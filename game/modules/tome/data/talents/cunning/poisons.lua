@@ -167,10 +167,12 @@ newTalent{
 	require = cuns_req_high4,
 	on_kill = function(self, t, target)
 		local possible = {}
-		for i = -1, 1 do for j = -1, 1 do if game.level.map:isBound(target.x + i, target.y + j) then if i ~= 0 or j ~= 0 then
-			local tgt = game.level.map(target.x + i, target.y + j, Map.ACTOR)
-			if tgt and not tgt.dead then possible[tgt] = true end
-		end end end end
+		for _, coord in pairs(util.adjacentCoords(target.x, target.y)) do
+			if game.level.map:isBound(coord[1], coord[2]) then
+				local tgt = game.level.map(coord[1], coord[2], Map.ACTOR)
+				if tgt and not tgt.dead then possible[tgt] = true end
+			end
+		end
 		possible[self] = nil
 		possible[target] = nil
 		possible = table.keys(possible)

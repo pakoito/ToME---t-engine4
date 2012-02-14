@@ -492,10 +492,10 @@ newInscription{
 		self:magicMap(data.range, self.x, self.y, function(x, y)
 			local g = game.level.map(x, y, Map.TERRAIN)
 			if g and (g.always_remember or g:check("block_move")) then
-				for i = -1, 1 do for j = -1, 1 do
-					local g2 = game.level.map(x + i, y + j, Map.TERRAIN)
+				for _, coord in pairs(util.adjacentCoords(x, y)) do
+					local g2 = game.level.map(coord[1], coord[2], Map.TERRAIN)
 					if g2 and not g2:check("block_move") then return true end
-				end end
+				end
 			end
 		end)
 		self:setEffect(self.EFF_SENSE_HIDDEN, data.dur, {power=data.power + data.inc_stat})

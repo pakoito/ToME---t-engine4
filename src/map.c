@@ -31,6 +31,32 @@
 //#include "shaders.h"
 #include "useshader.h"
 
+static const char IS_HEX_KEY = 'k';
+
+/*
+static int lua_set_is_hex(lua_State *L)
+{
+	int val = luaL_checknumber(L, 1);
+	lua_pushlightuserdata(L, (void *)&IS_HEX_KEY); // push address as guaranteed unique key
+	lua_pushnumber(L, val);
+	lua_settable(L, LUA_REGISTRYINDEX);
+	return 0;
+}
+*/
+
+static int lua_is_hex(lua_State *L)
+{
+	lua_pushlightuserdata(L, (void *)&IS_HEX_KEY); // push address as guaranteed unique key
+	lua_gettable(L, LUA_REGISTRYINDEX);  /* retrieve value */
+	if (lua_isnil(L, -1)) {
+		lua_pop(L, 1); // remove nil
+		lua_pushlightuserdata(L, (void *)&IS_HEX_KEY); // push address as guaranteed unique key
+		lua_pushnumber(L, 0);
+		lua_settable(L, LUA_REGISTRYINDEX);
+		lua_pushnumber(L, 0);
+	}
+}
+
 static int map_object_new(lua_State *L)
 {
 	long uid = luaL_checknumber(L, 1);
@@ -238,11 +264,17 @@ static int map_object_reset_move_anim(lua_State *L)
 static int map_object_set_move_anim(lua_State *L)
 {
 	map_object *obj = (map_object*)auxiliar_checkclass(L, "core{mapobj}", 1);
-	// If at rest use satrting point
+
+	lua_is_hex(L);
+	int is_hex = luaL_checknumber(L, -1);
+
+	// If at rest use starting point
 	if (!obj->move_max)
 	{
-		obj->oldx = luaL_checknumber(L, 2);
-		obj->oldy = luaL_checknumber(L, 3);
+		int ox = luaL_checknumber(L, 2);
+		int oy = luaL_checknumber(L, 3);
+		obj->oldx = ox;
+		obj->oldy = oy + 0.5f*(ox & is_hex);
 	}
 	// If already moving, compute starting point
 	else
@@ -250,7 +282,7 @@ static int map_object_set_move_anim(lua_State *L)
 		int ox = luaL_checknumber(L, 2);
 		int oy = luaL_checknumber(L, 3);
 		obj->oldx = obj->animdx + ox;
-		obj->oldy = obj->animdy + oy;
+		obj->oldy = obj->animdy + oy + 0.5f*(ox & is_hex);
 	}
 	obj->move_step = 0;
 	obj->move_max = luaL_checknumber(L, 6);
@@ -299,14 +331,14 @@ static int map_object_is_valid(lua_State *L)
 
 static bool _CheckGL_Error(const char* GLcall, const char* file, const int line)
 {
-    GLenum errCode;
-    if((errCode = glGetError())!=GL_NO_ERROR)
-    {
+	GLenum errCode;
+	if((errCode = glGetError())!=GL_NO_ERROR)
+	{
 		printf("OPENGL ERROR #%i: (%s) in file %s on line %i\n",errCode,gluErrorString(errCode), file, line);
-        printf("OPENGL Call: %s\n",GLcall);
-        return FALSE;
-    }
-    return TRUE;
+		printf("OPENGL Call: %s\n",GLcall);
+		return FALSE;
+	}
+	return TRUE;
 }
 
 //#define _DEBUG
@@ -543,10 +575,11 @@ static void setup_seens_texture(map_type *map)
 	if (map->seens_texture) glDeleteTextures(1, &(map->seens_texture));
 	if (map->seens_map) free(map->seens_map);
 
+	int f = (map->is_hex & 1);
 	int realw=1;
-	while (realw < map->w) realw *= 2;
+	while (realw < f + (1+f)*map->w) realw *= 2;
 	int realh=1;
-	while (realh < map->h) realh *= 2;
+	while (realh < f + (1+f)*map->h) realh *= 2;
 	map->seens_map_w = realw;
 	map->seens_map_h = realh;
 
@@ -584,6 +617,7 @@ static int map_new(lua_State *L)
 	int tile_w = luaL_checknumber(L, 7);
 	int tile_h = luaL_checknumber(L, 8);
 	int zdepth = luaL_checknumber(L, 9);
+	int is_hex = luaL_checknumber(L, 10);
 	int i, j;
 
 	map_type *map = (map_type*)lua_newuserdata(L, sizeof(map_type));
@@ -599,6 +633,11 @@ static int map_new(lua_State *L)
 	map->mm_w = map->mm_h = 0;
 
 	map->minimap_gridsize = 4;
+
+	map->is_hex = (is_hex > 0);
+	lua_pushlightuserdata(L, (void *)&IS_HEX_KEY); // push address as guaranteed unique key
+	lua_pushnumber(L, map->is_hex);
+	lua_settable(L, LUA_REGISTRYINDEX);
 
 	map->vertices = calloc(2*4*QUADS_PER_BATCH, sizeof(GLfloat)); // 2 coords, 4 vertices per particles
 	map->colors = calloc(4*4*QUADS_PER_BATCH, sizeof(GLfloat)); // 4 color data, 4 vertices per particles
@@ -908,6 +947,7 @@ static void map_update_seen_texture(map_type *map)
 	int my = map->used_my;
 	GLubyte *seens = map->seens_map;
 	int ptr = 0;
+	int f = (map->is_hex & 1);
 	int ii, jj;
 	map->seensinfo_w = map->w;
 	map->seensinfo_h = map->h;
@@ -917,13 +957,31 @@ static void map_update_seen_texture(map_type *map)
 		for (ii = 0; ii < map->w; ii++)
 		{
 			int i = ii, j = jj;
+			ptr = (((1+f)*j + (i & f)) * map->seens_map_w + (1+f)*i) * 4;
 			if ((i < 0) || (j < 0) || (i >= map->w) || (j >= map->h))
 			{
 				seens[ptr] = 0;
 				seens[ptr+1] = 0;
 				seens[ptr+2] = 0;
 				seens[ptr+3] = 255;
-				ptr += 4;
+				if (f) {
+					ptr += 4;
+					seens[ptr] = 0;
+					seens[ptr+1] = 0;
+					seens[ptr+2] = 0;
+					seens[ptr+3] = 255;
+					ptr += 4 * map->seens_map_w - 4;
+					seens[ptr] = 0;
+					seens[ptr+1] = 0;
+					seens[ptr+2] = 0;
+					seens[ptr+3] = 255;
+					ptr += 4;
+					seens[ptr] = 0;
+					seens[ptr+1] = 0;
+					seens[ptr+2] = 0;
+					seens[ptr+3] = 255;
+				}
+				//ptr += 4;
 				continue;
 			}
 			float v = map->grids_seens[j*map->w+i] * 255;
@@ -935,6 +993,23 @@ static void map_update_seen_texture(map_type *map)
 				seens[ptr+1] = (GLubyte)0;
 				seens[ptr+2] = (GLubyte)0;
 				seens[ptr+3] = (GLubyte)255-v;
+				if (f) {
+					ptr += 4;
+					seens[ptr] = (GLubyte)0;
+					seens[ptr+1] = (GLubyte)0;
+					seens[ptr+2] = (GLubyte)0;
+					seens[ptr+3] = (GLubyte)255-v;
+					ptr += 4 * map->seens_map_w - 4;
+					seens[ptr] = (GLubyte)0;
+					seens[ptr+1] = (GLubyte)0;
+					seens[ptr+2] = (GLubyte)0;
+					seens[ptr+3] = (GLubyte)255-v;
+					ptr += 4;
+					seens[ptr] = (GLubyte)0;
+					seens[ptr+1] = (GLubyte)0;
+					seens[ptr+2] = (GLubyte)0;
+					seens[ptr+3] = (GLubyte)255-v;
+				}
 			}
 			else if (map->grids_remembers[i][j])
 			{
@@ -942,6 +1017,23 @@ static void map_update_seen_texture(map_type *map)
 				seens[ptr+1] = 0;
 				seens[ptr+2] = 0;
 				seens[ptr+3] = 255 - map->obscure_a * 255;
+				if (f) {
+					ptr += 4;
+					seens[ptr] = 0;
+					seens[ptr+1] = 0;
+					seens[ptr+2] = 0;
+					seens[ptr+3] = 255 - map->obscure_a * 255;
+					ptr += 4 * map->seens_map_w - 4;
+					seens[ptr] = 0;
+					seens[ptr+1] = 0;
+					seens[ptr+2] = 0;
+					seens[ptr+3] = 255 - map->obscure_a * 255;
+					ptr += 4;
+					seens[ptr] = 0;
+					seens[ptr+1] = 0;
+					seens[ptr+2] = 0;
+					seens[ptr+3] = 255 - map->obscure_a * 255;
+				}
 			}
 			else
 			{
@@ -949,11 +1041,28 @@ static void map_update_seen_texture(map_type *map)
 				seens[ptr+1] = 0;
 				seens[ptr+2] = 0;
 				seens[ptr+3] = 255;
+				if (f) {
+					ptr += 4;
+					seens[ptr] = 0;
+					seens[ptr+1] = 0;
+					seens[ptr+2] = 0;
+					seens[ptr+3] = 255;
+					ptr += 4 * map->seens_map_w - 4;
+					seens[ptr] = 0;
+					seens[ptr+1] = 0;
+					seens[ptr+2] = 0;
+					seens[ptr+3] = 255;
+					ptr += 4;
+					seens[ptr] = 0;
+					seens[ptr+1] = 0;
+					seens[ptr+2] = 0;
+					seens[ptr+3] = 255;
+				}
 			}
-			ptr += 4;
+			//ptr += 4;
 		}
 		// Skip the rest of the texture, silly GPUs not supporting NPOT textures!
-		ptr += (map->seens_map_w - map->w) * 4;
+		//ptr += (map->seens_map_w - map->w) * 4;
 	}
 	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, map->seens_map_w, map->seens_map_h, GL_BGRA, GL_UNSIGNED_BYTE, seens);
 }
@@ -986,11 +1095,12 @@ static int map_draw_seen_texture(lua_State *L)
 
 	tglBindTexture(GL_TEXTURE_2D, map->seens_texture);
 
+	int f = 1 + (map->is_hex & 1);
 	GLfloat texcoords[2*4] = {
 		0, 0,
-		0, 1,
-		1, 1,
-		1, 0,
+		0, f,
+		f, f,
+		f, 0,
 	};
 	GLfloat colors[4*4] = {
 		1,1,1,1,
@@ -1205,6 +1315,8 @@ void display_map_quad(GLuint *cur_tex, int *vert_idx, int *col_idx, map_type *ma
 	 ********************************************************/
 	float animdx = 0, animdy = 0;
 	if (m->display_last == DL_NONE) m->move_max = 0;
+	lua_is_hex(L);
+	int is_hex = luaL_checknumber(L, -1);
 	if (m->move_max)
 	{
 		m->move_step += nb_keyframes;
@@ -1214,7 +1326,7 @@ void display_map_quad(GLuint *cur_tex, int *vert_idx, int *col_idx, map_type *ma
 		if (m->move_max)
 		{
 			float adx = (float)i - m->oldx;
-			float ady = (float)j - m->oldy;
+			float ady = (float)j - m->oldy + 0.5f*(i & is_hex);
 
 			// Motion bluuuurr!
 			if (m->move_blur)
@@ -1343,7 +1455,7 @@ static int map_to_screen(lua_State *L)
 				if ((i < 0) || (j < 0) || (i >= map->w) || (j >= map->h)) continue;
 
 				int dx = x + i * map->tile_w;
-				int dy = y + j * map->tile_h;
+				int dy = y + j * map->tile_h + (i & map->is_hex) * map->tile_h / 2;
 				map_object *mo = map->grids[i][j][z];
 				if (!mo) continue;
 
@@ -1412,6 +1524,7 @@ static int minimap_to_screen(lua_State *L)
 	int col_idx = 0;
 	GLfloat r, g, b, a;
 
+	int f = (map->is_hex & 1);
 	// Create/recreate the minimap data if needed
 	if (map->mm_w != mdw || map->mm_h != mdh)
 	{
@@ -1422,7 +1535,7 @@ static int minimap_to_screen(lua_State *L)
 		int realw=1;
 		int realh=1;
 		while (realw < mdw) realw *= 2;
-		while (realh < mdh) realh *= 2;
+		while (realh < f + (1+f)*mdh) realh *= 2;
 
 		glGenTextures(1, &(map->mm_texture));
 		map->mm_w = mdw;
@@ -1443,7 +1556,7 @@ static int minimap_to_screen(lua_State *L)
 
 	int ptr;
 	GLubyte *mm = map->minimap;
-	memset(mm, 0, map->mm_rw * map->mm_rh * 4 * sizeof(GLubyte));
+	memset(mm, 0, map->mm_rh * map->mm_rw * 4 * sizeof(GLubyte));
 	for (z = 0; z < map->zdepth; z++)
 	{
 		for (i = mdx; i < mdx + mdw; i++)
@@ -1453,7 +1566,7 @@ static int minimap_to_screen(lua_State *L)
 				if ((i < 0) || (j < 0) || (i >= map->w) || (j >= map->h)) continue;
 				map_object *mo = map->grids[i][j][z];
 				if (!mo || mo->mm_r < 0) continue;
-				ptr = ((j-mdy) * map->mm_rw + (i-mdx)) * 4;
+				ptr = (((1+f)*(j-mdy) + (i & f)) * map->mm_rw + (i-mdx)) * 4;
 
 				if ((mo->on_seen && map->grids_seens[j*map->w+i]) || (mo->on_remember && map->grids_remembers[i][j]) || mo->on_unknown)
 				{
@@ -1469,6 +1582,13 @@ static int minimap_to_screen(lua_State *L)
 					mm[ptr+1] = g * 255;
 					mm[ptr+2] = r * 255;
 					mm[ptr+3] = a * 255;
+					if (f) {
+						ptr += 4 * map->mm_rw;
+						mm[ptr] = b * 255;
+						mm[ptr+1] = g * 255;
+						mm[ptr+2] = r * 255;
+						mm[ptr+3] = a * 255;
+					}
 				}
 			}
 		}
@@ -1478,8 +1598,8 @@ static int minimap_to_screen(lua_State *L)
 	// Display it
 	GLfloat texcoords[2*4] = {
 		0, 0,
-		0, (float)mdh/(float)map->mm_rh,
-		(float)mdw/(float)map->mm_rw, (float)mdh/(float)map->mm_rh,
+		0, (float)((1+f)*mdh)/(float)map->mm_rh,
+		(float)mdw/(float)map->mm_rw, (float)((1+f)*mdh)/(float)map->mm_rh,
 		(float)mdw/(float)map->mm_rw, 0,
 	};
 	GLfloat colors[4*4] = {

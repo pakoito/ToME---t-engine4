@@ -58,10 +58,10 @@ end
 
 function _M:liveOrDie(x, y)
 	local nb = 0
-	for i = -1, 1 do for j = -1, 1 do if i ~= 0 or j ~= 0 then
-		local g = self.map(x+i, y+j, Map.TERRAIN)
+	for _, coord in pairs(util.adjacentCoords(x, y)) if self.map:isBound(coord[1], coord[2]) then
+		local g = self.map(coord[1], coord[2], Map.TERRAIN)
 		if g and g == self.wall then nb = nb + 1 end
-	end end end
+	end end
 
 	if nb < 4 or nb > 7 then self.map(x, y, Map.TERRAIN, self.floor)
 	elseif nb == 5 or nb == 6 then self.map(x, y, Map.TERRAIN, self.wall)

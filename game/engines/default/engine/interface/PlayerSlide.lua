@@ -27,7 +27,31 @@ module(..., package.seeall, class.make)
 function _M:tryPlayerSlide(x, y, force)
 	-- Try to slide along walls if possible
 	if game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move", self, false) and not force then
-		local dir = util.getDir(x, y, self.x, self.y)
+		local zig_zag = util.dirZigZag(self.move_dir, self.x, self.y)
+		local slide_dir = zig_zag and zig_zag[self.zig_zag] or util.dirSides(self.move_dir, self.x, self.y)
+		if slide_dir then
+			if type(slide_dir) == "table" and slide_dir.left and slide_dir.right then
+				tx1, ty1 = util.coordAddDir(self.x, self.y, slide_dir.left)
+				tx2, ty2 = util.coordAddDir(self.x, self.y, slide_dir.right)
+				if not game.level.map:checkEntity(tx1, ty1, Map.TERRAIN, "block_move", self, false) and game.level.map:checkEntity(tx2, ty2, Map.TERRAIN, "block_move", self, false) then
+					self.zig_zag = util.dirNextZigZag(slide_dir.left, self.x, self.y)
+					return tx1, ty1
+				elseif game.level.map:checkEntity(tx1, ty1, Map.TERRAIN, "block_move", self, false) and not game.level.map:checkEntity(tx2, ty2, Map.TERRAIN, "block_move", self, false) then
+					self.zig_zag = util.dirNextZigZag(slide_dir.right, self.x, self.y)
+					return tx2, ty2
+				end
+			else
+				slide_dir = type(slide_dir) == "table" and (slide_dir.right or slide_dir.left) or slide_dir
+				tx, ty = util.coordAddDir(self.x, self.y, slide_dir)
+				if not game.level.map:checkEntity(tx, ty, Map.TERRAIN, "block_move", self, false) then
+					self.zig_zag = util.dirNextZigZag(slide_dir, self.x, self.y)
+					return tx, ty
+				end
+			end
+		end
+
+
+--[[
 		local ldir, rdir = dir_sides[dir].left, dir_sides[dir].right
 		local lx, ly = util.coordAddDir(self.x, self.y, ldir)
 		local rx, ry = util.coordAddDir(self.x, self.y, rdir)
@@ -38,6 +62,7 @@ function _M:tryPlayerSlide(x, y, force)
 		elseif game.level.map:checkEntity(lx, ly, Map.TERRAIN, "block_move", self, false) and not game.level.map:checkEntity(rx, ry, Map.TERRAIN, "block_move", self, false) then
 			x, y = rx, ry
 		end
+--]]
 	end
-	return x, y
+	return nil
 end

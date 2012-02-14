@@ -58,18 +58,6 @@ function _M:autoLoadedAI()
 	setmetatable(self.ai_target, {__mode='v'})
 end
 
-local coords = {
-	[1] = { 4, 2, 7, 3 },
-	[2] = { 1, 3, 4, 6 },
-	[3] = { 2, 6, 1, 9 },
-	[4] = { 7, 1, 8, 2 },
-	[5] = {},
-	[6] = { 9, 3, 8, 2 },
-	[7] = { 4, 8, 1, 9 },
-	[8] = { 7, 9, 4, 6 },
-	[9] = { 8, 6, 7, 3 },
-}
-
 function _M:aiCanPass(x, y)
 	-- Nothing blocks, just go on
 	if not game.level.map:checkAllEntities(x, y, "block_move", self, true) then return true end
@@ -96,16 +84,15 @@ function _M:moveDirection(x, y, force)
 		-- if we are blocked, try some other way
 		if not self:aiCanPass(lx, ly) then
 			local dir = util.getDir(lx, ly, self.x, self.y)
-
-			local list = coords[dir]
+			local list = util.dirSides(dir, self.x, self.y)
 			local l = {}
 			-- Find possibilities
-			for i = 1, #list do if dir_to_coord[list[i]] then
-				local dx, dy = self.x + (dir_to_coord[list[i]][1] or 0), self.y + (dir_to_coord[list[i]][2] or 0)
+			for _, dir in pairs(list) do
+				local dx, dy = util.coordAddDir(self.x, self.y, dir)
 				if self:aiCanPass(dx, dy) then
-					l[#l+1] = {dx,dy, (dx-x)^2 + (dy-y)^2}
+					l[#l+1] = {dx,dy, core.fov.distance(x,y,dx,dy)^2}
 				end
-			end end
+			end
 			-- Move to closest
 			if #l > 0 then
 				table.sort(l, function(a,b) return a[3]<b[3] end)

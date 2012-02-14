@@ -211,7 +211,7 @@ end
 
 function _M:makeCMap()
 	--util.show_backtrace()
-	self._map = core.map.newMap(self.w, self.h, self.mx, self.my, self.viewport.mwidth, self.viewport.mheight, self.tile_w, self.tile_h, self.zdepth)
+	self._map = core.map.newMap(self.w, self.h, self.mx, self.my, self.viewport.mwidth, self.viewport.mheight, self.tile_w, self.tile_h, self.zdepth, util.isHex() and 1 or 0)
 	self._map:setObscure(unpack(self.color_obscure))
 	self._map:setShown(unpack(self.color_shown))
 	self._fovcache =
@@ -788,14 +788,14 @@ end
 function _M:getMouseTile(mx, my)
 --	if mx < self.display_x or my < self.display_y or mx >= self.display_x + self.viewport.width or my >= self.display_y + self.viewport.height then return end
 	local tmx = math.floor((mx - self.display_x) / (self.tile_w * self.zoom)) + self.mx
-	local tmy = math.floor((my - self.display_y) / (self.tile_h * self.zoom)) + self.my
+	local tmy = math.floor((my - self.display_y) / (self.tile_h * self.zoom) - util.hexOffset(tmx)) + self.my
 	return tmx, tmy
 end
 
 --- Get the screen position corresponding to a tile
 function _M:getTileToScreen(tx, ty)
 	local x = (tx - self.mx) * self.tile_w * self.zoom + self.display_x
-	local y = (ty - self.my) * self.tile_h * self.zoom + self.display_y
+	local y = (ty - self.my + util.hexOffset(tx)) * self.tile_h * self.zoom + self.display_y
 	return x, y
 end
 
@@ -1088,14 +1088,14 @@ function _M:displayParticles(nb_keyframes)
 			if nb_keyframes == 0 and e.x and e.y then
 				-- Just display it, not updating, no emitting
 				if e.x + e.radius >= self.mx and e.x - e.radius < self.mx + self.viewport.mwidth and e.y + e.radius >= self.my and e.y - e.radius < self.my + self.viewport.mheight then
-					e.ps:toScreen(dx + (adx + e.x - self.mx + 0.5) * self.tile_w * self.zoom, dy + (ady + e.y - self.my + 0.5) * self.tile_h * self.zoom, self.seens(e.x, e.y) or e.always_seen, e.zoom * self.zoom)
+					e.ps:toScreen(dx + (adx + e.x - self.mx + 0.5) * self.tile_w * self.zoom, dy + (ady + e.y - self.my + 0.5 + util.hexOffset(e.x)) * self.tile_h * self.zoom, self.seens(e.x, e.y) or e.always_seen, e.zoom * self.zoom)
 				end
 			elseif e.x and e.y then
 				alive = e.ps:isAlive()
 
 				-- Update more, if needed
 				if alive and e.x + e.radius >= self.mx and e.x - e.radius < self.mx + self.viewport.mwidth and e.y + e.radius >= self.my and e.y - e.radius < self.my + self.viewport.mheight then
-					e.ps:toScreen(dx + (adx + e.x - self.mx + 0.5) * self.tile_w * self.zoom, dy + (ady + e.y - self.my + 0.5) * self.tile_h * self.zoom, self.seens(e.x, e.y) or e.always_seen)
+					e.ps:toScreen(dx + (adx + e.x - self.mx + 0.5) * self.tile_w * self.zoom, dy + (ady + e.y - self.my + 0.5 + util.hexOffset(e.x)) * self.tile_h * self.zoom, self.seens(e.x, e.y) or e.always_seen)
 				end
 
 				if not alive then

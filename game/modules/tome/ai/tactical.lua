@@ -45,7 +45,7 @@ local canFleeDmapKeepLos = function(self)
 		local c = act:distanceMap(self.x, self.y)
 		if not c then return end
 		local dir
-		for i = 1, 9 do
+		for _, i in ipairs(util.adjacentDirs()) do
 			local sx, sy = util.coordAddDir(self.x, self.y, i)
 			-- Check LOS first
 			if checkLOS(sx, sy, act.x, act.y) then
@@ -55,7 +55,8 @@ local canFleeDmapKeepLos = function(self)
 			end
 		end
 		if dir then
-			return true, self.x+dir_to_coord[dir][1], self.y+dir_to_coord[dir][2]
+			local dx, dy = util.dirToCoord(dir, self.x, self.y)
+			return true, self.x + dx, self.y + dy
 		else
 			return false
 		end

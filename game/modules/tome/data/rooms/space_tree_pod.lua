@@ -19,14 +19,18 @@
 
 local function check_borders(room_map, x, y, id)
 	local nb = 0
+	local possible_nb = 0
 	local own = false
-	for i = -1, 1 do for j = -1, 1 do
-		if room_map[x+i] and room_map[x+i][y+j] and room_map[x+i][y+j].room == id then
+	local coords = util.adjacentCoords(x, y)
+	coords[5] = {x, y}
+	for _, coord in pairs(coords) do
+		possible_nb = possible_nb + 1
+		if room_map[coord[1]] and room_map[coord[1]][coord[2]] and room_map[coord[1]][coord[2]].room == id then
 			nb = nb + 1
-			if i == 0 and j == 0 then own = true end
+			if coord[1] == x and coord[2] == y then own = true end
 		end
-	end end
-	return nb, own
+	end
+	return nb, possible_nb, own
 end
 
 return function(gen, id)
@@ -54,12 +58,12 @@ return function(gen, id)
 		local wormholes = {}
 		for i = x, x + mw do
 			for j = y, y + mh do
-				local nb, own = check_borders(gen.map.room_map, i, j, id)
+				local nb, possible_nb, own = check_borders(gen.map.room_map, i, j, id)
 				if nb > 0 then pod[#pod+1] = {x=i-x, y=j-y} end
-				if nb >= 9 and own and rng.percent(is_first and 10 or 40) then
+				if nb >= possible_nb and own and rng.percent(is_first and 10 or 40) then
 					gen.map(i, j, Map.TERRAIN, gen:resolve('T'))
 				end
-				if is_first and nb >= 9 and own then wormholes[#wormholes+1] = {i,j} end
+				if is_first and nb >= possible_nb and own then wormholes[#wormholes+1] = {i,j} end
 			end
 		end
 		if is_first and gen.level.level < gen.zone.max_level then
@@ -71,7 +75,7 @@ return function(gen, id)
 			end
 		end
 
-		gen.level.pods[#(gen.level.pods)+1] = {x1=x, x2=x+mw, y1=y, y2=y+mh, w=mw, h=mh, pod=pod, dir=rng.table{2,4,6,8}}
+		gen.level.pods[#(gen.level.pods)+1] = {x1=x, x2=x+mw, y1=y, y2=y+mh, w=mw, h=mh, pod=pod, dir=rng.table(util.primaryDirs())}
 		print(table.serialize(pod,nil,true))
 	end
 

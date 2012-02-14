@@ -193,6 +193,14 @@ end
 function _M:move(x, y, force)
 	local ox, oy = self.x, self.y
 	local moved = mod.class.Actor.move(self, x, y, force)
+
+	if not force and ox == self.x and oy == self.y and self.doPlayerSlide then
+		self.doPlayerSlide = nil
+		tx, ty = self:tryPlayerSlide(x, y, false)
+		if tx then moved = self:move(tx, ty, false) end
+	end
+	self.doPlayerSlide = nil
+
 	if moved then
 		game.level.map:moveViewSurround(self.x, self.y, config.settings.tome.scroll_dist, config.settings.tome.scroll_dist)
 		game.level.map.attrs(self.x, self.y, "walked", true)

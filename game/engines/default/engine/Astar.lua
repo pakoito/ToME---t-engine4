@@ -32,11 +32,20 @@ end
 
 --- The default heuristic for A*, tries to come close to the straight path
 function _M:heuristicCloserPath(sx, sy, cx, cy, tx, ty)
+	local h
+	if util.isHex() then
+		h = core.fov.distance(cx, cy, tx, ty)
+	else
+		-- Chebyshev  distance
+		h = math.max(math.abs(tx - cx), math.abs(ty - cy))
+	end
+
+	-- tie-breaker rule for straighter paths
 	local dx1 = cx - tx
 	local dy1 = cy - ty
 	local dx2 = sx - tx
 	local dy2 = sy - ty
-	return math.abs(dx1*dy2 - dx2*dy1)
+	return h + 0.01*math.abs(dx1*dy2 - dx2*dy1)
 end
 
 --- The a simple heuristic for A*, using distance
@@ -147,15 +156,8 @@ function _M:calc(sx, sy, tx, ty, use_has_seen, heuristic, add_check, forbid_diag
 		local x, y = self:toDouble(node)
 
 		-- Check sides
-		checkPos(node, x + 1, y)
-		checkPos(node, x - 1, y)
-		checkPos(node, x, y + 1)
-		checkPos(node, x, y - 1)
-		if not forbid_diagonals then
-			checkPos(node, x + 1, y + 1)
-			checkPos(node, x + 1, y - 1)
-			checkPos(node, x - 1, y + 1)
-			checkPos(node, x - 1, y - 1)
+		for _, coord in pairs(util.adjacentCoords(x, y, forbid_diagonals)) do
+			checkPos(node, coord[1], coord[2])
 		end
 	end
 end

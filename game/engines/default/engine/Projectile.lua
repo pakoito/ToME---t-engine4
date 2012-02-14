@@ -46,11 +46,13 @@ end
 
 function _M:loaded()
 	if self.project and self.project.def and self.project.def.typ and self.project.def.typ.line_function and type(self.project.def.typ.line_function.line) == "table" then
-		self.project.def.typ.line_function.line = core.fov.line_import(unpack(self.project.def.typ.line_function.line))
+		self.project.def.typ.line_function.line = util.isHex() and core.fov.hex_line_import(unpack(self.project.def.typ.line_function.line)) or 
+			core.fov.line_import(unpack(self.project.def.typ.line_function.line))
 
 		-- The metatable gets lost somewhere in the save, so let's remake it
 		local mt = {}
 		mt.__index = function(t, key, ...) if t.line[key] then return t.line[key] end end
+		mt.__call = function(t, ...) return t.line:step() end
 		setmetatable(self.project.def.typ.line_function, mt)
 
 		-- The block function apparently uses an "upvalue" that is no longer available upon save/reload, so let's remake it
@@ -157,18 +159,6 @@ function _M:tooltip()
 	return "Projectile: "..self.name
 end
 
-local coords = {
-	[1] = { 4, 2, 7, 3 },
-	[2] = { 1, 3, 4, 6 },
-	[3] = { 2, 6, 1, 9 },
-	[4] = { 7, 1, 8, 2 },
-	[5] = {},
-	[6] = { 9, 3, 8, 2 },
-	[7] = { 4, 8, 1, 9 },
-	[8] = { 7, 9, 4, 6 },
-	[9] = { 8, 6, 7, 3 },
-}
-
 --- Move one step to the given target if possible
 -- This tries the most direct route, if not available it checks sides and always tries to get closer
 function _M:moveDirection(x, y)
@@ -176,18 +166,17 @@ function _M:moveDirection(x, y)
 	local lx, ly = l()
 	if lx and ly then
 		-- if we are blocked, try some other way
-		if game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move") then
+		if game.level.map:checkEntity(lx, ly, Map.TERRAIN, "block_move") and not game.level.map:checkEntity(lx, ly, Map.TERRAIN, "pass_projectile") then
 			local dirx = lx - self.x
 			local diry = ly - self.y
-			local dir = coord_to_dir[dirx][diry]
-
-			local list = coords[dir]
+			local dir = util.coordToDir(dirx, diry, self.x, self.y)
+			local list = util.dirSides(dir, self.x, self.y)
 			local l = {}
 			-- Find possibilities
-			for i = 1, #list do
-				local dx, dy = self.x + dir_to_coord[list[i]][1], self.y + dir_to_coord[list[i]][2]
-				if not game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move") then
-					l[#l+1] = {dx,dy, (dx-x)^2 + (dy-y)^2}
+			for _, dir in pairs(list) do
+				local dx, dy = util.coordAddDir(self.x, self.y, dir)
+				if not game.level.map:checkEntity(dx, dy, Map.TERRAIN, "block_move") or game.level.map:checkEntity(dx, dy, Map.TERRAIN, "pass_projectile") then
+					l[#l+1] = {dx,dy, core.fov.distance(x,y,dx,dy)^2}
 				end
 			end
 			-- Move to closest

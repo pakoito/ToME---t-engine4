@@ -70,11 +70,11 @@ end
 
 function _M:findSpotGeneric(who, fct)
 	local spots = {}
-	for i = -1, 1 do for j = -1, 1 do if i ~= 0 or j ~= 0 then
-		if fct(game.level.map, who.x + i, who.y + j) then
-			spots[#spots+1] = {who.x + i, who.y + j}
+	for _, coord in pairs(util.adjacentCoords(who.x, who.y)) do if game.level.map:isBound(coord[1], coord[2]) then
+		if fct(game.level.map, coord[1], coord[2]) then
+			spots[#spots+1] = {coord[1], coord[2]}
 		end
-	end end end
+	end end
 	if #spots > 0 then
 		local s = rng.table(spots)
 		return s[1], s[2]
@@ -84,11 +84,11 @@ end
 function _M:findSpot(who, what)
 	what = what or "block_move"
 	local spots = {}
-	for i = -1, 1 do for j = -1, 1 do if i ~= 0 or j ~= 0 then
-		if not game.level.map:checkAllEntities(who.x + i, who.y + j, what, who) and game.level.map:checkAllEntities(who.x + i, who.y + j, "can_encounter", who) and not game.level.map:checkAllEntities(who.x + i, who.y + j, "change_level") then
-			spots[#spots+1] = {who.x + i, who.y + j}
+	for _, coord in pairs(util.adjacentCoords(who.x, who.y)) do if game.level.map:isBound(coord[1], coord[2]) then
+		if not game.level.map:checkAllEntities(coord[1], coord[2], what, who) and game.level.map:checkAllEntities(coord[1], coord[2], "can_encounter", who) and not game.level.map:checkAllEntities(coord[1], coord[2], "change_level") then
+			spots[#spots+1] = {coord[1], coord[2]}
 		end
-	end end end
+	end end
 	if #spots > 0 then
 		local s = rng.table(spots)
 		return s[1], s[2]

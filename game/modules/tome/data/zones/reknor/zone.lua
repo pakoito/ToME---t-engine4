@@ -84,13 +84,12 @@ return {
 		if level.level == 1 then
 			local l = game.zone:makeEntityByName(level, "terrain", "IRON_THRONE_EDICT")
 			if not l then return end
-			for i = -1, 1 do for j = -1, 1 do
-				local x, y = level.default_up.x + i, level.default_up.y + j
-				if game.level.map:isBound(x, y) and (i ~= 0 or j ~= 0) and not game.level.map:checkEntity(x, y, engine.Map.TERRAIN, "block_move") then
-					game.zone:addEntity(level, l, "terrain", x, y)
+			for _, coord in pairs(util.adjacentCoords(level.default_up.x, level.default_up.y)) do
+				if game.level.map:isBound(coord[1], coord[2]) and (i ~= 0 or j ~= 0) and not game.level.map:checkEntity(coord[1], coord[2], engine.Map.TERRAIN, "block_move") then
+					game.zone:addEntity(level, l, "terrain", coord[1], coord[2])
 					return
 				end
-			end end
+			end
 		end
 	end,
 }

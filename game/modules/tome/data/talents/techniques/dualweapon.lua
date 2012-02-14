@@ -265,13 +265,13 @@ newTalent{
 			return nil
 		end
 
-		for i = -1, 1 do for j = -1, 1 do
-			local x, y = self.x + i, self.y + j
-			if (self.x ~= x or self.y ~= y) and game.level.map:isBound(x, y) and game.level.map(x, y, Map.ACTOR) then
-				local target = game.level.map(x, y, Map.ACTOR)
+		local tg = self:getTalentTarget(t)
+		self:project(tg, self.x, self.y, function(px, py, tg, self)
+			local target = game.level.map(px, py, Map.ACTOR)
+			if target and target ~= self then
 				self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 1.2, 1.9), true)
 			end
-		end end
+		end)
 
 		return true
 	end,

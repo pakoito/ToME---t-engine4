@@ -21,10 +21,9 @@ local Object = require "engine.Object"
 local DamageType = require "engine.DamageType"
 
 --- Random tunnel dir
-local function randDir()
-	local dirs = {4,6,8,2}
-	local d = dir_to_coord[dirs[rng.range(1, #dirs)]]
-	return d[1], d[2]
+local function randDir(sx, sy)
+	local dirs = util.primaryDirs() --{4,6,8,2}
+	return util.dirToCoord(dirs[rng.range(1, #dirs)], sx, sy)
 end
 
 --- Find the direction in which to tunnel
@@ -51,7 +50,7 @@ local function tunnel(self, x1, y1, x2, y2)
 	local startx, starty = x1, y1
 
 	if rng.percent(30) then
-		if rng.percent(10) then xdir, ydir = randDir()
+		if rng.percent(10) then xdir, ydir = randDir(x1, x2)
 		else xdir, ydir = tunnelDir(x1, y1, x2, y2)
 		end
 	end
@@ -65,7 +64,7 @@ local function tunnel(self, x1, y1, x2, y2)
 		end
 		nx, ny = x1 + xdir, y1 + ydir
 	end
---	print(feat, "try pos", nx, ny, "dir", coord_to_dir[xdir][ydir])
+--	print(feat, "try pos", nx, ny, "dir", util.coordToDir(xdir, ydir, nx, ny))
 
 	return nx, ny
 end

@@ -84,19 +84,21 @@ newTalent{
 		local level = math.max(3 * self:getTalentTypeMastery(t.type[1]) - 2, self:getTalentLevel(t) - 2)
 		return -self:rescaleDamage((math.sqrt(level) - 0.5) * 15 * ((100 + self:getStat("str")) / 200))
 	end,
+	range = 0,
+	radius = 1,
+        target = function(self, t)
+                return {type="ball", range=self:getTalentRange(t), selffire=false, radius=self:getTalentRadius(t)}
+        end,
 	action = function(self, t)
+		local tg = self:getTalentTarget(t)
+
 		local targets = {}
-		for i = -1, 1 do
-			for j = -1, 1 do
-				local x, y = self.x + i, self.y + j
-				if (self.x ~= x or self.y ~= y) and game.level.map:isBound(x, y) and game.level.map(x, y, Map.ACTOR) then
-					local target = game.level.map(x, y, Map.ACTOR)
-					if target and self:reactionToward(target) < 0 then
-						targets[#targets+1] = target
-					end
-				end
+		self:project(tg, self.x, self.y, function(px, py, tg, self)
+			local target = game.level.map(px, py, Map.ACTOR)
+			if target and self:reactionToward(target) < 0 then
+				targets[#targets+1] = target
 			end
-		end
+		end)
 
 		if #targets <= 0 then return nil end
 

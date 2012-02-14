@@ -109,7 +109,7 @@ function _M:display(dispx, dispy)
 		if self.target_type.min_range and core.fov.distance(self.source_actor.x, self.source_actor.y, lx, ly) < self.target_type.min_range then
 			s = self.sr
 		end
-		s:toScreen(self.display_x + (blocked_corner_x - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (blocked_corner_y - game.level.map.my) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
+		s:toScreen(self.display_x + (blocked_corner_x - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (blocked_corner_y - game.level.map.my + util.hexOffset(blocked_corner_x)) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
 		s = self.sr
 	end
 
@@ -140,7 +140,7 @@ function _M:display(dispx, dispy)
 				end
 			end
 		end
-		s:toScreen(self.display_x + (lx - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (ly - game.level.map.my) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
+		s:toScreen(self.display_x + (lx - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (ly - game.level.map.my + util.hexOffset(lx)) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
 		if block then
 			s = self.sr
 			stopped = true
@@ -154,12 +154,12 @@ function _M:display(dispx, dispy)
 			hit_radius = false
 			s = self.sr
 			-- double the fun :-P
-			s:toScreen(self.display_x + (blocked_corner_x - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (blocked_corner_y - game.level.map.my) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
-			s:toScreen(self.display_x + (blocked_corner_x - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (blocked_corner_y - game.level.map.my) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
+			s:toScreen(self.display_x + (blocked_corner_x - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (blocked_corner_y - game.level.map.my + util.hexOffset(blocked_corner_x)) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
+			s:toScreen(self.display_x + (blocked_corner_x - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (blocked_corner_y - game.level.map.my + util.hexOffset(blocked_corner_x)) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
 		end
 
 	end
-	self.cursor:toScreen(self.display_x + (self.target.x - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (self.target.y - game.level.map.my) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
+	self.cursor:toScreen(self.display_x + (self.target.x - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (self.target.y - game.level.map.my + util.hexOffset(self.target.x)) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
 
 	if self.target_type.ball and self.target_type.ball > 0 then
 		core.fov.calc_circle(
@@ -174,12 +174,12 @@ function _M:display(dispx, dispy)
 			function(_, px, py)
 				if not self.target_type.no_restrict and not game.level.map.remembers(px, py) and not game.level.map.seens(px, py) then
 					self.syg:toScreen(self.display_x + (px - game.level.map.mx) * self.tile_w * Map.zoom,
-					self.display_y + (py - game.level.map.my) * self.tile_h * Map.zoom,
+					self.display_y + (py - game.level.map.my + util.hexOffset(px)) * self.tile_h * Map.zoom,
 					self.tile_w * Map.zoom,
 					self.tile_h * Map.zoom)
 				else
 					self.sg:toScreen(self.display_x + (px - game.level.map.mx) * self.tile_w * Map.zoom,
-					self.display_y + (py - game.level.map.my) * self.tile_h * Map.zoom,
+					self.display_y + (py - game.level.map.my + util.hexOffset(px)) * self.tile_h * Map.zoom,
 					self.tile_w * Map.zoom,
 					self.tile_h * Map.zoom)
 				end
@@ -202,12 +202,12 @@ function _M:display(dispx, dispy)
 			function(_, px, py)
 				if not self.target_type.no_restrict and not game.level.map.remembers(px, py) and not game.level.map.seens(px, py) then
 					self.syg:toScreen(self.display_x + (px - game.level.map.mx) * self.tile_w * Map.zoom,
-					self.display_y + (py - game.level.map.my) * self.tile_h * Map.zoom,
+					self.display_y + (py - game.level.map.my + util.hexOffset(px)) * self.tile_h * Map.zoom,
 					self.tile_w * Map.zoom,
 					self.tile_h * Map.zoom)
 				else
 					self.sg:toScreen(self.display_x + (px - game.level.map.mx) * self.tile_w * Map.zoom,
-					self.display_y + (py - game.level.map.my) * self.tile_h * Map.zoom,
+					self.display_y + (py - game.level.map.my + util.hexOffset(px)) * self.tile_h * Map.zoom,
 					self.tile_w * Map.zoom,
 					self.tile_h * Map.zoom)
 				end
@@ -326,17 +326,17 @@ function _M:setActive(v, type)
 end
 
 function _M:freemove(dir)
-	local d = dir_to_coord[dir]
-	self.target.x = self.target.x + d[1]
-	self.target.y = self.target.y + d[2]
+	local dx, dy = util.dirToCoord(dir, self.target.x, self.target.y)
+	self.target.x = self.target.x + dx
+	self.target.y = self.target.y + dy
 	self.target.entity = game.level.map(self.target.x, self.target.y, engine.Map.ACTOR)
 	if self.on_set_target then self:on_set_target("freemove") end
 end
 
 function _M:setDirFrom(dir, src)
-	local d = dir_to_coord[dir]
-	self.target.x = src.x + d[1]
-	self.target.y = src.y + d[2]
+	local dx, dy = util.dirToCoord(dir, src.x, src.y)
+	self.target.x = src.x + dx
+	self.target.y = src.y + dy
 	self.target.entity = game.level.map(self.target.x, self.target.y, engine.Map.ACTOR)
 	if self.on_set_target then self:on_set_target("dir_from") end
 end

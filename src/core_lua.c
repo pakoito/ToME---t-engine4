@@ -2830,7 +2830,7 @@ int luaopen_core(lua_State *L)
 	lua_settable(L, -3);
 
 	luaL_openlib(L, "rng", rnglib, 0);
-	luaL_openlib(L, "line", linelib, 0);
+	luaL_openlib(L, "bresenham", linelib, 0);
 
 	lua_settop(L, 0);
 	return 1;

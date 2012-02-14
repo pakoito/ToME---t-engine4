@@ -63,7 +63,8 @@ typedef enum {
     FOV_SHAPE_CIRCLE_PLUS1,             /* floor(d + 1 - 1.0/d)           sqrt(r^2 + 1 - x^2)     x^2 + y^2 <= r^2 + 1    */
     FOV_SHAPE_OCTAGON,                  /* max(x, y) + min(x, y)/2        2*(r - x) + 1                                   */
     FOV_SHAPE_DIAMOND,                  /* x + y                          r - x                                           */
-    FOV_SHAPE_SQUARE                    /* max(x, y)                      r                                               */
+    FOV_SHAPE_SQUARE,                   /* max(x, y)                      r                                               */
+    FOV_SHAPE_HEX
 } fov_shape_type;
 
 /* The following aren't implemented and, hence, aren't used. If the the original library implements it later, we may want to copy it */
@@ -149,6 +150,41 @@ typedef struct {
     bool start_at_end;
 } fov_line_data;
 
+/** struct of calculated data for field of vision lines */
+typedef struct {
+    /** Parametrization variable used to count the "steps" of the line */
+    int t;
+
+    /** Parametrization value of t for where line is blocked, if applicable */
+    int block_t;
+
+    /** Parametrization value of t for where line reaches destination tile */
+    int dest_t;
+
+    /** "real" x from which the line originates */
+    float source_x;
+
+    /** "real" y from which the line originates */
+    float source_y;
+
+    /** Size of single step in x direction, so for t'th step, delta_x = t*step_x */
+    float step_x;
+
+    /** Size of single step in y direction, so for t'th step, delta_y = t*step_y */
+    float step_y;
+
+    /** Epsilon used to round toward the correct chirality or based on adjacent obstructed grids */
+    float eps_x;
+
+    /** Epsilon used to round toward the correct chirality or based on adjacent obstructed grids */
+    float eps_y;
+
+    /** Whether or not the line is blocked */
+    bool is_blocked;
+
+    /** Whether the line should begin at the destination (and continue away from the source) */
+    bool start_at_end;
+} hex_fov_line_data;
 
 /** The opposite direction to that given. */
 #define fov_direction_opposite(direction) ((fov_direction_type)(((direction)+4)&0x7))
@@ -307,8 +343,8 @@ void fov_beam(fov_settings_type *settings, void *map, void *source,
  * \param beam_angle The angle at the base of the beam of light, in degrees.
  */
 void fov_beam_any_angle(fov_settings_type *settings, void *map, void *source,
-						int source_x, int source_y, unsigned radius,
-						float dx, float dy, float beam_angle
+                        int source_x, int source_y, unsigned radius,
+                        float dx, float dy, float beam_angle
 );
 
 /**
@@ -327,10 +363,18 @@ void fov_beam_any_angle(fov_settings_type *settings, void *map, void *source,
  * \param dest_y y-axis coordinate from which to end.
  * \param start_at_end if true, the line will begin at the destination (x, y) and continue away from source (x, y)
  */
-void fov_create_los_line(fov_settings_type *settings, void *map, void *source, fov_line_data *line,
-                                                int source_x, int source_y,
-                                                int dest_x, int dest_y,
-                                                bool start_at_end
+void fov_create_los_line(fov_settings_type *settings, void *map, void *source,
+                         fov_line_data *line,
+                         int source_x, int source_y,
+                         int dest_x, int dest_y,
+                         bool start_at_end
+); 
+
+void hex_fov_create_los_line(fov_settings_type *settings, void *map, void *source,
+                         hex_fov_line_data *line,
+                         int source_x, int source_y,
+                         int dest_x, int dest_y,
+                         bool start_at_end
 ); 
 
 #ifdef __cplusplus

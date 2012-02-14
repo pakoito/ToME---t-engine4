@@ -131,14 +131,14 @@ newTalent{
 			if not x or not y then return nil end
 		end
 
-		for i = -1, 1 do for j = -1, 1 do if game.level.map:isBound(x + i, y + j) then
-			if not game.level.map:checkAllEntities(x + i, y + j, "block_move") then
+		for _, coord in pairs(util.adjacentCoords(self.x, self.y)) do if game.level.map:isBound(coord[1], coord[2]) then
+			if not game.level.map:checkAllEntities(coord[1], coord[2], "block_move") then
 				-- Ok some explanation, we make a new *OBJECT* because objects can have energy and act
 				-- it stores the current terrain in "old_feat" and restores it when it expires
 				-- We CAN set an object as a terrain because they are all entities
 
 				local e = Object.new{
-					old_feat = game.level.map(x + i, y + j, Map.TERRAIN),
+					old_feat = game.level.map(coord[1], coord[2], Map.TERRAIN),
 					name = "summoned wall", image = "terrain/granite_wall1.png",
 					display = '#', color_r=255, color_g=255, color_b=255, back_color=colors.GREY,
 					always_remember = true,
@@ -146,7 +146,7 @@ newTalent{
 					block_move = true,
 					block_sight = true,
 					temporary = t.getDuration(self, t),
-					x = x + i, y = y + j,
+					x = coord[1], y = coord[2],
 					canAct = false,
 					act = function(self)
 						self:useEnergy()
@@ -166,9 +166,9 @@ newTalent{
 					summoner = self,
 				}
 				game.level:addEntity(e)
-				game.level.map(x + i, y + j, Map.TERRAIN, e)
+				game.level.map(coord[1], coord[2], Map.TERRAIN, e)
 			end
-		end end end
+		end end
 
 		game:playSoundNear(self, "talents/earth")
 		return true

@@ -33,9 +33,10 @@ local function forceHit(self, target, sourceX, sourceY, damage, knockback, knock
 	if not target.dead and knockback and knockback > 0 and target:canBe("knockback") and (target.never_move or 0) < 1 then
 		-- give direct hit a direction?
 		if sourceX == target.x and sourceY == target.y then
-			local newDirection = rng.range(1, 8)
-			sourceX = sourceX + dir_to_coord[newDirection][1]
-			sourceY = sourceY + dir_to_coord[newDirection][2]
+			local newDirection = rng.table(util.adjacentDirs())
+			local dx, dy = util.dirToCoord(newDirection, sourceX, sourceY)
+			sourceX = sourceX + dx
+			sourceY = sourceY + dy
 		end
 
 		local block_actor = function(_, bx, by) return game.level.map:checkEntity(bx, by, Map.TERRAIN, "block_move", target) end

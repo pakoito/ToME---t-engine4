@@ -46,11 +46,13 @@ newAI("move_snake", function(self)
 			elseif rd == 2 then
 				-- move to the left
 				local dir = util.getDir(tx, ty, self.x, self.y)
-				tx, ty = util.coordAddDir(self.x, self.y, dir_sides[dir].left)
+				local nextDir = util.dirSides(dir, self.x, self.y)
+				tx, ty = util.coordAddDir(self.x, self.y, nextDir and nextDir.left or dir)
 			elseif rd == 3 then
 				-- move to the right
 				local dir = util.getDir(tx, ty, self.x, self.y)
-				tx, ty = util.coordAddDir(self.x, self.y, dir_sides[dir].right)
+				local nextDir = util.dirSides(dir, self.x, self.y)
+				tx, ty = util.coordAddDir(self.x, self.y, nextDir and nextDir.right or dir)
 			end
 			return self:moveDirection(tx, ty)
 		end

@@ -191,8 +191,26 @@ end
 
 --- Moves into the given direction (calls actor:move() internally)
 function _M:moveDir(dir)
-	local dx, dy = dir_to_coord[dir][1], dir_to_coord[dir][2]
+	local dx, dy = util.dirToCoord(dir, self.x, self.y)
+	if dir ~= 5 then self.doPlayerSlide = config.settings.player_slide end
+
+	-- Handles zig-zagging for non-square grids
+	local zig_zag = util.dirZigZag(dir, self.x, self.y)
+	local next_zig_zag = util.dirNextZigZag(dir, self.x, self.y)
+	if next_zig_zag then -- in hex mode, {1,2,3,7,8,9} dirs
+		self.zig_zag = next_zig_zag
+	elseif zig_zag then -- in hex mode, {4,6} dirs
+		self.zig_zag  = self.zig_zag or "zig"
+		local dir2 = zig_zag[self.zig_zag]
+		dx, dy = util.dirToCoord(dir2, self.x, self.y)
+		local nx, ny = util.coordAddDir(self.x, self.y, dir2)
+		self.zig_zag = util.dirNextZigZag(self.zig_zag, nx, ny)
+		if dir ~= 5 then self.doPlayerSlide = true end
+	end
+
 	local x, y = self.x + dx, self.y + dy
+	self.move_dir = dir
+	
 	return self:move(x, y)
 end
 

@@ -37,7 +37,7 @@ newAI("move_dmap", function(self)
 		local c = a:distanceMap(self.x, self.y)
 		if not c then return self:runAI("move_simple") end
 		local dir = 5
-		for i = 1, 9 do
+		for _, i in ipairs(util.adjacentDirs()) do
 			local sx, sy = util.coordAddDir(self.x, self.y, i)
 			local cd = a:distanceMap(sx, sy)
 --			print("looking for dmap", dir, i, "::", c, cd)
@@ -55,7 +55,7 @@ newAI("flee_dmap", function(self)
 		local c = a:distanceMap(self.x, self.y)
 		if not c then return end
 		local dir = 5
-		for i = 1, 9 do
+		for _, i in ipairs(util.adjacentDirs()) do
 			local sx, sy = util.coordAddDir(self.x, self.y, i)
 			local cd = a:distanceMap(sx, sy)
 --			print("looking for dmap", dir, i, "::", c, cd)

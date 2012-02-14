@@ -166,6 +166,21 @@ function table.update(dst, src, deep)
 	end
 end
 
+--- Creates a read-only table
+function table.readonly(src)
+   for k, v in pairs(src) do
+	if type(v) == "table" then
+		src[k] = table.readonly(v)
+	end
+   end
+   return setmetatable(src, {
+     __newindex = function(src, key, value)
+                    error("Attempt to modify read-only table")
+                  end,
+     __metatable = false
+   });
+end
+
 function string.ordinal(number)
 	local suffix = "th"
 	number = tonumber(number)
@@ -882,8 +897,7 @@ setmetatable(tstring, {
 	end,
 })
 
-
-dir_to_angle = {
+local dir_to_angle = table.readonly{
 	[1] = 225,
 	[2] = 270,
 	[3] = 315,
@@ -894,7 +908,8 @@ dir_to_angle = {
 	[8] = 90,
 	[9] = 45,
 }
-dir_to_coord = {
+
+local dir_to_coord = table.readonly{
 	[1] = {-1, 1},
 	[2] = { 0, 1},
 	[3] = { 1, 1},
@@ -905,7 +920,8 @@ dir_to_coord = {
 	[8] = { 0,-1},
 	[9] = { 1,-1},
 }
-coord_to_dir = {
+
+local coord_to_dir = table.readonly{
 	[-1] = {
 		[-1] = 7,
 		[ 0] = 4,
@@ -923,20 +939,19 @@ coord_to_dir = {
 	},
 }
 
-dir_sides =
-{
-	[1] = {left=2, right=4},
-	[2] = {left=3, right=1},
-	[3] = {left=6, right=2},
-	[4] = {left=1, right=7},
-	[5] = {left=7, right=9}, -- To avoid problems
-	[6] = {left=9, right=3},
-	[7] = {left=4, right=8},
-	[8] = {left=7, right=9},
-	[9] = {left=8, right=6},
+local dir_sides = table.readonly{
+	[1] = {hard_left=3, left=2, right=4, hard_right=7},
+	[2] = {hard_left=6, left=3, right=1, hard_right=4},
+	[3] = {hard_left=9, left=6, right=2, hard_right=1},
+	[4] = {hard_left=2, left=1, right=7, hard_right=8},
+	[5] = {hard_left=4, left=7, right=9, hard_right=6}, -- To avoid problems
+	[6] = {hard_left=8, left=9, right=3, hard_right=2},
+	[7] = {hard_left=1, left=4, right=8, hard_right=9},
+	[8] = {hard_left=4, left=7, right=9, hard_right=6},
+	[9] = {hard_left=7, left=8, right=6, hard_right=3},
 }
 
-opposed_dir = {
+local opposed_dir = table.readonly{
 	[1] = 9,
 	[2] = 8,
 	[3] = 7,
@@ -948,17 +963,247 @@ opposed_dir = {
 	[9] = 1,
 }
 
+local hex_dir_to_angle = table.readonly{
+	[1] = 210,
+	[2] = 270,
+	[3] = 330,
+	[4] = 180,
+	[5] = 0,
+	[6] = 0,
+	[7] = 150,
+	[8] = 90,
+	[9] = 30,
+}
+
+local hex_dir_to_coord = table.readonly{
+	[0] = {
+		[1] = {-1, 0},
+		[2] = { 0, 1},
+		[3] = { 1, 0},
+		[4] = {-1, 0},
+		[5] = { 0, 0},
+		[6] = { 1, 0},
+		[7] = {-1,-1},
+		[8] = { 0,-1},
+		[9] = { 1,-1},
+	},
+	[1] = {
+		[1] = {-1, 1},
+		[2] = { 0, 1},
+		[3] = { 1, 1},
+		[4] = {-1, 0},
+		[5] = { 0, 0},
+		[6] = { 1, 0},
+		[7] = {-1, 0},
+		[8] = { 0,-1},
+		[9] = { 1, 0},
+	}
+}
+
+local hex_coord_to_dir = table.readonly{
+	[0] = {
+		[-1] = {
+			[-1] = 7,
+			[ 0] = 1, -- or 4
+			[ 1] = 1,
+		},
+		[ 0] = {
+			[-1] = 8,
+			[ 0] = 5,
+			[ 1] = 2,
+		},
+		[ 1] = {
+			[-1] = 9,
+			[ 0] = 3, -- or 6
+			[ 1] = 3,
+		},
+	},
+	[1] = {
+		[-1] = {
+			[-1] = 7,
+			[ 0] = 7, -- or 4
+			[ 1] = 1,
+		},
+		[ 0] = {
+			[-1] = 8,
+			[ 0] = 5,
+			[ 1] = 2,
+		},
+		[ 1] = {
+			[-1] = 9,
+			[ 0] = 9, -- or 6
+			[ 1] = 3,
+		},
+	}
+}
+
+local hex_dir_sides = table.readonly{
+	[0] = {
+		[1] = {hard_left=3, left=2, right=7, hard_right=8},
+		[2] = {hard_left=9, left=3, right=1, hard_right=7},
+		[3] = {hard_left=8, left=9, right=2, hard_right=1},
+		[4] = {hard_left=2, left=1, right=7, hard_right=8},
+		[5] = {hard_left=1, left=7, right=9, hard_right=3}, -- To avoid problems
+		[6] = {hard_left=8, left=9, right=3, hard_right=2},
+		[7] = {hard_left=2, left=1, right=8, hard_right=9},
+		[8] = {hard_left=1, left=7, right=9, hard_right=3},
+		[9] = {hard_left=7, left=8, right=3, hard_right=2},
+	},
+	[1] = {
+		[1] = {hard_left=3, left=2, right=7, hard_right=8},
+		[2] = {hard_left=9, left=3, right=1, hard_right=7},
+		[3] = {hard_left=8, left=9, right=2, hard_right=1},
+		[4] = {hard_left=2, left=1, right=7, hard_right=8},
+		[5] = {hard_left=1, left=7, right=9, hard_right=3}, -- To avoid problems
+		[6] = {hard_left=8, left=9, right=3, hard_right=2},
+		[7] = {hard_left=2, left=1, right=8, hard_right=9},
+		[8] = {hard_left=1, left=7, right=9, hard_right=3},
+		[9] = {hard_left=7, left=8, right=3, hard_right=2},
+	}
+}
+
+local hex_next_zig_zag = table.readonly{
+	[1] = "zig",
+	[2] = "zig",
+	[3] = "zig",
+	[7] = "zag",
+	[8] = "zag",
+	[9] = "zag",
+	zag = "zig",
+	zig = "zag",
+}
+
+local hex_zig_zag = table.readonly{
+	[4] = {
+		zig = 7,
+		zag = 1,
+	},
+	[6] = {
+		zig = 9,
+		zag = 3,
+	},
+}
+
+local hex_opposed_dir = table.readonly{
+	[0] = {
+		[1] = 9,
+		[2] = 8,
+		[3] = 7,
+		[4] = 3,
+		[5] = 5,
+		[6] = 1,
+		[7] = 3,
+		[8] = 2,
+		[9] = 1,
+	},
+	[1] = {
+		[1] = 9,
+		[2] = 8,
+		[3] = 7,
+		[4] = 9,
+		[5] = 5,
+		[6] = 7,
+		[7] = 3,
+		[8] = 2,
+		[9] = 1,
+	},
+}
+
 util = {}
+
+local is_hex = 0
+function util.hexOffset(x)
+	return 0.5 * (x % 2) * is_hex
+end
+
+function util.isHex()
+	return is_hex == 1
+end
+
+function util.dirToAngle(dir, sx, sy)
+	return is_hex == 0 and dir_to_angle[dir] or hex_dir_to_angle[dir]
+end
+
+function util.dirToCoord(dir, sx, sy)
+	return unpack(is_hex == 0 and dir_to_coord[dir] or hex_dir_to_coord[sx % 2][dir])
+end
+
+function util.coordToDir(dx, dy, sx, sy)
+	return is_hex == 0 and coord_to_dir[dx][dy] or hex_coord_to_dir[sx % 2][dx][dy]
+end
+
+function util.dirSides(dir, sx, sy)
+	return is_hex == 0 and dir_sides[dir] or hex_dir_sides[sx % 2][dir]
+end
+
+function util.dirZigZag(dir, sx, sy)
+	if is_hex == 0 then
+		return nil
+	else
+		return hex_zig_zag[dir]
+	end
+end
+
+function util.dirNextZigZag(dir, sx, sy)
+	if is_hex == 0 then
+		return nil
+	else
+		return hex_next_zig_zag[dir]
+	end
+end
+
+function util.opposedDir(dir, sx, sy)
+	return is_hex == 0 and opposed_dir[dir] or hex_opposed_dir[sx % 2][dir]
+end
 
 function util.getDir(x1, y1, x2, y2)
 	local xd, yd = x1 - x2, y1 - y2
 	if xd ~= 0 then xd = xd / math.abs(xd) end
 	if yd ~= 0 then yd = yd / math.abs(yd) end
-	return coord_to_dir[xd][yd], xd, yd
+	return util.coordToDir(xd, yd, x2, y2), xd, yd
+end
+
+function util.primaryDirs()
+	return is_hex == 0 and {2, 4, 6, 8} or {1, 2, 3, 7, 8, 9}
+end
+
+function util.adjacentDirs()
+	return is_hex == 0 and {1, 2, 3, 4, 6, 7, 8, 9} or {1, 2, 3, 7, 8, 9}
+end
+
+--- A list of adjacent coordinates depending on core.fov.set_algorithm.
+-- @param x x-coordinate of the source tile.
+-- @param y y-coordinate of the source tile.
+-- @param no_diagonals Boolean that restricts diagonal motion.
+-- @param no_cardinals Boolean that restricts cardinal motion.
+-- @return Array of {x, y} coordinate arrays indexed by direction from source.
+function util.adjacentCoords(x, y, no_diagonals, no_cardinals)
+	local coords = {}
+
+	if is_hex == 0 then
+		if not no_cardinals then
+			coords[6] = {x+1, y  }
+			coords[4] = {x-1, y  }
+			coords[2] = {x  , y+1}
+			coords[8] = {x  , y-1}
+		end
+		if not no_diagonals then
+			coords[3] = {x+1, y+1}
+			coords[9] = {x+1, y-1}
+			coords[1] = {x-1, y+1}
+			coords[7] = {x-1, y-1}
+		end
+	elseif not no_cardinals then
+		for _, dir in ipairs(util.primaryDirs()) do
+			coords[dir] = {util.coordAddDir(x, y, dir)}
+		end
+	end
+	return coords
 end
 
 function util.coordAddDir(x, y, dir)
-	return x + dir_to_coord[dir][1], y + dir_to_coord[dir][2]
+	local dx, dy = util.dirToCoord(dir, x, y)
+	return x + dx, y + dy
 end
 
 function util.boundWrap(i, min, max)
@@ -1100,13 +1345,15 @@ function core.fov.line(sx, sy, tx, ty, block, start_at_end)
 			return game.level.map:checkAllEntities(x, y, what)
 		end
 
-	local line = core.fov.line_base(sx, sy, tx, ty, game.level.map.w, game.level.map.h, start_at_end, block)
+	local line = is_hex == 0 and core.fov.line_base(sx, sy, tx, ty, game.level.map.w, game.level.map.h, start_at_end, block) or
+			core.fov.hex_line_base(sx, sy, tx, ty, game.level.map.w, game.level.map.h, start_at_end, block)
 	local l = {}
 	l.line = line
 	l.block = block
 	l.set_corner_block = core.fov.set_corner_block
 	local mt = {}
 	mt.__index = function(t, key, ...) if t.line[key] then return t.line[key] end end
+	mt.__call = function(t, ...) return t.line:step() end
 	setmetatable(l, mt)
 
 	return l
@@ -1120,7 +1367,7 @@ end
 -- ..r
 -- Default is "square"
 function core.fov.set_permissiveness(val)
-	val = type(val) == "string" and (string.lower(val) == "square" and 0.0 or
+	val = type(val) == "string" and ((string.lower(val) == "default" or string.lower(val) == "square") and 0.0 or
 						string.lower(val) == "diamond" and 0.5 or
 						string.lower(val) == "octagon" and 1 - math.sqrt(0.5) or   --0.29289321881345247560 or
 						string.lower(val) == "firstpeek" and 0.167) or
@@ -1139,18 +1386,44 @@ end
 -- Default is "circle_round"
 function core.fov.set_vision_shape(val)
 	sval = type(val) == "string" and string.lower(val)
-	val = sval and ((sval == "circle" or sval == "circle_round") and 0 or
+	val = sval and ((sval == "default" or sval == "circle" or sval == "circle_round") and 0 or
 				sval == "circle_floor" and 1 or
 				sval == "circle_ceil" and 2 or
 				sval == "circle_plus1" and 3 or
 				sval == "octagon" and 4 or
 				sval == "diamond" and 5 or
-				sval == "square" and 6) or
+				sval == "square" and 6 or
+				(sval == "hex" or sval == "hexagon") and 7) or
 			type(tonumber(val)) == "number" and tonumber(val)
 
 	if type(val) ~= "number" then return end
 	core.fov.set_vision_shape_base(val)
 	return val
+end
+
+function core.fov.set_algorithm(val)
+	sval = type(val) == "string" and string.lower(val)
+	val = sval and ((sval == "default" or sval == "shadow" or sval == "shadowcasting") and 0 or
+				(sval == "hex" or sval == "hexagon") and 1) or
+			type(tonumber(val)) == "number" and tonumber(val)
+
+	if type(val) ~= "number" then return end
+	if val == 1 then
+		core.fov.set_vision_shape("hex")
+		is_hex = 1
+	else
+		core.fov.set_vision_shape("circle")
+		core.fov.set_permissiveness("square")
+		is_hex = 0
+	end
+--	core.fov.set_algorithm_base(val)
+	return val
+end
+
+--- create a basic bresenham line (or hex equivalent)
+line = {}
+function line.new(sx, sy, tx, ty)
+	return is_hex == 0 and bresenham.new(sx, sy, tx, ty) or core.fov.line(sx, sy, tx, ty, function() end, false)
 end
 
 --- Finds free grids around coords in a radius.

@@ -224,6 +224,11 @@ newTalent{
 	stamina = 30,
 	tactical = { ESCAPE = { knockback = 2 }, DEFEND = { knockback = 0.5 } },
 	on_pre_use = function(self, t, silent) if not self:hasShield() then if not silent then game.logPlayer(self, "You require a weapon and a shield to use this talent.") end return false end return true end,
+	range = 0,
+	radius = 1,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), selffire=false, radius=self:getTalentRadius(t)}
+	end,
 	action = function(self, t)
 		local shield = self:hasShield()
 		if not shield then
@@ -231,10 +236,10 @@ newTalent{
 			return nil
 		end
 
-		for i = -1, 1 do for j = -1, 1 do
-			local x, y = self.x + i, self.y + j
-			if (self.x ~= x or self.y ~= y) and game.level.map:isBound(x, y) and game.level.map(x, y, Map.ACTOR) then
-				local target = game.level.map(x, y, Map.ACTOR)
+		local tg = self:getTalentTarget(t)
+		self:project(tg, self.x, self.y, function(px, py, tg, self)
+			local target = game.level.map(x, y, Map.ACTOR)
+			if target then
 				if target:checkHit(self:combatAttack(shield.special_combat), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("knockback") then
 					target:knockback(self.x, self.y, 2 + self:getTalentLevel(t))
 					if target:canBe("stun") then target:setEffect(target.EFF_DAZED, 3 + self:getStr(8), {}) end
@@ -242,7 +247,7 @@ newTalent{
 					game.logSeen(target, "%s resists the knockback!", target.name:capitalize())
 				end
 			end
-		end end
+		end)
 
 		return true
 	end,

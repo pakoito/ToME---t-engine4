@@ -287,15 +287,15 @@ function _M:buildTile(tile, bx, by, rid)
 	local opens = {}
 	for i, o in ipairs(tile.openings) do
 		print(" * opening in dir ", o[3], "::", o[1], o[2])
-		local coord = dir_to_coord[o[3]]
+		local x, y = util.dirToCoord(o[3], o[1], o[2])
 		local mts, type = self:findMatchingTiles(tile, o[3])
 		-- if we found no match for the given type try the other one
 		if #mts == 0 then mts, type = self:findMatchingTiles(tile, o[3], type == "room" and "tunnel" or "room") end
 
 		if #mts > 0 then
 			local mt = mts[rng.range(1, #mts)]
-			opens[#opens+1] = {bx + coord[1] + mt.stw, by + coord[2] + mt.sth, tile=mt.tile}
-			print("room at ",bx,by,"opens to",o[3],"::",bx + coord[1], by + coord[2])
+			opens[#opens+1] = {bx + x + mt.stw, by + y + mt.sth, tile=mt.tile}
+			print("room at ",bx,by,"opens to",o[3],"::",bx + x, by + y)
 		end
 	end
 
