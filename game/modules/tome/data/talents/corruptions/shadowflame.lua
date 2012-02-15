@@ -131,12 +131,13 @@ newTalent{
 	random_boss_rarity = 10,
 	tactical = { DISABLE = 3 },
 	range = 5,
+	on_pre_use = function(self, t) return self:canBe("planechange") end,
 	activate = function(self, t)
 		if game.zone.is_demon_plane then
 			game.logPlayer(self, "This spell can not be used from within the Fearscape.")
 			return
 		end
-		if not self:canBe("worldport") then
+		if not self:canBe("planechange") then
 			game.logPlayer(self, "The spell fizzles...")
 			return
 		end

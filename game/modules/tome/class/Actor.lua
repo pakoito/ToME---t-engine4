@@ -3144,7 +3144,8 @@ function _M:canBe(what)
 	if what == "stone" and rng.percent(100 * (self:attr("stone_immune") or 0)) then return false end
 	if what == "instakill" and rng.percent(100 * (self:attr("instakill_immune") or 0)) then return false end
 	if what == "teleport" and (rng.percent(100 * (self:attr("teleport_immune") or 0)) or self:attr("encased_in_ice")) then return false end
-	if what == "worldport" and game.level.data and game.level.data.no_worldport then return false end
+	if what == "worldport" and game.level and game.level.data and game.level.data.no_worldport then return false end
+	if what == "planechange" and game.level and game.level.data and game.level.data.no_planechange then return false end
 	if what == "summon" and self:attr("suppress_summon") then return false end
 	return true
 end
