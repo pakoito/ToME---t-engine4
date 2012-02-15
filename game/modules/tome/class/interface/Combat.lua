@@ -483,9 +483,9 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 
 	-- Onslaught
 	if hitted and self:attr("onslaught") then
-		local dir = util.getDir(target.x, target.y, self.x, self.y)
-		local lx, ly = util.coordAddDir(self.x, self.y, dir_sides[dir or 6].left)
-		local rx, ry = util.coordAddDir(self.x, self.y, dir_sides[dir or 6].right)
+		local dir = util.getDir(target.x, target.y, self.x, self.y) or 6
+		local lx, ly = util.coordAddDir(self.x, self.y, util.dirSides(dir, self.x, self.y).left)
+		local rx, ry = util.coordAddDir(self.x, self.y, util.dirSides(dir, self.x, self.y).right)
 		local lt, rt = game.level.map(lx, ly, Map.ACTOR), game.level.map(rx, ry, Map.ACTOR)
 
 		if target:checkHit(self:combatAttack(weapon), target:combatPhysicalResist(), 0, 95, 10) and target:canBe("knockback") then
@@ -1070,7 +1070,7 @@ function _M:physicalCrit(dam, weapon, target, atk, def)
 	if target:hasHeavyArmor() and target:knowTalent(target.T_ARMOUR_TRAINING) then
 		chance = chance - target:getTalentLevel(target.T_ARMOUR_TRAINING) * 1.9
 	end
-	
+
 	if target:attr("combat_critreduction") then
 		chance = chance - target:attr("combat_critreduction")
 	end

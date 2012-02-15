@@ -201,8 +201,8 @@ newTalent{
 		if core.fov.distance(self.x, self.y, x, y) == 1 then
 			-- get left and right side
 			local dir = util.getDir(x, y, self.x, self.y)
-			local lx, ly = util.coordAddDir(self.x, self.y, dir_sides[dir].left)
-			local rx, ry = util.coordAddDir(self.x, self.y, dir_sides[dir].right)
+			local lx, ly = util.coordAddDir(self.x, self.y, util.dirSides(dir, self.x, self.y).left)
+			local rx, ry = util.coordAddDir(self.x, self.y, util.dirSides(dir, self.x, self.y).right)
 			local lt, rt = game.level.map(lx, ly, Map.ACTOR), game.level.map(rx, ry, Map.ACTOR)
 
 			hit1 = self:attackTarget(target, nil, damage, true)

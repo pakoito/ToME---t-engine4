@@ -168,9 +168,9 @@ local function shadowMoveToLocationTarget(self)
 		-- try to move around actors..if we fail we will just try a a new target
 		if not self:canMove(tx, ty, false) then
 			local dir = util.getDir(tx, ty, self.x, self.y)
-			tx, ty = util.coordAddDir(self.x, self.y, dir_sides[dir].left)
+			tx, ty = util.coordAddDir(self.x, self.y, util.dirSides(dir, self.x, self.y).left)
 			if not self:canMove(tx, ty, false) then
-				tx, ty = util.coordAddDir(self.x, self.y, dir_sides[dir].right)
+				tx, ty = util.coordAddDir(self.x, self.y, util.dirSides(dir, self.x, self.y).right)
 				if not self:canMove(tx, ty, false) then
 					--game.logPlayer(self.summoner, "#PINK#%s move fails", self.name:capitalize())
 					return false

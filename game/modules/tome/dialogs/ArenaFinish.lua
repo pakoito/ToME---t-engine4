@@ -149,7 +149,7 @@ function _M:use(item)
 	elseif act == "dump" then
 		game:registerDialog(require("mod.dialogs.CharacterSheet").new(self.actor))
 	elseif act == "log" then
-		game:registerDialog(require("mod.dialogs.ShowChatLog").new("Message Log", 0.6, game.logdisplay, profile.chat))
+		game:registerDialog(require("mod.dialogs.ShowChatLog").new("Message Log", 0.6, game.uiset.logdisplay, profile.chat))
 	end
 end
 

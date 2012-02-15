@@ -109,13 +109,13 @@ function _M:resurrectBasic(actor)
 	game:unregisterDialog(self)
 	game.level.map:redisplay()
 	actor.energy.value = game.energy_to_act
-	
+
 	-- apply cursed equipment
 	if actor.hasTalent and actor.hasTalent(actor.T_DEFILING_TOUCH) then
 		local t = self:getTalentFromId(self.T_DEFILING_TOUCH)
 		t.updateCurses(self, t, true)
 	end
-	
+
 	actor.changed = true
 	game.paused = true
 end
@@ -195,7 +195,7 @@ function _M:use(item)
 	elseif act == "dump" then
 		game:registerDialog(require("mod.dialogs.CharacterSheet").new(self.actor))
 	elseif act == "log" then
-		game:registerDialog(require("mod.dialogs.ShowChatLog").new("Message Log", 0.6, game.logdisplay, profile.chat))
+		game:registerDialog(require("mod.dialogs.ShowChatLog").new("Message Log", 0.6, game.uiset.logdisplay, profile.chat))
 	elseif act == "cheat" then
 		game.logPlayer(self.actor, "#LIGHT_BLUE#You resurrect! CHEATER!")
 
@@ -247,7 +247,7 @@ end
 function _M:generateList()
 	local list = {}
 	local allow_res = true
-	
+
 	-- Pause the game
 	game:onTickEnd(function()
 		game.paused = true

@@ -214,8 +214,8 @@ newTalent{
 
 		local dir = util.getDir(x, y, self.x, self.y)
 		if dir == 5 then return nil end
-		local lx, ly = util.coordAddDir(self.x, self.y, dir_sides[dir].left)
-		local rx, ry = util.coordAddDir(self.x, self.y, dir_sides[dir].right)
+		local lx, ly = util.coordAddDir(self.x, self.y, util.dirSides(dir, self.x, self.y).left)
+		local rx, ry = util.coordAddDir(self.x, self.y, util.dirSides(dir, self.x, self.y).right)
 		local lt, rt = game.level.map(lx, ly, Map.ACTOR), game.level.map(rx, ry, Map.ACTOR)
 
 		local hit

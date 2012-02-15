@@ -957,8 +957,8 @@ static void map_update_seen_texture(map_type *map)
 		for (ii = 0; ii < map->w+10; ii++)
 		{
 			int i = ii, j = jj;
-			ptr = (((1+f)*j + (i & f)) * map->seens_map_w + (1+f)*i) * 4;
 			int ri = i-5, rj = j-5;
+			ptr = (((1+f)*j + (ri & f)) * map->seens_map_w + (1+f)*i) * 4;
 			ri = (ri < 0) ? 0 : (ri >= map->w) ? map->w-1 : ri;
 			rj = (rj < 0) ? 0 : (rj >= map->h) ? map->h-1 : rj;
 			if ((i < 0) || (j < 0) || (i >= map->w+10) || (j >= map->h+10))
