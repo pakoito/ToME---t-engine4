@@ -1079,6 +1079,8 @@ void fov_beam_any_angle(fov_settings_type *settings, void *map, void *source,
                     } else if (prev_blocked == 1) {                                                                             \
                         line->step_x = signx target_slope / (INV_SQRT_3*target_slope + 1);                                      \
                         line->step_y = signy 1 / (INV_SQRT_3*target_slope + 1);                                                 \
+                        line->is_blocked = true;                                                                                \
+                        line->block_t = line->dest_t - delta - 1;                                                               \
                         return;                                                                                                 \
                     }                                                                                                           \
                 } else if (prev_blocked == 1) {                                                                                 \
@@ -1092,6 +1094,8 @@ void fov_beam_any_angle(fov_settings_type *settings, void *map, void *source,
             } else if (prev_blocked == 1) {                                                                                     \
                 line->step_x = signx target_slope / (INV_SQRT_3*target_slope + 1);                                              \
                 line->step_y = signy 1 / (INV_SQRT_3*target_slope + 1);                                                         \
+                line->is_blocked = true;                                                                                        \
+                line->block_t = line->dest_t - delta - 1;                                                                       \
                 return;                                                                                                         \
             }                                                                                                                   \
             fx0 += fdx0;                                                                                                        \
@@ -1147,6 +1151,8 @@ void fov_beam_any_angle(fov_settings_type *settings, void *map, void *source,
                         line->eps_y = -GRID_EPSILON;                                                                            \
                     } else if (prev_blocked == 1) {                                                                             \
                         line->step_y = SQRT_3_2 * target_slope;                                                                 \
+                        line->is_blocked = true;                                                                                \
+                        line->block_t = line->dest_t - delta - 1;                                                               \
                         return;                                                                                                 \
                     }                                                                                                           \
                 } else if (prev_blocked == 1) {                                                                                 \
@@ -1157,6 +1163,8 @@ void fov_beam_any_angle(fov_settings_type *settings, void *map, void *source,
                 }                                                                                                               \
             } else if (prev_blocked == 1) {                                                                                     \
                 line->step_y = SQRT_3_2 * target_slope;                                                                         \
+                line->is_blocked = true;                                                                                        \
+                line->block_t = line->dest_t - delta - 1;                                                                       \
                 return;                                                                                                         \
             }                                                                                                                   \
             x = x signx 1;                                                                                                      \
@@ -1267,10 +1275,10 @@ void hex_fov_create_los_line(fov_settings_type *settings, void *map, void *sourc
         line->eps_x = (dy < 0.0f) ? GRID_EPSILON : -GRID_EPSILON;
         line->eps_y = (dx > 0.0f) ? GRID_EPSILON : -GRID_EPSILON;
     }
-    if (start_at_end) {
-        line->t = line->dest_t;
-    }
 */
+    if (start_at_end) {
+        line->t = (line->is_blocked) ? line->block_t : line->dest_t;
+    }
 }
 
 void fov_create_los_line(fov_settings_type *settings, void *map, void *source, fov_line_data *line,

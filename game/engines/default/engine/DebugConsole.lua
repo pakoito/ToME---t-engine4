@@ -210,10 +210,10 @@ function _M:init()
 				-- Find the longest common substring and complete it
 				local substring = array[1]:sub(#to_complete+1)
 				for i=2,#array do
-					local min_len = math.min(#array[i], #substring)
-					for j=#to_complete,min_len do
-						if substring:sub(j, j) ~= array[i]:sub(j, j) then
-							substring = substring:sub(#to_complete+1, util.bound(j-1, 0))
+					local min_len = math.min(#array[i]-#to_complete, #substring)
+					for j=1,min_len do
+						if substring:sub(j, j) ~= array[i]:sub(#to_complete+j, #to_complete+j) then
+							substring = substring:sub(1, util.bound(j-1, 0))
 							break
 						end
 					end

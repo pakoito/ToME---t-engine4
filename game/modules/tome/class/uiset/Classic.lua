@@ -314,6 +314,7 @@ function _M:display(nb_keyframes)
 
 	-- Minimap display
 	if game.level and game.level.map and not self.no_minimap then
+		local map = game.level.map
 		game.zone_name_s:toScreenFull(
 			map.display_x + map.viewport.width - game.zone_name_w - 15,
 			map.display_y + 5,
