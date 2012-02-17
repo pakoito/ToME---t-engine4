@@ -543,9 +543,20 @@ static int sdl_surface_drawstring_newsurface_aa(lua_State *L)
 	return 1;
 }
 
-static font_make_texture_line(lua_State *L, SDL_Surface *s, int id, bool is_separator, int id_real_line, char *line_data, int line_data_size)
+static font_make_texture_line(lua_State *L, SDL_Surface *s, int id, bool is_separator, int id_real_line, char *line_data, int line_data_size, bool direct_uid_draw)
 {
-	lua_createtable(L, 0, 5);
+	lua_createtable(L, 0, 9);
+
+	if (direct_uid_draw)
+	{
+		lua_pushliteral(L, "_dduids");
+		lua_pushvalue(L, -4);
+		lua_rawset(L, -3);
+
+		// Replace dduids by a new one
+		lua_newtable(L);
+		lua_replace(L, -4);
+	}
 
 	lua_pushliteral(L, "_tex");
 	GLuint *t = (GLuint*)lua_newuserdata(L, sizeof(GLuint));
@@ -603,6 +614,7 @@ static int sdl_font_draw(lua_State *L)
 	int g = luaL_checknumber(L, 5);
 	int b = luaL_checknumber(L, 6);
 	bool no_linefeed = lua_toboolean(L, 7);
+	bool direct_uid_draw = lua_toboolean(L, 8);
 	int h = TTF_FontLineSkip(*f);
 	SDL_Color color = {r,g,b};
 
@@ -618,6 +630,12 @@ static int sdl_font_draw(lua_State *L)
 #endif
 	SDL_Surface *s = SDL_CreateRGBSurface(SDL_SWSURFACE | SDL_SRCALPHA, max_width, h, 32, rmask, gmask, bmask, amask);
 	SDL_FillRect(s, NULL, SDL_MapRGBA(s->format, 0, 0, 0, 0));
+
+	int id_dduid = 1;
+	if (direct_uid_draw)
+	{
+		lua_newtable(L);
+	}
 
 	lua_newtable(L);
 
@@ -656,7 +674,7 @@ static int sdl_font_draw(lua_State *L)
 			if (!no_linefeed && (force_nl || (txt && (size + txt->w > max_width))))
 			{
 				// Push it & reset the surface
-				font_make_texture_line(L, s, nb_lines, is_separator, id_real_line, line_data, line_data_size);
+				font_make_texture_line(L, s, nb_lines, is_separator, id_real_line, line_data, line_data_size, direct_uid_draw);
 				is_separator = FALSE;
 				SDL_FillRect(s, NULL, SDL_MapRGBA(s->format, 0, 0, 0, 0));
 //				printf("Ending previous line at size %d\n", size);
@@ -702,21 +720,54 @@ static int sdl_font_draw(lua_State *L)
 				}
 				// Entity UID
 				else if ((codestop - (next+1) > 4) && (*(next+1) == 'U') && (*(next+2) == 'I') && (*(next+3) == 'D') && (*(next+4) == ':')) {
-					lua_getglobal(L, "__get_uid_surface");
-					char *colon = next + 5;
-					while (*colon && *colon != ':') colon++;
-					lua_pushlstring(L, next+5, colon - (next+5));
-//					printf("Drawing UID %s\n", lua_tostring(L,-1));
-					lua_pushnumber(L, h);
-					lua_pushnumber(L, h);
-					lua_call(L, 3, 1);
-					if (lua_isuserdata(L, -1))
+					if (!direct_uid_draw)
 					{
-						SDL_Surface **img = (SDL_Surface**)auxiliar_checkclass(L, "sdl{surface}", -1);
-						sdlDrawImage(s, *img, size, 0);
-						size += (*img)->w;
+						lua_getglobal(L, "__get_uid_surface");
+						char *colon = next + 5;
+						while (*colon && *colon != ':') colon++;
+						lua_pushlstring(L, next+5, colon - (next+5));
+//						printf("Drawing UID %s\n", lua_tostring(L,-1));
+						lua_pushnumber(L, h);
+						lua_pushnumber(L, h);
+						lua_call(L, 3, 1);
+						if (lua_isuserdata(L, -1))
+						{
+							SDL_Surface **img = (SDL_Surface**)auxiliar_checkclass(L, "sdl{surface}", -1);
+							sdlDrawImage(s, *img, size, 0);
+							size += (*img)->w;
+						}
+						lua_pop(L, 1);
 					}
-					lua_pop(L, 1);
+					else
+					{
+						lua_getglobal(L, "__get_uid_entity");
+						char *colon = next + 5;
+						while (*colon && *colon != ':') colon++;
+						lua_pushlstring(L, next+5, colon - (next+5));
+						lua_call(L, 1, 1);
+						if (lua_istable(L, -1))
+						{
+//							printf("DirectDrawUID in font:draw %d : %d\n", size, h);
+							lua_createtable(L, 0, 4);
+
+							lua_pushliteral(L, "e");
+							lua_pushvalue(L, -3);
+							lua_rawset(L, -3);
+
+							lua_pushliteral(L, "x");
+							lua_pushnumber(L, size);
+							lua_rawset(L, -3);
+
+							lua_pushliteral(L, "w");
+							lua_pushnumber(L, h);
+							lua_rawset(L, -3);
+
+							lua_rawseti(L, -4, id_dduid++); // __dduids
+
+							size += h;
+						}
+						lua_pop(L, 1);
+					}
 				}
 				// Extra data
 				else if ((*(next+1) == '&')) {
@@ -801,7 +852,7 @@ static int sdl_font_draw(lua_State *L)
 		next++;
 	}
 
-	font_make_texture_line(L, s, nb_lines, is_separator, id_real_line, line_data, line_data_size);
+	font_make_texture_line(L, s, nb_lines, is_separator, id_real_line, line_data, line_data_size, direct_uid_draw);
 	if (size > max_size) max_size = size;
 
 	if (txt) SDL_FreeSurface(txt);
@@ -809,6 +860,8 @@ static int sdl_font_draw(lua_State *L)
 
 	lua_pushnumber(L, nb_lines);
 	lua_pushnumber(L, max_size);
+
+	if (direct_uid_draw) lua_remove(L, -4);
 
 	return 3;
 }

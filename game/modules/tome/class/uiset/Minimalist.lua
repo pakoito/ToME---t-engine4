@@ -1542,9 +1542,9 @@ function _M:display(nb_keyframes)
 	d.glTranslate(-self.places.gamelog.x, -self.places.gamelog.y, -0)
 
 	-- Chat log
-	d.glTranslate(self.places.chatlog.x, self.places.chatlog.y, 0)
-	self:displayChatLog(1, self.places.chatlog.x, self.places.chatlog.y)
-	d.glTranslate(-self.places.chatlog.x, -self.places.chatlog.y, -0)
+--	d.glTranslate(self.places.chatlog.x, self.places.chatlog.y, 0)
+--	self:displayChatLog(1, self.places.chatlog.x, self.places.chatlog.y)
+--	d.glTranslate(-self.places.chatlog.x, -self.places.chatlog.y, -0)
 
 	-- Toolbar
 	if game.show_npc_list then self.npcs_display:toScreen() else self.hotkeys_display:toScreen() end

@@ -411,7 +411,8 @@ end
 -- @param y where to display
 -- @param w the width
 -- @param h the height
-function _M:toScreen(tiles, x, y, w, h)
+-- @param a the alpha setting, defaults to 1
+function _M:toScreen(tiles, x, y, w, h, a)
 	local Map = require "engine.Map"
 	tiles = tiles or Map.tiles
 
@@ -421,7 +422,7 @@ function _M:toScreen(tiles, x, y, w, h)
 	for i = 1, Map.zdepth do
 		if mos[i] then list[#list+1] = mos[i] end
 	end
-	core.map.mapObjectsToScreen(x, y, w, h, unpack(list))
+	core.map.mapObjectsToScreen(x, y, w, h, a, unpack(list))
 end
 
 --- Resolves an entity

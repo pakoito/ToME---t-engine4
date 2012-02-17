@@ -357,6 +357,7 @@ static int map_objects_toscreen(lua_State *L)
 	int y = luaL_checknumber(L, 2);
 	int w = luaL_checknumber(L, 3);
 	int h = luaL_checknumber(L, 4);
+	float a = (lua_isnumber(L, 5) ? lua_tonumber(L, 5) : 1);
 
 	GLfloat vertices[3*4];
 	GLfloat texcoords[2*4] = {
@@ -366,10 +367,10 @@ static int map_objects_toscreen(lua_State *L)
 		0, 1,
 	};
 	GLfloat colors[4*4] = {
-		1, 1, 1, 1,
-		1, 1, 1, 1,
-		1, 1, 1, 1,
-		1, 1, 1, 1,
+		1, 1, 1, a,
+		1, 1, 1, a,
+		1, 1, 1, a,
+		1, 1, 1, a,
 	};
 
 	glTexCoordPointer(2, GL_FLOAT, 0, texcoords);
@@ -379,7 +380,7 @@ static int map_objects_toscreen(lua_State *L)
 	/***************************************************
 	 * Render
 	 ***************************************************/
-	int moid = 5;
+	int moid = 6;
 	while (lua_isuserdata(L, moid))
 	{
 		map_object *m = (map_object*)auxiliar_checkclass(L, "core{mapobj}", moid);
