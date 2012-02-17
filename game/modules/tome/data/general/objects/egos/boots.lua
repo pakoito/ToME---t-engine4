@@ -172,6 +172,7 @@ newEntity{
 newEntity{
 	power_source = {technique=true},
 	name = "stalker's ", prefix=true, instant_resolve=true,
+	keywords = {stalker=true},
 	level_range = {1, 50},
 	rarity = 5,
 	cost = 6,
@@ -357,21 +358,21 @@ newEntity{
 		},
 	},
 }
--- TODO: Make into an artifact effect and remove
+
 newEntity{
 	power_source = {arcane=true},
 	name = " of spellbinding", suffix=true, instant_resolve=true,
 	keywords = {spellbinding=true},
-	level_range = {10, 50},
+	level_range = {30, 50},
 	greater_ego = 1,
-	rarity = 35,
+	rarity = 30,
 	cost = 30,
-	max_power = 80, power_regen = 1,
-	use_talent = { id = Talents.T_METAFLOW, level = 2, power = 80 },
 	wielder = {
 		inc_stats = {
 			[Stats.STAT_MAG] = resolvers.mbonus_material(5, 1),
 		},
+		combat_spellresist = resolvers.mbonus_material(7, 1),
+		spell_cooldown_reduction = 0.1,
 	},
 }
 

@@ -131,7 +131,7 @@ newTalent{
 			if not x or not y then return nil end
 		end
 
-		for _, coord in pairs(util.adjacentCoords(self.x, self.y)) do if game.level.map:isBound(coord[1], coord[2]) then
+		for _, coord in pairs(util.adjacentCoords(x, y)) do if game.level.map:isBound(coord[1], coord[2]) then
 			if not game.level.map:checkAllEntities(coord[1], coord[2], "block_move") then
 				-- Ok some explanation, we make a new *OBJECT* because objects can have energy and act
 				-- it stores the current terrain in "old_feat" and restores it when it expires

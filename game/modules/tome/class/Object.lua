@@ -760,6 +760,7 @@ function _M:getTextualDesc(compare_with)
 
 		compare_fields(w, compare_with, field, "combat_spellpower", "%+d", "Spellpower: ")
 		compare_fields(w, compare_with, field, "combat_spellcrit", "%+d%%", "Spell crit. chance: ")
+		compare_fields(w, compare_with, field, "spell_cooldown_reduction", "%d%%", "Lowers spell cool-downs by: ", 100)
 
 		compare_fields(w, compare_with, field, "combat_mindpower", "%+d", "Mindpower: ")
 		compare_fields(w, compare_with, field, "combat_mindcrit", "%+d%%", "Mental crit. chance: ")

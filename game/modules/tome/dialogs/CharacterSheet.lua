@@ -639,11 +639,16 @@ function _M:drawDialog(kind, actor_to_compare)
 		self:mouseTooltip(self.TOOLTIP_SPELL_CRIT, s:drawColorStringBlended(self.font,  ("Crit. chance: #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h
 		text = compare_fields(player, actor_to_compare, function(actor, ...) return actor:combatSpellSpeed() end, "%.2f%%", "%+.2f%%", 100)
 		self:mouseTooltip(self.TOOLTIP_SPELL_SPEED, s:drawColorStringBlended(self.font, ("Spell speed : #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h
+		text = compare_fields(player, actor_to_compare, function(actor, ...) return (1 - (actor.spell_cooldown_reduction or 0)) * 100 end, "%3d%%", "%+.0f%%")
+		self:mouseTooltip(self.TOOLTIP_SPELL_COOLDOWN  , s:drawColorStringBlended(self.font,   ("Spell cooldown: #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h
 		h = h + self.font_h
+		s:drawColorStringBlended(self.font, "#LIGHT_BLUE#Mental:", w, h, 255, 255, 255, true) h = h + self.font_h
 		text = compare_fields(player, actor_to_compare, function(actor, ...) return actor:combatMindpower() end, "%3d", "%+.0f")
 		dur_text = ("%d"):format(math.floor(player:combatMindpower()/5))
 		self:mouseTooltip(self.TOOLTIP_MINDPOWER, s:drawColorStringBlended(self.font, ("Mindpower: #00ff00#%s"):format(text, dur_text), w, h, 255, 255, 255, true)) h = h + self.font_h
-
+		text = compare_fields(player, actor_to_compare, function(actor, ...) return actor:combatMindCrit() end, "%d%%", "%+.0f%%")
+		self:mouseTooltip(self.TOOLTIP_MIND_CRIT, s:drawColorStringBlended(self.font,  ("Crit. chance: #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h
+		
 		h = 0
 		w = self.w * 0.5
 
@@ -775,7 +780,9 @@ function _M:drawDialog(kind, actor_to_compare)
 		self:mouseTooltip(self.TOOLTIP_DEFENSE, s:drawColorStringBlended(self.font,           ("Defense         : #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h
 		text = compare_fields(player, actor_to_compare, function(actor, ...) return actor:combatDefenseRanged(true) end, "%3d", "%+.0f")
 		self:mouseTooltip(self.TOOLTIP_RDEFENSE,s:drawColorStringBlended(self.font,           ("Ranged Defense  : #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h
-
+		text = compare_fields(player, actor_to_compare, function(actor, ...) return actor:combatCritReduction()  end, "%d%%", "%+.0f%%")
+		self:mouseTooltip(self.TOOLTIP_CRIT_REDUCTION,s:drawColorStringBlended(self.font,           ("Crit. Reduction  : #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h
+		
 		h = h + self.font_h
 		s:drawColorStringBlended(self.font, "#LIGHT_BLUE#Saves:", w, h, 255, 255, 255, true) h = h + self.font_h
 		text = compare_fields(player, actor_to_compare, function(actor, ...) return math.floor(actor:combatPhysicalResist(true)) end, "%3d", "%+.0f")

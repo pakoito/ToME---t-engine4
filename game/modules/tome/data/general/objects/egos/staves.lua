@@ -275,21 +275,36 @@ newEntity{
 	use_talent = { id = Talents.T_DISPLACEMENT_SHIELD, level = 4, power = 80 },
 }
 
--- TODO: Make into an artifact effect and remove
 newEntity{
 	power_source = {arcane=true},
 	name = " of channeling", suffix=true, instant_resolve=true,
 	keywords = {channeling=true},
 	level_range = {30, 50},
 	greater_ego = 1,
-	rarity = 38,
+	rarity = 20,
 	cost = 45,
 	wielder = {
 		combat_spellpower = resolvers.mbonus_material(12, 3),
 		mana_regen = resolvers.mbonus_material(30, 10, function(e, v) v=v/100 return 0, v end),
 	},
-	max_power = 80, power_regen = 1,
-	use_talent = { id = Talents.T_METAFLOW, level = 3, power = 80 },
+	max_power = 30, power_regen = 1,
+	use_power = { name = "channel mana (increasing mana regen by 500% for ten turns)", power = 30,
+		use = function(self, who)
+			if who.mana_regen > 0 and not who:hasEffect(who.EFF_MANASURGE) then
+				who:setEffect(who.EFF_MANASURGE, 10, {power=who.mana_regen * 5})
+			else
+				if who.mana_regen < 0 then
+					game.logPlayer(who, "Your negative mana regeneration rate is unaffected by the staff.")
+				elseif who:hasEffect(who.EFF_MANASURGE) then
+					game.logPlayer(who, "Another mana surge is currently active.")
+				else
+					game.logPlayer(who, "Your nonexistant mana regeneration rate is unaffected by the staff.")
+				end
+			end
+			game.logSeen(who, "%s is channeling mana!", who.name:capitalize())
+			return {id=true, used=true}
+		end
+	},
 }
 
 newEntity{

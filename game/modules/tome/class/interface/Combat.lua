@@ -1042,6 +1042,18 @@ function _M:combatSummonSpeed()
 	return math.max(1 - ((self:attr("fast_summons") or 0) / 100), 0.1)
 end
 
+--- Computes physical crit chance reduction
+function _M:combatCritReduction()
+	local crit_reduction = 0
+	if self:hasHeavyArmor() and self:knowTalent(self.T_ARMOUR_TRAINING) then
+		crit_reduction = crit_reduction + self:getTalentLevel(self.T_ARMOUR_TRAINING) * 1.9
+	end
+	if self:attr("combat_crit_reduction") then
+		crit_reduction = crit_reduction + self:attr("combat_crit_reduction")
+	end
+	return crit_reduction
+end
+
 --- Computes physical crit for a damage
 function _M:physicalCrit(dam, weapon, target, atk, def)
 	local tier_diff = self:getTierDiff(atk, def)
@@ -1054,8 +1066,8 @@ function _M:physicalCrit(dam, weapon, target, atk, def)
 	local crit = false
 	if self:knowTalent(self.T_BACKSTAB) and target:attr("stunned") then chance = chance + self:getTalentLevel(self.T_BACKSTAB) * 10 end
 
-	if target:attr("combat_critical") then
-		chance = chance + target:attr("combat_critical")
+	if target:attr("combat_crit_vulnerable") then
+		chance = chance + target:attr("combat_crit_vulnerable")
 	end
 	if target:hasEffect(target.EFF_SET_UP) then
 		local p = target:hasEffect(target.EFF_SET_UP)
@@ -1063,17 +1075,8 @@ function _M:physicalCrit(dam, weapon, target, atk, def)
 			chance = chance + p.power
 		end
 	end
-	if target:hasEffect(target.EFF_OFFGUARD) then
-		chance = chance + 10
-	end
 
-	if target:hasHeavyArmor() and target:knowTalent(target.T_ARMOUR_TRAINING) then
-		chance = chance - target:getTalentLevel(target.T_ARMOUR_TRAINING) * 1.9
-	end
-
-	if target:attr("combat_critreduction") then
-		chance = chance - target:attr("combat_critreduction")
-	end
+	chance = chance - target:combatCritReduction()
 
 	if target:hasEffect(target.EFF_DISMAYED) then
 		chance = 100

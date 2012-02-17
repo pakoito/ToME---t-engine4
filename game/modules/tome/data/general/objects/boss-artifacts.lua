@@ -1145,7 +1145,7 @@ Though clearly a powerful piece, it must once have been much greater.]],
 		knockback_immune = 0.3,
 
 		combat_physresist = 15,
-		combat_critreduction = 20,
+		combat_crit_reduction = 20,
 	},
 }
 

@@ -1456,8 +1456,10 @@ newEffect{
 	on_gain = function(self, err) return nil, "+Off-guard" end,
 	on_lose = function(self, err) return nil, "-Off-guard" end,
 	activate = function(self, eff)
+		eff.crit_vuln = self:addTemporaryValue("combat_crit_vulnerable", 10) -- increases chance to be crit
 	end,
 	deactivate = function(self, eff)
+		self:removeTemporaryValue("combat_crit_vulnerable", eff.crit_vuln)
 	end,
 }
 

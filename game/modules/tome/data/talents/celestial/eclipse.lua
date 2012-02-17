@@ -84,8 +84,8 @@ newTalent{
 	getDarknessDamage = function(self, t) return self:combatTalentSpellDamage(t, 15, 70) end,
 	on_crit = function(self, t)
 		if self:getPositive() < 2 or self:getNegative() < 2 then
-			self:forceUseTalent(t.id, {ignore_energy=true})
-			return
+		--	self:forceUseTalent(t.id, {ignore_energy=true})
+			return nil
 		end
 		local tgts = {}
 		local grids = core.fov.circle_grids(self.x, self.y, 10, true)
@@ -127,7 +127,8 @@ newTalent{
 		local lightdamage = t.getLightDamage(self, t)
 		local darknessdamage = t.getDarknessDamage(self, t)
 		return ([[Each time one of your spells is a critical you project a bolt of light or shadow at %d targets in a radius of 10, doing %0.2f light damage or %0.2f darkness damage.
-		The damage scales with the Magic stat and each bolt fired will cost 2 positive or negative energy respectively.]]):
+		This effect costs 2 positive or 2 negative energy each time it's triggered and will not trigger if either your positive or negative energy is below 2.
+		The damage scales with the Magic stat.]]):
 		format(targetcount, damDesc(self, DamageType.LIGHT, lightdamage), damDesc(self, DamageType.DARKNESS, darknessdamage))
 	end,
 }
@@ -142,7 +143,7 @@ newTalent{
 	sustain_negative = 10,
 	tactical = { DEFEND = 2, ESCAPE = 2 },
 	getInvisibilityPower = function(self, t) return 5 + (self:getCun() / 15) * self:getTalentLevel(t) end,
-	getEnergyConvert = function(self, t) return 6 - math.max(0, self:getTalentLevelRaw(t)) end,
+	getEnergyConvert = function(self, t) return math.max(0, 6 - self:getTalentLevelRaw(t)) end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 100) end,
 	getRadius = function(self, t) return 2 + self:getTalentLevel(t) / 2 end,
 	activate = function(self, t)

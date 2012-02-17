@@ -239,6 +239,9 @@ TOOLTIP_ARMOR_HARDINESS = [[#GOLD#Armour Hardiness#LAST#
 Armour hardiness value represents how much of every incoming blows the armour will affect.
 Absorbs (hardiness)% of incoming physical damage, up to a maximum of (armour) damage absorbed.
 ]]
+TOOLTIP_CRIT_REDUCTION = [[#GOLD#Crit Reduction#LAST#
+Crit reduction reduces the chance an opponent has of landing a critical strike with a melee or ranged attack.
+]]
 TOOLTIP_DEFENSE = [[#GOLD#Defense#LAST#
 Defense represents your chance to avoid physical melee attacks and reduces the chance you'll be knocked off-balance by an enemies attack. It is measured against the attacker's Accuracy.
 ]]
@@ -263,7 +266,7 @@ Your spellpower value represents how powerful your spells are.
 In addition, when your spells inflict temporary detrimental effects, every point your opponent's relevant saving throw exceeds your spellpower will reduce the duration of the effect by 5%.
 ]]
 TOOLTIP_SPELL_CRIT = [[#GOLD#Spell critical chance#LAST#
-Each time you deal damage with a spell you have a chance to make a critical hit that deals 150% of the normal damage.
+Each time you deal damage with a spell you may have a chance to make a critical hit that deals 150% of the normal damage.
 Some talents allow you to increase this percentage.
 It is improved by Cunning.
 ]]
@@ -271,9 +274,18 @@ TOOLTIP_SPELL_SPEED = [[#GOLD#Spellcasting speed#LAST#
 Spellcasting speed represents how fast your spellcasting is compared to a normal turn.
 The lower it is the faster it is.
 ]]
+TOOLTIP_SPELL_COOLDOWN = [[#GOLD#Spellcooldown#LAST#
+Spell cooldown represents how fast your spells will come off of cooldown.
+The lower it is the more often you'll be able to use your spell talents and runes.
+]]
 TOOLTIP_MINDPOWER = [[#GOLD#Mindpower#LAST#
 Your mindpower value represents how powerful your mental abilities are.
 In addition, when your mental abilities inflict temporary detrimental effects, every point your opponent's relevant saving throw exceeds your  mindpower will reduce the duration of the effect by 5%.
+]]
+TOOLTIP_MIND_CRIT = [[#GOLD#Mental critical chance#LAST#
+Each time you deal damage with a mental attack you may have a chance to make a critical hit that deals 150% of the normal damage.
+Some talents allow you to increase this percentage.
+It is improved by Cunning.
 ]]
 
 -------------------------------------------------------------
