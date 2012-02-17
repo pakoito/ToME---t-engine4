@@ -43,7 +43,7 @@ newEntity{ base = "TRAP_COMPLEX",
 				g = game.level.map(i, j, engine.Map.TERRAIN)
 			until not g or g:check("block_move")
 			if g and not g.is_door and core.fov.distance(x, y, i, j) >= 2 then
-				i, j = util.coordAddDir(i, j, opposed_dir[dir])
+				i, j = util.coordAddDir(i, j, util.opposedDir(dir, i, j))
 				walls[#walls+1] = {x=i, y=j}
 			end
 		end

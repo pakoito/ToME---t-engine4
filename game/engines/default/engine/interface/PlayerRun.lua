@@ -27,7 +27,7 @@ module(..., package.seeall, class.make)
 local function checkDir(a, dir, dist)
 	dist = dist or 1
 	local x, y = a.x, a.y
-	for i = 1, dist do util.coordAddDir(x, y, dir) end
+	for i = 1, dist do x, y = util.coordAddDir(x, y, dir) end
 	-- don't treat other actors as terrain or as something to notice (let the module handle this)
 	if game.level.map(x, y, game.level.map.ACTOR) and not game.level.map:checkEntity(x, y, game.level.map.TERRAIN, "block_move") then return false end
 	return (game.level.map:checkAllEntities(x, y, "block_move", a) or not game.level.map:isBound(x, y)) and true or false
