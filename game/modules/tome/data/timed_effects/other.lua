@@ -432,6 +432,7 @@ newEffect{
 
 			-- Move back in time, but keep the paradox_future world stored
 			game:chronoRestore("paradox_past", true)
+			game._chronoworlds = game._chronoworlds or {}
 			game._chronoworlds["paradox_future"] = clone
 			game.logPlayer(self, "#LIGHT_BLUE#You've been pulled into the past!")
 			-- pass health and resources into the new timeline

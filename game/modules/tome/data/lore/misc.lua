@@ -506,6 +506,60 @@ Now's the time to choose
 Running man, running man
 Your honour or your shoes!]] }
 
+newLore{
+	id = "channelers-set",
+	category = "artifacts",
+	name = "Gifts of Nature",
+	lore = [[In Age of Allure rose an archmage high
+With power beyond compare
+And the people poor would not come nigh
+His dark and terrible lair
+
+Whilst crops fell dead in drought and blight
+And children grew diseased
+The wizard dread stole in the night
+To pillage what he pleased
+
+But a hero came with shining sword
+And a will of solid steel
+Not seeking fame or high reward
+He followed but his zeal
+
+"From Zigur I come on righteous quest
+To battle foes arcane
+I will not succumb to magic detest
+I will end this evil reign"
+
+And so he rode on pure-white steed
+To the warlock's hold
+That dank abode of dark misdeed
+He entered brave and bold
+
+There battle blazed beyond all sight
+Sword clashed with spell
+Blood was razed in fearsome fight
+Scream followed yell
+
+A beam was cast of arcane pure
+Piercing mail and shield
+But still steadfast with flesh secure
+The hero did not yield
+
+A slash tore through the wizard's cloth
+His hat dropped to the ground
+From loose grip flew his staff so wroth
+Thus fell the mage renowned
+
+Now bare of skin and weaponless
+Here lay but a man
+No arcane sin could now redress
+The blood that freely ran
+
+"Fool warlock dead, you were too vain
+To gifts of Nature trust
+Your faith instead in tools arcane
+Now to Nature you are dust"]] }
+
 
 --------------------------------------------------------------
 -- Misc bosses

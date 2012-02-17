@@ -2297,6 +2297,84 @@ newEntity{ base = "BASE_DIGGER",
 	end,
 }
 
+-- Channelers set
+newEntity{ base = "BASE_STAFF", define_as = "SET_STAFF_CHANNELERS",
+	power_source = {arcane=true},
+	unique = true,
+	name = "Staff of Arcane Supremacy",
+	unided_name = "silver-runed staff",
+	level_range = {20, 40},
+	color=colors.BLUE,
+	rarity = 300,
+	desc = [[A long slender staff, made of ancient dragon-bone, with runes emblazoned all over its surface in bright silver. 
+It hums faintly, as if great power is locked within, yet alone it seems incomplete.]],
+	cost = 200,
+	material_level = 3,
+	require = { stat = { mag=24 }, },
+	combat = {
+		dam = 15,
+		apr = 4,
+		dammod = {mag=1.5},
+		damtype = DamageType.ARCANE,
+	},
+	wielder = {
+		combat_spellpower = 20,
+		inc_damage={
+			[DamageType.ARCANE] = 20,
+		},
+		talent_cd_reduction = {
+			[Talents.T_MANATHRUST] = 1,
+		},
+		talents_types_mastery = {
+			["spell/arcane"]=0.2,
+		},
+	},
+	max_power = 20, power_regen = 1,
+	use_talent = { id = Talents.T_ARCANE_SUPREMACY, level = 3, power = 20 },
+	set_list = { {"define_as", "SET_HAT_CHANNELERS"} },
+	on_set_complete = function(self, who)
+		self:specialSetAdd({"wielder","max_mana"}, 100)
+		game.logSeen(who, "#STEEL_BLUE#You feel a swell of arcane energy.")
+	end,
+}
+
+newEntity{ base = "BASE_WIZARD_HAT", define_as = "SET_HAT_CHANNELERS",
+	power_source = {technique=true},
+	unique = true,
+	name = "Hat of Arcane Understanding",
+	unided_name = "silver-runed hat",
+	desc = [[A traditional pointed wizard's hat, made of fine purple elven-silk and decorated with bright silver runes. You sense it has been passed from ancient times, and has been born on the heads of great mages.
+Touching the cloth you feel a sense of knowledge and power from bygone ages, yet it is partly sealed away, waiting for a trigger to release it.]],
+	color = colors.BLUE,
+	level_range = {20, 40},
+	rarity = 300,
+	cost = 100,
+	material_level = 3,
+	wielder = {
+		combat_def = 2,
+		mana_regen = 2,
+		resists = {
+			[DamageType.ARCANE] = 20,
+		},
+		talent_cd_reduction = {
+			[Talents.T_MANAFLOW] = 5,
+		},
+		talents_types_mastery = {
+			["spell/meta"]=0.2,
+		},
+	},
+	max_power = 40, power_regen = 1,
+	set_list = { {"define_as", "SET_STAFF_CHANNELERS"} },
+	on_set_complete = function(self, who)
+		self.use_talent = { id = Talents.T_METAFLOW, level = 3, power = 40 }
+		game.player:learnLore("channelers-set")
+	end,
+	on_set_broken = function(self, who)
+		self.use_talent = nil
+		game.logPlayer(who, "#STEEL_BLUE#The arcane energies surrounding you dissapate.")
+	end,
+}
+
 --[=[
 newEntity{
 	unique = true,

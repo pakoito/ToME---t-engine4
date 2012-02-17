@@ -1601,3 +1601,25 @@ newEffect{
 		self:removeTemporaryValue("bloodcasting", eff.tmpid)
 	end,
 }
+
+newEffect{
+	name = "ARCANE_SUPREMACY", image = "talents/arcane_supremacy.png",
+	desc = "Arcane Supremacy",
+	long_desc = function(self, eff) return ("The target's spellpower and spell save has been increased by %d"):	format(eff.power) end,
+	type = "magical",
+	subtype = { arcane=true },
+	status = "beneficial",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target# is surging with arcane energy.", "+Arcane Supremacy" end,
+	on_lose = function(self, err) return "#The arcane energy around Target# has dissipated.", "-Arcane Supremacy" end,
+	activate = function(self, eff)
+		eff.spell_save = self:addTemporaryValue("combat_spellresist", eff.power)
+		eff.spell_power = self:addTemporaryValue("combat_spellpower", eff.power)
+		eff.particle = self:addParticles(Particles.new("arcane_power", 1))
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("combat_spellpower", eff.spell_power)
+		self:removeTemporaryValue("combat_spellresist", eff.spell_save)
+		self:removeParticles(eff.particle)
+	end,
+}
