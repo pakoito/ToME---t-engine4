@@ -183,7 +183,7 @@ function _M:init()
 		gamelog = {x=function(self) return self.logdisplay.w - move_handle[6] end, y=function(self) return self.logdisplay.h - move_handle[6] end, name="Game Log"},
 		chatlog = {x=function(self) return profile.chat.w - move_handle[6] end, y=function(self) return profile.chat.h - move_handle[6] end, name="Online Chat Log"},
 		hotkeys = {x=function(self) return self.places.hotkeys.w - move_handle[6] end, y=function(self) return self.places.hotkeys.h - move_handle[6] end, name="Hotkeys"},
-		mainicons = {x=tb_bg[6] * 5 - move_handle[6], y=0, name="Game Actions"},
+		mainicons = {x=0, y=0, name="Game Actions"},
 	}
 
 	local w, h = core.display.size()
@@ -198,10 +198,10 @@ function _M:init()
 		minimap = {x=w - 239, y=0, scale=1, a=1},
 		buffs = {x=w - 40, y=200, scale=1, a=1},
 		party = {x=pf_bg[6], y=0, scale=1, a=1},
-		gamelog = {x=0, y=hup - 200, w=math.floor(w/2), h=200, scale=1, a=1},
-		chatlog = {x=math.floor(w/2), y=hup - 200, w=math.floor(w/2), h=200, scale=1, a=1},
-		mainicons = {x=w - (tb_bg[6] * 5 - move_handle[6]), y=hup, scale=1, a=1},
-		hotkeys = {x=30, y=h - th, w=w-60, h=th, scale=1, a=1},
+		gamelog = {x=0, y=hup - 210, w=math.floor(w/2), h=200, scale=1, a=1},
+		chatlog = {x=math.floor(w/2), y=hup - 210, w=math.floor(w/2), h=200, scale=1, a=1},
+		mainicons = {x=w - tb_bg[6] * 0.5, y=h - tb_bg[7] * 5 * 0.5 - 5, scale=1, a=1},
+		hotkeys = {x=10, y=h - th, w=w-60, h=th, scale=1, a=1},
 	}
 	table.merge(self.places, config.settings.tome.uiset_minimalist and config.settings.tome.uiset_minimalist.places or {}, true)
 
@@ -1504,75 +1504,88 @@ function _M:displayHotkeys(scale, bx, by)
 	self:computePadding("hotkeys", bx, by, bx + hkeys.w * scale, by + hkeys.h * scale)
 end
 
+function _M:toolbarOrientStep(orient, bx, by, scale, x, y, w, h)
+	if orient == "down" or orient == "up" then
+		x = x + w
+		if (x + w) * scale >= game.w - bx then x = 0 y = y + h end
+	elseif orient == "right" or orient == "left" then
+		y = y + h
+		if (y + h) * scale >= self.map_h_stop - by then y = 0 x = x + w end
+	end
+	return x, y
+end
+
 function _M:displayToolbar(scale, bx, by)
 	-- Toolbar icons
-	local x = 0
+	local x, y = 0, 0
+	local orient = self.sizes.mainicons and self.sizes.mainicons.orient or "down"
 
-	tb_bg[1]:toScreenFull		(x, - tb_bg[7], tb_bg[6], tb_bg[7], tb_bg[2], tb_bg[3], 1, 1, 1, 1)
-	tb_inven[1]:toScreenFull	(x, - tb_inven[7], tb_inven[6], tb_inven[7], tb_inven[2], tb_inven[3], self.tbbuttons.inven, self.tbbuttons.inven, self.tbbuttons.inven, 1)
-	if not game.mouse:updateZone("tb_inven", bx + x * scale, by - tb_inven[7]*scale, tb_inven[6], tb_inven[7], nil, scale) then
+	tb_bg[1]:toScreenFull		(x, y, tb_bg[6], tb_bg[7], tb_bg[2], tb_bg[3], 1, 1, 1, 1)
+	tb_inven[1]:toScreenFull	(x, y, tb_inven[6], tb_inven[7], tb_inven[2], tb_inven[3], self.tbbuttons.inven, self.tbbuttons.inven, self.tbbuttons.inven, 1)
+	if not game.mouse:updateZone("tb_inven", bx + x * scale, by +y*scale, tb_inven[6], tb_inven[7], nil, scale) then
 		game.mouse:unregisterZone("tb_inven")
 		local desc_fct = function(button, mx, my, xrel, yrel, bx, by, event)
 			if event == "out" then self.tbbuttons.inven = 0.6 return else self.tbbuttons.inven = 1 end
 			game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, "Left mouse to show inventory")
 			if button == "left" and not xrel and not yrel and event == "button" then game.key:triggerVirtual("SHOW_INVENTORY") end
 		end
-		game.mouse:registerZone(bx + x * scale, by - tb_inven[7]*scale, tb_inven[6], tb_inven[7], desc_fct, nil, "tb_inven", true, scale)
+		game.mouse:registerZone(bx + x * scale, by +y*scale, tb_inven[6], tb_inven[7], desc_fct, nil, "tb_inven", true, scale)
 	end
-	x = x + tb_inven[6]
+	x, y = self:toolbarOrientStep(orient, bx, by, scale, x, y, tb_bg[6], tb_bg[7])
 
-	tb_bg[1]:toScreenFull		(x, - tb_bg[7], tb_bg[6], tb_bg[7], tb_bg[2], tb_bg[3], 1, 1, 1, 1)
-	tb_quest[1]:toScreenFull	(x, - tb_quest[7], tb_quest[6], tb_quest[7], tb_quest[2], tb_quest[3], self.tbbuttons.quest, self.tbbuttons.quest, self.tbbuttons.quest, 1)
-	if not game.mouse:updateZone("tb_quest", bx + x * scale, by - tb_quest[7]*scale, tb_quest[6], tb_quest[7], nil, scale) then
+	tb_bg[1]:toScreenFull		(x, y, tb_bg[6], tb_bg[7], tb_bg[2], tb_bg[3], 1, 1, 1, 1)
+	tb_quest[1]:toScreenFull	(x, y, tb_quest[6], tb_quest[7], tb_quest[2], tb_quest[3], self.tbbuttons.quest, self.tbbuttons.quest, self.tbbuttons.quest, 1)
+	if not game.mouse:updateZone("tb_quest", bx + x * scale, by +y*scale, tb_quest[6], tb_quest[7], nil, scale) then
 		game.mouse:unregisterZone("tb_quest")
 		local desc_fct = function(button, mx, my, xrel, yrel, bx, by, event)
 			if event == "out" then self.tbbuttons.quest = 0.6 return else self.tbbuttons.quest = 1 end
-			game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, "Left mouse to show quest log")
-			if button == "left" and not xrel and not yrel and event == "button" then game.key:triggerVirtual("SHOW_QUESTS") end
+			game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, "Left mouse to show message/chat log.")
+			if button == "left" and not xrel and not yrel and event == "button" then game.key:triggerVirtual("SHOW_MESSAGE_LOG") end
 		end
-		game.mouse:registerZone(bx + x * scale, by - tb_quest[7]*scale, tb_quest[6], tb_quest[7], desc_fct, nil, "tb_quest", true, scale)
+		game.mouse:registerZone(bx + x * scale, by +y*scale, tb_quest[6], tb_quest[7], desc_fct, nil, "tb_quest", true, scale)
 	end
-	x = x + tb_quest[6]
+	x, y = self:toolbarOrientStep(orient, bx, by, scale, x, y, tb_bg[6], tb_bg[7])
 
-	tb_bg[1]:toScreenFull		(x, - tb_bg[7], tb_bg[6], tb_bg[7], tb_bg[2], tb_bg[3], 1, 1, 1, 1)
-	tb_lore[1]:toScreenFull		(x, - tb_lore[7], tb_lore[6], tb_lore[7], tb_lore[2], tb_lore[3], self.tbbuttons.lore, self.tbbuttons.lore, self.tbbuttons.lore, 1)
-	if not game.mouse:updateZone("tb_lore", bx + x * scale, by - tb_lore[7]*scale, tb_lore[6], tb_lore[7], nil, scale) then
+	tb_bg[1]:toScreenFull		(x, y, tb_bg[6], tb_bg[7], tb_bg[2], tb_bg[3], 1, 1, 1, 1)
+	tb_lore[1]:toScreenFull		(x, y, tb_lore[6], tb_lore[7], tb_lore[2], tb_lore[3], self.tbbuttons.lore, self.tbbuttons.lore, self.tbbuttons.lore, 1)
+	if not game.mouse:updateZone("tb_lore", bx + x * scale, by +y*scale, tb_lore[6], tb_lore[7], nil, scale) then
 		game.mouse:unregisterZone("tb_lore")
 		local desc_fct = function(button, mx, my, xrel, yrel, bx, by, event)
 			if event == "out" then self.tbbuttons.lore = 0.6 return else self.tbbuttons.lore = 1 end
-			game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, "Left mouse to show all known lore")
-			if button == "left" and not xrel and not yrel and event == "button" then game:registerDialog(require("mod.dialogs.ShowLore").new("Tales of Maj'Eyal Lore", game.player)) end
+			game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, "Left mouse to show quest log.\nRight mouse to show all known lore.")
+			if button == "left" and not xrel and not yrel and event == "button" then game.key:triggerVirtual("SHOW_QUESTS")
+			elseif button == "right" and not xrel and not yrel and event == "button" then game:registerDialog(require("mod.dialogs.ShowLore").new("Tales of Maj'Eyal Lore", game.player)) end
 		end
-		game.mouse:registerZone(bx + x * scale, by - tb_lore[7]*scale, tb_lore[6], tb_lore[7], desc_fct, nil, "tb_lore", true, scale)
+		game.mouse:registerZone(bx + x * scale, by +y*scale, tb_lore[6], tb_lore[7], desc_fct, nil, "tb_lore", true, scale)
 	end
-	x = x + tb_lore[6]
+	x, y = self:toolbarOrientStep(orient, bx, by, scale, x, y, tb_bg[6], tb_bg[7])
 
-	tb_bg[1]:toScreenFull		(x, - tb_bg[7], tb_bg[6], tb_bg[7], tb_bg[2], tb_bg[3], 1, 1, 1, 1)
-	tb_mainmenu[1]:toScreenFull	(x, - tb_mainmenu[7], tb_mainmenu[6], tb_mainmenu[7], tb_mainmenu[2], tb_mainmenu[3], self.tbbuttons.mainmenu, self.tbbuttons.mainmenu, self.tbbuttons.mainmenu, 1)
-	if not game.mouse:updateZone("tb_mainmenu", bx + x * scale, by - tb_mainmenu[7]*scale, tb_mainmenu[6], tb_mainmenu[7], nil, scale) then
+	tb_bg[1]:toScreenFull		(x, y, tb_bg[6], tb_bg[7], tb_bg[2], tb_bg[3], 1, 1, 1, 1)
+	tb_mainmenu[1]:toScreenFull	(x, y, tb_mainmenu[6], tb_mainmenu[7], tb_mainmenu[2], tb_mainmenu[3], self.tbbuttons.mainmenu, self.tbbuttons.mainmenu, self.tbbuttons.mainmenu, 1)
+	if not game.mouse:updateZone("tb_mainmenu", bx + x * scale, by + y*scale, tb_mainmenu[6], tb_mainmenu[7], nil, scale) then
 		game.mouse:unregisterZone("tb_mainmenu")
 		local desc_fct = function(button, mx, my, xrel, yrel, bx, by, event)
 			if event == "out" then self.tbbuttons.mainmenu = 0.6 return else self.tbbuttons.mainmenu = 1 end
 			game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, "Left mouse to show main menu")
 			if button == "left" and not xrel and not yrel and event == "button" then game.key:triggerVirtual("EXIT") end
 		end
-		game.mouse:registerZone(bx + x * scale, by - tb_mainmenu[7]*scale, tb_mainmenu[6], tb_mainmenu[7], desc_fct, nil, "tb_mainmenu", true, scale)
+		game.mouse:registerZone(bx + x * scale, by +y*scale, tb_mainmenu[6], tb_mainmenu[7], desc_fct, nil, "tb_mainmenu", true, scale)
 	end
-	x = x + tb_lore[6]
+	x, y = self:toolbarOrientStep(orient, bx, by, scale, x, y, tb_bg[6], tb_bg[7])
 
 	local padlock = self.locked and tb_padlock_closed or tb_padlock_open
-	tb_bg[1]:toScreenFull		(x, - tb_bg[7], tb_bg[6], tb_bg[7], tb_bg[2], tb_bg[3], 1, 1, 1, 1)
-	padlock[1]:toScreenFull	(x, - padlock[7], padlock[6], padlock[7], padlock[2], padlock[3], self.tbbuttons.padlock, self.tbbuttons.padlock, self.tbbuttons.padlock, 1)
-	if not game.mouse:updateZone("padlock", bx + x * scale, by - padlock[7]*scale, padlock[6], padlock[7], nil, scale) then
+	tb_bg[1]:toScreenFull		(x, y, tb_bg[6], tb_bg[7], tb_bg[2], tb_bg[3], 1, 1, 1, 1)
+	padlock[1]:toScreenFull		(x, y, padlock[6], padlock[7], padlock[2], padlock[3], self.tbbuttons.padlock, self.tbbuttons.padlock, self.tbbuttons.padlock, 1)
+	if not game.mouse:updateZone("padlock", bx + x * scale, by +y*scale, padlock[6], padlock[7], nil, scale) then
 		game.mouse:unregisterZone("padlock")
 		local desc_fct = function(button, mx, my, xrel, yrel, bx, by, event)
 			if event == "out" then self.tbbuttons.padlock = 0.6 return else self.tbbuttons.padlock = 1 end
 			game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, self.locked and "Unlock all interface elements so they can be moved and resized." or "Lock all interface elements so they can not be moved nor resized.")
 			if button == "left" and not xrel and not yrel and event == "button" then self.locked = not self.locked end
 		end
-		game.mouse:registerZone(bx + x * scale, by - padlock[7]*scale, padlock[6], padlock[7], desc_fct, nil, "padlock", true, scale)
+		game.mouse:registerZone(bx + x * scale, by +y*scale, padlock[6], padlock[7], desc_fct, nil, "padlock", true, scale)
 	end
-	x = x + tb_bg[6]
+	x, y = self:toolbarOrientStep(orient, bx, by, scale, x, y, tb_bg[6], tb_bg[7])
 
 	local mhx, mhy = util.getval(self.mhandle_pos.mainicons.x, self), util.getval(self.mhandle_pos.mainicons.y, self)
 	if not self.locked then
@@ -1585,12 +1598,15 @@ function _M:displayToolbar(scale, bx, by)
 		local desc_fct = function(button, mx, my, xrel, yrel, bx, by, event)
 			-- Move handle
 			if not self.locked then
-				self:uiMoveResize("mainicons", button, mx, my, xrel, yrel, bx+mhx, by+mhy, event)
+				self:uiMoveResize("mainicons", button, mx, my, xrel, yrel, bx+mhx*scale, by+mhy*scale, event)
 				return
 			end
 		end
 		game.mouse:registerZone(bx + mhx * scale, by + mhy * scale, move_handle[6], move_handle[7], desc_fct, nil, "tb_handle", true, scale)
 	end
+
+	-- Compute how much space to reserve on the side
+	self:computePadding("mainicons", bx, by, bx + x * scale, by + y * scale)
 end
 
 function _M:display(nb_keyframes)
@@ -1660,8 +1676,8 @@ function _M:display(nb_keyframes)
 
 	-- Main icons
 	d.glTranslate(self.places.mainicons.x, self.places.mainicons.y, 0)
-	d.glScale(self.places.mainicons.scale, self.places.mainicons.scale, self.places.mainicons.scale)
-	self:displayToolbar(self.places.mainicons.scale, self.places.mainicons.x, self.places.mainicons.y)
+	d.glScale(self.places.mainicons.scale * 0.5, self.places.mainicons.scale * 0.5, self.places.mainicons.scale * 0.5)
+	self:displayToolbar(self.places.mainicons.scale * 0.5, self.places.mainicons.x, self.places.mainicons.y)
 	d.glScale()
 	d.glTranslate(-self.places.mainicons.x, -self.places.mainicons.y, -0)
 
