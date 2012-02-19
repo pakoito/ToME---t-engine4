@@ -145,14 +145,23 @@ local mm_comp = {core.display.loadImage("/data/gfx/ui/minimap/compass.png"):glTe
 local mm_shadow = {core.display.loadImage("/data/gfx/ui/minimap/shadow.png"):glTexture()}
 local mm_transp = {core.display.loadImage("/data/gfx/ui/minimap/transp.png"):glTexture()}
 
-local sep = {core.display.loadImage("/data/gfx/ui/hotkeys/separator.png"):glTexture()}
-local sep_vines = {core.display.loadImage("/data/gfx/ui/hotkeys/separator_vines.png"):glTexture()}
+local tb_bg = {core.display.loadImage("/data/gfx/ui/hotkeys/icons_bg.png"):glTexture()}
 local tb_inven = {core.display.loadImage("/data/gfx/ui/hotkeys/inventory.png"):glTexture()}
 local tb_lore = {core.display.loadImage("/data/gfx/ui/hotkeys/lore.png"):glTexture()}
 local tb_quest = {core.display.loadImage("/data/gfx/ui/hotkeys/quest.png"):glTexture()}
 local tb_mainmenu = {core.display.loadImage("/data/gfx/ui/hotkeys/mainmenu.png"):glTexture()}
 local tb_padlock_open = {core.display.loadImage("/data/gfx/ui/padlock_open.png"):glTexture()}
 local tb_padlock_closed = {core.display.loadImage("/data/gfx/ui/padlock_closed.png"):glTexture()}
+
+local hk1 = {core.display.loadImage("/data/gfx/ui/hotkeys/hotkey_1.png"):glTexture()}
+local hk2 = {core.display.loadImage("/data/gfx/ui/hotkeys/hotkey_2.png"):glTexture()}
+local hk3 = {core.display.loadImage("/data/gfx/ui/hotkeys/hotkey_3.png"):glTexture()}
+local hk4 = {core.display.loadImage("/data/gfx/ui/hotkeys/hotkey_4.png"):glTexture()}
+local hk5 = {core.display.loadImage("/data/gfx/ui/hotkeys/hotkey_5.png"):glTexture()}
+local hk6 = {core.display.loadImage("/data/gfx/ui/hotkeys/hotkey_6.png"):glTexture()}
+local hk7 = {core.display.loadImage("/data/gfx/ui/hotkeys/hotkey_7.png"):glTexture()}
+local hk8 = {core.display.loadImage("/data/gfx/ui/hotkeys/hotkey_8.png"):glTexture()}
+local hk9 = {core.display.loadImage("/data/gfx/ui/hotkeys/hotkey_9.png"):glTexture()}
 
 function _M:init()
 	UISet.init(self)
@@ -166,20 +175,22 @@ function _M:init()
 	self.locked = true
 
 	self.mhandle_pos = {
-		player = {x=296, y=73},
-		resources = {x=fshat[6] - move_handle[6], y=0},
-		minimap = {x=208, y=176},
-		buffs = {x=40 - move_handle[6], y=0},
-		party = {x=portrait[6] - move_handle[6], y=0},
-		gamelog = {x=function(self) return self.logdisplay.w - move_handle[6] end, y=function(self) return self.logdisplay.h - move_handle[6] end},
-		chatlog = {x=function(self) return profile.chat.w - move_handle[6] end, y=function(self) return profile.chat.h - move_handle[6] end},
+		player = {x=296, y=73, name="Player Infos"},
+		resources = {x=fshat[6] - move_handle[6], y=0, name="Resources"},
+		minimap = {x=208, y=176, name="Minimap"},
+		buffs = {x=40 - move_handle[6], y=0, name="Current Effects"},
+		party = {x=portrait[6] - move_handle[6], y=0, name="Party Members"},
+		gamelog = {x=function(self) return self.logdisplay.w - move_handle[6] end, y=function(self) return self.logdisplay.h - move_handle[6] end, name="Game Log"},
+		chatlog = {x=function(self) return profile.chat.w - move_handle[6] end, y=function(self) return profile.chat.h - move_handle[6] end, name="Online Chat Log"},
+		hotkeys = {x=function(self) return self.places.hotkeys.w - move_handle[6] end, y=function(self) return self.places.hotkeys.h - move_handle[6] end, name="Hotkeys"},
+		mainicons = {x=tb_bg[6] * 5 - move_handle[6], y=0, name="Game Actions"},
 	}
 
 	local w, h = core.display.size()
 
 	local th = 52
 	if config.settings.tome.hotkey_icons then th = (4 + config.settings.tome.hotkey_icons_size) * config.settings.tome.hotkey_icons_rows end
-	local hup = h - th - sep[7]
+	local hup = h - th
 
 	self.places = {
 		player = {x=0, y=0, scale=1, a=1},
@@ -189,6 +200,8 @@ function _M:init()
 		party = {x=pf_bg[6], y=0, scale=1, a=1},
 		gamelog = {x=0, y=hup - 200, w=math.floor(w/2), h=200, scale=1, a=1},
 		chatlog = {x=math.floor(w/2), y=hup - 200, w=math.floor(w/2), h=200, scale=1, a=1},
+		mainicons = {x=w - (tb_bg[6] * 5 - move_handle[6]), y=hup, scale=1, a=1},
+		hotkeys = {x=30, y=h - th, w=w-60, h=th, scale=1, a=1},
 	}
 	table.merge(self.places, config.settings.tome.uiset_minimalist and config.settings.tome.uiset_minimalist.places or {}, true)
 
@@ -207,7 +220,12 @@ function _M:boundPlaces(w, h)
 		if d.x then
 			d.x = math.floor(d.x)
 			d.y = math.floor(d.y)
-			if d.scale then
+			if d.w and d.h then
+				d.scale = 1
+
+				d.x = util.bound(d.x, 0, w - d.w)
+				d.y = util.bound(d.y, 0, w - d.h)
+			elseif d.scale then
 				d.scale = util.bound(d.scale, 0.5, 2)
 
 				local mx, my = util.getval(self.mhandle_pos[what].x, self), util.getval(self.mhandle_pos[what].y, self)
@@ -225,7 +243,7 @@ function _M:saveSettings()
 	local lines = {}
 	lines[#lines+1] = ("tome.uiset_minimalist = {}"):format(w)
 	lines[#lines+1] = ("tome.uiset_minimalist.places = {}"):format(w)
-	for _, w in ipairs{"player", "resources", "party", "buffs", "minimap", "gamelog", "chatlog"} do
+	for _, w in ipairs{"player", "resources", "party", "buffs", "minimap", "gamelog", "chatlog", "hotkeys", "mainicons"} do
 		lines[#lines+1] = ("tome.uiset_minimalist.places.%s = {}"):format(w)
 		if self.places[w] then for k, v in pairs(self.places[w]) do
 			lines[#lines+1] = ("tome.uiset_minimalist.places.%s.%s = %f"):format(w, k, v)
@@ -273,7 +291,7 @@ function _M:activate()
 
 	self.buff_font = core.display.newFont(font_mono, size_mono * 2, true)
 
-	self.hotkeys_display_text = HotkeysDisplay.new(nil, 0, game.h - 52, game.w, 52, "/data/gfx/ui/hotkeys/back.png", font_mono, size_mono)
+	self.hotkeys_display_text = HotkeysDisplay.new(nil, self.places.hotkeys.x, self.places.hotkeys.y, self.places.hotkeys.w, self.places.hotkeys.h, nil, font_mono, size_mono)
 	self.hotkeys_display_text:enableShadow(0.6)
 	self.hotkeys_display_text:setColumns(3)
 	self:resizeIconsHotkeysToolbar()
@@ -315,11 +333,11 @@ function _M:resizeIconsHotkeysToolbar()
 	if config.settings.tome.hotkey_icons then h = (4 + config.settings.tome.hotkey_icons_size) * config.settings.tome.hotkey_icons_rows end
 
 	local oldstop = self.map_h_stop_up or (game.h - h)
-	self.map_h_stop = game.h - h
-	self.map_h_stop_up = game.h - h - sep[7]
+	self.map_h_stop = game.h
+	self.map_h_stop_up = game.h - h
 	self.map_h_stop_tooltip = self.map_h_stop_up
 
-	self.hotkeys_display_icons = HotkeysIconsDisplay.new(nil, 0, game.h - h, game.w, h, "/data/gfx/ui/hotkeys/back.png", self.init_font_mono, self.init_size_mono, config.settings.tome.hotkey_icons_size, config.settings.tome.hotkey_icons_size)
+	self.hotkeys_display_icons = HotkeysIconsDisplay.new(nil, self.places.hotkeys.x, self.places.hotkeys.y, self.places.hotkeys.w, self.places.hotkeys.h, nil, self.init_font_mono, self.init_size_mono, config.settings.tome.hotkey_icons_size, config.settings.tome.hotkey_icons_size)
 	self.hotkeys_display_icons:enableShadow(0.6)
 
 	if self.no_ui then
@@ -353,7 +371,7 @@ function _M:uiMoveResize(what, button, mx, my, xrel, yrel, bx, by, event, mode, 
 
 	mode = mode or "rescale"
 
-	game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, "Left mouse drag&drop to move the frame\nRight mouse drag&drop to scale up/down\nMiddle click to reset to default scale")
+	game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, self.mhandle_pos[what].name.."\n---\nLeft mouse drag&drop to move the frame\nRight mouse drag&drop to scale up/down\nMiddle click to reset to default scale")
 	if event == "button" and button == "middle" then self.places[what].scale = 1 self:saveSettings()
 	elseif event == "motion" and button == "left" then
 		self.ui_moving = what
@@ -1421,10 +1439,76 @@ function _M:displayChatLog(scale, bx, by)
 	end
 end
 
+
+function _M:displayHotkeys(scale, bx, by)
+	local hkeys = self.hotkeys_display
+	local ox, oy = hkeys.display_x, hkeys.display_y
+
+	hk5[1]:toScreenFull(0, 0, self.places.hotkeys.w, self.places.hotkeys.h, hk5[2], hk5[3])
+
+	hk8[1]:toScreenFull(0, -hk8[7], self.places.hotkeys.w, hk8[7], hk8[2], hk8[3])
+	hk2[1]:toScreenFull(0, self.places.hotkeys.h, self.places.hotkeys.w, hk2[7], hk2[2], hk2[3])
+	hk4[1]:toScreenFull(-hk4[6], 0, hk4[6], self.places.hotkeys.h, hk4[2], hk4[3])
+	hk6[1]:toScreenFull(self.places.hotkeys.w, 0, hk6[6], self.places.hotkeys.h, hk6[2], hk6[3])
+
+	hk7[1]:toScreenFull(-hk7[6], -hk7[6], hk7[6], hk7[7], hk7[2], hk7[3])
+	hk9[1]:toScreenFull(self.places.hotkeys.w, -hk9[6], hk9[6], hk9[7], hk9[2], hk9[3])
+	hk1[1]:toScreenFull(-hk7[6], self.places.hotkeys.h, hk1[6], hk1[7], hk1[2], hk1[3])
+	hk3[1]:toScreenFull(self.places.hotkeys.w, self.places.hotkeys.h, hk3[6], hk3[7], hk3[2], hk3[3])
+
+	hkeys.orient = self.sizes.hotkeys and self.sizes.hotkeys.orient or "down"
+	hkeys.display_x, hkeys.display_y = 0, 0
+	hkeys:toScreen()
+	hkeys.display_x, hkeys.display_y = ox, oy
+
+	if not self.locked then
+		move_handle[1]:toScreenFull(util.getval(self.mhandle_pos.hotkeys.x, self), util.getval(self.mhandle_pos.hotkeys.y, self), move_handle[6], move_handle[7], move_handle[2], move_handle[3])
+	end
+
+	if not game.mouse:updateZone("hotkeys", bx, by, self.places.hotkeys.w, self.places.hotkeys.h, nil, scale) then
+		game.mouse:unregisterZone("hotkeys")
+
+		local desc_fct = function(button, mx, my, xrel, yrel, bx, by, event)
+			if event == "out" then self.mhandle.hotkeys = nil self.hotkeys_display.cur_sel = nil return
+			else self.mhandle.hotkeys = true end
+
+			-- Move handle
+			local mhx, mhy = util.getval(self.mhandle_pos.hotkeys.x, self), util.getval(self.mhandle_pos.hotkeys.y, self)
+			if not self.locked and bx >= mhx and bx <= mhx + move_handle[6] and by >= mhy and by <= mhy + move_handle[7] then
+				self:uiMoveResize("hotkeys", button, mx, my, xrel, yrel, bx, by, event, "resize", function(mode)
+					hkeys:resize(self.places.hotkeys.x, self.places.hotkeys.y, self.places.hotkeys.w, self.places.hotkeys.h)
+				end)
+				return
+			end
+
+			if event == "button" and button == "left" and ((game.zone and game.zone.wilderness) or (game.key ~= game.normal_key)) then return end
+			self.hotkeys_display:onMouse(button, mx, my, event == "button",
+				function(text)
+					text = text:toTString()
+					text:add(true, "---", true, {"font","italic"}, {"color","GOLD"}, "Left click to use", true, "Right click to configure", true, "Press 'm' to setup", {"color","LAST"}, {"font","normal"})
+					game:tooltipDisplayAtMap(game.w, game.h, text)
+				end,
+				function(i, hk)
+					if button == "right" and hk[1] == "talent" then
+						local d = require("mod.dialogs.UseTalents").new(game.player)
+						d:use({talent=hk[2], name=game.player:getTalentFromId(hk[2]).name}, "right")
+						return true
+					end
+				end
+			)
+		end
+		game.mouse:registerZone(bx, by, self.places.hotkeys.w, self.places.hotkeys.h, desc_fct, nil, "hotkeys", true, scale)
+	end
+
+	-- Compute how much space to reserve on the side
+	self:computePadding("hotkeys", bx, by, bx + hkeys.w * scale, by + hkeys.h * scale)
+end
+
 function _M:displayToolbar(scale, bx, by)
 	-- Toolbar icons
 	local x = 0
 
+	tb_bg[1]:toScreenFull		(x, - tb_bg[7], tb_bg[6], tb_bg[7], tb_bg[2], tb_bg[3], 1, 1, 1, 1)
 	tb_inven[1]:toScreenFull	(x, - tb_inven[7], tb_inven[6], tb_inven[7], tb_inven[2], tb_inven[3], self.tbbuttons.inven, self.tbbuttons.inven, self.tbbuttons.inven, 1)
 	if not game.mouse:updateZone("tb_inven", bx + x * scale, by - tb_inven[7]*scale, tb_inven[6], tb_inven[7], nil, scale) then
 		game.mouse:unregisterZone("tb_inven")
@@ -1437,6 +1521,7 @@ function _M:displayToolbar(scale, bx, by)
 	end
 	x = x + tb_inven[6]
 
+	tb_bg[1]:toScreenFull		(x, - tb_bg[7], tb_bg[6], tb_bg[7], tb_bg[2], tb_bg[3], 1, 1, 1, 1)
 	tb_quest[1]:toScreenFull	(x, - tb_quest[7], tb_quest[6], tb_quest[7], tb_quest[2], tb_quest[3], self.tbbuttons.quest, self.tbbuttons.quest, self.tbbuttons.quest, 1)
 	if not game.mouse:updateZone("tb_quest", bx + x * scale, by - tb_quest[7]*scale, tb_quest[6], tb_quest[7], nil, scale) then
 		game.mouse:unregisterZone("tb_quest")
@@ -1449,6 +1534,7 @@ function _M:displayToolbar(scale, bx, by)
 	end
 	x = x + tb_quest[6]
 
+	tb_bg[1]:toScreenFull		(x, - tb_bg[7], tb_bg[6], tb_bg[7], tb_bg[2], tb_bg[3], 1, 1, 1, 1)
 	tb_lore[1]:toScreenFull		(x, - tb_lore[7], tb_lore[6], tb_lore[7], tb_lore[2], tb_lore[3], self.tbbuttons.lore, self.tbbuttons.lore, self.tbbuttons.lore, 1)
 	if not game.mouse:updateZone("tb_lore", bx + x * scale, by - tb_lore[7]*scale, tb_lore[6], tb_lore[7], nil, scale) then
 		game.mouse:unregisterZone("tb_lore")
@@ -1461,6 +1547,7 @@ function _M:displayToolbar(scale, bx, by)
 	end
 	x = x + tb_lore[6]
 
+	tb_bg[1]:toScreenFull		(x, - tb_bg[7], tb_bg[6], tb_bg[7], tb_bg[2], tb_bg[3], 1, 1, 1, 1)
 	tb_mainmenu[1]:toScreenFull	(x, - tb_mainmenu[7], tb_mainmenu[6], tb_mainmenu[7], tb_mainmenu[2], tb_mainmenu[3], self.tbbuttons.mainmenu, self.tbbuttons.mainmenu, self.tbbuttons.mainmenu, 1)
 	if not game.mouse:updateZone("tb_mainmenu", bx + x * scale, by - tb_mainmenu[7]*scale, tb_mainmenu[6], tb_mainmenu[7], nil, scale) then
 		game.mouse:unregisterZone("tb_mainmenu")
@@ -1474,6 +1561,7 @@ function _M:displayToolbar(scale, bx, by)
 	x = x + tb_lore[6]
 
 	local padlock = self.locked and tb_padlock_closed or tb_padlock_open
+	tb_bg[1]:toScreenFull		(x, - tb_bg[7], tb_bg[6], tb_bg[7], tb_bg[2], tb_bg[3], 1, 1, 1, 1)
 	padlock[1]:toScreenFull	(x, - padlock[7], padlock[6], padlock[7], padlock[2], padlock[3], self.tbbuttons.padlock, self.tbbuttons.padlock, self.tbbuttons.padlock, 1)
 	if not game.mouse:updateZone("padlock", bx + x * scale, by - padlock[7]*scale, padlock[6], padlock[7], nil, scale) then
 		game.mouse:unregisterZone("padlock")
@@ -1483,6 +1571,25 @@ function _M:displayToolbar(scale, bx, by)
 			if button == "left" and not xrel and not yrel and event == "button" then self.locked = not self.locked end
 		end
 		game.mouse:registerZone(bx + x * scale, by - padlock[7]*scale, padlock[6], padlock[7], desc_fct, nil, "padlock", true, scale)
+	end
+	x = x + tb_bg[6]
+
+	local mhx, mhy = util.getval(self.mhandle_pos.mainicons.x, self), util.getval(self.mhandle_pos.mainicons.y, self)
+	if not self.locked then
+		move_handle[1]:toScreenFull(mhx, mhy, move_handle[6], move_handle[7], move_handle[2], move_handle[3])
+	end
+
+	if not game.mouse:updateZone("tb_handle", bx + mhx * scale, by + mhy * scale, move_handle[6], move_handle[7], nil, scale) then
+		game.mouse:unregisterZone("tb_handle")
+
+		local desc_fct = function(button, mx, my, xrel, yrel, bx, by, event)
+			-- Move handle
+			if not self.locked then
+				self:uiMoveResize("mainicons", button, mx, my, xrel, yrel, bx+mhx, by+mhy, event)
+				return
+			end
+		end
+		game.mouse:registerZone(bx + mhx * scale, by + mhy * scale, move_handle[6], move_handle[7], desc_fct, nil, "tb_handle", true, scale)
 	end
 end
 
@@ -1498,6 +1605,16 @@ function _M:display(nb_keyframes)
 	Map.viewport_padding_6 = 0
 	Map.viewport_padding_8 = 0
 	Map.viewport_padding_2 = 0
+
+	-- Game log
+	d.glTranslate(self.places.gamelog.x, self.places.gamelog.y, 0)
+	self:displayGameLog(1, self.places.gamelog.x, self.places.gamelog.y)
+	d.glTranslate(-self.places.gamelog.x, -self.places.gamelog.y, -0)
+
+	-- Chat log
+	d.glTranslate(self.places.chatlog.x, self.places.chatlog.y, 0)
+	self:displayChatLog(1, self.places.chatlog.x, self.places.chatlog.y)
+	d.glTranslate(-self.places.chatlog.x, -self.places.chatlog.y, -0)
 
 	-- Minimap display
 	if game.level and game.level.map then
@@ -1536,30 +1653,17 @@ function _M:display(nb_keyframes)
 	d.glScale()
 	d.glTranslate(-self.places.party.x, -self.places.party.y, -0)
 
-	-- Game log
-	d.glTranslate(self.places.gamelog.x, self.places.gamelog.y, 0)
-	self:displayGameLog(1, self.places.gamelog.x, self.places.gamelog.y)
-	d.glTranslate(-self.places.gamelog.x, -self.places.gamelog.y, -0)
+	-- Hotkeys
+	d.glTranslate(self.places.hotkeys.x, self.places.hotkeys.y, 0)
+	self:displayHotkeys(1, self.places.hotkeys.x, self.places.hotkeys.y)
+	d.glTranslate(-self.places.hotkeys.x, -self.places.hotkeys.y, -0)
 
-	-- Chat log
---	d.glTranslate(self.places.chatlog.x, self.places.chatlog.y, 0)
---	self:displayChatLog(1, self.places.chatlog.x, self.places.chatlog.y)
---	d.glTranslate(-self.places.chatlog.x, -self.places.chatlog.y, -0)
-
-	-- Toolbar
-	if game.show_npc_list then self.npcs_display:toScreen() else self.hotkeys_display:toScreen() end
-
-	-- Toolbar separator
-	sep[1]:toScreenFull(0, self.map_h_stop_up, game.w, sep[7], sep[2], sep[3])
-	sep_vines[1]:toScreenFull(0, self.map_h_stop_up - 3, game.w, sep_vines[7], sep_vines[2], sep_vines[3])
-
-	local bx = game.w - (tb_inven[6] + tb_quest[6] + tb_lore[6] + tb_mainmenu[6] + tb_padlock_open[6]) * 0.7
-	local by = self.map_h_stop_up + sep[7]
-	d.glTranslate(bx, by, 0)
-	d.glScale(0.7, 0.7, 0.7)
-	self:displayToolbar(0.7, bx, by)
+	-- Main icons
+	d.glTranslate(self.places.mainicons.x, self.places.mainicons.y, 0)
+	d.glScale(self.places.mainicons.scale, self.places.mainicons.scale, self.places.mainicons.scale)
+	self:displayToolbar(self.places.mainicons.scale, self.places.mainicons.x, self.places.mainicons.y)
 	d.glScale()
-	d.glTranslate(-bx, -by, 0)
+	d.glTranslate(-self.places.mainicons.x, -self.places.mainicons.y, -0)
 
 	-- Display border indicators when possible
 	if self.ui_moving and self.sizes[self.ui_moving] then
@@ -1574,31 +1678,9 @@ function _M:display(nb_keyframes)
 end
 
 function _M:setupMouse(mouse)
-	-- Use hotkeys with mouse
-	mouse:registerZone(self.hotkeys_display.display_x, self.hotkeys_display.display_y, game.w, game.h, function(button, mx, my, xrel, yrel, bx, by, event)
-		if self.show_npc_list then return end
-		if event == "out" then self.hotkeys_display.cur_sel = nil return end
-		if event == "button" and button == "left" and ((self.zone and self.zone.wilderness) or (game.key ~= game.normal_key)) then return end
-		self.hotkeys_display:onMouse(button, mx, my, event == "button",
-			function(text)
-				text = text:toTString()
-				text:add(true, "---", true, {"font","italic"}, {"color","GOLD"}, "Left click to use", true, "Right click to configure", true, "Press 'm' to setup", {"color","LAST"}, {"font","normal"})
-				game:tooltipDisplayAtMap(game.w, game.h, text)
-			end,
-			function(i, hk)
-				if button == "right" and hk[1] == "talent" then
-					local d = require("mod.dialogs.UseTalents").new(game.player)
-					d:use({talent=hk[2], name=game.player:getTalentFromId(hk[2]).name}, "right")
-					return true
-				end
-			end
-		)
-	end, nil, "hotkeys", true)
-
 	-- Chat tooltips
 	profile.chat:onMouse(function(user, item, button, event, x, y, xrel, yrel, bx, by)
 		local mx, my = core.mouse.get()
-print("=====")
 		if not item or not user or item.faded == 0 then game.mouse:delegate(button, mx, my, xrel, yrel, nil, nil, event, "playmap") return end
 
 		local str = tstring{{"color","GOLD"}, {"font","bold"}, user.name, {"color","LAST"}, {"font","normal"}, true}

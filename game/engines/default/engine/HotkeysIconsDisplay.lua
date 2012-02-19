@@ -114,6 +114,7 @@ function _M:display()
 	self.surface:erase(self.bgcolor[1], self.bgcolor[2], self.bgcolor[3])
 	if self.bg_surface then self.surface:merge(self.bg_surface, 0, 0) end
 
+	local orient = self.orient or "down"
 	local x = 0
 	local y = 0
 	local col, row = 0, 0
@@ -201,11 +202,21 @@ function _M:display()
 			self.items[#self.items+1] = {i=i, x=x, y=y, e=display_entity or self.default_entity, color=color, angle=angle, key=key, gtxt=gtxt, frame=frame, pagesel=lpage==spage}
 			self.clics[i] = {x,y,w,h}
 		end
-		col = col + 1
-		if col >= self.max_cols then
-			col = 0
+
+		if orient == "down" or orient == "up" then
+			col = col + 1
+			if col >= self.max_cols then
+				col = 0
+				row = row + 1
+				if row >= self.max_rows then return end
+			end
+		elseif orient == "left" or orient == "right" then
 			row = row + 1
-			if row >= self.max_rows then return end
+			if row >= self.max_rows then
+				row = 0
+				col = col + 1
+				if col >= self.max_cols then return end
+			end
 		end
 	end end
 end
