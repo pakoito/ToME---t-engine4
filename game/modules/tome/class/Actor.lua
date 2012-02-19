@@ -2313,7 +2313,7 @@ end
 
 --- Equilibrium check
 function _M:equilibriumChance(eq)
-	eq = (eq or 0) + self:getEquilibrium()
+	eq = self:getEquilibrium()
 	local wil = self:getWil()
 	-- Do not fail if below willpower
 	if eq < wil then return true, 100 end
