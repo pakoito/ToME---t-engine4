@@ -41,47 +41,9 @@ on_status_change = function(self, who, status, sub)
 	end
 end
 
-collect_staff = function(self, npc, who, dialog)
-	who:showInventory("Offer which item?", who:getInven("INVEN"),
-		function(o) return
-			(
-				(o.type == "weapon" and o.subtype == "staff") or
-				(o.type == "jewelry" and o.subtype == "ring") or
-				(o.type == "jewelry" and o.subtype == "amulet")
-			) and not o.unique
-		end,
-		function(o, item)
-			self.nb_collect = self.nb_collect + 1
-			if self.nb_collect >= 10 then who:setQuestStatus(self, self.COMPLETED) end
-			who:removeObject(who:getInven("INVEN"), item)
-			game.log("You have no more %s", o:getName{no_count=true, do_color=true})
-			who:sortInven(who:getInven(inven))
-			dialog.next_dialog:regen()
-			return true
-		end
-	)
-end
-
-can_offer = function(self, who)
-	if self.nb_collect >= 10 then return end
-	if not who:getInven("INVEN") then return end
-
-	for item, o in ipairs(who:getInven("INVEN")) do
-		if (
-			(o.type == "weapon" and o.subtype == "staff") or
-			(o.type == "jewelry" and o.subtype == "ring") or
-			(o.type == "jewelry" and o.subtype == "amulet")
-		) and not o.unique then return true end
-	end
-end
-
 collect_staff_unique = function(self, npc, who, dialog)
 	who:showInventory("Offer which item?", who:getInven("INVEN"),
-		function(o) return (
-				(o.type == "weapon" and o.subtype == "staff") or
-				(o.type == "jewelry" and o.subtype == "ring") or
-				(o.type == "jewelry" and o.subtype == "amulet")
-			) and o.unique
+		function(o) return o.power_source and o.power_source.arcane and o.unique
 		end,
 		function(o, item)
 			-- Special handling for the staff of absorption
@@ -95,8 +57,8 @@ collect_staff_unique = function(self, npc, who, dialog)
 				return true
 			end
 
-			self.nb_collect = self.nb_collect + 10
-			if self.nb_collect >= 10 then who:setQuestStatus(self, self.COMPLETED) end
+			self.nb_collect = self.nb_collect + 1
+			if self.nb_collect >= 1 then who:setQuestStatus(self, self.COMPLETED) end
 			who:removeObject(who:getInven("INVEN"), item)
 			game.log("You have no more %s", o:getName{no_count=true, do_color=true})
 			who:sortInven(who:getInven(inven))
@@ -107,15 +69,11 @@ collect_staff_unique = function(self, npc, who, dialog)
 end
 
 can_offer_unique = function(self, who)
-	if self.nb_collect >= 10 then return end
+	if self.nb_collect >= 1 then return end
 	if not who:getInven("INVEN") then return end
 
 	for item, o in ipairs(who:getInven("INVEN")) do
-		if (
-			(o.type == "weapon" and o.subtype == "staff") or
-			(o.type == "jewelry" and o.subtype == "ring") or
-			(o.type == "jewelry" and o.subtype == "amulet")
-		) and o.unique then return true end
+		if o.power_source and o.power_source.arcane and o.unique then return true end
 	end
 end
 

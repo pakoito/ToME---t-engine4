@@ -38,12 +38,7 @@ newChat{ id="welcome",
 Good day to you, fellow traveler!]],
 	answers = {
 		{"What brings an apprentice mage out into the wilds?", jump="quest", cond=function(npc, player) return not player:hasQuest("mage-apprentice") end},
-		{"I have something for you!",
-			jump="welcome",
-			cond=function(npc, player) return player:hasQuest("mage-apprentice") and player:hasQuest("mage-apprentice"):can_offer(player) end,
-			action=function(npc, player, dialog) player:hasQuest("mage-apprentice"):collect_staff(npc, player, dialog) end
-		},
-		{"I found this artefact; it looks powerful. Maybe it would be enough?",
+		{"I found this artefact; it looks powerful and arcane infused. Maybe it would be enough?",
 			jump="unique",
 			cond=function(npc, player) return player:hasQuest("mage-apprentice") and player:hasQuest("mage-apprentice"):can_offer_unique(player) end,
 			action=function(npc, player, dialog) player:hasQuest("mage-apprentice"):collect_staff_unique(npc, player, dialog) end
@@ -81,7 +76,7 @@ I am a novice mage, as you might have noticed, and my goal is to be accepted by 
 }
 newChat{ id="quest3",
 	text = [[The keepers of ar... err, I do not think I am supposed to talk about them... sorry, my friend...
-In any case, I must collect 10 magic staves, rings or amulets, and I have yet to find one. I would be grateful if you could bring me some should you find any!]],
+In any case, I must collect many items. I have some already but I am still looking for an arcane-infused artefact. You do not happen to have one I imagine... Well if you do, tell me please!]],
 	answers = {
 		{"I will keep that in mind!", action=function(npc, player) player:grantQuest("mage-apprentice") end},
 		{"No way, bye!"},
@@ -89,7 +84,7 @@ In any case, I must collect 10 magic staves, rings or amulets, and I have yet to
 }
 newChat{ id="quest3_mage",
 	text = [[I hope I will too ...
-In any case, I must collect 10 magic staves, rings or amulets and I have yet to find one. I would be grateful if you could bring me some should you find any!]],
+In any case, I must collect many items. I have some already but I am still looking for an arcane-infused artefact. You do not happen to have one I imagine... Well if you do, tell me please!]],
 	answers = {
 		{"I will keep that in mind!", action=function(npc, player) player:grantQuest("mage-apprentice") end},
 		{"No way, bye!"},
