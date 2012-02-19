@@ -125,7 +125,7 @@ newTalent{
 	sustain_mana = 10,
 	no_energy = true,
 	tactical = { DEFEND = 2 },
-	getManaRatio = function(self, t) return 3 - math.max(self:combatTalentSpellDamage(t, 10, 200) / 100, 0.5) end,
+	getManaRatio = function(self, t) return math.max(3 - self:combatTalentSpellDamage(t, 10, 200) / 100, 0.5) end,
 	getArcaneResist = function(self, t) return 10 + self:combatTalentSpellDamage(t, 10, 500) / 10 end,
 	explode = function(self, t, dam)
 		game.logSeen(self, "#VIOLET#%s's disruption shield collapses and then explodes in a powerful manastorm!", self.name:capitalize())
