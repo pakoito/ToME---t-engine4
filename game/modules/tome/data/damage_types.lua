@@ -1934,7 +1934,7 @@ newDamageType{
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
 			local reapplied = target:hasEffect(target.EFF_WEAKENED)
-			target:setEffect(target.EFF_WEAKENED, dam.dur, { power=incDamage }, reapplied)
+			target:setEffect(target.EFF_WEAKENED, dam.dur, { power=dam.incDamage }, reapplied)
 		end
 	end,
 }
