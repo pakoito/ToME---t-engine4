@@ -127,7 +127,7 @@ newTalent{
 		if choose then
 			game.player:runStop()
 			game.player:restStop()
-		
+
 			-- don't bother the player when there is an enemy near
 			local grids = core.fov.circle_grids(self.x, self.y, 10, true)
 			for x, yy in pairs(grids) do
@@ -295,7 +295,7 @@ newTalent{
 		self:project(tg, self.x, self.y, DamageType.WEAKNESS, { incDamage=incDamage, dur=3 })
 
 		game.level.map:addEffect(self,
-			self.x, self.y, range,
+			self.x, self.y, duration,
 			DamageType.WEAKNESS, { incDamage=incDamage, dur=3 },
 			range,
 			5, nil,
