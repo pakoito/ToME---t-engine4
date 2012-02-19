@@ -37,7 +37,7 @@ newTalent{
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		x, y = checkBackfire(self, x, y, t.paradox)
+		x, y = checkBackfire(self, x, y)
 		self:project(tg, x, y, DamageType.MATTER, self:spellCrit(t.getDamage(self, t)))
 		local _ _, _, _, x, y = self:canProject(tg, x, y)
 		game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(x-self.x), math.abs(y-self.y)), "matter_beam", {tx=x-self.x, ty=y-self.y})
@@ -119,7 +119,7 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		x, y = checkBackfire(self, x, y, t.paradox)
+		x, y = checkBackfire(self, x, y)
 		self:project(tg, x, y, function(px, py)
 			local target = game.level.map(px, py, Map.ACTOR)
 			if not target then return end
@@ -159,7 +159,7 @@ newTalent{
 		local tg = self:getTalentTarget(t)
 		local x, y, target = self:getTarget(tg)
 		if not x or not y then return nil end
-		x, y = checkBackfire(self, x, y, t.paradox)
+		x, y = checkBackfire(self, x, y)
 		
 		-- bonus damage on targets with temporal destabilization
 		local damage = t.getDamage(self, t)

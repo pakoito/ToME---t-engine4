@@ -87,9 +87,6 @@ local maker_list = function()
 					if game._chronoworlds then 
 						game.log("#CRIMSON#Your timetravel has no effect on pre-determined outcomes such as this.")
 						game._chronoworlds = nil
-						if player:isTalentActive(player.T_DOOR_TO_THE_PAST) then
-							player:forceUseTalent(player.T_DOOR_TO_THE_PAST, {ignore_energy=true})
-						end
 					end
 					game:saveGame()
 

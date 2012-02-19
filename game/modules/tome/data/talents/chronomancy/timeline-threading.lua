@@ -37,7 +37,8 @@ newTalent{
 		local reduction = t.getReduction(self, t)
 		return ([[You begin to gather energy from other timelines, increasing spellpower by %0.2f on the first turn and %0.2f more each additional turn.
 		The effect will end with the first attack, item, or talent used, otherwise the spell ends after five turns.
-		Eacn turn the effect is active your Paradox will be reduced by %d.]]):format(primary + (primary/5), primary/5, reduction)
+		Eacn turn the effect is active your Paradox will be reduced by %d.
+		This spell will not break Spactime Tuning, nor will it be broken by activating Spactime Tuning.]]):format(primary + (primary/5), primary/5, reduction)
 	end,
 }
 

@@ -369,10 +369,9 @@ function _M:actBase()
 				self.tempeffect_def[self.EFF_CURSE_OF_NIGHTMARES].doNightmare(self, eff)
 			end
 		end
-		-- this handles Door to the Past random anomalies
-		if self:isTalentActive(self.T_DOOR_TO_THE_PAST) then
-			local t = self:getTalentFromId(self.T_DOOR_TO_THE_PAST)
-			t.do_anomalyCount(self, t)
+		-- this handles spacetime tuning paradox regen
+		if self:isTalentActive(self.T_SPACETIME_TUNING) then
+			self:incParadox(-1)
 		end
 		-- this handles Carbon Spike regrowth
 		if self:isTalentActive(self.T_CARBON_SPIKES) then
@@ -2327,7 +2326,7 @@ end
 
 --- Paradox checks
 function _M:paradoxChanceModifier()
-	local modifier = self:getWil() * 2
+	local modifier = self:getWil() * 1.5
 	if self:knowTalent(self.T_PARADOX_MASTERY) then
 		modifier = modifier * (1 + (self:getTalentLevel(self.T_PARADOX_MASTERY)/10) or 0)
 	end
@@ -2335,30 +2334,27 @@ function _M:paradoxChanceModifier()
 	return modifier
 end
 
-function _M:paradoxFailChance(pa)
-	local total_paradox = self:getParadox() + (pa or 0)
-	local chance = 	(100 + 2*self:combatFatigue()) / 100 * math.pow((total_paradox - self:paradoxChanceModifier()) / 200, 2)
+function _M:paradoxFailChance()
+	local chance = 	(100 + 2*self:combatFatigue()) / 100 * math.pow((self:getParadox() - self:paradoxChanceModifier()) / 200, 2)
 	if self:getParadox() < 200 then chance = 0 end
 	--print("[Paradox] Fail chance: ", chance, "::", self:getParadox())
-	chance = util.bound(chance, 0, 100)
+	chance = util.bound(math.ceil(chance), 0, 100)
 	return rng.percent(chance), chance
 end
 
-function _M:paradoxAnomalyChance(pa)
-	local total_paradox = self:getParadox() + (pa or 0)
-	local chance = 	(100 + 2*self:combatFatigue()) / 100 * math.pow((total_paradox- self:paradoxChanceModifier()) / 300, 3)
+function _M:paradoxAnomalyChance()
+	local chance = 	(100 + 2*self:combatFatigue()) / 100 * math.pow((self:getParadox() - self:paradoxChanceModifier()) / 300, 3)
 	if self:getParadox() < 300 then chance = 0 end
 	--print("[Paradox] Anomaly chance: ", chance, "::", self:getParadox())
-	chance = util.bound(chance, 0, 100)
+	chance = util.bound(math.ceil(chance), 0, 100)
 	return rng.percent(chance), chance
 end
 
-function _M:paradoxBackfireChance(pa)
-	local total_paradox = self:getParadox() + (pa or 0)
-	local chance = (100 + 2*self:combatFatigue()) / 100 * math.pow((total_paradox - self:paradoxChanceModifier()) / 400, 4)
+function _M:paradoxBackfireChance()
+	local chance = (100 + 2 * self:combatFatigue()) / 100 * math.pow((self:getParadox() - self:paradoxChanceModifier()) / 400, 4)
 	if self:getParadox() < 400 then chance = 0 end
 	--print("[Paradox] Backfire chance: ", chance, "::", self:getParadox())
-	chance = util.bound(chance, 0, 100)
+	chance = util.bound(math.ceil(chance), 0, 100)
 	return rng.percent(chance), chance
 end
 
@@ -2537,10 +2533,10 @@ function _M:preUseTalent(ab, silent, fake)
 	end
 
 	-- Paradox is special, it has no max, but the higher it is the higher the chance of something bad happening
-	if (ab.paradox or (ab.sustain_paradox and not self:isTalentActive(ab.id))) and not fake and not self:attr("force_talent_ignore_ressources") then
+	if (ab.paradox and ab.paradox > 0 or (ab.sustain_paradox and ab.sustain_paradox > 0 and not self:isTalentActive(ab.id))) and not fake and not self:attr("force_talent_ignore_ressources") then
 		-- Check anomalies first since they can reduce paradox, this way paradox is a self correcting resource
 		local paradox_scaling = 1 + self.paradox / 300
-		if not game.zone.no_anomalies and not self:attr("no_paradox_fail") and self:paradoxAnomalyChance(ab.paradox or ab.sustain_paradox) then
+		if not game.zone.no_anomalies and not self:attr("no_paradox_fail") and self:paradoxAnomalyChance() then
 			-- Random anomaly
 			local ts = {}
 			for id, t in pairs(self.talents_def) do
@@ -2552,7 +2548,7 @@ function _M:preUseTalent(ab, silent, fake)
 			self:useEnergy()
 			return false
 		-- Now check for failure
-		elseif not self:attr("no_paradox_fail") and self:paradoxFailChance(ab.paradox or ab.sustain_paradox) and not self:hasEffect(self.EFF_SPACETIME_STABILITY) then
+		elseif not self:attr("no_paradox_fail") and self:paradoxFailChance() and not self:hasEffect(self.EFF_SPACETIME_STABILITY) then
 			if not silent then game.logPlayer(self, "You fail to use %s due to your paradox!", ab.name) end
 			self:incParadox(ab.paradox or ab.sustain_paradox / 10)
 			self:useEnergy()
@@ -2673,7 +2669,7 @@ function _M:postUseTalent(ab, ret)
 				trigger = true; self:incMaxHate(-ab.sustain_hate)
 			end
 			if ab.sustain_paradox then
-				trigger = true; self:breakGatherTheThreads(); self:incMinParadox(ab.sustain_paradox)
+				trigger = true; self:incMinParadox(ab.sustain_paradox);
 			end
 			if ab.sustain_psi then
 				trigger = true; self:incMaxPsi(-ab.sustain_psi)
@@ -2748,7 +2744,7 @@ function _M:postUseTalent(ab, ret)
 	-- Cancel stealth!
 	if ab.id ~= self.T_STEALTH and ab.id ~= self.T_HIDE_IN_PLAIN_SIGHT and not ab.no_break_stealth then self:breakStealth() end
 	if ab.id ~= self.T_LIGHTNING_SPEED then self:breakLightningSpeed() end
-	if ab.id ~= self.T_GATHER_THE_THREADS then self:breakGatherTheThreads() end
+	if ab.id ~= self.T_GATHER_THE_THREADS and ab.id ~= self.T_SPACETIME_TUNING then self:breakChronoSpells() end
 	self:breakStepUp()
 
 	if ab.id ~= self.T_REDUX and self:hasEffect(self.EFF_REDUX) and ab.type[1]:find("^chronomancy/") and ab.mode == "activated" and self:getTalentLevel(self.T_REDUX) >= self:getTalentLevel(ab.id) then
@@ -2811,10 +2807,13 @@ function _M:breakLightningSpeed()
 	end
 end
 
---- Breaks gather the threads if active
-function _M:breakGatherTheThreads()
+--- Breaks some chrono spells if active
+function _M:breakChronoSpells()
 	if self:hasEffect(self.EFF_GATHER_THE_THREADS) then
 		self:removeEffect(self.EFF_GATHER_THE_THREADS)
+	end
+	if self:isTalentActive(self.T_SPACETIME_TUNING) then
+		self:forceUseTalent(self.T_SPACETIME_TUNING, {ignore_energy=true})
 	end
 end
 

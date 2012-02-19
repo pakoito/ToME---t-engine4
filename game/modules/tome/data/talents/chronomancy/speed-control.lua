@@ -60,7 +60,7 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		local _ _, _, _, x, y = self:canProject(tg, x, y)
-		x, y = checkBackfire(self, x, y, t.paradox)
+		x, y = checkBackfire(self, x, y)
 		local grids = self:project(tg, x, y, DamageType.STOP, t.getDuration(self, t))
 		self:project(tg, x, y, DamageType.TEMPORAL, self:spellCrit(t.getDamage(self, t)))
 
@@ -102,7 +102,7 @@ newTalent{
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		x, y = checkBackfire(self, x, y, t.paradox)
+		x, y = checkBackfire(self, x, y)
 		local _ _, _, _, x, y = self:canProject(tg, x, y)
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
@@ -136,7 +136,7 @@ newTalent{
 	cooldown = 24,
 	tactical = { BUFF = 2, CLOSEIN = 2, ESCAPE = 2 },
 	no_energy = true,
-	getPower = function(self, t) return (self:combatTalentSpellDamage(t, 50, 100) * getParadoxModifier(self, pm)) / 100 end,
+	getPower = function(self, t) return (self:combatTalentSpellDamage(t, 20, 80) * getParadoxModifier(self, pm)) / 100 end,
 	do_haste_double = function(self, t, x, y)
 		-- Find space
 		local tx, ty = util.findFreeGrid(x, y, 0, true, {[Map.ACTOR]=true})

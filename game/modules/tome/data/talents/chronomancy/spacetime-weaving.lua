@@ -46,7 +46,7 @@ newTalent{
 			game.logSeen(self, "You do not have line of sight.")
 			return nil
 		end
-		x, y = checkBackfire(self, x, y, t.paradox)
+		x, y = checkBackfire(self, x, y)
 		local __, x, y = self:canProject(tg, x, y)
 
 		game.level.map:particleEmitter(self.x, self.y, 1, "temporal_teleport")

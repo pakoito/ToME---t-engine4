@@ -34,7 +34,7 @@ newTalent{
 		
 		return duration
 	end,
-	getReduction = function(self, t) return self:combatTalentSpellDamage(t, 30, 300) end,
+	getReduction = function(self, t) return self:combatTalentSpellDamage(t, 20, 200) end,
 	action = function(self, t)
 		self:incParadox (- t.getReduction(self, t))
 		game:playSoundNear(self, "talents/spell_generic")
@@ -45,7 +45,6 @@ newTalent{
 		local reduction = t.getReduction(self, t)
 		local duration = t.getDuration(self, t)
 		return ([[By slightly reorganizing history you reduce your Paradox by %d and temporarily stabilize the timeline; allowing chronomancy to be used without chance of failure for %d turns.(backfires and anomalies may still occur).
-		Talent points invested in Static History will also reduce your chances of triggering an anomaly while using Spacetime Tuning.
 		The paradox reduction will increase with your Spellpower.]]):
 		format(reduction, duration)
 	end,
@@ -69,7 +68,7 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y, _ = self:getTarget(tg)
 		if not x or not y then return nil end
-		x, y = checkBackfire(self, x, y, t.paradox)
+		x, y = checkBackfire(self, x, y)
 		_, x, y = self:canProject(tg, x, y)
 		local target = x and game.level.map(x, y, engine.Map.ACTOR) or nil
 		if not target then return nil end

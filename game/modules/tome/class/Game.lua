@@ -599,10 +599,6 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down, auto_zone_stair)
 	-- clear chrono worlds and their various effects
 	if self._chronoworlds then self._chronoworlds = nil end
 
-	if self.player:isTalentActive(self.player.T_DOOR_TO_THE_PAST) then
-		self.player:forceUseTalent(self.player.T_DOOR_TO_THE_PAST, {ignore_energy=true})
-	end
-
 	local left_zone = self.zone
 
 	if self.zone and self.zone.on_leave then

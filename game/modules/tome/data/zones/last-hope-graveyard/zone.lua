@@ -89,9 +89,6 @@ return {
 			if game._chronoworlds then
 				game.log("#CRIMSON#Your timetravel has no effect on pre-determined outcomes such as this.")
 				game._chronoworlds = nil
-				if who:isTalentActive(who.T_DOOR_TO_THE_PAST) then
-					who:forceUseTalent(who.T_DOOR_TO_THE_PAST, {ignore_energy=true})
-				end
 			end
 			local r = rng.range(1, 100)
 			if r <= 10 then

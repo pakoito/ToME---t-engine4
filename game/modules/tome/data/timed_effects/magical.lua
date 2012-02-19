@@ -1112,54 +1112,6 @@ newEffect{
 }
 
 newEffect{
-	name = "SPACETIME_TUNING", image = "talents/spacetime_tuning.png",
-	desc = "Spacetime Tuning",
-	long_desc = function(self, eff) return "The target is retuning the fabric of spacetime; any damage will stop it." end,
-	type = "magical",
-	subtype = { temporal=true },
-	status = "beneficial",
-	parameters = {},
-	on_timeout = function(self, eff)
-		local t = self:getTalentFromId(self.T_SPACETIME_TUNING)
-		local anomaly = t.getAnomaly(self, t)
-
-		-- first check for anomaly
-		if rng.percent(anomaly) and not game.zone.no_anomalies and eff.power > 0 then
-			-- Random anomaly
-			local ts = {}
-			for id, t in pairs(self.talents_def) do
-				if t.type[1] == "chronomancy/anomalies" then ts[#ts+1] = id end
-			end
-			if not silent then game.logPlayer(self, "You lose control and unleash an anomaly!") end
-			self:forceUseTalent(rng.table(ts), {ignore_energy=true})
-			-- cancel tuning
-			self:removeEffect(self.EFF_SPACETIME_TUNING)
-		-- prevent abusive shananigans
-		elseif self.paradox > math.max(self:getWil() * 20, 500) and eff.power > 0 then
-			game.logPlayer(self, "Space time resists your will, you can raise Paradox no further.")
-			self:removeEffect(self.EFF_SPACETIME_TUNING)
-		else
-			self:incParadox(eff.power)
-		end
-
-	end,
-	activate = function(self, eff)
-		-- energy gets used here instead of in the talent since the talent will use it when the dialog box pops up and mess with our daze
-		self:useEnergy()
-		-- set daze
-		eff.tmpid = self:addTemporaryValue("dazed", 1)
-	end,
-	deactivate = function(self, eff)
-		local modifier = self:paradoxChanceModifier()
-		local _, failure = self:paradoxFailChance()
-		local _, anomaly = self:paradoxAnomalyChance()
-		local _, backfire = self:paradoxBackfireChance()
-		self:removeTemporaryValue("dazed", eff.tmpid)
-		game.logPlayer(self, "Your current failure chance is %d%%, your current anomaly chance is %d%%, and your current backfire chance is %d%%.", failure, anomaly, backfire)
-	end,
-}
-
-newEffect{
 	name = "MANAWORM", image = "effects/manaworm.png",
 	desc = "Manaworm",
 	long_desc = function(self, eff) return ("The target is infected by a manaworm, draining %0.2f mana per turns and releasing it as arcane damage to the target."):format(eff.power) end,

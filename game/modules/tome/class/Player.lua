@@ -631,6 +631,7 @@ function _M:restCheck()
 		if self:getStamina() < self:getMaxStamina() and self.stamina_regen > 0 then return true end
 		if self:getPsi() < self:getMaxPsi() and self.psi_regen > 0 then return true end
 		if self:getEquilibrium() > 0 and self.equilibrium_regen < 0 then return true end
+		if self:getParadox() > 0 and self:getParadox() > self.min_paradox and self:isTalentActive(self.T_SPACETIME_TUNING) then return true end
 		if self.life < self.max_life and self.life_regen> 0 then return true end
 		for act, def in pairs(game.party.members) do if game.level:hasEntity(act) and not act.dead then
 			if act.life < act.max_life and act.life_regen> 0 then return true end
@@ -945,7 +946,7 @@ function _M:playerUseItem(object, item, inven)
 				self:breakStepUp()
 				self:breakStealth()
 				self:breakLightningSpeed()
-				self:breakGatherTheThreads()
+				self:breakChronoSpells()
 				return true
 			end
 

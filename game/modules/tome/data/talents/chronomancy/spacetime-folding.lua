@@ -61,7 +61,7 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local tx, ty, target = self:getTarget(tg)
 		if not tx or not ty then return nil end
-		tx, ty = checkBackfire(self, tx, ty, t.paradox)
+		tx, ty = checkBackfire(self, tx, ty)
 		if tx then
 			local _ _, tx, ty = self:canProject(tg, tx, ty)
 			if tx then
@@ -157,7 +157,7 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		if not self:hasLOS(x, y) or game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move") then game.logSeen(self, "You can't move there.") return nil	end
-		x, y = checkBackfire(self, x, y, t.paradox)
+		x, y = checkBackfire(self, x, y)
 		local _ _, x, y = self:canProject(tg, x, y)
 		
 		-- indirect fire after the teleport from the x, y to our old starting spot would be best here 

@@ -21,41 +21,35 @@
 newTalent{
 	name = "Spacetime Tuning",
 	type = {"chronomancy/other", 1},
+	mode = "sustained",
+	sustain_paradox = 0,
 	hide = true,
 	points = 1,
-	message = "@Source@ retunes the fabric of spacetime.",
-	cooldown = 50,
+	--message = "@Source@ retunes the fabric of spacetime.",
+	cooldown = 5,
 	tactical = { PARADOX = 2 },
 	no_npc_use = true,
 	no_energy = true,
 	no_unlearn_last = true,
-	getAnomaly = function(self, t) return 6 - (self:getTalentLevelRaw(self.T_STATIC_HISTORY) or 0) end,
-	getPower = function(self, t) return math.floor(self:getWil()/2) end,
-	action = function(self, t)
-		-- open dialog to get desired paradox
-		local q = engine.dialogs.GetQuantity.new("Retuning the fabric of spacetime...",
-		"What's your desired paradox level?", math.floor(self.paradox), nil, function(qty)
-
-			-- get reduction amount and find duration
-			local amount = qty - self.paradox
-			local dur = math.floor(math.abs(qty-self.paradox)/t.getPower(self, t))
-
-			-- set tuning effect
-			if amount >= 0 then
-				self:setEffect(self.EFF_SPACETIME_TUNING, dur, {power = t.getPower(self, t)})
-			elseif amount < 0 then
-				self:setEffect(self.EFF_SPACETIME_TUNING, dur, {power = - t.getPower(self, t)})
-			end
-
-		end)
-		game:registerDialog(q)
+	activate = function(self, t)
+		return {}
+	end,
+	deactivate = function(self, t, p)
+		local _, failure = self:paradoxFailChance()
+		local _, backfire = self:paradoxBackfireChance()
+		local _, anomaly = self:paradoxAnomalyChance()
+		game.logPlayer(self, "Your current failure chance is %d%%, your current anomaly chance is %d%%, and your current backfire chance is %d%%.", failure, anomaly, backfire)
 		return true
 	end,
 	info = function(self, t)
-		local chance = t.getAnomaly(self, t)
-		return ([[Retunes your Paradox towards the desired level and informs you of failure, anomaly, and backfire chances when you finish tuning.  You will be dazed while tuning and each turn your Paradox will increase or decrease by an amount equal to one half of your Willpower stat.
-		Each turn you spend increasing Paradox will have a %d%% chance of triggering a temporal anomaly which will end the tuning process.  Decreasing Paradox has no chance of triggering an anomaly.]]):
-		format(chance)
+		local _, failure = self:paradoxFailChance()
+		local _, backfire = self:paradoxBackfireChance()
+		local _, anomaly = self:paradoxAnomalyChance()
+		return ([[Reduces your paradox by one each turn while sustained.  Attacking, using an item, or a talent will cancel the spell.
+		
+		Current failure chance  : %d%%
+		Current anomaly chance  : %d%%
+		Current backfire chance : %d%%]]):format(failure, backfire, anomaly)
 	end,
 }
 
