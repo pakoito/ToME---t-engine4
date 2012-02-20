@@ -523,23 +523,17 @@ newEntity{
 	},
 }
 
---[[ Todo: make it balanced
 newEntity{
-	power_source = {nature=true},
-	name = "insatiable ", prefix=true, instant_resolve=true,
-	keywords = {insatiable=true},
-	level_range = {1, 50},
+	power_source = {nature=true, antimagic=true},
+	name = "manaburning ", prefix=true, instant_resolve=true,
+	keywords = {manaburning=true},
+	level_range = {10, 50},
 	greater_ego = 1,
-	rarity = 60,
+	rarity = 25,
 	cost = 40,
-	wielder = {
-		resource_leech_chance = resolvers.mbonus_material(4, 1, function(e, v) v=v*10 return 0, v end),
-		resource_leech_value = resolvers.mbonus_material(15, 5),
-	},
 	combat = {
 		melee_project = {
-			[DamageType.NATURE] = resolvers.mbonus_material(25, 5),
+			[DamageType.MANABURN] = resolvers.mbonus_material(50, 15),
 		},
 	},
 }
-]]

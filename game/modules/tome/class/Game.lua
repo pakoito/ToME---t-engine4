@@ -331,6 +331,7 @@ function _M:loaded()
 	Zone.default_filter = function(...) return self.state:defaultEntityFilter(...) end
 	Zone.alter_filter = function(...) return self.state:entityFilterAlter(...) end
 	Zone.post_filter = function(...) return self.state:entityFilterPost(...) end
+	Zone.ego_filter = function(...) return self.state:egoFilter(...) end
 
 	self.uiset = (require("mod.class.uiset."..(config.settings.tome.uiset_mode or "Minimalist"))).new()
 

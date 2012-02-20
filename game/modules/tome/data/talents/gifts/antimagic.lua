@@ -136,23 +136,7 @@ newTalent{
 			if not target then return end
 
 			local base = self:combatTalentMindDamage(t, 20, 230)
-			local mana = base * 2
-			local vim = base
-			local positive = base / 2
-			local negative = base / 2
-
-			mana = math.min(target:getMana(), mana)
-			vim = math.min(target:getVim(), vim)
-			positive = math.min(target:getPositive(), positive)
-			negative = math.min(target:getNegative(), negative)
-
-			target:incMana(-mana)
-			target:incVim(-vim)
-			target:incPositive(-positive)
-			target:incNegative(-negative)
-
-			local dam = math.max(mana, vim * 2, positive * 4, negative * 4) * 1.3
-			DamageType:get(DamageType.ARCANE).projector(self, px, py, DamageType.ARCANE, dam)
+			DamageType:get(DamageType.MANABURN).projector(self, px, py, DamageType.MANABURN, base)
 		end, nil, {type="slime"})
 		game:playSoundNear(self, "talents/heal")
 		return true

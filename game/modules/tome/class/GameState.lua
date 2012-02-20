@@ -1058,6 +1058,49 @@ function _M:entityFilterPost(zone, level, type, e, filter)
 	return e
 end
 
+function _M:egoFilter(zone, level, type, etype, e, ego_filter, egos_list, picked_etype)
+	if type ~= "object" then return ego_filter end
+
+	if not ego_filter then ego_filter = {}
+	else ego_filter = table.clone(ego_filter, true) end
+
+	local arcane_check = false
+	local nature_check = false
+	local am_check = false
+	for i = 1, #egos_list do
+		local e = egos_list[i]
+		if e.power_source and e.power_source.arcane then arcane_check = true end
+		if e.power_source and e.power_source.nature then nature_check = true end
+		if e.power_source and e.power_source.antimagic then am_check = true end
+	end
+
+	local fcts = {}
+
+	if arcane_check then
+		fcts[#fcts+1] = function(ego) return not ego.power_source or not ego.power_source.nature or rng.percent(20) end
+		fcts[#fcts+1] = function(ego) return not ego.power_source or not ego.power_source.antimagic end
+	end
+	if nature_check then
+		fcts[#fcts+1] = function(ego) return not ego.power_source or not ego.power_source.arcane or rng.percent(20) end
+	end
+	if am_check then
+		fcts[#fcts+1] = function(ego) return not ego.power_source or not ego.power_source.arcane end
+	end
+
+	if #fcts > 0 then
+		local old = ego_filter.special
+		ego_filter.special = function(ego)
+			for i = 1, #fcts do
+				if not fcts[i](ego) then return false end
+			end
+			if old and not old(ego) then return false end
+			return true
+		end
+	end
+
+	return ego_filter
+end
+
 --------------------------------------------------------------
 -- Random zones
 --------------------------------------------------------------
