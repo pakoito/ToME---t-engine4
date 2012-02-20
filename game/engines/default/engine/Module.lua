@@ -540,6 +540,7 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 
 	-- Init the module code
 	local M, W = mod.load("init")
+	class:runInherited()
 	_G.game = M.new()
 	_G.game:setPlayerName(name)
 

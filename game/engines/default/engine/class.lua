@@ -20,6 +20,7 @@
 module("class", package.seeall)
 
 local base = _G
+local run_inherited = {}
 
 local function search(k, plist)
 	for i=1, #plist do
@@ -100,6 +101,15 @@ function inherit(...)
 			o.__CLASSNAME = c._NAME
 			setmetatable(o, {__index=c})
 		end
+		if c.inherited then
+			run_inherited[#run_inherited+1] = function()
+				local i = 1
+				while i <= #bases do
+					c:inherited(bases[i], i)
+					i = i + 1
+				end
+			end
+		end
 		return c
 	end
 end
@@ -110,6 +120,12 @@ end
 
 function _M:getClass()
 	return getmetatable(self).__index
+end
+
+function _M:runInherited()
+	for _, f in ipairs(run_inherited) do
+		f()
+	end
 end
 
 local function clonerecurs(d)

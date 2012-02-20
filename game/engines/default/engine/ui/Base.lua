@@ -87,6 +87,18 @@ _M.ui_conf = {
 	},
 }
 
+function _M:inherited(base)
+	if base._NAME == "engine.ui.Base" then
+		self.font = base.font
+		self.font_h = base.font_h
+		self.font_mono = base.font_mono
+		self.font_mono_w = base.font_mono_w
+		self.font_mono_h = base.font_mono_h
+		self.font_bold = base.font_bold
+		self.font_bold_h = base.font_bold_h
+	end
+end
+
 function _M:init(t, no_gen)
 	self.mouse = Mouse.new()
 	self.key = KeyBind.new()
