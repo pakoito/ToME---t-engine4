@@ -967,7 +967,10 @@ function _M:combatSpellpower(mod)
 		add = add + self:hasEffect(self.EFF_BLOODLUST).dur
 	end
 
-	return self:rescaleCombatStats((self.combat_spellpower > 0 and self.combat_spellpower or 0) + add + self:getMag()) * mod
+	local am = 1
+	if self:attr("spellpower_reduction") then am = 1 / (1 + self:attr("spellpower_reduction")) end
+
+	return self:rescaleCombatStats((self.combat_spellpower > 0 and self.combat_spellpower or 0) + add + self:getMag()) * mod * am
 end
 
 --- Gets damage based on talent

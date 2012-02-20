@@ -2100,10 +2100,16 @@ function _M:onWear(o, bypass_set)
 		end
 	end
 
-	-- apply any special cursed logic
+	-- Apply any special cursed logic
 	if self:knowTalent(self.T_DEFILING_TOUCH) then
 		local t = self:getTalentFromId(self.T_DEFILING_TOUCH)
 		t.on_onWear(self, t, o)
+	end
+
+	-- Apply antimagic
+	if o.power_source and o.power_source.antimagic then
+		self:attr("spellpower_reduction", 1)
+		self:attr("spell_failure", (o.material_level or 1) * 10)
 	end
 
 	self:breakReloading()
@@ -2160,6 +2166,12 @@ function _M:onTakeoff(o, bypass_set)
 		t.on_onTakeOff(self, t, o)
 	end
 
+	-- Apply antimagic
+	if o.power_source and o.power_source.antimagic then
+		self:attr("spellpower_reduction", -1)
+		self:attr("spell_failure", -(o.material_level or 1) * 10)
+	end
+
 	self:breakReloading()
 
 	self:updateModdableTile()
@@ -2208,9 +2220,9 @@ function _M:canWearObject(o, try_slot)
 	if self:attr("forbid_arcane") and o.power_source and o.power_source.arcane then
 		return nil, "antimagic"
 	end
-	if o.power_source and o.power_source.antimagic and not self:attr("forbid_arcane") then
-		return nil, "requires antimagic"
-	end
+--	if o.power_source and o.power_source.antimagic and not self:attr("forbid_arcane") then
+--		return nil, "requires antimagic"
+--	end
 
 	return engine.interface.ActorInventory.canWearObject(self, o, try_slot)
 end
@@ -2549,6 +2561,15 @@ function _M:preUseTalent(ab, silent, fake)
 		if (not self:attr("no_equilibrium_fail") and (not self:attr("no_equilibrium_summon_fail") or not ab.is_summon)) and not self:equilibriumChance(ab.equilibrium or ab.sustain_equilibrium) then
 			if not silent then game.logPlayer(self, "You fail to use %s due to your equilibrium!", ab.name) end
 			self:incEquilibrium((ab.equilibrium or ab.sustain_equilibrium) / 10)
+			self:useEnergy()
+			return false
+		end
+	end
+
+	-- Spells can fail
+	if (ab.is_spell and not self:isTalentActive(ab.id)) and not fake and self:attr("spell_failure") then
+		if rng.percent(self:attr("spell_failure")) then
+			if not silent then game.logPlayer(self, "You fail to cast %s!", ab.name) end
 			self:useEnergy()
 			return false
 		end

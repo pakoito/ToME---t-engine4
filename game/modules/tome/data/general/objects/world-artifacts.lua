@@ -458,6 +458,7 @@ newEntity{ base = "BASE_LITE",
 	rarity = 300,
 	desc = [[Said to have once belonged to Inquisitor Marcus Dunn during the Spellhunt this fist sized quartz crystal glows constantly with a soft white light and was rumoured to be a great aid in meditation, helping focus the mind, body, and soul of the owner as well as protecting them from the foulest of magics.]],
 	cost = 100,
+	material_level = 4,
 
 	wielder = {
 		lite = 4,
