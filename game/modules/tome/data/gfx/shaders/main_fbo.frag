@@ -6,6 +6,7 @@ uniform sampler2D noisevol;
 uniform vec2 texSize;
 uniform sampler2D tex;
 uniform vec4 colorize;
+uniform vec4 intensify;
 
 void main(void)
 {
@@ -97,6 +98,13 @@ void main(void)
 	{
 		float grey = (gl_FragColor.r*0.3+gl_FragColor.g*0.59+gl_FragColor.b*0.11) * colorize.a;
 		gl_FragColor = gl_FragColor * (1.0 - colorize.a) + (vec4(colorize.r, colorize.g, colorize.b, 1.0) * grey);
+	}
+
+	if (intensify.r > 0.0 || intensify.g > 0.0 || intensify.b > 0.0)
+	{
+		float grey = gl_FragColor.r*0.3+gl_FragColor.g*0.59+gl_FragColor.b*0.11;
+		vec4 vgrey = vec4(grey, grey, grey, gl_FragColor.a);
+		gl_FragColor = max(gl_FragColor * intensify, vgrey);
 	}
 
 	if (hp_warning > 0.0)
