@@ -79,6 +79,7 @@ function _M:init(t, no_default)
 
 	t.rank = t.rank or 3
 	t.old_life = 0
+	t.old_air = 0
 
 	t.money_value_multiplier = t.money_value_multiplier or 1 -- changes amounts in gold piles and such
 
@@ -248,6 +249,7 @@ function _M:act()
 	self:updateMainShader()
 
 	self.old_life = self.life
+	self.old_air = self.air
 
 	-- Clean log flasher
 --	game.flash:empty()
@@ -276,6 +278,11 @@ function _M:updateMainShader()
 		if self.life ~= self.old_life then
 			if self.life < self.max_life / 2 then game.fbo_shader:setUniform("hp_warning", 1 - (self.life / self.max_life))
 			else game.fbo_shader:setUniform("hp_warning", 0) end
+		end
+		-- Set shader air warning
+		if self.air ~= self.old_air then
+			if self.air < self.max_air / 2 then game.fbo_shader:setUniform("air_warning", 1 - (self.air / self.max_air))
+			else game.fbo_shader:setUniform("air_warning", 0) end
 		end
 
 		-- Colorize shader
@@ -953,7 +960,7 @@ function _M:playerUseItem(object, item, inven)
 			self:breakStepUp()
 			self:breakStealth()
 			self:breakLightningSpeed()
-			self:breakGatherTheThreads()
+			self:breakReloading()
 			self.changed = true
 		end)
 		local ok, ret = coroutine.resume(co)
