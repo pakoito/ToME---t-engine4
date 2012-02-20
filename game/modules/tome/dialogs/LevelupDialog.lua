@@ -1187,7 +1187,7 @@ function _M:drawDialog(kind)
 			for i, o in ipairs(self.actor:getInven(self.actor.INVEN_MAINHAND)) do
 				local mean, dam = o.combat, o.combat
 				if o.archery and mean then
-					dam = (self.actor:getInven("QUIVER")[1] and self.actor:getInven("QUIVER")[1].combat) or o.basic_ammo
+					dam = (self.actor:getInven("QUIVER")[1] and self.actor:getInven("QUIVER")[1].combat)
 				end
 				if mean and dam then
 					s:drawColorStringBlended(self.font, WeaponTxt, w, h, 255, 255, 255, true) h = h + self.font_h
@@ -1225,7 +1225,7 @@ function _M:drawDialog(kind)
 			for i, o in ipairs(self.actor:getInven(self.actor.INVEN_OFFHAND)) do
 				local mean, dam = o.combat, o.combat
 				if o.archery and mean then
-					dam = (self.actor:getInven("QUIVER")[1] and self.actor:getInven("QUIVER")[1].combat) or o.basic_ammo
+					dam = (self.actor:getInven("QUIVER")[1] and self.actor:getInven("QUIVER")[1].combat)
 				end
 				if mean and dam then
 					s:drawColorStringBlended(self.font, "#LIGHT_BLUE#Off Hand:", w, h, 255, 255, 255, true) h = h + self.font_h

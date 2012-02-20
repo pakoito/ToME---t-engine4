@@ -121,7 +121,7 @@ function _M:dumpToJSON(js)
 		for i, o in ipairs(self:getInven(self.INVEN_MAINHAND)) do
 			local mean, dam = o.combat, o.combat
 			if o.archery and mean then
-				dam = (self:getInven("QUIVER")[1] and self:getInven("QUIVER")[1].combat) or o.basic_ammo
+				dam = (self:getInven("QUIVER")[1] and self:getInven("QUIVER")[1].combat)
 			end
 			if mean and dam then
 				c[#c+1] = { ["accuracy (main hand)"] = string.format("%d", self:combatAttack(mean)) }
@@ -150,7 +150,7 @@ function _M:dumpToJSON(js)
 		for i, o in ipairs(self:getInven(self.INVEN_OFFHAND)) do
 			local mean, dam = o.combat, o.combat
 			if o.archery and mean then
-				dam = (self:getInven("QUIVER")[1] and self:getInven("QUIVER")[1].combat) or o.basic_ammo
+				dam = (self:getInven("QUIVER")[1] and self:getInven("QUIVER")[1].combat)
 			end
 			if mean and dam then
 				c[#c+1] = { ["accuracy (off hand)"] = string.format("%d", self:combatAttack(mean)) }

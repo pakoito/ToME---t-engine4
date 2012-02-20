@@ -555,7 +555,7 @@ function _M:drawDialog(kind, actor_to_compare)
 			for i, o in ipairs(player:getInven(player.INVEN_MAINHAND)) do
 				local mean, dam = o.combat, o.combat
 				if o.archery and mean then
-					dam = (player:getInven("QUIVER")[1] and player:getInven("QUIVER")[1].combat) or o.basic_ammo
+					dam = (player:getInven("QUIVER")[1] and player:getInven("QUIVER")[1].combat)
 				end
 				if mean and dam then
 					s:drawColorStringBlended(self.font, WeaponTxt, w, h, 255, 255, 255, true) h = h + self.font_h
@@ -605,7 +605,7 @@ function _M:drawDialog(kind, actor_to_compare)
 			for i, o in ipairs(player:getInven(player.INVEN_OFFHAND)) do
 				local mean, dam = o.combat, o.combat
 				if o.archery and mean then
-					dam = (player:getInven("QUIVER")[1] and player:getInven("QUIVER")[1].combat) or o.basic_ammo
+					dam = (player:getInven("QUIVER")[1] and player:getInven("QUIVER")[1].combat)
 				end
 				if mean and dam then
 					s:drawColorStringBlended(self.font, "#LIGHT_BLUE#Off Hand:", w, h, 255, 255, 255, true) h = h + self.font_h
@@ -648,7 +648,7 @@ function _M:drawDialog(kind, actor_to_compare)
 		self:mouseTooltip(self.TOOLTIP_MINDPOWER, s:drawColorStringBlended(self.font, ("Mindpower: #00ff00#%s"):format(text, dur_text), w, h, 255, 255, 255, true)) h = h + self.font_h
 		text = compare_fields(player, actor_to_compare, function(actor, ...) return actor:combatMindCrit() end, "%d%%", "%+.0f%%")
 		self:mouseTooltip(self.TOOLTIP_MIND_CRIT, s:drawColorStringBlended(self.font,  ("Crit. chance: #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h
-		
+
 		h = 0
 		w = self.w * 0.5
 
@@ -782,7 +782,7 @@ function _M:drawDialog(kind, actor_to_compare)
 		self:mouseTooltip(self.TOOLTIP_RDEFENSE,s:drawColorStringBlended(self.font,           ("Ranged Defense  : #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h
 		text = compare_fields(player, actor_to_compare, function(actor, ...) return actor:combatCritReduction()  end, "%d%%", "%+.0f%%")
 		self:mouseTooltip(self.TOOLTIP_CRIT_REDUCTION,s:drawColorStringBlended(self.font,           ("Crit. Reduction  : #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h
-		
+
 		h = h + self.font_h
 		s:drawColorStringBlended(self.font, "#LIGHT_BLUE#Saves:", w, h, 255, 255, 255, true) h = h + self.font_h
 		text = compare_fields(player, actor_to_compare, function(actor, ...) return math.floor(actor:combatPhysicalResist(true)) end, "%3d", "%+.0f")
@@ -939,7 +939,7 @@ function _M:dump()
 		for i, o in ipairs(player:getInven(player.INVEN_MAINHAND)) do
 			local mean, dam = o.combat, o.combat
 			if o.archery and mean then
-				dam = (player:getInven("QUIVER")[1] and player:getInven("QUIVER")[1].combat) or o.basic_ammo
+				dam = (player:getInven("QUIVER")[1] and player:getInven("QUIVER")[1].combat)
 			end
 			if mean and dam then
 				strings[1] = ("Accuracy(Main Hand): %3d"):format(player:combatAttack(mean))
@@ -1024,7 +1024,7 @@ function _M:dump()
 		for i, o in ipairs(player:getInven(player.INVEN_OFFHAND)) do
 			local mean, dam = o.combat, o.combat
 			if o.archery and mean then
-				dam = (player:getInven("QUIVER")[1] and player:getInven("QUIVER")[1].combat) or o.basic_ammo
+				dam = (player:getInven("QUIVER")[1] and player:getInven("QUIVER")[1].combat)
 			end
 			if mean and dam then
 				nl()

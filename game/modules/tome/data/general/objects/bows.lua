@@ -32,7 +32,6 @@ newEntity{
 	require = { talent = { Talents.T_SHOOT }, },
 	archery = "bow",
 	proj_image = resolvers.image_material("arrow", "wood"),
-	basic_ammo = { talented = "bow", damrange = 1.4  },
 	desc = [[Longbows are used to shoot arrows at your foes.]],
 	randart_able = { attack=40, physical=80, spell=20, def=10, misc=10 },
 	egos = "/data/general/objects/egos/bow.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
@@ -48,12 +47,6 @@ newEntity{ base = "BASE_LONGBOW",
 		range = 6,
 		physspeed = 0.8,
 	},
-	basic_ammo = {
-		dam = resolvers.rngavg(7,12),
-		apr = 5,
-		physcrit = 1,
-		dammod = {dex=0.7, str=0.5},
-	},
 }
 
 newEntity{ base = "BASE_LONGBOW",
@@ -65,12 +58,6 @@ newEntity{ base = "BASE_LONGBOW",
 	combat = {
 		range = 7,
 		physspeed = 0.8,
-	},
-	basic_ammo = {
-		dam = resolvers.rngavg(15,22),
-		apr = 7,
-		physcrit = 1.5,
-		dammod = {dex=0.7, str=0.5},
 	},
 }
 
@@ -84,12 +71,6 @@ newEntity{ base = "BASE_LONGBOW",
 		range = 8,
 		physspeed = 0.8,
 	},
-	basic_ammo = {
-		dam = resolvers.rngavg(28,37),
-		apr = 10,
-		physcrit = 2,
-		dammod = {dex=0.7, str=0.5},
-	},
 }
 
 newEntity{ base = "BASE_LONGBOW",
@@ -101,12 +82,6 @@ newEntity{ base = "BASE_LONGBOW",
 	combat = {
 		range = 9,
 		physspeed = 0.8,
-	},
-	basic_ammo = {
-		dam = resolvers.rngavg(40,47),
-		apr = 14,
-		physcrit = 2.5,
-		dammod = {dex=0.7, str=0.5},
 	},
 }
 
@@ -120,12 +95,6 @@ newEntity{ base = "BASE_LONGBOW",
 		range = 10,
 		physspeed = 0.8,
 	},
-	basic_ammo = {
-		dam = resolvers.rngavg(50, 57),
-		apr = 18,
-		physcrit = 3,
-		dammod = {dex=0.7, str=0.5},
-	},
 }
 
 ------------------ AMMO -------------------
@@ -134,26 +103,29 @@ newEntity{
 	define_as = "BASE_ARROW",
 	slot = "QUIVER",
 	type = "ammo", subtype="arrow",
-	add_name = " (#COMBAT#)",
+	add_name = " (#COMBAT_AMMO#)",
 	display = "{", color=colors.UMBER, image = resolvers.image_material("arrow", "wood"),
 	encumber = 0.03,
 	rarity = 11,
-	combat = { talented = "bow", damrange = 1.4},
+	combat = {
+		talented = "bow",
+		damrange = 1.4,
+	},
 	proj_image = resolvers.image_material("arrow", "wood"),
 	archery_ammo = "bow",
 	desc = [[Arrows are used with bows to pierce your foes to death.]],
-	generate_stack = resolvers.rngavg(100,200),
-	egos = "/data/general/objects/egos/ammo.lua", egos_chance = {100, resolvers.mbonus(30, 5)},
-	stacking = true,
+	egos = "/data/general/objects/egos/ammo.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
+	resolvers.shooter_capacity(),
 }
 
 newEntity{ base = "BASE_ARROW",
-	name = "elm arrow", short_name = "elm",
+	name = "quiver of elm arrows", short_name = "elm",
 	level_range = {1, 10},
 	require = { stat = { dex=11 }, },
 	cost = 0.05,
 	material_level = 1,
 	combat = {
+		capacity = resolvers.rngavg(6, 8),
 		dam = resolvers.rngavg(7,12),
 		apr = 5,
 		physcrit = 1,
@@ -162,12 +134,13 @@ newEntity{ base = "BASE_ARROW",
 }
 
 newEntity{ base = "BASE_ARROW",
-	name = "ash arrow", short_name = "ash",
+	name = "quiver of ash arrows", short_name = "ash",
 	level_range = {10, 20},
 	require = { stat = { dex=16 }, },
 	cost = 0.1,
 	material_level = 2,
 	combat = {
+		capacity = resolvers.rngavg(7, 9),
 		dam = resolvers.rngavg(15,22),
 		apr = 7,
 		physcrit = 1.5,
@@ -176,12 +149,13 @@ newEntity{ base = "BASE_ARROW",
 }
 
 newEntity{ base = "BASE_ARROW",
-	name = "yew arrow", short_name = "yew",
+	name = "quiver of yew arrows", short_name = "yew",
 	level_range = {20, 30},
 	require = { stat = { dex=24 }, },
 	cost = 0.15,
 	material_level = 3,
 	combat = {
+		capacity = resolvers.rngavg(8, 10),
 		dam = resolvers.rngavg(28,37),
 		apr = 10,
 		physcrit = 2,
@@ -190,12 +164,13 @@ newEntity{ base = "BASE_ARROW",
 }
 
 newEntity{ base = "BASE_ARROW",
-	name = "elven-wood arrow", short_name = "e.wood",
+	name = "quiver of elven-wood arrows", short_name = "e.wood",
 	level_range = {30, 40},
 	require = { stat = { dex=35 }, },
 	cost = 0.25,
 	material_level = 4,
 	combat = {
+		capacity = resolvers.rngavg(11, 15),
 		dam = resolvers.rngavg(40,47),
 		apr = 14,
 		physcrit = 2.5,
@@ -204,12 +179,13 @@ newEntity{ base = "BASE_ARROW",
 }
 
 newEntity{ base = "BASE_ARROW",
-	name = "dragonbone arrow", short_name = "dragonbone",
+	name = "quiver of dragonbone arrows", short_name = "dragonbone",
 	level_range = {40, 50},
 	require = { stat = { dex=48 }, },
 	cost = 0.35,
 	material_level = 5,
 	combat = {
+		capacity = resolvers.rngavg(14, 19),
 		dam = resolvers.rngavg(50, 57),
 		apr = 18,
 		physcrit = 3,

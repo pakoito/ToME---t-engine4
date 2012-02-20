@@ -35,28 +35,31 @@ function _M:archeryAcquireTargets(tg, params)
 		game.logPlayer(self, "You must wield a bow or a sling (%s)!", ammo)
 		return nil
 	end
+	if not ammo or ammo.combat.shots_left <= 0 then
+		game.logPlayer(self, "You do not have enough ammo left!")
+		return nil
+	end
 	params = params or {}
 
 	print("[ARCHERY ACQUIRE TARGETS WITH]", weapon.name, ammo.name)
 	local realweapon = weapon
 	weapon = weapon.combat
 
-	local tg = tg or {type="bolt"}
+	local tg = tg or {}
+	tg.type = tg.type or weapon.tg_type or ammo.combat.tg_type or tg.type or "bolt"
 
 	if not tg.range then tg.range=weapon.range or 6 end
 	tg.display = tg.display or {display='/'}
-	tg.speed = (tg.speed or 20) * (ammo.travel_speed or 100) / 100
+	tg.speed = (tg.speed or 6) * (ammo.combat.travel_speed or 100) / 100
 	local x, y = self:getTarget(tg)
 	if not x or not y then return nil end
 
 	-- Find targets to know how many ammo we use
 	local targets = {}
 	if params.one_shot then
-		local a
+		local a = ammo
 		if not ammo.infinite then
-			a = self:removeObject(self:getInven("QUIVER"), 1)
-		else
-			a = ammo
+			ammo.combat.shots_left = ammo.combat.shots_left - 1
 		end
 		if a then
 			targets = {{x=x, y=y, ammo=a.combat}}
@@ -75,11 +78,11 @@ function _M:archeryAcquireTargets(tg, params)
 			end
 
 			for i = 1, params.multishots or 1 do
-				local a
+				local a = ammo
 				if not ammo.infinite then
-					a = self:removeObject(self:getInven("QUIVER"), 1)
-				else
-					a = ammo
+					if ammo.combat.shots_left > 0 then ammo.combat.shots_left = ammo.combat.shots_left - 1
+					else break
+					end
 				end
 				if a then targets[#targets+1] = {x=tx, y=ty, ammo=a.combat}
 				else break end
@@ -96,9 +99,9 @@ function _M:archeryAcquireTargets(tg, params)
 
 		if sound then game:playSoundNear(self, sound) end
 
-		if not ammo.infinite and (ammo:getNumber() < 10 or ammo:getNumber() == 50 or ammo:getNumber() == 40 or ammo:getNumber() == 25) then
-			game.logPlayer(self, "You only have %s left!", ammo:getName{do_color=true})
-		end
+--		if not ammo.infinite and (ammo.combat.shots_left < 10 or ammo:getNumber() == 50 or ammo:getNumber() == 40 or ammo:getNumber() == 25) then
+--			game.logPlayer(self, "You only have %s left!", ammo:getName{do_color=true})
+--		end
 
 		return targets
 	else
@@ -179,11 +182,30 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 	end
 
 	-- Ranged project
-	if hitted and not target.dead then for typ, dam in pairs(self.ranged_project) do
+	local weapon_ranged_project = weapon.ranged_project or {}
+	local ammo_ranged_project = ammo.ranged_project or {}
+	local total_ranged_project = {}
+	table.mergeAdd(total_ranged_project, weapon_ranged_project, true)
+	table.mergeAdd(total_ranged_project, ammo_ranged_project, true)
+	if hitted and not target.dead then for typ, dam in pairs(total_ranged_project) do
 		if dam > 0 then
 			DamageType:get(typ).projector(self, target.x, target.y, typ, dam, tmp)
 		end
 	end end
+
+	-- Talent on hit
+	if hitted and not target.dead and weapon and weapon.talent_on_hit and next(weapon.talent_on_hit) then
+		for tid, data in pairs(weapon.talent_on_hit) do
+			if rng.percent(data.chance) then
+				self:forceUseTalent(tid, {ignore_cd=true, ignore_energy=true, force_target=target, force_level=data.level, ignore_ressources=true})
+			end
+		end
+	end
+
+	-- Special effect
+	if hitted and not target.dead and weapon and weapon.special_on_hit and weapon.special_on_hit.fct then
+		weapon.special_on_hit.fct(weapon, self, target)
+	end
 
 	-- Temporal cast
 	if hitted and not target.dead and self:knowTalent(self.T_WEAPON_FOLDING) and self:isTalentActive(self.T_WEAPON_FOLDING) then
@@ -255,12 +277,13 @@ function _M:archeryShoot(targets, talent, tg, params)
 	local realweapon = weapon
 	weapon = weapon.combat
 
-	local tg = tg or {type="bolt"}
+	local tg = tg or {}
+	tg.type = tg.type or weapon.tg_type or ammo.combat.tg_type or tg.type or "bolt"
 	tg.talent = tg.talent or talent
 
 	if not tg.range then tg.range=weapon.range or 6 end
 	tg.display = tg.display or {display=' ', particle="arrow", particle_args={tile="shockbolt/"..(ammo.proj_image or realweapon.proj_image):gsub("%.png$", "")}}
-	tg.speed = (tg.speed or 20) * (ammo.travel_speed or 100) / 100
+	tg.speed = (tg.speed or 6) * (ammo.combat.travel_speed or 100) / 100
 	tg.archery = params or {}
 	tg.archery.weapon = weapon
 	for i = 1, #targets do
@@ -290,8 +313,7 @@ function _M:hasArcheryWeapon(type)
 		return nil, "no shooter"
 	end
 	if not ammo then
-		-- Launchers provide infinite basic ammo
-		ammo = {name="default", infinite=true, combat=weapon.basic_ammo}
+		return nil, "no ammo"
 	else
 		if not ammo.archery_ammo or weapon.archery ~= ammo.archery_ammo then
 			return nil, "bad ammo"
@@ -299,4 +321,17 @@ function _M:hasArcheryWeapon(type)
 	end
 	if type and weapon.archery ~= type then return nil, "bad type" end
 	return weapon, ammo
+end
+
+--- Check if the actor has a bow or sling and corresponding ammo
+function _M:hasAmmo(type)
+	if not self:getInven("QUIVER") then return nil, "no ammo" end
+	local ammo = self:getInven("QUIVER")[1]
+
+	if not ammo then return nil, "no ammo" end
+	if not ammo.archery_ammo then return nil, "bad ammo" end
+	if not ammo.combat then return nil, "bad ammo" end
+	if not ammo.combat.capacity then return nil, "bad ammo" end
+	if type and ammo.archery_ammo ~= type then return nil, "bad type" end
+	return ammo
 end

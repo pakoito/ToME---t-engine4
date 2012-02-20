@@ -1300,3 +1300,27 @@ newEffect{
 		return dam
 	end,
 }
+
+newEffect{
+	name = "RELOADING", image = "talents/reload.png",
+	desc = "Reloading",
+	long_desc = function(self, eff) return ("Reloading ammo.") end,
+	decrease = 0,
+	type = "other",
+	subtype = { miscellaneous=true },
+	status = "beneficial",
+	parameters = {},
+	activate = function(self, eff) game.logPlayer(self, "#LIGHT_BLUE#You begin reloading.") end,
+	deactivate = function(self, eff)
+	end,
+	on_timeout = function(self, eff)
+		for i = 1, eff.shots_per_turn do
+			eff.ammo.combat.shots_left = eff.ammo.combat.shots_left + 1
+			if eff.ammo.combat.shots_left >= eff.ammo.combat.capacity then
+				game.logPlayer(self, "Your %s is full.", eff.ammo.name)
+				self:breakReloading()
+				break
+			end
+		end
+	end,
+}

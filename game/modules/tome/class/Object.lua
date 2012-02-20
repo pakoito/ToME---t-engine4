@@ -133,6 +133,9 @@ function _M:descAttribute(attr)
 	elseif attr == "COMBAT" then
 		local c = self.combat
 		return c.dam.."-"..(c.dam*(c.damrange or 1.1)).." power, "..(c.apr or 0).." apr"
+	elseif attr == "COMBAT_AMMO" then
+		local c = self.combat
+		return c.shots_left.."/"..c.capacity..", "..c.dam.."-"..(c.dam*(c.damrange or 1.1)).." power, "..(c.apr or 0).." apr"
 	elseif attr == "COMBAT_DAMTYPE" then
 		local c = self.combat
 		return c.dam.."-"..(c.dam*(c.damrange or 1.1)).." power, "..(c.apr or 0).." apr, "..DamageType:get(c.damtype).name.." damage"
@@ -432,6 +435,9 @@ function _M:getTextualDesc(compare_with)
 		compare_fields(combat, compare_with, field, "physspeed", "%.0f%%", "Attack speed: ", 100, false, true, add_table)
 
 		compare_fields(combat, compare_with, field, "range", "%+d", "Firing range: ", 1, false, false, add_table)
+		compare_fields(combat, compare_with, field, "capacity", "%d", "Capacity: ", 1, false, false, add_table)
+		compare_fields(combat, compare_with, field, "shots_reloaded_per_turn", "%+d", "Reload speed: ", 1, false, false, add_table)
+		compare_fields(combat, compare_with, field, "ammo_every", "%d", "Turns elapse between self-loadings: ", 1, false, false, add_table)
 
 		local talents = {}
 		if combat.talent_on_hit then
@@ -485,6 +491,10 @@ function _M:getTextualDesc(compare_with)
 
 		compare_fields(combat, compare_with, field, "travel_speed", "%+d%%", "Travel speed: ", 1, false, false, add_table)
 
+		if combat.tg_type and combat.tg_type == "beam" then
+			desc:add({"color","YELLOW"}, ("Shots beam through all targets."), {"color","LAST"}, true)
+		end
+
 		compare_table_fields(combat, compare_with, field, "melee_project", "%+d", "Damage when this weapon hits: ", function(item)
 				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
 				return col[2], (" %s"):format(DamageType.dam_def[item].name),{"color","LAST"}
@@ -515,6 +525,8 @@ function _M:getTextualDesc(compare_with)
 		compare_fields(w, compare_with, field, "combat_def_ranged", "%+d", "Ranged Defense: ")
 
 		compare_fields(w, compare_with, field, "fatigue", "%+d%%", "Fatigue: ", 1, true, true)
+
+		compare_fields(w, compare_with, field, "ammo_reload_speed", "%+d", "Ammo reloads per turns: ")
 
 		compare_table_fields(w, compare_with, field, "inc_stats", "%+d", "Changes stats: ", function(item)
 				return (" %s"):format(Stats.stats_def[item].short_name:capitalize())
@@ -789,7 +801,7 @@ function _M:getTextualDesc(compare_with)
 		if w.undead then
 			desc:add("The wearer is treated as an undead.", true)
 		end
-		
+
 		if w.blind_fight then
 			desc:add({"color", "YELLOW"}, "Blind-Fight:", {"color", "LAST"}, "This item allows the wearer to attack unseen targets without any penalties.", true)
 		end
@@ -815,7 +827,6 @@ function _M:getTextualDesc(compare_with)
 	end
 	local can_combat = false
 	local can_special_combat = false
-	local can_basic_ammo = false
 	local can_wielder = false
 	local can_carrier = false
 	local can_imbue_powers = false
@@ -826,9 +837,6 @@ function _M:getTextualDesc(compare_with)
 		end
 		if v.special_combat then
 			can_special_combat = true
-		end
-		if v.basic_ammo then
-			can_basic_ammo = true
 		end
 		if v.wielder then
 			can_wielder = true
@@ -861,11 +869,6 @@ function _M:getTextualDesc(compare_with)
 		desc:add(found and {"color","WHITE"} or {"color","GREEN"}, "It is immune to teleportation, if you teleport it will fall on the ground.", {"color", "LAST"}, true)
 	elseif found then
 		desc:add({"color","RED"}, "It is immune to teleportation, if you teleport it will fall on the ground.", {"color", "LAST"}, true)
-	end
-
-	if self.basic_ammo or can_basic_ammo then
-		desc:add({"color","YELLOW"}, "Default ammo(infinite):", {"color", "LAST"}, true)
-		desc_combat(self, compare_with, "basic_ammo")
 	end
 
 	if self.wielder or can_wielder then

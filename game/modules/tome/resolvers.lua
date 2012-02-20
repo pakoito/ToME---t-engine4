@@ -607,3 +607,12 @@ function resolvers.calc.nice_tile(t, e)
 	end
 	return nil
 end
+
+function resolvers.shooter_capacity()
+	return {__resolver="shooter_capacity", __resolve_last=true}
+end
+function resolvers.calc.shooter_capacity(t, e)
+	e.combat.capacity = math.floor(e.combat.capacity)
+	e.combat.shots_left = e.combat.capacity
+	return nil
+end

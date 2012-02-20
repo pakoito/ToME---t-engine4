@@ -511,12 +511,6 @@ newEntity{ base = "BASE_LONGBOW",
 		physspeed = 0.7,
 		apr = 12,
 	},
-	basic_ammo = {
-		dam = 57,
-		apr = 18,
-		physcrit = 3,
-		dammod = {dex=0.7, str=0.5},
-	},
 	wielder = {
 		inc_damage={ [DamageType.PHYSICAL] = 12, },
 		lite = 1,
@@ -538,12 +532,6 @@ newEntity{ base = "BASE_LONGBOW",
 		range = 7,
 		physspeed = 0.8,
 	},
-	basic_ammo = {
-		dam = 20,
-		apr = 7,
-		physcrit = 1.5,
-		dammod = {dex=0.7, str=0.5},
-	},
 	wielder = {
 		disease_immune = 0.5,
 		ranged_project = {[DamageType.CORRUPTED_BLOOD] = 15},
@@ -564,12 +552,6 @@ newEntity{ base = "BASE_SLING",
 	combat = {
 		range = 10,
 		physspeed = 0.7,
-	},
-	basic_ammo = {
-		dam = 36,
-		apr = 3,
-		physcrit = 5,
-		dammod = {dex=0.7, cun=0.5},
 	},
 	wielder = {
 		inc_stats = { [Stats.STAT_DEX] = 4, [Stats.STAT_CUN] = 3,  },

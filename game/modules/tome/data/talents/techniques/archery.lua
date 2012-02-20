@@ -51,6 +51,34 @@ newTalent{
 		return ([[Shoot your bow or sling!]])
 	end,
 }
+newTalent{
+	name = "Reload",
+	type = {"technique/archery-base", 1},
+	cooldown = 0,
+	points = 1,
+	tactical = { AMMO = 2 },
+	on_pre_use = function(self, t, silent) if not self:hasAmmo() then if not silent then game.logPlayer(self, "You must have a quiver or pouch equipped.") end return false end return true end,
+	shots_per_turn = function(self, t)
+		return self:getTalentLevelRaw(t) + (self:attr("ammo_reload_speed") or 0)
+	end,
+	action = function(self, t)
+		local q, err = self:hasAmmo()
+		if not q then
+			game.logPlayer(self, "%s", err)
+			return
+		end
+		if q.combat.shots_left >= q.combat.capacity then
+			game.logPlayer(self, "Your %s is full.", q.name)
+			return
+		end
+		self:setEffect(self.EFF_RELOADING, q.combat.capacity, {ammo = q, shots_per_turn = t.shots_per_turn(self, t)})
+		return true
+	end,
+	info = function(self, t)
+		local spt = t.shots_per_turn(self, t)
+		return ([[Reload your quiver or shot pouch at the rate of %d shot%s per turn (depends of the ammo used).]]):format(spt, (spt > 1 and "s") or "")
+	end,
+}
 
 newTalent{
 	name = "Steady Shot",

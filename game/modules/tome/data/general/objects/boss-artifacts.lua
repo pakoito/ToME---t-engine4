@@ -1188,12 +1188,6 @@ Hard to tell if that really helped its former owner, but it's clear that the ski
 		range = 10,
 		physspeed = 0.8,
 	},
-	basic_ammo = {
-		dam = 42,
-		apr = 3,
-		physcrit = 5,
-		dammod = {dex=0.7, cun=0.5},
-	},
 	wielder = {
 		movement_speed = 0.2,
 		inc_stats = { [Stats.STAT_LCK] = 10, },
@@ -1231,7 +1225,7 @@ It has been kept somewhat intact with layers of salt and clay, but in spite of t
 			local grids = core.fov.circle_grids(actor.x, actor.y, 1, true)
 			local Map = require "engine.Map"
 			local is_trap = false
-			
+
 			for x, yy in pairs(grids) do for y, _ in pairs(yy) do
 				local trap = game.level.map(x, y, Map.TRAP)
 				if trap then

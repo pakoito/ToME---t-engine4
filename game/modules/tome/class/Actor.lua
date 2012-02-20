@@ -299,6 +299,7 @@ function _M:actBase()
 	if not self:attr("no_talents_cooldown") then self:cooldownTalents() end
 	-- Regen resources
 	self:regenLife()
+	self:regenAmmo()
 	if self:knowTalent(self.T_UNNATURAL_BODY) then
 		local t = self:getTalentFromId(self.T_UNNATURAL_BODY)
 		t.do_regenLife(self, t)
@@ -599,7 +600,7 @@ function _M:defineDisplayCallback()
 		if game.level and self.can_talk then
 			local map = game.level.map
 			if not ichat then
-				ichat = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, "speak_bubble.png")
+				ichat = game.level.map.tilesTactic:get('', 0,0,0, 0,0,0, "speak_bubble.png")
 			end
 
 			ichat:toScreen(x + w - 8, y, 8, 8)
@@ -1093,6 +1094,19 @@ function _M:regenLife()
 	if self.life_regen and not self:attr("no_life_regen") then
 		self.life = util.bound(self.life + self.life_regen * util.bound((self.healing_factor or 1), 0, 2.5), self.die_at, self.max_life)
 	end
+end
+
+function _M:regenAmmo()
+	local ammo = self:hasAmmo()
+	local r = (ammo and ammo.combat and ammo.combat.ammo_every)
+	if not r then return end
+	if ammo.combat.shots_left >= ammo.combat.capacity then ammo.combat.shots_left = ammo.combat.capacity return end
+	ammo.combat.reload_counter = (ammo.combat.reload_counter or 0) + 1
+	if ammo.combat.reload_counter == r then
+		ammo.combat.reload_counter = 0
+		ammo.combat.shots_left = util.bound(ammo.combat.shots_left + 1, 0, ammo.combat.capacity)
+	end
+
 end
 
 --- Called before healing
@@ -2092,6 +2106,8 @@ function _M:onWear(o, bypass_set)
 		t.on_onWear(self, t, o)
 	end
 
+	self:breakReloading()
+
 	self:updateModdableTile()
 	if self == game.player then game:playSound("actions/wear") end
 end
@@ -2143,6 +2159,8 @@ function _M:onTakeoff(o, bypass_set)
 		local t = self:getTalentFromId(self.T_DEFILING_TOUCH)
 		t.on_onTakeOff(self, t, o)
 	end
+
+	self:breakReloading()
 
 	self:updateModdableTile()
 	if self == game.player then game:playSound("actions/takeoff") end
@@ -2278,6 +2296,10 @@ function _M:learnPool(t)
 	if t.type[1]:find("^technique/archery") and not self:knowTalent(self.T_SHOOT) then
 		self:learnTalent(self.T_SHOOT, true)
 		self.resource_pool_refs[self.T_SHOOT] = (self.resource_pool_refs[self.T_SHOOT] or 0) + 1
+	end
+	if t.type[1]:find("^technique/archery") and not self:knowTalent(self.T_RELOAD) then
+		self:learnTalent(self.T_RELOAD, true)
+		self.resource_pool_refs[self.T_RELOAD] = (self.resource_pool_refs[self.T_RELOAD] or 0) + 1
 	end
 
 	return true
@@ -2745,6 +2767,7 @@ function _M:postUseTalent(ab, ret)
 	if ab.id ~= self.T_STEALTH and ab.id ~= self.T_HIDE_IN_PLAIN_SIGHT and not ab.no_break_stealth then self:breakStealth() end
 	if ab.id ~= self.T_LIGHTNING_SPEED then self:breakLightningSpeed() end
 	if ab.id ~= self.T_GATHER_THE_THREADS and ab.id ~= self.T_SPACETIME_TUNING then self:breakChronoSpells() end
+	if ab.id ~= self.T_RELOAD then self:breakReloading() end
 	self:breakStepUp()
 
 	if ab.id ~= self.T_REDUX and self:hasEffect(self.EFF_REDUX) and ab.type[1]:find("^chronomancy/") and ab.mode == "activated" and self:getTalentLevel(self.T_REDUX) >= self:getTalentLevel(ab.id) then
@@ -2769,6 +2792,12 @@ function _M:forceUseTalent(t, def)
 	if def.no_equilibrium_fail then self:attr("no_equilibrium_fail", -1) end
 	if def.no_paradox_fail then self:attr("no_paradox_fail", -1) end
 	return unpack(ret)
+end
+
+function _M:breakReloading()
+	if self:hasEffect(self.EFF_RELOADING) then
+		self:removeEffect(self.EFF_RELOADING)
+	end
 end
 
 --- Breaks stealth if active

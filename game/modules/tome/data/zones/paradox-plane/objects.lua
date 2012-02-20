@@ -39,12 +39,6 @@ According to legend it was made from the first ash sapling to sprout after the S
 		range = 9,
 		physspeed = 0.6,
 	},
-	basic_ammo = {
-		dam = 30,
-		apr = 10,
-		physcrit = 2,
-		dammod = {dex=0.7, str=0.5},
-	},
 	wielder = {
 		life_regen = 2.0,
 		stamina_regen = 1.0,

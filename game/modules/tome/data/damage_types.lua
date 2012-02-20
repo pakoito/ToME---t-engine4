@@ -584,6 +584,15 @@ newDamageType{
 	end,
 }
 
+-- Lite + Light damage
+newDamageType{
+	name = "bright light", type = "LITE_LIGHT",
+	projector = function(src, x, y, type, dam)
+		DamageType:get(DamageType.LITE).projector(src, x, y, DamageType.LITE, 1)
+		return DamageType:get(DamageType.LIGHT).projector(src, x, y, DamageType.LIGHT, dam)
+	end,
+}
+
 -- Fire damage + DOT
 newDamageType{
 	name = "fireburn", type = "FIREBURN",

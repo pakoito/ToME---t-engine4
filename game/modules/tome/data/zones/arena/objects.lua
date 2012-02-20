@@ -123,12 +123,6 @@ newEntity{ define_as = "ARENA_BOW", name = "elm longbow of piercing arrows",
 		range = 8,
 		physspeed = 0.8,
 	},
-	basic_ammo = {
-		dam = 20,
-		apr = 5,
-		physcrit = 1,
-		dammod = {dex=0.7, str=0.5},
-	},
 }
 
 newEntity{ define_as = "ARENA_SLING", name = "rough leather sling of flare",
@@ -148,11 +142,5 @@ newEntity{ define_as = "ARENA_SLING", name = "rough leather sling of flare",
 	combat = {
 		range = 8,
 		physspeed = 0.8,
-	},
-	basic_ammo = {
-		dam = 20,
-		apr = 1,
-		physcrit = 4,
-		dammod = {dex=0.7, cun=0.5},
 	},
 }

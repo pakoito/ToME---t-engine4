@@ -17,81 +17,171 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local Talents = require("engine.interface.ActorTalents")
+
 newEntity{
-	power_source = {arcane=true},
-	name = "flaming ", prefix=true, instant_resolve=true,
-	keywords = {flaming=true},
+	power_source = {technique=true},
+	name = "quick-loading ", prefix=true, instant_resolve=true,
+	keywords = {quick=true},
 	level_range = {1, 50},
 	rarity = 5,
 	wielder = {
-		ranged_project={[DamageType.FIRE] = resolvers.mbonus_material(25, 4, function(e, v) return v * 0.1 * 0.64 end)},
+		ammo_reload_speed = resolvers.mbonus_material(4, 1),
+	},
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = "high-capacity ", prefix=true, instant_resolve=true,
+	keywords = {capacity=true},
+	level_range = {1, 50},
+	rarity = 5,
+	combat = {
+		capacity = resolvers.generic(function(e) return e.combat.capacity * rng.float(1.3, 1.6) end),
+	},
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = "self-loading ", prefix=true, instant_resolve=true,
+	keywords = {self=true},
+	level_range = {1, 50},
+	rarity = 5,
+	combat = {
+		ammo_regen = resolvers.mbonus_material(3, 1),
+	},
+	resolvers.genericlast(function(e)
+		e.combat.ammo_every = 6 - e.combat.ammo_regen
+	end),
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = "battle-ranger's ", prefix=true, instant_resolve=true,
+	keywords = {ranger=true},
+	level_range = {1, 50},
+	rarity = 7,
+	greater_ego = 1,
+	combat = {
+		capacity = resolvers.generic(function(e) return e.combat.capacity * rng.float(1.2, 1.5) end),
+	},
+	wielder = {
+		ammo_reload_speed = resolvers.mbonus_material(4, 1),
+	},
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = "enchanted ", prefix=true, instant_resolve=true,
+	keywords = {enchanted=true},
+	level_range = {1, 50},
+	rarity = 7,
+	greater_ego = 1,
+	combat = {
+		ammo_regen = resolvers.mbonus_material(3, 1),
+	},
+	wielder = {
+		ammo_reload_speed = resolvers.mbonus_material(4, 1),
+	},
+	resolvers.genericlast(function(e)
+		e.combat.ammo_every = 6 - e.combat.ammo_regen
+	end),
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = "sentry's ", prefix=true, instant_resolve=true,
+	keywords = {sentry=true},
+	level_range = {1, 50},
+	rarity = 7,
+	greater_ego = 1,
+	combat = {
+		ammo_regen = resolvers.mbonus_material(3, 1),
+		capacity = resolvers.generic(function(e) return e.combat.capacity * rng.float(1.2, 1.5) end),
+	},
+	resolvers.genericlast(function(e)
+		e.combat.ammo_every = 6 - e.combat.ammo_regen
+	end),
+}
+
+newEntity{
+	power_source = {nature=true},
+	name = " of fire", suffix=true, instant_resolve=true,
+	keywords = {fire=true},
+	level_range = {1, 50},
+	rarity = 5,
+	combat = {
+		ranged_project={[DamageType.FIRE] = resolvers.mbonus_material(20, 5)},
 	},
 }
 newEntity{
-	power_source = {arcane=true},
-	name = "icy ", prefix=true, instant_resolve=true,
-	keywords = {icy=true},
+	power_source = {nature=true},
+	name = " of ice", suffix=true, instant_resolve=true,
+	keywords = {ice=true},
 	level_range = {15, 50},
 	rarity = 5,
-	wielder = {
-		ranged_project={[DamageType.ICE] = resolvers.mbonus_material(15, 4, function(e, v) return v * 0.1 * 0.7 end)},
+	combat = {
+		ranged_project={[DamageType.ICE] = resolvers.mbonus_material(10, 4)},
 	},
 }
 newEntity{
 	power_source = {nature=true},
-	name = "acidic ", prefix=true, instant_resolve=true,
-	keywords = {acidic=true},
+	name = " of acid", suffix=true, instant_resolve=true,
+	keywords = {cunning=true},
 	level_range = {1, 50},
 	rarity = 5,
-	wielder = {
-		ranged_project={[DamageType.ACID] = resolvers.mbonus_material(25, 4, function(e, v) return v * 0.1 * 0.7 end)},
-	},
-}
-newEntity{
-	power_source = {arcane=true},
-	name = "shocking ", prefix=true, instant_resolve=true,
-	keywords = {shocking=true},
-	level_range = {1, 50},
-	rarity = 5,
-	wielder = {
-		ranged_project={[DamageType.LIGHTNING] = resolvers.mbonus_material(25, 4, function(e, v) return v * 0.1 * 0.7 end)},
+	combat = {
+		ranged_project={[DamageType.ACID] = resolvers.mbonus_material(20, 5)},
 	},
 }
 newEntity{
 	power_source = {nature=true},
-	name = "poisonous ", prefix=true, instant_resolve=true,
-	keywords = {poisonous=true},
+	name = " of lightning", suffix=true, instant_resolve=true,
+	keywords = {lightning=true},
 	level_range = {1, 50},
 	rarity = 5,
-	wielder = {
-		ranged_project={[DamageType.POISON] = resolvers.mbonus_material(45, 6, function(e, v) return v * 0.1 * 0.5 end)},
+	combat = {
+		ranged_project={[DamageType.LIGHTNING] = resolvers.mbonus_material(20, 5)},
 	},
 }
 
 newEntity{
 	power_source = {nature=true},
-	name = "slime-covered ", prefix=true, instant_resolve=true,
+	name = " of slime", suffix=true, instant_resolve=true,
 	keywords = {slime=true},
 	level_range = {10, 50},
 	rarity = 5,
-	wielder = {
-		ranged_project={[DamageType.SLIME] = resolvers.mbonus_material(45, 6, function(e, v) return v * 0.1 * 0.9 end)},
+	combat = {
+		ranged_project={[DamageType.SLIME] = resolvers.mbonus_material(10, 4)},
 	},
 }
 
 newEntity{
-	power_source = {arcane=true},
-	name = "elemental ", prefix=true, instant_resolve=true,
-	keywords = {elemental=true},
+	power_source = {technique=true},
+	name = " of accuracy", suffix=true, instant_resolve=true,
+	keywords = {accuracy=true},
+	level_range = {1, 50},
+	rarity = 3,
+	cost = 4,
+	combat = {
+		atk = resolvers.mbonus_material(20, 5),
+	},
+}
+
+newEntity{
+	power_source = {nature=true},
+	name = " of the elements", suffix=true, instant_resolve=true,
+	keywords = {elements=true},
 	level_range = {35, 50},
 	greater_ego = 1,
 	rarity = 25,
-	wielder = {
+	cost = 35,
+	combat = {
 		ranged_project={
-			[DamageType.FIRE] = resolvers.mbonus_material(25, 4, function(e, v) return v * 0.1 * 0.7 * 0.3 end),
-			[DamageType.ICE] = resolvers.mbonus_material(15, 4, function(e, v) return v * 0.1 * 0.7 * 0.3 end),
-			[DamageType.ACID] = resolvers.mbonus_material(25, 4, function(e, v) return v * 0.1 * 0.7 * 0.3 end),
-			[DamageType.LIGHTNING] = resolvers.mbonus_material(25, 4, function(e, v) return v * 0.1 * 0.7 * 0.3 end),
+			[DamageType.FIRE] = resolvers.mbonus_material(10, 3),
+			[DamageType.ICE] = resolvers.mbonus_material(10, 3),
+			[DamageType.ACID] = resolvers.mbonus_material(10, 3),
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(10, 3),
 		},
 	},
 }
@@ -104,40 +194,72 @@ newEntity{
 	rarity = 7,
 	combat = {
 		travel_speed = 200,
-		atk = resolvers.mbonus_material(10, 3, function(e, v) return v * 0.1 * 0.5 end),
 	},
 }
 
 newEntity{
 	power_source = {technique=true},
-	name = " of annihilation", suffix=true,
-	keywords = {['annihil.']=true},
+	name = " of annihilation", suffix=true, instant_resolve=true,
+	keywords = {annihilation=true},
 	level_range = {1, 50},
 	greater_ego = 1,
 	cost = 1,
 	rarity = 15,
 	combat = {
-		physcrit = 100,
+		dam = resolvers.mbonus_material(50, 15),
+		atk = resolvers.mbonus_material(20, 5),
+		travel_speed = 200,
+		-- Powerful but comes in a small quiver/pouch
+		capacity = resolvers.generic(function(e) return e.combat.capacity / 5 end),
 	},
-	-- Powerful but does not come in much quantity
-	resolvers.generic(function(e)
-		e.generate_stack = rng.range(5, 10)
-	end),
 }
 
 newEntity{
-	power_source = {technique=true},
-	name = " of unerring flight", suffix=true,
-	keywords = {unerring=true},
+	power_source = {arcane=true},
+	name = " of corruption", suffix=true, instant_resolve=true,
+	keywords = {corruption=true},
+	level_range = {35, 50},
+	greater_ego = 1,
+	rarity = 20,
+	cost = 35,
+	combat = {
+		ranged_project={
+			[DamageType.BLIGHT] = resolvers.mbonus_material(15, 5),
+			[DamageType.DARKNESS] = resolvers.mbonus_material(15, 5),
+		},
+	},
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = " of paradox", suffix=true, instant_resolve=true,
+	keywords = {paradox=true},
 	level_range = {1, 50},
 	greater_ego = 1,
-	cost = 1,
+	rarity = 15,
+	cost = 30,
+	combat = {
+		ranged_project = {
+			[DamageType.TEMPORAL] = resolvers.mbonus_material(15, 5),
+			[DamageType.RANDOM_CONFUSION] = resolvers.mbonus_material(10, 5),
+		},
+	},
+}
+
+
+newEntity{
+	power_source = {nature=true},
+	name = " of sunrise", suffix=true, instant_resolve=true,
+	keywords = {sunrise=true},
+	level_range = {1, 50},
+	greater_ego = 1,
+	cost = 30,
 	rarity = 15,
 	combat = {
-		atk = 500,
+		tg_type = "beam",
+		travel_speed = 300,
+		-- Powerful but comes in a small quiver/pouch
+		capacity = resolvers.generic(function(e) return e.combat.capacity / 4 end),
 	},
-	-- Powerful but does not come in much quantity
-	resolvers.generic(function(e)
-		e.generate_stack = rng.range(5, 10)
-	end),
+	resolvers.generic(function(e) e.combat.damtype = DamageType.LITE_LIGHT end),
 }

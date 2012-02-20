@@ -19,73 +19,18 @@
 local Talents = require("engine.interface.ActorTalents")
 local Stats = require("engine.interface.ActorStats")
 
---load("/data/general/objects/egos/charged-attack.lua")
+load("/data/general/objects/egos/ranged.lua")
 
 newEntity{
 	power_source = {technique=true},
-	name = " of power", suffix=true, instant_resolve=true,
-	keywords = {power=true},
-	level_range = {1, 50},
-	rarity = 3,
-	cost = 6,
-	combat={apr = resolvers.mbonus_material(15, 1)},
-}
-
-newEntity{
-	power_source = {technique=true},
-	name = "mighty ", prefix=true, instant_resolve=true,
-	keywords = {mighty=true},
-	level_range = {1, 50},
-	rarity = 3,
-	cost = 4,
-	wielder = {
-		inc_damage={ [DamageType.PHYSICAL] = resolvers.mbonus_material(25, 8), },
-	},
-}
-
-newEntity{
-	power_source = {technique=true},
-	name = "steady ", prefix=true, instant_resolve=true,
-	keywords = {steady=true},
-	level_range = {20, 50},
-	rarity = 9,
-	cost = 10,
-	wielder = {
-		talent_cd_reduction={[Talents.T_STEADY_SHOT]=1},
-	},
-}
-
-newEntity{
-	power_source = {technique=true},
-	name = " of dexterity (#STATBONUS#)", suffix=true, instant_resolve=true,
+	name = " of cunning (#STATBONUS#)", suffix=true, instant_resolve=true,
 	keywords = {dex=true},
 	level_range = {20, 50},
 	rarity = 7,
 	cost = 7,
 	wielder = {
-		inc_stats = { [Stats.STAT_DEX] = resolvers.mbonus_material(6, 2) },
+		inc_stats = { [Stats.STAT_CUN] = resolvers.mbonus_material(6, 2) },
 	},
-}
-
-newEntity{
-	power_source = {technique=true},
-	name = " of speed", suffix=true, instant_resolve=true,
-	keywords = {speed=true},
-	level_range = {20, 50},
-	rarity = 7,
-	cost = 7,
-	combat={physspeed = -0.1},
-}
-
-newEntity{
-	power_source = {technique=true},
-	name = " of great speed", suffix=true, instant_resolve=true,
-	keywords = {SPEED=true},
-	level_range = {40, 50},
-	greater_ego = 1,
-	rarity = 10,
-	cost = 60,
-	combat={physspeed = -0.2},
 }
 
 newEntity{

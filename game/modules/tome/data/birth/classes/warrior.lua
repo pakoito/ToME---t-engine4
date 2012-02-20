@@ -167,10 +167,14 @@ newBirthDescriptor{
 		max_life = 110,
 		resolvers.equip{ id=true,
 			{type="weapon", subtype="longbow", name="elm longbow", autoreq=true, ego_chance=-1000},
-			{type="armor", subtype="light", name="rough leather armour", autoreq=true, ego_chance=-1000}
+			{type="ammo", subtype="arrow", name="quiver of elm arrows", autoreq=true, ego_chance=-1000},
+			{type="armor", subtype="light", name="rough leather armour", autoreq=true, ego_chance=-1000},
 		},
 		resolvers.inventory{ id=true, inven="QS_MAINHAND",
 			{type="weapon", subtype="sling", name="rough leather sling", autoreq=true, ego_chance=-1000},
+		},
+		resolvers.inventory{ id=true, inven="QS_QUIVER",
+			{type="ammo", subtype="shot", name="pouch of iron shots", autoreq=true, ego_chance=-1000},
 		},
 		resolvers.generic(function(e)
 			e.auto_shoot_talent = e.T_SHOOT

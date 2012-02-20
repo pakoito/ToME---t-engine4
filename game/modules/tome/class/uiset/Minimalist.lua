@@ -889,19 +889,23 @@ function _M:displayResources(scale, bx, by, a)
 		local quiver = player:getInven("QUIVER")
 		local ammo = quiver and quiver[1]
 		if ammo then
-			local amt = ammo:getNumber()
+			local amt, max = 0, 0
 			local shad, bg
-			if ammo.type == "alchemist-gem" then shad, bg = _M["ammo_shadow_alchemist-gem"], _M["ammo_alchemist-gem"]
-			else shad, bg = _M["ammo_shadow_"..ammo.subtype] or ammo_shadow_default, _M["ammo_"..ammo.subtype] or ammo_default
+			if ammo.type == "alchemist-gem" then
+				shad, bg = _M["ammo_shadow_alchemist-gem"], _M["ammo_alchemist-gem"]
+				amt = ammo:getNumber()
+			else
+				shad, bg = _M["ammo_shadow_"..ammo.subtype] or ammo_shadow_default, _M["ammo_"..ammo.subtype] or ammo_default
+				amt, max = ammo.combat.shots_left, ammo.combat.capacity
 			end
 
 			shad[1]:toScreenFull(x, y, shad[6], shad[7], shad[2], shad[3], 1, 1, 1, a)
 			bg[1]:toScreenFull(x, y, bg[6], bg[7], bg[2], bg[3], 1, 1, 1, a)
 
-			if not self.res.ammo or self.res.ammo.vc ~= amt then
+			if not self.res.ammo or self.res.ammo.vc ~= amt or self.res.ammo.vm ~= max then
 				self.res.ammo = {
-					vc = amt,
-					cur = {core.display.drawStringBlendedNewSurface(font_sha, ("%d"):format(amt), 255, 255, 255):glTexture()},
+					vc = amt, vm = max,
+					cur = {core.display.drawStringBlendedNewSurface(font_sha, max > 0 and ("%d/%d"):format(amt, max) or ("%d"):format(amt), 255, 255, 255):glTexture()},
 				}
 			end
 			local dt = self.res.ammo.cur
