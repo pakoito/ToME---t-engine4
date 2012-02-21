@@ -52,7 +52,6 @@ Each swing drips pestulant fluid before it, and each droplet writhes and wriggle
 	life_rating = 16,
 	rank = 3,
 	hate_regen = 10,
-	vim_regen = 1,
 
 	autolevel = "warriormage",
 	ai = "tactical", ai_state = { ai_move="move_dmap", talent_in=1, ally_compassion=0 },
@@ -86,6 +85,7 @@ Each swing drips pestulant fluid before it, and each droplet writhes and wriggle
 	resolvers.inscriptions(1, {"regeneration infusion"}),
 
 	resolvers.talents{
+		[Talents.T_DRAIN]={base=5, every=10, max=7},
 		[Talents.T_WORM_ROT]={base=4, every=8},
 		[Talents.T_EPIDEMIC]={base=4, every=8},
 		[Talents.T_REND]={base=4, every=8},

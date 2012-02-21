@@ -30,7 +30,6 @@ newEntity{ base = "BASE_NPC_ELVEN_CASTER", define_as = "GRAND_CORRUPTOR",
 	desc = [[An Elven corruptor, drawn to these blighted lands.]],
 	level_range = {30, nil}, exp_worth = 1,
 	rank = 3.5,
-	vim_regen = 40,
 	max_vim = 800,
 	max_life = resolvers.rngavg(300, 310), life_rating = 18,
 	resolvers.equip{
@@ -44,6 +43,7 @@ newEntity{ base = "BASE_NPC_ELVEN_CASTER", define_as = "GRAND_CORRUPTOR",
 
 	combat_armor = 0, combat_def = 0,
 	resolvers.talents{
+		[Talents.T_DRAIN]=5,
 		[Talents.T_BONE_SHIELD]=5,
 		[Talents.T_BLOOD_SPRAY]=5,
 		[Talents.T_SOUL_ROT]=5,
