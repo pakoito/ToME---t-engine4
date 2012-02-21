@@ -977,31 +977,31 @@ function _M:entityFilterAlter(zone, level, type, filter)
 			print("[TOME ENTITY FILTER] selected Double Greater", r, dg)
 			filter.not_properties = filter.not_properties or {}
 			filter.not_properties[#filter.not_properties+1] = "unique"
-			filter.ego_chance={tries = { {ego_chance=100, properties={"greater_ego"}}, {ego_chance=100, properties={"greater_ego"}} } }
+			filter.ego_chance={tries = { {ego_chance=100, properties={"greater_ego"}, power_source=filter.power_source, forbid_power_source=filter.forbid_power_source}, {ego_chance=100, properties={"greater_ego"}, power_source=filter.power_source, forbid_power_source=filter.forbid_power_source} } }
 
 		elseif r < ge then
 			print("[TOME ENTITY FILTER] selected Greater + Ego", r, ge)
 			filter.not_properties = filter.not_properties or {}
 			filter.not_properties[#filter.not_properties+1] = "unique"
-			filter.ego_chance={tries = { {ego_chance=100, properties={"greater_ego"}}, {ego_chance=100, not_properties={"greater_ego"}} }}
+			filter.ego_chance={tries = { {ego_chance=100, properties={"greater_ego"}, power_source=filter.power_source, forbid_power_source=filter.forbid_power_source}, {ego_chance=100, not_properties={"greater_ego"}, power_source=filter.power_source, forbid_power_source=filter.forbid_power_source} }}
 
 		elseif r < g then
 			print("[TOME ENTITY FILTER] selected Greater", r, g)
 			filter.not_properties = filter.not_properties or {}
 			filter.not_properties[#filter.not_properties+1] = "unique"
-			filter.ego_chance={tries = { {ego_chance=100, properties={"greater_ego"}} } }
+			filter.ego_chance={tries = { {ego_chance=100, properties={"greater_ego"}, power_source=filter.power_source, forbid_power_source=filter.forbid_power_source} } }
 
 		elseif r < de then
 			print("[TOME ENTITY FILTER] selected Double Ego", r, de)
 			filter.not_properties = filter.not_properties or {}
 			filter.not_properties[#filter.not_properties+1] = "unique"
-			filter.ego_chance={tries = { {ego_chance=100, not_properties={"greater_ego"}}, {ego_chance=100, not_properties={"greater_ego"}} }}
+			filter.ego_chance={tries = { {ego_chance=100, not_properties={"greater_ego"}, power_source=filter.power_source, forbid_power_source=filter.forbid_power_source}, {ego_chance=100, not_properties={"greater_ego"}, power_source=filter.power_source, forbid_power_source=filter.forbid_power_source} }}
 
 		elseif r < e then
 			print("[TOME ENTITY FILTER] selected Ego", r, e)
 			filter.not_properties = filter.not_properties or {}
 			filter.not_properties[#filter.not_properties+1] = "unique"
-			filter.ego_chance={tries = { {ego_chance=100, not_properties={"greater_ego"}} } }
+			filter.ego_chance={tries = { {ego_chance=100, not_properties={"greater_ego"}, power_source=filter.power_source, forbid_power_source=filter.forbid_power_source} } }
 
 		elseif r < m then
 			print("[TOME ENTITY FILTER] selected Money", r, m)
@@ -1024,6 +1024,22 @@ function _M:entityFilterAlter(zone, level, type, filter)
 end
 
 function _M:entityFilter(zone, e, filter, type)
+	if filter.forbid_power_source then
+		if e.power_source then
+			for k, _ in pairs(filter.forbid_power_source) do
+				if e.power_source[k] then return false end
+			end
+		end
+	end
+
+	if filter.power_source and e.power_source then
+		local ok = false
+		for k, _ in pairs(filter.power_source) do
+			if e.power_source[k] then ok = true break end
+		end
+		if not ok then return false end
+	end
+
 	if type == "object" then
 		if not filter.ingore_material_restriction then
 			local min_mlvl = util.getval(zone.min_material_level)
