@@ -254,7 +254,7 @@ function _M:listVaultSavesForCurrent()
 end
 
 --- List all available addons
-function _M:loadAddons(mod)
+function _M:listAddons(mod, ignore_compat)
 	local adds = {}
 	local load = function(dir, teaa)
 		local add_def = loadfile(dir.."/init.lua")
@@ -263,9 +263,11 @@ function _M:loadAddons(mod)
 			setfenv(add_def, add)
 			add_def()
 
-			if engine.version_string(add.version) == engine.version_string(mod.version) and add.for_module == mod.short_name then
+			if (ignore_compat or engine.version_string(add.version) == engine.version_string(mod.version)) and add.for_module == mod.short_name then
 				add.dir = dir
 				add.teaa = teaa
+				add.natural_compatible = engine.version_string(add.version) == engine.version_string(mod.version)
+				add.version_txt = ("%d.%d.%d"):format(add.version[1], add.version[2], add.version[3])
 				adds[#adds+1] = add
 			end
 		end
@@ -287,6 +289,28 @@ function _M:loadAddons(mod)
 	end end
 
 	table.sort(adds, function(a, b) return a.weight < b.weight end)
+	return adds
+end
+
+function _M:loadAddons(mod)
+	local adds = self:listAddons(mod, true)
+
+	-- Filter based on settings
+	for i = #adds, 1, -1 do
+		local add = adds[i]
+		if config.settings.addons[add.for_module] and config.settings.addons[add.for_module][add.short_name] ~= nil then
+			-- Forbidden by config
+			if config.settings.addons[add.for_module][add.short_name] == false then
+				print("Removing addon"..add.short_name..": not allowed by config")
+				table.remove(adds, i)
+			end
+		else
+			-- Forbidden by version
+			if not add.natural_compatible then
+				table.remove(adds, i)
+			end
+		end
+	end
 
 	mod.addons = {}
 	for i, add in ipairs(adds) do
