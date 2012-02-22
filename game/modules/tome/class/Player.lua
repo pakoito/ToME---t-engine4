@@ -630,6 +630,12 @@ function _M:restCheck()
 		act:incPsi(act.psi_regen * perc)
 	end end
 
+	-- Reload
+	local ammo = self:hasAmmo()
+	if self.resting.cnt == 0 and ammo and ammo.combat.shots_left < ammo.combat.capacity and not self:hasEffect(self.EFF_RELOADING) and self:knowTalent(self.T_RELOAD) then
+		self:forceUseTalent(self.T_RELOAD, {ignore_energy=true})
+	end
+
 	-- Check resources, make sure they CAN go up, otherwise we will never stop
 	if not self.resting.rest_turns then
 		if self.air_regen < 0 then return false, "losing breath!" end
@@ -644,8 +650,7 @@ function _M:restCheck()
 			if act.life < act.max_life and act.life_regen> 0 then return true end
 		end end
 
-		local ammo = self:hasAmmo()
-		if ammo and ammo.combat.shots_left < ammo.combat.capacity and ammo.combat.ammo_every and ammo.combat.ammo_every > 0 then return true end
+		if ammo and ammo.combat.shots_left < ammo.combat.capacity and ((self:hasEffect(self.EFF_RELOADING)) or (ammo.combat.ammo_every and ammo.combat.ammo_every > 0)) then return true end
 	else
 		return true
 	end
