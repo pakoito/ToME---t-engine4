@@ -415,9 +415,21 @@ function _M:act()
 				self:forceUseTalent(tid, {ignore_energy=true})
 			end
 		end
-		-- clear grappling
-		if self:hasEffect(self.EFF_GRAPPLING) and not self:hasEffect(self.EFF_ADRENALINE_SURGE) then
-			self:removeEffect(self.EFF_GRAPPLING)
+	end
+	
+	-- clear grappling
+	if self:hasEffect(self.EFF_GRAPPLING) and self.stamina < 1 and not self:hasEffect(self.EFF_ADRENALINE_SURGE) then
+		self:removeEffect(self.EFF_GRAPPLING)
+	end
+	
+	-- disable spell sustains
+	if self:attr("spell_failure") then
+		for tid, _ in pairs(self.sustain_talents) do
+			local t = self:getTalentFromId(tid)
+			if t.is_spell and rng.percent(self:attr("spell_failure")/10)then
+				self:forceUseTalent(tid, {ignore_energy=true})
+				if not silent then game.logPlayer(self, "%s has been disrupted!", t.name) end
+			end
 		end
 	end
 
@@ -2918,6 +2930,9 @@ function _M:getTalentFullDescription(t, addlevel, config)
 			local uspeed = "1 turn"
 			if t.no_energy and type(t.no_energy) == "boolean" and t.no_energy == true then uspeed = "instant" end
 			d:add({"color",0x6f,0xff,0x83}, "Usage Speed: ", {"color",0xFF,0xFF,0xFF}, uspeed, true)
+		end
+		if t.is_spell then 
+			d:add({"color",0x6f,0xff,0x83}, "Is Spell: ", {"color",0xFF,0xFF,0xFF}, "true", true)
 		end
 	end
 

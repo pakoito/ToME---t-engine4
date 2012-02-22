@@ -124,32 +124,37 @@ newTalent{
 	require = gifts_req4,
 	points = 5,
 	equilibrium = 10,
-	cooldown = 10,
+	cooldown = 6,
 	range = 10,
 	tactical = { ATTACK = { ARCANE = 3 } },
+	direct_hit = true,
+	requires_target = true,
+	target = function(self, t)
+		return {type="hit", range=self:getTalentRange(t), talent=t}
+	end,
 	action = function(self, t)
-		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
-		local x, y = self:getTarget(tg)
+		local tg = self:getTalentTarget(t)
+		local x, y, target = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, function(px, py)
 			local target = game.level.map(px, py, Map.ACTOR)
 			if not target then return end
 
-			local base = self:combatTalentMindDamage(t, 20, 230)
+			local base = self:combatTalentMindDamage(t, 40, 460)
 			DamageType:get(DamageType.MANABURN).projector(self, px, py, DamageType.MANABURN, base)
 		end, nil, {type="slime"})
 		game:playSoundNear(self, "talents/heal")
 		return true
 	end,
 	info = function(self, t)
-		local base = self:combatTalentMindDamage(t, 20, 230)
-		local mana = base * 2
-		local vim = base
-		local positive = base / 2
-		local negative = base / 2
+		local base = self:combatTalentMindDamage(t, 40, 460)
+		local mana = base
+		local vim = base / 2
+		local positive = base / 4
+		local negative = base / 4
 
 		return ([[Drain %d mana, %d vim, %d positive and negative energies from your target, triggering a chain reaction that explodes in a burst of arcane damage.
-		The damage done is 130%% of the mana drained, 260%% of the vim drained, 520%% of the positive or negative energy drained, whichever is higher.
+		The damage done is equal to 100%% of the mana drained, 200%% of the vim drained, or 400%% of the positive or negative energy drained, whichever is higher.
 		The effect will increase with your Mindpower.]]):
 		format(mana, vim, positive, negative)
 	end,

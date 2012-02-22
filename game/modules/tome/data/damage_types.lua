@@ -1969,10 +1969,10 @@ newDamageType{
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
-			local mana = dam * 2
-			local vim = dam
-			local positive = dam / 2
-			local negative = dam / 2
+			local mana = dam
+			local vim = dam / 2
+			local positive = dam / 4
+			local negative = dam / 4
 
 			mana = math.min(target:getMana(), mana)
 			vim = math.min(target:getVim(), vim)
@@ -1984,7 +1984,7 @@ newDamageType{
 			target:incPositive(-positive)
 			target:incNegative(-negative)
 
-			local dam = math.max(mana, vim * 2, positive * 4, negative * 4) * 1.3
+			local dam = math.max(mana, vim * 2, positive * 4, negative * 4)
 			return DamageType:get(DamageType.ARCANE).projector(src, x, y, DamageType.ARCANE, dam)
 		end
 		return 0

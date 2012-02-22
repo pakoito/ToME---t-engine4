@@ -28,7 +28,7 @@ defineTile("S", "GRASS", nil, {random_filter={type="animal", subtype="snake", ma
 defineTile("T", "GRASS", nil, "TUTORIAL_NPC_TROLL", nil)
 defineTile("L", "GRASS", nil, "TUTORIAL_NPC_LONE_WOLF", nil)
 defineTile("1", "GRASS", nil, nil, "TUTORIAL_MELEE")
-defineTile("|", "GRASS", {random_filter={name="elm arrow"}}, nil, nil)
+defineTile("|", "GRASS", {random_filter={name="quiver of elm arrows"}}, nil, nil)
 defineTile("2", "GRASS", {random_filter={name="regeneration infusion"}}, nil, "TUTORIAL_OBJECTS")
 defineTile("3", "GRASS", nil, nil, "TUTORIAL_TALENTS")
 defineTile("4", "GRASS", nil, nil, "TUTORIAL_LEVELUP")

@@ -237,9 +237,9 @@ function _M:generateList()
 
 	-- Find all talents of this school
 	for j, t in pairs(self.actor.talents_def) do
-		if self.actor:knowTalent(t.id) then
+		if self.actor:knowTalent(t.id) and not t.hide then
 			local typename = "talent"
-			local nodes = t.mode == "sustained" and sustains or actives
+			local nodes = (t.mode == "sustained" and sustains) or (t.mode =="passives" and passives) or actives
 			local status = tstring{{"color", "LIGHT_GREEN"}, "Active"}
 			if self.actor:isTalentCoolingDown(t) then
 				nodes = cooldowns
@@ -250,9 +250,9 @@ function _M:generateList()
 			elseif t.mode == "sustained" then
 				if self.actor:isTalentActive(t.id) then nodes = sustained end
 				status = self.actor:isTalentActive(t.id) and tstring{{"color", "YELLOW"}, "Sustaining"} or tstring{{"color", "LIGHT_GREEN"}, "Sustain"}
-			elseif t.mode == "passive" and not t.hide then
+			elseif t.mode == "passive" then
 				nodes = passives
-				status = tstring{{"color", "BLUE"}, "Passive"}
+				status = tstring{{"color", "LIGHT_BLUE"}, "Passive"}
 			end
 
 			-- Pregenenerate icon with the Tiles instance that allows images
