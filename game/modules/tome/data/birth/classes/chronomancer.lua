@@ -135,5 +135,8 @@ newBirthDescriptor{
 		resolvers.inventory{ id=true, inven="QS_MAINHAND",
 			{type="weapon", subtype="longbow", name="elm longbow", autoreq=true, ego_chance=-1000},
 		},
+		resolvers.inventory{ id=true, inven="QS_QUIVER",
+			{type="ammo", subtype="arrow", name="quiver of elm arrows", autoreq=true, ego_chance=-1000},
+		},
 	},
 }

@@ -358,6 +358,7 @@ There is a cunning air to his hollow skull, and his empty sockets reveal nothing
 	equipment = resolvers.equip{
 		{type="weapon", subtype="sling", defined="HARESKIN_SLING", random_art_replace={chance=0}, autoreq=true, tome_drops="boss"},
 		{type="weapon", subtype="dagger", ego_chance=100, autoreq=true, force_drop=true},
+		{type="ammo", subtype="shot", ego_chance=100, autoreq=true, force_drop=true},
 	},
 	resolvers.drops{chance=100, nb=1, {tome_drops="boss"} },
 	resolvers.drops{chance=100, nb=1, {defined="FILIO_LETTER"} },

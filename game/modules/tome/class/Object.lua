@@ -499,6 +499,11 @@ function _M:getTextualDesc(compare_with)
 				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
 				return col[2], (" %s"):format(DamageType.dam_def[item].name),{"color","LAST"}
 			end)
+			
+		compare_table_fields(combat, compare_with, field, "ranged_project", "%+d", "Damage when this weapon hits(ranged): ", function(item)
+				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
+				return col[2], (" %s"):format(DamageType.dam_def[item].name),{"color","LAST"}
+			end)
 
 		compare_table_fields(combat, compare_with, field, "inc_damage_type", "%+d%%", "Damage against: ", function(item)
 				local _, _, t, st = item:find("^([^/]+)/?(.*)$")
