@@ -201,16 +201,17 @@ newEntity{
 	power_source = {technique=true},
 	name = " of annihilation", suffix=true, instant_resolve=true,
 	keywords = {annihilation=true},
-	level_range = {1, 50},
+	level_range = {30, 50},
 	greater_ego = 1,
 	cost = 1,
 	rarity = 15,
 	combat = {
-		dam = resolvers.mbonus_material(50, 15),
-		atk = resolvers.mbonus_material(20, 5),
+		dam = resolvers.mbonus_material(10, 2),
+		physcrit = resolvers.mbonus_material(10, 2),
+		apr  = resolvers.mbonus_material(10, 2),
 		travel_speed = 200,
 		-- Powerful but comes in a small quiver/pouch
-		capacity = resolvers.generic(function(e) return e.combat.capacity / 5 end),
+		--capacity = resolvers.generic(function(e) return e.combat.capacity / 5 end),
 	},
 }
 
@@ -244,22 +245,4 @@ newEntity{
 			[DamageType.RANDOM_CONFUSION] = resolvers.mbonus_material(10, 5),
 		},
 	},
-}
-
-
-newEntity{
-	power_source = {nature=true},
-	name = " of sunrise", suffix=true, instant_resolve=true,
-	keywords = {sunrise=true},
-	level_range = {1, 50},
-	greater_ego = 1,
-	cost = 30,
-	rarity = 15,
-	combat = {
-		tg_type = "beam",
-		travel_speed = 300,
-		-- Powerful but comes in a small quiver/pouch
-		capacity = resolvers.generic(function(e) return e.combat.capacity / 4 end),
-	},
-	resolvers.generic(function(e) e.combat.damtype = DamageType.LITE_LIGHT end),
 }

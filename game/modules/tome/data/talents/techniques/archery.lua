@@ -59,7 +59,13 @@ newTalent{
 	tactical = { AMMO = 2 },
 	on_pre_use = function(self, t, silent) if not self:hasAmmo() then if not silent then game.logPlayer(self, "You must have a quiver or pouch equipped.") end return false end return true end,
 	shots_per_turn = function(self, t)
-		return self:getTalentLevelRaw(t) + (self:attr("ammo_reload_speed") or 0)
+		local v = math.max(self:getTalentLevelRaw(self.T_BOW_MASTERY), self:getTalentLevelRaw(self.T_SLING_MASTERY))
+		local add = 0
+		if v >= 10 then add = add + 3
+		elseif v >= 6 then add = add + 2
+		elseif v >= 3 then add = add + 1
+		end
+		return self:getTalentLevelRaw(t) + (self:attr("ammo_reload_speed") or 0) + add
 	end,
 	action = function(self, t)
 		local q, err = self:hasAmmo()

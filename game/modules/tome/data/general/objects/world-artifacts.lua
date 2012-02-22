@@ -2381,6 +2381,30 @@ Touching the cloth you feel a sense of knowledge and power from bygone ages, yet
 	end,
 }
 
+newEntity{ base = "BASE_ARROW",
+	power_source = {arcane=true},
+	unique = true,
+	name = "Quiver of the Sun",
+	unided_name = "bright quiver",
+	desc = [[This strange orange quiver is made of brass and etched with many bright red runes that glow and glitter in the light.  The arrows themselves appear to be solid shafts of blazing hot light, like rays of sunshine, hammered and forged into a solid state.]],
+	color = colors.BLUE, --image = "object/artifact/wizard_hat_of_arcane_understanding.png",
+	level_range = {20, 40},
+	rarity = 300,
+	cost = 100,
+	material_level = 3,
+	require = { stat = { dex=24 }, },
+	combat = {
+		capacity = 6,
+		tg_type = "beam",
+		travel_speed = 300,
+		dam = 34,
+		apr = 10,
+		physcrit = 2,
+		dammod = {dex=0.7, str=0.5},
+		damtype = DamageType.LITE_LIGHT,
+	},
+}
+
 --[=[
 newEntity{
 	unique = true,

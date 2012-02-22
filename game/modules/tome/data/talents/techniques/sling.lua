@@ -28,7 +28,12 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local inc = t.getPercentInc(self, t)
-		return ([[Increases Physical Power by %d. Also increases damage done with slings by %d%%.]]):
+		return ([[Increases Physical Power by %d. Also increases damage done with slings by %d%%.
+		Also, when using Reload:
+		At level 3 it grants one more reload per turn.
+		At level 6 it grants two more reloads per turn.
+		At level 10 it grants three more reloads per turn.
+		]]):
 		format(damage, inc * 100)
 	end,
 }

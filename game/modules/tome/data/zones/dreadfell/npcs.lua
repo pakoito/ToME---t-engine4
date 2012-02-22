@@ -51,8 +51,8 @@ newEntity{ define_as = "THE_MASTER",
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, NECK=1, },
 	equipment = resolvers.equip{
-		{type="weapon", subtype="greatsword", force_drop=true, tome_drops="boss", autoreq=true},
-		{type="armor", subtype="heavy", force_drop=true, tome_drops="boss", autoreq=true},
+		{type="weapon", subtype="greatsword", forbid_power_source={antimagic=true}, force_drop=true, tome_drops="boss", autoreq=true},
+		{type="armor", subtype="heavy", forbid_power_source={antimagic=true}, force_drop=true, tome_drops="boss", autoreq=true},
 		{type="jewelry", subtype="amulet", defined="AMULET_DREAD", random_art_replace={chance=75}, autoreq=true},
 	},
 	resolvers.drops{chance=100, nb=5, {tome_drops="boss"} },
@@ -144,8 +144,8 @@ newEntity{ define_as = "PALE_DRAKE",
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, NECK=1, },
 	equipment = resolvers.equip{
-		{type="weapon", subtype="staff", force_drop=true, tome_drops="boss", autoreq=true},
-		{type="armor", subtype="cloth", force_drop=true, tome_drops="boss", autoreq=true},
+		{type="weapon", subtype="staff", forbid_power_source={antimagic=true}, force_drop=true, tome_drops="boss", autoreq=true},
+		{type="armor", subtype="cloth", forbid_power_source={antimagic=true}, force_drop=true, tome_drops="boss", autoreq=true},
 	},
 	resolvers.drops{chance=100, nb=5, {tome_drops="boss"} },
 	resolvers.drops{chance=100, nb=1, {defined="RUNED_SKULL", random_art_replace={chance=75}} },

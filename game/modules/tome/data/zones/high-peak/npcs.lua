@@ -83,9 +83,9 @@ newEntity{
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, HEAD=1, FEET=1 },
 	resolvers.equip{
 		{type="weapon", subtype="staff", defined="STAFF_ABSORPTION_AWAKENED", autoreq=true},
-		{type="armor", subtype="cloth", force_drop=true, tome_drops="boss", autoreq=true},
-		{type="armor", subtype="head", force_drop=true, tome_drops="boss", autoreq=true},
-		{type="armor", subtype="feet", force_drop=true, tome_drops="boss", autoreq=true},
+		{type="armor", subtype="cloth", forbid_power_source={antimagic=true}, force_drop=true, tome_drops="boss", autoreq=true},
+		{type="armor", subtype="head", forbid_power_source={antimagic=true}, force_drop=true, tome_drops="boss", autoreq=true},
+		{type="armor", subtype="feet" forbid_power_source={antimagic=true},, force_drop=true, tome_drops="boss", autoreq=true},
 	},
 	resolvers.drops{chance=100, nb=5, {tome_drops="boss"} },
 
@@ -158,12 +158,12 @@ newEntity{
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, FEET=1, HEAD=1, HANDS=1 },
 	resolvers.equip{
-		{type="weapon", subtype="sword", force_drop=true, tome_drops="boss", autoreq=true},
-		{type="weapon", subtype="waraxe", force_drop=true, tome_drops="boss", autoreq=true},
-		{type="armor", subtype="massive", force_drop=true, tome_drops="boss", autoreq=true},
-		{type="armor", subtype="feet", name="pair of voratun boots", force_drop=true, tome_drops="boss", autoreq=true},
-		{type="armor", subtype="head", name="voratun helm", force_drop=true, tome_drops="boss", autoreq=true},
-		{type="armor", subtype="hands", name="voratun gauntlets", force_drop=true, tome_drops="boss", autoreq=true},
+		{type="weapon", subtype="sword", force_drop=true,  forbid_power_source={antimagic=true}, tome_drops="boss", autoreq=true},
+		{type="weapon", subtype="waraxe", force_drop=true, forbid_power_source={antimagic=true}, tome_drops="boss", autoreq=true},
+		{type="armor", subtype="massive", force_drop=true, forbid_power_source={antimagic=true}, tome_drops="boss", autoreq=true},
+		{type="armor", subtype="feet", name="pair of voratun boots", force_drop=true, forbid_power_source={antimagic=true}, tome_drops="boss", autoreq=true},
+		{type="armor", subtype="head", name="voratun helm", forbid_power_source={antimagic=true}, force_drop=true, tome_drops="boss", autoreq=true},
+		{type="armor", subtype="hands", name="voratun gauntlets", forbid_power_source={antimagic=true}, force_drop=true, tome_drops="boss", autoreq=true},
 	},
 	resolvers.drops{chance=100, nb=1, {defined="PEARL_LIFE_DEATH"} },
 	resolvers.drops{chance=100, nb=5, {tome_drops="boss"} },
@@ -237,11 +237,11 @@ newEntity{ define_as = "FALLEN_SUN_PALADIN_AERYN",
 	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
 
 	resolvers.equip{
-		{type="weapon", subtype="mace", force_drop=true, tome_drops="boss", autoreq=true},
-		{type="armor", subtype="shield", force_drop=true, tome_drops="boss", autoreq=true},
-		{type="armor", subtype="massive", force_drop=true, tome_drops="boss", autoreq=true},
-		{type="armor", subtype="feet", force_drop=true, tome_drops="boss", autoreq=true},
-		{type="armor", subtype="head", force_drop=true, tome_drops="boss", autoreq=true},
+		{type="weapon", subtype="mace", force_drop=true, forbid_power_source={antimagic=true}, tome_drops="boss", autoreq=true},
+		{type="armor", subtype="shield", force_drop=true, forbid_power_source={antimagic=true}, tome_drops="boss", autoreq=true},
+		{type="armor", subtype="massive", force_drop=true, forbid_power_source={antimagic=true}, tome_drops="boss", autoreq=true},
+		{type="armor", subtype="feet", force_drop=true, forbid_power_source={antimagic=true}, tome_drops="boss", autoreq=true},
+		{type="armor", subtype="head", force_drop=true, forbid_power_source={antimagic=true}, tome_drops="boss", autoreq=true},
 	},
 
 	die = function(self, src)
