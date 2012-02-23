@@ -176,7 +176,7 @@ function _M:init()
 
 	self.mhandle_pos = {
 		player = {x=296, y=73, name="Player Infos"},
-		resources = {x=fshat[6] - move_handle[6], y=0, name="Resources"},
+		resources = {x=fshat[6] / 2 - move_handle[6], y=0, name="Resources"},
 		minimap = {x=208, y=176, name="Minimap"},
 		buffs = {x=40 - move_handle[6], y=0, name="Current Effects"},
 		party = {x=portrait[6] - move_handle[6], y=0, name="Party Members"},
@@ -560,7 +560,7 @@ function _M:displayResources(scale, bx, by, a)
 		x, y = self:resourceOrientStep(orient, bx, by, scale, x, y, fshat[6], fshat[7])
 
 		if not self.locked then
-			move_handle[1]:toScreenFull(fshat[6] - move_handle[6], 0, move_handle[6], move_handle[7], move_handle[2], move_handle[3])
+			move_handle[1]:toScreenFull(fshat[6] / 2 - move_handle[6], 0, move_handle[6], move_handle[7], move_handle[2], move_handle[3])
 		end
 
 		-----------------------------------------------------------------------------------

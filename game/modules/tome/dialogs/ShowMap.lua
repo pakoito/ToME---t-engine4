@@ -29,13 +29,13 @@ function _M:init()
 
 	self.ui = "parchment"
 
-	self.bsize = 12
+	self.bsize = 22
 	local map = game.level.map
 	local mw, mh = map.w * self.bsize, map.h * self.bsize
 	local Mw, Mh = math.floor(game.w * 0.9), math.floor(game.h * 0.9)
 
 	while mw > Mw or mh > Mh do
-		if self.bsize <= 3 then break end
+		if self.bsize <= 22 then break end
 		self.bsize = self.bsize - 1
 		mw, mh = map.w * self.bsize, map.h * self.bsize
 	end
@@ -62,13 +62,20 @@ function _M:init()
 		local ts = game.tooltip:getTooltipAtMap(dx, dy, dx, dy)
 		if ts then game.tooltip:set(ts) game.tooltip:display() else game.tooltip:erase() end
 
-		if event == "button" and button == "left" then
+		if xrel and yrel and button == "left" and core.key.modState("ctrl") then
 			game.minimap_scroll_x = dx - math.floor(t_per_w / 2)
 			game.minimap_scroll_y = dy - math.floor(t_per_h / 2)
 
 			game.minimap_scroll_x = util.bound(game.minimap_scroll_x, 0, math.max(0, map.w - t_per_w))
 			game.minimap_scroll_y = util.bound(game.minimap_scroll_y, 0, math.max(0, map.h - t_per_h))
+		elseif button == "left" and not xrel and not yrel and event == "button" then
+			game.player:mouseMove(dx, dy)
+		elseif button == "right" then
+			game.level.map:moveViewSurround(dx, dy, 1000, 1000)
+		elseif event == "button" and button == "middle" then
+			game.key:triggerVirtual("SHOW_MAP")
 		end
+
 	end, nil, nil, true)
 
 	self:loadUI(uis)
