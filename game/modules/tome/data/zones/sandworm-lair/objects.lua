@@ -49,9 +49,9 @@ newEntity{
 
 		if who:knowTalentType("wild-gift/harmony") then
 			who:setTalentTypeMastery("wild-gift/harmony", who:getTalentTypeMastery("wild-gift/harmony") + 0.1)
-		elseif who:knowTalentType("wild-gift/harmony") == false then
+		elseif who:knowTalentType("wild-gift/harmony") == false and not who:attr("forbid_nature") then
 			who:learnTalentType("wild-gift/harmony", true)
-		else
+		elseif not who:attr("forbid_nature") then
 			who:learnTalentType("wild-gift/harmony", false)
 		end
 		-- Make sure a previous amulet didnt bug it out

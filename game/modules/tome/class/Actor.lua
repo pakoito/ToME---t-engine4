@@ -416,12 +416,12 @@ function _M:act()
 			end
 		end
 	end
-	
+
 	-- clear grappling
 	if self:hasEffect(self.EFF_GRAPPLING) and self.stamina < 1 and not self:hasEffect(self.EFF_ADRENALINE_SURGE) then
 		self:removeEffect(self.EFF_GRAPPLING)
 	end
-	
+
 	-- disable spell sustains
 	if self:attr("spell_failure") then
 		for tid, _ in pairs(self.sustain_talents) do
@@ -2484,6 +2484,11 @@ function _M:preUseTalent(ab, silent, fake)
 		if not silent then game.logSeen(self, "The spell fizzles.") end
 		return false
 	end
+	-- Nature is forbidden to undead (just wild-gifts for now)
+	if ab.is_nature and self:attr("forbid_nature") and (ab.mode ~= "sustained" or not self:isTalentActive(ab.id)) then
+		if not silent then game.logSeen(self, "%s is too disconnected from Nature to use %s.", self.name:capitalize(), ab.name) end
+		return false
+	end
 
 	if ab.is_inscription and self.inscription_restrictions and not self.inscription_restrictions[ab.type[1]] then
 		if not silent then game.logSeen(self, "%s is unable to use this kind of inscription.", self.name:capitalize()) end
@@ -2931,7 +2936,7 @@ function _M:getTalentFullDescription(t, addlevel, config)
 			if t.no_energy and type(t.no_energy) == "boolean" and t.no_energy == true then uspeed = "instant" end
 			d:add({"color",0x6f,0xff,0x83}, "Usage Speed: ", {"color",0xFF,0xFF,0xFF}, uspeed, true)
 		end
-		if t.is_spell then 
+		if t.is_spell then
 			d:add({"color",0x6f,0xff,0x83}, "Is Spell: ", {"color",0xFF,0xFF,0xFF}, "true", true)
 		end
 	end

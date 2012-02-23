@@ -26,6 +26,7 @@ Talents.newTalent = function(self, t)
 	if engine.interface.ActorTalents.talents_types_def[t.type[1]].generic then t.generic = true end
 	if engine.interface.ActorTalents.talents_types_def[t.type[1]].no_silence then t.no_silence = true end
 	if engine.interface.ActorTalents.talents_types_def[t.type[1]].is_spell then t.is_spell = true end
+	if engine.interface.ActorTalents.talents_types_def[t.type[1]].is_nature then t.is_nature = true end
 	if engine.interface.ActorTalents.talents_types_def[t.type[1]].is_unarmed then t.is_unarmed = true end
 
 	if t.tactical then
