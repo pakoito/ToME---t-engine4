@@ -507,7 +507,7 @@ newDamageType{
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
 			if target:canBe("silence") then
-				target:setEffect(target.EFF_SILENCED, math.ceil(dam), {apply_power=src:combatMindpower() * 0.7})
+				target:setEffect(target.EFF_SILENCED, math.ceil(dam.dur), {apply_power=dam.power_check or src:combatMindpower() * 0.7})
 			else
 				game.logSeen(target, "%s resists!", target.name:capitalize())
 			end

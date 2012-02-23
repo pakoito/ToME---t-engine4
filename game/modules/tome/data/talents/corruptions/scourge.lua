@@ -167,7 +167,7 @@ newTalent{
 		if hit1 then
 			local speed2, hit2 = self:attackTargetWith(target, offweapon.combat, DamageType.BLIGHT, self:getOffHandMult(self:combatTalentWeaponDamage(t, 0.6, 1.4)))
 			if hit2 and target:canBe("blind") then
-				target:setEffect(target.EFF_BLINDED, 4, {apply_power=self:combatAttack(offweapon.combat)})
+				target:setEffect(target.EFF_BLINDED, 4, {apply_power=self:combatPhysicalpower()})
 			else
 				game.logSeen(self, "%s resists the darkness.", target.name:capitalize())
 			end

@@ -1081,7 +1081,7 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.SILENCE, math.floor(4 + self:getTalentLevel(t)), {type="mind"})
+		self:project(tg, x, y, DamageType.SILENCE, {dur=math.floor(4 + self:getTalentLevel(t))}, {type="mind"})
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,

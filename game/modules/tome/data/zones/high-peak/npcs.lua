@@ -85,7 +85,7 @@ newEntity{
 		{type="weapon", subtype="staff", defined="STAFF_ABSORPTION_AWAKENED", autoreq=true},
 		{type="armor", subtype="cloth", forbid_power_source={antimagic=true}, force_drop=true, tome_drops="boss", autoreq=true},
 		{type="armor", subtype="head", forbid_power_source={antimagic=true}, force_drop=true, tome_drops="boss", autoreq=true},
-		{type="armor", subtype="feet" forbid_power_source={antimagic=true},, force_drop=true, tome_drops="boss", autoreq=true},
+		{type="armor", subtype="feet", forbid_power_source={antimagic=true}, force_drop=true, tome_drops="boss", autoreq=true},
 	},
 	resolvers.drops{chance=100, nb=5, {tome_drops="boss"} },
 

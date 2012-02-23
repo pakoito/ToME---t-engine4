@@ -54,9 +54,11 @@ end
 newChat{ id="welcome",
 	text = [[#LIGHT_GREEN#*A grim-looking Fighter stands there, clad in mail armour and a large olive cloak. He doesn't appear hostile - his sword is sheathed.*#WHITE#
 ]]..sex..[[, our guild has been watching you and we believe that you have potential.
-We see that the hermetic arts have always been at the root of each and every trial this land has endured, and we also see that one day they will bring about our destruction. So we have decided to take action, training ourselves to combat those who wield the arcane.
+We see that the hermetic arts have always been at the root of each and every trial this land has endured, and we also see that one day they will bring about our destruction. So we have decided to take action by calling upon Nature to help us combat those who wield the arcane.
 We can train you, but you need to prove you are pure, untouched by the eldritch forces, and ready to fight them to the end.
-You will be challenged against magical foes. Should you defeat them, we will teach you our ways, and never again will you be able to be tainted by magic, or use it.]],
+You will be challenged against magical foes. Should you defeat them, we will teach you our ways, and never again will you be able to be tainted by magic, or use it.
+
+#LIGHT_RED#Note:  Completing this quest will forever prevent this character from using spells or items powered by arcane forces.  In exchange you'll be given access to a mindpower based generic talent tree, Anti-magic, and be able to unlock hidden properties in many arcane-disrupting items.]],
 	answers = {
 		{"I will face your challenge!", cond=function(npc, player) return player.level >= 10 end, jump="testok"},
 		{"I will face your challenge!", cond=function(npc, player) return player.level < 10 end, jump="testko"},

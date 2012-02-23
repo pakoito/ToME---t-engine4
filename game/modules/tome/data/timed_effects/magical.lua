@@ -1465,7 +1465,7 @@ newEffect{
 newEffect{
 	name = "EPIDEMIC", image = "talents/epidemic.png",
 	desc = "Epidemic",
-	long_desc = function(self, eff) return ("The target is infected by a disease, doing %0.2f blight damage per turn and reducig healing received by %d%%.\nEach non-disease blight damage done to it will spread the disease."):format(eff.dam, eff.heal_factor) end,
+	long_desc = function(self, eff) return ("The target is infected by a disease, doing %0.2f blight damage per turn and reducing healing received by %d%%.\nEach non-disease blight damage done to it will spread the disease."):format(eff.dam, eff.heal_factor) end,
 	type = "magical",
 	subtype = {disease=true, blight=true},
 	status = "detrimental",

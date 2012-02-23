@@ -62,13 +62,13 @@ newTalent{
 	end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
-		self:project(tg, self.x, self.y, DamageType.SILENCE, 3 + math.floor(self:getTalentLevel(t) / 2))
+		self:project(tg, self.x, self.y, DamageType.SILENCE, {dur=3 + math.floor(self:getTalentLevel(t) / 2), power_check=self:combatMindpower()})
 		return true
 	end,
 	info = function(self, t)
 		local rad = self:getTalentRadius(t)
 		return ([[Let out a burst of sound that silences for %d turns all those affected in a radius of %d, including the user.
-		The silence chance will increase with your Willpower stat.]]):
+		The silence chance will increase with your Mindpower.]]):
 		format(3 + math.floor(self:getTalentLevel(t) / 2), rad)
 	end,
 }

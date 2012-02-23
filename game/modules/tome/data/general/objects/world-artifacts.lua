@@ -1637,7 +1637,7 @@ newEntity{ base = "BASE_LEATHER_BELT",
 
 
 newEntity{ base = "BASE_LEATHER_BELT",
-	power_source = {nature=true, arcane=true},
+	power_source = {nature=true},
 	unique = true,
 	name = "Rope Belt of the Thaloren", image = "object/artifact/rope_belt_of_the_thaloren.png",
 	unided_name = "short length of rope",
@@ -2345,7 +2345,7 @@ It hums faintly, as if great power is locked within, yet alone it seems incomple
 }
 
 newEntity{ base = "BASE_WIZARD_HAT", define_as = "SET_HAT_CHANNELERS",
-	power_source = {technique=true},
+	power_source = {arcane=true},
 	unique = true,
 	name = "Hat of Arcane Understanding",
 	unided_name = "silver-runed hat",
