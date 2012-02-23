@@ -35,6 +35,7 @@ function _M:init(actor, x, y, w, h, bgcolor, fontname, fontsize, icon_w, icon_h)
 	self.font = core.display.newFont(fontname or "/data/font/VeraMono.ttf", fontsize or 10)
 	self.fontbig = core.display.newFont(fontname or "/data/font/VeraMono.ttf", (fontsize or 10) * 2)
 	self.font_h = self.font:lineSkip()
+	self.dragclics = {}
 	self.clics = {}
 	self.items = {}
 	self.cache = {}
@@ -118,8 +119,10 @@ function _M:display()
 	local x = 0
 	local y = 0
 	local col, row = 0, 0
+	self.dragclics = {}
 	self.clics = {}
 	self.items = {}
+	local w, h = self.icon_w, self.icon_h
 
 	for page = bpage, #page_to_hotkey do for i = 1, 12 do
 		local ts = nil
@@ -130,6 +133,10 @@ function _M:display()
 		elseif a.hotkey[j] and a.hotkey[j][1] == "inventory" then
 			ts = {a.hotkey[j][2], j, "inventory", i, page, i + (12 * (page - bpage))}
 		end
+
+		x = self.frames.w * col
+		y = self.frames.h * row
+		self.dragclics[j] = {x,y,w,h}
 
 		if ts then
 			local s
@@ -185,7 +192,6 @@ function _M:display()
 				end
 			end
 
-			local w, h = self.icon_w, self.icon_h
 			self.font:setStyle("bold")
 			local ks = game.key:formatKeyString(game.key:findBoundKeys("HOTKEY_"..page_to_hotkey[page]..bi))
 			local key = self.font:draw(ks, self.font:size(ks), colors.ANTIQUE_WHITE.r, colors.ANTIQUE_WHITE.g, colors.ANTIQUE_WHITE.b, true)[1]
@@ -197,8 +203,6 @@ function _M:display()
 				gtxt.fw, gtxt.fh = self.fontbig:size(txt)
 			end
 
-			x = self.frames.w * col
-			y = self.frames.h * row
 			self.items[#self.items+1] = {i=i, x=x, y=y, e=display_entity or self.default_entity, color=color, angle=angle, key=key, gtxt=gtxt, frame=frame, pagesel=lpage==spage}
 			self.clics[i] = {x,y,w,h}
 		end
@@ -255,6 +259,7 @@ end
 --- Call when a mouse event arrives in this zone
 -- This is optional, only if you need mouse support
 function _M:onMouse(button, mx, my, click, on_over, on_click)
+	local orient = self.orient or "down"
 	mx, my = mx - self.display_x, my - self.display_y
 	local a = self.actor
 
@@ -268,24 +273,28 @@ function _M:onMouse(button, mx, my, click, on_over, on_click)
 		local drag = game.mouse.dragged.payload
 		print(table.serialize(drag,nil,true))
 		if drag.kind == "talent" or drag.kind == "inventory" then
-			local i = math.floor(mx / self.frames.w) + (self.actor.hotkey_page-1) * 12 + 1 + math.floor(my / self.frames.h) * self.max_cols
-			local old = self.actor.hotkey[i]
+			for i, zone in pairs(self.dragclics) do
+				if mx >= zone[1] and mx < zone[1] + zone[3] and my >= zone[2] and my < zone[2] + zone[4] then
+					local old = self.actor.hotkey[i]
 
-			if i <= #page_to_hotkey * 12 then -- Only add this hotkey if we support a valid page for it.
-				self.actor.hotkey[i] = {drag.kind, drag.id}
+					if i <= #page_to_hotkey * 12 then -- Only add this hotkey if we support a valid page for it.
+						self.actor.hotkey[i] = {drag.kind, drag.id}
 
-				if drag.source_hotkey_slot then
-					self.actor.hotkey[drag.source_hotkey_slot] = old
-				end
+						if drag.source_hotkey_slot then
+							self.actor.hotkey[drag.source_hotkey_slot] = old
+						end
 
-				-- Update the quickhotkeys table immediately rather than waiting for a save.
-				if self.actor.save_hotkeys then
-					engine.interface.PlayerHotkeys:updateQuickHotkey(self.actor, i)
-					engine.interface.PlayerHotkeys:updateQuickHotkey(self.actor, drag.source_hotkey_slot)
+						-- Update the quickhotkeys table immediately rather than waiting for a save.
+						if self.actor.save_hotkeys then
+							engine.interface.PlayerHotkeys:updateQuickHotkey(self.actor, i)
+							engine.interface.PlayerHotkeys:updateQuickHotkey(self.actor, drag.source_hotkey_slot)
+						end
+					end
+					game.mouse:usedDrag()
+					self.actor.changed = true
+					break
 				end
 			end
-			game.mouse:usedDrag()
-			self.actor.changed = true
 		end
 	end
 
