@@ -188,33 +188,21 @@ function _M:generateList()
 		self.c_list:drawItem(item)
 	end,}
 
-	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"How many log and chat lines to show at the screen's bottom."}
-	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Log lines#WHITE##{normal}#", status=function(item)
-		return tostring(config.settings.tome.log_lines)
-	end, fct=function(item)
-		game:registerDialog(GetQuantity.new("Number of lines", "From 2 to 20", config.settings.tome.log_lines, 20, function(qty)
-			qty = util.bound(qty, 2, 20)
-			game:saveSettings("tome.log_lines", ("tome.log_lines = %d\n"):format(qty))
-			config.settings.tome.log_lines = qty
-			game.logdisplay.resizeToLines()
-			profile.chat.resizeToLines()
-			self.c_list:drawItem(item)
-		end, 2))
-	end,}
-
-	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"How many seconds before log and chat lines begin to fade away.\nIf set to 0 the logs will never fade away."}
-	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Log fade time#WHITE##{normal}#", status=function(item)
-		return tostring(config.settings.tome.log_fade)
-	end, fct=function(item)
-		game:registerDialog(GetQuantity.new("Fade time (in seconds)", "From 0 to 20", config.settings.tome.log_fade, 20, function(qty)
-			qty = util.bound(qty, 0, 20)
-			game:saveSettings("tome.log_fade", ("tome.log_fade = %d\n"):format(qty))
-			config.settings.tome.log_fade = qty
-			game.logdisplay:enableFading(config.settings.tome.log_fade)
-			profile.chat:enableFading(config.settings.tome.log_fade)
-			self.c_list:drawItem(item)
-		end, 0))
-	end,}
+	if game.uiset:checkGameOption("log_lines") then
+		local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"How many seconds before log and chat lines begin to fade away.\nIf set to 0 the logs will never fade away."}
+		list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Log fade time#WHITE##{normal}#", status=function(item)
+			return tostring(config.settings.tome.log_fade)
+		end, fct=function(item)
+			game:registerDialog(GetQuantity.new("Fade time (in seconds)", "From 0 to 20", config.settings.tome.log_fade, 20, function(qty)
+				qty = util.bound(qty, 0, 20)
+				game:saveSettings("tome.log_fade", ("tome.log_fade = %d\n"):format(qty))
+				config.settings.tome.log_fade = qty
+				game.logdisplay:enableFading(config.settings.tome.log_fade)
+				profile.chat:enableFading(config.settings.tome.log_fade)
+				self.c_list:drawItem(item)
+			end, 0))
+		end,}
+	end
 
 	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Configure the chat filters to select what kind of messages to see.#WHITE#"}
 	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Chat message filters#WHITE##{normal}#", status=function(item)
@@ -226,39 +214,45 @@ function _M:generateList()
 		}))
 	end,}
 
-	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Uses the icons for status effects instead of text.#WHITE#"}
-	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Icons status effects#WHITE##{normal}#", status=function(item)
-		return tostring(config.settings.tome.effects_icons and "enabled" or "disabled")
-	end, fct=function(item)
-		config.settings.tome.effects_icons = not config.settings.tome.effects_icons
-		game:saveSettings("tome.effects_icons", ("tome.effects_icons = %s\n"):format(tostring(config.settings.tome.effects_icons)))
-		game.player.changed = true
-		self.c_list:drawItem(item)
-	end,}
+	if game.uiset:checkGameOption("icons_temp_effects") then
+		local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Uses the icons for status effects instead of text.#WHITE#"}
+		list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Icons status effects#WHITE##{normal}#", status=function(item)
+			return tostring(config.settings.tome.effects_icons and "enabled" or "disabled")
+		end, fct=function(item)
+			config.settings.tome.effects_icons = not config.settings.tome.effects_icons
+			game:saveSettings("tome.effects_icons", ("tome.effects_icons = %s\n"):format(tostring(config.settings.tome.effects_icons)))
+			game.player.changed = true
+			self.c_list:drawItem(item)
+		end,}
+	end
 
-	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Uses the icons hotkeys toolbar or the textual one.#WHITE#"}
-	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Icons hotkey toolbar#WHITE##{normal}#", status=function(item)
-		return tostring(config.settings.tome.hotkey_icons and "enabled" or "disabled")
-	end, fct=function(item)
-		config.settings.tome.hotkey_icons = not config.settings.tome.hotkey_icons
-		game:saveSettings("tome.hotkey_icons", ("tome.hotkey_icons = %s\n"):format(tostring(config.settings.tome.hotkey_icons)))
-		game.player.changed = true
-		game:resizeIconsHotkeysToolbar()
-		self.c_list:drawItem(item)
-	end,}
-
-	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Number of rows to show in the icons hotkeys toolbar.#WHITE#"}
-	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Icons hotkey toolbar rows#WHITE##{normal}#", status=function(item)
-		return tostring(config.settings.tome.hotkey_icons_rows)
-	end, fct=function(item)
-		game:registerDialog(GetQuantity.new("Number of icons rows", "From 1 to 4", config.settings.tome.hotkey_icons_rows, 4, function(qty)
-			qty = util.bound(qty, 1, 4)
-			game:saveSettings("tome.hotkey_icons_rows", ("tome.hotkey_icons_rows = %d\n"):format(qty))
-			config.settings.tome.hotkey_icons_rows = qty
+	if game.uiset:checkGameOption("icons_hotkeys") then
+		local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Uses the icons hotkeys toolbar or the textual one.#WHITE#"}
+		list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Icons hotkey toolbar#WHITE##{normal}#", status=function(item)
+			return tostring(config.settings.tome.hotkey_icons and "enabled" or "disabled")
+		end, fct=function(item)
+			config.settings.tome.hotkey_icons = not config.settings.tome.hotkey_icons
+			game:saveSettings("tome.hotkey_icons", ("tome.hotkey_icons = %s\n"):format(tostring(config.settings.tome.hotkey_icons)))
+			game.player.changed = true
 			game:resizeIconsHotkeysToolbar()
 			self.c_list:drawItem(item)
-		end, 1))
-	end,}
+		end,}
+	end
+
+	if game.uiset:checkGameOption("hotkeys_rows") then
+		local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Number of rows to show in the icons hotkeys toolbar.#WHITE#"}
+		list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Icons hotkey toolbar rows#WHITE##{normal}#", status=function(item)
+			return tostring(config.settings.tome.hotkey_icons_rows)
+		end, fct=function(item)
+			game:registerDialog(GetQuantity.new("Number of icons rows", "From 1 to 4", config.settings.tome.hotkey_icons_rows, 4, function(qty)
+				qty = util.bound(qty, 1, 4)
+				game:saveSettings("tome.hotkey_icons_rows", ("tome.hotkey_icons_rows = %d\n"):format(qty))
+				config.settings.tome.hotkey_icons_rows = qty
+				game:resizeIconsHotkeysToolbar()
+				self.c_list:drawItem(item)
+			end, 1))
+		end,}
+	end
 
 	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Size of the icons in the hotkeys toolbar.#WHITE#"}
 	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Icons hotkey toolbar icon size#WHITE##{normal}#", status=function(item)

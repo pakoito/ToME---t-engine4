@@ -46,3 +46,7 @@ end
 function _M:toggleUI()
 	self.no_ui = not self.no_ui
 end
+
+function _M:checkGameOption(name)
+	return true
+end

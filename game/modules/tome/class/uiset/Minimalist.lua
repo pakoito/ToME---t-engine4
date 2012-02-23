@@ -212,6 +212,12 @@ function _M:init()
 	self.buffs_base = UI:makeFrame("ui/icon-frame/frame", 40, 40)
 end
 
+--- Forbid some options from showing up, they are useless for this ui
+function _M:checkGameOption(name)
+	local list = table.reverse{"icons_temp_effects", "icons_hotkeys", "hotkeys_rows", "log_lines"}
+	return not list[name]
+end
+
 function _M:boundPlaces(w, h)
 	w = w or game.w
 	h = h or game.h
