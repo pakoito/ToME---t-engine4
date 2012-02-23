@@ -101,7 +101,7 @@ getNextNodes = {
 		local x, y, c, val = node[1], node[2], node[3], node[4]+1
 		local p = x % 2
 		local r = 1 - p
-		
+
 		if x > 0 then
 			                                           cardinal_tiles[#cardinal_tiles+1] = {x - 1, y - r, c - 1 - r*game.level.map.w, val, 7 }
 			if y < game.level.map.h - 1 or p == 0 then cardinal_tiles[#cardinal_tiles+1] = {x - 1, y + p, c - 1 + p*game.level.map.w, val, 1 } end
@@ -1206,7 +1206,7 @@ function _M:autoExplore()
 		end
 
 		-- if we need to continue running but have no more tiles to iterate over, propagate from "slow_tiles" such as traps
-		if #current_tiles_next == 0 and #slow_tiles > 0 and #unseen_tiles == 0 and #unseen_items == 0 and #unseen_doors == 0 and #exits == 0 and #portals == 0 then
+		if #current_tiles_next == 0 and #slow_tiles > 0 and #unseen_tiles == 0 and #unseen_items == 0 then
 			running = true
 			current_tiles = slow_tiles
 			for _, node in ipairs(slow_tiles) do
