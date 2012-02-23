@@ -42,7 +42,7 @@ function _M:init()
 
 	self.c_adds = ListColumns.new{width=math.floor(self.iw * 2 / 3 - 10), height=self.ih - 10 - self.c_compat.h, scrollbar=true, columns={
 		{name="Addon", width=60, display_prop="long_name"},
-		{name="Active", width=20, display_prop=function(item) 
+		{name="Active", width=20, display_prop=function(item)
 			if config.settings.addons[item.for_module] and config.settings.addons[item.for_module][item.short_name] ~= nil then
 				return (config.settings.addons[item.for_module][item.short_name] and "#LIGHT_GREEN#Manual: Active" or "#LIGHT_RED#Manual: Disabled"):toTString()
 			else
@@ -111,22 +111,6 @@ function _M:generateList()
 			if j > 1 then break end
 			if not mod.is_boot and (not mod.show_only_on_cheat or config.settings.cheat) then
 				mod.name = tstring{{"font","bold"}, {"color","GOLD"}, mod.name, {"font","normal"}}
-				mod.fct = function(mod)
-					if mod.no_get_name then
-						Module:instanciate(mod, "player", true, false)
-					else
-						game:registerDialog(require('engine.dialogs.GetText').new("Enter your character's name", "Name", 2, 25, function(text)
-							local savename = text:gsub("[^a-zA-Z0-9_-.]", "_")
-							if fs.exists(("/%s/save/%s/game.teag"):format(mod.short_name, savename)) then
-								Dialog:yesnoPopup("Overwrite character?", "There is already a character with this name, do you want to overwrite it?", function(ret)
-									if not ret then Module:instanciate(mod, text, true) end
-								end, "No", "Yes")
-							else
-								Module:instanciate(mod, text, true)
-							end
-						end))
-					end
-				end
 				mod.version_txt = ("%d.%d.%d"):format(mod.version[1], mod.version[2], mod.version[3])
 				mod.adds = Module:listAddons(mod, true)
 
