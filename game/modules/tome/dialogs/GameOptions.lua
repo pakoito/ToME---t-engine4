@@ -143,6 +143,18 @@ function _M:generateList()
 		end)
 	end,}
 
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Select the HUD look. 'Minimalist' is the default one.\n#LIGHT_RED#This will take effect on next restart."}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#HUD Style#WHITE##{normal}#", status=function(item)
+		return tostring(config.settings.tome.uiset_mode):capitalize()
+	end, fct=function(item)
+		Dialog:listPopup("HUD style", "Select style", {{name="Minimalist", ui="Minimalist"}, {name="Classic", ui="Classic"}}, 300, 200, function(sel)
+			if not sel or not sel.ui then return end
+			game:saveSettings("tome.uiset_mode", ("tome.uiset_mode = %q\n"):format(sel.ui))
+			config.settings.tome.uiset_mode = sel.ui
+			self.c_list:drawItem(item)
+		end)
+	end,}
+
 	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Select the fonts look. Fantasy is the default one. Basic is simplified and smaller.\nYou must restart the game for the change to take effect."}
 	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Font Style#WHITE##{normal}#", status=function(item)
 		return tostring(config.settings.tome.fonts.type):capitalize()
