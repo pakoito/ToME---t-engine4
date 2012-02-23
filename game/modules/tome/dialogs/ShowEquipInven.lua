@@ -23,6 +23,7 @@ local Dialog = require "engine.ui.Dialog"
 local Inventory = require "engine.ui.Inventory"
 local Separator = require "engine.ui.Separator"
 local EquipDoll = require "engine.ui.EquipDoll"
+local Tab = require "engine.ui.Tab"
 
 module(..., package.seeall, class.inherit(Dialog))
 
@@ -33,6 +34,9 @@ function _M:init(title, actor, filter, action, on_select)
 	self.on_select = on_select
 
 	Dialog.init(self, title or "Inventory", math.max(800, game.w * 0.8), math.max(600, game.h * 0.8))
+
+	self.c_main_set = Tab.new{title="Main Set", default=not actor.off_weapon_slots, fct=function() end, on_change=function(s) if s then self:switchSets("main") end end}
+	self.c_off_set = Tab.new{title="Off Set", default=actor.off_weapon_slots, fct=function() end, on_change=function(s) if s then self:switchSets("off") end end}
 
 	-- Add tooltips
 	self.on_select = function(item)
@@ -66,7 +70,9 @@ function _M:init(title, actor, filter, action, on_select)
 	}
 
 	local uis = {
-		{left=0, top=0, ui=self.c_doll},
+		{left=0, top=0, ui=self.c_main_set},
+		{left=self.c_main_set, top=0, ui=self.c_off_set},
+		{left=0, top=self.c_main_set, ui=self.c_doll},
 		{right=0, top=0, ui=self.c_inven},
 		{left=self.c_doll.w, top=5, ui=Separator.new{dir="horizontal", size=self.ih - 10}},
 	}
@@ -88,7 +94,16 @@ function _M:init(title, actor, filter, action, on_select)
 		-- Control resets the tooltip
 		if sym == self.key._LCTRL or sym == self.key._RCTRL then local i = self.cur_item self.cur_item = nil self:select(i) end
 	end
+end
 
+function _M:switchSets(which)
+	if which == "main" and not self.actor.off_weapon_slots then return end
+	if which == "off" and self.actor.off_weapon_slots then return end
+
+	self.actor:quickSwitchWeapons()
+
+	self.c_main_set.selected = not self.actor.off_weapon_slots
+	self.c_off_set.selected = self.actor.off_weapon_slots
 end
 
 function _M:firstDisplay()
