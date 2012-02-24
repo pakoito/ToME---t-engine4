@@ -111,7 +111,9 @@ function _M:display(dispx, dispy)
 		if self.target_type.min_range and core.fov.distance(self.source_actor.x, self.source_actor.y, lx, ly) < self.target_type.min_range then
 			s = self.sr
 		end
-		s:toScreen(self.display_x + (blocked_corner_x - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (blocked_corner_y - game.level.map.my + util.hexOffset(blocked_corner_x)) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
+		if game.level.map:isBound(blocked_corner_x, blocked_corner_y) then
+			s:toScreen(self.display_x + (blocked_corner_x - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (blocked_corner_y - game.level.map.my + util.hexOffset(blocked_corner_x)) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
+		end
 		s = self.sr
 	end
 
@@ -156,8 +158,10 @@ function _M:display(dispx, dispy)
 			hit_radius = false
 			s = self.sr
 			-- double the fun :-P
-			s:toScreen(self.display_x + (blocked_corner_x - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (blocked_corner_y - game.level.map.my + util.hexOffset(blocked_corner_x)) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
-			s:toScreen(self.display_x + (blocked_corner_x - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (blocked_corner_y - game.level.map.my + util.hexOffset(blocked_corner_x)) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
+			if game.level.map:isBound(blocked_corner_x, blocked_corner_y) then
+				s:toScreen(self.display_x + (blocked_corner_x - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (blocked_corner_y - game.level.map.my + util.hexOffset(blocked_corner_x)) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
+				s:toScreen(self.display_x + (blocked_corner_x - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (blocked_corner_y - game.level.map.my + util.hexOffset(blocked_corner_x)) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
+			end
 		end
 
 	end
@@ -246,7 +250,9 @@ function _M:getType(t)
 		selffire = true,
 		friendlyfire = true,
 		block_path = function(typ, lx, ly, for_highlights)
-			if not typ.no_restrict then
+			if not game.level.map:isBound(lx, ly) then
+				return true, false, false
+			elseif not typ.no_restrict then
 				if typ.range and typ.start_x then
 					local dist = core.fov.distance(typ.start_x, typ.start_y, lx, ly)
 					if dist > typ.range then return true, false, false end

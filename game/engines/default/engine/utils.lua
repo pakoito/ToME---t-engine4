@@ -1374,7 +1374,7 @@ function core.fov.line(sx, sy, tx, ty, block, start_at_end)
 	l.set_corner_block = core.fov.set_corner_block
 	local mt = {}
 	mt.__index = function(t, key, ...) if t.line[key] then return t.line[key] end end
-	mt.__call = function(t, ...) return t.line:step() end
+	mt.__call = function(t, ...) return t.line:step(...) end
 	setmetatable(l, mt)
 
 	return l

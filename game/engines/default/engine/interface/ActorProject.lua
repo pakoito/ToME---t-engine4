@@ -74,7 +74,7 @@ function _M:project(t, x, y, damtype, dam, particles)
 	local lx, ly, blocked_corner_x, blocked_corner_y = l:step()
 
 	-- Being completely blocked by the corner of an adjacent tile is annoying, so let's make it a special case and hit it instead
-	if blocked_corner_x then
+	if blocked_corner_x and game.level.map:isBound(blocked_corner_x, blocked_corner_y) then
 		stop_x = blocked_corner_x
 		stop_y = blocked_corner_y
 		if typ.line then addGrid(blocked_corner_x, blocked_corner_y) end

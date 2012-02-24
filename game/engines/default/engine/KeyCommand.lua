@@ -29,9 +29,6 @@ function _M:init()
 	self.commands = {}
 	self.ignore = {}
 	self.on_input = false
-
-	-- Fullscreen toggle
-	self:addCommand(self._RETURN, {"alt"}, function() core.display.fullscreen() end)
 end
 
 --- Adds the profiler keybind (ctrl, alt, shift, p)
