@@ -149,7 +149,7 @@ function _M:newGame()
 	Zone:setup{npc_class="mod.class.NPC", grid_class="mod.class.Grid", }
 	self:changeLevel(rng.range(1, 3), "dungeon")
 end
-
+--[[
 function _M:onResolutionChange()
 	local oldw, oldh = self.w, self.h
 	engine.Game.onResolutionChange(self)
@@ -166,12 +166,40 @@ function _M:onResolutionChange()
 		end, "Accept", "Revert")
 	end
 end
+]]
+--- Called when screen resolution changes
+function _M:checkResolutionChange(w, h, ow, oh)
+	self:resizeMapViewport(w, h)
+
+	return true
+end
+
+function _M:resizeMapViewport(w, h)
+	w = math.floor(w)
+	h = math.floor(h)
+
+	Map.viewport.width = w
+	Map.viewport.height = h
+	Map.viewport.mwidth = math.floor(w / Map.tile_w)
+	Map.viewport.mheight = math.floor(h / Map.tile_h)
+
+	self:createFBOs()
+
+	if self.level then
+		self.level.map:makeCMap()
+		self.level.map:redisplay()
+	end
+end
 
 function _M:setupDisplayMode()
 	Map:setViewPort(0, 0, self.w, self.h, 48, 48, nil, 22, true, true)
 	Map:resetTiles()
 	Map.tiles.use_images = true
 
+	self:createFBOs()
+end
+
+function _M:createFBOs()
 	-- Create the framebuffer
 	self.fbo = core.display.newFBO(game.w, game.h)
 	if self.fbo then

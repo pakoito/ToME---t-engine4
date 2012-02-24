@@ -205,6 +205,18 @@ function _M:init()
 	}
 	table.merge(self.places, config.settings.tome.uiset_minimalist and config.settings.tome.uiset_minimalist.places or {}, true)
 
+	-- Adjsut to account for resolution change
+	if config.settings.tome.uiset_minimalist and config.settings.tome.uiset_minimalist.save_size then
+		local ow, oh = config.settings.tome.uiset_minimalist.save_size.w, config.settings.tome.uiset_minimalist.save_size.h
+
+		-- Adjust UI
+		local w2, h2 = math.floor(ow / 2), math.floor(oh / 2)
+		for what, d in pairs(self.places) do
+			if d.x > w2 then d.x = d.x + w - ow end
+			if d.y > h2 then d.y = d.y + h - oh end
+		end
+	end
+
 	self.sizes = {}
 
 	self.tbbuttons = {inven=0.6, mainmenu=0.6, lore=0.6, quest=0.6}
@@ -247,7 +259,8 @@ function _M:saveSettings()
 	self:boundPlaces()
 
 	local lines = {}
-	lines[#lines+1] = ("tome.uiset_minimalist = {}"):format(w)
+	lines[#lines+1] = ("tome.uiset_minimalist = {}"):format()
+	lines[#lines+1] = ("tome.uiset_minimalist.save_size = {w=%d, h=%d}"):format(game.w, game.h)
 	lines[#lines+1] = ("tome.uiset_minimalist.places = {}"):format(w)
 	for _, w in ipairs{"player", "resources", "party", "buffs", "minimap", "gamelog", "chatlog", "hotkeys", "mainicons"} do
 		lines[#lines+1] = ("tome.uiset_minimalist.places.%s = {}"):format(w)
@@ -366,6 +379,25 @@ function _M:resizeIconsHotkeysToolbar()
 	self.hotkeys_display.actor = game.player
 end
 
+function _M:handleResolutionChange(w, h, ow, oh)
+	local w, h = core.display.size()
+	game:setResolution(w.."x"..h, true)
+
+	self.no_ui = not self.no_ui
+	self:toggleUI()
+
+	-- Adjust UI
+	local w2, h2 = math.floor(ow / 2), math.floor(oh / 2)
+	for what, d in pairs(self.places) do
+		if d.x > w2 then d.x = d.x + w - ow end
+		if d.y > h2 then d.y = d.y + h - oh end
+	end
+
+	self:boundPlaces()
+	self:saveSettings()
+
+	return true
+end
 
 function _M:getMapSize()
 	local w, h = core.display.size()

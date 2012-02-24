@@ -193,6 +193,62 @@ function table.readonly(src)
    });
 end
 
+-- Taken from http://lua-users.org/wiki/SortedIteration
+local function cmp_multitype(op1, op2)
+	local type1, type2 = type(op1), type(op2)
+	if type1 ~= type2 then --cmp by type
+		return type1 < type2
+	elseif type1 == "number" and type2 == "number"
+	  or type1 == "string" and type2 == "string" then
+		return op1 < op2 --comp by default
+	elseif type1 == "boolean" and type2 == "boolean" then
+		return op1 == true
+	else
+		return tostring(op1) < tostring(op2) --cmp by address
+	end
+end
+
+local __genOrderedIndex = function(t)
+	local orderedIndex = {}
+	for key in pairs(t) do
+		table.insert(orderedIndex, key)
+	end
+	table.sort(orderedIndex, cmp_multitype) --### CANGE ###
+	return orderedIndex
+end
+
+local orderedNext = function(t, state)
+	-- Equivalent of the next function, but returns the keys in the alphabetic
+	-- order. We use a temporary ordered key table that is stored in the
+	-- table being iterated.
+	if state == nil then
+		-- the first time, generate the index
+		t.__orderedIndex = __genOrderedIndex(t)
+		key = t.__orderedIndex[1]
+		return key, t[key]
+	end
+	-- fetch the next value
+	key = nil
+	for i = 1,table.getn(t.__orderedIndex) do
+		if t.__orderedIndex[i] == state then
+			key = t.__orderedIndex[i+1]
+		end
+	end
+
+	if key then
+		return key, t[key]
+	end
+
+	-- no more value to return, cleanup
+	t.__orderedIndex = nil
+	return
+end
+
+--- An ordered iteration through a table
+function table.orderedPairs(t)
+	return orderedNext, t, nil
+end
+
 function string.ordinal(number)
 	local suffix = "th"
 	number = tonumber(number)

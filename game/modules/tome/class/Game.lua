@@ -1034,6 +1034,13 @@ function _M:displayMap(nb_keyframes)
 	end
 end
 
+--- Called when screen resolution changes
+function _M:checkResolutionChange(w, h, ow, oh)
+	self:createFBOs()
+
+	return self.uiset:handleResolutionChange(w, h, ow, oh)
+end
+
 function _M:display(nb_keyframes)
 	-- If switching resolution, blank everything but the dialog
 	if self.change_res_dialog then engine.GameTurnBased.display(self, nb_keyframes) return end

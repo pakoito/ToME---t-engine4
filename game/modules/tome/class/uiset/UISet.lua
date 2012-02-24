@@ -50,3 +50,7 @@ end
 function _M:checkGameOption(name)
 	return true
 end
+
+function _M:handleResolutionChange(w, h, ow, oh)
+	return false
+end

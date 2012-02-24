@@ -417,6 +417,8 @@ function _M:onResolutionChange()
 	-- No actual resize
 	if ow == self.w and oh == self.h then return end
 
+	if self:checkResolutionChange(self.w, self.h, ow, oh) then return end
+
 	-- Do not repop if we just revert back
 	if self.change_res_dialog and type(self.change_res_dialog) == "string" and self.change_res_dialog == "revert" then return end
 	-- Unregister old dialog if there was one
@@ -433,6 +435,11 @@ function _M:onResolutionChange()
 			self.change_res_dialog_oldw, self.change_res_dialog_oldh = nil, nil
 		end
 	end, "Accept", "Revert")
+end
+
+--- Checks if we must reload to change resolution
+function _M:checkResolutionChange(w, h, ow, oh)
+	return false
 end
 
 --- Called when the game window is moved around
