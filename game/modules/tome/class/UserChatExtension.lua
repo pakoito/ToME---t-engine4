@@ -61,12 +61,18 @@ function _M:event(e)
 		if not data then return end
 		data = data:unserialize()
 		if not data then return end
+
+		local color = colors.WHITE
+		if e.status == 'dev' then color = colors.CRIMSON
+		elseif e.donator == "oneshot" then color = colors.LIGHT_GREEN
+		elseif e.donator == "recurring" then color = colors.ROYAL_BLUE end
+
 		if data.kind == "object-link" then
-			self.chat:addMessage("link", e.channel, e.login, e.name, "#ANTIQUE_WHITE#has linked an item: #WHITE# "..data.name, {mode="tooltip", tooltip=data.desc})
+			self.chat:addMessage("link", e.channel, e.login, {e.name, color}, "#ANTIQUE_WHITE#has linked an item: #WHITE# "..data.name, {mode="tooltip", tooltip=data.desc})
 		elseif data.kind == "actor-link" then
-			self.chat:addMessage("link", e.channel, e.login, e.name, "#ANTIQUE_WHITE#has linked a creature: #WHITE# "..data.name, {mode="tooltip", tooltip=data.desc})
+			self.chat:addMessage("link", e.channel, e.login, {e.name, color}, "#ANTIQUE_WHITE#has linked a creature: #WHITE# "..data.name, {mode="tooltip", tooltip=data.desc})
 		elseif data.kind == "killer-link" then
-			self.chat:addMessage("death", e.channel, e.login, e.name, "#CRIMSON#"..data.msg.."#WHITE#", data.desc and {mode="tooltip", tooltip=data.desc} or nil)
+			self.chat:addMessage("death", e.channel, e.login, {e.name, color}, "#CRIMSON#"..data.msg.."#WHITE#", data.desc and {mode="tooltip", tooltip=data.desc} or nil)
 		end
 	end
 end

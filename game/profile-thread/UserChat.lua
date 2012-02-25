@@ -30,30 +30,30 @@ end
 
 function _M:event(e)
 	if e.e == "ChatTalk" then
-		cprofile.pushEvent(string.format("e='Chat' se='Talk' channel=%q login=%q name=%q donator=%q msg=%q", e.channel, e.login, e.name, e.donator, e.msg))
+		cprofile.pushEvent(string.format("e='Chat' se='Talk' channel=%q login=%q name=%q donator=%q status=%q msg=%q", e.channel, e.login, e.name, e.donator, e.status, e.msg))
 		print("[USERCHAT] channel talk", e.login, e.channel, e.msg)
 	elseif e.e == "ChatWhisper" then
-		cprofile.pushEvent(string.format("e='Chat' se='Whisper' login=%q name=%q donator=%q msg=%q", e.login, e.name, e.donator, e.msg))
+		cprofile.pushEvent(string.format("e='Chat' se='Whisper' login=%q name=%q donator=%q status=%q msg=%q", e.login, e.name, e.donator, e.status, e.msg))
 		print("[USERCHAT] whisper", e.login, e.msg)
 	elseif e.e == "ChatAchievement" then
-		cprofile.pushEvent(string.format("e='Chat' se='Achievement' channel=%q login=%q name=%q donator=%q msg=%q", e.channel, e.login, e.name, e.donator, e.msg))
+		cprofile.pushEvent(string.format("e='Chat' se='Achievement' channel=%q login=%q name=%q donator=%q status=%q msg=%q", e.channel, e.login, e.name, e.donator, e.status, e.msg))
 		print("[USERCHAT] channel achievement", e.login, e.channel, e.msg)
 	elseif e.e == "ChatSerialData" then
 		local data = self.client.psock:receive(e.size)
 		if data then
 			e.msg = data
-			cprofile.pushEvent(string.format("e='Chat' se='SerialData' channel=%q login=%q name=%q donator=%q msg=%q", e.channel, e.login, e.name, e.donator, e.msg))
+			cprofile.pushEvent(string.format("e='Chat' se='SerialData' channel=%q login=%q name=%q donator=%q status=%q msg=%q", e.channel, e.login, e.name, e.donator, e.status, e.msg))
 			print("[USERCHAT] channel serial data", e.login, e.channel, e.size)
 		end
 	elseif e.e == "ChatJoin" then
 		self.channels[e.channel] = self.channels[e.channel] or {}
 		self.channels[e.channel][e.login] = true
-		cprofile.pushEvent(string.format("e='Chat' se='Join' channel=%q login=%q name=%q donator=%q", e.channel, e.login, e.name, e.donator))
+		cprofile.pushEvent(string.format("e='Chat' se='Join' channel=%q login=%q name=%q donator=%q status=%q", e.channel, e.login, e.name, e.donator, e.status))
 		print("[USERCHAT] channel join", e.login, e.channel)
 	elseif e.e == "ChatPart" then
 		self.channels[e.channel] = self.channels[e.channel] or {}
 		self.channels[e.channel][e.login] = nil
-		cprofile.pushEvent(string.format("e='Chat' se='Part' channel=%q login=%q name=%q donator=%q", e.channel, e.login, e.name, e.donator))
+		cprofile.pushEvent(string.format("e='Chat' se='Part' channel=%q login=%q name=%q donator=%q status=%q", e.channel, e.login, e.name, e.donator, e.status))
 		print("[USERCHAT] channel part", e.login, e.channel)
 	end
 end
