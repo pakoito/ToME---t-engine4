@@ -23,7 +23,7 @@ newTalent{
 	type = {"chronomancy/other", 1},
 	mode = "sustained",
 	sustain_paradox = 0,
-	hide = true,
+	--hide = true,
 	points = 1,
 	--message = "@Source@ retunes the fabric of spacetime.",
 	cooldown = 5,
@@ -43,13 +43,13 @@ newTalent{
 	end,
 	info = function(self, t)
 		local _, failure = self:paradoxFailChance()
-		local _, backfire = self:paradoxBackfireChance()
 		local _, anomaly = self:paradoxAnomalyChance()
+		local _, backfire = self:paradoxBackfireChance()
 		return ([[Reduces your paradox by one each turn while sustained.  Attacking, using an item, or a talent will cancel the spell.
 		
 		Current failure chance  : %d%%
 		Current anomaly chance  : %d%%
-		Current backfire chance : %d%%]]):format(failure, backfire, anomaly)
+		Current backfire chance : %d%%]]):format(failure, anomaly, backfire)
 	end,
 }
 

@@ -2371,35 +2371,44 @@ function _M:equilibriumChance(eq)
 end
 
 --- Paradox checks
-function _M:paradoxChanceModifier()
-	local modifier = self:getWil() * 1.5
-	if self:knowTalent(self.T_PARADOX_MASTERY) then
-		modifier = modifier * (1 + (self:getTalentLevel(self.T_PARADOX_MASTERY)/10) or 0)
-	end
-	--print("[Paradox] Will modifier: ", modifier, "::", self:getParadox())
-	return modifier
+function _M:getModifiedParadox()
+	local will_modifier = 1 + (self:getTalentLevel(self.T_PARADOX_MASTERY)/10) or 0
+	local modified_paradox = math.max(0, self:getParadox() - (self:getWil() * will_modifier))
+	return modified_paradox
 end
 
 function _M:paradoxFailChance()
-	local chance = 	(100 + 2*self:combatFatigue()) / 100 * math.pow((self:getParadox() - self:paradoxChanceModifier()) / 200, 2)
-	if self:getParadox() < 200 then chance = 0 end
-	--print("[Paradox] Fail chance: ", chance, "::", self:getParadox())
+	local chance = 0
+	local fatigue_modifier = (100 + 2 * self:combatFatigue()) / 100
+	-- Failures only happen if Modified Paradox is over 200
+	if self:getModifiedParadox() > 200 then
+		chance = fatigue_modifier * math.pow(self:getModifiedParadox() / 200, 2)
+	end
+	-- If there's any chance, round it up
 	chance = util.bound(math.ceil(chance), 0, 100)
 	return rng.percent(chance), chance
 end
 
 function _M:paradoxAnomalyChance()
-	local chance = 	(100 + 2*self:combatFatigue()) / 100 * math.pow((self:getParadox() - self:paradoxChanceModifier()) / 300, 3)
-	if self:getParadox() < 300 then chance = 0 end
-	--print("[Paradox] Anomaly chance: ", chance, "::", self:getParadox())
+	local chance = 0
+	local fatigue_modifier = (100 + 2 * self:combatFatigue()) / 100
+	-- Anomalies only happen if Modified Paradox is over 200
+	if self:getModifiedParadox() > 300 then
+		chance = fatigue_modifier * math.pow(self:getModifiedParadox() / 300, 3)
+	end
+	-- If there's any chance, round it up
 	chance = util.bound(math.ceil(chance), 0, 100)
 	return rng.percent(chance), chance
 end
 
 function _M:paradoxBackfireChance()
-	local chance = (100 + 2 * self:combatFatigue()) / 100 * math.pow((self:getParadox() - self:paradoxChanceModifier()) / 400, 4)
-	if self:getParadox() < 400 then chance = 0 end
-	--print("[Paradox] Backfire chance: ", chance, "::", self:getParadox())
+	local chance = 0
+	local fatigue_modifier = (100 + 2 * self:combatFatigue()) / 100
+	-- Backfires only happen if Modified Paradox is over 400
+	if self:getModifiedParadox() > 400 then
+		chance = fatigue_modifier * math.pow(self:getModifiedParadox() / 400, 4)
+	end
+	-- If there's any chance, round it up
 	chance = util.bound(math.ceil(chance), 0, 100)
 	return rng.percent(chance), chance
 end
@@ -2409,21 +2418,21 @@ local previous_incParadox = _M.incParadox
 
 function _M:incParadox(paradox)
 	-- Failure checks
-	if self:getParadox() < 200 and self:getParadox() + paradox >= 200 then
+	if self:getModifiedParadox() < 200 and self:getModifiedParadox() + paradox >= 200 then
 		game.logPlayer(self, "#LIGHT_RED#You feel the edges of time begin to fray!")
 	end
-	if self:getParadox() > 200 and self:getParadox() + paradox <= 200 then
+	if self:getModifiedParadox() > 200 and self:getModifiedParadox() + paradox <= 200 then
 		game.logPlayer(self, "#LIGHT_BLUE#Time feels more stable.")
 	end
 	-- Anomaly checks
-	if self:getParadox() < 300 and self:getParadox() + paradox >= 300 then
+	if self:getModifiedParadox() < 300 and self:getModifiedParadox() + paradox >= 300 then
 		game.logPlayer(self, "#LIGHT_RED#You feel the edges of space begin to ripple and bend!")
 	end
-	if self:getParadox() > 300 and self:getParadox() + paradox <= 300 then
+	if self:getModifiedParadox() > 300 and self:getModifiedParadox() + paradox <= 300 then
 		game.logPlayer(self, "#LIGHT_BLUE#Space feels more stable.")
 	end
 	-- Backfire checks
-	if self:getParadox() < 400 and self:getParadox() + paradox >= 400 then
+	if self:getModifiedParadox() < 400 and self:getModifiedParadox() + paradox >= 400 then
 		game.logPlayer(self, "#LIGHT_RED#Space and time both fight against your control!")
 	end
 	if self:getParadox() > 400 and self:getParadox() + paradox <= 400 then
@@ -2604,13 +2613,14 @@ function _M:preUseTalent(ab, silent, fake)
 			end
 			if not silent then game.logPlayer(self, "You lose control and unleash an anomaly!") end
 			self:forceUseTalent(rng.table(ts), {ignore_energy=true})
-			self:incParadox(-(ab.paradox and (ab.paradox * paradox_scaling) or ab.sustain_paradox))
+			-- Anomalies correct the timeline and reduce Paradox
+			self:incParadox(- (ab.paradox and (ab.paradox * paradox_scaling) or ab.sustain_paradox) * 2)
 			self:useEnergy()
 			return false
 		-- Now check for failure
 		elseif not self:attr("no_paradox_fail") and self:paradoxFailChance() and not self:hasEffect(self.EFF_SPACETIME_STABILITY) then
 			if not silent then game.logPlayer(self, "You fail to use %s due to your paradox!", ab.name) end
-			self:incParadox(ab.paradox or ab.sustain_paradox / 10)
+			self:incParadox(ab.paradox and (ab.paradox * paradox_scaling) or ab.sustain_paradox)
 			self:useEnergy()
 			return false
 		end
