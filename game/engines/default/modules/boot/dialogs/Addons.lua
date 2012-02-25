@@ -68,13 +68,6 @@ function _M:init()
 	}
 end
 
-function _M:on_register()
-	if #self.list == 1 then
-		game:unregisterDialog(self)
-		self.list[1]:fct()
-	end
-end
-
 function _M:select(item)
 	if item and item.adds and self.c_adds then
 		self.c_adds.list = item.adds
