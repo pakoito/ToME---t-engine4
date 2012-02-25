@@ -245,21 +245,17 @@ newTalent{
 	points = 5,
 	on_learn = function(self, t)
 		self.alchemy_golem:learnTalent(Talents.T_WEAPON_COMBAT, true, nil, {no_unlearn=true})
-		self.alchemy_golem:learnTalent(Talents.T_WEAPON_COMBAT, true, nil, {no_unlearn=true})
-		self.alchemy_golem:learnTalent(Talents.T_WEAPONS_MASTERY, true, nil, {no_unlearn=true})
 		self.alchemy_golem:learnTalent(Talents.T_WEAPONS_MASTERY, true, nil, {no_unlearn=true})
 	end,
 	on_unlearn = function(self, t)
 		self.alchemy_golem:unlearnTalent(Talents.T_WEAPON_COMBAT, true)
-		self.alchemy_golem:unlearnTalent(Talents.T_WEAPON_COMBAT, true)
-		self.alchemy_golem:unlearnTalent(Talents.T_WEAPONS_MASTERY, true)
 		self.alchemy_golem:unlearnTalent(Talents.T_WEAPONS_MASTERY, true)
 	end,
 	info = function(self, t)
 		if not self.alchemy_golem then return "Improves your golem's proficiency with weapons, increasing its attack and damage." end
 		local rawlev = self:getTalentLevelRaw(t)
 		local olda, oldd = self.alchemy_golem.talents[Talents.T_WEAPON_COMBAT], self.alchemy_golem.talents[Talents.T_WEAPONS_MASTERY]
-		self.alchemy_golem.talents[Talents.T_WEAPON_COMBAT], self.alchemy_golem.talents[Talents.T_WEAPONS_MASTERY] = 2 + rawlev * 2, rawlev * 2
+		self.alchemy_golem.talents[Talents.T_WEAPON_COMBAT], self.alchemy_golem.talents[Talents.T_WEAPONS_MASTERY] = 2 + rawlev, rawlev
 		local ta, td = self:getTalentFromId(Talents.T_WEAPON_COMBAT), self:getTalentFromId(Talents.T_WEAPONS_MASTERY)
 		local attack = ta.getAttack(self.alchemy_golem, ta)
 		local power = td.getDamage(self.alchemy_golem, td)
@@ -278,15 +274,11 @@ newTalent{
 	points = 5,
 	on_learn = function(self, t)
 		self.alchemy_golem:learnTalent(Talents.T_THICK_SKIN, true, nil, {no_unlearn=true})
-		self.alchemy_golem:learnTalent(Talents.T_THICK_SKIN, true, nil, {no_unlearn=true})
-		self.alchemy_golem:learnTalent(Talents.T_ARMOUR_TRAINING, true, nil, {no_unlearn=true})
 		self.alchemy_golem:learnTalent(Talents.T_ARMOUR_TRAINING, true, nil, {no_unlearn=true})
 		self.alchemy_golem.healing_factor = (self.alchemy_golem.healing_factor or 1) + 0.1
 	end,
 	on_unlearn = function(self, t)
 		self.alchemy_golem:unlearnTalent(Talents.T_THICK_SKIN, true)
-		self.alchemy_golem:unlearnTalent(Talents.T_THICK_SKIN, true)
-		self.alchemy_golem:unlearnTalent(Talents.T_ARMOUR_TRAINING, true)
 		self.alchemy_golem:unlearnTalent(Talents.T_ARMOUR_TRAINING, true)
 		self.alchemy_golem.healing_factor = (self.alchemy_golem.healing_factor or 1) - 0.1
 	end,
@@ -294,7 +286,7 @@ newTalent{
 		if not self.alchemy_golem then return "Improves your golem's armour training and damage resistance." end
 		local rawlev = self:getTalentLevelRaw(t)
 		local oldh, olda = self.alchemy_golem.talents[Talents.T_THICK_SKIN], self.alchemy_golem.talents[Talents.T_ARMOUR_TRAINING]
-		self.alchemy_golem.talents[Talents.T_THICK_SKIN], self.alchemy_golem.talents[Talents.T_ARMOUR_TRAINING] = rawlev * 2, 4 + rawlev * 2
+		self.alchemy_golem.talents[Talents.T_THICK_SKIN], self.alchemy_golem.talents[Talents.T_ARMOUR_TRAINING] = rawlev, 4 + rawlev
 		local th, ta = self:getTalentFromId(Talents.T_THICK_SKIN), self:getTalentFromId(Talents.T_ARMOUR_TRAINING)
 		local res = th.getRes(self.alchemy_golem, th)
 		local heavyarmor = ta.getArmor(self.alchemy_golem, ta)
