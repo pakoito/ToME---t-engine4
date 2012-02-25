@@ -58,7 +58,7 @@ end
 
 function _M:liveOrDie(x, y)
 	local nb = 0
-	for _, coord in pairs(util.adjacentCoords(x, y)) if self.map:isBound(coord[1], coord[2]) then
+	for _, coord in pairs(util.adjacentCoords(x, y)) do if self.map:isBound(coord[1], coord[2]) then
 		local g = self.map(coord[1], coord[2], Map.TERRAIN)
 		if g and g == self.wall then nb = nb + 1 end
 	end end
