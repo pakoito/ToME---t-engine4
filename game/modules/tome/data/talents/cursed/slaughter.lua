@@ -56,7 +56,7 @@ newTalent{
 				target:setEffect(target.EFF_CURSED_WOUND, woundDuration, { healFactorChange=healFactorChange, totalDuration=woundDuration })
 			end
 		end
-				
+
 		return true
 	end,
 	info = function(self, t)
@@ -106,7 +106,7 @@ newTalent{
 		local attackChange = t.getAttackChange(self, t)
 
 		local effStalker = self:hasEffect(self.EFF_STALKER)
-		if core.fov.distance(self.x, self.y, effStalker.target.x, effStalker.target.y) > 1 then effStalker = nil end
+		if effStalker and core.fov.distance(self.x, self.y, effStalker.target.x, effStalker.target.y) > 1 then effStalker = nil end
 		for i = 1, 4 do
 			local target
 			if effStalker and not effStalker.target.dead then
@@ -161,7 +161,7 @@ newTalent{
 
 		local attackCount = 0
 		local maxAttackCount = t.getMaxAttackCount(self, t)
-		
+
 		while nextX and nextY and not is_corner_blocked do
 			local blockingTarget = game.level.map(nextX, nextY, Map.ACTOR)
 			if blockingTarget and self:reactionToward(blockingTarget) < 0 then
