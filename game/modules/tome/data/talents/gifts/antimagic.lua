@@ -140,14 +140,14 @@ newTalent{
 			local target = game.level.map(px, py, Map.ACTOR)
 			if not target then return end
 
-			local base = self:combatTalentMindDamage(t, 40, 460)
+			local base = self:combatTalentMindDamage(t, 20, 460)
 			DamageType:get(DamageType.MANABURN).projector(self, px, py, DamageType.MANABURN, base)
 		end, nil, {type="slime"})
 		game:playSoundNear(self, "talents/heal")
 		return true
 	end,
 	info = function(self, t)
-		local base = self:combatTalentMindDamage(t, 40, 460)
+		local base = self:combatTalentMindDamage(t, 20, 460)
 		local mana = base
 		local vim = base / 2
 		local positive = base / 4

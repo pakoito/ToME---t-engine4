@@ -548,11 +548,12 @@ function _M:displayResources(scale, bx, by, a)
 		shat[1]:toScreenPrecise(x+49, y+10, shat[6] * p, shat[7], 0, p * 1/shat[4], 0, 1/shat[5], life_c[1], life_c[2], life_c[3], a)
 		if life_sha.shad then life_sha.shad:use(false) end
 
-		if not self.res.life or self.res.life.vc ~= player.life or self.res.life.vm ~= player.max_life or self.res.life.vr ~= player.life_regen then
+		local life_regen = player.life_regen * util.bound((player.healing_factor or 1), 0, 2.5)
+		if not self.res.life or self.res.life.vc ~= player.life or self.res.life.vm ~= player.max_life or self.res.life.vr ~= life_regen then
 			self.res.life = {
-				vc = player.life, vm = player.max_life, vr = player.life_regen,
+				vc = player.life, vm = player.max_life, vr = life_regen,
 				cur = {core.display.drawStringBlendedNewSurface(font_sha, ("%d/%d"):format(player.life, player.max_life), 255, 255, 255):glTexture()},
-				regen={core.display.drawStringBlendedNewSurface(sfont_sha, ("%+0.2f"):format(player.life_regen), 255, 255, 255):glTexture()},
+				regen={core.display.drawStringBlendedNewSurface(sfont_sha, ("%+0.2f"):format(life_regen), 255, 255, 255):glTexture()},
 			}
 		end
 		local dt = self.res.life.cur

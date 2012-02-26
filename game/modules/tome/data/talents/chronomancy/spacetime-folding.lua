@@ -26,8 +26,8 @@ newTalent{
 	cooldown = 10,
 	tactical = { BUFF = 2 },
 	points = 5,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 15, 40) end,
-	getParadoxReduction = function(self, t) return self:getTalentLevel(t) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 15, 25) end,
+	getParadoxReduction = function(self, t) return self:getTalentLevel(t) / 2 end,
 	activate = function(self, t)
 		return {}
 	end,
@@ -37,8 +37,8 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local paradox_reduction = t.getParadoxReduction(self, t)
-		return ([[Folds a single dimension of your weapons (or ammo), adding %0.2f temporal damage to your strikes and reducing your Paradox by %0.1f every time you land an attack.
-		The damage will increase with your Spellpower.]]):format(damDesc(self, DamageType.TEMPORAL, damage), paradox_reduction)
+		return ([[Folds a single dimension of your weapons (or ammo), adding %0.2f temporal damage to your strikes (%0.2f for ammo) and reducing your Paradox by %0.1f every time you land an attack (%0.1f for ammo).
+		The damage will increase with your Spellpower.]]):format(damDesc(self, DamageType.TEMPORAL, damage), damDesc(self, DamageType.TEMPORAL, damage * 2), paradox_reduction, paradox_reduction * 2)
 	end,
 }
 
@@ -53,7 +53,7 @@ newTalent{
 	requires_target = true,
 	direct_hit = true,
 	range = function(self, t)
-		return 4 + math.floor(self:getTalentLevel(t))
+		return 3 + math.ceil(self:getTalentLevel(t))
 	end,
 	getConfuseDuration = function(self, t) return math.floor((self:getTalentLevel(t) + 2) * getParadoxModifier(self, pm)) end,
 	getConfuseEfficency = function(self, t) return (30 + self:getTalentLevelRaw(t) * 10) end,
@@ -106,8 +106,9 @@ newTalent{
 	info = function(self, t)
 		local range = self:getTalentRange(t)
 		local duration = t.getConfuseDuration(self, t)
-		return ([[You manipulate the spacetime continuum in such a way that you switch places with another creature with in a range of %d.  The targeted creature will be confused for %d turns.
-		The spells hit chance will increase with your Spellpower.]]):format (range, duration)
+		local power = t.getConfuseEfficency(self, t)
+		return ([[You manipulate the spacetime continuum in such a way that you switch places with another creature with in a range of %d.  The targeted creature will be confused (power %d%%) for %d turns.
+		The spells hit chance will increase with your Spellpower.]]):format (range, power, duration)
 	end,
 }
 
@@ -150,7 +151,7 @@ newTalent{
 	end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 230) * getParadoxModifier(self, pm) end,
 	range = function(self, t)
-		return 4 + math.floor(self:getTalentLevel(t))
+		return 2 + math.floor(self:getTalentLevel(t)/2)
 	end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)

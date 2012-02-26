@@ -210,9 +210,9 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 	-- Temporal cast
 	if hitted and not target.dead and self:knowTalent(self.T_WEAPON_FOLDING) and self:isTalentActive(self.T_WEAPON_FOLDING) then
 		local t = self:getTalentFromId(self.T_WEAPON_FOLDING)
-		local dam = t.getDamage(self, t)
+		local dam = t.getDamage(self, t) * 2
 		DamageType:get(DamageType.TEMPORAL).projector(self, target.x, target.y, DamageType.TEMPORAL, dam, tmp)
-		self:incParadox(- t.getParadoxReduction(self, t))
+		self:incParadox(- t.getParadoxReduction(self, t) * 2)
 	end
 
 	-- Conduit (Psi)
