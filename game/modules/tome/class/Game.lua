@@ -126,7 +126,12 @@ function _M:run()
 	self.uiset.npcs_display.actor = self.player
 
 	-- Run the current music if any
-	self:onTickEnd(function() self:playMusic() end)
+	self:onTickEnd(function()
+		self:playMusic()
+		if self.level then
+			self.level.map:moveViewSurround(self.player.x, self.player.y, config.settings.tome.scroll_dist, config.settings.tome.scroll_dist)
+		end
+	end)
 
 	-- Create the map scroll text overlay
 	local lfont = core.display.newFont("/data/font/Vera.ttf", 30)
@@ -162,7 +167,7 @@ function _M:setPlayerName(name)
 end
 
 function _M:newGame()
-	self.party = Party.new()
+	self.party = Party.new{}
 	local player = Player.new{name=self.player_name, game_ender=true}
 	self.party:addMember(player, {
 		control="full",
@@ -1584,7 +1589,12 @@ function _M:saveGame()
 	if not self.creating_player then
 		local oldplayer = self.player
 		self.party:setPlayer(self:getPlayer(true), true)
-		self.player:saveUUID()
+
+		local party = self.party:cloneFull()
+		party.__te4_uuid = self:getPlayer(true).__te4_uuid
+		for m, _ in pairs(party.members) do m.fov = {actors={}, actors_dist={}} end
+		self.player:saveUUID(party)
+
 		self.party:setPlayer(oldplayer, true)
 	end
 	self.log("Saving game...")

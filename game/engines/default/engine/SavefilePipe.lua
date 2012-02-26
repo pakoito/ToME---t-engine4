@@ -49,7 +49,8 @@ end
 -- @param type the Savefile method to use. I.e: "game", "level", "zone". This will cann the Savefile:saveGame, Savefile:saveLevel, Savefile:saveZone methods
 -- @param object the object to save
 -- @param class a class name, if different from the default one
-function _M:push(savename, type, object, class)
+-- @param on_end a function to call when this object is saved; this can be nil
+function _M:push(savename, type, object, class, on_end)
 	if game.onSavefilePush then game:onSavefilePush(savename, type, object, class) end
 
 	local screenshot = nil
@@ -64,7 +65,7 @@ function _M:push(savename, type, object, class)
 	if #self.pipe == 0 then savefile_pipe.current_nb = 0 end
 
 	local clone, nb = object:cloneFull()
-	self.pipe[#self.pipe+1] = {id=id, savename = savename, type=type, object=clone, nb_objects=nb, baseobject=object, class=class, saveversion=game:saveVersion("new"), screenshot=screenshot}
+	self.pipe[#self.pipe+1] = {id=id, savename = savename, type=type, object=clone, nb_objects=nb, baseobject=object, class=class, saveversion=game:saveVersion("new"), screenshot=screenshot, on_end=on_end}
 	local total_nb = 0
 	for i, p in ipairs(self.pipe) do total_nb = total_nb + p.nb_objects end
 	self.total_nb = total_nb
@@ -104,6 +105,10 @@ function _M:doThread()
 		save["save"..p.type:lower():capitalize()](save, o, true)
 		if p.screenshot then save:saveScreenshot(p.screenshot) end
 		save:close()
+
+		if p.on_end then
+			p.on_end(save)
+		end
 
 		table.remove(self.pipe, 1)
 	end

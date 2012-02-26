@@ -627,6 +627,16 @@ function _M:registerNewCharacter(module)
 	return uuid
 end
 
+function _M:registerSaveCharball(module, uuid, data)
+	if not self.auth or not self.hash_valid then return end
+	core.profile.pushOrder(table.serialize{o="SaveCharball",
+		module=module,
+		uuid=uuid,
+		data=data,
+	})
+	print("[ONLINE PROFILE] saved character charball", uuid)
+end
+
 function _M:registerSaveChardump(module, uuid, title, tags, data)
 	if not self.auth or not self.hash_valid then return end
 	core.profile.pushOrder(table.serialize{o="SaveChardump",

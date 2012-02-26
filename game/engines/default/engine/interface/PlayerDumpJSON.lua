@@ -35,7 +35,7 @@ function _M:getUUID()
 end
 
 --- Call this when a character is saved to upload data to te4.org
-function _M:saveUUID()
+function _M:saveUUID(do_charball)
 	if not self.__te4_uuid then
 		-- Try to grab an UUID even after char reg
 		if self.allow_late_uuid and not game:isTainted() then self:getUUID() end
@@ -58,6 +58,22 @@ function _M:saveUUID()
 	if not data or not title then return end
 
 	profile:registerSaveChardump(game.__mod_info.short_name, self.__te4_uuid, title, tags, core.zlib.compress(data))
+	if do_charball then
+		savefile_pipe:push(do_charball.name, "entity", do_charball, "engine.CharacterBallSave", function(save)
+			f = fs.open("/charballs/"..save:nameSaveEntity(do_charball), "r")
+			if f then
+				local data = {}
+				while true do
+					local l = f:read()
+					if not l then break end
+					data[#data+1] = l
+				end
+				f:close()
+
+				profile:registerSaveCharball(game.__mod_info.short_name, self.__te4_uuid, table.concat(data))
+			end
+		end)
+	end
 end
 
 --- Override this method to define dump sections

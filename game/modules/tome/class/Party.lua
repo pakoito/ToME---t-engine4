@@ -29,6 +29,7 @@ module(..., package.seeall, class.inherit(
 ))
 
 function _M:init(t, no_default)
+	t.name = t.name or "party"
 	engine.Entity.init(self, t, no_default)
 
 	self.members = {}

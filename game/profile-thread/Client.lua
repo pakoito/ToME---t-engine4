@@ -345,6 +345,13 @@ function _M:orderSaveChardump(o)
 	cprofile.pushEvent("e='SaveChardump' ok=true")
 end
 
+function _M:orderSaveCharball(o)
+	self:command("CHAR", "CHARBALL", o.data:len(), o.uuid, o.module)
+	if not self:read("200") then return end
+	self.sock:send(o.data)
+	cprofile.pushEvent("e='SaveCharball' ok=true")
+end
+
 function _M:orderCurrentCharacter(o)
 	self:command("CHAR", "CUR", table.serialize(o))
 	self.cur_char = o

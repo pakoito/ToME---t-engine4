@@ -1228,7 +1228,7 @@ It has been kept somewhat intact with layers of salt and clay, but in spite of t
 
 			for x, yy in pairs(grids) do for y, _ in pairs(yy) do
 				local trap = game.level.map(x, y, Map.TRAP)
-				if trap and not (trap:knownBy(self) or trap:knownBy(who)) then
+				if trap and not (trap:knownBy(self) or trap:knownBy(actor)) then
 					is_trap = true
 					-- Set the artifact as knowing the trap, not the wearer
 					trap:setKnown(self, true)

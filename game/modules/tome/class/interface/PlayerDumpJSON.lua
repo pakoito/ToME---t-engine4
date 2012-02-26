@@ -296,7 +296,7 @@ function _M:dumpToJSON(js)
 	-- Log
 	-------------------------------------------------------------------
 	local log = js:newSection("last messages", "log", "text", nil)
-	log[#log+1] = { val=table.concat(game.logdisplay:getLines(30), "#LAST#\n"), bg="000000" }
+	log[#log+1] = { val=table.concat(game.uiset.logdisplay:getLines(30), "#LAST#\n"), bg="000000" }
 
 	-- Cleanup numbers
 	for _, sec in ipairs(js.sections) do
