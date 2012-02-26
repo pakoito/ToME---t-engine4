@@ -237,9 +237,9 @@ function _M:generateList()
 
 	-- Find all talents of this school
 	for j, t in pairs(self.actor.talents_def) do
-		if self.actor:knowTalent(t.id) and not t.hide then
+		if self.actor:knowTalent(t.id) and not (t.hide and t.mode == "passive") then
 			local typename = "talent"
-			local nodes = (t.mode == "sustained" and sustains) or (t.mode =="passives" and passives) or actives
+			local nodes = (t.mode == "sustained" and sustains) or (t.mode =="passive" and passives) or actives
 			local status = tstring{{"color", "LIGHT_GREEN"}, "Active"}
 			if self.actor:isTalentCoolingDown(t) then
 				nodes = cooldowns
