@@ -270,12 +270,12 @@ function _M:projectile(t, x, y, damtype, dam, particles)
 --	if type(dam) == "number" and dam < 0 then return end
 	local typ = Target:getType(t)
 	typ.source_actor = self
-	typ.start_x = self.x
-	typ.start_y = self.y
+	typ.start_x = t.x or self.x
+	typ.start_y = t.y or self.y
 	if self.lineFOV then
-		typ.line_function = self:lineFOV(x, y)
+		typ.line_function = self:lineFOV(x, y, nil, nil, t.x, t.y)
 	else
-		typ.line_function = core.fov.line(self.x, self.y, x, y)
+		typ.line_function = core.fov.line(t.x or self.x, t.y or self.y, x, y)
 	end
 	local block_corner = typ.block_path and function(_, bx, by) local b, h, hr = typ:block_path(bx, by, true) ; return b and h and not hr end
 		or function(_, bx, by) return false end
