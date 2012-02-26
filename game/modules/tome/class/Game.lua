@@ -1655,6 +1655,7 @@ function _M:placeRandomLoreObjectScale(base, nb, level)
 		[5] = { {1}, {2,3}, {4,5} }, -- 5 => 3
 		korpul = { {1,2}, {3,4} }, -- 5 => 3
 		maze = { {1,2,3,4},{5,6,7} }, -- 5 => 3
+		daikara = { {1}, {2}, {3}, {4,5} },
 		[7] = { {1,2}, {3,4}, {5,6}, {7} }, -- 7 => 4
 	})[nb][level]
 	if not dist then return end

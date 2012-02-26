@@ -72,7 +72,7 @@ return {
 
 	post_process = function(level)
 		-- Place a lore note on each level
-		game:placeRandomLoreObjectScale("NOTE", 7, level.level)
+		game:placeRandomLoreObjectScale("NOTE", "daikara", level.level)
 
 		-- Temporal rift on level 4
 		local p = game.party:findMember{main=true}
