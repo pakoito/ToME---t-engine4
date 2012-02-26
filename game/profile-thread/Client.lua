@@ -352,6 +352,19 @@ function _M:orderSaveCharball(o)
 	cprofile.pushEvent("e='SaveCharball' ok=true")
 end
 
+function _M:orderGetCharball(o)
+	self:command("CHAR", "GETCHARBALL", o.id_profile, o.uuid, o.module)
+	if self:read("200") then
+		local _, _, size = self.last_line:find("^([0-9]+)")
+		size = tonumber(size)
+		if not size or size < 1 then return end
+		local body = self:receive(size)
+		cprofile.pushEvent(string.format("e='GetCharball' id_profile=%q uuid=%q data=%q", o.id_profile, o.uuid, body))
+	else
+		cprofile.pushEvent(string.format("e='GetCharball' id_profile=%q uuid=%q unknown=true", o.id_profile, o.uuid))
+	end
+end
+
 function _M:orderCurrentCharacter(o)
 	self:command("CHAR", "CUR", table.serialize(o))
 	self.cur_char = o

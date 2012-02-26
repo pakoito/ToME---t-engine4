@@ -627,6 +627,20 @@ function _M:registerNewCharacter(module)
 	return uuid
 end
 
+function _M:getCharball(id_profile, uuid)
+	if not self.auth then return end
+	local dialog = Dialog:simpleWaiter("Retrieving data from the server", "Retrieving...")
+	core.display.forceRedraw()
+
+	local data = nil
+	core.profile.pushOrder(table.serialize{o="GetCharball", module=game.__mod_info.short_name, uuid=uuid, id_profile=id_profile})
+	self:waitEvent("GetCharball", function(e) data = e.data end, 30000)
+
+	dialog:done()
+	if not data then return end
+	return data
+end
+
 function _M:registerSaveCharball(module, uuid, data)
 	if not self.auth or not self.hash_valid then return end
 	core.profile.pushOrder(table.serialize{o="SaveCharball",
