@@ -1064,9 +1064,9 @@ function _M:handleEffect(player, eff_id, e, p, x, y, hs, bx, by, is_first, scale
 		end, desc_fct}
 	end
 
-	if not game.mouse:updateZone("tbuff"..eff_id, bx+x, by+y, hs, hs, self.tbuff[eff_id..":"..dur][4], scale) then
+	if not game.mouse:updateZone("tbuff"..eff_id, bx+x*scale, by+y*scale, hs, hs, self.tbuff[eff_id..":"..dur][4], scale) then
 		game.mouse:unregisterZone("tbuff"..eff_id)
-		game.mouse:registerZone(bx+x, by+y, hs, hs, self.tbuff[eff_id..":"..dur][4], nil, "tbuff"..eff_id, true, scale)
+		game.mouse:registerZone(bx+x*scale, by+y*scale, hs, hs, self.tbuff[eff_id..":"..dur][4], nil, "tbuff"..eff_id, true, scale)
 	end
 
 	self.tbuff[eff_id..":"..dur][3](x, y)
@@ -1111,9 +1111,9 @@ function _M:displayBuffs(scale, bx, by)
 					end, desc_fct}
 				end
 
-				if not game.mouse:updateZone("pbuff"..tid, bx+x, by+y, hs, hs, nil, scale) then
+				if not game.mouse:updateZone("pbuff"..tid, bx+x*scale, by+y*scale, hs, hs, nil, scale) then
 					game.mouse:unregisterZone("pbuff"..tid)
-					game.mouse:registerZone(bx+x, by+y, hs, hs, self.pbuff[tid][4], nil, "pbuff"..tid, true, scale)
+					game.mouse:registerZone(bx+x*scale, by+y*scale, hs, hs, self.pbuff[tid][4], nil, "pbuff"..tid, true, scale)
 				end
 
 				self.pbuff[tid][3](x, y)
@@ -1217,9 +1217,9 @@ function _M:displayParty(scale, bx, by)
 				end, desc_fct}
 			end
 
-			if not game.mouse:updateZone("party"..a.uid, bx+x, by+y, hs, hs, self.party[a][4], scale) then
+			if not game.mouse:updateZone("party"..a.uid, bx+x*scale, by+y*scale, hs, hs, self.party[a][4], scale) then
 				game.mouse:unregisterZone("party"..a.uid)
-				game.mouse:registerZone(bx+x, by+y, hs, hs, self.party[a][4], nil, "party"..a.uid, true, scale)
+				game.mouse:registerZone(bx+x*scale, by+y*scale, hs, hs, self.party[a][4], nil, "party"..a.uid, true, scale)
 			end
 
 			self.party[a][3](x, y)
