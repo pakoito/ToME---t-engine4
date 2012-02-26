@@ -53,7 +53,7 @@ newTalent{
 	requires_target = true,
 	direct_hit = true,
 	range = function(self, t)
-		return 3 + math.ceil(self:getTalentLevel(t))
+		return 2 + math.floor(self:getTalentLevel(t))
 	end,
 	getConfuseDuration = function(self, t) return math.floor((self:getTalentLevel(t) + 2) * getParadoxModifier(self, pm)) end,
 	getConfuseEfficency = function(self, t) return (30 + self:getTalentLevelRaw(t) * 10) end,
@@ -151,7 +151,7 @@ newTalent{
 	end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 230) * getParadoxModifier(self, pm) end,
 	range = function(self, t)
-		return 2 + math.floor(self:getTalentLevel(t)/2)
+		return 2 + math.ceil(self:getTalentLevel(t)/2)
 	end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)

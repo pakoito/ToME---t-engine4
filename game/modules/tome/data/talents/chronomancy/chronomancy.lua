@@ -108,33 +108,29 @@ newTalent{
 	paradox = 10,
 	cooldown = 18,
 	getDuration = function(self, t) return math.ceil(self:getTalentLevel(t) * 2) end,
-	getDetection = function(self, t) return self:getTalentLevel(t) * 5 end,
-	getDefense = function(self, t) return self:getTalentLevel(t) * 4 end,
+	getPower = function(self, t) return math.ceil(self:getTalentLevel(t) * 3) end,
 	tactical = { BUFF = 4 },
 	no_energy = true,
 	no_npc_use = true,
 	action = function(self, t)
-		local defense_power = t.getDefense(self, t)
-		local detect_power = t.getDetection(self, t)
+		local power = t.getPower(self, t)
 		-- check for Spin Fate
 		local eff = self:hasEffect(self.EFF_SPIN_FATE)
 		if eff then
-			local bonus = math.max(0, (eff.cur_mental or eff.mental), (eff.cur_physical or eff.physical), (eff.cur_spell or eff.spell))/2
-			defense_power = defense_power + bonus
-			detect_power = detect_power + bonus
+			local bonus = math.max(0, (eff.cur_save_bonus or eff.save_bonus) / 2)
+			power = power + bonus
 		end
 
-		self:setEffect(self.EFF_PRESCIENCE, t.getDuration(self, t), {detect=detect_power, defense=defense_power})
+		self:setEffect(self.EFF_PRESCIENCE, t.getDuration(self, t), {power=power})
 		return true
 	end,
 	info = function(self, t)
-		local detect = t.getDetection(self, t)
-		local defense = t.getDefense(self, t)
+		local power = t.getPower(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[You pull your awareness fully into the moment, increasing your stealth detection and see invisibility by %d and your defense by %d for %d turns.
-		If you have Spin Fate going when you cast this spell you'll gain a bonus to these values equal to 50%% of your highest active spin.
+		return ([[You pull your awareness fully into the moment increasing your stealth detection, see invisibility, defense, and accuracy by %d for %d turns.
+		If you have Spin Fate going when you cast this spell you'll gain a bonus to these values equal to 50%% of your spin.
 		This spell takes no time to cast.]]):
-		format(detect, defense, duration)
+		format(power, duration)
 	end,
 }
 
@@ -145,21 +141,15 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	getDuration = function(self, t) return 1 + math.ceil(self:getTalentLevel(t)) end,
-	getSaveBonus = function(self, t) return self:getTalentLevel(t) end,
+	getSaveBonus = function(self, t) return math.ceil(self:getTalentLevel(t)) end,
 	do_spin_fate = function(self, t, type)
 		local save_bonus = t.getSaveBonus(self, t)
-
-		local mental_save, physical_save, spell_save = 0
-		if type == "mental" then mental_save = save_bonus end
-		if type == "physical" then physical_save = save_bonus end
-		if type == "spell" then spell_save = save_bonus end
-		print("Spin Fate", type, mental_save, physical_save, spell_save)
-		
+	
 		if type ~= "defense" then
 			if not self:hasEffect(self.EFF_SPIN_FATE) then
 				game:playSoundNear(self, "talents/spell_generic")
 			end
-			self:setEffect(self.EFF_SPIN_FATE, t.getDuration(self, t), {max_bonus = t.getSaveBonus(self, t) * 5, mental = mental_save, physical = physical_save, spell = spell_save})
+			self:setEffect(self.EFF_SPIN_FATE, t.getDuration(self, t), {max_bonus = t.getSaveBonus(self, t) * 5, save_bonus = t.getSaveBonus(self, t)})
 		end
 		
 		return true
@@ -167,7 +157,7 @@ newTalent{
 	info = function(self, t)
 		local save = t.getSaveBonus(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[You've learned to make minor corrections in how future events unfold.  Each time an attacker makes a check against one of your saving throws the respective value is increased by %d (stacking up to a maximum increase of %d for each value).
+		return ([[You've learned to make minor corrections in how future events unfold.  Each time you make a saving throw all your saves are increased by %d (stacking up to a maximum increase of %d for each value).
 		The effect will last %d turns but the duration will refresh everytime it's reapplied.]]):
 		format(save, save * 5, duration)
 	end,

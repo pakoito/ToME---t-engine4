@@ -24,13 +24,13 @@ newTalent{
 	points = 5,
 	mode = "passive",
 	on_learn = function(self, t)
-		self.movement_speed = self.movement_speed + 0.05
+		self.movement_speed = self.movement_speed + 0.10
 	end,
 	on_unlearn = function(self, t)
-		self.movement_speed = self.movement_speed - 0.05
+		self.movement_speed = self.movement_speed - 0.10
 	end,
 	info = function(self, t)
-		local power = self:getTalentLevelRaw(t) * 5
+		local power = self:getTalentLevelRaw(t) * 10
 		return ([[Increases your movement speed by %d%% and switching between already equipped weapon sets (default hotkey x) no longer takes a turn.]]):
 		format(power)
 	end,

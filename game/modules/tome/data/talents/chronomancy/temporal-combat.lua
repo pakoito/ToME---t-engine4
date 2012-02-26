@@ -27,7 +27,7 @@ newTalent{
 	sustain_paradox = 100,
 	cooldown = 18,
 	tactical = { BUFF = 2 },
-	getPower = function(self, t) return math.ceil((self:getTalentLevel(t) * 1.5) + self:combatTalentStatDamage(t, "wil", 5, 20)) end,
+	getPower = function(self, t) return math.ceil(self:combatTalentStatDamage(t, "wil", 5, 20)) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/arcane")
 		return {
@@ -77,7 +77,7 @@ newTalent{
 	sustain_paradox = 100,
 	cooldown = 18,
 	tactical = { BUFF = 2 },
-	getPower = function(self, t) return math.ceil((self:getTalentLevel(t) * 1.5) + self:combatTalentStatDamage(t, "wil", 5, 20)) end,
+	getPower = function(self, t) return math.ceil(self:combatTalentStatDamage(t, "wil", 5, 20)) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/arcane")
 		return {

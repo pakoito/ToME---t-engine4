@@ -30,19 +30,16 @@ newTalent{
 	end,
 	requires_target = true,
 	target = function(self, t)
-		if self:getTalentLevel(t) >=4 then
-			return {type="hit", range=self:getTalentRange(t), pass_terrain=true, requires_knowledge=false}
-		else
-			return {type="hit", range=self:getTalentRange(t)}
-		end
+		return {type="hit", range=self:getTalentRange(t)}
 	end,
 	direct_hit = true,
+	no_energy = true,
 	is_teleport = true,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		if not self:hasLOS(x, y) and self:getTalentLevel(t) < 4 then
+		if not self:hasLOS(x, y) then
 			game.logSeen(self, "You do not have line of sight.")
 			return nil
 		end
@@ -67,7 +64,7 @@ newTalent{
 	info = function(self, t)
 		local range = self:getTalentRange(t)
 		return ([[Teleports you to up to %d tiles away to a targeted location in line of sight.  Additional talent points increase the range.
-		At talent level 4 you no longer require line of sight to teleport.]]):format(range)
+		This spell takes no time to cast..]]):format(range)
 	end,
 }
 
@@ -148,12 +145,11 @@ newTalent{
 		return 10 + math.floor(self:getTalentLevel(t)/2)
 	end,
 	radius = function(self, t)
-		return 7 - math.floor(self:getTalentLevel(t))
+		return 8 - math.floor(self:getTalentLevel(t))
 	end,
 	requires_target = true,
 	getDuration = function (self, t) return 5 + math.floor(self:getTalentLevel(t)*getParadoxModifier(self, pm)) end,
 	no_npc_use = true,
-	no_energy = true,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=1, nolock=true, talent=t}
 		local entrance_x, entrance_y = self:getTarget(tg)
@@ -274,8 +270,7 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local radius = self:getTalentRadius(t)
 		return ([[You fold the space between yourself and a random point within range, creating a pair of wormholes.  Any creature stepping on either wormhole will be teleported to the other.  The wormholes will last %d turns.
-		At level 4 you may choose the exit location target area (radius %d).  The duration will scale with your Paradox.
-		This spell takes no time to cast.]])
+		At level 4 you may choose the exit location target area (radius %d).  The duration will scale with your Paradox.]])
 		:format(duration, radius)
 	end,
 }
