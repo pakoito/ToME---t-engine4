@@ -193,9 +193,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Summon a Jelly for %d turns to attack your foes. Jellies do not move, but are great to block a passage.
+		return ([[Summon a Jelly for %d turns to attack your foes. Jellies do not move, but your equilibrium will be reduced by 10%% of all damage received by the jelly.
 		It will get %d constitution and %d strength.
-		When your jelly it absorbs 10%% of the damage taken and uses it to decrease your equilibrium.
 		Your summons inherit some of your stats: increased damage%%, stun/pin/confusion/blindness resistance, armour penetration.
 		Constitution stat will increase with your Willpower stat.]])
 		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
