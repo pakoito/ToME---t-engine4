@@ -427,6 +427,16 @@ newTalent{
 		sentry:resolve(nil, true)
 		sentry:forceLevelup(self.level)
 
+		-- Auto alloc some stats to be able to wear it
+		if rawget(o, "require") and rawget(o, "require").stat then
+			for s, v in pairs(rawget(o, "require").stat) do
+				if sentry:getStat(s) < v then
+					sentry.unused_stats = sentry.unused_stats - (v - sentry:getStat(s))
+					sentry:incStat(s, v - sentry:getStat(s))
+				end
+			end
+		end
+
 		result = sentry:wearObject(o, true, false)
 		if o.archery then
 			local qo = nil
