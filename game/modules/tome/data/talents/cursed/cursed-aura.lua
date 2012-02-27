@@ -324,7 +324,7 @@ newTalent{
 		return math.floor(6 + self:getTalentLevel(t) * 2)
 	end,
 	getAttackSpeed = function(self, t)
-		return math.floor(60 + (math.sqrt(self:getTalentLevel(t)) - 1) * 60)
+		return math.min(1.6, 0.4 + self:getTalentLevel(t)/5)
 	end,
 	action = function(self, t)
 		local inven = self:getInven("INVEN")
@@ -386,7 +386,7 @@ newTalent{
 			stats = { str=20, dex=20, mag=10, con=10 },
 			combat = { dam=1, atk=1, apr=1 },
 			combat_armor = 100, combat_def = 50,
-			combat_physspeed = 100 / t.getAttackSpeed(self, t),
+			combat_physspeed = t.getAttackSpeed(self, t),
 			infravision = 10,
 
 			resists = { all = 75, },
@@ -466,7 +466,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
-		local attackSpeed = t.getAttackSpeed(self, t)
+		local attackSpeed = 100/t.getAttackSpeed(self, t)
 
 		return ([[Instill a part of your living curse into a weapon in your inventory and toss it nearby. This nearly impervious sentry will attack all nearby enemies for %d turns. When the curse ends the weapon will crumble to dust. Attack Speed: %d%%]]):format(duration, attackSpeed)
 	end,
