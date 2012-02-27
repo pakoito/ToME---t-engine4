@@ -380,7 +380,7 @@ newTalent{
 			size_category = 1,
 
 			autolevel = "warrior",
-			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=5, },
+			ai = "summoned", ai_real = "tactical", ai_state = { talent_in=1, },
 
 			max_life = 50, life_rating = 3,
 			stats = { str=20, dex=20, mag=10, con=10 },
@@ -422,11 +422,21 @@ newTalent{
 				game.logSeen(self, "#F53CBE#%s crumbles to dust.", self.name:capitalize())
 			end,
 		}
-		result = sentry:wearObject(o, true, false)
 
 		sentry:resolve()
 		sentry:resolve(nil, true)
 		sentry:forceLevelup(self.level)
+
+		result = sentry:wearObject(o, true, false)
+		if o.archery then
+			local qo = nil
+			if o.archery == "bow" then qo = game.zone:makeEntity(game.level, "object", {type="ammo", subtype="arrow"}, nil, true)
+			elseif o.archery == "sling" then qo = game.zone:makeEntity(game.level, "object", {type="ammo", subtype="shot"}, nil, true)
+			end
+			if qo then sentry:wearObject(qo, true, false) end
+		end
+
+
 		game.zone:addEntity(game.level, sentry, "actor", x, y)
 
 		sentry.no_party_ai = true

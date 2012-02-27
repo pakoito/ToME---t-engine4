@@ -91,6 +91,7 @@ newBirthDescriptor{
 		resolvers.inventory{ id=true,
 			{type="gem",},
 			{type="weapon", subtype="longbow", name="elm longbow", ego_chance=-1000},
+			{type="ammo", subtype="arrow", name="quiver of elm arrows", autoreq=true, ego_chance=-1000},
 		},
 		resolvers.generic(function(self)
 			-- Make and wield some alchemist gems
