@@ -596,7 +596,7 @@ end
 
 --- We started resting
 function _M:onRestStart()
-	if self:attr("equilibrium_regen_on_rest") and not self.resting.equilibrium_regen then
+	if self.resting and self:attr("equilibrium_regen_on_rest") and not self.resting.equilibrium_regen then
 		self:attr("equilibrium_regen", self:attr("equilibrium_regen_on_rest"))
 		self.resting.equilibrium_regen = self:attr("equilibrium_regen_on_rest")
 	end
@@ -604,7 +604,7 @@ end
 
 --- We stopped resting
 function _M:onRestStop()
-	if self.resting.equilibrium_regen then
+	if self.resting and self.resting.equilibrium_regen then
 		self:attr("equilibrium_regen", -self.resting.equilibrium_regen)
 		self.resting.equilibrium_regen = nil
 	end
