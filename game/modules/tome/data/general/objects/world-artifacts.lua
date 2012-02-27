@@ -2372,6 +2372,7 @@ Touching the cloth you feel a sense of knowledge and power from bygone ages, yet
 	max_power = 40, power_regen = 1,
 	set_list = { {"define_as", "SET_STAFF_CHANNELERS"} },
 	on_set_complete = function(self, who)
+local Talents = require "engine.interface.ActorTalents"
 		self.use_talent = { id = Talents.T_METAFLOW, level = 3, power = 40 }
 		game.player:learnLore("channelers-set")
 	end,
