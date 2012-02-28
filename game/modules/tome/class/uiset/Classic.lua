@@ -396,7 +396,7 @@ function _M:setupMouse(mouse)
 		if button == "left" and not xrel and not yrel and event == "button" then
 			local tmx, tmy = math.floor(bx / 4), math.floor(by / 4)
 			game.player:mouseMove(tmx + game.minimap_scroll_x, tmy + game.minimap_scroll_y)
-		elseif button == "right" then
+		elseif button == "right" and self.level then
 			local tmx, tmy = math.floor(bx / 4), math.floor(by / 4)
 			self.level.map:moveViewSurround(tmx + game.minimap_scroll_x, tmy + game.minimap_scroll_y, 1000, 1000)
 		end

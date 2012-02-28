@@ -127,9 +127,11 @@ function _M:useTalent(id, who, force_level, ignore_cd, force_target)
 			local old_target
 			if force_level then old_level = who.talents[id]; who.talents[id] = force_level end
 			if force_target then old_target = rawget(who, "getTarget"); who.getTarget = function(a) return force_target.x, force_target.y, not force_target.__no_self and force_target end end
-			local ret = ab.action(who, ab)
+			local ok, ret = xpcall(function() return ab.action(who, ab) end, debug.traceback)
 			if force_target then who.getTarget = old_target end
 			if force_level then who.talents[id] = old_level end
+
+			if not ok then error(ret) end
 
 			if not self:postUseTalent(ab, ret) then return end
 
