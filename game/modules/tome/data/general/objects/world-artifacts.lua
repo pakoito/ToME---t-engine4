@@ -1198,6 +1198,40 @@ newEntity{ base = "BASE_GAUNTLETS",
 	},
 }
 
+newEntity{ base = "BASE_GAUNTLETS",
+	power_source = {psionic=true, technique=true},
+	define_as = "GAUNTLETS_SCORPION",
+	unique = true,
+	name = "Fists of the Desert Scorpion", color = colors.STEEL_BLUE,
+	unided_name = "viciously spiked gauntlets",
+	desc = [[These wickedly spiked gauntlets belonged to an orc captain in the Age of Pyre who conquered the western sands, using them as a base to lay raids on Elvala to the south.  Known as The Scorpion, he seemed unconquerable in battle, able to pull enemies towards him with vicious mental force and lay down lethal blows on them.  Often a flurry of these yellow and black gauntlets would be the last thing great Shaloren mages would see before having the life crushed from them.
+
+Finally The Scorpion was defeated by the alchemist Nessylia, who went to face the fiendish orc alone.  The captain pulled the elf towards him with a brutish cackle, but before he could batter the life from her flesh she tore off her robes, revealing eighty incendiary bombs strapped to her flesh.  With a spark from her fingers she triggered an explosion that could be seen for miles around.  To this day Nessylia is still remembered in song for the sacrifice of her immortal life to protect her people.]],
+	level_range = {20, 40},
+	disarm_immune = 0.4,
+	rarity = 300,
+	cost = 1000,
+	material_level = 3,
+	wielder = {
+		inc_stats = { [Stats.STAT_STR] = 3, [Stats.STAT_WIL] = 3, [Stats.STAT_CUN] = 3, },
+		inc_damage = { [DamageType.PHYSICAL] = 8 },
+		combat_armor = 4,
+		combat_def = 8,
+		talents_types_mastery = { ["psionic/grip"] = 0.2, ["technique/grappling"] = 0.2},
+		combat = {
+			dam = 24,
+			apr = 10,
+			physcrit = 10,
+			physspeed = -0.25,
+			dammod = {dex=0.4, str=-0.6, cun=0.4,},
+			damrange = 0.3,
+			talent_on_hit = { [Talents.T_BITE_POISON] = {level=1, chance=20} },
+		},
+	},
+	max_power = 30, power_regen = 1,
+	use_talent = { id = Talents.T_MINDHOOK, level = 4, power = 20 },
+}
+
 newEntity{ base = "BASE_GLOVES",
 	power_source = {nature=true},
 	unique = true,
