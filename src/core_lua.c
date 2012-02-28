@@ -1797,9 +1797,9 @@ static int sdl_set_window_size(lua_State *L)
 {
 	int w = luaL_checknumber(L, 1);
 	int h = luaL_checknumber(L, 2);
-	int fullscreen = lua_tonumber(L, 3);
+	bool fullscreen = lua_toboolean(L, 3);
 
-	printf("Setting resolution to %dx%d (%s)\n", w, h, (fullscreen == 2) ? "fakefull" : ((fullscreen) ? "fullscreen" : "windowed");
+	printf("Setting resolution to %dx%d (%s)\n", w, h, fullscreen ? "fullscreen" : "windowed");
 	do_resize(w, h, fullscreen);
 
 	lua_pushboolean(L, TRUE);
