@@ -52,13 +52,14 @@ newEntity{
 	name = " of mastery (#MASTERY#)", suffix=true,
 	keywords = {mastery=true},
 	level_range = {1, 50},
-	rarity = 3,
+	rarity = 6,
 	cost = 2,
 	wielder = {},
 	resolvers.generic(function(e)
 		local tts = {}
+		local p = game:getPlayer(true)
 		for i, def in ipairs(engine.interface.ActorTalents.talents_types_def) do
-			if def.allow_random then tts[#tts+1] = def.type end
+			if p and def.allow_random and p:knowTalentType(def.type) or p:knowTalentType(def.type) == false then tts[#tts+1] = def.type end
 		end
 		local tt = tts[rng.range(1, #tts)]
 
