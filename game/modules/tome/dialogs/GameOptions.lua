@@ -197,7 +197,7 @@ function _M:generateList()
 				qty = util.bound(qty, 0, 20)
 				game:saveSettings("tome.log_fade", ("tome.log_fade = %d\n"):format(qty))
 				config.settings.tome.log_fade = qty
-				game.logdisplay:enableFading(config.settings.tome.log_fade)
+				game.uiset.logdisplay:enableFading(config.settings.tome.log_fade)
 				profile.chat:enableFading(config.settings.tome.log_fade)
 				self.c_list:drawItem(item)
 			end, 0))

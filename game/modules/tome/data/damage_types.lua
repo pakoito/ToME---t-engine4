@@ -444,8 +444,8 @@ newDamageType{
 			else
 				game.logSeen(target, "%s resists the mind attack!", target.name:capitalize())
 			end
-			return 0
 		end
+		return 0
 	end,
 	death_message = {"psyched", "mentally tortured", "mindraped"},
 }

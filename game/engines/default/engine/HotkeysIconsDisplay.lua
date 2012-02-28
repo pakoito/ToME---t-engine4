@@ -271,7 +271,7 @@ function _M:onMouse(button, mx, my, click, on_over, on_click)
 		return
 	elseif button == "drag-end" then
 		local drag = game.mouse.dragged.payload
-		print(table.serialize(drag,nil,true))
+--		print(table.serialize(drag,nil,true))
 		if drag.kind == "talent" or drag.kind == "inventory" then
 			for i, zone in pairs(self.dragclics) do
 				if mx >= zone[1] and mx < zone[1] + zone[3] and my >= zone[2] and my < zone[2] + zone[4] then
