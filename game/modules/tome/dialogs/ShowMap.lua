@@ -73,7 +73,7 @@ function _M:init()
 		elseif button == "right" then
 			game.level.map:moveViewSurround(dx, dy, 1000, 1000)
 		elseif event == "button" and button == "middle" then
-			game.key:triggerVirtual("SHOW_MAP")
+			self.key:triggerVirtual("SHOW_MAP")
 		end
 
 	end, nil, nil, true)
