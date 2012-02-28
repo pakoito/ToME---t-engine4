@@ -737,9 +737,13 @@ int resizeWindow(int width, int height)
 
 void do_resize(int w, int h, bool fullscreen)
 {
+	SDL_DisplayMode mode;
+	SDL_GetDesktopDisplayMode(0, &mode);
+	w = mode.w; h = mode.h;
+
 	if (!window)
 	{
-		window = SDL_CreateWindow("TE4", 0, 0, w, h, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | (fullscreen ? SDL_WINDOW_FULLSCREEN : 0));
+		window = SDL_CreateWindow("TE4", 0, 0, w, h, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_BORDERLESS);
 		if (window==NULL) {
 			printf("error opening screen: %s\n", SDL_GetError());
 			exit(1);

@@ -20,11 +20,11 @@
 name = "An apprentice task"
 desc = function(self, who)
 	local desc = {}
-	desc[#desc+1] = "You met a novice mage who was tasked to collect many staves or jewelry."
+	desc[#desc+1] = "You met a novice mage who was tasked to collect an arcane powered artifact."
 	desc[#desc+1] = "He asked for your help, should you collect some that you do not need."
 	if self:isCompleted() then
 	else
-		desc[#desc+1] = "#SLATE#* "..self.nb_collect.."/10#WHITE#"
+		desc[#desc+1] = "#SLATE#* Collect an artifact arcane powered item.#WHITE#"
 	end
 	return table.concat(desc, "\n")
 end
