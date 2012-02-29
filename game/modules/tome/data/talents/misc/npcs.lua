@@ -1551,3 +1551,36 @@ newTalent{
 	end,
 }
 
+newTalent{
+	short_name = "STRIKE",
+	name = "Strike",
+	type = {"spell/other", 1},
+	points = 5,
+	random_ego = "attack",
+	mana = 18,
+	cooldown = 6,
+	tactical = {
+		ATTACK = { PHYSICAL = 1 },
+		DISABLE = { knockback = 2 },
+		ESCAPE = { knockback = 2 },
+	},
+	range = 10,
+	reflectable = true,
+	proj_speed = 6,
+	requires_target = true,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 8, 230) end,
+	action = function(self, t)
+		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_earth", trail="earthtrail"}}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:projectile(tg, x, y, DamageType.SPELLKNOCKBACK, self:spellCrit(t.getDamage(self, t)))
+		game:playSoundNear(self, "talents/earth")
+		return true
+	end,
+	info = function(self, t)
+		local damage = t.getDamage(self, t)
+		return ([[Conjures up a fist of stone doing %0.2f physical damage and knocking the target back.
+		The damage will increase with your Spellpower.]]):format(damDesc(self, DamageType.PHYSICAL, damage))
+	end,
+}
+

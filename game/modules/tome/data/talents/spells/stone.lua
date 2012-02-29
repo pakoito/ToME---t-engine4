@@ -24,14 +24,14 @@ newTalent{
 	points = 5,
 	random_ego = "attack",
 	mana = 10,
-	cooldown = 3,
+	cooldown = 6,
 	tactical = { ATTACK = { PHYSICAL = 1, cut = 1} },
 	range = 10,
 	direct_hit = true,
 	reflectable = true,
 	proj_speed = 20,
 	requires_target = true,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 15, 120) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 200) end,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="stone_shards", trail="earthtrail"}}
 		local x, y = self:getTarget(tg)
@@ -81,8 +81,8 @@ newTalent{
 	tactical = { BUFF = 2 },
 	getFireRes = function(self, t) return self:combatTalentSpellDamage(t, 5, 80) end,
 	getLightningRes = function(self, t) return self:combatTalentSpellDamage(t, 5, 50) end,
-	getPhysicalRes = function(self, t) return self:combatTalentSpellDamage(t, 5, 20) end,
-	getKnockbackRes = function(self, t) return self:getTalentLevel(t)/10 end,
+	getAcidRes = function(self, t) return self:combatTalentSpellDamage(t, 5, 20) end,
+	getStunRes = function(self, t) return self:getTalentLevel(t)/10 end,
 	getCooldownReduction = function(self, t) return self:getTalentLevel(t)/2 end,
 	activate = function(self, t)
 		local cdr = t.getCooldownReduction(self, t)
@@ -90,23 +90,23 @@ newTalent{
 		return {
 			particle = self:addParticles(Particles.new("stone_skin", 1)),
 			move = self:addTemporaryValue("never_move", 1),
-			knock = self:addTemporaryValue("knockback_immune", t.getKnockbackRes(self, t)),
+			stun = self:addTemporaryValue("stun_immune", t.getStunRes(self, t)),
 			cdred = self:addTemporaryValue("talent_cd_reduction", {
 				[self.T_EARTHEN_MISSILES] = cdr,
-				[self.T_STRIKE] = cdr,
+				[self.T_MUDSLIDE] = cdr,
 				[self.T_EARTHQUAKE] = cdr,
 			}),
 			res = self:addTemporaryValue("resists", {
 				[DamageType.FIRE] = t.getFireRes(self, t),
 				[DamageType.LIGHTNING] = t.getLightningRes(self, t),
-				[DamageType.PHYSICAL] = t.getPhysicalRes(self, t),
+				[DamageType.ACID] = t.getAcidRes(self, t),
 			}),
 		}
 	end,
 	deactivate = function(self, t, p)
 		self:removeParticles(p.particle)
 		self:removeTemporaryValue("never_move", p.move)
-		self:removeTemporaryValue("knockback_immune", p.knock)
+		self:removeTemporaryValue("stun_immune", p.stun)
 		self:removeTemporaryValue("talent_cd_reduction", p.cdred)
 		self:removeTemporaryValue("resists", p.res)
 		return true
@@ -114,15 +114,15 @@ newTalent{
 	info = function(self, t)
 		local fireres = t.getFireRes(self, t)
 		local lightningres = t.getLightningRes(self, t)
-		local physicalres = t.getPhysicalRes(self, t)
+		local acidres = t.getAcidRes(self, t)
 		local cooldownred = t.getCooldownReduction(self, t)
-		local knockbackres = t.getKnockbackRes(self, t)
+		local stunres = t.getStunRes(self, t)
 		return ([[You root yourself into the earth and transform your flesh into stone.  While this spell is sustained you may not move and any forced movement will end the effect.
 		Your stoned form and your affinity with the earth while the spell is active has the following effects:
-		* Reduces the cooldown of Earthen Missiles, Earthquake, and Strike by %d
-		* Grants %d%% Fire Resistance, %d%% Lightning Resistance, %d%% Physical Resistance, and %d%% Knockback Resistance
+		* Reduces the cooldown of Earthen Missiles, Earthquake, and Mudslide by %d
+		* Grants %d%% Fire Resistance, %d%% Lightning Resistance, %d%% Acid Resistance, and %d%% Stun Resistance
 		Resistances scale with the Magic Stat.]])
-		:format(cooldownred, fireres, lightningres, physicalres, knockbackres*100)
+		:format(cooldownred, fireres, lightningres, acidres, stunres*100)
 	end,
 }
 
@@ -144,7 +144,7 @@ newTalent{
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
 	end,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 15, 70) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 15, 80) end,
 	getDuration = function(self, t) return 3 + self:getTalentLevel(t) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)

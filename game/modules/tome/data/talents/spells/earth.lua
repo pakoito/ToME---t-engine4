@@ -28,7 +28,7 @@ newTalent{
 	sustain_mana = 30,
 	cooldown = 10,
 	tactical = { BUFF = 2 },
-	getArmor = function(self, t) return self:combatTalentSpellDamage(t, 10, 20) end,
+	getArmor = function(self, t) return self:combatTalentSpellDamage(t, 10, 23) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/earth")
 		return {
@@ -49,36 +49,37 @@ newTalent{
 	end,
 }
 
+
 newTalent{
-	name = "Strike",
-	type = {"spell/earth",2},
+	name = "Mudslide",
+        type = {"spell/earth",2},
 	require = spells_req2,
 	points = 5,
 	random_ego = "attack",
-	mana = 18,
-	cooldown = 6,
-	tactical = {
-		ATTACK = { PHYSICAL = 1 }, 
-		DISABLE = { knockback = 2 },
-		ESCAPE = { knockback = 2 },
-	},
-	range = 10,
-	reflectable = true,
-	proj_speed = 6,
+	mana = 40,
+	cooldown = 12,
+	direct_hit = true,
+	tactical = { ATTACKAREA = { PHYSICAL = 2 }, DISABLE = { knockback = 2 }, ESCAPE = { knockback = 1 } },
+	range = 0,
+	radius = function(self, t) return 3 + self:getTalentLevelRaw(t) end,
 	requires_target = true,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 8, 230) end,
+	target = function(self, t) return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t} end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 250) end,
 	action = function(self, t)
-		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_earth", trail="earthtrail"}}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:projectile(tg, x, y, DamageType.SPELLKNOCKBACK, self:spellCrit(t.getDamage(self, t)))
-		game:playSoundNear(self, "talents/earth")
+		self:project(tg, x, y, DamageType.SPELLKNOCKBACK, {dist=4, dam=self:spellCrit(t.getDamage(self, t))})
+		game.level.map:particleEmitter(self.x, self.y, tg.radius, "mudflow", {radius=tg.radius, tx=x-self.x, ty=y-self.y})
+		game:playSoundNear(self, "talents/tidalwave")
 		return true
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Conjures up a fist of stone doing %0.2f physical damage and knocking the target back.
-		The damage will increase with your Spellpower.]]):format(damDesc(self, DamageType.PHYSICAL, damage))
+		local radius = self:getTalentRadius(t)
+		return ([[Conjures a mudslide dealing %0.2f physical damage in a radius of %d. Any creatures caught inside will be knocked back.
+		The damage will increase with your Spellpower.]]):
+		format(damDesc(self, DamageType.PHYSICAL, damage), self:getTalentRadius(t))
 	end,
 }
 
@@ -131,14 +132,14 @@ newTalent{
 			if not x or not y then return nil end
 		end
 
-		for _, coord in pairs(util.adjacentCoords(x, y)) do if game.level.map:isBound(coord[1], coord[2]) then
-			if not game.level.map:checkAllEntities(coord[1], coord[2], "block_move") then
+		for i = -1, 1 do for j = -1, 1 do if game.level.map:isBound(x + i, y + j) then
+			if not game.level.map:checkAllEntities(x + i, y + j, "block_move") then
 				-- Ok some explanation, we make a new *OBJECT* because objects can have energy and act
 				-- it stores the current terrain in "old_feat" and restores it when it expires
 				-- We CAN set an object as a terrain because they are all entities
 
 				local e = Object.new{
-					old_feat = game.level.map(coord[1], coord[2], Map.TERRAIN),
+					old_feat = game.level.map(x + i, y + j, Map.TERRAIN),
 					name = "summoned wall", image = "terrain/granite_wall1.png",
 					display = '#', color_r=255, color_g=255, color_b=255, back_color=colors.GREY,
 					always_remember = true,
@@ -146,7 +147,7 @@ newTalent{
 					block_move = true,
 					block_sight = true,
 					temporary = t.getDuration(self, t),
-					x = coord[1], y = coord[2],
+					x = x + i, y = y + j,
 					canAct = false,
 					act = function(self)
 						self:useEnergy()
@@ -166,9 +167,9 @@ newTalent{
 					summoner = self,
 				}
 				game.level:addEntity(e)
-				game.level.map(coord[1], coord[2], Map.TERRAIN, e)
+				game.level.map(x + i, y + j, Map.TERRAIN, e)
 			end
-		end end
+		end end end
 
 		game:playSoundNear(self, "talents/earth")
 		return true

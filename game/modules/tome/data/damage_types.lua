@@ -909,12 +909,13 @@ newDamageType{
 	projector = function(src, x, y, type, dam, tmp)
 		local target = game.level.map(x, y, Map.ACTOR)
 		local realdam = 0
+		if _G.type(dam) ~= "table" then dam = {dam=dam, dist=3} end
 		tmp = tmp or {}
 		if target and not tmp[target] then
 			tmp[target] = true
-			realdam = DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam)
+			realdam = DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam.dam)
 			if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then
-				target:knockback(src.x, src.y, 3)
+				target:knockback(src.x, src.y, dam.dist)
 				target:crossTierEffect(target.EFF_OFFBALANCE, src:combatSpellpower())
 				game.logSeen(target, "%s is knocked back!", target.name:capitalize())
 			else
