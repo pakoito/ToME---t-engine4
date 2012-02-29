@@ -34,6 +34,7 @@ newEntity{ define_as = "CLOAK_DECEPTION",
 
 	wielder = {
 		combat_spellpower = 5,
+		combat_mindpower = 5,
 		combat_dam = 5,
 	},
 

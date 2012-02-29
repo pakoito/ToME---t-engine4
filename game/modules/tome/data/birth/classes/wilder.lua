@@ -81,7 +81,9 @@ newBirthDescriptor{
 	copy = {
 		max_life = 90,
 		resolvers.equip{ id=true,
-			{type="armor", subtype="light", name="rough leather armour", autoreq=true, ego_chance=-1000}
+			{type="weapon", subtype="mindstar", name="mossy mindstar", autoreq=true, ego_chance=-1000},
+			{type="weapon", subtype="mindstar", name="mossy mindstar", autoreq=true, ego_chance=-1000},
+			{type="armor", subtype="light", name="rough leather armour", autoreq=true, ego_chance=-1000},
 		},
 	},
 }
