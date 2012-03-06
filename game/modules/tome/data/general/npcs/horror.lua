@@ -277,7 +277,7 @@ newEntity{ base = "BASE_NPC_HORROR", define_as = "BASE_NPC_ELDRICTH_EYE",
 		game.logSeen(self, "#AQUAMARINE#As %s falls %s seems to weaken!", self.name, self.summoner.name)
 		local damtype = next(self.resists)
 		self.summoner.resists.all = (self.summoner.resists.all or 0) - 30
-		self.summoner[damtype] = nil
+		self.summoner.resists[damtype] = nil
 
 		-- Blind the main horror if no more eyes
 		local nb = 0

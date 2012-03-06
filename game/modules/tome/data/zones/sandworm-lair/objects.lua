@@ -47,17 +47,19 @@ newEntity{
 		game.logPlayer(who, "You have %d class talent point(s) to spend. Press G to use them.", who.unused_talents)
 		game.logPlayer(who, "You have %d generic talent point(s) to spend. Press G to use them.", who.unused_generics)
 
-		if who:knowTalentType("wild-gift/harmony") then
-			who:setTalentTypeMastery("wild-gift/harmony", who:getTalentTypeMastery("wild-gift/harmony") + 0.1)
-		elseif who:knowTalentType("wild-gift/harmony") == false and not who:attr("forbid_nature") then
-			who:learnTalentType("wild-gift/harmony", true)
-		elseif not who:attr("forbid_nature") then
-			who:learnTalentType("wild-gift/harmony", false)
+		if not who:attr("forbid_nature") then
+			if who:knowTalentType("wild-gift/harmony") then
+				who:setTalentTypeMastery("wild-gift/harmony", who:getTalentTypeMastery("wild-gift/harmony") + 0.1)
+			elseif who:knowTalentType("wild-gift/harmony") == false then
+				who:learnTalentType("wild-gift/harmony", true)
+			else
+				who:learnTalentType("wild-gift/harmony", false)
+			end
+			-- Make sure a previous amulet didnt bug it out
+			if who:getTalentTypeMastery("wild-gift/harmony") == 0 then who:setTalentTypeMastery("wild-gift/harmony", 1) end
+			game.logPlayer(who, "You are transformed by the heart of the Queen!.")
+			game.logPlayer(who, "#00FF00#You gain an affinity for nature. You can now learn new Harmony talents (press G).")
 		end
-		-- Make sure a previous amulet didnt bug it out
-		if who:getTalentTypeMastery("wild-gift/harmony") == 0 then who:setTalentTypeMastery("wild-gift/harmony", 1) end
-		game.logPlayer(who, "You are transformed by the heart of the Queen!.")
-		game.logPlayer(who, "#00FF00#You gain an affinity for nature. You can now learn new Harmony talents (press G).")
 
 		game:setAllowedBuild("wilder_wyrmic", true)
 
