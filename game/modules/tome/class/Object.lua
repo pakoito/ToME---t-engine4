@@ -128,7 +128,7 @@ function _M:descAttribute(attr)
 		local stat, i = next(self.wielder.resists)
 		return (i and i > 0 and "+"..i or tostring(i)).."%"
 	elseif attr == "REGEN" then
-		local i = self.wielder.mana_regen or self.wielder.stamina_regen or self.wielder.life_regen or self.wielder.hate_regen
+		local i = self.wielder.mana_regen or self.wielder.stamina_regen or self.wielder.life_regen or self.wielder.hate_regen or self.wielder.positive_regen
 		return ("%s%0.2f/turn"):format(i > 0 and "+" or "-", math.abs(i))
 	elseif attr == "COMBAT" then
 		local c = self.combat
@@ -475,6 +475,24 @@ function _M:getTextualDesc(compare_with)
 		if special ~= "" then
 			desc:add(found and {"color","WHITE"} or {"color","GREEN"}, "Special effect when this weapon hits: "..special, {"color","LAST"}, true)
 		end
+		
+		special = ""
+		if combat.special_on_crit then
+			special = combat.special_on_crit.desc
+		end
+		found = false
+		for i, v in ipairs(compare_with or {}) do
+			if v[field] and v[field].special_on_crit then
+				if special ~= v[field].special_on_crit.desc then
+					desc:add({"color","RED"}, "Special effect when this weapon crits: "..v[field].special_on_crit.desc, {"color","LAST"}, true)
+				else
+					found = true
+				end
+			end
+		end
+		if special ~= "" then
+			desc:add(found and {"color","WHITE"} or {"color","GREEN"}, "Special effect when this weapon crits: "..special, {"color","LAST"}, true)
+		end
 
 		found = false
 		for i, v in ipairs(compare_with or {}) do
@@ -490,6 +508,8 @@ function _M:getTextualDesc(compare_with)
 		end
 
 		compare_fields(combat, compare_with, field, "travel_speed", "%+d%%", "Travel speed: ", 1, false, false, add_table)
+		
+		compare_fields(combat, compare_with, field, "phase_power", "%+d%%", "Damage Shield penetration: ", 1, false, false, add_table)
 
 		if combat.tg_type and combat.tg_type == "beam" then
 			desc:add({"color","YELLOW"}, ("Shots beam through all targets."), {"color","LAST"}, true)
@@ -504,8 +524,23 @@ function _M:getTextualDesc(compare_with)
 				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
 				return col[2], (" %s"):format(DamageType.dam_def[item].name),{"color","LAST"}
 			end)
+		
+		compare_table_fields(combat, compare_with, field, "burst_on_hit", "%+d", "Burst (radius 1) on hit: ", function(item)
+				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
+				return col[2], (" %s"):format(DamageType.dam_def[item].name),{"color","LAST"}
+			end)
+			
+		compare_table_fields(combat, compare_with, field, "burst_on_crit", "%+d", "Burst (radius 2) on crit: ", function(item)
+				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
+				return col[2], (" %s"):format(DamageType.dam_def[item].name),{"color","LAST"}
+			end)
+		
+		compare_table_fields(combat, compare_with, field, "convert_damage", "%d%%", "Damage conversion: ", function(item)
+				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
+				return col[2], (" %s"):format(DamageType.dam_def[item].name),{"color","LAST"}
+			end)
 
-		compare_table_fields(combat, compare_with, field, "inc_damage_type", "%+d%%", "Damage against: ", function(item)
+		compare_table_fields(combat, compare_with, field, "inc_damage_type", "%+d%% ", "Damage against: ", function(item)
 				local _, _, t, st = item:find("^([^/]+)/?(.*)$")
 				if st and st ~= "" then
 					return st:capitalize()
@@ -760,6 +795,7 @@ function _M:getTextualDesc(compare_with)
 		compare_fields(w, compare_with, field, "stamina_regen", "%+.2f", "Stamina each turn: ")
 		compare_fields(w, compare_with, field, "mana_regen", "%+.2f", "Mana each turn: ")
 		compare_fields(w, compare_with, field, "hate_regen", "%+.2f", "Hate each turn: ")
+		compare_fields(w, compare_with, field, "positive_regen", "%+.2f", "P.Energy each turn: ")
 
 		compare_fields(w, compare_with, field, "stamina_regen_on_hit", "%+.2f", "Stamina when hit: ")
 		compare_fields(w, compare_with, field, "mana_regen_on_hit", "%+.2f", "Mana when hit: ")
@@ -943,6 +979,8 @@ function _M:getTextualDesc(compare_with)
 		end
 	end
 
+
+	
 	local use_desc = self:getUseDesc()
 	if use_desc then desc:merge(use_desc:toTString()) end
 	return desc
@@ -1009,6 +1047,10 @@ function _M:getDesc(name_param, compare_with, never_compare)
 
 	if self.encumber then
 		desc:add({"color",0x67,0xAD,0x00}, ("%0.2f Encumbrance."):format(self.encumber), {"color", "LAST"})
+	end
+	if self.ego_bonus_mult then
+		desc:add(true)
+		desc:add({"color",0x67,0xAD,0x00}, ("%0.2f Ego Multiplier."):format(1 + self.ego_bonus_mult), {"color", "LAST"})
 	end
 
 	desc:add(true, true)

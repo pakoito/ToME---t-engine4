@@ -68,7 +68,7 @@ newEntity{ base = "BASE_LITE", define_as = "WINTERTIDE_PHIAL",
 	rarity = 200,
 	encumber = 2,
 	cost = 50,
-	material_level = 2,
+	material_level = 1,
 
 	wielder = {
 		lite = 1,
@@ -114,6 +114,7 @@ newEntity{ base = "BASE_AMULET",
 	level_range = {32, 42},
 	rarity = 220,
 	cost = 190,
+	material_level = 3,
 	wielder = {
 		inc_stats = { [Stats.STAT_MAG] = 5, [Stats.STAT_WIL] = 4, [Stats.STAT_CUN] = 3 },
 		combat_spellpower = 7,
@@ -143,6 +144,7 @@ newEntity{ base = "BASE_LEATHER_BOOT",
 	desc = [[A pair of leather boots. Cold to the touch, they radiate a cold blue light.]],
 	require = { stat = { dex=16 }, },
 	level_range = {10, 18},
+	material_level = 2,
 	rarity = 220,
 	cost = 40,
 
@@ -169,6 +171,7 @@ newEntity{ base = "BASE_HELM",
 	desc = [[Traces of a dragon's power still remain in this bleached and cracked skull.]],
 	require = { stat = { wil=24 }, },
 	level_range = {45, 50},
+	material_level = 5,
 	rarity = 280,
 	cost = 200,
 
@@ -311,7 +314,7 @@ newEntity{ base = "BASE_RING",
 	level_range = {15, 23},
 	rarity = 250,
 	cost = 500,
-	material_level = 4,
+	material_level = 2,
 	wielder = {
 		max_stamina = 25,
 		combat_def = 6,
@@ -338,7 +341,7 @@ newEntity{ base = "BASE_HELM",
 	level_range = {12, 22},
 	rarity = 200,
 	cost = 20,
-	material_level = 3,
+	material_level = 2,
 	skullcracker_mult = 5,
 
 	wielder = {
@@ -454,6 +457,7 @@ newEntity{ base = "BASE_CLOTH_ARMOR",
 	level_range = {40, 50},
 	rarity = 280,
 	cost = 500,
+	material_level = 5,
 	wielder = {
 		inc_stats = { [Stats.STAT_MAG] = 5, [Stats.STAT_WIL] = 4, [Stats.STAT_CUN] = 3 },
 		see_invisible = 10,
@@ -480,6 +484,7 @@ newEntity{ base = "BASE_WARAXE",
 	level_range = {35, 45},
 	rarity = 290,
 	cost = 375,
+	material_level = 4,
 	combat = {
 		dam = 55,
 		apr = 15,
@@ -504,6 +509,7 @@ newEntity{ base = "BASE_STAFF",
 	level_range = {1, 10},
 	rarity = 200,
 	cost = 60,
+	material_level = 1,
 	combat = {
 		dam = 10,
 		apr = 0,
@@ -533,6 +539,7 @@ newEntity{ base = "BASE_AMULET",
 	level_range = {40, 50},
 	rarity = 220,
 	cost = 3000,
+	material_level = 5,
 	wielder = {
 		see_invisible = 20,
 		silence_immune = 0.8,
@@ -555,6 +562,7 @@ newEntity{ base = "BASE_STAFF",
 	level_range = {40, 50},
 	rarity = 210,
 	encumber = 2.5,
+	material_level = 5,
 	cost = 500,
 	combat = {
 		dam = 35,
@@ -579,6 +587,7 @@ newEntity{ base = "BASE_AMULET",
 	level_range = {20, 28},
 	rarity = 220,
 	cost = 5000,
+	material_level = 3,
 	wielder = {
 		see_invisible = 10,
 		blind_immune = 1,
@@ -671,6 +680,7 @@ newEntity{ base = "BASE_GREATMAUL",
 	desc = [[This is a big, nasty-looking tree trunk that Bill the Troll used as a weapon. It could still serve this purpose, should you be strong enough to wield it!]],
 	require = { stat = { str=25 }, },
 	level_range = {1, 10},
+	material_level = 1,
 	rarity = 200,
 	metallic = false,
 	cost = 70,
@@ -695,6 +705,7 @@ newEntity{ base = "BASE_SHIELD",
 	desc = [[Though tarnished and spattered with blood, the emblem of the Sun still manages to shine through on this shield.]],
 	require = { stat = { str=39 }, },
 	level_range = {35, 45},
+	material_level = 4,
 	rarity = 240,
 	cost = 120,
 
@@ -1001,6 +1012,7 @@ newEntity{ base = "BASE_WARAXE",
 	desc = [[A small but sharp axe, with a handle made of polished bone.  The blade has chopped through the skulls of many, and has been stained a deep crimson.]],
 	require = { stat = { str=18 }, },
 	level_range = {5, 12},
+	material_level = 1,
 	rarity = 220,
 	cost = 50,
 	combat = {
@@ -1024,7 +1036,7 @@ newEntity{ base = "BASE_DIGGER",
 	desc = [[A huge tooth taken from the Mouth, in the Deep Bellow.]],
 	level_range = {5, 12},
 	cost = 50,
-	material_level = 3,
+	material_level = 1,
 	digspeed = 12,
 	wielder = {
 		inc_damage = { [DamageType.BLIGHT] = 4 },
@@ -1060,7 +1072,7 @@ newEntity{ base = "BASE_HEAVY_BOOTS",
 }
 
 newEntity{ base = "BASE_BATTLEAXE",
-	power_source = {nature=true,},
+	power_source = {nature=true, antimagic=true},
 	define_as = "GAPING_MAW",
 	name = "The Gaping Maw", color = colors.SLATE, image = "object/artifact/battleaxe_the_gaping_maw.png",
 	unided_name = "huge granite battleaxe", unique = true,
@@ -1069,7 +1081,7 @@ newEntity{ base = "BASE_BATTLEAXE",
 	rarity = 300,
 	require = { stat = { str=60 }, },
 	cost = 650,
-	material_level = 4,
+	material_level = 5,
 	combat = {
 		dam = 72,
 		apr = 4,
@@ -1078,20 +1090,26 @@ newEntity{ base = "BASE_BATTLEAXE",
 		melee_project={[DamageType.SLIME] = 50, [DamageType.ACID] = 50},
 	},
 	wielder = {
-		inc_stats = { [Stats.STAT_STR] = 6, [Stats.STAT_WIL] = 6, },
-		inc_damage={
-			[DamageType.NATURE] = 15,
-		},
 		talent_cd_reduction= {
 			[Talents.T_SWALLOW] = 2,
 			[Talents.T_MANA_CLASH] = 2,
 			[Talents.T_ICE_CLAW] = 1,
 		},
 	},
+	on_wear = function(self, who)
+		if who:attr("forbid_arcane") then
+			local Stats = require "engine.interface.ActorStats"
+			local DamageType = require "engine.DamageType"
+	
+			self:specialWearAdd({"wielder","inc_damage"}, {[DamageType.NATURE]=15})
+			self:specialWearAdd({"wielder","inc_stats"}, { [Stats.STAT_STR] = 6, [Stats.STAT_WIL] = 6, })
+			game.logPlayer(who, "#DARK_GREEN#You feel like Nature's Wrath incarnate!")
+		end
+	end,
 }
 
 newEntity{ base = "BASE_AMULET",
-	power_source = {nature=true},
+	power_source = {psionic=true},
 	define_as = "WITHERING_ORBS",
 	unique = true,
 	name = "Withering Orbs", color = colors.WHITE, image = "object/artifact/artifact_jewelry_withering_orbs.png",
@@ -1127,7 +1145,7 @@ Though clearly a powerful piece, it must once have been much greater.]],
 	rarity = 200,
 	require = { stat = { str=35 }, },
 	cost = 500,
-	material_level = 5,
+	material_level = 3,
 	wielder = {
 		combat_def = 10,
 		combat_armor = 15,
@@ -1150,7 +1168,7 @@ Though clearly a powerful piece, it must once have been much greater.]],
 }
 
 newEntity{ base = "BASE_LEATHER_CAP", -- No armor training requirement
-	power_source = {nature=true},
+	power_source = {psionic=true},
 	define_as = "ALETTA_DIADEM",
 	name = "Aletta's Diadem", unique=true, unided_name="jeweled diadem", image = "object/artifact/diadem_alettas_diadem.png",
 	desc = [[A filigree of silver set with many small jewels, this diadem seems radiant - ethereal almost. But its touch seems to freeze your skin and brings wild thoughts to your mind. You want to drop it, throw it away, and yet you cannot resist thinking of what powers it might bring you.
@@ -1173,7 +1191,7 @@ Is this temptation a weak will on your part, or some domination from the artifac
 }
 
 newEntity{ base = "BASE_SLING",
-	power_source = {technique=true},
+	power_source = {nature=true},
 	define_as = "HARESKIN_SLING",
 	name = "Hare-Skin Sling", unique=true, unided_name = "hare-skin sling", image = "object/artifact/sling_hareskin_sling.png",
 	desc = [[This well-tended sling is made from the leather and sinews of a large hare. It feels smooth to the touch yet very durable. Some say that the skin of a hare brings luck and fortune.
@@ -1182,7 +1200,7 @@ Hard to tell if that really helped its former owner, but it's clear that the ski
 	rarity = 200,
 	require = { stat = { dex=35 }, },
 	cost = 50,
-	material_level = 4,
+	material_level = 3,
 	use_no_energy = true,
 	combat = {
 		range = 10,
@@ -1200,7 +1218,7 @@ Hard to tell if that really helped its former owner, but it's clear that the ski
 }
 
 newEntity{ base = "BASE_TOOL_MISC",
-	power_source = {nature=true},
+	power_source = {arcane=true},
 	define_as = "LUCKY_FOOT",
 	unique = true,
 	name = "Prox's Lucky Halfling Foot", color = colors.WHITE,

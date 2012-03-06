@@ -104,7 +104,7 @@ newEntity{
 	type = "ammo", subtype="shot",
 	add_name = " (#COMBAT_AMMO#)",
 	display = "{", color=colors.UMBER, image = resolvers.image_material("shot", "metal"),
-	encumber = 5,
+	encumber = 3,
 	rarity = 11,
 	combat = { talented = "sling", damrange = 1.2},
 	proj_image = resolvers.image_material("shot_s", "metal"),

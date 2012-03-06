@@ -23,28 +23,26 @@ newTalent{
 	require = gifts_req1,
 	mode = "passive",
 	points = 5,
+	getRegen = function(self, t) return 1 + (self:combatTalentMindDamage(t, 1, 10) /10) end,
+	getResist = function(self, t) return self:combatTalentMindDamage(t, 10, 40) end,
 	on_absorb = function(self, t, damtype)
 		if not DamageType:get(damtype).antimagic_resolve then return end
 
 		if not self:isTalentActive(self.T_ANTIMAGIC_SHIELD) then
-			local equi = 1 + self:combatTalentMindDamage(t, 10, 5)
-			local stamina = 1 + self:combatTalentMindDamage(t, 10, 10)
-			self:incEquilibrium(-equi)
-			self:incStamina(stamina)
+			self:incEquilibrium(-t.getRegen(self, t))
+			self:incStamina(t.getRegen(self, t))
 		end
-		self:setEffect(self.EFF_RESOLVE, 7, {damtype=damtype, res=self:combatTalentMindDamage(t, 10, 40)})
+		self:setEffect(self.EFF_RESOLVE, 7, {damtype=damtype, res=t.getResist(self, t)})
 		game.logSeen(self, "%s is invigorated by the attack!", self.name:capitalize())
 	end,
 	info = function(self, t)
+		local resist = t.getResist(self, t)
+		local regen = t.getRegen(self, t)
 		return ([[You stand in the way of magical damage. That which does not kill you makes you stronger.
 		Each time you are hit by a magical damage you get a %d%% resistance to this elemental for 7 turns.
-		If antimagic shield is not active you also absorb part of the impact and use it to fuel your own powers, decreasing your equilibrium by %d and increasing your stamina by %d.
+		If antimagic shield is not active you also absorb part of the impact and use it to fuel your own powers, decreasing your equilibrium and increasing your stamina by %0.2f.
 		The effects will increase with your Mindpower.]]):
-		format(
-			self:combatTalentMindDamage(t, 10, 40),
-			1 + self:combatTalentMindDamage(t, 10, 5),
-			1 + self:combatTalentMindDamage(t, 10, 10)
-		)
+		format(	resist, regen )
 	end,
 }
 
@@ -124,7 +122,7 @@ newTalent{
 	require = gifts_req4,
 	points = 5,
 	equilibrium = 10,
-	cooldown = 6,
+	cooldown = 8,
 	range = 10,
 	tactical = { ATTACK = { ARCANE = 3 } },
 	direct_hit = true,

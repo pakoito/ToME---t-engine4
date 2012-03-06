@@ -31,6 +31,7 @@ newEntity{
 	combat = { talented = "mace", damrange = 1.5, physspeed = 1, sound = {"actions/melee", pitch=0.6, vol=1.2}, sound_miss = {"actions/melee", pitch=0.6, vol=1.2} },
 	desc = [[Massive two-handed maul.]],
 	twohanded = true,
+	ego_bonus_mult = 0.2,
 	randart_able = { attack=40, physical=80, spell=20, def=10, misc=10 },
 	egos = "/data/general/objects/egos/weapon.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
 }

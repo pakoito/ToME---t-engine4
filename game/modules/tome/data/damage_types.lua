@@ -595,7 +595,7 @@ newDamageType{
 
 -- Fire damage + DOT
 newDamageType{
-	name = "fireburn", type = "FIREBURN",
+	name = "fire burn", type = "FIREBURN", text_color = "#LIGHT_RED#",
 	projector = function(src, x, y, type, dam)
 		local dur = 3
 		local perc = 50
@@ -705,7 +705,7 @@ newDamageType{
 
 -- Cold damage + freeze chance
 newDamageType{
-	name = "ice", type = "ICE",
+	name = "ice", type = "ICE", text_color = "#1133F3#",
 	projector = function(src, x, y, type, dam)
 		local realdam = DamageType:get(DamageType.COLD).projector(src, x, y, DamageType.COLD, dam)
 		if rng.percent(25) then
@@ -765,7 +765,7 @@ newDamageType{
 
 -- Acid damage + blind chance
 newDamageType{
-	name = "acid blind", type = "ACID_BLIND",
+	name = "acid blind", type = "ACID_BLIND", text_color = "#GREEN#",
 	projector = function(src, x, y, type, dam)
 		local realdam = DamageType:get(DamageType.ACID).projector(src, x, y, DamageType.ACID, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
@@ -799,7 +799,7 @@ newDamageType{
 
 -- Lightning damage + daze chance
 newDamageType{
-	name = "lightning daze", type = "LIGHTNING_DAZE",
+	name = "lightning daze", type = "LIGHTNING_DAZE", text_color = "#ROYAL_BLUE#",
 	projector = function(src, x, y, type, dam)
 		if _G.type(dam) == "number" then dam = {dam=dam, daze=25} end
 		local realdam = DamageType:get(DamageType.LIGHTNING).projector(src, x, y, DamageType.LIGHTNING, dam.dam)
@@ -987,7 +987,7 @@ newDamageType{
 
 -- Poisoning damage
 newDamageType{
-	name = "poison", type = "POISON",
+	name = "poison", type = "POISON", text_color = "#LIGHT_GREEN#",
 	projector = function(src, x, y, t, dam)
 		local power
 		if type(dam) == "table" then
@@ -1041,8 +1041,9 @@ newDamageType{
 
 -- Insidious poison: prevents healing
 newDamageType{
-	name = "insidious poison", type = "INSIDIOUS_POISON",
+	name = "insidious poison", type = "INSIDIOUS_POISON", text_color = "#LIGHT_GREEN#",
 	projector = function(src, x, y, type, dam)
+		if _G.type(dam) == "number" then dam = {dam=dam, dur=7, heal_factor=dam} end
 		DamageType:get(DamageType.NATURE).projector(src, x, y, DamageType.NATURE, dam.dam / dam.dur)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and target:canBe("poison") then
@@ -1079,12 +1080,13 @@ newDamageType{
 
 -- Slime damage
 newDamageType{
-	name = "slime", type = "SLIME",
+	name = "slime", type = "SLIME", text_color = "#LIGHT_GREEN#",
 	projector = function(src, x, y, type, dam)
-		DamageType:get(DamageType.NATURE).projector(src, x, y, DamageType.NATURE, dam)
+		if _G.type(dam) == "number" then dam = {dam=dam, power=0.15} end
+		DamageType:get(DamageType.NATURE).projector(src, x, y, DamageType.NATURE, dam.dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
-			target:setEffect(target.EFF_SLOW, 3, {power=0.15, no_ct_effect=true})
+			target:setEffect(target.EFF_SLOW, 3, {power=dam.power, no_ct_effect=true})
 		end
 	end,
 }
@@ -1613,7 +1615,7 @@ newDamageType{
 
 -- Temporal + Stat damage
 newDamageType{
-	name = "clock", type = "CLOCK",
+	name = "reverse aging", type = "CLOCK",
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
@@ -1627,7 +1629,7 @@ newDamageType{
 
 -- Temporal Over Time
 newDamageType{
-	name = "wasting", type = "WASTING",
+	name = "wasting", type = "WASTING", text_color = "#LIGHT_STEEL_BLUE#",
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		local dur = 3
@@ -1670,7 +1672,7 @@ newDamageType{
 				if target:canBe("stun") then
 					target:setEffect(target.EFF_STUNNED, 3, {apply_power=src:combatSpellpower()})
 				else
-					game.logSeen(target, "%s resists the daze!", target.name:capitalize())
+					game.logSeen(target, "%s resists the stun!", target.name:capitalize())
 				end
 			elseif chance == 2 then
 				if target:canBe("blind") then
@@ -1966,7 +1968,7 @@ newDamageType{
 }
 
 newDamageType{
-	name = "manaburn", type = "MANABURN",
+	name = "manaburn", type = "MANABURN", text_color = "#PURPLE#",
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then

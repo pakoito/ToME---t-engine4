@@ -336,7 +336,7 @@ newEffect{
 			if game._chronoworlds then game._chronoworlds = nil end
 			if game.player:knowTalent(game.player.T_FORESIGHT) then
 				local t = game.player:getTalentFromId(game.player.T_FORESIGHT)
-				t.do_precog_foresight(self, t)
+				t.do_precog_foresight(game.player, t)
 			end
 			game.player.energy.value = game.energy_to_act
 			game.paused = true

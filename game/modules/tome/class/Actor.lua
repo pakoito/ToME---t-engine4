@@ -1249,14 +1249,28 @@ function _M:onTakeHit(value, src)
 	end
 
 	if self:attr("damage_shield") then
-		-- Absorb damage into the shield
-		self.damage_shield_absorb = self.damage_shield_absorb or 0
-		if value <= self.damage_shield_absorb then
-			self.damage_shield_absorb = self.damage_shield_absorb - value
-			value = 0
+		-- Phased attack?
+		if src and src:attr("damage_shield_penetrate") then
+			local adjusted_value = value * (1 - (util.bound(src.damage_shield_penetrate, 0, 100) / 100))
+			self.damage_shield_absorb = self.damage_shield_absorb or 0
+			if adjusted_value <= self.damage_shield_absorb then
+				self.damage_shield_absorb = self.damage_shield_absorb - adjusted_value
+				value = value - adjusted_value
+			else
+				adjusted_value = adjusted_value - self.damage_shield_absorb
+				value = value + adjusted_value
+				self.damage_shield_absorb = 0
+			end
 		else
-			value = value - self.damage_shield_absorb
-			self.damage_shield_absorb = 0
+			-- Absorb damage into the shield
+			self.damage_shield_absorb = self.damage_shield_absorb or 0
+			if value <= self.damage_shield_absorb then
+				self.damage_shield_absorb = self.damage_shield_absorb - value
+				value = 0
+			else
+				value = value - self.damage_shield_absorb
+				self.damage_shield_absorb = 0
+			end
 		end
 
 		-- If we are at the end of the capacity, release the time shield damage
@@ -2595,7 +2609,7 @@ function _M:preUseTalent(ab, silent, fake)
 	-- Spells can fail
 	if (ab.is_spell and not self:isTalentActive(ab.id)) and not fake and self:attr("spell_failure") then
 		if rng.percent(self:attr("spell_failure")) then
-			if not silent then game.logPlayer(self, "You fail to cast %s!", ab.name) end
+			if not silent then game.logSeen(self, "%s's %s has been disrupted by anti-magic forces!", self.name:capitalize(), ab.name) end
 			self:useEnergy()
 			return false
 		end

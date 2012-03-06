@@ -25,6 +25,7 @@ newEntity{
 	keywords = {quick=true},
 	level_range = {1, 50},
 	rarity = 5,
+	cost = 6,
 	wielder = {
 		ammo_reload_speed = resolvers.mbonus_material(4, 1),
 	},
@@ -36,6 +37,7 @@ newEntity{
 	keywords = {capacity=true},
 	level_range = {1, 50},
 	rarity = 5,
+	cost = 6,
 	combat = {
 		capacity = resolvers.generic(function(e) return e.combat.capacity * rng.float(1.3, 1.6) end),
 	},
@@ -47,6 +49,7 @@ newEntity{
 	keywords = {self=true},
 	level_range = {1, 50},
 	rarity = 5,
+	cost = 6,
 	combat = {
 		ammo_regen = resolvers.mbonus_material(3, 1),
 	},
@@ -62,6 +65,7 @@ newEntity{
 	level_range = {1, 50},
 	rarity = 7,
 	greater_ego = 1,
+	cost = 6,
 	combat = {
 		capacity = resolvers.generic(function(e) return e.combat.capacity * rng.float(1.2, 1.5) end),
 	},
@@ -77,6 +81,7 @@ newEntity{
 	level_range = {1, 50},
 	rarity = 7,
 	greater_ego = 1,
+	cost = 6,
 	combat = {
 		ammo_regen = resolvers.mbonus_material(3, 1),
 	},
@@ -95,6 +100,7 @@ newEntity{
 	level_range = {1, 50},
 	rarity = 7,
 	greater_ego = 1,
+	cost = 6,
 	combat = {
 		ammo_regen = resolvers.mbonus_material(3, 1),
 		capacity = resolvers.generic(function(e) return e.combat.capacity * rng.float(1.2, 1.5) end),
@@ -110,6 +116,7 @@ newEntity{
 	keywords = {fire=true},
 	level_range = {1, 50},
 	rarity = 5,
+	cost = 6,
 	combat = {
 		ranged_project={[DamageType.FIRE] = resolvers.mbonus_material(20, 5)},
 	},
@@ -120,6 +127,7 @@ newEntity{
 	keywords = {ice=true},
 	level_range = {15, 50},
 	rarity = 5,
+	cost = 6,
 	combat = {
 		ranged_project={[DamageType.ICE] = resolvers.mbonus_material(10, 4)},
 	},
@@ -130,6 +138,7 @@ newEntity{
 	keywords = {cunning=true},
 	level_range = {1, 50},
 	rarity = 5,
+	cost = 6,
 	combat = {
 		ranged_project={[DamageType.ACID] = resolvers.mbonus_material(20, 5)},
 	},
@@ -140,6 +149,7 @@ newEntity{
 	keywords = {lightning=true},
 	level_range = {1, 50},
 	rarity = 5,
+	cost = 6,
 	combat = {
 		ranged_project={[DamageType.LIGHTNING] = resolvers.mbonus_material(20, 5)},
 	},
@@ -151,6 +161,7 @@ newEntity{
 	keywords = {slime=true},
 	level_range = {10, 50},
 	rarity = 5,
+	cost = 6,
 	combat = {
 		ranged_project={[DamageType.SLIME] = resolvers.mbonus_material(10, 4)},
 	},
@@ -163,6 +174,7 @@ newEntity{
 	level_range = {1, 50},
 	rarity = 3,
 	cost = 4,
+	cost = 6,
 	combat = {
 		atk = resolvers.mbonus_material(20, 5),
 	},
@@ -192,6 +204,7 @@ newEntity{
 	keywords = {wind=true},
 	level_range = {10, 50},
 	rarity = 7,
+	cost = 6,
 	combat = {
 		travel_speed = 200,
 	},
@@ -203,7 +216,7 @@ newEntity{
 	keywords = {annihilation=true},
 	level_range = {30, 50},
 	greater_ego = 1,
-	cost = 1,
+	cost = 6,
 	rarity = 15,
 	combat = {
 		dam = resolvers.mbonus_material(10, 2),

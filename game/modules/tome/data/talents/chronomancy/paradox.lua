@@ -91,10 +91,9 @@ newTalent{
 			return true
 		end
 	
-		-- Manualy start cooldown and spend paradox before the chronoworld is made
+		-- Manualy start cooldown before the chronoworld is made
 		game.player:startTalentCooldown(t)
-		game.player:incParadox(t.paradox * (1 + (game.player.paradox / 300)))
-	
+		
 		-- set up chronoworld next, we'll load it when the target dies in class\actor
 		game:onTickEnd(function()
 			game:chronoClone("cease_to_exist")

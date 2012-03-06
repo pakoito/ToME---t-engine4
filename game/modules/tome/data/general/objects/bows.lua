@@ -105,7 +105,7 @@ newEntity{
 	type = "ammo", subtype="arrow",
 	add_name = " (#COMBAT_AMMO#)",
 	display = "{", color=colors.UMBER, image = resolvers.image_material("arrow", "wood"),
-	encumber = 5,
+	encumber = 3,
 	rarity = 11,
 	combat = {
 		talented = "bow",

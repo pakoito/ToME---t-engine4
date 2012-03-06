@@ -37,7 +37,7 @@ newEntity{ base = "BASE_STAFF",
 	rarity = 170,
 	desc = [[This unique-looking staff is carved with runes of destruction.]],
 	cost = 200,
-	material_level = 3,
+	material_level = 2,
 
 	require = { stat = { mag=24 }, },
 	combat = {
@@ -66,7 +66,7 @@ newEntity{ base = "BASE_STAFF",
 	rarity = 200,
 	desc = [[A powerful staff sent in secret to Angolwen by the Shaloren, to aid their fighting of the plagues following the Spellblaze.]],
 	cost = 200,
-	material_level = 2,
+	material_level = 1,
 
 	require = { stat = { mag=24 }, },
 	combat = {
@@ -157,7 +157,7 @@ newEntity{ base = "BASE_STAFF",
 	rarity = 220,
 	desc = [[A thick staff with a heavy knob on the end.  It was said to be used by the grand alchemist Bolbum in the Age of Allure.  Much renowned is the fear of his students for their master, and the high rate of cranial injuries amongst them.  Bolbum died with seven daggers in his back and his much-cursed staff went missing after.]],
 	cost = 300,
-	material_level = 4,
+	material_level = 3,
 
 	require = { stat = { mag=38 }, },
 	combat = {
@@ -305,10 +305,10 @@ newEntity{ base = "BASE_AMULET",
 	rarity = 200,
 	cost = 90,
 	material_level = 2,
-
 	wielder = {
 		max_encumber = 20,
 		fatigue = -20,
+		avoid_pressure_traps = 1,
 	},
 }
 
@@ -333,6 +333,16 @@ newEntity{ base = "BASE_AMULET",
 	},
 	max_power = 60, power_regen = 1,
 	use_talent = { id = Talents.T_JUGGERNAUT, level = 2, power = 30 },
+	on_wear = function(self, who)
+		if who.descriptor and who.descriptor.race == "Halfling" then
+			local Talents = require "engine.interface.ActorStats"
+		
+			self:specialWearAdd({"wielder", "talents_types_mastery"}, { ["technique/battle-tactics"] = 0.2 })
+			self:specialWearAdd({"wielder","combat_armor"}, 5)
+			self:specialWearAdd({"wielder","combat_crit_reduction"}, 10)
+			game.logPlayer(who, "#LIGHT_BLUE#You feel invincible!")
+		end
+	end,
 }
 
 newEntity{ base = "BASE_AMULET", define_as = "SET_GARKUL_TEETH",
@@ -344,7 +354,7 @@ newEntity{ base = "BASE_AMULET", define_as = "SET_GARKUL_TEETH",
 	level_range = {40, 50},
 	rarity = 300,
 	cost = 1000,
-	material_level = 4,
+	material_level = 5,
 	wielder = {
 		inc_stats = {
 			[Stats.STAT_STR] = 10,
@@ -395,7 +405,20 @@ newEntity{ base = "BASE_LITE",
 	},
 	wielder = {
 		lite = 4,
+		healing_factor = 0.1,
+		talent_cd_reduction= {
+			[Talents.T_HEALING_LIGHT] = 1,
+			[Talents.T_BATHE_IN_LIGHT] = 1,
+			[Talents.T_BARRIER] = 2,
+			[Talents.T_PROVIDENCE] = 5,
+		},
 	},
+	on_wear = function(self, who)
+		if who.descriptor and who.descriptor.subclass == "Sun Paladin" then
+			self:specialWearAdd({"wielder", "positive_regen"}, 0.2)
+			game.logPlayer(who, "#GOLD#You feel a swell of positive energy!")
+		end
+	end,
 }
 
 newEntity{ base = "BASE_LITE",
@@ -407,6 +430,7 @@ newEntity{ base = "BASE_LITE",
 	color=colors.YELLOW,
 	encumber = 1,
 	rarity = 250,
+	material_level = 3,
 	desc = [[The first Halfling mages during the Age of Allure discovered how to capture the Sunlight and infuse gems with it.
 This star is the culmination of their craft. Light radiates from its ever-shifting yellow surface.]],
 	cost = 400,
@@ -433,12 +457,13 @@ newEntity{ base = "BASE_LITE",
 	color = colors.RED,
 	encumber = 1,
 	rarity = 300,
+	material_level = 4,
 	desc = [[This dark red heart still beats despite being seperated from its owner.  It also snuffs out any light source that comes near it.]],
 	cost = 100,
 
 	wielder = {
 		lite = -1000,
-		infravision = 7,
+		infravision = 6,
 		resists_cap = { [DamageType.LIGHT] = 10 },
 		resists = { [DamageType.LIGHT] = 30 },
 	},
@@ -459,7 +484,7 @@ newEntity{ base = "BASE_LITE",
 	desc = [[Said to have once belonged to Inquisitor Marcus Dunn during the Spellhunt this fist sized quartz crystal glows constantly with a soft white light and was rumoured to be a great aid in meditation, helping focus the mind, body, and soul of the owner as well as protecting them from the foulest of magics.
 It seems somebody well versed in antimagic could use it to its fullest potential.]],
 	cost = 100,
-	material_level = 4,
+	material_level = 5,
 
 	wielder = {
 		lite = 4,
@@ -617,7 +642,7 @@ newEntity{ base = "BASE_GREATSWORD",
 	desc = [[Farian was King Toknor's captain, and fought by his side in the great Battle of Last Hope.  However, when he returned after the battle to find his hometown burnt in an orcish pyre, a madness overtook him.  The desire for vengeance made him quit the army and strike out on his own, lightly armoured and carrying nought but his sword.  Most thought him dead until the reports came back of a fell figure tearing through the orcish encampments, slaughtering all before him and mercilessly butchering the corpses after.  It is said his blade drank the blood of 100 orcs each day until finally all of Maj'Eyal was cleared of their presence.  When the final orc was slain and no more were to be found, Farian at the last turned the blade on himself and stuck it through his chest.  Those nearby said his body shook with convulsions as he did so, though they could not tell whether he was laughing or crying.]],
 	cost = 400,
 	require = { stat = { str=40, wil=20 }, },
-	material_level = 5,
+	material_level = 3,
 	combat = {
 		dam = 42,
 		apr = 4,
@@ -633,7 +658,7 @@ newEntity{ base = "BASE_GREATSWORD",
 }
 
 newEntity{ base = "BASE_KNIFE",
-	power_source = {technique=true},
+	power_source = {arcane=true},
 	unique = true,
 	name = "Unerring Scalpel", image = "object/artifact/unerring_scalpel.png",
 	unided_name = "long sharp scalpel",
@@ -642,12 +667,13 @@ newEntity{ base = "BASE_KNIFE",
 	rarity = 200,
 	require = { stat = { cun=16 }, },
 	cost = 80,
-	material_level = 3,
+	material_level = 1,
 	combat = {
 		dam = 15,
-		apr = 10,
+		apr = 25,
 		physcrit = 0,
 		dammod = {dex=0.55, str=0.45},
+		phasing = 50,
 	},
 	wielder = {combat_atk=20},
 }
@@ -663,7 +689,7 @@ newEntity{ base = "BASE_LEATHER_BOOT",
 	level_range = {1, 20},
 	rarity = 200,
 	cost = 100,
-	material_level = 3,
+	material_level = 2,
 	wielder = {
 		combat_armor = 1,
 		combat_def = 2,
@@ -693,7 +719,7 @@ newEntity{ base = "BASE_SHIELD",
 	rarity = 300,
 	require = { stat = { str=28 }, },
 	cost = 350,
-	material_level = 5,
+	material_level = 4,
 	special_combat = {
 		dam = 58,
 		physcrit = 4.5,
@@ -721,7 +747,7 @@ newEntity{ base = "BASE_SHIELD",
 	rarity = 270,
 	require = { stat = { str=37 }, },
 	cost = 300,
-	material_level = 4,
+	material_level = 3,
 	special_combat = {
 		dam = 48,
 		physcrit = 4.5,
@@ -746,7 +772,7 @@ newEntity{ base = "BASE_LIGHT_ARMOR",
 	rarity = 270,
 	cost = 200,
 	require = { stat = { str=22 }, },
-	material_level = 4,
+	material_level = 3,
 	wielder = {
 		combat_def = 6,
 		combat_armor = 7,
@@ -817,7 +843,7 @@ newEntity{ base = "BASE_HELM",
 	level_range = {20, 28},
 	rarity = 240,
 	cost = 700,
-	material_level = 3,
+	material_level = 2,
 	wielder = {
 		lite = 1,
 		combat_armor = 6,
@@ -825,6 +851,9 @@ newEntity{ base = "BASE_HELM",
 		blind_immune = 0.3,
 		confusion_immune = 0.3,
 		inc_stats = { [Stats.STAT_WIL] = 3, [Stats.STAT_MAG] = 4, },
+		inc_damage={
+			[DamageType.LIGHT] = 8,
+		},
 	},
 	max_power = 30, power_regen = 1,
 	use_talent = { id = Talents.T_SUN_FLARE, level = 3, power = 30 },
@@ -869,7 +898,7 @@ newEntity{ base = "BASE_KNIFE",
 	rarity = 200,
 	require = { stat = { cun=25 }, },
 	cost = 250,
-	material_level = 3,
+	material_level = 2,
 	combat = {
 		dam = 25,
 		apr = 10,
@@ -956,7 +985,7 @@ newEntity{ base = "BASE_RING",
 	name = "Ring of the War Master", color = colors.DARK_GREY, image = "object/artifact/ring_of_war_master.png",
 	unided_name = "blade-edged ring",
 	desc = [[A blade-edged ring that radiates power. As you put it on, strange thoughts of pain and destruction come to your mind.]],
-	level_range = {15, 30},
+	level_range = {40, 50},
 	rarity = 200,
 	cost = 500,
 	material_level = 5,
@@ -1041,7 +1070,7 @@ newEntity{ base = "BASE_MACE",
 	name = "Crooked Club", color = colors.GREEN, image = "object/artifact/weapon_crooked_club.png",
 	unided_name = "weird club",
 	desc = [[An oddly twisted club with a hefty weight on the end.]],
-	level_range = {3, 12},
+	level_range = {12, 20},
 	rarity = 192,
 	require = { stat = { str=20 }, },
 	cost = 250,
@@ -1066,7 +1095,7 @@ newEntity{ base = "BASE_MACE",
 	rarity = 340,
 	require = { stat = { str=42 } },
 	cost = 350,
-	material_level = 4,
+	material_level = 3,
 	combat = {
 		dam = 40,
 		apr = 4,
@@ -1111,7 +1140,7 @@ newEntity{ base = "BASE_HELM",
 	level_range = {37, 45},
 	rarity = 280,
 	cost = 400,
-	material_level = 5,
+	material_level = 4,
 	wielder = {
 		inc_stats = { [Stats.STAT_STR] = 5, [Stats.STAT_CON] = 5, [Stats.STAT_LCK] = -4, },
 		combat_def = 5,
@@ -1132,7 +1161,7 @@ newEntity{ base = "BASE_HELM",
 	level_range = {20, 35},
 	rarity = 280,
 	cost = 300,
-	material_level = 5,
+	material_level = 3,
 	wielder = {
 		inc_stats = { [Stats.STAT_CON] = 3, [Stats.STAT_WIL] = 10, },
 		combat_def = 3,
@@ -1178,7 +1207,7 @@ newEntity{ base = "BASE_GAUNTLETS",
 	level_range = {40, 50},
 	rarity = 300,
 	cost = 2000,
-	material_level = 3,
+	material_level = 5,
 	wielder = {
 		inc_stats = { [Stats.STAT_STR] = 6, [Stats.STAT_MAG] = 6 },
 		inc_damage = { [DamageType.PHYSICAL] = 10 },
@@ -1233,7 +1262,7 @@ Finally The Scorpion was defeated by the alchemist Nessylia, who went to face th
 }
 
 newEntity{ base = "BASE_GLOVES",
-	power_source = {nature=true},
+	power_source = {nature=true}, define_as = "SET_GIANT_WRAPS",
 	unique = true,
 	name = "Snow Giant Wraps", color = colors.SANDY_BROWN, image = "object/artifact/snow_giant_arm_wraps.png",
 	unided_name = "fur-lined leather wraps",
@@ -1241,7 +1270,7 @@ newEntity{ base = "BASE_GLOVES",
 	level_range = {15, 25},
 	rarity = 200,
 	cost = 500,
-	material_level = 1,
+	material_level = 3,
 	wielder = {
 		inc_stats = { [Stats.STAT_STR] = 4, },
 		resists = { [DamageType.COLD]= 10, [DamageType.LIGHTNING] = 10, },
@@ -1259,6 +1288,40 @@ newEntity{ base = "BASE_GLOVES",
 	},
 	max_power = 6, power_regen = 1,
 	use_talent = { id = Talents.T_THROW_BOULDER, level = 2, power = 6 },
+	
+	set_list = { {"define_as", "SET_MIGHTY_GIRDLE"} },
+	on_set_complete = function(self, who)
+		self:specialSetAdd({"wielder","combat_dam"}, 10)
+		self:specialSetAdd({"wielder","combat_physresist"}, 10)
+	end,
+}
+
+newEntity{ base = "BASE_LEATHER_BELT",
+	power_source = {technique=true}, define_as = "SET_MIGHTY_GIRDLE",
+	unique = true,
+	name = "Mighty Girdle", image = "object/artifact/belt_mighty_girdle.png",
+	unided_name = "massive, stained girdle",
+	desc = [[This girdle is enchanted with mighty wards against expanding girth. Whatever the source of its wondrous strength, it will prove of great aid in the transport of awkward burdens.]],
+	color = colors.LIGHT_RED,
+	level_range = {1, 25},
+	rarity = 170,
+	cost = 350,
+	material_level = 2,
+	wielder = {
+		knockback_immune = 0.4,
+		max_encumber = 70,
+		combat_armor = 4,
+	},
+	
+	set_list = { {"define_as", "SET_GIANT_WRAPS"} },
+	on_set_complete = function(self, who)
+		self:specialSetAdd({"wielder","max_life"}, 100)
+		self:specialSetAdd({"wielder","size_category"}, 2)
+		game.logPlayer(who, "#GOLD#You grow to immense size!")
+	end,
+	on_set_broken = function(self, who)
+		game.logPlayer(who, "#LIGHT_BLUE#You feel a lot smaller...")
+	end,
 }
 
 newEntity{ base = "BASE_GAUNTLETS",
@@ -1270,7 +1333,7 @@ newEntity{ base = "BASE_GAUNTLETS",
 	level_range = {25, 35},
 	rarity = 250,
 	cost = 1000,
-	material_level = 5,
+	material_level = 3,
 	require = nil,
 	wielder = {
 		inc_stats = { [Stats.STAT_MAG] = 4, },
@@ -1345,7 +1408,7 @@ It was made by Humans for Humans; only they can harness the true power of the ro
 	level_range = {12, 22},
 	rarity = 220,
 	cost = 150,
-	material_level = 3,
+	material_level = 2,
 	wielder = {
 		inc_damage = {[DamageType.ARCANE]=10},
 		inc_stats = { [Stats.STAT_MAG] = 6 },
@@ -1373,7 +1436,7 @@ newEntity{ base = "BASE_CLOTH_ARMOR",
 	level_range = {20, 30},
 	rarity = 300,
 	cost = 280,
-	material_level = 4,
+	material_level = 3,
 	wielder = {
 		inc_damage = {[DamageType.FIRE]=20},
 		combat_def = 8,
@@ -1394,7 +1457,7 @@ newEntity{ base = "BASE_CLOTH_ARMOR",
 	level_range = {30, 40},
 	rarity = 290,
 	cost = 550,
-	material_level = 5,
+	material_level = 4,
 	moddable_tile = "special/robe_of_the_archmage",
 	moddable_tile_big = true,
 	wielder = {
@@ -1422,7 +1485,7 @@ newEntity{ base = "BASE_CLOTH_ARMOR",
 	level_range = {30, 40},
 	rarity = 310,
 	cost = 540,
-	material_level = 5,
+	material_level = 4,
 	wielder = {
 		inc_damage = {[DamageType.TEMPORAL]=20},
 		combat_def = 9,
@@ -1531,7 +1594,7 @@ newEntity{ base = "BASE_WAND",
 	elec_proof = true,
 	add_name = false,
 
-	material_level = 5,
+	material_level = 2,
 
 	max_power = 75, power_regen = 1,
 	use_power = { name = "shoot a cone of fire", power = 20,
@@ -1591,7 +1654,7 @@ newEntity{ base = "BASE_BATTLEAXE",
 	rarity = 300,
 	cost = 400,
 	level_range = {20, 35},
-	material_level = 4,
+	material_level = 3,
 	combat = {
 		dam = 52,
 		apr = 21,
@@ -1617,18 +1680,25 @@ newEntity{ base = "BASE_WARAXE",
 	rarity = 235,
 	require = { stat = { str=40, dex=24 }, },
 	cost = 330,
-	material_level = 4,
+	material_level = 3,
+	wielder = {
+		combat_armor = 20,
+		resists_pen = {
+			[DamageType.COLD] = 20,
+		},
+	},
 	combat = {
 		dam = 33,
 		apr = 4.5,
 		physcrit = 7,
 		dammod = {str=1},
-		melee_project={[DamageType.COLD] = 25},
+		convert_damage = { 
+			[DamageType.ICE] = 50,
+		},
 	},
-	wielder = {
-		combat_atk = 15,
-	},
+	talent_on_hit = { [Talents.T_ICE_BREATH] = {level=2, chance=15} },
 }
+
 
 newEntity{ base = "BASE_WHIP",
 	power_source = {nature=true},
@@ -1637,38 +1707,23 @@ newEntity{ base = "BASE_WHIP",
 	desc = [[A long whip of linked metal joints finished with a viciously sharp barb leaking venomous poison.]],
 	require = { stat = { dex=28 }, },
 	cost = 150,
+	rarity = 340,
+	level_range = {20, 30},
 	material_level = 3,
 	combat = {
 		dam = 28,
 		apr = 8,
 		physcrit = 5,
 		dammod = {dex=1},
-		melee_project={[DamageType.POISON] = 22},
+		melee_project={[DamageType.POISON] = 22, [DamageType.BLEED] = 22},
+		talent_on_hit = { T_DISARM = {level=3, chance=10} },
 	},
 	wielder = {
 		combat_atk = 10,
 		see_invisible = 9,
+		see_stealth = 9,
 	},
 }
-
-newEntity{ base = "BASE_LEATHER_BELT",
-	power_source = {technique=true},
-	unique = true,
-	name = "Mighty Girdle", image = "object/artifact/belt_mighty_girdle.png",
-	unided_name = "massive, stained girdle",
-	desc = [[This girdle is enchanted with mighty wards against expanding girth. Whatever the source of its wondrous strength, it will prove of great aid in the transport of awkward burdens.]],
-	color = colors.LIGHT_RED,
-	level_range = {1, 25},
-	rarity = 170,
-	cost = 350,
-	material_level = 5,
-	wielder = {
-		knockback_immune = 0.4,
-		max_encumber = 70,
-		combat_armor = 4,
-	},
-}
-
 
 newEntity{ base = "BASE_LEATHER_BELT",
 	power_source = {nature=true},
@@ -1680,7 +1735,7 @@ newEntity{ base = "BASE_LEATHER_BELT",
 	level_range = {20, 30},
 	rarity = 200,
 	cost = 450,
-	material_level = 5,
+	material_level = 2,
 	wielder = {
 		inc_stats = { [Stats.STAT_CUN] = 7, [Stats.STAT_WIL] = 8, },
 		combat_mindpower = 12,
@@ -1730,7 +1785,7 @@ newEntity{ base = "BASE_LEATHER_BELT",
 	level_range = {5, 14},
 	rarity = 120,
 	cost = 75,
-	material_level = 3,
+	material_level = 1,
 	wielder = {
 		inc_stats = { [Stats.STAT_WIL] = 3,  },
 		resists = {
@@ -1753,7 +1808,7 @@ newEntity{ base = "BASE_LIGHT_ARMOR",
 	rarity = 230,
 	require = { stat = { str=22 }, },
 	cost = 250,
-	material_level = 3,
+	material_level = 2,
 	wielder = {
 		inc_stats = { [Stats.STAT_STR] = 2, [Stats.STAT_CON] = 2 },
 
@@ -1790,7 +1845,7 @@ newEntity{ base = "BASE_LIGHT_ARMOR",
 		combat_def = 12,
 		fatigue = 7,
 		max_life = 40,
-		infravision = 6,
+		infravision = 3,
 		talents_types_mastery = { ["cunning/stealth"] = -0.2, },
 	},
 }
@@ -1806,7 +1861,7 @@ newEntity{ base = "BASE_LIGHT_ARMOR",
 	rarity = 350,
 	require = { stat = { str=20 }, {wil=20} },
 	cost = 350,
-	material_level = 4,
+	material_level = 2,
 	wielder = {
 		inc_stats = { [Stats.STAT_WIL] = 3, [Stats.STAT_CON] = 4 },
 
@@ -1840,7 +1895,7 @@ newEntity{ base = "BASE_HEAVY_ARMOR",
 	rarity = 190,
 	require = { stat = { str=14 }, },
 	cost = 200,
-	material_level = 1,
+	material_level = 2,
 	wielder = {
 		inc_stats = { [Stats.STAT_CON] = 2, [Stats.STAT_STR] = 2 },
 		resists = {
@@ -1960,12 +2015,12 @@ newEntity{ base = "BASE_GREATSWORD",
 	unided_name = "three-edged sword",
 	desc = [[The wise ones say that truth is a three-edged sword. And sometimes, the truth hurts.]],
 	level_range = {25, 32},
-	require = { stat = { str=26, wil=26, cun=26 }, },
+	require = { stat = { str=18, wil=18, cun=18 }, },
 	color = colors.GOLD,
 	encumber = 12,
 	cost = 350,
 	rarity = 240,
-	material_level = 4,
+	material_level = 3,
 	moddable_tile = "special/golden_sword_right",
 	moddable_tile_big = true,
 	combat = {
@@ -2263,7 +2318,7 @@ newEntity{ base = "BASE_AMULET",
 	material_level = 4,
 	metallic = false,
 	wielder = {
-		infravision = 5,
+		infravision = 3,
 		resists = { [DamageType.LIGHT] = -25 },
 		resists_cap = { [DamageType.LIGHT] = -25 },
 		blind_immune = 1,
@@ -2283,7 +2338,7 @@ newEntity{ base = "BASE_CLOAK",
 	level_range = {40, 50},
 	rarity = 400,
 	cost = 300,
-	material_level = 3,
+	material_level = 5,
 	wielder = {
 		resists_cap = {
 			[DamageType.FIRE] = 5,
@@ -2310,10 +2365,10 @@ newEntity{ base = "BASE_DIGGER",
 	name = "Pick of Dwarven Emperors", color = colors.GREY, image = "object/artifact/pick_of_dwarven_emperors.png",
 	unided_name = "crude iron pickaxe",
 	desc = [[This ancient pickaxe was used to pass down dwarven legends from one generation to the next.  Every bit of the head and shaft are covered in runes that recount the stories of the dwarven people.]],
-	level_range = {26, 35},
+	level_range = {40, 50},
 	rarity = 290,
 	cost = 150,
-	material_level = 3,
+	material_level = 5,
 	digspeed = 12,
 	wielder = {
 		resists_pen = { [DamageType.PHYSICAL] = 10, },
@@ -2406,7 +2461,7 @@ Touching the cloth you feel a sense of knowledge and power from bygone ages, yet
 	max_power = 40, power_regen = 1,
 	set_list = { {"define_as", "SET_STAFF_CHANNELERS"} },
 	on_set_complete = function(self, who)
-local Talents = require "engine.interface.ActorTalents"
+		local Talents = require "engine.interface.ActorTalents"
 		self.use_talent = { id = Talents.T_METAFLOW, level = 3, power = 40 }
 		game.player:learnLore("channelers-set")
 	end,
@@ -2426,7 +2481,7 @@ newEntity{ base = "BASE_ARROW",
 	level_range = {20, 40},
 	rarity = 300,
 	cost = 100,
-	material_level = 3,
+	material_level = 4,
 	require = { stat = { dex=24 }, },
 	combat = {
 		capacity = 6,

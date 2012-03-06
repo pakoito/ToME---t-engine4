@@ -25,7 +25,7 @@ newEntity{
 	display = "!", color=colors.LIGHT_RED, image = resolvers.image_material("mindstar", "wood"),
 	moddable_tile = resolvers.moddable_tile("mindstar"),
 	randart_able = { attack=10, physical=40, spell=1, def=10, misc=10 },
-	encumber = 5,
+	encumber = 3,
 	rarity = 4,
 	power_source = {nature=true},
 	combat = {

@@ -364,7 +364,35 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		end
 
 		if crit then game.logSeen(self, "#{bold}#%s performs a critical strike!#{normal}#", self.name:capitalize()) end
-		DamageType:get(damtype).projector(self, target.x, target.y, damtype, math.max(0, dam))
+
+		-- Phasing, percent of weapon damage bypasses shields
+		if weapon and weapon.phasing then
+			self:attr("damage_shield_penetrate", weapon.phasing)
+		end
+
+		-- Damage conversion?
+		-- Reduces base damage but converts it into another damage type
+		local conv_dam
+		local conv_damtype
+		if weapon and weapon.convert_damage then
+			for typ, conv in pairs(weapon.convert_damage) do
+				if dam > 0 then
+					conv_dam = math.min(dam, dam * (conv / 100))
+					conv_damtype = typ
+					dam = dam - conv_dam
+					DamageType:get(conv_damtype).projector(self, target.x, target.y, conv_damtype, math.max(0, conv_dam))
+				end
+			end
+		end
+
+		if dam > 0 then
+			DamageType:get(damtype).projector(self, target.x, target.y, damtype, math.max(0, dam))
+		end
+
+		if weapon and weapon.phasing then
+			self:attr("damage_shield_penetrate", -weapon.phasing)
+		end
+
 		hitted = true
 	else
 		local srcname = game.level.map.seens(self.x, self.y) and self.name:capitalize() or "Something"
@@ -481,6 +509,20 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		self.shattering_impact_last_turn = game.turn
 	end
 
+	-- Burst on Hit
+	if hitted and crit and weapon.burst_on_hit then
+		for typ, dam in pairs(weapon.burst_on_hit) do
+			self:project({type="ball", radius=1, friendlyfire=false}, target.x, target.y, typ, dam)
+		end
+	end
+
+	-- Critical Burst (generally more damage then burst on hit and larger radius)
+	if hitted and crit and weapon.burst_on_crit then
+		for typ, dam in pairs(weapon.burst_on_crit) do
+			self:project({type="ball", radius=2, friendlyfire=false}, target.x, target.y, typ, dam)
+		end
+	end
+
 	-- Onslaught
 	if hitted and self:attr("onslaught") then
 		local dir = util.getDir(target.x, target.y, self.x, self.y) or 6
@@ -548,6 +590,11 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	if hitted and not target.dead and weapon and weapon.special_on_hit and weapon.special_on_hit.fct then
 		weapon.special_on_hit.fct(weapon, self, target)
 	end
+
+	if hitted and crit and not target.dead and weapon and weapon.special_on_crit and weapon.special_on_crit.fct then
+		weapon.special_on_crit.fct(weapon, self, target)
+	end
+
 
 	-- Poison coating
 	if hitted and not target.dead and self.vile_poisons and next(self.vile_poisons) and target:canBe("poison") then
