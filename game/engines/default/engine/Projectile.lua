@@ -46,7 +46,7 @@ end
 
 function _M:loaded()
 	if self.project and self.project.def and self.project.def.typ and self.project.def.typ.line_function and type(self.project.def.typ.line_function.line) == "table" then
-		self.project.def.typ.line_function.line = util.isHex() and core.fov.hex_line_import(unpack(self.project.def.typ.line_function.line)) or 
+		self.project.def.typ.line_function.line = util.isHex() and core.fov.hex_line_import(unpack(self.project.def.typ.line_function.line)) or
 			core.fov.line_import(unpack(self.project.def.typ.line_function.line))
 
 		-- The metatable gets lost somewhere in the save, so let's remake it
@@ -232,6 +232,7 @@ end
 
 --- Something moved in the same spot as us, hit ?
 function _M:on_move(x, y, target)
+	if self.project then self.src:projectDoAct(self.project.def.typ, self.project.def.tg, self.project.def.damtype, self.project.def.dam, self.project.def.particles, self.x, self.y, self.tmp_proj) end
 	if self.project and self.project.def.typ.stop_block then
 		game.level:removeEntity(self, true)
 		self.dead = true
