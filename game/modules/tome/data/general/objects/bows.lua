@@ -27,7 +27,7 @@ newEntity{
 	display = "}", color=colors.UMBER, image = resolvers.image_material("longbow", "wood"),
 	moddable_tile = resolvers.moddable_tile("bow"),
 	encumber = 4,
-	rarity = 5,
+	rarity = 7,
 	combat = { talented = "bow", sound = "actions/arrow", sound_miss = "actions/arrow",},
 	require = { talent = { Talents.T_SHOOT }, },
 	archery = "bow",
@@ -106,7 +106,7 @@ newEntity{
 	add_name = " (#COMBAT_AMMO#)",
 	display = "{", color=colors.UMBER, image = resolvers.image_material("arrow", "wood"),
 	encumber = 3,
-	rarity = 11,
+	rarity = 7,
 	combat = {
 		talented = "bow",
 		damrange = 1.4,
