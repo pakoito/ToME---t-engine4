@@ -406,10 +406,10 @@ function _M:playerFOV()
 
 		-- Handle infravision/heightened_senses which allow to see outside of lite radius but with LOS
 		if self:attr("infravision") or self:attr("heightened_senses") then
-			local rad1 = math.max((self.heightened_senses or 0), (self.infravision or 0))
-			rad1 = math.min(rad, self.sight)
-			local rad2 = math.max(1, math.floor(rad1 / 4))
-			self:computeFOV(rad1, "block_sight", function(x, y, dx, dy, sqdist) if game.level.map(x, y, game.level.map.ACTOR) then game.level.map.seens(x, y, fovdist[sqdist]) end end, true, true, true)
+			local radius = math.max((self.heightened_senses or 0), (self.infravision or 0))
+			radius = math.min(radius, self.sight)
+			local rad2 = math.max(1, math.floor(radius / 4))
+			self:computeFOV(radius, "block_sight", function(x, y, dx, dy, sqdist) if game.level.map(x, y, game.level.map.ACTOR) then game.level.map.seens(x, y, fovdist[sqdist]) end end, true, true, true)
 			self:computeFOV(rad2, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyLite(x, y, fovdist[sqdist]) end, true, true, true)
 		end
 
@@ -765,6 +765,11 @@ function _M:runMoved()
 	if self.running and self.running.explore then
 		game.level.map:particleEmitter(self.x, self.y, 1, "dust_trail")
 	end
+	-- Autoreload on Auto-explore
+	local ammo = self:hasAmmo()
+	if self.running and self.running.explore and ammo and ammo.combat.shots_left < ammo.combat.capacity and not self:hasEffect(self.EFF_RELOADING) and self:knowTalent(self.T_RELOAD) then
+		self:forceUseTalent(self.T_RELOAD, {ignore_energy=true})
+	end
 end
 
 --- Called after stopping running
@@ -965,7 +970,6 @@ function _M:playerUseItem(object, item, inven)
 				self:breakStepUp()
 				self:breakStealth()
 				self:breakLightningSpeed()
-				self:breakChronoSpells()
 				return true
 			end
 

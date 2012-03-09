@@ -172,7 +172,8 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			local dominated = target:hasEffect(target.EFF_DOMINATED)
 			if dominated and dominated.source == src then pen = pen + (dominated.resistPenetration or 0) end
 			local res = target:combatGetResist(type)
-			res = res * (100 - pen) / 100
+			pen = util.bound(0, pen, 100)
+			if res > 0 then	res = res * (100 - pen) / 100 end
 			print("[PROJECTOR] res", res, (100 - res) / 100, " on dam", dam)
 			if res >= 100 then dam = 0
 			elseif res <= -100 then dam = dam * 2

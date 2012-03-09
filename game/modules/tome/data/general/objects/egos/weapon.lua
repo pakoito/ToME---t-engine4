@@ -24,73 +24,9 @@ local Talents = require "engine.interface.ActorTalents"
 
 -- Idea: Giant(technique, chance to stun on hit and increased weight), Sharp, Jagged, Deft  (of deftness-quick swap),
 -- Wolf, Bear, Snake based nature egos (maybe wolf could summon wolves),
--- TODO: Talk to Darkgod about instant_resolve
 -------------------------------------------------------
 -- Techniques------------------------------------------
 -------------------------------------------------------
--- Craftsmanship based egos multiply the bonuses on any other ego applied and may have other minor bonuses based on item type
---[[newEntity{
-	power_source = {technique=true},
-	name = "fine ", prefix=true, instant_resolve=true,
-	keywords = {fine=true},
-	level_range = {1, 50},
-	rarity = 60,
-	cost = 30,
-	ego_bonus_mult = 0.2,
-	combat = {
-		dam = 2,
-		apr = 2,
-		physcrit = 2,
-	},
-}
-
-newEntity{
-	power_source = {technique=true},
-	name = " of quality", suffix=true, instant_resolve=true,
-	keywords = {quality=true},
-	level_range = {1, 50},
-	rarity = 60,
-	cost = 30,
-	ego_bonus_mult = 0.2,
-	combat = {
-		dam = 2,
-		apr = 2,
-		physcrit = 2,
-	},
-}
-
-newEntity{
-	power_source = {technique=true},
-	name = "exceptional ", prefix=true, instant_resolve=true,
-	keywords = {except=true},
-	greater_ego = 1,
-	level_range = {25, 50},
-	rarity = 60,
-	cost = 60,
-	ego_bonus_mult = 0.4,
-	combat = {
-		dam = 4,
-		apr = 4,
-		physcrit = 4,
-	},
-}
-
-newEntity{
-	power_source = {technique=true},
-	name = " of the master", suffix=true, instant_resolve=true,
-	keywords = {master=true},
-	greater_ego = 1,
-	level_range = {25, 50},
-	rarity = 60,
-	cost = 60,
-	ego_bonus_mult = 0.4,
-	combat = {
-		dam = 4,
-		apr = 4,
-		physcrit = 4,
-	},
-}]]--
--- Lesser
 newEntity{
 	power_source = {technique=true},
 	name = "balanced ", prefix=true, instant_resolve=true,
@@ -767,7 +703,7 @@ newEntity{
 		melee_project = {
 			[DamageType.MANABURN] = resolvers.mbonus_material(25, 8),
 		},
-		special_on_crit = {desc="burns latenet spell energy", fct=function(combat, who, target)
+		special_on_crit = {desc="burns latent spell energy", fct=function(combat, who, target)
 			local turns = 1 + math.ceil(who:combatMindpower() / 20)
 			if not who:checkHit(who:combatMindpower(), target:combatMentalResist()) then game.logSeen(target, "%s resists!", target.name:capitalize()) return nil end
 			

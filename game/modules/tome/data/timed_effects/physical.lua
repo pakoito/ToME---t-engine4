@@ -1618,12 +1618,13 @@ newEffect{
 newEffect{
 	name = "SPELL_DISRUPTION", image = "talents/mana_clash.png",
 	desc = "Spell Disruption",
-	--display_desc = function(self, eff) return eff.cur_power.."% Spell Disruption" end,
 	long_desc = function(self, eff) return ("The target has a %d%% chance to fail any spell it casts and a chance each turn to lose spell sustains."):format(eff.cur_power) end,
 	type = "physical",
 	subtype = { antimagic=true },
-	status = "beneficial",
+	status = "detrimental",
 	parameters = { power=10, max=50 },
+	on_gain = function(self, err) return "#Target#'s magic has been disrupted." end,
+	on_lose = function(self, err) return "#Target#'s is no longer disrupted." end,
 	on_merge = function(self, old_eff, new_eff)
 		self:removeTemporaryValue("spell_failure", old_eff.tmpid)
 		old_eff.cur_power = math.min(old_eff.cur_power + new_eff.power, new_eff.max)

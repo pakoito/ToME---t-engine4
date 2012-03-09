@@ -45,7 +45,7 @@ newTalent{
 		local _, failure = self:paradoxFailChance()
 		local _, anomaly = self:paradoxAnomalyChance()
 		local _, backfire = self:paradoxBackfireChance()
-		return ([[Reduces your paradox by one each turn while sustained.  Attacking, using an item, or a talent will cancel the spell.
+		return ([[Reduces your paradox by one each turn while sustained.  Casting a spell will cancel this effect.
 		
 		Current failure chance  : %d%%
 		Current anomaly chance  : %d%%

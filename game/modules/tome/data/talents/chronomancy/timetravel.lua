@@ -139,7 +139,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[Inflicts %0.2f temporal damage.  If your target survives it will be removed from time for %d turns.
+		return ([[Inflicts %0.2f temporal damage if the target fails a spell save.  If your target survives it will be removed from time for %d turns.
 		The duration will scale with your Paradox.  The damage will scale with your Paradox and Spellpower.]]):format(damDesc(self, DamageType.TEMPORAL, damage), duration)
 	end,
 }

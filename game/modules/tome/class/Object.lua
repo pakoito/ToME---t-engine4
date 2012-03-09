@@ -846,7 +846,11 @@ function _M:getTextualDesc(compare_with)
 		if w.blind_fight then
 			desc:add({"color", "YELLOW"}, "Blind-Fight:", {"color", "LAST"}, "This item allows the wearer to attack unseen targets without any penalties.", true)
 		end
-
+		
+		if w.avoid_pressure_traps then
+			desc:add({"color", "YELLOW"}, "Avoid Pressure Traps:", {"color", "LAST"}, "The wearer never triggers traps that require pressure.", true)
+		end
+		
 		if w.speaks_shertul then
 			desc:add("Allows you to speak and read the old Sher'Tul language.", true)
 		end

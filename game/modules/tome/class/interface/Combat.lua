@@ -202,7 +202,6 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 	-- Cancel stealth!
 	if break_stealth then self:breakStealth() end
 	self:breakLightningSpeed()
-	self:breakChronoSpells()
 	return hit
 end
 
@@ -380,7 +379,9 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 					conv_dam = math.min(dam, dam * (conv / 100))
 					conv_damtype = typ
 					dam = dam - conv_dam
-					DamageType:get(conv_damtype).projector(self, target.x, target.y, conv_damtype, math.max(0, conv_dam))
+					if conv_dam > 0 then
+						DamageType:get(conv_damtype).projector(self, target.x, target.y, conv_damtype, math.max(0, conv_dam))
+					end
 				end
 			end
 		end
@@ -512,14 +513,18 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	-- Burst on Hit
 	if hitted and crit and weapon.burst_on_hit then
 		for typ, dam in pairs(weapon.burst_on_hit) do
-			self:project({type="ball", radius=1, friendlyfire=false}, target.x, target.y, typ, dam)
+			if dam > 0 then
+				self:project({type="ball", radius=1, friendlyfire=false}, target.x, target.y, typ, dam)
+			end
 		end
 	end
 
 	-- Critical Burst (generally more damage then burst on hit and larger radius)
 	if hitted and crit and weapon.burst_on_crit then
 		for typ, dam in pairs(weapon.burst_on_crit) do
-			self:project({type="ball", radius=2, friendlyfire=false}, target.x, target.y, typ, dam)
+			if dam > 0 then
+				self:project({type="ball", radius=2, friendlyfire=false}, target.x, target.y, typ, dam)
+			end
 		end
 	end
 
