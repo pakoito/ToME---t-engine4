@@ -73,7 +73,7 @@ function _M:additionalLore(id, name, category, lore)
 	self.additional_lore[id] = {id=id, name=name, category=category, lore=lore, order=self.additional_lore_nb + #self.lore_defs}
 end
 
-function _M:learnLore(lore, nopopup, silent)
+function _M:learnLore(lore, nopopup, silent, nostop)
 	local l = self:getLore(lore, silent)
 	if not l then return end
 	local learnt = false
@@ -91,7 +91,7 @@ function _M:learnLore(lore, nopopup, silent)
 	print("[LORE] learnt", lore)
 	if learnt then if l.on_learn then l.on_learn(self) end end
 
-	if self.runStop then
+	if self.runStop and not nostop then
 		self:runStop("learnt lore")
 		self:restStop("learnt lore")
 	end
