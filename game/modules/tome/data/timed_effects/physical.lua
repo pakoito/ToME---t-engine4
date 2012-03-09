@@ -1233,8 +1233,8 @@ newEffect{
 			return true
 		else
 			DamageType:get(DamageType.PHYSICAL).projector(eff.src or self, self.x, self.y, DamageType.PHYSICAL, eff.dam)
-			if eff.src:knowTalent(eff.src.T_ELDRITCH_VINE) then
-				local l = eff.src:getTalentLevel(eff.src.T_ELDRITCH_VINE)
+			if eff.src:knowTalent(eff.src.T_ELDRITCH_VINES) then
+				local l = eff.src:getTalentLevel(eff.src.T_ELDRITCH_VINES)
 				eff.src:incEquilibrium(-l / 4)
 				eff.src:incMana(l / 3)
 			end

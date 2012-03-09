@@ -149,7 +149,7 @@ newTalent{
 		self:project(tg, self.x, self.y, function(px, py)
 			local target = game.level.map(px, py, Map.ACTOR)
 			if not target or target == self then return end
-			self:attackTargetWith(target, shield.special_combat, nil, self:combatTalentWeaponDamage(t, 1.3, 2.6), true)
+			self:attackTargetWith(target, shield.special_combat, nil, self:combatTalentWeaponDamage(t, 1.3, 2.6))
 		end)
 
 		return true

@@ -193,15 +193,21 @@ newTalent{
 			target.demon_plane_on_die = target.on_die
 			target.on_die = function(self, ...)
 				self.demon_plane_trapper:forceUseTalent(self.T_DEMON_PLANE, {ignore_energy=true})
-				if self.demon_plane_on_die then self:demon_plane_on_die(...) end
-				self.on_die, self.demon_plane_on_die = self.demon_plane_on_die, nil
+				local args = {...}
+				game:onTickEnd(function()
+					if self.demon_plane_on_die then self:demon_plane_on_die(unpack(args)) end
+					self.on_die, self.demon_plane_on_die = self.demon_plane_on_die, nil
+				end)
 			end
 
 			self.demon_plane_on_die = self.on_die
 			self.on_die = function(self, ...)
 				self:forceUseTalent(self.T_DEMON_PLANE, {ignore_energy=true})
-				if self.demon_plane_on_die then self:demon_plane_on_die(...) end
-				self.on_die, self.demon_plane_on_die = self.demon_plane_on_die, nil
+				local args = {...}
+				game:onTickEnd(function()
+					if self.demon_plane_on_die then self:demon_plane_on_die(unpack(args)) end
+					self.on_die, self.demon_plane_on_die = self.demon_plane_on_die, nil
+				end)
 			end
 
 			game.logPlayer(game.player, "#LIGHT_RED#You are taken to the Fearscape!")
@@ -217,6 +223,7 @@ newTalent{
 	end,
 	deactivate = function(self, t, p)
 		game:onTickEnd(function()
+				game.log("===exiting===")
 			-- Collect objects
 			local objs = {}
 			for i = 0, game.level.map.w - 1 do for j = 0, game.level.map.h - 1 do
