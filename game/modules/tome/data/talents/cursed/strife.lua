@@ -407,6 +407,6 @@ newTalent{
 	info = function(self, t)
 		local chance = t.getChance(self, t)
 		return ([[Rather than hide from the onslaught you face down every threat. While active you have a %d%% chance of repelling a melee attack. The recklessness of your defense brings you bad luck (luck -3). Cleave, repel and surge cannot be activate simultaneously and activating one will place the others in cooldown.
-		Chance increases with with the Strength stat and when equipped with a shield.]]):format(chance)
+		Chance increases with the Strength stat and when equipped with a shield.]]):format(chance)
 	end,
 }
