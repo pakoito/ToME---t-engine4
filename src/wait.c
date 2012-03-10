@@ -117,6 +117,8 @@ static int enable(lua_State *L)
 		manual_ticks_enabled = FALSE;
 		waited_ticks = SDL_GetTicks();
 
+		SDL_GL_SwapWindow(window);
+
 		int w, h;
 		SDL_GetWindowSize(window, &w, &h);
 
