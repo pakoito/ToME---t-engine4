@@ -103,11 +103,11 @@ newEffect{
 newEffect{
 	name = "TIME_SHIELD", image = "talents/time_shield.png",
 	desc = "Time Shield",
-	long_desc = function(self, eff) return ("The target is surrounded by a time distortion, absorbing %d/%d damage and sending it forward in time."):format(self.time_shield_absorb, eff.power) end,
+	long_desc = function(self, eff) return ("The target is surrounded by a time distortion, absorbing %d/%d damage and sending it forward in time. While active all newly applied status effects durations are reduced by %d%%."):format(self.time_shield_absorb, eff.power, eff.time_reducer) end,
 	type = "other",
 	subtype = { time=true, shield=true },
 	status = "beneficial",
-	parameters = { power=10 },
+	parameters = { power=10, dot_dur=5, time_reducer=20 },
 	on_gain = function(self, err) return "The very fabric of time alters around #target#.", "+Time Shield" end,
 	on_lose = function(self, err) return "The fabric of time around #target# stabilizes to normal.", "-Time Shield" end,
 	on_aegis = function(self, eff, aegis)
@@ -116,6 +116,7 @@ newEffect{
 	activate = function(self, eff)
 		if self:attr("shield_factor") then eff.power = eff.power * (100 + self:attr("shield_factor")) / 100 end
 		if self:attr("shield_dur") then eff.dur = eff.dur + self:attr("shield_dur") end
+		eff.durid = self:addTemporaryValue("reduce_status_effects_time", eff.time_reducer)
 		eff.tmpid = self:addTemporaryValue("time_shield", eff.power)
 		--- Warning there can be only one time shield active at once for an actor
 		self.time_shield_absorb = eff.power
@@ -123,11 +124,13 @@ newEffect{
 		eff.particle = self:addParticles(Particles.new("time_shield", 1))
 	end,
 	deactivate = function(self, eff)
+		self:removeTemporaryValue("reduce_status_effects_time", eff.durid)
+
 		self:removeParticles(eff.particle)
 		-- Time shield ends, setup a dot if needed
 		if eff.power - self.time_shield_absorb > 0 then
-			print("Time shield dot", eff.power - self.time_shield_absorb, (eff.power - self.time_shield_absorb) / 5)
-			self:setEffect(self.EFF_TIME_DOT, 5, {power=(eff.power - self.time_shield_absorb) / 5})
+			print("Time shield dot", eff.power - self.time_shield_absorb, (eff.power - self.time_shield_absorb) / eff.dot_dur)
+			self:setEffect(self.EFF_TIME_DOT, eff.dot_dur, {power=(eff.power - self.time_shield_absorb) / eff.dot_dur})
 		end
 
 		self:removeTemporaryValue("time_shield", eff.tmpid)
