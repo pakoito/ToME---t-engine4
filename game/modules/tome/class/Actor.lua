@@ -3295,7 +3295,7 @@ function _M:on_set_temporary_effect(eff_id, e, p)
 	end
 	if self:knowTalent(self.T_VITALITY) and e.status == "detrimental" and (e.subtype.wound or e.subtype.poison or e.subtype.disease) then
 		local t = self:getTalentFromId(self.T_VITALITY)
-		p.dur = math.ceil(p.dur * (1 - util.bound(t.getWoundReduction(self, t), 0, 1))
+		p.dur = math.ceil(p.dur * (1 - util.bound(t.getWoundReduction(self, t), 0, 1)))
 	end
 	if self:hasEffect(self.EFF_HAUNTED) and e.subtype and e.subtype.fear then
 		local e = self.tempeffect_def[self.EFF_HAUNTED]
