@@ -62,13 +62,15 @@ newTalent{
 	getDotDuration = function(self, t) return util.bound(4 + math.floor(self:getTalentLevel(t)), 4, 12) end,
 	getTimeReduction = function(self, t) return util.bound(15 + math.floor(self:getTalentLevel(t) * 2), 15, 35) end,
 	action = function(self, t)
-		self:setEffect(self.EFF_TIME_SHIELD, t.getDuration(self, t), {power=t.getMaxAbsorb(self, t), dot_dur=t.getDotDuraion(self, t), time_reducer=t.getTimeReduction(self, t)})
+		self:setEffect(self.EFF_TIME_SHIELD, t.getDuration(self, t), {power=t.getMaxAbsorb(self, t), dot_dur=t.getDotDuration(self, t), time_reducer=t.getTimeReduction(self, t)})
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
 	info = function(self, t)
 		local maxabsorb = t.getMaxAbsorb(self, t)
 		local duration = t.getDuration(self, t)
+		local dotdur = t.getDotDuration(self,t)
+		local time_reduc = t.getTimeReduction(self,t)
 		return ([[This intricate spell instantly erects a time shield around the caster, preventing any incoming damage and sending it forward in time.
 		Once either the maximum damage (%d) is absorbed, or the time runs out (%d turns), the stored damage will return as self-damage over time (%d turns).
 		While under the effect of Time Shield all newly applied magical, physical and mental effects will have their durations reduced by %d%%.
