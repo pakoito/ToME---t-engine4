@@ -44,6 +44,12 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			local t = target:getTalentFromId(target.T_PREMONITION)
 			t.on_damage(target, t, type)
 		end
+		
+		-- Item-granted damage ward talent
+		if target:hasEffect(target.EFF_WARD) then
+			local e = target.tempeffect_def[target.EFF_WARD]
+			dam = e.absorb(type, dam, target.tmp[target.EFF_WARD], target, src)
+		end
 
 		-- Increases damage
 		if src.inc_damage then

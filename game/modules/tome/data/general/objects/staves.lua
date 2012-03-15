@@ -17,8 +17,11 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local Talents = require "engine.interface.ActorTalents"
+
 newEntity{
 	define_as = "BASE_STAFF",
+	flavor_names = {"staff", "magestaff", "starstaff", "vilestaff"},
 	slot = "MAINHAND",
 	slot_forbid = "OFFHAND",
 	type = "weapon", subtype="staff",
@@ -34,7 +37,6 @@ newEntity{
 		physspeed = 1,
 		damrange = 1.2,
 		sound = {"actions/melee", pitch=0.6, vol=1.2}, sound_miss = {"actions/melee", pitch=0.6, vol=1.2},
-		damtype = resolvers.rngtable{DamageType.FIRE, DamageType.COLD, DamageType.ACID, DamageType.LIGHTNING, DamageType.LIGHT, DamageType.DARKNESS, DamageType.NATURE, DamageType.BLIGHT},
 	},
 	desc = [[Staves designed for wielders of magic, by the greats of the art.]],
 	egos = "/data/general/objects/egos/staves.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
@@ -47,15 +49,12 @@ newEntity{ base = "BASE_STAFF",
 	cost = 5,
 	material_level = 1,
 	combat = {
-		dam = resolvers.rngavg(3,5),
+		dam = 10,
 		apr = 2,
 		physcrit = 2.5,
 		dammod = {mag=1},
 	},
-	wielder = {
-		combat_spellpower = 1,
-		combat_spellcrit = 1,
-	},
+	wielder = resolvers.staff_wielder(),
 }
 
 newEntity{ base = "BASE_STAFF",
@@ -65,15 +64,12 @@ newEntity{ base = "BASE_STAFF",
 	cost = 10,
 	material_level = 2,
 	combat = {
-		dam = resolvers.rngavg(7,11),
+		dam = 15,
 		apr = 3,
 		physcrit = 3,
 		dammod = {mag=1},
 	},
-	wielder = {
-		combat_spellpower = 2,
-		combat_spellcrit = 2,
-	},
+	wielder = resolvers.staff_wielder(),
 }
 
 newEntity{ base = "BASE_STAFF",
@@ -83,15 +79,12 @@ newEntity{ base = "BASE_STAFF",
 	cost = 15,
 	material_level = 3,
 	combat = {
-		dam = resolvers.rngavg(14,22),
+		dam = 20,
 		apr = 4,
 		physcrit = 3.5,
 		dammod = {mag=1},
 	},
-	wielder = {
-		combat_spellpower = 3,
-		combat_spellcrit = 3,
-	},
+	wielder = resolvers.staff_wielder(),
 }
 
 newEntity{ base = "BASE_STAFF",
@@ -101,15 +94,12 @@ newEntity{ base = "BASE_STAFF",
 	cost = 25,
 	material_level = 4,
 	combat = {
-		dam = resolvers.rngavg(24,28),
+		dam = 25,
 		apr = 5,
 		physcrit = 4.5,
 		dammod = {mag=1},
 	},
-	wielder = {
-		combat_spellpower = 4,
-		combat_spellcrit = 4,
-	},
+	wielder = resolvers.staff_wielder(),
 }
 
 newEntity{ base = "BASE_STAFF",
@@ -119,13 +109,10 @@ newEntity{ base = "BASE_STAFF",
 	cost = 35,
 	material_level = 5,
 	combat = {
-		dam = resolvers.rngavg(32,38),
+		dam = 30,
 		apr = 6,
 		physcrit = 5,
 		dammod = {mag=1},
 	},
-	wielder = {
-		combat_spellpower = 7,
-		combat_spellcrit = 5,
-	},
+	wielder = resolvers.staff_wielder(),
 }

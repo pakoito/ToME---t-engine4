@@ -17,14 +17,14 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-newTalentType{ no_silence=true, is_spell=true, type="spell/artifact", name = "artifact spells", hide = true, description = "Spell abilities of the various artifacts of the world." }
+newTalentType{ no_silence=true, is_spell=true, type="spell/objects", name = "object spells", description = "Spell abilities of the various objects of the world." }
 
-local oldTalent = newTalent
-local newTalent = function(t) if type(t.hide) == "nil" then t.hide = true end return oldTalent(t) end
+--local oldTalent = newTalent
+--local newTalent = function(t) if type(t.hide) == "nil" then t.hide = true end return oldTalent(t) end
 
 newTalent{
 	name = "Arcane Supremacy",
-	type = {"spell/artifact",1},
+	type = {"spell/objects",1},
 	points = 1,
 	mana = 40,
 	cooldown = 12,
@@ -82,5 +82,56 @@ newTalent{
 		local count = t.getRemoveCount(self, t)
 		return ([[Removes up to %d detrimental magical effects and empowers you with arcane energy for ten turns, increasing spellpower and spell save by 5 plus 5 per effect removed.]]):
 		format(count)
+	end,
+}
+
+newTalent{
+	name = "Command Staff",
+	type = {"spell/objects", 1},
+	cooldown = 5,
+	points = 5,
+	no_npc_use = true,
+	no_unlearn_last = true,
+	action = function(self, t)
+		local staff = self:hasStaffWeapon()
+		if not staff then
+			game.logPlayer(self, "You must be holding a staff.")
+			return
+		end
+		local state = {}
+		local Chat = require("engine.Chat")
+		local chat = Chat.new("command-staff", {name="Command Staff"}, self, {version=staff, state=state, co=coroutine.running()})
+		local d = chat:invoke()
+		if not coroutine.yield() then return nil end
+		return true		
+	end,
+	info = function(self, t)
+		return ([[Alter the flow of energies through a staff.]])
+	end,
+}
+
+newTalent{
+	name = "Ward",
+	type = {"spell/objects", 1},
+	cooldown = function(self, t)
+		return math.max(10, 28 - 3 * self:getTalentLevel(t))
+	end,
+	points = 5,
+	hard_cap = 5,
+	no_npc_use = true,
+	action = function(self, t)
+		local state = {}
+		local Chat = require("engine.Chat")
+		local chat = Chat.new("ward", {name="Ward"}, self, {version=self, state=state})
+		local d = chat:invoke()
+		local co = coroutine.running()
+		--print("before d.unload, state.set_ward is ", state.set_ward)
+		d.unload = function() coroutine.resume(co, state.set_ward) end
+		--print("state.set_ward is ", state.set_ward)
+		if not coroutine.yield() then return nil end
+		return true
+	end,
+	info = function(self, t)
+		return ([[Bring a damage-type-specific ward into being. The ward will fully negate as many attacks of its element as it has charges.]])
 	end,
 }

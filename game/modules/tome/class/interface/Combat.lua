@@ -511,7 +511,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	end
 
 	-- Burst on Hit
-	if hitted and crit and weapon.burst_on_hit then
+	if hitted and weapon and weapon.burst_on_hit then
 		for typ, dam in pairs(weapon.burst_on_hit) do
 			if dam > 0 then
 				self:project({type="ball", radius=1, friendlyfire=false}, target.x, target.y, typ, dam)
@@ -520,7 +520,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	end
 
 	-- Critical Burst (generally more damage then burst on hit and larger radius)
-	if hitted and crit and weapon.burst_on_crit then
+	if hitted and crit and weapon and weapon.burst_on_crit then
 		for typ, dam in pairs(weapon.burst_on_crit) do
 			if dam > 0 then
 				self:project({type="ball", radius=2, friendlyfire=false}, target.x, target.y, typ, dam)
@@ -1167,6 +1167,13 @@ function _M:spellCrit(dam, add_chance)
 		game.logSeen(self, "#{bold}#%s's spell attains critical power!#{normal}#", self.name:capitalize())
 
 		if self:attr("mana_on_crit") then self:incMana(self:attr("mana_on_crit")) end
+		
+		if self:attr("vim_on_crit") then self:incVim(self:attr("vim_on_crit")) end
+		
+		if self:attr("spellsurge_on_crit") then
+			local power = self:attr("spellsurge_on_crit")
+			self:setEffect(self.EFF_SPELLSURGE, 10, {power=power, max=power*3})
+		end
 
 		if self:isTalentActive(self.T_BLOOD_FURY) then
 			local t = self:getTalentFromId(self.T_BLOOD_FURY)

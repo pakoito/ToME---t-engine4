@@ -129,8 +129,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local resist = t.getResist(self, t)
-		return ([[You partially remove yourself from the timeline for 10 turns, increasing your resistance to all damage by %d%%, reducing the duration of all detrimental effects by %d%%, and reducing all damage you deal by 20%%.
-		The resistance bonus, detrimental effect reduction, and damage penalty will gradually lose power over the course of the spell.
+		return ([[You partially remove yourself from the timeline for 10 turns, increasing your resistance to all damage by %d%%, reducing the duration of all effects by %d%%, and reducing all damage you deal by 20%%.
+		The resistance bonus, effect reduction, and damage penalty will gradually lose power over the course of the spell.
 		The effect will scale with your Paradox and Spellpower.]]):
 		format(resist, resist, resist/10)
 	end,

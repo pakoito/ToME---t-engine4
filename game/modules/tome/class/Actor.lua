@@ -815,6 +815,9 @@ function _M:teleportRandom(x, y, dist, min_dist)
 	if self.x ~= ox or self.y ~= oy then
 		self.x, self.y, ox, oy = ox, oy, self.x, self.y
 		self:dropNoTeleportObjects()
+		if self:attr("defense_on_teleport") or self:attr("resist_all_on_teleport") or self:attr("effect_reduction_on_teleport") then
+			self:setEffect(self.EFF_OUT_OF_PHASE, 5, {defense=self:attr("defense_on_teleport") or 0, resists=self:attr("resist_all_on_teleport") or 0, effect_reduction=self:attr("effect_reduction_on_teleport") or 0})
+		end
 		self.x, self.y, ox, oy = ox, oy, self.x, self.y
 	end
 	return ret
@@ -2138,6 +2141,13 @@ function _M:onWear(o, bypass_set)
 		self:attr("spell_failure", (o.material_level or 1) * 10)
 	end
 
+	-- Learn Talent
+	if o.wielder and o.wielder.learn_talent then
+		for tid, level in pairs(o.wielder.learn_talent) do
+			self:learnItemTalent(o, tid, level)
+		end
+	end
+	
 	self:breakReloading()
 
 	self:updateModdableTile()
@@ -2196,6 +2206,12 @@ function _M:onTakeoff(o, bypass_set)
 	if o.power_source and o.power_source.antimagic then
 		self:attr("spellpower_reduction", -1)
 		self:attr("spell_failure", -(o.material_level or 1) * 10)
+	end
+	
+	if o.wielder and o.wielder.learn_talent then
+		for tid, level in pairs(o.wielder.learn_talent) do
+			self:unlearnItemTalent(o, tid, level)
+		end
 	end
 
 	self:breakReloading()
@@ -2285,6 +2301,42 @@ function _M:learnTalent(t_id, force, nb, extra)
 
 	self:learnPool(t)
 	return true
+end
+
+-- Learn item talents; right now this code has no sanity checks so use it wisely
+-- For example you can give the player talent levels in talents they know, which they can then unlearn for free talent points
+-- Freshly learned talents also do not start on cooldown; which is fine for now but should be changed if we start using this code to teach more general talents to prevent swap abuse
+-- For now we'll use it to teach talents the player couldn't learn at all otherwise rather then talents that they could possibly know
+-- Make sure such talents are always flagged as unlearnable (see Command Staff for an example)
+function _M:learnItemTalent(o, tid, level)
+	local t = self:getTalentFromId(tid)
+	local max = t.hard_cap or (t.points and t.points + 2) or 5
+	if not self.item_talent_surplus_levels then self.item_talent_surplus_levels = {} end
+	--local item_talent_surplus_levels = self.item_talent_surplus_levels or {}
+	if not self.item_talent_surplus_levels[tid] then self.item_talent_surplus_levels[tid] = 0 end
+	--item_talent_levels[tid] = item_talent_levels[tid] + level
+	for i = 1, level do
+		if self:getTalentLevelRaw(t) >= max then 
+			self.item_talent_surplus_levels[tid] = self.item_talent_surplus_levels[tid] + 1 
+		else
+			self:learnTalent(tid, true, 1)
+		end		
+	end
+end
+
+function _M:unlearnItemTalent(o, tid, level)
+	local t = self:getTalentFromId(tid)
+	local max = (t.points and t.points + 2) or 5
+	if not self.item_talent_surplus_levels then self.item_talent_surplus_levels = {} end
+	--local item_talent_surplus_levels = self.item_talent_surplus_levels or {}
+	if not self.item_talent_surplus_levels[tid] then self.item_talent_surplus_levels[tid] = 0 end
+	for i = 1, level do
+		if self.item_talent_surplus_levels[tid] > 0 then 
+			self.item_talent_surplus_levels[tid] = self.item_talent_surplus_levels[tid] - 1 
+		else
+			self:unlearnTalent(tid, true, 1)
+		end	
+	end
 end
 
 --- Actor learns a resource pool
@@ -3284,10 +3336,6 @@ function _M:on_set_temporary_effect(eff_id, e, p)
 
 	if e.status == "detrimental" and self:knowTalent(self.T_RESILIENT_BONES) then
 		p.dur = math.ceil(p.dur * (1 - util.bound(self:getTalentLevel(self.T_RESILIENT_BONES) / 12, 0, 1)))
-	end
-	if e.status == "detrimental" and e.type ~= "other" and self:hasEffect(self.EFF_FADE_FROM_TIME) then
-		local fft = util.bound(self:hasEffect(self.EFF_FADE_FROM_TIME), 0, 100)
-		p.dur = math.ceil(p.dur * (1 - (fft.power/100)))
 	end
 	if e.type ~= "other" and self:attr("reduce_status_effects_time") then
 		local power = util.bound(self.reduce_status_effects_time, 0, 100)

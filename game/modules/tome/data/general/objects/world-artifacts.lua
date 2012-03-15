@@ -31,28 +31,34 @@ newEntity{ base = "BASE_STAFF",
 	power_source = {arcane=true},
 	unique = true,
 	name = "Staff of Destruction",
+	flavor_name = "magestaff",
 	unided_name = "darkness infused staff", image = "object/artifact/staff_of_destruction.png",
 	level_range = {20, 25},
 	color=colors.VIOLET,
 	rarity = 170,
 	desc = [[This unique-looking staff is carved with runes of destruction.]],
 	cost = 200,
-	material_level = 2,
+	material_level = 3,
 
 	require = { stat = { mag=24 }, },
+	modes = {"fire", "cold", "lightning", "arcane"},
 	combat = {
-		dam = 15,
+		dam = 20,
 		apr = 4,
 		dammod = {mag=1.5},
-		damtype = DamageType.ARCANE,
+		damtype = DamageType.FIRE,
+		is_greater = true,
 	},
 	wielder = {
 		combat_spellpower = 10,
 		combat_spellcrit = 15,
 		inc_damage={
-			[DamageType.FIRE] = resolvers.mbonus(25, 8),
-			[DamageType.LIGHTNING] = resolvers.mbonus(25, 8),
+			[DamageType.FIRE] = 20,
+			[DamageType.LIGHTNING] = 20,
+			[DamageType.COLD] = 20,
+			[DamageType.ARCANE] = 20,
 		},
+		learn_talent = {[Talents.T_COMMAND_STAFF] = 1},
 	},
 }
 
@@ -60,20 +66,22 @@ newEntity{ base = "BASE_STAFF",
 	power_source = {arcane=true},
 	unique = true,
 	name = "Penitence",
+	flavor_name = "starstaff",
 	unided_name = "glowing staff", image = "object/artifact/staff_penitence.png",
 	level_range = {10, 18},
 	color=colors.VIOLET,
 	rarity = 200,
 	desc = [[A powerful staff sent in secret to Angolwen by the Shaloren, to aid their fighting of the plagues following the Spellblaze.]],
 	cost = 200,
-	material_level = 1,
+	material_level = 2,
 
 	require = { stat = { mag=24 }, },
 	combat = {
-		dam = 10,
+		--sentient = "penitent", -- commented out for now...  how many sentient staves do we need?
+		dam = 15,
 		apr = 4,
 		dammod = {mag=1.2},
-		damtype = DamageType.ARCANE,
+		damtype = DamageType.NATURE, -- Note this is odd for a staff; it's intentional and it's also why the damage type can't be changed.  Blight on this staff would be sad :(
 	},
 	wielder = {
 		combat_spellpower = 15,
@@ -117,6 +125,7 @@ newEntity{ base = "BASE_STAFF",
 	unique = true,
 	name = "Lost Staff of Archmage Tarelion", image = "object/artifact/staff_lost_staff_archmage_tarelion.png",
 	unided_name = "shining staff",
+	flavor_name = "magestaff",
 	level_range = {37, 50},
 	color=colors.VIOLET,
 	rarity = 250,
@@ -125,8 +134,10 @@ newEntity{ base = "BASE_STAFF",
 	material_level = 5,
 
 	require = { stat = { mag=48 }, },
+	modes = {"fire", "cold", "lightning", "arcane"},
 	combat = {
-		dam = 38,
+		is_greater = true,
+		dam = 30,
 		apr = 4,
 		dammod = {mag=1.5},
 		damtype = DamageType.ARCANE,
@@ -136,7 +147,7 @@ newEntity{ base = "BASE_STAFF",
 		max_mana = 40,
 		combat_spellpower = 40,
 		combat_spellcrit = 25,
-		inc_damage = { [DamageType.ARCANE] = 24, [DamageType.FIRE] = 24, [DamageType.COLD] = 24, [DamageType.LIGHTNING] = 24,  },
+		inc_damage = { [DamageType.ARCANE] = 30, [DamageType.FIRE] = 30, [DamageType.COLD] = 30, [DamageType.LIGHTNING] = 30,  },
 		silence_immune = 0.4,
 		mana_on_crit = 12,
 		talent_cd_reduction={
@@ -144,6 +155,7 @@ newEntity{ base = "BASE_STAFF",
 			[Talents.T_FIREFLASH] = 2,
 			[Talents.T_CHAIN_LIGHTNING] = 2,
 		},
+		learn_talent = {[Talents.T_COMMAND_STAFF] = 1,},
 	},
 }
 
@@ -171,7 +183,7 @@ newEntity{ base = "BASE_STAFF",
 		combat_spellpower = 12,
 		combat_spellcrit = 18,
 		inc_damage={
-			[DamageType.PHYSICAL] = resolvers.mbonus(20, 8),
+			[DamageType.PHYSICAL] = 20,
 		},
 		talents_types_mastery = {
 			["spell/staff-combat"] = 0.2,
@@ -1499,7 +1511,7 @@ newEntity{ base = "BASE_CLOTH_ARMOR",
 	use_talent = { id = Talents.T_DAMAGE_SMEARING, level = 3, power = 100 },
 }
 
-newEntity{ base = "BASE_GEM",
+newEntity{ base = "BASE_GEM", define_as = "GEM_TELOS",
 	power_source = {arcane=true},
 	unique = true,
 	unided_name = "scintillating white crystal",
@@ -1540,9 +1552,12 @@ newEntity{ base = "BASE_GEM",
 				who:sortInven(gem_inven)
 
 				-- Change the staff
+				voice.modes = o.modes
+				voice.flavor_name = o.flavor_name
 				voice.combat = o.combat
-				voice.combat.dam = voice.combat.dam * 1.4
-				voice.combat.damtype = engine.DamageType.ARCANE
+				voice.combat.dam = math.floor(voice.combat.dam * 1.4)
+				voice.combat.sentient = "telos"
+				voice.wielder.inc_damage[voice.combat.damtype] = voice.combat.dam
 				voice:identify(true)
 				o:replaceWith(voice)
 				who:sortInven()
@@ -1578,8 +1593,8 @@ newEntity{ base = "BASE_STAFF", define_as = "VOICE_TELOS",
 		max_mana = 100,
 		inc_stats = { [Stats.STAT_MAG] = 6, [Stats.STAT_WIL] = 5, [Stats.STAT_CUN] = 4 },
 		lite = 1,
-
-		inc_damage = { all=14 },
+		inc_damage = {},
+		learn_talent = {[Talents.T_COMMAND_STAFF] = 1},
 	},
 }
 
@@ -2156,6 +2171,9 @@ newEntity{ base = "BASE_LONGSWORD", define_as = "ART_PAIR_TWSWORD",
 		inc_damage={
 			[DamageType.TEMPORAL] = 5, [DamageType.PHYSICAL] = -5,
 		},
+		resist_all_on_teleport = 5,
+		defense_on_teleport = 10,
+		effect_reduction_on_teleport = 15,
 	},
 	set_list = { {"define_as","ART_PAIR_TWDAG"} },
 	on_set_complete = function(self, who)
@@ -2194,6 +2212,9 @@ newEntity{ base = "BASE_KNIFE", define_as = "ART_PAIR_TWDAG",
 		inc_damage={
 			[DamageType.TEMPORAL] = 5, [DamageType.PHYSICAL] = -10,
 		},
+		resist_all_on_teleport = 5,
+		defense_on_teleport = 10,
+		effect_reduction_on_teleport = 15,
 	},
 	set_list = { {"define_as","ART_PAIR_TWSWORD"} },
 	on_set_complete = function(self, who)
@@ -2393,11 +2414,13 @@ newEntity{ base = "BASE_DIGGER",
 }
 
 -- Channelers set
+-- Note that this staff can not be channeled.  All of it's flavor is arcane, lets leave it arcane
 newEntity{ base = "BASE_STAFF", define_as = "SET_STAFF_CHANNELERS",
 	power_source = {arcane=true},
 	unique = true,
 	name = "Staff of Arcane Supremacy",
 	unided_name = "silver-runed staff",
+	flavor_name = "magestaff",
 	level_range = {20, 40},
 	color=colors.BLUE, image = "object/artifact/staff_of_arcane_supremacy.png",
 	rarity = 300,
@@ -2407,7 +2430,7 @@ It hums faintly, as if great power is locked within, yet alone it seems incomple
 	material_level = 3,
 	require = { stat = { mag=24 }, },
 	combat = {
-		dam = 15,
+		dam = 20,
 		apr = 4,
 		dammod = {mag=1.5},
 		damtype = DamageType.ARCANE,
@@ -2484,7 +2507,7 @@ newEntity{ base = "BASE_ARROW",
 	material_level = 4,
 	require = { stat = { dex=24 }, },
 	combat = {
-		capacity = 6,
+		capacity = 12,
 		tg_type = "beam",
 		travel_speed = 300,
 		dam = 34,

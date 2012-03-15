@@ -17,6 +17,8 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+-- TODO: Update prices
+
 require "engine.class"
 require "engine.Object"
 require "engine.interface.ObjectActivable"
@@ -509,7 +511,7 @@ function _M:getTextualDesc(compare_with)
 
 		compare_fields(combat, compare_with, field, "travel_speed", "%+d%%", "Travel speed: ", 1, false, false, add_table)
 		
-		compare_fields(combat, compare_with, field, "phase_power", "%+d%%", "Damage Shield penetration: ", 1, false, false, add_table)
+		compare_fields(combat, compare_with, field, "phase_power", "%+d%%", "Damage Shield penetration (this weapon only): ", 1, false, false, add_table)
 
 		if combat.tg_type and combat.tg_type == "beam" then
 			desc:add({"color","YELLOW"}, ("Shots beam through all targets."), {"color","LAST"}, true)
@@ -591,12 +593,17 @@ function _M:getTextualDesc(compare_with)
 				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
 				return col[2], (" %s"):format(item == "all" and "all" or DamageType.dam_def[item].name), {"color","LAST"}
 			end)
-
+		
 		compare_table_fields(w, compare_with, field, "resists_cap", "%+d%%", "Changes resistances cap: ", function(item)
 				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
 				return col[2], (" %s"):format(item == "all" and "all" or DamageType.dam_def[item].name), {"color","LAST"}
 			end)
 
+		compare_table_fields(w, compare_with, field, "wards", "%+d", "Maximum wards: ", function(item)
+				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
+				return col[2], (" %s"):format(item == "all" and "all" or DamageType.dam_def[item].name), {"color","LAST"}
+			end)	
+		
 		compare_table_fields(w, compare_with, field, "resists_pen", "%+d%%", "Changes resistances penetration: ", function(item)
 				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
 				return col[2], (" %s"):format(item == "all" and "all" or DamageType.dam_def[item].name), {"color","LAST"}
@@ -611,7 +618,6 @@ function _M:getTextualDesc(compare_with)
 				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
 				return col[2], (" %s"):format(item == "all" and "all" or DamageType.dam_def[item].name), {"color","LAST"}
 			end)
-
 
 		compare_fields(w, compare_with, field, "esp_range", "%+d", "Change telepathy range by : ")
 
@@ -735,7 +741,42 @@ function _M:getTextualDesc(compare_with)
 			end
 			desc:add(true)
 		end
-
+		
+		-- Display learned talents
+		local any_learn_talent = 0
+		local learn_talents = {}
+		for i, v in ipairs(compare_with or {}) do
+			if v[field] and v[field].learn_talent then
+				for tid, tl in pairs(v[field].learn_talent) do
+					learn_talents[tid] = learn_talents[tid] or {}
+					learn_talents[tid][1] = tl
+					any_learn_talent = any_learn_talent + 1
+				end
+			end
+		end
+		for tid, tl in pairs(w.learn_talent or {}) do
+			learn_talents[tid] = learn_talents[tid] or {}
+			learn_talents[tid][2] = tl
+			any_learn_talent = any_learn_talent + 1
+		end
+		if any_learn_talent > 0 then
+			desc:add(("Talent%s granted: "):format(any_learn_talent > 1 and "s" or ""))
+			for tid, tl in pairs(learn_talents) do
+				local diff = (tl[2] or 0) - (tl[1] or 0)
+				local name = Talents.talents_def[tid].name
+				if diff ~= 0 then
+					if tl[1] then
+						desc:add(("+%d"):format(tl[2] or 0), diff < 0 and {"color","RED"} or {"color","LIGHT_GREEN"}, ("(+%d) "):format(diff), {"color","LAST"}, ("%s "):format(name))
+					else
+						desc:add({"color","LIGHT_GREEN"}, ("+%d"):format(tl[2] or 0),  {"color","LAST"}, (" %s "):format(name))
+					end
+				else
+					desc:add({"color","WHITE"}, ("%+.2f(-) %s "):format(tl[2] or tl[1], name), {"color","LAST"})
+				end
+			end
+			desc:add(true)
+		end
+	
 		local any_breath = 0
 		local breaths = {}
 		for i, v in ipairs(compare_with or {}) do
@@ -802,6 +843,8 @@ function _M:getTextualDesc(compare_with)
 		compare_fields(w, compare_with, field, "equilibrium_regen_on_hit", "%+.2f", "Equilibrium when hit: ")
 
 		compare_fields(w, compare_with, field, "mana_on_crit", "%+.2f", "Mana when firing critical spell: ")
+		compare_fields(w, compare_with, field, "vim_on_crit", "%+.2f", "Vim when firing critical spell: ")
+		compare_fields(w, compare_with, field, "spellsurge_on_crit", "%+d", "Spellpower on spell critical (stacks up to 3 times): ")
 
 		compare_fields(w, compare_with, field, "die_at", "%+.2f life", "Only die when reaching: ", 1, true, true)
 		compare_fields(w, compare_with, field, "max_life", "%+.2f", "Maximum life: ")
@@ -824,7 +867,8 @@ function _M:getTextualDesc(compare_with)
 
 		compare_fields(w, compare_with, field, "see_invisible", "%+d", "See invisible: ")
 		compare_fields(w, compare_with, field, "invisible", "%+d", "Invisibility: ")
-
+		
+		compare_fields(w, compare_with, field, "global_speed_add", "%+d%%", "Global speed: ", 100)
 		compare_fields(w, compare_with, field, "movement_speed", "%+d%%", "Movement speed: ", 100)
 		compare_fields(w, compare_with, field, "combat_physspeed", "%+d%%", "Combat speed: ", 100)
 		compare_fields(w, compare_with, field, "combat_spellspeed", "%+d%%", "Casting speed: ", 100)
@@ -836,6 +880,12 @@ function _M:getTextualDesc(compare_with)
 
 		compare_fields(w, compare_with, field, "resource_leech_chance", "%+d%%", "Resource leech chance: ")
 		compare_fields(w, compare_with, field, "resource_leech_value", "%+d", "Resource leech: ")
+		
+		compare_fields(w, compare_with, field, "damage_shield_penetrate", "%+d%%", "Damage Shield penetration: ")
+		
+		compare_fields(w, compare_with, field, "defense_on_teleport", "%+d", "Defense after a teleport: ")
+		compare_fields(w, compare_with, field, "resist_all_on_teleport", "%+d%%", "Resist all after a teleport: ")
+		compare_fields(w, compare_with, field, "effect_reduction_on_teleport", "%+d%%", "Effect duration reduction after a teleport: ")
 
 		compare_fields(w, compare_with, field, "size_category", "%+d", "Size category: ")
 
@@ -848,7 +898,7 @@ function _M:getTextualDesc(compare_with)
 		end
 		
 		if w.avoid_pressure_traps then
-			desc:add({"color", "YELLOW"}, "Avoid Pressure Traps:", {"color", "LAST"}, "The wearer never triggers traps that require pressure.", true)
+			desc:add({"color", "YELLOW"}, "Avoid Pressure Traps: ", {"color", "LAST"}, "The wearer never triggers traps that require pressure.", true)
 		end
 		
 		if w.speaks_shertul then

@@ -26,7 +26,8 @@ local Textbox = require "engine.ui.Textbox"
 module(..., package.seeall, class.inherit(Dialog))
 
 function _M:init(errs)
-	self.errs = table.concat(errs, "\n")
+	errs = table.concat(errs, "\n")
+	self.errs = errs
 	Dialog.init(self, "Lua Error", 700, 500)
 
 	local md5 = require "md5"

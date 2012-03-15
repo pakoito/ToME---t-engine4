@@ -1085,7 +1085,7 @@ newEffect{
 	activate = function(self, eff)
 		eff.cur_power = eff.power
 		eff.tmpid = self:addTemporaryValue("combat_spellpower", eff.power)
-		eff.particle = self:addParticles(Particles.new("arcane_power", 1))
+		eff.particle = self:addParticles(Particles.new("time_shield", 1))
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("combat_spellpower", eff.tmpid)
@@ -1570,6 +1570,93 @@ newEffect{
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("combat_spellpower", eff.spell_power)
 		self:removeTemporaryValue("combat_spellresist", eff.spell_save)
+		self:removeParticles(eff.particle)
+	end,
+}
+
+newEffect{
+	name = "WARD", image = "talents/ward.png",
+	desc = "Ward",
+	long_desc = function(self, eff) return ("Fully absorbs %d %s attack%s."):format(#eff.particles, DamageType.dam_def[eff.d_type].name, #eff.particles > 1 and "s" or "") end,
+	type = "magical",
+	subtype = { acrane=true },
+	status = "beneficial",
+	parameters = { nb=3 },
+	on_gain = function(self, eff) return ("#Target# warded against %s!"):format(DamageType.dam_def[eff.d_type].name), "+Ward" end,
+	on_lose = function(self, eff) return ("#Target#'s %s ward fades"):format(DamageType.dam_def[eff.d_type].name), "-Ward" end,
+	absorb = function(type, dam, eff, self, src)
+		if eff.d_type ~= type then return dam end
+		game.logPlayer(self, "Your %s ward absorbs the damage!", DamageType.dam_def[eff.d_type].name)
+		local pid = table.remove(eff.particles)
+		if pid then self:removeParticles(pid) end
+		if #eff.particles <= 0 then
+			--eff.dur = 0
+			self:removeEffect(self.EFF_WARD)
+		end
+		return 0
+	end,
+	activate = function(self, eff)
+		local nb = eff.nb
+		local ps = {}
+		for i = 1, nb do ps[#ps+1] = self:addParticles(Particles.new("ward", 1, {color=DamageType.dam_def[eff.d_type].color})) end
+		eff.particles = ps
+	end,
+	deactivate = function(self, eff)
+		for i, particle in ipairs(eff.particles) do self:removeParticles(particle) end
+	end,
+}
+
+newEffect{
+	name = "SPELLSURGE", image = "talents/gather_the_threads.png",
+	desc = "Spellsurge",
+	long_desc = function(self, eff) return ("The target's spellpower has been increased by %d."):
+	format(eff.cur_power or eff.power) end,
+	type = "magical",
+	subtype = { arcane=true },
+	status = "beneficial",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target# is surging arcane power.", "+Spellsurge" end,
+	on_lose = function(self, err) return "#Target# is no longer surging arcane power.", "-Spellsurge" end,
+	on_merge = function(self, old_eff, new_eff)
+		self:removeTemporaryValue("combat_spellpower", old_eff.tmpid)
+		old_eff.cur_power = math.min(old_eff.cur_power + new_eff.power, new_eff.max)
+		old_eff.tmpid = self:addTemporaryValue("combat_spellpower", old_eff.cur_power)
+
+		old_eff.dur = new_eff.dur
+		return old_eff
+	end,
+	activate = function(self, eff)
+		eff.cur_power = eff.power
+		eff.tmpid = self:addTemporaryValue("combat_spellpower", eff.power)
+		eff.particle = self:addParticles(Particles.new("arcane_power", 1))
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("combat_spellpower", eff.tmpid)
+		self:removeParticles(eff.particle)
+	end,
+}
+
+newEffect{
+	name = "OUT_OF_PHASE", image = "talents/phase_door.png",
+	desc = "Out of Phase",
+	long_desc = function(self, eff) return ("The target is out of phase with reality, increasing defense by %d, resist all by %d%%, and the duration of all timed effects by %d%%."):
+	format(eff.defense or 0, eff.resists or 0, eff.effect_reduction or 0) end,
+	type = "magical",
+	subtype = { teleport=true },
+	status = "beneficial",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target# is out of phase.", "+Phased" end,
+	on_lose = function(self, err) return "#Target# is no longer out of phase.", "-Phased" end,
+	activate = function(self, eff)
+		eff.defid = self:addTemporaryValue("combat_def", eff.defense)
+		eff.resid= self:addTemporaryValue("resists", {all=eff.resists})
+		eff.durid = self:addTemporaryValue("reduce_status_effects_time", eff.effect_reduction)
+		eff.particle = self:addParticles(Particles.new("phantasm_shield", 1))
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("combat_def", eff.defid)
+		self:removeTemporaryValue("resists", eff.resid)
+		self:removeTemporaryValue("reduce_status_effects_time", eff.durid)
 		self:removeParticles(eff.particle)
 	end,
 }

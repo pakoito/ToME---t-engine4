@@ -100,7 +100,7 @@ newEntity{
 		inc_stats = {
 			[Stats.STAT_CON] = resolvers.mbonus_material(6, 1),
 		},
-		disarm_immune = resolvers.mbonus_material(25, 5, function(e, v) v=v/100 return 0, v end),
+		disarm_immune = resolvers.mbonus_material(25, 10, function(e, v) v=v/100 return 0, v end),
 		combat_dam = resolvers.mbonus_material(10, 2),
 		resists_pen = {
 			[DamageType.PHYSICAL] = resolvers.mbonus_material(10, 2),
@@ -234,7 +234,7 @@ newEntity{
 newEntity{
 	power_source = {arcane=true},
 	name = "arcing ", prefix=true, instant_resolve=true,
-	keywords = {shocking=true},
+	keywords = {arcing=true},
 	level_range = {1, 50},
 	rarity = 5,
 	cost = 10,
@@ -344,10 +344,10 @@ newEntity{
 	cost = 35,
 	combat = {
 		convert_damage ={
-			[DamageType.FIRE] = resolvers.mbonus_material(25, 10),
-			[DamageType.COLD] = resolvers.mbonus_material(25, 10),
-			[DamageType.ACID] = resolvers.mbonus_material(25, 10),
-			[DamageType.LIGHTNING] = resolvers.mbonus_material(25, 10),
+			[DamageType.FIRE] = resolvers.mbonus_material(15, 10),
+			[DamageType.COLD] = resolvers.mbonus_material(15, 10),
+			[DamageType.ACID] = resolvers.mbonus_material(15, 10),
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(15, 10),
 		},
 		special_on_hit = {desc="random elemental effect", fct=function(combat, who, target)
 			local dam = 20 + (who:combatSpellpower()/5)
@@ -479,14 +479,14 @@ newEntity{
 	rarity = 45,
 	cost = 40,
 	wielder = {
-		global_speed_add = resolvers.mbonus_material(10, 5, function(e, v) v=v/100 return 0, v end),
+		global_speed_add = resolvers.mbonus_material(5, 1, function(e, v) v=v/100 return 0, v end),
 		resists_pen = {
 			[DamageType.FIRE] = resolvers.mbonus_material(10, 2),
 		},
 	},
 	combat = {
 		convert_damage = { 
-			[DamageType.FIREBURN] = resolvers.mbonus_material(25, 5, function(e, v) v=math.min(50, v) return 0, v end),
+			[DamageType.FIREBURN] = resolvers.mbonus_material(25, 25),
 		},
 	},
 }
@@ -507,7 +507,7 @@ newEntity{
 	},
 	combat = {
 		convert_damage = { 
-			[DamageType.ACID_BLIND] = resolvers.mbonus_material(25, 5, function(e, v) v=math.min(50, v) return 0, v end),
+			[DamageType.ACID_BLIND] = resolvers.mbonus_material(25, 25),
 		},
 	},
 }
@@ -535,7 +535,7 @@ newEntity{
 	},
 	combat = {
 		convert_damage = { 
-			[DamageType.LIGHTNING_DAZE] = resolvers.mbonus_material(25, 5, function(e, v) v=math.min(50, v) return 0, v end),
+			[DamageType.LIGHTNING_DAZE] = resolvers.mbonus_material(25, 25),
 		},
 	},
 }
@@ -556,7 +556,7 @@ newEntity{
 	},
 	combat = {
 		convert_damage = { 
-			[DamageType.ICE] = resolvers.mbonus_material(25, 5, function(e, v) v=math.min(50, v) return 0, v end),
+			[DamageType.ICE] = resolvers.mbonus_material(25, 25),
 		},
 	},
 }
@@ -601,14 +601,14 @@ newEntity{
 	rarity = 45,
 	cost = 40,
 	wielder = {
-		resists = { all = resolvers.mbonus_material(10, 2) },
+		resists = { all = resolvers.mbonus_material(8, 2) },
 		resists_pen = {
 			[DamageType.NATURE] = resolvers.mbonus_material(10, 2),
 		},
 	},
 	combat = {
 		convert_damage = { 
-			[DamageType.POISON] = resolvers.mbonus_material(25, 4),
+			[DamageType.POISON] = resolvers.mbonus_material(25, 25),
 		},
 	},
 }
@@ -664,6 +664,9 @@ newEntity{
 		melee_project={[DamageType.NATURE] = resolvers.mbonus_material(15, 4)},
 		special_on_hit = {desc="25% chance to remove a magical effect", fct=function(combat, who, target)
 			if not rng.percent(25) then return end
+			
+			local effs = {}
+			
 			-- Go through all spell effects
 			for eff_id, p in pairs(target.tmp) do
 				local e = target.tempeffect_def[eff_id]
@@ -801,7 +804,7 @@ newEntity{
 			[DamageType.MIND] = resolvers.mbonus_material(15, 4),
 		},
 		convert_damage = { 
-			[DamageType.MIND] = resolvers.mbonus_material(25, 5),
+			[DamageType.MIND] = resolvers.mbonus_material(25, 25),
 		},
 	},
 }

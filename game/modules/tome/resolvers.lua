@@ -17,6 +17,8 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local Talents = require "engine.interface.ActorTalents"
+
 --- Resolves equipment creation for an actor
 function resolvers.equip(t)
 	return {__resolver="equip", __resolve_last=true, t}
@@ -262,7 +264,11 @@ function resolvers.calc.mbonus_material(t, e)
 	end
 	
 	if e.ego_bonus_mult then
-		v = math.ceil(v * (1 + e.ego_bonus_mult))
+		if v >= 1 then
+			v = math.ceil(v * (1 + e.ego_bonus_mult)) 
+		else
+			v = v * (1 + e.ego_bonus_mult)
+		end
 	end
 
 	return v
@@ -620,4 +626,27 @@ function resolvers.calc.shooter_capacity(t, e)
 	e.combat.capacity = math.floor(e.combat.capacity)
 	e.combat.shots_left = e.combat.capacity
 	return nil
+end
+
+--- Give staves a flavor, appropriate damage type, spellpower, spellcrit, and the ability to teach the command staff talent
+function resolvers.staff_wielder(name)
+	return {__resolver="staff_wielder", name}
+end
+function resolvers.calc.staff_wielder(t, e)
+	local staff_type = rng.table{2, 2, 2, 2, 3, 3, 3, 4, 4, 4}
+	e.flavor_name = e["flavor_names"][staff_type]
+	if staff_type == 2 then
+		e.combat.damtype = rng.table{engine.DamageType.FIRE, engine.DamageType.COLD, engine.DamageType.LIGHTNING, engine.DamageType.ARCANE }
+		e.modes = {"fire", "cold", "lightning", "arcane"}
+		e.name = e.name:gsub(" staff", " magestaff")
+	elseif staff_type == 3 then
+		e.combat.damtype = rng.table{engine.DamageType.LIGHT, engine.DamageType.DARKNESS, engine.DamageType.TEMPORAL,  engine.DamageType.PHYSICAL }
+		e.modes = {"light", "darkness", "temporal", "physical"}
+		e.name = e.name:gsub(" staff", " starstaff")
+	elseif staff_type == 4 then
+		e.combat.damtype = rng.table{engine.DamageType.DARKNESS, engine.DamageType.BLIGHT, engine.DamageType.ACID, engine.DamageType.FIRE,}
+		e.modes = {"darkness", "blight", "acid", "fire"}
+		e.name = e.name:gsub(" staff", " vilestaff")
+	end
+	return 	{ inc_damage = {[e.combat.damtype] = e.combat.dam}, combat_spellpower = e.material_level * 3, combat_spellcrit = e.material_level, learn_talent = {[Talents.T_COMMAND_STAFF] = 1}, }
 end

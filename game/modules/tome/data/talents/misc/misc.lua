@@ -25,7 +25,7 @@ newTalentType{ is_spell=true, no_silence=true, type="inscriptions/runes", name =
 newTalentType{ is_spell=true, no_silence=true, type="inscriptions/taints", name = "taints", hide = true, description = "Taints are not class abilities, you must find them or learn them from other people." }
 
 -- Load other misc things
-load("/data/talents/misc/artifacts.lua")
+load("/data/talents/misc/objects.lua")
 load("/data/talents/misc/inscriptions.lua")
 load("/data/talents/misc/npcs.lua")
 load("/data/talents/misc/horrors.lua")
