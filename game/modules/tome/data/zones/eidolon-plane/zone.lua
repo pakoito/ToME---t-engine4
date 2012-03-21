@@ -137,6 +137,7 @@ return {
 
 			-- Reload MOs
 			game.level.map:redisplay()
+			game.level.map:recreate()
 
 			for uid, act in pairs(game.level.entities) do
 				if act.setEffect then

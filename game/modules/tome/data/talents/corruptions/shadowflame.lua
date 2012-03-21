@@ -280,6 +280,7 @@ newTalent{
 
 			-- Reload MOs
 			game.level.map:redisplay()
+			game.level.map:recreate()
 
 			game.logPlayer(game.player, "#LIGHT_RED#You are brought back from the Fearscape!")
 		end)
