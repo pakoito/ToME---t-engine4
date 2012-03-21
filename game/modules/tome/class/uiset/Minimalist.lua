@@ -31,6 +31,7 @@ local FlyingText = require "engine.FlyingText"
 local Shader = require "engine.Shader"
 local Tooltip = require "mod.class.Tooltip"
 local TooltipsData = require "mod.class.interface.TooltipsData"
+local Dialog = require "engine.ui.Dialog"
 local Map = require "engine.Map"
 
 module(..., package.seeall, class.inherit(UISet, TooltipsData))
@@ -482,7 +483,20 @@ function _M:showResourceTooltip(x, y, w, h, id, desc, is_first)
 				else self.mhandle.resources = true end
 
 				-- Move handle
-				if not self.locked and bx >= self.mhandle_pos.resources.x and bx <= self.mhandle_pos.resources.x + move_handle[6] and by >= self.mhandle_pos.resources.y and by <= self.mhandle_pos.resources.y + move_handle[7] then self:uiMoveResize("resources", button, mx, my, xrel, yrel, bx, by, event) return end
+				if not self.locked and bx >= self.mhandle_pos.resources.x and bx <= self.mhandle_pos.resources.x + move_handle[6] and by >= self.mhandle_pos.resources.y and by <= self.mhandle_pos.resources.y + move_handle[7] then
+					if event == "button" and button == "right" then
+						local list = {}
+						for id, d in pairs(self.res or {}) do if d.hidable then list[#list+1] = {name=d.hidable, id=id} end end
+						table.sort(list, function(a,b) return a.name<b.name end)
+						Dialog:listPopup("Display/Hide resources", "Toggle:", list, 300, 300, function(sel)
+							if not sel or not sel.id then return end
+							game.player["_hide_resource_"..sel.id] = not game.player["_hide_resource_"..sel.id]
+						end)
+						return
+					end
+					self:uiMoveResize("resources", button, mx, my, xrel, yrel, bx, by, event)
+					return
+				end
 			end
 
 			local extra = {log_str=desc}
@@ -604,7 +618,7 @@ function _M:displayResources(scale, bx, by, a)
 
 		-----------------------------------------------------------------------------------
 		-- Stamina
-		if player:knowTalent(player.T_STAMINA_POOL) then
+		if player:knowTalent(player.T_STAMINA_POOL) and not player._hide_resource_stamina then
 			sshat[1]:toScreenFull(x-6, y+8, sshat[6], sshat[7], sshat[2], sshat[3], 1, 1, 1, a)
 			bshat[1]:toScreenFull(x, y, bshat[6], bshat[7], bshat[2], bshat[3], 1, 1, 1, a)
 			if stam_sha.shad then stam_sha:setUniform("a", a) stam_sha.shad:use(true) end
@@ -614,6 +628,7 @@ function _M:displayResources(scale, bx, by, a)
 
 			if not self.res.stamina or self.res.stamina.vc ~= player.stamina or self.res.stamina.vm ~= player.max_stamina or self.res.stamina.vr ~= player.stamina_regen then
 				self.res.stamina = {
+					hidable = "Stamina",
 					vc = player.stamina, vm = player.max_stamina, vr = player.stamina_regen,
 					cur = {core.display.drawStringBlendedNewSurface(font_sha, ("%d/%d"):format(player.stamina, player.max_stamina), 255, 255, 255):glTexture()},
 					regen={core.display.drawStringBlendedNewSurface(sfont_sha, ("%+0.2f"):format(player.stamina_regen), 255, 255, 255):glTexture()},
@@ -636,7 +651,7 @@ function _M:displayResources(scale, bx, by, a)
 
 		-----------------------------------------------------------------------------------
 		-- Mana
-		if player:knowTalent(player.T_MANA_POOL) then
+		if player:knowTalent(player.T_MANA_POOL) and not player._hide_resource_mana then
 			sshat[1]:toScreenFull(x-6, y+8, sshat[6], sshat[7], sshat[2], sshat[3], 1, 1, 1, a)
 			bshat[1]:toScreenFull(x, y, bshat[6], bshat[7], bshat[2], bshat[3], 1, 1, 1, a)
 			if mana_sha.shad then mana_sha:setUniform("a", a) mana_sha.shad:use(true) end
@@ -646,6 +661,7 @@ function _M:displayResources(scale, bx, by, a)
 
 			if not self.res.mana or self.res.mana.vc ~= player.mana or self.res.mana.vm ~= player.max_mana or self.res.mana.vr ~= player.mana_regen then
 				self.res.mana = {
+					hidable = "Mana",
 					vc = player.mana, vm = player.max_mana, vr = player.mana_regen,
 					cur = {core.display.drawStringBlendedNewSurface(font_sha, ("%d/%d"):format(player.mana, player.max_mana), 255, 255, 255):glTexture()},
 					regen={core.display.drawStringBlendedNewSurface(sfont_sha, ("%+0.2f"):format(player.mana_regen), 255, 255, 255):glTexture()},
@@ -667,7 +683,7 @@ function _M:displayResources(scale, bx, by, a)
 
 		-----------------------------------------------------------------------------------
 		-- Souls
-		if player:isTalentActive(player.T_NECROTIC_AURA) then
+		if player:isTalentActive(player.T_NECROTIC_AURA) and not player._hide_resource_soul then
 			local pt = player:isTalentActive(player.T_NECROTIC_AURA)
 
 			sshat[1]:toScreenFull(x-6, y+8, sshat[6], sshat[7], sshat[2], sshat[3], 1, 1, 1, a)
@@ -679,6 +695,7 @@ function _M:displayResources(scale, bx, by, a)
 
 			if not self.res.soul or self.res.soul.vc ~= pt.souls or self.res.soul.vm ~= pt.souls_max then
 				self.res.soul = {
+					hidable = "Souls",
 					vc = pt.souls, vm = player.souls_max,
 					cur = {core.display.drawStringBlendedNewSurface(font_sha, ("%d/%d"):format(pt.souls, pt.souls_max), 255, 255, 255):glTexture()},
 				}
@@ -696,7 +713,7 @@ function _M:displayResources(scale, bx, by, a)
 
 		-----------------------------------------------------------------------------------
 		-- Equilibirum
-		if player:knowTalent(player.T_EQUILIBRIUM_POOL) then
+		if player:knowTalent(player.T_EQUILIBRIUM_POOL) and not player._hide_resource_equilibrium then
 			sshat[1]:toScreenFull(x-6, y+8, sshat[6], sshat[7], sshat[2], sshat[3], 1, 1, 1, a)
 			bshat[1]:toScreenFull(x, y, bshat[6], bshat[7], bshat[2], bshat[3], 1, 1, 1, a)
 			local _, chance = player:equilibriumChance()
@@ -712,6 +729,7 @@ function _M:displayResources(scale, bx, by, a)
 
 			if not self.res.equilibrium or self.res.equilibrium.vc ~= player.equilibrium or self.res.equilibrium.vr ~= chance then
 				self.res.equilibrium = {
+					hidable = "Equilibrium",
 					vc = player.equilibrium, vr = chance,
 					cur = {core.display.drawStringBlendedNewSurface(font_sha, ("%d"):format(player.equilibrium), 255, 255, 255):glTexture()},
 					regen={core.display.drawStringBlendedNewSurface(sfont_sha, ("%d%%"):format(100-chance), 255, 255, 255):glTexture()},
@@ -733,7 +751,7 @@ function _M:displayResources(scale, bx, by, a)
 
 		-----------------------------------------------------------------------------------
 		-- Positive
-		if player:knowTalent(player.T_POSITIVE_POOL) then
+		if player:knowTalent(player.T_POSITIVE_POOL) and not player._hide_resource_positive then
 			sshat[1]:toScreenFull(x-6, y+8, sshat[6], sshat[7], sshat[2], sshat[3], 1, 1, 1, a)
 			bshat[1]:toScreenFull(x, y, bshat[6], bshat[7], bshat[2], bshat[3], 1, 1, 1, a)
 			if pos_sha.shad then pos_sha:setUniform("a", a) pos_sha.shad:use(true) end
@@ -743,6 +761,7 @@ function _M:displayResources(scale, bx, by, a)
 
 			if not self.res.positive or self.res.positive.vc ~= player.positive or self.res.positive.vm ~= player.max_positive or self.res.positive.vr ~= player.positive_regen then
 				self.res.positive = {
+					hidable = "Positive",
 					vc = player.positive, vm = player.max_positive, vr = player.positive_regen,
 					cur = {core.display.drawStringBlendedNewSurface(font_sha, ("%d/%d"):format(player.positive, player.max_positive), 255, 255, 255):glTexture()},
 					regen={core.display.drawStringBlendedNewSurface(sfont_sha, ("%+0.2f"):format(player.positive_regen), 255, 255, 255):glTexture()},
@@ -764,7 +783,7 @@ function _M:displayResources(scale, bx, by, a)
 
 		-----------------------------------------------------------------------------------
 		-- Negative
-		if player:knowTalent(player.T_NEGATIVE_POOL) then
+		if player:knowTalent(player.T_NEGATIVE_POOL) and not player._hide_resource_negative then
 			sshat[1]:toScreenFull(x-6, y+8, sshat[6], sshat[7], sshat[2], sshat[3], 1, 1, 1, a)
 			bshat[1]:toScreenFull(x, y, bshat[6], bshat[7], bshat[2], bshat[3], 1, 1, 1, a)
 			if neg_sha.shad then neg_sha:setUniform("a", a) neg_sha.shad:use(true) end
@@ -774,6 +793,7 @@ function _M:displayResources(scale, bx, by, a)
 
 			if not self.res.negative or self.res.negative.vc ~= player.negative or self.res.negative.vm ~= player.max_negative or self.res.negative.vr ~= player.negative_regen then
 				self.res.negative = {
+					hidable = "Negative",
 					vc = player.negative, vm = player.max_negative, vr = player.negative_regen,
 					cur = {core.display.drawStringBlendedNewSurface(font_sha, ("%d/%d"):format(player.negative, player.max_negative), 255, 255, 255):glTexture()},
 					regen={core.display.drawStringBlendedNewSurface(sfont_sha, ("%+0.2f"):format(player.negative_regen), 255, 255, 255):glTexture()},
@@ -795,7 +815,7 @@ function _M:displayResources(scale, bx, by, a)
 
 		-----------------------------------------------------------------------------------
 		-- Paradox
-		if player:knowTalent(player.T_PARADOX_POOL) then
+		if player:knowTalent(player.T_PARADOX_POOL) and not player._hide_resource_paradox then
 			sshat[1]:toScreenFull(x-6, y+8, sshat[6], sshat[7], sshat[2], sshat[3], 1, 1, 1, a)
 			bshat[1]:toScreenFull(x, y, bshat[6], bshat[7], bshat[2], bshat[3], 1, 1, 1, a)
 			local _, chance = player:paradoxFailChance()
@@ -811,6 +831,7 @@ function _M:displayResources(scale, bx, by, a)
 
 			if not self.res.paradox or self.res.paradox.vc ~= player.paradox or self.res.paradox.vr ~= chance then
 				self.res.paradox = {
+					hidable = "Paradox",
 					vc = player.paradox, vr = chance,
 					cur = {core.display.drawStringBlendedNewSurface(font_sha, ("%d"):format(player.paradox), 255, 255, 255):glTexture()},
 					regen={core.display.drawStringBlendedNewSurface(sfont_sha, ("%d%%"):format(chance), 255, 255, 255):glTexture()},
@@ -832,7 +853,7 @@ function _M:displayResources(scale, bx, by, a)
 
 		-----------------------------------------------------------------------------------
 		-- Vim
-		if player:knowTalent(player.T_VIM_POOL) then
+		if player:knowTalent(player.T_VIM_POOL) and not player._hide_resource_vim then
 			sshat[1]:toScreenFull(x-6, y+8, sshat[6], sshat[7], sshat[2], sshat[3], 1, 1, 1, a)
 			bshat[1]:toScreenFull(x, y, bshat[6], bshat[7], bshat[2], bshat[3], 1, 1, 1, a)
 			if vim_sha.shad then vim_sha:setUniform("a", a) vim_sha.shad:use(true) end
@@ -842,6 +863,7 @@ function _M:displayResources(scale, bx, by, a)
 
 			if not self.res.vim or self.res.vim.vc ~= player.vim or self.res.vim.vm ~= player.max_vim or self.res.vim.vr ~= player.vim_regen then
 				self.res.vim = {
+					hidable = "Vim",
 					vc = player.vim, vm = player.max_vim, vr = player.vim_regen,
 					cur = {core.display.drawStringBlendedNewSurface(font_sha, ("%d/%d"):format(player.vim, player.max_vim), 255, 255, 255):glTexture()},
 					regen={core.display.drawStringBlendedNewSurface(sfont_sha, ("%+0.2f"):format(player.vim_regen), 255, 255, 255):glTexture()},
@@ -863,7 +885,7 @@ function _M:displayResources(scale, bx, by, a)
 
 		-----------------------------------------------------------------------------------
 		-- Hate
-		if player:knowTalent(player.T_HATE_POOL) then
+		if player:knowTalent(player.T_HATE_POOL) and not player._hide_resource_hate then
 			sshat[1]:toScreenFull(x-6, y+8, sshat[6], sshat[7], sshat[2], sshat[3], 1, 1, 1, a)
 			bshat[1]:toScreenFull(x, y, bshat[6], bshat[7], bshat[2], bshat[3], 1, 1, 1, a)
 			if hate_sha.shad then hate_sha:setUniform("a", a) hate_sha.shad:use(true) end
@@ -873,6 +895,7 @@ function _M:displayResources(scale, bx, by, a)
 
 			if not self.res.hate or self.res.hate.vc ~= player.hate or self.res.hate.vm ~= player.max_hate or self.res.hate.vr ~= player.hate_regen then
 				self.res.hate = {
+					hidable = "Hate",
 					vc = player.hate, vm = player.max_hate, vr = player.hate_regen,
 					cur = {core.display.drawStringBlendedNewSurface(font_sha, ("%d/%d"):format(player.hate, player.max_hate), 255, 255, 255):glTexture()},
 					regen={core.display.drawStringBlendedNewSurface(sfont_sha, ("%+0.1f"):format(player.hate_regen), 255, 255, 255):glTexture()},
@@ -894,7 +917,7 @@ function _M:displayResources(scale, bx, by, a)
 
 		-----------------------------------------------------------------------------------
 		-- Psi
-		if player:knowTalent(player.T_PSI_POOL) then
+		if player:knowTalent(player.T_PSI_POOL) and not player._hide_resource_psi then
 			sshat[1]:toScreenFull(x-6, y+8, sshat[6], sshat[7], sshat[2], sshat[3], 1, 1, 1, a)
 			bshat[1]:toScreenFull(x, y, bshat[6], bshat[7], bshat[2], bshat[3], 1, 1, 1, a)
 			if psi_sha.shad then psi_sha:setUniform("a", a) psi_sha.shad:use(true) end
@@ -904,6 +927,7 @@ function _M:displayResources(scale, bx, by, a)
 
 			if not self.res.psi or self.res.psi.vc ~= player.psi or self.res.psi.vm ~= player.max_psi or self.res.psi.vr ~= player.psi_regen then
 				self.res.psi = {
+					hidable = "Psi",
 					vc = player.psi, vm = player.max_psi, vr = player.psi_regen,
 					cur = {core.display.drawStringBlendedNewSurface(font_sha, ("%d/%d"):format(player.psi, player.max_psi), 255, 255, 255):glTexture()},
 					regen={core.display.drawStringBlendedNewSurface(sfont_sha, ("%+0.2f"):format(player.psi_regen), 255, 255, 255):glTexture()},
