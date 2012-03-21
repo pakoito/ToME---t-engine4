@@ -537,7 +537,7 @@ newTalent{
 			lure_trigger = true,
 			triggered = function(self, x, y, who)
 				-- Add a lasting map effect
-				game.level.map:addEffect(actor,
+				game.level.map:addEffect(self,
 					x, y, 4,
 					engine.DamageType.POISON, {dam=self.dam, apply_power=self.check_hit},
 					3,
