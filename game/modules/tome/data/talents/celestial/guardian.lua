@@ -45,8 +45,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local heal = t.getHeal(self, t)
-		return ([[Infuse your shield with light energy, healing you for %0.2f each time you take damage.
-		Each heal will drain up to 2 positive energy. The spell ends when energy reaches 0.
+		return ([[Infuse your shield with light energy, healing you for %0.2f each time you take damage and costing up to 2 positive energy.
+		If you do not have enough positive energy, the effect will not trigger.
 		The healing done will increase with the Magic stat]]):
 		format(heal)
 	end,

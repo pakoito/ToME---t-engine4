@@ -39,8 +39,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Infuse your weapon of the power of the Sun, doing %0.2f light damage with each hit.
-		Each hit will drain 3 positive energy. The spell ends when energy reaches 0.
+		return ([[Infuse your weapon of the power of the Sun, doing %0.2f light damage with each hit and costing 3 positive energy.
+		If you do not have enough positive energy, the effect will not trigger.
 		The damage will increase with the Magic stat]]):
 		format(damDesc(self, DamageType.LIGHT, damage))
 	end,

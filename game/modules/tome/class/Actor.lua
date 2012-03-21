@@ -1468,10 +1468,7 @@ function _M:onTakeHit(value, src)
 		else
 			drain = 2
 		end
-		if self:getPositive() <= 0 then
-			self:forceUseTalent(self.T_SHIELD_OF_LIGHT, {ignore_energy=true})
-			game.logSeen(self, "%s's shield of light spell has crumbled under the attack!", self.name:capitalize())
-		else
+		if self:getPositive() >= drain then
 			self:incPositive(- drain)
 			self:heal(self:combatTalentSpellDamage(self.T_SHIELD_OF_LIGHT, 5, 25), self)
 		end

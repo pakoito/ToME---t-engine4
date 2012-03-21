@@ -178,13 +178,7 @@ newTalent{
 	getTargetCount = function(self, t) return math.floor(self:getTalentLevel(t)) end,
 	getNegativeDrain = function(self, t) return 9 - self:getTalentLevelRaw(t) end,
 	do_beams = function(self, t)
-		if self:getNegative() <= 0 then
-			local old = self.energy.value
-			self.energy.value = 100000
-			self:useTalent(self.T_HYMN_OF_MOONLIGHT)
-			self.energy.value = old
-			return
-		end
+		if self:getNegative() < t.getNegativeDrain(self, t) then return end
 
 		local tgts = {}
 		local grids = core.fov.circle_grids(self.x, self.y, 5, true)
