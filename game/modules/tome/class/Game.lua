@@ -1115,10 +1115,6 @@ function _M:setupCommands()
 			end end
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
-			for name, d in pairs(self.mouse.areas_name) do
-				print(" *** MOUSE ZONE", name, "::", d.x1, d.x2, d.y1, d.y2)
-			end
-			print("===TOTAL ZONES", #self.mouse.areas)
 		end end,
 		[{"_f","ctrl"}] = function() if config.settings.cheat then
 			self.player.quests["love-melinda"] = nil

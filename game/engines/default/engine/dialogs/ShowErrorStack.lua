@@ -65,8 +65,8 @@ If you are not currently connected to the internet, please report this bug when 
 	local ok = require("engine.ui.Button").new{text="Send", fct=function() self:send() end}
 	local cancel = require("engine.ui.Button").new{text="Close", fct=function() game:unregisterDialog(self) end}
 	local cancel_all = require("engine.ui.Button").new{text="Close All", fct=function()
-		for i = #self.dialogs, 1, -1 do
-			local d = self.dialogs[i]
+		for i = #game.dialogs, 1, -1 do
+			local d = game.dialogs[i]
 			if d.__CLASSNAME == "engine.dialogs.ShowErrorStack" then
 				game:unregisterDialog(d)
 			end
@@ -74,7 +74,7 @@ If you are not currently connected to the internet, please report this bug when 
 	end}
 
 	local many_errs = false
-	for i = #self.dialogs, 1, -1 do local d = self.dialogs[i] if d.__CLASSNAME == "engine.dialogs.ShowErrorStack" then many_errs = true break end end
+	for i = #game.dialogs, 1, -1 do local d = game.dialogs[i] if d.__CLASSNAME == "engine.dialogs.ShowErrorStack" then many_errs = true break end end
 
 	local uis = {
 		{left=0, top=0, padding_h=10, ui=errmsg},
