@@ -29,7 +29,7 @@ return {
 	all_lited = true,
 	persistent = "zone",
 	ambient_music = "Virtue lost.ogg",
-	min_material_level = 2,
+	min_material_level = 1,
 	max_material_level = 2,
 	generator =  {
 		map = {

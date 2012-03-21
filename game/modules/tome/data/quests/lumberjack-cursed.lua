@@ -54,6 +54,15 @@ on_status_change = function(self, who, status, sub)
 			who:incMoney(money)
 			require("engine.ui.Dialog"):simplePopup("Thanks", ("The remaining lumberjacks collect some gold to thanks you (%0.2f)."):format(money))
 		end
+		if self.lumberjacks_died < 7 then
+			local o = game.zone:makeEntity(game.level, "object", {type="tool", subtype="digger", tome_drops="boss"}, nil, true)
+			if o then
+				game:addEntity(game.level, o, "object")
+				o:identify(true)
+				who:addObject(who.INVEN_INVEN, o)
+				require("engine.ui.Dialog"):simplePopup("Thanks", ("You saved most of us, please take this has a reward. (They give you %s)"):format(o:getName{do_color=true}))
+			end
+		end
 		who:setQuestStatus(self.id, engine.Quest.DONE)
 		game:setAllowedBuild("afflicted")
 		game:setAllowedBuild("afflicted_cursed", true)
