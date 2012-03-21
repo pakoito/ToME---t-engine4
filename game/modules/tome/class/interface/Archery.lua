@@ -50,7 +50,7 @@ function _M:archeryAcquireTargets(tg, params)
 
 	if not tg.range then tg.range=weapon.range or 6 end
 	tg.display = tg.display or {display='/'}
-	tg.speed = (tg.speed or 6) * (ammo.combat.travel_speed or 100) / 100
+	tg.speed = (tg.speed or 10) + (ammo.combat_travel_speed or 0) + (weapon.combat_travel_speed or 0) + (self.travel_speed or 0)
 	local x, y = self:getTarget(tg)
 	if not x or not y then return nil end
 
@@ -184,9 +184,11 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 	-- Ranged project
 	local weapon_ranged_project = weapon.ranged_project or {}
 	local ammo_ranged_project = ammo.ranged_project or {}
+	local self_ranged_project = self.ranged_project or {}
 	local total_ranged_project = {}
 	table.mergeAdd(total_ranged_project, weapon_ranged_project, true)
 	table.mergeAdd(total_ranged_project, ammo_ranged_project, true)
+	table.mergeAdd(total_ranged_project, self_ranged_project, true)
 	if hitted and not target.dead then for typ, dam in pairs(total_ranged_project) do
 		if dam > 0 then
 			DamageType:get(typ).projector(self, target.x, target.y, typ, dam, tmp)
@@ -283,7 +285,7 @@ function _M:archeryShoot(targets, talent, tg, params)
 
 	if not tg.range then tg.range=weapon.range or 6 end
 	tg.display = tg.display or {display=' ', particle="arrow", particle_args={tile="shockbolt/"..(ammo.proj_image or realweapon.proj_image):gsub("%.png$", "")}}
-	tg.speed = (tg.speed or 6) * (ammo.combat.travel_speed or 100) / 100
+	tg.speed = (tg.speed or 10) + (ammo.combat_travel_speed or 0) + (weapon.combat_travel_speed or 0) + (self.travel_speed or 0)
 	tg.archery = params or {}
 	tg.archery.weapon = weapon
 	for i = 1, #targets do

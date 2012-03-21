@@ -107,7 +107,7 @@ newEntity{
 	level_range = {1, 50},
 	rarity = 9,
 	cost = 10,
-	combat = {travel_speed = 200,},
+	combat = {travel_speed = 2},
 }
 
 newEntity{
@@ -120,7 +120,7 @@ newEntity{
 	cost = 40,
 	combat = {
 		physcrit = resolvers.mbonus_material(7, 3),
-		travel_speed = 200
+		travel_speed = 2
 	},
 	resolvers.generic(function(e)
 		e.combat.range = e.combat.range + 1

@@ -1137,6 +1137,9 @@ If you close your eyes a moment, you can almost imagine what dread sights they s
 		melee_project = {
 			[DamageType.MIND] = 5,
 		},
+		ranged_project = {
+			[DamageType.MIND] = 5,
+		},
 	},
 }
 

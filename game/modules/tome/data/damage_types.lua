@@ -1250,7 +1250,7 @@ newDamageType{
 
 -- Drain Life
 newDamageType{
-	name = "drain life", type = "DRAINLIFE",
+	name = "drain life", type = "DRAINLIFE", text_color = "#DARK_GREEN#",
 	projector = function(src, x, y, type, dam)
 		if _G.type(dam) == "number" then dam = {dam=dam, healfactor=0.4} end
 		local target = game.level.map(x, y, Map.ACTOR) -- Get the target first to make sure we heal even on kill

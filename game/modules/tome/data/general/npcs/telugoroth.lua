@@ -19,6 +19,48 @@
 
 local Talents = require("engine.interface.ActorTalents")
 
+-- Teluvorta swap function
+-- This causes the monster to swap places with a random target each turn
+local function doTeluvortaSwap(self)
+	local Map = require "engine.Map"
+	local tgts = {}
+	local grids = core.fov.circle_grids(self.x, self.y, 10)
+	for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
+		local a = game.level.map(x, y, Map.ACTOR)
+		if a and a:canBe("teleport") and a ~= self then
+			tgts[#tgts+1] = a
+		end
+	end end
+
+	if #tgts > 0 then
+		-- Randomly take a target
+		local a, id = rng.table(tgts)
+		local target = a
+	
+		if target:canBe("teleport") and self:canBe("teleport") then
+			-- first remove the target so the destination tile is empty
+			game.level.map:remove(target.x, target.y, Map.ACTOR)
+			local px, py 
+			px, py = self.x, self.y
+			if self:teleportRandom(a.x, a.y, 0) then
+				-- return the target at the casters old location
+				game.level.map(px, py, Map.ACTOR, target)
+				self.x, self.y, target.x, target.y = target.x, target.y, px, py
+				game.level.map:particleEmitter(target.x, target.y, 1, "temporal_teleport")
+				game.level.map:particleEmitter(self.x, self.y, 1, "temporal_teleport")
+				game.logSeen(self, "Reality has shifted.")
+			else
+				-- return the target without effect
+				game.level.map(target.x, target.y, Map.ACTOR, target)
+				game.logSeen(self, "The spell fizzles!")
+			end
+		else
+			game.logSeen(target, "%s resists the swap!", target.name:capitalize())
+		end
+		game:playSoundNear(self, "talents/teleport")
+	end
+end
+
 newEntity{
 	define_as = "BASE_NPC_TELUGOROTH", -- telu goroth = time terror
 	type = "elemental", subtype = "temporal",
@@ -113,11 +155,14 @@ newEntity{ base = "BASE_NPC_TELUGOROTH",
 	talent_cd_reduction = {[Talents.T_DUST_TO_DUST]=-3},
 	
 	resolvers.talents{
-		[Talents.T_ANOMALY_REARRANGE]=1,
 		[Talents.T_DUST_TO_DUST]={base=3, every=10, max=7},
 		[Talents.T_TEMPORAL_WAKE]={base=3, every=10, max=7},
 	},
 	resolvers.sustains_at_birth(),
+	
+	on_act = function(self)
+		doTeluvortaSwap(self)
+	end,
 }
 
 newEntity{ base = "BASE_NPC_TELUGOROTH",
@@ -135,11 +180,13 @@ newEntity{ base = "BASE_NPC_TELUGOROTH",
 	
 	resolvers.talents{
 		[Talents.T_DIMENSIONAL_STEP]={base=5, every=10, max=9},
-		[Talents.T_ANOMALY_REARRANGE]=1,
 		[Talents.T_DUST_TO_DUST]={base=4, every=10, max=8},
 		[Talents.T_TEMPORAL_WAKE]={base=4, every=10, max=8},
 	},
 	resolvers.sustains_at_birth(),
+	on_act = function(self)
+		doTeluvortaSwap(self)
+	end,
 }
 
 newEntity{ base = "BASE_NPC_TELUGOROTH",
@@ -162,8 +209,10 @@ newEntity{ base = "BASE_NPC_TELUGOROTH",
 		[Talents.T_DUST_TO_DUST]={base=4, every=7},
 		[Talents.T_QUANTUM_SPIKE]={base=2, every=7},
 		[Talents.T_SWAP]={base=5, every=7},
-		[Talents.T_ANOMALY_REARRANGE]=1,
 		[Talents.T_TEMPORAL_WAKE]={base=4, every=7},
 	},
 	resolvers.sustains_at_birth(),
+	on_act = function(self)
+		doTeluvortaSwap(self)
+	end,
 }

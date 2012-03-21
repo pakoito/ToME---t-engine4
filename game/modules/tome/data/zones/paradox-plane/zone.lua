@@ -21,7 +21,7 @@ return {
 	name = "Paradox Plane",
 	display_name = function(x, y) return "Paradox Plane" end,
 	variable_zone_name = true,
-	level_range = {16, 30},
+	level_range = {7, 16},
 	level_scheme = "player",
 	max_level = 1,
 	decay = {300, 800},

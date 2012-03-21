@@ -28,7 +28,7 @@ newEntity{ define_as = "EPOCH",
 	name = "Epoch",
 	display = "E", color=colors.VIOLET,
 	desc = [[A huge being composed of sparking blue and yellow energy stands before you.  It shifts and flows as it moves; at once erratic and graceful.]],
-	level_range = {15, nil}, exp_worth = 2,
+	level_range = {12, nil}, exp_worth = 2,
 	max_life = 200, life_rating = 17, fixed_rating = true,
 	max_stamina = 85,
 	max_mana = 200,
@@ -55,7 +55,7 @@ newEntity{ define_as = "EPOCH",
 	resists = { [DamageType.TEMPORAL] = 100, [DamageType.PHYSICAL] = -50, },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
-	resolvers.drops{chance=100, nb=1, {defined="EPOCH_CURVE", random_art_replace={chance=25}}},
+	resolvers.drops{chance=100, nb=1, {defined="EPOCH_CURVE"}},
 	resolvers.drops{chance=100, nb=5, {tome_drops="boss"} },
 
 	combat_armor = 0, combat_def = 10,
@@ -77,11 +77,13 @@ newEntity{ define_as = "EPOCH",
 	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
 	ai_tactic = resolvers.tactic"ranged",
 	resolvers.inscriptions(1, "rune"),
+	
+	talent_cd_reduction = {[Talents.T_MULTIPLY]=-40}, -- Negative 40 is right, so the player doesn't get swarmed with bosses
 
 	on_multiply = function(self, src)
 		self.on_die = nil
 		self.talents.T_SWAP = nil
-		self.talents_cd.T_MULTIPLY = 10
+		self.talents.T_MULTIPLY = nil
 	end,
 	on_die = function(self, who)
 		game.level.data.portal_next(self)

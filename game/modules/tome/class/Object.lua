@@ -509,7 +509,7 @@ function _M:getTextualDesc(compare_with)
 			desc:add({"color","RED"}, "When used from stealth a simple attack with it will not break stealth.", {"color","LAST"}, true)
 		end
 
-		compare_fields(combat, compare_with, field, "travel_speed", "%+d%%", "Travel speed: ", 1, false, false, add_table)
+		compare_fields(combat, compare_with, field, "travel_speed", "%+d%%", "Travel speed: ", 100, false, false, add_table)
 		
 		compare_fields(combat, compare_with, field, "phase_power", "%+d%%", "Damage Shield penetration (this weapon only): ", 1, false, false, add_table)
 

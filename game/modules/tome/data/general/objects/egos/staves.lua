@@ -398,7 +398,7 @@ newEntity{
 		},
 		wards = {},
 	},
-	combat = {of_warding = true},
+	combat = {of_greater_warding = true},
 	resolvers.genericlast(function(e)
 		for d, v in pairs(e.wielder.inc_damage) do
 			e.wielder.wards[d] = 3

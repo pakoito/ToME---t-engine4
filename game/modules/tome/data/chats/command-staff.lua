@@ -129,6 +129,7 @@ local function set_element(element, new_flavor, player)
 
 	update_table(dam_tables[o.flavor_name], dam_tables[new_flavor], o.combat.damtype, element, "inc_damage", dam, o.combat.is_greater)
 	if o.combat.of_warding then update_table(dam_tables[o.flavor_name], dam_tables[new_flavor], o.combat.damtype, element, "wards", 2, o.combat.is_greater) end
+	if o.combat.of_greater_warding then update_table(dam_tables[o.flavor_name], dam_tables[new_flavor], o.combat.damtype, element, "wards", 3, o.combat.is_greater) end
 	if o.combat.of_breaching then update_table(dam_tables[o.flavor_name], dam_tables[new_flavor], o.combat.damtype, element, "resists_pen", dam/2, o.combat.is_greater) end
 	if o.combat.of_protection then update_table(dam_tables[o.flavor_name], dam_tables[new_flavor], o.combat.damtype, element, "resists", dam/2, o.combat.is_greater) end
 

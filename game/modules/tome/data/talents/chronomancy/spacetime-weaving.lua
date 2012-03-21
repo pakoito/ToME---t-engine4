@@ -217,7 +217,7 @@ newTalent{
 			destabilization_power = self:combatSpellpower(0.3),
 			summoned_by = self, -- "summoner" is immune to it's own traps
 			triggered = function(self, x, y, who)
-				if who:checkHit(self.check_hit, who:combatSpellResist(), 0, 95, 15) and who:canBe("teleport") or who == self.summoned_by then
+				if who == self.summoned_by or who:checkHit(self.check_hit, who:combatSpellResist(), 0, 95, 15) and who:canBe("teleport") then
 					-- since we're using a precise teleport we'll look for a free grid first
 					local tx, ty = util.findFreeGrid(self.dest.x, self.dest.y, 5, true, {[Map.ACTOR]=true})
 					if tx and ty then

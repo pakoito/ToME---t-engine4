@@ -123,7 +123,9 @@ newEntity{
 	combat = { 
 		special_on_crit = {desc="wounds the target", fct=function(combat, who, target)
 			local dam = 5 + (who:combatPhysicalpower()/5)
-			target:setEffect(target.EFF_DEEP_WOUND, 7, {src=who, heal_factor=dam * 2, power=dam, apply_power=who:combatAttack()})
+			if target:canBe("cut") then
+				target:setEffect(target.EFF_DEEP_WOUND, 7, {src=who, heal_factor=dam * 2, power=dam, apply_power=who:combatAttack()})
+			end
 		end},
 	},
 }
@@ -196,7 +198,7 @@ newEntity{
 		melee_project={
 			[DamageType.ACID] = resolvers.mbonus_material(15, 4)
 		},
-		special_on_crit = {desc="splashes the target", fct=function(combat, who, target)
+		special_on_crit = {desc="splashes the target with acid", fct=function(combat, who, target)
 			local power = 5 + (who:combatSpellpower()/10)
 			target:setEffect(target.EFF_ACID_SPLASH, 5, {src=who, dam=power, atk=power, armor=power})
 		end},
@@ -598,7 +600,7 @@ newEntity{
 	keywords = {nature=true},
 	level_range = {30, 50},
 	greater_ego = 1,
-	rarity = 45,
+	rarity = 30,
 	cost = 40,
 	wielder = {
 		resists = { all = resolvers.mbonus_material(8, 2) },
@@ -684,11 +686,12 @@ newEntity{
 			end
 			
 			local eff = rng.tableRemove(effs)
-
-			if eff[1] == "effect" then
-				target:removeEffect(eff[2])
-			else
-				target:forceUseTalent(eff[2], {ignore_energy=true})
+			if eff then
+				if eff[1] == "effect" then
+					target:removeEffect(eff[2])
+				else
+					target:forceUseTalent(eff[2], {ignore_energy=true})
+				end
 			end
 		end},
 	},

@@ -206,7 +206,7 @@ newEntity{
 	rarity = 7,
 	cost = 6,
 	combat = {
-		travel_speed = 200,
+		travel_speed = 2,
 	},
 }
 
@@ -222,7 +222,7 @@ newEntity{
 		dam = resolvers.mbonus_material(10, 2),
 		physcrit = resolvers.mbonus_material(10, 2),
 		apr  = resolvers.mbonus_material(10, 2),
-		travel_speed = 200,
+		travel_speed = 2,
 		-- Powerful but comes in a small quiver/pouch
 		--capacity = resolvers.generic(function(e) return e.combat.capacity / 5 end),
 	},
