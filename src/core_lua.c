@@ -675,6 +675,7 @@ static int sdl_font_draw(lua_State *L)
 			{
 				// Push it & reset the surface
 				font_make_texture_line(L, s, nb_lines, is_separator, id_real_line, line_data, line_data_size, direct_uid_draw);
+				id_dduid = 1;
 				is_separator = FALSE;
 				SDL_FillRect(s, NULL, SDL_MapRGBA(s->format, 0, 0, 0, 0));
 //				printf("Ending previous line at size %d\n", size);
@@ -853,6 +854,7 @@ static int sdl_font_draw(lua_State *L)
 	}
 
 	font_make_texture_line(L, s, nb_lines, is_separator, id_real_line, line_data, line_data_size, direct_uid_draw);
+	id_dduid = 1;
 	if (size > max_size) max_size = size;
 
 	if (txt) SDL_FreeSurface(txt);

@@ -75,7 +75,7 @@ function _M:addPond(x, y, spots)
 		local lx, ly = l()
 		while lx do
 --			print(lx, ly, nmap[lx][ly])
-			if nmap[lx][ly] > highest.v then highest.v = nmap[lx][ly]; highest.x = lx; highest.y = ly end
+			if nmap[lx] and nmap[lx][ly] and nmap[lx][ly] > highest.v then highest.v = nmap[lx][ly]; highest.x = lx; highest.y = ly end
 			lx, ly = l()
 		end
 --		print("Highest pond point", highest.x, highest.y," ::", highest.v)
@@ -86,7 +86,7 @@ function _M:addPond(x, y, spots)
 		while lx do
 			local stop = true
 			for _ = 1, #self.do_ponds.pond do
-				if nmap[lx][ly] < split * self.do_ponds.pond[_][1] then
+				if nmap[lx] and nmap[lx][ly] and nmap[lx][ly] < split * self.do_ponds.pond[_][1] then
 					pmap[lx][ly] = self.do_ponds.pond[_][2]
 					stop = false
 					break
