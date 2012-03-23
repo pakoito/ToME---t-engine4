@@ -1043,13 +1043,23 @@ newEffect{
 newEffect{
 	name = "INVIGORATE", image = "talents/invigorate.png",
 	desc = "Invigorate",
-	long_desc = function(self, eff) return ("The target is regaining %d stamina per turn."):format(eff.power) end,
+	long_desc = function(self, eff) return ("The target is regaining %d stamina per turn and refreshing talents at twice the normal rate."):format(eff.power) end,
 	type = "magical",
 	subtype = { temporal=true },
 	status = "beneficial",
 	parameters = {power = 10},
-	on_gain = function(self, err) return "#Target# is recovering stamina.", "+Invigorate" end,
-	on_lose = function(self, err) return "#Target# is no longer recovering stamina.", "-Invigorate" end,
+	on_gain = function(self, err) return "#Target# is invigorated.", "+Invigorate" end,
+	on_lose = function(self, err) return "#Target# is no longer invigorated.", "-Invigorate" end,
+	on_timeout = function(self, eff)
+		if not self:attr("no_talents_cooldown") then
+			for tid, _ in pairs(self.talents_cd) do
+				local t = self:getTalentFromId(tid)
+				if t and t.name ~= "Invigorate" then
+					self.talents_cd[tid] = self.talents_cd[tid] - 1
+				end
+			end
+		end
+	end,
 	activate = function(self, eff)
 		self.stamina_regen = self.stamina_regen + eff.power
 	end,

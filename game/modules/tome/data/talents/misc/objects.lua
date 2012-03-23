@@ -17,6 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+newTalentType{ no_silence=true, is_spell=true, type="sher'tul/fortress", name = "fortress", description = "Yiilkgur abilities." }
 newTalentType{ no_silence=true, is_spell=true, type="spell/objects", name = "object spells", description = "Spell abilities of the various objects of the world." }
 
 --local oldTalent = newTalent
@@ -72,9 +73,9 @@ newTalent{
 				power = power + 5
 			end
 		end
-		
+
 		self:setEffect(self.EFF_ARCANE_SUPREMACY, 10, {power=power})
-		
+
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
@@ -103,7 +104,7 @@ newTalent{
 		local chat = Chat.new("command-staff", {name="Command Staff"}, self, {version=staff, state=state, co=coroutine.running()})
 		local d = chat:invoke()
 		if not coroutine.yield() then return nil end
-		return true		
+		return true
 	end,
 	info = function(self, t)
 		return ([[Alter the flow of energies through a staff.]])
@@ -133,5 +134,18 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Bring a damage-type-specific ward into being. The ward will fully negate as many attacks of its element as it has charges.]])
+	end,
+}
+
+newTalent{
+	name = "Teleport to the ground", short_name = "YIILKGUR_BEAM_DOWN",
+	type = {"sher'tul/fortress", 1},
+	points = 1,
+	no_npc_use = true,
+	action = function(self, t)
+		return true
+	end,
+	info = function(self, t)
+		return ([[Use Yiilkgur's teleporter to teleport to the ground.]])
 	end,
 }

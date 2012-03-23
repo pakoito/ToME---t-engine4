@@ -27,22 +27,24 @@ newTalent{
 	sustain_paradox = 100,
 	cooldown = 18,
 	tactical = { BUFF = 2 },
-	getPower = function(self, t) return math.ceil(self:combatTalentStatDamage(t, "wil", 5, 20)) end,
+	getPower = function(self, t) return math.ceil((self:getTalentLevel(t) * 1.5) + self:combatTalentStatDamage(t, "wil", 5, 20)) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/arcane")
 		return {
 			stats = self:addTemporaryValue("inc_stats", {[self.STAT_STR] = t.getPower(self, t)}),
+			phys = self:addTemporaryValue("combat_physresist", t.getPower(self, t)),
 			particle = self:addParticles(Particles.new("temporal_focus", 1)),
 		}
 	end,
 	deactivate = function(self, t, p)
 		self:removeParticles(p.particle)
 		self:removeTemporaryValue("inc_stats", p.stats)
+		self:removeTemporaryValue("combat_physresist", p.phys)
 		return true
 	end,
 	info = function(self, t)
 		local power = t.getPower(self, t)
-		return ([[You've learned to boost your strength through your control of the spacetime continuum.  Increases your strength by %d.
+		return ([[You've learned to boost your strength through your control of the spacetime continuum.  Increases your strength and your physical saves by %d.
 		The effect will scale with your Willpower stat.]]):format(power)
 	end
 }
@@ -53,17 +55,19 @@ newTalent{
 	require = temporal_req2,
 	points = 5,
 	paradox = 10,
-	cooldown = 50,
+	cooldown = 24,
 	tactical = { STAMINA = 2 },
-	getPower = function(self, t) return (20 + self:getTalentLevel(t) * 12)/5 end,
+	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t) * getParadoxModifier(self, pm)) end,
+	getPower = function(self, t) return self:getTalentLevel(t) end,
 	action = function(self, t)
-		self:setEffect(self.EFF_INVIGORATE, 5, {power=t.getPower(self, t)})
+		self:setEffect(self.EFF_INVIGORATE, t.getDuration(self,t), {power=t.getPower(self, t)})
 		return true
 	end,
 	info = function(self, t)
 		local power = t.getPower(self, t)
-		return ([[Regenerates %d stamina each turn for the next 5 turns.
-		]]):format(power)
+		local duration = t.getDuration(self, t)
+		return ([[For the next %d turns you recover %d stamina each turn and all other talents on cooldown will refresh twice as fast as usual.
+		The duration will scale with your Paradox.]]):format(duration, power)
 	end,
 }
 
@@ -77,22 +81,24 @@ newTalent{
 	sustain_paradox = 100,
 	cooldown = 18,
 	tactical = { BUFF = 2 },
-	getPower = function(self, t) return math.ceil(self:combatTalentStatDamage(t, "wil", 5, 20)) end,
+	getPower = function(self, t) return math.ceil((self:getTalentLevel(t) * 1.5) + self:combatTalentStatDamage(t, "wil", 5, 20)) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/arcane")
 		return {
 			stats = self:addTemporaryValue("inc_stats", {[self.STAT_MAG] = t.getPower(self, t)}),
+			spell = self:addTemporaryValue("combat_spellresist", t.getPower(self, t)),
 			particle = self:addParticles(Particles.new("arcane_power", 1)),
 		}
 	end,
 	deactivate = function(self, t, p)
 		self:removeTemporaryValue("inc_stats", p.stats)
+		self:removeTemporaryValue("combat_spellresist", p.spell)
 		self:removeParticles(p.particle)
 		return true
 	end,
 	info = function(self, t)
 		local power = t.getPower(self, t)
-		return ([[You've learned to boost your magic through your control over the spacetime continuum.  Increases your magic by %d.
+		return ([[You've learned to boost your magic through your control over the spacetime continuum.  Increases your magic and your spell saves by %d.
 		The effect will scale with your Willpower stat.]]):format(power)
 	end
 }
@@ -105,15 +111,16 @@ newTalent{
 	paradox = 25,
 	cooldown = 25,
 	tactical = { DEFEND = 2 },
+	no_energy = true,
 	getDuration = function(self, t) return 2 + math.ceil(self:getTalentLevel(t) * getParadoxModifier(self, pm)) end,
 	action = function(self, t)
-		self:setEffect(self.EFF_DAMAGE_SMEARING, t.getDuration(self,t), {power=10})
+		self:setEffect(self.EFF_DAMAGE_SMEARING, t.getDuration(self,t), {})
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		return ([[For the next %d turns you convert all non-temporal damage you receive into temporal damage spread out over six turns.
-		The duration will scale with your Paradox.]]):format (duration)
+		This spell takes no time to cast and the duration will scale with your Paradox.]]):format (duration)
 	end,
 }
