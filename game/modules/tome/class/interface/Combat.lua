@@ -896,7 +896,7 @@ function _M:combatCrit(weapon)
 	end
 	local crit = self.combat_physcrit + (self:getCun() - 10) * 0.3 + (self:getLck() - 50) * 0.30 + (weapon.physcrit or 1) + addcrit
 
-	return crit
+	return util.bound(crit, 0, 100)
 end
 
 --- Gets the damage range
@@ -1070,7 +1070,7 @@ end
 function _M:combatSpellCrit()
 	local crit = self.combat_spellcrit + (self:getCun() - 10) * 0.3 + (self:getLck() - 50) * 0.30 + 1
 
-	return crit
+	return util.bound(crit, 0, 100)
 end
 
 --- Gets mindcrit
@@ -1083,7 +1083,7 @@ function _M:combatMindCrit(add)
 
 	local crit = self.combat_mindcrit + (self:getCun() - 10) * 0.3 + (self:getLck() - 50) * 0.30 + 1 + add
 
-	return crit
+	return util.bound(crit, 0, 100)
 end
 
 --- Gets spellspeed
@@ -1166,9 +1166,9 @@ function _M:spellCrit(dam, add_chance)
 		game.logSeen(self, "#{bold}#%s's spell attains critical power!#{normal}#", self.name:capitalize())
 
 		if self:attr("mana_on_crit") then self:incMana(self:attr("mana_on_crit")) end
-		
+
 		if self:attr("vim_on_crit") then self:incVim(self:attr("vim_on_crit")) end
-		
+
 		if self:attr("spellsurge_on_crit") then
 			local power = self:attr("spellsurge_on_crit")
 			self:setEffect(self.EFF_SPELLSURGE, 10, {power=power, max=power*3})

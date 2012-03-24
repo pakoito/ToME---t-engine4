@@ -36,8 +36,8 @@ newTalent{ short_name = "RITCH_FLAMESPITTER_BOLT",
 		return true
 	end,
 	info = function(self, t)
-		return ([[Conjures up a bolt of fire doing %0.2f fire damage.
-		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.FIRE, self:combatTalentSpellDamage(t, 8, 120)))
+		return ([[Spits a bolt of fire doing %0.2f fire damage.
+		The damage will increase with mindpower.]]):format(damDesc(self, DamageType.FIRE, self:combatTalentMindDamage(t, 8, 120)))
 	end,
 }
 
