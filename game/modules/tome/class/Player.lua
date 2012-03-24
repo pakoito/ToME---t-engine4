@@ -849,12 +849,12 @@ function _M:doWear(inven, item, o)
 	self:removeObject(inven, item, true)
 	local ro = self:wearObject(o, true, true)
 	if ro then
+		self:useEnergy()
 		if type(ro) == "table" then self:addObject(inven, ro) end
 	elseif not ro then
 		self:addObject(inven, o)
 	end
 	self:sortInven()
-	self:useEnergy()
 	self:playerCheckSustains()
 	self.changed = true
 end
