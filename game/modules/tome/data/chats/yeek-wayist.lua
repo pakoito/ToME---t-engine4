@@ -43,8 +43,10 @@ newChat{ id="what",
 	text = [[The Way is enlightenment, peace and protection. I am a Yeek. I came through this tunnel to explore this part of the world that was closed to us for centuries.]],
 	answers = {
 		{"Can you tell me more about the Way?", jump="way", action=function(npc, player)
-			player.combat_mentalresist = player.combat_mentalresist + 15
-			player:attr("confusion_immune", 0.10)
+			game.party:reward("Select the party member to receive the mental shield:", function(player)
+				player.combat_mentalresist = player.combat_mentalresist + 15
+				player:attr("confusion_immune", 0.10)
+			end)
 			game.logPlayer(player, "The contact with the Wayist mind has improved your mental shields. (+15 mental save, +10%% confusion resistance)")
 		end},
 --		{"So you will wander the land alone?", jump="done"},

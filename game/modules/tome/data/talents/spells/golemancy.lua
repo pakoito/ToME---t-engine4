@@ -69,8 +69,9 @@ local function makeGolem()
 			["golem/fighting"] = 0.3,
 			["golem/arcane"] = 0.3,
 		},
+		forbid_nature = 1,
 		inscription_restrictions = { ["inscriptions/runes"] = true, },
-                resolvers.inscription("RUNE:_SHIELDING", {cooldown=14, dur=5, power=100}),
+		resolvers.inscription("RUNE:_SHIELDING", {cooldown=14, dur=5, power=100}),
 
 		hotkey = {},
 		hotkey_page = 1,
