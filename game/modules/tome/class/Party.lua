@@ -23,6 +23,7 @@ local Map = require "engine.Map"
 local Dialog = require "engine.ui.Dialog"
 local GetQuantity = require "engine.dialogs.GetQuantity"
 local PartyOrder = require "mod.dialogs.PartyOrder"
+local PartyRewardSelector = require "mod.dialogs.PartyRewardSelector"
 
 module(..., package.seeall, class.inherit(
 	engine.Entity
@@ -353,4 +354,31 @@ function _M:select(actor)
 	elseif self:canOrder(actor) then return self:giveOrders(actor)
 	end
 	return false
+end
+
+function _M:canReward(actor)
+	if not actor then return false end
+
+	if not self.members[actor] then
+		return false
+	end
+	if self.members[actor].control ~= "full" then
+		return false
+	end
+	if actor.dead or (game.level and not game.level:hasEntity(actor)) then
+		return false
+	end
+	if actor.summon_time then
+		return false
+	end
+	return true
+end
+
+function _M:reward(title, action)
+	local d = PartyRewardSelector.new(title, action)
+	if #d.list == 1 then
+		action(d.list[1].actor)
+		return
+	end
+	game:registerDialog(d)
 end

@@ -191,12 +191,12 @@ local function generate_rewards()
 	local answers = {}
 	if reward.stats then
 		for i = 1, #npc.stats_def do if reward.stats[i] then
-			local doit = function(npc, player)
+			local doit = function(npc, player) game.party:reward("Select the party member to receive the reward:", function(player)
 				player.inc_stats[i] = (player.inc_stats[i] or 0) + reward.stats[i]
 				player:onStatChange(i, reward.stats[i])
 				player.changed = true
 				player:hasQuest(npc.quest_id).reward_message = ("improved %s by +%d"):format(npc.stats_def[i].name, reward.stats[i])
-			end
+			end) end
 			answers[#answers+1] = {("[Improve %s by +%d]"):format(npc.stats_def[i].name, reward.stats[i]),
 				jump="done",
 				action=doit,
@@ -210,11 +210,11 @@ local function generate_rewards()
 	end
 	if reward.saves then
 		for save, v in pairs(reward.saves) do
-			local doit = function(npc, player)
+			local doit = function(npc, player) game.party:reward("Select the party member to receive the reward:", function(player)
 				player:attr("combat_"..save.."resist", v)
 				player.changed = true
 				player:hasQuest(npc.quest_id).reward_message = ("improved %s save by +%d"):format(saves_name[save], v)
-			end
+			end) end
 			answers[#answers+1] = {("[Improve %s save by +%d]"):format(saves_name[save], v),
 				jump="done",
 				action=doit,
@@ -231,12 +231,12 @@ local function generate_rewards()
 			local t = npc:getTalentFromId(tid)
 			level = math.min(t.points - game.player:getTalentLevelRaw(tid), level)
 			if level > 0 then
-				local doit = function(npc, player)
+				local doit = function(npc, player) game.party:reward("Select the party member to receive the reward:", function(player)
 					if game.player:knowTalentType(t.type[1]) == nil then player:setTalentTypeMastery(t.type[1], 0.7) end
 					player:learnTalent(tid, true, level, {no_unlearn=true})
 					if t.hide then player.__show_special_talents[tid] = true end
 					player:hasQuest(npc.quest_id).reward_message = ("%s talent %s (+%d level(s))"):format(game.player:knowTalent(tid) and "improved" or "learnt", t.name, level)
-				end
+				end) end
 				answers[#answers+1] = {
 					("[%s talent %s (+%d level(s))]"):format(game.player:knowTalent(tid) and "Improve" or "Learn", t.name, level),
 						jump="done",
@@ -253,11 +253,11 @@ local function generate_rewards()
 		for tt, mastery in pairs(reward.types) do if game.player:knowTalentType(tt) == nil then
 			local tt_def = npc:getTalentTypeFrom(tt)
 			local cat = tt_def.type:gsub("/.*", "")
-			local doit = function(npc, player)
+			local doit = function(npc, player) game.party:reward("Select the party member to receive the reward:", function(player)
 				player:learnTalentType(tt, false)
 				player:setTalentTypeMastery(tt, math.max(mastery, player:getTalentTypeMastery(tt)))
 				player:hasQuest(npc.quest_id).reward_message = ("gained talent category %s (at mastery %0.2f)"):format(cat:capitalize().." / "..tt_def.name:capitalize(), mastery)
-			end
+			end) end
 			answers[#answers+1] = {("[Allow training of talent category %s (at mastery %0.2f)]"):format(cat:capitalize().." / "..tt_def.name:capitalize(), mastery),
 				jump="done",
 				action=doit,

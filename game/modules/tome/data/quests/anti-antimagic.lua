@@ -88,13 +88,15 @@ on_status_change = function(self, who, status, sub)
 		who:setQuestStatus(self.id, engine.Quest.DONE)
 		world:gainAchievement("ANTI_ANTIMAGIC", game.player)
 
-		if who:knowTalentType("corruption/hexes") then
-			who:setTalentTypeMastery("corruption/hexes", who:getTalentTypeMastery("corruption/hexes") + 0.1)
-		elseif who:knowTalentType("corruption/hexes") == false then
-			who:learnTalentType("corruption/hexes", true)
-		else
-			who:learnTalentType("corruption/hexes", false)
-		end
+		game.party:reward("Select the party member to receive the hexes generic talent tree:", function(player)
+			if who:knowTalentType("corruption/hexes") then
+				who:setTalentTypeMastery("corruption/hexes", who:getTalentTypeMastery("corruption/hexes") + 0.1)
+			elseif who:knowTalentType("corruption/hexes") == false then
+				who:learnTalentType("corruption/hexes", true)
+			else
+				who:learnTalentType("corruption/hexes", false)
+			end
+		end)
 
 		require("engine.ui.Dialog"):simplePopup("Grand Corruptor", "#LIGHT_GREEN#The Grand Corruptor gazes upon you. You feel knowledge flowing in your mind. You can now train some corruption powers.")
 		game:setAllowedBuild("corrupter")
