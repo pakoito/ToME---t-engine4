@@ -1154,7 +1154,7 @@ newEffect{
 	activate = function(self, eff)
 		eff.damid = self:addTemporaryValue("combat_dam", eff.power)
 		eff.spellid = self:addTemporaryValue("combat_spellpower", eff.power)
-		eff.accid = self:addTemporaryValue("combat_attack", eff.power)
+		eff.accid = self:addTemporaryValue("combat_atk", eff.power)
 		eff.aprid = self:addTemporaryValue("combat_apr", eff.apr)
 		eff.pcritid = self:addTemporaryValue("combat_physcrit", eff.crit)
 		eff.scritid = self:addTemporaryValue("combat_spellcrit", eff.crit)
@@ -1162,7 +1162,7 @@ newEffect{
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("combat_dam", eff.damid)
 		self:removeTemporaryValue("combat_spellpower", eff.spellid)
-		self:removeTemporaryValue("combat_attack", eff.accid)
+		self:removeTemporaryValue("combat_atk", eff.accid)
 		self:removeTemporaryValue("combat_apr", eff.aprid)
 		self:removeTemporaryValue("combat_physcrit", eff.pcritid)
 		self:removeTemporaryValue("combat_spellcrit", eff.scritid)
@@ -1353,7 +1353,7 @@ newEffect{
 		old_eff.physid = self:addTemporaryValue("combat_physresist", old_eff.cur_save_bonus)
 		old_eff.spellid = self:addTemporaryValue("combat_spellresist", old_eff.cur_save_bonus)
 		old_eff.mentalid = self:addTemporaryValue("combat_mentalresist", old_eff.cur_save_bonus)
-		
+
 		old_eff.dur = new_eff.dur
 		return old_eff
 	end,

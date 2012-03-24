@@ -776,7 +776,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[A surge of power radiates to all your minions, increasing their combat power, spellpower and accuracy by %d, their armour penetration by %d and their critical hit chance by %d for 6 turns.
+		return ([[A surge of power radiates to all your minions, increasing their physical power, spellpower and accuracy by %d, their armour penetration by %d and their critical hit chance by %d for 6 turns.
 		The effects will increase with your Spellpower.]]):
 		format(t.getPower(self, t), t.getAPR(self, t), t.getCrit(self, t))
 	end,
