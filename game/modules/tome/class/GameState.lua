@@ -1620,3 +1620,12 @@ function _M:debugRandomZone()
 		end
 	end
 end
+
+function _M:locationRevealAround(x, y)
+	game.level.map.lites(x, y, true)
+	game.level.map.remembers(x, y, true)
+	for _, c in pairs(util.adjacentCoords(x, y)) do
+		game.level.map.lites(x+c[1], y+c[2], true)
+		game.level.map.remembers(x+c[1], y+c[2], true)
+	end
+end

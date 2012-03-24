@@ -65,21 +65,25 @@ on_grant = function(self, who)
 		local spot = level:pickSpot{type="zone-pop", subtype="rak-shor-pride"}
 		game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
 		game.nicer_tiles:updateAround(game.level, spot.x, spot.y)
+		game.state:locationRevealAround(spot.x, spot.y)
 
 		g = game.zone:makeEntityByName(level, "terrain", "VOR_PRIDE")
 		local spot = level:pickSpot{type="zone-pop", subtype="vor-pride"}
 		game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
 		game.nicer_tiles:updateAround(game.level, spot.x, spot.y)
+		game.state:locationRevealAround(spot.x, spot.y)
 
 		g = game.zone:makeEntityByName(level, "terrain", "GORBAT_PRIDE")
 		local spot = level:pickSpot{type="zone-pop", subtype="gorbat-pride"}
 		game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
 		game.nicer_tiles:updateAround(game.level, spot.x, spot.y)
+		game.state:locationRevealAround(spot.x, spot.y)
 
 		g = game.zone:makeEntityByName(level, "terrain", "GRUSHNAK_PRIDE")
 		local spot = level:pickSpot{type="zone-pop", subtype="grushnak-pride"}
 		game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
 		game.nicer_tiles:updateAround(game.level, spot.x, spot.y)
+		game.state:locationRevealAround(spot.x, spot.y)
 	end)
 end
 

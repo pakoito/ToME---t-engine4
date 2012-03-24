@@ -116,6 +116,7 @@ open_telmur = function(self, player)
 		local spot = level:pickSpot{type="zone-pop", subtype="telmur"}
 		game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
 		game.nicer_tiles:updateAround(game.level, spot.x, spot.y)
+		game.state:locationRevealAround(spot.x, spot.y)
 	end)
 
 	game.logPlayer(game.player, "Tannen points to the location of Telmur on your map.")

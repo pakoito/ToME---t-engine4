@@ -552,6 +552,7 @@ It's strange what death can do to people, how it can take over their minds. Some
 				local spot = level:pickSpot{type="zone-pop", subtype="last-hope-graveyard"}
 				game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
 				game.nicer_tiles:updateAround(game.level, spot.x, spot.y)
+				game.state:locationRevealAround(spot.x, spot.y)
 			end)
 			game.log("He points the location of the graveyard on your map.")
 			player:grantQuest("grave-necromancer")

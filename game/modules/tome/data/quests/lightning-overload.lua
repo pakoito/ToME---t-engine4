@@ -96,6 +96,7 @@ create_entrance = function(self)
 		local spot = level:pickSpot{type="zone-pop", subtype="tempest-peak"}
 		game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
 		game.nicer_tiles:updateAround(game.level, spot.x, spot.y)
+		game.state:locationRevealAround(spot.x, spot.y)
 	end)
 	game.player:setQuestStatus(self.id, engine.Quest.COMPLETED, "tempest-entrance")
 end

@@ -34,6 +34,7 @@ on_grant = function(self, who)
 		local spot = level:pickSpot{type="zone-pop", subtype="reknor"}
 		game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
 		game.nicer_tiles:updateAround(game.level, spot.x, spot.y)
+		game.state:locationRevealAround(spot.x, spot.y)
 	end)
 	game.logPlayer(game.player, "The elder points to Reknor on your map, to the north on the western side of the Iron Throne.")
 end

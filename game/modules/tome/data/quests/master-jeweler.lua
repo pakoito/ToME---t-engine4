@@ -60,6 +60,7 @@ start_search = function(self, who)
 		local spot = level:pickSpot{type="zone-pop", subtype="valley-moon-caverns"}
 		game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
 		game.nicer_tiles:updateAround(game.level, spot.x, spot.y)
+		game.state:locationRevealAround(spot.x, spot.y)
 	end)
 
 	who:setQuestStatus(self.id, engine.Quest.COMPLETED, "search-valley")

@@ -86,8 +86,11 @@ access_angolwen = function(self, player)
 	local spot = level:pickSpot{type="zone-pop", subtype="angolwen"}
 	game.zone:addEntity(level, g, "terrain", spot.x, spot.y)
 	game.nicer_tiles:updateAround(game.level, spot.x, spot.y)
+	game.state:locationRevealAround(spot.x, spot.y)
 	spot = level:pickSpot{type="zone-pop", subtype="angolwen-portal"}
 	game.zone:addEntity(level, p, "terrain", spot.x, spot.y)
+	game.nicer_tiles:updateAround(game.level, spot.x, spot.y)
+	game.state:locationRevealAround(spot.x, spot.y)
 
 	game:setAllowedBuild("mage", true)
 	world:gainAchievement("THE_SECRET_CITY", player)
