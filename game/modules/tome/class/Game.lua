@@ -1353,7 +1353,7 @@ function _M:setupCommands()
 
 		HELP = "EXIT",
 		EXIT = function()
-			local menu menu = require("engine.dialogs.GameMenu").new{
+			local l = {
 				"resume",
 				"achievements",
 				{ "Show known Lore", function() self:unregisterDialog(menu) self:registerDialog(require("mod.dialogs.ShowLore").new("Tales of Maj'Eyal Lore", self.player)) end },
@@ -1368,6 +1368,9 @@ function _M:setupCommands()
 				"save",
 				"quit"
 			}
+			local adds = self.uiset:getMainMenuItems()
+			for i = #adds, 1, -1 do table.insert(l, 10, adds[i]) end
+			local menu menu = require("engine.dialogs.GameMenu").new(l)
 			self:registerDialog(menu)
 		end,
 

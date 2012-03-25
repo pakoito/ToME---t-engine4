@@ -210,6 +210,12 @@ function _M:init()
 	self.buffs_base = UI:makeFrame("ui/icon-frame/frame", 40, 40)
 end
 
+function _M:getMainMenuItems()
+	return {
+		{"Reset interface positions", function() self:resetPlaces() end},
+	}
+end
+
 --- Forbid some options from showing up, they are useless for this ui
 function _M:checkGameOption(name)
 	local list = table.reverse{"icons_temp_effects", "icons_hotkeys", "hotkeys_rows", "log_lines"}

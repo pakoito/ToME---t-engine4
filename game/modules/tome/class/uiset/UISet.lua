@@ -54,3 +54,7 @@ end
 function _M:handleResolutionChange(w, h, ow, oh)
 	return false
 end
+
+function _M:getMainMenuItems()
+	return {}
+end
