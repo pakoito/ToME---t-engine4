@@ -191,3 +191,116 @@ newEntity{ base = "BASE_CLOAK",
 	max_power = 1000, power_regen = 1,
 	use_talent = { id = Talents.T_SEE_THE_THREADS, level = 1, power = 1000 },
 }
+
+newEntity{ base = "BASE_LONGSWORD", define_as = "BLOODEDGE",
+	power_source = {arcane=true},
+	unique = true,
+	name = "Blood-Edge", image = "object/artifact/weapon_spellblade.png",
+	unided_name = "red crystalline sword",
+	level_range = {35, 42},
+	color=colors.RED,
+	rarity = 270,
+	desc = [[This deep red sword weeps blood continuously. It was born in the labs of the orcish corrupter Hurik, who sought to make a crystal that would house his soul after death. But his plans were disrupted by a band of sun paladins, and though most died purging his keep of dread minions, their leader Raasul fought through to Hurik's lab, sword in hand. There the two did battle, blade against blood magic, till both fell to the floor with weeping wounds. The orc with his last strength crawled towards his fashioned phylactery, hoping to save himself, but Raasul saw his plans and struck the crystal with his light-bathed sword. It shattered, and in the sudden impulse of energies the steel, crystal and blood were fused into one.
+Now the broken fragments of Raasul's soul are trapped in this terrible artifact, his mind warped beyond all sanity by decades of imprisonment. Only the taste of blood calls him forth, his soul stealing the lifeblood of others to take on physical form again, that he may thrash and wail against the living.]],
+	cost = 1000,
+	require = { stat = { mag=20, str=32,}, },
+	material_level = 5,
+	wielder = {
+		esp = {["undead/blood"]=1,},
+		combat_spellpower = 12,
+		combat_spellcrit = 4,
+		inc_damage={
+			[DamageType.PHYSICAL] = 12,
+			[DamageType.BLIGHT] = 12,
+		},
+		max_vim = 20,
+	},
+
+	max_power = 30, power_regen = 1,
+	use_talent = { id = Talents.T_BLEEDING_EDGE, level = 4, power = 30 },
+	combat = {
+		dam = 38,
+		apr = 4,
+		physcrit = 5,
+		dammod = {str=0.5, mag=0.5},
+		damage_convert = {[ DamageType.BLIGHT] = 50},
+
+		special_on_hit = {desc="15% chance to animate a bleeding foe's blood", fct=function(combat, who, target)
+			if not rng.percent(15) then return end
+			local cut = false
+
+			-- Go through all timed effects
+			for eff_id, p in pairs(target.tmp) do
+				local e = target.tempeffect_def[eff_id]
+				if e.subtype.cut then
+					cut = true
+				end
+			end
+
+			if not (cut) then return end
+
+			local tg = {type="hit", range=1}
+			who:project(tg, target.x, target.y, engine.DamageType.DRAIN_VIM, 80)
+
+			local x, y = util.findFreeGrid(target.x, target.y, 5, true, {[engine.Map.ACTOR]=true})
+			local NPC = require "mod.class.NPC"
+			local m = NPC.new{
+				type = "undead", subtype = "blood",
+				display = "L",
+				name = "animated blood", color=colors.RED,
+				resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/undead_lich_blood_lich.png", display_h=1, display_y=0}}},
+				desc = "A haze of blood, vibrant and pulsing through the air, possessed by a warped and cracked soul. Every now and then a scream or wail of agony garbles through it, telling of the mindless suffering undergone by its possessor.",
+				body = { INVEN = 10, MAINHAND=1, OFFHAND=1, },
+				rank = 3,
+				life_rating = 10, exp_worth = 0,
+				max_vim=200,
+				max_life = resolvers.rngavg(50,90),
+				infravision = 20,
+				autolevel = "dexmage",
+				ai = "summoned", ai_real = "tactical", ai_state = { talent_in=2, ally_compassion=10},
+				stats = { str=15, dex=18, mag=18, wil=15, con=10, cun=18 },
+				level_range = {1, nil}, exp_worth = 0,
+				silent_levelup = true,
+				combat_armor = 0, combat_def = 24,
+				combat = { dam=resolvers.rngavg(10,13), atk=15, apr=15, dammod={mag=0.5, dex=0.5}, damtype=engine.DamageType.BLIGHT, },
+
+				resists = { [engine.DamageType.BLIGHT] = 100, [engine.DamageType.NATURE] = -100, },
+
+				negative_status_effect_immune = 1,
+
+				on_melee_hit = {[engine.DamageType.DRAINLIFE]=resolvers.mbonus(10, 30)},
+				melee_project = {[engine.DamageType.DRAINLIFE]=resolvers.mbonus(10, 30)},
+
+				resolvers.talents{
+					[who.T_WEAPON_COMBAT]={base=1, every=7, max=10},
+					[who.T_EVASION]={base=3, every=8, max=7},
+
+					[who.T_BLOOD_SPRAY]={base=1, every=6, max = 10},
+					[who.T_BLOOD_GRASP]={base=1, every=5, max = 9},
+					[who.T_BLOOD_BOIL]={base=1, every=7, max = 7},
+					[who.T_BLOOD_FURY]={base=1, every=8, max = 6},
+				},
+				resolvers.sustains_at_birth(),
+				faction = who.faction,
+				summoner = who, summoner_gain_exp=true,
+				summon_time = 7,
+			}
+
+			m:resolve()
+			game.zone:addEntity(game.level, m, "actor", x, y)
+			m.remove_from_party_on_death = true,
+			game.party:addMember(m, {
+				control=false,
+				type="summon",
+				title="Summon",
+				orders = {target=true, leash=true, anchor=true, talents=true},
+			})
+
+			game.logSeen(who, "#GOLD#As the blade touches %s's spilt blood, the blood rises, animated!", target.name:capitalize())
+			if who:knowTalent(who.T_VIM_POOL) then
+				game.logSeen(who, "#GOLD#%s draws power from the spilt blood!", who.name:capitalize())
+			end
+
+		end},
+	},
+}
