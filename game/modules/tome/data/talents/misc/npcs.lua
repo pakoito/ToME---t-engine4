@@ -355,6 +355,8 @@ newTalent{
 			end
 
 			-- Find an actor with that filter
+			filter = table.clone(filter)
+			filter.max_ood = filter.max_ood or 2
 			local m = game.zone:makeEntity(game.level, "actor", filter, nil, true)
 			if m then
 				if not filter.hasxp then m.exp_worth = 0 end

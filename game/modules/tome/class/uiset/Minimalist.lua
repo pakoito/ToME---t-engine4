@@ -187,24 +187,9 @@ function _M:init()
 		mainicons = {x=0, y=0, name="Game Actions"},
 	}
 
+	self:resetPlaces()
+
 	local w, h = core.display.size()
-
-	local th = 52
-	if config.settings.tome.hotkey_icons then th = (4 + config.settings.tome.hotkey_icons_size) * config.settings.tome.hotkey_icons_rows end
-	local hup = h - th
-
-	self.places = {
-		player = {x=0, y=0, scale=1, a=1},
-		resources = {x=0, y=111, scale=1, a=1},
-		minimap = {x=w - 239, y=0, scale=1, a=1},
-		buffs = {x=w - 40, y=200, scale=1, a=1},
-		party = {x=pf_bg[6], y=0, scale=1, a=1},
-		gamelog = {x=0, y=hup - 210, w=math.floor(w/2), h=200, scale=1, a=1},
-		chatlog = {x=math.floor(w/2), y=hup - 210, w=math.floor(w/2), h=200, scale=1, a=1},
-		mainicons = {x=w - tb_bg[6] * 0.5, y=h - tb_bg[7] * 5 * 0.5 - 5, scale=1, a=1},
-		hotkeys = {x=10, y=h - th, w=w-60, h=th, scale=1, a=1},
-	}
-	table.merge(self.places, config.settings.tome.uiset_minimalist and config.settings.tome.uiset_minimalist.places or {}, true)
 
 	-- Adjsut to account for resolution change
 	if config.settings.tome.uiset_minimalist and config.settings.tome.uiset_minimalist.save_size then
@@ -229,6 +214,26 @@ end
 function _M:checkGameOption(name)
 	local list = table.reverse{"icons_temp_effects", "icons_hotkeys", "hotkeys_rows", "log_lines"}
 	return not list[name]
+end
+
+function _M:resetPlaces()
+	local w, h = core.display.size()
+
+	local th = 52
+	if config.settings.tome.hotkey_icons then th = (4 + config.settings.tome.hotkey_icons_size) * config.settings.tome.hotkey_icons_rows end
+	local hup = h - th
+
+	self.places = {
+		player = {x=0, y=0, scale=1, a=1},
+		resources = {x=0, y=111, scale=1, a=1},
+		minimap = {x=w - 239, y=0, scale=1, a=1},
+		buffs = {x=w - 40, y=200, scale=1, a=1},
+		party = {x=pf_bg[6], y=0, scale=1, a=1},
+		gamelog = {x=0, y=hup - 210, w=math.floor(w/2), h=200, scale=1, a=1},
+		chatlog = {x=math.floor(w/2), y=hup - 210, w=math.floor(w/2), h=200, scale=1, a=1},
+		mainicons = {x=w - tb_bg[6] * 0.5, y=h - tb_bg[7] * 5 * 0.5 - 5, scale=1, a=1},
+		hotkeys = {x=10, y=h - th, w=w-60, h=th, scale=1, a=1},
+	}
 end
 
 function _M:boundPlaces(w, h)
