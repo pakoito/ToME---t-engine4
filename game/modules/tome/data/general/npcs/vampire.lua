@@ -164,3 +164,45 @@ newEntity{ base = "BASE_NPC_VAMPIRE",
 		end
 	end,
 }
+
+-- Arch Zephyr, Vampiric Storm Lord. Wields a bow and lightning magic with equal effectiveness, and moves quickly.
+newEntity{ base = "BASE_NPC_VAMPIRE", unique=true, define_as="ARCH_ZEPHYR",
+	name = "Arch Zephyr", color=colors.BLUE, image = "npc/vampire_lord.png",
+	desc=[[The robes of this ancient vampire billow with intense winds. Bolts of lightning arc along its body. In its hand it holds a bow, electricity streaking across it.]],
+	level_range = {45, nil}, exp_worth = 1,
+	rarity = 25,
+	autolevel="warriormage",
+	stats = { str=12, dex=25, mag=12, con=12 },
+	max_life = resolvers.rngavg(100,120), life_rating=24,
+	combat_armor = 15, combat_def = 15,
+	rank = 3.5,
+	mana_regen=5,
+
+	movement_speed=1.5,
+
+	ai = "tactical", ai_state = { talent_in=4, },
+	resolvers.equip{ {type="weapon", subtype="longbow", autoreq=true}, {type="ammo", subtype="arrow", autoreq=true} },
+
+	resists = { [DamageType.LIGHTNING] = 100, [DamageType.PHYSICAL] = -20, [DamageType.LIGHT] = 30,  },
+	resolvers.talents{
+		[Talents.T_LIGHTNING]={base=4, every=4, max=10},
+		[Talents.T_CHAIN_LIGHTNING]={base=3, every=5, max=7},
+		[Talents.T_BLUR_SIGHT]=8,
+		[Talents.T_PHANTASMAL_SHIELD]=8,
+		[Talents.T_FEATHER_WIND]={base=3, every=4, max=10},
+		[Talents.T_THUNDERSTORM]={base=3, every=6, max=8},
+		[Talents.T_NOVA]={base=3, every=6, max=8},
+		[Talents.T_SHOCK]={base=3, every=6, max=8},
+		[Talents.T_TEMPEST]={base=1, every=7, max=4},
+		[Talents.T_HURRICANE]={base=1, every=7, max=4},
+
+		[Talents.T_SHOOT]=1, -- If possible, add talent that lets it temporarily fire lightning instead of arrows.
+		[Talents.T_RELOAD]=1,
+		[Talents.T_BOW_MASTERY]={base=6, every=5},
+		[Talents.T_DUAL_ARROWS]={base=3, every=6, max=8},
+		[Talents.T_PINNING_SHOT]={base=2, every=6, max=4},
+		[Talents.T_CRIPPLING_SHOT]={base=2, every=6, max=7},
+		[Talents.T_STEADY_SHOT]={base=4, every=5, max=10},
+	},
+	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
+}

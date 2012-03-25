@@ -959,6 +959,7 @@ newDamageType{
 	projector = function(src, x, y, type, dam, tmp)
 		local target = game.level.map(x, y, Map.ACTOR)
 		tmp = tmp or {}
+		if _G.type(dam) ~= "table" then dam = {dam=dam, dist=3} end
 		if target and not tmp[target] then
 			tmp[target] = true
 			DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam.dam)

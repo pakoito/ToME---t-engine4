@@ -133,6 +133,68 @@ newEntity{ base = "BASE_NPC_GHOUL", define_as = "RISEN_CORPSE",
 		[Talents.T_STUN]={base=3, every=9, max=7},
 		[Talents.T_BITE_POISON]={base=3, every=9, max=7},
 		[Talents.T_ROTTING_DISEASE]={base=4, every=9, max=7},
-		},     
+		},
 }
 
+--Rotting Titan, undead mass of flesh and stone. Regenerates quickly, moves slow, and hits hard.
+newEntity{ base = "BASE_NPC_GHOUL", define_as = "ROTTING_TITAN",
+	name = "Rotting Titan", color={128,64,0}, unique=true, image="npc/undead_ghoul_ghoul.png",
+	desc = [[This gigantic mass of flesh and stone moves slowly, the ground rumbling with each step it takes. Its body seems to constantly pulsate and reform. Massive stones at the end of each limb form massive blunt weapons.]],
+	level_range = {45, nil}, exp_worth = 2,
+	rarity = 25,
+	max_life = resolvers.rngavg(150,200), life_rating = 34,
+	combat_armor = 40, combat_def = 10,
+	ai_state = { talent_in=2, ai_pause=20 },
+	movement_speed = 0.8,
+	size_category=5,
+
+	rank = 3.5,
+	life_regen=5,
+	max_stamina=1000,
+	stamina_regen=20,
+
+	ai = "tactical",
+	ai_tactic = resolvers.tactic"melee",
+	autolevel="warriormage",
+
+	can_pass = {pass_wall=70}, --So AI knows to try and pass walls.
+
+	stats = { str=17, dex=12, mag=12, con=14 },
+	resists = {all = 20, [DamageType.PHYSICAL]=15, [DamageType.ARCANE]=-50, [DamageType.FIRE]=-20},
+
+	combat = { dam=resolvers.levelup(50, 1, 1.4), atk=resolvers.levelup(8, 1, 1), apr=4, dammod={str=0.6}, damtype=engine.DamageType.PHYSKNOCKBACK, },
+
+	on_move = function(self)
+		if not force then
+			self:project({type="ball", range=0, selffire=false, radius=1}, self.x, self.y, engine.DamageType.DIG, 1)
+			if rng.percent(20) then
+				game.logSeen(self, "The ground shakes as %s steps!", self.name:capitalize())
+				local tg = {type="ball", range=0, selffire=false, radius=3, no_restrict=true}
+				local DamageType = require "engine.DamageType"
+				self:project(tg, self.x, self.y, DamageType.PHYSKNOCKBACK, {dam=24, dist=1})
+				self:doQuake(tg, self.x, self.y)
+			end
+		end
+	end,
+
+	knockback_immune=1,
+
+	resolvers.talents{
+		[Talents.T_STUN]={base=3, every=9, max=7},
+		[Talents.T_BITE_POISON]={base=3, every=9, max=7},
+		[Talents.T_SKELETON_REASSEMBLE]=4,
+		[Talents.T_ROTTING_DISEASE]={base=4, every=9, max=9},
+		[Talents.T_DECREPITUDE_DISEASE]={base=3, every=9, max=9},
+		[Talents.T_WEAKNESS_DISEASE]={base=3, every=9, max=9},
+		[Talents.T_KNOCKBACK]={base=3, every=9, max=9},
+		[Talents.T_STRIKE]={base=4, every=5, max = 12},
+		[Talents.T_INNER_POWER]={base=4, every=5, max = 10},
+		[Talents.T_EARTHEN_MISSILES]={base=5, every=5, max = 10},
+		[Talents.T_CRYSTALLINE_FOCUS]={base=1, every=7, max = 4},
+		[Talents.T_EARTHQUAKE]={base=2, every=5, max = 6},
+		[Talents.T_ONSLAUGHT]={base=2, every=5, max = 6},
+		[Talents.T_BATTLE_CALL]={base=2, every=5, max = 6},
+	},
+	resolvers.sustains_at_birth(),
+	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
+}
