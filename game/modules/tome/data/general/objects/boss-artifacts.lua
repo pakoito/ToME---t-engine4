@@ -1108,7 +1108,7 @@ newEntity{ base = "BASE_BATTLEAXE",
 		if who:attr("forbid_arcane") then
 			local Stats = require "engine.interface.ActorStats"
 			local DamageType = require "engine.DamageType"
-	
+
 			self:specialWearAdd({"wielder","inc_damage"}, {[DamageType.NATURE]=15})
 			self:specialWearAdd({"wielder","inc_stats"}, { [Stats.STAT_STR] = 6, [Stats.STAT_WIL] = 6, })
 			game.logPlayer(who, "#DARK_GREEN#You feel like Nature's Wrath incarnate!")

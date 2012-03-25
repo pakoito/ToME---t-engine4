@@ -404,6 +404,7 @@ function _M:act()
 	if not engine.Actor.act(self) then return end
 
 	self.changed = true
+	self.turn_procs = {}
 
 	-- If resources are too low, disable sustains
 	if self.mana < 1 or self.stamina < 1 or self.psi < 1 then
@@ -2144,7 +2145,7 @@ function _M:onWear(o, bypass_set)
 			self:learnItemTalent(o, tid, level)
 		end
 	end
-	
+
 	self:breakReloading()
 
 	self:updateModdableTile()
@@ -2204,7 +2205,7 @@ function _M:onTakeoff(o, bypass_set)
 		self:attr("spellpower_reduction", -1)
 		self:attr("spell_failure", -(o.material_level or 1) * 10)
 	end
-	
+
 	if o.wielder and o.wielder.learn_talent then
 		for tid, level in pairs(o.wielder.learn_talent) do
 			self:unlearnItemTalent(o, tid, level)
@@ -2313,11 +2314,11 @@ function _M:learnItemTalent(o, tid, level)
 	if not self.item_talent_surplus_levels[tid] then self.item_talent_surplus_levels[tid] = 0 end
 	--item_talent_levels[tid] = item_talent_levels[tid] + level
 	for i = 1, level do
-		if self:getTalentLevelRaw(t) >= max then 
-			self.item_talent_surplus_levels[tid] = self.item_talent_surplus_levels[tid] + 1 
+		if self:getTalentLevelRaw(t) >= max then
+			self.item_talent_surplus_levels[tid] = self.item_talent_surplus_levels[tid] + 1
 		else
 			self:learnTalent(tid, true, 1)
-		end		
+		end
 	end
 end
 
@@ -2328,11 +2329,11 @@ function _M:unlearnItemTalent(o, tid, level)
 	--local item_talent_surplus_levels = self.item_talent_surplus_levels or {}
 	if not self.item_talent_surplus_levels[tid] then self.item_talent_surplus_levels[tid] = 0 end
 	for i = 1, level do
-		if self.item_talent_surplus_levels[tid] > 0 then 
-			self.item_talent_surplus_levels[tid] = self.item_talent_surplus_levels[tid] - 1 
+		if self.item_talent_surplus_levels[tid] > 0 then
+			self.item_talent_surplus_levels[tid] = self.item_talent_surplus_levels[tid] - 1
 		else
 			self:unlearnTalent(tid, true, 1)
-		end	
+		end
 	end
 end
 

@@ -44,7 +44,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			local t = target:getTalentFromId(target.T_PREMONITION)
 			t.on_damage(target, t, type)
 		end
-		
+
 		-- Item-granted damage ward talent
 		if target:hasEffect(target.EFF_WARD) then
 			local e = target.tempeffect_def[target.EFF_WARD]
@@ -294,11 +294,11 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 				target:crossTierEffect(target.EFF_SPELLSHOCKED, src:combatSpellpower())
 			end
 
-			if src.__projecting_for and not src.__projecting_for.talent_on_hit_done then
-				if src.talent_on_spell and next(src.talent_on_spell) and t.is_spell then
+			if src.__projecting_for then
+				if src.talent_on_spell and next(src.talent_on_spell) and t.is_spell and not src.turn_procs.spell_talent then
 					for id, d in pairs(src.talent_on_spell) do
 						if rng.percent(d.chance) and t.id ~= d.talent then
-							src.__projecting_for.talent_on_hit_done = true
+							src.turn_procs.spell_talent = true
 							local old = src.__projecting_for
 							src:forceUseTalent(d.talent, {ignore_cd=true, ignore_energy=true, force_target=target, force_level=d.level, ignore_ressources=true})
 							src.__projecting_for = old

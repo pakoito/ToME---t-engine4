@@ -493,9 +493,10 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	end
 
 	-- On hit talent
-	if hitted and not target.dead and weapon and weapon.talent_on_hit and next(weapon.talent_on_hit) then
+	if hitted and not target.dead and weapon and weapon.talent_on_hit and next(weapon.talent_on_hit) and not self.turn_procs.melee_talent then
 		for tid, data in pairs(weapon.talent_on_hit) do
 			if rng.percent(data.chance) then
+				self.turn_procs.melee_talent = true
 				self:forceUseTalent(tid, {ignore_cd=true, ignore_energy=true, force_target=target, force_level=data.level, ignore_ressources=true})
 			end
 		end

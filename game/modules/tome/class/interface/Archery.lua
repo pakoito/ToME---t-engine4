@@ -196,9 +196,10 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 	end end
 
 	-- Talent on hit
-	if hitted and not target.dead and weapon and weapon.talent_on_hit and next(weapon.talent_on_hit) then
+	if hitted and not target.dead and weapon and weapon.talent_on_hit and next(weapon.talent_on_hit) and not self.turn_procs.ranged_talent then
 		for tid, data in pairs(weapon.talent_on_hit) do
 			if rng.percent(data.chance) then
+				self.turn_procs.ranged_talent = true
 				self:forceUseTalent(tid, {ignore_cd=true, ignore_energy=true, force_target=target, force_level=data.level, ignore_ressources=true})
 			end
 		end
