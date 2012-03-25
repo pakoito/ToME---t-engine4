@@ -1585,7 +1585,9 @@ function _M:createRandomBoss(base, data)
 	b.on_added_to_level = function(self, ...)
 		self:check("birth_create_alchemist_golem")
 		for tid, lev in pairs(self.learn_tids) do
-			self:learnTalent(tid, true, lev)
+			if self:getTalentLevelRaw(tid) < lev then
+				self:learnTalent(tid, true, lev - self:getTalentLevelRaw(tid))
+			end
 		end
 		self:check("rnd_boss_on_added_to_level", ...)
 		self.rnd_boss_on_added_to_level = nil
