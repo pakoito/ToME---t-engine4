@@ -87,7 +87,7 @@ newEntity{ base = "BASE_NPC_ELVEN_CASTER", define_as = "GRAND_CORRUPTOR",
 			print("Player has a total of "..has_spells.." spell levels")
 			if not game.player:hasQuest("antimagic") and has_spells > 10 then
 				local Chat = require "engine.Chat"
-				local chat = Chat.new("corruptor-quest", self, game.player)
+				local chat = Chat.new("corruptor-quest", self, game:getPlayer(true))
 				chat:invoke()
 				return 0
 			end
