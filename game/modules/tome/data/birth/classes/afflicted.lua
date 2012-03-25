@@ -104,7 +104,7 @@ newBirthDescriptor{
 		"#LIGHT_BLUE# * +0 Strength, +0 Dexterity, +0 Constitution",
 		"#LIGHT_BLUE# * +0 Magic, +4 Willpower, +5 Cunning",
 	},
-	stats = { wil=4, cun=4, },
+	stats = { wil=4, cun=5, },
 	talents_types = {
 		["cursed/dark-sustenance"]={true, 0.3},
 		["cursed/force-of-will"]={true, 0.3},

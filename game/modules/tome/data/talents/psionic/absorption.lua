@@ -131,7 +131,7 @@ newTalent{
 		local absorb = 100*getEfficiency(self,t)
 		return ([[Surround yourself with a shield that will absorb %d%% of any physical or acidic attack, up to a maximum of %d damage per attack. Deactivating the shield spikes it up to a temporary (five turns) %d point shield.
 		Every time your shield absorbs damage, you gain two points of energy plus an additional point for every %d points of damage absorbed. Spiked shields absorb energy more efficiently.
-		These values scale with Willpower and Cunning.]]):
+		These values scale with your Mindpower.]]):
 		format(absorb, s_str, spike_str, mast)
 	end,
 }
@@ -234,7 +234,7 @@ newTalent{
 		local absorb = 100*getEfficiency(self,t)
 		return ([[Surround yourself with a shield that will absorb %d%% of any fire or cold attack, up to a maximum of %d damage per attack. Deactivating the shield spikes it up to a temporary (five turns) %d point shield.
 		Every time your shield absorbs damage, you gain two points of energy plus an additional point for every %d points of damage absorbed. Spiked shields absorb energy more efficiently.
-		These values scale with Willpower and Cunning.]]):
+		These values scale with your Mindpower.]]):
 		format(absorb, s_str, spike_str, mast)
 	end,
 }
@@ -333,7 +333,7 @@ newTalent{
 		local absorb = 100*getEfficiency(self,t)
 		return ([[Surround yourself with a shield that will absorb %d%% of any lightning or blight attack, up to a maximum of %d damage per attack. Deactivating the shield spikes it up to a temporary (five turns) %d point shield.
 		Every time your shield absorbs damage, you gain two points of energy plus an additional point for every %d points of damage absorbed. Spiked shields absorb energy more efficiently.
-		These values scale with Willpower and Cunning.]]):
+		These values scale with your Mindpower.]]):
 		format(absorb, s_str, spike_str, mast)
 	end,
 }

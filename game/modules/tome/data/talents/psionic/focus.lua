@@ -100,7 +100,7 @@ newTalent{
 	info = function(self, t)
 		local dam = t.getDamage(self, t)
 		return ([[Focus energies on a distant target to lash it with physical force, doing %d damage as well as any Conduit damage.
-		Mindslayers do not do this sort of ranged attack naturally. The use of a telekinetically-wielded gem as a focus will improve the effects considerably.]]):
+		Mindslayers do not do this sort of ranged attack naturally. The use of a telekinetically-wielded gem or mindstar as a focus will improve the effects considerably.]]):
 		format(dam)
 	end,
 }
@@ -143,7 +143,7 @@ newTalent{
 		local radius = self:getTalentRadius(t)
 		local dam = t.getDamage(self, t)
 		return ([[Focus energies on all foes within %d squares, setting them ablaze. Does %d damage over ten turns.
-		Mindslayers do not do this sort of ranged attack naturally. The use of a telekinetically-wielded gem as a focus will improve the effects considerably.]]):
+		Mindslayers do not do this sort of ranged attack naturally. The use of a telekinetically-wielded gem or mindstar as a focus will improve the effects considerably.]]):
 		format(radius, dam)
 	end,
 }
@@ -156,7 +156,7 @@ newTalent{
 	points = 5,
 	info = function(self, t)
 		local inc = 2*self:getTalentLevel(t)
-		return ([[You can extend your mental reach beyond your natural limits using a telekinetically-wielded gemstone as a focus. Increases the range of various abilities by %d%% to %d%%, depending on the quality of the gem used as a focus.]]):
+		return ([[You can extend your mental reach beyond your natural limits using a telekinetically-wielded gemstone or mindstar as a focus. Increases the range of various abilities by %d%% to %d%%, depending on the quality of the gem used as a focus.]]):
 		format(inc, 5*inc)
 	end,
 }
@@ -169,7 +169,7 @@ newTalent{
 	points = 5,
 	info = function(self, t)
 		local inc = 1 + 0.15*self:getTalentLevel(t)
-		return ([[You can channel more energy with your auras and shields using a telekinetically-wielded gemstone as a focus. Increases the base strength of all auras and shields by %0.2f to %0.2f, depending on the quality of the gem used as a focus.]]):
+		return ([[You can channel more energy with your auras and shields using a telekinetically-wielded gemstone or mindstar as a focus. Increases the base strength of all auras and shields by %0.2f to %0.2f, depending on the quality of the gem or mindstar used as a focus.]]):
 		format(inc, 5*inc)
 	end,
 }

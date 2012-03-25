@@ -160,7 +160,7 @@ newTalent{
 					self:forceUseTalent(self.T_KINETIC_SHIELD, {ignore_energy=true})
 				end
 				local dam = self:spellCrit(self:combatTalentMindDamage(t, 20, 600))
-				self:project(tg, x, y, DamageType.BATTER, self:spellCrit(rng.avg(2*dam/3, dam, 3)))
+				self:project(tg, x, y, DamageType.MINDKNOCKBACK, self:spellCrit(rng.avg(2*dam/3, dam, 3)))
 				--local _ _, x, y = self:canProject(tg, x, y)
 				game.level.map:particleEmitter(self.x, self.y, tg.radius, "flamebeam", {tx=x-self.x, ty=y-self.y})
 				game:playSoundNear(self, "talents/lightning")
@@ -188,7 +188,7 @@ newTalent{
 			for i = 1, self:getTalentRange(t) do
 				self:project(tg, x, y, DamageType.DIG, 1)
 			end
-			self:project(tg, x, y, DamageType.BATTER, self:spellCrit(rng.avg(2*dam/3, dam, 3)))
+			self:project(tg, x, y, DamageType.MINDKNOCKBACK, self:spellCrit(rng.avg(2*dam/3, dam, 3)))
 			local _ _, x, y = self:canProject(tg, x, y)
 			game.level.map:particleEmitter(self.x, self.y, tg.radius, "flamebeam", {tx=x-self.x, ty=y-self.y})
 			game:playSoundNear(self, "talents/lightning")

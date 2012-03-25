@@ -141,12 +141,12 @@ function getGemLevel(self)
 	local gem_level = 0
 	if self:getInven("PSIONIC_FOCUS") then
 		local tk_item = self:getInven("PSIONIC_FOCUS")[1]
-		if tk_item and (tk_item.type == "gem") then
+		if tk_item and (tk_item.type == "gem") or (tk_item.subtype == "mindstar") then
 			gem_level = tk_item.material_level or 5
 		end
 	end
 	if self:knowTalent(self.T_GREATER_TELEKINETIC_GRASP) and gem_level > 0 then
-		if self:getTalentLevelRaw(self.T_GREATER_TELEKINETIC_GRASP) == 5 then
+		if self:getTalentLevelRaw(self.T_GREATER_TELEKINETIC_GRASP) >= 5 then
 			gem_level = gem_level + 1
 		end
 	end

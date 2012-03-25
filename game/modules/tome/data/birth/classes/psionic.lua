@@ -50,9 +50,9 @@ newBirthDescriptor{
 		"Their most important stats are: Willpower and Cunning",
 		"#GOLD#Stat modifiers:",
 		"#LIGHT_BLUE# * +1 Strength, +0 Dexterity, +0 Constitution",
-		"#LIGHT_BLUE# * +0 Magic, +4 Willpower, +3 Cunning",
+		"#LIGHT_BLUE# * +0 Magic, +4 Willpower, +4 Cunning",
 	},
-	stats = { str=1, wil=4, cun=3, },
+	stats = { str=1, wil=4, cun=4, },
 	talents_types = {
 		--Level 0 trees:
 		["psionic/absorption"]={true, 0.3},

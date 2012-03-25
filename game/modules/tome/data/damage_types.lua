@@ -1460,7 +1460,7 @@ newDamageType{
 		if target and target:attr("never_move") then
 			dam = dam * 1.5
 		end
-		DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam)
+		DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam) -- This damage type can deal damage multiple times, use with accordingly
 		-- check knockback
 		if target and not target:attr("never_move") and not tmp[target] then
 			tmp[target] = true
@@ -1555,23 +1555,6 @@ newDamageType{
 				else
 					game.logSeen(target, "%s resists the knockback!", target.name:capitalize())
 				end
-			end
-		end
-	end,
-}
-
-newDamageType{
-	name = "batter", type = "BATTER",
-	projector = function(src, x, y, type, dam)
-		DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam)
-		local target = game.level.map(x, y, Map.ACTOR)
-		if target then
-			if target:canBe("knockback") then
-				target:knockback(src.x, src.y, 3)
-				target:crossTierEffect(target.EFF_OFFBALANCE, src:combatMindpower())
-				game.logSeen(target, "%s is knocked back!", target.name:capitalize())
-			else
-				game.logSeen(target, "%s resists the knockback!", target.name:capitalize())
 			end
 		end
 	end,
