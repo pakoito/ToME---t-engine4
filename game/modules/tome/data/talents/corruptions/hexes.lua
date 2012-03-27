@@ -71,15 +71,16 @@ newTalent{
 		if not x or not y then return nil end
 		self:project(tg, x, y, function(tx, ty)
 			local target = game.level.map(tx, ty, Map.ACTOR)
-			if not target or target == self then return end
-			target:setEffect(target.EFF_BURNING_HEX, 20, {src=self, dam=self:combatTalentSpellDamage(t, 4, 90), apply_power=self:combatSpellpower()})
+			if not target then return end
+			target:setEffect(target.EFF_BURNING_HEX, 20, {src=self, dam=self:combatTalentSpellDamage(t, 4, 90), power=1+(self:getTalentLevel(t) / 10), apply_power=self:combatSpellpower()})
 		end)
 		game:playSoundNear(self, "talents/slime")
 		return true
 	end,
 	info = function(self, t)
 		return ([[Hexes your target and everything within a radius 2 ball of your target for 20 turns. Each time your affected targets use a resource (stamina, mana, vim, ...) they take %0.2f fire damage.
-		The damage will increase with Magic stat.]]):format(damDesc(self, DamageType.FIRE, self:combatTalentSpellDamage(t, 4, 90)))
+		In addition the affected talent will have its cooldown increased by 1 turn + %d%%.
+		The damage will increase with Magic stat.]]):format(damDesc(self, DamageType.FIRE, self:combatTalentSpellDamage(t, 4, 90)), ((self:getTalentLevel(t) / 10))*100)
 	end,
 }
 

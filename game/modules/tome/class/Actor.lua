@@ -3043,12 +3043,18 @@ function _M:getTalentCooldown(t)
 
 	if self.talent_cd_reduction[t.id] then cd = cd - self.talent_cd_reduction[t.id] end
 	if self.talent_cd_reduction.all then cd = cd - self.talent_cd_reduction.all end
+
+	local eff = self:hasEffect(self.EFF_BURNING_HEX)
+	if eff then
+		cd = 1 + cd * eff.power
+	end
+
 	if t.is_spell then
 		return math.ceil(cd * (1 - (self.spell_cooldown_reduction or 0)))
 	elseif t.is_summon then
 		return math.ceil(cd * (1 - (self.summon_cooldown_reduction or 0)))
 	else
-		return cd
+		return math.ceil(cd)
 	end
 end
 

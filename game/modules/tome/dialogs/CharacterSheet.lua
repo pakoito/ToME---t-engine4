@@ -1245,7 +1245,7 @@ function _M:dump()
 	nl("  [Last Messages]")
 	nl()
 
-	nl(table.concat(game.logdisplay:getLines(40), "\n"):removeColorCodes())
+	nl(table.concat(game.uiset.logdisplay:getLines(40), "\n"):removeColorCodes())
 
 	fff:close()
 
