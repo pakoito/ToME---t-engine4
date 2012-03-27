@@ -184,6 +184,8 @@ function _M:init(t, no_default)
 
 	t.money = t.money or 0
 
+	self.turn_procs = {}
+
 	engine.Actor.init(self, t, no_default)
 	engine.interface.ActorInventory.init(self, t)
 	engine.interface.ActorTemporaryEffects.init(self, t)
