@@ -1489,10 +1489,12 @@ newEffect{
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("diseases_spread_on_blight", 1)
 		eff.healid = self:addTemporaryValue("healing_factor", -eff.heal_factor / 100)
+		eff.immid = self:addTemporaryValue("disease_immune", -eff.resist / 100)
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("diseases_spread_on_blight", eff.tmpid)
 		self:removeTemporaryValue("healing_factor", eff.healid)
+		self:removeTemporaryValue("disease_immune", eff.immid)
 	end,
 }
 
