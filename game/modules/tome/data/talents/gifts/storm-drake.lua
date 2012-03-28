@@ -84,6 +84,8 @@ newTalent{
 			local dam = target.life * perc / 100
 			if target.life - dam < 0 then dam = target.life end
 			target:takeHit(dam, self)
+
+			game:delayedLogDamage(self, target, dam, ("#PURPLE#%d pure damage#LAST#"):format(math.ceil(dam)))
 		end, nil, {type="lightning_explosion"})
 		game:playSoundNear(self, "talents/lightning")
 		return true
