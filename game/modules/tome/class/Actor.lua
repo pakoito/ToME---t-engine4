@@ -652,8 +652,12 @@ function _M:move(x, y, force)
 			self:attackTarget(self)
 			moved = true
 		-- Should we prob travel through walls ?
-		elseif not force and self:attr("prob_travel") and game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move", self) then
+		elseif not force and self:attr("prob_travel") and not self:attr("prob_travel_deny") and game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move", self) then
 			moved = self:probabilityTravel(x, y, self:attr("prob_travel"))
+			if self:attr("prob_travel_penalty") then
+				local d = core.fov.distance(ox, oy, self.x, self.y)
+				self:setEffect(self.EFF_PROB_TRAVEL_UNSTABLE, d * self:attr("prob_travel_penalty"), {})
+			end
 		-- Never move but tries to attack ? ok
 		elseif not force and self:attr("never_move") then
 			-- A bit weird, but this simple asks the collision code to detect an attack

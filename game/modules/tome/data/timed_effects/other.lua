@@ -1331,3 +1331,19 @@ newEffect{
 		end
 	end,
 }
+
+newEffect{
+	name = "PROB_TRAVEL_UNSTABLE", image = "talents/probability_travel.png",
+	desc = "Time Prison",
+	long_desc = function(self, eff) return "The target has recently blinked through a wall using probability travel." end,
+	type = "other",
+	subtype = { time=true, space=true },
+	status = "detrimental",
+	parameters = {},
+	activate = function(self, eff)
+		eff.iid = self:addTemporaryValue("prob_travel_deny", 1)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("prob_travel_deny", eff.iid)
+	end,
+}

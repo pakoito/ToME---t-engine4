@@ -222,17 +222,20 @@ newTalent{
 		game:playSoundNear(self, "talents/teleport")
 		return {
 			prob_travel = self:addTemporaryValue("prob_travel", t.getRange(self, t)),
+			prob_travel_penalty = self:addTemporaryValue("prob_travel_penalty", 2 + (5 - math.min(self:getTalentLevelRaw(t), 5)) / 2),
 		}
 	end,
 	deactivate = function(self, t, p)
 		self:removeTemporaryValue("prob_travel", p.prob_travel)
+		self:removeTemporaryValue("prob_travel_penalty", p.prob_travel_penalty)
 		return true
 	end,
 	info = function(self, t)
 		local range = t.getRange(self, t)
 		return ([[When you hit a solid surface this spell tears down the laws of probability to make you instantly appear on the other side.
 		Teleports up to %d grids.
+		After a successful probability travel you are left unstable, unable to do it again for a number of turns equal to %d%% of the number of tiles you blinked through.
 		Range will improve with your Spellpower.]]):
-		format(range)
+		format(range, (2 + (5 - math.min(self:getTalentLevelRaw(t), 5)) / 2) * 100)
 	end,
 }
