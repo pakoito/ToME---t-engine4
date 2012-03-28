@@ -114,7 +114,7 @@ function _M:regenResources()
 	for i = 1, #_M.resources_def do
 		r = _M.resources_def[i]
 		if r.regen_prop then
-			self[r.short_name] = util.bound(self[r.short_name] + self[r.regen_prop], 0, self[r.maxname])
+			self[r.short_name] = util.bound(self[r.short_name] + self[r.regen_prop], self[r.minname], self[r.maxname])
 		end
 	end
 end

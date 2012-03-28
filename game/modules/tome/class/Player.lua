@@ -647,7 +647,7 @@ function _M:restCheck()
 		if self:getMana() < self:getMaxMana() and self.mana_regen > 0 then return true end
 		if self:getStamina() < self:getMaxStamina() and self.stamina_regen > 0 then return true end
 		if self:getPsi() < self:getMaxPsi() and self.psi_regen > 0 then return true end
-		if self:getEquilibrium() > 0 and self.equilibrium_regen < 0 then return true end
+		if self:getEquilibrium() > self:getMinEquilibrium() and self.equilibrium_regen < 0 then return true end
 		if self:getParadox() > 0 and self:getParadox() > self.min_paradox and self:isTalentActive(self.T_SPACETIME_TUNING) then return true end
 		if self.life < self.max_life and self.life_regen> 0 then return true end
 		for act, def in pairs(game.party.members) do if game.level:hasEntity(act) and not act.dead then
