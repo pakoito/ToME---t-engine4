@@ -35,7 +35,7 @@ newTalentType{ allow_random=true, type="psionic/greater-psi-fighting", name = "g
 newTalentType{ allow_random=true, type="psionic/brainstorm", name = "brainstorm", description = "Focus your telekinetic powers in ways undreamed of by most mindslayers." }
 
 -- Secret Project...
--- Solipsist Talent Trees 
+-- Solipsist Talent Trees
 newTalentType{ allow_random=true, type="psionic/psychic-assault", name = "psychic assault", description = "Directly attack your opponents minds." }
 -- Generic Solipsist Trees
 
@@ -141,7 +141,7 @@ function getGemLevel(self)
 	local gem_level = 0
 	if self:getInven("PSIONIC_FOCUS") then
 		local tk_item = self:getInven("PSIONIC_FOCUS")[1]
-		if tk_item and (tk_item.type == "gem") or (tk_item.subtype == "mindstar") then
+		if tk_item and ((tk_item.type == "gem") or (tk_item.subtype == "mindstar")) then
 			gem_level = tk_item.material_level or 5
 		end
 	end
