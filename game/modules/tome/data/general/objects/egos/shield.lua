@@ -263,8 +263,8 @@ newEntity{
 
 newEntity{
 	power_source = {nature=true},
-	name = "blood-runed ", prefix=true, instant_resolve=true,
-	keywords = {runed=true},
+	name = "blood-etched ", prefix=true, instant_resolve=true,
+	keywords = {etched=true},
 	level_range = {30, 50},
 	greater_ego = 1,
 	rarity = 17,
