@@ -112,4 +112,5 @@ newEntity{ base = "BASE_NPC_DERTH_TOWN",
 		self.seen_by = nil
 		self:doEmote("Hey you. Come here.", 60)
 	end,
+	on_die = false,
 }
