@@ -80,7 +80,24 @@ newEffect{
 	on_gain = function(self, err) return "#Target# starts regenerating health quickly.", "+Regen" end,
 	on_lose = function(self, err) return "#Target# stops regenerating health quickly.", "-Regen" end,
 	activate = function(self, eff)
+		if not eff.no_wild_growth then
+			if self:attr("liferegen_factor") then eff.power = eff.power * (100 + self:attr("liferegen_factor")) / 100 end
+			if self:attr("liferegen_dur") then eff.dur = eff.dur + self:attr("liferegen_dur") end
+		end
 		eff.tmpid = self:addTemporaryValue("life_regen", eff.power)
+
+		if self:knowTalent(self.T_ANCESTRAL_LIFE) then
+			local t = self:getTalentFromId(self.T_ANCESTRAL_LIFE)
+			print("=====<", self.energy.value)
+			self.energy.value = self.energy.value + (t.getTurn(self, t) * game.energy_to_act / 100)
+			print("=====>", self.energy.value)
+		end
+	end,
+	on_timeout = function(self, eff)
+		if self:knowTalent(self.T_ANCESTRAL_LIFE) then
+			local t = self:getTalentFromId(self.T_ANCESTRAL_LIFE)
+			self:incEquilibrium(-t.getEq(self, t))
+		end
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("life_regen", eff.tmpid)

@@ -109,6 +109,7 @@ newBirthDescriptor{
 		["wild-gift/fire-drake"]={true, 0.3},
 		["wild-gift/cold-drake"]={true, 0.3},
 		["wild-gift/storm-drake"]={true, 0.3},
+		["wild-gift/fungus"]={true, 0.1},
 		["cunning/survival"]={false, 0},
 		["technique/shield-offense"]={true, 0.1},
 		["technique/2hweapon-offense"]={true, 0.1},

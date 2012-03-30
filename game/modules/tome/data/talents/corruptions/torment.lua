@@ -37,7 +37,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You set your mind toward a single goal: the destruction of all yuor foes.
+		return ([[You set your mind toward a single goal: the destruction of all your foes.
 		Increases the maximum amount of vim you can store by %d.]]):
 		format(self:getTalentLevel(t) * 15)
 	end,

@@ -1,4 +1,3 @@
-
 -- ToME - Tales of Maj'Eyal
 -- Copyright (C) 2009, 2010, 2011, 2012 Nicolas Casalini
 --
