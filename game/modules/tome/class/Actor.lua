@@ -1115,6 +1115,9 @@ end
 function _M:regenLife()
 	if self.life_regen and not self:attr("no_life_regen") then
 		self.life = util.bound(self.life + self.life_regen * util.bound((self.healing_factor or 1), 0, 2.5), self.die_at, self.max_life)
+		if self:attr("blood_lock") then
+			self.life = util.bound(self.life, self.die_at, self:attr("blood_lock"))
+		end
 	end
 end
 
@@ -1156,6 +1159,13 @@ function _M:onHeal(value, src)
 
 	if self:attr("arcane_shield") and value > 0 and not self:hasEffect(self.EFF_DAMAGE_SHIELD) then
 		self:setEffect(self.EFF_DAMAGE_SHIELD, 3, {power=value * self.arcane_shield / 100})
+	end
+
+	-- Must be last!
+	if self:attr("blood_lock") then
+		if self.life + value > self:attr("blood_lock") then
+			value = math.max(0, self:attr("blood_lock") - self.life)
+		end
 	end
 
 	print("[HEALING]", self.uid, self.name, "for", value)
@@ -1522,6 +1532,18 @@ function _M:onTakeHit(value, src)
 		for tid, _ in pairs(self.contingency_disable) do self:forceUseTalent(tid, {ignore_energy=true}) end
 	end
 
+	-- Spell cooldowns on hit
+	if self:attr("reduce_spell_cooldown_on_hit") and value >= self.max_life * self:attr("reduce_spell_cooldown_on_hit") / 100 then
+		local alt = {}
+		for tid, cd in pairs(self.talents_cd) do 
+			if rng.percent(self:attr("reduce_spell_cooldown_on_hit_chance")) then alt[tid] = cd - 1 end
+		end
+		for tid, cd in pairs(alt) do 
+			if cd <= 0 then self.talents_cd[tid] = nil
+			else self.talents_cd[tid] = cd end
+		end
+	end
+
 	-- Life leech
 	if value > 0 and src and src:attr("life_leech_chance") and rng.percent(src.life_leech_chance) then
 		local leech = math.min(value, self.life) * src.life_leech_value / 100
@@ -1549,6 +1571,17 @@ function _M:onTakeHit(value, src)
 	end
 
 	return value
+end
+
+function _M:takeHit(value, src, death_note)
+	local dead, val = engine.interface.ActorLife.takeHit(self, value, src, death_note)
+	
+	if dead and src and src.attr and src:attr("overkill") and src.project then
+		local dam = (self.die_at - self.life) * src:attr("overkill") / 100
+		src:project({type="ball", radius=2, selffire=false, x=self.x, y=self.y}, self.x, self.y, DamageType.BLIGHT, dam, {type="acid"})
+	end
+
+	return dead, val
 end
 
 function _M:removeTimedEffectsOnClone()

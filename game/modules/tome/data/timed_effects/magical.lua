@@ -1672,3 +1672,22 @@ newEffect{
 		self:removeParticles(eff.particle)
 	end,
 }
+
+newEffect{
+	name = "BLOOD_LOCK", image = "talents/blood_lock.png",
+	desc = "Blood Lock",
+	long_desc = function(self, eff) return ("Can not heal higher than %d life."):format(eff.power) end,
+	type = "magical",
+	subtype = { blood=true },
+	status = "detrimental",
+	parameters = { },
+	on_gain = function(self, err) return "#Target# is blood locked.", "+Blood Lock" end,
+	on_lose = function(self, err) return "#Target# is no longer blood locked.", "-Blood Lock" end,
+	activate = function(self, eff)
+		eff.power = self.life
+		eff.tmpid = self:addTemporaryValue("blood_lock", eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("blood_lock", eff.tmpid)
+	end,
+}

@@ -81,6 +81,8 @@ function _M:die(src, death_note)
 	self.changed = true
 
 	self:check("on_die", src, death_note)
+
+	return true
 end
 
 --- Actor is being attacked!

@@ -63,6 +63,7 @@ newBirthDescriptor{
 		["corruption/hexes"]={false, 0.3},
 		["corruption/curses"]={false, 0.3},
 		["corruption/bone"]={true, 0.3},
+		["corruption/torment"]={true, 0.3},
 	},
 	talents = {
 		[ActorTalents.T_CORRUPTED_STRENGTH] = 1,
@@ -108,6 +109,7 @@ newBirthDescriptor{
 		["corruption/blood"]={true, 0.3},
 		["corruption/vim"]={true, 0.3},
 		["corruption/blight"]={true, 0.3},
+		["corruption/torment"]={false, 0.3},
 	},
 	talents = {
 		[ActorTalents.T_DRAIN] = 1,
