@@ -110,7 +110,7 @@ newTalent{
 		-- do crushing hold or strangle if we're already grappling the target
 		if hit and self:knowTalent(self.T_CRUSHING_HOLD) then
 			local t = self:getTalentFromId(self.T_CRUSHING_HOLD)
-			if grappled and not target.no_breath and not target.undead and target:canBe("silence") then
+			if grappled and not target.no_breath and not target:attr("undead") and target:canBe("silence") then
 				target:setEffect(target.EFF_STRANGLE_HOLD, duration, {src=self, power=t.getDamage(self, t) * 1.5})
 			else
 				target:setEffect(target.EFF_CRUSHING_HOLD, duration, {src=self, power=t.getDamage(self, t)})

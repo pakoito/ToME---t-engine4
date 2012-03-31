@@ -63,7 +63,7 @@ newChat{ id="melinda",
 	text = [[@playername@! #LIGHT_GREEN#*She jumps for joy and hugs you while her father returns to his shop.*#WHITE#]],
 	answers = {
 		{"I am glad to see you are fine. It seems your scars are healing quite well.", jump="scars", cond=function(npc, player)
-			if player.undead then return false end
+			if player:attr("undead") then return false end
 			return true
 		end,},
 		{"I am glad to see you well. Take care."},

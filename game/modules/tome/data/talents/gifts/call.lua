@@ -85,7 +85,7 @@ newTalent{ short_name = "NATURE_TOUCH",
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
-		if not target.undead then
+		if not target:attr("undead") then
 			target:heal(20 + self:combatTalentMindDamage(t, 20, 500))
 		end
 		game:playSoundNear(self, "talents/heal")
