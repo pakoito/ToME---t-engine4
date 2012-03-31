@@ -47,7 +47,7 @@ newTalent{
 		self:removeTemporaryValue("liferegen_dur", p.dur)
 		if p.fg then self:removeTemporaryValue("fungal_growth", p.fg) end
 		return true
-	end,	
+	end,
 	info = function(self, t)
 		local dur = t.getDur(self, t)
 		local regen = t.getRegen(self, t)
@@ -104,7 +104,10 @@ newTalent{
 	action = function(self, t)
 		local amt = self.life_regen * t.getMult(self, t)
 
+		local old = self.fungal_growth
+		self.fungal_growth = nil
 		self:heal(amt)
+		self.fungal_growth = old
 
 		game:playSoundNear(self, "talents/heal")
 		return true

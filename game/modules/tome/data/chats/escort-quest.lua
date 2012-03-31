@@ -50,12 +50,11 @@ local reward_types = {
 		},
 		antimagic = {
 			types = {
-				["wild-gift/slime"] = 0.7,
+				["wild-gift/fungus"] = 0.7,
 			},
 			saves = { mind = 4 },
 			talents = {
-				[Talents.T_SLIME_SPIT] = 1,
-				[Talents.T_SLIME_ROOTS] = 1,
+				[Talents.T_WILD_GROWTH] = 1,
 			},
 			stats = {
 				[Stats.STAT_CUN] = 1,
@@ -80,11 +79,10 @@ local reward_types = {
 		},
 		antimagic = {
 			types = {
-				["wild-gift/slime"] = 0.7,
+				["wild-gift/fungus"] = 0.7,
 			},
 			talents = {
-				[Talents.T_SLIME_SPIT] = 1,
-				[Talents.T_POISONOUS_SPORES] = 1,
+				[Talents.T_WILD_GROWTH] = 1,
 			},
 			saves = { spell = 4 },
 			stats = {
@@ -121,11 +119,10 @@ local reward_types = {
 		},
 		antimagic = {
 			types = {
-				["wild-gift/slime"] = 0.7,
+				["wild-gift/fungus"] = 0.7,
 			},
 			talents = {
-				[Talents.T_POISONOUS_SPORES] = 1,
-				[Talents.T_ACIDIC_SKIN] = 1,
+				[Talents.T_WILD_GROWTH] = 1,
 			},
 			saves = { spell = 4, phys = 4 },
 			stats = {
@@ -148,11 +145,10 @@ local reward_types = {
 		},
 		antimagic = {
 			types = {
-				["wild-gift/slime"] = 0.7,
+				["wild-gift/fungus"] = 0.7,
 			},
 			talents = {
-				[Talents.T_SLIME_SPIT] = 1,
-				[Talents.T_ACIDIC_SKIN] = 1,
+				[Talents.T_WILD_GROWTH] = 1,
 			},
 			saves = { spell = 4, mind = 4 },
 			stats = {
