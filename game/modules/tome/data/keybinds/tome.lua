@@ -137,7 +137,7 @@ defineAction{
 }
 
 defineAction{
-	default = { "sym:_b:false:false:false:false" },
+	default = { "sym:_b:false:true:false:false" },
 	type = "TOGGLE_BUMP_ATTACK",
 	group = "movement",
 	name = "Toggle movement mode",
