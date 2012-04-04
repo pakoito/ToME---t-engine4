@@ -58,7 +58,7 @@ on_status_change = function(self, who, status, sub)
 			self:end_end_combat()
 
 			local Chat = require"engine.Chat"
-			local chat = Chat.new("sorcerer-end", {name="Endgame"}, game.player)
+			local chat = Chat.new("sorcerer-end", {name="Endgame"}, game:getPlayer(true))
 			chat:invoke()
 		end
 	end
