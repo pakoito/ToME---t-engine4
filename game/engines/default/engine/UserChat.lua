@@ -414,7 +414,13 @@ function _M:mouseEvent(button, x, y, xrel, yrel, bx, by, event)
 		local citem = nil
 		for i = 1, #self.dlist do
 			local item = self.dlist[i]
-			if item.dh and y >= item.dh - self.mouse.delegate_offset_y then citem = self.dlist[i].src break end
+			if item.dh and by >= item.dh - self.mouse.delegate_offset_y then citem = self.dlist[i].src break end
+		end
+		print("================================")
+		util.show_backtrace()
+		for i = 1, #self.dlist do
+			local item = self.dlist[i]
+			if item.dh then print("===", y, by, item.dh - self.mouse.delegate_offset_y) end
 		end
 		self.on_mouse(citem and citem.login and self.channels[self.cur_channel].users[citem.login], citem and citem.login and citem, button, event, x, y, xrel, yrel, bx, by)
 	end

@@ -1520,7 +1520,7 @@ function _M:displayChatLog(scale, bx, by)
 				return
 			end
 
-			profile.chat:mouseEvent(button, mx, my, xrel, yrel, bx, bx, event)
+			profile.chat:mouseEvent(button, mx, my, xrel, yrel, bx, by, event)
 		end
 		game.mouse:registerZone(bx, by, log.w, log.h, desc_fct, nil, "chatlog", true, scale)
 	end
