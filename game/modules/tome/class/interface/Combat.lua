@@ -1114,9 +1114,6 @@ end
 --- Computes physical crit for a damage
 function _M:physicalCrit(dam, weapon, target, atk, def)
 	local tier_diff = self:getTierDiff(atk, def)
-	if self:isTalentActive(self.T_STEALTH) and self:knowTalent(self.T_SHADOWSTRIKE) then
-		return dam * (1.5 + self:getTalentLevel(self.T_SHADOWSTRIKE) / 7), true
-	end
 
 	local chance = self:combatCrit(weapon)
 	local crit_power_add = 0
@@ -1139,6 +1136,11 @@ function _M:physicalCrit(dam, weapon, target, atk, def)
 		chance = 100
 	end
 
+	if self:isTalentActive(self.T_STEALTH) and self:knowTalent(self.T_SHADOWSTRIKE) then
+		chance = 100
+		crit_power_add = crit_power_add + self:getTalentLevel(self.T_SHADOWSTRIKE) / 7
+	end
+
 	chance = util.bound(chance, 0, 100)
 
 	print("[PHYS CRIT %]", chance)
@@ -1155,16 +1157,18 @@ end
 
 --- Computes spell crit for a damage
 function _M:spellCrit(dam, add_chance)
-	if self:isTalentActive(self.T_STEALTH) and self:knowTalent(self.T_SHADOWSTRIKE) then
-		return dam * (1.5 + self:getTalentLevel(self.T_SHADOWSTRIKE) / 7), true
-	end
-
+	local crit_power_add = 0
 	local chance = self:combatSpellCrit() + (add_chance or 0)
 	local crit = false
 
+	if self:isTalentActive(self.T_STEALTH) and self:knowTalent(self.T_SHADOWSTRIKE) then
+		chance = 100
+		crit_power_add = crit_power_add + self:getTalentLevel(self.T_SHADOWSTRIKE) / 7
+	end
+
 	print("[SPELL CRIT %]", chance)
 	if rng.percent(chance) then
-		dam = dam * (1.5 + (self.combat_critical_power or 0) / 100)
+		dam = dam * (1.5 + crit_power_add + (self.combat_critical_power or 0) / 100)
 		crit = true
 		game.logSeen(self, "#{bold}#%s's spell attains critical power!#{normal}#", self.name:capitalize())
 
@@ -1193,23 +1197,25 @@ end
 
 --- Computes mind crit for a damage
 function _M:mindCrit(dam, add_chance)
-	if self:isTalentActive(self.T_STEALTH) and self:knowTalent(self.T_SHADOWSTRIKE) then
-		return dam * (1.5 + self:getTalentLevel(self.T_SHADOWSTRIKE) / 7), true
-	end
-
+	local crit_power_add = 0
 	local chance = self:combatMindCrit() + (add_chance or 0)
 	local crit = false
 
+	if self:isTalentActive(self.T_STEALTH) and self:knowTalent(self.T_SHADOWSTRIKE) then
+		chance = 100
+		crit_power_add = crit_power_add + self:getTalentLevel(self.T_SHADOWSTRIKE) / 7
+	end
+
 	print("[MIND CRIT %]", chance)
 	if rng.percent(chance) then
-		dam = dam * (1.5 + (self.combat_critical_power or 0) / 100)
+		dam = dam * (1.5 + crit_power_add + (self.combat_critical_power or 0) / 100)
 		crit = true
 		game.logSeen(self, "#{bold}#%s's mind surges with critical power!#{normal}#", self.name:capitalize())
-		
+
 		if self:attr("hate_on_crit") then self:incMana(self:attr("hate_on_crit")) end
 		if self:attr("psi_on_crit") then self:incMana(self:attr("psi_on_crit")) end
 		if self:attr("equilibrium_on_crit") then self:incVim(self:attr("equilibrium_on_crit")) end
-		
+
 	end
 	return dam, crit
 end

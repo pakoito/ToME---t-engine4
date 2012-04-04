@@ -56,6 +56,7 @@ newTalent{
 			infra = self:addTemporaryValue("infravision", 1),
 		}
 		self:resetCanSeeCacheOf()
+		if self.updateMainShader then self:updateMainShader() end
 		return res
 	end,
 	deactivate = function(self, t, p)
@@ -63,6 +64,7 @@ newTalent{
 		self:removeTemporaryValue("infravision", p.infra)
 		self:removeTemporaryValue("lite", p.lite)
 		self:resetCanSeeCacheOf()
+		if self.updateMainShader then self:updateMainShader() end
 		return true
 	end,
 	info = function(self, t)
@@ -83,11 +85,11 @@ newTalent{
 	require = cuns_req2,
 	mode = "passive",
 	points = 5,
-	getMultiplier = function(self, t) return 1.5 + self:getTalentLevel(t) / 7 end,
+	getMultiplier = function(self, t) return self:getTalentLevel(t) / 7 end,
 	info = function(self, t)
 		local multiplier = t.getMultiplier(self, t)
 		return ([[When striking from stealth, hits are automatically criticals if the target does not notice you.
-		Shadowstrikes do %.02f%% damage versus a normal hit.]]):
+		Shadowstrikes do +%.02f%% damage versus a normal critical hit.]]):
 		format(multiplier * 100)
 	end,
 }
