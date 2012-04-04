@@ -836,21 +836,31 @@ function _M:getTextualDesc(compare_with)
 		compare_fields(w, compare_with, field, "stamina_regen", "%+.2f", "Stamina each turn: ")
 		compare_fields(w, compare_with, field, "mana_regen", "%+.2f", "Mana each turn: ")
 		compare_fields(w, compare_with, field, "hate_regen", "%+.2f", "Hate each turn: ")
+		compare_fields(w, compare_with, field, "psi_regen", "%+.2f", "Psi each turn: ")
 		compare_fields(w, compare_with, field, "positive_regen", "%+.2f", "P.Energy each turn: ")
 
 		compare_fields(w, compare_with, field, "stamina_regen_on_hit", "%+.2f", "Stamina when hit: ")
 		compare_fields(w, compare_with, field, "mana_regen_on_hit", "%+.2f", "Mana when hit: ")
 		compare_fields(w, compare_with, field, "equilibrium_regen_on_hit", "%+.2f", "Equilibrium when hit: ")
+		compare_fields(w, compare_with, field, "psi_regen_on_hit", "%+.2f", "Psi when hit: ")
+		compare_fields(w, compare_with, field, "hate_regen_on_hit", "%+.2f", "Hate when hit: ")
 
 		compare_fields(w, compare_with, field, "mana_on_crit", "%+.2f", "Mana when firing critical spell: ")
 		compare_fields(w, compare_with, field, "vim_on_crit", "%+.2f", "Vim when firing critical spell: ")
 		compare_fields(w, compare_with, field, "spellsurge_on_crit", "%+d", "Spellpower on spell critical (stacks up to 3 times): ")
+		
+		compare_fields(w, compare_with, field, "hate_on_crit", "%+.2f", "Hate when firing a critical mind attack: ")
+		compare_fields(w, compare_with, field, "psi_on_crit", "%+.2f", "Psi when firing a critical mind attack: ")
+		compare_fields(w, compare_with, field, "equilibrium_on_crit", "%+.2f", "Equilibrium when firing a critical mind attack: ")
+		
+		compare_fields(w, compare_with, field, "hate_per_kill", "+%0.2f", "Hate per kill: ")
 
 		compare_fields(w, compare_with, field, "die_at", "%+.2f life", "Only die when reaching: ", 1, true, true)
 		compare_fields(w, compare_with, field, "max_life", "%+.2f", "Maximum life: ")
 		compare_fields(w, compare_with, field, "max_mana", "%+.2f", "Maximum mana: ")
 		compare_fields(w, compare_with, field, "max_stamina", "%+.2f", "Maximum stamina: ")
 		compare_fields(w, compare_with, field, "max_hate", "%+.2f", "Maximum hate: ")
+		compare_fields(w, compare_with, field, "max_psi", "%+.2f", "Maximum psi: ")
 		compare_fields(w, compare_with, field, "max_vim", "%+.2f", "Maximum vim: ")
 		compare_fields(w, compare_with, field, "max_air", "%+.2f", "Maximum air capacity: ")
 
@@ -874,7 +884,8 @@ function _M:getTextualDesc(compare_with)
 		compare_fields(w, compare_with, field, "combat_spellspeed", "%+d%%", "Casting speed: ", 100)
 
 		compare_fields(w, compare_with, field, "healing_factor", "%+d%%", "Healing mod.: ", 100)
-
+		compare_fields(w, compare_with, field, "heal_on_nature_summon", "%+d", "Heals friendly targets nearby when you use a nature summon: ")
+		
 		compare_fields(w, compare_with, field, "life_leech_chance", "%+d%%", "Life leech chance: ")
 		compare_fields(w, compare_with, field, "life_leech_value", "%+d%%", "Life leech: ")
 
@@ -886,9 +897,14 @@ function _M:getTextualDesc(compare_with)
 		compare_fields(w, compare_with, field, "defense_on_teleport", "%+d", "Defense after a teleport: ")
 		compare_fields(w, compare_with, field, "resist_all_on_teleport", "%+d%%", "Resist all after a teleport: ")
 		compare_fields(w, compare_with, field, "effect_reduction_on_teleport", "%+d%%", "Effect duration reduction after a teleport: ")
-
+		
+		compare_fields(w, compare_with, field, "damage_resonance", "%+d%%", "Damage Resonance (when hit): ")
+		
 		compare_fields(w, compare_with, field, "size_category", "%+d", "Size category: ")
-
+		
+		compare_fields(w, compare_with, field, "nature_summon_max", "%+d", "Max wilder summons: ")
+		compare_fields(w, compare_with, field, "nature_summon_regen", "%+.2f", "Life regen bonus (wilder-summons): ")
+		
 		if w.undead then
 			desc:add("The wearer is treated as an undead.", true)
 		end
@@ -1180,6 +1196,8 @@ function _M:getPriceFlags()
 		if w.stamina_regen_on_hit then price = price + w.stamina_regen_on_hit * 3 end
 		if w.equilibrium_regen_on_hit then price = price + w.equilibrium_regen_on_hit * 3 end
 		if w.mana_regen_on_hit then price = price + w.mana_regen_on_hit * 3 end
+		if w.psi_regen_on_hit then price = price + w.psi_regen_on_hit * 3 end
+		if w.hate_regen_on_hit then price = price + w.hate_regen_on_hit * 3 end
 		if w.resource_leech_chance then price = price + w.resource_leech_chance * 10 end
 		if w.resource_leech_value then price = price + w.resource_leech_value * 10 end
 

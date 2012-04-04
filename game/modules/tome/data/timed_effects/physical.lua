@@ -1658,3 +1658,21 @@ newEffect{
 		self:removeTemporaryValue("spell_failure", eff.tmpid)
 	end,
 }
+
+newEffect{
+	name = "RESONANCE", image = "talents/alchemist_protection.png",
+	desc = "Resonance",
+	long_desc = function(self, eff) return ("+%d%% %s damage."):format(eff.dam, DamageType:get(eff.damtype).name) end,
+	type = "physical",
+	subtype = { nature=true },
+	status = "beneficial",
+	parameters = { dam=10, damtype=DamageType.ARCANE },
+	on_gain = function(self, err) return "#Target# resonates with the damage.", "+Resonance" end,
+	on_lose = function(self, err) return "#Target# is no longer resonating.", "-Resonance" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("inc_damage", {[eff.damtype]=eff.dam})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("inc_damage", eff.tmpid)
+	end,
+}

@@ -488,7 +488,7 @@ function _M:act()
 
 	if self.never_act then return false end
 
-	if not game.zone.wilderness then self:automaticTalents() end
+	if not game.zone.wilderness and not self:attr("confused") and not self:attr("terrified") then self:automaticTalents() end
 
 	-- Compute bonuses based on actors in FOV
 	if self:knowTalent(self.T_MILITANT_MIND) and not self:hasEffect(self.EFF_MILITANT_MIND) then
@@ -1539,10 +1539,10 @@ function _M:onTakeHit(value, src)
 	-- Spell cooldowns on hit
 	if self:attr("reduce_spell_cooldown_on_hit") and value >= self.max_life * self:attr("reduce_spell_cooldown_on_hit") / 100 then
 		local alt = {}
-		for tid, cd in pairs(self.talents_cd) do 
+		for tid, cd in pairs(self.talents_cd) do
 			if rng.percent(self:attr("reduce_spell_cooldown_on_hit_chance")) then alt[tid] = cd - 1 end
 		end
-		for tid, cd in pairs(alt) do 
+		for tid, cd in pairs(alt) do
 			if cd <= 0 then self.talents_cd[tid] = nil
 			else self.talents_cd[tid] = cd end
 		end
@@ -1579,7 +1579,7 @@ end
 
 function _M:takeHit(value, src, death_note)
 	local dead, val = engine.interface.ActorLife.takeHit(self, value, src, death_note)
-	
+
 	if dead and src and src.attr and src:attr("overkill") and src.project then
 		local dam = (self.die_at - self.life) * src:attr("overkill") / 100
 		src:project({type="ball", radius=2, selffire=false, x=self.x, y=self.y}, self.x, self.y, DamageType.BLIGHT, dam, {type="acid"})
@@ -2934,6 +2934,16 @@ function _M:postUseTalent(ab, ret)
 	if not ab.innate and self:hasEffect(self.EFF_RAMPAGE) and ab.id ~= self.T_RAMPAGE and ab.id ~= self.T_SLAM then
 		local eff = self:hasEffect(self.EFF_RAMPAGE)
 		value = self.tempeffect_def[self.EFF_RAMPAGE].do_postUseTalent(self, eff, value)
+	end
+
+	if ab.is_summon and ab.is_nature and self:attr("heal_on_nature_summon") then
+		local tg = {type="ball", range=0, radius=3,}
+		self:project(tg, self.x, self.y, function(px, py)
+			local target = game.level.map(px, py, Map.ACTOR)
+			if target and self:reactionToward(target) >= 0 then
+				target:heal(self:attr("heal_on_nature_summon"))
+			end
+		end)
 	end
 
 	return true

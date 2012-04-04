@@ -70,7 +70,7 @@ newEntity{ base = "BASE_MINDSTAR",
 		dammod = {wil=1},
 	},
 	wielder = {
-		combat_mindpower = 1,
+		combat_mindpower = 2,
 		combat_mindcrit = 2,
 	},
 }
@@ -88,7 +88,7 @@ newEntity{ base = "BASE_MINDSTAR",
 		dammod = {wil=1},
 	},
 	wielder = {
-		combat_mindpower = 2,
+		combat_mindpower = 3,
 		combat_mindcrit = 3,
 	},
 }

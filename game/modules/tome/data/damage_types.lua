@@ -264,6 +264,10 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 
 		if target.knowTalent and target:knowTalent(target.T_RESOLVE) then local t = target:getTalentFromId(target.T_RESOLVE) t.on_absorb(target, t, type, dam) end
 
+		if target ~= src and target.attr and target:attr("damage_resonance") and not target:hasEffect(target.EFF_RESONANCE) then
+			target:setEffect(target.EFF_RESONANCE, 5, {damtype=type, dam=target:attr("damage_resonance_on_hit")})
+		end
+		
 		if not target.dead and dam > 0 and type == DamageType.MIND and src and src.knowTalent and src:knowTalent(src.T_MADNESS) then
 			local t = src:getTalentFromId(src.T_MADNESS)
 			t.doMadness(target, t, src)

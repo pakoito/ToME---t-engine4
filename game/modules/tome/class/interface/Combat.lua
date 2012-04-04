@@ -614,6 +614,8 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	if hitted and not target.dead and target:attr("stamina_regen_on_hit") then target:incStamina(target.stamina_regen_on_hit) end
 	if hitted and not target.dead and target:attr("mana_regen_on_hit") then target:incMana(target.mana_regen_on_hit) end
 	if hitted and not target.dead and target:attr("equilibrium_regen_on_hit") then target:incEquilibrium(-target.equilibrium_regen_on_hit) end
+	if hitted and not target.dead and target:attr("psi_regen_on_hit") then target:incPsi(target.psi_regen_on_hit) end
+	if hitted and not target.dead and target:attr("hate_regen_on_hit") then target:incHate(target.hate_regen_on_hit) end
 
 	if hitted and self:attr("stamina_use_on_hit") then
 		self:incStamina(-self.stamina_use_on_hit)
@@ -1203,6 +1205,11 @@ function _M:mindCrit(dam, add_chance)
 		dam = dam * (1.5 + (self.combat_critical_power or 0) / 100)
 		crit = true
 		game.logSeen(self, "#{bold}#%s's mind surges with critical power!#{normal}#", self.name:capitalize())
+		
+		if self:attr("hate_on_crit") then self:incMana(self:attr("hate_on_crit")) end
+		if self:attr("psi_on_crit") then self:incMana(self:attr("psi_on_crit")) end
+		if self:attr("equilibrium_on_crit") then self:incVim(self:attr("equilibrium_on_crit")) end
+		
 	end
 	return dam, crit
 end

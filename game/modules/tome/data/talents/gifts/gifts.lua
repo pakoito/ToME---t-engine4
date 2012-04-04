@@ -99,6 +99,9 @@ function checkMaxSummon(self, silent)
 	end
 
 	local max = math.max(1, math.floor(self:getCun() / 10))
+	if self:attr("nature_summon_max") then
+		max = max + self:attr("nature_summon_max")
+	end
 	if nb >= max then
 		if not silent then
 			game.logPlayer(self, "#PINK#You can not summon any more; you have too many summons already (%d). You can increase the limit with higher Cunning(+1 for every 10).", nb)
@@ -122,6 +125,7 @@ function setupSummon(self, m, x, y, no_control)
 	-- Try to use stored AI talents to preserve tweaking over multiple summons
 	m.ai_talents = self.stored_ai_talents and self.stored_ai_talents[m.name] or {}
 	local main_weapon = self:getInven("MAINHAND") and self:getInven("MAINHAND")[1]
+	m.life_regen = m.life_regen + self:attr("nature_summon_regen")
 	m:attr("combat_apr", self:combatAPR(main_weapon))
 	m.inc_damage = table.clone(self.inc_damage, true)
 	m.resists_pen = table.clone(self.resists_pen, true)

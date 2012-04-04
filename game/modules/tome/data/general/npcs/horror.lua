@@ -338,6 +338,7 @@ newEntity{ base = "BASE_NPC_ELDRICTH_EYE",
 	_eldritch_eye_rarity = 1,
 	equilibrium_regen = -100,
 	resists = {[DamageType.ACID] = 80},
+	nature_summon_max = -1,
 	resolvers.talents{
 		[Talents.T_HYDRA]=3,
 	},
