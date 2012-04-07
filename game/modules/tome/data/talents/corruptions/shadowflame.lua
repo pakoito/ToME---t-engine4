@@ -207,6 +207,7 @@ newTalent{
 				game:onTickEnd(function()
 					if self.demon_plane_on_die then self:demon_plane_on_die(unpack(args)) end
 					self.on_die, self.demon_plane_on_die = self.demon_plane_on_die, nil
+					if not game.party:hasMember(self) then world:gainAchievement("FEARSCAPE", game:getPlayer(true)) end
 				end)
 			end
 
@@ -223,7 +224,6 @@ newTalent{
 	end,
 	deactivate = function(self, t, p)
 		game:onTickEnd(function()
-				game.log("===exiting===")
 			-- Collect objects
 			local objs = {}
 			for i = 0, game.level.map.w - 1 do for j = 0, game.level.map.h - 1 do

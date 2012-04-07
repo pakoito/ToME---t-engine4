@@ -1784,6 +1784,7 @@ function _M:setupMouse(mouse)
 	-- Chat tooltips
 	profile.chat:onMouse(function(user, item, button, event, x, y, xrel, yrel, bx, by)
 		local mx, my = core.mouse.get()
+		print(">>??", item, user, item and item.faded)
 		if not item or not user or item.faded == 0 then game.mouse:delegate(button, mx, my, xrel, yrel, nil, nil, event, "playmap") return end
 
 		local str = tstring{{"color","GOLD"}, {"font","bold"}, user.name, {"color","LAST"}, {"font","normal"}, true}
@@ -1808,6 +1809,7 @@ function _M:setupMouse(mouse)
 				extra.add_map_action = { name="Show chat user", fct=function() profile.chat:showUserInfo(user.login) end }
 			end
 		end
+		game.tooltip.old_tmx = -100
 		game.mouse:delegate(button, mx, my, xrel, yrel, nil, nil, event, "playmap", extra)
 	end)
 end

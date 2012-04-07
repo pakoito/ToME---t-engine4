@@ -700,16 +700,18 @@ function _M:checkEntity(x, y, pos, what, ...)
 end
 
 --- Lite all grids
-function _M:liteAll(x, y, w, h)
+function _M:liteAll(x, y, w, h, v)
+	if v == nil then v = true end
 	for i = x, x + w - 1 do for j = y, y + h - 1 do
-		self.lites(i, j, true)
+		self.lites(i, j, v)
 	end end
 end
 
 --- Remember all grids
-function _M:rememberAll(x, y, w, h)
+function _M:rememberAll(x, y, w, h, v)
+	if v == nil then v = true end
 	for i = x, x + w - 1 do for j = y, y + h - 1 do
-		self.remembers(i, j, true)
+		self.remembers(i, j, v)
 	end end
 end
 

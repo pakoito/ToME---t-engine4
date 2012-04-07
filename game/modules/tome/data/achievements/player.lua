@@ -100,3 +100,9 @@ newAchievement{
 	show = "name",
 	desc = [[Linking yourself in the ingame chat.]],
 }
+
+newAchievement{
+	name = "Fear me not!", id = "FEARSCAPE",
+	show = "full",
+	desc = [[Survive the Fearscape!]],
+}
