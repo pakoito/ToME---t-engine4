@@ -1559,7 +1559,7 @@ function _M:createRandomBoss(base, data)
 			local t = b:getTalentFromId(tid)
 			if t then
 				print(" * talent", tid)
-				local max = (t.points == 1) and 1 or math.ceil(t.points * 1.6)
+				local max = (t.points == 1) and 1 or math.ceil(t.points * 1.4)
 				local step = max / 50
 				b.learn_tids[tid] = math.ceil(step * data.level)
 			end

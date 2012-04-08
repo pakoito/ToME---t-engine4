@@ -56,7 +56,7 @@ newTalent{
 	tactical = { DISABLE = { silence = 4 } },
 	radius = function(self, t) return 4 + self:getTalentLevel(t) * 1.5 end,
 	target = function(self, t)
-		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=true, talent=t}
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
