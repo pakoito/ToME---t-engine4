@@ -26,14 +26,12 @@ newTalent{
 	sustain_equilibrium = 15,
 	cooldown = 20,
 	tactical = { BUFF = 2 },
-	getDur = function(self, t) return math.ceil(2 + self:getTalentLevel(t) / 2) end,
-	getRegen = function(self, t) return 20 + self:combatTalentMindDamage(t, 5, 400) / 10 end,
+	getDur = function(self, t) return math.max(1,  math.floor(self:getTalentLevel(t))) end,
 	activate = function(self, t)
 		local dur = t.getDur(self, t)
 		local regen = t.getRegen(self, t)
 		game:playSoundNear(self, "talents/heal")
 		local ret = {
-			regen = self:addTemporaryValue("liferegen_factor", regen),
 			dur = self:addTemporaryValue("liferegen_dur", dur),
 		}
 		if self:knowTalent(self.T_FUNGAL_GROWTH) then
@@ -43,17 +41,14 @@ newTalent{
 		return ret
 	end,
 	deactivate = function(self, t, p)
-		self:removeTemporaryValue("liferegen_factor", p.regen)
 		self:removeTemporaryValue("liferegen_dur", p.dur)
 		if p.fg then self:removeTemporaryValue("fungal_growth", p.fg) end
 		return true
 	end,
 	info = function(self, t)
 		local dur = t.getDur(self, t)
-		local regen = t.getRegen(self, t)
 		return ([[Surround yourself with a myriad of tiny, nearly invisible, healing fungus.
-		Any regeneration effect active on you will be increased by %d%% and its duration by +%d turns.
-		The effect will increase with your Mindpower.]]):
+		Any regeneration effect active on you will have its duration increased by +%d turns.]]):
 		format(regen, dur)
 	end,
 }
