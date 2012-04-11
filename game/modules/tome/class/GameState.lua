@@ -323,6 +323,10 @@ function _M:generateRandart(add, base, lev, nb_egos)
 			local filter = nil
 			if rng.percent(lev) and been_greater < 2 then been_greater = been_greater + 1 filter = function(e) return e.greater_ego end end
 			for z = 1, #egos do list[#list+1] = egos[z].e end
+
+			local ef = self:egoFilter(game.zone, game.level, "object", "randartego", o, {special=filter}, list, {})
+			filter = ef.special
+
 			local pick_egos = game.zone:computeRarities("object", list, game.level, filter, nil, nil)
 			local ego = game.zone:pickEntity(pick_egos)
 			if ego then
