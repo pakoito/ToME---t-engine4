@@ -245,6 +245,9 @@ newEntity{ define_as = "FALLEN_SUN_PALADIN_AERYN",
 	},
 
 	die = function(self, src)
+		if game.zone.short_name ~= "high-peak" then
+			return mod.class.NPC.die(self, src)
+		end
 		self.die = function() end
 		local Chat = require "engine.Chat"
 		local chat = Chat.new("fallen-aeryn", self, game.player)

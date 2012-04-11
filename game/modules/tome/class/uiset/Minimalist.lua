@@ -188,6 +188,7 @@ function _M:init()
 	}
 
 	self:resetPlaces()
+	table.merge(self.places, config.settings.tome.uiset_minimalist and config.settings.tome.uiset_minimalist.places or {}, true)
 
 	local w, h = core.display.size()
 

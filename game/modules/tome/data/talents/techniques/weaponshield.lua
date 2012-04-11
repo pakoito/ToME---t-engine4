@@ -238,7 +238,7 @@ newTalent{
 
 		local tg = self:getTalentTarget(t)
 		self:project(tg, self.x, self.y, function(px, py, tg, self)
-			local target = game.level.map(x, y, Map.ACTOR)
+			local target = game.level.map(px, py, Map.ACTOR)
 			if target then
 				if target:checkHit(self:combatAttack(shield.special_combat), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("knockback") then
 					target:knockback(self.x, self.y, 2 + self:getTalentLevel(t))

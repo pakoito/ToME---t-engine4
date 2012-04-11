@@ -346,7 +346,6 @@ local pick_ego = function(self, level, e, egos_list, type, picked_etype, etype, 
 	local egos = level:getEntitiesList(type.."/"..e.egos..":"..etype)
 	if not egos then egos = self:generateEgoEntities(level, type, etype, e.egos, e.__CLASSNAME) end
 
-print("<<",self, level, type, etype, e, ego_filter, egos_list, picked_etype)
 	if self.ego_filter then ego_filter = self.ego_filter(self, level, type, etype, e, ego_filter, egos_list, picked_etype) end
 
 	-- Filter the egos if needed
