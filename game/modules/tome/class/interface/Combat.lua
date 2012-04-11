@@ -713,7 +713,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 			-- Outmaneuver
 			if effPredator.typeOutmaneuverChance > 0 and rng.percent(effPredator.typeOutmaneuverChance) then
 				local t = self:getTalentFromId(self.T_OUTMANEUVER)
-				target:setEffect(target.EFF_OUTMANEUVERED, t.getDuration(self, t), { reduction=t.getReduction(self, t) })
+				target:setEffect(target.EFF_OUTMANEUVERED, t.getDuration(self, t), { physicalResistChange=t.getPhysicalResistChange(self, t), statReduction=t.getStatReduction(self, t) })
 			end
 		end
 	end
