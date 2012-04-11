@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 newTalent{
-	name = "Heal",
+	name = "Arcane Reconstruction", short_name = "HEAL",
 	type = {"spell/aegis", 1},
 	require = spells_req1,
 	points = 5,
@@ -34,7 +34,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local heal = t.getHeal(self, t)
-		return ([[Call upon the forces of nature to heal your body for %d life.
+		return ([[Imbues your body with arcane forces, reconstructing it to a default state, healing for %d life.
 		The life healed will increase with your Spellpower.]]):
 		format(heal)
 	end,
