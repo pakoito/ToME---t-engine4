@@ -151,7 +151,8 @@ newEntity{ base = "BASE_NPC_GHOST",
 
 --Glacial Legion, icy fused soul. Leaves trails that freeze any who try to pass over them.
 newEntity{ base = "BASE_NPC_GHOST", define_as = "GLACIAL_LEGION",
-	name = "Glacial Legion", color=colors.BLUE, image="npc/banshee.png", unique=true,
+	name = "Glacial Legion", color=colors.BLUE, unique=true,
+	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/undead_ghost_glacial_legion.png", display_h=2, display_y=-1}}},
 	desc = [[A massive, shifting, ethereal form floats in the air around an orb of frozen blood. Vapor pools on the floor beneath it.]],
 	level_range = {45, nil}, exp_worth = 2,
 	rarity = 50,

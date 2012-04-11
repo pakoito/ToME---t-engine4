@@ -138,7 +138,8 @@ newEntity{ base = "BASE_NPC_GHOUL", define_as = "RISEN_CORPSE",
 
 --Rotting Titan, undead mass of flesh and stone. Regenerates quickly, moves slow, and hits hard.
 newEntity{ base = "BASE_NPC_GHOUL", define_as = "ROTTING_TITAN",
-	name = "Rotting Titan", color={128,64,0}, unique=true, image="npc/undead_ghoul_ghoul.png",
+	name = "Rotting Titan", color={128,64,0}, unique=true,
+	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/undead_ghoul_rotting_titan.png", display_h=2, display_y=-1}}},
 	desc = [[This gigantic mass of flesh and stone moves slowly, the ground rumbling with each step it takes. Its body seems to constantly pulsate and reform. Massive stones at the end of each limb form massive blunt weapons.]],
 	level_range = {45, nil}, exp_worth = 2,
 	rarity = 25,

@@ -365,6 +365,7 @@ function resolvers.calc.image_material(t, e)
 	if type(t[2]) == "string" and t[2] == "sea-metal" then t[2] = {"coral", "bluesteel", "deepsteel", "orite", "orichalcum"} end
 	if type(t[2]) == "string" and t[2] == "leather" then t[2] = {"rough", "cured", "hardened", "reinforced", "drakeskin"} end
 	if type(t[2]) == "string" and t[2] == "wood" then t[2] = {"elm","ash","yew","elvenwood","dragonbone"} end
+	if type(t[2]) == "string" and t[2] == "nature" then t[2] = {"mossy","vined","thorned","pulsing","living"} end
 	if type(t[2]) == "string" and t[2] == "cloth" then t[2] = {"linen","woollen","cashmere","silk","elvensilk"} end
 	local ml = e.material_level or 1
 	return "object/"..t[1].."_"..t[2][ml]..".png"
@@ -403,7 +404,7 @@ function resolvers.calc.moddable_tile(t, e)
 	elseif slot == "bow" then r = {"%s_hand_01"}
 	elseif slot == "sling" then r = {"%s_hand_02"}
 	elseif slot == "dagger" then r = {"%s_hand_03"}
-	elseif slot == "mindstar" then r = {"%s_hand_03"}
+	elseif slot == "mindstar" then r = {{"mindstar_mossy_%s_01",true},{"mindstar_vines_%s_01",true},{"mindstar_thorn_%s_01",true},{"mindstar_pusling_%s_01",true},{"mindstar_living_%s_01",true},}
 	elseif slot == "helm" then r = {"head_05","head_06","head_08","head_10","head_09",}
 	elseif slot == "leather_cap" then r = {"head_03"}
 	elseif slot == "mummy_wrapping" then r = {{"special/mummy_wrappings",true}}

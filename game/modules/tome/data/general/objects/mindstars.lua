@@ -22,7 +22,7 @@ newEntity{
 	slot = "MAINHAND", offslot = "OFFHAND",
 	type = "weapon", subtype="mindstar",
 	add_name = " (#COMBAT_DAMTYPE#)",
-	display = "!", color=colors.LIGHT_RED, image = resolvers.image_material("mindstar", "wood"),
+	display = "!", color=colors.LIGHT_RED, image = resolvers.image_material("mindstar", "nature"),
 	moddable_tile = resolvers.moddable_tile("mindstar"),
 	randart_able = { attack=10, physical=40, spell=1, def=10, misc=10 },
 	encumber = 3,
@@ -76,7 +76,7 @@ newEntity{ base = "BASE_MINDSTAR",
 }
 
 newEntity{ base = "BASE_MINDSTAR",
-	name = "thorny mnidstar", short_name = "thorny",
+	name = "thorny mindstar", short_name = "thorny",
 	level_range = {20, 30},
 	require = { stat = { wil=24 }, },
 	cost = 15,
