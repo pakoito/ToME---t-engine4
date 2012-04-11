@@ -2195,6 +2195,8 @@ function _M:onWear(o, bypass_set)
 
 	self:breakReloading()
 
+	self:checkMindstar(o)
+
 	self:updateModdableTile()
 	if self == game.player then game:playSound("actions/wear") end
 end
@@ -2259,10 +2261,36 @@ function _M:onTakeoff(o, bypass_set)
 		end
 	end
 
+	self:checkMindstar(o)
+
 	self:breakReloading()
 
 	self:updateModdableTile()
 	if self == game.player then game:playSound("actions/takeoff") end
+end
+
+function _M:checkMindstar(o)
+	local new
+	local old
+
+	if o.wielded then
+		new = self:attr("psiblades_active")
+		old = o.psiblade_active
+	else
+		new = false
+		old = o.psiblade_active
+	end
+
+	if new and not old then
+		o.moddable_tile_ornament = o.psiblade_tile
+		o.psiblade_active = true
+--		o.combat.dammod.wil
+		print("Activating psiblade", o.name)
+	elseif not new and old then
+		o.moddable_tile_ornament = nil
+		o.psiblade_active = false
+		print("Disabling psiblade", o.name)
+	end
 end
 
 --- Call when an object is added
