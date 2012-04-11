@@ -49,7 +49,7 @@ newTalent{
 	sustain_mana = 40,
 	cooldown = 14,
 	tactical = { BUFF = 2 },
-	getDur = function(self, t) return math.ceil(2 + self:getTalentLevel(t) / 2) end,
+	getDur = function(self, t) return self:getTalentLevel(t) >= 5 and 1 or 0 end,
 	getShield = function(self, t) return 20 + self:combatTalentSpellDamage(t, 5, 400) / 10 end,
 	activate = function(self, t)
 		local dur = t.getDur(self, t)
@@ -71,7 +71,8 @@ newTalent{
 		local shield = t.getShield(self, t)
 		local dur = t.getDur(self, t)
 		return ([[Surround yourself with strengthening arcane forces.
-		Every damage shield, time shield or displacement shield affecting you has its power increased by %d%% and duration increased by %d.
+		Every damage shield, time shield or displacement shield affecting you has its power increased by %d%%.
+		At level 5 it also increases the duration of all shields by 1 turn.
 		The shield value will increase with your Spellpower.]]):
 		format(shield, dur)
 	end,
