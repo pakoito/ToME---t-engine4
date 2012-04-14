@@ -47,8 +47,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Channel your mental power through your wielded mindstars.]]):
-		format()
+		return ([[Channel your mental power through your wielded mindstars, generating psionic blades sprouting from the mindstars.
+		Mindstar psiblades have their damage modifiers (how much damage they gain from stats) increased by %d%% and their armour penetration by %d%%.]]):
+		format(100 * (1.3 + self:getTalentLevel(t) / 10), 100 * (1 + self:getTalentLevel(t) / 6.3))
 	end,
 }
 

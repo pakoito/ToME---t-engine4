@@ -32,7 +32,7 @@ newTalentType{ allow_random=true, is_nature=true, type="wild-gift/sand-drake", n
 newTalentType{ allow_random=true, is_nature=true, type="wild-gift/fire-drake", name = "fire drake aspect", description = "Take on the defining aspects of a Fire Drake." }
 newTalentType{ allow_random=true, is_nature=true, type="wild-gift/cold-drake", name = "cold drake aspect", description = "Take on the defining aspects of a Cold Drake." }
 newTalentType{ allow_random=true, is_nature=true, type="wild-gift/storm-drake", name = "storm drake aspect", description = "Take on the defining aspects of a Storm Drake." }
-newTalentType{ allow_random=true, is_nature=true, type="wild-gift/mindstar-mastery", name = "mindstar mastery", generic = true, description = "Learn to channel your mental power throught mindstars, forming powerful psionic blades." }
+newTalentType{ allow_random=true, is_nature=true, type="wild-gift/mindstar-mastery", name = "mindstar mastery", generic = true, description = "Learn to channel your mental power through mindstars, forming powerful psionic blades." }
 newTalentType{ allow_random=true, is_nature=true, type="wild-gift/earthen-power", name = "earthen power", description = "Dwarves have learned to imbue their shields with the power of stone itself." }
 newTalentType{ allow_random=true, is_nature=true, type="wild-gift/earthen-vines", name = "earthen vines", description = "Control the stone itself and bring it alive in the form of dreadful vines." }
 

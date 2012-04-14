@@ -2121,8 +2121,8 @@ function _M:updateModdableTile()
 		end
 		if i[1].moddable_tile_ornament then add[#add+1] = {image = base..(i[1].moddable_tile_ornament):format("right")..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1} end
 	end
-	i = self.inven[self.INVEN_OFFHAND]; if i and i[1] and i[1].moddable_tile then 
-		add[#add+1] = {image = base..(i[1].moddable_tile):format("left")..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1} 
+	i = self.inven[self.INVEN_OFFHAND]; if i and i[1] and i[1].moddable_tile then
+		add[#add+1] = {image = base..(i[1].moddable_tile):format("left")..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1}
 		if i[1].moddable_tile_ornament then add[#add+1] = {image = base..(i[1].moddable_tile_ornament):format("left")..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1} end
 	end
 
@@ -2282,11 +2282,24 @@ function _M:checkMindstar(o)
 	end
 
 	if new and not old then
+		local pv = new
 		o.moddable_tile_ornament = o.psiblade_tile
-		o.psiblade_active = true
---		o.combat.dammod.wil
+		o.psiblade_active = new
+
+		local nm = {}
+		for s, v in pairs(o.combat.dammod) do nm[s] = v * (1.3 + pv / 10) end
+		o.combat.dammod = nm
+		o.comba.apr = o.comba.apr * (1 + pv / 6.3)
+
 		print("Activating psiblade", o.name)
 	elseif not new and old then
+		local pv = o.psiblade_active
+
+		local nm = {}
+		for s, v in pairs(o.combat.dammod) do nm[s] = v / (1.3 + pv / 10) end
+		o.combat.dammod = nm
+		o.comba.apr = o.comba.apr / (1 + pv / 6.3)
+
 		o.moddable_tile_ornament = nil
 		o.psiblade_active = false
 		print("Disabling psiblade", o.name)

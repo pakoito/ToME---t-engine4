@@ -33,7 +33,7 @@ newTalent{
 		local regen = t.getRegen(self, t)
 		local max_regen = t.getMax(self, t)
 		return ([[Delight in spilling the blood of your foes.  After scoring a critical hit your maximum hit points will be increased by %d%%, your life regeneration by %0.2f per turn, and your stamina regeneration by %0.2f per turn.
-		The life and stamina regeneration will stack up to five times for a maximum of %0.2f and %0.2f each turn, respectfully.]]):
+		The life and stamina regeneration will stack up to five times for a maximum of %0.2f and %0.2f each turn, respectively.]]):
 		format(math.floor(self:getTalentLevel(t) * 2), regen, regen/5, max_regen, max_regen/5)
 	end,
 }
