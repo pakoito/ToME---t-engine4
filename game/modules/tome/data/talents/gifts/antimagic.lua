@@ -24,7 +24,7 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	getRegen = function(self, t) return 1 + (self:combatTalentMindDamage(t, 1, 10) /10) end,
-	getResist = function(self, t) return self:combatTalentMindDamage(t, 10, 40) end,
+	getResist = function(self, t) return self:mindCrit(self:combatTalentMindDamage(t, 10, 40)) end,
 	on_absorb = function(self, t, damtype)
 		if not DamageType:get(damtype).antimagic_resolve then return end
 
@@ -138,7 +138,7 @@ newTalent{
 			local target = game.level.map(px, py, Map.ACTOR)
 			if not target then return end
 
-			local base = self:combatTalentMindDamage(t, 20, 460)
+			local base = self:mindCrit(self:combatTalentMindDamage(t, 20, 460))
 			DamageType:get(DamageType.MANABURN).projector(self, px, py, DamageType.MANABURN, base)
 		end, nil, {type="slime"})
 		game:playSoundNear(self, "talents/heal")
