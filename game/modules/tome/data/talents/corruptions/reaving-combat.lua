@@ -75,7 +75,7 @@ newTalent{
 	require = str_corrs_req4,
 	points = 5,
 	do_splash = function(self, t, target)
-		local dam = self:combatTalentSpellDamage(t, 5, 30)
+		local dam = self:spellCrit(self:combatTalentSpellDamage(t, 5, 30))
 		local atk = self:combatTalentSpellDamage(t, 15, 35)
 		local armor = self:combatTalentSpellDamage(t, 15, 40)
 		if self:getTalentLevel(t) >= 3 then

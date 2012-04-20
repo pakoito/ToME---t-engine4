@@ -72,7 +72,7 @@ newTalent{
 		self:project(tg, x, y, function(tx, ty)
 			local target = game.level.map(tx, ty, Map.ACTOR)
 			if not target or target == self then return end
-			target:setEffect(target.EFF_BURNING_HEX, 20, {src=self, dam=self:combatTalentSpellDamage(t, 4, 90), power=1+(self:getTalentLevel(t) / 10), apply_power=self:combatSpellpower()})
+			target:setEffect(target.EFF_BURNING_HEX, 20, {src=self, dam=self:spellCrit(self:combatTalentSpellDamage(t, 4, 90)), power=1+(self:getTalentLevel(t) / 10), apply_power=self:combatSpellpower()})
 		end)
 		game:playSoundNear(self, "talents/slime")
 		return true

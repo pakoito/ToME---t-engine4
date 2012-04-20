@@ -127,7 +127,7 @@ newTalent{
 		self:project(tg, x, y, function(px, py)
 			local target = game.level.map(px, py, Map.ACTOR)
 			if not target then return end
-			target:setEffect(target.EFF_CORROSIVE_WORM, 10, {src=self, dam=self:combatTalentSpellDamage(t, 10, 60), explosion=self:spellCrit(self:combatTalentSpellDamage(t, 10, 230))})
+			target:setEffect(target.EFF_CORROSIVE_WORM, 10, {src=self, dam=self:spellCrit(self:combatTalentSpellDamage(t, 10, 60)), explosion=self:spellCrit(self:combatTalentSpellDamage(t, 10, 230))})
 		end)
 		game:playSoundNear(self, "talents/slime")
 		return true
@@ -156,7 +156,7 @@ newTalent{
 	action = function(self, t)
 		local duration = 5 + self:getTalentLevel(t)
 		local radius = self:getTalentRadius(t)
-		local dam = self:combatTalentSpellDamage(t, 12, 130)
+		local dam = self:spellCrit(self:combatTalentSpellDamage(t, 12, 130))
 		local actor = self
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,

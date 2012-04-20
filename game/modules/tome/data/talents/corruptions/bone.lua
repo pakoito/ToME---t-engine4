@@ -61,7 +61,7 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 
-		local dam = self:combatTalentSpellDamage(t, 5, 140)
+		local dam = self:spellCrit(self:combatTalentSpellDamage(t, 5, 140))
 
 		self:project(tg, x, y, function(px, py)
 			local target = game.level.map(px, py, engine.Map.ACTOR)
@@ -105,7 +105,7 @@ newTalent{
 	end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
-		self:project(tg, self.x, self.y, DamageType.PHYSICAL, self:combatTalentSpellDamage(t, 8, 180), {type="bones"})
+		self:project(tg, self.x, self.y, DamageType.PHYSICAL, self:spellCrit(self:combatTalentSpellDamage(t, 8, 180)), {type="bones"})
 		game:playSoundNear(self, "talents/arcane")
 		return true
 	end,

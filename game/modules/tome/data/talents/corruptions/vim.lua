@@ -116,7 +116,7 @@ newTalent{
 			if a:canBe("disease") then
 				local diseases = {{self.EFF_WEAKNESS_DISEASE, "str"}, {self.EFF_ROTTING_DISEASE,"con"}, {self.EFF_DECREPITUDE_DISEASE,"dex"}}
 				local disease = rng.table(diseases)
-				a:setEffect(disease[1], 6, {src=self, dam=self:combatTalentSpellDamage(t, 12, 80), [disease[2]]=self:combatTalentSpellDamage(t, 5, 25)})
+				a:setEffect(disease[1], 6, {src=self, dam=self:spellCrit(self:combatTalentSpellDamage(t, 12, 80)), [disease[2]]=self:combatTalentSpellDamage(t, 5, 25)})
 			end
 		end
 

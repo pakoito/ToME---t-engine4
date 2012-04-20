@@ -27,13 +27,14 @@ newTalent{
 	random_ego = "attack",
 	tactical = { ATTACK = {BLIGHT = 2} },
 	requires_target = true,
+	no_energy = true,
 	range = function(self, t) return 4 + math.floor(self:getTalentLevel(t)) end,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t)}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 
-		local diseases = {{self.EFF_WEAKNESS_DISEASE, "str"}, {self.EFF_ROTTING_DISEASE,"con"}, {self.EFF_DECREPITUDE_DISEASE,"dex"}}
+		local diseases = {{self.EFF_WEAKNESS_DISEASE, "str"}, {self.EFF_ROTTING_DISEASE, "con"}, {self.EFF_DECREPITUDE_DISEASE, "dex"}}
 		local disease = rng.table(diseases)
 
 		-- Try to rot !
@@ -41,7 +42,17 @@ newTalent{
 			local target = game.level.map(px, py, engine.Map.ACTOR)
 			if not target then return end
 			if target:canBe("disease") then
-				target:setEffect(disease[1], 6, {src=self, dam=self:combatTalentSpellDamage(t, 5, 45), [disease[2]]=self:combatTalentSpellDamage(t, 5, 25), apply_power=self:combatSpellpower()})
+				local str, dex, con = not target:hasEffect(self.EFF_WEAKNESS_DISEASE) and target:getStr() or 0, not target:hasEffect(self.EFF_DECREPITUDE_DISEASE) and target:getDex() or 0, not target:hasEffect(self.EFF_ROTTING_DISEASE) and target:getCon() or 0
+
+				if str >= dex and str >= con then
+					disease = {self.EFF_WEAKNESS_DISEASE, "str"}
+				elseif dex >= str and dex >= con then
+					disease = {self.EFF_DECREPITUDE_DISEASE, "dex"}
+				elseif con > 0 then
+					disease = {self.EFF_ROTTING_DISEASE, "con"}
+				end
+
+				target:setEffect(disease[1], 6, {src=self, dam=self:spellCrit(7 + self:combatTalentSpellDamage(t, 6, 65)), [disease[2]]=self:combatTalentSpellDamage(t, 5, 35), apply_power=self:combatSpellpower()})
 			else
 				game.logSeen(target, "%s resists the disease!", target.name:capitalize())
 			end
@@ -52,9 +63,10 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Fires a bolt of pure filth, diseasing your target with a random disease doing %0.2f blight damage per turns for 6 turns and reducing one of its physical stats (strength, constitution, dexterity) by %d.
+		return ([[Fires a bolt of pure filth, diseasing your target with a disease doing %0.2f blight damage per turns for 6 turns and reducing one of its physical stats (strength, constitution, dexterity) by %d. The three diseases can stack.
+		Virulent Disease will always try to apply a disease the target does not currently have, and also one that will have the most debilitaing effect for the target.
 		The effect will increase with your Magic stat.]]):
-		format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 5, 45)), self:combatTalentSpellDamage(t, 5, 25))
+		format(damDesc(self, DamageType.BLIGHT, 7 + self:combatTalentSpellDamage(t, 6, 65), self:combatTalentSpellDamage(t, 5, 35))
 	end,
 }
 
@@ -90,7 +102,7 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 
-		local dam = self:combatTalentSpellDamage(t, 15, 85)
+		local dam = self:spellCrit(self:combatTalentSpellDamage(t, 15, 85))
 		local diseases = {}
 
 		-- Try to rot !
@@ -181,7 +193,7 @@ newTalent{
 			-- Make them EXPLODE !!!
 			for i, d in ipairs(diseases) do
 				target:removeEffect(d.id)
-				DamageType:get(DamageType.BLIGHT).projector(self, px, py, DamageType.BLIGHT, d.params.dam * d.params.dur)
+				DamageType:get(DamageType.BLIGHT).projector(self, px, py, DamageType.BLIGHT, self:spellCrit(d.params.dam * d.params.dur))
 			end
 
 			if #diseases > 0 and target:canBe("stun") then
@@ -247,7 +259,7 @@ newTalent{
 		self:project(tg, x, y, function(px, py)
 			local target = game.level.map(px, py, engine.Map.ACTOR)
 			if not target or (self:reactionToward(target) >= 0) then return end
-			target:setEffect(self.EFF_EPIDEMIC, 6, {src=self, dam=self:combatTalentSpellDamage(t, 15, 50), heal_factor=40 + self:getTalentLevel(t) * 4, resist=30 + self:getTalentLevel(t) * 6, apply_power=self:combatSpellpower()})
+			target:setEffect(self.EFF_EPIDEMIC, 6, {src=self, dam=self:spellCrit(self:combatTalentSpellDamage(t, 15, 70)), heal_factor=40 + self:getTalentLevel(t) * 4, resist=30 + self:getTalentLevel(t) * 6, apply_power=self:combatSpellpower()})
 			game.level.map:particleEmitter(px, py, 1, "slime")
 		end)
 		game:playSoundNear(self, "talents/slime")
@@ -260,6 +272,6 @@ newTalent{
 		Creatures suffering from that disease will also suffer healing reduction (%d%%) and diseases immunity reduction (%d%%).
 		Epidemic is an extremely potent disease, as such it fully ignores the target's diseases immunity.
 		The damage will increase with your Magic stat, and the spread chance increases with the blight damage.]]):
-		format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 15, 50)), 40 + self:getTalentLevel(t) * 4, 30 + self:getTalentLevel(t) * 6)
+		format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 15, 70)), 40 + self:getTalentLevel(t) * 4, 30 + self:getTalentLevel(t) * 6)
 	end,
 }

@@ -42,8 +42,8 @@ newTalent{
 	type = {"corruption/shadowflame", 2},
 	require = corrs_req2,
 	points = 5,
-	cooldown = 10,
-	vim = 20,
+	cooldown = 8,
+	vim = 15,
 	requires_target = true,
 	range = 6,
 	radius = function(self, t)
