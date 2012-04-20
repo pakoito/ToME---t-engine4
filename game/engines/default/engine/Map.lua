@@ -882,7 +882,7 @@ function _M:addEffect(src, x, y, duration, damtype, dam, radius, dir, angle, ove
 
 	-- Handle any angle
 	if type(dir) == "table" then
-		grids = core.fov.beam_any_angle_grids(x, y, radius, dir.delta_x, dir.delta_y, angle, true)
+		grids = core.fov.beam_any_angle_grids(x, y, radius, angle, dir.source_x or src.x or x, dir.source_y or src.y or y, dir.delta_x, dir.delta_y, true)
 	-- Handle balls
 	elseif dir == 5 then
 		grids = core.fov.circle_grids(x, y, radius, true)
@@ -959,7 +959,7 @@ function _M:processEffects()
 			table.insert(todel, i)
 		elseif e.update_fct then
 			if e:update_fct() then
-				if type(dir) == "table" then e.grids = core.fov.beam_any_angle_grids(e.x, e.y, e.radius, e.dir.delta_x, e.dir.delta_y, e.angle, true)
+				if type(dir) == "table" then e.grids = core.fov.beam_any_angle_grids(e.x, e.y, e.radius, e.angle, e.dir.source_x or e.src.x or e.x, e.dir.source_y or e.src.y or e.y, e.dir.delta_x, e.dir.delta_y, true)
 				elseif e.dir == 5 then e.grids = core.fov.circle_grids(e.x, e.y, e.radius, true)
 				else e.grids = core.fov.beam_grids(e.x, e.y, e.radius, e.dir, e.angle, true) end
 				if e.particles then

@@ -49,6 +49,8 @@ function _M:project(t, x, y, damtype, dam, particles)
 --	if type(dam) == "number" and dam < 0 then return end
 	local typ = Target:getType(t)
 	typ.source_actor = self
+	typ.start_x = typ.start_x or typ.x or typ.source_actor and typ.source_actor.x or self.x
+	typ.start_y = typ.start_y or typ.y or typ.source_actor and typ.source_actor.y or self.x
 
 	local grids = {}
 	local function addGrid(x, y)
@@ -56,16 +58,14 @@ function _M:project(t, x, y, damtype, dam, particles)
 		grids[x][y] = true
 	end
 
-	local srcx, srcy = t.x or self.x, t.y or self.y
-
 	-- Stop at range or on block
-	local stop_x, stop_y = srcx, srcy
-	local stop_radius_x, stop_radius_y = srcx, srcy
+	local stop_x, stop_y = typ.start_x, typ.start_y
+	local stop_radius_x, stop_radius_y = typ.start_x, typ.start_y
 	local l, is_corner_blocked
 	if typ.source_actor.lineFOV then
-		l = typ.source_actor:lineFOV(x, y, nil, nil, srcx, srcy)
+		l = typ.source_actor:lineFOV(x, y, nil, nil, typ.start_x, typ.start_y)
 	else
-		l = core.fov.line(srcx, srcy, x, y)
+		l = core.fov.line(typ.start_x, typ.start_y, x, y)
 	end
 	local block_corner = typ.block_path and function(_, bx, by) local b, h, hr = typ:block_path(bx, by, true) ; return b and h and not hr end
 		or function(_, bx, by) return false end
@@ -134,9 +134,11 @@ function _M:project(t, x, y, damtype, dam, particles)
 			game.level.map.w,
 			game.level.map.h,
 			typ.cone,
-			x - self.x,
-			y - self.y,
 			typ.cone_angle,
+			typ.start_x,
+			typ.start_y,
+			x - typ.start_x,
+			y - typ.start_y,
 			function(_, px, py)
 				if typ.block_radius and typ:block_radius(px, py) then return true end
 			end,
@@ -145,13 +147,32 @@ function _M:project(t, x, y, damtype, dam, particles)
 			end,
 		nil)
 		addGrid(stop_x, stop_y)
+	elseif typ.wall and typ.wall > 0 then
+		core.fov.calc_wall(
+			stop_radius_x,
+			stop_radius_y,
+			game.level.map.w,
+			game.level.map.h,
+			typ.wall,
+			typ.halfmax_spots,
+			typ.start_x,
+			typ.start_y,
+			x - typ.start_x,
+			y - typ.start_y,
+			function(_, px, py)
+				if typ.block_radius and typ:block_radius(px, py) then return true end
+			end,
+			function(_, px, py)
+				addGrid(px, py)
+			end,
+		nil)
 	else
 		-- Deal damage: single
 		addGrid(stop_x, stop_y)
 	end
 
 	-- Check for minimum range
-	if typ.min_range and core.fov.distance(self.x, self.y, stop_x, stop_y) < typ.min_range then
+	if typ.min_range and core.fov.distance(typ.start_x, typ.start_y, stop_x, stop_y) < typ.min_range then
 		return
 	end
 
@@ -198,17 +219,17 @@ end
 function _M:canProject(t, x, y)
 	local typ = Target:getType(t)
 	typ.source_actor = self
-	typ.start_x = self.x
-	typ.start_y = self.y
+	typ.start_x = typ.start_x or typ.x or typ.source_actor and typ.source_actor.x or self.x
+	typ.start_y = typ.start_y or typ.y or typ.source_actor and typ.source_actor.y or self.x
 
 	-- Stop at range or on block
-	local stop_x, stop_y = self.x, self.y
-	local stop_radius_x, stop_radius_y = self.x, self.y
+	local stop_x, stop_y = typ.start_x, typ.start_y
+	local stop_radius_x, stop_radius_y = typ.start_x, typ.start_y
 	local l, is_corner_blocked
 	if typ.source_actor.lineFOV then
-		l = typ.source_actor:lineFOV(x, y)
+		l = typ.source_actor:lineFOV(x, y, nil, nil, typ.start_x, typ.start_y)
 	else
-		l = core.fov.line(self.x, self.y, x, y)
+		l = core.fov.line(typ.start_x, typ.start_y, x, y)
 	end
 	local block_corner = typ.block_path and function(_, bx, by) local b, h, hr = typ:block_path(bx, by, true) ; return b and h and not hr end
 		or function(_, bx, by) return false end
@@ -243,7 +264,7 @@ function _M:canProject(t, x, y)
 	end
 
 	-- Check for minimum range
-	if typ.min_range and core.fov.distance(self.x, self.y, stop_x, stop_y) < typ.min_range then
+	if typ.min_range and core.fov.distance(typ.start_x, typ.start_y, stop_x, stop_y) < typ.min_range then
 		return
 	end
 
@@ -270,20 +291,20 @@ function _M:projectile(t, x, y, damtype, dam, particles)
 --	if type(dam) == "number" and dam < 0 then return end
 	local typ = Target:getType(t)
 	typ.source_actor = self
-	typ.start_x = t.x or self.x
-	typ.start_y = t.y or self.y
+	typ.start_x = typ.start_x or typ.x or typ.source_actor and typ.source_actor.x or self.x
+	typ.start_y = typ.start_y or typ.y or typ.source_actor and typ.source_actor.y or self.x
 	if self.lineFOV then
-		typ.line_function = self:lineFOV(x, y, nil, nil, t.x, t.y)
+		typ.line_function = self:lineFOV(x, y, nil, nil, typ.start_x, typ.start_y)
 	else
-		typ.line_function = core.fov.line(t.x or self.x, t.y or self.y, x, y)
+		typ.line_function = core.fov.line(typ.start_x, typ.start_y, x, y)
 	end
 	local block_corner = typ.block_path and function(_, bx, by) local b, h, hr = typ:block_path(bx, by, true) ; return b and h and not hr end
 		or function(_, bx, by) return false end
 
 	typ.line_function:set_corner_block(block_corner)
 
-	local proj = require(self.projectile_class):makeProject(self, t.display, {x=x, y=y, start_x = t.x or self.x, start_y = t.y or self.y, damtype=damtype, tg=t, typ=typ, dam=dam, particles=particles})
-	game.zone:addEntity(game.level, proj, "projectile", t.x or self.x, t.y or self.y)
+	local proj = require(self.projectile_class):makeProject(self, t.display, {x=x, y=y, start_x=typ.start_x, start_y=typ.start_y, damtype=damtype, tg=t, typ=typ, dam=dam, particles=particles})
+	game.zone:addEntity(game.level, proj, "projectile", typ.start_x, typ.start_y)
 end
 
 -- @param typ a target type table
@@ -386,9 +407,11 @@ function _M:projectDoStop(typ, tg, damtype, dam, particles, lx, ly, tmp, rx, ry)
 			game.level.map.w,
 			game.level.map.h,
 			typ.cone,
-			lx - typ.source_actor.x,
-			ly - typ.source_actor.y,
 			typ.cone_angle,
+			typ.start_x,
+			typ.start_y,
+			lx - typ.start_x,
+			ly - typ.start_y,
 			function(_, px, py)
 				if typ.block_radius and typ:block_radius(px, py) then return true end
 			end,
@@ -398,6 +421,26 @@ function _M:projectDoStop(typ, tg, damtype, dam, particles, lx, ly, tmp, rx, ry)
 			end,
 		nil)
 		addGrid(rx, ry)
+	elseif typ.wall and typ.wall > 0 then
+		core.fov.calc_wall(
+			rx,
+			rx,
+			game.level.map.w,
+			game.level.map.h,
+			typ.wall,
+			typ.halfmax_spots,
+			typ.start_x,
+			typ.start_y,
+			lx - typ.start_x,
+			ly - typ.start_y,
+			function(_, px, py)
+				if typ.block_radius and typ:block_radius(px, py) then return true end
+			end,
+			function(_, px, py)
+				-- Deal damage: wall
+				addGrid(px, py)
+			end,
+		nil)
 	else
 		-- Deal damage: single
 		addGrid(lx, ly)

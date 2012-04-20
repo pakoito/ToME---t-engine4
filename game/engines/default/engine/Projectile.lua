@@ -259,7 +259,7 @@ function _M:makeProject(src, display, def, do_move, do_act, do_stop)
 		travel_particle_args = display.particle_args,
 		trail_particle = display.trail,
 		src = src,
-		src_x = def.start_x or src.x, src_y = def.start_y or src.y,
+		start_x = def.start_x or src.x, start_y = def.start_y or src.y,
 		project = {def=def},
 		energy = {mod=speed},
 		tmp_proj = {},

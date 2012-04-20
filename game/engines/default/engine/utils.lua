@@ -1347,17 +1347,125 @@ function util.loadfilemods(file, env)
 	return prev
 end
 
+-- if these functions are ever desired elsewhere, don't be shy to make these accessible beyond utils.lua
+local function deltaCoordsToReal(dx, dy, source_x, source_y)
+	if util.isHex() then
+		dy = dy + (math.floor(math.abs(dx) + 0.5) % 2) * (0.5 - math.floor(source_x) % 2)
+		dx = dx * math.sqrt(3) / 2
+	end
+	return dx, dy
+end
+
+local function deltaRealToCoords(dx, dy, source_x, source_y)
+	if util.isHex() then
+		dx = dx < 0 and math.ceil(dx * 2 / math.sqrt(3) - 0.5) or math.floor(dx * 2 / math.sqrt(3) + 0.5)
+		dy = dy - (math.floor(math.abs(dx) + 0.5) % 2) * (0.5 - math.floor(source_x) % 2)
+	end
+	return source_x + dx, source_y + dy
+end
+
+function core.fov.calc_wall(x, y, w, h, halflength, halfmax_spots, source_x, source_y, delta_x, delta_y, block, apply)
+	apply(_, x, y)
+	delta_x, delta_y = deltaCoordsToReal(delta_x, delta_y, source_x, source_y)
+
+	local angle = math.atan2(delta_y, delta_x) + math.pi / 2
+
+	local dx, dy = math.cos(angle) * halflength, math.sin(angle) * halflength
+	local adx, ady = math.abs(dx), math.abs(dy)
+
+	local x1, y1 = deltaRealToCoords( dx,  dy, x, y)
+	local x2, y2 = deltaRealToCoords(-dx, -dy, x, y)
+
+	local spots = 1
+	local wall_block_corner = function(_, bx, by)
+		if halfmax_spots and spots > halfmax_spots or math.floor(core.fov.distance(x2, y2, bx, by, true) - 0.25) > 2*halflength then return true end
+		apply(_, bx, by)
+		spots = spots + 1
+		return block(_, bx, by)
+	end
+
+	local l = core.fov.line(x+0.5, y+0.5, x1+0.5, y1+0.5, function(_, bx, by) return true end)
+	l:set_corner_block(wall_block_corner)
+	-- use the correct tangent (not approximate) and round corner tie-breakers toward the player (via wiggles!)
+	if adx < ady then
+		l:change_step(dx/ady, dy/ady)
+		if delta_y < 0 then l:wiggle(true) else l:wiggle() end
+	else
+		l:change_step(dx/adx, dy/adx)
+		if delta_x < 0 then l:wiggle(true) else l:wiggle() end
+	end
+	while true do
+		local lx, ly, is_corner_blocked = l:step(true)
+		if not lx or is_corner_blocked or halfmax_spots and spots > halfmax_spots or math.floor(core.fov.distance(x2, y2, lx, ly, true) + 0.25) > 2*halflength then break end
+		apply(_, lx, ly)
+		spots = spots + 1
+		if block(_, lx, ly) then break end
+	end
+
+	spots = 1
+	wall_block_corner = function(_, bx, by)
+		if halfmax_spots and spots > halfmax_spots or math.floor(core.fov.distance(x1, y1, bx, by, true) - 0.25) > 2*halflength then return true end
+		apply(_, bx, by)
+		spots = spots + 1
+		return block(_, bx, by)
+	end
+
+	local l = core.fov.line(x+0.5, y+0.5, x2+0.5, y2+0.5, function(_, bx, by) return true end)
+	l:set_corner_block(wall_block_corner)
+	-- use the correct tangent (not approximate) and round corner tie-breakers toward the player (via wiggles!)
+	if adx < ady then
+		l:change_step(-dx/ady, -dy/ady)
+		if delta_y < 0 then l:wiggle(true) else l:wiggle() end
+	else
+		l:change_step(-dx/adx, -dy/adx)
+		if delta_x < 0 then l:wiggle(true) else l:wiggle() end
+	end
+	while true do
+		local lx, ly, is_corner_blocked = l:step(true)
+		if not lx or is_corner_blocked or halfmax_spots and spots > halfmax_spots or math.floor(core.fov.distance(x1, y1, lx, ly, true) + 0.25) > 2*halflength then break end
+		apply(_, lx, ly)
+		spots = spots + 1
+		if block(_, lx, ly) then break end
+	end
+end
+
+function core.fov.wall_grids(x, y, halflength, halfmax_spots, source_x, source_y, delta_x, delta_y, block)
+	if not x or not y then return {} end
+	local grids = {}
+	core.fov.calc_wall(x, y, game.level.map.w, game.level.map.h, halflength, halfmax_spots, source_x, source_y, delta_x, delta_y,
+		function(_, lx, ly)
+			if type(block) == "function" then
+				return block(_, lx, ly)
+			elseif block and game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_move") then return true end
+		end,
+		function(_, lx, ly)
+			if not grids[lx] then grids[lx] = {} end
+			grids[lx][ly] = true
+		end,
+	nil)
+
+	-- point of origin
+	if not grids[x] then grids[x] = {} end
+	grids[x][y] = true
+
+	return grids
+end
+
 function core.fov.circle_grids(x, y, radius, block)
 	if not x or not y then return {} end
 	if radius == 0 then return {[x]={[y]=true}} end
 	local grids = {}
-	core.fov.calc_circle(x, y, game.level.map.w, game.level.map.h, radius, function(_, lx, ly)
-		if block and game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_move") then return true end
-	end,
-	function(_, lx, ly)
-		if not grids[lx] then grids[lx] = {} end
-		grids[lx][ly] = true
-	end, nil)
+	core.fov.calc_circle(x, y, game.level.map.w, game.level.map.h, radius,
+		function(_, lx, ly)
+			if type(block) == "function" then
+				return block(_, lx, ly)
+			elseif block and game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_move") then return true end
+		end,
+		function(_, lx, ly)
+			if not grids[lx] then grids[lx] = {} end
+			grids[lx][ly] = true
+		end,
+	nil)
 
 	-- point of origin
 	if not grids[x] then grids[x] = {} end
@@ -1370,13 +1478,17 @@ function core.fov.beam_grids(x, y, radius, dir, angle, block)
 	if not x or not y then return {} end
 	if radius == 0 then return {[x]={[y]=true}} end
 	local grids = {}
-	core.fov.calc_beam(x, y, game.level.map.w, game.level.map.h, radius, dir, angle, function(_, lx, ly)
-		if block and game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_move") then return true end
-	end,
-	function(_, lx, ly)
-		if not grids[lx] then grids[lx] = {} end
-		grids[lx][ly] = true
-	end, nil)
+	core.fov.calc_beam(x, y, game.level.map.w, game.level.map.h, radius, dir, angle,
+		function(_, lx, ly)
+			if type(block) == "function" then
+				return block(_, lx, ly)
+			elseif block and game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_move") then return true end
+		end,
+		function(_, lx, ly)
+			if not grids[lx] then grids[lx] = {} end
+			grids[lx][ly] = true
+		end,
+	nil)
 
 	-- point of origin
 	if not grids[x] then grids[x] = {} end
@@ -1385,17 +1497,21 @@ function core.fov.beam_grids(x, y, radius, dir, angle, block)
 	return grids
 end
 
-function core.fov.beam_any_angle_grids(x, y, radius, delta_x, delta_y, angle, block)
+function core.fov.beam_any_angle_grids(x, y, radius, angle, source_x, source_y, delta_x, delta_y, block)
 	if not x or not y then return {} end
 	if radius == 0 then return {[x]={[y]=true}} end
 	local grids = {}
-	core.fov.calc_beam_any_angle(x, y, game.level.map.w, game.level.map.h, radius, delta_x, delta_y, angle, function(_, lx, ly)
-		if block and game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_move") then return true end
-	end,
-	function(_, lx, ly)
-		if not grids[lx] then grids[lx] = {} end
-		grids[lx][ly] = true
-	end, nil)
+	core.fov.calc_beam_any_angle(x, y, game.level.map.w, game.level.map.h, radius, angle, source_x, source_y, delta_x, delta_y,
+		function(_, lx, ly)
+			if type(block) == "function" then
+				return block(_, lx, ly)
+			elseif block and game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_move") then return true end
+		end,
+		function(_, lx, ly)
+			if not grids[lx] then grids[lx] = {} end
+			grids[lx][ly] = true
+		end,
+	nil)
 
 	-- point of origin
 	if not grids[x] then grids[x] = {} end

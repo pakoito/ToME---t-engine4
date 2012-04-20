@@ -36,7 +36,7 @@ newEntity{
 		sound = {"actions/melee", pitch=0.6, vol=1.2}, sound_miss = {"actions/melee", pitch=0.6, vol=1.2},
 		damtype = resolvers.rngtable{DamageType.NATURE, DamageType.MIND},
 	},
-	desc = [[Mindstars are natural products. Natural gems covered in living matter, they are used to focus the mental powers of all nature defenders.]],
+	desc = [[Mindstars are natural products. Natural gems covered in living matter, they are used to focus the mental powers of all nature defenders and psionics.]],
 	egos = "/data/general/objects/egos/mindstars.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
 }
 

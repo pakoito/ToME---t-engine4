@@ -3508,7 +3508,7 @@ function _M:on_projectile_target(x, y, p)
 	if self:isTalentActive(self.T_GLOOM) and self:knowTalent(self.T_SANCTUARY) then
 		-- mark temp table with the sanctuary damage change (to lower using tmp from DamageType:project)
 		local t = self:getTalentFromId(self.T_GLOOM)
-		if core.fov.distance(self.x, self.y, p.src_x, p.src_y) > self:getTalentRange(t) then
+		if core.fov.distance(self.x, self.y, p.start_x, p.start_y) > self:getTalentRange(t) then
 			t = self:getTalentFromId(self.T_SANCTUARY)
 			p.tmp_proj.sanctuaryDamageChange = t.getDamageChange(self, t)
 			print("Sanctuary marking reduced damage on projectile:", p.tmp_proj.sanctuaryDamageChange)

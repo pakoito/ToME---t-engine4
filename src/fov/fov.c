@@ -716,7 +716,7 @@ void fov_beam(fov_settings_type *settings, void *map, void *source,
 }}}}}}}}
 
 void fov_beam_any_angle(fov_settings_type *settings, void *map, void *source,
-                        int source_x, int source_y, unsigned radius,
+                        int source_x, int source_y, unsigned radius, int sx, int sy,
                         float dx, float dy, float beam_angle) {
 
     /* Note: angle_begin and angle_end are misnomers, since FoV calculation uses slopes, not angles.
@@ -749,7 +749,7 @@ void fov_beam_any_angle(fov_settings_type *settings, void *map, void *source,
         /* time for some slightly odd conventions.  We're assuming that dx and dy are still in coordinate space so
          * that "source_x + dx" gives the target tile coordinate.  dx, dy are floats, so we have sub-tile resolution.
          * We will then calculate the "real space" x's and y's to allow beam-casting at any angle. */
-        dy += (float)(((int)(abs(dx) + 0.5f)) & 1) * (0.5f - (float)(source_x & 1));
+        dy += (float)(((int)(abs(dx) + 0.5f)) & 1) * (0.5f - (float)(sx & 1));
         dx *= SQRT_3_2;
     }
 

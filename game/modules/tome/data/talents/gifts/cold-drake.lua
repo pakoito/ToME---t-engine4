@@ -93,10 +93,14 @@ newTalent{
 	on_learn = function(self, t) self.resists[DamageType.COLD] = (self.resists[DamageType.COLD] or 0) + 1 end,
 	on_unlearn = function(self, t) self.resists[DamageType.COLD] = (self.resists[DamageType.COLD] or 0) - 1 end,
 	action = function(self, t)
-		local tg = {type="bolt", range=self:getTalentRange(t), nolock=true, talent=t}
+		local halflength = 1 + math.floor(self:getTalentLevel(t) / 2)
+		local block = function(_, lx, ly)
+			return game.level.map:checkAllEntities(lx, ly, "block_move")
+		end
+		local tg = {type="wall", range=self:getTalentRange(t), halflength=halflength, talent=t, halfmax_spots=halflength+1, block_radius=block}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		local _ _, x, y = self:canProject(tg, x, y)
+		local _ _, _, _, x, y = self:canProject(tg, x, y)
 		if game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move") then return nil end
 
 		local addwall = function(x, y)
@@ -132,51 +136,7 @@ newTalent{
 			game.level.map(x, y, Map.TRAP, e)
 		end
 
-		local size = 1 + math.floor(self:getTalentLevel(t) / 2)
-		local angle = math.atan2(y - self.y, x - self.x) + math.pi / 2
-		local x1, y1 = x + math.cos(angle) * size, y + math.sin(angle) * size
-		local x2, y2 = x - math.cos(angle) * size, y - math.sin(angle) * size
-
-		local dx1, dy1 = math.abs(x1 - x), math.abs(y1 - y)
-		local dx2, dy2 = math.abs(x2 - x), math.abs(y2 - y)
-		local block_corner = function(_, bx, by)
-				if game.level.map:checkAllEntities(bx, by, "block_move") then return true
-				else addwall(bx, by) ; return false end
-			end
-
-		local l = core.fov.line(x, y, x1, y1, function(_, bx, by) return true end)
-		l:set_corner_block(block_corner)
-		-- use the correct tangent (not approximate) and round corner tie-breakers toward the player (via wiggles!)
-		if dx1 < dy1 then
-			l:change_step((x1-x)/dy1, (y1-y)/dy1)
-			if y < self.y then l:wiggle(true) else l:wiggle() end
-		else
-			l:change_step((x1-x)/dx1, (y1-y)/dx1)
-			if x < self.x then l:wiggle(true) else l:wiggle() end
-		end
-		while true do
-			local lx, ly, is_corner_blocked = l:step()
-			if not lx or is_corner_blocked or game.level.map:checkAllEntities(lx, ly, "block_move") then break end
-			addwall(lx, ly)
-		end
-
-		local l = core.fov.line(x, y, x2, y2, function(_, bx, by) return true end)
-		l:set_corner_block(block_corner)
-		-- use the correct tangent (not approximate) and round corner tie-breakers toward the player (via wiggles!)
-		if dx2 < dy2 then
-			l:change_step((x2-x)/dy2, (y2-y)/dy2)
-			if y < self.y then l:wiggle(true) else l:wiggle() end
-		else
-			l:change_step((x2-x)/dx2, (y2-y)/dx2)
-			if x < self.x then l:wiggle(true) else l:wiggle() end
-		end
-		while true do
-			local lx, ly, is_corner_blocked = l:step()
-			if not lx or is_corner_blocked or game.level.map:checkAllEntities(lx, ly, "block_move") then break end
-			addwall(lx, ly)
-		end
-
-		if not game.level.map:checkAllEntities(x, y, "block_move") then addwall(x, y) end
+		self:project(tg, x, y, addwall)
 
 		game.level.map:redisplay()
 		return true

@@ -343,7 +343,7 @@ void fov_beam(fov_settings_type *settings, void *map, void *source,
  * \param beam_angle The angle at the base of the beam of light, in degrees.
  */
 void fov_beam_any_angle(fov_settings_type *settings, void *map, void *source,
-                        int source_x, int source_y, unsigned radius,
+                        int source_x, int source_y, unsigned radius, int sx, int sy,
                         float dx, float dy, float beam_angle
 );
 

@@ -73,6 +73,9 @@ function _M:display(dispx, dispy)
 	self.target.x = self.target.x or self.source_actor.x
 	self.target.y = self.target.y or self.source_actor.y
 
+	self.target_type.start_x = self.target_type.start_x or self.target_type.x or self.target_type.source_actor and self.target_type.source_actor.x or self.x
+	self.target_type.start_y = self.target_type.start_y or self.target_type.y or self.target_type.source_actor and self.target_type.source_actor.y or self.y
+
 	local ox, oy = self.display_x, self.display_y
 	local sx, sy = game.level.map._map:getScroll()
 	sx = sx + game.level.map.display_x
@@ -87,9 +90,9 @@ function _M:display(dispx, dispy)
 	local s = self.sb
 	local l
 	if self.target_type.source_actor.lineFOV then
-		l = self.target_type.source_actor:lineFOV(self.target.x, self.target.y)
+		l = self.target_type.source_actor:lineFOV(self.target.x, self.target.y, nil, nil, self.target_type.start_x, self.target_type.start_y)
 	else
-		l = core.fov.line(self.source_actor.x, self.source_actor.y, self.target.x, self.target.y)
+		l = core.fov.line(self.target_type.start_x, self.target_type.start_y, self.target.x, self.target.y)
 	end
 	local block_corner = self.target_type.block_path and function(_, bx, by) local b, h, hr = self.target_type:block_path(bx, by, true) ; return b and h and not hr end
 		or function(_, bx, by) return false end
@@ -97,8 +100,8 @@ function _M:display(dispx, dispy)
 	l:set_corner_block(block_corner)
 	local lx, ly, blocked_corner_x, blocked_corner_y = l:step()
 
-	local stop_x, stop_y = self.source_actor.x, self.source_actor.y
-	local stop_radius_x, stop_radius_y = self.source_actor.x, self.source_actor.y
+	local stop_x, stop_y = self.target_type.start_x, self.target_type.start_y
+	local stop_radius_x, stop_radius_y = self.target_type.start_x, self.target_type.start_y
 	local stopped = false
 	local block, hit, hit_radius
 
@@ -108,7 +111,7 @@ function _M:display(dispx, dispy)
 		hit = true
 		hit_radius = false
 		stopped = true
-		if self.target_type.min_range and core.fov.distance(self.source_actor.x, self.source_actor.y, lx, ly) < self.target_type.min_range then
+		if self.target_type.min_range and core.fov.distance(self.target_type.start_x, self.target_type.start_y, lx, ly) < self.target_type.min_range then
 			s = self.sr
 		end
 		if game.level.map:isBound(blocked_corner_x, blocked_corner_y) then
@@ -136,7 +139,7 @@ function _M:display(dispx, dispy)
 			end
 			if self.target_type.min_range then
 				-- Check if we should be "red"
-				if core.fov.distance(self.source_actor.x, self.source_actor.y, lx, ly) < self.target_type.min_range then
+				if core.fov.distance(self.target_type.start_x, self.target_type.start_y, lx, ly) < self.target_type.min_range then
 					s = self.sr
 				-- Check if we were only "red" because of minimum distance
 				elseif s == self.sr then
@@ -199,9 +202,40 @@ function _M:display(dispx, dispy)
 			game.level.map.w,
 			game.level.map.h,
 			self.target_type.cone,
-			self.target.x - self.source_actor.x,
-			self.target.y - self.source_actor.y,
 			self.target_type.cone_angle,
+			self.target_type.start_x,
+			self.target_type.start_y,
+			self.target.x - self.target_type.start_x,
+			self.target.y - self.target_type.start_y,
+			function(_, px, py)
+				if self.target_type.block_radius and self.target_type:block_radius(px, py, true) then return true end
+			end,
+			function(_, px, py)
+				if not self.target_type.no_restrict and not game.level.map.remembers(px, py) and not game.level.map.seens(px, py) then
+					self.syg:toScreen(self.display_x + (px - game.level.map.mx) * self.tile_w * Map.zoom,
+					self.display_y + (py - game.level.map.my + util.hexOffset(px)) * self.tile_h * Map.zoom,
+					self.tile_w * Map.zoom,
+					self.tile_h * Map.zoom)
+				else
+					self.sg:toScreen(self.display_x + (px - game.level.map.mx) * self.tile_w * Map.zoom,
+					self.display_y + (py - game.level.map.my + util.hexOffset(px)) * self.tile_h * Map.zoom,
+					self.tile_w * Map.zoom,
+					self.tile_h * Map.zoom)
+				end
+			end,
+		nil)
+	elseif self.target_type.wall and self.target_type.wall > 0 then
+		core.fov.calc_wall(
+			stop_radius_x,
+			stop_radius_y,
+			game.level.map.w,
+			game.level.map.h,
+			self.target_type.wall,
+			self.target_type.halfmax_spots,
+			self.target_type.start_x,
+			self.target_type.start_y,
+			self.target.x - self.target_type.start_x,
+			self.target.y - self.target_type.start_y,
 			function(_, px, py)
 				if self.target_type.block_radius and self.target_type:block_radius(px, py, true) then return true end
 			end,
@@ -307,6 +341,14 @@ function _M:getType(t)
 			target_type.cone = t.radius
 			target_type.cone_angle = t.cone_angle or 55
 			target_type.selffire = false
+		end
+		if t.type:find("wall") then
+			if util.isHex() then
+				--with a hex grid, a wall should only be defined by the number of spots
+				t.halfmax_spots = t.halflength
+				t.halflength = 2*t.halflength
+			end
+			target_type.wall = t.halflength
 		end
 		if t.type:find("bolt") then
 			target_type.stop_block = true

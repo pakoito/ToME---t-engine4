@@ -36,6 +36,9 @@
 #include <math.h>
 #include <time.h>
 
+#define SQRT_3       1.73205080756887729353
+#define INV_SQRT_3   0.577350269189625764509
+#define SQRT_3_2     0.866025403784438646764
 #define INV_SQRT_3_2 1.15470053837925152902
 
 /******************************************************************
@@ -344,13 +347,15 @@ static int lua_fov_calc_beam_any_angle(lua_State *L)
 	int w = luaL_checknumber(L, 3);
 	int h = luaL_checknumber(L, 4);
 	int radius = luaL_checknumber(L, 5);
-	float dx = luaL_checknumber(L, 6);
-	float dy = luaL_checknumber(L, 7);
-	float beam_angle = luaL_checknumber(L, 8);
+	float beam_angle = luaL_checknumber(L, 6);
+	int sx = luaL_checknumber(L, 7);
+	int sy = luaL_checknumber(L, 8);
+	float dx = luaL_checknumber(L, 9);
+	float dy = luaL_checknumber(L, 10);
 	struct lua_fov fov;
-	if (lua_isuserdata(L, 11))
+	if (lua_isuserdata(L, 13))
 	{
-		fov.cache = (struct lua_fovcache*)auxiliar_checkclass(L, "fov{cache}", 10);
+		fov.cache = (struct lua_fovcache*)auxiliar_checkclass(L, "fov{cache}", 12);
 		fov.cache_ref = luaL_ref(L, LUA_REGISTRYINDEX);
 	}
 	else
@@ -374,7 +379,7 @@ static int lua_fov_calc_beam_any_angle(lua_State *L)
 	lua_fov_get_vision_shape(L);
 	fov.fov_settings.shape = luaL_checknumber(L, -1);
 
-	fov_beam_any_angle(&(fov.fov_settings), &fov, NULL, x, y, radius, dx, dy, beam_angle);
+	fov_beam_any_angle(&(fov.fov_settings), &fov, NULL, x, y, radius, sx, sy, dx, dy, beam_angle);
 	map_seen(&fov, x, y, 0, 0, radius, NULL);
 	fov_settings_free(&(fov.fov_settings));
 
@@ -1058,9 +1063,18 @@ static int lua_hex_fov_line_change_step(lua_State *L)
 	hex_fov_line_data *line = &(lua_line->line);
 	float step_x = lua_tonumber(L, 2);
 	float step_y = lua_tonumber(L, 3);
+	float ax = fabs(step_x);
+	float ay = fabs(step_y);
 
-	line->step_x = step_x;
-	line->step_y = step_y;
+	// lines are a little weird in hex, so lets enforce unit step sizes
+	if (SQRT_3*ay < ax) {
+		line->step_x = SQRT_3_2 * step_x / ax;
+		line->step_y = SQRT_3_2 * step_y / ax;
+	} else {
+		line->step_x = step_x / (INV_SQRT_3*ax + ay);
+		line->step_y = step_y / (INV_SQRT_3*ax + ay);
+	}
+
 	return 0;
 }
 
