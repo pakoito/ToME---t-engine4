@@ -44,7 +44,7 @@ newTalent{
 				nb = nb + 1
 			end
 		end
-		self:heal(nb * self:combatTalentStatDamage(t, "wil", 20, 60))
+		self:heal(self:mindCrit(nb * self:combatTalentStatDamage(t, "wil", 20, 60)))
 
 		self:setEffect(self.EFF_WATERS_OF_LIFE, 5 + self:getTalentLevel(t), {})
 
@@ -103,6 +103,7 @@ newTalent{
 	points = 5,
 	equilibrium = 15,
 	cooldown = 30,
+	no_energy = true,
 	tactical = { BUFF = 2 },
 	on_pre_use = function(self, t) return self:hasEffect(self.EFF_INFUSION_COOLDOWN) end,
 	action = function(self, t)

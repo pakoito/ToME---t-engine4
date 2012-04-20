@@ -77,7 +77,7 @@ newTalent{
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.PHYSKNOCKBACK, {dam=self:combatTalentStatDamage(t, "str", 15, 90), dist=4})
+		self:project(tg, x, y, DamageType.PHYSKNOCKBACK, {dam=self:mindCrit(self:combatTalentStatDamage(t, "str", 15, 90)), dist=4})
 		game:playSoundNear(self, "talents/breath")
 		return true
 	end,
@@ -115,7 +115,7 @@ newTalent{
 	action = function(self, t)
 		local duration = t.getDuration(self, t)
 		local radius = self:getTalentRadius(t)
-		local dam = t.getDamage(self, t)
+		local dam = self:mindCrit(t.getDamage(self, t))
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
@@ -165,7 +165,7 @@ newTalent{
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.FIREBURN, {dam=self:combatTalentStatDamage(t, "str", 30, 550), dur=3, initial=70})
+		self:project(tg, x, y, DamageType.FIREBURN, {dam=self:mindCrit(self:combatTalentStatDamage(t, "str", 30, 550)), dur=3, initial=70})
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "breath_fire", {radius=tg.radius, tx=x-self.x, ty=y-self.y})
 		game:playSoundNear(self, "talents/breath")
 		return true
