@@ -66,7 +66,7 @@ newTalent{
 		return ([[Fires a bolt of pure filth, diseasing your target with a disease doing %0.2f blight damage per turns for 6 turns and reducing one of its physical stats (strength, constitution, dexterity) by %d. The three diseases can stack.
 		Virulent Disease will always try to apply a disease the target does not currently have, and also one that will have the most debilitaing effect for the target.
 		The effect will increase with your Magic stat.]]):
-		format(damDesc(self, DamageType.BLIGHT, 7 + self:combatTalentSpellDamage(t, 6, 65), self:combatTalentSpellDamage(t, 5, 35))
+		format(damDesc(self, DamageType.BLIGHT, 7 + self:combatTalentSpellDamage(t, 6, 65), self:combatTalentSpellDamage(t, 5, 35)))
 	end,
 }
 
@@ -131,7 +131,7 @@ newTalent{
 				if not target or target == source or target == self or (self:reactionToward(target) >= 0) then return end
 
 				for _, disease in ipairs(diseases) do
-					if disease.id == self.EFF_WEAKNESS_DISEASE) or disease.id == self.EFF_DECREPITUDE_DISEASE or disease.id == self.EFF_ROTTING_DISEASE or disease.id == self.EFF_EPIDEMIC then
+					if disease.id == self.EFF_WEAKNESS_DISEASE or disease.id == self.EFF_DECREPITUDE_DISEASE or disease.id == self.EFF_ROTTING_DISEASE or disease.id == self.EFF_EPIDEMIC then
 						target:setEffect(disease.id, 6, {src=self, dam=disease.params.dam, str=disease.params.str, dex=disease.params.dex, con=disease.params.con, heal_factor=disease.params.heal_factor, apply_power=self:combatSpellpower()})
 					end
 				end

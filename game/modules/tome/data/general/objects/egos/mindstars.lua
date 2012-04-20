@@ -90,7 +90,7 @@ newEntity{
 	rarity = 4,
 	cost = 8,
 	wielder = {
-		max_life = max_life=resolvers.mbonus_material(40, 10),
+		max_life = resolvers.mbonus_material(40, 10),
 		life_regen = resolvers.mbonus_material(15, 5, function(e, v) v=v/10 return 0, v end),
 	},
 }
@@ -142,7 +142,7 @@ newEntity{
 	rarity = 4,
 	cost = 8,
 	combat = {
-		melee_project = { [DamageType.LIGHT = resolvers.mbonus_material(8, 2), },
+		melee_project = { [DamageType.LIGHT] = resolvers.mbonus_material(8, 2), },
 	},		
 	wielder = {
 		combat_mindpower = resolvers.mbonus_material(4, 1),

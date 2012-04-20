@@ -49,7 +49,7 @@ newTalent{
 		local dur = t.getDur(self, t)
 		return ([[Surround yourself with a myriad of tiny, nearly invisible, healing fungus.
 		Any regeneration effect active on you will have its duration increased by +%d turns.]]):
-		format(regen, dur)
+		format(dur)
 	end,
 }
 
