@@ -44,42 +44,6 @@ newEntity{
 }
 
 newEntity{
-	name = "lone bear",
-	type = "hostile", subtype = "animal", image = "npc/black_bear.png",
-	display = 'q', color = colors.UMBER,
-	level_range = {1, nil},
-	sight = 3,
-	rarity = 4,
-	unit_power = 1,
-	ai = "world_hostile", ai_state = {chase_distance=3},
-	on_encounter = {type="ambush", width=10, height=10, nb={1,1}, filters={{type="animal", subtype="bear"}}},
-}
-
-newEntity{
-	name = "pack of wolves",
-	type = "hostile", subtype = "animal",
-	display = 'C', color = colors.RED, image="npc/canine_w.png",
-	level_range = {1, nil},
-	sight = 3,
-	rarity = 4,
-	unit_power = 1,
-	ai = "world_hostile", ai_state = {chase_distance=3},
-	on_encounter = {type="ambush", width=10, height=10, nb={3,5}, filters={{type="animal", subtype="canine"}}},
-}
-
-newEntity{
-	name = "dragon",
-	type = "hostile", subtype = "dragon",
-	display = 'D', color = colors.RED, image = "npc/dragon_fire_fire_drake.png",
-	level_range = {12, nil},
-	sight = 3,
-	rarity = 12,
-	unit_power = 7,
-	ai = "world_hostile", ai_state = {chase_distance=3},
-	on_encounter = {type="ambush", width=10, height=10, nb={1,1}, filters={{type="dragon", special=function(e) if not e.name or e.name:find("hatchling") then return false end return true end}}},
-}
-
-newEntity{
 	name = "adventurers party",
 	type = "hostile", subtype = "humanoid",
 	display = '@', color = colors.UMBER,
