@@ -130,8 +130,11 @@ newTalent{
 				local target = game.level.map(px, py, engine.Map.ACTOR)
 				if not target or target == source or target == self or (self:reactionToward(target) >= 0) then return end
 
-				local disease = rng.table(diseases)
-				target:setEffect(disease.id, 6, {src=self, dam=disease.params.dam, str=disease.params.str, dex=disease.params.dex, con=disease.params.con, heal_factor=disease.params.heal_factor})
+				for _, disease in ipairs(diseases) do
+					if disease.id == self.EFF_WEAKNESS_DISEASE) or disease.id == self.EFF_DECREPITUDE_DISEASE or disease.id == self.EFF_ROTTING_DISEASE or disease.id == self.EFF_EPIDEMIC then
+						target:setEffect(disease.id, 6, {src=self, dam=disease.params.dam, str=disease.params.str, dex=disease.params.dex, con=disease.params.con, heal_factor=disease.params.heal_factor, apply_power=self:combatSpellpower()})
+					end
+				end
 				game.level.map:particleEmitter(px, py, 1, "slime")
 			end)
 		end
@@ -141,7 +144,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Make your target's diseases burst, doing %0.2f blight damage for each disease it is infected with.
-		This will also spread a random disease to any nearby foes in a radius of %d.
+		This will also spread any decrepitude, weakness, rotting or epidemic diseases to any nearby foes in a radius of %d.
 		The damage will increase with your Magic stat.]]):
 		format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 15, 85)), self:getTalentRadius(t))
 	end,
