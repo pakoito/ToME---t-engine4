@@ -265,7 +265,7 @@ newEntity{ define_as = "ALETTA",
 	allow_infinite_dungeon = true,
 	faction = "dreadfell",
 	type = "undead", subtype = "ghost", unique = true,
-	name = "Aletta Soultorn",
+	name = "Aletta Soultorn", female=1,
 	display = "G", color=colors.VIOLET,
 	desc = [[What once must have been an enchantingly beautiful Higher woman now looks to be a ghost of utter despair. Her thin, elegant form ripples gently in the air, whilst her tattered robes seem oddly still. The ghost's face looks jittery and pained whilst her wild, glowing eyes move rapidly back and forth in their sockets. 
 Now and then she seems to see something and her jaw pulls back, her whole face splitting apart as she shrieks an unholy cry of pain and torment.]],

@@ -100,7 +100,7 @@ newEntity{ base = "BASE_NPC_GHOST",
 }
 
 newEntity{ base = "BASE_NPC_GHOST",
-	name = "banshee", color=colors.BLUE, image="npc/banshee.png",
+	name = "banshee", color=colors.BLUE, image="npc/banshee.png", female=1,
 	desc = [[It is a ghostly woman's form that wails mournfully.]],
 	level_range = {20, nil}, exp_worth = 1,
 	rarity = 8,

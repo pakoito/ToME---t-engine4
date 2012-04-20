@@ -163,7 +163,7 @@ newEntity{ base = "BASE_NPC_ANT",
 }
 
 newEntity{ base = "BASE_NPC_ANT",
-	name = "Queen Ant", color=colors.VIOLET, unique=true,
+	name = "Queen Ant", color=colors.VIOLET, unique=true, female = 1,
 	desc = "Queen of the ants, queen of the biting death!",
 	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/insect_ant_queen_ant.png", display_h=2, display_y=-1}}},
 	level_range = {25, nil}, exp_worth = 2,

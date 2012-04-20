@@ -36,7 +36,7 @@ function _M:init(title, actor, filter, action)
 	self.c_main_set = Tab.new{title="Main Set", default=not actor.off_weapon_slots, fct=function() end, on_change=function(s) if s then self:switchSets("main") end end}
 	self.c_off_set = Tab.new{title="Off Set", default=actor.off_weapon_slots, fct=function() end, on_change=function(s) if s then self:switchSets("off") end end}
 
-	self.c_doll = EquipDoll.new{actor=actor, drag_enable=true,
+	self.c_doll = EquipDoll.new{actor=actor, drag_enable=true, filter=filter,
 		fct=function(item) self:use(item) end,
 		on_select=function(ui, inven, item, o) self:select{item=item, object=o} end
 	}

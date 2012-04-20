@@ -303,7 +303,7 @@ newEntity{ base = "BASE_NPC_SPIDER",
 }
 
 newEntity{ base = "BASE_NPC_SPIDER",
-	name = "weaver matriarch", color=colors.DARK_BLUE,
+	name = "weaver matriarch", female =1, color=colors.DARK_BLUE,
 	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/spiderkin_spider_weaver_matriarch.png", display_h=2, display_y=-1}}},
 	desc = [[A large dark blue arachnid with a shifting yellow and white pattern on it's thorax.  It shifts and shimmers as though only partially connected to the timeline.]],
 	level_range = {38, nil}, exp_worth = 1,
@@ -337,7 +337,7 @@ newEntity{ base = "BASE_NPC_SPIDER",
 }
 
 newEntity{ base = "BASE_NPC_SPIDER",
-	name = "Ninandra, the Great Weaver", unique = true,
+	name = "Ninandra, the Great Weaver", female=1, unique = true,
 	color = colors.VIOLET,
 	rarity = 50,
 	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/spiderkin_spider_ninandra_the_great_weaver.png", display_h=2, display_y=-1}}},
