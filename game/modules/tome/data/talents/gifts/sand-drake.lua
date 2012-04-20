@@ -84,7 +84,7 @@ newTalent{
 	end,
 	action = function(self, t)
 		local tg = {type="ball", range=0, selffire=false, radius=self:getTalentRadius(t), talent=t, no_restrict=true}
-		self:project(tg, self.x, self.y, DamageType.PHYSKNOCKBACK, {dam=t.getDamage(self, t), dist=4})
+		self:project(tg, self.x, self.y, DamageType.PHYSKNOCKBACK, {dam=self:mindCrit(t.getDamage(self, t)), dist=4})
 		self:doQuake(tg, self.x, self.y)
 		return true
 	end,
@@ -149,7 +149,7 @@ newTalent{
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.SAND, {dur=t.getDuration(self, t), dam=t.getDamage(self, t)})
+		self:project(tg, x, y, DamageType.SAND, {dur=t.getDuration(self, t), dam=self:mindCrit(t.getDamage(self, t))})
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "breath_earth", {radius=tg.radius, tx=x-self.x, ty=y-self.y})
 		game:playSoundNear(self, "talents/breath")
 		return true

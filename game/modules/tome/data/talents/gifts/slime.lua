@@ -88,7 +88,7 @@ newTalent{
 		local tg = {type="bolt", range=self:getTalentRange(t), display={particle="bolt_arcane"}}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:projectile(tg, x, y, DamageType.SLIME, self:combatTalentStatDamage(t, "dex", 30, 290), {type="slime"})
+		self:projectile(tg, x, y, DamageType.SLIME, self:mindCrit(self:combatTalentStatDamage(t, "dex", 30, 290)), {type="slime"})
 		game:playSoundNear(self, "talents/slime")
 		return true
 	end,

@@ -32,7 +32,7 @@ newTalent{
 	on_learn = function(self, t) self.resists[DamageType.LIGHTNING] = (self.resists[DamageType.LIGHTNING] or 0) + 1 end,
 	on_unlearn = function(self, t) self.resists[DamageType.LIGHTNING] = (self.resists[DamageType.LIGHTNING] or 0) - 1 end,
 	action = function(self, t)
-		self:setEffect(self.EFF_LIGHTNING_SPEED, math.ceil(1 + self:getTalentLevel(t) * 0.3), {power=400 + self:getTalentLevel(t) * 70})
+		self:setEffect(self.EFF_LIGHTNING_SPEED, math.ceil(self:mindCrit(1 + self:getTalentLevel(t) * 0.3)), {power=400 + self:getTalentLevel(t) * 70})
 		return true
 	end,
 	info = function(self, t)
@@ -120,8 +120,8 @@ newTalent{
 		local target = game.level.map(x, y, Map.ACTOR)
 		if not target then return nil end
 
-		local movedam = self:combatTalentMindDamage(t, 10, 110)
-		local dam = self:combatTalentMindDamage(t, 15, 190)
+		local movedam = self:mindCrit(self:combatTalentMindDamage(t, 10, 110))
+		local dam = self:mindCrit(self:combatTalentMindDamage(t, 15, 190))
 
 		local proj = require("engine.Projectile"):makeHoming(
 			self,
@@ -201,7 +201,7 @@ newTalent{
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		local dam = t.getDamage(self, t)
+		local dam = self:mindCrit(t.getDamage(self, t))
 		self:project(tg, x, y, DamageType.LIGHTNING_DAZE, rng.avg(dam / 3, dam, 3))
 
 		local sradius = (tg.radius + 0.5) * (engine.Map.tile_w + engine.Map.tile_h) / 2
