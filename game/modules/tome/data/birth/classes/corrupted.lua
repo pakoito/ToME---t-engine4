@@ -19,11 +19,11 @@
 
 newBirthDescriptor{
 	type = "class",
-	name = "Corrupter",
+	name = "Defiler",
 	locked = function() return profile.mod.allow_build.corrupter end,
 	locked_desc = "Dark thoughts, black bloods, vile deeds... Those who spill their brethren's blood will find its power.",
 	desc = {
-		"Corrupters are touched by the mark of evil. They are a blight on the world. Working to promote the cause of evil, they serve their masters, or themselves become masters.",
+		"Defilers are touched by the mark of evil. They are a blight on the world. Working to promote the cause of evil, they serve their masters, or themselves become masters.",
 	},
 	descriptor_choices =
 	{
