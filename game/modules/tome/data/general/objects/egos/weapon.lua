@@ -404,7 +404,7 @@ newEntity{
 			if eff == "vuln" then target:setEffect(target.EFF_CURSE_VULNERABILITY, 2, {power=20})
 			elseif eff == "defenseless" then target:setEffect(target.EFF_CURSE_DEFENSELESSNESS, 2, {power=20})
 			elseif eff == "impotence" then target:setEffect(target.EFF_CURSE_IMPOTENCE, 2, {power=20})
-			elseif eff == "death" then target:setEffect(target.EFF_CURSE_DEATH, 2, {src=who, power=20})
+			elseif eff == "death" then target:setEffect(target.EFF_CURSE_DEATH, 2, {src=who, dam=20})
 			end
 		end},
 	},

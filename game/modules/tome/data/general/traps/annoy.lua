@@ -54,7 +54,7 @@ newEntity{ base = "TRAP_ANNOY",
 	dam = resolvers.mbonus(80, 5),
 	pressure_trap = true,
 	triggered = function(self, x, y, who)
-		who:setEffect(who.EFF_BURNING_HEX, 7, {src=self, dam=self.dam})
+		who:setEffect(who.EFF_BURNING_HEX, 7, {src=self, dam=self.dam, power=1+(self.dam/100)})
 		return true, true
 	end
 }

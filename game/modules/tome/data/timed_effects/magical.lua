@@ -1274,7 +1274,7 @@ newEffect{
 newEffect{
 	name = "IMPENDING_DOOM", image = "talents/impending_doom.png",
 	desc = "Impending Doom",
-	long_desc = function(self, eff) return ("The target's final doom is drawing near, preventing all forms of healing and dealing %0.2f arcane damage per turn. The effect will stop if the caster dies."):format(eff.dam) end,
+	long_desc = function(self, eff) return ("The target's final doom is drawing near, preventing all forms of healing and regeneration and dealing %0.2f arcane damage per turn. The effect will stop if the caster dies."):format(eff.dam) end,
 	type = "magical",
 	subtype = { arcane=true },
 	status = "detrimental",
@@ -1283,6 +1283,7 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is freed from the impending doom.", "-Doomed" end,
 	activate = function(self, eff)
 		eff.healid = self:addTemporaryValue("no_healing", 1)
+		eff.regenid = self:addTemporaryValue("no_life_regen", 1)
 	end,
 	on_timeout = function(self, eff)
 		if eff.src.dead or not game.level:hasEntity(eff.src) then return true end
@@ -1290,6 +1291,7 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("no_healing", eff.healid)
+		self:removeTemporaryValue("no_life_regen", eff.regenid)
 	end,
 }
 
