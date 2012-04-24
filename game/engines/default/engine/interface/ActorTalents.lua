@@ -293,7 +293,7 @@ function _M:learnTalent(t_id, force, nb)
 
 	self.talents[t_id] = (self.talents[t_id] or 0) + (nb or 1)
 
-	if t.on_learn then t.on_learn(self, t) end
+	if t.on_learn then for i = 1, (nb or 1) do t.on_learn(self, t) end end
 
 	self.changed = true
 	return true

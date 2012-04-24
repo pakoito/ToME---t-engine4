@@ -1545,7 +1545,7 @@ function _M:createRandomBoss(base, data)
 		for tid, v in pairs(class.talents or {}) do
 			local t = b:getTalentFromId(tid)
 			if not t.no_npc_use and (not t.random_boss_rarity or rng.chance(t.random_boss_rarity)) then
-				local max = (t.points == 1) and 1 or math.ceil(t.points * 1.6)
+				local max = (t.points == 1) and 1 or math.ceil(t.points * 1.2)
 				local step = max / 50
 				tres[1][tid] = v + math.ceil(step * data.level)
 			end
@@ -1563,7 +1563,7 @@ function _M:createRandomBoss(base, data)
 			local t = b:getTalentFromId(tid)
 			if t then
 				print(" * talent", tid)
-				local max = (t.points == 1) and 1 or math.ceil(t.points * 1.4)
+				local max = (t.points == 1) and 1 or math.ceil(t.points * 1.2)
 				local step = max / 50
 				b.learn_tids[tid] = math.ceil(step * data.level)
 			end
