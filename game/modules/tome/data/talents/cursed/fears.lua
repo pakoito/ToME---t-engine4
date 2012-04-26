@@ -60,7 +60,7 @@ newTalent{
 		
 		local mindpower = self:combatMindpower(1, mindpowerChange)
 		if not target:checkHit(mindpower, target:combatMentalResist()) then
-			game:logSeen(target, "%s resists the fear!", target.name:capitalize())
+			game.logSeen(target, "%s resists the fear!", target.name:capitalize())
 			return nil
 		end
 		

@@ -343,16 +343,15 @@ function resolvers.calc.random_use_talent(tt, e)
 	return { id=tid, level=level, power=tt[2] }
 end
 
---- Charges resolver
-function resolvers.charges(min, max, cost)
-	return {__resolver="charges", __resolve_last=true, min, max, cost}
+--- Charms resolver
+function resolvers.charm(desc, cd, fct)
+	return {__resolver="charm", desc, cd, fct}
 end
-function resolvers.calc.charges(tt, e)
-	e.max_power = rng.range(tt[1], tt[2])
+function resolvers.calc.charm(tt, e)
+	local cd = tt[2]
+	e.max_power = cd
 	e.power = e.max_power
-	e.recharge_cost = (e.cost_per_charge or 0) * 4
-	e.cost = e.cost + (e.cost_per_charge or 0) * e.max_power
-	e.show_charges = true
+	e.use_power = {name=tt[1], power=cd, use=tt[3]}
 	return
 end
 

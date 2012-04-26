@@ -66,13 +66,19 @@ function _M:useObject(who, ...)
 	if not game:hasEntity(self) then game:addEntity(self) end
 
 	if self.use_power then
-		if self.power >= self.use_power.power then
+		if (self.talent_cooldown and not who:isTalentCoolingDown(self.talent_cooldown)) or (not self.talent_cooldown and self.power >= self.use_power.power) then
 			local ret = self.use_power.use(self, who, ...) or {}
 			local no_power = not ret.used or ret.no_power
-			if not no_power then self.power = self.power - self.use_power.power end
+			if not no_power then 
+				if self.talent_cooldown then
+					who.talents_cd[self.talent_cooldown] = self.use_power.power
+				else
+					self.power = self.power - self.use_power.power 
+				end
+			end
 			return ret
 		else
-			if self.power_regen and self.power_regen ~= 0 then
+			if self.talent_cooldown or (self.power_regen and self.power_regen ~= 0) then
 				game.logPlayer(who, "%s is still recharging.", self:getName{no_count=true})
 			else
 				game.logPlayer(who, "%s can not be used anymore.", self:getName{no_count=true})
@@ -82,18 +88,24 @@ function _M:useObject(who, ...)
 	elseif self.use_simple then
 		return self.use_simple.use(self, who, ...) or {}
 	elseif self.use_talent then
-		if not self.use_talent.power or self.power >= self.use_talent.power then
+		if (self.talent_cooldown and not who:isTalentCoolingDown(self.talent_cooldown)) or (not self.talent_cooldown and (not self.use_talent.power or self.power >= self.use_talent.power)) then
 			local id = self.use_talent.id
 			local ab = self:getTalentFromId(id)
 			local old_level = who.talents[id]; who.talents[id] = self.use_talent.level
 			local ret = ab.action(who, ab)
 			who.talents[id] = old_level
 
-			if ret then self.power = self.power - self.use_talent.power end
+			if ret then 
+				if self.talent_cooldown then
+					who.talents_cd[self.talent_cooldown] = self.use_talent.power
+				else
+					self.power = self.power - self.use_talent.power 
+				end
+			end
 
 			return {used=ret}
 		else
-			if self.power_regen and self.power_regen ~= 0 then
+			if self.talent_cooldown or (self.power_regen and self.power_regen ~= 0) then
 				game.logPlayer(who, "%s is still recharging.", self:getName{no_count=true})
 			else
 				game.logPlayer(who, "%s can not be used anymore.", self:getName{no_count=true})

@@ -31,6 +31,7 @@ loadIfNot("/data/general/objects/lites.lua")
 loadIfNot("/data/general/objects/potions.lua")
 loadIfNot("/data/general/objects/scrolls.lua")
 loadIfNot("/data/general/objects/wands.lua")
+loadIfNot("/data/general/objects/totems.lua")
 
 -- Tools
 loadIfNot("/data/general/objects/digger.lua")

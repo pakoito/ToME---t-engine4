@@ -24,6 +24,22 @@ newTalentType{ no_silence=true, is_spell=true, type="spell/objects", name = "obj
 --local newTalent = function(t) if type(t.hide) == "nil" then t.hide = true end return oldTalent(t) end
 
 newTalent{
+	name = "charms", short_name = "GLOBAL_CD",
+	type = {"spell/objects",1},
+	points = 1,
+	cooldown = 1,
+	no_npc_use = true,
+	hide = true,
+	action = function(self, t)
+		return true
+	end,
+	info = function(self, t)
+		return ""
+	end,
+}
+
+
+newTalent{
 	name = "Arcane Supremacy",
 	type = {"spell/objects",1},
 	points = 1,

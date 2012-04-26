@@ -541,6 +541,7 @@ end
 --- Starts a talent cooldown
 -- @param t the talent to cooldown
 function _M:startTalentCooldown(t)
+	t = self:getTalentFromId(t)
 	if not t.cooldown then return end
 	local cd = t.cooldown
 	if type(cd) == "function" then cd = cd(self, t) end
@@ -550,6 +551,7 @@ end
 
 --- Is talent in cooldown?
 function _M:isTalentCoolingDown(t)
+	t = self:getTalentFromId(t)
 	if not t.cooldown then return false end
 	if self.talents_cd[t.id] and self.talents_cd[t.id] > 0 then return self.talents_cd[t.id] else return false end
 end

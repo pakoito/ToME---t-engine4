@@ -179,7 +179,16 @@ function _M:display()
 					local t = a:getTalentFromId(o.use_talent.id)
 					display_entity = t.display_entity
 				end
-				if o and (o.use_talent or o.use_power) then
+				if o and o.talent_cooldown then
+					local t = a:getTalentFromId(o.talent_cooldown)
+					angle = 360
+					if a:isTalentCoolingDown(t) then
+						color = {255,0,0}
+						angle = 360 * (1 - (a.talents_cd[t.id] / a:getTalentCooldown(t)))
+						frame = "cooldown"
+						txt = tostring(a:isTalentCoolingDown(t))
+					end
+				elseif o and (o.use_talent or o.use_power) then
 					angle = 360 * ((o.power / o.max_power))
 					color = {255,0,0}
 					local need = (o.use_talent and o.use_talent.power) or (o.use_power and o.use_power.power) or 0

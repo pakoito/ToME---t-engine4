@@ -46,7 +46,7 @@ newEntity{ define_as = "UNGOLE", base = "BASE_NPC_SPIDER",
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	resolvers.drops{chance=100, nb=5, {tome_drops="boss"} },
-	resolvers.drops{chance=100, nb=1, {type="wand", subtype="wand", defined="ROD_SPYDRIC_POISON"} },
+	resolvers.drops{chance=100, nb=1, {defined="ROD_SPYDRIC_POISON"} },
 	resolvers.drops{chance=100, nb=1, {unique=true} },
 
 	resolvers.talents{

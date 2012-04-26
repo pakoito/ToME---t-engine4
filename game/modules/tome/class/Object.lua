@@ -151,9 +151,13 @@ function _M:descAttribute(attr)
 		return self:getTalentFromId(self.use_talent.id).name:lower()
 	elseif attr == "DIGSPEED" then
 		return ("dig speed %d turns"):format(self.digspeed)
+	elseif attr == "CHARM" then
+		return (" [power %d]"):format(self:getCharmPower())
 	elseif attr == "CHARGES" then
-		if self.use_power then
-			return (" (%d/%d)"):format(math.floor(self.power / self.use_power.power), math.floor(self.max_power / self.use_power.power))
+		if self.talent_cooldown and (self.use_power or self.use_talent) then
+			return " ("..(self.use_power or self.use_talent).power.." cooldown)"
+		elseif self.use_power or self.use_talent then
+			return (" (%d/%d)"):format(math.floor(self.power / (self.use_power or self.use_talent).power), math.floor(self.max_power / (self.use_power or self.use_talent).power))
 		else
 			return ""
 		end
@@ -1060,9 +1064,11 @@ end
 function _M:getUseDesc()
 	if self.use_power then
 		if self.show_charges then
-			return tstring{{"color","YELLOW"}, ("It can be used to %s, with %d charges out of %d."):format(self.use_power.name, math.floor(self.power / self.use_power.power), math.floor(self.max_power / self.use_power.power)), {"color","LAST"}}
+			return tstring{{"color","YELLOW"}, ("It can be used to %s, with %d charges out of %d."):format(util.getval(self.use_power.name, self), math.floor(self.power / self.use_power.power), math.floor(self.max_power / self.use_power.power)), {"color","LAST"}}
+		elseif self.talent_cooldown then
+			return tstring{{"color","YELLOW"}, ("It can be used to %s, placing all other charms into a %d cooldown."):format(util.getval(self.use_power.name, self):format(self:getCharmPower()), self.use_power.power), {"color","LAST"}}
 		else
-			return tstring{{"color","YELLOW"}, ("It can be used to %s, costing %d power out of %d/%d."):format(self.use_power.name, self.use_power.power, self.power, self.max_power), {"color","LAST"}}
+			return tstring{{"color","YELLOW"}, ("It can be used to %s, costing %d power out of %d/%d."):format(util.getval(self.use_power.name, self), self.use_power.power, self.power, self.max_power), {"color","LAST"}}
 		end
 	elseif self.use_simple then
 		return tstring{{"color","YELLOW"}, ("It can be used to %s."):format(self.use_simple.name), {"color","LAST"}}
@@ -1317,4 +1323,11 @@ end
 function _M:specialSetAdd(prop, value)
 	self._special_set = self._special_set or {}
 	self._special_set[prop] = self:addTemporaryValue(prop, value)
+end
+
+function _M:getCharmPower()
+	local def = self.charm_power_def or {add=0, max=100}
+	local v = def.add + (self.charm_power * def.max / 100)
+	if def.floor then v = math.floor(v) end
+	return v
 end

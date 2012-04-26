@@ -228,7 +228,7 @@ newEntity{
 				{type="weapon", subtype="staff", id=true, tome_drops="store"},
 				{type="weapon", subtype="staff", id=true, tome_drops="store"},
 				{type="weapon", subtype="staff", id=true, tome_drops="store"},
-				{type="wand", subtype="wand", id=true, tome_drops="store"},
+				{type="charm", subtype="wand", id=true, tome_drops="store"},
 			}
 		end,
 	},

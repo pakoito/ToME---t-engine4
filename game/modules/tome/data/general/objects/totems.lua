@@ -18,9 +18,9 @@
 -- darkgod@te4.org
 
 newEntity{
-	define_as = "BASE_WAND",
-	type = "charm", subtype="wand",
-	unided_name = "wand", id_by_type = true,
+	define_as = "BASE_TOTEM",
+	type = "charm", subtype="totem",
+	unided_name = "totem", id_by_type = true,
 	display = "-", color=colors.WHITE, image = resolvers.image_material("wand", "wood"),
 	encumber = 2,
 	rarity = 9,
@@ -28,14 +28,14 @@ newEntity{
 	use_sound = "talents/spell_generic",
 	is_magic_device = true,
 	elec_destroy = {{20,1}, {30,2}, {60,5}, {90,10}, {170,20}},
-	desc = [[Magical wands are made by powerful Alchemists and Archmagi to store spells. Anybody can use them to release the spells.]],
-	egos = "/data/general/objects/egos/wands.lua", egos_chance = { prefix=resolvers.mbonus(20, 5), suffix=100 }, ego_first_type = "suffix",
-	power_source = {arcane=true},
+	desc = [[Natural totems are made by powerful wilders to store nature power.]],
+	egos = "/data/general/objects/egos/totems.lua", egos_chance = { prefix=resolvers.mbonus(20, 5), suffix=100 }, ego_first_type = "suffix",
+	power_source = {nature=true},
 	talent_cooldown = "T_GLOBAL_CD",
 }
 
-newEntity{ base = "BASE_WAND",
-	name = "elm wand",
+newEntity{ base = "BASE_TOTEM",
+	name = "elm totem",
 	color = colors.UMBER,
 	level_range = {1, 10},
 	cost = 1,
@@ -43,8 +43,8 @@ newEntity{ base = "BASE_WAND",
 	charm_power = resolvers.mbonus_material(15, 10),
 }
 
-newEntity{ base = "BASE_WAND",
-	name = "ash wand",
+newEntity{ base = "BASE_TOTEM",
+	name = "ash totem",
 	color = colors.UMBER,
 	level_range = {10, 20},
 	cost = 2,
@@ -52,8 +52,8 @@ newEntity{ base = "BASE_WAND",
 	charm_power = resolvers.mbonus_material(20, 20),
 }
 
-newEntity{ base = "BASE_WAND",
-	name = "yew wand",
+newEntity{ base = "BASE_TOTEM",
+	name = "yew totem",
 	color = colors.UMBER,
 	level_range = {20, 30},
 	cost = 3,
@@ -61,8 +61,8 @@ newEntity{ base = "BASE_WAND",
 	charm_power = resolvers.mbonus_material(25, 30),
 }
 
-newEntity{ base = "BASE_WAND",
-	name = "elven-wood wand",
+newEntity{ base = "BASE_TOTEM",
+	name = "elven-wood totem",
 	color = colors.UMBER,
 	level_range = {30, 40},
 	cost = 4,
@@ -70,8 +70,8 @@ newEntity{ base = "BASE_WAND",
 	charm_power = resolvers.mbonus_material(30, 40),
 }
 
-newEntity{ base = "BASE_WAND",
-	name = "dragonbone wand",
+newEntity{ base = "BASE_TOTEM",
+	name = "dragonbone totem",
 	color = colors.UMBER,
 	level_range = {40, 50},
 	cost = 5,
