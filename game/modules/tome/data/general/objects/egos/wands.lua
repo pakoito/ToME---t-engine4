@@ -22,7 +22,7 @@ newEntity{
 	level_range = {1, 50},
 	rarity = 15,
 	cost = 5,
-	resolvers.genericlast(function(e) 
+	resolvers.genericlast(function(e)
 		e.use_power.power = math.ceil(e.use_power.power * rng.float(0.6, 0.8))
 		e.charm_power = math.ceil(e.charm_power * rng.float(0.4, 0.7))
 	end),
@@ -33,21 +33,30 @@ newEntity{
 	level_range = {1, 50},
 	rarity = 15,
 	cost = 5,
-	resolvers.genericlast(function(e) 
+	resolvers.genericlast(function(e)
 		e.use_power.power = math.ceil(e.use_power.power * rng.float(1.2, 1.5))
 		e.charm_power = math.ceil(e.charm_power * rng.float(1.3, 1.5))
 	end),
 }
 
 --[[
+Wands
 *detection
 *light
-*teleportation
 *trap destruction
 *flame
 *lightning
-digging (very rare)
-*healing
+*conjuration
+
+Totems
+healing
+cure illness
+cure poisons
+cure
+
+Torques
+Psionic Shield
+Psychoportation
 
 ]]
 
