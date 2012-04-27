@@ -317,12 +317,12 @@ newEntity{
 	greater_ego = 1,
 	rarity = 20,
 	cost = 40,
-	resolvers.charmt(Talents.T_PERFECT_STRIKE, {2,3,4}, 26 ),
+	resolvers.charmt(Talents.T_PERFECT_STRIKE, {2,3,4}, 26),
 	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 2) end),
 	wielder = {
 		inc_stats = {
 			[Stats.STAT_STR] = resolvers.mbonus_material(5, 1),
 		},
 		combat_apr = resolvers.mbonus_material(10, 5),
-	),
+	},
 }
