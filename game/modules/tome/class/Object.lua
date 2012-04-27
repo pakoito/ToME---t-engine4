@@ -810,7 +810,7 @@ function _M:getTextualDesc(compare_with)
 		end
 
 		compare_fields(w, compare_with, field, "combat_critical_power", "%+.2f%%", "Critical mult.: ")
-		compare_fields(w, compare_with, field, "combat_critreduction", "%-d%%", "Reduces opponents crit chance: ")
+		compare_fields(w, compare_with, field, "combat_crit_reduction", "%-d%%", "Reduces opponents crit chance: ")
 
 		compare_fields(w, compare_with, field, "disarm_bonus", "%+d", "Trap disarming bonus: ")
 		compare_fields(w, compare_with, field, "inc_stealth", "%+d", "Stealth bonus: ")

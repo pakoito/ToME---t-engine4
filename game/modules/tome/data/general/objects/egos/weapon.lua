@@ -35,8 +35,8 @@ newEntity{
 	rarity = 5,
 	cost = 15,
 	wielder={
-		combat_atk = resolvers.mbonus_material(10, 2),
-		combat_def = resolvers.mbonus_material(10, 2),
+		combat_atk = resolvers.mbonus_material(10, 5),
+		combat_def = resolvers.mbonus_material(10, 5),
 	},
 }
 
@@ -48,7 +48,7 @@ newEntity{
 	rarity = 3,
 	cost = 4,
 	wielder = {
-		combat_physcrit = resolvers.mbonus_material(10, 2),
+		combat_physcrit = resolvers.mbonus_material(10, 5),
 	},
 	combat = {
 		special_on_crit = {desc="cripple the target", fct=function(combat, who, target)
@@ -66,7 +66,7 @@ newEntity{
 	rarity = 3,
 	cost = 4,
 	combat = {
-		dam = resolvers.mbonus_material(10, 2),
+		dam = resolvers.mbonus_material(10, 5),
 	},
 }
 
@@ -81,7 +81,7 @@ newEntity{
 	cost = 30,
 	combat = { physspeed = -0.1 },
 	wielder = {
-		combat_atk = resolvers.mbonus_material(10, 2),
+		combat_atk = resolvers.mbonus_material(10, 5),
 		inc_stats = {
 			[Stats.STAT_DEX] = resolvers.mbonus_material(6, 1),
 		},
@@ -101,9 +101,9 @@ newEntity{
 			[Stats.STAT_CON] = resolvers.mbonus_material(6, 1),
 		},
 		disarm_immune = resolvers.mbonus_material(25, 10, function(e, v) v=v/100 return 0, v end),
-		combat_dam = resolvers.mbonus_material(10, 2),
+		combat_dam = resolvers.mbonus_material(10, 5),
 		resists_pen = {
-			[DamageType.PHYSICAL] = resolvers.mbonus_material(10, 2),
+			[DamageType.PHYSICAL] = resolvers.mbonus_material(10, 5),
 		},
 	},
 }
@@ -117,8 +117,8 @@ newEntity{
 	rarity = 20,
 	cost = 40,
 	wielder = {
-		combat_physcrit = resolvers.mbonus_material(10, 2),
-		combat_dam = resolvers.mbonus_material(10, 2),
+		combat_physcrit = resolvers.mbonus_material(10, 5),
+		combat_dam = resolvers.mbonus_material(10, 5),
 	},
 	combat = { 
 		special_on_crit = {desc="wounds the target", fct=function(combat, who, target)
@@ -139,9 +139,9 @@ newEntity{
 	rarity = 25,
 	cost = 35,
 	wielder = {
-		combat_atk = resolvers.mbonus_material(10, 2),
+		combat_atk = resolvers.mbonus_material(10, 5),
 		inc_damage = {
-			[DamageType.PHYSICAL] = resolvers.mbonus_material(10, 2),
+			[DamageType.PHYSICAL] = resolvers.mbonus_material(10, 5),
 		},
 		inc_stats = {
 			[Stats.STAT_STR] = resolvers.mbonus_material(6, 1),
@@ -159,9 +159,9 @@ newEntity{
 	rarity = 20,
 	cost = 25,
 	wielder = {
-		combat_physcrit = resolvers.mbonus_material(10, 2),
+		combat_physcrit = resolvers.mbonus_material(10, 5),
 		combat_critical_power = resolvers.mbonus_material(10, 10),
-		combat_apr = resolvers.mbonus_material(10, 2),
+		combat_apr = resolvers.mbonus_material(10, 5),
 	},
 }
 
@@ -174,12 +174,12 @@ newEntity{
 	rarity = 20,
 	cost = 40,
 	wielder = {
-		combat_apr = resolvers.mbonus_material(10, 2),
+		combat_apr = resolvers.mbonus_material(10, 5),
 		inc_damage = {
-			[DamageType.PHYSICAL] = resolvers.mbonus_material(10, 2),
+			[DamageType.PHYSICAL] = resolvers.mbonus_material(10, 5),
 		},
 		resists_pen = {
-			[DamageType.PHYSICAL] = resolvers.mbonus_material(10, 2),
+			[DamageType.PHYSICAL] = resolvers.mbonus_material(10, 5),
 		},
 	},
 }
@@ -196,7 +196,7 @@ newEntity{
 	cost = 10,
 	combat = {
 		melee_project={
-			[DamageType.ACID] = resolvers.mbonus_material(15, 4)
+			[DamageType.ACID] = resolvers.mbonus_material(15, 5)
 		},
 		special_on_crit = {desc="splashes the target with acid", fct=function(combat, who, target)
 			local power = 5 + (who:combatSpellpower()/10)
@@ -214,7 +214,7 @@ newEntity{
 	cost = 10,
 	combat = {
 		burst_on_hit={
-			[DamageType.FIRE] = resolvers.mbonus_material(15, 4)
+			[DamageType.FIRE] = resolvers.mbonus_material(15, 5)
 		},
 	},
 }
@@ -228,7 +228,7 @@ newEntity{
 	cost = 10,
 	combat = {
 		melee_project={
-			[DamageType.ICE] = resolvers.mbonus_material(15, 4)
+			[DamageType.ICE] = resolvers.mbonus_material(15, 5)
 		},
 	},
 }
@@ -242,7 +242,7 @@ newEntity{
 	cost = 10,
 	combat = {
 		melee_project={
-			[DamageType.LIGHTNING] = resolvers.mbonus_material(15, 4),
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(15, 5),
 		},
 		special_on_hit = {desc="25% chance for lightning to arc to a second target", fct=function(combat, who, target)
 			if not rng.percent(25) then return end
@@ -278,7 +278,7 @@ newEntity{
 	rarity = 10,
 	cost = 20,
 	combat = {
-		melee_project={[DamageType.LIGHT] = resolvers.mbonus_material(15, 4)},
+		melee_project={[DamageType.LIGHT] = resolvers.mbonus_material(15, 5)},
 		inc_damage_type = {undead=resolvers.mbonus_material(25, 5)},
 	},
 }
@@ -291,7 +291,7 @@ newEntity{
 	rarity = 15,
 	cost = 30,
 	combat={
-		apr = resolvers.mbonus_material(10, 2),
+		apr = resolvers.mbonus_material(10, 5),
 		phasing = resolvers.mbonus_material(50, 10)
 	},
 }
@@ -305,7 +305,7 @@ newEntity{
 	cost = 30,
 	combat={
 		melee_project = {
-			[DamageType.BLIGHT] = resolvers.mbonus_material(15, 4)
+			[DamageType.BLIGHT] = resolvers.mbonus_material(15, 5)
 		},
 		burst_on_crit = {
 			[DamageType.CORRUPTED_BLOOD] = resolvers.mbonus_material(25, 5),
@@ -325,12 +325,12 @@ newEntity{
 			[DamageType.TEMPORAL] = resolvers.mbonus_material(15, 5),
 		},
 		on_melee_hit = {
-			[DamageType.TEMPORAL] = resolvers.mbonus_material(10, 2),
+			[DamageType.TEMPORAL] = resolvers.mbonus_material(15, 5),
 		},
 	},
 	combat = {
 		melee_project = {
-			[DamageType.TEMPORAL] = resolvers.mbonus_material(15, 4)
+			[DamageType.TEMPORAL] = resolvers.mbonus_material(15, 5)
 		},
 	},
 }
@@ -378,7 +378,7 @@ newEntity{
 	},
 	combat = {
 		melee_project = {
-			[DamageType.BLIGHT] = resolvers.mbonus_material(15, 4),
+			[DamageType.BLIGHT] = resolvers.mbonus_material(15, 5),
 		},
 		talent_on_hit = { [Talents.T_EPIDEMIC] = {level=1, chance=10} },
 	},
@@ -394,8 +394,8 @@ newEntity{
 	cost = 40,
 	combat = {
 		melee_project={
-			[DamageType.BLIGHT] = resolvers.mbonus_material(15, 4),
-			[DamageType.DARKNESS] = resolvers.mbonus_material(15, 4),
+			[DamageType.BLIGHT] = resolvers.mbonus_material(15, 5),
+			[DamageType.DARKNESS] = resolvers.mbonus_material(15, 5),
 		},
 		special_on_hit = {desc="20% chance to curse the target", fct=function(combat, who, target)
 			if not rng.percent(20) then return end
@@ -419,7 +419,7 @@ newEntity{
 	rarity = 30,
 	cost = 30,
 	wielder = {
-		combat_spellcrit = resolvers.mbonus_material(10, 2),
+		combat_spellpower = resolvers.mbonus_material(10, 5),
 		inc_stats = {
 			[Stats.STAT_MAG] = resolvers.mbonus_material(6, 1),
 			[Stats.STAT_WIL] = resolvers.mbonus_material(6, 1),
@@ -438,7 +438,7 @@ newEntity{
 	rarity = 10,
 	cost = 20,
 	combat = {
-		melee_project={[DamageType.NATURE] = resolvers.mbonus_material(15, 4)},
+		melee_project={[DamageType.NATURE] = resolvers.mbonus_material(15, 5)},
 		inc_damage_type = {animal=resolvers.mbonus_material(25, 5)},
 	},
 }
@@ -452,7 +452,7 @@ newEntity{
 	cost = 15,
 	combat = {
 		melee_project={
-			[DamageType.INSIDIOUS_POISON] = resolvers.mbonus_material(48, 8), -- this gets divided by 7 for damage
+			[DamageType.INSIDIOUS_POISON] = resolvers.mbonus_material(50, 10), -- this gets divided by 7 for damage
 		},
 	},
 }
@@ -466,8 +466,8 @@ newEntity{
 	cost = 15,
 	combat = {
 		melee_project={
-			[DamageType.NATURE] = resolvers.mbonus_material(15, 4),
-			[DamageType.WASTING] = resolvers.mbonus_material(15, 4),
+			[DamageType.NATURE] = resolvers.mbonus_material(15, 5),
+			[DamageType.WASTING] = resolvers.mbonus_material(15, 5),
 		},
 	},
 }
@@ -483,7 +483,7 @@ newEntity{
 	wielder = {
 		global_speed_add = resolvers.mbonus_material(5, 1, function(e, v) v=v/100 return 0, v end),
 		resists_pen = {
-			[DamageType.FIRE] = resolvers.mbonus_material(10, 2),
+			[DamageType.FIRE] = resolvers.mbonus_material(10, 5),
 		},
 	},
 	combat = {
@@ -504,7 +504,7 @@ newEntity{
 	wielder = {
 		life_regen = resolvers.mbonus_material(20, 5, function(e, v) v=v/10 return 0, v end),
 		resists_pen = {
-			[DamageType.ACID] = resolvers.mbonus_material(10, 2),
+			[DamageType.ACID] = resolvers.mbonus_material(10, 5),
 		},
 	},
 	combat = {
@@ -532,7 +532,7 @@ newEntity{
 			[Stats.STAT_CON] = resolvers.mbonus_material(3, 1),
 		},
 		resists_pen = {
-			[DamageType.LIGHTNING] = resolvers.mbonus_material(10, 2),
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(10, 5),
 		},
 	},
 	combat = {
@@ -551,9 +551,9 @@ newEntity{
 	rarity = 45,
 	cost = 40,
 	wielder = {
-		combat_armor = resolvers.mbonus_material(10, 2),
+		combat_armor = resolvers.mbonus_material(10, 5),
 		resists_pen = {
-			[DamageType.COLD] = resolvers.mbonus_material(10, 2),
+			[DamageType.COLD] = resolvers.mbonus_material(10, 5),
 		},
 	},
 	combat = {
@@ -573,12 +573,12 @@ newEntity{
 	cost = 30,
 	wielder = {
 		inc_damage = {
-			[DamageType.PHYSICAL] = resolvers.mbonus_material(10, 2),
+			[DamageType.PHYSICAL] = resolvers.mbonus_material(10, 5),
 		},
 	},
 	combat = {
 		melee_project={
-			[DamageType.GRAVITY] = resolvers.mbonus_material(15, 4),
+			[DamageType.GRAVITY] = resolvers.mbonus_material(15, 5),
 		},
 		special_on_hit = {desc="25% chance to crush the target", fct=function(combat, who, target)
 			if not rng.percent(25) then return end
@@ -605,7 +605,7 @@ newEntity{
 	wielder = {
 		resists = { all = resolvers.mbonus_material(8, 2) },
 		resists_pen = {
-			[DamageType.NATURE] = resolvers.mbonus_material(10, 2),
+			[DamageType.NATURE] = resolvers.mbonus_material(10, 5),
 		},
 	},
 	combat = {
@@ -625,7 +625,7 @@ newEntity{
 	cost = 40,
 	combat = {
 		melee_project = {
-			[DamageType.MANABURN] = resolvers.mbonus_material(25, 8),
+			[DamageType.MANABURN] = resolvers.mbonus_material(25, 10),
 		},
 	},
 }
@@ -638,7 +638,7 @@ newEntity{
 	rarity = 20,
 	cost = 15,
 	combat = {
-		melee_project={[DamageType.SLIME] = resolvers.mbonus_material(15, 4)},
+		melee_project={[DamageType.SLIME] = resolvers.mbonus_material(15, 5)},
 	},
 }
 
@@ -663,7 +663,7 @@ newEntity{
 	rarity = 20,
 	cost = 20,
 	combat = {
-		melee_project={[DamageType.NATURE] = resolvers.mbonus_material(15, 4)},
+		melee_project={[DamageType.NATURE] = resolvers.mbonus_material(15, 5)},
 		special_on_hit = {desc="25% chance to remove a magical effect", fct=function(combat, who, target)
 			if not rng.percent(25) then return end
 			
@@ -707,7 +707,7 @@ newEntity{
 	cost = 40,
 	combat = {
 		melee_project = {
-			[DamageType.MANABURN] = resolvers.mbonus_material(25, 8),
+			[DamageType.MANABURN] = resolvers.mbonus_material(25, 10),
 		},
 		special_on_crit = {desc="burns latent spell energy", fct=function(combat, who, target)
 			local turns = 1 + math.ceil(who:combatMindpower() / 20)
@@ -763,11 +763,11 @@ newEntity{
 	cost = 40,
 	wielder = {
 		on_melee_hit = {
-			[DamageType.SLIME] = resolvers.mbonus_material(15, 4),
+			[DamageType.SLIME] = resolvers.mbonus_material(15, 5),
 		},
 	},
 	combat = {
-		melee_project={[DamageType.SLIME] = resolvers.mbonus_material(15, 4)},
+		melee_project={[DamageType.SLIME] = resolvers.mbonus_material(15, 5)},
 		special_on_hit = {desc="leeches stamina from the target", fct=function(combat, who, target)
 			if target and target:getStamina() > 0 then
 				local leech = who:combatMindpower() / 50
@@ -790,7 +790,7 @@ newEntity{
 	rarity = 10,
 	cost = 20,
 	combat = {
-		melee_project={[DamageType.DARKNESS] = resolvers.mbonus_material(15, 4)},
+		melee_project={[DamageType.DARKNESS] = resolvers.mbonus_material(15, 5)},
 		inc_damage_type = {humanoid=resolvers.mbonus_material(25, 5)},
 	},
 }
@@ -804,7 +804,7 @@ newEntity{
 	cost = 10,
 	combat = {
 		melee_project={
-			[DamageType.MIND] = resolvers.mbonus_material(15, 4),
+			[DamageType.MIND] = resolvers.mbonus_material(15, 5),
 		},
 		convert_damage = { 
 			[DamageType.MIND] = resolvers.mbonus_material(25, 25),
@@ -821,7 +821,7 @@ newEntity{
 	cost = 15,
 	wielder = {
 		on_melee_hit = {
-			[DamageType.MIND] = resolvers.mbonus_material(15, 4),
+			[DamageType.MIND] = resolvers.mbonus_material(15, 5),
 		},
 	},
 	combat = {
@@ -872,7 +872,7 @@ newEntity{
 	},
 	combat = {	
 		melee_project={
-			[DamageType.MIND] = resolvers.mbonus_material(15, 4),
+			[DamageType.MIND] = resolvers.mbonus_material(15, 5),
 		},
 	},
 }
@@ -886,7 +886,7 @@ newEntity{
 	rarity = 30,
 	cost = 30,
 	wielder = {
-		combat_mindcrit = resolvers.mbonus_material(10, 2),
+		combat_mindpower = resolvers.mbonus_material(10, 5),
 		inc_stats = {
 			[Stats.STAT_CUN] = resolvers.mbonus_material(6, 1),
 			[Stats.STAT_WIL] = resolvers.mbonus_material(6, 1),
@@ -904,8 +904,8 @@ newEntity{
 	cost = 30,
 	wielder = {
 		resists_pen = {
-			[DamageType.MIND] = resolvers.mbonus_material(10, 2),
-			[DamageType.DARKNESS] = resolvers.mbonus_material(10, 2),
+			[DamageType.MIND] = resolvers.mbonus_material(10, 5),
+			[DamageType.DARKNESS] = resolvers.mbonus_material(10, 5),
 		},
 	},
 	combat = {
