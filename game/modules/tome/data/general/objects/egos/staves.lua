@@ -401,7 +401,7 @@ newEntity{
 	rarity = 30,
 	cost = 40,
 	resolvers.charm("projects damage in a cone from the staff", 8,
-		use = function(self, who)
+		function(self, who)
 			local tg = {type="cone", range=0, radius=self.material_level * 2, selffire=false}
 			local weapon = who:hasStaffWeapon()
 			local combat = weapon.combat
