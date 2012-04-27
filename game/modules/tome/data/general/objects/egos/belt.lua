@@ -45,13 +45,15 @@ newEntity{
 	wielder = {
 		combat_def = resolvers.mbonus_material(10, 5),
 	},
-	max_power = 120, power_regen = 1,
-	use_power = { name = "create a temporary shield that absorbs damage", power = 100, use = function(self, who)
-		local power = 100 + who:getMag(120, true)
+	
+	charm_power = resolvers.mbonus_material(80, 30),
+	charm_power_def = {add=80, max=300, floor=true},
+	resolvers.charm("create a temporary shield that absorbs %d damage", 30, function(self, who)
+		local power = self:getCharmPower()
 		who:setEffect(who.EFF_DAMAGE_SHIELD, 10, {power=power})
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
 		return {id=true, used=true}
-	end}
+	end),
 }
 
 newEntity{

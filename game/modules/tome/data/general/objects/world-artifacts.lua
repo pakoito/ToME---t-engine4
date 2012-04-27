@@ -1598,18 +1598,18 @@ newEntity{ base = "BASE_STAFF", define_as = "VOICE_TELOS",
 	},
 }
 
-newEntity{ base = "BASE_WAND",
+newEntity{ base = "BASE_ROD",
 	power_source = {arcane=true},
 	unided_name = "glowing rod",
 	name = "Gwai's Burninator", color=colors.LIGHT_RED, unique=true, image = "object/artifact/wand_gwais_burninator.png",
 	desc = [[Gwai, a Pyromanceress that lived during the Spellhunt, was cornered by group of mage hunters. She fought to her last breath and is said to have killed at least ten people with this wand before she fell.]],
 	cost = 50,
 	rarity = 220,
-	level_range = {15, 30},
+	level_range = {25, 35},
 	elec_proof = true,
 	add_name = false,
 
-	material_level = 2,
+	material_level = 3,
 
 	max_power = 75, power_regen = 1,
 	use_power = { name = "shoot a cone of fire", power = 20,
@@ -1617,7 +1617,7 @@ newEntity{ base = "BASE_WAND",
 			local tg = {type="cone", range=0, radius=5}
 			local x, y = who:getTarget(tg)
 			if not x or not y then return nil end
-			who:project(tg, x, y, engine.DamageType.FIRE, 80 + who:getMag() * 2, {type="flame"})
+			who:project(tg, x, y, engine.DamageType.FIRE, 300 + who:getMag() * 2, {type="flame"})
 			return {id=true, used=true}
 		end
 	},

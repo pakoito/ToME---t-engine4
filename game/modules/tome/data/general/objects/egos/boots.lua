@@ -34,14 +34,15 @@ newEntity{
 			[Stats.STAT_WIL] = resolvers.mbonus_material(2, 2),
 		},
 	},
-	max_power = 60, power_regen = 1,
-	use_power = { name = "blink to a nearby random location", power = 35, use = function(self, who)
+	charm_power = resolvers.mbonus_material(80, 20),
+	charm_power_def = {add=5, max=10, floor=true},
+	resolvers.charm("blink to a nearby random location", 25, function(self, who)
 		game.level.map:particleEmitter(who.x, who.y, 1, "teleport")
-		who:teleportRandom(who.x, who.y, 10 + who:getMag(5))
+		who:teleportRandom(who.x, who.y, self:getCharmPower())
 		game.level.map:particleEmitter(who.x, who.y, 1, "teleport")
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
 		return {id=true, used=true}
-	end}
+	end),
 }
 
 newEntity{
@@ -77,8 +78,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 18,
 	cost = 40,
-	max_power = 80, power_regen = 1,
-	use_talent = { id = Talents.T_RUSH, level = 2, power = 80 },
+	resolvers.charmt(Talents.T_RUSH, {1,2,3}, 25),
 	wielder = {
 		inc_stats = {
 			[Stats.STAT_STR] = resolvers.mbonus_material(2, 2),
@@ -96,8 +96,7 @@ newEntity{
 	rarity = 18,
 	cost = 40,
 
-	max_power = 80, power_regen = 1,
-	use_talent = { id = Talents.T_DISENGAGE, level = 2, power = 80 },
+	resolvers.charmt(Talents.T_DISENGAGE, {1,2,3}, 25),
 	wielder = {
 		inc_stats = {
 			[Stats.STAT_DEX] = resolvers.mbonus_material(2, 2),
@@ -328,8 +327,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 30,
 	cost = 60,
-	max_power = 80, power_regen = 1,
-	use_talent = { id = Talents.T_HEAVE, level = 4, power = 40 },
+	resolvers.charmt(Talents.T_HEAVE, {2,3,4}, 30),
 	wielder = {
 		inc_stats = {
 			[Stats.STAT_STR] = resolvers.mbonus_material(7, 3),
@@ -384,8 +382,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 15,
 	cost = 30,
-	max_power = 80, power_regen = 1,
-	use_talent = { id = Talents.T_EVASION, level = 2, power = 80 },
+	resolvers.charmt(Talents.T_EVASION, {2,3,4}, 30),
 	wielder = {
 		combat_mentalresist = resolvers.mbonus_material(7, 1),
 		combat_physresist = resolvers.mbonus_material(7, 1),

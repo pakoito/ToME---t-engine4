@@ -430,8 +430,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 30,
 	cost = 80,
-	max_power = 80, power_regen = 1,
-	use_talent = { id = Talents.T_SECOND_WIND, level = 5, power = 80 },
+	resolvers.charmt(Talents.T_SECOND_WIND, {3,4,5}, 35),
 	wielder = {
 		max_life = resolvers.mbonus_material(60, 40, function(e, v) return 0, -v end),
 		combat_armor = resolvers.mbonus_material(7, 3, function(e, v) return 0, -v end),
@@ -468,8 +467,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 25,
 	cost = 60,
-	max_power = 80, power_regen = 1,
-	use_talent = { id = Talents.T_TRACK, level = 2, power = 80 },
+	resolvers.charmt(Talents.T_TRACK, 2, 30),
 	wielder = {
 		inc_stats = {
 			[Stats.STAT_STR] = resolvers.mbonus_material(6, 4),

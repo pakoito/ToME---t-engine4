@@ -19,6 +19,7 @@
 
 newEntity{
 	define_as = "BASE_WAND",
+	slot = "TOOL",
 	type = "charm", subtype="wand",
 	unided_name = "wand", id_by_type = true,
 	display = "-", color=colors.WHITE, image = resolvers.image_material("wand", "wood"),

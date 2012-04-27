@@ -19,6 +19,7 @@
 
 newEntity{
 	define_as = "BASE_TOTEM",
+	slot = "TOOL",
 	type = "charm", subtype="totem",
 	unided_name = "totem", id_by_type = true,
 	display = "-", color=colors.WHITE, image = resolvers.image_material("wand", "wood"),

@@ -351,8 +351,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 20,
 	cost = 40,
-	max_power = 80, power_regen = 1,
-	use_talent = { id = Talents.T_ARCANE_EYE, level = 2, power = 80 },
+	resolvers.charmt(Talents.T_ARCANE_EYE, {2,3,4,5}, 40),
 	wielder = {
 		blind_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, -v end),
 		confusion_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, -v end),
@@ -371,8 +370,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 20,
 	cost = 40,
-	max_power = 80, power_regen = 1,
-	use_talent = { id = Talents.T_ILLUMINATE, level = 3, power = 40 },
+	resolvers.charmt(Talents.T_ILLUMINATE, 3, 30),
 }
 
 newEntity{
@@ -404,8 +402,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 20,
 	cost = 40,
-	max_power = 80, power_regen = 1,
-	use_talent = { id = Talents.T_MOONLIGHT_RAY, level = 4, power = 80 },
+	resolvers.charmt(Talents.T_MOONLIGHT_RAY, 4, power = 8),
 	wielder = {
 		combat_spellpower = resolvers.mbonus_material(7, 3),
 	},	
@@ -419,8 +416,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 15,
 	cost = 40,
-	max_power = 80, power_regen = 1,
-	use_talent = { id = Talents.T_GLYPH_OF_REPULSION, level = 3, power = 80 },
+	resolvers.charmt(Talents.T_GLYPH_OF_REPULSION, 3, 40),
 	wielder = {
 		inc_stats = {
 			[Stats.STAT_MAG] = resolvers.mbonus_material(5, 1),

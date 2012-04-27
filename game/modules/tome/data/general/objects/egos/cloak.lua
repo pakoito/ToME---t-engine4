@@ -405,8 +405,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 30,
 	cost = 60,
-	max_power = 80, power_regen = 1,
-	use_talent = { id = Talents.T_BLINDING_SPEED, level = 3, power = 80 },
+	resolvers.charmt(Talents.T_BLINDING_SPEED, {2,3,4}, 45),
 	wielder = {
 		max_life = resolvers.mbonus_material(70, 40),
 		fatigue = resolvers.mbonus_material(6, 4, function(e, v) return 0, -v end),

@@ -353,8 +353,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 20,
 	cost = 40,
-	max_power = 80, power_regen = 1,
-	use_talent = { id = Talents.T_GLYPH_OF_EXPLOSION, level = 4, power = 80 },
+	resolvers.charmt(Talents.T_GLYPH_OF_EXPLOSION, {2,3,4}, 30),
 	wielder = {
 		resists={
 			[DamageType.FIRE] = resolvers.mbonus_material(10, 5),
@@ -389,8 +388,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 30,
 	cost = 60,
-	max_power = 10, power_regen = 1,
-	use_talent = { id = Talents.T_NOVA, level = 4, power = 6 },
+	resolvers.charmt(Talents.T_NOVA, {2,3,4}, 8),
 	wielder = {
 		resists={
 			[DamageType.LIGHTNING] = resolvers.mbonus_material(20, 5),

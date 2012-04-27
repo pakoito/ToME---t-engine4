@@ -344,14 +344,29 @@ function resolvers.calc.random_use_talent(tt, e)
 end
 
 --- Charms resolver
-function resolvers.charm(desc, cd, fct)
-	return {__resolver="charm", desc, cd, fct}
+function resolvers.charm(desc, cd, fct, tcd)
+	return {__resolver="charm", desc, cd, fct, tcd}
 end
 function resolvers.calc.charm(tt, e)
 	local cd = tt[2]
 	e.max_power = cd
 	e.power = e.max_power
-	e.use_power = {name=tt[1], power=cd, use=tt[3]}
+	e.use_power = {name=tt[1], power=cd, use=tt[3], __no_merge_add=true}
+	if e.talent_cooldown == nil then e.talent_cooldown = tt[4] or "T_GLOBAL_CD" end
+	return
+end
+
+--- Charms talent resolver
+function resolvers.charmt(tid, tlvl, cd, tcd)
+	return {__resolver="charmt", tid, tlvl, cd, tcd}
+end
+function resolvers.calc.charmt(tt, e)
+	local cd = tt[3]
+	e.max_power = cd
+	e.power = e.max_power
+	local lvl = util.getval(tt[2], e)
+	e.use_talent = {id=tt[1], power=cd, level=lvl, __no_merge_add=true}
+	if e.talent_cooldown == nil then e.talent_cooldown = tt[4] or "T_GLOBAL_CD" end
 	return
 end
 

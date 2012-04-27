@@ -83,7 +83,7 @@ function table.merge(dst, src, deep, k_skip, k_skip_deep, addnumbers)
 			elseif e == table.NIL_MERGE then
 				dst[k] = nil
 			-- Add number entries if "add" is set
-			elseif addnumbers and dst[k] and type(dst[k]) == "number" and type(e) == "number" then
+			elseif addnumbers and not dst.__no_merge_add and dst[k] and type(dst[k]) == "number" and type(e) == "number" then
 				dst[k] = dst[k] + e
 			-- Or simply replace/set with the src value
 			else

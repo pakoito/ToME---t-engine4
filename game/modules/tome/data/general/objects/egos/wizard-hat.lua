@@ -121,8 +121,7 @@ newEntity{
 		},
 		combat_spellpower = resolvers.mbonus_material(5, 3),
 	},
-	max_power = 80, power_regen = 1,
-	use_talent = { id = Talents.T_MANAFLOW, level = 1, power = 80 },
+	resolvers.charmt(Talents.T_MANAFLOW, {1,2}, 40),
 }
 
 newEntity{
@@ -381,8 +380,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 30,
 	cost = 60,
-	max_power = 80, power_regen = 1,
-	use_talent = { id = Talents.T_HATEFUL_WHISPER, level = 4, power = 80 },
+	resolvers.charmt(Talents.T_HATEFUL_WHISPER, {2,3,4}, 15),
 	wielder = {
 		resists={
 			[DamageType.MIND] = resolvers.mbonus_material(10, 5, function(e, v) return 0, -v end),
@@ -403,8 +401,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 15,
 	cost = 20,
-	max_power = 80, power_regen = 1,
-	use_talent = { id = Talents.T_STONE_WALL, level = 3, power = 80 },
+	resolvers.charmt(Talents.T_STONE_WALL, {1,2,3}, 80),
 	wielder = {
 		inc_stats = {
 			[Stats.STAT_CON] = resolvers.mbonus_material(5, 1),
@@ -421,8 +418,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 15,
 	cost = 30,
-	max_power = 80, power_regen = 1,
-	use_talent = { id = Talents.T_CORROSIVE_VAPOUR, level = 3, power = 80 },
+	resolvers.charmt(Talents.T_CORROSIVE_VAPOUR, {1,2,3,4}, 20),
 	wielder = {
 		resists={
 			[DamageType.ACID] = resolvers.mbonus_material(10, 5),
@@ -439,8 +435,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 20,
 	cost = 40,
-	max_power = 80, power_regen = 1,
-	use_talent = { id = Talents.T_ARCANE_EYE, level = 5, power = 80 },
+	resolvers.charmt(Talents.T_ARCANE_EYE, 5, 30),
 	wielder = {
 		inc_stats = {
 			[Stats.STAT_MAG] = resolvers.mbonus_material(9, 1),
@@ -456,6 +451,5 @@ newEntity{
 	greater_ego = 1,
 	rarity = 15,
 	cost = 30,
-	max_power = 80, power_regen = 1,
-	use_talent = { id = Talents.T_CIRCLE_OF_WARDING, level = 3, power = 50 },
+	resolvers.charmt(Talents.T_CIRCLE_OF_WARDING, 3, 40),
 }

@@ -182,8 +182,7 @@ newEntity{
 	wielder = {
 		lite = resolvers.mbonus_material(4, 1),
 	},
-	max_power = 12, power_regen = 1,
-	use_talent = { id = Talents.T_ILLUMINATE, level = resolvers.mbonus_material(2, 1), power = 12 },
+	resolvers.charmt(Talents.T_ILLUMINATE, {1,2}, 6},
 }
 
 newEntity{
@@ -217,14 +216,8 @@ newEntity{
 	level_range = {1, 50},
 	rarity = 10,
 	cost = 15,
-	max_power = 5, power_regen = 1,
-	resolvers.generic(function(e)
-		local v = (5 + rng.mbonus(math.ceil(10 * e.material_level / 5), resolvers.current_level, 20))
-		e.max_power = v
-		e.cost = e.cost + v * 1
-	end),
-	use_power = { name = "projects a bolt from the staff", power = 5,
-		use = function(self, who)
+	resolvers.charm("projects a bolt from the staff", 5,
+		function(self, who)
 			local tg = {type="bolt", range= 5 + self.material_level, speed=20, display = {particle=particle, trail=trail},}
 			local weapon = who:hasStaffWeapon()
 			local combat = weapon.combat
@@ -259,7 +252,7 @@ newEntity{
 			game:playSoundNear(who, "talents/arcane")
 			return {id=true, used=true}
 		end
-	},
+	),
 }
 
 newEntity{
@@ -310,14 +303,8 @@ newEntity{
 	greater_ego = 1,
 	rarity = 30,
 	cost = 40,
-	max_power = 10, power_regen = 1,
-	resolvers.generic(function(e)
-		local v = (10 + rng.mbonus(math.ceil(10 * e.material_level / 5), resolvers.current_level, 20))
-		e.max_power = v
-		e.cost = e.cost + v * 1
-	end),
-	use_power = { name = "projects damage in a circle from the staff", power = 10,
-		use = function(self, who)
+	resolvers.charm("projects damage in a circle from the staff", 10,
+		function(self, who)
 			local tg = {type="ball", range=0, radius=self.material_level + 1, selffire=false}
 			local weapon = who:hasStaffWeapon()
 			local combat = weapon.combat
@@ -349,7 +336,7 @@ newEntity{
 			game:playSoundNear(who, "talents/arcane")
 			return {id=true, used=true}
 		end
-	},
+	),
 }
 
 newEntity{
@@ -364,9 +351,8 @@ newEntity{
 		combat_spellpower = resolvers.mbonus_material(10, 2),
 		mana_regen = resolvers.mbonus_material(30, 10, function(e, v) v=v/100 return 0, v end),
 	},
-	max_power = 30, power_regen = 1,
-	use_power = { name = "channel mana (increasing mana regen by 500% for ten turns)", power = 30,
-		use = function(self, who)
+	resolvers.charm("channel mana (increasing mana regen by 500% for ten turns)", 30,
+		function(self, who)
 			if who.mana_regen > 0 and not who:hasEffect(who.EFF_MANASURGE) then
 				who:setEffect(who.EFF_MANASURGE, 10, {power=who.mana_regen * 5})
 			else
@@ -381,7 +367,7 @@ newEntity{
 			game.logSeen(who, "%s is channeling mana!", who.name:capitalize())
 			return {id=true, used=true}
 		end
-	},
+	),
 }
 
 newEntity{
@@ -414,13 +400,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 30,
 	cost = 40,
-	max_power = 10, power_regen = 1,
-	resolvers.generic(function(e)
-		local v = (10 + rng.mbonus(math.ceil(10 * e.material_level / 5), resolvers.current_level, 20))
-		e.max_power = v
-		e.cost = e.cost + v * 1
-	end),
-	use_power = { name = "projects damage in a cone from the staff", power = 10,
+	resolvers.charm("projects damage in a cone from the staff", 8,
 		use = function(self, who)
 			local tg = {type="cone", range=0, radius=self.material_level * 2, selffire=false}
 			local weapon = who:hasStaffWeapon()
@@ -456,7 +436,7 @@ newEntity{
 			game:playSoundNear(who, "talents/arcane")
 			return {id=true, used=true}
 		end
-	},
+	),
 }
 
 newEntity{

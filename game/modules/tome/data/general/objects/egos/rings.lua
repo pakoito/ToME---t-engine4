@@ -477,8 +477,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 20,
 	cost = 40,
-	max_power = 80, power_regen = 1,
-	use_talent = { id = Talents.T_BLEEDING_EDGE, level = 4, power = 80 },
+	resolvers.charmt(Talents.T_BLEEDING_EDGE, {2,3,4}, 20),
 	wielder = {
 		inc_stats = {
 			[Stats.STAT_CUN] = resolvers.mbonus_material(9, 1),
@@ -515,8 +514,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 40,
 	cost = 100,
-	max_power = 80, power_regen = 1,
-	use_talent = { id = Talents.T_GREATER_WEAPON_FOCUS, level = 4, power = 80 },
+	resolvers.charmt(Talents.T_GREATER_WEAPON_FOCUS, {2,3,4}, 20),
 	wielder = {
 		resists_pen = {
 			[DamageType.PHYSICAL] = resolvers.mbonus_material(10, 5),
@@ -532,8 +530,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 15,
 	cost = 30,
-	max_power = 80, power_regen = 1,
-	use_talent = { id = Talents.T_DISENGAGE, level = 2, power = 40 },
+	resolvers.charmt(Talents.T_DISENGAGE, 2, 30),
 	wielder = {
 		combat_apr = resolvers.mbonus_material(7, 3),
 		combat_def = resolvers.mbonus_material(7, 3),
@@ -548,8 +545,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 40,
 	cost = 140,
-	max_power = 80, power_regen = 1,
-	use_talent = { id = Talents.T_BLINDING_SPEED, level = 4, power = 80 },
+	resolvers.charmt(Talents.T_BLINDING_SPEED, {2,3,4}, 40),
 	wielder = {
 		movement_speed = resolvers.mbonus_material(12, 3, function(e, v) v=v/100 return 0, v end),
 	},

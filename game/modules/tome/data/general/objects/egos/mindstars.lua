@@ -180,15 +180,17 @@ newEntity{
 		hate_per_kill = resolvers.mbonus_material(4, 1),
 		psi_per_kill = resolvers.mbonus_material(4, 1),
 	},
-	max_power = 20, power_regen = 1,
-	use_power = { name = "inflict mind damage; gain psi and hate", power = 20,
-		use = function(self, who)
+	
+	charm_power = resolvers.mbonus_material(80, 20),
+	charm_power_def = {add=5, max=10, floor=true},
+	resolvers.charm("inflict mind damage; gain psi and hate", 20,
+		function(self, who)
 			local tg = {type="hit", range=10,}
 			local x, y, target = who:getTarget(tg)
 			if not x or not y then return nil end
 			if target then
 				if target:checkHit(who:combatMindpower(), target:combatMentalResist(), 0, 95, 5) then
-					local damage = (20 * self.material_level) + (who:combatMindpower() * (1 + self.material_level/5))
+					local damage = self:getCharmPower() + (who:combatMindpower() * (1 + self.material_level/5))
 					who:project(tg, x, y, engine.DamageType.MIND, {dam=damage, alwaysHit=true}, {type="mind"})
 					who:incPsi(damage/10)
 					who:incHate(damage/10)
@@ -198,7 +200,7 @@ newEntity{
 			end
 			return {id=true, used=true}
 		end
-	},
+	),
 }
 
  newEntity{
@@ -252,9 +254,8 @@ newEntity{
 			[DamageType.NATURE] = resolvers.mbonus_material(8, 2),
 		},
 	},
-	max_power = 20, power_regen = 1,
-	use_power = { name = "completes a nature powered mindstar set", power = 20,	
-		use = function(self, who, ms_inven)
+	resolvers.charm("completes a nature powered mindstar set", 20,	
+		function(self, who, ms_inven)
 			who:showEquipment("Harmonize with which mindstar?", function(o) return o.subtype == "mindstar" and o.set_list and o ~= self  and o.power_source and o.power_source.nature and not o.set_complete end, function(o) 
 				-- remove any existing set properties
 				self.define_as =nil
@@ -274,7 +275,7 @@ newEntity{
 			end)
 			return {id=true, used=true}
 		end
-	},
+	),
 }
 
  newEntity{
@@ -298,8 +299,7 @@ newEntity{
 			[DamageType.MIND] = resolvers.mbonus_material(8, 2),
 		},
 	},
-	max_power = 20, power_regen = 1,
-	use_power = { name = "completes a nature powered mindstar set", power = 20,	
+	resolvers.charm("completes a nature powered mindstar set", 20,	
 		use = function(self, who, ms_inven)
 			who:showEquipment("Resonate with which mindstar?", function(o) return o.subtype == "mindstar" and o.set_list and o ~= self and o.power_source and o.power_source.psionic and not o.set_complete end, function(o) 
 				-- remove any existing set properties
@@ -320,7 +320,7 @@ newEntity{
 			end)
 			return {id=true, used=true}
 		end
-	},
+	),
 }
 
 -- Caller's Set: For summoners!
@@ -411,8 +411,7 @@ newEntity{
 	on_set_broken = function(self, who)
 		game.logPlayer(who, "#SLATE#The link between the mindstars is broken.")
 	end,
-	max_power = 20, power_regen = 1,
-	use_power = { name = "call the drake in an elemental mindstar", power = 1,	
+	resolvers.charm("call the drake in an elemental mindstar", 20,	
 		use = function(self, who, ms_inven)
 			who:showEquipment("Call the drake in which mindstar?", function(o) return o.subtype == "mindstar" and o.is_drake_star and not o.set_list end, function(o)
 				-- remove any existing sets from the mindstar
@@ -462,7 +461,7 @@ newEntity{
 			end)
 			return {id=true, used=true}
 		end
-	},
+	),
 }
 
 newEntity{
@@ -621,9 +620,8 @@ newEntity{
 		physcrit = resolvers.mbonus_material(10, 2),
 		melee_project = { [DamageType.ACID_BLIND]= resolvers.mbonus_material(15, 5), [DamageType.SLIME]= resolvers.mbonus_material(15, 5),},
 	},
-	max_power = 1, power_regen = 1,
-	use_power = { name = "divide the mindstar in two", power = 1,
-		use = function(self, who)
+	resolvers.charm("divide the mindstar in two", 1,
+		function(self, who)
 			-- Check for free slot first
 			if who:getFreeHands() == 0 then
 				game.logPlayer(who, "You must have a free hand to divide %s", self.name)
@@ -668,7 +666,7 @@ newEntity{
 			-- Because we're removing the use_power we're not returning that it was used; instead we'll have the actor use energy manually
 			who:useEnergy()
 		end
-	},
+	),
 }
 
 -- Wrathful Set: Geared towards Afflicted

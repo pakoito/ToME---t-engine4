@@ -350,7 +350,7 @@ You have heard of such items before. They are very useful to adventurers, allowi
 	end,
 }
 
-newEntity{ base = "BASE_WAND",
+newEntity{ base = "BASE_ROD",
 	power_source = {unknown=true, arcane=false},
 	type = "chest", subtype = "sher'tul",
 	define_as = "TRANSMO_CHEST",

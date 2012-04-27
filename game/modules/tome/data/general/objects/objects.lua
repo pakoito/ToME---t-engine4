@@ -30,6 +30,7 @@ loadIfNot("/data/general/objects/lites.lua")
 -- Usable stuff
 loadIfNot("/data/general/objects/potions.lua")
 loadIfNot("/data/general/objects/scrolls.lua")
+loadIfNot("/data/general/objects/rods.lua")
 loadIfNot("/data/general/objects/wands.lua")
 loadIfNot("/data/general/objects/totems.lua")
 

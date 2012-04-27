@@ -854,9 +854,8 @@ newEntity{
 	level_range = {1, 50},
 	rarity = 5,
 	cost = 15,
-	max_power = 6, power_regen = 1,
-	use_power = { name = "project an attack as mind damage", power = 6,
-		use = function(self, who)
+	resolvers.charm("project an attack as mind damage doing 100%% weapon damage", 6,
+		function(self, who)
 			local tg = {type="bolt", range=5}
 			local x, y = who:getTarget(tg)
 			if not x or not y then return nil end
@@ -869,7 +868,7 @@ newEntity{
 			end
 			return {id=true, used=true}
 		end
-	},
+	),
 	combat = {	
 		melee_project={
 			[DamageType.MIND] = resolvers.mbonus_material(15, 5),

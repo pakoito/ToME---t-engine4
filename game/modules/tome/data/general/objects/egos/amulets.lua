@@ -102,14 +102,15 @@ newEntity{
 	wielder = {
 		teleport_immune = 0.5,
 	},
-	max_power = 120, power_regen = 1,
-	use_power = { name = "teleport you anywhere on the level, randomly", power = 65, use = function(self, who)
+	charm_power = resolvers.mbonus_material(70, 30),
+	charm_power_def = {add=15, max=50, floor=true},
+	resolvers.charm("teleports your randomly (rad %d)", 15, function(self, who)
 		game.level.map:particleEmitter(who.x, who.y, 1, "teleport")
-		who:teleportRandom(who.x, who.y, 200)
+		who:teleportRandom(who.x, who.y, self:getCharmPower())
 		game.level.map:particleEmitter(who.x, who.y, 1, "teleport")
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
 		return {id=true, used=true}
-	end}
+	end),
 }
 
 
@@ -283,8 +284,8 @@ newEntity{
 		healing_factor = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return 0, v end),
 		cut_immune = resolvers.mbonus_material(4, 4, function(e, v) v=v/10 return 0, v end),
 	},
-	max_power = 80, power_regen = 1,
-	use_talent = { id = Talents.T_HEAL, level = 3, power = 80 },
+
+	resolvers.charmt(Talents.T_HEAL, {1,2,3}, 80),
 }
 
 newEntity{

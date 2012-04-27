@@ -971,7 +971,7 @@ newEntity{ base = "BASE_GEM", define_as = "CRYSTAL_HEART",
 	end },
 }
 
-newEntity{ base = "BASE_WAND", define_as = "ROD_OF_ANNULMENT",
+newEntity{ base = "BASE_ROD", define_as = "ROD_OF_ANNULMENT",
 	power_source = {arcane=true},
 	unided_name = "dark rod",
 	name = "Rod of Annulment", color=colors.LIGHT_BLUE, unique=true, image = "object/artifact/rod_of_annulment.png",

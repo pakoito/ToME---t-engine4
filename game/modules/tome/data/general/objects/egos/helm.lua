@@ -473,8 +473,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 30,
 	cost = 60,
-	max_power = 80, power_regen = 1,
-	use_talent = { id = Talents.T_CIRCLE_OF_SANCTITY, level = 4, power = 80 },
+	resolvers.charmt(Talents.T_CIRCLE_OF_SANCTITY, {2,3,4}, 30),
 	wielder = {
 		resists={
 			[DamageType.BLIGHT] = resolvers.mbonus_material(10, 5),
@@ -492,8 +491,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 20,
 	cost = 40,
-	max_power = 80, power_regen = 1,
-	use_talent = { id = Talents.T_BATTLE_CRY, level = 2, power = 80 },
+	resolvers.charmt(Talents.T_BATTLE_CRY, 2, 28),
 	wielder = {
 		inc_stats = {
 			[Stats.STAT_STR] = resolvers.mbonus_material(5, 1),

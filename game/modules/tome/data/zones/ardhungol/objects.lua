@@ -20,7 +20,7 @@
 load("/data/general/objects/objects-far-east.lua")
 load("/data/general/objects/lore/sunwall.lua")
 
-newEntity{ base = "BASE_WAND",
+newEntity{ base = "BASE_ROD",
 	power_source = {nature=true},
 	define_as = "ROD_SPYDRIC_POISON",
 	unided_name = "poison dripping wand", image = "object/artifact/rod_of_spydric_poison.png",

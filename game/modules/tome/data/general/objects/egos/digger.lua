@@ -269,8 +269,6 @@ newEntity{
 	greater_ego = 1,
 	rarity = 20,
 	cost = 40,
-	max_power = 80, power_regen = 1,
-	use_talent = { id = Talents.T_QUICKEN_SPELLS, level = 2, power = 80 },
 	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 2) end),
 }
 
@@ -319,8 +317,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 20,
 	cost = 40,
-	max_power = 80, power_regen = 1,
-	use_talent = { id = Talents.T_PERFECT_STRIKE, level = 3, power = 80 },
+	resolvers.charmt(Talents.T_PERFECT_STRIKE, {2,3,4}, 26 },
 	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 2) end),
 	wielder = {
 		inc_stats = {

@@ -427,8 +427,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 25,
 	cost = 40,
-	max_power = 80, power_regen = 1,
-	use_talent = { id = Talents.T_DISPLACEMENT_SHIELD, level = 5, power = 80 },
+	resolvers.charmt(Talents.T_DISPLACEMENT_SHIELD, {2,3,4}, 40),
 	wielder = {
 		combat_def = resolvers.mbonus_material(10, 5),
 	},
@@ -442,8 +441,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 25,
 	cost = 40,
-	max_power = 80, power_regen = 1,
-	use_talent = { id = Talents.T_EARTHEN_BARRIER, level = 5, power = 80 },
+	resolvers.charmt(Talents.T_EARTHEN_BARRIER, {2,3,4,5}, 40),
 	wielder = {
 		combat_armor = resolvers.mbonus_material(7, 3),
 	},
@@ -457,8 +455,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 10,
 	cost = 20,
-	max_power = 10, power_regen = 1,
-	use_talent = { id = Talents.T_ILLUMINATE, level = 2, power = 6 },
+	resolvers.charmt(Talents.T_ILLUMINATE, 2, 6),
 	wielder = {
 		resists={
 			[DamageType.LIGHT] = resolvers.mbonus_material(10, 5),
@@ -475,8 +472,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 20,
 	cost = 40,
-	max_power = 80, power_regen = 1,
-	use_talent = { id = Talents.T_TIME_SHIELD, level = 5, power = 80 },
+	resolvers.charmt(Talents.T_TIME_SHIELD, {2,3,4,5}, 30 },
 	wielder = {
 		resists={
 			[DamageType.TEMPORAL] = resolvers.mbonus_material(10, 5),
@@ -495,8 +491,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 30,
 	cost = 60,
-	max_power = 80, power_regen = 1,
-	use_talent = { id = Talents.T_WATERS_OF_LIFE, level = 4, power = 80 },
+	resolvers.charmt(Talents.T_WATERS_OF_LIFE, 4, 30),
 	wielder = {
 		talents_types_mastery = {
 			["wild-gift/harmony"] = resolvers.mbonus_material(2, 2, function(e, v) v=v/10 return 0, v end),
@@ -512,8 +507,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 10,
 	cost = 20,
-	max_power = 80, power_regen = 1,
-	use_talent = { id = Talents.T_BARRIER, level = 4, power = 80 },
+	resolvers.charmt(Talents.T_BARRIER, {2,3,4}, 40),
 	wielder = {
 		inc_stats = {
 			[Stats.STAT_WIL] = resolvers.mbonus_material(5, 1),

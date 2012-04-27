@@ -479,8 +479,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 35,
 	cost = 70,
-	max_power = 80, power_regen = 1,
-	use_talent = { id = Talents.T_DISPERSE_MAGIC, level = 3, power = 80 },
+	resolvers.charmt(Talents.T_DISPERSE_MAGIC, 3, 50),
 	wielder = {
 		resists={
 			[DamageType.ARCANE] = resolvers.mbonus_material(7, 3),
@@ -528,8 +527,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 20,
 	cost = 40,
-	max_power = 80, power_regen = 1,
-	use_talent = { id = Talents.T_JUGGERNAUT, level = 4, power = 80 },
+	resolvers.charmt(Talents.T_JUGGERNAUT, {2,3,4}, 80),
 	wielder = {
 		inc_stats = {
 			[Stats.STAT_CON] = resolvers.mbonus_material(5, 1),
@@ -552,8 +550,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 40,
 	cost = 80,
-	max_power = 80, power_regen = 1,
-	use_talent = { id = Talents.T_TRACK, level = 2, power = 80 },
+	resolvers.charmt(Talents.T_TRACK, 2, 30),
 	wielder = {
 		inc_stats = {
 			[Stats.STAT_DEX] = resolvers.mbonus_material(5, 1),
