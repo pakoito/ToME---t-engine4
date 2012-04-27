@@ -656,13 +656,13 @@ newEffect{
 			eff.particles = nil
 		end
 
-		eff.target:removeEffect(eff.target.EFF_FED_UPON)
+		eff.target:removeEffect(eff.target.EFF_FED_UPON, false, true)
 	end,
 	updateFeed = function(self, eff)
 		local source = eff.src
 		local target = eff.target
 
-		if source.dead or target.dead or not game.level:hasEntity(source) or not game.level:hasEntity(target) or not source:hasLOS(target.x, target.y) then
+		if source.dead or target.dead or not game.level:hasEntity(source) or not game.level:hasEntity(target) or not source:hasLOS(target.x, target.y) or core.fov.distance(self.x, self.y, target.x, target.y) > (eff.range or 10) then
 			source:removeEffect(source.EFF_FEED)
 			if eff.particles then
 				game.level.map:removeParticleEmitter(eff.particles)
@@ -696,12 +696,19 @@ newEffect{
 	subtype = { psychic_drain=true },
 	status = "detrimental",
 	remove_on_clone = true,
+	no_remove = true,
 	parameters = { },
 	activate = function(self, eff)
 	end,
 	deactivate = function(self, eff)
 		if eff.target == self and eff.src:hasEffect(eff.src.EFF_FEED) then
 			eff.src:removeEffect(eff.src.EFF_FEED)
+		end
+	end,
+	on_timeout = function(self, eff)
+		-- no_remove prevents targets from dispelling feeding, make sure this gets removed if something goes wrong
+		if eff.dur <= 0 or eff.src.dead then
+			self:removeEffect(eff.src.EFF_FED_UPON, false, true)
 		end
 	end,
 }
@@ -727,7 +734,7 @@ newEffect{
 
 		local damage = math.floor(eff.damage * (eff.turn / eff.duration))
 		if damage > 0 then
-			DamageType:get(DamageType.MIND).projector(eff.source, self.x, self.y, DamageType.MIND, damage)
+			DamageType:get(DamageType.MIND).projector(eff.source, self.x, self.y, DamageType.MIND, { dam=damage, crossTierChance=25 })
 			game:playSoundNear(self, "talents/fire")
 		end
 
@@ -753,31 +760,46 @@ newEffect{
 	on_gain = function(self, err) return "#Target# has heard the hateful whisper!", "+Hateful Whisper" end,
 	on_lose = function(self, err) return "#Target# no longer hears the hateful whisper.", "-Hateful Whisper" end,
 	activate = function(self, eff)
-		DamageType:get(DamageType.MIND).projector(eff.source, self.x, self.y, DamageType.MIND, { dam=eff.damage,criticals=true })
-
+		if not eff.source.dead and eff.source:knowTalent(eff.source.T_HATE_POOL) then
+			eff.source:incHate(eff.hateGain)
+		end
+		DamageType:get(DamageType.MIND).projector(eff.source, self.x, self.y, DamageType.MIND, { dam=eff.damage, crossTierChance=25 })
+		
 		if self.dead then
 			-- only spread on activate if the target is dead
-			self.tempeffect_def[self.EFF_HATEFUL_WHISPER].doSpread(self, eff)
-			eff.duration = 0
+			if eff.jumpCount > 0 then
+				eff.jumpCount = eff.jumpCount - 1
+				self.tempeffect_def[self.EFF_HATEFUL_WHISPER].doSpread(self, eff)
+			end
 		else
 			eff.particle = self:addParticles(Particles.new("hateful_whisper", 1, { }))
 		end
 
 		game:playSoundNear(self, "talents/fire")
+		
+		eff.firstTurn = true
 	end,
 	deactivate = function(self, eff)
 		if eff.particle then self:removeParticles(eff.particle) end
 	end,
 	on_timeout = function(self, eff)
-		eff.duration = eff.duration - 1
-		if eff.duration <= 0 then return false end
+		if self.dead then return false end
 
-		if (eff.state or 0) == 0 then
+		if eff.firstTurn then
 			-- pause a turn before infecting others
-			eff.state = 1
-		elseif eff.state == 1 then
-			self.tempeffect_def[self.EFF_HATEFUL_WHISPER].doSpread(self, eff)
-			eff.state = 2
+			eff.firstTurn = false
+		elseif eff.jumpDuration > 0 then
+			-- limit the total duration of all spawned effects
+			eff.jumpDuration = eff.jumpDuration - 1
+			
+			if eff.jumpCount > 0 then
+				-- guaranteed jump
+				eff.jumpCount = eff.jumpCount - 1
+				self.tempeffect_def[self.EFF_HATEFUL_WHISPER].doSpread(self, eff)
+			elseif rng.percent(eff.jumpChance) then
+				-- per turn chance of a jump
+				self.tempeffect_def[self.EFF_HATEFUL_WHISPER].doSpread(self, eff)
+			end
 		end
 	end,
 	doSpread = function(self, eff)
@@ -795,25 +817,20 @@ newEffect{
 		end
 
 		if #targets > 0 then
-			local hitCount = 1
-			if rng.percent(eff.extraJumpChance or 0) then hitCount = hitCount + 1 end
+			local target = rng.table(targets)
+			target:setEffect(target.EFF_HATEFUL_WHISPER, eff.duration, {
+				source = eff.source,
+				duration = eff.duration,
+				damage = eff.damage,
+				mindpower = eff.mindpower,
+				jumpRange = eff.jumpRange,
+				jumpCount = 0, -- secondary effects do not get automatic spreads
+				jumpChance = eff.jumpChance,
+				jumpDuration = eff.jumpDuration,
+				hateGain = eff.hateGain
+			})
 
-			-- Randomly take targets
-			for i = 1, hitCount do
-				local target = rng.tableRemove(targets)
-				target:setEffect(target.EFF_HATEFUL_WHISPER, eff.duration, {
-					source = eff.source,
-					duration = eff.duration,
-					damage = eff.damage,
-					mindpower = eff.mindpower,
-					jumpRange = eff.jumpRange,
-					extraJumpChance = eff.extraJumpChance
-				})
-
-				game.level.map:particleEmitter(target.x, target.y, 1, "reproach", { dx = self.x - target.x, dy = self.y - target.y })
-
-				if #targets == 0 then break end
-			end
+			game.level.map:particleEmitter(target.x, target.y, 1, "reproach", { dx = self.x - target.x, dy = self.y - target.y })
 		end
 	end,
 }
@@ -821,7 +838,7 @@ newEffect{
 newEffect{
 	name = "MADNESS_SLOW", image = "effects/madness_slowed.png",
 	desc = "Slowed by madness",
-	long_desc = function(self, eff) return ("Madness reduces the target's global speed by %d%%."):format(eff.power * 100) end,
+	long_desc = function(self, eff) return ("Madness reduces the target's global speed by %d%% and lowers mind resistance by %d%%."):format(eff.power * 100, -eff.mindResistChange) end,
 	type = "mental",
 	subtype = { madness=true, slow=true },
 	status = "detrimental",
@@ -830,9 +847,11 @@ newEffect{
 	on_lose = function(self, err) return "#Target# overcomes the madness.", "-Slow" end,
 	activate = function(self, eff)
 		eff.particle = self:addParticles(Particles.new("gloom_slow", 1))
+		eff.mindResistChangeId = self:addTemporaryValue("resists", { [DamageType.MIND]=eff.mindResistChange })
 		eff.tmpid = self:addTemporaryValue("global_speed_add", -eff.power)
 	end,
 	deactivate = function(self, eff)
+		self:removeTemporaryValue("resists", eff.mindResistChangeId)
 		self:removeTemporaryValue("global_speed_add", eff.tmpid)
 		self:removeParticles(eff.particle)
 	end,
@@ -841,7 +860,7 @@ newEffect{
 newEffect{
 	name = "MADNESS_STUNNED", image = "effects/madness_stunned.png",
 	desc = "Stunned by madness",
-	long_desc = function(self, eff) return ("Madness has stunned the target, reducing damage by 70%%, healing received by 50%%, putting random talents on cooldown and reducing movement speed by 50%%. While stunned talents do not cooldown."):format() end,
+	long_desc = function(self, eff) return ("Madness has stunned the target, reducing damage by 70%%, healing received by 50%%, lowering mind resistance by %d%%, putting random talents on cooldown and reducing movement speed by 50%%. While stunned talents do not cooldown."):format(eff.mindResistChange) end,
 	type = "mental",
 	subtype = { madness=true, stun=true },
 	status = "detrimental",
@@ -851,6 +870,7 @@ newEffect{
 	activate = function(self, eff)
 		eff.particle = self:addParticles(Particles.new("gloom_stunned", 1))
 
+		eff.mindResistChangeId = self:addTemporaryValue("resists", { [DamageType.MIND]=eff.mindResistChange })
 		eff.tmpid = self:addTemporaryValue("stunned", 1)
 		eff.tcdid = self:addTemporaryValue("no_talents_cooldown", 1)
 		eff.speedid = self:addTemporaryValue("movement_speed", -0.5)
@@ -869,6 +889,7 @@ newEffect{
 	deactivate = function(self, eff)
 		self:removeParticles(eff.particle)
 
+		self:removeTemporaryValue("resists", eff.mindResistChangeId)
 		self:removeTemporaryValue("stunned", eff.tmpid)
 		self:removeTemporaryValue("no_talents_cooldown", eff.tcdid)
 		self:removeTemporaryValue("movement_speed", eff.speedid)
@@ -878,7 +899,7 @@ newEffect{
 newEffect{
 	name = "MADNESS_CONFUSED", image = "effects/madness_confused.png",
 	desc = "Confused by madness",
-	long_desc = function(self, eff) return ("Madness has confused the target, making it act randomly (%d%% chance) and unable to perform complex actions."):format(eff.power) end,
+	long_desc = function(self, eff) return ("Madness has confused the target, lowering mind resistance by %d%% and making it act randomly (%d%% chance) and unable to perform complex actions."):format(eff.mindResistChange, eff.power) end,
 	type = "mental",
 	subtype = { madness=true, confusion=true },
 	status = "detrimental",
@@ -887,11 +908,37 @@ newEffect{
 	on_lose = function(self, err) return "#Target# overcomes the madness", "-Confused" end,
 	activate = function(self, eff)
 		eff.particle = self:addParticles(Particles.new("gloom_confused", 1))
+		eff.mindResistChangeId = self:addTemporaryValue("resists", { [DamageType.MIND]=eff.mindResistChange })
 		eff.tmpid = self:addTemporaryValue("confused", eff.power)
 	end,
 	deactivate = function(self, eff)
+		self:removeTemporaryValue("resists", eff.mindResistChangeId)
 		self:removeParticles(eff.particle)
 		self:removeTemporaryValue("confused", eff.tmpid)
+	end,
+}
+
+newEffect{
+	name = "MALIGNED", image = "talents/getsture_of_malice.png",
+	desc = "Maligned",
+	long_desc = function(self, eff) return ("The target is under a malign influence. All resists have been lowered by %d%%."):format(-eff.resistAllChange) end,
+	type = "mental",
+	subtype = { curse=true },
+	status = "detrimental",
+	parameters = {},
+	on_gain = function(self, err) return "#F53CBE##Target# has been maligned!", "+Maligned" end,
+	on_lose = function(self, err) return "#Target# is no longer maligned", "-Maligned" end,
+	activate = function(self, eff)
+		eff.particle = self:addParticles(Particles.new("maligned", 1))
+		eff.resistAllChangeId = self:addTemporaryValue("resists", { all=eff.resistAllChange })
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("resists", eff.resistAllChangeId)
+		self:removeParticles(eff.particle)
+	end,
+	on_merge = function(self, old_eff, new_eff)
+		old_eff.dur = new_eff.dur
+		return old_eff
 	end,
 }
 
@@ -927,6 +974,9 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		updateFearParticles(self)
+		
+		local tInstillFear = self:getTalentFromId(self.T_INSTILL_FEAR)
+		tInstillFear.endEffect(self, tInstillFear)
 	end,
 	do_act = function(self, eff)
 		if not self:enoughEnergy() then return nil end
@@ -986,6 +1036,9 @@ newEffect{
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("resists", eff.damageId)
 		updateFearParticles(self)
+		
+		local tInstillFear = self:getTalentFromId(self.T_INSTILL_FEAR)
+		tInstillFear.endEffect(self, tInstillFear)
 	end,
 }
 
@@ -1006,6 +1059,9 @@ newEffect{
 	deactivate = function(self, eff)
 		eff.terrifiedId = self:removeTemporaryValue("terrified", eff.terrifiedId)
 		updateFearParticles(self)
+		
+		local tInstillFear = self:getTalentFromId(self.T_INSTILL_FEAR)
+		tInstillFear.endEffect(self, tInstillFear)
 	end,
 }
 
@@ -1030,6 +1086,9 @@ newEffect{
 		self:removeTemporaryValue("combat_mentalresist", eff.mentalId)
 		self:removeTemporaryValue("combat_spellresist", eff.spellId)
 		updateFearParticles(self)
+		
+		local tInstillFear = self:getTalentFromId(self.T_INSTILL_FEAR)
+		tInstillFear.endEffect(self, tInstillFear)
 	end,
 }
 
@@ -1057,6 +1116,9 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		updateFearParticles(self)
+		
+		local tInstillFear = self:getTalentFromId(self.T_INSTILL_FEAR)
+		tInstillFear.endEffect(self, tInstillFear)
 	end,
 	on_setFearEffect = function(self, e)
 		local eff = self:hasEffect(self.EFF_HAUNTED)
@@ -1080,6 +1142,9 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		updateFearParticles(self)
+		
+		local tInstillFear = self:getTalentFromId(self.T_INSTILL_FEAR)
+		tInstillFear.endEffect(self, tInstillFear)
 	end,
 	npcTormentor = {
 		name = "tormentor",
@@ -1114,7 +1179,7 @@ newEffect{
 				self:die()
 			else
 				game.logSeen(self, "%s is tormented by a vision!", target.name:capitalize())
-				self:project({type="hit", x=target.x,y=target.y}, target.x, target.y, DamageType.MIND, { dam=self.tormentedDamage,alwaysHit=true,criticals=true,crossTierChance=0 })
+				self:project({type="hit", x=target.x,y=target.y}, target.x, target.y, DamageType.MIND, { dam=self.tormentedDamage,alwaysHit=true,crossTierChance=75 })
 				self:die()
 			end
 		end,
@@ -1165,6 +1230,9 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		self:removeParticles(eff.particlesId)
+		
+		local tInstillFear = self:getTalentFromId(self.T_INSTILL_FEAR)
+		tInstillFear.endEffect(self, tInstillFear)
 	end,
 	do_act = function(self, eff)
 		if not self:enoughEnergy() then return nil end

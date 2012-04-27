@@ -24,7 +24,7 @@ newTalent{
 	points = 5,
 	random_ego = "attack",
 	cooldown = 6,
-	hate =  4,
+	hate = 8,
 	range = 8,
 	radius = function(self, t) return 2 end,
 	tactical = { DISABLE = 2 },
@@ -101,7 +101,23 @@ newTalent{
 		
 		target:setEffect(effectId, duration, eff)
 		
+		-- heightened fear
+		if tHeightenFear and not target:hasEffect(target.EFF_HEIGHTEN_FEAR) then
+			local turnsUntilTrigger = tHeightenFear.getTurnsUntilTrigger(self, tHeightenFear)
+			target:setEffect(target.EFF_HEIGHTEN_FEAR, 1, { source=self, range=self:getTalentRange(tHeightenFear), turns=turnsUntilTrigger, turns_left=turnsUntilTrigger })
+		end
+		
 		return effectId
+	end,
+	endEffect = function(self, t)
+		local tHeightenFear = nil
+		if self:knowTalent(self.T_HEIGHTEN_FEAR) then tHeightenFear = self:getTalentFromId(self.T_HEIGHTEN_FEAR) end
+		if tHeightenFear then
+			if not t.hasEffect(self, t) then
+				-- no more fears
+				self:removeEffect(self.EFF_HEIGHTEN_FEAR)
+			end
+		end
 	end,
 	requires_target = true,
 	target = function(self, t) return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t} end,
@@ -126,7 +142,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Instill fear in your target, causing one of several possible fears that lasts for %d turns. There is also a 25%% chance of instilling fear in any foe in a radius of %d. The target can save versus Mindpower to avoid the effect and can be affected by multiple fears.  You gain 2 new fears: The Paranoid effect gives the target an %d%% chance to physically attack a nearby creature, friend or foe. If hit, their target will be afflicted with paranoia as well. The Despair effect reduces the targets resistance to all damage by %d%%.
+		return ([[Instill fear in your target, causing one of several possible fears that lasts for %d turns. There is also a 25%% chance of instilling fear in any foe in a radius of %d. The target can save versus Mindpower to resist the effect and can be affected by multiple fears.  You gain 2 new fears: The Paranoid effect gives the target an %d%% chance to physically attack a nearby creature, friend or foe. If hit, their target will be afflicted with paranoia as well. The Despair effect reduces the targets resistance to all damage by %d%%.
 		Fear effects improve with your Mindpower.]]):format(t.getDuration(self, t), self:getTalentRadius(t),
 		t.getParanoidAttackChance(self, t),
 		-t.getDespairResistAllChange(self, t))
@@ -137,12 +153,13 @@ newTalent{
 	name = "Heighten Fear",
 	type = {"cursed/fears", 2},
 	require = cursed_wil_req2,
+	mode = "passive",
 	points = 5,
-	random_ego = "attack",
-	cooldown = 3,
-	hate = 2,
 	range = function(self, t)
 		return math.sqrt(self:getTalentLevel(t)) * 3
+	end,
+	getTurnsUntilTrigger = function(self, t)
+		return 5
 	end,
 	getTerrifiedActionFailureChance = function(self, t)
 		return math.min(50, self:combatTalentMindDamage(t, 20, 45))
@@ -151,29 +168,13 @@ newTalent{
 		return -self:combatTalentMindDamage(t, 15, 30)
 	end,
 	tactical = { DISABLE = 2 },
-	action = function(self, t)
-		local range = self:getTalentRange(t)
-		self:project(
-			{type="ball", radius=range, x=self.x, y=self.y}, self.x, self.y,
-			function(px, py)
-				local actor = game.level.map(px, py, engine.Map.ACTOR)
-				if actor and self:reactionToward(actor) < 0 and actor ~= self then
-					local tInstillFear = self:getTalentFromId(self.T_INSTILL_FEAR)
-					if tInstillFear.hasEffect(self, tInstillFear, actor) then
-						tInstillFear.applyEffect(self, tInstillFear, actor)
-					end
-				end
-			end,
-			nil, nil)
-
-		return true
-	end,
 	info = function(self, t)
 		local tInstillFear = self:getTalentFromId(self.T_INSTILL_FEAR)
 		local range = self:getTalentRange(t)
+		local turnsUntilTrigger = t.getTurnsUntilTrigger(self, t)
 		local duration = tInstillFear.getDuration(self, tInstillFear)
-		return ([[Heighten the fears in everyone around you. Any foes in a radius of %d experiencing at least one fear will gain a new fear that lasts for %d turns. You gain 2 new fears: The Terrified effect causes talents and attacks to fail %d%% of the time. The Distressed effect reduces all saves by %d.
-		Fear effects improve with your Mindpower.]]):format(range, duration,
+		return ([[Heighten the fears of everyone around you. Any foe experiencing at least one fear who remains in a radius of %d and in sight of you for %d (non-consecutive) turns will gain a new fear that lasts for %d turns. The target can save versus Mindpower to resist the effect and each heightened fear reduces the chances of another by 10%%. You gain 2 new fears: The Terrified effect causes talents and attacks to fail %d%% of the time. The Distressed effect reduces all saves by %d.
+		Fear effects improve with your Mindpower.]]):format(range, turnsUntilTrigger, duration,
 		t.getTerrifiedActionFailureChance(self, t),
 		-t.getDistressedSaveChange(self, t))
 	end,

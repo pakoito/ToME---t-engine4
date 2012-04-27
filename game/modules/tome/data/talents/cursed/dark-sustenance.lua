@@ -70,7 +70,7 @@ newTalent{
 			resistGain = tFeedStrengths.getResistGain(self, tFeedStrengths, target)
 		end
 
-		self:setEffect(self.EFF_FEED, 40, { target=target, hateGain=hateGain, constitutionGain=constitutionGain, lifeRegenGain=lifeRegenGain, damageGain=damageGain, resistGain=resistGain })
+		self:setEffect(self.EFF_FEED, 40, { target=target, range=range, hateGain=hateGain, constitutionGain=constitutionGain, lifeRegenGain=lifeRegenGain, damageGain=damageGain, resistGain=resistGain })
 
 		return true
 	end,

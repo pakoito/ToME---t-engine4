@@ -18,6 +18,23 @@
 -- darkgod@te4.org
 
 newTalent{
+	short_name = "SHADOW_FADE",
+	name = "Fade",
+	type = {"spell/other",1},
+	points = 5,
+	cooldown = function(self, t)
+		return math.max(3, 8 - self:getTalentLevelRaw(t))
+	end,
+	action = function(self, t)
+		self:setEffect(self.EFF_FADED, 1, {})
+		return true
+	end,
+	info = function(self, t)
+		return ([[You fade from sight, making you invulnerable until the beginning of your next turn.]])
+	end,
+}
+
+newTalent{
 	short_name = "SHADOW_PHASE_DOOR",
 	name = "Phase Door",
 	type = {"spell/other",1},
@@ -154,12 +171,11 @@ newTalent{
 	end,
 	info = function(self, t)
 		local chance = t.getChance(self, t)
-		return ([[When a shadow is hit and killed, there is a %d%% chance it will reform unhurt."
-		The chance will increase with the Magic stat]]):format(chance)
+		return ([[When a shadow is hit and killed, there is a %d%% chance it will reform unhurt.]]):format(chance)
 	end,
 }
 
-local function createShadow(self, level, duration, target)
+local function createShadow(self, level, tCallShadows, tShadowWarriors, tShadowMages, duration, target)
 	return require("mod.class.NPC").new{
 		type = "undead", subtype = "shadow",
 		name = "shadow",
@@ -176,34 +192,36 @@ local function createShadow(self, level, duration, target)
 		autolevel = "none",
 		level_range = {level, level},
 		exp_worth=0,
+		hate_regen = 1,
 
-		max_life = resolvers.rngavg(15,20), life_rating = 4,
+		max_life = resolvers.rngavg(3,12), life_rating = 5,
 		stats = {
-			str=10 + math.floor(level * 0.2),
-			dex=15 + math.floor(level * 0.8),
-			mag=15 + math.floor(level * 0.6),
-			wil=10 + math.floor(level * 0.6),
-			cun=10 + math.floor(level * 0.2),
-			con=5,
+			str=5 + math.floor(level),
+			dex=10 + math.floor(level * 1.5),
+			mag=10 + math.floor(level * 1.5),
+			wil=5 + math.floor(level),
+			cun=5 + math.floor(level * 0.7),
+			con=5 + math.floor(level * 0.7),
 		},
-		combat_armor = 0, combat_def = 3 + level * 0.1,
+		combat_armor = 0, combat_def = 3,
 		combat = {
-			dam=8 + level * 2,
-			atk=10 + 1.5 * level * 2,
-			apr=10,
-			dammod={dex=0.3, mag=0.3}
+			dam=math.floor(level * 1.5),
+			atk=10 + level,
+			apr=8,
+			dammod={str=0.5, dex=0.5}
 		},
-		evasion = 30,
 		mana = 100,
+		spellpower = tShadowMages and tShadowMages.getSpellpowerChange(self, tShadowMages) or 0,
 		summoner_hate_per_kill = self.hate_per_kill,
 		resolvers.talents{
-			[self.T_SHADOW_PHASE_DOOR]=math.max(5, math.floor(1 + level * 0.1)),
-			[self.T_SHADOW_BLINDSIDE]=math.max(5, math.floor(1 + level * 0.1)),
-			[self.T_SHADOW_LIGHTNING]=math.max(5, math.floor(1 + level * 0.1)),
-			[self.T_SHADOW_FLAMES]=math.max(5, math.floor(1 + level * 0.1)),
-			[self.T_SHADOW_REFORM]=math.max(5, math.floor(1 + level * 0.1)),
-			[self.T_HEAL]=math.max(5, math.floor(1 + level * 0.1)),
-			[self.T_DOMINATE]=math.max(5, math.floor(1 + level * 0.1)),
+			[self.T_SHADOW_PHASE_DOOR]=tCallShadows.getPhaseDoorLevel(self, tCallShadows),
+			[self.T_SHADOW_BLINDSIDE]=tCallShadows.getBlindsideLevel(self, tCallShadows),
+			[self.T_HEAL]=tCallShadows.getHealLevel(self, tCallShadows),
+			[self.T_DOMINATE]=tShadowWarriors and tShadowWarriors.getDominateLevel(self, tShadowWarriors) or 0,
+			[self.T_SHADOW_FADE]=tShadowWarriors and tShadowWarriors.getFadeLevel(self, tShadowWarriors) or 0,
+			[self.T_SHADOW_LIGHTNING]=tShadowMages and tShadowMages.getLightningLevel(self, tShadowMages) or 0,
+			[self.T_SHADOW_FLAMES]=tShadowMages and tShadowMages.getFlamesLevel(self, tShadowMages) or 0,
+			[self.T_SHADOW_REFORM]=tShadowMages and tShadowMages.getReformLevel(self, tShadowMages) or 0,
 		},
 
 		undead = 1,
@@ -217,7 +235,8 @@ local function createShadow(self, level, duration, target)
 		stun_immune = 1,
 		blind_immune = 1,
 		see_invisible = 80,
-		resists = {[DamageType.LIGHT] = -100, [DamageType.DARKNESS] = 100},
+		resists = { [DamageType.LIGHT] = -100, [DamageType.DARKNESS] = 100 },
+		resists_pen = { all=25 },
 
 		ai = "shadow",
 		ai_state = {
@@ -282,6 +301,13 @@ local function createShadow(self, level, duration, target)
 				self.ai_state.dominate_chance = 0
 			end
 		end,
+		onTakeHit = function(self, value, src)
+			if self:knowTalent(self.T_SHADOW_FADE) and not self:isTalentCoolingDown(self.T_SHADOW_FADE) then
+				self:forceUseTalent(self.T_SHADOW_FADE, {ignore_energy=true})
+			end
+			
+			return mod.class.Actor.onTakeHit(self, value, src)
+		end,
 	}
 end
 
@@ -289,6 +315,7 @@ newTalent{
 	name = "Call Shadows",
 	type = {"cursed/shadows", 1},
 	mode = "sustained",
+	no_energy = true,
 	require = cursed_cun_req1,
 	points = 5,
 	cooldown = 10,
@@ -298,6 +325,15 @@ newTalent{
 	end,
 	getMaxShadows = function(self, t)
 		return math.max(1, math.floor(self:getTalentLevel(t) * 0.55))
+	end,
+	getPhaseDoorLevel = function(self, t)
+		return self:getTalentLevelRaw(t)
+	end,
+	getBlindsideLevel = function(self, t)
+		return self:getTalentLevelRaw(t)
+	end,
+	getHealLevel = function(self, t)
+		return self:getTalentLevelRaw(t)
 	end,
 	activate = function(self, t)
 		return {}
@@ -341,15 +377,18 @@ newTalent{
 		end
 
 		-- use hate
-		if self.hate < 10 then
+		if self.hate < 6 then
 			-- not enough hate..just wait for another try
 			game.logPlayer(self, "You hate is too low to call another shadow!", deflectDamage)
 			return false
 		end
-		self:incHate(-10)
+		self:incHate(-6)
 
 		level = t.getLevel(self, t)
-		local shadow = createShadow(self, level, 1000, nil)
+		local tShadowWarriors = self:knowTalent(self.T_SHADOW_WARRIORS) and self:getTalentFromId(self.T_SHADOW_WARRIORS) or nil
+		local tShadowMages = self:knowTalent(self.T_SHADOW_MAGES) and self:getTalentFromId(self.T_SHADOW_MAGES) or nil
+		
+		local shadow = createShadow(self, level, t, tShadowWarriors, tShadowMages, 1000, nil)
 
 		shadow:resolve()
 		shadow:resolve(nil, true)
@@ -375,14 +414,151 @@ newTalent{
 	info = function(self, t)
 		local maxShadows = t.getMaxShadows(self, t)
 		local level = t.getLevel(self, t)
-		return ([[While this ability is active you will continually call up to %d level %d shadows to aid you in battle. Shadows are weak combatants that can Heal themselves, Blindside their opponents and Phase Door from place to place. Each shadow costs 10 hate to summon and will be equal in level to you when it appears.]]):format(maxShadows, level)
+		local healLevel = t.getHealLevel(self, t)
+		local blindsideLevel = t.getBlindsideLevel(self, t)
+		return ([[While this ability is active you will continually call up to %d level %d shadows to aid you in battle. Each shadow costs 6 hate to summon. Shadows are weak combatants that can: Use Arcane Reconstruction to heal themselves (level %d), Blindside their opponents (level %d) and Phase Door from place to place.]]):format(maxShadows, level, healLevel, blindsideLevel)
+	end,
+}
+
+newTalent{
+	name = "Shadow Warriors",
+	type = {"cursed/shadows", 2},
+	mode = "passive",
+	require = cursed_cun_req2,
+	points = 5,
+	getIncDamage = function(self, t)
+		return math.floor((math.sqrt(self:getTalentLevel(t)) - 0.5) * 35)
+	end,
+	getCombatAtk = function(self, t)
+		return math.floor((math.sqrt(self:getTalentLevel(t)) - 0.5) * 23)
+	end,
+	getDominateLevel = function(self, t)
+		return self:getTalentLevelRaw(t)
+	end,
+	getFadeLevel = function(self, t)
+		return self:getTalentLevelRaw(t)
+	end,
+	getDominateChance = function(self, t)
+		if self:getTalentLevelRaw(t) > 0 then
+			return math.min(100, math.sqrt(self:getTalentLevel(t)) * 7)
+		else
+			return 0
+		end
+	end,
+	on_learn = function(self, t)
+		if game and game.level and game.level.entities then
+			for _, e in pairs(game.level.entities) do
+				if e.summoner and e.summoner == self and e.subtype == "shadow" then
+					e:feed(t)
+				end
+			end
+		end
+
+		return { }
+	end,
+	on_unlearn = function(self, t, p)
+		if game and game.level and game.level.entities then
+			for _, e in pairs(game.level.entities) do
+				if e.summoner and e.summoner == self and e.subtype == "shadow" then
+					e:feed(t)
+				end
+			end
+		end
+
+		return true
+	end,
+	info = function(self, t)
+		local combatAtk = t.getCombatAtk(self, t)
+		local incDamage = t.getIncDamage(self, t)
+		local dominateChance = t.getDominateChance(self, t)
+		local dominateLevel = t.getDominateLevel(self, t)
+		local fadeCooldown = math.max(3, 8 - self:getTalentLevelRaw(t))
+		return ([[Instill hate in your shadows, strengthening their attacks. They gain %d%% extra accuracy and %d%% extra damage. The fury of their attacks gives them the ability to try to Dominate their foes, increasing all damage taken by that foe for 4 turns (level %d, %d%% chance at range 1). They also gain the ability to Fade when hit, avoiding all damage until their next turn (%d turn cooldown).]]):format(combatAtk, incDamage, dominateLevel, dominateChance, fadeCooldown)
+	end,
+}
+
+newTalent{
+	name = "Shadow Mages",
+	type = {"cursed/shadows", 3},
+	mode = "passive",
+	require = cursed_cun_req3,
+	points = 5,
+	getCloseAttackSpellChance = function(self, t)
+		if math.floor(self:getTalentLevel(t)) > 0 then
+			return math.min(100, math.sqrt(self:getTalentLevel(t)) * 7)
+		else
+			return 0
+		end
+	end,
+	getFarAttackSpellChance = function(self, t)
+		if math.floor(self:getTalentLevel(t)) >= 3 then
+			return math.min(100, math.sqrt(self:getTalentLevel(t)) * 7)
+		else
+			return 0
+		end
+	end,
+	getLightningLevel = function(self, t)
+		return self:getTalentLevelRaw(t)
+	end,
+	getFlamesLevel = function(self, t)
+		if self:getTalentLevel(t) >= 3 then
+			return self:getTalentLevelRaw(t)
+		else
+			return 0
+		end
+	end,
+	getReformLevel = function(self, t)
+		if self:getTalentLevel(t) >= 5 then
+			return self:getTalentLevelRaw(t)
+		else
+			return 0
+		end
+	end,
+	canReform = function(self, t)
+		return t.getReformLevel(self, t) > 0
+	end,
+	getSpellpowerChange = function(self, t)
+		return math.floor(self:getTalentLevel(t) * 3)
+	end,
+	on_learn = function(self, t)
+		if game and game.level and game.level.entities then
+			for _, e in pairs(game.level.entities) do
+				if e.summoner and e.summoner == self and e.subtype == "shadow" then
+					e:feed(t)
+				end
+			end
+		end
+
+		return { }
+	end,
+	on_unlearn = function(self, t, p)
+		if game and game.level and game.level.entities then
+			for _, e in pairs(game.level.entities) do
+				if e.summoner and e.summoner == self and e.subtype == "shadow" then
+					e:feed(t)
+				end
+			end
+		end
+
+		return true
+	end,
+	info = function(self, t)
+		local closeAttackSpellChance = t.getCloseAttackSpellChance(self, t)
+		local farAttackSpellChance = t.getFarAttackSpellChance(self, t)
+		local spellpowerChange = t.getSpellpowerChange(self, t)
+		local lightningLevel = t.getLightningLevel(self, t)
+		local flamesLevel = t.getFlamesLevel(self, t)
+		return ([[Infuse magic into your shadows to give them fearsome spells. Your shadows receive a bonus of %d to their spellpower.
+		Your shadows can strike adjacent foes with Lightning (level %d, %d%% chance at range 1).
+		At level 3 your shadows can sear their enemies from a distance with Flames (level %d, %d%% chance at range 2 to 6).
+		At level 5 when your shadows are struck down they will attempt to Reform, becoming whole again (50%% chance).]]):format(spellpowerChange, lightningLevel, closeAttackSpellChance, flamesLevel, farAttackSpellChance)
 	end,
 }
 
 newTalent{
 	name = "Focus Shadows",
-	type = {"cursed/shadows", 2},
-	require = cursed_cun_req2,
+	type = {"cursed/shadows", 4},
+	require = cursed_cun_req4,
 	points = 5,
 	random_ego = "attack",
 	cooldown = 6,
@@ -454,111 +630,6 @@ newTalent{
 		local blindsideChance = t.getBlindsideChance(self, t)
 		return ([[Focus your shadows on a single target. Friendly targets will be defended for %d turns. Hostile targets will be attacked with a %d%% chance they will blindside the target.
 		This talent has no cost.]]):format(defenseDuration, blindsideChance)
-	end,
-}
-
-newTalent{
-	name = "Shadow Mages",
-	type = {"cursed/shadows", 3},
-	mode = "passive",
-	require = cursed_cun_req3,
-	points = 5,
-	getCloseAttackSpellChance = function(self, t)
-		if self:getTalentLevelRaw(t) > 0 then
-			return math.min(100, math.sqrt(self:getTalentLevel(t)) * 5)
-		else
-			return 0
-		end
-	end,
-	getFarAttackSpellChance = function(self, t)
-		if self:getTalentLevelRaw(t) >= 3 then
-			return math.min(100, math.sqrt(self:getTalentLevel(t)) * 5)
-		else
-			return 0
-		end
-	end,
-	canReform = function(self, t)
-		return self:getTalentLevelRaw(t) >= 5
-	end,
-	on_learn = function(self, t)
-		if game and game.level and game.level.entities then
-			for _, e in pairs(game.level.entities) do
-				if e.summoner and e.summoner == self and e.subtype == "shadow" then
-					e:feed(t)
-				end
-			end
-		end
-
-		return { }
-	end,
-	on_unlearn = function(self, t, p)
-		if game and game.level and game.level.entities then
-			for _, e in pairs(game.level.entities) do
-				if e.summoner and e.summoner == self and e.subtype == "shadow" then
-					e:feed(t)
-				end
-			end
-		end
-
-		return true
-	end,
-	info = function(self, t)
-		local closeAttackSpellChance = t.getCloseAttackSpellChance(self, t)
-		local farAttackSpellChance = t.getFarAttackSpellChance(self, t)
-
-		return ([[Infuse magic into your shadows to give them fearsome spells.
-		Your shadows can strike adjacent foes with Lightning (%d%% chance at range 1).
-		At level 3 your shadows can sear their enemies from a distance with Flames (%d%% chance at range 2 to 6).
-		At level 5 when your shadows are struck down they will attempt to Reform, becoming whole again.]]):format(closeAttackSpellChance, farAttackSpellChance)
-	end,
-}
-
-newTalent{
-	name = "Shadow Warriors",
-	type = {"cursed/shadows", 4},
-	mode = "passive",
-	require = cursed_cun_req4,
-	points = 5,
-	getIncDamage = function(self, t)
-		return math.floor((math.sqrt(self:getTalentLevel(t)) - 0.5) * 23)
-	end,
-	getCombatAtk = function(self, t)
-		return math.floor((math.sqrt(self:getTalentLevel(t)) - 0.5) * 23)
-	end,
-	getDominateChance = function(self, t)
-		if self:getTalentLevelRaw(t) > 0 then
-			return math.min(100, math.sqrt(self:getTalentLevel(t)) * 5)
-		else
-			return 0
-		end
-	end,
-	on_learn = function(self, t)
-		if game and game.level and game.level.entities then
-			for _, e in pairs(game.level.entities) do
-				if e.summoner and e.summoner == self and e.subtype == "shadow" then
-					e:feed(t)
-				end
-			end
-		end
-
-		return { }
-	end,
-	on_unlearn = function(self, t, p)
-		if game and game.level and game.level.entities then
-			for _, e in pairs(game.level.entities) do
-				if e.summoner and e.summoner == self and e.subtype == "shadow" then
-					e:feed(t)
-				end
-			end
-		end
-
-		return true
-	end,
-	info = function(self, t)
-		local combatAtk = t.getCombatAtk(self, t)
-		local incDamage = t.getIncDamage(self, t)
-		local dominateChance = t.getDominateChance(self, t)
-		return ([[Instill hate in your shadows, strengthening their attacks. They gain %d%% extra accuracy and %d%% extra damage. The fury of their attacks gives them the ability to try to Dominate their foes, increasing all damage taken by that foe for 4 turns. (%d%% chance at range 1)]]):format(combatAtk, incDamage, dominateChance)
 	end,
 }
 

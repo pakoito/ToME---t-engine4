@@ -146,42 +146,14 @@ newTalent{
 		-- hate loss speeds up as hate increases
 		local hate = self:getHate()
 		local hateChange
-		local p = self:isTalentActive(self.T_SEETHE)
-		if p then
-			-- handle seethe mode hate changes
-			if hate > p.sustainHate then
-				-- drop to sustained level of hate
-				hateChange = -math.min(2, hate - p.sustainHate)
-			else
-				hateChange = 0
-			end
+		if hate < self.baseline_hate then
+			hateChange = 0
 		else
-			-- handle normal hate changes
-			if hate < self.baseline_hate then
-				hateChange = 0
-			else
-				hateChange = -0.7 * math.pow(hate / 100, 1.5)
-			end
-			if hateChange < 0 then
-				hateChange = math.min(0, math.max(hateChange, self.baseline_hate - hate))
-			end
+			hateChange = -0.7 * math.pow(hate / 100, 1.5)
 		end
-		
-		-- old seethe that keeps hate at low levels
-		--if self:knowTalent(self.T_SEETHE) then
-		--	-- seethe prevents loss at low levels and gains some back and very low levels
-		--	local t = self:getTalentFromId(self.T_SEETHE)
-		--	local hateLossMinHate = t.getHateLossMinHate(self, t)
-		--	local hateGainMaxHate = t.getHateGainMaxHate(self, t)
-
-		--	if self:getHate() < hateGainMaxHate then
-		--		hateChange = math.min(t.getHateGainChange(self, t), hateGainMaxHate - self:getHate())
-		--	elseif self:getHate() < hateLossMinHate then
-		--		hateChange = 0
-		--	elseif self:getHate() + hateChange <= hateLossMinHate then
-		--		hateChange = hateLossMinHate - self:getHate()
-		--	end
-		--end
+		if hateChange < 0 then
+			hateChange = math.min(0, math.max(hateChange, self.baseline_hate - hate))
+		end
 
 		self.hate_regen = self.hate_regen - (self.hate_decay or 0) + hateChange
 		self.hate_decay = hateChange

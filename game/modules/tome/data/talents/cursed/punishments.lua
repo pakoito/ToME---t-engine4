@@ -23,12 +23,15 @@ newTalent{
 	require = cursed_cun_req1,
 	points = 5,
 	random_ego = "attack",
-	cooldown = 4,
+	cooldown = 5,
 	hate =  5,
-	range = 3,
+	range = 2,
 	tactical = { ATTACKAREA = { MIND = 2 } },
 	getDamage = function(self, t)
-		return self:combatTalentMindDamage(t, 10, 280)
+		return self:combatTalentMindDamage(t, 0, 280)
+	end,
+	getSpreadFactor = function(self, t)
+		return 0.80
 	end,
 	action = function(self, t)
 		local targets = {}
@@ -44,9 +47,13 @@ newTalent{
 
 		if #targets == 0 then return false end
 
-		local damage = t.getDamage(self, t) / #targets
+		local damage = self:mindCrit(t.getDamage(self, t))
+		if #targets > 1 then
+			local spreadFactor = t.getSpreadFactor(self, t)
+			damage = damage * math.pow(spreadFactor, #targets - 1)
+		end
 		for i, t in ipairs(targets) do
-			self:project({type="hit", x=t.x,y=t.y}, t.x, t.y, DamageType.MIND, { dam=damage,criticals=true })
+			self:project({type="hit", x=t.x,y=t.y}, t.x, t.y, DamageType.MIND, { dam=damage, crossTierChance=25 })
 			game.level.map:particleEmitter(t.x, t.y, 1, "reproach", { dx = self.x - t.x, dy = self.y - t.y })
 		end
 
@@ -56,8 +63,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[You unleash your hateful mind on any who dare approach you. %d mind damage is spread between everyone in range.
-		Can cause critical hits. The damage increases with your Mindpower.]]):format(damDesc(self, DamageType.MIND, damage))
+		local spreadFactor = t.getSpreadFactor(self, t)
+		return ([[You unleash your hateful mind on any who dare approach you, inflicing %d mind damage. The attack will hit multiple targets, but each additional target will further reduce damage by %d%%.
+		25%% chance of cross tier effects. The damage increases with your Mindpower.]]):format(damDesc(self, DamageType.MIND, damage), (1 - spreadFactor) * 100)
 	end,
 }
 
@@ -68,22 +76,31 @@ newTalent{
 	points = 5,
 	random_ego = "attack",
 	cooldown = 10,
-	hate =  8,
-	range = 7,
+	hate =  12,
+	range = 5,
 	tactical = { ATTACK = { MIND = 2 } },
 	direct_hit = true,
 	requires_target = true,
 	getDuration = function(self, t)
-		return 10
+		return 4
 	end,
 	getDamage = function(self, t)
-		return self:combatTalentMindDamage(t, 0, 160)
+		return self:combatTalentMindDamage(t, 0, 300)
 	end,
 	getJumpRange = function(self, t)
-		return 0.7 + math.sqrt(self:getTalentLevel(t))
+		return math.min(6, math.sqrt(self:getTalentLevel(t) * 2))
 	end,
-	getExtraJumpChance = function(self, t)
-		return 25 + 12 * math.sqrt(self:getTalentLevel(t))
+	getJumpCount = function(self, t)
+		return math.min(3, self:getTalentLevelRaw(t))
+	end,
+	getJumpChance = function(self, t)
+		return math.min(40, 15 * math.sqrt(self:getTalentLevel(t)))
+	end,
+	getJumpDuration = function(self, t)
+		return 30
+	end,
+	getHateGain = function(self, t)
+		return 2
 	end,
 	action = function(self, t)
 		local range = self:getTalentRange(t)
@@ -92,17 +109,23 @@ newTalent{
 		if not x or not y or not target or core.fov.distance(self.x, self.y, x, y) > range or target:hasEffect(target.EFF_HATEFUL_WHISPER) then return nil end
 
 		local duration = t.getDuration(self, t)
-		local damage = t.getDamage(self, t)
+		local damage = self:mindCrit(t.getDamage(self, t))
 		local mindpower = self:combatMindpower()
 		local jumpRange = t.getJumpRange(self, t)
-		local extraJumpChance = t.getExtraJumpChance(self, t)
+		local jumpCount = t.getJumpCount(self, t)
+		local jumpChance = t.getJumpChance(self, t)
+		local jumpDuration = t.getJumpDuration(self, t)
+		local hateGain = t.getHateGain(self, t)
 		target:setEffect(target.EFF_HATEFUL_WHISPER, duration, {
 			source = self,
-			duration = duration,
 			damage = damage,
+			duration = duration,
 			mindpower = mindpower,
 			jumpRange = jumpRange,
-			extraJumpChance = extraJumpChance
+			jumpCount = jumpCount,
+			jumpChance = jumpChance,
+			jumpDuration = jumpDuration,
+			hateGain = hateGain
 		})
 		game.level.map:particleEmitter(target.x, target.y, 1, "reproach", { dx = self.x - target.x, dy = self.y - target.y })
 
@@ -111,9 +134,11 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local jumpRange = t.getJumpRange(self, t)
-		local extraJumpChance = t.getExtraJumpChance(self, t)
-		return ([[Send a whisper filled with hate to spread throughout your foes. When first heard they will suffer %d mind damage and the whisper can travel to another victim within a range of %0.2f and begin to spread from them. There is a %d%% chance the whisper will be passed to two victims instead of one.
-		Can cause critical hits. The damage increases with your Mindpower.]]):format(damDesc(self, DamageType.MIND, damage), jumpRange, extraJumpChance)
+		local jumpCount = t.getJumpCount(self, t)
+		local jumpChance = t.getJumpChance(self, t)
+		local hateGain = t.getHateGain(self, t)
+		return ([[Send a whisper filled with hate to spread throughout your foes. When first heard they will suffer %d mind damage and feed you %d hate. For the first %d turns the whisper will travel from the original victim to a new one within a range of %0.1f. Every victim of the whisper has a %d%% chance of spreading it to another victim every turn.
+		25%% chance of cross tier effects. The damage increases with your Mindpower.]]):format(damDesc(self, DamageType.MIND, damage), hateGain, jumpCount, jumpRange, jumpChance)
 	end,
 }
 
@@ -259,7 +284,7 @@ newTalent{
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target or core.fov.distance(self.x, self.y, x, y) > range then return nil end
 
-		local damage = t.getDamage(self, t)
+		local damage = self:mindCrit(t.getDamage(self, t))
 		local mindpower = self:combatMindpower()
 		local duration = t.getDuration(self, t)
 		target:setEffect(target.EFF_AGONY, duration, {
@@ -275,8 +300,8 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local maxDamage = t.getDamage(self, t)
 		local minDamage = maxDamage / duration
-		return ([[Unleash agony upon your target. The pain will grow over the course of %d turns. The first turn will inflict %d damage and slowly increase to %d on the last turn.
-		The damage will increase with your Mindpower.]]):format(duration, damDesc(self, DamageType.MIND, minDamage), damDesc(self, DamageType.MIND, maxDamage))
+		return ([[Unleash agony upon your target. The pain will grow over the course of %d turns. The first turn will inflict %d damage and slowly increase to %d on the last turn (%d total).
+		25%% chance of cross tier effects. The damage will increase with your Mindpower.]]):format(duration, damDesc(self, DamageType.MIND, minDamage), damDesc(self, DamageType.MIND, maxDamage), maxDamage * (duration + 1) / 2)
 	end,
 }
 
@@ -289,26 +314,30 @@ newTalent{
 	getChance = function(self, t)
 		return math.sqrt(self:getTalentLevel(t)) * 8
 	end,
-	doMadness = function(self, t, src)
+	getMindResistChange = function(self, t)
+		return -math.min(5, self:getTalentLevelRaw(t)) * 10
+	end,
+	doMadness = function(target, t, src)
 		local chance = t.getChance(src, t)
-		if self and src and self:reactionToward(src) < 0 and self:checkHit(self:combatMindpower(), self:combatMentalResist(), 0, chance, 5) then
+		if target and src and target:reactionToward(src) < 0 and src:checkHit(src:combatMindpower(), target:combatMentalResist(), 0, chance, 5) then
+			local mindResistChange = t.getMindResistChange(src, t)
 			local effect = rng.range(1, 3)
 			if effect == 1 then
 				-- confusion
-				if self:canBe("confusion") and not self:hasEffect(self.EFF_MADNESS_CONFUSED) then
-					self:setEffect(self.EFF_MADNESS_CONFUSED, 2, {power=70})
+				if target:canBe("confusion") and not target:hasEffect(target.EFF_MADNESS_CONFUSED) then
+					target:setEffect(target.EFF_MADNESS_CONFUSED, 3, {power=70, mindResistChange=mindResistChange})
 					hit = true
 				end
 			elseif effect == 2 then
 				-- stun
-				if self:canBe("stun") and not self:hasEffect(self.EFF_MADNESS_STUNNED) then
-					self:setEffect(self.EFF_MADNESS_STUNNED, 2, {})
+				if target:canBe("stun") and not target:hasEffect(target.EFF_MADNESS_STUNNED) then
+					target:setEffect(target.EFF_MADNESS_STUNNED, 3, {mindResistChange=mindResistChange})
 					hit = true
 				end
 			elseif effect == 3 then
 				-- slow
-				if self:canBe("slow") and not self:hasEffect(self.EFF_MADNESS_SLOW) then
-					self:setEffect(self.EFF_MADNESS_SLOW, 2, {power=0.3})
+				if target:canBe("slow") and not target:hasEffect(target.EFF_MADNESS_SLOW) then
+					target:setEffect(target.EFF_MADNESS_SLOW, 3, {power=0.3, mindResistChange=mindResistChange})
 					hit = true
 				end
 			end
@@ -316,7 +345,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local chance = t.getChance(self, t)
-		return ([[Every time you inflict mental damage there is a %d%% chance that your foe must save against your Mindpower or go mad. Madness can briefly cause them to become confused, slowed or stunned.]]):format(chance)
+		local mindResistChange = t.getMindResistChange(self, t)
+		return ([[Every time you inflict mental damage there is a %d%% chance that your foe must save against your Mindpower or go mad. Madness can cause them to become confused, slowed or stunned for 3 turns and lowers resistance to mental damage by %d%%.]]):format(chance, -mindResistChange)
 	end,
 }
 

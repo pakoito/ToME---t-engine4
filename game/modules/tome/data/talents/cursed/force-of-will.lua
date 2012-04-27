@@ -25,6 +25,7 @@
 local function forceHit(self, target, sourceX, sourceY, damage, knockback, knockbackDamage, power)
 	-- apply initial damage
 	if damage > 0 then
+		damage = self:mindCrit(damage)
 		self:project(target, target.x, target.y, DamageType.PHYSICAL, damage)
 		game.level.map:particleEmitter(target.x, target.y, 1, "force_hit", {power=power, dx=target.x - sourceX, dy=target.y - sourceY})
 	end
@@ -87,7 +88,12 @@ local function forceHit(self, target, sourceX, sourceY, damage, knockback, knock
 		end
 
 		if not target.dead and (finalX ~= target.x or finalY ~= target.y) then
+			local ox, oy = target.x, target.y
 			target:move(finalX, finalY, true)
+			if config.settings.tome.smooth_move > 0 then
+				target:resetMoveAnim()
+				target:setMoveAnim(ox, oy, 9, 5)
+			end
 		end
 	end
 end
@@ -103,14 +109,12 @@ newTalent{
 	tactical = { ATTACK = { PHYSICAL = 2 } },
 	direct_hit = true,
 	requires_target = true,
-	range = function(self, t)
-		return 4
-	end,
+	range = 3,
 	getDamage = function(self, t)
-		return self:combatTalentMindDamage(t, 0, 240)
+		return self:combatTalentMindDamage(t, 0, 280)
 	end,
 	getKnockback = function(self, t)
-		return math.floor((self:getTalentLevelRaw(t) + 1) / 2)
+		return 2
 	end,
 	action = function(self, t)
 		local range = self:getTalentRange(t)
@@ -126,11 +130,18 @@ newTalent{
 		forceHit(self, target, self.x, self.y, damage, knockback, 7, power)
 		return true
 	end,
+	on_learn = function(self, t)
+		self.combat_critical_power = (self.combat_critical_power or 0) + 3
+	end,
+	on_unlearn = function(self, t)
+		self.combat_critical_power = (self.combat_critical_power or 0) - 3
+	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local knockback = t.getKnockback(self, t)
 		return ([[Focusing your hate, you strike your foe with unseen force for %d damage and %d knockback.
-		Damage increases with your Mindpower.]]):format(damDesc(self, DamageType.PHYSICAL, damage), knockback)
+		Your ability to channel force increases all critical damage by 3%% per point (current: %d%%)
+		Damage increases with your Mindpower.]]):format(damDesc(self, DamageType.PHYSICAL, damage), knockback, self.combat_critical_power)
 	end,
 }
 
@@ -138,6 +149,7 @@ newTalent{
 	name = "Deflection",
 	type = {"cursed/force-of-will", 2},
 	mode = "sustained",
+	no_energy = true,
 	require = cursed_wil_req2,
 	points = 5,
 	random_ego = "attack",
@@ -193,10 +205,17 @@ newTalent{
 			p.power = power
 		end
 	end,
+	on_learn = function(self, t)
+		self.combat_critical_power = (self.combat_critical_power or 0) + 3
+	end,
+	on_unlearn = function(self, t)
+		self.combat_critical_power = (self.combat_critical_power or 0) - 3
+	end,
 	info = function(self, t)
 		local maxDamage = t.getMaxDamage(self, t)
 		return ([[Deflect 50%% of incoming damage with the force of your will. You may deflect up to %d damage, but first your hate must slowly feed your strength (-0.2 hate regeneration while building strength).
-		The maximum damage deflected increases with your Mindpower.]]):format(maxDamage)
+		Your ability to channel force increases all critical damage by 3%% per point (current: %d%%)
+		The maximum damage deflected increases with your Mindpower.]]):format(maxDamage, self.combat_critical_power)
 	end,
 }
 
@@ -209,18 +228,16 @@ newTalent{
 	cooldown = 14,
 	tactical = { ATTACKAREA = { PHYSICAL = 2 }, DISABLE = { stun = 1 } },
 	requires_target = true,
-	hate = 15,
-	range = function(self, t)
-		return 4
-	end,
+	hate = 12,
+	range = 4,
 	radius = function(self, t)
 		return math.floor(2 + self:getTalentLevel(t) / 3)
 	end,
 	getDamage = function(self, t)
-		return self:combatTalentMindDamage(t, 0, 200)
+		return self:combatTalentMindDamage(t, 0, 300)
 	end,
 	getKnockback = function(self, t)
-		return math.floor((self:getTalentLevelRaw(t) + 1) / 2)
+		return 2
 	end,
 	target = function(self, t)
 		return {type="ball", nolock=true, pass_terrain=false, friendly_fire=false, nowarning=true, range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t}
@@ -262,13 +279,20 @@ newTalent{
 
 		return true
 	end,
+	on_learn = function(self, t)
+		self.combat_critical_power = (self.combat_critical_power or 0) + 3
+	end,
+	on_unlearn = function(self, t)
+		self.combat_critical_power = (self.combat_critical_power or 0) - 3
+	end,
 	info = function(self, t)
 		local radius = self:getTalentRadius(t)
 		local damage = t.getDamage(self, t)
 		local knockback = t.getKnockback(self, t)
 		local dazeDuration = t.getDazeDuration(self, t)
 		return ([[You rage coalesces at a single point and then explodes outward blasting enemies within a radius of %d in all directions. The blast causes %d damage and %d knockback at the center that decreases with distance. Anyone caught in the explosion will also be dazed for 3 turns.
-		Damage increases with your Mindpower.]]):format(radius, damDesc(self, DamageType.PHYSICAL, damage), knockback)
+		Your ability to channel force increases all critical damage by 3%% per point (current: %d%%)
+		Damage increases with your Mindpower.]]):format(radius, damDesc(self, DamageType.PHYSICAL, damage), knockback, self.combat_critical_power)
 	end,
 }
 
@@ -277,12 +301,10 @@ newTalent{
 	type = {"cursed/force-of-will", 4},
 	require = cursed_wil_req4,
 	points = 5,
-	hate = 30,
-	cooldown = 50,
+	hate = 18,
+	cooldown = 30,
 	tactical = { ATTACKAREA = { PHYSICAL = 2 } },
-	range = function(self, t)
-		return math.floor(4 + self:getTalentLevel(t) / 2.3)
-	end,
+	range = 4,
 	getDuration = function(self, t)
 		return 5 + math.floor(self:getTalentLevel(t))
 	end,
@@ -290,7 +312,7 @@ newTalent{
 		return self:combatTalentMindDamage(t, 0, 140)
 	end,
 	getKnockback = function(self, t)
-		return math.floor(self:getTalentLevel(t))
+		return 2
 	end,
 	getSecondHitChance = function(self, t)
 		local level = self:getTalentLevel(t)
@@ -339,13 +361,20 @@ newTalent{
 			game.logSeen(self, "The unseen force around %s subsides.", self.name)
 		end
 	end,
+	on_learn = function(self, t)
+		self.combat_critical_power = (self.combat_critical_power or 0) + 3
+	end,
+	on_unlearn = function(self, t)
+		self.combat_critical_power = (self.combat_critical_power or 0) - 3
+	end,
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		local damage = t.getDamage(self, t)
 		local knockback = t.getKnockback(self, t)
 		local secondHitChance = t.getSecondHitChance(self, t)
-		return ([[Your fury becomes an unseen force that randomly lashes out at the foes around you. For %d turns you strike one nearby target doing %d damage and %d knockback. At higher levels there is a chance of a second strike.
-		Damage increases with your Mindpower.]]):format(duration, damDesc(self, DamageType.PHYSICAL, damage), knockback, secondHitChance)
+		return ([[Your fury becomes an unseen force that randomly lashes out at the foes around you. For %d turns you strike one nearby target doing %d damage and %d knockback. At higher levels there is a %d%% chance of a second strike.
+		Your ability to channel force increases all critical damage by 3%% per point (current: %d%%)
+		Damage increases with your Mindpower.]]):format(duration, damDesc(self, DamageType.PHYSICAL, damage), knockback, secondHitChance, self.combat_critical_power)
 	end,
 }
 

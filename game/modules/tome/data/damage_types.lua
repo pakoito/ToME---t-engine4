@@ -74,11 +74,6 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			print("[PROJECTOR] after necrotic increase dam", dam)
 		end
 
-		if src.isTalentActive and src:isTalentActive(target.T_GESTURE_OF_GUARDING) then
-			local t = src:getTalentFromId(src.T_GESTURE_OF_GUARDING)
-			dam = t.on_damageInflicted(src, t, type, dam, target)
-		end
-
 		-- Blast the iceblock
 		if src.attr and src:attr("encased_in_ice") then
 			local eff = src:hasEffect(src.EFF_FROZEN)
@@ -99,14 +94,11 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 		end
 
 		-- dark vision increases damage done in creeping dark
-		if src and src.knowTalent and src:knowTalent(src.T_DARK_VISION)
-				and src.x and src.y
-				and game.level.map:checkAllEntities(x, y, "creepingDark") then
-			local t = src:getTalentFromId(src.T_DARK_VISION)
-			local damageIncrease = t.getDamageIncrease(src, t)
-			if damageIncrease > 0 and core.fov.distance(src.x, src.y, target.x, target.y) <= src:getTalentRange(t) then
-				dam = dam + (dam * damageIncrease / 100)
-				game.logPlayer(src, "You strike in the darkness. (+%d damage)", damageIncrease)
+		if src and game.level.map:checkAllEntities(x, y, "creepingDark") then
+			local dark = game.level.map:checkAllEntities(x, y, "creepingDark")
+			if dark.summoner == src and dark.damageIncrease > 0 and not dark.projecting then
+				game.logPlayer(src, "You strike in the darkness. (+%d damage)", (dam * dark.damageIncrease / 100))
+				dam = dam + (dam * dark.damageIncrease / 100)
 			end
 		end
 
@@ -197,11 +189,6 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 		if target.isTalentActive and target:isTalentActive(target.T_ENERGY_DECOMPOSITION) then
 			local t = target:getTalentFromId(target.T_ENERGY_DECOMPOSITION)
 			dam = t.on_damage(target, t, type, dam)
-		end
-
-		if target.isTalentActive and target:isTalentActive(target.T_GESTURE_OF_GUARDING) then
-			local t = target:getTalentFromId(target.T_GESTURE_OF_GUARDING)
-			dam = t.on_damageReceived(target, t, type, dam, src)
 		end
 
 		if src:attr("stunned") then
@@ -443,11 +430,8 @@ newDamageType{
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
 			local mindpower, mentalresist
-			if _G.type(dam) == "table" then dam, mindpower, mentalresist, factor, alwaysHit, criticals, crossTierChance = dam.dam, dam.mindpower, dam.mentalresist, dam.alwaysHit, dam.criticals, dam.crossTierChance end
+			if _G.type(dam) == "table" then dam, mindpower, mentalresist, alwaysHit, crossTierChance = dam.dam, dam.mindpower, dam.mentalresist, dam.alwaysHit, dam.crossTierChance end
 			if alwaysHit or target:checkHit(mindpower or src:combatMindpower(), mentalresist or target:combatMentalResist(), 0, 95, 15) then
-				if criticals then
-					dam = src:mindCrit(dam)
-				end
 				if crossTierChance and rng.chance(crossTierChance) then
 					target:crossTierEffect(target.EFF_BRAINLOCKED, src:combatMindpower())
 				end
@@ -1710,6 +1694,7 @@ newDamageType{
 	projector = function(src, x, y, type, dam)
 		if _G.type(dam) == "number" then dam = {dam=dam} end
 		local target = game.level.map(x, y, Map.ACTOR) -- Get the target first to make sure we heal even on kill
+		dam.dam = math.max(0, math.min(target.life, dam.dam))
 		local realdam = DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam.dam)
 		if target and realdam > 0 then
 			local heal = realdam * (dam.healfactor or 1)

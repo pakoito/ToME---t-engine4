@@ -1347,3 +1347,161 @@ newEffect{
 		self:removeTemporaryValue("prob_travel_deny", eff.iid)
 	end,
 }
+
+newEffect{
+	name = "HEIGHTEN_FEAR", image = "talents/heighten_fear.png",
+	desc = "Heighten Fear",
+	long_desc = function(self, eff) return ("The target is in a state of growing fear. If they spend %d more turns in a range or %d and in sight of the source of this fear (%s), they will be subjected to a new fear."):
+	format(eff.turns_left, eff.range, eff.source.name) end,
+	type = "other",
+	subtype = { fear=true },
+	status = "detrimental",
+	decrease = 0,
+	no_remove = true,
+	cancel_on_level_change = true,
+	parameters = { },
+	on_merge = function(self, old_eff, new_eff)
+		old_eff.source = new_eff.source
+		old_eff.range = new_eff.range
+		
+		return old_eff
+	end,
+	on_timeout = function(self, eff)
+		local tInstillFear = self:getTalentFromId(self.T_INSTILL_FEAR)
+		if tInstillFear.hasEffect(eff.source, tInstillFear, self) then
+			if core.fov.distance(self.x, self.y, eff.source.x, eff.source.y) <= eff.range and self:hasLOS(eff.source.x, eff.source.y) then
+				eff.turns_left = eff.turns_left - 1
+			end
+			if eff.turns_left <= 0 then
+				eff.turns_left = eff.turns
+				if rng.percent(eff.chance or 100) then
+					eff.chance = (eff.chance or 100) - 10
+					game.logSeen(self, "%s succumbs to heightening fears!", self.name:capitalize())
+					tInstillFear.applyEffect(eff.source, tInstillFear, self)
+				else
+					game.logSeen(self, "%s feels a little less afraid!", self.name:capitalize())
+				end
+			end
+		else
+			-- no more fears
+			self:removeEffect(self.EFF_HEIGHTEN_FEAR, false, true)
+		end
+	end,
+	activate = function(self, eff)
+	end,
+	deactivate = function(self, eff)
+	end,
+}
+
+newEffect{
+	name = "CURSED_FORM", image = "talents/seethe.png",
+	desc = "Cursed Form",
+	type = "other",
+	subtype = { curse=true },
+	status = "beneficial",
+	decrease = 0,
+	no_remove = true,
+	cancel_on_level_change = true,
+	parameters = {},
+	long_desc = function(self, eff)
+		local desc = "The target's unnatural body has responded to damage taken."
+		if (eff.incDamageChange or 0) > 0 then
+			desc = desc..(" All damage that the target inflicts is increased by %d%%."):format(eff.incDamageChange)
+		end
+		if (eff.statChange or 0) > 0 then
+			desc = desc..(" Strength and Willpower are increased by %d. Poisons and diseases have a %d%% chance of being neutralized each turn."):format(eff.statChange, eff.neutralizeChance)
+		end
+		return desc
+	end,
+	activate = function(self, eff)
+		-- first on_timeout is ignored because it is applied immediately
+		eff.firstHit = true
+		eff.increase = 1
+		self.tempeffect_def[self.EFF_CURSED_FORM].updateEffect(self, eff)
+		
+		game.level.map:particleEmitter(self.x, self.y, 1, "cursed_form", {power=eff.increase})
+	end,
+	deactivate = function(self, eff)
+		if eff.incDamageId then
+			self:removeTemporaryValue("inc_damage", eff.incDamageId)
+			eff.incDamageId = nil
+		end
+		if eff.incStatsId then
+			self:removeTemporaryValue("inc_stats", eff.incStatsId)
+			eff.incStatsId = nil
+		end
+	end,
+	do_onTakeHit = function(self, eff, dam)
+		eff.hit = true
+	end,
+	updateEffect = function(self, eff)
+		local tSeethe = self:getTalentFromId(self.T_SEETHE)
+		local tGrimResolve = self:getTalentFromId(self.T_GRIM_RESOLVE)
+		if tSeethe then
+			eff.incDamageChange = tSeethe.getIncDamageChange(self, tSeethe, eff.increase)
+		end
+		if tGrimResolve then
+			eff.statChange = tGrimResolve.getStatChange(self, tGrimResolve, eff.increase)
+			eff.neutralizeChance = tGrimResolve.getNeutralizeChance(self, tGrimResolve)
+		end
+		
+		if eff.incDamageId then
+			self:removeTemporaryValue("inc_damage", eff.incDamageId)
+			eff.incDamageId = nil
+		end
+		if eff.incDamageChange > 0 then
+			eff.incDamageId = self:addTemporaryValue("inc_damage", {all = eff.incDamageChange})
+		end
+		if eff.incStatsId then
+			self:removeTemporaryValue("inc_stats", eff.incStatsId)
+			eff.incStatsId = nil
+		end
+		if eff.statChange > 0 then
+			eff.incStatsId = self:addTemporaryValue("inc_stats", { [Stats.STAT_STR] = eff.statChange, [Stats.STAT_WIL] = eff.statChange })
+		end
+	end,
+	on_timeout = function(self, eff)
+		if eff.firstHit then
+			eff.firstHit = nil
+			eff.hit = false
+		elseif eff.hit then
+			if eff.increase < 5 then
+				eff.increase = eff.increase + 1
+				self.tempeffect_def[self.EFF_CURSED_FORM].updateEffect(self, eff)
+				
+				game.level.map:particleEmitter(self.x, self.y, 1, "cursed_form", {power=eff.increase})
+			end
+			eff.hit = false
+		else
+			eff.increase = eff.increase - 1
+			if eff.increase == 0 then
+				self:removeEffect(self.EFF_CURSED_FORM, false, true)
+			else
+				self.tempeffect_def[self.EFF_CURSED_FORM].updateEffect(self, eff)
+			end
+		end
+	end,
+}
+
+newEffect{
+	name = "FADED", image = "talents/shadow_fade.png",
+	desc = "Faded",
+	long_desc = function(self, eff) return "The target has faded and is no longer taking damage." end,
+	type = "other",
+	subtype = { },
+	status = "beneficial",
+	on_gain = function(self, err) return "#Target# fades!", "+Faded" end,
+	parameters = {},
+	activate = function(self, eff)
+		eff.iid = self:addTemporaryValue("invulnerable", 1)
+		eff.imid = self:addTemporaryValue("status_effect_immune", 1)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("invulnerable", eff.iid)
+		self:removeTemporaryValue("status_effect_immune", eff.imid)
+	end,
+	on_timeout = function(self, eff)
+		-- always remove
+		return true
+	end,
+}

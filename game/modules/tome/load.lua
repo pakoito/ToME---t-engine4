@@ -206,14 +206,6 @@ ActorResource:defineResource("Hate", "hate", ActorTalents.T_HATE_POOL, "hate_reg
 ActorResource:defineResource("Paradox", "paradox", ActorTalents.T_PARADOX_POOL, "paradox_regen", "Paradox represents how much damage you've done to the space-time continuum. A high Paradox score makes Chronomancy less reliable and more dangerous to use but also amplifies the effects.", 0, false)
 ActorResource:defineResource("Psi", "psi", ActorTalents.T_PSI_POOL, "psi_regen", "Psi represents the power available to your mind.")
 
--- overload incHate to update seethe sustained hate
-ActorResource.incHateBase = ActorResource.incHate
-ActorResource.incHate = function(self, value)
-		self:incHateBase(value)
-		local p = self:isTalentActive(self.T_SEETHE)
-		if p then p.sustainHate = math.min(self:getHate(), p.sustainHate) end
-	end
-
 -- Actor stats
 
 ActorStats:defineStat("Strength",	"str", 10, 1, 100, "Strength defines your character's ability to apply physical force. It increases your melee damage, damage done with heavy weapons, your chance to resist physical effects, and carrying capacity.")

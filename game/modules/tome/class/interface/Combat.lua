@@ -313,6 +313,11 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 			atk = atk + effPredator.typeAttackChange
 		end
 	end
+	
+	if target.knowTalent and target:knowTalent(target.T_GESTURE_OF_GUARDING) then
+		local t = target:getTalentFromId(target.T_GESTURE_OF_GUARDING)
+		mult = mult * (100 + t.getDamageChange(target, t)) / 100
+	end
 
 	-- track weakness for hate bonus before the target removes it
 	local effGloomWeakness = target:hasEffect(target.EFF_GLOOM_WEAKNESS)
@@ -652,6 +657,12 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		game.logSeen(self, "%s counters the attack!", target.name:capitalize())
 		local t = target:getTalentFromId(target.T_COUNTER_ATTACK)
 		target:attackTarget(self, nil, t.getDamage(target, t), true)
+	end
+
+	-- Gesture of Guarding counterattack
+	if hitted and not target.dead and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:knowTalent(target.T_GESTURE_OF_GUARDING) then
+		local t = target:getTalentFromId(target.T_GESTURE_OF_GUARDING)
+		t.on_hit(target, t, self)
 	end
 
 	-- Defensive Throw!
@@ -1212,7 +1223,7 @@ function _M:mindCrit(dam, add_chance)
 		crit = true
 		game.logSeen(self, "#{bold}#%s's mind surges with critical power!#{normal}#", self.name:capitalize())
 
-		if self:attr("hate_on_crit") then self:incMana(self:attr("hate_on_crit")) end
+		if self:attr("hate_on_crit") then self:incHate(self:attr("hate_on_crit")) end
 		if self:attr("psi_on_crit") then self:incMana(self:attr("psi_on_crit")) end
 		if self:attr("equilibrium_on_crit") then self:incVim(self:attr("equilibrium_on_crit")) end
 
@@ -1234,8 +1245,8 @@ function _M:combatMindpower(mod, add)
 	mod = mod or 1
 	add = add or 0
 
-	if self:knowTalent(self.T_GESTURE_OF_COMMAND) then
-		local t = self:getTalentFromId(self.T_GESTURE_OF_COMMAND)
+	if self:knowTalent(self.T_GESTURE_OF_POWER) then
+		local t = self:getTalentFromId(self.T_GESTURE_OF_POWER)
 		add = add + t.getMindpowerChange(self, t)
 	end
 
@@ -1340,12 +1351,18 @@ function _M:combatGetResist(type)
 end
 
 --- Computes movement speed
-function _M:combatMovementSpeed()
+function _M:combatMovementSpeed(x, y)
 	local mult = 1
 	if game.level and game.level.data.zero_gravity then
 		mult = 3
 	end
-	return mult * (self.base_movement_speed or 1) / self.movement_speed
+	
+	local movement_speed = self.movement_speed
+	if x and y and game.level.map:checkAllEntities(x, y, "creepingDark") and self:knowTalent(self.T_DARK_VISION) then
+		local t = self:getTalentFromId(self.T_DARK_VISION)
+		movement_speed = movement_speed + t.getMovementSpeedChange(self, t)
+	end
+	return mult * (self.base_movement_speed or 1) / movement_speed
 end
 
 --- Computes see stealth

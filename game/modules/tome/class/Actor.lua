@@ -671,7 +671,7 @@ function _M:move(x, y, force)
 			local eff = self:hasEffect(self.EFF_CURSE_OF_SHROUDS)
 			if eff then eff.moved = true end
 
-			self:useEnergy(game.energy_to_act * self:combatMovementSpeed())
+			self:useEnergy(game.energy_to_act * self:combatMovementSpeed(x, y))
 		end
 	end
 	self.did_energy = nil
@@ -1348,6 +1348,14 @@ function _M:onTakeHit(value, src)
 		local t = self:getTalentFromId(self.T_BONE_SHIELD)
 		t.absorb(self, t, self:isTalentActive(self.T_BONE_SHIELD))
 		value = 0
+	end
+	
+	if self.knowTalent and (self:knowTalent(self.T_SEETHE) or self:knowTalent(self.T_GRIM_RESOLVE)) then
+		if not self:hasEffect(self.EFF_CURSED_FORM) then
+			self:setEffect(self.EFF_CURSED_FORM, 1, { increase=0 })
+		end
+		local eff = self:hasEffect(self.EFF_CURSED_FORM)
+		self.tempeffect_def[self.EFF_CURSED_FORM].do_onTakeHit(self, eff, value)
 	end
 
 	if self:isTalentActive(self.T_DEFLECTION) then
@@ -3464,6 +3472,20 @@ function _M:on_set_temporary_effect(eff_id, e, p)
 	end
 end
 
+-- @param t a type table describing the attack, passed to engine.Target:getType() for interpretation
+-- @param x target coords
+-- @param y target coords
+-- @return can_project, stop_x, stop_y, radius_x, radius_y.
+function _M:canProject(t, x, y)
+	local can_project, stop_x, stop_y, radius_x, radius_y = engine.interface.ActorProject.canProject(self, t, x, y)
+	
+	-- add line of sight to can project unless pass_block_sight or pass_terrain has been set
+	if not t.pass_terain and not t.pass_block_sight and can_project then
+		if not self:hasLOS(x, y) then can_project = false end
+	end
+	return can_project, stop_x, stop_y, radius_x, radius_y
+end
+
 --- Called when we are the target of a projection
 function _M:on_project_acquire(tx, ty, who, t, x, y, damtype, dam, particles, is_projectile, mods)
 	if is_projectile and self:attr("projectile_evasion") and rng.percent(self.projectile_evasion) then
@@ -3491,6 +3513,14 @@ function _M:on_project(tx, ty, who, t, x, y, damtype, dam, particles)
 		game.logSeen(self, "%s ignores the spell!", self.name:capitalize())
 		return true
 	end
+	
+	-- LOS check (this is also caught by canProject)
+	if not t.pass_terain and not t.pass_block_sight then
+		if not who:hasLOS(tx, ty) then
+			return true
+		end
+	end
+	
 	return false
 end
 

@@ -43,9 +43,6 @@ newTalent{
 	getRegenRate = function(self, t)
 		return 3 + math.sqrt(self:getTalentLevel(t) * 2) * math.min(1000, self.max_life) * 0.006
 	end,
-	getResist = function(self, t)
-		return -18 + (self:getTalentLevel(t) * 3) + (18 * getHateMultiplier(self, 0, 1))
-	end,
 	updateHealingFactor = function(self, t)
 		local change = -0.5 + math.min(100, self:getHate()) * .005
 		self.healing_factor = (self.healing_factor or 1) - (self.unnatural_body_healing_factor or 0) + change
@@ -66,12 +63,6 @@ newTalent{
 
 			self.unnatural_body_heal = math.max(0, (self.unnatural_body_heal or 0) - heal)
 		end
-
-		-- update resists as well
-		local oldResist = self.unnatural_body_resist or 0
-		local newResist = t.getResist(self, t)
-		self.resists.all = (self.resists.all or 0) - oldResist + newResist
-		self.unnatural_body_resist = newResist
 	end,
 	on_kill = function(self, t, target)
 		if target and target.max_life then
@@ -93,107 +84,10 @@ newTalent{
 }
 
 newTalent{
-	name = "Seethe",
-	type = {"cursed/cursed-form", 2},
-	mode = "sustained",
-	require = cursed_wil_req2,
-	points = 5,
-	cooldown = 10,
-	no_npc_use = true,
-	getEfficiency = function(self, t)
-		return 90 - 40 / math.pow(self:getTalentLevel(t), 0.6)
-	end,
-	getDamageChange = function(self, t)
-		return -40
-	end,
-	activate = function(self, t)
-		if self:getHate() < 5 then
-			game.logPlayer(self, "You possess too little hate to seethe.")
-			return nil
-		end
-		
-		-- reduce hate by efficiency
-		local cost = self:getHate() * (1 - t.getEfficiency(self, t) / 100)
-		self:incHate(-cost)
-		
-		-- reduce damage
-		local damageChange = t.getDamageChange(self, t)
-		local incDamageId = self:addTemporaryValue("inc_damage", {all=damageChange})
-		
-		local particlesId = self:addParticles(Particles.new("seethe", 1))
-		game.logSeen(self, "#F53CBE#%s begins to seethe.", self.name:capitalize())
-		
-		return { sustainHate=self:getHate(), incDamageId=incDamageId, particlesId=particlesId }
-	end,
-	deactivate = function(self, t, p)
-		self:removeTemporaryValue("inc_damage", p.incDamageId)
-		self:removeParticles(p.particlesId)
-		game.logSeen(self, "#F53CBE#%s is no longer seething.", self.name:capitalize())
-		
-		return true
-	end,
-	info = function(self, t)
-		local efficiency = t.getEfficiency(self, t)
-		local damageChange = t.getDamageChange(self, t)
-		return ([[You have learned to hold onto your hate, biding your time until you are ready to call upon it. When activated, your hate will drop to %d%% of its current value, but will no longer fall over time. Any hate you gain will be quickly lost and any hate you use will not recover. In addition, the exertion of seething will reduce your damage by %d%%.]]):format(efficiency, -damageChange)
-	end
-}
-
---newTalent{
---	name = "Seethe",
---	type = {"cursed/cursed-form", 2},
---	require = cursed_wil_req2,
---	mode = "passive",
---	points = 5,
---	getHateLossMinHate = function(self, t)
---		return math.sqrt(self:getTalentLevel(t)) * 13
---	end,
---	getHateGainMaxHate = function(self, t)
---		return math.max(0, self:getTalentLevel(t) * 4)
---	end,
---	getHateGainChange = function(self, t)
---		return 0.1
---	end,
---	on_learn = function(self, t)
---	end,
---	on_unlearn = function(self, t)
---	end,
---	info = function(self, t)
---		local hateLossMinHate = t.getHateLossMinHate(self, t)
---		local hateGainMaxHate = t.getHateGainMaxHate(self, t)
---		return ([[You have learned to keep your hatred burning deep inside. Below %0.1f hate you will no longer lose hate over time. Below %0.1f hate you will even slowly gain it back.]]):format(hateLossMinHate, hateGainMaxHate)
---	end
---}
-
---newTalent{
---	name = "Seethe",
---	type = {"cursed/cursed-form", 2},
---	random_ego = "utility",
---	require = cursed_wil_req2,
---	points = 5,
---	cooldown = 400,
---	tactical = { BUFF = 1 },
---	getHateGain = function(self, t)
---		return (math.sqrt(self:getTalentLevel(t)) - 0.5) * 3
---	end,
---	action = function(self, t)
---		self:incHate(t.getHateGain(self, t))
-
---		game.level.map:particleEmitter(self.x, self.y, 5, "fireflash", {radius=1, tx=self.x, ty=self.y})
---		game:playSoundNear(self, "talents/fireflash")
---		return true
---	end,
---	info = function(self, t)
---		local hateGain = t.getHateGain(self, t)
---		return ([[Focus your rage gaining %0.1f hate.]]):format(hateGain)
---	end,
---}
-
-newTalent{
 	name = "Relentless",
-	type = {"cursed/cursed-form", 3},
+	type = {"cursed/cursed-form", 2},
 	mode = "passive",
-	require = cursed_wil_req3,
+	require = cursed_wil_req2,
 	points = 5,
 	on_learn = function(self, t)
 		self:attr("fear_immune", 0.15)
@@ -215,21 +109,36 @@ newTalent{
 }
 
 newTalent{
-	name = "Repression",
+	name = "Seethe",
+	type = {"cursed/cursed-form", 3},
+	mode = "passive",
+	require = cursed_wil_req3,
+	points = 5,
+	getIncDamageChange = function(self, t, increase)
+		return math.min(30, math.floor(math.sqrt(self:getTalentLevel(t)) * 2 * increase))
+	end,
+	info = function(self, t)
+		local incDamageChangeMax = t.getIncDamageChange(self, t, 5)
+		return ([[You have learned to hold onto your hate and use your suffering to fuel your body's rage. Every turn you take damage, the damage you inflict increases until it reaches a maximum of +%d%% after 5 turns. Any turn in which you do not take damage will reduce the bonus.]]):format(incDamageChangeMax)
+	end
+}
+
+newTalent{
+	name = "Grim Resolve",
 	type = {"cursed/cursed-form", 4},
 	require = cursed_wil_req4,
 	mode = "passive",
 	points = 5,
-	on_learn = function(self, t)
-		self.healing_factor = self.healing_factor + 0.05
-		self.hate_per_kill = self.hate_per_kill - 0.2
+	getStatChange = function(self, t, increase)
+		return math.min(18, math.floor(math.sqrt(self:getTalentLevel(t) * 1) * increase))
 	end,
-	on_unlearn = function(self, t)
-		self.healing_factor = self.healing_factor - 0.05
-		self.hate_per_kill = self.hate_per_kill + 0.2
+	getNeutralizeChance = function(self, t)
+		return math.min(30, math.floor(math.sqrt(self:getTalentLevel(t)) * 10))
 	end,
 	info = function(self, t)
-		return ([[Years of battling your curse has given you some mastery over it and restored a part of your former self. If that is the path you choose. (+%d%% healing increase, %0.2f hate gain per kill)]]):format(self:getTalentLevelRaw(t) * 5, self.default_hate_per_kill - 0.2 * self:getTalentLevelRaw(t))
+		local statChangeMax = t.getStatChange(self, t, 5)
+		local neutralizeChance = t.getNeutralizeChance(self, t)
+		return ([[You rise to meet the pain that others would inflict on you. Every turn you take damage, your Strength and Willpower increase until it reaches maximum of +%d after 5 turns. Any turn in which you do not take damage will reduce the bonus. While in effect, your body also has a %d%% chance to overcome poisons and diseases each turn.]]):format(statChangeMax, neutralizeChance)
 	end,
 }
 

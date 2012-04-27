@@ -73,7 +73,7 @@ local function createDarkTendrils(summoner, x, y, target, damage, duration, pinD
 				-- move to new location
 				if bestX and bestY then
 					self.x, self.y = bestX, bestY
-					if not game.level.map:checkAllEntities(self.x, self.y, "creepingDark") then
+					if not game.level.map:checkAllEntities(self.x, self.y, "creepingDark") and rng.percent(50) then
 						tCreepingDarkness.createDark(self.summoner, self.x, self.y, self.damage, 3, 2, 33, 0)
 					end
 
@@ -99,7 +99,7 @@ local function createDarkTendrils(summoner, x, y, target, damage, duration, pinD
 				if dark then
 					dark.duration = math.max(dark.duration, self.pinDuration + 1)
 					for i = 1, 4 do
-						if rng.chance(50) then tCreepingDarkness.doCreep(tCreepingDarkness, dark, false) end
+						if rng.percent(50) then tCreepingDarkness.doCreep(tCreepingDarkness, dark, false) end
 					end
 				end
 
@@ -134,6 +134,21 @@ local function createDarkTendrils(summoner, x, y, target, damage, duration, pinD
 	game.level.map:addParticleEmitter(e.particles)
 end
 
+local function getDamageIncrease(self)
+	local total = 0
+		
+	local t = self:getTalentFromId(self.T_CREEPING_DARKNESS)
+	if t then total = total + self:getTalentLevelRaw(t) end
+	t = self:getTalentFromId(self.T_DARK_VISION)
+	if t then total = total + self:getTalentLevelRaw(t) end
+	t = self:getTalentFromId(self.T_DARK_TORRENT)
+	if t then total = total + self:getTalentLevelRaw(t) end
+	t = self:getTalentFromId(self.T_DARK_TENDRILS)
+	if t then total = total + self:getTalentLevelRaw(t) end
+	
+	return total * 2
+end
+
 newTalent{
 	name = "Creeping Darkness",
 	type = {"cursed/darkness", 1},
@@ -141,7 +156,7 @@ newTalent{
 	points = 5,
 	random_ego = "attack",
 	cooldown = 20,
-	hate = 15,
+	hate = 8,
 	range = 5,
 	radius = 3,
 	tactical = { ATTACK = { DARKNESS = 1 }, DISABLE = 2 },
@@ -198,6 +213,7 @@ newTalent{
 			creepChance = creepChance,
 			summoner = summoner,
 			summoner_gain_exp = true,
+			damageIncrease = getDamageIncrease(summoner),
 			act = function(self)
 				local Map = require "engine.Map"
 
@@ -206,8 +222,9 @@ newTalent{
 				-- apply damage to anything inside the darkness
 				local actor = game.level.map(self.x, self.y, Map.ACTOR)
 				if actor and actor ~= self.summoner and (not actor.summoner or actor.summoner ~= self.summoner) then
+					self.projecting = true -- simplest way to indicate that this damage should not be amplified by the in creeping dark bonus
 					self.summoner:project(actor, actor.x, actor.y, engine.DamageType.DARKNESS, self.damage)
-					--DamageType:get(DamageType.DARKNESS).projector(self.summoner, actor.x, actor.y, DamageType.DARKNESS, damage)
+					self.projecting = false
 				end
 
 				if self.duration <= 0 then
@@ -270,7 +287,7 @@ newTalent{
 	end,
 
 	getDarkCount = function(self, t)
-		return 5 + math.floor(self:getTalentLevel(t))
+		return 1 + math.floor(self:getTalentLevel(t))
 	end,
 	getDamage = function(self, t)
 		return self:combatTalentMindDamage(t, 0, 60)
@@ -278,7 +295,7 @@ newTalent{
 	action = function(self, t)
 		local range = self:getTalentRange(t)
 		local radius = self:getTalentRadius(t)
-		local damage = t.getDamage(self, t)
+		local damage = self:mindCrit(t.getDamage(self, t))
 		local darkCount = t.getDarkCount(self, t)
 
 		local tg = {type="ball", nolock=true, pass_terrain=false, nowarning=true, friendly_fire=true, default_target=self, range=range, radius=radius, talent=t}
@@ -310,7 +327,7 @@ newTalent{
 		for i = 1, darkCount do
 			local location, id = rng.table(locations)
 			table.remove(locations, id)
-			t.createDark(self, location[1], location[2], damage, 8, 4, 70, 0)
+			t.createDark(self, location[1], location[2], damage, rng.range(5, 8), 4, 40, 0)
 		end
 
 		game:playSoundNear(self, "talents/breath")
@@ -320,8 +337,9 @@ newTalent{
 		local radius = self:getTalentRadius(t)
 		local damage = t.getDamage(self, t)
 		local darkCount = t.getDarkCount(self, t)
+		local damageIncrease = getDamageIncrease(self)
 		return ([[Creeping dark slowly spreads from %d spots in a radius of %d around the targeted location. The dark deals %d damage and blocks the sight of any who do not possess Dark Vision or some other magical means of seeing.
-		The damage will increase with your Mindpower.]]):format(darkCount, radius, damage)
+		The damage will increase with your Mindpower. You do +%d%% damage to anything that has entered your creeping dark.]]):format(darkCount, radius, damage, damageIncrease)
 	end,
 }
 
@@ -333,15 +351,17 @@ newTalent{
 	mode = "passive",
 	random_ego = "attack",
 	range = function(self, t)
-		return math.min(10, math.floor((math.sqrt(self:getTalentLevel(t)) - 0.5) * 5))
+		return 1 + self:getTalentLevelRaw(t)
 	end,
-	getDamageIncrease = function(self, t)
-		return self:combatTalentMindDamage(t, 0, 30)
+	getMovementSpeedChange = function(self, t)
+		return self:getTalentLevel(t) * 0.5
 	end,
 	info = function(self, t)
-		local damageIncrease = t.getDamageIncrease(self, t)
-		return ([[Your eyes penetrate the darkness to find anyone that may be hiding there. You can also see through your clouds of creeping dark and gain the advantage of doing %d%% more damage to anyone enveloped by it.
-		The damage will increase with your Mindpower.]]):format(damageIncrease)
+		local range = self:getTalentRange(t)
+		local movementSpeedChange = t.getMovementSpeedChange(self, t)
+		local damageIncrease = getDamageIncrease(self)
+		return ([[Your eyes penetrate the darkness to find anyone that may be hiding there. This allows you to see through creeping darkness out to a radius of %d. You can also find your way through the darkness with greater speed (+%d%% movement into creeping darkness).
+		You do +%d%% damage to anything that has entered your creeping dark.]]):format(range, movementSpeedChange * 100, damageIncrease)
 	end,
 }
 
@@ -359,7 +379,7 @@ newTalent{
 	reflectable = true,
 	requires_target = true,
 	getDamage = function(self, t)
-		return self:combatTalentMindDamage(t, 0, 260)
+		return self:combatTalentMindDamage(t, 0, 280)
 	end,
 	action = function(self, t)
 		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
@@ -367,7 +387,7 @@ newTalent{
 		if not x or not y then return nil end
 		local _ _, x, y = self:canProject(tg, x, y)
 
-		local damage = t.getDamage(self, t)
+		local damage = self:mindCrit(t.getDamage(self, t))
 
 		local grids = self:project(tg, x, y,
 			function(x, y, target, self)
@@ -375,13 +395,18 @@ newTalent{
 				local target = game.level.map(x, y, Map.ACTOR)
 				if target then
 					self:project(target, target.x, target.y, DamageType.DARKNESS, self:spellCrit(damage))
-					if rng.percent(15) then
+					if rng.percent(25) then
 						if not target.dead and target:canBe("blind") then
 							target:setEffect(target.EFF_BLINDED, 3, {apply_power=self:combatSpellpower(), min_dur=1})
 							target:setTarget(nil)
 							--game.logSeen(target, "%s stumbles in the darkness!", target.name:capitalize())
 						end
 					end
+				end
+				if rng.percent(25) and self:knowTalent(self.T_CREEPING_DARKNESS) then
+					local tCreepingDarkness = self:getTalentFromId(self.T_CREEPING_DARKNESS)
+					local damage = tCreepingDarkness.getDamage(self, tCreepingDarkness)
+					tCreepingDarkness.createDark(self, x, y, damage, 3, 2, 33, 0)
 				end
 			end,
 			nil, nil)
@@ -392,8 +417,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Sends a torrent of searing darkness through your foes doing %d damage. There is a small chance the rushing darkness will blind them for 3 turns and cause them to forget their target.
-		The damage will increase with your Mindpower.]]):format(damDesc(self, DamageType.DARKNESS, damage))
+		local damageIncrease = getDamageIncrease(self)
+		return ([[Sends a torrent of searing darkness through your foes doing %d damage. There is a 25%% chance the rushing darkness will blind them for 3 turns and cause them to forget their target.
+		The damage will increase with your Mindpower. You do +%d%% damage to anything that has entered your creeping dark.]]):format(damDesc(self, DamageType.DARKNESS, damage), damageIncrease)
 	end,
 }
 
@@ -403,8 +429,8 @@ newTalent{
 	require = cursed_wil_req4,
 	points = 5,
 	random_ego = "attack",
-	cooldown = 10,
-	hate = 12,
+	cooldown = 12,
+	hate = 10,
 	range = 6,
 	tactical = { ATTACK = { DARKNESS = 2 }, DISABLE = { pin = 2 } },
 	direct_hit = true,
@@ -424,7 +450,7 @@ newTalent{
 		if not x or not y or not target or core.fov.distance(self.x, self.y, x, y) > range then return nil end
 
 		local pinDuration = t.getPinDuration(self, t)
-		local damage = t.getDamage(self, t)
+		local damage = self:mindCrit(t.getDamage(self, t))
 
 		createDarkTendrils(self, self.x, self.y, target, damage, 12, pinDuration)
 
@@ -433,8 +459,9 @@ newTalent{
 	info = function(self, t)
 		local pinDuration = t.getPinDuration(self, t)
 		local damage = t.getDamage(self, t)
+		local damageIncrease = getDamageIncrease(self)
 		return ([[Send tendrils of creeping dark out to attack your target and pin them in the darkness for %d turns. Creeping dark will trail behind the tendrils as they move. The darkness does %d damage per turn.
-		The damage will increase with your Mindpower.]]):format(pinDuration, damage)
+		The damage will increase with your Mindpower. You do +%d%% damage to anything that has entered your creeping dark.]]):format(pinDuration, damage, damageIncrease)
 	end,
 }
 

@@ -183,9 +183,10 @@ newTalent{
 				end
 
 				local t = rng.tableRemove(tids)
-				if not t then break end
-				target.talents_cd[t.id] = rng.range(3, 5)
-				game.logSeen(target, "#F53CBE#%s's %s is disrupted!", target.name:capitalize(), t.name)
+				if t then
+					target.talents_cd[t.id] = rng.range(3, 5)
+					game.logSeen(target, "#F53CBE#%s's %s is disrupted!", target.name:capitalize(), t.name)
+				end
 			end
 		end
 
