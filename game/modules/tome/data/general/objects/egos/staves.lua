@@ -182,7 +182,7 @@ newEntity{
 	wielder = {
 		lite = resolvers.mbonus_material(4, 1),
 	},
-	resolvers.charmt(Talents.T_ILLUMINATE, {1,2}, 6},
+	resolvers.charmt(Talents.T_ILLUMINATE, {1,2}, 6),
 }
 
 newEntity{

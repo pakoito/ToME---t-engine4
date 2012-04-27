@@ -324,5 +324,5 @@ newEntity{
 			[Stats.STAT_STR] = resolvers.mbonus_material(5, 1),
 		},
 		combat_apr = resolvers.mbonus_material(10, 5),
-	},
+	),
 }

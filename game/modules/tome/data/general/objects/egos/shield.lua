@@ -472,7 +472,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 20,
 	cost = 40,
-	resolvers.charmt(Talents.T_TIME_SHIELD, {2,3,4,5}, 30 },
+	resolvers.charmt(Talents.T_TIME_SHIELD, {2,3,4,5}, 30 ),
 	wielder = {
 		resists={
 			[DamageType.TEMPORAL] = resolvers.mbonus_material(10, 5),

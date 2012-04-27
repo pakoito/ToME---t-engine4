@@ -402,7 +402,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 20,
 	cost = 40,
-	resolvers.charmt(Talents.T_MOONLIGHT_RAY, 4, power = 8),
+	resolvers.charmt(Talents.T_MOONLIGHT_RAY, 4, 8),
 	wielder = {
 		combat_spellpower = resolvers.mbonus_material(7, 3),
 	},	

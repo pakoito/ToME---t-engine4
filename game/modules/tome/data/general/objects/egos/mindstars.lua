@@ -300,7 +300,7 @@ newEntity{
 		},
 	},
 	resolvers.charm("completes a nature powered mindstar set", 20,	
-		use = function(self, who, ms_inven)
+		function(self, who, ms_inven)
 			who:showEquipment("Resonate with which mindstar?", function(o) return o.subtype == "mindstar" and o.set_list and o ~= self and o.power_source and o.power_source.psionic and not o.set_complete end, function(o) 
 				-- remove any existing set properties
 				self.define_as =nil
@@ -412,7 +412,7 @@ newEntity{
 		game.logPlayer(who, "#SLATE#The link between the mindstars is broken.")
 	end,
 	resolvers.charm("call the drake in an elemental mindstar", 20,	
-		use = function(self, who, ms_inven)
+		function(self, who, ms_inven)
 			who:showEquipment("Call the drake in which mindstar?", function(o) return o.subtype == "mindstar" and o.is_drake_star and not o.set_list end, function(o)
 				-- remove any existing sets from the mindstar
 				o.set_list = nil
