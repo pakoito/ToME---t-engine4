@@ -417,8 +417,6 @@ function _M:mouseEvent(button, x, y, xrel, yrel, bx, by, event)
 			local item = self.dlist[i]
 			if item.dh and by >= item.dh - self.mouse.delegate_offset_y then citem = self.dlist[i].src ci=i break end
 		end
-		print("================================")
-		util.show_backtrace()
 		for i = 1, #self.dlist do
 			local item = self.dlist[i]
 			if item.dh then print("===", y, by, item.dh - self.mouse.delegate_offset_y, ci==i and "*****" or "") end

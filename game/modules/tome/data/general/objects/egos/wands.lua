@@ -23,6 +23,7 @@ newEntity{
 	rarity = 15,
 	cost = 5,
 	resolvers.genericlast(function(e)
+		if not e.use_power or not e.charm_power then return end
 		e.use_power.power = math.ceil(e.use_power.power * rng.float(0.6, 0.8))
 		e.charm_power = math.ceil(e.charm_power * rng.float(0.4, 0.7))
 	end),
@@ -34,6 +35,7 @@ newEntity{
 	rarity = 15,
 	cost = 5,
 	resolvers.genericlast(function(e)
+		if not e.use_power or not e.charm_power then return end
 		e.use_power.power = math.ceil(e.use_power.power * rng.float(1.2, 1.5))
 		e.charm_power = math.ceil(e.charm_power * rng.float(1.3, 1.5))
 	end),
@@ -44,7 +46,7 @@ Wands
 *detection
 *light
 *trap destruction
-*flame
+*firewall
 *lightning
 *conjuration
 
@@ -154,17 +156,19 @@ newEntity{
 }
 
 newEntity{
-	name = " of flames", suffix=true, instant_resolve=true,
+	name = " of firewall", suffix=true, instant_resolve=true,
 	level_range = {15, 50},
 	rarity = 10,
 
 	charm_power_def = {add=25, max=250, floor=true},
-	resolvers.charm("fire a beam of flames (dam %d)", 6, function(self, who)
-		local tg = {type="beam", range=6 + who:getMag(4)}
+	resolvers.charm("creates a wall of flames lasting for 4 turns (dam %d overall)", 6, function(self, who)
+		local tg = {type="wall", range=5, halflength=3, halfmax_spots=3+1}
 		local x, y = who:getTarget(tg)
 		if not x or not y then return nil end
 		local dam = self:getCharmPower()
-		who:project(tg, x, y, engine.DamageType.FIRE, dam, {type="flame"})
+		who:project(tg, x, y, function(px, py)
+			game.level.map:addEffect(who, px, py, 4, engine.DamageType.FIRE, dam / 4, 0, 5, nil, {type="inferno"}, nil, true)
+		end)
 		game:playSoundNear(who, "talents/fire")
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
 		return {id=true, used=true}

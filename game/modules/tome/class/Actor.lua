@@ -292,6 +292,10 @@ function _M:actBase()
 		return
 	end
 
+	if self.__use_build_order then
+		self:useBuildOrder()
+	end
+
 	if self:isTalentActive (self.T_DARKEST_LIGHT) and self.positive > self.negative then
 		self:forceUseTalent(self.T_DARKEST_LIGHT, {ignore_energy=true})
 		game.logSeen(self, "%s's darkness can no longer hold back the light!", self.name:capitalize())
@@ -523,6 +527,131 @@ function _M:act()
 	if self.sound_random and rng.chance(self.sound_random_chance or 15) then game:playSoundNear(self, self.sound_random) end
 
 	return true
+end
+
+--- Follow a build order as possible
+function _M:useBuildOrder()
+	local b = self.__use_build_order
+
+	if self.unused_stats > 0 then
+		b.stats.i = b.stats.i or 1
+		local nb = 0
+
+		while self.unused_stats > 0 and nb < #b.stats+1 do
+			local stat = b.stats[b.stats.i]
+
+			if not (self:getStat(stat, nil, nil, true) >= self.level * 1.4 + 20) and
+			   not (self:isStatMax(stat) or self:getStat(stat, nil, nil, true) >= 60 + math.max(0, (self.level - 50))) then
+				self:incStat(stat, 1)
+				self.unused_stats = self.unused_stats - 1
+				nb = -1
+				game.log("#VIOLET#Following build order %s; increasing %s by 1.", b.name, self.stats_def[stat].name)
+			end
+			b.stats.i = util.boundWrap(b.stats.i + 1, 1, #b.stats)
+			nb = nb + 1
+		end
+	end
+
+	if self.unused_talents_types > 0 then
+		self.__increased_talent_types = self.__increased_talent_types or {}
+
+		local learn = true
+		while learn do
+			learn = false
+			for i, tt in ipairs(b.types) do
+				if self.unused_talents_types > 0 and (self.__increased_talent_types[tt] or 0) == 0 then
+					if not self:knowTalentType(tt) then
+						self:learnTalentType(tt)
+					else
+						self.__increased_talent_types[tt] = (self.__increased_talent_types[tt] or 0) + 1
+						self:setTalentTypeMastery(tt, self:getTalentTypeMastery(tt) + 0.2)
+					end
+
+					game.log("#VIOLET#Following build order %s; learning talent category %s.", b.name, tt)
+					self.unused_talents_types = self.unused_talents_types - 1
+					table.remove(b.types, i)
+					learn = true
+					break
+				end
+			end
+		end
+	end
+
+	if self.unused_talents > 0 then
+		local learn = true
+		while learn do
+			learn = false
+			for i, td in ipairs(b.talents) do
+				if td.kind == "class" then
+					local t = self:getTalentFromId(td.tid)
+
+					if self.unused_talents > 0 and self:canLearnTalent(t) and self:getTalentLevelRaw(t.id) < t.points then
+						self:learnTalent(t.id, true)
+						game.log("#VIOLET#Following build order %s; learning talent %s.", b.name, t.name)
+						self.unused_talents = self.unused_talents - 1
+						table.remove(b.talents, i)
+						learn = true
+						break
+					end
+				end
+			end
+		end
+	end
+
+	if self.unused_generics > 0 then
+		local learn = true
+		while learn do
+			learn = false
+			for i, td in ipairs(b.talents) do
+				if td.kind == "generic" then
+					local t = self:getTalentFromId(td.tid)
+
+					if self.unused_generics > 0 and self:canLearnTalent(t) and self:getTalentLevelRaw(t.id) < t.points then
+						self:learnTalent(t.id, true)
+						game.log("#VIOLET#Following build order %s; learning talent %s.", b.name, t.name)
+						self.unused_generics = self.unused_generics - 1
+						table.remove(b.talents, i)
+						learn = true
+						break
+					end
+				end
+			end
+		end
+	end
+end
+
+function _M:loadBuildOrder(file)
+	local f = fs.open("/build-orders/"..file, "r")
+	if not f then return end
+
+	local b = {name="xxx", stats={}, talents={}, types={}}
+
+	local cur = "name"
+	while true do
+		local line = f:readLine()
+		if not line then break end
+
+		if line == "#Name" then cur = "name"
+		elseif line == "#Stats" then cur = "stats"
+		elseif line == "#Talents" then cur = "talents"
+		elseif line == "#Types" then cur = "types"
+		else
+			if cur == "name" then b.name = line
+			elseif cur == "stats" then
+				b.stats = line:split(',')
+			elseif cur == "talents" then
+				local t = line:split(',')
+				table.insert(b.talents, {kind=t[2], tid=t[3]})
+			elseif cur == "types" then
+				local tt = line:split(',')
+				table.insert(b.types, tt[2])
+			end
+		end
+	end
+
+	if #b.stats > 0 and #b.talents > 0 then
+		self.__use_build_order = b
+	end
 end
 
 --- Setup minimap color for this entity
@@ -1349,7 +1478,7 @@ function _M:onTakeHit(value, src)
 		t.absorb(self, t, self:isTalentActive(self.T_BONE_SHIELD))
 		value = 0
 	end
-	
+
 	if self.knowTalent and (self:knowTalent(self.T_SEETHE) or self:knowTalent(self.T_GRIM_RESOLVE)) then
 		if not self:hasEffect(self.EFF_CURSED_FORM) then
 			self:setEffect(self.EFF_CURSED_FORM, 1, { increase=0 })
@@ -1706,7 +1835,7 @@ function _M:die(src, death_note)
 	if src and src.knowTalent and src:knowTalent(src.T_UNENDING_FRENZY) then
 		src:incStamina(src:getTalentLevel(src.T_UNENDING_FRENZY) * 2)
 	end
-	
+
 	-- Regain Psi
 	if src and src.attr and src:attr("psi_per_kill") then
 		src:incPsi(src:attr("psi_per_kill"))
@@ -3478,7 +3607,7 @@ end
 -- @return can_project, stop_x, stop_y, radius_x, radius_y.
 function _M:canProject(t, x, y)
 	local can_project, stop_x, stop_y, radius_x, radius_y = engine.interface.ActorProject.canProject(self, t, x, y)
-	
+
 	-- add line of sight to can project unless pass_block_sight or pass_terrain has been set
 	if not t.pass_terain and not t.pass_block_sight and can_project then
 		if not self:hasLOS(x, y) then can_project = false end
@@ -3513,14 +3642,14 @@ function _M:on_project(tx, ty, who, t, x, y, damtype, dam, particles)
 		game.logSeen(self, "%s ignores the spell!", self.name:capitalize())
 		return true
 	end
-	
+
 	-- LOS check (this is also caught by canProject)
 	if not t.pass_terain and not t.pass_block_sight then
 		if not who:hasLOS(tx, ty) then
 			return true
 		end
 	end
-	
+
 	return false
 end
 

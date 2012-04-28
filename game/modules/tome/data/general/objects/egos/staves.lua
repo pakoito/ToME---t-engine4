@@ -221,7 +221,7 @@ newEntity{
 			local tg = {type="bolt", range= 5 + self.material_level, speed=20, display = {particle=particle, trail=trail},}
 			local weapon = who:hasStaffWeapon()
 			local combat = weapon.combat
-			
+
 			local DamageType = require "engine.DamageType"
 			local damtype = combat.damtype
 			if     damtype == DamageType.FIRE then      explosion = "flame"               particle = "bolt_fire"      trail = "firetrail"
@@ -236,16 +236,16 @@ newEntity{
 			elseif damtype == DamageType.TEMPORAL then  explosion = "light"				  particle = "temporal_bolt"  trail = "lighttrail"
 			else                                        explosion = "manathrust"          particle = "bolt_arcane"    trail = "arcanetrail" damtype = DamageType.ARCANE
 			end
-			
+
 			local x, y = who:getTarget(tg)
 			if not x or not y then return nil end
-			
+
 			-- Compute damage
 			local dam = who:combatDamage(combat)
 			local damrange = who:combatDamageRange(combat)
 			dam = rng.range(dam, dam * damrange)
 			dam = who:spellCrit(dam)
-						
+
 			who:projectile(tg, x, y, damtype, dam, {type=explosion})
 
 			game.logSeen(who, "%s fires a bolt from %s!", who.name:capitalize(), self.name)
@@ -308,28 +308,28 @@ newEntity{
 			local tg = {type="ball", range=0, radius=self.material_level + 1, selffire=false}
 			local weapon = who:hasStaffWeapon()
 			local combat = weapon.combat
-			
+
 			local DamageType = require "engine.DamageType"
 			local damtype = combat.damtype
-			if     damtype == DamageType.FIRE then      explosion = "flame"           
-			elseif damtype == DamageType.COLD then      explosion = "freeze"     
-			elseif damtype == DamageType.ACID then      explosion = "acid"              
-			elseif damtype == DamageType.LIGHTNING then explosion = "lightning_explosion" 
-			elseif damtype == DamageType.LIGHT then     explosion = "light"              
-			elseif damtype == DamageType.DARKNESS then  explosion = "dark"               
-			elseif damtype == DamageType.NATURE then    explosion = "slime"              
-			elseif damtype == DamageType.BLIGHT then    explosion = "slime"              
-			elseif damtype == DamageType.PHYSICAL then  explosion = "dark"               
-			elseif damtype == DamageType.TEMPORAL then  explosion = "light"				
+			if     damtype == DamageType.FIRE then      explosion = "flame"
+			elseif damtype == DamageType.COLD then      explosion = "freeze"
+			elseif damtype == DamageType.ACID then      explosion = "acid"
+			elseif damtype == DamageType.LIGHTNING then explosion = "lightning_explosion"
+			elseif damtype == DamageType.LIGHT then     explosion = "light"
+			elseif damtype == DamageType.DARKNESS then  explosion = "dark"
+			elseif damtype == DamageType.NATURE then    explosion = "slime"
+			elseif damtype == DamageType.BLIGHT then    explosion = "slime"
+			elseif damtype == DamageType.PHYSICAL then  explosion = "dark"
+			elseif damtype == DamageType.TEMPORAL then  explosion = "light"
 			else                                        explosion = "manathrust"         damtype = DamageType.ARCANE
 			end
-		
+
 			-- Compute damage
 			local dam = who:combatDamage(combat)
 			local damrange = who:combatDamageRange(combat)
 			dam = rng.range(dam, dam * damrange)
 			dam = who:spellCrit(dam)
-						
+
 			who:project(tg, who.x, who.y, damtype, dam, {type=explosion})
 
 			game.logSeen(who, "%s unleashes an elemental blastwave from %s!", who.name:capitalize(), self.name)
@@ -351,7 +351,7 @@ newEntity{
 		combat_spellpower = resolvers.mbonus_material(10, 2),
 		mana_regen = resolvers.mbonus_material(30, 10, function(e, v) v=v/100 return 0, v end),
 	},
-	resolvers.charm("channel mana (increasing mana regen by 500% for ten turns)", 30,
+	resolvers.charm("channel mana (increasing mana regen by 500%% for ten turns)", 30,
 		function(self, who)
 			if who.mana_regen > 0 and not who:hasEffect(who.EFF_MANASURGE) then
 				who:setEffect(who.EFF_MANASURGE, 10, {power=who.mana_regen * 5})
@@ -405,31 +405,31 @@ newEntity{
 			local tg = {type="cone", range=0, radius=self.material_level * 2, selffire=false}
 			local weapon = who:hasStaffWeapon()
 			local combat = weapon.combat
-			
+
 			local DamageType = require "engine.DamageType"
 			local damtype = combat.damtype
-			if     damtype == DamageType.FIRE then      explosion = "flame"      
-			elseif damtype == DamageType.COLD then      explosion = "freeze"    
-			elseif damtype == DamageType.ACID then      explosion = "acid"          
-			elseif damtype == DamageType.LIGHTNING then explosion = "lightning_explosion" 
-			elseif damtype == DamageType.LIGHT then     explosion = "light"              
-			elseif damtype == DamageType.DARKNESS then  explosion = "dark"               
-			elseif damtype == DamageType.NATURE then    explosion = "slime"           
-			elseif damtype == DamageType.BLIGHT then    explosion = "slime"            
-			elseif damtype == DamageType.PHYSICAL then  explosion = "dark"           
-			elseif damtype == DamageType.TEMPORAL then  explosion = "light"				 
+			if     damtype == DamageType.FIRE then      explosion = "flame"
+			elseif damtype == DamageType.COLD then      explosion = "freeze"
+			elseif damtype == DamageType.ACID then      explosion = "acid"
+			elseif damtype == DamageType.LIGHTNING then explosion = "lightning_explosion"
+			elseif damtype == DamageType.LIGHT then     explosion = "light"
+			elseif damtype == DamageType.DARKNESS then  explosion = "dark"
+			elseif damtype == DamageType.NATURE then    explosion = "slime"
+			elseif damtype == DamageType.BLIGHT then    explosion = "slime"
+			elseif damtype == DamageType.PHYSICAL then  explosion = "dark"
+			elseif damtype == DamageType.TEMPORAL then  explosion = "light"
 			else                                        explosion = "manathrust"          damtype = DamageType.ARCANE
 			end
-			
+
 			local x, y = who:getTarget(tg)
 			if not x or not y then return nil end
-			
+
 			-- Compute damage
 			local dam = who:combatDamage(combat)
 			local damrange = who:combatDamageRange(combat)
 			dam = rng.range(dam, dam * damrange)
 			dam = who:spellCrit(dam)
-						
+
 			who:project(tg, x, y, damtype, dam, {type=explosion})
 
 			game.logSeen(who, "%s conjures a cone of elemental energy from %s!", who.name:capitalize(), self.name)

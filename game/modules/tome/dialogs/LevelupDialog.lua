@@ -798,6 +798,7 @@ function _M:learnType(tt, v)
 			self.actor:setTalentTypeMastery(tt, self.actor:getTalentTypeMastery(tt) + 0.2)
 			self.talent_types_learned[tt][2] = true
 		end
+		self:triggerHook{"PlayerLevelup:addTalentType", actor=self.actor, tt=tt}
 		self.actor.unused_talents_types = self.actor.unused_talents_types - 1
 		self.new_talents_changed = true
 	else
@@ -833,6 +834,7 @@ function _M:learnType(tt, v)
 				return
 			end
 		end
+		self:triggerHook{"PlayerLevelup:subTalentType", actor=self.actor, tt=tt}
 	end
 end
 
