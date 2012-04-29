@@ -25,7 +25,6 @@ newEntity{ base = "BASE_LORE",
 	name = "daikara expedition note", lore="daikara-note-"..i,
 	desc = [[A paper scrap, left by an adventurer.]],
 	rarity = false,
-	is_magic_device = false,
 	encumberance = 0,
 }
 end

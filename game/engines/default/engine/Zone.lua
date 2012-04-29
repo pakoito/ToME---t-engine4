@@ -142,6 +142,13 @@ function _M:computeRarities(type, list, level, filter, add_level, rarity_field)
 				end
 			end
 
+			-- Generate and store addons list if needed
+			if e.addons then
+				if not level:getEntitiesList(type.."/"..e.addons..":addon") then
+					self:generateEgoEntities(level, type, "addon", e.addons, e.__CLASSNAME)
+				end
+			end
+
 			if genprob > 0 then
 --				genprob = math.ceil(genprob / 10 * math.sqrt(genprob))
 				r.total = r.total + genprob
@@ -223,7 +230,7 @@ function _M:generateEgoEntities(level, type, etype, e_egos, e___CLASSNAME)
 		local egos_prob = self:computeRarities(type, egos, level, etype ~= "" and function(e) return e[etype] end or nil)
 		level:setEntitiesList(type.."/"..e_egos..":"..etype, egos_prob)
 		level:setEntitiesList(type.."/base/"..e_egos..":"..etype, egos)
-		return egos
+		return egos_prob
 	end
 end
 
@@ -340,11 +347,11 @@ function _M:makeEntityByName(level, type, name, force_unique)
 	return e, forced
 end
 
-local pick_ego = function(self, level, e, egos_list, type, picked_etype, etype, ego_filter)
+local pick_ego = function(self, level, e, eegos, egos_list, type, picked_etype, etype, ego_filter)
 	picked_etype[etype] = true
 	if _G.type(etype) == "number" then etype = "" end
 	local egos = level:getEntitiesList(type.."/"..e.egos..":"..etype)
-	if not egos then egos = self:generateEgoEntities(level, type, etype, e.egos, e.__CLASSNAME) end
+	if not egos then egos = self:generateEgoEntities(level, type, etype, eegos, e.__CLASSNAME) end
 
 	if self.ego_filter then ego_filter = self.ego_filter(self, level, type, etype, e, ego_filter, egos_list, picked_etype) end
 
@@ -356,13 +363,46 @@ local pick_ego = function(self, level, e, egos_list, type, picked_etype, etype, 
 	end
 	egos_list[#egos_list+1] = self:pickEntity(egos)
 
-	if egos_list[#egos_list] then print("Picked ego", type.."/"..e.egos..":"..etype, ":=>", egos_list[#egos_list].name) else print("Picked ego", type.."/"..e.egos..":"..etype, ":=>", #egos_list) end
+	if egos_list[#egos_list] then print("Picked ego", type.."/"..eegos..":"..etype, ":=>", egos_list[#egos_list].name) else print("Picked ego", type.."/"..eegos..":"..etype, ":=>", #egos_list) end
 end
 
 --- Finishes generating an entity
 function _M:finishEntity(level, type, e, ego_filter)
 	e = e:clone()
 	e:resolve()
+
+	-- Add "addon" properties, awlays
+	if not e.unique and e.addons then
+		local egos_list = {}
+
+		pick_ego(self, level, e, e.addons, egos_list, type, {}, "addon", nil)
+
+		if #egos_list > 0 then
+			for ie, ego in ipairs(egos_list) do
+				print("addon", ego.__CLASSNAME, ego.name, getmetatable(ego))
+				ego = ego:clone()
+				local newname
+				if ego.prefix then newname = ego.name .. e.name
+				else newname = e.name .. ego.name end
+				print("applying addon", ego.name, "to ", e.name, "::", newname, "///", e.unided_name, ego.unided_name)
+				ego.unided_name = nil
+				ego.__CLASSNAME = nil
+				-- The ego requested instant resolving before merge ?
+				if ego.instant_resolve then ego:resolve(nil, nil, e) end
+				ego.instant_resolve = nil
+				-- Void the uid, we dont want to erase the base entity's one
+				ego.uid = nil
+				-- Merge additively but with array appending, so that nameless resolvers are not lost
+				table.mergeAddAppendArray(e, ego, true)
+				e.name = newname
+				e.egoed = true
+			end
+			-- Re-resolve with the (possibly) new resolvers
+			e:resolve()
+		end
+		e.addons = nil
+	end
+
 	-- Add "ego" properties, sometimes
 	if not e.unique and e.egos and (e.force_ego or e.egos_chance) then
 		local egos_list = {}
@@ -387,7 +427,7 @@ function _M:finishEntity(level, type, e, ego_filter)
 				local etype = e.ego_first_type and e.ego_first_type or rng.tableIndex(e.egos_chance, picked_etype)
 				local echance = etype and e.egos_chance[etype]
 				while etype and rng.percent(util.bound(echance / chance_decay + (ego_chance or 0), 0, 100)) do
-					pick_ego(self, level, e, egos_list, type, picked_etype, etype, ego_filter)
+					pick_ego(self, level, e, e.egos, egos_list, type, picked_etype, etype, ego_filter)
 
 					etype = rng.tableIndex(e.egos_chance, picked_etype)
 					echance = e.egos_chance[etype]
@@ -409,7 +449,7 @@ function _M:finishEntity(level, type, e, ego_filter)
 					if not etype then break end
 					local echance = etype and try[etype]
 
-					pick_ego(self, level, e, egos_list, type, picked_etype, etype, try)
+					pick_ego(self, level, e, e.egos, egos_list, type, picked_etype, etype, try)
 				end
 			end
 		else

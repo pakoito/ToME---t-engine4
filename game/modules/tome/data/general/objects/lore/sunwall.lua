@@ -24,7 +24,6 @@ newEntity{ base = "BASE_LORE_RANDOM",
 	desc = [[A paper scrap containing some lore.]],
 	level_range = {1, 50},
 	rarity = 50,
-	is_magic_device = false,
 	encumber = 0,
 }
 end

@@ -62,7 +62,6 @@ newEntity{ base = "BASE_LORE",
 	name = "journal page", lore="blighted-ruins-note-"..i,
 	desc = [[A paper scrap, left by the Necromancer.]],
 	rarity = false,
-	is_magic_device = false,
 	encumberance = 0,
 }
 end

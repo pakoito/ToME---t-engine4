@@ -630,21 +630,22 @@ function _M:loadBuildOrder(file)
 	while true do
 		local line = f:readLine()
 		if not line then break end
+		line = line:gsub('[\r\n"]', '')
+		local split = line:split(',')
 
-		if line == "#Name" then cur = "name"
-		elseif line == "#Stats" then cur = "stats"
-		elseif line == "#Talents" then cur = "talents"
-		elseif line == "#Types" then cur = "types"
+		if split[1] == "#Name" then cur = "name"
+		elseif split[1] == "#Stats" then cur = "stats"
+		elseif split[1] == "#Talents" then cur = "talents"
+		elseif split[1] == "#Types" then cur = "types"
 		else
-			if cur == "name" then b.name = line
+			if cur == "name" then b.name = split[1]
 			elseif cur == "stats" then
-				b.stats = line:split(',')
+				b.stats = {}
+				for i, s in ipairs(split) do if s ~= "" then table.insert(b.stats, s) end end
 			elseif cur == "talents" then
-				local t = line:split(',')
-				table.insert(b.talents, {kind=t[2], tid=t[3]})
+				table.insert(b.talents, {kind=split[2], tid=split[3]})
 			elseif cur == "types" then
-				local tt = line:split(',')
-				table.insert(b.types, tt[2])
+				table.insert(b.types, split[2])
 			end
 		end
 	end

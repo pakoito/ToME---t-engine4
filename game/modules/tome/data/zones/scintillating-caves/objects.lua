@@ -25,7 +25,6 @@ newEntity{ base = "BASE_LORE",
 	name = "research log", lore="scintillating-caves-note-"..i,
 	desc = [[A paper scrap, left by an adventurer.]],
 	rarity = false,
-	is_magic_device = false,
 	encumberance = 0,
 }
 end
@@ -35,6 +34,5 @@ newEntity{ base = "BASE_LORE",
 	name = "exploration log", lore="scintillating-caves-note-6",
 	desc = [[A paper scrap, left by an adventurer.]],
 	rarity = false,
-	is_magic_device = false,
 	encumberance = 0,
 }

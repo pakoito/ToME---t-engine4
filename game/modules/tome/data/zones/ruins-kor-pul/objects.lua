@@ -25,7 +25,6 @@ newEntity{ base = "BASE_LORE",
 	name = "journal page", lore="kor-pul-note-"..i,
 	desc = [[A journal page, left by an adventurer.]],
 	rarity = false,
-	is_magic_device = false,
 	encumberance = 0,
 }
 end

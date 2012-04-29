@@ -28,6 +28,5 @@ newEntity{ base = "BASE_LORE",
 	name = "journal page", lore="old-forest-note-5",
 	desc = [[A paper scrap, left by an adventurer.]],
 	rarity = false,
-	is_magic_device = false,
 	encumberance = 0,
 }

@@ -17,14 +17,26 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/objects/objects-maj-eyal.lua")
-
-for i = 1, 4 do
-newEntity{ base = "BASE_LORE",
-	define_as = "NOTE"..i,
-	name = "research log of halfling mage Hompalan", lore="halfling-research-note-"..i,
-	desc = [[A very research note, nearly unreadable.]],
-	rarity = false,
-	encumberance = 0,
+newEntity{
+	name = "quick ", prefix=true,
+	level_range = {1, 50},
+	rarity = 15,
+	cost = 5,
+	resolvers.genericlast(function(e)
+		if not e.use_power or not e.charm_power then return end
+		e.use_power.power = math.ceil(e.use_power.power * rng.float(0.6, 0.8))
+		e.charm_power = math.ceil(e.charm_power * rng.float(0.4, 0.7))
+	end),
 }
-end
+
+newEntity{
+	name = "supercharded ", prefix=true,
+	level_range = {1, 50},
+	rarity = 15,
+	cost = 5,
+	resolvers.genericlast(function(e)
+		if not e.use_power or not e.charm_power then return end
+		e.use_power.power = math.ceil(e.use_power.power * rng.float(1.2, 1.5))
+		e.charm_power = math.ceil(e.charm_power * rng.float(1.3, 1.5))
+	end),
+}

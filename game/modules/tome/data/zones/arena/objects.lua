@@ -25,7 +25,6 @@ newEntity{ base = "BASE_LORE",
 	name = "Arena for dummies", lore="arena-scoring",
 	desc = [[A note explaining the arena's scoring rules. Someone must have dropped it.]],
 	rarity = false,
-	is_magic_device = false,
 	encumberance = 0,
 }
 

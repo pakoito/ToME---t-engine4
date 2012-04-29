@@ -24,6 +24,5 @@ newEntity{ base = "BASE_LORE",
 	name = "draft letter", lore="grand-corruptor-draft",
 	desc = [[A letter.]],
 	rarity = false,
-	is_magic_device = false,
 	encumberance = 0,
 }

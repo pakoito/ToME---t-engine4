@@ -26,6 +26,5 @@ newEntity{ base = "BASE_LORE",
 	name = "draft note", lore="rak-shor-pride-note",
 	desc = [[A note.]],
 	rarity = false,
-	is_magic_device = false,
 	encumberance = 0,
 }

@@ -17,14 +17,26 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/objects/objects-maj-eyal.lua")
+--[[
+Torques
+psionic Shield
+psychoportation
+clear mind
+adrenaline rush
 
-for i = 1, 4 do
-newEntity{ base = "BASE_LORE",
-	define_as = "NOTE"..i,
-	name = "research log of halfling mage Hompalan", lore="halfling-research-note-"..i,
-	desc = [[A very research note, nearly unreadable.]],
-	rarity = false,
-	encumberance = 0,
+]]
+
+newEntity{
+	name = " of psychoportation", addon=true, instant_resolve=true,
+	level_range = {15, 50},
+	rarity = 10,
+
+	charm_power_def = {add=15, max=60, floor=true},
+	resolvers.charm("teleport randomly (rad %d)", 30, function(self, who)
+		game.level.map:particleEmitter(who.x, who.y, 1, "teleport")
+		who:teleportRandom(who.x, who.y, self:getCharmPower())
+		game.level.map:particleEmitter(who.x, who.y, 1, "teleport")
+		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
+		return {id=true, used=true}
+	end),
 }
-end

@@ -262,10 +262,10 @@ function resolvers.calc.mbonus_material(t, e)
 		e.cost = e.cost + ap
 		v = nv or v
 	end
-	
+
 	if e.ego_bonus_mult then
 		if v >= 1 then
-			v = math.ceil(v * (1 + e.ego_bonus_mult)) 
+			v = math.ceil(v * (1 + e.ego_bonus_mult))
 		else
 			v = v * (1 + e.ego_bonus_mult)
 		end

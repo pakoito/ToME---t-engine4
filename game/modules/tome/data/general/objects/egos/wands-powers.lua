@@ -17,30 +17,6 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-newEntity{
-	name = "quick ", prefix=true,
-	level_range = {1, 50},
-	rarity = 15,
-	cost = 5,
-	resolvers.genericlast(function(e)
-		if not e.use_power or not e.charm_power then return end
-		e.use_power.power = math.ceil(e.use_power.power * rng.float(0.6, 0.8))
-		e.charm_power = math.ceil(e.charm_power * rng.float(0.4, 0.7))
-	end),
-}
-
-newEntity{
-	name = "supercharded ", prefix=true,
-	level_range = {1, 50},
-	rarity = 15,
-	cost = 5,
-	resolvers.genericlast(function(e)
-		if not e.use_power or not e.charm_power then return end
-		e.use_power.power = math.ceil(e.use_power.power * rng.float(1.2, 1.5))
-		e.charm_power = math.ceil(e.charm_power * rng.float(1.3, 1.5))
-	end),
-}
-
 --[[
 Wands
 *detection
@@ -49,21 +25,10 @@ Wands
 *firewall
 *lightning
 *conjuration
-
-Totems
-healing
-cure illness
-cure poisons
-cure
-
-Torques
-Psionic Shield
-Psychoportation
-
 ]]
 
 newEntity{
-	name = " of detection", suffix=true, instant_resolve=true,
+	name = " of detection", addon=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 8,
 
@@ -80,7 +45,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of illumination", suffix=true, instant_resolve=true,
+	name = " of illumination", addon=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 8,
 
@@ -93,7 +58,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of trap destruction", suffix=true, instant_resolve=true,
+	name = " of trap destruction", addon=true, instant_resolve=true,
 	level_range = {1, 50},
 	rarity = 14,
 
@@ -120,23 +85,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of teleportation", suffix=true, instant_resolve=true,
-	level_range = {15, 50},
-	rarity = 10,
-
-	charm_power_def = {add=15, max=60, floor=true},
-	resolvers.charm("teleport randomly (rad %d)", 30, function(self, who)
-		game.level.map:particleEmitter(who.x, who.y, 1, "teleport")
-		who:teleportRandom(who.x, who.y, self:getCharmPower())
-		game.level.map:particleEmitter(who.x, who.y, 1, "teleport")
-		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
-		return {id=true, used=true}
-	end),
-}
-
-
-newEntity{
-	name = " of lightning", suffix=true, instant_resolve=true,
+	name = " of lightning", addon=true, instant_resolve=true,
 	level_range = {15, 50},
 	rarity = 10,
 
@@ -156,7 +105,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of firewall", suffix=true, instant_resolve=true,
+	name = " of firewall", addon=true, instant_resolve=true,
 	level_range = {15, 50},
 	rarity = 10,
 
@@ -176,7 +125,7 @@ newEntity{
 }
 
 newEntity{
-	name = " of conjuration", suffix=true, instant_resolve=true,
+	name = " of conjuration", addon=true, instant_resolve=true,
 	level_range = {10, 50},
 	rarity = 6,
 
@@ -196,24 +145,6 @@ newEntity{
 		}
 		who:project(tg, x, y, elem[1], rng.avg(dam / 2, dam, 3), {type=elem[2]})
 		game:playSoundNear(who, "talents/fire")
-		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
-		return {id=true, used=true}
-	end),
-}
-
-newEntity{
-	name = " of healing", suffix=true, instant_resolve=true,
-	level_range = {25, 50},
-	rarity = 20,
-
-	charm_power_def = {add=50, max=250, floor=true},
-	resolvers.charm("heals the target for %d", 35, function(self, who)
-		local tg = {default_target=who, type="hit", nowarning=true, range=6 + who:getWil(4), first_target="friend"}
-		local x, y = who:getTarget(tg)
-		if not x or not y then return nil end
-		local dam = self:getCharmPower()
-		who:project(tg, x, y, engine.DamageType.HEAL, dam)
-		game:playSoundNear(who, "talents/heal")
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
 		return {id=true, used=true}
 	end),

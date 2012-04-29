@@ -17,14 +17,28 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/objects/objects-maj-eyal.lua")
+--[[
+Totems
+healing
+cure illness
+cure poisons
+cure
+]]
 
-for i = 1, 4 do
-newEntity{ base = "BASE_LORE",
-	define_as = "NOTE"..i,
-	name = "research log of halfling mage Hompalan", lore="halfling-research-note-"..i,
-	desc = [[A very research note, nearly unreadable.]],
-	rarity = false,
-	encumberance = 0,
+newEntity{
+	name = " of healing", addon=true, instant_resolve=true,
+	level_range = {25, 50},
+	rarity = 20,
+
+	charm_power_def = {add=50, max=250, floor=true},
+	resolvers.charm("heals the target for %d", 35, function(self, who)
+		local tg = {default_target=who, type="hit", nowarning=true, range=6 + who:getWil(4), first_target="friend"}
+		local x, y = who:getTarget(tg)
+		if not x or not y then return nil end
+		local dam = self:getCharmPower()
+		who:project(tg, x, y, engine.DamageType.HEAL, dam)
+		game:playSoundNear(who, "talents/heal")
+		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
+		return {id=true, used=true}
+	end),
 }
-end

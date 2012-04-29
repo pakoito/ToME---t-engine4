@@ -28,7 +28,6 @@ newEntity{ base = "BASE_LORE",
 	name = "weird conch", lore="slazish-note-"..i, image = "terrain/shell1.png",
 	desc = [[A conch, it seemed the naga was using it as a communication tool.]],
 	rarity = false,
-	is_magic_device = false,
 	encumberance = 0,
 }
 end

@@ -68,7 +68,6 @@ newEntity{ base = "BASE_LORE",
 	name = "Iron Throne Profits History", lore="iron-throne-profits-"..i,
 	desc = [[A journal of the profits history of the Iron Throne dwarves.]],
 	rarity = false,
-	is_magic_device = false,
 	encumberance = 0,
 }
 end
@@ -78,7 +77,6 @@ newEntity{ base = "BASE_LORE",
 	name = "Iron Throne trade ledger", lore="iron-throne-trade-ledger",
 	desc = [[A trade ledger of the Iron Throne dwarves.]],
 	rarity = false,
-	is_magic_device = false,
 	encumberance = 0,
 }
 
@@ -87,6 +85,5 @@ newEntity{ base = "BASE_LORE",
 	name = "Iron Throne Reknor expedition, last words", lore="iron-throne-last-words",
 	desc = [[Last words of a dwarven expedition to secure Reknor.]],
 	rarity = false,
-	is_magic_device = false,
 	encumberance = 0,
 }

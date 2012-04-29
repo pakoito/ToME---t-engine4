@@ -25,7 +25,6 @@ newEntity{ base = "BASE_LORE",
 	name = "Deep Bellow excavation report "..i, lore="deep-bellow-"..i,
 	desc = [[A paper scrap.]],
 	rarity = false,
-	is_magic_device = false,
 	encumberance = 0,
 }
 end

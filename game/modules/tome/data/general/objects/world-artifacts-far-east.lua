@@ -27,7 +27,6 @@ newEntity{ base = "BASE_SCROLL", define_as = "JEWELER_TOME", subtype="tome", no_
 	name = "Ancient Tome titled 'Gems and their uses'", image = "object/artifact/ancient_tome_gems_and_their_uses.png",
 	level_range = {30, 40}, rarity = 120,
 	color = colors.VIOLET,
-	is_magic_device = false,
 	fire_proof = true,
 	not_in_stores = true,
 
@@ -46,7 +45,6 @@ newEntity{ base = "BASE_SCROLL", define_as = "JEWELER_SUMMON", subtype="tome", n
 	name = "Scroll of Summoning (Limmir the Jeweler)",
 	color = colors.VIOLET,
 	fire_proof = true,
-	is_magic_device = false,
 
 	max_power = 1, power_regen = 1,
 	use_power = { name = "summon Limmir the jeweler at the center of the lake of the moon", power = 1,

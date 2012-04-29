@@ -28,7 +28,6 @@ newEntity{ base = "BASE_LORE",
 	name = "creased letter", lore="celia-letter",
 	desc = [[A letter.]],
 	rarity = false,
-	is_magic_device = false,
 	encumberance = 0,
 }
 

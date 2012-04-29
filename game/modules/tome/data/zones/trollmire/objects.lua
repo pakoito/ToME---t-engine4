@@ -25,7 +25,6 @@ newEntity{ base = "BASE_LORE",
 	name = "tattered paper scrap", lore="trollmire-note-"..i,
 	desc = [[A paper scrap, left by an adventurer.]],
 	rarity = false,
-	is_magic_device = false,
 	encumberance = 0,
 }
 end
@@ -35,6 +34,5 @@ newEntity{ base = "BASE_LORE",
 	name = "tattered paper scrap", lore="trollmire-note-3",
 	desc = [[A paper scrap, left by an adventurer.]],
 	rarity = false,
-	is_magic_device = false,
 	encumberance = 0,
 }
