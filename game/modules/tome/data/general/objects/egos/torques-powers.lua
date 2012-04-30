@@ -20,9 +20,8 @@
 --[[
 Torques
 *psionic shield
-psychoportation
-clear mind
-adrenaline rush
+*psychoportation
+*clear mind
 mind wave
 ]]
 
@@ -88,6 +87,23 @@ newEntity{
 	charm_power_def = {add=0, max=5, floor=true},
 	resolvers.charm("absorbs and nullifies at most %d detrimental mental status effects in the next 6 turns.", 20, function(self, who)
 		who:setEffect(who.EFF_CLEAR_MIND, 6, {power=self:getCharmPower()})
+		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
+		return {id=true, used=true}
+	end),
+}
+
+newEntity{
+	name = " of mindblast", addon=true, instant_resolve=true,
+	level_range = {15, 50},
+	rarity = 8,
+
+	charm_power_def = {add=45, max=300, floor=true},
+	resolvers.charm(function(self) return ("fire a blast of psionic energies in a beam (dam %d-%d)"):format(self:getCharmPower()/2, self:getCharmPower()) end, 6, function(self, who)
+		local tg = {type="beam", range=6 + who:getWil(4)}
+		local x, y = who:getTarget(tg)
+		if not x or not y then return nil end
+		local dam = self:getCharmPower()
+		who:project(tg, x, y, engine.DamageType.MIND, rng.avg(dam / 2, dam, 3), {type="mind"})
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
 		return {id=true, used=true}
 	end),
