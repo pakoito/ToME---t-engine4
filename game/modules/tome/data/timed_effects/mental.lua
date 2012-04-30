@@ -764,7 +764,7 @@ newEffect{
 			eff.source:incHate(eff.hateGain)
 		end
 		DamageType:get(DamageType.MIND).projector(eff.source, self.x, self.y, DamageType.MIND, { dam=eff.damage, crossTierChance=25 })
-		
+
 		if self.dead then
 			-- only spread on activate if the target is dead
 			if eff.jumpCount > 0 then
@@ -776,7 +776,7 @@ newEffect{
 		end
 
 		game:playSoundNear(self, "talents/fire")
-		
+
 		eff.firstTurn = true
 	end,
 	deactivate = function(self, eff)
@@ -791,7 +791,7 @@ newEffect{
 		elseif eff.jumpDuration > 0 then
 			-- limit the total duration of all spawned effects
 			eff.jumpDuration = eff.jumpDuration - 1
-			
+
 			if eff.jumpCount > 0 then
 				-- guaranteed jump
 				eff.jumpCount = eff.jumpCount - 1
@@ -974,7 +974,7 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		updateFearParticles(self)
-		
+
 		local tInstillFear = self:getTalentFromId(self.T_INSTILL_FEAR)
 		tInstillFear.endEffect(self, tInstillFear)
 	end,
@@ -1036,7 +1036,7 @@ newEffect{
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("resists", eff.damageId)
 		updateFearParticles(self)
-		
+
 		local tInstillFear = self:getTalentFromId(self.T_INSTILL_FEAR)
 		tInstillFear.endEffect(self, tInstillFear)
 	end,
@@ -1059,7 +1059,7 @@ newEffect{
 	deactivate = function(self, eff)
 		eff.terrifiedId = self:removeTemporaryValue("terrified", eff.terrifiedId)
 		updateFearParticles(self)
-		
+
 		local tInstillFear = self:getTalentFromId(self.T_INSTILL_FEAR)
 		tInstillFear.endEffect(self, tInstillFear)
 	end,
@@ -1086,7 +1086,7 @@ newEffect{
 		self:removeTemporaryValue("combat_mentalresist", eff.mentalId)
 		self:removeTemporaryValue("combat_spellresist", eff.spellId)
 		updateFearParticles(self)
-		
+
 		local tInstillFear = self:getTalentFromId(self.T_INSTILL_FEAR)
 		tInstillFear.endEffect(self, tInstillFear)
 	end,
@@ -1116,7 +1116,7 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		updateFearParticles(self)
-		
+
 		local tInstillFear = self:getTalentFromId(self.T_INSTILL_FEAR)
 		tInstillFear.endEffect(self, tInstillFear)
 	end,
@@ -1142,7 +1142,7 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		updateFearParticles(self)
-		
+
 		local tInstillFear = self:getTalentFromId(self.T_INSTILL_FEAR)
 		tInstillFear.endEffect(self, tInstillFear)
 	end,
@@ -1230,7 +1230,7 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		self:removeParticles(eff.particlesId)
-		
+
 		local tInstillFear = self:getTalentFromId(self.T_INSTILL_FEAR)
 		tInstillFear.endEffect(self, tInstillFear)
 	end,
@@ -2249,5 +2249,49 @@ newEffect{
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("inc_stats", eff.cid)
 		if self.ai then self.ai=eff.ai end
+	end,
+}
+
+newEffect{
+	name = "PSIONIC_SHIELD", image = "talents/kinetic_shield.png",
+	desc = "Psionic Shield",
+	display_desc = function(self, eff) return eff.kind:capitalize().." Psionic Shield" end,
+	long_desc = function(self, eff) return ("Reduces all incoming %s damage by %d."):format(eff.what, eff.power) end,
+	type = "mental",
+	subtype = { psionic=true, shield=true },
+	status = "beneficial",
+	parameters = { power=10, kind="kinetic" },
+	activate = function(self, eff)
+		if eff.kind == "kinetic" then
+			eff.sid = self:addTemporaryValue("flat_damage_armor", {[DamageType.PHYSICAL] = eff.power, [DamageType.ACID] = eff.power})
+			eff.what = "physical and acid"
+		elseif eff.kind == "thermal" then
+			eff.sid = self:addTemporaryValue("flat_damage_armor", {[DamageType.FIRE] = eff.power, [DamageType.COLD] = eff.power})
+			eff.what = "fire and cold"
+		elseif eff.kind == "charged" then
+			eff.sid = self:addTemporaryValue("flat_damage_armor", {[DamageType.LIGHTNING] = eff.power, [DamageType.BLIGHT] = eff.power})
+			eff.what = "lightning and blight"
+		end
+	end,
+	deactivate = function(self, eff)
+		if eff.sid then
+			self:removeTemporaryValue("flat_damage_armor", eff.sid)
+		end
+	end,
+}
+
+newEffect{
+	name = "CLEAR_MIND", image = "talents/aura_discipline.png",
+	desc = "Clear Mind",
+	long_desc = function(self, eff) return ("Nullifies the next %d detrimental mental effects."):format(self.mental_negative_status_effect_immune) end,
+	type = "mental",
+	subtype = { psionic=true, },
+	status = "beneficial",
+	parameters = { power=2 },
+	activate = function(self, eff)
+		self.mental_negative_status_effect_immune = eff.power
+	end,
+	deactivate = function(self, eff)
+		self.mental_negative_status_effect_immune = nil
 	end,
 }
