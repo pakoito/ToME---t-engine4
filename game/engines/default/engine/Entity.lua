@@ -299,6 +299,10 @@ function _M:makeMapObject(tiles, idx)
 	return self._mo, self.z
 end
 
+function _M:loaded()
+	self:defineDisplayCallback()
+end
+
 --- Get all "map objects" representing this entity
 -- Do not touch unless you *KNOW* what you are doing.<br/>
 -- You do *NOT* need this, this is used by the engine.Map class automatically.<br/>

@@ -520,6 +520,24 @@ newEffect{
 }
 
 newEffect{
+	name = "THORNY_SKIN", image = "talents/stoneskin.png",
+	desc = "Thorny Skin",
+	long_desc = function(self, eff) return ("The target's skin reacts to damage, granting %d armour and %d%% armour hardiness."):format(eff.ac, eff.hard) end,
+	type = "physical",
+	subtype = { nature=true },
+	status = "beneficial",
+	parameters = { ac=10, hard=10 },
+	activate = function(self, eff)
+		eff.aid = self:addTemporaryValue("combat_armor", eff.ac)
+		eff.hid = self:addTemporaryValue("combat_armor_hardiness", eff.hard)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("combat_armor", eff.aid)
+		self:removeTemporaryValue("combat_armor_hardiness", eff.hid)
+	end,
+}
+
+newEffect{
 	name = "FROZEN_FEET", image = "talents/frozen_ground.png",
 	desc = "Frozen Feet",
 	long_desc = function(self, eff) return "The target is frozen on the ground, able to act freely but not move." end,
@@ -1605,11 +1623,11 @@ newEffect{
 		-- add the remaining healing reduction spread out over the new duration
 		old_eff.healFactorChange = math.max(-0.75, (old_eff.healFactorChange / old_eff.totalDuration) * old_eff.dur + new_eff.healFactorChange)
 		old_eff.dur = math.max(old_eff.dur, new_eff.dur)
-		
+
 		self:removeTemporaryValue("healing_factor", old_eff.healFactorId)
 		old_eff.healFactorId = self:addTemporaryValue("healing_factor", old_eff.healFactorChange)
 		game.logSeen(self, "%s has re-opened a cursed wound!", self.name:capitalize())
-		
+
 		return old_eff
 	end,
 }

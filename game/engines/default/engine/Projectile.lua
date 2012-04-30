@@ -45,6 +45,10 @@ function _M:save()
 end
 
 function _M:loaded()
+--	DPT: I think the line below should be there
+--	but somehow this causes projectiles to be duplicated on a chrono load
+--	self:defineDisplayCallback()
+
 	if self.project and self.project.def and self.project.def.typ and self.project.def.typ.line_function and type(self.project.def.typ.line_function.line) == "table" then
 		self.project.def.typ.line_function.line = util.isHex() and core.fov.hex_line_import(unpack(self.project.def.typ.line_function.line)) or
 			core.fov.line_import(unpack(self.project.def.typ.line_function.line))
