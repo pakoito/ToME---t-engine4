@@ -23,6 +23,26 @@ function lpeg.anywhere (p)
 	return lpeg.P{ p + 1 * lpeg.V(1) }
 end
 
+function table.min(t)
+	local m = nil
+	for _, v in pairs(t) do
+		if not m then m = v
+		else m = math.min(m, v)
+		end
+	end
+	return m
+end
+
+function table.max(t)
+	local m = nil
+	for _, v in pairs(t) do
+		if not m then m = v
+		else m = math.max(m, v)
+		end
+	end
+	return m
+end
+
 function table.print(src, offset)
 	offset = offset or ""
 	for k, e in pairs(src) do
@@ -261,6 +281,10 @@ function string.ordinal(number)
 		suffix = "rd"
 	end
 	return number..suffix
+end
+
+function string.trim(str)
+	return str:gsub("^%s*(.-)%s*$", "%1")
 end
 
 function string.a_an(str)

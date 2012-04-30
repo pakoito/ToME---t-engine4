@@ -73,6 +73,9 @@ _M.temporary_values_conf.movement_speed = "mult0"
 _M.temporary_values_conf.combat_physspeed = "mult0"
 _M.temporary_values_conf.combat_spellspeed = "mult0"
 
+-- Damage cap takes the lowest
+_M.temporary_values_conf.flat_damage_cap = "lowest"
+
 function _M:init(t, no_default)
 	-- Define some basic combat stats
 	self.energyBase = 0
@@ -153,6 +156,9 @@ function _M:init(t, no_default)
 	-- % Increase damage
 	t.inc_damage = t.inc_damage or {}
 	t.inc_damage_actor_type = t.inc_damage_actor_type or {}
+
+	t.flat_damage_armor = t.flat_damage_armor or {}
+	t.flat_damage_cap = t.flat_damage_cap or {}
 
 	-- Default regen
 	t.air_regen = t.air_regen or 3
@@ -631,14 +637,14 @@ function _M:loadBuildOrder(file)
 		local line = f:readLine()
 		if not line then break end
 		line = line:gsub('[\r\n"]', '')
-		local split = line:split(',')
+		local split = line:split(lpeg.S",; \t")
 
 		if split[1] == "#Name" then cur = "name"
 		elseif split[1] == "#Stats" then cur = "stats"
 		elseif split[1] == "#Talents" then cur = "talents"
 		elseif split[1] == "#Types" then cur = "types"
 		else
-			if cur == "name" then b.name = split[1]
+			if cur == "name" then b.name = table.concat(split, " "):trim()
 			elseif cur == "stats" then
 				b.stats = {}
 				for i, s in ipairs(split) do if s ~= "" then table.insert(b.stats, s) end end

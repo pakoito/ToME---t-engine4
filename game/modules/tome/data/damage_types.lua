@@ -191,6 +191,24 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			dam = t.on_damage(target, t, type, dam)
 		end
 
+		-- Flat damage reduction ("armour")
+		if target.flat_damage_armor then
+			local dec = (target.flat_damage_armor.all or 0) + (target.flat_damage_armor[type] or 0)
+			dam = math.max(0, dam - dec)
+			print("[PROJECTOR] after flat damage armor", dam)
+		end
+
+		-- Flat damage cap
+		if target.flat_damage_cap then
+			local cap = nil
+			if target.flat_damage_cap.all then cap = target.flat_damage_cap.all end
+			if target.flat_damage_cap[type] then cap = target.flat_damage_cap[type] end
+			if cap and cap > 0 then
+				dam = math.max(math.min(dam, cap), 0)
+				print("[PROJECTOR] after flat damage cap", dam)
+			end
+		end
+
 		if src:attr("stunned") then
 			dam = dam * 0.3
 			print("[PROJECTOR] stunned dam", dam)
@@ -254,7 +272,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 		if target ~= src and target.attr and target:attr("damage_resonance") and not target:hasEffect(target.EFF_RESONANCE) then
 			target:setEffect(target.EFF_RESONANCE, 5, {damtype=type, dam=target:attr("damage_resonance_on_hit")})
 		end
-		
+
 		if not target.dead and dam > 0 and type == DamageType.MIND and src and src.knowTalent and src:knowTalent(src.T_MADNESS) then
 			local t = src:getTalentFromId(src.T_MADNESS)
 			t.doMadness(target, t, src)

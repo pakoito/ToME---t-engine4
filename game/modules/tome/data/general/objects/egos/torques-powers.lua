@@ -19,11 +19,11 @@
 
 --[[
 Torques
-psionic Shield
+psionic shield
 psychoportation
 clear mind
 adrenaline rush
-
+mind wave
 ]]
 
 newEntity{

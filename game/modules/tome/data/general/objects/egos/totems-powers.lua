@@ -22,7 +22,7 @@ Totems
 *healing
 *cure illness
 *cure poisons
-thorny skin
+*thorny skin
 ]]
 
 newEntity{
