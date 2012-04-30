@@ -22,7 +22,7 @@ newEntity{
 	slot = "TOOL",
 	type = "charm", subtype="torque",
 	unided_name = "torque", id_by_type = true,
-	display = "-", color=colors.WHITE, image = resolvers.image_material("wand", "wood"),
+	display = "-", color=colors.WHITE, image = resolvers.image_material("torque", "metal"),
 	encumber = 2,
 	rarity = 12,
 	add_name = "#CHARM# #CHARGES#",

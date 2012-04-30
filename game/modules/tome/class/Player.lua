@@ -1072,7 +1072,10 @@ function _M:onWear(o, bypass_set)
 	mod.class.Actor.onWear(self, o, bypass_set)
 
 	if not self.no_power_reset_on_wear then
-		o:forAllStack(function(so) if so.power and so:attr("power_regen") then so.power = 0 end end)
+		o:forAllStack(function(so)
+			if so.power and so:attr("power_regen") then so.power = 0 end
+			if so.talent_cooldown then self.talents_cd[so.talent_cooldown] = math.max(self.talents_cd[so.talent_cooldown] or 0, math.min(4, math.floor((so.use_power or so.use_talent).power / 5))) end
+		end)
 	end
 end
 
