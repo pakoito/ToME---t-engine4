@@ -225,6 +225,15 @@ function _M:init(t, no_default)
 	self:recomputeGlobalSpeed()
 end
 
+function _M:onEntityMerge(a)
+	-- Remove stats to make new stats work
+	for i, s in ipairs(_M.stats_def) do
+		if a.stats[i] then
+			a.stats[s.short_name], a.stats[i] = a.stats[i], nil
+		end
+	end
+end
+
 function _M:useEnergy(val)
 	engine.Actor.useEnergy(self, val)
 
