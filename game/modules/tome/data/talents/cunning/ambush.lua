@@ -79,6 +79,9 @@ newTalent{
 		target:move(sx, sy, true)
 
 		if core.fov.distance(self.x, self.y, sx, sy) <= 1 then
+			if target:canBe("stun") then
+				target:setEffect(target.EFF_DAZED, 2, {apply_power=self:combatAttack()})
+			end
 			if target:canBe("silence") then
 				target:setEffect(target.EFF_SILENCED, t.getDuration(self, t), {apply_power=self:combatAttack()})
 			else
@@ -90,7 +93,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[You reach out with shadow vines toward your target, pulling it to you and silencing it for %d turns.
+		return ([[You reach out with shadow vines toward your target, pulling it to you and silencing it for %d turns and dazing it for 2 turns.
 		Duration increases with talent level and chance to succeed with your Dexterity stat.]]):
 		format(duration)
 	end,
