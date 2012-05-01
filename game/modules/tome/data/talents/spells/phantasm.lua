@@ -40,8 +40,8 @@ newTalent{
 			return 0
 		end,
 	},
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 28, 280) end,
-	getBlindPower = function(self, t) return if self:getTalentLevel(t) >= 5 then return 4 else 3 end end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 28, 180) end,
+	getBlindPower = function(self, t) if self:getTalentLevel(t) >= 5 then return 4 else return 3 end end,
 	action = function(self, t)
 		local tg = {type="ball", range=self:getTalentRange(t), selffire=true, radius=self:getTalentRadius(t), talent=t}
 		self:project(tg, self.x, self.y, DamageType.LITE, 1)
@@ -58,8 +58,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local radius = self:getTalentRadius(t)
-		local turn = self:getBlindPower(t)
-		local dam = self:getDamage(t)
+		local turn = t.getBlindPower(self, t)
+		local dam = t.getDamage(self, t)
 		return ([[Creates a globe of pure light with a radius of %d that illuminates the area.
 		At level 3 it also blinds all who see it (except the caster) for %d turns.
 		At level 4 it also deals %0.2f light damage.]]):
