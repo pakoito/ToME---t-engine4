@@ -42,3 +42,17 @@ newEntity{
 		e.charm_power = math.ceil(e.charm_power * rng.float(1.3, 1.5))
 	end),
 }
+
+newEntity{
+	name = "overpowered ", prefix=true,
+	keywords = {['overpower']=true},
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 16,
+	cost = 5,
+	resolvers.genericlast(function(e)
+		if not e.use_power or not e.charm_power then return end
+		e.use_power.power = math.ceil(e.use_power.power * rng.float(1.4, 1.7))
+		e.charm_power = math.ceil(e.charm_power * rng.float(1.6, 1.9))
+	end),
+}

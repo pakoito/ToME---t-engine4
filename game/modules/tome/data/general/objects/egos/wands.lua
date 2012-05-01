@@ -23,7 +23,7 @@ local DamageType = require "engine.DamageType"
 load("/data/general/objects/egos/charms.lua")
 
 newEntity{
-	name = "arcane ", prefix=true,
+	name = "arcane ", prefix=true, second=true,
 	keywords = {arcane=true},
 	level_range = {10, 50},
 	rarity = 12,
@@ -37,7 +37,7 @@ newEntity{
 }
 
 newEntity{
-	name = "defiled ", prefix=true,
+	name = "defiled ", prefix=true, second=true,
 	keywords = {defiled=true},
 	level_range = {10, 50},
 	rarity = 12,
@@ -51,7 +51,7 @@ newEntity{
 }
 
 newEntity{
-	name = "bright ", prefix=true,
+	name = "bright ", prefix=true, second=true,
 	keywords = {bright=true},
 	level_range = {10, 50},
 	rarity = 12,
@@ -65,7 +65,7 @@ newEntity{
 }
 
 newEntity{
-	name = "shadowy ", prefix=true,
+	name = "shadowy ", prefix=true, second=true,
 	keywords = {shadow=true},
 	level_range = {10, 50},
 	rarity = 12,
@@ -79,7 +79,7 @@ newEntity{
 }
 
 newEntity{
-	name = "warded ", prefix=true,
+	name = "warded ", prefix=true, second=true,
 	keywords = {ward=true},
 	level_range = {30, 50},
 	rarity = 12,
@@ -99,7 +99,7 @@ newEntity{
 }
 
 newEntity{
-	name = "void ", prefix=true,
+	name = "void ", prefix=true, second=true,
 	keywords = {void=true},
 	level_range = {30, 50},
 	rarity = 12,
@@ -113,7 +113,7 @@ newEntity{
 }
 
 newEntity{
-	name = "volcanic ", prefix=true,
+	name = "volcanic ", prefix=true, second=true,
 	keywords = {volcanic=true},
 	level_range = {30, 50},
 	rarity = 12,
@@ -126,7 +126,7 @@ newEntity{
 }
 
 newEntity{
-	name = "striking ", prefix=true,
+	name = "striking ", prefix=true, second=true,
 	keywords = {striking=true},
 	level_range = {30, 50},
 	rarity = 12,

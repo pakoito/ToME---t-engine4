@@ -28,7 +28,7 @@ newEntity{
 	add_name = "#CHARM# #CHARGES#",
 	use_sound = "talents/spell_generic",
 	desc = [[Magical wands are made by powerful Alchemists and Archmagi to store spells. Anybody can use them to release the spells.]],
-	egos = "/data/general/objects/egos/wands.lua", egos_chance = { prefix=resolvers.mbonus(20, 5), suffix=resolvers.mbonus(20, 5) },
+	egos = "/data/general/objects/egos/wands.lua", egos_chance = { prefix=resolvers.mbonus(20, 5), },
 	addons = "/data/general/objects/egos/wands-powers.lua",
 	power_source = {arcane=true},
 	randart_able = { misc=10 },

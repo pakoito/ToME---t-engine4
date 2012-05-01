@@ -31,6 +31,7 @@ newEntity{
 	egos = "/data/general/objects/egos/totems.lua", egos_chance = { prefix=resolvers.mbonus(20, 5), suffix=resolvers.mbonus(20, 5) },
 	addons = "/data/general/objects/egos/totems-powers.lua",
 	power_source = {nature=true},
+	randart_able = { misc=10 },
 	talent_cooldown = "T_GLOBAL_CD",
 }
 
