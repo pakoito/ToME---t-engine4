@@ -410,6 +410,8 @@ function _M:actBase()
 				self:forceUseTalent(self.T_DAUNTING_PRESENCE, {ignore_energy=true})
 			end
 		end
+
+		self:triggerHook{"Actor:actBase:Effects"}
 	end
 
 	-- Suffocate ?
