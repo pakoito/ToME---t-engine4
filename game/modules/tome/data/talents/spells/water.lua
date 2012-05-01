@@ -18,14 +18,14 @@
 -- darkgod@te4.org
 
 newTalent{
-	name = "Corrosive Vapour",
+	name = "Glacial Vapour",
 	type = {"spell/water",1},
 	require = spells_req1,
 	points = 5,
 	random_ego = "attack",
-	mana = 25,
+	mana = 12,
 	cooldown = 8,
-	tactical = { ATTACKAREA = { ACID = 2 } },
+	tactical = { ATTACKAREA = { COLD = 2 } },
 	range = 8,
 	radius = 3,
 	direct_hit = true,
@@ -43,10 +43,10 @@ newTalent{
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
 			x, y, t.getDuration(self, t),
-			DamageType.ACID, t.getDamage(self, t),
+			DamageType.COLD, t.getDamage(self, t),
 			self:getTalentRadius(t),
 			5, nil,
-			{type="vapour"},
+			{type="ice_vapour"},
 			nil, self:spellFriendlyFire()
 		)
 		game:playSoundNear(self, "talents/cloud")
@@ -55,9 +55,9 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[Corrosive fumes rise from the ground doing %0.2f acid damage in a radius of 3 each turn for %d turns.
+		return ([[Glacial fumes rise from the ground doing %0.2f cold damage in a radius of 3 each turn for %d turns.
 		The damage will increase with your Spellpower.]]):
-		format(damDesc(self, DamageType.ACID, damage), duration)
+		format(damDesc(self, DamageType.COLD, damage), duration)
 	end,
 }
 

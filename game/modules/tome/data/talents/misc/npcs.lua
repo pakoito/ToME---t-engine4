@@ -1592,3 +1592,46 @@ newTalent{
 	end,
 }
 
+newTalent{
+	name = "Corrosive Vapour",
+	type = {"spell/other",1},
+	require = spells_req1,
+	points = 5,
+	random_ego = "attack",
+	mana = 20,
+	cooldown = 8,
+	tactical = { ATTACKAREA = { ACID = 2 } },
+	range = 8,
+	radius = 3,
+	direct_hit = true,
+	requires_target = true,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
+	end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 4, 50) end,
+	getDuration = function(self, t) return self:getTalentLevel(t) + 2 end,
+	action = function(self, t)
+		local tg = self:getTalentTarget(t)
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		local _ _, _, _, x, y = self:canProject(tg, x, y)
+		-- Add a lasting map effect
+		game.level.map:addEffect(self,
+			x, y, t.getDuration(self, t),
+			DamageType.ACID, t.getDamage(self, t),
+			self:getTalentRadius(t),
+			5, nil,
+			{type="vapour"},
+			nil, self:spellFriendlyFire()
+		)
+		game:playSoundNear(self, "talents/cloud")
+		return true
+	end,
+	info = function(self, t)
+		local damage = t.getDamage(self, t)
+		local duration = t.getDuration(self, t)
+		return ([[Corrosive fumes rise from the ground doing %0.2f acid damage in a radius of 3 each turn for %d turns.
+		The damage will increase with your Spellpower.]]):
+		format(damDesc(self, DamageType.ACID, damage), duration)
+	end,
+}

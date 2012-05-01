@@ -74,7 +74,7 @@ newEntity{ base = "BASE_NPC_WIGHT",
 	combat_armor = 7, combat_def = 6,
 
 	resolvers.talents{
-		[Talents.T_FLAMESHOCK]={base=1, every=5, max=5}, [Talents.T_LIGHTNING]={base=1, every=5, max=5}, [Talents.T_CORROSIVE_VAPOUR]={base=1, every=5, max=5},
+		[Talents.T_FLAMESHOCK]={base=1, every=5, max=5}, [Talents.T_LIGHTNING]={base=1, every=5, max=5}, [Talents.T_GLACIAL_VAPOUR]={base=1, every=5, max=5},
 		[Talents.T_MIND_DISRUPTION]={base=1, every=5, max=5},
 	},
 }
@@ -87,7 +87,7 @@ newEntity{ base = "BASE_NPC_WIGHT",
 	max_life = resolvers.rngavg(70,80),
 	combat_armor = 9, combat_def = 6,
 
-	resolvers.talents{ [Talents.T_FLAMESHOCK]={base=2, every=5, max=6}, [Talents.T_LIGHTNING]={base=2, every=5, max=6}, [Talents.T_CORROSIVE_VAPOUR]={base=2, every=5, max=6},
+	resolvers.talents{ [Talents.T_FLAMESHOCK]={base=2, every=5, max=6}, [Talents.T_LIGHTNING]={base=2, every=5, max=6}, [Talents.T_GLACIAL_VAPOUR]={base=2, every=5, max=6},
 		[Talents.T_MIND_DISRUPTION]={base=2, every=5, max=6},
 	},
 }
@@ -101,7 +101,7 @@ newEntity{ base = "BASE_NPC_WIGHT",
 	max_life = resolvers.rngavg(80,90),
 	combat_armor = 10, combat_def = 8,
 
-	resolvers.talents{ [Talents.T_FLAMESHOCK]={base=3, every=5, max=7}, [Talents.T_LIGHTNING]={base=3, every=5, max=7}, [Talents.T_CORROSIVE_VAPOUR]={base=3, every=5, max=7},
+	resolvers.talents{ [Talents.T_FLAMESHOCK]={base=3, every=5, max=7}, [Talents.T_LIGHTNING]={base=3, every=5, max=7}, [Talents.T_GLACIAL_VAPOUR]={base=3, every=5, max=7},
 		[Talents.T_MIND_DISRUPTION]={base=3, every=5, max=7},
 	},
 }
@@ -122,7 +122,7 @@ newEntity{ base = "BASE_NPC_WIGHT",
 	make_escort = {
 		{type="undead", subtype="wight", number=resolvers.mbonus(2, 2)},
 	},
-	resolvers.talents{ [Talents.T_FLAMESHOCK]={base=3, every=5, max=7}, [Talents.T_LIGHTNING]={base=4, every=5, max=8}, [Talents.T_CORROSIVE_VAPOUR]={base=3, every=5, max=7}, [Talents.T_THUNDERSTORM]={base=2, every=5, max=7},
+	resolvers.talents{ [Talents.T_FLAMESHOCK]={base=3, every=5, max=7}, [Talents.T_LIGHTNING]={base=4, every=5, max=8}, [Talents.T_GLACIAL_VAPOUR]={base=3, every=5, max=7}, [Talents.T_THUNDERSTORM]={base=2, every=5, max=7},
 		[Talents.T_MIND_DISRUPTION]={base=4, every=5, max=8},
 	},
 }
