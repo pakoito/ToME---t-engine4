@@ -310,10 +310,11 @@ newTalent{
 	range = archery_range,
 	tactical = { ATTACK = { weapon = 1 }, DISABLE = { pin = 2 } },
 	requires_target = true,
+	getDur = function(self, t) return ({2, 3, 4, 4, 5})[util.bound(self:getTalentLevelRaw(t), 1, 5)] end,
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow or sling for this talent.") end return false end return true end,
 	archery_onhit = function(self, t, target, x, y)
 		if target:canBe("pin") then
-			target:setEffect(target.EFF_PINNED, 2 + self:getTalentLevelRaw(t), {apply_power=self:combatAttack()})
+			target:setEffect(target.EFF_PINNED, t.getDur(self, t), {apply_power=self:combatAttack()})
 		else
 			game.logSeen(target, "%s resists!", target.name:capitalize())
 		end
@@ -328,7 +329,7 @@ newTalent{
 		return ([[You fire a pinning shot, doing %d%% damage and pinning your target to the ground for %d turns.
 		Pinning chance increase with your Dexterity stat.]])
 		:format(self:combatTalentWeaponDamage(t, 1, 1.4) * 100,
-		2 + self:getTalentLevelRaw(t))
+		t.getDur(self, t))
 	end,
 }
 
