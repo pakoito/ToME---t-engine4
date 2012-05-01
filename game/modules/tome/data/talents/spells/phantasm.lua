@@ -28,12 +28,20 @@ newTalent{
 	range = 0,
 	radius = function(self, t) return 5 + self:getTalentLevel(t) end,
 	tactical = { DISABLE = function(self, t)
-		if self:getTalentLevel(t) >= 3 then
-			return 2
-		end
-		return 0
-	end},
-	getBlindPower = function(self, t) return 3 + self:getTalentLevel(t) end,
+			if self:getTalentLevel(t) >= 3 then
+				return 2
+			end
+			return 0
+		end,
+		ATTACKAREA = function(self, t)
+			if self:getTalentLevel(t) >= 4 then
+				return { LIGHT = 2 }
+			end
+			return 0
+		end,
+	},
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 28, 280) end,
+	getBlindPower = function(self, t) return if self:getTalentLevel(t) >= 5 then return 4 else 3 end end,
 	action = function(self, t)
 		local tg = {type="ball", range=self:getTalentRange(t), selffire=true, radius=self:getTalentRadius(t), talent=t}
 		self:project(tg, self.x, self.y, DamageType.LITE, 1)
@@ -41,14 +49,21 @@ newTalent{
 			tg.selffire= false
 			self:project(tg, self.x, self.y, DamageType.BLIND, t.getBlindPower(self, t))
 		end
+		if self:getTalentLevel(t) >= 4 then
+			tg.selffire= false
+			self:project(tg, self.x, self.y, DamageType.LIGHT, t.getDamage(self, t))
+		end
 		game:playSoundNear(self, "talents/heal")
 		return true
 	end,
 	info = function(self, t)
 		local radius = self:getTalentRadius(t)
+		local turn = self:getBlindPower(t)
+		local dam = self:getDamage(t)
 		return ([[Creates a globe of pure light with a radius of %d that illuminates the area.
-		At level 3 it also blinds all who see it (except the caster).]]):
-		format(radius)
+		At level 3 it also blinds all who see it (except the caster) for %d turns.
+		At level 4 it also deals %0.2f light damage.]]):
+		format(radius, turn, dam)
 	end,
 }
 
@@ -61,7 +76,7 @@ newTalent{
 	sustain_mana = 30,
 	cooldown = 10,
 	tactical = { BUFF = 2 },
-	getDefense = function(self, t) return self:combatTalentSpellDamage(t, 4, 30) end,
+	getDefense = function(self, t) return self:combatTalentSpellDamage(t, 6, 45) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/heal")
 		return {
@@ -88,7 +103,7 @@ newTalent{
 	mode = "sustained",
 	require = spells_req3,
 	points = 5,
-	sustain_mana = 60,
+	sustain_mana = 12,
 	cooldown = 10,
 	tactical = { BUFF = 2 },
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 50) end,
