@@ -58,8 +58,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target with two shield strikes doing %d%% and %d%% shield damage. If it hits a second time it stuns target for %d turns
-		The damage multiplier increases with your Strength and second strike with Shield Expertise talent level.]])
+		return ([[Hits the target with two shield strikes doing %d%% and %d%% shield damage. If it hits a second time it stuns target for %d turns.]])
 		:format(100 * self:combatTalentWeaponDamage(t, 1, 1.7, self:getTalentLevel(self.T_SHIELD_EXPERTISE)),
 		100 * self:combatTalentWeaponDamage(t, 1.2, 2.1, self:getTalentLevel(self.T_SHIELD_EXPERTISE)),
 		2 + self:getTalentLevel(t) / 2)
@@ -283,8 +282,8 @@ newTalent{
 	require = techs_req4,
 	mode = "sustained",
 	points = 5,
-	cooldown = 60,
-	sustain_stamina = 90,
+	cooldown = 30,
+	sustain_stamina = 50,
 	tactical = { DEFEND = 3 },
 	no_npc_use = true,
 	on_pre_use = function(self, t, silent) if not self:hasShield() then if not silent then game.logPlayer(self, "You require a weapon and a shield to use this talent.") end return false end return true end,
@@ -296,7 +295,7 @@ newTalent{
 		end
 
 		return {
-			max_life = self:addTemporaryValue("max_life", (10 + self:getCon() * 0.25) * self:getTalentLevel(t)),
+			max_life = self:addTemporaryValue("max_life", (10 + self:getCon() * 0.7) * self:getTalentLevel(t)),
 			def = self:addTemporaryValue("combat_def", 5 + self:getDex(4, true) * self:getTalentLevel(t)),
 			nomove = self:addTemporaryValue("never_move", 1),
 		}
@@ -311,7 +310,7 @@ newTalent{
 		return ([[You brace yourself for the final stand, increasing defense by %d and maximum life by %d, but making you unable to move.
 		The increase in defense is based on Dexterity and life on Constitution.]]):
 		format(5 + self:getDex(4, true) * self:getTalentLevel(t),
-		(10 + self:getCon() * 0.25) * self:getTalentLevel(t))
+		(10 + self:getCon() * 0.7) * self:getTalentLevel(t))
 	end,
 }
 
