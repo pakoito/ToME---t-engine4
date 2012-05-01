@@ -27,6 +27,7 @@ Totems
 
 newEntity{
 	name = " of cure illness", addon=true, instant_resolve=true,
+	keywords = {cureill=true},
 	level_range = {15, 50},
 	rarity = 8,
 
@@ -66,6 +67,7 @@ newEntity{
 
 newEntity{
 	name = " of cure poisons", addon=true, instant_resolve=true,
+	keywords = {curepoison=true},
 	level_range = {1, 50},
 	rarity = 8,
 
@@ -105,6 +107,7 @@ newEntity{
 
 newEntity{
 	name = " of thorny skin", addon=true, instant_resolve=true,
+	keywords = {thorny=true},
 	level_range = {1, 50},
 	rarity = 6,
 
@@ -119,6 +122,7 @@ newEntity{
 
 newEntity{
 	name = " of healing", addon=true, instant_resolve=true,
+	keywords = {heal=true},
 	level_range = {25, 50},
 	rarity = 20,
 

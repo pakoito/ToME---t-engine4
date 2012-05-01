@@ -28,14 +28,14 @@ newEntity{
 	add_name = "#CHARM# #CHARGES#",
 	use_sound = "talents/spell_generic",
 	desc = [[Magical wands are made by powerful Alchemists and Archmagi to store spells. Anybody can use them to release the spells.]],
-	egos = "/data/general/objects/egos/charms.lua", egos_chance = { prefix=resolvers.mbonus(20, 5), suffix=resolvers.mbonus(20, 5) },
+	egos = "/data/general/objects/egos/wands.lua", egos_chance = { prefix=resolvers.mbonus(20, 5), suffix=resolvers.mbonus(20, 5) },
 	addons = "/data/general/objects/egos/wands-powers.lua",
 	power_source = {arcane=true},
 	talent_cooldown = "T_GLOBAL_CD",
 }
 
 newEntity{ base = "BASE_WAND",
-	name = "elm wand",
+	name = "elm wand", short_name = "elm",
 	color = colors.UMBER,
 	level_range = {1, 10},
 	cost = 1,
@@ -44,7 +44,7 @@ newEntity{ base = "BASE_WAND",
 }
 
 newEntity{ base = "BASE_WAND",
-	name = "ash wand",
+	name = "ash wand", short_name = "ash",
 	color = colors.UMBER,
 	level_range = {10, 20},
 	cost = 2,
@@ -53,7 +53,7 @@ newEntity{ base = "BASE_WAND",
 }
 
 newEntity{ base = "BASE_WAND",
-	name = "yew wand",
+	name = "yew wand", short_name = "yew",
 	color = colors.UMBER,
 	level_range = {20, 30},
 	cost = 3,
@@ -62,7 +62,7 @@ newEntity{ base = "BASE_WAND",
 }
 
 newEntity{ base = "BASE_WAND",
-	name = "elven-wood wand",
+	name = "elven-wood wand", short_name = "e.wood",
 	color = colors.UMBER,
 	level_range = {30, 40},
 	cost = 4,
@@ -71,7 +71,7 @@ newEntity{ base = "BASE_WAND",
 }
 
 newEntity{ base = "BASE_WAND",
-	name = "dragonbone wand",
+	name = "dragonbone wand", short_name = "dargonbone",
 	color = colors.UMBER,
 	level_range = {40, 50},
 	cost = 5,

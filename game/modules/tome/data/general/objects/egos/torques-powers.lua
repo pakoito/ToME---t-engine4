@@ -22,11 +22,12 @@ Torques
 *psionic shield
 *psychoportation
 *clear mind
-mind wave
+*mind wave
 ]]
 
 newEntity{
 	name = " of psychoportation", addon=true, instant_resolve=true,
+	keywords = {psyport=true},
 	level_range = {15, 50},
 	rarity = 10,
 
@@ -42,6 +43,7 @@ newEntity{
 
 newEntity{
 	name = " of kinetic psionic shield", addon=true, instant_resolve=true,
+	keywords = {kinshield=true},
 	level_range = {1, 50},
 	rarity = 7,
 
@@ -55,6 +57,7 @@ newEntity{
 
 newEntity{
 	name = " of thermal psionic shield", addon=true, instant_resolve=true,
+	keywords = {thermshield=true},
 	level_range = {1, 50},
 	rarity = 7,
 
@@ -68,6 +71,7 @@ newEntity{
 
 newEntity{
 	name = " of charged psionic shield", addon=true, instant_resolve=true,
+	keywords = {chargedshield=true},
 	level_range = {10, 50},
 	rarity = 8,
 
@@ -81,6 +85,7 @@ newEntity{
 
 newEntity{
 	name = " of clear mind", addon=true, instant_resolve=true,
+	keywords = {clearmind=true},
 	level_range = {15, 50},
 	rarity = 12,
 
@@ -94,6 +99,7 @@ newEntity{
 
 newEntity{
 	name = " of mindblast", addon=true, instant_resolve=true,
+	keywords = {mindblast=true},
 	level_range = {15, 50},
 	rarity = 8,
 

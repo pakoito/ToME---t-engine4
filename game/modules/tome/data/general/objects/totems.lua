@@ -28,14 +28,14 @@ newEntity{
 	add_name = "#CHARM# #CHARGES#",
 	use_sound = "talents/spell_generic",
 	desc = [[Natural totems are made by powerful wilders to store nature power.]],
-	egos = "/data/general/objects/egos/charms.lua", egos_chance = { prefix=resolvers.mbonus(20, 5), suffix=resolvers.mbonus(20, 5) },
+	egos = "/data/general/objects/egos/totems.lua", egos_chance = { prefix=resolvers.mbonus(20, 5), suffix=resolvers.mbonus(20, 5) },
 	addons = "/data/general/objects/egos/totems-powers.lua",
 	power_source = {nature=true},
 	talent_cooldown = "T_GLOBAL_CD",
 }
 
 newEntity{ base = "BASE_TOTEM",
-	name = "elm totem",
+	name = "elm totem", short_name = "elm",
 	color = colors.UMBER,
 	level_range = {1, 10},
 	cost = 1,
@@ -44,7 +44,7 @@ newEntity{ base = "BASE_TOTEM",
 }
 
 newEntity{ base = "BASE_TOTEM",
-	name = "ash totem",
+	name = "ash totem", short_name = "ash",
 	color = colors.UMBER,
 	level_range = {10, 20},
 	cost = 2,
@@ -53,7 +53,7 @@ newEntity{ base = "BASE_TOTEM",
 }
 
 newEntity{ base = "BASE_TOTEM",
-	name = "yew totem",
+	name = "yew totem", short_name = "yew",
 	color = colors.UMBER,
 	level_range = {20, 30},
 	cost = 3,
@@ -62,7 +62,7 @@ newEntity{ base = "BASE_TOTEM",
 }
 
 newEntity{ base = "BASE_TOTEM",
-	name = "elven-wood totem",
+	name = "elven-wood totem", short_name = "e.wood",
 	color = colors.UMBER,
 	level_range = {30, 40},
 	cost = 4,
@@ -71,7 +71,7 @@ newEntity{ base = "BASE_TOTEM",
 }
 
 newEntity{ base = "BASE_TOTEM",
-	name = "dragonbone totem",
+	name = "dragonbone totem", short_name = "dragonbone",
 	color = colors.UMBER,
 	level_range = {40, 50},
 	cost = 5,

@@ -29,6 +29,7 @@ Wands
 
 newEntity{
 	name = " of detection", addon=true, instant_resolve=true,
+	keywords = {detect=true},
 	level_range = {1, 50},
 	rarity = 8,
 
@@ -46,6 +47,7 @@ newEntity{
 
 newEntity{
 	name = " of illumination", addon=true, instant_resolve=true,
+	keywords = {illuminate=true},
 	level_range = {1, 50},
 	rarity = 8,
 
@@ -59,6 +61,7 @@ newEntity{
 
 newEntity{
 	name = " of trap destruction", addon=true, instant_resolve=true,
+	keywords = {trap=true},
 	level_range = {1, 50},
 	rarity = 14,
 
@@ -86,6 +89,7 @@ newEntity{
 
 newEntity{
 	name = " of lightning", addon=true, instant_resolve=true,
+	keywords = {lightning=true},
 	level_range = {15, 50},
 	rarity = 10,
 
@@ -106,6 +110,7 @@ newEntity{
 
 newEntity{
 	name = " of firewall", addon=true, instant_resolve=true,
+	keywords = {firewall=true},
 	level_range = {15, 50},
 	rarity = 10,
 
@@ -126,7 +131,8 @@ newEntity{
 
 newEntity{
 	name = " of conjuration", addon=true, instant_resolve=true,
-	level_range = {10, 50},
+	keywords = {conjure=true},
+	level_range = {6, 50},
 	rarity = 6,
 
 	charm_power_def = {add=25, max=250, floor=true},

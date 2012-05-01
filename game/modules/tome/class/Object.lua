@@ -89,6 +89,12 @@ function _M:use(who, typ, inven, item)
 	if typ == "use" then
 		local ret = self:useObject(who, inven, item)
 		if ret.used then
+			if self.charm_on_use then
+				for fct, d in pairs(self.charm_on_use) do
+					if rng.percent(d[1]) then fct(self, who) end
+				end
+			end
+
 			if self.use_sound then game:playSoundNear(who, self.use_sound) end
 			if not self.use_no_energy then
 				who:useEnergy(game.energy_to_act * (inven.use_speed or 1))
@@ -155,7 +161,12 @@ function _M:descAttribute(attr)
 		return (" [power %d]"):format(self:getCharmPower())
 	elseif attr == "CHARGES" then
 		if self.talent_cooldown and (self.use_power or self.use_talent) then
-			return " ("..(self.use_power or self.use_talent).power.." cooldown)"
+			local cd = game.player.talents_cd[self.talent_cooldown]
+			if cd and cd > 0 then
+				return " ("..cd.."/"..(self.use_power or self.use_talent).power.." cooldown)"
+			else
+				return " ("..(self.use_power or self.use_talent).power.." cooldown)"
+			end
 		elseif self.use_power or self.use_talent then
 			return (" (%d/%d)"):format(math.floor(self.power / (self.use_power or self.use_talent).power), math.floor(self.max_power / (self.use_power or self.use_talent).power))
 		else
@@ -481,7 +492,7 @@ function _M:getTextualDesc(compare_with)
 		if special ~= "" then
 			desc:add(found and {"color","WHITE"} or {"color","GREEN"}, "Special effect when this weapon hits: "..special, {"color","LAST"}, true)
 		end
-		
+
 		special = ""
 		if combat.special_on_crit then
 			special = combat.special_on_crit.desc
@@ -514,7 +525,7 @@ function _M:getTextualDesc(compare_with)
 		end
 
 		compare_fields(combat, compare_with, field, "travel_speed", "%+d%%", "Travel speed: ", 100, false, false, add_table)
-		
+
 		compare_fields(combat, compare_with, field, "phase_power", "%+d%%", "Damage Shield penetration (this weapon only): ", 1, false, false, add_table)
 
 		if combat.tg_type and combat.tg_type == "beam" then
@@ -525,22 +536,22 @@ function _M:getTextualDesc(compare_with)
 				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
 				return col[2], (" %s"):format(DamageType.dam_def[item].name),{"color","LAST"}
 			end)
-			
+
 		compare_table_fields(combat, compare_with, field, "ranged_project", "%+d", "Damage when this weapon hits(ranged): ", function(item)
 				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
 				return col[2], (" %s"):format(DamageType.dam_def[item].name),{"color","LAST"}
 			end)
-		
+
 		compare_table_fields(combat, compare_with, field, "burst_on_hit", "%+d", "Burst (radius 1) on hit: ", function(item)
 				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
 				return col[2], (" %s"):format(DamageType.dam_def[item].name),{"color","LAST"}
 			end)
-			
+
 		compare_table_fields(combat, compare_with, field, "burst_on_crit", "%+d", "Burst (radius 2) on crit: ", function(item)
 				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
 				return col[2], (" %s"):format(DamageType.dam_def[item].name),{"color","LAST"}
 			end)
-		
+
 		compare_table_fields(combat, compare_with, field, "convert_damage", "%d%%", "Damage conversion: ", function(item)
 				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
 				return col[2], (" %s"):format(DamageType.dam_def[item].name),{"color","LAST"}
@@ -597,7 +608,7 @@ function _M:getTextualDesc(compare_with)
 				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
 				return col[2], (" %s"):format(item == "all" and "all" or DamageType.dam_def[item].name), {"color","LAST"}
 			end)
-		
+
 		compare_table_fields(w, compare_with, field, "resists_cap", "%+d%%", "Changes resistances cap: ", function(item)
 				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
 				return col[2], (" %s"):format(item == "all" and "all" or DamageType.dam_def[item].name), {"color","LAST"}
@@ -606,8 +617,8 @@ function _M:getTextualDesc(compare_with)
 		compare_table_fields(w, compare_with, field, "wards", "%+d", "Maximum wards: ", function(item)
 				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
 				return col[2], (" %s"):format(item == "all" and "all" or DamageType.dam_def[item].name), {"color","LAST"}
-			end)	
-		
+			end)
+
 		compare_table_fields(w, compare_with, field, "resists_pen", "%+d%%", "Changes resistances penetration: ", function(item)
 				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
 				return col[2], (" %s"):format(item == "all" and "all" or DamageType.dam_def[item].name), {"color","LAST"}
@@ -745,7 +756,7 @@ function _M:getTextualDesc(compare_with)
 			end
 			desc:add(true)
 		end
-		
+
 		-- Display learned talents
 		local any_learn_talent = 0
 		local learn_talents = {}
@@ -780,7 +791,7 @@ function _M:getTextualDesc(compare_with)
 			end
 			desc:add(true)
 		end
-	
+
 		local any_breath = 0
 		local breaths = {}
 		for i, v in ipairs(compare_with or {}) do
@@ -852,11 +863,11 @@ function _M:getTextualDesc(compare_with)
 		compare_fields(w, compare_with, field, "mana_on_crit", "%+.2f", "Mana when firing critical spell: ")
 		compare_fields(w, compare_with, field, "vim_on_crit", "%+.2f", "Vim when firing critical spell: ")
 		compare_fields(w, compare_with, field, "spellsurge_on_crit", "%+d", "Spellpower on spell critical (stacks up to 3 times): ")
-		
+
 		compare_fields(w, compare_with, field, "hate_on_crit", "%+.2f", "Hate when firing a critical mind attack: ")
 		compare_fields(w, compare_with, field, "psi_on_crit", "%+.2f", "Psi when firing a critical mind attack: ")
 		compare_fields(w, compare_with, field, "equilibrium_on_crit", "%+.2f", "Equilibrium when firing a critical mind attack: ")
-		
+
 		compare_fields(w, compare_with, field, "hate_per_kill", "+%0.2f", "Hate per kill: ")
 		compare_fields(w, compare_with, field, "psi_per_kill", "+%0.2f", "Psi per kill: ")
 
@@ -882,7 +893,7 @@ function _M:getTextualDesc(compare_with)
 
 		compare_fields(w, compare_with, field, "see_invisible", "%+d", "See invisible: ")
 		compare_fields(w, compare_with, field, "invisible", "%+d", "Invisibility: ")
-		
+
 		compare_fields(w, compare_with, field, "global_speed_add", "%+d%%", "Global speed: ", 100)
 		compare_fields(w, compare_with, field, "movement_speed", "%+d%%", "Movement speed: ", 100)
 		compare_fields(w, compare_with, field, "combat_physspeed", "%+d%%", "Combat speed: ", 100)
@@ -890,26 +901,26 @@ function _M:getTextualDesc(compare_with)
 
 		compare_fields(w, compare_with, field, "healing_factor", "%+d%%", "Healing mod.: ", 100)
 		compare_fields(w, compare_with, field, "heal_on_nature_summon", "%+d", "Heals friendly targets nearby when you use a nature summon: ")
-		
+
 		compare_fields(w, compare_with, field, "life_leech_chance", "%+d%%", "Life leech chance: ")
 		compare_fields(w, compare_with, field, "life_leech_value", "%+d%%", "Life leech: ")
 
 		compare_fields(w, compare_with, field, "resource_leech_chance", "%+d%%", "Resource leech chance: ")
 		compare_fields(w, compare_with, field, "resource_leech_value", "%+d", "Resource leech: ")
-		
+
 		compare_fields(w, compare_with, field, "damage_shield_penetrate", "%+d%%", "Damage Shield penetration: ")
-		
+
 		compare_fields(w, compare_with, field, "defense_on_teleport", "%+d", "Defense after a teleport: ")
 		compare_fields(w, compare_with, field, "resist_all_on_teleport", "%+d%%", "Resist all after a teleport: ")
 		compare_fields(w, compare_with, field, "effect_reduction_on_teleport", "%+d%%", "Effect duration reduction after a teleport: ")
-		
+
 		compare_fields(w, compare_with, field, "damage_resonance", "%+d%%", "Damage Resonance (when hit): ")
-		
+
 		compare_fields(w, compare_with, field, "size_category", "%+d", "Size category: ")
-		
+
 		compare_fields(w, compare_with, field, "nature_summon_max", "%+d", "Max wilder summons: ")
 		compare_fields(w, compare_with, field, "nature_summon_regen", "%+.2f", "Life regen bonus (wilder-summons): ")
-		
+
 		if w.undead then
 			desc:add("The wearer is treated as an undead.", true)
 		end
@@ -917,11 +928,11 @@ function _M:getTextualDesc(compare_with)
 		if w.blind_fight then
 			desc:add({"color", "YELLOW"}, "Blind-Fight:", {"color", "LAST"}, "This item allows the wearer to attack unseen targets without any penalties.", true)
 		end
-		
+
 		if w.avoid_pressure_traps then
 			desc:add({"color", "YELLOW"}, "Avoid Pressure Traps: ", {"color", "LAST"}, "The wearer never triggers traps that require pressure.", true)
 		end
-		
+
 		if w.speaks_shertul then
 			desc:add("Allows you to speak and read the old Sher'Tul language.", true)
 		end
@@ -1055,35 +1066,43 @@ function _M:getTextualDesc(compare_with)
 	end
 
 
-	
+
 	local use_desc = self:getUseDesc()
 	if use_desc then desc:merge(use_desc:toTString()) end
 	return desc
 end
 
 function _M:getUseDesc()
+	local ret = tstring{}
 	if self.use_power then
 		if self.show_charges then
-			return tstring{{"color","YELLOW"}, ("It can be used to %s, with %d charges out of %d."):format(util.getval(self.use_power.name, self), math.floor(self.power / self.use_power.power), math.floor(self.max_power / self.use_power.power)), {"color","LAST"}}
+			ret = tstring{{"color","YELLOW"}, ("It can be used to %s, with %d charges out of %d."):format(util.getval(self.use_power.name, self), math.floor(self.power / self.use_power.power), math.floor(self.max_power / self.use_power.power)), {"color","LAST"}}
 		elseif self.talent_cooldown then
-			return tstring{{"color","YELLOW"}, ("It can be used to %s, placing all other charms into a %d cooldown."):format(util.getval(self.use_power.name, self):format(self:getCharmPower()), self.use_power.power), {"color","LAST"}}
+			ret = tstring{{"color","YELLOW"}, ("It can be used to %s, placing all other charms into a %d cooldown."):format(util.getval(self.use_power.name, self):format(self:getCharmPower()), self.use_power.power), {"color","LAST"}}
 		else
-			return tstring{{"color","YELLOW"}, ("It can be used to %s, costing %d power out of %d/%d."):format(util.getval(self.use_power.name, self), self.use_power.power, self.power, self.max_power), {"color","LAST"}}
+			ret = tstring{{"color","YELLOW"}, ("It can be used to %s, costing %d power out of %d/%d."):format(util.getval(self.use_power.name, self), self.use_power.power, self.power, self.max_power), {"color","LAST"}}
 		end
 	elseif self.use_simple then
-		return tstring{{"color","YELLOW"}, ("It can be used to %s."):format(self.use_simple.name), {"color","LAST"}}
+		ret = tstring{{"color","YELLOW"}, ("It can be used to %s."):format(self.use_simple.name), {"color","LAST"}}
 	elseif self.use_talent then
 		local t = game.player:getTalentFromId(self.use_talent.id)
 		local desc = game.player:getTalentFullDescription(t, nil, {force_level=self.use_talent.level, ignore_cd=true, ignore_ressources=true, ignore_use_time=true, custom=self.use_talent.power and tstring{{"color",0x6f,0xff,0x83}, "Power cost: ", {"color",0x7f,0xff,0xd4},("%d out of %d/%d."):format(self.use_talent.power, self.power, self.max_power)}})
-		local ret
 		if self.talent_cooldown then
 			ret = tstring{{"color","YELLOW"}, "It can be used to activate talent ", t.name,", placing all other charms into a ", tostring(math.floor(self.use_talent.power)) ," cooldown :", {"color","LAST"}, true}
 		else
 			ret = tstring{{"color","YELLOW"}, "It can be used to activate talent ", t.name," (costing ", tostring(math.floor(self.use_talent.power)), " power out of ", tostring(math.floor(self.power)), "/", tostring(math.floor(self.max_power)), ") :", {"color","LAST"}, true}
 		end
 		ret:merge(desc)
-		return ret
 	end
+
+	if self.charm_on_use then
+		ret:add(true, "When used:", true)
+		for fct, d in pairs(self.charm_on_use) do
+			ret:add(tostring(d[1]), "% chances to ", d[2](self, game.player), ".", true)
+		end
+	end
+
+	return ret
 end
 
 --- Gets the full desc of the object
@@ -1330,7 +1349,8 @@ function _M:specialSetAdd(prop, value)
 	self._special_set[prop] = self:addTemporaryValue(prop, value)
 end
 
-function _M:getCharmPower()
+function _M:getCharmPower(raw)
+	if raw then return self.charm_power or 1 end
 	local def = self.charm_power_def or {add=0, max=100}
 	local v = def.add + ((self.charm_power or 1) * def.max / 100)
 	if def.floor then v = math.floor(v) end

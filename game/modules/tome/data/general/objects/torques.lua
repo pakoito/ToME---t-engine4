@@ -28,14 +28,14 @@ newEntity{
 	add_name = "#CHARM# #CHARGES#",
 	use_sound = "talents/spell_generic",
 	desc = [[Torques are made by powerful psionics to store psionic powers.]],
-	egos = "/data/general/objects/egos/charms.lua", egos_chance = { prefix=resolvers.mbonus(20, 5), suffix=resolvers.mbonus(20, 5) },
+	egos = "/data/general/objects/egos/torques.lua", egos_chance = { prefix=resolvers.mbonus(20, 5), suffix=resolvers.mbonus(20, 5) },
 	addons = "/data/general/objects/egos/torques-powers.lua",
 	power_source = {psionic=true},
 	talent_cooldown = "T_GLOBAL_CD",
 }
 
 newEntity{ base = "BASE_TORQUE",
-	name = "iron torque",
+	name = "iron torque", short_name = "iron",
 	color = colors.UMBER,
 	level_range = {1, 10},
 	cost = 1,
@@ -44,7 +44,7 @@ newEntity{ base = "BASE_TORQUE",
 }
 
 newEntity{ base = "BASE_TORQUE",
-	name = "steel torque",
+	name = "steel torque", short_name = "steel",
 	color = colors.UMBER,
 	level_range = {10, 20},
 	cost = 2,
@@ -53,7 +53,7 @@ newEntity{ base = "BASE_TORQUE",
 }
 
 newEntity{ base = "BASE_TORQUE",
-	name = "dwarven-steel torque",
+	name = "dwarven-steel torque", short_name = "d.steel",
 	color = colors.UMBER,
 	level_range = {20, 30},
 	cost = 3,
@@ -62,7 +62,7 @@ newEntity{ base = "BASE_TORQUE",
 }
 
 newEntity{ base = "BASE_TORQUE",
-	name = "stralite torque",
+	name = "stralite torque", short_name = "stralite",
 	color = colors.UMBER,
 	level_range = {30, 40},
 	cost = 4,
@@ -71,7 +71,7 @@ newEntity{ base = "BASE_TORQUE",
 }
 
 newEntity{ base = "BASE_TORQUE",
-	name = "voratun torque",
+	name = "voratun torque", short_name = "voratun",
 	color = colors.UMBER,
 	level_range = {40, 50},
 	cost = 5,
