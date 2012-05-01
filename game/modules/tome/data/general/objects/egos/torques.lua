@@ -67,3 +67,31 @@ newEntity{
 		learn_talent = {[Talents.T_WARD] = 1},
 	},
 }
+
+newEntity{
+	name = "quiet ", prefix=true,
+	keywords = {quiest=true},
+	level_range = {30, 50},
+	rarity = 12,
+	greater_ego = 1,
+	cost = 5,
+
+	wielder = {
+		talent_cd_reduction={[Talents.T_SILENCE]=-5},
+		learn_talent = {[Talents.T_SILENCE] = resolvers.mbonus_material(4, 1)},
+	},
+}
+
+newEntity{
+	name = "telekinetic ", prefix=true,
+	keywords = {telekinetic=true},
+	level_range = {30, 50},
+	rarity = 12,
+	greater_ego = 1,
+	cost = 5,
+
+	wielder = {
+		talent_cd_reduction={[Talents.T_TELEKINETIC_BLAST]=-5},
+		learn_talent = {[Talents.T_TELEKINETIC_BLAST] = resolvers.mbonus_material(4, 1)},
+	},
+}
