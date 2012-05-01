@@ -19,6 +19,7 @@
 
 newEntity{
 	name = "quick ", prefix=true,
+	keywords = {quick=true},
 	level_range = {1, 50},
 	rarity = 15,
 	cost = 5,
@@ -31,6 +32,7 @@ newEntity{
 
 newEntity{
 	name = "supercharded ", prefix=true,
+	keywords = {['super.c']=true},
 	level_range = {1, 50},
 	rarity = 15,
 	cost = 5,

@@ -62,10 +62,10 @@ Each swing drips pestulant fluid before it, and each droplet writhes and wriggle
 	stun_immune = 1,
 	blind_immune = 1,
 	disease_immune = 1,
-	
+
 	combat_spellspeed = 1.3,
 	combat_spellpower = resolvers.levelup(10, 1, 1),
-	
+
 
 	resists = { [DamageType.PHYSICAL] = 50, [DamageType.ACID] = 100, [DamageType.BLIGHT] = 100, [DamageType.FIRE] = -50},
 	inc_damage = { [DamageType.BLIGHT] = 20, },
@@ -419,7 +419,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 
 	blind_immune = 1,
 	see_invisible = 10,
-		
+
 	resolvers.talents{
 		[Talents.T_CHANT_OF_FORTITUDE]={base=3, every=6, max=8},
 		[Talents.T_SEARING_LIGHT]={base=3, every=6, max=8},
@@ -530,6 +530,7 @@ You can discern a huge round mouth covered in razor-sharp teeth.]],
 	no_breath = 1,
 	size_category = 4,
 	movement_speed = 0.8,
+	is_grgglck = true,
 
 	stun_immune = 1,
 	knockback_immune = 1,
@@ -596,9 +597,13 @@ newEntity{ base="BASE_NPC_HORROR", define_as = "GRGGLCK_TENTACLE",
 	end,
 
 	on_die = function(self, who)
-		if self.summoner and not self.summoner.dead then
+		if self.summoner and not self.summoner.dead and who then
 			game.logSeen(self, "#AQUAMARINE#As %s falls you notice that %s seems to shudder in pain!", self.name, self.summoner.name)
-			self.summoner:takeHit(self.max_life, who)
+			if self.summoner.is_grgglck then
+				self.summoner:takeHit(self.max_life, who)
+			else
+				self.summoner:takeHit(self.max_life * 0.66, who)
+			end
 		end
 	end,
 }

@@ -1185,6 +1185,10 @@ newTalent{
 
 			m.summoner = self
 			m.summon_time = 10
+			if not self.is_grgglck then
+				m.ai_real = m.ai
+				m.ai = "summoned"
+			end
 
 			game.zone:addEntity(game.level, m, "actor", x, y)
 
@@ -1356,7 +1360,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Summons a small raging volcano for %d turns. Every turns it will fire %d molten boulders toward your foes, dealing %0.2f fire and %0.2f physical damage.]]):
+		return ([[Summons a small raging volcano for %d turns. Every turns it will fire %d molten boulders toward your foes, dealing %0.2f fire and %0.2f physical damage.
+		The damage will scale with Spellpower.]]):
 		format(4 + self:getTalentLevel(t), math.floor(self:getTalentLevel(self.T_VOLCANO)), damDesc(self, DamageType.FIRE, self:combatTalentSpellDamage(self.T_VOLCANO, 15, 80) / 2), damDesc(self, DamageType.PHYSICAL, self:combatTalentSpellDamage(self.T_VOLCANO, 15, 80) / 2))
 	end,
 }

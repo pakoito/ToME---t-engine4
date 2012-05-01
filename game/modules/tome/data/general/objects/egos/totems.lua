@@ -17,10 +17,14 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local Talents = require "engine.interface.ActorTalents"
+local DamageType = require "engine.DamageType"
+
 load("/data/general/objects/egos/charms.lua")
 
 newEntity{
 	name = "natural ", prefix=true,
+	keywords = {natural=true},
 	level_range = {10, 50},
 	rarity = 12,
 	cost = 5,
@@ -34,6 +38,7 @@ newEntity{
 
 newEntity{
 	name = "forcefull ", prefix=true,
+	keywords = {force=true},
 	level_range = {10, 50},
 	rarity = 12,
 	cost = 5,
@@ -43,4 +48,62 @@ newEntity{
 			who:incStamina(self:getCharmPower(true) / 6)
 		end] = {100, function(self, who) return ("regenerate %d stamina"):format(self:getCharmPower(true) / 6) end},
 	}
+}
+
+newEntity{
+	name = "warded ", prefix=true,
+	keywords = {ward=true},
+	level_range = {30, 50},
+	rarity = 12,
+	greater_ego = 1,
+	cost = 5,
+
+	wielder = {
+		wards = {
+			[DamageType.NATURE] = resolvers.mbonus_material(4, 1),
+			[DamageType.ACID] = resolvers.mbonus_material(4, 1),
+			[DamageType.LIGHT] = resolvers.mbonus_material(4, 1),
+		},
+		learn_talent = {[Talents.T_WARD] = 1},
+	},
+}
+
+newEntity{
+	name = "rushing ", prefix=true,
+	keywords = {rushing=true},
+	level_range = {30, 50},
+	rarity = 12,
+	greater_ego = 1,
+	cost = 5,
+
+	wielder = {
+		learn_talent = {[Talents.T_RUSHING_CLAWS] = resolvers.mbonus_material(4, 1)},
+	},
+}
+
+newEntity{
+	name = "webbed ", prefix=true,
+	keywords = {webbed=true},
+	level_range = {30, 50},
+	rarity = 12,
+	greater_ego = 1,
+	cost = 5,
+
+	wielder = {
+		learn_talent = {[Talents.T_LAY_WEB] = resolvers.mbonus_material(4, 1)},
+	},
+}
+
+newEntity{
+	name = "tentacled ", prefix=true,
+	keywords = {tentacled=true},
+	level_range = {30, 50},
+	rarity = 12,
+	greater_ego = 1,
+	cost = 5,
+
+	wielder = {
+		talent_cd_reduction={[Talents.T_INVOKE_TENTACLE]=-5},
+		learn_talent = {[Talents.T_INVOKE_TENTACLE] = 1},
+	},
 }

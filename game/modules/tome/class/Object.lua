@@ -195,6 +195,14 @@ end
 function _M:getDisplayColor()
 	if not self:isIdentified() then return {180, 180, 180}, "#B4B4B4#" end
 	if self.lore then return {0, 128, 255}, "#0080FF#"
+	elseif self.unique then
+		if self.randart then
+			return {255, 0x77, 0}, "#FF7700#"
+		elseif self.godslayer then
+			return {0xAA, 0xD5, 0x00}, "#AAD500#"
+		else
+			return {255, 215, 0}, "#FFD700#"
+		end
 	elseif self.egoed then
 		if self.greater_ego then
 			if self.greater_ego > 1 then
@@ -204,14 +212,6 @@ function _M:getDisplayColor()
 			end
 		else
 			return {0, 255, 128}, "#00FF80#"
-		end
-	elseif self.unique then
-		if self.randart then
-			return {255, 0x77, 0}, "#FF7700#"
-		elseif self.godslayer then
-			return {0xAA, 0xD5, 0x00}, "#AAD500#"
-		else
-			return {255, 215, 0}, "#FFD700#"
 		end
 	else return {255, 255, 255}, "#FFFFFF#"
 	end

@@ -17,10 +17,14 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local Talents = require "engine.interface.ActorTalents"
+local DamageType = require "engine.DamageType"
+
 load("/data/general/objects/egos/charms.lua")
 
 newEntity{
 	name = "arcane ", prefix=true,
+	keywords = {arcane=true},
 	level_range = {10, 50},
 	rarity = 12,
 	cost = 5,
@@ -34,6 +38,7 @@ newEntity{
 
 newEntity{
 	name = "defiled ", prefix=true,
+	keywords = {defiled=true},
 	level_range = {10, 50},
 	rarity = 12,
 	cost = 5,
@@ -47,6 +52,7 @@ newEntity{
 
 newEntity{
 	name = "bright ", prefix=true,
+	keywords = {bright=true},
 	level_range = {10, 50},
 	rarity = 12,
 	cost = 5,
@@ -60,6 +66,7 @@ newEntity{
 
 newEntity{
 	name = "shadowy ", prefix=true,
+	keywords = {shadow=true},
 	level_range = {10, 50},
 	rarity = 12,
 	cost = 5,
@@ -69,4 +76,64 @@ newEntity{
 			who:incNegative(self:getCharmPower(true) / 8)
 		end] = {100, function(self, who) return ("regenerate %d negative energy"):format(self:getCharmPower(true) / 8) end},
 	}
+}
+
+newEntity{
+	name = "warded ", prefix=true,
+	keywords = {ward=true},
+	level_range = {30, 50},
+	rarity = 12,
+	greater_ego = 1,
+	cost = 5,
+
+	wielder = {
+		wards = {
+			[DamageType.FIRE] = resolvers.mbonus_material(4, 1),
+			[DamageType.COLD] = resolvers.mbonus_material(4, 1),
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(4, 1),
+			[DamageType.TEMPORAL] = resolvers.mbonus_material(4, 1),
+			[DamageType.BLIGHT] = resolvers.mbonus_material(4, 1),
+		},
+		learn_talent = {[Talents.T_WARD] = 1},
+	},
+}
+
+newEntity{
+	name = "void ", prefix=true,
+	keywords = {void=true},
+	level_range = {30, 50},
+	rarity = 12,
+	greater_ego = 1,
+	cost = 5,
+
+	wielder = {
+		talent_cd_reduction={[Talents.T_VOID_BLAST]=-6},
+		learn_talent = {[Talents.T_VOID_BLAST] = resolvers.mbonus_material(4, 1)},
+	},
+}
+
+newEntity{
+	name = "volcanic ", prefix=true,
+	keywords = {volcanic=true},
+	level_range = {30, 50},
+	rarity = 12,
+	greater_ego = 1,
+	cost = 5,
+
+	wielder = {
+		learn_talent = {[Talents.T_VOLCANO] = resolvers.mbonus_material(4, 1)},
+	},
+}
+
+newEntity{
+	name = "striking ", prefix=true,
+	keywords = {striking=true},
+	level_range = {30, 50},
+	rarity = 12,
+	greater_ego = 1,
+	cost = 5,
+
+	wielder = {
+		learn_talent = {[Talents.T_STRIKE] = resolvers.mbonus_material(4, 1)},
+	},
 }

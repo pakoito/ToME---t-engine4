@@ -1115,7 +1115,13 @@ function _M:setupCommands()
 			end end
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
-			self.player:loadBuildOrder("bomber-alchemist.csv")
+			local base = game.zone:makeEntity(game.level, "object", {ingore_material_restriction=true, no_tome_drops=true, ego_filter={keep_egos=true, ego_chance=-1000}, type='charm',subtype='wand'}, nil, true)
+			local a = self.state:generateRandart(false, base, 50, 3)
+			local o = a:clone()
+			o:resolve()
+			o:resolve(nil, true)
+			o:identify(true)
+			game.zone:addEntity(game.level, o, "object", self.player.x, self.player.y)
 		end end,
 		[{"_f","ctrl"}] = function() if config.settings.cheat then
 			self.player.quests["love-melinda"] = nil

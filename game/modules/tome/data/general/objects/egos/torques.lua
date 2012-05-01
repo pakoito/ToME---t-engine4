@@ -17,10 +17,14 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local Talents = require "engine.interface.ActorTalents"
+local DamageType = require "engine.DamageType"
+
 load("/data/general/objects/egos/charms.lua")
 
 newEntity{
 	name = "psionic ", prefix=true,
+	keywords = {psi=true},
 	level_range = {10, 50},
 	rarity = 12,
 	cost = 5,
@@ -34,6 +38,7 @@ newEntity{
 
 newEntity{
 	name = "hateful ", prefix=true,
+	keywords = {hate=true},
 	level_range = {10, 50},
 	rarity = 12,
 	cost = 5,
@@ -43,4 +48,22 @@ newEntity{
 			who:incHate(-self:getCharmPower(true) / 7)
 		end] = {100, function(self, who) return ("regenerate %d hate"):format(self:getCharmPower(true) / 7) end},
 	}
+}
+
+newEntity{
+	name = "warded ", prefix=true,
+	keywords = {ward=true},
+	level_range = {30, 50},
+	rarity = 12,
+	greater_ego = 1,
+	cost = 5,
+
+	wielder = {
+		wards = {
+			[DamageType.MIND] = resolvers.mbonus_material(4, 1),
+			[DamageType.PHYSICAL] = resolvers.mbonus_material(2, 1),
+			[DamageType.DARKNESS] = resolvers.mbonus_material(4, 1),
+		},
+		learn_talent = {[Talents.T_WARD] = 1},
+	},
 }
