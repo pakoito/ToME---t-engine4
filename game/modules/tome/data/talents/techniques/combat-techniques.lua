@@ -190,13 +190,13 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	on_learn = function(self, t)
-		self.combat_spellresist = self.combat_spellresist + 6
+		self.combat_spellresist = self.combat_spellresist + 8
 	end,
 	on_unlearn = function(self, t)
-		self.combat_spellresist = self.combat_spellresist - 6
+		self.combat_spellresist = self.combat_spellresist - 8
 	end,
 	info = function(self, t)
-		return ([[Rigorous training allows you to be more resistant to some spell effects. (+%d spell save).]]):format(self:getTalentLevelRaw(t) * 6)
+		return ([[Rigorous training allows you to be more resistant to some spell effects. (+%d spell save).]]):format(self:getTalentLevelRaw(t) * 8)
 	end,
 }
 
