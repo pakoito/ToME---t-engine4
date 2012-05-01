@@ -48,7 +48,7 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	require = cuns_req2,
-	getSpellpower = function(self, t) return 15 + self:getTalentLevel(t) * 3 end,
+	getSpellpower = function(self, t) return 15 + self:getTalentLevel(t) * 5 end,
 	info = function(self, t)
 		local spellpower = t.getSpellpower(self, t)
 		return ([[The user gains a bonus to spellpower equal to %d%% of their cunning.]]):

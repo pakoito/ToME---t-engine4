@@ -313,7 +313,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 			atk = atk + effPredator.typeAttackChange
 		end
 	end
-	
+
 	if target.knowTalent and target:knowTalent(target.T_GESTURE_OF_GUARDING) then
 		local t = target:getTalentFromId(target.T_GESTURE_OF_GUARDING)
 		mult = mult * (100 + t.getDamageChange(target, t)) / 100
@@ -1026,7 +1026,7 @@ function _M:combatSpellpower(mod)
 		add = add + (15 + self:getTalentLevel(self.T_ARCANE_DEXTERITY) * 5) * self:getDex() / 100
 	end
 	if self:knowTalent(self.T_SHADOW_CUNNING) then
-		add = add + (15 + self:getTalentLevel(self.T_SHADOW_CUNNING) * 3) * self:getCun() / 100
+		add = add + (15 + self:getTalentLevel(self.T_SHADOW_CUNNING) * 5) * self:getCun() / 100
 	end
 	if self:hasEffect(self.EFF_BLOODLUST) then
 		add = add + self:hasEffect(self.EFF_BLOODLUST).dur
@@ -1356,7 +1356,7 @@ function _M:combatMovementSpeed(x, y)
 	if game.level and game.level.data.zero_gravity then
 		mult = 3
 	end
-	
+
 	local movement_speed = self.movement_speed
 	if x and y and game.level.map:checkAllEntities(x, y, "creepingDark") and self:knowTalent(self.T_DARK_VISION) then
 		local t = self:getTalentFromId(self.T_DARK_VISION)
