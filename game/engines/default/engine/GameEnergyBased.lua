@@ -97,6 +97,19 @@ end
 function _M:tickLevel(level)
 	local i, e
 	local arr = level.e_array
+
+	if level.last_iteration then
+		i = nil
+
+		for ii = 1, #arr do if arr[ii] == level.last_iteration.e then i = ii + 1 break end end
+
+		if not i then i = level.last_iteration.i + 1 end
+
+		if i > #arr then i = 1 end
+		level.last_iteration = nil
+--		print("=====LEVEL", level.level, level.sublevel_id, "resuming tick loop at ", i, arr[i].name)
+	end
+
 	for i = 1, #arr do
 		e = arr[i]
 		if e and e.act and e.energy then
@@ -109,7 +122,7 @@ function _M:tickLevel(level)
 				end
 			end
 
---				print("<ENERGY", e.name, e.uid, "::", e.energy.value, self.paused, "::", e.player)
+--			print("<ENERGY", e.name, e.uid, "::", e.energy.value, self.paused, "::", e.player)
 			if e.energy.value < self.energy_to_act then
 				e.energy.value = (e.energy.value or 0) + self.energy_per_tick * (e.energy.mod or 1) * (e.global_speed or 1)
 			end
@@ -117,7 +130,13 @@ function _M:tickLevel(level)
 				e.energy.used = false
 				e:act(self)
 			end
---				print(">ENERGY", e.name, e.uid, "::", e.energy.value, self.paused, "::", e.player)
+--			print(">ENERGY", e.name, e.uid, "::", e.energy.value, self.paused, "::", e.player)
+
+			if self.paused then
+				level.last_iteration = {i=i, e=e}
+--				print("====LEVEL", level.level, level.sublevel_id, "pausing tick loop at ", i, e.name)
+				break
+			end
 		end
 	end
 end
