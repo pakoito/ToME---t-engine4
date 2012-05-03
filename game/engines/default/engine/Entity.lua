@@ -155,6 +155,11 @@ function _M:changeUid(newuid)
 	__uids[self.uid] = self
 end
 
+--- Try to remove all "un-needed" effects, fields, ... for a clean export
+-- This does nothing by default
+function _M:stripForExport()
+end
+
 --- Setup minimap color for this entity
 -- You may overload this method to customize your minimap
 function _M:setupMinimapInfo(mo, map)

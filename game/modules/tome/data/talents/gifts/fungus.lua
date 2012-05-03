@@ -29,7 +29,6 @@ newTalent{
 	getDur = function(self, t) return math.max(1,  math.floor(self:getTalentLevel(t))) end,
 	activate = function(self, t)
 		local dur = t.getDur(self, t)
-		local regen = t.getRegen(self, t)
 		game:playSoundNear(self, "talents/heal")
 		local ret = {
 			dur = self:addTemporaryValue("liferegen_dur", dur),

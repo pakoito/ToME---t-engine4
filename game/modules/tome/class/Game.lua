@@ -1607,9 +1607,9 @@ function _M:saveGame()
 		local party = self.party:cloneFull()
 		party.__te4_uuid = self:getPlayer(true).__te4_uuid
 		for m, _ in pairs(party.members) do
-			m.fov = {actors={}, actors_dist={}}
-			m.running_fov = nil
+			m:stripForExport()
 		end
+		party:stripForExport()
 		self.player:saveUUID(party)
 
 		self.party:setPlayer(oldplayer, true)

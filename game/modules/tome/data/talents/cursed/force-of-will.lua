@@ -141,7 +141,7 @@ newTalent{
 		local knockback = t.getKnockback(self, t)
 		return ([[Focusing your hate, you strike your foe with unseen force for %d damage and %d knockback.
 		Your ability to channel force increases all critical damage by 3%% per point (current: %d%%)
-		Damage increases with your Mindpower.]]):format(damDesc(self, DamageType.PHYSICAL, damage), knockback, self.combat_critical_power)
+		Damage increases with your Mindpower.]]):format(damDesc(self, DamageType.PHYSICAL, damage), knockback, self.combat_critical_power or 0)
 	end,
 }
 
@@ -215,7 +215,7 @@ newTalent{
 		local maxDamage = t.getMaxDamage(self, t)
 		return ([[Deflect 50%% of incoming damage with the force of your will. You may deflect up to %d damage, but first your hate must slowly feed your strength (-0.2 hate regeneration while building strength).
 		Your ability to channel force increases all critical damage by 3%% per point (current: %d%%)
-		The maximum damage deflected increases with your Mindpower.]]):format(maxDamage, self.combat_critical_power)
+		The maximum damage deflected increases with your Mindpower.]]):format(maxDamage, self.combat_critical_power or 0)
 	end,
 }
 
@@ -292,7 +292,7 @@ newTalent{
 		local dazeDuration = t.getDazeDuration(self, t)
 		return ([[You rage coalesces at a single point and then explodes outward blasting enemies within a radius of %d in all directions. The blast causes %d damage and %d knockback at the center that decreases with distance. Anyone caught in the explosion will also be dazed for 3 turns.
 		Your ability to channel force increases all critical damage by 3%% per point (current: %d%%)
-		Damage increases with your Mindpower.]]):format(radius, damDesc(self, DamageType.PHYSICAL, damage), knockback, self.combat_critical_power)
+		Damage increases with your Mindpower.]]):format(radius, damDesc(self, DamageType.PHYSICAL, damage), knockback, self.combat_critical_power or 0)
 	end,
 }
 
@@ -374,7 +374,7 @@ newTalent{
 		local secondHitChance = t.getSecondHitChance(self, t)
 		return ([[Your fury becomes an unseen force that randomly lashes out at the foes around you. For %d turns you strike one nearby target doing %d damage and %d knockback. At higher levels there is a %d%% chance of a second strike.
 		Your ability to channel force increases all critical damage by 3%% per point (current: %d%%)
-		Damage increases with your Mindpower.]]):format(duration, damDesc(self, DamageType.PHYSICAL, damage), knockback, secondHitChance, self.combat_critical_power)
+		Damage increases with your Mindpower.]]):format(duration, damDesc(self, DamageType.PHYSICAL, damage), knockback, secondHitChance, self.combat_critical_power or 0)
 	end,
 }
 

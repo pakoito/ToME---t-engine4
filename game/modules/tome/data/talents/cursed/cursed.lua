@@ -31,9 +31,9 @@ newTalentType{ allow_random=true, type="cursed/force-of-will", name = "force of 
 newTalentType{ allow_random=true, type="cursed/darkness", name = "darkness", description = "Harness the power of darkness to envelop your foes." }
 newTalentType{ allow_random=true, type="cursed/shadows", name = "shadows", description = "Summon shadows from the darkness to aid you." }
 newTalentType{ allow_random=true, type="cursed/punishments", name = "punishments", description = "Your hate becomes punishment in the minds of your foes." }
-newTalentType{ allow_random=true, type="cursed/gestures", name = "gestures", description = "Enhance the power of you mind with gestures." }
 
 -- Generic
+newTalentType{ allow_random=true, type="cursed/gestures", name = "gestures", generic = true, description = "Enhance the power of you mind with gestures." }
 newTalentType{ allow_random=true, type="cursed/cursed-form", name = "cursed form", generic = true, description = "You are wracked with the dark energies of the curse." }
 newTalentType{ allow_random=true, type="cursed/cursed-aura", name = "cursed aura", generic = true, description = "The things you surround yourself with soon wither away." }
 newTalentType{ allow_random=false, type="cursed/curses", name = "curses", hide = true, description = "The effects of cursed objects." }

@@ -234,6 +234,31 @@ function _M:onEntityMerge(a)
 	end
 end
 
+--- Try to remove all "un-needed" effects, fields, ... for a clean export
+function _M:stripForExport()
+	self.distance_map = {}
+	self.fov = {actors={}, actors_dist={}}
+	self.running_fov = nil
+	self.running_prev = nil
+	self.killedBy = nil
+	self.quests = {}
+	self.dialog = nil
+	self:setTarget(nil)
+
+	-- Disable all sustains, remove all effects
+	local list = {}
+	for eff_id, _ in pairs(self.tmp) do list[#list+1] = eff_id end
+	for _, eff_id in ipairs(list) do self:removeEffect(eff_id, true, true) end
+
+	list = {}
+	for tid, act in pairs(self.sustain_talents) do if act then list[#list+1] = tid end end
+	while #list > 0 do
+		local eff = rng.tableRemove(list)
+		self:forceUseTalent(eff, {ignore_energy=true, no_equilibrium_fail=true, no_paradox_fail=true})
+	end
+end
+	
+
 function _M:useEnergy(val)
 	engine.Actor.useEnergy(self, val)
 
@@ -3220,6 +3245,8 @@ end
 -- You may overload it to add more data (like power usage, ...)
 function _M:getTalentFullDescription(t, addlevel, config)
 	if not t then return tstring{"no talent"} end
+
+	print("=====",t.name,t.type[1])
 
 	config = config or {}
 	local old = self.talents[t.id]
