@@ -87,6 +87,25 @@ function _M:display(dispx, dispy)
 	-- Do not display if not requested
 	if not self.active then return end
 
+	local display_highlight
+	if util.isHex() then
+		display_highlight = function(texture, tx, ty)
+			texture:toScreenHighlightHex(
+				self.display_x + (tx - game.level.map.mx) * self.tile_w * Map.zoom,
+				self.display_y + (ty - game.level.map.my + util.hexOffset(tx)) * self.tile_h * Map.zoom,
+				self.tile_w * Map.zoom,
+				self.tile_h * Map.zoom)
+			end
+	else
+		display_highlight = function(texture, tx, ty)
+			texture:toScreen(
+				self.display_x + (tx - game.level.map.mx) * self.tile_w * Map.zoom,
+				self.display_y + (ty - game.level.map.my) * self.tile_h * Map.zoom,
+				self.tile_w * Map.zoom,
+				self.tile_h * Map.zoom)
+			end
+	end
+
 	local s = self.sb
 	local l
 	if self.target_type.source_actor.lineFOV then
@@ -115,7 +134,7 @@ function _M:display(dispx, dispy)
 			s = self.sr
 		end
 		if game.level.map:isBound(blocked_corner_x, blocked_corner_y) then
-			s:toScreen(self.display_x + (blocked_corner_x - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (blocked_corner_y - game.level.map.my + util.hexOffset(blocked_corner_x)) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
+			display_highlight(s, blocked_corner_x, blocked_corner_y)
 		end
 		s = self.sr
 	end
@@ -147,7 +166,7 @@ function _M:display(dispx, dispy)
 				end
 			end
 		end
-		s:toScreen(self.display_x + (lx - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (ly - game.level.map.my + util.hexOffset(lx)) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
+		display_highlight(s, lx, ly)
 		if block then
 			s = self.sr
 			stopped = true
@@ -162,8 +181,8 @@ function _M:display(dispx, dispy)
 			s = self.sr
 			-- double the fun :-P
 			if game.level.map:isBound(blocked_corner_x, blocked_corner_y) then
-				s:toScreen(self.display_x + (blocked_corner_x - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (blocked_corner_y - game.level.map.my + util.hexOffset(blocked_corner_x)) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
-				s:toScreen(self.display_x + (blocked_corner_x - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (blocked_corner_y - game.level.map.my + util.hexOffset(blocked_corner_x)) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
+				display_highlight(s, blocked_corner_x, blocked_corner_y)
+				display_highlight(s, blocked_corner_x, blocked_corner_y)
 			end
 		end
 
@@ -182,15 +201,9 @@ function _M:display(dispx, dispy)
 			end,
 			function(_, px, py)
 				if not self.target_type.no_restrict and not game.level.map.remembers(px, py) and not game.level.map.seens(px, py) then
-					self.syg:toScreen(self.display_x + (px - game.level.map.mx) * self.tile_w * Map.zoom,
-					self.display_y + (py - game.level.map.my + util.hexOffset(px)) * self.tile_h * Map.zoom,
-					self.tile_w * Map.zoom,
-					self.tile_h * Map.zoom)
+					display_highlight(self.syg, px, py)
 				else
-					self.sg:toScreen(self.display_x + (px - game.level.map.mx) * self.tile_w * Map.zoom,
-					self.display_y + (py - game.level.map.my + util.hexOffset(px)) * self.tile_h * Map.zoom,
-					self.tile_w * Map.zoom,
-					self.tile_h * Map.zoom)
+					display_highlight(self.sg, px, py)
 				end
 			end,
 		nil)
@@ -212,15 +225,9 @@ function _M:display(dispx, dispy)
 			end,
 			function(_, px, py)
 				if not self.target_type.no_restrict and not game.level.map.remembers(px, py) and not game.level.map.seens(px, py) then
-					self.syg:toScreen(self.display_x + (px - game.level.map.mx) * self.tile_w * Map.zoom,
-					self.display_y + (py - game.level.map.my + util.hexOffset(px)) * self.tile_h * Map.zoom,
-					self.tile_w * Map.zoom,
-					self.tile_h * Map.zoom)
+					display_highlight(self.syg, px, py)
 				else
-					self.sg:toScreen(self.display_x + (px - game.level.map.mx) * self.tile_w * Map.zoom,
-					self.display_y + (py - game.level.map.my + util.hexOffset(px)) * self.tile_h * Map.zoom,
-					self.tile_w * Map.zoom,
-					self.tile_h * Map.zoom)
+					display_highlight(self.sg, px, py)
 				end
 			end,
 		nil)
@@ -241,15 +248,9 @@ function _M:display(dispx, dispy)
 			end,
 			function(_, px, py)
 				if not self.target_type.no_restrict and not game.level.map.remembers(px, py) and not game.level.map.seens(px, py) then
-					self.syg:toScreen(self.display_x + (px - game.level.map.mx) * self.tile_w * Map.zoom,
-					self.display_y + (py - game.level.map.my + util.hexOffset(px)) * self.tile_h * Map.zoom,
-					self.tile_w * Map.zoom,
-					self.tile_h * Map.zoom)
+					display_highlight(self.syg, px, py)
 				else
-					self.sg:toScreen(self.display_x + (px - game.level.map.mx) * self.tile_w * Map.zoom,
-					self.display_y + (py - game.level.map.my + util.hexOffset(px)) * self.tile_h * Map.zoom,
-					self.tile_w * Map.zoom,
-					self.tile_h * Map.zoom)
+					display_highlight(self.sg, px, py)
 				end
 			end,
 		nil)

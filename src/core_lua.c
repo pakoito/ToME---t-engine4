@@ -1477,6 +1477,78 @@ static int sdl_texture_toscreen(lua_State *L)
 	return 0;
 }
 
+static int sdl_texture_toscreen_highlight_hex(lua_State *L)
+{
+	GLuint *t = (GLuint*)auxiliar_checkclass(L, "gl{texture}", 1);
+	int x = luaL_checknumber(L, 2);
+	int y = luaL_checknumber(L, 3);
+	int w = luaL_checknumber(L, 4);
+	int h = luaL_checknumber(L, 5);
+	if (lua_isnumber(L, 6))
+	{
+		float r = luaL_checknumber(L, 6);
+		float g = luaL_checknumber(L, 7);
+		float b = luaL_checknumber(L, 8);
+		float a = luaL_checknumber(L, 9);
+		GLfloat colors[4*8] = {
+			r, g, b, a,
+			r, g, b, a,
+			r, g, b, a,
+			r, g, b, a,
+			r, g, b, a,
+			r, g, b, a,
+			r, g, b, a,
+			r, g, b, a,
+		};
+		glColorPointer(4, GL_FLOAT, 0, colors);
+	}
+	else
+	{
+		// A very slight gradient to give some definition to the texture
+		GLfloat colors[4*8] = {
+			0.9, 0.9, 0.9, 1,
+			0.9, 0.9, 0.9, 1,
+			1, 1, 1, 1,
+			1, 1, 1, 1,
+			0.9, 0.9, 0.9, 1,
+			0.8, 0.8, 0.8, 1,
+			0.8, 0.8, 0.8, 1,
+			0.9, 0.9, 0.9, 1,
+		};
+		glColorPointer(4, GL_FLOAT, 0, colors);
+	}
+
+	tglBindTexture(GL_TEXTURE_2D, *t);
+
+	GLfloat texcoords[2*8] = {
+		0, 0,
+		0, 1,
+		1, 1,
+		1, 0,
+		1, 0,
+		1, 0,
+		1, 0,
+		1, 0,
+	};
+
+	float f = x - w/6.0;
+	float v = 4.0*w/3.0;
+	glTexCoordPointer(2, GL_FLOAT, 0, texcoords);
+	GLfloat vertices[2*8] = {
+		x + 0.5*v,  y + 0.5*h,
+		f + 0.25*v, y,
+		f,          y + 0.5*h,
+		f + 0.25*v, y + h,
+		f + 0.75*v, y + h,
+		f + v,      y + 0.5*h,
+		f + 0.75*v, y,
+		f + 0.25*v, y,
+	};
+	glVertexPointer(2, GL_FLOAT, 0, vertices);
+	glDrawArrays(GL_TRIANGLE_FAN, 0, 8);
+	return 0;
+}
+
 static int sdl_texture_toscreen_full(lua_State *L)
 {
 	GLuint *t = (GLuint*)auxiliar_checkclass(L, "gl{texture}", 1);
@@ -2361,6 +2433,7 @@ static const struct luaL_reg sdl_texture_reg[] =
 	{"toScreen", sdl_texture_toscreen},
 	{"toScreenFull", sdl_texture_toscreen_full},
 	{"toScreenPrecise", sdl_texture_toscreen_precise},
+	{"toScreenHighlightHex", sdl_texture_toscreen_highlight_hex},
 	{"makeOutline", sdl_texture_outline},
 	{"toSurface", gl_texture_to_sdl},
 	{"bind", sdl_texture_bind},
