@@ -1115,13 +1115,19 @@ function _M:setupCommands()
 			end end
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
-			local base = game.zone:makeEntity(game.level, "object", {ingore_material_restriction=true, no_tome_drops=true, ego_filter={keep_egos=true, ego_chance=-1000}, type='charm',subtype='wand'}, nil, true)
-			local a = self.state:generateRandart(false, base, 50, 3)
-			local o = a:clone()
-			o:resolve()
-			o:resolve(nil, true)
-			o:identify(true)
-			game.zone:addEntity(game.level, o, "object", self.player.x, self.player.y)
+			local m = game.zone:makeEntity(game.level, "actor", {random_boss={
+				nb_classes=1,
+				rank=3, ai = "tactical",
+				life_rating=function(v) return v * 1.3 + 2 end,
+				loot_quality = "store",
+				loot_quantity = 1,
+				drop_equipment = false,
+				no_loot_randart = true,
+			}}, nil, true)
+
+			FINISH ME
+
+			if m then game.zone:addEntity(game.level, m, "actor", self.player.x, self.player.y-1) end
 		end end,
 		[{"_f","ctrl"}] = function() if config.settings.cheat then
 			self.player.quests["love-melinda"] = nil

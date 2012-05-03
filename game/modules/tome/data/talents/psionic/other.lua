@@ -141,14 +141,17 @@ newTalent{
 		end
 		return hit
 	end,
-	activate = function (self, t)
-		if not self:getInven("PSIONIC_FOCUS") then return end
+	on_pre_use = function (self, t)
+		if not self:getInven("PSIONIC_FOCUS") then return false end
 		local tkweapon = self:getInven("PSIONIC_FOCUS")[1]
 		if type(tkweapon) == "boolean" then tkweapon = nil end
 		if not tkweapon or tkweapon.type == "gem" or tkweapon.archery then
-			game.logPlayer(self, "You cannot do that without a telekinetically-wielded melee weapon.")
-			return nil
+--			game.logPlayer(self, "You cannot do that without a telekinetically-wielded melee weapon.")
+			return false
 		end
+		return true
+	end,
+	activate = function (self, t)
 		return true
 	end,
 	deactivate =  function (self, t)

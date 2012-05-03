@@ -1526,7 +1526,7 @@ function _M:createRandomBoss(base, data)
 					d.name = nil
 					d.ego_chance = nil
 					d.tome_drops = data.loot_quality or "boss"
-					d.force_drop = true
+					d.force_drop = (data.drop_equipment == nil) and true or data.drop_equipment
 				end
 				b[#b+1] = resolver
 			elseif k == "birth_create_alchemist_golem" then
