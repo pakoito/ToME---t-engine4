@@ -3018,7 +3018,7 @@ function _M:preUseTalent(ab, silent, fake)
 	return true
 end
 
---- Called before a talent is used
+--- Called after a talent is used
 -- Check if it must use a turn, mana, stamina, ...
 -- @param ab the talent (not the id, the table)
 -- @param ret the return of the talent action
@@ -3183,9 +3183,11 @@ end
 function _M:forceUseTalent(t, def)
 	if def.no_equilibrium_fail then self:attr("no_equilibrium_fail", 1) end
 	if def.no_paradox_fail then self:attr("no_paradox_fail", 1) end
+	if def.talent_reuse then self:attr("talent_reuse", 1) end
 	local ret = {engine.interface.ActorTalents.forceUseTalent(self, t, def)}
 	if def.no_equilibrium_fail then self:attr("no_equilibrium_fail", -1) end
 	if def.no_paradox_fail then self:attr("no_paradox_fail", -1) end
+	if def.talent_reuse then self:attr("talent_reuse", -1) end
 	return unpack(ret)
 end
 

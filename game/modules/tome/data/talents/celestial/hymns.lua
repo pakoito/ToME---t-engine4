@@ -157,7 +157,7 @@ newTalent{
 		return ([[Chant the glory of the moon, granting you %d%% stun, blindness and confusion resistances.
 		In addition it surrounds you with a shield of darkness, damaging anything that attacks you for %0.2f darkness damage.
 		You may only have one Hymn active at once.
-		The resistances and damage will increase with the Magic stat]]):
+		The damage will increase with the Magic stat]]):
 		format(100 * (immunities), damDesc(self, DamageType.DARKNESS, darknessdamage))
 	end,
 }
