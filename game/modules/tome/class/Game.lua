@@ -1115,14 +1115,17 @@ function _M:setupCommands()
 			end end
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
-			local m = game.zone:makeEntity(game.level, "actor", {random_elite={}}, nil, true)
-
-			if m then game.zone:addEntity(game.level, m, "actor", self.player.x, self.player.y-1) end
+			local l = {}
+			for tt, d in pairs(mod.class.Actor.talents_types_def) do
+				if d.generic and type(tt) == "string" and not tt:find("other") and not tt:find("race/") and not tt:find("undead/") then l[#l+1] = tt end
+			end
+			table.sort(l)
+			for i, tt in ipairs(l) do print(tt) end
 		end end,
 		[{"_f","ctrl"}] = function() if config.settings.cheat then
 			self.player.quests["love-melinda"] = nil
 			self.player:grantQuest("love-melinda")
-			self.player:hasQuest("love-melinda"):melindaWarrior(self.player)
+			self.player:hasQuest("love-melinda"):melindaCompanion(self.player, "Defiler", "Corruptor")
 		end end,
 	}
 

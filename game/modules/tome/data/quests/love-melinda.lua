@@ -79,7 +79,7 @@ function spawnFortress(self, who) game:onTickEnd(function()
 	who:setQuestStatus(self.id, self.COMPLETED, "moved-in")
 end) end
 
-function melindaWarrior(self, who)
+function melindaCompanion(self, who, c, sc)
 	for uid, e in pairs(game.level.entities) do if e.define_as == "MELINDA_NPC" then e:disappear() end end
 
 	local melinda = require("mod.class.Player").new{name="Melinda"}
@@ -90,8 +90,8 @@ function melindaWarrior(self, who)
 	birth:setDescriptor("permadeath", "Roguelike")
 	birth:setDescriptor("race", "Human")
 	birth:setDescriptor("subrace", "Cornac")
-	birth:setDescriptor("class", "Warrior")
-	birth:setDescriptor("subclass", "Fighter")
+	birth:setDescriptor("class", c)
+	birth:setDescriptor("subclass", sc)
 	birth.actor = melinda
 	birth:apply()
 	melinda.image = "player/cornac_female_redhair.png"
@@ -104,7 +104,7 @@ function melindaWarrior(self, who)
 	melinda:forceLevelup(who.level)
 
 	game.party:addMember(melinda, {
-		control="full", type="companion", title="Melina",
+		control="full", type="companion", title="Melinda",
 		orders = {target=true, leash=true, anchor=true, talents=true, behavior=true},
 	})
 end

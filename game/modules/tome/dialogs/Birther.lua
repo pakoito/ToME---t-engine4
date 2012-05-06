@@ -281,7 +281,7 @@ function _M:makeDefault()
 	self:setDescriptor("race", "Human")
 	self:setDescriptor("subrace", "Higher")
 	self:setDescriptor("class", "Warrior")
-	self:setDescriptor("subclass", "Archer")
+	self:setDescriptor("subclass", "Berserker")
 	__module_extra_info.no_birth_popup = true
 	self:atEnd("created")
 end
