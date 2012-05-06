@@ -50,11 +50,12 @@ local reward_types = {
 		},
 		antimagic = {
 			types = {
-				["wild-gift/fungus"] = 0.7,
+				["wild-gift/call"] = 0.7,
 			},
 			saves = { mind = 4 },
 			talents = {
-				[Talents.T_WILD_GROWTH] = 1,
+				[Talents.T_NATURE_TOUCH] = 1,
+				[Talents.T_EARTH_S_EYES] = 1,
 			},
 			stats = {
 				[Stats.STAT_CUN] = 1,
@@ -79,14 +80,15 @@ local reward_types = {
 		},
 		antimagic = {
 			types = {
-				["wild-gift/fungus"] = 0.7,
+				["wild-gift/mindstar-mastery"] = 0.7,
 			},
 			talents = {
-				[Talents.T_WILD_GROWTH] = 1,
+				[Talents.T_PSIBLADES] = 1,
+				[Talents.T_THORN_GRAB] = 1,
 			},
 			saves = { spell = 4 },
 			stats = {
-				[Stats.STAT_CUN] = 1,
+				[Stats.STAT_WIL] = 1,
 				[Stats.STAT_DEX] = 2,
 			},
 		},
@@ -119,10 +121,11 @@ local reward_types = {
 		},
 		antimagic = {
 			types = {
-				["wild-gift/fungus"] = 0.7,
+				["technique/mobility"] = 0.7,
 			},
 			talents = {
-				[Talents.T_WILD_GROWTH] = 1,
+				[Talents.T_HACK_N_BACK] = 1,
+				[Talents.T_LIGHT_OF_FOOT] = 1,
 			},
 			saves = { spell = 4, phys = 4 },
 			stats = {
@@ -145,10 +148,11 @@ local reward_types = {
 		},
 		antimagic = {
 			types = {
-				["wild-gift/fungus"] = 0.7,
+				["technique/field-control"] = 0.7,
 			},
 			talents = {
-				[Talents.T_WILD_GROWTH] = 1,
+				[Talents.T_TRACK] = 1,
+				[Talents.T_HEAVE] = 1,
 			},
 			saves = { spell = 4, mind = 4 },
 			stats = {
