@@ -377,7 +377,18 @@ static int sdl_new_font(lua_State *L)
 	TTF_Font **f = (TTF_Font**)lua_newuserdata(L, sizeof(TTF_Font*));
 	auxiliar_setclass(L, "sdl{font}", -1);
 
-	*f = TTF_OpenFontRW(PHYSFSRWOPS_openRead(name), TRUE, size);
+	SDL_RWops *src = PHYSFSRWOPS_openRead(name);
+	if (!src)
+	{
+		return luaL_error(L, "could not load font: %s (%d)", name, size);
+	}
+
+	*f = TTF_OpenFontRW(src, TRUE, size);
+
+	if (!*f)
+	{
+		return luaL_error(L, "could not load font: %s (%d)", name, size);
+	}
 
 	return 1;
 }
