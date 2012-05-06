@@ -65,6 +65,7 @@ newBirthDescriptor{
 		["corruption/curses"]={false, 0.3},
 		["corruption/bone"]={true, 0.3},
 		["corruption/torment"]={true, 0.3},
+		["corruption/vim"]={true, 0.3},
 	},
 	talents = {
 		[ActorTalents.T_CORRUPTED_STRENGTH] = 1,
