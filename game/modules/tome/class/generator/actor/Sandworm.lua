@@ -20,7 +20,7 @@
 require "engine.class"
 local Map = require "engine.Map"
 require "engine.Generator"
-local Random = require "engine.generator.actor.Random"
+local Random = require "mod.class.generator.actor.Random"
 
 --- Very specialized generator that puts sandworms in interesting spots to dig tunnels
 module(..., package.seeall, class.inherit(engine.Generator))

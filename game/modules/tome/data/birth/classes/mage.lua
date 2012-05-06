@@ -53,6 +53,7 @@ newBirthDescriptor{
 		"#LIGHT_BLUE# * +0 Strength, +3 Dexterity, +0 Constitution",
 		"#LIGHT_BLUE# * +5 Magic, +1 Willpower, +0 Cunning",
 	},
+	power_source = {arcane=true},
 	stats = { mag=5, dex=3, wil=1, },
 	talents_types = {
 		["spell/explosives"]={true, 0.3},
@@ -117,6 +118,7 @@ newBirthDescriptor{
 		"#LIGHT_BLUE# * +0 Strength, +0 Dexterity, +0 Constitution",
 		"#LIGHT_BLUE# * +5 Magic, +3 Willpower, +1 Cunning",
 	},
+	power_source = {arcane=true},
 	stats = { mag=5, wil=3, cun=1, },
 	talents_types = {
 		["spell/arcane"]={true, 0.3},
@@ -183,6 +185,7 @@ newBirthDescriptor{
 		"#LIGHT_BLUE# * +0 Strength, +0 Dexterity, +0 Constitution",
 		"#LIGHT_BLUE# * +5 Magic, +3 Willpower, +1 Cunning",
 	},
+	power_source = {arcane=true},
 	stats = { mag=5, wil=3, cun=1, },
 	talents_types = {
 		["spell/conveyance"]={true, 0.2},

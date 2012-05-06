@@ -37,7 +37,7 @@ return {
 			up = "OLD_FLOOR",
 			down = "DOWN",
 		},
-		actor = { class = "engine.generator.actor.Random",nb_npc = {5, 7}, },
+		actor = { class = "mod.class.generator.actor.Random",nb_npc = {5, 7}, },
 		trap = { class = "engine.generator.trap.Random", nb_trap = {3, 3}, },
 	},
 	levels = { [2] = {

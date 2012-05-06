@@ -40,7 +40,7 @@ return {
 			map = "towns/elvala",
 		},
 		actor = {
-			class = "engine.generator.actor.Random",
+			class = "mod.class.generator.actor.Random",
 			nb_npc = {10, 10},
 		},
 		object = {

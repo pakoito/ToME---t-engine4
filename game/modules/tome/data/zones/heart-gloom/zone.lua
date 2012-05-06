@@ -47,7 +47,7 @@ return {
 			door = "UNDERGROUND_FLOOR",
 		},
 		actor = {
-			class = "engine.generator.actor.Random",
+			class = "mod.class.generator.actor.Random",
 			nb_npc = {20, 30},
 			filters = { {max_ood=2}, },
 			guardian = "WITHERING_THING",

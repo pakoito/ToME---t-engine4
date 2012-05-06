@@ -55,7 +55,7 @@ return {
 			lite_room_chance = 100,
 		},
 		actor = {
-			class = "engine.generator.actor.Random",
+			class = "mod.class.generator.actor.Random",
 			nb_npc = {20, 30},
 		},
 		object = {

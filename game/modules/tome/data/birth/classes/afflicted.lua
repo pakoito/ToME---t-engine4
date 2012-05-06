@@ -54,6 +54,7 @@ newBirthDescriptor{
 		"#LIGHT_BLUE# * +5 Strength, +0 Dexterity, +0 Constitution",
 		"#LIGHT_BLUE# * +0 Magic, +4 Willpower, +0 Cunning",
 	},
+	power_source = {psionic=true, technique=true},
 	stats = { wil=4, str=5, },
 	talents_types = {
 		["cursed/gloom"]={true, 0.3},
@@ -104,6 +105,7 @@ newBirthDescriptor{
 		"#LIGHT_BLUE# * +0 Strength, +0 Dexterity, +0 Constitution",
 		"#LIGHT_BLUE# * +0 Magic, +4 Willpower, +5 Cunning",
 	},
+	power_source = {psionic=true},
 	stats = { wil=4, cun=5, },
 	talents_types = {
 		["cursed/dark-sustenance"]={true, 0.3},

@@ -51,6 +51,7 @@ newEntity{
 	blind_immune = 1,
 	knockback_immune = 1,
 	confusion_immune = 1,
+	power_source = {arcane=true},
 }
 
 newEntity{ base = "BASE_NPC_LOSGOROTH",

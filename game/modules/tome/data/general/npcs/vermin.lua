@@ -39,6 +39,7 @@ newEntity{
 	size_category = 1,
 	blind_immune = 1,
 	life_rating = 6,
+	not_power_source = {arcane=true},
 }
 
 newEntity{ base = "BASE_NPC_WORM",

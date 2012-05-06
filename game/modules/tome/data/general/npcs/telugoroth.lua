@@ -36,11 +36,11 @@ local function doTeluvortaSwap(self)
 		-- Randomly take a target
 		local a, id = rng.table(tgts)
 		local target = a
-	
+
 		if target:canBe("teleport") and self:canBe("teleport") then
 			-- first remove the target so the destination tile is empty
 			game.level.map:remove(target.x, target.y, Map.ACTOR)
-			local px, py 
+			local px, py
 			px, py = self.x, self.y
 			if self:teleportRandom(a.x, a.y, 0) then
 				-- return the target at the casters old location
@@ -86,7 +86,7 @@ newEntity{
 	resists = { [DamageType.TEMPORAL] = 100, },
 
 	negative_status_effect_immune = 1,
-	
+	not_power_source = {nature=true},
 }
 
 newEntity{ base = "BASE_NPC_TELUGOROTH",
@@ -153,13 +153,13 @@ newEntity{ base = "BASE_NPC_TELUGOROTH",
 	ai = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_snake" },
 
 	talent_cd_reduction = {[Talents.T_DUST_TO_DUST]=-3},
-	
+
 	resolvers.talents{
 		[Talents.T_DUST_TO_DUST]={base=3, every=10, max=7},
 		[Talents.T_TEMPORAL_WAKE]={base=3, every=10, max=7},
 	},
 	resolvers.sustains_at_birth(),
-	
+
 	on_act = function(self)
 		doTeluvortaSwap(self)
 	end,
@@ -177,7 +177,7 @@ newEntity{ base = "BASE_NPC_TELUGOROTH",
 	ai = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_snake" },
 
 	talent_cd_reduction = {[Talents.T_DUST_TO_DUST]=-3},
-	
+
 	resolvers.talents{
 		[Talents.T_DIMENSIONAL_STEP]={base=5, every=10, max=9},
 		[Talents.T_DUST_TO_DUST]={base=4, every=10, max=8},
@@ -203,7 +203,7 @@ newEntity{ base = "BASE_NPC_TELUGOROTH",
 	ai = "tactical", ai_state = { talent_in=2, ai_move="move_snake" },
 
 	talent_cd_reduction = {[Talents.T_DUST_TO_DUST]=-3},
-	
+
 	resolvers.talents{
 		[Talents.T_ANOMALY_TEMPORAL_STORM]=1,
 		[Talents.T_DUST_TO_DUST]={base=4, every=7},

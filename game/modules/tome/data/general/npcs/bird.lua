@@ -40,6 +40,7 @@ newEntity{
 	levitation = 1,
 
 	can_pass = {pass_tree=10},
+	not_power_source = {arcane=true},
 }
 
 newEntity{ base="BASE_NPC_BIRD", define_as = "NPC_PHOENIX",

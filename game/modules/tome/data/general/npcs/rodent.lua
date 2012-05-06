@@ -37,6 +37,7 @@ newEntity{ --rodent base
 	combat_armor = 1, combat_def = 1,
 	rank = 1,
 	size_category = 1,
+	not_power_source = {arcane=true},
 }
 
 newEntity{ base = "BASE_NPC_RODENT",

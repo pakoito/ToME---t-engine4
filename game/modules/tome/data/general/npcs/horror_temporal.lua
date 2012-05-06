@@ -40,6 +40,7 @@ newEntity{
 
 	no_breath = 1,
 	fear_immune = 1,
+	not_power_source = {nature=true},
 }
 
 -- temporal horrors

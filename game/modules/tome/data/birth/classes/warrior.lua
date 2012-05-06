@@ -51,6 +51,7 @@ newBirthDescriptor{
 		"#LIGHT_BLUE# * +5 Strength, +1 Dexterity, +3 Constitution",
 		"#LIGHT_BLUE# * +0 Magic, +0 Willpower, +0 Cunning",
 	},
+	power_source = {technique=true},
 	stats = { str=5, con=3, dex=1, },
 	talents_types = {
 		["technique/archery-training"]={false, 0.1},
@@ -96,6 +97,7 @@ newBirthDescriptor{
 		"#LIGHT_BLUE# * +5 Strength, +2 Dexterity, +2 Constitution",
 		"#LIGHT_BLUE# * +0 Magic, +0 Willpower, +0 Cunning",
 	},
+	power_source = {technique=true},
 	stats = { str=5, con=2, dex=2, },
 	talents_types = {
 		["technique/archery-training"]={false, 0.1},
@@ -143,6 +145,7 @@ newBirthDescriptor{
 		"#LIGHT_BLUE# * +2 Strength, +5 Dexterity, +0 Constitution",
 		"#LIGHT_BLUE# * +0 Magic, +0 Willpower, +2 Cunning",
 	},
+	power_source = {technique=true},
 	stats = { dex=5, str=2, cun=2, },
 	talents_types = {
 		["technique/archery-training"]={true, 0.3},
@@ -195,6 +198,7 @@ newBirthDescriptor{
 		"#LIGHT_BLUE# * +3 Strength, +3 Dexterity, +0 Constitution",
 		"#LIGHT_BLUE# * +3 Magic, +0 Willpower, +0 Cunning",
 	},
+	power_source = {technique=true, arcane=true},
 	stats = { mag=3, str=3, dex=3},
 	talents_types = {
 		["spell/fire"]={true, 0.2},
@@ -249,6 +253,7 @@ newBirthDescriptor{
 		"#LIGHT_BLUE# * +3 Strength, +3 Dexterity, +0 Constitution",
 		"#LIGHT_BLUE# * +0 Magic, +0 Willpower, +3 Cunning",
 	},
+	power_source = {technique=true},
 	stats = { str=3, dex=3, cun=3},
 	talents_types = {
 		["cunning/dirty"]={false, 0},

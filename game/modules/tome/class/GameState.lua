@@ -482,7 +482,7 @@ function _M:spawnWorldAmbush(enc, dx, dy)
 		min_material_level = util.bound(math.ceil(game.player.level / 10), 1, 5) - 1,
 		generator =  {
 			map = gen,
-			actor = { class = "engine.generator.actor.Random", nb_npc = enc.nb or {1,1}, filters=enc.filters },
+			actor = { class = "mod.class.generator.actor.Random", nb_npc = enc.nb or {1,1}, filters=enc.filters },
 		},
 
 		npc_list = mod.class.NPC:loadList("/data/general/npcs/all.lua", nil, nil, function(e) e.make_escort=nil end),
@@ -1071,7 +1071,44 @@ function _M:entityFilterPost(zone, level, type, e, filter)
 			if _G.type(filter.random_boss) == "boolean" then filter.random_boss = {}
 			else filter.random_boss = table.clone(filter.random_boss, true) end
 			filter.random_boss.level = filter.random_boss.level or zone:level_adjust_level(level, zone, type)
+			filter.random_boss.class_filter = filter.random_boss.class_filter or function(c)
+				if e.power_source then
+					for ps, _ in pairs(e.power_source) do if c.power_source and c.power_source[ps] then return true end end
+					return false
+				end
+				if e.not_power_source then
+					for ps, _ in pairs(e.not_power_source) do if c.power_source and c.power_source[ps] then return false end end
+					return true
+				end
+				return true
+			end
+
 			e = self:createRandomBoss(e, filter.random_boss)
+		elseif filter.random_elite then
+			if _G.type(filter.random_elite) == "boolean" then filter.random_elite = {}
+			else filter.random_elite = table.clone(filter.random_elite, true) end
+			local base = {
+				nb_classes=1,
+				rank=3.2, ai = "tactical",
+				life_rating=function(v) return v * 1.3 + 2 end,
+				loot_quality = "store",
+				loot_quantity = 1,
+				drop_equipment = false,
+				no_loot_randart = true,
+				class_filter = function(c)
+					if e.power_source then
+						for ps, _ in pairs(e.power_source) do if c.power_source and c.power_source[ps] then return true end end
+						return false
+					end
+					if e.not_power_source then
+						for ps, _ in pairs(e.not_power_source) do if c.power_source and c.power_source[ps] then return false end end
+						return true
+					end
+					return true
+				end,
+				level = filter.random_elite.level or zone:level_adjust_level(level, zone, type),
+			}
+			e = self:createRandomBoss(e, table.merge(base, filter.random_elite, true))
 		end
 	end
 
@@ -1398,7 +1435,7 @@ function _M:createRandomZone(zbase)
 		reload_lists = false,
 		generator =  {
 			map = layout.gen(data),
-			actor = { class = "engine.generator.actor.Random", nb_npc = nb_npc, guardian = boss_id, abord_no_guardian=true, guardian_alert=layout.guardian_alert },
+			actor = { class = "mod.class.generator.actor.Random", nb_npc = nb_npc, guardian = boss_id, abord_no_guardian=true, guardian_alert=layout.guardian_alert },
 			trap = { class = "engine.generator.trap.Random", nb_trap = nb_trap, },
 			object = { class = "engine.generator.object.Random", nb_object = nb_object, },
 		},
@@ -1576,7 +1613,7 @@ function _M:createRandomBoss(base, data)
 	local force_classes = data.force_classes and table.clone(data.force_classes)
 	for name, cdata in pairs(classes) do
 		if force_classes and force_classes[cdata.name] then apply_class(table.clone(cdata, true)) force_classes[cdata.name] = nil
-		elseif not cdata.not_on_random_boss then list[#list+1] = cdata
+		elseif not cdata.not_on_random_boss and (not data.class_filter or data.class_filter(cdata))then list[#list+1] = cdata
 		end
 	end
 	for i = 1, data.nb_classes or 2 do

@@ -40,6 +40,7 @@ newEntity{
 	stats = { str=14, dex=23, mag=5, con=5 },
 	combat = {sound="creatures/snakes/snake_attack"},
 	combat_armor = 1, combat_def = 1,
+	not_power_source = {arcane=true},
 }
 
 newEntity{ base = "BASE_NPC_SNAKE",

@@ -51,6 +51,7 @@ newEntity{
 		[Talents.T_STAMINA_POOL]=1, [Talents.T_MANA_POOL]=1,
 		[Talents.T_ARMOUR_TRAINING]={base=4, every=5, max=10},
 	},
+	not_power_source = {nature=true},
 }
 
 newEntity{ base = "BASE_NPC_CONSTRUCT",

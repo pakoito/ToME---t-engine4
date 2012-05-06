@@ -48,6 +48,7 @@ newBirthDescriptor{
 		"#LIGHT_BLUE# * +2 Strength, +2 Dexterity, +2 Constitution",
 		"#LIGHT_BLUE# * +2 Magic, +2 Willpower, +2 Cunning",
 	},
+	not_on_random_boss = true,
 	stats = { str=2, con=2, dex=2, mag=2, wil=2, cun=2 },
 	talents_types = function(birth)
 		local tts = {}

@@ -52,6 +52,7 @@ newEntity{
 	poison_immune = 1,
 	see_invisible = 2,
 	undead = 1,
+	not_power_source = {nature=true},
 }
 
 newEntity{ base = "BASE_NPC_SKELETON",

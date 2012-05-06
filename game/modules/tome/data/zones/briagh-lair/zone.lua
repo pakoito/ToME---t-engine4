@@ -43,7 +43,7 @@ return {
 			door = "UNDERGROUND_SAND",
 		},
 		actor = {
-			class = "engine.generator.actor.Random",
+			class = "mod.class.generator.actor.Random",
 			nb_npc = {120, 140},
 			guardian = "BRIAGH",
 		},

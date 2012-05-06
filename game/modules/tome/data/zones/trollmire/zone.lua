@@ -58,7 +58,7 @@ return {
 			lite_room_chance = 100,
 		},
 		actor = {
-			class = "engine.generator.actor.OnSpots",
+			class = "mod.class.generator.actor.OnSpots",
 			nb_npc = {20, 30},
 			filters = { {max_ood=2}, },
 			nb_spots = 2, on_spot_chance = 35,

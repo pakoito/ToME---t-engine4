@@ -37,7 +37,7 @@ return {
 			map = "zones/unremarkable-cave",
 		},
 		actor = {
-			class = "engine.generator.actor.Random",
+			class = "mod.class.generator.actor.Random",
 			area = {x1=0, x2=85, y1=0, y2=49},
 			nb_npc = {50, 60},
 		},

@@ -44,7 +44,7 @@ return {
 			force_down = true,
 		},
 		actor = {
-			class = "engine.generator.actor.Random",
+			class = "mod.class.generator.actor.Random",
 			nb_npc = {50, 60},
 			filters = { {max_ood=2}, },
 			nb_spots = 2, on_spot_chance = 35,

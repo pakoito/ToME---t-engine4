@@ -57,7 +57,7 @@ return {
 				edge_entrances = {4,6},
 			},
 			actor = {
-				class = "engine.generator.actor.Random",
+				class = "mod.class.generator.actor.Random",
 				filters = {{type="elemental", subtype="temporal",}},
 				nb_npc = {15, 25},
 			},
@@ -70,7 +70,7 @@ return {
 				map = "towns/lumberjack-village",
 			},
 			actor = {
-				class = "engine.generator.actor.Random",
+				class = "mod.class.generator.actor.Random",
 				filters = {{type="horror", subtype="temporal",}},
 				nb_npc = {3, 3},
 			},
@@ -91,7 +91,7 @@ return {
 				door = "ROCKY_GROUND",
 			},
 			actor = {
-				class = "engine.generator.actor.Random",
+				class = "mod.class.generator.actor.Random",
 				filters = {{type="horror", subtype="temporal",}},
 				nb_npc = {15, 25},
 			},
@@ -104,7 +104,7 @@ return {
 				map = "zones/lake-nur",
 			},
 			actor = {
-				class = "engine.generator.actor.Random",
+				class = "mod.class.generator.actor.Random",
 				nb_npc = {0, 0},
 			},
 		} },
@@ -131,11 +131,11 @@ return {
 		elseif lev == 2 and not game.level.shown_warning then
 			Dialog:simplePopup("Temporal Rift", "This looks like Maj'Eyal's forest but it looks strangely distorted, beware...")
 			game.level.shown_warning = true
-			require("engine.generator.actor.Random").new(game.zone, game.level.map, game.level, {}):generateGuardian("BEN_CRUTHDAR_ABOMINATION")
+			require("mod.class.generator.actor.Random").new(game.zone, game.level.map, game.level, {}):generateGuardian("BEN_CRUTHDAR_ABOMINATION")
 		elseif lev == 3 and not game.level.shown_warning then
 			Dialog:simplePopup("Temporal Rift", "As you pass the rift you see what seems to be the Daikara mountains, yet they are not.")
 			game.level.shown_warning = true
-			require("engine.generator.actor.Random").new(game.zone, game.level.map, game.level, {}):generateGuardian("ABOMINATION_RANTHA")
+			require("mod.class.generator.actor.Random").new(game.zone, game.level.map, game.level, {}):generateGuardian("ABOMINATION_RANTHA")
 		elseif lev == 4 and not game.level.shown_warning then
 			Dialog:simplePopup("Temporal Rift", "The peace of this place has been disturbed.")
 			game.level.shown_warning = true

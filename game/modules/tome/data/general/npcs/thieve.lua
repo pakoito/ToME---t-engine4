@@ -52,6 +52,7 @@ newEntity{
 	stats = { str=8, dex=15, mag=6, cun=15, con=7 },
 
 	resolvers.talents{ [Talents.T_LETHALITY]={base=1, every=6, max=5}, },
+	power_source = {technique=true},
 }
 
 newEntity{ base = "BASE_NPC_THIEF",

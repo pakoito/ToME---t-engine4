@@ -37,7 +37,7 @@ return {
 			map = "zones/slime-tunnels",
 		},
 		actor = {
-			class = "engine.generator.actor.Random",
+			class = "mod.class.generator.actor.Random",
 			nb_npc = {20, 30},
 		},
 		trap = {

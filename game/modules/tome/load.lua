@@ -77,7 +77,9 @@ if not config.settings.tome.scroll_dist then config.settings.tome.scroll_dist = 
 if not config.settings.tome.hotkey_icons_rows then config.settings.tome.hotkey_icons_rows = 1 end
 if not config.settings.tome.hotkey_icons_size then config.settings.tome.hotkey_icons_size = 48 end
 Map.smooth_scroll = config.settings.tome.smooth_move
-Map.faction_danger_check = function(self, e) return e.rank > 3 end
+Map.faction_danger2 = "tactical_danger.png"
+Map.faction_danger1 = "tactical_enemy_strong.png"
+Map.faction_danger_check = function(self, e, max) return (not max and e.rank > 3) or (max and e.rank >= 3.5) end
 
 -- Dialog UI
 UIBase.ui = config.settings.tome.ui_theme2

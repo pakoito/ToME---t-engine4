@@ -49,7 +49,7 @@ return {
 			door = "DOOR",
 		},
 		actor = {
-			class = "engine.generator.actor.Random",
+			class = "mod.class.generator.actor.Random",
 			nb_npc = {20, 30},
 			guardian = "THE_MASTER",
 		},

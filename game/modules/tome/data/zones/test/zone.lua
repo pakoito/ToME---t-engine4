@@ -66,7 +66,7 @@ return {
 --]]
 		},
 		actor = {
-			class = "engine.generator.actor.Random",
+			class = "mod.class.generator.actor.Random",
 			nb_npc = {0, 0},
 		},
 --[[

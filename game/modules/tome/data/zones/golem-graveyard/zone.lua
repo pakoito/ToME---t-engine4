@@ -45,7 +45,7 @@ return {
 			down = "GRASS_DOWN6",
 		},
 		actor = {
-			class = "engine.generator.actor.Random",
+			class = "mod.class.generator.actor.Random",
 			nb_npc = {6, 8},
 		},
 		object = {

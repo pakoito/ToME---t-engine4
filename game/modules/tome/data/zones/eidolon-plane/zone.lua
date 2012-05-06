@@ -41,7 +41,7 @@ return {
 			down = "VOID",
 		},
 		actor = {
-			class = "engine.generator.actor.Random",
+			class = "mod.class.generator.actor.Random",
 			nb_npc = {0, 0},
 			guardian = "EIDOLON",
 		},

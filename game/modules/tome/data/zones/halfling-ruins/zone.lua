@@ -46,7 +46,7 @@ return {
 			force_last_stair = true,
 		},
 		actor = {
-			class = "engine.generator.actor.Random",
+			class = "mod.class.generator.actor.Random",
 			nb_npc = {20, 30},
 		},
 		object = {

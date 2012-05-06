@@ -44,7 +44,7 @@ return {
 			door = "DOOR",
 		},
 		actor = {
-			class = "engine.generator.actor.Random",
+			class = "mod.class.generator.actor.Random",
 			nb_npc = {14, 14},
 			guardian = "SHADE_OF_TELOS",
 		},

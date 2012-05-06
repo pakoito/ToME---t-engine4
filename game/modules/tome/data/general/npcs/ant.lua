@@ -39,6 +39,7 @@ newEntity{
 	max_life = resolvers.rngavg(10,20),
 	rank = 1,
 	size_category = 1,
+	not_power_source = {arcane=true},
 }
 
 newEntity{ base = "BASE_NPC_ANT",

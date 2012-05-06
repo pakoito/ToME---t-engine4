@@ -47,7 +47,7 @@ return {
 			down = "DOWN",
 		},
 		actor = {
-			class = "engine.generator.actor.Random",
+			class = "mod.class.generator.actor.Random",
 			nb_npc = {10, 15},
 		},
 		object = {
@@ -75,7 +75,7 @@ return {
 					map = "zones/ring-of-blood",
 				},
 				actor = {
-					class = "engine.generator.actor.Random",
+					class = "mod.class.generator.actor.Random",
 					nb_npc = {0, 0},
 				},
 				object = {

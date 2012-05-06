@@ -63,6 +63,7 @@ newEntity{
 			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
 		end
 	end,
+	not_power_source = {nature=true},
 }
 
 newEntity{ base = "BASE_NPC_WIGHT",

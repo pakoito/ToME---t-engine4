@@ -40,7 +40,7 @@ return {
 			floor = "OLD_FLOOR",
 		},
 		actor = {
-			class = "engine.generator.actor.Random",
+			class = "mod.class.generator.actor.Random",
 			nb_npc = {50, 60},
 			guardian = "MINOTAUR_MAZE",
 			guardian_alert = true,

@@ -34,6 +34,7 @@ newEntity{
 	},
 
 	lite = 2,
+	not_power_source = {nature=true, technique=true},
 }
 
 newEntity{ name = "wisp",

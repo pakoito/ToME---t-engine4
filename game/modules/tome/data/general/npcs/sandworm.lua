@@ -49,6 +49,7 @@ newEntity{
 			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
 		end
 	end,
+	not_power_source = {arcane=true},
 }
 
 newEntity{ base = "BASE_NPC_SANDWORM",

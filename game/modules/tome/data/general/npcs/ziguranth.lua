@@ -49,6 +49,7 @@ newEntity{
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=3, },
 	stats = { str=20, dex=15, mag=1, con=16, wil=19 },
+	not_power_source = {arcane=true},
 }
 
 newEntity{ base = "BASE_NPC_ZIGURANTH",

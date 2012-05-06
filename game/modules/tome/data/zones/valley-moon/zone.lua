@@ -38,7 +38,7 @@ return {
 			map = "zones/valley-moon",
 		},
 		actor = {
-			class = "engine.generator.actor.Random",
+			class = "mod.class.generator.actor.Random",
 			nb_npc = {0, 0},
 			rate = 0.27,
 		},

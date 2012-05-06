@@ -41,7 +41,7 @@ return {
 			map = "zones/charred-scar",
 		},
 		actor = {
-			class = "engine.generator.actor.Random",
+			class = "mod.class.generator.actor.Random",
 			area = {x1=0, x2=11, y1=30, y2=410},
 			nb_npc = {30, 30},
 			rate = 0.25,

@@ -26,6 +26,7 @@ newEntity{
 	type = "undead", subtype = "shade",
 	display = "G", color=colors.DARK_GREY,
 	blood_color = colors.GREY,
+	power_source = {}, -- means forbid randelites
 
 	resolvers.generic(function(e)
 		local base = game.zone:makeEntity(game.level, "actor", e.shade_filter, nil , true)

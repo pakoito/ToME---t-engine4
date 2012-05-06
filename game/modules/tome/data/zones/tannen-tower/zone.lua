@@ -37,7 +37,7 @@ return {
 			class = "engine.generator.map.Static",
 		},
 		actor = {
-			class = "engine.generator.actor.Random",
+			class = "mod.class.generator.actor.Random",
 			nb_npc = {0, 0},
 		},
 		object = {

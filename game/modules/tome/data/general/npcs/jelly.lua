@@ -47,6 +47,7 @@ newEntity{
 	drops = resolvers.drops{chance=60, nb=1, {type="money"} },
 
 	resists = { [DamageType.LIGHT] = -50 },
+	not_power_source = {arcane=true},
 }
 
 newEntity{ base = "BASE_NPC_JELLY",

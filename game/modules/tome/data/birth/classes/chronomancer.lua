@@ -52,6 +52,7 @@ newBirthDescriptor{
 		"#LIGHT_BLUE# * +0 Strength, +0 Dexterity, +0 Constitution",
 		"#LIGHT_BLUE# * +5 Magic, +3 Willpower, +1 Cunning",
 	},
+	power_source = {arcane=true},
 	stats = { mag=5, wil=3, cun=1, },
 	talents_types = {
 		["chronomancy/age-manipulation"]={true, 0.3},
@@ -100,6 +101,7 @@ newBirthDescriptor{
 		"#LIGHT_BLUE# * +2 Strength, +3 Dexterity, +0 Constitution",
 		"#LIGHT_BLUE# * +2 Magic, +2 Willpower, +0 Cunning",
 	},
+	power_source = {technique=true, arcane=true},
 	stats = { str=2, wil=2, dex=3, mag=2},
 	talents_types = {
 		["technique/archery-bow"]={true, 0},

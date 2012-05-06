@@ -37,6 +37,7 @@ newEntity{
 	size_category = 1,
 	never_move = 1,
 	fear_immune = 1,
+	not_power_source = {arcane=true, technique=true},
 }
 
 newEntity{ base = "BASE_NPC_PLANT",

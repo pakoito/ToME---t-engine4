@@ -257,7 +257,7 @@ function _M:stripForExport()
 		self:forceUseTalent(eff, {ignore_energy=true, no_equilibrium_fail=true, no_paradox_fail=true})
 	end
 end
-	
+
 
 function _M:useEnergy(val)
 	engine.Actor.useEnergy(self, val)
@@ -718,6 +718,7 @@ function _M:defineDisplayCallback()
 
 	local f_self = nil
 	local f_danger = nil
+	local f_danger = nil
 	local f_powerful = nil
 	local f_friend = nil
 	local f_enemy = nil
@@ -756,7 +757,8 @@ function _M:defineDisplayCallback()
 				if not f_self then
 					f_self = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_self)
 					f_powerful = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_powerful)
-					f_danger = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_danger)
+					f_danger2 = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_danger2)
+					f_danger1 = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_danger1)
 					f_friend = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_friend)
 					f_enemy = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_enemy)
 					f_neutral = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_neutral)
@@ -771,7 +773,13 @@ function _M:defineDisplayCallback()
 						f_self:toScreen(x, y, w, h)
 					elseif map:faction_danger_check(self) then
 						if friend >= 0 then f_powerful:toScreen(x, y, w, h)
-						else f_danger:toScreen(x, y, w, h) end
+						else
+							if map:faction_danger_check(self, true) then
+								f_danger2:toScreen(x, y, w, h)
+							else
+								f_danger1:toScreen(x, y, w, h)
+							end
+						end
 					elseif friend > 0 then
 						f_friend:toScreen(x, y, w, h)
 					elseif friend < 0 then
@@ -1088,6 +1096,7 @@ function _M:getRankStatAdjust()
 	if self.rank == 1 then return -1
 	elseif self.rank == 2 then return -0.5
 	elseif self.rank == 3 then return 0
+	elseif self.rank == 3.2 then return 0.5
 	elseif self.rank == 3.5 then return 1
 	elseif self.rank == 4 then return 1
 	elseif self.rank >= 5 then return 1
@@ -1099,6 +1108,7 @@ function _M:getRankLevelAdjust()
 	if self.rank == 1 then return -1
 	elseif self.rank == 2 then return 0
 	elseif self.rank == 3 then return 1
+	elseif self.rank == 3.2 then return 1
 	elseif self.rank == 3.5 then return 2
 	elseif self.rank == 4 then return 3
 	elseif self.rank >= 5 then return 4
@@ -1110,6 +1120,7 @@ function _M:getRankVimAdjust()
 	if self.rank == 1 then return 0.7
 	elseif self.rank == 2 then return 1
 	elseif self.rank == 3 then return 1.2
+	elseif self.rank == 3.2 then return 1.2
 	elseif self.rank == 3.5 then return 2.2
 	elseif self.rank == 4 then return 2.6
 	elseif self.rank >= 5 then return 2.8
@@ -1122,6 +1133,7 @@ function _M:getRankLifeAdjust(value)
 	if self.rank == 1 then return value * (level_adjust - 0.2)
 	elseif self.rank == 2 then return value * (level_adjust - 0.1)
 	elseif self.rank == 3 then return value * (level_adjust + 0.1)
+	elseif self.rank == 3.2 then return value * (level_adjust + 0.15)
 	elseif self.rank == 3.5 then return value * (level_adjust + 1)
 	elseif self.rank == 4 then return value * (level_adjust + 2)
 	elseif self.rank >= 5 then return value * (level_adjust + 3)
@@ -1133,6 +1145,7 @@ function _M:getRankResistAdjust()
 	if self.rank == 1 then return 0.4, 0.9
 	elseif self.rank == 2 then return 0.5, 1.5
 	elseif self.rank == 3 then return 0.8, 1.5
+	elseif self.rank == 3.2 then return 0.8, 1.5
 	elseif self.rank == 3.5 then return 0.9, 1.5
 	elseif self.rank == 4 then return 0.9, 1.5
 	elseif self.rank >= 5 then return 0.9, 1.5
@@ -1144,6 +1157,7 @@ function _M:getRankSaveAdjust()
 	if self.rank == 1 then return 0.6, 0.9
 	elseif self.rank == 2 then return 1, 1.5
 	elseif self.rank == 3 then return 1.3, 1.8
+	elseif self.rank == 3.2 then return 1.3, 1.8
 	elseif self.rank == 3.5 then return 1.5, 2
 	elseif self.rank == 4 then return 1.7, 2.1
 	elseif self.rank >= 5 then return 1.9, 2.3
@@ -1156,6 +1170,7 @@ function _M:TextRank()
 	if self.rank == 1 then rank, color = "critter", "#C0C0C0#"
 	elseif self.rank == 2 then rank, color = "normal", "#ANTIQUE_WHITE#"
 	elseif self.rank == 3 then rank, color = "elite", "#YELLOW#"
+	elseif self.rank == 3.2 then rank, color = "rare", "#SALMON#"
 	elseif self.rank == 3.5 then rank, color = "unique", "#SANDY_BROWN#"
 	elseif self.rank == 4 then rank, color = "boss", "#ORANGE#"
 	elseif self.rank >= 5 then rank, color = "elite boss", "#GOLD#"
@@ -3392,9 +3407,10 @@ function _M:worthExp(target)
 		if self.rank == 1 then mult = 0.6
 		elseif self.rank == 2 then mult = 0.8
 		elseif self.rank == 3 then mult = 3
-		elseif self.rank == 3.5 then mult = 12
-		elseif self.rank == 4 then mult = 45
-		elseif self.rank >= 5 then mult = 100
+		elseif self.rank == 3.2 then mult = 3
+		elseif self.rank == 3.5 then mult = 11
+		elseif self.rank == 4 then mult = 40
+		elseif self.rank >= 5 then mult = 90
 		end
 
 		return self.level * mult * self.exp_worth * (target.exp_kill_multiplier or 1)
@@ -3403,6 +3419,7 @@ function _M:worthExp(target)
 		if self.rank == 1 then mult = 2
 		elseif self.rank == 2 then mult = 2
 		elseif self.rank == 3 then mult = 3.5
+		elseif self.rank == 3.2 then mult = 3.5
 		elseif self.rank == 3.5 then mult = 5
 		elseif self.rank == 4 then mult = 6
 		elseif self.rank >= 5 then mult = 6.5

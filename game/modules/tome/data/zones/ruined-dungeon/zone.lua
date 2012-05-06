@@ -36,7 +36,7 @@ return {
 			map = "zones/ruined-dungeon",
 		},
 		actor = {
-			class = "engine.generator.actor.Random",
+			class = "mod.class.generator.actor.Random",
 			nb_npc = {60, 60},
 		},
 		object = {

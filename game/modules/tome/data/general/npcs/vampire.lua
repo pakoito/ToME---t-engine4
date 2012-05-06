@@ -56,6 +56,7 @@ newEntity{
 	undead = 1,
 --	free_action = 1,
 --	sleep_immune = 1,
+	not_power_source = {nature=true},
 }
 
 newEntity{ base = "BASE_NPC_VAMPIRE",
@@ -167,7 +168,7 @@ newEntity{ base = "BASE_NPC_VAMPIRE",
 
 -- Arch Zephyr, Vampiric Storm Lord. Wields a bow and lightning magic with equal effectiveness, and moves quickly.
 newEntity{ base = "BASE_NPC_VAMPIRE", unique=true, define_as="ARCH_ZEPHYR",
-	name = "Arch Zephyr", color=colors.BLUE, 
+	name = "Arch Zephyr", color=colors.BLUE,
 	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/undead_vampire_arch_zephyr.png", display_h=2, display_y=-1}}},
 	desc=[[The robes of this ancient vampire billow with intense winds. Bolts of lightning arc along its body. In its hand it holds a bow, electricity streaking across it.]],
 	level_range = {45, nil}, exp_worth = 1,

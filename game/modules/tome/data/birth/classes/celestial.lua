@@ -64,6 +64,7 @@ newBirthDescriptor{
 		"#LIGHT_BLUE# * +5 Strength, +0 Dexterity, +0 Constitution",
 		"#LIGHT_BLUE# * +4 Magic, +0 Willpower, +0 Cunning",
 	},
+	power_source = {technique=true, arcane=true},
 	stats = { mag=4, str=5, },
 	talents_types = {
 		["technique/shield-offense"]={true, 0.1},
@@ -112,6 +113,7 @@ newBirthDescriptor{
 		"#LIGHT_BLUE# * +0 Strength, +0 Dexterity, +0 Constitution",
 		"#LIGHT_BLUE# * +6 Magic, +0 Willpower, +3 Cunning",
 	},
+	power_source = {arcane=true},
 	stats = { mag=6, cun=3, },
 	talents_types = {
 		["cunning/survival"]={false, 0.1},
