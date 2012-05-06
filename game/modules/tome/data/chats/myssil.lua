@@ -36,6 +36,7 @@ newChat{ id="welcome",
 I am Protector Myssil. Welcome to Zigur.]],
 	answers = {
 		{"I require all the help I can get, not for my sake but for the town of Derth, to the northeast of here.", jump="save-derth", cond=function(npc, player) local q = player:hasQuest("lightning-overload") return q and q:isCompleted("saved-derth") and not q:isCompleted("tempest-entrance") and not q:isStatus(q.DONE) end},
+		{"Protector, I have dispatched the Tempest as you commanded.", jump="tempest-dead", cond=function(npc, player) local q = player:hasQuest("lightning-overload") return q and q:isCompleted("tempest-entrance") and not q:isCompleted("antimagic-reward") and q:isStatus(q.DONE) end},
 		{"Nothing for now. Sorry to have taken your time. Farewell, Protector."},
 	}
 }
@@ -48,6 +49,28 @@ Erase him.]],
 	answers = {
 		{"You can count on me, Protector.", action=function(npc, player)
 			player:hasQuest("lightning-overload"):create_entrance()
+		end},
+	}
+}
+
+newChat{ id="tempest-dead",
+	text = [[So have I heard, @playername@. You prove worthy of your training, go with the blessing and nature @playername@ of Zigur.
+#LIGHT_GREEN#*She touches your skin, you can feel nature infusing your very being.*#WHITE#
+This shall help your on your travels. Farewell!]],
+	answers = {
+		{"Thank you Protector.", action=function(npc, player)
+			player:hasQuest("lightning-overload"):create_entrance()
+			if player:knowTalentType("wild-gift/fungus") then
+				player:setTalentTypeMastery("wild-gift/fungus", player:getTalentTypeMastery("wild-gift/fungus") + 0.1)
+			elseif player:knowTalentType("wild-gift/fungus") == false then
+				player:learnTalentType("wild-gift/fungus", true)
+			else
+				player:learnTalentType("wild-gift/fungus", false)
+			end
+			-- Make sure a previous amulet didnt bug it out
+			if player:getTalentTypeMastery("wild-gift/fungus") == 0 then player:setTalentTypeMastery("wild-gift/fungus", 1) end
+			game.logPlayer(player, "#00FF00#You gain the fungus talents school.")
+			player:hasQuest("lightning-overload"):setStatus(engine.Quest.COMPLETED, "antimagic-reward")
 		end},
 	}
 }
