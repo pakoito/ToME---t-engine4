@@ -123,7 +123,7 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 
 	local hd = {"Combat:attackTarget", target=target, damtype=damtype, mult=mult, noenergy=noenergy}
 	if self:triggerHook(hd) then
-		speed, hit = ht.speed, hd.hit
+		speed, hit, damtype, mult = ht.speed, hd.hit, hd.damtype, hd.mult
 		if ht.stop then return hit end
 	end
 
