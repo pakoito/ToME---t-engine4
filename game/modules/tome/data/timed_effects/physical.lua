@@ -1694,3 +1694,40 @@ newEffect{
 		self:removeTemporaryValue("inc_damage", eff.tmpid)
 	end,
 }
+
+newEffect{
+	name = "THORN_GRAB", image = "talents/thorn_grab.png",
+	desc = "Thorn Grab",
+	long_desc = function(self, eff) return ("The target is encased in thorny vines, dealing %d nature damage each turn and reducing its speed by %d%%."):format(eff.dam, eff.speed*100) end,
+	type = "physical",
+	subtype = { nature=true },
+	status = "detrimental",
+	parameters = { dam=10, speed=20 },
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("global_speed_add", -eff.speed)
+	end,
+	on_timeout = function(self, eff)
+		DamageType:get(DamageType.NATURE).projector(eff.src or self, self.x, self.y, DamageType.NATURE, eff.dam)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("global_speed_add", eff.tmpid)
+	end,
+}
+
+newEffect{
+	name = "LEAVES_COVER", image = "talents/leaves_tide.png",
+	desc = "Leaves Cover",
+	long_desc = function(self, eff) return ("%d%% chance to fully absorb any damaging actions."):format(eff.power) end,
+	type = "physical",
+	subtype = { nature=true },
+	status = "beneficial",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target# is protected by a layer of thick leaves.", "+Leaves Cover" end,
+	on_lose = function(self, err) return "#Target# cover of leaves falls apart.", "-Leaves Cover" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("cancel_damage_chance", eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("cancel_damage_chance", eff.tmpid)
+	end,
+}

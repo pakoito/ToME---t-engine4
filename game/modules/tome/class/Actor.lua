@@ -1400,6 +1400,10 @@ function _M:onTakeHit(value, src)
 		return 0
 	end
 
+	if self:attr("cancel_damage_chance") and rng.percent(self.cancel_damage_chance) then
+		return 0
+	end
+
 	if self:attr("retribution") then
 	-- Absorb damage into the retribution
 		if value / 2 <= self.retribution_absorb then
@@ -3262,8 +3266,6 @@ end
 -- You may overload it to add more data (like power usage, ...)
 function _M:getTalentFullDescription(t, addlevel, config)
 	if not t then return tstring{"no talent"} end
-
-	print("=====",t.name,t.type[1])
 
 	config = config or {}
 	local old = self.talents[t.id]

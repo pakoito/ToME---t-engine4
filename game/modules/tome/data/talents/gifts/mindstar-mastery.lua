@@ -17,14 +17,22 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+function get_mindstar_power_mult(self, div)
+	local main, off = self:hasPsiblades(true, true)
+	if not main or not off then return 1 end
+
+	local mult = 1 + (main.combat.dam + off.combat.dam) / (div or 40)
+	return mult
+end
+
 newTalent{
 	name = "Psiblades",
 	type = {"wild-gift/mindstar-mastery", 1},
 	require = gifts_req1,
 	points = 5,
 	mode = "sustained",
-	sustain_equilibrium = 10,
-	cooldown = 15,
+	sustain_equilibrium = 18,
+	cooldown = 6,
 	tactical = { BUFF = 4 },
 	activate = function(self, t)
 		local r = {
@@ -58,34 +66,25 @@ newTalent{
 	type = {"wild-gift/mindstar-mastery", 2},
 	require = gifts_req2,
 	points = 5,
-	mode = "sustained",
-	sustain_equilibrium = 20,
-	cooldown = 30,
-	tactical = { BUFF = 3 },
-	activate = function(self, t)
-		return {
-			tmpid = self:addTemporaryValue("elemental_harmony", self:getTalentLevel(t)),
-		}
-	end,
-	deactivate = function(self, t, p)
-		self:removeTemporaryValue("elemental_harmony", p.tmpid)
+	equilibrium = 7,
+	cooldown = 15,
+	tactical = { ATTACK = 2, DISABLE = 2 },
+	on_pre_use = function(self, t, silent) if not self:hasPsiblades(true, false) then if not silent then game.logPlayer(self, "You require a psiblade in your mainhand to use this talent.") end return false end return true end,
+	action = function(self, t)
+		local tg = {type="hit", range=self:getTalentRange(t)}
+		local x, y, target = self:getTarget(tg)
+		if not x or not y or not target then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
+
+		target:setEffect(target.EFF_THORN_GRAB, 10, {src=self, speed=1 - 1 / (1 + (20 + self:getTalentLevel(t) * 2) / 100), dam=self:mindCrit(self:combatTalentMindDamage(t, 15, 250) / 10 * get_mindstar_power_mult(self))})
+
 		return true
 	end,
 	info = function(self, t)
-		local power = self:getTalentLevel(t)
-		local turns = 5 + math.ceil(power)
-		local fire = 100 * (0.1 + power / 16)
-		local cold = 3 + power * 2
-		local lightning = math.floor(power)
-		local acid = 5 + power * 2
-		local nature = 5 + power * 1.4
-		return ([[Befriend the natural elements that constitute nature. Each time you are hit by one of the elements you gain a special effect for %d turns. This can only happen every %d turns.
-		Fire: +%d%% global speed
-		Cold: +%d armour
-		Lightning: +%d to all stats
-		Acid: +%0.2f life regen
-		Nature: +%d%% to all resists]]):
-		format(turns, turns, fire, cold, lightning, acid, nature)
+		return ([[You touch the target with your psiblade, bringing the forces of nature onto your foe.
+		Thorny vines will grab the target, slowing it by %d%% and dealing %0.2f nature damage each turn for 10 turns.
+		Damage will increase with Mindpower and Mindstar power (requires two mindstars, multiplier %2.f).]]):
+		format(20 + self:getTalentLevel(t) * 2, damDesc(self, DamageType.NATURE, self:combatTalentMindDamage(t, 15, 250) / 10 * get_mindstar_power_mult(self)), get_mindstar_power_mult(self))
 	end,
 }
 
@@ -94,32 +93,38 @@ newTalent{
 	type = {"wild-gift/mindstar-mastery", 3},
 	require = gifts_req3,
 	points = 5,
-	equilibrium = 15,
-	cooldown = 30,
-	tactical = { BUFF = 2 },
-	on_pre_use = function(self, t) return self:hasEffect(self.EFF_INFUSION_COOLDOWN) end,
+	equilibrium = 20,
+	cooldown = 25,
+	tactical = { ATTACK = 2, DEFEND=3 },
+	getDamage = function(self, t) return 5 + self:combatTalentMindDamage(t, 5, 35) * get_mindstar_power_mult(self) end,
+	getChance = function(self, t) return util.bound(10 + self:combatTalentMindDamage(t, 5, 35), 10, 40) * get_mindstar_power_mult(self, 90) end,
+	on_pre_use = function(self, t, silent) if not self:hasPsiblades(true, true) then if not silent then game.logPlayer(self, "You require two psiblades in your hands to use this talent.") end return false end return true end,
 	action = function(self, t)
-		self:removeEffect(self.EFF_INFUSION_COOLDOWN)
-		local tids = {}
-		local nb = self:getTalentLevelRaw(t)
-		for tid, _ in pairs(self.talents_cd) do
-			local tt = self:getTalentFromId(tid)
-			if tt.type[1] == "inscriptions/infusions" and self:isTalentCoolingDown(tt) then tids[#tids+1] = tid end
-		end
-		for i = 1, nb do
-			if #tids == 0 then break end
-			local tid = rng.tableRemove(tids)
-			self.talents_cd[tid] = self.talents_cd[tid] - (1 + math.floor(self:getTalentLevel(t) / 2))
-			if self.talents_cd[tid] <= 0 then self.talents_cd[tid] = nil end
-		end
-		game:playSoundNear(self, "talents/spell_generic2")
+		-- Add a lasting map effect
+		game.level.map:addEffect(self,
+			self.x, self.y, 7,
+			DamageType.LEAVES, {dam=self:mindCrit(t.getDamage(self, t)), chance=t.getChance(self, t)},
+			3,
+			5, nil,
+			{type="leavestide", only_one=true},
+			function(e)
+				e.x = e.src.x
+				e.y = e.src.y
+				return true
+			end,
+			true
+		)
+		game:playSoundNear(self, "talents/icestorm")
 		return true
 	end,
 	info = function(self, t)
-		local turns = 1 + math.floor(self:getTalentLevel(t) / 2)
-		local nb = self:getTalentLevelRaw(t)
-		return ([[Commune with nature, removing the infusion saturation effect and reducing the cooldown of %d infusions by %d turns.]]):
-		format(nb, turns)
+		local dam = t.getDamage(self, t)
+		local c = t.getChance(self, t)
+		return ([[Smash your psiblades into the ground, creating a tide of crystalized leaves circling you in a radius of 3 for 7 turns.
+		All foes hit by the leaves will start bleeding for %0.2f per turn (cummulative).
+		All allies hit will be covered in leaves, granting them %d%% chance to completly avoid any damaging attack.
+		Damage and avoidance will increase with Mindpower and Mindstar power (requires two mindstars, multiplier %2.f).]]):
+		format(dam, c, get_mindstar_power_mult(self))
 	end,
 }
 
@@ -128,30 +133,44 @@ newTalent{
 	type = {"wild-gift/mindstar-mastery", 4},
 	require = gifts_req4,
 	points = 5,
-	equilibrium = 24,
-	cooldown = 20,
-	range = 10,
-	tactical = { DISABLE = 3, HEAL = 0.5 },
+	equilibrium = 5,
+	cooldown = 15,
+	range = 1,
+	tactical = { ATTACK = 1, HEAL = 1, EQUILIBRIUM = 1 },
 	direct_hit = true,
 	requires_target = true,
-	range = 0,
-	radius = function(self, t) return 1 + self:getTalentLevelRaw(t) end,
-	target = function(self, t) return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=true, talent=t} end,
+	on_pre_use = function(self, t, silent) if not self:hasPsiblades(true, true) then if not silent then game.logPlayer(self, "You require two psiblades in your hands to use this talent.") end return false end return true end,
+	getMaxDamage = function(self, t) return 50 + self:combatTalentMindDamage(t, 5, 250) * get_mindstar_power_mult(self) end,
 	action = function(self, t)
-		local tg = self:getTalentTarget(t)
-		local grids = self:project(tg, self.x, self.y, function(px, py)
-			local target = game.level.map(px, py, Map.ACTOR)
-			if not target then return end
-			target:setEffect(target.EFF_HEALING_NEXUS, 3 + self:getTalentLevelRaw(t), {src=self, pct=0.4 + self:getTalentLevel(t) / 10, eq=5 + self:getTalentLevel(t)})
-		end)
-		game.level.map:particleEmitter(self.x, self.y, tg.radius, "ball_acid", {radius=tg.radius})
+		local main, off = self:hasPsiblades(true, true)
+
+		local tg = {type="hit", range=self:getTalentRange(t)}
+		local x, y, target = self:getTarget(tg)
+		if not x or not y or not target then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
+
+		local ol = target.life
+		local speed, hit = self:attackTargetWith(target, main.combat, nil, self:combatTalentWeaponDamage(t, 2.5, 4))
+		local dam = util.bound(ol - target.life, 0, t.getMaxDamage(self, t))
+
+		while hit do -- breakable if
+			local tg = {default_target=self, type="hit", nowarning=true, range=1, first_target="friend"}
+			local x, y, target = self:getTarget(tg)
+			if not x or not y or not target then break end
+			if core.fov.distance(self.x, self.y, x, y) > 1 then break end
+
+			target:heal(dam)
+			target:incEquilibrium(-dam / 10)
+			break
+		end
+
 		game:playSoundNear(self, "talents/spell_generic2")
 		return true
 	end,
 	info = function(self, t)
-		return ([[A wave a natural energies flow around you in a radius of %d, all creatures hit will suffer healing nexus for %d turns.
-		While under the effect all healing done to the creature will instead heal you for %d%% of the heal value (and no healing at all goes to the target).
-		Each heal leeched will also restore %d equilibrium]]):
-		format(self:getTalentRadius(t), 3 + self:getTalentLevelRaw(t), (0.4 + self:getTalentLevel(t) / 10) * 100, 5 + self:getTalentLevel(t))
+		return ([[You hit a foe with your mainhand psiblade doing %d%% weapon damage, channeling all the damage done through your offhand psiblade with which you touch a friendly creature to heal it.
+		Maximum heal possible %d. Equilibrium of the healed target will also decrease.
+		Max heal will increase with Mindpower and Mindstar power (requires two mindstars, multiplier %2.f).]]):
+		format(self:combatTalentWeaponDamage(t, 2.5, 4) * 100, t.getMaxDamage(self, t), get_mindstar_power_mult(self))
 	end,
 }

@@ -303,8 +303,13 @@ function _M:tooltip(x, y, seen_by)
 end
 
 function _M:getTarget(typ)
+	-- Free ourselves
 	if self:attr("encased_in_ice") then
 		return self.x, self.y, self
+	-- Heal/buff/... ourselves
+	elseif type(typ) == "table" and typ.first_target == "friend" and typ.default_target == self then
+		return self.x, self.y, self
+	-- Hit our foes
 	else
 		return ActorAI.getTarget(self, typ)
 	end

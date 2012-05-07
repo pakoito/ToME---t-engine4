@@ -1517,6 +1517,26 @@ function _M:hasDualWeapon()
 	return weapon, offweapon
 end
 
+--- Check if the actor uses psiblades
+function _M:hasPsiblades(main, off)
+	if self:attr("disarmed") then
+		return nil, "disarmed"
+	end
+
+	local weapon, offweapon = nil, nil
+	if main then
+		if not self:getInven("MAINHAND") then return end
+		weapon = self:getInven("MAINHAND")[1]
+		if not weapon.combat or not weapon.psiblade_active then return nil, "unactivated psiblade" end
+	end
+	if off then
+		if not self:getInven("OFFHAND") then return end
+		offweapon = self:getInven("OFFHAND")[1]
+		if not offweapon.combat or not offweapon.psiblade_active then return nil, "unactivated psiblade" end
+	end
+	return weapon, offweapon
+end
+
 --- Check if the actor has a light armor
 function _M:hasLightArmor()
 	if not self:getInven("BODY") then return end
