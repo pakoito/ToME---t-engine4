@@ -1115,7 +1115,9 @@ function _M:setupCommands()
 			end end
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
-			for id, _ in pairs(game.party.__ingredients_def) do game.party:collectIngredient(id, rng.range(1, 3)) end
+--			for id, _ in pairs(game.party.__ingredients_def) do game.party:collectIngredient(id, rng.range(1, 3)) end
+			local m = game.zone:makeEntity(game.level, "actor", {random_elite=true}, nil, true)
+			game.zone:addEntity(game.level, m, "actor", game.player.x,game.player.y-1)
 		end end,
 		[{"_f","ctrl"}] = function() if config.settings.cheat then
 			self.player.quests["love-melinda"] = nil

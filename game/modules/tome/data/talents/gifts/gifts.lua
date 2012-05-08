@@ -93,10 +93,16 @@ load("/data/talents/gifts/storm-drake.lua")
 
 function checkMaxSummon(self, silent)
 	local nb = 0
-	if not game.party then return end
+
 	-- Count party members
-	for act, def in pairs(game.party.members) do
-		if act.summoner and act.summoner == self and act.wild_gift_summon then nb = nb + 1 end
+	if game.party:hasMember(self) then
+		for act, def in pairs(game.party.members) do
+			if act.summoner and act.summoner == self and act.wild_gift_summon then nb = nb + 1 end
+		end
+	else
+		for _, act in pairs(game.level.entities) do
+			if act.summoner and act.summoner == self and act.wild_gift_summon then nb = nb + 1 end
+		end
 	end
 
 	local max = math.max(1, math.floor(self:getCun() / 10))
