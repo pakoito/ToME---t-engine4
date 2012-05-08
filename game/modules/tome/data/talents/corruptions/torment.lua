@@ -95,7 +95,7 @@ newTalent{
 	deactivate = function(self, t, p)
 		self:removeTemporaryValue("overkill", p.ov)
 		return true
-	end,	
+	end,
 	info = function(self, t)
 		return ([[When you kill a creature, the remainer of the damage done will not be lost. Instead %d%% of it will splash in a radius 2, doing blight damage.
 		The damage will increase with Magic stat.]]):format(40 + self:combatTalentSpellDamage(t, 10, 90))
@@ -124,7 +124,7 @@ newTalent{
 		self:removeTemporaryValue("reduce_spell_cooldown_on_hit", p.l)
 		self:removeTemporaryValue("reduce_spell_cooldown_on_hit_chance", p.c)
 		return true
-	end,	
+	end,
 	info = function(self, t)
 		local l, c = t.getPower(self, t)
 		return ([[When you are dealt a blow that reduces your life by at least %d%% you have %d%% chances to reduce the remaining cooldown of all your spells by 1.

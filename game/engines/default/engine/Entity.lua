@@ -254,7 +254,7 @@ function _M:makeMapObject(tiles, idx)
 	self:defineDisplayCallback()
 
 	-- Setup tint
-	self._mo:tint(self.tint_r, self.tint_g, self.tint_b)
+	self._mo:tint(self.tint_r or 1, self.tint_g or 1, self.tint_b or 1)
 
 	-- Texture 0 is always the normal image/ascii tile
 	local tex, texx, texy, pos_x, pos_y = tiles:get(self.display, self.color_r, self.color_g, self.color_b, self.color_br, self.color_bg, self.color_bb, self.image, self._noalpha and 255, self.ascii_outline, true)

@@ -175,6 +175,8 @@ newTalent{
 	end,
 	points = 5,
 	hard_cap = 5,
+	range = 1,
+	tactical = { ATTACK = 2, DEFEND = 2 },
 	on_pre_use = function(self, t, silent) if not self:hasShield() then if not silent then game.logPlayer(self, "You require a weapon and a shield to use this talent.") end return false end return true end,
 	getProperties = function(self, t)
 		local shield = self:hasShield()
@@ -254,6 +256,6 @@ newTalent{
 			br_text = " All blocked damage heals the wielder."
 		end
 		local bt, bt_string = t.getBlockedTypes(self, t)
-		return ([[Raise your shield into blocking position for one turn, reducing the damage of all %s attacks by %d. If you block all of an attack's damage, the attacker will be vulnerable to a deadly counterstrike for one turn.%s%s%s]]):format(bt_string, t.getBlockValue(self, t), sp_text, ref_text, br_text)
+		return ([[Raise your shield into blocking position for one turn, reducing the damage of all %s attacks by %d. If you block all of an attack's damage, the attacker will be vulnerable to a deadly counterstrike (a normal attack will instead deal 200%% damage) for one turn.%s%s%s]]):format(bt_string, t.getBlockValue(self, t), sp_text, ref_text, br_text)
 	end,
 }
