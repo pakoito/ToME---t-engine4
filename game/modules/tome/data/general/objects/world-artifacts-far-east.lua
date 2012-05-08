@@ -88,6 +88,7 @@ newEntity{ base = "BASE_SHIELD",
 	material_level = 5,
 	special_combat = {
 		dam = 50,
+		block = 280,
 		physcrit = 4.5,
 		dammod = {str=1},
 		damtype = DamageType.LIGHT,
@@ -100,6 +101,7 @@ newEntity{ base = "BASE_SHIELD",
 		fatigue = 14,
 		combat_spellresist = 19,
 		resists = {[DamageType.DARKNESS] = 30},
+		learn_talent = { [Talents.T_BLOCK] = 5, },
 	},
 }
 

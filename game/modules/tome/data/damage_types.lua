@@ -51,6 +51,12 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			dam = e.absorb(type, dam, target.tmp[target.EFF_WARD], target, src)
 		end
 
+		-- Block talent from shields
+		if target:attr("block") then
+			local e = target.tempeffect_def[target.EFF_BLOCKING]
+			dam = e.do_block(type, dam, target.tmp[target.EFF_BLOCKING], target, src)
+		end
+
 		-- Increases damage
 		if src.inc_damage then
 			local inc = (src.inc_damage.all or 0) + (src.inc_damage[type] or 0)

@@ -1731,3 +1731,69 @@ newEffect{
 		self:removeTemporaryValue("cancel_damage_chance", eff.tmpid)
 	end,
 }
+
+newEffect{
+	name = "BLOCKING", image = "talents/block.png",
+	desc = "Blocking",
+	long_desc = function(self, eff) return ("Absorbs %d damage from the next blockable attack."):format(eff.power) end,
+	type = "physical",
+	subtype = { tactic=true },
+	status = "beneficial",
+	parameters = { nb=1 },
+	on_gain = function(self, eff) return nil, nil end,
+	on_lose = function(self, eff) return nil, nil end,
+	do_block = function(type, dam, eff, self, src)
+		local dur_inc = 0
+		local crit_inc = 0
+		local nb = 1
+		if self:knowTalent(self.T_RIPOSTE) then
+			local t = self:getTalentFromId(self.T_RIPOSTE)
+			dur_inc = t.getDurInc(self, t)
+			crit_inc = t.getCritInc(self, t)
+			nb = nb + dur_inc
+		end
+		local b = false
+		for i = 1, #eff.d_types do
+			if type == eff.d_types[i] then b = true break end
+		end
+		if not b then return dam end
+		eff.dur = 0
+		local amt = util.bound(dam - eff.power, 0, dam)
+		local blocked = dam - amt
+		if eff.properties.br then self:heal(blocked) end
+		if eff.properties.ref and src.life then DamageType.defaultProjector(src, src.x, src.y, type, blocked, tmp, true) end
+		if (self:knowTalent(self.T_RIPOSTE) or amt == 0) and src.life then src:setEffect(src.EFF_COUNTERSTRIKE, 1 + dur_inc, {power=eff.power, no_ct_effect=true, src=self, crit_inc=crit_inc, nb=nb}) end
+		return amt
+	end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("block", eff.power)
+		eff.def = self:addTemporaryValue("combat_def", -eff.power)
+		if eff.properties.sp then eff.spell = self:addTemporaryValue("combat_spellresist", eff.power) end
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("block", eff.tmpid)
+		self:removeTemporaryValue("combat_def", eff.def)
+		if eff.properties.sp then self:removeTemporaryValue("combat_spellresist", eff.spell) end
+	end,
+}
+
+newEffect{
+	name = "COUNTERSTRIKE", image = "effects/counterstrike.png",
+	desc = "Counterstrike",
+	long_desc = function(self, eff) return "Vulnerable to deadly counterstrikes. Next melee attack will inflict double damage." end,
+	type = "physical",
+	subtype = { tactic=true },
+	status = "detrimental",
+	parameters = { nb=1 },
+	on_gain = function(self, eff) return nil, "+Counter" end,
+	on_lose = function(self, eff) return nil, "-Counter" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("counterstrike", 1)
+		eff.def = self:addTemporaryValue("combat_def", -eff.power)
+		eff.dur = eff.dur * (self.global_speed or 1)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("counterstrike", eff.tmpid)
+		self:removeTemporaryValue("combat_def", eff.def)
+	end,
+}

@@ -19,6 +19,7 @@
 
 newTalentType{ no_silence=true, is_spell=true, type="sher'tul/fortress", name = "fortress", description = "Yiilkgur abilities." }
 newTalentType{ no_silence=true, is_spell=true, type="spell/objects", name = "object spells", description = "Spell abilities of the various objects of the world." }
+newTalentType{ type="technique/objects", name = "object techniques", description = "Techniques of the various objects of the world." }
 
 --local oldTalent = newTalent
 --local newTalent = function(t) if type(t.hide) == "nil" then t.hide = true end return oldTalent(t) end
@@ -163,5 +164,96 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Use Yiilkgur's teleporter to teleport to the ground.]])
+	end,
+}
+
+newTalent{
+	name = "Block",
+	type = {"technique/objects", 1},
+	cooldown = function(self, t)
+		return 8 - util.bound(self:getTalentLevelRaw(t), 1, 5)
+	end,
+	points = 5,
+	hard_cap = 5,
+	on_pre_use = function(self, t, silent) if not self:hasShield() then if not silent then game.logPlayer(self, "You require a weapon and a shield to use this talent.") end return false end return true end,
+	getProperties = function(self, t)
+		local shield = self:hasShield()
+		--if not shield then return nil end
+		local p = {
+			sp = (shield and shield.special_combat and shield.special_combat.spellplated or false),
+			ref = (shield and shield.special_combat and shield.special_combat.reflective or false),
+			br = (shield and shield.special_combat and shield.special_combat.bloodruned or false),
+		}
+		return p
+	end,
+	getBlockValue = function(self, t)
+		local shield = self:hasShield()
+		if not shield then return 0 end
+		return (shield.special_combat and shield.special_combat.block) or 0
+	end,
+	getBlockedTypes = function(self, t)
+		local shield = self:hasShield()
+		local bt = {DamageType.PHYSICAL}
+		if not shield then return bt, "error!" end
+		local count = 2
+		if shield.wielder.resists then
+			for res, v in pairs(shield.wielder.resists) do
+				if v > 0 then
+					bt[count] = res
+					count = count + 1
+				end
+			end
+		end
+		if shield.wielder.on_melee_hit then
+			for res, v in pairs(shield.wielder.on_melee_hit) do
+				if v > 0 then
+					local add = true
+					for i = 1, #bt do
+						if bt[i] == res then add = false end
+					end
+					if add then
+						bt[count] = res
+						count = count + 1
+					end
+				end
+			end
+		end
+		local n = #bt
+		if n < 1 then return "(error 2)" end
+		local e_string = ""
+		if n == 1 then
+			e_string = DamageType.dam_def[bt[1]].name
+		elseif n == 2 then
+			e_string = DamageType.dam_def[bt[1]].name.." and "..DamageType.dam_def[bt[2]].name
+		else
+			for i = 1, #bt-1 do
+				e_string = e_string..DamageType.dam_def[bt[i]].name..", "
+			end
+			e_string = e_string.."and "..DamageType.dam_def[bt[n]].name
+		end
+		return bt, e_string
+	end,
+	action = function(self, t)
+		local properties = t.getProperties(self, t)
+		local bt, bt_string = t.getBlockedTypes(self, t)
+		self:setEffect(self.EFF_BLOCKING, 1, {power = t.getBlockValue(self, t), d_types=bt, properties=properties})
+		return true
+	end,
+	info = function(self, t)
+		local properties = t.getProperties(self, t)
+		local sp_text = ""
+		local ref_text = ""
+		local br_text = ""
+		if properties.sp then
+			sp_text = (" Increases your spell save by %d for that turn."):format(t.getBlockValue(self, t))
+		end
+		if properties.ref then
+			ref_text = " Reflects all blocked damage back to the source."
+		end
+		if properties.br then
+			br_text = " All blocked damage heals the wielder."
+		end
+		local bt, bt_string = t.getBlockedTypes(self, t)
+		return ([[Raise your shield into blocking position for one turn, reducing the damage of all %s attacks by %d. If you block all of an attack's damage, the attacker will be vulnerable to a deadly counterstrike for one turn.%s%s%s]]):format(bt_string, t.getBlockValue(self, t), sp_text, ref_text, br_text)
 	end,
 }

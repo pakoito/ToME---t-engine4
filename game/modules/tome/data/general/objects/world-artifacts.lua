@@ -348,7 +348,7 @@ newEntity{ base = "BASE_AMULET",
 	on_wear = function(self, who)
 		if who.descriptor and who.descriptor.race == "Halfling" then
 			local Talents = require "engine.interface.ActorStats"
-		
+
 			self:specialWearAdd({"wielder", "talents_types_mastery"}, { ["technique/battle-tactics"] = 0.2 })
 			self:specialWearAdd({"wielder","combat_armor"}, 5)
 			self:specialWearAdd({"wielder","combat_crit_reduction"}, 10)
@@ -734,6 +734,7 @@ newEntity{ base = "BASE_SHIELD",
 	material_level = 4,
 	special_combat = {
 		dam = 58,
+		block = 220,
 		physcrit = 4.5,
 		dammod = {str=1},
 		damtype = DamageType.FIRE,
@@ -745,6 +746,7 @@ newEntity{ base = "BASE_SHIELD",
 		combat_def = 16,
 		combat_def_ranged = 15,
 		fatigue = 20,
+		learn_talent = { [Talents.T_BLOCK] = 5, },
 	},
 }
 
@@ -762,6 +764,7 @@ newEntity{ base = "BASE_SHIELD",
 	material_level = 3,
 	special_combat = {
 		dam = 48,
+		block = 320,
 		physcrit = 4.5,
 		dammod = {str=1},
 	},
@@ -771,6 +774,7 @@ newEntity{ base = "BASE_SHIELD",
 		combat_def_ranged = 10,
 		fatigue = 30,
 		combat_armor_hardiness = 20,
+		learn_talent = { [Talents.T_BLOCK] = 4, },
 	},
 }
 
@@ -1300,7 +1304,7 @@ newEntity{ base = "BASE_GLOVES",
 	},
 	max_power = 6, power_regen = 1,
 	use_talent = { id = Talents.T_THROW_BOULDER, level = 2, power = 6 },
-	
+
 	set_list = { {"define_as", "SET_MIGHTY_GIRDLE"} },
 	on_set_complete = function(self, who)
 		self:specialSetAdd({"wielder","combat_dam"}, 10)
@@ -1324,7 +1328,7 @@ newEntity{ base = "BASE_LEATHER_BELT",
 		max_encumber = 70,
 		combat_armor = 4,
 	},
-	
+
 	set_list = { {"define_as", "SET_GIANT_WRAPS"} },
 	on_set_complete = function(self, who)
 		self:specialSetAdd({"wielder","max_life"}, 100)
@@ -1707,7 +1711,7 @@ newEntity{ base = "BASE_WARAXE",
 		apr = 4.5,
 		physcrit = 7,
 		dammod = {str=1},
-		convert_damage = { 
+		convert_damage = {
 			[DamageType.ICE] = 50,
 		},
 	},

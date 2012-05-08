@@ -147,6 +147,13 @@ function _M:descAttribute(attr)
 	elseif attr == "COMBAT_DAMTYPE" then
 		local c = self.combat
 		return c.dam.."-"..(c.dam*(c.damrange or 1.1)).." power, "..(c.apr or 0).." apr, "..DamageType:get(c.damtype).name.." damage"
+	elseif attr == "SHIELD" then
+		local c = self.special_combat
+		if c and (game.player:knowTalentType("technique/shield-offense") or game.player:knowTalentType("technique/shield-defense")) then
+			return c.dam.." dam, "..c.block.." block"
+		else
+			return c.block.." block"
+		end
 	elseif attr == "ARMOR" then
 		return (self.wielder and self.wielder.combat_def or 0).." def, "..(self.wielder and self.wielder.combat_armor or 0).." armour"
 	elseif attr == "ATTACK" then
@@ -450,6 +457,8 @@ function _M:getTextualDesc(compare_with)
 		compare_fields(combat, compare_with, field, "apr", "%+d", "Armour Penetration: ", 1, false, false, add_table)
 		compare_fields(combat, compare_with, field, "physcrit", "%+.1f%%", "Physical crit. chance: ", 1, false, false, add_table)
 		compare_fields(combat, compare_with, field, "physspeed", "%.0f%%", "Attack speed: ", 100, false, true, add_table)
+
+		compare_fields(combat, compare_with, field, "block", "%+d", "Block value: ", 1, false, true, add_table)
 
 		compare_fields(combat, compare_with, field, "range", "%+d", "Firing range: ", 1, false, false, add_table)
 		compare_fields(combat, compare_with, field, "capacity", "%d", "Capacity: ", 1, false, false, add_table)

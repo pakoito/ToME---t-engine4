@@ -378,6 +378,7 @@ newEntity{ base = "BASE_SHIELD",
 	material_level = 5,
 	special_combat = {
 		dam = 45,
+		block = 250,
 		physcrit = 10,
 		dammod = {str=1},
 		damrange = 1.4,
@@ -394,6 +395,7 @@ newEntity{ base = "BASE_SHIELD",
 
 		lite = 1,
 		talents_types_mastery = {["celestial/star-fury"]=0.2,["celestial/twilight"]=0.1,},
+		learn_talent = { [Talents.T_BLOCK] = 5, },
 	},
 	talent_on_spell = { {chance=10, talent=Talents.T_MOONLIGHT_RAY, level=2} },
 }
@@ -414,6 +416,7 @@ newEntity{ base = "BASE_SHIELD",
 
 	special_combat = {
 		dam = resolvers.rngavg(20,30),
+		block = 60,
 		physcrit = 2,
 		dammod = {str=1.5},
 		damrange = 1.4,
@@ -427,6 +430,7 @@ newEntity{ base = "BASE_SHIELD",
 			[DamageType.COLD] = 20,
 			[DamageType.NATURE] = 20,
 		},
+		learn_talent = { [Talents.T_BLOCK] = 3, },
 	},
 }
 
@@ -719,6 +723,7 @@ newEntity{ base = "BASE_SHIELD",
 
 	special_combat = {
 		dam = 40,
+		block = 220,
 		physcrit = 9,
 		dammod = {str=1.2},
 	},
@@ -730,6 +735,7 @@ newEntity{ base = "BASE_SHIELD",
 		fatigue = 19,
 		resists = { [DamageType.BLIGHT] = 25, },
 		life_regen = 5,
+		learn_talent = { [Talents.T_BLOCK] = 5, },
 	},
 }
 

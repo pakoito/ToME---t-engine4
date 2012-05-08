@@ -71,8 +71,19 @@ newTalent{
 	require = techs_req2,
 	mode = "passive",
 	points = 5,
+	getDurInc = function(self, t)
+		return math.ceil(self:getTalentLevel(t)/4)
+	end,
+	getCritInc = function(self, t)
+		return self:combatTalentIntervalDamage(t, "dex", 10, 50)
+	end,
 	info = function(self, t)
-		return ([[When you block/avoid a melee blow you have a %d%% chance to get a free, automatic melee attack against your foe. Your chances increase with dexterity.]]):format(self:getTalentLevel(t) * (5 + self:getDex(5, true)))
+		local inc = t.getDurInc(self, t)
+		return ([[Improves your ability to perform counterstrikes after blocks in the following ways:
+		Allows counterstrikes after incomplete blocks.
+		Increases the duration of the counterstrike debuff on attackers by %d turn%s.
+		Increases the number of counterstrikes you can perform on a target while they're vulnerable by %d.
+		Increases the crit chance of counterstrikes by %d%%. This increase scales with Dexterity.]]):format(inc, (inc > 1 and "s" or ""), inc, t.getCritInc(self, t))
 	end,
 }
 

@@ -80,6 +80,17 @@ newEntity{
 	},
 }
 
+newEntity{
+	power_source = {technique=true},
+	name = "reinforced ", prefix=true, instant_resolve=true,
+	keywords = {reinforced=true},
+	level_range = {10, 50},
+	rarity = 9,
+	cost = 9,
+	special_combat = {
+		block = resolvers.mbonus_material(80, 20),
+	},
+}
 
 newEntity{
 	power_source = {arcane=true},
@@ -235,6 +246,9 @@ newEntity{
 	greater_ego = 1,
 	rarity = 18,
 	cost = 40,
+	special_combat = {
+		block = resolvers.mbonus_material(90, 30),
+	},
 	wielder = {
 		combat_armor = resolvers.mbonus_material(8, 4),
 		stun_immune = resolvers.mbonus_material(3, 2, function(e, v) v=v/10 return 0, v end),

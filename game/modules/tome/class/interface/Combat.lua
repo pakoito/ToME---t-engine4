@@ -360,6 +360,15 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		dam = dam * mult
 		print("[ATTACK] after mult", dam)
 
+		if target:hasEffect(target.EFF_COUNTERSTRIKE) then
+			dam = dam * 2
+			--self:removeEffect(target.EFF_COUNTERSTRIKE)
+			local eff = target.tmp[target.EFF_COUNTERSTRIKE]
+			eff.nb = eff.nb - 1
+			if eff.nb == 0 then target:removeEffect(target.EFF_COUNTERSTRIKE) end
+			print("[ATTACK] after counterstrike", dam)
+		end
+
 		if weapon and weapon.inc_damage_type then
 			for t, idt in pairs(weapon.inc_damage_type) do
 				if target.type.."/"..target.subtype == t or target.type == t then dam = dam + dam * idt / 100 break end
@@ -637,12 +646,6 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	if hitted and not target.dead and target:attr("carbon_spikes") then
 		local t = target:getTalentFromId(target.T_CARBON_SPIKES)
 		t.do_carbonLoss(target, t)
-	end
-
-	-- Riposte!
-	if not hitted and not target.dead and not evaded and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:knowTalent(target.T_RIPOSTE) and rng.percent(target:getTalentLevel(target.T_RIPOSTE) * (5 + target:getDex(5, true))) then
-		game.logSeen(self, "%s ripostes!", target.name:capitalize())
-		target:attackTarget(self, nil, nil, true)
 	end
 
 	-- Set Up
