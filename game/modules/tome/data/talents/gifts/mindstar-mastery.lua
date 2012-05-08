@@ -120,9 +120,9 @@ newTalent{
 	info = function(self, t)
 		local dam = t.getDamage(self, t)
 		local c = t.getChance(self, t)
-		return ([[Smash your psiblades into the ground, creating a tide of crystalized leaves circling you in a radius of 3 for 7 turns.
-		All foes hit by the leaves will start bleeding for %0.2f per turn (cummulative).
-		All allies hit will be covered in leaves, granting them %d%% chance to completly avoid any damaging attack.
+		return ([[Smash your psiblades into the ground, creating a tide of crystallized leaves circling you in a radius of 3 for 7 turns.
+		All foes hit by the leaves will start bleeding for %0.2f per turn (cumulative).
+		All allies hit will be covered in leaves, granting them %d%% chance to completely avoid any damaging attack.
 		Damage and avoidance will increase with Mindpower and Mindstar power (requires two mindstars, multiplier %2.f).]]):
 		format(dam, c, get_mindstar_power_mult(self))
 	end,
