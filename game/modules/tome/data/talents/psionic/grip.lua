@@ -111,6 +111,7 @@ newTalent{
 	end,
 	psi = 40,
 	tactical = { ATTACK = { PHYSICAL = 2 } },
+	no_npc_use = true,
 	range = function(self, t)
 		local r = 3
 		local gem_level = getGemLevel(self)

@@ -1108,6 +1108,7 @@ function _M:entityFilterPost(zone, level, type, e, filter)
 					return true
 				end,
 				level = filter.random_elite.level or zone:level_adjust_level(level, zone, type),
+				check_talents_level = true,
 			}
 			e = self:createRandomBoss(e, table.merge(base, filter.random_elite, true))
 		end
@@ -1591,7 +1592,19 @@ function _M:createRandomBoss(base, data)
 
 		-- Select additional talents from the class
 		local list = {}
-		for _, t in pairs(b.talents_def) do if b.talents_types[t.type[1]] and not t.no_npc_use then list[t.id] = true end end
+		for _, t in pairs(b.talents_def) do
+			if b.talents_types[t.type[1]] and not t.no_npc_use then
+				local ok = true
+				if data.check_talents_level then
+					local req = util.getval(rawget(t, 'require'), b, t)
+					if req and req.level and util.getval(req.level, 1) > data.level then
+						print("Random boss forbade talent because of level", t.name, data.level)
+					end
+				end
+
+				if ok then list[t.id] = true end
+			end
+		end
 		local nb = 4 + (data.level / 7)
 		nb = math.max(rng.range(math.floor(nb * 0.7), math.ceil(nb * 1.3)), 1)
 		print("Adding "..nb.." random class talents to boss")

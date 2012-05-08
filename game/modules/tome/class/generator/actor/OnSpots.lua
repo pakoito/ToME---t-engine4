@@ -25,7 +25,7 @@ module(..., package.seeall, class.inherit(OnSpots))
 function _M:init(zone, map, level, spots)
 	OnSpots.init(self, zone, map, level, spots)
 	local data = level.data.generator.actor
-	self.randelite = data.randelite or 20
+	self.randelite = data.randelite or 25
 end
 
 function _M:generateOne()
