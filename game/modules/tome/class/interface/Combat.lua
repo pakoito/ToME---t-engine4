@@ -124,7 +124,7 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 	local hd = {"Combat:attackTarget", target=target, damtype=damtype, mult=mult, noenergy=noenergy}
 	if self:triggerHook(hd) then
 		speed, hit, damtype, mult = ht.speed, hd.hit, hd.damtype, hd.mult
-		if ht.stop then return hit end
+		if hd.stop then return hit end
 	end
 
 	if not speed and self:isTalentActive(self.T_GESTURE_OF_PAIN) then
