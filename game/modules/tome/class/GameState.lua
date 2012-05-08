@@ -1095,6 +1095,7 @@ function _M:entityFilterPost(zone, level, type, e, filter)
 				loot_quantity = 1,
 				drop_equipment = false,
 				no_loot_randart = true,
+				resources_boost = 1.5,
 				class_filter = function(c)
 					if e.power_source then
 						for ps, _ in pairs(e.power_source) do if c.power_source and c.power_source[ps] then return true end end
@@ -1636,10 +1637,10 @@ function _M:createRandomBoss(base, data)
 		self.on_added_to_level = nil
 
 		-- Cheat a bit with ressources
-		self.max_mana = self.max_mana * 3 self.mana_regen = self.mana_regen + 1
-		self.max_vim = self.max_vim * 3 self.vim_regen = self.vim_regen + 1
-		self.max_stamina = self.max_stamina * 3 self.stamina_regen = self.stamina_regen + 1
-		self.max_psi = self.max_psi * 3 self.psi_regen = self.psi_regen + 2
+		self.max_mana = self.max_mana * (data.resources_boost or 3) self.mana_regen = self.mana_regen + 1
+		self.max_vim = self.max_vim * (data.resources_boost or 3) self.vim_regen = self.vim_regen + 1
+		self.max_stamina = self.max_stamina * (data.resources_boost or 3) self.stamina_regen = self.stamina_regen + 1
+		self.max_psi = self.max_psi * (data.resources_boost or 3) self.psi_regen = self.psi_regen + 2
 		self.equilibrium_regen = self.equilibrium_regen - 2
 		self:resetToFull()
 	end
