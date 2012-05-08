@@ -717,8 +717,8 @@ function _M:defineDisplayCallback()
 	local ps = self:getParticlesList()
 
 	local f_self = nil
-	local f_danger = nil
-	local f_danger = nil
+	local f_danger2 = nil
+	local f_danger1 = nil
 	local f_powerful = nil
 	local f_friend = nil
 	local f_enemy = nil
@@ -2617,6 +2617,11 @@ function _M:learnItemTalent(o, tid, level)
 		else
 			self:learnTalent(tid, true, 1)
 		end
+	end
+
+	if not self.talents_cd[tid] then
+		local cd = math.ceil((self:getTalentCooldown(t) or 6) / 1.5)
+		self.talents_cd[tid] = cd
 	end
 end
 
