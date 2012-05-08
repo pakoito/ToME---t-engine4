@@ -104,7 +104,7 @@ newEntity{ base = "BASE_MINDSTAR",
 	material_level = 4,
 	combat = {
 		dam = resolvers.rngavg(12,14),
-		apr = 5,
+		apr = 32,
 		physcrit = 4.5,
 		dammod = {wil=0.45, cun=0.25},
 	},
