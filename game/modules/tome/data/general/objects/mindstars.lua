@@ -101,7 +101,7 @@ newEntity{ base = "BASE_MINDSTAR",
 	level_range = {30, 40},
 	require = { stat = { wil=35 }, },
 	cost = 25,
-	material_level = 32,
+	material_level = 4,
 	combat = {
 		dam = resolvers.rngavg(12,14),
 		apr = 5,

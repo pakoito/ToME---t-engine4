@@ -382,6 +382,7 @@ function resolvers.calc.image_material(t, e)
 	if type(t[2]) == "string" and t[2] == "nature" then t[2] = {"mossy","vined","thorned","pulsing","living"} end
 	if type(t[2]) == "string" and t[2] == "cloth" then t[2] = {"linen","woollen","cashmere","silk","elvensilk"} end
 	local ml = e.material_level or 1
+	print("================", e.name, t[1], ml, t[2][ml])
 	return "object/"..t[1].."_"..t[2][ml]..".png"
 end
 
