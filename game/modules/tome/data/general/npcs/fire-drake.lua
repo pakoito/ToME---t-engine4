@@ -111,10 +111,5 @@ newEntity{ base = "BASE_NPC_FIRE_DRAKE",
 		[Talents.T_FIRE_BREATH]={base=5, every=4},
 		[Talents.T_DEVOURING_FLAME]={base=5, every=6},
 	},
-	on_die = function(self, who)
-		local part = "FIRE_WYRM_SALIVA"
-		if game.player:hasQuest("brotherhood-of-alchemists") then
-			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
-		end
-	end,
+	ingredient_on_death = "FIRE_WYRM_SALIVA",
 }

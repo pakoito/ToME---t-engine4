@@ -89,12 +89,7 @@ newEntity{ base = "BASE_NPC_SKELETON",
 
 	autolevel = "caster",
 	ai = "dumb_talented_simple", ai_state = { talent_in=3, },
-	on_die = function(self, who)
-		local part = "SKELETON_MAGE_SKULL"
-		if game.player:hasQuest("brotherhood-of-alchemists") then
-			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
-		end
-	end,
+	ingredient_on_death = "SKELETON_MAGE_SKULL",
 }
 
 newEntity{ base = "BASE_NPC_SKELETON",

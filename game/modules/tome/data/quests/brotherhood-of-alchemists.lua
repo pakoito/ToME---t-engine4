@@ -40,17 +40,17 @@ desc = function(self, player, who)
 			elseif self:isCompleted(self.e[i][j].start) and not self:isCompleted(self.e[i][j].full) then
 				desc[#desc+1] = ""..self.e[i][j].alchemist.." needs your help making an "..self.e[i][j].name..". He has given you some notes on the ingredients:"
 				if not self:check_i(player, self.e[i][j].ingredients[1]) then
-					desc[#desc+1] = "#SLATE#  * 'Needed: one "..self.e[i][j].ingredients[1].name..". "..self.e[i][j].ingredients[1].alch.."'#WHITE#"
+					desc[#desc+1] = "#SLATE#  * 'Needed: one "..self.e[i][j].ingredients[1].name..". "..game.party:getIngredient(self.e[i][j].ingredients[1].id).alchemy_text.."'#WHITE#"
 				else
 					desc[#desc+1] = "#LIGHT_GREEN#  * You've found the needed "..self.e[i][j].ingredients[1].name..".#WHITE#"
 				end
 				if not self:check_i(player, self.e[i][j].ingredients[2]) then
-					desc[#desc+1] = "#SLATE#  * 'Needed: one "..self.e[i][j].ingredients[2].name..". "..self.e[i][j].ingredients[2].alch.."'#WHITE#"
+					desc[#desc+1] = "#SLATE#  * 'Needed: one "..self.e[i][j].ingredients[2].name..". "..game.party:getIngredient(self.e[i][j].ingredients[2].id).alchemy_text.."'#WHITE#"
 				else
 					desc[#desc+1] = "#LIGHT_GREEN#  * You've found the needed "..self.e[i][j].ingredients[2].name..".#WHITE#"
 				end
 				if not self:check_i(player, self.e[i][j].ingredients[3]) then
-					desc[#desc+1] = "#SLATE#  * 'Needed: one "..self.e[i][j].ingredients[3].name..". "..self.e[i][j].ingredients[3].alch.."'#WHITE#"
+					desc[#desc+1] = "#SLATE#  * 'Needed: one "..self.e[i][j].ingredients[3].name..". "..game.party:getIngredient(self.e[i][j].ingredients[3].id).alchemy_text.."'#WHITE#"
 				else
 					desc[#desc+1] = "#LIGHT_GREEN#  * You've found the needed "..self.e[i][j].ingredients[3].name..".#WHITE#"
 				end
@@ -62,8 +62,10 @@ end
 
 on_grant = function(self, who)
 	self.cookbook, self.elixirs, self.alchemists, self.e = self:recipes()
+	self.recipes = nil
 	self.needed_ingredients = {}
 	self.player_loses = false
+	game.log("#VIOLET#You can check the ingredients you possess by pressing Escape and selecting 'Show ingredients'.")
 end
 
 -- called whenever getting the task for or turning in an elixir. Wipes the shopping list and rewrites it.
@@ -90,50 +92,23 @@ end
 
 --only used in the desc function
 check_i = function(self, player, ingredient)
-	local ing_list = mod.class.Object:loadList("/data/general/objects/elixir-ingredients.lua")
-	--local ing = ing_list[ingredient]
-	local o, item, inven_id = player:findInAllInventories(ingredient.name)
-	return o
+	return game.party:hasIngredient(ingredient.id)
 end
 
 --called in various chat cond functions
 check_ingredients = function(self, player, elixir, n)
 	local o = {self.cookbook[elixir][1], self.cookbook[elixir][2], self.cookbook[elixir][3]}
-	local first_o, first_item, first_inven_id = player:findInAllInventories(o[1].name)
-	local second_o, second_item, second_inven_id = player:findInAllInventories(o[2].name)
-	local third_o, third_item, third_inven_id = player:findInAllInventories(o[3].name)
+	local first_o = game.party:hasIngredient(o[1].id)
+	local second_o = game.party:hasIngredient(o[2].id)
+	local third_o = game.party:hasIngredient(o[3].id)
 	return first_o and second_o and third_o
-end
-
---called in the on_die functions of ingredient-dropping monsters to determine if they should really drop their ingredient
-need_part = function(self, player, ingredient, monster)
-	if not player then return end
-	if self:isEnded() then return end
-	local oplayer = player
-	if player.resolveSource then player = player:resolveSource() end
-	if not player or not game.party:hasMember(player) or oplayer.suppress_alchemist_drops then return end
-	local list = self.needed_ingredients
-	local needed = false
-	local ing_list = mod.class.Object:loadList("/data/general/objects/elixir-ingredients.lua")
-	local ing = ing_list[ingredient]:clone()
-	ing:resolve()
-	ing:resolve(nil, true)
-	for i = 1, #list do
-		if list[i].name == ing.name then needed = true end
-	end
-	local o, item, inven_id = player:findInAllInventories(ing.name)
-	if needed and not o then
-		game.zone:addEntity(game.level, ing, "object", monster.x, monster.y)
-	end
 end
 
 --called in various chat cond functions
 remove_ingredients = function(self, player, elixir, n)
 	local o = {self.cookbook[elixir][1], self.cookbook[elixir][2], self.cookbook[elixir][3]}
 	for i = 1, 3 do
-		local object, item, inven_id = player:findInAllInventories(o[i].name)
-		player:removeObject(inven_id, item, false)
-		object:removed()
+		game.party:useIngredient(o[i].id, 1)
 	end
 end
 
@@ -224,14 +199,9 @@ winner_is = function(self, player, alchemist_num)
 	self.player_won = true
 end
 
---list of object definitions used to randomly generate ingredients for the elixirs in the table e in the recipes function.
-monster_parts = { "TROLL_INTESTINE", "SKELETON_MAGE_SKULL", "RITCH_STINGER", "ORC_HEART", "NAGA_TONGUE", "GREATER_DEMON_BILE", "BONE_GOLEM_DUST", "FROST_ANT_STINGER", "MINOTAUR_NOSE",
-		  "ELDER_VAMPIRE_BLOOD", "MULTIHUED_WYRM_SCALE", "SPIDER_SPINNERET", "HONEY_TREE_ROOT", "BLOATED_HORROR_HEART", "ELECTRIC_EEL_TAIL", "SQUID_INK", "BEAR_PAW", "ICE_WYRM_TOOTH",
-		  "RED_CRYSTAL_SHARD", "FIRE_WYRM_SALIVA", "GHOUL_FLESH", "MUMMY_BONE", "SANDWORM_TOOTH", "BLACK_MAMBA_HEAD", "SNOW_GIANT_KIDNEY", "STORM_WYRM_CLAW", "GREEN_WORM",
-		  "WIGHT_ECTOPLASM", "XORN_FRAGMENT", "WARG_CLAW", "FAEROS_ASH", "WRETCHLING_EYE", "FAERLHING_FANG", "VAMPIRE_LORD_FANG", "HUMMERHORN_WING", "LUMINOUS_HORROR_DUST" }
-
 recipes = function(self)
-	local ing_list = mod.class.Object:loadList("/data/general/objects/elixir-ingredients.lua")
+	local ing_list = {}
+	for id, d in pairs(game.party.__ingredients_def) do if d.alchemy_text then ing_list[#ing_list+1] = {id=id, name=d.name} end end
 	local e = {
 		{
 			{
@@ -246,9 +216,9 @@ recipes = function(self)
 			poached = "fox_poached",
 			alchemist = "Stire of Derth",
 			ingredients = {
-				ing_list[rng.tableRemove(self.monster_parts)],
-				ing_list[rng.tableRemove(self.monster_parts)],
-				ing_list[rng.tableRemove(self.monster_parts)],
+				rng.tableRemove(ing_list),
+				rng.tableRemove(ing_list),
+				rng.tableRemove(ing_list),
 				},
 			},
 			{
@@ -263,9 +233,9 @@ recipes = function(self)
 			poached = "avoidance_poached",
 			alchemist = "Stire of Derth",
 			ingredients = {
-				ing_list[rng.tableRemove(self.monster_parts)],
-				ing_list[rng.tableRemove(self.monster_parts)],
-				ing_list[rng.tableRemove(self.monster_parts)],
+				rng.tableRemove(ing_list),
+				rng.tableRemove(ing_list),
+				rng.tableRemove(ing_list),
 				},
 			},
 			{
@@ -280,9 +250,9 @@ recipes = function(self)
 			poached = "precision_poached",
 			alchemist = "Stire of Derth",
 			ingredients = {
-				ing_list[rng.tableRemove(self.monster_parts)],
-				ing_list[rng.tableRemove(self.monster_parts)],
-				ing_list[rng.tableRemove(self.monster_parts)],
+				rng.tableRemove(ing_list),
+				rng.tableRemove(ing_list),
+				rng.tableRemove(ing_list),
 				},
 			},
 		},
@@ -299,9 +269,9 @@ recipes = function(self)
 			poached = "mysticism_poached",
 			alchemist = "Marus of Elvala",
 			ingredients = {
-				ing_list[rng.tableRemove(self.monster_parts)],
-				ing_list[rng.tableRemove(self.monster_parts)],
-				ing_list[rng.tableRemove(self.monster_parts)],
+				rng.tableRemove(ing_list),
+				rng.tableRemove(ing_list),
+				rng.tableRemove(ing_list),
 				},
 			},
 			{
@@ -316,9 +286,9 @@ recipes = function(self)
 			poached = "savior_poached",
 			alchemist = "Marus of Elvala",
 			ingredients = {
-				ing_list[rng.tableRemove(self.monster_parts)],
-				ing_list[rng.tableRemove(self.monster_parts)],
-				ing_list[rng.tableRemove(self.monster_parts)],
+				rng.tableRemove(ing_list),
+				rng.tableRemove(ing_list),
+				rng.tableRemove(ing_list),
 				},
 			},
 			{
@@ -333,9 +303,9 @@ recipes = function(self)
 			poached = "mastery_poached",
 			alchemist = "Marus of Elvala",
 			ingredients = {
-				ing_list[rng.tableRemove(self.monster_parts)],
-				ing_list[rng.tableRemove(self.monster_parts)],
-				ing_list[rng.tableRemove(self.monster_parts)],
+				rng.tableRemove(ing_list),
+				rng.tableRemove(ing_list),
+				rng.tableRemove(ing_list),
 				},
 			},
 		},
@@ -352,9 +322,9 @@ recipes = function(self)
 			poached = "force_poached",
 			alchemist = "Agrimley the hermit",
 			ingredients = {
-				ing_list[rng.tableRemove(self.monster_parts)],
-				ing_list[rng.tableRemove(self.monster_parts)],
-				ing_list[rng.tableRemove(self.monster_parts)],
+				rng.tableRemove(ing_list),
+				rng.tableRemove(ing_list),
+				rng.tableRemove(ing_list),
 				},
 			},
 			{
@@ -369,9 +339,9 @@ recipes = function(self)
 			poached = "serendipity_poached",
 			alchemist = "Agrimley the hermit",
 			ingredients = {
-				ing_list[rng.tableRemove(self.monster_parts)],
-				ing_list[rng.tableRemove(self.monster_parts)],
-				ing_list[rng.tableRemove(self.monster_parts)],
+				rng.tableRemove(ing_list),
+				rng.tableRemove(ing_list),
+				rng.tableRemove(ing_list),
 				},
 			},
 			{
@@ -386,9 +356,9 @@ recipes = function(self)
 			poached = "focus_poached",
 			alchemist = "Agrimley the hermit",
 			ingredients = {
-				ing_list[rng.tableRemove(self.monster_parts)],
-				ing_list[rng.tableRemove(self.monster_parts)],
-				ing_list[rng.tableRemove(self.monster_parts)],
+				rng.tableRemove(ing_list),
+				rng.tableRemove(ing_list),
+				rng.tableRemove(ing_list),
 				},
 			},
 		},
@@ -405,9 +375,9 @@ recipes = function(self)
 			poached = "brawn_poached",
 			alchemist = "Ungrol of Last Hope",
 			ingredients = {
-				ing_list[rng.tableRemove(self.monster_parts)],
-				ing_list[rng.tableRemove(self.monster_parts)],
-				ing_list[rng.tableRemove(self.monster_parts)],
+				rng.tableRemove(ing_list),
+				rng.tableRemove(ing_list),
+				rng.tableRemove(ing_list),
 				},
 			},
 			{
@@ -422,9 +392,9 @@ recipes = function(self)
 			poached = "stoneskin_poached",
 			alchemist = "Ungrol of Last Hope",
 			ingredients = {
-				ing_list[rng.tableRemove(self.monster_parts)],
-				ing_list[rng.tableRemove(self.monster_parts)],
-				ing_list[rng.tableRemove(self.monster_parts)],
+				rng.tableRemove(ing_list),
+				rng.tableRemove(ing_list),
+				rng.tableRemove(ing_list),
 				},
 			},
 			{
@@ -439,9 +409,9 @@ recipes = function(self)
 			poached = "foundations_poached",
 			alchemist = "Ungrol of Last Hope",
 			ingredients = {
-				ing_list[rng.tableRemove(self.monster_parts)],
-				ing_list[rng.tableRemove(self.monster_parts)],
-				ing_list[rng.tableRemove(self.monster_parts)],
+				rng.tableRemove(ing_list),
+				rng.tableRemove(ing_list),
+				rng.tableRemove(ing_list),
 				},
 			},
 		},

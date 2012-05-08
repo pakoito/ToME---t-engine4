@@ -89,10 +89,5 @@ newEntity{ base = "BASE_NPC_INSECT",
 	can_multiply = 4,
 
 	resolvers.talents{ [Talents.T_BITE_POISON]={base=3, every=10, max=8} },
-	on_die = function(self, who)
-		local part = "HUMMERHORN_WING"
-		if game.player:hasQuest("brotherhood-of-alchemists") then
-			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
-		end
-	end,
+	ingredient_on_death = "HUMMERHORN_WING",
 }

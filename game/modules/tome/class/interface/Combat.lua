@@ -1527,12 +1527,12 @@ function _M:hasPsiblades(main, off)
 	if main then
 		if not self:getInven("MAINHAND") then return end
 		weapon = self:getInven("MAINHAND")[1]
-		if not weapon.combat or not weapon.psiblade_active then return nil, "unactivated psiblade" end
+		if not weapon or not weapon.combat or not weapon.psiblade_active then return nil, "unactivated psiblade" end
 	end
 	if off then
 		if not self:getInven("OFFHAND") then return end
 		offweapon = self:getInven("OFFHAND")[1]
-		if not offweapon.combat or not offweapon.psiblade_active then return nil, "unactivated psiblade" end
+		if not offweapon or not offweapon.combat or not offweapon.psiblade_active then return nil, "unactivated psiblade" end
 	end
 	return weapon, offweapon
 end

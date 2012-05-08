@@ -80,12 +80,7 @@ newEntity{ base = "BASE_NPC_CRYSTAL",
 	resolvers.talents{
 		[Talents.T_FLAME]={base=1, every=7, max=5},
 	},
-	on_die = function(self, who)
-		local part = "RED_CRYSTAL_SHARD"
-		if game.player:hasQuest("brotherhood-of-alchemists") then
-			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
-		end
-	end,
+	ingredient_on_death = "RED_CRYSTAL_SHARD",
 }
 
 newEntity{ base = "BASE_NPC_CRYSTAL",

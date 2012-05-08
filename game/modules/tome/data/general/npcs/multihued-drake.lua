@@ -133,12 +133,7 @@ newEntity{ base = "BASE_NPC_MULTIHUED_DRAKE", define_as = "GREATER_MULTI_HUED_WY
 		[Talents.T_LIGHTNING_BREATH]={base=9, every=4},
 		[Talents.T_ACID_BREATH]={base=9, every=4},
 	},
-	on_die = function(self, who)
-		local part = "MULTIHUED_WYRM_SCALE"
-		if game.player:hasQuest("brotherhood-of-alchemists") then
-			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
-		end
-	end,
+	ingredient_on_death = "MULTIHUED_WYRM_SCALE",
 }
 
 newEntity{ base = "BASE_NPC_MULTIHUED_DRAKE",

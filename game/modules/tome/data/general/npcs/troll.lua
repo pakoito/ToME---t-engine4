@@ -50,12 +50,7 @@ newEntity{
 
 	resists = { [DamageType.FIRE] = -50 },
 	fear_immune = 1,
-	on_die = function(self, who)
-		local part = "TROLL_INTESTINE"
-		if game.player:hasQuest("brotherhood-of-alchemists") then
-			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
-		end
-	end,
+	ingredient_on_death = "TROLL_INTESTINE",
 }
 
 newEntity{ base = "BASE_NPC_TROLL",

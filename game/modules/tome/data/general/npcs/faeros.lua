@@ -49,12 +49,7 @@ newEntity{
 	blind_immune = 1,
 	knockback_immune = 1,
 	confusion_immune = 1,
-	on_die = function(self, who)
-		local part = "FAEROS_ASH"
-		if game.player:hasQuest("brotherhood-of-alchemists") then
-			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
-		end
-	end,
+	ingredient_on_death = "FAEROS_ASH",
 }
 
 newEntity{ base = "BASE_NPC_FAEROS",

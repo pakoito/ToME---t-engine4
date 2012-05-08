@@ -102,10 +102,5 @@ newEntity{ base = "BASE_NPC_PLANT",
 	},
 
 	resolvers.talents{ [Talents.T_SUMMON]=1 },
-	on_die = function(self, who)
-		local part = "HONEY_TREE_ROOT"
-		if game.player:hasQuest("brotherhood-of-alchemists") then
-			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
-		end
-	end,
+	ingredient_on_death = "HONEY_TREE_ROOT",
 }

@@ -138,12 +138,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	resolvers.inscriptions(1, {"shielding rune"}),
 
 	resolvers.sustains_at_birth(),
-	on_die = function(self, who)
-		local part = "BLOATED_HORROR_HEART"
-		if game.player:hasQuest("brotherhood-of-alchemists") then
-			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
-		end
-	end,
+	ingredient_on_death = "BLOATED_HORROR_HEART",
 }
 
 newEntity{ base = "BASE_NPC_HORROR",
@@ -434,12 +429,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	make_escort = {
 		{type="horror", subtype="eldritch", name="luminous horror", number=2, no_subescort=true},
 	},
-	on_die = function(self, who)
-		local part = "LUMINOUS_HORROR_DUST"
-		if game.player:hasQuest("brotherhood-of-alchemists") then
-			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
-		end
-	end,
+	ingredient_on_death = "LUMINOUS_HORROR_DUST",
 }
 
 newEntity{ base = "BASE_NPC_HORROR",

@@ -98,12 +98,7 @@ newEntity{ base = "BASE_NPC_CANINE",
 	combat_armor = 5, combat_def = 7,
 	combat = { dam=resolvers.levelup(10, 1, 1), atk=10, apr=5 },
 	resolvers.talents{ [Talents.T_HOWL]=3, },
-	on_die = function(self, who)
-		local part = "WARG_CLAW"
-		if game.player:hasQuest("brotherhood-of-alchemists") then
-			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
-		end
-	end,
+	ingredient_on_death = "WARG_CLAW",
 }
 
 newEntity{ base = "BASE_NPC_CANINE",

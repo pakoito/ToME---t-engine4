@@ -65,12 +65,10 @@ newEntity{
 			loot_quantity = 1,
 			no_loot_randart = true,
 			on_die = function(self, src) -- When they die they have a chance to drop an alchemist ingredient
-				local q = game.player:hasQuest("brotherhood-of-alchemists")
-				if q and rng.percent(30) then
-					local ing = rng.table(q.needed_ingredients)
-					if ing then
-						q:need_part(src, ing.define_as, self)
-					end
+				if rng.percent(30) then
+					local list = {}
+					for id, d in pairs(game.party.__ingredients_def) do if d.type == "organic" then list[#list+1] = id end end
+					if #list > 0 then game.party:collectIngredient(rng.table(list)) end
 				end
 			end
 		}}}

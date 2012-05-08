@@ -43,12 +43,7 @@ newEntity{
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=3, },
 	stats = { str=15, dex=7, mag=3, con=3 },
 	combat_armor = 1, combat_def = 1,
-	on_die = function(self, who)
-		local part = "SANDWORM_TOOTH"
-		if game.player:hasQuest("brotherhood-of-alchemists") then
-			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
-		end
-	end,
+	ingredient_on_death = "SANDWORM_TOOTH",
 	not_power_source = {arcane=true},
 }
 

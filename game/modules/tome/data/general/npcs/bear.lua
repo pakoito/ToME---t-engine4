@@ -46,12 +46,7 @@ newEntity{
 	resolvers.tmasteries{ ["technique/other"]=0.25 },
 
 	resists = { [DamageType.FIRE] = 20, [DamageType.COLD] = 20, [DamageType.NATURE] = 20 },
-	on_die = function(self, who)
-		local part = "BEAR_PAW"
-		if game.player:hasQuest("brotherhood-of-alchemists") then
-			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
-		end
-	end,
+	ingredient_on_death = "BEAR_PAW",
 	not_power_source = {arcane=true},
 }
 

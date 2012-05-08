@@ -43,12 +43,7 @@ Vicious predators, they inject corrupting diseases into their foes, and their sh
 	poison_immune = 0.5,
 	disease_immune = 0.5,
 	resists = { [DamageType.BLIGHT] = 20, [DamageType.FIRE] = 100 },
-	on_die = function(self, who)
-		local part = "RITCH_STINGER"
-		if game.player:hasQuest("brotherhood-of-alchemists") then
-			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
-		end
-	end,
+	ingredient_on_death = "RITCH_STINGER",
 	not_power_source = {arcane=true},
 }
 

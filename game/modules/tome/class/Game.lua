@@ -1115,12 +1115,7 @@ function _M:setupCommands()
 			end end
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
-			local l = {}
-			for tt, d in pairs(mod.class.Actor.talents_types_def) do
-				if d.generic and type(tt) == "string" and not tt:find("other") and not tt:find("race/") and not tt:find("undead/") then l[#l+1] = tt end
-			end
-			table.sort(l)
-			for i, tt in ipairs(l) do print(tt) end
+			for id, _ in pairs(game.party.__ingredients_def) do game.party:collectIngredient(id, rng.range(1, 3)) end
 		end end,
 		[{"_f","ctrl"}] = function() if config.settings.cheat then
 			self.player.quests["love-melinda"] = nil
@@ -1363,6 +1358,7 @@ function _M:setupCommands()
 				"resume",
 				"achievements",
 				{ "Show known Lore", function() self:unregisterDialog(menu) self:registerDialog(require("mod.dialogs.ShowLore").new("Tales of Maj'Eyal Lore", self.player)) end },
+				{ "Show ingredients", function() self:unregisterDialog(menu) self:registerDialog(require("mod.dialogs.ShowIngredients").new(self.party)) end },
 				"highscores",
 				{ "Inventory", function() self:unregisterDialog(menu) self.key:triggerVirtual("SHOW_INVENTORY") end },
 				{ "Character Sheet", function() self:unregisterDialog(menu) self.key:triggerVirtual("SHOW_CHARACTER_SHEET") end },

@@ -44,12 +44,7 @@ newEntity{
 	random_name_def = "demon",
 
 	resolvers.inscriptions(1, "rune"),
-	on_die = function(self, who)
-		local part = "GREATER_DEMON_BILE"
-		if game.player:hasQuest("brotherhood-of-alchemists") then
-			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
-		end
-	end,
+	ingredient_on_death = "GREATER_DEMON_BILE",
 }
 
 newEntity{ base = "BASE_NPC_MAJOR_DEMON",

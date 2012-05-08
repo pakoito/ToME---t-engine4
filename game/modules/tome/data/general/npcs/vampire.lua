@@ -127,12 +127,7 @@ It can summon the very shades of its victims from beyond the grave to come ensla
 		[Talents.T_ROTTING_DISEASE]={base=3, every=7, max=7},
 		[Talents.T_FORGERY_OF_HAZE]={base=2, every=7, max=5},
 	},
-	on_die = function(self, who)
-		local part = "ELDER_VAMPIRE_BLOOD"
-		if game.player:hasQuest("brotherhood-of-alchemists") then
-			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
-		end
-	end,
+	ingredient_on_death = "ELDER_VAMPIRE_BLOOD",
 }
 
 newEntity{ base = "BASE_NPC_VAMPIRE",
@@ -158,12 +153,7 @@ newEntity{ base = "BASE_NPC_VAMPIRE",
 	make_escort = {
 		{type="undead", number=resolvers.mbonus(2, 2)},
 	},
-	on_die = function(self, who)
-		local part = "VAMPIRE_LORD_FANG"
-		if game.player:hasQuest("brotherhood-of-alchemists") then
-			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
-		end
-	end,
+	ingredient_on_death = "VAMPIRE_LORD_FANG",
 }
 
 -- Arch Zephyr, Vampiric Storm Lord. Wields a bow and lightning magic with equal effectiveness, and moves quickly.

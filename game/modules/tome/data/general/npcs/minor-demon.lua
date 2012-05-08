@@ -85,12 +85,7 @@ newEntity{ base = "BASE_NPC_DEMON",
 	make_escort = {
 		{type="demon", subtype="minor", name="wretchling", number=rng.range(1, 4), no_subescort=true},
 	},
-	on_die = function(self, who)
-		local part = "WRETCHLING_EYE"
-		if game.player:hasQuest("brotherhood-of-alchemists") then
-			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
-		end
-	end,
+	ingredient_on_death = "WRETCHLING_EYE",
 }
 
 newEntity{ base = "BASE_NPC_DEMON",

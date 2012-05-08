@@ -107,10 +107,5 @@ newEntity{ base = "BASE_NPC_COLD_DRAKE",
 		[Talents.T_ICY_SKIN]={base=3, every=5},
 		[Talents.T_ICE_BREATH]={base=5, every=4},
 	},
-	on_die = function(self, who)
-		local part = "ICE_WYRM_TOOTH"
-		if game.player:hasQuest("brotherhood-of-alchemists") then
-			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
-		end
-	end,
+	ingredient_on_death = "ICE_WYRM_TOOTH",
 }

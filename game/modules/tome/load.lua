@@ -42,6 +42,7 @@ local Birther = require "engine.Birther"
 local Store = require "mod.class.Store"
 local WorldAchievements = require "mod.class.interface.WorldAchievements"
 local PlayerLore = require "mod.class.interface.PlayerLore"
+local PartyIngredients = require "mod.class.interface.PartyIngredients"
 local PlayerHotkeys = require "engine.interface.PlayerHotkeys"
 local Quest = require "engine.Quest"
 local UIBase = require "engine.ui.Base"
@@ -186,6 +187,9 @@ ActorInventory.equipdolls = {
 		GEM = {{weight=4, x=264, y=120}, {weight=5, x=264, y=192}},
 	}},
 }
+
+-- Ingredients
+PartyIngredients:loadDefinition("/data/ingredients.lua")
 
 -- Damage types
 DamageType:loadDefinition("/data/damage_types.lua")

@@ -23,15 +23,17 @@ local Map = require "engine.Map"
 local Dialog = require "engine.ui.Dialog"
 local GetQuantity = require "engine.dialogs.GetQuantity"
 local PartyOrder = require "mod.dialogs.PartyOrder"
+local PartyIngredients = require "mod.class.interface.PartyIngredients"
 local PartyRewardSelector = require "mod.dialogs.PartyRewardSelector"
 
 module(..., package.seeall, class.inherit(
-	engine.Entity
+	engine.Entity, PartyIngredients
 ))
 
 function _M:init(t, no_default)
 	t.name = t.name or "party"
 	engine.Entity.init(self, t, no_default)
+	PartyIngredients.init(self, t)
 
 	self.members = {}
 	self.m_list = {}

@@ -46,12 +46,7 @@ newEntity{
 	no_breath = 1,
 	confusion_immune = 1,
 	poison_immune = 1,
-	on_die = function(self, who)
-		local part = "SNOW_GIANT_KIDNEY"
-		if game.player:hasQuest("brotherhood-of-alchemists") then
-			game.player:hasQuest("brotherhood-of-alchemists"):need_part(who, part, self)
-		end
-	end,
+	ingredient_on_death = "SNOW_GIANT_KIDNEY",
 }
 
 newEntity{ base = "BASE_NPC_SNOW_GIANT",

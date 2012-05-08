@@ -18,7 +18,6 @@
 -- darkgod@te4.org
 
 local art_list = mod.class.Object:loadList("/data/general/objects/brotherhood-artifacts.lua")
-local ing_list = mod.class.Object:loadList("/data/general/objects/elixir-ingredients.lua")
 local alchemist_num = 2
 local other_alchemist_nums = {1, 3, 4}
 local q = game.player:hasQuest("brotherhood-of-alchemists")

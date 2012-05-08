@@ -2056,6 +2056,12 @@ function _M:die(src, death_note)
 		p.all_kills[self.name] = p.all_kills[self.name] + 1
 	end
 
+	-- Ingredients
+	if src and self.ingredient_on_death then
+		local rsrc = src.resolveSource and src:resolveSource() or src
+		if game.party:hasMember(rsrc) then game.party:collectIngredient(self.ingredient_on_death) end
+	end
+
 	if self.sound_die and (self.unique or rng.chance(5)) then game:playSoundNear(self, self.sound_die) end
 
 	return true
