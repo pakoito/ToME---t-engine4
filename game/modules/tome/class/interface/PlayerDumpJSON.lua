@@ -146,8 +146,8 @@ function _M:dumpToJSON(js)
 		if mean and mean.range then c[#c+1] = { ["range (unarmed)"] = mean.range } end
 	end
 	if self:getInven(self.INVEN_OFFHAND) then
-		local offmult = self:getOffHandMult()
 		for i, o in ipairs(self:getInven(self.INVEN_OFFHAND)) do
+			local offmult = self:getOffHandMult(o.combat)
 			local mean, dam = o.combat, o.combat
 			if o.archery and mean then
 				dam = (self:getInven("QUIVER")[1] and self:getInven("QUIVER")[1].combat)

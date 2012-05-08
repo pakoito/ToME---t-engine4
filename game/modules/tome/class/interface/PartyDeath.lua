@@ -116,7 +116,7 @@ function _M:onPartyDeath(src, death_note)
 		game:playSound("actions/death")
 
 		game.log("#{bold}#"..msg.."#{normal}#")
-		if not game.player.easy_mode_lifes or game.player.easy_mode_lifes <= 0 then
+		if (not game.player.easy_mode_lifes or game.player.easy_mode_lifes <= 0) and not game.player.infinite_lifes then
 			profile.chat.uc_ext:sendKillerLink(msg, src)
 		end
 	end

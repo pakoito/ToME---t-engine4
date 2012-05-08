@@ -132,7 +132,7 @@ newTalent{
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 
 		-- First attack with offhand
-		local speed, hit = self:attackTargetWith(target, offweapon.combat, nil, self:getOffHandMult(self:combatTalentWeaponDamage(t, 0.7, 1.5)))
+		local speed, hit = self:attackTargetWith(target, offweapon.combat, nil, self:getOffHandMult(offweapon.combat, self:combatTalentWeaponDamage(t, 0.7, 1.5)))
 
 		-- Second attack with mainhand
 		if hit then

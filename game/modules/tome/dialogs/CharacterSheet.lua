@@ -601,8 +601,8 @@ function _M:drawDialog(kind, actor_to_compare)
 		-- All weapons in off hands
 		-- Offhand attacks are with a damage penalty, that can be reduced by talents
 		if player:getInven(player.INVEN_OFFHAND) then
-			local offmult = player:getOffHandMult()
 			for i, o in ipairs(player:getInven(player.INVEN_OFFHAND)) do
+				local offmult = player:getOffHandMult(o.combat)
 				local mean, dam = o.combat, o.combat
 				if o.archery and mean then
 					dam = (player:getInven("QUIVER")[1] and player:getInven("QUIVER")[1].combat)
@@ -1020,8 +1020,8 @@ function _M:dump()
 	-- All weapons in off hands
 	-- Offhand attacks are with a damage penalty, that can be reduced by talents
 	if player:getInven(player.INVEN_OFFHAND) then
-		local offmult = player:getOffHandMult()
 		for i, o in ipairs(player:getInven(player.INVEN_OFFHAND)) do
+			local offmult = player:getOffHandMult(o.combat)
 			local mean, dam = o.combat, o.combat
 			if o.archery and mean then
 				dam = (player:getInven("QUIVER")[1] and player:getInven("QUIVER")[1].combat)

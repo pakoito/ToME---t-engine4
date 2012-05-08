@@ -1222,9 +1222,9 @@ function _M:drawDialog(kind)
 		end
 		h = h + self.font_h
 		if self.actor:getInven(self.actor.INVEN_OFFHAND) then
-			local act_offmult = self.actor:getOffHandMult()
-			local act_dup_offmult = self.actor_dup:getOffHandMult()
 			for i, o in ipairs(self.actor:getInven(self.actor.INVEN_OFFHAND)) do
+				local act_offmult = self.actor:getOffHandMult(o.combat)
+				local act_dup_offmult = self.actor_dup:getOffHandMult(o.combat)
 				local mean, dam = o.combat, o.combat
 				if o.archery and mean then
 					dam = (self.actor:getInven("QUIVER")[1] and self.actor:getInven("QUIVER")[1].combat)

@@ -153,8 +153,8 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 		-- All weapons in off hands
 		-- Offhand attacks are with a damage penalty, that can be reduced by talents
 		if self:getInven(self.INVEN_OFFHAND) then
-			local offmult = self:getOffHandMult(mult)
 			for i, o in ipairs(self:getInven(self.INVEN_OFFHAND)) do
+				local offmult = self:getOffHandMult(o.combat, mult)
 				local combat = o.combat
 				if o.special_combat and o.subtype == "shield" and self:knowTalent(self.T_STONESHIELD) then combat = o.special_combat end
 				if combat and not o.archery then
@@ -778,6 +778,7 @@ local weapon_talents = {
 	bow =     Talents.T_BOW_MASTERY,
 	sling =   Talents.T_SLING_MASTERY,
 	staff =   Talents.T_STAFF_MASTERY,
+	mindstar =Talents.T_PSIBLADES,
 	unarmed = Talents.T_UNARMED_MASTERY,
 }
 
@@ -1056,7 +1057,7 @@ function _M:combatTalentWeaponDamage(t, base, max, t2)
 end
 
 --- Gets the off hand multiplier
-function _M:getOffHandMult(mult)
+function _M:getOffHandMult(combat, mult)
 	local offmult = (mult or 1) / 2
 	if self:knowTalent(Talents.T_DUAL_WEAPON_TRAINING) then
 		offmult = (mult or 1) / (2 - (math.min(self:getTalentLevel(Talents.T_DUAL_WEAPON_TRAINING), 8) / 6))
@@ -1071,7 +1072,11 @@ function _M:getOffHandMult(mult)
 		end
 	end
 
-	return offmult
+	if comabt and combat.no_offhand_penalty then
+		return math.max(1, offmult)
+	else
+		return offmult
+	end
 end
 
 --- Gets fatigue
