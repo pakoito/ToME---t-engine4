@@ -58,7 +58,7 @@ function _M:saveUUID(do_charball)
 	if not data or not title then return end
 
 	profile:registerSaveChardump(game.__mod_info.short_name, self.__te4_uuid, title, tags, core.zlib.compress(data))
-	if do_charball then
+	if do_charball then pcall(function()
 		savefile_pipe:push(do_charball.name, "entity", do_charball, "engine.CharacterBallSave", function(save)
 			f = fs.open("/charballs/"..save:nameSaveEntity(do_charball), "r")
 			if f then
@@ -73,7 +73,7 @@ function _M:saveUUID(do_charball)
 				profile:registerSaveCharball(game.__mod_info.short_name, self.__te4_uuid, table.concat(data))
 			end
 		end)
-	end
+	end) end
 end
 
 --- Override this method to define dump sections

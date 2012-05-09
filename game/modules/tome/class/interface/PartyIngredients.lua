@@ -65,6 +65,7 @@ function _M:getIngredient(id)
 end
 
 function _M:collectIngredient(id, nb, silent)
+	if not self.ingredients then return end
 	if not self.__ingredients_def[id] then return end
 	local d = self.__ingredients_def[id]
 	nb = nb or 1
@@ -84,6 +85,7 @@ function _M:collectIngredient(id, nb, silent)
 end
 
 function _M:hasIngredient(id, nb)
+	if not self.ingredients then return end
 	if not self.__ingredients_def[id] then return false end
 	local d = self.__ingredients_def[id]
 	nb = nb or 1
@@ -95,6 +97,7 @@ function _M:hasIngredient(id, nb)
 end
 
 function _M:useIngredient(id, nb)
+	if not self.ingredients then return end
 	if not self.__ingredients_def[id] then return false end
 	local d = self.__ingredients_def[id]
 	nb = nb or 1

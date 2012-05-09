@@ -74,7 +74,7 @@ function _M:addEntity(e, after, no_error)
 		return
 	end
 
-	if self.entities[e.uid] then if no_error then return else error("Entity "..e.uid.."("..e.name..") already present on the level") end end
+	if self.entities[e.uid] then if no_error then return else error("Entity "..e.uid.."("..(e.name or "???")..") already present on the level") end end
 	self.entities[e.uid] = e
 	if e.addEntityOrder then after = e:addEntityOrder(level) end
 	if not after or not self:hasEntity(after) then
@@ -107,7 +107,7 @@ function _M:removeEntity(e, force)
 		return
 	end
 
-	if not self.entities[e.uid] and not force then error("Entity "..e.uid.."("..e.name..") not present on the level") end
+	if not self.entities[e.uid] and not force then error("Entity "..e.uid.."("..(e.name or "???")..") not present on the level") end
 	self.entities[e.uid] = nil
 	for i = 1, #self.e_array do
 		if self.e_array[i] == e then
