@@ -103,7 +103,7 @@ newEntity{
 	rarity = 8,
 	cost = 8,
 	wielder = {
-		on_melee_hit={ 
+		on_melee_hit={
 			[DamageType.SLIME] = resolvers.mbonus_material(8, 2),
 		},
 		inc_damage={
@@ -123,7 +123,7 @@ newEntity{
 	rarity = 4,
 	cost = 8,
 	wielder = {
-		on_melee_hit={ 
+		on_melee_hit={
 			[DamageType.MIND] = resolvers.mbonus_material(8, 2),
 			[DamageType.DARKNESS] = resolvers.mbonus_material(8, 2),
 		},
@@ -143,7 +143,7 @@ newEntity{
 	cost = 8,
 	combat = {
 		melee_project = { [DamageType.LIGHT] = resolvers.mbonus_material(8, 2), },
-	},		
+	},
 	wielder = {
 		combat_mindpower = resolvers.mbonus_material(4, 1),
 		combat_mindcrit = resolvers.mbonus_material(4, 1),
@@ -180,7 +180,7 @@ newEntity{
 		hate_per_kill = resolvers.mbonus_material(4, 1),
 		psi_per_kill = resolvers.mbonus_material(4, 1),
 	},
-	
+
 	charm_power = resolvers.mbonus_material(80, 20),
 	charm_power_def = {add=5, max=10, floor=true},
 	resolvers.charm("inflict mind damage; gain psi and hate", 20,
@@ -254,14 +254,14 @@ newEntity{
 			[DamageType.NATURE] = resolvers.mbonus_material(8, 2),
 		},
 	},
-	resolvers.charm("completes a nature powered mindstar set", 20,	
+	resolvers.charm("completes a nature powered mindstar set", 20,
 		function(self, who, ms_inven)
-			who:showEquipment("Harmonize with which mindstar?", function(o) return o.subtype == "mindstar" and o.set_list and o ~= self  and o.power_source and o.power_source.nature and not o.set_complete end, function(o) 
+			who:showEquipment("Harmonize with which mindstar?", function(o) return o.subtype == "mindstar" and o.set_list and o ~= self  and o.power_source and o.power_source.nature and not o.set_complete end, function(o)
 				-- remove any existing set properties
 				self.define_as =nil
 				self.set_list = nil
 				self.on_set_complete = nil
-				
+
 				-- define the mindstar so it matches the set list of the target mindstar
 				self.define_as = o.set_list[1][2]
 				-- then set the mindstar's set list as the definition of the target mindstar
@@ -299,14 +299,14 @@ newEntity{
 			[DamageType.MIND] = resolvers.mbonus_material(8, 2),
 		},
 	},
-	resolvers.charm("completes a nature powered mindstar set", 20,	
+	resolvers.charm("completes a psionic powered mindstar set", 20,
 		function(self, who, ms_inven)
-			who:showEquipment("Resonate with which mindstar?", function(o) return o.subtype == "mindstar" and o.set_list and o ~= self and o.power_source and o.power_source.psionic and not o.set_complete end, function(o) 
+			who:showEquipment("Resonate with which mindstar?", function(o) return o.subtype == "mindstar" and o.set_list and o ~= self and o.power_source and o.power_source.psionic and not o.set_complete end, function(o)
 				-- remove any existing set properties
 				self.define_as =nil
 				self.set_list = nil
 				self.on_set_complete = nil
-				
+
 				-- define the mindstar so it matches the set list of the target mindstar
 				self.define_as = o.set_list[1][2]
 				-- then set the mindstar's set list as the definition of the target mindstar
@@ -333,13 +333,13 @@ newEntity{
 	rarity = 40,
 	cost = 40,
 	wielder = {
-		inc_damage = { 
+		inc_damage = {
 			[DamageType.FIRE] = resolvers.mbonus_material(10, 5),
 			[DamageType.ACID] = resolvers.mbonus_material(10, 5),
 			[DamageType.COLD] = resolvers.mbonus_material(10, 5),
 			[DamageType.PHYSICAL] = resolvers.mbonus_material(10, 5),
 		},
-		resists_pen = { 
+		resists_pen = {
 			[DamageType.FIRE] = resolvers.mbonus_material(8, 2),
 			[DamageType.ACID] = resolvers.mbonus_material(8, 2),
 			[DamageType.COLD] = resolvers.mbonus_material(8, 2),
@@ -389,7 +389,7 @@ newEntity{
 	rarity = 35,
 	cost = 40,
 	wielder = {
-		on_melee_hit={ 
+		on_melee_hit={
 			[DamageType.PHYSICAL] = resolvers.mbonus_material(8, 2),
 			[DamageType.COLD] = resolvers.mbonus_material(8, 2),
 			[DamageType.FIRE] = resolvers.mbonus_material(8, 2),
@@ -411,7 +411,7 @@ newEntity{
 	on_set_broken = function(self, who)
 		game.logPlayer(who, "#SLATE#The link between the mindstars is broken.")
 	end,
-	resolvers.charm("call the drake in an elemental mindstar", 20,	
+	resolvers.charm("call the drake in an elemental mindstar", 20,
 		function(self, who, ms_inven)
 			who:showEquipment("Call the drake in which mindstar?", function(o) return o.subtype == "mindstar" and o.is_drake_star and not o.set_list end, function(o)
 				-- remove any existing sets from the mindstar
@@ -419,11 +419,11 @@ newEntity{
 				o.on_set_complete = nil
 				o.on_set_broken = nil
 				o.define_as = nil
-				
+
 				-- create the set list
 				o.define_as = "MS_EGO_SET_DRAKE_STAR"
 				o.set_list = { {"define_as", "MS_EGO_SET_WYRM"} }
-				
+
 				-- define on_set_complete based on keywords
 				if o.keywords.flames then
 					o.on_set_complete = function(self, who)
@@ -442,8 +442,8 @@ newEntity{
 				elseif o.keywords.storms then
 					o.on_set_complete = function(self, who)
 						local Stats = require "engine.interface.ActorStats"
-						
-						self:specialSetAdd({"wielder","inc_stats"}, {	
+
+						self:specialSetAdd({"wielder","inc_stats"}, {
 							[Stats.STAT_STR] = self.material_level,
 							[Stats.STAT_DEX] = self.material_level,
 							[Stats.STAT_CON] = self.material_level,
@@ -453,7 +453,7 @@ newEntity{
 						})
 					end
 				end
-				
+
 				-- rewear the wyrm star to trigger set bonuses
 				local obj = who:takeoffObject(ms_inven, 1)
 				who:wearObject(obj, true, true)
@@ -473,7 +473,7 @@ newEntity{
 	rarity = 40,
 	cost = 40,
 	wielder = {
-		on_melee_hit={ 
+		on_melee_hit={
 			[DamageType.FIRE] = resolvers.mbonus_material(8, 2),
 		},
 		inc_damage={
@@ -497,7 +497,7 @@ newEntity{
 	rarity = 40,
 	cost = 40,
 	wielder = {
-		on_melee_hit={ 
+		on_melee_hit={
 			[DamageType.COLD] = resolvers.mbonus_material(8, 2),
 		},
 		inc_damage={
@@ -521,7 +521,7 @@ newEntity{
 	rarity = 40,
 	cost = 40,
 	wielder = {
-		on_melee_hit={ 
+		on_melee_hit={
 			[DamageType.PHYSICAL] = resolvers.mbonus_material(8, 2),
 		},
 		inc_damage={
@@ -545,7 +545,7 @@ newEntity{
 	rarity = 40,
 	cost = 40,
 	wielder = {
-		on_melee_hit={ 
+		on_melee_hit={
 			[DamageType.LIGHTNING] = resolvers.mbonus_material(8, 2),
 		},
 		inc_damage={
@@ -625,23 +625,23 @@ newEntity{
 			-- Check for free slot first
 			if who:getFreeHands() == 0 then
 				game.logPlayer(who, "You must have a free hand to divide %s", self.name)
-			return 
+			return
 			end
 
 			if who:getInven("PSIONIC_FOCUS") and who:getInven("PSIONIC_FOCUS")[1] == self then
 				game.logPlayer(who, "You cannot split %s while using it as a psionic focus.", self.name)
 				return
 			end
-		
+
 			local o = self
-			
+
 			-- Remove some properties before cloning
 			o.cost = self.cost / 2 -- more don't split for extra gold discouragement
 			o.max_power = nil
 			o.power_regen = nil
 			o.use_power = nil
 			local o2 = o:clone()
-			
+
 			-- Build the item set
 			o.define_as = "MS_EGO_SET_MITOTIC_ACID"
 			o2.define_as = "MS_EGO_SET_MITOTIC_SLIME"
@@ -655,14 +655,14 @@ newEntity{
 			o.on_set_broken = function(self, who)
 				game.logPlayer(who, "#SLATE#The link between the mindstars is broken.")
 			end
-			
+
 			o2.on_set_complete = function(self, who)
 				self:specialWearAdd({"combat","burst_on_crit"}, { [engine.DamageType.SLIME] = 10 * self.material_level } )
 			end
-			
+
 			-- Wearing the second mindstar will complete the set and thus update the first mindstar
 			who:wearObject(o2, true, true)
-			
+
 			-- Because we're removing the use_power we're not returning that it was used; instead we'll have the actor use energy manually
 			who:useEnergy()
 		end
