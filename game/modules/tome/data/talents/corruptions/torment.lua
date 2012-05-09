@@ -24,7 +24,6 @@ newTalent{
 	mode = "sustained",
 	points = 5,
 	cooldown = 20,
-	vim = 0,
 	tactical = { BUFF = 2 },
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/flame")
@@ -84,7 +83,7 @@ newTalent{
 	points = 5,
 	mode = "sustained",
 	cooldown = 20,
-	vim = 18,
+	sustain_vim = 18,
 	tactical = { BUFF = 2 },
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/flame")
