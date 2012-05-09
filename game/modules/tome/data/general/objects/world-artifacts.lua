@@ -154,6 +154,7 @@ newEntity{ base = "BASE_STAFF",
 			[Talents.T_ICE_STORM] = 2,
 			[Talents.T_FIREFLASH] = 2,
 			[Talents.T_CHAIN_LIGHTNING] = 2,
+			[Talents.T_ARCANE_VORTEX] = 2,
 		},
 		learn_talent = {[Talents.T_COMMAND_STAFF] = 1,},
 	},
@@ -585,6 +586,10 @@ newEntity{ base = "BASE_LONGBOW",
 	wielder = {
 		disease_immune = 0.5,
 		ranged_project = {[DamageType.CORRUPTED_BLOOD] = 15},
+		inc_damage={ [DamageType.BLIGHT] = 10, },
+		talent_cd_reduction={
+			[Talents.T_CYST_BURST] = 2,
+		},
 	},
 }
 
