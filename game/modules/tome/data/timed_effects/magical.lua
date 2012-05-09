@@ -230,7 +230,7 @@ newEffect{
 	on_gain = function(self, err) return "#Target# loses sight!", "+Blind" end,
 	on_lose = function(self, err) return "#Target# recovers sight.", "-Blind" end,
 	on_timeout = function(self, eff)
-		DamageType:get(DamageType.FIRE).projector(eff.src, self.x, self.y, DamageType.DARKNESS, eff.dam)
+		DamageType:get(DamageType.DARKNESS).projector(eff.src, self.x, self.y, DamageType.DARKNESS, eff.dam)
 	end,
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("blind", 1)
@@ -259,7 +259,7 @@ newEffect{
 	on_gain = function(self, err) return "#Target# wanders around!.", "+Confused" end,
 	on_lose = function(self, err) return "#Target# seems more focused.", "-Confused" end,
 	on_timeout = function(self, eff)
-		DamageType:get(DamageType.FIRE).projector(eff.src, self.x, self.y, DamageType.DARKNESS, eff.dam)
+		DamageType:get(DamageType.DARKNESS).projector(eff.src, self.x, self.y, DamageType.DARKNESS, eff.dam)
 	end,
 	activate = function(self, eff)
 		eff.power = eff.power - (self:attr("confusion_immune") or 0) / 2
@@ -1691,5 +1691,61 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("blood_lock", eff.tmpid)
+	end,
+}
+
+newEffect{
+	name = "CONGEAL_TIME", image = "talents/congeal_time.png",
+	desc = "Congeal Time",
+	long_desc = function(self, eff) return ("Reduces global action speed by %d%% and all outgoing projectiles speed by %d%%."):format(eff.slow * 100, eff.proj) end,
+	type = "magical",
+	subtype = { temporal=true, slow=true },
+	status = "detrimental",
+	parameters = { slow=0.1, proj=15 },
+	on_gain = function(self, err) return "#Target# slows down.", "+Congeal Time" end,
+	on_lose = function(self, err) return "#Target# speeds up.", "-Congeal Time" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("global_speed_add", -eff.slow)
+		eff.prjid = self:addTemporaryValue("slow_projectiles_outgoing", eff.proj)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("global_speed_add", eff.tmpid)
+		self:removeTemporaryValue("slow_projectiles_outgoing", eff.prjid)
+	end,
+}
+
+newEffect{
+	name = "ARCANE_VORTEX", image = "talents/arcane_vortex.png",
+	desc = "Arcane Vortex",
+	long_desc = function(self, eff) return ("An arcane vortex followes the target. Each turn a manathrust fires from it to a random foe in sight doing %0.2f arcane damage to all. If no foes are found the main target takes 150%% more arcane damage this turn."):format(eff.dam) end,
+	type = "magical",
+	subtype = { arcane=true },
+	status = "detrimental",
+	parameters = { dam=10 },
+	on_gain = function(self, err) return "#Target# is focused by an arcane vortex!.", "+Arcane Vortex" end,
+	on_lose = function(self, err) return "#Target# is free from the arcane vortex.", "-Arcane Vortex" end,
+	on_timeout = function(self, eff)
+		local l = {}
+		self:project({type="ball", x=self.x, y=self.y, radius=7, selffire=false}, self.x, self.y, function(px, py)
+			local target = game.level.map(px, py, Map.ACTOR)
+			if target and target ~= self and eff.src:reactionToward(target) < 0 then l[#l+1] = target end
+		end)
+
+		if #l == 0 then
+			DamageType:get(DamageType.ARCANE).projector(eff.src, self.x, self.y, DamageType.ARCANE, eff.dam * 1.5)
+		else
+			DamageType:get(DamageType.ARCANE).projector(eff.src, self.x, self.y, DamageType.ARCANE, eff.dam)
+			local act = rng.table(l)
+			eff.src:project({type="beam", x=self.x, y=self.y}, act.x, act.y, DamageType.ARCANE, eff.dam, nil)
+			game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(act.x-self.x), math.abs(act.y-self.y)), "mana_beam", {tx=act.x-self.x, ty=act.y-self.y})
+		end
+
+		game:playSoundNear(self, "talents/arcane")
+	end,
+	activate = function(self, eff)
+		eff.particle = self:addParticles(Particles.new("arcane_vortex", 1))
+	end,
+	deactivate = function(self, eff)
+		self:removeParticles(eff.particle)
 	end,
 }

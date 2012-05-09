@@ -32,18 +32,23 @@ newTalent{
 	direct_hit = true,
 	requires_target = true,
 	getSlow = function(self, t) return math.min(self:getTalentLevel(t) * 0.08, 0.6) end,
+	getProj = function(self, t) return math.min(90, 5 + self:combatTalentSpellDamage(t, 5, 700) / 10) end,
 	action = function(self, t)
 		local tg = {type="beam", range=self:getTalentRange(t), talent=t, display={particle="bolt_arcane"}}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:projectile(tg, x, y, DamageType.SLOW, 1 - 1 / (1 + t.getSlow(self, t)), {type="manathrust"})
+		self:projectile(tg, x, y, DamageType.CONGEAL_TIME, {
+			slow = 1 - 1 / (1 + t.getSlow(self, t)),
+			proj = t.getProj(self, t),
+		}, {type="manathrust"})
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
 	info = function(self, t)
 		local slow = t.getSlow(self, t)
-		return ([[Project a bolt of time distortion, decreasing the target's global speed by %d%% for 7 turns.]]):
-		format(100 * slow)
+		local proj = t.getProj(self, t)
+		return ([[Project a bolt of time distortion, decreasing the target's global speed by %d%% and all projectiles it fires by %d%% for 7 turns.]]):
+		format(100 * slow, proj)
 	end,
 }
 
@@ -61,7 +66,7 @@ newTalent{
 	getDuration = function(self, t) return util.bound(5 + math.floor(self:getTalentLevel(t)), 5, 15) end,
 	getDotDuration = function(self, t) return util.bound(4 + math.floor(self:getTalentLevel(t)), 4, 12) end,
 	getTimeReduction = function(self, t) return util.bound(15 + math.floor(self:getTalentLevel(t) * 2), 15, 35) end,
-	action = function(self, t)
+		action = function(self, t)
 		self:setEffect(self.EFF_TIME_SHIELD, t.getDuration(self, t), {power=t.getMaxAbsorb(self, t), dot_dur=t.getDotDuration(self, t), time_reducer=t.getTimeReduction(self, t)})
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
@@ -72,7 +77,8 @@ newTalent{
 		local dotdur = t.getDotDuration(self,t)
 		local time_reduc = t.getTimeReduction(self,t)
 		return ([[This intricate spell instantly erects a time shield around the caster, preventing any incoming damage and sending it forward in time.
-		Once either the maximum damage (%d) is absorbed, or the time runs out (%d turns), the stored damage will return as self-damage over time (%d turns).
+		Once either the maximum damage (%d) is absorbed, or the time runs out (%d turns), the stored damage will return as a temporal wake over time (%d turns).
+		Each turn the temporal wake is active a temporal vortex will spawn at your feet, damaging any inside after one turn for three turns.
 		While under the effect of Time Shield all newly applied magical, physical and mental effects will have their durations reduced by %d%%.
 		Max absorption will increase with your Spellpower.]]):
 		format(maxabsorb, duration, dotdur, time_reduc)

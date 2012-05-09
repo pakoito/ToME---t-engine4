@@ -31,7 +31,7 @@ newEntity{
 }
 
 newEntity{
-	name = "supercharded ", prefix=true,
+	name = "supercharged ", prefix=true,
 	keywords = {['super.c']=true},
 	level_range = {1, 50},
 	rarity = 15,

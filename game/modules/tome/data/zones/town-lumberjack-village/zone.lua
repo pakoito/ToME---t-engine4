@@ -39,6 +39,7 @@ return {
 		actor = {
 			class = "mod.class.generator.actor.Random",
 			nb_npc = {20, 20},
+			randelite = 0,
 		},
 		object = {
 			class = "engine.generator.object.Random",

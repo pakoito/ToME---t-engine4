@@ -1510,11 +1510,11 @@ function _M:onTakeHit(value, src)
 	end
 
 	if self:attr("disruption_shield") then
-		local mana = self:getMana()
+		local mana = self:getMaxMana() - self:getMana()
 		local mana_val = value * self:attr("disruption_shield")
 		-- We have enough to absorb the full hit
 		if mana_val <= mana then
-			self:incMana(-mana_val)
+			self:incMana(mana_val)
 			self.disruption_shield_absorb = self.disruption_shield_absorb + value
 			return 0
 		-- Or the shield collapses in a deadly arcane explosion
@@ -3738,6 +3738,15 @@ end
 --- Called when we have been projected upon and the DamageType is about to be called
 function _M:projected(tx, ty, who, t, x, y, damtype, dam, particles)
 	return false
+end
+
+--- Called when we fire a projectile
+function _M:on_projectile_fired(proj, typ, x, y, damtype, dam, particles)
+	if self:attr("slow_projectiles_outgoing") then
+		print("Projectile slowing down from", proj.energy.mod)
+		proj.energy.mod = proj.energy.mod * (100 - self.slow_projectiles_outgoing) / 100
+		print("Projectile slowing down to", proj.energy.mod)
+	end
 end
 
 --- Called when we are targeted by a projectile

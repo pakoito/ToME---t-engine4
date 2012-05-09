@@ -71,7 +71,7 @@ newTalent{
 		local shield = t.getShield(self, t)
 		local dur = t.getDur(self, t)
 		return ([[Surround yourself with strengthening arcane forces.
-		Every damage shield, time shield or displacement shield affecting you has its power increased by %d%%.
+		Every damage shield, time shield, displacement shield, disruption shield affecting you has its power increased by %d%%.
 		At level 5 it also increases the duration of all shields by 1 turn.
 		The shield value will increase with your Spellpower.]]):
 		format(shield, dur)

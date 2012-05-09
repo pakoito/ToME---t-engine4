@@ -26,10 +26,10 @@ newTalent{
 	points = 5,
 	cooldown = 30,
 	tactical = { BUFF = 2 },
-	spellpower_increase = { 5, 9, 13, 16, 18 },
+	spellpower_increase = { 5, 9, 14, 17, 20 },
 	getSpellpowerIncrease = function(self, t)
 		local v = t.spellpower_increase[self:getTalentLevelRaw(t)]
-		if v then return v else return 18 + (self:getTalentLevelRaw(t) - 5) * 2 end
+		if v then return v else return 20 + (self:getTalentLevelRaw(t) - 5) * 2 end
 	end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/arcane")
@@ -93,25 +93,36 @@ newTalent{
 }
 
 newTalent{
-	name = "Manaflow",
+	name = "Arcane Vortex",
 	type = {"spell/arcane", 3},
 	require = spells_req3,
 	points = 5,
-	mana = 0,
-	cooldown = 25,
-	tactical = { MANA = 3 },
-	getManaRestoration = function(self, t) return 5 + self:combatTalentSpellDamage(t, 10, 20) end,
-	on_pre_use = function(self, t) return not self:hasEffect(self.EFF_MANASURGE) end,
+	mana = 35,
+	cooldown = 12,
+	range = 10,
+	direct_hit = true,
+	reflectable = true,
+	requires_target = true,
+	tactical = { ATTACK = { ARCANE = 2 } },
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 340) / 6 end,
 	action = function(self, t)
-		self:setEffect(self.EFF_MANASURGE, 10, {power=t.getManaRestoration(self, t)})
+		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
+		local tx, ty, target = self:getTarget(tg)
+		if not tx or not ty then return nil end
+		local _ _, tx, ty = self:canProject(tg, tx, ty)
+		target = game.level.map(tx, ty, Map.ACTOR)
+		if not target then return nil end
+
+		target:setEffect(target.EFF_ARCANE_VORTEX, 6, {src=self, dam=t.getDamage(self, t)})
 		game:playSoundNear(self, "talents/arcane")
 		return true
 	end,
 	info = function(self, t)
-		local restoration = t.getManaRestoration(self, t)
-		return ([[Engulf yourself in a surge of mana, quickly restoring %d mana every turn for 10 turns.
-		The mana restored will increase with your Spellpower.]]):
-		format(restoration)
+		local dam = t.getDamage(self, t)
+		return ([[Creates a vortex of arcane energies on the target for 6 turns. Each turn the vortex will look for an other foe in sight and fire a manathrust doing %0.2f arcane damage to all foes in line.
+		If no foes are found the target will take 150%% more arcane damage.
+		The damage will increase with your Spellpower.]]):
+		format(damDesc(self, DamageType.ARCANE, dam))
 	end,
 }
 
@@ -124,9 +135,10 @@ newTalent{
 	cooldown = 30,
 	sustain_mana = 10,
 	no_energy = true,
-	tactical = { DEFEND = 2 },
-	getManaRatio = function(self, t) return math.max(3 - self:combatTalentSpellDamage(t, 10, 200) / 100, 0.5) end,
-	getArcaneResist = function(self, t) return 10 + self:combatTalentSpellDamage(t, 10, 500) / 10 end,
+	tactical = { MANA = 3, DEFEND = 2, },
+	getManaRatio = function(self, t) return math.max(3 - self:combatTalentSpellDamage(t, 10, 200) / 100, 0.5) * (100 - util.bound(self:attr("shield_factor") or 0, 0, 70)) / 100 end,
+	getArcaneResist = function(self, t) return 50 + self:combatTalentSpellDamage(t, 10, 500) / 10 end,
+	on_pre_use = function(self, t) return self:getMana() / self:getMaxMana() <= 0.25 end,
 	explode = function(self, t, dam)
 		game.logSeen(self, "#VIOLET#%s's disruption shield collapses and then explodes in a powerful manastorm!", self.name:capitalize())
 
@@ -158,9 +170,11 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Uses mana instead of life to take damage. Uses %0.2f mana per damage point taken.
-		If your mana is brought too low by the shield, it will de-activate and the chain reaction will release a deadly arcane storm with radius 3 for 10 turns, dealing 10%% of the damage absorbed each turn.
+		return ([[Surround yourself with arcane forces, disrupting any attemps to harm you and instead generating mana.
+		Generates %0.2f mana per damage point taken (Aegis Shielding talent affects the ratio).
+		If your mana is brought too high by the shield, it will de-activate and the chain reaction will release a deadly arcane storm with radius 3 for 10 turns, dealing 10%% of the damage absorbed each turn.
 		While the arcane storm rages you also get a %d%% arcane resistance.
+		Only usable when bellow 25%% mana.
 		The damage to mana ratio increases with your Spellpower.]]):
 		format(t.getManaRatio(self, t), t.getArcaneResist(self, t))
 	end,

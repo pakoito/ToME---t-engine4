@@ -305,6 +305,8 @@ function _M:projectile(t, x, y, damtype, dam, particles)
 
 	local proj = require(self.projectile_class):makeProject(self, t.display, {x=x, y=y, start_x=typ.start_x, start_y=typ.start_y, damtype=damtype, tg=t, typ=typ, dam=dam, particles=particles})
 	game.zone:addEntity(game.level, proj, "projectile", typ.start_x, typ.start_y)
+
+	self:check("on_projectile_fired", proj, typ, x, y, damtype, dam, particles)
 end
 
 -- @param typ a target type table

@@ -1143,6 +1143,18 @@ newDamageType{
 	end,
 }
 
+newDamageType{
+	name = "congeal time", type = "CONGEAL_TIME",
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			-- Freeze it, if we pass the test
+			local sx, sy = game.level.map:getTileToScreen(x, y)
+			target:setEffect(target.EFF_CONGEAL_TIME, 7, {slow=dam.slow, proj=dam.proj, apply_power=src:combatSpellpower()})
+		end
+	end,
+}
+
 -- Time prison, invulnerability and stun
 newDamageType{
 	name = "time prison", type = "TIME_PRISON",

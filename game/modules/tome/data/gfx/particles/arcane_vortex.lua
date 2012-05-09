@@ -19,33 +19,30 @@
 
 base_size = 32
 
-local i = 0
-local r = 1
-local g = 1
-local b = 1
-local a = 1
-
 return { generator = function()
+	local ad = rng.range(0, 360)
+	local a = math.rad(ad)
+	local dir = math.rad(ad + 90)
+	local r = rng.range(1, 20)
+	local dirv = math.rad(1)
+
 	return {
-		trail = 0,
-		life = 30,
-		size = 36, sizev = -0.33, sizea = 0,
+		trail = 1,
+		life = 10,
+		size = 6, sizev = -0.1, sizea = 0,
 
-		x = 0, xv = 0, xa = 0,
-		y = 0, yv = 0, ya = 0,
-		dir = 0, dirv = dirv, dira = 0,
-		vel = 0, velv = 0, vela = 0,
+		x = r * math.cos(a), xv = rng.float(-0.4, 0.4), xa = 0,
+		y = r * math.sin(a), yv = rng.float(-0.4, 0.4), ya = 0,
+		dir = dir, dirv = dirv, dira = dir / 20,
+		vel = 2, velv = 0, vela = 0.1,
 
-		r = r, rv = 0, ra = 0,
-		g = g, gv = 0, ga = 0,
-		b = b, bv = 0, ba = 0,
-		a = a, av = -1/90, aa = 0,
+		r = rng.range(180, 220)/255,  rv = 0, ra = 0,
+		g = rng.range(0, 0)/255,      gv = 0, ga = 0,
+		b = rng.range(200, 255)/255,      bv = 0, ba = 0,
+		a = rng.range(80, 220)/255,   av = 0, aa = 0,
 	}
 end, },
 function(self)
-	if i == 0 then self.ps:emit(1) end
-	i = i + 1
-	if i == 10 then i = 0 end
+	self.ps:emit(4)
 end,
-30,
-"particles_images/shield_bubble_arcane", true
+40

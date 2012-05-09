@@ -121,7 +121,7 @@ newEffect{
 		--- Warning there can be only one time shield active at once for an actor
 		self.time_shield_absorb = eff.power
 		self.time_shield_absorb_max = eff.power
-		eff.particle = self:addParticles(Particles.new("time_shield", 1))
+		eff.particle = self:addParticles(Particles.new("time_shield_bubble", 1))
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("reduce_status_effects_time", eff.durid)
@@ -141,16 +141,30 @@ newEffect{
 
 newEffect{
 	name = "TIME_DOT",
-	desc = "Time Shield Backfire",
-	long_desc = function(self, eff) return ("The time distortion protecting the target has ended. All damage forwarded in time is now applied, doing %d arcane damage per turn."):format(eff.power) end,
+	desc = "Temporal Wake",
+	long_desc = function(self, eff) return ("The time distortion protecting the target has ended. All damage forwarded in time is now appearing as temporal vortexes each turn. Temporal Vortexes do %0.2f temporal damage per turn for 3 turn."):format(eff.power) end,
 	type = "other",
 	subtype = { time=true },
 	status = "detrimental",
 	parameters = { power=10 },
-	on_gain = function(self, err) return "The powerful time-altering energies come crashing down on #target#.", "+Time Shield Backfire" end,
-	on_lose = function(self, err) return "The fabric of time around #target# returns to normal.", "-Time Shield Backfire" end,
+	on_gain = function(self, err) return "The powerful time-altering energies come crashing down on #target#.", "+Temporal Wake" end,
+	on_lose = function(self, err) return "The fabric of time around #target# returns to normal.", "-Temporal Wake" end,
+	activate = function(self, eff)
+		eff.particle = self:addParticles(Particles.new("time_shield", 1))
+	end,
+	deactivate = function(self, eff)
+		self:removeParticles(eff.particle)
+	end,
 	on_timeout = function(self, eff)
-		DamageType:get(DamageType.ARCANE).projector(self, self.x, self.y, DamageType.ARCANE, eff.power)
+		-- Add a lasting map effect
+		game.level.map:addEffect(self,
+			self.x, self.y, 3,
+			DamageType.TEMPORAL, eff.power,
+			0,
+			5, nil,
+			{type="temporal_vortex"},
+			nil, true
+		)
 	end,
 }
 
@@ -1363,7 +1377,7 @@ newEffect{
 	on_merge = function(self, old_eff, new_eff)
 		old_eff.source = new_eff.source
 		old_eff.range = new_eff.range
-		
+
 		return old_eff
 	end,
 	on_timeout = function(self, eff)
@@ -1418,7 +1432,7 @@ newEffect{
 		eff.firstHit = true
 		eff.increase = 1
 		self.tempeffect_def[self.EFF_CURSED_FORM].updateEffect(self, eff)
-		
+
 		game.level.map:particleEmitter(self.x, self.y, 1, "cursed_form", {power=eff.increase})
 	end,
 	deactivate = function(self, eff)
@@ -1444,7 +1458,7 @@ newEffect{
 			eff.statChange = tGrimResolve.getStatChange(self, tGrimResolve, eff.increase)
 			eff.neutralizeChance = tGrimResolve.getNeutralizeChance(self, tGrimResolve)
 		end
-		
+
 		if eff.incDamageId then
 			self:removeTemporaryValue("inc_damage", eff.incDamageId)
 			eff.incDamageId = nil
@@ -1468,7 +1482,7 @@ newEffect{
 			if eff.increase < 5 then
 				eff.increase = eff.increase + 1
 				self.tempeffect_def[self.EFF_CURSED_FORM].updateEffect(self, eff)
-				
+
 				game.level.map:particleEmitter(self.x, self.y, 1, "cursed_form", {power=eff.increase})
 			end
 			eff.hit = false

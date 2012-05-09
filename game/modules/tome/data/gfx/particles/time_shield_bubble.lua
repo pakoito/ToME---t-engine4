@@ -19,7 +19,6 @@
 
 base_size = 32
 
-local i = 0
 local r = 1
 local g = 1
 local b = 1
@@ -28,8 +27,8 @@ local a = 1
 return { generator = function()
 	return {
 		trail = 0,
-		life = 30,
-		size = 36, sizev = -0.33, sizea = 0,
+		life = 10,
+		size = 36, sizev = 0, sizea = 0,
 
 		x = 0, xv = 0, xa = 0,
 		y = 0, yv = 0, ya = 0,
@@ -39,13 +38,11 @@ return { generator = function()
 		r = r, rv = 0, ra = 0,
 		g = g, gv = 0, ga = 0,
 		b = b, bv = 0, ba = 0,
-		a = a, av = -1/90, aa = 0,
+		a = a, av = -0.02, aa = 0.005,
 	}
 end, },
 function(self)
-	if i == 0 then self.ps:emit(1) end
-	i = i + 1
-	if i == 10 then i = 0 end
+	self.ps:emit(1)
 end,
-30,
-"particles_images/shield_bubble_arcane", true
+1,
+"particles_images/shield_bubble_temporal"

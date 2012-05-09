@@ -1635,3 +1635,25 @@ newTalent{
 		format(damDesc(self, DamageType.ACID, damage), duration)
 	end,
 }
+
+newTalent{
+	name = "Manaflow",
+	type = {"spell/other", 1},
+	points = 5,
+	mana = 0,
+	cooldown = 25,
+	tactical = { MANA = 3 },
+	getManaRestoration = function(self, t) return 5 + self:combatTalentSpellDamage(t, 10, 20) end,
+	on_pre_use = function(self, t) return not self:hasEffect(self.EFF_MANASURGE) end,
+	action = function(self, t)
+		self:setEffect(self.EFF_MANASURGE, 10, {power=t.getManaRestoration(self, t)})
+		game:playSoundNear(self, "talents/arcane")
+		return true
+	end,
+	info = function(self, t)
+		local restoration = t.getManaRestoration(self, t)
+		return ([[Engulf yourself in a surge of mana, quickly restoring %d mana every turn for 10 turns.
+		The mana restored will increase with your Spellpower.]]):
+		format(restoration)
+	end,
+}
