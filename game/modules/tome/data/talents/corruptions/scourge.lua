@@ -165,7 +165,9 @@ newTalent{
 		local speed1, hit1 = self:attackTargetWith(target, weapon.combat, DamageType.DARKNESS, self:combatTalentWeaponDamage(t, 0.6, 1.4))
 
 		if hit1 then
+			self.combat_physcrit = self.combat_physcrit + 100
 			local speed2, hit2 = self:attackTargetWith(target, offweapon.combat, DamageType.BLIGHT, self:getOffHandMult(offweapon.combat, self:combatTalentWeaponDamage(t, 0.6, 1.4)))
+			self.combat_physcrit = self.combat_physcrit - 100
 			if hit2 and target:canBe("blind") then
 				target:setEffect(target.EFF_BLINDED, 4, {apply_power=self:combatPhysicalpower()})
 			else
