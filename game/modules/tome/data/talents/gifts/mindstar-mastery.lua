@@ -39,8 +39,8 @@ newTalent{
 			tmpid = self:addTemporaryValue("psiblades_active", self:getTalentLevel(t)),
 		}
 
-		for i, o in ipairs(self:getInven("MAINHAND")) do self:checkMindstar(o) end
-		for i, o in ipairs(self:getInven("OFFHAND")) do self:checkMindstar(o) end
+		for i, o in ipairs(self:getInven("MAINHAND") or {}) do self:checkMindstar(o) end
+		for i, o in ipairs(self:getInven("OFFHAND") or {}) do self:checkMindstar(o) end
 		self:updateModdableTile()
 
 		return r
@@ -48,8 +48,8 @@ newTalent{
 	deactivate = function(self, t, p)
 		self:removeTemporaryValue("psiblades_active", p.tmpid)
 
-		for i, o in ipairs(self:getInven("MAINHAND")) do self:checkMindstar(o) end
-		for i, o in ipairs(self:getInven("OFFHAND")) do self:checkMindstar(o) end
+		for i, o in ipairs(self:getInven("MAINHAND") or {}) do self:checkMindstar(o) end
+		for i, o in ipairs(self:getInven("OFFHAND") or {}) do self:checkMindstar(o) end
 		self:updateModdableTile()
 
 		return true
