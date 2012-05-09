@@ -1367,7 +1367,7 @@ newDamageType{
 
 -- Corrupted blood, blight damage + potential diseases
 newDamageType{
-	name = "corrupted blood", type = "CORRUPTED_BLOOD",
+	name = "corrupted blood", type = "CORRUPTED_BLOOD", text_color = "#DARK_GREEN#",
 	projector = function(src, x, y, type, dam)
 		if _G.type(dam) == "number" then dam = {dam=dam} end
 		DamageType:get(DamageType.BLIGHT).projector(src, x, y, DamageType.BLIGHT, dam.dam)
