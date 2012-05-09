@@ -48,7 +48,7 @@ newEntity{
 
 	resists = { [DamageType.LIGHT] = -50, [DamageType.COLD] = -50 },
 	fear_immune = 1,
-	not_power_source = {arcane=true},
+	not_power_source = {arcane=true, technique_ranged=true},
 }
 
 newEntity{ base = "BASE_NPC_OOZE",

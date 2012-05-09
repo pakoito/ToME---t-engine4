@@ -33,7 +33,7 @@ newEntity{
 	combat_physspeed = 2, -- Double attack per turn
 
 	resolvers.sustains_at_birth(),
-	not_power_source = {arcane=true},
+	not_power_source = {arcane=true, technique_ranged=true},
 }
 
 newEntity{ base = "BASE_NPC_CAT",

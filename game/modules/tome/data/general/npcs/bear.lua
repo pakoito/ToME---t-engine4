@@ -47,7 +47,7 @@ newEntity{
 
 	resists = { [DamageType.FIRE] = 20, [DamageType.COLD] = 20, [DamageType.NATURE] = 20 },
 	ingredient_on_death = "BEAR_PAW",
-	not_power_source = {arcane=true},
+	not_power_source = {arcane=true, technique_ranged=true},
 }
 
 newEntity{ base = "BASE_NPC_BEAR",

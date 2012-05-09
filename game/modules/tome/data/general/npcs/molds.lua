@@ -39,6 +39,7 @@ newEntity{
 	no_breath = 1,
 	rank = 1,
 	size_category = 1,
+	not_power_source = {technique_ranged=true},
 }
 
 newEntity{ base = "BASE_NPC_MOLD",

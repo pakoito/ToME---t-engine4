@@ -41,7 +41,7 @@ newEntity{
 	stats = { str=10, dex=17, mag=3, con=7 },
 	combat = { dammod={str=0.6}, sound="creatures/wolves/wolf_attack_1" },
 	combat_armor = 1, combat_def = 1,
-	not_power_source = {arcane=true},
+	not_power_source = {arcane=true, technique_ranged=true},
 }
 
 newEntity{ base = "BASE_NPC_CANINE",

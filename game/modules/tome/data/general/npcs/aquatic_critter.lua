@@ -38,7 +38,7 @@ newEntity{
 	can_breath={water=1},
 
 	resists = { [DamageType.COLD] = 25, },
-	not_power_source = {arcane=true},
+	not_power_source = {arcane=true, technique_ranged=true},
 }
 
 newEntity{ base = "BASE_NPC_AQUATIC_CRITTER",

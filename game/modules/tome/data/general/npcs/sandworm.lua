@@ -44,7 +44,7 @@ newEntity{
 	stats = { str=15, dex=7, mag=3, con=3 },
 	combat_armor = 1, combat_def = 1,
 	ingredient_on_death = "SANDWORM_TOOTH",
-	not_power_source = {arcane=true},
+	not_power_source = {arcane=true, technique_ranged=true},
 }
 
 newEntity{ base = "BASE_NPC_SANDWORM",

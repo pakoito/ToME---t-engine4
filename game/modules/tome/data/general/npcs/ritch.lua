@@ -44,7 +44,7 @@ Vicious predators, they inject corrupting diseases into their foes, and their sh
 	disease_immune = 0.5,
 	resists = { [DamageType.BLIGHT] = 20, [DamageType.FIRE] = 100 },
 	ingredient_on_death = "RITCH_STINGER",
-	not_power_source = {arcane=true},
+	not_power_source = {arcane=true, technique_ranged=true},
 }
 
 newEntity{ base = "BASE_NPC_RITCH",

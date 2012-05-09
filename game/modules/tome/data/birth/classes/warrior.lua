@@ -145,7 +145,7 @@ newBirthDescriptor{
 		"#LIGHT_BLUE# * +2 Strength, +5 Dexterity, +0 Constitution",
 		"#LIGHT_BLUE# * +0 Magic, +0 Willpower, +2 Cunning",
 	},
-	power_source = {technique=true},
+	power_source = {technique=true, technique_ranged=true},
 	stats = { dex=5, str=2, cun=2, },
 	talents_types = {
 		["technique/archery-training"]={true, 0.3},
