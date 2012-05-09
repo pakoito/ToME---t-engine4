@@ -2480,6 +2480,8 @@ function _M:onTakeoff(o, bypass_set)
 end
 
 function _M:checkMindstar(o)
+	if not o.psiblade_tile or not o.combat then return end
+
 	local new
 	local old
 
