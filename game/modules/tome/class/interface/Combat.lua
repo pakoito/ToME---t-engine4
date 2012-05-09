@@ -1131,11 +1131,11 @@ function _M:combatCritReduction()
 end
 
 --- Computes physical crit for a damage
-function _M:physicalCrit(dam, weapon, target, atk, def)
+function _M:physicalCrit(dam, weapon, target, atk, def, add_chance, crit_power_add)
 	local tier_diff = self:getTierDiff(atk, def)
 
-	local chance = self:combatCrit(weapon)
-	local crit_power_add = 0
+	local chance = self:combatCrit(weapon) + (add_chance or 0)
+	crit_power_add = crit_power_add or 0
 	local crit = false
 	if self:knowTalent(self.T_BACKSTAB) and target:attr("stunned") then chance = chance + self:getTalentLevel(self.T_BACKSTAB) * 10 end
 
@@ -1175,8 +1175,8 @@ function _M:physicalCrit(dam, weapon, target, atk, def)
 end
 
 --- Computes spell crit for a damage
-function _M:spellCrit(dam, add_chance)
-	local crit_power_add = 0
+function _M:spellCrit(dam, add_chance, crit_power_add)
+	crit_power_add = crit_power_add or 0
 	local chance = self:combatSpellCrit() + (add_chance or 0)
 	local crit = false
 
@@ -1215,8 +1215,8 @@ function _M:spellCrit(dam, add_chance)
 end
 
 --- Computes mind crit for a damage
-function _M:mindCrit(dam, add_chance)
-	local crit_power_add = 0
+function _M:mindCrit(dam, add_chance, crit_power_add)
+	crit_power_add = crit_power_add or 0
 	local chance = self:combatMindCrit() + (add_chance or 0)
 	local crit = false
 
