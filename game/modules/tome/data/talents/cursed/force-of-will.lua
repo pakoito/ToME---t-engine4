@@ -22,7 +22,7 @@
 -- knockback: distance to knockback
 -- knockbackDamage: when knockback strikes something, both parties take damage - percent of damage * remaining knockback
 -- power: used to determine the initial radius of particles
-local function forceHit(self, target, sourceX, sourceY, damage, knockback, knockbackDamage, power)
+local function forceHit(self, target, sourceX, sourceY, damage, knockback, knockbackDamage, power, max)
 	-- apply initial damage
 	if damage > 0 then
 		damage = self:mindCrit(damage)
@@ -70,8 +70,9 @@ local function forceHit(self, target, sourceX, sourceY, damage, knockback, knock
 
 				if nextTarget then
 					-- start a new force hit with the knockback damage and current knockback
-
-					forceHit(self, nextTarget, sourceX, sourceY, blockDamage, knockback, knockbackDamage, power / 2)
+					if max > 0 then
+						forceHit(self, nextTarget, sourceX, sourceY, blockDamage, knockback, knockbackDamage, power / 2, max - 1)
+					end
 				end
 
 				knockback = 0
@@ -127,7 +128,7 @@ newTalent{
 		local power = 1 --(1 - ((distance - 1) / range))
 		local damage = t.getDamage(self, t) * power
 		local knockback = t.getKnockback(self, t)
-		forceHit(self, target, self.x, self.y, damage, knockback, 7, power)
+		forceHit(self, target, self.x, self.y, damage, knockback, 7, power, 10)
 		return true
 	end,
 	on_learn = function(self, t)
@@ -265,7 +266,7 @@ newTalent{
 					local localDamage = damage * power
 					local dazeDuration = t.getDazeDuration(self, t)
 
-					forceHit(self, target, blastX, blastY, damage, math.max(0, knockback - distance), 7, power)
+					forceHit(self, target, blastX, blastY, damage, math.max(0, knockback - distance), 7, power, 10)
 					if target:canBe("stun") then
 						target:setEffect(target.EFF_DAZED, dazeDuration, {src=self})
 					end
@@ -350,7 +351,7 @@ newTalent{
 			-- Randomly take targets
 			for i = 1, hitCount do
 				local target, index = rng.table(targets)
-				forceHit(self, target, target.x, target.y, damage, knockback, 7, 0.6)
+				forceHit(self, target, target.x, target.y, damage, knockback, 7, 0.6, 10)
 			end
 		end
 
