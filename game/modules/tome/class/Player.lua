@@ -677,6 +677,20 @@ function _M:restCheck()
 	end
 
 	self.resting.wait_cooldowns = nil
+
+	-- Enter recall waiting rest if we are at max already
+	if self.resting.cnt == 0 and self:hasEffect(self.EFF_RECALL) then
+		self.resting.wait_recall = true
+	end
+
+	if self.resting.wait_recall then
+		if self:hasEffect(self.EFF_RECALL) then
+			return true
+		end
+	end
+
+	self.resting.wait_recall = nil
+
 	return false, "all resources and life at maximum"
 end
 
