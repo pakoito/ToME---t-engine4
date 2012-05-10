@@ -109,7 +109,7 @@ newTalent{
 	mode = "sustained",
 	cooldown = 20,
 	getPower = function(self, t) return math.max(2, 10 - self:getTalentLevelRaw(t)), util.bound(40 + self:combatTalentSpellDamage(t, 10, 90), 0, 100) end,
-	vim = 22,
+	sustain_vim = 22,
 	tactical = { BUFF = 2 },
 	activate = function(self, t)
 		local l, c = t.getPower(self, t)
