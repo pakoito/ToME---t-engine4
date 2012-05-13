@@ -3677,7 +3677,7 @@ function _M:on_set_temporary_effect(eff_id, e, p)
 	if e.status == "detrimental" and self:attr("negative_status_effect_immune") then
 		p.dur = 0
 	end
-	if e.status == "detrimental" and e.type == "mental" and self:attr("mental_negative_status_effect_immune") then
+	if e.status == "detrimental" and e.type == "mental" and self:attr("mental_negative_status_effect_immune") and not e.subtype["cross tier"] then
 		p.dur = 0
 		self:attr("mental_negative_status_effect_immune", -1)
 		if not self:attr("mental_negative_status_effect_immune") then self:removeEffect(self.EFF_CLEAR_MIND) end

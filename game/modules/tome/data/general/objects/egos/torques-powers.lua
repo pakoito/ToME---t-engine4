@@ -89,7 +89,7 @@ newEntity{
 	level_range = {15, 50},
 	rarity = 12,
 
-	charm_power_def = {add=0, max=5, floor=true},
+	charm_power_def = {add=1, max=5, floor=true},
 	resolvers.charm("absorbs and nullifies at most %d detrimental mental status effects in the next 6 turns.", 20, function(self, who)
 		who:setEffect(who.EFF_CLEAR_MIND, 6, {power=self:getCharmPower()})
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
