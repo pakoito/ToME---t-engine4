@@ -457,7 +457,8 @@ function _M:eventPushCode(e)
 	if not f then
 --		core.profile.pushOrder("o='GetNews'")
 	else
-		pcall(f)
+		local ok, err = pcall(f)
+		if config.settings.cheat then print(ok, err) end
 	end
 end
 

@@ -1065,7 +1065,7 @@ function _M:buffOrientStep(orient, bx, by, scale, x, y, w, h)
 	return x, y
 end
 
-function _M:handleEffect(player, eff_id, e, p, x, y, hs, bx, by, is_first, scale)
+function _M:handleEffect(player, eff_id, e, p, x, y, hs, bx, by, is_first, scale, allow_remove)
 	local dur = p.dur + 1
 
 	if not self.tbuff[eff_id..":"..dur] then
@@ -1078,6 +1078,7 @@ function _M:handleEffect(player, eff_id, e, p, x, y, hs, bx, by, is_first, scale
 		else
 			desc = ("#{bold}##GOLD#%s\n(%s: %s)#WHITE##{normal}#\n"):format(name, e.type, eff_subtype)..e.long_desc(player, p)
 		end
+		if allow_remove then desc = desc.."\n---\nRight click to cancel early." end
 
 		local txt = nil
 		if e.decrease > 0 then
@@ -1094,6 +1095,13 @@ function _M:handleEffect(player, eff_id, e, p, x, y, hs, bx, by, is_first, scale
 
 				-- Move handle
 				if not self.locked and bx >= self.mhandle_pos.buffs.x and bx <= self.mhandle_pos.buffs.x + move_handle[6] and by >= self.mhandle_pos.buffs.y and by <= self.mhandle_pos.buffs.y + move_handle[7] then self:uiMoveResize("buffs", button, mx, my, xrel, yrel, bx, by, event) end
+			end
+			if allow_remove and event == "button" and button == "right" then
+				Dialog:yesnoPopup(name, "Really cancel "..name.."?", function(ret)
+					if ret then
+						player:removeEffect(eff_id)
+					end
+				end)
 			end
 			game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, desc)
 		end
@@ -1176,13 +1184,13 @@ function _M:displayBuffs(scale, bx, by)
 
 		for eff_id, p in pairs(good_e) do
 			local e = player.tempeffect_def[eff_id]
-			self:handleEffect(player, eff_id, e, p, x, y, hs, bx, by, is_first, scale)
+			self:handleEffect(player, eff_id, e, p, x, y, hs, bx, by, is_first, scale, true)
 			is_first = false
 			x, y = self:buffOrientStep(orient, bx, by, scale, x, y, hs, hs)
 		end
 		for eff_id, p in pairs(bad_e) do
 			local e = player.tempeffect_def[eff_id]
-			self:handleEffect(player, eff_id, e, p, x, y, hs, bx, by, is_first, scale)
+			self:handleEffect(player, eff_id, e, p, x, y, hs, bx, by, is_first, scale, false)
 			is_first = false
 			x, y = self:buffOrientStep(orient, bx, by, scale, x, y, hs, hs)
 		end

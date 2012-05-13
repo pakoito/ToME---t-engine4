@@ -36,6 +36,7 @@ end
 
 --- Call this when a character is saved to upload data to te4.org
 function _M:saveUUID(do_charball)
+	if game:isTainted() then return end
 	if not self.__te4_uuid then
 		-- Try to grab an UUID even after char reg
 		if self.allow_late_uuid and not game:isTainted() then self:getUUID() end

@@ -166,6 +166,6 @@ game:onLevelLoad("wilderness-1", function(wzone, level)
 	game.zone:addEntity(game.level, g, "terrain", x, y)
 	print("Poosh portal added")
 end)
-local msg = "Message from #GOLD#DarkGod#WHITE#: Today we celebrate the 10000 days of total ToME4 playtime! This is over 27 years and a half.\nTo celebrate this you should find on your worldmap a new portal to the lost land of Poosh where you will see some new creatures and might find a useful item too!\nThank you all and have great fun!\n\nPS: Oh and do not forget to vote for ToME4 on http://te4.org/vote ! :)\n\nPS2: If you liked this special event, please say so in the forums I may do more later!"
+local msg = "Message from #GOLD#DarkGod#WHITE#: Today we celebrate hum .. something. Well I just wanted to give an other round of the fabled .... LOST LAND OF POOSH! Enjoy!"
 game.log(msg)
-require("engine.ui.Dialog"):simpleLongPopup("10000 days played!", msg, 500)
+require("engine.ui.Dialog"):simpleLongPopup("Poosh?!", msg, 500)

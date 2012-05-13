@@ -1115,9 +1115,22 @@ function _M:setupCommands()
 			end end
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
---			for id, _ in pairs(game.party.__ingredients_def) do game.party:collectIngredient(id, rng.range(1, 3)) end
-			local m = game.zone:makeEntity(game.level, "actor", {random_elite=true}, nil, true)
-			game.zone:addEntity(game.level, m, "actor", game.player.x,game.player.y-1)
+			savefile_pipe:ignoreSaveToken(true)
+			local ep = savefile_pipe:doLoad("reaver", "entity", "engine.CharacterBallSave", "reaver")
+			savefile_pipe:ignoreSaveToken(false)
+			for a, _ in pairs(ep.members) do
+				if a.__CLASSNAME == "mod.class.Player" then
+					mod.class.NPC.castAs(a)
+					engine.interface.ActorAI.init(a, a)
+					a.ai = "tactical"
+					a.ai_state = {talent_in=1}
+					a.no_drops = true
+					a.energy.value = 0
+					a.player = nil
+					a.faction = "enemies"
+					game.zone:addEntity(game.level, a, "actor", game.player.x, game.player.y-1)
+				end
+			end
 		end end,
 		[{"_f","ctrl"}] = function() if config.settings.cheat then
 			self.player.quests["love-melinda"] = nil
