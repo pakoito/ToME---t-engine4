@@ -36,7 +36,6 @@ function _M:init(title, action)
 	self:setupUI(true, true)
 
 	self.key:addCommands{ __TEXTINPUT = function(c) if self.list and self.list.chars[c] then self:use(self.list[self.list.chars[c]]) end end}
-	self.key:addBinds{ EXIT = function() game:unregisterDialog(self) end, }
 end
 
 function _M:on_register()
