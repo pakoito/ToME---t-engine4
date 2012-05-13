@@ -31,6 +31,17 @@ As for your probable many questions, they will stay unanswered. I may help, but 
 			cond=function() return not game.level.source_level.data or not game.level.source_level.data.no_worldport end,
 			action=function() game.level.data.eidolon_exit(true) end
 		},
+		{"Thank you, but I am weary of this life, I wish no more, please let me go.", jump="die"},
+	}
+}
+
+newChat{ id="die",
+	text = [[#LIGHT_GREEN#*It seems to stare at you in weird way.*#WHITE#
+I...had plans for you, but I can not go against your free will. Know that you had a destiny waiting for you.
+Are you sure?]],
+	answers = {
+		{"Just let me go please.", action=function(npc, player) game:getPlayer(true):die(game.player) end},
+		{"No actually, perhaps life is still worth it!"},
 	}
 }
 
