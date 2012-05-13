@@ -110,6 +110,7 @@ newTalent{
 	require = techs_req3,
 	points = 5,
 	random_ego = "attack",
+	message = function(self) if self.subtype == "rodent" then return "@Source@ uses Warsqueak." else return "@Source@ uses Warshout." end end ,
 	stamina = 30,
 	cooldown = 18,
 	tactical = { ATTACKAREA = { confusion = 1 }, DISABLE = { confusion = 3 } },

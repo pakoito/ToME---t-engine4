@@ -181,7 +181,7 @@ end
 --- Replace some markers in a string with info on the talent
 function _M:useTalentMessage(ab)
 	if not ab.message then return nil end
-	local str = ab.message
+	local str = util.getval(ab.message, self, ab)
 	local _, _, target = self:getTarget()
 	local tname = "unknown"
 	if target then tname = target.name end
