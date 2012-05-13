@@ -31,7 +31,7 @@ end
 function _M:generateOne()
 	local f = nil
 	if self.filters then f = self.filters[rng.range(1, #self.filters)] end
-	if self.randelite > 0 and rng.chance(self.randelite) and self.zone:level_adjust_level(self.level, "actor") > 1 then
+	if self.randelite > 0 and rng.chance(self.randelite) and self.zone:level_adjust_level(self.level, "actor") > 3 then
 		print("Random elite generating")
 		if not f then f = {} else f = table.clone(f, true) end
 		f.random_elite = f.random_elite or true
