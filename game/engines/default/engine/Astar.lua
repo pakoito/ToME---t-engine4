@@ -79,6 +79,7 @@ end
 -- @param tx the end coord
 -- @param ty the end coord
 -- @param use_has_seen if true the astar wont consider non-has_seen grids
+-- @param add_check a function that checks each x/y coordinate and returns true if the coord is valid
 -- @return either nil if no path or a list of nodes in the form { {x=...,y=...}, {x=...,y=...}, ..., {x=tx,y=ty}}
 function _M:calc(sx, sy, tx, ty, use_has_seen, heuristic, add_check, forbid_diagonals)
 	local heur = heuristic or self.heuristicCloserPath

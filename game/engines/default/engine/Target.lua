@@ -284,6 +284,9 @@ function _M:getType(t)
 		range = 20,
 		selffire = true,
 		friendlyfire = true,
+		friendlyblock = true,
+		--- Determines how a path is blocked for a target type
+		--@param typ The target type table
 		block_path = function(typ, lx, ly, for_highlights)
 			if not game.level.map:isBound(lx, ly) then
 				return true, false, false
@@ -308,7 +311,18 @@ function _M:getType(t)
 				-- If we explode due to something other than terrain, then we should explode ON the tile, not before it
 				elseif typ.stop_block then
 					local nb = game.level.map:checkAllEntitiesCount(lx, ly, "block_move")
-					if nb > 1 or (nb == 1 and game.level.map:checkAllEntities(lx, ly, "block_move") and not game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "pass_projectile")) then
+					-- Reduce for pass_projectile or pass_terrain, which was handled above
+					if game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_move") and (typ.pass_terrain or game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "pass_projectile")) then
+						nb = nb - 1
+					end
+					-- Reduce the nb blocking for friendlies
+					if not typ.friendlyblock and typ.source_actor and typ.source_actor.reactionToward then
+						local a = game.level.map(lx, ly, engine.Map.ACTOR)
+						if a and typ.source_actor:reactionToward(a) > 0 then
+							nb = nb - 1
+						end
+					end
+					if nb > 0 then
 						if for_highlights then
 							-- Targeting highlight should be yellow if we don't know what we're firing through
 							if not is_known then
