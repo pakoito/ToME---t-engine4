@@ -49,7 +49,9 @@ newTalent{
 
 		-- Find a place around to clone
 		self.can_multiply = self.can_multiply - 1
-		local a = self:clone()
+		local a
+		if self.clone_base then a = self.clone_base:clone() else a = self:clone() end
+		a.can_multiply = a.can_multiply - 1
 		a.energy.val = 0
 		a.exp_worth = 0.1
 		a.inven = {}

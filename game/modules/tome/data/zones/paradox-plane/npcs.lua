@@ -77,7 +77,7 @@ newEntity{ define_as = "EPOCH",
 	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
 	ai_tactic = resolvers.tactic"ranged",
 	resolvers.inscriptions(1, "rune"),
-	
+
 	talent_cd_reduction = {[Talents.T_MULTIPLY]=-40}, -- Negative 40 is right, so the player doesn't get swarmed with bosses
 
 	on_multiply = function(self, src)

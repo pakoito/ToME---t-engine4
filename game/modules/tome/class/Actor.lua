@@ -1653,9 +1653,10 @@ function _M:onTakeHit(value, src)
 		local x, y = util.findFreeGrid(self.x, self.y, 1, true, {[Map.ACTOR]=true})
 		if x then
 			-- Find a place around to clone
-			local a = self:clone()
-			a.life = math.max(1, a.life - value / 2)
-			a.clone_on_hit.chance = math.ceil(a.clone_on_hit.chance / 2)
+			local a
+			if self.clone_base then a = self.clone_base:clone() else a = self:clone() end
+			a.life = math.max(1, self.life - value / 2)
+			a.clone_on_hit.chance = math.ceil(self.clone_on_hit.chance / 2)
 			a.energy.val = 0
 			a.exp_worth = 0.1
 			a.inven = {}

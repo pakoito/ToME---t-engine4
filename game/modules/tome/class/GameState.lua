@@ -1482,6 +1482,12 @@ function _M:createRandomBoss(base, data)
 	end
 	b.max_life = b.max_life or 150
 
+	if b.can_multiply or b.clone_on_hit then
+		b.clone_base = base:clone()
+		b.clone_base:resolve()
+		b.clone_base:resolve(nil, true)
+	end
+
 	-- Force resolving some stuff
 	if type(b.max_life) == "table" and b.max_life.__resolver then b.max_life = resolvers.calc[b.max_life.__resolver](b.max_life, b, b, b, "max_life", {}) end
 
