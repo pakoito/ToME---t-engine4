@@ -205,7 +205,7 @@ newEntity{
 
  newEntity{
 	power_source = {psionic=true},
-	name = " of nightfall", prefix=true, instant_resolve=true,
+	name = " of nightfall", suffix=true, instant_resolve=true,
 	keywords = {nightfall=true},
 	level_range = {30, 50},
 	rarity = 30,
