@@ -1067,7 +1067,7 @@ end
 
 function _M:entityFilterPost(zone, level, type, e, filter)
 	if type == "actor" then
-		if filter.random_boss then
+		if filter.random_boss and not e.unique then
 			if _G.type(filter.random_boss) == "boolean" then filter.random_boss = {}
 			else filter.random_boss = table.clone(filter.random_boss, true) end
 			filter.random_boss.level = filter.random_boss.level or zone:level_adjust_level(level, zone, type)
@@ -1084,7 +1084,7 @@ function _M:entityFilterPost(zone, level, type, e, filter)
 			end
 
 			e = self:createRandomBoss(e, filter.random_boss)
-		elseif filter.random_elite then
+		elseif filter.random_elite and not e.unique then
 			if _G.type(filter.random_elite) == "boolean" then filter.random_elite = {}
 			else filter.random_elite = table.clone(filter.random_elite, true) end
 			local base = {

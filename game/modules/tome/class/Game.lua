@@ -1115,7 +1115,6 @@ function _M:setupCommands()
 			end end
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
---[[
 			savefile_pipe:ignoreSaveToken(true)
 			local ep = savefile_pipe:doLoad("reaver", "entity", "engine.CharacterBallSave", "reaver")
 			savefile_pipe:ignoreSaveToken(false)
@@ -1132,9 +1131,6 @@ function _M:setupCommands()
 					game.zone:addEntity(game.level, a, "actor", game.player.x, game.player.y-1)
 				end
 			end
-]]
-			local m = game.zone:makeEntity(game.level, "actor", {name="green ooze", random_elite=true}, nil, true)
-			game.zone:addEntity(game.level, m, "actor", game.player.x,game.player.y-1)
 		end end,
 		[{"_f","ctrl"}] = function() if config.settings.cheat then
 			self.player.quests["love-melinda"] = nil
