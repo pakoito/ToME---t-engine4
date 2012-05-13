@@ -182,10 +182,12 @@ function _M:event(e)
 		self.channels[e.channel].users = {}
 		for _, user in ipairs(info.users) do
 			self.channels[e.channel].users[user.login] = {
+				id=user.id,
 				login=user.login,
 				name=user.name,
 				donator=user.donator,
 				status=user.status,
+				current_char_data=user.current_char,
 				current_char=user.current_char and user.current_char.title or "unknown",
 				module=user.current_char and user.current_char.module or "unknown",
 				valid=user.current_char and user.current_char.valid and "validate" or "not validated",

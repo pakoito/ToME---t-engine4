@@ -1109,6 +1109,12 @@ function _M:entityFilterPost(zone, level, type, e, filter)
 				end,
 				level = filter.random_elite.level or zone:level_adjust_level(level, zone, type),
 				check_talents_level = true,
+				post = function(b, data)
+					if data.level <= 12 then
+						b.inc_damage = b.inc_damage or {}
+						b.inc_damage.all = (b.inc_damage.all or 0) - 40 * (12 - data.level + 1) / 12
+					end
+				end,
 			}
 			e = self:createRandomBoss(e, table.merge(base, filter.random_elite, true))
 		end
@@ -1663,6 +1669,9 @@ function _M:createRandomBoss(base, data)
 		self.equilibrium_regen = self.equilibrium_regen - 2
 		self:resetToFull()
 	end
+
+	-- Anything else
+	if data.post then data.post(b, data) end
 
 	return b, boss_id
 end

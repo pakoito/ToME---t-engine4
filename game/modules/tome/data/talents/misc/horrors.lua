@@ -18,6 +18,7 @@
 -- darkgod@te4.org
 
 newTalentType{ type="technique/horror", name = "horror techniques", hide = true, description = "Physical talents of the various horrors of the world." }
+newTalentType{ type="gift/horror", name = "horror wild gifts", hide = true, description = "Wild gifts talents of the various horrors of the world." }
 newTalentType{ no_silence=true, is_spell=true, type="spell/horror", name = "horror spells", hide = true, description = "Spell talents of the various horrors of the world." }
 newTalentType{ no_silence=true, is_spell=true, type="corruption/horror", name = "horror spells", hide = true, description = "Spell talents of the various horrors of the world." }
 newTalentType{ type="other/horror", name = "horror powers", hide = true, description = "Unclassified talents of the various horrors of the world." }
@@ -162,7 +163,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t) * 100
 		local bleed = t.getBleedDamage(self, t) * 100
-		return ([[Bites the target for %d%% weapon damage, potentially causing it to bleed for %d%% weapon damage over five turns.  
+		return ([[Bites the target for %d%% weapon damage, potentially causing it to bleed for %d%% weapon damage over five turns.
 		If the target is affected by the bleed it will send the devourer into a frenzy (which in turn will frenzy nearby devourers).]]):format(damage, bleed)
 	end,
 }
@@ -276,7 +277,7 @@ newTalent{
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		local chance = t.getChance(self, t)
-		return ([[Brings the target's inner demons to the surface.  Each turn for %d turns there's a %d%% chance that one will be summoned. 
+		return ([[Brings the target's inner demons to the surface.  Each turn for %d turns there's a %d%% chance that one will be summoned.
 		If the summoning is resisted the effect will end early.]]):format(duration, chance)
 	end,
 }
@@ -549,4 +550,3 @@ newTalent{
 		format(duration, damDesc(self, DamageType.ACID, (damage/2)), damDesc(self, DamageType.BLIGHT, (damage/2)), damDesc(self, DamageType.ACID, (burst)))
 	end,
 }
-
