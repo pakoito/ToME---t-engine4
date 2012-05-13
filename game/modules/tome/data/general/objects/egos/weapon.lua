@@ -400,7 +400,7 @@ newEntity{
 		special_on_hit = {desc="20% chance to curse the target", fct=function(combat, who, target)
 			if not rng.percent(20) then return end
 			local eff = rng.table{"vuln", "defenseless", "impotence", "death", }
-			if not target:checkHit(who:combatSpellpower(), target:combatSpellResist()) then return end
+			if not who:checkHit(who:combatSpellpower(), target:combatSpellResist()) then return end
 			if eff == "vuln" then target:setEffect(target.EFF_CURSE_VULNERABILITY, 2, {power=20})
 			elseif eff == "defenseless" then target:setEffect(target.EFF_CURSE_DEFENSELESSNESS, 2, {power=20})
 			elseif eff == "impotence" then target:setEffect(target.EFF_CURSE_IMPOTENCE, 2, {power=20})
@@ -912,7 +912,7 @@ newEntity{
 			if not rng.percent(20) then return end
 			local eff = rng.table{"stun", "blind", "pin", "confusion", "silence",}
 			if not target:canBe(eff) then return end
-			if not target:checkHit(who:combatMindpower(), target:combatMentalResist()) then return end
+			if not who:checkHit(who:combatMindpower(), target:combatMentalResist()) then return end
 			if eff == "stun" then target:setEffect(target.EFF_STUNNED, 3, {})
 			elseif eff == "blind" then target:setEffect(target.EFF_BLINDED, 3, {})
 			elseif eff == "pin" then target:setEffect(target.EFF_PINNED, 3, {})

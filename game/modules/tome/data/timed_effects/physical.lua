@@ -1790,10 +1790,12 @@ newEffect{
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("counterstrike", 1)
 		eff.def = self:addTemporaryValue("combat_def", -eff.power)
+		eff.crit = self:addTemporaryValue("combat_crit_vulnerable", eff.crit_inc or 0)
 		eff.dur = eff.dur * (self.global_speed or 1)
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("counterstrike", eff.tmpid)
 		self:removeTemporaryValue("combat_def", eff.def)
+		self:removeTemporaryValue("combat_crit_vulnerable", eff.crit)
 	end,
 }

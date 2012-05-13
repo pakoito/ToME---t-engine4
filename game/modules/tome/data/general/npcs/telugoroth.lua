@@ -37,7 +37,7 @@ local function doTeluvortaSwap(self)
 		local a, id = rng.table(tgts)
 		local target = a
 
-		if target:canBe("teleport") and self:canBe("teleport") then
+		if self:checkHit(self:combatSpellpower(), target:combatSpellResist()) and target:canBe("teleport") and self:canBe("teleport") then
 			-- first remove the target so the destination tile is empty
 			game.level.map:remove(target.x, target.y, Map.ACTOR)
 			local px, py
@@ -151,7 +151,8 @@ newEntity{ base = "BASE_NPC_TELUGOROTH",
 	combat_armor = 0, combat_def = 20, combat_def_ranged = 20,
 	on_melee_hit = { [DamageType.TEMPORAL] = resolvers.mbonus(20, 10), },
 	ai = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_snake" },
-
+	doTeluvortaSwap = doTeluvortaSwap,
+	
 	talent_cd_reduction = {[Talents.T_DUST_TO_DUST]=-3},
 
 	resolvers.talents{
@@ -161,7 +162,9 @@ newEntity{ base = "BASE_NPC_TELUGOROTH",
 	resolvers.sustains_at_birth(),
 
 	on_act = function(self)
-		doTeluvortaSwap(self)
+		if rng.chance(2) then
+			self:doTeluvortaSwap()
+		end
 	end,
 }
 
@@ -175,7 +178,8 @@ newEntity{ base = "BASE_NPC_TELUGOROTH",
 	combat_armor = 0, combat_def = 20, combat_def_ranged = 20,
 	on_melee_hit = { [DamageType.TEMPORAL] = resolvers.mbonus(20, 10), },
 	ai = "dumb_talented_simple", ai_state = { talent_in=2, ai_move="move_snake" },
-
+	doTeluvortaSwap = doTeluvortaSwap,
+	
 	talent_cd_reduction = {[Talents.T_DUST_TO_DUST]=-3},
 
 	resolvers.talents{
@@ -185,7 +189,9 @@ newEntity{ base = "BASE_NPC_TELUGOROTH",
 	},
 	resolvers.sustains_at_birth(),
 	on_act = function(self)
-		doTeluvortaSwap(self)
+		if rng.chance(2) then
+			self:doTeluvortaSwap()
+		end
 	end,
 }
 
@@ -201,7 +207,8 @@ newEntity{ base = "BASE_NPC_TELUGOROTH",
 	combat_armor = 0, combat_def = 20, combat_def_ranged = 20,
 	on_melee_hit = { [DamageType.TEMPORAL] = resolvers.mbonus(20, 10), },
 	ai = "tactical", ai_state = { talent_in=2, ai_move="move_snake" },
-
+	doTeluvortaSwap = doTeluvortaSwap,
+	
 	talent_cd_reduction = {[Talents.T_DUST_TO_DUST]=-3},
 
 	resolvers.talents{
@@ -213,6 +220,8 @@ newEntity{ base = "BASE_NPC_TELUGOROTH",
 	},
 	resolvers.sustains_at_birth(),
 	on_act = function(self)
-		doTeluvortaSwap(self)
+		if rng.chance(2) then
+			self:doTeluvortaSwap()
+		end
 	end,
 }
