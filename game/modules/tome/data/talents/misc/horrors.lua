@@ -18,7 +18,8 @@
 -- darkgod@te4.org
 
 newTalentType{ type="technique/horror", name = "horror techniques", hide = true, description = "Physical talents of the various horrors of the world." }
-newTalentType{ type="gift/horror", name = "horror wild gifts", hide = true, description = "Wild gifts talents of the various horrors of the world." }
+newTalentType{ type="psionic/horror", name = "horror techniques", hide = false, description = "Psionic talents of the various horrors of the world." }
+newTalentType{ type="wild-gift/horror", name = "horror techniques", hide = false, description = "Psionic talents of the various horrors of the world." }
 newTalentType{ no_silence=true, is_spell=true, type="spell/horror", name = "horror spells", hide = true, description = "Spell talents of the various horrors of the world." }
 newTalentType{ no_silence=true, is_spell=true, type="corruption/horror", name = "horror spells", hide = true, description = "Spell talents of the various horrors of the world." }
 newTalentType{ type="other/horror", name = "horror powers", hide = true, description = "Unclassified talents of the various horrors of the world." }
@@ -548,5 +549,275 @@ newTalent{
 		return ([[Infects the target with parasitic carrion worm larvae for %d turns.  Each turn the disease will remove a beneficial physical effect and deal %0.2f acid and %0.2f blight damage.
 		If not cleared after five turns it will inflict %0.2f acid damage as the larvae hatch, removing the effect but spawning a full grown carrion worm mass near the target's location.]]):
 		format(duration, damDesc(self, DamageType.ACID, (damage/2)), damDesc(self, DamageType.BLIGHT, (damage/2)), damDesc(self, DamageType.ACID, (burst)))
+	end,
+}
+-------------------------------------------
+-- THE PUREQUESTION HORRORS AND ALL THAT --
+-------------------------------------------
+
+--Bladed Horror Talents
+newTalent{
+	name = "Knife Storm",
+	type = {"psionic/horror",1},
+	points = 5,
+	random_ego = "attack",
+	psi = 25,
+	cooldown = 20,
+	tactical = { ATTACKAREA = { PHYSICAL = 2, stun = 1 } },
+	range = 0,
+	radius = 3,
+	requires_target = true,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false}
+	end,
+	getDamage = function(self, t) return self:combatTalentMindDamage(t, 5, 85) end,
+	getDuration = function(self, t) return 3 + self:combatMindpower(0.05) + self:getTalentLevel(t)/2 end,
+	action = function(self, t)
+		-- Add a lasting map effect
+		game.level.map:addEffect(self,
+			self.x, self.y, t.getDuration(self, t),
+			DamageType.PHYSICALBLEED, t.getDamage(self, t),
+			3,
+			5, nil,
+			{type="knifestorm", only_one=true},
+			function(e)
+				e.x = e.src.x
+				e.y = e.src.y
+				return true
+			end,
+			false
+		)
+		game:playSoundNear(self, "talents/icestorm")
+		return true
+	end,
+	info = function(self, t)
+		local damage = t.getDamage(self, t)
+		local duration = t.getDuration(self, t)
+		return ([[Summon a storm of swirling blades to slice your foes, inflicting physical damage and bleeding to anyone who approaches.
+		The damage and duration will increase with your Mindpower.]]):format(damDesc(self, DamageType.PHYSICAL, damage), duration)
+	end,
+}
+
+newTalent{
+	name = "Psionic Pull",
+	type = {"psionic/horror", 1},
+	points = 5,
+	cooldown = 6,
+	psi = 35,
+	tactical = { DISABLE = 2 },
+	range = 0,
+	radius = function(self, t)
+		return 5
+	end,
+	target = function(self, t)
+		return {type="ball", range=0, friendlyfire=true, radius=self:getTalentRadius(t), talent=t}
+	end,
+	action = function(self, t)
+		local tg = self:getTalentTarget(t)
+		local tgts = {}
+		self:project(tg, self.x, self.y, function(px, py)
+			local target = game.level.map(px, py, Map.ACTOR)
+			if not target then return end
+			if self:reactionToward(target) < 0 and not tgts[target] then
+				tgts[target] = true
+				local ox, oy = target.x, target.y
+				target:pull(self.x, self.y, 2)
+				self:project(tg, target.x, target.y, engine.DamageType.PHYSICAL, 25+self:getTalentLevel(t)*4)
+				if target.x ~= ox or target.y ~= oy then game.logSeen(target, "%s is pulled in!", target.name:capitalize()) end
+			end
+		end)
+		return true
+	end,
+	info = function(self, t)
+		return ([[Pull all foes toward you in radius 5 while dealing physical damage.]])
+	end,
+}
+
+newTalent{
+	name = "Razor Knife",
+	type = {"psionic/horror", 1},
+	points = 5,
+	psi = 18,
+	cooldown = 8,
+	range = 7,
+	random_ego = "attack",
+	tactical = { ATTACK = {PHYSICAL = 2} },
+	direct_hit = true,
+	requires_target = true,
+	target = function(self, t)
+		return {type="beam", range=self:getTalentRange(t), talent=t}
+	end,
+	action = function(self, t)
+		local tg = self:getTalentTarget(t)
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:project(tg, x, y, DamageType.PHYSICAL, self:mindCrit(self:combatTalentMindDamage(t, 20, 200)), {type="bones"})
+		game:playSoundNear(self, "talents/arcane")
+		return true
+	end,
+	info = function(self, t)
+		return ([[Launches a knife with intense power doing %0.2f physical damage to all targets in line.
+		The damage will increase with Mindpower]]):format(damDesc(self, DamageType.PHYSICAL, self:combatTalentMindDamage(t, 20, 200)))
+	end,
+}
+
+--Oozing Horror Talents
+newTalent{
+	name = "Slime Wave",
+	type = {"wild-gift/horror",1},
+	points = 5,
+	random_ego = "attack",
+	equilibrium = 25,
+	cooldown = 10,
+	tactical = {ATTACKAREA = { NATURE=2 } },
+	direct_hit = true,
+	range = 0,
+	requires_target = true,
+	radius = function(self, t)
+		return 1 + 0.5 * t.getDuration(self, t)
+	end,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
+	end,
+	getDamage = function(self, t) return self:combatTalentMindDamage(t, 5, 90) end,
+	getDuration = function(self, t) return 9 + self:combatTalentMindDamage(t, 6, 7) end,
+	action = function(self, t)
+		-- Add a lasting map effect
+		game.level.map:addEffect(self,
+			self.x, self.y, t.getDuration(self, t),
+			DamageType.SLIME, {dam=t.getDamage(self, t), x=self.x, y=self.y},
+			1,
+			5, nil,
+			engine.Entity.new{alpha=100, display='', color_br=30, color_bg=200, color_bb=60},
+			function(e)
+				e.radius = e.radius + 0.5
+				return true
+			end,
+			false
+		)
+		game:playSoundNear(self, "talents/slime")
+		return true
+	end,
+	info = function(self, t)
+		local damage = t.getDamage(self, t)
+		local duration = t.getDuration(self, t)
+		local radius = self:getTalentRadius(t)
+		return ([[A wall of slime oozes out from the caster with radius 1, increasing once every two turns to a maximum eventual radius of %d, doing %0.2f slime damage for %d turns.
+		The damage and duration will increase with your Mindpower.]]):
+		format(radius, damDesc(self, DamageType.NATURE, damage), duration)
+	end,
+}
+
+newTalent{
+	name = "Tentacle Grab",
+	type = {"wild-gift/horror",1},
+	points = 5,
+	equilibrium = 10,
+	cooldown = 15,
+	range = 6,
+	tactical = { DISABLE = 1, CLOSEIN = 3 },
+	requires_target = true,
+	getDamage = function(self, t) return self:mindCrit(self:combatTalentMindDamage(t, 5, 50)) end,
+	getDuration = function(self, t) return 2 + math.ceil(self:getTalentLevel(t)) end,
+	action = function(self, t)
+		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
+		local x, y = self:getTarget(tg)
+		local target = game.level.map(x, y, engine.Map.ACTOR)
+		if not x or not y or not target then return nil end
+
+		if target:canBe("pin") and self:checkHit(self:combatMindpower(), target:combatPhysicalResist()) then
+			target:setEffect(target.EFF_GRAPPLED, t.getDuration(self, t), {src=self, power=t.getDamage(self, t)/2})
+			self:project(tg, x, y, function(px, py)
+
+				target:pull(self.x, self.y, tg.range)
+
+				if not target:attr("no_breath") and not target:attr("undead") and target:canBe("silence") then
+					target:setEffect(target.EFF_STRANGLE_HOLD, t.getDuration(self, t), {src=self, power=t.getDamage(self, t) * 1.5, damtype="SLIME"})
+				else
+					target:setEffect(target.EFF_CRUSHING_HOLD, t.getDuration(self, t), {src=self, power=t.getDamage(self, t), damtype="SLIME"})
+				end
+			end)
+		else
+			game.logSeen(target, "%s resists the grab!", target.name:capitalize())
+		end
+		game:playSoundNear(self, "talents/slime")
+
+		return true
+	end,
+	info = function(self, t)
+		local damage = t.getDamage(self, t)
+		local duration = t.getDuration(self, t)
+		return ([[Grab a target and drag it to your side, holding it down and strangling it for %d turns.
+		The grab will also deal %0.2f slime damage per turn.
+		The damage will increase with your Mindpower.]]):
+		format(duration, damDesc(self, DamageType.SLIME, damage))
+	end,
+}
+
+newTalent{
+	short_name = "OOZE_SPIT",
+	name = "Slime Spit",
+	type = {"wild-gift/horror", 1},
+	require = gifts_req3,
+	points = 5,
+	random_ego = "attack",
+	equilibrium = 4,
+	cooldown = 30,
+	tactical = { ATTACK = { NATURE = 2} },
+	range = 10,
+	direct_hit = true,
+	proj_speed = 8,
+	action = function(self, t)
+		local tg = {type="bolt", range=self:getTalentRange(t), display={particle="bolt_arcane"}}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:projectile(tg, x, y, DamageType.SLIME, self:mindCrit(self:combatTalentStatDamage(t, "wil", 30, 290)), {type="slime"})
+		game:playSoundNear(self, "talents/slime")
+		return true
+	end,
+	info = function(self, t)
+		return ([[Spit slime at your target doing %0.2f nature damage and slowing it down by 30%% for 3 turns.
+		The damage will increase with the Dexterity stat]]):format(damDesc(self, DamageType.NATURE, self:combatTalentStatDamage(t, "dex", 30, 290)))
+	end,
+}
+
+newTalent{
+	short_name = "OOZE_ROOTS",
+	name = "Slime Roots",
+	type = {"wild-gift/horror", 1},
+	points = 5,
+	random_ego = "utility",
+	equilibrium = 5,
+	cooldown = 20,
+	tactical = { CLOSEIN = 2 },
+	requires_target = true,
+	range = function(self, t)
+		return 5 + self:getTalentLevel(t)
+	end,
+	radius = function(self, t)
+		return 1-- util.bound(4 - self:getTalentLevel(t) / 2, 1, 4)
+	end,
+	is_teleport = true,
+	action = function(self, t)
+		local range = self:getTalentRange(t)
+		local radius = self:getTalentRadius(t)
+		local tg = {type="ball", nolock=true, pass_terrain=true, nowarning=true, range=range, radius=radius, requires_knowledge=false}
+		local x, y = self:getTarget(tg)
+		if not x then return nil end
+		-- Target code does not restrict the self coordinates to the range, it lets the project function do it
+		-- but we cant ...
+		local _ _, x, y = self:canProject(tg, x, y)
+		game.level.map:particleEmitter(self.x, self.y, 1, "slime")
+		self:teleportRandom(x, y, self:getTalentRadius(t))
+		game.level.map:particleEmitter(self.x, self.y, 1, "slime")
+
+		game:playSoundNear(self, "talents/slime")
+		return true
+	end,
+	info = function(self, t)
+		local range = self:getTalentRange(t)
+		local radius = self:getTalentRadius(t)
+		local duration = t.getDuration(self, t)
+		return ([[You extend slimy roots into the ground, follow them, and re-appear somewhere else in a range of %d with error margin of %d.]]):format(range, radius)
 	end,
 }

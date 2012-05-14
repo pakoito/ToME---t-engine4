@@ -1076,6 +1076,9 @@ newEffect{
 		local p = self:hasEffect(self.EFF_GRAPPLED)
 		if core.fov.distance(self.x, self.y, eff.src.x, eff.src.y) > 1 or eff.src.dead or not game.level:hasEntity(eff.src) or not (p and p.src == eff.src) then
 			self:removeEffect(self.EFF_STRANGLE_HOLD)
+		elseif eff.damtype then
+			local type = eff.damtype
+			DamageType:get(DamageType[type]).projector(eff.src or self, self.x, self.y, DamageType[type], eff.power)
 		else
 			DamageType:get(DamageType.PHYSICAL).projector(eff.src or self, self.x, self.y, DamageType.PHYSICAL, eff.power)
 		end

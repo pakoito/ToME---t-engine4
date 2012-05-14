@@ -501,6 +501,138 @@ newEntity{ base = "BASE_NPC_HORROR",
 	},
 }
 
+--Blade horror, psionic horror surrounded by countless telekinetic blades.
+newEntity{ base = "BASE_NPC_HORROR",
+	name = "blade horror", color=colors.GREY, define_as="BLADEHORROR",
+	desc = "Blades whirl in the air around this thin, floating figure. The air around it swirls with force, threatening to tear apart anything that approches, if the blades don't do it first.",
+	level_range = {15, nil}, exp_worth = 1,
+	rarity = 2,
+	rank = 2,
+	levitate=1,
+	max_psi= 300,
+	psi_regen= 4,
+	size_category = 3,
+	autolevel = "wildcaster",
+	max_life = resolvers.rngavg(70, 95),
+	life_rating = 12,
+	life_regen = 0.25,
+	combat_armor = 12, combat_def = 24,
+	
+		ai = "tactical", ai_state = { ai_move="move_dmap", talent_in=3, ally_compassion=0 },
+		
+	on_melee_hit = {[DamageType.PHYSICALBLEED]=resolvers.mbonus(14, 2)},
+	combat = { dam=resolvers.levelup(resolvers.rngavg(16,22), 1, 1.5), atk=resolvers.levelup(18, 1, 1), apr=4, dammod={wil=0.25, cun=0.1}, damtype=engine.DamageType.PHYSICALBLEED, },
+	combat_physspeed = 4, --Crazy fast attack rate
+	
+	resists = {[DamageType.PHYSICAL] = 10, [DamageType.MIND] = 40, [DamageType.ARCANE] = -20},
+	
+	resolvers.talents{
+		[Talents.T_KNIFE_STORM]={base=3, every=6, max=7},
+		[Talents.T_BIND]={base=1, every=8, max=4},
+		[Talents.T_RAZOR_KNIFE]={base=1, every=6, max=5},
+		[Talents.T_PSIONIC_PULL]={base=1, every=6, max=5},
+		[Talents.T_KINETIC_AURA]={base=1, every=4, max=7},
+		[Talents.T_KINETIC_SHIELD]={base=1, every=3, max=6},
+		[Talents.T_KINETIC_LEECH]={base=2, every=5, max=5},
+	},
+	resolvers.sustains_at_birth(),
+}
+
+newEntity{ base = "BASE_NPC_HORROR",
+	subtype = "eldritch",
+	name = "oozing horror", color=colors.GREEN,
+	desc = "A massive, amorphous blob of green slime crawls on the ground towards you. Eyes, drifting through the viscous mass, scanning for potential prey.",
+	level_range = {16, nil}, exp_worth = 1,
+	rarity = 7,
+	rank = 3,
+	movement_speed = 0.7,
+	size_category = 4,
+	autolevel = "wildcaster",
+	max_life = resolvers.rngavg(100, 120),
+	life_rating = 20,
+	life_regen = 3,
+	combat_armor = 15, combat_def = 24,
+	
+	on_move = function(self)
+			local DamageType = require "engine.DamageType"
+			local duration = 10
+			local radius = 0
+			local dam = 25
+			-- Add a lasting map effect
+			game.level.map:addEffect(self,
+				self.x, self.y, duration,
+				engine.DamageType.SLIME, 25,
+				radius,
+				5, nil,
+				engine.Entity.new{alpha=100, display='', color_br=25, color_bg=140, color_bb=40},
+				function(e)
+					e.radius = e.radius
+					return true
+				end,
+				false
+			)
+	end,
+	
+	on_melee_hit = {[DamageType.SLIME]=resolvers.mbonus(16, 2), [DamageType.ACID]=resolvers.mbonus(14, 2)},
+	combat = { 
+		dam=resolvers.levelup(resolvers.rngavg(40,50), 1, 0.9), 
+		atk=resolvers.rngavg(25,50), apr=25, 
+		dammod={wil=1.1}, physcrit = 10, 
+		damtype=engine.DamageType.SLIME,
+	},
+	ai_state = { talent_in=3, },
+	
+	resists = {all=15, [DamageType.PHYSICAL] = -10, [DamageType.NATURE] = 100, [DamageType.ARCANE] = 40, [DamageType.BLIGHT] = 24},
+
+	resolvers.talents{
+			[Talents.T_RESOLVE]={base=3, every=6, max=8},
+			[Talents.T_MANA_CLASH]={base=1, every=6, max=7},
+			[Talents.T_OOZE_SPIT]={base=1, every=8, max=4},
+			[Talents.T_OOZE_ROOTS]={base=3, every=6, max=7},
+			[Talents.T_SLIME_WAVE]={base=2, every=8, max=7},
+			[Talents.T_TENTACLE_GRAB]={base=2, every=7, max=6},
+	},
+}
+
+newEntity{ base = "BASE_NPC_HORROR",
+	subtype = "eldritch",
+	name = "umbral horror", color=colors.BLACK,
+	desc = "A dark shifting shape stalks through the shadows, blending in seemlessly.",
+	level_range = {16, nil}, exp_worth = 1,
+	rarity = 8,
+	rank = 3,
+	movement_speed = 1.2,
+	size_category = 2,
+	autolevel = "wildcaster",
+	max_life = resolvers.rngavg(100, 120),
+	life_rating = 20,
+	life_regen = 0.25,
+	hate_regen=4,
+	combat_armor = 0, combat_def = 24,
+	
+	combat = { 
+		dam=resolvers.levelup(resolvers.rngavg(36,45), 1, 1.2), 
+		atk=resolvers.rngavg(25,35), apr=20, 
+		dammod={wil=0.8}, physcrit = 12, 
+		damtype=engine.DamageType.DARKNESS,
+	},
+	combat_physspeed = 2,
+	
+	resists = {[DamageType.PHYSICAL] = -10, [DamageType.DARKNESS] = 100, [DamageType.LIGHT] = -60},
+
+	resolvers.talents{
+			[Talents.T_CALL_SHADOWS]={base=3, every=6, max=10},
+			[Talents.T_STEALTH]={base=4, every=5, max=10},
+			[Talents.T_PHASE_DOOR]=1,
+			[Talents.T_BLINDSIDE]={base=2, every=8, max=5},
+			[Talents.T_DARK_TORRENT]={base=1, every=5, max=8},
+			[Talents.T_CREEPING_DARKNESS]={base=2, every=4, max=10},
+			[Talents.T_DARK_VISION]=5,
+			[Talents.T_FOCUS_SHADOWS]={base=4, every=5, max=10},
+			[Talents.T_SHADOW_WARRIORS]={base=1, every=8, max=5},
+	},
+		resolvers.sustains_at_birth(),
+}
 ------------------------------------------------------------------------
 -- Uniques
 ------------------------------------------------------------------------
