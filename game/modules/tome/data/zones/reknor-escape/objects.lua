@@ -27,7 +27,7 @@ newEntity{ base = "BASE_WARAXE",
 	desc = [[A small but sharp axe, with a handle made of polished bone.  The blade has chopped through the skulls of many, and has been stained a deep crimson.]],
 	require = { stat = { str=18 }, },
 	level_range = {5, 12},
-	rarity = 220,
+	rarity = false,
 	cost = 50,
 	combat = {
 		dam = 16,
