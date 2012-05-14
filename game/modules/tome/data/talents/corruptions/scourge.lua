@@ -17,6 +17,8 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local DamageType = require "engine.DamageType"
+
 newTalent{
 	name = "Rend",
 	type = {"corruption/scourge", 1},
@@ -39,8 +41,10 @@ newTalent{
 		if not x or not y or not target then return nil end
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 
+		DamageType:projectingFor(self, {project_type={talent=t}})
 		local speed1, hit1 = self:attackTargetWith(target, weapon.combat, nil, self:combatTalentWeaponDamage(t, 0.8, 1.6))
 		local speed2, hit2 = self:attackTargetWith(target, offweapon.combat, nil, self:getOffHandMult(offweapon.combat, self:combatTalentWeaponDamage(t, 0.8, 1.6)))
+		DamageType:projectingFor(self, nil)
 
 		-- Try to bleed !
 		if hit1 then
@@ -120,8 +124,10 @@ newTalent{
 		if not x or not y or not target then return nil end
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 
+		DamageType:projectingFor(self, {project_type={talent=t}})
 		local speed1, hit1 = self:attackTargetWith(target, weapon.combat, DamageType.ACID, self:combatTalentWeaponDamage(t, 0.8, 1.6))
 		local speed2, hit2 = self:attackTargetWith(target, offweapon.combat, DamageType.ACID, self:getOffHandMult(offweapon.combat, self:combatTalentWeaponDamage(t, 0.8, 1.6)))
+		DamageType:projectingFor(self, nil)
 
 		-- Acid splash !
 		if hit1 or hit2 then
@@ -162,6 +168,7 @@ newTalent{
 		if not x or not y or not target then return nil end
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 
+		DamageType:projectingFor(self, {project_type={talent=t}})
 		local speed1, hit1 = self:attackTargetWith(target, weapon.combat, DamageType.DARKNESS, self:combatTalentWeaponDamage(t, 0.6, 1.4))
 
 		if hit1 then
@@ -174,6 +181,7 @@ newTalent{
 				game.logSeen(self, "%s resists the darkness.", target.name:capitalize())
 			end
 		end
+		DamageType:projectingFor(self, nil)
 
 		return true
 	end,
