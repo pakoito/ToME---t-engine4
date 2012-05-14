@@ -45,7 +45,7 @@ function _M:init(title, store_inven, actor_inven, store_filter, actor_filter, ac
 			{name="Price", width={50,"fixed"}, display_prop=function(item) return self.descprice("sell", item.object) end, sort=function(a, b) return descprice("sell", a.object) < descprice("sell", b.object) end},
 		},
 		fct=function(item, sel, button, event) self:use(item, button, event) end,
-		on_select=function(item, sel) self:select(item) end,
+		select=function(item, sel) self:select(item) end,
 		on_drag=function(item) self:onDrag(item, "store-sell") end,
 		on_drag_end=function() self:onDragTakeoff("store-buy") end,
 	}
@@ -58,7 +58,7 @@ function _M:init(title, store_inven, actor_inven, store_filter, actor_filter, ac
 			{name="Price", width={50,"fixed"}, display_prop=function(item) return self.descprice("buy", item.object) end, sort=function(a, b) return descprice("buy", a.object) < descprice("buy", b.object) end},
 		},
 		fct=function(item, sel, button, event) self:use(item, button, event) end,
-		on_select=function(item, sel) self:select(item) end,
+		select=function(item, sel) self:select(item) end,
 		on_drag=function(item) self:onDrag(item, "store-buy") end,
 		on_drag_end=function() self:onDragTakeoff("store-sell") end,
 	}
