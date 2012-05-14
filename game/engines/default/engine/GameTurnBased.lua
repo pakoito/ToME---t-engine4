@@ -27,6 +27,8 @@ require "engine.GameEnergyBased"
 -- @inherit engine.GameEnergyBased
 module(..., package.seeall, class.inherit(engine.GameEnergyBased))
 
+can_pause = true
+
 --- See engine.GameEnergyBased
 function _M:init(keyhandler, energy_to_act, energy_per_tick)
 	self.paused = false

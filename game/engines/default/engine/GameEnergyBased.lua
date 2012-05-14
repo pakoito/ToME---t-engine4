@@ -132,7 +132,7 @@ function _M:tickLevel(level)
 			end
 --			print(">ENERGY", e.name, e.uid, "::", e.energy.value, self.paused, "::", e.player)
 
-			if self.paused then
+			if self.can_pause and self.paused then
 				level.last_iteration = {i=i, e=e}
 --				print("====LEVEL", level.level, level.sublevel_id, "pausing tick loop at ", i, e.name)
 				break

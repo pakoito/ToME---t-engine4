@@ -210,7 +210,7 @@ function _M:moveDir(dir)
 
 	local x, y = self.x + dx, self.y + dy
 	self.move_dir = dir
-	
+
 	return self:move(x, y)
 end
 

@@ -386,6 +386,7 @@ function _M:getEntityFinalSurface(tiles, w, h)
 
 	local mos = {}
 	local list = {}
+	print("===final surface for", self.uid, self.namself, self.x, self.y, self.type, self.subtype)
 	self:getMapObjects(tiles, mos, 1)
 	for i = 1, Map.zdepth do
 		if mos[i] then list[#list+1] = mos[i] end
