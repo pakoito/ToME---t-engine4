@@ -33,6 +33,17 @@ newTalent{
 	end,
 	deactivate = function(self, t, p)
 		self:removeTemporaryValue("max_vim", p.vim)
+
+		while self:getMaxVim() < 0 do
+			local l = {}
+			for tid, _ in pairs(self.sustain_talents) do
+				local t = self:getTalentFromId(tid)
+				if t.sustain_vim then l[#l+1] = tid end
+			end
+			if #l == 0 then break end
+			self:forceUseTalent(rng.table(l), {ignore_energy=true, no_equilibrium_fail=true, no_paradox_fail=true})
+		end
+
 		return true
 	end,
 	info = function(self, t)
