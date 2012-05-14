@@ -1293,3 +1293,204 @@ It has been kept somewhat intact with layers of salt and clay, but in spite of t
 		self.worn_by = nil
 	end,
 }
+
+--Storm fury, lightning infused bow that automatically attacks nearby enemies with bolts of lightning.
+newEntity{ base = "BASE_LONGBOW",
+	power_source = {arcane=true},
+	define_as = "STORM_FURY",
+	name = "Storm Fury", unique=true,
+	unided_name = "crackling longbow", color=colors.BLUE,
+	desc = [[This dragonbone longbow is enhanced with bands of steel, which arc with intense lightning. Bolts travel up and down the string, ignorant of you.]],
+	require = { stat = { dex=60 }, },
+	level_range = {40, 50},
+	rarity = 250,
+	cost = 300,
+	material_level = 5,
+	sentient = true,
+	combat = {
+		range=10,
+		physspeed = 0.7,
+	},
+	wielder = {
+		combat_spellpower=8,
+		ranged_project = {[DamageType.LIGHTNING] = 50},
+		talents_types_mastery = {
+			["spell/air"] = 0.2,
+			["spell/storm"] = 0.1,
+		},
+		inc_damage={
+			[DamageType.LIGHTNING] = 15,
+		},
+	},
+	act = function(self)
+		self:useEnergy()
+		if not self.worn_by then return end
+		if self.worn_by:attr("dead") then return end
+		self.zap = self.zap + 5
+		if not rng.percent(self.zap)  then return end
+		local who = self.worn_by
+		local Map = require "engine.Map"
+		--local project = require "engine.DamageType"
+		local tgts = {}
+		local DamageType = require "engine.DamageType"
+		--local project = "engine.ActorProject"
+		local grids = core.fov.circle_grids(who.x, who.y, 5, true)
+		for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
+			local a = game.level.map(x, y, Map.ACTOR)
+			if a and who:reactionToward(a) < 0 then
+				tgts[#tgts+1] = a
+			end
+		end end
+		
+		local tg = {type="hit", range=5,}
+		for i = 1, 1 do
+			if #tgts <= 0 then break end
+			local a, id = rng.table(tgts)
+			table.remove(tgts, id)
+
+			self.za = 0
+			who:project(tg, a.x, a.y, DamageType.LIGHTNING_DAZE, {daze=40, dam = rng.avg(1,3) * (40+ who:getMag() * 1.5)} )
+			game.level.map:particleEmitter(who.x, who.y, math.max(math.abs(a.x-who.x), math.abs(a.y-who.y)), "lightning", {tx=a.x-who.x, ty=a.y-who.y})
+			game:playSoundNear(self, "talents/lightning")
+			game.logSeen(who, "#GOLD#A bolt of lightning fires from %s's bow, striking %s!", who.name:capitalize(), a.name:capitalize())
+		end
+	end,
+	on_wear = function(self, who)
+		self.worn_by = who
+		self.zap = 0
+	end,
+	on_takeoff = function(self)
+		self.worn_by = nil
+	end,
+}
+--Ice Cloak that can release massive freezing AOE, dropped by Glacial Legion.
+newEntity{ base = "BASE_CLOAK", define_as="GLACIAL_CLOAK",
+	power_source = {arcane=true},
+	unique = true,
+	name = "Frozen Shroud", image="object/artifact/cloak_winds_whisper.png",
+	unided_name = "chilling cloak",
+	desc = [[All that remains of the Glacial Legion. This cloak seems to exude an icy cold vapor that freezes all it touches.]],
+	level_range = {40, 50},
+	rarity = 250,
+	cost = 300,
+	material_level = 5,
+	wielder = {
+		resists= {[DamageType.FIRE] = -15,[DamageType.COLD] = 25, all=5},
+		inc_stats = { [Stats.STAT_MAG] = 7,},
+		combat_def = 12,
+		on_melee_hit = {[DamageType.ICE]=60},
+	},
+	max_power = 30, power_regen = 1,
+	use_power = { name = "release a blast of ice", power = 30,
+		use = function(self, who)	
+			local duration = 10
+			local radius = 4
+			local dam = (25 + who:getMag())
+			local blast = {type="ball", range=0, radius=radius, selffire=false, display={particle="bolt_ice", trail="icetrail"}}
+			who:project(blast, who.x, who.y, DamageType.COLD, dam*3)
+			who:project(blast, who.x, who.y, DamageType.FREEZE, {dur=6, hp=80+dam})
+			-- Add a lasting map effect
+			game.level.map:addEffect(who,
+				who.x, who.y, duration,
+				engine.DamageType.ICE, dam,
+				radius,
+				5, nil,
+				engine.Entity.new{alpha=100, display='', color_br=30, color_bg=60, color_bb=200},
+				function(e)
+					e.radius = e.radius
+					return true
+				end,
+				false
+			)
+			game.logSeen(who, "%s releases a burst of freezing cold from within their cloak!", who.name:capitalize(), self:getName())
+			return {id=true, used=true}
+		end
+	},
+}
+--Blight+Phys Greatmaul that inflicts disease, dropped by Rotting Titan.
+newEntity{ base = "BASE_GREATMAUL", define_as="ROTTING_MAUL",
+	power_source = {arcane=true},
+	unique = true,
+	name = "Blighted Maul", color = colors.LIGHT_RED, image = "object/artifact/voratun_hammer_of_the_deep_bellow.png",
+	unided_name = "rotten stone limb",
+	desc = [[The massive stone limb of the Rotting Titan, a mass of stone and rotting flesh. You think you can lift it, but it is very heavy.]],
+	level_range = {40, 50},
+	rarity = 250,
+	require = { stat = { str=60 }, },
+	cost = 300,
+	encumber = 12,
+	material_level = 5,
+	combat = {
+		dam = 96,
+		apr = 22,
+		physcrit = 10,
+		combat_critical_power = 40,
+		psysspeed=1.2,
+		dammod = {str=1.4},
+		damage_convert = {[ DamageType.BLIGHT] = 20},
+		melee_project={[DamageType.CORRUPTED_BLOOD] = 30},
+		special_on_hit = {desc="25% to damage nearby foes", fct=function(combat, who, target)
+			if rng.percent(25) then
+				local dam = rng.avg(1,2) * (70+ who:getStr() * 1.8)
+				game.logSeen(self, "The ground shakes as the %s hits!", who.name:capitalize())
+				local tg = {type="ball", range=0, selffire=false, radius=2, no_restrict=true}
+				who:project(tg, target.x, target.y, DamageType.PHYSICAL, dam)
+			end
+		end},
+	},
+	wielder = {
+		inc_damage={[DamageType.PHYSICAL] = 12,},
+		knockback_immune=0.3,
+	},
+	max_power = 50, power_regen = 1,
+	use_power = { name = "knock away nearby foes", power = 50,
+		use = function(self, who)
+			local dam = rng.avg(1,2) * (125+ who:getStr() * 3)
+			local tg = {type="ball", range=0, selffire=false, radius=4, no_restrict=true}
+			who:project(tg, who.x, who.y, DamageType.PHYSKNOCKBACK, {dam=dam, dist=4})
+			game.logSeen(who, "%s slams their %s into the ground, sending out a shockwave!", who.name:capitalize(), self:getName())
+			return {id=true, used=true}
+		end
+	},
+}
+--Molten Staff, dropped by Heavy Sentinel.
+newEntity{ base = "BASE_STAFF",
+	power_source = {arcane=true},
+	define_as = "STAFF_MOLTEN", rarity=false,
+	unided_name = "melting bone",
+	name = "Molten Staff", unique=true,
+	desc = [[This staff of fused molten bone from the Heavy Sentinel radiates intense heat. It still glows red with the heat of the Sentinel's core.]],
+	require = { stat = { mag=60 }, },
+	level_range = {40, 50},
+	rarity = 250,
+	cost = 300,
+	material_level=5,
+	combat = {
+		dam = 60,
+		apr = 6,
+		physcrit = 5,
+		dammod = {mag=1.35},
+		damtype = DamageType.FIREBURN,
+	},
+	wielder = {
+		combat_spellpower = 20,
+		combat_spellcrit = 10,
+		inc_damage={
+			[DamageType.FIRE] = 20,
+		},
+		resists={
+			[DamageType.FIRE] = 24,
+			[DamageType.COLD] = -10,
+		},
+		resists_pen={
+			[DamageType.FIRE] = 10,
+		},
+		talents_types_mastery = {
+			["spell/fire"] = 0.1,
+			["spell/wildfire"] = 0.1,
+		},
+	},
+	max_power = 6, power_regen = 1,
+	use_talent = { id = Talents.T_FLAME, level = 5, power = 5 },
+	talent_on_spell = { {chance=20, talent="T_FLAME", level=2} },
+}

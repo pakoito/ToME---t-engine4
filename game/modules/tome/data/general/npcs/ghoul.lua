@@ -139,9 +139,9 @@ newEntity{ base = "BASE_NPC_GHOUL", define_as = "ROTTING_TITAN",
 	desc = [[This gigantic mass of flesh and stone moves slowly, the ground rumbling with each step it takes. Its body seems to constantly pulsate and reform. Massive stones at the end of each limb form massive blunt weapons.]],
 	level_range = {45, nil}, exp_worth = 2,
 	rarity = 25,
-	max_life = resolvers.rngavg(150,200), life_rating = 34,
+	max_life = resolvers.rngavg(150,200), life_rating = 40,
 	combat_armor = 40, combat_def = 10,
-	ai_state = { talent_in=2, ai_pause=20 },
+	ai_state = { talent_in=2 },
 	movement_speed = 0.8,
 	size_category=5,
 
@@ -156,41 +156,45 @@ newEntity{ base = "BASE_NPC_GHOUL", define_as = "ROTTING_TITAN",
 
 	can_pass = {pass_wall=70}, --So AI knows to try and pass walls.
 
-	stats = { str=17, dex=12, mag=12, con=14 },
-	resists = {all = 20, [DamageType.PHYSICAL]=15, [DamageType.ARCANE]=-50, [DamageType.FIRE]=-20},
+	stats = { str=40, dex=20, mag=24, con=25 },
+	resists = {all = 25, [DamageType.PHYSICAL]=15, [DamageType.ARCANE]=-50, [DamageType.FIRE]=-20},
+	
+	resolvers.equip{ {type="weapon", subtype="greatmaul", defined="ROTTING_MAUL", random_art_replace={chance=30}, autoreq=true, force_drop=true}, },
 
-	combat = { dam=resolvers.levelup(50, 1, 1.4), atk=resolvers.levelup(8, 1, 1), apr=4, dammod={str=0.6}, damtype=engine.DamageType.PHYSKNOCKBACK, },
+	combat = { dam=resolvers.levelup(80, 1, 2), atk=resolvers.levelup(70, 1, 1), apr=20, dammod={str=1.3}, damtype=engine.DamageType.PHYSICAL, },
+	
+	combat_atk=40,
+	combat_spellpower=25,
 
 	on_move = function(self)
-		if not force then
-			self:project({type="ball", range=0, selffire=false, radius=1}, self.x, self.y, engine.DamageType.DIG, 1)
+		self:project({type="ball", range=0, selffire=false, radius=1}, self.x, self.y, engine.DamageType.DIG, 1)
 			if rng.percent(20) then
 				game.logSeen(self, "The ground shakes as %s steps!", self.name:capitalize())
 				local tg = {type="ball", range=0, selffire=false, radius=3, no_restrict=true}
 				local DamageType = require "engine.DamageType"
 				self:project(tg, self.x, self.y, DamageType.PHYSKNOCKBACK, {dam=24, dist=1})
 				self:doQuake(tg, self.x, self.y)
-			end
 		end
 	end,
 
 	knockback_immune=1,
 
 	resolvers.talents{
-		[Talents.T_STUN]={base=3, every=9, max=7},
-		[Talents.T_BITE_POISON]={base=3, every=9, max=7},
+		[Talents.T_STUN]={base=5, every=9, max=7},
+		[Talents.T_BITE_POISON]={base=5, every=9, max=7},
 		[Talents.T_SKELETON_REASSEMBLE]=4,
-		[Talents.T_ROTTING_DISEASE]={base=4, every=9, max=9},
+		[Talents.T_ROTTING_DISEASE]={base=6, every=9, max=9},
 		[Talents.T_DECREPITUDE_DISEASE]={base=3, every=9, max=9},
 		[Talents.T_WEAKNESS_DISEASE]={base=3, every=9, max=9},
-		[Talents.T_KNOCKBACK]={base=3, every=9, max=9},
-		[Talents.T_STRIKE]={base=4, every=5, max = 12},
-		[Talents.T_INNER_POWER]={base=4, every=5, max = 10},
-		[Talents.T_EARTHEN_MISSILES]={base=5, every=5, max = 10},
-		[Talents.T_CRYSTALLINE_FOCUS]={base=1, every=7, max = 4},
-		[Talents.T_EARTHQUAKE]={base=2, every=5, max = 6},
-		[Talents.T_ONSLAUGHT]={base=2, every=5, max = 6},
-		[Talents.T_BATTLE_CALL]={base=2, every=5, max = 6},
+		[Talents.T_KNOCKBACK]={base=5, every=9, max=9},
+		[Talents.T_STRIKE]={base=6, every=5, max = 12},
+		[Talents.T_WEAPONS_MASTERY]={base=4, every=5, max = 12},
+		[Talents.T_INNER_POWER]={base=7, every=5, max = 10},
+		[Talents.T_EARTHEN_MISSILES]={base=7, every=5, max = 10},
+		[Talents.T_CRYSTALLINE_FOCUS]={base=3, every=7, max = 6},
+		[Talents.T_EARTHQUAKE]={base=4, every=5, max = 6},
+		[Talents.T_ONSLAUGHT]={base=3, every=5, max = 6},
+		[Talents.T_BATTLE_CALL]={base=4, every=5, max = 6},
 	},
 	resolvers.sustains_at_birth(),
 	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
