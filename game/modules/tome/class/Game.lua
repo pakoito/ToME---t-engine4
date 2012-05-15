@@ -232,7 +232,7 @@ function _M:newGame()
 			-- Generate
 			if self.player.__game_difficulty then self:setupDifficulty(self.player.__game_difficulty) end
 			self:setupPermadeath(self.player)
-			self:changeLevel(self.player.starting_level or 1, self.player.starting_zone, nil, self.player.starting_level_force_down)
+			self:changeLevel(self.player.starting_level or 1, self.player.starting_zone, {force_down=self.player.starting_level_force_down})
 
 			print("[PLAYER BIRTH] resolve...")
 			self.player:resolve()
@@ -287,7 +287,7 @@ function _M:newGame()
 			self.to_re_add_actors = {}
 			for act, _ in pairs(self.party.members) do if self.player ~= act then self.to_re_add_actors[act] = true end end
 
-			self:changeLevel(self.player.starting_level or 1, self.player.starting_zone, nil, self.player.starting_level_force_down)
+			self:changeLevel(self.player.starting_level or 1, self.player.starting_zone, {force_down=self.player.starting_level_force_down})
 			self.player:grantQuest(self.player.starting_quest)
 			self.creating_player = false
 
@@ -545,7 +545,8 @@ function _M:onLevelLoad(id, fct, data)
 	print("Registering on level load", id, fct, data)
 end
 
-function _M:changeLevel(lev, zone, keep_old_lev, force_down, auto_zone_stair)
+function _M:changeLevel(lev, zone, params)
+	params = params or {}
 	if not self.player.can_change_level then
 		self.logPlayer(self.player, "#LIGHT_RED#You may not change level without your own body!")
 		return
@@ -606,32 +607,80 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down, auto_zone_stair)
 	if self._chronoworlds then self._chronoworlds = nil end
 
 	local left_zone = self.zone
-
-	if self.zone and self.zone.on_leave then
-		local nl, nz, stop = self.zone.on_leave(lev, old_lev, zone)
-		if stop then return end
-		if nl then lev = nl end
-		if nz then zone = nz end
-	end
-
-	if self.zone and self.level then self.player:onLeaveLevel(self.zone, self.level) end
-
 	local old_lev = (self.level and not zone) and self.level.level or -1000
-	if keep_old_lev then old_lev = self.level.level end
-	if zone then
-		if self.zone then
-			self.zone:leaveLevel(false, lev, old_lev)
-			self.zone:leave()
-		end
+	if params.keep_old_lev then old_lev = self.level.level end
+
+	local force_recreate = false
+	local popup = nil
+
+	-- We only switch temporarily, keep the old one around
+	if params.temporary_zone_shift then
+		self:leaveLevel(self.level, lev, old_lev)
+
+		local oz, ol = self.zone, self.level
 		if type(zone) == "string" then
 			self.zone = Zone.new(zone)
 		else
 			self.zone = zone
 		end
 		if type(self.zone.save_per_level) == "nil" then self.zone.save_per_level = config.settings.tome.save_zone_levels and true or false end
+
+		self.zone:getLevel(self, lev, old_lev, true)
+		self.visited_zones[self.zone.short_name] = true
+
+		self.level.temp_shift_zone = oz
+		self.level.temp_shift_level = ol
+	-- We switch back
+	elseif params.temporary_zone_shift_back then
+		popup = Dialog:simpleWaiter("Loading level", "Please wait while loading the level...", nil, 10000)
+		core.display.forceRedraw()
+
+		local old = self.level
+
+		if self.zone and self.zone.on_leave then
+			local nl, nz, stop = self.zone.on_leave(lev, old_lev, zone)
+			if stop then return end
+			if nl then lev = nl end
+			if nz then zone = nz end
+		end
+
+		if self.zone and self.level then self.player:onLeaveLevel(self.zone, self.level) end
+		if self.zone then
+			self.zone:leaveLevel(false, lev, old_lev)
+			self.zone:leave()
+		end
+
+		self.zone = old.temp_shift_zone
+		self.level = old.temp_shift_level
+
+		self.visited_zones[self.zone.short_name] = true
+		force_recreate = true
+	-- We move to a new zone as normal
+	elseif not params.temporary_zone_shift then
+		if self.zone and self.zone.on_leave then
+			local nl, nz, stop = self.zone.on_leave(lev, old_lev, zone)
+			if stop then return end
+			if nl then lev = nl end
+			if nz then zone = nz end
+		end
+
+		if self.zone and self.level then self.player:onLeaveLevel(self.zone, self.level) end
+
+		if zone then
+			if self.zone then
+				self.zone:leaveLevel(false, lev, old_lev)
+				self.zone:leave()
+			end
+			if type(zone) == "string" then
+				self.zone = Zone.new(zone)
+			else
+				self.zone = zone
+			end
+			if type(self.zone.save_per_level) == "nil" then self.zone.save_per_level = config.settings.tome.save_zone_levels and true or false end
+		end
+		self.zone:getLevel(self, lev, old_lev)
+		self.visited_zones[self.zone.short_name] = true
 	end
-	local _, is_new = self.zone:getLevel(self, lev, old_lev)
-	self.visited_zones[self.zone.short_name] = true
 
 	-- Post process walls
 	self.nicer_tiles:postProcessLevelTiles(self.level)
@@ -676,7 +725,7 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down, auto_zone_stair)
 		self.player.last_wilderness = self.zone.short_name
 	else
 		local x, y = nil, nil
-		if auto_zone_stair and left_zone then
+		if params.auto_zone_stair and left_zone then
 			-- Dirty but quick
 			local list = {}
 			for i = 0, self.level.map.w - 1 do for j = 0, self.level.map.h - 1 do
@@ -690,7 +739,7 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down, auto_zone_stair)
 
 		-- Default to stairs
 		if not x then
-			if lev > old_lev and not force_down then x, y = self.level.default_up.x, self.level.default_up.y
+			if lev > old_lev and not params.force_down then x, y = self.level.default_up.x, self.level.default_up.y
 			else x, y = self.level.default_down.x, self.level.default_down.y
 			end
 		end
@@ -791,6 +840,7 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down, auto_zone_stair)
 
 	self.level.map:redisplay()
 	self.level.map:reopen()
+	if force_recreate then self.level.map:recreate() end
 
 	-- Anti stairscum
 	if self.level.last_turn and self.level.last_turn < self.turn then
@@ -812,6 +862,8 @@ function _M:changeLevel(lev, zone, keep_old_lev, force_down, auto_zone_stair)
 			end
 		end
 	end
+
+	if popup then popup:done() end
 end
 
 function _M:getPlayer(main)
@@ -1240,7 +1292,7 @@ function _M:setupCommands()
 				else
 					-- Do not unpause, the player is allowed first move on next level
 					if e.change_level_check and e:change_level_check(self.player) then return end
-					self:changeLevel(e.change_zone and e.change_level or self.level.level + e.change_level, e.change_zone, e.keep_old_lev, e.force_down, e.change_zone_auto_stairs)
+					self:changeLevel(e.change_zone and e.change_level or self.level.level + e.change_level, e.change_zone, {keep_old_lev=e.keep_old_lev, force_down=e.force_down, auto_zone_stair=e.change_zone_auto_stairs, temporary_zone_shift_back=e.change_level_shift_back})
 				end
 			else
 				self.log("There is no way out of this level here.")

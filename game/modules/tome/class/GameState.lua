@@ -469,6 +469,9 @@ function _M:spawnWorldAmbush(enc, dx, dy)
 
 	if g.can_encounter == "desert" then gen.floor = "SAND" gen.wall = "PALMTREE" end
 
+	local terrains = mod.class.Grid:loadList{"/data/general/grids/basic.lua", "/data/general/grids/forest.lua", "/data/general/grids/sand.lua"}
+	terrains[gen.up].change_level_shift_back = true
+
 	local zone = engine.Zone.new("ambush", {
 		name = "Ambush!",
 		level_range = {game.player.level, game.player.level},
@@ -476,6 +479,7 @@ function _M:spawnWorldAmbush(enc, dx, dy)
 		max_level = 1,
 		actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
 		width = enc.width or 20, height = enc.height or 20,
+		no_worldport = true,
 		all_lited = true,
 		ambient_music = "last",
 		max_material_level = util.bound(math.ceil(game.player.level / 10), 1, 5),
@@ -486,7 +490,7 @@ function _M:spawnWorldAmbush(enc, dx, dy)
 		},
 
 		npc_list = mod.class.NPC:loadList("/data/general/npcs/all.lua", nil, nil, function(e) e.make_escort=nil end),
-		grid_list = mod.class.Grid:loadList{"/data/general/grids/basic.lua", "/data/general/grids/forest.lua", "/data/general/grids/sand.lua"},
+		grid_list = terrains,
 		object_list = mod.class.Object:loadList("/data/general/objects/objects.lua"),
 		trap_list = {},
 		post_process = function(level)
@@ -504,7 +508,7 @@ function _M:spawnWorldAmbush(enc, dx, dy)
 	game.player:runStop()
 	game.player.energy.value = game.energy_to_act
 	game.paused = true
-	game:changeLevel(1, zone)
+	game:changeLevel(1, zone, {temporary_zone_shift=true})
 	engine.ui.Dialog:simplePopup("Ambush!", "You have been ambushed!")
 
 	end)
