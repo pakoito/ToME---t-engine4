@@ -872,6 +872,7 @@ end
 function _M:combatAttack(weapon, ammo)
 	local stats
 	if self.use_psi_combat then stats = self:getCun(100, true) - 10
+	elseif weapon and weapon.wil_attack then stats = self:getWil(100, true) - 10
 	else stats = self:getDex(100, true) - 10
 	end
 	return self:rescaleCombatStats(self:combatAttackBase(weapon, ammo) + stats)
@@ -1075,7 +1076,7 @@ function _M:getOffHandMult(combat, mult)
 		end
 	end
 
-	if comabt and combat.no_offhand_penalty then
+	if combat and combat.no_offhand_penalty then
 		return math.max(1, offmult)
 	else
 		return offmult

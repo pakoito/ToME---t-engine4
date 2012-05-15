@@ -30,6 +30,7 @@ newEntity{
 	rarity = 4,
 	power_source = {nature=true},
 	combat = {
+		wil_attack = true,
 		no_offhand_penalty = true,
 		talented = "mindstar",
 		physspeed = 1,
