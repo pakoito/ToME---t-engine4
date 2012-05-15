@@ -41,6 +41,141 @@
 
 extern SDL_Window *window;
 
+#define SDL_SRCALPHA        0x00010000
+int SDL_SetAlpha(SDL_Surface * surface, Uint32 flag, Uint8 value)
+{
+    if (flag & SDL_SRCALPHA) {
+        /* According to the docs, value is ignored for alpha surfaces */
+        if (surface->format->Amask) {
+            value = 0xFF;
+        }
+        SDL_SetSurfaceAlphaMod(surface, value);
+        SDL_SetSurfaceBlendMode(surface, SDL_BLENDMODE_BLEND);
+    } else {
+        SDL_SetSurfaceAlphaMod(surface, 0xFF);
+        SDL_SetSurfaceBlendMode(surface, SDL_BLENDMODE_NONE);
+    }
+    SDL_SetSurfaceRLE(surface, (flag & SDL_RLEACCEL));
+
+    return 0;
+}
+
+typedef struct SDL_VideoInfo
+{
+    Uint32 hw_available:1;
+    Uint32 wm_available:1;
+    Uint32 UnusedBits1:6;
+    Uint32 UnusedBits2:1;
+    Uint32 blit_hw:1;
+    Uint32 blit_hw_CC:1;
+    Uint32 blit_hw_A:1;
+    Uint32 blit_sw:1;
+    Uint32 blit_sw_CC:1;
+    Uint32 blit_sw_A:1;
+    Uint32 blit_fill:1;
+    Uint32 UnusedBits3:16;
+    Uint32 video_mem;
+
+    SDL_PixelFormat *vfmt;
+
+    int current_w;
+    int current_h;
+} SDL_VideoInfo;
+
+static int
+GetVideoDisplay()
+{
+    const char *variable = SDL_getenv("SDL_VIDEO_FULLSCREEN_DISPLAY");
+    if ( !variable ) {
+        variable = SDL_getenv("SDL_VIDEO_FULLSCREEN_HEAD");
+    }
+    if ( variable ) {
+        return SDL_atoi(variable);
+    } else {
+        return 0;
+    }
+}
+
+const SDL_VideoInfo *SDL_GetVideoInfo(void)
+{
+    static SDL_VideoInfo info;
+    SDL_DisplayMode mode;
+
+    /* Memory leak, compatibility code, who cares? */
+    if (!info.vfmt && SDL_GetDesktopDisplayMode(GetVideoDisplay(), &mode) == 0) {
+        info.vfmt = SDL_AllocFormat(mode.format);
+        info.current_w = mode.w;
+        info.current_h = mode.h;
+    }
+    return &info;
+}
+
+SDL_Rect **
+SDL_ListModes(const SDL_PixelFormat * format, Uint32 flags)
+{
+    int i, nmodes;
+    SDL_Rect **modes;
+
+/*    if (!SDL_GetVideoDevice()) {
+        return NULL;
+    }
+  */
+/*    if (!(flags & SDL_FULLSCREEN)) {
+        return (SDL_Rect **) (-1);
+    }
+*/
+    if (!format) {
+        format = SDL_GetVideoInfo()->vfmt;
+    }
+
+    /* Memory leak, but this is a compatibility function, who cares? */
+    nmodes = 0;
+    modes = NULL;
+    for (i = 0; i < SDL_GetNumDisplayModes(GetVideoDisplay()); ++i) {
+        SDL_DisplayMode mode;
+        int bpp;
+
+        SDL_GetDisplayMode(GetVideoDisplay(), i, &mode);
+        if (!mode.w || !mode.h) {
+            return (SDL_Rect **) (-1);
+        }
+
+        /* Copied from src/video/SDL_pixels.c:SDL_PixelFormatEnumToMasks */
+        if (SDL_BYTESPERPIXEL(mode.format) <= 2) {
+            bpp = SDL_BITSPERPIXEL(mode.format);
+        } else {
+            bpp = SDL_BYTESPERPIXEL(mode.format) * 8;
+        }
+
+        if (bpp != format->BitsPerPixel) {
+            continue;
+        }
+        if (nmodes > 0 && modes[nmodes - 1]->w == mode.w
+            && modes[nmodes - 1]->h == mode.h) {
+            continue;
+        }
+
+        modes = SDL_realloc(modes, (nmodes + 2) * sizeof(*modes));
+        if (!modes) {
+            return NULL;
+        }
+        modes[nmodes] = (SDL_Rect *) SDL_malloc(sizeof(SDL_Rect));
+        if (!modes[nmodes]) {
+            return NULL;
+        }
+        modes[nmodes]->x = 0;
+        modes[nmodes]->y = 0;
+        modes[nmodes]->w = mode.w;
+        modes[nmodes]->h = mode.h;
+        ++nmodes;
+    }
+    if (modes) {
+        modes[nmodes] = NULL;
+    }
+    return modes;
+}
+
+
 /***** Helpers *****/
 static GLenum sdl_gl_texture_format(SDL_Surface *s) {
 	// get the number of channels in the SDL surface
@@ -180,12 +315,12 @@ static int lua_set_current_keyhandler(lua_State *L)
 static int lua_get_mod_state(lua_State *L)
 {
 	const char *mod = luaL_checkstring(L, 1);
-	SDLMod smod = SDL_GetModState();
+	SDL_Keymod smod = SDL_GetModState();
 
 	if (!strcmp(mod, "shift")) lua_pushboolean(L, smod & KMOD_SHIFT);
 	else if (!strcmp(mod, "ctrl")) lua_pushboolean(L, smod & KMOD_CTRL);
 	else if (!strcmp(mod, "alt")) lua_pushboolean(L, smod & KMOD_ALT);
-	else if (!strcmp(mod, "meta")) lua_pushboolean(L, smod & KMOD_META);
+	else if (!strcmp(mod, "meta")) lua_pushboolean(L, smod & KMOD_GUI);
 	else if (!strcmp(mod, "caps")) lua_pushboolean(L, smod & KMOD_CAPS);
 	else lua_pushnil(L);
 
@@ -353,12 +488,6 @@ static const struct luaL_reg gamelib[] =
  ******************************************************************
  ******************************************************************/
 static bool no_text_aa = FALSE;
-
-static int sdl_fullscreen(lua_State *L)
-{
-	SDL_WM_ToggleFullScreen(screen);
-	return 0;
-}
 
 extern bool is_fullscreen;
 static int sdl_screen_size(lua_State *L)
@@ -639,7 +768,7 @@ static int sdl_font_draw(lua_State *L)
 #else
 	rmask = 0x000000ff; gmask = 0x0000ff00; bmask = 0x00ff0000; amask = 0xff000000;
 #endif
-	SDL_Surface *s = SDL_CreateRGBSurface(SDL_SWSURFACE | SDL_SRCALPHA, max_width, h, 32, rmask, gmask, bmask, amask);
+	SDL_Surface *s = SDL_CreateRGBSurface(SDL_SWSURFACE, max_width, h, 32, rmask, gmask, bmask, amask);
 	SDL_FillRect(s, NULL, SDL_MapRGBA(s->format, 0, 0, 0, 0));
 
 	int id_dduid = 1;
@@ -916,7 +1045,7 @@ static int sdl_new_tile(lua_State *L)
 #endif
 
 	*s = SDL_CreateRGBSurface(
-		SDL_SWSURFACE | SDL_SRCALPHA,
+		SDL_SWSURFACE,
 		w,
 		h,
 		32,
@@ -957,7 +1086,7 @@ static int sdl_new_surface(lua_State *L)
 #endif
 
 	*s = SDL_CreateRGBSurface(
-		SDL_SWSURFACE | SDL_SRCALPHA,
+		SDL_SWSURFACE,
 		w,
 		h,
 		32,
@@ -1011,7 +1140,7 @@ int init_blank_surface()
 	amask = 0xff000000;
 #endif
 	SDL_Surface *s = SDL_CreateRGBSurface(
-		SDL_SWSURFACE | SDL_SRCALPHA,
+		SDL_SWSURFACE,
 		4,
 		4,
 		32,
@@ -1417,7 +1546,7 @@ static int sdl_surface_alpha(lua_State *L)
 	if (lua_isnumber(L, 2))
 	{
 		int a = luaL_checknumber(L, 2);
-		SDL_SetAlpha(*s, SDL_SRCALPHA | SDL_RLEACCEL, (a < 0) ? 0 : (a > 255) ? 255 : a);
+		SDL_SetAlpha(*s, /*SDL_SRCALPHA | */SDL_RLEACCEL, (a < 0) ? 0 : (a > 255) ? 255 : a);
 	}
 	else
 	{
@@ -2219,7 +2348,7 @@ static int get_text_aa(lua_State *L)
 static int sdl_get_modes_list(lua_State *L)
 {
 	SDL_PixelFormat format;
-	SDL_Rect **modes;
+	SDL_Rect **modes = NULL;
 	int loops = 0;
 	int bpp = 0;
 	int nb = 1;
@@ -2244,7 +2373,7 @@ static int sdl_get_modes_list(lua_State *L)
 		}
 
 		//get available fullscreen/hardware modes
-		modes = SDL_ListModes(&format, SDL_FULLSCREEN);
+		modes = SDL_ListModes(&format, 0);
 		if (modes)
 		{
 			int i;
@@ -2388,7 +2517,6 @@ static const struct luaL_reg displaylib[] =
 	{"setTextBlended", set_text_aa},
 	{"getTextBlended", get_text_aa},
 	{"forceRedraw", sdl_redraw_screen},
-	{"fullscreen", sdl_fullscreen},
 	{"size", sdl_screen_size},
 	{"newFont", sdl_new_font},
 	{"newSurface", sdl_new_surface},

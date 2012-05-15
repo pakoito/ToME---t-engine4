@@ -275,7 +275,7 @@ static int loadsoundLua(lua_State *L) {
 		if (sound->mutex == NULL) luaL_error(L, "out of memory");
 		sound->cond = SDL_CreateCond();
 		if (sound->cond == NULL) luaL_error(L, "out of memory");
-		sound->loaderThread = SDL_CreateThread(streamingLoader, sound);
+		sound->loaderThread = SDL_CreateThread(streamingLoader, "steamer", sound);
 	}
 	else {
 		sound->static_source = 0;

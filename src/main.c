@@ -72,8 +72,8 @@ int mouse_drag_tex = 0, mouse_drag_tex_ref = LUA_NOREF;
 int mousex = 0, mousey = 0;
 float gamma_correction = 1;
 int requested_fps = 30;
-SDL_TimerID display_timer_id = NULL;
-SDL_TimerID realtime_timer_id = NULL;
+SDL_TimerID display_timer_id = 0;
+SDL_TimerID realtime_timer_id = 0;
 
 /* OpenGL capabilities */
 GLint max_texture_size = 1024;
@@ -336,12 +336,6 @@ void on_event(SDL_Event *event)
 				break;
 			case SDL_BUTTON_RIGHT:
 				lua_pushstring(L, "right");
-				break;
-			case SDL_BUTTON_WHEELUP:
-				lua_pushstring(L, "wheelup");
-				break;
-			case SDL_BUTTON_WHEELDOWN:
-				lua_pushstring(L, "wheeldown");
 				break;
 			default:
 				lua_pushstring(L, "button");
@@ -650,7 +644,7 @@ void setupRealtime(float freq)
 	if (!freq)
 	{
 		if (realtime_timer_id) SDL_RemoveTimer(realtime_timer_id);
-		realtime_timer_id = NULL;
+		realtime_timer_id = 0;
 		printf("[ENGINE] Switching to turn based\n");
 	}
 	else
@@ -726,7 +720,7 @@ int resizeWindow(int width, int height)
 	/* Reset The View */
 	glLoadIdentity( );
 
-	SDL_SetGamma(gamma_correction, gamma_correction, gamma_correction);
+//TSDL2	SDL_SetGamma(gamma_correction, gamma_correction, gamma_correction);
 
 	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max_texture_size);
 	printf("OpenGL max texture size: %d\n", max_texture_size);
@@ -869,7 +863,7 @@ void boot_lua(int state, bool rebooting, int argc, char *argv[])
 	}
 	else if (state == 2)
 	{
-		SDL_WM_SetCaption("T-Engine4", NULL);
+		SDL_SetWindowTitle(window, "T-Engine4");
 
 		// Now we can open lua lanes, the physfs paths are set and it can load it's lanes-keeper.lua file
 		//		luaopen_lanes(L);
@@ -1001,7 +995,6 @@ int main(int argc, char *argv[])
 	}
 	SDL_SetWindowIcon(window, IMG_Load_RW(PHYSFSRWOPS_openRead("/engines/default/data/gfx/te4-icon.png"), TRUE));
 	SDL_SetWindowTitle(window, "T4Engine");
-	SDL_EnableKeyRepeat(300, 10);
 	TTF_Init();
 
 	/* Sets up OpenGL double buffering */

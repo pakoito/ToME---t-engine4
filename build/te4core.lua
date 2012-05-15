@@ -57,8 +57,8 @@ project "TEngine"
 
 
 	configuration "linux"
-		libdirs {"/opt/SDL-1.3/lib/"}
-		links { "dl", "SDL-1.3", "SDL_ttf", "SDL_image", "openal", "vorbisfile", "GL", "GLU", "m", "pthread" }
+		libdirs {"/opt/SDL-2.0/lib/"}
+		links { "dl", "SDL2", "SDL2_ttf", "SDL2_image", "png", "openal", "vorbisfile", "GL", "GLU", "m", "pthread" }
 		defines { [[TENGINE_HOME_PATH='".t-engine"']], 'SELFEXE_LINUX' }
 
 	configuration {"Debug"}

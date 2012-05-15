@@ -207,7 +207,7 @@ int create_profile_thread(lua_State *L)
 	profile->lock_oqueue = SDL_CreateMutex();
 	profile->wait_oqueue = SDL_CreateSemaphore(0);
 
-	thread = SDL_CreateThread(thread_profile, profile);
+	thread = SDL_CreateThread(thread_profile, "profile", profile);
 	if (thread == NULL) {
 		printf("Unable to create profile thread: %s\n", SDL_GetError());
 		return -1;

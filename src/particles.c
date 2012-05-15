@@ -876,6 +876,7 @@ void create_particles_thread()
 
 	MAX_THREADS = nb_cpus - 1;
 	MAX_THREADS = (MAX_THREADS < 1) ? 1 : MAX_THREADS;
+	MAX_THREADS = 1;
 	threads = calloc(MAX_THREADS, sizeof(particle_thread));
 
 	cur_thread = 0;
@@ -890,7 +891,7 @@ void create_particles_thread()
 		pt->keyframes = SDL_CreateSemaphore(0);
 		pt->running = TRUE;
 
-		thread = SDL_CreateThread(thread_particles, pt);
+		thread = SDL_CreateThread(thread_particles, "particles", pt);
 		if (thread == NULL) {
 			printf("Unable to create particle thread: %s\n", SDL_GetError());
 			continue;
