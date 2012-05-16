@@ -125,7 +125,7 @@ newTalent{
 	end,
 	getDamage = function (self, t)
 		local gem_level = getGemLevel(self)
-		return self:combatStatTalentIntervalDamage(t, "combatMindpower", 100, 150, 0.25)*(1 + 0.1*gem_level)
+		return self:combatStatTalentIntervalDamage(t, "combatMindpower", 60, 120, 0.25)*(1 + 0.1*gem_level)
 	end,
 	requires_target = true,
 	target = function(self, t) return {type="ball", range=self:getTalentRange(t), radius=0, selffire=false, talent=t} end,
