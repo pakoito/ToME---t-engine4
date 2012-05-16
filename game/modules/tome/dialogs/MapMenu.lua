@@ -36,7 +36,7 @@ function _M:init(mx, my, tmx, tmy, extra)
 	local w = self.font_bold:size(name)
 	engine.ui.Dialog.init(self, name, 1, 100, mx, my)
 
-	local list = List.new{width=math.max(w, self.max) + 10, nb_items=#self.list, list=self.list, fct=function(item) self:use(item) end, select=function(item) self:select(item) end}
+	local list = List.new{width=math.max(w, self.max) + 10, nb_items=math.min(15, #self.list), scrollbar=#self.list>15, list=self.list, fct=function(item) self:use(item) end, select=function(item) self:select(item) end}
 
 	self:loadUI{
 		{left=0, top=0, ui=list},
@@ -44,7 +44,8 @@ function _M:init(mx, my, tmx, tmy, extra)
 
 	self:setupUI(true, true, function(w, h)
 		self.force_x = mx - w / 2
-		self.force_y = my - (self.h - self.ih + list.fh / 3)
+		self.force_y = my - self.h + (self.ih + list.fh / 3)
+		if self.force_y + h > game.h then self.force_y = game.h - h end
 	end)
 
 	self.mouse:reset()
