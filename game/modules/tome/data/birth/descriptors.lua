@@ -126,6 +126,7 @@ newBirthDescriptor{
 		},
 	},
 	copy = {
+		auto_id = 2,
 		no_birth_levelup = true,
 		easy_mode_lifes = 99999,
 		__game_difficulty = 1,
