@@ -1131,7 +1131,7 @@ newEntity{ base = "BASE_MACE",
 }
 
 newEntity{ base = "BASE_CLOTH_ARMOR",
-	power_source = {nature=true, arcane=true},
+	power_source = {nature=true},
 	unique = true,
 	name = "Spider-Silk Robe of Spydrë", color = colors.DARK_GREEN, image = "object/artifact/robe_spider_silk_robe_spydre.png",
 	unided_name = "spider-silk robe",
@@ -1142,12 +1142,16 @@ newEntity{ base = "BASE_CLOTH_ARMOR",
 	material_level = 3,
 	wielder = {
 		combat_def = 10,
-		combat_armor = 10,
-		inc_stats = { [Stats.STAT_CON] = 4, [Stats.STAT_WIL] = -2, },
+		combat_armor = 15,
+		combat_armor_hardiness = 40,
+		inc_stats = { [Stats.STAT_CON] = 5, [Stats.STAT_WIL] = 4, },
+		combat_mindpower = 10,
+		combat_mindcrit = 5,
 		combat_spellresist = 10,
 		combat_physresist = 10,
+		inc_damage={[DamageType.NATURE] = 10, [DamageType.MIND] = 10, [DamageType.ACID] = 10},
 		resists={[DamageType.NATURE] = 30},
-		on_melee_hit={[DamageType.POISON] = 20},
+		on_melee_hit={[DamageType.POISON] = 20, [DamageType.SLIME] = 20},
 	},
 }
 
