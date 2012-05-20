@@ -1118,9 +1118,9 @@ function _M:entityFilterPost(zone, level, type, e, filter)
 				level = filter.random_elite.level or zone:level_adjust_level(level, zone, type),
 				check_talents_level = true,
 				post = function(b, data)
-					if data.level <= 12 then
+					if data.level <= 20 then
 						b.inc_damage = b.inc_damage or {}
-						b.inc_damage.all = (b.inc_damage.all or 0) - 40 * (12 - data.level + 1) / 12
+						b.inc_damage.all = (b.inc_damage.all or 0) - 40 * (20 - data.level + 1) / 20
 					end
 				end,
 			}

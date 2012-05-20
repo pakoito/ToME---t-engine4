@@ -90,6 +90,7 @@ newTalent{
 	deactivate = function(self, t, p)
 		local spike_str = getSpikeStrength(self, t)
 		self:removeTemporaryValue("kinetic_shield", p.am)
+		if self:attr("save_cleanup") then return true end
 		self:setEffect(self.EFF_KINSPIKE_SHIELD, 5, {power=spike_str})
 		return true
 	end,
@@ -193,6 +194,7 @@ newTalent{
 	deactivate = function(self, t, p)
 		local spike_str = getSpikeStrength(self, t)
 		self:removeTemporaryValue("thermal_shield", p.am)
+		if self:attr("save_cleanup") then return true end
 		self:setEffect(self.EFF_THERMSPIKE_SHIELD, 5, {power=spike_str})
 		return true
 	end,
@@ -293,6 +295,7 @@ newTalent{
 	deactivate = function(self, t, p)
 		local spike_str = getSpikeStrength(self, t)
 		self:removeTemporaryValue("charged_shield", p.am)
+		if self:attr("save_cleanup") then return true end
 		self:setEffect(self.EFF_CHARGESPIKE_SHIELD, 5, {power=spike_str})
 		return true
 	end,

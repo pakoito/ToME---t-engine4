@@ -154,6 +154,7 @@ newTalent{
 		return true
 	end,
 	deactivate = function(self, t, p)
+		if self:attr("save_cleanup") then return true end
 		local dam = t.getAuraSpikeStrength(self, t)
 		local cost = t.getSpikeCost(self, t)
 		if self:getPsi() <= cost then
@@ -269,6 +270,7 @@ newTalent{
 		return true
 	end,
 	deactivate = function(self, t, p)
+		if self:attr("save_cleanup") then return true end
 		local dam = t.getAuraSpikeStrength(self, t)
 		local cost = t.getSpikeCost(self, t)
 		--if self:isTalentActive(self.T_CONDUIT) then return true end
@@ -390,6 +392,7 @@ newTalent{
 		return true
 	end,
 	deactivate = function(self, t, p)
+		if self:attr("save_cleanup") then return true end
 		local dam = t.getAuraSpikeStrength(self, t)
 		local cost = t.getSpikeCost(self, t)
 		--if self:isTalentActive(self.T_CONDUIT) then return true end

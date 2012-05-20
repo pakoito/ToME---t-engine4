@@ -255,7 +255,7 @@ function _M:stripForExport()
 	for tid, act in pairs(self.sustain_talents) do if act then list[#list+1] = tid end end
 	while #list > 0 do
 		local eff = rng.tableRemove(list)
-		self:forceUseTalent(eff, {ignore_energy=true, no_equilibrium_fail=true, no_paradox_fail=true})
+		self:forceUseTalent(eff, {silent=true, ignore_energy=true, no_equilibrium_fail=true, no_paradox_fail=true, save_cleanup=true})
 	end
 end
 
@@ -3219,10 +3219,12 @@ function _M:forceUseTalent(t, def)
 	if def.no_equilibrium_fail then self:attr("no_equilibrium_fail", 1) end
 	if def.no_paradox_fail then self:attr("no_paradox_fail", 1) end
 	if def.talent_reuse then self:attr("talent_reuse", 1) end
+	if def.save_cleanup then self:attr("save_cleanup", 1) end
 	local ret = {engine.interface.ActorTalents.forceUseTalent(self, t, def)}
 	if def.no_equilibrium_fail then self:attr("no_equilibrium_fail", -1) end
 	if def.no_paradox_fail then self:attr("no_paradox_fail", -1) end
 	if def.talent_reuse then self:attr("talent_reuse", -1) end
+	if def.save_cleanup then self:attr("save_cleanup", -1) end
 	return unpack(ret)
 end
 

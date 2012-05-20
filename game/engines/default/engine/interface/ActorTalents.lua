@@ -111,7 +111,7 @@ function _M:resolveLevelTalents()
 end
 
 --- Make the actor use the talent
-function _M:useTalent(id, who, force_level, ignore_cd, force_target)
+function _M:useTalent(id, who, force_level, ignore_cd, force_target, silent)
 	who = who or self
 	local ab = _M.talents_def[id]
 	assert(ab, "trying to cast talent "..tostring(id).." but it is not defined")
@@ -121,7 +121,7 @@ function _M:useTalent(id, who, force_level, ignore_cd, force_target)
 			game.logPlayer(who, "%s is still on cooldown for %d turns.", ab.name:capitalize(), self.talents_cd[ab.id])
 			return
 		end
-		if not self:preUseTalent(ab) then return end
+		if not self:preUseTalent(ab, silent) then return end
 		local co = coroutine.create(function()
 			local old_level
 			local old_target
@@ -145,7 +145,7 @@ function _M:useTalent(id, who, force_level, ignore_cd, force_target)
 			game.logPlayer(who, "%s is still on cooldown for %d turns.", ab.name:capitalize(), self.talents_cd[ab.id])
 			return
 		end
-		if not self:preUseTalent(ab) then return end
+		if not self:preUseTalent(ab, silent) then return end
 		local co = coroutine.create(function()
 			if not self.sustain_talents[id] then
 				local old_level
@@ -220,7 +220,7 @@ function _M:forceUseTalent(t, def)
 	if def.ignore_energy then self.energy.value = 10000 end
 
 	if def.ignore_ressources then self:attr("force_talent_ignore_ressources", 1) end
-	local ret = {self:useTalent(t, def.force_who, def.force_level, def.ignore_cd, def.force_target)}
+	local ret = {self:useTalent(t, def.force_who, def.force_level, def.ignore_cd, def.force_target, def.silent)}
 	if def.ignore_ressources then self:attr("force_talent_ignore_ressources", -1) end
 
 	if def.ignore_energy then
