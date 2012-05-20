@@ -2516,7 +2516,7 @@ Touching the cloth you feel a sense of knowledge and power from bygone ages, yet
 			[DamageType.ARCANE] = 20,
 		},
 		talent_cd_reduction = {
-			[Talents.T_MANAFLOW] = 5,
+			[Talents.T_DISRUPTION_SHIELD] = 10,
 		},
 		talents_types_mastery = {
 			["spell/meta"]=0.2,

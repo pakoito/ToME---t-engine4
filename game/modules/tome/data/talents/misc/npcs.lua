@@ -1062,13 +1062,13 @@ newTalent{
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.MIND, self:spellCrit(self:combatTalentMindDamage(t, 10, 370)), {type="mind"})
+		self:project(tg, x, y, DamageType.MIND, self:spellCrit(self:combatTalentMindDamage(t, 10, 340)), {type="mind"})
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
 	info = function(self, t)
 		return ([[Sends a telepathic attack, trying to destroy the brains of any target in the beam, doing %0.2f mind damage.
-		The damage will increase with Willpower and Cunning stats.]]):format(self:combatTalentMindDamage(t, 10, 370))
+		The damage will increase with Willpower and Cunning stats.]]):format(self:combatTalentMindDamage(t, 10, 340))
 	end,
 }
 

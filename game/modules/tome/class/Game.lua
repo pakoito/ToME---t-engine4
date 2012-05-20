@@ -1168,9 +1168,11 @@ function _M:setupCommands()
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
 --			self:registerDialog(require("mod.dialogs.DownloadCharball").new())
-			local o = game.state:generateRandart{lev=50, egos=0, power_points_factor=8, nb_powers_add=6}
-			o:identify(true)
-			game.zone:addEntity(game.level,o,"object",game.player.x,game.player.y)
+--			local o = game.state:generateRandart{lev=50, egos=0, power_points_factor=3, nb_powers_add=3}
+--			o:identify(true)
+--			game.zone:addEntity(game.level,o,"object",game.player.x,game.player.y)
+--			local m = game.zone:makeEntity(game.level,"actor",{random_elite=true},nil,true)
+--			game.zone:addEntity(game.level,m,"actor",game.player.x,game.player.y-1)
 		end end,
 		[{"_f","ctrl"}] = function() if config.settings.cheat then
 			self.player.quests["love-melinda"] = nil
