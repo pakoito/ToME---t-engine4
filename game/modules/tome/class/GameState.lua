@@ -242,7 +242,7 @@ function _M:generateRandart(data)
 	resolvers.current_level = math.ceil(lev * 1.4)
 
 	-- Get a base object
-	local base = data.base or game.zone:makeEntity(game.level, "object", {ingore_material_restriction=true, no_tome_drops=true, ego_filter={keep_egos=true, ego_chance=-1000}, special=function(e)
+	local base = data.base or game.zone:makeEntity(game.level, "object", data.base_filter or {ingore_material_restriction=true, no_tome_drops=true, ego_filter={keep_egos=true, ego_chance=-1000}, special=function(e)
 		return (not e.unique and e.randart_able) and (not e.material_level or e.material_level >= 2) and true or false
 	end}, nil, true)
 	if not base then game.level.level = oldlev resolvers.current_level = oldclev return end
@@ -260,9 +260,10 @@ function _M:generateRandart(data)
 	-----------------------------------------------------------
 	-- Determine power
 	-----------------------------------------------------------
-	local points = math.ceil((lev * 0.7 + rng.range(5, 15)) / 2) * (data.power_points_factor or 1)
+	local points = math.ceil(((lev * 0.7 + rng.range(5, 15)) / 2) * (data.power_points_factor or 1))
 	local nb_powers = 1 + rng.dice(math.max(1, lev / 17), 2) + (data.nb_powers_add or 0)
 	local powers = {}
+	print("Powers:", points, nb_powers, lev)
 
 	o.cost = o.cost + points * 7
 
@@ -289,7 +290,7 @@ function _M:generateRandart(data)
 	local ngd = NameGenerator.new(rng.chance(2) and randart_name_rules.default or randart_name_rules.default2)
 	local ngt = (themename and randart_name_rules[themename] and NameGenerator.new(randart_name_rules[themename])) or ngd
 	local name
-	local namescheme = (ngt ~= ngd) and rng.range(1, 4) or rng.range(1, 3)
+	local namescheme = data.namescheme or ((ngt ~= ngd) and rng.range(1, 4) or rng.range(1, 3))
 	if namescheme == 1 then
 		name = o.name.." '"..ngt:generate().."'"
 	elseif namescheme == 2 then
@@ -301,7 +302,7 @@ function _M:generateRandart(data)
 	end
 	o.define_as = name:upper():gsub("[^A-Z]", "_")
 
-	o.unided_name = rng.table{"glowing","scintillating","rune-covered","unblemished","jewel-encrusted"}.." "..o.unided_name
+	o.unided_name = rng.table{"glowing","scintillating","rune-covered","unblemished","jewel-encrusted"}.." "..(o.unided_name or o.name)
 	o.unique = name
 	o.randart = true
 	o.no_unique_lore = true
@@ -423,6 +424,10 @@ function _M:generateRandart(data)
 
 	-- Setup the name
 	o.name = name
+
+	if data.post then
+		data.post(o)
+	end
 
 	if data.add_pool then self:addWorldArtifact(o) end
 
@@ -1030,6 +1035,11 @@ function _M:entityFilterAlter(zone, level, type, filter)
 		end
 	end
 
+	if filter.random_object then
+		print("[TOME ENTITY FILTER] random object requested, removing ego chances")
+		filter.ego_chance = -1000
+	end
+
 	-- By default we dont apply special filters, but we always provide one so that entityFilter is called
 	return filter
 end
@@ -1066,6 +1076,7 @@ function _M:entityFilter(zone, e, filter, type)
 			end
 		end
 		if e.lore and e.rarity and util.getval(zone.no_random_lore) then return false end
+		if filter.random_object and not e.randart_able then return false end
 		return true
 	else
 		return true
@@ -1099,7 +1110,7 @@ function _M:entityFilterPost(zone, level, type, e, filter)
 				rank=3.2, ai = "tactical",
 				life_rating=function(v) return v * 1.3 + 2 end,
 				loot_quality = "store",
-				loot_quantity = 1,
+				loot_quantity = 0,
 				drop_equipment = false,
 				no_loot_randart = true,
 				resources_boost = 1.5,
@@ -1121,9 +1132,26 @@ function _M:entityFilterPost(zone, level, type, e, filter)
 						b.inc_damage = b.inc_damage or {}
 						b.inc_damage.all = (b.inc_damage.all or 0) - 40 * (20 - data.level + 1) / 20
 					end
+
+					-- Drop
+					local o = game.zone:makeEntity(game.level,"object", {random_object=true}, nil, true)
+					b:addObject(b.INVEN_INVEN, o)
+					game.zone:addEntity(game.level, o, "object")
 				end,
 			}
 			e = self:createRandomBoss(e, table.merge(base, filter.random_elite, true))
+		end
+	elseif type == "object" then
+		if filter.random_object and not e.unique and e.randart_able then
+			e = game.state:generateRandart{
+				lev = math.max(4, game.zone:level_adjust_level(game.level, game.zone, "object")),
+				egos = 0,
+				power_points_factor = 3,
+				nb_powers_add = 1,
+				base = e,
+				post = function(o) o.rare = true o.unique = nil o.randart = nil end,
+				namescheme = 3
+			}
 		end
 	end
 

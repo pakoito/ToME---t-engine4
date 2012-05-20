@@ -194,7 +194,7 @@ function _M:getPowerRank()
 	if self.godslayer then return 10 end
 	if self.unique then return 3 end
 	if self.egoed and self.greater_ego then return 2 end
-	if self.egoed then return 1 end
+	if self.egoed or self.rare then return 1 end
 	return 0
 end
 
@@ -210,6 +210,8 @@ function _M:getDisplayColor()
 		else
 			return {255, 215, 0}, "#FFD700#"
 		end
+	elseif self.rare then
+		return {250, 128, 114}, "#SALMON#"
 	elseif self.egoed then
 		if self.greater_ego then
 			if self.greater_ego > 1 then
