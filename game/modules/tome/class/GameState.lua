@@ -1104,7 +1104,6 @@ function _M:entityFilterPost(zone, level, type, e, filter)
 				no_loot_randart = true,
 				resources_boost = 1.5,
 				class_filter = function(c)
-					if c.name=="Doomed" then return true else return false end
 					if e.power_source then
 						for ps, _ in pairs(e.power_source) do if c.power_source and c.power_source[ps] then return true end end
 						return false
