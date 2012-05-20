@@ -244,7 +244,9 @@ newEffect{
 	activate = function(self, eff)
 	end,
 	deactivate = function(self, eff)
-		self:setEffect(self.EFF_STONED, eff.stone, {})
+		if target:canBe("stun") and target:canBe("stone") and target:canBe("instakill") then
+			self:setEffect(self.EFF_STONED, eff.stone, {})
+		end
 	end,
 }
 

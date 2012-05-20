@@ -104,6 +104,7 @@ newEntity{ define_as = "LIMMIR",
 	resolvers.sustains_at_birth(),
 
 	can_talk = "limmir-valley-moon",
+	never_anger = true,
 	can_craft = true,
 	on_die = function(self, who)
 		game.level.turn_counter = nil

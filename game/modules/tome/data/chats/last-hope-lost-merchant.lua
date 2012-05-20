@@ -78,13 +78,13 @@ local maker_list = function()
 		local o = game.zone:makeEntity(game.level, "object", {name=name, ingore_material_restriction=true, no_tome_drops=true, ego_filter={keep_egos=true, ego_chance=-1000}}, nil, true)
 		if o then
 			l[#l+1] = {o:getName{force_id=true, do_color=true, no_count=true}, action=function(npc, player)
-				local art = game.state:generateRandart(nil, o, 70, 4)
+				local art = game.state:generateRandart{base=o, lev=70, egos=4}
 				if art then
 					art:identify(true)
 					player:addObject(player.INVEN_INVEN, art)
 					player:incMoney(-4000)
 					-- clear chrono worlds and their various effects
-					if game._chronoworlds then 
+					if game._chronoworlds then
 						game.log("#CRIMSON#Your timetravel has no effect on pre-determined outcomes such as this.")
 						game._chronoworlds = nil
 					end

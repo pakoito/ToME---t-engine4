@@ -100,7 +100,7 @@ newEntity{
 	level_range = {30, 50},
 	rarity = 12,
 	greater_ego = 1,
-	cost = 5,
+	cost = 15,
 
 	wielder = {
 		talent_cd_reduction={[Talents.T_INVOKE_TENTACLE]=-5},

@@ -50,18 +50,27 @@ newTalent{
 		local effs = {}
 
 		-- Go through all spell effects
-		for eff_id, p in pairs(target.tmp) do
-			local e = target.tempeffect_def[eff_id]
-			if e.type == "magical" then
-				effs[#effs+1] = {"effect", eff_id}
+		if self:reactionToward(target) < 0 then
+			for eff_id, p in pairs(target.tmp) do
+				local e = target.tempeffect_def[eff_id]
+				if e.type == "magical" and e.status == "beneficial" then
+					effs[#effs+1] = {"effect", eff_id}
+				end
 			end
-		end
 
-		-- Go through all sustained spells
-		for tid, act in pairs(target.sustain_talents) do
-			if act then
-				local talent = target:getTalentFromId(tid)
-				if talent.is_spell then effs[#effs+1] = {"talent", tid} end
+			-- Go through all sustained spells
+			for tid, act in pairs(target.sustain_talents) do
+				if act then
+					local talent = target:getTalentFromId(tid)
+					if talent.is_spell then effs[#effs+1] = {"talent", tid} end
+				end
+			end
+		else
+			for eff_id, p in pairs(target.tmp) do
+				local e = target.tempeffect_def[eff_id]
+				if e.type == "magical" and e.status == "detrimental" then
+					effs[#effs+1] = {"effect", eff_id}
+				end
 			end
 		end
 
@@ -80,7 +89,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local count = t.getRemoveCount(self, t)
-		return ([[Removes up to %d magical effects (both good and bad) from the target.
+		return ([[Removes up to %d magical effects (good effects from foes and bad effects from friends) from the target.
 		At level 3 it can be targeted.]]):
 		format(count)
 	end,

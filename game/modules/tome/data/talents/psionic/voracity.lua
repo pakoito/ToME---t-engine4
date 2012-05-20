@@ -171,7 +171,7 @@ newTalent{
 		local range = self:getTalentRadius(t)
 		local en = t.getLeech(self, t)
 		local dam = damDesc(self, DamageType.LIGHTNING, t.getDam(self, t))
-		return ([[You pull electric potential from all targets around you in a radius of %d, gaining %d energy for each one affected and giving them a nasty shock in the process. Deals between %d and %d damage.]]):format(range, en, dam / 3, dam)
+		return ([[You pull electric potential from all targets around you in a radius of %d, gaining %d energy for each one affected and giving them a nasty shock in the process. Deals between %d and %d damage nad has a chance to daze.]]):format(range, en, dam / 3, dam)
 	end,
 }
 newTalent{

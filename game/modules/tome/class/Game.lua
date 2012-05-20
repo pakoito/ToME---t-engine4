@@ -192,7 +192,7 @@ function _M:newGame()
 		end
 
 		for i = 1, 50 do
-			local o = self.state:generateRandart(true)
+			local o = self.state:generateRandart{add_pool=true}
 			self.zone.object_list[#self.zone.object_list+1] = o
 		end
 
@@ -1167,7 +1167,10 @@ function _M:setupCommands()
 			end end
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
-			self:registerDialog(require("mod.dialogs.DownloadCharball").new())
+--			self:registerDialog(require("mod.dialogs.DownloadCharball").new())
+			local o = game.state:generateRandart{lev=50, egos=0, power_points_factor=8, nb_powers_add=6}
+			o:identify(true)
+			game.zone:addEntity(game.level,o,"object",game.player.x,game.player.y)
 		end end,
 		[{"_f","ctrl"}] = function() if config.settings.cheat then
 			self.player.quests["love-melinda"] = nil

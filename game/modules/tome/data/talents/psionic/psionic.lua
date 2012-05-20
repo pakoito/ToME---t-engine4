@@ -39,6 +39,8 @@ newTalentType{ allow_random=true, type="psionic/brainstorm", name = "brainstorm"
 newTalentType{ allow_random=true, type="psionic/psychic-assault", name = "psychic assault", description = "Directly attack your opponents minds." }
 -- Generic Solipsist Trees
 
+newTalentType{ allow_random=true, type="psionic/possession", name = "possession", description = "You have learnt to shed away your body, allowing you to possess any other." }
+
 
 -- Level 0 wil tree requirements:
 psi_absorb = {
@@ -168,3 +170,6 @@ load("/data/talents/psionic/grip.lua")
 
 -- Solipsist
 load("/data/talents/psionic/psychic-assault.lua")
+
+load("/data/talents/psionic/possession.lua")
+

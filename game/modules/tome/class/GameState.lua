@@ -229,19 +229,20 @@ local randart_name_rules = {
 }
 
 --- Generate randarts for this state
-function _M:generateRandart(add, base, lev, nb_egos)
+function _M:generateRandart(data)
+
 	if not self.randart_powers then self.randart_powers = engine.Object:loadList("/data/general/objects/random-artifacts.lua") end
 	local powers_list = self.randart_powers
 
 	-- Setup level
-	lev = lev or rng.range(12, 50)
+	local lev = data.lev or rng.range(12, 50)
 	local oldlev = game.level.level
 	local oldclev = resolvers.current_level
 	game.level.level = lev
 	resolvers.current_level = math.ceil(lev * 1.4)
 
 	-- Get a base object
-	base = base or game.zone:makeEntity(game.level, "object", {ingore_material_restriction=true, no_tome_drops=true, ego_filter={keep_egos=true, ego_chance=-1000}, special=function(e)
+	local base = data.base or game.zone:makeEntity(game.level, "object", {ingore_material_restriction=true, no_tome_drops=true, ego_filter={keep_egos=true, ego_chance=-1000}, special=function(e)
 		return (not e.unique and e.randart_able) and (not e.material_level or e.material_level >= 2) and true or false
 	end}, nil, true)
 	if not base then game.level.level = oldlev resolvers.current_level = oldclev return end
@@ -259,8 +260,8 @@ function _M:generateRandart(add, base, lev, nb_egos)
 	-----------------------------------------------------------
 	-- Determine power
 	-----------------------------------------------------------
-	local points = math.ceil((lev * 0.7 + rng.range(5, 15)) / 2)
-	local nb_powers = 1 + rng.dice(math.max(1, lev / 17), 2)
+	local points = math.ceil((lev * 0.7 + rng.range(5, 15)) / 2) * (data.power_points_factor or 1)
+	local nb_powers = 1 + rng.dice(math.max(1, lev / 17), 2) + (data.nb_powers_add or 0)
 	local powers = {}
 
 	o.cost = o.cost + points * 7
@@ -276,6 +277,7 @@ function _M:generateRandart(add, base, lev, nb_egos)
 			powers[#powers+1] = p
 		end
 	end
+	print("Selected powers:") table.print(powers)
 	power_themes = table.listify(power_themes)
 	table.sort(power_themes, function(a, b) return a[2] < b[2] end)
 
@@ -311,7 +313,8 @@ function _M:generateRandart(add, base, lev, nb_egos)
 	-----------------------------------------------------------
 	-- Add ego properties
 	-----------------------------------------------------------
-	if o.egos then
+	local nb_egos = data.egos or 3
+	if o.egos and nb_egos > 0 then
 		local legos = {}
 		local been_greater = 0
 		table.insert(legos, game.level:getEntitiesList("object/"..o.egos..":prefix"))
@@ -345,7 +348,7 @@ function _M:generateRandart(add, base, lev, nb_egos)
 					print("table.mergeAddAppendArray failed at creating a randart, retrying")
 					game.level.level = oldlev
 					resolvers.current_level = oldclev
-					return self:generateRandart(add, base, lev, nb_egos)
+					return self:generateRandart(data)
 				end
 			end
 		end
@@ -391,7 +394,7 @@ function _M:generateRandart(add, base, lev, nb_egos)
 				merger(o.wielder, p.wielder)
 			end
 			if p.copy then merger(o, p.copy) end
---			print(" * adding power: "..p.name)
+			print(" * adding power: "..p.name)
 		end
 		hpoints = hpoints - p.points
 	end
@@ -413,7 +416,7 @@ function _M:generateRandart(add, base, lev, nb_egos)
 				merger(o.wielder, p.wielder)
 			end
 			if p.copy then merger(o, p.copy) end
---			print(" * adding power: "..p.name)
+			print(" * adding bias power: "..p.name)
 		end
 		hpoints = hpoints - (p and p.points or 1) * 2
 	end
@@ -421,7 +424,7 @@ function _M:generateRandart(add, base, lev, nb_egos)
 	-- Setup the name
 	o.name = name
 
-	if add then self:addWorldArtifact(o) end
+	if data.add_pool then self:addWorldArtifact(o) end
 
 	game.level.level = oldlev
 	resolvers.current_level = oldclev
@@ -1653,6 +1656,7 @@ function _M:createRandomBoss(base, data)
 	end
 
 	b.rnd_boss_on_added_to_level = b.on_added_to_level
+	b._rndboss_resources_boost = data.resources_boost
 	b.on_added_to_level = function(self, ...)
 		self:check("birth_create_alchemist_golem")
 		for tid, lev in pairs(self.learn_tids) do
@@ -1666,10 +1670,10 @@ function _M:createRandomBoss(base, data)
 		self.on_added_to_level = nil
 
 		-- Cheat a bit with ressources
-		self.max_mana = self.max_mana * (data.resources_boost or 3) self.mana_regen = self.mana_regen + 1
-		self.max_vim = self.max_vim * (data.resources_boost or 3) self.vim_regen = self.vim_regen + 1
-		self.max_stamina = self.max_stamina * (data.resources_boost or 3) self.stamina_regen = self.stamina_regen + 1
-		self.max_psi = self.max_psi * (data.resources_boost or 3) self.psi_regen = self.psi_regen + 2
+		self.max_mana = self.max_mana * (self._rndboss_resources_boost or 3) self.mana_regen = self.mana_regen + 1
+		self.max_vim = self.max_vim * (self._rndboss_resources_boost or 3) self.vim_regen = self.vim_regen + 1
+		self.max_stamina = self.max_stamina * (self._rndboss_resources_boost or 3) self.stamina_regen = self.stamina_regen + 1
+		self.max_psi = self.max_psi * (self._rndboss_resources_boost or 3) self.psi_regen = self.psi_regen + 2
 		self.equilibrium_regen = self.equilibrium_regen - 2
 		self:resetToFull()
 	end

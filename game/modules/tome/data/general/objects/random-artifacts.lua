@@ -34,6 +34,19 @@ newEntity{ theme={spell=true, sorcerous=true}, name="spell crit magnitude", poin
 }
 
 ----------------------------------------------------------------
+-- Mindpower
+----------------------------------------------------------------
+newEntity{ theme={mind=true, mindcraft=true}, name="mindpower", points = 1, rarity = 8, level_range = {1, 50},
+	wielder = { combat_mindpower = resolvers.randartmax(1, 28), },
+}
+newEntity{ theme={mind=true, mindcraft=true}, name="mindcrit", points = 1, rarity = 10, level_range = {1, 50},
+	wielder = { combat_mindcrit = resolvers.randartmax(1, 15), },
+}
+newEntity{ theme={mind=true, mindcraft=true}, name="mind crit magnitude", points = 1, rarity = 15, level_range = {1, 50},
+	wielder = { combat_critical_power = resolvers.randartmax(1, 12), },
+}
+
+----------------------------------------------------------------
 -- Physical damage
 ----------------------------------------------------------------
 newEntity{ theme={physical=true, brawny=true}, name="phys dam", points = 1, rarity = 8, level_range = {1, 50},
@@ -163,34 +176,34 @@ newEntity{ theme={attack=true, psionic=true}, name="inc damage mind", points = 1
 -- Immunes
 ----------------------------------------------------------------
 newEntity{ theme={def=true, unyielding=true}, name="immune stun", points = 1, rarity = 7, level_range = {1, 50},
-	wielder = { stun_immune = resolvers.randartmax(0.05, 1), },
+	wielder = { stun_immune = resolvers.randartmax(0.05, 0.5), },
 }
 newEntity{ theme={def=true, brawny=true, unyielding=true}, name="immune knockback", points = 1, rarity = 14, level_range = {1, 50},
-	wielder = { knockback_immune = resolvers.randartmax(0.05, 1), },
+	wielder = { knockback_immune = resolvers.randartmax(0.05, 0.5), },
 }
 newEntity{ theme={def=true, sorcerous=true}, name="immune blind", points = 1, rarity = 14, level_range = {1, 50},
-	wielder = { blind_immune = resolvers.randartmax(0.05, 1), },
+	wielder = { blind_immune = resolvers.randartmax(0.05, 0.5), },
 }
 newEntity{ theme={def=true, psionic=true}, name="immune confusion", points = 1, rarity = 14, level_range = {1, 50},
-	wielder = { confusion_immune = resolvers.randartmax(0.05, 1), },
+	wielder = { confusion_immune = resolvers.randartmax(0.05, 0.5), },
 }
 newEntity{ theme={def=true, brawny=true}, name="immune pin", points = 1, rarity = 14, level_range = {1, 50},
-	wielder = { pin_immune = resolvers.randartmax(0.05, 1), },
+	wielder = { pin_immune = resolvers.randartmax(0.05, 0.5), },
 }
 newEntity{ theme={def=true, venom=true, nature=true}, name="immune poison", points = 1, rarity = 14, level_range = {1, 50},
-	wielder = { poison_immune = resolvers.randartmax(0.05, 1), },
+	wielder = { poison_immune = resolvers.randartmax(0.05, 0.5), },
 }
 newEntity{ theme={def=true, venom=true, nature=true}, name="immune disease", points = 1, rarity = 14, level_range = {1, 50},
-	wielder = { disease_immune = resolvers.randartmax(0.05, 1), },
+	wielder = { disease_immune = resolvers.randartmax(0.05, 0.5), },
 }
 newEntity{ theme={def=true, sorcerous=true}, name="immune silence", points = 1, rarity = 11, level_range = {1, 50},
-	wielder = { silence_immune = resolvers.randartmax(0.05, 1), },
+	wielder = { silence_immune = resolvers.randartmax(0.05, 0.5), },
 }
 newEntity{ theme={def=true, nimble=true, unyielding=true}, name="immune disarm", points = 1, rarity = 11, level_range = {1, 50},
-	wielder = { disarm_immune = resolvers.randartmax(0.05, 1), },
+	wielder = { disarm_immune = resolvers.randartmax(0.05, 0.5), },
 }
 newEntity{ theme={def=true, nimble=true}, name="immune cut", points = 1, rarity = 14, level_range = {1, 50},
-	wielder = { cut_immune = resolvers.randartmax(0.05, 1), },
+	wielder = { cut_immune = resolvers.randartmax(0.05, 0.5), },
 }
 
 ----------------------------------------------------------------

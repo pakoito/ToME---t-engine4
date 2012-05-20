@@ -302,23 +302,27 @@ end
 --- Actor forgets a talent
 -- @param t_id the id of the talent to learn
 -- @return true if the talent was unlearnt, nil and an error message otherwise
-function _M:unlearnTalent(t_id)
+function _M:unlearnTalent(t_id, nb)
 	if not self:knowTalent(t_id) then return false, "talent not known" end
 
 	local t = _M.talents_def[t_id]
 
-	if self.talents[t_id] and self.talents[t_id] == 1 then
-		if self.hotkey then
-			for i, known_t_id in pairs(self.hotkey) do
-				if known_t_id[1] == "talent" and known_t_id[2] == t_id then self.hotkey[i] = nil end
+	nb = math.min(nb or 1, self.talents[t_id])
+
+	for j = 1, nb do
+		if self.talents[t_id] and self.talents[t_id] == 1 then
+			if self.hotkey then
+				for i, known_t_id in pairs(self.hotkey) do
+					if known_t_id[1] == "talent" and known_t_id[2] == t_id then self.hotkey[i] = nil end
+				end
 			end
 		end
+
+		self.talents[t_id] = self.talents[t_id] - 1
+		if self.talents[t_id] == 0 then self.talents[t_id] = nil end
+
+		if t.on_unlearn then t.on_unlearn(self, t) end
 	end
-
-	self.talents[t_id] = self.talents[t_id] - 1
-	if self.talents[t_id] == 0 then self.talents[t_id] = nil end
-
-	if t.on_unlearn then t.on_unlearn(self, t) end
 
 	self.talents_auto[t_id] = nil
 

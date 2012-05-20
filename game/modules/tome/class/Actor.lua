@@ -2640,7 +2640,7 @@ function _M:unlearnItemTalent(o, tid, level)
 		if self.item_talent_surplus_levels[tid] > 0 then
 			self.item_talent_surplus_levels[tid] = self.item_talent_surplus_levels[tid] - 1
 		else
-			self:unlearnTalent(tid, true, 1)
+			self:unlearnTalent(tid)
 		end
 	end
 end
@@ -2704,8 +2704,8 @@ end
 --- Actor forgets a talent
 -- @param t_id the id of the talent to learn
 -- @return true if the talent was unlearnt, nil and an error message otherwise
-function _M:unlearnTalent(t_id)
-	if not engine.interface.ActorTalents.unlearnTalent(self, t_id, force) then return false end
+function _M:unlearnTalent(t_id, nb)
+	if not engine.interface.ActorTalents.unlearnTalent(self, t_id, nb) then return false end
 
 	local t = _M.talents_def[t_id]
 

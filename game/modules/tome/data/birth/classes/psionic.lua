@@ -31,6 +31,7 @@ newBirthDescriptor{
 		{
 			__ALL__ = "disallow",
 			Mindslayer = "allow",
+			Psion = "allow",
 		},
 	},
 	copy = {
@@ -105,6 +106,39 @@ newBirthDescriptor{
 				end
 			end
 		end),
+	},
+	copy_add = {
+		life_rating = -4,
+	},
+}
+
+newBirthDescriptor{
+	type = "subclass",
+	name = "Psion",
+	locked = function() return profile.mod.allow_build.psionic_psion end,
+	locked_desc = "TODO",
+	desc = {
+		"blahblah",
+		"Their most important stats are: Willpower and Cunning",
+		"#GOLD#Stat modifiers:",
+		"#LIGHT_BLUE# * +1 Strength, +0 Dexterity, +0 Constitution",
+		"#LIGHT_BLUE# * +0 Magic, +4 Willpower, +4 Cunning",
+	},
+	power_source = {psionic=true},
+	stats = { str=0, wil=5, cun=4, },
+	talents_types = {
+		["psionic/possession"]={true, 0.3},
+	},
+	talents = {
+		[ActorTalents.T_POSSESS] = 1,
+	},
+	copy = {
+		max_life = 90,
+		resolvers.equip{ id=true,
+			{type="armor", subtype="cloth", name="linen robe", autoreq=true, ego_chance=-1000},
+			{type="weapon", subtype="mindstar", name="mossy mindstar", autoreq=true, ego_chance=-1000},
+			{type="weapon", subtype="mindstar", name="mossy mindstar", autoreq=true, ego_chance=-1000},
+		},
 	},
 	copy_add = {
 		life_rating = -4,

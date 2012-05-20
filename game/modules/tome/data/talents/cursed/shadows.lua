@@ -305,7 +305,7 @@ local function createShadow(self, level, tCallShadows, tShadowWarriors, tShadowM
 			if self:knowTalent(self.T_SHADOW_FADE) and not self:isTalentCoolingDown(self.T_SHADOW_FADE) then
 				self:forceUseTalent(self.T_SHADOW_FADE, {ignore_energy=true})
 			end
-			
+
 			return mod.class.Actor.onTakeHit(self, value, src)
 		end,
 	}
@@ -324,7 +324,7 @@ newTalent{
 		return self.level
 	end,
 	getMaxShadows = function(self, t)
-		return math.max(1, math.floor(self:getTalentLevel(t) * 0.55))
+		return math.min(4, math.max(1, math.floor(self:getTalentLevel(t) * 0.55)))
 	end,
 	getPhaseDoorLevel = function(self, t)
 		return self:getTalentLevelRaw(t)
@@ -387,7 +387,7 @@ newTalent{
 		level = t.getLevel(self, t)
 		local tShadowWarriors = self:knowTalent(self.T_SHADOW_WARRIORS) and self:getTalentFromId(self.T_SHADOW_WARRIORS) or nil
 		local tShadowMages = self:knowTalent(self.T_SHADOW_MAGES) and self:getTalentFromId(self.T_SHADOW_MAGES) or nil
-		
+
 		local shadow = createShadow(self, level, t, tShadowWarriors, tShadowMages, 1000, nil)
 
 		shadow:resolve()

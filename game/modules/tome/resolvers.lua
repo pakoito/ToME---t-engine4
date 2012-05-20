@@ -180,7 +180,7 @@ function resolvers.calc.drop_randart(t, e)
 		end
 	end
 
-	local o = game.state:generateRandart(false, base, resolvers.current_level)
+	local o = game.state:generateRandart{base=base, lev=resolvers.current_level}
 	if o then
 --		print("Zone made us a randart drop according to filter!", o:getName{force_id=true})
 		e:addObject(e.INVEN_INVEN, o)

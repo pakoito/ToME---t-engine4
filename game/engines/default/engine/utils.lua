@@ -57,6 +57,20 @@ function table.print(src, offset)
 	end
 end
 
+function table.iprint(src, offset)
+	offset = offset or ""
+	for k, e in ipairs(src) do
+		-- Deep copy subtables, but not objects!
+		if type(e) == "table" and not e.__CLASSNAME then
+			print(("%s[%s] = {"):format(offset, tostring(k)))
+			table.print(e, offset.."  ")
+			print(("%s}"):format(offset))
+		else
+			print(("%s[%s] = %s"):format(offset, tostring(k), tostring(e)))
+		end
+	end
+end
+
 --- Returns a clone of a table
 -- @param tbl The original table to be cloned
 -- @param deep Boolean to determine if recursive cloning occurs
