@@ -159,6 +159,7 @@ end
 
 --- Sets the player name
 function _M:setPlayerName(name)
+	name = name:removeColorCodes():gsub("#", " ")
 	self.save_name = name
 	self.player_name = name
 	if self.party and self.party:findMember{main=true} then
