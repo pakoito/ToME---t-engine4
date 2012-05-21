@@ -256,6 +256,10 @@ newEntity{
 	},
 	resolvers.charm("completes a nature powered mindstar set", 20,
 		function(self, who, ms_inven)
+			if who:getInven("PSIONIC_FOCUS") and who:getInven("PSIONIC_FOCUS")[1] == self then
+				game.logPlayer(who, "You cannot use %s while using it as a psionic focus.", self.name)
+				return
+			end		
 			who:showEquipment("Harmonize with which mindstar?", function(o) return o.subtype == "mindstar" and o.set_list and o ~= self  and o.power_source and o.power_source.nature and not o.set_complete end, function(o)
 				-- remove any existing set properties
 				self.define_as =nil
@@ -301,6 +305,10 @@ newEntity{
 	},
 	resolvers.charm("completes a psionic powered mindstar set", 20,
 		function(self, who, ms_inven)
+			if who:getInven("PSIONIC_FOCUS") and who:getInven("PSIONIC_FOCUS")[1] == self then
+				game.logPlayer(who, "You cannot use %s while using it as a psionic focus.", self.name)
+				return
+			end		
 			who:showEquipment("Resonate with which mindstar?", function(o) return o.subtype == "mindstar" and o.set_list and o ~= self and o.power_source and o.power_source.psionic and not o.set_complete end, function(o)
 				-- remove any existing set properties
 				self.define_as =nil
@@ -413,6 +421,10 @@ newEntity{
 	end,
 	resolvers.charm("call the drake in an elemental mindstar", 20,
 		function(self, who, ms_inven)
+			if who:getInven("PSIONIC_FOCUS") and who:getInven("PSIONIC_FOCUS")[1] == self then
+				game.logPlayer(who, "You cannot use %s while using it as a psionic focus.", self.name)
+				return
+			end		
 			who:showEquipment("Call the drake in which mindstar?", function(o) return o.subtype == "mindstar" and o.is_drake_star and not o.set_list end, function(o)
 				-- remove any existing sets from the mindstar
 				o.set_list = nil
