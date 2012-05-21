@@ -546,7 +546,7 @@ function _M:act()
 			if act and self:reactionToward(act) < 0 and self:canSee(act) then nb_foes = nb_foes + 1 end
 		end
 		if nb_foes > 1 then
-			nb_foes = math.min(nb_foes, self:getTalentLevel(self.T_MILITANT_MIND))
+			nb_foes = math.min(nb_foes, 5)
 			self:setEffect(self.EFF_MILITANT_MIND, 4, {power=self:getTalentLevel(self.T_MILITANT_MIND) * nb_foes * 0.6})
 		end
 	end
@@ -1729,6 +1729,13 @@ function _M:onTakeHit(value, src)
 	if value >= self.max_life * 0.15 and self:attr("invis_on_hit") and rng.percent(self:attr("invis_on_hit")) then
 		self:setEffect(self.EFF_INVISIBILITY, 5, {power=self:attr("invis_on_hit_power")})
 		for tid, _ in pairs(self.invis_on_hit_disable) do self:forceUseTalent(tid, {ignore_energy=true}) end
+	end
+	
+	if self:knowTalent(self.T_DUCK_AND_DODGE) then
+		local t = self:getTalentFromId(self.T_DUCK_AND_DODGE)
+		if value >= self.max_life * t.getThreshold(self, t) then
+			self:setEffect(self.EFF_EVASION, t.getDuration(self, t), {chance=t.getEvasionChance(self, t)})
+		end
 	end
 
 	-- Damage shield on hit

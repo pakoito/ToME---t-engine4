@@ -1593,7 +1593,7 @@ newEffect{
 newEffect{
 	name = "HALFLING_LUCK", image = "talents/halfling_luck.png",
 	desc = "Halflings's Luck",
-	long_desc = function(self, eff) return ("The target's luck and cunning combine to grant it %d%% higher combat critical chance and %d%% higher spell critical chance."):format(eff.physical, eff.spell) end,
+	long_desc = function(self, eff) return ("The target's luck and cunning combine to grant it %d%% higher combat critical chance, %d%% higher mental critical chance, and %d%% higher spell critical chance."):format(eff.physical, eff.mind, eff.spell) end,
 	type = "mental",
 	subtype = { focus=true },
 	status = "beneficial",
@@ -1603,10 +1603,12 @@ newEffect{
 	activate = function(self, eff)
 		eff.pid = self:addTemporaryValue("combat_physcrit", eff.physical)
 		eff.sid = self:addTemporaryValue("combat_spellcrit", eff.spell)
+		eff.mid = self:addTemporaryValue("combat_mindcrit", eff.mind)
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("combat_physcrit", eff.pid)
 		self:removeTemporaryValue("combat_spellcrit", eff.sid)
+		self:removeTemporaryValue("combat_mindcrit", eff.mid)
 	end,
 }
 

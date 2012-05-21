@@ -496,7 +496,7 @@ newEffect{
 newEffect{
 	name = "MILITANT_MIND", image = "talents/militant_mind.png",
 	desc = "Militant Mind",
-	long_desc = function(self, eff) return ("Increases physical power, spellpower and mindpower by %d."):format(eff.power) end,
+	long_desc = function(self, eff) return ("Increases physical power, physical save, spellpower, spell save, mindpower, and mental save by %d."):format(eff.power) end,
 	type = "other",
 	subtype = { miscellaneous=true },
 	status = "beneficial",
@@ -505,11 +505,17 @@ newEffect{
 		eff.damid = self:addTemporaryValue("combat_dam", eff.power)
 		eff.spellid = self:addTemporaryValue("combat_spellpower", eff.power)
 		eff.mindid = self:addTemporaryValue("combat_mindpower", eff.power)
+		eff.presid = self:addTemporaryValue("combat_physresist", eff.power)
+		eff.sresid = self:addTemporaryValue("combat_spellresist", eff.power)
+		eff.mresid = self:addTemporaryValue("combat_mentalresist", eff.power)
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("combat_dam", eff.damid)
 		self:removeTemporaryValue("combat_spellpower", eff.spellid)
 		self:removeTemporaryValue("combat_mindpower", eff.mindid)
+		self:removeTemporaryValue("combat_physresist", eff.presid)
+		self:removeTemporaryValue("combat_spellresist", eff.sresid)
+		self:removeTemporaryValue("combat_mentalresist", eff.mresid)
 	end,
 }
 

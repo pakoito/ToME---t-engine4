@@ -497,11 +497,12 @@ newTalent{
 		self:setEffect(self.EFF_HALFLING_LUCK, 5, {
 			physical=10 + self:getCun() / 2,
 			spell=10 + self:getCun() / 2,
+			mind=10 + self:getCun() / 2,
 		})
 		return true
 	end,
 	info = function(self, t)
-		return ([[Call upon the luck and cunning of the Little Folk to increase your physical and spell critical strike chance by %d%% for 5 turns.
+		return ([[Call upon the luck and cunning of the Little Folk to increase your physical, mental, and spell critical strike chance by %d%% for 5 turns.
 		The bonus will increase with the Cunning stat.]]):format(10 + self:getCun() / 2, 10 + self:getCun() / 2)
 	end,
 }
@@ -512,10 +513,16 @@ newTalent{
 	require = racial_req2,
 	points = 5,
 	mode = "passive",
+	getThreshold = function(self, t) return math.max(10, (15 - self:getTalentLevelRaw(t))) / 100 end,
+	getEvasionChance = function(self, t) return self:getStat("lck") end,
+	getDuration = function(self, t) return 1 + math.ceil(self:getTalentLevel(t)/2) end,
 	info = function(self, t)
-		return ([[Halfling have long learnt to use their small stature as an advantage when fighting the other races.
-		Increases defense in melee based on the size difference between the attacker and you (+%d defence per size).]]):
-		format(self:getTalentLevelRaw(t) * 1.2)
+		local threshold = t.getThreshold(self, t)
+		local evasion = t.getEvasionChance(self, t)
+		local duration = t.getDuration(self, t)
+		return ([[Your incredible luck kicks in at just the right moment to save your skin.
+		Whenever you take %d%% or more of your life from a single attack you gain Evasion equal to your luck stat (currently %d%%) for the next %d turns.]]):
+		format(threshold * 100, evasion, duration)
 	end,
 }
 
@@ -527,8 +534,8 @@ newTalent{
 	mode = "passive",
 	info = function(self, t)
 		return ([[Halflings have always been a very organised and methodical race, the more foes they face the more organised they are.
-		If two or more foes are in sight your physical power, spellpower and mindpower are increased by %0.1f per foes (up to %d foes).]]):
-		format(self:getTalentLevel(t) * 0.6, self:getTalentLevel(t))
+		If two or more foes are in sight your physical power, physical save, spellpower, spell save, mental save, and mindpower are increased by %0.1f per foes (up to 5 foes).]]):
+		format(self:getTalentLevel(t) * 0.6)
 	end,
 }
 
@@ -539,14 +546,38 @@ newTalent{
 	points = 5,
 	no_energy = true,
 	cooldown = function(self, t) return 50 - self:getTalentLevel(t) * 5 end,
-	tactical = { DEFEND = 1 },
+	tactical = { DEFEND = 1,  CURE = 1 },
+	getRemoveCount = function(self, t) return 1 + self:getTalentLevel(t) end,
+	getDuration = function(self, t) return 1 + self:getTalentLevel(t) end,
 	action = function(self, t)
-		self:setEffect(self.EFF_FREE_ACTION, 3 + self:getTalentLevel(t), {})
+		local effs = {}
+
+		-- Go through all effects
+		for eff_id, p in pairs(self.tmp) do
+			local e = self.tempeffect_def[eff_id]
+			if e.subtype.stun or e.subtype.pin then -- Daze is stun subtype
+				effs[#effs+1] = {"effect", eff_id}
+			end
+		end
+
+		for i = 1, t.getRemoveCount(self, t) do
+			if #effs == 0 then break end
+			local eff = rng.tableRemove(effs)
+
+			if eff[1] == "effect" then
+				self:removeEffect(eff[2])
+			end
+		end
+	
+		self:setEffect(self.EFF_FREE_ACTION, t.getDuration(self, t), {})
 		return true
 	end,
 	info = function(self, t)
+		local duration = t.getDuration(self, t)
+		local count = t.getRemoveCount(self, t)
 		return ([[Halflings are one of the more powerful military force of the known world, they have been at war with most other races for thousand of years.
-		Instantly makes you immune to stuns, dazes and pinning effects for %d turns.]]):format(3 + self:getTalentLevel(t))
+		Removes %d stun, daze, or pin effects and makes you immune to stuns, dazes and pins for %d turns.
+		This talent takes no time to use.]]):format(duration, count)
 	end,
 }
 

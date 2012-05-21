@@ -28,10 +28,11 @@ solution "TEngine"
 
 configuration "windows"
 	libdirs {
-		"/c/mingw2/lib",
+		"/c/code/SDL/lib",
 	}
 	includedirs {
-		"/c/mingw2/include/SDL",
+		"/c/code/SDL/include/SDL2",
+		"/c/code/SDL/include",
 		"/c/mingw2/include/GL",
 	}
 

@@ -325,11 +325,6 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	local dam, apr, armor = force_dam or self:combatDamage(weapon), self:combatAPR(weapon), target:combatArmor()
 	print("[ATTACK] to ", target.name, " :: ", dam, apr, armor, def, "::", mult)
 
-	if target:knowTalent(target.T_DUCK_AND_DODGE) then
-		local diff = util.bound((self.size_category or 3) - (target.size_category or 2), 0, 5)
-		def = def + diff * target:getTalentLevelRaw(target.T_DUCK_AND_DODGE) * 1.2
-	end
-
 	-- check repel
 	local repelled = false
 	if target:isTalentActive(target.T_REPEL) then
