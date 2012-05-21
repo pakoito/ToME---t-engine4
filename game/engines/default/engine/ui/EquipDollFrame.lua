@@ -23,7 +23,7 @@ local Focusable = require "engine.ui.Focusable"
 
 module(..., package.seeall, class.inherit(Base, Focusable))
 
-_M.font = core.display.newFont("/data/font/Vera.ttf", 10)
+_M.font = core.display.newFont("/data/font/DroidSans.ttf", 10)
 _M.font_h = _M.font:lineSkip()
 
 function _M:init(t)

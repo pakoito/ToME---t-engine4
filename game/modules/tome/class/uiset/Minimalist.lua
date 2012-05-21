@@ -120,9 +120,9 @@ ammo_shot = {core.display.loadImage("/data/gfx/ui/resources/ammo_shot.png"):glTe
 _M['ammo_shadow_alchemist-gem'] = {core.display.loadImage("/data/gfx/ui/resources/ammo_shadow_alchemist-gem.png"):glTexture()}
 _M['ammo_alchemist-gem'] = {core.display.loadImage("/data/gfx/ui/resources/ammo_alchemist-gem.png"):glTexture()}
 
-font_sha = core.display.newFont("/data/font/USENET_.ttf", 14, true)
+font_sha = core.display.newFont("/data/font/DroidSans.ttf", 14, true)
 font_sha:setStyle("bold")
-sfont_sha = core.display.newFont("/data/font/USENET_.ttf", 12, true)
+sfont_sha = core.display.newFont("/data/font/DroidSans.ttf", 12, true)
 sfont_sha:setStyle("bold")
 
 icon_green = { core.display.loadImage("/data/gfx/ui/talent_frame_ok.png"):glTexture() }
@@ -302,8 +302,8 @@ function _M:activate()
 	if config.settings.tome.fonts.type == "fantasy" then
 		size = ({normal=16, small=14, big=18})[config.settings.tome.fonts.size]
 		size_mono = ({normal=14, small=10, big=16})[config.settings.tome.fonts.size]
-		font = "/data/font/USENET_.ttf"
-		font_mono = "/data/font/SVBasicManual.ttf"
+		font = "/data/font/DroidSans.ttf"
+		font_mono = "/data/font/DroidSansMono.ttf"
 	else
 		size = ({normal=12, small=10, big=14})[config.settings.tome.fonts.size]
 		size_mono = ({normal=12, small=10, big=14})[config.settings.tome.fonts.size]

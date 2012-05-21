@@ -27,7 +27,7 @@ function _M:init(text, key_source, force_all)
 	self.text = text or "Gesture: "
 	self.gesture = ""
 	self.gestures = {}
-	self.font = core.display.newFont("/data/font/Vera.ttf", 12)
+	self.font = core.display.newFont("/data/font/DroidSans.ttf", 12)
 
 	local gesttext = self.text.."WWWWW"
 	self.fontmax_w, self.font_h = self.font:size(gesttext)

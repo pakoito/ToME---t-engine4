@@ -89,9 +89,9 @@ UIBase:setTextShadow(0.6)
 -- Dialogs fonts
 if config.settings.tome.fonts.type == "fantasy" then
 	local size = ({normal=16, small=12, big=18})[config.settings.tome.fonts.size]
-	UIBase.font = core.display.newFont("/data/font/USENET_.ttf", size)
-	UIBase.font_bold = core.display.newFont("/data/font/USENET_.ttf", size)
-	UIBase.font_mono = core.display.newFont("/data/font/SVBasicManual.ttf", size)
+	UIBase.font = core.display.newFont("/data/font/DroidSans.ttf", size)
+	UIBase.font_bold = core.display.newFont("/data/font/DroidSans.ttf", size)
+	UIBase.font_mono = core.display.newFont("/data/font/DroidSansMono.ttf", size)
 	UIBase.font_bold:setStyle("bold")
 	UIBase.font_h = UIBase.font:lineSkip()
 	UIBase.font_bold_h = UIBase.font_bold:lineSkip()

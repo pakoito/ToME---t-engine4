@@ -38,7 +38,7 @@ function _M:init(actor)
 	self.actor = actor
 	Dialog.init(self, "Character Sheet: "..self.actor.name, math.max(game.w * 0.7, 950), 500)
 
-	self.font = core.display.newFont("/data/font/VeraMono.ttf", 12)
+	self.font = core.display.newFont("/data/font/DroidSansMono.ttf", 12)
 	self.font_h = self.font:lineSkip()
 
 	self.c_general = Tab.new{title="General", default=true, fct=function() end, on_change=function(s) if s then self:switchTo("general") end end}

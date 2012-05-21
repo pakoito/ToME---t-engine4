@@ -56,7 +56,7 @@ function _M:init(actor, on_finish, on_birth)
 	self.talent_types_learned = {}
 	self.stats_increased = {}
 
-	self.font = core.display.newFont("/data/font/VeraMono.ttf", 12)
+	self.font = core.display.newFont("/data/font/DroidSansMono.ttf", 12)
 	self.font_h = self.font:lineSkip()
 
 	self.actor.__hidden_talent_types = self.actor.__hidden_talent_types or {}

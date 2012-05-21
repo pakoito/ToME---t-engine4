@@ -59,7 +59,7 @@ function _M:init()
 		self.c_auth = Textzone.new{auto_width=true, auto_height=true, text=str}
 	end
 
-	self.c_list = List.new{width=self.iw, nb_items=#self.list, list=self.list, fct=function(item) end, font={"/data/font/VeraBd.ttf", 16}}
+	self.c_list = List.new{width=self.iw, nb_items=#self.list, list=self.list, fct=function(item) end, font={"/data/font/DroidSans-Bold.ttf", 16}}
 
 	self:loadUI{
 		{left=0, top=0, ui=self.c_list},

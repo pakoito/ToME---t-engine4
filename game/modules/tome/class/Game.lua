@@ -134,14 +134,14 @@ function _M:run()
 	end)
 
 	-- Create the map scroll text overlay
-	local lfont = core.display.newFont("/data/font/Vera.ttf", 30)
+	local lfont = core.display.newFont("/data/font/DroidSans.ttf", 30)
 	lfont:setStyle("bold")
 	local s = core.display.drawStringBlendedNewSurface(lfont, "<Scroll mode, press keys to scroll, caps lock to exit>", unpack(colors.simple(colors.GOLD)))
 	lfont:setStyle("normal")
 	self.caps_scroll = {s:glTexture()}
 	self.caps_scroll.w, self.caps_scroll.h = s:getSize()
 
-	self.zone_font = core.display.newFont("/data/font/Vera.ttf", 12)
+	self.zone_font = core.display.newFont("/data/font/DroidSans.ttf", 12)
 
 	self.inited = true
 end

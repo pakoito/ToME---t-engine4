@@ -29,7 +29,7 @@ function _M:init(actor, x, y, w, h, bgcolor, fontname, fontsize)
 		self.bgcolor = {0,0,0}
 		self.bg_image = bgcolor
 	end
-	self.font = core.display.newFont(fontname or "/data/font/VeraMono.ttf", fontsize or 10)
+	self.font = core.display.newFont(fontname or "/data/font/DroidSansMono.ttf", fontsize or 10)
 	self.font_h = self.font:lineSkip()
 	self.clics = {}
 	self.items = {}

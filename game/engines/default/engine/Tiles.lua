@@ -43,7 +43,7 @@ function _M:init(w, h, fontname, fontsize, texture, allow_backcolor)
 	self.allow_backcolor = allow_backcolor
 	self.texture = texture
 	self.w, self.h = w, h
-	self.font = core.display.newFont(fontname or "/data/font/VeraMoBd.ttf", fontsize or 14)
+	self.font = core.display.newFont(fontname or "/data/font/DroidSansMono.ttf", fontsize or 14)
 	self.repo = {}
 	self.texture_store = {}
 end

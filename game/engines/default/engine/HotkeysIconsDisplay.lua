@@ -32,8 +32,8 @@ function _M:init(actor, x, y, w, h, bgcolor, fontname, fontsize, icon_w, icon_h)
 		self.bgcolor = {0,0,0}
 		self.bg_image = bgcolor
 	end
-	self.font = core.display.newFont(fontname or "/data/font/VeraMono.ttf", fontsize or 10)
-	self.fontbig = core.display.newFont(fontname or "/data/font/VeraMono.ttf", (fontsize or 10) * 2)
+	self.font = core.display.newFont(fontname or "/data/font/DroidSansMono.ttf", fontsize or 10)
+	self.fontbig = core.display.newFont(fontname or "/data/font/DroidSansMono.ttf", (fontsize or 10) * 2)
 	self.font_h = self.font:lineSkip()
 	self.dragclics = {}
 	self.clics = {}
@@ -41,7 +41,7 @@ function _M:init(actor, x, y, w, h, bgcolor, fontname, fontsize, icon_w, icon_h)
 	self.cache = {}
 	setmetatable(self.cache, {__mode="v"})
 	self.icon_w, self.icon_h = icon_w, icon_h
-	self.tiles = Tiles.new(icon_w, icon_h, fontname or "/data/font/VeraMono.ttf", fontsize or 10, true, true)
+	self.tiles = Tiles.new(icon_w, icon_h, fontname or "/data/font/DroidSansMono.ttf", fontsize or 10, true, true)
 	self.tiles.use_images = true
 	self.tiles.force_back_color = {r=0, g=0, b=0}
 

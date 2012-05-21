@@ -359,7 +359,7 @@ function _M:resize(x, y, w, h, fontname, fontsize, color, bgcolor)
 		self.bgcolor = {0,0,0}
 		self.bg_image = bgcolor
 	end
-	self.font = core.display.newFont(fontname or "/data/font/Vera.ttf", fontsize or 12)
+	self.font = core.display.newFont(fontname or "/data/font/DroidSans.ttf", fontsize or 12)
 	self.font_h = self.font:lineSkip()
 
 	self.scroll = 0

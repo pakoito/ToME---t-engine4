@@ -109,7 +109,7 @@ function _M:init()
 	self.blink_period = 20
 	self.blink = self.blink_period
 	local w, h = core.display.size()
-	engine.Dialog.init(self, "Lua Console", w, h, 0, 0, nil, core.display.newFont("/data/font/VeraMono.ttf", 12))
+	engine.Dialog.init(self, "Lua Console", w, h, 0, 0, nil, core.display.newFont("/data/font/DroidSansMono.ttf", 12))
 	game:onTickEnd(function() self.key:unicodeInput(true) end)
 	self:keyCommands{
 		_RETURN = function()

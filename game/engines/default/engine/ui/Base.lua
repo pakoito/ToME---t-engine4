@@ -29,12 +29,12 @@ local cache = {}
 local tcache = {}
 
 -- Default font
-_M.font = core.display.newFont("/data/font/Vera.ttf", 12)
+_M.font = core.display.newFont("/data/font/DroidSans.ttf", 12)
 _M.font_h = _M.font:lineSkip()
-_M.font_mono = core.display.newFont("/data/font/VeraMono.ttf", 12)
+_M.font_mono = core.display.newFont("/data/font/DroidSansMono.ttf", 12)
 _M.font_mono_w = _M.font_mono:size(" ")
 _M.font_mono_h = _M.font_mono:lineSkip()
-_M.font_bold = core.display.newFont("/data/font/VeraBd.ttf", 12)
+_M.font_bold = core.display.newFont("/data/font/DroidSans-Bold.ttf", 12)
 _M.font_bold_h = _M.font_bold:lineSkip()
 
 -- Default UI

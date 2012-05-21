@@ -28,12 +28,12 @@ module(..., package.seeall, class.inherit(Base))
 tooltip_bound_x1 = 0
 tooltip_bound_x2 = function() return game.w end
 tooltip_bound_y1 = 0
-tooltip_bound_y2 = function() print("=============gameh", game.h)return game.h end
+tooltip_bound_y2 = function() return game.h end
 
 function _M:init(fontname, fontsize, color, bgcolor, max)
 	self.max = max or 300
 	self.ui = "simple"
-	self.font = {fontname or "/data/font/Vera.ttf", fontsize or 12}
+	self.font = {fontname or "/data/font/DroidSans.ttf", fontsize or 12}
 	self.default_ui = { TextzoneList.new{weakstore=true, width=self.max, height=500, variable_height=true, font=self.font, ui=self.ui} }
 
 	self.uis = {}
