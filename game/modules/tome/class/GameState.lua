@@ -1115,6 +1115,7 @@ function _M:entityFilterPost(zone, level, type, e, filter)
 				no_loot_randart = true,
 				resources_boost = 1.5,
 				class_filter = function(c)
+					if c.name=="Corruptor" then return true else return false end
 					if e.power_source then
 						for ps, _ in pairs(e.power_source) do if c.power_source and c.power_source[ps] then return true end end
 						return false
@@ -1642,10 +1643,12 @@ function _M:createRandomBoss(base, data)
 		for _, t in pairs(b.talents_def) do
 			if b.talents_types[t.type[1]] and not t.no_npc_use then
 				local ok = true
-				if data.check_talents_level then
-					local req = util.getval(rawget(t, 'require'), b, t)
-					if req and req.level and util.getval(req.level, 1) > data.level then
+				if data.check_talents_level and rawget(t, 'require') then
+					local req = t.require
+					if type(req) == "function" then req = req(b, t) end
+					if req and req.level and util.getval(req.level, 1) > math.ceil(data.level/2) then
 						print("Random boss forbade talent because of level", t.name, data.level)
+						ok = false
 					end
 				end
 
