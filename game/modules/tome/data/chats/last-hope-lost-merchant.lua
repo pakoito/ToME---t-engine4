@@ -95,7 +95,7 @@ local maker_list = function()
 						answers = {
 							{"Yes please.", action=function(npc, player)
 								local d = require("engine.dialogs.GetText").new("Name your item", "Name", 2, 40, function(txt)
-									art.name = txt
+									art.name = txt:removeColorCodes():gsub("#", " ")
 									game.log("#LIGHT_BLUE#The merchant carefully hands you: %s", art:getName{do_color=true})
 								end, function() game.log("#LIGHT_BLUE#The merchant carefully hands you: %s", art:getName{do_color=true}) end)
 								game:registerDialog(d)
