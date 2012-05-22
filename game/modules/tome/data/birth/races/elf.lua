@@ -91,7 +91,7 @@ newBirthDescriptor
 		resolvers.inscription("RUNE:_PHASE_DOOR", {cooldown=7, range=10}),
 	},
 	experience = 1.35,
-	random_escort_possibilities = { {"scintillating-caves", 2, 3}, {"daikara", 1, 3}, {"old-forest", 1, 4}, {"dreadfell", 1, 8}, {"reknor", 1, 2}, },
+	random_escort_possibilities = { {"scintillating-caves", 2, 3}, {"daikara", 1, 2}, {"old-forest", 1, 4}, {"dreadfell", 1, 8}, {"reknor", 1, 2}, },
 }
 
 newBirthDescriptor

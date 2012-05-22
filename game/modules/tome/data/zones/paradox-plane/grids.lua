@@ -37,5 +37,5 @@ newEntity{
 	always_remember = true,
 	show_tooltip = true,
 	desc = [[The rift leads somewhere ..]],
-	change_level = 4, change_zone = "daikara",
+	change_level = 3, change_zone = "daikara",
 }

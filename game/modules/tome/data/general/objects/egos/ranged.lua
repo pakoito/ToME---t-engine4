@@ -27,7 +27,9 @@ newEntity{
 	level_range = {1, 50},
 	rarity = 3,
 	cost = 6,
-	combat={},
+	wielder = {
+		inc_damage={ [DamageType.PHYSICAL] = resolvers.mbonus_material(14, 8), },
+	},
 }
 
 newEntity{
@@ -37,8 +39,8 @@ newEntity{
 	level_range = {1, 50},
 	rarity = 3,
 	cost = 4,
-	combat = {
-		dam = resolvers.mbonus_material(20, 5),
+	wielder = {
+		combat_dam = resolvers.mbonus_material(10, 5),
 	},
 }
 
@@ -61,7 +63,7 @@ newEntity{
 	level_range = {1, 50},
 	rarity = 7,
 	cost = 7,
-	combat = {
+	wielder = {
 		physcrit = resolvers.mbonus_material(7, 3),
 	}
 }
@@ -119,12 +121,14 @@ newEntity{
 	rarity = 20,
 	cost = 40,
 	combat = {
-		physcrit = resolvers.mbonus_material(7, 3),
 		travel_speed = 2
 	},
 	resolvers.generic(function(e)
 		e.combat.range = e.combat.range + 1
 	end),
+	wielder = {
+		physcrit = resolvers.mbonus_material(7, 3),
+	},
 }
 
 newEntity{
@@ -135,10 +139,8 @@ newEntity{
 	greater_ego = 1,
 	rarity = 20,
 	cost = 40,
-	combat = {
-		apr = resolvers.mbonus_material(25, 5)
-	},
 	wielder = {
+		apr = resolvers.mbonus_material(25, 5),
 		resists_pen = {
 			[DamageType.PHYSICAL] = resolvers.mbonus_material(20, 5),
 		},

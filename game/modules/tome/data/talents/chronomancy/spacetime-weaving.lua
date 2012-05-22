@@ -166,9 +166,10 @@ newTalent{
 			minimum_distance = 0
 			local tg = {type="ball", nolock=true, pass_terrain=true, nowarning=true, range=self:getTalentRange(t), radius=radius}
 			x, y = self:getTarget(tg)
+			print("[Target]", x, y)
 			if not x then return nil end
-			-- See if we can actually project to the selected location
-			if not self:canProject(tg, x, y) then
+			-- Make sure the target is within range
+			if core.fov.distance(self.x, self.y, x, y) > self:getTalentRange(t) then
 				game.logPlayer(self, "Pick a valid location.")
 				return false
 			end
