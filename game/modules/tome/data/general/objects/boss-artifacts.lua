@@ -1348,7 +1348,7 @@ newEntity{ base = "BASE_LONGBOW",
 			local a, id = rng.table(tgts)
 			table.remove(tgts, id)
 
-			self.za = 0
+			self.zap = 0
 			who:project(tg, a.x, a.y, DamageType.LIGHTNING_DAZE, {daze=40, dam = rng.avg(1,3) * (40+ who:getMag() * 1.5)} )
 			game.level.map:particleEmitter(who.x, who.y, math.max(math.abs(a.x-who.x), math.abs(a.y-who.y)), "lightning", {tx=a.x-who.x, ty=a.y-who.y})
 			game:playSoundNear(self, "talents/lightning")
