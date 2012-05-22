@@ -2559,6 +2559,496 @@ newEntity{ base = "BASE_ARROW",
 	},
 }
 
+newEntity{ base = "BASE_ARROW",
+	power_source = {psionic=true},
+	unique = true,
+	name = "Quiver of Domination",
+	unided_name = "grey quiver",
+	desc = [[Powerful telepathic forces emanate from the arrows of this quiver. The tips appear dull, but touching them causes you intense pain.]],
+	color = colors.GREY,
+	level_range = {20, 40},
+	rarity = 300,
+	cost = 100,
+	material_level = 4,
+	require = { stat = { dex=24 }, },
+	combat = {
+		capacity = 8,
+		dam = 24,
+		apr = 8,
+		physcrit = 2,
+		dammod = {dex=0.6, str=0.5, wil=0.2},
+		damtype = DamageType.MIND,
+		special_on_crit = {desc="40% chance to dominate the target", fct=function(combat, who, target)
+			if not target or target == self then return end
+			if not rng.percent(40)  then return end
+			if target:canBe("instakill") then
+				target:setEffect(target.EFF_DOMINATE_ENTHRALL, 3, {src=who, apply_power=who:combatMindpower()})
+			end
+		end},
+	},
+}
+
+newEntity{ base = "BASE_SHIELD",
+	power_source = {nature=true, antimagic=true},
+	unique = true,
+	name = "Blightstopper",
+	unided_name = "vine coated shield",
+	desc = [[This voratun shield, coated with thick vines, was imbued with nature's power long ago by the Halfling General Almadar Riul, who used it to stave off the magic and diseases of orcish corruptors during the peak of the Pyre Wars.]],
+	color = colors.LIGHT_GREEN,
+	level_range = {36, 45},
+	rarity = 300,
+	require = { stat = { str=35 }, },
+	cost = 375,
+	material_level = 5,
+	special_combat = {
+		dam = 52,
+		block = 240,
+		physcrit = 4.5,
+		dammod = {str=1},
+		damtype = DamageType.PHYSICAL,
+		convert_damage = {
+			[DamageType.NATURE] = 30,
+			[DamageType.MANABURN] = 10,
+		},
+	},
+	wielder = {
+		resists={[DamageType.BLIGHT] = 35, [DamageType.NATURE] = 15},
+		on_melee_hit={[DamageType.NATURE] = 15},
+		combat_armor = 12,
+		combat_def = 18,
+		combat_def_ranged = 12,
+		combat_spellresist = 24,
+		talents_types_mastery = { ["wild-gift/antimagic"] = 0.2, },
+		fatigue = 22,
+		learn_talent = { [Talents.T_BLOCK] = 5,},
+		disease_immune = 0.6,
+	},
+	max_power = 40, power_regen = 1,
+	use_power = { name = "purge diseases and increase your resistances", power = 25,
+	use = function(self, who)
+		local target = who
+		local effs = {}
+		local known = false
+
+		who:setEffect(who.EFF_PURGE_BLIGHT, 5, {power=20})
+
+			-- Go through all spell effects
+		for eff_id, p in pairs(target.tmp) do
+			local e = target.tempeffect_def[eff_id]
+			if e.subtype.disease then
+				effs[#effs+1] = {"effect", eff_id}
+			end
+		end
+
+		for i = 1, 3 + math.floor(who:getWil() / 10) do
+			if #effs == 0 then break end
+			local eff = rng.tableRemove(effs)
+
+			if eff[1] == "effect" then
+				target:removeEffect(eff[2])
+				known = true
+			end
+		end
+		game.logSeen(who, "%s is purged of diseases!", who.name:capitalize())
+		return {id=true, used=true}
+	end,
+	},
+}
+
+newEntity{ base = "BASE_SHOT",
+	power_source = {arcane=true},
+	unique = true,
+	name = "Star Shot",
+	unided_name = "blazing shot",
+	desc = [[Intense heat radiates from this powerful shot.]],
+	color = colors.RED,
+	level_range = {25, 40},
+	rarity = 300,
+	cost = 110,
+	material_level = 4,
+	require = { stat = { dex=28 }, },
+	combat = {
+		capacity = 4,
+		dam = 32,
+		apr = 15,
+		physcrit = 10,
+		dammod = {dex=0.7, cun=0.5},
+		damtype = DamageType.FIRE,
+		special_on_hit = {desc="sets off a powerful explosion", fct=function(combat, who, target)
+			local tg = {type="ball", range=0, radius=3, selffire=false}
+			local grids = who:project(tg, target.x, target.y, DamageType.FIREKNOCKBACK, {dist=3, dam=40 + who:getMag()*0.6 + who:getCun()*0.6})
+			game.level.map:particleEmitter(target.x, target.y, tg.radius, "ball_fire", {radius=tg.radius})
+		end},
+	},
+}
+
+newEntity{ base = "BASE_MINDSTAR",
+	power_source = {psionic=true},
+	unique = true,
+	name = "Psionic Fury",
+	unided_name = "vibrating mindstar",
+	level_range = {24, 32},
+	color=colors.AQUAMARINE,
+	rarity = 250,
+	desc = [[This mindstar constantly shakes and vibrates, as if a powerful force is desperately trying to escape.]],
+	cost = 85,
+	require = { stat = { wil=24 }, },
+	material_level = 3,
+	combat = {
+		dam = 12,
+		apr = 25,
+		physcrit = 5,
+		dammod = {wil=0.4, cun=0.2},
+		damtype = DamageType.MIND,
+	},
+	wielder = {
+		combat_mindpower = 10,
+		combat_mindcrit = 8,
+		inc_damage={
+			[DamageType.MIND] 		= 15,
+			[DamageType.PHYSICAL]	= 5,
+		},
+		resists={
+			[DamageType.MIND] 		= 10,
+		},
+		inc_stats = { [Stats.STAT_WIL] = 5, [Stats.STAT_CUN] = 4, },
+	},
+	max_power = 40, power_regen = 1,
+	use_power = { name = "release a wave of psionic power", power = 40,
+	use = function(self, who)
+		local radius = 4
+		local dam = (50 + who:getWil()*1.8)
+		local blast = {type="ball", range=0, radius=5, selffire=false}
+		who:project(blast, who.x, who.y, engine.DamageType.MIND, dam)
+		game.level.map:particleEmitter(who.x, who.y, blast.radius, "force_blast", {radius=blast.radius})
+		game.logSeen(who, "%s sends out a blast of psionic energy!", who.name:capitalize(), self:getName())
+		return {id=true, used=true}
+		end
+	},
+}
+
+--[[ For now
+newEntity{ base = "BASE_MINDSTAR",
+	power_source = {psionic=true},
+	unique = true,
+	name = "Withered Force", define_as = "WITHERED_STAR",
+	unided_name = "dark mindstar",
+	level_range = {28, 38},
+	color=colors.AQUAMARINE,
+	rarity = 250,
+	desc = [=[A hazy aura emanates from this ancient gem, coated with withering, thorny vines.]=],
+	cost = 98,
+	require = { stat = { wil=24 }, },
+	material_level = 4,
+	combat = {
+		dam = 16,
+		apr = 28,
+		physcrit = 5,
+		dammod = {wil=0.45, cun=0.25},
+		damtype = DamageType.MIND,
+		convert_damage = {
+			[DamageType.DARKNESS] = 30,
+		},
+		talents_types_mastery = {
+			["cursed/gloom"] = 0.2,
+			["cursed/darkness"] = 0.2,
+		}
+	},
+	ms_combat = {},
+	wielder = {
+		combat_mindpower = 14,
+		combat_mindcrit = 7,
+		inc_damage={
+			[DamageType.DARKNESS] 	= 10,
+			[DamageType.PHYSICAL]	= 10,
+		},
+		inc_stats = { [Stats.STAT_WIL] = 4,},
+		hate_per_kill = 3,
+	},
+	max_power = 40, power_regen = 1,
+	use_power = { name = "switch the weapon between an axe and a mindstar", power = 40,
+		use = function(self, who)
+		if self.subtype == "mindstar" then
+			ms_combat = table.clone(self.combat)
+			--self.name	= "Withered Axe"
+			if self:isTalentActive (who.T_PSIBLADES) then
+				self:forceUseTalent(who.T_PSIBLADES, {ignore_energy=true})
+				game.logSeen(who, "%s rejects the inferior psionic blade!", self.name:capitalize())
+			end
+			self.desc	= [=[A hazy aura emanates from this dark axe, withering, thorny vines twisting around the handle.]=]
+			self.subtype = "waraxe"
+			self.image = self.resolvers.image_material("axe", "metal")
+			self.moddable_tile = self.resolvers.moddable_tile("axe")
+					self:removeAllMOs()
+			--Set moddable tile here
+			self.combat = nil
+			self.combat = {
+				talented = "axe", damrange = 1.4, physspeed = 1, sound = {"actions/melee", pitch=0.6, vol=1.2}, sound_miss = {"actions/melee", pitch=0.6, vol=1.2},
+				no_offhand_penalty = true,
+				dam = 34,
+				apr = 8,
+				physcrit = 7,
+				dammod = {str=0.85, wil=0.2},
+				damtype = DamageType.PHYSICAL,
+				convert_damage = {
+					[DamageType.DARKNESS] = 25,
+					[DamageType.MIND] = 15,
+				},
+			}
+		else
+			--self.name	= "Withered Star"
+			self.image = self.resolvers.image_material("mindstar", "nature")
+			self.moddable_tile = self.resolvers.moddable_tile("mindstar")
+					self:removeAllMOs()
+			--Set moddable tile here
+			self.desc	= [=[A hazy aura emanates from this ancient gem, coated with withering, thorny vines."]=]
+			self.subtype = "mindstar"
+			self.combat = nil
+			self.combat = table.clone(ms_combat)
+		end
+		return {id=true, used=true}
+		end
+	},
+}
+]]
+
+newEntity{ base = "BASE_MINDSTAR",
+	power_source = {psionic=true},
+	unique = true,
+	name = "Nexus of the Way",
+	unided_name = "brilliant green mindstar",
+	level_range = {38, 50},
+	color=colors.AQUAMARINE,
+	rarity = 350,
+	desc = [[The vast psionic force of the Way reverberates through this gemstone. With a single touch, you can sense overwhelming power, and countless thoughts.]],
+	cost = 280,
+	require = { stat = { wil=48 }, },
+	material_level = 5,
+	combat = {
+		dam = 22,
+		apr = 40,
+		physcrit = 5,
+		dammod = {wil=0.6, cun=0.2},
+		damtype = DamageType.MIND,
+	},
+	wielder = {
+		combat_mindpower = 15,
+		combat_mindcrit = 9,
+		confusion_immune=0.3,
+		inc_damage={
+			[DamageType.MIND] 	= 20,
+		},
+		resists={
+			[DamageType.MIND] 	= 20,
+		},
+		resists_pen={
+			[DamageType.MIND] 	= 20,
+		},
+		inc_stats = { [Stats.STAT_WIL] = 6, [Stats.STAT_CUN] = 3, },
+	},
+	max_power = 75, power_regen = 1,
+	use_talent = { id = Talents.T_WAYIST, level = 1, power = 75 },
+	on_wear = function(self, who)
+		if who.descriptor and who.descriptor.race == "Yeek" then
+			local Talents = require "engine.interface.ActorStats"
+			self:specialWearAdd({"wielder", "talents_types_mastery"}, { ["race/yeek"] = 0.2 })
+			self:specialWearAdd({"wielder","combat_mindpower"}, 15)
+			self:specialWearAdd({"wielder","combat_mentalresist"}, 15)
+			game.logPlayer(who, "#LIGHT_BLUE#You feel the power of the Way within you!")
+		end
+		if who.descriptor and who.descriptor.race == "Halfling" then
+			local Talents = require "engine.interface.ActorStats"
+			self:specialWearAdd({"wielder","resists"}, {[DamageType.MIND] = -25,})
+			self:specialWearAdd({"wielder","combat_mentalresist"}, -20)
+			game.logPlayer(who, "#RED#The Way rejects its former captors!")
+		end
+	end,
+}
+
+newEntity{ base = "BASE_MINDSTAR",
+	power_source = {psionic=true},
+	unique = true,
+	name = "Amethyst of Sanctuary",
+	unided_name = "deep purple gem",
+	level_range = {28, 35},
+	color=colors.AQUAMARINE,
+	rarity = 250,
+	desc = [[This bright violet gem exudes a calming, focusing force. Holding it, you feel protected against outside forces.]],
+	cost = 85,
+	require = { stat = { wil=28 }, },
+	material_level = 4,
+	combat = {
+		dam = 15,
+		apr = 26,
+		physcrit = 6,
+		dammod = {wil=0.45, cun=0.22},
+		damtype = DamageType.MIND,
+	},
+	wielder = {
+		combat_mindpower = 12,
+		combat_mindcrit = 8,
+		combat_mindresist = 25,
+		max_psi = 20,
+		talents_types_mastery = {
+			["psionic/focus"] = 0.1,
+			["psionic/absorption"] = 0.2,
+		},
+		resists={
+			[DamageType.MIND] 	= 15,
+		},
+		inc_stats = { [Stats.STAT_WIL] = 8,},
+	},
+}
+
+newEntity{ base = "BASE_STAFF",
+	power_source = {arcane=true},
+	unique = true,
+	name = "Sceptre of the Archlich",
+	flavor_name = "vilestaff",
+	unided_name = "bone carved sceptre",
+	level_range = {37, 50},
+	color=colors.VIOLET,
+	rarity = 320,
+	desc = [[This sceptre, carved of ancient, blackened bone, holds a single gem of deep obsidian. You feel a dark power from deep within, looking to get out.]],
+	cost = 285,
+	material_level = 5,
+
+	require = { stat = { mag=52 }, },
+	combat = {
+		dam = 45,
+		apr = 12,
+		dammod = {mag=1.3},
+		damtype = DamageType.DARKNESS,
+	},
+	wielder = {
+		combat_spellpower = 28,
+		combat_spellcrit = 14,
+		inc_damage={
+			[DamageType.DARKNESS] 	= 18,
+		},
+		talents_types_mastery = {
+			["spell/necrosis"] = 0.2,
+			["spell/necrotic-minions"] = 0.2,
+		}
+	},
+	on_wear = function(self, who)
+		if who.descriptor and who.descriptor.subrace == "Lich" then
+			local Talents = require "engine.interface.ActorStats"
+			self:specialWearAdd({"wielder", "talents_types_mastery"}, { ["spell/nightfall"] = 0.2 })
+			self:specialWearAdd({"wielder","combat_spellpower"}, 12)
+			self:specialWearAdd({"wielder","combat_spellresist"}, 10)
+			self:specialWearAdd({"wielder","combat_mentalresist"}, 10)
+			self:specialWearAdd({"wielder","max_mana"}, 50)
+			self:specialWearAdd({"wielder","mana_regen"}, 0.5)
+			game.logPlayer(who, "#LIGHT_BLUE#You feel the power of the sceptre flow over your undead form!")
+		end
+	end,
+}
+
+newEntity{ base = "BASE_MINDSTAR",
+	power_source = {antimagic=true},
+	unique = true,
+	name = "Oozing Heart",
+	unided_name = "slimy mindstar",
+	level_range = {27, 34},
+	color=colors.GREEN,
+	rarity = 250,
+	desc = [[This mindstar oozes a thick, sticky liquid. Magic seems to die around it.]],
+	cost = 85,
+	require = { stat = { wil=36 }, },
+	material_level = 4,
+	combat = {
+		dam = 17,
+		apr = 25,
+		physcrit = 7,
+		dammod = {wil=0.5, cun=0.2},
+		damtype = DamageType.SLIME,
+	},
+	wielder = {
+		combat_mindpower = 12,
+		combat_mindcrit = 8,
+		combat_spellresist=15,
+		inc_damage={
+			[DamageType.NATURE] = 18,
+		},
+		resists={
+			[DamageType.ARCANE] = 12,
+			[DamageType.BLIGHT] = 12,
+		},
+		inc_stats = { [Stats.STAT_WIL] = 7, [Stats.STAT_CUN] = 2, },
+	},
+	max_power = 30, power_regen = 1,
+	use_talent = { id = Talents.T_OOZE_SPIT, level = 2, power = 30 },
+}
+
+newEntity{ base = "BASE_MINDSTAR",
+	power_source = {nature=true},
+	unique = true,
+	name = "Bloomsoul",
+	unided_name = "flower covered mindstar",
+	level_range = {10, 20},
+	color=colors.GREEN,
+	rarity = 180,
+	desc = [[Pristine flowers coat the surface of this mindstar. Touching it fills you with calm and refreshes your body.]],
+	cost = 40,
+	require = { stat = { wil=18 }, },
+	material_level = 2,
+	combat = {
+		dam = 8,
+		apr = 13,
+		physcrit = 7,
+		dammod = {wil=0.25, cun=0.1},
+		damtype = DamageType.NATURE,
+	},
+	wielder = {
+		combat_mindpower = 12,
+		combat_mindcrit = 8,
+		life_regen = 0.5,
+		healing_factor = 0.1,
+		talents_types_mastery = { ["wild-gift/fungus"] = 0.2,},
+	},
+	max_power = 60, power_regen = 1,
+	use_talent = { id = Talents.T_BLOOM_HEAL, level = 1, power = 60 },
+}
+
+newEntity{ base = "BASE_STAFF",
+	power_source = {arcane=true},
+	unique = true,
+	name = "Gravitational Staff",
+	flavor_name = "starstaff",
+	unided_name = "heavy staff",
+	level_range = {25, 33},
+	color=colors.VIOLET,
+	rarity = 240,
+	desc = [[Time and Space seem to warp and bend around the massive tip of this stave.]],
+	cost = 215,
+	material_level = 3,
+	require = { stat = { mag=35 }, },
+	combat = {
+		dam = 28,
+		apr = 8,
+		dammod = {mag=1.3},
+		damtype = DamageType.GRAVITYPIN,
+	},
+	wielder = {
+		combat_spellpower = 18,
+		combat_spellcrit = 6,
+		inc_damage={
+			[DamageType.PHYSICAL] 	= 14,
+			[DamageType.TEMPORAL] 	= 8,
+		},
+		resists={
+			[DamageType.PHYSICAL] 	= 10,
+		},
+		talents_types_mastery = {
+			["chronomancy/gravity"] = 0.2,
+		}
+	},
+	max_power = 35, power_regen = 1,
+	use_talent = { id = Talents.T_GRAVITY_SPIKE, level = 3, power = 35 },
+}
+
+
 --[=[
 newEntity{
 	unique = true,

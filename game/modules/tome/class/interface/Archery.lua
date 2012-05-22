@@ -135,6 +135,7 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 
 	-- If hit is over 0 it connects, if it is 0 we still have 50% chance
 	local hitted = false
+	local crit = false
 	if self:checkHit(atk, def) and (self:canSee(target) or self:attr("blind_fight") or rng.chance(3)) then
 		apr = apr + (tg.archery.apr or 0)
 		print("[ATTACK ARCHERY] raw dam", dam, "versus", armor, "with APR", apr)
@@ -148,7 +149,6 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 		dam = rng.range(dam, dam * damrange)
 		print("[ATTACK ARCHERY] after range", dam)
 
-		local crit
 		dam, crit = self:physicalCrit(dam, ammo, target, atk, def, tg.archery.crit_chance or 0, tg.archery.crit_power or 0)
 		print("[ATTACK ARCHERY] after crit", dam)
 
@@ -207,6 +207,21 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 	-- Special effect
 	if hitted and not target.dead and weapon and weapon.special_on_hit and weapon.special_on_hit.fct then
 		weapon.special_on_hit.fct(weapon, self, target)
+	end
+	
+	-- Special effect... AGAIN!
+	if hitted and not target.dead and ammo and ammo.special_on_hit and ammo.special_on_hit.fct then
+		ammo.special_on_hit.fct(ammo, self, target)
+	end
+	
+	-- Special effect... AGAIN!... AGAIN!
+	if crit and not target.dead and weapon and weapon.special_on_crit and weapon.special_on_crit.fct then
+		weapon.special_on_hit.fct(weapon, self, target)
+	end
+	
+	-- Special effect... AGAIN!... AGAIN!... AGAIN!
+	if crit and not target.dead and ammo and ammo.special_on_crit and ammo.special_on_crit.fct then
+		ammo.special_on_crit.fct(ammo, self, target)
 	end
 
 	-- Temporal cast

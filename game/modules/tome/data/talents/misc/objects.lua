@@ -20,6 +20,7 @@
 newTalentType{ no_silence=true, is_spell=true, type="sher'tul/fortress", name = "fortress", description = "Yiilkgur abilities." }
 newTalentType{ no_silence=true, is_spell=true, type="spell/objects", name = "object spells", description = "Spell abilities of the various objects of the world." }
 newTalentType{ type="technique/objects", name = "object techniques", description = "Techniques of the various objects of the world." }
+newTalentType{ type="wild-gift/objects", name = "object techniques", description = "Wild gifts of the various objects of the world." }
 
 --local oldTalent = newTalent
 --local newTalent = function(t) if type(t.hide) == "nil" then t.hide = true end return oldTalent(t) end
@@ -257,5 +258,24 @@ newTalent{
 		end
 		local bt, bt_string = t.getBlockedTypes(self, t)
 		return ([[Raise your shield into blocking position for one turn, reducing the damage of all %s attacks by %d. If you block all of an attack's damage, the attacker will be vulnerable to a deadly counterstrike (a normal attack will instead deal 200%% damage) for one turn.%s%s%s]]):format(bt_string, t.getBlockValue(self, t), sp_text, ref_text, br_text)
+	end,
+}
+
+newTalent{
+	short_name = "BLOOM_HEAL", image = "talents/regeneration.png",
+	name = "Bloom Heal",
+	type = {"wild-gift/objects", 1},
+	points = 1,
+	no_energy = true,
+	cooldown = function(self, t) return 50 end,
+	tactical = { HEAL = 2 },
+	on_pre_use = function(self, t) return not self:hasEffect(self.EFF_REGENERATION) end,
+	action = function(self, t)
+		self:setEffect(self.EFF_REGENERATION, 6, {power=7 + self:getWil() * 0.5})
+		return true
+	end,
+	info = function(self, t)
+		return ([[Call upon the power of nature to regenerate your body for %d life every turn for 6 turns.
+		The life healed will increase with the Willpower stat.]]):format(7 + self:getWil() * 0.5)
 	end,
 }

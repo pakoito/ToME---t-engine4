@@ -1425,14 +1425,14 @@ newEntity{ base = "BASE_GREATMAUL", define_as="ROTTING_MAUL",
 		apr = 22,
 		physcrit = 10,
 		combat_critical_power = 40,
-		psysspeed=1.2,
+		physspeed=1.2,
 		dammod = {str=1.4},
-		damage_convert = {[ DamageType.BLIGHT] = 20},
+		convert_damage = {[DamageType.BLIGHT] = 20},
 		melee_project={[DamageType.CORRUPTED_BLOOD] = 30},
 		special_on_hit = {desc="25% to damage nearby foes", fct=function(combat, who, target)
 			if rng.percent(25) then
 				local dam = rng.avg(1,2) * (70+ who:getStr() * 1.8)
-				game.logSeen(self, "The ground shakes as the %s hits!", who.name:capitalize())
+				game.logSeen(who, "The ground shakes as the %s hits!", who.name:capitalize())
 				local tg = {type="ball", range=0, selffire=false, radius=2, no_restrict=true}
 				who:project(tg, target.x, target.y, DamageType.PHYSICAL, dam)
 			end

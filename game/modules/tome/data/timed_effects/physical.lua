@@ -673,6 +673,28 @@ newEffect{
 }
 
 newEffect{
+	name = "PURGE_BLIGHT", image = "talents/infusion__wild.png",
+	desc = "Purge Blight",
+	long_desc = function(self, eff) return ("The target is infused with the power of nature, reducing all blight damage taken by %d%%, increasing spell saves by %d, and granting immunity to diseases."):format(eff.power, eff.power) end,
+	type = "physical",
+	subtype = { nature=true },
+	status = "beneficial",
+	parameters = { power=20 },
+	on_gain = function(self, err) return "#Target# rejects blight!", "+Purge" end,
+	on_lose = function(self, err) return "#Target# is susceptible to blight again.", "-Purge" end,
+	activate = function(self, eff)
+		eff.pid = self:addTemporaryValue("resists", {[DamageType.BLIGHT]=eff.power})
+		eff.spell_save = self:addTemporaryValue("combat_spellresist", eff.power)
+		eff.disease = self:addTemporaryValue("disease_immune", 1)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("combat_spellresist", eff.spell_save)
+		self:removeTemporaryValue("disease_immune", eff.disease)
+		self:removeTemporaryValue("resists", eff.pid)
+	end,
+}
+
+newEffect{
 	name = "SENSE", image = "talents/track.png",
 	desc = "Sensing",
 	long_desc = function(self, eff) return "Improves senses, allowing the detection of unseen things." end,

@@ -223,7 +223,7 @@ Now the broken fragments of Raasul's soul are trapped in this terrible artifact,
 		apr = 4,
 		physcrit = 5,
 		dammod = {str=0.5, mag=0.5},
-		damage_convert = {[ DamageType.BLIGHT] = 50},
+		convert_damage = {[DamageType.BLIGHT] = 50},
 
 		special_on_hit = {desc="15% chance to animate a bleeding foe's blood", fct=function(combat, who, target)
 			if not rng.percent(15) then return end
@@ -302,5 +302,63 @@ Now the broken fragments of Raasul's soul are trapped in this terrible artifact,
 			end
 
 		end},
+	},
+}
+
+newEntity{ base = "BASE_LONGSWORD",
+	power_source = {arcane=true},
+	unique = true,
+	name = "Dawn's Blade",
+	unided_name = "shining longsword",
+	level_range = {35, 42},
+	color=colors.YELLOW,
+	rarity = 260,
+	desc = [[Said to have been forged in the earliest days of the Sunwall, this longsword shines with the light of daybreak, capable of banishing all shadows.]],
+	cost = 1000,
+	require = { stat = { mag=18, str=35,}, },
+	material_level = 5,
+	wielder = {
+		combat_spellpower = 10,
+		combat_spellcrit = 4,
+		inc_damage={
+			[DamageType.LIGHT] = 18,
+		},
+		resists_pen={
+			[DamageType.LIGHT] = 20,
+		},
+		talents_types_mastery = {
+			["celestial/sun"] = 0.2,
+		},
+		talent_cd_reduction= {
+			[Talents.T_HEALING_LIGHT] = 2,
+			[Talents.T_BARRIER] = 2,
+			[Talents.T_SUN_FLARE] = 2,
+		},
+		lite=2,
+	},
+	max_power = 40, power_regen = 1,
+	use_power = { name = "invoke dawn", power = 40,
+		use = function(self, who)
+			local radius = 4
+			local dam = (75 + who:getMag()*2)
+			local blast = {type="ball", range=0, radius=5, selffire=false}
+			who:project(blast, who.x, who.y, engine.DamageType.LIGHT, dam)
+			game.level.map:particleEmitter(who.x, who.y, blast.radius, "sunburst", {radius=blast.radius})
+			who:project({type="ball", range=0, radius=10}, who.x, who.y, engine.DamageType.LITE, 100)
+			game:playSoundNear(self, "talents/fireflash")
+			game.logSeen(who, "%s raises %s and sends out a burst of light!", who.name:capitalize(), self:getName())
+			return {id=true, used=true}
+		end
+	},
+	combat = {
+		dam = 42,
+		apr = 4,
+		physcrit = 5,
+		dammod = {str=0.75, mag=0.25},
+		convert_damage = {[DamageType.LIGHT] = 30},
+		inc_damage_type={
+			undead=25,
+			demon=25,
+		},
 	},
 }

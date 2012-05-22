@@ -1454,7 +1454,7 @@ newDamageType{
 }
 
 newDamageType{
-	name = "gravitypin", type = "GRAVITYPIN",
+	name = "gravity pin", type = "GRAVITYPIN",
 	projector = function(src, x, y, type, dam)
 		DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam)
 		local target = game.level.map(x, y, Map.ACTOR)

@@ -755,8 +755,8 @@ newTalent{
 }
 
 newTalent{
-	short_name = "OOZE_SPIT",
-	name = "Slime Spit",
+	short_name = "OOZE_SPIT", image = "talents/slime_spit.png",
+	name = "Ooze Spit",
 	type = {"wild-gift/horror", 1},
 	require = gifts_req3,
 	points = 5,

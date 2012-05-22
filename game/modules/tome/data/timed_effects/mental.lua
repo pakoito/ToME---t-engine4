@@ -1590,6 +1590,26 @@ newEffect{
 	end,
 }
 
+
+newEffect{
+	name = "DOMINATE_ENTHRALL", image = "talents/yeek_will.png",
+	desc = "Enthralled",
+	long_desc = function(self, eff) return ("The target is enthralled, temporarily changing its faction.") end,-- to %s.")--:format(engine.Faction.factions[eff.faction].name) end,
+	type = "mental",
+	subtype = { dominate=true },
+	status = "detrimental",
+	parameters = {},
+	on_gain = function(self, err) return "#Target# is entralled.", "+Enthralled" end,
+	on_lose = function(self, err) return "#Target# is free from the domination.", "-Enthralled" end,
+	activate = function(self, eff)
+		eff.olf_faction = self.faction
+		self.faction = eff.src.faction
+	end,
+	deactivate = function(self, eff)
+		self.faction = eff.olf_faction
+	end,
+}
+
 newEffect{
 	name = "HALFLING_LUCK", image = "talents/halfling_luck.png",
 	desc = "Halflings's Luck",
