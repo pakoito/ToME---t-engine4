@@ -102,7 +102,7 @@ newTalent{
 	points = 5,
 	require = { stat = { str=function(level) return 12 + level * 6 end }, },
 	mode = "passive",
-	getDamage = function(self, t) return self:getTalentLevel(t) * 5 end,
+	getDamage = function(self, t) return self:getTalentLevel(t) * 10 end,
 	getPercentInc = function(self, t) return math.sqrt(self:getTalentLevel(t) / 5) / 2 end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
@@ -119,7 +119,7 @@ newTalent{
 	points = 5,
 	require = { stat = { dex=function(level) return 10 + level * 6 end }, },
 	mode = "passive",
-	getDamage = function(self, t) return self:getTalentLevel(t) * 5 end,
+	getDamage = function(self, t) return self:getTalentLevel(t) * 10 end,
 	getPercentInc = function(self, t) return math.sqrt(self:getTalentLevel(t) / 5) / 2 end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
@@ -136,7 +136,7 @@ newTalent{
 	points = 5,
 	require = { stat = { str=function(level) return 10 + level * 6 end, dex=function(level) return 10 + level * 6 end }, },
 	mode = "passive",
-	getDamage = function(self, t) return self:getTalentLevel(t) * 5 end,
+	getDamage = function(self, t) return self:getTalentLevel(t) * 10 end,
 	getPercentInc = function(self, t) return math.sqrt(self:getTalentLevel(t) / 5) / 2 end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)

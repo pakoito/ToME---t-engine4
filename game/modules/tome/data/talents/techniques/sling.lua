@@ -20,19 +20,19 @@
 newTalent{
 	name = "Sling Mastery",
 	type = {"technique/archery-sling", 1},
-	points = 10,
-	require = { stat = { dex=function(level) return 12 + level * 3 end }, },
+	points = 5,
+	require = { stat = { dex=function(level) return 12 + level * 6 end }, },
 	mode = "passive",
-	getDamage = function(self, t) return self:getTalentLevel(t) * 5 end,
-	getPercentInc = function(self, t) return math.sqrt(self:getTalentLevel(t) / 10) / 2 end,
+	getDamage = function(self, t) return self:getTalentLevel(t) * 10 end,
+	getPercentInc = function(self, t) return math.sqrt(self:getTalentLevel(t) / 5) / 2 end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local inc = t.getPercentInc(self, t)
 		return ([[Increases Physical Power by %d. Also increases damage done with slings by %d%%.
 		Also, when using Reload:
-		At level 3 it grants one more reload per turn.
-		At level 6 it grants two more reloads per turn.
-		At level 10 it grants three more reloads per turn.
+		At level 2 it grants one more reload per turn.
+		At level 4 it grants two more reloads per turn.
+		At level 5 it grants three more reloads per turn.
 		]]):
 		format(damage, inc * 100)
 	end,

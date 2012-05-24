@@ -61,9 +61,9 @@ newTalent{
 	shots_per_turn = function(self, t)
 		local v = math.max(self:getTalentLevelRaw(self.T_BOW_MASTERY), self:getTalentLevelRaw(self.T_SLING_MASTERY))
 		local add = 0
-		if v >= 10 then add = add + 3
-		elseif v >= 6 then add = add + 2
-		elseif v >= 3 then add = add + 1
+		if v >= 5 then add = add + 3
+		elseif v >= 4 then add = add + 2
+		elseif v >= 2 then add = add + 1
 		end
 		return self:getTalentLevelRaw(t) + (self:attr("ammo_reload_speed") or 0) + add
 	end,
