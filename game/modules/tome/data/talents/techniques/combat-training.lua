@@ -85,10 +85,10 @@ newTalent{
 newTalent{
 	name = "Combat Accuracy", short_name = "WEAPON_COMBAT",
 	type = {"technique/combat-training", 1},
-	points = 10,
-	require = { level=function(level) return (level - 1) * 2 end },
+	points = 5,
+	require = { level=function(level) return (level - 1) * 4 end },
 	mode = "passive",
-	getAttack = function(self, t) return self:getTalentLevel(t) * 5 end,
+	getAttack = function(self, t) return self:getTalentLevel(t) * 10 end,
 	info = function(self, t)
 		local attack = t.getAttack(self, t)
 		return ([[Increases accuracy of unarmed, melee and ranged weapons by %d.]]):
@@ -99,11 +99,11 @@ newTalent{
 newTalent{
 	name = "Weapons Mastery",
 	type = {"technique/combat-training", 1},
-	points = 10,
-	require = { stat = { str=function(level) return 12 + level * 3 end }, },
+	points = 5,
+	require = { stat = { str=function(level) return 12 + level * 6 end }, },
 	mode = "passive",
 	getDamage = function(self, t) return self:getTalentLevel(t) * 5 end,
-	getPercentInc = function(self, t) return math.sqrt(self:getTalentLevel(t) / 10) / 2 end,
+	getPercentInc = function(self, t) return math.sqrt(self:getTalentLevel(t) / 5) / 2 end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local inc = t.getPercentInc(self, t)
@@ -116,11 +116,11 @@ newTalent{
 newTalent{
 	name = "Knife Mastery",
 	type = {"technique/combat-training", 1},
-	points = 10,
-	require = { stat = { dex=function(level) return 10 + level * 3 end }, },
+	points = 5,
+	require = { stat = { dex=function(level) return 10 + level * 6 end }, },
 	mode = "passive",
 	getDamage = function(self, t) return self:getTalentLevel(t) * 5 end,
-	getPercentInc = function(self, t) return math.sqrt(self:getTalentLevel(t) / 10) / 2 end,
+	getPercentInc = function(self, t) return math.sqrt(self:getTalentLevel(t) / 5) / 2 end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local inc = t.getPercentInc(self, t)
@@ -133,11 +133,11 @@ newTalent{
 	name = "Exotic Weapons Mastery",
 	type = {"technique/combat-training", 1},
 	hide = true,
-	points = 10,
-	require = { stat = { str=function(level) return 10 + level * 3 end, dex=function(level) return 10 + level * 3 end }, },
+	points = 5,
+	require = { stat = { str=function(level) return 10 + level * 6 end, dex=function(level) return 10 + level * 6 end }, },
 	mode = "passive",
 	getDamage = function(self, t) return self:getTalentLevel(t) * 5 end,
-	getPercentInc = function(self, t) return math.sqrt(self:getTalentLevel(t) / 10) / 2 end,
+	getPercentInc = function(self, t) return math.sqrt(self:getTalentLevel(t) / 5) / 2 end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local inc = t.getPercentInc(self, t)

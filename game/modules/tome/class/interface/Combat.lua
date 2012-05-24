@@ -862,7 +862,7 @@ end
 --- Gets the attack
 function _M:combatAttackBase(weapon, ammo)
 	weapon = weapon or self.combat or {}
-	return 4 + self.combat_atk + self:getTalentLevel(Talents.T_WEAPON_COMBAT) * 5 + (weapon.atk or 0) + (ammo and ammo.atk or 0) + (self:getLck() - 50) * 0.4
+	return 4 + self.combat_atk + self:getTalentLevel(Talents.T_WEAPON_COMBAT) * 10 + (weapon.atk or 0) + (ammo and ammo.atk or 0) + (self:getLck() - 50) * 0.4
 end
 function _M:combatAttack(weapon, ammo)
 	local stats
@@ -964,7 +964,7 @@ function _M:combatDamage(weapon)
 		end
 	end
 
-	local talented_mod = math.sqrt(self:combatCheckTraining(weapon) / 10) / 2 + 1
+	local talented_mod = math.sqrt(self:combatCheckTraining(weapon) / 5) / 2 + 1
 
 	local power = math.max((weapon.dam or 1), 1)
 	power = (math.sqrt(power / 10) - 1) * 0.5 + 1
