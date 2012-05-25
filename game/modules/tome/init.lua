@@ -57,6 +57,24 @@ profile_stats_fields = {"artifacts", "characters", "deaths", "uniques", "scores"
 allow_userchat = true -- We can talk to the online community
 no_get_name = true -- Name setting for new characters is done by the module itself
 
+load_tips = {
+	{image="/data/gfx/shockbolt/npc/humanoid_human_linaniil_supreme_archmage.png", img_y_off=-50, text=[[Though magic is still shunned in Maj'Eyal, rumours abound of secret havens of mages.]]},
+	{image="/data/gfx/shockbolt/npc/humanoid_orc_orc_elite_berserker.png", text=[[The Rush talent lets you close in on an enemy quickly and daze them, disabling them whilst you hack down their friends.]]},
+	{image="/data/gfx/shockbolt/npc/humanoid_human_rogue.png", text=[[Stunning an opponent slows down their movement and reduces their damage output, giving you the opportunity to tactically reposition or finish them off at less risk.]]},
+	{image="/data/gfx/shockbolt/npc/humanoid_human_bandit.png", text=[[Movement is key on the battlefield. A stationary fighter will become a dead fighter. One must always seek the position of greatest tactical advantage and continue to re-evaluate throughout the battle.]]},
+	{image="/data/gfx/shockbolt/npc/humanoid_orc_orc_blood_mage.png", text=[[In the Age of Pyre the orcs learned the secrets of magic, and with their newfound powers nearly overcame the whole of Maj'Eyal.]]},
+	{image="/data/gfx/shockbolt/npc/humanoid_orc_orc_berserker.png", text=[[The orcs once terrorised the whole content. In the Age of Ascendancy they were rendered extinct, but rumours abound of hidden groups biding their time to return.]]},
+	{image="/data/gfx/shockbolt/npc/humanoid_human_fire_wyrmic.png", text=[[Intense willpower lets wyrmics take on the natural powers of dragons.]]},
+	{image="/data/gfx/loadtiles/alchemist_golem.png", text=[[Alchemist can transmute gems to create fiery explosions, and are known to travel with a sturdy golem for extra protection.]]},
+	{image="/data/gfx/shockbolt/npc/construct_golem_athamathon_the_giant_golem.png", text=[[In the Age of Pyre the giant golem Atamathon was built with the sole purpose of stopping the orcish leader Garkul the Devourer. The golem was single-handedly destroyed by the orc, who then slaughtered an army of thousands before the demonic fighter was finally slain.]]},
+	{image="/data/gfx/loadtiles/farportal.png", text=[[None know what the Sher'Tul looked like, or what caused them all to disappear thousands of years ago. Their rare ruins are a source of mystery and terror.]]},
+	{image="/data/gfx/shockbolt/npc/horror_eldritch_luminous_horror.png", text=[[In deep places dark things dwell beyond description or understanding. None know the source of these hideous horrors.]]},
+	{image="/data/gfx/shockbolt/npc/humanoid_human_celia.png", img_y_off=-20, text=[[Who knows what dark thoughts drive ones to necromancy? Its art is as old as magic itself, and its creations have plagued all the races since the earliest memories.]]},
+	{image="/data/gfx/shockbolt/npc/undead_mummy_greater_mummy_lord.png", text=[[Some say that in their early days the Shaloren kings experimented with necromancy to preserve their flesh after death, but with little success. The Shaloren vehemently deny this.]]},
+	{image="/data/gfx/loadtiles/toknor_mirvenia.png", img_y_off=-10, text=[[120 years ago Toknor and Mirvenia united the human and halfling kingdoms and wiped out the orcish race, thus establishing the Age of Ascendancy.]]},
+	{image="/data/gfx/loadtiles/lava.png", text=[["The Spellblaze tore Eyal apart and nearly brought about the end of all civilisation. Two thousand years on its shadow still hangs over many lands, and the prideful mages have never been forgiven their place in bringing it about.]]},
+}
+
 -- Define the fields that are sync'ed online, and how they are sync'ed
 profile_defs = {
 	allow_build = { {name="index:string:30"}, receive=function(data, save) save[data.name] = true end, export=function(env) for k, _ in pairs(env) do add{name=k} end end },

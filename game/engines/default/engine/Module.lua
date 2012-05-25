@@ -399,9 +399,47 @@ function _M:loadScreen(mod)
 		local bar = {core.display.loadImage("/data/gfx/waiter/bar.png"):glTexture()}
 
 		local font = core.display.newFont("/data/font/DroidSans.ttf", 12)
+		local bfont = core.display.newFont("/data/font/DroidSans.ttf", 16)
 
 		local dw, dh = math.floor(sw / 2), left[7]
 		local dx, dy = math.floor((sw - dw) / 2), sh - dh
+
+		local tip = nil
+		if mod.load_tips then
+			local l = rng.table(mod.load_tips)
+			local img = nil
+			if l.image then
+				local i = core.display.loadImage(l.image)
+				if i then img = {i:glTexture()} end
+			end
+			local text = bfont:draw(l.text, dw - (img and img[6] or 0), 255, 255, 255)
+			local text_h = #text * text[1].h
+
+			local Base = require "engine.ui.Base"
+			local frame = Base:makeFrame("ui/tooltip/", dw + 30, math.max((img and img[7] or 0) + (l.img_y_off or 0), text_h) + 30)
+
+			tip = function(x, y)
+				y = y - frame.h - 30
+				Base:drawFrame(frame, x+1, y+1, 0, 0, 0, 0.3)
+				Base:drawFrame(frame, x-3, y-3, 1, 1, 1, 0.75)
+				x = x + 10
+				y = y + 10
+
+				if img then 
+					img[1]:toScreenFull(x, y + (l.img_y_off or 0), img[6], img[7], img[2], img[3])
+					x = x + img[6] + 7
+				end
+
+				y = y - 10 + math.floor((frame.h - text_h) / 2)
+				for i = 1, #text do
+					local item = text[i]
+					if not item then break end
+					item._tex:toScreenFull(x+2, y+2, item.w, item.h, item._tex_w, item._tex_h, 0, 0, 0, 0.8)
+					item._tex:toScreenFull(x, y, item.w, item.h, item._tex_w, item._tex_h)
+					y = y + item.h
+				end
+			end
+		end
 
 		return function()
 			-- Background
@@ -451,6 +489,8 @@ function _M:loadScreen(mod)
 				txt[1]:toScreenFull(dx + (dw - txt[6]) / 2 + 2, dy + (bar[7] - txt[7]) / 2 + 2, txt[6], txt[7], txt[2], txt[3], 0, 0, 0, 0.6)
 				txt[1]:toScreenFull(dx + (dw - txt[6]) / 2, dy + (bar[7] - txt[7]) / 2, txt[6], txt[7], txt[2], txt[3])
 			end
+
+			if tip then tip(dw / 2, dy) end
 		end
 	end)
 	core.display.forceRedraw()
