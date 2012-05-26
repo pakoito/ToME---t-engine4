@@ -1774,9 +1774,9 @@ newEntity{ base = "BASE_LEATHER_BELT",
 newEntity{ base = "BASE_LEATHER_BELT",
 	power_source = {arcane=true},
 	unique = true,
-	name = "Nienna's Memory", image = "object/artifact/belt_girdle_of_preservation.png",
+	name = "Neira's Memory", image = "object/artifact/belt_girdle_of_preservation.png",
 	unided_name = "crackling belt",
-	desc = [[Ages ago this belt was worn by Linaniil herself in her youth, using its power she shielded herself from the Spellblaze rain of fire, but naught could she do for your sister Nienna.]],
+	desc = [[Ages ago this belt was worn by Linaniil herself in her youth, using its power she shielded herself from the Spellblaze rain of fire, but naught could she do for your sister Neira.]],
 	color = colors.GOLD,
 	level_range = {20, 30},
 	rarity = 200,
@@ -1793,7 +1793,7 @@ newEntity{ base = "BASE_LEATHER_BELT",
 		use = function(self, who)
 			who:setEffect(who.EFF_DAMAGE_SHIELD, 10, {power=100 + self:getMag(250)})
 			game:playSoundNear(who, "talents/arcane")
-			game.logSeen(who, "%s invokes the memory of Nienna!", who.name:capitalize())
+			game.logSeen(who, "%s invokes the memory of Neira!", who.name:capitalize())
 			return {id=true, used=true}
 		end
 	},
