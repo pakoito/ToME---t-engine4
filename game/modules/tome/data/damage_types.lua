@@ -976,7 +976,7 @@ newDamageType{
 			tmp[target] = true
 			DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam.dam)
 			if target:checkHit(src:combatPhysicalpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then
-				target:knockback(src.x, src.y, dam.dist)
+				target:knockback(dam.x or src.x, dam.y or src.y, dam.dist)
 				target:crossTierEffect(target.EFF_OFFBALANCE, src:combatPhysicalpower())
 				game.logSeen(target, "%s is knocked back!", target.name:capitalize())
 			else

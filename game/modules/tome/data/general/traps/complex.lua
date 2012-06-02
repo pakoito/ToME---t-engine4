@@ -47,21 +47,69 @@ newEntity{ base = "TRAP_COMPLEX",
 				walls[#walls+1] = {x=i, y=j}
 			end
 		end
-		if #walls == 0 then game.level.map:remove(i, j, engine.Map.TRAP) return end
+		if #walls == 0 then game.level.map:remove(x, y, engine.Map.TRAP) return end
 
 		local spot = rng.table(walls)
 		local l = line.new(spot.x, spot.y, x, y)
 		self.spawn_x, self.spawn_y = l()
 		print("Boulder trap spawn", self.spawn_x, self.spawn_y)
 		self.x, self.y = x, y
+		self.on_added = nil
 	end,
 	str = resolvers.mbonus(200, 30),
 	dam = resolvers.mbonus_level(300, 5),
-	combatAttackStr = function(self) return self.str end,
+	combatPhysicalpower = function(self) return mod.class.interface.Combat:rescaleCombatStats(self.str) end,
 	triggered = function(self, x, y, who)
 		if not self.spawn_x then return end
-		local tg = {name="huge boulder", type="bolt", range=5, x=self.spawn_x, y=self.spawn_y, speed=2, display={image="trap/trap_big_boulder_01.png"}}
-		self:projectile(tg, x, y, engine.DamageType.PHYSKNOCKBACK, {dam=self.dam, dist=3})
+		local tg = {name="huge boulder", type="bolt", range=core.fov.distance(x, y, self.spawn_x, self.spawn_y), x=self.spawn_x, y=self.spawn_y, speed=2, display={image="trap/trap_big_boulder_01.png"}, blur_move=4}
+		self:projectile(tg, x, y, engine.DamageType.PHYSKNOCKBACK, {dam=self.dam, dist=3, x=self.spawn_x, y=self.spawn_y})
 		return true
+	end,
+}
+
+newEntity{ base = "TRAP_COMPLEX",
+	subtype = "arcane",
+	name = "spinning beam", image = "trap/trap_glyph_explosion_01_64.png",
+	detect_power = 6, disarm_power = 6,
+	rarity = 3, level_range = {1, 30},
+	color_r=40, color_g=220, color_b=0,
+	message = "@Target@ walks on a trap, the beam intensifies.",
+	on_added = function(self, level, x, y)
+		self.x, self.y = x, y
+		self.rad = rng.range(2, 8)
+		local tries = {}
+		local list = {i=1}
+		local sa = rng.range(0, 359)
+		local dir = rng.percent(50) and 1 or -1
+		for a = sa, sa + 359 * dir, dir do
+			local rx, ry = math.floor(math.cos(math.rad(a)) * self.rad), math.floor(math.sin(math.rad(a)) * self.rad)
+			if not tries[rx] or not tries[rx][ry] then
+				tries[rx] = tries[rx] or {}
+				tries[rx][ry] = true
+				list[#list+1] = {x=rx+x, y=ry+y}
+			end
+		end
+		self.list = list
+		game.level:addEntity(self)
+		self.on_added = nil
+	end,
+	all_know = true,
+	dam = resolvers.mbonus_level(300, 5),
+	triggered = function(self, x, y, who)
+		if self:reactionToward(who) < 0 then self.dam = self.dam * 1.5 end
+		return true
+	end,
+	canAct = false,
+	energy = {value=0},
+	act = function(self)
+		local x, y = self.list[self.list.i].x, self.list[self.list.i].y
+		self.list.i = util.boundWrap(self.list.i + 1, 1, #self.list)
+
+		local tg = {type="beam", range=self.rad, friendlyfire=false}
+		self:project(tg, x, y, engine.DamageType.ARCANE, self.dam, nil)
+		local _ _, x, y = self:canProject(tg, x, y)
+		game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(x-self.x), math.abs(y-self.y)), "mana_beam", {tx=x-self.x, ty=y-self.y})
+
+		self:useEnergy()
 	end,
 }

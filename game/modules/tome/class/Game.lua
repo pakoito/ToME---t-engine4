@@ -316,7 +316,6 @@ function _M:loaded()
 	engine.GameTurnBased.loaded(self)
 	engine.interface.GameMusic.loaded(self)
 	engine.interface.GameSound.loaded(self)
-	Actor.projectile_class = "mod.class.Projectile"
 	Zone:setup{
 		npc_class="mod.class.NPC", grid_class="mod.class.Grid", object_class="mod.class.Object", trap_class="mod.class.Trap",
 		on_setup = function(zone)

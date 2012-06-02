@@ -24,8 +24,9 @@ module(..., package.seeall, class.inherit(engine.Generator))
 
 function _M:init(zone, map, level, data)
 	engine.Generator.init(self, zone, map, level)
+	self.data = data
 	self.grid_list = zone.grid_list
-	self.floor = self:resolve("floor")
+	self.floor = self:resolve("floor") or self:resolve(".")
 	self.up = self:resolve("up")
 end
 

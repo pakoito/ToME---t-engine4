@@ -33,8 +33,16 @@ function _M:move(x, y, force)
 
 	local moved = engine.Projectile.move(self, x, y, force)
 	if moved and not force and ox and oy and (ox ~= self.x or oy ~= self.y) and config.settings.tome.smooth_move > 0 then
-		self:setMoveAnim(ox, oy, config.settings.tome.smooth_move)
+		self:setMoveAnim(ox, oy, config.settings.tome.smooth_move, self.project and self.project.def and self.project.def.typ.blur_move)
 	end
 
 	return moved
+end
+function _M:tooltip(x, y)
+	local tstr = tstring("Projectile: ", self.name)
+
+	if config.settings.cheat then
+		tstr:add(true, "UID: ", tostring(self.uid), true, "Coords: ", tostring(x), "x", tostring(y))
+	end
+	return tstr
 end

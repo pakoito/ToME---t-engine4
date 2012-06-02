@@ -77,6 +77,8 @@ _M.temporary_values_conf.combat_spellspeed = "mult0"
 -- Damage cap takes the lowest
 _M.temporary_values_conf.flat_damage_cap = "lowest"
 
+_M.projectile_class = "mod.class.Projectile"
+
 function _M:init(t, no_default)
 	-- Define some basic combat stats
 	self.energyBase = 0
@@ -3740,7 +3742,7 @@ function _M:on_project(tx, ty, who, t, x, y, damtype, dam, particles)
 	end
 
 	-- LOS check (this is also caught by canProject)
-	if not t.pass_terain and not t.pass_block_sight then
+	if not t.pass_terain and not t.pass_block_sight and who.hasLOS then
 		if not who:hasLOS(tx, ty) then
 			return true
 		end

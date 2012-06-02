@@ -87,7 +87,7 @@ end
 
 --- Get the known status for the given actor
 function _M:knownBy(actor)
-	return self.known_by[actor]
+	return self.known_by[actor] or self.all_know
 end
 
 --- Can we disarm this trap?

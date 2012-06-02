@@ -35,6 +35,8 @@ module(..., package.seeall, class.inherit(
 	engine.interface.ActorTalents
 ))
 
+_M.projectile_class = "mod.class.Projectile"
+
 function _M:init(t, no_default)
 	t.encumber = t.encumber or 0
 

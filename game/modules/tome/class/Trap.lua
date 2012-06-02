@@ -21,6 +21,7 @@ require "engine.class"
 require "engine.Trap"
 require "engine.interface.ActorProject"
 require "engine.interface.ObjectIdentify"
+local Faction = require "engine.Faction"
 
 module(..., package.seeall, class.inherit(
 	engine.Trap,
@@ -28,7 +29,10 @@ module(..., package.seeall, class.inherit(
 	engine.interface.ActorProject
 ))
 
+_M.projectile_class = "mod.class.Projectile"
+
 function _M:init(t, no_default)
+	self.faction = "enemies"
 	engine.Trap.init(self, t, no_default)
 	engine.interface.ObjectIdentify.init(self, t)
 	engine.interface.ActorProject.init(self, t)
@@ -48,6 +52,12 @@ function _M:tooltip()
 		if self.is_store then res:add(true, {"font","italic"}, "<Store>", {"font","normal"}) end
 		return res
 	end
+end
+
+--- What is our reaction toward the target
+-- See Faction:factionReaction()
+function _M:reactionToward(target)
+	return Faction:factionReaction(self.faction, target.faction)
 end
 
 --- Can we disarm this trap?
