@@ -153,8 +153,8 @@ newTalent{
 	require = techs_req4,
 	points = 5,
 	random_ego = "attack",
-	cooldown = 30,
-	stamina = 30,
+	cooldown = 10,
+	stamina = 15,
 	requires_target = true,
 	tactical = { ATTACK = { weapon = 1 } },
 	on_pre_use = function(self, t, silent) if not self:hasTwoHandedWeapon() then if not silent then game.logPlayer(self, "You require a two handed weapon to use this talent.") end return false end return true end,
@@ -180,7 +180,7 @@ newTalent{
 
 		if self:getTalentLevel(t) >= 4 then
 			self.combat_dam = self.combat_dam - inc
-			self.stamina = 0
+			self:incStamina(-self.stamina / 2)
 		end
 		self.combat_physcrit = self.combat_physcrit - 100
 
@@ -198,7 +198,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Tries to perform a killing blow doing %d%% weapon damage, granting an automatic critical hit. If the target ends up with low enough life(<20%%) it might be instantly killed.
-		At level 4 it drains all remaining stamina and uses it to increase the blow damage by 50%% of it.
+		At level 4 it drains half your remaining stamina and uses it to increase the blow damage by 100%% of it.
 		Chance to instant kill will increase with your Strength stat.]]):format(100 * self:combatTalentWeaponDamage(t, 0.8, 1.3))
 	end,
 }
