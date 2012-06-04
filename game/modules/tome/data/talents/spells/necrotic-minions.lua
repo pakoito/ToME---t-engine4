@@ -740,6 +740,14 @@ newTalent{
 	require = spells_req2,
 	points = 5,
 	mode = "passive",
+	on_learn = function(self, t)
+		self:forceUseTalent(self.T_NECROTIC_AURA, {ignore_energy=true, ignore_cd=true, no_equilibrium_fail=true, no_paradox_fail=true})
+		self:forceUseTalent(self.T_NECROTIC_AURA, {ignore_energy=true, ignore_cd=true, no_equilibrium_fail=true, no_paradox_fail=true})
+	end,
+	on_unlearn = function(self, t)
+		self:forceUseTalent(self.T_NECROTIC_AURA, {ignore_energy=true, ignore_cd=true, no_equilibrium_fail=true, no_paradox_fail=true})
+		self:forceUseTalent(self.T_NECROTIC_AURA, {ignore_energy=true, ignore_cd=true, no_equilibrium_fail=true, no_paradox_fail=true})
+	end,
 	info = function(self, t)
 		return ([[Your dark power radiates further as you grow stronger. Increases the radius of your necrotic aura by %d and reduces the decay rate of your minions outside the aura by %d%%.]]):
 		format(self:getTalentLevelRaw(t), self:getTalentLevelRaw(t))

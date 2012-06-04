@@ -114,7 +114,7 @@ newTalent{
 
 
 newTalent{
-	name = "Knife Mastery",
+	name = "Dagger Mastery", short_name = "KNIFE_MASTERY",
 	type = {"technique/combat-training", 1},
 	points = 5,
 	require = { stat = { dex=function(level) return 10 + level * 6 end }, },
@@ -124,7 +124,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local inc = t.getPercentInc(self, t)
-		return ([[Increases Physical Power by %d. Also increases damage done with knives by %d%%]]):
+		return ([[Increases Physical Power by %d. Also increases damage done with daggers by %d%%]]):
 		format(damage, 100*inc)
 	end,
 }

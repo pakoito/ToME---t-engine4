@@ -217,12 +217,15 @@ newTalent{
 		end)
 
 		local ret = {
+			vim = self:addTemporaryValue("vim_regen", -3),
 			target = target,
 			x = self.x, y = self.y,
 		}
 		return ret
 	end,
 	deactivate = function(self, t, p)
+		self:removeTemporaryValue("vim_regen", p.vim)
+
 		game:onTickEnd(function()
 			-- Collect objects
 			local objs = {}

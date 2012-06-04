@@ -30,7 +30,7 @@ newEntity{ base = "TRAP_COMPLEX",
 	name = "giant boulder trap", image = "trap/trap_pressure_plate_01.png",
 	detect_power = 6, disarm_power = 6,
 	rarity = 3, level_range = {1, 30},
-	color_r=40, color_g=220, color_b=0,
+	color = colors.UMBER,
 	message = "@Target@ walks on a trap, there is a loud noise.",
 	pressure_trap = true,
 	on_added = function(self, level, x, y)
@@ -72,7 +72,7 @@ newEntity{ base = "TRAP_COMPLEX",
 	name = "spinning beam", image = "trap/trap_glyph_explosion_01_64.png",
 	detect_power = 6, disarm_power = 6,
 	rarity = 3, level_range = {1, 30},
-	color_r=40, color_g=220, color_b=0,
+	color=colors.PURPLE,
 	message = "@Target@ walks on a trap, the beam intensifies.",
 	on_added = function(self, level, x, y)
 		self.x, self.y = x, y
@@ -113,3 +113,52 @@ newEntity{ base = "TRAP_COMPLEX",
 		self:useEnergy()
 	end,
 }
+
+newEntity{ base = "TRAP_COMPLEX",
+	subtype = "nature",
+	name = "poison cloud", image = "trap/trap_acid_blast_01.png",
+	detect_power = 6, disarm_power = 6,
+	rarity = 3, level_range = {1, 30},
+	color=colors.GREEN,
+	message = "@Target@ walks on a poison spore.",
+	on_added = function(self, level, x, y)
+		self.x, self.y = x, y
+		self.rad = rng.range(2, 8)
+		game.level:addEntity(self)
+		self.on_added = nil
+	end,
+	dam = resolvers.mbonus_level(300, 15),
+	triggered = function(self, x, y, who)
+		self:firePoison()
+		return true
+	end,
+	canAct = false,
+	energy = {value=0},
+	firePoison = function(self)
+		-- Add a lasting map effect
+		game.level.map:addEffect(self,
+			self.x, self.y, 5,
+			engine.DamageType.POISON, self.dam,
+			self.rad,
+			5, nil,
+			{type="vapour"},
+			nil, 0, 0
+		)		
+		self:useEnergy(game.energy_to_act * 7)
+	end,
+	act = function(self)
+		local ok = false
+		local tg = {type="ball", radius=self.rad, friendlyfire=false}
+		self:project(tg, self.x, self.y, function(px, py)
+			local target = game.level.map(px, py, engine.Map.ACTOR)
+			if target and self:reactionToward(target) < 0 then ok = true end
+		end)
+		if not ok then
+			self:useEnergy()
+		else
+			self:firePoison()
+		end
+	end,
+}
+
+-- you do NOT want native UI widgets

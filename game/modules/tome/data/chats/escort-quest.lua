@@ -72,7 +72,6 @@ local reward_types = {
 			[Talents.T_CHANNEL_STAFF] = 1,
 			[Talents.T_STAFF_MASTERY] = 1,
 			[Talents.T_STONE_TOUCH] = 1,
-			[Talents.T_IMBUE_ITEM] = 1,
 		},
 		stats = {
 			[Stats.STAT_MAG] = 2,
@@ -140,7 +139,7 @@ local reward_types = {
 		},
 		talents = {
 			[Talents.T_BATHE_IN_LIGHT] = 1,
-			[Talents.T_PROVIDENCE] = 1,
+			[Talents.T_HEALING_LIGHT] = 1,
 		},
 		stats = {
 			[Stats.STAT_CUN] = 2,
