@@ -407,11 +407,17 @@ function _M:playerFOV()
 				end
 			end, true, true, true)
 		end
+		
+		-- Overseer of Nations bonus
+		local bonus = 0
+		if self:knowTalent(self.T_OVERSEER_OF_NATIONS) then
+			bonus = math.ceil(self:getTalentLevelRaw(self.T_OVERSEER_OF_NATIONS)/2)
+		end
 
 		-- Handle infravision/heightened_senses which allow to see outside of lite radius but with LOS
 		if self:attr("infravision") or self:attr("heightened_senses") then
 			local radius = math.max((self.heightened_senses or 0), (self.infravision or 0))
-			radius = math.min(radius, self.sight)
+			radius = math.min(radius + bonus, self.sight)
 			local rad2 = math.max(1, math.floor(radius / 4))
 			self:computeFOV(radius, "block_sight", function(x, y, dx, dy, sqdist) if game.level.map(x, y, game.level.map.ACTOR) then game.level.map.seens(x, y, fovdist[sqdist]) end end, true, true, true)
 			self:computeFOV(rad2, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyLite(x, y, fovdist[sqdist]) end, true, true, true)
@@ -423,7 +429,7 @@ function _M:playerFOV()
 			game.level.map:apply(x, y, fovdist[sqdist])
 		end, true, false, true)
 		if self.lite <= 0 then game.level.map:applyLite(self.x, self.y)
-		else self:computeFOV(self.lite, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyLite(x, y) end, true, true, true) end
+		else self:computeFOV(self.lite + bonus, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyLite(x, y) end, true, true, true) end
 
 		-- For each entity, generate lite
 		local uid, e = next(game.level.entities)

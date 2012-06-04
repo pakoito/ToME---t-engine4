@@ -84,7 +84,7 @@ newEntity{
 		inc_stats = {
 			[Stats.STAT_MAG] = resolvers.mbonus_material(3, 1),
 			[Stats.STAT_WIL] = resolvers.mbonus_material(3, 1),
-			},
+		},
 	},
 }
 
@@ -99,7 +99,7 @@ newEntity{
 		inc_stats = {
 			[Stats.STAT_STR] = resolvers.mbonus_material(3, 1),
 			[Stats.STAT_CON] = resolvers.mbonus_material(3, 1),
-			},
+		},
 	},
 }
 
@@ -129,7 +129,6 @@ newEntity{
 			[DamageType.FIRE] = resolvers.mbonus_material(15, 10),
 			[DamageType.LIGHT] = resolvers.mbonus_material(15, 10),
 		},
-		confusion_immune = -0.2,
 		combat_def = resolvers.mbonus_material(6, 4),
 		lite = -1,
 		inc_stealth = resolvers.mbonus_material(10, 5),
@@ -247,8 +246,8 @@ newEntity{
 	wielder = {
 		inc_stats = {
 			[Stats.STAT_WIL] = resolvers.mbonus_material(2, 2),
-			[Stats.STAT_CUN] = resolvers.mbonus_material(2, 2),
-			},
+			[Stats.STAT_MAG] = resolvers.mbonus_material(2, 2),
+		},
 		silence_immune = resolvers.mbonus_material(3, 2, function(e, v) v=v/10 return 0, v end),
 	},
 }

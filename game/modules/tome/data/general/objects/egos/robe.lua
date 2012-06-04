@@ -92,7 +92,7 @@ newEntity{
 }
 
 newEntity{
-	power_source = {nature=true},
+	power_source = {antimagic=true},
 	name = "slimy ", prefix=true, instant_resolve=true,
 	keywords = {slimy=true},
 	level_range = {10, 50},
@@ -244,7 +244,7 @@ newEntity{
 }
 
 newEntity{
-	power_source = {nature=true},
+	power_source = {arcane=true},
 	name = "radiant ", prefix=true, instant_resolve=true,
 	keywords = {radiant=true},
 	level_range = {30, 50},
@@ -388,7 +388,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 30,
 	cost = 60,
-	resolvers.charmt(Talents.T_NOVA, {2,3,4}, 8),
+	resolvers.charmt(Talents.T_NOVA, {2,3,4}, 16),
 	wielder = {
 		resists={
 			[DamageType.LIGHTNING] = resolvers.mbonus_material(20, 5),
@@ -473,7 +473,7 @@ newEntity{
 }
 
 newEntity{
-	power_source = {arcane=true},
+	power_source = {psionic=true},
 	name = "tormentor's ", prefix=true, instant_resolve=true,
 	keywords = {tormentor=true},
 	level_range = {30, 50},
@@ -484,7 +484,7 @@ newEntity{
 		inc_stats = {
 			[Stats.STAT_CUN] = resolvers.mbonus_material(9, 1),
 		},
-		combat_spellcrit = resolvers.mbonus_material(4, 1),
+		combat_mindcrit = resolvers.mbonus_material(4, 1),
 		combat_critical_power = resolvers.mbonus_material(30, 10),
 	},	
 }

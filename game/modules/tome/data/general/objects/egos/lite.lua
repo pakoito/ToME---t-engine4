@@ -47,7 +47,7 @@ newEntity{
 }
 
 newEntity{
-	power_source = {nature=true},
+	power_source = {arcane=true},
 	name = " of the sun", suffix=true, instant_resolve=true,
 	keywords = {sun=true},
 	level_range = {20, 50},
@@ -88,7 +88,7 @@ newEntity{
 }
 
 newEntity{
-	power_source = {technique=true},
+	power_source = {psionic=true},
 	name = " of clarity", suffix=true, instant_resolve=true,
 	keywords = {clarity=true},
 	level_range = {1, 50},
@@ -163,7 +163,7 @@ newEntity{
 }
 
 newEntity{
-	power_source = {technique=true},
+	power_source = {nature=true},
 	name = "guide's ", prefix=true, instant_resolve=true,
 	keywords = {guide=true},
 	level_range = {15, 50},
@@ -175,7 +175,7 @@ newEntity{
 }
 
 newEntity{
-	power_source = {nature=true},
+	power_source = {arcane=true},
 	name = "reflective ", prefix=true, instant_resolve=true,
 	keywords = {reflect=true},
 	level_range = {20, 50},
@@ -204,7 +204,7 @@ newEntity{
 		combat_physcrit = resolvers.mbonus_material(3, 3),
 		inc_stats = {
 			[Stats.STAT_WIL] = resolvers.mbonus_material(4, 3),
-			},
+		},
 	},
 }
 
@@ -221,7 +221,7 @@ newEntity{
 		lite = 2,
 		inc_stats = {
 			[Stats.STAT_MAG] = resolvers.mbonus_material(3, 3),
-			},
+		},
 	},
 }
 
@@ -292,7 +292,7 @@ newEntity{
 }
 
 newEntity{
-	power_source = {nature=true},
+	power_source = {arcane=true},
 	name = "faithful ", prefix=true, instant_resolve=true,
 	keywords = {faithful=true},
 	level_range = {20, 50},
@@ -326,7 +326,7 @@ newEntity{
 }
 
 newEntity{
-	power_source = {technique=true},
+	power_source = {nature=true},
 	name = "preserving ", prefix=true, instant_resolve=true,
 	keywords = {preserve=true},
 	level_range = {1, 50},
@@ -374,7 +374,7 @@ newEntity{
 }
 
 newEntity{
-	power_source = {technique=true},
+	power_source = {arcane=true},
 	name = " of refraction", suffix=true, instant_resolve=true,
 	keywords = {refract=true},
 	level_range = {10, 50},
@@ -395,7 +395,7 @@ newEntity{
 }
 
 newEntity{
-	power_source = {nature=true},
+	power_source = {arcane=true},
 	name = " of moonlight", suffix=true, instant_resolve=true,
 	keywords = {moonlight=true},
 	level_range = {30, 50},
@@ -409,7 +409,7 @@ newEntity{
 }
 
 newEntity{
-	power_source = {nature=true},
+	power_source = {arcane=true},
 	name = " of repulsion", suffix=true, instant_resolve=true,
 	keywords = {repulsion=true},
 	level_range = {1, 50},

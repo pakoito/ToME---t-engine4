@@ -71,7 +71,8 @@ newTalent{
 	info = function(self, t)
 		return ([[While Highers are not meant to rule other humans - and show no particular will to do so - they are frequently called to higher duties.
 		Their nature grants them better senses than other humans.
-		Increase maximum sight range by %d.]]):format(self:getTalentLevelRaw(t))
+		Increase maximum sight range by %d and increases existing lite, infravision, and heightened senses range by %d.]]):
+		format(self:getTalentLevelRaw(t), math.ceil(self:getTalentLevelRaw(t)/2))
 	end,
 }
 
@@ -82,16 +83,19 @@ newTalent{
 	points = 5,
 	mode = "passive",
 	on_learn = function(self, t)
-		self.combat_spellresist = self.combat_spellresist + 3
+		self.combat_spellresist = self.combat_spellresist + 5
 		self.resists[DamageType.ARCANE] = (self.resists[DamageType.ARCANE] or 0) + 5
+		self.inc_damage[DamageType.ARCANE] = (self.inc_damage[DamageType.ARCANE] or 0) + 5
 	end,
 	on_unlearn = function(self, t)
-		self.combat_spellresist = self.combat_spellresist - 3
+		self.combat_spellresist = self.combat_spellresist - 5
 		self.resists[DamageType.ARCANE] = (self.resists[DamageType.ARCANE] or 0) - 5
+		self.inc_damage[DamageType.ARCANE] = (self.inc_damage[DamageType.ARCANE] or 0) - 5
 	end,
 	info = function(self, t)
 		return ([[Highers were originally created during the Age of Allure by the human Conclave. They are imbued with magic at the very core of their being.
-		Increase spell save by +%d and arcane resistance by %d%%.]]):format(self:getTalentLevelRaw(t) * 3, self:getTalentLevelRaw(t) * 5)
+		Increase spell save by +%d, arcane damage by %d%%, and arcane resistance by %d%%.]]):
+		format(self:getTalentLevelRaw(t) * 5, self:getTalentLevelRaw(t) * 5, self:getTalentLevelRaw(t) * 5)
 	end,
 }
 
@@ -101,34 +105,18 @@ newTalent{
 	require = racial_req4,
 	points = 5,
 	no_energy = true,
-	cooldown = function(self, t) return 100 - self:getTalentLevel(t) * 5 end,
+	cooldown = function(self, t) return 50 - self:getTalentLevel(t) * 3 end,
 	tactical = { MANA = 2, VIM = 2, EQUILIBRIUM = 2, STAMINA = 2, POSITIVE = 2, NEGATIVE = 2, PARADOX = 2, PSI = 2 },
-	getData = function(self, t)
-		local base = self:combatTalentStatDamage(t, "con", 10, 90)
-		return {
-			stamina = base,
-			mana = base * 1.8,
-			equilibrium = -base * 1.5,
-			vim = base,
-			positive = base / 2,
-			negative = base / 2,
-			paradox = -base * 1.5,
-			psi = base * 0.7,
-		}
-	end,
+	getDuration = function(self, t) return 1 + math.ceil(self:getTalentLevelRaw(t)/2) end,
 	action = function(self, t)
-		local data = t.getData(self, t)
-		for name, v in pairs(data) do
-			local inc = "inc"..name:capitalize()
-			if self[inc] then self[inc](self, v) end
-		end
+		self:setEffect(self.EFF_HIGHBORN_S_BLOOM, t.getDuration(self, t), {})
 		return true
 	end,
 	info = function(self, t)
-		local d = t.getData(self, t)
-		return ([[Activate some of your inner magic, manipulating the world to be in a better shape for you.
-		Restores %d stamina, %d mana, %d equilibrium, %d vim, %d positive and negative energies, %d paradox and %d psi energy.
-		The effect increases with your Constitution.]]):format(d.stamina, d.mana, d.equilibrium, d.vim, d.positive, d.paradox, d.psi)
+		local duration = t.getDuration(self, t)
+		return ([[Activate some of your inner magic, using it to power your abilities.  For the next %d turns all active talents will be used without resource cost.
+		Your resources must still be high enough to initially power the talent and failure rates (etc.) still apply.
+		]]):format(duration)
 	end,
 }
 
@@ -321,7 +309,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[You are part of the wood, it shields you from corruption.
-		Increase disease immunity by %d%% and blight resistance by %d%%.]]):format(self:getTalentLevel(t) * 12, self:getTalentLevel(t) * 4)
+		Increase disease immunity by %d%% and blight resistance by %d%%.]]):format(self:getTalentLevelRaw(t) * 12, self:getTalentLevelRaw(t) * 4)
 	end,
 }
 

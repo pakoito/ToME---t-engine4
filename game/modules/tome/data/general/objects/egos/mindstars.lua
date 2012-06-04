@@ -419,13 +419,13 @@ newEntity{
 	on_set_broken = function(self, who)
 		game.logPlayer(who, "#SLATE#The link between the mindstars is broken.")
 	end,
-	resolvers.charm("call the drake in an elemental mindstar", 20,
+	resolvers.charm("call the drake in an elemental mindstar (this will remove other set bonuses)", 20,
 		function(self, who, ms_inven)
 			if who:getInven("PSIONIC_FOCUS") and who:getInven("PSIONIC_FOCUS")[1] == self then
 				game.logPlayer(who, "You cannot use %s while using it as a psionic focus.", self.name)
 				return
 			end		
-			who:showEquipment("Call the drake in which mindstar?", function(o) return o.subtype == "mindstar" and o.is_drake_star and not o.set_list end, function(o)
+			who:showEquipment("Call the drake in which mindstar (this will destroy other set bonuses)?", function(o) return o.subtype == "mindstar" and o.is_drake_star and o ~= self end, function(o)
 				-- remove any existing sets from the mindstar
 				o.set_list = nil
 				o.on_set_complete = nil

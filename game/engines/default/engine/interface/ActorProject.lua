@@ -220,7 +220,7 @@ function _M:canProject(t, x, y)
 	local typ = Target:getType(t)
 	typ.source_actor = self
 	typ.start_x = typ.start_x or typ.x or typ.source_actor and typ.source_actor.x or self.x
-	typ.start_y = typ.start_y or typ.y or typ.source_actor and typ.source_actor.y or self.x
+	typ.start_y = typ.start_y or typ.y or typ.source_actor and typ.source_actor.y or self.y
 
 	-- Stop at range or on block
 	local stop_x, stop_y = typ.start_x, typ.start_y

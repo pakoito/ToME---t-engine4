@@ -177,7 +177,7 @@ newEntity{
 }
 
 newEntity{
-	power_source = {nature=true},
+	power_source = {arcane=true},
 	name = "brilliant ", prefix=true, instant_resolve=true,
 	keywords = {brilliant=true},
 	level_range = {15, 50},
@@ -271,7 +271,7 @@ newEntity{
 		combat_spellresist = resolvers.mbonus_material(10, 5),
 		inc_stats = {
 			[Stats.STAT_WIL] = resolvers.mbonus_material(4, 2),
-			},
+		},
 	},
 }
 
@@ -288,7 +288,7 @@ newEntity{
 		healing_factor = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return 0, v end),
 		inc_stats = {
 			[Stats.STAT_CON] = resolvers.mbonus_material(4, 3),
-			},
+		},
 	},
 }
 
@@ -338,7 +338,7 @@ newEntity{
 }
 
 newEntity{
-	power_source = {technique=true},
+	power_source = {arcane=true},
 	name = "coruscating ", prefix=true, instant_resolve=true,
 	keywords = {coruscating=true},
 	level_range = {30, 50},
@@ -362,7 +362,7 @@ newEntity{
 }
 
 newEntity{
-	power_source = {technique=true},
+	power_source = {arcane=true},
 	name = "crackling ", prefix=true, instant_resolve=true,
 	keywords = {crackling=true},
 	level_range = {30, 50},
@@ -386,7 +386,7 @@ newEntity{
 }
 
 newEntity{
-	power_source = {technique=true},
+	power_source = {arcane=true},
 	name = "corrosive ", prefix=true, instant_resolve=true,
 	keywords = {corrosive=true},
 	level_range = {30, 50},
@@ -410,7 +410,7 @@ newEntity{
 }
 
 newEntity{
-	power_source = {technique=true},
+	power_source = {nature=true},
 	name = "wintry ", prefix=true, instant_resolve=true,
 	keywords = {wintry=true},
 	level_range = {30, 50},
@@ -462,7 +462,7 @@ newEntity{
 }
 
 newEntity{
-	power_source = {natural=true},
+	power_source = {arcane=true},
 	name = " of the sun", suffix=true, instant_resolve=true,
 	keywords = {sun=true},
 	level_range = {1, 50},
@@ -514,7 +514,7 @@ newEntity{
 }
 
 newEntity{
-	power_source = {nature=true},
+	power_source = {arcane=true},
 	name = " of faith", suffix=true, instant_resolve=true,
 	keywords = {faith=true},
 	level_range = {1, 50},

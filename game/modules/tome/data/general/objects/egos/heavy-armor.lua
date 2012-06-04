@@ -35,7 +35,7 @@ newEntity{
 }
 
 newEntity{
-	power_source = {technique=true},
+	power_source = {arcane=true},
 	name = "fearforged ", prefix=true, instant_resolve=true,
 	keywords = {fearforged=true},
 	level_range = {40, 50},

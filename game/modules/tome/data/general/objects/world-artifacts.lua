@@ -1625,7 +1625,7 @@ newEntity{ base = "BASE_ROD",
 	material_level = 3,
 
 	max_power = 75, power_regen = 1,
-	use_power = { name = "shoot a cone of fire", power = 20,
+	use_power = { name = "shoot a cone of fire", power = 50,
 		use = function(self, who)
 			local tg = {type="cone", range=0, radius=5}
 			local x, y = who:getTarget(tg)

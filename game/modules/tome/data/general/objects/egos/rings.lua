@@ -367,7 +367,6 @@ newEntity{
 	rarity = 20,
 	cost = 60,
 	wielder = {
-		healing_factor = resolvers.mbonus_material(30, 5, function(e, v) v=v/10 return 0, -v end),
 		combat_spellpower = resolvers.mbonus_material(15, 5),
 		combat_dam = resolvers.mbonus_material(15, 5),
 	},

@@ -189,7 +189,6 @@ newEntity{
 			[Stats.STAT_STR] = resolvers.mbonus_material(7, 3),
 		},
 		combat_physcrit = resolvers.mbonus_material(5, 1),
-		healing_factor = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return 0, -v end),
 	},
 }
 
@@ -270,6 +269,9 @@ newEntity{
 	rarity = 20,
 	cost = 40,
 	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 2) end),
+	wielder = {
+		spell_cooldown_reduction = 0.1,
+	},
 }
 
 newEntity{

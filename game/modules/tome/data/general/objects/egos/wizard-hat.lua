@@ -25,15 +25,13 @@ local DamageType = require "engine.DamageType"
 --load("/data/general/objects/egos/charged-utility.lua")
 
 newEntity{
-	power_source = {technique=true},
+	power_source = {arcane=true},
 	name = " of absorption", suffix=true, instant_resolve=true,
 	keywords = {absorb=true},
 	level_range = {20, 50},
 	rarity = 10,
 	cost = 20,
 	wielder = {
-		stamina_regen_on_hit = resolvers.mbonus_material(23, 7, function(e, v) v=v/10 return 0, v end),
-		equilibrium_regen_on_hit = resolvers.mbonus_material(23, 7, function(e, v) v=v/10 return 0, v end),
 		mana_regen_on_hit = resolvers.mbonus_material(23, 7, function(e, v) v=v/10 return 0, v end),
 	},
 }
@@ -61,7 +59,7 @@ newEntity{
 	},
 }
 newEntity{
-	power_source = {arcane=true},
+	power_source = {psionic=true},
 	name = " of cunning (#STATBONUS#)", suffix=true, instant_resolve=true,
 	keywords = {cun=true},
 	level_range = {1, 50},
@@ -69,17 +67,6 @@ newEntity{
 	cost = 4,
 	wielder = {
 		inc_stats = { [Stats.STAT_CUN] = resolvers.mbonus_material(8, 2) },
-	},
-}
-newEntity{
-	power_source = {arcane=true},
-	name = " of telepathic range", suffix=true,
-	keywords = {range=true},
-	level_range = {40, 50},
-	rarity = 15,
-	cost = 15,
-	wielder = {
-		esp_range = 10,
 	},
 }
 newEntity{
@@ -444,7 +431,7 @@ newEntity{
 }
 
 newEntity{
-	power_source = {nature=true},
+	power_source = {arcane=true},
 	name = " of warding", suffix=true, instant_resolve=true,
 	keywords = {warding=true},
 	level_range = {1, 50},

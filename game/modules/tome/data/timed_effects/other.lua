@@ -292,42 +292,6 @@ newEffect{
 	end,
 }
 
--- Borrowed Time and the Borrowed Time stun effect
-newEffect{
-	name = "BORROWED_TIME", image = "talents/borrowed_time.png",
-	desc = "Borrowed Time",
-	long_desc = function(self, eff) return ("The target's global speed has been increased by %d%%."):format(100) end,
-	type = "other",
-	subtype = { time=true },
-	status = "beneficial",
-	parameters = { power=10 },
-	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("global_speed_add", 1)
-	end,
-	deactivate = function(self, eff)
-		self:removeTemporaryValue("global_speed_add", eff.tmpid)
-		self:setEffect(self.EFF_TEMPORAL_STUN, eff.power, {})
-	end,
-}
-
-newEffect{
-	name = "TEMPORAL_STUN",
-	desc = "Temporal Stun",
-	long_desc = function(self, eff) return "The target is paralyzed, preventing any actions." end,
-	type = "other",
-	subtype = { time=true },
-	status = "detrimental",
-	parameters = {},
-	on_gain = function(self, err) return "#Target# is paralyzed!", "+Paralyzed" end,
-	on_lose = function(self, err) return "#Target# is not paralyzed anymore.", "-Paralyzed" end,
-	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("time_stun", 1)
-	end,
-	deactivate = function(self, eff)
-		self:removeTemporaryValue("time_stun", eff.tmpid)
-	end,
-}
-
 newEffect{
 	name = "PRECOGNITION", image = "talents/precognition.png",
 	desc = "Precognition",
@@ -1540,5 +1504,22 @@ newEffect{
 	deactivate = function(self, eff)
 		self.summoner = nil
 		self:die(self)
+	end,
+}
+
+-- Borrowed Time and the Borrowed Time stun effect
+newEffect{
+	name = "HIGHBORN_S_BLOOM", image = "talents/highborn_s_bloom.png",
+	desc = "Highborn's Bloom",
+	long_desc = function(self, eff) return "The target is using talents without consuming resources." end,
+	type = "other",
+	subtype = { arcane=true },
+	status = "beneficial",
+	parameters = { power=10 },
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("zero_resource_cost", 1)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("zero_resource_cost", eff.tmpid)
 	end,
 }

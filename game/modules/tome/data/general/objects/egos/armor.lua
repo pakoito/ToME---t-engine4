@@ -197,7 +197,7 @@ newEntity{
 }
 
 newEntity{
-	power_source = {technique=true},
+	power_source = {arcane=true},
 	name = "anchoring ", prefix=true, instant_resolve=true,
 	keywords = {anchor=true},
 	level_range = {1, 50},
@@ -281,7 +281,7 @@ newEntity{
 
 
 newEntity{
-	power_source = {arcane=true},
+	power_source = {nature=true},
 	name = " of the sky", suffix=true, instant_resolve=true,
 	keywords = {sky=true},
 	level_range = {20, 50},
@@ -404,7 +404,7 @@ newEntity{
 }
 
 newEntity{
-	power_source = {arcane=true},
+	power_source = {psionic=true},
 	name = "enlightening ", prefix=true, instant_resolve=true,
 	keywords = {enlight=true},
 	level_range = {10, 50},
@@ -413,12 +413,12 @@ newEntity{
 	cost = 30,
 	wielder = {
 		inc_stats = {
+			[Stats.STAT_WIL] = resolvers.mbonus_material(5, 1),
 			[Stats.STAT_CUN] = resolvers.mbonus_material(5, 1),
 		},
 		blind_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
 		confusion_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
 		combat_mentalresist = resolvers.mbonus_material(10, 5),
-		combat_spellresist = resolvers.mbonus_material(10, 5),
 	},
 }
 
@@ -442,7 +442,7 @@ newEntity{
 }
 
 newEntity{
-	power_source = {technique=true},
+	power_source = {psionic=true},
 	name = " of command", suffix=true, instant_resolve=true,
 	keywords = {command=true},
 	level_range = {20, 50},

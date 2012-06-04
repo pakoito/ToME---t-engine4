@@ -59,20 +59,9 @@ newEntity{
 	},
 }
 newEntity{
-	power_source = {arcane=true},
-	name = " of telepathic range", suffix=true,
-	keywords = {range=true},
-	level_range = {40, 50},
-	rarity = 15,
-	cost = 15,
-	wielder = {
-		esp_range = 10,
-	},
-}
-newEntity{
-	power_source = {arcane=true},
-	name = "shaloran ", prefix=true, instant_resolve=true,
-	keywords = {shaloran=true},
+	power_source = {technique=true},
+	name = "thaloren ", prefix=true, instant_resolve=true,
+	keywords = {thaloren=true},
 	level_range = {25, 50},
 	greater_ego = 1,
 	rarity = 10,
@@ -126,7 +115,7 @@ newEntity{
 }
 
 newEntity{
-	power_source = {technique=true},
+	power_source = {nature=true},
 	name = " of absorption", suffix=true, instant_resolve=true,
 	keywords = {absorb=true},
 	level_range = {20, 50},
@@ -135,7 +124,6 @@ newEntity{
 	wielder = {
 		stamina_regen_on_hit = resolvers.mbonus_material(23, 7, function(e, v) v=v/10 return 0, v end),
 		equilibrium_regen_on_hit = resolvers.mbonus_material(23, 7, function(e, v) v=v/10 return 0, v end),
-		mana_regen_on_hit = resolvers.mbonus_material(23, 7, function(e, v) v=v/10 return 0, v end),
 	},
 }
 
@@ -183,7 +171,7 @@ newEntity{
 }
 
 newEntity{
-	power_source = {technique=true},
+	power_source = {arcane=true},
 	name = "anchoring ", prefix=true, instant_resolve=true,
 	keywords = {anchor=true},
 	level_range = {1, 50},
@@ -240,7 +228,7 @@ newEntity{
 		inc_stats = {
 			[Stats.STAT_MAG] = resolvers.mbonus_material(3, 2),
 			[Stats.STAT_WIL] = resolvers.mbonus_material(3, 2),
-			},
+		},
 	},
 }
 
@@ -258,7 +246,7 @@ newEntity{
 		inc_stats = {
 			[Stats.STAT_STR] = resolvers.mbonus_material(3, 2),
 			[Stats.STAT_CON] = resolvers.mbonus_material(3, 2),
-			},
+		},
 	},
 }
 
@@ -275,7 +263,7 @@ newEntity{
 		inc_stats = {
 			[Stats.STAT_DEX] = resolvers.mbonus_material(3, 2),
 			[Stats.STAT_CUN] = resolvers.mbonus_material(3, 2),
-			},
+		},
 	},
 }
 
@@ -292,7 +280,7 @@ newEntity{
 		pin_immune = resolvers.mbonus_material(3, 3, function(e, v) v=v/10 return 0, v end),
 		inc_stats = {
 			[Stats.STAT_WIL] = resolvers.mbonus_material(4, 3),
-			},
+		},
 	},
 }
 
@@ -352,7 +340,7 @@ newEntity{
 }
 
 newEntity{
-	power_source = {arcane=true},
+	power_source = {psionic=true},
 	name = "mindcaging ", prefix=true, instant_resolve=true,
 	keywords = {mindcage=true},
 	level_range = {20, 50},
@@ -435,7 +423,6 @@ newEntity{
 	cost = 100,
 	wielder = {
 		inc_stats = {
-			[Stats.STAT_CON] = resolvers.mbonus_material(10, 5, function(e, v) return 0, -v end),
 			[Stats.STAT_MAG] = resolvers.mbonus_material(5, 3),
 			[Stats.STAT_WIL] = resolvers.mbonus_material(5, 3),
 		},
@@ -444,7 +431,6 @@ newEntity{
 			[DamageType.BLIGHT] = resolvers.mbonus_material(15, 5),
 			[DamageType.ARCANE] = resolvers.mbonus_material(15, 5),
 		},
-		healing_factor = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return 0, -v end),
 	},
 }
 
@@ -466,7 +452,7 @@ newEntity{
 }
 
 newEntity{
-	power_source = {nature=true},
+	power_source = {arcane=true},
 	name = " of sanctity", suffix=true, instant_resolve=true,
 	keywords = {sanctity=true},
 	level_range = {30, 50},
@@ -479,7 +465,7 @@ newEntity{
 			[DamageType.BLIGHT] = resolvers.mbonus_material(10, 5),
 			[DamageType.DARKNESS] = resolvers.mbonus_material(10, 5),
 		},
-		confusion_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
+		silence_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
 	},
 }
 

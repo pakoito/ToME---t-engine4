@@ -3155,34 +3155,34 @@ function _M:postUseTalent(ab, ret)
 			end
 		end
 	elseif not self:attr("force_talent_ignore_ressources") then
-		if ab.mana then
+		if ab.mana and not self:attr("zero_resource_cost") then
 			trigger = true; self:incMana(-util.getval(ab.mana, self, ab) * (100 + 2 * self:combatFatigue()) / 100)
 		end
-		if ab.stamina then
+		if ab.stamina and not self:attr("zero_resource_cost") then
 			trigger = true; self:incStamina(-ab.stamina * (100 + self:combatFatigue()) / 100)
 		end
 		-- Vim is not affected by fatigue
-		if ab.vim then
+		if ab.vim and not self:attr("zero_resource_cost") then
 			trigger = true; self:incVim(-ab.vim)
 		end
-		if ab.positive then
+		if ab.positive and not (self:attr("zero_resource_cost") and ab.positive > 0) then
 			trigger = true; self:incPositive(-ab.positive * (100 + self:combatFatigue()) / 100)
 		end
-		if ab.negative then
+		if ab.negative and not (self:attr("zero_resource_cost") and ab.negative > 0) then
 			trigger = true; self:incNegative(-ab.negative * (100 + self:combatFatigue()) / 100)
 		end
-		if ab.hate then
+		if ab.hate and not self:attr("zero_resource_cost") then
 			trigger = true; self:incHate(-ab.hate * (100 + self:combatFatigue()) / 100)
 		end
 		-- Equilibrium is not affected by fatigue
-		if ab.equilibrium then
+		if ab.equilibrium and not self:attr("zero_resource_cost") then
 			trigger = true; self:incEquilibrium(ab.equilibrium)
 		end
 		-- Paradox is not affected by fatigue but it's cost does increase exponentially
-		if ab.paradox then
+		if ab.paradox and not self:attr("zero_resource_cost") then
 			trigger = true; self:incParadox(ab.paradox * (1 + (self.paradox / 300)))
 		end
-		if ab.psi then
+		if ab.psi and not self:attr("zero_resource_cost") then
 			trigger = true; self:incPsi(-ab.psi * (100 + 2 * self:combatFatigue()) / 100)
 		end
 	end

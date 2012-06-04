@@ -148,7 +148,7 @@ newEntity{
 }
 
 newEntity{
-	power_source = {technique=true},
+	power_source = {arcane=true},
 	name = "anchoring ", prefix=true, instant_resolve=true,
 	keywords = {anchoring=true},
 	level_range = {1, 50},
@@ -192,7 +192,7 @@ newEntity{
 }
 
 newEntity{
-	power_source = {technique=true},
+	power_source = {psionic=true},
 	name = " of clarity", suffix=true, instant_resolve=true,
 	keywords = {clarity=true},
 	level_range = {1, 50},
@@ -363,7 +363,7 @@ newEntity{
 }
 
 newEntity{
-	power_source = {technique=true},
+	power_source = {nature=true},
 	name = "skylord's ", prefix=true, instant_resolve=true,
 	keywords = {skylord=true},
 	level_range = {40, 50},

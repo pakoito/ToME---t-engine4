@@ -148,7 +148,7 @@ newEntity{
 }
 
 newEntity{
-	power_source = {arcane=true},
+	power_source = {psionic=true},
 	name = " of torment", suffix=true, instant_resolve=true,
 	keywords = {torment=true},
 	level_range = {1, 50},

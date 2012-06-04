@@ -70,17 +70,6 @@ newEntity{
 	end),
 }
 newEntity{
-	power_source = {arcane=true},
-	name = " of telepathic range", suffix=true,
-	keywords = {telepathy=true},
-	level_range = {40, 50},
-	rarity = 15,
-	cost = 15,
-	wielder = {
-		esp_range = 10,
-	},
-}
-newEntity{
 	power_source = {nature=true},
 	name = " of the fish", suffix=true,
 	keywords = {fish=true},
@@ -363,7 +352,7 @@ newEntity{
 }
 
 newEntity{
-	power_source = {arcane=true},
+	power_source = {psionic=true},
 	name = "mindweaver's ", prefix=true, instant_resolve=true,
 	keywords = {mindweaver=true},
 	level_range = {20, 50},
@@ -377,7 +366,6 @@ newEntity{
 		confusion_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
 		combat_mentalresist = resolvers.mbonus_material(10, 5),
 		combat_spellresist = resolvers.mbonus_material(10, 5),
-
 	},
 }
 
@@ -440,13 +428,13 @@ newEntity{
 	wielder = {
 		resists={
 			[DamageType.FIRE] = resolvers.mbonus_material(10, 5, function(e, v) return 0, -v end),
-			[DamageType.MIND] = resolvers.mbonus_material(10, 5, function(e, v) return 0, -v end),
+			[DamageType.BLIGHT] = resolvers.mbonus_material(10, 5, function(e, v) return 0, -v end),
 		},
 		combat_spellpower = resolvers.mbonus_material(10, 5),
 		combat_critical_power = resolvers.mbonus_material(30, 10),
 		inc_damage = {
 			[DamageType.FIRE] = resolvers.mbonus_material(10, 5),
-			[DamageType.MIND] = resolvers.mbonus_material(10, 5),
+			[DamageType.BLIGHT] = resolvers.mbonus_material(10, 5),
 		},
 	},
 }
@@ -482,12 +470,11 @@ newEntity{
 		},
 		max_mana = resolvers.mbonus_material(40, 20),
 		mana_regen = resolvers.mbonus_material(50, 10, function(e, v) v=v/100 return 0, v end),
-
 	},
 }
 
 newEntity{
-	power_source = {technique=true},
+	power_source = {arcane=true},
 	name = " of the chosen", suffix=true, instant_resolve=true,
 	keywords = {chosen=true},
 	level_range = {25, 50},
