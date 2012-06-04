@@ -74,7 +74,7 @@ newTalent{
 	points = 5,
 	random_ego = "defensive",
 	cooldown = 15,
-	stamina = 20,
+	stamina = 5,
 	tactical = { ESCAPE = { knockback = 1 }, DISABLE = { knockback = 3 } },
 	requires_target = true,
 	action = function(self, t)
