@@ -38,9 +38,14 @@ newAI("escort_quest", function(self)
 		end
 		if not self.energy.used then
 			if self:reactionToward(self.ai_target.actor) < 0 and not self:hasLOS(self.escort_target.x, self.escort_target.y, "block_move") then
-				self:runAI("move_dmap")
+				self:runAI("flee_dmap")
+				if not self.ai_state.fleeing_msg then
+					self.ai_state.fleeing_msg = true
+					self:doEmote("Help!")
+				end
 			else
 				self:runAI("move_escort")
+				self.ai_state.fleeing_msg = nil
 			end
 		end
 		return true
