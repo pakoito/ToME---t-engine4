@@ -1907,7 +1907,7 @@ function _M:die(src, death_note)
 
 	-- Give stamina back
 	if src and src.knowTalent and src:knowTalent(src.T_UNENDING_FRENZY) then
-		src:incStamina(src:getTalentLevel(src.T_UNENDING_FRENZY) * 2)
+		src:incStamina(src:getTalentLevel(src.T_UNENDING_FRENZY) * 4)
 	end
 
 	-- Regain Psi
