@@ -946,7 +946,7 @@ function _M:processEffects()
 			for ly, _ in pairs(ys) do
 				local act = game.level.map(lx, ly, engine.Map.ACTOR)
 				if act and act == e.src and not ((type(e.selffire) == "number" and rng.percent(e.selffire)) or (type(e.selffire) ~= "number" and e.selffire)) then
-				elseif act and e.src and e.src.reactionToward and (e.src:reactionToward(act) >= 0) and not ((type(e.friendlyfire) == "number" and rng.percent(typ.friendlyfire)) or (type(e.friendlyfire) ~= "number" and e.friendlyfire)) then
+				elseif act and e.src and e.src.reactionToward and (e.src:reactionToward(act) >= 0) and not ((type(e.friendlyfire) == "number" and rng.percent(e.friendlyfire)) or (type(e.friendlyfire) ~= "number" and e.friendlyfire)) then
 				-- Otherwise hit
 				else
 					DamageType:get(e.damtype).projector(e.src, lx, ly, e.damtype, e.dam)
