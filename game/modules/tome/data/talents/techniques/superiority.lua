@@ -26,14 +26,15 @@ newTalent{
 	random_ego = "attack",
 	cooldown = 40,
 	stamina = 60,
+	no_energy = true,
 	tactical = { DEFEND = 2 },
 	action = function(self, t)
-		self:setEffect(self.EFF_EARTHEN_BARRIER, 20, {power=self:getTalentLevelRaw(t) * 5})
+		self:setEffect(self.EFF_EARTHEN_BARRIER, 20, {power=10 + self:getTalentLevel(t) * 5})
 		return true
 	end,
 	info = function(self, t)
 		return ([[Concentrate on the battle, ignoring some of the damage you take.
-		Improves physical damage reduction by %d%% for 20 turns.]]):format(self:getTalentLevelRaw(t) * 5)
+		Improves physical damage reduction by %d%% for 20 turns.]]):format(10 + self:getTalentLevelRaw(t) * 5)
 	end,
 }
 
@@ -43,13 +44,13 @@ newTalent{
 	require = techs_req_high2,
 	points = 5,
 	mode = "sustained",
-	cooldown = 60,
-	sustain_stamina = 80,
+	cooldown = 20,
+	sustain_stamina = 50,
 	tactical = { BUFF = 2 },
 	activate = function(self, t)
 		return {
 			onslaught = self:addTemporaryValue("onslaught", math.floor(self:getTalentLevel(t))),
-			stamina = self:addTemporaryValue("stamina_regen", -15),
+			stamina = self:addTemporaryValue("stamina_regen", -4),
 		}
 	end,
 
@@ -60,7 +61,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Take an offensive stance. As you walk through your foes, you knock them all back in an frontal arc (up to %d grids).
-		This consumes stamina rapidly(-15 stamina/turn).]]):
+		This consumes stamina rapidly(-4 stamina/turn).]]):
 		format(math.floor(self:getTalentLevel(t)))
 	end,
 }
