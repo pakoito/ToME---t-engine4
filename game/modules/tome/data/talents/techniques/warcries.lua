@@ -54,15 +54,15 @@ newTalent{
 	require = techs_req_high2,
 	points = 5,
 	random_ego = "utility",
-	cooldown = 100,
+	cooldown = 50,
 	tactical = { STAMINA = 2 },
 	action = function(self, t)
-		self:incStamina(20 + self:getTalentLevel(t) * 12)
+		self:incStamina((20 + self:getTalentLevel(t) * 7) * self.max_stamina / 100)
 		return true
 	end,
 	info = function(self, t)
-		return ([[Take a deep breath to recover %d stamina.]]):
-		format(20 + self:getTalentLevel(t) * 12)
+		return ([[Take a deep breath to recover %d%% stamina.]]):
+		format(20 + self:getTalentLevel(t) * 7)
 	end,
 }
 
