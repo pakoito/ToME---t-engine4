@@ -340,7 +340,8 @@ newTalent{
 	points = 5,
 	mode = "sustained",
 	cooldown = 15,
-	sustain_stamina = 100,
+	sustain_stamina = 70,
+	no_energy = true,
 	tactical = { BUFF = 1 },
 	do_turn = function(self, t)
 		if self.blood_frenzy > 0 then
@@ -356,7 +357,7 @@ newTalent{
 		end
 		self.blood_frenzy = 0
 		return {
-			regen = self:addTemporaryValue("stamina_regen", -4),
+			regen = self:addTemporaryValue("stamina_regen", -2),
 		}
 	end,
 	deactivate = function(self, t, p)
@@ -365,7 +366,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Enter a blood frenzy, draining stamina quickly(-4 stamina/turn). Each time you kill a foe while in blood frenzy you gain a cumulative bonus to physical power of %d.
+		return ([[Enter a blood frenzy, draining stamina quickly(-2 stamina/turn). Each time you kill a foe while in blood frenzy you gain a cumulative bonus to physical power of %d.
 		Each turn the bonus decreases by 2.]]):format(2 * self:getTalentLevel(t))
 	end,
 }
