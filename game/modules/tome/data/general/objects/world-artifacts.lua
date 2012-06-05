@@ -718,7 +718,7 @@ newEntity{ base = "BASE_LEATHER_BOOT",
 	max_power = 50, power_regen = 1,
 	use_power = { name = "boost speed", power = 50,
 		use = function(self, who)
-			who:setEffect(who.EFF_SPEED, 8, {power=0.20 + who:getCun() / 80})
+			who:setEffect(who.EFF_SPEED, 8, {power=0.20 + who:getCun() / 200})
 			return {id=true, used=true}
 		end
 	},

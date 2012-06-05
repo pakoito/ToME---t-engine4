@@ -124,18 +124,19 @@ newTalent{
 	tactical = { ATTACK = {LIGHT = 2} },
 	range = 1,
 	requires_target = true,
-	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 1.1, 1.9) end,
+	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.8, 1.6) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 		self:attackTarget(target, DamageType.LIGHT, t.getDamage(self, t), true)
+		self:attackTarget(target, DamageType.LIGHT, t.getDamage(self, t), true)
 		return true
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Concentrate the power of the sun in a single blow doing %d%% weapon damage as light damage.]]):
+		return ([[Concentrate the power of the sun in a two blows doing %d%% weapon damage each as light damage.]]):
 		format(100 * damage)
 	end,
 }
