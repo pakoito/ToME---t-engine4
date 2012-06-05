@@ -183,14 +183,14 @@ newTalent{
 	range = 8,
 	requires_target = true,
 	no_npc_use = true,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t,  20, 80) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t,  20, 70) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t, first_target="friend"}
 		local tx, ty, target = self:getTarget(tg)
 		if not tx or not ty or not target or not target.summoner or not target.summoner == self or not target.necrotic_minion then return nil end
 
 		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t}
-		local dam = target.life * t.getDamage(self, t) / 100
+		local dam = target.max_life * t.getDamage(self, t) / 100
 		target:die()
 		target:project(tg, target.x, target.y, DamageType.BLIGHT, dam)
 		game.level.map:particleEmitter(target.x, target.y, tg.radius, "ball_acid", {radius=tg.radius})
@@ -200,7 +200,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Minions are only tools. You may dispose of them... violently.
-		Makes the targetted minion explode for %d%% of its remaining life as blight damage.
+		Makes the targetted minion explode for %d%% of its maximum life as blight damage.
 		Beware! Don't get caught in the blast!]]):
 		format(t.getDamage(self, t))
 	end,

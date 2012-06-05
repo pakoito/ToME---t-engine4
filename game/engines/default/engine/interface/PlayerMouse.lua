@@ -35,6 +35,7 @@ module(..., package.seeall, class.make)
 -- @param spotHostiles a function taking only the player as a parameter that must return true if hostiles are in sight
 -- @param astar_check nil or a function to check each tile on the astar path for passability
 function _M:mouseMove(tmx, tmy, spotHostiles, astar_check, force_move)
+	if not self.x or not self.y then return end
 	tmx = util.bound(tmx, 0, game.level.map.w - 1)
 	tmy = util.bound(tmy, 0, game.level.map.h - 1)
 

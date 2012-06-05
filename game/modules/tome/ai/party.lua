@@ -21,7 +21,7 @@ newAI("party_member", function(self)
 	local anchor = self.ai_state.tactic_leash_anchor
 
 	-- Stay close to the leash anchor
-	if anchor and self.ai_state.tactic_leash then
+	if anchor and self.ai_state.tactic_leash and anchor.x and anchor.y then
 		local leash_dist = core.fov.distance(self.x, self.y, anchor.x, anchor.y)
 		if self.ai_state.tactic_leash < leash_dist then
 --			print("[PARTY AI] leashing to anchor", self.name)
@@ -45,7 +45,7 @@ end)
 
 newAI("move_anchor", function(self)
 	local anchor = self.ai_state.tactic_leash_anchor
-	if anchor then
+	if anchor and anchor.x and anchor.y then
 		local tx, ty = anchor.x, anchor.y
 		return self:moveDirection(tx, ty)
 	end

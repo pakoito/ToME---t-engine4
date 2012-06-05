@@ -1544,6 +1544,7 @@ end
 
 --- Left mouse click on the map
 function _M:mouseLeftClick(mx, my)
+	if not self.level then return end
 	local tmx, tmy = self.level.map:getMouseTile(mx, my)
 	local p = self.player
 	local a = self.level.map(tmx, tmy, Map.ACTOR)
@@ -1562,6 +1563,7 @@ end
 
 --- Middle mouse click on the map
 function _M:mouseMiddleClick(mx, my)
+	if not self.level then return end
 	local tmx, tmy = self.level.map:getMouseTile(mx, my)
 	local p = self.player
 	local a = self.level.map(tmx, tmy, Map.ACTOR)
@@ -1580,6 +1582,7 @@ end
 
 --- Right mouse click on the map
 function _M:mouseRightClick(mx, my, extra)
+	if not self.level then return end
 	local tmx, tmy = self.level.map:getMouseTile(mx, my)
 	self:registerDialog(MapMenu.new(mx, my, tmx, tmy, extra and extra.add_map_action))
 end

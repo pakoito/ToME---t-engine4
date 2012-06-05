@@ -92,8 +92,10 @@ function _M:generate()
 
 	-- Add UI controls
 	self.mouse:registerZone(0, 0, self.w, self.h, function(button, x, y, xrel, yrel, bx, by, event)
-		if button == "wheelup" and event == "button" then self.scroll = util.bound(self.scroll - 1, 1, self.scrollbar.max)
-		elseif button == "wheeldown" and event == "button" then self.scroll = util.bound(self.scroll + 1, 1, self.scrollbar.max) end
+		if self.scrollbar then
+			if button == "wheelup" and event == "button" then self.scroll = util.bound(self.scroll - 1, 1, self.scrollbar.max)
+			elseif button == "wheeldown" and event == "button" then self.scroll = util.bound(self.scroll + 1, 1, self.scrollbar.max) end
+		end
 
 		self.sel_j = util.bound(self.scroll + math.floor(by / (self.tile_h + self.padding)), 1, self.max)
 		self.sel_i = util.bound(1 + math.floor(bx / (self.tile_w + self.padding)), 1, self.nb_w)

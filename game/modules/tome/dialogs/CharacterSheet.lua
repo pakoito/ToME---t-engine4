@@ -555,7 +555,7 @@ function _M:drawDialog(kind, actor_to_compare)
 			for i, o in ipairs(player:getInven(player.INVEN_MAINHAND)) do
 				local mean, dam = o.combat, o.combat
 				if o.archery and mean then
-					dam = (player:getInven("QUIVER")[1] and player:getInven("QUIVER")[1].combat)
+					dam = (player:getInven("QUIVER") and player:getInven("QUIVER")[1] and player:getInven("QUIVER")[1].combat)
 				end
 				if mean and dam then
 					s:drawColorStringBlended(self.font, WeaponTxt, w, h, 255, 255, 255, true) h = h + self.font_h
@@ -605,7 +605,7 @@ function _M:drawDialog(kind, actor_to_compare)
 				local offmult = player:getOffHandMult(o.combat)
 				local mean, dam = o.combat, o.combat
 				if o.archery and mean then
-					dam = (player:getInven("QUIVER")[1] and player:getInven("QUIVER")[1].combat)
+					dam = (player:getInven("QUIVER") and player:getInven("QUIVER")[1] and player:getInven("QUIVER")[1].combat)
 				end
 				if mean and dam then
 					s:drawColorStringBlended(self.font, "#LIGHT_BLUE#Off Hand:", w, h, 255, 255, 255, true) h = h + self.font_h

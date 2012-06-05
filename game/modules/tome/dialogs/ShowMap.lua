@@ -97,6 +97,7 @@ function _M:unload()
 end
 
 function _M:innerDisplay(x, y, nb_keyframes)
+	if not game.level then return end
 	local map = game.level.map
 
 	local w = math.floor(self.iw / self.bsize)
