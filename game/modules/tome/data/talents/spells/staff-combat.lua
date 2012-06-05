@@ -107,7 +107,7 @@ newTalent{
 	require = spells_req3,
 	mode = "sustained",
 	points = 5,
-	sustain_mana = 80,
+	sustain_mana = 20,
 	cooldown = 30,
 	tactical = { BUFF = 2 },
 	getDefense = function(self, t) return self:combatTalentSpellDamage(t, 10, 20) end,
@@ -121,19 +121,19 @@ newTalent{
 		local power = t.getDefense(self, t)
 		game:playSoundNear(self, "talents/arcane")
 		return {
-			dam = self:addTemporaryValue("combat_dam", -power / 2),
+			arm = self:addTemporaryValue("combat_armor", power),
 			def = self:addTemporaryValue("combat_def", power),
 		}
 	end,
 	deactivate = function(self, t, p)
-		self:removeTemporaryValue("combat_dam", p.dam)
+		self:removeTemporaryValue("combat_armor", p.arm)
 		self:removeTemporaryValue("combat_def", p.def)
 		return true
 	end,
 	info = function(self, t)
 		local defense = t.getDefense(self, t)
-		return ([[Adopt a defensive posture, reducing your staff attack power by %d and increasing your defense by %d.]]):
-		format(defense / 2, defense)
+		return ([[Adopt a defensive posture, increasing your defense and armour by %d.]]):
+		format(defense)
 	end,
 }
 
@@ -143,7 +143,7 @@ newTalent{
 	require = spells_req4,
 	points = 5,
 	mana = 12,
-	cooldown = 6,
+	cooldown = 12,
 	tactical = { ATTACK = 1, DISABLE = 2, ESCAPE = 1 },
 	range = 1,
 	requires_target = true,
@@ -151,7 +151,7 @@ newTalent{
 		return {type="hit", range=self:getTalentRange(t)}
 	end,
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 1, 1.5) end,
-	getDazeDuration = function(self, t) return 4 + self:getTalentLevel(t) end,
+	getDazeDuration = function(self, t) return 1 + self:getTalentLevel(t) end,
 	action = function(self, t)
 		local weapon = self:hasStaffWeapon()
 		if not weapon then
@@ -163,14 +163,16 @@ newTalent{
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
+		if self:getTalentLevel(t) >= 5 then self.combat_atk = self.combat_atk + 1000 end
 		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, t.getDamage(self, t))
-
+		if self:getTalentLevel(t) >= 5 then self.combat_atk = self.combat_atk - 1000 end
+		
 		-- Try to stun !
 		if hit then
 			if target:canBe("stun") then
-				target:setEffect(target.EFF_DAZED, t.getDazeDuration(self, t), {apply_power=self:combatPhysicalpower()})
+				target:setEffect(target.EFF_STUNNED, t.getDazeDuration(self, t), {apply_power=self:combatSpellpower()})
 			else
-				game.logSeen(target, "%s resists the dazing blow!", target.name:capitalize())
+				game.logSeen(target, "%s resists the stunning blow!", target.name:capitalize())
 			end
 		end
 
@@ -179,8 +181,9 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local dazedur = t.getDazeDuration(self, t)
-		return ([[Hit a target for %d%% melee damage and daze it for %d turns.
-		Daze chance will improve with talent level.]]):
+		return ([[Hit a target for %d%% melee damage and stun it for %d turns.
+		Stun chance will improve with talent level.
+		At level 5 this attack can not miss.]]):
 		format(100 * damage, dazedur)
 	end,
 }
