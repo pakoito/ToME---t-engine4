@@ -1172,29 +1172,20 @@ newEffect{
 newEffect{
 	name = "BONE_SHIELD", image = "talents/bone_shield.png",
 	desc = "Bone Shield",
-	long_desc = function(self, eff) return ("Fully protects from %d damaging actions."):format(#eff.particles) end,
+	long_desc = function(self, eff) return ("Any attacks doing more than %d%% of your life is reduced to %d%%."):format(eff.power, eff.power) end,
 	type = "magical",
 	subtype = { arcane=true },
 	status = "beneficial",
-	parameters = { nb=3 },
+	parameters = { power=30 },
 	on_gain = function(self, err) return "#Target# protected by flying bones.", "+Bone Shield" end,
 	on_lose = function(self, err) return "#Target# flying bones crumble.", "-Bone Shield" end,
-	absorb = function(self, eff)
-		game.logPlayer(self, "Your bone shield absorbs the damage!")
-		local pid = table.remove(eff.particles)
-		if pid then self:removeParticles(pid) end
-		if #eff.particles <= 0 then
-			eff.dur = 0
-		end
-	end,
 	activate = function(self, eff)
-		local nb = eff.nb
-		local ps = {}
-		for i = 1, nb do ps[#ps+1] = self:addParticles(Particles.new("bone_shield", 1)) end
-		eff.particles = ps
+		eff.tmpid = self:addTemporaryValue("flat_damage_cap", {all=eff.power})
+		eff.particle = self:addParticles(Particles.new("time_shield_bubble", 1))
 	end,
 	deactivate = function(self, eff)
-		for i, particle in ipairs(eff.particles) do self:removeParticles(particle) end
+		self:removeTemporaryValue("flat_damage_cap", eff.tmpid)
+		self:removeParticles(eff.particle)
 	end,
 }
 

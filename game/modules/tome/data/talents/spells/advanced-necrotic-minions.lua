@@ -308,7 +308,7 @@ newTalent{
 		return false
 	end,
 	getTurns = function(self, t) return math.floor(4 + self:combatTalentSpellDamage(t, 8, 20)) end,
-	getBones = function(self, t) return math.floor(1 + self:getTalentLevel(t)) end,
+	getPower = function(self, t) return 25 - math.ceil(1 + self:getTalentLevel(t) * 1.5) end,
 	action = function(self, t)
 		local list = {}
 		if game.party and game.party:hasMember(self) then
@@ -324,16 +324,16 @@ newTalent{
 
 		rng.tableRemove(list):die(self)
 
-		self:setEffect(self.EFF_BONE_SHIELD, t.getTurns(self, t), {nb=t.getBones(self, t)})
+		self:setEffect(self.EFF_BONE_SHIELD, t.getTurns(self, t), {power=t.getPower(self, t)})
 
 		game:playSoundNear(self, "talents/spell_generic2")
 		return true
 	end,
 	info = function(self, t)
-		return ([[Sacrifice a bone giant minion. Using its bones you make a temporary bone shield around you with %d charges.
+		return ([[Sacrifice a bone giant minion. Using its bones you make a temporary shield around you that prevents any attacks from doing more than %d%% of your total life.
 		The effect lasts %d turns or until all charges are depleted.
 		Each charge will fully absorb one attack.]]):
-		format(t.getBones(self, t), t.getTurns(self, t))
+		format(t.getPower(self, t), t.getTurns(self, t))
 	end,
 }
 

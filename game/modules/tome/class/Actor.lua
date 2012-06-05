@@ -1533,11 +1533,6 @@ function _M:onTakeHit(value, src)
 		end
 	end
 
-	if self:hasEffect(self.EFF_BONE_SHIELD) then
-		local e = self.tempeffect_def[self.EFF_BONE_SHIELD]
-		e.absorb(self, self.tmp[self.EFF_BONE_SHIELD])
-		value = 0
-	end
 	if self:isTalentActive(self.T_BONE_SHIELD) then
 		local t = self:getTalentFromId(self.T_BONE_SHIELD)
 		t.absorb(self, t, self:isTalentActive(self.T_BONE_SHIELD))

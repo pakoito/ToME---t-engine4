@@ -66,7 +66,7 @@ newTalent{
 	getDuration = function(self, t) return util.bound(5 + math.floor(self:getTalentLevel(t)), 5, 15) end,
 	getDotDuration = function(self, t) return util.bound(4 + math.floor(self:getTalentLevel(t)), 4, 12) end,
 	getTimeReduction = function(self, t) return util.bound(15 + math.floor(self:getTalentLevel(t) * 2), 15, 35) end,
-		action = function(self, t)
+	action = function(self, t)
 		self:setEffect(self.EFF_TIME_SHIELD, t.getDuration(self, t), {power=t.getMaxAbsorb(self, t), dot_dur=t.getDotDuration(self, t), time_reducer=t.getTimeReduction(self, t)})
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
