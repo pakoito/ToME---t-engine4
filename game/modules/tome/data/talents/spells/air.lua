@@ -142,26 +142,34 @@ newTalent{
 	points = 5,
 	mode = "sustained",
 	cooldown = 10,
-	sustain_mana = 50,
+	sustain_mana = 10,
 	tactical = { BUFF = 2 },
 	getEncumberance = function(self, t) return math.floor(self:combatTalentSpellDamage(t, 10, 110)) end,
 	getRangedDefence = function(self, t) return self:combatTalentSpellDamage(t, 4, 30) end,
+	getSpeed = function(self, t) return 0.05 * self:getTalentLevel(t) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/spell_generic2")
 		local ret = {
 			encumb = self:addTemporaryValue("max_encumber", t.getEncumberance(self, t)),
 			def = self:addTemporaryValue("combat_def_ranged", t.getRangedDefence(self, t)),
-			lev = self:addTemporaryValue("levitation", 1),
-			traps = self:addTemporaryValue("avoid_pressure_traps", 1),
 		}
+		if self:getTalentLevel(t) >= 4 then
+			ret.lev = self:addTemporaryValue("levitation", 1)
+			ret.traps = self:addTemporaryValue("avoid_pressure_traps", 1)
+		end
+		if self:getTalentLevel(t) >= 5 then
+			ret.ms = self:addTemporaryValue("movement_speed", t.getSpeed(self, t))
+		end
+
 		self:checkEncumbrance()
 		return ret
 	end,
 	deactivate = function(self, t, p)
 		self:removeTemporaryValue("max_encumber", p.encumb)
 		self:removeTemporaryValue("combat_def_ranged", p.def)
-		self:removeTemporaryValue("levitation", p.lev)
-		self:removeTemporaryValue("avoid_pressure_traps", p.traps)
+		if p.lev then self:removeTemporaryValue("levitation", p.lev) end
+		if p.traps then self:removeTemporaryValue("avoid_pressure_traps", p.traps) end
+		if p.ms then self:removeTemporaryValue("movement_speed", p.ms) end
 		self:checkEncumbrance()
 		return true
 	end,
@@ -169,8 +177,9 @@ newTalent{
 		local encumberance = t.getEncumberance(self, t)
 		local rangedef = t.getRangedDefence(self, t)
 		return ([[A gentle wind circles around the caster, increasing carrying capacity by %d and increasing defense against projectiles by %d.
-		At level 4 it also makes you slightly levitate, allowing you to ignore some traps.]]):
-		format(encumberance, rangedef)
+		At level 4 it also makes you slightly levitate, allowing you to ignore some traps.
+		At level 5 it also grants %d%% movement speed.]]):
+		format(encumberance, rangedef, t.getSpeed(self, t) * 100)
 	end,
 }
 
@@ -180,14 +189,14 @@ newTalent{
 	require = spells_req4,
 	points = 5,
 	mode = "sustained",
-	sustain_mana = 170,
+	sustain_mana = 100,
 	cooldown = 15,
 	tactical = { ATTACKAREA = 3 },
-	range = 5,
+	range = 6,
 	direct_hit = true,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 15, 80) end,
 	getTargetCount = function(self, t) return math.floor(self:getTalentLevel(t)) end,
-	getManaDrain = function(self, t) return -1.2 * self:getTalentLevelRaw(t) end,
+	getManaDrain = function(self, t) return -1.5 * self:getTalentLevelRaw(t) end,
 	do_storm = function(self, t)
 		if self:getMana() <= 0 then
 			self:forceUseTalent(t.id, {ignore_energy=true})
@@ -195,7 +204,7 @@ newTalent{
 		end
 
 		local tgts = {}
-		local grids = core.fov.circle_grids(self.x, self.y, 5, true)
+		local grids = core.fov.circle_grids(self.x, self.y, 6, true)
 		for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
 			local a = game.level.map(x, y, Map.ACTOR)
 			if a and self:reactionToward(a) < 0 then
@@ -204,36 +213,35 @@ newTalent{
 		end end
 
 		-- Randomly take targets
-		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
+		local tg = {type="ball", radius=1, range=self:getTalentRange(t), talent=t}
 		for i = 1, t.getTargetCount(self, t) do
 			if #tgts <= 0 then break end
 			local a, id = rng.table(tgts)
 			table.remove(tgts, id)
 
 			self:project(tg, a.x, a.y, DamageType.LIGHTNING, rng.avg(1, self:spellCrit(t.getDamage(self, t)), 3))
-			game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(a.x-self.x), math.abs(a.y-self.y)), "lightning", {tx=a.x-self.x, ty=a.y-self.y})
+			game.level.map:particleEmitter(a.x, a.y, tg.radius, "ball_lightning", {radius=tg.radius, tx=x, ty=y})
 			game:playSoundNear(self, "talents/lightning")
+			self:incMana(t.getManaDrain(self, t))
 		end
 	end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/thunderstorm")
 		game.logSeen(self, "#0080FF#A furious lightning storm forms around %s!", self.name)
 		return {
-			drain = self:addTemporaryValue("mana_regen", t.getManaDrain(self, t)),
 		}
 	end,
 	deactivate = function(self, t, p)
 		game.logSeen(self, "#0080FF#The furious lightning storm around %s calms down and disappears.", self.name)
-		self:removeTemporaryValue("mana_regen", p.drain)
 		return true
 	end,
 	info = function(self, t)
 		local targetcount = t.getTargetCount(self, t)
 		local damage = t.getDamage(self, t)
 		local manadrain = t.getManaDrain(self, t)
-		return ([[Conjures a furious, raging lightning storm with a radius of 5 that follows you as long as this spell is active.
-		Each turn a random lightning bolt will hit up to %d of your foes for 1 to %0.2f damage.
-		This powerful spell will continuously drain %0.2f mana while active.
+		return ([[Conjures a furious, raging lightning storm with a radius of 6 that follows you as long as this spell is active.
+		Each turn a random lightning bolt will hit up to %d of your foes for 1 to %0.2f damage in a radius of 1.
+		This powerful spell will drain %0.2f mana with each hit.
 		The damage will increase with your Spellpower.]]):
 		format(targetcount, damDesc(self, DamageType.LIGHTNING, damage),-manadrain)
 	end,
