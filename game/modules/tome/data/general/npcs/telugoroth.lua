@@ -27,7 +27,7 @@ local function doTeluvortaSwap(self)
 	local grids = core.fov.circle_grids(self.x, self.y, 10)
 	for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
 		local a = game.level.map(x, y, Map.ACTOR)
-		if a and a:canBe("teleport") and a ~= self then
+		if a and a:canBe("teleport") and a ~= self and self:canProject({type=hit}, a.x, a.y) then
 			tgts[#tgts+1] = a
 		end
 	end end

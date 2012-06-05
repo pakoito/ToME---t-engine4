@@ -64,8 +64,8 @@ newEntity{ base = "BASE_NPC_ORC_GRUSHNAK",
 
 	resolvers.talents{
 		[Talents.T_ARMOUR_TRAINING]={base=4, every=5, max=5},
-		[Talents.T_WEAPON_COMBAT]={base=4, every=5, max=8},
-		[Talents.T_WEAPONS_MASTERY]={base=4, every=5, max=8},
+		[Talents.T_WEAPON_COMBAT]={base=2, every=10, max=4},
+		[Talents.T_WEAPONS_MASTERY]={base=2, every=10, max=4},
 		[Talents.T_RUSH]={base=3, every=9, max=5},
 		[Talents.T_SHIELD_PUMMEL]={base=3, every=7, max=6},
 		[Talents.T_OVERPOWER]={base=3, every=7, max=6},
@@ -92,8 +92,8 @@ newEntity{ base = "BASE_NPC_ORC_GRUSHNAK",
 
 	resolvers.talents{
 		[Talents.T_ARMOUR_TRAINING]={base=5, every=5, max=8},
-		[Talents.T_WEAPON_COMBAT]={base=8, every=5, max=12},
-		[Talents.T_WEAPONS_MASTERY]={base=6, every=5, max=12},
+		[Talents.T_WEAPON_COMBAT]={base=4, every=10, max=6},
+		[Talents.T_WEAPONS_MASTERY]={base=3, every=10, max=6},
 		[Talents.T_RUSH]={base=3, every=7, max=6},
 		[Talents.T_BATTLE_CALL]={base=3, every=7, max=6},
 		[Talents.T_SHIELD_PUMMEL]={base=4, every=7, max=7},
@@ -118,8 +118,8 @@ newEntity{ base = "BASE_NPC_ORC_GRUSHNAK",
 
 	resolvers.talents{
 		[Talents.T_ARMOUR_TRAINING]={base=4, every=5, max=5},
-		[Talents.T_WEAPON_COMBAT]={base=4, every=5, max=8},
-		[Talents.T_WEAPONS_MASTERY]={base=4, every=5, max=8},
+		[Talents.T_WEAPON_COMBAT]={base=2, every=10, max=4},
+		[Talents.T_WEAPONS_MASTERY]={base=2, every=10, max=4},
 		[Talents.T_RUSH]={base=3, every=7, max=6},
 		[Talents.T_STUNNING_BLOW]={base=3, every=7, max=6},
 		[Talents.T_BERSERKER]={base=3, every=7, max=6},
@@ -144,8 +144,8 @@ newEntity{ base = "BASE_NPC_ORC_GRUSHNAK",
 
 	resolvers.talents{
 		[Talents.T_ARMOUR_TRAINING]={base=5, every=5, max=8},
-		[Talents.T_WEAPON_COMBAT]={base=8, every=5, max=12},
-		[Talents.T_WEAPONS_MASTERY]={base=6, every=5, max=12},
+		[Talents.T_WEAPON_COMBAT]={base=4, every=10, max=6},
+		[Talents.T_WEAPONS_MASTERY]={base=3, every=10, max=6},
 		[Talents.T_RUSH]={base=3, every=7, max=6},
 		[Talents.T_BATTLE_CALL]={base=3, every=7, max=6},
 		[Talents.T_STUNNING_BLOW]={base=4, every=7, max=7},

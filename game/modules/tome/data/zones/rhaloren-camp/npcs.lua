@@ -51,7 +51,7 @@ newEntity{ define_as = "INQUISITOR",
 
 	resolvers.talents{
 		[Talents.T_FLAME]=3, [Talents.T_SOUL_ROT]=3,
-		[Talents.T_WEAPONS_MASTERY]=3,
+		[Talents.T_WEAPONS_MASTERY]=2,
 		[Talents.T_RUSH]=2,
 	},
 	resolvers.inscriptions(1, {"shielding rune", "speed rune"}),

@@ -88,7 +88,7 @@ newEntity{ define_as = "THE_MASTER",
 		[Talents.T_STRIKE]={base=3, every=5, max=7},
 
 		[Talents.T_ARMOUR_TRAINING]={base=3, every=5, max=10},
-		[Talents.T_WEAPONS_MASTERY]={base=3, every=4, max=7},
+		[Talents.T_WEAPONS_MASTERY]={base=2, every=8, max=5},
 		[Talents.T_STUNNING_BLOW]={base=1, every=5, max=5},
 		[Talents.T_RUSH]={base=4, every=5, max=8},
 		[Talents.T_SPELL_SHIELD]={base=4, every=5, max=8},
@@ -241,8 +241,8 @@ What proud hero of renown was this before he was condemned to such a terrible fa
 		
 		[Talents.T_THICK_SKIN]={base=3, every=5, max=5},
 		[Talents.T_ARMOUR_TRAINING]={base=4, every=5, max=10},
-		[Talents.T_WEAPONS_MASTERY]={base=4, every=5, max=10},
-		[Talents.T_WEAPON_COMBAT]={base=4, every=5, max=10},
+		[Talents.T_WEAPONS_MASTERY]={base=2, every=10, max=5},
+		[Talents.T_WEAPON_COMBAT]={base=2, every=10, max=5},
 		
 		[Talents.T_VITALITY]={base=4, every=5, max=6},
 		[Talents.T_UNFLINCHING_RESOLVE]=6,
@@ -388,8 +388,8 @@ There is a cunning air to his hollow skull, and his empty sockets reveal nothing
 		[Talents.T_LETHALITY]={base=1, every=6, max=5},
 		[Talents.T_WILLFUL_COMBAT]={base=5, every=6, max=6},
 		
-		[Talents.T_KNIFE_MASTERY]={base=4, every=5, max=10},
-		[Talents.T_WEAPON_COMBAT]={base=4, every=5, max=10},
+		[Talents.T_KNIFE_MASTERY]={base=2, every=10, max=5},
+		[Talents.T_WEAPON_COMBAT]={base=2, every=10, max=5},
 		
 		[Talents.T_BONE_ARMOUR]={base=3, every=5, max=5},
 		[Talents.T_RESILIENT_BONES]={base=3, every=5, max=5},

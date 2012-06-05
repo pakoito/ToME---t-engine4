@@ -62,8 +62,8 @@ newEntity{ define_as = "ATAMATHON", base = "BASE_NPC_CONSTRUCT",
 	},
 
 	resolvers.talents{
-		[Talents.T_WEAPON_COMBAT]={base=12, every=3},
-		[Talents.T_WEAPONS_MASTERY]={base=14, every=3},
+		[Talents.T_WEAPON_COMBAT]={base=6, every=6},
+		[Talents.T_WEAPONS_MASTERY]={base=7, every=6},
 		[Talents.T_GOLEM_BEAM]={base=8, every=3},
 		[Talents.T_GOLEM_ARCANE_PULL]={base=8, every=3},
 		[Talents.T_GOLEM_REFLECTIVE_SKIN]={base=8, every=3},

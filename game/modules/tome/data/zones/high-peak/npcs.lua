@@ -190,8 +190,8 @@ newEntity{
 		[Talents.T_ACID_BLOOD]={base=7, every=6},
 		[Talents.T_DRAIN]={base=7, every=6},
 
-		[Talents.T_WEAPON_COMBAT]=10,
-		[Talents.T_WEAPONS_MASTERY]={base=7, every=6},
+		[Talents.T_WEAPON_COMBAT]=5,
+		[Talents.T_WEAPONS_MASTERY]={base=4, every=10},
 		[Talents.T_ARMOUR_TRAINING]={base=7, every=6},
 	},
 	resolvers.sustains_at_birth(),
@@ -258,8 +258,8 @@ newEntity{ define_as = "FALLEN_SUN_PALADIN_AERYN",
 
 	resolvers.talents{
 		[Talents.T_ARMOUR_TRAINING]=7,
-		[Talents.T_WEAPON_COMBAT]=10,
-		[Talents.T_WEAPONS_MASTERY]=10,
+		[Talents.T_WEAPON_COMBAT]=5,
+		[Talents.T_WEAPONS_MASTERY]=5,
 		[Talents.T_RUSH]=3,
 
 		[Talents.T_CHANT_OF_FORTITUDE]=7,
@@ -323,8 +323,8 @@ newEntity{ define_as = "HIGH_SUN_PALADIN_AERYN",
 
 	resolvers.talents{
 		[Talents.T_ARMOUR_TRAINING]=5,
-		[Talents.T_WEAPON_COMBAT]=10,
-		[Talents.T_WEAPONS_MASTERY]=10,
+		[Talents.T_WEAPON_COMBAT]=5,
+		[Talents.T_WEAPONS_MASTERY]=5,
 		[Talents.T_RUSH]=8,
 
 		[Talents.T_CHANT_OF_FORTITUDE]=5,

@@ -87,7 +87,7 @@ newEntity{ base = "BASE_NPC_YAECH",
 		[Talents.T_KINETIC_AURA]={base=1, every=7, max=5},
 		[Talents.T_CHARGED_AURA]={base=1, every=7, max=5},
 		[Talents.T_KINETIC_SHIELD]={base=2, every=7, max=5},
-		[Talents.T_EXOTIC_WEAPONS_MASTERY]={base=1, every=7, max=10},
+		[Talents.T_EXOTIC_WEAPONS_MASTERY]={base=1, every=10, max=5},
 	},
 }
 

@@ -54,7 +54,7 @@ newEntity{ base = "BASE_NPC_ELVALA_TOWN",
 	rarity = 3,
 	max_life = resolvers.rngavg(70,80),
 	resolvers.talents{
-		[Talents.T_BOW_MASTERY]={base=1, every=5, max=10},
+		[Talents.T_BOW_MASTERY]={base=1, every=10, max=5},
 		[Talents.T_SHOOT]=1,
 	},
 	ai_state = { talent_in=1, },

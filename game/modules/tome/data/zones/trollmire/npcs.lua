@@ -161,8 +161,8 @@ newEntity{ define_as = "ALUIN",
 
 	resolvers.talents{
 		[Talents.T_ARMOUR_TRAINING]=5,
-		[Talents.T_WEAPON_COMBAT]={base=5, every=5, max=10},
-		[Talents.T_WEAPONS_MASTERY]={base=5, every=5, max=10},
+		[Talents.T_WEAPON_COMBAT]={base=3, every=10, max=5},
+		[Talents.T_WEAPONS_MASTERY]={base=3, every=10, max=5},
 		[Talents.T_RUSH]={base=4, every=7, max=6},
 
 		[Talents.T_BLINDSIDE]={base=4, every=7, max=6},

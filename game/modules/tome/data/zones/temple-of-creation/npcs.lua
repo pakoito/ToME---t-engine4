@@ -63,8 +63,8 @@ newEntity{ define_as = "SLASUL",
 	resolvers.drops{chance=100, nb=5, {tome_drops="boss"} },
 
 	resolvers.talents{
-		[Talents.T_WEAPON_COMBAT]={base=6, every=6, max=10},
-		[Talents.T_WEAPONS_MASTERY]={base=6, every=6, max=10},
+		[Talents.T_WEAPON_COMBAT]={base=3, every=10, max=5},
+		[Talents.T_WEAPONS_MASTERY]={base=3, every=10, max=5},
 		[Talents.T_SHIELD_EXPERTISE]={base=3, every=7, max=6},
 		[Talents.T_SHIELD_PUMMEL]={base=2, every=7, max=6},
 		[Talents.T_RIPOSTE]=5,

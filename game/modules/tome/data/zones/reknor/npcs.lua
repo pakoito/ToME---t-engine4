@@ -58,8 +58,8 @@ newEntity{ define_as = "GOLBUG",
 
 	resolvers.talents{
 		[Talents.T_ARMOUR_TRAINING]={base=4, every=6, max=8},
-		[Talents.T_WEAPON_COMBAT]={base=6, every=5, max=10},
-		[Talents.T_WEAPONS_MASTERY]={base=6, every=5, max=10},
+		[Talents.T_WEAPON_COMBAT]={base=3, every=10, max=5},
+		[Talents.T_WEAPONS_MASTERY]={base=3, every=10, max=5},
 		[Talents.T_SHIELD_PUMMEL]={base=4, every=5, max=6},
 		[Talents.T_RUSH]={base=4, every=5, max=6},
 		[Talents.T_RIPOSTE]={base=4, every=5, max=6},
@@ -187,8 +187,8 @@ newEntity{ define_as = "LITHFENGEL", -- Lord of Ash; backup guardian
 		[Talents.T_CATALEPSY]={base=5, every=6, max=8},
 		[Talents.T_RUSH]={base=5, every=6, max=8},
 		[Talents.T_MORTAL_TERROR]={base=5, every=6, max=8},
-		[Talents.T_WEAPON_COMBAT]=10,
-		[Talents.T_WEAPONS_MASTERY]={base=5, every=6, max=10},
+		[Talents.T_WEAPON_COMBAT]=5,
+		[Talents.T_WEAPONS_MASTERY]={base=3, every=10, max=5},
 	},
 	resolvers.sustains_at_birth(),
 

@@ -403,13 +403,13 @@ newTalent{
 			no_drops = true, -- remove to drop the weapon
 
 			resolvers.talents{
-				[Talents.T_WEAPON_COMBAT]={base=1, every=5, max=10},
-				[Talents.T_WEAPONS_MASTERY]={base=1, every=5, max=10},
-				[Talents.T_KNIFE_MASTERY]={base=1, every=5, max=10},
-				[Talents.T_EXOTIC_WEAPONS_MASTERY]={base=1, every=5, max=10},
-				[Talents.T_STAFF_MASTERY]={base=1, every=5, max=10},
-				[Talents.T_BOW_MASTERY]={base=1, every=5, max=10},
-				[Talents.T_SLING_MASTERY]={base=1, every=5, max=10},
+				[Talents.T_WEAPON_COMBAT]={base=1, every=10, max=5},
+				[Talents.T_WEAPONS_MASTERY]={base=1, every=10, max=5},
+				[Talents.T_KNIFE_MASTERY]={base=1, every=10, max=5},
+				[Talents.T_EXOTIC_WEAPONS_MASTERY]={base=1, every=10, max=5},
+				[Talents.T_STAFF_MASTERY]={base=1, every=10, max=5},
+				[Talents.T_BOW_MASTERY]={base=1, every=10, max=5},
+				[Talents.T_SLING_MASTERY]={base=1, every=10, max=5},
 				[Talents.T_SHOOT]=1,
 			},
 

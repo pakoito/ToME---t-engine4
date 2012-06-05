@@ -137,7 +137,7 @@ newEntity{ base="BASE_NPC_NAGA", define_as = "ZOISLA",
 		[Talents.T_SPIT_POISON]={base=2, every=10, max=5},
 		[Talents.T_WATER_BOLT]={base=2, every=10, max=5},
 		[Talents.T_MIND_SEAR]={base=2, every=10, max=5},
-		[Talents.T_EXOTIC_WEAPONS_MASTERY]={base=1, every=6, max=13},
+		[Talents.T_EXOTIC_WEAPONS_MASTERY]={base=1, every=8, max=6},
 	},
 	resolvers.inscriptions(1, {"movement infusion"}),
 

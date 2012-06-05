@@ -96,8 +96,8 @@ Each swing drips pestulant fluid before it, and each droplet writhes and wriggle
 
 		[Talents.T_BLINDSIDE]={base=3, every=12},
 
-		[Talents.T_WEAPON_COMBAT]={base=5, every=10, max=10},
-		[Talents.T_WEAPONS_MASTERY]={base=3, every=10, max=10},
+		[Talents.T_WEAPON_COMBAT]={base=2, every=10, max=6},
+		[Talents.T_WEAPONS_MASTERY]={base=1, every=10, max=6},
 	},
 
 	resolvers.sustains_at_birth(),

@@ -42,7 +42,7 @@ newEntity{
 	open_door = true,
 
 	resolvers.racial(),
-	resolvers.talents{ [Talents.T_ARMOUR_TRAINING]=5, [Talents.T_WEAPON_COMBAT]={base=1, every=5, max=10}, [Talents.T_WEAPONS_MASTERY]={base=1, every=5, max=10} },
+	resolvers.talents{ [Talents.T_ARMOUR_TRAINING]=5, [Talents.T_WEAPON_COMBAT]={base=1, every=10, max=5}, [Talents.T_WEAPONS_MASTERY]={base=1, every=10, max=5} },
 
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=3, },

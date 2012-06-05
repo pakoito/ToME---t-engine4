@@ -95,7 +95,7 @@ newEntity{ base = "BASE_NPC_ORC_GORBAT",
 	resolvers.inscriptions(2, "infusion"),
 
 	resolvers.talents{
-		[Talents.T_SLING_MASTERY]={base=5, every=5, max=10},
+		[Talents.T_SLING_MASTERY]={base=2, every=10, max=5},
 		[Talents.T_MINOTAUR]={base=5, every=6, max=9},
 		[Talents.T_STONE_GOLEM]={base=5, every=6, max=9},
 		[Talents.T_RITCH_FLAMESPITTER]={base=4, every=5, max=9},
@@ -129,7 +129,7 @@ newEntity{ base = "BASE_NPC_ORC_GORBAT",
 	resolvers.inscriptions(1, "infusion"),
 
 	resolvers.talents{
-		[Talents.T_WEAPONS_MASTERY]={base=5, every=5, max=14},
+		[Talents.T_WEAPONS_MASTERY]={base=2, every=10, max=7},
 		[Talents.T_ICE_CLAW]={base=4, every=6, max=8},
 		[Talents.T_ICY_SKIN]={base=4, every=5, max=8},
 		[Talents.T_ICE_BREATH]={base=4, every=5, max=9},
@@ -163,8 +163,8 @@ newEntity{ base = "BASE_NPC_ORC_GORBAT",
 	resolvers.inscriptions(2, "infusion"),
 
 	resolvers.talents{
-		[Talents.T_WEAPONS_MASTERY]={base=5, every=5, max=14},
-		[Talents.T_WEAPON_COMBAT]={base=5, every=5, max=14},
+		[Talents.T_WEAPONS_MASTERY]={base=2, every=10, max=7},
+		[Talents.T_WEAPON_COMBAT]={base=2, every=10, max=7},
 		[Talents.T_ARMOUR_TRAINING]={base=5, every=5, max=14},
 		[Talents.T_RESOLVE]={base=4, every=5, max=9},
 		[Talents.T_ANTIMAGIC_SHIELD]={base=4, every=5, max=9},

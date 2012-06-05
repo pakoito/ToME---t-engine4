@@ -193,7 +193,7 @@ newEntity{ base = "BASE_NPC_VAMPIRE", unique=true, define_as="ARCH_ZEPHYR",
 
 		[Talents.T_SHOOT]=1, -- If possible, add talent that lets it temporarily fire lightning instead of arrows.
 		[Talents.T_RELOAD]=1,
-		[Talents.T_BOW_MASTERY]={base=7, every=5},
+		[Talents.T_BOW_MASTERY]={base=3, every=10},
 		[Talents.T_DUAL_ARROWS]={base=3, every=6, max=8},
 		[Talents.T_PINNING_SHOT]={base=2, every=6, max=4},
 		[Talents.T_CRIPPLING_SHOT]={base=2, every=6, max=7},

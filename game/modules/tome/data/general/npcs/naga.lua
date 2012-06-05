@@ -64,8 +64,8 @@ newEntity{ base = "BASE_NPC_NAGA",
 		[Talents.T_SUNDER_ARMOUR]={base=4, every=10, max=8},
 		[Talents.T_STUNNING_BLOW]={base=3, every=10, max=7},
 		[Talents.T_RUSH]=8,
-		[Talents.T_WEAPON_COMBAT]={base=6, every=6, max=13},
-		[Talents.T_EXOTIC_WEAPONS_MASTERY]={base=6, every=6, max=13},
+		[Talents.T_WEAPON_COMBAT]={base=3, every=10, max=6},
+		[Talents.T_EXOTIC_WEAPONS_MASTERY]={base=3, every=10, max=6},
 	},
 }
 
@@ -90,8 +90,8 @@ newEntity{ base = "BASE_NPC_NAGA",
 		[Talents.T_WATER_JET]={base=6, every=10, max=11},
 		[Talents.T_WATER_BOLT]={base=7, every=10, max=12},
 		[Talents.T_SHOOT]=1,
-		[Talents.T_WEAPON_COMBAT]={base=6, every=6, max=13},
-		[Talents.T_BOW_MASTERY]={base=6, every=6, max=13},
+		[Talents.T_WEAPON_COMBAT]={base=3, every=10, max=6},
+		[Talents.T_BOW_MASTERY]={base=3, every=10, max=6},
 	},
 }
 

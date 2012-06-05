@@ -50,7 +50,7 @@ newEntity{ base="BASE_NPC_ORC", define_as = "UKRUK",
 	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
 
 	resolvers.talents{
-		[Talents.T_WEAPONS_MASTERY]=10, [Talents.T_ASSAULT]=5, [Talents.T_OVERPOWER]=5, [Talents.T_RUSH]=5,
+		[Talents.T_WEAPONS_MASTERY]=5, [Talents.T_ASSAULT]=5, [Talents.T_OVERPOWER]=5, [Talents.T_RUSH]=5,
 	},
 	combat_atk = 1000,
 

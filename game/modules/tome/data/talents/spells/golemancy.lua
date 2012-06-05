@@ -48,7 +48,7 @@ local function makeGolem()
 
 		resolvers.talents{
 			[Talents.T_ARMOUR_TRAINING]=4,
-			[Talents.T_WEAPON_COMBAT]=2,
+			[Talents.T_WEAPON_COMBAT]=1,
 			[Talents.T_MANA_POOL]=1,
 			[Talents.T_STAMINA_POOL]=1,
 			[Talents.T_GOLEM_KNOCKBACK]=1,
@@ -256,7 +256,7 @@ newTalent{
 		if not self.alchemy_golem then return "Improves your golem's proficiency with weapons, increasing its attack and damage." end
 		local rawlev = self:getTalentLevelRaw(t)
 		local olda, oldd = self.alchemy_golem.talents[Talents.T_WEAPON_COMBAT], self.alchemy_golem.talents[Talents.T_WEAPONS_MASTERY]
-		self.alchemy_golem.talents[Talents.T_WEAPON_COMBAT], self.alchemy_golem.talents[Talents.T_WEAPONS_MASTERY] = 2 + rawlev, rawlev
+		self.alchemy_golem.talents[Talents.T_WEAPON_COMBAT], self.alchemy_golem.talents[Talents.T_WEAPONS_MASTERY] = 1 + rawlev, rawlev
 		local ta, td = self:getTalentFromId(Talents.T_WEAPON_COMBAT), self:getTalentFromId(Talents.T_WEAPONS_MASTERY)
 		local attack = ta.getAttack(self.alchemy_golem, ta)
 		local power = td.getDamage(self.alchemy_golem, td)

@@ -1917,8 +1917,8 @@ newDamageType{
 
 			resolvers.talents{
 				[src.T_ARMOUR_TRAINING]={base=4, every=5, max=5},
-				[src.T_WEAPON_COMBAT]={base=4, every=5, max=8},
-				[src.T_WEAPONS_MASTERY]={base=4, every=5, max=8},
+				[src.T_WEAPON_COMBAT]={base=2, every=10, max=4},
+				[src.T_WEAPONS_MASTERY]={base=2, every=10, max=4},
 				[src.T_RUSH]={base=3, every=7, max=6},
 				[src.T_STUNNING_BLOW]={base=3, every=7, max=6},
 				[src.T_BERSERKER]={base=3, every=7, max=6},
