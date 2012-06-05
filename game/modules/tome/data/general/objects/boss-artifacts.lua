@@ -1325,6 +1325,7 @@ newEntity{ base = "BASE_LONGBOW",
 	act = function(self)
 		self:useEnergy()
 		if not self.worn_by then return end
+		if game.level and not game.level:hasEntity(self.worn_by) then self.worn_by = nil return end
 		if self.worn_by:attr("dead") then return end
 		self.zap = self.zap + 5
 		if not rng.percent(self.zap)  then return end

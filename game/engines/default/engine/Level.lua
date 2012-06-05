@@ -74,6 +74,7 @@ function _M:addEntity(e, after, no_error)
 		return
 	end
 
+	if self.entities[e.uid] and self.entities[e.uid] == e then return end
 	if self.entities[e.uid] then if no_error then return else error("Entity "..e.uid.."("..(e.name or "???")..") already present on the level") end end
 	self.entities[e.uid] = e
 	if e.addEntityOrder then after = e:addEntityOrder(level) end

@@ -49,7 +49,7 @@ end
 --- Can this object act at all
 -- Most object will want to answer false, only recharging and stuff needs them
 function _M:canAct()
-	if self.power_regen or self.use_talent or self.sentient then return true end
+	if (self.power_regen or self.use_talent or self.sentient) and not self.talent_cooldown then return true end
 	return false
 end
 

@@ -132,7 +132,7 @@ newTalent{
 		if not x then return nil end
 
 		local list = mod.class.NPC:loadList("/data/general/npcs/ghoul.lua")
-		local m = list.GHOUL
+		local m = list.GHOUL:clone()
 		if not m then return nil end
 
 		m:resolve() m:resolve(nil, true)
