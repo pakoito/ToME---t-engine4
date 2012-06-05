@@ -428,6 +428,7 @@ local minions_list = {
 		see_invisible = 5,
 		undead = 1,
 		name = "master vampire", color=colors.GREEN, image = "npc/master_vampire.png",
+		resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/master_vampire.png", display_h=2, display_y=-1}}},
 		desc=[[It is a humanoid form dressed in robes. Power emanates from its chilling frame.]],
 		max_life = resolvers.rngavg(80,90),
 		combat_armor = 10, combat_def = 8,
@@ -567,6 +568,7 @@ local minions_list = {
 		resolvers.sustains_at_birth(),
 		name = "lich", color=colors.DARK_BLUE,
 		desc=[[Having thought to discover life eternal, these beings have allowed undeath to rob them of the joys of life. Now they seek to destroy it as well.]],
+		resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/undead_lich_lich.png", display_h=2, display_y=-1}}},
 		level_range = {1, nil}, exp_worth = 0,
 		rarity = 20,
 		max_life = resolvers.rngavg(70,80),
@@ -602,17 +604,17 @@ local minions_list = {
 function getAdvancedMinionChances(self)
 	local cl = math.floor(self:getTalentLevel(self.T_MINION_MASTERY))
 	if cl <= 1 then
-		return { vampire=2, m_vampire=0, g_wight=0, b_wight=0, dread=0, lich=0 }
+		return { vampire=4, m_vampire=0, g_wight=0, b_wight=0, dread=0, lich=0 }
 	elseif cl == 2 then
-		return { vampire=2, m_vampire=1, g_wight=0, b_wight=0, dread=1, lich=0 }
+		return { vampire=4, m_vampire=2, g_wight=0, b_wight=0, dread=2, lich=0 }
 	elseif cl == 3 then
-		return { vampire=3, m_vampire=1, g_wight=1, b_wight=0, dread=1, lich=0 }
+		return { vampire=6, m_vampire=2, g_wight=2, b_wight=0, dread=2, lich=0 }
 	elseif cl == 4 then
-		return { vampire=3, m_vampire=2, g_wight=1, b_wight=1, dread=2, lich=1 }
+		return { vampire=6, m_vampire=4, g_wight=2, b_wight=2, dread=4, lich=2 }
 	elseif cl == 5 then
-		return { vampire=3, m_vampire=2, g_wight=2, b_wight=1, dread=2, lich=1 }
+		return { vampire=6, m_vampire=4, g_wight=4, b_wight=2, dread=4, lich=2 }
 	elseif cl >= 6 then
-		return { vampire=2, m_vampire=2, g_wight=2, b_wight=2, dread=3, lich=2 }
+		return { vampire=4, m_vampire=4, g_wight=4, b_wight=4, dread=6, lich=4 }
 	end
 end
 
