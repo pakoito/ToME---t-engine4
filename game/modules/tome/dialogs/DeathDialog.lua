@@ -202,6 +202,7 @@ function _M:use(item)
 		self:cleanActor(self.actor)
 		self:resurrectBasic(self.actor)
 		self:restoreResources(self.actor)
+		self.actor:check("on_resurrect", "cheat")
 	elseif act == "precognition" then
 		self:resurrectBasic(self.actor)
 		self.actor:removeEffect(self.actor.EFF_PRECOGNITION)
@@ -213,6 +214,7 @@ function _M:use(item)
 		self:resurrectBasic(self.actor)
 		self:restoreResources(self.actor)
 		world:gainAchievement("UNSTOPPABLE", actor)
+		self.actor:check("on_resurrect", "blood_life")
 	elseif act == "lichform" then
 		local t = self.actor:getTalentFromId(self.actor.T_LICHFORM)
 
@@ -222,6 +224,7 @@ function _M:use(item)
 		world:gainAchievement("LICHFORM", actor)
 		t.becomeLich(self.actor, t)
 		self.actor:updateModdableTile()
+		self.actor:check("on_resurrect", "lichform")
 	elseif act == "easy_mode" then
 		self:eidolonPlane()
 	elseif act == "skeleton" then
@@ -232,6 +235,7 @@ function _M:use(item)
 		self:resurrectBasic(self.actor)
 		self:restoreResources(self.actor)
 		world:gainAchievement("UNSTOPPABLE", actor)
+		self.actor:check("on_resurrect", "skeleton")
 	elseif act:find("^consume") then
 		local inven, item, o = item.inven, item.item, item.object
 		self.actor:removeObject(inven, item)
@@ -241,6 +245,7 @@ function _M:use(item)
 		self:resurrectBasic(self.actor)
 		self:restoreResources(self.actor)
 		world:gainAchievement("UNSTOPPABLE", actor)
+		self.actor:check("on_resurrect", "consume", o)
 	end
 end
 

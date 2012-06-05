@@ -38,7 +38,7 @@ function _M:init(class, max_before_wait)
 	self.saveclass = class or "engine.Savefile"
 	self.pipe = {}
 	self.on_done = {}
-	self.max_before_wait = max_before_wait or 4
+	self.max_before_wait = max_before_wait or 6
 	self.co = nil
 	self.current_nb = 0
 	self.total_nb = 1

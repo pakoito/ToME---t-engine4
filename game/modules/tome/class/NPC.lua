@@ -271,6 +271,8 @@ function _M:die(src, death_note)
 		self.died = (self.died or 0) + 1
 		self:move(self.x, self.y, true)
 
+		self:check("on_resurrect", "basic_resurrect")
+
 		return
 	end
 
