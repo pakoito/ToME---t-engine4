@@ -113,7 +113,7 @@ newTalent{
 	no_unlearn_last = true,
 	action = function(self, t)
 		local staff = self:hasStaffWeapon()
-		if not staff then
+		if not staff or not staff.wielder or not staff.wielder.learn_talent or not staff.wielder.learn_talent[self.T_COMMAND_STAFF] then
 			game.logPlayer(self, "You must be holding a staff.")
 			return
 		end
