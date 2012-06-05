@@ -2015,6 +2015,14 @@ function _M:die(src, death_note)
 			end
 		end)
 	end
+	
+	if self:hasEffect(self.EFF_GHOUL_ROT) then
+		local p = self:hasEffect(self.EFF_GHOUL_ROT)
+		if p.make_ghoul > 0 then
+			local t = p.src:getTalentFromId(p.src.T_GNAW)
+			t.spawn_ghoul(p.src, self, t)
+		end
+	end		
 
 	-- Curse of Corpses: Corpselight
 	-- Curse of Corpses: Reprieve from Death

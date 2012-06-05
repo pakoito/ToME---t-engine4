@@ -48,7 +48,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_NPC_GHOUL",
-	name = "ghoul", color=colors.TAN,
+	name = "ghoul", color=colors.TAN, define_as = "GHOUL",
 	desc = [[Flesh is falling off in chunks from this decaying abomination.]],
 	level_range = {7, nil}, exp_worth = 1,
 	rarity = 1,

@@ -1181,10 +1181,12 @@ newTalent{
 		end
 
 		-- Find an actor with that filter
-		local m = game.zone:makeEntityByName(game.level, "actor", "GRGGLCK_TENTACLE")
+		local list = mod.class.NPC:loadList("/data/general/npcs/horror.lua")
+		local m = list.GRGGLCK_TENTACLE:clone()
 		if m then
 			m.exp_worth = 0
 			m:resolve()
+			m:resolve(nil, true)
 
 			m.summoner = self
 			m.summon_time = 10

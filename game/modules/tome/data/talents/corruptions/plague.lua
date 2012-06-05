@@ -155,10 +155,9 @@ newTalent{
 	type = {"corruption/plague", 3},
 	require = corrs_req3,
 	points = 5,
-	vim = 35,
+	vim = 20,
 	cooldown = 15,
 	range = 6,
-	radius = 2,
 	tactical = { DISABLE = function(self, t, target)
 		-- Make sure the target has a disease
 		for eff_id, p in pairs(target.tmp) do
@@ -170,15 +169,16 @@ newTalent{
 	end },
 	direct_hit = true,
 	requires_target = true,
+	getDamage = function(self, t) return (100 + self:combatTalentSpellDamage(t, 0, 50)) / 100 end,
+	getDuration = function(self, t) return math.floor(2 + self:getTalentLevel(t) / 2) end,
+	getRadius = function(self, t) return 2 + math.floor(self:getTalentLevel(t)/3) end,
 	target = function(self, t)
-		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
+		return {type="ball", range=self:getTalentRange(t), radius=t.getRadius(self, t)}
 	end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-
-		local dur = math.floor(2 + self:getTalentLevel(t) / 2)
 
 		local source = nil
 		self:project(tg, x, y, function(px, py)
@@ -196,11 +196,11 @@ newTalent{
 			-- Make them EXPLODE !!!
 			for i, d in ipairs(diseases) do
 				target:removeEffect(d.id)
-				DamageType:get(DamageType.BLIGHT).projector(self, px, py, DamageType.BLIGHT, self:spellCrit(d.params.dam * d.params.dur))
+				DamageType:get(DamageType.BLIGHT).projector(self, px, py, DamageType.BLIGHT, self:spellCrit(d.params.dam * d.params.dur * t.getDamage(self, t)))
 			end
 
 			if #diseases > 0 and target:canBe("stun") then
-				target:setEffect(target.EFF_STUNNED, dur, {apply_power=self:combatSpellpower()})
+				target:setEffect(target.EFF_STUNNED, t.getDuration(self, t), {apply_power=self:combatSpellpower()})
 			elseif #diseases > 0 then
 				game.logSeen(target, "%s resists the stun!", target.name:capitalize())
 			end
@@ -211,8 +211,11 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[All your foes within a radius 2 ball infected with a disease enter a catalepsy, stunning them for %d turns and dealing all remaining disease damage instantly.]]):
-		format(math.floor(2 + self:getTalentLevel(t) / 2))
+		local radius = t.getRadius(self, t)
+		local duration = t.getDuration(self, t)
+		local damage = t.getDamage(self, t)
+		return ([[All your foes within a radius %d ball infected with a disease enter a catalepsy, stunning them for %d turns and dealing %d%% of all remaining disease damage instantly.]]):
+		format(radius, duration, damage * 100)
 	end,
 }
 
@@ -245,8 +248,12 @@ newTalent{
 			local disease = rng.table(diseases)
 			local params = disease.params
 			params.src = self
+			local disease_spread = { 
+				src=self, dam=disease.params.dam, str=disease.params.str, dex=disease.params.dex, con=disease.params.con, apply_power=self:combatSpellpower(),
+				heal_factor=disease.params.heal_factor, burst=disease.params.burst, rot_timer=disease.params.rot_timer, resist=disease.params.resist, make_ghoul=disease.params.make_ghoul,
+			} 
 			if target:canBe("disease") then
-				target:setEffect(disease.id, 6, {src=self, dam=disease.params.dam, str=disease.params.str, dex=disease.params.dex, con=disease.params.con, heal_factor=disease.params.heal_factor, burst=disease.params.burst, rot_timer=disease.params.rot_timer, resist=disease.params.resist, apply_power=self:combatSpellpower()})
+				target:setEffect(disease.id, 6, disease_spread)
 			else
 				game.logSeen(target, "%s resists the disease!", target.name:capitalize())
 			end

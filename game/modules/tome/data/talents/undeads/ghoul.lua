@@ -120,29 +120,76 @@ newTalent{
 	require = undeads_req4,
 	points = 5,
 	cooldown = 15,
-	tactical = { ATTACK = 0.5, DISABLE = { stun = 2 } },
+	tactical = { ATTACK = {BLIGHT = 2} },
 	range = 1,
 	requires_target = true,
+	getDamage = function(self, t) return 0.2 + self:getTalentLevel(t) / 12 end,
+	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)) end,
+	getDiseaseDamage = function(self, t) return self:combatTalentStatDamage(t, "con", 5, 50) end,
+	getStatDamage = function(self, t) return self:combatTalentStatDamage(t, "con", 5, 20) end,
+	spawn_ghoul = function (self, target, t)
+		local x, y = util.findFreeGrid(target.x, target.y, 10, true, {[Map.ACTOR]=true})
+		if not x then return nil end
+
+		local list = mod.class.NPC:loadList("/data/general/npcs/ghoul.lua")
+		local m = list.GHOUL
+		if not m then return nil end
+
+		m:resolve() m:resolve(nil, true)
+		m.ai = "summoned"
+		m.ai_real = "dumb_talented_simple"
+		m.faction = self.faction
+		m.summoner = self
+		m.summoner_gain_exp = true
+		m.summon_time = 20
+		m.exp_worth = 0
+		m.no_drops = true
+		
+		game.zone:addEntity(game.level, m, "actor", target.x, target.y)
+		game.level.map:particleEmitter(target.x, target.y, 1, "slime")
+		game:playSoundNear(target, "talents/slime")
+		game.logPlayer(game.player, "A #DARK_GREEN#ghoul#LAST# rises from the corpse of %s.", target.name)
+	end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
-		local hitted = self:attackTarget(target, nil, 0.2 + self:getTalentLevel(t) / 12, true)
+		local hitted = self:attackTarget(target, nil, t.getDamage(self, t), true)
 
+		-- Damage Stats?
+		local str_damage, con_damage, dex_damage = 0
+		if self:getTalentLevel(t) >=2 then str_damage = t.getStatDamage(self, t) end
+		if self:getTalentLevel(t) >=3 then dex_damage = t.getStatDamage(self, t) end
+		if self:getTalentLevel(t) >=4 then con_damage = t.getStatDamage(self, t) end
+		
+		-- Ghoulify??
+		local ghoulify = 0
+		if self:getTalentLevel(t) >=5 then ghoulify = 1 end
+		
 		if hitted then
-			if target:canBe("stun") then
-				target:setEffect(target.EFF_STUNNED, 3 + math.ceil(self:getTalentLevel(t)), {apply_power=self:combatAttack()})
+			if target:canBe("disease") then
+				if target.dead and ghoulify > 0 then
+					t.spawn_ghoul(self, target, t)
+				end
+				target:setEffect(target.EFF_GHOUL_ROT, 3 + math.ceil(self:getTalentLevel(t)), {src=self, apply_power=self:combatPhysicalpower(), dam=t.getDiseaseDamage(self, t), str=str_damage, con=con_damage, dex=dex_damage, make_ghoul=ghoulify})
 			else
-				game.logSeen(target, "%s resists the stun!", target.name:capitalize())
+				game.logSeen(target, "%s resists the disease!", target.name:capitalize())
 			end
 		end
 
 		return true
 	end,
 	info = function(self, t)
-		return ([[Gnaw your target doing %d%% damage, trying to stun it instead of damaging it. If your attack hits, the target is stunned for %d turns.]]):
-		format(100 * (0.2 + self:getTalentLevel(t) / 12), 3 + math.ceil(self:getTalentLevel(t)))
+		local damage = t.getDamage(self, t)
+		local duration = t.getDuration(self, t)
+		local disease_damage = t.getDiseaseDamage(self, t)
+		local stat_damage = t.getStatDamage(self, t)
+		return ([[Gnaw your target for %d%% damage.  If your attack hits, the target may be infected with ghoul rot for %d turns.
+		Each turn Ghoul Rot inflicts %0.2f blight damage.  At talent level two Ghoul Rot also reduces Strength by %d, at level three it reduces Dexterity by %d, and at level four it reduces Constitution by %d.
+		At talent level five targets suffering from Ghoul Rot rise as friendly ghouls when slain.
+		The blight damage and stat damage scales with your Constitution.]]):
+		format(100 * damage, duration, damDesc(self, DamageType.BLIGHT, disease_damage), stat_damage, stat_damage, stat_damage)
 	end,
 }
 

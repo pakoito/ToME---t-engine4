@@ -1542,6 +1542,35 @@ newEffect{
 }
 
 newEffect{
+	name = "GHOUL_ROT", image = "talents/gnaw.png",
+	desc = "Ghoul Rot",
+	long_desc = function(self, eff)
+		local ghoulify = ""
+		if eff.make_ghoul > 0 then ghoulify = "  If the target dies while ghoul rot is active it will rise as a ghoul." end
+		return ("The target is infected by a disease, reducing its strength by %d, dexterity by %d, constitution by %d, and doing %0.2f blight damage per turn.%s"):format(eff.str, eff.dex, eff.con, eff.dam, ghoulify)
+	end,
+	type = "magical",
+	subtype = {disease=true, blight=true},
+	status = "detrimental",
+	parameters = {},
+	on_gain = function(self, err) return "#Target# is afflicted by ghoul rot!" end,
+	on_lose = function(self, err) return "#Target# is free from the ghoul rot." end,
+	-- Damage each turn
+	on_timeout = function(self, eff)
+		if self:attr("purify_disease") then self:heal(eff.dam)
+		else DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.dam, {from_disease=true})
+		end
+	end,
+	-- Lost of CON
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("inc_stats", {[Stats.STAT_STR] = -eff.str, [Stats.STAT_DEX] = -eff.dex, [Stats.STAT_CON] = -eff.con})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("inc_stats", eff.tmpid)
+	end,
+}
+
+newEffect{
 	name = "BLOODCASTING", image = "talents/bloodcasting.png",
 	desc = "Bloodcasting",
 	long_desc = function(self, eff) return ("Corruptions consume health instead of vim.") end,
