@@ -3048,6 +3048,104 @@ newEntity{ base = "BASE_STAFF",
 	use_talent = { id = Talents.T_GRAVITY_SPIKE, level = 3, power = 35 },
 }
 
+newEntity{ base = "BASE_MINDSTAR",
+	name = "Eye of the Wyrm", define_as = "EYE_WYRM",
+	unided_name = "multi-colored mindstar", unique = true,
+	desc = [[A black iris cuts through the core of this mindstar, which shifts with myriad colours. It darts around, as if searching.]],
+	level_range = {30, 40},
+	require = { stat = { wil=45, }, },
+	rarity = 280,
+	cost = 300,
+	material_level = 4,
+	combat = {
+		dam = 16,
+		apr = 24,
+		physcrit = 2.5,
+		dammod = {wil=0.4, cun=0.1, str=0.2},
+		damtype=DamageType.PHYSICAL,
+		convert_damage = {
+			[DamageType.COLD] = 25,
+			[DamageType.FIRE] = 25,
+			[DamageType.LIGHTNING] = 25,
+		},
+	},
+	wielder = {
+		combat_mindpower = 8,
+		combat_mindcrit = 7,
+		inc_damage={
+			[DamageType.PHYSICAL] 	= 8,
+			[DamageType.FIRE] 	= 8,
+			[DamageType.COLD] 	= 8,
+			[DamageType.LIGHTNING] 	= 8,
+		},
+		resists={
+			[DamageType.PHYSICAL] 	= 8,
+			[DamageType.FIRE] 	= 8,
+			[DamageType.COLD] 	= 8,
+			[DamageType.LIGHTNING] 	= 8,
+		},
+		talents_types_mastery = {
+			["wild-gift/sand-drake"] = 0.1,
+			["wild-gift/fire-drake"] = 0.1,
+			["wild-gift/cold-drake"] = 0.1,
+			["wild-gift/storm-drake"] = 0.1,
+		}
+	},
+	max_power = 40, power_regen = 1,
+	use_power = { name = "release a random breath", power = 40,
+	use = function(self, who)	
+			local Talents = require "engine.interface.ActorTalents"
+			local breathe = rng.table{
+				{Talents.T_FIRE_BREATH},
+				{Talents.T_ICE_BREATH},
+				{Talents.T_LIGHTNING_BREATH},
+				{Talents.T_SAND_BREATH},
+			}
+			who:forceUseTalent(breathe[1], {ignore_cd=true, ignore_energy=true, force_level=4, ignore_ressources=true})
+			return {id=true, used=true}
+		end
+	},
+}
+
+newEntity{ base = "BASE_MINDSTAR",
+	name = "Great Caller",
+	unided_name = "humming mindstar", unique = true,
+	desc = [[This mindstar constantly emits a low tone. Life seems to be pulled towards it.]],
+	level_range = {24, 32},
+	require = { stat = { wil=34, }, },
+	rarity = 280,
+	cost = 220,
+	material_level = 3,
+	combat = {
+		dam = 10,
+		apr = 18,
+		physcrit = 2.5,
+		dammod = {wil=0.35, cun=0.5},
+		damtype=DamageType.NATURE,
+	},
+	wielder = {
+		combat_mindpower = 8,
+		combat_mindcrit = 6,
+		inc_damage={
+			[DamageType.PHYSICAL] 	= 8,
+			[DamageType.FIRE] 	= 8,
+			[DamageType.COLD] 	= 8,
+		},
+		talents_types_mastery = {
+			["wild-gift/summon-melee"] = 0.1,
+			["wild-gift/summon-distance"] = 0.1,
+			["wild-gift/summon-augmentation"] = 0.1,
+			["wild-gift/summon-utility"] = 0.1,
+			["wild-gift/summon-advanced"] = 0.1,
+		},
+		heal_on_nature_summon = 30,
+		nature_summon_max = 2,
+		inc_stats = { [Stats.STAT_WIL] = 5, [Stats.STAT_CUN] = 4 },
+	},
+	max_power = 40, power_regen = 1,
+	use_talent = { id = Talents.T_RAGE, level = 4, power = 40 },
+}
+
 
 --[=[
 newEntity{

@@ -72,6 +72,7 @@ local maker_list = function()
 		"drakeskin leather sling",
 		"voratun shield",
 		"dragonbone staff",
+		"living mindstar",
 	}
 	local l = {}
 	for i, name in ipairs(bases) do

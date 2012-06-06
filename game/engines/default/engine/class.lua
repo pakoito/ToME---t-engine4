@@ -205,6 +205,8 @@ end
 
 --- Replaces the object with an other, by copying (not deeply)
 function _M:replaceWith(t)
+	if self.replacedWith then self:replacedWith(false, t) end
+
 	-- Delete fields
 	for k, e in pairs(self) do
 		self[k] = nil
@@ -213,6 +215,8 @@ function _M:replaceWith(t)
 		self[k] = e
 	end
 	setmetatable(self, getmetatable(t))
+
+	if self.replacedWith then self:replacedWith(true) end
 end
 
 -- ---------------------------------------------------------------------

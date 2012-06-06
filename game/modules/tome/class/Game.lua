@@ -831,7 +831,7 @@ function _M:changeLevel(lev, zone, params)
 	if feeling then self.log("#TEAL#%s", feeling) end
 
 	-- Autosave
-	if config.settings.tome.autosave and not config.settings.cheat and ((left_zone and left_zone.short_name ~= "wilderness") or self.zone.save_per_level) and (left_zone and left_zone.short_name ~= self.zone.short_name) then self:saveGame() end
+--	if config.settings.tome.autosave and not config.settings.cheat and ((left_zone and left_zone.short_name ~= "wilderness") or self.zone.save_per_level) and (left_zone and left_zone.short_name ~= self.zone.short_name) then self:saveGame() end
 
 	self.player:onEnterLevelEnd(self.zone, self.level)
 
@@ -1171,8 +1171,17 @@ function _M:setupCommands()
 --			local o = game.zone:makeEntity(game.level,"object",{random_object=true},nil,true)
 --			o:identify(true)
 --			game.zone:addEntity(game.level,o,"object",game.player.x,game.player.y)
-			local m = game.zone:makeEntity(game.level,"actor",{random_elite=true},nil,true)
-			game.zone:addEntity(game.level,m,"actor",game.player.x,game.player.y-1)
+--			local m = game.zone:makeEntity(game.level,"actor",{random_elite=true},nil,true)
+--			game.zone:addEntity(game.level,m,"actor",game.player.x,game.player.y-1)
+			local mnb , nb = 0, 0
+			for k, e in pairs(__uids) do
+				if k ~= e.uid then 
+					print("==", k, e.uid, e.name)
+					nb=nb+1
+				end
+				mnb = mnb+1
+			end
+			game.log("NB !!! %d / %d", nb, mnb)
 		end end,
 		[{"_f","ctrl"}] = function() if config.settings.cheat then
 			self.player.quests["love-melinda"] = nil
@@ -1618,6 +1627,7 @@ end
 
 --- When a save has been done, if it's a zone or level, also save the main game
 function _M:onSavefilePushed(savename, type, object, class)
+	if config.settings.cheat then return end -- Dont annoy debug
 	if type == "zone" or type == "level" then self:saveGame() end
 end
 

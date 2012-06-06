@@ -66,6 +66,7 @@ function _M:init(t, no_default)
 	t = t or {}
 	self.uid = next_uid
 	__uids[self.uid] = self
+	next_uid = next_uid + 1
 
 	for k, e in pairs(t) do
 		if k ~= "__CLASSNAME" then
@@ -110,8 +111,6 @@ function _M:init(t, no_default)
 
 	if self.unique and type(self.unique) ~= "string" then self.unique = self.name end
 
-	next_uid = next_uid + 1
-
 	self.changed = true
 	self.__particles = self.__particles or {}
 
@@ -132,11 +131,23 @@ function _M:cloned(src)
 	self.changed = true
 end
 
+--- If we are replaced we need a new uid
+function _M:replacedWith(isdone, new)
+	if not isdone then __uids[self.uid] = nil
+	else
+		self.uid = next_uid
+		__uids[self.uid] = self
+		next_uid = next_uid + 1
+		self.changed = true
+	end
+end
+
 _M.__autoload = {}
 _M.loadNoDelay = true
 --- If we are loaded we need a new uid
 function _M:loaded()
 	local ouid = self.uid
+	if __uids[self.uid] and __uids[self.uid] == self.uid then __uids[self.uid] = nil end
 	self.uid = next_uid
 	__uids[self.uid] = self
 	next_uid = next_uid + 1
@@ -150,7 +161,7 @@ end
 --- Change the entity's uid
 -- <strong>*WARNING*</strong>: ONLY DO THIS IF YOU KNOW WHAT YOU ARE DOING!. YOU DO NOT !
 function _M:changeUid(newuid)
-	__uids[self.uid] = nil
+	if __uids[self.uid] and __uids[self.uid] == self.uid then __uids[self.uid] = nil end
 	self.uid = newuid
 	__uids[self.uid] = self
 end
@@ -257,8 +268,9 @@ function _M:makeMapObject(tiles, idx)
 	self._mo:tint(self.tint_r or 1, self.tint_g or 1, self.tint_b or 1)
 
 	-- Texture 0 is always the normal image/ascii tile
-	local tex, texx, texy, pos_x, pos_y = tiles:get(self.display, self.color_r, self.color_g, self.color_b, self.color_br, self.color_bg, self.color_bb, self.image, self._noalpha and 255, self.ascii_outline, true)
-	self._mo:texture(0, tex, false, texx, texy, pos_x, pos_y)
+	-- we pcall it because some weird cases can not find a tile
+	local ok, tex, texx, texy, pos_x, pos_y = pcall(tiles.get, tiles, self.display, self.color_r, self.color_g, self.color_b, self.color_br, self.color_bg, self.color_bb, self.image, self._noalpha and 255, self.ascii_outline, true)
+	if ok then self._mo:texture(0, tex, false, texx, texy, pos_x, pos_y) end
 
 	-- Additional MO chained to the same Z order
 	if tiles.use_images and self.add_mos then
@@ -386,7 +398,6 @@ function _M:getEntityFinalSurface(tiles, w, h)
 
 	local mos = {}
 	local list = {}
-	print("===final surface for", self.uid, self.name, self.x, self.y, self.type, self.subtype)
 	self:getMapObjects(tiles, mos, 1)
 	for i = 1, Map.zdepth do
 		if mos[i] then list[#list+1] = mos[i] end
@@ -770,7 +781,7 @@ function _M:loadList(file, no_default, res, mod, loaded)
 		newEntity = function(t)
 			-- Do we inherit things ?
 			if t.base then
-				local temp = table.clone(res[t.base], true, {define_as = true})
+				local temp = table.clone(res[t.base], true, {uid=true, define_as = true})
 				if res[t.base].onEntityMerge then res[t.base]:onEntityMerge(temp) end
 				table.mergeAppendArray(temp, t, true)
 				t = temp

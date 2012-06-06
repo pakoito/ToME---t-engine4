@@ -1350,7 +1350,7 @@ newEntity{ base = "BASE_LONGBOW",
 			table.remove(tgts, id)
 
 			self.zap = 0
-			who:project(tg, a.x, a.y, DamageType.LIGHTNING_DAZE, {daze=40, dam = rng.avg(1,3) * (40+ who:getMag() * 1.5)} )
+			who:project(tg, a.x, a.y, engine.DamageType.LIGHTNING_DAZE, {daze=40, dam = rng.avg(1,3) * (40+ who:getMag() * 1.5)} )
 			game.level.map:particleEmitter(who.x, who.y, math.max(math.abs(a.x-who.x), math.abs(a.y-who.y)), "lightning", {tx=a.x-who.x, ty=a.y-who.y})
 			game:playSoundNear(self, "talents/lightning")
 			game.logSeen(who, "#GOLD#A bolt of lightning fires from %s's bow, striking %s!", who.name:capitalize(), a.name:capitalize())
@@ -1388,8 +1388,9 @@ newEntity{ base = "BASE_CLOAK", define_as="GLACIAL_CLOAK",
 			local radius = 4
 			local dam = (25 + who:getMag())
 			local blast = {type="ball", range=0, radius=radius, selffire=false, display={particle="bolt_ice", trail="icetrail"}}
-			who:project(blast, who.x, who.y, DamageType.COLD, dam*3)
-			who:project(blast, who.x, who.y, DamageType.FREEZE, {dur=6, hp=80+dam})
+			who:project(blast, who.x, who.y, engine.DamageType.COLD, dam*3)
+			who:project(blast, who.x, who.y, engine.DamageType.FREEZE, {dur=6, hp=80+dam})
+			game.level.map:particleEmitter(who.x, who.y, blast.radius, "iceflash", {radius=blast.radius})
 			-- Add a lasting map effect
 			game.level.map:addEffect(who,
 				who.x, who.y, duration,
@@ -1432,10 +1433,11 @@ newEntity{ base = "BASE_GREATMAUL", define_as="ROTTING_MAUL",
 		melee_project={[DamageType.CORRUPTED_BLOOD] = 30},
 		special_on_hit = {desc="25% to damage nearby foes", fct=function(combat, who, target)
 			if rng.percent(25) then
+			local o, item, inven_id = who:findInAllInventoriesBy("define_as", "ROTTING_MAUL")
 				local dam = rng.avg(1,2) * (70+ who:getStr() * 1.8)
-				game.logSeen(who, "The ground shakes as the %s hits!", who.name:capitalize())
+				game.logSeen(who, "The ground shakes as the %s hits!", o:getName())
 				local tg = {type="ball", range=0, selffire=false, radius=2, no_restrict=true}
-				who:project(tg, target.x, target.y, DamageType.PHYSICAL, dam)
+				who:project(tg, target.x, target.y, engine.DamageType.PHYSICAL, dam)
 			end
 		end},
 	},
@@ -1448,7 +1450,7 @@ newEntity{ base = "BASE_GREATMAUL", define_as="ROTTING_MAUL",
 		use = function(self, who)
 			local dam = rng.avg(1,2) * (125+ who:getStr() * 3)
 			local tg = {type="ball", range=0, selffire=false, radius=4, no_restrict=true}
-			who:project(tg, who.x, who.y, DamageType.PHYSKNOCKBACK, {dam=dam, dist=4})
+			who:project(tg, who.x, who.y, engine.DamageType.PHYSKNOCKBACK, {dam=dam, dist=4})
 			game.logSeen(who, "%s slams their %s into the ground, sending out a shockwave!", who.name:capitalize(), self:getName())
 			return {id=true, used=true}
 		end
@@ -1494,4 +1496,39 @@ newEntity{ base = "BASE_STAFF",
 	max_power = 6, power_regen = 1,
 	use_talent = { id = Talents.T_FLAME, level = 5, power = 5 },
 	talent_on_spell = { {chance=20, talent="T_FLAME", level=2} },
+}
+
+newEntity{ base = "BASE_BATTLEAXE",
+	power_source = {arcane=true},
+	define_as = "HELLFIRE",
+	name = "Hellfire", color = colors.DARK_RED,
+	unided_name = "firey blackened battleaxe", unique = true,
+	desc = [[Blackened with soot and covered in spikes, this battleaxe roars with the flames of the Fearscape. Given by Urh'Rok himself to his greatest commanders, this powerful weapon can burn even the most resilient of foes.]],
+	level_range = {37, 50},
+	rarity = 300,
+	require = { stat = { str=52 }, },
+	cost = 600,
+	material_level = 5,
+	combat = {
+		dam = 70,
+		apr = 8,
+		physcrit = 8,
+		dammod = {str=1.2},
+		convert_damage = {[DamageType.FIRE] = 20},
+		melee_project={[DamageType.FIRE] = 50,}
+	},
+	wielder = {
+		demon=1,
+		inc_damage={
+			[DamageType.FIRE] = 20,
+		},
+		resists={
+			[DamageType.FIRE] = 20,
+		},
+		resists_pen={
+			[DamageType.FIRE] = 25,
+		},
+	},
+	max_power = 35, power_regen = 1,
+	use_talent = { id = Talents.T_INFERNAL_BREATH, level = 3, power = 35 },
 }

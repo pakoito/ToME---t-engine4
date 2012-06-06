@@ -943,6 +943,10 @@ function _M:getTextualDesc(compare_with)
 		if w.undead then
 			desc:add("The wearer is treated as an undead.", true)
 		end
+		
+		if w.demon then
+			desc:add("The wearer is treated as a demon.", true)
+		end
 
 		if w.blind_fight then
 			desc:add({"color", "YELLOW"}, "Blind-Fight:", {"color", "LAST"}, "This item allows the wearer to attack unseen targets without any penalties.", true)

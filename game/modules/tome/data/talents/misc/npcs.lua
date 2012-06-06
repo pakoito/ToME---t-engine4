@@ -1660,3 +1660,48 @@ newTalent{
 		format(restoration)
 	end,
 }
+
+------------------------------
+--General of Urh'Rok Talents--
+------------------------------
+newTalent{
+	name = "Infernal Breath", image = "talents/flame_of_urh_rok.png",
+	type = {"spell/other",1},
+	random_ego = "attack",
+	cooldown = 20,
+	tactical = { ATTACK = { FIRE = 1 }, HEAL = 1, },
+	range = 0,
+	radius = function(self, t)
+		return 3 + self:getTalentLevelRaw(t)
+	end,
+	requires_target = true,
+	target = function(self, t)
+		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
+	end,
+	action = function(self, t)
+		local tg = self:getTalentTarget(t)
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:project(tg, x, y, DamageType.DEMONFIRE, self:spellCrit(self:combatTalentStatDamage(t, "str", 30, 350)))
+
+		game.level.map:addEffect(self,
+				self.x, self.y, 4,
+				DamageType.DEMONFIRE, self:spellCrit(self:combatTalentStatDamage(t, "str", 30, 70)),
+				tg.radius,
+				{delta_x=x-self.x, delta_y=y-self.y}, 55,
+				{type="dark_inferno"},
+				nil, true
+		)
+		game.level.map:particleEmitter(self.x, self.y, tg.radius, "breath_fire", {radius=tg.radius, tx=x-self.x, ty=y-self.y})
+		game:playSoundNear(self, "talents/breathe")
+		return true
+	end,
+	info = function(self, t)
+		local radius = self:getTalentRadius(t)
+		return ([[Exhale a wave of dark fire with radius %d. Any non demon caught in the area will take %0.2f fire damage, and flames will be left dealing a further %0.2f each turn. Demons will be healed for the same amount.
+		The damage will increase with your Strength Stat.]]):
+		format(radius, damDesc(self, DamageType.FIRE, self:combatTalentStatDamage(t, "str", 30, 350)), damDesc(self, DamageType.FIRE, self:combatTalentStatDamage(t, "str", 30, 70)))
+	end,
+}
+
+

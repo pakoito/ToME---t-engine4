@@ -516,7 +516,7 @@ newTalent{
 
 		local worm = {type="vermin", subtype="worms", name="carrion worm mass"}
 		local list = mod.class.NPC:loadList("/data/general/npcs/vermin.lua")
-		local m = list.CARRION_WORM_MASS
+		local m = list.CARRION_WORM_MASS:clone()
 		if not m then return nil end
 
 		m:resolve() m:resolve(nil, true)

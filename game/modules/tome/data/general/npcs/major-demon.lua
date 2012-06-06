@@ -278,3 +278,55 @@ newEntity{ base = "BASE_NPC_MAJOR_DEMON",
 		[Talents.T_CLEANSING_FLAMES]={base=5, every=8, max=10},
 	},
 }
+
+newEntity{ base = "BASE_NPC_MAJOR_DEMON",
+	name = "General of Urh'Rok", --Give actual name?
+	color=colors.DARK_RED, unique=true,
+	desc = [[This massive form, sheathed in dark flames, stands tall above a legion of lesser demons. In his hands he holds a massive blacked battleaxe, flames dancing around the blades.]],
+	level_range = {40, nil}, exp_worth = 1,
+	rarity = 50,
+	rank = 3.5,
+	global_speed_base = 1,
+	size_category = 5,
+	autolevel = "warriormage",
+	life_rating = 35,
+	combat_armor = 50, combat_def = 40, combat_atk=50,
+	mana_regen = 100, stamina_regen = 100,
+
+	ai = "tactical",
+
+	resolvers.equip{ {type="weapon", subtype="battleaxe", defined="HELLFIRE", random_art_replace={chance=30}, autoreq=true, force_drop=true}, },
+
+	resists={[DamageType.PHYSICAL] = resolvers.mbonus(8, 8), [DamageType.FIRE] = 100},
+	on_melee_hit = {[DamageType.FIRE]=resolvers.mbonus(25, 25)},
+	melee_project = {[DamageType.FIRE]=resolvers.mbonus(25, 35)},
+
+	knockback_immune = 1,
+	
+	summon = {
+		{type="demon", number=2, hasxp=false},
+	},
+	make_escort = {
+		{type="demon", no_subescort=true, number=resolvers.mbonus(4, 4)},
+	},
+
+	resolvers.talents{
+		[Talents.T_SUMMON]=1,
+			--Melee
+		[Talents.T_WEAPON_COMBAT]={base=8, every=5, max=12},
+		[Talents.T_WEAPONS_MASTERY]={base=8, every=8, max=12},
+		[Talents.T_RUSH]={base=5, every=7, max=8},
+		[Talents.T_BATTLE_CRY]={base=4, every=5, max=9},
+		[Talents.T_BATTLE_CALL]={base=2, every=3, max=8},
+		[Talents.T_STUNNING_BLOW]={base=5, every=8, max=7},
+		[Talents.T_KNOCKBACK]={base=4, every=4, max=8},
+			--Magic
+		[Talents.T_FIRE_STORM]={base=4, every=6, max=8},
+		[Talents.T_WILDFIRE]={base=3, every=8, max=6},
+		[Talents.T_FLAME]={base=5, every=8, max=10},
+			--Special
+		[Talents.T_INFERNAL_BREATH]={base=3, every=5, max=7},
+	},
+	resolvers.sustains_at_birth(),
+	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
+}
