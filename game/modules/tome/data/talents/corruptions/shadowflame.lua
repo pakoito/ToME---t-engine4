@@ -156,6 +156,7 @@ newTalent{
 		local dam = self:combatTalentSpellDamage(t, 12, 140)
 
 		game:onTickEnd(function()
+			if self:attr("dead") then return end
 			local oldzone = game.zone
 			local oldlevel = game.level
 
