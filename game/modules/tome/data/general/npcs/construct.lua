@@ -61,7 +61,7 @@ newEntity{ base = "BASE_NPC_CONSTRUCT",
 	rarity = 1,
 	max_life = resolvers.rngavg(70,80),
 	resolvers.equip{
-		{type="weapon", subtype="greatmaul", autoreq=true},
+		{type="weapon", subtype="greatmaul", forbid_power_source={antimagic=true}, autoreq=true},
 	},
 	resolvers.inscriptions(1, "rune"),
 	resolvers.talents{
@@ -78,7 +78,7 @@ newEntity{ base = "BASE_NPC_CONSTRUCT",
 	rarity = 1,
 	max_life = resolvers.rngavg(90,100),
 	resolvers.equip{
-		{type="weapon", subtype="greatmaul", autoreq=true},
+		{type="weapon", subtype="greatmaul", forbid_power_source={antimagic=true}, autoreq=true},
 	},
 	resolvers.inscriptions(2, "rune"),
 	resolvers.talents{
@@ -97,7 +97,7 @@ newEntity{ base = "BASE_NPC_CONSTRUCT",
 	rank = 3,
 	max_life = resolvers.rngavg(90,100),
 	resolvers.equip{
-		{type="weapon", subtype="greatmaul", autoreq=true},
+		{type="weapon", subtype="greatmaul", forbid_power_source={antimagic=true}, autoreq=true},
 	},
 	resolvers.inscriptions(2, "rune"),
 	resolvers.talents{

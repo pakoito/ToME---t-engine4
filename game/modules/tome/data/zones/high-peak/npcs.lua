@@ -312,11 +312,11 @@ newEntity{ define_as = "HIGH_SUN_PALADIN_AERYN",
 	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
 
 	resolvers.equip{
-		{type="weapon", subtype="mace", force_drop=true, tome_drops="boss", autoreq=true},
-		{type="armor", subtype="shield", force_drop=true, tome_drops="boss", autoreq=true},
-		{type="armor", subtype="massive", force_drop=true, tome_drops="boss", autoreq=true},
-		{type="armor", subtype="feet", force_drop=true, tome_drops="boss", autoreq=true},
-		{type="armor", subtype="head", force_drop=true, tome_drops="boss", autoreq=true},
+		{type="weapon", subtype="mace", force_drop=true, tome_drops="boss", forbid_power_source={antimagic=true}, autoreq=true},
+		{type="armor", subtype="shield", force_drop=true, tome_drops="boss", forbid_power_source={antimagic=true}, autoreq=true},
+		{type="armor", subtype="massive", force_drop=true, tome_drops="boss", forbid_power_source={antimagic=true}, autoreq=true},
+		{type="armor", subtype="feet", force_drop=true, tome_drops="boss", forbid_power_source={antimagic=true}, autoreq=true},
+		{type="armor", subtype="head", force_drop=true, tome_drops="boss", forbid_power_source={antimagic=true}, autoreq=true},
 	},
 
 	positive_regen = 25,

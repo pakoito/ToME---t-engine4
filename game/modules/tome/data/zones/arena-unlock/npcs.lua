@@ -144,9 +144,9 @@ newEntity{ name = "arcane blade",
 	rarity = false,
 	max_life = resolvers.rngavg(100,130),
 	resolvers.equip{
-		{type="weapon", subtype="greatsword", autoreq=true},
-		{type="armor", subtype="heavy", autoreq=true},
-		{type="armor", subtype="feet", autoreq=true},
+		{type="weapon", subtype="greatsword", forbid_power_source={antimagic=true}, autoreq=true},
+		{type="armor", subtype="heavy", forbid_power_source={antimagic=true}, autoreq=true},
+		{type="armor", subtype="feet", forbid_power_source={antimagic=true}, autoreq=true},
 	},
 	resolvers.talents{
 		[Talents.T_ARCANE_COMBAT]=2,

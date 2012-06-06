@@ -123,7 +123,7 @@ newEntity{ base = "BASE_NPC_GHOUL", define_as = "RISEN_CORPSE",
 	exp_worth = 1,
 	combat_armor = 5, combat_def = 3,
 	resolvers.equip{
-		{type="weapon", subtype="longsword", autoreq=true},
+		{type="weapon", subtype="longsword", forbid_power_source={antimagic=true}, autoreq=true},
 	},
 	resolvers.talents{
 		[Talents.T_STUN]={base=3, every=9, max=7},
@@ -158,11 +158,11 @@ newEntity{ base = "BASE_NPC_GHOUL", define_as = "ROTTING_TITAN",
 
 	stats = { str=40, dex=20, mag=24, con=25 },
 	resists = {all = 25, [DamageType.PHYSICAL]=15, [DamageType.ARCANE]=-50, [DamageType.FIRE]=-20},
-	
+
 	resolvers.equip{ {type="weapon", subtype="greatmaul", defined="ROTTING_MAUL", random_art_replace={chance=30}, autoreq=true, force_drop=true}, },
 
 	combat = { dam=resolvers.levelup(80, 1, 2), atk=resolvers.levelup(70, 1, 1), apr=20, dammod={str=1.3}, damtype=engine.DamageType.PHYSICAL, },
-	
+
 	combat_atk=40,
 	combat_spellpower=25,
 

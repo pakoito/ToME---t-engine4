@@ -43,9 +43,9 @@ newEntity{ define_as="SUBJECT_Z",
 	see_invisible = 20,
 
 	resolvers.equip{
-		{type="weapon", subtype="dagger", autoreq=true, force_drop=true, tome_drops="boss"},
-		{type="weapon", subtype="dagger", autoreq=true, force_drop=true, tome_drops="boss"},
-		{type="armor", subtype="light", autoreq=true, force_drop=true, tome_drops="boss"},
+		{type="weapon", subtype="dagger", autoreq=true, force_drop=true, forbid_power_source={antimagic=true}, tome_drops="boss"},
+		{type="weapon", subtype="dagger", autoreq=true, force_drop=true, forbid_power_source={antimagic=true}, tome_drops="boss"},
+		{type="armor", subtype="light", autoreq=true, force_drop=true, forbid_power_source={antimagic=true}, tome_drops="boss"},
 		{defined="NIGHT_SONG", random_art_replace={chance=65}, autoreq=true},
 	},
 

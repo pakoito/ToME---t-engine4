@@ -58,7 +58,7 @@ newEntity{ base = "BASE_NPC_ELVEN_CASTER",
 	rarity = 2,
 	max_life = resolvers.rngavg(70, 80), life_rating = 10,
 	resolvers.equip{
-		{type="weapon", subtype="staff", autoreq=true},
+		{type="weapon", subtype="staff", forbid_power_source={antimagic=true}, autoreq=true},
 	},
 	combat_armor = 0, combat_def = 0,
 	resolvers.talents{
@@ -75,7 +75,7 @@ newEntity{ base = "BASE_NPC_ELVEN_CASTER",
 	max_life = resolvers.rngavg(70, 80), life_rating = 10,
 	mana_regen = 30, max_mana = 200,
 	resolvers.equip{
-		{type="weapon", subtype="staff", autoreq=true},
+		{type="weapon", subtype="staff", forbid_power_source={antimagic=true}, autoreq=true},
 	},
 	combat_armor = 0, combat_def = 0,
 	resolvers.talents{
@@ -94,8 +94,8 @@ newEntity{ base = "BASE_NPC_ELVEN_CASTER",
 	ai = "tactical",
 	max_life = resolvers.rngavg(100, 110), life_rating = 13,
 	resolvers.equip{
-		{type="weapon", subtype="staff", autoreq=true},
-		{type="armor", subtype="cloth", autoreq=true},
+		{type="weapon", subtype="staff", forbid_power_source={antimagic=true}, autoreq=true},
+		{type="armor", subtype="cloth", forbid_power_source={antimagic=true}, autoreq=true},
 	},
 	combat_armor = 0, combat_def = 0,
 	resolvers.talents{
@@ -118,8 +118,8 @@ newEntity{ base = "BASE_NPC_ELVEN_CASTER",
 	ai = "tactical",
 	max_life = resolvers.rngavg(100, 110),
 	resolvers.equip{
-		{type="weapon", subtype="staff", autoreq=true},
-		{type="armor", subtype="cloth", autoreq=true},
+		{type="weapon", subtype="staff", forbid_power_source={antimagic=true}, autoreq=true},
+		{type="armor", subtype="cloth", forbid_power_source={antimagic=true}, autoreq=true},
 	},
 	combat_armor = 0, combat_def = 0,
 	resolvers.talents{
@@ -143,8 +143,8 @@ newEntity{ base = "BASE_NPC_ELVEN_CASTER",
 	ai_tactic = resolvers.tactic"ranged",
 	max_life = resolvers.rngavg(100, 110), life_rating = 12,
 	resolvers.equip{
-		{type="weapon", subtype="staff", autoreq=true},
-		{type="armor", subtype="cloth", autoreq=true},
+		{type="weapon", subtype="staff", forbid_power_source={antimagic=true}, autoreq=true},
+		{type="armor", subtype="cloth", forbid_power_source={antimagic=true}, autoreq=true},
 	},
 	combat_armor = 0, combat_def = 0,
 	resolvers.talents{

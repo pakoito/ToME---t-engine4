@@ -78,9 +78,9 @@ newEntity{ base = "BASE_NPC_SUNWALL_TOWN",
 	ai = "tactical",
 	ai_tactic = resolvers.tactic"melee",
 	resolvers.equip{
-		{type="weapon", subtype="mace", autoreq=true},
-		{type="armor", subtype="shield", autoreq=true},
-		{type="armor", subtype="massive", autoreq=true},
+		{type="weapon", subtype="mace", forbid_power_source={antimagic=true}, autoreq=true},
+		{type="armor", subtype="shield", forbid_power_source={antimagic=true}, autoreq=true},
+		{type="armor", subtype="massive", forbid_power_source={antimagic=true}, autoreq=true},
 	},
 	resolvers.talents{
 		[Talents.T_ARMOUR_TRAINING]=4,
@@ -100,8 +100,8 @@ newEntity{ base = "BASE_NPC_SUNWALL_TOWN",
 	ai_tactic = resolvers.tactic"ranged",
 	max_life = resolvers.rngavg(70,80),
 	resolvers.equip{
-		{type="weapon", subtype="stagg", autoreq=true},
-		{type="armor", subtype="robe", autoreq=true},
+		{type="weapon", subtype="stagg", forbid_power_source={antimagic=true}, autoreq=true},
+		{type="armor", subtype="robe", forbid_power_source={antimagic=true}, autoreq=true},
 	},
 	resolvers.talents{
 		[Talents.T_CHANT_OF_LIGHT]=2,

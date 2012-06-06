@@ -211,12 +211,12 @@ What proud hero of renown was this before he was condemned to such a terrible fa
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, HEAD=1, HANDS=1, FEET=1, },
 	equipment = resolvers.equip{
-		{type="weapon", subtype="mace", ego_chance=100, autoreq=true, force_drop=true,},
-		{type="armor", subtype="shield", ego_chance=100, autoreq=true, force_drop=true,},
+		{type="weapon", subtype="mace", ego_chance=100, autoreq=true, forbid_power_source={antimagic=true}, force_drop=true,},
+		{type="armor", subtype="shield", ego_chance=100, autoreq=true, forbid_power_source={antimagic=true}, force_drop=true,},
 		{type="armor", subtype="massive", defined="BORFAST_CAGE", random_art_replace={chance=75}, autoreq=true, tome_drops="boss"},
-		{type="armor", subtype="head", ego_chance=75, autoreq=true},
-		{type="armor", subtype="hands", ego_chance=75, autoreq=true},
-		{type="armor", subtype="feet", ego_chance=75, autoreq=true},
+		{type="armor", subtype="head", ego_chance=75, forbid_power_source={antimagic=true}, autoreq=true},
+		{type="armor", subtype="hands", ego_chance=75, forbid_power_source={antimagic=true}, autoreq=true},
+		{type="armor", subtype="feet", ego_chance=75, forbid_power_source={antimagic=true}, autoreq=true},
 	},
 	resolvers.drops{chance=100, nb=1, {tome_drops="boss"} },
 	resolvers.drops{chance=100, nb=1, {defined="BORFAST_LETTER"} },
@@ -235,19 +235,19 @@ What proud hero of renown was this before he was condemned to such a terrible fa
 		[Talents.T_RUSH]={base=1, every=5, max=6},
 		[Talents.T_SPELL_SHIELD]={base=3, every=5, max=6},
 		[Talents.T_PERFECT_STRIKE]={base=3, every=5, max=6},
-		
+
 		[Talents.T_SHIELD_WALL]=6,
 		[Talents.T_SHIELD_EXPERTISE]=6,
-		
+
 		[Talents.T_THICK_SKIN]={base=3, every=5, max=5},
 		[Talents.T_ARMOUR_TRAINING]={base=4, every=5, max=10},
 		[Talents.T_WEAPONS_MASTERY]={base=2, every=10, max=5},
 		[Talents.T_WEAPON_COMBAT]={base=2, every=10, max=5},
-		
+
 		[Talents.T_VITALITY]={base=4, every=5, max=6},
 		[Talents.T_UNFLINCHING_RESOLVE]=6,
 		[Talents.T_DAUNTING_PRESENCE]={base=3, every=5, max=5},
-		
+
 		[Talents.T_GHOULISH_LEAP]={base=1, every=5, max=5},
 		[Talents.T_RETCH]=5,
 		[Talents.T_GNAW]=1,
@@ -267,7 +267,7 @@ newEntity{ define_as = "ALETTA",
 	type = "undead", subtype = "ghost", unique = true,
 	name = "Aletta Soultorn", female=1,
 	display = "G", color=colors.VIOLET,
-	desc = [[What once must have been an enchantingly beautiful Higher woman now looks to be a ghost of utter despair. Her thin, elegant form ripples gently in the air, whilst her tattered robes seem oddly still. The ghost's face looks jittery and pained whilst her wild, glowing eyes move rapidly back and forth in their sockets. 
+	desc = [[What once must have been an enchantingly beautiful Higher woman now looks to be a ghost of utter despair. Her thin, elegant form ripples gently in the air, whilst her tattered robes seem oddly still. The ghost's face looks jittery and pained whilst her wild, glowing eyes move rapidly back and forth in their sockets.
 Now and then she seems to see something and her jaw pulls back, her whole face splitting apart as she shrieks an unholy cry of pain and torment.]],
 	killer_message = "and offered to her dark Master",
 	level_range = {20, nil}, exp_worth = 2,
@@ -278,7 +278,7 @@ Now and then she seems to see something and her jaw pulls back, her whole face s
 	size_category = 3,
 	infravision = 10,
 	stats = { str=14, dex=18, mag=20, wil=20, cun=20, con=12 },
-	
+
 	instakill_immune = 1,
 	no_breath = 1,
 	stone_immune = 1,
@@ -292,23 +292,23 @@ Now and then she seems to see something and her jaw pulls back, her whole face s
 	cut_immune = 1,
 	see_invisible = 80,
 	undead = 1,
-	
+
 	combat_armor = 0, combat_def = 10,
 	stealth = 20,
 
 	combat = { dam=5, atk=5, apr=100, dammod={str=0.5, mag=0.5} },
-	
+
 	can_pass = {pass_wall=70},
 	dont_pass_target = true,
 	resists = {all = 35, [DamageType.LIGHT] = -70, [DamageType.DARKNESS] = 65},
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, NECK=1, FINGER = 2, BODY=1, HEAD=1, },
 	equipment = resolvers.equip{
-		{type="armor", subtype="cloth", ego_chance=75, autoreq=true,},
+		{type="armor", subtype="cloth", ego_chance=75, forbid_power_source={antimagic=true}, autoreq=true,},
 		{type="armor", subtype="head", defined="ALETTA_DIADEM", random_art_replace={chance=75}, autoreq=true, tome_drops="boss"},
-		{type="jewelry", subtype="amulet", ego_chance=100, autoreq=true, force_drop=true},
-		{type="jewelry", subtype="ring", ego_chance=100, autoreq=true, force_drop=true},
-		{type="jewelry", subtype="ring", ego_chance=75, autoreq=true},
+		{type="jewelry", subtype="amulet", ego_chance=100, autoreq=true, forbid_power_source={antimagic=true}, force_drop=true},
+		{type="jewelry", subtype="ring", ego_chance=100, autoreq=true, forbid_power_source={antimagic=true}, force_drop=true},
+		{type="jewelry", subtype="ring", ego_chance=75, forbid_power_source={antimagic=true}, autoreq=true},
 	},
 	resolvers.drops{chance=100, nb=1, {tome_drops="boss"} },
 	resolvers.drops{chance=100, nb=1, {defined="ALETTA_LETTER"} },
@@ -322,7 +322,7 @@ Now and then she seems to see something and her jaw pulls back, her whole face s
 		[Talents.T_GLOOM]={base=3, every=7, max=5},
 		[Talents.T_WEAKNESS]={base=3, every=7, max=5},
 		[Talents.T_SANCTUARY]=5,
-		
+
 		[Talents.T_INSTILL_FEAR]=5,
 		[Talents.T_HEIGHTEN_FEAR]=5,
 		[Talents.T_TYRANT]=5,
@@ -357,12 +357,12 @@ There is a cunning air to his hollow skull, and his empty sockets reveal nothing
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, QUIVER=1  },
 	equipment = resolvers.equip{
 		{type="weapon", subtype="sling", defined="HARESKIN_SLING", random_art_replace={chance=0}, autoreq=true, tome_drops="boss"},
-		{type="weapon", subtype="dagger", ego_chance=100, autoreq=true, force_drop=true},
-		{type="ammo", subtype="shot", ego_chance=100, autoreq=true, force_drop=true},
+		{type="weapon", subtype="dagger", ego_chance=100, autoreq=true, forbid_power_source={antimagic=true}, force_drop=true},
+		{type="ammo", subtype="shot", ego_chance=100, autoreq=true, forbid_power_source={antimagic=true}, force_drop=true},
 	},
 	resolvers.drops{chance=100, nb=1, {tome_drops="boss"} },
 	resolvers.drops{chance=100, nb=1, {defined="FILIO_LETTER"} },
-	
+
 	open_door = 1,
 	instakill_immune = 1,
 	cut_immune = 1,
@@ -374,23 +374,23 @@ There is a cunning air to his hollow skull, and his empty sockets reveal nothing
 	resolvers.talents{
 		[Talents.T_SHOOT]=1,
 		[Talents.T_INERTIAL_SHOT]=3,
-		
+
 		[Talents.T_STEALTH]={base=5, every=6, max=7},
 		[Talents.T_SHADOWSTRIKE]={base=1, every=6, max=7},
 		[Talents.T_HIDE_IN_PLAIN_SIGHT]={base=1, every=6, max=7},
-		
+
 		[Talents.T_DISENGAGE]={base=3, every=6, max=7},
 		[Talents.T_EVASION]={base=5, every=6, max=7},
 		[Talents.T_PIERCING_SIGHT]={base=3, every=6, max=7},
-		
+
 		[Talents.T_DUAL_STRIKE]={base=2, every=6, max=7},
 		[Talents.T_DUAL_WEAPON_DEFENSE]={base=5, every=6, max=7},
 		[Talents.T_LETHALITY]={base=1, every=6, max=5},
 		[Talents.T_WILLFUL_COMBAT]={base=5, every=6, max=6},
-		
+
 		[Talents.T_KNIFE_MASTERY]={base=2, every=10, max=5},
 		[Talents.T_WEAPON_COMBAT]={base=2, every=10, max=5},
-		
+
 		[Talents.T_BONE_ARMOUR]={base=3, every=5, max=5},
 		[Talents.T_RESILIENT_BONES]={base=3, every=5, max=5},
 		[Talents.T_SKELETON_REASSEMBLE]={base=3, every=5, max=5},
@@ -401,11 +401,11 @@ There is a cunning air to his hollow skull, and his empty sockets reveal nothing
 	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
 	ai_tactic = resolvers.tactic"survivor",
 	resolvers.inscriptions(1, {"invisibility rune",}),
-	
+
 	on_move = function(self, x, y, self, force)
 		if not force and rng.percent(10) then
 			local traps = { self.T_BEAR_TRAP, self.T_CATAPULT_TRAP }
 			self:forceUseTalent(rng.table(traps), {ignore_energy=true, ignore_resources=true, ignore_cd=true, force_target=self})
 		end
-	end,	
+	end,
 }

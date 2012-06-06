@@ -50,8 +50,8 @@ newEntity{ define_as = "TANNEN",
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1, },
 	equipment = resolvers.equip{
-		{type="weapon", subtype="staff", force_drop=true, tome_drops="boss", autoreq=true},
-		{type="armor", subtype="cloth", force_drop=true, tome_drops="boss", autoreq=true},
+		{type="weapon", subtype="staff", force_drop=true, tome_drops="boss", forbid_power_source={antimagic=true}, autoreq=true},
+		{type="armor", subtype="cloth", force_drop=true, tome_drops="boss", forbid_power_source={antimagic=true}, autoreq=true},
 	},
 	resolvers.drops{chance=100, nb=4, {tome_drops="boss"} },
 	resolvers.drops{chance=100, nb=1, {defined="ORB_MANY_WAYS2"} },
@@ -131,9 +131,9 @@ It is so huge that it blocks sight beyond it.]],
 	resolvers.drops{chance=100, nb=1, {defined="RESONATING_DIAMOND_WEST2"} },
 
 	resolvers.equip{
-		{type="weapon", subtype="greatsword", force_drop=true, tome_drops="boss", autoreq=true},
-		{type="armor", subtype="massive", force_drop=true, tome_drops="boss", autoreq=true},
-		{type="armor", subtype="head", force_drop=true, tome_drops="boss", autoreq=true},
+		{type="weapon", subtype="greatsword", force_drop=true, tome_drops="boss", forbid_power_source={antimagic=true}, autoreq=true},
+		{type="armor", subtype="massive", force_drop=true, tome_drops="boss", forbid_power_source={antimagic=true}, autoreq=true},
+		{type="armor", subtype="head", force_drop=true, tome_drops="boss", forbid_power_source={antimagic=true}, autoreq=true},
 	},
 
 	autolevel = "warrior",

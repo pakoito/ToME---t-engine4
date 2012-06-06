@@ -53,9 +53,9 @@ newEntity{ define_as = "HIGH_SUN_PALADIN_AERYN",
 	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
 
 	resolvers.equip{
-		{type="weapon", subtype="mace", autoreq=true},
-		{type="armor", subtype="shield", autoreq=true},
-		{type="armor", subtype="massive", autoreq=true},
+		{type="weapon", subtype="mace", forbid_power_source={antimagic=true}, autoreq=true},
+		{type="armor", subtype="shield", forbid_power_source={antimagic=true}, autoreq=true},
+		{type="armor", subtype="massive", forbid_power_source={antimagic=true}, autoreq=true},
 	},
 	resolvers.talents{
 		[Talents.T_ARMOUR_TRAINING]=5,

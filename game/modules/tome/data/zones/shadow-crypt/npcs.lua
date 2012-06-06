@@ -50,7 +50,7 @@ newEntity{ base="BASE_NPC_ORC_RAK_SHOR", define_as = "CULTIST_RAK_SHOR",
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 
 	resolvers.equip{
-		{type="weapon", subtype="staff", force_drop=true, tome_drops="boss", autoreq=true},
+		{type="weapon", subtype="staff", force_drop=true, tome_drops="boss", forbid_power_source={antimagic=true}, autoreq=true},
 	},
 	resolvers.drops{chance=20, nb=1, {defined="JEWELER_TOME"} },
 	resolvers.drops{chance=100, nb=1, {defined="LIFE_DRINKER", random_art_replace={chance=75}} },

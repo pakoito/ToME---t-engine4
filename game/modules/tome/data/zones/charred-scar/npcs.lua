@@ -55,9 +55,9 @@ newEntity{ base = "BASE_NPC_SUNWALL_DEFENDER", define_as = "SUN_PALADIN_DEFENDER
 	life_regen = 5,
 	max_life = resolvers.rngavg(140,170),
 	resolvers.equip{
-		{type="weapon", subtype="mace", autoreq=true},
-		{type="armor", subtype="shield", autoreq=true},
-		{type="armor", subtype="massive", autoreq=true},
+		{type="weapon", subtype="mace", forbid_power_source={antimagic=true}, autoreq=true},
+		{type="armor", subtype="shield", forbid_power_source={antimagic=true}, autoreq=true},
+		{type="armor", subtype="massive", forbid_power_source={antimagic=true}, autoreq=true},
 	},
 	resolvers.talents{
 		[Talents.T_ARMOUR_TRAINING]=5,
@@ -85,9 +85,9 @@ newEntity{ base = "BASE_NPC_SUNWALL_DEFENDER", define_as = "SUN_PALADIN_DEFENDER
 	life_regen = 5,
 	max_life = resolvers.rngavg(240,270),
 	resolvers.equip{
-		{type="weapon", subtype="mace", autoreq=true},
-		{type="armor", subtype="shield", autoreq=true},
-		{type="armor", subtype="massive", autoreq=true},
+		{type="weapon", subtype="mace", forbid_power_source={antimagic=true}, autoreq=true},
+		{type="armor", subtype="shield", forbid_power_source={antimagic=true}, autoreq=true},
+		{type="armor", subtype="massive", forbid_power_source={antimagic=true}, autoreq=true},
 	},
 	resolvers.talents{
 		[Talents.T_ARMOUR_TRAINING]=5,
@@ -177,8 +177,8 @@ newEntity{
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	resolvers.equip{
-		{type="weapon", subtype="staff", force_drop=true, tome_drops="boss", autoreq=true},
-		{type="armor", subtype="cloth", force_drop=true, tome_drops="boss", autoreq=true},
+		{type="weapon", subtype="staff", force_drop=true, tome_drops="boss", forbid_power_source={antimagic=true}, autoreq=true},
+		{type="armor", subtype="cloth", force_drop=true, tome_drops="boss", forbid_power_source={antimagic=true}, autoreq=true},
 	},
 	resolvers.drops{chance=100, nb=10, {tome_drops="boss"} },
 
@@ -235,8 +235,8 @@ newEntity{
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	resolvers.equip{
-		{type="weapon", subtype="staff", force_drop=true, tome_drops="boss", autoreq=true},
-		{type="armor", subtype="cloth", force_drop=true, tome_drops="boss", autoreq=true},
+		{type="weapon", subtype="staff", force_drop=true, tome_drops="boss", forbid_power_source={antimagic=true}, autoreq=true},
+		{type="armor", subtype="cloth", force_drop=true, tome_drops="boss", forbid_power_source={antimagic=true}, autoreq=true},
 	},
 	resolvers.drops{chance=100, nb=10, {tome_drops="boss"} },
 

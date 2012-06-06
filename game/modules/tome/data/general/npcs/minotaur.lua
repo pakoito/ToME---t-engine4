@@ -75,7 +75,7 @@ newEntity{ base = "BASE_NPC_MINOTAUR",
 	level_range = {20, nil}, exp_worth = 1,
 	rarity = 4,
 	combat_armor = 15, combat_def = 7,
-	resolvers.equip{ {type="weapon", subtype="maul", autoreq=true} },
+	resolvers.equip{ {type="weapon", subtype="maul", forbid_power_source={antimagic=true}, autoreq=true} },
 
 	autolevel = "caster",
 	resists = { [DamageType.FIRE] = 100 },

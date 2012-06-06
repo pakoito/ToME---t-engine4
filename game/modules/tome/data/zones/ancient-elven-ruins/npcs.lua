@@ -49,8 +49,8 @@ newEntity{ define_as = "GREATER_MUMMY_LORD",
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, HEAD=1, },
 	equipment = resolvers.equip{
 		{type="weapon", subtype="longsword", defined="LONGSWORD_WINTERTIDE", random_art_replace={chance=75}, autoreq=true},
-		{type="armor", subtype="shield", force_drop=true, tome_drops="boss", autoreq=true},
-		{type="armor", subtype="mummy", force_drop=true, tome_drops="boss", autoreq=true},
+		{type="armor", subtype="shield", force_drop=true, tome_drops="boss", forbid_power_source={antimagic=true}, autoreq=true},
+		{type="armor", subtype="mummy", force_drop=true, tome_drops="boss", forbid_power_source={antimagic=true}, autoreq=true},
 	},
 	resolvers.drops{chance=100, nb=4, {tome_drops="boss"} },
 
@@ -93,8 +93,8 @@ newEntity{ base = "BASE_NPC_MUMMY",
 	infravision = 10,
 
 	resolvers.equip{
-		{type="weapon", subtype="greatsword", autoreq=true},
-		{type="armor", subtype="mummy", autoreq=true},
+		{type="weapon", subtype="greatsword", forbid_power_source={antimagic=true}, autoreq=true},
+		{type="armor", subtype="mummy", forbid_power_source={antimagic=true}, autoreq=true},
 	},
 	resolvers.talents{
 		[Talents.T_STUNNING_BLOW]={base=2, every=7, max=6},
@@ -117,7 +117,7 @@ newEntity{ base = "BASE_NPC_MUMMY",
 	infravision = 10,
 
 	resolvers.equip{
-		{type="armor", subtype="mummy", force_drop=true, autoreq=true},
+		{type="armor", subtype="mummy", force_drop=true, forbid_power_source={antimagic=true}, autoreq=true},
 	},
 	autolevel = "caster",
 	resolvers.talents{
@@ -140,7 +140,7 @@ newEntity{ base = "BASE_NPC_MUMMY",
 	infravision = 10,
 
 	resolvers.equip{
-		{type="armor", subtype="mummy", autoreq=true},
+		{type="armor", subtype="mummy", forbid_power_source={antimagic=true}, autoreq=true},
 	},
 	autolevel = "ghoul",
 	resolvers.talents{

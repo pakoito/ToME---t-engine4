@@ -147,9 +147,9 @@ newEntity{ base="BASE_NPC_CORRUPTED_HORROR", define_as = "ABOMINATION",
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, FEET=1 },
 	resolvers.equip{
-		{type="weapon", subtype="battleaxe", force_drop=true, tome_drops="boss", autoreq=true},
-		{type="armor", subtype="boots", defined="WARPED_BOOTS", random_art_replace={chance=75}, autoreq=true},
-		{type="armor", subtype="massive", force_drop=true, tome_drops="boss", autoreq=true},
+		{type="weapon", subtype="battleaxe", force_drop=true, tome_drops="boss", forbid_power_source={antimagic=true}, autoreq=true},
+		{type="armor", subtype="boots", defined="WARPED_BOOTS", random_art_replace={chance=75}, forbid_power_source={antimagic=true}, autoreq=true},
+		{type="armor", subtype="massive", force_drop=true, tome_drops="boss", forbid_power_source={antimagic=true}, autoreq=true},
 	},
 	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
 	resolvers.drops{chance=100, nb=1, {defined="ADV_LTR_8"} },

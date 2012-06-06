@@ -45,8 +45,8 @@ newEntity{ base = "BASE_NPC_HORROR", define_as="WEIRDLING_BEAST",
 	negative_regen = 15,
 
 	resolvers.equip{
-		{type="weapon", subtype="staff", autoreq=true, force_drop=true, tome_drops="boss"},
-		{type="armor", subtype="light", autoreq=true, force_drop=true, tome_drops="boss"}
+		{type="weapon", subtype="staff", autoreq=true, force_drop=true, forbid_power_source={antimagic=true}, tome_drops="boss"},
+		{type="armor", subtype="light", autoreq=true, force_drop=true, forbid_power_source={antimagic=true}, tome_drops="boss"}
 	},
 	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
 

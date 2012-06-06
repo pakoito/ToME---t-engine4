@@ -109,7 +109,7 @@ Oh, and it is twice as big, too.]],
 	ai = "tactical",
 	ai_tactic = resolvers.tactic"melee",
 
-	resolvers.equip{ {type="weapon", subtype="battleaxe", autoreq=true}, },
+	resolvers.equip{ {type="weapon", subtype="battleaxe", forbid_power_source={antimagic=true}, autoreq=true}, },
 
 	resists={[DamageType.PHYSICAL] = resolvers.mbonus(15, 10), [DamageType.FIRE] = resolvers.mbonus(15, 10)},
 
@@ -140,7 +140,7 @@ newEntity{ base = "BASE_NPC_MAJOR_DEMON",
 
 	ai = "tactical",
 
-	resolvers.equip{ {type="weapon", subtype="staff", autoreq=true}, },
+	resolvers.equip{ {type="weapon", subtype="staff", forbid_power_source={antimagic=true}, autoreq=true}, },
 
 	silence_immune = 1,
 	blind_immune = 1,
@@ -175,8 +175,8 @@ It moves swiftly toward you, casting terrible spells and swinging its weapons at
 
 	ai = "tactical",
 
-	resolvers.equip{ {type="weapon", subtype="longsword", autoreq=true}, },
-	resolvers.equip{ {type="weapon", subtype="waraxe", autoreq=true}, },
+	resolvers.equip{ {type="weapon", subtype="longsword", forbid_power_source={antimagic=true}, autoreq=true}, },
+	resolvers.equip{ {type="weapon", subtype="waraxe", forbid_power_source={antimagic=true}, autoreq=true}, },
 
 	resists={all = resolvers.mbonus(25, 20)},
 
@@ -250,8 +250,8 @@ newEntity{ base = "BASE_NPC_MAJOR_DEMON",
 
 	ai = "tactical",
 
-	resolvers.equip{ {type="weapon", subtype="mace", autoreq=true}, },
-	resolvers.equip{ {type="weapon", subtype="mace", autoreq=true}, },
+	resolvers.equip{ {type="weapon", subtype="mace", forbid_power_source={antimagic=true}, autoreq=true}, },
+	resolvers.equip{ {type="weapon", subtype="mace", forbid_power_source={antimagic=true}, autoreq=true}, },
 
 	resists={[DamageType.PHYSICAL] = resolvers.mbonus(15, 10), [DamageType.FIRE] = 100},
 	on_melee_hit = {[DamageType.FIRE]=resolvers.mbonus(25, 25)},

@@ -176,7 +176,7 @@ newEntity{ base = "BASE_NPC_SLAVER",
 	rarity = 1,
 	max_life = resolvers.rngavg(80,90), life_rating = 11,
 	resolvers.equip{
-		{type="weapon", subtype="staff", autoreq=true},
+		{type="weapon", subtype="staff", forbid_power_source={antimagic=true}, autoreq=true},
 	},
 	combat_armor = 0, combat_def = 6,
 	resolvers.talents{

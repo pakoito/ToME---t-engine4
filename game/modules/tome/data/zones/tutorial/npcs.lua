@@ -30,7 +30,7 @@ newEntity{ base = "BASE_NPC_SKELETON", define_as = "TUTORIAL_NPC_MAGE", image="n
 	stats = { str=10, dex=12, cun=14, mag=14, con=10 },
 	resolvers.talents{ [Talents.T_MANATHRUST]=3 },
 
-	resolvers.equip{ {type="weapon", subtype="staff", autoreq=true} },
+	resolvers.equip{ {type="weapon", subtype="staff", forbid_power_source={antimagic=true}, autoreq=true} },
 
 	autolevel = "caster",
 	ai = "dumb_talented_simple", ai_state = { talent_in=1, },

@@ -22,7 +22,7 @@ load("/data/general/npcs/gwelgoroth.lua", function(e) if e.rarity then e.derth_r
 local Talents = require("engine.interface.ActorTalents")
 
 newEntity{
-	define_as = "BASE_NPC_ELVALA_TOWN",
+	define_as = "BASE_NPC_IRON_COUNCIL_TOWN",
 	type = "humanoid", subtype = "dwarf",
 	display = "p", color=colors.WHITE,
 	faction = "iron-throne",
@@ -50,7 +50,7 @@ newEntity{
 	emote_random = resolvers.emote_random{allow_backup_guardian=true},
 }
 
-newEntity{ base = "BASE_NPC_ELVALA_TOWN",
+newEntity{ base = "BASE_NPC_IRON_COUNCIL_TOWN",
 	name = "dwarven guard", color=colors.LIGHT_UMBER,
 	desc = [[A stocky dwarf, he looks angry.]],
 	level_range = {1, nil}, exp_worth = 1,
@@ -63,7 +63,7 @@ newEntity{ base = "BASE_NPC_ELVALA_TOWN",
 	resolvers.talents{ [Talents.T_RUSH]=1, [Talents.T_PERFECT_STRIKE]=1, },
 }
 
-newEntity{ base = "BASE_NPC_ELVALA_TOWN",
+newEntity{ base = "BASE_NPC_IRON_COUNCIL_TOWN",
 	name = "dwarven earthwarden", color=colors.RED,
 	desc = [[A stocky dwarf, he looks angry.]],
 	level_range = {1, nil}, exp_worth = 1,

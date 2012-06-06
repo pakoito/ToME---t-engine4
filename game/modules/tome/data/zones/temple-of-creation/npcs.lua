@@ -54,9 +54,9 @@ newEntity{ define_as = "SLASUL",
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, LITE=1 },
 	resolvers.equip{
-		{type="weapon", subtype="mace", force_drop=true, tome_drops="boss", autoreq=true},
-		{type="armor", subtype="shield", force_drop=true, tome_drops="boss", autoreq=true},
-		{type="armor", subtype="heavy", force_drop=true, tome_drops="boss", autoreq=true},
+		{type="weapon", subtype="mace", force_drop=true, tome_drops="boss", forbid_power_source={antimagic=true}, autoreq=true},
+		{type="armor", subtype="shield", force_drop=true, tome_drops="boss", forbid_power_source={antimagic=true}, autoreq=true},
+		{type="armor", subtype="heavy", force_drop=true, tome_drops="boss", forbid_power_source={antimagic=true}, autoreq=true},
 		{type="jewelry", subtype="lite", defined="ELDRITCH_PEARL", autoreq=true},
 	},
 	resolvers.drops{chance=100, nb=1, {defined="SLASUL_NOTE"} },

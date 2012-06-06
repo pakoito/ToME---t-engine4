@@ -55,8 +55,8 @@ newEntity{ base = "BASE_NPC_ORC_RAK_SHOR",
 	rarity = 1,
 	max_life = resolvers.rngavg(70,80), life_rating = 7,
 	resolvers.equip{
-		{type="weapon", subtype="staff", autoreq=true},
-		{type="armor", subtype="cloth", autoreq=true},
+		{type="weapon", subtype="staff", forbid_power_source={antimagic=true}, autoreq=true},
+		{type="armor", subtype="cloth", forbid_power_source={antimagic=true}, autoreq=true},
 	},
 	combat_armor = 0, combat_def = 5,
 
@@ -87,8 +87,8 @@ newEntity{ base = "BASE_NPC_ORC_RAK_SHOR",
 	rarity = 2,
 	max_life = resolvers.rngavg(110,120), life_rating = 12,
 	resolvers.equip{
-		{type="weapon", subtype="staff", autoreq=true},
-		{type="armor", subtype="cloth", autoreq=true},
+		{type="weapon", subtype="staff", forbid_power_source={antimagic=true}, autoreq=true},
+		{type="armor", subtype="cloth", forbid_power_source={antimagic=true}, autoreq=true},
 	},
 	combat_armor = 0, combat_def = 5,
 
@@ -111,8 +111,8 @@ newEntity{ base = "BASE_NPC_ORC_RAK_SHOR",
 	rank = 3,
 	max_life = resolvers.rngavg(160,180), life_rating = 15,
 	resolvers.equip{
-		{type="weapon", subtype="staff", autoreq=true},
-		{type="armor", subtype="cloth", autoreq=true},
+		{type="weapon", subtype="staff", forbid_power_source={antimagic=true}, autoreq=true},
+		{type="armor", subtype="cloth", forbid_power_source={antimagic=true}, autoreq=true},
 	},
 	combat_armor = 0, combat_def = 5,
 

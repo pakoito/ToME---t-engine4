@@ -40,8 +40,8 @@ newEntity{ define_as = "ATAMATHON", base = "BASE_NPC_CONSTRUCT",
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, GEM=4 },
 	resolvers.equip{
-		{type="weapon", subtype="greatmaul", tome_drops="boss", tome_mod="uvault", autoreq=true },
-		{type="armour", subtype="massive", tome_drops="boss", tome_mod="uvault", autoreq=true },
+		{type="weapon", subtype="greatmaul", tome_drops="boss", tome_mod="uvault", forbid_power_source={antimagic=true}, autoreq=true },
+		{type="armour", subtype="massive", tome_drops="boss", tome_mod="uvault", forbid_power_source={antimagic=true}, autoreq=true },
 	},
 	combat_armor = 50,
 	resolvers.drops{chance=100, nb=7, {type="gem"} },

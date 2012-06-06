@@ -30,13 +30,13 @@ newEntity{
 
 	body = { INVEN = 10, MAINHAND = 1, OFFHAND = 1, FINGER = 2, NECK = 1, LITE = 1, BODY = 1, HEAD = 1, CLOAK = 1, HANDS = 1, BELT = 1, FEET = 1},
 	equipment = resolvers.equip{
-		{type="armor", subtype="cloth", ego_chance=75, autoreq=true},
-		{type="armor", subtype="head", ego_chance=75, autoreq=true},
-		{type="armor", subtype="feet", ego_chance=75, autoreq=true},
-		{type="armor", subtype="cloak", ego_chance=75, autoreq=true},
-		{type="jewelry", subtype="amulet", ego_chance=100, autoreq=true},
-		{type="jewelry", subtype="ring", ego_chance=100, autoreq=true},
-		{type="jewelry", subtype="ring", ego_chance=100, autoreq=true},
+		{type="armor", subtype="cloth", ego_chance=75, forbid_power_source={antimagic=true}, autoreq=true},
+		{type="armor", subtype="head", ego_chance=75, forbid_power_source={antimagic=true}, autoreq=true},
+		{type="armor", subtype="feet", ego_chance=75, forbid_power_source={antimagic=true}, autoreq=true},
+		{type="armor", subtype="cloak", ego_chance=75, forbid_power_source={antimagic=true}, autoreq=true},
+		{type="jewelry", subtype="amulet", ego_chance=100, forbid_power_source={antimagic=true}, autoreq=true},
+		{type="jewelry", subtype="ring", ego_chance=100, forbid_power_source={antimagic=true}, autoreq=true},
+		{type="jewelry", subtype="ring", ego_chance=100, forbid_power_source={antimagic=true}, autoreq=true},
 	},
 
 	autolevel = "caster",

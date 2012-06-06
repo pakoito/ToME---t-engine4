@@ -59,7 +59,7 @@ newEntity{ base = "BASE_NPC_SKELETON",
 	name = "degenerated skeleton warrior", color=colors.WHITE, image="npc/degenerated_skeleton_warrior.png",
 	level_range = {1, 18}, exp_worth = 1,
 	rarity = 1,
-	resolvers.equip{ {type="weapon", subtype="greatsword", autoreq=true} },
+	resolvers.equip{ {type="weapon", subtype="greatsword", forbid_power_source={antimagic=true}, autoreq=true} },
 	max_life = resolvers.rngavg(40,50),
 	combat_armor = 5, combat_def = 1,
 }
@@ -70,7 +70,7 @@ newEntity{ base = "BASE_NPC_SKELETON",
 	rarity = 1,
 	max_life = resolvers.rngavg(90,100),
 	combat_armor = 5, combat_def = 1,
-	resolvers.equip{ {type="weapon", subtype="greatsword", autoreq=true} },
+	resolvers.equip{ {type="weapon", subtype="greatsword", forbid_power_source={antimagic=true}, autoreq=true} },
 	resolvers.talents{ [Talents.T_STUNNING_BLOW]={base=1, every=7, max=5}, [Talents.T_WEAPON_COMBAT]={base=1, every=10, max=5}, [Talents.T_WEAPONS_MASTERY]={base=1, every=10, max=5}, },
 	ai_state = { talent_in=1, },
 }
@@ -85,7 +85,7 @@ newEntity{ base = "BASE_NPC_SKELETON",
 	stats = { str=10, dex=12, cun=14, mag=14, con=10 },
 	resolvers.talents{ [Talents.T_FLAME]={base=1, every=7, max=5}, [Talents.T_MANATHRUST]={base=2, every=7, max=5} },
 
-	resolvers.equip{ {type="weapon", subtype="staff", autoreq=true} },
+	resolvers.equip{ {type="weapon", subtype="staff", forbid_power_source={antimagic=true}, autoreq=true} },
 
 	autolevel = "caster",
 	ai = "dumb_talented_simple", ai_state = { talent_in=3, },
@@ -102,7 +102,7 @@ newEntity{ base = "BASE_NPC_SKELETON",
 	ai_state = { talent_in=1, },
 
 	autolevel = "archer",
-	resolvers.equip{ {type="weapon", subtype="longbow", autoreq=true}, {type="ammo", subtype="arrow", autoreq=true} },
+	resolvers.equip{ {type="weapon", subtype="longbow", forbid_power_source={antimagic=true}, autoreq=true}, {type="ammo", subtype="arrow", forbid_power_source={antimagic=true}, autoreq=true} },
 }
 
 newEntity{ base = "BASE_NPC_SKELETON",
@@ -119,7 +119,7 @@ newEntity{ base = "BASE_NPC_SKELETON",
 	ai_tactic = resolvers.tactic"ranged",
 
 	autolevel = "archer",
-	resolvers.equip{ {type="weapon", subtype="longbow", autoreq=true}, {type="ammo", subtype="arrow", autoreq=true} },
+	resolvers.equip{ {type="weapon", subtype="longbow", forbid_power_source={antimagic=true}, autoreq=true}, {type="ammo", subtype="arrow", forbid_power_source={antimagic=true}, autoreq=true} },
 }
 
 newEntity{ base = "BASE_NPC_SKELETON",
@@ -143,6 +143,6 @@ newEntity{ base = "BASE_NPC_SKELETON",
 		[Talents.T_OVERPOWER]={base=1, every=7, max=5},
 		[Talents.T_DISARM]={base=3, every=7, max=7},
 	},
-	resolvers.equip{ {type="weapon", subtype="longsword", autoreq=true}, {type="armor", subtype="shield", autoreq=true}, {type="armor", subtype="heavy", autoreq=true} },
+	resolvers.equip{ {type="weapon", subtype="longsword", forbid_power_source={antimagic=true}, autoreq=true}, {type="armor", subtype="shield", forbid_power_source={antimagic=true}, autoreq=true}, {type="armor", subtype="heavy", forbid_power_source={antimagic=true}, autoreq=true} },
 	ai_state = { talent_in=1, },
 }

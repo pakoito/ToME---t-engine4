@@ -52,7 +52,7 @@ newEntity{
 
 	max_life = resolvers.rngavg(70,80), life_rating = 7,
 	resolvers.equip{
-		{type="weapon", subtype="staff", autoreq=true},
+		{type="weapon", subtype="staff", forbid_power_source={antimagic=true}, autoreq=true},
 		{type="armor", subtype="cloak", defined="CLOAK_DECEPTION", autoreq=true},
 	},
 
