@@ -1277,7 +1277,6 @@ newTalent{
 				{DamageType.FIRE, "flame"},
 				{DamageType.COLD, "freeze"},
 				{DamageType.LIGHTNING, "lightning_explosion"},
-				{DamageType.ACID, "acid"},
 				{DamageType.NATURE, "slime"},
 				{DamageType.BLIGHT, "blood"},
 				{DamageType.LIGHT, "light"},
