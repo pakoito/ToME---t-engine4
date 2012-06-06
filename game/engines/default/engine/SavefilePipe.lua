@@ -74,6 +74,8 @@ function _M:push(savename, type, object, class, on_end)
 		game:registerCoroutine("savefilepipe", self.co)
 	end
 
+	if game.onSavefilePushed then game:onSavefilePushed(savename, type, object, class) end
+
 	-- Refuse to continue, make the user wait
 	if #self.pipe >= self.max_before_wait or not config.settings.background_saves then
 		self:forceWait()

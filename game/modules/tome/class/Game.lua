@@ -1616,6 +1616,11 @@ function _M:onSavefilePush()
 	self.player:restStop("saving")
 end
 
+--- When a save has been done, if it's a zone or level, also save the main game
+function _M:onSavefilePushed(savename, type, object, class)
+	if type == "zone" or type == "level" then self:saveGame() end
+end
+
 --- Saves the highscore of the current char
 function _M:registerHighscore()
 	local player = self:getPlayer(true)
