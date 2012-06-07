@@ -120,10 +120,7 @@ newBirthDescriptor{
 			end
 		end,
 
-		-- Give the orb of knowledge
-		resolvers.inventory{ id=true, {defined="ORB_KNOWLEDGE"}},
 		resolvers.equip{ id=true, {name="iron pickaxe", ego_chance=-1000}},
-		resolvers.generic(function(e) e.hotkey[12] = {"inventory", "Orb of Knowledge"} end),
 		-- Override normal stuff
 		before_starting_zone = function(self)
 			self.starting_level = 1

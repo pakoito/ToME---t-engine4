@@ -1513,7 +1513,11 @@ function _M:createRandomBoss(base, data)
 		ngd = NameGenerator.new(randart_name_rules.default)
 		name = ngd:generate()
 	end
-	b.name = name.." the "..b.name
+	if data.name_scheme then
+		b.name = data.name_scheme:gsub("#rng#", name):gsub("#base#", b.name)
+	else
+		b.name = name.." the "..b.name
+	end
 	b.unique = b.name
 	b.randboss = true
 	local boss_id = "RND_BOSS_"..b.name:upper():gsub("[^A-Z]", "_")
@@ -1759,7 +1763,7 @@ function _M:startEvents()
 		local levels = {}
 		for i = 1, game.zone.max_level do levels[i] = {} end
 
-		for i, e in ipairs(evts) do 
+		for i, e in ipairs(evts) do
 			if e.always or rng.percent(e.percent) then
 				local lev = nil
 				if e.one_per_level then

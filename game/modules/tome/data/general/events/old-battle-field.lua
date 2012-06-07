@@ -35,7 +35,7 @@ while not check(x, y) and tries < 100 do
 	x, y = rng.range(3, level.map.w - 4), rng.range(3, level.map.h - 4)
 	tries = tries + 1
 end
-if tries < 100 then 
+if tries < 100 then
 	local id = "old-battle-field-"..game.turn
 
 	local changer = function(id)
@@ -78,6 +78,17 @@ if tries < 100 then
 						local spot = game.level:pickSpot{type="pop", subtype="undead"}
 						local g = game.zone:makeEntityByName(game.level, "terrain", "CAVE_LADDER_UP_WILDERNESS")
 						game.zone:addEntity(game.level, g, "terrain", spot.x, spot.y)
+
+						-- A "boss" comes
+						local nb = 20
+						while nb > 0 do
+							local spot = game.level:pickSpot{type="pop", subtype="undead"}
+							if not game.level.map(spot.x, spot.y, game.level.map.ACTOR) then
+								local m = game.zone:makeEntity(game.level, "actor", {random_elite={life_rating=function(v) return v * 1.5 + 4 end, nb_rares=6}}, nil, true)
+								if m then game.zone:addEntity(game.level, m, "actor", spot.x, spot.y) m:setTarget(game.player) break end
+							end
+							nb = nb - 1
+						end
 
 						require("engine.ui.Dialog"):simpleLongPopup("Onslaught", "You have survived the onslaught of undeads, you notice a way to climb up you had not seen before in a wall nearby.", 400)
 					elseif game.level.turn_counter % 50 == 0 then
