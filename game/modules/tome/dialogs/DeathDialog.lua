@@ -136,7 +136,7 @@ function _M:eidolonPlane()
 
 		local oldzone = game.zone
 		local oldlevel = game.level
-		local zone = engine.Zone.new("eidolon-plane")
+		local zone = mod.class.Zone.new("eidolon-plane")
 		local level = zone:getLevel(game, 1, 0)
 
 		level.data.eidolon_exit_x = self.actor.x

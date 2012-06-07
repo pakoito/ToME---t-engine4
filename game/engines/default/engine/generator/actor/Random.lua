@@ -55,7 +55,10 @@ function _M:generate()
 end
 
 function _M:generateGuardian(guardian)
-	local m = self.zone:makeEntityByName(self.level, "actor", guardian)
+	local m
+	if type(guardian) == "string" then m = self.zone:makeEntityByName(self.level, "actor", guardian)
+	else m = self.zone:makeEntity(self.level, "actor", guardian, nil, true)
+	end
 	local ok = false
 	if m then
 		local x, y = nil, nil

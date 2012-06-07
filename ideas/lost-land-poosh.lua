@@ -71,7 +71,7 @@ game:onLevelLoad("wilderness-1", function(wzone, level)
 		end },
 	}
 
-	local zone = engine.Zone.new("lost-land-poosh", {
+	local zone = mod.class.Zone.new("lost-land-poosh", {
 		name = "Lost land of Poosh",
 		level_range = {15, 35},
 		level_scheme = "player",

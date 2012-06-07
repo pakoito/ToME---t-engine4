@@ -25,7 +25,7 @@ require "engine.interface.GameTargeting"
 local KeyBind = require "engine.KeyBind"
 local Savefile = require "engine.Savefile"
 local DamageType = require "engine.DamageType"
-local Zone = require "engine.Zone"
+local Zone = require "mod.class.Zone"
 local Tiles = require "engine.Tiles"
 local Map = require "engine.Map"
 local Level = require "engine.Level"
@@ -611,6 +611,7 @@ function _M:changeLevel(lev, zone, params)
 	if params.keep_old_lev then old_lev = self.level.level end
 
 	local force_recreate = false
+	local recreate_nothing = false
 	local popup = nil
 
 	-- We only switch temporarily, keep the old one around
@@ -654,7 +655,12 @@ function _M:changeLevel(lev, zone, params)
 		self.level = old.temp_shift_level
 
 		self.visited_zones[self.zone.short_name] = true
-		force_recreate = true
+--		if self.level.map.closed then
+			force_recreate = true
+--		else
+--			print("Reloading back map without having it closed")
+--			recreate_nothing = true
+--		end
 	-- We move to a new zone as normal
 	elseif not params.temporary_zone_shift then
 		if self.zone and self.zone.on_leave then
@@ -678,8 +684,12 @@ function _M:changeLevel(lev, zone, params)
 			end
 			if type(self.zone.save_per_level) == "nil" then self.zone.save_per_level = config.settings.tome.save_zone_levels and true or false end
 		end
-		self.zone:getLevel(self, lev, old_lev)
+		local _, new_level = self.zone:getLevel(self, lev, old_lev)
 		self.visited_zones[self.zone.short_name] = true
+
+		if new_level then
+			self.state:startEvents()
+		end
 	end
 
 	-- Post process walls
@@ -838,9 +848,11 @@ function _M:changeLevel(lev, zone, params)
 	-- Day/Night cycle
 	if self.level.data.day_night then self.state:dayNightCycle() end
 
-	self.level.map:redisplay()
-	self.level.map:reopen()
-	if force_recreate then self.level.map:recreate() end
+	if recreate_nothing then
+		self.level.map:redisplay()
+		self.level.map:reopen()
+		if force_recreate then self.level.map:recreate() end
+	end
 
 	-- Anti stairscum
 	if self.level.last_turn and self.level.last_turn < self.turn then
@@ -936,7 +948,11 @@ function _M:updateZoneName()
 	else
 		local lev = self.level.level
 		if self.level.data.reverse_level_display then lev = 1 + self.level.data.max_level - lev end
-		name = ("%s (%d)"):format(self.zone.name, lev)
+		if self.zone.max_level == 1 then
+			name = self.zone.name
+		else
+			name = ("%s (%d)"):format(self.zone.name, lev)
+		end
 	end
 	if self.zone_name_s and self.old_zone_name == name then return end
 
@@ -1169,20 +1185,10 @@ function _M:setupCommands()
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
 --			self:registerDialog(require("mod.dialogs.DownloadCharball").new())
---			local o = game.zone:makeEntity(game.level,"object",{random_object=true},nil,true)
---			o:identify(true)
---			game.zone:addEntity(game.level,o,"object",game.player.x,game.player.y)
---			local m = game.zone:makeEntity(game.level,"actor",{random_elite=true},nil,true)
---			game.zone:addEntity(game.level,m,"actor",game.player.x,game.player.y-1)
-			local mnb , nb = 0, 0
-			for k, e in pairs(__uids) do
-				if k ~= e.uid then 
-					print("==", k, e.uid, e.name)
-					nb=nb+1
-				end
-				mnb = mnb+1
-			end
-			game.log("NB !!! %d / %d", nb, mnb)
+			local f, err = loadfile("/data/general/events/old-battle-field.lua")
+			print(f, err)
+			setfenv(f, setmetatable({level=self.level, zone=self.zone}, {__index=_G}))
+			print(pcall(f))
 		end end,
 		[{"_f","ctrl"}] = function() if config.settings.cheat then
 			self.player.quests["love-melinda"] = nil

@@ -575,12 +575,19 @@ function _M:load(dynamic)
 			self._no_save_fields.object_list = true
 			self._no_save_fields.trap_list = true
 		end
+
+		self:onLoadZoneFile("/data/zones/"..self.short_name.."/")
 	elseif not data and dynamic then
 		data = dynamic
 		ret = false
 	end
 	for k, e in pairs(data) do self[k] = e end
 	return ret
+end
+
+--- Called when the zone file is loaded
+-- Does nothing, overload it
+function _M:onLoadZoneFile(basedir)
 end
 
 local recurs = function(t)
@@ -636,6 +643,7 @@ function _M:getLevel(game, lev, old_lev, no_close)
 	local level_data = self:getLevelData(lev)
 
 	local level
+	local new_level = false
 	-- Load persistent level?
 	if type(level_data.persistent) == "string" and level_data.persistent == "zone_temporary" then
 		local popup = Dialog:simpleWaiter("Loading level", "Please wait while loading the level...", nil, 10000)
@@ -702,6 +710,7 @@ function _M:getLevel(game, lev, old_lev, no_close)
 		core.display.forceRedraw()
 
 		level = self:newLevel(level_data, lev, old_lev, game)
+		new_level = true
 
 		popup:done()
 	end
@@ -712,7 +721,7 @@ function _M:getLevel(game, lev, old_lev, no_close)
 	-- Re-open the level if needed (the method does the check itself)
 	level.map:reopen()
 
-	return level
+	return level, new_level
 end
 
 function _M:getGenerator(what, level, spots)

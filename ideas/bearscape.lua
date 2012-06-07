@@ -65,7 +65,7 @@ game:onLevelLoad("wilderness-1", function(wzone, level)
 		end },
 	}
 
-	local zone = engine.Zone.new("bearscape", {
+	local zone = mod.class.Zone.new("bearscape", {
 		name = "Bearscape",
 		level_range = {12, 35},
 		level_scheme = "player",

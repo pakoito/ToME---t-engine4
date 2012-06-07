@@ -34,6 +34,7 @@ function _M:init(t, no_default)
 	self.world_artifacts_pool = {}
 	self.seen_special_farportals = {}
 	self.unique_death = {}
+	self.used_events = {}
 	self.boss_killed = 0
 	self.stores_restock = 1
 	self.east_orc_patrols = 4
@@ -480,7 +481,7 @@ function _M:spawnWorldAmbush(enc, dx, dy)
 	local terrains = mod.class.Grid:loadList{"/data/general/grids/basic.lua", "/data/general/grids/forest.lua", "/data/general/grids/sand.lua"}
 	terrains[gen.up].change_level_shift_back = true
 
-	local zone = engine.Zone.new("ambush", {
+	local zone = mod.class.Zone.new("ambush", {
 		name = "Ambush!",
 		level_range = {game.player.level, game.player.level},
 		level_scheme = "player",
@@ -1108,14 +1109,13 @@ function _M:entityFilterPost(zone, level, type, e, filter)
 			local base = {
 				nb_classes=1,
 				rank=3.2, ai = "tactical",
-				life_rating=function(v) return v * 1.3 + 2 end,
+				life_rating = filter.random_elite.life_rating or function(v) return v * 1.3 + 2 end,
 				loot_quality = "store",
 				loot_quantity = 0,
 				drop_equipment = false,
 				no_loot_randart = true,
 				resources_boost = 1.5,
 				class_filter = function(c)
-					if c.name=="Corruptor" then return true else return false end
 					if e.power_source then
 						for ps, _ in pairs(e.power_source) do if c.power_source and c.power_source[ps] then return true end end
 						return false
@@ -1127,6 +1127,7 @@ function _M:entityFilterPost(zone, level, type, e, filter)
 					return true
 				end,
 				level = filter.random_elite.level or zone:level_adjust_level(level, zone, type),
+				nb_rares = filter.random_elite.nb_rares or 1,
 				check_talents_level = true,
 				post = function(b, data)
 					if data.level <= 20 then
@@ -1135,9 +1136,13 @@ function _M:entityFilterPost(zone, level, type, e, filter)
 					end
 
 					-- Drop
-					local o = game.zone:makeEntity(game.level,"object", {random_object=true}, nil, true)
-					b:addObject(b.INVEN_INVEN, o)
-					game.zone:addEntity(game.level, o, "object")
+					for i = 1, data.nb_rares do
+						local o = game.zone:makeEntity(game.level,"object", {random_object=true}, nil, true)
+						if o then
+							b:addObject(b.INVEN_INVEN, o)
+							game.zone:addEntity(game.level, o, "object")
+						end
+					end
 				end,
 			}
 			e = self:createRandomBoss(e, table.merge(base, filter.random_elite, true))
@@ -1462,7 +1467,7 @@ function _M:createRandomZone(zbase)
 	------------------------------------------------------------
 	-- Final glue
 	------------------------------------------------------------
-	local zone = engine.Zone.new(short_name, {
+	local zone = mod.class.Zone.new(short_name, {
 		name = name,
 		level_range = {data.min_lev, data.max_lev},
 		level_scheme = "player",
@@ -1739,4 +1744,51 @@ function _M:locationRevealAround(x, y)
 		game.level.map.lites(x+c[1], y+c[2], true)
 		game.level.map.remembers(x+c[1], y+c[2], true)
 	end
+end
+
+function _M:doneEvent(id)
+	return self.used_events[id]
+end
+
+function _M:startEvents()
+	if not game.zone.events then print("No zone events loaded") return end
+
+	local evts = game.zone.events
+
+	if not game.zone.assigned_events then
+		local levels = {}
+		for i = 1, game.zone.max_level do levels[i] = {} end
+
+		for i, e in ipairs(evts) do 
+			if e.always or rng.percent(e.percent) then
+				local lev = nil
+				if e.one_per_level then
+					local list = {}
+					for i = 1, #levels do if #levels[i] == 0 then list[#list+1] = i end end
+					if #list > 0 then
+						lev = rng.table(list)
+					end
+				else
+					lev = rng.range(1, game.zone.max_level)
+				end
+
+				if lev then
+					lev = levels[lev]
+					lev[#lev+1] = e.name
+				end
+			end
+		end
+
+		game.zone.assigned_events = levels
+	end
+
+	print("Assigned events list")
+	table.print(game.zone.assigned_events)
+
+	for i, e in ipairs(game.zone.assigned_events[game.level.level] or {}) do
+		local f = loadfile("/data/general/events/"..e..".lua")
+		setfenv(f, setmetatable({level=game.level, zone=game.zone}, {__index=_G}))
+		f()
+	end
+	game.zone.assigned_events[game.level.level] = {}
 end
