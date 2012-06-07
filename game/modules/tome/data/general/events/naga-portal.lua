@@ -32,8 +32,22 @@ local changer = function(id)
 	local npcs = mod.class.NPC:loadList{"/data/general/npcs/naga.lua"}
 	local objects = mod.class.Object:loadList("/data/general/objects/objects.lua")
 	local terrains = mod.class.Grid:loadList{"/data/general/grids/basic.lua", "/data/general/grids/water.lua"}
-	terrains.WATER_UP_WILDERNESS.change_level_shift_back = true
-	terrains.WATER_UP_WILDERNESS.change_zone_auto_stairs = true
+	terrains.PORTAL_BACK = mod.class.Grid.new{
+		type = "floor", subtype = "underwater",
+		display = "&", color = colors.BLUE,
+		name = "coral invasion portal",
+		image = "terrain/underwater/subsea_floor_02.png",
+		add_displays = {mod.class.Grid.new{z=18, image="terrain/naga_portal.png", display_h=2, display_y=-1, embed_particles = {
+			{name="naga_portal_smoke", rad=2, args={smoke="particles_images/smoke_whispery_bright"}},
+			{name="naga_portal_smoke", rad=2, args={smoke="particles_images/smoke_heavy_bright"}},
+			{name="naga_portal_smoke", rad=2, args={smoke="particles_images/smoke_dark"}},
+		}}},
+		change_level = 1, change_zone = "wilderness",
+		change_level_shift_back = true,
+		change_zone_auto_stairs = true,
+		does_block_move = true,
+		pass_projectile = true,
+	}
 	local zone = mod.class.Zone.new(id, {
 		name = "water cavern",
 		level_range = {zone:level_adjust_level(level, zone, "actor"), zone:level_adjust_level(level, zone, "actor")},
@@ -51,11 +65,12 @@ local changer = function(id)
 				class = "engine.generator.map.Cavern",
 				zoom = 12,
 				min_floor = 250,
-				floor = "WATER_FLOOR",
+				floor = {"WATER_FLOOR","WATER_FLOOR","WATER_FLOOR","WATER_FLOOR","WATER_FLOOR","WATER_FLOOR","WATER_FLOOR","WATER_FLOOR","WATER_FLOOR","WATER_FLOOR","WATER_FLOOR_BUBBLE"},
 				wall = "WATER_WALL",
-				up = "WATER_UP",
-				down = "WATER_DOWN",
+				up = "WATER_FLOOR",
+				down = "PORTAL_BACK",
 				door = "WATER_FLOOR",
+				force_last_stair = true,
 			},
 			actor = {
 				class = "mod.class.generator.actor.Random",
@@ -110,7 +125,7 @@ g.block_move = function(self, x, y, who, act, couldpass)
 
 	require("engine.ui.Dialog"):yesnoPopup("Coral Portal", "Do you wish to enter the portal or just destroy it?", function(ret)
 		game.log("#VIOLET#The portal is broken!")
-		if ret then
+		if not ret then
 			self:change_level_check()
 		end
 		self.broken = true
@@ -123,7 +138,9 @@ end
 game.zone:addEntity(game.level, g, "terrain", x, y)
 
 local respawn = function(self)
-	local i, j = util.findFreeGrid(self.naga_portal_x, self.naga_portal_y, 10, true, {[engine.Map.ACTOR]=true})
+	local portal = game.level.map(self.naga_portal_x, self.naga_portal_y, engine.Map.TERRAIN)
+	if not portal or portal.broken then return end
+	local i, j = util.findFreeGrid(self.naga_portal_x, self.naga_portal_y+1, 10, true, {[engine.Map.ACTOR]=true})
 	if not i then return end
 
 	local npcs = mod.class.NPC:loadList{"/data/general/npcs/naga.lua"}

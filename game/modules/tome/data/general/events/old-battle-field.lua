@@ -130,6 +130,7 @@ if tries < 100 then
 		game:changeLevel(1, self.real_change(self.change_zone), {temporary_zone_shift=true})
 		self.change_level_check = nil
 		self.real_change = nil
+		self.change_level = nil
 		return true
 	end
 
