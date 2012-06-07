@@ -45,8 +45,6 @@ local changer = function(id)
 		change_level = 1, change_zone = "wilderness",
 		change_level_shift_back = true,
 		change_zone_auto_stairs = true,
-		does_block_move = true,
-		pass_projectile = true,
 	}
 	local zone = mod.class.Zone.new(id, {
 		name = "water cavern",
