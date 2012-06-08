@@ -255,6 +255,7 @@ newEntity{ base = "BASE_NPC_UNDEAD_RAT", define_as="RATLICH",
 	},
 	resolvers.sustains_at_birth(),
 	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
+	resolvers.drops{chance=100, nb=1, {defined="RATLICH_SKULL"} },
 
 	emote_random = {chance=1, "*squeak*", "Squeak!", "Squeak??", "SQUEAK!!!!!", '"Squeak" I say, yes .. "Squeak!"'},
 }
