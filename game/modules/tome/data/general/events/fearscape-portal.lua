@@ -191,6 +191,4 @@ local base = {fearscape_portal_x=x, fearscape_portal_y=y, fearscape_respawn=resp
 respawn(base)
 respawn(base)
 
-game.player:move(x,y-1,true)
-
 return true
