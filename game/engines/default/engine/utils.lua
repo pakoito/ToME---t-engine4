@@ -283,6 +283,16 @@ function table.orderedPairs(t)
 	return orderedNext, t, nil
 end
 
+--- Shuffles the content of a table (list)
+function table.shuffle(t)
+	local n = #t
+	for i = n, 2, -1 do
+		local j = rng.range(1, i)
+		t[i], t[j] = t[j], t[i]
+	end
+	return t
+end
+
 function string.ordinal(number)
 	local suffix = "th"
 	number = tonumber(number)

@@ -17,6 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-return { one_per_level=true,
-	{group="fareast-generic", percent_factor=1.5},
+return {
+	{name="naga-portal", percent=7},
+	{name="fearscape-portal", percent=7},
 }

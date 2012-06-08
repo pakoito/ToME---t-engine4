@@ -1757,13 +1757,29 @@ end
 function _M:startEvents()
 	if not game.zone.events then print("No zone events loaded") return end
 
-	local evts = game.zone.events
-
 	if not game.zone.assigned_events then
 		local levels = {}
 		for i = 1, game.zone.max_level do levels[i] = {} end
 
+		-- Generate the events list for this zone, eventually loading from group files
+		local evts = {}
+		for i, e in ipairs(game.zone.events) do
+			if e.name then evts[#evts+1] = e.name
+			elseif e.group then
+				local f = loadfile("/data/general/events/groups/"..e..".lua")
+				setfenv(f, setmetatable({level=game.level, zone=game.zone}, {__index=_G}))
+				local list = f()
+				for j, ee in ipairs(list) do
+					if e.percent_factor and ee.percent then ee.percent = math.floor(ee.percent * e.percent_factor) end
+					if ee.name then evts[#evts+1] = ee.name end
+				end
+			end
+		end
+
+		-- Randomize the order they are checked as
+		table.shuffle(evts)
 		for i, e in ipairs(evts) do
+			-- If we allow it, try to find a level to host it
 			if e.always or rng.percent(e.percent) then
 				local lev = nil
 				if e.one_per_level then

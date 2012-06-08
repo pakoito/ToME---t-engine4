@@ -18,7 +18,8 @@
 -- darkgod@te4.org
 
 return { one_per_level=true,
-	{name="damp-cave", percent=10},
 	{name="tombstones", percent=10},
 	{name="old-battle-field", percent=5},
+	{group="outdoor-majeyal-gloomy"},
+	{group="outdoor-majeyal-generic"},
 }
