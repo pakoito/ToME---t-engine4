@@ -187,7 +187,7 @@ newEntity{ base = "BASE_NPC_UNDEAD_RAT", define_as="RATLICH",
 	rarity = false,
 	rank=3.5,
 	max_life = resolvers.rngavg(50,80),
-	life_rating=9,
+	life_rating=10,
 	combat_armor = 20, combat_def = 15,
 
 	self_resurrect = 1,
@@ -199,15 +199,20 @@ newEntity{ base = "BASE_NPC_UNDEAD_RAT", define_as="RATLICH",
 	poison_immune = 1,
 
 	hate_regen=1,
+ 	mana_regen=3,
+ 	negative_regen=3,
 
 	combat_spellpower = resolvers.mbonus(20, 10),
 	combat_spellcrit = resolvers.mbonus(5, 5),
+	
+	combat_mindpower = resolvers.mbonus(20, 10),
+	combat_mindcrit = resolvers.mbonus(5, 5),
 
 	autolevel="caster",
 	ai = "tactical", ai_state = { talent_in=1, },
 	ai_tactic = resolvers.tactic"ranged",
 
-	combat = { dam=resolvers.rngavg(12,20), atk=15, apr=9, damtype=DamageType.DARKSTUN, dammod={mag=0.9} },
+	combat = { dam=resolvers.rngavg(12,20), atk=20, apr=9, damtype=DamageType.DARKSTUN, dammod={mag=0.9} },
 
 	summon = {
 		{type="undead", subtype="rodent", number=2, hasxp=false},
@@ -232,7 +237,7 @@ newEntity{ base = "BASE_NPC_UNDEAD_RAT", define_as="RATLICH",
 				{type="undead", subtype="rodent", number=3, hasxp=false},
 			}
 
-			game.logSeen(self, "Rising again, the Rat Lich's eyes glow with renewed energy!")
+			game.logSeen(self, "#RED#Rising again, the Rat Lich's eyes glow with renewed energy!")
 
 			self.desc = self.desc.."\nThe Rat Lich's true power has been unveiled! Swirling with arcane energy, it stalks towards you uttering warsqueaks at its minions!"
 
@@ -243,15 +248,19 @@ newEntity{ base = "BASE_NPC_UNDEAD_RAT", define_as="RATLICH",
 	resolvers.talents{
 		[Talents.T_SUMMON]=1,
 
+		--Doomed
 		[Talents.T_CALL_SHADOWS]={base=1, every=6, max=6},
 		[Talents.T_SHADOW_WARRIORS]={base=1, every=6, max=6},
 		[Talents.T_CREEPING_DARKNESS]={base=4, every=8, max=7},
-		[Talents.T_DARK_VISION]={base=4, every=8, max=7},
-
-		[Talents.T_CREEPING_DARKNESS]={base=2, every=7, max=6},
-		[Talents.T_DARK_VISION]={base=3, every=7, max=6},
-		[Talents.T_DARK_TORRENT]={base=2, every=7, max=6},
 		[Talents.T_DARK_TENDRILS]={base=1, every=6, max=6},
+		[Talents.T_DARK_VISION]={base=4, every=8, max=6},
+		--Magic
+		[Talents.T_INVOKE_DARKNESS]={base=3, every=6, max=7},
+		[Talents.T_MANATHRUST]={base=3, every=8, max=6},
+		[Talents.T_FEAR_THE_NIGHT]={base=2, every=7, max=5},
+		--Anorithil
+		[Talents.T_MOONLIGHT_RAY]={base=2, every=6, max=7},
+		[Talents.T_SHADOW_BLAST]={base=1, every=7, max=5},	
 	},
 	resolvers.sustains_at_birth(),
 	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
