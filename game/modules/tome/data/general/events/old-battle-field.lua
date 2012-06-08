@@ -54,6 +54,8 @@ if tries < 100 then
 			ambient_music = "Swashing the buck.ogg",
 			reload_lists = false,
 			persistent = "zone",
+			min_material_level = game.zone.min_material_level,
+			max_material_level = game.zone.max_material_level,
 			generator =  {
 				map = {
 					class = "engine.generator.map.Static",

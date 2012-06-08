@@ -26,21 +26,23 @@ while (not game.player:canMove(x, y) or level.map.attrs(x, y, "no_teleport")) an
 end
 if tries >= 100 then return false end
 
-local id = "damp-cave-"..game.turn
+local kind = rng.table{"fire", "fire", "cold", "cold", "storm", "storm", "multihued"}
 
-local changer = function(id)
-	local npcs = mod.class.NPC:loadList{"/data/general/npcs/thieve.lua"}
+local id = kind.."-dragon-cave-"..game.turn
+
+local changer = function(id, kind)
+	local npcs = mod.class.NPC:loadList{"/data/general/npcs/"..kind.."-drake.lua"}
 	local objects = mod.class.Object:loadList("/data/general/objects/objects.lua")
 	local terrains = mod.class.Grid:loadList("/data/general/grids/cave.lua")
 	terrains.CAVE_LADDER_UP_WILDERNESS.change_level_shift_back = true
 	terrains.CAVE_LADDER_UP_WILDERNESS.change_zone_auto_stairs = true
 	local zone = mod.class.Zone.new(id, {
-		name = "Damp Cave",
+		name = "Intimidating Cave",
 		level_range = {zone:level_adjust_level(level, zone, "actor"), zone:level_adjust_level(level, zone, "actor")},
 		level_scheme = "player",
 		max_level = 1,
 		actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
-		width = 20, height = 20,
+		width = 50, height = 50,
 		ambient_music = "Swashing the buck.ogg",
 		reload_lists = false,
 		persistent = "zone",
@@ -49,8 +51,8 @@ local changer = function(id)
 		generator =  {
 			map = {
 				class = "engine.generator.map.Cavern",
-				zoom = 4,
-				min_floor = 120,
+				zoom = 6,
+				min_floor = 1200,
 				floor = "CAVEFLOOR",
 				wall = "CAVEWALL",
 				up = "CAVE_LADDER_UP_WILDERNESS",
@@ -58,13 +60,13 @@ local changer = function(id)
 			},
 			actor = {
 				class = "mod.class.generator.actor.Random",
-				nb_npc = {14, 14},
-				guardian = {random_elite={life_rating=function(v) return v * 1.5 + 4 end, nb_rares=3}},
+				nb_npc = {25, 25},
+				guardian = {special=function(e) return e.rank and e.rank >= 2 end, random_elite={life_rating=function(v) return v * 1.5 + 4 end, nb_rares=3}},
 			},
 			object = {
 				class = "engine.generator.object.Random",
 				filters = {{type="gem"}},
-				nb_object = {6, 9},
+				nb_object = {15, 25},
 			},
 			trap = {
 				class = "engine.generator.trap.Random",
@@ -81,20 +83,31 @@ local changer = function(id)
 end
 
 local g = game.level.map(x, y, engine.Map.TERRAIN):cloneFull()
-g.name = "damp cave"
+g.name = "intimidating cave"
 g.display='>' g.color_r=0 g.color_g=0 g.color_b=255 g.notice = true
 g.change_level=1 g.change_zone=id g.glow=true
 g.add_displays = g.add_displays or {}
 g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/crystal_ladder_down.png", z=5}
 g.nice_tiler = nil
 g:initGlow()
+g.dragon_kind = kind
 g.real_change = changer
 g.change_level_check = function(self)
-	game:changeLevel(1, self.real_change(self.change_zone), {temporary_zone_shift=true})
+	game:changeLevel(1, self.real_change(self.change_zone, self.dragon_kind), {temporary_zone_shift=true})
 	self.change_level_check = nil
 	self.real_change = nil
 	return true
 end
 game.zone:addEntity(game.level, g, "terrain", x, y)
+
+local i, j = util.findFreeGrid(x, y, 10, true, {[engine.Map.ACTOR]=true})
+if not i then return end
+
+-- Pop hatchlings at the stairs
+local npcs = mod.class.NPC:loadList{"/data/general/npcs/"..kind.."-drake.lua"}
+local m = game.zone:makeEntity(game.level, "actor", {base_list=npcs, special=function(e) return e.rank and e.rank == 1 end}, nil, true)
+if m then
+	game.zone:addEntity(game.level, m, "actor", i, j)
+end
 
 return true

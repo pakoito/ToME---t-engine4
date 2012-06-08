@@ -53,6 +53,8 @@ local changer = function(id)
 		reload_lists = false,
 		projectile_speed_mod = 0.3,
 		persistent = "zone",
+		min_material_level = game.zone.min_material_level,
+		max_material_level = game.zone.max_material_level,
 		generator =  {
 			map = {
 				class = "engine.generator.map.Roomer",
@@ -81,7 +83,7 @@ local changer = function(id)
 				nb_trap = {6, 9},
 			},
 		},
-		post_process = function(level) 
+		post_process = function(level)
 			local Map = require "engine.Map"
 			local Quadratic = require "engine.Quadratic"
 			level.background_particle1 = require("engine.Particles").new("starfield_static", 1, {width=Map.viewport.width, height=Map.viewport.height, nb=300, a_min=0.5, a_max = 0.8, size_min = 1, size_max = 3})
