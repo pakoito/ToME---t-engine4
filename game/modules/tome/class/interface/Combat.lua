@@ -1188,7 +1188,6 @@ function _M:spellCrit(dam, add_chance, crit_power_add)
 		game.logSeen(self, "#{bold}#%s's spell attains critical power!#{normal}#", self.name:capitalize())
 
 		if self:attr("mana_on_crit") then self:incMana(self:attr("mana_on_crit")) end
-
 		if self:attr("vim_on_crit") then self:incVim(self:attr("vim_on_crit")) end
 
 		if self:attr("spellsurge_on_crit") then
@@ -1228,8 +1227,8 @@ function _M:mindCrit(dam, add_chance, crit_power_add)
 		game.logSeen(self, "#{bold}#%s's mind surges with critical power!#{normal}#", self.name:capitalize())
 
 		if self:attr("hate_on_crit") then self:incHate(self:attr("hate_on_crit")) end
-		if self:attr("psi_on_crit") then self:incMana(self:attr("psi_on_crit")) end
-		if self:attr("equilibrium_on_crit") then self:incVim(self:attr("equilibrium_on_crit")) end
+		if self:attr("psi_on_crit") then self:incPsi(self:attr("psi_on_crit")) end
+		if self:attr("equilibrium_on_crit") then self:incEquilibrium(self:attr("equilibrium_on_crit")) end
 
 	end
 	return dam, crit

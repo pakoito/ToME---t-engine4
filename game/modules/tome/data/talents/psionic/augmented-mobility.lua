@@ -159,8 +159,8 @@ newTalent{
 				if not self:hasEffect(self.EFF_KINSPIKE_SHIELD) and self:isTalentActive(self.T_KINETIC_SHIELD) then
 					self:forceUseTalent(self.T_KINETIC_SHIELD, {ignore_energy=true})
 				end
-				local dam = self:spellCrit(self:combatTalentMindDamage(t, 20, 600))
-				self:project(tg, x, y, DamageType.MINDKNOCKBACK, self:spellCrit(rng.avg(2*dam/3, dam, 3)))
+				local dam = self:mindCrit(self:combatTalentMindDamage(t, 20, 600))
+				self:project(tg, x, y, DamageType.MINDKNOCKBACK, self:mindCrit(rng.avg(2*dam/3, dam, 3)))
 				--local _ _, x, y = self:canProject(tg, x, y)
 				game.level.map:particleEmitter(self.x, self.y, tg.radius, "flamebeam", {tx=x-self.x, ty=y-self.y})
 				game:playSoundNear(self, "talents/lightning")
@@ -183,12 +183,12 @@ newTalent{
 			if not self:hasEffect(self.EFF_KINSPIKE_SHIELD) and self:isTalentActive(self.T_KINETIC_SHIELD) then
 				self:forceUseTalent(self.T_KINETIC_SHIELD, {ignore_energy=true})
 			end
-			local dam = self:spellCrit(self:combatTalentMindDamage(t, 20, 600))
+			local dam = self:mindCrit(self:combatTalentMindDamage(t, 20, 600))
 
 			for i = 1, self:getTalentRange(t) do
 				self:project(tg, x, y, DamageType.DIG, 1)
 			end
-			self:project(tg, x, y, DamageType.MINDKNOCKBACK, self:spellCrit(rng.avg(2*dam/3, dam, 3)))
+			self:project(tg, x, y, DamageType.MINDKNOCKBACK, self:mindCrit(rng.avg(2*dam/3, dam, 3)))
 			local _ _, x, y = self:canProject(tg, x, y)
 			game.level.map:particleEmitter(self.x, self.y, tg.radius, "flamebeam", {tx=x-self.x, ty=y-self.y})
 			game:playSoundNear(self, "talents/lightning")
