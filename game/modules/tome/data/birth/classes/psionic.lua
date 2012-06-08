@@ -124,6 +124,7 @@ newBirthDescriptor{
 		"#LIGHT_BLUE# * +1 Strength, +0 Dexterity, +0 Constitution",
 		"#LIGHT_BLUE# * +0 Magic, +4 Willpower, +4 Cunning",
 	},
+	not_on_random_boss = true,
 	power_source = {psionic=true},
 	stats = { str=0, wil=5, cun=4, },
 	talents_types = {

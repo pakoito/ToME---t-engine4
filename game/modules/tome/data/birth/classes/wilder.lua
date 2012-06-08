@@ -198,6 +198,7 @@ newBirthDescriptor{
 		"#LIGHT_BLUE# * +0 Magic, +5 Willpower, +4 Cunning",
 	},
 	power_source = {nature=true},
+	not_on_random_boss = true,
 	stats = { wil=5, cun=4, },
 	talents_types = {
 		["wild-gift/call"]={true, 0.2},

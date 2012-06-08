@@ -118,7 +118,7 @@ function necroGetNbSummon(self)
 	return nb
 end
 
-function necroSetupSummon(self, m, x, y, level, no_control)
+function necroSetupSummon(self, m, x, y, level, no_control, no_decay)
 	m.faction = self.faction
 	m.summoner = self
 	m.summoner_gain_exp = true
@@ -181,18 +181,20 @@ function necroSetupSummon(self, m, x, y, level, no_control)
 	game.level.map:particleEmitter(x, y, 1, "summon")
 
 	-- Summons decay
-	m.on_act = function(self)
-		local src = self.summoner
-		local p = src:isTalentActive(src.T_NECROTIC_AURA)
-		if p and self.x and self.y and not src.dead and src.x and src.y and core.fov.distance(self.x, self.y, src.x, src.y) <= self.summoner.necrotic_aura_radius then return end
+	if not no_decay then
+		m.on_act = function(self)
+			local src = self.summoner
+			local p = src:isTalentActive(src.T_NECROTIC_AURA)
+			if p and self.x and self.y and not src.dead and src.x and src.y and core.fov.distance(self.x, self.y, src.x, src.y) <= self.summoner.necrotic_aura_radius then return end
 
-		self.life = self.life - self.max_life * (p and p.necrotic_aura_decay or 10) / 100
-		self.changed = true
-		if self.life <= 0 then
-			game.logSeen(self, "#{bold}#%s decays into a pile of ash!#{normal}#", self.name:capitalize())
-			local t = src:getTalentFromId(src.T_NECROTIC_AURA)
-			t.die_speach(self, t)
-			self:die(self)
+			self.life = self.life - self.max_life * (p and p.necrotic_aura_decay or 10) / 100
+			self.changed = true
+			if self.life <= 0 then
+				game.logSeen(self, "#{bold}#%s decays into a pile of ash!#{normal}#", self.name:capitalize())
+				local t = src:getTalentFromId(src.T_NECROTIC_AURA)
+				t.die_speach(self, t)
+				self:die(self)
+			end
 		end
 	end
 

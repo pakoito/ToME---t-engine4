@@ -1780,7 +1780,7 @@ function _M:startEvents()
 		table.shuffle(evts)
 		for i, e in ipairs(evts) do
 			-- If we allow it, try to find a level to host it
-			if e.always or rng.percent(e.percent) then
+			if (e.always or rng.percent(e.percent)) and (not e.unique or not self:doneEvent(e.name)) then
 				local lev = nil
 				if e.one_per_level then
 					local list = {}
@@ -1807,7 +1807,7 @@ function _M:startEvents()
 
 	for i, e in ipairs(game.zone.assigned_events[game.level.level] or {}) do
 		local f = loadfile("/data/general/events/"..e..".lua")
-		setfenv(f, setmetatable({level=game.level, zone=game.zone}, {__index=_G}))
+		setfenv(f, setmetatable({level=game.level, zone=game.zone, event_id=e.name}, {__index=_G}))
 		f()
 	end
 	game.zone.assigned_events[game.level.level] = {}

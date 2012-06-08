@@ -1342,7 +1342,7 @@ newEntity{ base = "BASE_LONGBOW",
 				tgts[#tgts+1] = a
 			end
 		end end
-		
+
 		local tg = {type="hit", range=5,}
 		for i = 1, 1 do
 			if #tgts <= 0 then break end
@@ -1383,7 +1383,7 @@ newEntity{ base = "BASE_CLOAK", define_as="GLACIAL_CLOAK",
 	},
 	max_power = 30, power_regen = 1,
 	use_power = { name = "release a blast of ice", power = 30,
-		use = function(self, who)	
+		use = function(self, who)
 			local duration = 10
 			local radius = 4
 			local dam = (25 + who:getMag())
