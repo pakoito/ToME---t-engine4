@@ -38,7 +38,7 @@ local changer = function(id)
 	terrains.UP_WILDERNESS.change_level_shift_back = true
 	terrains.UP_WILDERNESS.change_zone_auto_stairs = true
 
-	objects.RATLICH_SKULL = mod.class.Object{
+	objects.RATLICH_SKULL = mod.class.Object.new{
 		define_as = "RATLICH_SKULL",
 		power_source = {arcane=true},
 		unique = true,
@@ -56,7 +56,7 @@ local changer = function(id)
 		wielder = {
 			combat_spellpower = 10,
 			combat_spellcrit = 4,
-			on_melee_hit = {[DamageType.DARKNESS]=12},
+			on_melee_hit = {[engine.DamageType.DARKNESS]=12},
 		},
 		max_power = 70, power_regen = 1,
 		use_power = { name = "raise undead rats", power = 70, use = function(self, who)

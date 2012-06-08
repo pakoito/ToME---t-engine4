@@ -57,21 +57,18 @@ local changer = function(id)
 		max_material_level = game.zone.max_material_level,
 		generator =  {
 			map = {
-				class = "engine.generator.map.Roomer",
-				nb_rooms = 8,
-				--no_tunnels = true,
-				rooms = {"space_tree_pod"},
-				['.'] = "FLOATING_ROCKS",
-				['T'] = "FLOATING_ROCKS",
-				['#'] = "OUTERSPACE",
-				wormhole = "PORTAL_BACK",
-				door = "FLOATING_ROCKS",
+				class = "engine.generator.map.Cavern",
+				zoom = 4,
+				min_floor = 400,
+				floor = "FLOATING_ROCKS",
+				wall = "OUTERSPACE",
+				down = "PORTAL_BACK",
 				force_last_stair = true,
 			},
 			actor = {
 				class = "mod.class.generator.actor.Random",
 				nb_npc = {12, 12},
-				guardian = {random_elite={life_rating=function(v) return v * 1.5 + 4 end, nb_rares=4, name_scheme="#rng# the Tidebender"}},
+				guardian = {random_elite={life_rating=function(v) return v * 1.5 + 4 end, nb_rares=4, name_scheme="#rng# the Invader"}},
 			},
 			object = {
 				class = "engine.generator.object.Random",

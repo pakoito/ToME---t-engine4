@@ -1766,18 +1766,19 @@ function _M:startEvents()
 		for i, e in ipairs(game.zone.events) do
 			if e.name then evts[#evts+1] = e.name
 			elseif e.group then
-				local f = loadfile("/data/general/events/groups/"..e..".lua")
+				local f = loadfile("/data/general/events/groups/"..e.group..".lua")
 				setfenv(f, setmetatable({level=game.level, zone=game.zone}, {__index=_G}))
 				local list = f()
 				for j, ee in ipairs(list) do
-					if e.percent_factor and ee.percent then ee.percent = math.floor(ee.percent * e.percent_factor) end
-					if ee.name then evts[#evts+1] = ee.name end
+					if e.percent_factor and ee.percent then ee.percent_factor = math.floor(ee.percent * e.percent_factor) end
+					if ee.name then evts[#evts+1] = ee end
 				end
 			end
 		end
 
 		-- Randomize the order they are checked as
 		table.shuffle(evts)
+		table.print(evts)
 		for i, e in ipairs(evts) do
 			-- If we allow it, try to find a level to host it
 			if (e.always or rng.percent(e.percent)) and (not e.unique or not self:doneEvent(e.name)) then

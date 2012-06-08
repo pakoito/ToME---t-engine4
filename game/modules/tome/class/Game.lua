@@ -982,7 +982,7 @@ function _M:tick()
 
 	if savefile_pipe.saving then self.player.changed = true end
 	if self.paused and not savefile_pipe.saving then return true end
-	if self.on_tick_end and #self.on_tick_end > 0 then return true end
+--	if self.on_tick_end and #self.on_tick_end > 0 then return true end
 end
 
 function _M:displayDelayedLogDamage()
