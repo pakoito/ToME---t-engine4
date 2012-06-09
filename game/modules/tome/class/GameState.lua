@@ -1766,7 +1766,8 @@ function _M:startEvents()
 		for i, e in ipairs(game.zone.events) do
 			if e.name then evts[#evts+1] = e.name
 			elseif e.group then
-				local f = loadfile("/data/general/events/groups/"..e.group..".lua")
+				local f, err = loadfile("/data/general/events/groups/"..e.group..".lua")
+				if not f then error(err) end
 				setfenv(f, setmetatable({level=game.level, zone=game.zone}, {__index=_G}))
 				local list = f()
 				for j, ee in ipairs(list) do
@@ -1807,7 +1808,8 @@ function _M:startEvents()
 	table.print(game.zone.assigned_events)
 
 	for i, e in ipairs(game.zone.assigned_events[game.level.level] or {}) do
-		local f = loadfile("/data/general/events/"..e..".lua")
+		local f, err = loadfile("/data/general/events/"..e..".lua")
+		if not f then error(err) end
 		setfenv(f, setmetatable({level=game.level, zone=game.zone, event_id=e.name}, {__index=_G}))
 		f()
 	end
