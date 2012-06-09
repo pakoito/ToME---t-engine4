@@ -782,6 +782,7 @@ local weapon_talents = {
 
 --- Checks weapon training
 function _M:combatCheckTraining(weapon)
+	if not weapon then return end
 	if not weapon.talented then return 0 end
 	if not weapon_talents[weapon.talented] then return 0 end
 	return self:getTalentLevel(weapon_talents[weapon.talented])
@@ -969,10 +970,10 @@ function _M:combatDamage(weapon)
 	local power = math.max((weapon.dam or 1), 1)
 	power = (math.sqrt(power / 10) - 1) * 0.5 + 1
 	--print(("[COMBAT DAMAGE] power(%f) totstat(%f) talent_mod(%f)"):format(power, totstat, talented_mod))
-	return self:rescaleDamage(0.3*(self:combatPhysicalpower() + totstat) * power * talented_mod)
+	return self:rescaleDamage(0.3*(self:combatPhysicalpower(nil, weapon) + totstat) * power * talented_mod)
 end
 
-function _M:combatPhysicalpower(mod)
+function _M:combatPhysicalpower(mod, weapon)
 	mod = mod or 1
 	local add = 0
 	if self:knowTalent(Talents.T_ARCANE_DESTRUCTION) then
@@ -985,27 +986,13 @@ function _M:combatPhysicalpower(mod)
 		local t = self:getTalentFromId(self.T_EMPTY_HAND)
 		add = add + t.getDamage(self, t)
 	end
-	if self:knowTalent(Talents.T_WEAPONS_MASTERY) then
-		add = add + 5 * self:getTalentLevel(Talents.T_WEAPONS_MASTERY)
+
+	if not weapon then
+		local inven = self:getInven(self.INVEN_MAINHAND)
+		if inven and inven[1] then weapon = inven[1].combat end
 	end
-	if self:knowTalent(Talents.T_KNIFE_MASTERY) then
-		add = add + 5 * self:getTalentLevel(Talents.T_KNIFE_MASTERY)
-	end
-	if self:knowTalent(Talents.T_EXOTIC_WEAPONS_MASTERY) then
-		add = add + 5 * self:getTalentLevel(Talents.T_EXOTIC_WEAPONS_MASTERY)
-	end
-	if self:knowTalent(Talents.T_UNARMED_MASTERY) then
-		add = add + 5 * self:getTalentLevel(Talents.T_UNARMED_MASTERY)
-	end
-	if self:knowTalent(Talents.T_STAFF_MASTERY) then
-		add = add + 5 * self:getTalentLevel(Talents.T_STAFF_MASTERY)
-	end
-	if self:knowTalent(Talents.T_BOW_MASTERY) then
-		add = add + 5 * self:getTalentLevel(Talents.T_BOW_MASTERY)
-	end
-	if self:knowTalent(Talents.T_SLING_MASTERY) then
-		add = add + 5 * self:getTalentLevel(Talents.T_SLING_MASTERY)
-	end
+
+	add = add + 5 * self:combatCheckTraining(weapon)
 
 	return self:rescaleCombatStats((self.combat_dam > 0 and self.combat_dam or 0) + add + self:getStr()) * mod
 end
