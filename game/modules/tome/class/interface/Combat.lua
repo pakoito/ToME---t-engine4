@@ -782,7 +782,7 @@ local weapon_talents = {
 
 --- Checks weapon training
 function _M:combatCheckTraining(weapon)
-	if not weapon then return end
+	if not weapon then return 0 end
 	if not weapon.talented then return 0 end
 	if not weapon_talents[weapon.talented] then return 0 end
 	return self:getTalentLevel(weapon_talents[weapon.talented])

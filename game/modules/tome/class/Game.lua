@@ -48,6 +48,7 @@ local NPC = require "mod.class.NPC"
 local DebugConsole = require "engine.DebugConsole"
 local FlyingText = require "engine.FlyingText"
 local Tooltip = require "mod.class.Tooltip"
+local BigNews = require "mod.class.BigNews"
 
 local Calendar = require "engine.Calendar"
 local Gestures = require "engine.ui.Gestures"
@@ -95,6 +96,8 @@ function _M:run()
 	self.flyers = FlyingText.new("/data/font/INSULA__.ttf", flysize, "/data/font/INSULA__.ttf", flysize + 3)
 	self.flyers:enableShadow(0.6)
 	game:setFlyingText(self.flyers)
+
+	self.bignews = BigNews.new("/data/font/DroidSansMono.ttf", 26)
 
 	self.nicer_tiles = NicerTiles.new()
 
@@ -1123,6 +1126,9 @@ function _M:display(nb_keyframes)
 
 	-- Now the ui
 	self.uiset:display(nb_keyframes)
+
+	-- "Big News"
+	self.bignews:display(nb_keyframes)
 
 	if self.player then self.player.changed = false end
 

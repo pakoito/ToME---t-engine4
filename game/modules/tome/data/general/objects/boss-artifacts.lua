@@ -426,7 +426,7 @@ newEntity{ base = "BASE_SHIELD",
 		combat_def = 9,
 		fatigue = 14,
 		resists = {
-			[DamageType.FIRE] = -20,
+			[DamageType.DARKNESS] = 20,
 			[DamageType.COLD] = 20,
 			[DamageType.NATURE] = 20,
 		},
