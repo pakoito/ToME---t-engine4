@@ -407,7 +407,7 @@ function _M:playerFOV()
 				end
 			end, true, true, true)
 		end
-		
+
 		-- Overseer of Nations bonus
 		local bonus = 0
 		if self:knowTalent(self.T_OVERSEER_OF_NATIONS) then
@@ -1223,7 +1223,7 @@ function _M:on_quest_status(quest, status, sub)
 		game.bignews:say(60, "#LIGHT_GREEN#Quest '%s' done!", quest.name)
 	elseif status == engine.Quest.FAILED then
 		game.logPlayer(game.player, "#LIGHT_RED#Quest '%s' is failed! #WHITE#(Press 'j' to see the quest log)", quest.name)
-		game.bignews:say(60, "#LIGHT_GREEN#Quest '%s' failed!", quest.name)
+		game.bignews:say(60, "#LIGHT_RED#Quest '%s' failed!", quest.name)
 	end
 end
 

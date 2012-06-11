@@ -97,7 +97,7 @@ function _M:run()
 	self.flyers:enableShadow(0.6)
 	game:setFlyingText(self.flyers)
 
-	self.bignews = BigNews.new("/data/font/DroidSansMono.ttf", 26)
+	self.bignews = BigNews.new("/data/font/DroidSansMono.ttf", 30)
 
 	self.nicer_tiles = NicerTiles.new()
 
