@@ -33,6 +33,7 @@ function _M:init(t)
 	self.tooltip = assert(t.tooltip, "no tooltip")
 	self.on_use = assert(t.on_use, "no on_use")
 	self.on_expand = t.on_expand
+	self.scrollbar = t.scrollbar
 	self.no_cross = t.no_cross
 
 	self.icon_size = 48
@@ -82,7 +83,7 @@ function _M:generate()
 
 	-- Draw the scrollbar
 	if self.scrollbar then
-		self.scrollbar = Slider.new{size=self.h - fh, max=1}
+		self.scrollbar = Slider.new{size=self.h, max=#self.tree}
 	end
 
 	self.mousezones = {}
@@ -239,7 +240,7 @@ function _M:display(x, y, nb_keyframes, screen_x, screen_y)
 	end
 
 	if self.focused and self.scrollbar then
-		self.scrollbar.pos = self.sel
-		self.scrollbar:display(bx + self.w - self.scrollbar.w, by + self.fh)
+		self.scrollbar.pos = self.scroll
+		self.scrollbar:display(x + self.w - self.scrollbar.w, y)
 	end
 end

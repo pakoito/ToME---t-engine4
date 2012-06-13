@@ -544,6 +544,7 @@ function _M:createDisplay()
 		width=self.iw-200-10, height=self.ih-10,
 		tooltip=function(item) return self:getTalentDesc(item), self.uis[3].x - game.tooltip.max, nil end,
 		on_use = function(item, inc) self:onUseTalent(item, inc) end,
+		scrollbar = true,
 	}
 
 	self.c_stat = TalentTrees.new{
