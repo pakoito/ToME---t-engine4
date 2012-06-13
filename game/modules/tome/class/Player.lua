@@ -162,6 +162,8 @@ function _M:onWorldEncounter(target, x, y)
 end
 
 function _M:describeFloor(x, y)
+	if self.old_x == x and self.old_y == y then return end
+
 	-- Autopickup money
 	if self:getInven(self.INVEN_INVEN) and not self.no_inventory_access then
 		local i, nb = 1, 0
@@ -232,6 +234,8 @@ function _M:move(x, y, force)
 
 	-- Update zone name
 	if game.zone.variable_zone_name then game:updateZoneName() end
+
+	self.old_x, self.old_y = self.x, self.y
 
 	return moved
 end

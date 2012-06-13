@@ -29,6 +29,7 @@ local KeyBind = require "engine.KeyBind"
 local DamageType = require "engine.DamageType"
 local Faction = require "engine.Faction"
 local Map = require "engine.Map"
+local Level = require "engine.Level"
 local Tiles = require "engine.Tiles"
 local InventoryUI = require "engine.ui.Inventory"
 local ActorStats = require "engine.interface.ActorStats"
@@ -81,6 +82,7 @@ Map.smooth_scroll = config.settings.tome.smooth_move
 Map.faction_danger2 = "tactical_danger.png"
 Map.faction_danger1 = "tactical_enemy_strong.png"
 Map.faction_danger_check = function(self, e, max) return (not max and e.rank > 3) or (max and e.rank >= 3.5) end
+Level.remove_old_entity_on_duplicate = true
 
 -- Dialog UI
 UIBase.ui = config.settings.tome.ui_theme2

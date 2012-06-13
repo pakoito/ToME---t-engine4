@@ -87,6 +87,7 @@ for i = 1, 3 do
 							ov.image = "terrain/pedestal_orb_0"..rng.range(1, 5)..".png"
 							game.level.map:updateMap(self.pedestal_x, self.pedestal_y)
 							game.level.pedestal_events = (game.level.pedestal_events or 0) + 1
+							game.logSeen(self, "%s soul is absorbed by the pedestal. A glowing orb appears.", self.name:capitalize())
 
 							if game.level.pedestal_events >= 3 then
 								game.level.pedestal_events = 0
