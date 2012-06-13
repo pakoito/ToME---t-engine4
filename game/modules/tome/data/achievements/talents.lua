@@ -18,36 +18,6 @@
 -- darkgod@te4.org
 
 newAchievement{
-	name = "Elementalist",
-	desc = [[Maxed all elemental spells.]],
-	mode = "player",
-	can_gain = function(self, who)
-		local types = table.reverse{"spell/fire", "spell/earth", "spell/water", "spell/air"}
-		local nb = 0
-		for id, _ in pairs(who.talents) do
-			local t = who:getTalentFromId(id)
-			if types[t.type[1]] then nb = nb + who:getTalentLevelRaw(t) end
-		end
-		return nb >= 4 * 4 * 5
-	end
-}
-
-newAchievement{
-	name = "Warper",
-	desc = [[Maxed all arcane, conveyance, divination, and temporal spells.]],
-	mode = "player",
-	can_gain = function(self, who)
-		local types = table.reverse{"spell/arcane", "spell/temporal", "spell/conveyance", "spell/divination"}
-		local nb = 0
-		for id, _ in pairs(who.talents) do
-			local t = who:getTalentFromId(id)
-			if types[t.type[1]] then nb = nb + who:getTalentLevelRaw(t) end
-		end
-		return nb >= 4 * 4 * 5
-	end
-}
-
-newAchievement{
 	name = "Pyromancer",
 	desc = [[Unlocked Archmage class and did over one million fire damage (with any item/talent/class).]],
 	show = "full",

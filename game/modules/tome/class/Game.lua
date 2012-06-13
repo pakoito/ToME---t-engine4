@@ -1191,10 +1191,14 @@ function _M:setupCommands()
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
 --			self:registerDialog(require("mod.dialogs.DownloadCharball").new())
-			local f, err = loadfile("/data/general/events/weird-pedestals.lua")
+--[[			local f, err = loadfile("/data/general/events/weird-pedestals.lua")
 			print(f, err)
 			setfenv(f, setmetatable({level=self.level, zone=self.zone}, {__index=_G}))
 			print(pcall(f))
+--]]
+			package.loaded["mod.dialogs.elements.TalentTrees"] = nil
+			package.loaded["mod.dialogs.Levelup2Dialog"] = nil
+			game:registerDialog(require("mod.dialogs.Levelup2Dialog").new(game.player))
 		end end,
 		[{"_f","ctrl"}] = function() if config.settings.cheat then
 			self.player.quests["love-melinda"] = nil
