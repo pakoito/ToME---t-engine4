@@ -59,7 +59,7 @@ for i = 1, 3 do
 			who:restInit(20, "refitting", "refitted", function(cnt, max)
 				if cnt > max then
 					self.pedestal_activated = true
-					require("engine.ui.Dialog"):simplePopup("Weird Pedestal", "As you inspect it a shadow materializes near you, and suddently it is no more a shadow!")
+					require("engine.ui.Dialog"):simplePopup("Weird Pedestal", "As you inspect it a shadow materializes near you, and suddenly it is no more a shadow!")
 
 					local m = game.zone:makeEntity(game.level, "actor", {
 						base_list=mod.class.NPC:loadList("/data/general/npcs/humanoid_random_boss.lua"),

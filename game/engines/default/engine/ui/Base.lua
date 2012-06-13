@@ -160,11 +160,13 @@ function _M:makeFrame(base, w, h)
 	return f
 end
 
-function _M:drawFrame(f, x, y, r, g, b, a)
+function _M:drawFrame(f, x, y, r, g, b, a, w, h)
 	if not f.b7 then return end
 
 	x = math.floor(x)
 	y = math.floor(y)
+	f.w = w or f.w
+	f.h = h or f.h
 
 	-- Sides
 	f.b8.t:toScreenFull(x + f.b7.w, y, f.w - f.b7.w - f.b9.w + 1, f.b8.h, f.b8.tw, f.b8.th, r, g, b, a)

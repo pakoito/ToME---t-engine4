@@ -32,6 +32,8 @@ function _M:init(t)
 	self.h = assert(t.height, "no height")
 	self.tooltip = assert(t.tooltip, "no tooltip")
 	self.on_use = assert(t.on_use, "no on_use")
+	self.on_expand = t.on_expand
+	self.no_cross = t.no_cross
 
 	self.icon_size = 48
 	self.frame_size = 50
@@ -40,6 +42,8 @@ function _M:init(t)
 
 	self.shadow = 0.7
 
+	self.frame_sel = self:makeFrame("ui/selector-sel", self.frame_size, self.frame_size)
+	self.frame_usel = self:makeFrame("ui/selector", self.frame_size, self.frame_size)
 	self.talent_frame = self:makeFrame("ui/icon-frame/frame", self.frame_size, self.frame_size)
 	self.plus = _M:getUITexture("ui/plus.png")
 	self.minus = _M:getUITexture("ui/minus.png")
@@ -51,14 +55,19 @@ function _M:onUse(item, inc)
 	self.on_use(item, inc)
 end
 
+function _M:onExpand(item, inc)
+	item.shown = not item.shown
+	if self.on_expand then self.on_expand(item) end
+end
+
 function _M:updateTooltip()
 	if not self.last_mz then
 		game.tooltip_x = nil
-		return 
+		return
 	end
 	local mz = self.last_mz
 	local str = self.tooltip(mz.item)
-	game:tooltipDisplayAtMap(self.last_display_x + mz.x2, self.last_display_y + mz.y1, str)
+	game:tooltipDisplayAtMap(mz.tx or (self.last_display_x + mz.x2), mz.ty or (self.last_display_y + mz.y1), str)
 end
 
 function _M:doScroll(v)
@@ -78,14 +87,7 @@ function _M:generate()
 
 	self.mousezones = {}
 
-	for i = 1, #self.tree do
-		local tree = self.tree[i]
-		self:drawItem(tree)
-		for j = 1, #tree.nodes do
-			local tal = tree.nodes[j]
-			self:drawItem(tal)
-		end
-	end
+	self:redrawAllItems()
 
 	-- Add UI controls
 	self.mouse:registerZone(0, 0, self.w, self.h, function(button, x, y, xrel, yrel, bx, by, event)
@@ -98,12 +100,20 @@ function _M:generate()
 			local mz = self.mousezones[i]
 			if x >= mz.x1 and x <= mz.x2 and y >= mz.y1 and y <= mz.y2 then
 				if not self.last_mz or mz.item ~= self.last_mz.item then
-					local str = self.tooltip(mz.item)
-					game:tooltipDisplayAtMap(self.last_display_x + mz.x2, self.last_display_y + mz.y1, str)
+					local str, fx, fy = self.tooltip(mz.item)
+					mz.tx, mz.ty = fx or (self.last_display_x + mz.x2), fy or (self.last_display_y + mz.y1)
+					game:tooltipDisplayAtMap(mz.tx, mz.ty, str)
 				end
 
-				if event == "button" and (button == "left" or button == "right") then self:onUse(mz.item, button == "left") end
-				
+				if event == "button" and (button == "left" or button == "right") then
+					if mz.item.type then
+						if x - mz.x1 >= self.plus.w then self:onUse(mz.item, button == "left")
+						else self:onExpand(mz.item, button == "left") end
+					else
+						self:onUse(mz.item, button == "left")
+					end
+				end
+
 				self.last_mz = mz
 				done = true
 				break
@@ -133,14 +143,38 @@ function _M:generate()
 end
 
 function _M:drawItem(item)
-	if item.talent then
+	if item.stat then
+		local str = item:status():toString()
+		local d = self.font:draw(str, self.font:size(str), 255, 255, 255, true)[1]
+		item.text_status = d
+	elseif item.type_stat then
+		local str = item.name:toString()
+		self.font:setStyle("bold")
+		local d = self.font:draw(str, self.font:size(str), 255, 255, 255, true)[1]
+		self.font:setStyle("normal")
+		item.text_status = d
+	elseif item.talent then
 		local str = item:status():toString()
 		local d = self.font:draw(str, self.font:size(str), 255, 255, 255, true)[1]
 		item.text_status = d
 	elseif item.type then
 		local str = item:rawname():toString()
-		local d = self.font:draw(str, self.font:size(str), 255, 255, 255, true)[1]
+		local c = item:color()
+		self.font:setStyle("bold")
+		local d = self.font:draw(str, self.font:size(str), c[1], c[2], c[3], true)[1]
+		self.font:setStyle("normal")
 		item.text_status = d
+	end
+end
+
+function _M:redrawAllItems()
+	for i = 1, #self.tree do
+		local tree = self.tree[i]
+		self:drawItem(tree)
+		for j = 1, #tree.nodes do
+			local tal = tree.nodes[j]
+			self:drawItem(tal)
+		end
 	end
 end
 
@@ -153,27 +187,38 @@ function _M:display(x, y, nb_keyframes, screen_x, screen_y)
 
 	local dx, dy = 0, 0
 
+	if self.last_mz then
+		self:drawFrame(self.focused and self.frame_sel or self.frame_usel, x+self.last_mz.x1-2, y+self.last_mz.y1-2, 1, 1, 1, 1, self.last_mz.x2-self.last_mz.x1+4, self.last_mz.y2-self.last_mz.y1+4)
+	end
+
 	self.max_display = 1
 	for i = self.scroll, #self.tree do
 		local tree = self.tree[i]
 
 		if tree.text_status then
 			local key = tree.text_status
+			local cross = not tree.shown and self.plus or self.minus
+
+			mz[#mz+1] = {item=tree, x1=dx, y1=dy, x2=dx+cross.w + 3 + key.w, y2=dy+cross.h}
+
+			if not self.no_cross then
+				cross.t:toScreenFull(dx+x, dy+y + (-cross.h + key.h) / 2, cross.w, cross.h, cross.tw, cross.th)
+				dx = dx + cross.w + 3
+			end
+
 			if self.shadow then key._tex:toScreenFull(dx+x + 2, dy+y + 2, key.w, key.h, key._tex_w, key._tex_h, 0, 0, 0, self.shadow) end
 			key._tex:toScreenFull(dx+x, dy+y, key.w, key.h, key._tex_w, key._tex_h)
 			dy = dy + key.h + 4
 		end
 
 		local addh = 0
-		for j = 1, #tree.nodes do
+		if tree.shown then for j = 1, #tree.nodes do
 			local tal = tree.nodes[j]
 
 			tal.entity:toScreen(self.tiles, dx+x + self.icon_offset, dy+y + self.icon_offset, self.icon_size, self.icon_size)
 
 			local rgb = tal:color()
 			self:drawFrame(self.talent_frame, dx+x, dy+y, rgb[1]/255, rgb[2]/255, rgb[3]/255, 1)
-
-			mz[#mz+1] = {item=tal, x1=dx, y1=dy, x2=dx+self.frame_size, y2=dy+self.frame_size}
 
 			if tal.text_status then
 				local key = tal.text_status
@@ -182,11 +227,14 @@ function _M:display(x, y, nb_keyframes, screen_x, screen_y)
 				addh = key.h
 			end
 
+			mz[#mz+1] = {item=tal, x1=dx, y1=dy, x2=dx+self.frame_size, y2=dy+self.frame_size+addh}
+
 			dx = dx + self.frame_size + self.frame_offset
-		end
+			addh = addh + self.frame_size
+		end end
 		self.max_display = i
 		dx = 0
-		dy = dy + self.frame_size + addh + 12
+		dy = dy + addh + 12
 		if dy + self.frame_size >= self.h then break end
 	end
 

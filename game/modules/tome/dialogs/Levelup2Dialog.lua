@@ -21,7 +21,9 @@ require "engine.class"
 require "mod.class.interface.TooltipsData"
 
 local Dialog = require "engine.ui.Dialog"
+local Textzone = require "engine.ui.Textzone"
 local TalentTrees = require "mod.dialogs.elements.TalentTrees"
+local Separator = require "engine.ui.Separator"
 local DamageType = require "engine.DamageType"
 
 module(..., package.seeall, class.inherit(Dialog, mod.class.interface.TooltipsData))
@@ -154,71 +156,31 @@ function _M:finish()
 	return true
 end
 
-function _M:incStat(v)
+function _M:incStat(sid, v)
 	if v == 1 then
 		if self.actor.unused_stats <= 0 then
 			self:simplePopup("Not enough stat points", "You have no stat points left!")
 			return
 		end
-		if self.actor:getStat(self.sel, nil, nil, true) >= self.actor.level * 1.4 + 20 then
+		if self.actor:getStat(sid, nil, nil, true) >= self.actor.level * 1.4 + 20 then
 			self:simplePopup("Stat is at the maximum for your level", "You cannot increase this stat further until next level!")
 			return
 		end
-		if self.actor:isStatMax(self.sel) or self.actor:getStat(self.sel, nil, nil, true) >= 60 + math.max(0, (self.actor.level - 50)) then
+		if self.actor:isStatMax(sid) or self.actor:getStat(sid, nil, nil, true) >= 60 + math.max(0, (self.actor.level - 50)) then
 			self:simplePopup("Stat is at the maximum", "You cannot increase this stat further!")
 			return
 		end
 	else
-		if self.actor_dup:getStat(self.sel, nil, nil, true) == self.actor:getStat(self.sel, nil, nil, true) then
+		if self.actor_dup:getStat(sid, nil, nil, true) == self.actor:getStat(sid, nil, nil, true) then
 			self:simplePopup("Impossible", "You cannot take out more points!")
 			return
 		end
 	end
 
-	local sel = self.sel
-	self.actor:incStat(sel, v)
+	self.actor:incStat(sid, v)
 	self.actor.unused_stats = self.actor.unused_stats - v
-	self.c_list.list[sel].base = self.actor:getStat(sel, nil, nil, true)
-	self.c_list.list[sel].val = self.actor:getStat(sel)
-	self.c_list.list[sel].color = 	{(self.actor_dup:getStat(self.sel, nil, nil, true) == self.actor:getStat(self.sel, nil, nil, true)) and {255, 255, 255} or {255, 215, 0},
-									(self.actor_dup:getStat(self.sel, nil, nil, true) == self.actor:getStat(self.sel, nil, nil, true)) and {255, 255, 255} or {255, 215, 0},
-									(self.actor:getStat(self.sel, nil, nil, true) - self.actor_dup:getStat(self.sel, nil, nil, true) + self.actor_dup:getStat(self.sel) == self.actor:getStat(self.sel)) and {255, 255, 255} or {255, 215, 0}}
-	self.c_list.sel = sel
 
-	local stats = { "str", "dex", "mag", "wil", "cun", "con" }
-	for i = 1,6 do
-		stat_sel = stats[i]
-		if self.talent_stats_req[stat_sel] then
-			to_remove = {}
-			for j=1,#self.talent_stats_req[stat_sel] do
-				local t = self.talent_stats_req[stat_sel][j][2]
-				if type(t.require) == "function" then
-					stats_req = t.require(self.actor, t).stat
-					for stat, _ in pairs(stats_req) do
-						if stat ~= stat_sel then
-							self.talent_stats_req[stat] = self.talent_stats_req[stat] or {}
-							self.talent_stats_req[stat][#self.talent_stats_req[stat] + 1] = { self.talent_stats_req[stat_sel][j][1], t }
-							to_remove[#to_remove+1] = j
-						end
-					end
-				end
-			end
-			local off = 0
-			for j=1,#to_remove do
-				table.remove(self.talent_stats_req[stat_sel], to_remove[j] - off)
-				off = off + 1
-			end
-		end
-	end
-
-	self.stats_increased[sel] = (self.stats_increased[sel] or 0) + v
-
-	self.c_list:onSelect(true)
-	self.c_list:drawItem(self.c_list.list[self.c_list.sel])
-	self.c_points.text = _points_text:format(self.actor.unused_stats)
-	self.c_points:generate()
-	self.new_stats_changed = true
-	self:onSelectStat(self.c_list.list[self.c_list.sel], true)
+	self.stats_increased[sid] = (self.stats_increased[sid] or 0) + v
 end
 
 function _M:computeDeps(t)
@@ -452,7 +414,6 @@ end
 
 function _M:generateList()
 	self.actor.__show_special_talents = self.actor.__show_special_talents or {}
-	self.talent_stats_req = {}
 
 	-- Makes up the list
 	local tree = {}
@@ -515,48 +476,100 @@ function _M:generateList()
 							end
 						end
 					end
-
-					if t.require then
-						local stats = {}
-						if type(t.require) == "table" and t.require.stat then
-							stats = t.require.stat
-						elseif type(t.require) == "function" and t.require(self.actor,t).stat then
-							stats = t.require(self.actor,t).stat
-						end
-						for stat, _ in pairs(stats) do
-							self.talent_stats_req[stat] = self.talent_stats_req[stat] or {}
-							self.talent_stats_req[stat][#self.talent_stats_req[stat] + 1] = { list[#list], t }
-						end
-					end
 				end
 			end
 		end
 	end
-	table.sort(tree, function(a, b) 
+	table.sort(tree, function(a, b)
 		if a.isgeneric == b.isgeneric then
 			return a.order_id < b.order_id
 		else
-			return a.isgeneric < b.isgeneric  
+			return a.isgeneric < b.isgeneric
 		end
 	end)
 	self.tree = tree
+
+	-- Makes up the stats list
+	local phys, mind = {}, {}
+	self.tree_stats = {{shown=true, nodes=phys, name="Physical Stats", type_stat=true}, {shown=true, nodes=mind, name="Mental Stats", type_stat=true}}
+
+	for i, sid in ipairs{self.actor.STAT_STR, self.actor.STAT_DEX, self.actor.STAT_CON, self.actor.STAT_MAG, self.actor.STAT_WIL, self.actor.STAT_CUN } do
+		local s = self.actor.stats_def[sid]
+		local e = engine.Entity.new{image="stats/"..s.short_name:lower()..".png", is_stat=true}
+		e:getMapObjects(game.uiset.hotkeys_display_icons.tiles, {}, 1)
+
+		local stats = (i <= 3) and phys or mind
+		stats[#stats+1] = {
+			name=s.name,
+			rawname=s.name,
+			entity=e,
+			stat=sid,
+			desc=s.description,
+			color=function(item)
+				if self.actor:getStat(sid, nil, nil, true) >= self.actor.level * 1.4 + 20 or
+				   self.actor:isStatMax(sid) or
+				   self.actor:getStat(sid, nil, nil, true) >= 60 + math.max(0, (self.actor.level - 50)) then
+					return {255, 0, 0}
+				else
+					return {175,175,175}
+				end
+			end,
+			status = function(item)
+				if self.actor:getStat(sid, nil, nil, true) >= self.actor.level * 1.4 + 20 or
+				   self.actor:isStatMax(sid) or
+				   self.actor:getStat(sid, nil, nil, true) >= 60 + math.max(0, (self.actor.level - 50)) then
+					return tstring{{"color", 0xFF, 0x00, 0x00}, tostring(self.actor:getStat(sid))}
+				else
+					return tstring{{"color", 0x00, 0xFF, 0x00}, tostring(self.actor:getStat(sid))}
+				end
+			end,
+		}
+	end
 end
 
 -----------------------------------------------------------------
 -- UI Stuff
 -----------------------------------------------------------------
 
+local _points_left = [[
+Stats points left: #00FF00#%d#LAST#
+Category points left: #00FF00#%d#LAST#
+Class talent points left: #00FF00#%d#LAST#
+Generic talent points left: #00FF00#%d#LAST#]]
+
 function _M:createDisplay()
 	self.c_tree = TalentTrees.new{
-		tiles=game.uiset.hotkeys_display_icons, 
-		tree=self.tree, 
-		width=self.iw-10, height=self.ih-10, 
-		tooltip=function(item) return self:getTalentDesc(item) end,
+		tiles=game.uiset.hotkeys_display_icons,
+		tree=self.tree,
+		width=self.iw-200-10, height=self.ih-10,
+		tooltip=function(item) return self:getTalentDesc(item), self.uis[3].x - game.tooltip.max, nil end,
 		on_use = function(item, inc) self:onUseTalent(item, inc) end,
 	}
 
+	self.c_stat = TalentTrees.new{
+		tiles=game.uiset.hotkeys_display_icons,
+		tree=self.tree_stats, no_cross = true,
+		width=200, height=210,
+		tooltip=function(item) return item.desc end,
+		on_use = function(item, inc) self:onUseTalent(item, inc) end,
+		on_expand = function(item) self.actor.__hidden_talent_types[item.type] = not item.shown end,
+	}
+
+	self.c_points = Textzone.new{
+		width=200, height=1, auto_height=true,
+		text=_points_left:format(self.actor.unused_stats, self.actor.unused_talents_types, self.actor.unused_talents, self.actor.unused_generics)
+	}
+
+	local vsep = Separator.new{dir="horizontal", size=self.ih - 20}
+	local hsep = Separator.new{dir="vertical", size=180}
+
 	return {
-		{left=0, top=0, ui=self.c_tree},
+		{left=0, top=0, ui=self.c_stat},
+		{left=self.c_stat, top=10, ui=vsep},
+		{left=vsep, top=0, ui=self.c_tree},
+
+		{left=10, top=210, ui=hsep},
+		{left=0, top=hsep, ui=self.c_points},
 	}
 end
 
@@ -625,10 +638,19 @@ end
 function _M:onUseTalent(item, inc)
 	if item.type then
 		self:learnType(item.type, inc)
+		item.shown = (self.actor.__hidden_talent_types[item.type] == nil and self.actor:knowTalentType(item.type)) or (self.actor.__hidden_talent_types[item.type] ~= nil and not self.actor.__hidden_talent_types[item.type])
+		self.c_tree:redrawAllItems()
 	elseif item.talent then
 		self:learnTalent(item.talent, inc)
+		self.c_tree:redrawAllItems()
+	elseif item.stat then
+		self:incStat(item.stat, inc and 1 or -1)
+		self.c_stat:redrawAllItems()
+		self.c_tree:redrawAllItems()
 	end
-	self.c_tree:drawItem(item)
+
+	self.c_points.text = _points_left:format(self.actor.unused_stats, self.actor.unused_talents_types, self.actor.unused_talents, self.actor.unused_generics)
+	self.c_points:generate()
 end
 
 function _M:updateTooltip()
