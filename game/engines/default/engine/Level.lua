@@ -36,6 +36,10 @@ function _M:init(level, map)
 	self.data = {}
 end
 
+function _M:onSaving()
+	self.last_iteration = nil
+end
+
 --- Adds a sublevel
 function _M:addSublevel(name, level)
 	if self.sublevels[name] then error("Sublevel already exists: "..name) end

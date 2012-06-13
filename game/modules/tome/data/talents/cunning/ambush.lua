@@ -148,6 +148,7 @@ newTalent{
 		m.on_takehit = nil
 		m.can_talk = nil
 		m.clone_on_hit = nil
+		m.exp_worth = 0
 		m.no_inventory_access = true
 		m.stealth = t.getStealthPower(self, t)
 		for i = 1, 10 do

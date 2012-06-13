@@ -279,6 +279,14 @@ function _M:act()
 	end
 end
 
+function _M:tooltip(x, y, seen_by)
+	local str = mod.class.Actor.tooltip(self, x, y, seen_by)
+	if not str then return end
+	if config.settings.cheat then str:add(true, "UID: "..self.uid, true, self.image) end
+
+	return str
+end
+
 --- Funky shader stuff
 function _M:updateMainShader()
 	if game.fbo_shader then

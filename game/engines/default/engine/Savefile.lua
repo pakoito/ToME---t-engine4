@@ -103,6 +103,7 @@ function _M:saveObject(obj, zip)
 	while #self.process > 0 do
 		local tbl = table.remove(self.process)
 		self.tables[tbl] = self:getFileName(tbl)
+		if tbl.onSaving then tbl:onSaving() end
 		tbl:save()
 		savefile_pipe.current_nb = savefile_pipe.current_nb + 1
 		processed = processed + 1

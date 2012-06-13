@@ -63,6 +63,7 @@ function _M:init(actor, on_finish, on_birth)
 	self.actor.__increased_talent_types = self.actor.__increased_talent_types or {}
 
 	self.actor_dup = actor:clone()
+	self.actor_dup.uid = actor.uid -- Yes ...
 
 	for _, v in pairs(game.engine.Birther.birth_descriptor_def) do
 		if v.type == "subclass" and v.name == actor.descriptor.subclass then self.desc_def = v break end
@@ -369,7 +370,9 @@ function _M:cancel()
 	self.actor.last_learnt_talents = self.actor_dup.last_learnt_talents
 ]]
 	local ax, ay = self.actor.x, self.actor.y
+	self.actor_dup.replacedWith = false
 	self.actor:replaceWith(self.actor_dup)
+	self.actor.replacedWith = nil
 	self.actor.x, self.actor.y = ax, ay
 	self.actor.changed = true
 	self.actor:removeAllMOs()
@@ -470,7 +473,7 @@ function _M:finish()
 	for tid, act in pairs(self.actor.sustain_talents) do
 		if act then
 			local t = self.actor:getTalentFromId(tid)
-			if t.no_sustain_autoreset then
+			if t.no_sustain_autoreset and self.actor:knowTalent(tid) then
 				talents = talents.."#GOLD# - "..t.name.."#LAST#\n"
 			else
 				reset[#reset+1] = tid
@@ -715,7 +718,7 @@ function _M:learnTalent(t_id, v)
 				self:simplePopup("Impossible", "You cannot unlearn talents!")
 				return
 			end
-			self.actor:unlearnTalent(t_id)
+			self.actor:unlearnTalent(t_id, nil, true)
 			self.talents_changed[t_id] = true
 			local _, reason = self.actor:canLearnTalent(t, 0)
 			local ok, dep_miss, stats_ok = self:checkDeps()
@@ -757,7 +760,7 @@ function _M:learnTalent(t_id, v)
 				self:simplePopup("Impossible", "You cannot unlearn talents!")
 				return
 			end
-			self.actor:unlearnTalent(t_id)
+			self.actor:unlearnTalent(t_id, nil, true)
 			self.talents_changed[t_id] = true
 			local _, reason = self.actor:canLearnTalent(t, 0)
 			local ok, dep_miss, stats_ok = self:checkDeps()

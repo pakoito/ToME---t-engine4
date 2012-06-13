@@ -2716,7 +2716,7 @@ end
 --- Actor forgets a talent
 -- @param t_id the id of the talent to learn
 -- @return true if the talent was unlearnt, nil and an error message otherwise
-function _M:unlearnTalent(t_id, nb)
+function _M:unlearnTalent(t_id, nb, no_unsustain)
 	if not engine.interface.ActorTalents.unlearnTalent(self, t_id, nb) then return false end
 
 	local t = _M.talents_def[t_id]
@@ -2736,7 +2736,7 @@ function _M:unlearnTalent(t_id, nb)
 	end
 
 	-- Unsustain ?
-	if not self:knowTalent(t_id) and t.mode == "sustained" and self:isTalentActive(t_id) then self:forceUseTalent(t_id, {ignore_energy=true}) end
+	if not no_unsustain and not self:knowTalent(t_id) and t.mode == "sustained" and self:isTalentActive(t_id) then self:forceUseTalent(t_id, {ignore_energy=true}) end
 
 	return true
 end

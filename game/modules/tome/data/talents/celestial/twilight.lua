@@ -240,6 +240,7 @@ newTalent{
 		m.on_acquire_target = nil
 		m.seen_by = nil
 		m.can_talk = nil
+		m.exp_worth = 0
 		m.clone_on_hit = nil
 		if m.talents.T_SUMMON then m.talents.T_SUMMON = nil end
 		if m.talents.T_MULTIPLY then m.talents.T_MULTIPLY = nil end
