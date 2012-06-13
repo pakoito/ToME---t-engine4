@@ -509,7 +509,7 @@ function _M:generateList()
 				if self.actor:getStat(sid, nil, nil, true) >= self.actor.level * 1.4 + 20 or
 				   self.actor:isStatMax(sid) or
 				   self.actor:getStat(sid, nil, nil, true) >= 60 + math.max(0, (self.actor.level - 50)) then
-					return {255, 0, 0}
+					return {0, 255, 0}
 				else
 					return {175,175,175}
 				end
@@ -518,7 +518,7 @@ function _M:generateList()
 				if self.actor:getStat(sid, nil, nil, true) >= self.actor.level * 1.4 + 20 or
 				   self.actor:isStatMax(sid) or
 				   self.actor:getStat(sid, nil, nil, true) >= 60 + math.max(0, (self.actor.level - 50)) then
-					return tstring{{"color", 0xFF, 0x00, 0x00}, tostring(self.actor:getStat(sid))}
+					return tstring{{"color", 175, 175, 175}, tostring(self.actor:getStat(sid))}
 				else
 					return tstring{{"color", 0x00, 0xFF, 0x00}, tostring(self.actor:getStat(sid))}
 				end
