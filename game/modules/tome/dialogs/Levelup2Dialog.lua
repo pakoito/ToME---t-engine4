@@ -495,7 +495,7 @@ function _M:generateList()
 
 	for i, sid in ipairs{self.actor.STAT_STR, self.actor.STAT_DEX, self.actor.STAT_CON, self.actor.STAT_MAG, self.actor.STAT_WIL, self.actor.STAT_CUN } do
 		local s = self.actor.stats_def[sid]
-		local e = engine.Entity.new{image="stats/"..s.short_name:lower()..".png", is_stat=true}
+		local e = engine.Entity.new{image="stats/"..s.name:lower()..".png", is_stat=true}
 		e:getMapObjects(game.uiset.hotkeys_display_icons.tiles, {}, 1)
 
 		local stats = (i <= 3) and phys or mind
