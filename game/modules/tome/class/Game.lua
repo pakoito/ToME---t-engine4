@@ -879,6 +879,16 @@ function _M:changeLevel(lev, zone, params)
 	end
 
 	if popup then popup:done() end
+
+	self:dieClonesDie()
+end
+
+function _M:dieClonesDie()
+	if not self.level then return end
+	local p = self:getPlayer(true)
+	for uid, e in pairs(self.level.entities) do
+		if p.puuid == e.puuid and e ~= p then self.level:removeEntity(e) end
+	end
 end
 
 function _M:getPlayer(main)
@@ -1045,6 +1055,9 @@ function _M:onTurn()
 		self.log(self.calendar:getTimeDate(self.turn))
 		self.day_of_year = self.calendar:getDayOfYear(self.turn)
 	end
+
+	if self.turn % 500 ~= 0 then return end
+	self:dieClonesDie()
 end
 
 function _M:updateFOV()

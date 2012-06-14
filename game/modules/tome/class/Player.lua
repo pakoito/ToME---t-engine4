@@ -90,6 +90,7 @@ function _M:init(t, no_default)
 	self.descriptor = self.descriptor or {}
 	self.died_times = self.died_times or {}
 	self.last_learnt_talents = self.last_learnt_talents or { class={}, generic={} }
+	self.puuid = self.puuid or util.uuid()
 end
 
 function _M:onBirth(birther)
