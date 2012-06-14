@@ -783,6 +783,48 @@ newEntity{ base = "BASE_SHIELD",
 	},
 }
 
+newEntity{ base = "BASE_SHIELD",
+	power_source = {nature=true},
+	unique = true,
+	name = "Black Mesh", image = "object/artifact/shield_mesh.png",
+	unided_name = "pile of tendrils",
+	desc = [[Black, interwoven tendrils form this mesh that can be used as shield. It reacts visibly to your touch, clinging to your arm and engulfing it in a warm, black mass.]],
+	color = colors.BLACK,
+	level_range = {15, 30},
+	rarity = 270,
+	require = { stat = { str=20 }, }, --make str to 20
+	cost = 400,
+	material_level = 3,
+	metallic = false,
+	special_combat = {
+		dam = resolvers.rngavg(25,35),
+		block = resolvers.rngavg(90, 120),
+		physcrit = 5,
+		dammod = {str=1},
+	},
+	wielder = {
+		combat_armor = 2,
+		combat_def = 8,
+		combat_def_ranged = 8,
+		fatigue = 12,
+		learn_talent = { [Talents.T_BLOCK] = 3, },
+		resists = { [DamageType.BLIGHT] = 15, [DamageType.DARKNESS] = 30, },
+		stamina_regen = 2,
+
+	},
+	on_block = function(self, who, src, type, dam, eff)
+		if rng.percent(30) then
+			if not src then return end
+
+			src:pull(who.x, who.y, 15)
+			game.logSeen(src, "Black tendrils shoot out of the mesh and pull %s to you!", src.name:capitalize())
+			if core.fov.distance(who.x, who.y, src.x, src.y) <= 1 and src:canBe('pin') then
+				src:setEffect(src.EFF_CONSTRICTED, 6, {src=who})
+			end
+		end
+	end,
+}
+
 newEntity{ base = "BASE_LIGHT_ARMOR",
 	power_source = {technique=true},
 	unique = true,

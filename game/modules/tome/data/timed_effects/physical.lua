@@ -368,7 +368,7 @@ newEffect{
 	type = "physical",
 	subtype = { grapple=true, pin=true },
 	status = "detrimental",
-	parameters = {},
+	parameters = {power=10},
 	on_gain = function(self, err) return "#Target# is constricted!", "+Constricted" end,
 	on_lose = function(self, err) return "#Target# is free to breathe.", "-Constricted" end,
 	activate = function(self, eff)

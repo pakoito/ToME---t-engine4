@@ -886,6 +886,7 @@ end
 function _M:dieClonesDie()
 	if not self.level then return end
 	local p = self:getPlayer(true)
+	if not p.puuid then return end
 	for uid, e in pairs(self.level.entities) do
 		if p.puuid == e.puuid and e ~= p then self.level:removeEntity(e) end
 	end
