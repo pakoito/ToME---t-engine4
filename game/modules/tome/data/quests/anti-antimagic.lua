@@ -113,7 +113,7 @@ myssil_dies = function(self)
 
 	local corr = nil
 	for uid, e in pairs(game.level.entities) do
-		if e.faction == "rhalore" then e.invulnerable = 1 end
+		if e.faction == "rhalore" then e:setEffect(e.EFF_VICTORY_RUSH_ZIGUR, 20, {}) end
 		if e.define_as and e.define_as == "GRAND_CORRUPTOR" then corr = e end
 	end
 	if not corr then return end

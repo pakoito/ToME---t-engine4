@@ -35,6 +35,7 @@ function _M:init(t)
 	self.on_expand = t.on_expand
 	self.scrollbar = t.scrollbar
 	self.no_cross = t.no_cross
+	self.dont_select_top = t.dont_select_top
 
 	self.icon_size = 48
 	self.frame_size = 50
@@ -53,10 +54,12 @@ function _M:init(t)
 end
 
 function _M:onUse(item, inc)
+	self.last_scroll = nil
 	self.on_use(item, inc)
 end
 
 function _M:onExpand(item, inc)
+	self.last_scroll = nil
 	item.shown = not item.shown
 	if self.on_expand then self.on_expand(item) end
 end
@@ -75,6 +78,58 @@ function _M:doScroll(v)
 	self.scroll = util.bound(self.scroll + v, 1, self.max_display)
 end
 
+function _M:moveSel(i, j)
+	local match = nil
+
+	if i == 0 then
+		local t = self.tree[self.sel_i]
+		if t.nodes then
+			self.sel_j = util.bound(self.sel_j + j, 1, #t.nodes)
+			match = t.nodes[self.sel_j]
+		end
+	elseif i == 1 then
+		local t = self.tree[self.sel_i]
+		if t.shown and self.sel_j == 0 and t.nodes and #t.nodes > 0 then
+			self.sel_j = 1
+			match = t.nodes[1]
+		else
+			self.sel_i = util.bound(self.sel_i + i, 1, #self.tree)
+			self.sel_j = 0
+			self.scroll = util.scroll(self.sel_i, self.scroll, self.max_display)
+			local t = self.tree[self.sel_i]
+			match = t
+		end
+	elseif i == -1 then
+		local t = self.tree[self.sel_i]
+		if t.shown and self.sel_j > 0 and t.nodes and #t.nodes > 0 then
+			self.sel_j = 0
+			match = t
+		else
+			self.sel_i = util.bound(self.sel_i + i, 1, #self.tree)
+			self.scroll = util.scroll(self.sel_i, self.scroll, self.max_display)
+			local t = self.tree[self.sel_i]
+			if t.shown and t.nodes and #t.nodes > 0 then
+				self.sel_j = 1
+				match = t.nodes[1]
+			else
+				self.sel_j = 0
+				match = t
+			end
+		end
+	end
+
+	for i = 1, #self.mousezones do
+		local mz = self.mousezones[i]
+		if mz.item == match then self.last_mz = mz break end
+	end
+
+	local str, fx, fy = self.tooltip(self.last_mz.item)
+	self.last_mz.tx, self.last_mz.ty = fx or (self.last_display_x + self.last_mz.x2), fy or (self.last_display_y + self.last_mz.y1)
+	game:tooltipDisplayAtMap(self.last_mz.tx, self.last_mz.ty, str)
+
+	self.last_scroll = nil
+end
+
 function _M:generate()
 	self.mouse:reset()
 	self.key:reset()
@@ -85,6 +140,9 @@ function _M:generate()
 	if self.scrollbar then
 		self.scrollbar = Slider.new{size=self.h, max=#self.tree}
 	end
+
+	self.sel_i = 1
+	self.sel_j = 1
 
 	self.mousezones = {}
 
@@ -116,6 +174,8 @@ function _M:generate()
 				end
 
 				self.last_mz = mz
+				self.sel_i = mz.i
+				self.sel_j = mz.j
 				done = true
 				break
 			end
@@ -123,19 +183,20 @@ function _M:generate()
 		if not done then game.tooltip_x = nil self.last_mz = nil end
 	end)
 	self.key:addBinds{
-		ACCEPT = function() self:onUse("left", "key") end,
-		MOVE_UP = function()
-		end,
-		MOVE_DOWN = function()
-		end,
+		ACCEPT = function() self:onUse(self.last_mz.item, true) end,
+		MOVE_UP = function() self:moveSel(-1, 0) end,
+		MOVE_DOWN = function() self:moveSel(1, 0) end,
+		MOVE_LEFT = function() self:moveSel(0, -1) end,
+		MOVE_RIGHT = function() self:moveSel(0, 1) end,
 	}
 	self.key:addCommands{
+		[{"_RETURN","ctrl"}] = function() self:onUse(self.last_mz.item, false) end,
 		[{"_UP","ctrl"}] = function() self.key:triggerVirtual("MOVE_UP") end,
 		[{"_DOWN","ctrl"}] = function() self.key:triggerVirtual("MOVE_DOWN") end,
-		_HOME = function()
-		end,
-		_END = function()
-		end,
+		[{"_LEFT","ctrl"}] = function() self.key:triggerVirtual("MOVE_LEFT") end,
+		[{"_RIGHT","ctrl"}] = function() self.key:triggerVirtual("MOVE_RIGHT") end,
+		_HOME = function() self.sel_i = 1 self:moveSel(-1, 0) end,
+		_END = function() self.sel_i = #self.tree self:moveSel(1, 0)  end,
 		_PAGEUP = function()
 		end,
 		_PAGEDOWN = function()
@@ -184,7 +245,7 @@ function _M:display(x, y, nb_keyframes, screen_x, screen_y)
 	self.last_display_y = screen_y
 
 	local mz = {}
-	self.mousezones = mz
+	if self.last_scroll ~= self.scroll then self.mousezones = mz end
 
 	local dx, dy = 0, 0
 
@@ -200,7 +261,7 @@ function _M:display(x, y, nb_keyframes, screen_x, screen_y)
 			local key = tree.text_status
 			local cross = not tree.shown and self.plus or self.minus
 
-			mz[#mz+1] = {item=tree, x1=dx, y1=dy, x2=dx+cross.w + 3 + key.w, y2=dy+cross.h}
+			mz[#mz+1] = {i=i,j=1, item=tree, x1=dx, y1=dy, x2=dx+cross.w + 3 + key.w, y2=dy+cross.h}
 
 			if not self.no_cross then
 				cross.t:toScreenFull(dx+x, dy+y + (-cross.h + key.h) / 2, cross.w, cross.h, cross.tw, cross.th)
@@ -228,7 +289,7 @@ function _M:display(x, y, nb_keyframes, screen_x, screen_y)
 				addh = key.h
 			end
 
-			mz[#mz+1] = {item=tal, x1=dx, y1=dy, x2=dx+self.frame_size, y2=dy+self.frame_size+addh}
+			mz[#mz+1] = {i=i, j=j, item=tal, x1=dx, y1=dy, x2=dx+self.frame_size, y2=dy+self.frame_size+addh}
 
 			dx = dx + self.frame_size + self.frame_offset
 			addh = addh + self.frame_size
@@ -243,4 +304,6 @@ function _M:display(x, y, nb_keyframes, screen_x, screen_y)
 		self.scrollbar.pos = self.scroll
 		self.scrollbar:display(x + self.w - self.scrollbar.w, y)
 	end
+
+	self.last_scroll = self.scroll
 end

@@ -28,13 +28,6 @@ local DamageType = require "engine.DamageType"
 
 module(..., package.seeall, class.inherit(Dialog, mod.class.interface.TooltipsData))
 
-local _points_text = "Stats points left: #00FF00#%d#LAST#"
-
-local _points_left = [[
-Category points left: #00FF00#%d#LAST#
-Class talent points left: #00FF00#%d#LAST#
-Generic talent points left: #00FF00#%d#LAST#]]
-
 function _M:init(actor, on_finish, on_birth)
 	self.on_birth = on_birth
 	actor.no_last_learnt_talents_cap = true
@@ -65,13 +58,22 @@ function _M:init(actor, on_finish, on_birth)
 		if v.type == "subclass" and v.name == actor.descriptor.subclass then self.desc_def = v break end
 	end
 
-	Dialog.init(self, "Levelup: "..actor.name, game.w * 0.9, game.h * 0.9, game.w * 0.05, game.h * 0.05)
+	Dialog.init(self, "Levelup: "..actor.name, 650, game.h * 0.9, game.w * 0.05, game.h * 0.05)
 
 	self:generateList()
 
 	self:loadUI(self:createDisplay())
 	self:setupUI()
 
+	self.key:addCommands{
+		__TEXTINPUT = function(c)
+			if c == "+" and self.focus_ui and self.focus_ui.ui.onExpand then
+				self.focus_ui.ui:onExpand(self.focus_ui.ui.last_mz.item)
+			elseif c == "-" then
+				self.focus_ui.ui:onExpand(self.focus_ui.ui.last_mz.item)
+			end
+		end,
+	}
 	self.key:addBinds{
 		EXIT = function()
 			if self.actor.unused_stats~=self.actor_dup.unused_stats or self.actor.unused_talents_types~=self.actor_dup.unused_talents_types or
@@ -491,7 +493,10 @@ function _M:generateList()
 
 	-- Makes up the stats list
 	local phys, mind = {}, {}
-	self.tree_stats = {{shown=true, nodes=phys, name="Physical Stats", type_stat=true}, {shown=true, nodes=mind, name="Mental Stats", type_stat=true}}
+	self.tree_stats = {
+		{shown=true, nodes=phys, name="Physical Stats", type_stat=true, desc=self.TOOLTIP_STRDEXCON},
+		{shown=true, nodes=mind, name="Mental Stats", type_stat=true, desc=TOOLTIP_MAGWILCUN}
+	}
 
 	for i, sid in ipairs{self.actor.STAT_STR, self.actor.STAT_DEX, self.actor.STAT_CON, self.actor.STAT_MAG, self.actor.STAT_WIL, self.actor.STAT_CUN } do
 		local s = self.actor.stats_def[sid]
@@ -542,7 +547,11 @@ function _M:createDisplay()
 		tiles=game.uiset.hotkeys_display_icons,
 		tree=self.tree,
 		width=self.iw-200-10, height=self.ih-10,
-		tooltip=function(item) return self:getTalentDesc(item), self.uis[3].x - game.tooltip.max, nil end,
+		tooltip=function(item) 
+			local x = self.display_x + self.uis[3].x - game.tooltip.max
+			if self.display_x + self.w + game.tooltip.max <= game.w then x = self.display_x + self.w end
+			return self:getTalentDesc(item), x, nil 
+		end,
 		on_use = function(item, inc) self:onUseTalent(item, inc) end,
 		scrollbar = true,
 	}
@@ -551,7 +560,12 @@ function _M:createDisplay()
 		tiles=game.uiset.hotkeys_display_icons,
 		tree=self.tree_stats, no_cross = true,
 		width=200, height=210,
-		tooltip=function(item) return item.desc end,
+		dont_select_top = true,
+		tooltip=function(item)
+			local x = self.display_x + self.uis[1].x + self.uis[1].ui.w
+			if self.display_x + self.w + game.tooltip.max <= game.w then x = self.display_x + self.w end
+			return item.desc, x, nil 
+		end,
 		on_use = function(item, inc) self:onUseTalent(item, inc) end,
 		on_expand = function(item) self.actor.__hidden_talent_types[item.type] = not item.shown end,
 	}

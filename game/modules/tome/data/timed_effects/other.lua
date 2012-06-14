@@ -1523,3 +1523,19 @@ newEffect{
 		self:removeTemporaryValue("zero_resource_cost", eff.tmpid)
 	end,
 }
+
+newEffect{
+	name = "VICTORY_RUSH_ZIGUR", image = "talents/arcane_destruction.png",
+	desc = "Victory Rush",
+	long_desc = function(self, eff) return "The thrill of victory makes this creature invulnerable." end,
+	type = "other",
+	subtype = { arcane=true },
+	status = "beneficial",
+	parameters = { },
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("invulnerable", 1)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("invulnerable", eff.tmpid)
+	end,
+}
