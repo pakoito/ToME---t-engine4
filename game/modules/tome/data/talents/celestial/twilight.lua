@@ -237,6 +237,7 @@ newTalent{
 		m.forceLevelup = function() end
 		-- Handle special things
 		m.on_die = nil
+		m.puuid = nil
 		m.on_acquire_target = nil
 		m.seen_by = nil
 		m.can_talk = nil

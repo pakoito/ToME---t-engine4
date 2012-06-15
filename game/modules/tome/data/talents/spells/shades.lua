@@ -204,6 +204,7 @@ newTalent{
 		m.on_acquire_target = nil
 		m.seen_by = nil
 		m.can_talk = nil
+		m.puuid = nil
 		m.on_takehit = nil
 		m.exp_worth = 0
 		m.no_inventory_access = true

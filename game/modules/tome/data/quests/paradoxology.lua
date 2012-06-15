@@ -51,6 +51,7 @@ generate = function(self, player, x, y)
 	a.ai_state = {talent_in=1}
 	a.faction = "enemies"
 	a.max_life = a.max_life * 2
+	a.puuid = nil
 	a.life = a.max_life
 
 	-- Remove all talents

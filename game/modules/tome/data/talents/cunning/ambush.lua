@@ -145,6 +145,7 @@ newTalent{
 		m.on_die = nil
 		m.on_acquire_target = nil
 		m.seen_by = nil
+		m.puuid = nil
 		m.on_takehit = nil
 		m.can_talk = nil
 		m.clone_on_hit = nil

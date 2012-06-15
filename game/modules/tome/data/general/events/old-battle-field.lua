@@ -109,36 +109,36 @@ if tries < 100 then
 		return zone
 	end
 
-
-	local g = game.level.map(x, y, engine.Map.TERRAIN):cloneFull()
-	g.name = "grave"
-	g.display='&' g.color_r=255 g.color_g=255 g.color_b=255 g.notice = true
-	g.add_displays = g.add_displays or {}
-	g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/grave_unopened_0"..rng.range(1,3).."_64.png", display_y=-1, display_h=2}
-	g.nice_tiler = nil
-	g.block_move = function(self, x, y, who, act, couldpass)
-		if not who or not who.player or not act then return false end
-		who:runStop("grave")
-		require("engine.ui.Dialog"):yesnoPopup("Grave", "Do you wish to disturb the grave?", function(ret) if ret then
-			self.block_move = nil
-			self:change_level_check()
-			require("engine.ui.Dialog"):simplePopup("Fall...", "As you tried to dig the grave the ground fell under you. You find yourself stranded in an eerie lit cavern.")
-		end end)
-		return false
-	end
-	g.change_level=1 g.change_zone=id g.glow=true
-	g.real_change = changer
-	g.change_level_check = function(self)
-		game:changeLevel(1, self.real_change(self.change_zone), {temporary_zone_shift=true})
-		self.change_level_check = nil
-		self.real_change = nil
-		self.change_level = nil
-		return true
-	end
-
 	local grids = check(x, y)
 	for i = 1, 5 do
 		local p = rng.tableRemove(grids)
+
+		local g = game.level.map(p.x, p.y, engine.Map.TERRAIN):cloneFull()
+		g.name = "grave"
+		g.display='&' g.color_r=255 g.color_g=255 g.color_b=255 g.notice = true
+		g.add_displays = g.add_displays or {}
+		g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/grave_unopened_0"..rng.range(1,3).."_64.png", display_y=-1, display_h=2}
+		g.nice_tiler = nil
+		g.block_move = function(self, x, y, who, act, couldpass)
+			if not who or not who.player or not act then return false end
+			who:runStop("grave")
+			require("engine.ui.Dialog"):yesnoPopup("Grave", "Do you wish to disturb the grave?", function(ret) if ret then
+				self.block_move = nil
+				self:change_level_check()
+				require("engine.ui.Dialog"):simplePopup("Fall...", "As you tried to dig the grave the ground fell under you. You find yourself stranded in an eerie lit cavern.")
+			end end)
+			return false
+		end
+		g.change_level=1 g.change_zone=id g.glow=true
+		g.real_change = changer
+		g.change_level_check = function(self)
+			game:changeLevel(1, self.real_change(self.change_zone), {temporary_zone_shift=true})
+			self.change_level_check = nil
+			self.real_change = nil
+			self.change_level = nil
+			return true
+		end
+
 		game.zone:addEntity(game.level, g, "terrain", p.x, p.y)
 	end
 end

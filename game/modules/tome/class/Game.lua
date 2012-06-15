@@ -1210,8 +1210,7 @@ function _M:setupCommands()
 			setfenv(f, setmetatable({level=self.level, zone=self.zone}, {__index=_G}))
 			print(pcall(f))
 --]]
-			local o = game.zone:makeEntity(game.level,"object", {
-			type = "weapon", subtype="battleaxe",random_object={}}, nil, true)
+			local o = game.zone:makeEntity(game.level,"object", {random_object={}}, nil, true)
 			if o then
 				o:identify(true)
 				game.zone:addEntity(game.level, o, "object", game.player.x, game.player.y)
