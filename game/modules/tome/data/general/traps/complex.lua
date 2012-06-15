@@ -143,7 +143,7 @@ newEntity{ base = "TRAP_COMPLEX",
 			5, nil,
 			{type="vapour"},
 			nil, 0, 0
-		)		
+		)
 		self:useEnergy(game.energy_to_act * 7)
 	end,
 	act = function(self)
@@ -160,5 +160,3 @@ newEntity{ base = "TRAP_COMPLEX",
 		end
 	end,
 }
-
--- you do NOT want native UI widgets

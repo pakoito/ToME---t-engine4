@@ -17,6 +17,6 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/traps/elemental.lua")
+load("/data/general/traps/complex.lua")
 load("/data/general/traps/alarm.lua")
 load("/data/general/traps/natural_forest.lua")
