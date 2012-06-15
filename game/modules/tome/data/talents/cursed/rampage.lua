@@ -79,7 +79,7 @@ newTalent{
 	onTakeHit = function(t, self, fractionDamage)
 		if fractionDamage < 0.08 then return false end
 		if self:hasEffect(self.EFF_RAMPAGE) then return false end
-		if rng.percent(0.5) then
+		if rng.percent(50) then
 			t.action(self, t, 0)
 			return true
 		end

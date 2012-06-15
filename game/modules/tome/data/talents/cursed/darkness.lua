@@ -394,10 +394,10 @@ newTalent{
 				-- your will ignores friendly targets (except for knockback hits)
 				local target = game.level.map(x, y, Map.ACTOR)
 				if target then
-					self:project(target, target.x, target.y, DamageType.DARKNESS, self:spellCrit(damage))
+					self:project(target, target.x, target.y, DamageType.DARKNESS, damage)
 					if rng.percent(25) then
 						if not target.dead and target:canBe("blind") then
-							target:setEffect(target.EFF_BLINDED, 3, {apply_power=self:combatSpellpower(), min_dur=1})
+							target:setEffect(target.EFF_BLINDED, 3, {apply_power=self:combatMindpower(), min_dur=1})
 							target:setTarget(nil)
 							--game.logSeen(target, "%s stumbles in the darkness!", target.name:capitalize())
 						end

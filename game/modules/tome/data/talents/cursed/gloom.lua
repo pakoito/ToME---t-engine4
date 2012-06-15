@@ -225,7 +225,7 @@ newTalent{
 	require = cursed_wil_req4,
 	points = 5,
 	getDamageChange = function(self, t)
-		return math.min(35, -math.sqrt(self:getTalentLevel(t)) * 11)
+		return math.max(-35, -math.sqrt(self:getTalentLevel(t)) * 11)
 	end,
 	info = function(self, t)
 		local damageChange = t.getDamageChange(self, t)

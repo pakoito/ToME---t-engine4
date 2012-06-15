@@ -220,7 +220,7 @@ newTalent{
 	end,
 }
 
-newTalent{
+newTalent{ 
 	name = "Blast",
 	type = {"cursed/force-of-will", 3},
 	require = cursed_wil_req3,
@@ -246,7 +246,7 @@ newTalent{
 	getDazeDuration = function(self, t)
 		return 3
 	end,
-	action = function(self, t)
+	action = function(self, t) --NOTE TO DG, SINCE I CAN'T UNDERSTAND A WORD OF BENLI'S CODE: EDIT SO THAT KNOCKBACK OCCURS AFTER DAMAGE, AND SEPARATELY, TO PREVENT ENEMIES BEING SHOVED INTO A NEW SPACE AND HIT AGAIN.
 		local range = self:getTalentRange(t)
 		local radius = self:getTalentRadius(t)
 		local damage = t.getDamage(self, t)
