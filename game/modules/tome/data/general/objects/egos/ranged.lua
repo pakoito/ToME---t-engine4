@@ -16,9 +16,57 @@
 --
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
+
 local Talents = require("engine.interface.ActorTalents")
 local Stats = require("engine.interface.ActorStats")
 
+-------------------------------------------------------
+-- Techniques------------------------------------------
+-------------------------------------------------------
+newEntity{
+	power_source = {technique=true},
+	name = "mighty ", prefix=true, instant_resolve=true,
+	keywords = {mighty=true},
+	level_range = {1, 50},
+	rarity = 3,
+	cost = 4,
+	wielder = {
+		combat_dam = resolvers.mbonus_material(10, 5),
+		inc_stats = {
+			[Stats.STAT_STR] = resolvers.mbonus_material(6, 1),
+		},
+	},
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = "ranger's ", prefix=true, instant_resolve=true,
+	keywords = {ranger=true},
+	level_range = {1, 50},
+	rarity = 9,
+	cost = 10,
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_DEX] = resolvers.mbonus_material(6, 1),
+		},
+	},
+	resolvers.generic(function(e)
+		e.combat.range = e.combat.range + 1
+	end),
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = "steady ", prefix=true, instant_resolve=true,
+	keywords = {steady=true},
+	level_range = {1, 50},
+	rarity = 5,
+	cost = 15,
+	wielder={
+		combat_atk = resolvers.mbonus_material(10, 5),
+		talent_cd_reduction={[Talents.T_STEADY_SHOT]=1},
+	},
+}
 
 newEntity{
 	power_source = {technique=true},
@@ -29,87 +77,23 @@ newEntity{
 	cost = 6,
 	wielder = {
 		inc_damage={ [DamageType.PHYSICAL] = resolvers.mbonus_material(14, 8), },
+		resists_pen={ [DamageType.PHYSICAL] = resolvers.mbonus_material(14, 8), },
 	},
 }
 
-newEntity{
-	power_source = {technique=true},
-	name = "mighty ", prefix=true, instant_resolve=true,
-	keywords = {mighty=true},
-	level_range = {1, 50},
-	rarity = 3,
-	cost = 4,
-	wielder = {
-		combat_dam = resolvers.mbonus_material(10, 5),
-	},
-}
-
-newEntity{
-	power_source = {technique=true},
-	name = "steady ", prefix=true, instant_resolve=true,
-	keywords = {steady=true},
-	level_range = {1, 50},
-	rarity = 9,
-	cost = 10,
-	wielder = {
-		talent_cd_reduction={[Talents.T_STEADY_SHOT]=1},
-	},
-}
-
-newEntity{
-	power_source = {technique=true},
-	name = " of crippling", suffix=true, instant_resolve=true,
-	keywords = {crippling=true},
-	level_range = {1, 50},
-	rarity = 7,
-	cost = 7,
-	wielder = {
-		physcrit = resolvers.mbonus_material(7, 3),
-	}
-}
-
-newEntity{
-	power_source = {technique=true},
-	name = " of speed", suffix=true, instant_resolve=true,
-	keywords = {speed=true},
-	level_range = {20, 50},
-	rarity = 7,
-	cost = 7,
-	combat={physspeed = -0.1},
-}
-
-newEntity{
-	power_source = {technique=true},
-	name = "tracker's ", prefix=true, instant_resolve=true,
-	keywords = {tracker=true},
-	level_range = {1, 50},
-	rarity = 9,
-	cost = 10,
-	wielder = {
-		infravision = resolvers.mbonus_material(3, 1),
-	},
-}
-
-newEntity{
-	power_source = {technique=true},
-	name = " of range", suffix=true, instant_resolve=true,
-	keywords = {range=true},
-	level_range = {1, 50},
-	rarity = 9,
-	cost = 10,
-	resolvers.generic(function(e)
-		e.combat.range = e.combat.range + 1
-	end),
-}
-
+-- Greater 
 newEntity{
 	power_source = {technique=true},
 	name = "swiftstrike ", prefix=true, instant_resolve=true,
 	keywords = {swiftstrike=true},
-	level_range = {1, 50},
-	rarity = 9,
-	cost = 10,
-	combat = {travel_speed = 2},
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 25,
+	cost = 30,
+	combat = {
+		physspeed = -0.1,
+		travel_speed = 2,
+	},
 }
 
 newEntity{
@@ -120,19 +104,81 @@ newEntity{
 	greater_ego = 1,
 	rarity = 20,
 	cost = 40,
-	combat = {
-		travel_speed = 2
-	},
 	resolvers.generic(function(e)
 		e.combat.range = e.combat.range + 1
 	end),
 	wielder = {
-		physcrit = resolvers.mbonus_material(7, 3),
+		combat_atk = resolvers.mbonus_material(10, 5),
+		combat_physcrit = resolvers.mbonus_material(10, 5),
+	},
+}
+
+-------------------------------------------------------
+-- Arcane Egos-----------------------------------------
+-------------------------------------------------------
+newEntity{
+	power_source = {arcane=true},
+	name = " of fire", suffix=true, instant_resolve=true,
+	keywords = {fire=true},
+	level_range = {1, 50},
+	rarity = 5,
+	cost = 6,
+	combat = {
+		ranged_project={[DamageType.FIRE] = resolvers.mbonus_material(15, 5)},
+	},
+	wielder = {
+		inc_damage={ [DamageType.FIRE] = resolvers.mbonus_material(14, 8), },
 	},
 }
 
 newEntity{
-	power_source = {technique=true},
+	power_source = {arcane=true},
+	name = " of cold", suffix=true, instant_resolve=true,
+	keywords = {cold=true},
+	level_range = {15, 50},
+	rarity = 5,
+	cost = 6,
+	combat = {
+		ranged_project={[DamageType.COLD] = resolvers.mbonus_material(15, 5)},
+	},
+	wielder = {
+		inc_damage={ [DamageType.COLD] = resolvers.mbonus_material(14, 8), },
+	},
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = " of acid", suffix=true, instant_resolve=true,
+	keywords = {cunning=true},
+	level_range = {1, 50},
+	rarity = 5,
+	cost = 6,
+	combat = {
+		ranged_project={[DamageType.ACID] = resolvers.mbonus_material(15, 5)},
+	},
+	wielder = {
+		inc_damage={ [DamageType.ACID] = resolvers.mbonus_material(14, 8), },
+	},
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = " of lightning", suffix=true, instant_resolve=true,
+	keywords = {lightning=true},
+	level_range = {1, 50},
+	rarity = 5,
+	cost = 6,
+	combat = {
+		ranged_project={[DamageType.LIGHTNING] = resolvers.mbonus_material(20, 5)},
+	},
+	wielder = {
+		inc_damage={ [DamageType.LIGHTNING] = resolvers.mbonus_material(14, 8), },
+	},
+}
+
+-- Greater
+newEntity{
+	power_source = {arcane=true},
 	name = "penetrating ", prefix=true, instant_resolve=true,
 	keywords = {penetrating=true},
 	level_range = {30, 50},
@@ -144,28 +190,290 @@ newEntity{
 		resists_pen = {
 			[DamageType.PHYSICAL] = resolvers.mbonus_material(20, 5),
 		},
+		damage_shield_penetrate = resolvers.mbonus_material(50, 10),
 	},
 }
 
 newEntity{
-	power_source = {psionic=true},
-	name = " of torment", suffix=true, instant_resolve=true,
-	keywords = {torment=true},
+	power_source = {arcane=true},
+	name = "runic ", prefix=true, instant_resolve=true,
+	keywords = {runic=true},
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 30,
+	cost = 30,
+	wielder = {
+		combat_spellpower = resolvers.mbonus_material(10, 5),
+		inc_stats = {
+			[Stats.STAT_MAG] = resolvers.mbonus_material(6, 1),
+		},
+		inc_damage = {
+			[DamageType.ARCANE] = resolvers.mbonus_material(10, 5),
+		},
+	},
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = "warden's ", prefix=true, instant_resolve=true,
+	keywords = {wardens=true},
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 30,
+	cost = 40,
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_WIL] = resolvers.mbonus_material(6, 1),
+		},
+		resists_pen = {
+			[DamageType.TEMPORAL] = resolvers.mbonus_material(10, 5),
+		},
+		inc_damage = {
+			[DamageType.TEMPORAL] = resolvers.mbonus_material(10, 5),
+		},
+		ammo_reload_speed = resolvers.mbonus_material(4, 1),
+		quick_weapon_swap = 1,
+	},
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = " of recursion", suffix=true, instant_resolve=true,
+	keywords = {recursion=true},
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 30,
+	cost = 40,
+	combat = {
+		talent_on_hit = { [Talents.T_SHOOT] = {level=1, chance=25} },
+		convert_damage = { [DamageType.TEMPORAL] = resolvers.mbonus_material(25, 25),}
+	}
+}
+
+-------------------------------------------------------
+-- Nature/Antimagic Egos:------------------------------
+-------------------------------------------------------
+-- **  NEED SOME LESSER ** --
+newEntity{
+	power_source = {nature=true},
+	name = "fungal ", prefix=true, instant_resolve=true,
+	keywords = {fungal=true},
+	level_range = {1, 50},
+	rarity = 10,
+	cost = 10,
+	wielder = {
+		talents_types_mastery = {
+			["wild-gift/fungus"] = resolvers.mbonus_material(1, 1, function(e, v) v=v/10 return 0, v end),
+		},
+	},
+	charm_power = resolvers.mbonus_material(100, 5),
+	charm_power_def = {add=50, max=200, floor=true},
+	resolvers.charm("regenerate %d life over 5 turns", 20,
+		function(self, who)
+			who:setEffect(who.EFF_REGENERATION, 5, {power=self:getCharmPower()/5})
+			return {id=true, used=true}
+		end
+	),
+}
+
+-- Greater
+newEntity{
+	power_source = {nature=true},
+	name = "blazebringer's ", prefix=true, instant_resolve=true,
+	keywords = {blaze=true},
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 45,
+	cost = 40,
+	wielder = {
+		global_speed_add = resolvers.mbonus_material(5, 1, function(e, v) v=v/100 return 0, v end),
+		resists_pen = {
+			[DamageType.FIRE] = resolvers.mbonus_material(10, 5),
+		},
+	},
+	combat = {
+		ranged_project={
+			[DamageType.FIREBURN] = resolvers.mbonus_material(30, 5),
+		},
+	},
+}
+
+newEntity{
+	power_source = {nature=true},
+	name = "caustic ", prefix=true, instant_resolve=true,
+	keywords = {caustic=true},
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 45,
+	cost = 40,
+	wielder = {
+		life_regen = resolvers.mbonus_material(20, 5, function(e, v) v=v/10 return 0, v end),
+		resists_pen = {
+			[DamageType.ACID] = resolvers.mbonus_material(10, 5),
+		},
+	},
+	combat = {
+		ranged_project={
+			[DamageType.ACID_BLIND] = resolvers.mbonus_material(15, 5),
+		},
+	},
+}
+
+newEntity{
+	power_source = {nature=true},
+	name = "glacial ", prefix=true, instant_resolve=true,
+	keywords = {glacial=true},
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 45,
+	cost = 40,
+	wielder = {
+		combat_armor = resolvers.mbonus_material(10, 5),
+		resists_pen = {
+			[DamageType.COLD] = resolvers.mbonus_material(10, 5),
+		},
+	},
+	combat = {
+		ranged_project={
+			[DamageType.ICE] = resolvers.mbonus_material(15, 5),
+		},
+	},
+}
+
+newEntity{
+	power_source = {nature=true},
+	name = "thunderous ", prefix=true, instant_resolve=true,
+	keywords = {thunder=true},
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 45,
+	cost = 40,
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_STR] = resolvers.mbonus_material(3, 1),
+			[Stats.STAT_DEX] = resolvers.mbonus_material(3, 1),
+			[Stats.STAT_MAG] = resolvers.mbonus_material(3, 1),
+			[Stats.STAT_WIL] = resolvers.mbonus_material(3, 1),
+			[Stats.STAT_CUN] = resolvers.mbonus_material(3, 1),
+			[Stats.STAT_CON] = resolvers.mbonus_material(3, 1),
+		},
+		resists_pen = {
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(10, 5),
+		},
+	},
+	combat = {
+		ranged_project={
+			[DamageType.LIGHTNING_DAZE] = resolvers.mbonus_material(15, 5),
+		},
+	},
+}
+
+newEntity{
+	power_source = {nature=true},
+	name = " of nature", suffix=true, instant_resolve=true,
+	keywords = {nature=true},
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 30,
+	cost = 40,
+	wielder = {
+		resists = { all = resolvers.mbonus_material(8, 2) },
+		resists_pen = {
+			[DamageType.NATURE] = resolvers.mbonus_material(10, 5),
+		},
+	},
+	combat = {
+		ranged_project = { 
+			[DamageType.POISON] = resolvers.mbonus_material(25, 25),
+		},
+	},
+}
+
+-- Antimagic
+newEntity{
+	power_source = {antimagic=true},
+	name = " of dampening", suffix=true, instant_resolve=true,
+	keywords = {dampening=true},
 	level_range = {1, 50},
 	rarity = 18,
 	cost = 22,
+	wielder = {
+		resists={
+			[DamageType.ACID] = resolvers.mbonus_material(8, 5),
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(8, 5),
+			[DamageType.FIRE] = resolvers.mbonus_material(8, 5),
+			[DamageType.COLD] = resolvers.mbonus_material(8, 5),
+		},
+		combat_spellresist = resolvers.mbonus_material(10, 5),
+	},
+}
+
+newEntity{
+	power_source = {antimagic=true},
+	name = "mage-hunter's ", prefix=true, instant_resolve=true,
+	keywords = {magehunters=true},
+	level_range = {30, 50},
+	rarity = 18,
+	cost = 22,
+	greater_ego = 1,
 	combat = {
-		special_on_hit = {desc="30% chance to torment the target", fct=function(combat, who, target)
-			if not rng.percent(30) then return end
-			local eff = rng.table{"stun", "blind", "pin", "confusion", "silence"}
-			if not target:canBe(eff) then return end
-			if not target:checkHit(who:combatAttack(combat), target:combatPhysicalResist(), 15) then return end
-			if eff == "stun" then target:setEffect(target.EFF_STUNNED, 3, {})
-			elseif eff == "blind" then target:setEffect(target.EFF_BLINDED, 3, {})
-			elseif eff == "pin" then target:setEffect(target.EFF_PINNED, 3, {})
-			elseif eff == "confusion" then target:setEffect(target.EFF_CONFUSED, 3, {power=60})
-			elseif eff == "silence" then target:setEffect(target.EFF_SILENCED, 3, {})
+		talent_on_hit = { [Talents.T_MANA_CLASH] = {level=1, chance=10} },
+	},
+	wielder = {
+		talents_types_mastery = {
+			["wild-gift/antimagic"] = resolvers.mbonus_material(1, 1, function(e, v) v=v/10 return 0, v end),
+		},
+		ranged_project = { 
+			[DamageType.MANABURN] = resolvers.mbonus_material(20, 5),
+		},
+	},
+}
+
+newEntity{
+	power_source = {antimagic=true},
+	name = "throat-seeking ", prefix=true, instant_resolve=true,
+	keywords = {throat=true},
+	level_range = {30, 50},
+	rarity = 18,
+	cost = 22,
+	greater_ego = 1,
+	wielder = {
+		resists_pen = {
+			[DamageType.NATURE] = resolvers.mbonus_material(10, 5),
+		},
+	},
+	combat = {
+		ranged_project = { 
+			[DamageType.NATURE] = resolvers.mbonus_material(20, 5),
+		},
+		special_on_crit = {desc="silences the target", fct=function(combat, who, target)
+			if target:canBe("silence") then
+				target:setEffect(target.EFF_SILENCED, 2, {apply_power=who:combatAttack()})
 			end
 		end},
+	},
+}
+
+
+-------------------------------------------------------
+-- Psionic Egos ---------------------------------------
+-------------------------------------------------------
+-- **  NEED SOME LESSER ** --
+
+-- Greater
+newEntity{
+	power_source = {psionic=true},
+	name = "psychic's ", prefix=true, instant_resolve=true,
+	keywords = {psychic=true},
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 30,
+	cost = 30,
+	wielder = {
+		combat_mindpower = resolvers.mbonus_material(10, 5),
+		inc_stats = {
+			[Stats.STAT_CUN] = resolvers.mbonus_material(6, 1),
+			[Stats.STAT_WIL] = resolvers.mbonus_material(6, 1),
+		},
 	},
 }

@@ -24,7 +24,7 @@ load("/data/general/objects/egos/ranged.lua")
 newEntity{
 	power_source = {technique=true},
 	name = " of cunning (#STATBONUS#)", suffix=true, instant_resolve=true,
-	keywords = {dex=true},
+	keywords = {cun=true},
 	level_range = {20, 50},
 	rarity = 7,
 	cost = 7,

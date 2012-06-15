@@ -205,33 +205,6 @@ newEntity{
 	},
 }
 
-newEntity{
-	power_source = {arcane=true},
-	name = "flaming ", prefix=true, instant_resolve=true,
-	keywords = {flaming=true},
-	level_range = {1, 50},
-	rarity = 5,
-	cost = 10,
-	combat = {
-		burst_on_hit={
-			[DamageType.FIRE] = resolvers.mbonus_material(15, 5)
-		},
-	},
-}
-
-newEntity{
-	power_source = {arcane=true},
-	name = "icy ", prefix=true, instant_resolve=true,
-	keywords = {icy=true},
-	level_range = {15, 50},
-	rarity = 5,
-	cost = 10,
-	combat = {
-		melee_project={
-			[DamageType.ICE] = resolvers.mbonus_material(15, 5)
-		},
-	},
-}
 
 newEntity{
 	power_source = {arcane=true},
@@ -267,6 +240,34 @@ newEntity{
 			game.level.map:particleEmitter(x, y, math.max(math.abs(a.x-x), math.abs(a.y-y)), "lightning", {tx=a.x-x, ty=a.y-y})
 			game:playSoundNear(who, "talents/lightning")
 		end},
+	},
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = "flaming ", prefix=true, instant_resolve=true,
+	keywords = {flaming=true},
+	level_range = {1, 50},
+	rarity = 5,
+	cost = 10,
+	combat = {
+		burst_on_hit={
+			[DamageType.FIRE] = resolvers.mbonus_material(15, 5)
+		},
+	},
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = "icy ", prefix=true, instant_resolve=true,
+	keywords = {icy=true},
+	level_range = {15, 50},
+	rarity = 5,
+	cost = 10,
+	combat = {
+		melee_project={
+			[DamageType.ICE] = resolvers.mbonus_material(15, 5)
+		},
 	},
 }
 
@@ -516,6 +517,27 @@ newEntity{
 
 newEntity{
 	power_source = {nature=true},
+	name = "glacial ", prefix=true, instant_resolve=true,
+	keywords = {glacial=true},
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 45,
+	cost = 40,
+	wielder = {
+		combat_armor = resolvers.mbonus_material(10, 5),
+		resists_pen = {
+			[DamageType.COLD] = resolvers.mbonus_material(10, 5),
+		},
+	},
+	combat = {
+		convert_damage = { 
+			[DamageType.ICE] = resolvers.mbonus_material(25, 25),
+		},
+	},
+}
+
+newEntity{
+	power_source = {nature=true},
 	name = "thunderous ", prefix=true, instant_resolve=true,
 	keywords = {thunder=true},
 	level_range = {30, 50},
@@ -538,27 +560,6 @@ newEntity{
 	combat = {
 		convert_damage = { 
 			[DamageType.LIGHTNING_DAZE] = resolvers.mbonus_material(25, 25),
-		},
-	},
-}
-
-newEntity{
-	power_source = {nature=true},
-	name = "glacial ", prefix=true, instant_resolve=true,
-	keywords = {glacial=true},
-	level_range = {30, 50},
-	greater_ego = 1,
-	rarity = 45,
-	cost = 40,
-	wielder = {
-		combat_armor = resolvers.mbonus_material(10, 5),
-		resists_pen = {
-			[DamageType.COLD] = resolvers.mbonus_material(10, 5),
-		},
-	},
-	combat = {
-		convert_damage = { 
-			[DamageType.ICE] = resolvers.mbonus_material(25, 25),
 		},
 	},
 }
@@ -650,9 +651,11 @@ newEntity{
 	rarity = 20,
 	cost = 20,
 	combat = {
-		inc_stats = { [Stats.STAT_WIL] = resolvers.mbonus_material(6, 1), },
 		inc_damage_type = {demon=resolvers.mbonus_material(25, 5)},
 	},
+	wielder = { 
+		inc_stats = { [Stats.STAT_WIL] = resolvers.mbonus_material(6, 1), },
+	}
 }
 
 newEntity{
@@ -740,8 +743,6 @@ newEntity{
 	greater_ego = 1,
 	rarity = 50,
 	cost = 40,
-	wielder = {
-		},
 	combat = {
 		inc_damage_type = {
 			undead=resolvers.mbonus_material(25, 5), 
@@ -810,6 +811,11 @@ newEntity{
 			[DamageType.MIND] = resolvers.mbonus_material(25, 25),
 		},
 	},
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_WIL] = resolvers.mbonus_material(6, 1),
+		},
+	}
 }
 
 newEntity{

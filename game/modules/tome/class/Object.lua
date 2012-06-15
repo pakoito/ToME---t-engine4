@@ -951,6 +951,10 @@ function _M:getTextualDesc(compare_with)
 		if w.blind_fight then
 			desc:add({"color", "YELLOW"}, "Blind-Fight:", {"color", "LAST"}, "This item allows the wearer to attack unseen targets without any penalties.", true)
 		end
+		
+		if w.quick_weapon_swap then
+			desc:add({"color", "YELLOW"}, "Quick Weapon Swap:", {"color", "LAST"}, "This item allows the wearer to swap to their secondary weapon without spending a turn.", true)
+		end
 
 		if w.avoid_pressure_traps then
 			desc:add({"color", "YELLOW"}, "Avoid Pressure Traps: ", {"color", "LAST"}, "The wearer never triggers traps that require pressure.", true)
@@ -1244,14 +1248,22 @@ function _M:getPriceFlags()
 		if w.max_stamina then price = price + w.max_stamina * 0.1 end
 		if w.max_mana then price = price + w.max_mana * 0.2 end
 		if w.max_vim then price = price + w.max_vim * 0.4 end
+		if w.max_hate then price = price + w.max_hate * 0.4 end
 		if w.life_regen then price = price + w.life_regen * 10 end
 		if w.stamina_regen then price = price + w.stamina_regen * 100 end
 		if w.mana_regen then price = price + w.mana_regen * 80 end
+		if w.psi_regen then price = price + w.psi_regen * 100 end
 		if w.stamina_regen_on_hit then price = price + w.stamina_regen_on_hit * 3 end
 		if w.equilibrium_regen_on_hit then price = price + w.equilibrium_regen_on_hit * 3 end
 		if w.mana_regen_on_hit then price = price + w.mana_regen_on_hit * 3 end
 		if w.psi_regen_on_hit then price = price + w.psi_regen_on_hit * 3 end
 		if w.hate_regen_on_hit then price = price + w.hate_regen_on_hit * 3 end
+		if w.mana_on_crit then price = price + w.mana_regen_on_hit * 3 end
+		if w.vim_on_crit then price = price + w.vim_regen_on_hit * 3 end
+		if w.psi_on_crit then price = price + w.psi_regen_on_hit * 3 end
+		if w.hate_on_crit then price = price + w.hate_regen_on_hit * 3 end
+		if w.psi_per_kill then price = price + w.psi_per_kill * 3 end
+		if w.hate_per_kill then price = price + w.hate_per_kill * 3 end
 		if w.resource_leech_chance then price = price + w.resource_leech_chance * 10 end
 		if w.resource_leech_value then price = price + w.resource_leech_value * 10 end
 
@@ -1267,7 +1279,12 @@ function _M:getPriceFlags()
 		if w.combat_physspeed then price = price + w.combat_physspeed * -200 end
 		if w.combat_spellpower then price = price + w.combat_spellpower * 0.8 end
 		if w.combat_spellcrit then price = price + w.combat_spellcrit * 0.4 end
-
+		
+		--shooter attributes
+		if w.ammo_regen then price = price + w.ammo_regen * 10 end
+		if w.ammo_reload_speed then price = price + w.ammo_reload_speed *10 end
+		if w.travel_speed then price = price +w.travel_speed * 10 end
+				
 		--miscellaneous attributes
 		if w.inc_stealth then price = price + w.inc_stealth * 1 end
 		if w.see_invisible then price = price + w.see_invisible * 0.2 end
@@ -1275,6 +1292,8 @@ function _M:getPriceFlags()
 		if w.trap_detect_power then price = price + w.trap_detect_power * 1.2 end
 		if w.disarm_bonus then price = price + w.disarm_bonus * 1.2 end
 		if w.healing_factor then price = price + w.healing_factor * 0.8 end
+		if w.heal_on_nature_summon then price = price + w.heal_on_nature_summon * 1 end
+		if w.nature_summon_regen then price = price + w.nature_summon_regen * 5 end
 		if w.max_encumber then price = price + w.max_encumber * 0.4 end
 		if w.movement_speed then price = price + w.movement_speed * 100 end
 		if w.fatigue then price = price + w.fatigue * -1 end
@@ -1283,7 +1302,16 @@ function _M:getPriceFlags()
 		if w.esp_all then price = price + w.esp_all * 25 end
 		if w.esp_range then price = price + w.esp_range * 15 end
 		if w.can_breath then for t, v in pairs(w.can_breath) do price = price + v * 30 end end
-
+		if w.esp_all then price = price + w.esp_all * 25 end
+		if w.damage_shield_penetrate then price = price + w.damage_shield_penetrate * 3 end
+		if w.spellsurge_on_crit then price = price + w.spellsurge_on_crit * 5 end
+		if w.quick_weapon_swap then price = price + w.quick_weapon_swap * 50 end
+		
+		--on teleport abilities
+		if w.resist_all_on_teleport then price = price + w.resist_all_on_teleport * 4 end
+		if w.defense_on_teleport then price = price + w.defense_on_teleport * 3 end
+		if w.effect_reduction_on_teleport then price = price + w.effect_reduction_on_teleport * 2 end
+		
 		--resists
 		if w.resists then for t, v in pairs(w.resists) do price = price + v * 0.15 end end
 
@@ -1298,22 +1326,30 @@ function _M:getPriceFlags()
 
 		--percentage damage increases
 		if w.inc_damage then for t, v in pairs(w.inc_damage) do price = price + v * 0.8 end end
+		if w.inc_damage_type then for t, v in pairs(w.inc_damage_type) do price = price + v * 0.8 end end
 
 		--damage auras
 		if w.on_melee_hit then for t, v in pairs(w.on_melee_hit) do price = price + v * 0.6 end end
 
-		--melee-projected damage
+		--projected damage
 		if w.melee_project then for t, v in pairs(w.melee_project) do price = price + v * 0.7 end end
+		if w.ranged_project then for t, v in pairs(w.ranged_project) do price = price + v * 0.7 end end
+		if w.burst_on_hit then for t, v in pairs(w.burst_on_hit) do price = price + v * 0.8 end end
+		if w.burst_on_crit then for t, v in pairs(w.burst_on_crit) do price = price + v * 0.8 end end
+		
+		--damage conversion
+		if w.convert_damage then for t, v in pairs(w.convert_damage) do price = price + v * 10 end end
 
 		--talent mastery
 		if w.talent_types_mastery then for t, v in pairs(w.talent_types_mastery) do price = price + v * 100 end end
 
 		--talent cooldown reduction
-		if w.talent_cd_reduction then for t, v in pairs(w.talent_cd_reduction) do price = price + v * 5 end end
+		if w.talent_cd_reduction then for t, v in pairs(w.talent_cd_reduction) do if v > 0 then price = price + v * 5 end end end
 	end
 
 	if self.carrier then count(self.carrier) end
 	if self.wielder then count(self.wielder) end
+	if self.combat then count(self.combat) end
 	return price
 end
 

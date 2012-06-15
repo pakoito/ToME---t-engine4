@@ -148,6 +148,13 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 		local damrange = self:combatDamageRange(ammo)
 		dam = rng.range(dam, dam * damrange)
 		print("[ATTACK ARCHERY] after range", dam)
+		
+		if ammo and ammo.inc_damage_type then
+			for t, idt in pairs(ammo.inc_damage_type) do
+				if target.type.."/"..target.subtype == t or target.type == t then dam = dam + dam * idt / 100 break end
+			end
+			print("[ATTACK] after inc by type", dam)
+		end
 
 		dam, crit = self:physicalCrit(dam, ammo, target, atk, def, tg.archery.crit_chance or 0, tg.archery.crit_power or 0)
 		print("[ATTACK ARCHERY] after crit", dam)
@@ -156,7 +163,39 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 		print("[ATTACK ARCHERY] after mult", dam)
 
 		if crit then game.logSeen(self, "#{bold}#%s performs a critical strike!#{normal}#", self.name:capitalize()) end
+		
+		-- Damage conversion?
+		-- Reduces base damage but converts it into another damage type
+		local conv_dam
+		local conv_damtype
+		if ammo and ammo.convert_damage then
+			for typ, conv in pairs(ammo.convert_damage) do
+				if dam > 0 then
+					conv_dam = math.min(dam, dam * (conv / 100))
+					conv_damtype = typ
+					dam = dam - conv_dam
+					if conv_dam > 0 then
+						DamageType:get(conv_damtype).projector(self, target.x, target.y, conv_damtype, math.max(0, conv_dam))
+					end
+				end
+			end
+		end
+		
+		if weapon and weapon.convert_damage then
+			for typ, conv in pairs(weapon.convert_damage) do
+				if dam > 0 then
+					conv_dam = math.min(dam, dam * (conv / 100))
+					conv_damtype = typ
+					dam = dam - conv_dam
+					if conv_dam > 0 then
+						DamageType:get(conv_damtype).projector(self, target.x, target.y, conv_damtype, math.max(0, conv_dam))
+					end
+				end
+			end
+		end
+		
 		DamageType:get(damtype).projector(self, target.x, target.y, damtype, math.max(0, dam), tmp)
+		
 		game.level.map:particleEmitter(target.x, target.y, 1, "archery")
 		hitted = true
 
@@ -193,10 +232,48 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 			DamageType:get(typ).projector(self, target.x, target.y, typ, dam, tmp)
 		end
 	end end
+	
+	-- Ranged project (burst)
+	local weapon_burst_on_hit = weapon.burst_on_hit or {}
+	local ammo_burst_on_hit = ammo.burst_on_hit or {}
+	local self_burst_on_hit = self.burst_on_hit or {}
+	local total_burst_on_hit = {}
+	table.mergeAdd(total_burst_on_hit, weapon_burst_on_hit, true)
+	table.mergeAdd(total_burst_on_hit, ammo_burst_on_hit, true)
+	table.mergeAdd(total_burst_on_hit, self_burst_on_hit, true)
+	if hitted and not target.dead then for typ, dam in pairs(total_burst_on_hit) do
+		if dam > 0 then
+			self:project({type="ball", radius=1, friendlyfire=false}, target.x, target.y, typ, dam)
+		end
+	end end
+	
+	-- Ranged project (burst on crit)
+	local weapon_burst_on_crit = weapon.burst_on_crit or {}
+	local ammo_burst_on_crit = ammo.burst_on_crit or {}
+	local self_burst_on_crit = self.burst_on_crit or {}
+	local total_burst_on_crit = {}
+	table.mergeAdd(total_burst_on_crit, weapon_burst_on_crit, true)
+	table.mergeAdd(total_burst_on_crit, ammo_burst_on_crit, true)
+	table.mergeAdd(total_burst_on_crit, self_burst_on_crit, true)
+	if hitted and crit and not target.dead then for typ, dam in pairs(total_burst_on_crit) do
+		if dam > 0 then
+			self:project({type="ball", radius=2, friendlyfire=false}, target.x, target.y, typ, dam)
+		end
+	end end
 
 	-- Talent on hit
 	if hitted and not target.dead and weapon and weapon.talent_on_hit and next(weapon.talent_on_hit) and not self.turn_procs.ranged_talent then
 		for tid, data in pairs(weapon.talent_on_hit) do
+			if rng.percent(data.chance) then
+				self.turn_procs.ranged_talent = true
+				self:forceUseTalent(tid, {ignore_cd=true, ignore_energy=true, force_target=target, force_level=data.level, ignore_ressources=true})
+			end
+		end
+	end
+	
+	-- Talent on hit...  AMMO!
+	if hitted and not target.dead and ammo and ammo.talent_on_hit and next(ammo.talent_on_hit) and not self.turn_procs.ranged_talent then
+		for tid, data in pairs(ammo.talent_on_hit) do
 			if rng.percent(data.chance) then
 				self.turn_procs.ranged_talent = true
 				self:forceUseTalent(tid, {ignore_cd=true, ignore_energy=true, force_target=target, force_level=data.level, ignore_ressources=true})
@@ -209,17 +286,17 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 		weapon.special_on_hit.fct(weapon, self, target)
 	end
 	
-	-- Special effect... AGAIN!
+	-- Special effect... AMMO!
 	if hitted and not target.dead and ammo and ammo.special_on_hit and ammo.special_on_hit.fct then
 		ammo.special_on_hit.fct(ammo, self, target)
 	end
 	
-	-- Special effect... AGAIN!... AGAIN!
+	-- Special effect on crit
 	if crit and not target.dead and weapon and weapon.special_on_crit and weapon.special_on_crit.fct then
-		weapon.special_on_hit.fct(weapon, self, target)
+		weapon.special_on_crit.fct(weapon, self, target)
 	end
 	
-	-- Special effect... AGAIN!... AGAIN!... AGAIN!
+	-- Special effect on crit AMMO!
 	if crit and not target.dead and ammo and ammo.special_on_crit and ammo.special_on_crit.fct then
 		ammo.special_on_crit.fct(ammo, self, target)
 	end

@@ -1043,6 +1043,10 @@ function _M:quickSwitchWeapons()
 	-- Do not reset power of switched items
 	self.no_power_reset_on_wear = true
 
+	-- Check for free weapon swaps
+	local free_swap = false
+	if self:knowTalent(self.T_CELERITY) or self:attr("quick_weapon_swap") then free_swap = true end
+	
 	local mhset1, mhset2 = {}, {}
 	local ohset1, ohset2 = {}, {}
 	local pfset1, pfset2 = {}, {}
@@ -1073,7 +1077,7 @@ function _M:quickSwitchWeapons()
 		for i = 1, #qvset1 do self:addObject(qv2, qvset1[i]) end
 		for i = 1, #qvset2 do self:addObject(qv1, qvset2[i]) end
 	end
-	if not self:knowTalent(self.T_CELERITY) then self:useEnergy() end
+	if free_swap == false then self:useEnergy() end
 	local names = ""
 	if pf1 and pf2 then
 		if not pf1[1] then
