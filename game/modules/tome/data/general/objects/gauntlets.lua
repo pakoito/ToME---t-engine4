@@ -32,7 +32,7 @@ newEntity{
 	rarity = 9,
 	metallic = true,
 	desc = [[Metal gloves protecting the hands up to the middle of the lower arm.]],
-	randart_able = { attack=10, physical=10, spell=10, def=40, misc=30 },
+	randart_able = "/data/general/objects/random-artifacts/gloves.lua",
 	egos = "/data/general/objects/egos/gloves.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
 }
 

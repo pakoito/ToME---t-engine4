@@ -31,7 +31,7 @@ newEntity{
 	rarity = 7,
 	metallic = true,
 	desc = [[Heavy boots, with metal strips at the toes, heels and other vulnerable parts, to better protect the wearer's feet from harm.]],
-	randart_able = { attack=10, physical=10, spell=10, def=40, misc=40 },
+	randart_able = "/data/general/objects/random-artifacts/generic.lua",
 	egos = "/data/general/objects/egos/boots.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
 }
 

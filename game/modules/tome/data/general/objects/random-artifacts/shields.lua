@@ -20,6 +20,8 @@
 local Stats = require "engine.interface.ActorStats"
 local Talents = require "engine.interface.ActorTalents"
 
+load("/data/general/objects/random-artifacts/generic.lua")
+
 ----------------------------------------------------------------
 -- Weapon Properties
 ----------------------------------------------------------------

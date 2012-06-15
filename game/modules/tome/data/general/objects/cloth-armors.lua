@@ -27,7 +27,7 @@ newEntity{
 	encumber = 2,
 	rarity = 5,
 	desc = [[A cloth vestment. It offers no intrinsic protection but can be enchanted.]],
-	randart_able = { attack=10, physical=10, spell=80, def=20, misc=10 },
+	randart_able = "/data/general/objects/random-artifacts/generic.lua",
 	egos = "/data/general/objects/egos/robe.lua", egos_chance = { prefix=resolvers.mbonus(30, 15), suffix=resolvers.mbonus(30, 15) },
 }
 

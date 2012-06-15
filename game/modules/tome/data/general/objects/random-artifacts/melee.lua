@@ -20,6 +20,8 @@
 local Stats = require "engine.interface.ActorStats"
 local Talents = require "engine.interface.ActorTalents"
 
+load("/data/general/objects/random-artifacts/generic.lua")
+
 ----------------------------------------------------------------
 -- Weapon Properties
 ----------------------------------------------------------------
@@ -93,7 +95,7 @@ newEntity{ theme={cold=true}, name="ice melee", points = 1, rarity = 20, level_r
 	combat = { melee_project = {[DamageType.ICE] = resolvers.randartmax(1, 20), }, },
 }
 newEntity{ theme={antimagic=true}, name="manaburn melee", points = 1, rarity = 18, level_range = {1, 50},
-	combat = { melee_project = {[DamageType.MANA_BURN] = resolvers.randartmax(1, 20), }, },
+	combat = { melee_project = {[DamageType.MANABURN] = resolvers.randartmax(1, 20), }, },
 }
 newEntity{ theme={nature=true, antimagic=true}, name="slime melee", points = 1, rarity = 18, level_range = {1, 50},
 	combat = { melee_project = {[DamageType.SLIME] = resolvers.randartmax(1, 20), }, },

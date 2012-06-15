@@ -20,6 +20,8 @@
 local Stats = require "engine.interface.ActorStats"
 local Talents = require "engine.interface.ActorTalents"
 
+load("/data/general/objects/random-artifacts/generic.lua")
+
 ----------------------------------------------------------------
 -- Ammo Properties
 ----------------------------------------------------------------
@@ -99,7 +101,7 @@ newEntity{ theme={cold=true}, name="ice ranged", points = 1, rarity = 20, level_
 	combat = { ranged_project = {[DamageType.ICE] = resolvers.randartmax(1, 20), }, },
 }
 newEntity{ theme={antimagic=true}, name="manaburn ranged", points = 1, rarity = 18, level_range = {1, 50},
-	combat = { ranged_project = {[DamageType.MANA_BURN] = resolvers.randartmax(1, 20), }, },
+	combat = { ranged_project = {[DamageType.MANABURN] = resolvers.randartmax(1, 20), }, },
 }
 newEntity{ theme={nature=true, antimagic=true}, name="slime ranged", points = 1, rarity = 18, level_range = {1, 50},
 	combat = { ranged_project = {[DamageType.SLIME] = resolvers.randartmax(1, 20), }, },

@@ -31,7 +31,7 @@ newEntity{
 	rarity = 5,
 	metallic = true,
 	desc = [[A suit of armour made of mail.]],
-	randart_able = { attack=10, physical=10, spell=10, def=80, misc=10 },
+	randart_able = "/data/general/objects/random-artifacts/generic.lua",
 	egos = "/data/general/objects/egos/heavy-armor.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
 }
 

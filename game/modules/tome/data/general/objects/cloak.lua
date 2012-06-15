@@ -27,7 +27,7 @@ newEntity{
 	encumber = 2,
 	rarity = 6,
 	desc = [[A cloth coat typically worn as a loose outer garment. It is spacious enough to be worn even over bulky metal armour.]],
-	randart_able = { attack=10, physical=10, spell=10, def=10, misc=50 },
+	randart_able = "/data/general/objects/random-artifacts/generic.lua",
 	egos = "/data/general/objects/egos/cloak.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
 }
 

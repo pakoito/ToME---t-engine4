@@ -25,7 +25,7 @@ newEntity{
 	encumber = 1,
 	rarity = 6,
 	desc = [[A belt that goes around your waist.]],
-	randart_able = { attack=10, physical=10, spell=10, def=10, misc=10 },
+	randart_able = "/data/general/objects/random-artifacts/generic.lua",
 	egos = "/data/general/objects/egos/belt.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
 }
 

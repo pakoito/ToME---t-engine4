@@ -25,7 +25,7 @@ newEntity{
 	display = "!", color=colors.LIGHT_RED, image = resolvers.image_material("mindstar", "nature"),
 	moddable_tile = resolvers.moddable_tile("mindstar"),
 	psiblade_tile = "mindstar_psiblade_%s_01",
-	randart_able = { attack=10, physical=40, spell=1, def=10, misc=10 },
+	randart_able = "/data/general/objects/random-artifacts/melee.lua",
 	encumber = 3,
 	rarity = 4,
 	power_source = {nature=true},

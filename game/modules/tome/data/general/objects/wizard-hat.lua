@@ -27,7 +27,7 @@ newEntity{
 	encumber = 2,
 	rarity = 6,
 	desc = [[A pointy cloth hat, very wizardly...]],
-	randart_able = { attack=10, physical=10, spell=80, def=10, misc=10 },
+	randart_able = "/data/general/objects/random-artifacts/generic.lua",
 	egos = "/data/general/objects/egos/wizard-hat.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
 }
 

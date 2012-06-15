@@ -34,7 +34,7 @@ newEntity{
 Tridents require the exotic weapons mastery talent to use correctly.]],
 	twohanded = true,
 	ego_bonus_mult = 0.2,
-	randart_able = { attack=40, physical=80, spell=20, def=10, misc=10 },
+	randart_able = "/data/general/objects/random-artifacts/melee.lua",
 	egos = "/data/general/objects/egos/weapon.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
 }
 

@@ -31,7 +31,7 @@ newEntity{
 	rarity = 7,
 	metallic = true,
 	desc = [[A large helmet that can protect the entire head. Ventilation and bad vision can be a problem, however.]],
-	randart_able = { attack=20, physical=10, spell=10, def=50, misc=10 },
+	randart_able = "/data/general/objects/random-artifacts/generic.lua",
 	egos = "/data/general/objects/egos/helm.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
 }
 

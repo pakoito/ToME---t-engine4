@@ -27,7 +27,7 @@ newEntity{
 	encumber = 2,
 	rarity = 6,
 	desc = [[A pair of boots made of leather.]],
-	randart_able = { attack=10, physical=10, spell=10, def=40, misc=30 },
+	randart_able = "/data/general/objects/random-artifacts/generic.lua",
 	egos = "/data/general/objects/egos/light-boots.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
 }
 

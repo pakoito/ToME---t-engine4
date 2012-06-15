@@ -1210,10 +1210,13 @@ function _M:setupCommands()
 			setfenv(f, setmetatable({level=self.level, zone=self.zone}, {__index=_G}))
 			print(pcall(f))
 --]]
-			package.loaded["mod.dialogs.elements.TalentTrees"] = nil
-			package.loaded["mod.dialogs.Levelup2Dialog"] = nil
-			game:registerDialog(require("mod.dialogs.Levelup2Dialog").new(game.player))
-		end end,
+			local o = game.zone:makeEntity(game.level,"object", {
+			type = "weapon", subtype="battleaxe",random_object={}}, nil, true)
+			if o then
+				o:identify(true)
+				game.zone:addEntity(game.level, o, "object", game.player.x, game.player.y)
+			end
+			end end,
 		[{"_f","ctrl"}] = function() if config.settings.cheat then
 			self.player.quests["love-melinda"] = nil
 			self.player:grantQuest("love-melinda")

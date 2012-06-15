@@ -33,7 +33,7 @@ newEntity{
 	archery = "bow",
 	proj_image = resolvers.image_material("arrow", "wood"),
 	desc = [[Longbows are used to shoot arrows at your foes.]],
-	randart_able = { attack=40, physical=80, spell=20, def=10, misc=10 },
+	randart_able = "/data/general/objects/random-artifacts/generic.lua",
 	egos = "/data/general/objects/egos/bow.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
 }
 
@@ -114,6 +114,7 @@ newEntity{
 	proj_image = resolvers.image_material("arrow", "wood"),
 	archery_ammo = "bow",
 	desc = [[Arrows are used with bows to pierce your foes to death.]],
+	randart_able = "/data/general/objects/random-artifacts/ammo.lua",
 	egos = "/data/general/objects/egos/ammo.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
 	resolvers.shooter_capacity(),
 }

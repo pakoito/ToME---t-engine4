@@ -196,6 +196,13 @@ function table.from_list(t, k, v)
 	for i, e in ipairs(t) do tt[e[k or 1]] = e[v or 2] end
 	return tt
 end
+
+function table.removeFromList(t, ...)
+	for _, v in ipairs{...} do
+		for i = #t, 1, -1 do if t[i] == v then table.remove(t, i) end end
+	end
+end
+
 --- Adds missing keys from the src table to the dst table.
 -- @param dst The destination table, which will have all merged values.
 -- @param src The source table, supplying values to be merged.

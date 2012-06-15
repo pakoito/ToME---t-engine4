@@ -30,7 +30,7 @@ newEntity{
 	encumber = 1,
 	rarity = 9,
 	desc = [[Light gloves which do not seriously hinder finger movements, while still protecting the hands somewhat.]],
-	randart_able = { attack=10, physical=10, spell=10, def=30, misc=10 },
+	randart_able = "/data/general/objects/random-artifacts/gloves.lua",
 	egos = "/data/general/objects/egos/gloves.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
 }
 
