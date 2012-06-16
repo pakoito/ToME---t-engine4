@@ -28,15 +28,9 @@ newTalent{
 	points = 1,
 	no_unlearn_last = true,
 	getDamage = function(self, t) return self.level * 0.5 end,
-	on_learn = function(self, t)
-		self.combat.sound = "actions/melee"
-		self.combat.sound_miss = "actions/melee_miss"
-	end,
-	on_unlearn = function(self, t)
-	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Grants %d physical power when armed only with gloves or gauntlets.
+		return ([[Grants %d physical power when fightning unarmed (or with gloves or gauntlets).
 		This talent's effects will scale with your level.]]):
 		format(damage)
 	end,
@@ -55,7 +49,7 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local inc = t.getPercentInc(self, t)
 		return ([[Increases damage done with all unarmed attacks by %d%% (including grapples and kicks).  Also increases Physical Power by %d.
-		Note that brawlers naturally gain 0.5 physical power per character level (current brawler physical power bonus: %0.1f.)]]):
+		Note that brawlers naturally gain 0.5 physical power per character level while unarmed (current brawler physical power bonus: %0.1f) and attack 40%% faster while unarmed.]]):
 		format(100*inc, damage, self.level * 0.5)
 	end,
 }

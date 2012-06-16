@@ -88,9 +88,6 @@ newEntity{ theme={acid=true}, name="acid blind melee", points = 1, rarity = 20, 
 newEntity{ theme={lightning=true}, name="lightning daze melee", points = 1, rarity = 20, level_range = {1, 50},
 	combat = { melee_project = {[DamageType.LIGHTNING_DAZE] = resolvers.randartmax(1, 20), }, },
 }
-newEntity{ theme={fire=true}, name="burn melee", points = 1, rarity = 20, level_range = {1, 50},
-	combat = { melee_project = {[DamageType.FIREBURN] = resolvers.randartmax(1, 20), }, },
-}
 newEntity{ theme={cold=true}, name="ice melee", points = 1, rarity = 20, level_range = {1, 50},
 	combat = { melee_project = {[DamageType.ICE] = resolvers.randartmax(1, 20), }, },
 }
@@ -102,9 +99,6 @@ newEntity{ theme={nature=true, antimagic=true}, name="slime melee", points = 1, 
 }
 newEntity{ theme={nature=true}, name="insidious poison melee", points = 1, rarity = 20, level_range = {1, 50},
 	combat = { melee_project = {[DamageType.INSIDIOUS_POISON] = resolvers.randartmax(1, 50), }, },  -- this gets divided by 7 for damage
-}
-newEntity{ theme={temporal=true}, name="wasting melee", points = 1, rarity = 20, level_range = {1, 50},
-	combat = { melee_project = {[DamageType.WASTING] = resolvers.randartmax(1, 20), }, },
 }
 ----------------------------------------------------------------
 -- Melee damage burst

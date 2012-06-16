@@ -848,9 +848,9 @@ newEntity{ base = "BASE_GLOVES", define_as = "FLAMEWROUGHT",
 			dam = 5,
 			apr = 7,
 			physcrit = 1,
-			physspeed = -0.4,
 			dammod = {dex=0.4, str=-0.6, cun=0.4 },
 			melee_project={[DamageType.FIRE] = 10},
+			convert_damage = { [DamageType.FIRE] = 100,},
 		},
 	},
 	max_power = 24, power_regen = 1,
@@ -872,7 +872,7 @@ newEntity{ base = "BASE_GEM", define_as = "CRYSTAL_FOCUS",
 
 	max_power = 1, power_regen = 1,
 	use_power = { name = "combine with a weapon", power = 1, use = function(self, who, gem_inven, gem_item)
-		who:showInventory("Fuse with which weapon?", who:getInven("INVEN"), function(o) return o.type == "weapon" and o.subtype ~= "mindstar" and not o.egoed and not o.unique end, function(o, item)
+		who:showInventory("Fuse with which weapon?", who:getInven("INVEN"), function(o) return (o.type == "weapon" or o.subtype == "hands") and o.subtype ~= "mindstar" and not o.egoed and not o.unique end, function(o, item)
 			local oldname = o:getName{do_color=true}
 
 			-- Remove the gem
@@ -886,6 +886,10 @@ newEntity{ base = "BASE_GEM", define_as = "CRYSTAL_FOCUS",
 			if o.combat and o.combat.dam then
 				o.combat.dam = o.combat.dam * 1.25
 				o.combat.damtype = engine.DamageType.ARCANE
+			elseif o.wielder.combat and o.wielder.combat.dam then
+				o.wielder.combat.dam = o.wielder.combat.dam * 1.25
+				o.wielder.combat.convert_damage = o.wielder.combat.convert_damage or {}
+				o.wielder.combat.convert_damage[engine.DamageType.ARCANE] = 100
 			end
 			o.is_crystalline_weapon = true
 			o.wielder = o.wielder or {}

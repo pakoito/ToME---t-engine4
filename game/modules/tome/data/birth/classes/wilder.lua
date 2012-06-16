@@ -53,6 +53,7 @@ newBirthDescriptor{
 		"#GOLD#Stat modifiers:",
 		"#LIGHT_BLUE# * +0 Strength, +1 Dexterity, +0 Constitution",
 		"#LIGHT_BLUE# * +0 Magic, +5 Willpower, +3 Cunning",
+		"#GOLD#Life per level:#LIGHT_BLUE# +0",
 	},
 	power_source = {nature=true},
 	getStatDesc = function(stat, actor)
@@ -103,6 +104,7 @@ newBirthDescriptor{
 		"#GOLD#Stat modifiers:",
 		"#LIGHT_BLUE# * +5 Strength, +0 Dexterity, +1 Constitution",
 		"#LIGHT_BLUE# * +0 Magic, +3 Willpower, +0 Cunning",
+		"#GOLD#Life per level:#LIGHT_BLUE# +2",
 	},
 	power_source = {nature=true, technique=true},
 	stats = { str=5, wil=3, con=1, },

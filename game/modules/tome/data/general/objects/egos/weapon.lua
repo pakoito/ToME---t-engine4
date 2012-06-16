@@ -468,7 +468,7 @@ newEntity{
 	combat = {
 		melee_project={
 			[DamageType.NATURE] = resolvers.mbonus_material(15, 5),
-			[DamageType.WASTING] = resolvers.mbonus_material(15, 5),
+			[DamageType.TEMPORAL] = resolvers.mbonus_material(15, 5),
 		},
 	},
 }
@@ -489,7 +489,7 @@ newEntity{
 	},
 	combat = {
 		convert_damage = { 
-			[DamageType.FIREBURN] = resolvers.mbonus_material(25, 25),
+			[DamageType.FIRE] = resolvers.mbonus_material(25, 25),
 		},
 	},
 }
@@ -611,7 +611,7 @@ newEntity{
 	},
 	combat = {
 		convert_damage = { 
-			[DamageType.POISON] = resolvers.mbonus_material(25, 25),
+			[DamageType.NATURE] = resolvers.mbonus_material(25, 25),
 		},
 	},
 }

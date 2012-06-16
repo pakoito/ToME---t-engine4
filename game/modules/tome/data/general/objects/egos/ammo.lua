@@ -480,7 +480,7 @@ newEntity{
 	combat = {
 		ranged_project={
 			[DamageType.NATURE] = resolvers.mbonus_material(15, 5),
-			[DamageType.WASTING] = resolvers.mbonus_material(15, 5),
+			[DamageType.TEMPORAL] = resolvers.mbonus_material(15, 5),
 		},
 	},
 }

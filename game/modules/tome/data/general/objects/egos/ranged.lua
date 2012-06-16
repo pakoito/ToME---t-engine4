@@ -293,7 +293,7 @@ newEntity{
 	},
 	combat = {
 		ranged_project={
-			[DamageType.FIREBURN] = resolvers.mbonus_material(30, 5),
+			[DamageType.FIRE] = resolvers.mbonus_material(30, 5),
 		},
 	},
 }
@@ -384,7 +384,7 @@ newEntity{
 	},
 	combat = {
 		ranged_project = { 
-			[DamageType.POISON] = resolvers.mbonus_material(25, 25),
+			[DamageType.NATURE] = resolvers.mbonus_material(30, 5),
 		},
 	},
 }

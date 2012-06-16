@@ -48,6 +48,7 @@ newBirthDescriptor{
 		"#GOLD#Stat modifiers:",
 		"#LIGHT_BLUE# * +1 Strength, +3 Dexterity, +0 Constitution",
 		"#LIGHT_BLUE# * +0 Magic, +0 Willpower, +5 Cunning",
+		"#GOLD#Life per level:#LIGHT_BLUE# +0",
 	},
 	power_source = {technique=true},
 	stats = { dex=3, str=1, cun=5, },
@@ -93,6 +94,7 @@ newBirthDescriptor{
 		"#GOLD#Stat modifiers:",
 		"#LIGHT_BLUE# * +0 Strength, +3 Dexterity, +0 Constitution",
 		"#LIGHT_BLUE# * +3 Magic, +0 Willpower, +3 Cunning",
+		"#GOLD#Life per level:#LIGHT_BLUE# +0",
 	},
 	power_source = {technique=true, arcane=true},
 	stats = { dex=3, mag=3, cun=3, },
@@ -141,6 +143,7 @@ newBirthDescriptor{
 		"#GOLD#Stat modifiers:",
 		"#LIGHT_BLUE# * +4 Strength, +4 Dexterity, +0 Constitution",
 		"#LIGHT_BLUE# * +0 Magic, +0 Willpower, +1 Cunning",
+		"#GOLD#Life per level:#LIGHT_BLUE# +0",
 	},
 	stats = { dex=4, str=4, cun=1, },
 	talents_types = {

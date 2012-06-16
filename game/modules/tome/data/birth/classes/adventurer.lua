@@ -47,6 +47,7 @@ newBirthDescriptor{
 		"#GOLD#Stat modifiers:",
 		"#LIGHT_BLUE# * +2 Strength, +2 Dexterity, +2 Constitution",
 		"#LIGHT_BLUE# * +2 Magic, +2 Willpower, +2 Cunning",
+		"#GOLD#Life per level:#LIGHT_BLUE# +0",
 	},
 	not_on_random_boss = true,
 	stats = { str=2, con=2, dex=2, mag=2, wil=2, cun=2 },

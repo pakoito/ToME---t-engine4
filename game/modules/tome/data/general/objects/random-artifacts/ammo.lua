@@ -20,8 +20,6 @@
 local Stats = require "engine.interface.ActorStats"
 local Talents = require "engine.interface.ActorTalents"
 
-load("/data/general/objects/random-artifacts/generic.lua")
-
 ----------------------------------------------------------------
 -- Ammo Properties
 ----------------------------------------------------------------
@@ -34,11 +32,8 @@ newEntity{ theme={physical=true}, name="apr", points = 1, rarity = 10, level_ran
 newEntity{ theme={physical=true}, name="crit", points = 1, rarity = 10, level_range = {1, 50},
 	combat = { physcrit = resolvers.randartmax(1, 15), },
 }
-newEntity{ theme={physical=true}, name="ammo regen", points = 1, rarity = 10, level_range = {1, 50},
-	combat = { ammo_regen = resolvers.randartmax(1, 3), },
-}
 newEntity{ theme={physical=true}, name="ammo reload", points = 1, rarity = 10, level_range = {1, 50},
-	combat = { ammo_reload_speed = resolvers.randartmax(1, 4), },
+	wielder = { ammo_reload_speed = resolvers.randartmax(1, 4), },
 }
 newEntity{ theme={physical=true}, name="travel speed", points = 1, rarity = 10, level_range = {1, 50},
 	combat = { travel_speed = resolvers.randartmax(1, 2), },
@@ -94,9 +89,6 @@ newEntity{ theme={acid=true}, name="acid blind ranged", points = 1, rarity = 20,
 newEntity{ theme={lightning=true}, name="lightning daze ranged", points = 1, rarity = 20, level_range = {1, 50},
 	combat = { ranged_project = {[DamageType.LIGHTNING_DAZE] = resolvers.randartmax(1, 20), }, },
 }
-newEntity{ theme={fire=true}, name="burn ranged", points = 1, rarity = 20, level_range = {1, 50},
-	combat = { ranged_project = {[DamageType.FIREBURN] = resolvers.randartmax(1, 20), }, },
-}
 newEntity{ theme={cold=true}, name="ice ranged", points = 1, rarity = 20, level_range = {1, 50},
 	combat = { ranged_project = {[DamageType.ICE] = resolvers.randartmax(1, 20), }, },
 }
@@ -108,9 +100,6 @@ newEntity{ theme={nature=true, antimagic=true}, name="slime ranged", points = 1,
 }
 newEntity{ theme={nature=true}, name="insidious poison ranged", points = 1, rarity = 20, level_range = {1, 50},
 	combat = { ranged_project = {[DamageType.INSIDIOUS_POISON] = resolvers.randartmax(1, 50), }, },  -- this gets divided by 7 for damage
-}
-newEntity{ theme={temporal=true}, name="wasting ranged", points = 1, rarity = 20, level_range = {1, 50},
-	combat = { ranged_project = {[DamageType.WASTING] = resolvers.randartmax(1, 20), }, },
 }
 ----------------------------------------------------------------
 -- Melee damage burst
