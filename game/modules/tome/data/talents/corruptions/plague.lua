@@ -196,7 +196,7 @@ newTalent{
 			-- Make them EXPLODE !!!
 			for i, d in ipairs(diseases) do
 				target:removeEffect(d.id)
-				DamageType:get(DamageType.BLIGHT).projector(self, px, py, DamageType.BLIGHT, self:spellCrit(d.params.dam * d.params.dur * t.getDamage(self, t)))
+				DamageType:get(DamageType.BLIGHT).projector(self, px, py, DamageType.BLIGHT, d.params.dam * d.params.dur * t.getDamage(self, t))
 			end
 
 			if #diseases > 0 and target:canBe("stun") then
@@ -248,10 +248,10 @@ newTalent{
 			local disease = rng.table(diseases)
 			local params = disease.params
 			params.src = self
-			local disease_spread = { 
+			local disease_spread = {
 				src=self, dam=disease.params.dam, str=disease.params.str, dex=disease.params.dex, con=disease.params.con, apply_power=self:combatSpellpower(),
 				heal_factor=disease.params.heal_factor, burst=disease.params.burst, rot_timer=disease.params.rot_timer, resist=disease.params.resist, make_ghoul=disease.params.make_ghoul,
-			} 
+			}
 			if target:canBe("disease") then
 				target:setEffect(disease.id, 6, disease_spread)
 			else
