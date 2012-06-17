@@ -250,15 +250,15 @@ function _M:generateRandart(data)
 	}
 	local themes = {}
 	if data.force_themes then
-		for i, v in ipairs(data.force_themes) do 
-			table.removeFromList(allthemes, v) 
+		for i, v in ipairs(data.force_themes) do
+			table.removeFromList(allthemes, v)
 			themes[v] = true
 			if v == 'antimagic' then table.removeFromList(allthemes, 'spell', 'arcane', 'blight', 'temporal') end
 			if v == 'spell' or v == 'arcane' or v == 'blight' or v == 'temporal' then table.removeFromList(allthemes, 'antimagic') end
 		end
 	end
-	for i = #themes + 1, (data.nb_themes or 2) do 
-		if #allthemes == 0 then break end 
+	for i = #themes + 1, (data.nb_themes or 2) do
+		if #allthemes == 0 then break end
 		local v = rng.tableRemove(allthemes)
 		themes[v] = true
 		if v == 'antimagic' then table.removeFromList(allthemes, 'spell', 'arcane', 'blight', 'temporal') end
@@ -1136,6 +1136,7 @@ function _M:entityFilterPost(zone, level, type, e, filter)
 		elseif filter.random_elite and not e.unique then
 			if _G.type(filter.random_elite) == "boolean" then filter.random_elite = {}
 			else filter.random_elite = table.clone(filter.random_elite, true) end
+			local lev = filter.random_elite.level or zone:level_adjust_level(level, zone, type)
 			local base = {
 				nb_classes=1,
 				rank=3.2, ai = "tactical",
@@ -1145,6 +1146,7 @@ function _M:entityFilterPost(zone, level, type, e, filter)
 				drop_equipment = false,
 				no_loot_randart = true,
 				resources_boost = 1.5,
+				talent_cds_factor = (lev <= 10) and 3 or ((lev <= 20) and 2 or nil),
 				class_filter = function(c)
 					if e.power_source then
 						for ps, _ in pairs(e.power_source) do if c.power_source and c.power_source[ps] then return true end end
@@ -1156,7 +1158,7 @@ function _M:entityFilterPost(zone, level, type, e, filter)
 					end
 					return true
 				end,
-				level = filter.random_elite.level or zone:level_adjust_level(level, zone, type),
+				level = lev,
 				nb_rares = filter.random_elite.nb_rares or 1,
 				check_talents_level = true,
 				post = function(b, data)
@@ -1731,6 +1733,7 @@ function _M:createRandomBoss(base, data)
 
 	b.rnd_boss_on_added_to_level = b.on_added_to_level
 	b._rndboss_resources_boost = data.resources_boost
+	b._rndboss_talent_cds = data.talent_cds_factor
 	b.on_added_to_level = function(self, ...)
 		self:check("birth_create_alchemist_golem")
 		for tid, lev in pairs(self.learn_tids) do
@@ -1742,6 +1745,18 @@ function _M:createRandomBoss(base, data)
 		self.rnd_boss_on_added_to_level = nil
 		self.learn_tids = nil
 		self.on_added_to_level = nil
+
+		-- Increase talent cds
+		if self._rndboss_talent_cds then
+			local fact = self._rndboss_talent_cds
+			for tid, _ in pairs(self.talents) do
+				local t = self:getTalentFromId(tid)
+				if t.mode ~= "passive" then
+					local bcd = self:getTalentCooldown(t) or 0
+					self.talent_cd_reduction[tid] = (self.talent_cd_reduction[tid] or 0) - math.ceil(bcd * (fact - 1))
+				end
+			end
+		end
 
 		-- Cheat a bit with ressources
 		self.max_mana = self.max_mana * (self._rndboss_resources_boost or 3) self.mana_regen = self.mana_regen + 1
