@@ -1788,7 +1788,10 @@ function _M:takeHit(value, src, death_note)
 	if dead and src and src.attr and src:attr("overkill") and src.project and not src.turn_procs.overkill then
 		src.turn_procs.overkill = true
 		local dam = (self.die_at - self.life) * src:attr("overkill") / 100
+		local incdam = self.inc_damage
+		self.inc_damage = {}
 		src:project({type="ball", radius=2, selffire=false, x=self.x, y=self.y}, self.x, self.y, DamageType.BLIGHT, dam, {type="acid"})
+		self.inc_damage = incdam
 	end
 
 	return dead, val

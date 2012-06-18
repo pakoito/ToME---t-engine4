@@ -164,8 +164,10 @@ newTalent{
 			if oldlevel:hasEntity(self) then oldlevel:removeEntity(self) end
 			if oldlevel:hasEntity(target) then oldlevel:removeEntity(target) end
 
-			local zone = engine.Zone.new("demon-plane-spell")
+			oldlevel.no_remove_entities = true
+			local zone = mod.class.Zone.new("demon-plane-spell")
 			local level = zone:getLevel(game, 1, 0)
+			oldlevel.no_remove_entities = nil
 			level.demonfire_dam = dam
 			level.plane_owner = self
 

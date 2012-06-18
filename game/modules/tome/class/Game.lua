@@ -524,6 +524,8 @@ function _M:leaveLevel(level, lev, old_lev)
 		end
 	end
 
+	if level.no_remove_entities then return end
+
 	level.last_turn = self.turn
 	for act, _ in pairs(self.party.members) do
 		if self.player ~= act and level:hasEntity(act) then
