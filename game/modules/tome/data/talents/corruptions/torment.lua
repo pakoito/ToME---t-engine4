@@ -99,7 +99,7 @@ newTalent{
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/flame")
 		return {
-			ov = self:addTemporaryValue("overkill", 40 + self:combatTalentSpellDamage(t, 10, 90)),
+			ov = self:addTemporaryValue("overkill", 20 + self:combatTalentSpellDamage(t, 10, 70)),
 		}
 	end,
 	deactivate = function(self, t, p)
@@ -108,7 +108,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[When you kill a creature, the remainer of the damage done will not be lost. Instead %d%% of it will splash in a radius 2, doing blight damage.
-		The damage will increase with Magic stat.]]):format(40 + self:combatTalentSpellDamage(t, 10, 90))
+		The damage will increase with Magic stat.]]):format(20 + self:combatTalentSpellDamage(t, 10, 70))
 	end,
 }
 
