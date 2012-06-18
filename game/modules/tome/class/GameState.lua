@@ -397,7 +397,7 @@ function _M:generateRandart(data)
 	-- Distribute points
 	local hpoints = math.ceil(points / 2)
 	local i = 0
-	while hpoints > 0 do
+	while hpoints > 0 and #powers >0 do
 		i = util.boundWrap(i + 1, 1, #powers)
 		local p = powers[i]:clone()
 		if p.points <= hpoints then
