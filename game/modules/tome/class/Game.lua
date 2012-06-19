@@ -853,7 +853,7 @@ function _M:changeLevel(lev, zone, params)
 	-- Day/Night cycle
 	if self.level.data.day_night then self.state:dayNightCycle() end
 
-	if recreate_nothing then
+	if not recreate_nothing then
 		self.level.map:redisplay()
 		self.level.map:reopen()
 		if force_recreate then self.level.map:recreate() end
