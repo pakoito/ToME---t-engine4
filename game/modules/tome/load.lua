@@ -25,6 +25,7 @@ local Entity = require "engine.Entity"
 Entity.ascii_outline = {x=2, y=2, r=0, g=0, b=0, a=0.8}
 
 -- This file loads the game module, and loads data
+local Savefile = require "engine.Savefile"
 local KeyBind = require "engine.KeyBind"
 local DamageType = require "engine.DamageType"
 local Faction = require "engine.Faction"
@@ -47,6 +48,10 @@ local PartyIngredients = require "mod.class.interface.PartyIngredients"
 local PlayerHotkeys = require "engine.interface.PlayerHotkeys"
 local Quest = require "engine.Quest"
 local UIBase = require "engine.ui.Base"
+
+Savefile:setSaveMD5Type("game")
+Savefile:setSaveMD5Type("level")
+Savefile:setSaveMD5Type("zone")
 
 -- Init settings
 config.settings.tome = config.settings.tome or {}

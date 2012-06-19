@@ -32,6 +32,7 @@ module(..., package.seeall, class.make)
 
 _M.current_save = false
 _M.hotkeys_file = "/save/quick_hotkeys"
+_M.md5_types = {}
 
 --- Init a savefile
 -- @param savefile the name of the savefile, usually the player's name. It will be sanitized so dont bother doing it
@@ -55,6 +56,10 @@ function _M:getCurrent()
 end
 function _M:setCurrent(save)
 	_M.current_save = save
+end
+
+function _M:setSaveMD5Type(type)
+	self.md5_types[type] = true
 end
 
 --- Finishes up a savefile
@@ -142,6 +147,8 @@ function _M:saveWorld(world, no_dialog)
 	fs.delete(self.save_dir..self:nameSaveWorld(world))
 	fs.rename(self.save_dir..self:nameSaveWorld(world)..".tmp", self.save_dir..self:nameSaveWorld(world))
 
+	self:md5Upload("world", self:nameSaveWorld(world))
+
 	if not no_dialog then popup:done() end
 end
 
@@ -211,6 +218,8 @@ function _M:saveGame(game, no_dialog)
 	fs.delete(self.save_dir..self:nameSaveGame(game))
 	fs.rename(self.save_dir..self:nameSaveGame(game)..".tmp", self.save_dir..self:nameSaveGame(game))
 
+	self:md5Upload("game", self:nameSaveGame(game))
+
 	local desc = game:getSaveDescription()
 	local f = fs.open(self.save_dir.."desc.lua", "w")
 	f:write(("module = %q\n"):format(game.__mod_info.short_name))
@@ -279,6 +288,8 @@ function _M:saveZone(zone, no_dialog)
 	fs.delete(self.save_dir..self:nameSaveZone(zone))
 	fs.rename(self.save_dir..self:nameSaveZone(zone)..".tmp", self.save_dir..self:nameSaveZone(zone))
 
+	self:md5Upload("zone", self:nameSaveZone(zone))
+
 	if not no_dialog then popup:done() end
 end
 
@@ -308,6 +319,8 @@ function _M:saveLevel(level, no_dialog)
 	fs.delete(self.save_dir..self:nameSaveLevel(level))
 	fs.rename(self.save_dir..self:nameSaveLevel(level)..".tmp", self.save_dir..self:nameSaveLevel(level))
 
+	self:md5Upload("level", self:nameSaveLevel(level))
+
 	if not no_dialog then popup:done() end
 end
 
@@ -336,6 +349,8 @@ function _M:saveEntity(e, no_dialog)
 	zip:close()
 	fs.delete(self.save_dir..self:nameSaveEntity(e))
 	fs.rename(self.save_dir..self:nameSaveEntity(e)..".tmp", self.save_dir..self:nameSaveEntity(e))
+
+	self:md5Upload("entity", self:nameSaveEntity(e))
 
 	if not no_dialog then popup:done() end
 end
@@ -380,6 +395,8 @@ function _M:loadWorld()
 	local path = fs.getRealPath(self.save_dir..self:nameLoadWorld())
 	if not path or path == "" then return nil, "no savefile" end
 
+	local checker = self:md5Check("world", self:nameLoadWorld())
+
 	fs.mount(path, self.load_dir)
 
 	local popup = Dialog:simpleWaiter("Loading world", "Please wait while loading the world...")
@@ -394,6 +411,9 @@ function _M:loadWorld()
 	end
 
 	fs.umount(path)
+
+	-- We check for the server return, while we loaded the save it probably responded so we do not wait at all
+	if not checker() then self:badMD5Load() end
 
 	popup:done()
 
@@ -430,6 +450,8 @@ function _M:loadGame()
 
 	local loadedGame = self:loadReal("main")
 
+	local checker = self:md5Check("game", self:nameLoadGame(), loadedGame)
+
 	-- Delay loaded must run
 	local delay_fct = function()
 		for i, o in ipairs(self.delayLoad) do
@@ -439,6 +461,9 @@ function _M:loadGame()
 	end
 
 	fs.umount(path)
+
+	-- We check for the server return, while we loaded the save it probably responded so we do not wait at all
+	if not checker() then self:badMD5Load() end
 
 	popup:done()
 
@@ -469,6 +494,8 @@ function _M:loadZone(zone)
 	local path = fs.getRealPath(self.save_dir..self:nameLoadZone(zone))
 	if not path or path == "" then return false end
 
+	local checker = self:md5Check("zone", self:nameLoadZone(zone))
+
 	fs.mount(path, self.load_dir)
 
 	local f = fs.open(self.load_dir.."nb", "r")
@@ -490,6 +517,9 @@ function _M:loadZone(zone)
 		o:loaded()
 	end
 
+	-- We check for the server return, while we loaded the save it probably responded so we do not wait at all
+	if not checker() then self:badMD5Load() end
+
 	core.wait.enableManualTick(false)
 	popup:done()
 
@@ -501,6 +531,8 @@ end
 function _M:loadLevel(zone, level)
 	local path = fs.getRealPath(self.save_dir..self:nameLoadLevel(zone, level))
 	if not path or path == "" then return false end
+
+	local checker = self:md5Check("level", self:nameLoadLevel(zone, level))
 
 	fs.mount(path, self.load_dir)
 
@@ -522,6 +554,9 @@ function _M:loadLevel(zone, level)
 		o:loaded()
 	end
 
+	-- We check for the server return, while we loaded the save it probably responded so we do not wait at all
+	if not checker() then self:badMD5Load() end
+
 	popup:done()
 
 	fs.umount(path)
@@ -532,6 +567,8 @@ end
 function _M:loadEntity(name)
 	local path = fs.getRealPath(self.save_dir..self:nameLoadEntity(name))
 	if not path or path == "" then return false end
+
+	local checker = self:md5Check("entity", self:nameLoadEntity(name))
 
 	fs.mount(path, self.load_dir)
 
@@ -553,6 +590,9 @@ function _M:loadEntity(name)
 		o:loaded()
 	end
 
+	-- We check for the server return, while we loaded the save it probably responded so we do not wait at all
+	if not checker() then self:badMD5Load() end
+
 	popup:done()
 
 	fs.umount(path)
@@ -562,4 +602,53 @@ end
 --- Checks for existence
 function _M:check()
 	return fs.exists(self.save_dir..self:nameLoadGame())
+end
+
+function _M:md5Upload(type, f)
+	if not self.md5_types[type] then return end
+	local p = game:getPlayer(true)
+	if not p.getUUID then return end
+	local uuid = p:getUUID()
+	if not uuid then return end
+
+	local md5 = require "md5"
+	local m = nil
+	local fff = fs.open(self.save_dir..f, "r")
+	if fff then
+		local data = fff:read(10485760)
+		if data and data ~= "" then
+			m = md5.sumhexa(data)
+		end
+		fff:close()
+	end
+	print("Save MD5", uuid, m, type, f)
+	profile:setSaveID(game.__mod_info.short_name, uuid, f, m)
+end
+
+function _M:md5Check(type, f, loadgame)
+	if not self.md5_types[type] then return function() return true end end
+
+	local bad = function() return false end
+	local p = (loadgame or game):getPlayer(true)
+	if not p.getUUID then return bad end
+	local uuid = p:getUUID()
+	if not uuid then return bad end
+
+	local md5 = require "md5"
+	local m = nil
+	local fff = fs.open(self.save_dir..f, "r")
+	if fff then
+		local data = fff:read(10485760)
+		if data and data ~= "" then
+			m = md5.sumhexa(data)
+		end
+		fff:close()
+	end
+	print("Check MD5", uuid, m, type, f)
+	return profile:checkSaveID(game.__mod_info.short_name, uuid, f, m)
+end
+
+function _M:badMD5Load()
+	if game.onBadMD5Load then game:onBadMD5Load() end
+	game.bad_md5_loaded = true
 end

@@ -100,7 +100,7 @@ function _M:defaultSavedFields(t)
 		always_target=true, gfxmode=true, uniques=true, object_known_types=true,
 		memory_levels=true, achievement_data=true, factions=true, playing_musics=true,
 		state=true,
-		__savefile_version_tokens = true,
+		__savefile_version_tokens = true, bad_md5_loaded = true,
 	}
 	table.merge(def, t)
 	return def

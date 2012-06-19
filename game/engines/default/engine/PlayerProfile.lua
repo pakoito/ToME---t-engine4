@@ -663,6 +663,35 @@ function _M:registerSaveChardump(module, uuid, title, tags, data)
 	print("[ONLINE PROFILE] saved character ", uuid)
 end
 
+function _M:setSaveID(module, uuid, savename, md5)
+	if not self.auth or not self.hash_valid or not md5 then return end
+	core.profile.pushOrder(table.serialize{o="SaveMD5",
+		module=module,
+		uuid=uuid,
+		savename=savename,
+		md5=md5,
+	})
+	print("[ONLINE PROFILE] saved character md5", uuid, savename, md5)
+end
+
+function _M:checkSaveID(module, uuid, savename, md5)
+	if not self.auth or not self.hash_valid or not md5 then return function() return false end end
+	core.profile.pushOrder(table.serialize{o="CheckSaveMD5",
+		module=module,
+		uuid=uuid,
+		savename=savename,
+		md5=md5,
+	})
+	print("[ONLINE PROFILE] checking character md5", uuid, savename, md5)
+	return function()
+		local ok = false
+		self:waitEvent("CheckSaveMD5", function(e)
+			if e.savename == savename and e.ok then ok = true end
+		end, 30000)
+		return ok
+	end
+end
+
 function _M:currentCharacter(module, title, uuid)
 	if not self.auth then return end
 	core.profile.pushOrder(table.serialize{o="CurrentCharacter",

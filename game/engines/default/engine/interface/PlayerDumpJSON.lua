@@ -28,6 +28,7 @@ allow_late_uuid = false
 
 --- Register the character on te4.org and return a UUID for it
 function _M:getUUID()
+	if self.__te4_uuid then return self.__te4_uuid end
 	local uuid = profile:registerNewCharacter(game.__mod_info.short_name)
 	if uuid then
 		self.__te4_uuid = uuid

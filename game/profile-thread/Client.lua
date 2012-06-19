@@ -365,6 +365,19 @@ function _M:orderGetCharball(o)
 	end
 end
 
+function _M:orderSaveMD5(o)
+	self:command("CHAR", "SETSAVEID", o.md5, o.uuid, o.module, o.savename)
+end
+
+function _M:orderCheckSaveMD5(o)
+	self:command("CHAR", "CHECKSAVEID", o.md5, o.uuid, o.module, o.savename)
+	if self:read("200") then
+		cprofile.pushEvent(string.format("e='CheckSaveMD5' ok=true savename=%q", o.savename))
+	else
+		cprofile.pushEvent(string.format("e='CheckSaveMD5' ok=false savename=%q", o.savename))
+	end
+end
+
 function _M:orderCurrentCharacter(o)
 	self:command("CHAR", "CUR", table.serialize(o))
 	self.cur_char = o
