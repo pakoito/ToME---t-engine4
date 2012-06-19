@@ -62,7 +62,12 @@ function _M:addMember(actor, def)
 
 	-- Turn NPCs into party members
 	if not actor.no_party_class then
+		local uid = actor.uid
+		actor.replacedWith = false
 		actor:replaceWith(require("mod.class.PartyMember").new(actor))
+		actor.uid = uid
+		__uids[uid] = actor
+		actor.replacedWith = nil
 	end
 
 	-- Notify the UI

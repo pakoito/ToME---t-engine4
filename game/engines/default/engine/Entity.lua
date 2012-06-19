@@ -69,7 +69,7 @@ function _M:init(t, no_default)
 	next_uid = next_uid + 1
 
 	for k, e in pairs(t) do
-		if k ~= "__CLASSNAME" then
+		if k ~= "__CLASSNAME" and k ~= "uid" then
 			local ee = e
 			if type(e) == "table" and not e.__CLASSNAME then ee = table.clone(e, true) end
 			self[k] = ee
