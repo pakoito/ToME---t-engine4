@@ -494,8 +494,8 @@ newEntity{
 	cost = 6,
 	combat = {
 		travel_speed = 2,
-		special_on_hit = {desc="25% chance to create an air burst", fct=function(combat, who, target)
-			if not rng.percent(25) then return end
+		special_on_hit = {desc="10% chance to create an air burst", fct=function(combat, who, target)
+			if not rng.percent(10) then return end
 			local dam = 20 + who:combatPhysicalpower()/2
 			local distance = 2 + math.floor(who:combatPhysicalpower()/40)
 			who:project({type="ball", radius=2, friendlyfire=false}, target.x, target.y, engine.DamageType.PHYSKNOCKBACK, {dist=distance, dam=dam})
@@ -516,8 +516,8 @@ newEntity{
 		ranged_project={
 			[DamageType.GRAVITY] = resolvers.mbonus_material(15, 5),
 		},
-		special_on_hit = {desc="25% chance to crush the target", fct=function(combat, who, target)
-			if not rng.percent(25) then return end
+		special_on_hit = {desc="10% chance to crush the target", fct=function(combat, who, target)
+			if not rng.percent(10) then return end
 			if target:attr("never_move") then
 				local tg = {type="hit", range=1}
 				who:project(tg, target.x, target.y, engine.DamageType.IMPLOSION, 10 + who:combatMindpower()/4)
@@ -732,8 +732,8 @@ newEntity{
 		ranged_project={
 			[DamageType.PHYSICAL] = resolvers.mbonus_material(15, 5),
 		},
-		special_on_hit = {desc="20% chance to knock the target back", fct=function(combat, who, target)
-			if not rng.percent(20) then return nil end
+		special_on_hit = {desc="10% chance to knock the target back", fct=function(combat, who, target)
+			if not rng.percent(10) then return nil end
 			if not who:checkHit(who:combatMindpower(), target:combatPhysicalResist()) then game.logSeen(target, "%s resists!", target.name:capitalize()) return nil end
 			if target:canBe("knockback") then
 				target:knockback(who.x, who.y, 2)
@@ -746,7 +746,7 @@ newEntity{
 newEntity{
 	power_source = {psionic=true},
 	name = " of amnesia", suffix=true, instant_resolve=true,
-	keywords = {forgotten=true},
+	keywords = {amnesia=true},
 	level_range = {10, 50},
 	rarity = 25, -- very rare because no one can remember how to make them...  haha
 	cost = 15,

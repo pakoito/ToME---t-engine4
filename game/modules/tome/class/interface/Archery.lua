@@ -233,33 +233,39 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 		end
 	end end
 	
-	-- Ranged project (burst)
-	local weapon_burst_on_hit = weapon.burst_on_hit or {}
-	local ammo_burst_on_hit = ammo.burst_on_hit or {}
-	local self_burst_on_hit = self.burst_on_hit or {}
-	local total_burst_on_hit = {}
-	table.mergeAdd(total_burst_on_hit, weapon_burst_on_hit, true)
-	table.mergeAdd(total_burst_on_hit, ammo_burst_on_hit, true)
-	table.mergeAdd(total_burst_on_hit, self_burst_on_hit, true)
-	if hitted and not target.dead then for typ, dam in pairs(total_burst_on_hit) do
-		if dam > 0 then
-			self:project({type="ball", radius=1, friendlyfire=false}, target.x, target.y, typ, dam)
-		end
-	end end
+	if not tg.archery.hit_burst then
+		-- Ranged project (burst)
+		local weapon_burst_on_hit = weapon.burst_on_hit or {}
+		local ammo_burst_on_hit = ammo.burst_on_hit or {}
+		local self_burst_on_hit = self.burst_on_hit or {}
+		local total_burst_on_hit = {}
+		table.mergeAdd(total_burst_on_hit, weapon_burst_on_hit, true)
+		table.mergeAdd(total_burst_on_hit, ammo_burst_on_hit, true)
+		table.mergeAdd(total_burst_on_hit, self_burst_on_hit, true)
+		if hitted and not target.dead then for typ, dam in pairs(total_burst_on_hit) do
+			if dam > 0 then
+				self:project({type="ball", radius=1, friendlyfire=false}, target.x, target.y, typ, dam)
+				tg.archery.hit_burst = true
+			end
+		end end
+	end
 	
 	-- Ranged project (burst on crit)
-	local weapon_burst_on_crit = weapon.burst_on_crit or {}
-	local ammo_burst_on_crit = ammo.burst_on_crit or {}
-	local self_burst_on_crit = self.burst_on_crit or {}
-	local total_burst_on_crit = {}
-	table.mergeAdd(total_burst_on_crit, weapon_burst_on_crit, true)
-	table.mergeAdd(total_burst_on_crit, ammo_burst_on_crit, true)
-	table.mergeAdd(total_burst_on_crit, self_burst_on_crit, true)
-	if hitted and crit and not target.dead then for typ, dam in pairs(total_burst_on_crit) do
-		if dam > 0 then
-			self:project({type="ball", radius=2, friendlyfire=false}, target.x, target.y, typ, dam)
-		end
-	end end
+	if not tg.archery.crit_burst then
+		local weapon_burst_on_crit = weapon.burst_on_crit or {}
+		local ammo_burst_on_crit = ammo.burst_on_crit or {}
+		local self_burst_on_crit = self.burst_on_crit or {}
+		local total_burst_on_crit = {}
+		table.mergeAdd(total_burst_on_crit, weapon_burst_on_crit, true)
+		table.mergeAdd(total_burst_on_crit, ammo_burst_on_crit, true)
+		table.mergeAdd(total_burst_on_crit, self_burst_on_crit, true)
+		if hitted and crit and not target.dead then for typ, dam in pairs(total_burst_on_crit) do
+			if dam > 0 then
+				self:project({type="ball", radius=2, friendlyfire=false}, target.x, target.y, typ, dam)
+				tg.archery.crit_burst = true
+			end
+		end end
+	end
 
 	-- Talent on hit
 	if hitted and not target.dead and weapon and weapon.talent_on_hit and next(weapon.talent_on_hit) and not self.turn_procs.ranged_talent then

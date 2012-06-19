@@ -180,9 +180,10 @@ newTalent{
 		m:removeAllMOs()
 		m.make_escort = nil
 		m.on_added_to_level = nil
-
+		
 		m.energy.value = 0
 		m.player = nil
+		m.puuid = nil
 		m.max_life = m.max_life
 		m.life = util.bound(m.life, 0, m.max_life)
 		m.forceLevelup = function() end

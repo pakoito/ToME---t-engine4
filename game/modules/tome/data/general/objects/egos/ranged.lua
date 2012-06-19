@@ -51,7 +51,7 @@ newEntity{
 		},
 	},
 	resolvers.generic(function(e)
-		e.combat.range = e.combat.range + 1
+		e.combat.range = math.min(e.combat.range + 1, 10)
 	end),
 }
 
@@ -105,7 +105,7 @@ newEntity{
 	rarity = 20,
 	cost = 40,
 	resolvers.generic(function(e)
-		e.combat.range = e.combat.range + 1
+		e.combat.range = math.min(e.combat.range + 1, 10)
 	end),
 	wielder = {
 		combat_atk = resolvers.mbonus_material(10, 5),
@@ -245,7 +245,7 @@ newEntity{
 	rarity = 30,
 	cost = 40,
 	combat = {
-		talent_on_hit = { [Talents.T_SHOOT] = {level=1, chance=25} },
+		talent_on_hit = { [Talents.T_SHOOT] = {level=1, chance=10} },
 		convert_damage = { [DamageType.TEMPORAL] = resolvers.mbonus_material(25, 25),}
 	}
 }
@@ -448,7 +448,7 @@ newEntity{
 		},
 		special_on_crit = {desc="silences the target", fct=function(combat, who, target)
 			if target:canBe("silence") then
-				target:setEffect(target.EFF_SILENCED, 2, {apply_power=who:combatAttack()})
+				target:setEffect(target.EFF_SILENCED, 2, {apply_power=who:combatAttack(), no_ct_effect=true})
 			end
 		end},
 	},
