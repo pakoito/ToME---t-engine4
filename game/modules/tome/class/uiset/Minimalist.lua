@@ -459,6 +459,8 @@ end
 function _M:computePadding(what, x1, y1, x2, y2)
 	self.sizes[what] = {}
 	local size = self.sizes[what]
+	if x2 < x1 then x1, x2 = x2, x1 end
+	if y2 < y1 then y1, y2 = y2, y1 end
 	size.x1 = x1
 	size.x2 = x2
 	size.y1 = y1
@@ -1054,13 +1056,13 @@ function _M:displayResources(scale, bx, by, a)
 	end
 end
 
-function _M:buffOrientStep(orient, bx, by, scale, x, y, w, h)
+function _M:buffOrientStep(orient, bx, by, scale, x, y, w, h, next)
 	if orient == "down" or orient == "up" then
 		x = x + w
-		if (x + w) * scale >= game.w - bx then x = 0 y = y + h end
+		if (x + w) * scale >= game.w - bx or next then x = 0 y = y + h * (orient == "down" and 1 or -1) end
 	elseif orient == "right" or orient == "left" then
 		y = y + h
-		if (y + h) * scale >= self.map_h_stop - by then y = 0 x = x + w end
+		if (y + h) * scale >= self.map_h_stop - by or next then y = 0 x = x + w * (orient == "right" and 1 or -1) end
 	end
 	return x, y
 end
@@ -1188,6 +1190,9 @@ function _M:displayBuffs(scale, bx, by)
 			is_first = false
 			x, y = self:buffOrientStep(orient, bx, by, scale, x, y, hs, hs)
 		end
+
+		x, y = self:buffOrientStep(orient, bx, by, scale, x, y, hs, hs, true)
+
 		for eff_id, p in pairs(bad_e) do
 			local e = player.tempeffect_def[eff_id]
 			self:handleEffect(player, eff_id, e, p, x, y, hs, bx, by, is_first, scale, false)
@@ -1199,7 +1204,11 @@ function _M:displayBuffs(scale, bx, by)
 			move_handle[1]:toScreenFull(40 - move_handle[6], 0, move_handle[6], move_handle[7], move_handle[2], move_handle[3])
 		end
 
-		self:computePadding("buffs", bx, by, bx + x * scale, by + y * scale)
+		if orient == "down" or orient == "up" then
+			self:computePadding("buffs", bx, by, bx + x * scale + hs, by + hs)
+		else
+			self:computePadding("buffs", bx, by, bx + hs, by + y * scale + hs)
+		end
 	end
 end
 
