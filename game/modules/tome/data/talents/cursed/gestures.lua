@@ -18,17 +18,18 @@
 -- darkgod@te4.org
 
 local function canUseGestures(self)
+	local nb = 0
 	if self:getInven("MAINHAND") then
 		local weapon = self:getInven("MAINHAND")[1]
-		if not weapon or weapon.subtype == "mindstar" then return true end
+		if not weapon or weapon.subtype == "mindstar" then nb = nb + 1 end
 	end
 		
 	if self:getInven("OFFHAND") then
 		local weapon = self:getInven("OFFHAND")[1]
-		if not weapon or weapon.subtype == "mindstar" then return true end
+		if not weapon or weapon.subtype == "mindstar" then nb = nb + 1 end
 	end
 	
-	return false
+	return nb == 2 and true or false
 end
 
 newTalent{
