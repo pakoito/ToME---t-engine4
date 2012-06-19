@@ -79,9 +79,9 @@ function _M:addEntity(e, after, no_error)
 	end
 
 	if self.entities[e.uid] and self.entities[e.uid] == e then return end
-	if self.entities[e.uid] then 
+	if self.entities[e.uid] then
 		if self.remove_old_entity_on_duplicate then self:removeEntity(self.entities[e.uid], true) end
-		if no_error then return else error("Entity "..e.uid.."("..(e.name or "???")..") already present on the level") end 
+		if no_error then return else error("Entity "..e.uid.."("..(e.name or "???")..") already present on the level") end
 	end
 	self.entities[e.uid] = e
 	if e.addEntityOrder then after = e:addEntityOrder(level) end

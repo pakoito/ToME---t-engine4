@@ -78,7 +78,7 @@ end
 
 --- Called when disarmed
 function _M:onDisarm(x, y, who)
-	-- Let the actor gain exp
+	self:check("disarmed", x, y, who)
 end
 
 --- Called when triggered

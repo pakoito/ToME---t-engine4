@@ -99,6 +99,9 @@ newEntity{ base = "TRAP_COMPLEX",
 		if self:reactionToward(who) < 0 then self.dam = self.dam * 1.5 end
 		return true
 	end,
+	disarmed = function(self, x, y, who)
+		game.level:removeEntity(self, true)
+	end,
 	canAct = false,
 	energy = {value=0},
 	act = function(self)
@@ -131,6 +134,9 @@ newEntity{ base = "TRAP_COMPLEX",
 	triggered = function(self, x, y, who)
 		self:firePoison()
 		return true
+	end,
+	disarmed = function(self, x, y, who)
+		game.level:removeEntity(self, true)
 	end,
 	canAct = false,
 	energy = {value=0},
