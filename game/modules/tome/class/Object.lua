@@ -1258,10 +1258,10 @@ function _M:getPriceFlags()
 		if w.mana_regen_on_hit then price = price + w.mana_regen_on_hit * 3 end
 		if w.psi_regen_on_hit then price = price + w.psi_regen_on_hit * 3 end
 		if w.hate_regen_on_hit then price = price + w.hate_regen_on_hit * 3 end
-		if w.mana_on_crit then price = price + w.mana_regen_on_hit * 3 end
-		if w.vim_on_crit then price = price + w.vim_regen_on_hit * 3 end
-		if w.psi_on_crit then price = price + w.psi_regen_on_hit * 3 end
-		if w.hate_on_crit then price = price + w.hate_regen_on_hit * 3 end
+		if w.mana_on_crit then price = price + w.mana_on_crit * 3 end
+		if w.vim_on_crit then price = price + w.vim_on_crit * 3 end
+		if w.psi_on_crit then price = price + w.psi_on_crit * 3 end
+		if w.hate_on_crit then price = price + w.hate_on_crit * 3 end
 		if w.psi_per_kill then price = price + w.psi_per_kill * 3 end
 		if w.hate_per_kill then price = price + w.hate_per_kill * 3 end
 		if w.resource_leech_chance then price = price + w.resource_leech_chance * 10 end
