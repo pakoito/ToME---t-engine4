@@ -50,6 +50,9 @@ function _M:tooltip()
 	if self:knownBy(game.player) then
 		local res = tstring{{"uid", self.uid}, self:getName()}
 		if self.is_store then res:add(true, {"font","italic"}, "<Store>", {"font","normal"}) end
+		if config.settings.cheat then
+			res:add(true, "UID: "..self.uid, true, "Detect: "..self.detect_power, true, "Disarm: "..self.disarm_power)
+		end
 		return res
 	end
 end

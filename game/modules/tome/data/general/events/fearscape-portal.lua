@@ -20,7 +20,7 @@
 -- Find a random spot
 local x, y = rng.range(1, level.map.w - 2), rng.range(1, level.map.h - 2)
 local tries = 0
-while (not game.player:canMove(x, y) or level.map.attrs(x, y, "no_teleport")) and tries < 100 do
+while not game.state:canEventGrid(level, x, y) and tries < 100 do
 	x, y = rng.range(1, level.map.w - 2), rng.range(1, level.map.h - 2)
 	tries = tries + 1
 end

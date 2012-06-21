@@ -53,6 +53,7 @@ game.zone.on_turn = function()
 	local npcs = mod.class.NPC:loadList{"/data/general/npcs/gwelgoroth.lua"}
 	local m = game.zone:makeEntity(game.level, "actor", {base_list=npcs}, nil, true)
 	if m then
+		m.exp_worth = 0
 		game.zone:addEntity(game.level, m, "actor", i, j)
 		local x1, y1 = i + rng.range(-4, 4), j + rng.range(-4, 4)
 		game.level.map:particleEmitter(x1, y1, math.max(math.abs(i-x1), math.abs(j-y1)), "lightning", {tx=i-x1, ty=j-y1})

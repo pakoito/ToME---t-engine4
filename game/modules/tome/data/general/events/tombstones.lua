@@ -23,11 +23,11 @@ for i = 1, nb do
 
 local x, y = rng.range(1, level.map.w - 2), rng.range(1, level.map.h - 2)
 local tries = 0
-while (not game.player:canMove(x, y) or level.map.attrs(x, y, "no_teleport")) and tries < 100 do
+while not game.state:canEventGrid(level, x, y) and tries < 100 do
 	x, y = rng.range(1, level.map.w - 2), rng.range(1, level.map.h - 2)
 	tries = tries + 1
 end
-if tries < 100 then 
+if tries < 100 then
 	local g = game.level.map(x, y, engine.Map.TERRAIN):cloneFull()
 	g.name = "grave"
 	g.display='&' g.color_r=255 g.color_g=255 g.color_b=255 g.notice = true

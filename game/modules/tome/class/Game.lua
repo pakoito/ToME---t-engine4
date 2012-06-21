@@ -1207,16 +1207,10 @@ function _M:setupCommands()
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
 --			self:registerDialog(require("mod.dialogs.DownloadCharball").new())
---[[			local f, err = loadfile("/data/general/events/weird-pedestals.lua")
+			local f, err = loadfile("/data/general/events/weird-pedestals.lua")
 			print(f, err)
 			setfenv(f, setmetatable({level=self.level, zone=self.zone}, {__index=_G}))
 			print(pcall(f))
---]]
-			local o = game.zone:makeEntity(game.level,"object", {random_object={}}, nil, true)
-			if o then
-				o:identify(true)
-				game.zone:addEntity(game.level, o, "object", game.player.x, game.player.y)
-			end
 			end end,
 		[{"_f","ctrl"}] = function() if config.settings.cheat then
 			self.player.quests["love-melinda"] = nil

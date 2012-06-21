@@ -20,9 +20,7 @@
 local function check(x, y)
 	local list = {}
 	for i = -2, 2 do for j = -2, 2 do
-		if not game.player:canMove(x+i, y+j) then return false end
-		if level.map.attrs(x+i, y+j, "no_teleport") then return false end
-		list[#list+1] = {x=x+i, y=y+j}
+		if game.state:canEventGrid(level, x+i, y+j) then list[#list+1] = {x=x+i, y=y+j} end
 	end end
 
 	if #list < 5 then return false

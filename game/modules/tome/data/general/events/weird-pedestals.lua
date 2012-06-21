@@ -20,9 +20,7 @@
 local function check(x, y)
 	local list = {}
 	for i = -1, 1 do for j = -1, 1 do
-		if not game.player:canMove(x+i, y+j) then return false end
-		if level.map.attrs(x+i, y+j, "no_teleport") then return false end
-		list[#list+1] = {x=x+i, y=y+j}
+		if game.state:canEventGrid(level, x+i, y+j) then list[#list+1] = {x=x+i, y=y+j} end
 	end end
 
 	if #list < 3 then return false
@@ -56,7 +54,7 @@ for i = 1, 3 do
 		who:runStop("weird pedestal")
 		if self.pedestal_activated then return false end
 		require("engine.ui.Dialog"):yesnoPopup("Weird Pedestal", "Do you wish to inspect the pedestal?", function(ret) if ret then
-			who:restInit(20, "refitting", "refitted", function(cnt, max)
+			who:restInit(20, "inspecting", "inspected", function(cnt, max)
 				if cnt > max then
 					self.pedestal_activated = true
 					require("engine.ui.Dialog"):simplePopup("Weird Pedestal", "As you inspect it a shadow materializes near you, and suddenly it is no more a shadow!")

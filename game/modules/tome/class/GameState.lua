@@ -1803,6 +1803,10 @@ function _M:doneEvent(id)
 	return self.used_events[id]
 end
 
+function _M:canEventGrid(level, x, y)
+	return game.player:canMove(x, y) and not level.map.attrs(x, y, "no_teleport") and not level.map:checkAllEntities("change_level")
+end
+
 function _M:startEvents()
 	if not game.zone.events then print("No zone events loaded") return end
 
