@@ -58,7 +58,7 @@ function _M:init(actor, on_finish, on_birth)
 		if v.type == "subclass" and v.name == actor.descriptor.subclass then self.desc_def = v break end
 	end
 
-	Dialog.init(self, "Levelup: "..actor.name, 650, game.h * 0.9, game.w * 0.05, game.h * 0.05)
+	Dialog.init(self, "Levelup: "..actor.name, 740, game.h * 0.9, game.w * 0.05, game.h * 0.05)
 
 	self:generateList()
 

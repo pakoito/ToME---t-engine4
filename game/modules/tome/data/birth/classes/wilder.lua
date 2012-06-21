@@ -190,7 +190,7 @@ newBirthDescriptor{
 newBirthDescriptor{
 	type = "subclass",
 	name = "Oozemancer",
-	locked = function() return profile.mod.allow_build.wilder_oozemancer end,
+	locked = function() return profile.mod.allow_build.wilder_oozemancer and true or "hide"  end,
 	locked_desc = "TODO",
 	desc = {
 		"Bla bla",

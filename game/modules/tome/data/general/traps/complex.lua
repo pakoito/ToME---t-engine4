@@ -166,3 +166,41 @@ newEntity{ base = "TRAP_COMPLEX",
 		end
 	end,
 }
+
+newEntity{ base = "TRAP_COMPLEX",
+	subtype = "arcane",
+	name = "delayed explosion trap", image = "trap/trap_fire_rune_01.png",
+	detect_power = 6, disarm_power = 6,
+	rarity = 3, level_range = {1, 30},
+	color=colors.RED,
+	message = "Flames start to appear arround @target@.",
+	dam = resolvers.mbonus_level(300, 15),
+	triggered = function(self, x, y, who)
+		local ps, p = {}, {}
+		self:project({type="ball", radius=4}, x, y, function(px, py)
+			ps[#ps+1] = {x=px, y=py}
+		end)
+		for i = 1, 4 do
+			if #ps == 0 then break end
+			p[#p+1] = rng.tableRemove(ps)
+		end
+		self.points = p
+
+		for i, d in ipairs(p) do
+			game.level.map:particleEmitter(d.x, d.y, 1, "bolt_fire")
+		end
+		game.level:addEntity(self)
+		return true
+	end,
+	canAct = false,
+	energy = {value=0, mod=0.25},
+	act = function(self)
+		local tg = {type="ball", radius=1, friendlyfire=false}
+		for i, d in ipairs(self.points) do
+			self:project(tg, d.x, d.y, engine.DamageType.FIRE, self.dam, nil)
+			game.level.map:particleEmitter(d.x, d.y, 1, "ball_fire", {radius=1})
+		end
+		self:useEnergy()
+		game.level:removeEntity(self)
+	end,
+}

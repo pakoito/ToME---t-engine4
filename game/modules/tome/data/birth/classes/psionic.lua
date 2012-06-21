@@ -116,7 +116,7 @@ newBirthDescriptor{
 newBirthDescriptor{
 	type = "subclass",
 	name = "Psion",
-	locked = function() return profile.mod.allow_build.psionic_psion end,
+	locked = function() return profile.mod.allow_build.psionic_psion and true or "hide"  end,
 	locked_desc = "TODO",
 	desc = {
 		"blahblah",
