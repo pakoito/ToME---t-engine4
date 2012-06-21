@@ -176,19 +176,21 @@ newEntity{ base = "TRAP_COMPLEX",
 	message = "Flames start to appear arround @target@.",
 	dam = resolvers.mbonus_level(300, 15),
 	triggered = function(self, x, y, who)
-		local ps, p = {}, {}
-		self:project({type="ball", radius=4}, x, y, function(px, py)
-			ps[#ps+1] = {x=px, y=py}
+		local ps, p = {}, self.points or {}
+		self.x, self.y = x, y
+		self:project({type="ball", radius=3}, x, y, function(px, py)
+			local g = game.level.map(px, py, engine.Map.TERRAIN)
+			if not g:check("block_move") then
+				ps[#ps+1] = {x=px, y=py}
+			end
 		end)
 		for i = 1, 4 do
 			if #ps == 0 then break end
 			p[#p+1] = rng.tableRemove(ps)
+			p[#p].e = game.level.map:particleEmitter(p[#p].x, p[#p].y, 1, "bolt_fire")
 		end
 		self.points = p
 
-		for i, d in ipairs(p) do
-			game.level.map:particleEmitter(d.x, d.y, 1, "bolt_fire")
-		end
 		game.level:addEntity(self)
 		return true
 	end,
@@ -197,9 +199,11 @@ newEntity{ base = "TRAP_COMPLEX",
 	act = function(self)
 		local tg = {type="ball", radius=1, friendlyfire=false}
 		for i, d in ipairs(self.points) do
+			game.level.map:removeParticleEmitter(d.e)
 			self:project(tg, d.x, d.y, engine.DamageType.FIRE, self.dam, nil)
 			game.level.map:particleEmitter(d.x, d.y, 1, "ball_fire", {radius=1})
 		end
+		self.points = {}
 		self:useEnergy()
 		game.level:removeEntity(self)
 	end,

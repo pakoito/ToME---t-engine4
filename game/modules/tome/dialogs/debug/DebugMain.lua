@@ -127,7 +127,7 @@ function _M:generateList()
 	list[#list+1] = {name="Create Item", dialog="CreateItem"}
 	list[#list+1] = {name="Alter Faction", dialog="AlterFaction"}
 	list[#list+1] = {name="Give Sher'tul fortress energy", action="shertul-energy"}
-	list[#list+1] = {name="Create all traps", action="all_traps"}
+	list[#list+1] = {name="Create Trap", dialog="CreateTrap"}
 
 	local chars = {}
 	for i, v in ipairs(list) do
