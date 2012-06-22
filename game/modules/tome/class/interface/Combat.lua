@@ -537,6 +537,12 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		end
 	end
 
+	-- Critical Burst (generally more damage then burst on hit and larger radius)
+	if hitted and crit and weapon and self:knowTalent(self.T_ARCANE_DESTRUCTION) then
+		local typ = rng.table{DamageType.FIRE, DamageType.LIGHTNING, DamageType.ARCANE}
+		self:project({type="ball", radius=2, friendlyfire=false}, target.x, target.y, typ, self:combatSpellpower() * 2)
+	end
+
 	-- Onslaught
 	if hitted and self:attr("onslaught") then
 		local dir = util.getDir(target.x, target.y, self.x, self.y) or 6
@@ -977,7 +983,7 @@ function _M:combatPhysicalpower(mod, weapon)
 	mod = mod or 1
 	local add = 0
 	if self:knowTalent(Talents.T_ARCANE_DESTRUCTION) then
-		add = add + self:combatSpellpower() * self:getTalentLevel(Talents.T_ARCANE_DESTRUCTION) / 9
+		add = add + self:combatSpellpower() * self:getTalentLevel(Talents.T_ARCANE_DESTRUCTION) / 7
 	end
 	if self:isTalentActive(Talents.T_BLOOD_FRENZY) then
 		add = add + self.blood_frenzy
@@ -1009,8 +1015,8 @@ end
 function _M:combatSpellpower(mod)
 	mod = mod or 1
 	local add = 0
-	if self:knowTalent(self.T_ARCANE_DEXTERITY) then
-		add = add + (15 + self:getTalentLevel(self.T_ARCANE_DEXTERITY) * 5) * self:getDex() / 100
+	if self:knowTalent(self.T_ARCANE_CUNNING) then
+		add = add + (15 + self:getTalentLevel(self.T_ARCANE_CUNNING) * 5) * self:getCun() / 100
 	end
 	if self:knowTalent(self.T_SHADOW_CUNNING) then
 		add = add + (15 + self:getTalentLevel(self.T_SHADOW_CUNNING) * 5) * self:getCun() / 100

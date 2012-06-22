@@ -1660,10 +1660,6 @@ newTalent{
 		format(restoration)
 	end,
 }
-
-------------------------------
---General of Urh'Rok Talents--
-------------------------------
 newTalent{
 	name = "Infernal Breath", image = "talents/flame_of_urh_rok.png",
 	type = {"spell/other",1},
@@ -1705,3 +1701,33 @@ newTalent{
 }
 
 
+newTalent{
+	name = "Frost Hands", image = "talents/shock_hands.png",
+	type = {"spell/other", 3},
+	points = 5,
+	mode = "sustained",
+	cooldown = 10,
+	sustain_mana = 40,
+	tactical = { BUFF = 2 },
+	getIceDamage = function(self, t) return self:combatTalentSpellDamage(t, 3, 20) end,
+	getIceDamageIncrease = function(self, t) return self:combatTalentSpellDamage(t, 5, 14) end,
+	activate = function(self, t)
+		game:playSoundNear(self, "talents/ice")
+		return {
+			dam = self:addTemporaryValue("melee_project", {[DamageType.ICE] = t.getIceDamage(self, t)}),
+			per = self:addTemporaryValue("inc_damage", {[DamageType.COLD] = t.getIceDamageIncrease(self, t)}),
+		}
+	end,
+	deactivate = function(self, t, p)
+		self:removeTemporaryValue("melee_project", p.dam)
+		self:removeTemporaryValue("inc_damage", p.per)
+		return true
+	end,
+	info = function(self, t)
+		local icedamage = t.getIceDamage(self, t)
+		local icedamageinc = t.getIceDamageIncrease(self, t)
+		return ([[Engulfs your hands (and weapons) in a sheath of frost, dealing %d cold damage per melee attack and increasing all cold damage by %d%%.
+		The effects will increase with your Spellpower.]]):
+		format(damDesc(self, DamageType.COLD, icedamage), icedamageinc, self:getTalentLevel(t) / 3)
+	end,
+}

@@ -33,19 +33,22 @@ newTalent{
 		return {
 			dam = self:addTemporaryValue("melee_project", {[DamageType.FIRE] = t.getFireDamage(self, t)}),
 			per = self:addTemporaryValue("inc_damage", {[DamageType.FIRE] = t.getFireDamageIncrease(self, t)}),
+			sta = self:addTemporaryValue("stamina_regen_on_hit", self:getTalentLevel(t) / 3),
 		}
 	end,
 	deactivate = function(self, t, p)
 		self:removeTemporaryValue("melee_project", p.dam)
 		self:removeTemporaryValue("inc_damage", p.per)
+		self:removeTemporaryValue("stamina_regen_on_hit", p.sta)
 		return true
 	end,
 	info = function(self, t)
 		local firedamage = t.getFireDamage(self, t)
 		local firedamageinc = t.getFireDamageIncrease(self, t)
 		return ([[Engulfs your hands (and weapons) in a sheath of fire, dealing %0.2f fire damage per melee attack and increasing all fire damage by %d%%.
+		Each hit will also regenerate %0.2f stamina.
 		The effects will increase with your Spellpower.]]):
-		format(damDesc(self, DamageType.FIRE, firedamage), firedamageinc)
+		format(damDesc(self, DamageType.FIRE, firedamage), firedamageinc, self:getTalentLevel(t) / 3)
 	end,
 }
 
@@ -74,7 +77,7 @@ newTalent{
 }
 
 newTalent{
-	name = "Frost Hands",
+	name = "Shock Hands",
 	type = {"spell/enhancement", 3},
 	require = spells_req3,
 	points = 5,
@@ -85,23 +88,26 @@ newTalent{
 	getIceDamage = function(self, t) return self:combatTalentSpellDamage(t, 3, 20) end,
 	getIceDamageIncrease = function(self, t) return self:combatTalentSpellDamage(t, 5, 14) end,
 	activate = function(self, t)
-		game:playSoundNear(self, "talents/ice")
+		game:playSoundNear(self, "talents/lightning")
 		return {
-			dam = self:addTemporaryValue("melee_project", {[DamageType.ICE] = t.getIceDamage(self, t)}),
-			per = self:addTemporaryValue("inc_damage", {[DamageType.COLD] = t.getIceDamageIncrease(self, t)}),
+			dam = self:addTemporaryValue("melee_project", {[DamageType.LIGHTNING_DAZE] = t.getIceDamage(self, t)}),
+			per = self:addTemporaryValue("inc_damage", {[DamageType.LIGHTNING] = t.getIceDamageIncrease(self, t)}),
+			man = self:addTemporaryValue("mana_regen_on_hit", self:getTalentLevel(t) / 3),
 		}
 	end,
 	deactivate = function(self, t, p)
 		self:removeTemporaryValue("melee_project", p.dam)
 		self:removeTemporaryValue("inc_damage", p.per)
+		self:removeTemporaryValue("mana_regen_on_hit", p.man)
 		return true
 	end,
 	info = function(self, t)
 		local icedamage = t.getIceDamage(self, t)
 		local icedamageinc = t.getIceDamageIncrease(self, t)
-		return ([[Engulfs your hands (and weapons) in a sheath of ice, dealing %d ice damage per melee attack and increasing all cold damage by %d%%.
+		return ([[Engulfs your hands (and weapons) in a sheath of lightnings, dealing %d lightning damage per melee attack and increasing all lightning damage by %d%%.
+		Each hit will also regenerate %0.2f mana.
 		The effects will increase with your Spellpower.]]):
-		format(damDesc(self, DamageType.COLD, icedamage), icedamageinc)
+		format(damDesc(self, DamageType.LIGHTNING, icedamage), icedamageinc, self:getTalentLevel(t) / 3)
 	end,
 }
 

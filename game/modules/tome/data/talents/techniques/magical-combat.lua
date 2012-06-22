@@ -30,7 +30,10 @@ newTalent{
 	do_trigger = function(self, t, target)
 		if self.x == target.x and self.y == target.y then return nil end
 
-		if rng.percent(20 + self:getTalentLevel(t) * (1 + self:getDex(9, true))) then
+		local chance = 20 + self:getTalentLevel(t) * (1 + self:getCun(9, true))
+		if self:hasDualWeapon() then chance = chance / 2 end
+
+		if rng.percent(chance) then
 			local spells = {}
 			local fatigue = (100 + 2 * self:combatFatigue()) / 100
 			local mana = self:getMana() - 1
@@ -74,20 +77,21 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Allows one to use a melee weapon to focus spells, granting %d%% chance per melee attack to deliver a Flame, Lightning or Earthen Missiles spell as a free action on the target.
+		When using two weapons the chance is half for each weapon.
 		Delivering the spell this way will not trigger a spell cooldown, but only works if the spell is not cooling-down.
-		The chance increases with dexterity.]]):
-		format(20 + self:getTalentLevel(t) * (1 + self:getDex(9, true)))
+		The chance increases with cunning.]]):
+		format(20 + self:getTalentLevel(t) * (1 + self:getCun(9, true)))
 	end,
 }
 
 newTalent{
-	name = "Arcane Dexterity",
+	name = "Arcane Cunning",
 	type = {"technique/magical-combat", 2},
 	mode = "passive",
 	points = 5,
 	require = techs_req2,
 	info = function(self, t)
-		return ([[The user gains a bonus to spellpower equal to %d%% of their dexterity.]]):
+		return ([[The user gains a bonus to spellpower equal to %d%% of their cunning.]]):
 		format(15 + self:getTalentLevel(t) * 5)
 	end,
 }
@@ -98,12 +102,12 @@ newTalent{
 	mode = "sustained",
 	points = 5,
 	cooldown = 5,
-	sustain_stamina = 40,
+	sustain_stamina = 20,
 	require = techs_req3,
 	range = 10,
 	tactical = { BUFF = 2 },
 	activate = function(self, t)
-		local power = self:getTalentLevel(t) / 14
+		local power = self:getTalentLevel(t) / 7
 		return {
 			regen = self:addTemporaryValue("mana_regen", power),
 		}
@@ -113,7 +117,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Regenerates %0.2f mana per turn while active.]]):format(self:getTalentLevel(t) / 14)
+		return ([[Regenerates %0.2f mana per turn while active.]]):format(self:getTalentLevel(t) / 7)
 	end,
 }
 
@@ -125,8 +129,9 @@ newTalent{
 	require = techs_req4,
 	info = function(self, t)
 		return ([[Raw magical damage channels through the caster's weapon, increasing physical power by %d.
-		The bonus scales with Magic and Dexterity.]]):
-		format(self:combatSpellpower() * self:getTalentLevel(Talents.T_ARCANE_DESTRUCTION) / 9)
+		Each time your crit with a melee blow you will unleash a radius 2 ball of either fire, lightning or arcane damage doing %0.2f.
+		The bonus scales with Magic and Cunning.]]):
+		format(self:combatSpellpower() * self:getTalentLevel(Talents.T_ARCANE_DESTRUCTION) / 7, self:combatSpellpower() * 2)
 	end,
 }
 
