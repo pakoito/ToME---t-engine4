@@ -144,7 +144,7 @@ newEntity{ base = "TRAP_COMPLEX",
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
 			self.x, self.y, 5,
-			engine.DamageType.POISON, self.dam,
+			engine.DamageType.POISON, {dam=self.dam, power=self.dam},
 			self.rad,
 			5, nil,
 			{type="vapour"},
