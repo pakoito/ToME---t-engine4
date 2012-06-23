@@ -108,16 +108,21 @@ newTalent{
 	tactical = { BUFF = 2 },
 	activate = function(self, t)
 		local power = self:getTalentLevel(t) / 7
+		local crit = self:getTalentLevel(t) * 2.2
 		return {
 			regen = self:addTemporaryValue("mana_regen", power),
+			pc = self:addTemporaryValue("combat_physcrit", crit),
+			sc = self:addTemporaryValue("combat_spellcrit", crit),
 		}
 	end,
 	deactivate = function(self, t, p)
 		self:removeTemporaryValue("mana_regen", p.regen)
+		self:removeTemporaryValue("combat_physcrit", p.pc)
+		self:removeTemporaryValue("combat_spellcrit", p.sc)
 		return true
 	end,
 	info = function(self, t)
-		return ([[Regenerates %0.2f mana per turn while active.]]):format(self:getTalentLevel(t) / 7)
+		return ([[Regenerates %0.2f mana per turn and increases physical and spell critical chance by %d%% while active.]]):format(self:getTalentLevel(t) / 7, self:getTalentLevel(t) * 2.2)
 	end,
 }
 
