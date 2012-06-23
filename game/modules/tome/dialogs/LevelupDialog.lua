@@ -67,10 +67,10 @@ function _M:init(actor, on_finish, on_birth)
 
 	self.key:addCommands{
 		__TEXTINPUT = function(c)
-			if c == "+" and self.focus_ui and self.focus_ui.ui.onExpand then
-				self.focus_ui.ui:onExpand(self.focus_ui.ui.last_mz.item)
+			if c == "+" and self.focus_ui and self.focus_ui.ui.onUse then
+				self.focus_ui.ui:onUse(self.focus_ui.ui.last_mz.item, true)
 			elseif c == "-" then
-				self.focus_ui.ui:onExpand(self.focus_ui.ui.last_mz.item)
+				self.focus_ui.ui:onUse(self.focus_ui.ui.last_mz.item, false)
 			end
 		end,
 	}
@@ -97,6 +97,10 @@ function _M:init(actor, on_finish, on_birth)
 			end
 		end,
 	}
+end
+
+function _M:on_register()
+	game:onTickEnd(function() self.key:unicodeInput(true) end)
 end
 
 function _M:unload()
@@ -547,10 +551,10 @@ function _M:createDisplay()
 		tiles=game.uiset.hotkeys_display_icons,
 		tree=self.tree,
 		width=self.iw-200-10, height=self.ih-10,
-		tooltip=function(item) 
+		tooltip=function(item)
 			local x = self.display_x + self.uis[3].x - game.tooltip.max
 			if self.display_x + self.w + game.tooltip.max <= game.w then x = self.display_x + self.w end
-			return self:getTalentDesc(item), x, nil 
+			return self:getTalentDesc(item), x, nil
 		end,
 		on_use = function(item, inc) self:onUseTalent(item, inc) end,
 		scrollbar = true,
@@ -564,7 +568,7 @@ function _M:createDisplay()
 		tooltip=function(item)
 			local x = self.display_x + self.uis[1].x + self.uis[1].ui.w
 			if self.display_x + self.w + game.tooltip.max <= game.w then x = self.display_x + self.w end
-			return item.desc, x, nil 
+			return item.desc, x, nil
 		end,
 		on_use = function(item, inc) self:onUseTalent(item, inc) end,
 		on_expand = function(item) self.actor.__hidden_talent_types[item.type] = not item.shown end,
