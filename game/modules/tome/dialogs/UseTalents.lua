@@ -87,12 +87,15 @@ function _M:defineHotkey(id)
 	local item = self.cur_item
 	if not item or not item.talent then return end
 
+	local t = self.actor:getTalentFromId(item.talent)
+	if t.mode == "passive" then return end
+
 	for i = 1, 12 * self.actor.nb_hotkey_pages do
 		if self.actor.hotkey[i] and self.actor.hotkey[i][1] == "talent" and self.actor.hotkey[i][2] == item.talent then self.actor.hotkey[i] = nil end
 	end
 
 	self.actor.hotkey[id] = {"talent", item.talent}
-	self:simplePopup("Hotkey "..id.." assigned", self.actor:getTalentFromId(item.talent).name:capitalize().." assigned to hotkey "..id)
+	self:simplePopup("Hotkey "..id.." assigned", t.name:capitalize().." assigned to hotkey "..id)
 	self.c_list:drawTree()
 	self.actor.changed = true
 end
