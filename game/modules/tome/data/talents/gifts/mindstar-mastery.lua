@@ -68,6 +68,8 @@ newTalent{
 	points = 5,
 	equilibrium = 7,
 	cooldown = 15,
+	no_energy = true,
+	range = 1,
 	tactical = { ATTACK = 2, DISABLE = 2 },
 	on_pre_use = function(self, t, silent) if not self:hasPsiblades(true, false) then if not silent then game.logPlayer(self, "You require a psiblade in your mainhand to use this talent.") end return false end return true end,
 	action = function(self, t)
