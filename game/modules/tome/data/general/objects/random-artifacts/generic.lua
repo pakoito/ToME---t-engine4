@@ -287,40 +287,40 @@ newEntity{ theme={defense=true, antimagic=true, temporal=true}, name="resist tem
 ----------------------------------------------------------------
 -- Elemental Projection
 ----------------------------------------------------------------
-newEntity{ theme={physical=true}, name="physical melee", points = 1, rarity = 18, level_range = {1, 50},
+newEntity{ theme={physical=true}, name="physical melee", points = 2, rarity = 18, level_range = {1, 50},
 	wielder = { melee_project = {[DamageType.PHYSICAL] = resolvers.randartmax(2, 20), }, },
 }
-newEntity{ theme={mind=true, mental=true}, name="mind melee", points = 1, rarity = 18, level_range = {1, 50},
+newEntity{ theme={mind=true, mental=true}, name="mind melee", points = 2, rarity = 18, level_range = {1, 50},
 	wielder = { melee_project = {[DamageType.MIND] = resolvers.randartmax(2, 20), }, },
 }
-newEntity{ theme={acid=true}, name="acid melee", points = 1, rarity = 18, level_range = {1, 50},
+newEntity{ theme={acid=true}, name="acid melee", points = 2, rarity = 18, level_range = {1, 50},
 	wielder = { melee_project = {[DamageType.ACID] = resolvers.randartmax(2, 20), }, },
 }
-newEntity{ theme={lightning=true}, name="lightning melee", points = 1, rarity = 18, level_range = {1, 50},
+newEntity{ theme={lightning=true}, name="lightning melee", points = 2, rarity = 18, level_range = {1, 50},
 	wielder = { melee_project = {[DamageType.LIGHTNING] = resolvers.randartmax(2, 20), }, },
 }
-newEntity{ theme={fire=true}, name="fire melee", points = 1, rarity = 18, level_range = {1, 50},
+newEntity{ theme={fire=true}, name="fire melee", points = 2, rarity = 18, level_range = {1, 50},
 	wielder = { melee_project = {[DamageType.FIRE] = resolvers.randartmax(2, 20), }, },
 }
-newEntity{ theme={cold=true}, name="cold melee", points = 1, rarity = 18, level_range = {1, 50},
+newEntity{ theme={cold=true}, name="cold melee", points = 2, rarity = 18, level_range = {1, 50},
 	wielder = { melee_project = {[DamageType.COLD] = resolvers.randartmax(2, 20), }, },
 }
-newEntity{ theme={light=true}, name="light melee", points = 1, rarity = 18, level_range = {1, 50},
+newEntity{ theme={light=true}, name="light melee", points = 2, rarity = 18, level_range = {1, 50},
 	wielder = { melee_project = {[DamageType.LIGHT] = resolvers.randartmax(2, 20), }, },
 }
-newEntity{ theme={dark=true}, name="dark melee", points = 1, rarity = 18, level_range = {1, 50},
+newEntity{ theme={dark=true}, name="dark melee", points = 2, rarity = 18, level_range = {1, 50},
 	wielder = { melee_project = {[DamageType.DARKNESS] = resolvers.randartmax(2, 20), }, },
 }
-newEntity{ theme={blight=true, spell=true}, name="blight melee", points = 1, rarity = 18, level_range = {1, 50},
+newEntity{ theme={blight=true, spell=true}, name="blight melee", points = 2, rarity = 18, level_range = {1, 50},
 	wielder = { melee_project = {[DamageType.BLIGHT] = resolvers.randartmax(2, 20), }, },
 }
-newEntity{ theme={nature=true}, name="nature melee", points = 1, rarity = 18, level_range = {1, 50},
+newEntity{ theme={nature=true}, name="nature melee", points = 2, rarity = 18, level_range = {1, 50},
 	wielder = { melee_project = {[DamageType.NATURE] = resolvers.randartmax(2, 20), }, },
 }
-newEntity{ theme={arcane=true, spell=true}, name="arcane melee", points = 1, rarity = 18, level_range = {1, 50},
+newEntity{ theme={arcane=true, spell=true}, name="arcane melee", points = 2, rarity = 18, level_range = {1, 50},
 	wielder = { melee_project = {[DamageType.ARCANE] = resolvers.randartmax(2, 20), }, },
 }
-newEntity{ theme={temporal=true}, name="temporal melee", points = 1, rarity = 18, level_range = {1, 50},
+newEntity{ theme={temporal=true}, name="temporal melee", points = 2, rarity = 18, level_range = {1, 50},
 	wielder = { melee_project = {[DamageType.TEMPORAL] = resolvers.randartmax(2, 20), }, },
 }
 ----------------------------------------------------------------

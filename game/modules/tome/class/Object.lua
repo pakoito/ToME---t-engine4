@@ -1303,7 +1303,7 @@ function _M:getPriceFlags()
 		if w.esp_range then price = price + w.esp_range * 15 end
 		if w.can_breath then for t, v in pairs(w.can_breath) do price = price + v * 30 end end
 		if w.esp_all then price = price + w.esp_all * 25 end
-		if w.damage_shield_penetrate then price = price + w.damage_shield_penetrate * 3 end
+		if w.damage_shield_penetrate then price = price + w.damage_shield_penetrate * 1 end
 		if w.spellsurge_on_crit then price = price + w.spellsurge_on_crit * 5 end
 		if w.quick_weapon_swap then price = price + w.quick_weapon_swap * 50 end
 		
@@ -1338,7 +1338,7 @@ function _M:getPriceFlags()
 		if w.burst_on_crit then for t, v in pairs(w.burst_on_crit) do price = price + v * 0.8 end end
 		
 		--damage conversion
-		if w.convert_damage then for t, v in pairs(w.convert_damage) do price = price + v * 10 end end
+		if w.convert_damage then for t, v in pairs(w.convert_damage) do price = price + v * 1 end end
 
 		--talent mastery
 		if w.talent_types_mastery then for t, v in pairs(w.talent_types_mastery) do price = price + v * 100 end end
