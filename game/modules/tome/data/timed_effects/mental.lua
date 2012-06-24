@@ -1179,7 +1179,7 @@ newEffect{
 				self:die()
 			else
 				game.logSeen(self, "%s is tormented by a vision!", target.name:capitalize())
-				self:project({type="hit", x=target.x,y=target.y}, target.x, target.y, DamageType.MIND, { dam=self.tormentedDamage,alwaysHit=true,crossTierChance=75 })
+				self:project({type="hit", x=target.x,y=target.y}, target.x, target.y, engine.DamageType.MIND, { dam=self.tormentedDamage,alwaysHit=true,crossTierChance=75 })
 				self:die()
 			end
 		end,
