@@ -264,6 +264,17 @@ newAchievement{
 	desc = [[You did the righteous thing in the ring of blood and disposed of the Blood Master.]],
 }
 newAchievement{
+	name = "Thralless", id = "RING_BLOOD_FREED",
+	show = "full",
+	mode = "player",
+	desc = [[Free at least 30 enthralled slaves in the slavers compound.]],
+	can_gain = function(self)
+		self.nb = (self.nb or 0) + 1
+		if self.nb >= 30 then return true end
+	end,
+	track = function(self) return tstring{tostring(self.nb or 0)," / 30"} end,
+}
+newAchievement{
 	name = "Lost in translation", id = "SUNWALL_LOST",
 	show = "name",
 	desc = [[Destroy the naga portal in the slazish fens and be caught in the aftereffect.]],

@@ -187,7 +187,18 @@ newEntity{ base = "BASE_NPC_SLAVER",
 	},
 
 	make_escort = {
-		{type="humanoid", subtype="human", name="enthralled slave", number=2},
+		{type="humanoid", subtype="human", name="enthralled slave", number=2, post=function(self, m)
+			m.master = self
+			m.on_act = function(self)
+				if self.master and self.master:attr("dead") then
+					self.faction = "neutral"
+					self:doEmote(rng.table{"I am free!", "At last, freedom!", "Thanks for this!", "The mental hold is gone!"}, 60)
+					self.on_act = nil
+					self.master = nil
+					world:gainAchievement("RING_BLOOD_FREED", game:getPlayer(true))
+				end
+			end
+		end},
 	}
 }
 

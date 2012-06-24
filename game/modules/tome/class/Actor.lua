@@ -1727,7 +1727,7 @@ function _M:onTakeHit(value, src)
 		self:setEffect(self.EFF_INVISIBILITY, 5, {power=self:attr("invis_on_hit_power")})
 		for tid, _ in pairs(self.invis_on_hit_disable) do self:forceUseTalent(tid, {ignore_energy=true}) end
 	end
-	
+
 	if self:knowTalent(self.T_DUCK_AND_DODGE) then
 		local t = self:getTalentFromId(self.T_DUCK_AND_DODGE)
 		if value >= self.max_life * t.getThreshold(self, t) then
@@ -2018,14 +2018,14 @@ function _M:die(src, death_note)
 			end
 		end)
 	end
-	
+
 	if self:hasEffect(self.EFF_GHOUL_ROT) then
 		local p = self:hasEffect(self.EFF_GHOUL_ROT)
 		if p.make_ghoul > 0 then
 			local t = p.src:getTalentFromId(p.src.T_GNAW)
 			t.spawn_ghoul(p.src, self, t)
 		end
-	end		
+	end
 
 	-- Curse of Corpses: Corpselight
 	-- Curse of Corpses: Reprieve from Death
@@ -3821,6 +3821,7 @@ function _M:addedToLevel(level, x, y)
 					if m and m:canMove(x, y) then
 						if filter.no_subescort then m.make_escort = nil end
 						game.zone:addEntity(game.level, m, "actor", x, y)
+						if filter.post then filter.post(self, m) end
 					elseif m then m:removed() end
 				end
 			end
