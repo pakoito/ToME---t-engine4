@@ -97,6 +97,13 @@ function _M:canTrigger(x, y, who, no_random)
 	return true
 end
 
+--- Trigger the trap
+function _M:trigger(x, y, who)
+	engine.Trap.trigger(self, x, y, who)
+
+	if who.runStop then who:runStop("trap") end
+end
+
 function _M:resolveSource()
 	if self.summoner_gain_exp and self.summoner then
 		return self.summoner:resolveSource()
