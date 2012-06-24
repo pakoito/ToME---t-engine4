@@ -198,7 +198,7 @@ function _M:setPlayer(actor, bypass)
 	game.uiset.hotkeys_display.actor = actor
 	Map:setViewerActor(actor)
 	if game.target then game.target.source_actor = actor end
-	if game.level then game.level.map:moveViewSurround(actor.x, actor.y, 8, 8) end
+	if game.level and actor.x and actor.y then game.level.map:moveViewSurround(actor.x, actor.y, 8, 8) end
 	actor._move_others = actor.move_others
 	actor.move_others = true
 
