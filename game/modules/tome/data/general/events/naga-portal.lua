@@ -48,7 +48,7 @@ local changer = function(id)
 	}
 	local zone = mod.class.Zone.new(id, {
 		name = "water cavern",
-		level_range = {zone:level_adjust_level(level, zone, "actor"), zone:level_adjust_level(level, zone, "actor")},
+		level_range = {game.zone:level_adjust_level(game.level, game.zone, "actor"), game.zone:level_adjust_level(game.level, game.zone, "actor")},
 		level_scheme = "player",
 		max_level = 1,
 		actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
