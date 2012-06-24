@@ -3169,7 +3169,7 @@ function _M:postUseTalent(ab, ret)
 		end
 		-- Vim is not affected by fatigue
 		if ab.vim and not self:attr("zero_resource_cost") then
-			trigger = true; self:incVim(-ab.vim)
+			trigger = true; self:incVim(-ab.vim) self:incEquilibrium(ab.vim * 5)
 		end
 		if ab.positive and not (self:attr("zero_resource_cost") and ab.positive > 0) then
 			trigger = true; self:incPositive(-ab.positive * (100 + self:combatFatigue()) / 100)
