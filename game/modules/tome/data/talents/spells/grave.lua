@@ -276,7 +276,9 @@ newTalent{
 
 		local tg = {type="ball", nolock=true, pass_terrain=false, nowarning=true, friendly_fire=true, default_target=self, range=range, radius=radius, talent=t}
 		local x, y = self:getTarget(tg)
+		print("====1")
 		if not x or not y then return nil end
+		print("====2")
 		local _ _, _, _, x, y = self:canProject(tg, x, y)
 
 		-- get locations in line of movement from center
@@ -298,6 +300,7 @@ newTalent{
 		end end
 
 		darkCount = math.min(darkCount, #locations)
+		print("====3", darkCount)
 		if darkCount == 0 then return false end
 
 		for i = 1, darkCount do

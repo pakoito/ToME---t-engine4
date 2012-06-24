@@ -29,7 +29,7 @@ newEntity{ base = "TRAP_COMPLEX",
 	subtype = "boulder",
 	name = "giant boulder trap", image = "trap/trap_pressure_plate_01.png",
 	detect_power = resolvers.mbonus(40, 5), disarm_power = resolvers.mbonus(50, 10),
-	rarity = 3, level_range = {1, 30},
+	rarity = 3, level_range = {1, nil},
 	color = colors.UMBER,
 	message = "@Target@ walks on a trap, there is a loud noise.",
 	pressure_trap = true,
@@ -71,7 +71,7 @@ newEntity{ base = "TRAP_COMPLEX",
 	subtype = "arcane",
 	name = "spinning beam", image = "trap/trap_glyph_explosion_01_64.png",
 	detect_power = resolvers.mbonus(40, 5), disarm_power = resolvers.mbonus(50, 10),
-	rarity = 3, level_range = {1, 30},
+	rarity = 3, level_range = {1, nil},
 	color=colors.PURPLE,
 	message = "@Target@ walks on a trap, the beam intensifies.",
 	on_added = function(self, level, x, y)
@@ -121,7 +121,7 @@ newEntity{ base = "TRAP_COMPLEX",
 	subtype = "nature",
 	name = "poison cloud", image = "trap/trap_acid_blast_01.png",
 	detect_power = resolvers.mbonus(40, 5), disarm_power = resolvers.mbonus(50, 10),
-	rarity = 3, level_range = {1, 30},
+	rarity = 3, level_range = {1, nil},
 	color=colors.GREEN,
 	message = "@Target@ walks on a poison spore.",
 	on_added = function(self, level, x, y)
@@ -171,7 +171,7 @@ newEntity{ base = "TRAP_COMPLEX",
 	subtype = "arcane",
 	name = "delayed explosion trap", image = "trap/trap_fire_rune_01.png",
 	detect_power = resolvers.mbonus(40, 5), disarm_power = resolvers.mbonus(50, 10),
-	rarity = 3, level_range = {1, 30},
+	rarity = 3, level_range = {1, nil},
 	color=colors.RED,
 	message = "Flames start to appear arround @target@.",
 	dam = resolvers.mbonus_level(300, 15),
@@ -206,5 +206,28 @@ newEntity{ base = "TRAP_COMPLEX",
 		self.points = {}
 		self:useEnergy()
 		game.level:removeEntity(self)
+	end,
+}
+
+newEntity{ base = "TRAP_COMPLEX",
+	subtype = "arcane",
+	name = "cold flames trap", image = "trap/trap_frost_rune_01.png",
+	detect_power = resolvers.mbonus(40, 5), disarm_power = resolvers.mbonus(50, 10),
+	rarity = 3, level_range = {1, nil},
+	color=colors.BLUE,
+	message = "Cold flames start to appear arround @target@.",
+	dam = resolvers.mbonus_level(150, 5),
+	triggered = function(self, x, y, who)
+		local NPC = require "mod.class.NPC"
+		local m = NPC.new{
+			name = "cold flames trap",
+			combatSpellpower = function(self) return self.dam end,
+			getTarget = function(self) return self.x, self.y end,
+			dam = self.dam,
+			x = x, y = y,
+			faction = self.faction,
+		}
+		m:forceUseTalent(m.T_COLD_FLAMES, {ignore_cd=true, ignore_energy=true, force_level=2, ignore_ressources=true})
+		return true
 	end,
 }
