@@ -38,7 +38,7 @@ newEntity{ theme={spell=true}, name="spell crit magnitude", points = 3, rarity =
 	wielder = { combat_critical_power = resolvers.randartmax(5, 25), },
 }
 newEntity{ theme={spell=true}, name="spellsurge", points = 1, rarity = 10, level_range = {1, 50},
-	wielder = { spellsurge_on_crit = resolvers.randartmax(4, 20), },
+	wielder = { spellsurge_on_crit = resolvers.randartmax(2, 10), },
 }
 ----------------------------------------------------------------
 -- Resources

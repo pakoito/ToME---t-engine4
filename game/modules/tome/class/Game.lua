@@ -1394,7 +1394,12 @@ function _M:setupCommands()
 		end),
 
 		LEVELUP = function()
-			self.player:playerLevelup(nil, false)
+package.loaded["mod.dialogs.LevelupDialog"] = nil
+package.loaded["mod.dialogs.elements.TalentTrees"] = nil
+	local ds = require("mod.dialogs.LevelupDialog").new(game.player)
+	game:registerDialog(ds)
+
+--			self.player:playerLevelup(nil, false)
 		end,
 
 		SAVE_GAME = function()

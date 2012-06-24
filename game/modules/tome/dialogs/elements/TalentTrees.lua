@@ -95,7 +95,6 @@ function _M:moveSel(i, j)
 		else
 			self.sel_i = util.bound(self.sel_i + i, 1, #self.tree)
 			self.sel_j = 0
-			self.scroll = util.scroll(self.sel_i, self.scroll, self.max_display)
 			local t = self.tree[self.sel_i]
 			match = t
 		end
@@ -106,7 +105,6 @@ function _M:moveSel(i, j)
 			match = t
 		else
 			self.sel_i = util.bound(self.sel_i + i, 1, #self.tree)
-			self.scroll = util.scroll(self.sel_i, self.scroll, self.max_display)
 			local t = self.tree[self.sel_i]
 			if t.shown and t.nodes and #t.nodes > 0 then
 				self.sel_j = 1
@@ -118,16 +116,21 @@ function _M:moveSel(i, j)
 		end
 	end
 
+	self.last_scroll = nil
+	self.scroll = util.scroll(self.sel_i, self.scroll, self.max_display)
+	self:display(self.last_display_bx, self.last_display_by, 0, self.last_display_x, self.last_display_y)
+
 	for i = 1, #self.mousezones do
 		local mz = self.mousezones[i]
 		if mz.item == match then self.last_mz = mz break end
 	end
 
+	self:display(self.last_display_bx, self.last_display_by, 0, self.last_display_x, self.last_display_y)
+
+	if not self.last_mz then return end
 	local str, fx, fy = self.tooltip(self.last_mz.item)
 	self.last_mz.tx, self.last_mz.ty = fx or (self.last_display_x + self.last_mz.x2), fy or (self.last_display_y + self.last_mz.y1)
 	game:tooltipDisplayAtMap(self.last_mz.tx, self.last_mz.ty, str)
-
-	self.last_scroll = nil
 end
 
 function _M:generate()
@@ -197,10 +200,8 @@ function _M:generate()
 		[{"_RIGHT","ctrl"}] = function() self.key:triggerVirtual("MOVE_RIGHT") end,
 		_HOME = function() self.sel_i = 1 self:moveSel(-1, 0) end,
 		_END = function() self.sel_i = #self.tree self:moveSel(1, 0)  end,
-		_PAGEUP = function()
-		end,
-		_PAGEDOWN = function()
-		end,
+		_PAGEUP = function() self:doScroll(-self.max_display) end,
+		_PAGEDOWN = function() self:doScroll(self.max_display) end,
 	}
 end
 
@@ -241,6 +242,8 @@ function _M:redrawAllItems()
 end
 
 function _M:display(x, y, nb_keyframes, screen_x, screen_y)
+	self.last_display_bx = x
+	self.last_display_by = y
 	self.last_display_x = screen_x
 	self.last_display_y = screen_y
 
@@ -294,7 +297,7 @@ function _M:display(x, y, nb_keyframes, screen_x, screen_y)
 			dx = dx + self.frame_size + self.frame_offset
 			addh = addh + self.frame_size
 		end end
-		self.max_display = i
+		self.max_display = i - self.scroll + 1
 		dx = 0
 		dy = dy + addh + 12
 		if dy + self.frame_size >= self.h then break end
