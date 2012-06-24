@@ -1697,19 +1697,23 @@ function _M:saveGame()
 	if self.party then for actor, _ in pairs(self.party.members) do engine.interface.PlayerHotkeys:updateQuickHotkeys(actor) end end
 
 	-- savefile_pipe is created as a global by the engine
-	savefile_pipe:push(self.save_name, "game", self)
+	local clone = savefile_pipe:push(self.save_name, "game", self)
 	world:saveWorld()
 	if not self.creating_player then
 		local oldplayer = self.player
 		self.party:setPlayer(self:getPlayer(true), true)
 
-		local party = self.party:cloneFull()
-		party.__te4_uuid = self:getPlayer(true).__te4_uuid
-		for m, _ in pairs(party.members) do
-			m:stripForExport()
-		end
-		party:stripForExport()
-		self.player:saveUUID(party)
+		_G.game = clone
+		pcall(function()
+			local party = game.party:cloneFull()
+			party.__te4_uuid = game:getPlayer(true).__te4_uuid
+			for m, _ in pairs(party.members) do
+				m:stripForExport()
+			end
+			party:stripForExport()
+			game.player:saveUUID(party)
+		end)
+		_G.game = self
 
 		self.party:setPlayer(oldplayer, true)
 	end

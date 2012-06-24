@@ -80,6 +80,8 @@ function _M:push(savename, type, object, class, on_end)
 	if #self.pipe >= self.max_before_wait or not config.settings.background_saves then
 		self:forceWait()
 	end
+
+	return clone
 end
 
 --- Push a generic action to be done once saves complete
