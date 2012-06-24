@@ -1112,7 +1112,7 @@ function _M:displayParticles(nb_keyframes)
 
 		e = next(self.particles, e)
 	end
-	for i = 1, #del do self.particles[del[i]] = nil end
+	for i = 1, #del do self.particles[del[i]] = nil if del[i].on_remove then del[i]:on_remove() end end
 end
 
 -------------------------------------------------------------

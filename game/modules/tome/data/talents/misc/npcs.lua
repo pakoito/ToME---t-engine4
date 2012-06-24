@@ -1700,7 +1700,6 @@ newTalent{
 	end,
 }
 
-
 newTalent{
 	name = "Frost Hands", image = "talents/shock_hands.png",
 	type = {"spell/other", 3},
@@ -1729,5 +1728,80 @@ newTalent{
 		return ([[Engulfs your hands (and weapons) in a sheath of frost, dealing %d cold damage per melee attack and increasing all cold damage by %d%%.
 		The effects will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.COLD, icedamage), icedamageinc, self:getTalentLevel(t) / 3)
+	end,
+}
+
+newTalent{
+	name = "Meteor Rain",
+	type = {"spell/other", 3},
+	points = 5,
+	cooldown = 30,
+	mana = 70,
+	tactical = { ATTACKAREA = { FIRE=2, PHYSICAL=2 } },
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 15, 250) end,
+	getNb = function(self, t) return 3 + math.floor(self:getTalentLevel(t) / 3) end,
+	radius = 2,
+	range = 5,
+	target = function(self, t) return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t} end,
+	action = function(self, t)
+		local tg = self:getTalentTarget(t)
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+
+		local terrains = mod.class.Grid:loadList("/data/general/grids/lava.lua")
+		local meteor = function(src, x, y, dam)
+			game.level.map:particleEmitter(x, y, 10, "meteor", {x=x, y=y}).on_remove = function(self)
+				local x, y = self.args.x, self.args.y
+				game.level.map:particleEmitter(x, y, 10, "ball_fire", {radius=2})
+				game:playSoundNear(game.player, "talents/fireflash")
+
+				for i = x-1, x+1 do for j = y-1, y+1 do
+					if (core.fov.distance(x, y, i, j) < 1 or rng.percent(40)) and (game.level.map:checkEntity(i, j, engine.Map.TERRAIN, "dig") or game.level.map:checkEntity(i, j, engine.Map.TERRAIN, "grow")) then
+						local g = terrains.LAVA_FLOOR:clone()
+						g:resolve() g:resolve(nil, true)
+						g.temporary = 8
+						g.x = i g.y = j
+						g.canAct = false
+						g.energy = { value = 0, mod = 1 }
+						g.old_feat = game.level.map(i, j, engine.Map.TERRAIN)
+						g.useEnergy = mod.class.Trap.useEnergy
+						g.act = function(self)
+							self:useEnergy()
+							self.temporary = self.temporary - 1
+							if self.temporary <= 0 then
+								game.level.map(self.x, self.y, engine.Map.TERRAIN, self.old_feat)
+								game.level:removeEntity(self)
+								game.nicer_tiles:updateAround(game.level, self.x, self.y)
+							end
+						end
+						game.zone:addEntity(game.level, g, "terrain", i, j)
+						game.level:addEntity(g)
+					end
+				end end
+				for i = x-1, x+1 do for j = y-1, y+1 do
+					game.nicer_tiles:updateAround(game.level, i, j)
+				end end
+
+				src:project({type="ball", radius=2, selffire=src:spellFriendlyFire()}, x, y, engine.DamageType.FIRE, dam/2)
+				src:project({type="ball", radius=2, selffire=src:spellFriendlyFire()}, x, y, engine.DamageType.PHYSICAL, dam/2)
+			end
+		end
+
+		local grids = {}
+		self:project(tg, x, y, function(px, py) grids[#grids+1] = {x=px, y=py} end)
+
+		for i = 1, t.getNb(self, t) do
+			local g = rng.tableRemove(grids)
+			meteor(self, g.x, g.y, t.getDamage(self, t))
+		end
+
+		return true
+	end,
+	info = function(self, t)
+		local dam = t.getDamage(self, t)
+		return ([[Uses arcane forces to summon %d meteors that fall on the ground, smashing all around in a radius 2 for %0.2f fire and %0.2f physical damage.
+		The hit zone will also turn into lava for 8 turns.
+		The effects will increase with your Spellpower.]]):
+		format(t.getNb(self, t), damDesc(self, DamageType.FIRE, dam), damDesc(self, DamageType.PHYSICAL, dam))
 	end,
 }

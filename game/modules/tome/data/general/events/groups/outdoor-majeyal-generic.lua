@@ -20,4 +20,5 @@
 return {
 	{name="damp-cave", percent=10},
 	{name="drake-cave", percent=5},
+	{name="meteor", percent=7},
 }
