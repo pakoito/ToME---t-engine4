@@ -76,10 +76,13 @@ local maker_list = function()
 	}
 	local l = {}
 	for i, name in ipairs(bases) do
-		local o = game.zone:makeEntity(game.level, "object", {name=name, ingore_material_restriction=true, no_tome_drops=true, ego_filter={keep_egos=true, ego_chance=-1000}}, nil, true)
+		local not_ps = player:attr("forbid_arcane") and {arcane=true} or {antimagic=true}
+		local force_themes = player:attr("forbid_arcane") and {'antimagic'} or nil
+
+		local o = game.zone:makeEntity(game.level, "object", {name=name, forbid_power_source=not_ps, ingore_material_restriction=true, no_tome_drops=true, ego_filter={keep_egos=true, ego_chance=-1000}}, nil, true)
 		if o then
 			l[#l+1] = {o:getName{force_id=true, do_color=true, no_count=true}, action=function(npc, player)
-				local art = game.state:generateRandart{base=o, lev=70, egos=4}
+				local art = game.state:generateRandart{base=o, lev=70, egos=4, force_themes=force_themes, forbid_power_source=not_ps}
 				if art then
 					art:identify(true)
 					player:addObject(player.INVEN_INVEN, art)
