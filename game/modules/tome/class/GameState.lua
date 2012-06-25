@@ -518,7 +518,7 @@ function _M:spawnWorldAmbush(enc, dx, dy)
 		max_level = 1,
 		actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
 		width = enc.width or 20, height = enc.height or 20,
-		no_worldport = true,
+--		no_worldport = true,
 		all_lited = true,
 		ambient_music = "last",
 		max_material_level = util.bound(math.ceil(game.player.level / 10), 1, 5),

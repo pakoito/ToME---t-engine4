@@ -1212,7 +1212,7 @@ function _M:setupCommands()
 			setfenv(f, setmetatable({level=self.level, zone=self.zone}, {__index=_G}))
 			print(pcall(f))
 
-			FINISH CULTISTS EVENT
+--			FINISH CULTISTS EVENT
 
 			end end,
 		[{"_f","ctrl"}] = function() if config.settings.cheat then

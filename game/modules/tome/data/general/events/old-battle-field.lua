@@ -99,7 +99,7 @@ if tries < 100 then
 								if m then game.zone:addEntity(game.level, m, "actor", spot.x, spot.y) m:setTarget(game.player) end
 							end
 						end
-						game.level.nb_pop = game.level.nb_pop + 0.15
+						game.level.nb_pop = game.level.nb_pop + 0.1
 					end
 				end
 			end,
