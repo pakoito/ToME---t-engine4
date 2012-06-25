@@ -148,25 +148,32 @@ end
 
 function _M:canControl(actor, vocal)
 	if not actor then return false end
-	if actor == game.player then return false end
+	if actor == game.player then
+		print("[PARTY] error trying to set player, same")
+		return false
+	end
 
 	if game.player and game.player.no_leave_control then
---		print("[PARTY] error trying to set player but current player is modal")
+		print("[PARTY] error trying to set player but current player is modal")
 		return false
 	end
 	if not self.members[actor] then
---		print("[PARTY] error trying to set player, not a member of party: ", actor.uid, actor.name)
+		print("[PARTY] error trying to set player, not a member of party: ", actor.uid, actor.name)
 		return false
 	end
 	if self.members[actor].control ~= "full" then
---		print("[PARTY] error trying to set player, not controlable: ", actor.uid, actor.name)
+		print("[PARTY] error trying to set player, not controlable: ", actor.uid, actor.name)
 		return false
 	end
 	if actor.dead or (game.level and not game.level:hasEntity(actor)) then
 		if vocal then game.logPlayer(game.player, "Can not switch control to this creature.") end
+		print("[PARTY] error trying to set player, no entity or dead")
 		return false
 	end
-	if actor.on_can_control and not actor:on_can_control(vocal) then return false end
+	if actor.on_can_control and not actor:on_can_control(vocal) then
+		print("[PARTY] error trying to set player, forbade")
+		return false
+	end
 	return true
 end
 
@@ -187,7 +194,12 @@ function _M:setPlayer(actor, bypass)
 	-- Convert the class to always be a player
 	if actor.__CLASSNAME ~= "mod.class.Player" and not actor.no_party_class then
 		actor.__PREVIOUS_CLASSNAME = actor.__CLASSNAME
+		local uid = actor.uid
+		actor.replacedWith = false
 		actor:replaceWith(mod.class.Player.new(actor))
+		actor.replacedWith = nil
+		actor.uid = uid
+		__uids[uid] = actor
 		actor.changed = true
 	end
 
@@ -207,7 +219,12 @@ function _M:setPlayer(actor, bypass)
 		if self.members[oldp] and self.members[oldp].on_uncontrol then self.members[oldp].on_uncontrol(oldp) end
 
 		if oldp.__PREVIOUS_CLASSNAME then
+			local uid = oldp.uid
+			oldp.replacedWith = false
 			oldp:replaceWith(require(oldp.__PREVIOUS_CLASSNAME).new(oldp))
+			oldp.replacedWith = nil
+			oldp.uid = uid
+			__uids[uid] = oldp
 		end
 
 		actor.move_others = actor._move_others
@@ -255,7 +272,10 @@ function _M:canOrder(actor, order, vocal)
 		if vocal then game.logPlayer(game.player, "Can not give orders to this creature.") end
 		return false
 	end
-	if actor.on_can_order and not actor:on_can_order(vocal) then return false end
+	if actor.on_can_order and not actor:on_can_order(vocal) then
+		print("[PARTY] error trying to order, can order forbade")
+		return false
+	end
 	if order and not self.members[actor].orders[order] then
 		print("[PARTY] error trying to order, unknown order: ", actor.uid, actor.name)
 		return false
@@ -355,7 +375,8 @@ end
 function _M:select(actor)
 	if not actor then return false end
 	if type(actor) == "number" then actor = self.m_list[actor] end
-	if actor == game.player then return false end
+	print("====", actor.name)
+	if actor == game.player then print("[PARTY] control fail, same", actor, game.player) return false end
 
 	if self:canControl(actor) then return self:setPlayer(actor)
 	elseif self:canOrder(actor) then return self:giveOrders(actor)
