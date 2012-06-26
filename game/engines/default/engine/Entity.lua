@@ -764,6 +764,7 @@ function _M:loadList(file, no_default, res, mod, loaded)
 		entities_load_functions[file][no_default] = f
 	else
 		-- No data
+		print("Loading entities file from file", file, "which does not exists!")
 		f = function() end
 	end
 	if err then error(err) end
