@@ -176,7 +176,6 @@ local function clonerecursfull(clonetable, d)
 		if clonetable[e] then ne = clonetable[e]
 		elseif type(e) == "table" and (type(k) ~= "string" or k ~= "__threads") then ne, add = clonerecursfull(clonetable, e) nb = nb + add
 		end
-		if tostring(nk) == "nan" and type(nk) ~= "string" then nk = "__nan_bug" end
 		n[nk] = ne
 
 		k, e = next(d, k)
