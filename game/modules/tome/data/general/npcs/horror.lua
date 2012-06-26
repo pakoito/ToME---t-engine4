@@ -518,7 +518,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	life_regen = 0.25,
 	combat_armor = 12, combat_def = 24,
 	
-		ai = "tactical", ai_state = { ai_move="move_dmap", talent_in=3, ally_compassion=0 },
+		ai = "tactical", ai_state = { ai_move="move_dmap", talent_in=2, ally_compassion=0 },
 		
 	on_melee_hit = {[DamageType.PHYSICALBLEED]=resolvers.mbonus(14, 2)},
 	combat = { dam=resolvers.levelup(resolvers.rngavg(16,22), 1, 1.5), atk=resolvers.levelup(18, 1, 1), apr=4, dammod={wil=0.25, cun=0.1}, damtype=engine.DamageType.PHYSICALBLEED, },
@@ -580,7 +580,8 @@ newEntity{ base = "BASE_NPC_HORROR",
 		dammod={wil=1.1}, physcrit = 10, 
 		damtype=engine.DamageType.SLIME,
 	},
-	ai_state = { talent_in=3, },
+	
+		ai = "tactical", ai_state = { ai_move="move_dmap", talent_in=1, ally_compassion=0 },
 	
 	resists = {all=15, [DamageType.PHYSICAL] = -10, [DamageType.NATURE] = 100, [DamageType.ARCANE] = 40, [DamageType.BLIGHT] = 24},
 
@@ -617,6 +618,8 @@ newEntity{ base = "BASE_NPC_HORROR",
 		damtype=engine.DamageType.DARKNESS,
 	},
 	combat_physspeed = 2,
+	
+		ai = "tactical", ai_state = { ai_move="move_dmap", talent_in=1, ally_compassion=0 },
 	
 	resists = {[DamageType.PHYSICAL] = -10, [DamageType.DARKNESS] = 100, [DamageType.LIGHT] = -60},
 

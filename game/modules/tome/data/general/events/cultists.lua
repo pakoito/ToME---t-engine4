@@ -83,6 +83,7 @@ for i, p in ipairs(list) do
 		},
 		resolvers.sustains_at_birth(),
 		resolvers.inscriptions(1, "rune"),
+		is_cultist_event = true,
 	}
 	m:resolve() m:resolve(nil, true)
 	game.zone:addEntity(game.level, m, "actor", p.x-1, p.y)
