@@ -249,8 +249,8 @@ newTalent{
 		self.alchemy_golem:learnTalent(Talents.T_WEAPONS_MASTERY, true, nil, {no_unlearn=true})
 	end,
 	on_unlearn = function(self, t)
-		self.alchemy_golem:unlearnTalent(Talents.T_WEAPON_COMBAT, true)
-		self.alchemy_golem:unlearnTalent(Talents.T_WEAPONS_MASTERY, true)
+		self.alchemy_golem:unlearnTalent(Talents.T_WEAPON_COMBAT)
+		self.alchemy_golem:unlearnTalent(Talents.T_WEAPONS_MASTERY)
 	end,
 	info = function(self, t)
 		if not self.alchemy_golem then return "Improves your golem's proficiency with weapons, increasing its attack and damage." end
@@ -279,8 +279,8 @@ newTalent{
 		self.alchemy_golem.healing_factor = (self.alchemy_golem.healing_factor or 1) + 0.1
 	end,
 	on_unlearn = function(self, t)
-		self.alchemy_golem:unlearnTalent(Talents.T_THICK_SKIN, true)
-		self.alchemy_golem:unlearnTalent(Talents.T_ARMOUR_TRAINING, true)
+		self.alchemy_golem:unlearnTalent(Talents.T_THICK_SKIN)
+		self.alchemy_golem:unlearnTalent(Talents.T_ARMOUR_TRAINING)
 		self.alchemy_golem.healing_factor = (self.alchemy_golem.healing_factor or 1) - 0.1
 	end,
 	info = function(self, t)
