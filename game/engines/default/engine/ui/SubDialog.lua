@@ -272,15 +272,14 @@ function _M:setSubFocus(id)
 		for i = 1, #self.uis do
 			if self.uis[i].ui == id then id = i break end
 		end
-		if type(id) == "table" then self:no_focus() return end
+		if type(id) == "table" then return end
 	end
 
 	local ui = self.uis[id]
-	if not ui.ui.can_focus then self:no_focus() return end
+	if not ui.ui.can_focus then return end
 	self.focus_ui = ui
 	self.focus_ui_id = id
 	ui.ui:setFocus(true)
-	self:on_focus(id, ui)
 end
 
 function _M:moveUIElement(id, left, right, top, bottom)
@@ -328,9 +327,13 @@ function _M:moveFocus(v)
 	end
 end
 
-function _M:on_focus(id, ui)
-end
-function _M:no_focus()
+function _M:on_focus(v)
+	if not v then
+		self.last_focus = self.focus_ui
+		self:setSubFocus({})
+	else
+		self:setSubFocus(self.focus_ui)
+	end
 end
 
 function _M:mouseEvent(button, x, y, xrel, yrel, bx, by, event)
@@ -345,7 +348,6 @@ function _M:mouseEvent(button, x, y, xrel, yrel, bx, by, event)
 			return
 		end
 	end
-	self:no_focus()
 end
 
 function _M:keyEvent(...)
