@@ -32,6 +32,7 @@ local TextzoneList = require "engine.ui.TextzoneList"
 local Separator = require "engine.ui.Separator"
 local NameGenerator = require "engine.NameGenerator"
 local NameGenerator2 = require "engine.NameGenerator2"
+local Savefile = require "engine.Savefile"
 local Module = require "engine.Module"
 local Tiles = require "engine.Tiles"
 local Particles = require "engine.Particles"
@@ -257,6 +258,11 @@ function _M:atEnd(v)
 				self.actor.moddable_tile = nil
 			end
 			game:setPlayerName(self.c_name.text)
+
+			local save = Savefile.new(game.save_name)
+			save:delete()
+			save:close()
+
 			game:saveSettings("tome.default_birth", ("tome.default_birth = {permadeath = %q}\n"):format(self.actor.descriptor.permadeath))
 
 			self.at_end(false)
