@@ -67,6 +67,7 @@ function _M:init(title, actor, filter, action, on_select)
 		select_tab=function(item) self:select(item) end,
 		on_drag=function(item) self:onDrag(item) end,
 		on_drag_end=function() self:onDragTakeoff() end,
+		special_bg=function(item) if item.object and item.object.__transmo then return colors.GOLD end end,
 	}
 
 	local uis = {
@@ -181,7 +182,7 @@ function _M:updateTitle(title)
 end
 
 function _M:onDrag(item)
-	if item and item.object and not item.object.__transmo then
+	if item and item.object then
 		local s = item.object:getEntityFinalSurface(nil, 64, 64)
 		local x, y = core.mouse.get()
 		game.mouse:startDrag(x, y, s, {kind="inventory", item_idx=item.item, inven=item.inven, object=item.object, id=item.object:getName{no_add_name=true, force_id=true, no_count=true}}, function(drag, used)

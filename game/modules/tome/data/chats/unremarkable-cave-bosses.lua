@@ -54,8 +54,7 @@ Fillarel: "You! @playerdescriptor.race@! Help me defeat this monster or begone!"
 Krogar: "Ah, looking for help? Bah. @playerdescriptor.race@, kill this wench for me and I shall reward you!"]],
 	answers = {
 		{"[attack Krogar]", action=attack_krogar},
--- Not available yet
---		{"[attack Fillarel]", action=attack_fillarel},
+		{"[attack Fillarel]", action=attack_fillarel, cond=function(npc, player) return not player:hasQuest("start-sunwall") and config.settings.cheat end},
 	}
 }
 return "welcome"

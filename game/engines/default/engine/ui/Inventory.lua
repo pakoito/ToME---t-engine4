@@ -40,6 +40,7 @@ function _M:init(t)
 	self.on_select_tab = t.select_tab
 	self.on_drag = t.on_drag
 	self.on_drag_end = t.on_drag_end
+	self.special_bg = t.special_bg
 
 	if self.tabslist == nil and self.default_tabslist then
 		if type(self.default_tabslist) == "function" then self.tabslist = self.default_tabslist(self)
@@ -250,7 +251,7 @@ function _M:generateList(no_update)
 			local enc = 0
 			o:forAllStack(function(o) enc=enc+o.encumber end)
 
-			list[#list+1] = { id=#list+1, char=char, name=o:getName(), sortname=o:getName():toString():removeColorCodes(), color=o:getDisplayColor(), object=o, inven=self.actor.INVEN_INVEN, item=item, cat=o.subtype, encumberance=enc, desc=o:getDesc() }
+			list[#list+1] = { id=#list+1, char=char, name=o:getName(), sortname=o:getName():toString():removeColorCodes(), color=o:getDisplayColor(), object=o, inven=self.actor.INVEN_INVEN, item=item, cat=o.subtype, encumberance=enc, desc=o:getDesc(), special_bg=self.special_bg }
 			chars[char] = #list
 			i = i + 1
 		end

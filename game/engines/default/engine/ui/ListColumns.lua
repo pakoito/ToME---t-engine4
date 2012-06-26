@@ -65,6 +65,7 @@ function _M:init(t)
 
 		col.surface = core.display.newSurface(col.width, self.fh)
 		col.frame = self:makeFrame(nil, col.width, self.fh)
+		col.frame_special = self:makeFrame("ui/selector", col.width, self.fh)
 		col.frame_sel = self:makeFrame("ui/selector-sel", col.width, self.fh)
 		col.frame_usel = self:makeFrame("ui/selector", col.width, self.fh)
 		col.frame_col = self:makeFrame("ui/heading", col.width, self.fh)
@@ -326,6 +327,15 @@ function _M:display(x, y, nb_keyframes, screen_x, screen_y)
 					if item.focus_decay <= 0 then item.focus_decay = nil end
 				end
 			end
+
+			if item.special_bg then
+				local c = item.special_bg
+				if type(c) == "function" then c = c(item) end
+				if c then
+					self:drawFrame(col.frame_special, x, y, c.r, c.g, c.b, c.a or 1)
+				end
+			end
+
 			if col.direct_draw then
 				col.direct_draw(item, x, y, col.fw, self.fh)
 			elseif item._tex then
