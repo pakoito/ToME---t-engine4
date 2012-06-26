@@ -357,7 +357,6 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 
 		if target:hasEffect(target.EFF_COUNTERSTRIKE) then
 			dam = dam * 2
-			--self:removeEffect(target.EFF_COUNTERSTRIKE)
 			local eff = target.tmp[target.EFF_COUNTERSTRIKE]
 			eff.nb = eff.nb - 1
 			if eff.nb == 0 then target:removeEffect(target.EFF_COUNTERSTRIKE) end

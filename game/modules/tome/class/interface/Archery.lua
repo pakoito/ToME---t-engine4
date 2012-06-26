@@ -148,6 +148,14 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 		local damrange = self:combatDamageRange(ammo)
 		dam = rng.range(dam, dam * damrange)
 		print("[ATTACK ARCHERY] after range", dam)
+
+		if target:hasEffect(target.EFF_COUNTERSTRIKE) then
+			dam = dam * 2
+			local eff = target.tmp[target.EFF_COUNTERSTRIKE]
+			eff.nb = eff.nb - 1
+			if eff.nb == 0 then target:removeEffect(target.EFF_COUNTERSTRIKE) end
+			print("[ATTACK] after counterstrike", dam)
+		end
 		
 		if ammo and ammo.inc_damage_type then
 			for t, idt in pairs(ammo.inc_damage_type) do
