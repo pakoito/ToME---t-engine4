@@ -223,6 +223,7 @@ newEntity{ base = "TRAP_COMPLEX",
 		local NPC = require "mod.class.NPC"
 		local m = NPC.new{
 			name = "cold flames trap",
+			type = "trap", subtype = "arcane",
 			combatSpellpower = function(self) return self.dam end,
 			getTarget = function(self) return self.x, self.y end,
 			dam = self.dam,
