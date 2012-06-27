@@ -3099,6 +3099,16 @@ function _M:postUseTalent(ab, ret)
 		else
 			self:useEnergy()
 		end
+
+		-- Free melee blow
+		if self:knowTalent(self.T_CORRUPTED_STRENGTH) then
+			local tgts = {}
+			for _, c in pairs(util.adjacentCoords(self.x, self.y)) do
+				local target = game.level.map(c[1], c[2], Map.ACTOR)
+				if target and self:reactionToward(target) < 0 then tgts[#tgts+1] = target end
+			end
+			if #tgts > 0 then self:attackTarget(rng.table(tgts), DamageType.BLIGHT, self:combatTalentWeaponDamage(self.T_CORRUPTED_STRENGTH, 0.5, 1.1), true) end
+		end
 	end
 
 	local trigger = false

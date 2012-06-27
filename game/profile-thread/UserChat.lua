@@ -69,6 +69,8 @@ function _M:parted(channel)
 end
 
 function _M:reconnect()
+	if not self.client.sock then return end
+
 	-- Rejoin every channels
 	print("[ONLINE PROFILE] reconnecting to channels")
 	for chan, _ in pairs(self.cjoined) do
