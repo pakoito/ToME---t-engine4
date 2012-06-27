@@ -186,14 +186,14 @@ function _M:generate()
 		if not done then game.tooltip_x = nil self.last_mz = nil end
 	end)
 	self.key:addBinds{
-		ACCEPT = function() self:onUse(self.last_mz.item, true) end,
+		ACCEPT = function() if self.last_mz then self:onUse(self.last_mz.item, true) end end,
 		MOVE_UP = function() self:moveSel(-1, 0) end,
 		MOVE_DOWN = function() self:moveSel(1, 0) end,
 		MOVE_LEFT = function() self:moveSel(0, -1) end,
 		MOVE_RIGHT = function() self:moveSel(0, 1) end,
 	}
 	self.key:addCommands{
-		[{"_RETURN","ctrl"}] = function() self:onUse(self.last_mz.item, false) end,
+		[{"_RETURN","ctrl"}] = function() if self.last_mz then self:onUse(self.last_mz.item, false) end end,
 		[{"_UP","ctrl"}] = function() self.key:triggerVirtual("MOVE_UP") end,
 		[{"_DOWN","ctrl"}] = function() self.key:triggerVirtual("MOVE_DOWN") end,
 		[{"_LEFT","ctrl"}] = function() self.key:triggerVirtual("MOVE_LEFT") end,
