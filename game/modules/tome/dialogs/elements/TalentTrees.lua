@@ -27,7 +27,7 @@ module(..., package.seeall, class.inherit(Base, Focusable))
 
 function _M:init(t)
 	self.tiles = assert(t.tiles, "no Tiles class")
-	self.tree = assert(t.tree, "no talent tree")
+	self.tree = t.tree or {}
 	self.w = assert(t.width, "no width")
 	self.h = assert(t.height, "no height")
 	self.tooltip = assert(t.tooltip, "no tooltip")
