@@ -375,7 +375,6 @@ end
 function _M:select(actor)
 	if not actor then return false end
 	if type(actor) == "number" then actor = self.m_list[actor] end
-	print("====", actor.name)
 	if actor == game.player then print("[PARTY] control fail, same", actor, game.player) return false end
 
 	if self:canControl(actor) then return self:setPlayer(actor)
