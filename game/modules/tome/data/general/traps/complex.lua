@@ -17,6 +17,8 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local DamageType = require "engine.DamageType"
+
 newEntity{ define_as = "TRAP_COMPLEX",
 	type = "complex", id_by_type=true, unided_name = "trap",
 	display = '^',
@@ -73,11 +75,10 @@ newEntity{ base = "TRAP_COMPLEX",
 	detect_power = resolvers.mbonus(40, 5), disarm_power = resolvers.mbonus(50, 10),
 	rarity = 3, level_range = {1, nil},
 	color=colors.PURPLE,
-	message = "@Target@ walks on a trap, the beam intensifies.",
+	message = "@Target@ walks on a trap, the beam changes.",
 	on_added = function(self, level, x, y)
 		self.x, self.y = x, y
 		self.rad = rng.range(2, 8)
-		self.max_dam = self.dam * 2.5
 		local tries = {}
 		local list = {i=1}
 		local sa = rng.range(0, 359)
@@ -94,10 +95,17 @@ newEntity{ base = "TRAP_COMPLEX",
 		game.level:addEntity(self)
 		self.on_added = nil
 	end,
+	dammode = rng.table{engine.DamageType.ARCANE_SILENCE, engine.DamageType.DARKSTUN, engine.DamageType.COLDNEVERMOVE},
 	all_know = true,
 	dam = resolvers.mbonus_level(300, 5),
+	mag = resolvers.mbonus(200, 30),
+	combatSpellpower = function(self) return mod.class.interface.Combat:rescaleCombatStats(self.mag) end,
 	triggered = function(self, x, y, who)
-		if self:reactionToward(who) < 0 and not who.summoner then self.dam = math.min(self.dam * 1.5, self.max_dam) end
+		if self:reactionToward(who) < 0 then
+			local dammode = self.dammode
+			while dammode == self.dammode do dammode = rng.table{engine.DamageType.ARCANE_SILENCE, engine.DamageType.DARKSTUN, engine.DamageType.COLDNEVERMOVE} end
+			self.dammode = dammode
+		end
 		return true
 	end,
 	disarmed = function(self, x, y, who)
@@ -110,9 +118,15 @@ newEntity{ base = "TRAP_COMPLEX",
 		self.list.i = util.boundWrap(self.list.i + 1, 1, #self.list)
 
 		local tg = {type="beam", range=self.rad, friendlyfire=false}
-		self:project(tg, x, y, engine.DamageType.ARCANE, self.dam, nil)
+		self:project(tg, x, y, self.dammode, self.dam, nil)
 		local _ _, x, y = self:canProject(tg, x, y)
-		game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(x-self.x), math.abs(y-self.y)), "mana_beam", {tx=x-self.x, ty=y-self.y})
+		if self.dammode == engine.DamageType.ARCANE_SILENCE then
+			game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(x-self.x), math.abs(y-self.y)), "mana_beam", {tx=x-self.x, ty=y-self.y})
+		elseif self.dammode == engine.DamageType.DARKSTUN then
+			game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(x-self.x), math.abs(y-self.y)), "dark_lightning", {tx=x-self.x, ty=y-self.y})
+		elseif self.dammode == engine.DamageType.COLDNEVERMOVE then
+			game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(x-self.x), math.abs(y-self.y)), "icebeam", {tx=x-self.x, ty=y-self.y})
+		end
 
 		self:useEnergy()
 	end,
