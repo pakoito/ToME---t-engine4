@@ -22,6 +22,7 @@ require "mod.class.interface.TooltipsData"
 
 local Dialog = require "engine.ui.Dialog"
 local Textzone = require "engine.ui.Textzone"
+local TextzoneList = require "engine.ui.TextzoneList"
 local TalentTrees = require "mod.dialogs.elements.TalentTrees"
 local Separator = require "engine.ui.Separator"
 local DamageType = require "engine.DamageType"
@@ -58,7 +59,10 @@ function _M:init(actor, on_finish, on_birth)
 		if v.type == "subclass" and v.name == actor.descriptor.subclass then self.desc_def = v break end
 	end
 
-	Dialog.init(self, "Levelup: "..actor.name, 740, game.h * 0.9, game.w * 0.05, game.h * 0.05)
+	Dialog.init(self, "Levelup: "..actor.name, game.w * 0.9, game.h * 0.9, game.w * 0.05, game.h * 0.05)
+	if game.w * 0.9 >= 1000 then
+		self.no_tooltip = true
+	end
 
 	self:generateList()
 
@@ -551,14 +555,19 @@ function _M:createDisplay()
 	self.c_tree = TalentTrees.new{
 		tiles=game.uiset.hotkeys_display_icons,
 		tree=self.tree,
-		width=self.iw-200-10, height=self.ih-10,
+		width=530, height=self.ih-10,
 		tooltip=function(item)
 			local x = self.display_x + self.uis[3].x - game.tooltip.max
 			if self.display_x + self.w + game.tooltip.max <= game.w then x = self.display_x + self.w end
-			return self:getTalentDesc(item), x, nil
+			local ret = self:getTalentDesc(item), x, nil
+			if self.no_tooltip then
+				self.c_desc:erase()
+				self.c_desc:switchItem(ret, ret)
+			end
+			return ret
 		end,
 		on_use = function(item, inc) self:onUseTalent(item, inc) end,
-		scrollbar = true,
+		scrollbar = true, no_tooltip = self.no_tooltip,
 	}
 
 	self.c_stat = TalentTrees.new{
@@ -569,10 +578,16 @@ function _M:createDisplay()
 		tooltip=function(item)
 			local x = self.display_x + self.uis[1].x + self.uis[1].ui.w
 			if self.display_x + self.w + game.tooltip.max <= game.w then x = self.display_x + self.w end
-			return self:getStatDesc(item), x, nil
+			local ret = self:getStatDesc(item), x, nil
+			if self.no_tooltip then
+				self.c_desc:erase()
+				self.c_desc:switchItem(ret, ret)
+			end
+			return ret
 		end,
 		on_use = function(item, inc) self:onUseTalent(item, inc) end,
 		on_expand = function(item) self.actor.__hidden_talent_types[item.type] = not item.shown end,
+		no_tooltip = self.no_tooltip,
 	}
 
 	self.c_points = Textzone.new{
@@ -583,7 +598,7 @@ function _M:createDisplay()
 	local vsep = Separator.new{dir="horizontal", size=self.ih - 20}
 	local hsep = Separator.new{dir="vertical", size=180}
 
-	return {
+	local ret = {
 		{left=0, top=0, ui=self.c_stat},
 		{left=self.c_stat, top=10, ui=vsep},
 		{left=vsep, top=0, ui=self.c_tree},
@@ -591,6 +606,18 @@ function _M:createDisplay()
 		{left=10, top=210, ui=hsep},
 		{left=0, top=hsep, ui=self.c_points},
 	}
+
+	if self.no_tooltip then
+		local vsep2 = Separator.new{dir="horizontal", size=self.ih - 20}
+		self.c_desc = TextzoneList.new{
+			width=self.iw - 200 - 530 - 40, height = self.ih,
+			scrollbar = true,
+		}
+		ret[#ret+1] = {right=0, top=0, ui=self.c_desc}
+		ret[#ret+1] = {right=self.c_desc.w, top=0, ui=vsep2}
+	end
+
+	return ret
 end
 
 function _M:getStatDesc(item)

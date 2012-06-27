@@ -36,6 +36,7 @@ function _M:init(t)
 	self.scrollbar = t.scrollbar
 	self.no_cross = t.no_cross
 	self.dont_select_top = t.dont_select_top
+	self.no_tooltip = t.no_tooltip
 
 	self.icon_size = 48
 	self.frame_size = 50
@@ -71,7 +72,7 @@ function _M:updateTooltip()
 	end
 	local mz = self.last_mz
 	local str = self.tooltip(mz.item)
-	game:tooltipDisplayAtMap(mz.tx or (self.last_display_x + mz.x2), mz.ty or (self.last_display_y + mz.y1), str)
+	if not self.no_tooltip then game:tooltipDisplayAtMap(mz.tx or (self.last_display_x + mz.x2), mz.ty or (self.last_display_y + mz.y1), str) end
 end
 
 function _M:doScroll(v)
@@ -130,7 +131,7 @@ function _M:moveSel(i, j)
 	if not self.last_mz then return end
 	local str, fx, fy = self.tooltip(self.last_mz.item)
 	self.last_mz.tx, self.last_mz.ty = fx or (self.last_display_x + self.last_mz.x2), fy or (self.last_display_y + self.last_mz.y1)
-	game:tooltipDisplayAtMap(self.last_mz.tx, self.last_mz.ty, str)
+	if not self.no_tooltip then game:tooltipDisplayAtMap(self.last_mz.tx, self.last_mz.ty, str) end
 end
 
 function _M:generate()
@@ -164,7 +165,7 @@ function _M:generate()
 				if not self.last_mz or mz.item ~= self.last_mz.item then
 					local str, fx, fy = self.tooltip(mz.item)
 					mz.tx, mz.ty = fx or (self.last_display_x + mz.x2), fy or (self.last_display_y + mz.y1)
-					game:tooltipDisplayAtMap(mz.tx, mz.ty, str)
+					if not self.no_tooltip then game:tooltipDisplayAtMap(mz.tx, mz.ty, str) end
 				end
 
 				if event == "button" and (button == "left" or button == "right") then
