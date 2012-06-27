@@ -258,7 +258,10 @@ newTalent{
 			ai = "summoned", ai_real = "tactical", ai_state = { talent_in=1, ally_compassion=10},
 			ai_tactic = resolvers.tactic"ranged",
 			stats = {str=0, dex=0, con=0, cun=0, wil=0, mag=0},
-			inc_stats = { wil=15 + self:getWil() * self:getTalentLevel(t) / 5, cun=10 + self:getTalentLevel(t) * 2, con=10+ self:getTalentLevelRaw(self.T_RESILIENCE)*2, },
+			inc_stats = {
+				wil=15 + (self:mindCrit(self:combatMindpower(2)) * self:getTalentLevel(t) / 5),
+				cun=15 + (self:mindCrit(self:combatMindpower(1.7)) * self:getTalentLevel(t) / 5),
+			},
 			level_range = {self.level, self.level}, exp_worth = 0,
 
 			max_life = resolvers.rngavg(5,10),
@@ -293,10 +296,10 @@ newTalent{
 		return ([[Summon a Ritch Flamespitter for %d turns to burn your foes to death. Flamespitters are really weak in melee and die easily, but they can burn your foes from afar.
 		It will get %d willpower, %d cunning and %d constitution.
 		Your summons inherit some of your stats: increased damage%%, stun/pin/confusion/blindness resistance, armour penetration.
-		Willpower stat will increase with your Willpower stat.]])
+		Willpower stat will increase with your Mindpower stat.]])
 		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
-		15 + self:getWil() * self:getTalentLevel(t) / 5,
-		10 + self:getTalentLevel(t) * 2,
+		15 + (self:combatMindpower(2) * self:getTalentLevel(t) / 5),
+		15 + (self:combatMindpower(1.7) * self:getTalentLevel(t) / 5),
 		10 + self:getTalentLevelRaw(self.T_RESILIENCE)*2)
 	end,
 }
@@ -358,7 +361,11 @@ newTalent{
 			ai = "summoned", ai_real = "tactical", ai_state = { talent_in=1, ally_compassion=10},
 
 			stats = {str=0, dex=0, con=0, cun=0, wil=0, mag=0},
-			inc_stats = { wil=15 + self:getWil() * self:getTalentLevel(t) / 5, str=18, con=10 + self:getTalentLevel(t) * 2 + self:getTalentLevelRaw(self.T_RESILIENCE)*2},
+			inc_stats = {
+				wil=15 + (self:mindCrit(self:combatMindpower(1.6)) * self:getTalentLevel(t) / 5),
+				str=18,
+				con=10 + self:getTalentLevel(t) * 2 + self:getTalentLevelRaw(self.T_RESILIENCE)*2
+			},
 			level_range = {self.level, self.level}, exp_worth = 0,
 
 			max_life = resolvers.rngavg(5,10),
@@ -394,9 +401,9 @@ newTalent{
 		return ([[Summon a 3-headed Hydra for %d turns to destroy your foes. 3-headed hydras are able to breathe poison, acid and lightning.
 		It will get %d willpower and %d constitution and 18 strength.
 		Your summons inherit some of your stats: increased damage%%, stun/pin/confusion/blindness resistance, armour penetration.
-		Willpower stat will increase with your Willpower stat.]])
+		Willpower stat will increase with your Mindpower stat.]])
 		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
-		15 + self:getWil() * self:getTalentLevel(t) / 5,
+		15 + (self:combatMindpower(1.6) * self:getTalentLevel(t) / 5),
 		10 + self:getTalentLevel(t) * 2 + self:getTalentLevelRaw(self.T_RESILIENCE)*2)
 	end,
 }
@@ -453,7 +460,11 @@ newTalent{
 			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=1, ally_compassion=10},
 			ai_tactic = resolvers.tactic"ranged",
 			stats = {str=0, dex=0, con=0, cun=0, wil=0, mag=0},
-			inc_stats = { wil=15 + self:getWil() * self:getTalentLevel(t) / 5, cun=10 + self:getTalentLevel(t) * 2, con=10+self:getTalentLevelRaw(self.T_RESILIENCE) * 2, },
+			inc_stats = {
+				wil=15 + (self:mindCrit(self:combatMindpower(2)) * self:getTalentLevel(t) / 5),
+				cun=15 + (self:mindCrit(self:combatMindpower(1.6)) * self:getTalentLevel(t) / 5),
+				con=10+self:getTalentLevelRaw(self.T_RESILIENCE) * 2,
+			},
 			level_range = {self.level, self.level}, exp_worth = 0,
 			never_move = 1,
 
@@ -488,10 +499,10 @@ newTalent{
 		return ([[Summon a Rimebark for %d turns to harass your foes. Rimebarks can not move but they have a permanent ice storm around them, damaging and freezing anything coming close in a radius of 3.
 		It will get %d willpower, %d cunning and %d constitution.
 		Your summons inherit some of your stats: increased damage%%, stun/pin/confusion/blindness resistance, armour penetration.
-		Willpower stat will increase with your Willpower stat.]])
+		Willpower stat will increase with your Mindpower stat.]])
 		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
-		15 + self:getWil() * self:getTalentLevel(t) / 5,
-		10 + self:getTalentLevel(t) * 2,
+		15 + (self:combatMindpower(2) * self:getTalentLevel(t) / 5),
+		15 + (self:combatMindpower(1.6) * self:getTalentLevel(t) / 5),
 		10 + self:getTalentLevelRaw(self.T_RESILIENCE) * 2)
 	end,
 }
@@ -582,7 +593,11 @@ newTalent{
 			autolevel = "none",
 			ai = "summoned", ai_real = "tactical", ai_state = { talent_in=1, ally_compassion=10},
 			stats = {str=0, dex=0, con=0, cun=0, wil=0, mag=0},
-			inc_stats = { str=15 + self:getWil() * self:getTalentLevel(t) / 5, wil=38, con=20 + self:getTalentLevel(t) * 3 + self:getTalentLevelRaw(self.T_RESILIENCE) * 2, },
+			inc_stats = {
+				str=15 + (self:mindCrit(self:combatMindpower(2)) * self:getTalentLevel(t) / 5),
+				wil=38,
+				con=20 + (self:mindCrit(self:combatMindpower(1.5)) * self:getTalentLevel(t) / 5) + self:getTalentLevelRaw(self.T_RESILIENCE) * 2,
+			},
 			level_range = {self.level, self.level}, exp_worth = 0,
 
 			max_life = resolvers.rngavg(100, 150),
@@ -621,9 +636,9 @@ newTalent{
 		return ([[Summon a Fire Drake for %d turns to burn and crush your foes to death. Fire Drakes are behemoths that can burn your foes from afar with their fiery breath.
 		It will get %d strength, %d constitution and 38 willpower.
 		Your summons inherit some of your stats: increased damage%%, stun/pin/confusion/blindness resistance, armour penetration.
-		Strength stat will increase with your Willpower stat.]])
+		Strength stat will increase with your Mindpower stat.]])
 		:format(math.ceil(self:getTalentLevel(t)) + 2 + self:getTalentLevelRaw(self.T_RESILIENCE),
-		15 + self:getWil() * self:getTalentLevel(t) / 5,
-		20 + self:getTalentLevel(t) * 3 + self:getTalentLevelRaw(self.T_RESILIENCE) * 2)
+		15 + (self:combatMindpower(2) * self:getTalentLevel(t) / 5),
+		20 + (self:combatMindpower(1.5) * self:getTalentLevel(t) / 5) + self:getTalentLevelRaw(self.T_RESILIENCE) * 2)
 	end,
 }
