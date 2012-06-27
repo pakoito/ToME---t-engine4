@@ -77,6 +77,7 @@ newEntity{ base = "TRAP_COMPLEX",
 	on_added = function(self, level, x, y)
 		self.x, self.y = x, y
 		self.rad = rng.range(2, 8)
+		self.max_dam = self.dam * 2.5
 		local tries = {}
 		local list = {i=1}
 		local sa = rng.range(0, 359)
@@ -96,7 +97,7 @@ newEntity{ base = "TRAP_COMPLEX",
 	all_know = true,
 	dam = resolvers.mbonus_level(300, 5),
 	triggered = function(self, x, y, who)
-		if self:reactionToward(who) < 0 then self.dam = self.dam * 1.5 end
+		if self:reactionToward(who) < 0 and not who.summoner then self.dam = math.min(self.dam * 1.5, self.max_dam) end
 		return true
 	end,
 	disarmed = function(self, x, y, who)
