@@ -762,7 +762,7 @@ newEffect{
 			return
 		end
 
-		if self:canBe("worldport") and not self:attr("never_move") then
+		if self:canBe("worldport") and not self:attr("never_move") and eff.dur <= 0 then
 			game:onTickEnd(function()
 				if eff.leveid == game.zone.short_name.."-"..game.level.level and game.player.can_change_zone then
 					game.logPlayer(self, "You are yanked out of this place!")
