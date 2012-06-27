@@ -187,6 +187,7 @@ function _M:incStat(sid, v)
 	self.actor.unused_stats = self.actor.unused_stats - v
 
 	self.stats_increased[sid] = (self.stats_increased[sid] or 0) + v
+	self:updateTooltip()
 end
 
 function _M:computeDeps(t)
@@ -568,7 +569,7 @@ function _M:createDisplay()
 		tooltip=function(item)
 			local x = self.display_x + self.uis[1].x + self.uis[1].ui.w
 			if self.display_x + self.w + game.tooltip.max <= game.w then x = self.display_x + self.w end
-			return item.desc, x, nil
+			return self:getStatDesc(item), x, nil
 		end,
 		on_use = function(item, inc) self:onUseTalent(item, inc) end,
 		on_expand = function(item) self.actor.__hidden_talent_types[item.type] = not item.shown end,
@@ -592,10 +593,68 @@ function _M:createDisplay()
 	}
 end
 
+function _M:getStatDesc(item)
+	local stat_id = item.stat
+	if not stat_id then return item.desc end
+	local text = tstring{}
+	text:merge(item.desc:toTString())
+	text:add(true, true)
+	local diff = self.actor:getStat(stat_id, nil, nil, true) - self.actor_dup:getStat(stat_id, nil, nil, true)
+	local color = diff >= 0 and {"color", "LIGHT_GREEN"} or {"color", "RED"}
+	local dc = {"color", "LAST"}
+
+	text:add({"color", "LIGHT_BLUE"}, "Stat gives:", dc, true)
+	if stat_id == self.actor.STAT_CON then
+		text:add("Max life: ", color, ("%0.2f"):format(diff * 4), dc, true)
+		text:add("Physical save: ", color, ("%0.2f"):format(diff * 0.35), dc, true)
+	elseif stat_id == self.actor.STAT_WIL then
+		if self.actor:knowTalent(self.actor.T_MANA_POOL) then
+			text:add("Max mana: ", color, ("%0.2f"):format(diff * 5), dc, true)
+		end
+		if self.actor:knowTalent(self.actor.T_STAMINA_POOL) then
+			text:add("Max stamina: ", color, ("%0.2f"):format(diff * 2.5), dc, true)
+		end
+		if self.actor:knowTalent(self.actor.T_PSI_POOL) then
+			text:add("Max psi: ", color, ("%0.2f"):format(diff * 1), dc, true)
+		end
+		text:add("Mindpower: ", color, ("%0.2f"):format(diff * 0.7), dc, true)
+		text:add("Mental save: ", color, ("%0.2f"):format(diff * 0.35), dc, true)
+		text:add("Spell save: ", color, ("%0.2f"):format(diff * 0.35), dc, true)
+		if self.actor.use_psi_combat then
+			text:add("Accuracy: ", color, ("%0.2f"):format(diff * 0.35), dc, true)
+		end
+	elseif stat_id == self.actor.STAT_STR then
+		text:add("Physical power: ", color, ("%0.2f"):format(diff), dc, true)
+		text:add("Max encumberance: ", color, ("%0.2f"):format(diff * 1.8), dc, true)
+		text:add("Physical save: ", color, ("%0.2f"):format(diff * 0.35), dc, true)
+	elseif stat_id == self.actor.STAT_CUN then
+		text:add("Crit. chance: ", color, ("%0.2f"):format(diff * 0.3), dc, true)
+		text:add("Mental save: ", color, ("%0.2f"):format(diff * 0.35), dc, true)
+		text:add("Mindpower: ", color, ("%0.2f"):format(diff * 0.4), dc, true)
+		if self.actor.use_psi_combat then
+			text:add("Accuracy: ", color, ("%0.2f"):format(diff * 0.35), dc, true)
+		end
+	elseif stat_id == self.actor.STAT_MAG then
+		text:add("Spell save: ", color, ("%0.2f"):format(diff * 0.35), dc, true)
+		text:add("Spellpower: ", color, ("%0.2f"):format(diff * 1), dc, true)
+	elseif stat_id == self.actor.STAT_DEX then
+		text:add("Defense: ", color, ("%0.2f"):format(diff * 0.35), dc, true)
+		text:add("Ranged defense: ", color, ("%0.2f"):format(diff * 0.35), dc, true)
+		text:add("Accuracy: ", color, ("%0.2f"):format(diff), dc, true)
+	end
+
+	if self.actor.player and self.desc_def and self.desc_def.getStatDesc and self.desc_def.getStatDesc(stat_id, self.actor) then
+		text:add({"color", "LIGHT_BLUE"}, "Class powers:", dc, true)
+		text:add(self.desc_def.getStatDesc(stat_id, self.actor))
+	end
+	return text
+end
+
+
 function _M:getTalentDesc(item)
 	local text = tstring{}
 
-	text:add({"color", "GOLD"}, {"font", "bold"}, util.getval(item.rawname, item), {"color", "LAST"}, {"font", "normal"})
+ 	text:add({"color", "GOLD"}, {"font", "bold"}, util.getval(item.rawname, item), {"color", "LAST"}, {"font", "normal"})
 	text:add(true, true)
 
 	if item.type then
@@ -674,4 +733,5 @@ end
 
 function _M:updateTooltip()
 	self.c_tree:updateTooltip()
+	self.c_stat:updateTooltip()
 end
