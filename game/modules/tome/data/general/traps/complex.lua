@@ -114,6 +114,8 @@ newEntity{ base = "TRAP_COMPLEX",
 	canAct = false,
 	energy = {value=0},
 	act = function(self)
+		if game.level.map(self.x, self.y, engine.Map.TRAP) ~= self then game.level:removeEntity(self, true) return end
+
 		local x, y = self.list[self.list.i].x, self.list[self.list.i].y
 		self.list.i = util.boundWrap(self.list.i + 1, 1, #self.list)
 
@@ -168,6 +170,8 @@ newEntity{ base = "TRAP_COMPLEX",
 		self:useEnergy(game.energy_to_act * 7)
 	end,
 	act = function(self)
+		if game.level.map(self.x, self.y, engine.Map.TRAP) ~= self then game.level:removeEntity(self, true) return end
+
 		local ok = false
 		local tg = {type="ball", radius=self.rad, friendlyfire=false}
 		self:project(tg, self.x, self.y, function(px, py)
