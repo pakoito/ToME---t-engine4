@@ -17,6 +17,9 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+-- Unique
+if game.state:doneEvent(event_id) then return end
+
 local list = {}
 
 local function check(x, y)
@@ -106,6 +109,8 @@ for i, p in ipairs(list) do
 			g:removeAllMOs()
 			game.level.map:updateMap(self.monolith_x, self.monolith_y)
 			if not game.level.turn_counter then
+				game.level.event_cultists.queen_x = self.monolith_x
+				game.level.event_cultists.queen_y = self.monolith_y
 				game.level.turn_counter = 10 * 150
 				game.level.max_turn_counter = 10 * 150
 				require("engine.ui.Dialog"):simplePopup("Cultist", "The cultist soul seems to be absorbed by the strange stone he was guarding. You feel like something is about to happen...")
@@ -130,6 +135,64 @@ game.zone.on_turn = function()
 		if game.level.turn_counter < 0 then
 			game.level.turn_counter = nil
 
+			local m = mod.class.NPC.new{
+				type = "demon", subtype = "major",
+				display = 'U',
+				name = "Shasshhiy'Kaish", color=colors.VIOLET, unique = true,
+--				resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/demon_major_shasshhiy_kaish.png", display_h=2, display_y=-1}}},
+				desc = [[This demon would be very attractive if not for the hovering crown of flames, the three tails and sharp claws. As you watch her you can almost feel pain.]],
+				killer_message = "and used for her perverted desires",
+				level_range = {25, nil}, exp_worth = 2,
+				female = 1,
+				faction = "fearscape",
+				rank = 4,
+				size_category = 4,
+				max_life = 250, life_rating = 27, fixed_rating = true,
+				infravision = 10,
+				stats = { str=25, dex=25, cun=32, mag=26, con=14 },
+				move_others=true,
+
+				instakill_immune = 1,
+				stun_immune = 0.5,
+				blind_immune = 0.5,
+				combat_armor = 0, combat_def = 0,
+
+				open_door = true,
+
+				autolevel = "warriormage",
+				ai = "tactical", ai_state = { talent_in=2, ai_move="move_astar", },
+				ai_tactic = resolvers.tactic"melee",
+				resolvers.inscriptions(3, "rune"),
+
+				body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
+
+				combat = { dam=resolvers.levelup(resolvers.mbonus(86, 20), 1, 1.4), atk=50, apr=30, dammod={str=1.1} },
+
+				resolvers.drops{chance=100, nb=5, {tome_drops="boss"} },
+
+				resolvers.talents{
+					[Talents.T_METEOR_RAIN]={base=4, every=5, max=7},
+					[Talents.T_INNER_DEMONS]={base=4, every=5, max=7},
+					[Talents.T_FLAME_OF_URH_ROK]={base=5, every=5, max=8},
+					[Talents.T_PACIFICATION_HEX]={base=5, every=5, max=8},
+					[Talents.T_BURNING_HEX]={base=5, every=5, max=8},
+					[Talents.T_BLOOD_LOCK]={base=5, every=5, max=8},
+					[Talents.T_SPELLCRAFT]=5,
+				},
+				resolvers.sustains_at_birth(),
+
+				inc_damage = {all=90},
+			}
+			m:resolve() m:resolve(nil, true)
+
+			local x, y = util.findFreeGrid(game.level.event_cultists.queen_x-1, game.level.event_cultists.queen_y, 10, true, {[engine.Map.ACTOR]=true})
+			if x then
+				m.inc_damage.all = m.inc_damage.all - 10 * (game.level.event_cultists.kill)
+				m.max_life = m.max_life * (14 - game.level.event_cultists.kill) / 14
+
+				game.zone:addEntity(game.level, m, "actor", x, y) 
+				require("engine.ui.Dialog"):simplePopup("Cultist", "A terrible shout thunders across the level: 'Come my darling, come, I will be ssssooo *nice* to you!'")
+			end
 		elseif  game.level.turn_counter == 10 * 130 or
 			game.level.turn_counter == 10 * 110 or
 			game.level.turn_counter == 10 * 90 or

@@ -1230,9 +1230,11 @@ end
 function _M:spellFriendlyFire()
 	local chance = (self:getLck() - 50) * 0.2
 	if self:isTalentActive(self.T_SPELLCRAFT) then chance = chance + self:getTalentLevelRaw(self.T_SPELLCRAFT) * 20 end
+	chance = chance + (self.combat_spell_friendlyfire or 0)
+
 	chance = 100 - chance
 	print("[SPELL] friendly fire chance", chance)
-	return chance
+	return util.bound(chance, 0, 100)
 end
 
 --- Gets mindpower

@@ -66,7 +66,7 @@ local changer = function(id, kind)
 			object = {
 				class = "engine.generator.object.Random",
 				filters = {{type="gem"}},
-				nb_object = {15, 25},
+				nb_object = {25, 35},
 			},
 			trap = {
 				class = "engine.generator.trap.Random",
