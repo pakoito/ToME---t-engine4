@@ -261,6 +261,7 @@ newTalent{
 			inc_stats = {
 				wil=15 + (self:mindCrit(self:combatMindpower(2)) * self:getTalentLevel(t) / 5),
 				cun=15 + (self:mindCrit(self:combatMindpower(1.7)) * self:getTalentLevel(t) / 5),
+				con=10 + self:getTalentLevelRaw(self.T_RESILIENCE)*2,
 			},
 			level_range = {self.level, self.level}, exp_worth = 0,
 

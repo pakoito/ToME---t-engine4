@@ -286,8 +286,8 @@ function _M:generateRandart(data)
 		local p = game.zone:pickEntity(list)
 		if p then
 			for t, _ in pairs(p.theme) do if themes[t] and randart_name_rules[t] then power_themes[t] = (power_themes[t] or 0) + 1 end end
-			powers[p.name] = p
-			powers[#powers+1] = p
+			powers[p.name] = p:clone()
+			powers[#powers+1] = powers[p.name]
 		end
 	end
 	print("Selected powers:") table.print(powers)
@@ -399,7 +399,7 @@ function _M:generateRandart(data)
 	local i = 0
 	while hpoints > 0 and #powers >0 do
 		i = util.boundWrap(i + 1, 1, #powers)
-		local p = powers[i]:clone()
+		local p = powers[i]
 		if p.points <= hpoints then
 			print(" * adding power: "..p.name)
 			if p.wielder then
@@ -417,6 +417,7 @@ function _M:generateRandart(data)
 			if p.copy then merger(o, p.copy) end
 		end
 		hpoints = hpoints - p.points
+		p.points = p.points * 1.5
 	end
 	o:resolve() o:resolve(nil, true)
 
@@ -429,7 +430,7 @@ function _M:generateRandart(data)
 	while hpoints > 0 do
 		i = util.boundWrap(i + 1, 1, #bias_powers)
 
-		local p = bias_powers[i] and bias_powers[i]:clone()
+		local p = bias_powers[i] and bias_powers[i]
 		if p and p.points <= hpoints * 2 then
 			if p.wielder then
 				o.wielder = o.wielder or {}
@@ -439,6 +440,7 @@ function _M:generateRandart(data)
 			print(" * adding bias power: "..p.name)
 		end
 		hpoints = hpoints - (p and p.points or 1) * 2
+		if p then p.points = p.points * 1.5 end
 	end
 
 	-- Power source if none

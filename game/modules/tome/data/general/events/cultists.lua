@@ -38,6 +38,8 @@ end
 
 local Talents = require("engine.interface.ActorTalents")
 
+game.level.event_cultists = {sacrifice = 0, kill = 0}
+
 for i, p in ipairs(list) do
 	local g = game.level.map(p.x, p.y, engine.Map.TERRAIN):cloneFull()
 	g.name = "monolith"
@@ -45,6 +47,7 @@ for i, p in ipairs(list) do
 	g.add_displays = g.add_displays or {}
 	g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/moonstone_0"..rng.range(1,8)..".png", display_y=-1, display_h=2, z=18}
 	g.nice_tiler = nil
+	g.is_monolith = true
 	game.zone:addEntity(game.level, g, "terrain", p.x, p.y)
 
 	local m = mod.class.NPC.new{
@@ -75,18 +78,74 @@ for i, p in ipairs(list) do
 		},
 		resolvers.talents{
 			[Talents.T_BONE_SHIELD]={base=2, every=10, max=5},
-			[Talents.T_BLOOD_SPRAY]={base=5, every=10, max=7},
-			[Talents.T_DRAIN]={base=5, every=10, max=7},
-			[Talents.T_SOUL_ROT]={base=5, every=10, max=7},
-			[Talents.T_BLOOD_GRASP]={base=4, every=10, max=6},
-			[Talents.T_BONE_SPEAR]={base=5, every=10, max=7},
+			[Talents.T_BLOOD_SPRAY]={base=2, every=10, max=7},
+			[Talents.T_DRAIN]={base=2, every=10, max=7},
+			[Talents.T_SOUL_ROT]={base=2, every=10, max=7},
+			[Talents.T_BLOOD_GRASP]={base=2, every=10, max=6},
+			[Talents.T_BONE_SPEAR]={base=2, every=10, max=7},
 		},
 		resolvers.sustains_at_birth(),
 		resolvers.inscriptions(1, "rune"),
 		is_cultist_event = true,
+		monolith_x = p.x,
+		monolith_y = p.y,
+		on_die = function(self)
+			local g = game.level.map(self.monolith_x, self.monolith_y, engine.Map.TERRAIN)
+			if not g or not g.is_monolith then return end
+			if self.self_sacrifice then
+				self:doEmote(rng.table{"My soul for her!", "The Dark Queen shall reign!", "Take me! Take me!", "From death comes life!"}, 60)
+				g.add_displays[#g.add_displays].image = g.add_displays[#g.add_displays].image:gsub("/moonstone_0", "/darkgreen_moonstone_0")
+				g.name = "corrupted monolith"
+				game.level.event_cultists.sacrifice = game.level.event_cultists.sacrifice + 1
+			else
+				self:doEmote(rng.table{"This is too soon!", "No the ritual will weaken!"}, 60)
+				g.add_displays[#g.add_displays].image = g.add_displays[#g.add_displays].image:gsub("/moonstone_0", "/bluish_moonstone_0")
+				g.name = "disrupted monolith"
+				game.level.event_cultists.kill = game.level.event_cultists.kill + 1
+			end
+			g:removeAllMOs()
+			game.level.map:updateMap(self.monolith_x, self.monolith_y)
+			if not game.level.turn_counter then
+				game.level.turn_counter = 10 * 150
+				game.level.max_turn_counter = 10 * 150
+				require("engine.ui.Dialog"):simplePopup("Cultist", "The cultist soul seems to be absorbed by the strange stone he was guarding. You feel like something is about to happen...")
+			end
+		end,
 	}
 	m:resolve() m:resolve(nil, true)
 	game.zone:addEntity(game.level, m, "actor", p.x-1, p.y)
+end
+
+game.zone.cultist_event_levels = game.zone.cultist_event_levels or {}
+game.zone.cultist_event_levels[level.level] = true
+
+if not game.zone.cultist_event_on_turn then game.zone.cultist_event_on_turn = game.zone.on_turn or function() end end
+game.zone.on_turn = function()
+	if game.zone.cultist_event_on_turn then game.zone.cultist_event_on_turn() end
+	if not game.zone.cultist_event_levels[game.level.level] then return end
+
+	if game.level.turn_counter then
+		game.level.turn_counter = game.level.turn_counter - 1
+		game.player.changed = true
+		if game.level.turn_counter < 0 then
+			game.level.turn_counter = nil
+
+		elseif  game.level.turn_counter == 10 * 130 or
+			game.level.turn_counter == 10 * 110 or
+			game.level.turn_counter == 10 * 90 or
+			game.level.turn_counter == 10 * 70 or
+			game.level.turn_counter == 10 * 50 or
+			game.level.turn_counter == 10 * 30 then
+			local cultists = {}
+			for uid, e in pairs(game.level.entities) do if e.is_cultist_event then cultists[#cultists+1] = e end end
+			if #cultists > 0 then
+				local c = rng.table(cultists)
+				game.logSeen(c, "%s pulls a dagger and opens his own chest, piercing his beating heart. The stone glows with malevolent colors.", c.name:capitalize())
+				c.self_sacrifice = true
+				c:die()
+			end
+		end
+	end
 end
 
 return true
