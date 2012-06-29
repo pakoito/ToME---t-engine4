@@ -372,6 +372,13 @@ function _M:display()
 			{r=colors.BLUE.r / 5, g=colors.BLUE.g / 5, b=colors.BLUE.b / 5}
 		)) h = h + self.font_h
 	end
+	
+	if player.psionic_feedback_max then
+		self:mouseTooltip(self.TOOLTIP_FEEDBACK, self:makeTextureBar("#7fffd4#Feedback:", nil, player.psionic_feedback or 0, player.psionic_feedback_max, -1, x, h, 255, 255, 255,
+			{r=colors.YELLOW.r / 2, g=colors.YELLOW.g / 2, b=colors.YELLOW.b / 2},
+			{r=colors.YELLOW.r / 5, g=colors.YELLOW.g / 5, b=colors.YELLOW.b / 5}
+		)) h = h + self.font_h
+	end
 
 	local quiver = player:getInven("QUIVER")
 	local ammo = quiver and quiver[1]

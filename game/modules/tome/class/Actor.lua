@@ -327,6 +327,24 @@ function _M:useEnergy(val)
 end
 
 function _M:actBase()
+	-- Solipsism speed effects
+	local current_psi_percentage = self:getPsi() / self:getMaxPsi()
+	if self:attr("solipsism_threshold") and current_psi_percentage < self:attr("solipsism_threshold") then
+		if self:hasEffect(self.EFF_CLARITY) then
+			self:removeEffect(self.EFF_CLARITY)
+		end
+		self:setEffect(self.EFF_SOLIPSISM, 1, {power = self:attr("solipsism_threshold") - current_psi_percentage})
+	elseif self:attr("clarity_threshold") and current_psi_percentage > self:attr("clarity_threshold") then
+		if self:hasEffect(self.EFF_SOLIPSISM) then
+			self:removeEffect(self.EFF_SOLIPSISM)
+		end
+		self:setEffect(self.EFF_CLARITY, 1, {power = current_psi_percentage - self:attr("clarity_threshold")})
+	elseif self:hasEffect(self.EFF_SOLIPSISM) then
+		self:removeEffect(self.EFF_SOLIPSISM)
+	elseif self:hasEffect(self.EFF_CLARITY) then
+		self:removeEffect(self.EFF_CLARITY)
+	end
+
 	self.energyBase = self.energyBase - game.energy_to_act
 
 	if self:attr("no_timeflow") then
@@ -361,6 +379,11 @@ function _M:actBase()
 	end
 
 	self:regenResources()
+	
+	-- update psionic feedback
+	if self.psionic_feedback and self.psionic_feedback > 0 then
+		self.psionic_feedback = math.max(0, self.psionic_feedback - 1)
+	end
 
 	-- Compute timed effects
 	self:timedEffects()
@@ -1304,7 +1327,23 @@ end
 --- Regenerate life, call it from your actor class act() method
 function _M:regenLife()
 	if self.life_regen and not self:attr("no_life_regen") then
-		self.life = util.bound(self.life + self.life_regen * util.bound((self.healing_factor or 1), 0, 2.5), self.die_at, self.max_life)
+		local regen = self.life_regen * util.bound((self.healing_factor or 1), 0, 2.5)
+		
+		-- Psionic Balance
+		if self:knowTalent(self.T_BALANCE) then
+			local t = self:getTalentFromId(self.T_BALANCE)
+			local ratio = t.getBalanceRatio(self, t)
+			local psi_increase = regen * ratio
+			self:incPsi(psi_increase)
+			-- Quality of life hack, doesn't decrease life regen while resting..  was way to painful
+			if not self.resting then
+				regen = regen - psi_increase
+			end
+		end
+		
+		self.life = util.bound(self.life + regen, self.die_at, self.max_life)
+		
+		-- Blood Lock
 		if self:attr("blood_lock") then
 			self.life = util.bound(self.life, self.die_at, self:attr("blood_lock"))
 		end
@@ -1355,6 +1394,15 @@ function _M:onHeal(value, src)
 		self:setEffect(self.EFF_REGENERATION, 6, {power=(value * self.fungal_growth / 100) / 6, no_wild_growth=true})
 	end
 
+	-- Psionic Balance
+	if self:knowTalent(self.T_BALANCE) then
+		local t = self:getTalentFromId(self.T_BALANCE)
+		local ratio = t.getBalanceRatio(self, t)
+		local psi_increase = value * ratio
+		self:incPsi(psi_increase)
+		value = value - psi_increase
+	end
+	
 	-- Must be last!
 	if self:attr("blood_lock") then
 		if self.life + value > self:attr("blood_lock") then
@@ -1532,13 +1580,27 @@ function _M:onTakeHit(value, src)
 			t.explode(self, t, dam)
 		end
 	end
+	
+	if self:attr("resonance_shield") then
+	-- Absorb damage into the shield
+		if value / 2 <= self.resonance_shield_absorb then
+			self.resonance_shield_absorb = self.resonance_shield_absorb - (value / 2)
+			value = value / 2
+		else
+			value = value - self.resonance_shield_absorb
+			self.resonance_shield_absorb = 0
+		end
+		if self.resonance_shield_absorb <= 0 then
+			self:removeEffect(self.EFF_RESONANCE_SHIELD)
+		end
+	end
 
 	if self:isTalentActive(self.T_BONE_SHIELD) then
 		local t = self:getTalentFromId(self.T_BONE_SHIELD)
 		t.absorb(self, t, self:isTalentActive(self.T_BONE_SHIELD))
 		value = 0
 	end
-
+	
 	if self.knowTalent and (self:knowTalent(self.T_SEETHE) or self:knowTalent(self.T_GRIM_RESOLVE)) then
 		if not self:hasEffect(self.EFF_CURSED_FORM) then
 			self:setEffect(self.EFF_CURSED_FORM, 1, { increase=0 })
@@ -1571,13 +1633,6 @@ function _M:onTakeHit(value, src)
 		if value >= 6000 then world:gainAchievement("DAMAGE_6000", rsrc) end
 	end
 
-	-- Stoned ? SHATTER !
-	if self:attr("stoned") and value >= self.max_life * 0.3 then
-		-- Make the damage high enough to kill it
-		value = self.max_life + 1
-		game.logSeen(self, "%s shatters into pieces!", self.name:capitalize())
-	end
-
 	-- Frozen: absorb some damage into the iceblock
 	if self:attr("encased_in_ice") then
 		local eff = self:hasEffect(self.EFF_FROZEN)
@@ -1587,6 +1642,36 @@ function _M:onTakeHit(value, src)
 			game:onTickEnd(function() self:removeEffect(self.EFF_FROZEN) end)
 			eff.begone = game.turn
 		end
+	end
+	
+	-- Feedback pool: Stores damage as energy to use later
+	if self.psionic_feedback then
+		local current = self.psionic_feedback
+		local max = self.psionic_feedback_max or 100
+		self.psionic_feedback = math.min(self.psionic_feedback_max, self.psionic_feedback + value)
+	end
+		
+	-- Solipsism
+	if self.knowTalent and self:knowTalent(self.T_SOLIPSISM) then
+		local t = self:getTalentFromId(self.T_SOLIPSISM)
+		local damage_to_psi = value * t.damageToPsi(self, t)
+		if self:getPsi() > damage_to_psi then
+			self:incPsi(-damage_to_psi)
+		else
+			damage_to_psi = self:getPsi()
+			self:incPsi(-damage_to_psi)
+		end
+		if damage_to_psi > 0 then
+			game.logSeen(self, "%s's mind suffers #BLUE#%d psi#LAST# damage from the attack.", self.name:capitalize(), damage_to_psi)
+		end
+		value = value - damage_to_psi
+	end
+
+	-- Stoned ? SHATTER !
+	if self:attr("stoned") and value >= self.max_life * 0.3 then
+		-- Make the damage high enough to kill it
+		value = self.max_life + 1
+		game.logSeen(self, "%s shatters into pieces!", self.name:capitalize())
 	end
 
 	-- Adds hate
@@ -3285,6 +3370,9 @@ function _M:breakStepUp()
 	end
 	if self:hasEffect(self.EFF_REFLEXIVE_DODGING) then
 		self:removeEffect(self.EFF_REFLEXIVE_DODGING)
+	end
+	if self:hasEffect(self.EFF_DISMISSAL) then
+		self:removeEffect(self.EFF_DISMISSAL)
 	end
 end
 

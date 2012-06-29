@@ -2317,3 +2317,46 @@ newEffect{
 		self.mental_negative_status_effect_immune = nil
 	end,
 }
+
+
+newEffect{
+	name = "FEEDBACK", image = "talents/feedback.png",
+	desc = "Feedback",
+	long_desc = function(self, eff) return ("The target is converting feedback into Psi regen at the rate of %0.2f per turn."):format(eff.power) end,
+	type = "mental",
+	subtype = { psionic=true },
+	status = "beneficial",
+	parameters = { power=1 },
+	on_gain = function(self, err) return "#target# is recovering Psi quickly.", "+Feedback" end,
+	on_lose = function(self, err) return "#target#'s Psi recover has returned to normal.", "-Feedback" end,
+	activate = function(self, eff)
+		eff.tid = self:addTemporaryValue("psi_regen", eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("psi_regen", eff.tid)
+	end,
+}
+
+newEffect{
+	name = "RESONANCE_SHIELD", image = "talents/resonance_shield.png",
+	desc = "Resonance Shield",
+	long_desc = function(self, eff) return ("The target is surrounded by a psychic shield, absorbing 50%% of all damage (up to %d/%d).  Additionally melee attackers will suffer %0.2f mind damage on contact."):format(self.resonance_shield_absorb, eff.power, eff.dam) end,
+	type = "mental",
+	subtype = { psionic=true, shield=true },
+	status = "beneficial",
+	parameters = { power=100, dam = 1 },
+	on_gain = function(self, err) return "A psychic shield forms around #target#.", "+Resonance Shield" end,
+	on_lose = function(self, err) return "The psychic shield around #target# crumbles.", "-Resonance Shield" end,
+	activate = function(self, eff)
+		self.resonance_shield_absorb = eff.power
+		eff.particle = self:addParticles(Particles.new("damage_shield", 1))
+		eff.sid = self:addTemporaryValue("resonance_shield", eff.power)
+		eff.did = self:addTemporaryValue("on_melee_hit", {[DamageType.MIND]=eff.dam})
+	end,
+	deactivate = function(self, eff)
+		self.resonance_shield_absorb = nil
+		self:removeParticles(eff.particle)
+		self:removeTemporaryValue("resonance_shield", eff.sid)
+		self:removeTemporaryValue("on_melee_hit", eff.did)
+	end,
+}

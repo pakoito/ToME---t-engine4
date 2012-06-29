@@ -37,7 +37,9 @@ newTalentType{ allow_random=true, type="psionic/brainstorm", name = "brainstorm"
 -- Secret Project...
 -- Solipsist Talent Trees
 newTalentType{ allow_random=true, type="psionic/psychic-assault", name = "psychic assault", description = "Directly attack your opponents minds." }
+newTalentType{ allow_random=true, type="psionic/solipsism", name = "solipsism", description = "Nothing exists outside the minds ability to perceive it." }
 -- Generic Solipsist Trees
+newTalentType{ allow_random=true, type="psionic/feedback", generic = true, name = "feedback", description = "Store and discharge psychic feedback." }
 
 newTalentType{ allow_random=true, type="psionic/possession", name = "possession", description = "You have learnt to shed away your body, allowing you to possess any other." }
 
@@ -169,7 +171,10 @@ load("/data/talents/psionic/psi-archery.lua")
 load("/data/talents/psionic/grip.lua")
 
 -- Solipsist
+load("/data/talents/psionic/feedback.lua")
 load("/data/talents/psionic/psychic-assault.lua")
+load("/data/talents/psionic/solipsism.lua")
+
 
 load("/data/talents/psionic/possession.lua")
 

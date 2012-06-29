@@ -115,6 +115,12 @@ To get meaningful amounts back in combat, you must absorb it through shields or 
 Your capacity for storing energy is determined by your Willpower.
 ]]
 
+TOOLTIP_FEEDBACK = [[#GOLD#Feedback#LAST#
+Feedback represents energy you've stored up from being attacked. It decays quickly over time.
+To get meaningful amounts back in combat, you must take damage.
+Your capacity for storing feedback is determined by how many talents you know that harness it.
+]]
+
 TOOLTIP_NECROTIC_AURA = [[#GOLD#Necrotic Aura#LAST#
 Represents the raw materials for creating undead minions.
 It increases each time you or your minions kill something that is inside the aura radius.

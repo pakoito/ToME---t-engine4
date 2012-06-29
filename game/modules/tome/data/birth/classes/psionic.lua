@@ -32,12 +32,12 @@ newBirthDescriptor{
 			__ALL__ = "disallow",
 			Mindslayer = "allow",
 			Psion = "allow",
+			Solipsist = "allow",
 		},
 	},
 	copy = {
 		psi_regen = 0.2,
 	},
-	body = { PSIONIC_FOCUS = 1, QS_PSIONIC_FOCUS = 1,},
 }
 
 newBirthDescriptor{
@@ -85,6 +85,7 @@ newBirthDescriptor{
 		[ActorTalents.T_TELEKINETIC_SMASH] = 1,
 		[ActorTalents.T_SHOOT] = 1,
 	},
+	body = { PSIONIC_FOCUS = 1, QS_PSIONIC_FOCUS = 1,},
 	copy = {
 		max_life = 110,
 		resolvers.equip{ id=true,
@@ -134,6 +135,44 @@ newBirthDescriptor{
 	},
 	talents = {
 		[ActorTalents.T_POSSESS] = 1,
+	},
+	copy = {
+		max_life = 90,
+		resolvers.equip{ id=true,
+			{type="armor", subtype="cloth", name="linen robe", autoreq=true, ego_chance=-1000},
+			{type="weapon", subtype="mindstar", name="mossy mindstar", autoreq=true, ego_chance=-1000},
+			{type="weapon", subtype="mindstar", name="mossy mindstar", autoreq=true, ego_chance=-1000},
+		},
+	},
+	copy_add = {
+		life_rating = -4,
+	},
+}
+
+newBirthDescriptor{
+	type = "subclass",
+	name = "Solipsist",
+	locked = function() return profile.mod.allow_build.psionic_solipsist and true or "hide"  end,
+	locked_desc = "TODO",
+	desc = {
+		"blahblah",
+		"Their most important stats are: Willpower and Cunning",
+		"#GOLD#Stat modifiers:",
+		"#LIGHT_BLUE# * +0 Strength, +0 Dexterity, +0 Constitution",
+		"#LIGHT_BLUE# * +0 Magic, +5 Willpower, +4 Cunning",
+		"#GOLD#Life per level:#LIGHT_BLUE# -4 (*special*)",
+	},
+	power_source = {psionic=true},
+	stats = { str=0, wil=5, cun=4, },
+	talents_types = {
+		["psionic/feedback"]={true, 0.3},
+		["psionic/psychic-assault"]={true, 0.3},
+		["psionic/solipsism"]={true, 0.3},
+	},
+	talents = {
+		[ActorTalents.T_FEEDBACK] = 1,
+		[ActorTalents.T_PSYCHIC_LOBOTOMY] = 1,
+		[ActorTalents.T_SOLIPSISM] = 1,
 	},
 	copy = {
 		max_life = 90,

@@ -1541,3 +1541,59 @@ newEffect{
 		self:removeTemporaryValue("invulnerable", eff.tmpid)
 	end,
 }
+
+newEffect{
+	name = "SOLIPSISM", image = "talents/solipsism.png",
+	desc = "Solipsism",
+	long_desc = function(self, eff) return ("This creature has fallen into a solipsistic state and is caught up in its own thoughts (-%d%% global speed)."):format(eff.power * 100) end,
+	type = "other",
+	subtype = { psionic=true },
+	status = "detrimental",
+	decrease = 0,
+	no_stop_enter_worlmap = true, no_stop_resting = true,
+	parameters = { },
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("global_speed_add", -eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("global_speed_add", eff.tmpid)
+	end,
+}
+
+newEffect{
+	name = "CLARITY", image = "talents/clarity.png",
+	desc = "Clarity",
+	long_desc = function(self, eff) return ("The creature has found a state of clarity (+%d%% global speed)."):format(eff.power * 100) end,
+	type = "other",
+	subtype = { psionic=true },
+	status = "beneficial",
+	decrease = 0,
+	no_stop_enter_worlmap = true, no_stop_resting = true,
+	parameters = { },
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("global_speed_add", eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("global_speed_add", eff.tmpid)
+	end,
+}
+
+newEffect{
+	name = "DISMISSAL", image = "talents/dismissal.png",
+	desc = "Dismissal",
+	long_desc = function(self, eff) return "The target has dismissed reality.  For the duration it is immune to new status effects and all damage." end,
+	type = "other",
+	subtype = { psionic=true },
+	status = "beneficial",
+	parameters = {},
+	on_gain = function(self, err) return "#Target# dismisses reality!", "+Dismissal" end,
+	on_lose = function(self, err) return "#Target# reaffirms it's belief in reality.", "-Dismissal" end,
+	activate = function(self, eff)
+		eff.iid = self:addTemporaryValue("invulnerable", 1)
+		eff.imid = self:addTemporaryValue("status_effect_immune", 1)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("invulnerable", eff.iid)
+		self:removeTemporaryValue("status_effect_immune", eff.imid)
+	end,
+}

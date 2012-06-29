@@ -1295,7 +1295,17 @@ function _M:combatPhysicalResist(fake)
 	if self:knowTalent(self.T_POWER_IS_MONEY) then
 		add = add + util.bound(self.money / (90 - self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 5), 0, self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 7)
 	end
-	return self:rescaleCombatStats(self.combat_physresist + (self:getCon() + self:getStr() + (self:getLck() - 50) * 0.5) * 0.35 + add)
+	
+	-- To return later
+	local total = self:rescaleCombatStats(self.combat_physresist + (self:getCon() + self:getStr() + (self:getLck() - 50) * 0.5) * 0.35 + add)
+	
+	-- Psionic Balance
+	if self:knowTalent(self.T_BALANCE) then
+		local t = self:getTalentFromId(self.T_BALANCE)
+		local ratio = t.getBalanceRatio(self, t)
+		total = (1 - ratio)*total + self:combatMentalResist(fake)*ratio
+	end
+	return total
 end
 
 --- Computes spell resistance

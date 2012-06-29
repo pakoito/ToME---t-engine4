@@ -1062,7 +1062,7 @@ newTalent{
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.MIND, self:spellCrit(self:combatTalentMindDamage(t, 10, 340)), {type="mind"})
+		self:project(tg, x, y, DamageType.MIND, self:mindCrit(self:combatTalentMindDamage(t, 10, 340)), {type="mind"})
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
@@ -1112,7 +1112,7 @@ newTalent{
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.MINDKNOCKBACK, self:spellCrit(self:combatTalentMindDamage(t, 10, 170)), {type="mind"})
+		self:project(tg, x, y, DamageType.MINDKNOCKBACK, self:mindCrit(self:combatTalentMindDamage(t, 10, 170)), {type="mind"})
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,

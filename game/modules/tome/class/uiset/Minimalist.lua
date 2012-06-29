@@ -72,6 +72,8 @@ hate_c = {0xF5/255, 0x3C/255, 0xBE/255}
 hate_sha = Shader.new("resources", {color=hate_c, speed=1000, distort={0.4,0.4}})
 psi_c = {colors.BLUE.r/255, colors.BLUE.g/255, colors.BLUE.b/255}
 psi_sha = Shader.new("resources", {color=psi_c, speed=2000, distort={0.4,0.4}})
+feedback_c = {colors.YELLOW.r/255, colors.YELLOW.g/255, colors.YELLOW.b/255}
+feedback_sha = Shader.new("resources", {color=feedback_c, speed=2000, distort={0.4,0.4}})
 save_c = pos_c
 save_sha = pos_sha
 
@@ -103,6 +105,8 @@ fshat_vim = {core.display.loadImage("/data/gfx/ui/resources/front_vim.png"):glTe
 fshat_vim_dark = {core.display.loadImage("/data/gfx/ui/resources/front_vim_dark.png"):glTexture()}
 fshat_psi = {core.display.loadImage("/data/gfx/ui/resources/front_psi.png"):glTexture()}
 fshat_psi_dark = {core.display.loadImage("/data/gfx/ui/resources/front_psi_dark.png"):glTexture()}
+fshat_feedback = {core.display.loadImage("/data/gfx/ui/resources/front_psi.png"):glTexture()}
+fshat_feedback_dark = {core.display.loadImage("/data/gfx/ui/resources/front_psi_dark.png"):glTexture()}
 fshat_air = {core.display.loadImage("/data/gfx/ui/resources/front_air.png"):glTexture()}
 fshat_air_dark = {core.display.loadImage("/data/gfx/ui/resources/front_air_dark.png"):glTexture()}
 
@@ -511,6 +515,7 @@ function _M:showResourceTooltip(x, y, w, h, id, desc, is_first)
 						if player:knowTalent(player.T_VIM_POOL) then list[#list+1] = {name="Vim", id="vim"} end
 						if player:knowTalent(player.T_HATE_POOL) then list[#list+1] = {name="Hate", id="hate"} end
 						if player:knowTalent(player.T_PSI_POOL) then list[#list+1] = {name="Psi", id="psi"} end
+						if player.psionic_feedback_max then list[#list+1] = {name="Feedback", id="feedback"} end
 						Dialog:listPopup("Display/Hide resources", "Toggle:", list, 300, 300, function(sel)
 							if not sel or not sel.id then return end
 							game.player["_hide_resource_"..sel.id] = not game.player["_hide_resource_"..sel.id]
@@ -969,6 +974,38 @@ function _M:displayResources(scale, bx, by, a)
 			self:showResourceTooltip(bx+x*scale, by+y*scale, fshat[6], fshat[7], "res:psi", self.TOOLTIP_PSI)
 			x, y = self:resourceOrientStep(orient, bx, by, scale, x, y, fshat[6], fshat[7])
 		elseif game.mouse:getZone("res:psi") then game.mouse:unregisterZone("res:psi") end
+		
+		-----------------------------------------------------------------------------------
+		-- Feedback
+		if player.psionic_feedback_max and not player._hide_resource_feedback then
+			sshat[1]:toScreenFull(x-6, y+8, sshat[6], sshat[7], sshat[2], sshat[3], 1, 1, 1, a)
+			bshat[1]:toScreenFull(x, y, bshat[6], bshat[7], bshat[2], bshat[3], 1, 1, 1, a)
+			if feedback_sha.shad then feedback_sha:setUniform("a", a) feedback_sha.shad:use(true) end
+			local p = player.psionic_feedback / player.psionic_feedback_max
+			shat[1]:toScreenPrecise(x+49, y+10, shat[6] * p, shat[7], 0, p * 1/shat[4], 0, 1/shat[5], feedback_c[1], feedback_c[2], feedback_c[3], a)
+			if feedback_sha.shad then feedback_sha.shad:use(false) end
+
+			if not self.res.feedback or self.res.feedback.vc ~= player.psionic_feedback or self.res.feedback.vm ~= player.psionic_feedback_max or self.res.feedback.vr ~= -1 then
+				self.res.feedback = {
+					hidable = "Feedback",
+					vc = player.psionic_feedback, vm = player.psionic_feedback_max, vr = -1,
+					cur = {core.display.drawStringBlendedNewSurface(font_sha, ("%d/%d"):format(player.psionic_feedback, player.psionic_feedback_max), 255, 255, 255):glTexture()},
+					regen={core.display.drawStringBlendedNewSurface(sfont_sha, ("%+0.2f"):format(-1), 255, 255, 255):glTexture()},
+				}
+			end
+			local dt = self.res.feedback.cur
+			dt[1]:toScreenFull(2+x+64, 2+y+10 + (shat[7]-dt[7])/2, dt[6], dt[7], dt[2], dt[3], 0, 0, 0, 0.7 * a)
+			dt[1]:toScreenFull(x+64, y+10 + (shat[7]-dt[7])/2, dt[6], dt[7], dt[2], dt[3], 1, 1, 1, a)
+			dt = self.res.feedback.regen
+			dt[1]:toScreenFull(2+x+144, 2+y+10 + (shat[7]-dt[7])/2, dt[6], dt[7], dt[2], dt[3], 0, 0, 0, 0.7 * a)
+			dt[1]:toScreenFull(x+144, y+10 + (shat[7]-dt[7])/2, dt[6], dt[7], dt[2], dt[3], 1, 1, 1, a)
+
+			local front = fshat_feedback_dark
+			if player.psionic_feedback >= player.psionic_feedback_max then front = fshat_feedback end
+			front[1]:toScreenFull(x, y, front[6], front[7], front[2], front[3], 1, 1, 1, a)
+			self:showResourceTooltip(bx+x*scale, by+y*scale, fshat[6], fshat[7], "res:feedback", self.TOOLTIP_FEEDBACK)
+			x, y = self:resourceOrientStep(orient, bx, by, scale, x, y, fshat[6], fshat[7])
+		elseif game.mouse:getZone("res:feedback") then game.mouse:unregisterZone("res:feedback") end
 
 		-----------------------------------------------------------------------------------
 		-- Ammo
