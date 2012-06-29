@@ -140,7 +140,7 @@ game.zone.on_turn = function()
 				display = 'U',
 				name = "Shasshhiy'Kaish", color=colors.VIOLET, unique = true,
 --				resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/demon_major_shasshhiy_kaish.png", display_h=2, display_y=-1}}},
-				desc = [[This demon would be very attractive if not for the hovering crown of flames, the three tails and sharp claws. As you watch her you can almost feel pain.]],
+				desc = [[This demon would be very attractive if not for the hovering crown of flames, the three tails and sharp claws. As you watch her you can almost feel pain digging in your flesh. She wants you to suffer.]],
 				killer_message = "and used for her perverted desires",
 				level_range = {25, nil}, exp_worth = 2,
 				female = 1,
@@ -185,10 +185,45 @@ game.zone.on_turn = function()
 			}
 			m:resolve() m:resolve(nil, true)
 
+			local scale = (7 - game.level.event_cultists.kill) / 6
+			local o = mod.class.Object.new{
+				define_as = "METEORIC_CROWN",
+				slot = "HEAD",
+				type = "armor", subtype="head",
+				name = "Crown of Burning Pain", image = "object/artifact/crown_of_command.png",
+				unided_name = "burning crown",
+				desc = [[This crown of pure flames possess a myriad of small molten rocks floating wildly above it. Each can be removed to throw as a true meteor.]],
+				add_name = " (#ARMOR#)",
+				power_source = {arcane=true},
+				display = "]", color=colors.SLATE, image = "",
+				moddable_tile = resolvers.moddable_tile("helm"),
+				require = { talent = { m.T_ARMOUR_TRAINING }, },
+				encumber = 4,
+				metallic = true,
+				unique = true,
+				require = { stat = { cun=25 } },
+				level_range = {20, 35},
+				cost = 300,
+				material_level = 3,
+				wielder = {
+					inc_stats = { [m.STAT_CUN] = math.floor(scale * 6), [m.STAT_WIL] = math.floor(scale * 6), },
+					combat_def = math.floor(3 + scale * 10),
+					combat_armor = 0,
+					fatigue = 4,
+					resists = { [engine.DamageType.FIRE] = 5 + math.floor(scale * 30)},
+					inc_damage = { [engine.DamageType.FIRE] = 5 + math.floor(scale * 30)},
+				},
+				max_power = 50, power_regen = 1,
+				use_talent = { id = m.T_METEOR_RAIN, level = 2, power = 50 - math.floor(scale * 25) },
+			}
+			o:resolve() o:resolve(nil, true)
+
 			local x, y = util.findFreeGrid(game.level.event_cultists.queen_x-1, game.level.event_cultists.queen_y, 10, true, {[engine.Map.ACTOR]=true})
 			if x then
 				m.inc_damage.all = m.inc_damage.all - 10 * (game.level.event_cultists.kill)
 				m.max_life = m.max_life * (14 - game.level.event_cultists.kill) / 14
+				game.zone:addEntity(game.level, o, "object")
+				m:addObject(m:getInven("INVEN"), o)
 
 				game.zone:addEntity(game.level, m, "actor", x, y) 
 				require("engine.ui.Dialog"):simplePopup("Cultist", "A terrible shout thunders across the level: 'Come my darling, come, I will be ssssooo *nice* to you!'")
