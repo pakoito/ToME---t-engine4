@@ -307,6 +307,8 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		game:onTickEnd(function()
+			-- Update the shader of the original player
+			self:updateMainShader()
 			if game._chronoworlds == nil then
 				game.logSeen(self, "#LIGHT_RED#The spell fizzles.")
 				return

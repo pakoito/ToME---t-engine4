@@ -482,16 +482,16 @@ newEntity{ theme={misc=true, light=true}, name="lite radius", points = 1, rarity
 newEntity{ theme={misc=true}, name="water breathing", points = 10, rarity = 15, level_range = {1, 50},
 	wielder = { can_breath = {water=1}, },
 }
-newEntity{ theme={misc=true, mental=true}, name="telepathy", points = 60, rarity = 65, level_range = {1, 50},
+newEntity{ theme={misc=true, mental=true}, name="telepathy", points = 60, rarity = 100, level_range = {1, 50},
 	wielder = { esp_all = 1 },
 }
-newEntity{ theme={misc=true, mental=true}, name="orc telepathy", points = 15, rarity = 25, level_range = {1, 50},
+newEntity{ theme={misc=true, mental=true}, name="orc telepathy", points = 15, rarity = 50, level_range = {1, 50},
 	wielder = { esp = {["humanoid/orc"]=1}, },
 }
-newEntity{ theme={misc=true, mental=true}, name="dragon telepathy", points = 8, rarity = 20, level_range = {1, 50},
+newEntity{ theme={misc=true, mental=true}, name="dragon telepathy", points = 8, rarity = 40, level_range = {1, 50},
 	wielder = { esp = {dragon=1}, },
 }
-newEntity{ theme={misc=true, mental=true}, name="demon telepathy", points = 8, rarity = 20, level_range = {1, 50},
+newEntity{ theme={misc=true, mental=true}, name="demon telepathy", points = 8, rarity = 40, level_range = {1, 50},
 	wielder = { esp = {["demon/minor"]=1, ["demon/major"]=1}, },
 }
 newEntity{ theme={misc=true}, name="no teleport", points = 1, rarity = 17, level_range = {1, 50},
