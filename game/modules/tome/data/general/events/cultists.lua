@@ -111,8 +111,8 @@ for i, p in ipairs(list) do
 			if not game.level.turn_counter then
 				game.level.event_cultists.queen_x = self.monolith_x
 				game.level.event_cultists.queen_y = self.monolith_y
-				game.level.turn_counter = 10 * 150
-				game.level.max_turn_counter = 10 * 150
+				game.level.turn_counter = 10 * 210
+				game.level.max_turn_counter = 10 * 210
 				require("engine.ui.Dialog"):simplePopup("Cultist", "The cultist soul seems to be absorbed by the strange stone he was guarding. You feel like something is about to happen...")
 			end
 		end,
@@ -134,6 +134,8 @@ game.zone.on_turn = function()
 		game.player.changed = true
 		if game.level.turn_counter < 0 then
 			game.level.turn_counter = nil
+
+			local scale = (7 - game.level.event_cultists.kill) / 6
 
 			local m = mod.class.NPC.new{
 				type = "demon", subtype = "major",
@@ -168,7 +170,7 @@ game.zone.on_turn = function()
 
 				combat = { dam=resolvers.levelup(resolvers.mbonus(86, 20), 1, 1.4), atk=50, apr=30, dammod={str=1.1} },
 
-				resolvers.drops{chance=100, nb=5, {tome_drops="boss"} },
+				resolvers.drops{chance=100, nb=math.ceil(5 * scale), {tome_drops="boss"} },
 
 				resolvers.talents{
 					[Talents.T_METEOR_RAIN]={base=4, every=5, max=7},
@@ -183,9 +185,11 @@ game.zone.on_turn = function()
 
 				inc_damage = {all=90},
 			}
+			if game.level.event_cultists.kill == 1 then
+				m.on_die = function(self) world:gainAchievement("EVENT_CULTISTS", game:getPlayer(true)) end
+			end
 			m:resolve() m:resolve(nil, true)
 
-			local scale = (7 - game.level.event_cultists.kill) / 6
 			local o = mod.class.Object.new{
 				define_as = "METEORIC_CROWN",
 				slot = "HEAD",
@@ -225,14 +229,14 @@ game.zone.on_turn = function()
 				game.zone:addEntity(game.level, o, "object")
 				m:addObject(m:getInven("INVEN"), o)
 
-				game.zone:addEntity(game.level, m, "actor", x, y) 
-				require("engine.ui.Dialog"):simplePopup("Cultist", "A terrible shout thunders across the level: 'Come my darling, come, I will be ssssooo *nice* to you!'")
+				game.zone:addEntity(game.level, m, "actor", x, y)
+				require("engine.ui.Dialog"):simpleLongPopup("Cultist", "A terrible shout thunders across the level: 'Come my darling, come, I will be ssssooo *nice* to you!'\nYou should flee from this level!", 400)
 			end
-		elseif  game.level.turn_counter == 10 * 130 or
-			game.level.turn_counter == 10 * 110 or
+		elseif  game.level.turn_counter == 10 * 180 or
+			game.level.turn_counter == 10 * 150 or
+			game.level.turn_counter == 10 * 120 or
 			game.level.turn_counter == 10 * 90 or
-			game.level.turn_counter == 10 * 70 or
-			game.level.turn_counter == 10 * 50 or
+			game.level.turn_counter == 10 * 60 or
 			game.level.turn_counter == 10 * 30 then
 			local cultists = {}
 			for uid, e in pairs(game.level.entities) do if e.is_cultist_event then cultists[#cultists+1] = e end end

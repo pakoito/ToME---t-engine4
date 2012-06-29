@@ -90,6 +90,7 @@ if tries < 100 then
 							nb = nb - 1
 						end
 
+						world:gainAchievement("EVENT_OLDBATTLEFIELD", game:getPlayer(true))
 						require("engine.ui.Dialog"):simpleLongPopup("Onslaught", "You have survived the onslaught of undeads, you notice a way to climb up you had not seen before in a wall nearby.", 400)
 					elseif game.level.turn_counter % 50 == 0 then
 						for i = 1, math.floor(game.level.nb_pop) do

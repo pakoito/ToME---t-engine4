@@ -99,6 +99,7 @@ for i = 1, 3 do
 										loot_quantity = 0,
 										no_loot_randart = true,
 										name_scheme = "#rng# the Bringer of Doom",
+										on_die = function(self) world:gainAchievement("EVENT_PEDESTALS", game:getPlayer(true)) end,
 								}}, nil, true)
 								local i, j = util.findFreeGrid(x, y, 5, true, {[engine.Map.ACTOR]=true})
 								if i then

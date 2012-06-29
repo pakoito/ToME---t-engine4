@@ -68,7 +68,7 @@ local changer = function(id)
 			actor = {
 				class = "mod.class.generator.actor.Random",
 				nb_npc = {12, 12},
-				guardian = {random_elite={life_rating=function(v) return v * 1.5 + 4 end, nb_rares=4, name_scheme="#rng# the Invader"}},
+				guardian = {random_elite={life_rating=function(v) return v * 1.5 + 4 end, nb_rares=4, name_scheme="#rng# the Invader", on_die=function(self) world:gainAchievement("EVENT_FEARSCAPE", game:getPlayer(true)) end}},
 			},
 			object = {
 				class = "engine.generator.object.Random",

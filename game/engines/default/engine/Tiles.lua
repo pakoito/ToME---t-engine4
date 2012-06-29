@@ -88,7 +88,7 @@ function _M:get(char, fr, fg, fb, br, bg, bb, image, alpha, do_outline, allow_ti
 	else
 		local s, sw, sh
 		local is_image = false
-		if (self.use_images or not dochar) and image then
+		if (self.use_images or not dochar) and image and #image > 4 then
 			if allow_tileset and self.texture then
 				local ts, fx, fy, tsx, tsy = self:checkTileset(self.prefix..image)
 				if ts then

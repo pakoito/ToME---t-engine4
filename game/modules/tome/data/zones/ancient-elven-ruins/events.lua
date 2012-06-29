@@ -19,4 +19,5 @@
 
 return { one_per_level=true,
 	{group="majeyal-generic"},
+	{name="cultists", percent=10},
 }

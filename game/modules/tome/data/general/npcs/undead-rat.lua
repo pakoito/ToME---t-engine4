@@ -204,7 +204,7 @@ newEntity{ base = "BASE_NPC_UNDEAD_RAT", define_as="RATLICH",
 
 	combat_spellpower = resolvers.mbonus(20, 10),
 	combat_spellcrit = resolvers.mbonus(5, 5),
-	
+
 	combat_mindpower = resolvers.mbonus(20, 10),
 	combat_mindcrit = resolvers.mbonus(5, 5),
 
@@ -260,11 +260,13 @@ newEntity{ base = "BASE_NPC_UNDEAD_RAT", define_as="RATLICH",
 		[Talents.T_FEAR_THE_NIGHT]={base=2, every=7, max=5},
 		--Anorithil
 		[Talents.T_MOONLIGHT_RAY]={base=2, every=6, max=7},
-		[Talents.T_SHADOW_BLAST]={base=1, every=7, max=5},	
+		[Talents.T_SHADOW_BLAST]={base=1, every=7, max=5},
 	},
 	resolvers.sustains_at_birth(),
 	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
 	resolvers.drops{chance=100, nb=1, {defined="RATLICH_SKULL"} },
 
 	emote_random = {chance=1, "*squeak*", "Squeak!", "Squeak??", "SQUEAK!!!!!", '"Squeak" I say, yes .. "Squeak!"'},
+
+	on_die = function(self) world:gainAchievement("EVENT_RATLICH", game:getPlayer(true)) end,
 }

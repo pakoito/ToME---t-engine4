@@ -84,6 +84,7 @@ game.zone.on_turn = function()
 			game.nicer_tiles:updateAround(game.level, i, j)
 		end end
 
+		world:gainAchievement("EVENT_METEOR", game:getPlayer(true))
 		require("engine.ui.Dialog"):simplePopup("Meteor!", "As you walk you notice a huge rock falling from the sky, it crashes right near you!")
 	end
 end
