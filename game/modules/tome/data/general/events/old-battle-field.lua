@@ -119,6 +119,7 @@ if tries < 100 then
 		g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/grave_unopened_0"..rng.range(1,3).."_64.png", display_y=-1, display_h=2}
 		g.nice_tiler = nil
 		g.block_move = function(self, x, y, who, act, couldpass)
+			if game.level.event_battlefield_entered then return false end
 			if not who or not who.player or not act then return false end
 			who:runStop("grave")
 			require("engine.ui.Dialog"):yesnoPopup("Grave", "Do you wish to disturb the grave?", function(ret) if ret then
@@ -131,10 +132,9 @@ if tries < 100 then
 		g.change_level=1 g.change_zone=id g.glow=true
 		g.real_change = changer
 		g.change_level_check = function(self)
+			if game.level.event_battlefield_entered then return true end
+			game.level.event_battlefield_entered = true
 			game:changeLevel(1, self.real_change(self.change_zone), {temporary_zone_shift=true})
-			self.change_level_check = nil
-			self.real_change = nil
-			self.change_level = nil
 			return true
 		end
 

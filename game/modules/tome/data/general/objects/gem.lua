@@ -69,7 +69,7 @@ newGem("Diamond",	"object/diamond.png",5,		18,	"white",	40,	50, 5, 70,
 	{ power=25 }
 )
 newGem("Pearl",	"object/pearl.png",	5,		18,	"white",	40,	50, 5, 70,
-	{ resists = {all=10} },
+	{ resists = {all=5}, combat_armor = 5 },
 	{ splash={type="LITE", dam=1} }
 )
 newGem("Moonstone",	"object/moonstone.png",5,	18,	"white",	40,	50, 5, 70,
@@ -97,7 +97,7 @@ newGem("Turquoise",	"object/turquoise.png",4,	16,	"green",	30,	40, 4, 65,
 	{ splash={type="ACID", dam=30} }
 )
 newGem("Jade",		"object/jade.png",	4,	16,	"green",	30,	40, 4, 65,
-	{ resists = {all=8} },
+	{ resists = {all=4}, combat_armor = 4 },
 	{ splash={type="SLOW", dam=-1 + 1 / (1 + 0.20)} }
 )
 newGem("Sapphire",	"object/sapphire.png",4,	16,	"blue",		30,	40, 4, 65,
@@ -109,7 +109,7 @@ newGem("Quartz",	"object/quartz.png",3,	12,	"white",	20,	30, 3, 50,
 	{ splash={type="SPELLKNOCKBACK", dam=10} }
 )
 newGem("Emerald",	"object/emerald.png",3,	12,	"green",	20,	30, 3, 50,
-	{ resists = {all=6} },
+	{ resists = {all=3}, combat_armor = 3 },
 	{ splash={type="POISON", dam=50} }
 )
 newGem("Lapis Lazuli",	"object/lapis_lazuli.png",3,	12,	"blue",		20,	30, 3, 50,
@@ -125,7 +125,7 @@ newGem("Onyx",		"object/onyx.png",	3,	12,	"black",	20,	30, 3, 50,
 	{ power=15 }
 )
 newGem("Amethyst",	"object/amethyst.png",2,	10,	"violet",	10,	20, 2, 35,
-	{ inc_damage = {all=4}, combat_physcrit=2, combat_mindcrit=2, combat_spellcrit=2, },
+	{ inc_damage = {all=3}, combat_physcrit=2, combat_mindcrit=2, combat_spellcrit=2, },
 	{ splash={type="ARCANE", dam=25}}
 )
 newGem("Opal",		"object/opal.png",	2,	10,	"blue",		10,	20, 2, 35,
@@ -137,7 +137,7 @@ newGem("Topaz",		"object/topaz.png",	2,	10,	"blue",		10,	20, 2, 35,
 	{ range=3 }
 )
 newGem("Aquamarine",	"object/aquamarine.png",2,	10,	"blue",		10,	20, 2, 35,
-	{ resists = {all=4} },
+	{ resists = {all=2}, combat_armor = 2 },
 	{ mana=20 }
 )
 newGem("Ametrine",	"object/ametrine.png",1,	8,	"yellow",	1,	10, 1, 20,
@@ -145,7 +145,7 @@ newGem("Ametrine",	"object/ametrine.png",1,	8,	"yellow",	1,	10, 1, 20,
 	{ splash={type="LITE", dam=1} }
 )
 newGem("Zircon",	"object/zircon.png",1,	8,	"yellow",	1,	10, 1, 20,
-	{ resists = {all=2} },
+	{ resists = {all=1}, combat_armor = 1 },
 	{ daze={chance=20, dur=3} }
 )
 newGem("Spinel",	"object/spinel.png",1,	8,	"green",	1,	10, 1, 20,
