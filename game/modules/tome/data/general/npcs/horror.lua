@@ -505,6 +505,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 newEntity{ base = "BASE_NPC_HORROR",
 	name = "blade horror", color=colors.GREY, define_as="BLADEHORROR",
 	desc = "Blades whirl in the air around this thin, floating figure. The air around it swirls with force, threatening to tear apart anything that approches, if the blades don't do it first.",
+	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/horror_eldritch_blade_horror.png", display_h=2, display_y=-1}}},
 	level_range = {15, nil}, exp_worth = 1,
 	rarity = 2,
 	rank = 2,
@@ -517,15 +518,15 @@ newEntity{ base = "BASE_NPC_HORROR",
 	life_rating = 12,
 	life_regen = 0.25,
 	combat_armor = 12, combat_def = 24,
-	
+
 		ai = "tactical", ai_state = { ai_move="move_dmap", talent_in=2, ally_compassion=0 },
-		
+
 	on_melee_hit = {[DamageType.PHYSICALBLEED]=resolvers.mbonus(14, 2)},
 	combat = { dam=resolvers.levelup(resolvers.rngavg(16,22), 1, 1.5), atk=resolvers.levelup(18, 1, 1), apr=4, dammod={wil=0.25, cun=0.1}, damtype=engine.DamageType.PHYSICALBLEED, },
 	combat_physspeed = 4, --Crazy fast attack rate
-	
+
 	resists = {[DamageType.PHYSICAL] = 10, [DamageType.MIND] = 40, [DamageType.ARCANE] = -20},
-	
+
 	resolvers.talents{
 		[Talents.T_KNIFE_STORM]={base=3, every=6, max=7},
 		[Talents.T_BIND]={base=1, every=8, max=4},
@@ -552,7 +553,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	life_rating = 20,
 	life_regen = 3,
 	combat_armor = 15, combat_def = 24,
-	
+
 	on_move = function(self)
 			local DamageType = require "engine.DamageType"
 			local duration = 10
@@ -572,17 +573,17 @@ newEntity{ base = "BASE_NPC_HORROR",
 				false
 			)
 	end,
-	
+
 	on_melee_hit = {[DamageType.SLIME]=resolvers.mbonus(16, 2), [DamageType.ACID]=resolvers.mbonus(14, 2)},
-	combat = { 
-		dam=resolvers.levelup(resolvers.rngavg(40,50), 1, 0.9), 
-		atk=resolvers.rngavg(25,50), apr=25, 
-		dammod={wil=1.1}, physcrit = 10, 
+	combat = {
+		dam=resolvers.levelup(resolvers.rngavg(40,50), 1, 0.9),
+		atk=resolvers.rngavg(25,50), apr=25,
+		dammod={wil=1.1}, physcrit = 10,
 		damtype=engine.DamageType.SLIME,
 	},
-	
+
 		ai = "tactical", ai_state = { ai_move="move_dmap", talent_in=1, ally_compassion=0 },
-	
+
 	resists = {all=15, [DamageType.PHYSICAL] = -10, [DamageType.NATURE] = 100, [DamageType.ARCANE] = 40, [DamageType.BLIGHT] = 24},
 
 	resolvers.talents{
@@ -599,6 +600,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	subtype = "eldritch",
 	name = "umbral horror", color=colors.BLACK,
 	desc = "A dark shifting shape stalks through the shadows, blending in seemlessly.",
+	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/horror_eldritch_umbral_horror.png", display_h=2, display_y=-1}}},
 	level_range = {16, nil}, exp_worth = 1,
 	rarity = 8,
 	rank = 3,
@@ -610,17 +612,17 @@ newEntity{ base = "BASE_NPC_HORROR",
 	life_regen = 0.25,
 	hate_regen=4,
 	combat_armor = 0, combat_def = 24,
-	
-	combat = { 
-		dam=resolvers.levelup(resolvers.rngavg(36,45), 1, 1.2), 
-		atk=resolvers.rngavg(25,35), apr=20, 
-		dammod={wil=0.8}, physcrit = 12, 
+
+	combat = {
+		dam=resolvers.levelup(resolvers.rngavg(36,45), 1, 1.2),
+		atk=resolvers.rngavg(25,35), apr=20,
+		dammod={wil=0.8}, physcrit = 12,
 		damtype=engine.DamageType.DARKNESS,
 	},
 	combat_physspeed = 2,
-	
+
 		ai = "tactical", ai_state = { ai_move="move_dmap", talent_in=1, ally_compassion=0 },
-	
+
 	resists = {[DamageType.PHYSICAL] = -10, [DamageType.DARKNESS] = 100, [DamageType.LIGHT] = -60},
 
 	resolvers.talents{

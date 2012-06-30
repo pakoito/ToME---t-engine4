@@ -601,8 +601,6 @@ function _M:changeLevel(lev, zone, params)
 	-- Finish stuff registered for the previous level
 	self:onTickEndExecute()
 
-	print("=====TIMING", st - core.game.getTime()) sti = sti + 1
-
 	if self.zone and self.level then self.party:leftLevel() end
 
 	if self.player:isTalentActive(self.player.T_JUMPGATE) then
@@ -613,7 +611,6 @@ function _M:changeLevel(lev, zone, params)
 		self.player:forceUseTalent(self.player.T_JUMPGATE_TWO, {ignore_energy=true})
 	end
 
-	print("=====TIMING", st - core.game.getTime()) sti = sti + 1
 	-- clear chrono worlds and their various effects
 	if self._chronoworlds then self._chronoworlds = nil end
 
@@ -625,7 +622,6 @@ function _M:changeLevel(lev, zone, params)
 	local recreate_nothing = false
 	local popup = nil
 
-	print("=====TIMING", st - core.game.getTime()) sti = sti + 1
 	-- We only switch temporarily, keep the old one around
 	if params.temporary_zone_shift then
 		self:leaveLevel(self.level, lev, old_lev)
@@ -704,17 +700,14 @@ function _M:changeLevel(lev, zone, params)
 		end
 	end
 
-	print("=====TIMING", st - core.game.getTime()) sti = sti + 1
 	-- Post process walls
 	self.nicer_tiles:postProcessLevelTiles(self.level)
-	print("=====TIMING", st - core.game.getTime()) sti = sti + 1
 
 	-- Post process if needed once the nicer tiles are done
 	if self.level.data and self.level.data.post_nicer_tiles then self.level.data.post_nicer_tiles(self.level) end
 
 	-- Check if we need to switch the current guardian
 	self.state:zoneCheckBackupGuardian()
-	print("=====TIMING", st - core.game.getTime()) sti = sti + 1
 
 	-- Check if we must do some special things on load of this level
 	self.on_level_load_fcts = self.on_level_load_fcts or {}
@@ -723,7 +716,6 @@ function _M:changeLevel(lev, zone, params)
 		fct.fct(self.zone, self.level, fct.data)
 	end
 	self.on_level_load_fcts[self.zone.short_name.."-"..self.level.level] = nil
-	print("=====TIMING", st - core.game.getTime()) sti = sti + 1
 
 	-- Decay level ?
 	if self.level.last_turn and self.level.data.decay and self.level.last_turn + self.level.data.decay[1] * 10 < self.turn then
@@ -745,7 +737,6 @@ function _M:changeLevel(lev, zone, params)
 		end
 	end
 
-	print("=====TIMING", st - core.game.getTime()) sti = sti + 1
 	-- Move back to old wilderness position
 	if self.zone.wilderness then
 		self.player:move(self.player.wild_x, self.player.wild_y, true)
@@ -786,7 +777,6 @@ function _M:changeLevel(lev, zone, params)
 		local x, y = util.findFreeGrid(self.player.x, self.player.y, 20, true, {[Map.ACTOR]=true})
 		if x then act:move(x, y, true) end
 	end end
-	print("=====TIMING", st - core.game.getTime()) sti = sti + 1
 
 	-- Re add entities
 	self.level:addEntity(self.player)
@@ -800,7 +790,6 @@ function _M:changeLevel(lev, zone, params)
 		end
 		self.to_re_add_actors = nil
 	end
-	print("=====TIMING", st - core.game.getTime()) sti = sti + 1
 
 	if self.zone.on_enter then
 		self.zone.on_enter(lev, old_lev, zone)
@@ -809,7 +798,6 @@ function _M:changeLevel(lev, zone, params)
 	self.player:onEnterLevel(self.zone, self.level)
 	self.player:resetMoveAnim()
 
-	print("=====TIMING", st - core.game.getTime()) sti = sti + 1
 	local musics = {}
 	local keep_musics = false
 	if self.level.data.ambient_music then
@@ -823,12 +811,10 @@ function _M:changeLevel(lev, zone, params)
 		end
 	end
 	if not keep_musics then self:playAndStopMusic(unpack(musics)) end
-	print("=====TIMING", st - core.game.getTime()) sti = sti + 1
 
 	-- Update the minimap
 	self:setupMiniMap()
 
-	print("=====TIMING", st - core.game.getTime()) sti = sti + 1
 	-- Tell the map to use path strings to speed up path calculations
 	for uid, e in pairs(self.level.entities) do
 		if e.getPathString then
@@ -836,7 +822,6 @@ function _M:changeLevel(lev, zone, params)
 		end
 	end
 	self.zone_name_s = nil
-	print("=====TIMING", st - core.game.getTime()) sti = sti + 1
 
 	-- Special stuff
 	for uid, act in pairs(self.level.entities) do
@@ -845,7 +830,6 @@ function _M:changeLevel(lev, zone, params)
 			else act:removeEffect(act.EFF_ZERO_GRAVITY, nil, true) end
 		end
 	end
-	print("=====TIMING", st - core.game.getTime()) sti = sti + 1
 
 	-- Level feeling
 	local feeling
@@ -863,24 +847,20 @@ function _M:changeLevel(lev, zone, params)
 		end
 	end
 	if feeling then self.log("#TEAL#%s", feeling) end
-	print("=====TIMING", st - core.game.getTime()) sti = sti + 1
 
 	-- Autosave
 --	if config.settings.tome.autosave and not config.settings.cheat and ((left_zone and left_zone.short_name ~= "wilderness") or self.zone.save_per_level) and (left_zone and left_zone.short_name ~= self.zone.short_name) then self:saveGame() end
 
 	self.player:onEnterLevelEnd(self.zone, self.level)
-	print("=====TIMING", st - core.game.getTime()) sti = sti + 1
 
 	-- Day/Night cycle
 	if self.level.data.day_night then self.state:dayNightCycle() end
-	print("=====TIMING", st - core.game.getTime()) sti = sti + 1
 
 	if not recreate_nothing then
 		self.level.map:redisplay()
 		self.level.map:reopen()
 		if force_recreate then self.level.map:recreate() end
 	end
-	print("=====TIMING", st - core.game.getTime()) sti = sti + 1
 
 	-- Anti stairscum
 	if self.level.last_turn and self.level.last_turn < self.turn then
@@ -902,12 +882,10 @@ function _M:changeLevel(lev, zone, params)
 			end
 		end
 	end
-	print("=====TIMING", st - core.game.getTime()) sti = sti + 1
 
 	if popup then popup:done() end
 
 	self:dieClonesDie()
-	print("=====TIMING", st - core.game.getTime()) sti = sti + 1
 end
 
 function _M:dieClonesDie()
