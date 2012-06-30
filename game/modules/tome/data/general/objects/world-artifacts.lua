@@ -1831,7 +1831,7 @@ newEntity{ base = "BASE_LEATHER_BELT",
 	max_power = 20, power_regen = 1,
 	use_power = { name = "generate a personnal shield", power = 20,
 		use = function(self, who)
-			who:setEffect(who.EFF_DAMAGE_SHIELD, 10, {power=100 + self:getMag(250)})
+			who:setEffect(who.EFF_DAMAGE_SHIELD, 10, {power=100 + who:getMag(250)})
 			game:playSoundNear(who, "talents/arcane")
 			game.logSeen(who, "%s invokes the memory of Neira!", who.name:capitalize())
 			return {id=true, used=true}
@@ -3134,7 +3134,7 @@ newEntity{ base = "BASE_MINDSTAR",
 	},
 	max_power = 40, power_regen = 1,
 	use_power = { name = "release a random breath", power = 40,
-	use = function(self, who)	
+	use = function(self, who)
 			local Talents = require "engine.interface.ActorTalents"
 			local breathe = rng.table{
 				{Talents.T_FIRE_BREATH},
