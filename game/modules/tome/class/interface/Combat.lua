@@ -606,11 +606,11 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	end
 
 	-- Special effect
-	if hitted and not target.dead and weapon and weapon.special_on_hit and weapon.special_on_hit.fct then
+	if hitted and weapon and weapon.special_on_hit and weapon.special_on_hit.fct and (not target.dead or weapon.special_on_hit.on_kill) then
 		weapon.special_on_hit.fct(weapon, self, target)
 	end
 
-	if hitted and crit and not target.dead and weapon and weapon.special_on_crit and weapon.special_on_crit.fct then
+	if hitted and crit and weapon and weapon.special_on_crit and weapon.special_on_crit.fct and (not target.dead or weapon.special_on_crit.on_kill) then
 		weapon.special_on_crit.fct(weapon, self, target)
 	end
 

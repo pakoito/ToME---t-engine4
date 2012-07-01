@@ -3864,7 +3864,7 @@ end
 function _M:on_projectile_fired(proj, typ, x, y, damtype, dam, particles)
 	if self:attr("slow_projectiles_outgoing") then
 		print("Projectile slowing down from", proj.energy.mod)
-		proj.energy.mod = proj.energy.mod * (100 - self.slow_projectiles_outgoing) / 100
+		proj.energy.mod = proj.energy.mod * (100 - math.min(90, self.slow_projectiles_outgoing)) / 100
 		print("Projectile slowing down to", proj.energy.mod)
 	end
 end
@@ -3873,7 +3873,7 @@ end
 function _M:on_projectile_target(x, y, p)
 	if self:attr("slow_projectiles") then
 		print("Projectile slowing down from", p.energy.mod)
-		p.energy.mod = p.energy.mod * (100 - self.slow_projectiles) / 100
+		p.energy.mod = p.energy.mod * (100 - math.min(90, self.slow_projectiles)) / 100
 		print("Projectile slowing down to", p.energy.mod)
 	end
 	if self:knowTalent(self.T_HEIGHTENED_REFLEXES) then
