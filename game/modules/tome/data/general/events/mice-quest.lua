@@ -85,6 +85,7 @@ g.change_level=1 g.change_zone=id
 g.add_displays = g.add_displays or {}
 g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/pedestal_heart.png", z=5}
 g.nice_tiler = nil
+g.real_change = changer
 g.block_move = function(self)
 	game:changeLevel(1, self.real_change(self.change_zone), {temporary_zone_shift=true})
 	return true

@@ -43,7 +43,7 @@ local changer = function(id)
 		power_source = {arcane=true},
 		unique = true,
 		slot = "TOOL",
-		type = "tool", subtype="skull", image = "object/artifact/bone_runed_skull.png",
+		type = "tool", subtype="skull", image = "object/artifact/skull_of_the_rat_lich.png",
 		unided_name = "dusty rat skull",
 		name = "Skull of the Rat Lich",
 		display = "*", color=colors.BLACK,
