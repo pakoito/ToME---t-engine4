@@ -282,6 +282,7 @@ newEntity{ base = "BASE_NPC_MAJOR_DEMON",
 newEntity{ base = "BASE_NPC_MAJOR_DEMON",
 	name = "General of Urh'Rok", --Give actual name?
 	color=colors.DARK_RED, unique=true,
+	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/demon_major_general_of_urh_rok.png", display_h=2, display_y=-1}}},
 	desc = [[This massive form, sheathed in dark flames, stands tall above a legion of lesser demons. In his hands he holds a massive blacked battleaxe, flames dancing around the blades.]],
 	level_range = {40, nil}, exp_worth = 1,
 	rarity = 50,
@@ -302,7 +303,7 @@ newEntity{ base = "BASE_NPC_MAJOR_DEMON",
 	melee_project = {[DamageType.FIRE]=resolvers.mbonus(25, 35)},
 
 	knockback_immune = 1,
-	
+
 	summon = {
 		{type="demon", number=2, hasxp=false},
 	},
