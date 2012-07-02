@@ -1806,7 +1806,7 @@ function _M:doneEvent(id)
 end
 
 function _M:canEventGrid(level, x, y)
-	return game.player:canMove(x, y) and not level.map.attrs(x, y, "no_teleport") and not level.map:checkAllEntities("change_level")
+	return game.player:canMove(x, y) and not level.map.attrs(x, y, "no_teleport") and not level.map:checkAllEntities(x, y, "change_level")
 end
 
 function _M:startEvents()

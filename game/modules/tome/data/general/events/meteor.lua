@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-local function canEventGrid(level,x,y) return not level.map.attrs(x, y, "no_teleport") and not level.map:checkAllEntities("change_level") end
+local function canEventGrid(level,x,y) return not level.map.attrs(x, y, "no_teleport") and not level.map:checkAllEntities(x, y, "change_level") end
 
 local function check(x, y)
 	local list = {}
