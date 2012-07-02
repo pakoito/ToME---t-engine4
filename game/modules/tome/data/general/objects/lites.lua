@@ -48,7 +48,7 @@ newEntity{ base = "BASE_LITE",
 	rarity = 10,
 	encumber = 1,
 	cost = 3,
-	material_level = 5,
+	material_level = 3,
 
 	wielder = {
 		lite = 3,
