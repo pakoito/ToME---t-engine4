@@ -31,12 +31,14 @@ local id = "fearscape-invasion-"..game.turn
 local changer = function(id)
 	local npcs = mod.class.NPC:loadList{"/data/general/npcs/minor-demon.lua", "/data/general/npcs/major-demon.lua"}
 	local objects = mod.class.Object:loadList("/data/general/objects/objects.lua")
-	local terrains = mod.class.Grid:loadList{"/data/general/grids/basic.lua", "/data/general/grids/void.lua"}
+	local terrains = mod.class.Grid:loadList({"/data/general/grids/basic.lua", "/data/general/grids/void.lua"}, nil, nil, function(e)
+		if e.image then e.image = e.image:gsub("^terrain/floating_rocks", "terrain/red_floating_rocks") end
+	end)
 	terrains.PORTAL_BACK = mod.class.Grid.new{
 		type = "floor", subtype = "floor",
 		display = "&", color = colors.BLUE,
 		name = "portal",
-		image = "terrain/floating_rocks05_01.png",
+		image = "terrain/red_floating_rocks05_01.png",
 		add_displays = { mod.class.Grid.new{image="terrain/demon_portal3.png"} },
 		change_level = 1, change_zone = "wilderness",
 		change_level_shift_back = true,
