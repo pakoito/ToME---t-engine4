@@ -529,6 +529,24 @@ function _M:getTextualDesc(compare_with)
 		if special ~= "" then
 			desc:add(found and {"color","WHITE"} or {"color","GREEN"}, "Special effect when this weapon crits: "..special, {"color","LAST"}, true)
 		end
+		
+		local special = ""
+		if combat.special_on_kill then
+			special = combat.special_on_kill.desc
+		end
+		local found = false
+		for i, v in ipairs(compare_with or {}) do
+			if v[field] and v[field].special_on_kill then
+				if special ~= v[field].special_on_kill.desc then
+					desc:add({"color","RED"}, "Special effect when this weapon kills: "..v[field].special_on_kill.desc, {"color","LAST"}, true)
+				else
+					found = true
+				end
+			end
+		end
+		if special ~= "" then
+			desc:add(found and {"color","WHITE"} or {"color","GREEN"}, "Special effect when this weapon kills: "..special, {"color","LAST"}, true)
+		end
 
 		found = false
 		for i, v in ipairs(compare_with or {}) do
@@ -948,6 +966,10 @@ function _M:getTextualDesc(compare_with)
 		
 		if w.demon then
 			desc:add("The wearer is treated as a demon.", true)
+		end
+		
+		if w.blind then
+			desc:add("The wearer is blinded.", true)
 		end
 
 		if w.blind_fight then

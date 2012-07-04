@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 
--- TODO: Sounds and particles
+-- Edge TODO: Sounds, Particles
 
 newTalent{
 	name = "Solipsism",
@@ -27,7 +27,7 @@ newTalent{
 	require = psi_wil_req1,
 	mode = "passive",
 	no_unlearn_last = true,
-	damageToPsi = function(self, t) return math.min(self:getTalentLevel(t) * 0.15, 1) end,
+	getConversionRatio = function(self, t) return math.min(self:getTalentLevel(t) * 0.15, 1) end,
 	on_learn = function(self, t)
 		self:incMaxPsi(10)
 		if self:getTalentLevelRaw(t) == 1 then
@@ -45,11 +45,11 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local damage_to_psi = t.damageToPsi(self, t)
+		local conversion_ratio = t.getConversionRatio(self, t)
 		return ([[You believe that your mind is the center of everything.  Permanently increases the amount of psi you gain per level by 10 and reduces your life rating (affects life at level up) to 0 (one time only adjustment).
-		You also have learned to overcome physical damage with your mind alone and convert %d%% of all damage into psi damage.
+		You also have learned to overcome damage with your mind alone and convert %d%% of all damage into psi damage and %d%% of your healing and life regen now recovers Psi instead of life. 
 		Increases your solipsism threshold by 20%% (first point only), reducing global speed if your Psi falls below the threshold (currently %d%%).
-		Each talent point invested will also increase your max Psi by 10.]]):format(damage_to_psi * 100, self.solipsism_threshold * 100)
+		Each talent point invested will also increase your max Psi by 10.]]):format(conversion_ratio * 100, conversion_ratio * 100, self.solipsism_threshold * 100)
 	end,
 }
 
@@ -76,9 +76,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		local ratio = t.getBalanceRatio(self, t) * 100
-		return ([[%d%% of your healing and life regen now recovers Psi instead of life.  You now use %d%% of your physical save value and %d%% of your mental save value for physical saving throws.
+		return ([[You now substitute %d%% of your mental save for %d%% of your physical and spell saves throws (so at 100%% you would effectively use mental save for all saving throw rolls).
 		Increases your solipsism threshold by 10%% (first point only), reducing global speed if your Psi falls below the threshold (currently %d%%).
-		Each talent point invested will also increase your max Psi by 10.]]):format(ratio, ratio, ratio, self.solipsism_threshold * 100)
+		Each talent point invested will also increase your max Psi by 10.]]):format(ratio, ratio, self.solipsism_threshold * 100)
 	end,
 }
 
@@ -92,9 +92,7 @@ newTalent{
 	on_learn = function(self, t)
 		self:incMaxPsi(10)
 		self.solipsism_threshold = (self.solipsism_threshold or 0) + 0.1
-		if self:getTalentLevelRaw(t) == 1 then
-			self.clarity_threshold = t.getClarityThreshold(self, t)
-		end
+		self.clarity_threshold = t.getClarityThreshold(self, t)
 		return true
 	end,
 	on_unlearn = function(self, t)
@@ -109,7 +107,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local threshold = t.getClarityThreshold(self, t)
-		return ([[For every percent that your Psi pool exceeds %d%% you gain 1%% global speed.
+		return ([[For every percent that your Psi pool exceeds %d%% you gain 1%% global speed (up to a maximum of 50%%).
 		Increases your solipsism threshold by 10%% (first point only), reducing global speed if your Psi falls below the threshold (currently %d%%).
 		Each talent point invested will also increase your max Psi by 10.]]):format(threshold * 100, self.solipsism_threshold * 100)
 	end,
@@ -120,10 +118,8 @@ newTalent{
 	type = {"psionic/solipsism", 4},
 	points = 5,
 	require = psi_wil_req4,
-	cooldown = 12,
-	psi = 20,
-	tactical = { DEFEND = 2},
-	getDuration = function(self, t) return 1 + math.ceil(self:getTalentLevel(t)) end,
+	mode = "passive",
+	getSavePercentage = function(self, t) return math.min(2, 0.3  + self:getTalentLevel(t)/5) end,
 	on_learn = function(self, t)
 		self:incMaxPsi(10)
 		if self:getTalentLevelRaw(t) == 1 then
@@ -138,14 +134,20 @@ newTalent{
 		end
 		return true
 	end,
-	action = function(self, t)
-		self:setEffect(self.EFF_DISMISSAL, t.getDuration(self, t), {})
-		return true
+	doDismissalOnHit = function(self, value, src, t)
+		local saving_throw = self:combatMindCrit(t.getSavePercentage(self, t))
+		print("[Dismissal] ", self.name:capitalize(), " attempting to ignore ", value, "damage from ", src.name:capitalize(), "using", saving_throw,  "mental save.")
+		if self:checkHit(math.floor(saving_throw), value) then
+			game.logSeen(self, "%s dismisses %s's attack!", self.name:capitalize(), src.name:capitalize())
+			return 0
+		else
+			return value
+		end
 	end,
 	info = function(self, t)
-		local duration = t.getDuration(self, t)
-		return ([[You dismiss 'reality' as merely a figment of your mind.  For the next %d turns you are immune to all damage and ignore new status effects.  Performing any action other then movement will reaffirm your belief in 'reality' and end the effect.
+		local save_percentage = t.getSavePercentage(self, t)
+		return ([[Each time you take damage you roll %d%% of your mental save against it.  If the saving throw succeeds the damage will be reduced to 0.
 		Increases your solipsism threshold by 10%% (first point only), reducing global speed if your Psi falls below the threshold (currently %d%%).
-		Each talent point invested will also increase your max Psi by 10.]]):format(duration, self.solipsism_threshold * 100)
+		Each talent point invested will also increase your max Psi by 10.]]):format(save_percentage * 100, self.solipsism_threshold * 100)
 	end,
 }

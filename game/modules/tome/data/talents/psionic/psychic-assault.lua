@@ -17,9 +17,43 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+-- Edge TODO: Sounds, Particles, Talent Icons; All Talents
+-- Idea (5:06:11 PM) Neuq: Sunder mind - Hit the enemy for X mind damage + Y mind damage for every stack of Sunder mind he has on him? :)
+
+newTalent{
+	name = "Sunder Mind",
+	type = {"psionic/psychic-assault", 1},
+	require = psi_wil_req1,
+	points = 5,
+	cooldown = 2,
+	psi = 5,
+	range = 7,
+	direct_hit = true,
+	requires_target = true,
+	target = function(self, t)
+		return {type="beam", range=self:getTalentRange(t), talent=t}
+	end,
+	tactical = { ATTACK = { MIND = 3 } },
+	getDamage = function(self, t) return self:combatTalentMindDamage(t, 10, 340) end,
+	action = function(self, t)
+		local tg = self:getTalentTarget(t)
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:project(tg, x, y, DamageType.MIND, self:mindCrit(self:combatTalentMindDamage(t, 10, 340)), {type="mind"})
+		game:playSoundNear(self, "talents/spell_generic")
+		return true
+	end,
+	info = function(self, t)
+		local damage = t.getDamage(self, t)
+		return ([[Sends a telepathic attack, trying to destroy the brains of any target in the beam, doing %0.2f mind damage.
+		The damage will increase with your mindpower.]]):format(damDesc(self, DamageType.PHYSICAL, damage))
+	end,
+}
+
 newTalent{
 	name = "Psychic Lobotomy",
-	type = {"psionic/psychic-assault", 1},
+	type = {"psionic/psychic-assault", 2},
+	require = psi_wil_req2,
 	points = 5,
 	cooldown = 6,
 	range = 10,
@@ -60,5 +94,64 @@ newTalent{
 	end,
 }
 
+newTalent{
+	name = "Mind Sear",
+	type = {"psionic/psychic-assault", 1},
+	require = psi_wil_req1,
+	points = 5,
+	cooldown = 2,
+	psi = 5,
+	range = 7,
+	direct_hit = true,
+	requires_target = true,
+	target = function(self, t)
+		return {type="beam", range=self:getTalentRange(t), talent=t}
+	end,
+	tactical = { ATTACK = { MIND = 3 } },
+	getDamage = function(self, t) return self:combatTalentMindDamage(t, 10, 340) end,
+	action = function(self, t)
+		local tg = self:getTalentTarget(t)
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:project(tg, x, y, DamageType.MIND, self:mindCrit(self:combatTalentMindDamage(t, 10, 340)), {type="mind"})
+		game:playSoundNear(self, "talents/spell_generic")
+		return true
+	end,
+	info = function(self, t)
+		local damage = t.getDamage(self, t)
+		return ([[Sends a telepathic attack, trying to destroy the brains of any target in the beam, doing %0.2f mind damage.
+		The damage will increase with your mindpower.]]):format(damDesc(self, DamageType.PHYSICAL, damage))
+	end,
+}
+
+newTalent{
+	name = "Brain Lock",  -- sustain, gives chance to brain lock enemies when mental damage is applied
+	type = {"psionic/psychic-assault", 1},
+	require = psi_wil_req1,
+	points = 5,
+	cooldown = 2,
+	psi = 5,
+	range = 7,
+	direct_hit = true,
+	requires_target = true,
+	target = function(self, t)
+		return {type="beam", range=self:getTalentRange(t), talent=t}
+	end,
+	tactical = { ATTACK = { MIND = 3 } },
+	getDamage = function(self, t) return self:combatTalentMindDamage(t, 10, 340) end,
+	action = function(self, t)
+		local tg = self:getTalentTarget(t)
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:project(tg, x, y, DamageType.MIND, self:mindCrit(self:combatTalentMindDamage(t, 10, 340)), {type="mind"})
+		game:playSoundNear(self, "talents/spell_generic")
+		return true
+	end,
+	info = function(self, t)
+		local damage = t.getDamage(self, t)
+		return ([[Sends a telepathic attack, trying to destroy the brains of any target in the beam, doing %0.2f mind damage.
+		The damage will increase with your mindpower.]]):format(damDesc(self, DamageType.PHYSICAL, damage))
+	end,
+}
 
 -- Idea, Brain Rupture

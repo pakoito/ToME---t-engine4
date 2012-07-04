@@ -306,13 +306,23 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 	end
 	
 	-- Special effect on crit
-	if crit and weapon and weapon.special_on_crit and weapon.special_on_crit.fct and (not target.dead or weapon.special_on_hit.on_kill) then
+	if crit and weapon and weapon.special_on_crit and weapon.special_on_crit.fct and (not target.dead or weapon.special_on_crit.on_kill) then
 		weapon.special_on_crit.fct(weapon, self, target)
 	end
 	
 	-- Special effect on crit AMMO!
-	if crit and ammo and ammo.special_on_crit and ammo.special_on_crit.fct and (not target.dead or ammo.special_on_hit.on_kill) then
+	if crit and ammo and ammo.special_on_crit and ammo.special_on_crit.fct and (not target.dead or ammo.special_on_crit.on_kill) then
 		ammo.special_on_crit.fct(ammo, self, target)
+	end
+	
+	-- Special effect on kill
+	if hitted and weapon and weapon.special_on_kill and weapon.special_on_kill.fct and target.dead then
+		weapon.special_on_kill.fct(weapon, self, target)
+	end
+	
+	-- Special effect on kill A-A-A-AMMMO!
+	if hitted and ammo and ammo.special_on_kill and ammo.special_on_kill.fct and target.dead then
+		ammo.special_on_kill.fct(ammo, self, target)
 	end
 
 	-- Temporal cast

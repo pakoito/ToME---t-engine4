@@ -1046,33 +1046,6 @@ newTalent{
 }
 
 newTalent{
-	name = "Mind Sear",
-	type = {"psionic/other", 1},
-	points = 5,
-	cooldown = 2,
-	psi = 5,
-	range = 7,
-	direct_hit = true,
-	requires_target = true,
-	target = function(self, t)
-		return {type="beam", range=self:getTalentRange(t), talent=t}
-	end,
-	tactical = { ATTACK = { MIND = 3 } },
-	action = function(self, t)
-		local tg = self:getTalentTarget(t)
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.MIND, self:mindCrit(self:combatTalentMindDamage(t, 10, 340)), {type="mind"})
-		game:playSoundNear(self, "talents/spell_generic")
-		return true
-	end,
-	info = function(self, t)
-		return ([[Sends a telepathic attack, trying to destroy the brains of any target in the beam, doing %0.2f mind damage.
-		The damage will increase with Willpower and Cunning stats.]]):format(self:combatTalentMindDamage(t, 10, 340))
-	end,
-}
-
-newTalent{
 	name = "Silence",
 	type = {"psionic/other", 1},
 	points = 5,

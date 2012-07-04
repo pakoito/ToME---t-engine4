@@ -154,6 +154,7 @@ newTalent{
 		m.stealth = t.getStealthPower(self, t)
 		for i = 1, 10 do
 			m:unlearnTalent(m.T_AMBUSCADE)
+			m:unlearnTalent(m.T_PROJECTION) -- no recurssive projections
 			m:unlearnTalent(m.T_STEALTH)
 			m:unlearnTalent(m.T_HIDE_IN_PLAIN_SIGHT)
 		end

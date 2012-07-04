@@ -73,6 +73,7 @@ _M.temporary_values_conf.global_speed_add = "newest"
 _M.temporary_values_conf.movement_speed = "mult0"
 _M.temporary_values_conf.combat_physspeed = "mult0"
 _M.temporary_values_conf.combat_spellspeed = "mult0"
+_M.temporary_values_conf.combat_mentalspeed = "mult0"
 
 -- Damage cap takes the lowest
 _M.temporary_values_conf.flat_damage_cap = "lowest"
@@ -96,6 +97,7 @@ function _M:init(t, no_default)
 	self.combat_physcrit = 0
 	self.combat_physspeed = 1
 	self.combat_spellspeed = 1
+	self.combat_mentalspeed = 1
 	self.combat_spellcrit = 0
 	self.combat_spellpower = 0
 	self.combat_mindpower = 0
@@ -338,7 +340,7 @@ function _M:actBase()
 		if self:hasEffect(self.EFF_SOLIPSISM) then
 			self:removeEffect(self.EFF_SOLIPSISM)
 		end
-		self:setEffect(self.EFF_CLARITY, 1, {power = current_psi_percentage - self:attr("clarity_threshold")})
+		self:setEffect(self.EFF_CLARITY, 1, {power = math.max(0.5, current_psi_percentage - self:attr("clarity_threshold"))})
 	elseif self:hasEffect(self.EFF_SOLIPSISM) then
 		self:removeEffect(self.EFF_SOLIPSISM)
 	elseif self:hasEffect(self.EFF_CLARITY) then
@@ -381,8 +383,8 @@ function _M:actBase()
 	self:regenResources()
 	
 	-- update psionic feedback
-	if self.psionic_feedback and self.psionic_feedback > 0 then
-		self.psionic_feedback = math.max(0, self.psionic_feedback - 1)
+	if self:getFeedback() > 0 then
+		self:incFeedback(-self:getFeedbackDecay())
 	end
 
 	-- Compute timed effects
@@ -460,6 +462,10 @@ function _M:actBase()
 			if self.life < t.getMinimumLife(self, t) then
 				self:forceUseTalent(self.T_DAUNTING_PRESENCE, {ignore_energy=true})
 			end
+		end
+		if self:isTalentActive(self.T_FEEDBACK_OVERFLOW) and self:attr("psionic_overflow") then
+			local t = self:getTalentFromId(self.T_FEEDBACK_OVERFLOW)
+			t.doOverflowDischarge(self, t)
 		end
 
 		self:triggerHook{"Actor:actBase:Effects"}
@@ -1329,10 +1335,10 @@ function _M:regenLife()
 	if self.life_regen and not self:attr("no_life_regen") then
 		local regen = self.life_regen * util.bound((self.healing_factor or 1), 0, 2.5)
 		
-		-- Psionic Balance
-		if self:knowTalent(self.T_BALANCE) then
-			local t = self:getTalentFromId(self.T_BALANCE)
-			local ratio = t.getBalanceRatio(self, t)
+		-- Solipsism
+		if self:knowTalent(self.T_SOLIPSISM) then
+			local t = self:getTalentFromId(self.T_SOLIPSISM)
+			local ratio = t.getConversionRatio(self, t)
 			local psi_increase = regen * ratio
 			self:incPsi(psi_increase)
 			-- Quality of life hack, doesn't decrease life regen while resting..  was way to painful
@@ -1395,9 +1401,9 @@ function _M:onHeal(value, src)
 	end
 
 	-- Psionic Balance
-	if self:knowTalent(self.T_BALANCE) then
-		local t = self:getTalentFromId(self.T_BALANCE)
-		local ratio = t.getBalanceRatio(self, t)
+	if self:knowTalent(self.T_SOLIPSISM) then
+		local t = self:getTalentFromId(self.T_SOLIPSISM)
+		local ratio = t.getConversionRatio(self, t)
 		local psi_increase = value * ratio
 		self:incPsi(psi_increase)
 		value = value - psi_increase
@@ -1455,6 +1461,11 @@ function _M:onTakeHit(value, src)
 		return 0
 	end
 
+	if self.knowTalent and self:knowTalent(self.T_DISMISSAL) then
+		local t = self:getTalentFromId(self.T_DISMISSAL)
+		value = t.doDismissalOnHit(self, value, src, t)
+	end
+		
 	if self:attr("retribution") then
 	-- Absorb damage into the retribution
 		if value / 2 <= self.retribution_absorb then
@@ -1645,16 +1656,29 @@ function _M:onTakeHit(value, src)
 	end
 	
 	-- Feedback pool: Stores damage as energy to use later
-	if self.psionic_feedback then
-		local current = self.psionic_feedback
-		local max = self.psionic_feedback_max or 100
-		self.psionic_feedback = math.min(self.psionic_feedback_max, self.psionic_feedback + value)
+	if self:getMaxFeedback() > 0 and src ~= self then
+		local ratio = 0.5
+		if self:knowTalent(self.T_FEEDBACK) then
+			local t = self:getTalentFromId(self.T_FEEDBACK)
+			ratio = t.getConversionRatio(self, t)
+		end
+		
+		local feedback_gain = value * ratio
+
+		-- Overflow?
+		if self:isTalentActive(self.T_FEEDBACK_OVERFLOW) then
+			local set_overflow = feedback_gain + self:getFeedback() - self:getMaxFeedback()
+			if set_overflow > 0 then
+				self.psionic_overflow = math.min(self.psionic_overflow_max, set_overflow + (self.psionic_overflow or 0))
+			end
+		end
+		self:incFeedback(feedback_gain)
 	end
 		
 	-- Solipsism
-	if self.knowTalent and self:knowTalent(self.T_SOLIPSISM) then
+	if self:knowTalent(self.T_SOLIPSISM) then
 		local t = self:getTalentFromId(self.T_SOLIPSISM)
-		local damage_to_psi = value * t.damageToPsi(self, t)
+		local damage_to_psi = value * t.getConversionRatio(self, t)
 		if self:getPsi() > damage_to_psi then
 			self:incPsi(-damage_to_psi)
 		else
@@ -2474,6 +2498,15 @@ function _M:onWear(o, bypass_set)
 	o:check("on_wear", self)
 	if o.wielder then
 		for k, e in pairs(o.wielder) do
+			-- Apply Psychometry
+			if self:knowTalent(self.T_PSYCHOMETRY) and o.power_source and (o.power_source.psionic or o.power_source.nature or o.power_source.antimagic) then
+				local multiplier = 0.05 + (self:getTalentLevel(self.T_PSYCHOMETRY) / 33)
+				if e >= 1 then
+					e = math.ceil(e * (1 + multiplier))
+				else
+					e = e * (1 + multiplier)
+				end
+			end
 			o.wielded[k] = self:addTemporaryValue(k, e)
 		end
 	end
@@ -2947,6 +2980,60 @@ function _M:incVim(v)
 	end
 end
 
+-- Feedback Psuedo-Resource Functions
+function _M:getFeedback()
+	if self.psionic_feedback then
+		return self.psionic_feedback
+	else
+		return 0
+	end
+end
+
+function _M:getMaxFeedback()
+	if self.psionic_feedback_max then
+		return self.psionic_feedback_max
+	else
+		return 0
+	end
+end
+
+function _M:incFeedback(v, set)
+	if not set then
+		self.psionic_feedback = util.bound(self.psionic_feedback + v, 0, self:getMaxFeedback())
+	else
+		self.psionic_feedback = math.min(v, self:getMaxFeedback())
+	end
+end
+
+function _M:incMaxFeedback(v, set)
+	-- give the actor base feedback if it doesn't have any
+	if not self.psionic_feedback then
+		self.psionic_feedback = 0
+	end
+	
+	if not set then
+		self.psionic_feedback_max = (self.psionic_feedback_max or 0) + v
+	else
+		self.psionic_feedback_max = v
+	end
+	
+	-- auto unlearn feedback if below 0
+	if self.psionic_feedback_max <= 0 then
+		self.psionic_feedback = nil
+		self.psionic_feedback_max = nil
+	end
+end
+
+function _M:getFeedbackDecay()
+	if self.psionic_feedback and self.psionic_feedback > 0 then
+		local feedback_decay = math.max(1, self.psionic_feedback / 10)
+		return feedback_decay
+	else
+		return 0
+	end
+end
+	
+
 --- Called before a talent is used
 -- Check the actor can cast it
 -- @param ab the talent (not the id, the table)
@@ -3046,9 +3133,15 @@ function _M:preUseTalent(ab, silent, fake)
 			if not silent then game.logPlayer(self, "You do not have enough hate to use %s.", ab.name) end
 			return false
 		end
-		if ab.psi and self:getPsi() < ab.psi * (100 + 2 * self:combatFatigue()) / 100 then
-			if not silent then game.logPlayer(self, "You do not have enough energy to cast %s.", ab.name) end
+		if ab.psi then
+			local talent_cost = ab.psi * (100 + 2 * self:combatFatigue()) / 100
+			if self:getPsi() < talent_cost and self:getFeedback() < talent_cost then
+				if not silent then game.logPlayer(self, "You do not have enough energy to cast %s.", ab.name) end
 			return false
+			end
+		end
+		if ab.feedback and self:getFeedback() < ab.feedback * (100 + 2 * self:combatFatigue()) / 100 then
+			if not silent then game.logPlayer(self, "You do not have enough energy to cast %s.", ab.name) end
 		end
 	end
 
@@ -3181,6 +3274,8 @@ function _M:postUseTalent(ab, ret)
 			self:useEnergy(game.energy_to_act * self:combatSummonSpeed())
 		elseif ab.type[1]:find("^technique/") then
 			self:useEnergy(game.energy_to_act * self:combatSpeed())
+		elseif ab.type[1]:find("^psionic/") then
+			self:useEnergy(game.energy_to_act * self:combatMentalSpeed())
 		else
 			self:useEnergy()
 		end
@@ -3284,7 +3379,18 @@ function _M:postUseTalent(ab, ret)
 			trigger = true; self:incParadox(ab.paradox * (1 + (self.paradox / 300)))
 		end
 		if ab.psi and not self:attr("zero_resource_cost") then
-			trigger = true; self:incPsi(-ab.psi * (100 + 2 * self:combatFatigue()) / 100)
+			trigger = true
+			local cost = ab.psi * (100 + 2 * self:combatFatigue()) / 100
+			-- Feedback adjustment
+			if self:getFeedback() > 0 then
+				local old_cost = cost
+				cost = cost - self:getFeedback()
+				self:incFeedback(-old_cost)
+			end
+			self:incPsi(-cost)
+		end
+		if ab.feedback and not self:attr("zero_resource_cost") then
+			trigger = true; self:incFeedback(-ab.feedback * (100 + 2 * self:combatFatigue()) / 100)
 		end
 	end
 
@@ -3371,9 +3477,6 @@ function _M:breakStepUp()
 	if self:hasEffect(self.EFF_REFLEXIVE_DODGING) then
 		self:removeEffect(self.EFF_REFLEXIVE_DODGING)
 	end
-	if self:hasEffect(self.EFF_DISMISSAL) then
-		self:removeEffect(self.EFF_DISMISSAL)
-	end
 end
 
 --- Breaks lightning speed if active
@@ -3428,6 +3531,7 @@ function _M:getTalentFullDescription(t, addlevel, config)
 		if t.hate or t.sustain_hate then d:add({"color",0x6f,0xff,0x83}, "Hate cost:  ", {"color", 127, 127, 127}, ""..(t.hate or t.sustain_hate * (100 + 2 * self:combatFatigue()) / 100), true) end
 		if t.paradox or t.sustain_paradox then d:add({"color",0x6f,0xff,0x83}, "Paradox cost: ", {"color",  176, 196, 222}, ("%0.2f"):format(t.sustain_paradox or t.paradox * (1 + (self.paradox / 300))), true) end
 		if t.psi or t.sustain_psi then d:add({"color",0x6f,0xff,0x83}, "Psi cost: ", {"color",0x7f,0xff,0xd4}, ""..(t.sustain_psi or t.psi * (100 + 2 * self:combatFatigue()) / 100), true) end
+		if t.feedback or t.sustain_feedback then d:add({"color",0x6f,0xff,0x83}, "Feedback cost: ", {"color",0xFF, 0xFF, 0x00}, ""..(t.sustain_feedback or t.feedback * (100 + 2 * self:combatFatigue()) / 100), true) end
 	end
 	if t.mode ~= "passive" then
 		if self:getTalentRange(t) > 1 then d:add({"color",0x6f,0xff,0x83}, "Range: ", {"color",0xFF,0xFF,0xFF}, ("%0.2f"):format(self:getTalentRange(t)), true)
@@ -3767,7 +3871,13 @@ function _M:on_set_temporary_effect(eff_id, e, p)
 		if not p.no_ct_effect and not e.no_ct_effect and e.status == "detrimental" then self:crossTierEffect(eff_id, p.apply_power, p.apply_save or save_for_effects[e.type]) end
 		p.total_dur = p.dur
 
-		if e.status == "detrimental" and self:checkHit(save, p.apply_power, 0, 95) then
+		-- Bonus save for schism
+		if self:attr("psionic_schism") and e.status == "detrimental" and save_type == "combatMentalResist" and self:checkHit(save, p.apply_power, 0, 95) then
+			game.logSeen(self, "#ORANGE#%s mental clone shrugs off the effect '%s'!", self.name:capitalize(), e.desc)
+			p.dur = 0
+		end
+		
+		if e.status == "detrimental" and self:checkHit(save, p.apply_power, 0, 95) and p.dur > 0 then
 			game.logSeen(self, "#ORANGE#%s shrugs off the effect '%s'!", self.name:capitalize(), e.desc)
 			p.dur = 0
 		end

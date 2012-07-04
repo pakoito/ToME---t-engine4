@@ -36,10 +36,18 @@ newTalentType{ allow_random=true, type="psionic/brainstorm", name = "brainstorm"
 
 -- Secret Project...
 -- Solipsist Talent Trees
-newTalentType{ allow_random=true, type="psionic/psychic-assault", name = "psychic assault", description = "Directly attack your opponents minds." }
+newTalentType{ allow_random=true, type="psionic/discharge", name = "discharge", description = "Store and discharge psychic feedback." }
+newTalentType{ allow_random=true, type="psionic/distortion", name = "distortion", description = "Distort reality with your mental energy." }
+newTalentType{ allow_random=true, type="psionic/nightmare", name = "nightmare", description = "Manifest your enemies nightmares." }
+newTalentType{ allow_random=true, type="psionic/psychic-assault", name = "Psychic Assault", description = "Directly attack your opponents minds." }
+newTalentType{ allow_random=true, type="psionic/slumber", name = "slumber", description = "Force enemies into a deep sleep." }
 newTalentType{ allow_random=true, type="psionic/solipsism", name = "solipsism", description = "Nothing exists outside the minds ability to perceive it." }
+newTalentType{ allow_random=true, type="psionic/thought-forms", name = "Thought-Forms", description = "Manifest your thoughts as psionic summons." }
+
 -- Generic Solipsist Trees
-newTalentType{ allow_random=true, type="psionic/feedback", generic = true, name = "feedback", description = "Store and discharge psychic feedback." }
+newTalentType{ allow_random=true, type="psionic/mentalism", generic = true, name = "mentalism", description = "ESP and other various mental powers." }
+newTalentType{ allow_random=true, type="psionic/feedback", generic = true, name = "feedback", description = "Store and manipulate psychic feedback." }
+newTalentType{ allow_random=true, type="psionic/trance", generic = true, name = "trance", description = "Put your mind into a deep trance." }
 
 newTalentType{ allow_random=true, type="psionic/possession", name = "possession", description = "You have learnt to shed away your body, allowing you to possess any other." }
 
@@ -171,9 +179,16 @@ load("/data/talents/psionic/psi-archery.lua")
 load("/data/talents/psionic/grip.lua")
 
 -- Solipsist
+load("/data/talents/psionic/discharge.lua")
+load("/data/talents/psionic/distortion.lua")
+load("/data/talents/psionic/mentalism.lua")
 load("/data/talents/psionic/feedback.lua")
+load("/data/talents/psionic/nightmare.lua")
 load("/data/talents/psionic/psychic-assault.lua")
+load("/data/talents/psionic/slumber.lua")
 load("/data/talents/psionic/solipsism.lua")
+load("/data/talents/psionic/thought-forms.lua")
+load("/data/talents/psionic/trance.lua")
 
 
 load("/data/talents/psionic/possession.lua")

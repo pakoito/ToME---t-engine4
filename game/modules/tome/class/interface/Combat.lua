@@ -613,6 +613,10 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	if hitted and crit and weapon and weapon.special_on_crit and weapon.special_on_crit.fct and (not target.dead or weapon.special_on_crit.on_kill) then
 		weapon.special_on_crit.fct(weapon, self, target)
 	end
+	
+	if hitted and weapon and weapon.special_on_kill and weapon.special_on_kill.fct and target.dead then
+		weapon.special_on_kill.fct(weapon, self, target)
+	end
 
 
 	-- Poison coating
@@ -994,7 +998,7 @@ function _M:combatPhysicalpower(mod, weapon)
 
 	if not weapon then
 		local inven = self:getInven(self.INVEN_MAINHAND)
-		if inven and inven[1] then weapon = inven[1].combat end
+		if inven and inven[1] then weapon = inven[1].combat else weapon = self.combat end
 	end
 
 	add = add + 5 * self:combatCheckTraining(weapon)
@@ -1099,6 +1103,11 @@ end
 --- Gets spellspeed
 function _M:combatSpellSpeed()
 	return 1 / self.combat_spellspeed
+end
+
+-- Gets mental speed
+function _M:combatMentalSpeed()
+	return 1 / self.combat_mentalspeed
 end
 
 --- Gets summon speed
@@ -1318,7 +1327,17 @@ function _M:combatSpellResist(fake)
 	if self:knowTalent(self.T_POWER_IS_MONEY) then
 		add = add + util.bound(self.money / (90 - self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 5), 0, self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 7)
 	end
-	return self:rescaleCombatStats(self.combat_spellresist + (self:getMag() + self:getWil() + (self:getLck() - 50) * 0.5) * 0.35 + add)
+	
+	-- To return later
+	local total = self:rescaleCombatStats(self.combat_spellresist + (self:getMag() + self:getWil() + (self:getLck() - 50) * 0.5) * 0.35 + add)
+	
+	-- Psionic Balance
+	if self:knowTalent(self.T_BALANCE) then
+		local t = self:getTalentFromId(self.T_BALANCE)
+		local ratio = t.getBalanceRatio(self, t)
+		total = (1 - ratio)*total + self:combatMentalResist(fake)*ratio
+	end
+	return total
 end
 
 --- Computes mental resistance

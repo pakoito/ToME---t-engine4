@@ -981,16 +981,16 @@ function _M:displayResources(scale, bx, by, a)
 			sshat[1]:toScreenFull(x-6, y+8, sshat[6], sshat[7], sshat[2], sshat[3], 1, 1, 1, a)
 			bshat[1]:toScreenFull(x, y, bshat[6], bshat[7], bshat[2], bshat[3], 1, 1, 1, a)
 			if feedback_sha.shad then feedback_sha:setUniform("a", a) feedback_sha.shad:use(true) end
-			local p = player.psionic_feedback / player.psionic_feedback_max
+			local p = player:getFeedback() / player:getMaxFeedback()
 			shat[1]:toScreenPrecise(x+49, y+10, shat[6] * p, shat[7], 0, p * 1/shat[4], 0, 1/shat[5], feedback_c[1], feedback_c[2], feedback_c[3], a)
 			if feedback_sha.shad then feedback_sha.shad:use(false) end
 
-			if not self.res.feedback or self.res.feedback.vc ~= player.psionic_feedback or self.res.feedback.vm ~= player.psionic_feedback_max or self.res.feedback.vr ~= -1 then
+			if not self.res.feedback or self.res.feedback.vc ~= player:getFeedback() or self.res.feedback.vm ~= player:getMaxFeedback() or self.res.feedback.vr ~= player:getFeedbackDecay() then
 				self.res.feedback = {
 					hidable = "Feedback",
-					vc = player.psionic_feedback, vm = player.psionic_feedback_max, vr = -1,
-					cur = {core.display.drawStringBlendedNewSurface(font_sha, ("%d/%d"):format(player.psionic_feedback, player.psionic_feedback_max), 255, 255, 255):glTexture()},
-					regen={core.display.drawStringBlendedNewSurface(sfont_sha, ("%+0.2f"):format(-1), 255, 255, 255):glTexture()},
+					vc = player:getFeedback(), vm = player:getMaxFeedback(), vr = player:getFeedbackDecay(),
+					cur = {core.display.drawStringBlendedNewSurface(font_sha, ("%d/%d"):format(player:getFeedback(), player:getMaxFeedback()), 255, 255, 255):glTexture()},
+					regen={core.display.drawStringBlendedNewSurface(sfont_sha, ("%+0.2f"):format(-player:getFeedbackDecay()), 255, 255, 255):glTexture()},
 				}
 			end
 			local dt = self.res.feedback.cur

@@ -1552,7 +1552,7 @@ newEffect{
 	type = "magical",
 	subtype = {disease=true, blight=true},
 	status = "detrimental",
-	parameters = {},
+	parameters = {str = 0, con = 0, dex = 0, make_ghoul = 0},
 	on_gain = function(self, err) return "#Target# is afflicted by ghoul rot!" end,
 	on_lose = function(self, err) return "#Target# is free from the ghoul rot." end,
 	-- Damage each turn

@@ -250,6 +250,24 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 				end
 			end
 		end
+		
+		-- Psychic Projection
+		if src.attr and src:attr("is_psychic_projection") then
+			if type == DamageType.MIND then
+				if target.hasEffect and target:hasEffect(target.EFF_MINDLINK) then
+					local eff = target:hasEffect(target.EFF_MINDLINK)
+					if eff.src == self then
+						dam = dam
+					end
+				elseif target.subtype and target.subtype == "ghost" then
+					dam = dam
+				else
+					dam = 0
+				end
+			else
+				dam = 0
+			end
+		end
 
 		print("[PROJECTOR] final dam", dam)
 
@@ -456,7 +474,7 @@ newDamageType{
 			local mindpower, mentalresist
 			if _G.type(dam) == "table" then dam, mindpower, mentalresist, alwaysHit, crossTierChance = dam.dam, dam.mindpower, dam.mentalresist, dam.alwaysHit, dam.crossTierChance end
 			if alwaysHit or target:checkHit(mindpower or src:combatMindpower(), mentalresist or target:combatMentalResist(), 0, 95, 15) then
-				if crossTierChance and rng.chance(crossTierChance) then
+				if crossTierChance and rng.percent(crossTierChance) then
 					target:crossTierEffect(target.EFF_BRAINLOCKED, src:combatMindpower())
 				end
 				return DamageType.defaultProjector(src, x, y, type, dam)

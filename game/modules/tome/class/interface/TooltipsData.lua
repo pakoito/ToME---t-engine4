@@ -116,9 +116,10 @@ Your capacity for storing energy is determined by your Willpower.
 ]]
 
 TOOLTIP_FEEDBACK = [[#GOLD#Feedback#LAST#
-Feedback represents energy you've stored up from being attacked. It decays quickly over time.
-To get meaningful amounts back in combat, you must take damage.
+Feedback represents using pain as a means of psionic grounding and it can be used in place of Psi.
+To get meaningful amounts back in combat, you must take damage (at a base 50%% conversion rate though some talents can improve this ratio).
 Your capacity for storing feedback is determined by how many talents you know that harness it.
+Feedback decays quickly over time.
 ]]
 
 TOOLTIP_NECROTIC_AURA = [[#GOLD#Necrotic Aura#LAST#
@@ -165,7 +166,11 @@ The additional time you have to attack (in melee or ranged).
 It represents how many more attacks you can do in the same time.
 I.E: at 100% you will be able to do 100% more attacks (aka twice as many) in the same time it would have taken you to do one at 0% speed.
 ]]
-
+TOOLTIP_SPEED_MENTAL = [[#GOLD#Mental Speed#LAST#
+The additional time you have to use a mental power.
+It represents how many more mental powers you can do in the same time.
+I.E: at 100% you will be able to do 100% more attacks (aka twice as many) in the same time it would have taken you to do one at 0% speed.
+]]
 -------------------------------------------------------------
 -- Stats
 -------------------------------------------------------------

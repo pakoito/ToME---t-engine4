@@ -1577,23 +1577,3 @@ newEffect{
 		self:removeTemporaryValue("global_speed_add", eff.tmpid)
 	end,
 }
-
-newEffect{
-	name = "DISMISSAL", image = "talents/dismissal.png",
-	desc = "Dismissal",
-	long_desc = function(self, eff) return "The target has dismissed reality.  For the duration it is immune to new status effects and all damage." end,
-	type = "other",
-	subtype = { psionic=true },
-	status = "beneficial",
-	parameters = {},
-	on_gain = function(self, err) return "#Target# dismisses reality!", "+Dismissal" end,
-	on_lose = function(self, err) return "#Target# reaffirms it's belief in reality.", "-Dismissal" end,
-	activate = function(self, eff)
-		eff.iid = self:addTemporaryValue("invulnerable", 1)
-		eff.imid = self:addTemporaryValue("status_effect_immune", 1)
-	end,
-	deactivate = function(self, eff)
-		self:removeTemporaryValue("invulnerable", eff.iid)
-		self:removeTemporaryValue("status_effect_immune", eff.imid)
-	end,
-}

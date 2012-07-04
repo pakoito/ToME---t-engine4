@@ -162,16 +162,32 @@ newBirthDescriptor{
 		"#LIGHT_BLUE# * +0 Magic, +5 Willpower, +4 Cunning",
 		"#GOLD#Life per level:#LIGHT_BLUE# -4 (*special*)",
 	},
+	not_on_random_boss = true, -- remove later, this is here so half-finished talents don't end up on bosses
 	power_source = {psionic=true},
 	stats = { str=0, wil=5, cun=4, },
 	talents_types = {
-		["psionic/feedback"]={true, 0.3},
-		["psionic/psychic-assault"]={true, 0.3},
+		-- class
+		["psionic/discharge"]={true, 0},
+		["psionic/distortion"]={true, 0.3},
+		["psionic/slumber"]={true, 0.3},
 		["psionic/solipsism"]={true, 0.3},
+		["psionic/thought-forms"]={true, 0.3},
+		
+		-- generic
+		["psionic/mentalism"]={true, 0.3},
+		["cunning/survival"]={true, 0},
+		["psionic/feedback"]={true, 0},
+		
+		-- locked trees
+		["psionic/psychic-assault"]={false, 0},
+		["psionic/nightmare"]={false, 0.3},
+		-- generic
+		["psionic/trance"]={false, 0.3},
+		
 	},
 	talents = {
 		[ActorTalents.T_FEEDBACK] = 1,
-		[ActorTalents.T_PSYCHIC_LOBOTOMY] = 1,
+		[ActorTalents.T_MIND_SEAR] = 1,
 		[ActorTalents.T_SOLIPSISM] = 1,
 	},
 	copy = {

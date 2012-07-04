@@ -2318,25 +2318,6 @@ newEffect{
 	end,
 }
 
-
-newEffect{
-	name = "FEEDBACK", image = "talents/feedback.png",
-	desc = "Feedback",
-	long_desc = function(self, eff) return ("The target is converting feedback into Psi regen at the rate of %0.2f per turn."):format(eff.power) end,
-	type = "mental",
-	subtype = { psionic=true },
-	status = "beneficial",
-	parameters = { power=1 },
-	on_gain = function(self, err) return "#target# is recovering Psi quickly.", "+Feedback" end,
-	on_lose = function(self, err) return "#target#'s Psi recover has returned to normal.", "-Feedback" end,
-	activate = function(self, eff)
-		eff.tid = self:addTemporaryValue("psi_regen", eff.power)
-	end,
-	deactivate = function(self, eff)
-		self:removeTemporaryValue("psi_regen", eff.tid)
-	end,
-}
-
 newEffect{
 	name = "RESONANCE_SHIELD", image = "talents/resonance_shield.png",
 	desc = "Resonance Shield",
