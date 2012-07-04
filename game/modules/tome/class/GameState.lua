@@ -1819,7 +1819,7 @@ function _M:startEvents()
 		-- Generate the events list for this zone, eventually loading from group files
 		local evts = {}
 		for i, e in ipairs(game.zone.events) do
-			if e.name then evts[#evts+1] = e.name
+			if e.name then evts[#evts+1] = e
 			elseif e.group then
 				local f, err = loadfile("/data/general/events/groups/"..e.group..".lua")
 				if not f then error(err) end

@@ -254,13 +254,17 @@ newTalent{
 			game.zone_name_s = nil
 
 			local x1, y1 = util.findFreeGrid(p.x, p.y, 20, true, {[Map.ACTOR]=true})
-			if x1 and not self.dead then
-				self:move(x1, y1, true)
-				self.on_die, self.demon_plane_on_die = self.demon_plane_on_die, nil
-				game.level.map:particleEmitter(x1, y1, 1, "demon_teleport")
+			if x1 then
+				if not self.dead then
+					self:move(x1, y1, true)
+					self.on_die, self.demon_plane_on_die = self.demon_plane_on_die, nil
+					game.level.map:particleEmitter(x1, y1, 1, "demon_teleport")
+				else
+					self.x, self.y = x1, y1
+				end
 			end
+			local x2, y2 = util.findFreeGrid(p.x, p.y, 20, true, {[Map.ACTOR]=true})
 			if not p.target.dead then
-				local x2, y2 = util.findFreeGrid(p.x, p.y, 20, true, {[Map.ACTOR]=true})
 				if x2 then
 					p.target:move(x2, y2, true)
 					p.target.on_die, p.target.demon_plane_on_die = p.target.demon_plane_on_die, nil
@@ -268,6 +272,8 @@ newTalent{
 				end
 				if oldlevel:hasEntity(p.target) then oldlevel:removeEntity(p.target) end
 				level:addEntity(p.target)
+			else
+				p.target.x, p.target.y = x2, y2
 			end
 
 			-- Add objects back
