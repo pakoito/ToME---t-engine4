@@ -26,6 +26,9 @@ desc = function(self, who)
 	elseif self:isStatus(self.DONE) then
 		desc[#desc+1] = "The defenders of Zigur were crushed, the Ziguranth scattered and weakened."
 	end
+	if self:isStatus(self.COMPLETED, "grand-corruptor-treason") then
+		desc[#desc+1] = "In the aftermath you turned against the Grand Corruptor and dispatched him."
+	end
 
 	return table.concat(desc, "\n")
 end
@@ -105,6 +108,10 @@ on_status_change = function(self, who, status, sub)
 end
 
 corruptor_dies = function(self)
+	if self:isStatus(engine.Quest.DONE) then 
+		game.player:setQuestStatus(self.id, self.COMPLETED, "grand-corruptor-treason")
+		return 
+	end
 	game.player:setQuestStatus(self.id, self.FAILED)
 end
 
@@ -124,6 +131,7 @@ end
 
 function onWin(self, who)
 	if not self:isStatus(self.DONE) then return end
+	if self:isStatus(self.COMPLETED, "grand-corruptor-treason") then return end
 	return 10, {
 		"While you were in the Far East, the Grand Corruptor was busy in Maj'Eyal.",
 		"With the fall of Zigur he was able to attack and take control of Elvala, the Shaloren capital city.",
