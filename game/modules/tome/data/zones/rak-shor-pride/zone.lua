@@ -29,7 +29,7 @@ return {
 --	all_remembered = true,
 	all_lited = true,
 	day_night = true,
-	ambient_music = "Bazaar of Tal-Mashad.ogg",
+	ambient_music = "March.ogg",
 	min_material_level = 4,
 	max_material_level = 5,
 	generator =  {

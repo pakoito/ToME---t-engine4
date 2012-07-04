@@ -29,7 +29,7 @@ return {
 	all_lited = true,
 	day_night = true,
 	persistent = "zone",
-	ambient_music = "Rainy Day.ogg",
+	ambient_music = "Broken.ogg",
 	min_material_level = 2,
 	max_material_level = 3,
 	is_mark_spellblaze = true,

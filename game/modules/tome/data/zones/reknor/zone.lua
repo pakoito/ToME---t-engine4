@@ -28,7 +28,7 @@ return {
 --	all_remembered = true,
 --	all_lited = true,
 	persistent = "zone",
-	ambient_music = "a_lomos_del_dragon_blanco.ogg",
+	ambient_music = "To the Depths.ogg",
 	min_material_level = 3,
 	max_material_level = 4,
 	generator =  {

@@ -28,7 +28,7 @@ return {
 	persistent = "zone",
 --	all_remembered = true,
 --	all_lited = true,
-	ambient_music = "Breaking the siege.ogg",
+	ambient_music = "New Dawn.ogg",
 	min_material_level = 4,
 	max_material_level = 5,
 	generator =  {

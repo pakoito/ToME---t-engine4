@@ -29,7 +29,7 @@ return {
 --	all_remembered = true,
 --	all_lited = true,
 	persistent = "zone",
-	ambient_music = "Dark Secrets.ogg",
+	ambient_music = "Forgotten Memories.ogg",
 	no_worldport = true,
 	max_material_level = 2,
 	generator =  {

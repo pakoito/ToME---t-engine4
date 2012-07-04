@@ -28,7 +28,7 @@ return {
 --	all_remembered = true,
 --	all_lited = true,
 	persistent = "zone",
-	ambient_music = "Thrall's Theme.ogg",
+	ambient_music = "Together We Are Strong.ogg",
 	no_level_connectivity = true,
 	max_material_level = 5,
 	generator =  {

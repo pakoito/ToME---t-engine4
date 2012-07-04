@@ -29,7 +29,7 @@ return {
 --	all_lited = true,
 	no_worldport = true,
 	persistent = "zone",
-	ambient_music = "Swashing the buck.ogg",
+	ambient_music = "Enemy at the gates.ogg",
 	max_material_level = 2,
 	generator =  {
 		map = {

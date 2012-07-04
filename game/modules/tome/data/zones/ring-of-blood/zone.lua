@@ -33,7 +33,7 @@ return {
 --	all_remembered = true,
 	all_lited = true,
 	persistent = "zone",
-	ambient_music = "Swashing the buck.ogg",
+	ambient_music = "Sinestra.ogg",
 	max_material_level = 2,
 	generator =  {
 		map = {

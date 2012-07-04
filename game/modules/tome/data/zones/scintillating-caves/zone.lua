@@ -28,7 +28,7 @@ return {
 --	all_remembered = true,
 	all_lited = true,
 	persistent = "zone",
-	ambient_music = "World of Ice.ogg",
+	ambient_music = "Mystery.ogg",
 	max_material_level = 2,
 	generator =  {
 		map = {
