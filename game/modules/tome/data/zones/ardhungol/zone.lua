@@ -66,5 +66,7 @@ return {
 				up = "CAVE_LADDER_UP_WILDERNESS",
 			}, },
 		},
+		[2] = { width = 40, height = 40, generator = {map = {min_floor=600}} },
+		[3] = { width = 20, height = 20, generator = {map = {min_floor=200}} },
 	},
 }

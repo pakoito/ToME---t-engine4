@@ -24,7 +24,7 @@ return {
 	max_level = 2,
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
-	width = 80, height = 80,
+	width = 60, height = 60,
 --	all_remembered = true,
 --	all_lited = true,
 	persistent = "zone",
@@ -38,6 +38,7 @@ return {
 			down = "DOWN",
 			wall = "OLD_WALL",
 			floor = "OLD_FLOOR",
+			widen_w = 2, widen_h = 2,
 		},
 		actor = {
 			class = "mod.class.generator.actor.Random",
