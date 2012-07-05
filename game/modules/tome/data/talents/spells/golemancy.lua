@@ -200,7 +200,9 @@ newTalent{
 				return
 			end
 			for i = 1, 2 do self:removeObject(self:getInven("QUIVER"), 1) end
+			self.alchemy_golem:attr("allow_on_heal", 1)
 			self.alchemy_golem:heal(t.getHeal(self, t))
+			self.alchemy_golem:attr("allow_on_heal", -1)
 
 		-- resurrect the golem
 		elseif not self:hasEffect(self.EFF_GOLEM_MOUNT) then

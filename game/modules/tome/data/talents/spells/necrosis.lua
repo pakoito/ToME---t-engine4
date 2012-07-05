@@ -117,7 +117,9 @@ newTalent{
 				end
 			end
 		end
+		self:attr("allow_on_heal", 1)
 		self:heal(self.max_life * heal / 100)
+		self:attr("allow_on_heal", -1)
 		game:playSoundNear(self, "talents/ice")
 		return true
 	end,

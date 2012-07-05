@@ -28,7 +28,9 @@ newTalent{
 	getHeal = function(self, t) return 40 + self:combatTalentSpellDamage(t, 10, 520) end,
 	is_heal = true,
 	action = function(self, t)
+		self:attr("allow_on_heal", 1)
 		self:heal(self:spellCrit(t.getHeal(self, t)), self)
+		self:attr("allow_on_heal", -1)
 		game:playSoundNear(self, "talents/heal")
 		return true
 	end,

@@ -102,7 +102,9 @@ newTalent{
 	getHealingModifier = function(self, t) return self:combatTalentMindDamage(t, 10, 50) end,
 	getLifeRegen = function(self, t) return self:combatTalentMindDamage(t, 10, 50) / 10 end,
 	activate = function(self, t)
+		self:attr("allow_on_heal", 1)
 		self:heal(self:mindCrit(t.getHeal(self, t)))
+		self:attr("allow_on_heal", -1)
 	
 		cancelTrances(self)	
 		game:playSoundNear(self, "talents/spell_generic2")

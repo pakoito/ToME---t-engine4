@@ -92,7 +92,9 @@ newInscription{
 	is_heal = true,
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
+		self:attr("allow_on_heal", 1)
 		self:heal(data.heal + data.inc_stat)
+		self:attr("allow_on_heal", -1)
 		return true
 	end,
 	info = function(self, t)

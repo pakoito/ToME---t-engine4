@@ -105,7 +105,9 @@ newTalent{
 		if not x or not y or not target then return nil end
 		if not target:hasEffect(target.EFF_STONE_VINE) then return nil end
 
+		self:attr("allow_on_heal", 1)
 		self:heal(100 + self:combatTalentStatDamage(t, "wil", 40, 630))
+		self:attr("allow_on_heal", -1)
 		local tx, ty = util.findFreeGrid(x, y, 2, true, {[Map.ACTOR]=true})
 		if tx and ty then
 			local ox, oy = self.x, self.y

@@ -274,7 +274,7 @@ newEntity{
 		cut_immune = resolvers.mbonus_material(4, 4, function(e, v) v=v/10 return 0, v end),
 	},
 
-	resolvers.charmt(Talents.T_HEAL, {1,2,3}, 80),
+	resolvers.charmt(Talents.T_HEAL_NATURE, {1,2,3}, 80),
 }
 
 newEntity{

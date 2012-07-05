@@ -668,7 +668,9 @@ newTalent{
 				target:removeEffect(eff[2])
 			end
 		end
+		self:attr("allow_on_heal", 1)
 		self:heal(25 + self:getCon() * 2.3)
+		self:attr("allow_on_heal", -1)
 		return true
 	end,
 	info = function(self, t)

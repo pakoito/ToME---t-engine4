@@ -38,7 +38,9 @@ newTalent{
 		local power = math.min(t.getPower(self, t), golem.life)
 		golem.life = golem.life - power -- Direct hit, bypass all checks
 		golem.changed = true
+		self:attr("allow_on_heal", 1)
 		self:heal(power)
+		self:attr("allow_on_heal", -1)
 		game:playSoundNear(self, "talents/arcane")
 		return true
 	end,

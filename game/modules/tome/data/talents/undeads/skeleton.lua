@@ -90,7 +90,9 @@ newTalent{ short_name = "SKELETON_REASSEMBLE",
 		end
 	end,
 	action = function(self, t)
+		self:attr("allow_on_heal", 1)
 		self:heal(100 * self:getTalentLevel(t), self)
+		self:attr("allow_on_heal", -1)
 		game:playSoundNear(self, "talents/heal")
 		return true
 	end,

@@ -1778,3 +1778,27 @@ newTalent{
 		format(t.getNb(self, t), damDesc(self, DamageType.FIRE, dam), damDesc(self, DamageType.PHYSICAL, dam))
 	end,
 }
+
+newTalent{
+	name = "Heal", short_name = "HEAL_NATURE",
+	type = {"wild-gift/other", 1},
+	points = 5,
+	equilibrium = 10,
+	cooldown = 16,
+	tactical = { HEAL = 2 },
+	getHeal = function(self, t) return 40 + self:combatTalentMindDamage(t, 10, 520) end,
+	is_heal = true,
+	action = function(self, t)
+		self:attr("allow_on_heal", 1)
+		self:heal(self:mindCrit(t.getHeal(self, t)), self)
+		self:attr("allow_on_heal", -1)
+		game:playSoundNear(self, "talents/heal")
+		return true
+	end,
+	info = function(self, t)
+		local heal = t.getHeal(self, t)
+		return ([[Imbues your body with natural energies, healing for %d life.
+		The life healed will increase with your Mindpower.]]):
+		format(heal)
+	end,
+}

@@ -1392,11 +1392,11 @@ function _M:onHeal(value, src)
 		end
 	end
 
-	if self:attr("arcane_shield") and value > 0 and not self:hasEffect(self.EFF_DAMAGE_SHIELD) then
+	if self:attr("arcane_shield") and self:attr("allow_on_heal") and value > 0 and not self:hasEffect(self.EFF_DAMAGE_SHIELD) then
 		self:setEffect(self.EFF_DAMAGE_SHIELD, 3, {power=value * self.arcane_shield / 100})
 	end
 
-	if self:attr("fungal_growth") and value > 0 and not self:hasEffect(self.EFF_REGENERATION) then
+	if self:attr("fungal_growth") and self:attr("allow_on_heal") and value > 0 and not self:hasEffect(self.EFF_REGENERATION) then
 		self:setEffect(self.EFF_REGENERATION, 6, {power=(value * self.fungal_growth / 100) / 6, no_wild_growth=true})
 	end
 
