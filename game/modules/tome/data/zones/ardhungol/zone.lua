@@ -24,7 +24,7 @@ return {
 	max_level = 3,
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
-	width = 70, height = 70,
+	width = 60, height = 60,
 --	all_remembered = true,
 --	all_lited = true,
 	persistent = "zone",
@@ -38,7 +38,7 @@ return {
 		map = {
 			class = "engine.generator.map.Cavern",
 			zoom = 16,
-			min_floor = 1200,
+			min_floor = 1100,
 			floor = "CAVEFLOOR",
 			wall = "CAVEWALL",
 			up = "CAVE_LADDER_UP",
@@ -56,7 +56,7 @@ return {
 		},
 		trap = {
 			class = "engine.generator.trap.Random",
-			nb_object = {0, 0},
+			nb_trap = {0, 0},
 		},
 	},
 	levels =
@@ -67,6 +67,6 @@ return {
 			}, },
 		},
 		[2] = { width = 40, height = 40, generator = {map = {min_floor=600}} },
-		[3] = { width = 20, height = 20, generator = {map = {min_floor=200}} },
+		[3] = { width = 20, height = 20, generator = {map = {min_floor=200}, actor = {nb_npc = {20, 25}}} },
 	},
 }
