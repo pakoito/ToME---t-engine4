@@ -567,6 +567,7 @@ function _M:createDisplay()
 			return ret
 		end,
 		on_use = function(item, inc) self:onUseTalent(item, inc) end,
+		on_expand = function(item) self.actor.__hidden_talent_types[item.type] = not item.shown end,
 		scrollbar = true, no_tooltip = self.no_tooltip,
 	}
 
@@ -586,7 +587,6 @@ function _M:createDisplay()
 			return ret
 		end,
 		on_use = function(item, inc) self:onUseTalent(item, inc) end,
-		on_expand = function(item) self.actor.__hidden_talent_types[item.type] = not item.shown end,
 		no_tooltip = self.no_tooltip,
 	}
 
