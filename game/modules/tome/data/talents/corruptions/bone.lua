@@ -136,7 +136,7 @@ newTalent{
 		end)
 	end,
 	activate = function(self, t)
-		local nb = math.floor(self:getTalentLevel(t))
+		local nb = math.ceil(self:getTalentLevel(t))
 
 		local ps = {}
 		for i = 1, nb do ps[#ps+1] = self:addParticles(Particles.new("bone_shield", 1)) end
