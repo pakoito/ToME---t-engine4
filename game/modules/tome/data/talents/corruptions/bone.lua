@@ -153,6 +153,6 @@ newTalent{
 	info = function(self, t)
 		return ([[Bone shields start circling around you. They will each fully absorb one attack.
 		%d shield(s) will be generated.]]):
-		format(math.floor(self:getTalentLevel(t)))
+		format(math.ceil(self:getTalentLevel(t)))
 	end,
 }
