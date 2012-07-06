@@ -121,8 +121,8 @@ newTalent{
 	points = 5,
 	mode = "sustained", no_sustain_autoreset = true,
 	require = corrs_req4,
-	cooldown = 60,
-	sustain_vim = 150,
+	cooldown = 30,
+	sustain_vim = 50,
 	tactical = { DEFEND = 4 },
 	direct_hit = true,
 	absorb = function(self, t, p)
