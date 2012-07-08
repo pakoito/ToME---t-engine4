@@ -718,7 +718,7 @@ newEffect{
 	desc = "Agony",
 	long_desc = function(self, eff) return ("%s is writhing in agony, suffering from %d to %d damage over %d turns."):format(self.name:capitalize(), eff.damage / eff.duration, eff.damage, eff.duration) end,
 	type = "mental",
-	subtype = { pain=true, mind=true },
+	subtype = { pain=true, psionic=true },
 	status = "detrimental",
 	parameters = { damage=10, mindpower=10, range=10, minPercent=10 },
 	on_gain = function(self, err) return "#Target# is writhing in agony!", "+Agony" end,
@@ -754,7 +754,7 @@ newEffect{
 	desc = "Hateful Whisper",
 	long_desc = function(self, eff) return ("%s has heard the hateful whisper."):format(self.name:capitalize()) end,
 	type = "mental",
-	subtype = { madness=true, mind=true },
+	subtype = { madness=true, psionic=true },
 	status = "detrimental",
 	parameters = { },
 	on_gain = function(self, err) return "#Target# has heard the hateful whisper!", "+Hateful Whisper" end,
@@ -1446,7 +1446,7 @@ newEffect{
 	desc = "Void Echoes",
 	long_desc = function(self, eff) return ("The target is seeing echoes from the void and will take %0.2f mind damage as well as some resource damage each turn it fails a mental save."):format(eff.power) end,
 	type = "mental",
-	subtype = { madness=true, mind=true },
+	subtype = { madness=true, psionic=true },
 	status = "detrimental",
 	parameters = { power=10 },
 	on_gain = function(self, err) return "#Target# is being driven mad by the void.", "+Void Echoes" end,
@@ -2339,5 +2339,25 @@ newEffect{
 		self:removeParticles(eff.particle)
 		self:removeTemporaryValue("resonance_shield", eff.sid)
 		self:removeTemporaryValue("on_melee_hit", eff.did)
+	end,
+}
+
+newEffect{
+	name = "MIND_LINK_TARGET", image = "talents/mind_link.png",
+	desc = "Mind Link",
+	long_desc = function(self, eff) return ("The target's mind has been invaded, increasing all mind damage it recieves from %s by %d%%."):format(eff.src.name:capitalize(), eff.power) end,
+	type = "mental",
+	subtype = { psionic=true },
+	status = "detrimental",
+	parameters = {power = 1},
+	remove_on_clone = true, decrease = 0,
+	on_gain = function(self, err) return "#Target#'s mind has been invaded!", "+Mind Link" end,
+	on_lose = function(self, err) return "#Target# is free from the mental invasion.", "-Mind Link" end,
+	on_timeout = function(self, eff)
+		-- Remove the mind link when appropriate
+		local p = eff.src:isTalentActive(eff.src.T_MIND_LINK)
+		if not p or p.target ~= self or eff.src.dead or not game.level:hasEntity(eff.src) then
+			self:removeEffect(self.EFF_MIND_LINK_TARGET)
+		end
 	end,
 }

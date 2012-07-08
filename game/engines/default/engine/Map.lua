@@ -768,7 +768,7 @@ function _M:moveViewSurround(x, y, marginx, marginy, ignore_padding)
 		elseif self.my + self.viewport.mheight - marginy - self.viewport_padding_2 <= y then
 			self.my = y - self.viewport.mheight + marginy + self.viewport_padding_2
 			self.changed = true
-		end
+		end	
 	end
 --[[
 	if self.mx + marginx >= x or self.mx + self.viewport.mwidth - marginx <= x then

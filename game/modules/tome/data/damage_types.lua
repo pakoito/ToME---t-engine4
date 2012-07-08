@@ -251,24 +251,25 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			end
 		end
 		
+		-- Mind Link
+		local mind_linked_damage = 0
+		if type == DamageType.MIND and target.hasEffect and target:hasEffect(target.EFF_MIND_LINK_TARGET) then
+			local eff = target:hasEffect(target.EFF_MIND_LINK_TARGET)
+			if eff.src == src then
+				mind_linked_damage = eff.power/100
+			end
+		end
 		-- Psychic Projection
-		if src.attr and src:attr("is_psychic_projection") then
-			if type == DamageType.MIND then
-				if target.hasEffect and target:hasEffect(target.EFF_MINDLINK) then
-					local eff = target:hasEffect(target.EFF_MINDLINK)
-					if eff.src == self then
-						dam = dam
-					end
-				elseif target.subtype and target.subtype == "ghost" then
-					dam = dam
-				else
-					dam = 0
-				end
+		if src.attr and src:attr("is_psychic_projection")then
+			if mind_linked_damage > 0 then
+				dam = dam * (1 + mind_linked_damage)
+			elseif target.subtype and target.subtype == "ghost" then
+				dam = dam
 			else
 				dam = 0
 			end
 		end
-
+		
 		print("[PROJECTOR] final dam", dam)
 
 		local hd = {"DamageProjector:final", src=src, x=x, y=y, type=type, dam=dam}
@@ -473,7 +474,9 @@ newDamageType{
 		if target then
 			local mindpower, mentalresist
 			if _G.type(dam) == "table" then dam, mindpower, mentalresist, alwaysHit, crossTierChance = dam.dam, dam.mindpower, dam.mentalresist, dam.alwaysHit, dam.crossTierChance end
-			if alwaysHit or target:checkHit(mindpower or src:combatMindpower(), mentalresist or target:combatMentalResist(), 0, 95, 15) then
+			local hit_power = mindpower or src:combatMindpower()
+			if src.attr and src:attr("psionic_schism") then hit_power = hit_power * (1 + src:attr("psionic_schism")/100) end
+			if alwaysHit or target:checkHit(hit_power, mentalresist or target:combatMentalResist(), 0, 95, 15) then
 				if crossTierChance and rng.percent(crossTierChance) then
 					target:crossTierEffect(target.EFF_BRAINLOCKED, src:combatMindpower())
 				end

@@ -331,8 +331,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Sacrifice a bone giant minion. Using its bones you make a temporary shield around you that prevents any attacks from doing more than %d%% of your total life.
-		The effect lasts %d turns or until all charges are depleted.
-		Each charge will fully absorb one attack.]]):
+		The effect lasts %d turns.]]):
 		format(t.getPower(self, t), t.getTurns(self, t))
 	end,
 }

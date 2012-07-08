@@ -42,11 +42,11 @@ return { generator = function()
 end, },
 function(self)
 	if first then
-		self.ps:emit(700)
+		self.ps:emit(2100)
 	else
-		self.ps:emit(2)
+		self.ps:emit(6)
 	end
 	first = false
 end,
-1000,
+3000,
 "weather/snowflake"

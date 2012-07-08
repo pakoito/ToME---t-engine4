@@ -536,12 +536,12 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		end
 	end
 
-	-- Critical Burst (generally more damage then burst on hit and larger radius)
+	-- Arcane Destruction
 	if hitted and crit and weapon and self:knowTalent(self.T_ARCANE_DESTRUCTION) then
 		local typ = rng.table{DamageType.FIRE, DamageType.LIGHTNING, DamageType.ARCANE}
 		self:project({type="ball", radius=2, friendlyfire=false}, target.x, target.y, typ, self:combatSpellpower() * 2)
 	end
-
+	
 	-- Onslaught
 	if hitted and self:attr("onslaught") then
 		local dir = util.getDir(target.x, target.y, self.x, self.y) or 6
@@ -634,9 +634,18 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	if hitted and not target.dead and target:attr("equilibrium_regen_on_hit") then target:incEquilibrium(-target.equilibrium_regen_on_hit) end
 	if hitted and not target.dead and target:attr("psi_regen_on_hit") then target:incPsi(target.psi_regen_on_hit) end
 	if hitted and not target.dead and target:attr("hate_regen_on_hit") then target:incHate(target.hate_regen_on_hit) end
-
-	if hitted and self:attr("stamina_use_on_hit") then
-		self:incStamina(-self.stamina_use_on_hit)
+		
+	-- Resource regen on hit
+	if hitted and self.gain_resource_on_hit and next(self.gain_resource_on_hit) then
+		local resources = { 
+			mana = "incMana", paradox = "incParadox", vim = "incVim", negative = "incNegative", positive = "incPositive",
+			stamina = "incStamina", psi = "incPsi", hate = "incHate", equilibrium = "incEquilibrium",
+		}
+		for res, value in pairs(self.gain_resource_on_hit) do
+			if value ~= 0 and self[resources[res]] then
+				self[resources[res]](self, value)
+			end
+		end
 	end
 
 	if hitted and not target.dead and target:knowTalent(target.T_STONESHIELD) then

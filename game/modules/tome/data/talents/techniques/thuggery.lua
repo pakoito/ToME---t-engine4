@@ -132,14 +132,14 @@ newTalent{
 		local ret = {
 			crit = self:addTemporaryValue("combat_physcrit", t.getCrit(self, t)),
 			pen = self:addTemporaryValue("resists_pen", {[DamageType.PHYSICAL] = t.getPen(self, t)}),
-			drain = self:addTemporaryValue("stamina_use_on_hit", t.getDrain(self, t)),
+			drain = self:addTemporaryValue("gain_resource_on_hit", { stamina = - t.getDrain(self, t)}),
 		}
 		return ret
 	end,
 	deactivate = function(self, t, p)
 		self:removeTemporaryValue("combat_physcrit", p.crit)
 		self:removeTemporaryValue("resists_pen", p.pen)
-		self:removeTemporaryValue("stamina_use_on_hit", p.drain)
+		self:removeTemporaryValue("gain_resource_on_hit", p.drain)
 		return true
 	end,
 	info = function(self, t)

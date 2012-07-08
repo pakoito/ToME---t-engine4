@@ -165,6 +165,9 @@ function _M:init(t, no_default)
 	t.flat_damage_armor = t.flat_damage_armor or {}
 	t.flat_damage_cap = t.flat_damage_cap or {}
 
+	-- Regen resource on hit
+	t.gain_resource_on_hit = {}
+	
 	-- Default regen
 	t.air_regen = t.air_regen or 3
 	t.mana_regen = t.mana_regen or 0.5
@@ -359,10 +362,19 @@ function _M:actBase()
 		self:useBuildOrder()
 	end
 
+	-- Break darkest light
 	if self:isTalentActive (self.T_DARKEST_LIGHT) and self.positive > self.negative then
 		self:forceUseTalent(self.T_DARKEST_LIGHT, {ignore_energy=true})
 		game.logSeen(self, "%s's darkness can no longer hold back the light!", self.name:capitalize())
 	end
+	-- Break mind links
+	if self:isTalentActive(self.T_MIND_LINK) then
+		local p = self:isTalentActive(self.T_MIND_LINK)
+		if p.target.dead or not p.target:hasEffect(p.target.EFF_MIND_LINK_TARGET) or not game.level:hasEntity(p.target) then
+			self:forceUseTalent(self.T_MIND_LINK, {ignore_energy=true})
+		end
+	end
+		
 
 	-- Cooldown talents
 	if not self:attr("no_talents_cooldown") then self:cooldownTalents() end
@@ -3872,7 +3884,7 @@ function _M:on_set_temporary_effect(eff_id, e, p)
 		p.total_dur = p.dur
 
 		-- Bonus save for schism
-		if self:attr("psionic_schism") and e.status == "detrimental" and save_type == "combatMentalResist" and self:checkHit(save, p.apply_power, 0, 95) then
+		if self:attr("psionic_schism") and rng.percent(self:attr("psionic_schism")) and e.status == "detrimental" and save_type == "combatMentalResist" and self:checkHit(save, p.apply_power, 0, 95) then
 			game.logSeen(self, "#ORANGE#%s mental clone shrugs off the effect '%s'!", self.name:capitalize(), e.desc)
 			p.dur = 0
 		end

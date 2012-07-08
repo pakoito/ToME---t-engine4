@@ -33,13 +33,13 @@ newTalent{
 		return {
 			dam = self:addTemporaryValue("melee_project", {[DamageType.FIRE] = t.getFireDamage(self, t)}),
 			per = self:addTemporaryValue("inc_damage", {[DamageType.FIRE] = t.getFireDamageIncrease(self, t)}),
-			sta = self:addTemporaryValue("stamina_regen_on_hit", self:getTalentLevel(t) / 3),
+			sta = self:addTemporaryValue("gain_resource_on_hit", { stamina = self:getTalentLevel(t) / 3}),
 		}
 	end,
 	deactivate = function(self, t, p)
 		self:removeTemporaryValue("melee_project", p.dam)
 		self:removeTemporaryValue("inc_damage", p.per)
-		self:removeTemporaryValue("stamina_regen_on_hit", p.sta)
+		self:removeTemporaryValue("gain_resource_on_hit", p.sta)
 		return true
 	end,
 	info = function(self, t)
@@ -92,13 +92,13 @@ newTalent{
 		return {
 			dam = self:addTemporaryValue("melee_project", {[DamageType.LIGHTNING_DAZE] = t.getIceDamage(self, t)}),
 			per = self:addTemporaryValue("inc_damage", {[DamageType.LIGHTNING] = t.getIceDamageIncrease(self, t)}),
-			man = self:addTemporaryValue("mana_regen_on_hit", self:getTalentLevel(t) / 3),
+			man = self:addTemporaryValue("gain_resource_on_hit", { mana = self:getTalentLevel(t) / 3}),
 		}
 	end,
 	deactivate = function(self, t, p)
 		self:removeTemporaryValue("melee_project", p.dam)
 		self:removeTemporaryValue("inc_damage", p.per)
-		self:removeTemporaryValue("mana_regen_on_hit", p.man)
+		self:removeTemporaryValue("gain_resource_on_hit", p.man)
 		return true
 	end,
 	info = function(self, t)

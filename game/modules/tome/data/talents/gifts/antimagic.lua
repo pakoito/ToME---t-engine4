@@ -24,7 +24,7 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	getRegen = function(self, t) return 1 + (self:combatTalentMindDamage(t, 1, 10) /10) end,
-	getResist = function(self, t) return self:mindCrit(self:combatTalentMindDamage(t, 10, 40)) end,
+	getResist = function(self, t) return self:combatTalentMindDamage(t, 10, 40) end,
 	on_absorb = function(self, t, damtype)
 		if not DamageType:get(damtype).antimagic_resolve then return end
 
@@ -32,7 +32,7 @@ newTalent{
 			self:incEquilibrium(-t.getRegen(self, t))
 			self:incStamina(t.getRegen(self, t))
 		end
-		self:setEffect(self.EFF_RESOLVE, 7, {damtype=damtype, res=t.getResist(self, t)})
+		self:setEffect(self.EFF_RESOLVE, 7, {damtype=damtype, res=self:mindCrit(t.getResist(self, t))})
 		game.logSeen(self, "%s is invigorated by the attack!", self.name:capitalize())
 	end,
 	info = function(self, t)

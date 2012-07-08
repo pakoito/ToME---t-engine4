@@ -150,7 +150,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You enter a calm, focused stance, increasing your damage(+%d), accuracy(+%d), armor penetration(+%d), and critical chance(+%d%%) but reducing your firing speed by %d%% and making you unable to move.
+		return ([[You enter a calm, focused stance, increasing your physical power(+%d), accuracy(+%d), armor penetration(+%d), and critical chance(+%d%%) but reducing your firing speed by %d%% and making you unable to move.
 		The effects will increase with your Dexterity stat.]]):
 		format(4 + self:getTalentLevel(t) * self:getDex(10, true), 4 + self:getTalentLevel(t) * self:getDex(10, true),
 		3 + self:getTalentLevel(t) * self:getDex(10, true), 7 + self:getTalentLevel(t) * self:getDex(10, true),
@@ -193,7 +193,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You switch to a fluid and fast battle stance, increasing your firing speed by %d%% at the cost of your accuracy(%d), damage(%d), and critical chance(%d).]]):
+		return ([[You switch to a fluid and fast battle stance, increasing your firing speed by %d%% at the cost of your accuracy(%d), physical powere(%d), and critical chance(%d).]]):
 		format(self:getTalentLevel(t) * 10, -8 - self:getTalentLevelRaw(t) * 2.4, -8 - self:getTalentLevelRaw(t) * 2.4, -8 - self:getTalentLevelRaw(t) * 2.4)
 	end,
 }
@@ -344,7 +344,7 @@ newTalent{
 	require = techs_dex_req4,
 	range = archery_range,
 	radius = function(self, t)
-		return 1 + self:getTalentLevel(t) / 3
+		return 1 + math.floor(self:getTalentLevel(t) / 3)
 	end,
 	tactical = { ATTACKAREA = { weapon = 2 }, DISABLE = { stun = 3 } },
 	requires_target = true,
