@@ -156,6 +156,8 @@ function _M:loaded()
 
 	-- hackish :/
 	if self.autoLoadedAI then self:autoLoadedAI() end
+
+	self:defineDisplayCallback()
 end
 
 --- Change the entity's uid
@@ -314,10 +316,6 @@ function _M:makeMapObject(tiles, idx)
 	end
 
 	return self._mo, self.z
-end
-
-function _M:loaded()
-	self:defineDisplayCallback()
 end
 
 --- Get all "map objects" representing this entity

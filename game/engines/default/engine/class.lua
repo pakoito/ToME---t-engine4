@@ -317,7 +317,7 @@ function load(str, delayloading)
 --		print("setting obj class", obj.__CLASSNAME)
 		setmetatable(obj, {__index=require(obj.__CLASSNAME)})
 		if obj.loaded then
---			print("loader found for class", obj, obj.__CLASSNAME)
+--			print("loader found for class", obj, obj.__CLASSNAME, obj.loadNoDelay, obj.loaded, require(obj.__CLASSNAME).loaded)
 			if delayloading and not obj.loadNoDelay then
 				engine.Savefile.current_save:addDelayLoad(obj)
 			else

@@ -45,6 +45,8 @@ function _M:save()
 end
 
 function _M:loaded()
+	Entity.loaded(self)
+
 --	DPT: I think the line below should be there
 --	but somehow this causes projectiles to be duplicated on a chrono load
 --	self:defineDisplayCallback()
