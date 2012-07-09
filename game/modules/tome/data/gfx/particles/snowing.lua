@@ -18,6 +18,7 @@
 -- darkgod@te4.org
 
 dir = math.rad(110)
+factor = factor or 1
 
 return { generator = function()
 	local x, y = rng.range(-width/2, width), rng.range(-height/2, height)
@@ -42,11 +43,11 @@ return { generator = function()
 end, },
 function(self)
 	if first then
-		self.ps:emit(2100)
+		self.ps:emit(700 * factor)
 	else
-		self.ps:emit(6)
+		self.ps:emit(2 * factor)
 	end
 	first = false
 end,
-3000,
+1000 * factor,
 "weather/snowflake"
