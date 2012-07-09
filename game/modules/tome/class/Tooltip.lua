@@ -34,19 +34,30 @@ function _M:getTooltipAtMap(tmx, tmy, mx, my)
 	local tt = {}
 	local seen = game.level.map.seens(tmx, tmy)
 	local remember = game.level.map.remembers(tmx, tmy)
-	tt[#tt+1] = seen and game.level.map:checkEntity(tmx, tmy, Map.PROJECTILE, "tooltip", game.level.map.actor_player) or nil
-	tt[#tt+1] = seen and game.level.map:checkEntity(tmx, tmy, Map.ACTOR, "tooltip", game.level.map.actor_player) or nil
-	tt[#tt+1] = (seen or remember) and game.level.map:checkEntity(tmx, tmy, Map.OBJECT, "tooltip", game.level.map.actor_player) or nil
-	tt[#tt+1] = (seen or remember) and game.level.map:checkEntity(tmx, tmy, Map.TRAP, "tooltip", game.level.map.actor_player) or nil
-	tt[#tt+1] = (seen or remember) and game.level.map:checkEntity(tmx, tmy, Map.TERRAIN, "tooltip", game.level.map.actor_player) or nil
-	if #tt > 0 then
-		local ts = tstring{}
-		if self.add_map_str then ts:merge(self.add_map_str:toTString()) ts:add(true, "---", true) end
-		for i = 1, #tt do
-			ts:merge(tt[i]:toTString())
-			if i < #tt then ts:add(true, "---", true) end
+	local ctrl_state = core.key.modState("ctrl")
+	
+	local check = function(check_type)
+		local to_add = game.level.map:checkEntity(tmx, tmy, check_type, "tooltip", game.level.map.actor_player)
+		if to_add then 
+			if type(to_add) == "string" then to_add = to_add:toTString() end
+			tt[#tt+1] = to_add 
 		end
-		return ts
+	end
+	
+	if seen and not ctrl_state then
+		check(Map.PROJECTILE)
+		check(Map.ACTOR)
+	end
+	if seen or remember then
+		local obj = check(Map.OBJECT)
+		if not ctrl_state or not obj then
+			check(Map.TRAP)
+			check(Map.TERRAIN)
+		end
+	end
+	
+	if #tt > 0 then
+		return tt
 	end
 	if self.add_map_str then return self.add_map_str:toTString() end
 	return nil

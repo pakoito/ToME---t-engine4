@@ -50,12 +50,11 @@ function _M:generate()
 	self.mouse:reset()
 	self.key:reset()
 
-	local fw, fh = self.w, self.font_h
-	self.fw, self.fh = fw, fh
+	self.fw, self.fh = self.w, self.font_h
 
 	-- Draw the scrollbar
 	if self.scrollbar then
-		self.scrollbar = Slider.new{size=self.h - fh, max=1}
+		self.scrollbar = Slider.new{size=self.h - self.font_h, max=1}
 	end
 
 	-- Add UI controls
@@ -72,73 +71,38 @@ end
 
 function _M:createItem(item, text)
 	local old_style = self.font:getStyle()
+    
+	local max_display = math.floor(self.h / self.fh)
 
-	-- Handle normal text
-	if false and type(text) == "string" then
-		local list = text:splitLines(self.w, self.font)
-		local scroll = 1
-		local max = #list
-		local max_display = math.floor(self.h / self.fh)
-		if self.variable_height then
-			self.h = max * self.fh
-			max_display = max
-		end
-
-		-- Draw the list items
-		local gen = {}
-		local r, g, b = 255, 255, 255
-		local s = core.display.newSurface(self.fw, self.fh)
-		for i, l in ipairs(list) do
-			s:erase(0, 0, 0, 0)
-			r, g, b = s:drawColorStringBlended(self.font, l, 0, 0, r, g, b, true)
-			if self.no_color_bleed then r, g, b = 255, 255, 255 end
-
-			local dat = {}
-			dat._tex, dat._tex_w, dat._tex_h = s:glTexture()
-			gen[#gen+1] = dat
-		end
-
-		self.items[item] = {
-			list = gen,
-			scroll = scroll,
-			max = max,
-			max_display = max_display,
-		}
-	-- Handle "pre formated" text, as a table
-	else
 		-- Draw the list items
 		local gen = self.font:draw(text:toString(), self.fw, 255, 255, 255)
 
-		for i = 1, #gen do
-			if gen[i].line_extra then
-				if gen[i].line_extra:sub(1, 7) == "linebg:" then
-					local color = colors[gen[i].line_extra:sub(8)]
-					if color then
-						gen[i].background = colors.simple(color)
-						gen[i].background[4] = 255
-					else
-						local c = gen[i].line_extra
-						gen[i].background = {string.parseHex(c:sub(8, 9)), string.parseHex(c:sub(10, 11)), string.parseHex(c:sub(12, 13)), string.parseHex(c:sub(14, 15))}
-					end
+	for i = 1, #gen do
+		if gen[i].line_extra then
+			if gen[i].line_extra:sub(1, 7) == "linebg:" then
+				local color = colors[gen[i].line_extra:sub(8)]
+				if color then
+					gen[i].background = colors.simple(color)
+					gen[i].background[4] = 255
+				else
+					local c = gen[i].line_extra
+					gen[i].background = {string.parseHex(c:sub(8, 9)), string.parseHex(c:sub(10, 11)), string.parseHex(c:sub(12, 13)), string.parseHex(c:sub(14, 15))}
 				end
 			end
 		end
-
-		local scroll = 1
-		local max = #gen
-		local max_display = math.floor(self.h / self.fh)
-		if self.variable_height then
-			self.h = max * self.fh
-			max_display = max
-		end
-
-		self.items[item] = {
-			list = gen,
-			scroll = scroll,
-			max = max,
-			max_display = max_display,
-		}
 	end
+
+	local max = #gen
+	if self.variable_height then
+		self.h = max * self.fh
+		max_display = max
+	end
+	self.items[item] = {
+		list = gen,
+		scroll = 1,
+		max = max,
+		max_display = max_display,
+	}
 	self.font:setStyle(old_style)
 end
 

@@ -44,47 +44,6 @@ end
 function _M:cloned()
 	self:loaded()
 end
---[[
-function _M:loaded()
-	local def, fct, max, gl, no_stop
-	local base_size = nil
-	if type(self.def) == "string" then
-		if _M.particles_def[self.def] then
-			local t = self.args or {}
-			setfenv(_M.particles_def[self.def], setmetatable(t, {__index=_G}))
-			def, fct, max, gl, no_stop = _M.particles_def[self.def]()
-			base_size = t.base_size
-		else
-			local odef = self.def
-			print("[PARTICLE] Loading from /data/gfx/particles/"..self.def..".lua")
-			local f, err = loadfile("/data/gfx/particles/"..self.def..".lua")
-			if not f and err then error(err) end
-			local t = self.args or {}
-			setfenv(f, setmetatable(t, {__index=_G}))
-			def, fct, max, gl, no_stop = f()
-			base_size = t.base_size
-			_M.particles_def[odef] = f
-		end
-	else error("unsupported particle type: "..type(self.def))
-	end
-
-	gl = gl or "particle"
-	if not self.__particles_gl[gl] then self.__particles_gl[gl] = core.display.loadImage("/data/gfx/"..gl..".png"):glTexture() end
-	gl = self.__particles_gl[gl]
-
-	-- Zoom accordingly
-	self.base_size = base_size
-	self:updateZoom()
-
-	self.update = fct
-	-- Make a gas cloud
-	if def.gas then
-		self.ps = core.gas.newEmitter(def.gas.w, def.gas.h, config.settings.particles_density or 100, def, gl)
-	else
-		self.ps = core.particles.newEmitter(max or 1000, no_stop, config.settings.particles_density or 100, def, gl)
-	end
-end
-]]
 
 local foo = {}
 function _M:loaded()

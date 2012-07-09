@@ -51,7 +51,8 @@ function _M:targetOnTick()
 end
 
 --- Display the tooltip, if any
-function _M:targetDisplayTooltip(dx, dy)
+
+function _M:targetDisplayTooltip(dx, dy, force)
 	-- Tooltip is displayed over all else
 	if self.level and self.level.map and self.level.map.finished then
 		-- Display a tooltip if available
@@ -60,7 +61,7 @@ function _M:targetDisplayTooltip(dx, dy)
 				self.tooltip:toScreen(self.tooltip.last_display_x, self.tooltip.last_display_y)
 			else
 				local tmx, tmy = self.level.map:getMouseTile(self.tooltip_x , self.tooltip_y)
-				self.tooltip:displayAtMap(tmx, tmy, dx, dy)
+				self.tooltip:displayAtMap(tmx, tmy, dx, dy, nil, force)
 			end
 		end
 
@@ -73,8 +74,8 @@ function _M:targetDisplayTooltip(dx, dy)
 end
 
 --- Forces the tooltip to pop with the given text
-function _M:tooltipDisplayAtMap(x, y, text, extra)
-	self.tooltip:displayAtMap(nil, nil, x, y, text)
+function _M:tooltipDisplayAtMap(x, y, text, extra, force)
+	self.tooltip:displayAtMap(nil, nil, x, y, text, force)
 	if extra then
 		if extra.up then self.tooltip.last_display_y = self.tooltip.last_display_y - self.tooltip.h end
 	end

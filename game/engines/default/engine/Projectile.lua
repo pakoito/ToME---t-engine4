@@ -160,7 +160,7 @@ function _M:useEnergy(val)
 end
 
 function _M:tooltip()
-	return "Projectile: "..self.name
+	return ("Projectile: "..self.name):toTString()
 end
 
 --- Move one step to the given target if possible

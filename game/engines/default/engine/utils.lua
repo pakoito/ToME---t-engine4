@@ -361,10 +361,10 @@ function string.lpegSub(s, patt, repl)
 end
 
 -- Those matching patterns are used both by splitLine and drawColorString*
-local Pextra = "&" * -lpeg.S"#"^1
 local Puid = "UID:" * lpeg.R"09"^1 * ":" * lpeg.R"09"
 local Puid_cap = "UID:" * lpeg.C(lpeg.R"09"^1) * ":" * lpeg.C(lpeg.R"09")
 local Pcolorname = (lpeg.R"AZ" + "_")^3
+local Pextra = "&" * lpeg.P"linebg:" * lpeg.C(lpeg.R"09"^1 + Pcolorname)
 local Pcode = (lpeg.R"af" + lpeg.R"09" + lpeg.R"AF")
 local Pcolorcode = Pcode * Pcode
 local Pfontstyle = "{" * (lpeg.P"bold" + lpeg.P"italic" + lpeg.P"underline" + lpeg.P"normal") * "}"
@@ -372,7 +372,7 @@ local Pfontstyle_cap = "{" * lpeg.C(lpeg.P"bold" + lpeg.P"italic" + lpeg.P"under
 local Pcolorcodefull = Pcolorcode * Pcolorcode * Pcolorcode
 
 function string.removeColorCodes(str)
-	return str:lpegSub("#" * (Puid + Pcolorcodefull + Pcolorname + Pfontstyle) * "#", "")
+	return str:lpegSub("#" * (Puid + Pcolorcodefull + Pcolorname + Pfontstyle + Pextra) * "#", "")
 end
 
 function string.removeUIDCodes(str)
@@ -723,6 +723,21 @@ function tstring:countLines()
 	return nb
 end
 
+function tstring:maxWidth(font)
+	local max_w = 0
+	local line_max = 0
+	local v
+	local w = game.level.map.tiles.w * 0.5
+	for i = 1, #self do
+		v = self[i]
+		if type(v) == "string" then line_max = line_max + font:size(v)
+	elseif type(v) == "table" then if v[1] == "uid" then line_max = line_max + w end
+		elseif type(v) == "boolean" then max_w = math.max(max_w, line_max) line_max = 0 end
+	end
+	max_w = math.max(max_w, line_max)
+	return max_w
+end
+
 function tstring.from(str)
 	if type(str) ~= "table" then
 		return tstring{str}
@@ -874,20 +889,26 @@ function tstring:tokenize(tokens)
 	return ret
 end
 
-function tstring:extractLines()
+
+function tstring:extractLines(keep_color)
 	local rets = {}
 	local ret = tstring{}
-	local v, tv
+	local last_color = {"color", "WHITE"}
+	local v
 	for i = 1, #self do
 		v = self[i]
-		tv = type(v)
-		if tv == true then
+		if type(v) == "table" and v[1] == "color" then 
+			last_color = v
+		end
+		if v == true then	
 			rets[#rets+1] = ret
 			ret = tstring{}
+			if keep_color and #rets > 0 then ret:add(last_color) end
 		else
 			ret[#ret+1] = v
 		end
 	end
+	if keep_color and #rets > 0 then table.insert(ret, 1, last_color) end
 	rets[#rets+1] = ret
 	return rets
 end

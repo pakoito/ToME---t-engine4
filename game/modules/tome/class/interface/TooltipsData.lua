@@ -34,13 +34,15 @@ You can gain money by looting it from your foes, by selling items and by doing s
 TOOLTIP_LIVES = [[#GOLD#Lives#LAST#
 How many lives you have and how many you lost.
 Your total number of lives depends on the permadeath setting you choose.
-You may find other ways to save yourself but they are not considered extra lives.]]
+You may find other ways to save yourself but they are not considered extra lives.
+]]
 
 TOOLTIP_LIFE = [[#GOLD#Life#LAST#
 This is your life force, when you take damage this is reduced more and more.
 If it reaches below zero you die.
 Death is usually permanent so beware!
-It is increased by Constitution.]]
+It is increased by Constitution.
+]]
 
 TOOLTIP_DAMAGE_SHIELD = [[#GOLD#Damage shields#LAST#
 Various talents, items and powers can grant you a temporary damage shield.
@@ -49,15 +51,18 @@ They all work in slightly different maners, but usualy will absorb some damage b
 
 TOOLTIP_UNNATURAL_BODY = [[#GOLD#Unnatrual Body Regeneration#LAST#
 Your Unnatural Body talent allows you to feed of the life of your fallen foes.
-Each time you kill a creature your maximum regeneration pool increases and each turn some of it transfers into your own life.]]
+Each time you kill a creature your maximum regeneration pool increases and each turn some of it transfers into your own life.
+]]
 
 TOOLTIP_LIFE_REGEN = [[#GOLD#Life Regeneration#LAST#
 How many life you regenerate per turn.
-This value can be improved with spells, talents, infusions, equipment.]]
+This value can be improved with spells, talents, infusions, equipment.
+]]
 
 TOOLTIP_HEALING_MOD = [[#GOLD#Healing mod#LAST#
 This represents how effective is healing for you.
-All healing values are multiplied by this value (including life regeneration).]]
+All healing values are multiplied by this value (including life regeneration).
+]]
 
 TOOLTIP_AIR = [[#GOLD#Air#LAST#
 The breath counter only appears when you are suffocating.
@@ -68,11 +73,13 @@ When you come back into a breathable atmosphere you will slowly regain your air 
 TOOLTIP_STAMINA = [[#GOLD#Stamina#LAST#
 Stamina represents your physical fatigue. Each physical ability used reduces it.
 It regenerates slowly over time or when resting.
-It is increased by Willpower.]]
+It is increased by Willpower.
+]]
 
 TOOLTIP_MANA = [[#GOLD#Mana#LAST#
 Mana represents your reserve of magical energies. Each spell cast consumes mana and each sustained spell reduces your maximum mana.
-It is increased by Willpower.]]
+It is increased by Willpower.
+]]
 
 TOOLTIP_POSITIVE = [[#GOLD#Positive#LAST#
 Positive energy represents your reserve of positive "celestial" power.

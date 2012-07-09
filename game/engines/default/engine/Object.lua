@@ -211,6 +211,7 @@ function _M:getRequirementDesc(who)
 			end
 		end
 	end
+	str:add(true)
 	return str
 end
 

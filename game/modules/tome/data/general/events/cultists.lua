@@ -137,6 +137,7 @@ game.zone.on_turn = function()
 
 			local scale = (7 - game.level.event_cultists.kill) / 6
 
+			local Talents = require("engine.interface.ActorTalents")
 			local m = mod.class.NPC.new{
 				type = "demon", subtype = "major",
 				display = 'U',
