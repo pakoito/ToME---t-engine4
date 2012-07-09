@@ -78,7 +78,7 @@ newEntity{
 		combat_physresist = resolvers.mbonus_material(8, 2),
 		combat_spellresist = resolvers.mbonus_material(8, 2),
 		combat_mentalresist = resolvers.mbonus_material(8, 2),
-		equilibrium_regen_on_hit = resolvers.mbonus_material(20, 5, function(e, v) v=v/10 return 0, v end),
+		equilibrium_regen_when_hit = resolvers.mbonus_material(20, 5, function(e, v) v=v/10 return 0, v end),
 	},
 }
 
@@ -240,7 +240,7 @@ newEntity{
 	rarity = 35,
 	cost = 40,
 	wielder = {
-		equilibrium_regen_on_hit = resolvers.mbonus_material(20, 5, function(e, v) v=v/10 return 0, v end),
+		equilibrium_regen_when_hit = resolvers.mbonus_material(20, 5, function(e, v) v=v/10 return 0, v end),
 		talents_types_mastery = {
 			["wild-gift/harmony"] = resolvers.mbonus_material(1, 1, function(e, v) v=v/10 return 0, v end),
 		},
@@ -292,7 +292,7 @@ newEntity{
 	cost = 40,
 	wielder = {
 		damage_resonance = resolvers.mbonus_material(20, 5),
-		psi_regen_on_hit = resolvers.mbonus_material(20, 5, function(e, v) v=v/10 return 0, v end),
+		psi_regen_when_hit = resolvers.mbonus_material(20, 5, function(e, v) v=v/10 return 0, v end),
 		inc_damage={
 			[DamageType.MIND] = resolvers.mbonus_material(8, 2),
 		},

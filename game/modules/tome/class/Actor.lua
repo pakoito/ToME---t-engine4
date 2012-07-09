@@ -164,9 +164,6 @@ function _M:init(t, no_default)
 
 	t.flat_damage_armor = t.flat_damage_armor or {}
 	t.flat_damage_cap = t.flat_damage_cap or {}
-
-	-- Regen resource on hit
-	t.gain_resource_on_hit = {}
 	
 	-- Default regen
 	t.air_regen = t.air_regen or 3
@@ -375,7 +372,6 @@ function _M:actBase()
 		end
 	end
 		
-
 	-- Cooldown talents
 	if not self:attr("no_talents_cooldown") then self:cooldownTalents() end
 	-- Regen resources
@@ -396,7 +392,12 @@ function _M:actBase()
 	
 	-- update psionic feedback
 	if self:getFeedback() > 0 then
-		self:incFeedback(-self:getFeedbackDecay())
+		local decay = self:getFeedbackDecay()
+		if self:knowTalent(self.T_BIOFEEDBACK) then
+			local t = self:getTalentFromId(self.T_BIOFEEDBACK)
+			self:heal(decay * t.getHealRatio(self, t))
+		end
+		self:incFeedback(-decay)
 	end
 
 	-- Compute timed effects
@@ -465,6 +466,7 @@ function _M:actBase()
 			local t = self:getTalentFromId(self.T_CARBON_SPIKES)
 			t.do_carbonRegrowth(self, t)
 		end
+		-- this handles conditioning talents
 		if self:knowTalent(self.T_UNFLINCHING_RESOLVE) then
 			local t = self:getTalentFromId(self.T_UNFLINCHING_RESOLVE)
 			t.do_unflinching_resolve(self, t)
@@ -475,11 +477,13 @@ function _M:actBase()
 				self:forceUseTalent(self.T_DAUNTING_PRESENCE, {ignore_energy=true})
 			end
 		end
-		if self:isTalentActive(self.T_FEEDBACK_OVERFLOW) and self:attr("psionic_overflow") then
-			local t = self:getTalentFromId(self.T_FEEDBACK_OVERFLOW)
-			t.doOverflowDischarge(self, t)
-		end
-
+		-- this handles feedback overcharge
+		if self:attr("discharge_overcharge") then
+			local t = self:getTalentFromId(self.T_OVERCHARGE)
+			t.doOvercharge(self, t, self:attr("discharge_overcharge"))
+			self.discharge_overcharge = nil
+		end		
+		
 		self:triggerHook{"Actor:actBase:Effects"}
 	end
 
@@ -1604,20 +1608,6 @@ function _M:onTakeHit(value, src)
 		end
 	end
 	
-	if self:attr("resonance_shield") then
-	-- Absorb damage into the shield
-		if value / 2 <= self.resonance_shield_absorb then
-			self.resonance_shield_absorb = self.resonance_shield_absorb - (value / 2)
-			value = value / 2
-		else
-			value = value - self.resonance_shield_absorb
-			self.resonance_shield_absorb = 0
-		end
-		if self.resonance_shield_absorb <= 0 then
-			self:removeEffect(self.EFF_RESONANCE_SHIELD)
-		end
-	end
-
 	if self:isTalentActive(self.T_BONE_SHIELD) then
 		local t = self:getTalentFromId(self.T_BONE_SHIELD)
 		t.absorb(self, t, self:isTalentActive(self.T_BONE_SHIELD))
@@ -1670,21 +1660,39 @@ function _M:onTakeHit(value, src)
 	-- Feedback pool: Stores damage as energy to use later
 	if self:getMaxFeedback() > 0 and src ~= self then
 		local ratio = 0.5
-		if self:knowTalent(self.T_FEEDBACK) then
-			local t = self:getTalentFromId(self.T_FEEDBACK)
-			ratio = t.getConversionRatio(self, t)
+		if self:knowTalent(self.T_AMPLIFICATION) then
+			local t = self:getTalentFromId(self.T_AMPLIFICATION)
+			ratio = t.getFeedbackGain(self, t)
 		end
-		
 		local feedback_gain = value * ratio
-
-		-- Overflow?
-		if self:isTalentActive(self.T_FEEDBACK_OVERFLOW) then
-			local set_overflow = feedback_gain + self:getFeedback() - self:getMaxFeedback()
-			if set_overflow > 0 then
-				self.psionic_overflow = math.min(self.psionic_overflow_max, set_overflow + (self.psionic_overflow or 0))
+		self:incFeedback(feedback_gain)
+		-- Trigger backlash retribution damage
+		if self:isTalentActive(self.T_BACKLASH) and self:getFeedback() >= 1 then
+			local t = self:getTalentFromId(self.T_BACKLASH)
+			t.doBacklash(self, src, t)
+			if self:knowTalent(self.T_OVERCHARGE) then
+				local t = self:getTalentFromId(self.T_OVERCHARGE)
+				local overcharge = math.floor((feedback_gain + self:getFeedback() - self:getMaxFeedback()) / t.getOverchargeRatio(self, t))
+				if overcharge > 0 then
+					self.discharge_overcharge = math.max(self.discharge_overcharge or 0 + overcharge, t.getTargetCount(self, t))
+				end
 			end
 		end
-		self:incFeedback(feedback_gain)
+	end
+
+	-- Resonance Field, must be called after Feedback gains
+	if self:attr("resonance_field") then
+		if value / 2 <= self.resonance_field_absorb then
+			self.resonance_field_absorb = self.resonance_field_absorb - (value / 2)
+			value = value / 2
+		else
+			value = value - self.resonance_field_absorb
+			self.resonance_field_absorb = 0
+		end
+		if self.resonance_field_absorb <= 0 then
+			game.logPlayer(self, "Your resonance field crumbles under the damage!")
+			self:removeEffect(self.EFF_RESONANCE_FIELD)
+		end
 	end
 		
 	-- Solipsism
@@ -2829,9 +2837,12 @@ function _M:learnPool(t)
 		self:learnTalent(self.T_PARADOX_POOL, true)
 		self.resource_pool_refs[self.T_PARADOX_POOL] = (self.resource_pool_refs[self.T_PARADOX_POOL] or 0) + 1
 	end
-	if t.type[1]:find("^psionic/") and not self:knowTalent(self.T_PSI_POOL) then
+	if t.type[1]:find("^psionic/") and not (t.type[1]:find("^psionic/feedback") or t.type[1]:find("^psionic/discharge")) and not self:knowTalent(self.T_PSI_POOL) then
 		self:learnTalent(self.T_PSI_POOL, true)
 		self.resource_pool_refs[self.T_PSI_POOL] = (self.resource_pool_refs[self.T_PSI_POOL] or 0) + 1
+	end
+	if t.type[1]:find("^psionic/feedback") or t.type[1]:find("^psionic/discharge")and not self:knowTalent(self.T_FEEDBACK_POOL) then
+		self:learnTalent(self.T_FEEDBACK_POOL, true)
 	end
 	-- If we learn an archery talent, also learn to shoot
 	if t.type[1]:find("^technique/archery") and not self:knowTalent(self.T_SHOOT) then
@@ -3145,15 +3156,12 @@ function _M:preUseTalent(ab, silent, fake)
 			if not silent then game.logPlayer(self, "You do not have enough hate to use %s.", ab.name) end
 			return false
 		end
-		if ab.psi then
-			local talent_cost = ab.psi * (100 + 2 * self:combatFatigue()) / 100
-			if self:getPsi() < talent_cost and self:getFeedback() < talent_cost then
-				if not silent then game.logPlayer(self, "You do not have enough energy to cast %s.", ab.name) end
-			return false
-			end
+		if ab.psi and self:getPsi() < ab.psi * (100 + 2 * self:combatFatigue()) / 100 then
+			if not silent then game.logPlayer(self, "You do not have enough energy to use %s.", ab.name) end
 		end
 		if ab.feedback and self:getFeedback() < ab.feedback * (100 + 2 * self:combatFatigue()) / 100 then
-			if not silent then game.logPlayer(self, "You do not have enough energy to cast %s.", ab.name) end
+			if not silent then game.logPlayer(self, "You do not have enough feedback to use %s.", ab.name) end
+			return false
 		end
 	end
 
@@ -3391,15 +3399,7 @@ function _M:postUseTalent(ab, ret)
 			trigger = true; self:incParadox(ab.paradox * (1 + (self.paradox / 300)))
 		end
 		if ab.psi and not self:attr("zero_resource_cost") then
-			trigger = true
-			local cost = ab.psi * (100 + 2 * self:combatFatigue()) / 100
-			-- Feedback adjustment
-			if self:getFeedback() > 0 then
-				local old_cost = cost
-				cost = cost - self:getFeedback()
-				self:incFeedback(-old_cost)
-			end
-			self:incPsi(-cost)
+			trigger = true; self:incPsi(-ab.psi * (100 + 2 * self:combatFatigue()) / 100)
 		end
 		if ab.feedback and not self:attr("zero_resource_cost") then
 			trigger = true; self:incFeedback(-ab.feedback * (100 + 2 * self:combatFatigue()) / 100)

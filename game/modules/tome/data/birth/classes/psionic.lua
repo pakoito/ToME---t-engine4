@@ -167,7 +167,7 @@ newBirthDescriptor{
 	stats = { str=0, wil=5, cun=4, },
 	talents_types = {
 		-- class
-		["psionic/discharge"]={true, 0},
+		["psionic/discharge"]={true, 0.3},
 		["psionic/distortion"]={true, 0.3},
 		["psionic/slumber"]={true, 0.3},
 		["psionic/solipsism"]={true, 0.3},
@@ -176,7 +176,7 @@ newBirthDescriptor{
 		-- generic
 		["psionic/mentalism"]={true, 0.3},
 		["cunning/survival"]={true, 0},
-		["psionic/feedback"]={true, 0},
+		["psionic/feedback"]={true, 0.3},
 		
 		-- locked trees
 		["psionic/psychic-assault"]={false, 0},
@@ -186,7 +186,7 @@ newBirthDescriptor{
 		
 	},
 	talents = {
-		[ActorTalents.T_FEEDBACK] = 1,
+		[ActorTalents.T_BIOFEEDBACK] = 1,
 		[ActorTalents.T_MIND_SEAR] = 1,
 		[ActorTalents.T_SOLIPSISM] = 1,
 	},

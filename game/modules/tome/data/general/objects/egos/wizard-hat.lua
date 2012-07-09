@@ -32,7 +32,7 @@ newEntity{
 	rarity = 10,
 	cost = 20,
 	wielder = {
-		mana_regen_on_hit = resolvers.mbonus_material(23, 7, function(e, v) v=v/10 return 0, v end),
+		mana_regen_when_hit = resolvers.mbonus_material(23, 7, function(e, v) v=v/10 return 0, v end),
 	},
 }
 

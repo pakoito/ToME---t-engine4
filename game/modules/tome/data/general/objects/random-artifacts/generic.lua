@@ -93,7 +93,7 @@ newEntity{ theme={mental=true}, name="mind crit magnitude", points = 3, rarity =
 -- Resources
 ----------------------------------------------------------------
 newEntity{ theme={mental=true}, name="equilibrium on hit", points = 1, rarity = 16, level_range = {1, 50},
-	wielder = { equilibrium_regen_on_hit = resolvers.randartmax(.04, 2), },
+	wielder = { equilibrium_regen_when_hit = resolvers.randartmax(.04, 2), },
 }
 newEntity{ theme={mental=true}, name="max hate", points = 1, rarity = 16, level_range = {1, 50},
 	wielder = { max_hate = resolvers.randartmax(2, 10), },
@@ -111,7 +111,7 @@ newEntity{ theme={mental=true}, name="psi per kill", points = 1, rarity = 16, le
 	wielder = { psi_per_kill = resolvers.randartmax(1, 5), },
 }
 newEntity{ theme={mental=true}, name="psi on hit", points = 1, rarity = 16, level_range = {1, 50},
-	wielder = { psi_regen_on_hit = resolvers.randartmax(.04, 2), },
+	wielder = { psi_regen_when_hit = resolvers.randartmax(.04, 2), },
 }
 newEntity{ theme={mental=true}, name="psi on crit", points = 1, rarity = 16, level_range = {1, 50},
 	wielder = { psi_on_crit = resolvers.randartmax(1, 5), },

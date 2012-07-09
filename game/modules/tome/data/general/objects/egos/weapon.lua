@@ -146,7 +146,7 @@ newEntity{
 		inc_stats = {
 			[Stats.STAT_STR] = resolvers.mbonus_material(6, 1),
 		},
-		stamina_regen_on_hit = resolvers.mbonus_material(20, 5, function(e, v) v=v/10 return 0, v end),
+		stamina_regen_when_hit = resolvers.mbonus_material(20, 5, function(e, v) v=v/10 return 0, v end),
 	},
 }
 

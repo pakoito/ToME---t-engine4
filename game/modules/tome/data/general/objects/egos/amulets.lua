@@ -452,7 +452,7 @@ newEntity{
 			[Stats.STAT_WIL] = resolvers.mbonus_material(5, 1),
 		},
 		max_stamina = resolvers.mbonus_material(30, 10),
-		stamina_regen_on_hit = resolvers.mbonus_material(23, 7, function(e, v) v=v/10 return 0, v end),
+		stamina_regen_when_hit = resolvers.mbonus_material(23, 7, function(e, v) v=v/10 return 0, v end),
 	},
 }
 

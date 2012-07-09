@@ -358,22 +358,13 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 
 
 	-- Regen on being hit
-	if hitted and not target.dead and target:attr("stamina_regen_on_hit") then target:incStamina(target.stamina_regen_on_hit) end
-	if hitted and not target.dead and target:attr("mana_regen_on_hit") then target:incMana(target.mana_regen_on_hit) end
-	if hitted and not target.dead and target:attr("equilibrium_regen_on_hit") then target:incEquilibrium(-target.equilibrium_regen_on_hit) end
+	if hitted and not target.dead and target:attr("stamina_regen_when_hit") then target:incStamina(target.stamina_regen_when_hit) end
+	if hitted and not target.dead and target:attr("mana_regen_when_hit") then target:incMana(target.mana_regen_when_hit) end
+	if hitted and not target.dead and target:attr("equilibrium_regen_when_hit") then target:incEquilibrium(-target.equilibrium_regen_when_hit) end
 	
 	-- Resource regen on hit
-	if hitted and self.gain_resource_on_hit then
-		local resources = { 
-			mana = "incMana", paradox = "incParadox", vim = "incVim", negative = "incNegative", positive = "incPositive",
-			stamina = "incStamina", psi = "incPsi", hate = "incHate", equilibrium = "incEquilibrium",
-		}
-		for res, value in pairs(self.gain_resource_on_hit) do
-			if value ~= 0 and self[resources[res]] then
-				self[resources[res]](self, value)
-			end
-		end
-	end
+	if hitted and self:attr("stamina_regen_on_hit") then self:incStamina(self.stamina_regen_on_hit) end
+	if hitted and self:attr("mana_regen_on_hit") then self:incMana(self.mana_regen_on_hit) end
 
 	-- Ablative armor
 	if hitted and not target.dead and target:attr("carbon_spikes") then

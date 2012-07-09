@@ -88,6 +88,22 @@ newTalent{
 }
 
 newTalent{
+	name = "Feedback Pool",
+	type = {"base/class", 1},
+	info = "Allows you to have a Feedback pool. Feedback is used to power feedback and discharge talents.",
+	mode = "passive",
+	hide = true,
+	no_unlearn_last = true,
+	on_learn = function(self, t)
+		if self:getMaxFeedback() <= 0 then
+			self:incMaxFeedback(100)
+		end
+		return true
+	end,
+}
+
+
+newTalent{
 	name = "Mana Pool",
 	type = {"base/class", 1},
 	info = "Allows you to have a mana pool. Mana is used to cast all spells.",

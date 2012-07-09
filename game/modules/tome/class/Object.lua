@@ -891,11 +891,11 @@ function _M:getTextualDesc(compare_with)
 		compare_fields(w, compare_with, field, "psi_regen", "%+.2f", "Psi each turn: ")
 		compare_fields(w, compare_with, field, "positive_regen", "%+.2f", "P.Energy each turn: ")
 
-		compare_fields(w, compare_with, field, "stamina_regen_on_hit", "%+.2f", "Stamina when hit: ")
-		compare_fields(w, compare_with, field, "mana_regen_on_hit", "%+.2f", "Mana when hit: ")
-		compare_fields(w, compare_with, field, "equilibrium_regen_on_hit", "%+.2f", "Equilibrium when hit: ")
-		compare_fields(w, compare_with, field, "psi_regen_on_hit", "%+.2f", "Psi when hit: ")
-		compare_fields(w, compare_with, field, "hate_regen_on_hit", "%+.2f", "Hate when hit: ")
+		compare_fields(w, compare_with, field, "stamina_regen_when_hit", "%+.2f", "Stamina when hit: ")
+		compare_fields(w, compare_with, field, "mana_regen_when_hit", "%+.2f", "Mana when hit: ")
+		compare_fields(w, compare_with, field, "equilibrium_regen_when_hit", "%+.2f", "Equilibrium when hit: ")
+		compare_fields(w, compare_with, field, "psi_regen_when_hit", "%+.2f", "Psi when hit: ")
+		compare_fields(w, compare_with, field, "hate_regen_when_hit", "%+.2f", "Hate when hit: ")
 
 		compare_fields(w, compare_with, field, "mana_on_crit", "%+.2f", "Mana when firing critical spell: ")
 		compare_fields(w, compare_with, field, "vim_on_crit", "%+.2f", "Vim when firing critical spell: ")
@@ -1277,11 +1277,11 @@ function _M:getPriceFlags()
 		if w.stamina_regen then price = price + w.stamina_regen * 100 end
 		if w.mana_regen then price = price + w.mana_regen * 80 end
 		if w.psi_regen then price = price + w.psi_regen * 100 end
-		if w.stamina_regen_on_hit then price = price + w.stamina_regen_on_hit * 3 end
-		if w.equilibrium_regen_on_hit then price = price + w.equilibrium_regen_on_hit * 3 end
-		if w.mana_regen_on_hit then price = price + w.mana_regen_on_hit * 3 end
-		if w.psi_regen_on_hit then price = price + w.psi_regen_on_hit * 3 end
-		if w.hate_regen_on_hit then price = price + w.hate_regen_on_hit * 3 end
+		if w.stamina_regen_when_hit then price = price + w.stamina_regen_when_hit * 3 end
+		if w.equilibrium_regen_when_hit then price = price + w.equilibrium_regen_when_hit * 3 end
+		if w.mana_regen_when_hit then price = price + w.mana_regen_when_hit * 3 end
+		if w.psi_regen_when_hit then price = price + w.psi_regen_when_hit * 3 end
+		if w.hate_regen_when_hit then price = price + w.hate_regen_when_hit * 3 end
 		if w.mana_on_crit then price = price + w.mana_on_crit * 3 end
 		if w.vim_on_crit then price = price + w.vim_on_crit * 3 end
 		if w.psi_on_crit then price = price + w.psi_on_crit * 3 end

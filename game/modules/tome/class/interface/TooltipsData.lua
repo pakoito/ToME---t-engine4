@@ -124,9 +124,8 @@ Your capacity for storing energy is determined by your Willpower.
 
 TOOLTIP_FEEDBACK = [[#GOLD#Feedback#LAST#
 Feedback represents using pain as a means of psionic grounding and it can be used in place of Psi.
-To get meaningful amounts back in combat, you must take damage (at a base 50%% conversion rate though some talents can improve this ratio).
-Your capacity for storing feedback is determined by how many talents you know that harness it.
-Feedback decays quickly over time.
+Fifty percent of all damage you take from an outside source will increase your Feedback.
+Feedback decays at the rate of 10%% or 1 per turn (which ever is greater).
 ]]
 
 TOOLTIP_NECROTIC_AURA = [[#GOLD#Necrotic Aura#LAST#

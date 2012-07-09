@@ -515,7 +515,7 @@ function _M:showResourceTooltip(x, y, w, h, id, desc, is_first)
 						if player:knowTalent(player.T_VIM_POOL) then list[#list+1] = {name="Vim", id="vim"} end
 						if player:knowTalent(player.T_HATE_POOL) then list[#list+1] = {name="Hate", id="hate"} end
 						if player:knowTalent(player.T_PSI_POOL) then list[#list+1] = {name="Psi", id="psi"} end
-						if player.psionic_feedback_max then list[#list+1] = {name="Feedback", id="feedback"} end
+						if player:knowTalent(player.T_FEEDBACK_POOL) then list[#list+1] = {name="Feedback", id="feedback"} end
 						Dialog:listPopup("Display/Hide resources", "Toggle:", list, 300, 300, function(sel)
 							if not sel or not sel.id then return end
 							game.player["_hide_resource_"..sel.id] = not game.player["_hide_resource_"..sel.id]

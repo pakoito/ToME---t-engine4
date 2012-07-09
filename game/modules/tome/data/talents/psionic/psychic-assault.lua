@@ -18,7 +18,8 @@
 -- darkgod@te4.org
 
 -- Edge TODO: Sounds, Particles, Talent Icons; All Talents
--- Idea (5:06:11 PM) Neuq: Sunder mind - Hit the enemy for X mind damage + Y mind damage for every stack of Sunder mind he has on him? :)
+-- Idea (5:06:11 PM) Neuq: Sunder mind - Hit the enemy for X mind damage + Y mind damage for every stack of Sunder mind he has on him? :)\
+-- Idea 2; Cognitive Disonance, sustain - Improves mindpower for applying brain lock and gives your mind damage a chance to apply brain lock equal to X% of the damage dealt
 
 newTalent{
 	name = "Sunder Mind",
