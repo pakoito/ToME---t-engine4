@@ -87,7 +87,7 @@ newBirthDescriptor
 		"#LIGHT_BLUE# * +3 Strength, +1 Dexterity, +5 Constitution",
 		"#LIGHT_BLUE# * +0 Magic, -2 Willpower, -2 Cunning",
 		"#GOLD#Life per level:#LIGHT_BLUE# 14",
-		"#GOLD#Experience penalty:#LIGHT_BLUE# 40%",
+		"#GOLD#Experience penalty:#LIGHT_BLUE# 25%",
 		"#GOLD#Speed penalty:#LIGHT_BLUE# -20%",
 	},
 	descriptor_choices =
@@ -118,7 +118,7 @@ newBirthDescriptor
 		moddable_tile = "ghoul",
 		moddable_tile_nude = true,
 	},
-	experience = 1.4,
+	experience = 1.25,
 }
 
 newBirthDescriptor
