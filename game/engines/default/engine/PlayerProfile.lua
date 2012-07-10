@@ -683,6 +683,7 @@ function _M:checkSaveID(module, uuid, savename, md5)
 		md5=md5,
 	})
 	print("[ONLINE PROFILE] checking character md5", uuid, savename, md5)
+--[[
 	return function()
 		local ok = false
 		self:waitEvent("CheckSaveMD5", function(e)
@@ -690,6 +691,8 @@ function _M:checkSaveID(module, uuid, savename, md5)
 		end, 30000)
 		return ok
 	end
+]]
+	return function() return true end
 end
 
 function _M:currentCharacter(module, title, uuid)
