@@ -309,6 +309,7 @@ newEntity{ base = "BASE_GEM",
 		inc_stats = {[Stats.STAT_CON] = 10, },
 		healing_factor = 0.3,
 		life_regen = 2,
+		stun_immune = 0.3,
 		resists = {
 			[DamageType.BLIGHT] = 10,
 		},

@@ -293,15 +293,18 @@ newEntity{ base = "BASE_AMULET",
 	wielder = {
 		combat_armor = 6,
 		combat_def = 6,
+		combat_spellpower = 8,
+		combat_spellcrit = 6,
+		spellsurge_on_crit = 15,
 	},
-	max_power = 300, power_regen = 1,
-	use_power = { name = "unleash a destructive wail", power = 300,
+	max_power = 60, power_regen = 1,
+	use_power = { name = "unleash a destructive wail", power = 60,
 		use = function(self, who)
 			who:project({type="ball", range=0, selffire=false, radius=3}, who.x, who.y, engine.DamageType.DIG, 1)
 			who:project({type="ball", range=0, selffire=false, radius=3}, who.x, who.y, engine.DamageType.DIG, 1)
 			who:project({type="ball", range=0, selffire=false, radius=3}, who.x, who.y, engine.DamageType.DIG, 1)
 			who:project({type="ball", range=0, selffire=false, radius=3}, who.x, who.y, engine.DamageType.DIG, 1)
-			who:project({type="ball", range=0, selffire=false, radius=3}, who.x, who.y, engine.DamageType.PHYSICAL, 100 + who:getMag() * 2)
+			who:project({type="ball", range=0, selffire=false, radius=3}, who.x, who.y, engine.DamageType.PHYSICAL, 250 + who:getMag() * 3)
 			game.logSeen(who, "%s uses the %s!", who.name:capitalize(), self:getName())
 			return {id=true, used=true}
 		end
@@ -322,6 +325,7 @@ newEntity{ base = "BASE_AMULET",
 		max_encumber = 20,
 		fatigue = -20,
 		avoid_pressure_traps = 1,
+		movement_speed = 0.2,
 	},
 }
 
@@ -448,8 +452,8 @@ newEntity{ base = "BASE_LITE",
 This star is the culmination of their craft. Light radiates from its ever-shifting yellow surface.]],
 	cost = 400,
 
-	max_power = 150, power_regen = 1,
-	use_power = { name = "map surroundings", power = 100,
+	max_power = 30, power_regen = 1,
+	use_power = { name = "map surroundings", power = 10,
 		use = function(self, who)
 			who:magicMap(20)
 			game.logSeen(who, "%s brandishes the %s which radiates in all directions!", who.name:capitalize(), self:getName())
@@ -479,6 +483,8 @@ newEntity{ base = "BASE_LITE",
 		infravision = 6,
 		resists_cap = { [DamageType.LIGHT] = 10 },
 		resists = { [DamageType.LIGHT] = 30 },
+		talents_types_mastery = { ["cunning/stealth"] = 0.1 },
+		combat_dam = 7,
 	},
 
 	max_power = 15, power_regen = 1,
@@ -1197,7 +1203,7 @@ newEntity{ base = "BASE_CLOTH_ARMOR",
 	},
 }
 
-newEntity{ base = "BASE_HELM",
+newEntity{ base = "BASE_HELM", define_as = "HELM_KROLTAR",
 	power_source = {technique=true},
 	unique = true,
 	name = "Dragon-helm of Kroltar", image = "object/artifact/dragon_helm_of_kroltar.png",
@@ -1216,6 +1222,17 @@ newEntity{ base = "BASE_HELM",
 	},
 	max_power = 45, power_regen = 1,
 	use_talent = { id = Talents.T_WARSHOUT, level = 2, power = 45 },
+	set_list = { {"define_as","SCALE_MAIL_KROLTAR"} },
+	on_set_complete = function(self, who)
+		self:specialSetAdd("skullcracker_mult", 1)
+		self:specialSetAdd({"wielder","combat_spellresist"}, 15)
+		self:specialSetAdd({"wielder","combat_mentalresist"}, 15)
+		self:specialSetAdd({"wielder","combat_physresist"}, 15)
+		game.logPlayer(who, "#GOLD#As the Kroltar helm approches the scale mail, they begin to emit fumes and fires.")
+	end,
+	o.on_set_broken = function(self, who)
+		game.logPlayer(who, "#GOLD#The funes and fires disappear.")
+	end,
 }
 
 newEntity{ base = "BASE_HELM",
@@ -1552,6 +1569,7 @@ newEntity{ base = "BASE_CLOTH_ARMOR",
 	cost = 540,
 	material_level = 4,
 	wielder = {
+		combat_spellpower = 23,
 		inc_damage = {[DamageType.TEMPORAL]=20},
 		combat_def = 9,
 		combat_armor = 3,
@@ -2012,7 +2030,7 @@ newEntity{ base = "BASE_HEAVY_ARMOR",
 }
 
 
-newEntity{ base = "BASE_HEAVY_ARMOR",
+newEntity{ base = "BASE_HEAVY_ARMOR", define_as = "SCALE_MAIl_KROLTAR",
 	power_source = {technique=true, nature=true},
 	unique = true,
 	name = "Scale Mail of Kroltar", image = "object/artifact/scale_mail_of_kroltar.png",
@@ -2041,6 +2059,12 @@ newEntity{ base = "BASE_HEAVY_ARMOR",
 	},
 	max_power = 80, power_regen = 1,
 	use_talent = { id = Talents.T_INFERNO, level = 3, power = 50 },
+	set_list = { {"define_as","HELM_KROLTAR"} },
+	on_set_complete = function(self, who)
+		self:specialSetAdd({"wielder","max_life"}, 120)
+		self:specialSetAdd({"wielder","fatigue"}, -8)
+		self:specialSetAdd({"wielder","combat_def"}, 10)
+	end,
 }
 
 newEntity{ base = "BASE_MASSIVE_ARMOR",
@@ -2386,27 +2410,6 @@ newEntity{ base = "BASE_GAUNTLETS",
 			physspeed = 0.2,
 		},
 	},
-}
-
-newEntity{ base = "BASE_AMULET",
-	power_source = {arcane=true},
-	unique = true,
-	name = "Zemekkys' Broken Hourglass", color = colors.WHITE,
-	unided_name = "a broken hourglass", image="object/artifact/amulet_zemekkys_broken_hourglass.png",
-	desc = [[This small broken hourglass hangs from a thin gold chain.  The glass is cracked and the sand has long since escaped.]],
-	level_range = {30, 40},
-	rarity = 300,
-	cost = 200,
-	material_level = 4,
-	metallic = false,
-	wielder = {
-		inc_stats = { [Stats.STAT_WIL] = 4, },
-		inc_damage = { [DamageType.TEMPORAL]= 10 },
-		resists = { [DamageType.TEMPORAL] = 20 },
-		resists_cap = { [DamageType.TEMPORAL] = 5 },
-	},
-	max_power = 60, power_regen = 1,
-	use_talent = { id = Talents.T_WORMHOLE, level = 2, power = 60 },
 }
 
 newEntity{ base = "BASE_AMULET",

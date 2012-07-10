@@ -56,3 +56,42 @@ newEntity{ base = "BASE_KNIFE", define_as = "LIFE_DRINKER",
 		{chance=15, talent=Talents.T_BLOOD_GRASP, level=2},
 	},
 }
+
+newEntity{ base = "BASE_TRIDENT",
+	power_source = {nature=true},
+	define_as = "TRIDENT_TIDES",
+	unided_name = "ever-dripping trident",
+	name = "Trident of the Tides", unique=true, image = "object/artifact/trident_of_the_tides.png",
+	desc = [[The power of the tides rushing through this trident.
+Tridents require the exotic weapons mastery talent to use correctly.]],
+	require = { stat = { str=35 }, },
+	level_range = {30, 40},
+	rarity = 230,
+	cost = 300,
+	material_level = 4,
+	combat = {
+		dam = 80,
+		apr = 20,
+		physcrit = 15,
+		dammod = {str=1.4},
+		damrange = 1.4,
+		melee_project={
+			[DamageType.COLD] = 15,
+			[DamageType.NATURE] = 20,
+		},
+		talent_on_hit = { T_WATER_BOLT = {level=3, chance=40} }
+	},
+
+	wielder = {
+		combat_atk = 10,
+		combat_spellresist = 18,
+		see_invisible = 2,
+		resists={[DamageType.COLD] = 25},
+		inc_damage = { [DamageType.COLD] = 20 },
+	},
+
+	talent_on_spell = { {chance=20, talent="T_WATER_BOLT", level=3} }
+
+	max_power = 150, power_regen = 1,
+	use_talent = { id = Talents.T_FREEZE, level=3, power = 60 },
+}

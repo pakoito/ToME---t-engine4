@@ -190,42 +190,6 @@ newEntity{ base = "BASE_HELM",
 	},
 }
 
-newEntity{ base = "BASE_TRIDENT",
-	power_source = {nature=true},
-	define_as = "TRIDENT_TIDES",
-	unided_name = "ever-dripping trident",
-	name = "Trident of the Tides", unique=true, image = "object/artifact/trident_of_the_tides.png",
-	desc = [[The power of the tides rushing through this trident.
-Tridents require the exotic weapons mastery talent to use correctly.]],
-	require = { stat = { str=35 }, },
-	level_range = {30, 40},
-	rarity = 230,
-	cost = 300,
-	material_level = 4,
-	combat = {
-		dam = 60,
-		apr = 4,
-		physcrit = 15,
-		dammod = {str=1.3},
-		damrange = 1.4,
-		melee_project={
-			[DamageType.COLD] = 15,
-			[DamageType.NATURE] = 20,
-		},
-	},
-
-	wielder = {
-		combat_atk = 10,
-		combat_spellresist = 18,
-		see_invisible = 2,
-		resists={[DamageType.COLD] = 25},
-		inc_damage = { [DamageType.COLD] = 20 },
-	},
-
-	max_power = 150, power_regen = 1,
-	use_talent = { id = Talents.T_WATER_BOLT, level=3, power = 60 },
-}
-
 newEntity{ base = "BASE_LIGHT_ARMOR",
 	power_source = {nature=true},
 	define_as = "EEL_SKIN", rarity=false, image = "object/artifact/eel_skin_armor.png",
@@ -391,7 +355,8 @@ newEntity{ base = "BASE_SHIELD",
 		combat_armor = 7,
 		combat_def = 12,
 		combat_def_ranged = 5,
-		fatigue = 12,
+		combat_spellpower = 10,
+		fatigue = 2,
 
 		lite = 1,
 		talents_types_mastery = {["celestial/star-fury"]=0.2,["celestial/twilight"]=0.1,},
@@ -445,10 +410,10 @@ newEntity{ base = "BASE_GEM",
 	desc = [[A piece of the scorched wood taken from the remains of Snaproot.]],
 	rarity = false,
 	cost = 100,
-	material_level = 5,
+	material_level = 4,
 	imbue_powers = {
-		resists = { [DamageType.NATURE] = 25, [DamageType.FIRE] = -10, [DamageType.COLD] = 10 },
-		inc_stats = { [Stats.STAT_CON] = 10, },
+		resists = { [DamageType.NATURE] = 25, [DamageType.DARKNESS] = 10, [DamageType.COLD] = 10 },
+		inc_stats = { [Stats.STAT_CON] = 25, },
 	},
 }
 
