@@ -2902,7 +2902,7 @@ newEntity{ base = "BASE_MINDSTAR",
 		end
 		if who.descriptor and who.descriptor.race == "Halfling" then
 			local Talents = require "engine.interface.ActorStats"
-			self:specialWearAdd({"wielder","resists"}, {[DamageType.MIND] = -25,})
+			self:specialWearAdd({"wielder","resists"}, {[engine.DamageType.MIND] = -25,})
 			self:specialWearAdd({"wielder","combat_mentalresist"}, -20)
 			game.logPlayer(who, "#RED#The Way rejects its former captors!")
 		end

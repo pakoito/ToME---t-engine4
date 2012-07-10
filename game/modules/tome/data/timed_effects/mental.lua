@@ -352,6 +352,7 @@ newEffect{
 	desc = "Stalked",
 	long_desc = function(self, eff)
 		local effStalker = eff.source:hasEffect(eff.source.EFF_STALKER)
+		if not effStalker then return "Being stalked." end
 		local t = self:getTalentFromId(eff.source.T_STALK)
 		local desc = ([[Being stalked by %s. Stalker bonus level %d: +%d attack, +%d%% melee damage, +%0.2f hate/turn prey was hit.]]):format(
 			eff.source.name, effStalker.bonus, t.getAttackChange(eff.source, t, effStalker.bonus), t.getStalkedDamageMultiplier(eff.source, t, effStalker.bonus) * 100 - 100, t.getHitHateChange(eff.source, t, effStalker.bonus))

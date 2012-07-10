@@ -325,7 +325,7 @@ function _M:unlearnTalent(t_id, nb)
 		if t.on_unlearn then t.on_unlearn(self, t) end
 	end
 
-	if self.talents[t_id] = nil then self.talents_auto[t_id] = nil end
+	if self.talents[t_id] == nil then self.talents_auto[t_id] = nil end
 
 	self.changed = true
 	return true
