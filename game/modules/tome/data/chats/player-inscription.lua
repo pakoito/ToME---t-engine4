@@ -54,7 +54,7 @@ answers[#answers+1] = {"Cancel"}
 newChat{ id="welcome",
 	text = replace_same and [[You have too many of this type of inscription. You can only override an existing one. The old inscription will be lost.]]
 	or [[You have reached your maximum number of inscriptions(infusions/runes).
-If you have unassigned #{bold}#talent category point#{normal}# you can use one to create a new slot.
+If you have unassigned #{bold}#talent category point#{normal}# you can use one to create a new slot (up to 5).
 You can replace an existing one or cancel.
 The old inscription will be lost.]],
 	answers = answers,

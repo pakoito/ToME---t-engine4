@@ -1230,7 +1230,7 @@ newEntity{ base = "BASE_HELM", define_as = "HELM_KROLTAR",
 		self:specialSetAdd({"wielder","combat_physresist"}, 15)
 		game.logPlayer(who, "#GOLD#As the Kroltar helm approches the scale mail, they begin to emit fumes and fires.")
 	end,
-	o.on_set_broken = function(self, who)
+	on_set_broken = function(self, who)
 		game.logPlayer(who, "#GOLD#The funes and fires disappear.")
 	end,
 }

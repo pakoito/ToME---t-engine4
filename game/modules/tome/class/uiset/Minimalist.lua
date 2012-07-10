@@ -1536,7 +1536,7 @@ function _M:displayGameLog(scale, bx, by)
 				return
 			end
 
-			game.mouse:delegate(button, mx, my, xrel, yrel, nil, nil, event, "playmap", nil)
+			log:mouseEvent(button, mx, my, xrel, yrel, bx, by, event)
 		end
 		game.mouse:registerZone(bx, by, log.w, log.h, desc_fct, nil, "gamelog", true, scale)
 	end
@@ -1836,6 +1836,24 @@ function _M:display(nb_keyframes)
 end
 
 function _M:setupMouse(mouse)
+	-- Log tooltips
+	self.logdisplay:onMouse(function(item, sub_es, button, event, x, y, xrel, yrel, bx, by)
+		local mx, my = core.mouse.get()
+		if not item or not sub_es or #sub_es == 0 then game.mouse:delegate(button, mx, my, xrel, yrel, nil, nil, event, "playmap") return end
+
+		local str = tstring{}
+		for i, e in ipairs(sub_es) do
+			str:merge(e:tooltip():toTString())
+			if i < #sub_es then str:add(true, "---", true)
+			else str:add(true) end
+		end
+
+		local extra = {}
+		extra.log_str = str
+		game.tooltip.old_ttmx = -100
+		game.mouse:delegate(button, mx, my, xrel, yrel, nil, nil, event, "playmap", extra)
+	end)
+
 	-- Chat tooltips
 	profile.chat:onMouse(function(user, item, button, event, x, y, xrel, yrel, bx, by)
 		local mx, my = core.mouse.get()

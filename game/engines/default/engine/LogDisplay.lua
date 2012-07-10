@@ -19,6 +19,7 @@
 
 require "engine.class"
 require "engine.ui.Base"
+local Mouse = require "engine.Mouse"
 local Slider = require "engine.ui.Slider"
 
 --- Module that handles message history in a mouse wheel scrollable zone
@@ -76,6 +77,11 @@ function _M:resize(x, y, w, h)
 	end
 
 	self.scrollbar = Slider.new{size=self.h - 20, max=1, inverse=true}
+
+	self.mouse = Mouse.new()
+	self.mouse.delegate_offset_x = self.display_x
+	self.mouse.delegate_offset_y = self.display_y
+	self.mouse:registerZone(0, 0, self.w, self.h, function(button, x, y, xrel, yrel, bx, by, event) self:mouseEvent(button, x, y, xrel, yrel, bx, by, event) end)
 end
 
 --- Returns the full log
@@ -134,6 +140,31 @@ function _M:getLines(number)
 	return lines
 end
 
+function _M:onMouse(fct)
+	self.on_mouse = fct
+end
+
+function _M:mouseEvent(button, x, y, xrel, yrel, bx, by, event)
+	if button == "wheelup" then self:scrollUp(1)
+	elseif button == "wheeldown" then self:scrollUp(-1)
+	else
+		if not self.on_mouse or not self.dlist then return end
+		local citem = nil
+		local ci
+		for i = 1, #self.dlist do
+			local item = self.dlist[i]
+			if item.dh and by >= item.dh - self.mouse.delegate_offset_y then citem = self.dlist[i] ci=i break end
+		end
+		if citem then
+			local sub_es = {}
+			for di = 1, #citem.item._dduids do sub_es[#sub_es+1] = citem.item._dduids[di].e end
+			self.on_mouse(citem, sub_es, button, event, x, y, xrel, yrel, bx, by)
+		else
+			self.on_mouse(nil, nil, button, event, x, y, xrel, yrel, bx, by)
+		end
+	end
+end
+
 function _M:display()
 	-- If nothing changed, return the same surface as before
 	if not self.changed then return end
@@ -183,6 +214,7 @@ function _M:toScreen()
 			else fade = 0 end
 		end
 
+		self.dlist[i].dh = h
 		if self.shadow then item._tex:toScreenFull(self.display_x+2, h+2, item.w, item.h, item._tex_w, item._tex_h, 0,0,0, self.shadow * fade) end
 		item._tex:toScreenFull(self.display_x, h, item.w, item.h, item._tex_w, item._tex_h, 1, 1, 1, fade)
 		for di = 1, #item._dduids do item._dduids[di].e:toScreen(nil, self.display_x + item._dduids[di].x, h, item._dduids[di].w, item._dduids[di].w, fade) end

@@ -74,8 +74,8 @@ function _M:createItem(item, text)
     
 	local max_display = math.floor(self.h / self.fh)
 
-		-- Draw the list items
-		local gen = self.font:draw(text:toString(), self.fw, 255, 255, 255)
+	-- Draw the list items
+	local gen = self.font:draw(text:toString(), self.fw, 255, 255, 255)
 
 	for i = 1, #gen do
 		if gen[i].line_extra then

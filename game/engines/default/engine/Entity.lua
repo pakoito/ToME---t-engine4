@@ -410,13 +410,13 @@ end
 --- Get a string that will display in text the texture of this entity
 function _M:getDisplayString(tstr)
 	if tstr then
-		if core.display.FBOActive() then
+		if core.display.FBOActive() or true then
 			return tstring{{"uid", self.uid}}
 		else
 			return tstring{}
 		end
 	else
-		if core.display.FBOActive() then
+		if core.display.FBOActive() or true then
 			return "#UID:"..self.uid..":0#"
 		else
 			return ""

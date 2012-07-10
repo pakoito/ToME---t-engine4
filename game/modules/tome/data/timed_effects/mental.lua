@@ -103,6 +103,7 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("confused", eff.tmpid)
+		if self == game.player and self.updateMainShader then self:updateMainShader() end
 	end,
 }
 
