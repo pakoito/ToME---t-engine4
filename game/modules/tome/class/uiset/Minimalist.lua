@@ -1843,9 +1843,11 @@ function _M:setupMouse(mouse)
 
 		local str = tstring{}
 		for i, e in ipairs(sub_es) do
-			str:merge(e:tooltip():toTString())
-			if i < #sub_es then str:add(true, "---", true)
-			else str:add(true) end
+			if e.tooltip then
+				str:merge(e:tooltip():toTString())
+				if i < #sub_es then str:add(true, "---", true)
+				else str:add(true) end
+			end
 		end
 
 		local extra = {}

@@ -21,6 +21,7 @@ require "engine.class"
 require "mod.class.interface.TooltipsData"
 
 local Dialog = require "engine.ui.Dialog"
+local Button = require "engine.ui.Button"
 local Textzone = require "engine.ui.Textzone"
 local TextzoneList = require "engine.ui.TextzoneList"
 local TalentTrees = require "mod.dialogs.elements.TalentTrees"
@@ -427,7 +428,8 @@ function _M:generateList()
 	self.actor.__show_special_talents = self.actor.__show_special_talents or {}
 
 	-- Makes up the list
-	local tree = {}
+	local ctree = {}
+	local gtree = {}
 	self.talents_deps = {}
 	for i, tt in ipairs(self.actor.talents_types_def) do
 		if not tt.hide and not (self.actor.talents_types[tt.type] == nil) then
@@ -437,7 +439,7 @@ function _M:generateList()
 			local tshown = (self.actor.__hidden_talent_types[tt.type] == nil and ttknown) or (self.actor.__hidden_talent_types[tt.type] ~= nil and not self.actor.__hidden_talent_types[tt.type])
 			local node = {
 				name=function(item) return tstring{{"font", "bold"}, cat:capitalize().." / "..tt.name:capitalize() ..(" (%s)"):format((isgeneric and "generic" or "class")), {"font", "normal"}} end,
-				rawname=function(item) return cat:capitalize().." / "..tt.name:capitalize() ..(" (%s, mastery %.2f)"):format((isgeneric and "generic" or "class"), self.actor:getTalentTypeMastery(item.type)) end,
+				rawname=function(item) return cat:capitalize().." / "..tt.name:capitalize() ..(" (x%.2f)"):format(self.actor:getTalentTypeMastery(item.type)) end,
 				type=tt.type,
 				color=function(item) return ((self.actor:knowTalentType(item.type) ~= self.actor_dup:knowTalentType(item.type)) or ((self.actor.__increased_talent_types[item.type] or 0) ~= (self.actor_dup.__increased_talent_types[item.type] or 0))) and {255, 215, 0} or self.actor:knowTalentType(item.type) and {0,200,0} or {175,175,175} end,
 				shown = tshown,
@@ -446,7 +448,8 @@ function _M:generateList()
 				isgeneric = isgeneric and 0 or 1,
 				order_id = i,
 			}
-			tree[#tree+1] = node
+			if isgeneric then gtree[#gtree+1] = node
+			else ctree[#ctree+1] = node end
 
 			local list = node.nodes
 
@@ -462,9 +465,10 @@ function _M:generateList()
 					list[#list+1] = {
 						__id=t.id,
 						name=t.name:toTString(),
-						rawname=t.name..(isgeneric and " (generic talent)" or " (class talent)"),
+						rawname=t.name,
 						entity=t.display_entity,
 						talent=t.id,
+						isgeneric=isgeneric and 0 or 1,
 						_type=tt.type,
 						color=function(item)
 							if ((self.actor.talents[item.talent] or 0) ~= (self.actor_dup.talents[item.talent] or 0)) then return {255, 215, 0}
@@ -491,29 +495,25 @@ function _M:generateList()
 			end
 		end
 	end
-	table.sort(tree, function(a, b)
-		if a.isgeneric == b.isgeneric then
-			return a.order_id < b.order_id
-		else
-			return a.isgeneric < b.isgeneric
-		end
+	table.sort(ctree, function(a, b)
+		return a.order_id < b.order_id
 	end)
-	self.tree = tree
+	self.ctree = ctree
+	table.sort(gtree, function(a, b)
+		return a.order_id < b.order_id
+	end)
+	self.gtree = gtree
 
 	-- Makes up the stats list
-	local phys, mind = {}, {}
-	self.tree_stats = {
-		{shown=true, nodes=phys, name="Physical Stats", type_stat=true, desc=self.TOOLTIP_STRDEXCON},
-		{shown=true, nodes=mind, name="Mental Stats", type_stat=true, desc=TOOLTIP_MAGWILCUN}
-	}
+	local stats = {}
+	self.tree_stats = stats
 
 	for i, sid in ipairs{self.actor.STAT_STR, self.actor.STAT_DEX, self.actor.STAT_CON, self.actor.STAT_MAG, self.actor.STAT_WIL, self.actor.STAT_CUN } do
 		local s = self.actor.stats_def[sid]
 		local e = engine.Entity.new{image="stats/"..s.name:lower()..".png", is_stat=true}
 		e:getMapObjects(game.uiset.hotkeys_display_icons.tiles, {}, 1)
 
-		local stats = (i <= 3) and phys or mind
-		stats[#stats+1] = {
+		stats[#stats+1] = {shown=true, nodes={{
 			name=s.name,
 			rawname=s.name,
 			entity=e,
@@ -537,7 +537,7 @@ function _M:generateList()
 					return tstring{{"color", 0x00, 0xFF, 0x00}, tostring(self.actor:getStat(sid))}
 				end
 			end,
-		}
+		}}}	
 	end
 end
 
@@ -552,12 +552,33 @@ Class talent points left: #00FF00#%d#LAST#
 Generic talent points left: #00FF00#%d#LAST#]]
 
 function _M:createDisplay()
-	self.c_tree = TalentTrees.new{
+	self.c_ctree = TalentTrees.new{
+		font = core.display.newFont("/data/font/DroidSans.ttf", 14),
 		tiles=game.uiset.hotkeys_display_icons,
-		tree=self.tree,
-		width=530, height=self.ih-10,
+		tree=self.ctree,
+		width=320, height=self.ih-50,
 		tooltip=function(item)
-			local x = self.display_x + self.uis[3].x - game.tooltip.max
+			local x = self.display_x + self.uis[5].x - game.tooltip.max
+			if self.display_x + self.w + game.tooltip.max <= game.w then x = self.display_x + self.w end
+			local ret = self:getTalentDesc(item), x, nil
+			if self.no_tooltip then
+				self.c_desc:erase()
+				self.c_desc:switchItem(ret, ret)
+			end
+			return ret
+		end,
+		on_use = function(item, inc) self:onUseTalent(item, inc) end,
+		on_expand = function(item) self.actor.__hidden_talent_types[item.type] = not item.shown end,
+		scrollbar = true, no_tooltip = self.no_tooltip,
+	}
+
+	self.c_gtree = TalentTrees.new{
+		font = core.display.newFont("/data/font/DroidSans.ttf", 14),
+		tiles=game.uiset.hotkeys_display_icons,
+		tree=self.gtree,
+		width=320, height=self.ih-50,
+		tooltip=function(item)
+			local x = self.display_x + self.uis[8].x - game.tooltip.max
 			if self.display_x + self.w + game.tooltip.max <= game.w then x = self.display_x + self.w end
 			local ret = self:getTalentDesc(item), x, nil
 			if self.no_tooltip then
@@ -572,12 +593,13 @@ function _M:createDisplay()
 	}
 
 	self.c_stat = TalentTrees.new{
+		font = core.display.newFont("/data/font/DroidSans.ttf", 14),
 		tiles=game.uiset.hotkeys_display_icons,
 		tree=self.tree_stats, no_cross = true,
-		width=200, height=210,
+		width=50, height=self.ih,
 		dont_select_top = true,
 		tooltip=function(item)
-			local x = self.display_x + self.uis[1].x + self.uis[1].ui.w
+			local x = self.display_x + self.uis[2].x + self.uis[2].ui.w
 			if self.display_x + self.w + game.tooltip.max <= game.w then x = self.display_x + self.w end
 			local ret = self:getStatDesc(item), x, nil
 			if self.no_tooltip then
@@ -595,26 +617,40 @@ function _M:createDisplay()
 		text=_points_left:format(self.actor.unused_stats, self.actor.unused_talents_types, self.actor.unused_talents, self.actor.unused_generics)
 	}
 
-	local vsep = Separator.new{dir="horizontal", size=self.ih - 20}
+	local vsep1 = Separator.new{dir="horizontal", size=self.ih - 20}
+	local vsep2 = Separator.new{dir="horizontal", size=self.ih - 20}
 	local hsep = Separator.new{dir="vertical", size=180}
 
-	local ret = {
-		{left=0, top=0, ui=self.c_stat},
-		{left=self.c_stat, top=10, ui=vsep},
-		{left=vsep, top=0, ui=self.c_tree},
+	self.b_stat = Button.new{text="Stats: "..self.actor.unused_stats, fct=function() end}
+	self.b_class = Button.new{text="Class points: "..self.actor.unused_talents, fct=function() end}
+	self.b_generic = Button.new{text="Generic points: "..self.actor.unused_generics, fct=function() end}
+	self.b_types = Button.new{text="Category points: "..self.actor.unused_talents_types, fct=function() end}
 
-		{left=10, top=210, ui=hsep},
-		{left=0, top=hsep, ui=self.c_points},
+	local ret = {
+		{left=-10, top=0, ui=self.b_stat},
+		{left=0, top=self.b_stat.h+10, ui=self.c_stat},
+
+		{left=self.c_stat, top=40, ui=vsep1},
+
+		{left=vsep1, top=0, ui=self.b_class},
+		{left=vsep1, top=self.b_class, ui=self.c_ctree},
+
+		{left=self.c_ctree, top=40, ui=vsep2},
+
+		{left=580, top=0, ui=self.b_generic},
+		{left=vsep2, top=self.b_generic, ui=self.c_gtree},
+
+		{left=330, top=0, ui=self.b_types},
 	}
 
 	if self.no_tooltip then
-		local vsep2 = Separator.new{dir="horizontal", size=self.ih - 20}
+		local vsep3 = Separator.new{dir="horizontal", size=self.ih - 20}
 		self.c_desc = TextzoneList.new{
 			width=self.iw - 200 - 530 - 40, height = self.ih,
 			scrollbar = true,
 		}
 		ret[#ret+1] = {right=0, top=0, ui=self.c_desc}
-		ret[#ret+1] = {right=self.c_desc.w, top=0, ui=vsep2}
+		ret[#ret+1] = {right=self.c_desc.w, top=0, ui=vsep3}
 	end
 
 	return ret
@@ -744,21 +780,31 @@ function _M:onUseTalent(item, inc)
 	if item.type then
 		self:learnType(item.type, inc)
 		item.shown = (self.actor.__hidden_talent_types[item.type] == nil and self.actor:knowTalentType(item.type)) or (self.actor.__hidden_talent_types[item.type] ~= nil and not self.actor.__hidden_talent_types[item.type])
-		self.c_tree:redrawAllItems()
+		local t = (item.isgeneric==0 and self.c_gtree or self.c_ctree)
+		t:redrawAllItems()
 	elseif item.talent then
 		self:learnTalent(item.talent, inc)
-		self.c_tree:redrawAllItems()
+		local t = (item.isgeneric==0 and self.c_gtree or self.c_ctree)
+		t:redrawAllItems()
 	elseif item.stat then
 		self:incStat(item.stat, inc and 1 or -1)
 		self.c_stat:redrawAllItems()
-		self.c_tree:redrawAllItems()
+		self.c_ctree:redrawAllItems()
+		self.c_gtree:redrawAllItems()
 	end
 
-	self.c_points.text = _points_left:format(self.actor.unused_stats, self.actor.unused_talents_types, self.actor.unused_talents, self.actor.unused_generics)
-	self.c_points:generate()
+	self.b_stat.text = "Stats: "..self.actor.unused_stats
+	self.b_stat:generate()
+	self.b_class.text = "Class points: "..self.actor.unused_talents
+	self.b_class:generate()
+	self.b_generic.text = "Generic points: "..self.actor.unused_generics
+	self.b_generic:generate()
+	self.b_types.text = "Category points: "..self.actor.unused_talents_types
+	self.b_types:generate()
 end
 
 function _M:updateTooltip()
-	self.c_tree:updateTooltip()
+	self.c_gtree:updateTooltip()
+	self.c_ctree:updateTooltip()
 	self.c_stat:updateTooltip()
 end

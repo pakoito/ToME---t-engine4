@@ -32,7 +32,6 @@ require "mod.class.interface.PartyDeath"
 local Map = require "engine.Map"
 local Dialog = require "engine.ui.Dialog"
 local ActorTalents = require "engine.interface.ActorTalents"
-local LevelupDialog = require "mod.dialogs.LevelupDialog"
 
 --- Defines the player for ToME
 -- It is a normal actor, with some redefined methods to handle user interaction.<br/>
@@ -1138,6 +1137,9 @@ function _M:playerCheckSustains()
 end
 
 function _M:playerLevelup(on_finish, on_birth)
+	package.loaded["mod.dialogs.LevelupDialog"] = nil
+	package.loaded["mod.dialogs.elements.TalentTrees"] = nil
+	local LevelupDialog = require "mod.dialogs.LevelupDialog"
 	local ds = LevelupDialog.new(self, on_finish, on_birth)
 	game:registerDialog(ds)
 end
