@@ -470,6 +470,7 @@ function _M:generateList()
 						talent=t.id,
 						isgeneric=isgeneric and 0 or 1,
 						_type=tt.type,
+						do_shadow = function(item) if not self.actor:canLearnTalent(t) then return true else return false end end,
 						color=function(item)
 							if ((self.actor.talents[item.talent] or 0) ~= (self.actor_dup.talents[item.talent] or 0)) then return {255, 215, 0}
 							elseif self:isUnlearnable(t, true) then return colors.simple(colors.LIGHT_BLUE)
