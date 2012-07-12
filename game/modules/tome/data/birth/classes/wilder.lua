@@ -33,7 +33,6 @@ newBirthDescriptor{
 			__ALL__ = "disallow",
 			Summoner = "allow",
 			Wyrmic = "allow",
-			["Stone Warden"] = "allow",
 			Oozemancer = "allow",
 		},
 	},
@@ -141,51 +140,6 @@ newBirthDescriptor{
 	},
 }
 
-newBirthDescriptor{
-	type = "subclass",
-	name = "Stone Warden",
-	locked = function() return profile.mod.allow_build.wilder_stone_warden and true or "hide" end,
-	locked_desc = "",
-	desc = {
-		"Stone Wardens are dwarves trained in both the eldritch arts and the worship of nature.",
-		"While other races are stuck in their belief that arcane forces and natural forces are meant to oppose, dwarves have found a way to combine them in harmony.",
-		"Stone Wardens are armoured fighters, using a shield to channel many of their powers.",
-		"#GOLD#Stat modifiers:",
-		"#LIGHT_BLUE# * +2 Strength, +0 Dexterity, +0 Constitution",
-		"#LIGHT_BLUE# * +4 Magic, +3 Willpower, +0 Cunning",
-	},
-	power_source = {nature=true, arcane=true},
-	not_on_random_boss = true,
-	stats = { str=2, wil=3, mag=4, },
-	talents_types = {
-		["wild-gift/call"]={true, 0.2},
-		["wild-gift/earthen-stone"]={true, 0.3},
-		["wild-gift/earthen-vines"]={true, 0.3},
-		["spell/arcane-shield"]={true, 0.3},
-		["spell/earth"]={true, 0.2},
-		["spell/stone"]={false, 0.2},
-		["cunning/survival"]={true, 0},
-		["technique/combat-training"]={true, 0},
-	},
-	talents = {
-		[ActorTalents.T_STONE_VINES] = 1,
-		[ActorTalents.T_STONESHIELD] = 1,
-		[ActorTalents.T_ELDRITCH_BLOW] = 1,
-		[ActorTalents.T_ARMOUR_TRAINING] = 3,
-		[ActorTalents.T_WEAPONS_MASTERY] = 1,
-	},
-	copy = {
-		max_life = 110,
-		resolvers.equip{ id=true,
-			{type="weapon", subtype="mace", name="iron mace", autoreq=true, ego_chance=-1000, ego_chance=-1000},
-			{type="armor", subtype="shield", name="iron shield", autoreq=true, ego_chance=-1000, ego_chance=-1000},
-			{type="armor", subtype="heavy", name="iron mail armour", autoreq=true, ego_chance=-1000, ego_chance=-1000}
-		},
-	},
-	copy_add = {
-		life_rating = 2,
-	},
-}
 
 newBirthDescriptor{
 	type = "subclass",

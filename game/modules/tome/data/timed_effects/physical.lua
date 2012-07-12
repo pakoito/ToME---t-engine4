@@ -1267,46 +1267,6 @@ newEffect{
 }
 
 newEffect{
-	name = "STONE_VINE",
-	desc = "Stone Vine",
-	long_desc = function(self, eff) return ("A living stone vine holds the target on the ground and doing %0.2f physical damage per turn."):format(eff.dam) end,
-	type = "physical",
-	subtype = { earth=true, pin=true },
-	status = "detrimental",
-	parameters = { dam=10 },
-	on_gain = function(self, err) return "#Target# is grabbed by a stone vine.", "+Stone Vine" end,
-	on_lose = function(self, err) return "#Target# is free from the stone vine.", "-Stone Vine" end,
-	activate = function(self, eff)
-		eff.last_x = eff.src.x
-		eff.last_y = eff.src.y
-		eff.tmpid = self:addTemporaryValue("never_move", 1)
-		eff.particle = self:addParticles(Particles.new("stonevine_static", 1, {}))
-	end,
-	deactivate = function(self, eff)
-		self:removeTemporaryValue("never_move", eff.tmpid)
-		self:removeParticles(eff.particle)
-	end,
-	on_timeout = function(self, eff)
-		local severed = false
-		if core.fov.distance(self.x, self.y, eff.src.x, eff.src.y) >= eff.free or eff.src.dead or not game.level:hasEntity(eff.src) then severed = true end
-		if rng.percent(eff.free_chance) then severed = true end
-
-		if severed then
-			return true
-		else
-			DamageType:get(DamageType.PHYSICAL).projector(eff.src or self, self.x, self.y, DamageType.PHYSICAL, eff.dam)
-			if eff.src:knowTalent(eff.src.T_ELDRITCH_VINES) then
-				local l = eff.src:getTalentLevel(eff.src.T_ELDRITCH_VINES)
-				eff.src:incEquilibrium(-l / 4)
-				eff.src:incMana(l / 3)
-			end
-		end
-		eff.last_x = eff.src.x
-		eff.last_y = eff.src.y
-	end,
-}
-
-newEffect{
 	name = "WATERS_OF_LIFE", image = "talents/waters_of_life.png",
 	desc = "Waters of Life",
 	long_desc = function(self, eff) return ("The target purifies all diseases and poisons, turning them into healing effects.") end,

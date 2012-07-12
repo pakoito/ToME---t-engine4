@@ -642,6 +642,15 @@ function _M:getCharball(id_profile, uuid)
 	return data
 end
 
+function _M:getDLCD(name, version, file)
+	if not self.auth then return end
+	local data = nil
+	core.profile.pushOrder(table.serialize{o="GetDLCD", name=name, version=version, file=file})
+	self:waitEvent("GetDLCD", function(e) data = e.data end, 30000)
+	if not data then return "" end
+	return zlib.decompress(data)
+end
+
 function _M:registerSaveCharball(module, uuid, data)
 	if not self.auth or not self.hash_valid then return end
 	core.profile.pushOrder(table.serialize{o="SaveCharball",

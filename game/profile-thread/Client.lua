@@ -442,6 +442,19 @@ function _M:orderChatChannelList(o)
 	end
 end
 
+function _M:orderGetDLCD(o)
+	self:command("DLCD", o.name, o.version, o.file)
+	if self:read("200") then
+		local _, _, size = self.last_line:find("^([0-9]+)")
+		size = tonumber(size)
+		if not size or size < 1 then return end
+		local body = self:receive(size)
+		cprofile.pushEvent(string.format("e='GetDLCD' data=%q", body))
+	else
+		cprofile.pushEvent("e='GetDLCD' data=''")
+	end
+end
+
 function _M:orderPing(o)
 	local time = core.game.getTime()
 	self:command("PING")

@@ -58,6 +58,7 @@ damDesc = function(self, type, dam)
 end
 
 Talents.damDesc = damDesc
+Talents.main_env = getfenv(1)
 
 load("/data/talents/misc/misc.lua")
 load("/data/talents/techniques/techniques.lua")

@@ -61,9 +61,6 @@ newTalentType{ allow_random=true, no_silence=true, is_spell=true, mana_regen=tru
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, mana_regen=true, type="spell/necrosis", name = "necrosis", description = "Gain control over death, eventually turning into a lich." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, mana_regen=true, type="spell/grave", name = "grave", description = "Use the rotting cold doom of the tomb to fell your foes." }
 
--- Stone Warden spells
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/arcane-shield", name = "arcane shield", description = "Infuse arcane forces in your shield." }
-
 -- Generic requires for spells based on talent level
 spells_req1 = {
 	stat = { mag=function(level) return 12 + (level-1) * 2 end },
@@ -241,8 +238,6 @@ load("/data/talents/spells/staff-combat.lua")
 load("/data/talents/spells/fire-alchemy.lua")
 load("/data/talents/spells/stone-alchemy.lua")
 load("/data/talents/spells/golem.lua")
-
-load("/data/talents/spells/arcane-shield.lua")
 
 load("/data/talents/spells/necrotic-minions.lua")
 load("/data/talents/spells/advanced-necrotic-minions.lua")

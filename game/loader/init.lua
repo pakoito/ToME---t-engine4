@@ -164,6 +164,15 @@ table.insert(package.loaders, 2, te4_loader)
 --table.insert(package.loaders, 2, function(name) return loadfile("/"..name:gsub("%.", "/")..".lua") end )
 --]]
 
+local dlcd_loader = function(name)
+	if not fs.exists("/"..name:gsub("%.", "/")..".stub") then return end
+	print("===DLCLOADER", "/"..name:gsub("%.", "/")..".stub")
+	local d = loadfile("/"..name:gsub("%.", "/")..".stub")()
+	local data = profile:getDLCD(d.name, d.version, name:gsub("%.", "/")..".lua")
+	return loadstring(data)
+end
+table.insert(package.loaders, 2, dlcd_loader)
+
 
 
 -- RUN engine RUN !!
