@@ -923,9 +923,10 @@ function _M:selectType(type) end
 
 function _M:on_register()
 	if __module_extra_info.auto_quickbirth then
+		local qb_short_name = __module_extra_info.auto_quickbirth:gsub("[^a-zA-Z0-9_-.]", "_")
 		local lss = Module:listVaultSavesForCurrent()
 		for i, pm in ipairs(lss) do
-			if pm.short_name == __module_extra_info.auto_quickbirth then
+			if pm.short_name == qb_short_name then
 				self:loadPremade(pm)
 				break
 			end
