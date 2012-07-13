@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
--- Edge TODO: Sounds, Particles, Talent Icons
+-- Edge TODO: Sounds, Particles
 
 local Map = require "engine.Map"
 
@@ -217,7 +217,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getBonusDamage(self, t)
-		return ([[Link minds with the targe.  While your minds are linked you'll inflict %d%% more mind damage to the target and gain telepathy to it's creature type.
+		return ([[Link minds with the target.  While your minds are linked you'll inflict %d%% more mind damage to the target and gain telepathy to it's creature type.
 		Only one mindlink can be maintained at a time and the mind damage bonus will scale with your mindpower.]]):format(damage)
 	end,
 }

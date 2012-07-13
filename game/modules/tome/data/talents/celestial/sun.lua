@@ -73,7 +73,7 @@ newTalent{
 	direct_hit = true,
 	range = 0,
 	radius = function(self, t)
-		return 2 + self:getTalentLevel(t) / 2
+		return 2 + math.ceil(self:getTalentLevel(t) / 2)
 	end,
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), selffire=false, radius=self:getTalentRadius(t), talent=t}

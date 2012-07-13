@@ -1006,6 +1006,7 @@ function _M:playerUseItem(object, item, inven)
 				self:breakStepUp()
 				self:breakStealth()
 				self:breakLightningSpeed()
+				self:breakPsionicChannel()
 				return true
 			end
 
@@ -1013,6 +1014,7 @@ function _M:playerUseItem(object, item, inven)
 			self:breakStealth()
 			self:breakLightningSpeed()
 			self:breakReloading()
+			self:breakPsionicChannel()
 			self.changed = true
 		end)
 		local ok, ret = coroutine.resume(co)

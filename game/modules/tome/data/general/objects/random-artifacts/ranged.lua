@@ -288,7 +288,7 @@ newEntity{ theme={defense=true, antimagic=true, temporal=true}, name="resist tem
 newEntity{ theme={physical=true}, name="physical melee", points = 1, rarity = 18, level_range = {1, 50},
 	wielder = { ranged_project = {[DamageType.PHYSICAL] = resolvers.randartmax(2, 20), }, },
 }
-newEntity{ theme={mind=true, mental=true}, name="mind melee", points = 1, rarity = 18, level_range = {1, 50},
+newEntity{ theme={mind=true, mental=true}, name="mind melee", points = 1, rarity = 24, level_range = {1, 50},
 	wielder = { ranged_project = {[DamageType.MIND] = resolvers.randartmax(2, 20), }, },
 }
 newEntity{ theme={acid=true}, name="acid melee", points = 1, rarity = 18, level_range = {1, 50},
@@ -315,10 +315,10 @@ newEntity{ theme={blight=true, spell=true}, name="blight melee", points = 1, rar
 newEntity{ theme={nature=true}, name="nature melee", points = 1, rarity = 18, level_range = {1, 50},
 	wielder = { ranged_project = {[DamageType.NATURE] = resolvers.randartmax(2, 20), }, },
 }
-newEntity{ theme={arcane=true, spell=true}, name="arcane melee", points = 1, rarity = 18, level_range = {1, 50},
+newEntity{ theme={arcane=true, spell=true}, name="arcane melee", points = 2, rarity = 24, level_range = {1, 50},
 	wielder = { ranged_project = {[DamageType.ARCANE] = resolvers.randartmax(2, 20), }, },
 }
-newEntity{ theme={temporal=true}, name="temporal melee", points = 1, rarity = 18, level_range = {1, 50},
+newEntity{ theme={temporal=true}, name="temporal melee", points = 2, rarity = 24, level_range = {1, 50},
 	wielder = { ranged_project = {[DamageType.TEMPORAL] = resolvers.randartmax(2, 20), }, },
 }
 ----------------------------------------------------------------
@@ -348,115 +348,115 @@ newEntity{ theme={nature=true}, name="insidious poison ranged", points = 2, rari
 ----------------------------------------------------------------
 -- damage burst
 ----------------------------------------------------------------
-newEntity{ theme={physical=true}, name="physical burst", points = 2, rarity = 20, level_range = {1, 50},
+newEntity{ theme={physical=true}, name="physical burst", points = 2, rarity = 24, level_range = {1, 50},
 	combat = { burst_on_hit = {[DamageType.PHYSICAL] = resolvers.randartmax(2, 20), }, },
 }
-newEntity{ theme={mind=true, mental=true}, name="mind burst", points = 2, rarity = 20, level_range = {1, 50},
+newEntity{ theme={mind=true, mental=true}, name="mind burst", points = 2, rarity = 30, level_range = {1, 50},
 	combat = { burst_on_hit = {[DamageType.MIND] = resolvers.randartmax(2, 20), }, },
 }
-newEntity{ theme={acid=true}, name="acid burst", points = 2, rarity = 20, level_range = {1, 50},
+newEntity{ theme={acid=true}, name="acid burst", points = 2, rarity = 24, level_range = {1, 50},
 	combat = { burst_on_hit = {[DamageType.ACID] = resolvers.randartmax(2, 20), }, },
 }
-newEntity{ theme={lightning=true}, name="lightning burst", points = 2, rarity = 20, level_range = {1, 50},
+newEntity{ theme={lightning=true}, name="lightning burst", points = 2, rarity = 24, level_range = {1, 50},
 	combat = { burst_on_hit = {[DamageType.LIGHTNING] = resolvers.randartmax(2, 20), }, },
 }
-newEntity{ theme={fire=true}, name="fire burst", points = 2, rarity = 20, level_range = {1, 50},
+newEntity{ theme={fire=true}, name="fire burst", points = 2, rarity = 24, level_range = {1, 50},
 	combat = { burst_on_hit = {[DamageType.FIRE] = resolvers.randartmax(2, 20), }, },
 }
-newEntity{ theme={cold=true}, name="cold burst", points = 2, rarity = 20, level_range = {1, 50},
+newEntity{ theme={cold=true}, name="cold burst", points = 2, rarity = 24, level_range = {1, 50},
 	combat = { burst_on_hit = {[DamageType.COLD] = resolvers.randartmax(2, 20), }, },
 }
-newEntity{ theme={light=true}, name="light burst", points = 2, rarity = 20, level_range = {1, 50},
+newEntity{ theme={light=true}, name="light burst", points = 2, rarity = 24, level_range = {1, 50},
 	combat = { burst_on_hit = {[DamageType.LIGHT] = resolvers.randartmax(2, 20), }, },
 }
-newEntity{ theme={dark=true}, name="dark burst", points = 2, rarity = 20, level_range = {1, 50},
+newEntity{ theme={dark=true}, name="dark burst", points = 2, rarity = 24, level_range = {1, 50},
 	combat = { burst_on_hit = {[DamageType.DARKNESS] = resolvers.randartmax(2, 20), }, },
 }
-newEntity{ theme={blight=true}, name="blight burst", points = 2, rarity = 20, level_range = {1, 50},
+newEntity{ theme={blight=true}, name="blight burst", points = 2, rarity = 24, level_range = {1, 50},
 	combat = { burst_on_hit = {[DamageType.BLIGHT] = resolvers.randartmax(2, 20), }, },
 }
-newEntity{ theme={nature=true}, name="nature burst", points = 2, rarity = 20, level_range = {1, 50},
+newEntity{ theme={nature=true}, name="nature burst", points = 2, rarity = 24, level_range = {1, 50},
 	combat = { burst_on_hit = {[DamageType.NATURE] = resolvers.randartmax(2, 20), }, },
 }
-newEntity{ theme={arcane=true}, name="arcane burst", points = 2, rarity = 20, level_range = {1, 50},
+newEntity{ theme={arcane=true}, name="arcane burst", points = 4, rarity = 24, level_range = {1, 50},
 	combat = { burst_on_hit = {[DamageType.ARCANE] = resolvers.randartmax(2, 20), }, },
 }
-newEntity{ theme={temporal=true}, name="temporal burst", points = 2, rarity = 20, level_range = {1, 50},
+newEntity{ theme={temporal=true}, name="temporal burst", points = 4, rarity = 24, level_range = {1, 50},
 	combat = { burst_on_hit = {[DamageType.TEMPORAL] = resolvers.randartmax(2, 20), }, },
 }
 ----------------------------------------------------------------
 -- damage burst(crit)
 ----------------------------------------------------------------
-newEntity{ theme={physical=true}, name="physical burst (crit)", points = 3, rarity = 20, level_range = {1, 50},
+newEntity{ theme={physical=true}, name="physical burst (crit)", points = 3, rarity = 28, level_range = {1, 50},
 	combat = { burst_on_crit = {[DamageType.PHYSICAL] = resolvers.randartmax(2, 20), }, },
 }
-newEntity{ theme={mind=true, mental=true}, name="mind burst (crit)", points = 3, rarity = 20, level_range = {1, 50},
+newEntity{ theme={mind=true, mental=true}, name="mind burst (crit)", points = 3, rarity = 36, level_range = {1, 50},
 	combat = { burst_on_crit = {[DamageType.MIND] = resolvers.randartmax(2, 20), }, },
 }
-newEntity{ theme={acid=true}, name="acid burst (crit)", points = 3, rarity = 20, level_range = {1, 50},
+newEntity{ theme={acid=true}, name="acid burst (crit)", points = 3, rarity = 28, level_range = {1, 50},
 	combat = { burst_on_crit = {[DamageType.ACID] = resolvers.randartmax(2, 20), }, },
 }
-newEntity{ theme={lightning=true}, name="lightning burst (crit)", points = 3, rarity = 20, level_range = {1, 50},
+newEntity{ theme={lightning=true}, name="lightning burst (crit)", points = 3, rarity = 28, level_range = {1, 50},
 	combat = { burst_on_crit = {[DamageType.LIGHTNING] = resolvers.randartmax(2, 20), }, },
 }
-newEntity{ theme={fire=true}, name="fire burst (crit)", points = 3, rarity = 20, level_range = {1, 50},
+newEntity{ theme={fire=true}, name="fire burst (crit)", points = 3, rarity = 28, level_range = {1, 50},
 	combat = { burst_on_crit = {[DamageType.FIRE] = resolvers.randartmax(2, 20), }, },
 }
-newEntity{ theme={cold=true}, name="cold burst (crit)", points = 3, rarity = 20, level_range = {1, 50},
+newEntity{ theme={cold=true}, name="cold burst (crit)", points = 3, rarity = 28, level_range = {1, 50},
 	combat = { burst_on_crit = {[DamageType.COLD] = resolvers.randartmax(2, 20), }, },
 }
-newEntity{ theme={light=true}, name="light burst (crit)", points = 3, rarity = 20, level_range = {1, 50},
+newEntity{ theme={light=true}, name="light burst (crit)", points = 3, rarity = 28, level_range = {1, 50},
 	combat = { burst_on_crit = {[DamageType.LIGHT] = resolvers.randartmax(2, 20), }, },
 }
-newEntity{ theme={dark=true}, name="dark burst (crit)", points = 3, rarity = 20, level_range = {1, 50},
+newEntity{ theme={dark=true}, name="dark burst (crit)", points = 3, rarity = 28, level_range = {1, 50},
 	combat = { burst_on_crit = {[DamageType.DARKNESS] = resolvers.randartmax(2, 20), }, },
 }
-newEntity{ theme={blight=true}, name="blight burst (crit)", points = 3, rarity = 20, level_range = {1, 50},
+newEntity{ theme={blight=true}, name="blight burst (crit)", points = 3, rarity = 28, level_range = {1, 50},
 	combat = { burst_on_crit = {[DamageType.BLIGHT] = resolvers.randartmax(2, 20), }, },
 }
-newEntity{ theme={nature=true}, name="nature burst (crit)", points = 3, rarity = 20, level_range = {1, 50},
+newEntity{ theme={nature=true}, name="nature burst (crit)", points = 3, rarity = 28, level_range = {1, 50},
 	combat = { burst_on_crit = {[DamageType.NATURE] = resolvers.randartmax(2, 20), }, },
 }
-newEntity{ theme={arcane=true}, name="arcane burst (crit)", points = 3, rarity = 20, level_range = {1, 50},
+newEntity{ theme={arcane=true}, name="arcane burst (crit)", points = 6, rarity = 36, level_range = {1, 50},
 	combat = { burst_on_crit = {[DamageType.ARCANE] = resolvers.randartmax(2, 20), }, },
 }
-newEntity{ theme={temporal=true}, name="temporal burst (crit)", points = 3, rarity = 20, level_range = {1, 50},
+newEntity{ theme={temporal=true}, name="temporal burst (crit)", points = 6, rarity = 36, level_range = {1, 50},
 	combat = { burst_on_crit = {[DamageType.TEMPORAL] = resolvers.randartmax(2, 20), }, },
 }
 ----------------------------------------------------------------
 -- damage conversion
 ----------------------------------------------------------------
-newEntity{ theme={mind=true, mental=true}, name="mind conversion", points = 1, rarity = 20, level_range = {1, 50},
+newEntity{ theme={mind=true, mental=true}, name="mind conversion", points = 1, rarity = 36, level_range = {1, 50},
 	combat = { convert_damage = {[DamageType.MIND] = resolvers.randartmax(10, 50), }, },
 }
-newEntity{ theme={acid=true}, name="acid conversion", points = 1, rarity = 20, level_range = {1, 50},
+newEntity{ theme={acid=true}, name="acid conversion", points = 1, rarity = 28, level_range = {1, 50},
 	combat = { convert_damage = {[DamageType.ACID] = resolvers.randartmax(10, 50), }, },
 }
-newEntity{ theme={lightning=true}, name="lightning conversion", points = 1, rarity = 20, level_range = {1, 50},
+newEntity{ theme={lightning=true}, name="lightning conversion", points = 1, rarity = 28, level_range = {1, 50},
 	combat = { convert_damage = {[DamageType.LIGHTNING] = resolvers.randartmax(10, 50), }, },
 }
-newEntity{ theme={fire=true}, name="fire conversion", points = 1, rarity = 20, level_range = {1, 50},
+newEntity{ theme={fire=true}, name="fire conversion", points = 1, rarity = 28, level_range = {1, 50},
 	combat = { convert_damage = {[DamageType.FIRE] = resolvers.randartmax(10, 50), }, },
 }
-newEntity{ theme={cold=true}, name="cold conversion", points = 1, rarity = 20, level_range = {1, 50},
+newEntity{ theme={cold=true}, name="cold conversion", points = 1, rarity = 28, level_range = {1, 50},
 	combat = { convert_damage = {[DamageType.COLD] = resolvers.randartmax(10, 50), }, },
 }
-newEntity{ theme={light=true}, name="light conversion", points = 1, rarity = 20, level_range = {1, 50},
+newEntity{ theme={light=true}, name="light conversion", points = 1, rarity = 28, level_range = {1, 50},
 	combat = { convert_damage = {[DamageType.LIGHT] = resolvers.randartmax(10, 50), }, },
 }
-newEntity{ theme={dark=true}, name="dark conversion", points = 1, rarity = 20, level_range = {1, 50},
+newEntity{ theme={dark=true}, name="dark conversion", points = 1, rarity = 28, level_range = {1, 50},
 	combat = { convert_damage = {[DamageType.DARKNESS] = resolvers.randartmax(10, 50), }, },
 }
-newEntity{ theme={blight=true}, name="blight conversion", points = 1, rarity = 20, level_range = {1, 50},
+newEntity{ theme={blight=true}, name="blight conversion", points = 1, rarity = 28, level_range = {1, 50},
 	combat = { convert_damage = {[DamageType.BLIGHT] = resolvers.randartmax(10, 50), }, },
 }
-newEntity{ theme={nature=true}, name="nature conversion", points = 1, rarity = 20, level_range = {1, 50},
+newEntity{ theme={nature=true}, name="nature conversion", points = 1, rarity = 28, level_range = {1, 50},
 	combat = { convert_damage = {[DamageType.NATURE] = resolvers.randartmax(10, 50), }, },
 }
-newEntity{ theme={arcane=true}, name="arcane conversion", points = 1, rarity = 20, level_range = {1, 50},
+newEntity{ theme={arcane=true}, name="arcane conversion", points = 2, rarity = 36, level_range = {1, 50},
 	combat = { convert_damage = {[DamageType.ARCANE] = resolvers.randartmax(10, 50), }, },
 }
-newEntity{ theme={temporal=true}, name="temporal conversion", points = 1, rarity = 20, level_range = {1, 50},
+newEntity{ theme={temporal=true}, name="temporal conversion", points = 2, rarity = 36, level_range = {1, 50},
 	combat = { convert_damage = {[DamageType.TEMPORAL] = resolvers.randartmax(10, 50), }, },
 }
 ----------------------------------------------------------------
@@ -465,7 +465,7 @@ newEntity{ theme={temporal=true}, name="temporal conversion", points = 1, rarity
 newEntity{ theme={physical=true}, name="physical retribution", points = 1, rarity = 18, level_range = {1, 50},
 	wielder = { on_melee_hit = {[DamageType.PHYSICAL] = resolvers.randartmax(4, 20), }, },
 }
-newEntity{ theme={mind=true, mental=true}, name="mind retribution", points = 1, rarity = 18, level_range = {1, 50},
+newEntity{ theme={mind=true, mental=true}, name="mind retribution", points = 1, rarity = 24, level_range = {1, 50},
 	wielder = { on_melee_hit = {[DamageType.MIND] = resolvers.randartmax(4, 20), }, },
 }
 newEntity{ theme={acid=true}, name="acid retribution", points = 1, rarity = 18, level_range = {1, 50},
@@ -492,10 +492,10 @@ newEntity{ theme={blight=true, spell=true}, name="blight retribution", points = 
 newEntity{ theme={nature=true}, name="nature retribution", points = 1, rarity = 18, level_range = {1, 50},
 	wielder = { on_melee_hit = {[DamageType.NATURE] = resolvers.randartmax(4, 20), }, },
 }
-newEntity{ theme={arcane=true, spell=true}, name="arcane retribution", points = 1, rarity = 18, level_range = {1, 50},
+newEntity{ theme={arcane=true, spell=true}, name="arcane retribution", points = 2, rarity = 24, level_range = {1, 50},
 	wielder = { on_melee_hit = {[DamageType.ARCANE] = resolvers.randartmax(4, 20), }, },
 }
-newEntity{ theme={temporal=true}, name="temporal retribution", points = 1, rarity = 18, level_range = {1, 50},
+newEntity{ theme={temporal=true}, name="temporal retribution", points = 2, rarity = 24, level_range = {1, 50},
 	wielder = { on_melee_hit = {[DamageType.TEMPORAL] = resolvers.randartmax(4, 20), }, },
 }
 

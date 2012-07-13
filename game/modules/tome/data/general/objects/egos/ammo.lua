@@ -709,7 +709,7 @@ newEntity{
 	name = "thought-forged ", prefix=true, instant_resolve=true,
 	keywords = {thought=true},
 	level_range = {1, 50},
-	rarity = 5,
+	rarity = 15,
 	cost = 10,
 	combat = {
 		ranged_project={

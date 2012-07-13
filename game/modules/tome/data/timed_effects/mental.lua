@@ -1468,13 +1468,13 @@ newEffect{
 newEffect{
 	name = "WAKING_NIGHTMARE", image = "talents/waking_nightmare.png",
 	desc = "Waking Nightmare",
-	long_desc = function(self, eff) return ("The target is lost in a waking nightmare that deals %0.2f darkness damage each turn and has a %d%% chance to cause a random detrimental effect."):format(eff.dam, eff.chance) end,
+	long_desc = function(self, eff) return ("The target is lost in a nightmare that deals %0.2f darkness damage each turn and has a %d%% chance to cause a random detrimental effect."):format(eff.dam, eff.chance) end,
 	type = "mental",
-	subtype = { madness=true, darkness=true },
+	subtype = { nightmare=true, darkness=true },
 	status = "detrimental",
 	parameters = { chance=10, dam = 10 },
-	on_gain = function(self, err) return "#Target# is lost in a waking nightmare.", "+Waking Nightmare" end,
-	on_lose = function(self, err) return "#Target# is free from the nightmare.", "-Waking Nightmare" end,
+	on_gain = function(self, err) return "#F53CBE##Target# is lost in a nightmare.", "+Night Terrors" end,
+	on_lose = function(self, err) return "#Target# is free from the nightmare.", "-Night Terrors" end,
 	on_timeout = function(self, eff)
 		DamageType:get(DamageType.DARKNESS).projector(eff.src or self, self.x, self.y, DamageType.DARKNESS, eff.dam)
 		if rng.percent(eff.chance or 0) then
@@ -1503,15 +1503,15 @@ newEffect{
 	desc = "Inner Demons",
 	long_desc = function(self, eff) return ("The target is plagued by inner demons and each turn there's a %d%% chance that one will appear.  If the caster is killed or the target resists setting his demons loose the effect will end early."):format(eff.chance) end,
 	type = "mental",
-	subtype = { madness=true },
+	subtype = { nightmare=true },
 	status = "detrimental",
 	parameters = {},
-	on_gain = function(self, err) return "#Target# is plagued by inner demons!", "+Inner Demons" end,
+	on_gain = function(self, err) return "#F53CBE##Target# is plagued by inner demons!", "+Inner Demons" end,
 	on_lose = function(self, err) return "#Target# is freed from the demons.", "-Inner Demons" end,
 	on_timeout = function(self, eff)
 		if eff.src.dead or not game.level:hasEntity(eff.src) then eff.dur = 0 return true end
 		if rng.percent(eff.chance or 0) then
-			if self:checkHit(eff.src:combatSpellpower(), self:combatMentalResist(), 0, 95, 5) then
+			if self:checkHit(eff.src:combatMindpower(), self:combatMentalResist(), 0, 95, 5) then
 				local t = eff.src:getTalentFromId(eff.src.T_INNER_DEMONS)
 				t.summon_inner_demons(eff.src, self, t)
 			else
@@ -2323,24 +2323,22 @@ newEffect{
 newEffect{
 	name = "RESONANCE_FIELD", image = "talents/resonance_field.png",
 	desc = "Resonance Field",
-	long_desc = function(self, eff) return ("The target is surrounded by a psychic field, absorbing 50%% of all damage (up to %d/%d).  Additionally melee attackers will suffer %0.2f mind damage on contact."):format(self.resonance_field_absorb, eff.power, eff.dam) end,
+	long_desc = function(self, eff) return ("The target is surrounded by a psychic field, absorbing 50%% of all damage (up to %d/%d)."):format(self.resonance_field_absorb, eff.power) end,
 	type = "mental",
 	subtype = { psionic=true, shield=true },
 	status = "beneficial",
-	parameters = { power=100, dam = 1 },
+	parameters = { power=100 },
 	on_gain = function(self, err) return "A psychic field forms around #target#.", "+Resonance Shield" end,
 	on_lose = function(self, err) return "The psychic field around #target# crumbles.", "-Resonance Shield" end,
 	activate = function(self, eff)
 		self.resonance_field_absorb = eff.power
 		eff.particle = self:addParticles(Particles.new("damage_shield", 1))
 		eff.sid = self:addTemporaryValue("resonance_field", eff.power)
-		eff.did = self:addTemporaryValue("on_melee_hit", {[DamageType.MIND]=eff.dam})
 	end,
 	deactivate = function(self, eff)
 		self.resonance_field_absorb = nil
 		self:removeParticles(eff.particle)
 		self:removeTemporaryValue("resonance_field", eff.sid)
-		self:removeTemporaryValue("on_melee_hit", eff.did)
 	end,
 }
 
@@ -2363,3 +2361,90 @@ newEffect{
 		end
 	end,
 }
+
+newEffect{
+	name = "FEEDBACK_LOOP", image = "talents/feedback_loop.png",
+	desc = "Feedback Loop",
+	long_desc = function(self, eff) return "The target is gaining feedback." end,
+	type = "mental",
+	subtype = { psionic=true },
+	status = "beneficial",
+	parameters = { power = 1 },
+	on_gain = function(self, err) return "#Target# is gaining feedback.", "+Feedback Loop" end,
+	on_lose = function(self, err) return "#Target# is no longer gaining feedback.", "-Feedback Loop" end,
+}
+
+newEffect{
+	name = "FOCUSED_WRATH", image = "talents/focused_wrath.png",
+	desc = "Focused Wrath",
+	long_desc = function(self, eff) return ("The target's subconscious has focused it's attention on %s."):format(eff.target.name:capitalize()) end,
+	type = "mental",
+	subtype = { psionic=true },
+	status = "beneficial",
+	parameters = { power = 1 },
+	on_gain = function(self, err) return "#Target#'s subconscious has been focused.", "+Focused Wrath" end,
+	on_lose = function(self, err) return "#Target#'s subconscious has returned to normal.", "-Focused Wrath" end,
+	on_timeout = function(self, eff)
+		if not eff.target or eff.target.dead or not game.level:hasEntity(eff.target) then
+			self:removeEffect(self.EFF_FOCUSED_WRATH)
+		end
+	end,
+}
+
+newEffect{
+	name = "SLEEP", image = "talents/sleep.png",
+	desc = "Sleep",
+	long_desc = function(self, eff) return ("The target is in a deep sleep and unable to act.  Every %d damage it takes will reduce the duration of the effect by one turn."):format(eff.power) end,
+	type = "mental",
+	subtype = { sleep=true },
+	status = "detrimental",
+	parameters = { power=1, contagious=0, insomnia=1 },
+	on_gain = function(self, err) return "#Target# has been put to sleep.", "+Sleep" end,
+	on_lose = function(self, err) return "#Target# is no longer sleeping.", "-Sleep" end,
+	on_timeout = function(self, eff)
+		if eff.contagious > 0 and eff.dur > 1 then
+			local t = eff.src:getTalentFromId(eff.src.T_SLEEP)
+			t.doContagiousSlumber(eff.src, self, eff, t)
+		end
+	end,
+	activate = function(self, eff)
+		eff.sid = self:addTemporaryValue("sleep", eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("sleep", eff.sid)
+		self:setEffect(self.EFF_INSOMNIA, eff.insomnia, {power=eff.insomnia/10})
+	end,
+}
+
+newEffect{
+	name = "INSOMNIA", image = "talents/sleep.png",
+	desc = "Insomnia",
+	long_desc = function(self, eff) return ("The target is wide awake and has %d%% resistance to sleep effects."):format(eff.power) end,
+	type = "mental",
+	subtype = { sleep=true },
+	status = "beneficial",
+	parameters = { power=0 },
+	on_merge = function(self, old_eff, new_eff)
+		-- Merge the effect
+		local dur = math.ceil((old_eff.dur + new_eff.dur) / 2)
+		old_eff.dur = dur
+		old_eff.power = dur/10
+		-- Need to remove and re-add the effect
+		self:removeTemporaryValue("sleep_immune", old_eff.sid)
+		old_eff.effsid = self:addTemporaryValue("sleep_immune", old_eff.power)
+		return old_eff
+	end,
+	on_timeout = function(self, eff)
+		-- Deincrement the power
+		eff.power = eff.dur/10
+		self:removeTemporaryValue("sleep_immune", eff.sid)
+		eff.sid = self:addTemporaryValue("sleep_immune", eff.power)
+	end,
+	activate = function(self, eff)
+		eff.sid = self:addTemporaryValue("sleep_immune", eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("sleep_immune", eff.sid)
+	end,
+}
+

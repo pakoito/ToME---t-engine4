@@ -79,7 +79,7 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 
 	-- Break before we do the blow, because it might start step up, we dont want to insta-cancel it
 	self:breakStepUp()
-
+	
 	if self:attr("feared") then
 		if not noenergy then
 			self:useEnergy(game.energy_to_act * speed)
@@ -373,6 +373,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		if crit then game.logSeen(self, "#{bold}#%s performs a critical strike!#{normal}#", self.name:capitalize()) end
 
 		-- Phasing, percent of weapon damage bypasses shields
+		-- It's done like this because onTakeHit has no knowledge of the weapon
 		if weapon and weapon.phasing then
 			self:attr("damage_shield_penetrate", weapon.phasing)
 		end
@@ -381,10 +382,12 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		-- Reduces base damage but converts it into another damage type
 		local conv_dam
 		local conv_damtype
+		local total_conversion = 0
 		if weapon and weapon.convert_damage then
 			for typ, conv in pairs(weapon.convert_damage) do
 				if dam > 0 then
 					conv_dam = math.min(dam, dam * (conv / 100))
+					total_conversion = total_conversion + conv_dam
 					conv_damtype = typ
 					dam = dam - conv_dam
 					if conv_dam > 0 then
@@ -397,11 +400,17 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		if dam > 0 then
 			DamageType:get(damtype).projector(self, target.x, target.y, damtype, math.max(0, dam))
 		end
-
+		
+		-- remove phasing
 		if weapon and weapon.phasing then
 			self:attr("damage_shield_penetrate", -weapon.phasing)
 		end
 
+		-- add damage conversion back in so the total damage still gets passed
+		if total_conversion > 0 then
+			dam = dam + total_conversion
+		end
+				
 		hitted = true
 	else
 		local srcname = game.level.map.seens(self.x, self.y) and self.name:capitalize() or "Something"

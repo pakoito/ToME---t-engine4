@@ -290,7 +290,7 @@ newEntity{ theme={defense=true, antimagic=true, temporal=true}, name="resist tem
 newEntity{ theme={physical=true}, name="physical melee", points = 2, rarity = 18, level_range = {1, 50},
 	wielder = { melee_project = {[DamageType.PHYSICAL] = resolvers.randartmax(2, 20), }, },
 }
-newEntity{ theme={mind=true, mental=true}, name="mind melee", points = 2, rarity = 18, level_range = {1, 50},
+newEntity{ theme={mind=true, mental=true}, name="mind melee", points = 2, rarity = 24, level_range = {1, 50},
 	wielder = { melee_project = {[DamageType.MIND] = resolvers.randartmax(2, 20), }, },
 }
 newEntity{ theme={acid=true}, name="acid melee", points = 2, rarity = 18, level_range = {1, 50},
@@ -317,10 +317,10 @@ newEntity{ theme={blight=true, spell=true}, name="blight melee", points = 2, rar
 newEntity{ theme={nature=true}, name="nature melee", points = 2, rarity = 18, level_range = {1, 50},
 	wielder = { melee_project = {[DamageType.NATURE] = resolvers.randartmax(2, 20), }, },
 }
-newEntity{ theme={arcane=true, spell=true}, name="arcane melee", points = 2, rarity = 18, level_range = {1, 50},
+newEntity{ theme={arcane=true, spell=true}, name="arcane melee", points = 4, rarity = 24, level_range = {1, 50},
 	wielder = { melee_project = {[DamageType.ARCANE] = resolvers.randartmax(2, 20), }, },
 }
-newEntity{ theme={temporal=true}, name="temporal melee", points = 2, rarity = 18, level_range = {1, 50},
+newEntity{ theme={temporal=true}, name="temporal melee", points = 4, rarity = 24, level_range = {1, 50},
 	wielder = { melee_project = {[DamageType.TEMPORAL] = resolvers.randartmax(2, 20), }, },
 }
 ----------------------------------------------------------------
@@ -329,7 +329,7 @@ newEntity{ theme={temporal=true}, name="temporal melee", points = 2, rarity = 18
 newEntity{ theme={physical=true}, name="physical retribution", points = 1, rarity = 18, level_range = {1, 50},
 	wielder = { on_melee_hit = {[DamageType.PHYSICAL] = resolvers.randartmax(4, 20), }, },
 }
-newEntity{ theme={mind=true, mental=true}, name="mind retribution", points = 1, rarity = 18, level_range = {1, 50},
+newEntity{ theme={mind=true, mental=true}, name="mind retribution", points = 1, rarity = 24, level_range = {1, 50},
 	wielder = { on_melee_hit = {[DamageType.MIND] = resolvers.randartmax(4, 20), }, },
 }
 newEntity{ theme={acid=true}, name="acid retribution", points = 1, rarity = 18, level_range = {1, 50},
@@ -356,10 +356,10 @@ newEntity{ theme={blight=true, spell=true}, name="blight retribution", points = 
 newEntity{ theme={nature=true}, name="nature retribution", points = 1, rarity = 18, level_range = {1, 50},
 	wielder = { on_melee_hit = {[DamageType.NATURE] = resolvers.randartmax(4, 20), }, },
 }
-newEntity{ theme={arcane=true, spell=true}, name="arcane retribution", points = 1, rarity = 18, level_range = {1, 50},
+newEntity{ theme={arcane=true, spell=true}, name="arcane retribution", points = 2, rarity = 24, level_range = {1, 50},
 	wielder = { on_melee_hit = {[DamageType.ARCANE] = resolvers.randartmax(4, 20), }, },
 }
-newEntity{ theme={temporal=true}, name="temporal retribution", points = 1, rarity = 18, level_range = {1, 50},
+newEntity{ theme={temporal=true}, name="temporal retribution", points = 2, rarity = 24, level_range = {1, 50},
 	wielder = { on_melee_hit = {[DamageType.TEMPORAL] = resolvers.randartmax(4, 20), }, },
 }
 

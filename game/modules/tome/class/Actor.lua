@@ -329,7 +329,7 @@ function _M:useEnergy(val)
 end
 
 function _M:actBase()
-	-- Solipsism speed effects
+	-- Solipsism speed effects; calculated before the actor gets 
 	local current_psi_percentage = self:getPsi() / self:getMaxPsi()
 	if self:attr("solipsism_threshold") and current_psi_percentage < self:attr("solipsism_threshold") then
 		if self:hasEffect(self.EFF_CLARITY) then
@@ -397,7 +397,11 @@ function _M:actBase()
 			local t = self:getTalentFromId(self.T_BIOFEEDBACK)
 			self:heal(decay * t.getHealRatio(self, t))
 		end
-		self:incFeedback(-decay)
+		if self:hasEffect(self.EFF_FEEDBACK_LOOP) then
+			self:incFeedback(decay)
+		else
+			self:incFeedback(-decay)
+		end
 	end
 
 	-- Compute timed effects
@@ -477,12 +481,13 @@ function _M:actBase()
 				self:forceUseTalent(self.T_DAUNTING_PRESENCE, {ignore_energy=true})
 			end
 		end
-		-- this handles feedback overcharge
-		if self:attr("discharge_overcharge") then
-			local t = self:getTalentFromId(self.T_OVERCHARGE)
-			t.doOvercharge(self, t, self:attr("discharge_overcharge"))
-			self.discharge_overcharge = nil
-		end		
+		-- this handles Mind Storm
+		if self:isTalentActive(self.T_MIND_STORM) then
+			local t, p = self:getTalentFromId(self.T_MIND_STORM), self:isTalentActive(self.T_MIND_STORM)
+			if self:getFeedback() >= 1 or p.overcharge >= 1 then
+				t.doMindStorm(self, t, p)
+			end
+		end
 		
 		self:triggerHook{"Actor:actBase:Effects"}
 	end
@@ -559,6 +564,7 @@ function _M:act()
 	end
 	if self:attr("stoned") then self.energy.value = 0 end
 	if self:attr("dazed") then self.energy.value = 0 end
+	if self:attr("sleep") then self.energy.value = 0 end
 	if self:attr("time_stun") then self.energy.value = 0 end
 	if self:attr("time_prison") then self.energy.value = 0 end
 
@@ -934,6 +940,10 @@ function _M:move(x, y, force)
 
 	if moved and self:isTalentActive(self.T_BODY_OF_STONE) then
 		self:forceUseTalent(self.T_BODY_OF_STONE, {ignore_energy=true})
+	end
+	
+	if moved then
+		self:breakPsionicChannel()
 	end
 
 	if not forced and moved and ox and oy and (ox ~= self.x or oy ~= self.y) and self:knowTalent(self.T_LIGHT_OF_FOOT) then
@@ -1416,7 +1426,7 @@ function _M:onHeal(value, src)
 		self:setEffect(self.EFF_REGENERATION, 6, {power=(value * self.fungal_growth / 100) / 6, no_wild_growth=true})
 	end
 
-	-- Psionic Balance
+	-- Solipsism healing
 	if self:knowTalent(self.T_SOLIPSISM) then
 		local t = self:getTalentFromId(self.T_SOLIPSISM)
 		local ratio = t.getConversionRatio(self, t)
@@ -1462,6 +1472,14 @@ function _M:onTakeHit(value, src)
 	end
 	if self:hasEffect(self.EFF_SPACETIME_TUNING) then
 		self:removeEffect(self.EFF_SPACETIME_TUNING)
+	end
+	if self:hasEffect(self.EFF_SLEEP) then
+		local p = self:hasEffect(self.EFF_SLEEP)
+		if p.power * p.dur < value then
+			self:removeEffect(self.EFF_SLEEPING)
+		else
+			p.dur = p.dur - math.ceil(value/p.power)
+		end
 	end
 
 	-- Remove domination hex
@@ -1667,15 +1685,10 @@ function _M:onTakeHit(value, src)
 		local feedback_gain = value * ratio
 		self:incFeedback(feedback_gain)
 		-- Trigger backlash retribution damage
-		if self:isTalentActive(self.T_BACKLASH) and self:getFeedback() >= 1 then
-			local t = self:getTalentFromId(self.T_BACKLASH)
-			t.doBacklash(self, src, t)
-			if self:knowTalent(self.T_OVERCHARGE) then
-				local t = self:getTalentFromId(self.T_OVERCHARGE)
-				local overcharge = math.floor((feedback_gain + self:getFeedback() - self:getMaxFeedback()) / t.getOverchargeRatio(self, t))
-				if overcharge > 0 then
-					self.discharge_overcharge = math.max(self.discharge_overcharge or 0 + overcharge, t.getTargetCount(self, t))
-				end
+		if self:knowTalent(self.T_BACKLASH) then
+			if src.y and src.x and not src.dead and self:reactionToward(src) < 0 then
+				local t = self:getTalentFromId(self.T_BACKLASH)
+				t.doBacklash(self, src, t)
 			end
 		end
 	end
@@ -1706,7 +1719,7 @@ function _M:onTakeHit(value, src)
 			self:incPsi(-damage_to_psi)
 		end
 		if damage_to_psi > 0 then
-			game.logSeen(self, "%s's mind suffers #BLUE#%d psi#LAST# damage from the attack.", self.name:capitalize(), damage_to_psi)
+			game.logSeen(self, "%s's mind suffers #YELLOW#%d psi#LAST# damage from the attack.", self.name:capitalize(), damage_to_psi)
 		end
 		value = value - damage_to_psi
 	end
@@ -3022,6 +3035,14 @@ end
 
 function _M:incFeedback(v, set)
 	if not set then
+		local p = self:isTalentActive(self.T_MIND_STORM)
+		if p then
+			local t = self:getTalentFromId(self.T_MIND_STORM)
+			local overcharge_gain = math.floor((v + self:getFeedback() - self:getMaxFeedback()) / t.getOverchargeRatio(self, t))
+			if overcharge_gain > 0 then
+				p.overcharge = p.overcharge + overcharge_gain
+			end
+		end
 		self.psionic_feedback = util.bound(self.psionic_feedback + v, 0, self:getMaxFeedback())
 	else
 		self.psionic_feedback = math.min(v, self:getMaxFeedback())
@@ -3341,6 +3362,9 @@ function _M:postUseTalent(ab, ret)
 			if ab.sustain_psi then
 				trigger = true; self:incMaxPsi(-ab.sustain_psi)
 			end
+			if ab.sustain_feedback then
+				trigger = true; self:incMaxFeedback(-ab.sustain_feedback)
+			end
 		else
 			if ab.sustain_mana then
 				self:incMaxMana(ab.sustain_mana)
@@ -3368,6 +3392,9 @@ function _M:postUseTalent(ab, ret)
 			end
 			if ab.sustain_psi then
 				self:incMaxPsi(ab.sustain_psi)
+			end
+			if ab.sustain_feedback then
+				self:incMaxFeedback(ab.sustain_feedback)
 			end
 		end
 	elseif not self:attr("force_talent_ignore_ressources") then
@@ -3417,6 +3444,7 @@ function _M:postUseTalent(ab, ret)
 	if ab.id ~= self.T_GATHER_THE_THREADS and ab.id ~= self.T_SPACETIME_TUNING and ab.is_spell then self:breakChronoSpells() end
 	if ab.id ~= self.T_RELOAD then self:breakReloading() end
 	self:breakStepUp()
+	if not ab.no_break_channel then self:breakPsionicChannel(ab.id) end
 
 	if ab.id ~= self.T_REDUX and self:hasEffect(self.EFF_REDUX) and ab.type[1]:find("^chronomancy/") and ab.mode == "activated" and self:getTalentLevel(self.T_REDUX) >= self:getTalentLevel(ab.id) then
 		self:removeEffect(self.EFF_REDUX)
@@ -3505,6 +3533,13 @@ function _M:breakChronoSpells()
 	end
 	if self:isTalentActive(self.T_SPACETIME_TUNING) then
 		self:forceUseTalent(self.T_SPACETIME_TUNING, {ignore_energy=true})
+	end
+end
+
+--- Break Psionic Channels
+function _M:breakPsionicChannel(talent)
+	if self:isTalentActive(self.T_MIND_STORM) and talent ~= self.T_MIND_STORM then
+		self:forceUseTalent(self.T_MIND_STORM, {ignore_energy=true})
 	end
 end
 
@@ -3840,6 +3875,7 @@ function _M:canBe(what)
 	if what == "disarm" and rng.percent(100 * (self:attr("disarm_immune") or 0)) then return false end
 	if what == "pin" and rng.percent(100 * (self:attr("pin_immune") or 0)) and not self:attr("levitation") then return false end
 	if what == "stun" and rng.percent(100 * (self:attr("stun_immune") or 0)) then return false end
+	if what == "sleep" and rng.percent(100 * (self:attr("sleep_immune") or 0)) then return false end
 	if what == "fear" and rng.percent(100 * (self:attr("fear_immune") or 0)) then return false end
 	if what == "knockback" and (rng.percent(100 * (self:attr("knockback_immune") or 0)) or self:attr("never_move")) then return false end
 	if what == "stone" and rng.percent(100 * (self:attr("stone_immune") or 0)) then return false end

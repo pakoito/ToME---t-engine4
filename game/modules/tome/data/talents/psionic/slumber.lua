@@ -24,111 +24,90 @@ newTalent{
 	type = {"psionic/slumber", 1},
 	points = 5, 
 	require = psi_wil_req1,
-	cooldown = 5,
+	cooldown = 8,
+	psi = 5,
 	tactical = { DISABLE = 2},
-	range = 0,
 	direct_hit = true,
 	requires_target = true,
-	getDamage = function(self, t) return self:combatTalentMindDamage(t, 20, 150) end,
-	radius = function(self, t) return 1 + math.ceil(self:getTalentLevel(t)) end,
-	target = function(self, t)
-		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false}
+	range = function(self, t) return 5 + math.min(5, self:getTalentLevelRaw(t)) end,
+	radius = function(self, t) return 1 + math.floor(self:getTalentLevel(t)/4) end,
+	target = function(self, t) return {type="ball", radius=self:getTalentRadius(t), range=self:getTalentRange(t), talent=t} end,
+	getDuration = function(self, t) return 2 + math.ceil(self:getTalentLevel(t)/2) end,
+	getInsomniaDuration = function(self, t)
+		local t = self:getTalentFromId(self.T_SANDMAN)
+		local reduction = t.getInsomniaReduction(self, t)
+		return 10 - reduction
 	end,
-	on_pre_use = function(self, t, silent) if self.psionic_feedback <= 0 then if not silent then game.logPlayer(self, "You have no feedback to power this talent.") end return false end return true end,
-	on_learn = function(self, t)
-		if self:getTalentLevelRaw(t) == 1 then
-			if not self.psionic_feedback then
-				self.psionic_feedback = 0
-			end
-			self.psionic_feedback_max = (self.psionic_feedback_max or 0) + 100
+	getSleepPower = function(self, t) 
+		local power = self:combatTalentMindDamage(t, 10, 50)
+		if self:knowTalent(self.T_SANDMAN) then
+			local t = self:getTalentFromId(self.T_SANDMAN)
+			power = power + t.getSleepPowerBonus(self, t)
 		end
-		return true
+		return power
 	end,
-	on_unlearn = function(self, t)
-		if not self:knowTalent(t) then
-			self.psionic_feedback_max = self.psionic_feedback_max - 100
-			if self.psionic_feedback_max <= 0 then
-				self.psionic_feedback_max = nil
-				self.psionic_feedback = nil
+	doContagiousSlumber = function(self, target, p, t)
+		local tg = {type="ball", radius=self:getTalentRadius(t), talent=t}
+		self:project(tg, target.x, target.y, function(tx, ty)
+			local target = game.level.map(tx, ty, Map.ACTOR)
+			if target and self:reactionToward(target) < 0 and rng.percent(p.contagious) and target:canBe("sleep") and not target:attr("sleep") then
+				target:setEffect(target.EFF_SLEEP, math.floor(p.dur/2), {src=self, power=p.power, contagious=p.contagious/2, insomnia=math.ceil(p.insomnia/2), no_ct_effect=true, apply_power=self:combatMindpower()})
 			end
-		end
-		return true
+		end)
 	end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
-		
-		local damage = math.min(self.psionic_feedback, t.getDamage(self, t))
-		self:project(tg, x, y, DamageType.MIND, {dam=self:mindCrit(damage), crossTierChance=math.max(100, damage)})
-		
-		self.psionic_feedback = self.psionic_feedback - damage
-							
+		if not x or not y then return nil end
+
+		--Contagious?
+		local is_contagious = 0
+		if self:getTalentLevel(self.T_SANDMAN) > 5 then
+			is_contagious = 25
+		end
+		--Sandman?
+		local power = self:mindCrit(t.getSleepPower(self, t))
+		self:project(tg, x, y, function(tx, ty)
+			local target = game.level.map(tx, ty, Map.ACTOR)
+			if target and not target:attr("sleep") then
+				if target:canBe("sleep") then
+					target:setEffect(target.EFF_SLEEP, t.getDuration(self, t), {src=self, power=power, contagious=is_contagious, insomnia=t.getInsomniaDuration(self, t), no_ct_effect=true, apply_power=self:combatMindpower()})
+				else
+					game.logSeen(self, "%s resists the sleep!", target.name:capitalize())
+				end
+			end
+		end)
 		return true
 	end,
 	info = function(self, t)
-		local damage = t.getDamage(self, t)
 		local radius = self:getTalentRadius(t)
-		return ([[You now store damage you take from outside sources as psionic feedback.  Activate to slumber up to %0.2f feedback in a %d radius cone.  Targets in the area will suffer mind damage and may be brain locked by this attack.
-		Learning this talent will increase the amount of feedback you can store by 100 (first talent point only).
-		The damage will scale with your mindpower.]]):format(damage, radius)
+		local duration = t.getDuration(self, t)
+		local power = t.getSleepPower(self, t)
+		local insomnia = t.getInsomniaDuration(self, t)
+		return([[Puts targets in a radius of %d to sleep for %d turns, rendering them unable to act.  Every %d points of damage the target suffers will reduce the effect duration by one turn.
+		When Sleep ends the target will suffer from Insomnia for %d turns, rendering them resistant to Sleep effects.
+		The damage threshold will scale with your mindpower.]]):format(radius, duration, power, insomnia)
 	end,
 }
 
 newTalent{
-	name = "Fitful Slumber",
+	name = "Sandman",
 	type = {"psionic/slumber", 2},
 	points = 5, 
 	require = psi_wil_req2,
-	mode = "sustained",
-	sustain_psi = 20,
-	cooldown = 18,
-	tactical = { BUFF = 2 },
-	getMaxOverflow = function(self, t) return self.psionic_feedback_max * (self:combatTalentMindDamage(t, 20, 100)/100) end,
-	radius = function(self, t) return math.ceil(self:getTalentLevel(t)/2) end,
-	on_learn = function(self, t)
-		if self:getTalentLevelRaw(t) == 1 then
-			if not self.psionic_feedback then
-				self.psionic_feedback = 0
-			end
-			self.psionic_feedback_max = (self.psionic_feedback_max or 0) + 50
-		end
-		return true
-	end,
-	on_unlearn = function(self, t)
-		if not self:knowTalent(t) then
-			self.psionic_feedback_max = self.psionic_feedback_max - 50
-			if self.psionic_feedback_max <= 0 then
-				self.psionic_feedback_max = nil
-				self.psionic_feedback = nil
-			end
-		end
-		return true
-	end,
-	doOverflowslumber = function(self, t)
-		local tg = {type="ball", range=0, radius=self:getTalentRadius(t), selffire=false, friendlyfire=false}
-		local damage = self.psionic_overflow
-		self:project(tg, self.x, self.y, DamageType.MIND, self:mindCrit(damage))
-		-- Lose remaining overflow
-		self.psionic_overflow = nil
-	end,
-	activate = function(self, t)
-		game:playSoundNear(self, "talents/flame")
-		return {
-			ov = self:addTemporaryValue("psionic_overflow_max", t.getMaxOverflow(self, t)),
-		}
-	end,
-	deactivate = function(self, t, p)
-		self:removeTemporaryValue("psionic_overflow_max", p.ov)
-		return true
-	end,
+	mode = "passive",
+	getSleepPowerBonus = function(self, t) return self:combatTalentMindDamage(t, 10, 50) end,
+	getInsomniaReduction = function(self, t) return math.min(8, math.floor(self:getTalentLevel(self.T_SANDMAN))) end,
 	info = function(self, t)
-		local overflow = t.getMaxOverflow(self, t)
-		local radius = self:getTalentRadius(t)
-		return ([[While active you store up to %d excess feedback as overflow.  At the start of your turn the overflow will be unleased as mind damage in a radius of %d.
-		Learning this talent will increase the amount of feedback you can store by 50 (first talent point only).
-		The max excess you can store will improve with your mindpower and max feedback.]]):format(overflow, radius)
+		local power_bonus = t.getSleepPowerBonus(self, t)
+		local reduction = t.getInsomniaReduction(self, t)
+		return([[Increases the amount of damage you can deal to sleeping targets before rousing them by %d and reduces the duration of the Insomnia effect by %d turns.
+		At talent level 5 the Sleep will become contagious and has a 25%% chance to spread to nearby targets each turn.
+		These effects will be directly reflected in the Sleep talent description.
+		The damage threshold bonus will scale with your mindpower.]]):format(power_bonus, reduction)
 	end,
 }
+
 
 newTalent{
 	name = "Contagious Slumber",
@@ -185,7 +164,7 @@ newTalent{
 }
 
 newTalent{
-	name = "Sandman",
+	name = "Sleep4",
 	type = {"psionic/slumber", 4},
 	points = 5, 
 	require = psi_wil_req4,

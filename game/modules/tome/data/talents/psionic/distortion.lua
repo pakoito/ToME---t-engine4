@@ -18,6 +18,7 @@
 -- darkgod@te4.org
 
 -- Edge TODO: Sounds, Particles, Talent Icons; All Talents
+-- Fade from Reality?  (better name would be good, sounds to much like fade from time..  but yeah, same principal, only targeted so it reduces the enemies damage and what not)
 
 newTalent{
 	name = "Distortion",

@@ -134,7 +134,7 @@ newTalent{
 		return true
 	end,
 	doDismissalOnHit = function(self, value, src, t)
-		local saving_throw = self:combatMindCrit(t.getSavePercentage(self, t))
+		local saving_throw = self:mindCrit(t.getSavePercentage(self, t))
 		print("[Dismissal] ", self.name:capitalize(), " attempting to ignore ", value, "damage from ", src.name:capitalize(), "using", saving_throw,  "mental save.")
 		if self:checkHit(math.floor(saving_throw), value) then
 			game.logSeen(self, "%s dismisses %s's attack!", self.name:capitalize(), src.name:capitalize())

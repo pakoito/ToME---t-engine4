@@ -17,7 +17,8 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
--- Edge TODO: Sounds, Particles, Talent Icons
+-- Edge TODO: Sounds, Particles,
+
 newTalent{
 	name = "Biofeedback",
 	type = {"psionic/feedback", 1},
@@ -27,48 +28,54 @@ newTalent{
 	getHealRatio = function(self, t) return 0.5 + self:combatTalentMindDamage(t, 0.1, 1)end,
 	info = function(self, t)
 		local heal = t.getHealRatio(self, t)
-		return ([[Your natural Feedback decay now heals you for %d%% of the loss.
+		return ([[Your Feedback decay now heals you for %d%% of the loss.
 		The healing effect will scale with your mindpower.]]):format(heal*100)
 	end,
 }
 
 newTalent{
-	name = "Amplification",
+	name = "Resonance Field",
 	type = {"psionic/feedback", 2},
 	points = 5,
+	feedback = 25,
 	require = psi_wil_req2,
 	cooldown = 15,
-	tactical = { FEEDBACK = 2},
-	getFeedbackGain = function(self, t) return 0.5 + self:combatTalentMindDamage(t, 0.1, 0.5) end,
-	action = function(self, t)
-		local feedback_gain = t.getFeedbackGain(self, t) * self:getFeedback()
-		self:incFeedback(self:mindCrit(feedback_gain))
-		return true
-	end,
-	info = function(self, t)
-		local gain = t.getFeedbackGain(self, t)
-		return ([[Activate to increase your current feedback by %d%% (cannot trigger Overchrage.)  Learning this talent also increases your base Feedback gain ratio to %d%%.
-		The Feedback gain will scale with your mindpower.]]):format(gain * 100, gain * 100)
-	end,
-}
-
-newTalent{
-	name = "Resonance Field",
-	type = {"psionic/feedback", 4},
-	points = 5,
-	feedback = 20,
-	require = psi_wil_req4,
-	cooldown = 15,
 	tactical = { DEFEND = 2},
+	no_break_channel = true,
 	getShieldPower = function(self, t) return self:combatTalentMindDamage(t, 30, 470) end,
 	action = function(self, t)
-		self:setEffect(self.EFF_RESONANCE_FIELD, 10, {power = self:mindCrit(power)})
+		self:setEffect(self.EFF_RESONANCE_FIELD, 10, {power = self:mindCrit(t.getShieldPower(self, t))})
 		return true
 	end,
 	info = function(self, t)
 		local shield_power = t.getShieldPower(self, t)
 		return ([[Activate to create a resonance field that will absorb 50%% of all damage you take (%d max absorption).  The field will not interfere with Feedback gain.
+		Using this talent will not break psionic channels (such as Mind Storm).
 		The max absorption value will scale with your mindpower and the effect lasts up to ten turns.]]):format(shield_power)
+	end,
+}
+
+newTalent{
+	name = "Amplification",
+	type = {"psionic/feedback", 3},
+	points = 5,
+	require = psi_wil_req3,
+	mode = "passive",
+	getFeedbackGain = function(self, t) return 0.5 + self:combatTalentMindDamage(t, 0.1, 0.5) end,
+	getMaxFeedback = function(self, t) return self:getTalentLevelRaw(t) * 10 end,
+	on_learn = function(self, t)
+		self:incMaxFeedback(10)
+		return true
+	end,
+	on_unlearn = function(self, t)
+		self:incMaxFeedback(-10)
+		return true
+	end,
+	info = function(self, t)
+		local max_feedback = t.getMaxFeedback(self, t)
+		local gain = t.getFeedbackGain(self, t)
+		return ([[Increases your maximum Feedback by %d and increases your base Feedback gain ratio to %d%%.
+		The Feedback gain will scale with your mindpower.]]):format(max_feedback, gain * 100)
 	end,
 }
 
@@ -76,15 +83,17 @@ newTalent{
 	name = "Conversion",
 	type = {"psionic/feedback", 4},
 	points = 5,
-	feedback = 50,
+	feedback = 25,
 	require = psi_wil_req4,
 	cooldown = 24,
+	no_break_channel = true,
 	tactical = { MANA = 2, VIM = 2, EQUILIBRIUM = 2, STAMINA = 2, POSITIVE = 2, NEGATIVE = 2, PSI = 2, HATE = 2 },
 	dont_provide_pool = true,
-	getConversion = function(self, t) return 50 * self:combatTalentMindDamage(t, 0.5, 2) end,
+	getConversion = function(self, t) return self:combatTalentMindDamage(t, 10, 50) end,
 	getData = function(self, t)
-		local base = self:mindCrit(t.getConversion(self, t))
+		local base = t.getConversion(self, t)
 		return {
+			heal = base * 10,
 			stamina = base,
 			mana = base * 1.8,
 			equilibrium = -base * 1.5,
@@ -99,13 +108,18 @@ newTalent{
 		local data = t.getData(self, t)
 		for name, v in pairs(data) do
 			local inc = "inc"..name:capitalize()
-			if self[inc] then self[inc](self, v) end
+			if name == "heal" then
+				self:heal(self:mindCrit(v))
+			elseif
+				self[inc] then self[inc](self, v) 
+			end
 		end
 		return true
 	end,
 	info = function(self, t)
 		local data = t.getData(self, t)
-		return ([[Convert Feedback into other resources.  Restores %d stamina, %d mana, %d equilibrium, %d vim, %d positive and negative energies, %d psi energy, and %d hate.
-		The resource gain will improve with your mindpower.]]):format(data.stamina, data.mana, data.equilibrium, data.vim, data.positive, data.psi, data.hate)
+		return ([[Use Feedback to replinish yourself.  Heals you for %d life and restores %d stamina, %d mana, %d equilibrium, %d vim, %d positive and negative energies, %d psi energy, and %d hate.
+		Using this talent will not break psionic channels (such as Mind Storm).
+		The heal and resource gain will improve with your mindpower.]]):format(data.heal, data.stamina, data.mana, -data.equilibrium, data.vim, data.positive, data.psi, data.hate)
 	end,
 }
