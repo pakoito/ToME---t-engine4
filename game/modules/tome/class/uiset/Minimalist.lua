@@ -135,6 +135,8 @@ icon_red = { core.display.loadImage("/data/gfx/ui/talent_frame_cooldown.png"):gl
 
 local portrait = {core.display.loadImage("/data/gfx/ui/party-portrait.png"):glTexture()}
 local portrait_unsel = {core.display.loadImage("/data/gfx/ui/party-portrait-unselect.png"):glTexture()}
+local portrait_lev = {core.display.loadImage("/data/gfx/ui/party-portrait-lev.png"):glTexture()}
+local portrait_unsel_lev = {core.display.loadImage("/data/gfx/ui/party-portrait-unselect-lev.png"):glTexture()}
 
 local pf_bg = {core.display.loadImage("/data/gfx/ui/playerframe/back.png"):glTexture()}
 local pf_shadow = {core.display.loadImage("/data/gfx/ui/playerframe/shadow.png"):glTexture()}
@@ -974,7 +976,7 @@ function _M:displayResources(scale, bx, by, a)
 			self:showResourceTooltip(bx+x*scale, by+y*scale, fshat[6], fshat[7], "res:psi", self.TOOLTIP_PSI)
 			x, y = self:resourceOrientStep(orient, bx, by, scale, x, y, fshat[6], fshat[7])
 		elseif game.mouse:getZone("res:psi") then game.mouse:unregisterZone("res:psi") end
-		
+
 		-----------------------------------------------------------------------------------
 		-- Feedback
 		if player.psionic_feedback_max and not player._hide_resource_feedback then
@@ -1312,6 +1314,9 @@ function _M:displayParty(scale, bx, by)
 
 					a:toScreen(nil, x+4, y+4, 32, 32)
 					local p = (game.player == a) and portrait or portrait_unsel
+					if a.unused_stats > 0 or a.unused_talents > 0 or a.unused_generics > 0 or a.unused_talents_types > 0 and def.control == "full" then
+						p = (game.player == a) and portrait_lev or portrait_unsel_lev
+					end
 					p[1]:toScreenFull(x, y, p[6], p[7], p[2], p[3])
 				end, desc_fct}
 			end
