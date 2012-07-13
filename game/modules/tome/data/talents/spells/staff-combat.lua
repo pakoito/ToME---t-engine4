@@ -91,8 +91,8 @@ newTalent{
 	mode = "passive",
 	require = spells_req2,
 	points = 5,
-	getDamage = function(self, t) return self:getTalentLevel(t) * 5 end,
-	getPercentInc = function(self, t) return math.sqrt(self:getTalentLevel(t) / 10) / 2 end,
+	getDamage = function(self, t) return self:getTalentLevel(t) * 10 end,
+	getPercentInc = function(self, t) return math.sqrt(self:getTalentLevel(t) / 5) / 2 end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local inc = t.getPercentInc(self, t)

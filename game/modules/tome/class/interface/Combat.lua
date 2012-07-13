@@ -1001,7 +1001,7 @@ function _M:combatPhysicalpower(mod, weapon)
 		if inven and inven[1] then weapon = inven[1].combat else weapon = self.combat end
 	end
 
-	add = add + 5 * self:combatCheckTraining(weapon)
+	add = add + 10 * self:combatCheckTraining(weapon)
 
 	return self:rescaleCombatStats((self.combat_dam > 0 and self.combat_dam or 0) + add + self:getStr()) * mod
 end
