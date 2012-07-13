@@ -18,7 +18,5 @@
 -- darkgod@te4.org
 
 return { one_per_level=true,
-	{group="outdoor-majeyal-gloomy"},
-	{group="outdoor-majeyal-generic"},
 	{group="majeyal-generic"},
 }

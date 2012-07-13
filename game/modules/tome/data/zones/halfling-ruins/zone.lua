@@ -88,6 +88,9 @@ return {
 				actor = {
 					area = {x1=0, x2=49, y1=0, y2=40},
 				},
+				trap = {
+					nb_trap = {0, 0},
+				},
 			},
 		},
 	},
