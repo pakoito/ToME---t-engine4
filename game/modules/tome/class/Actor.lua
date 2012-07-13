@@ -1292,7 +1292,7 @@ function _M:tooltip(x, y, seen_by)
 	local resists = {}
 	for t, v in pairs(self.resists) do
 		if t ~= "all" then v = self:combatGetResist(t) end
-		resists[#resists+1] = string.format("%d%% %s", v, t == "all" and "all" or DamageType:get(t).name)
+		if v ~= 0 then resists[#resists+1] = string.format("%d%% %s", v, t == "all" and "all" or DamageType:get(t).name) end
 	end
 
 	local ts = tstring{}
