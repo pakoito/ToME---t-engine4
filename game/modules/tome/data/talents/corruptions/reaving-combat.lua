@@ -24,7 +24,9 @@ newTalent{
 	points = 5,
 	require = str_corrs_req1,
 	on_learn = function(self, t)
-		self:attr("allow_any_dual_weapons", 1)
+		if self:getTalentLevelRaw(t) == 1 then
+			self:attr("allow_any_dual_weapons", 1)
+		end
 	end,
 	on_unlearn = function(self, t)
 		if not self:knowTalent(t) then
