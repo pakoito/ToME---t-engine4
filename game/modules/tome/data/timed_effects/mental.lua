@@ -1101,7 +1101,7 @@ newEffect{
 	type = "mental",
 	subtype = { fear=true },
 	status = "detrimental",
-	parameters = {},
+	parameters = {damage=10},
 	on_gain = function(self, err) return "#F53CBE##Target# becomes haunted!", "+Haunted" end,
 	on_lose = function(self, err) return "#Target# is no longer haunted", "-Haunted" end,
 	activate = function(self, eff)
@@ -1136,7 +1136,7 @@ newEffect{
 	type = "mental",
 	subtype = { fear=true },
 	status = "detrimental",
-	parameters = {},
+	parameters = {count=1, damage=10},
 	on_gain = function(self, err) return "#F53CBE##Target# becomes tormented!", "+Tormented" end,
 	on_lose = function(self, err) return "#Target# is no longer tormented", "-Tormented" end,
 	activate = function(self, eff)

@@ -82,6 +82,7 @@ defineTile('1', mod.class.Grid.new{
 
 		game.logPlayer(actor, "Something in the floor clicks ominously, and suddenly the world spins around you!")
 		local g = game.zone:makeEntityByName(game.level, "terrain", "FLOOR")
+		if not g then return end
 		game.zone:addEntity(game.level, g, "terrain", x, y)
 	end,
 }
@@ -98,6 +99,7 @@ defineTile('2', mod.class.Grid.new{
 		if forced then return end
 		local g = game.zone:makeEntityByName(game.level, "terrain", "HARDWALL")
 		local f = game.zone:makeEntityByName(game.level, "terrain", "FLOOR")
+		if not g or not f then return end
 		game.zone:addEntity(game.level, g, "terrain", x - 1, y)
 		game.nicer_tiles:updateAround(game.level, x - 1, y)
 		game.zone:addEntity(game.level, f, "terrain", x, y + 1)
@@ -126,6 +128,7 @@ defineTile('3', mod.class.Grid.new{
 		if not actor.player then return end
 		if forced then return end
 		local g = game.zone:makeEntityByName(game.level, "terrain", "FLOOR")
+		if not g then return end
 		game.zone:addEntity(game.level, g, "terrain", x + 1, y)
 		game.nicer_tiles:updateAround(game.level, x + 1, y)
 
@@ -145,6 +148,7 @@ defineTile('4', mod.class.Grid.new{
 		if forced then return end
 		local g = game.zone:makeEntityByName(game.level, "terrain", "HARDMOUNTAIN_WALL")
 		local f = game.zone:makeEntityByName(game.level, "terrain", "ROCKY_GROUND")
+		if not g or not f then return end
 		game.zone:addEntity(game.level, g, "terrain", x + 1, y)
 		game.nicer_tiles:updateAround(game.level, x + 1, y)
 		game.zone:addEntity(game.level, f, "terrain", x, y + 1)
@@ -176,6 +180,7 @@ defineTile('5', mod.class.Grid.new{
 		if not actor.player then return end
 		if forced then return end
 		local g = game.zone:makeEntityByName(game.level, "terrain", "ROCKY_GROUND")
+		if not g then return end
 		game.zone:addEntity(game.level, g, "terrain", x - 1, y)
 		game.nicer_tiles:updateAround(game.level, x - 1, y)
 		game.zone:addEntity(game.level, g, "terrain", x, y)
@@ -225,4 +230,4 @@ return {
 [[#..+..U........UU....%a#.+.~=~~~~~#]],
 [[###################################]],
 
-}
+}
