@@ -133,46 +133,23 @@ load(...)
 
 fs.umount(homepath)
 
-
--- [[
-local te4_loader = function(name)
-	local bname = name
-
-	-- Base loader
-	local prev = loadfile("/"..bname:gsub("%.", "/")..".lua")
-
-	name = name:gsub("%.", "/")
-	for i, addon in ipairs(fs.list("/mod/addons/")) do
-		local fn = "/mod/addons/"..addon.."/superload/"..name..".lua"
-		if fs.exists(fn) then
-			local f = loadfile(fn)
-			local base = prev
-			setfenv(f, setmetatable({
-				loadPrevious = function()
-					print("FROM ", fn, "loading previous!")
-					base(bname)
-					return package.loaded[bname]
-				end
-			}, {__index=_G}))
-			prev = f
-		end
-	end
-	return prev
-end
-
-table.insert(package.loaders, 2, te4_loader)
---table.insert(package.loaders, 2, function(name) return loadfile("/"..name:gsub("%.", "/")..".lua") end )
---]]
-
+local oldload = loadfile
 local dlcd_loader = function(name)
-	if not fs.exists("/"..name:gsub("%.", "/")..".stub") then return end
-	print("===DLCLOADER", "/"..name:gsub("%.", "/")..".stub")
-	local d = loadfile("/"..name:gsub("%.", "/")..".stub")()
+	if not fs.exists("/"..name:gsub("%.", "/")..".lua.stub") then return end
+	print("===DLCLOADER:class", "/"..name:gsub("%.", "/")..".lua.stub")
+	local d = oldload("/"..name:gsub("%.", "/")..".lua.stub")()
 	local data = profile:getDLCD(d.name, d.version, name:gsub("%.", "/")..".lua")
 	return loadstring(data)
 end
 table.insert(package.loaders, 2, dlcd_loader)
 
+loadfile = function(name)
+	if not fs.exists(name..".stub") then return oldload(name) end
+	print("===DLCLOADER:file", name..".stub")
+	local d = oldload(name..".stub")()
+	local data = profile:getDLCD(d.name, d.version, name)
+	return loadstring(data)
+end
 
 
 -- RUN engine RUN !!
