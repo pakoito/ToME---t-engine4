@@ -1615,7 +1615,7 @@ newEffect{
 	desc = "Ward",
 	long_desc = function(self, eff) return ("Fully absorbs %d %s attack%s."):format(#eff.particles, DamageType.dam_def[eff.d_type].name, #eff.particles > 1 and "s" or "") end,
 	type = "magical",
-	subtype = { acrane=true },
+	subtype = { arcane=true },
 	status = "beneficial",
 	parameters = { nb=3 },
 	on_gain = function(self, eff) return ("#Target# warded against %s!"):format(DamageType.dam_def[eff.d_type].name), "+Ward" end,

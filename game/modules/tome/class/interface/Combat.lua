@@ -991,9 +991,9 @@ function _M:combatDamage(weapon)
 	return self:rescaleDamage(0.3*(self:combatPhysicalpower(nil, weapon) + totstat) * power * talented_mod)
 end
 
-function _M:combatPhysicalpower(mod, weapon)
+function _M:combatPhysicalpower(mod, weapon, add)
 	mod = mod or 1
-	local add = 0
+	add = add or 0
 	if self:knowTalent(Talents.T_ARCANE_DESTRUCTION) then
 		add = add + self:combatSpellpower() * self:getTalentLevel(Talents.T_ARCANE_DESTRUCTION) / 7
 	end
@@ -1024,9 +1024,9 @@ function _M:combatTalentPhysicalDamage(t, base, max)
 end
 
 --- Gets spellpower
-function _M:combatSpellpower(mod)
+function _M:combatSpellpower(mod, add)
 	mod = mod or 1
-	local add = 0
+	add = add or 0
 	if self:knowTalent(self.T_ARCANE_CUNNING) then
 		add = add + (15 + self:getTalentLevel(self.T_ARCANE_CUNNING) * 5) * self:getCun() / 100
 	end
