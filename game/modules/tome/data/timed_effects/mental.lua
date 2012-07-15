@@ -293,6 +293,7 @@ newEffect{
 	deactivate = function(self, eff)
 		self:removeParticles(eff.particle)
 		self:removeTemporaryValue("confused", eff.tmpid)
+		if self == game.player then self:updateMainShader() end
 	end,
 }
 

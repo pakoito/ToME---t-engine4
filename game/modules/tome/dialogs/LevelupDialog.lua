@@ -749,14 +749,13 @@ function _M:getTalentDesc(item)
 		local diff = function(i2, i1, res)
 			res:add({"color", "LIGHT_GREEN"}, i1, {"color", "LAST"}, " [->", {"color", "YELLOW_GREEN"}, i2, {"color", "LAST"}, "]")
 		end
-		if traw == 0 and self:getMaxTPoints(t) >= 2 then
+		if traw == 0 then
 			local req = self.actor:getTalentReqDesc(item.talent, 1):toTString():tokenize(" ()[]")
-			local req2 = self.actor:getTalentReqDesc(item.talent, 2):toTString():tokenize(" ()[]")
 			text:add{"color","WHITE"}
-			text:add({"font", "bold"}, "First talent level: ", tostring(traw+1), " [-> ", tostring(traw + 2), "]", {"font", "normal"})
+			text:add({"font", "bold"}, "First talent level: ", tostring(traw+1), {"font", "normal"})
 			text:add(true)
-			text:merge(req2:diffWith(req, diff))
-			text:merge(self.actor:getTalentFullDescription(t, 2):diffWith(self.actor:getTalentFullDescription(t, 1), diff))
+			text:merge(req)
+			text:merge(self.actor:getTalentFullDescription(t, 1))
 		elseif traw < self:getMaxTPoints(t) then
 			local req = self.actor:getTalentReqDesc(item.talent):toTString():tokenize(" ()[]")
 			local req2 = self.actor:getTalentReqDesc(item.talent, 1):toTString():tokenize(" ()[]")

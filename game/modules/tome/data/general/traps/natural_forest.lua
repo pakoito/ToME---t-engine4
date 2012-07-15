@@ -39,6 +39,7 @@ newEntity{ base = "TRAP_NATURAL_FOREST",
 		else
 			game.logSeen(who, "%s resists!", who.name:capitalize())
 		end
+		return true
 	end
 }
 
