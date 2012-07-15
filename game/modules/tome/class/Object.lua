@@ -151,7 +151,7 @@ function _M:descAttribute(attr)
 		return c.dam.."-"..(c.dam*(c.damrange or 1.1)).." power, "..(c.apr or 0).." apr, "..DamageType:get(c.damtype).name.." damage"
 	elseif attr == "SHIELD" then
 		local c = self.special_combat
-		if c and (game.player:knowTalentType("technique/shield-offense") or game.player:knowTalentType("technique/shield-defense")) then
+		if c and (game.player:knowTalentType("technique/shield-offense") or game.player:knowTalentType("technique/shield-defense")) or game.player:attr("show_shield_combat") then
 			return c.dam.." dam, "..c.block.." block"
 		else
 			return c.block.." block"
@@ -1031,7 +1031,7 @@ function _M:getTextualDesc(compare_with)
 		desc_combat(self, compare_with, "combat")
 	end
 
-	if (self.special_combat or can_special_combat) and (game.player:knowTalentType("technique/shield-offense") or game.player:knowTalentType("technique/shield-defense")) then
+	if (self.special_combat or can_special_combat) and (game.player:knowTalentType("technique/shield-offense") or game.player:knowTalentType("technique/shield-defense") or game.player:attr("show_shield_combat")) then
 		desc:add({"color","YELLOW"}, "When used to attack (with talents):", {"color", "LAST"}, true)
 		desc_combat(self, compare_with, "special_combat")
 	end

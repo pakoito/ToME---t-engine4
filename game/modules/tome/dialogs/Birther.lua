@@ -571,6 +571,8 @@ function _M:isDescriptorAllowed(d, ignore_type)
 		end
 	end
 
+	if d.special_check and not d.special_check(self) then return nil end
+
 	-- Check it is allowed
 	return allowed and not d.never_show
 end

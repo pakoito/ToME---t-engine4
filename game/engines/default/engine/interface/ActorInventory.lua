@@ -373,7 +373,7 @@ function _M:wearObject(o, replace, vocal)
 	elseif replace then
 		local ro = self:removeObject(inven, 1, true)
 
-		if vocal then game.logSeen(self, "%s wears: %s.", self.name:capitalize(), o:getName{do_color=true}) end
+		if vocal then game.logSeen(self, "%s wears(replacing): %s.", self.name:capitalize(), o:getName{do_color=true}) end
 
 		-- Can we stack the old and new one ?
 		if o:stack(ro) then ro = true end

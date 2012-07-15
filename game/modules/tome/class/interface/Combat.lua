@@ -139,14 +139,15 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 		-- All weapons in main hands
 		if self:getInven(self.INVEN_MAINHAND) then
 			for i, o in ipairs(self:getInven(self.INVEN_MAINHAND)) do
-				if o.combat and not o.archery then
+				local combat = self:getObjectCombat(o, "mainhand")
+				if combat and not o.archery then
 					print("[ATTACK] attacking with", o.name)
-					local s, h = self:attackTargetWith(target, o.combat, damtype, mult)
+					local s, h = self:attackTargetWith(target, combat, damtype, mult)
 					speed = math.max(speed or 0, s)
 					hit = hit or h
-					if hit and not sound then sound = o.combat.sound
-					elseif not hit and not sound_miss then sound_miss = o.combat.sound_miss end
-					if not o.combat.no_stealth_break then break_stealth = true end
+					if hit and not sound then sound = combat.sound
+					elseif not hit and not sound_miss then sound_miss = combat.sound_miss end
+					if not combat.no_stealth_break then break_stealth = true end
 				end
 			end
 		end
@@ -155,7 +156,7 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 		if self:getInven(self.INVEN_OFFHAND) then
 			for i, o in ipairs(self:getInven(self.INVEN_OFFHAND)) do
 				local offmult = self:getOffHandMult(o.combat, mult)
-				local combat = o.combat
+				local combat = self:getObjectCombat(o, "offhand")
 				if o.special_combat and o.subtype == "shield" and self:knowTalent(self.T_STONESHIELD) then combat = o.special_combat end
 				if combat and not o.archery then
 					print("[ATTACK] attacking with", o.name)
@@ -173,12 +174,13 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 	-- Barehanded ?
 	if not speed and self.combat then
 		print("[ATTACK] attacking with innate combat")
-		local s, h = self:attackTargetWith(target, self.combat, damtype, mult)
+		local combat = self:getObjectCombat(o, "barehand")
+		local s, h = self:attackTargetWith(target, combat, damtype, mult)
 		speed = math.max(speed or 0, s)
 		hit = hit or h
-		if hit and not sound then sound = self.combat.sound
-		elseif not hit and not sound_miss then sound_miss = self.combat.sound_miss end
-		if not self.combat.no_stealth_break then break_stealth = true end
+		if hit and not sound then sound = combat.sound
+		elseif not hit and not sound_miss then sound_miss = combat.sound_miss end
+		if not combat.no_stealth_break then break_stealth = true end
 	end
 
 	-- We use up our own energy
@@ -203,6 +205,14 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 	if break_stealth then self:breakStealth() end
 	self:breakLightningSpeed()
 	return hit
+end
+
+--- Determines the combat field to use for this item
+function _M:getObjectCombat(o, kind)
+	if kind == "barehand" then return self.combat end
+	if kind == "mainhand" then return o.combat end
+	if kind == "offhand" then return o.combat end
+	return nil
 end
 
 --- Computes a logarithmic chance to hit, opposing chance to hit to chance to miss
