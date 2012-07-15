@@ -759,7 +759,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Spit blight at your target doing %0.2f blight damage.
-		The damage will increase with the Magic stat]]):format(20 + (self:getDex() * self:getTalentLevel(t)) * 0.8)
+		The damage will increase with the Magic stat]]):format(20 + (self:getMag() * self:getTalentLevel(t)) * 0.8)
 	end,
 }
 
