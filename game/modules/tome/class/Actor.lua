@@ -1561,29 +1561,33 @@ function _M:onTakeHit(value, src)
 
 	if self:attr("damage_shield") then
 		-- Phased attack?
-		if src and src:attr("damage_shield_penetrate") then
-			local adjusted_value = value * (1 - (util.bound(src.damage_shield_penetrate, 0, 100) / 100))
-			self.damage_shield_absorb = self.damage_shield_absorb or 0
-			if adjusted_value <= self.damage_shield_absorb then
-				self.damage_shield_absorb = self.damage_shield_absorb - adjusted_value
-				value = value - adjusted_value
-			else
-				adjusted_value = adjusted_value - self.damage_shield_absorb
-				value = value + adjusted_value
-				self.damage_shield_absorb = 0
-			end
-		else
-			-- Absorb damage into the shield
-			self.damage_shield_absorb = self.damage_shield_absorb or 0
-			if value <= self.damage_shield_absorb then
-				self.damage_shield_absorb = self.damage_shield_absorb - value
-				value = 0
-			else
-				value = value - self.damage_shield_absorb
-				self.damage_shield_absorb = 0
-			end
+		local adjusted_value = value
+		if src and src.attr and src:attr("damage_shield_penetrate") then
+			adjusted_value = value * (1 - (util.bound(src.damage_shield_penetrate, 0, 100) / 100))
 		end
 
+		-- Shield Reflect?
+		local reflection, reflect_damage = false, 0
+		if self:attr("damage_shield_reflect") then
+			reflection = true
+		end
+		-- Absorb damage into the shield
+		self.damage_shield_absorb = self.damage_shield_absorb or 0
+		if adjusted_value <= self.damage_shield_absorb then
+			self.damage_shield_absorb = self.damage_shield_absorb - adjusted_value
+			if reflection then reflect_damage = adjusted_value end
+			value = value - adjusted_value
+		else
+			if reflection then reflect_damage = self.damage_shield_absorb end
+			value = adjusted_value - self.damage_shield_absorb
+			self.damage_shield_absorb = 0
+		end
+	
+		if reflection and reflect_damage > 0 then 
+			src:takeHit(math.ceil(reflect_damage * (self:attr("damage_shield_reflect")/100)), self)
+			game.logSeen(self, "The damage shield reflects %d damage back to %s!", math.ceil(reflect_damage * (self:attr("damage_shield_reflect")/100)),src.name:capitalize())
+		end
+		
 		-- If we are at the end of the capacity, release the time shield damage
 		if self.damage_shield_absorb <= 0 then
 			game.logPlayer(self, "Your shield crumbles under the damage!")

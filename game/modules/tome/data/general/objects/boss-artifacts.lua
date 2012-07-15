@@ -1267,7 +1267,7 @@ It has been kept somewhat intact with layers of salt and clay, but in spite of t
 newEntity{ base = "BASE_LONGBOW",
 	power_source = {arcane=true},
 	define_as = "STORM_FURY",
-	name = "Storm Fury", unique=true,
+	name = "Storm Fury", unique=true, --THESE
 	unided_name = "crackling longbow", color=colors.BLUE,
 	desc = [[This dragonbone longbow is enhanced with bands of steel, which arc with intense lightning. Bolts travel up and down the string, ignorant of you.]],
 	require = { stat = { dex=60 }, },
@@ -1337,7 +1337,7 @@ newEntity{ base = "BASE_LONGBOW",
 newEntity{ base = "BASE_CLOAK", define_as="GLACIAL_CLOAK",
 	power_source = {arcane=true},
 	unique = true,
-	name = "Frozen Shroud", image="object/artifact/cloak_winds_whisper.png",
+	name = "Frozen Shroud", --ARTIFACTS
 	unided_name = "chilling cloak",
 	desc = [[All that remains of the Glacial Legion. This cloak seems to exude an icy cold vapor that freezes all it touches.]],
 	level_range = {40, 50},
@@ -1382,7 +1382,7 @@ newEntity{ base = "BASE_CLOAK", define_as="GLACIAL_CLOAK",
 newEntity{ base = "BASE_GREATMAUL", define_as="ROTTING_MAUL",
 	power_source = {arcane=true},
 	unique = true,
-	name = "Blighted Maul", color = colors.LIGHT_RED, image = "object/artifact/voratun_hammer_of_the_deep_bellow.png",
+	name = "Blighted Maul", color = colors.LIGHT_RED, --NEED
 	unided_name = "rotten stone limb",
 	desc = [[The massive stone limb of the Rotting Titan, a mass of stone and rotting flesh. You think you can lift it, but it is very heavy.]],
 	level_range = {40, 50},
@@ -1425,54 +1425,57 @@ newEntity{ base = "BASE_GREATMAUL", define_as="ROTTING_MAUL",
 		end
 	},
 }
---Molten Staff, dropped by Heavy Sentinel.
-newEntity{ base = "BASE_STAFF",
+--Molten Skin, dropped by Heavy Sentinel.
+newEntity{ base = "BASE_LIGHT_ARMOR",
 	power_source = {arcane=true},
-	define_as = "STAFF_MOLTEN", rarity=false,
-	unided_name = "melting bone",
-	name = "Molten Staff", unique=true,
-	desc = [[This staff of fused molten bone from the Heavy Sentinel radiates intense heat. It still glows red with the heat of the Sentinel's core.]],
+	define_as = "ARMOR_MOLTEN", rarity=false,
+	unided_name = "melting bony armour",
+	name = "Molten Skin", unique=true,
+	desc = [[This mass of fused molten bone from the Heavy Sentinel radiates intense power. It still glows red with the heat of the Sentinel's core, and yet seems to do you no harm.]],
 	require = { stat = { mag=60 }, },
 	level_range = {40, 50},
 	rarity = 250,
 	cost = 300,
 	material_level=5,
-	combat = {
-		dam = 60,
-		apr = 6,
-		physcrit = 5,
-		dammod = {mag=1.35},
-		damtype = DamageType.FIREBURN,
-	},
 	wielder = {
-		combat_spellpower = 20,
+		combat_spellpower = 15,
 		combat_spellcrit = 10,
-		inc_damage={
+		combat_physcrit = 8,
+		combat_critical_power = 20,
+		combat_def = 15,
+		combat_armor = 12,
+		inc_stats = { [Stats.STAT_MAG] = 6,[Stats.STAT_CUN] = 6,},
+		melee_project={[DamageType.FIRE] = 30,},
+ 		inc_damage={
+			[DamageType.FIRE] = 25,
+			[DamageType.LIGHT] = 10,
+			all=5,
+ 		},
+ 		resists={
 			[DamageType.FIRE] = 20,
-		},
-		resists={
-			[DamageType.FIRE] = 24,
-			[DamageType.COLD] = -10,
-		},
-		resists_pen={
-			[DamageType.FIRE] = 10,
-		},
-		talents_types_mastery = {
-			["spell/fire"] = 0.1,
-			["spell/wildfire"] = 0.1,
-		},
+			[DamageType.LIGHT] = 12,
+			[DamageType.COLD] = -5,
+ 		},
+ 		resists_pen={
+			[DamageType.FIRE] = 15,
+			[DamageType.LIGHT] = 10,
+ 		},
+ 		talents_types_mastery = {
+ 			["spell/fire"] = 0.1,
+ 			["spell/wildfire"] = 0.1,
+			["celestial/sun"] = 0.1,
+ 		},
 	},
-	max_power = 6, power_regen = 1,
-	use_talent = { id = Talents.T_FLAME, level = 5, power = 5 },
-	talent_on_spell = { {chance=20, talent="T_FLAME", level=2} },
+	max_power = 16, power_regen = 1,
+	use_talent = { id = Talents.T_BLASTWAVE, level = 4, power = 12 },
 }
 
 newEntity{ base = "BASE_BATTLEAXE",
 	power_source = {arcane=true},
-	define_as = "HELLFIRE",
-	name = "Hellfire", color = colors.DARK_RED, image = "object/artifact/hellfire.png",
+	define_as = "KHULMANAR_WRATH",
+	name = "Khulmanar's Wrath", color = colors.DARK_RED, image = "object/artifact/hellfire.png",
 	unided_name = "firey blackened battleaxe", unique = true,
-	desc = [[Blackened with soot and covered in spikes, this battleaxe roars with the flames of the Fearscape. Given by Urh'Rok himself to his greatest commanders, this powerful weapon can burn even the most resilient of foes.]],
+	desc = [[Blackened with soot and covered in spikes, this battleaxe roars with the flames of the Fearscape. Given by Urh'Rok himself to his general, this powerful weapon can burn even the most resilient of foes.]],
 	level_range = {37, 50},
 	rarity = 300,
 	require = { stat = { str=52 }, },
@@ -1500,4 +1503,82 @@ newEntity{ base = "BASE_BATTLEAXE",
 	},
 	max_power = 35, power_regen = 1,
 	use_talent = { id = Talents.T_INFERNAL_BREATH, level = 3, power = 35 },
+}
+
+newEntity{ base = "BASE_TOOL_MISC", image="object/temporal_instability.png",
+	power_source = {arcane=true, psionic=true},
+	define_as = "BLADE_RIFT",
+	unique = true,
+	name = "The Bladed Rift", color = colors.BLUE,
+	unided_name = "hole in space",
+	desc = [[Upon defeat, Ak'Gishil collapsed into this tiny rift. How it remains stable, you are unsure. If you focus, you think you can call forth a sword from it.]],
+	level_range = {30, 50},
+	rarity = 500,
+	cost = 500,
+	material_level = 4,
+	metallic = false,
+	wielder = {
+		combat_spellpower=5,
+		combat_mindpower=5,
+		on_melee_hit = {[DamageType.PHYSICALBLEED]=25},
+		resists={
+			[DamageType.TEMPORAL] 	= 15,
+		},
+		inc_damage={
+			[DamageType.TEMPORAL] 	= 10,
+			[DamageType.PHYSICAL] 	= 5,
+		},
+	},
+	max_power = 40, power_regen = 1,
+	use_talent = { id = Talents.T_ANIMATE_BLADE, level = 1, power = 40 },
+}
+
+newEntity{ base = "BASE_LONGSWORD", define_as = "RIFT_SWORD",
+	power_source = {arcane=true},
+	unique = true,
+	name = "Blade of Distorted Time", image = "object/artifact/sword_of_potential_futures.png",
+	unided_name = "time-warped sword",
+	desc = [[The remnants of a damaged timeline, this blade shifts and fades at random.]],
+	level_range = {30, 50},
+	rarity = nil, --Not random!
+	require = { stat = { str=44 }, },
+	cost = 300,
+	material_level = 4,
+	combat = {
+		dam = 40,
+		apr = 10,
+		physcrit = 8,
+		dammod = {str=0.8,mag=0.2},
+		convert_damage={[DamageType.TEMPORAL] = 20},
+		special_on_hit = {desc="20% to slow target", fct=function(combat, who, target)
+			if not rng.percent(20) then return end
+			local dam = (20 + who:getMag()/2)
+			local slow = (10 + who:getMag()/5)
+			who:project(target.x, target.y, engine.DamageType.CHRONOSLOW, {dam=dam, slow=slow})
+		end},
+	},
+	wielder = {
+		inc_damage={
+			[DamageType.TEMPORAL] = 12,
+			[DamageType.PHYSICAL] = 10,
+		},
+	},
+	max_power = 8, power_regen = 1,
+	use_talent = { id = Talents.T_RETHREAD, level = 2, power = 8 },
+}
+
+newEntity{ base = "BASE_RUNE", define_as = "RUNE_REFLECT",
+	name = "Rune of Reflection", unique=true,
+	desc = [[You can see your own image mirrored in the surface of this silvery rune.]],
+	unided_name = "shiny rune",
+	level_range = {5, 15},
+	rarity = 240,
+	cost = 100,
+	material_level = 3,
+
+	inscription_kind = "protect",
+	inscription_data = {
+		cooldown = 15,
+	},
+	inscription_talent = "RUNE:_REFLECTION_SHIELD",
 }

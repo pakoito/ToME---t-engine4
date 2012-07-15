@@ -165,9 +165,10 @@ newEntity{ base = "BASE_NPC_GHOUL", define_as = "ROTTING_TITAN",
 
 	combat_atk=40,
 	combat_spellpower=25,
+	
+	disarm_immune=1, --Since disarming him would be, well, DISARMING him.
 
 	on_move = function(self)
-		self:project({type="ball", range=0, selffire=false, radius=1}, self.x, self.y, engine.DamageType.DIG, 1)
 			if rng.percent(20) then
 				game.logSeen(self, "The ground shakes as %s steps!", self.name:capitalize())
 				local tg = {type="ball", range=0, selffire=false, radius=3, no_restrict=true}
@@ -175,8 +176,8 @@ newEntity{ base = "BASE_NPC_GHOUL", define_as = "ROTTING_TITAN",
 				self:project(tg, self.x, self.y, DamageType.PHYSKNOCKBACK, {dam=24, dist=1})
 				self:doQuake(tg, self.x, self.y)
 		end
+		self:project({type="ball", range=0, selffire=false, radius=1}, self.x, self.y, engine.DamageType.DIG, 1)
 	end,
-
 	knockback_immune=1,
 
 	resolvers.talents{

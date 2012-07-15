@@ -279,3 +279,67 @@ newTalent{
 		The life healed will increase with the Willpower stat.]]):format(7 + self:getWil() * 0.5)
 	end,
 }
+
+newTalent{
+	image = "talents/mana_clash.png",
+	name = "Destroy Magic",
+	type = {"wild-gift/objects", 1},
+	points = 5,
+	no_energy = true,
+	tactical = { ATTACK = { ARCANE = 3 } },
+	cooldown = function(self, t) return 50 end,
+	tactical = { HEAL = 2 },
+	target = function(self, t)
+		return {type="hit", range=1, talent=t}
+	end,
+	action = function(self, t)
+	self:getTalentLevel(t)
+		local tg = self:getTalentTarget(t)
+		local x, y, target = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:project(tg, x, y, function(px, py)
+			target:setEffect(target.EFF_SPELL_DISRUPTION, 8, {src=self, power = 8, max = 45+self:getTalentLevel(t)*5, apply_power=self:combatMindpower()})
+			if rng.percent(30) and self:getTalentLevel(t)>2 then
+			
+			local effs = {}
+			
+			-- Go through all spell effects
+				for eff_id, p in pairs(target.tmp) do
+					local e = target.tempeffect_def[eff_id]
+					if e.type == "magical" then
+						effs[#effs+1] = {"effect", eff_id}
+					end
+				end
+			if self:getTalentLevel(t) > 3 then --only do sustains at level 3+
+				-- Go through all sustained spells
+				for tid, act in pairs(target.sustain_talents) do
+					if act then
+						local talent = target:getTalentFromId(tid)
+						if talent.is_spell then effs[#effs+1] = {"talent", tid} end
+					end
+				end	
+			end
+				local eff = rng.tableRemove(effs)
+				if eff then
+					if eff[1] == "effect" then
+						target:removeEffect(eff[2])
+					else
+						target:forceUseTalent(eff[2], {ignore_energy=true})
+					end
+				end
+			end
+				if self:getTalentLevel(t)>4 then
+					if target.undead or target.construct then
+						self.project(target.x,target.y,engine.DamageType.ARCANE,40+self:getMindpower())
+						if target:canBe("stun") then target:setEffect(target.EFF_STUNNED, 5, {apply_power=self:combatMindpower()}) end
+						game.logSeen(self, "%s's animating magic is disrupted!", target.name:capitalize())
+					end
+				end
+		end, nil, {type="slime"})
+		return true
+	end,
+	info = function(self, t)
+		return ([[Inflict various status effects on the target, depending on the level.]]):format(7 + self:getWil() * 0.5)
+	end,
+}
+

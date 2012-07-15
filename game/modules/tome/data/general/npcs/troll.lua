@@ -144,3 +144,35 @@ newEntity{ base = "BASE_NPC_TROLL",
 	},
 	resolvers.sustains_at_birth(),
 }
+
+newEntity{ base = "BASE_NPC_TROLL", unique=true,
+	name = "Forest Troll Hedge-Wizard", color=colors.YELLOW_GREEN, image="npc/troll_f.png",
+	desc = [[This old looking troll glares at you with malice. His muscles appear atrophied, but a certain power surrounds him nonetheless.]],
+	level_range = {3, nil}, exp_worth = 2,
+	rank=3.5,
+	rarity = 40,
+	max_life = resolvers.rngavg(50,70),
+	life_rating=18,
+	combat_armor = 4, combat_def = 0,
+	
+	resolvers.tmasteries{ ["spell/arcane"]=-0.8, ["spell/aegis"]=0.4,["spell/fire"]=-0.8, },
+	autolevel = "caster",
+	stats = { str=8, dex=8, mag=20, con=12, cun=12, },
+	ai = "tactical",
+	
+	on_added_to_level = function(self)
+		self.inc_damage={[DamageType.FIRE]=math.min(self.level*2,50),}
+	end,
+	
+	resolvers.talents{
+		[Talents.T_SHIELDING]={base=1, every=5, max=5},
+		[Talents.T_MANATHRUST]={base=1, every=1, max=50},
+		[Talents.T_FLAME]={base=1, every=2, max=15},
+	},
+	
+	resolvers.sustains_at_birth(),
+	
+	resolvers.inscription("RUNE:_REFLECTION_SHIELD", {cooldown=14,}),
+	resolvers.drops{chance=100, nb=1, {defined="RUNE_REFLECT"} },
+	resolvers.drops{chance=100, nb=1, {tome_drops="boss"} },
+}

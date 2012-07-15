@@ -137,10 +137,11 @@ newEntity{ base = "BASE_NPC_BONE_GIANT", define_as = "HEAVY_SENTINEL",
 	life_rating = 28,
 	
 	combat_atk=30,
+	combat_spellpower=15,
 	
 	stats = { str=28, dex=60, mag=20, con=20 },
 	
-		equipment = resolvers.equip{ {type="weapon", subtype="staff", defined="STAFF_MOLTEN", random_art_replace={chance=75}, autoreq=true, force_drop=true}, {type="armor", subtype="light", autoreq=true}, },
+	combat = { dam=resolvers.levelup(60, 1, 2), atk=resolvers.levelup(70, 1, 1), apr=20, dammod={str=1.2}, damtype=engine.DamageType.FIRE, convert_damage={[engine.DamageType.PHYSICAL]=50}},
 	
 	melee_project = {[DamageType.FIRE]=resolvers.mbonus(15, 25)},
 	on_melee_hit = {[DamageType.FIRE]=resolvers.mbonus(15, 5)},
@@ -165,4 +166,5 @@ newEntity{ base = "BASE_NPC_BONE_GIANT", define_as = "HEAVY_SENTINEL",
 	},
 	resolvers.sustains_at_birth(),
 	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
+	resolvers.drops{chance=100, nb=1, {defined="ARMOR_MOLTEN"} },
 }

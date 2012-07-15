@@ -735,3 +735,178 @@ newEntity{ base="BASE_NPC_HORROR", define_as = "GRGGLCK_TENTACLE",
 		end
 	end,
 }
+
+
+--MUHUHAHAHAHAHAHA
+newEntity{ base = "BASE_NPC_HORROR",
+	name = "Ak'Gishil", color=colors.GREY, unique = true,
+	desc = "This blade horror has grown in power dramatically, and become a nexus of temporal energy. Rifts in space open around it constantly, summoning and banishing blades before vanishing as quickly as they appear.",
+	level_range = {30, nil}, exp_worth = 1,
+	rarity = 55,
+	rank = 3.5,
+	levitate=1,
+	max_psi= 300,
+	psi_regen= 4,
+	size_category = 4,
+	autolevel = "wildcaster",
+	max_life = resolvers.rngavg(130, 160),
+	life_rating = 30,
+	life_regen = 0.25,
+	combat_armor = 25, combat_def = 15,
+	is_akgishil = true,
+	
+	resolvers.drops{chance=100, nb=1, {defined="BLADE_RIFT"} },
+	
+		ai = "tactical", ai_state = { ai_move="move_dmap", talent_in=2, ally_compassion=0 },
+		
+	on_melee_hit = {[DamageType.PHYSICALBLEED]=resolvers.mbonus(30, 4)},
+	combat = { dam=resolvers.levelup(resolvers.rngavg(20,28), 1, 1.5), physspeed = 0.25,atk=resolvers.levelup(24, 1.2, 1.2), apr=4, dammod={wil=0.3, cun=0.15}, damtype=engine.DamageType.PHYSICALBLEED, },
+	--combat_physspeed = 4, --Crazy fast attack rate
+	
+	resists = {[DamageType.PHYSICAL] = 15, [DamageType.MIND] = 50, [DamageType.TEMPORAL] = 30, [DamageType.ARCANE] = -20},
+	
+	on_added_to_level = function(self)
+		self.blades = 0
+	end,
+
+	on_act = function(self)
+		if self.blades > 2 or not rng.percent(20) then return end
+		self.blades = self.blades + 1
+			self:forceUseTalent(Talents.T_ANIMATE_BLADE, {ignore_cd=true, force_level=1})
+	end,
+	
+	resolvers.talents{
+		--Original Blade Horror talents, beefed up
+		[Talents.T_KNIFE_STORM]={base=5, every=5, max=8},
+		[Talents.T_BIND]={base=2, every=6, max=5},
+		[Talents.T_RAZOR_KNIFE]={base=3, every=4, max=7},
+		[Talents.T_PSIONIC_PULL]={base=5, every=3, max=7},
+		[Talents.T_KINETIC_AURA]={base=3, every=3, max=8},
+		[Talents.T_KINETIC_SHIELD]={base=3, every=2, max=9},
+		[Talents.T_KINETIC_LEECH]={base=2, every=3, max=5},
+		--TEMPORAL
+		[Talents.T_STATIC_HISTORY]={base=1, every=4, max=5},
+		[Talents.T_QUANTUM_SPIKE]={base=1, every=4, max=5},
+		[Talents.T_WEAPON_FOLDING]={base=1, every=4, max=5},
+		[Talents.T_RETHREAD]={base=2, every=4, max=5},
+		[Talents.T_DIMENSIONAL_STEP]={base=3, every=4, max=5},
+	},
+	resolvers.sustains_at_birth(),
+}
+
+newEntity{ base="BASE_NPC_HORROR", define_as = "ANIMATED_BLADE",
+	type = "construct", subtype = "weapon", image="object/sword_dsteel.png",
+	name = "Animated Sword",
+	color = colors.GREY,
+	desc = [[Time seems to warp and bend around this floating weapon.]],
+	level_range = {30, nil}, exp_worth = 0,
+	max_life = 80, life_rating = 3,
+	rank = 2,
+	no_breath = 1,
+	size_category = 2,
+
+	negative_status_immune = 1,
+	
+	resolvers.equip{
+		{type="weapon", subtype="longsword", ego_chance = 100, autoreq=true},
+	},
+	
+	resists = {[DamageType.MIND] = 75, [DamageType.TEMPORAL] = 30,},
+
+	autolevel = "warrior",
+	ai = "dumb_talented_simple", ai_state = { talent_in=3, ai_move="move_astar" },
+	
+	resolvers.talents{
+		[Talents.T_SWAP]={base=1, every=4, max=4},
+		[Talents.T_WEAPONS_MASTERY]={base=4, every=4, max=6},
+		[Talents.T_DIMENSIONAL_STEP]={base=1, every=4, max=4},
+	},
+	
+	on_added_to_level = function(self)
+		self:teleportRandom(self.x, self.y, 3)
+		game.logSeen(self, "A rift opens, spawning a free floating blade!")
+		game.level.map:addEffect(self,
+			self.x, self.y, 3,
+			DamageType.TEMPORAL, 25,
+			0,
+			5, nil,
+			{type="time_prison"},
+			nil, false
+		)
+	end,
+	
+	on_die = function(self, who)
+		if self.summoner and not self.summoner:attr("dead") then
+			if self.summoner.is_akgishil then
+				self.summoner.blades=self.summoner.blades - 1
+			end
+		end
+	end,
+
+	on_act = function(self)
+		if self.summoner:attr("dead") then
+			self:die()
+			game.logSeen(self, "#AQUAMARINE#With the horror's death the blade clatters to the ground!")
+		end
+	end,
+}
+
+newEntity{ base="BASE_NPC_HORROR", define_as = "DISTORTED_BLADE",
+	type = "construct", subtype = "weapon", --image="object/artifact/distorted_blade.png",
+	name = "Distorted Animated Sword", unique=true,
+	color = colors.GREY,
+	desc = [[Time seems to collapse around this floating weapon.]],
+	level_range = {30, nil}, exp_worth = 0,
+	max_life = 80, life_rating = 5,
+	rank = 3.5,
+	no_breath = 1,
+	size_category = 2,
+
+	negative_status_immune = 1,
+	
+	resolvers.equip{
+		{type="weapon", subtype="longsword", define_as="RIFT_SWORD", autoreq=true},
+	},
+	
+	resolvers.drops{chance=100, nb=1, {defined="RIFT_SWORD"} },
+	
+	resists = {[DamageType.MIND] = 75, [DamageType.TEMPORAL] = 40,},
+
+	autolevel = "warrior",
+	ai = "dumb_talented_simple", ai_state = { talent_in=3, ai_move="move_astar" },
+	
+	resolvers.talents{
+		[Talents.T_SWAP]={base=1, every=4, max=4},
+		[Talents.T_WEAPONS_MASTERY]={base=4, every=4, max=6},
+		[Talents.T_DIMENSIONAL_STEP]={base=2, every=4, max=5},
+	},
+	
+	on_added_to_level = function(self)
+		self:teleportRandom(self.x, self.y, 3)
+		game.logSeen(self, "When the rift opens, you see a blade quickly emerge. It does not look like the others.")
+		game.level.map:addEffect(self,
+			self.x, self.y, 5,
+			DamageType.TEMPORAL, 50,
+			0,
+			5, nil,
+			{type="time_prison"},
+			nil, false
+		)
+	end,
+	
+	on_die = function(self, who)
+		if self.summoner and not self.summoner:attr("dead") then
+			if self.summoner.is_akgishil then
+				self.summoner.blades=self.summoner.blades - 1
+			end
+		end
+	end,
+
+	on_act = function(self)
+		if self.summoner:attr("dead") then
+			self:die()
+			game.logSeen(self, "#AQUAMARINE#With the horror's death the chaotic blade clatters to the ground!")
+		end
+	end,
+}
+

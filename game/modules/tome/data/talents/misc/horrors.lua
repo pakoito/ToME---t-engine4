@@ -669,3 +669,52 @@ newTalent{
 		return ([[You extend slimy roots into the ground, follow them, and re-appear somewhere else in a range of %d with error margin of %d.]]):format(range, radius)
 	end,
 }
+
+
+--Ak'Gishil
+newTalent{
+	name = "Animate Blade",
+	type = {"spell/horror", 1},
+	cooldown = 1,
+	range = 10,
+	direct_hit = true,
+	tactical = { ATTACK = 2 },
+	action = function(self, t)
+		-- Find space
+		local x, y = util.findFreeGrid(self.x, self.y, 3, true, {[Map.ACTOR]=true})
+		if not x then
+			game.logPlayer(self, "Not enough space to invoke!")
+			return
+		end
+
+		-- Find an actor with that filter
+		local m = false
+		local list = mod.class.NPC:loadList("/data/general/npcs/horror.lua")
+		if self.is_akgishil and rng.percent(3) and not self.summoned_distort then
+			m = list.DISTORTED_BLADE:clone()
+			self.summoned_distort=1
+		else
+			m = list.ANIMATED_BLADE:clone()
+		end
+		if m then
+			m.exp_worth = 0
+			m:resolve()
+			m:resolve(nil, true)
+
+			m.summoner = self
+			m.summon_time = 1000
+			if not self.is_akgishil then
+				m.summon_time = 10
+				m.ai_real = m.ai
+				m.ai = "summoned"
+			end
+
+			game.zone:addEntity(game.level, m, "actor", x, y)
+		end
+
+		return true
+	end,
+	info = function(self, t)
+		return ([[Open a hole in space, summoning an animate blade for 10 turns.]])
+	end,
+}

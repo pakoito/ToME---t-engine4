@@ -439,6 +439,7 @@ newEffect{
 		if self:attr("shield_factor") then eff.power = eff.power * (100 + self:attr("shield_factor")) / 100 end
 		if self:attr("shield_dur") then eff.dur = eff.dur + self:attr("shield_dur") end
 		eff.tmpid = self:addTemporaryValue("damage_shield", eff.power)
+		if eff.reflect then eff.refid = self:addTemporaryValue("damage_shield_reflect", eff.reflect) end
 		--- Warning there can be only one time shield active at once for an actor
 		self.damage_shield_absorb = eff.power
 		self.damage_shield_absorb_max = eff.power
@@ -447,6 +448,7 @@ newEffect{
 	deactivate = function(self, eff)
 		self:removeParticles(eff.particle)
 		self:removeTemporaryValue("damage_shield", eff.tmpid)
+		if eff.refid then self:removeTemporaryValue("damage_shield_reflect", eff.refid) end
 		self.damage_shield_absorb = nil
 		self.damage_shield_absorb_max = nil
 	end,

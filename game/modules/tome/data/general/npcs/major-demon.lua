@@ -280,7 +280,7 @@ newEntity{ base = "BASE_NPC_MAJOR_DEMON",
 }
 
 newEntity{ base = "BASE_NPC_MAJOR_DEMON",
-	name = "General of Urh'Rok", --Give actual name?
+	name = "Khulmanar, General of Urh'Rok",
 	color=colors.DARK_RED, unique=true,
 	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/demon_major_general_of_urh_rok.png", display_h=2, display_y=-1}}},
 	desc = [[This massive form, sheathed in dark flames, stands tall above a legion of lesser demons. In his hands he holds a massive blacked battleaxe, flames dancing around the blades.]],
@@ -296,7 +296,7 @@ newEntity{ base = "BASE_NPC_MAJOR_DEMON",
 
 	ai = "tactical",
 
-	resolvers.equip{ {type="weapon", subtype="battleaxe", defined="HELLFIRE", random_art_replace={chance=30}, autoreq=true, force_drop=true}, },
+	resolvers.equip{ {type="weapon", subtype="battleaxe", defined="KHULMANAR_WRATH", random_art_replace={chance=30}, autoreq=true, force_drop=true}, },
 
 	resists={[DamageType.PHYSICAL] = resolvers.mbonus(8, 8), [DamageType.FIRE] = 100},
 	on_melee_hit = {[DamageType.FIRE]=resolvers.mbonus(25, 25)},

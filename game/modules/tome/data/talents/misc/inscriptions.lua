@@ -439,6 +439,32 @@ newInscription{
 }
 
 newInscription{
+	name = "Rune: Reflection Shield", image = "talents/rune__shielding.png",
+	type = {"inscriptions/runes", 1},
+	points = 1,
+	is_spell = true,
+	allow_autocast = true,
+	no_energy = true,
+	tactical = { DEFEND = 2 },
+	on_pre_use = function(self, t)
+		return not self:hasEffect(self.EFF_DAMAGE_SHIELD)
+	end,
+	action = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		self:setEffect(self.EFF_DAMAGE_SHIELD, 5, {power=100, reflect=100})
+		return true
+	end,
+	info = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return ([[Activate the rune to create a protective shield absorbing and reflecting at most %d damage for %d turns.]]):format(100, 5)
+	end,
+	short_info = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return ([[absorb and reflect %d for %d turns]]):format(100, 5)
+	end,
+}
+
+newInscription{
 	name = "Rune: Invisibility",
 	type = {"inscriptions/runes", 1},
 	points = 1,
@@ -744,9 +770,6 @@ newInscription{
 		local summoner = self
 		-- Store the current terrain
 		local terrain = game.level.map(target.x, target.y, engine.Map.TERRAIN)
-		-- Store target attributes as needed
-		local a = {}
-		a.life = target.life
 		-- Instability
 		local temporal_instability = mod.class.Object.new{
 			old_feat = game.level.map(target.x, target.y, engine.Map.TERRAIN),
@@ -755,6 +778,7 @@ newInscription{
 			temporary = t.getDuration(self, t),
 			canAct = false,
 			target = target,
+			back_life = target.life,
 			act = function(self)
 				self:useEnergy()
 				self.temporary = self.temporary - 1
@@ -764,7 +788,7 @@ newInscription{
 					game.level:removeEntity(self)
 					local mx, my = util.findFreeGrid(self.target.x, self.target.y, 20, true, {[engine.Map.ACTOR]=true})
 					game.zone:addEntity(game.level, self.target, "actor", mx, my)
-					self.target.life = a.life
+					self.target.life = self.back_life
 				end
 			end,
 			summoner_gain_exp = true,
