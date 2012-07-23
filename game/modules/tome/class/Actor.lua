@@ -413,10 +413,6 @@ function _M:actBase()
 			local t = self:getTalentFromId(self.T_THUNDERSTORM)
 			t.do_storm(self, t)
 		end
-		if self:isTalentActive(self.T_STONE_VINES) then
-			local t = self:getTalentFromId(self.T_STONE_VINES)
-			t.do_vines(self, t)
-		end
 		if self:isTalentActive(self.T_BODY_OF_FIRE) then
 			local t = self:getTalentFromId(self.T_BODY_OF_FIRE)
 			t.do_fire(self, t)

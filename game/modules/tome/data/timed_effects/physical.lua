@@ -1737,9 +1737,7 @@ newEffect{
 			nb = nb + dur_inc
 		end
 		local b = false
-		for i = 1, #eff.d_types do
-			if type == eff.d_types[i] then b = true break end
-		end
+		if eff.d_types[type] then b = true end
 		if not b then return dam end
 		eff.dur = 0
 		local amt = util.bound(dam - eff.power, 0, dam)

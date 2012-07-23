@@ -90,7 +90,7 @@ Tridents require the exotic weapons mastery talent to use correctly.]],
 		inc_damage = { [DamageType.COLD] = 20 },
 	},
 
-	talent_on_spell = { {chance=20, talent="T_WATER_BOLT", level=3} }
+	talent_on_spell = { {chance=20, talent="T_WATER_BOLT", level=3} },
 
 	max_power = 150, power_regen = 1,
 	use_talent = { id = Talents.T_FREEZE, level=3, power = 60 },

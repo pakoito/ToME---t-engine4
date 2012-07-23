@@ -195,49 +195,35 @@ newTalent{
 		if shield1 then val = val + (shield1.special_combat and shield1.special_combat.block) or 0 end
 		
 		if not self:getInven("MAINHAND") then return val end
-		local shield2 = self:getInven("OFFHAND")[1]
+		local shield2 = self:getInven("MAINHAND")[1]
 		if shield2 then val = val + (shield2.special_combat and shield2.special_combat.block) or 0 end
 		return val
 	end,
 	getBlockedTypes = function(self, t)
 		local shield = self:hasShield()
-		local bt = {DamageType.PHYSICAL}
+		local bt = {[DamageType.PHYSICAL]=true}
 		if not shield then return bt, "error!" end
-		local count = 2
-		if shield.wielder.resists then
-			for res, v in pairs(shield.wielder.resists) do
-				if v > 0 then
-					bt[count] = res
-					count = count + 1
-				end
-			end
-		end
-		if shield.wielder.on_melee_hit then
-			for res, v in pairs(shield.wielder.on_melee_hit) do
-				if v > 0 then
-					local add = true
-					for i = 1, #bt do
-						if bt[i] == res then add = false end
-					end
-					if add then
-						bt[count] = res
-						count = count + 1
-					end
-				end
-			end
-		end
-		local n = #bt
+		local shield2 = self:getInven("MAINHAND") and self:getInven("MAINHAND")[1]
+		shield2 = shield2.special_combat and shield2 or nil
+
+		if shield.wielder.resists then for res, v in pairs(shield.wielder.resists) do if v > 0 then bt[res] = true end end end
+		if shield.wielder.on_melee_hit then for res, v in pairs(shield.wielder.on_melee_hit) do if v > 0 then bt[res] = true end end end
+		if shield2 and shield2.wielder.resists then for res, v in pairs(shield2.wielder.resists) do if v > 0 then bt[res] = true end end end
+		if shield2 and shield2.wielder.on_melee_hit then for res, v in pairs(shield2.wielder.on_melee_hit) do if v > 0 then bt[res] = true end end end
+
+		local n = 0
+		for t, _ in pairs(bt) do n = n + 1 end
+
 		if n < 1 then return "(error 2)" end
 		local e_string = ""
 		if n == 1 then
-			e_string = DamageType.dam_def[bt[1]].name
-		elseif n == 2 then
-			e_string = DamageType.dam_def[bt[1]].name.." and "..DamageType.dam_def[bt[2]].name
+			e_string = DamageType.dam_def[next(bt)].name
 		else
-			for i = 1, #bt-1 do
-				e_string = e_string..DamageType.dam_def[bt[i]].name..", "
+			local list = table.keys(bt)
+			for i = 1, #list do
+				list[i] = DamageType.dam_def[list[i]].name
 			end
-			e_string = e_string.."and "..DamageType.dam_def[bt[n]].name
+			e_string = table.concat(list, ", ")
 		end
 		return bt, e_string
 	end,

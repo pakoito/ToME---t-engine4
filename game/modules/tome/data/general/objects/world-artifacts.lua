@@ -2030,7 +2030,7 @@ newEntity{ base = "BASE_HEAVY_ARMOR",
 }
 
 
-newEntity{ base = "BASE_HEAVY_ARMOR", define_as = "SCALE_MAIl_KROLTAR",
+newEntity{ base = "BASE_HEAVY_ARMOR", define_as = "SCALE_MAIL_KROLTAR",
 	power_source = {technique=true, nature=true},
 	unique = true,
 	name = "Scale Mail of Kroltar", image = "object/artifact/scale_mail_of_kroltar.png",
