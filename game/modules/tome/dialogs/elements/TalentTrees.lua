@@ -282,10 +282,11 @@ function _M:display(x, y, nb_keyframes, screen_x, screen_y)
 			local tal = tree.nodes[j]
 
 			tal.entity:toScreen(self.tiles, dx+x + self.icon_offset, dy+y + self.icon_offset, self.icon_size, self.icon_size)
-			if util.getval(tal.do_shadow, tal) then core.display.drawQuad(dx+x + self.icon_offset, dy+y + self.icon_offset, self.icon_size, self.icon_size, 0, 0, 0, 200) end
+			local do_shadow = util.getval(tal.do_shadow, tal) and 3 or 1
+			if do_shadow > 1 then core.display.drawQuad(dx+x + self.icon_offset, dy+y + self.icon_offset, self.icon_size, self.icon_size, 0, 0, 0, 200) end
 
 			local rgb = tal:color()
-			self:drawFrame(self.talent_frame, dx+x, dy+y, rgb[1]/255, rgb[2]/255, rgb[3]/255, 1)
+			self:drawFrame(self.talent_frame, dx+x, dy+y, rgb[1]/255 / do_shadow, rgb[2]/255 / do_shadow, rgb[3]/255 / do_shadow, 1)
 
 			if tal.text_status then
 				local key = tal.text_status

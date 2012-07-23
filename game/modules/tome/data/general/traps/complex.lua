@@ -147,7 +147,7 @@ newEntity{ base = "TRAP_COMPLEX",
 		game.level:addEntity(self)
 		self.on_added = nil
 	end,
-	dam = resolvers.mbonus_level(300, 15),
+	dam = resolvers.mbonus_level(450, 30),
 	triggered = function(self, x, y, who)
 		self:firePoison()
 		return true
@@ -157,6 +157,7 @@ newEntity{ base = "TRAP_COMPLEX",
 	end,
 	canAct = false,
 	energy = {value=0},
+	nb = 3,
 	firePoison = function(self)
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
@@ -168,9 +169,11 @@ newEntity{ base = "TRAP_COMPLEX",
 			nil, 0, 0
 		)
 		self:useEnergy(game.energy_to_act * 7)
+		self.nb = self.nb - 1
 	end,
 	act = function(self)
 		if game.level.map(self.x, self.y, engine.Map.TRAP) ~= self then game.level:removeEntity(self, true) return end
+		if self.nb <= 0 then game.level:removeEntity(self, true) print("The poison spore looks somewhat drained.") return end
 
 		local ok = false
 		local tg = {type="ball", radius=self.rad, friendlyfire=false}
@@ -215,7 +218,7 @@ newEntity{ base = "TRAP_COMPLEX",
 		return true
 	end,
 	canAct = false,
-	energy = {value=0, mod=0.25},
+	energy = {value=0, mod=0.20},
 	act = function(self)
 		local tg = {type="ball", radius=1, friendlyfire=false}
 		for i, d in ipairs(self.points) do
