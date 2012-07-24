@@ -74,7 +74,7 @@ function _M:init()
 	engine.GameTurnBased.init(self, engine.KeyBind.new(), 1000, 100)
 	engine.interface.GameMusic.init(self)
 	engine.interface.GameSound.init(self)
-    
+
 	-- Pause at birth
 	self.paused = true
 
@@ -1155,7 +1155,7 @@ function _M:display(nb_keyframes)
 
 	-- Tooltip is displayed over all else, even dialogs
 	local mx, my, button = core.mouse.get()
-    
+
 	self.old_ctrl_state = self.ctrl_state
 	self.ctrl_state = core.key.modState("ctrl")
 
