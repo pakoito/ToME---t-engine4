@@ -192,11 +192,11 @@ newTalent{
 	getBlockValue = function(self, t)
 		local val = 0
 		local shield1 = self:hasShield()
-		if shield1 then val = val + (shield1.special_combat and shield1.special_combat.block) or 0 end
+		if shield1 then val = val + (shield1.special_combat and shield1.special_combat.block or 0) end
 		
 		if not self:getInven("MAINHAND") then return val end
 		local shield2 = self:getInven("MAINHAND")[1]
-		if shield2 then val = val + (shield2.special_combat and shield2.special_combat.block) or 0 end
+		if shield2 then val = val + (shield2.special_combat and shield2.special_combat.block or 0) end
 		return val
 	end,
 	getBlockedTypes = function(self, t)

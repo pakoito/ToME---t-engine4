@@ -354,7 +354,7 @@ newEntity{
 		max_mana = resolvers.mbonus_material(40, 20),
 		talents_types_mastery = {
 			["spell/arcane"] = resolvers.mbonus_material(3, 1, function(e, v) v=v/10 return 0, v end),
-			["spell/arcane-shield"] = resolvers.mbonus_material(3, 1, function(e, v) v=v/10 return 0, v end),
+	--		["spell/arcane-shield"] = resolvers.mbonus_material(3, 1, function(e, v) v=v/10 return 0, v end),
 		},
 	},
 }

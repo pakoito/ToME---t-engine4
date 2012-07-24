@@ -168,26 +168,27 @@ newBirthDescriptor{
 	talents_types = {
 		-- class
 		["psionic/distortion"]={true, 0.3},
+		["psionic/psychic-assault"]={true, 0.3},
 		["psionic/slumber"]={true, 0.3},
 		["psionic/solipsism"]={true, 0.3},
 		["psionic/thought-forms"]={true, 0.3},
 		
 		-- generic
+		["psionic/dreaming"]={true, 0.3},
 		["psionic/feedback"]={true, 0.3},
 		["psionic/mentalism"]={true, 0.3},
 		["cunning/survival"]={true, 0},
 		
 		-- locked trees
 		["psionic/discharge"]={false, 0.3},
-		["psionic/nightmare"]={true, 0.3},
-		-- generic
-		["psionic/trance"]={false, 0.3},
-		
+		["psionic/nightmare"]={false, 0.3},
 	},
 	talents = {
-		[ActorTalents.T_BIOFEEDBACK] = 1,
-		[ActorTalents.T_MIND_SEAR] = 1,
+		[ActorTalents.T_SLEEP] = 1,
+		
+		[ActorTalents.T_SUNDER_MIND] = 1,
 		[ActorTalents.T_SOLIPSISM] = 1,
+		[ActorTalents.T_THOUGHT_FORMS] = 1,
 	},
 	copy = {
 		max_life = 90,

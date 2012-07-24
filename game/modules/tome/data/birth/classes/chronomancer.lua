@@ -75,7 +75,7 @@ newBirthDescriptor{
 		[ActorTalents.T_DIMENSIONAL_STEP] = 1,
 		[ActorTalents.T_DUST_TO_DUST] = 1,
 		[ActorTalents.T_TURN_BACK_THE_CLOCK] = 1,
-		},
+	},
 	copy = {
 		max_life = 90,
 		resolvers.equip{ id=true,
@@ -128,7 +128,7 @@ newBirthDescriptor{
 		[ActorTalents.T_DUAL_STRIKE] = 1,
 		[ActorTalents.T_CELERITY] = 1,
 		[ActorTalents.T_STRENGTH_OF_PURPOSE] = 1,
-		},
+	},
 	copy = {
 		max_life = 100,
 		resolvers.equip{ id=true,

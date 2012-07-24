@@ -17,214 +17,209 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
--- Edge TODO: Sounds, Particles, Talent Icons; All Talents
--- Fade from Reality?  (better name would be good, sounds to much like fade from time..  but yeah, same principal, only targeted so it reduces the enemies damage and what not)
+-- Edge TODO: Sounds, Particles
+
+local Object = require "mod.class.Object"
 
 newTalent{
-	name = "Distortion",
+	name = "Distortion Bolt",
 	type = {"psionic/distortion", 1},
 	points = 5, 
 	require = psi_wil_req1,
-	cooldown = 5,
-	tactical = { DISABLE = 2},
-	range = 0,
-	direct_hit = true,
+	cooldown = 2,
+	psi = 5,
+	tactical = { ATTACK = { PHYSICAL = 2} },
+	range = 10,
+	radius = function(self, t) return 1 + math.floor(self:getTalentLevel(t)/2) end,
 	requires_target = true,
-	getDamage = function(self, t) return self:combatTalentMindDamage(t, 20, 150) end,
-	radius = function(self, t) return 1 + math.ceil(self:getTalentLevel(t)) end,
+	proj_speed = 20,
+	getDamage = function(self, t) return self:combatTalentMindDamage(t, 10, 100) end,
+	getDetonateDamage = function(self, t) return self:combatTalentMindDamage(t, 20, 200) end,
 	target = function(self, t)
-		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false}
-	end,
-	on_pre_use = function(self, t, silent) if self.psionic_feedback <= 0 then if not silent then game.logPlayer(self, "You have no feedback to power this talent.") end return false end return true end,
-	on_learn = function(self, t)
-		if self:getTalentLevelRaw(t) == 1 then
-			if not self.psionic_feedback then
-				self.psionic_feedback = 0
-			end
-			self.psionic_feedback_max = (self.psionic_feedback_max or 0) + 100
-		end
-		return true
-	end,
-	on_unlearn = function(self, t)
-		if not self:knowTalent(t) then
-			self.psionic_feedback_max = self.psionic_feedback_max - 100
-			if self.psionic_feedback_max <= 0 then
-				self.psionic_feedback_max = nil
-				self.psionic_feedback = nil
-			end
-		end
-		return true
+		return {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_void", trail="dust_trail"}}
 	end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:projectile(tg, x, y, DamageType.DISTORTION, {dam=self:mindCrit(t.getDamage(self, t)), explosion=t.getDetonateDamage(self, t), penetrate=true, radius=self:getTalentRadius(t)})
+		return true
+	end,
+	info = function(self, t)
+		local damage = t.getDamage(self, t)
+		local detonate_damage = t.getDetonateDamage(self, t)
+		local radius = self:getTalentRadius(t)
+		return ([[Fire a bolt of distortion that ignores resistance and inflicts %0.2f physical damage.  This damage will distort affected targets, rendering them vulnerable to distortion effects.
+		If the bolt comes in contact with a target that's already distorted a detonation will occur, inflicting %0.2f physical damage and knocking back all targets in a %d radius.
+		The damage will scale with your mindpower.]]):format(damDesc(self, DamageType.PHYSICAL, damage), damDesc(self, DamageType.PHYSICAL, detonate_damage), radius)
+	end,
+}
+
+newTalent{
+	name = "Distortion Wave",
+	type = {"psionic/distortion", 2},
+	points = 5, 
+	require = psi_wil_req2,
+	cooldown = 6,
+	psi = 10,
+	tactical = { ATTACK = { PHYSICAL = 2}, DISABLE = 2},
+	range = 0,
+	radius = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)/2) end,
+	requires_target = true,
+	direct_hit = true,
+	getDamage = function(self, t) return self:combatTalentMindDamage(t, 10, 150) end,
+	getPower = function(self, t) return math.ceil(self:getTalentRadius(t)/2) end,
+	target = function(self, t)
+		return { type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t }
+	end,
+	action = function(self, t)
+		local tg = self:getTalentTarget(t)
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:project(tg, x, y, DamageType.DISTORTION, {dam=self:mindCrit(t.getDamage(self, t)), knockback=t.getPower(self, t), stun=t.getPower(self, t)}, {type="mind"})
+		return true
+	end,
+	info = function(self, t)
+		local damage = t.getDamage(self, t)
+		local radius = self:getTalentRadius(t)
+		local power = t.getPower(self, t)
+		return ([[Creates a distortion wave in a radius %d cone that deals %0.2f physical damage and knocks back targets in the blast radius.
+		This damage will distort affected targets, rendering them vulnerable to distortion effects.
+		If the target is already distorted they'll be stunned for %d turns as well.
+		The damage will scale with your mindpower.]]):format(radius, damDesc(self, DamageType.PHYSICAL, damage), power)
+	end,
+}
+
+newTalent{
+	name = "Ravage",
+	type = {"psionic/distortion", 3},
+	points = 5, 
+	require = psi_wil_req3,
+	cooldown = 12,
+	psi = 20,
+	tactical = { ATTACK = { PHYSICAL = 2}, DISABLE = 2},
+	range = 10,
+	requires_target = true,
+	direct_hit = true,
+	getDamage = function(self, t) return self:combatTalentMindDamage(t, 10, 50) end,
+	getDuration = function(self, t) return 2 + math.ceil(self:getTalentLevel(t)) end,
+	target = function(self, t)
+		return {type="hit", range=self:getTalentRange(t), talent=t}
+	end,
+	action = function(self, t)
+		local tg = self:getTalentTarget(t)
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		local _ _, x, y = self:canProject(tg, x, y)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if not target then return end
 		
-		local damage = math.min(self.psionic_feedback, t.getDamage(self, t))
-		self:project(tg, x, y, DamageType.MIND, {dam=self:mindCrit(damage), crossTierChance=math.max(100, damage)})
+		local ravage = false
+		if target:hasEffect(target.EFF_DISTORTION) then
+			ravage = true
+		end
 		
-		self.psionic_feedback = self.psionic_feedback - damage
+		target:setEffect(target.EFF_RAVAGE, t.getDuration(self, t), {dam=self:mindCrit(t.getDamage(self, t)), ravage=ravage, apply_power=self:combatMindpower()})
 							
 		return true
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		local radius = self:getTalentRadius(t)
-		return ([[You now store damage you take from outside sources as psionic feedback.  Activate to distortion up to %0.2f feedback in a %d radius cone.  Targets in the area will suffer mind damage and may be brain locked by this attack.
-		Learning this talent will increase the amount of feedback you can store by 100 (first talent point only).
-		The damage will scale with your mindpower.]]):format(damage, radius)
+		local duration = t.getDuration(self, t)
+		return ([[Ravages the target with distortion, inflicting %0.2f physical damage each turn for %d turns.
+		This damage will distort affected targets, rendering them vulnerable to distortion effects.
+		If the target is already distorted when ravage is applied the target will also lose one beneficial physical effect or sustain each turn.
+		The damage will scale with your mindpower.]]):format(damDesc(self, DamageType.PHYSICAL, damage), duration)
 	end,
 }
 
 newTalent{
-	name = "Distortion 2",
-	type = {"psionic/distortion", 2},
-	points = 5, 
-	require = psi_wil_req2,
-	mode = "sustained",
-	sustain_psi = 20,
-	cooldown = 18,
-	tactical = { BUFF = 2 },
-	getMaxOverflow = function(self, t) return self.psionic_feedback_max * (self:combatTalentMindDamage(t, 20, 100)/100) end,
-	radius = function(self, t) return math.ceil(self:getTalentLevel(t)/2) end,
-	on_learn = function(self, t)
-		if self:getTalentLevelRaw(t) == 1 then
-			if not self.psionic_feedback then
-				self.psionic_feedback = 0
-			end
-			self.psionic_feedback_max = (self.psionic_feedback_max or 0) + 50
-		end
-		return true
-	end,
-	on_unlearn = function(self, t)
-		if not self:knowTalent(t) then
-			self.psionic_feedback_max = self.psionic_feedback_max - 50
-			if self.psionic_feedback_max <= 0 then
-				self.psionic_feedback_max = nil
-				self.psionic_feedback = nil
-			end
-		end
-		return true
-	end,
-	doOverflowdistortion = function(self, t)
-		local tg = {type="ball", range=0, radius=self:getTalentRadius(t), selffire=false, friendlyfire=false}
-		local damage = self.psionic_overflow
-		self:project(tg, self.x, self.y, DamageType.MIND, self:mindCrit(damage))
-		-- Lose remaining overflow
-		self.psionic_overflow = nil
-	end,
-	activate = function(self, t)
-		game:playSoundNear(self, "talents/flame")
-		return {
-			ov = self:addTemporaryValue("psionic_overflow_max", t.getMaxOverflow(self, t)),
-		}
-	end,
-	deactivate = function(self, t, p)
-		self:removeTemporaryValue("psionic_overflow_max", p.ov)
-		return true
-	end,
-	info = function(self, t)
-		local overflow = t.getMaxOverflow(self, t)
-		local radius = self:getTalentRadius(t)
-		return ([[While active you store up to %d excess feedback as overflow.  At the start of your turn the overflow will be unleased as mind damage in a radius of %d.
-		Learning this talent will increase the amount of feedback you can store by 50 (first talent point only).
-		The max excess you can store will improve with your mindpower and max feedback.]]):format(overflow, radius)
-	end,
-}
-
-newTalent{
-	name = "Distortion 3",
-	type = {"psionic/distortion", 3},
-	points = 5,
-	require = psi_wil_req3,
-	cooldown = 10,
-	tactical = { ATTACKAREA = {PHYSICAL = 2}, DISABLE = { knockback = 2 }, },
-	range = 0,
-	radius = function(self, t) return 1 + math.ceil(self:getTalentLevel(t)) end,
-	direct_hit = true,
-	requires_target = true,
-	target = function(self, t)
-		return {type="ball", range=self:getTalentRange(t), talent=t}
-	end,
-	getDamage = function(self, t) return self:combatTalentMindDamage(t, 20, 230) end,
-	on_pre_use = function(self, t, silent) if self.psionic_feedback <= 0 then if not silent then game.logPlayer(self, "You have no feedback to power this talent.") end return false end return not self:hasEffect(self.EFF_REGENERATION) end,
-	on_learn = function(self, t)
-		if self:getTalentLevelRaw(t) == 1 then
-			if not self.psionic_feedback then
-				self.psionic_feedback = 0
-			end
-			self.psionic_feedback_max = (self.psionic_feedback_max or 0) + 50
-		end
-		return true
-	end,
-	on_unlearn = function(self, t)
-		if not self:knowTalent(t) then
-			self.psionic_feedback_max = self.psionic_feedback_max - 50
-			if self.psionic_feedback_max <= 0 then
-				self.psionic_feedback_max = nil
-				self.psionic_feedback = nil
-			end
-		end
-		return true
-	end,
-	action = function(self, t)
-		local tg = self:getTalentTarget(t)
-		if not x or not y then return nil end
-		
-		local damage = math.min(self.psionic_feedback, t.getDamage(self, t))
-		self:project(tg, x, y, DamageType.MINDKNOCKBACK, self:mindCrit(damage))
-		self.psionic_feedback = self.psionic_feedback - damage
-		
-		return true
-	end,
-	info = function(self, t)
-		local damage = t.getDamage(self, t)
-		local radius = self:getTalentRadius(t)
-		return ([[Activate to convert up to %0.2f of stored feedback into a blast of kinetic energy.  Targets out to a radius of %d will suffer physical damage and may be knocked back.
-		Learning this talent will increase the amount of feedback you can store by 50 (first talent point only).
-		The damage will scale with your mindpower.]]):format(damDesc(self, DamageType.PHYSICAL, damage), radius)
-	end,
-}
-
-newTalent{
-	name = "Distortion 4",
+	name = "Maelstrom",
 	type = {"psionic/distortion", 4},
 	points = 5, 
 	require = psi_wil_req4,
-	cooldown = 15,
-	tactical = { DEFEND = 2, ATTACK = {MIND = 2}},
-	on_pre_use = function(self, t, silent) if self.psionic_feedback <= 0 then if not silent then game.logPlayer(self, "You have no feedback to power this talent.") end return false end return true end,
-	getShieldPower = function(self, t) return self:combatTalentMindDamage(t, 20, 300) end,
+	cooldown = 24,
+	psi = 30,
+	tactical = { ATTACK = { PHYSICAL = 2}, DISABLE = 2},
+	range = 10,
+	radius = function(self, t) return 3 end,
+	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentMindDamage(t, 10, 50) end,
-	on_learn = function(self, t)
-		if self:getTalentLevelRaw(t) == 1 then
-			if not self.psionic_feedback then
-				self.psionic_feedback = 0
-			end
-			self.psionic_feedback_max = (self.psionic_feedback_max or 0) + 100
-		end
-		return true
+	getDuration = function(self, t) return 4 + math.ceil(self:getTalentLevel(t)) end,
+	target = function(self, t)
+		return {type="hit", range=self:getTalentRange(t), nolock=true, talent=t}
 	end,
-	on_unlearn = function(self, t)
-		if not self:knowTalent(t) then
-			self.psionic_feedback_max = self.psionic_feedback_max - 100
-			if self.psionic_feedback_max <= 0 then
-				self.psionic_feedback_max = nil
-				self.psionic_feedback = nil
-			end
-		end
-		return true
-	end,
+	tactical = { ATTACKAREA = { PHYSICAL = 2 }, DISABLE = 1 },
 	action = function(self, t)
-		local power = math.min(self.psionic_feedback, t.getShieldPower(self, t))
-		self:setEffect(self.EFF_RESONANCE_SHIELD, 10, {power = self:mindCrit(power), dam = t.getDamage(self, t)})
-		self.psionic_feedback = self.psionic_feedback - power
+		local tg = self:getTalentTarget(t)
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		local _ _, x, y = self:canProject(tg, x, y)
+		if game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move") then return nil end
+
+		local oe = game.level.map(x, y, Map.TERRAIN)
+		if not oe or oe.is_maelstrom then return end
+		
+		local e = Object.new{
+			old_feat = oe,
+			type = oe.type, subtype = oe.subtype,
+			name = "maelstrom", image = oe.image, add_mos = {{image = "terrain/wormhole.png"}},
+			display = '&', color_r=255, color_g=255, color_b=255, back_color=colors.STEEL_BLUE,
+			always_remember = true,
+			temporary = t.getDuration(self, t),
+			is_maelstrom = true,
+			x = x, y = y,
+			canAct = false,
+			dam = self:mindCrit(t.getDamage(self, t)),
+			radius = self:getTalentRadius(t),
+			act = function(self)
+				local tgts = {}
+				local Map = require "engine.Map"
+				local DamageType = require "engine.DamageType"
+				local grids = core.fov.circle_grids(self.x, self.y, self.radius, true)
+				for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
+					local Map = require "engine.Map"
+					local target = game.level.map(x, y, Map.ACTOR)
+					if target then 
+						tgts[#tgts+1] = {actor=target, sqdist=core.fov.distance(self.x, self.y, x, y)}
+					end
+				end end
+				table.sort(tgts, "sqdist")
+				for i, target in ipairs(tgts) do
+					if target.actor:canBe("knocback") then
+						target.actor:pull(self.x, self.y, 1)
+						game.logSeen(target.actor, "%s is pulled in by the %s!", target.actor.name:capitalize(), self.name)
+					end
+					DamageType:get(DamageType.PHYSICAL).projector(self.summoner, target.actor.x, target.actor.y, DamageType.PHYSICAL, self.dam)
+					target.actor:setEffect(target.actor.EFF_DISTORTION, 1, {})
+				end
+
+				self:useEnergy()
+				self.temporary = self.temporary - 1
+				if self.temporary <= 0 then
+					game.level.map:removeParticleEmitter(self.particles)	
+					game.level.map(self.x, self.y, engine.Map.TERRAIN, self.old_feat)
+					game.level:removeEntity(self)
+					game.level.map:updateMap(self.x, self.y)
+				end
+			end,
+			summoner_gain_exp = true,
+			summoner = self,
+		}
+		
+		e.particles = game.level.map:particleEmitter(x, y, 3, "leavestide", {only_one=true}) -- Edge TODO: Make particles for this
+		game.level:addEntity(e)
+		game.level.map(x, y, Map.TERRAIN, e)
+		game.nicer_tiles:updateAround(game.level, x, y)
+		game.level.map:updateMap(x, y)
+		game:playSoundNear(self, "talents/fire")
 		return true
 	end,
 	info = function(self, t)
-		local shield_power = t.getShieldPower(self, t)
+		local duration = t.getDuration(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Activate to conver up to %0.2f feedback into a resonance shield that will absorb 50%% of all damage you take and inflict %0.2f mind damage to melee attackers.
-		Learning this talent will increase the amount of feedback you can store by 100 (first talent point only).
-		The conversion ratio will scale with your mindpower and the effect lasts up to ten turns.]]):format(shield_power, damDesc(self, DamageType.MIND, damage))
+		return ([[Create a powerful maelstorm for %d turns.  Each turn the maelstrom will pull in actors within a radius of 3 and inflict %0.2f physical damage.
+		This damage will distort affected targets, rendering them vulnerable to distortion effects.
+		The damage will scale with your mindpower.]]):format(duration, damDesc(self, DamageType.PHYSICAL, damage))
 	end,
 }

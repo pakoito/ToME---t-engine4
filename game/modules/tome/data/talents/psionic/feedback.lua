@@ -65,11 +65,9 @@ newTalent{
 	getMaxFeedback = function(self, t) return self:getTalentLevelRaw(t) * 10 end,
 	on_learn = function(self, t)
 		self:incMaxFeedback(10)
-		return true
 	end,
 	on_unlearn = function(self, t)
 		self:incMaxFeedback(-10)
-		return true
 	end,
 	info = function(self, t)
 		local max_feedback = t.getMaxFeedback(self, t)

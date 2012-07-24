@@ -1449,7 +1449,7 @@ newEffect{
 newEffect{
 	name = "OFFBALANCE",
 	desc = "Off-balance",
-	long_desc = function(self, eff) return ("Badly off balance. Global speed is reduced by 15%%.") end,
+	long_desc = function(self, eff) return ("Badly off balance. Global speed is reduced by 15%.") end,
 	type = "physical",
 	subtype = { ["cross tier"]=true },
 	status = "detrimental",
@@ -1781,5 +1781,58 @@ newEffect{
 		self:removeTemporaryValue("counterstrike", eff.tmpid)
 		self:removeTemporaryValue("combat_def", eff.def)
 		self:removeTemporaryValue("combat_crit_vulnerable", eff.crit)
+	end,
+}
+
+newEffect{
+	name = "RAVAGE", image = "talents/ravage.png",
+	desc = "Ravage",
+	long_desc = function(self, eff)
+		local ravaged = "each turn."
+		if eff.ravage then ravaged = "and is losing one physical effect turn." end
+		return ("The target is being ravaged by distortion, taking %0.2f physical damage %s"):format(eff.dam, ravaged) 
+	end,
+	type = "physical",
+	subtype = { distortion=true },
+	status = "detrimental",
+	parameters = {dam=1},
+	on_gain = function(self, err) return  nil, "+Ravage" end,
+	on_lose = function(self, err) return "#Target# is no longer being ravaged." or nil, "-Ravage" end,
+	on_timeout = function(self, eff)
+		if eff.ravage then
+			-- Go through all physical effects
+			local effs = {}
+			for eff_id, p in pairs(self.tmp) do
+				local e = self.tempeffect_def[eff_id]
+				if e.type == "physical" and e.status == "beneficial" then
+					effs[#effs+1] = {"effect", eff_id}
+				end
+			end
+
+			-- Go through all sustained techniques
+			for tid, act in pairs(self.sustain_talents) do
+				if act then
+					local talent = self:getTalentFromId(tid)
+					if talent.type[1]:find("^technique/") then effs[#effs+1] = {"talent", tid} end
+				end
+			end
+
+			if #effs > 0 then
+				local eff = rng.tableRemove(effs)
+				if eff[1] == "effect" then
+					self:removeEffect(eff[2])
+				else
+					self:forceUseTalent(eff[2], {ignore_energy=true})
+				end
+			end
+		end
+		self:setEffect(self.EFF_DISTORTION, 1, {})
+		DamageType:get(DamageType.PHYSICAL).projector(eff.src or self, self.x, self.y, DamageType.PHYSICAL, eff.dam)
+	end,
+	activate = function(self, eff)
+		self:setEffect(self.EFF_DISTORTION, 1, {})
+		if eff.ravage then
+			game.logSeen(self, "#LIGHT_RED#%s is being ravaged by distortion!", self.name:capitalize())
+		end
 	end,
 }

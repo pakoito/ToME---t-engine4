@@ -36,7 +36,7 @@ newTalentType{ allow_random=true, type="psionic/brainstorm", name = "brainstorm"
 
 -- Secret Project...
 -- Solipsist Talent Trees
-newTalentType{ allow_random=true, type="psionic/discharge", name = "discharge", description = "Store and discharge psychic feedback." }
+newTalentType{ allow_random=true, type="psionic/discharge", name = "discharge", description = "Project feedback on the world around you." }
 newTalentType{ allow_random=true, type="psionic/distortion", name = "distortion", description = "Distort reality with your mental energy." }
 newTalentType{ allow_random=true, type="psionic/nightmare", name = "nightmare", description = "Manifest your enemies nightmares." }
 newTalentType{ allow_random=true, type="psionic/psychic-assault", name = "Psychic Assault", description = "Directly attack your opponents minds." }
@@ -45,8 +45,9 @@ newTalentType{ allow_random=true, type="psionic/solipsism", name = "solipsism", 
 newTalentType{ allow_random=true, type="psionic/thought-forms", name = "Thought-Forms", description = "Manifest your thoughts as psionic summons." }
 
 -- Generic Solipsist Trees
-newTalentType{ allow_random=true, type="psionic/mentalism", generic = true, name = "mentalism", description = "ESP and other various mental powers." }
-newTalentType{ allow_random=true, type="psionic/feedback", generic = true, name = "feedback", description = "Store and manipulate psychic feedback." }
+newTalentType{ allow_random=true, type="psionic/dreaming", generic = true, name = "dreaming", description = "Manipulate the sleep cycles of yourself and your enemies." }
+newTalentType{ allow_random=true, type="psionic/mentalism", generic = true, name = "mentalism", description = "Various mind based effects." }
+newTalentType{ allow_random=true, type="psionic/feedback", generic = true, name = "feedback", description = "Store feedback as you get damaged and use it to protect and heal your body." }
 newTalentType{ allow_random=true, type="psionic/trance", generic = true, name = "trance", description = "Put your mind into a deep trance." }
 
 newTalentType{ allow_random=true, type="psionic/possession", name = "possession", description = "You have learnt to shed away your body, allowing you to possess any other." }
@@ -165,6 +166,83 @@ function getGemLevel(self)
 	return gem_level
 end
 
+-- Thought Forms really only differ in the equipment they carry, the talents they have, and stat weights
+-- So these function will handle everything else
+function cancelThoughtForms(self)
+	local forms = {self.T_TF_DEFENDER, self.T_TF_WARRIOR, self.T_TF_BOWMAN}
+	for i, t in ipairs(forms) do
+		if self:isTalentActive(t) then
+			self:forceUseTalent(t, {ignore_energy=true})
+		end
+	end
+end
+
+function setupThoughtForm(self, m, x, y)
+	-- Set up some basic stuff
+	m.display = "p" 
+	m.color=colors.YELLOW
+	m.blood_color = colors.YELLOW
+	m.type = "thought-form"
+	m.subtype = "thought-form"
+	m.summoner_gain_exp=true
+	m.faction = self.faction
+	m.no_inventory_access = true -- Uncomment later; just for testing
+	m.rank = 2
+	m.size_category = 3
+	m.infravision = 10
+	m.lite = 1
+	m.no_breath = 1
+	
+	-- Less tedium
+	m.life_regen = 1
+	m.stamina_regen = 1
+	
+	-- Make sure we don't gain anything from leveling
+	m.autolevel = "none"
+	m.unused_stats = 0
+	m.unused_talents = 0
+	m.unused_generics = 0
+	m.unused_talents_types = 0
+	m.exp_worth = 0
+	m.no_points_on_levelup = true
+	m.silent_levelup = true
+	m.level_range = {self.level, self.level}
+
+	-- Try to use stored AI talents to preserve tweaking over multiple summons
+	m.ai_talents = self.stored_ai_talents and self.stored_ai_talents[m.name] or {}
+	m.save_hotkeys = true
+	
+	-- Inheret some attributes
+	if self:getTalentLevel(self.T_TF_UNITY) >=5 then
+		local damage_bonus = self:attr("inc_damage") and self:attr("inc_damage")[engine.DamageType.MIND] or 0
+		m.inc_damage.all = m.inc_damage.all or 0 + damage_bonus
+	end
+	if self:getTalentLevel(self.T_TF_UNITY) >=3 then
+		local save_bonus = self:combatMentalResist(fake)
+		m:attr("combat_physresist", save_bonus)
+		m:attr("combat_mentalresist", save_bonus)
+		m:attr("combat_spellresist", save_bonus)
+	end
+
+	if game.party:hasMember(self) then
+		m.remove_from_party_on_death = true
+		game.party:addMember(m, {
+			control="no",
+			type="thought-form",
+			title="thought-form",
+			orders = {target=true, leash=true, anchor=true, talents=true},
+		})
+	end
+	m:resolve() m:resolve(nil, true)
+	m:forceLevelup(self.level)
+	game.zone:addEntity(game.level, m, "actor", x, y)
+	game.level.map:particleEmitter(x, y, 1, "summon")
+
+	-- Summons never flee
+	m.ai_tactic = m.ai_tactic or {}
+	m.ai_tactic.escape = 0
+end
+
 load("/data/talents/psionic/absorption.lua")
 load("/data/talents/psionic/finer-energy-manipulations.lua")
 load("/data/talents/psionic/mental-discipline.lua")
@@ -181,6 +259,7 @@ load("/data/talents/psionic/grip.lua")
 -- Solipsist
 load("/data/talents/psionic/discharge.lua")
 load("/data/talents/psionic/distortion.lua")
+load("/data/talents/psionic/dreaming.lua")
 load("/data/talents/psionic/mentalism.lua")
 load("/data/talents/psionic/feedback.lua")
 load("/data/talents/psionic/nightmare.lua")

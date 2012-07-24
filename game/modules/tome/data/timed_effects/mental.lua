@@ -97,7 +97,7 @@ newEffect{
 	on_gain = function(self, err) return "#Target# wanders around!.", "+Confused" end,
 	on_lose = function(self, err) return "#Target# seems more focused.", "-Confused" end,
 	activate = function(self, eff)
-		eff.power = math.max(eff.power - (self:attr("confusion_immune") or 0), 10)
+		eff.power = math.max(eff.power - (self:attr("confusion_immune") or 0) * 100, 10)
 		eff.tmpid = self:addTemporaryValue("confused", eff.power)
 		if eff.power <= 0 then eff.dur = 0 end
 	end,
@@ -283,12 +283,14 @@ newEffect{
 	type = "mental",
 	subtype = { gloom=true, confusion=true },
 	status = "detrimental",
-	parameters = {},
+	parameters = { power = 10 },
 	on_gain = function(self, err) return "#F53CBE##Target# is lost in despair!", "+Confused" end,
 	on_lose = function(self, err) return "#Target# overcomes the gloom", "-Confused" end,
 	activate = function(self, eff)
 		eff.particle = self:addParticles(Particles.new("gloom_confused", 1))
+		eff.power = math.max(eff.power - (self:attr("confusion_immune") or 0) * 100, 10)
 		eff.tmpid = self:addTemporaryValue("confused", eff.power)
+		if eff.power <= 0 then eff.dur = 0 end
 	end,
 	deactivate = function(self, eff)
 		self:removeParticles(eff.particle)
@@ -906,18 +908,20 @@ newEffect{
 	type = "mental",
 	subtype = { madness=true, confusion=true },
 	status = "detrimental",
-	parameters = {},
+	parameters = { power=10 },
 	on_gain = function(self, err) return "#F53CBE##Target# is lost in madness!", "+Confused" end,
 	on_lose = function(self, err) return "#Target# overcomes the madness", "-Confused" end,
 	activate = function(self, eff)
 		eff.particle = self:addParticles(Particles.new("gloom_confused", 1))
 		eff.mindResistChangeId = self:addTemporaryValue("resists", { [DamageType.MIND]=eff.mindResistChange })
+		eff.power = math.max(eff.power - (self:attr("confusion_immune") or 0) * 100, 10)
 		eff.tmpid = self:addTemporaryValue("confused", eff.power)
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("resists", eff.mindResistChangeId)
 		self:removeParticles(eff.particle)
 		self:removeTemporaryValue("confused", eff.tmpid)
+		if self == game.player and self.updateMainShader then self:updateMainShader() end
 	end,
 }
 
@@ -1468,8 +1472,8 @@ newEffect{
 
 newEffect{
 	name = "WAKING_NIGHTMARE", image = "talents/waking_nightmare.png",
-	desc = "Waking Nightmare",
-	long_desc = function(self, eff) return ("The target is lost in a nightmare that deals %0.2f darkness damage each turn and has a %d%% chance to cause a random detrimental effect."):format(eff.dam, eff.chance) end,
+	desc = "Waking NIGHTMARE",
+	long_desc = function(self, eff) return ("The target is lost in a nightmare that deals %0.2f mind damage each turn and has a %d%% chance to cause a random detrimental effect."):format(eff.dam, eff.chance) end,
 	type = "mental",
 	subtype = { nightmare=true, darkness=true },
 	status = "detrimental",
@@ -1478,7 +1482,7 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is free from the nightmare.", "-Night Terrors" end,
 	on_timeout = function(self, eff)
 		DamageType:get(DamageType.DARKNESS).projector(eff.src or self, self.x, self.y, DamageType.DARKNESS, eff.dam)
-		if rng.percent(eff.chance or 0) then
+		if rng.percent(eff.chance) then
 			-- Pull random effect
 			local chance = rng.range(1, 3)
 			if chance == 1 then
@@ -1505,15 +1509,15 @@ newEffect{
 	long_desc = function(self, eff) return ("The target is plagued by inner demons and each turn there's a %d%% chance that one will appear.  If the caster is killed or the target resists setting his demons loose the effect will end early."):format(eff.chance) end,
 	type = "mental",
 	subtype = { nightmare=true },
-	status = "detrimental",
-	parameters = {},
+	status = "detrimental", remove_on_clone = true,
+	parameters = {chance=0},
 	on_gain = function(self, err) return "#F53CBE##Target# is plagued by inner demons!", "+Inner Demons" end,
 	on_lose = function(self, err) return "#Target# is freed from the demons.", "-Inner Demons" end,
 	on_timeout = function(self, eff)
 		if eff.src.dead or not game.level:hasEntity(eff.src) then eff.dur = 0 return true end
-		if rng.percent(eff.chance or 0) then
-			if self:checkHit(eff.src:combatMindpower(), self:combatMentalResist(), 0, 95, 5) then
-				local t = eff.src:getTalentFromId(eff.src.T_INNER_DEMONS)
+		local t = eff.src:getTalentFromId(eff.src.T_INNER_DEMONS)
+		if rng.percent(eff.chance) then 
+			if self:attr("sleep") or self:checkHit(eff.src:combatMindpower(), self:combatMentalResist(), 0, 95, 5) then
 				t.summon_inner_demons(eff.src, self, t)
 			else
 				eff.dur = 0
@@ -2260,22 +2264,28 @@ newEffect{
 newEffect{
 	name = "LOBOTOMIZED", image = "talents/psychic_lobotomy.png",
 	desc = "Lobotomized",
-	long_desc = function(self, eff) return ("The target's mental faculties have been impaired, reducing it's cunning by %d and preventing it from making tactical decisions."):format(eff.power) end,
+	long_desc = function(self, eff) return ("The target's mental faculties have been impaired, confusing the target, making it act randomly (%d%% chance) and reducing it's cunning by %d."):format(eff.power, eff.power/2) end,
 	type = "mental",
 	subtype = { confusion=true },
 	status = "detrimental",
 	on_gain = function(self, err) return "#Target# higher mental functions have been imparied.", "+Lobotomized" end,
 	on_lose = function(self, err) return "#Target#'s regains it's senses.", "-Lobotomized" end,
-	parameters = { },
+	parameters = { power=1, dam=1 },
 	activate = function(self, eff)
-		eff.cid = self:addTemporaryValue("inc_stats", {[Stats.STAT_CUN]=-eff.power})
-		if self.ai then self.ai="dumb_talented_simple" end
+
+		DamageType:get(DamageType.MIND).projector(eff.src or self, self.x, self.y, DamageType.MIND, eff.src:mindCrit(eff.dam))
+		eff.power = math.max(eff.power - (self:attr("confusion_immune") or 0) * 100, 10)
+		eff.tmpid = self:addTemporaryValue("confused", eff.power)
+		eff.cid = self:addTemporaryValue("inc_stats", {[Stats.STAT_CUN]=-eff.power/2})
+		if eff.power <= 0 then eff.dur = 0 end
 	end,
 	deactivate = function(self, eff)
+		self:removeTemporaryValue("confused", eff.tmpid)
 		self:removeTemporaryValue("inc_stats", eff.cid)
-		if self.ai then self.ai=eff.ai end
+		if self == game.player and self.updateMainShader then self:updateMainShader() end
 	end,
 }
+
 
 newEffect{
 	name = "PSIONIC_SHIELD", image = "talents/kinetic_shield.png",
@@ -2306,7 +2316,7 @@ newEffect{
 }
 
 newEffect{
-	name = "CLEAR_MIND", image = "talents/aura_discipline.png",
+	name = "CLEAR_MIND", image = "talents/mental_shielding.png",
 	desc = "Clear Mind",
 	long_desc = function(self, eff) return ("Nullifies the next %d detrimental mental effects."):format(self.mental_negative_status_effect_immune) end,
 	type = "mental",
@@ -2350,14 +2360,14 @@ newEffect{
 	type = "mental",
 	subtype = { psionic=true },
 	status = "detrimental",
-	parameters = {power = 1},
+	parameters = {power = 1, range = 5},
 	remove_on_clone = true, decrease = 0,
 	on_gain = function(self, err) return "#Target#'s mind has been invaded!", "+Mind Link" end,
 	on_lose = function(self, err) return "#Target# is free from the mental invasion.", "-Mind Link" end,
 	on_timeout = function(self, eff)
 		-- Remove the mind link when appropriate
 		local p = eff.src:isTalentActive(eff.src.T_MIND_LINK)
-		if not p or p.target ~= self or eff.src.dead or not game.level:hasEntity(eff.src) then
+		if not p or p.target ~= self or eff.src.dead or not game.level:hasEntity(eff.src) or core.fov.distance(self.x, self.y, eff.src.x, eff.src.y) > eff.range then
 			self:removeEffect(self.EFF_MIND_LINK_TARGET)
 		end
 	end,
@@ -2395,16 +2405,61 @@ newEffect{
 newEffect{
 	name = "SLEEP", image = "talents/sleep.png",
 	desc = "Sleep",
+	long_desc = function(self, eff) return ("The target is asleep and unable to act.  Every %d damage it takes will reduce the duration of the effect by one turn."):format(eff.power) end,
+	type = "mental",
+	subtype = { sleep=true },
+	status = "detrimental",
+	parameters = { power=1, insomnia=1, waking=0 },
+	on_gain = function(self, err) return "#Target# has been put to sleep.", "+Sleep" end,
+	on_lose = function(self, err) return "#Target# is no longer sleeping.", "-Sleep" end,
+	on_timeout = function(self, eff)
+		local dream_prison = false
+		if eff.src and eff.src.isTalentActive and eff.src:isTalentActive(eff.src.T_DREAM_PRISON) then
+			local t = eff.src:getTalentFromId(eff.src.T_DREAM_PRISON)
+			if core.fov.distance(self.x, self.y, eff.src.x, eff.src.y) <= eff.src:getTalentRange(t) then
+				dream_prison = true
+			end
+		end
+		if dream_prison then
+			eff.dur = eff.dur + 1
+		end
+	end,
+	activate = function(self, eff)
+		eff.sid = self:addTemporaryValue("sleep", eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("sleep", eff.sid)
+		if not self:attr("lucid_dreamer") then
+			self:setEffect(self.EFF_INSOMNIA, eff.insomnia, {power=eff.insomnia/10})
+		end
+		if not self:attr("sleep") and eff.waking > 0 then
+			DamageType:get(DamageType.MIND).projector(eff.src or self, self.x, self.y, DamageType.MIND, eff.src:mindCrit(eff.waking))
+		end
+	end,
+}
+
+newEffect{
+	name = "SLUMBER", image = "talents/slumber.png",
+	desc = "Slumber",
 	long_desc = function(self, eff) return ("The target is in a deep sleep and unable to act.  Every %d damage it takes will reduce the duration of the effect by one turn."):format(eff.power) end,
 	type = "mental",
 	subtype = { sleep=true },
 	status = "detrimental",
-	parameters = { power=1, contagious=0, insomnia=1 },
-	on_gain = function(self, err) return "#Target# has been put to sleep.", "+Sleep" end,
-	on_lose = function(self, err) return "#Target# is no longer sleeping.", "-Sleep" end,
+	parameters = { power=1, contagious=0, insomnia=1, waking=0 },
+	on_gain = function(self, err) return "#Target# is in a deep sleep.", "+Slumber" end,
+	on_lose = function(self, err) return "#Target# is no longer sleeping.", "-Slumber" end,
 	on_timeout = function(self, eff)
-		if eff.contagious > 0 and eff.dur > 1 then
-			local t = eff.src:getTalentFromId(eff.src.T_SLEEP)
+		local dream_prison = false
+		if eff.src and eff.src.isTalentActive and eff.src:isTalentActive(eff.src.T_DREAM_PRISON) then
+			local t = eff.src:getTalentFromId(eff.src.T_DREAM_PRISON)
+			if core.fov.distance(self.x, self.y, eff.src.x, eff.src.y) <= eff.src:getTalentRange(t) then
+				dream_prison = true
+			end
+		end
+		if dream_prison then
+			eff.dur = eff.dur + 1
+		elseif eff.contagious > 0 and eff.dur > 1 then
+			local t = eff.src:getTalentFromId(eff.src.T_SLUMBER)
 			t.doContagiousSlumber(eff.src, self, eff, t)
 		end
 	end,
@@ -2413,33 +2468,89 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("sleep", eff.sid)
-		self:setEffect(self.EFF_INSOMNIA, eff.insomnia, {power=eff.insomnia/10})
+		if not self:attr("lucid_dreamer") then
+			self:setEffect(self.EFF_INSOMNIA, eff.insomnia, {power=eff.insomnia/10})
+		end
+		if not self:attr("sleep") and eff.waking > 0 then
+			DamageType:get(DamageType.MIND).projector(eff.src or self, self.x, self.y, DamageType.MIND, eff.src:mindCrit(eff.waking))
+		end
+	end,
+}
+
+newEffect{
+	name = "NIGHTMARE", image = "talents/nightmare.png",
+	desc = "Nightmare",
+	long_desc = function(self, eff) return ("The target is in a nightmarish sleep, suffering %0.2f mind damage each turn and unable to act.  Every %d damage it takes will reduce the duration of the effect by one turn."):format(eff.dam, eff.power) end,
+	type = "mental",
+	subtype = { nightmare=true, sleep=true },
+	status = "detrimental",
+	parameters = { power=1, dam=0, insomnia=1, waking=0},
+	on_gain = function(self, err) return "#F53CBE##Target# is lost in a nightmare.", "+Nightmare" end,
+	on_lose = function(self, err) return "#Target# is free from the nightmare.", "-Nightmare" end,
+	on_timeout = function(self, eff)
+		local dream_prison = false
+		if eff.src and eff.src.isTalentActive and eff.src:isTalentActive(eff.src.T_DREAM_PRISON) then
+			local t = eff.src:getTalentFromId(eff.src.T_DREAM_PRISON)
+			if core.fov.distance(self.x, self.y, eff.src.x, eff.src.y) <= eff.src:getTalentRange(t) then
+				dream_prison = true
+			end
+		end
+		if dream_prison then
+			eff.dur = eff.dur + 1
+		else
+			-- Store the power for later
+			local real_power = eff.power
+			-- Temporarily spike the power so the nightmare doesn't break it
+			eff.power = 10000
+			DamageType:get(DamageType.DARKNESS).projector(eff.src or self, self.x, self.y, DamageType.DARKNESS, eff.dam)
+			-- Set the power back to its baseline
+			eff.power = real_power
+		end
+	end,
+	activate = function(self, eff)
+		eff.sid = self:addTemporaryValue("sleep", eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("sleep", eff.sid)
+		if not self:attr("lucid_dreamer") then
+			self:setEffect(self.EFF_INSOMNIA, eff.insomnia, {power=eff.insomnia/10})
+		end
+		if not self:attr("sleep") and eff.waking > 0 then
+			DamageType:get(DamageType.MIND).projector(eff.src or self, self.x, self.y, DamageType.MIND, eff.src:mindCrit(eff.waking))
+		end
 	end,
 }
 
 newEffect{
 	name = "INSOMNIA", image = "talents/sleep.png",
 	desc = "Insomnia",
-	long_desc = function(self, eff) return ("The target is wide awake and has %d%% resistance to sleep effects."):format(eff.power) end,
+	long_desc = function(self, eff) return ("The target is wide awake and has %d%% resistance to sleep effects."):format(eff.power*100) end,
 	type = "mental",
-	subtype = { sleep=true },
+	subtype = { psionic=true },
 	status = "beneficial",
 	parameters = { power=0 },
+	on_gain = function(self, err) return "#Target# is suffering from insomnia.", "+Insomnia" end,
+	on_lose = function(self, err) return "#Target# is no longer suffering from insomnia.", "-Insomnia" end,
 	on_merge = function(self, old_eff, new_eff)
 		-- Merge the effect
-		local dur = math.ceil((old_eff.dur + new_eff.dur) / 2)
+		local dur = math.min(10, math.ceil(old_eff.dur + new_eff.dur))
 		old_eff.dur = dur
 		old_eff.power = dur/10
 		-- Need to remove and re-add the effect
 		self:removeTemporaryValue("sleep_immune", old_eff.sid)
-		old_eff.effsid = self:addTemporaryValue("sleep_immune", old_eff.power)
+		old_eff.sid = self:addTemporaryValue("sleep_immune", old_eff.power)
 		return old_eff
 	end,
 	on_timeout = function(self, eff)
-		-- Deincrement the power
-		eff.power = eff.dur/10
-		self:removeTemporaryValue("sleep_immune", eff.sid)
-		eff.sid = self:addTemporaryValue("sleep_immune", eff.power)
+		-- Insomnia only ticks when we're awake
+		if self:attr("sleep") then
+			eff.dur = eff.dur + 1
+		else
+			-- Deincrement the power
+			eff.power = eff.dur/10
+			self:removeTemporaryValue("sleep_immune", eff.sid)
+			eff.sid = self:addTemporaryValue("sleep_immune", eff.power)
+		end
 	end,
 	activate = function(self, eff)
 		eff.sid = self:addTemporaryValue("sleep_immune", eff.power)
@@ -2449,3 +2560,29 @@ newEffect{
 	end,
 }
 
+newEffect{
+	name = "SUNDER_MIND", image = "talents/sunder_mind.png",
+	desc = "Sundered Mind",
+	long_desc = function(self, eff) return ("The target's mental faculties have been impaired, reducing it's mental save by %d."):format(eff.cur_power or eff.power) end,
+	type = "mental",
+	subtype = { psionic=true },
+	status = "detrimental",
+	on_gain = function(self, err) return "#Target# mental functions have been imparied.", "+Sundered Mind" end,
+	on_lose = function(self, err) return "#Target#'s regains it's senses.", "-Sundered Mind" end,
+	parameters = { power=10 },
+	on_merge = function(self, old_eff, new_eff)
+		self:removeTemporaryValue("combat_mentalresist", old_eff.sunder)
+		old_eff.cur_power = old_eff.cur_power + new_eff.power
+		old_eff.sunder = self:addTemporaryValue("combat_mentalresist", -old_eff.cur_power)
+
+		old_eff.dur = new_eff.dur
+		return old_eff
+	end,
+	activate = function(self, eff)
+		eff.cur_power = eff.power
+		eff.sunder = self:addTemporaryValue("combat_mentalresist", -eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("combat_mentalresist", eff.sunder)
+	end,
+}

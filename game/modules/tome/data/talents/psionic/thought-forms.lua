@@ -17,213 +17,556 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
--- Edge TODO: Sounds, Particles, Talent Icons; All Talents
+-- Edge TODO: Sounds, Particles,
+
+-- Thought Forms
+newTalent{
+	name = "Thought-Form: Warrior",
+	short_name = "TF_WARRIOR",
+	type = {"psionic/other", 1},
+	points = 5, 
+	require = psi_wil_req1,
+	sustain_psi = 20,
+	mode = "sustained",
+	no_sustain_autoreset = true,
+	cooldown = 24,
+	range = function(self, t)
+		local t = self:getTalentFromId(self.T_OVER_MIND)
+		return 10 + t.getRangeBonus(self, t)
+	end,
+	getStatBonus = function(self, t) 
+		local t = self:getTalentFromId(self.T_THOUGHT_FORMS)
+		return t.getStatBonus(self, t)
+	end,
+	activate = function(self, t)
+		cancelThoughtForms(self)
+		
+		-- Find space
+		local x, y = util.findFreeGrid(self.x, self.y, 5, true, {[Map.ACTOR]=true})
+		if not x then
+			game.logPlayer(self, "Not enough space to summon!")
+			return
+		end
+		
+		-- Do our stat bonuses here so we only roll for crit once		
+		local stat_bonus = math.floor(self:mindCrit(t.getStatBonus(self, t)))
+	
+		local NPC = require "mod.class.NPC"
+		local m = NPC.new{
+			name = "thought-forged warrior", summoner = self, 
+			desc = [[A thought-forged warrior wielding a massive hammer and clad in heavy armor.  It appears ready for battle.]],
+			body = { INVEN = 10, MAINHAND = 1, BODY = 1, HANDS = 1, FEET = 1},
+			-- Make a moddable tile
+			resolvers.generic(function(e)
+				if e.summoner.female then
+					e.female = true
+				end
+				e.image = e.summoner.image
+				e.moddable_tile = e.summoner.moddable_tile and e.summoner.moddable_tile or nil
+				e.moddable_tile_base = e.summoner.moddable_tile_base and e.summoner.moddable_tile_base or nil
+				e.moddable_tile_ornament = e.summoner.moddable_tile_ornament and e.summoner.moddable_tile_ornament or nil
+			end),
+			-- Disable our sustain when we die
+			on_die = function(self)
+				game:onTickEnd(function() 
+					if self.summoner:isTalentActive(self.summoner.T_TF_WARRIOR) then
+						self.summoner:forceUseTalent(self.summoner.T_TF_WARRIOR, {ignore_energy=true})
+					end
+					if self.summoner:isTalentActive(self.summoner.T_OVER_MIND) then
+						self.summoner:forceUseTalent(self.summoner.T_OVER_MIND, {ignore_energy=true})
+					end
+				end)
+			end,
+			-- Keep them on a leash
+			on_act = function(self)
+				local t = self.summoner:getTalentFromId(self.summoner.T_TF_WARRIOR)
+				if not game.level:hasEntity(self.summoner) or core.fov.distance(self.x, self.y, self.summoner.x, self.summoner.y) > self.summoner:getTalentRange(t) then
+					local Map = require "engine.Map"
+					local x, y = util.findFreeGrid(self.summoner.x, self.summoner.y, 5, true, {[Map.ACTOR]=true})
+					if not x then
+						return
+					end
+					-- Clear it's targeting on teleport
+					self.ai_target.actor = nil
+					self:move(x, y, true)
+					game.level.map:particleEmitter(x, y, 1, "summon")
+				end
+			end,
+			
+			ai = "summoned", ai_real = "tactical",
+			ai_state = { ai_move="move_dmap", talent_in=3, ally_compassion=10 },
+			ai_tactic = resolvers.tactic("melee"),
+			
+			max_life = resolvers.rngavg(100,110),
+			life_rating = 15,
+			combat_armor = 0, combat_def = 0,
+			inc_stats = {
+				str = stat_bonus,
+				dex = stat_bonus / 2,
+				con = stat_bonus / 2,
+			},
+			
+			resolvers.talents{ 
+				[Talents.T_ARMOUR_TRAINING]= 3,
+				[Talents.T_WEAPON_COMBAT]= math.ceil(self.level/10),
+				[Talents.T_WEAPONS_MASTERY]= math.ceil(self.level/10),
+				
+				[Talents.T_RUSH]= math.ceil(self.level/10),
+				[Talents.T_DEATH_DANCE]= math.ceil(self.level/10),
+				[Talents.T_BERSERKER]= math.ceil(self.level/10),
+
+				[Talents.T_PSYCHOMETRY]= math.floor(self:getTalentLevel(self.T_TRANSCENDENT_THOUGHT_FORMS)),
+				[Talents.T_BIOFEEDBACK]= math.floor(self:getTalentLevel(self.T_TRANSCENDENT_THOUGHT_FORMS)),
+				[Talents.T_LUCID_DREAMER]= math.floor(self:getTalentLevel(self.T_TRANSCENDENT_THOUGHT_FORMS)),
+			},
+			resolvers.equip{
+				{type="weapon", subtype="greatmaul", autoreq=true, forbid_power_source={arcane=true, technique=true} },
+				{type="armor", subtype="heavy", autoreq=true, forbid_power_source={arcane=true, technique=true} },
+				{type="armor", subtype="hands", autoreq=true, forbid_power_source={arcane=true, technique=true} },
+				{type="armor", subtype="feet", autoreq=true, forbid_power_source={arcane=true, technique=true} },
+			},
+			resolvers.sustains_at_birth(),
+		}
+
+		setupThoughtForm(self, m, x, y)
+
+		game:playSoundNear(self, "talents/spell_generic")
+		
+		local ret = {
+			summon = m
+		}
+		if self:knowTalent(self.T_TF_UNITY) then
+			local t = self:getTalentFromId(self.T_TF_UNITY)
+			ret.power = self:addTemporaryValue("combat_mindpower", t.getOffensePower(self, t))
+		end
+		return ret
+	end,
+	deactivate = function(self, t, p)
+		p.summon:die(p.summon)
+		if p.power then self:removeTemporaryValue("combat_mindpower", p.power) end
+		return true
+	end,
+	info = function(self, t)
+		local stat = t.getStatBonus(self, t)
+		return ([[Forge a warrior wielding a greatmaul from your thoughts.  The warrior learns weapon mastery, combat accuracy, berserker, death dance, and rush as it levels up and has %d improved strength, %d dexterity, and %d constitution.
+		The stat bonuses will improve with your mindpower.]]):format(stat, stat/2, stat/2)
+	end,
+}
 
 newTalent{
-	name = "Thought Form1",
+	name = "Thought-Form: Defender",
+	short_name = "TF_DEFENDER",
+	type = {"psionic/other", 1},
+	points = 5, 
+	require = psi_wil_req1,
+	sustain_psi = 20,
+	mode = "sustained",
+	no_sustain_autoreset = true,
+	cooldown = 24,
+	range = function(self, t)
+		local t = self:getTalentFromId(self.T_OVER_MIND)
+		return 10 + t.getRangeBonus(self, t)
+	end,
+	getStatBonus = function(self, t) 
+		local t = self:getTalentFromId(self.T_THOUGHT_FORMS)
+		return t.getStatBonus(self, t)
+	end,
+	activate = function(self, t)
+		cancelThoughtForms(self)
+		
+		-- Find space
+		local x, y = util.findFreeGrid(self.x, self.y, 5, true, {[Map.ACTOR]=true})
+		if not x then
+			game.logPlayer(self, "Not enough space to summon!")
+			return
+		end
+		
+		-- Do our stat bonuses here so we only roll for crit once	
+		local stat_bonus = math.floor(self:mindCrit(t.getStatBonus(self, t)))
+	
+		local NPC = require "mod.class.NPC"
+		local m = NPC.new{
+			name = "thought-forged defender", summoner = self,
+			desc = [[A thought-forged defender clad in massive armor.  It wields a sword and shield and appears ready for battle.]],
+			body = { INVEN = 10, MAINHAND = 1, OFFHAND = 1, BODY = 1, HANDS = 1, FEET = 1},
+			-- Make a moddable tile
+			resolvers.generic(function(e)
+				if e.summoner.female then
+					e.female = true
+				end
+				e.image = e.summoner.image
+				e.moddable_tile = e.summoner.moddable_tile and e.summoner.moddable_tile or nil
+				e.moddable_tile_base = e.summoner.moddable_tile_base and e.summoner.moddable_tile_base or nil
+				e.moddable_tile_ornament = e.summoner.moddable_tile_ornament and e.summoner.moddable_tile_ornament or nil
+			end),
+			-- Disable our sustain when we die
+			on_die = function(self)
+				game:onTickEnd(function() 
+					if self.summoner:isTalentActive(self.summoner.T_TF_DEFENDER) then
+						self.summoner:forceUseTalent(self.summoner.T_TF_DEFENDER, {ignore_energy=true})
+					end
+					if self.summoner:isTalentActive(self.summoner.T_OVER_MIND) then
+						self.summoner:forceUseTalent(self.summoner.T_OVER_MIND, {ignore_energy=true})
+					end
+				end)
+			end,
+			-- Keep them on a leash
+			on_act = function(self)
+				local t = self.summoner:getTalentFromId(self.summoner.T_TF_DEFENDER)
+				if not game.level:hasEntity(self.summoner) or core.fov.distance(self.x, self.y, self.summoner.x, self.summoner.y) > self.summoner:getTalentRange(t) then
+					local Map = require "engine.Map"
+					local x, y = util.findFreeGrid(self.summoner.x, self.summoner.y, 5, true, {[Map.ACTOR]=true})
+					if not x then
+						return
+					end
+					-- Clear it's targeting on teleport
+					self.ai_target.actor = nil
+					self:move(x, y, true)
+					game.level.map:particleEmitter(x, y, 1, "summon")
+				end
+			end,		
+			
+			ai = "summoned", ai_real = "tactical",
+			ai_state = { ai_move="move_dmap", talent_in=3, ally_compassion=10 },
+			ai_tactic = resolvers.tactic("tank"),
+			
+			max_life = resolvers.rngavg(100,110),
+			life_rating = 15,
+			combat_armor = 0, combat_def = 0,
+			inc_stats = {
+				str = stat_bonus / 2,
+				dex = stat_bonus / 2,
+				con = stat_bonus,
+			},
+			
+			resolvers.talents{ 
+				[Talents.T_ARMOUR_TRAINING]= 3 + math.ceil(self.level/10),
+				[Talents.T_WEAPON_COMBAT]= math.ceil(self.level/10),
+				[Talents.T_WEAPONS_MASTERY]= math.ceil(self.level/10),
+				
+				[Talents.T_SHIELD_PUMMEL]= math.ceil(self.level/10),
+				[Talents.T_SHIELD_WALL]= math.ceil(self.level/10),
+				
+
+				[Talents.T_PSYCHOMETRY]= math.floor(self:getTalentLevel(self.T_TRANSCENDENT_THOUGHT_FORMS)),
+				[Talents.T_BIOFEEDBACK]= math.floor(self:getTalentLevel(self.T_TRANSCENDENT_THOUGHT_FORMS)),
+				[Talents.T_LUCID_DREAMER]= math.floor(self:getTalentLevel(self.T_TRANSCENDENT_THOUGHT_FORMS)),
+
+			},
+			resolvers.equip{
+				{type="weapon", subtype="longsword", autoreq=true, forbid_power_source={arcane=true, technique=true} },
+				{type="armor", subtype="shield", autoreq=true, forbid_power_source={arcane=true, technique=true} },
+				{type="armor", subtype="massive", autoreq=true, forbid_power_source={arcane=true, technique=true} },
+				{type="armor", subtype="hands", autoreq=true, forbid_power_source={arcane=true, technique=true} },
+				{type="armor", subtype="feet", autoreq=true, forbid_power_source={arcane=true, technique=true} },
+			},
+			resolvers.sustains_at_birth(),
+		}
+
+		setupThoughtForm(self, m, x, y)
+
+		game:playSoundNear(self, "talents/spell_generic")
+		
+		local ret = {
+			summon = m
+		}
+		if self:knowTalent(self.T_TF_UNITY) then
+			local t = self:getTalentFromId(self.T_TF_UNITY)
+			ret.resist = self:addTemporaryValue("resists", {all= t.getDefensePower(self, t)})
+		end
+		return ret
+	end,
+	deactivate = function(self, t, p)
+		p.summon:die(p.summon)
+		if p.resist then self:removeTemporaryValue("resists", p.resist) end
+		return true
+	end,
+	info = function(self, t)
+		local stat = t.getStatBonus(self, t)
+		return ([[Forge a defender wielding a sword and shield from your thoughts.  The solider learns armor training, weapon mastery, combat accuracy, shield pummel, and shield wall as it levels up and has %d improved strength, %d dexterity, and %d constitution.
+		The stat bonuses will improve with your mindpower.]]):format(stat/2, stat/2, stat)
+	end,
+}
+
+newTalent{
+	name = "Thought-Form: Bowman",
+	short_name = "TF_BOWMAN",
+	type = {"psionic/other", 1},
+	points = 5, 
+	require = psi_wil_req1,
+	sustain_psi = 20,
+	mode = "sustained",
+	no_sustain_autoreset = true,
+	cooldown = 24,
+	range = function(self, t)
+		local t = self:getTalentFromId(self.T_OVER_MIND)
+		return 10 + t.getRangeBonus(self, t)
+	end,
+	getStatBonus = function(self, t) 
+		local t = self:getTalentFromId(self.T_THOUGHT_FORMS)
+		return t.getStatBonus(self, t)
+	end,
+	activate = function(self, t)
+		cancelThoughtForms(self)
+		
+		-- Find space
+		local x, y = util.findFreeGrid(self.x, self.y, 5, true, {[Map.ACTOR]=true})
+		if not x then
+			game.logPlayer(self, "Not enough space to summon!")
+			return
+		end
+		
+		-- Do our stat bonuses here so we only roll for crit once	
+		local stat_bonus = math.floor(self:mindCrit(t.getStatBonus(self, t)))
+	
+		local NPC = require "mod.class.NPC"
+		local m = NPC.new{
+			name = "thought-forged bowman", summoner = self,
+			desc = [[A thought-forged bowman.  It appears ready for battle.]],
+			body = { INVEN = 10, MAINHAND = 1, BODY = 1, QUIVER=1, HANDS = 1, FEET = 1},
+			-- Make a moddable tile
+			resolvers.generic(function(e)
+				if e.summoner.female then
+					e.female = true
+				end
+				e.image = e.summoner.image
+				e.moddable_tile = e.summoner.moddable_tile and e.summoner.moddable_tile or nil
+				e.moddable_tile_base = e.summoner.moddable_tile_base and e.summoner.moddable_tile_base or nil
+				e.moddable_tile_ornament = e.summoner.moddable_tile_ornament and e.summoner.moddable_tile_ornament or nil
+			end),
+			-- Disable our sustain when we die
+			on_die = function(self)
+				game:onTickEnd(function() 
+					if self.summoner:isTalentActive(self.summoner.T_TF_BOWMAN) then
+						self.summoner:forceUseTalent(self.summoner.T_TF_BOWMAN, {ignore_energy=true})
+					end
+					if self.summoner:isTalentActive(self.summoner.T_OVER_MIND) then
+						self.summoner:forceUseTalent(self.summoner.T_OVER_MIND, {ignore_energy=true})
+					end
+				end)
+			end,
+			-- Keep them on a leash
+			on_act = function(self)
+				local t = self.summoner:getTalentFromId(self.summoner.T_TF_BOWMAN)
+				if not game.level:hasEntity(self.summoner) or core.fov.distance(self.x, self.y, self.summoner.x, self.summoner.y) > self.summoner:getTalentRange(t) then
+					local Map = require "engine.Map"
+					local x, y = util.findFreeGrid(self.summoner.x, self.summoner.y, 5, true, {[Map.ACTOR]=true})
+					if not x then
+						return
+					end
+					-- Clear it's targeting on teleport
+					self.ai_target.actor = nil
+					self:move(x, y, true)
+					game.level.map:particleEmitter(x, y, 1, "summon")
+				end
+			end,
+
+			ai = "summoned", ai_real = "tactical",
+			ai_state = { ai_move="move_dmap", talent_in=3, ally_compassion=10 },
+			ai_tactic = resolvers.tactic("ranged"),
+			
+			max_life = resolvers.rngavg(100,110),
+			life_rating = 12,
+			combat_armor = 0, combat_def = 0,
+			inc_stats = {
+				str = stat_bonus / 2,
+				dex = stat_bonus,
+				con = stat_bonus / 2,
+			},
+			
+			resolvers.talents{ 
+				[Talents.T_HEAVE]= math.ceil(self.level/10),
+				[Talents.T_WEAPON_COMBAT]= math.ceil(self.level/10),
+				[Talents.T_BOW_MASTERY]= math.ceil(self.level/10),
+				
+				[Talents.T_STEADY_SHOT]= math.ceil(self.level/10),
+				[Talents.T_RAPID_SHOT]= math.ceil(self.level/10),
+				
+
+				[Talents.T_PSYCHOMETRY]= math.floor(self:getTalentLevel(self.T_TRANSCENDENT_THOUGHT_FORMS)),
+				[Talents.T_BIOFEEDBACK]= math.floor(self:getTalentLevel(self.T_TRANSCENDENT_THOUGHT_FORMS)),
+				[Talents.T_LUCID_DREAMER]= math.floor(self:getTalentLevel(self.T_TRANSCENDENT_THOUGHT_FORMS)),
+			},
+			resolvers.equip{
+				{type="weapon", subtype="longbow", autoreq=true, forbid_power_source={arcane=true, technique=true} },
+				{type="ammo", subtype="arrow", autoreq=true, forbid_power_source={arcane=true, technique=true} },
+				{type="armor", subtype="light", autoreq=true, forbid_power_source={arcane=true, technique=true} },
+				{type="armor", subtype="hands", autoreq=true, forbid_power_source={arcane=true, technique=true} },
+				{type="armor", subtype="feet", autoreq=true, forbid_power_source={arcane=true, technique=true} },
+			},
+			resolvers.sustains_at_birth(),
+		}
+
+		setupThoughtForm(self, m, x, y)
+
+		game:playSoundNear(self, "talents/spell_generic")
+		
+		local ret = {
+			summon = m
+		}
+		if self:knowTalent(self.T_TF_UNITY) then
+			local t = self:getTalentFromId(self.T_TF_UNITY)
+			ret.speed = self:addTemporaryValue("combat_mindspeed", t.getSpeedPower(self, t)/100)
+		end
+		return ret
+	end,
+	deactivate = function(self, t, p)
+		p.summon:die(p.summon)
+		if p.speed then self:removeTemporaryValue("combat_mindspeed", p.speed) end
+		return true
+	end,
+	info = function(self, t)
+		local stat = t.getStatBonus(self, t)
+		return ([[Forge a bowman clad in leather armor from your thoughts.  The bowman learns disengage, bow mastery, combat accuracy, steady shot, and rapid shot as it levels up and has %d improved strength, %d dexterity, and %d constitution.
+		The stat bonuses will improve with your mindpower.]]):format(stat/2, stat, stat/2)
+	end,
+}
+
+newTalent{
+	name = "Thought-Forms",
+	short_name = "THOUGHT_FORMS",
 	type = {"psionic/thought-forms", 1},
 	points = 5, 
 	require = psi_wil_req1,
-	cooldown = 5,
-	tactical = { DISABLE = 2},
-	range = 0,
-	direct_hit = true,
-	requires_target = true,
-	getDamage = function(self, t) return self:combatTalentMindDamage(t, 20, 150) end,
-	radius = function(self, t) return 1 + math.ceil(self:getTalentLevel(t)) end,
-	target = function(self, t)
-		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false}
+	mode = "passive",
+	range = function(self, t)
+		local t = self:getTalentFromId(self.T_OVER_MIND)
+		return 10 + t.getRangeBonus(self, t)
 	end,
-	on_pre_use = function(self, t, silent) if self.psionic_feedback <= 0 then if not silent then game.logPlayer(self, "You have no feedback to power this talent.") end return false end return true end,
+	getStatBonus = function(self, t) return self:combatTalentMindDamage(t, 5, 50) end,
 	on_learn = function(self, t)
-		if self:getTalentLevelRaw(t) == 1 then
-			if not self.psionic_feedback then
-				self.psionic_feedback = 0
-			end
-			self.psionic_feedback_max = (self.psionic_feedback_max or 0) + 100
+		if self:getTalentLevel(t) >= 1 and not self:knowTalent(self.T_TF_WARRIOR) then
+			self:learnTalent(self.T_TF_WARRIOR, true)
 		end
-		return true
-	end,
+		if self:getTalentLevel(t) >= 3 and not self:knowTalent(self.T_TF_DEFENDER) then
+			self:learnTalent(self.T_TF_DEFENDER, true)
+		end
+		if self:getTalentLevel(t) >= 5 and not self:knowTalent(self.T_TF_BOWMAN) then
+			self:learnTalent(self.T_TF_BOWMAN, true)
+		end
+	end,	
 	on_unlearn = function(self, t)
-		if not self:knowTalent(t) then
-			self.psionic_feedback_max = self.psionic_feedback_max - 100
-			if self.psionic_feedback_max <= 0 then
-				self.psionic_feedback_max = nil
-				self.psionic_feedback = nil
-			end
+		if self:getTalentLevel(t) < 1 and self:knowTalent(self.T_TF_WARRIOR) then
+			self:unlearnTalent(self.T_TF_WARRIOR)
 		end
-		return true
-	end,
-	action = function(self, t)
-		local tg = self:getTalentTarget(t)
-		local x, y = self:getTarget(tg)
-		
-		local damage = math.min(self.psionic_feedback, t.getDamage(self, t))
-		self:project(tg, x, y, DamageType.MIND, {dam=self:mindCrit(damage), crossTierChance=math.max(100, damage)})
-		
-		self.psionic_feedback = self.psionic_feedback - damage
-							
-		return true
+		if self:getTalentLevel(t) < 3 and self:knowTalent(self.T_TF_DEFENDER) then
+			self:unlearnTalent(self.T_TF_DEFENDER)
+		end
+		if self:getTalentLevel(t) < 5 and self:knowTalent(self.T_TF_BOWMAN) then
+			self:unlearnTalent(self.T_TF_BOWMAN)
+		end
 	end,
 	info = function(self, t)
-		local damage = t.getDamage(self, t)
-		local radius = self:getTalentRadius(t)
-		return ([[You now store damage you take from outside sources as psionic feedback.  Activate to discharge up to %0.2f feedback in a %d radius cone.  Targets in the area will suffer mind damage and may be brain locked by this attack.
-		Learning this talent will increase the amount of feedback you can store by 100 (first talent point only).
-		The damage will scale with your mindpower.]]):format(damage, radius)
+		local bonus = t.getStatBonus(self, t)
+		local range = self:getTalentRange(t)
+		return([[Forge a guardian from your thoughts alone.  Your guardian's primary stat will be improved by %d and it's two secondary stats by %d.
+		At talent level one you may forge a powerful warrior wielding a two-handed weapon, at talent level 3 you may forge a strong defender using a sword and shield, and at talent level 5 a mighty bowman clad in leather armor.
+		Thought forms can only be maintained up to a range of %d and will rematerialize next to you if this range is exceeded.
+		Only one thought-form may be active at a time and the stat bonuses will improve with your mindpower.]]):format(bonus, bonus/2, range)
 	end,
 }
 
 newTalent{
-	name = "Thought Form2",
+	name = "Transcendent Thought-Forms",
+	short_name = "TRANSCENDENT_THOUGHT_FORMS",
 	type = {"psionic/thought-forms", 2},
 	points = 5, 
 	require = psi_wil_req2,
+	mode = "passive",
+	info = function(self, t)
+		local level = self:getTalentLevel(t)
+		return([[Your thought-forms now know Lucid Dreamer, Biofeedback, and Psychometry at talent level %d.]]):format(level)
+	end,
+}
+
+newTalent{
+	name = "Over Mind",
+	type = {"psionic/thought-forms", 3},
+	points = 5, 
+	require = psi_wil_req3,
+	sustain_psi = 50,
 	mode = "sustained",
-	sustain_psi = 20,
-	cooldown = 18,
-	tactical = { BUFF = 2 },
-	getMaxOverflow = function(self, t) return self.psionic_feedback_max * (self:combatTalentMindDamage(t, 20, 100)/100) end,
-	radius = function(self, t) return math.ceil(self:getTalentLevel(t)/2) end,
-	on_learn = function(self, t)
-		if self:getTalentLevelRaw(t) == 1 then
-			if not self.psionic_feedback then
-				self.psionic_feedback = 0
-			end
-			self.psionic_feedback_max = (self.psionic_feedback_max or 0) + 50
-		end
-		return true
-	end,
-	on_unlearn = function(self, t)
-		if not self:knowTalent(t) then
-			self.psionic_feedback_max = self.psionic_feedback_max - 50
-			if self.psionic_feedback_max <= 0 then
-				self.psionic_feedback_max = nil
-				self.psionic_feedback = nil
-			end
-		end
-		return true
-	end,
-	doOverflowDischarge = function(self, t)
-		local tg = {type="ball", range=0, radius=self:getTalentRadius(t), selffire=false, friendlyfire=false}
-		local damage = self.psionic_overflow
-		self:project(tg, self.x, self.y, DamageType.MIND, self:mindCrit(damage))
-		-- Lose remaining overflow
-		self.psionic_overflow = nil
-	end,
+	no_sustain_autoreset = true,
+	cooldown = 24,
+	no_npc_use = true,
+	getControlBonus = function(self, t) return self:combatTalentMindDamage(t, 5, 50) end,
+	getRangeBonus = function(self, t) return self:getTalentLevelRaw(t) end,
+	on_pre_use = function(self, t, silent) if not game.party:findMember{type="thought-form"} then if not silent then game.logPlayer(self, "You must have an active Thought-Form to use this talent!") end return false end return true end,
 	activate = function(self, t)
-		game:playSoundNear(self, "talents/flame")
-		return {
-			ov = self:addTemporaryValue("psionic_overflow_max", t.getMaxOverflow(self, t)),
+		-- Find our thought-form
+		local target = game.party:findMember{type="thought-form"}
+		
+		-- Modify the control permission
+		local old_control = game.party:hasMember(target).control
+		game.party:hasMember(target).control = "full"
+				
+		-- Store life bonus and heal value
+		local life_bonus = target.max_life * (t.getControlBonus(self, t)/100)
+		
+		-- Switch on TickEnd so every thing applies correctly
+		game:onTickEnd(function() 
+			game.party:hasMember(target).on_control = function(self)
+				self.summoner.over_mind_ai = self.summoner.ai
+				self.summoner.ai = "none"
+				target:hotkeyAutoTalents()
+			end
+			game.party:hasMember(target).on_uncontrol = function(self)
+				self.summoner.ai = self.summoner.over_mind_ai
+				if self.summoner:isTalentActive(self.summoner.T_OVER_MIND) then
+					self.summoner:forceUseTalent(self.summoner.T_OVER_MIND, {ignore_energy=true})
+				end
+			end
+			game.party:setPlayer(target)
+			self:resetCanSeeCache()
+		end)
+			
+		local ret = {
+			target = target, old_control = old_control,
+			life = target:addTemporaryValue("max_life", life_bonus),
+			speed = target:addTemporaryValue("combat_physspeed", t.getControlBonus(self, t)/100),
+			damage = target:addTemporaryValue("inc_damage", {all=t.getControlBonus(self, t)}),
+			target:heal(life_bonus),
 		}
+		
+		return ret
 	end,
 	deactivate = function(self, t, p)
-		self:removeTemporaryValue("psionic_overflow_max", p.ov)
-		return true
-	end,
-	info = function(self, t)
-		local overflow = t.getMaxOverflow(self, t)
-		local radius = self:getTalentRadius(t)
-		return ([[While active you store up to %d excess feedback as overflow.  At the start of your turn the overflow will be unleased as mind damage in a radius of %d.
-		Learning this talent will increase the amount of feedback you can store by 50 (first talent point only).
-		The max excess you can store will improve with your mindpower and max feedback.]]):format(overflow, radius)
-	end,
-}
-
-newTalent{
-	name = "Thought Form3",
-	type = {"psionic/thought-forms", 3},
-	points = 5,
-	require = psi_wil_req3,
-	cooldown = 10,
-	tactical = { ATTACKAREA = {PHYSICAL = 2}, DISABLE = { knockback = 2 }, },
-	range = 0,
-	radius = function(self, t) return 1 + math.ceil(self:getTalentLevel(t)) end,
-	direct_hit = true,
-	requires_target = true,
-	target = function(self, t)
-		return {type="ball", range=self:getTalentRange(t), talent=t}
-	end,
-	getDamage = function(self, t) return self:combatTalentMindDamage(t, 20, 230) end,
-	on_pre_use = function(self, t, silent) if self.psionic_feedback <= 0 then if not silent then game.logPlayer(self, "You have no feedback to power this talent.") end return false end return not self:hasEffect(self.EFF_REGENERATION) end,
-	on_learn = function(self, t)
-		if self:getTalentLevelRaw(t) == 1 then
-			if not self.psionic_feedback then
-				self.psionic_feedback = 0
-			end
-			self.psionic_feedback_max = (self.psionic_feedback_max or 0) + 50
-		end
-		return true
-	end,
-	on_unlearn = function(self, t)
-		if not self:knowTalent(t) then
-			self.psionic_feedback_max = self.psionic_feedback_max - 50
-			if self.psionic_feedback_max <= 0 then
-				self.psionic_feedback_max = nil
-				self.psionic_feedback = nil
+		if p.target then
+			p.target:removeTemporaryValue("max_life", p.life)
+			p.target:removeTemporaryValue("inc_damage", p.damage)
+			p.target:removeTemporaryValue("combat_physspeed", p.speed)
+		
+			if game.party:hasMember(p.target) then
+				game.party:hasMember(p.target).control = old_control
 			end
 		end
 		return true
 	end,
-	action = function(self, t)
-		local tg = self:getTalentTarget(t)
-		if not x or not y then return nil end
-		
-		local damage = math.min(self.psionic_feedback, t.getDamage(self, t))
-		self:project(tg, x, y, DamageType.MINDKNOCKBACK, self:mindCrit(damage))
-		self.psionic_feedback = self.psionic_feedback - damage
-		
-		return true
-	end,
 	info = function(self, t)
-		local damage = t.getDamage(self, t)
-		local radius = self:getTalentRadius(t)
-		return ([[Activate to convert up to %0.2f of stored feedback into a blast of kinetic energy.  Targets out to a radius of %d will suffer physical damage and may be knocked back.
-		Learning this talent will increase the amount of feedback you can store by 50 (first talent point only).
-		The damage will scale with your mindpower.]]):format(damDesc(self, DamageType.PHYSICAL, damage), radius)
+		local bonus = t.getControlBonus(self, t)
+		local range = t.getRangeBonus(self, t)
+		return ([[Take direct control of your active thought-form, improving it's damage, attack speed, and maximum life by %d%% but leaving your body a defenseless shell.
+		Also increases the range at which you can maintain your thought forms (rather this talent is active or not) by %d.
+		The life, damage, and speed bonus will improve with your mindpower.]]):format(bonus, range)
 	end,
 }
 
 newTalent{
-	name = "Thought Form4",
+	name = "Thought-Form Unity",
+	short_name = "TF_UNITY",
 	type = {"psionic/thought-forms", 4},
 	points = 5, 
 	require = psi_wil_req4,
-	cooldown = 15,
-	tactical = { DEFEND = 2, ATTACK = {MIND = 2}},
-	on_pre_use = function(self, t, silent) if self.psionic_feedback <= 0 then if not silent then game.logPlayer(self, "You have no feedback to power this talent.") end return false end return true end,
-	getShieldPower = function(self, t) return self:combatTalentMindDamage(t, 20, 300) end,
-	getDamage = function(self, t) return self:combatTalentMindDamage(t, 10, 50) end,
-	on_learn = function(self, t)
-		if self:getTalentLevelRaw(t) == 1 then
-			if not self.psionic_feedback then
-				self.psionic_feedback = 0
-			end
-			self.psionic_feedback_max = (self.psionic_feedback_max or 0) + 100
-		end
-		return true
-	end,
-	on_unlearn = function(self, t)
-		if not self:knowTalent(t) then
-			self.psionic_feedback_max = self.psionic_feedback_max - 100
-			if self.psionic_feedback_max <= 0 then
-				self.psionic_feedback_max = nil
-				self.psionic_feedback = nil
-			end
-		end
-		return true
-	end,
-	action = function(self, t)
-		local power = math.min(self.psionic_feedback, t.getShieldPower(self, t))
-		self:setEffect(self.EFF_RESONANCE_SHIELD, 10, {power = self:mindCrit(power), dam = t.getDamage(self, t)})
-		self.psionic_feedback = self.psionic_feedback - power
-		return true
-	end,
+	mode = "passive",
+	getOffensePower = function(self, t) return self:combatTalentMindDamage(t, 10, 30) end,
+	getDefensePower = function(self, t) return self:combatTalentMindDamage(t, 5, 15) end,
+	getSpeedPower = function(self, t) return self:combatTalentMindDamage(t, 5, 15) end,
 	info = function(self, t)
-		local shield_power = t.getShieldPower(self, t)
-		local damage = t.getDamage(self, t)
-		return ([[Activate to conver up to %0.2f feedback into a resonance shield that will absorb 50%% of all damage you take and inflict %0.2f mind damage to melee attackers.
-		Learning this talent will increase the amount of feedback you can store by 100 (first talent point only).
-		The conversion ratio will scale with your mindpower and the effect lasts up to ten turns.]]):format(shield_power, damDesc(self, DamageType.MIND, damage))
+		local offense = t.getOffensePower(self, t)
+		local defense = t.getDefensePower(self, t)
+		local speed = t.getSpeedPower(self, t)
+		return([[You now gain a %d bonus to mind power while Thought-Form: Warrior is active, a %d%% bonus to resist all while Thought-Form: Defender is active, and a %d%% bonus to mind speed while Thought-Form: Bowman is active.
+		At talent level one any Feedback your Thought-Forms gain will be given to you as well, at talent level three your Thought-Forms gain a bonus to all saves equal to your mental save, and at talent level five they gain a bonus to all damage equal to your bonus mind damage.
+		These bonuses scale with your mindpower.]]):format(offense, defense, speed)
 	end,
 }

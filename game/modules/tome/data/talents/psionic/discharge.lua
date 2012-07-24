@@ -23,7 +23,7 @@ newTalent{
 	name = "Backlash",
 	type = {"psionic/discharge", 1},
 	points = 5, 
-	require = psi_wil_req1,
+	require = psi_wil_high1,
 	mode = "passive",
 	range = function(self, t) return 5 + math.min(5, (self:isTalentActive(self.T_MIND_STORM) and self:getTalentLevelRaw(self.T_MIND_STORM)) or 0) end,
 	getDamage = function(self, t) return self:combatTalentMindDamage(t, 10, 75) end,
@@ -53,16 +53,15 @@ newTalent{
 	name = "Feedback Loop",
 	type = {"psionic/discharge", 2},
 	points = 5, 
-	require = psi_wil_req2,
+	require = psi_wil_high2,
 	cooldown = 24,
 	tactical = { FEEDBACK = 2 },
 	no_break_channel = true,
-	getDuration = function(self, t) return math.ceil(self:getTalentLevel(t) * 1.5) end,
+	getDuration = function(self, t) return 2 + math.ceil(self:getTalentLevel(t) * 1.5) end,
 	on_pre_use = function(self, t, silent) if self:getFeedback() <= 0 then if not silent then game.logPlayer(self, "You have no feedback to start a feedback loop!") end return false end return true end,
 	action = function(self, t)
 		local wrath = self:hasEffect(self.EFF_FOCUSED_WRATH)
 		self:setEffect(self.EFF_FEEDBACK_LOOP, self:mindCrit(t.getDuration(self, t), nil, wrath and wrath.power or 0), {})
-		
 		return true
 	end,
 	info = function(self, t)
@@ -77,7 +76,7 @@ newTalent{
 	name = "Mind Storm",
 	type = {"psionic/discharge", 3},
 	points = 5, 
-	require = psi_wil_req3,
+	require = psi_wil_high3,
 	sustain_feedback = 50,
 	mode = "sustained",
 	cooldown = 12,
@@ -164,7 +163,7 @@ newTalent{
 	name = "Focused Wrath",   
 	type = {"psionic/discharge", 4},
 	points = 5, 
-	require = psi_wil_req4,
+	require = psi_wil_high4,
 	feedback = 25,
 	cooldown = 12,
 	tactical = { ATTACK = {MIND = 2}},

@@ -17,48 +17,70 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
--- Edge TODO: Sounds, Particles, Talent Icons; All Talents
--- Idea: Nightmare effects gain a bonus to mindpower applications on slept targets, increasing chances of landing as well as brain-locks
--- Idea Night Terror: Sustain, increases mind damage by x% and increases darkness damage by X% of your +mind damage (up to 100).  Increases power of all nightmare effects on sleeping targets by X%
+-- Edge TODO: Sounds, Particles,
 
 newTalent{
-	name = "Nightmare/Waking Nightmare",
-	short_name = "WAKING_NIGHTMARE",
+	name = "Nightmare",
 	type = {"psionic/nightmare", 1},
-	points = 5,
-	require = psi_wil_req1,
-	cooldown = 10,
-	psi = 20,
-	range = 10,
+	points = 5, 
+	require = psi_wil_high1,
+	cooldown = 8,
+	psi = 10,
+	tactical = { DISABLE = {sleep = 1}, ATTACK = { DARKNESS = 2 }, },
 	direct_hit = true,
 	requires_target = true,
-	tactical = { ATTACK = { DARKNESS = 2 }, DISABLE = { confusion = 1, stun = 1, blind = 1 } },
-	getChance = function(self, t) return self:combatTalentMindDamage(t, 15, 50) end,
-	getDamage = function(self, t) return self:combatTalentMindDamage(t, 5, 50) end,
-	getDuration = function(self, t) return 4 + math.ceil(self:getTalentLevel(t)) end,
+	range = function(self, t) return 2 + math.floor(self:getTalentLevel(t)/2) end,
+	target = function(self, t) return {type="cone", radius=self:getTalentRange(t), range=0, talent=t, selffire=false} end,
+	getDuration = function(self, t) return 2 + math.ceil(self:getTalentLevel(t)/2) end,
+	getInsomniaDuration = function(self, t)
+		local t = self:getTalentFromId(self.T_SANDMAN)
+		local reduction = t.getInsomniaReduction(self, t)
+		return 10 - reduction
+	end,
+	getSleepPower = function(self, t) 
+		local power = self:combatTalentMindDamage(t, 5, 25)
+		if self:knowTalent(self.T_SANDMAN) then
+			local t = self:getTalentFromId(self.T_SANDMAN)
+			power = power + t.getSleepPowerBonus(self, t)
+		end
+		return power
+	end,
+	getDamage = function(self, t) return self:combatTalentMindDamage(t, 10, 100) end,
 	action = function(self, t)
-		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		local _ _, x, y = self:canProject(tg, x, y)
-		if not x or not y then return nil end
-		local target = game.level.map(x, y, Map.ACTOR)
-		if not target then return nil end
 
-		if target:canBe("fear") then
-			target:setEffect(target.EFF_WAKING_NIGHTMARE, t.getDuration(self, t), {src = self, chance=t.getChance(self, t), dam=self:mindCrit(t.getDamage(self, t)), apply_power=self:combatMindpower()})
-		else
-			game.logSeen(target, "%s resists the nightmare!", target.name:capitalize())
+		--Restless?
+		local is_waking =0
+		if self:knowTalent(self.T_RESTLESS_NIGHT) then
+			local t = self:getTalentFromId(self.T_RESTLESS_NIGHT)
+			is_waking = t.getDamage(self, t)
 		end
-
+		
+		local damage = self:mindCrit(t.getDamage(self, t))
+		self:project(tg, x, y, function(tx, ty)
+			local target = game.level.map(tx, ty, Map.ACTOR)
+			if target then
+				if target:canBe("sleep") then
+					target:setEffect(target.EFF_NIGHTMARE, t.getDuration(self, t), {src=self, power=power, waking=is_waking, dam=damage, insomnia=t.getInsomniaDuration(self, t), no_ct_effect=true, apply_power=self:combatMindpower()})
+				else
+					game.logSeen(self, "%s resists the nightmare!", target.name:capitalize())
+				end
+			end
+		end)
 		return true
 	end,
 	info = function(self, t)
-		local damage = t.getDamage(self, t)
+		local radius = self:getTalentRange(t)
 		local duration = t.getDuration(self, t)
-		local chance = t.getChance(self, t)
-		return ([[Inflicts %0.2f darkness damage each turn for %d turns and has a %d%% chance to randomly cause blindness, stun, or confusion (lasting 3 turns).]]):
-		format(damDesc(self, DamageType.DARKNESS, (damage)), duration, chance)
+		local power = t.getSleepPower(self, t)
+		local damage = t.getDamage(self, t)
+		local insomnia = t.getInsomniaDuration(self, t)
+		return([[Puts targets in a radius %d cone into a nightmarish sleep for %d turns, rendering them unable to act.  Every %d points of damage the target suffers will reduce the effect duration by one turn.
+		Each turn they'll suffer %0.2f darkness damage.  This damage will not reduce the duration of the effect.
+		When Nightmare ends the target will suffer from Insomnia for %d turns, rendering them resistant to sleep effects.
+		The damage threshold and mind damage will scale with your mindpower.]]):format(radius, duration, power, damDesc(self, DamageType.DARKNESS, (damage)), insomnia)
 	end,
 }
 
@@ -66,7 +88,7 @@ newTalent{
 	name = "Inner Demons",
 	type = {"psionic/nightmare", 2},
 	points = 5,
-	require = psi_wil_req2,
+	require = psi_wil_high2,
 	cooldown = 18,
 	psi = 20,
 	range = 10,
@@ -126,10 +148,7 @@ newTalent{
 			if t.mode == "sustained" and m:isTalentActive(t.id) then m:forceUseTalent(t.id, {ignore_energy=true}) end
 			m.talents[t.id] = nil
 		end
-
-		-- nil the Inner Demons effect to squelch combat log spam
-		m.tmp[m.EFF_INNER_DEMONS] = nil
-
+		
 		-- remove detrimental timed effects
 		local effs = {}
 		for eff_id, p in pairs(m.tmp) do
@@ -146,7 +165,6 @@ newTalent{
 			end
 		end
 
-
 		game.zone:addEntity(game.level, m, "actor", x, y)
 		game.level.map:particleEmitter(x, y, 1, "shadow")
 
@@ -161,9 +179,14 @@ newTalent{
 		if not x or not y then return nil end
 		local target = game.level.map(x, y, Map.ACTOR)
 		if not target then return nil end
-
+		if self:reactionToward(target) < 0 then
+			game.logPlayer(self, "You can't cast this on friendly targets.")
+		end
+		
+		local chance = self:mindCrit(t.getChance(self, t))
+		if target:attr("sleep") then chance = chance * 2 end
 		if target:canBe("fear") then
-			target:setEffect(target.EFF_INNER_DEMONS, t.getDuration(self, t), {src = self, chance=self:mindCrit(t.getChance(self, t)), apply_power=self:combatMindpower()})
+			target:setEffect(target.EFF_INNER_DEMONS, t.getDuration(self, t), {src = self, chance=chance, apply_power=self:combatMindpower()})
 		else
 			game.logSeen(target, "%s resists the demons!", target.name:capitalize())
 		end
@@ -173,7 +196,144 @@ newTalent{
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		local chance = t.getChance(self, t)
-		return ([[Brings the target's inner demons to the surface.  Each turn for %d turns there's a %d%% chance that one will be summoned.
-		If the summoning is resisted the effect will end early.]]):format(duration, chance)
+		return ([[Brings the target's inner demons to the surface.  Each turn for %d turns there's a %d%% chance that the a demon will surface, requiring the target to make a mental save to keep it form manifesting.
+		If the target is sleeping the chance will be doubled and no saving throw will be allowed.  Otherwise if the summoning is resisted the effect will end early.
+		The summon chance will scale with your mindpower.]]):format(duration, chance)
+	end,
+}
+
+newTalent{
+	name = "Waking Nightmare",
+	type = {"psionic/nightmare", 3},
+	points = 5,
+	require = psi_wil_high3,
+	cooldown = 10,
+	psi = 20,
+	range = 10,
+	direct_hit = true,
+	requires_target = true,
+	tactical = { ATTACK = { DARKNESS = 2 }, DISABLE = { confusion = 1, stun = 1, blind = 1 } },
+	getChance = function(self, t) return self:combatTalentMindDamage(t, 15, 50) end,
+	getDamage = function(self, t) return self:combatTalentMindDamage(t, 5, 50) end,
+	getDuration = function(self, t) return 4 + math.ceil(self:getTalentLevel(t)) end,
+	action = function(self, t)
+		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		local _ _, x, y = self:canProject(tg, x, y)
+		if not x or not y then return nil end
+		local target = game.level.map(x, y, Map.ACTOR)
+		if not target then return nil end
+
+		local chance = self:mindCrit(t.getChance(self, t))
+		if target:attr("sleep") then chance = chance * 2 end
+		if target:canBe("fear") then
+			target:setEffect(target.EFF_WAKING_NIGHTMARE, t.getDuration(self, t), {src = self, chance=t.getChance(self, t), dam=self:mindCrit(t.getDamage(self, t)), apply_power=self:combatMindpower()})
+		else
+			game.logSeen(target, "%s resists the nightmare!", target.name:capitalize())
+		end
+
+		return true
+	end,
+	info = function(self, t)
+		local damage = t.getDamage(self, t)
+		local duration = t.getDuration(self, t)
+		local chance = t.getChance(self, t)
+		return ([[Inflicts %0.2f darkness damage each turn for %d turns and has a %d%% chance to randomly cause blindness, stun, or confusion (lasting 3 turns).
+		If the target is sleeping the chance of suffering a negative effect will be doubled.
+		The damage will scale with your mindpower.]]):
+		format(damDesc(self, DamageType.DARKNESS, (damage)), duration, chance)
+	end,
+}
+
+newTalent{
+	name = "Night Terror",
+	type = {"psionic/nightmare", 4},
+	points = 5,
+	require = psi_wil_high4,
+	mode = "sustained",
+	sustain_psi = 50,
+	cooldown = 24,
+	tactical = { BUFF=2 },
+	getDamageBonus = function(self, t) return self:combatTalentMindDamage(t, 10, 50) end,
+	getSummonTime = function(self, t) return math.floor(self:getTalentLevel(t)*2) end,
+	summonNightTerror = function(self, target, t)
+		-- Find space
+		local x, y = util.findFreeGrid(target.x, target.y, 1, true, {[Map.ACTOR]=true})
+		if not x then
+			return
+		end
+		
+		local stats = 10 + t.getDamageBonus(self, t)
+		local NPC = require "mod.class.NPC"
+		local m = NPC.new{
+			name = "terror",
+			display = "h", color=colors.DARK_GREY, image="npc/horror_eldritch_nightmare_horror.png",
+			blood_color = colors.BLUE,
+			desc = "A formless terror that seems to cut through the air, and its victims, like a knife.",
+			type = "horror", subtype = "eldritch",
+			rank = 2,
+			size_category = 2,
+			body = { INVEN = 10 },
+			no_drops = true,
+			autolevel = "warriorwill",
+			level_range = {1, nil}, exp_worth = 0,
+			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=2 },
+			stats = { str=15, dex=15, wil=15, con=15, cun=15},
+			infravision = 10,
+			can_pass = {pass_wall=20},
+			resists = {[DamageType.LIGHT] = -50, [DamageType.DARKNESS] = 100},
+			silent_levelup = true,
+			no_breath = 1,
+			negative_status_effect_immune = 1,
+			infravision = 10,
+			see_invisible = 80,
+			sleep = 1,
+			lucid_dreamer = 1,
+			max_life = resolvers.rngavg(50, 80),
+			combat_armor = 1, combat_def = 10,
+			combat = { dam=resolvers.levelup(resolvers.rngavg(15,20), 1, 1.1), atk=resolvers.rngavg(5,15), apr=5, dammod={str=1}, damtype=DamageType.DARKNESS },
+			resolvers.talents{
+			--	[Talents.T_SLEEP]=self:getTalentLevelRaw(t),
+			},
+		}
+
+		m.faction = self.faction
+		m.summoner = self
+		m.summoner_gain_exp = true
+		m.summon_time = t.getSummonTime(self, t)
+		m.remove_from_party_on_death = true
+		m:resolve() m:resolve(nil, true)
+		m:forceLevelup(self.level)
+		
+		game.zone:addEntity(game.level, m, "actor", x, y)
+		game.level.map:particleEmitter(x, y, 1, "shadow")
+		
+		if game.party:hasMember(self) then
+			game.party:addMember(m, {
+				control="no",
+				type="terror",
+				title="Night Terror",
+				orders = {target=true},
+			})
+		end
+
+	end,
+	activate = function(self, t)
+		game:playSoundNear(self, "talents/heal")
+		local ret = {
+			damage = self:addTemporaryValue("night_terror", t.getDamageBonus(self, t)),
+		}
+		return ret
+	end,
+	deactivate = function(self, t, p)
+		self:removeTemporaryValue("night_terror", p.damage)
+		return true
+	end,
+	info = function(self, t)
+		local damage = t.getDamageBonus(self, t)
+		local summon = t.getSummonTime(self, t)
+		return ([[Increases your damage and resistance penetration on sleeping targets by %d%%.  Additionally every time you slay a sleeping target a Night Terror will be summoned for %d turns.
+		The Night Terror's stats will scale with your mindpower as will the damage bonus to sleeping targets.]]):format(damage, summon)
 	end,
 }

@@ -73,7 +73,7 @@ _M.temporary_values_conf.global_speed_add = "newest"
 _M.temporary_values_conf.movement_speed = "mult0"
 _M.temporary_values_conf.combat_physspeed = "mult0"
 _M.temporary_values_conf.combat_spellspeed = "mult0"
-_M.temporary_values_conf.combat_mentalspeed = "mult0"
+_M.temporary_values_conf.combat_mindspeed = "mult0"
 
 -- Damage cap takes the lowest
 _M.temporary_values_conf.flat_damage_cap = "lowest"
@@ -97,7 +97,7 @@ function _M:init(t, no_default)
 	self.combat_physcrit = 0
 	self.combat_physspeed = 1
 	self.combat_spellspeed = 1
-	self.combat_mentalspeed = 1
+	self.combat_mindspeed = 1
 	self.combat_spellcrit = 0
 	self.combat_spellpower = 0
 	self.combat_mindpower = 0
@@ -329,7 +329,7 @@ function _M:useEnergy(val)
 end
 
 function _M:actBase()
-	-- Solipsism speed effects; calculated before the actor gets 
+	-- Solipsism speed effects; calculated before the actor gets energy
 	local current_psi_percentage = self:getPsi() / self:getMaxPsi()
 	if self:attr("solipsism_threshold") and current_psi_percentage < self:attr("solipsism_threshold") then
 		if self:hasEffect(self.EFF_CLARITY) then
@@ -340,7 +340,7 @@ function _M:actBase()
 		if self:hasEffect(self.EFF_SOLIPSISM) then
 			self:removeEffect(self.EFF_SOLIPSISM)
 		end
-		self:setEffect(self.EFF_CLARITY, 1, {power = math.max(0.5, current_psi_percentage - self:attr("clarity_threshold"))})
+		self:setEffect(self.EFF_CLARITY, 1, {power = math.min(0.5, current_psi_percentage - self:attr("clarity_threshold"))})
 	elseif self:hasEffect(self.EFF_SOLIPSISM) then
 		self:removeEffect(self.EFF_SOLIPSISM)
 	elseif self:hasEffect(self.EFF_CLARITY) then
@@ -560,7 +560,7 @@ function _M:act()
 	end
 	if self:attr("stoned") then self.energy.value = 0 end
 	if self:attr("dazed") then self.energy.value = 0 end
-	if self:attr("sleep") then self.energy.value = 0 end
+	if self:attr("sleep") and not self:attr("lucid_dreamer") then self.energy.value = 0 end
 	if self:attr("time_stun") then self.energy.value = 0 end
 	if self:attr("time_prison") then self.energy.value = 0 end
 
@@ -1297,8 +1297,10 @@ function _M:tooltip(x, y, seen_by)
 
 	local resists = {}
 	for t, v in pairs(self.resists) do
-		if t ~= "all" then v = self:combatGetResist(t) end
-		if v ~= 0 then resists[#resists+1] = string.format("%d%% %s", v, t == "all" and "all" or DamageType:get(t).name) end
+		if v ~= 0 then 
+			if t ~= "all" then v = self:combatGetResist(t) end
+			resists[#resists+1] = string.format("%d%% %s", v, t == "all" and "all" or DamageType:get(t).name)
+		end
 	end
 
 	local ts = tstring{}
@@ -1468,14 +1470,6 @@ function _M:onTakeHit(value, src)
 	end
 	if self:hasEffect(self.EFF_SPACETIME_TUNING) then
 		self:removeEffect(self.EFF_SPACETIME_TUNING)
-	end
-	if self:hasEffect(self.EFF_SLEEP) then
-		local p = self:hasEffect(self.EFF_SLEEP)
-		if p.power * p.dur < value then
-			self:removeEffect(self.EFF_SLEEPING)
-		else
-			p.dur = p.dur - math.ceil(value/p.power)
-		end
 	end
 
 	-- Remove domination hex
@@ -1676,7 +1670,7 @@ function _M:onTakeHit(value, src)
 	end
 	
 	-- Feedback pool: Stores damage as energy to use later
-	if self:getMaxFeedback() > 0 and src ~= self then
+	if self:getMaxFeedback() > 0 and src ~= self and src ~= self.summoner then
 		local ratio = 0.5
 		if self:knowTalent(self.T_AMPLIFICATION) then
 			local t = self:getTalentFromId(self.T_AMPLIFICATION)
@@ -1684,6 +1678,10 @@ function _M:onTakeHit(value, src)
 		end
 		local feedback_gain = value * ratio
 		self:incFeedback(feedback_gain)
+		-- Give feedback to summoner
+		if self.summoner and self.summoner:getTalentLevel(self.summoner.T_TF_UNITY) >=1 and self.summoner:getMaxFeedback() > 0 then
+			self.summoner:incFeedback(feedback_gain)
+		end
 		-- Trigger backlash retribution damage
 		if self:knowTalent(self.T_BACKLASH) then
 			if src.y and src.x and not src.dead and self:reactionToward(src) < 0 then
@@ -1705,6 +1703,29 @@ function _M:onTakeHit(value, src)
 		if self.resonance_field_absorb <= 0 then
 			game.logPlayer(self, "Your resonance field crumbles under the damage!")
 			self:removeEffect(self.EFF_RESONANCE_FIELD)
+		end
+	end
+	
+	-- Reduce sleep durations
+	if self:attr("sleep") then
+		local effs = {}
+		for eff_id, p in pairs(self.tmp) do
+			local e = self.tempeffect_def[eff_id]
+			if e.subtype.sleep then
+				effs[#effs+1] = {"effect", eff_id}
+			end
+		end
+		for i = 1, #effs do
+			if #effs == 0 then break end
+			local eff = rng.tableRemove(effs)
+			if eff[1] == "effect" then
+				local e = self:hasEffect(eff[2])
+				if e.power * e.dur < value then
+					game:onTickEnd(function() self:removeEffect(eff[2]) end) -- Happens on tick end so Night Terror can work properly
+				else
+					e.dur = e.dur - math.ceil(value/e.power)
+				end
+			end
 		end
 	end
 		
@@ -2168,6 +2189,11 @@ function _M:die(src, death_note)
 			t.spawn_ghoul(p.src, self, t)
 		end
 	end
+	
+	if src and self:attr("sleep") and src.isTalentActive and src:isTalentActive(src.T_NIGHT_TERROR) then
+		local t = src:getTalentFromId(src.T_NIGHT_TERROR) 
+		t.summonNightTerror(src, self, t)
+	end
 
 	-- Curse of Corpses: Corpselight
 	-- Curse of Corpses: Reprieve from Death
@@ -2531,15 +2557,6 @@ function _M:onWear(o, bypass_set)
 	o:check("on_wear", self)
 	if o.wielder then
 		for k, e in pairs(o.wielder) do
-			-- Apply Psychometry
-			if self:knowTalent(self.T_PSYCHOMETRY) and o.power_source and (o.power_source.psionic or o.power_source.nature or o.power_source.antimagic) then
-				local multiplier = 0.05 + (self:getTalentLevel(self.T_PSYCHOMETRY) / 33)
-				if e >= 1 then
-					e = math.ceil(e * (1 + multiplier))
-				else
-					e = e * (1 + multiplier)
-				end
-			end
 			o.wielded[k] = self:addTemporaryValue(k, e)
 		end
 	end
@@ -2564,7 +2581,13 @@ function _M:onWear(o, bypass_set)
 		self:attr("spellpower_reduction", 1)
 		self:attr("spell_failure", (o.material_level or 1) * 10)
 	end
-
+	
+	-- Apply Psychometry
+	if self:knowTalent(self.T_PSYCHOMETRY) then
+		local t = self:getTalentFromId(self.T_PSYCHOMETRY)
+		t.updatePsychometryCount(self, t)
+	end
+	
 	-- Learn Talent
 	if o.wielder and o.wielder.learn_talent then
 		for tid, level in pairs(o.wielder.learn_talent) do
@@ -2633,6 +2656,12 @@ function _M:onTakeoff(o, bypass_set)
 		self:attr("spellpower_reduction", -1)
 		self:attr("spell_failure", -(o.material_level or 1) * 10)
 	end
+	
+	-- Apply Psychometry
+	if self:knowTalent(self.T_PSYCHOMETRY) then
+		local t = self:getTalentFromId(self.T_PSYCHOMETRY)
+		t.updatePsychometryCount(self, t)
+	end
 
 	if o.wielder and o.wielder.learn_talent then
 		for tid, level in pairs(o.wielder.learn_talent) do
@@ -2670,7 +2699,7 @@ function _M:checkMindstar(o)
 		local nm = {}
 		for s, v in pairs(o.combat.dammod) do nm[s] = v * (1.3 + pv / 10) end
 		o.combat.dammod = nm
-		o.combat.apr = o.combat.apr * (1 + pv / 6.3)
+		o.combat.apr = math.floor(o.combat.apr * (1 + pv / 6.3))
 
 		print("Activating psiblade", o.name)
 	elseif not new and old then
@@ -2679,7 +2708,7 @@ function _M:checkMindstar(o)
 		local nm = {}
 		for s, v in pairs(o.combat.dammod) do nm[s] = v / (1.3 + pv / 10) end
 		o.combat.dammod = nm
-		o.combat.apr = o.combat.apr / (1 + pv / 6.3)
+		o.combat.apr = math.floor(o.combat.apr / (1 + pv / 6.3))
 
 		o.moddable_tile_ornament = nil
 		o.psiblade_active = false
@@ -3316,7 +3345,7 @@ function _M:postUseTalent(ab, ret)
 		elseif ab.type[1]:find("^technique/") then
 			self:useEnergy(game.energy_to_act * self:combatSpeed())
 		elseif ab.type[1]:find("^psionic/") then
-			self:useEnergy(game.energy_to_act * self:combatMentalSpeed())
+			self:useEnergy(game.energy_to_act * self:combatMindSpeed())
 		else
 			self:useEnergy()
 		end
@@ -3422,7 +3451,7 @@ function _M:postUseTalent(ab, ret)
 			trigger = true; self:incEquilibrium(ab.equilibrium)
 		end
 		-- Paradox is not affected by fatigue but it's cost does increase exponentially
-		if ab.paradox and not self:attr("zero_resource_cost") then
+		if ab.paradox and not (self:attr("zero_resource_cost") or game.zone.no_anomalies) then
 			trigger = true; self:incParadox(ab.paradox * (1 + (self.paradox / 300)))
 		end
 		if ab.psi and not self:attr("zero_resource_cost") then
@@ -3540,6 +3569,9 @@ end
 function _M:breakPsionicChannel(talent)
 	if self:isTalentActive(self.T_MIND_STORM) and talent ~= self.T_MIND_STORM then
 		self:forceUseTalent(self.T_MIND_STORM, {ignore_energy=true})
+	end
+	if self:isTalentActive(self.T_DREAM_PRISON) and talent ~= self.T_DREAM_PRISON then
+		self:forceUseTalent(self.T_DREAM_PRISON, {ignore_energy=true})
 	end
 end
 
@@ -3918,12 +3950,6 @@ function _M:on_set_temporary_effect(eff_id, e, p)
 		if not p.no_ct_effect and not e.no_ct_effect and e.status == "detrimental" then self:crossTierEffect(eff_id, p.apply_power, p.apply_save or save_for_effects[e.type]) end
 		p.total_dur = p.dur
 
-		-- Bonus save for schism
-		if self:attr("psionic_schism") and rng.percent(self:attr("psionic_schism")) and e.status == "detrimental" and save_type == "combatMentalResist" and self:checkHit(save, p.apply_power, 0, 95) then
-			game.logSeen(self, "#ORANGE#%s mental clone shrugs off the effect '%s'!", self.name:capitalize(), e.desc)
-			p.dur = 0
-		end
-		
 		if e.status == "detrimental" and self:checkHit(save, p.apply_power, 0, 95) and p.dur > 0 then
 			game.logSeen(self, "#ORANGE#%s shrugs off the effect '%s'!", self.name:capitalize(), e.desc)
 			p.dur = 0

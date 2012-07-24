@@ -137,6 +137,10 @@ newTalent{
 			game.logPlayer(self, "This spell can not be used from within the Fearscape.")
 			return
 		end
+		if game.zone.no_planechange then
+			game.logPlayer(self, "This spell can not be cast here.")
+			return
+		end
 		if not self:canBe("planechange") then
 			game.logPlayer(self, "The spell fizzles...")
 			return

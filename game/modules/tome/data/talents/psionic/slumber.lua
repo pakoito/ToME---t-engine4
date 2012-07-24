@@ -17,21 +17,20 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
--- Edge TODO: Sounds, Particles, Talent Icons; All Talents
+-- Edge TODO: Sounds, Particles,
 
 newTalent{
-	name = "Sleep",
+	name = "Slumber",
 	type = {"psionic/slumber", 1},
 	points = 5, 
 	require = psi_wil_req1,
 	cooldown = 8,
-	psi = 5,
-	tactical = { DISABLE = 2},
+	psi = 10,
+	tactical = { DISABLE = {sleep = 2} },
 	direct_hit = true,
 	requires_target = true,
 	range = function(self, t) return 5 + math.min(5, self:getTalentLevelRaw(t)) end,
-	radius = function(self, t) return 1 + math.floor(self:getTalentLevel(t)/4) end,
-	target = function(self, t) return {type="ball", radius=self:getTalentRadius(t), range=self:getTalentRange(t), talent=t} end,
+	target = function(self, t) return {type="hit", range=self:getTalentRange(t), talent=t} end,
 	getDuration = function(self, t) return 2 + math.ceil(self:getTalentLevel(t)/2) end,
 	getInsomniaDuration = function(self, t)
 		local t = self:getTalentFromId(self.T_SANDMAN)
@@ -39,7 +38,7 @@ newTalent{
 		return 10 - reduction
 	end,
 	getSleepPower = function(self, t) 
-		local power = self:combatTalentMindDamage(t, 10, 50)
+		local power = self:combatTalentMindDamage(t, 10, 100)
 		if self:knowTalent(self.T_SANDMAN) then
 			local t = self:getTalentFromId(self.T_SANDMAN)
 			power = power + t.getSleepPowerBonus(self, t)
@@ -47,162 +46,199 @@ newTalent{
 		return power
 	end,
 	doContagiousSlumber = function(self, target, p, t)
-		local tg = {type="ball", radius=self:getTalentRadius(t), talent=t}
+		local tg = {type="ball", radius=1, talent=t}
 		self:project(tg, target.x, target.y, function(tx, ty)
-			local target = game.level.map(tx, ty, Map.ACTOR)
-			if target and self:reactionToward(target) < 0 and rng.percent(p.contagious) and target:canBe("sleep") and not target:attr("sleep") then
-				target:setEffect(target.EFF_SLEEP, math.floor(p.dur/2), {src=self, power=p.power, contagious=p.contagious/2, insomnia=math.ceil(p.insomnia/2), no_ct_effect=true, apply_power=self:combatMindpower()})
+			local t2 = game.level.map(tx, ty, Map.ACTOR)
+			if t2 and target_two ~= target and rng.percent(p.contagious) and t2:canBe("sleep") then
+				t2:setEffect(t2.EFF_SLEEP, math.floor(p.dur/2), {src=self, power=p.power/10, waking=p.waking, insomnia=math.ceil(p.insomnia/2), no_ct_effect=true, apply_power=self:combatMindpower()})
 			end
 		end)
 	end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
-		local x, y = self:getTarget(tg)
+		local x, y, target = self:getTarget(tg)
 		if not x or not y then return nil end
+		local _ _, x, y = self:canProject(tg, x, y)
+		target = game.level.map(x, y, Map.ACTOR)
+		if not target then return nil end
 
 		--Contagious?
 		local is_contagious = 0
-		if self:getTalentLevel(self.T_SANDMAN) > 5 then
+		if self:getTalentLevel(t) >= 5 then
 			is_contagious = 25
 		end
-		--Sandman?
+		--Restless?
+		local is_waking =0
+		if self:knowTalent(self.T_RESTLESS_NIGHT) then
+			local t = self:getTalentFromId(self.T_RESTLESS_NIGHT)
+			is_waking = t.getDamage(self, t)
+		end
+		
 		local power = self:mindCrit(t.getSleepPower(self, t))
-		self:project(tg, x, y, function(tx, ty)
-			local target = game.level.map(tx, ty, Map.ACTOR)
-			if target and not target:attr("sleep") then
-				if target:canBe("sleep") then
-					target:setEffect(target.EFF_SLEEP, t.getDuration(self, t), {src=self, power=power, contagious=is_contagious, insomnia=t.getInsomniaDuration(self, t), no_ct_effect=true, apply_power=self:combatMindpower()})
-				else
-					game.logSeen(self, "%s resists the sleep!", target.name:capitalize())
-				end
-			end
-		end)
+		if target:canBe("sleep") then
+			target:setEffect(target.EFF_SLUMBER, t.getDuration(self, t), {src=self, power=power, waking=is_waking, contagious=is_contagious, insomnia=t.getInsomniaDuration(self, t), no_ct_effect=true, apply_power=self:combatMindpower()})
+		else
+			game.logSeen(self, "%s resists the sleep!", target.name:capitalize())
+		end
 		return true
 	end,
 	info = function(self, t)
-		local radius = self:getTalentRadius(t)
 		local duration = t.getDuration(self, t)
 		local power = t.getSleepPower(self, t)
 		local insomnia = t.getInsomniaDuration(self, t)
-		return([[Puts targets in a radius of %d to sleep for %d turns, rendering them unable to act.  Every %d points of damage the target suffers will reduce the effect duration by one turn.
-		When Sleep ends the target will suffer from Insomnia for %d turns, rendering them resistant to Sleep effects.
-		The damage threshold will scale with your mindpower.]]):format(radius, duration, power, insomnia)
+		return([[Puts the target into a deep sleep for %d turns, rendering it unable to act.  Every %d points of damage the target suffers will reduce the effect duration by one turn.
+		When Slumber ends the target will suffer from Insomnia for %d turns, rendering them resistant to sleep effects.
+		At talent level 5 your Slumber will become contagious and has a 25%% chance to spread Sleep to nearby targets each turn.
+		The damage threshold will scale with your mindpower.]]):format(duration, power, insomnia)
+	end,
+}
+
+newTalent{
+	name = "Restless Night",
+	type = {"psionic/slumber", 2},
+	points = 5, 
+	require = psi_wil_req2,
+	mode = "passive",
+	getDamage = function(self, t) return self:combatTalentMindDamage(t, 20, 200) end,
+	info = function(self, t)
+		local damage = t.getDamage(self, t)
+		return([[Targets you have slept now take %0.2f mind damage upon waking.
+		The damage will scale with your mindpower.]]):format(damDesc(self, DamageType.MIND, (damage)))
 	end,
 }
 
 newTalent{
 	name = "Sandman",
-	type = {"psionic/slumber", 2},
+	type = {"psionic/slumber", 3},
 	points = 5, 
-	require = psi_wil_req2,
+	require = psi_wil_req3,
 	mode = "passive",
-	getSleepPowerBonus = function(self, t) return self:combatTalentMindDamage(t, 10, 50) end,
+	getSleepPowerBonus = function(self, t) return self:combatTalentMindDamage(t, 5, 25) end,
 	getInsomniaReduction = function(self, t) return math.min(8, math.floor(self:getTalentLevel(self.T_SANDMAN))) end,
 	info = function(self, t)
 		local power_bonus = t.getSleepPowerBonus(self, t)
 		local reduction = t.getInsomniaReduction(self, t)
-		return([[Increases the amount of damage you can deal to sleeping targets before rousing them by %d and reduces the duration of the Insomnia effect by %d turns.
-		At talent level 5 the Sleep will become contagious and has a 25%% chance to spread to nearby targets each turn.
-		These effects will be directly reflected in the Sleep talent description.
+		return([[Increases the amount of damage you can deal to sleeping targets before reducing the effect duration by %d and reduces the duration of all Insomnia effects by %d turns.
+		These effects will be directly reflected in the appropriate talent descriptions.
 		The damage threshold bonus will scale with your mindpower.]]):format(power_bonus, reduction)
 	end,
 }
 
-
 newTalent{
-	name = "Contagious Slumber",
-	type = {"psionic/slumber", 3},
-	points = 5,
-	require = psi_wil_req3,
-	cooldown = 10,
-	tactical = { ATTACKAREA = {PHYSICAL = 2}, DISABLE = { knockback = 2 }, },
-	range = 0,
-	radius = function(self, t) return 1 + math.ceil(self:getTalentLevel(t)) end,
-	direct_hit = true,
-	requires_target = true,
-	target = function(self, t)
-		return {type="ball", range=self:getTalentRange(t), talent=t}
-	end,
-	getDamage = function(self, t) return self:combatTalentMindDamage(t, 20, 230) end,
-	on_pre_use = function(self, t, silent) if self.psionic_feedback <= 0 then if not silent then game.logPlayer(self, "You have no feedback to power this talent.") end return false end return not self:hasEffect(self.EFF_REGENERATION) end,
-	on_learn = function(self, t)
-		if self:getTalentLevelRaw(t) == 1 then
-			if not self.psionic_feedback then
-				self.psionic_feedback = 0
-			end
-			self.psionic_feedback_max = (self.psionic_feedback_max or 0) + 50
-		end
-		return true
-	end,
-	on_unlearn = function(self, t)
-		if not self:knowTalent(t) then
-			self.psionic_feedback_max = self.psionic_feedback_max - 50
-			if self.psionic_feedback_max <= 0 then
-				self.psionic_feedback_max = nil
-				self.psionic_feedback = nil
-			end
-		end
-		return true
-	end,
-	action = function(self, t)
-		local tg = self:getTalentTarget(t)
-		if not x or not y then return nil end
-		
-		local damage = math.min(self.psionic_feedback, t.getDamage(self, t))
-		self:project(tg, x, y, DamageType.MINDKNOCKBACK, self:mindCrit(damage))
-		self.psionic_feedback = self.psionic_feedback - damage
-		
-		return true
-	end,
-	info = function(self, t)
-		local damage = t.getDamage(self, t)
-		local radius = self:getTalentRadius(t)
-		return ([[Activate to convert up to %0.2f of stored feedback into a blast of kinetic energy.  Targets out to a radius of %d will suffer physical damage and may be knocked back.
-		Learning this talent will increase the amount of feedback you can store by 50 (first talent point only).
-		The damage will scale with your mindpower.]]):format(damDesc(self, DamageType.PHYSICAL, damage), radius)
-	end,
-}
-
-newTalent{
-	name = "Sleep4",
+	name = "Dreamscape",
 	type = {"psionic/slumber", 4},
 	points = 5, 
 	require = psi_wil_req4,
-	cooldown = 15,
-	tactical = { DEFEND = 2, ATTACK = {MIND = 2}},
-	on_pre_use = function(self, t, silent) if self.psionic_feedback <= 0 then if not silent then game.logPlayer(self, "You have no feedback to power this talent.") end return false end return true end,
-	getShieldPower = function(self, t) return self:combatTalentMindDamage(t, 20, 300) end,
-	getDamage = function(self, t) return self:combatTalentMindDamage(t, 10, 50) end,
-	on_learn = function(self, t)
-		if self:getTalentLevelRaw(t) == 1 then
-			if not self.psionic_feedback then
-				self.psionic_feedback = 0
-			end
-			self.psionic_feedback_max = (self.psionic_feedback_max or 0) + 100
-		end
-		return true
-	end,
-	on_unlearn = function(self, t)
-		if not self:knowTalent(t) then
-			self.psionic_feedback_max = self.psionic_feedback_max - 100
-			if self.psionic_feedback_max <= 0 then
-				self.psionic_feedback_max = nil
-				self.psionic_feedback = nil
-			end
-		end
-		return true
-	end,
+	cooldown = 24,
+	psi = 40,
+	tactical = { DISABLE = {sleep = 2} },
+	direct_hit = true,
+	requires_target = true,
+	range = function(self, t) return 5 + math.min(5, self:getTalentLevelRaw(t)) end,
+	target = function(self, t) return {type="hit", range=self:getTalentRange(t), talent=t} end,
+	getDuration = function(self, t) return 10 + math.ceil(self:getTalentLevel(t) * 4) end,
+	getPower = function(self, t) return self:combatTalentMindDamage(t, 10, 100) end,
+	on_pre_use = function(self, t, silent) if self:attr("is_psychic_projection") then if not silent then game.logPlayer(self, "You feel it unwise to travel to the dreamscape in such a fragile form.") end return false end return true end,
 	action = function(self, t)
-		local power = math.min(self.psionic_feedback, t.getShieldPower(self, t))
-		self:setEffect(self.EFF_RESONANCE_SHIELD, 10, {power = self:mindCrit(power), dam = t.getDamage(self, t)})
-		self.psionic_feedback = self.psionic_feedback - power
+		if game.zone.is_dream_scape then
+			game.logPlayer(self, "This talent can not be used from within the Dreamscape.")
+			return
+		end
+		if game.zone.no_planechange then
+			game.logPlayer(self, "This talent can not be used here.")
+			return
+		end
+		if not self:canBe("planechange") then
+			game.logPlayer(self, "The effect fizzles...")
+			return
+		end
+	
+		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
+		local tx, ty, target = self:getTarget(tg)
+		if not tx or not ty or not target then return nil end
+		local _ _, tx, ty = self:canProject(tg, tx, ty)
+		if not tx or not ty or not target then return nil end
+		target = game.level.map(tx, ty, Map.ACTOR)
+		if not tx or not ty or not target then return nil end
+		if not (target.player and target.game_ender) and not (self.player and self.game_ender) then return nil end
+		if target == self then return end
+		if not (target and target:attr("sleep")) then 
+			game.logPlayer(self, "Your target must be sleeping in order to enter it's dreamscape.")
+			return nil
+		end
+		
+		game:onTickEnd(function()
+			if self:attr("dead") then return end
+			local oldzone = game.zone
+			local oldlevel = game.level
+			
+			-- Clean up thought-forms
+			cancelThoughtForms(self)
+			
+			-- Remove them before making the new elvel, this way party memebrs are not removed from the old
+			if oldlevel:hasEntity(self) then oldlevel:removeEntity(self) end
+			if oldlevel:hasEntity(target) then oldlevel:removeEntity(target) end
+						
+			oldlevel.no_remove_entities = true
+			local zone = mod.class.Zone.new("dreamscape-talent")
+			local level = zone:getLevel(game, 1, 0)
+			oldlevel.no_remove_entities = nil
+			
+			level:addEntity(self)
+			level:addEntity(target)
+
+			level.source_zone = oldzone
+			level.source_level = oldlevel
+			game.zone = zone
+			game.level = level
+			game.zone_name_s = nil
+			
+			local x1, y1 = util.findFreeGrid(4, 6, 20, true, {[Map.ACTOR]=true})
+			if x1 then
+				self:move(x1, y1, true)
+				game.level.map:particleEmitter(x1, y1, 1, "teleport")
+			end
+			local x2, y2 = util.findFreeGrid(8, 6, 20, true, {[Map.ACTOR]=true})
+			if x2 then
+				target:move(x2, y2, true)
+			end
+		
+			target:setTarget(self)
+			target.dream_plane_trapper = self
+			target.dream_plane_on_die = target.on_die
+			target.on_die = function(self, ...)
+				self.dream_plane_trapper:removeEffect(self.EFF_DREAMSCAPE)
+				local args = {...}
+				game:onTickEnd(function()
+					if self.dream_plane_on_die then self:dream_plane_on_die(unpack(args)) end
+					self.on_die, self.dream_plane_on_die = self.dream_plane_on_die, nil
+				end)
+			end
+
+			self.dream_plane_on_die = self.on_die
+			self.on_die = function(self, ...)
+				self:removeEffect(self.EFF_DREAMSCAPE)
+				local args = {...}
+				game:onTickEnd(function()
+					if self.dream_plane_on_die then self:dream_plane_on_die(unpack(args)) end
+					self.on_die, self.dream_plane_on_die = self.dream_plane_on_die, nil
+				--	if not game.party:hasMember(self) then world:gainAchievement("FEARSCAPE", game:getPlayer(true)) end
+				end)
+			end
+
+			game.logPlayer(game.player, "#LIGHT_BLUE#You are taken to the Dreamscape!")
+		end)
+		
+		local power = self:mindCrit(t.getPower(self, t))
+		self:setEffect(self.EFF_DREAMSCAPE, t.getDuration(self, t), {target=target, power=power, projections_killed=0, x=self.x, y=self.y, tx=target.x, ty=target.y})
 		return true
 	end,
 	info = function(self, t)
-		local shield_power = t.getShieldPower(self, t)
-		local damage = t.getDamage(self, t)
-		return ([[Activate to conver up to %0.2f feedback into a resonance shield that will absorb 50%% of all damage you take and inflict %0.2f mind damage to melee attackers.
-		Learning this talent will increase the amount of feedback you can store by 100 (first talent point only).
-		The conversion ratio will scale with your mindpower and the effect lasts up to ten turns.]]):format(shield_power, damDesc(self, DamageType.MIND, damage))
+		local duration = t.getDuration(self, t)
+		local power = t.getPower(self, t)
+		return([[Enter a sleeping target's dreams for %d turns.  While in the dreamscape you'll encounter the target's invulnerable sleeping form as well as dream projections that it will spawn every four turns to defend it's mind.  When the dreamscape ends the target's life will be reduced by 20%% and it will to be brainlocked for one turn for each projection destroyed.
+		Lucid dreamer's will spawn projections every two turns instead of every four and their projections will deal more damage (generally projections have a 50%% penalty to all damage).
+		In the dreamscape your damage will be improved by %d%%.
+		The damage bonus will improve with your mindpower.]]):format(duration, power)
 	end,
 }

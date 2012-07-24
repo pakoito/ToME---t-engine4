@@ -35,14 +35,12 @@ newTalent{
 			self.life_rating = math.ceil(self.life_rating/2)
 			self.psi_rating =  self.psi_rating + 10
 		end
-		return true
 	end,
 	on_unlearn = function(self, t)
 		if not self:knowTalent(t) then
 			self:incMaxPsi(-50)
 			self.solipsism_threshold = self.solipsism_threshold - 0.2
 		end
-		return true
 	end,
 	info = function(self, t)
 		local conversion_ratio = t.getConversionRatio(self, t)
@@ -64,14 +62,12 @@ newTalent{
 			self:incMaxPsi(50)
 			self.solipsism_threshold = (self.solipsism_threshold or 0) + 0.1
 		end
-		return true
 	end,
 	on_unlearn = function(self, t)
 		if not self:knowTalent(t) then
 			self:incMaxPsi(-50)
 			self.solipsism_threshold = self.solipsism_threshold - 0.1
 		end
-		return true
 	end,
 	info = function(self, t)
 		local ratio = t.getBalanceRatio(self, t) * 100
@@ -86,14 +82,13 @@ newTalent{
 	points = 5, 
 	require = psi_wil_req3,
 	mode = "passive",
-	getClarityThreshold = function(self, t) return math.max(0.5, 1 - self:getTalentLevelRaw(t) / 10) end,
+	getClarityThreshold = function(self, t) return math.max(0.5, 1 - self:getTalentLevel(t) / 15) end,
 	on_learn = function(self, t)
 		self.clarity_threshold = t.getClarityThreshold(self, t)
 		if self:getTalentLevelRaw(t) == 1 then
 			self:incMaxPsi(50)
 			self.solipsism_threshold = (self.solipsism_threshold or 0) + 0.1
 		end
-		return true
 	end,
 	on_unlearn = function(self, t)
 		if not self:knowTalent(t) then
@@ -103,7 +98,6 @@ newTalent{
 		else
 			self.clarity_threshold = t.getClarityThreshold(self, t)
 		end
-		return true
 	end,
 	info = function(self, t)
 		local threshold = t.getClarityThreshold(self, t)
@@ -124,14 +118,12 @@ newTalent{
 			self:incMaxPsi(50)
 			self.solipsism_threshold = (self.solipsism_threshold or 0) + 0.1
 		end
-		return true
 	end,
 	on_unlearn = function(self, t)
 		if not self:knowTalent(t) then
 			self:incMaxPsi(-50)
 			self.solipsism_threshold = self.solipsism_threshold - 0.1
 		end
-		return true
 	end,
 	doDismissalOnHit = function(self, value, src, t)
 		local saving_throw = self:mindCrit(t.getSavePercentage(self, t))

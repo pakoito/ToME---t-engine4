@@ -27,40 +27,81 @@ newTalent{
 	points = 5, 
 	require = psi_wil_req1,
 	mode = "passive",
-	getMultiplier = function(self, t) return 0.05 + (self:getTalentLevel(t) / 33) end,
+	getPsychometryCap = function(self, t) return self:getTalentLevelRaw(t) end,
+	updatePsychometryCount = function(self, t)
+		-- Update psychometry power
+		local psychometry_count = 0
+		for inven_id, inven in pairs(self.inven) do
+			if inven.worn then
+				for item, o in ipairs(inven) do
+					if o and item and o.power_source and (o.power_source.psionic or o.power_source.nature or o.power_source.antimagic) then
+						psychometry_count = psychometry_count + math.min(o.material_level or 1, t.getPsychometryCap(self, t))
+					end
+				end
+			end
+		end
+		self:attr("psychometry_power", psychometry_count, true)
+	end,
+	on_learn = function(self, t)
+		t.updatePsychometryCount(self, t)
+	end,	
+	on_unlearn = function(self, t)
+		if not self:knowTalent(t) then
+			self.psychometry_power = nil
+		else
+			t.updatePsychometryCount(self, t)
+		end
+	end,
 	info = function(self, t)
-		local multiplier = t.getMultiplier(self, t)
-		return ([[When you wield or wear an item infused by psionic, nature, or arcane-disrupting forces you improve all values under its 'when wielded/worn' field by %d%%.
-		Note this doesn't change the item itself, but rather the effects it has on your person (the item description will not reflect the improved values).]]):format(multiplier * 100)
+		local max = t.getPsychometryCap(self, t)
+		return ([[Resonate with psionic, nature, and anti-magic powered objects, increasing your physical and mind power by %d or the objects material level (which ever is lower).
+		This effect stacks and applies for each qualifying object worn.]]):format(max)
 	end,
 }
 
 newTalent{
-	name = "Schism",
+	name = "Mental Shielding",
 	type = {"psionic/mentalism", 2},
 	points = 5,
 	require = psi_wil_req2,
-	mode = "sustained",
-	sustain_psi = 10,
+	psi = 15,
 	cooldown = 24,
-	remove_on_zero = true,
-	tactical = { BUFF=2, DEFEND=2},
-	getPower = function(self, t) return 20 + (self:getTalentLevel(t) * 10) end,
-	activate = function(self, t)
-		game:playSoundNear(self, "talents/heal")
-		local ret = {
-			schism = self:addTemporaryValue("psionic_schism", t.getPower(self, t)),
-		}
-		return ret
-	end,
-	deactivate = function(self, t, p)
-		self:removeTemporaryValue("psionic_schism", p.schism)
+	tactical = { CURE=2},
+	no_energy = true,
+	getRemoveCount = function(self, t) return math.ceil(self:getTalentLevel(t)) end,
+	action = function(self, t)
+		local effs = {}
+		local count = t.getRemoveCount(self, t)
+
+		-- Go through all mental effects
+		for eff_id, p in pairs(self.tmp) do
+			local e = self.tempeffect_def[eff_id]
+			if e.type == "mental" and e.status == "detrimental" then
+				effs[#effs+1] = {"effect", eff_id}
+			end
+		end
+
+		for i = 1, t.getRemoveCount(self, t) do
+			if #effs == 0 then break end
+			local eff = rng.tableRemove(effs)
+
+			if eff[1] == "effect" then
+				self:removeEffect(eff[2])
+				count = count - 1
+			end
+		end
+		
+		if count >= 1 then
+			self:setEffect(self.EFF_CLEAR_MIND, 6, {power=count})
+		end
+		
+		game.logSeen(self, "%s's mind is clear!", self.name:capitalize())
 		return true
 	end,
 	info = function(self, t)
-		local power = t.getPower(self, t)
-		return ([[Divide your mental faculties, increasing your mindpower for mind damage hit calculations by %d%% and giving you a %d%% chance to roll any mental saves against status effects twice, taking the better of the two results.
-		]]):format(power, power)
+		local count = t.getRemoveCount(self, t)
+		return ([[Clears your mind of current mental effects and block additional ones over 6 turns.  At most %d mental effects will be affected.
+		This talent takes not time to use.]]):format(count)
 	end,
 }
 
@@ -69,7 +110,7 @@ newTalent{
 	type = {"psionic/mentalism", 3},
 	points = 5, 
 	require = psi_wil_req3,
-	psi = 10,
+	psi = 20,
 	cooldown = 24,
 	no_npc_use = true, -- this can be changed if the AI is improved.  I don't trust it to be smart enough to leverage this effect.
 	getPower = function(self, t) return math.ceil(self:combatTalentMindDamage(t, 5, 40)) end,
@@ -81,7 +122,7 @@ newTalent{
 			game.logPlayer(self, "Not enough space to invoke your spirit!")
 			return
 		end
-
+		
 		local m = self:clone{
 			shader = "shadow_simulacrum",
 			no_drops = true,
@@ -155,7 +196,10 @@ newTalent{
 				end,
 			})
 		end
-		game:onTickEnd(function() game.party:setPlayer(m)  self:resetCanSeeCache() end)
+		game:onTickEnd(function() 
+			game.party:setPlayer(m)
+			self:resetCanSeeCache()
+		end)
 		
 		return true
 	end,
@@ -173,12 +217,12 @@ newTalent{
 	type = {"psionic/mentalism", 4},
 	points = 5, 
 	require = psi_wil_req4,
-	sustain_psi = 20,
+	sustain_psi = 50,
 	mode = "sustained",
 	no_sustain_autoreset = true,
 	cooldown = 24,
 	tactical = { BUFF = 2, ATTACK = {MIND = 2}},
-	range = 10,
+	range = function(self, t) return 5 + math.min(5, self:getTalentLevelRaw(t)) end,
 	direct_hit = true,
 	requires_target = true,
 	target = function(self, t)
@@ -189,17 +233,13 @@ newTalent{
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
+		local _ _, x, y = self:canProject(tg, x, y)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if not target or target == self then return end
 		
-		-- I would just check hit here but I hate bypassing the on_set_temporary_effect function, it kinda cheats the player
-		target:setEffect(target.EFF_MIND_LINK_TARGET, 10, {apply_power = self:combatMindpower(), no_ct_effect=true, src=self})
-		
-		-- So we do it like this...  Did we hit?
-		if not target:hasEffect(target.EFF_MIND_LINK_TARGET) then return false end
+		target:setEffect(target.EFF_MIND_LINK_TARGET, 10, {power=t.getBonusDamage(self, t), src=self, range=self:getTalentRange(t)})
 		
 		local ret = {
-			bonus_damage = t.getBonusDamage(self, t),
 			target = target,
 			esp = self:addTemporaryValue("esp", {[target.type] = 1}),
 		}
@@ -218,6 +258,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getBonusDamage(self, t)
 		return ([[Link minds with the target.  While your minds are linked you'll inflict %d%% more mind damage to the target and gain telepathy to it's creature type.
-		Only one mindlink can be maintained at a time and the mind damage bonus will scale with your mindpower.]]):format(damage)
+		Only one mindlink can be maintained at a time and the effect will break if the target dies or goes beyond the talent range.
+		The mind damage bonus will scale with your mindpower.]]):format(damage)
 	end,
 }

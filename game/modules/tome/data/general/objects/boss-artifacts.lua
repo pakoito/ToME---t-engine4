@@ -1395,12 +1395,11 @@ newEntity{ base = "BASE_GREATMAUL", define_as="ROTTING_MAUL",
 		dam = 96,
 		apr = 22,
 		physcrit = 10,
-		combat_critical_power = 40,
 		physspeed=1.2,
 		dammod = {str=1.4},
 		convert_damage = {[DamageType.BLIGHT] = 20},
 		melee_project={[DamageType.CORRUPTED_BLOOD] = 30},
-		special_on_hit = {desc="25% to damage nearby foes", fct=function(combat, who, target)
+		special_on_hit = {desc="25% to damage nearby foes", on_kill=true, fct=function(combat, who, target)
 			if rng.percent(25) then
 			local o, item, inven_id = who:findInAllInventoriesBy("define_as", "ROTTING_MAUL")
 				local dam = rng.avg(1,2) * (70+ who:getStr() * 1.8)
@@ -1413,6 +1412,7 @@ newEntity{ base = "BASE_GREATMAUL", define_as="ROTTING_MAUL",
 	wielder = {
 		inc_damage={[DamageType.PHYSICAL] = 12,},
 		knockback_immune=0.3,
+		combat_critical_power = 40,
 	},
 	max_power = 50, power_regen = 1,
 	use_power = { name = "knock away nearby foes", power = 50,

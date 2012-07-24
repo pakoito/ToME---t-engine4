@@ -58,6 +58,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 		end
 
 		-- Increases damage
+		local mind_linked = false
 		if src.inc_damage then
 			local inc = (src.inc_damage.all or 0) + (src.inc_damage[type] or 0)
 
@@ -66,8 +67,28 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 				local incEntity = src.inc_damage_actor_type[target.type]
 				if incEntity and incEntity ~= 0 then
 					print("[PROJECTOR] before inc_damage_actor_type", dam + (dam * inc / 100))
-					local inc = inc + src.inc_damage_actor_type[target.type]
+					inc = inc + src.inc_damage_actor_type[target.type]
 					print("[PROJECTOR] after inc_damage_actor_type", dam + (dam * inc / 100))
+				end
+			end
+			
+			-- Increases damage to sleeping targets
+			if target:attr("sleep") and src.attr and src:attr("night_terror") then
+				inc = inc + src:attr("night_terror")
+				print("[PROJECTOR] after night_terror", dam + (dam * inc / 100))
+			end
+			-- Increases damage to targets with Insomnia
+			if src.attr and src:attr("lucid_dreamer") and target:hasEffect(target.EFF_INSOMNIA) then
+				inc = inc + src:attr("lucid_dreamer")
+				print("[PROJECTOR] after lucid_dreamer", dam + (dam * inc / 100))
+			end
+			-- Mind Link
+			if type == DamageType.MIND and target:hasEffect(target.EFF_MIND_LINK_TARGET) then
+				local eff = target:hasEffect(target.EFF_MIND_LINK_TARGET)
+				if eff.src == src then
+					mind_linked = true
+					inc = inc + eff.power
+					print("[PROJECTOR] after mind_link", dam + (dam * inc / 100))
 				end
 			end
 
@@ -175,8 +196,9 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			if src.resists_pen then pen = (src.resists_pen.all or 0) + (src.resists_pen[type] or 0) end
 			local dominated = target:hasEffect(target.EFF_DOMINATED)
 			if dominated and dominated.source == src then pen = pen + (dominated.resistPenetration or 0) end
+			if target:attr("sleep") and src.attr and src:attr("night_terror") then pen = pen + src:attr("night_terror") end
 			local res = target:combatGetResist(type)
-			pen = util.bound(0, pen, 100)
+			pen = util.bound(pen, 0, 100)
 			if res > 0 then	res = res * (100 - pen) / 100 end
 			print("[PROJECTOR] res", res, (100 - res) / 100, " on dam", dam)
 			if res >= 100 then dam = 0
@@ -250,20 +272,10 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 				end
 			end
 		end
-		
-		-- Mind Link
-		local mind_linked_damage = 0
-		if type == DamageType.MIND and target.hasEffect and target:hasEffect(target.EFF_MIND_LINK_TARGET) then
-			local eff = target:hasEffect(target.EFF_MIND_LINK_TARGET)
-			if eff.src == src then
-				mind_linked_damage = eff.power/100
-			end
-		end
+
 		-- Psychic Projection
-		if src.attr and src:attr("is_psychic_projection")then
-			if mind_linked_damage > 0 then
-				dam = dam * (1 + mind_linked_damage)
-			elseif target.subtype and target.subtype == "ghost" then
+		if src.attr and src:attr("is_psychic_projection") and not game.zone.is_dream_scape then
+			if (target.subtype and target.subtype == "ghost") or mind_linked then
 				dam = dam
 			else
 				dam = 0
@@ -472,10 +484,9 @@ newDamageType{
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
-			local mindpower, mentalresist
+			local mindpower, mentalresist, alwaysHit
 			if _G.type(dam) == "table" then dam, mindpower, mentalresist, alwaysHit, crossTierChance = dam.dam, dam.mindpower, dam.mentalresist, dam.alwaysHit, dam.crossTierChance end
 			local hit_power = mindpower or src:combatMindpower()
-			if src.attr and src:attr("psionic_schism") then hit_power = hit_power * (1 + src:attr("psionic_schism")/100) end
 			if alwaysHit or target:checkHit(hit_power, mentalresist or target:combatMentalResist(), 0, 95, 15) then
 				if crossTierChance and rng.percent(crossTierChance) then
 					target:crossTierEffect(target.EFF_BRAINLOCKED, src:combatMindpower())
@@ -2064,6 +2075,64 @@ newDamageType{
 			else
 				local reapplied = target:hasEffect(target.EFF_LEAVES_COVER)
 				target:setEffect(target.EFF_LEAVES_COVER, 1, { power=dam.chance }, reapplied)
+			end
+		end
+	end,
+}
+
+-- Distortion; Includes knockback, penetrate, stun, and explosion paramters
+newDamageType{
+	name = "distortion", type = "DISTORTION",
+	projector = function(src, x, y, type, dam, tmp)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if not target then return end
+		tmp = tmp or {}
+		if target and not tmp[target] then
+			tmp[target] = true
+			local old_pen = 0
+			-- Spike resists pen
+			if dam.penetrate then 
+				old_pen = src.resists_pen and src.resists_pen[engine.DamageType.PHYSICAL] or 0
+				src.resists_pen[engine.DamageType.PHYSICAL] = 100
+			end
+			-- Handle distortion effects
+			if target:hasEffect(target.EFF_DISTORTION) then
+				-- Explosive?
+				if dam.explosion then
+					src:project({type="ball", target.x, target.y, radius=dam.radius}, target.x, target.y, engine.DamageType.DISTORTION, {dam=src:mindCrit(dam.explosion), knockback=dam.radius}, {type="mind"})
+					dam.explosion_done = true
+				end
+				-- Stun?
+				if dam.stun then
+					dam.do_stun = true
+				end
+			end
+			-- Our damage
+			target:setEffect(target.EFF_DISTORTION, 1, {})
+			if not dam.explosion_done then
+				DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam.dam)
+			end
+			-- Do knockback
+			if dam.knockback then
+				if target:checkHit(src:combatMindpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then 
+					target:knockback(src.x, src.y, dam.knockback)
+					target:crossTierEffect(target.EFF_OFFBALANCE, src:combatMindpower())
+					game.logSeen(target, "%s is knocked back!", target.name:capitalize())
+				else
+					game.logSeen(target, "%s resists the knockback!", target.name:capitalize())
+				end
+			end
+			-- Do stun
+			if dam.do_stun then
+				if target:canBe("stun") then
+					target:setEffect(target.EFF_STUNNED, dam.stun, {apply_power=src:combatMindpower()})
+				else
+					game.logSeen(target, "%s resists the stun!", target.name:capitalize())
+				end
+			end
+			-- Reset resists pen
+			if dam.penetrate then
+				src.resists_pen[engine.DamageType.PHYSICAL] = old_pen
 			end
 		end
 	end,

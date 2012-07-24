@@ -1577,3 +1577,201 @@ newEffect{
 		self:removeTemporaryValue("global_speed_add", eff.tmpid)
 	end,
 }
+
+newEffect{
+	name = "DREAMSCAPE", image = "talents/dreamscape.png",
+	desc = "Dreamscape",
+	long_desc = function(self, eff) return ("This target has invaded %s's dreams and has gained a %d%% bonus to all damage."):format(eff.target.name, eff.power) end,
+	type = "other",
+	subtype = { psionic=true },
+	status = "beneficial",
+	parameters = { power=1, projections_killed=0 },
+	on_timeout = function(self, eff)
+		-- Dreamscape doesn't cooldown in the dreamscape
+		self.talents_cd[self.T_DREAMSCAPE] = self.talents_cd[self.T_DREAMSCAPE] + 1
+		-- Spawn every four turns, or every two for lucid dreamers
+		local spawn_time = 4
+		if eff.target:attr("lucid_dreamer") then
+			spawn_time = 2
+		end
+		if eff.dur%spawn_time == 0 then 
+			local x, y = util.findFreeGrid(eff.target.x, eff.target.y, 1, true, {[Map.ACTOR]=true})
+			if not x then
+				game.logPlayer(self, "Not enough space to summon!")
+				return
+			end
+			
+			-- Create a clone for later spawning
+			local m = require("mod.class.NPC").new(eff.target:clone{
+				shader = "shadow_simulacrum",
+				no_drops = true,
+				faction = eff.target.faction,
+				summoner = eff.target, summoner_gain_exp=true,
+				ai_target = {actor=nil},
+				ai = "summoned", ai_real = "tactical",
+				name = eff.target.name.."'s dream projection",
+			})
+			m:removeAllMOs()
+			m.make_escort = nil
+			m.on_added_to_level = nil
+
+			m.energy.value = 0
+			m.player = nil
+			m.max_life = m.max_life
+			m.life = util.bound(m.life, 0, m.max_life)
+			if not eff.target:attr("lucid_dreamer") then
+				m.inc_damage.all = (m.inc_damage.all or 0) - 50
+			end
+			m.forceLevelup = function() end
+			m.die = nil
+			m.on_die = nil
+			m.on_acquire_target = nil
+			m.seen_by = nil
+			m.can_talk = nil
+			m.puuid = nil
+			m.on_takehit = nil
+			m.exp_worth = 0
+			m.no_inventory_access = true
+			m.clone_on_hit = nil
+			m.remove_from_party_on_death = true
+			m.is_psychic_projection = true
+			-- remove imprisonment
+			m.invulnerable = m.invulnerable - 1
+			m.time_prison = m.time_prison - 1
+			m.no_timeflow = m.no_timeflow - 1
+			m.status_effect_immune = m.status_effect_immune - 1
+			m:removeParticles(eff.particle)
+			
+			-- track number killed
+			m.on_die = function(self, who)
+				if who then
+					local p = who:hasEffect(who.EFF_DREAMSCAPE) or who.summoner:hasEffect(who.summoner.EFF_DREAMSCAPE)
+					p.projections_killed = p.projections_killed + 1
+				end
+			end
+			
+			game.zone:addEntity(game.level, m, "actor", x, y)
+			game.level.map:particleEmitter(x, y, 1, "shadow")
+
+			if game.party:hasMember(eff.target) then
+				game.party:addMember(m, {
+					control="full",
+					type="projection",
+					title="Dream Self",
+					orders = {target=true},
+				})
+				if eff.target == game.player then
+					game.party:setPlayer(m)
+					m:resetCanSeeCache()
+				end
+			end
+		end
+	end,
+	activate = function(self, eff)
+		-- Make the target invulnerable
+		eff.iid = eff.target:addTemporaryValue("invulnerable", 1)
+		eff.sid = eff.target:addTemporaryValue("time_prison", 1)
+		eff.tid = eff.target:addTemporaryValue("no_timeflow", 1)
+		eff.imid = eff.target:addTemporaryValue("status_effect_immune", 1)
+		eff.particle = eff.target:addParticles(Particles.new("time_prison", 1))
+		eff.target.energy.value = 0
+		-- Make the invader deadly
+		eff.pid = self:addTemporaryValue("inc_damage", {all=eff.power})
+		eff.did = self:addTemporaryValue("lucid_dreamer", 1)
+	end,
+	deactivate = function(self, eff)
+		-- Remove the target's invulnerability
+		eff.target:removeTemporaryValue("invulnerable", eff.iid)
+		eff.target:removeTemporaryValue("time_prison", eff.sid)
+		eff.target:removeTemporaryValue("no_timeflow", eff.tid)
+		eff.target:removeTemporaryValue("status_effect_immune", eff.imid)
+		eff.target:removeParticles(eff.particle)
+		-- Remove the invaders damage bonus
+		self:removeTemporaryValue("inc_damage", eff.pid)
+		self:removeTemporaryValue("lucid_dreamer", eff.did)
+		-- Return from the dreamscape
+		game:onTickEnd(function()
+			-- Collect objects
+			local objs = {}
+			for i = 0, game.level.map.w - 1 do for j = 0, game.level.map.h - 1 do
+				for z = game.level.map:getObjectTotal(i, j), 1, -1 do
+					objs[#objs+1] = game.level.map:getObject(i, j, z)
+					game.level.map:removeObject(i, j, z)
+				end
+			end end
+
+			local oldzone = game.zone
+			local oldlevel = game.level
+			local zone = game.level.source_zone
+			local level = game.level.source_level
+
+			if not self.dead then
+				oldlevel:removeEntity(self)
+				level:addEntity(self)
+			end
+
+			game.zone = zone
+			game.level = level
+			game.zone_name_s = nil
+
+			local x1, y1 = util.findFreeGrid(eff.x, eff.y, 20, true, {[Map.ACTOR]=true})
+			if x1 then
+				if not self.dead then
+					self:move(x1, y1, true)
+					self.on_die, self.dream_plane_on_die = self.dream_plane_on_die, nil
+					game.level.map:particleEmitter(x1, y1, 1, "teleport")
+				else
+					self.x, self.y = x1, y1
+				end
+			end
+			local x2, y2 = util.findFreeGrid(eff.tx, eff.ty, 20, true, {[Map.ACTOR]=true})
+			if not eff.target.dead then
+				if x2 then
+					eff.target:move(x2, y2, true)
+					eff.target.on_die, eff.target.dream_plane_on_die = eff.target.dream_plane_on_die, nil
+				end
+				if oldlevel:hasEntity(eff.target) then oldlevel:removeEntity(eff.target) end
+				level:addEntity(eff.target)
+			else
+				eff.target.x, eff.target.y = x2, y2
+			end
+
+			-- Add objects back
+			for i, o in ipairs(objs) do
+				if self.dead then
+					game.level.map:addObject(eff.target.x, eff.target.y, o)
+				else
+					game.level.map:addObject(self.x, self.y, o)
+				end
+			end
+
+			-- Remove all npcs in the dreamscape
+			for uid, e in pairs(oldlevel.entities) do
+				if e ~= self and e ~= eff.target and e.die then e:die() end
+			end
+
+			-- Reload MOs
+			game.level.map:redisplay()
+			game.level.map:recreate()
+
+			game.logPlayer(game.player, "#LIGHT_BLUE#You are brought back from the Dreamscape!")
+			
+			-- Apply Dreamscape hit
+			if eff.projections_killed > 0 then
+				eff.target:takeHit(eff.target.max_life/5 * eff.projections_killed, self)
+				eff.target:setEffect(eff.target.EFF_BRAINLOCKED, eff.projections_killed, {})
+			end
+		end)
+	end,
+}
+
+newEffect{
+	name = "DISTORTION", image = "talents/distortion.png",
+	desc = "Distortion",
+	long_desc = function(self, eff) return "The target has recently taken distortion damage and is vulnerable to distortion effects." end,
+	type = "other",
+	subtype = { distortion=true },
+	status = "detrimental",
+	parameters = { },
+	no_stop_enter_worlmap = true, no_stop_resting = true,
+}

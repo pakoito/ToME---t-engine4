@@ -433,7 +433,7 @@ newEntity{
 -------------------------------------------------------
 newEntity{
 	power_source = {nature=true},
-	name = "huntsmen's ", prefix=true, instant_resolve=true,
+	name = "huntsman's ", prefix=true, instant_resolve=true,
 	keywords = {hunt=true},
 	level_range = {1, 50},
 	rarity = 10,

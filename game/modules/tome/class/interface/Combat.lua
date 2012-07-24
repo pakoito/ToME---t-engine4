@@ -1014,6 +1014,9 @@ function _M:combatPhysicalpower(mod, weapon, add)
 		local t = self:getTalentFromId(self.T_EMPTY_HAND)
 		add = add + t.getDamage(self, t)
 	end
+	if self:attr("psychometry_power") then
+		add = add + self:attr("psychometry_power")
+	end
 
 	if not weapon then
 		local inven = self:getInven(self.INVEN_MAINHAND)
@@ -1125,8 +1128,8 @@ function _M:combatSpellSpeed()
 end
 
 -- Gets mental speed
-function _M:combatMentalSpeed()
-	return 1 / self.combat_mentalspeed
+function _M:combatMindSpeed()
+	return 1 / self.combat_mindspeed
 end
 
 --- Gets summon speed
@@ -1273,6 +1276,9 @@ function _M:combatMindpower(mod, add)
 	if self:knowTalent(self.T_GESTURE_OF_POWER) then
 		local t = self:getTalentFromId(self.T_GESTURE_OF_POWER)
 		add = add + t.getMindpowerChange(self, t)
+	end
+	if self:attr("psychometry_power") then
+		add = add + self:attr("psychometry_power")
 	end
 
 	return self:rescaleCombatStats((self.combat_mindpower > 0 and self.combat_mindpower or 0) + add + self:getWil() * 0.7 + self:getCun() * 0.4) * mod
