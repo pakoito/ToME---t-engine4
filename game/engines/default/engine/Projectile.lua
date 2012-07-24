@@ -295,8 +295,10 @@ function _M:makeHoming(src, display, def, target, count, on_move, on_hit)
 		trail_particle = display.trail,
 		src = src,
 		def = def,
+		start_x = def.start_x or src.x, start_y = def.start_y or src.y,
 		homing = {target=target, count=count, on_move=on_move, on_hit=on_hit},
 		energy = {mod=speed},
+		tmp_proj = {},
 	}
 
 	game.level.map:checkAllEntities(target.x, target.y, "on_projectile_target", p)
