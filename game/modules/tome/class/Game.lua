@@ -1213,7 +1213,8 @@ function _M:setupCommands()
 			end end
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
---			self:registerDialog(require("mod.dialogs.DownloadCharball").new())
+			self:registerDialog(require("mod.dialogs.DownloadCharball").new())
+do return end
 			local f, err = loadfile("/data/general/events/snowstorm.lua")
 			print(f, err)
 			setfenv(f, setmetatable({level=self.level, zone=self.zone}, {__index=_G}))

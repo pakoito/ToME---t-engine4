@@ -193,7 +193,7 @@ newTalent{
 		local val = 0
 		local shield1 = self:hasShield()
 		if shield1 then val = val + (shield1.special_combat and shield1.special_combat.block or 0) end
-		
+
 		if not self:getInven("MAINHAND") then return val end
 		local shield2 = self:getInven("MAINHAND")[1]
 		if shield2 then val = val + (shield2.special_combat and shield2.special_combat.block or 0) end
@@ -204,7 +204,7 @@ newTalent{
 		local bt = {[DamageType.PHYSICAL]=true}
 		if not shield then return bt, "error!" end
 		local shield2 = self:getInven("MAINHAND") and self:getInven("MAINHAND")[1]
-		shield2 = shield2.special_combat and shield2 or nil
+		shield2 = shield2 and shield2.special_combat and shield2 or nil
 
 		if shield.wielder.resists then for res, v in pairs(shield.wielder.resists) do if v > 0 then bt[res] = true end end end
 		if shield.wielder.on_melee_hit then for res, v in pairs(shield.wielder.on_melee_hit) do if v > 0 then bt[res] = true end end end
@@ -291,9 +291,9 @@ newTalent{
 		self:project(tg, x, y, function(px, py)
 			target:setEffect(target.EFF_SPELL_DISRUPTION, 8, {src=self, power = 8, max = 45+self:getTalentLevel(t)*5, apply_power=self:combatMindpower()})
 			if rng.percent(30) and self:getTalentLevel(t)>2 then
-			
+
 			local effs = {}
-			
+
 			-- Go through all spell effects
 				for eff_id, p in pairs(target.tmp) do
 					local e = target.tempeffect_def[eff_id]
@@ -308,7 +308,7 @@ newTalent{
 						local talent = target:getTalentFromId(tid)
 						if talent.is_spell then effs[#effs+1] = {"talent", tid} end
 					end
-				end	
+				end
 			end
 				local eff = rng.tableRemove(effs)
 				if eff then
