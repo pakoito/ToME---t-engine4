@@ -178,3 +178,35 @@ newAchievement{
 	desc = [[Saved Derth without a single inhabitant dying.]],
 	mode = "player",
 }
+
+newAchievement{
+	name = "Kickin' it old-school", id = "FIRST_BOSS_URKIS",
+	image = "npc/humanoid_human_urkis__the_high_tempest.png",
+	show = "full",
+	desc = [[Kill Urkis, the Tempest, causing him to drop the Rod of Recall.]],
+	mode = "player",
+}
+
+newAchievement{
+	name = "Leave the big boys alone", id = "FIRST_BOSS_MASTER",
+	image = "npc/the_master.png",
+	show = "full",
+	desc = [[Kill The Master, causing him to drop the Rod of Recall.]],
+	mode = "player",
+}
+
+newAchievement{
+	name = "You know who's to blame", id = "FIRST_BOSS_GRAND_CORRUPTOR",
+	image = "npc/humanoid_shalore_grand_corruptor.png",
+	show = "full",
+	desc = [[Kill the Grand Corruptor, causing him to drop the Rod of Recall.]],
+	mode = "player",
+}
+
+newAchievement{
+	name = "You know who's to blame (reprise)", id = "FIRST_BOSS_MYSSIL",
+	image = "npc/humanoid_halfling_protector_myssil.png",
+	show = "full",
+	desc = [[Kill Myssil, causing her to drop the Rod of Recall.]],
+	mode = "player",
+}

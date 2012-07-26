@@ -281,6 +281,11 @@ function _M:die(src, death_note)
 		if rod then
 			game.zone:addEntity(game.level, rod, "object", self.x, self.y)
 			game.state:allowRodRecall(false)
+			if self.define_as == "THE_MASTER" then world:gainAchievement("FIRST_BOSS_MASTER", src)
+			elseif self.define_as == "GRAND_CORRUPTOR" then world:gainAchievement("FIRST_BOSS_GRAND_CORRUPTOR", src)
+			elseif self.define_as == "PROTECTOR_MYSSIL" then world:gainAchievement("FIRST_BOSS_MYSSIL", src)
+			elseif self.define_as == "URKIS" then world:gainAchievement("FIRST_BOSS_URKIS", src)
+			end
 		end
 	end
 	-- Ok the player managed to kill a boss dont bother him with tutorial anymore
