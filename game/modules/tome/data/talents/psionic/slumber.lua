@@ -237,7 +237,7 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local power = t.getPower(self, t)
 		return([[Enter a sleeping target's dreams for %d turns.  While in the dreamscape you'll encounter the target's invulnerable sleeping form as well as dream projections that it will spawn every four turns to defend it's mind.  When the dreamscape ends the target's life will be reduced by 20%% and it will to be brainlocked for one turn for each projection destroyed.
-		Lucid dreamer's will spawn projections every two turns instead of every four and their projections will deal more damage (generally projections have a 50%% penalty to all damage).
+		Lucid dreamers will spawn projections every two turns instead of every four and their projections will deal more damage (generally projections have a 50%% penalty to all damage).
 		In the dreamscape your damage will be improved by %d%%.
 		The damage bonus will improve with your mindpower.]]):format(duration, power)
 	end,

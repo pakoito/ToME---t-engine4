@@ -230,7 +230,7 @@ newEntity{
 			end end
 
 			-- Randomly take targets
-			local tg = {type="beam", range=5, friendlyfire=false}
+			local tg = {type="beam", range=5, friendlyfire=false, x=target.x, y=target.y}
 			if #tgts <= 0 then return end
 			local a, id = rng.table(tgts)
 			table.remove(tgts, id)

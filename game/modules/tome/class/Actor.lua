@@ -332,15 +332,23 @@ function _M:actBase()
 	-- Solipsism speed effects; calculated before the actor gets energy
 	local current_psi_percentage = self:getPsi() / self:getMaxPsi()
 	if self:attr("solipsism_threshold") and current_psi_percentage < self:attr("solipsism_threshold") then
+		local solipsism_power = self:attr("solipsism_threshold") - current_psi_percentage
 		if self:hasEffect(self.EFF_CLARITY) then
 			self:removeEffect(self.EFF_CLARITY)
 		end
-		self:setEffect(self.EFF_SOLIPSISM, 1, {power = self:attr("solipsism_threshold") - current_psi_percentage})
+		local p = self:hasEffect(self.EFF_SOLIPSISM)
+		if (p and p.power ~= solipsism_power) or not p then
+			self:setEffect(self.EFF_SOLIPSISM, 1, {power = solipsism_power})
+		end
 	elseif self:attr("clarity_threshold") and current_psi_percentage > self:attr("clarity_threshold") then
+		local clarity_power = math.min(0.5, current_psi_percentage - self:attr("clarity_threshold"))
 		if self:hasEffect(self.EFF_SOLIPSISM) then
 			self:removeEffect(self.EFF_SOLIPSISM)
 		end
-		self:setEffect(self.EFF_CLARITY, 1, {power = math.min(0.5, current_psi_percentage - self:attr("clarity_threshold"))})
+		local p = self:hasEffect(self.EFF_CLARITY)
+		if (p and p.power ~= clarity_power) or not p then
+			self:setEffect(self.EFF_CLARITY, 1, {power = math.min(0.5, current_psi_percentage - self:attr("clarity_threshold"))})
+		end
 	elseif self:hasEffect(self.EFF_SOLIPSISM) then
 		self:removeEffect(self.EFF_SOLIPSISM)
 	elseif self:hasEffect(self.EFF_CLARITY) then
@@ -1555,29 +1563,29 @@ function _M:onTakeHit(value, src)
 		if src and src.attr and src:attr("damage_shield_penetrate") then
 			adjusted_value = value * (1 - (util.bound(src.damage_shield_penetrate, 0, 100) / 100))
 		end
-
 		-- Shield Reflect?
-		local reflection, reflect_damage = false, 0
+		local reflection, reflect_damage = 0
 		if self:attr("damage_shield_reflect") then
-			reflection = true
+			reflection = self:attr("damage_shield_reflect")/100
 		end
 		-- Absorb damage into the shield
 		self.damage_shield_absorb = self.damage_shield_absorb or 0
 		if adjusted_value <= self.damage_shield_absorb then
 			self.damage_shield_absorb = self.damage_shield_absorb - adjusted_value
-			if reflection then reflect_damage = adjusted_value end
+			if reflection > 0 then reflect_damage = adjusted_value end
 			value = value - adjusted_value
 		else
-			if reflection then reflect_damage = self.damage_shield_absorb end
+			if reflection > 0 then reflect_damage = self.damage_shield_absorb end
 			value = adjusted_value - self.damage_shield_absorb
 			self.damage_shield_absorb = 0
 		end
-	
-		if reflection and reflect_damage > 0 then 
-			src:takeHit(math.ceil(reflect_damage * (self:attr("damage_shield_reflect")/100)), self)
-			game.logSeen(self, "The damage shield reflects %d damage back to %s!", math.ceil(reflect_damage * (self:attr("damage_shield_reflect")/100)),src.name:capitalize())
+		if reflection > 0 and reflect_damage > 0 and src.y and src.x and not src.dead then
+			local a = game.level.map(src.x, src.y, Map.ACTOR)
+			if a and self:reactionToward(a) < 0 then
+				a:takeHit(math.ceil(reflect_damage * reflection), self)
+				game.logSeen(self, "The damage shield reflects %d damage back to %s!", math.ceil(reflect_damage * reflection), a.name:capitalize())
+			end
 		end
-		
 		-- If we are at the end of the capacity, release the time shield damage
 		if self.damage_shield_absorb <= 0 then
 			game.logPlayer(self, "Your shield crumbles under the damage!")
@@ -1684,7 +1692,7 @@ function _M:onTakeHit(value, src)
 		end
 		-- Trigger backlash retribution damage
 		if self:knowTalent(self.T_BACKLASH) then
-			if src.y and src.x and not src.dead and self:reactionToward(src) < 0 then
+			if src.y and src.x and not src.dead then
 				local t = self:getTalentFromId(self.T_BACKLASH)
 				t.doBacklash(self, src, t)
 			end

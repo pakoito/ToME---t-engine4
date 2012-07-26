@@ -1833,6 +1833,7 @@ newEffect{
 		self:setEffect(self.EFF_DISTORTION, 1, {})
 		if eff.ravage then
 			game.logSeen(self, "#LIGHT_RED#%s is being ravaged by distortion!", self.name:capitalize())
+			eff.dam = eff.dam * 1.5
 		end
 	end,
 }

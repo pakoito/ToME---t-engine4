@@ -54,7 +54,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local max = t.getPsychometryCap(self, t)
-		return ([[Resonate with psionic, nature, and anti-magic powered objects, increasing your physical and mind power by %d or the objects material level (which ever is lower).
+		return ([[Resonate with psionic, nature, and anti-magic powered objects, increasing your physical and mind power by %d or the objects material level (whichever is lower).
 		This effect stacks and applies for each qualifying object worn.]]):format(max)
 	end,
 }

@@ -2593,7 +2593,7 @@ newEntity{ base = "BASE_ARROW",
 	material_level = 4,
 	require = { stat = { dex=24 }, },
 	combat = {
-		capacity = 12,
+		capacity = 4,
 		tg_type = "beam",
 		travel_speed = 3,
 		dam = 34,

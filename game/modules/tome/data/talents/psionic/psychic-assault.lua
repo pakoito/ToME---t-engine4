@@ -43,7 +43,7 @@ newTalent{
 		
 		local dam =self:mindCrit(t.getDamage(self, t))
 		self:project(tg, x, y, DamageType.MIND, {dam=dam, alwaysHit=true})
-		target:setEffect(target.EFF_SUNDER_MIND, 4, {power=dam/10})
+		target:setEffect(target.EFF_SUNDER_MIND, 2, {power=dam/10})
 			
 		return true
 	end,

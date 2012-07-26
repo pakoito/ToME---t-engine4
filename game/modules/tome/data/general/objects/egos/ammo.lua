@@ -186,7 +186,7 @@ newEntity{
 			end end
 
 			-- Randomly take targets
-			local tg = {type="beam", range=5, friendlyfire=false}
+			local tg = {type="beam", range=10, friendlyfire=false, x=target.x, y=target.y}
 			if #tgts <= 0 then return end
 			local a, id = rng.table(tgts)
 			table.remove(tgts, id)
@@ -305,7 +305,7 @@ newEntity{
 		},
 		special_on_hit = {desc="random elemental effect", fct=function(combat, who, target)
 			local dam = 20 + (who:combatSpellpower()/5)
-			local tg = {type="hit", range=1}
+			local tg = {type="hit", range=10}
 			local elem = rng.table{
 				{engine.DamageType.FIREBURN, "flame"},
 				{engine.DamageType.ICE, "freeze"},

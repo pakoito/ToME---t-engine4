@@ -1766,7 +1766,7 @@ newEffect{
 }
 
 newEffect{
-	name = "DISTORTION", image = "talents/distortion.png",
+	name = "DISTORTION", image = "talents/maelstrom.png",
 	desc = "Distortion",
 	long_desc = function(self, eff) return "The target has recently taken distortion damage and is vulnerable to distortion effects." end,
 	type = "other",

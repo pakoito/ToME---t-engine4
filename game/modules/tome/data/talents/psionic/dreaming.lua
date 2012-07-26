@@ -139,7 +139,7 @@ newTalent{
 		local tg = self:getTalentTarget(t)
 		local x, y, target = self:getTarget(tg)
 		if not x or not y then return nil end
-		if not self:hasLOS(x, y) then
+		if not self:hasLOS(x, y) or game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move") then
 			game.logPlayer(self, "You do not have line of sight to this location.")
 			return nil
 		end

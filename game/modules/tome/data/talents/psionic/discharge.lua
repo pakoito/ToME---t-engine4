@@ -33,12 +33,14 @@ newTalent{
 	doBacklash = function(self, target, t)
 		if core.fov.distance(self.x, self.y,target.x, target.y) > self:getTalentRange(t) then return nil end
 		local tg = self:getTalentTarget(t)
+		local a = game.level.map(target.x, target.y, Map.ACTOR)
+		if not a or self:reactionToward(a) >= 0 then return nil end
 		-- Divert the Backlash?
 		local wrath = self:hasEffect(self.EFF_FOCUSED_WRATH)
 		if wrath then
 			self:project(tg, wrath.target.x, wrath.target.y, DamageType.MIND, self:mindCrit(t.getDamage(self, t), nil, wrath.power), {type="mind", true}) -- No Martyr loops
 		else
-			self:project(tg, target.x, target.y, DamageType.MIND, self:mindCrit(t.getDamage(self, t)), {type="mind"}, true) -- No Martyr loops
+			self:project(tg, a.x, a.y, DamageType.MIND, self:mindCrit(t.getDamage(self, t)), {type="mind"}, true) -- No Martyr loops
 		end
 	end,
 	info = function(self, t)
@@ -77,7 +79,7 @@ newTalent{
 	type = {"psionic/discharge", 3},
 	points = 5, 
 	require = psi_wil_high3,
-	sustain_feedback = 50,
+	sustain_feedback = 0,
 	mode = "sustained",
 	cooldown = 12,
 	tactical = { ATTACKAREA = {MIND = 2}},
@@ -88,7 +90,7 @@ newTalent{
 		return {type="bolt", range=self:getTalentRange(t), talent=t, friendlyfire=false, display={particle="bolt_void", trail="dust_trail"}}
 	end,
 	getDamage = function(self, t) return self:combatTalentMindDamage(t, 20, 140) end,
-	getTargetCount = function(self, t) return self:getTalentLevelRaw(t) end,
+	getTargetCount = function(self, t) return math.ceil(self:getTalentLevel(t)) end,
 	getOverchargeRatio = function(self, t) return 20 - math.ceil(self:getTalentLevel(t)) end,
 	doMindStorm = function(self, t, p)
 		local tgts = {}

@@ -179,8 +179,9 @@ newTalent{
 		if not x or not y then return nil end
 		local target = game.level.map(x, y, Map.ACTOR)
 		if not target then return nil end
-		if self:reactionToward(target) < 0 then
+		if self:reactionToward(target) >= 0 then
 			game.logPlayer(self, "You can't cast this on friendly targets.")
+			return nil
 		end
 		
 		local chance = self:mindCrit(t.getChance(self, t))

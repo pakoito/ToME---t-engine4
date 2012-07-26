@@ -111,12 +111,8 @@ newTalent{
 	cooldown = 30,
 	tactical = { BUFF = 2 },
 	getDefense = function(self, t) return self:combatTalentSpellDamage(t, 10, 20) end,
+	on_pre_use = function(self, t, silent) if not self:hasStaffWeapon() then if not silent then game.logPlayer(self, "You need a staff to use this spell.") end return false end return true end,
 	activate = function(self, t)
-		local weapon = self:hasStaffWeapon()
-		if not weapon then
-			game.logPlayer(self, "You need a staff to use this spell.")
-			return
-		end
 
 		local power = t.getDefense(self, t)
 		game:playSoundNear(self, "talents/arcane")

@@ -2522,7 +2522,7 @@ newEffect{
 }
 
 newEffect{
-	name = "INSOMNIA", image = "talents/sleep.png",
+	name = "INSOMNIA", image = "effects/insomnia.png",
 	desc = "Insomnia",
 	long_desc = function(self, eff) return ("The target is wide awake and has %d%% resistance to sleep effects."):format(eff.power*100) end,
 	type = "mental",
@@ -2567,7 +2567,7 @@ newEffect{
 	type = "mental",
 	subtype = { psionic=true },
 	status = "detrimental",
-	on_gain = function(self, err) return "#Target# mental functions have been imparied.", "+Sundered Mind" end,
+	on_gain = function(self, err) return "#Target# mental functions have been impaired.", "+Sundered Mind" end,
 	on_lose = function(self, err) return "#Target#'s regains it's senses.", "-Sundered Mind" end,
 	parameters = { power=10 },
 	on_merge = function(self, old_eff, new_eff)

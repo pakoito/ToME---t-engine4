@@ -2099,7 +2099,7 @@ newDamageType{
 			if target:hasEffect(target.EFF_DISTORTION) then
 				-- Explosive?
 				if dam.explosion then
-					src:project({type="ball", target.x, target.y, radius=dam.radius}, target.x, target.y, engine.DamageType.DISTORTION, {dam=src:mindCrit(dam.explosion), knockback=dam.radius}, {type="mind"})
+					src:project({type="ball", target.x, target.y, radius=dam.radius}, target.x, target.y, engine.DamageType.DISTORTION, {dam=src:mindCrit(dam.explosion)}, {type="mind"})
 					dam.explosion_done = true
 				end
 				-- Stun?

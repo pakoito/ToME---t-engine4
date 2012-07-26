@@ -30,9 +30,8 @@ newTalent{
 	psi = 5,
 	tactical = { ATTACK = { PHYSICAL = 2} },
 	range = 10,
-	radius = function(self, t) return 1 + math.floor(self:getTalentLevel(t)/2) end,
+	radius = function(self, t) return 1 + math.floor(self:getTalentLevel(t)/3) end,
 	requires_target = true,
-	proj_speed = 20,
 	getDamage = function(self, t) return self:combatTalentMindDamage(t, 10, 100) end,
 	getDetonateDamage = function(self, t) return self:combatTalentMindDamage(t, 20, 200) end,
 	target = function(self, t)
@@ -50,7 +49,7 @@ newTalent{
 		local detonate_damage = t.getDetonateDamage(self, t)
 		local radius = self:getTalentRadius(t)
 		return ([[Fire a bolt of distortion that ignores resistance and inflicts %0.2f physical damage.  This damage will distort affected targets, rendering them vulnerable to distortion effects.
-		If the bolt comes in contact with a target that's already distorted a detonation will occur, inflicting %0.2f physical damage and knocking back all targets in a %d radius.
+		If the bolt comes in contact with a target that's already distorted a detonation will occur, inflicting %0.2f physical damage in a %d radius.
 		The damage will scale with your mindpower.]]):format(damDesc(self, DamageType.PHYSICAL, damage), damDesc(self, DamageType.PHYSICAL, detonate_damage), radius)
 	end,
 }
@@ -119,7 +118,7 @@ newTalent{
 			ravage = true
 		end
 		
-		target:setEffect(target.EFF_RAVAGE, t.getDuration(self, t), {dam=self:mindCrit(t.getDamage(self, t)), ravage=ravage, apply_power=self:combatMindpower()})
+		target:setEffect(target.EFF_RAVAGE, t.getDuration(self, t), {src=self, dam=self:mindCrit(t.getDamage(self, t)), ravage=ravage, apply_power=self:combatMindpower()})
 							
 		return true
 	end,
@@ -128,7 +127,7 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		return ([[Ravages the target with distortion, inflicting %0.2f physical damage each turn for %d turns.
 		This damage will distort affected targets, rendering them vulnerable to distortion effects.
-		If the target is already distorted when ravage is applied the target will also lose one beneficial physical effect or sustain each turn.
+		If the target is already distorted when ravage is applied the damage will be increased by 50%% and the target will lose one beneficial physical effect or sustain each turn.
 		The damage will scale with your mindpower.]]):format(damDesc(self, DamageType.PHYSICAL, damage), duration)
 	end,
 }
@@ -186,7 +185,7 @@ newTalent{
 				end end
 				table.sort(tgts, "sqdist")
 				for i, target in ipairs(tgts) do
-					if target.actor:canBe("knocback") then
+					if target.actor:canBe("knockback") then
 						target.actor:pull(self.x, self.y, 1)
 						game.logSeen(target.actor, "%s is pulled in by the %s!", target.actor.name:capitalize(), self.name)
 					end
