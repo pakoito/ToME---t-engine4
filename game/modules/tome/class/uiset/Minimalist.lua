@@ -219,7 +219,7 @@ end
 
 function _M:getMainMenuItems()
 	return {
-		{"Reset interface positions", function() self:resetPlaces() end},
+		{"Reset interface positions", function() self:resetPlaces() self:saveSettings() end},
 	}
 end
 
@@ -261,7 +261,7 @@ function _M:boundPlaces(w, h)
 				d.scale = 1
 
 				d.x = util.bound(d.x, 0, w - d.w)
-				d.y = util.bound(d.y, 0, w - d.h)
+				d.y = util.bound(d.y, 0, h - d.h)
 			elseif d.scale then
 				d.scale = util.bound(d.scale, 0.5, 2)
 
