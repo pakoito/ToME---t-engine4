@@ -21,6 +21,9 @@ return {
 	frag = "shadow_simulacrum",
 	vert = nil,
 	args = {
+		color = color or {0.7, 0.7, 0.7},
+		base = base or 0.3,
+		time_factor = time_factor or 3000,
 	},
 	clone = false,
 }

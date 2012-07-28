@@ -4,7 +4,9 @@
 #extension GL_EXT_gpu_shader4: enable
 
 uniform sampler2D tex;
-uniform vec4 color;
+uniform vec3 color;
+uniform float base;
+uniform float time_factor;
 uniform float tick;
 uniform vec2 p2 = vec2(1.0, 1.0);
 
@@ -42,7 +44,7 @@ float noise3f(in vec3 p)
 
 #define ty(x,y) (pow(.5+sin((x)*y*6.2831)/2.0,2.0)-.5)
 #define t2(x,y) \
-	ty(y + 2.0*ty(x+2.0*noise3f(vec3(cos((x)/3.0)+x,y+tick/3000.0,(x)*.1)),.3),.7)
+	ty(y + 2.0*ty(x+2.0*noise3f(vec3(cos((x)/3.0)+x,y+tick/time_factor,(x)*.1)),.3),.7)
 #define tx(x,y,a,d) \
 	((t2(x, y) * (a - x) * (d - y) + \
 	t2(x - a, y) * x * (d - y) + t2(x, y - d) * (a - x) * y + \
@@ -62,5 +64,5 @@ void main(void)
 	vec2 uv = gl_TexCoord[0].xy * p2;
 	uv -= floor(uv);
 	gl_FragColor = texture2D(tex, gl_TexCoord[0].xy);
-	gl_FragColor.rgb = fx(uv) * 0.7 + (gl_FragColor.rgb * 0.3);
+	gl_FragColor.rgb = fx(uv) * color + (gl_FragColor.rgb * base);
 }
