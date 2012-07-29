@@ -1,4 +1,4 @@
--- ToME - Tales of Maj'Eyal
+-- ToME - Tales of Middle-Earth
 -- Copyright (C) 2009, 2010, 2011, 2012 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -16,33 +16,38 @@
 --
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
-
 base_size = 32
 
-local r = 1
-local g = 1
-local b = 1
-local a = 1
+local first = true
 
 return { generator = function()
+	local life = rng.range(20, 40)
+	local size = rng.range(4, 8)
+	local alpha = rng.range(100, 200) / 255
+	local angle = math.rad(rng.range(0, 360))
+	local distance = engine.Map.tile_w * rng.float(0.5, radius)
+	local vel = distance / life / 0.75
+	
 	return {
-		trail = 0,
-		life = 10,
-		size = 38, sizev = 0, sizea = 0,
+		trail = 1,
+		life = life,
+		size = size, sizev = size / life / 3, sizea = 0,
 
-		x = 0, xv = 0, xa = 0,
-		y = 0, yv = 0, ya = 0,
-		dir = 0, dirv = dirv, dira = 0,
-		vel = 0, velv = 0, vela = 0,
+		x = -size / 2, xv = 0, xa = 0,
+		y = -size / 2, yv = 0, ya = 0,
+		dir = angle, dirv = 0, dira = 0,
+		vel = vel, velv = -vel / life / 2, vela = 0,
 
-		r = r, rv = 0, ra = 0,
-		g = g, gv = 0, ga = 0,
-		b = b, bv = 0, ba = 0,
-		a = a, av = -0.02, aa = 0.005,
+		r = rng.range(rm, rM)/255,	rv = 0, ra = 0,
+		g = rng.range(gm, gM)/255,	gv = 0, ga = 0,
+		b = rng.range(bm, bM)/255,	bv = 0, ba = 0,
+		a = rng.range(am, aM)/255,  av = -alpha / life / 2, aa = 0,
 	}
 end, },
 function(self)
-	self.ps:emit(1)
+	if first then
+		self.ps:emit(100 * radius)
+		first = false
+	end
 end,
-1,
-"particles_images/"..(img or "shield2")
+100 * radius * 60

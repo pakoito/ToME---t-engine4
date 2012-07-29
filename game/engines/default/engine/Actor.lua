@@ -142,7 +142,7 @@ function _M:defineDisplayCallback()
 		end
 	end
 
-	if self._mo == self._last_mo then
+	if self._mo == self._last_mo or not self._last_mo then
 		self._mo:displayCallback(function(x, y, w, h)
 			tactical(x, y, w, h)
 			particles(x, y, w, h)

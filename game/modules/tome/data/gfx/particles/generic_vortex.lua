@@ -17,32 +17,32 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-base_size = 32
-
-local r = 1
-local g = 1
-local b = 1
-local a = 1
-
 return { generator = function()
+	local radius = radius
+	local sradius = (radius + 0.5) * (engine.Map.tile_w + engine.Map.tile_h) / 2
+	local ad = rng.range(0, 360)
+	local a = math.rad(ad)
+	local dir = math.rad(ad + 60)
+	local r = rng.float(0, sradius)
+	local dirv = math.rad(3)
+
 	return {
-		trail = 0,
-		life = 10,
-		size = 38, sizev = 0, sizea = 0,
+		trail = 1,
+		life = 2,
+		size = 4, sizev = 0, sizea = 0,
 
-		x = 0, xv = 0, xa = 0,
-		y = 0, yv = 0, ya = 0,
-		dir = 0, dirv = dirv, dira = 0,
-		vel = 0, velv = 0, vela = 0,
+		x = r * math.cos(a), xv = 0, xa = 0,
+		y = r * math.sin(a), yv = 0, ya = 0,
+		dir = dir, dirv = 0, dira = 0,
+		vel = -r/8, velv = 0, vela = 0,
 
-		r = r, rv = 0, ra = 0,
-		g = g, gv = 0, ga = 0,
-		b = b, bv = 0, ba = 0,
-		a = a, av = -0.02, aa = 0.005,
+		r = rng.range(rm, rM)/255,  		rv = 0.005, ra = 0.0005,
+		g = rng.range(gm, gM)/255, 	 		gv = 0.005, ga = 0.0005,
+		b = rng.range(bm, bM)/255, 			bv = 0.005, ba = 0.0005,
+		a = rng.range(am, aM)/255, 	 	  	av = 0, aa = 0.005,
 	}
 end, },
 function(self)
-	self.ps:emit(1)
+	self.ps:emit(500*radius)
 end,
-1,
-"particles_images/"..(img or "shield2")
+500*radius*2

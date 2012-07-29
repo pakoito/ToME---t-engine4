@@ -19,30 +19,32 @@
 
 base_size = 32
 
-local r = 1
-local g = 1
-local b = 1
-local a = 1
-
 return { generator = function()
+	local ad = rng.range(0, 360)
+	local a = math.rad(ad + 15)
+	local dir = math.rad(ad)
+	local r = rng.range(12, 20)
+
 	return {
-		trail = 0,
-		life = 10,
-		size = 38, sizev = 0, sizea = 0,
+		trail = 1,
+		life = 5,
+		size = 10, sizev = 0.08, sizea = 0,
 
-		x = 0, xv = 0, xa = 0,
-		y = 0, yv = 0, ya = 0,
-		dir = 0, dirv = dirv, dira = 0,
-		vel = 0, velv = 0, vela = 0,
+		x = r * math.cos(a), xv = 0, xa = 0,
+		y = r * math.sin(a), yv = 0, ya = 0,
+		dir = dir, dirv = math.rad(3), dira = math.rad(3) / 3,
+		vel = 1.4, velv = 0, vela = 0,
 
-		r = r, rv = 0, ra = 0,
-		g = g, gv = 0, ga = 0,
-		b = b, bv = 0, ba = 0,
-		a = a, av = -0.02, aa = 0.005,
+		r = rng.range(rm, rM)/255,  rv = 0, ra = 0,
+		g = rng.range(gm, gM)/255,  gv = 0, ga = 0,
+		b = rng.range(bm, bM)/255,  bv = 0, ba = 0,
+		a = rng.range(am, aM)/255,  av = 0, aa = 0,
 	}
 end, },
 function(self)
-	self.ps:emit(1)
+	self.nb = (self.nb or 0) + 1
+	if self.nb < 4 then
+		self.ps:emit(20)
+	end
 end,
-1,
-"particles_images/"..(img or "shield2")
+800

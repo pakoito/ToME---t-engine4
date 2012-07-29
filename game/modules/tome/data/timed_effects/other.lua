@@ -113,6 +113,14 @@ newEffect{
 	on_aegis = function(self, eff, aegis)
 		self.time_shield_absorb = self.time_shield_absorb + eff.power * aegis / 100
 	end,
+	damage_feedback = function(self, eff, src, value)
+		if eff.particle and eff.particle._shader and eff.particle._shader.shad and src and src.x and src.y then
+			local r = -rng.float(0.2, 0.4)
+			local a = math.atan2(src.y - self.y, src.x - self.x)
+			eff.particle._shader:setUniform("impact", {math.cos(a) * r, math.sin(a) * r})
+			eff.particle._shader:setUniform("impact_tick", core.game.getTime())
+		end
+	end,
 	activate = function(self, eff)
 		if self:attr("shield_factor") then eff.power = eff.power * (100 + self:attr("shield_factor")) / 100 end
 		if self:attr("shield_dur") then eff.dur = eff.dur + self:attr("shield_dur") end
@@ -121,7 +129,11 @@ newEffect{
 		--- Warning there can be only one time shield active at once for an actor
 		self.time_shield_absorb = eff.power
 		self.time_shield_absorb_max = eff.power
-		eff.particle = self:addParticles(Particles.new("time_shield_bubble", 1))
+		if core.shader.active() then
+			eff.particle = self:addParticles(Particles.new("shader_shield", 1, {img="shield3"}, {type="shield", time_factor=2000, color={1, 1, 0.3}}))
+		else
+			eff.particle = self:addParticles(Particles.new("time_shield_bubble", 1))
+		end
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("reduce_status_effects_time", eff.durid)
@@ -1594,13 +1606,13 @@ newEffect{
 		if eff.target:attr("lucid_dreamer") then
 			spawn_time = 2
 		end
-		if eff.dur%spawn_time == 0 then 
+		if eff.dur%spawn_time == 0 then
 			local x, y = util.findFreeGrid(eff.target.x, eff.target.y, 1, true, {[Map.ACTOR]=true})
 			if not x then
 				game.logPlayer(self, "Not enough space to summon!")
 				return
 			end
-			
+
 			-- Create a clone for later spawning
 			local m = require("mod.class.NPC").new(eff.target:clone{
 				shader = "shadow_simulacrum",
@@ -1642,7 +1654,7 @@ newEffect{
 			m.no_timeflow = m.no_timeflow - 1
 			m.status_effect_immune = m.status_effect_immune - 1
 			m:removeParticles(eff.particle)
-			
+
 			-- track number killed
 			m.on_die = function(self, who)
 				if who then
@@ -1650,7 +1662,7 @@ newEffect{
 					p.projections_killed = p.projections_killed + 1
 				end
 			end
-			
+
 			game.zone:addEntity(game.level, m, "actor", x, y)
 			game.level.map:particleEmitter(x, y, 1, "generic_teleport", {rm=0, rM=0, gm=180, gM=255, bm=180, bM=255, am=35, aM=90})
 
@@ -1756,7 +1768,7 @@ newEffect{
 			game.level.map:recreate()
 
 			game.logPlayer(game.player, "#LIGHT_BLUE#You are brought back from the Dreamscape!")
-			
+
 			-- Apply Dreamscape hit
 			if eff.projections_killed > 0 then
 				eff.target:takeHit(eff.target.max_life/5 * eff.projections_killed, self)
