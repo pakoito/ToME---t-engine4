@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
--- Edge TODO: Sounds, Particles
+-- Edge TODO: Sounds
 
 newTalent{
 	name = "Sunder Mind",
@@ -42,7 +42,7 @@ newTalent{
 		if not target then return end
 		
 		local dam =self:mindCrit(t.getDamage(self, t))
-		self:project(tg, x, y, DamageType.MIND, {dam=dam, alwaysHit=true})
+		self:project(tg, x, y, DamageType.MIND, {dam=dam, alwaysHit=true}, {type="mind"})
 		target:setEffect(target.EFF_SUNDER_MIND, 2, {power=dam/10})
 			
 		return true
@@ -146,7 +146,8 @@ newTalent{
 	getDamage = function(self, t) return self:combatTalentMindDamage(t, 20, 200) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
-		self:project(tg, self.x, self.y, DamageType.MIND, {dam=self:mindCrit(self:combatTalentMindDamage(t, 20, 200)), crossTierChance=100}, {type="mind"})
+		self:project(tg, self.x, self.y, DamageType.MIND, {dam=self:mindCrit(self:combatTalentMindDamage(t, 20, 200)), crossTierChance=100} )
+		game.level.map:particleEmitter(self.x, self.y, self:getTalentRadius(t), "generic_ball", {radius=self:getTalentRadius(t), rm=100, rM=125, gm=100, gM=125, bm=100, bM=125, am=200, aM=255})
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,

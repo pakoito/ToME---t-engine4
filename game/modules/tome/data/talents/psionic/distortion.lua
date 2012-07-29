@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
--- Edge TODO: Sounds, Particles
+-- Edge TODO: Sounds
 
 local Object = require "mod.class.Object"
 
@@ -32,10 +32,10 @@ newTalent{
 	range = 10,
 	radius = function(self, t) return 1 + math.floor(self:getTalentLevel(t)/3) end,
 	requires_target = true,
-	getDamage = function(self, t) return self:combatTalentMindDamage(t, 10, 100) end,
+	getDamage = function(self, t) return self:combatTalentMindDamage(t, 10, 150) end,
 	getDetonateDamage = function(self, t) return self:combatTalentMindDamage(t, 20, 200) end,
 	target = function(self, t)
-		return {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_void", trail="dust_trail"}}
+		return {type="bolt", range=self:getTalentRange(t), talent=t, display={trail="distortion_trail"}}
 	end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
@@ -49,7 +49,7 @@ newTalent{
 		local detonate_damage = t.getDetonateDamage(self, t)
 		local radius = self:getTalentRadius(t)
 		return ([[Fire a bolt of distortion that ignores resistance and inflicts %0.2f physical damage.  This damage will distort affected targets, rendering them vulnerable to distortion effects.
-		If the bolt comes in contact with a target that's already distorted a detonation will occur, inflicting %0.2f physical damage in a %d radius.
+		If the bolt comes in contact with a target that's already distorted a detonation will occur, inflicting %0.2f physical damage in a radius of %d.
 		The damage will scale with your mindpower.]]):format(damDesc(self, DamageType.PHYSICAL, damage), damDesc(self, DamageType.PHYSICAL, detonate_damage), radius)
 	end,
 }
@@ -75,7 +75,8 @@ newTalent{
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.DISTORTION, {dam=self:mindCrit(t.getDamage(self, t)), knockback=t.getPower(self, t), stun=t.getPower(self, t)}, {type="mind"})
+		self:project(tg, x, y, DamageType.DISTORTION, {dam=self:mindCrit(t.getDamage(self, t)), knockback=t.getPower(self, t), stun=t.getPower(self, t)})
+		game.level.map:particleEmitter(self.x, self.y, tg.radius, "generic_wave", {radius=tg.radius, tx=x-self.x, ty=y-self.y, rm=255, rM=255, gm=180, gM=255, bm=180, bM=255, am=35, aM=90})
 		return true
 	end,
 	info = function(self, t)
@@ -101,7 +102,7 @@ newTalent{
 	requires_target = true,
 	direct_hit = true,
 	getDamage = function(self, t) return self:combatTalentMindDamage(t, 10, 50) end,
-	getDuration = function(self, t) return 2 + math.ceil(self:getTalentLevel(t)) end,
+	getDuration = function(self, t) return 4 + math.floor(self:getTalentLevel(t)) end,
 	target = function(self, t)
 		return {type="hit", range=self:getTalentRange(t), talent=t}
 	end,
@@ -141,7 +142,7 @@ newTalent{
 	psi = 30,
 	tactical = { ATTACK = { PHYSICAL = 2}, DISABLE = 2},
 	range = 10,
-	radius = function(self, t) return 3 end,
+	radius = function(self, t) return math.min(4, 1 + math.ceil(self:getTalentLevel(t)/3)) end,
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentMindDamage(t, 10, 50) end,
 	getDuration = function(self, t) return 4 + math.ceil(self:getTalentLevel(t)) end,
@@ -162,7 +163,7 @@ newTalent{
 		local e = Object.new{
 			old_feat = oe,
 			type = oe.type, subtype = oe.subtype,
-			name = "maelstrom", image = oe.image, add_mos = {{image = "terrain/wormhole.png"}},
+			name = "maelstrom", image = oe.image, --add_mos = {{image = "terrain/wormhole.png"}},
 			display = '&', color_r=255, color_g=255, color_b=255, back_color=colors.STEEL_BLUE,
 			always_remember = true,
 			temporary = t.getDuration(self, t),
@@ -206,7 +207,7 @@ newTalent{
 			summoner = self,
 		}
 		
-		e.particles = game.level.map:particleEmitter(x, y, 3, "leavestide", {only_one=true}) -- Edge TODO: Make particles for this
+		e.particles = game.level.map:particleEmitter(x, y, e.radius, "generic_vortex", {radius=e.radius, rm=255, rM=255, gm=180, gM=255, bm=180, bM=255, am=35, aM=90})
 		game.level:addEntity(e)
 		game.level.map(x, y, Map.TERRAIN, e)
 		game.nicer_tiles:updateAround(game.level, x, y)
@@ -217,8 +218,9 @@ newTalent{
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Create a powerful maelstorm for %d turns.  Each turn the maelstrom will pull in actors within a radius of 3 and inflict %0.2f physical damage.
+		local radius = self:getTalentRadius(t)
+		return ([[Create a powerful maelstorm for %d turns.  Each turn the maelstrom will pull in actors within a radius of %d and inflict %0.2f physical damage.
 		This damage will distort affected targets, rendering them vulnerable to distortion effects.
-		The damage will scale with your mindpower.]]):format(duration, damDesc(self, DamageType.PHYSICAL, damage))
+		The damage will scale with your mindpower.]]):format(duration, radius, damDesc(self, DamageType.PHYSICAL, damage))
 	end,
 }

@@ -1604,6 +1604,7 @@ newEffect{
 			-- Create a clone for later spawning
 			local m = require("mod.class.NPC").new(eff.target:clone{
 				shader = "shadow_simulacrum",
+				shader_args = { color = {0.0, 0.4, 0.8}, base = 0.6 },
 				no_drops = true,
 				faction = eff.target.faction,
 				summoner = eff.target, summoner_gain_exp=true,
@@ -1651,7 +1652,7 @@ newEffect{
 			end
 			
 			game.zone:addEntity(game.level, m, "actor", x, y)
-			game.level.map:particleEmitter(x, y, 1, "shadow")
+			game.level.map:particleEmitter(x, y, 1, "generic_teleport", {rm=0, rM=0, gm=180, gM=255, bm=180, bM=255, am=35, aM=90})
 
 			if game.party:hasMember(eff.target) then
 				game.party:addMember(m, {
@@ -1673,7 +1674,7 @@ newEffect{
 		eff.sid = eff.target:addTemporaryValue("time_prison", 1)
 		eff.tid = eff.target:addTemporaryValue("no_timeflow", 1)
 		eff.imid = eff.target:addTemporaryValue("status_effect_immune", 1)
-		eff.particle = eff.target:addParticles(Particles.new("time_prison", 1))
+		eff.particle = eff.target:addParticles(engine.Particles.new("ultrashield", 1, {rm=0, rM=0, gm=180, gM=255, bm=180, bM=255, am=70, aM=180, radius=0.4, density=60, life=14, instop=1, static=100}))
 		eff.target.energy.value = 0
 		-- Make the invader deadly
 		eff.pid = self:addTemporaryValue("inc_damage", {all=eff.power})
@@ -1719,7 +1720,7 @@ newEffect{
 				if not self.dead then
 					self:move(x1, y1, true)
 					self.on_die, self.dream_plane_on_die = self.dream_plane_on_die, nil
-					game.level.map:particleEmitter(x1, y1, 1, "teleport")
+					game.level.map:particleEmitter(x1, y1, 1, "generic_teleport", {rm=0, rM=0, gm=180, gM=255, bm=180, bM=255, am=35, aM=90})
 				else
 					self.x, self.y = x1, y1
 				end

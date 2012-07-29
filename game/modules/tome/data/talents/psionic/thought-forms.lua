@@ -17,9 +17,145 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
--- Edge TODO: Sounds, Particles,
+-- Edge TODO: Sounds
 
 -- Thought Forms
+newTalent{
+	name = "Thought-Form: Bowman",
+	short_name = "TF_BOWMAN",
+	type = {"psionic/other", 1},
+	points = 5, 
+	require = psi_wil_req1,
+	sustain_psi = 20,
+	mode = "sustained",
+	no_sustain_autoreset = true,
+	cooldown = 24,
+	range = function(self, t)
+		local t = self:getTalentFromId(self.T_OVER_MIND)
+		return 10 + t.getRangeBonus(self, t)
+	end,
+	getStatBonus = function(self, t) 
+		local t = self:getTalentFromId(self.T_THOUGHT_FORMS)
+		return t.getStatBonus(self, t)
+	end,
+	activate = function(self, t)
+		cancelThoughtForms(self)
+		
+		-- Find space
+		local x, y = util.findFreeGrid(self.x, self.y, 5, true, {[Map.ACTOR]=true})
+		if not x then
+			game.logPlayer(self, "Not enough space to summon!")
+			return
+		end
+		
+		-- Do our stat bonuses here so we only roll for crit once	
+		local stat_bonus = math.floor(self:mindCrit(t.getStatBonus(self, t)))
+	
+		local NPC = require "mod.class.NPC"
+		local m = NPC.new{
+			name = "thought-forged bowman", summoner = self,
+			shader = "shadow_simulacrum",
+			shader_args = { color = {0.8, 0.8, 0.8}, base = 0.8, time_factor = 4000 },
+			desc = [[A thought-forged bowman.  It appears ready for battle.]],
+			body = { INVEN = 10, MAINHAND = 1, BODY = 1, QUIVER=1, HANDS = 1, FEET = 1},
+			-- Make a moddable tile
+			resolvers.generic(function(e)
+				if e.summoner.female then
+					e.female = true
+				end
+				e.image = e.summoner.image
+				e.moddable_tile = e.summoner.moddable_tile and e.summoner.moddable_tile or nil
+				e.moddable_tile_base = e.summoner.moddable_tile_base and e.summoner.moddable_tile_base or nil
+				e.moddable_tile_ornament = e.summoner.moddable_tile_ornament and e.summoner.moddable_tile_ornament or nil
+			end),
+			-- Disable our sustain when we die
+			on_die = function(self)
+				game:onTickEnd(function() 
+					if self.summoner:isTalentActive(self.summoner.T_TF_BOWMAN) then
+						self.summoner:forceUseTalent(self.summoner.T_TF_BOWMAN, {ignore_energy=true})
+					end
+					if self.summoner:isTalentActive(self.summoner.T_OVER_MIND) then
+						self.summoner:forceUseTalent(self.summoner.T_OVER_MIND, {ignore_energy=true})
+					end
+				end)
+			end,
+			-- Keep them on a leash
+			on_act = function(self)
+				local t = self.summoner:getTalentFromId(self.summoner.T_TF_BOWMAN)
+				if not game.level:hasEntity(self.summoner) or core.fov.distance(self.x, self.y, self.summoner.x, self.summoner.y) > self.summoner:getTalentRange(t) then
+					local Map = require "engine.Map"
+					local x, y = util.findFreeGrid(self.summoner.x, self.summoner.y, 5, true, {[Map.ACTOR]=true})
+					if not x then
+						return
+					end
+					-- Clear it's targeting on teleport
+					self.ai_target.actor = nil
+					self:move(x, y, true)
+					game.level.map:particleEmitter(x, y, 1, "generic_teleport", {rm=225, rM=255, gm=225, gM=255, bm=225, bM=255, am=35, aM=90})
+				end
+			end,
+
+			ai = "summoned", ai_real = "tactical",
+			ai_state = { ai_move="move_dmap", talent_in=3, ally_compassion=10 },
+			ai_tactic = resolvers.tactic("ranged"),
+			
+			max_life = resolvers.rngavg(100,110),
+			life_rating = 12,
+			combat_armor = 0, combat_def = 0,
+			inc_stats = {
+				str = stat_bonus / 2,
+				dex = stat_bonus,
+				con = stat_bonus / 2,
+			},
+			
+			resolvers.talents{ 
+				[Talents.T_HEAVE]= math.ceil(self.level/10),
+				[Talents.T_WEAPON_COMBAT]= math.ceil(self.level/10),
+				[Talents.T_BOW_MASTERY]= math.ceil(self.level/10),
+				
+				[Talents.T_STEADY_SHOT]= math.ceil(self.level/10),
+				[Talents.T_RAPID_SHOT]= math.ceil(self.level/10),
+				
+
+				[Talents.T_PSYCHOMETRY]= math.floor(self:getTalentLevel(self.T_TRANSCENDENT_THOUGHT_FORMS)),
+				[Talents.T_BIOFEEDBACK]= math.floor(self:getTalentLevel(self.T_TRANSCENDENT_THOUGHT_FORMS)),
+				[Talents.T_LUCID_DREAMER]= math.floor(self:getTalentLevel(self.T_TRANSCENDENT_THOUGHT_FORMS)),
+			},
+			resolvers.equip{
+				{type="weapon", subtype="longbow", autoreq=true, forbid_power_source={arcane=true, technique=true} },
+				{type="ammo", subtype="arrow", autoreq=true, forbid_power_source={arcane=true, technique=true} },
+				{type="armor", subtype="light", autoreq=true, forbid_power_source={arcane=true, technique=true} },
+				{type="armor", subtype="hands", autoreq=true, forbid_power_source={arcane=true, technique=true} },
+				{type="armor", subtype="feet", autoreq=true, forbid_power_source={arcane=true, technique=true} },
+			},
+			resolvers.sustains_at_birth(),
+		}
+
+		setupThoughtForm(self, m, x, y)
+
+		game:playSoundNear(self, "talents/spell_generic")
+		
+		local ret = {
+			summon = m
+		}
+		if self:knowTalent(self.T_TF_UNITY) then
+			local t = self:getTalentFromId(self.T_TF_UNITY)
+			ret.speed = self:addTemporaryValue("combat_mindspeed", t.getSpeedPower(self, t)/100)
+		end
+		return ret
+	end,
+	deactivate = function(self, t, p)
+		p.summon:die(p.summon)
+		if p.speed then self:removeTemporaryValue("combat_mindspeed", p.speed) end
+		return true
+	end,
+	info = function(self, t)
+		local stat = t.getStatBonus(self, t)
+		return ([[Forge a bowman clad in leather armor from your thoughts.  The bowman learns heave, bow mastery, combat accuracy, steady shot, and rapid shot as it levels up and has %d improved strength, %d dexterity, and %d constitution.
+		The stat bonuses will improve with your mindpower.]]):format(stat/2, stat, stat/2)
+	end,
+}
+
 newTalent{
 	name = "Thought-Form: Warrior",
 	short_name = "TF_WARRIOR",
@@ -54,6 +190,8 @@ newTalent{
 		local NPC = require "mod.class.NPC"
 		local m = NPC.new{
 			name = "thought-forged warrior", summoner = self, 
+			shader = "shadow_simulacrum",
+			shader_args = { color = {0.8, 0.8, 0.8}, base = 0.8, time_factor = 4000 },
 			desc = [[A thought-forged warrior wielding a massive hammer and clad in heavy armor.  It appears ready for battle.]],
 			body = { INVEN = 10, MAINHAND = 1, BODY = 1, HANDS = 1, FEET = 1},
 			-- Make a moddable tile
@@ -89,7 +227,7 @@ newTalent{
 					-- Clear it's targeting on teleport
 					self.ai_target.actor = nil
 					self:move(x, y, true)
-					game.level.map:particleEmitter(x, y, 1, "summon")
+					game.level.map:particleEmitter(x, y, 1, "generic_teleport", {rm=225, rM=255, gm=225, gM=255, bm=225, bM=255, am=35, aM=90})
 				end
 			end,
 			
@@ -120,7 +258,7 @@ newTalent{
 				[Talents.T_LUCID_DREAMER]= math.floor(self:getTalentLevel(self.T_TRANSCENDENT_THOUGHT_FORMS)),
 			},
 			resolvers.equip{
-				{type="weapon", subtype="greatmaul", autoreq=true, forbid_power_source={arcane=true, technique=true} },
+				{type="weapon", subtype="battleaxe", autoreq=true, forbid_power_source={arcane=true, technique=true} },
 				{type="armor", subtype="heavy", autoreq=true, forbid_power_source={arcane=true, technique=true} },
 				{type="armor", subtype="hands", autoreq=true, forbid_power_source={arcane=true, technique=true} },
 				{type="armor", subtype="feet", autoreq=true, forbid_power_source={arcane=true, technique=true} },
@@ -148,7 +286,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local stat = t.getStatBonus(self, t)
-		return ([[Forge a warrior wielding a greatmaul from your thoughts.  The warrior learns weapon mastery, combat accuracy, berserker, death dance, and rush as it levels up and has %d improved strength, %d dexterity, and %d constitution.
+		return ([[Forge a warrior wielding a battle-axe from your thoughts.  The warrior learns weapon mastery, combat accuracy, berserker, death dance, and rush as it levels up and has %d improved strength, %d dexterity, and %d constitution.
 		The stat bonuses will improve with your mindpower.]]):format(stat, stat/2, stat/2)
 	end,
 }
@@ -187,6 +325,8 @@ newTalent{
 		local NPC = require "mod.class.NPC"
 		local m = NPC.new{
 			name = "thought-forged defender", summoner = self,
+			shader = "shadow_simulacrum",
+			shader_args = { color = {0.8, 0.8, 0.8}, base = 0.8, time_factor = 4000 },
 			desc = [[A thought-forged defender clad in massive armor.  It wields a sword and shield and appears ready for battle.]],
 			body = { INVEN = 10, MAINHAND = 1, OFFHAND = 1, BODY = 1, HANDS = 1, FEET = 1},
 			-- Make a moddable tile
@@ -222,7 +362,7 @@ newTalent{
 					-- Clear it's targeting on teleport
 					self.ai_target.actor = nil
 					self:move(x, y, true)
-					game.level.map:particleEmitter(x, y, 1, "summon")
+					game.level.map:particleEmitter(x, y, 1, "generic_teleport", {rm=225, rM=255, gm=225, gM=255, bm=225, bM=255, am=35, aM=90})
 				end
 			end,		
 			
@@ -289,140 +429,6 @@ newTalent{
 }
 
 newTalent{
-	name = "Thought-Form: Bowman",
-	short_name = "TF_BOWMAN",
-	type = {"psionic/other", 1},
-	points = 5, 
-	require = psi_wil_req1,
-	sustain_psi = 20,
-	mode = "sustained",
-	no_sustain_autoreset = true,
-	cooldown = 24,
-	range = function(self, t)
-		local t = self:getTalentFromId(self.T_OVER_MIND)
-		return 10 + t.getRangeBonus(self, t)
-	end,
-	getStatBonus = function(self, t) 
-		local t = self:getTalentFromId(self.T_THOUGHT_FORMS)
-		return t.getStatBonus(self, t)
-	end,
-	activate = function(self, t)
-		cancelThoughtForms(self)
-		
-		-- Find space
-		local x, y = util.findFreeGrid(self.x, self.y, 5, true, {[Map.ACTOR]=true})
-		if not x then
-			game.logPlayer(self, "Not enough space to summon!")
-			return
-		end
-		
-		-- Do our stat bonuses here so we only roll for crit once	
-		local stat_bonus = math.floor(self:mindCrit(t.getStatBonus(self, t)))
-	
-		local NPC = require "mod.class.NPC"
-		local m = NPC.new{
-			name = "thought-forged bowman", summoner = self,
-			desc = [[A thought-forged bowman.  It appears ready for battle.]],
-			body = { INVEN = 10, MAINHAND = 1, BODY = 1, QUIVER=1, HANDS = 1, FEET = 1},
-			-- Make a moddable tile
-			resolvers.generic(function(e)
-				if e.summoner.female then
-					e.female = true
-				end
-				e.image = e.summoner.image
-				e.moddable_tile = e.summoner.moddable_tile and e.summoner.moddable_tile or nil
-				e.moddable_tile_base = e.summoner.moddable_tile_base and e.summoner.moddable_tile_base or nil
-				e.moddable_tile_ornament = e.summoner.moddable_tile_ornament and e.summoner.moddable_tile_ornament or nil
-			end),
-			-- Disable our sustain when we die
-			on_die = function(self)
-				game:onTickEnd(function() 
-					if self.summoner:isTalentActive(self.summoner.T_TF_BOWMAN) then
-						self.summoner:forceUseTalent(self.summoner.T_TF_BOWMAN, {ignore_energy=true})
-					end
-					if self.summoner:isTalentActive(self.summoner.T_OVER_MIND) then
-						self.summoner:forceUseTalent(self.summoner.T_OVER_MIND, {ignore_energy=true})
-					end
-				end)
-			end,
-			-- Keep them on a leash
-			on_act = function(self)
-				local t = self.summoner:getTalentFromId(self.summoner.T_TF_BOWMAN)
-				if not game.level:hasEntity(self.summoner) or core.fov.distance(self.x, self.y, self.summoner.x, self.summoner.y) > self.summoner:getTalentRange(t) then
-					local Map = require "engine.Map"
-					local x, y = util.findFreeGrid(self.summoner.x, self.summoner.y, 5, true, {[Map.ACTOR]=true})
-					if not x then
-						return
-					end
-					-- Clear it's targeting on teleport
-					self.ai_target.actor = nil
-					self:move(x, y, true)
-					game.level.map:particleEmitter(x, y, 1, "summon")
-				end
-			end,
-
-			ai = "summoned", ai_real = "tactical",
-			ai_state = { ai_move="move_dmap", talent_in=3, ally_compassion=10 },
-			ai_tactic = resolvers.tactic("ranged"),
-			
-			max_life = resolvers.rngavg(100,110),
-			life_rating = 12,
-			combat_armor = 0, combat_def = 0,
-			inc_stats = {
-				str = stat_bonus / 2,
-				dex = stat_bonus,
-				con = stat_bonus / 2,
-			},
-			
-			resolvers.talents{ 
-				[Talents.T_HEAVE]= math.ceil(self.level/10),
-				[Talents.T_WEAPON_COMBAT]= math.ceil(self.level/10),
-				[Talents.T_BOW_MASTERY]= math.ceil(self.level/10),
-				
-				[Talents.T_STEADY_SHOT]= math.ceil(self.level/10),
-				[Talents.T_RAPID_SHOT]= math.ceil(self.level/10),
-				
-
-				[Talents.T_PSYCHOMETRY]= math.floor(self:getTalentLevel(self.T_TRANSCENDENT_THOUGHT_FORMS)),
-				[Talents.T_BIOFEEDBACK]= math.floor(self:getTalentLevel(self.T_TRANSCENDENT_THOUGHT_FORMS)),
-				[Talents.T_LUCID_DREAMER]= math.floor(self:getTalentLevel(self.T_TRANSCENDENT_THOUGHT_FORMS)),
-			},
-			resolvers.equip{
-				{type="weapon", subtype="longbow", autoreq=true, forbid_power_source={arcane=true, technique=true} },
-				{type="ammo", subtype="arrow", autoreq=true, forbid_power_source={arcane=true, technique=true} },
-				{type="armor", subtype="light", autoreq=true, forbid_power_source={arcane=true, technique=true} },
-				{type="armor", subtype="hands", autoreq=true, forbid_power_source={arcane=true, technique=true} },
-				{type="armor", subtype="feet", autoreq=true, forbid_power_source={arcane=true, technique=true} },
-			},
-			resolvers.sustains_at_birth(),
-		}
-
-		setupThoughtForm(self, m, x, y)
-
-		game:playSoundNear(self, "talents/spell_generic")
-		
-		local ret = {
-			summon = m
-		}
-		if self:knowTalent(self.T_TF_UNITY) then
-			local t = self:getTalentFromId(self.T_TF_UNITY)
-			ret.speed = self:addTemporaryValue("combat_mindspeed", t.getSpeedPower(self, t)/100)
-		end
-		return ret
-	end,
-	deactivate = function(self, t, p)
-		p.summon:die(p.summon)
-		if p.speed then self:removeTemporaryValue("combat_mindspeed", p.speed) end
-		return true
-	end,
-	info = function(self, t)
-		local stat = t.getStatBonus(self, t)
-		return ([[Forge a bowman clad in leather armor from your thoughts.  The bowman learns disengage, bow mastery, combat accuracy, steady shot, and rapid shot as it levels up and has %d improved strength, %d dexterity, and %d constitution.
-		The stat bonuses will improve with your mindpower.]]):format(stat/2, stat, stat/2)
-	end,
-}
-
-newTalent{
 	name = "Thought-Forms",
 	short_name = "THOUGHT_FORMS",
 	type = {"psionic/thought-forms", 1},
@@ -435,32 +441,32 @@ newTalent{
 	end,
 	getStatBonus = function(self, t) return self:combatTalentMindDamage(t, 5, 50) end,
 	on_learn = function(self, t)
-		if self:getTalentLevel(t) >= 1 and not self:knowTalent(self.T_TF_WARRIOR) then
+		if self:getTalentLevel(t) >= 1 and not self:knowTalent(self.T_TF_BOWMAN) then
+			self:learnTalent(self.T_TF_BOWMAN, true)
+		end
+		if self:getTalentLevel(t) >= 3 and not self:knowTalent(self.T_TF_WARRIOR) then
 			self:learnTalent(self.T_TF_WARRIOR, true)
 		end
-		if self:getTalentLevel(t) >= 3 and not self:knowTalent(self.T_TF_DEFENDER) then
+		if self:getTalentLevel(t) >= 5 and not self:knowTalent(self.T_TF_DEFENDER) then
 			self:learnTalent(self.T_TF_DEFENDER, true)
-		end
-		if self:getTalentLevel(t) >= 5 and not self:knowTalent(self.T_TF_BOWMAN) then
-			self:learnTalent(self.T_TF_BOWMAN, true)
 		end
 	end,	
 	on_unlearn = function(self, t)
-		if self:getTalentLevel(t) < 1 and self:knowTalent(self.T_TF_WARRIOR) then
+		if self:getTalentLevel(t) < 1 and self:knowTalent(self.T_TF_BOWMAN) then
+			self:unlearnTalent(self.T_TF_BOWMAN)
+		end
+		if self:getTalentLevel(t) < 3 and self:knowTalent(self.T_TF_WARRIOR) then
 			self:unlearnTalent(self.T_TF_WARRIOR)
 		end
-		if self:getTalentLevel(t) < 3 and self:knowTalent(self.T_TF_DEFENDER) then
+		if self:getTalentLevel(t) < 5 and self:knowTalent(self.T_TF_DEFENDER) then
 			self:unlearnTalent(self.T_TF_DEFENDER)
-		end
-		if self:getTalentLevel(t) < 5 and self:knowTalent(self.T_TF_BOWMAN) then
-			self:unlearnTalent(self.T_TF_BOWMAN)
 		end
 	end,
 	info = function(self, t)
 		local bonus = t.getStatBonus(self, t)
 		local range = self:getTalentRange(t)
 		return([[Forge a guardian from your thoughts alone.  Your guardian's primary stat will be improved by %d and it's two secondary stats by %d.
-		At talent level one you may forge a powerful warrior wielding a two-handed weapon, at talent level 3 you may forge a strong defender using a sword and shield, and at talent level 5 a mighty bowman clad in leather armor.
+		At talent level one you may forge a mighty bowman clad in leather armor, at level three a powerful warrior wielding a two-handed weapon, and at level five a strong defender using a sword and shield, and at talent level 5 
 		Thought forms can only be maintained up to a range of %d and will rematerialize next to you if this range is exceeded.
 		Only one thought-form may be active at a time and the stat bonuses will improve with your mindpower.]]):format(bonus, bonus/2, range)
 	end,
@@ -505,6 +511,7 @@ newTalent{
 		
 		-- Switch on TickEnd so every thing applies correctly
 		game:onTickEnd(function() 
+			game.level.map:particleEmitter(self.x, self.y, 1, "generic_discharge", {rm=225, rM=255, gm=225, gM=255, bm=225, bM=255, am=35, aM=90})
 			game.party:hasMember(target).on_control = function(self)
 				self.summoner.over_mind_ai = self.summoner.ai
 				self.summoner.ai = "none"
@@ -516,6 +523,7 @@ newTalent{
 					self.summoner:forceUseTalent(self.summoner.T_OVER_MIND, {ignore_energy=true})
 				end
 			end
+			game.level.map:particleEmitter(target.x, target.y, 1, "generic_discharge", {rm=225, rM=255, gm=225, gM=255, bm=225, bM=255, am=35, aM=90})
 			game.party:setPlayer(target)
 			self:resetCanSeeCache()
 		end)
@@ -558,15 +566,15 @@ newTalent{
 	points = 5, 
 	require = psi_wil_req4,
 	mode = "passive",
+	getSpeedPower = function(self, t) return self:combatTalentMindDamage(t, 5, 15) end,
 	getOffensePower = function(self, t) return self:combatTalentMindDamage(t, 10, 30) end,
 	getDefensePower = function(self, t) return self:combatTalentMindDamage(t, 5, 15) end,
-	getSpeedPower = function(self, t) return self:combatTalentMindDamage(t, 5, 15) end,
 	info = function(self, t)
 		local offense = t.getOffensePower(self, t)
 		local defense = t.getDefensePower(self, t)
 		local speed = t.getSpeedPower(self, t)
-		return([[You now gain a %d bonus to mind power while Thought-Form: Warrior is active, a %d%% bonus to resist all while Thought-Form: Defender is active, and a %d%% bonus to mind speed while Thought-Form: Bowman is active.
-		At talent level one any Feedback your Thought-Forms gain will be given to you as well, at talent level three your Thought-Forms gain a bonus to all saves equal to your mental save, and at talent level five they gain a bonus to all damage equal to your bonus mind damage.
-		These bonuses scale with your mindpower.]]):format(offense, defense, speed)
+		return([[You now gain a %d%% bonus to mind speed while Thought-Form: Bowman is active, a %d bonus to mind power while Thought-Form: Warrior is active, and a %d%% bonus to resist all while Thought-Form: Defender is active. 
+		At talent level one any Feedback your Thought-Forms gain will be given to you as well, at level three your Thought-Forms gain a bonus to all saves equal to your mental save, and at level five they gain a bonus to all damage equal to your bonus mind damage.
+		These bonuses scale with your mindpower.]]):format(speed, offense, defense, speed)
 	end,
 }

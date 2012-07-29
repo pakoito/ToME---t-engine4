@@ -2272,16 +2272,17 @@ newEffect{
 	on_lose = function(self, err) return "#Target#'s regains it's senses.", "-Lobotomized" end,
 	parameters = { power=1, dam=1 },
 	activate = function(self, eff)
-
 		DamageType:get(DamageType.MIND).projector(eff.src or self, self.x, self.y, DamageType.MIND, eff.src:mindCrit(eff.dam))
 		eff.power = math.max(eff.power - (self:attr("confusion_immune") or 0) * 100, 10)
 		eff.tmpid = self:addTemporaryValue("confused", eff.power)
 		eff.cid = self:addTemporaryValue("inc_stats", {[Stats.STAT_CUN]=-eff.power/2})
 		if eff.power <= 0 then eff.dur = 0 end
+		eff.particles = self:addParticles(engine.Particles.new("generic_power", 1, {rm=100, rM=125, gm=100, gM=125, bm=100, bM=125, am=200, aM=255}))
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("confused", eff.tmpid)
 		self:removeTemporaryValue("inc_stats", eff.cid)
+		self:removeParticles(eff.particles)
 		if self == game.player and self.updateMainShader then self:updateMainShader() end
 	end,
 }
@@ -2325,9 +2326,11 @@ newEffect{
 	parameters = { power=2 },
 	activate = function(self, eff)
 		self.mental_negative_status_effect_immune = eff.power
+		eff.particles = self:addParticles(engine.Particles.new("generic_power", 1, {rm=0, rM=0, gm=100, gM=180, bm=180, bM=255, am=200, aM=255}))
 	end,
 	deactivate = function(self, eff)
 		self.mental_negative_status_effect_immune = nil
+		self:removeParticles(eff.particles)
 	end,
 }
 
@@ -2343,7 +2346,7 @@ newEffect{
 	on_lose = function(self, err) return "The psychic field around #target# crumbles.", "-Resonance Shield" end,
 	activate = function(self, eff)
 		self.resonance_field_absorb = eff.power
-		eff.particle = self:addParticles(Particles.new("damage_shield", 1))
+		eff.particle = self:addParticles(engine.Particles.new("ultrashield", 1, {rm=255, rM=255, gm=180, gM=255, bm=0, bM=0, am=70, aM=180, radius=0.4, density=60, life=14, instop=1, static=100}))
 		eff.sid = self:addTemporaryValue("resonance_field", eff.power)
 	end,
 	deactivate = function(self, eff)
@@ -2383,6 +2386,12 @@ newEffect{
 	parameters = { power = 1 },
 	on_gain = function(self, err) return "#Target# is gaining feedback.", "+Feedback Loop" end,
 	on_lose = function(self, err) return "#Target# is no longer gaining feedback.", "-Feedback Loop" end,
+	activate = function(self, eff)
+		eff.particle = self:addParticles(Particles.new("ultrashield", 1, {rm=255, rM=255, gm=180, gM=255, bm=0, bM=0, am=35, aM=90, radius=0.2, density=15, life=28, instop=40}))
+	end,
+	deactivate = function(self, eff)
+		self:removeParticles(eff.particle)
+	end,
 }
 
 newEffect{
@@ -2422,6 +2431,11 @@ newEffect{
 		end
 		if dream_prison then
 			eff.dur = eff.dur + 1
+			if not eff.particle then
+				eff.particle = self:addParticles(engine.Particles.new("ultrashield", 1, {rm=0, rM=0, gm=180, gM=255, bm=180, bM=255, am=70, aM=180, radius=0.4, density=60, life=14, instop=1, static=100}))
+			end
+		elseif eff.particle then
+			self:removeParticles(eff.particle)
 		end
 	end,
 	activate = function(self, eff)
@@ -2434,6 +2448,10 @@ newEffect{
 		end
 		if not self:attr("sleep") and eff.waking > 0 then
 			DamageType:get(DamageType.MIND).projector(eff.src or self, self.x, self.y, DamageType.MIND, eff.src:mindCrit(eff.waking))
+			game.level.map:particleEmitter(self.x, self.y, 1, "generic_discharge", {rm=180, rM=200, gm=100, gM=120, bm=30, bM=50, am=70, aM=180})
+		end
+		if eff.particle then
+			self:removeParticles(eff.particle)
 		end
 	end,
 }
@@ -2458,9 +2476,15 @@ newEffect{
 		end
 		if dream_prison then
 			eff.dur = eff.dur + 1
+			if not eff.particle then
+				eff.particle = self:addParticles(engine.Particles.new("ultrashield", 1, {rm=0, rM=0, gm=180, gM=255, bm=180, bM=255, am=70, aM=180, radius=0.4, density=60, life=14, instop=1, static=100}))
+			end
 		elseif eff.contagious > 0 and eff.dur > 1 then
 			local t = eff.src:getTalentFromId(eff.src.T_SLUMBER)
 			t.doContagiousSlumber(eff.src, self, eff, t)
+		end
+		if eff.particle and not dream_prison then
+			self:removeParticles(eff.particle)
 		end
 	end,
 	activate = function(self, eff)
@@ -2473,6 +2497,10 @@ newEffect{
 		end
 		if not self:attr("sleep") and eff.waking > 0 then
 			DamageType:get(DamageType.MIND).projector(eff.src or self, self.x, self.y, DamageType.MIND, eff.src:mindCrit(eff.waking))
+			game.level.map:particleEmitter(self.x, self.y, 1, "generic_discharge", {rm=180, rM=200, gm=100, gM=120, bm=30, bM=50, am=70, aM=180})
+		end
+		if eff.particle then
+			self:removeParticles(eff.particle)
 		end
 	end,
 }
@@ -2497,6 +2525,9 @@ newEffect{
 		end
 		if dream_prison then
 			eff.dur = eff.dur + 1
+			if not eff.particle then
+				eff.particle = self:addParticles(engine.Particles.new("ultrashield", 1, {rm=0, rM=0, gm=180, gM=255, bm=180, bM=255, am=70, aM=180, radius=0.4, density=60, life=14, instop=1, static=100}))
+			end
 		else
 			-- Store the power for later
 			local real_power = eff.power
@@ -2505,6 +2536,9 @@ newEffect{
 			DamageType:get(DamageType.DARKNESS).projector(eff.src or self, self.x, self.y, DamageType.DARKNESS, eff.dam)
 			-- Set the power back to its baseline
 			eff.power = real_power
+		end
+		if eff.particle and not dream_prison then
+			self:removeParticles(eff.particle)
 		end
 	end,
 	activate = function(self, eff)
@@ -2517,6 +2551,10 @@ newEffect{
 		end
 		if not self:attr("sleep") and eff.waking > 0 then
 			DamageType:get(DamageType.MIND).projector(eff.src or self, self.x, self.y, DamageType.MIND, eff.src:mindCrit(eff.waking))
+			game.level.map:particleEmitter(self.x, self.y, 1, "generic_discharge", {rm=180, rM=200, gm=100, gM=120, bm=30, bM=50, am=70, aM=180})
+		end
+		if eff.particle then
+			self:removeParticles(eff.particle)
 		end
 	end,
 }

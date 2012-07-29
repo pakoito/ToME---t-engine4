@@ -2099,7 +2099,8 @@ newDamageType{
 			if target:hasEffect(target.EFF_DISTORTION) then
 				-- Explosive?
 				if dam.explosion then
-					src:project({type="ball", target.x, target.y, radius=dam.radius}, target.x, target.y, engine.DamageType.DISTORTION, {dam=src:mindCrit(dam.explosion)}, {type="mind"})
+					src:project({type="ball", target.x, target.y, radius=dam.radius}, target.x, target.y, engine.DamageType.DISTORTION, {dam=src:mindCrit(dam.explosion)})
+					game.level.map:particleEmitter(target.x, target.y, dam.radius, "generic_blast", {radius=dam.radius, tx=target.x, ty=target.y, rm=255, rM=255, gm=180, gM=255, bm=180, bM=255, am=35, aM=90})
 					dam.explosion_done = true
 				end
 				-- Stun?

@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
--- Edge TODO: Sounds, Particles
+-- Edge TODO: Sounds
 
 local Map = require "engine.Map"
 
@@ -124,7 +124,6 @@ newTalent{
 		end
 		
 		local m = self:clone{
-			shader = "shadow_simulacrum",
 			no_drops = true,
 			faction = self.faction,
 			summoner = self, summoner_gain_exp=true,
@@ -237,7 +236,10 @@ newTalent{
 		local target = game.level.map(x, y, Map.ACTOR)
 		if not target or target == self then return end
 		
-		target:setEffect(target.EFF_MIND_LINK_TARGET, 10, {power=t.getBonusDamage(self, t), src=self, range=self:getTalentRange(t)})
+		target:setEffect(target.EFF_MIND_LINK_TARGET, 10, {power=t.getBonusDamage(self, t), src=self, range=self:getTalentRange(t)*2})
+		
+		game.level.map:particleEmitter(self.x, self.y, 1, "generic_discharge", {rm=0, rM=0, gm=100, gM=180, bm=180, bM=255, am=35, aM=90})
+		game.level.map:particleEmitter(target.x, target.y, 1, "generic_discharge", {rm=0, rM=0, gm=100, gM=180, bm=180, bM=255, am=35, aM=90})
 		
 		local ret = {
 			target = target,
@@ -257,8 +259,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getBonusDamage(self, t)
+		local range = self:getTalentRange(t) * 2
 		return ([[Link minds with the target.  While your minds are linked you'll inflict %d%% more mind damage to the target and gain telepathy to it's creature type.
-		Only one mindlink can be maintained at a time and the effect will break if the target dies or goes beyond the talent range.
-		The mind damage bonus will scale with your mindpower.]]):format(damage)
+		Only one mindlink can be maintained at a time and the effect will break if the target dies or goes beyond range (%d)).
+		The mind damage bonus will scale with your mindpower.]]):format(damage, range)
 	end,
 }

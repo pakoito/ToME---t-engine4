@@ -1,5 +1,6 @@
 uniform float hp_warning;
 uniform float air_warning;
+uniform float solipsism_warning;
 uniform float motionblur;
 uniform float blur;
 uniform float tick;
@@ -120,6 +121,13 @@ void main(void)
 		vec4 air_warning_color = vec4(0.0, air_warning / 3.0, air_warning / 1.0, air_warning / 1.3);
 		float dist = length(gl_TexCoord[0].xy - vec2(0.5)) / 2.0;
 		gl_FragColor = mix(gl_FragColor, air_warning_color, dist);
+	}
+	
+	if (solipsism_warning > 0.0)
+	{
+		vec4 solipsism_warning_color = vec4(solipsism_warning / 2.0, 0.0, solipsism_warning / 2.0, solipsism_warning / 1.3);
+		float dist = length(gl_TexCoord[0].xy - vec2(0.5)) / 2.0;
+		gl_FragColor = mix(gl_FragColor, solipsism_warning_color, dist);
 	}
 }
 

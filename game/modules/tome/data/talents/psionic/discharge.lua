@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
--- Edge TODO: Sounds, Particles
+-- Edge TODO: Sounds
 
 newTalent{
 	name = "Backlash",
@@ -30,24 +30,29 @@ newTalent{
 	target = function(self, t)
 		return {type="hit", range=self:getTalentRange(t), talent=t}
 	end,
-	doBacklash = function(self, target, t)
+	doBacklash = function(self, target, value, t)
 		if core.fov.distance(self.x, self.y,target.x, target.y) > self:getTalentRange(t) then return nil end
 		local tg = self:getTalentTarget(t)
 		local a = game.level.map(target.x, target.y, Map.ACTOR)
 		if not a or self:reactionToward(a) >= 0 then return nil end
+		local damage = math.min(value, t.getDamage(self, t))
 		-- Divert the Backlash?
 		local wrath = self:hasEffect(self.EFF_FOCUSED_WRATH)
-		if wrath then
-			self:project(tg, wrath.target.x, wrath.target.y, DamageType.MIND, self:mindCrit(t.getDamage(self, t), nil, wrath.power), {type="mind", true}) -- No Martyr loops
-		else
-			self:project(tg, a.x, a.y, DamageType.MIND, self:mindCrit(t.getDamage(self, t)), {type="mind"}, true) -- No Martyr loops
+		if damage > 0 then
+			if wrath then
+				self:project(tg, wrath.target.x, wrath.target.y, DamageType.MIND, self:mindCrit(damage, nil, wrath.power), nil, true) -- No Martyr loops
+				game.level.map:particleEmitter(wrath.target.x, wrath.target.y, 1, "generic_discharge", {rm=255, rM=255, gm=180, gM=255, bm=0, bM=0, am=35, aM=90})
+			else
+				self:project(tg, a.x, a.y, DamageType.MIND, self:mindCrit(damage), nil, true) -- No Martyr loops
+				game.level.map:particleEmitter(a.x, a.y, 1, "generic_discharge", {rm=255, rM=255, gm=180, gM=255, bm=0, bM=0, am=35, aM=90})
+			end
 		end
 	end,
 	info = function(self, t)
-		local damage = t.getDamage(self, t)
 		local range = self:getTalentRange(t)
-		return ([[Your subconscious now retaliates when you're attacked, inflicting %0.2f mind damage to any creature within a radius of %d when the damage it deals to you results in you gaining at least one Feedback.
-		The damage will scale with your mindpower.]]):format(damDesc(self, DamageType.MIND, damage), range)
+		local damage = t.getDamage(self, t)
+		return ([[Your subconscious now retaliates when you take damage.  If the attacker is within range (%d) you'll inflict mind damage equal to the Feedback gained from the attack or %0.2f, whichever is lower.
+		The damage will scale with your mindpower.]]):format(range, damDesc(self, DamageType.MIND, damage))
 	end,
 }
 
@@ -84,10 +89,10 @@ newTalent{
 	cooldown = 12,
 	tactical = { ATTACKAREA = {MIND = 2}},
 	requires_target = true,
-	proj_speed = 20,
+	proj_speed = 10,
 	range = function(self, t) return 5 + math.min(5, (self:isTalentActive(self.T_MIND_STORM) and self:getTalentLevelRaw(self.T_MIND_STORM)) or 0) end,
 	target = function(self, t)
-		return {type="bolt", range=self:getTalentRange(t), talent=t, friendlyfire=false, display={particle="bolt_void", trail="dust_trail"}}
+		return {type="bolt", range=self:getTalentRange(t), talent=t, friendlyfire=false, display={particle="discharge_bolt", trail="lighttrail"}}
 	end,
 	getDamage = function(self, t) return self:combatTalentMindDamage(t, 20, 140) end,
 	getTargetCount = function(self, t) return math.ceil(self:getTalentLevel(t)) end,
@@ -142,11 +147,13 @@ newTalent{
 	end,
 	activate = function(self, t)
 		local ret = {
-			overcharge = 0
+			overcharge = 0,
+			particles = self:addParticles(Particles.new("ultrashield", 1, {rm=255, rM=255, gm=180, gM=255, bm=0, bM=0, am=35, aM=90, radius=0.2, density=15, life=28, instop=10}))
 		}
 		return ret
 	end,
 	deactivate = function(self, t, p)
+		self:removeParticles(p.particles)
 		return true
 	end,
 	info = function(self, t)
@@ -188,6 +195,7 @@ newTalent{
 		
 		self:setEffect(self.EFF_FOCUSED_WRATH, t.getDuration(self, t), {target=target, power=t.getCritBonus(self, t)/100})
 
+		game.level.map:particleEmitter(self.x, self.y, 1, "generic_charge", {rm=255, rM=255, gm=180, gM=255, bm=0, bM=0, am=35, aM=90})
 		return true
 	end,
 	info = function(self, t)

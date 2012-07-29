@@ -236,11 +236,13 @@ function setupThoughtForm(self, m, x, y)
 	m:resolve() m:resolve(nil, true)
 	m:forceLevelup(self.level)
 	game.zone:addEntity(game.level, m, "actor", x, y)
-	game.level.map:particleEmitter(x, y, 1, "summon")
+	game.level.map:particleEmitter(x, y, 1, "generic_teleport", {rm=225, rM=255, gm=225, gM=255, bm=225, bM=255, am=35, aM=90})
 
-	-- Summons never flee
-	m.ai_tactic = m.ai_tactic or {}
-	m.ai_tactic.escape = 0
+	-- Summons never flee...  unless they're bowmen
+	if m.name ~= "thought-forged bowman" then
+		m.ai_tactic = m.ai_tactic or {}
+		m.ai_tactic.escape = 0
+	end
 end
 
 load("/data/talents/psionic/absorption.lua")

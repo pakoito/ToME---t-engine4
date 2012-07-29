@@ -243,6 +243,7 @@ newTalent{
 				end
 			end,
 		}
+		entrance.faction = nil
 		game.level:addEntity(entrance)
 		entrance:identify(true)
 		entrance:setKnown(self, true)

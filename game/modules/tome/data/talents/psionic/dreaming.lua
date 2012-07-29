@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
--- Edge TODO: Sounds, Particles,
+-- Edge TODO: Sounds
 
 newTalent{
 	name = "Sleep",
@@ -64,6 +64,7 @@ newTalent{
 			if target then
 				if target:canBe("sleep") then
 					target:setEffect(target.EFF_SLEEP, t.getDuration(self, t), {src=self, power=power, waking=is_waking, insomnia=t.getInsomniaDuration(self, t), no_ct_effect=true, apply_power=self:combatMindpower()})
+					game.level.map:particleEmitter(target.x, target.y, 1, "generic_charge", {rm=0, rM=0, gm=180, gM=255, bm=180, bM=255, am=35, aM=90})
 				else
 					game.logSeen(self, "%s resists the sleep!", target.name:capitalize())
 				end
@@ -152,7 +153,7 @@ newTalent{
 			end
 		end
 		
-		game.level.map:particleEmitter(self.x, self.y, 1, "teleport")
+		game.level.map:particleEmitter(x, y, 1, "generic_teleport", {rm=0, rM=0, gm=180, gM=255, bm=180, bM=255, am=35, aM=90})
 
 		-- since we're using a precise teleport we'll look for a free grid first
 		local tx, ty = util.findFreeGrid(x, y, 5, true, {[Map.ACTOR]=true})
@@ -162,7 +163,7 @@ newTalent{
 			end
 		end
 
-		game.level.map:particleEmitter(self.x, self.y, 1, "teleport")
+		game.level.map:particleEmitter(self.x, self.y, 1, "generic_teleport", {rm=0, rM=0, gm=180, gM=255, bm=180, bM=255, am=35, aM=90})
 		game:playSoundNear(self, "talents/teleport")
 
 		return true
@@ -194,11 +195,13 @@ newTalent{
 		game:playSoundNear(self, "talents/heal")
 		local ret = {
 			drain = self:addTemporaryValue("psi_regen", -t.getDrain(self, t)),
+			particles = self:addParticles(engine.Particles.new("ultrashield", 1, {rm=0, rM=0, gm=180, gM=255, bm=180, bM=255, am=70, aM=180, radius=0.8, density=60, life=14, instop=20, static=80}))
 		}
 		return ret
 	end,
 	deactivate = function(self, t, p)
 		self:removeTemporaryValue("psi_regen", p.drain)
+		self:removeParticles(p.particles)
 		return true
 	end,
 	info = function(self, t)

@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
--- Edge TODO: Sounds, Particles,
+-- Edge TODO: Sounds
 
 newTalent{
 	name = "Biofeedback",
@@ -112,6 +112,7 @@ newTalent{
 				self[inc] then self[inc](self, v) 
 			end
 		end
+		game.level.map:particleEmitter(self.x, self.y, 1, "generic_charge", {rm=255, rM=255, gm=180, gM=255, bm=0, bM=0, am=35, aM=90})
 		return true
 	end,
 	info = function(self, t)

@@ -142,8 +142,8 @@ newTalent{
 			end
 		end
 		target:crossTierEffect(target.EFF_SPELLSHOCKED, self:combatSpellpower())
-		game.level.map:particleEmitter(tx, ty, 1, "charge_matter")
-		game.level.map:particleEmitter(self.x, self.y, 1, "charge")
+		game.level.map:particleEmitter(tx, ty, 1, "generic_charge", {rm=10, rM=110, gm=10, gM=50, bm=20, bM=125, am=25, aM=255})
+		game.level.map:particleEmitter(self.x, self.y, 1, "generic_charge", {rm=200, rM=255, gm=200, gM=255, bm=200, bM=255, am=125, aM=125})
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,

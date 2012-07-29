@@ -1835,5 +1835,9 @@ newEffect{
 			game.logSeen(self, "#LIGHT_RED#%s is being ravaged by distortion!", self.name:capitalize())
 			eff.dam = eff.dam * 1.5
 		end
+		eff.particle = self:addParticles(Particles.new("ultrashield", 1, {rm=255, rM=255, gm=180, gM=255, bm=220, bM=255, am=35, aM=90, radius=0.2, density=15, life=28, instop=40}))
+	end,
+	deactivate = function(self, eff)
+		self:removeParticles(eff.particle)
 	end,
 }

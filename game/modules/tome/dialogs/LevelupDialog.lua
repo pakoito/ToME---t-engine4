@@ -672,17 +672,21 @@ function _M:getStatDesc(item)
 
 	text:add({"color", "LIGHT_BLUE"}, "Stat gives:", dc, true)
 	if stat_id == self.actor.STAT_CON then
-		text:add("Max life: ", color, ("%0.2f"):format(diff * 4), dc, true)
+		local multi_life = 4 + (self.actor.inc_resource_multi.life or 0)
+		text:add("Max life: ", color, ("%0.2f"):format(diff * multi_life), dc, true)
 		text:add("Physical save: ", color, ("%0.2f"):format(diff * 0.35), dc, true)
 	elseif stat_id == self.actor.STAT_WIL then
 		if self.actor:knowTalent(self.actor.T_MANA_POOL) then
-			text:add("Max mana: ", color, ("%0.2f"):format(diff * 5), dc, true)
+			local multi_mana = 5 + (self.actor.inc_resource_multi.mana or 0)
+			text:add("Max mana: ", color, ("%0.2f"):format(diff * multi_mana), dc, true)
 		end
 		if self.actor:knowTalent(self.actor.T_STAMINA_POOL) then
-			text:add("Max stamina: ", color, ("%0.2f"):format(diff * 2.5), dc, true)
+			local multi_stamina = 2.5 + (self.actor.inc_resource_multi.stamina or 0)
+			text:add("Max stamina: ", color, ("%0.2f"):format(diff * multi_stamina), dc, true)
 		end
 		if self.actor:knowTalent(self.actor.T_PSI_POOL) then
-			text:add("Max psi: ", color, ("%0.2f"):format(diff * 1), dc, true)
+			local multi_psi = 1 + (self.actor.inc_resource_multi.psi or 0)
+			text:add("Max psi: ", color, ("%0.2f"):format(diff * multi_psi), dc, true)
 		end
 		text:add("Mindpower: ", color, ("%0.2f"):format(diff * 0.7), dc, true)
 		text:add("Mental save: ", color, ("%0.2f"):format(diff * 0.35), dc, true)

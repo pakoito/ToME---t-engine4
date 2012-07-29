@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
--- Edge TODO: Sounds, Particles,
+-- Edge TODO: Sounds
 
 newTalent{
 	name = "Slumber",
@@ -51,6 +51,7 @@ newTalent{
 			local t2 = game.level.map(tx, ty, Map.ACTOR)
 			if t2 and target_two ~= target and rng.percent(p.contagious) and t2:canBe("sleep") then
 				t2:setEffect(t2.EFF_SLEEP, math.floor(p.dur/2), {src=self, power=p.power/10, waking=p.waking, insomnia=math.ceil(p.insomnia/2), no_ct_effect=true, apply_power=self:combatMindpower()})
+				game.level.map:particleEmitter(target.x, target.y, 1, "generic_charge", {rm=0, rM=0, gm=100, gM=200, bm=200, bM=255, am=35, aM=90})
 			end
 		end)
 	end,
@@ -77,6 +78,7 @@ newTalent{
 		local power = self:mindCrit(t.getSleepPower(self, t))
 		if target:canBe("sleep") then
 			target:setEffect(target.EFF_SLUMBER, t.getDuration(self, t), {src=self, power=power, waking=is_waking, contagious=is_contagious, insomnia=t.getInsomniaDuration(self, t), no_ct_effect=true, apply_power=self:combatMindpower()})
+			game.level.map:particleEmitter(target.x, target.y, 1, "generic_charge", {rm=180, rM=200, gm=100, gM=120, bm=30, bM=50, am=70, aM=180})
 		else
 			game.logSeen(self, "%s resists the sleep!", target.name:capitalize())
 		end
@@ -196,7 +198,7 @@ newTalent{
 			local x1, y1 = util.findFreeGrid(4, 6, 20, true, {[Map.ACTOR]=true})
 			if x1 then
 				self:move(x1, y1, true)
-				game.level.map:particleEmitter(x1, y1, 1, "teleport")
+				game.level.map:particleEmitter(x1, y1, 1, "generic_teleport", {rm=0, rM=0, gm=180, gM=255, bm=180, bM=255, am=35, aM=90})
 			end
 			local x2, y2 = util.findFreeGrid(8, 6, 20, true, {[Map.ACTOR]=true})
 			if x2 then

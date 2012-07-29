@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
--- Edge TODO: Sounds, Particles,
+-- Edge TODO: Sounds
 
 newTalent{
 	name = "Nightmare",
@@ -69,6 +69,9 @@ newTalent{
 				end
 			end
 		end)
+		
+		game.level.map:particleEmitter(self.x, self.y, tg.radius, "generic_wave", {radius=tg.radius, tx=x-self.x, ty=y-self.y, rm=60, rM=130, gm=20, gM=110, bm=90, bM=130, am=35, aM=90})
+		
 		return true
 	end,
 	info = function(self, t)
@@ -106,6 +109,7 @@ newTalent{
 
 		local m = target:clone{
 			shader = "shadow_simulacrum",
+			shader_args = { color = {0.6, 0.0, 0.3}, base = 0.3, time_factor = 2000 },
 			no_drops = true,
 			faction = self.faction,
 			summoner = self, summoner_gain_exp=true,
@@ -138,6 +142,10 @@ newTalent{
 		m.can_talk = nil
 		m.clone_on_hit = nil
 
+		-- Inner Demon's never flee
+		m.ai_tactic = m.ai_tactic or {}
+		m.ai_tactic.escape = 0
+		
 		-- Remove some talents
 		local tids = {}
 		for tid, _ in pairs(m.talents) do
@@ -166,7 +174,7 @@ newTalent{
 		end
 
 		game.zone:addEntity(game.level, m, "actor", x, y)
-		game.level.map:particleEmitter(x, y, 1, "shadow")
+		game.level.map:particleEmitter(x, y, 1, "generic_teleport", {rm=60, rM=130, gm=20, gM=110, bm=90, bM=130, am=70, aM=180})
 
 		game.logSeen(target, "#F53CBE#%s's Inner Demon manifests!", target.name:capitalize())
 
@@ -230,6 +238,7 @@ newTalent{
 		if target:attr("sleep") then chance = chance * 2 end
 		if target:canBe("fear") then
 			target:setEffect(target.EFF_WAKING_NIGHTMARE, t.getDuration(self, t), {src = self, chance=t.getChance(self, t), dam=self:mindCrit(t.getDamage(self, t)), apply_power=self:combatMindpower()})
+			game.level.map:particleEmitter(target.x, target.y, 1, "generic_charge", {rm=60, rM=130, gm=20, gM=110, bm=90, bM=130, am=70, aM=180})
 		else
 			game.logSeen(target, "%s resists the nightmare!", target.name:capitalize())
 		end
@@ -308,7 +317,7 @@ newTalent{
 		m:forceLevelup(self.level)
 		
 		game.zone:addEntity(game.level, m, "actor", x, y)
-		game.level.map:particleEmitter(x, y, 1, "shadow")
+		game.level.map:particleEmitter(x, y, 1, "generic_teleport", {rm=60, rM=130, gm=20, gM=110, bm=90, bM=130, am=70, aM=180})
 		
 		if game.party:hasMember(self) then
 			game.party:addMember(m, {
@@ -324,11 +333,13 @@ newTalent{
 		game:playSoundNear(self, "talents/heal")
 		local ret = {
 			damage = self:addTemporaryValue("night_terror", t.getDamageBonus(self, t)),
+			particle = self:addParticles(Particles.new("ultrashield", 1, {rm=60, rM=130, gm=20, gM=110, bm=90, bM=130, am=70, aM=180, radius=0.4, density=60, life=14, instop=20})),
 		}
 		return ret
 	end,
 	deactivate = function(self, t, p)
 		self:removeTemporaryValue("night_terror", p.damage)
+		self:removeParticles(p.particle)
 		return true
 	end,
 	info = function(self, t)

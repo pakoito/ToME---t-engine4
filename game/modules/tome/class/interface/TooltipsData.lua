@@ -295,6 +295,9 @@ TOOLTIP_SPELL_COOLDOWN = [[#GOLD#Spellcooldown#LAST#
 Spell cooldown represents how fast your spells will come off of cooldown.
 The lower it is the more often you'll be able to use your spell talents and runes.
 ]]
+-------------------------------------------------------------
+-- Mental
+-------------------------------------------------------------
 TOOLTIP_MINDPOWER = [[#GOLD#Mindpower#LAST#
 Your mindpower value represents how powerful your mental abilities are.
 In addition, when your mental abilities inflict temporary detrimental effects, every point your opponent's relevant saving throw exceeds your  mindpower will reduce the duration of the effect by 5%.
@@ -304,7 +307,10 @@ Each time you deal damage with a mental attack you may have a chance to make a c
 Some talents allow you to increase this percentage.
 It is improved by Cunning.
 ]]
-
+TOOLTIP_MIND_SPEED = [[#GOLD#Mental speed#LAST#
+Mental speed represents how fast you use psionic abilities compared to a normal turn.
+The lower it is the faster it is.
+]]
 -------------------------------------------------------------
 -- Damage and resists
 -------------------------------------------------------------

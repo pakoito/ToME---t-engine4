@@ -133,6 +133,7 @@ function _M:init(t, no_default)
 	t.stamina_rating = t.stamina_rating or 3
 	t.positive_negative_rating = t.positive_negative_rating or 3
 	t.psi_rating = t.psi_rating or 0
+	t.inc_resource_multi = t.inc_resource_multi or {}
 
 	t.esp = t.esp or {}
 	t.esp_range = t.esp_range or 10
@@ -1694,7 +1695,7 @@ function _M:onTakeHit(value, src)
 		if self:knowTalent(self.T_BACKLASH) then
 			if src.y and src.x and not src.dead then
 				local t = self:getTalentFromId(self.T_BACKLASH)
-				t.doBacklash(self, src, t)
+				t.doBacklash(self, src, feedback_gain, t)
 			end
 		end
 	end
@@ -2411,13 +2412,22 @@ function _M:levelup()
 end
 
 --- Notifies a change of stat value
+-- Note inc_resource_multi does not auto-update and talents that use it should manually adjust the pools
 function _M:onStatChange(stat, v)
 	if stat == self.STAT_CON then
-		self.max_life = self.max_life + 4 * v
+		-- life
+		local multi_life = 4 + (self.inc_resource_multi.life or 0)
+		self.max_life = self.max_life + multi_life * v
 	elseif stat == self.STAT_WIL then
-		self:incMaxMana(5 * v)
-		self:incMaxStamina(2.5 * v)
-		self:incMaxPsi(1 * v)
+		-- mana
+		local multi_mana = 5 + (self.inc_resource_multi.mana or 0)
+		self:incMaxMana(multi_mana * v)
+		-- stamina
+		local multi_stamina = 2.5 + (self.inc_resource_multi.stamina or 0)
+		self:incMaxStamina(multi_stamina * v)
+		-- psi
+		local multi_psi = 1 + (self.inc_resource_multi.psi or 0)
+		self:incMaxPsi(multi_psi * v)
 	elseif stat == self.STAT_STR then
 		self:checkEncumbrance()
 	end
@@ -3216,6 +3226,7 @@ function _M:preUseTalent(ab, silent, fake)
 		end
 		if ab.psi and self:getPsi() < ab.psi * (100 + 2 * self:combatFatigue()) / 100 then
 			if not silent then game.logPlayer(self, "You do not have enough energy to use %s.", ab.name) end
+			return false
 		end
 		if ab.feedback and self:getFeedback() < ab.feedback * (100 + 2 * self:combatFatigue()) / 100 then
 			if not silent then game.logPlayer(self, "You do not have enough feedback to use %s.", ab.name) end

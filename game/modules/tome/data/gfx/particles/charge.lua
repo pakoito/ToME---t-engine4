@@ -17,35 +17,35 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-base_size = 32
-
 return { generator = function()
-	local life = rng.range(10, 20)
-	local size = rng.range(15, 20)
-	local angle = math.rad(rng.range(0, 360))
-	local distance = engine.Map.tile_w * rng.float(2, 2.5)
-	local vel = distance / life
+	local radius = 0
+	local sradius = (radius + 0.5) * (engine.Map.tile_w + engine.Map.tile_h) / 2
+	local ad = rng.float(0, 360)
+	local a = math.rad(ad + 180)
+	local r = rng.float(0, sradius / 4)
+	local x = r * math.cos(a)
+	local y = r * math.sin(a)
+	local bx = math.floor(x / engine.Map.tile_w)
+	local by = math.floor(y / engine.Map.tile_h)
+	local static = rng.percent(40)
 
 	return {
 		trail = 1,
-		life = life,
-		size = size, sizev = 0.2, sizea = 0,
+		life = 2,
+		size = 12, sizev = 0, sizea = 0,
 
-		x = -size / 2 + distance * math.cos(angle), xv = 0, xa = 0,
-		y = -size / 2 + distance * math.sin(angle), yv = 0, ya = 0,
-		dir = angle, dirv = 0, dira = 0,
-		vel = -vel, velv = 0, vela = 0,
+		x = x, xv = 0, xa = 0,
+		y = y, yv = 0, ya = 0,
+		dir = a, dirv = 0, dira = 0,
+		vel = sradius / 2 / 24, velv = 0, vela = 0,
 
-		r = rng.range(200, 255) / 255,  rv = 0, ra = 0,
-		g = rng.range(200, 255) / 255,  gv = 0, ga = 0,
-		b = rng.range(200, 255) / 255,  bv = 0, ba = 0,
-		a = 0.5,  av = 0.01, aa = 0,
+		r = rng.range(255, 255)/255,  rv = 0, ra = 0,
+		g = rng.range(180, 230)/255,  gv = 0, ga = 0,
+		b = 0,                        bv = 0, ba = 0,
+		a = rng.range(25, 220)/255,   av = 0, aa = 0,
 	}
 end, },
 function(self)
-	self.nb = (self.nb or 0) + 1
-	if self.nb < 6 then
-		self.ps:emit(10)
-	end
+	self.ps:emit(5)
 end,
-120
+5*2

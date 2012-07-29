@@ -79,6 +79,7 @@ function _M:init(t, no_default)
 	t.rank = t.rank or 3
 	t.old_life = 0
 	t.old_air = 0
+	t.old_psi = 0
 
 	t.money_value_multiplier = t.money_value_multiplier or 1 -- changes amounts in gold piles and such
 
@@ -258,6 +259,7 @@ function _M:act()
 
 	self.old_life = self.life
 	self.old_air = self.air
+	self.old_psi = self.psi
 
 	-- Clean log flasher
 --	game.flash:empty()
@@ -300,7 +302,12 @@ function _M:updateMainShader()
 			if self.air < self.max_air / 2 then game.fbo_shader:setUniform("air_warning", 1 - (self.air / self.max_air))
 			else game.fbo_shader:setUniform("air_warning", 0) end
 		end
-
+		if self:attr("solipsism_threshold") and self.psi ~= self.old_psi then
+			local solipsism_power = self:attr("solipsism_threshold") - self:getPsi()/self:getMaxPsi()
+			if solipsism_power > 0 then game.fbo_shader:setUniform("solipsism_warning", solipsism_power)
+			else game.fbo_shader:setUniform("solipsism_warning", 0) end
+		end
+			
 		-- Colorize shader
 		if self:attr("stealth") then game.fbo_shader:setUniform("colorize", {0.9,0.9,0.9,0.6})
 		elseif self:attr("invisible") then game.fbo_shader:setUniform("colorize", {0.3,0.4,0.9,0.8})

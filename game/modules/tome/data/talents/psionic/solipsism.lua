@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 
--- Edge TODO: Sounds, Particles
+-- Edge TODO: Sounds
 
 newTalent{
 	name = "Solipsism",
@@ -30,15 +30,21 @@ newTalent{
 	getConversionRatio = function(self, t) return math.min(self:getTalentLevel(t) * 0.13, 1) end,
 	on_learn = function(self, t)
 		if self:getTalentLevelRaw(t) == 1 then
-			self.solipsism_threshold = (self.solipsism_threshold or 0) + 0.2
-			self:incMaxPsi(50)
+			self:incMaxPsi((self:getWil()-10) * 1)
+			self.max_life = self.max_life - (self:getCon()-10) * 0.5
+			self.inc_resource_multi.psi = (self.inc_resource_multi.psi or 0) + 1
+			self.inc_resource_multi.life = (self.inc_resource_multi.life or 0) - 0.5
 			self.life_rating = math.ceil(self.life_rating/2)
 			self.psi_rating =  self.psi_rating + 10
+			self.solipsism_threshold = (self.solipsism_threshold or 0) + 0.2
 		end
 	end,
 	on_unlearn = function(self, t)
 		if not self:knowTalent(t) then
-			self:incMaxPsi(-50)
+			self:incMaxPsi(-(self:getWil()-10) * 1)
+			self.max_life = self.max_life + (self:getCon()-10) * 0.5
+			self.inc_resource_multi.psi = self.inc_resource_multi.psi - 1
+			self.inc_resource_multi.life = self.inc_resource_multi.life + 0.5
 			self.solipsism_threshold = self.solipsism_threshold - 0.2
 		end
 	end,
@@ -46,7 +52,8 @@ newTalent{
 		local conversion_ratio = t.getConversionRatio(self, t)
 		return ([[You believe that your mind is the center of everything.  Permanently increases the amount of psi you gain per level by 10 and reduces your life rating (affects life at level up) by 50%% (one time only adjustment).
 		You also have learned to overcome damage with your mind alone and convert %d%% of all damage into Psi damage and %d%% of your healing and life regen now recovers Psi instead of life. 
-		The first talent point invested will also increase your max Psi by 50 and your solipsism threshold by 20%%, reducing global speed if your Psi falls below the threshold (currently %d%%).]]):format(conversion_ratio * 100, conversion_ratio * 100, self.solipsism_threshold * 100)
+		The first talent point invested will also increase the amount of Psi you gain from willpower by 1 but reduce the amount of life you gain from constitution by 0.5.
+		The first talent point also increases your solipsism threshold by 20%% (currently %d%%).]]):format(conversion_ratio * 100, conversion_ratio * 100, self.solipsism_threshold * 100)
 	end,
 }
 
@@ -59,20 +66,27 @@ newTalent{
 	getBalanceRatio = function(self, t) return math.min(self:getTalentLevel(t) * 0.13, 1) end,
 	on_learn = function(self, t)
 		if self:getTalentLevelRaw(t) == 1 then
-			self:incMaxPsi(50)
+			self:incMaxPsi((self:getWil()-10) * 1)
+			self.max_life = self.max_life - (self:getCon()-10) * 0.5
+			self.inc_resource_multi.psi = (self.inc_resource_multi.psi or 0) + 1
+			self.inc_resource_multi.life = (self.inc_resource_multi.life or 0) - 0.5
 			self.solipsism_threshold = (self.solipsism_threshold or 0) + 0.1
 		end
 	end,
 	on_unlearn = function(self, t)
 		if not self:knowTalent(t) then
-			self:incMaxPsi(-50)
+			self:incMaxPsi(-(self:getWil()-10) * 1)
+			self.max_life = self.max_life + (self:getCon()-10) * 0.5
+			self.inc_resource_multi.psi = self.inc_resource_multi.psi - 1
+			self.inc_resource_multi.life = self.inc_resource_multi.life + 0.5
 			self.solipsism_threshold = self.solipsism_threshold - 0.1
 		end
 	end,
 	info = function(self, t)
 		local ratio = t.getBalanceRatio(self, t) * 100
 		return ([[You now substitute %d%% of your mental save for %d%% of your physical and spell saves throws (so at 100%% you would effectively use mental save for all saving throw rolls).
-		The first talent point invested will also increase your max Psi by 50 and your solipsism threshold by 10%% (currently %d%%).]]):format(ratio, ratio, self.solipsism_threshold * 100)
+		The first talent point invested will also increase the amount of Psi you gain from willpower by 1 but reduce the amount of life you gain from constitution by 0.5.
+		Learning this talent also increases your solipsism threshold by 10%% (currently %d%%).]]):format(ratio, ratio, self.solipsism_threshold * 100)
 	end,
 }
 
@@ -86,14 +100,20 @@ newTalent{
 	on_learn = function(self, t)
 		self.clarity_threshold = t.getClarityThreshold(self, t)
 		if self:getTalentLevelRaw(t) == 1 then
-			self:incMaxPsi(50)
+			self:incMaxPsi((self:getWil()-10) * 1)
+			self.max_life = self.max_life - (self:getCon()-10) * 0.5
+			self.inc_resource_multi.psi = (self.inc_resource_multi.psi or 0) + 1
+			self.inc_resource_multi.life = (self.inc_resource_multi.life or 0) - 0.5
 			self.solipsism_threshold = (self.solipsism_threshold or 0) + 0.1
 		end
 	end,
 	on_unlearn = function(self, t)
 		if not self:knowTalent(t) then
 			self.clarity_threshold = nil
-			self:incMaxPsi(-50)
+			self:incMaxPsi(-(self:getWil()-10) * 1)
+			self.max_life = self.max_life + (self:getCon()-10) * 0.5
+			self.inc_resource_multi.psi = self.inc_resource_multi.psi - 1
+			self.inc_resource_multi.life = self.inc_resource_multi.life + 0.5
 			self.solipsism_threshold = self.solipsism_threshold - 0.1
 		else
 			self.clarity_threshold = t.getClarityThreshold(self, t)
@@ -102,7 +122,8 @@ newTalent{
 	info = function(self, t)
 		local threshold = t.getClarityThreshold(self, t)
 		return ([[For every percent that your Psi pool exceeds %d%% you gain 1%% global speed (up to a maximum of 50%%).
-		The first talent point invested will also increase your max Psi by 50 and your solipsism threshold by 10%% (currently %d%%).]]):format(threshold * 100, self.solipsism_threshold * 100)
+		The first talent point invested will also increase the amount of Psi you gain from willpower by 1 but reduce the amount of life you gain from constitution by 0.5.
+		The first talent point also increases your solipsism threshold by 10%% (currently %d%%).]]):format(threshold * 100, self.solipsism_threshold * 100)
 	end,
 }
 
@@ -115,21 +136,27 @@ newTalent{
 	getSavePercentage = function(self, t) return math.min(2, self:getTalentLevel(t)/4) end,
 	on_learn = function(self, t)
 		if self:getTalentLevelRaw(t) == 1 then
-			self:incMaxPsi(50)
+			self:incMaxPsi((self:getWil()-10) * 1)
+			self.max_life = self.max_life - (self:getCon()-10) * 0.5
+			self.inc_resource_multi.psi = (self.inc_resource_multi.psi or 0) + 1
+			self.inc_resource_multi.life = (self.inc_resource_multi.life or 0) - 0.5
 			self.solipsism_threshold = (self.solipsism_threshold or 0) + 0.1
 		end
 	end,
 	on_unlearn = function(self, t)
 		if not self:knowTalent(t) then
-			self:incMaxPsi(-50)
+			self:incMaxPsi(-(self:getWil()-10) * 1)
+			self.max_life = self.max_life + (self:getCon()-10) * 0.5
+			self.inc_resource_multi.psi = self.inc_resource_multi.psi - 1
+			self.inc_resource_multi.life = self.inc_resource_multi.life + 0.5
 			self.solipsism_threshold = self.solipsism_threshold - 0.1
 		end
 	end,
 	doDismissalOnHit = function(self, value, src, t)
-		local saving_throw = self:mindCrit(t.getSavePercentage(self, t))
+		local saving_throw = self:mindCrit(self:combatMentalResist(), t.getSavePercentage(self, t))
 		print("[Dismissal] ", self.name:capitalize(), " attempting to ignore ", value, "damage from ", src.name:capitalize(), "using", saving_throw,  "mental save.")
-		if self:checkHit(math.floor(saving_throw), value) then
-			game.logSeen(self, "%s dismisses %s's attack!", self.name:capitalize(), src.name:capitalize())
+		if self:checkHit(saving_throw, value) then
+			game.logSeen(self, "%s dismisses %s's damage!", self.name:capitalize(), src.name:capitalize())
 			return 0
 		else
 			return value
@@ -138,6 +165,7 @@ newTalent{
 	info = function(self, t)
 		local save_percentage = t.getSavePercentage(self, t)
 		return ([[Each time you take damage you roll %d%% of your mental save against it.  If the saving throw succeeds the damage will be reduced to 0.
-		The first talent point invested will also increase your max Psi by 50 and your solipsism threshold by 10%% (currently %d%%).]]):format(save_percentage * 100, self.solipsism_threshold * 100)
+		The first talent point invested will also increase the amount of Psi you gain from willpower by 1 but reduce the amount of life you gain from constitution by 0.5.
+		The first talent point also increases your solipsism threshold by 10%% (currently %d%%).]]):format(save_percentage * 100, self.solipsism_threshold * 100)
 	end,
 }
