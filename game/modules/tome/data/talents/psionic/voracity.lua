@@ -140,11 +140,11 @@ newTalent{
 		return self:combatStatTalentIntervalDamage(t, "combatMindpower", 6, 30)
 	end,
 	getDam = function(self, t)
-		return self:mindCrit(self:combatTalentMindDamage(t, 28, 270))
+		return self:combatTalentMindDamage(t, 28, 270)
 	end,
 	action = function(self, t)
 		local en = t.getLeech(self, t)
-		local dam = t.getDam(self, t)
+		local dam = self:mindCrit(t.getDam(self, t))
 		local tg = self:getTalentTarget(t)
 		self:project(tg, self.x, self.y, function(tx, ty)
 			local act = game.level.map(tx, ty, engine.Map.ACTOR)
