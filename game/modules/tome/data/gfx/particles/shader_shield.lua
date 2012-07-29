@@ -28,7 +28,7 @@ return { generator = function()
 	return {
 		trail = 0,
 		life = 10,
-		size = 38, sizev = 0, sizea = 0,
+		size = 38 * (size_factor or 1), sizev = 0, sizea = 0,
 
 		x = 0, xv = 0, xa = 0,
 		y = 0, yv = 0, ya = 0,

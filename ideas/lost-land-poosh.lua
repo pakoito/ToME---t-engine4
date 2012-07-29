@@ -89,7 +89,7 @@ game:onLevelLoad("wilderness-1", function(wzone, level)
 				noise = "fbm_perlin",
 				floor = "JUNGLE_GRASS",
 				wall = "JUNGLE_TREE",
-				up = "JUNGLE_GRASS_UP4",
+				up = "JUNGLE_GRASS",
 				down = "JUNGLE_GRASS_DOWN6",
 				door = "JUNGLE_GRASS",
 				do_ponds =  {

@@ -73,6 +73,16 @@ newTalent{
 	mana = 5,
 	no_npc_use = true,
 	no_unlearn_last = true,
+	on_learn = function(self, t)
+		if not self:knowTalent(self.T_CREATE_ALCHEMIST_GEMS) then
+			self:learnTalent(self.T_CREATE_ALCHEMIST_GEMS, true)
+		end
+	end,
+	on_unlearn = function(self, t)
+		if self:getTalentLevelRaw(t) == 0 and self:knowTalent(self.T_CREATE_ALCHEMIST_GEMS) then
+			self:unlearnTalent(self.T_CREATE_ALCHEMIST_GEMS)
+		end
+	end,
 	action = function(self, t)
 		local d d = self:showEquipInven("Try to extract gems from which metallic item?", function(o) return o.metallic and (o.material_level or 1) <= self:getTalentLevelRaw(t) end, function(o, inven, item)
 			if not o then return end

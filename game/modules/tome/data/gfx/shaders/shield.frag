@@ -44,6 +44,8 @@ void main(void)
 
 	c.a *= aadjust;
 
+	if (l <= 1.0) c.a = max(0.15, c.a);
+
 	c.rgb *= color;
 	gl_FragColor = c;
 }
