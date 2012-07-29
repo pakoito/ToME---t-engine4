@@ -538,7 +538,7 @@ function _M:generateList()
 					return tstring{{"color", 0x00, 0xFF, 0x00}, ("%d/%d"):format(self.actor:getStat(sid), self.actor:getStat(sid, nil, nil, true))}
 				end
 			end,
-		}}}	
+		}}}
 	end
 end
 
@@ -814,4 +814,5 @@ function _M:updateTooltip()
 	self.c_gtree:updateTooltip()
 	self.c_ctree:updateTooltip()
 	self.c_stat:updateTooltip()
+	if self.focus_ui and self.focus_ui.ui and self.focus_ui.ui.updateTooltip then self.focus_ui.ui:updateTooltip() end
 end
