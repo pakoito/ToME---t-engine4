@@ -402,7 +402,11 @@ newEffect{
 		self.displacement_shield_chance = eff.chance
 		--- Warning there can be only one time shield active at once for an actor
 		self.displacement_shield_target = eff.target
-		eff.particle = self:addParticles(Particles.new("displacement_shield", 1))
+		if core.shader.active() then
+			eff.particle = self:addParticles(Particles.new("shader_shield", 1, {img="shield3"}, {type="shield", time_factor=6000, color={0.5, 1, 0.2}}))
+		else
+			eff.particle = self:addParticles(Particles.new("displacement_shield", 1))
+		end
 	end,
 	on_aegis = function(self, eff, aegis)
 		self.displacement_shield = self.displacement_shield + eff.power * aegis / 100
