@@ -1213,8 +1213,15 @@ function _M:setupCommands()
 			end end
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
-			self:registerDialog(require("mod.dialogs.DownloadCharball").new())
+			local ps = next(game.player.__particles)
+
+			local a = math.rad(rng.float(0, 360))
+			local r = rng.float(0.2, 0.4)
+			ps._shader:setUniform("impact", {math.cos(a) * r, math.sin(a) * r})
+			ps._shader:setUniform("impact_tick", core.game.getTime())
+
 do return end
+			self:registerDialog(require("mod.dialogs.DownloadCharball").new())
 			local f, err = loadfile("/data/general/events/snowstorm.lua")
 			print(f, err)
 			setfenv(f, setmetatable({level=self.level, zone=self.zone}, {__index=_G}))

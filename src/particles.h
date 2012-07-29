@@ -22,6 +22,7 @@
 #define _PARTICLES_H_
 
 #include "tgl.h"
+#include "useshader.h"
 
 typedef struct {
 	float size, sizev, sizea;
@@ -40,6 +41,7 @@ typedef struct {
 
 	// Read only by main
 	GLuint texture;
+	shader_type *shader;
 
 	// W by main, R by thread
 	const char *name_def;

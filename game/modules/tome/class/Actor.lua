@@ -1974,6 +1974,13 @@ function _M:onTakeHit(value, src)
 end
 
 function _M:takeHit(value, src, death_note)
+	for eid, p in pairs(self.tmp) do
+		local e = self.tempeffect_def[eid]
+		if e.damage_feedback then
+			e.damage_feedback(self, p, src, value)
+		end
+	end
+
 	local dead, val = engine.interface.ActorLife.takeHit(self, value, src, death_note)
 
 	if dead and src and src.attr and src:attr("overkill") and src.project and not src.turn_procs.overkill then

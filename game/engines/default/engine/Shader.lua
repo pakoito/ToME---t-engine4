@@ -27,6 +27,8 @@ _M.verts = {}
 _M.frags = {}
 _M.progs = {}
 
+loadNoDelay = true
+
 --- Make a shader
 function _M:init(name, args)
 	self.args = args or {}

@@ -83,6 +83,8 @@ static int particles_new(lua_State *L)
 	// float zoom = luaL_checknumber(L, 3);
 	int density = luaL_checknumber(L, 4);
 	GLuint *texture = (GLuint*)auxiliar_checkclass(L, "gl{texture}", 5);
+	shader_type *s = NULL;
+	if (lua_isuserdata(L, 6)) s = (shader_type*)auxiliar_checkclass(L, "gl{program}", 6);
 
 	particles_type *ps = (particles_type*)lua_newuserdata(L, sizeof(particles_type));
 	auxiliar_setclass(L, "core{particles}", -1);
@@ -100,6 +102,7 @@ static int particles_new(lua_State *L)
 	ps->particles = NULL;
 	ps->init = FALSE;
 	ps->texture = *texture;
+	ps->shader = s;
 
 	thread_add(ps);
 	return 1;
@@ -182,6 +185,8 @@ static int particles_to_screen(lua_State *L)
 	glScalef(ps->zoom * zoom, ps->zoom * zoom, ps->zoom * zoom);
 	glRotatef(ps->rotate, 0, 0, 1);
 
+	if (ps->shader) useShader(ps->shader, 1, 1, 1, 1, 1, 1, 1, 1);
+
 	int remaining = ps->batch_nb;
 	while (remaining >= PARTICLES_PER_ARRAY)
 	{
@@ -189,6 +194,8 @@ static int particles_to_screen(lua_State *L)
 		remaining -= PARTICLES_PER_ARRAY;
 	}
 	if (remaining) glDrawArrays(GL_QUADS, 0, remaining);
+
+	if (ps->shader) glUseProgramObjectARB(0);
 
 	glRotatef(-ps->rotate, 0, 0, 1);
 	glPopMatrix();

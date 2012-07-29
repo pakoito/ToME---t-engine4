@@ -26,10 +26,11 @@ module(..., package.seeall, class.make)
 local __particles_gl = {}
 
 --- Make a particle emitter
-function _M:init(def, radius, args)
+function _M:init(def, radius, args, shader)
 	self.args = args
 	self.def = def
 	self.radius = radius or 1
+	self.shader = shader
 
 	self:loaded()
 end
@@ -72,7 +73,18 @@ function _M:loaded()
 	args = args.."tile_w="..engine.Map.tile_w.."\ntile_h="..engine.Map.tile_h
 
 	self.update = fct
-	self.ps = core.particles.newEmitter("/data/gfx/particles/"..self.def..".lua", args, self.zoom, config.settings.particles_density or 100, gl)
+
+	local sha = nil
+	if self.shader then
+		if not self._shader then
+			local Shader = require 'engine.Shader'
+			self._shader = Shader.new(self.shader.type, self.shader)
+		end
+
+		sha = self._shader.shad
+	end
+
+	self.ps = core.particles.newEmitter("/data/gfx/particles/"..self.def..".lua", args, self.zoom, config.settings.particles_density or 100, gl, sha)
 end
 
 function _M:updateZoom()

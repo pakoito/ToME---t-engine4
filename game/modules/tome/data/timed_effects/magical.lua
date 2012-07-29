@@ -435,6 +435,14 @@ newEffect{
 	on_aegis = function(self, eff, aegis)
 		self.damage_shield_absorb = self.damage_shield_absorb + eff.power * aegis / 100
 	end,
+	damage_feedback = function(self, eff, src, value)
+		if eff.particle and eff.particle._shader and eff.particle._shader.shad and src and src.x and src.y then
+			local r = -rng.float(0.2, 0.4)
+			local a = math.atan2(src.y - self.y, src.x - self.x)
+			eff.particle._shader:setUniform("impact", {math.cos(a) * r, math.sin(a) * r})
+			eff.particle._shader:setUniform("impact_tick", core.game.getTime())
+		end
+	end,
 	activate = function(self, eff)
 		if self:attr("shield_factor") then eff.power = eff.power * (100 + self:attr("shield_factor")) / 100 end
 		if self:attr("shield_dur") then eff.dur = eff.dur + self:attr("shield_dur") end
@@ -443,7 +451,11 @@ newEffect{
 		--- Warning there can be only one time shield active at once for an actor
 		self.damage_shield_absorb = eff.power
 		self.damage_shield_absorb_max = eff.power
-		eff.particle = self:addParticles(Particles.new("damage_shield", 1))
+		if core.shader.active() then
+			eff.particle = self:addParticles(Particles.new("shader_shield", 1, nil, {type="shield", color={0.4, 0.7, 1.0}}))
+		else
+			eff.particle = self:addParticles(Particles.new("damage_shield", 1))
+		end
 	end,
 	deactivate = function(self, eff)
 		self:removeParticles(eff.particle)
