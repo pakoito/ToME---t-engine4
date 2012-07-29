@@ -262,6 +262,7 @@ function _M:save(filter, allow)
 		filter.new = true
 		filter._no_save_fields = true
 		filter._mo = true
+		filter._last_mo = true
 		filter._mo_final = true
 		filter._hooks = true
 	else

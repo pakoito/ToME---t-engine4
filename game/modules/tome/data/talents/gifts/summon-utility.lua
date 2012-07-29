@@ -37,7 +37,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Forces hostile foes to attack you.]])
+		return ([[Forces all hostile foes in radius %d to attack you.]]):format(self:getTalentRadius(t))
 	end,
 }
 

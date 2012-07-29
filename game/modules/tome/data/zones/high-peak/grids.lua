@@ -119,7 +119,7 @@ local invocation_close = function(self, who)
 	g.color_r = colors.WHITE.r
 	g.color_g = colors.WHITE.g
 	g.color_b = colors.WHITE.b
-	if g._mo then g._mo:invalidate() g._mo = nil end
+	g:removeAllMOs()
 	game.level.map:updateMap(spot.x, spot.y)
 	who:setQuestStatus("high-peak", engine.Quest.COMPLETED, "closed-portal-"..self.summon)
 end

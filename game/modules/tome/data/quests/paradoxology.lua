@@ -46,7 +46,7 @@ generate = function(self, player, x, y)
 	a.rank = 4
 	a.name = a.name.." the Paradox Mage"
 	a.color_r = 250 a.color_g = 50 a.color_b = 250
-	a._mo:invalidate()
+	a:removeAllMOs()
 	a.ai = "tactical"
 	a.ai_state = {talent_in=1}
 	a.faction = "enemies"

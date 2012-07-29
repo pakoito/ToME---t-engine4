@@ -581,7 +581,7 @@ newEffect{
 			self.add_displays = { Entity.new{image='npc/iceblock.png', display=' ', display_on_seen=true } }
 			eff.added_display = true
 		end
-		if self._mo then self._mo:invalidate() self._mo = nil end
+		self:removeAllMOs()
 		game.level.map:updateMap(self.x, self.y)
 
 		eff.hp = eff.hp or 100
@@ -610,7 +610,7 @@ newEffect{
 		self.color_g = eff.old_g
 		self.color_b = eff.old_b
 		if eff.added_display then self.add_displays = nil end
-		if self._mo then self._mo:invalidate() self._mo = nil end
+		self:removeAllMOs()
 		game.level.map:updateMap(self.x, self.y)
 		self:setTarget(nil)
 	end,
@@ -1790,7 +1790,7 @@ newEffect{
 	long_desc = function(self, eff)
 		local ravaged = "each turn."
 		if eff.ravage then ravaged = "and is losing one physical effect turn." end
-		return ("The target is being ravaged by distortion, taking %0.2f physical damage %s"):format(eff.dam, ravaged) 
+		return ("The target is being ravaged by distortion, taking %0.2f physical damage %s"):format(eff.dam, ravaged)
 	end,
 	type = "physical",
 	subtype = { distortion=true },

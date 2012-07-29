@@ -248,7 +248,7 @@ function _M:makeMapObject(tiles, idx)
 		if not self.add_displays or not self.add_displays[idx-1] then return nil end
 		return self.add_displays[idx-1]:makeMapObject(tiles, 1)
 	else
-		if self._mo and self._mo:isValid() then return self._mo, self.z end
+		if self._mo and self._mo:isValid() then return self._mo, self.z, self._last_mo end
 	end
 
 	-- Create the map object with 1 + additional textures
@@ -264,7 +264,7 @@ function _M:makeMapObject(tiles, idx)
 		self:check("display_scale") or 1
 	)
 
-	self:defineDisplayCallback()
+	local last_mo = self._mo
 
 	-- Setup tint
 	self._mo:tint(self.tint_r or 1, self.tint_g or 1, self.tint_b or 1)
@@ -294,6 +294,7 @@ function _M:makeMapObject(tiles, idx)
 			end
 			cmo:chain(mo)
 			cmo = mo
+			last_mo = mo
 		end
 	end
 
@@ -315,7 +316,7 @@ function _M:makeMapObject(tiles, idx)
 		if shad.shad then self._mo:shader(shad.shad) end
 	end
 
-	return self._mo, self.z
+	return self._mo, self.z, last_mo
 end
 
 --- Get all "map objects" representing this entity
@@ -325,20 +326,25 @@ end
 function _M:getMapObjects(tiles, mos, z)
 	local i = -1
 	local nextz = 0
-	local mo, dz
+	local mo, dz, lm
+	local last_mo
 	repeat
 		i = i + 1
-		mo, dz = self:makeMapObject(tiles, 1+i)
+		mo, dz, lm = self:makeMapObject(tiles, 1+i)
 		if mo then
 			if dz then mos[dz] = mo
 			else mos[z + nextz] = mo nextz = nextz + 1 end
+			last_mo = lm
 		end
 	until not mo
+	self._last_mo = last_mo
+	self:defineDisplayCallback()
 end
 
 function _M:removeAllMOs(no_invalidate)
 	if self._mo and not no_invalidate then self._mo:invalidate() end
 	self._mo = nil
+	self._last_mo = nil
 
 	if not self.add_displays then return end
 	for i = 1, #self.add_displays do

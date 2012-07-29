@@ -165,7 +165,7 @@ function _M:init(t, no_default)
 
 	t.flat_damage_armor = t.flat_damage_armor or {}
 	t.flat_damage_cap = t.flat_damage_cap or {}
-	
+
 	-- Default regen
 	t.air_regen = t.air_regen or 3
 	t.mana_regen = t.mana_regen or 0.5
@@ -380,7 +380,7 @@ function _M:actBase()
 			self:forceUseTalent(self.T_MIND_LINK, {ignore_energy=true})
 		end
 	end
-		
+
 	-- Cooldown talents
 	if not self:attr("no_talents_cooldown") then self:cooldownTalents() end
 	-- Regen resources
@@ -398,7 +398,7 @@ function _M:actBase()
 	end
 
 	self:regenResources()
-	
+
 	-- update psionic feedback
 	if self:getFeedback() > 0 then
 		local decay = self:getFeedbackDecay()
@@ -493,7 +493,7 @@ function _M:actBase()
 				t.doMindStorm(self, t, p)
 			end
 		end
-		
+
 		self:triggerHook{"Actor:actBase:Effects"}
 	end
 
@@ -784,7 +784,7 @@ function _M:defineDisplayCallback()
 	local f_neutral = nil
 	local ichat = nil
 
-	self._mo:displayCallback(function(x, y, w, h, zoom, on_map)
+	local function tactical(x, y, w, h, zoom, on_map)
 		-- Tactical info
 		if game.level and game.always_target then
 			-- Tactical life info
@@ -849,7 +849,9 @@ function _M:defineDisplayCallback()
 				end
 			end
 		end
+	end
 
+	local function particles(x, y, w, h, zoom, on_map)
 		-- Chat
 		if game.level and self.can_talk then
 			local map = game.level.map
@@ -861,16 +863,33 @@ function _M:defineDisplayCallback()
 		end
 
 		local e
+		local dy = 0
+		if h > w then dy = (h - w) / 2 end
 		for i = 1, #ps do
 			e = ps[i]
 			e:checkDisplay()
-			if e.ps:isAlive() then e.ps:toScreen(x + w / 2, y + h / 2, true, w / (game.level and game.level.map.tile_w or w))
+			if e.ps:isAlive() then e.ps:toScreen(x + w / 2, y + dy + h / 2, true, w / (game.level and game.level.map.tile_w or w))
 			else self:removeParticles(e)
 			end
 		end
+	end
 
-		return true
-	end)
+	if self._mo == self._last_mo then
+		self._mo:displayCallback(function(x, y, w, h, zoom, on_map)
+			tactical(x, y, w, h, zoom, on_map)
+			particles(x, y, w, h, zoom, on_map)
+			return true
+		end)
+	else
+		self._mo:displayCallback(function(x, y, w, h, zoom, on_map)
+			tactical(x, y, w, h, zoom, on_map)
+			return true
+		end)
+		self._last_mo:displayCallback(function(x, y, w, h, zoom, on_map)
+			particles(x, y, w, h, zoom, on_map)
+			return true
+		end)
+	end
 end
 
 function _M:move(x, y, force)
@@ -946,7 +965,7 @@ function _M:move(x, y, force)
 	if moved and self:isTalentActive(self.T_BODY_OF_STONE) then
 		self:forceUseTalent(self.T_BODY_OF_STONE, {ignore_energy=true})
 	end
-	
+
 	if moved then
 		self:breakPsionicChannel()
 	end
@@ -1306,7 +1325,7 @@ function _M:tooltip(x, y, seen_by)
 
 	local resists = {}
 	for t, v in pairs(self.resists) do
-		if v ~= 0 then 
+		if v ~= 0 then
 			if t ~= "all" then v = self:combatGetResist(t) end
 			resists[#resists+1] = string.format("%d%% %s", v, t == "all" and "all" or DamageType:get(t).name)
 		end
@@ -1367,7 +1386,7 @@ end
 function _M:regenLife()
 	if self.life_regen and not self:attr("no_life_regen") then
 		local regen = self.life_regen * util.bound((self.healing_factor or 1), 0, 2.5)
-		
+
 		-- Solipsism
 		if self:knowTalent(self.T_SOLIPSISM) then
 			local t = self:getTalentFromId(self.T_SOLIPSISM)
@@ -1379,9 +1398,9 @@ function _M:regenLife()
 				regen = regen - psi_increase
 			end
 		end
-		
+
 		self.life = util.bound(self.life + regen, self.die_at, self.max_life)
-		
+
 		-- Blood Lock
 		if self:attr("blood_lock") then
 			self.life = util.bound(self.life, self.die_at, self:attr("blood_lock"))
@@ -1441,7 +1460,7 @@ function _M:onHeal(value, src)
 		self:incPsi(psi_increase)
 		value = value - psi_increase
 	end
-	
+
 	-- Must be last!
 	if self:attr("blood_lock") then
 		if self.life + value > self:attr("blood_lock") then
@@ -1498,7 +1517,7 @@ function _M:onTakeHit(value, src)
 		local t = self:getTalentFromId(self.T_DISMISSAL)
 		value = t.doDismissalOnHit(self, value, src, t)
 	end
-		
+
 	if self:attr("retribution") then
 	-- Absorb damage into the retribution
 		if value / 2 <= self.retribution_absorb then
@@ -1628,13 +1647,13 @@ function _M:onTakeHit(value, src)
 			t.explode(self, t, dam)
 		end
 	end
-	
+
 	if self:isTalentActive(self.T_BONE_SHIELD) then
 		local t = self:getTalentFromId(self.T_BONE_SHIELD)
 		t.absorb(self, t, self:isTalentActive(self.T_BONE_SHIELD))
 		value = 0
 	end
-	
+
 	if self.knowTalent and (self:knowTalent(self.T_SEETHE) or self:knowTalent(self.T_GRIM_RESOLVE)) then
 		if not self:hasEffect(self.EFF_CURSED_FORM) then
 			self:setEffect(self.EFF_CURSED_FORM, 1, { increase=0 })
@@ -1677,7 +1696,7 @@ function _M:onTakeHit(value, src)
 			eff.begone = game.turn
 		end
 	end
-	
+
 	-- Feedback pool: Stores damage as energy to use later
 	if self:getMaxFeedback() > 0 and src ~= self and src ~= self.summoner then
 		local ratio = 0.5
@@ -1714,7 +1733,7 @@ function _M:onTakeHit(value, src)
 			self:removeEffect(self.EFF_RESONANCE_FIELD)
 		end
 	end
-	
+
 	-- Reduce sleep durations
 	if self:attr("sleep") then
 		local effs = {}
@@ -1737,7 +1756,7 @@ function _M:onTakeHit(value, src)
 			end
 		end
 	end
-		
+
 	-- Solipsism
 	if self:knowTalent(self.T_SOLIPSISM) then
 		local t = self:getTalentFromId(self.T_SOLIPSISM)
@@ -2198,9 +2217,9 @@ function _M:die(src, death_note)
 			t.spawn_ghoul(p.src, self, t)
 		end
 	end
-	
+
 	if src and self:attr("sleep") and src.isTalentActive and src:isTalentActive(src.T_NIGHT_TERROR) then
-		local t = src:getTalentFromId(src.T_NIGHT_TERROR) 
+		local t = src:getTalentFromId(src.T_NIGHT_TERROR)
 		t.summonNightTerror(src, self, t)
 	end
 
@@ -2599,13 +2618,13 @@ function _M:onWear(o, bypass_set)
 		self:attr("spellpower_reduction", 1)
 		self:attr("spell_failure", (o.material_level or 1) * 10)
 	end
-	
+
 	-- Apply Psychometry
 	if self:knowTalent(self.T_PSYCHOMETRY) then
 		local t = self:getTalentFromId(self.T_PSYCHOMETRY)
 		t.updatePsychometryCount(self, t)
 	end
-	
+
 	-- Learn Talent
 	if o.wielder and o.wielder.learn_talent then
 		for tid, level in pairs(o.wielder.learn_talent) do
@@ -2674,7 +2693,7 @@ function _M:onTakeoff(o, bypass_set)
 		self:attr("spellpower_reduction", -1)
 		self:attr("spell_failure", -(o.material_level or 1) * 10)
 	end
-	
+
 	-- Apply Psychometry
 	if self:knowTalent(self.T_PSYCHOMETRY) then
 		local t = self:getTalentFromId(self.T_PSYCHOMETRY)
@@ -3101,13 +3120,13 @@ function _M:incMaxFeedback(v, set)
 	if not self.psionic_feedback then
 		self.psionic_feedback = 0
 	end
-	
+
 	if not set then
 		self.psionic_feedback_max = (self.psionic_feedback_max or 0) + v
 	else
 		self.psionic_feedback_max = v
 	end
-	
+
 	-- auto unlearn feedback if below 0
 	if self.psionic_feedback_max <= 0 then
 		self.psionic_feedback = nil
@@ -3123,7 +3142,7 @@ function _M:getFeedbackDecay()
 		return 0
 	end
 end
-	
+
 
 --- Called before a talent is used
 -- Check the actor can cast it
@@ -3610,9 +3629,12 @@ function _M:getTalentFullDescription(t, addlevel, config)
 	local d = tstring{}
 
 	d:add({"color",0x6f,0xff,0x83}, "Effective talent level: ", {"color",0x00,0xFF,0x00}, ("%.1f"):format(self:getTalentLevel(t)), true)
-	if t.mode == "passive" then d:add({"color",0x6f,0xff,0x83}, "Use mode: ", {"color",0x00,0xFF,0x00}, "Passive", true)
-	elseif t.mode == "sustained" then d:add({"color",0x6f,0xff,0x83}, "Use mode: ", {"color",0x00,0xFF,0x00}, "Sustained", true)
-	else d:add({"color",0x6f,0xff,0x83}, "Use mode: ", {"color",0x00,0xFF,0x00}, "Activated", true)
+
+	if not config.ignore_mode then
+		if t.mode == "passive" then d:add({"color",0x6f,0xff,0x83}, "Use mode: ", {"color",0x00,0xFF,0x00}, "Passive", true)
+		elseif t.mode == "sustained" then d:add({"color",0x6f,0xff,0x83}, "Use mode: ", {"color",0x00,0xFF,0x00}, "Sustained", true)
+		else d:add({"color",0x6f,0xff,0x83}, "Use mode: ", {"color",0x00,0xFF,0x00}, "Activated", true)
+		end
 	end
 
 	if config.custom then

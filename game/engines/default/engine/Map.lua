@@ -346,11 +346,13 @@ function _M:close()
 			if e and e._mo then
 				e._mo:invalidate()
 				e._mo = nil
+				e._last_mo = nil
 			end
 			if e and e.add_displays then for i, se in ipairs(e.add_displays) do
 				if se._mo then
 					se._mo:invalidate()
 					se._mo = nil
+					se._last_mo = nil
 				end
 			end end
 			if e then e:closeParticles() end
@@ -768,7 +770,7 @@ function _M:moveViewSurround(x, y, marginx, marginy, ignore_padding)
 		elseif self.my + self.viewport.mheight - marginy - self.viewport_padding_2 <= y then
 			self.my = y - self.viewport.mheight + marginy + self.viewport_padding_2
 			self.changed = true
-		end	
+		end
 	end
 --[[
 	if self.mx + marginx >= x or self.mx + self.viewport.mwidth - marginx <= x then

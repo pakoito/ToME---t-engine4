@@ -529,7 +529,7 @@ function _M:getTextualDesc(compare_with)
 		if special ~= "" then
 			desc:add(found and {"color","WHITE"} or {"color","GREEN"}, "Special effect when this weapon crits: "..special, {"color","LAST"}, true)
 		end
-		
+
 		local special = ""
 		if combat.special_on_kill then
 			special = combat.special_on_kill.desc
@@ -957,17 +957,17 @@ function _M:getTextualDesc(compare_with)
 
 		compare_fields(w, compare_with, field, "nature_summon_max", "%+d", "Max wilder summons: ")
 		compare_fields(w, compare_with, field, "nature_summon_regen", "%+.2f", "Life regen bonus (wilder-summons): ")
-		
+
 		compare_fields(w, compare_with, field, "slow_projectiles", "%+d%%", "Slows Projectiles: ")
 
 		if w.undead then
 			desc:add("The wearer is treated as an undead.", true)
 		end
-		
+
 		if w.demon then
 			desc:add("The wearer is treated as a demon.", true)
 		end
-		
+
 		if w.blind then
 			desc:add("The wearer is blinded.", true)
 		end
@@ -975,7 +975,7 @@ function _M:getTextualDesc(compare_with)
 		if w.blind_fight then
 			desc:add({"color", "YELLOW"}, "Blind-Fight:", {"color", "LAST"}, "This item allows the wearer to attack unseen targets without any penalties.", true)
 		end
-		
+
 		if w.quick_weapon_swap then
 			desc:add({"color", "YELLOW"}, "Quick Weapon Swap:", {"color", "LAST"}, "This item allows the wearer to swap to their secondary weapon without spending a turn.", true)
 		end
@@ -1137,7 +1137,7 @@ function _M:getUseDesc()
 		ret = tstring{{"color","YELLOW"}, ("It can be used to %s."):format(self.use_simple.name), {"color","LAST"}}
 	elseif self.use_talent then
 		local t = game.player:getTalentFromId(self.use_talent.id)
-		local desc = game.player:getTalentFullDescription(t, nil, {force_level=self.use_talent.level, ignore_cd=true, ignore_ressources=true, ignore_use_time=true, custom=self.use_talent.power and tstring{{"color",0x6f,0xff,0x83}, "Power cost: ", {"color",0x7f,0xff,0xd4},("%d out of %d/%d."):format(self.use_talent.power, self.power, self.max_power)}})
+		local desc = game.player:getTalentFullDescription(t, nil, {force_level=self.use_talent.level, ignore_cd=true, ignore_ressources=true, ignore_use_time=true, ignore_mode=true, custom=self.use_talent.power and tstring{{"color",0x6f,0xff,0x83}, "Power cost: ", {"color",0x7f,0xff,0xd4},("%d out of %d/%d."):format(self.use_talent.power, self.power, self.max_power)}})
 		if self.talent_cooldown then
 			ret = tstring{{"color","YELLOW"}, "It can be used to activate talent ", t.name,", placing all other charms into a ", tostring(math.floor(self.use_talent.power)) ," cooldown :", {"color","LAST"}, true}
 		else
@@ -1303,12 +1303,12 @@ function _M:getPriceFlags()
 		if w.combat_physspeed then price = price + w.combat_physspeed * -200 end
 		if w.combat_spellpower then price = price + w.combat_spellpower * 0.8 end
 		if w.combat_spellcrit then price = price + w.combat_spellcrit * 0.4 end
-		
+
 		--shooter attributes
 		if w.ammo_regen then price = price + w.ammo_regen * 10 end
 		if w.ammo_reload_speed then price = price + w.ammo_reload_speed *10 end
 		if w.travel_speed then price = price +w.travel_speed * 10 end
-				
+
 		--miscellaneous attributes
 		if w.inc_stealth then price = price + w.inc_stealth * 1 end
 		if w.see_invisible then price = price + w.see_invisible * 0.2 end
@@ -1330,12 +1330,12 @@ function _M:getPriceFlags()
 		if w.damage_shield_penetrate then price = price + w.damage_shield_penetrate * 1 end
 		if w.spellsurge_on_crit then price = price + w.spellsurge_on_crit * 5 end
 		if w.quick_weapon_swap then price = price + w.quick_weapon_swap * 50 end
-		
+
 		--on teleport abilities
 		if w.resist_all_on_teleport then price = price + w.resist_all_on_teleport * 4 end
 		if w.defense_on_teleport then price = price + w.defense_on_teleport * 3 end
 		if w.effect_reduction_on_teleport then price = price + w.effect_reduction_on_teleport * 2 end
-		
+
 		--resists
 		if w.resists then for t, v in pairs(w.resists) do price = price + v * 0.15 end end
 
@@ -1360,7 +1360,7 @@ function _M:getPriceFlags()
 		if w.ranged_project then for t, v in pairs(w.ranged_project) do price = price + v * 0.7 end end
 		if w.burst_on_hit then for t, v in pairs(w.burst_on_hit) do price = price + v * 0.8 end end
 		if w.burst_on_crit then for t, v in pairs(w.burst_on_crit) do price = price + v * 0.8 end end
-		
+
 		--damage conversion
 		if w.convert_damage then for t, v in pairs(w.convert_damage) do price = price + v * 1 end end
 

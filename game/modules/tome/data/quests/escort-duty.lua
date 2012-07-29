@@ -368,7 +368,7 @@ on_grant = function(self, who)
 		who:removed()
 		game.party:removeMember(who, true)
 	end
-	g._mo = nil
+	g:removeAllMOs()
 
 	g:resolve() g:resolve(nil, true)
 	game.zone:addEntity(game.level, g, "terrain", gx, gy)

@@ -135,6 +135,7 @@ function _M:replaceAll(level)
 					end
 					if e.add_mos_shader then gd.shader = e.add_mos_shader end
 					gd._mo = nil
+					gd._last_mo = nil
 				end
 				if e.add_displays then
 					g.add_displays = g.add_displays or {}

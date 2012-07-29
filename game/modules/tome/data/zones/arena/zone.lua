@@ -213,7 +213,7 @@ return {
 				master.color_r = 255
 				master.color_g = 0
 				master.color_b = 255
-				master._mo:invalidate()
+				master:removeAllMOs()
 				master.ai = "tactical"
 				master.ai_state = {talent_in=1, ai_move="move_astar"}
 				master.faction="enemies"

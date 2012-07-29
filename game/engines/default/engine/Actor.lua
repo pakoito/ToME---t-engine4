@@ -98,7 +98,7 @@ function _M:defineDisplayCallback()
 	local f_enemy = nil
 	local f_neutral = nil
 
-	self._mo:displayCallback(function(x, y, w, h)
+	local function particles(x, y, w, h)
 		local e
 		for i = 1, #ps do
 			e = ps[i]
@@ -107,7 +107,9 @@ function _M:defineDisplayCallback()
 			else self:removeParticles(e)
 			end
 		end
+	end
 
+	local function tactical(x, y, w, h)
 		-- Tactical info
 		if game.level and game.level.map.view_faction then
 			local map = game.level.map
@@ -138,8 +140,24 @@ function _M:defineDisplayCallback()
 				end
 			end
 		end
-		return true
-	end)
+	end
+
+	if self._mo == self._last_mo then
+		self._mo:displayCallback(function(x, y, w, h)
+			tactical(x, y, w, h)
+			particles(x, y, w, h)
+			return true
+		end)
+	else
+		self._mo:displayCallback(function(x, y, w, h)
+			tactical(x, y, w, h)
+			return true
+		end)
+		self._last_mo:displayCallback(function(x, y, w, h)
+			particles(x, y, w, h)
+			return true
+		end)
+	end
 end
 
 --- Moves an actor on the map
