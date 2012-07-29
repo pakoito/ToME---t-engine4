@@ -603,6 +603,7 @@ function _M:getTextualDesc(compare_with)
 				end
 			end)
 
+		self:triggerHook{"Object:descCombat", compare_with=compare_with, compare_fields=compare_fields, compare_table_fields=compare_table_fields, desc=desc, combat=combat}
 	end
 
 	local desc_wielder = function(w, compare_with, field)
@@ -988,6 +989,8 @@ function _M:getTextualDesc(compare_with)
 			desc:add("Allows you to speak and read the old Sher'Tul language.", true)
 		end
 
+		self:triggerHook{"Object:descWielder", compare_with=compare_with, compare_fields=compare_fields, compare_table_fields=compare_table_fields, desc=desc, w=w}
+
 		local can_combat_unarmed = false
 		local compare_unarmed = {}
 		for i, v in ipairs(compare_with) do
@@ -1116,7 +1119,7 @@ function _M:getTextualDesc(compare_with)
 		end
 	end
 
-
+	self:triggerHook{"Object:descMisc", compare_with=compare_with, compare_fields=compare_fields, compare_table_fields=compare_table_fields, desc=desc, object=self}
 
 	local use_desc = self:getUseDesc()
 	if use_desc then desc:merge(use_desc:toTString()) end
