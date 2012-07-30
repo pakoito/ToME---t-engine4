@@ -71,7 +71,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 					print("[PROJECTOR] after inc_damage_actor_type", dam + (dam * inc / 100))
 				end
 			end
-			
+
 			-- Increases damage to sleeping targets
 			if target:attr("sleep") and src.attr and src:attr("night_terror") then
 				inc = inc + src:attr("night_terror")
@@ -281,7 +281,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 				dam = 0
 			end
 		end
-		
+
 		print("[PROJECTOR] final dam", dam)
 
 		local hd = {"DamageProjector:final", src=src, x=x, y=y, type=type, dam=dam}
@@ -494,6 +494,7 @@ newDamageType{
 				return DamageType.defaultProjector(src, x, y, type, dam)
 			else
 				game.logSeen(target, "%s resists the mind attack!", target.name:capitalize())
+				return DamageType.defaultProjector(src, x, y, type, dam / 2)
 			end
 		end
 		return 0
@@ -2091,7 +2092,7 @@ newDamageType{
 			tmp[target] = true
 			local old_pen = 0
 			-- Spike resists pen
-			if dam.penetrate then 
+			if dam.penetrate then
 				old_pen = src.resists_pen and src.resists_pen[engine.DamageType.PHYSICAL] or 0
 				src.resists_pen[engine.DamageType.PHYSICAL] = 100
 			end
@@ -2115,7 +2116,7 @@ newDamageType{
 			end
 			-- Do knockback
 			if dam.knockback then
-				if target:checkHit(src:combatMindpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then 
+				if target:checkHit(src:combatMindpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then
 					target:knockback(src.x, src.y, dam.knockback)
 					target:crossTierEffect(target.EFF_OFFBALANCE, src:combatMindpower())
 					game.logSeen(target, "%s is knocked back!", target.name:capitalize())
