@@ -8,3 +8,5 @@
  - flood trap
  - gust of wind trap (for X turn a strong wind blows in a random direction, force-moving things
 * sub-tile entities, like the spiders for the arachnomancer: split a tile in 16 (4x4)
+* fun caster egos: apply/change tthe cross-tier effects o some things funky
+* refit mindslayers a bit (remove trees)
