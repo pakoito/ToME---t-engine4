@@ -179,16 +179,25 @@ newTalent{
 			self:incIncStat("mag", 3) self:incIncStat("wil", 3)
 			self:attr("combat_spellresist", 10) self:attr("combat_mentalresist", 10)
 			self.life_rating = self.life_rating + 2
+			self:learnTalentType("celestial/star-fury", true)
+			self:setTalentTypeMastery("celestial/star-fury", 0.7)
+			self.negative_regen = self.negative_regen + 0.2 + 0.1
 		elseif level < 6 then
 			self:incIncStat("mag", 5) self:incIncStat("wil", 5)
 			self:attr("combat_spellresist", 10) self:attr("combat_mentalresist", 10)
 			self.resists_cap.all = (self.resists_cap.all or 0) + 10
 			self.life_rating = self.life_rating + 2
+			self:learnTalentType("celestial/star-fury", true)
+			self:setTalentTypeMastery("celestial/star-fury", 0.9)
+			self.negative_regen = self.negative_regen + 0.2 + 0.5
 		else
 			self:incIncStat("mag", 6) self:incIncStat("wil", 6) self:incIncStat("cun", 6)
 			self:attr("combat_spellresist", 15) self:attr("combat_mentalresist", 15)
 			self.resists_cap.all = (self.resists_cap.all or 0) + 15
 			self.life_rating = self.life_rating + 3
+			self:learnTalentType("celestial/star-fury", true)
+			self:setTalentTypeMastery("celestial/star-fury", 1.1)
+			self.negative_regen = self.negative_regen + 0.2 + 1
 		end
 
 		if self:attr("blood_life") then
@@ -227,9 +236,9 @@ newTalent{
 		At level 1: -3 to all stats, -10%% to all resistances. Such meagre devotion!
 		At level 2: Nothing
 		At level 3: +3 Magic and Willpower, +1 life rating (not retroactive)
-		At level 4: +3 Magic and Willpower, +2 life rating (not retroactive), +10 spell and mental saves
-		At level 5: +5 Magic and Willpower, +2 life rating (not retroactive), +10 spell and mental saves, all resistance caps raised by 10%%
-		At level 6: +6 Magic, Willpower and Cunning, +3 life rating (not retroactive), +15 spell and mental saves, all resistance caps raised by 15%%. Fear my power!
+		At level 4: +3 Magic and Willpower, +2 life rating (not retroactive), +10 spell and mental saves, Celestial/Star Fury category (0.7) and 0.1 negative energies regeneration
+		At level 5: +5 Magic and Willpower, +2 life rating (not retroactive), +10 spell and mental saves, all resistance caps raised by 10%%, Celestial/Star Fury category (0.9) and 0.5 negative energies regeneration
+		At level 6: +6 Magic, Willpower and Cunning, +3 life rating (not retroactive), +15 spell and mental saves, all resistance caps raised by 15%%, Celestial/Star Fury category (1.1) and 1.0 negative energies regeneration. Fear my power!
 		The undead cannot use this talent.
 		While active it will drain 4 mana per turn.]]):
 		format()
