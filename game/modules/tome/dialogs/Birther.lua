@@ -198,6 +198,16 @@ function _M:applyingDescriptor(i, d)
 			end
 		end
 	end
+	if d.game_state then
+		local copy = table.clone(d.game_state, true)
+		-- Append array part
+		while #copy > 0 do
+			local f = table.remove(copy)
+			table.insert(game.state.birth, f)
+		end
+		-- Copy normal data
+		table.merge(game.state.birth, copy, true)
+	end
 end
 
 function _M:atEnd(v)

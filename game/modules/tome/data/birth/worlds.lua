@@ -74,10 +74,11 @@ newBirthDescriptor{
 		"But what lurks in the shadows of the world?",
 	},
 	descriptor_choices = default_eyal_descriptors{},
-	copy = {
+	game_state = {
+		campaign_name = "maj-eyal",
 		__allow_rod_recall = true,
 		__allow_transmo_chest = true,
-	}
+	},
 }
 
 newBirthDescriptor{
@@ -96,8 +97,6 @@ newBirthDescriptor{
 	},
 	descriptor_choices = default_eyal_descriptors{ difficulty = { Tutorial = "never"} },
 	copy = {
-		__allow_transmo_chest = true,
-
 		-- Can levelup forever
 		resolvers.generic(function(e) e.max_level = nil end),
 		no_points_on_levelup = function(self)
@@ -130,6 +129,11 @@ newBirthDescriptor{
 			self.starting_intro = "infinite-dungeon"
 		end,
 	},
+	game_state = {
+		campaign_name = "infinite-dungeon",
+		__allow_transmo_chest = true,
+		is_infinite_dungeon = true,
+	},
 }
 
 newBirthDescriptor{
@@ -157,111 +161,9 @@ newBirthDescriptor{
 			self.starting_intro = "arena"
 		end,
 	},
-}
-
-newBirthDescriptor{
-	type = "world",
-	name = "Spydre",
-	display_name = "Spydrë: Thouch of the Spider",
-	locked = function() return profile.mod.allow_build.campaign_spidre and true or "hide" end,
-	locked_desc = "",
-	desc =
-	{
-		"Spydrë is home to the essence of spiders. The mighty Ungoliant of Arda actually originated from this world.",
-		"It is home to uncounted numbers of spider races, all fighting for supremacy of all the lands.",
-		"Some humanoids also live there, but they are usually the prey, not the hunter.",
-	},
-	descriptor_choices =
-	{
-		race =
-		{
-			__ALL__ = "disallow",
-			Human = "allow",
---			Spider = function() return profile.mod.allow_build.spider and "allow" or "disallow" end,
-		},
+	game_state = {
+		campaign_name = "arena",
+		is_arena = true,
 	},
 }
 
-newBirthDescriptor{
-	type = "world",
-	name = "Trolls",
-	display_name = "Trolls: Pirates of the Kar'Haib",
-	locked = function() return profile.mod.allow_build.campaign_troll and true or "hide" end,
-	locked_desc = "",
-	desc =
-	{
-		"",
-	},
-	descriptor_choices =
-	{
-		race =
-		{
-			__ALL__ = "disallow",
-			Human = "allow",
---			Spider = function() return profile.mod.allow_build.spider and "allow" or "disallow" end,
-		},
-	},
-}
-
-newBirthDescriptor{
-	type = "world",
-	name = "Nagas",
-	display_name = "Nagas: Guardians of the Tide",
-	locked = function() return profile.mod.allow_build.campaign_naga and true or "hide" end,
-	locked_desc = "",
-	desc =
-	{
-		"",
-	},
-	descriptor_choices =
-	{
-		race =
-		{
-			__ALL__ = "disallow",
-			Human = "allow",
---			Spider = function() return profile.mod.allow_build.spider and "allow" or "disallow" end,
-		},
-	},
-}
-
-newBirthDescriptor{
-	type = "world",
-	name = "Faeros",
-	display_name = "Urthalath: Treason or the High Guards",
-	locked = function() return profile.mod.allow_build.campaign_faeros and true or "hide" end,
-	locked_desc = "",
-	desc =
-	{
-		"",
-	},
-	descriptor_choices =
-	{
-		race =
-		{
-			__ALL__ = "disallow",
-			Human = "allow",
---			Spider = function() return profile.mod.allow_build.spider and "allow" or "disallow" end,
-		},
-	},
-}
-
-newBirthDescriptor{
-	type = "world",
-	name = "Undeads",
-	display_name = "Broken Oath: The Curse of Undeath",
-	locked = function() return profile.mod.allow_build.campaign_undead and true or "hide" end,
-	locked_desc = "",
-	desc =
-	{
-		"",
-	},
-	descriptor_choices =
-	{
-		race =
-		{
-			__ALL__ = "disallow",
-			Human = "allow",
---			Spider = function() return profile.mod.allow_build.spider and "allow" or "disallow" end,
-		},
-	},
-}

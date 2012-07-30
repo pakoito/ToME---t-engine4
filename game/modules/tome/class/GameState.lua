@@ -38,6 +38,7 @@ function _M:init(t, no_default)
 	self.boss_killed = 0
 	self.stores_restock = 1
 	self.east_orc_patrols = 4
+	self.birth = {}
 end
 
 --- Restock all stores
