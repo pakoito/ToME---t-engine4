@@ -48,24 +48,28 @@ newEntity{ base = "BASE_STORE", define_as = "KNIFE_WEAPON_STORE",
 	name="Yulek's Tools of the Night",
 	display='3', color=colors.UMBER,
 	resolvers.store("KNIFE_WEAPON", "allied-kingdoms", "store/shop_door.png", "store/shop_sign_yuleks_tools_of_night.png"),
+	resolvers.chatfeature("last-hope-weapon-store", "allied-kingdoms"),
 }
 
 newEntity{ base = "BASE_STORE", define_as = "AXE_WEAPON_STORE",
 	name="Vortal's Trees Choppers",
 	display='3', color=colors.UMBER,
 	resolvers.store("AXE_WEAPON", "allied-kingdoms", "store/shop_door.png", "store/shop_sign_vortals_trees.png"),
+	resolvers.chatfeature("last-hope-weapon-store", "allied-kingdoms"),
 }
 
 newEntity{ base = "BASE_STORE", define_as = "MAUL_WEAPON_STORE",
 	name="Raber's Blunt Paradise",
 	display='3', color=colors.UMBER,
 	resolvers.store("MAUL_WEAPON", "allied-kingdoms", "store/shop_door.png", "store/shop_sign_rabers_blunt_paradise.png"),
+	resolvers.chatfeature("last-hope-weapon-store", "allied-kingdoms"),
 }
 
 newEntity{ base = "BASE_STORE", define_as = "ARCHER_WEAPON_STORE",
 	name="Dala's Far Reaching Implements",
 	display='3', color=colors.UMBER,
 	resolvers.store("ARCHER_WEAPON", "allied-kingdoms", "store/shop_door.png", "store/shop_sign_dalas_far_reaching.png"),
+	resolvers.chatfeature("last-hope-weapon-store", "allied-kingdoms"),
 }
 
 newEntity{ base = "BASE_STORE", define_as = "HERBALIST",
