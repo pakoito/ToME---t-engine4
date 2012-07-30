@@ -18,3 +18,40 @@
 -- darkgod@te4.org
 
 load("/data/general/objects/objects.lua")
+
+newEntity{
+	power_source = {technique=true},
+	unique = true,
+	type = "potion", subtype="potion",
+	name = "Potion of Martial Prowess",
+	unided_name = "phial filled with metallic liquid",
+	level_range = {1, 50},
+	display = '!', color=colors.VIOLET, image="object/elixir_of_stoneskin.png",
+	encumber = 0.4,
+	rarity = 150,
+	desc = [[This potent elixir can give insights into martial combat to those unlucky enough to ignore the basics.]],
+	cost = 500,
+
+	use_simple = { name = "quaff the elixir", use = function(self, who)
+		game.logSeen(who, "%s quaffs the %s!", who.name:capitalize(), self:getName())
+
+		local done = 0
+
+		if not who:knowTalentType("technique/combat-training") then
+			who:learnTalentType("technique/combat-training", true)
+			game.logPlayer(who, "#VIOLET#You seem to understand the basic martial pratices. (Combat Training talents unlocked)")
+			done = done + 1
+		end
+		if not who:knowTalent(who.T_SHOOT) then
+			who:learnTalent(who.T_SHOOT, true, nil, {no_unlearn=true})
+			game.logPlayer(who, "#VIOLET#You seem to now know how to properly use a bow or a sling.")
+			done = done + 1
+		end
+
+		if done == 0 then
+			game.logPlayer(who, "#VIOLET#It seems you already knew all the elixir could teach you.")
+		end
+
+		return {used=true, id=true, destroy=true}
+	end},
+}
