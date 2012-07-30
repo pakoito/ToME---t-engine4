@@ -316,7 +316,7 @@ function _M:recreate()
 	self.changed = true
 
 	-- Update particles to the correct size
-	for e, _ in pairs(self.particles) do
+	for _, e in ipairs(self.particles) do
 		e:loaded()
 	end
 
@@ -1064,27 +1064,26 @@ end
 -------------------------------------------------------------
 
 --- Add a new particle emitter
-function _M:particleEmitter(x, y, radius, def, args)
-	local e = Particles.new(def, radius, args)
+function _M:particleEmitter(x, y, radius, def, args, shader)
+	local e = Particles.new(def, radius, args, shader)
 	e.x = x
 	e.y = y
 
-	self.particles[e] = true
+	self.particles[#self.particles+1] = e
 	return e
 end
 
 --- Adds an existing particle emitter to the map
 function _M:addParticleEmitter(e)
 	if self.particles[e] then return false end
-	self.particles[e] = true
+	self.particles[#self.particles+1] = e
 	return e
 end
 
 --- Removes a particle emitter from the map
 function _M:removeParticleEmitter(e)
-	if not self.particles[e] then return false end
-	self.particles[e] = nil
-	return true
+	for i = 1, #self.particles do if self.particles[i] == e then table.remove(self.particles, i) return true end end
+	return false
 end
 
 --- Display the particle emitters, called by self:display()
@@ -1092,10 +1091,10 @@ function _M:displayParticles(nb_keyframes)
 	nb_keyframes = nb_keyframes or 1
 	local adx, ady
 	local alive
-	local del = {}
-	local e = next(self.particles)
+	local e
 	local dx, dy = self.display_x, self.display_y
-	while e do
+	for i = #self.particles, 1, -1 do
+		e = self.particles[i]
 		if e.ps then
 			adx, ady = 0, 0
 			if e.x and e.y then
@@ -1126,18 +1125,17 @@ function _M:displayParticles(nb_keyframes)
 				end
 
 				if not alive then
-					del[#del+1] = e
+					table.remove(self.particles, i)
+					if e.on_remove then e:on_remove() end
 					e.dead = true
 				end
 			else
-				del[#del+1] = e
+				table.remove(self.particles, i)
+				if e.on_remove then e:on_remove() end
 				e.dead = true
 			end
 		end
-
-		e = next(self.particles, e)
 	end
-	for i = 1, #del do self.particles[del[i]] = nil if del[i].on_remove then del[i]:on_remove() end end
 end
 
 -------------------------------------------------------------

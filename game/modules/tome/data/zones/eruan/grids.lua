@@ -59,6 +59,6 @@ newEntity{ base = "CHARRED_SCAR_PORTAL", define_as = "CCHARRED_SCAR_PORTAL",
 		level.map:particleEmitter(x, y, 3, "farportal_vortex")
 		level.map:particleEmitter(x, y, 3, "farportal_lightning")
 		level.map:particleEmitter(x, y, 3, "farportal_lightning")
-		level.map:particleEmitter(y, y, 3, "farportal_lightning")
+		level.map:particleEmitter(x, y, 3, "farportal_lightning")
 	end,
 }

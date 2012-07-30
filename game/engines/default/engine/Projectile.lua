@@ -116,6 +116,7 @@ function _M:move(x, y, force)
 	end
 
 	-- Update particle emitters attached to that actor
+--[[
 	local del = {}
 	for e, _ in pairs(self.__particles) do
 		if e.dead then del[#del+1] = e
@@ -128,7 +129,7 @@ function _M:move(x, y, force)
 		end
 	end
 	for i = 1, #del do self.__particles[del[i] ] = nil end
-
+]]
 	self:useEnergy()
 
 	map:checkAllEntities(x, y, "on_projectile_move", self, force)

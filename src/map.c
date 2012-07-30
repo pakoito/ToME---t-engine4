@@ -414,27 +414,31 @@ static int map_objects_toscreen(lua_State *L)
 			vertices[6] = dw + dx; vertices[7] = dh + dy; vertices[8] = dz;
 			vertices[9] = dx; vertices[10] = dh + dy; vertices[11] = dz;
 			glDrawArrays(GL_QUADS, 0, 4);
-			dm = dm->next;
-		}
 
-		if (m->cb_ref != LUA_NOREF)
-		{
-			int dx = x + m->dx * w, dy = y + m->dy * h;
-			float dw = w * m->dw;
-			float dh = h * m->dh;
-			lua_rawgeti(L, LUA_REGISTRYINDEX, m->cb_ref);
-			lua_pushnumber(L, dx);
-			lua_pushnumber(L, dy);
-			lua_pushnumber(L, dw);
-			lua_pushnumber(L, dh);
-			lua_pushnumber(L, 1);
-			lua_pushboolean(L, FALSE);
-			if (lua_pcall(L, 6, 1, 0))
+			if (dm->cb_ref != LUA_NOREF)
 			{
-				printf("Display callback error: UID %ld: %s\n", m->uid, lua_tostring(L, -1));
+				if (m->shader) glUseProgramObjectARB(0);
+				int dx = x + dm->dx * w, dy = y + dm->dy * h;
+				float dw = w * dm->dw;
+				float dh = h * dm->dh;
+				lua_rawgeti(L, LUA_REGISTRYINDEX, dm->cb_ref);
+				lua_pushnumber(L, dx);
+				lua_pushnumber(L, dy);
+				lua_pushnumber(L, dw);
+				lua_pushnumber(L, dh);
+				lua_pushnumber(L, 1);
+				lua_pushboolean(L, FALSE);
+				if (lua_pcall(L, 6, 1, 0))
+				{
+					printf("Display callback error: UID %ld: %s\n", dm->uid, lua_tostring(L, -1));
+					lua_pop(L, 1);
+				}
 				lua_pop(L, 1);
+
+				if (m->shader) useShader(m->shader, 1, 1, 1, 1, 1, 1, 1, 1);
 			}
-			lua_pop(L, 1);
+
+			dm = dm->next;
 		}
 
 		if (m->shader) glUseProgramObjectARB(0);
