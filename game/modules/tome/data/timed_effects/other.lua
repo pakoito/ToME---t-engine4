@@ -1654,6 +1654,7 @@ newEffect{
 			m.no_timeflow = m.no_timeflow - 1
 			m.status_effect_immune = m.status_effect_immune - 1
 			m:removeParticles(eff.particle)
+			m:removeTimedEffectsOnClone()
 
 			-- track number killed
 			m.on_die = function(self, who)

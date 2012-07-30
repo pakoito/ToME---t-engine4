@@ -214,8 +214,7 @@ function setupThoughtForm(self, m, x, y)
 	
 	-- Inheret some attributes
 	if self:getTalentLevel(self.T_TF_UNITY) >=5 then
-		local damage_bonus = self:attr("inc_damage") and self:attr("inc_damage")[engine.DamageType.MIND] or 0
-		m.inc_damage.all = m.inc_damage.all or 0 + damage_bonus
+		m.inc_damage.all = (m.inc_damage.all) or 0 + (self.inc_damage.all or 0) + (self.inc_damage[engine.DamageType.MIND] or 0)
 	end
 	if self:getTalentLevel(self.T_TF_UNITY) >=3 then
 		local save_bonus = self:combatMentalResist(fake)

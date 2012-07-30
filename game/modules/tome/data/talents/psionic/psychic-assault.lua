@@ -57,32 +57,31 @@ newTalent{
 }
 
 newTalent{
-	name = "Mind Sear",
+	name = "Synaptic Static",
 	type = {"psionic/psychic-assault", 2},
 	require = psi_wil_req2,
 	points = 5,
-	cooldown = 2,
-	psi = 5,
-	range = 7,
+	cooldown = 10,
+	psi = 25,
+	range = 0,
 	direct_hit = true,
 	requires_target = true,
-	target = function(self, t)
-		return {type="beam", range=self:getTalentRange(t), talent=t}
-	end,
-	tactical = { ATTACKAREA = { MIND = 3 } },
-	getDamage = function(self, t) return self:combatTalentMindDamage(t, 10, 340) end,
+	radius = function(self, t) return math.min(10, 3 + math.ceil(self:getTalentLevel(t))) end,
+	target = function(self, t) return {type="ball", radius=self:getTalentRadius(t), range=self:getTalentRange(t), talent=t, selffire=false} end,
+	tactical = { ATTACKAREA = { MIND = 3 }, DISABLE=1 },
+	getDamage = function(self, t) return self:combatTalentMindDamage(t, 20, 200) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.MIND, self:mindCrit(t.getDamage(self, t)), {type="mind"})
+		self:project(tg, self.x, self.y, DamageType.MIND, {dam=self:mindCrit(self:combatTalentMindDamage(t, 20, 200)), crossTierChance=100} )
+		game.level.map:particleEmitter(self.x, self.y, self:getTalentRadius(t), "generic_ball", {radius=self:getTalentRadius(t), rm=100, rM=125, gm=100, gM=125, bm=100, bM=125, am=200, aM=255})
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Sends a telepathic attack, trying to destroy the brains of any target in the beam, doing %0.2f mind damage.
-		The damage will increase with your mindpower.]]):format(damDesc(self, DamageType.MIND, damage))
+		local radius = self:getTalentRadius(t)
+		return ([[Sends out a blast of telepathic static in a %d radius, inflicting %0.2f mind damage.  This attack can brain-lock affected targets.
+		The damage will increase with your mindpower.]]):format(radius, damDesc(self, DamageType.MIND, damage))
 	end,
 }
 
@@ -131,30 +130,31 @@ newTalent{
 }
 
 newTalent{
-	name = "Synaptic Static",
+	name = "Mind Sear",
 	type = {"psionic/psychic-assault", 4},
 	require = psi_wil_req4,
 	points = 5,
-	cooldown = 10,
-	psi = 25,
-	range = 0,
+	cooldown = 2,
+	psi = 5,
+	range = 7,
 	direct_hit = true,
 	requires_target = true,
-	radius = function(self, t) return math.min(10, 3 + math.ceil(self:getTalentLevel(t))) end,
-	target = function(self, t) return {type="ball", radius=self:getTalentRadius(t), range=self:getTalentRange(t), talent=t, selffire=false} end,
-	tactical = { ATTACKAREA = { MIND = 3 }, DISABLE=1 },
-	getDamage = function(self, t) return self:combatTalentMindDamage(t, 20, 200) end,
+	target = function(self, t)
+		return {type="beam", range=self:getTalentRange(t), talent=t}
+	end,
+	tactical = { ATTACKAREA = { MIND = 3 } },
+	getDamage = function(self, t) return self:combatTalentMindDamage(t, 10, 300) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
-		self:project(tg, self.x, self.y, DamageType.MIND, {dam=self:mindCrit(self:combatTalentMindDamage(t, 20, 200)), crossTierChance=100} )
-		game.level.map:particleEmitter(self.x, self.y, self:getTalentRadius(t), "generic_ball", {radius=self:getTalentRadius(t), rm=100, rM=125, gm=100, gM=125, bm=100, bM=125, am=200, aM=255})
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:project(tg, x, y, DamageType.MIND, self:mindCrit(t.getDamage(self, t)), {type="mind"})
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		local radius = self:getTalentRadius(t)
-		return ([[Sends out a blast of telepathic static in a %d radius, inflicting %0.2f mind damage.  This attack can brain-lock affected targets.
-		The damage will increase with your mindpower.]]):format(radius, damDesc(self, DamageType.MIND, damage))
+		return ([[Sends a telepathic attack, trying to destroy the brains of any target in the beam, doing %0.2f mind damage.
+		The damage will increase with your mindpower.]]):format(damDesc(self, DamageType.MIND, damage))
 	end,
 }

@@ -33,9 +33,9 @@ newTalent{
 	radius = function(self, t) return 1 + math.floor(self:getTalentLevel(t)/4) end,
 	target = function(self, t) return {type="ball", radius=self:getTalentRadius(t), range=self:getTalentRange(t), talent=t} end,
 	getDuration = function(self, t) return 2 + math.ceil(self:getTalentLevel(t)/3) end,
-	getInsomniaDuration = function(self, t)
+	getInsomniaPower= function(self, t)
 		local t = self:getTalentFromId(self.T_SANDMAN)
-		local reduction = t.getInsomniaReduction(self, t)
+		local reduction = t.getInsomniaPower(self, t)
 		return 10 - reduction
 	end,
 	getSleepPower = function(self, t) 
@@ -46,11 +46,25 @@ newTalent{
 		end
 		return power
 	end,
+	doContagiousSleep = function(self, target, p, t)
+		local tg = {type="ball", radius=1, talent=t}
+		self:project(tg, target.x, target.y, function(tx, ty)
+			local t2 = game.level.map(tx, ty, Map.ACTOR)
+			if t2 and t2 ~= target and rng.percent(p.contagious) and t2:canBe("sleep") and not t2:hasEffect(t2.EFF_SLEEP) then
+				t2:setEffect(t2.EFF_SLEEP, p.dur, {src=self, power=p.power, waking=p.waking, insomnia=p.insomnia, no_ct_effect=true, apply_power=self:combatMindpower()})
+				game.level.map:particleEmitter(target.x, target.y, 1, "generic_charge", {rm=0, rM=0, gm=100, gM=200, bm=200, bM=255, am=35, aM=90})
+			end
+		end)
+	end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		
+		--Contagious?
+		local is_contagious = 0
+		if self:getTalentLevel(t) >= 5 then
+			is_contagious = 25
+		end
 		--Restless?
 		local is_waking =0
 		if self:knowTalent(self.T_RESTLESS_NIGHT) then
@@ -63,7 +77,7 @@ newTalent{
 			local target = game.level.map(tx, ty, Map.ACTOR)
 			if target then
 				if target:canBe("sleep") then
-					target:setEffect(target.EFF_SLEEP, t.getDuration(self, t), {src=self, power=power, waking=is_waking, insomnia=t.getInsomniaDuration(self, t), no_ct_effect=true, apply_power=self:combatMindpower()})
+					target:setEffect(target.EFF_SLEEP, t.getDuration(self, t), {src=self, power=power,  contagious=is_contagious, waking=is_waking, insomnia=t.getInsomniaPower(self, t), no_ct_effect=true, apply_power=self:combatMindpower()})
 					game.level.map:particleEmitter(target.x, target.y, 1, "generic_charge", {rm=0, rM=0, gm=180, gM=255, bm=180, bM=255, am=35, aM=90})
 				else
 					game.logSeen(self, "%s resists the sleep!", target.name:capitalize())
@@ -76,9 +90,10 @@ newTalent{
 		local radius = self:getTalentRadius(t)
 		local duration = t.getDuration(self, t)
 		local power = t.getSleepPower(self, t)
-		local insomnia = t.getInsomniaDuration(self, t)
+		local insomnia = t.getInsomniaPower(self, t)
 		return([[Puts targets in a radius of %d to sleep for %d turns, rendering them unable to act.  Every %d points of damage the target suffers will reduce the effect duration by one turn.
-		When Sleep ends the target will suffer from Insomnia for %d turns, rendering them resistant to sleep effects.
+		When Sleep ends the target will suffer from Insomnia for a number of turns equal to the amount of time it was asleep, granting it %d%% sleep immunity for each turn of the Insomnia effect.
+		At talent level 5 Sleep will become contagious and has a 25%% chance to spread to nearby targets each turn.
 		The damage threshold will scale with your mindpower.]]):format(radius, duration, power, insomnia)
 	end,
 }
@@ -208,6 +223,6 @@ newTalent{
 		local drain = t.getDrain(self, t)
 		return ([[Imprisons all sleeping targets within range in their dream state, effectively extending sleeping effects for as long as Dream Prison is maintainted.
 		This powerful effect constantly drains %d Psi per turn and is considered a psionic channel as such it will break if you move, use a talent, or activate an item.
-		(Note that sleeping effects that happen each turn, such as Nightmare's damage and Slumber's contagion, will cease to function for the duration of the effect.)]]):format(drain)
+		(Note that sleeping effects that happen each turn, such as Nightmare's damage and Sleep's contagion, will cease to function for the duration of the effect.)]]):format(drain)
 	end,
 }

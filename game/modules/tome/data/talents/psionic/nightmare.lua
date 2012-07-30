@@ -32,9 +32,9 @@ newTalent{
 	range = function(self, t) return 2 + math.floor(self:getTalentLevel(t)/2) end,
 	target = function(self, t) return {type="cone", radius=self:getTalentRange(t), range=0, talent=t, selffire=false} end,
 	getDuration = function(self, t) return 2 + math.ceil(self:getTalentLevel(t)/2) end,
-	getInsomniaDuration = function(self, t)
+	getInsomniaPower= function(self, t)
 		local t = self:getTalentFromId(self.T_SANDMAN)
-		local reduction = t.getInsomniaReduction(self, t)
+		local reduction = t.getInsomniaPower(self, t)
 		return 10 - reduction
 	end,
 	getSleepPower = function(self, t) 
@@ -63,7 +63,7 @@ newTalent{
 			local target = game.level.map(tx, ty, Map.ACTOR)
 			if target then
 				if target:canBe("sleep") then
-					target:setEffect(target.EFF_NIGHTMARE, t.getDuration(self, t), {src=self, power=power, waking=is_waking, dam=damage, insomnia=t.getInsomniaDuration(self, t), no_ct_effect=true, apply_power=self:combatMindpower()})
+					target:setEffect(target.EFF_NIGHTMARE, t.getDuration(self, t), {src=self, power=power, waking=is_waking, dam=damage, insomnia=t.getInsomniaPower(self, t), no_ct_effect=true, apply_power=self:combatMindpower()})
 				else
 					game.logSeen(self, "%s resists the nightmare!", target.name:capitalize())
 				end
@@ -79,10 +79,10 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local power = t.getSleepPower(self, t)
 		local damage = t.getDamage(self, t)
-		local insomnia = t.getInsomniaDuration(self, t)
+		local insomnia = t.getInsomniaPower(self, t)
 		return([[Puts targets in a radius %d cone into a nightmarish sleep for %d turns, rendering them unable to act.  Every %d points of damage the target suffers will reduce the effect duration by one turn.
 		Each turn they'll suffer %0.2f darkness damage.  This damage will not reduce the duration of the effect.
-		When Nightmare ends the target will suffer from Insomnia for %d turns, rendering them resistant to sleep effects.
+		When Nightmare ends the target will suffer from Insomnia for a number of turns equal to the amount of time it was asleep, granting it %d%% sleep immunity for each turn of the Insomnia effect.
 		The damage threshold and mind damage will scale with your mindpower.]]):format(radius, duration, power, damDesc(self, DamageType.DARKNESS, (damage)), insomnia)
 	end,
 }

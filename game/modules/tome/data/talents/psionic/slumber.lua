@@ -32,9 +32,9 @@ newTalent{
 	range = function(self, t) return 5 + math.min(5, self:getTalentLevelRaw(t)) end,
 	target = function(self, t) return {type="hit", range=self:getTalentRange(t), talent=t} end,
 	getDuration = function(self, t) return 2 + math.ceil(self:getTalentLevel(t)/2) end,
-	getInsomniaDuration = function(self, t)
+	getInsomniaPower = function(self, t)
 		local t = self:getTalentFromId(self.T_SANDMAN)
-		local reduction = t.getInsomniaReduction(self, t)
+		local reduction = t.getInsomniaPower(self, t)
 		return 10 - reduction
 	end,
 	getSleepPower = function(self, t) 
@@ -45,16 +45,6 @@ newTalent{
 		end
 		return power
 	end,
-	doContagiousSlumber = function(self, target, p, t)
-		local tg = {type="ball", radius=1, talent=t}
-		self:project(tg, target.x, target.y, function(tx, ty)
-			local t2 = game.level.map(tx, ty, Map.ACTOR)
-			if t2 and target_two ~= target and rng.percent(p.contagious) and t2:canBe("sleep") then
-				t2:setEffect(t2.EFF_SLEEP, math.floor(p.dur/2), {src=self, power=p.power/10, waking=p.waking, insomnia=math.ceil(p.insomnia/2), no_ct_effect=true, apply_power=self:combatMindpower()})
-				game.level.map:particleEmitter(target.x, target.y, 1, "generic_charge", {rm=0, rM=0, gm=100, gM=200, bm=200, bM=255, am=35, aM=90})
-			end
-		end)
-	end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y, target = self:getTarget(tg)
@@ -63,11 +53,6 @@ newTalent{
 		target = game.level.map(x, y, Map.ACTOR)
 		if not target then return nil end
 
-		--Contagious?
-		local is_contagious = 0
-		if self:getTalentLevel(t) >= 5 then
-			is_contagious = 25
-		end
 		--Restless?
 		local is_waking =0
 		if self:knowTalent(self.T_RESTLESS_NIGHT) then
@@ -77,7 +62,7 @@ newTalent{
 		
 		local power = self:mindCrit(t.getSleepPower(self, t))
 		if target:canBe("sleep") then
-			target:setEffect(target.EFF_SLUMBER, t.getDuration(self, t), {src=self, power=power, waking=is_waking, contagious=is_contagious, insomnia=t.getInsomniaDuration(self, t), no_ct_effect=true, apply_power=self:combatMindpower()})
+			target:setEffect(target.EFF_SLUMBER, t.getDuration(self, t), {src=self, power=power, waking=is_waking, insomnia=t.getInsomniaPower(self, t), no_ct_effect=true, apply_power=self:combatMindpower()})
 			game.level.map:particleEmitter(target.x, target.y, 1, "generic_charge", {rm=180, rM=200, gm=100, gM=120, bm=30, bM=50, am=70, aM=180})
 		else
 			game.logSeen(self, "%s resists the sleep!", target.name:capitalize())
@@ -87,10 +72,9 @@ newTalent{
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		local power = t.getSleepPower(self, t)
-		local insomnia = t.getInsomniaDuration(self, t)
+		local insomnia = t.getInsomniaPower(self, t)
 		return([[Puts the target into a deep sleep for %d turns, rendering it unable to act.  Every %d points of damage the target suffers will reduce the effect duration by one turn.
-		When Slumber ends the target will suffer from Insomnia for %d turns, rendering them resistant to sleep effects.
-		At talent level 5 your Slumber will become contagious and has a 25%% chance to spread Sleep to nearby targets each turn.
+		When Slumber ends the target will suffer from Insomnia for a number of turns equal to the amount of time it was asleep, granting it %d%% sleep immunity for each turn of the Insomnia effect.
 		The damage threshold will scale with your mindpower.]]):format(duration, power, insomnia)
 	end,
 }
@@ -116,13 +100,13 @@ newTalent{
 	require = psi_wil_req3,
 	mode = "passive",
 	getSleepPowerBonus = function(self, t) return self:combatTalentMindDamage(t, 5, 25) end,
-	getInsomniaReduction = function(self, t) return math.min(8, math.floor(self:getTalentLevel(self.T_SANDMAN))) end,
+	getInsomniaPower = function(self, t) return math.min(5, self:getTalentLevelRaw(t)) end,
 	info = function(self, t)
 		local power_bonus = t.getSleepPowerBonus(self, t)
-		local reduction = t.getInsomniaReduction(self, t)
-		return([[Increases the amount of damage you can deal to sleeping targets before reducing the effect duration by %d and reduces the duration of all Insomnia effects by %d turns.
+		local insomnia = t.getInsomniaPower(self, t)
+		return([[Increases the amount of damage you can deal to sleeping targets before reducing the effect duration by %d and reduces the sleep immunity of your Insomnia effects by %d%%.
 		These effects will be directly reflected in the appropriate talent descriptions.
-		The damage threshold bonus will scale with your mindpower.]]):format(power_bonus, reduction)
+		The damage threshold bonus will scale with your mindpower.]]):format(power_bonus, insomnia)
 	end,
 }
 

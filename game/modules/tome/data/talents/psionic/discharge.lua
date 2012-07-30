@@ -20,70 +20,10 @@
 -- Edge TODO: Sounds
 
 newTalent{
-	name = "Backlash",
+	name = "Mind Storm",
 	type = {"psionic/discharge", 1},
 	points = 5, 
 	require = psi_wil_high1,
-	mode = "passive",
-	range = function(self, t) return 5 + math.min(5, (self:isTalentActive(self.T_MIND_STORM) and self:getTalentLevelRaw(self.T_MIND_STORM)) or 0) end,
-	getDamage = function(self, t) return self:combatTalentMindDamage(t, 10, 75) end,
-	target = function(self, t)
-		return {type="hit", range=self:getTalentRange(t), talent=t}
-	end,
-	doBacklash = function(self, target, value, t)
-		if core.fov.distance(self.x, self.y,target.x, target.y) > self:getTalentRange(t) then return nil end
-		local tg = self:getTalentTarget(t)
-		local a = game.level.map(target.x, target.y, Map.ACTOR)
-		if not a or self:reactionToward(a) >= 0 then return nil end
-		local damage = math.min(value, t.getDamage(self, t))
-		-- Divert the Backlash?
-		local wrath = self:hasEffect(self.EFF_FOCUSED_WRATH)
-		if damage > 0 then
-			if wrath then
-				self:project(tg, wrath.target.x, wrath.target.y, DamageType.MIND, self:mindCrit(damage, nil, wrath.power), nil, true) -- No Martyr loops
-				game.level.map:particleEmitter(wrath.target.x, wrath.target.y, 1, "generic_discharge", {rm=255, rM=255, gm=180, gM=255, bm=0, bM=0, am=35, aM=90})
-			else
-				self:project(tg, a.x, a.y, DamageType.MIND, self:mindCrit(damage), nil, true) -- No Martyr loops
-				game.level.map:particleEmitter(a.x, a.y, 1, "generic_discharge", {rm=255, rM=255, gm=180, gM=255, bm=0, bM=0, am=35, aM=90})
-			end
-		end
-	end,
-	info = function(self, t)
-		local range = self:getTalentRange(t)
-		local damage = t.getDamage(self, t)
-		return ([[Your subconscious now retaliates when you take damage.  If the attacker is within range (%d) you'll inflict mind damage equal to the Feedback gained from the attack or %0.2f, whichever is lower.
-		The damage will scale with your mindpower.]]):format(range, damDesc(self, DamageType.MIND, damage))
-	end,
-}
-
-newTalent{
-	name = "Feedback Loop",
-	type = {"psionic/discharge", 2},
-	points = 5, 
-	require = psi_wil_high2,
-	cooldown = 24,
-	tactical = { FEEDBACK = 2 },
-	no_break_channel = true,
-	getDuration = function(self, t) return 2 + math.ceil(self:getTalentLevel(t) * 1.5) end,
-	on_pre_use = function(self, t, silent) if self:getFeedback() <= 0 then if not silent then game.logPlayer(self, "You have no feedback to start a feedback loop!") end return false end return true end,
-	action = function(self, t)
-		local wrath = self:hasEffect(self.EFF_FOCUSED_WRATH)
-		self:setEffect(self.EFF_FEEDBACK_LOOP, self:mindCrit(t.getDuration(self, t), nil, wrath and wrath.power or 0), {})
-		return true
-	end,
-	info = function(self, t)
-		local duration = t.getDuration(self, t)
-		return ([[Activate to invert your Feedback decay for %d turns.  This effect can be a critical hit, increasing the duration even further.
-		Using this talent will not break psionic channels (such as Mind Storm).  You must have some Feedback in order to start the loop.
-		The maximum Feedback gain will scale with your mindpower.]]):format(duration)
-	end,
-}
-
-newTalent{
-	name = "Mind Storm",
-	type = {"psionic/discharge", 3},
-	points = 5, 
-	require = psi_wil_high3,
 	sustain_feedback = 0,
 	mode = "sustained",
 	cooldown = 12,
@@ -165,6 +105,66 @@ newTalent{
 		Feedback gains beyond your maximum allowed amount may generate extra bolts (one bolt per %d excess Feedback), but no more then %d extra bolts per turn.
 		This effect is a psionic channel and will break if you move, use a talent, or activate an item.
 		The damage will scale with your mindpower.]]):format(range_increase, targets, damDesc(self, DamageType.MIND, damage), charge_ratio, targets)
+	end,
+}
+
+newTalent{
+	name = "Feedback Loop",
+	type = {"psionic/discharge", 2},
+	points = 5, 
+	require = psi_wil_high2,
+	cooldown = 24,
+	tactical = { FEEDBACK = 2 },
+	no_break_channel = true,
+	getDuration = function(self, t) return 2 + math.ceil(self:getTalentLevel(t) * 1.5) end,
+	on_pre_use = function(self, t, silent) if self:getFeedback() <= 0 then if not silent then game.logPlayer(self, "You have no feedback to start a feedback loop!") end return false end return true end,
+	action = function(self, t)
+		local wrath = self:hasEffect(self.EFF_FOCUSED_WRATH)
+		self:setEffect(self.EFF_FEEDBACK_LOOP, self:mindCrit(t.getDuration(self, t), nil, wrath and wrath.power or 0), {})
+		return true
+	end,
+	info = function(self, t)
+		local duration = t.getDuration(self, t)
+		return ([[Activate to invert your Feedback decay for %d turns.  This effect can be a critical hit, increasing the duration even further.
+		Using this talent will not break psionic channels (such as Mind Storm).  You must have some Feedback in order to start the loop.
+		The maximum Feedback gain will scale with your mindpower.]]):format(duration)
+	end,
+}
+
+newTalent{
+	name = "Backlash",
+	type = {"psionic/discharge", 3},
+	points = 5, 
+	require = psi_wil_high3,
+	mode = "passive",
+	range = function(self, t) return 5 + math.min(5, (self:isTalentActive(self.T_MIND_STORM) and self:getTalentLevelRaw(self.T_MIND_STORM)) or 0) end,
+	getDamage = function(self, t) return self:combatTalentMindDamage(t, 10, 75) end,
+	target = function(self, t)
+		return {type="hit", range=self:getTalentRange(t), talent=t}
+	end,
+	doBacklash = function(self, target, value, t)
+		if core.fov.distance(self.x, self.y,target.x, target.y) > self:getTalentRange(t) then return nil end
+		local tg = self:getTalentTarget(t)
+		local a = game.level.map(target.x, target.y, Map.ACTOR)
+		if not a or self:reactionToward(a) >= 0 then return nil end
+		local damage = math.min(value, t.getDamage(self, t))
+		-- Divert the Backlash?
+		local wrath = self:hasEffect(self.EFF_FOCUSED_WRATH)
+		if damage > 0 then
+			if wrath then
+				self:project(tg, wrath.target.x, wrath.target.y, DamageType.MIND, self:mindCrit(damage, nil, wrath.power), nil, true) -- No Martyr loops
+				game.level.map:particleEmitter(wrath.target.x, wrath.target.y, 1, "generic_discharge", {rm=255, rM=255, gm=180, gM=255, bm=0, bM=0, am=35, aM=90})
+			else
+				self:project(tg, a.x, a.y, DamageType.MIND, self:mindCrit(damage), nil, true) -- No Martyr loops
+				game.level.map:particleEmitter(a.x, a.y, 1, "generic_discharge", {rm=255, rM=255, gm=180, gM=255, bm=0, bM=0, am=35, aM=90})
+			end
+		end
+	end,
+	info = function(self, t)
+		local range = self:getTalentRange(t)
+		local damage = t.getDamage(self, t)
+		return ([[Your subconscious now retaliates when you take damage.  If the attacker is within range (%d) you'll inflict mind damage equal to the Feedback gained from the attack or %0.2f, whichever is lower.
+		The damage will scale with your mindpower.]]):format(range, damDesc(self, DamageType.MIND, damage))
 	end,
 }
 

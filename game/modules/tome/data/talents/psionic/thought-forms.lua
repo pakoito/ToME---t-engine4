@@ -122,11 +122,11 @@ newTalent{
 				[Talents.T_LUCID_DREAMER]= math.floor(self:getTalentLevel(self.T_TRANSCENDENT_THOUGHT_FORMS)),
 			},
 			resolvers.equip{
-				{type="weapon", subtype="longbow", autoreq=true, forbid_power_source={arcane=true, technique=true} },
-				{type="ammo", subtype="arrow", autoreq=true, forbid_power_source={arcane=true, technique=true} },
-				{type="armor", subtype="light", autoreq=true, forbid_power_source={arcane=true, technique=true} },
-				{type="armor", subtype="hands", autoreq=true, forbid_power_source={arcane=true, technique=true} },
-				{type="armor", subtype="feet", autoreq=true, forbid_power_source={arcane=true, technique=true} },
+				{type="weapon", subtype="longbow", autoreq=true, forbid_power_source={arcane=true, technique=true}, not_properties = {"unique"} },
+				{type="ammo", subtype="arrow", autoreq=true, forbid_power_source={arcane=true, technique=true}, not_properties = {"unique"} },
+				{type="armor", subtype="light", autoreq=true, forbid_power_source={arcane=true, technique=true}, not_properties = {"unique"} },
+				{type="armor", subtype="hands", autoreq=true, forbid_power_source={arcane=true, technique=true}, not_properties = {"unique"} },
+				{type="armor", subtype="feet", autoreq=true, forbid_power_source={arcane=true, technique=true}, not_properties = {"unique"} },
 			},
 			resolvers.sustains_at_birth(),
 		}
@@ -258,10 +258,10 @@ newTalent{
 				[Talents.T_LUCID_DREAMER]= math.floor(self:getTalentLevel(self.T_TRANSCENDENT_THOUGHT_FORMS)),
 			},
 			resolvers.equip{
-				{type="weapon", subtype="battleaxe", autoreq=true, forbid_power_source={arcane=true, technique=true} },
-				{type="armor", subtype="heavy", autoreq=true, forbid_power_source={arcane=true, technique=true} },
-				{type="armor", subtype="hands", autoreq=true, forbid_power_source={arcane=true, technique=true} },
-				{type="armor", subtype="feet", autoreq=true, forbid_power_source={arcane=true, technique=true} },
+				{type="weapon", subtype="battleaxe", autoreq=true, forbid_power_source={arcane=true, technique=true}, not_properties = {"unique"} },
+				{type="armor", subtype="heavy", autoreq=true, forbid_power_source={arcane=true, technique=true}, not_properties = {"unique"} },
+				{type="armor", subtype="hands", autoreq=true, forbid_power_source={arcane=true, technique=true}, not_properties = {"unique"} },
+				{type="armor", subtype="feet", autoreq=true, forbid_power_source={arcane=true, technique=true}, not_properties = {"unique"} },
 			},
 			resolvers.sustains_at_birth(),
 		}
@@ -394,11 +394,11 @@ newTalent{
 
 			},
 			resolvers.equip{
-				{type="weapon", subtype="longsword", autoreq=true, forbid_power_source={arcane=true, technique=true} },
-				{type="armor", subtype="shield", autoreq=true, forbid_power_source={arcane=true, technique=true} },
-				{type="armor", subtype="massive", autoreq=true, forbid_power_source={arcane=true, technique=true} },
-				{type="armor", subtype="hands", autoreq=true, forbid_power_source={arcane=true, technique=true} },
-				{type="armor", subtype="feet", autoreq=true, forbid_power_source={arcane=true, technique=true} },
+				{type="weapon", subtype="longsword", autoreq=true, forbid_power_source={arcane=true, technique=true}, not_properties = {"unique"} },
+				{type="armor", subtype="shield", autoreq=true, forbid_power_source={arcane=true, technique=true}, not_properties = {"unique"} },
+				{type="armor", subtype="massive", autoreq=true, forbid_power_source={arcane=true, technique=true}, not_properties = {"unique"} },
+				{type="armor", subtype="hands", autoreq=true, forbid_power_source={arcane=true, technique=true}, not_properties = {"unique"} },
+				{type="armor", subtype="feet", autoreq=true, forbid_power_source={arcane=true, technique=true}, not_properties = {"unique"} },
 			},
 			resolvers.sustains_at_birth(),
 		}

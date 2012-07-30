@@ -1509,7 +1509,8 @@ newEffect{
 	long_desc = function(self, eff) return ("The target is plagued by inner demons and each turn there's a %d%% chance that one will appear.  If the caster is killed or the target resists setting his demons loose the effect will end early."):format(eff.chance) end,
 	type = "mental",
 	subtype = { nightmare=true },
-	status = "detrimental", remove_on_clone = true,
+	status = "detrimental",
+	remove_on_clone = true,
 	parameters = {chance=0},
 	on_gain = function(self, err) return "#F53CBE##Target# is plagued by inner demons!", "+Inner Demons" end,
 	on_lose = function(self, err) return "#Target# is freed from the demons.", "-Inner Demons" end,
@@ -2418,7 +2419,7 @@ newEffect{
 	type = "mental",
 	subtype = { sleep=true },
 	status = "detrimental",
-	parameters = { power=1, insomnia=1, waking=0 },
+	parameters = { power=1, insomnia=1, waking=0, contagious=0, },
 	on_gain = function(self, err) return "#Target# has been put to sleep.", "+Sleep" end,
 	on_lose = function(self, err) return "#Target# is no longer sleeping.", "-Sleep" end,
 	on_timeout = function(self, eff)
@@ -2434,17 +2435,24 @@ newEffect{
 			if not eff.particle then
 				eff.particle = self:addParticles(engine.Particles.new("ultrashield", 1, {rm=0, rM=0, gm=180, gM=255, bm=180, bM=255, am=70, aM=180, radius=0.4, density=60, life=14, instop=1, static=100}))
 			end
-		elseif eff.particle then
+		elseif eff.contagious > 0 and eff.dur > 1 then
+			local t = eff.src:getTalentFromId(eff.src.T_SLEEP)
+			t.doContagiousSleep(eff.src, self, eff, t)
+		end
+		if eff.particle and not dream_prison then
 			self:removeParticles(eff.particle)
 		end
+		-- Incriment Insomnia Duration
+		eff.insomnia_duration = eff.insomnia_duration + 1
 	end,
 	activate = function(self, eff)
+		eff.insomnia_duration = 0
 		eff.sid = self:addTemporaryValue("sleep", eff.power)
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("sleep", eff.sid)
-		if not self:attr("lucid_dreamer") then
-			self:setEffect(self.EFF_INSOMNIA, eff.insomnia, {power=eff.insomnia/10})
+		if not self:attr("lucid_dreamer") and eff.insomnia_duration > 0 then
+			self:setEffect(self.EFF_INSOMNIA, eff.insomnia_duration, {power=eff.insomnia})
 		end
 		if not self:attr("sleep") and eff.waking > 0 then
 			DamageType:get(DamageType.MIND).projector(eff.src or self, self.x, self.y, DamageType.MIND, eff.src:mindCrit(eff.waking))
@@ -2463,7 +2471,7 @@ newEffect{
 	type = "mental",
 	subtype = { sleep=true },
 	status = "detrimental",
-	parameters = { power=1, contagious=0, insomnia=1, waking=0 },
+	parameters = { power=1, insomnia=1, waking=0 },
 	on_gain = function(self, err) return "#Target# is in a deep sleep.", "+Slumber" end,
 	on_lose = function(self, err) return "#Target# is no longer sleeping.", "-Slumber" end,
 	on_timeout = function(self, eff)
@@ -2479,21 +2487,20 @@ newEffect{
 			if not eff.particle then
 				eff.particle = self:addParticles(engine.Particles.new("ultrashield", 1, {rm=0, rM=0, gm=180, gM=255, bm=180, bM=255, am=70, aM=180, radius=0.4, density=60, life=14, instop=1, static=100}))
 			end
-		elseif eff.contagious > 0 and eff.dur > 1 then
-			local t = eff.src:getTalentFromId(eff.src.T_SLUMBER)
-			t.doContagiousSlumber(eff.src, self, eff, t)
-		end
-		if eff.particle and not dream_prison then
+		elseif eff.particle and not dream_prison then
 			self:removeParticles(eff.particle)
 		end
+		-- Incriment Insomnia Duration
+		eff.insomnia_duration = eff.insomnia_duration + 1
 	end,
 	activate = function(self, eff)
+		eff.insomnia_duration = 0
 		eff.sid = self:addTemporaryValue("sleep", eff.power)
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("sleep", eff.sid)
-		if not self:attr("lucid_dreamer") then
-			self:setEffect(self.EFF_INSOMNIA, eff.insomnia, {power=eff.insomnia/10})
+		if not self:attr("lucid_dreamer") and eff.insomnia_duration > 0 then
+			self:setEffect(self.EFF_INSOMNIA, eff.insomnia_duration, {power=eff.insomnia})
 		end
 		if not self:attr("sleep") and eff.waking > 0 then
 			DamageType:get(DamageType.MIND).projector(eff.src or self, self.x, self.y, DamageType.MIND, eff.src:mindCrit(eff.waking))
@@ -2540,14 +2547,17 @@ newEffect{
 		if eff.particle and not dream_prison then
 			self:removeParticles(eff.particle)
 		end
+		-- Incriment Insomnia Duration
+		eff.insomnia_duration = eff.insomnia_duration + 1
 	end,
 	activate = function(self, eff)
+		eff.insomnia_duration = 0
 		eff.sid = self:addTemporaryValue("sleep", eff.power)
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("sleep", eff.sid)
-		if not self:attr("lucid_dreamer") then
-			self:setEffect(self.EFF_INSOMNIA, eff.insomnia, {power=eff.insomnia/10})
+		if not self:attr("lucid_dreamer") and eff.insomnia_duration > 0 then
+			self:setEffect(self.EFF_INSOMNIA, eff.insomnia_duration, {power=eff.insomnia})
 		end
 		if not self:attr("sleep") and eff.waking > 0 then
 			DamageType:get(DamageType.MIND).projector(eff.src or self, self.x, self.y, DamageType.MIND, eff.src:mindCrit(eff.waking))
@@ -2562,7 +2572,7 @@ newEffect{
 newEffect{
 	name = "INSOMNIA", image = "effects/insomnia.png",
 	desc = "Insomnia",
-	long_desc = function(self, eff) return ("The target is wide awake and has %d%% resistance to sleep effects."):format(eff.power*100) end,
+	long_desc = function(self, eff) return ("The target is wide awake and has %d%% resistance to sleep effects."):format(eff.cur_power) end,
 	type = "mental",
 	subtype = { psionic=true },
 	status = "beneficial",
@@ -2573,10 +2583,10 @@ newEffect{
 		-- Merge the effect
 		local dur = math.min(10, math.ceil(old_eff.dur + new_eff.dur))
 		old_eff.dur = dur
-		old_eff.power = dur/10
+		old_eff.cur_power = old_eff.power * old_eff.dur
 		-- Need to remove and re-add the effect
 		self:removeTemporaryValue("sleep_immune", old_eff.sid)
-		old_eff.sid = self:addTemporaryValue("sleep_immune", old_eff.power)
+		old_eff.sid = self:addTemporaryValue("sleep_immune", old_eff.cur_power/100)
 		return old_eff
 	end,
 	on_timeout = function(self, eff)
@@ -2585,13 +2595,14 @@ newEffect{
 			eff.dur = eff.dur + 1
 		else
 			-- Deincrement the power
-			eff.power = eff.dur/10
+			eff.cur_power = eff.power * eff.dur
 			self:removeTemporaryValue("sleep_immune", eff.sid)
-			eff.sid = self:addTemporaryValue("sleep_immune", eff.power)
+			eff.sid = self:addTemporaryValue("sleep_immune", eff.cur_power/100)
 		end
 	end,
 	activate = function(self, eff)
-		eff.sid = self:addTemporaryValue("sleep_immune", eff.power)
+		eff.cur_power = eff.power * eff.dur
+		eff.sid = self:addTemporaryValue("sleep_immune", eff.cur_power/100)
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("sleep_immune", eff.sid)
