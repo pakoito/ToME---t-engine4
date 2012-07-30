@@ -307,10 +307,10 @@ function _M:updateMainShader()
 			if solipsism_power > 0 then game.fbo_shader:setUniform("solipsism_warning", solipsism_power)
 			else game.fbo_shader:setUniform("solipsism_warning", 0) end
 		end
-			
+
 		-- Colorize shader
-		if self:attr("stealth") then game.fbo_shader:setUniform("colorize", {0.9,0.9,0.9,0.6})
-		elseif self:attr("invisible") then game.fbo_shader:setUniform("colorize", {0.3,0.4,0.9,0.8})
+		if self:attr("stealth") and self:attr("stealth") > 0 then game.fbo_shader:setUniform("colorize", {0.9,0.9,0.9,0.6})
+		elseif self:attr("invisible") and self:attr("invisible") > 0 then game.fbo_shader:setUniform("colorize", {0.3,0.4,0.9,0.8})
 		elseif self:attr("unstoppable") then game.fbo_shader:setUniform("colorize", {1,0.2,0,1})
 		elseif self:attr("lightning_speed") then game.fbo_shader:setUniform("colorize", {0.2,0.3,1,1})
 		elseif game.level and game.level.data.is_eidolon_plane then game.fbo_shader:setUniform("colorize", {1,1,1,1})
@@ -341,7 +341,6 @@ local wild_fovdist = {}
 for i = 0, 10 * 10 do
 	wild_fovdist[i] = math.max((5 - math.sqrt(i)) / 1.4, 0.6)
 end
-local arcane_eye_true_seeing = function() return true, 100 end
 
 function _M:playerFOV()
 	-- Clean FOV before computing it
@@ -389,6 +388,7 @@ function _M:playerFOV()
 				if t and (eff.true_seeing or self:canSee(t)) then
 					map.seens(x, y, 1)
 					if self.can_see_cache[t] then self.can_see_cache[t]["nil/nil"] = {true, 100} end
+					if t ~= self then t:setEffect(t.EFF_ARCANE_EYE_SEEN, 1, {src=self, true_seeing=eff.true_seeing}) end
 				end
 			end,
 			cache and map._fovcache["block_sight"]
@@ -1054,7 +1054,7 @@ function _M:quickSwitchWeapons()
 	-- Check for free weapon swaps
 	local free_swap = false
 	if self:knowTalent(self.T_CELERITY) or self:attr("quick_weapon_swap") then free_swap = true end
-	
+
 	local mhset1, mhset2 = {}, {}
 	local ohset1, ohset2 = {}, {}
 	local pfset1, pfset2 = {}, {}

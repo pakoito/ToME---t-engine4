@@ -361,6 +361,27 @@ newEffect{
 }
 
 newEffect{
+	name = "ARCANE_EYE_SEEN", image = "talents/arcane_eye.png",
+	desc = "Seen by Arcane Eye",
+	long_desc = function(self, eff) return "An Arcane Eye has seen this creature." end,
+	type = "magical",
+	subtype = { sense=true },
+	no_ct_effect = true,
+	status = "detrimental",
+	parameters = {},
+	activate = function(self, eff)
+		if eff.true_seeing then
+			eff.inv = self:addTemporaryValue("invisible", -(self:attr("invisible") or 0))
+			eff.stealth = self:addTemporaryValue("stealth", -((self:attr("stealth") or 0) + (self:attr("inc_stealth") or 0)))
+		end
+	end,
+	deactivate = function(self, eff)
+		if eff.inv then self:removeTemporaryValue("invisible", eff.inv) end
+		if eff.stealth then self:removeTemporaryValue("stealth", eff.stealth) end
+	end,
+}
+
+newEffect{
 	name = "ALL_STAT", image = "effects/all_stat.png",
 	desc = "All stats increase",
 	long_desc = function(self, eff) return ("All primary stats of the target are increased by %d."):format(eff.power) end,

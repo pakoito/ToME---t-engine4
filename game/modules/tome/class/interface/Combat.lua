@@ -79,7 +79,7 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 
 	-- Break before we do the blow, because it might start step up, we dont want to insta-cancel it
 	self:breakStepUp()
-	
+
 	if self:attr("feared") then
 		if not noenergy then
 			self:useEnergy(game.energy_to_act * speed)
@@ -219,6 +219,8 @@ end
 -- This will be used for melee attacks, physical and spell resistance
 
 function _M:checkHitOld(atk, def, min, max, factor)
+	if atk < 0 then atk = 0 end
+	if def < 0 then def = 0 end
 	print("checkHit", atk, def)
 	if atk == 0 then atk = 1 end
 	local hit = nil
@@ -272,6 +274,8 @@ end
 
 --New, simpler checkHit that relies on rescaleCombatStats() being used elsewhere
 function _M:checkHit(atk, def, min, max, factor, p)
+	if atk < 0 then atk = 0 end
+	if def < 0 then def = 0 end
 	local min = min or 0
 	local max = max or 100
 	if game.player:hasQuest("tutorial-combat-stats") then
@@ -410,7 +414,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		if dam > 0 then
 			DamageType:get(damtype).projector(self, target.x, target.y, damtype, math.max(0, dam))
 		end
-		
+
 		-- remove phasing
 		if weapon and weapon.phasing then
 			self:attr("damage_shield_penetrate", -weapon.phasing)
@@ -420,7 +424,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		if total_conversion > 0 then
 			dam = dam + total_conversion
 		end
-				
+
 		hitted = true
 	else
 		local srcname = game.level.map.seens(self.x, self.y) and self.name:capitalize() or "Something"
@@ -560,7 +564,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		local typ = rng.table{DamageType.FIRE, DamageType.LIGHTNING, DamageType.ARCANE}
 		self:project({type="ball", radius=2, friendlyfire=false}, target.x, target.y, typ, self:combatSpellpower() * 2)
 	end
-	
+
 	-- Onslaught
 	if hitted and self:attr("onslaught") then
 		local dir = util.getDir(target.x, target.y, self.x, self.y) or 6
@@ -632,7 +636,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	if hitted and crit and weapon and weapon.special_on_crit and weapon.special_on_crit.fct and (not target.dead or weapon.special_on_crit.on_kill) then
 		weapon.special_on_crit.fct(weapon, self, target)
 	end
-	
+
 	if hitted and weapon and weapon.special_on_kill and weapon.special_on_kill.fct and target.dead then
 		weapon.special_on_kill.fct(weapon, self, target)
 	end
@@ -653,7 +657,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	if hitted and not target.dead and target:attr("equilibrium_regen_when_hit") then target:incEquilibrium(-target.equilibrium_regen_when_hit) end
 	if hitted and not target.dead and target:attr("psi_regen_when_hit") then target:incPsi(target.psi_regen_when_hit) end
 	if hitted and not target.dead and target:attr("hate_regen_when_hit") then target:incHate(target.hate_regen_when_hit) end
-		
+
 	-- Resource regen on hit
 	if hitted and self:attr("stamina_regen_on_hit") then self:incStamina(self.stamina_regen_on_hit) end
 	if hitted and self:attr("mana_regen_on_hit") then self:incMana(self.mana_regen_on_hit) end
@@ -1329,10 +1333,10 @@ function _M:combatPhysicalResist(fake)
 	if self:knowTalent(self.T_POWER_IS_MONEY) then
 		add = add + util.bound(self.money / (90 - self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 5), 0, self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 7)
 	end
-	
+
 	-- To return later
 	local total = self:rescaleCombatStats(self.combat_physresist + (self:getCon() + self:getStr() + (self:getLck() - 50) * 0.5) * 0.35 + add)
-	
+
 	-- Psionic Balance
 	if self:knowTalent(self.T_BALANCE) then
 		local t = self:getTalentFromId(self.T_BALANCE)
@@ -1352,10 +1356,10 @@ function _M:combatSpellResist(fake)
 	if self:knowTalent(self.T_POWER_IS_MONEY) then
 		add = add + util.bound(self.money / (90 - self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 5), 0, self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 7)
 	end
-	
+
 	-- To return later
 	local total = self:rescaleCombatStats(self.combat_spellresist + (self:getMag() + self:getWil() + (self:getLck() - 50) * 0.5) * 0.35 + add)
-	
+
 	-- Psionic Balance
 	if self:knowTalent(self.T_BALANCE) then
 		local t = self:getTalentFromId(self.T_BALANCE)

@@ -849,9 +849,7 @@ function _M:defineDisplayCallback()
 				end
 			end
 		end
-	end
 
-	local function particles(x, y, w, h, zoom, on_map)
 		-- Chat
 		if game.level and self.can_talk then
 			local map = game.level.map
@@ -861,7 +859,9 @@ function _M:defineDisplayCallback()
 
 			ichat:toScreen(x + w - 8, y, 8, 8)
 		end
+	end
 
+	local function particles(x, y, w, h, zoom, on_map)
 		local e
 		local dy = 0
 		if h > w then dy = (h - w) / 2 end

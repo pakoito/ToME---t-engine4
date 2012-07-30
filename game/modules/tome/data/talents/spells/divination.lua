@@ -50,7 +50,7 @@ newTalent{
 		Casting the eye does not take a turn.
 		Only one arcane eye can exist at any given time.
 		At level 4 if cast on a creature it will follow it until it expires or until the creature dies.
-		At level 5 its vision can see through invisibility, stealth and all other sight affecting effects.]]):
+		At level 5 it will place a magical marker on the creatures, negating invisibility and stealth effects.]]):
 		format(duration, radius)
 	end,
 }
