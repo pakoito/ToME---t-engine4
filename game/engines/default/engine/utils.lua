@@ -227,10 +227,10 @@ function table.readonly(src)
 	end
    end
    return setmetatable(src, {
-     __newindex = function(src, key, value)
-                    error("Attempt to modify read-only table")
-                  end,
-     __metatable = false
+	 __newindex = function(src, key, value)
+					error("Attempt to modify read-only table")
+				end,
+	__metatable = false
    });
 end
 
@@ -725,15 +725,19 @@ end
 
 function tstring:maxWidth(font)
 	local max_w = 0
+	local old_style = font:getStyle()
 	local line_max = 0
 	local v
-	local w = game.level.map.tiles.w * 0.5
+	local w, h = font:size("")
 	for i = 1, #self do
 		v = self[i]
-		if type(v) == "string" then line_max = line_max + font:size(v)
-	elseif type(v) == "table" then if v[1] == "uid" then line_max = line_max + w end
+		if type(v) == "string" then line_max = line_max + font:size(v) + 1
+	elseif type(v) == "table" then if v[1] == "uid" then line_max = line_max + h -- UID surface is same as font size  
+		elseif v[1] == "font" and v[2] == "bold" then font:setStyle("bold") 
+		elseif v[1] == "font" and v[2] == "normal" then font:setStyle("normal") end
 		elseif type(v) == "boolean" then max_w = math.max(max_w, line_max) line_max = 0 end
 	end
+	font:setStyle(old_style) 
 	max_w = math.max(max_w, line_max)
 	return max_w
 end
@@ -1364,11 +1368,17 @@ function util.boundWrap(i, min, max)
 	elseif i > max then i = min end
 	return i
 end
+
 function util.bound(i, min, max)
 	if min and i < min then i = min
 	elseif max and i > max then i = max end
 	return i
 end
+
+function util.minBound(i, min, max)
+	return math.max(math.min(max, i), min)
+end
+
 function util.scroll(sel, scroll, max)
 	if sel > scroll + max - 1 then scroll = sel - max + 1 end
 	if sel < scroll then scroll = sel end

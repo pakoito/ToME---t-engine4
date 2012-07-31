@@ -31,6 +31,8 @@
 //#include "shaders.h"
 #include "useshader.h"
 
+#include "assert.h"
+
 static const char IS_HEX_KEY = 'k';
 
 /*
@@ -487,13 +489,14 @@ static int map_objects_display(lua_State *L)
 	glLoadIdentity();
 	glOrtho(0, w, 0, h, -101, 101);
 	glMatrixMode( GL_MODELVIEW );
-
+	CHECKGL(glPushMatrix());
 	/* Reset The View */
-	glLoadIdentity( );
+	glLoadIdentity();
+	
 
 	tglClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
 	CHECKGL(glClear(GL_COLOR_BUFFER_BIT));
-	CHECKGL(glLoadIdentity());
+	//CHECKGL(glLoadIdentity());
 
 	GLfloat vertices[3*4];
 	GLfloat texcoords[2*4] = {
@@ -560,10 +563,11 @@ static int map_objects_display(lua_State *L)
 	// No, dot not it's a static, see upwards
 //	CHECKGL(glDeleteFramebuffersEXT(1, &fbo));
 
+	CHECKGL(glPopMatrix());
 	glMatrixMode(GL_PROJECTION);
 	CHECKGL(glPopMatrix());
 	glMatrixMode( GL_MODELVIEW );
-
+	
 	tglClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
 
 
@@ -1452,16 +1456,25 @@ static int map_to_screen(lua_State *L)
 
 	map->used_mx = mx;
 	map->used_my = my;
+	
+	int mini = mx - 1, maxi = mx + map->mwidth + 2, minj =  my - 1, maxj = my + map->mheight + 2;
+	
+	if(mini < 0)
+		mini = 0;
+	if(minj < 0)
+		minj = 0;
+	if(maxi > map->w)
+		maxi = map->w;
+	if(maxj > map->h)
+		maxj = map->h;
 
 	// Always display some more of the map to make sure we always see it all
 	for (z = 0; z < map->zdepth; z++)
 	{
-		for (j = my - 1; j < my + map->mheight + 2; j++)
+		for (j = minj; j < maxj; j++)
 		{
-			for (i = mx - 1; i < mx + map->mwidth + 2; i++)
+			for (i = mini; i < maxi; i++)
 			{
-				if ((i < 0) || (j < 0) || (i >= map->w) || (j >= map->h)) continue;
-
 				int dx = x + i * map->tile_w;
 				int dy = y + j * map->tile_h + (i & map->is_hex) * map->tile_h / 2;
 				map_object *mo = map->grids[i][j][z];
@@ -1565,13 +1578,24 @@ static int minimap_to_screen(lua_State *L)
 	int ptr;
 	GLubyte *mm = map->minimap;
 	memset(mm, 0, map->mm_rh * map->mm_rw * 4 * sizeof(GLubyte));
+	
+	int mini = mdx, maxi = mdx + mdw, minj = mdy, maxj = mdy + mdh;
+	
+	if(mini < 0)
+		mini = 0;
+	if(minj < 0)
+		minj = 0;
+	if(maxi > map->w)
+		maxi = map->w;
+	if(maxj > map->h)
+		maxj = map->h;
+	
 	for (z = 0; z < map->zdepth; z++)
 	{
-		for (i = mdx; i < mdx + mdw; i++)
+		for (j = minj; j < maxj; j++)
 		{
-			for (j = mdy; j < mdy + mdh; j++)
+			for (i = mini; i < maxi; i++)
 			{
-				if ((i < 0) || (j < 0) || (i >= map->w) || (j >= map->h)) continue;
 				map_object *mo = map->grids[i][j][z];
 				if (!mo || mo->mm_r < 0) continue;
 				ptr = (((1+f)*(j-mdy) + (i & f)) * map->mm_rw + (i-mdx)) * 4;

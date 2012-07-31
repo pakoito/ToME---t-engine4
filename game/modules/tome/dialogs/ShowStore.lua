@@ -49,10 +49,32 @@ function _M:init(title, store_inven, actor_inven, store_filter, actor_filter, ac
 		on_drag=function(item) self:onDrag(item, "store-sell") end,
 		on_drag_end=function() self:onDragTakeoff("store-buy") end,
 	}
+	
+	local direct_draw= function(item, x, y, w, h, total_w, total_h, loffset_x, loffset_y, dest_area)
+		-- if there is object and is withing visible bounds
+		if item.object and total_h + h > loffset_y and total_h < loffset_y + dest_area.h then 
+			local clip_y_start, clip_y_end = 0, 0
+			-- if it started before visible area then compute its top clip
+			if total_h < loffset_y then 
+				clip_y_start = loffset_y - total_h
+			end
+			-- if it ended after visible area then compute its bottom clip
+			if total_h + h > loffset_y + dest_area.h then 
+			   clip_y_end = total_h + h - loffset_y - dest_area.h 
+			end
+			-- get entity texture with everything it has i.e particles
+			local texture = item.object:getEntityFinalTexture(nil, h, h)
+			local one_by_tex_h = 1 / h
+			texture:toScreenPrecise(x, y, h, h - clip_y_start - clip_y_end, 0, 1, clip_y_start * one_by_tex_h, (h - clip_y_end) * one_by_tex_h)
+			return h, h, 0, 0, clip_y_start, clip_y_end
+		end 
+		return 0, 0, 0, 0, 0, 0
+	end
+	
 	self.c_store = Inventory.new{actor=store_actor, inven=store_inven, filter=store_filter, width=math.floor(self.iw / 2 - 10), height=self.ih - 10, tabslist=false,
 		columns={
 			{name="", width={20,"fixed"}, display_prop="char", sort="id"},
-			{name="", width={24,"fixed"}, display_prop="object", direct_draw=function(item, x, y) item.object:toScreen(nil, x+4, y, 16, 16) end},
+			{name="", width={24,"fixed"}, display_prop="object", direct_draw=direct_draw},
 			{name="Store", width=80, display_prop="name"},
 			{name="Category", width=20, display_prop="cat"},
 			{name="Price", width={50,"fixed"}, display_prop=function(item) return self.descprice("buy", item.object) end, sort=function(a, b) return descprice("buy", a.object) < descprice("buy", b.object) end},
@@ -93,12 +115,14 @@ function _M:init(title, store_inven, actor_inven, store_filter, actor_filter, ac
 			elseif self.focus_ui and self.focus_ui.ui == self.c_inven then
 				x = self.c_inven._last_ox - game.tooltip.max
 			end
+
 			game:tooltipDisplayAtMap(x or item.last_display_x, item.last_display_y, item.object:getDesc({do_color=true}, game.player:getInven(item.object:wornInven())))
 		end
 	end
 	self.key.any_key = function(sym)
 		-- Control resets the tooltip
-		if sym == self.key._LCTRL or sym == self.key._RCTRL then local i = self.cur_item self.cur_item = nil self:select(i) end
+		if (sym == self.key._LCTRL or sym == self.key._RCTRL) and sym~=self.prev_ctrl then local i = self.cur_item self.cur_item = nil self:select(i, true) end
+		self.prev_ctrl = sym
 	end
 end
 
@@ -110,12 +134,16 @@ function _M:updateStore()
 	self:generateList()
 end
 
-function _M:select(item)
-	if self.cur_item == item then return end
-	if item then
-		if self.on_select then self.on_select(item) end
-	end
+function _M:select(item, force)
+	if self.cur_item == item and not force then return end
+	if item then if self.on_select then self.on_select(item) end end
 	self.cur_item = item
+end
+
+function _M:on_recover_focus()
+	if self.focus_ui and self.focus_ui.ui == self.c_inven then self:select(self.c_inven.c_inven.list[self.c_inven.c_inven.sel], true)
+	elseif self.focus_ui and self.focus_ui.ui == self.c_store then self:select(self.c_store.c_inven.list[self.c_store.c_inven.sel], true)
+	end
 end
 
 function _M:on_focus(id, ui)

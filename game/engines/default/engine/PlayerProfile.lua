@@ -256,6 +256,7 @@ end
 --- Saves a profile data
 function _M:saveGenericProfile(name, data, no_sync, nowrite)
 	-- Delay when we are currently saving
+	if not profile then return end
 	if savefile_pipe and savefile_pipe.saving then savefile_pipe:pushGeneric("saveGenericProfile", function() self:saveGenericProfile(name, data, nosync) end) return end
 
 	if not generic_profile_defs[name] then print("[PROFILE] refusing unknown generic data", name) return end

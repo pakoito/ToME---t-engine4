@@ -114,7 +114,7 @@ function _M:init(t, no_gen)
 			self.font_h = self.font:lineSkip()
 		end
 	end
-
+	
 	if t.ui then self.ui = t.ui end
 
 	if not no_gen then self:generate() end
@@ -160,28 +160,120 @@ function _M:makeFrame(base, w, h)
 	return f
 end
 
-function _M:drawFrame(f, x, y, r, g, b, a, w, h)
-	if not f.b7 then return end
-
-	x = math.floor(x)
-	y = math.floor(y)
+function _M:drawFrame(f, x, y, r, g, b, a, w, h, total_w, total_h, loffset_x, loffset_y, clip_area)
+	if not f.b7 then return 0, 0, 0, 0 end
+	
+	loffset_x = loffset_x or 0
+	loffset_y = loffset_y or 0
+	total_w = total_w or 0
+	total_h = total_h or 0
+	
 	f.w = w or f.w
 	f.h = h or f.h
+	
+	clip_area = clip_area or { h = f.h, w = f.w }
 
-	-- Sides
-	f.b8.t:toScreenFull(x + f.b7.w, y, f.w - f.b7.w - f.b9.w + 1, f.b8.h, f.b8.tw, f.b8.th, r, g, b, a)
-	f.b2.t:toScreenFull(x + f.b7.w, y + f.h - f.b3.h + 1, f.w - f.b7.w - f.b9.w + 1, f.b2.h, f.b2.tw, f.b2.th, r, g, b, a)
-	f.b4.t:toScreenFull(x, y + f.b7.h, f.b4.w, f.h - f.b7.h - f.b1.h + 1, f.b4.tw, f.b4.th, r, g, b, a)
-	f.b6.t:toScreenFull(x + f.w - f.b9.w + 1, y + f.b7.h, f.b6.w, f.h - f.b7.h - f.b1.h + 1, f.b6.tw, f.b6.th, r, g, b, a)
+	-- check if anything is visible
+	if total_h + f.h > loffset_y and total_h < loffset_y + clip_area.h then 
+		local clip_y_start = 0
+		local clip_y_end = 0
+		local total_clip_y_start = 0
+		local total_clip_y_end = 0
+		
+		local one_by_tex_h = 1
+		local fw = 0
+		local fh = 0
+		
+		-- if it started before visible area then compute its top clip
+		if total_h < loffset_y then 
+			clip_y_start = loffset_y - total_h 
+		end
+		-- if it ended after visible area then compute its bottom clip
+		if total_h + f.b7.h > loffset_y + clip_area.h then 
+		   clip_y_end = total_h + f.b7.h - loffset_y - clip_area.h
+		   total_clip_y_end = clip_y_end
+		end
+		
+		-- check if top is visible
+		if total_h + f.b7.h > loffset_y and total_h < loffset_y + clip_area.h then 
+			one_by_tex_h = 1 / f.b7.th
+			fw, fh = f.b7.w, f.b7.h
+			f.b7.t:toScreenPrecise(x, y, fw, fh - (clip_y_start + clip_y_end), 0, fw / f.b7.tw, clip_y_start * one_by_tex_h, (fh - clip_y_end) * one_by_tex_h, r, g, b, a ) -- left top
+			
+			one_by_tex_h = 1 / f.b8.th
+			fw, fh = f.w - f.b7.w - f.b9.w, f.b8.h
+			f.b8.t:toScreenPrecise(x + f.b7.w, y, fw, fh - (clip_y_start + clip_y_end), 0, fw / f.b8.tw, clip_y_start * one_by_tex_h, (fh - clip_y_end) * one_by_tex_h, r, g, b, a ) -- top
+			
+			one_by_tex_h = 1 / f.b9.th
+			fw, fh = f.b9.w, f.b9.h
+			f.b9.t:toScreenPrecise(x + f.w - f.b9.w, y, fw, fh - (clip_y_start + clip_y_end), 0, fw / f.b9.tw, clip_y_start * one_by_tex_h, (fh - clip_y_end) * one_by_tex_h, r, g, b, a ) -- right top
+			total_clip_y_start = clip_y_start
+		else
+			total_clip_y_start = f.b7.h 
+		end
+		total_h = total_h + f.b7.h 
+		
+		local mid_h = f.h - f.b2.h - f.b8.h
+		clip_y_start = 0
+		clip_y_end = 0
+		-- if it started before visible area then compute its top clip
+		if total_h < loffset_y then 
+			clip_y_start = loffset_y - total_h 
+		end
+		-- if it ended after visible area then compute its bottom clip
+		if total_h + mid_h > loffset_y + clip_area.h then 
+		   clip_y_end = total_h + mid_h - loffset_y - clip_area.h
+		   total_clip_y_end = total_clip_y_end + clip_y_end
+		end
+		-- check if center is visible
+		if total_h + mid_h > loffset_y and total_h < loffset_y + clip_area.h then 
+			one_by_tex_h = 1 / f.b4.th
+			fw, fh = f.b4.w, mid_h
+			f.b4.t:toScreenPrecise(x, y + f.b7.h - total_clip_y_start, fw, fh - (clip_y_start + clip_y_end), 0, fw / f.b4.tw, clip_y_start * one_by_tex_h, (fh - clip_y_end) * one_by_tex_h, r, g, b, a ) -- left
+			
+			one_by_tex_h = 1 / f.b6.th
+			fw, fh = f.b6.w, mid_h
+			f.b6.t:toScreenPrecise(x + f.w - f.b9.w, y + f.b7.h - total_clip_y_start, fw, fh - (clip_y_start + clip_y_end), 0, fw / f.b6.tw, clip_y_start * one_by_tex_h, (fh - clip_y_end) * one_by_tex_h, r, g, b, a ) -- right
+			
+			one_by_tex_h = 1 / f.b5.th
+			fw, fh = f.w - f.b7.w - f.b3.w, mid_h
+			f.b5.t:toScreenPrecise(x + f.b7.w, y + f.b7.h - total_clip_y_start, fw, fh - (clip_y_start + clip_y_end), 0, fw / f.b5.tw, clip_y_start * one_by_tex_h, (fh - clip_y_end) * one_by_tex_h, r, g, b, a ) -- center
+			total_clip_y_start = total_clip_y_start + clip_y_start
+		else
+			total_clip_y_start = total_clip_y_start + mid_h
+		end
+		total_h = total_h + mid_h
+		
+		clip_y_start = 0
+		clip_y_end = 0
+ 		-- if it started before visible area then compute its top clip
+		if total_h < loffset_y then 
+			clip_y_start = loffset_y - total_h 
+		end
+		-- if it ended after visible area then compute its bottom clip
+		if total_h + f.b2.h > loffset_y + clip_area.h then 
+		   clip_y_end = total_h + f.b2.h - loffset_y - clip_area.h
+		   total_clip_y_end = total_clip_y_end + clip_y_end
+		end
+		
+		-- check if bottom is visible
+		if total_h + f.b2.h > loffset_y and total_h < loffset_y + clip_area.h then 
+			one_by_tex_h = 1 / f.b1.th
+			fw, fh = f.b1.w, f.b1.h
+			f.b1.t:toScreenPrecise(x, y + f.h - f.b1.h - total_clip_y_start, fw, fh - (clip_y_start + clip_y_end), 0, fw / f.b1.tw, clip_y_start * one_by_tex_h, (fh - clip_y_end) * one_by_tex_h, r, g, b, a ) -- left bottom
 
-	-- Body
-	f.b5.t:toScreenFull(x + f.b7.w, y + f.b7.h, f.w - f.b7.w - f.b3.w + 1, f.h - f.b7.h - f.b3.h + 1, f.b6.tw, f.b6.th, r, g, b, a)
+			one_by_tex_h = 1 / f.b2.th
+			fw, fh = f.w - f.b7.w - f.b9.w, f.b2.h
+			f.b2.t:toScreenPrecise(x + f.b7.w, y + f.h - f.b2.h - total_clip_y_start, fw, fh - (clip_y_start + clip_y_end), 0, fw / f.b2.tw, clip_y_start * one_by_tex_h, (fh - clip_y_end) * one_by_tex_h, r, g, b, a ) -- bottom
 
-	-- Corners
-	f.b7.t:toScreenFull(x, y, f.b7.w, f.b7.h, f.b7.tw, f.b7.th, r, g, b, a)
-	f.b1.t:toScreenFull(x, y + f.h - f.b1.h + 1, f.b1.w, f.b1.h, f.b1.tw, f.b1.th, r, g, b, a)
-	f.b9.t:toScreenFull(x + f.w - f.b9.w + 1, y, f.b9.w, f.b9.h, f.b9.tw, f.b9.th, r, g, b, a)
-	f.b3.t:toScreenFull(x + f.w - f.b3.w + 1, y + f.h - f.b3.h + 1, f.b3.w, f.b3.h, f.b3.tw, f.b3.th, r, g, b, a)
+			one_by_tex_h = 1 / f.b3.th
+			fw, fh = f.b3.w, f.b3.h
+			f.b3.t:toScreenPrecise(x + f.w - f.b3.w, y + f.h - f.b3.h - total_clip_y_start, fw, fh - (clip_y_start + clip_y_end), 0, fw / f.b3.tw, clip_y_start * one_by_tex_h, (fh - clip_y_end) * one_by_tex_h, r, g, b, a ) -- right bottom
+		end
+		
+		return 0, 0, total_clip_y_start, total_clip_y_end
+	end
+	return 0, 0, 0, 0
 end
 
 function _M:setTextShadow(v)

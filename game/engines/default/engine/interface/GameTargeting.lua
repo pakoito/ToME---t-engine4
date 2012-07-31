@@ -52,16 +52,17 @@ end
 
 --- Display the tooltip, if any
 
-function _M:targetDisplayTooltip(dx, dy, force)
+function _M:targetDisplayTooltip(dx, dy, force, nb_keyframes)
 	-- Tooltip is displayed over all else
 	if self.level and self.level.map and self.level.map.finished then
+		local tmx, tmy
 		-- Display a tooltip if available
 		if self.tooltip_x then
 			if type(self.tooltip_x) == "table" then
-				self.tooltip:toScreen(self.tooltip.last_display_x, self.tooltip.last_display_y)
+				self.tooltip:toScreen(self.tooltip.last_display_x, self.tooltip.last_display_y, nb_keyframes)
 			else
-				local tmx, tmy = self.level.map:getMouseTile(self.tooltip_x , self.tooltip_y)
-				self.tooltip:displayAtMap(tmx, tmy, dx, dy, nil, force)
+				tmx, tmy = self.level.map:getMouseTile(self.tooltip_x , self.tooltip_y)
+				self.tooltip:displayAtMap(tmx, tmy, dx, dy, nil, force, nb_keyframes)
 			end
 		end
 
@@ -74,8 +75,8 @@ function _M:targetDisplayTooltip(dx, dy, force)
 end
 
 --- Forces the tooltip to pop with the given text
-function _M:tooltipDisplayAtMap(x, y, text, extra, force)
-	self.tooltip:displayAtMap(nil, nil, x, y, text, force)
+function _M:tooltipDisplayAtMap(x, y, text, extra, force, nb_keyframes)
+	self.tooltip:displayAtMap(nil, nil, x, y, text, force, nb_keyframes)
 	if extra then
 		if extra.up then self.tooltip.last_display_y = self.tooltip.last_display_y - self.tooltip.h end
 	end

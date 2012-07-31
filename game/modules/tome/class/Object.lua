@@ -151,7 +151,7 @@ function _M:descAttribute(attr)
 		return c.dam.."-"..(c.dam*(c.damrange or 1.1)).." power, "..(c.apr or 0).." apr, "..DamageType:get(c.damtype).name.." damage"
 	elseif attr == "SHIELD" then
 		local c = self.special_combat
-		if c and (game.player:knowTalentType("technique/shield-offense") or game.player:knowTalentType("technique/shield-defense")) or game.player:attr("show_shield_combat") then
+		if c and (game.player:knowTalentType("technique/shield-offense") or game.player:knowTalentType("technique/shield-defense") or game.player:attr("show_shield_combat")) then
 			return c.dam.." dam, "..c.block.." block"
 		else
 			return c.block.." block"
@@ -468,7 +468,7 @@ function _M:getTextualDesc(compare_with)
 		compare_fields(combat, compare_with, field, "physcrit", "%+.1f%%", "Physical crit. chance: ", 1, false, false, add_table)
 		compare_fields(combat, compare_with, field, "physspeed", "%.0f%%", "Attack speed: ", 100, false, true, add_table)
 
-		compare_fields(combat, compare_with, field, "block", "%+d", "Block value: ", 1, false, false, add_table)
+		compare_fields(combat, compare_with, field, "block", "%+d", "Block value: ", 1, false, true, add_table)
 
 		compare_fields(combat, compare_with, field, "range", "%+d", "Firing range: ", 1, false, false, add_table)
 		compare_fields(combat, compare_with, field, "capacity", "%d", "Capacity: ", 1, false, false, add_table)
@@ -1173,19 +1173,9 @@ function _M:getDesc(name_param, compare_with, never_compare)
 	name_param = name_param or {}
 	name_param.do_color = true
 	compare_with = compare_with or {}
-	if not self:isIdentified() then
-		desc:merge(self:getName(name_param):toTString())
-		desc:add({"color", "WHITE"}, true)
-	else
-		desc:merge(self:getName(name_param):toTString())
-		desc:add({"color", "WHITE"}, true)
-		desc:add(true)
-		desc:add({"color", "ANTIQUE_WHITE"})
-		desc:merge(self.desc:toTString())
-		desc:add(true, true)
-		desc:add({"color", "WHITE"})
-	end
 
+	desc:merge(self:getName(name_param):toTString())
+	desc:add({"color", "WHITE"}, true)
 	local reqs = self:getRequirementDesc(game.player)
 	if reqs then
 		desc:merge(reqs)
@@ -1204,11 +1194,8 @@ function _M:getDesc(name_param, compare_with, never_compare)
 		desc:add({"color",0x67,0xAD,0x00}, ("%0.2f Encumbrance."):format(self.encumber), {"color", "LAST"})
 	end
 	if self.ego_bonus_mult then
-		desc:add(true)
-		desc:add({"color",0x67,0xAD,0x00}, ("%0.2f Ego Multiplier."):format(1 + self.ego_bonus_mult), {"color", "LAST"})
+		desc:add(true, {"color",0x67,0xAD,0x00}, ("%0.2f Ego Multiplier."):format(1 + self.ego_bonus_mult), {"color", "LAST"})
 	end
-
-	desc:add(true, true)
 
 	local could_compare = false
 	if not name_param.force_compare and not core.key.modState("ctrl") then
@@ -1216,7 +1203,14 @@ function _M:getDesc(name_param, compare_with, never_compare)
 		compare_with = {}
 	end
 
+	desc:add(true, true)
 	desc:merge(self:getTextualDesc(compare_with))
+
+	if self:isIdentified() then
+		desc:add(true, true, {"color", "ANTIQUE_WHITE"})
+		desc:merge(self.desc:toTString())
+		desc:add({"color", "WHITE"})
+	end
 
 	if could_compare and not never_compare then desc:add(true, {"font","italic"}, {"color","GOLD"}, "Press <control> to compare", {"color","LAST"}, {"font","normal"}) end
 

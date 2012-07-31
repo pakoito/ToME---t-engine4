@@ -1827,6 +1827,24 @@ static int gl_rotate(lua_State *L)
 	return 0;
 }
 
+static int gl_push(lua_State *L)
+{
+	glPushMatrix();
+	return 0;
+}
+
+static int gl_pop(lua_State *L)
+{
+	glPopMatrix();
+	return 0;
+}
+
+static int gl_identity(lua_State *L)
+{
+	glLoadIdentity();
+	return 0;
+}
+
 static int gl_matrix(lua_State *L)
 {
 	if (lua_toboolean(L, 1)) glPushMatrix();
@@ -2540,6 +2558,9 @@ static const struct luaL_reg displaylib[] =
 	{"glTranslate", gl_translate},
 	{"glScale", gl_scale},
 	{"glRotate", gl_rotate},
+	{"glPush", gl_push},
+	{"glPop", gl_pop},
+	{"glIdentity", gl_identity},
 	{"glColor", gl_color},
 	{"glMatrix", gl_matrix},
 	{"glDepthTest", gl_depth_test},

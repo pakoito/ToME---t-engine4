@@ -618,7 +618,7 @@ function _M:toScreen(x, y, nb_keyframes)
 
 	if self.first_display then self:firstDisplay() self.first_display = false end
 
-	-- Restiore normal opengl matrix
+	-- Restore normal opengl matrix
 	if zoom < 1 then core.display.glScale() end
 	core.display.glTranslate(-tx, -ty, 0)
 end

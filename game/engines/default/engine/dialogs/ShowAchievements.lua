@@ -44,9 +44,29 @@ function _M:init(title, player)
 	self.c_desc = TextzoneList.new{width=math.floor(self.iw * 0.4 - 10), height=self.ih - self.c_self.h}
 
 	self:generateList("main")
+	
+	local direct_draw= function(item, x, y, w, h, total_w, total_h, loffset_x, loffset_y, dest_area)
+		-- if there is object and is withing visible bounds
+		if item.tex and total_h + h > loffset_y and total_h < loffset_y + dest_area.h then 
+			local clip_y_start, clip_y_end = 0, 0
+			-- if it started before visible area then compute its top clip
+			if total_h < loffset_y then 
+				clip_y_start = loffset_y - total_h
+			end
+			-- if it ended after visible area then compute its bottom clip
+			if total_h + h > loffset_y + dest_area.h then 
+			   clip_y_end = total_h + h - loffset_y - dest_area.h 
+			end
 
-	self.c_list = ListColumns.new{width=math.floor(self.iw * 0.6 - 10), height=self.ih - 10 - self.c_self.h, scrollbar=true, sortable=true, columns={
-		{name="", width={24,"fixed"}, display_prop="--", direct_draw=function(item, x, y) if item.tex then item.tex[1]:toScreen(x+4, y, 16, 16) end end},
+			local one_by_tex_h = 1 / h
+			item.tex[1]:toScreenPrecise(x, y, h, h - clip_y_start - clip_y_end, 0, 1, clip_y_start * one_by_tex_h, (h - clip_y_end) * one_by_tex_h)
+			return h, h, 0, 0, clip_y_start, clip_y_end
+		end 
+		return 0, 0, 0, 0, 0, 0
+	end
+
+	self.c_list = ListColumns.new{width=math.floor(self.iw * 0.6 - 10), height=self.ih - 10 - self.c_self.h, floating_headers = true, scrollbar=true, sortable=true, columns={
+		{name="", width={24,"fixed"}, display_prop="--", direct_draw=direct_draw},
 		{name="Achievement", width=60, display_prop="name", sort="name"},
 		{name="When", width=20, display_prop="when", sort="when"},
 		{name="Who", width=20, display_prop="who", sort="who"},
@@ -77,8 +97,7 @@ function _M:switchTo(kind)
 	elseif kind == "all" then self.c_main.checked = false self.c_self.checked = false
 	end
 
-	self.c_list.list = self.list
-	self.c_list:generate()
+	self.c_list:setList(self.list)
 	self.c_desc.items = {}
 	self.c_desc:switchItem(nil)
 end

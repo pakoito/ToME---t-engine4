@@ -1846,17 +1846,17 @@ function _M:setupMouse(mouse)
 		local mx, my = core.mouse.get()
 		if not item or not sub_es or #sub_es == 0 then game.mouse:delegate(button, mx, my, xrel, yrel, nil, nil, event, "playmap") return end
 
-		local str = tstring{}
+		local tooltips = {}
 		for i, e in ipairs(sub_es) do
 			if e.tooltip then
-				str:merge(e:tooltip():toTString())
-				if i < #sub_es then str:add(true, "---", true)
-				else str:add(true) end
+				table.append(tooltips, e:tooltip())
+				if i < #sub_es then table.append(tooltips, { tstring{ true, "---" } } )
+				else table.append(tooltips, { tstring{ true } } ) end
 			end
 		end
 
 		local extra = {}
-		extra.log_str = str
+		extra.log_str = tooltips
 		game.tooltip.old_ttmx = -100
 		game.mouse:delegate(button, mx, my, xrel, yrel, nil, nil, event, "playmap", extra)
 	end)

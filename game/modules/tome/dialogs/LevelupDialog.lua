@@ -24,6 +24,7 @@ local Dialog = require "engine.ui.Dialog"
 local Button = require "engine.ui.Button"
 local Textzone = require "engine.ui.Textzone"
 local TextzoneList = require "engine.ui.TextzoneList"
+local UIContainer = require "engine.ui.UIContainer"
 local TalentTrees = require "mod.dialogs.elements.TalentTrees"
 local Separator = require "engine.ui.Separator"
 local DamageType = require "engine.DamageType"
@@ -646,10 +647,7 @@ function _M:createDisplay()
 
 	if self.no_tooltip then
 		local vsep3 = Separator.new{dir="horizontal", size=self.ih - 20}
-		self.c_desc = TextzoneList.new{
-			width=self.iw - 200 - 530 - 40, height = self.ih,
-			scrollbar = true,
-		}
+        self.c_desc = TextzoneList.new{ width=self.iw - 200 - 530 - 40, height = self.ih, dest_area = { h = self.ih } }
 		ret[#ret+1] = {right=0, top=0, ui=self.c_desc}
 		ret[#ret+1] = {right=self.c_desc.w, top=0, ui=vsep3}
 	end

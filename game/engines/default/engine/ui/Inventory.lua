@@ -41,6 +41,8 @@ function _M:init(t)
 	self.on_drag = t.on_drag
 	self.on_drag_end = t.on_drag_end
 	self.special_bg = t.special_bg
+	
+	self._last_x, _last_y, self._last_ox, self._last_oy = 0, 0, 0, 0
 
 	if self.tabslist == nil and self.default_tabslist then
 		if type(self.default_tabslist) == "function" then self.tabslist = self.default_tabslist(self)
@@ -67,16 +69,37 @@ function _M:generate()
 		end
 		self.uis[#self.uis+1] = {x=0, y=0, ui=self.c_tabs}
 	end
+	
+	local direct_draw= function(item, x, y, w, h, total_w, total_h, loffset_x, loffset_y, dest_area)
+		-- if there is object and is withing visible bounds
+		if item.object and total_h + h > loffset_y and total_h < loffset_y + dest_area.h then 
+			local clip_y_start, clip_y_end = 0, 0
+			-- if it started before visible area then compute its top clip
+			if total_h < loffset_y then 
+				clip_y_start = loffset_y - total_h
+			end
+			-- if it ended after visible area then compute its bottom clip
+			if total_h + h > loffset_y + dest_area.h then 
+			   clip_y_end = total_h + h - loffset_y - dest_area.h 
+			end
+			-- get entity texture with everything it has i.e particles
+			local texture = item.object:getEntityFinalTexture(nil, h, h)
+			local one_by_tex_h = 1 / h
+			texture:toScreenPrecise(x, y, h, h - clip_y_start - clip_y_end, 0, 1, clip_y_start * one_by_tex_h, (h - clip_y_end) * one_by_tex_h)
+			return h, h, 0, 0, clip_y_start, clip_y_end
+		end 
+		return 0, 0, 0, 0, 0, 0
+	end
 
-	self.c_inven = ListColumns.new{width=self.w, height=self.h - (self.c_tabs and self.c_tabs.h or 0), sortable=true, scrollbar=true, columns=self.columns or {
-		{name="", width={20,"fixed"}, display_prop="char", sort="id"},
-		{name="", width={24,"fixed"}, display_prop="object", sort="sortname", direct_draw=function(item, x, y) if item.object then item.object:toScreen(nil, x+4, y, 16, 16) end end},
+	self.c_inven = ListColumns.new{width=self.w, height=self.h - (self.c_tabs and self.c_tabs.h or 0), floating_headers = true, sortable=true, scrollbar=true, columns=self.columns or {
+		{name="", width={33,"fixed"}, display_prop="char", sort="id"},
+		{name="", width={24,"fixed"}, display_prop="object", sort="sortname", direct_draw=direct_draw},
 		{name="Inventory", width=72, display_prop="name", sort="sortname"},
 		{name="Category", width=20, display_prop="cat", sort="cat"},
 		{name="Enc.", width=8, display_prop="encumberance", sort="encumberance"},
 	}, list={},
 		fct=function(item, sel, button, event) if self.fct then self.fct(item, button, event) end end,
-		select=function(item, sel) if self.on_select then self.on_select(item, sel) end end,
+		select=self.on_select,
 		on_drag=function(item) if self.on_drag then self.on_drag(item) end end,
 		on_drag_end=function() if self.on_drag_end then self.on_drag_end() end end,
 	}

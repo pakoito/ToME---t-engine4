@@ -24,10 +24,11 @@ local Base = require "engine.ui.Base"
 module(..., package.seeall, class.inherit(Base))
 
 function _M:init(t)
-	self.size = assert(t.size, "no slider size")
+	self.h = assert(t.size, "no slider size")
 	self.max = assert(t.max, "no slider max")
 	self.pos = t.pos or 0
 	self.inverse = t.inverse
+	self.pos = util.minBound(self.pos, 0, self.max)
 
 	Base.init(self, t)
 end
@@ -37,18 +38,19 @@ function _M:generate()
 	self.middle = self:getUITexture("ui/scrollbar.png")
 	self.bottom = self:getUITexture("ui/scrollbar_bottom.png")
 	self.sel = self:getUITexture("ui/scrollbar-sel.png")
-	self.w, self.h = self.middle.w, self.size
+	self.w = self.middle.w
+	self.pos = util.minBound(self.pos, 0, self.max)
 end
 
 function _M:display(x, y)
 	self.top.t:toScreenFull(x, y, self.top.w, self.top.h, self.top.tw, self.top.th)
 	self.bottom.t:toScreenFull(x, y + self.h - self.bottom.h, self.bottom.w, self.bottom.h, self.bottom.tw, self.bottom.th)
 	self.middle.t:toScreenFull(x, y + self.top.h, self.middle.w, self.h - self.top.h - self.bottom.h, self.middle.tw, self.middle.th)
-	self.pos = util.bound(self.pos, 0, self.max)
+	self.pos = util.minBound(self.pos, 0, self.max)
 	if self.inverse then
-		y = y + self.h - (self.pos * self.size / self.max) + self.sel.h / 2
+		y = y + self.h - (self.pos / self.max) * (self.h - self.bottom.h - self.top.h - self.sel.h * 0.5) + self.sel.h * 0.5
 	else
-		y = y + (self.pos * self.size / self.max) + self.sel.h / 2
+		y = y + (self.pos / self.max) * (self.h - self.bottom.h - self.top.h - self.sel.h * 0.5) + self.sel.h * 0.5
 	end
-	self.sel.t:toScreenFull(x - (self.sel.w - self.top.w) / 2, y, self.sel.w, self.sel.h, self.sel.tw, self.sel.th)
+	self.sel.t:toScreenFull(x - (self.sel.w - self.top.w) * 0.5, y, self.sel.w, self.sel.h, self.sel.tw, self.sel.th)
 end

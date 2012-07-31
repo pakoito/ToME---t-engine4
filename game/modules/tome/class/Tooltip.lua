@@ -25,12 +25,9 @@ module(..., package.seeall, class.inherit(Tooltip))
 
 tooltip_bound_y2 = function() return game.uiset.map_h_stop_tooltip end
 
-function _M:init(...)
-	Tooltip.init(self, ...)
-end
-
 --- Gets the tooltips at the given map coord
 function _M:getTooltipAtMap(tmx, tmy, mx, my)
+	if self.locked then return nil end
 	local tt = {}
 	local seen = game.level.map.seens(tmx, tmy)
 	local remember = game.level.map.remembers(tmx, tmy)
@@ -40,25 +37,26 @@ function _M:getTooltipAtMap(tmx, tmy, mx, my)
 		local to_add = game.level.map:checkEntity(tmx, tmy, check_type, "tooltip", game.level.map.actor_player)
 		if to_add then 
 			if type(to_add) == "string" then to_add = to_add:toTString() end
-			tt[#tt+1] = to_add 
+			if to_add.is_tstring then 
+				tt[#tt+1] = to_add 
+			else 
+				table.append(tt, to_add) 
+			end
 		end
+		return to_add
 	end
 	
-	if seen and not ctrl_state then
-		check(Map.PROJECTILE)
+	if seen or remember and not ctrl_state then
+		check(Map.TRAP)
 		check(Map.ACTOR)
-	end
-	if seen or remember then
-		local obj = check(Map.OBJECT)
-		if not ctrl_state or not obj then
-			check(Map.TRAP)
-			check(Map.TERRAIN)
-		end
+		check(Map.OBJECT)
+		check(Map.PROJECTILE)
+		check(Map.TERRAIN)
 	end
 	
 	if #tt > 0 then
 		return tt
 	end
-	if self.add_map_str then return self.add_map_str:toTString() end
+	if self.add_map_str then return self.add_map_str end
 	return nil
-end
+end

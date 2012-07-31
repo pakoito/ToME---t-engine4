@@ -73,10 +73,18 @@ function _M:init(l, w, force_height)
 			{left = 3, top = 3 + image.h, ui=c_text},
 		}
 	end
+	
+	local on_end = function() 
+		game.tooltip.inhibited = false
+		game:unregisterDialog(self) 
+		if fct then 
+			fct() 
+		end  
+	end
 
 	self:loadUI(uis)
-	self.key:addBind("EXIT", function() game:unregisterDialog(self) if fct then fct() end end)
-	self.key:addBind("ACCEPT", function() game:unregisterDialog(self) if fct then fct() end end)
+	self.key:addBind("EXIT", on_end)
+	self.key:addBind("ACCEPT", on_end)
 	self:setupUI(true, true)
 
 	if self.w >= game.w or self.h >= game.h then
@@ -94,4 +102,6 @@ function _M:init(l, w, force_height)
 
 	game:registerDialog(self)
 	game:playSound("actions/read")
-end
+	
+	game.tooltip.inhibited = true
+end

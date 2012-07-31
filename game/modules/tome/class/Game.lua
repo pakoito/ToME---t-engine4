@@ -1153,17 +1153,17 @@ function _M:display(nb_keyframes)
 
 	engine.GameTurnBased.display(self, nb_keyframes)
 
-	-- Tooltip is displayed over all else, even dialogs
+	-- Tooltip is displayed over all else, even dialogs but before FBO
 	local mx, my, button = core.mouse.get()
 
 	self.old_ctrl_state = self.ctrl_state
 	self.ctrl_state = core.key.modState("ctrl")
 
-	if self.tooltip.w and mx > self.w - self.tooltip.w and my > Tooltip:tooltip_bound_y2() - self.tooltip.h then
-		self:targetDisplayTooltip(Map.display_x, self.h, self.old_ctrl_state~=self.ctrl_state )
+	-- if tooltip is in way of mouse and its not locked then move it
+	if self.tooltip.w and mx > self.w - self.tooltip.w and my > Tooltip:tooltip_bound_y2() - self.tooltip.h and not self.tooltip.locked then
+		self:targetDisplayTooltip(Map.display_x, self.h, self.old_ctrl_state~=self.ctrl_state, nb_keyframes )
 	else
-		self:targetDisplayTooltip(self.w, self.h, self.old_ctrl_state~=self.ctrl_state )
-
+		self:targetDisplayTooltip(self.w, self.h, self.old_ctrl_state~=self.ctrl_state, nb_keyframes )
 	end
 
 	if self.full_fbo then
@@ -1232,6 +1232,18 @@ do return end
 			self.player:grantQuest("love-melinda")
 			self.player:hasQuest("love-melinda"):melindaCompanion(self.player, "Defiler", "Corruptor")
 		end end,
+		[{"_UP","ctrl"}] = function() 
+			game.tooltip.container.scrollbar.pos = util.minBound(game.tooltip.container.scrollbar.pos - 1, 0, game.tooltip.container.scrollbar.max)
+		end,
+		[{"_DOWN","ctrl"}] = function() 
+			game.tooltip.container.scrollbar.pos = util.minBound(game.tooltip.container.scrollbar.pos + 1, 0, game.tooltip.container.scrollbar.max)
+		end,
+		[{"_HOME","ctrl"}] = function()
+			game.tooltip.container.scrollbar.pos = 0
+		end,
+		[{"_END","ctrl"}] = function()
+			game.tooltip.container.scrollbar.pos = game.tooltip.container.scrollbar.max
+		end,
 	}
 
 	self.key.any_key = function(sym)
@@ -1464,6 +1476,11 @@ do return end
 
 		HELP = "EXIT",
 		EXIT = function()
+			if self.tooltip.locked then
+				self.tooltip.locked = false
+				self.tooltip.container.focused = self.tooltip.locked
+				game.log("Tooltip %s", self.tooltip.locked and "locked" or "unlocked")
+			end
 			local l = {
 				"resume",
 				"achievements",
@@ -1514,6 +1531,22 @@ do return end
 			local ok, err = coroutine.resume(co)
 			if not ok and err then print(debug.traceback(co)) error(err) end
 		end,
+		
+		LOCK_TOOLTIP = function()
+			if not self.tooltip.empty then
+				self.tooltip.locked = not self.tooltip.locked
+				self.tooltip.container.focused = self.tooltip.locked
+				game.log("Tooltip %s", self.tooltip.locked and "locked" or "unlocked")
+			end
+		end,
+		
+		LOCK_TOOLTIP_COMPARE = function()
+			if not self.tooltip.empty then
+				self.tooltip.locked = not self.tooltip.locked
+				self.tooltip.container.focused = self.tooltip.locked
+				game.log("Tooltip %s", self.tooltip.locked and "locked" or "unlocked")
+			end
+		end,
 
 		SHOW_MAP = function()
 			game:registerDialog(require("mod.dialogs.ShowMap").new())
@@ -1549,6 +1582,27 @@ function _M:setupMouse(reset)
 	self.mouse:registerZone(Map.display_x, Map.display_y, Map.viewport.width, Map.viewport.height, function(button, mx, my, xrel, yrel, bx, by, event, extra)
 		self.tooltip.add_map_str = extra and extra.log_str
 
+		if game.tooltip.locked then 
+			if button == "wheelup" and event == "button" then
+				game.tooltip.container.scrollbar.pos = util.minBound(game.tooltip.container.scrollbar.pos - 1, 0, game.tooltip.container.scrollbar.max)
+			elseif button == "wheeldown" and event == "button" then 
+				game.tooltip.container.scrollbar.pos = util.minBound(game.tooltip.container.scrollbar.pos + 1, 0, game.tooltip.container.scrollbar.max)
+			end
+			if button == "middle" then
+				if not game.tooltip.container.draging then
+					game.tooltip.container.draging = true
+					game.tooltip.container.drag_x_start = mx
+					game.tooltip.container.drag_y_start = my
+				else
+					game.tooltip.container.scrollbar.pos = util.minBound(game.tooltip.container.scrollbar.pos + my - game.tooltip.container.drag_y_start, 0, game.tooltip.container.scrollbar.max)
+					game.tooltip.container.drag_x_start = mx
+					game.tooltip.container.drag_y_start = my
+				end
+			else
+				game.tooltip.container.draging = false
+			end
+		end
+		
 		-- Handle targeting
 		if self:targetMouse(button, mx, my, xrel, yrel, event) then return end
 

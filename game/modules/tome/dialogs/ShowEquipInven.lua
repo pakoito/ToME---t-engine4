@@ -41,10 +41,8 @@ function _M:init(title, actor, filter, action, on_select)
 	-- Add tooltips
 	self.on_select = function(item)
 		if item.last_display_x and item.object then
-			local x = nil
-			if self.focus_ui and self.focus_ui.ui == self.c_inven then
-				x = self.c_inven._last_ox - game.tooltip.max
-			end
+			local x
+			if self.focus_ui and self.focus_ui.ui == self.c_inven then x = self.c_inven._last_ox - game.tooltip.w end
 			game:tooltipDisplayAtMap(x or item.last_display_x, item.last_display_y, item.object:getDesc({do_color=true}, self.actor:getInven(item.object:wornInven())))
 		elseif item.last_display_x and item.data and item.data.desc then
 			game:tooltipDisplayAtMap(item.last_display_x, item.last_display_y, item.data.desc, {up=true})
@@ -81,6 +79,43 @@ function _M:init(title, actor, filter, action, on_select)
 	self:loadUI(uis)
 	self:setFocus(self.c_inven)
 	self:setupUI()
+	
+	local lock_tooltip = function()
+		if not game.tooltip.empty then
+			game.tooltip.locked = not game.tooltip.locked
+			game.tooltip.container.focused = game.tooltip.locked
+			game.log("Tooltip %s", game.tooltip.locked and "locked" or "unlocked")
+			if game.tooltip.locked then
+				self.old_areas_name = self.mouse.areas_name
+				self.old_areas = self.mouse.areas
+				self.mouse:reset()
+				local on_mouse = function(button, x, y, xrel, yrel, bx, by, event)
+					if button == "wheelup" and event == "button" then
+						game.tooltip.container.scrollbar.pos = util.minBound(game.tooltip.container.scrollbar.pos - 1, 0, game.tooltip.container.scrollbar.max)
+					elseif button == "wheeldown" and event == "button" then 
+						game.tooltip.container.scrollbar.pos = util.minBound(game.tooltip.container.scrollbar.pos + 1, 0, game.tooltip.container.scrollbar.max)
+					end
+					if button == "middle" then
+						if not self.scroll_drag then
+							self.scroll_drag = true
+							self.scroll_drag_x_start = x
+							self.scroll_drag_y_start = y
+						else
+							game.tooltip.container.scrollbar.pos = util.minBound(game.tooltip.container.scrollbar.pos + y - self.scroll_drag_y_start, 0, game.tooltip.container.scrollbar.max)
+							self.scroll_drag_x_start = x
+							self.scroll_drag_y_start = y
+						end
+					else
+						self.scroll_drag = false
+					end
+				end
+				self.mouse:registerZone(0, 0, self.w, self.h, on_mouse)
+			else
+				self.mouse.areas_name = self.old_areas_name
+				self.mouse.areas = self.old_areas
+			end
+		end
+	end
 
 	engine.interface.PlayerHotkeys:bindAllHotkeys(self.key, function(i) self:defineHotkey(i) end)
 	self.key:addBinds{
@@ -88,7 +123,11 @@ function _M:init(title, actor, filter, action, on_select)
 			if self.focus_ui and self.focus_ui.ui == self.c_inven then self:use(self.c_inven.c_inven.list[self.c_inven.c_inven.sel])
 			end
 		end,
-		EXIT = function() game:unregisterDialog(self) end,
+		EXIT = function() game.tooltip.locked = false game:unregisterDialog(self) end,
+		LOCK_TOOLTIP = lock_tooltip,
+		LOCK_TOOLTIP_COMPARE = lock_tooltip,
+		MOVE_UP = function() if game.tooltip.locked then game.tooltip.container.scrollbar.pos = util.minBound(game.tooltip.container.scrollbar.pos - 1, 0, game.tooltip.container.scrollbar.max) end end,
+		MOVE_DOWN = function() if game.tooltip.locked then game.tooltip.container.scrollbar.pos = util.minBound(game.tooltip.container.scrollbar.pos + 1, 0, game.tooltip.container.scrollbar.max) end end,
 	}
 
 	self.key.any_key = function(sym)

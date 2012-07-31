@@ -36,8 +36,8 @@ function _M:init()
 	self:generateList()
 
 	self.c_list = ListColumns.new{width=math.floor(self.iw / 3 - 10), height=self.ih - 10 - self.c_compat.h, scrollbar=true, columns={
-		{name="Game Module", width=80, display_prop="name"},
-		{name="Version", width=20, display_prop="version_txt"},
+		{name="Game Module", width=75, display_prop="name"},
+		{name="Version", width=25, display_prop="version_txt"},
 	}, list=self.list, fct=function(item) end, select=function(item, sel) self:select(item) end}
 
 	self.c_adds = ListColumns.new{width=math.floor(self.iw * 2 / 3 - 10), height=self.ih - 10 - self.c_compat.h, scrollbar=true, columns={
@@ -70,8 +70,7 @@ end
 
 function _M:select(item)
 	if item and item.adds and self.c_adds then
-		self.c_adds.list = item.adds
-		self.c_adds:generate()
+		self.c_adds:setList(item.adds)
 	end
 end
 
@@ -82,7 +81,7 @@ function _M:switchAddon(item)
 	elseif v == true then config.settings.addons[item.for_module][item.short_name] = false
 	elseif v == false then config.settings.addons[item.for_module][item.short_name] = nil
 	end
-	self.c_adds:drawItem(item)
+	--self.c_adds:drawItem(item)
 
 	local lines = {}
 	lines[#lines+1] = ("addons = {}"):format(w)

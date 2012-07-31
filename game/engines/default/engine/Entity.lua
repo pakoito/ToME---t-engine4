@@ -413,6 +413,32 @@ function _M:getEntityFinalSurface(tiles, w, h)
 	return _M.__mo_final_repo[self][id].surface, _M.__mo_final_repo[self][id].tex
 end
 
+--- Get the entity image as an sdl texture for the given tiles and size
+-- @param tiles a Tiles instance that will handle the tiles (usually pass it the current Map.tiles)
+-- @param w the width
+-- @param h the height
+-- @return the sdl texture
+function _M:getEntityFinalTexture(tiles, w, h)
+	local id = w.."x"..h
+	if _M.__mo_final_repo[self] and _M.__mo_final_repo[self][id] then return _M.__mo_final_repo[self][id].tex end
+
+	local Map = require "engine.Map"
+	tiles = tiles or Map.tiles
+
+	local mos = {}
+	local list = {}
+	self:getMapObjects(tiles, mos, 1)
+	local listsize = #list
+	for i = 1, Map.zdepth do
+		if mos[i] then list[listsize+i] = mos[i] end
+	end
+	local tex = core.map.mapObjectsToTexture(w, h, unpack(list))
+	if not tex then return nil end
+	_M.__mo_final_repo[self] = _M.__mo_final_repo[self] or {}
+	_M.__mo_final_repo[self][id] = {tex=tex}
+	return _M.__mo_final_repo[self][id].tex
+end
+
 --- Get a string that will display in text the texture of this entity
 function _M:getDisplayString(tstr)
 	if tstr then

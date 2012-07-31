@@ -205,3 +205,17 @@ defineAction{
 	group = "interface",
 	name = "Toggle UI display",
 }
+
+defineAction{
+	default = { "sym:_l:false:true:false:false" },
+	type = "LOCK_TOOLTIP",
+	group = "interface",
+	name = "Locks tooltip in place",
+}
+
+defineAction{
+	default = { "sym:_l:true:true:false:false" },
+	type = "LOCK_TOOLTIP_COMPARE",
+	group = "interface",
+	name = "Locks tooltip in place while comparing items",
+}
