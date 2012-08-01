@@ -1772,7 +1772,7 @@ newEffect{
 
 			-- Apply Dreamscape hit
 			if eff.projections_killed > 0 then
-				eff.target:takeHit(eff.target.max_life/5 * eff.projections_killed, self)
+				eff.target:takeHit(eff.target.max_life/10 * eff.projections_killed, self)
 				eff.target:setEffect(eff.target.EFF_BRAINLOCKED, eff.projections_killed, {})
 			end
 		end)

@@ -17,8 +17,6 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
--- Edge TODO: Sounds
-
 local Object = require "mod.class.Object"
 
 newTalent{
@@ -42,6 +40,7 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:projectile(tg, x, y, DamageType.DISTORTION, {dam=self:mindCrit(t.getDamage(self, t)), explosion=t.getDetonateDamage(self, t), penetrate=true, radius=self:getTalentRadius(t)})
+		game:playSoundNear(self, "talents/distortion")
 		return true
 	end,
 	info = function(self, t)
@@ -76,6 +75,7 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.DISTORTION, {dam=self:mindCrit(t.getDamage(self, t)), knockback=t.getPower(self, t), stun=t.getPower(self, t)})
+		game:playSoundNear(self, "talents/warp")
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "generic_wave", {radius=tg.radius, tx=x-self.x, ty=y-self.y, rm=255, rM=255, gm=180, gM=255, bm=180, bM=255, am=35, aM=90})
 		return true
 	end,
@@ -118,9 +118,8 @@ newTalent{
 		if target:hasEffect(target.EFF_DISTORTION) then
 			ravage = true
 		end
-		
 		target:setEffect(target.EFF_RAVAGE, t.getDuration(self, t), {src=self, dam=self:mindCrit(t.getDamage(self, t)), ravage=ravage, apply_power=self:combatMindpower()})
-							
+		game:playSoundNear(self, "talents/echo")
 		return true
 	end,
 	info = function(self, t)
@@ -212,7 +211,7 @@ newTalent{
 		game.level.map(x, y, Map.TERRAIN, e)
 		game.nicer_tiles:updateAround(game.level, x, y)
 		game.level.map:updateMap(x, y)
-		game:playSoundNear(self, "talents/fire")
+		game:playSoundNear(self, "talents/lightning_loud")
 		return true
 	end,
 	info = function(self, t)

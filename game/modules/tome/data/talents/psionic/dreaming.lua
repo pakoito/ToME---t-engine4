@@ -17,8 +17,6 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
--- Edge TODO: Sounds
-
 newTalent{
 	name = "Sleep",
 	type = {"psionic/dreaming", 1},
@@ -36,7 +34,7 @@ newTalent{
 	getInsomniaPower= function(self, t)
 		local t = self:getTalentFromId(self.T_SANDMAN)
 		local reduction = t.getInsomniaPower(self, t)
-		return 10 - reduction
+		return 20 - reduction
 	end,
 	getSleepPower = function(self, t) 
 		local power = self:combatTalentMindDamage(t, 5, 25)
@@ -84,6 +82,7 @@ newTalent{
 				end
 			end
 		end)
+		game:playSoundNear(self, "talents/dispel")
 		return true
 	end,
 	info = function(self, t)
@@ -207,7 +206,7 @@ newTalent{
 	getDrain = function(self, t) return 10 - math.min(8, math.ceil(self:getTalentLevel(t))) end,
 	remove_on_zero = true,
 	activate = function(self, t)
-		game:playSoundNear(self, "talents/heal")
+		game:playSoundNear(self, "talents/spell_generic")
 		local ret = {
 			drain = self:addTemporaryValue("psi_regen", -t.getDrain(self, t)),
 			particles = self:addParticles(engine.Particles.new("ultrashield", 1, {rm=0, rM=0, gm=180, gM=255, bm=180, bM=255, am=70, aM=180, radius=0.8, density=60, life=14, instop=20, static=80}))

@@ -148,21 +148,22 @@ newBirthDescriptor{
 		life_rating = -4,
 	},
 }
-
+-- Edge TODO: Unlock stuff
 newBirthDescriptor{
 	type = "subclass",
 	name = "Solipsist",
 	locked = function() return profile.mod.allow_build.psionic_solipsist and true or "hide"  end,
-	locked_desc = "TODO",
+	locked_desc = "The world as we know it is the collective dream of those that live in it.  Find and wake the sleeper and you'll unlock the potential of your dreams.",
 	desc = {
-		"blahblah",
+		"The Solipsist has awakened to the truth of reality, that it's malleable, nothing more than the collective vision of those that experience it.",
+		"They wield this knowledge to both create and destory, to invade the minds of others, and to manipulate the dreams of the unenlightened.",
+		"This knowledge comes with a heavy price and the Solipsist must guard his thoughts, lest he come to believe that the world exists only within his own mind.",
 		"Their most important stats are: Willpower and Cunning",
 		"#GOLD#Stat modifiers:",
 		"#LIGHT_BLUE# * +0 Strength, +0 Dexterity, +0 Constitution",
 		"#LIGHT_BLUE# * +0 Magic, +5 Willpower, +4 Cunning",
 		"#GOLD#Life per level:#LIGHT_BLUE# -4 (*special*)",
 	},
-	not_on_random_boss = true, -- remove later, this is here so half-finished talents don't end up on bosses
 	power_source = {psionic=true},
 	stats = { str=0, wil=5, cun=4, },
 	talents_types = {

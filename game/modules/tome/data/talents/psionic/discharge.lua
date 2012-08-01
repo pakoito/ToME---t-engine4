@@ -17,8 +17,6 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
--- Edge TODO: Sounds
-
 newTalent{
 	name = "Mind Storm",
 	type = {"psionic/discharge", 1},
@@ -86,6 +84,7 @@ newTalent{
 		
 	end,
 	activate = function(self, t)
+		game:playSoundNear(self, "talents/thunderstorm")
 		local ret = {
 			overcharge = 0,
 			particles = self:addParticles(Particles.new("ultrashield", 1, {rm=255, rM=255, gm=180, gM=255, bm=0, bM=0, am=35, aM=90, radius=0.2, density=15, life=28, instop=10}))
@@ -121,6 +120,7 @@ newTalent{
 	action = function(self, t)
 		local wrath = self:hasEffect(self.EFF_FOCUSED_WRATH)
 		self:setEffect(self.EFF_FEEDBACK_LOOP, self:mindCrit(t.getDuration(self, t), nil, wrath and wrath.power or 0), {})
+		game:playSoundNear(self, "talents/heal")
 		return true
 	end,
 	info = function(self, t)
@@ -196,6 +196,7 @@ newTalent{
 		self:setEffect(self.EFF_FOCUSED_WRATH, t.getDuration(self, t), {target=target, power=t.getCritBonus(self, t)/100})
 
 		game.level.map:particleEmitter(self.x, self.y, 1, "generic_charge", {rm=255, rM=255, gm=180, gM=255, bm=0, bM=0, am=35, aM=90})
+		game:playSoundNear(self, "talents/fireflash")
 		return true
 	end,
 	info = function(self, t)

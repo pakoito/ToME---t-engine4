@@ -17,8 +17,6 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
--- Edge TODO: Sounds
-
 -- Thought Forms
 newTalent{
 	name = "Thought-Form: Bowman",
@@ -522,11 +520,15 @@ newTalent{
 				if self.summoner:isTalentActive(self.summoner.T_OVER_MIND) then
 					self.summoner:forceUseTalent(self.summoner.T_OVER_MIND, {ignore_energy=true})
 				end
+				game.level.map:particleEmitter(self.x, self.y, 1, "generic_discharge", {rm=225, rM=255, gm=225, gM=255, bm=225, bM=255, am=35, aM=90})
+				game.level.map:particleEmitter(self.summoner.x, self.summoner.y, 1, "generic_discharge", {rm=225, rM=255, gm=225, gM=255, bm=225, bM=255, am=35, aM=90})
 			end
 			game.level.map:particleEmitter(target.x, target.y, 1, "generic_discharge", {rm=225, rM=255, gm=225, gM=255, bm=225, bM=255, am=35, aM=90})
 			game.party:setPlayer(target)
 			self:resetCanSeeCache()
 		end)
+		
+		game:playSoundNear(self, "talents/teleport")
 			
 		local ret = {
 			target = target, old_control = old_control,

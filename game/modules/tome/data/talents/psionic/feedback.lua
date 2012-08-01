@@ -17,8 +17,6 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
--- Edge TODO: Sounds
-
 newTalent{
 	name = "Biofeedback",
 	type = {"psionic/feedback", 1},
@@ -45,6 +43,7 @@ newTalent{
 	getShieldPower = function(self, t) return self:combatTalentMindDamage(t, 30, 470) end,
 	action = function(self, t)
 		self:setEffect(self.EFF_RESONANCE_FIELD, 10, {power = self:mindCrit(t.getShieldPower(self, t))})
+		game:playSoundNear(self, "talents/spell_generic2")
 		return true
 	end,
 	info = function(self, t)
@@ -113,6 +112,7 @@ newTalent{
 			end
 		end
 		game.level.map:particleEmitter(self.x, self.y, 1, "generic_charge", {rm=255, rM=255, gm=180, gM=255, bm=0, bM=0, am=35, aM=90})
+		game:playSoundNear(self, "talents/heal")
 		return true
 	end,
 	info = function(self, t)

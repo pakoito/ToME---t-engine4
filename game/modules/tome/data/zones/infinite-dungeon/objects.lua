@@ -55,3 +55,51 @@ newEntity{
 		return {used=true, id=true, destroy=true}
 	end},
 }
+
+newEntity{
+	power_source = {technique=true},
+	unique = true,
+	type = "potion", subtype="potion",
+	name = "Antimagic Wyrm Bile Extract",
+	unided_name = "phial filled with slimy liquid",
+	level_range = {10, 50},
+	display = '!', color=colors.VIOLET, image="object/elixir_of_avoidance.png",
+	encumber = 0.4,
+	rarity = 150,
+	desc = [[This potent elixir extracted from a powerful wyrm can grant the power to repel arcane forces.]],
+	cost = 500,
+
+	use_simple = { name = "quaff the elixir", use = function(self, who, inven, item)
+		local d = require("engine.ui.Dialog"):yesnoLongPopup("Antimagic", [[Quaffing this potion will grant you access to the antimagic talents but at the cost of all access to runes, arcane items and spells.]], 500, function(ret)
+			if ret then
+				game.logSeen(who, "%s quaffs the %s!", who.name:capitalize(), self:getName())
+
+				who:removeObject(inven, item)
+
+				for tid, _ in pairs(who.sustain_talents) do
+					local t = who:getTalentFromId(tid)
+					if t.is_spell then who:forceUseTalent(tid, {ignore_energy=true}) end
+				end
+
+				-- Remove equipment
+				for inven_id, inven in pairs(who.inven) do
+					for i = #inven, 1, -1 do
+						local o = inven[i]
+						if o.power_source and o.power_source.arcane then
+							game.logPlayer(who, "You can not use your %s anymore, it is tainted by magic.", o:getName{do_color=true})
+							local o = who:removeObject(inven, i, true)
+							who:addObject(who.INVEN_INVEN, o)
+							who:sortInven()
+						end
+					end
+				end
+
+				who:attr("forbid_arcane", 1)
+				who:learnTalentType("wild-gift/antimagic", true)
+				who:learnTalent(who.T_RESOLVE, true, nil, {no_unlearn=true})
+			end
+		end)
+
+		return {used=true, id=true}
+	end},
+}

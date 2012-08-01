@@ -17,9 +17,6 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-
--- Edge TODO: Sounds
-
 newTalent{
 	name = "Solipsism",
 	type = {"psionic/solipsism", 1},
@@ -27,7 +24,7 @@ newTalent{
 	require = psi_wil_req1,
 	mode = "passive",
 	no_unlearn_last = true,
-	getConversionRatio = function(self, t) return math.min(self:getTalentLevel(t) * 0.13, 1) end,
+	getConversionRatio = function(self, t) return math.min(0.25 + self:getTalentLevel(t) * 0.1, 1) end,
 	on_learn = function(self, t)
 		if self:getTalentLevelRaw(t) == 1 then
 			self:incMaxPsi((self:getWil()-10) * 1)
@@ -63,7 +60,7 @@ newTalent{
 	points = 5, 
 	require = psi_wil_req2,
 	mode = "passive",
-	getBalanceRatio = function(self, t) return math.min(self:getTalentLevel(t) * 0.13, 1) end,
+	getBalanceRatio = function(self, t) return math.min(0.25 + self:getTalentLevel(t) * 0.1, 1) end,
 	on_learn = function(self, t)
 		if self:getTalentLevelRaw(t) == 1 then
 			self:incMaxPsi((self:getWil()-10) * 1)
@@ -96,7 +93,7 @@ newTalent{
 	points = 5, 
 	require = psi_wil_req3,
 	mode = "passive",
-	getClarityThreshold = function(self, t) return math.max(0.5, 1 - self:getTalentLevel(t) / 15) end,
+	getClarityThreshold = function(self, t) return math.max(0.95 - self:getTalentLevel(t) * 0.06, 0.5) end,
 	on_learn = function(self, t)
 		self.clarity_threshold = t.getClarityThreshold(self, t)
 		if self:getTalentLevelRaw(t) == 1 then
@@ -133,7 +130,7 @@ newTalent{
 	points = 5, 
 	require = psi_wil_req4,
 	mode = "passive",
-	getSavePercentage = function(self, t) return math.min(2, self:getTalentLevel(t)/4) end,
+	getSavePercentage = function(self, t) return math.min(0.4 + self:getTalentLevel(t) * 0.16, 1.5) end,
 	on_learn = function(self, t)
 		if self:getTalentLevelRaw(t) == 1 then
 			self:incMaxPsi((self:getWil()-10) * 1)

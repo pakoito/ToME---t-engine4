@@ -1751,7 +1751,7 @@ function _M:onTakeHit(value, src)
 				if e.power * e.dur < value then
 					game:onTickEnd(function() self:removeEffect(eff[2]) end) -- Happens on tick end so Night Terror can work properly
 				else
-					e.dur = e.dur - math.ceil(value/e.power)
+					e.dur = math.max(0, e.dur - math.ceil(value/e.power))
 				end
 			end
 		end

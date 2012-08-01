@@ -17,8 +17,6 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
--- Edge TODO: Sounds
-
 local Map = require "engine.Map"
 
 newTalent{
@@ -96,6 +94,7 @@ newTalent{
 		end
 		
 		game.logSeen(self, "%s's mind is clear!", self.name:capitalize())
+		game:playSoundNear(self, "talents/heal")
 		return true
 	end,
 	info = function(self, t)
@@ -176,6 +175,8 @@ newTalent{
 		m.on_takehit = function(self, value, src) self.summoner:takeHit(value, src) return value end
 		
 		game.zone:addEntity(game.level, m, "actor", x, y)
+		game.level.map:particleEmitter(m.x, m.y, 1, "generic_teleport", {rm=0, rM=0, gm=100, gM=180, bm=180, bM=255, am=35, aM=90})
+		game:playSoundNear(self, "talents/teleport")
 	
 		if game.party:hasMember(self) then
 			game.party:addMember(m, {
@@ -189,9 +190,13 @@ newTalent{
 					self.summoner.ai = "none"
 				end,
 				on_uncontrol = function(self)
-					self.summoner.ai = self.summoner.projection_ai
-					self.summon_time = 0
-					game:onTickEnd(function() game.party:removeMember(self) end)
+					game:onTickEnd(function() 
+						self.summoner.ai = self.summoner.projection_ai
+						self.energy.value = 0
+						self.summon_time = 0
+						game.party:removeMember(self)
+						game.level.map:particleEmitter(self.summoner.x, self.summoner.y, 1, "generic_teleport", {rm=0, rM=0, gm=100, gM=180, bm=180, bM=255, am=35, aM=90})
+					end)
 				end,
 			})
 		end
@@ -240,6 +245,7 @@ newTalent{
 		
 		game.level.map:particleEmitter(self.x, self.y, 1, "generic_discharge", {rm=0, rM=0, gm=100, gM=180, bm=180, bM=255, am=35, aM=90})
 		game.level.map:particleEmitter(target.x, target.y, 1, "generic_discharge", {rm=0, rM=0, gm=100, gM=180, bm=180, bM=255, am=35, aM=90})
+		game:playSoundNear(self, "talents/echo")
 		
 		local ret = {
 			target = target,

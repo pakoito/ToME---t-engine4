@@ -17,8 +17,6 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
--- Edge TODO: Sounds
-
 newTalent{
 	name = "Nightmare",
 	type = {"psionic/nightmare", 1},
@@ -35,7 +33,7 @@ newTalent{
 	getInsomniaPower= function(self, t)
 		local t = self:getTalentFromId(self.T_SANDMAN)
 		local reduction = t.getInsomniaPower(self, t)
-		return 10 - reduction
+		return 20 - reduction
 	end,
 	getSleepPower = function(self, t) 
 		local power = self:combatTalentMindDamage(t, 5, 25)
@@ -71,7 +69,7 @@ newTalent{
 		end)
 		
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "generic_wave", {radius=tg.radius, tx=x-self.x, ty=y-self.y, rm=60, rM=130, gm=20, gM=110, bm=90, bM=130, am=35, aM=90})
-		
+		game:playSoundNear(self, "talents/breath")
 		return true
 	end,
 	info = function(self, t)
@@ -199,7 +197,8 @@ newTalent{
 		else
 			game.logSeen(target, "%s resists the demons!", target.name:capitalize())
 		end
-
+		
+		game:playSoundNear(self, "talents/arcane")
 		return true
 	end,
 	info = function(self, t)
@@ -243,6 +242,7 @@ newTalent{
 			game.logSeen(target, "%s resists the nightmare!", target.name:capitalize())
 		end
 
+		game:playSoundNear(self, "talents/arcane")
 		return true
 	end,
 	info = function(self, t)
@@ -330,7 +330,7 @@ newTalent{
 
 	end,
 	activate = function(self, t)
-		game:playSoundNear(self, "talents/heal")
+		game:playSoundNear(self, "talents/spell_generic")
 		local ret = {
 			damage = self:addTemporaryValue("night_terror", t.getDamageBonus(self, t)),
 			particle = self:addParticles(Particles.new("ultrashield", 1, {rm=60, rM=130, gm=20, gM=110, bm=90, bM=130, am=70, aM=180, radius=0.4, density=60, life=14, instop=20})),

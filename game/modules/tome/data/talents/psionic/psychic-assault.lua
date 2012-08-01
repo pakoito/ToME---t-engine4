@@ -17,8 +17,6 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
--- Edge TODO: Sounds
-
 newTalent{
 	name = "Sunder Mind",
 	type = {"psionic/psychic-assault", 1},
@@ -27,7 +25,7 @@ newTalent{
 	cooldown = 2,
 	psi = 5,
 	tactical = { ATTACK = { MIND = 2}, DISABLE = 1},
-	range = 10,
+	range = 7,
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentMindDamage(t, 10, 150) end,
 	target = function(self, t)
@@ -44,7 +42,8 @@ newTalent{
 		local dam =self:mindCrit(t.getDamage(self, t))
 		self:project(tg, x, y, DamageType.MIND, {dam=dam, alwaysHit=true}, {type="mind"})
 		target:setEffect(target.EFF_SUNDER_MIND, 2, {power=dam/10})
-			
+		
+		game:playSoundNear(self, "talents/warp")
 		return true
 	end,
 	info = function(self, t)
@@ -62,11 +61,11 @@ newTalent{
 	require = psi_wil_req2,
 	points = 5,
 	cooldown = 10,
-	psi = 25,
+	psi = 10,
 	range = 0,
 	direct_hit = true,
 	requires_target = true,
-	radius = function(self, t) return math.min(10, 3 + math.ceil(self:getTalentLevel(t))) end,
+	radius = function(self, t) return math.min(10, 3 + math.ceil(self:getTalentLevel(t)/2)) end,
 	target = function(self, t) return {type="ball", radius=self:getTalentRadius(t), range=self:getTalentRange(t), talent=t, selffire=false} end,
 	tactical = { ATTACKAREA = { MIND = 3 }, DISABLE=1 },
 	getDamage = function(self, t) return self:combatTalentMindDamage(t, 20, 200) end,
@@ -74,7 +73,7 @@ newTalent{
 		local tg = self:getTalentTarget(t)
 		self:project(tg, self.x, self.y, DamageType.MIND, {dam=self:mindCrit(self:combatTalentMindDamage(t, 20, 200)), crossTierChance=100} )
 		game.level.map:particleEmitter(self.x, self.y, self:getTalentRadius(t), "generic_ball", {radius=self:getTalentRadius(t), rm=100, rM=125, gm=100, gM=125, bm=100, bM=125, am=200, aM=255})
-		game:playSoundNear(self, "talents/spell_generic")
+		game:playSoundNear(self, "talents/echo")
 		return true
 	end,
 	info = function(self, t)
@@ -90,15 +89,15 @@ newTalent{
 	type = {"psionic/psychic-assault", 3},
 	require = psi_wil_req3,
 	points = 5,
-	cooldown = 6,
-	range = 10,
+	cooldown = 8,
+	range = 7,
 	psi = 10,
 	direct_hit = true,
 	requires_target = true,
 	tactical = { ATTACK = { MIND = 2 }, DISABLE = { confusion = 2 } },
 	getDamage = function(self, t) return self:combatTalentMindDamage(t, 20, 200) end,
 	getPower = function(self, t) return self:combatTalentMindDamage(t, 20, 60) end,
-	getDuration = function(self, t) return math.floor(self:getTalentLevel(t)) end,
+	getDuration = function(self, t) return 1 + math.floor(self:getTalentLevel(t)) end,
 	no_npc = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
@@ -116,6 +115,7 @@ newTalent{
 			game.logSeen(target, "%s resists the lobotomy!", target.name:capitalize())
 		end
 
+		game:playSoundNear(self, "talents/cloud")
 		return true
 	end,
 	info = function(self, t)
