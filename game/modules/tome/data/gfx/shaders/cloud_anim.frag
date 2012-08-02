@@ -13,8 +13,11 @@ void main(void)
 	vec2 uv = gl_TexCoord[0].xy;
 	vec2 r = vec2(rand(mapCoord / texSize));
 
-	int blursize = 2;
+	int blursize = 1;
 	vec2 offset = 1.0/texSize;
+
+	if (r.x < 0.5) blursize = 2;
+	else blursize = 3;
 
 	// Center Pixel
 	vec4 sample = vec4(0.0,0.0,0.0,0.0);
