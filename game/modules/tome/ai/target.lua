@@ -59,6 +59,7 @@ newAI("target_player_radius", function(self)
 
 	if core.fov.distance(self.x, self.y, game.player.x, game.player.y) < self.ai_state.sense_radius then
 		self.ai_target.actor = game.player
+		self:check("on_acquire_target", game.player)
 		return true
 	end
 end)

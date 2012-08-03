@@ -46,7 +46,7 @@ return {
 		},
 	},
 	post_process = function(level)
-		game.state:makeWeather(level, 6, {max_nb=2, chance=1, dir=120, speed={0.1, 0.9}, alpha={0.2, 0.4}, particle_name="weather/grey_cloud_%02d"})
+		game.state:makeWeather(level, 6, {max_nb=2, chance=1, dir=120, r=0.8, g=0.4, b=0.8, speed={0.1, 0.9}, alpha={0.2, 0.4}, particle_name="weather/grey_cloud_%02d"})
 	end,
 	foreground = function(level, dx, dx, nb_keyframes)
 		local tick = core.game.getTime()

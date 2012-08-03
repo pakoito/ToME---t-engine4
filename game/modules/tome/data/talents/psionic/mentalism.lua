@@ -64,7 +64,16 @@ newTalent{
 	require = psi_wil_req2,
 	psi = 15,
 	cooldown = 24,
-	tactical = { CURE=2},
+	tactical = { BUFF = 1, CURE = function(self, t, target)
+		local nb = 0
+		for eff_id, p in pairs(self.tmp) do
+			local e = self.tempeffect_def[eff_id]
+			if e.status == "detrimental" and e.type == "mental" then
+				nb = nb + 1
+			end
+		end
+		return nb
+	end,},
 	no_energy = true,
 	getRemoveCount = function(self, t) return math.ceil(self:getTalentLevel(t)) end,
 	action = function(self, t)
@@ -251,6 +260,11 @@ newTalent{
 			target = target,
 			esp = self:addTemporaryValue("esp", {[target.type] = 1}),
 		}
+		
+		-- Update for ESP
+		game:onTickEnd(function() 
+			self:resetCanSeeCache()
+		end)
 		
 		return ret
 	end,

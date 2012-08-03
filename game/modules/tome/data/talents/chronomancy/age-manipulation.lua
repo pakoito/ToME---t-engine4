@@ -157,7 +157,16 @@ newTalent{
 	points = 5,
 	paradox = 10,
 	cooldown = 10,
-	tactical = { HEAL = 2, CURE = 2 },
+	tactical = { HEAL = 2, CURE = function(self, t, target)
+		local nb = 0
+		for eff_id, p in pairs(self.tmp) do
+			local e = self.tempeffect_def[eff_id]
+			if e.status == "detrimental" and e.type == "physical" then
+				nb = nb + 1
+			end
+		end
+		return nb
+	end },
 	is_heal = true,
 	getHeal = function(self, t) return self:combatTalentSpellDamage(t, 40, 440)*getParadoxModifier(self, pm) end,
 	getRemoveCount = function(self, t) return math.floor(self:getTalentLevel(t)) end,

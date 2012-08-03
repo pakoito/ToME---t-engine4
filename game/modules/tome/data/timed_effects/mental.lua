@@ -2273,7 +2273,7 @@ newEffect{
 	on_lose = function(self, err) return "#Target#'s regains it's senses.", "-Lobotomized" end,
 	parameters = { power=1, dam=1 },
 	activate = function(self, eff)
-		DamageType:get(DamageType.MIND).projector(eff.src or self, self.x, self.y, DamageType.MIND, eff.src:mindCrit(eff.dam))
+		DamageType:get(DamageType.MIND).projector(eff.src or self, self.x, self.y, DamageType.MIND, {dam=eff.dam, alwaysHit=true})
 		eff.power = math.max(eff.power - (self:attr("confusion_immune") or 0) * 100, 10)
 		eff.tmpid = self:addTemporaryValue("confused", eff.power)
 		eff.cid = self:addTemporaryValue("inc_stats", {[Stats.STAT_CUN]=-eff.power/2})
@@ -2345,10 +2345,22 @@ newEffect{
 	parameters = { power=100 },
 	on_gain = function(self, err) return "A psychic field forms around #target#.", "+Resonance Shield" end,
 	on_lose = function(self, err) return "The psychic field around #target# crumbles.", "-Resonance Shield" end,
+	damage_feedback = function(self, eff, src, value)
+		if eff.particle and eff.particle._shader and eff.particle._shader.shad and src and src.x and src.y then
+			local r = -rng.float(0.2, 0.4)
+			local a = math.atan2(src.y - self.y, src.x - self.x)
+			eff.particle._shader:setUniform("impact", {math.cos(a) * r, math.sin(a) * r})
+			eff.particle._shader:setUniform("impact_tick", core.game.getTime())
+		end
+	end,
 	activate = function(self, eff)
 		self.resonance_field_absorb = eff.power
-		eff.particle = self:addParticles(engine.Particles.new("ultrashield", 1, {rm=255, rM=255, gm=180, gM=255, bm=0, bM=0, am=70, aM=180, radius=0.4, density=60, life=14, instop=1, static=100}))
 		eff.sid = self:addTemporaryValue("resonance_field", eff.power)
+		if core.shader.active() then
+			eff.particle = self:addParticles(Particles.new("shader_shield", 1, {img="shield2", size_factor=1.25}, {type="shield", time_factor=6000, color={1, 1, 0}}))
+		else
+			eff.particle = self:addParticles(Particles.new("time_shield_bubble", 1))
+		end
 	end,
 	deactivate = function(self, eff)
 		self.resonance_field_absorb = nil
@@ -2433,7 +2445,11 @@ newEffect{
 		if dream_prison then
 			eff.dur = eff.dur + 1
 			if not eff.particle then
-				eff.particle = self:addParticles(engine.Particles.new("ultrashield", 1, {rm=0, rM=0, gm=180, gM=255, bm=180, bM=255, am=70, aM=180, radius=0.4, density=60, life=14, instop=1, static=100}))
+				if core.shader.active() then
+					eff.particle = self:addParticles(Particles.new("shader_shield", 1, {img="shield2", size_factor=1.25}, {type="shield", time_factor=6000, aadjust=5, color={0, 1, 1}}))
+				else
+					eff.particle = self:addParticles(engine.Particles.new("ultrashield", 1, {rm=0, rM=0, gm=180, gM=255, bm=180, bM=255, am=70, aM=180, radius=0.4, density=60, life=14, instop=1, static=100}))
+				end
 			end
 		elseif eff.contagious > 0 and eff.dur > 1 then
 			local t = eff.src:getTalentFromId(eff.src.T_SLEEP)
@@ -2443,7 +2459,7 @@ newEffect{
 			self:removeParticles(eff.particle)
 		end
 		-- Incriment Insomnia Duration
-		eff.insomnia_duration = eff.insomnia_duration + 1
+		eff.insomnia_duration = math.min(eff.insomnia_duration + 1, 10)
 	end,
 	activate = function(self, eff)
 		eff.insomnia_duration = 0
@@ -2485,13 +2501,17 @@ newEffect{
 		if dream_prison then
 			eff.dur = eff.dur + 1
 			if not eff.particle then
-				eff.particle = self:addParticles(engine.Particles.new("ultrashield", 1, {rm=0, rM=0, gm=180, gM=255, bm=180, bM=255, am=70, aM=180, radius=0.4, density=60, life=14, instop=1, static=100}))
+				if core.shader.active() then
+					eff.particle = self:addParticles(Particles.new("shader_shield", 1, {img="shield2", size_factor=1.25}, {type="shield", time_factor=6000, aadjust=5, color={0, 1, 1}}))
+				else
+					eff.particle = self:addParticles(engine.Particles.new("ultrashield", 1, {rm=0, rM=0, gm=180, gM=255, bm=180, bM=255, am=70, aM=180, radius=0.4, density=60, life=14, instop=1, static=100}))
+				end
 			end
 		elseif eff.particle and not dream_prison then
 			self:removeParticles(eff.particle)
 		end
 		-- Incriment Insomnia Duration
-		eff.insomnia_duration = eff.insomnia_duration + 1
+		eff.insomnia_duration = math.min(eff.insomnia_duration + 1, 10)
 	end,
 	activate = function(self, eff)
 		eff.insomnia_duration = 0
@@ -2533,7 +2553,11 @@ newEffect{
 		if dream_prison then
 			eff.dur = eff.dur + 1
 			if not eff.particle then
-				eff.particle = self:addParticles(engine.Particles.new("ultrashield", 1, {rm=0, rM=0, gm=180, gM=255, bm=180, bM=255, am=70, aM=180, radius=0.4, density=60, life=14, instop=1, static=100}))
+				if core.shader.active() then
+					eff.particle = self:addParticles(Particles.new("shader_shield", 1, {img="shield2", size_factor=1.25}, {type="shield", aadjust=5, color={0, 1, 1}}))
+				else
+					eff.particle = self:addParticles(engine.Particles.new("ultrashield", 1, {rm=0, rM=0, gm=180, gM=255, bm=180, bM=255, am=70, aM=180, radius=0.4, density=60, life=14, instop=1, static=100}))
+				end
 			end
 		else
 			-- Store the power for later
@@ -2548,7 +2572,7 @@ newEffect{
 			self:removeParticles(eff.particle)
 		end
 		-- Incriment Insomnia Duration
-		eff.insomnia_duration = eff.insomnia_duration + 1
+		eff.insomnia_duration = math.min(eff.insomnia_duration + 1, 10)
 	end,
 	activate = function(self, eff)
 		eff.insomnia_duration = 0

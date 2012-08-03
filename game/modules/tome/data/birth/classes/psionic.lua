@@ -152,11 +152,11 @@ newBirthDescriptor{
 newBirthDescriptor{
 	type = "subclass",
 	name = "Solipsist",
-	locked = function() return profile.mod.allow_build.psionic_solipsist and true or "hide"  end,
-	locked_desc = "The world as we know it is the collective dream of those that live in it.  Find and wake the sleeper and you'll unlock the potential of your dreams.",
+	locked = function() return profile.mod.allow_build.psionic_solipsist end,
+	locked_desc = "Some believe that the world is the collective dream of those that live in it.  Find and wake the sleeper and you'll unlock the potential of your dreams.",
 	desc = {
-		"The Solipsist has awakened to the truth of reality, that it's malleable, nothing more than the collective vision of those that experience it.",
-		"They wield this knowledge to both create and destory, to invade the minds of others, and to manipulate the dreams of the unenlightened.",
+		"The Solipsist believes that reality is malleable and nothing more than the collective vision of those that experience it.",
+		"They wield this knowledge to both create and destory, to invade the minds of others, and to manipulate the dreams of those around them.",
 		"This knowledge comes with a heavy price and the Solipsist must guard his thoughts, lest he come to believe that the world exists only within his own mind.",
 		"Their most important stats are: Willpower and Cunning",
 		"#GOLD#Stat modifiers:",
@@ -187,7 +187,7 @@ newBirthDescriptor{
 	talents = {
 		[ActorTalents.T_SLEEP] = 1,
 		
-		[ActorTalents.T_SUNDER_MIND] = 1,
+		[ActorTalents.T_MIND_SEAR] = 1,
 		[ActorTalents.T_SOLIPSISM] = 1,
 		[ActorTalents.T_THOUGHT_FORMS] = 1,
 	},

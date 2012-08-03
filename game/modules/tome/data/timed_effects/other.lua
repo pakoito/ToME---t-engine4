@@ -1557,7 +1557,7 @@ newEffect{
 newEffect{
 	name = "SOLIPSISM", image = "talents/solipsism.png",
 	desc = "Solipsism",
-	long_desc = function(self, eff) return ("This creature has fallen into a solipsistic state and is caught up in its own thoughts (-%d%% global speed)."):format(eff.power * 100) end,
+	long_desc = function(self, eff) return ("This creature has fallen into a solipsistic state and is caught up in its own egoic thoughts (-%d%% global speed)."):format(eff.power * 100) end,
 	type = "other",
 	subtype = { psionic=true },
 	status = "detrimental",
@@ -1575,7 +1575,7 @@ newEffect{
 newEffect{
 	name = "CLARITY", image = "talents/clarity.png",
 	desc = "Clarity",
-	long_desc = function(self, eff) return ("The creature has found a state of clarity (+%d%% global speed)."):format(eff.power * 100) end,
+	long_desc = function(self, eff) return ("The creature has found a state of clarity and sees the world for what it is (+%d%% global speed)."):format(eff.power * 100) end,
 	type = "other",
 	subtype = { psionic=true },
 	status = "beneficial",
@@ -1616,14 +1616,16 @@ newEffect{
 			-- Create a clone for later spawning
 			local m = require("mod.class.NPC").new(eff.target:clone{
 				shader = "shadow_simulacrum",
-				shader_args = { color = {0.0, 0.4, 0.8}, base = 0.6 },
+				shader_args = { color = {0.0, 1, 1}, base = 0.6 },
 				no_drops = true,
 				faction = eff.target.faction,
 				summoner = eff.target, summoner_gain_exp=true,
 				ai_target = {actor=nil},
 				ai = "summoned", ai_real = "tactical",
+				ai_state = eff.target.ai_state or { ai_move="move_dmap", talent_in=1 },
 				name = eff.target.name.."'s dream projection",
 			})
+			m.ai_state.ally_compassion = 10
 			m:removeAllMOs()
 			m.make_escort = nil
 			m.on_added_to_level = nil
@@ -1659,8 +1661,11 @@ newEffect{
 			-- track number killed
 			m.on_die = function(self, who)
 				if who then
-					local p = who:hasEffect(who.EFF_DREAMSCAPE) or who.summoner:hasEffect(who.summoner.EFF_DREAMSCAPE)
-					p.projections_killed = p.projections_killed + 1
+					local p = who:hasEffect(who.EFF_DREAMSCAPE)
+					if p then -- For the rare instance we die after the effect ends but before the dreamscape instance closes
+						p.projections_killed = p.projections_killed + 1
+						game.logSeen(p.target, "#LIGHT_RED#%s writhes in agony as a fragment of it's mind is destroyed!", p.target.name:capitalize())
+					end
 				end
 			end
 
@@ -1679,6 +1684,11 @@ newEffect{
 					m:resetCanSeeCache()
 				end
 			end
+			
+			-- Try to insure the AI isn't attacking the invulnerable actor
+			if self.ai_target and self.ai_target.actor and self.ai_target.actor:attr("invulnerable") then
+				self.ai_target.actor = nil
+			end
 		end
 	end,
 	activate = function(self, eff)
@@ -1687,8 +1697,13 @@ newEffect{
 		eff.sid = eff.target:addTemporaryValue("time_prison", 1)
 		eff.tid = eff.target:addTemporaryValue("no_timeflow", 1)
 		eff.imid = eff.target:addTemporaryValue("status_effect_immune", 1)
-		eff.particle = eff.target:addParticles(engine.Particles.new("ultrashield", 1, {rm=0, rM=0, gm=180, gM=255, bm=180, bM=255, am=70, aM=180, radius=0.4, density=60, life=14, instop=1, static=100}))
 		eff.target.energy.value = 0
+		if core.shader.active() then
+			eff.particle = eff.target:addParticles(Particles.new("shader_shield", 1, {img="shield2", size_factor=1.25}, {type="shield", time_factor=6000, aadjust=5, color={0, 1, 1}}))
+		else
+			eff.particle = eff.target:addParticles(Particles.new("damage_shield", 1))
+		end
+		
 		-- Make the invader deadly
 		eff.pid = self:addTemporaryValue("inc_damage", {all=eff.power})
 		eff.did = self:addTemporaryValue("lucid_dreamer", 1)
@@ -1772,8 +1787,13 @@ newEffect{
 
 			-- Apply Dreamscape hit
 			if eff.projections_killed > 0 then
-				eff.target:takeHit(eff.target.max_life/10 * eff.projections_killed, self)
-				eff.target:setEffect(eff.target.EFF_BRAINLOCKED, eff.projections_killed, {})
+				local kills = eff.projections_killed
+				eff.target:takeHit(eff.target.max_life/10 * kills, self)
+				eff.target:setEffect(eff.target.EFF_BRAINLOCKED, kills, {})
+				
+				local loss = "loss"
+				if kills >= 10 then loss = "potentially fatal loss" elseif kills >=8 then loss = "devastating loss" elseif kills >=6 then loss = "tremendous loss" elseif kills >=4 then loss = "terrible loss" end
+				game.logSeen(eff.target, "#LIGHT_RED#%s suffered a %s of self in the Dreamscape!", eff.target.name:capitalize(), loss)
 			end
 		end)
 	end,

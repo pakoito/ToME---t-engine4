@@ -1513,11 +1513,6 @@ function _M:onTakeHit(value, src)
 		return 0
 	end
 
-	if self.knowTalent and self:knowTalent(self.T_DISMISSAL) then
-		local t = self:getTalentFromId(self.T_DISMISSAL)
-		value = t.doDismissalOnHit(self, value, src, t)
-	end
-
 	if self:attr("retribution") then
 	-- Absorb damage into the retribution
 		if value / 2 <= self.retribution_absorb then
@@ -1696,6 +1691,12 @@ function _M:onTakeHit(value, src)
 			eff.begone = game.turn
 		end
 	end
+	
+	-- Mind save to reduce damage to zero
+	if self:knowTalent(self.T_DISMISSAL) and value > 0 then
+		local t = self:getTalentFromId(self.T_DISMISSAL)
+		value = t.doDismissalOnHit(self, value, src, t)
+	end
 
 	-- Feedback pool: Stores damage as energy to use later
 	if self:getMaxFeedback() > 0 and src ~= self and src ~= self.summoner then
@@ -1757,20 +1758,11 @@ function _M:onTakeHit(value, src)
 		end
 	end
 
-	-- Solipsism
-	if self:knowTalent(self.T_SOLIPSISM) then
+	-- Solipsism damage; set it up here but apply it after on_take_hit
+	local damage_to_psi = 0
+	if self:knowTalent(self.T_SOLIPSISM) and value > 0 then
 		local t = self:getTalentFromId(self.T_SOLIPSISM)
-		local damage_to_psi = value * t.getConversionRatio(self, t)
-		if self:getPsi() > damage_to_psi then
-			self:incPsi(-damage_to_psi)
-		else
-			damage_to_psi = self:getPsi()
-			self:incPsi(-damage_to_psi)
-		end
-		if damage_to_psi > 0 then
-			game.logSeen(self, "%s's mind suffers #YELLOW#%d psi#LAST# damage from the attack.", self.name:capitalize(), damage_to_psi)
-		end
-		value = value - damage_to_psi
+		damage_to_psi = value * t.getConversionRatio(self, t)
 	end
 
 	-- Stoned ? SHATTER !
@@ -1858,6 +1850,18 @@ function _M:onTakeHit(value, src)
 	end
 
 	if self.on_takehit then value = self:check("on_takehit", value, src) end
+	
+	-- Apply Solipsism hit
+	if damage_to_psi > 0 then
+		if self:getPsi() > damage_to_psi then
+			self:incPsi(-damage_to_psi)
+		else
+			damage_to_psi = self:getPsi()
+			self:incPsi(-damage_to_psi)
+		end
+		game.logSeen(self, "%s's mind suffers #YELLOW#%d psi#LAST# damage from the attack.", self.name:capitalize(), damage_to_psi)
+		value = value - damage_to_psi
+	end
 
 	-- VITALITY?
 	if self:knowTalent(self.T_VITALITY) and self.life > self.max_life /2 and self.life - value <= self.max_life/2 then

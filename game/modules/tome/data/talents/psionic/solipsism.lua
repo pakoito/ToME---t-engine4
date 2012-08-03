@@ -27,13 +27,19 @@ newTalent{
 	getConversionRatio = function(self, t) return math.min(0.25 + self:getTalentLevel(t) * 0.1, 1) end,
 	on_learn = function(self, t)
 		if self:getTalentLevelRaw(t) == 1 then
-			self:incMaxPsi((self:getWil()-10) * 1)
-			self.max_life = self.max_life - (self:getCon()-10) * 0.5
 			self.inc_resource_multi.psi = (self.inc_resource_multi.psi or 0) + 1
 			self.inc_resource_multi.life = (self.inc_resource_multi.life or 0) - 0.5
 			self.life_rating = math.ceil(self.life_rating/2)
 			self.psi_rating =  self.psi_rating + 10
 			self.solipsism_threshold = (self.solipsism_threshold or 0) + 0.2
+			
+			-- Adjust the values onTickEnd for NPCs to make sure these table values are resolved
+			-- If we're not the player, we resetToFull to ensure correct values
+			game:onTickEnd(function()
+				self:incMaxPsi((self:getWil()-10) * 1)
+				self.max_life = self.max_life - (self:getCon()-10) * 0.5
+				if self ~= game.player then self:resetToFull() end
+			end)
 		end
 	end,
 	on_unlearn = function(self, t)
@@ -63,11 +69,16 @@ newTalent{
 	getBalanceRatio = function(self, t) return math.min(0.25 + self:getTalentLevel(t) * 0.1, 1) end,
 	on_learn = function(self, t)
 		if self:getTalentLevelRaw(t) == 1 then
-			self:incMaxPsi((self:getWil()-10) * 1)
-			self.max_life = self.max_life - (self:getCon()-10) * 0.5
 			self.inc_resource_multi.psi = (self.inc_resource_multi.psi or 0) + 1
 			self.inc_resource_multi.life = (self.inc_resource_multi.life or 0) - 0.5
 			self.solipsism_threshold = (self.solipsism_threshold or 0) + 0.1
+			-- Adjust the values onTickEnd for NPCs to make sure these table values are filled out
+			-- If we're not the player, we resetToFull to ensure correct values
+			game:onTickEnd(function()
+				self:incMaxPsi((self:getWil()-10) * 1)
+				self.max_life = self.max_life - (self:getCon()-10) * 0.5
+				if self ~= game.player then self:resetToFull() end
+			end)
 		end
 	end,
 	on_unlearn = function(self, t)
@@ -97,11 +108,16 @@ newTalent{
 	on_learn = function(self, t)
 		self.clarity_threshold = t.getClarityThreshold(self, t)
 		if self:getTalentLevelRaw(t) == 1 then
-			self:incMaxPsi((self:getWil()-10) * 1)
-			self.max_life = self.max_life - (self:getCon()-10) * 0.5
 			self.inc_resource_multi.psi = (self.inc_resource_multi.psi or 0) + 1
 			self.inc_resource_multi.life = (self.inc_resource_multi.life or 0) - 0.5
 			self.solipsism_threshold = (self.solipsism_threshold or 0) + 0.1
+			-- Adjust the values onTickEnd for NPCs to make sure these table values are resolved
+			-- If we're not the player, we resetToFull to ensure correct values
+			game:onTickEnd(function()
+				self:incMaxPsi((self:getWil()-10) * 1)
+				self.max_life = self.max_life - (self:getCon()-10) * 0.5
+				if self ~= game.player then self:resetToFull() end
+			end)
 		end
 	end,
 	on_unlearn = function(self, t)
@@ -133,11 +149,16 @@ newTalent{
 	getSavePercentage = function(self, t) return math.min(0.4 + self:getTalentLevel(t) * 0.16, 1.5) end,
 	on_learn = function(self, t)
 		if self:getTalentLevelRaw(t) == 1 then
-			self:incMaxPsi((self:getWil()-10) * 1)
-			self.max_life = self.max_life - (self:getCon()-10) * 0.5
 			self.inc_resource_multi.psi = (self.inc_resource_multi.psi or 0) + 1
 			self.inc_resource_multi.life = (self.inc_resource_multi.life or 0) - 0.5
 			self.solipsism_threshold = (self.solipsism_threshold or 0) + 0.1
+			-- Adjust the values onTickEnd for NPCs to make sure these table values are resolved
+			-- If we're not the player, we resetToFull to ensure correct values
+			game:onTickEnd(function()
+				self:incMaxPsi((self:getWil()-10) * 1)
+				self.max_life = self.max_life - (self:getCon()-10) * 0.5
+				if self ~= game.player then self:resetToFull() end
+			end)
 		end
 	end,
 	on_unlearn = function(self, t)

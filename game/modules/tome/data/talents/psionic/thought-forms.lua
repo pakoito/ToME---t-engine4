@@ -80,7 +80,10 @@ newTalent{
 			-- Keep them on a leash
 			on_act = function(self)
 				local t = self.summoner:getTalentFromId(self.summoner.T_TF_BOWMAN)
-				if not game.level:hasEntity(self.summoner) or core.fov.distance(self.x, self.y, self.summoner.x, self.summoner.y) > self.summoner:getTalentRange(t) then
+				if not game.level:hasEntity(self.summoner) or self.summoner.dead or not self.summoner:isTalentActive(self.summoner.T_TF_BOWMAN) then
+					self:die(self)
+				end
+				if game.level:hasEntity(self.summoner) and core.fov.distance(self.x, self.y, self.summoner.x, self.summoner.y) > self.summoner:getTalentRange(t) then
 					local Map = require "engine.Map"
 					local x, y = util.findFreeGrid(self.summoner.x, self.summoner.y, 5, true, {[Map.ACTOR]=true})
 					if not x then
@@ -143,7 +146,9 @@ newTalent{
 		return ret
 	end,
 	deactivate = function(self, t, p)
-		p.summon:die(p.summon)
+		if p.summon and p.summon.summoner == self then
+			p.summon:die(p.summon)
+		end
 		if p.speed then self:removeTemporaryValue("combat_mindspeed", p.speed) end
 		return true
 	end,
@@ -216,7 +221,10 @@ newTalent{
 			-- Keep them on a leash
 			on_act = function(self)
 				local t = self.summoner:getTalentFromId(self.summoner.T_TF_WARRIOR)
-				if not game.level:hasEntity(self.summoner) or core.fov.distance(self.x, self.y, self.summoner.x, self.summoner.y) > self.summoner:getTalentRange(t) then
+				if not game.level:hasEntity(self.summoner) or self.summoner.dead or not self.summoner:isTalentActive(self.summoner.T_TF_WARRIOR) then
+					self:die(self)
+				end
+				if game.level:hasEntity(self.summoner) and core.fov.distance(self.x, self.y, self.summoner.x, self.summoner.y) > self.summoner:getTalentRange(t) then
 					local Map = require "engine.Map"
 					local x, y = util.findFreeGrid(self.summoner.x, self.summoner.y, 5, true, {[Map.ACTOR]=true})
 					if not x then
@@ -278,7 +286,9 @@ newTalent{
 		return ret
 	end,
 	deactivate = function(self, t, p)
-		p.summon:die(p.summon)
+		if p.summon and p.summon.summoner == self then
+			p.summon:die(p.summon)
+		end
 		if p.power then self:removeTemporaryValue("combat_mindpower", p.power) end
 		return true
 	end,
@@ -351,7 +361,10 @@ newTalent{
 			-- Keep them on a leash
 			on_act = function(self)
 				local t = self.summoner:getTalentFromId(self.summoner.T_TF_DEFENDER)
-				if not game.level:hasEntity(self.summoner) or core.fov.distance(self.x, self.y, self.summoner.x, self.summoner.y) > self.summoner:getTalentRange(t) then
+				if not game.level:hasEntity(self.summoner) or self.summoner.dead or not self.summoner:isTalentActive(self.summoner.T_TF_DEFENDER) then
+					self:die(self)
+				end
+				if game.level:hasEntity(self.summoner) and core.fov.distance(self.x, self.y, self.summoner.x, self.summoner.y) > self.summoner:getTalentRange(t) then
 					local Map = require "engine.Map"
 					local x, y = util.findFreeGrid(self.summoner.x, self.summoner.y, 5, true, {[Map.ACTOR]=true})
 					if not x then
@@ -415,7 +428,9 @@ newTalent{
 		return ret
 	end,
 	deactivate = function(self, t, p)
-		p.summon:die(p.summon)
+		if p.summon and p.summon.summoner == self then
+			p.summon:die(p.summon)
+		end
 		if p.resist then self:removeTemporaryValue("resists", p.resist) end
 		return true
 	end,
@@ -464,7 +479,7 @@ newTalent{
 		local bonus = t.getStatBonus(self, t)
 		local range = self:getTalentRange(t)
 		return([[Forge a guardian from your thoughts alone.  Your guardian's primary stat will be improved by %d and it's two secondary stats by %d.
-		At talent level one you may forge a mighty bowman clad in leather armor, at level three a powerful warrior wielding a two-handed weapon, and at level five a strong defender using a sword and shield, and at talent level 5 
+		At talent level one you may forge a mighty bowman clad in leather armor, at level three a powerful warrior wielding a two-handed weapon, and at level five a strong defender using a sword and shield.
 		Thought forms can only be maintained up to a range of %d and will rematerialize next to you if this range is exceeded.
 		Only one thought-form may be active at a time and the stat bonuses will improve with your mindpower.]]):format(bonus, bonus/2, range)
 	end,

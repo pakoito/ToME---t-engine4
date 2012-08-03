@@ -116,7 +116,7 @@ newTalent{
 	require = psi_wil_req4,
 	cooldown = 24,
 	psi = 40,
-	tactical = { DISABLE = {sleep = 2} },
+	tactical = { DISABLE = function(self, t, target) if target:attr("sleep") then return 4 else return 0 end end},
 	direct_hit = true,
 	requires_target = true,
 	range = function(self, t) return 5 + math.min(5, self:getTalentLevelRaw(t)) end,
@@ -212,6 +212,12 @@ newTalent{
 			end
 
 			game.logPlayer(game.player, "#LIGHT_BLUE#You are taken to the Dreamscape!")
+			
+			-- Learn about solipsists
+			if target == game.player then
+				game:setAllowedBuild("psionic_solipsist", true)
+			end
+			
 		end)
 		
 		local power = self:mindCrit(t.getPower(self, t))

@@ -19,7 +19,7 @@
 
 local DamageType = require "engine.DamageType"
 
-local print = function() end
+--local print = function() end
 
 -- Internal functions
 local checkLOS = function(sx, sy, tx, ty)
@@ -185,13 +185,14 @@ newAI("use_tactical", function(self)
 
 		local need_heal = 0
 		local life = 100 * self.life / self.max_life
+		-- Subtract solipsism straight from the life value to give us higher than normal weights; helps keep clarity up and avoid solipsism
+		if self:knowTalent(self.T_SOLIPSISM) then life = life - (100 * self:getPsi() / self:getMaxPsi()) end
 		if life < 20 then need_heal = need_heal + 10 * self_compassion / 5
 		elseif life < 30 then need_heal = need_heal + 8 * self_compassion / 5
 		elseif life < 40 then need_heal = need_heal + 5 * self_compassion / 5
 		elseif life < 60 then need_heal = need_heal + 4 * self_compassion / 5
 		elseif life < 80 then need_heal = need_heal + 3 * self_compassion / 5
 		end
-
 		-- Need healing
 		if avail.heal then
 			want.heal = need_heal

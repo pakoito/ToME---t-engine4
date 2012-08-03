@@ -30,7 +30,7 @@ newEntity{
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=3, },
 
-	stats = { str=02, dex=20, wil=20, mag=20, con=20, cun=20 },
+	stats = { str=20, dex=20, wil=20, mag=20, con=20, cun=20 },
 	combat_armor = 5, combat_def = 10,
 	combat = { dam=5, atk=10, apr=5, dammod={str=0.6} },
 	infravision = 10,
@@ -148,6 +148,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	mana_regen = 10,
 	negative_regen = 10,
 	hate_regen = 10,
+	psi_regen = 10,
 	rarity = 8,
 	rank = 3,
 	max_life = resolvers.rngavg(150,170),
@@ -175,6 +176,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 		[Talents.T_DISMAY]={base=3, every=12, max=8},
 		[Talents.T_DOMINATE]={base=3, every=12, max=8},
 		[Talents.T_INVOKE_DARKNESS]={base=5, every=8, max=10},
+		[Talents.T_NIGHTMARE]={base=5, every=8, max=10},
 		[Talents.T_WAKING_NIGHTMARE]={base=3, every=8, max=10},
 		[Talents.T_ABYSSAL_SHROUD]={base=3, every=8, max=8},
 		[Talents.T_INNER_DEMONS]={base=3, every=8, max=10},
@@ -520,7 +522,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	life_regen = 0.25,
 	combat_armor = 12, combat_def = 24,
 
-		ai = "tactical", ai_state = { ai_move="move_dmap", talent_in=2, ally_compassion=0 },
+	ai = "tactical", ai_state = { ai_move="move_dmap", talent_in=2, ally_compassion=0 },
 
 	on_melee_hit = {[DamageType.PHYSICALBLEED]=resolvers.mbonus(14, 2)},
 	combat = { dam=resolvers.levelup(resolvers.rngavg(16,22), 1, 1.5), atk=resolvers.levelup(18, 1, 1), apr=4, dammod={wil=0.25, cun=0.1}, damtype=engine.DamageType.PHYSICALBLEED, },
@@ -583,7 +585,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 		damtype=engine.DamageType.SLIME,
 	},
 
-		ai = "tactical", ai_state = { ai_move="move_dmap", talent_in=1, ally_compassion=0 },
+	ai = "tactical", ai_state = { ai_move="move_dmap", talent_in=1, ally_compassion=0 },
 
 	resists = {all=15, [DamageType.PHYSICAL] = -10, [DamageType.NATURE] = 100, [DamageType.ARCANE] = 40, [DamageType.BLIGHT] = 24},
 
@@ -622,7 +624,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	},
 	combat_physspeed = 2,
 
-		ai = "tactical", ai_state = { ai_move="move_dmap", talent_in=1, ally_compassion=0 },
+	ai = "tactical", ai_state = { ai_move="move_dmap", talent_in=1, ally_compassion=0 },
 
 	resists = {[DamageType.PHYSICAL] = -10, [DamageType.DARKNESS] = 100, [DamageType.LIGHT] = -60},
 
@@ -638,6 +640,164 @@ newEntity{ base = "BASE_NPC_HORROR",
 			[Talents.T_SHADOW_WARRIORS]={base=1, every=8, max=5},
 	},
 		resolvers.sustains_at_birth(),
+}
+
+-- Dream Horror
+newEntity{ base = "BASE_NPC_HORROR",
+	name = "dreaming horror", color=colors.ORCHID,
+	desc =[[A vaguely tentacled yet constantly changing form rests here apparently oblivious to your existence.
+With each slow breath it takes reality distorts around it.  Blue twirls into red, green twists into yellow, and the air sings softly before bursting into a myriad of pastel shapes and colors.]],
+	shader = "shadow_simulacrum",
+	shader_args = { color = {0.5, 0.5, 1.0}, base = 0.8, time_factor= 2000 },
+	level_range = {20, nil}, exp_worth = 1,
+	rarity = 30,  -- Very rare; should feel almost like uniques though they aren't
+	rank = 3,
+	max_life = 100,  -- Solipsism will take care of hit points
+	life_rating = 4, 
+	psi_rating = 6,
+	autolevel = "wildcaster",
+	combat_armor = 1, combat_def = 15,
+	combat = { dam=resolvers.levelup(20, 1, 1.1), atk=20, apr=20, dammod={wil=1}, damtype=DamageType.MIND},
+
+	ai = "tactical",  ai_tactic = resolvers.tactic"ranged",
+	ai_state = { ai_target="target_player_radius", sense_radius=20, talent_in=1 }, -- Huge radius for projections to target
+	dont_pass_target = true,
+
+	resists = { all = 35 },
+	inc_damage = { all = -50}, -- Set base damage low, in the dreamscape it will be much higher
+
+	combat_mindpower = resolvers.levelup(30, 1, 2),
+	
+	body = { INVEN = 10 },
+	resolvers.drops{chance=100, nb=5, {ego_chance=100} }, -- Gives good loot to encourage the player to wake it up
+
+	resolvers.talents{
+		[Talents.T_DISTORTION_BOLT]={base=2, every=6, max=8},
+		[Talents.T_DISTORTION_WAVE]={base=2, every=6, max=8},
+		[Talents.T_MAELSTROM]={base=2, every=6, max=8},
+		[Talents.T_RAVAGE]={base=2, every=6, max=8},
+		
+		[Talents.T_BIOFEEDBACK]={base=2, every=6, max=8},
+		[Talents.T_RESONANCE_FIELD]={base=2, every=6, max=8},
+		[Talents.T_BACKLASH]={base=2, every=6, max=8},
+		
+		[Talents.T_MENTAL_SHIELDING]={base=2, every=6, max=8},
+	
+		[Talents.T_SOLIPSISM]=7, -- Seven gives some damage to health though it's very small
+		[Talents.T_BALANCE]={base=2, every=6, max=8},
+		[Talents.T_CLARITY]={base=2, every=6, max=8},
+		[Talents.T_DISMISSAL]={base=2, every=6, max=8},
+
+		[Talents.T_LUCID_DREAMER]={base=4, every=12, max=8},
+		[Talents.T_DREAM_WALK]={base=4, every=12, max=8},
+		[Talents.T_SLUMBER]={base=2, every=6, max=8},
+		[Talents.T_RESTLESS_NIGHT]={base=2, every=6, max=8},
+		[Talents.T_DREAMSCAPE]=10,
+	},
+
+	resolvers.inscriptions(1, {"regeneration infusion"}),
+	
+	resolvers.sustains_at_birth(),
+	
+	-- Used to track if he's awake or spawning projections
+	dreamer_sleep_state = 1,
+	-- And some particles to show that we're asleep
+	resolvers.genericlast(function(e)
+		if core.shader.active() then
+			e.sleep_particle = e:addParticles(engine.Particles.new("shader_shield", 1, {img="shield2", size_factor=1}, {type="shield", time_factor=6000, aadjust=2, color={0.6, 1, 0.6}}))
+		else
+			e.sleep_particle = e:addParticles(engine.Particles.new("ultrashield", 1, {rm=0, rM=0, gm=180, gM=255, bm=180, bM=255, am=70, aM=180, radius=0.4, density=60, life=14, instop=1, static=100}))
+		end
+	end),
+	
+	-- Spawn Dream Seeds
+	on_act = function(self)
+		if self.dreamer_sleep_state and self.ai_target.actor then 
+			self.dreamer_sleep_state = math.min(self.dreamer_sleep_state + 1, 51) -- Caps at 51 so a new one doesn't spawn as soon as an old one dies
+			self:useEnergy() -- Always use energy when in the sleep state
+
+			if self.dreamer_sleep_state%10 == 0 and self.dreamer_sleep_state <= 50 then
+				-- Find Space
+				local x, y = util.findFreeGrid(self.x, self.y, 5, true, {[engine.Map.ACTOR]=true})
+				if not x then
+					return
+				end
+				
+				local seed = {type="horror", subtype="eldrtich", name="dream seed"}
+				local list = mod.class.NPC:loadList("/data/general/npcs/horror.lua")
+				local m = list.DREAM_SEED:clone()
+				if not m then return nil end
+				
+				m.exp_worth = 0
+				m.summoner = self			
+				m:resolve() m:resolve(nil, true)
+				m:forceLevelup(self.level)
+				game.zone:addEntity(game.level, m, "actor", x, y)
+				
+				game.level.map:particleEmitter(x, y, 1, "generic_teleport", {rm=225, rM=255, gm=225, gM=255, bm=225, bM=255, am=35, aM=90})
+				game.logSeen(self, "%s spawns a dream seed!", self.name:capitalize())
+			end
+		-- Script the AI to encourage opening with dream scape
+		elseif self.ai_target.actor and not game.zone.is_dream_scape then
+			if not self:isTalentCoolingDown(self.T_SLUMBER) then
+				self:forceUseTalent(self.T_SLUMBER, {})
+			elseif not self:isTalentCoolingDown(self.T_DREAMSCAPE) and self.ai_target.actor:attr("sleep") then
+				self:forceUseTalent(self.T_DREAMSCAPE, {})
+			end
+		end
+	end,
+	on_acquire_target = function(self, who)
+		self:useEnergy() -- Use energy as soon as we find a target so we don't move
+	end,
+	on_takehit = function(self, value, src)
+		if value > 0 and self.dreamer_sleep_state then
+			self.dreamer_sleep_state = nil
+			self.desc = [[A vaguely tentacled yet rapidly changing shape floats here.  With each breath you can feel reality twist, shatter, and break. 
+Blue burns into red, green bursts into yellow, and the air crackles and hisses before exploding into a thousand fragments of sharp shapes and colors.]]
+			self:removeParticles(self.sleep_particle)
+			game.logSeen(self, "#LIGHT_BLUE#The sleeper stirs...")
+		end
+		return value
+	end,
+}
+
+newEntity{ base = "BASE_NPC_HORROR", define_as = "DREAM_SEED",
+	name = "dream seed", color=colors.PINK,
+	desc ="A pinkish bubble floats here, reflecting the world not as it is, but as it would be in that surreal place that exists only in our dreams.",
+	level_range = {20, nil}, exp_worth = 1,
+	rarity = 30,  -- Very rare; but they do spawn on their own to keep the players on thier toes
+	rank = 2,
+	max_life = 1, life_rating = 4,  -- Solipsism will take care of hit points
+	autolevel = "wildcaster",
+	
+	ai = "tactical",
+	ai_state = { ai_target="target_player_radius", sense_radius=20, talent_in=3, },
+	dont_pass_target = true,
+	can_pass = {pass_wall=20},
+	levitation = 1,
+	
+	combat_armor = 1, combat_def = 5,
+	combat = { dam=resolvers.levelup(20, 1, 1.1), atk=10, apr=10, dammod={wil=1}, damtype=engine.DamageType.MIND},
+	
+	resolvers.talents{
+		[Talents.T_BACKLASH]={base=2, every=6, max=8},
+		[Talents.T_DISTORTION_BOLT]={base=2, every=6, max=8},
+	
+		[Talents.T_SOLIPSISM]=8,
+
+		[Talents.T_SLEEP]={base=2, every=6, max=8},
+		[Talents.T_LUCID_DREAMER]={base=2, every=6, max=8},
+		[Talents.T_DREAM_WALK]=5,
+	},
+
+	resolvers.sustains_at_birth(),
+	
+	-- Remove ourselves from the dream seed limit
+	on_die = function(self)
+		if self.summoner and self.summoner.dreamer_sleep_state then
+			self.summoner.dreamer_sleep_state = self.summoner.dreamer_sleep_state - 10
+		end
+	end,
 }
 ------------------------------------------------------------------------
 -- Uniques
@@ -666,7 +826,7 @@ You can discern a huge round mouth covered in razor-sharp teeth.]],
 	combat = { dam=resolvers.levelup(resolvers.mbonus(100, 15), 1, 1), atk=500, apr=0, dammod={str=1.2} },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
-		  resolvers.drops{chance=100, nb=1, {unique=true} },
+	resolvers.drops{chance=100, nb=1, {unique=true} },
 	resolvers.drops{chance=100, nb=5, {ego_chance=100} },
 
 	resists = { all=500 },
@@ -757,7 +917,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	
 	resolvers.drops{chance=100, nb=1, {defined="BLADE_RIFT"} },
 	
-		ai = "tactical", ai_state = { ai_move="move_dmap", talent_in=2, ally_compassion=0 },
+	ai = "tactical", ai_state = { ai_move="move_dmap", talent_in=2, ally_compassion=0 },
 		
 	on_melee_hit = {[DamageType.PHYSICALBLEED]=resolvers.mbonus(30, 4)},
 	combat = { dam=resolvers.levelup(resolvers.rngavg(20,28), 1, 1.5), physspeed = 0.25,atk=resolvers.levelup(24, 1.2, 1.2), apr=4, dammod={wil=0.3, cun=0.15}, damtype=engine.DamageType.PHYSICALBLEED, },
@@ -909,4 +1069,3 @@ newEntity{ base="BASE_NPC_HORROR", define_as = "DISTORTED_BLADE",
 		end
 	end,
 }
-
