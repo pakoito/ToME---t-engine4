@@ -20,7 +20,7 @@
 newTalent{
 	name = "Slumber",
 	type = {"psionic/slumber", 1},
-	points = 5, 
+	points = 5,
 	require = psi_wil_req1,
 	cooldown = 8,
 	psi = 10,
@@ -35,7 +35,7 @@ newTalent{
 		local reduction = t.getInsomniaPower(self, t)
 		return 20 - reduction
 	end,
-	getSleepPower = function(self, t) 
+	getSleepPower = function(self, t)
 		local power = self:combatTalentMindDamage(t, 10, 100)
 		if self:knowTalent(self.T_SANDMAN) then
 			local t = self:getTalentFromId(self.T_SANDMAN)
@@ -57,7 +57,7 @@ newTalent{
 			local t = self:getTalentFromId(self.T_RESTLESS_NIGHT)
 			is_waking = t.getDamage(self, t)
 		end
-		
+
 		local power = self:mindCrit(t.getSleepPower(self, t))
 		if target:canBe("sleep") then
 			target:setEffect(target.EFF_SLUMBER, t.getDuration(self, t), {src=self, power=power, waking=is_waking, insomnia=t.getInsomniaPower(self, t), no_ct_effect=true, apply_power=self:combatMindpower()})
@@ -81,7 +81,7 @@ newTalent{
 newTalent{
 	name = "Restless Night",
 	type = {"psionic/slumber", 2},
-	points = 5, 
+	points = 5,
 	require = psi_wil_req2,
 	mode = "passive",
 	getDamage = function(self, t) return self:combatTalentMindDamage(t, 20, 200) end,
@@ -95,7 +95,7 @@ newTalent{
 newTalent{
 	name = "Sandman",
 	type = {"psionic/slumber", 3},
-	points = 5, 
+	points = 5,
 	require = psi_wil_req3,
 	mode = "passive",
 	getSleepPowerBonus = function(self, t) return self:combatTalentMindDamage(t, 5, 25) end,
@@ -112,10 +112,11 @@ newTalent{
 newTalent{
 	name = "Dreamscape",
 	type = {"psionic/slumber", 4},
-	points = 5, 
+	points = 5,
 	require = psi_wil_req4,
 	cooldown = 24,
 	psi = 40,
+	random_boss_rarity = 10,
 	tactical = { DISABLE = function(self, t, target) if target:attr("sleep") then return 4 else return 0 end end},
 	direct_hit = true,
 	requires_target = true,
@@ -137,7 +138,7 @@ newTalent{
 			game.logPlayer(self, "The effect fizzles...")
 			return
 		end
-	
+
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local tx, ty, target = self:getTarget(tg)
 		if not tx or not ty or not target then return nil end
@@ -147,28 +148,28 @@ newTalent{
 		if not tx or not ty or not target then return nil end
 		if not (target.player and target.game_ender) and not (self.player and self.game_ender) then return nil end
 		if target == self then return end
-		if not (target and target:attr("sleep")) then 
+		if not (target and target:attr("sleep")) then
 			game.logPlayer(self, "Your target must be sleeping in order to enter it's dreamscape.")
 			return nil
 		end
-		
+
 		game:onTickEnd(function()
 			if self:attr("dead") then return end
 			local oldzone = game.zone
 			local oldlevel = game.level
-			
+
 			-- Clean up thought-forms
 			cancelThoughtForms(self)
-			
+
 			-- Remove them before making the new elvel, this way party memebrs are not removed from the old
 			if oldlevel:hasEntity(self) then oldlevel:removeEntity(self) end
 			if oldlevel:hasEntity(target) then oldlevel:removeEntity(target) end
-						
+
 			oldlevel.no_remove_entities = true
 			local zone = mod.class.Zone.new("dreamscape-talent")
 			local level = zone:getLevel(game, 1, 0)
 			oldlevel.no_remove_entities = nil
-			
+
 			level:addEntity(self)
 			level:addEntity(target)
 
@@ -177,7 +178,7 @@ newTalent{
 			game.zone = zone
 			game.level = level
 			game.zone_name_s = nil
-			
+
 			local x1, y1 = util.findFreeGrid(4, 6, 20, true, {[Map.ACTOR]=true})
 			if x1 then
 				self:move(x1, y1, true)
@@ -187,7 +188,7 @@ newTalent{
 			if x2 then
 				target:move(x2, y2, true)
 			end
-		
+
 			target:setTarget(self)
 			target.dream_plane_trapper = self
 			target.dream_plane_on_die = target.on_die
@@ -212,14 +213,13 @@ newTalent{
 			end
 
 			game.logPlayer(game.player, "#LIGHT_BLUE#You are taken to the Dreamscape!")
-			
+
 			-- Learn about solipsists
 			if target == game.player then
 				game:setAllowedBuild("psionic_solipsist", true)
 			end
-			
 		end)
-		
+
 		local power = self:mindCrit(t.getPower(self, t))
 		self:setEffect(self.EFF_DREAMSCAPE, t.getDuration(self, t), {target=target, power=power, projections_killed=0, x=self.x, y=self.y, tx=target.x, ty=target.y})
 		game:playSoundNear(self, "talents/teleport")
