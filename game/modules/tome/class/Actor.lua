@@ -1691,7 +1691,7 @@ function _M:onTakeHit(value, src)
 			eff.begone = game.turn
 		end
 	end
-	
+
 	-- Mind save to reduce damage to zero
 	if self:knowTalent(self.T_DISMISSAL) and value > 0 then
 		local t = self:getTalentFromId(self.T_DISMISSAL)
@@ -1850,7 +1850,7 @@ function _M:onTakeHit(value, src)
 	end
 
 	if self.on_takehit then value = self:check("on_takehit", value, src) end
-	
+
 	-- Apply Solipsism hit
 	if damage_to_psi > 0 then
 		if self:getPsi() > damage_to_psi then
@@ -1982,6 +1982,12 @@ function _M:takeHit(value, src, death_note)
 		local e = self.tempeffect_def[eid]
 		if e.damage_feedback then
 			e.damage_feedback(self, p, src, value)
+		end
+	end
+	for tid, p in pairs(self.sustain_talents) do
+		local t = self:getTalentFromId(tid)
+		if t.damage_feedback then
+			t.damage_feedback(self, t, p, src, value)
 		end
 	end
 

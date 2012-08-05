@@ -154,13 +154,29 @@ newTalent{
 			true
 		)
 	end,
+	damage_feedback = function(self, t, p, src)
+		if p.particle and p.particle._shader and p.particle._shader.shad and src and src.x and src.y then
+			local r = -rng.float(0.2, 0.4)
+			local a = math.atan2(src.y - self.y, src.x - self.x)
+			p.particle._shader:setUniform("impact", {math.cos(a) * r, math.sin(a) * r})
+			p.particle._shader:setUniform("impact_tick", core.game.getTime())
+		end
+	end,
 	activate = function(self, t)
 		local power = t.getManaRatio(self, t)
 		self.disruption_shield_absorb = 0
 		game:playSoundNear(self, "talents/arcane")
+
+		local particle
+		if core.shader.active() then
+			particle = self:addParticles(Particles.new("shader_shield", 1, {size_factor=1.3}, {type="shield", time_factor=-2500, color={0.8, 0.1, 1.0}, impact_color = {0, 1, 0}, impact_time=800}))
+		else
+			particle = self:addParticles(Particles.new("disruption_shield", 1))
+		end
+
 		return {
 			shield = self:addTemporaryValue("disruption_shield", power),
-			particle = self:addParticles(Particles.new("disruption_shield", 1)),
+			particle = particle,
 		}
 	end,
 	deactivate = function(self, t, p)

@@ -180,9 +180,11 @@ function _M:onUse(button, forcectrl)
 	end
 end
 
-function _M:onSelect(how)
+function _M:onSelect(how, force)
 	local item = self.dlist[self.sel_j] and self.dlist[self.sel_j][self.sel_i]
+	if self.prev_item == item and not force then return end
 	if self.on_select and item then self.on_select(item, how) end
+	self.prev_item = item
 end
 
 function _M:display(x, y, nb_keyframes, screen_x, screen_y)

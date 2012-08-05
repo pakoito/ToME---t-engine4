@@ -21,8 +21,9 @@ require "engine.class"
 local Base = require "engine.ui.Base"
 local Focusable = require "engine.ui.Focusable"
 local EquipDollFrame = require "engine.ui.EquipDollFrame"
+local UIGroup = require "engine.ui.UIGroup"
 
-module(..., package.seeall, class.inherit(Base, Focusable))
+module(..., package.seeall, class.inherit(Base, Focusable, UIGroup))
 
 function _M:init(t)
 	self.actor = assert(t.actor, "no equipdoll actor")
@@ -34,10 +35,6 @@ function _M:init(t)
 	self.focus_ui = nil
 
 	Base.init(self, t)
-end
-
-function _M:on_focus(v)
-	game:onTickEnd(function() self.key:unicodeInput(v) end)
 end
 
 function _M:generate()
@@ -84,42 +81,11 @@ function _M:keyTrigger(c)
 	end
 end
 
-function _M:setInnerFocus(id)
-	if self.focus_ui and self.focus_ui.ui.can_focus then self.focus_ui.ui:setFocus(false) end
-
-	if type(id) == "table" then
-		for i = 1, #self.uis do
-			if self.uis[i].ui == id then id = i break end
-		end
-		if type(id) == "table" then self:no_focus() return end
-	end
-
-	local ui = self.uis[id]
-	if not ui.ui.can_focus then self:no_focus() return end
-	self.focus_ui = ui
-	self.focus_ui_id = id
-	ui.ui:setFocus(true)
-	self:on_focus(id, ui)
-end
-
-function _M:on_focus(id, ui)
-	if self.on_select and ui then self.on_select(ui, ui.ui.inven, ui.ui.item, ui.ui:getItem()) end
-end
-function _M:no_focus()
-end
-
-function _M:moveFocus(v)
-	local id = self.focus_ui_id
-	local start = id or 1
-	local cnt = 0
-	id = util.boundWrap((id or 1) + v, 1, #self.uis)
-	while start ~= id and cnt <= #self.uis do
-		if self.uis[id] and self.uis[id].ui and self.uis[id].ui.can_focus and not self.uis[id].ui.no_keyboard_focus then
-			self:setInnerFocus(id)
-			break
-		end
-		id = util.boundWrap(id + v, 1, #self.uis)
-		cnt = cnt + 1
+function _M:on_focus_change(status)
+	if status == true then
+		game.tooltip:erase()
+		local ui = self.focus_ui
+		if self.on_select and ui then self.on_select(ui, ui.ui.inven, ui.ui.item, ui.ui:getItem()) end
 	end
 end
 
@@ -160,6 +126,7 @@ function _M:generateEquipDollFrames()
 				frame.actorWear = function(_, ...) if self.actorWear then self.actorWear(frame, ...) end end
 				frame.fct=function(button, event) if frame:getItem() and self.fct then self.fct({inven=inven, item=item, object=frame:getItem()}, button, event) end end
 				frame.filter = self.filter
+				frame.on_focus_change=function(status) local ui = self.focus_ui if self.on_select and ui then self.on_select(ui, ui.ui.inven, ui.ui.item, ui.ui:getItem()) end end
 				uis[#uis+1] = {x=def.x, y=def.y, ui=frame, _weight=def.weight}
 				max_w = math.max(def.x, max_w)
 				max_h = math.max(def.y, max_h)

@@ -33,11 +33,12 @@ function _M:init(t)
 	self.nb_rows = t.nb_items
 	self.font = t.font or self.font
 	self.row_height = t.item_height or (self.font_h + 6)
-	self.h = t.height or self.row_height * ( (self.nb_rows or 0) + (self.hide_columns and 1 or 0) )
+	self.h = t.height or self.row_height * ( (self.nb_rows or 0) + (self.hide_columns and 0 or 1) )
 	self.sortable = t.sortable
 	self.scrollbar = t.scrollbar
 	self.fct = t.fct
 	self.on_select = t.select
+	--self.on_focus_change = t.on_focus_change
 	self.on_drag = t.on_drag
 	self.on_drag_end = t.on_drag_end
 	self.all_clicks = t.all_clicks
@@ -47,10 +48,12 @@ function _M:init(t)
 	self.text_shadow = t.text_shadow or self.text_shadow
 	self.click_select = t.click_select or false
 	self.only_display = t.only_display or false
+	if t.select_delay then self:setSelectDelay(t.select_delay) end
 
 	self.max_h = 0
 	self.max_h_columns = 0
 	self.prevrow = 0
+	self.prev_sel = 0
 	self.prevclick = 0
 	self.last_input_was_keyboard = false
 	self.scroll_inertia = 0
@@ -137,13 +140,17 @@ function _M:setupInput()
 	self.key:addBinds{
 		ACCEPT = function() self.last_input_was_keyboard = true self:onUse("left", "key") end,
 		MOVE_UP = function()
+			local prev = self.sel
 			self.last_input_was_keyboard = true
-			self.prevrow = self.sel
-			self.sel = util.minBound(self.sel - 1, 1, #self.list) end,
+			self.sel = util.minBound(self.sel - 1, 1, #self.list) 
+			self.prev_sel = self.sel ~= prev and prev or self.prev_sel
+			end,
 		MOVE_DOWN = function()
+			local prev = self.sel
 			self.last_input_was_keyboard = true
-			self.prevrow = self.sel
-			self.sel = util.minBound(self.sel + 1, 1, #self.list) end,
+			self.sel = util.minBound(self.sel + 1, 1, #self.list) 
+			self.prev_sel = self.sel ~= prev and prev or self.prev_sel
+			end,
 	}
 
 	self.key:addCommands{
@@ -379,9 +386,11 @@ function _M:setColumns(columns, force)
 		colx = colx + col.width
 		if col.h > max_h then max_h = col.h end
 	end
+	self.columns = columns
+	
 	self.max_h_columns = self.hide_columns and 0 or (self.row_height or max_h)
 	self.max_h = self.max_h_columns
-
+	
 	self.sel = 1
 	self:selectColumn(1, true)
 end
@@ -410,6 +419,7 @@ function _M:setList(list, force)
 		self.scrollbar.max = self.max_h - self.h
 	end
 	self.prevrow = 0
+	self.prev_sel = 0
 end
 
 function _M:changeAll(columns, list)
@@ -473,6 +483,11 @@ function _M:selectColumn(i, force, reverse)
 		if self.sort_reverse and fct then local old=fct fct = function(a, b) return old(b, a) end end
 		pcall(table.sort, self.list, fct)
 	end
+end
+
+function _M:setSelectDelay(delay)
+	self.delay = delay
+	self.delay_start = os.clock()
 end
 
 function _M:display(x, y, nb_keyframes, screen_x, screen_y, offset_x, offset_y, local_x, local_y)
@@ -623,9 +638,26 @@ function _M:display(x, y, nb_keyframes, screen_x, screen_y, offset_x, offset_y, 
 		end
 	end
 
-	-- if row was changed then refresh it
-	if self.prevrow ~= self.sel then
+	-- if there is delay set and its still focused
+	if self.delay and self.focused == true then
+		-- previously displayed selection is still the same
+		if self.prevrow == self.sel then
+			if os.clock() > self.delay + self.delay_start then
+				if self.prev_sel ~= self.sel then
+					self.prev_sel = self.sel
+					if not self.click_select then self:onSelect() end
+				end
+				self.delay_start = os.clock()
+			end
+		else
+			-- selection was changed
+			self.delay_start = os.clock()
+		end
 		self.prevrow = self.sel
+	-- if the rows changed
+	elseif not self.delay and self.prev_sel ~= self.sel then
+		self.prev_sel = self.sel
 		if not self.click_select then self:onSelect() end
 	end
+	
 end

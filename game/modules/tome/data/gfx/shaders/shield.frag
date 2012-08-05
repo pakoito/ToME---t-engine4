@@ -4,9 +4,10 @@ uniform float aadjust;
 uniform vec3 color;
 uniform float time_factor;
 
-vec3 impact_color = vec3(1.0, 0.3, 1.0);
+uniform vec3 impact_color;
 uniform vec2 impact;
 uniform float impact_tick;
+uniform float impact_time;
 
 void main(void)
 {
@@ -31,8 +32,8 @@ void main(void)
 
 	// Impact
 	float it = tick - impact_tick;
-	if (it < 400.0) {
-		float v = (400.0 - it) / 400.0;
+	if (it < impact_time) {
+		float v = (impact_time - it) / impact_time;
 		float il = distance(impact / ll, (vec2(0.5) - gl_TexCoord[0].xy) / ll);
 		if (il < 0.5 * (1.0 - v)) {
 			v *= v * v;

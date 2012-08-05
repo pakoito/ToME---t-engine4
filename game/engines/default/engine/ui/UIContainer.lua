@@ -34,6 +34,8 @@ function _M:init(t)
 	
 	self.scrollbar = Slider.new{size=self.h, max=0}
 	self.uis_h = 0
+	
+	self.scroll_inertia = 0
 
 	Base.init(self, t)
 end
@@ -52,8 +54,8 @@ function _M:generate()
 	self.mouse:registerZone(0, 0, self.w, self.h, on_mousewheel)
 	
 	self.key:addBinds{
-		MOVE_UP = function() if self.scrollbar.pos and self.uis_h > self.h then self.scrollbar.pos = util.bound(self.scrollbar.pos - 1, 0, self.scrollbar.max) end end,
-		MOVE_DOWN = function() if self.scrollbar.pos and self.uis_h > self.h then self.scrollbar.pos = util.bound(self.scrollbar.pos + 1, 0, self.scrollbar.max) end end,
+		MOVE_UP = function() if self.scrollbar.pos and self.uis_h > self.h then self.scroll_inertia = math.min(self.scroll_inertia, 0) - 5 end end,
+		MOVE_DOWN = function() if self.scrollbar.pos and self.uis_h > self.h then self.scroll_inertia = math.max(self.scroll_inertia, 0) + 5 end end,
 	}
 end
 
@@ -85,6 +87,14 @@ end
 function _M:display(x, y, nb_keyframes, screen_x, screen_y, offset_x, offset_y, local_x, local_y)
 	local_x = local_x and local_x or 0
 	local_y = local_y and local_y or 0
+	
+	if self.scrollbar then
+		self.scrollbar.pos = util.minBound(self.scrollbar.pos + self.scroll_inertia, 0, self.scrollbar.max)
+		if self.scroll_inertia > 0 then self.scroll_inertia = math.max(self.scroll_inertia - 1, 0)
+		elseif self.scroll_inertia < 0 then self.scroll_inertia = math.min(self.scroll_inertia + 1, 0)
+		end
+		if self.scrollbar.pos == 0 or self.scrollbar.pos == self.scrollbar.max then self.scroll_inertia = 0 end
+	end
 	
 	offset_x = offset_x and offset_x or 0
 	offset_y = offset_y and offset_y or (self.scrollbar and self.scrollbar.pos or 0)

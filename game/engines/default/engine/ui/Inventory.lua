@@ -23,9 +23,10 @@ local Focusable = require "engine.ui.Focusable"
 local ImageList = require "engine.ui.ImageList"
 local ListColumns = require "engine.ui.ListColumns"
 local KeyBind = require "engine.KeyBind"
+local UIGroup = require "engine.ui.UIGroup"
 
 --- A generic inventory, with possible tabs
-module(..., package.seeall, class.inherit(Base, Focusable))
+module(..., package.seeall, class.inherit(Base, Focusable, UIGroup))
 
 function _M:init(t)
 	self.inven = assert(t.inven, "no inventory inven")
@@ -40,6 +41,7 @@ function _M:init(t)
 	self.on_select_tab = t.select_tab
 	self.on_drag = t.on_drag
 	self.on_drag_end = t.on_drag_end
+	self.on_focus_change = t.on_focus_change
 	self.special_bg = t.special_bg
 	
 	self._last_x, _last_y, self._last_ox, self._last_oy = 0, 0, 0, 0
@@ -60,7 +62,11 @@ function _M:generate()
 	self.uis = {}
 
 	if self.tabslist then
-		self.c_tabs = ImageList.new{width=self.w, height=36, tile_w=32, tile_h=32, padding=5, force_size=true, selection="ctrl-multiple", list=self.tabslist, fct=function() self:generateList() end, on_select=function(item, how) self:selectTab(item, how) end}
+		self.c_tabs = ImageList.new{width=self.w, height=36, tile_w=32, tile_h=32, padding=5, force_size=true, selection="ctrl-multiple", list=self.tabslist, 
+			fct=function() self:generateList() end, 
+			on_select=function(item, how) self:selectTab(item, how) end
+		}
+		
 		self.c_tabs.no_keyboard_focus = true
 		if _M._last_tabs then
 			for _, l in ipairs(_M._last_tabs) do self.c_tabs.dlist[l[1]][l[2]].selected = true end
@@ -68,6 +74,12 @@ function _M:generate()
 			self.c_tabs.dlist[1][1].selected = true
 		end
 		self.uis[#self.uis+1] = {x=0, y=0, ui=self.c_tabs}
+		self.c_tabs.on_focus_change = function(ui_self, status) 
+			if status == true then 
+				local item = ui_self.dlist[ui_self.sel_j] and ui_self.dlist[ui_self.sel_j][ui_self.sel_i]
+				self.on_select(item, true)
+			end
+		end
 	end
 	
 	local direct_draw= function(item, x, y, w, h, total_w, total_h, loffset_x, loffset_y, dest_area)
@@ -91,7 +103,7 @@ function _M:generate()
 		return 0, 0, 0, 0, 0, 0
 	end
 
-	self.c_inven = ListColumns.new{width=self.w, height=self.h - (self.c_tabs and self.c_tabs.h or 0), floating_headers = true, sortable=true, scrollbar=true, columns=self.columns or {
+	self.c_inven = ListColumns.new{width=self.w, height=self.h - (self.c_tabs and self.c_tabs.h or 0), sortable=true, scrollbar=true, select_delay = 0.1, columns=self.columns or {
 		{name="", width={33,"fixed"}, display_prop="char", sort="id"},
 		{name="", width={24,"fixed"}, display_prop="object", sort="sortname", direct_draw=direct_draw},
 		{name="Inventory", width=72, display_prop="name", sort="sortname"},
@@ -156,45 +168,6 @@ end
 function _M:selectTab(item, how)
 	if self.on_select_tab then self.on_select_tab(item) end
 	if how == "key" then self.c_inven:onSelect() end
-end
-
-function _M:setInnerFocus(id)
-	if self.focus_ui and self.focus_ui.ui.can_focus then self.focus_ui.ui:setFocus(false) end
-
-	if type(id) == "table" then
-		for i = 1, #self.uis do
-			if self.uis[i].ui == id then id = i break end
-		end
-		if type(id) == "table" then self:no_focus() return end
-	end
-
-	local ui = self.uis[id]
-	if not ui.ui.can_focus then self:no_focus() return end
-	self.focus_ui = ui
-	self.focus_ui_id = id
-	ui.ui:setFocus(true)
-	self:on_focus(id, ui)
-end
-
-function _M:on_focus(id, ui)
---	if self.on_select and ui then self.on_select(ui, ui.ui.inven, ui.ui.item, ui.ui:getItem()) end
-end
-function _M:no_focus()
-end
-
-function _M:moveFocus(v)
-	local id = self.focus_ui_id
-	local start = id or 1
-	local cnt = 0
-	id = util.boundWrap((id or 1) + v, 1, #self.uis)
-	while start ~= id and cnt <= #self.uis do
-		if self.uis[id] and self.uis[id].ui and self.uis[id].ui.can_focus and not self.uis[id].ui.no_keyboard_focus then
-			self:setInnerFocus(id)
-			break
-		end
-		id = util.boundWrap(id + v, 1, #self.uis)
-		cnt = cnt + 1
-	end
 end
 
 function _M:mouseEvent(button, x, y, xrel, yrel, bx, by, event)
@@ -274,7 +247,7 @@ function _M:generateList(no_update)
 			local enc = 0
 			o:forAllStack(function(o) enc=enc+o.encumber end)
 
-			list[#list+1] = { id=#list+1, char=char, name=o:getName(), sortname=o:getName():toString():removeColorCodes(), color=o:getDisplayColor(), object=o, inven=self.actor.INVEN_INVEN, item=item, cat=o.subtype, encumberance=enc, desc=o:getDesc(), special_bg=self.special_bg }
+			list[#list+1] = { id=#list+1, char=char, name=o:getName(), sortname=o:getName():toString():removeColorCodes(), color=o:getDisplayColor(), object=o, inven=self.actor.INVEN_INVEN, item=item, cat=o.subtype, encumberance=enc, special_bg=self.special_bg }
 			chars[char] = #list
 			i = i + 1
 		end

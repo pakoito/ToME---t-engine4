@@ -194,7 +194,7 @@ function _M:toScreen(x, y, nb_keyframes)
 	self.last_display_x = x
 	self.last_display_y = y
 
-	if self.inhibited == true then return nil end
+	if self.inhibited == true or self.empty == true then return nil end
 	nb_keyframes = nb_keyframes or 0
 	-- Save current matrix and load coords to default values
 	core.display.glPush()

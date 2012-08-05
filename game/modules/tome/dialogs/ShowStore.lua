@@ -46,6 +46,7 @@ function _M:init(title, store_inven, actor_inven, store_filter, actor_filter, ac
 		},
 		fct=function(item, sel, button, event) self:use(item, button, event) end,
 		select=function(item, sel) self:select(item) end,
+		select_tab=function(item) self:select(item) end,
 		on_drag=function(item) self:onDrag(item, "store-sell") end,
 		on_drag_end=function() self:onDragTakeoff("store-buy") end,
 	}
@@ -90,6 +91,10 @@ function _M:init(title, store_inven, actor_inven, store_filter, actor_filter, ac
 		{right=0, top=0, ui=self.c_inven},
 		{hcenter=0, top=5, ui=Separator.new{dir="horizontal", size=self.ih - 10}},
 	}
+	
+	self.c_inven.c_inven.on_focus_change = function(ui_self, status) if status == true then self:select(ui_self.list[ui_self.sel]) end end
+	self.c_store.c_inven.on_focus_change = function(ui_self, status) if status == true then self:select(ui_self.list[ui_self.sel]) end end
+	
 	self:setFocus(self.c_inven)
 	self:setupUI()
 
@@ -117,8 +122,11 @@ function _M:init(title, store_inven, actor_inven, store_filter, actor_filter, ac
 			end
 
 			game:tooltipDisplayAtMap(x or item.last_display_x, item.last_display_y, item.object:getDesc({do_color=true}, game.player:getInven(item.object:wornInven())))
+		elseif item.last_display_x and item.data and item.data.desc then
+			game:tooltipDisplayAtMap(item.last_display_x, item.last_display_y, item.data.desc, {up=true})
 		end
 	end
+	
 	self.key.any_key = function(sym)
 		-- Control resets the tooltip
 		if (sym == self.key._LCTRL or sym == self.key._RCTRL) and sym~=self.prev_ctrl then local i = self.cur_item self.cur_item = nil self:select(i, true) end
@@ -138,18 +146,6 @@ function _M:select(item, force)
 	if self.cur_item == item and not force then return end
 	if item then if self.on_select then self.on_select(item) end end
 	self.cur_item = item
-end
-
-function _M:on_recover_focus()
-	if self.focus_ui and self.focus_ui.ui == self.c_inven then self:select(self.c_inven.c_inven.list[self.c_inven.c_inven.sel], true)
-	elseif self.focus_ui and self.focus_ui.ui == self.c_store then self:select(self.c_store.c_inven.list[self.c_store.c_inven.sel], true)
-	end
-end
-
-function _M:on_focus(id, ui)
-	if self.focus_ui and self.focus_ui.ui == self.c_inven then self:select(self.c_inven.c_inven.list[self.c_inven.c_inven.sel])
-	elseif self.focus_ui and self.focus_ui.ui == self.c_store then self:select(self.c_store.c_inven.list[self.c_store.c_inven.sel])
-	end
 end
 
 function _M:use(item, force)

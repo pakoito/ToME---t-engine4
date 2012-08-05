@@ -28,9 +28,21 @@ focus_decay_max_d = 8
 one_by_focus_decay = 1/32
 
 function _M:setFocus(v)
+	local prev_focus = self.focused
 	self.focused = v
-	if not v then
-		self.focus_decay = self.focus_decay_max
-	end
+	if not v then self.focus_decay = self.focus_decay_max end
+	if v ~= prev_focus and self.on_focus_change then self:on_focus_change(v) end
 	if self.on_focus then self:on_focus(v) end
+end
+
+--while focused
+function _M:on_focus(id, ui)
+end
+
+--while not focused
+function _M:no_focus()
+end
+
+--focus change
+function _M:on_focus_change(status)
 end

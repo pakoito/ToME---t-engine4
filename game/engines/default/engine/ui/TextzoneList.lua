@@ -136,7 +136,7 @@ end
 
 function _M:switchItem(item, create_if_needed, force)
 	if self.cur_item == item and not force then return true end
-	if create_if_needed and not self.items[item] then self:createItem(item, create_if_needed) end
+	if (create_if_needed and not self.items[item]) or force then self:createItem(item, create_if_needed) end
 	if not item or not self.items[item] then self.list = nil return false end
 	local d = self.items[item]
 	

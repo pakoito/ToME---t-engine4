@@ -31,7 +31,8 @@ function _M:init(title, actor, filter, action, on_select)
 	self.action = action
 	self.filter = filter
 	self.actor = actor
-	self.on_select = on_select
+	
+	game.tooltip.add_map_str = nil
 
 	Dialog.init(self, title or "Inventory", math.max(800, game.w * 0.8), math.max(600, game.h * 0.8))
 
@@ -67,6 +68,8 @@ function _M:init(title, actor, filter, action, on_select)
 		on_drag_end=function() self:onDragTakeoff() end,
 		special_bg=function(item) if item.object and item.object.__transmo then return colors.GOLD end end,
 	}
+	
+	self.c_inven.c_inven.on_focus_change = function(ui_self, status) if status == true then self:select(ui_self.list[ui_self.sel], true) end end
 
 	local uis = {
 		{left=0, top=0, ui=self.c_main_set},
@@ -91,9 +94,9 @@ function _M:init(title, actor, filter, action, on_select)
 				self.mouse:reset()
 				local on_mouse = function(button, x, y, xrel, yrel, bx, by, event)
 					if button == "wheelup" and event == "button" then
-						game.tooltip.container.scrollbar.pos = util.minBound(game.tooltip.container.scrollbar.pos - 1, 0, game.tooltip.container.scrollbar.max)
+						game.tooltip.container.scroll_inertia = math.min(game.tooltip.container.scroll_inertia, 0) - 5
 					elseif button == "wheeldown" and event == "button" then 
-						game.tooltip.container.scrollbar.pos = util.minBound(game.tooltip.container.scrollbar.pos + 1, 0, game.tooltip.container.scrollbar.max)
+						game.tooltip.container.scroll_inertia = math.max(game.tooltip.container.scroll_inertia, 0) + 5
 					end
 					if button == "middle" then
 						if not self.scroll_drag then
@@ -117,23 +120,25 @@ function _M:init(title, actor, filter, action, on_select)
 		end
 	end
 
+	self.key:reset()
 	engine.interface.PlayerHotkeys:bindAllHotkeys(self.key, function(i) self:defineHotkey(i) end)
-	self.key:addBinds{
-		ACCEPT = function()
-			if self.focus_ui and self.focus_ui.ui == self.c_inven then self:use(self.c_inven.c_inven.list[self.c_inven.c_inven.sel])
-			end
-		end,
-		EXIT = function() game.tooltip.locked = false game:unregisterDialog(self) end,
-		LOCK_TOOLTIP = lock_tooltip,
-		LOCK_TOOLTIP_COMPARE = lock_tooltip,
-		MOVE_UP = function() if game.tooltip.locked then game.tooltip.container.scrollbar.pos = util.minBound(game.tooltip.container.scrollbar.pos - 1, 0, game.tooltip.container.scrollbar.max) end end,
-		MOVE_DOWN = function() if game.tooltip.locked then game.tooltip.container.scrollbar.pos = util.minBound(game.tooltip.container.scrollbar.pos + 1, 0, game.tooltip.container.scrollbar.max) end end,
-	}
-
 	self.key.any_key = function(sym)
 		-- Control resets the tooltip
-		if sym == self.key._LCTRL or sym == self.key._RCTRL then local i = self.cur_item self.cur_item = nil self:select(i) end
+		if sym == self.key._LCTRL or sym == self.key._RCTRL then 
+			local ctrl = core.key.modState("ctrl")
+			if self.prev_ctrl ~= ctrl then self:select(self.cur_item, true) end
+			self.prev_ctrl = ctrl
+		end
 	end
+	
+	self.key:addBinds{
+		ACCEPT = function() if self.focus_ui and self.focus_ui.ui == self.c_inven then self:use(self.c_inven.c_inven.list[self.c_inven.c_inven.sel]) end end,
+		EXIT = function() game.tooltip.locked = false game:unregisterDialog(self) end,
+		MOVE_UP = function() game.log("up") if game.tooltip.locked then game.tooltip.container.scroll_inertia = math.min(game.tooltip.container.scroll_inertia, 0) - 5 end end,
+		MOVE_DOWN = function() if game.tooltip.locked then game.tooltip.container.scroll_inertia = math.max(game.tooltip.container.scroll_inertia, 0) + 5 end end,
+		LOCK_TOOLTIP = lock_tooltip,
+		LOCK_TOOLTIP_COMPARE = lock_tooltip,
+	}
 end
 
 function _M:switchSets(which)
@@ -169,23 +174,10 @@ function _M:defineHotkey(id)
 	self.actor.changed = true
 end
 
-function _M:select(item)
-	if self.cur_item == item then return end
-	if item then
-		if self.on_select then self.on_select(item) end
-	end
+function _M:select(item, force)
+	--if self.cur_item == item and not force then return end
+	if item then self.on_select(item) end
 	self.cur_item = item
-end
-
-function _M:on_focus(id, ui)
-	if self.focus_ui and self.focus_ui.ui == self.c_inven then self:select(self.c_inven.c_inven.list[self.c_inven.c_inven.sel])
-	elseif self.focus_ui and self.focus_ui.ui == self.c_tabs then
-	else
-		game.tooltip_x = nil
-	end
-end
-function _M:no_focus()
-	game.tooltip_x = nil
 end
 
 function _M:use(item, button, event)
@@ -194,10 +186,6 @@ function _M:use(item, button, event)
 			game:unregisterDialog(self)
 		end
 	end
-end
-
-function _M:on_recover_focus()
-	self.c_inven:generateList()
 end
 
 function _M:unload()

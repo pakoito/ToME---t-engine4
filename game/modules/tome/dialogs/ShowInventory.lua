@@ -33,16 +33,23 @@ function _M:init(title, inven, filter, action, actor)
 	self.actor = actor
 	Dialog.init(self, title or "Inventory", math.max(800, game.w * 0.8), math.max(600, game.h * 0.8))
 
-	self.c_desc = TextzoneList.new{width=math.floor(self.iw / 2 - 10), height=self.ih, no_color_bleed=true}
+	self.c_desc = TextzoneList.new{scrollbar = true, width=math.floor(self.iw / 2 - 10), height=self.ih}
 
 	self.c_inven = Inventory.new{actor=actor, inven=inven, filter=filter, width=math.floor(self.iw / 2 - 10), height=self.ih - 10,
 		fct=function(item, sel, button, event) self:use(item, button, event) end,
-		select=function(item, sel) self:select(item) end,
+		select=function(item, force) self:select(item, force) end,
+		select_tab=function(item) self:select(item) end,
 	}
-
+	
+	self.c_inven.c_inven.on_focus_change = function(ui_self, status) if status == true then game.tooltip:erase() end end
+	
 	self.key.any_key = function(sym)
 		-- Control resets the tooltip
-		if (sym == self.key._LCTRL or sym == self.key._RCTRL) and self.cur_item then self.cur_item.desc = nil self:select(self.cur_item) end
+		if sym == self.key._LCTRL or sym == self.key._RCTRL then 
+			local ctrl = core.key.modState("ctrl")
+			if self.prev_ctrl ~= ctrl then self:select(self.cur_item, true) end
+			self.prev_ctrl = ctrl
+		end
 	end
 
 	self:loadUI{
@@ -69,16 +76,15 @@ function _M:on_register()
 	game:onTickEnd(function() self.key:unicodeInput(true) end)
 end
 
-function _M:select(item)
-	if item then
-		self.cur_item = item
-		if not item.desc or item.ctrl_state ~= core.key.modState("ctrl") then
-			item.ctrl_state = core.key.modState("ctrl")
-			item.desc = item.object:getDesc({do_color=true}, self.actor:getInven(item.object:wornInven()))
-			self.c_desc:createItem(item, item.desc)
-		end
-		self.c_desc:switchItem(item, item.desc)
+function _M:select(item, force)
+	if self.cur_item == item and not force then return end
+	if item.last_display_x and item.object then
+		if not item.desc or force then item.desc = item.object:getDesc({do_color=true}, self.actor:getInven(item.object:wornInven())) end
+		self.c_desc:switchItem(item, item.desc, true)
+	elseif item.last_display_x and item.data and item.data.desc then
+		game:tooltipDisplayAtMap(item.last_display_x, item.last_display_y, item.data.desc, {up=true}, force)
 	end
+	self.cur_item = item
 end
 
 function _M:use(item)

@@ -27,6 +27,8 @@ return {
 		aadjust = aadjust or 10,
 		impact = {0, 0},
 		impact_tick = -1000,
+		impact_color = {1.0, 0.3, 1.0},
+		impact_time = 400,
 	},
 	clone = false,
 }
