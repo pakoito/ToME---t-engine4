@@ -36,7 +36,21 @@ function _M:init(name, args)
 	self.totalname = self:makeTotalName()
 --	print("[SHADER] making shader from", name, " into ", self.totalname)
 
-	if core.shader.active() then self:loaded() end
+	if not core.shader.active() then return end
+
+	if not self.args.delay_load then
+		self:loaded()
+	else
+		self.old_meta = getmetatable(self)
+		setmetatable(self, {__index=function(t, k)
+			if k ~= "shad" then return _M[k] end
+			print("Shader delayed load running for", t.name)
+			t:loaded()
+			setmetatable(t, t.old_meta)
+			t.old_meta = nil
+			return t.shad
+		end})
+	end
 end
 
 function _M:makeTotalName()
