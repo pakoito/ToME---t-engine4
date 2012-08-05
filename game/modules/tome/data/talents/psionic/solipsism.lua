@@ -146,7 +146,7 @@ newTalent{
 	points = 5, 
 	require = psi_wil_req4,
 	mode = "passive",
-	getSavePercentage = function(self, t) return math.min(0.4 + self:getTalentLevel(t) * 0.16, 1.5) end,
+	getSavePercentage = function(self, t) return math.min(0.25 + self:getTalentLevel(t) * 0.1, 1) end,
 	on_learn = function(self, t)
 		if self:getTalentLevelRaw(t) == 1 then
 			self.inc_resource_multi.psi = (self.inc_resource_multi.psi or 0) + 1
@@ -171,7 +171,7 @@ newTalent{
 		end
 	end,
 	doDismissalOnHit = function(self, value, src, t)
-		local saving_throw = self:mindCrit(self:combatMentalResist(), t.getSavePercentage(self, t))
+		local saving_throw = self:mindCrit(self:combatMentalResist()) * t.getSavePercentage(self, t)
 		print("[Dismissal] ", self.name:capitalize(), " attempting to ignore ", value, "damage from ", src.name:capitalize(), "using", saving_throw,  "mental save.")
 		if self:checkHit(saving_throw, value) then
 			game.logSeen(self, "%s dismisses %s's damage!", self.name:capitalize(), src.name:capitalize())

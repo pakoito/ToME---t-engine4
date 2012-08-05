@@ -1472,7 +1472,7 @@ newEffect{
 
 newEffect{
 	name = "WAKING_NIGHTMARE", image = "talents/waking_nightmare.png",
-	desc = "Waking NIGHTMARE",
+	desc = "Waking Nightmare",
 	long_desc = function(self, eff) return ("The target is lost in a nightmare that deals %0.2f mind damage each turn and has a %d%% chance to cause a random detrimental effect."):format(eff.dam, eff.chance) end,
 	type = "mental",
 	subtype = { nightmare=true, darkness=true },
@@ -2459,7 +2459,7 @@ newEffect{
 			self:removeParticles(eff.particle)
 		end
 		-- Incriment Insomnia Duration
-		eff.insomnia_duration = math.min(eff.insomnia_duration + 1, 10)
+		eff.insomnia_duration = math.min(eff.insomnia_duration + 1, 5)
 	end,
 	activate = function(self, eff)
 		eff.insomnia_duration = 0
@@ -2511,7 +2511,7 @@ newEffect{
 			self:removeParticles(eff.particle)
 		end
 		-- Incriment Insomnia Duration
-		eff.insomnia_duration = math.min(eff.insomnia_duration + 1, 10)
+		eff.insomnia_duration = math.min(eff.insomnia_duration + 1, 5)
 	end,
 	activate = function(self, eff)
 		eff.insomnia_duration = 0
@@ -2572,7 +2572,7 @@ newEffect{
 			self:removeParticles(eff.particle)
 		end
 		-- Incriment Insomnia Duration
-		eff.insomnia_duration = math.min(eff.insomnia_duration + 1, 10)
+		eff.insomnia_duration = math.min(eff.insomnia_duration + 1, 5)
 	end,
 	activate = function(self, eff)
 		eff.insomnia_duration = 0
@@ -2604,8 +2604,8 @@ newEffect{
 	on_gain = function(self, err) return "#Target# is suffering from insomnia.", "+Insomnia" end,
 	on_lose = function(self, err) return "#Target# is no longer suffering from insomnia.", "-Insomnia" end,
 	on_merge = function(self, old_eff, new_eff)
-		-- Merge the effect
-		local dur = math.min(10, math.ceil(old_eff.dur + new_eff.dur))
+		-- Take the longest of the two durations on merge
+		local dur = math.max(old_eff.dur, new_eff.dur)
 		old_eff.dur = dur
 		old_eff.cur_power = old_eff.power * old_eff.dur
 		-- Need to remove and re-add the effect

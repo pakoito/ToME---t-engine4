@@ -186,12 +186,13 @@ function setupThoughtForm(self, m, x, y)
 	m.subtype = "thought-form"
 	m.summoner_gain_exp=true
 	m.faction = self.faction
-	m.no_inventory_access = true -- Uncomment later; just for testing
+	m.no_inventory_access = true
 	m.rank = 2
 	m.size_category = 3
 	m.infravision = 10
 	m.lite = 1
 	m.no_breath = 1
+	m.move_others = true
 	
 	-- Less tedium
 	m.life_regen = 1

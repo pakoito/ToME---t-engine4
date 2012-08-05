@@ -102,7 +102,7 @@ newTalent{
 		local charge_ratio = t.getOverchargeRatio(self, t)
 		return ([[Unleash your subconscious on the world around you.  While active the range of all Discharge talents will be increased by %d and you'll fire up to %d bolts each turn (one per hostile target) that deal %0.2f mind damage.  Each bolt consumes 1 Feedback.
 		Feedback gains beyond your maximum allowed amount may generate extra bolts (one bolt per %d excess Feedback), but no more then %d extra bolts per turn.
-		This effect is a psionic channel and will break if you move, use a talent, or activate an item.
+		This effect is a psionic channel and will break if you move, use a talent that consumes a turn, or activate an item.
 		The damage will scale with your mindpower.]]):format(range_increase, targets, damDesc(self, DamageType.MIND, damage), charge_ratio, targets)
 	end,
 }

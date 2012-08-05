@@ -1660,12 +1660,10 @@ newEffect{
 
 			-- track number killed
 			m.on_die = function(self, who)
-				if who then
-					local p = who:hasEffect(who.EFF_DREAMSCAPE)
-					if p then -- For the rare instance we die after the effect ends but before the dreamscape instance closes
-						p.projections_killed = p.projections_killed + 1
-						game.logSeen(p.target, "#LIGHT_RED#%s writhes in agony as a fragment of it's mind is destroyed!", p.target.name:capitalize())
-					end
+				local p = (who and who:hasEffect(who.EFF_DREAMSCAPE)) or (who.summoner and who.summoner:hasEffect(who.summoner.EFF_DREAMSCAPE))
+				if p then -- For the rare instance we die after the effect ends but before the dreamscape instance closes
+					p.projections_killed = p.projections_killed + 1
+					game.logSeen(p.target, "#LIGHT_RED#%s writhes in agony as a fragment of it's mind is destroyed!", p.target.name:capitalize())
 				end
 			end
 

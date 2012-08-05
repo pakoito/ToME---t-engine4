@@ -3522,7 +3522,7 @@ function _M:postUseTalent(ab, ret)
 	if ab.id ~= self.T_GATHER_THE_THREADS and ab.id ~= self.T_SPACETIME_TUNING and ab.is_spell then self:breakChronoSpells() end
 	if ab.id ~= self.T_RELOAD then self:breakReloading() end
 	self:breakStepUp()
-	if not ab.no_break_channel then self:breakPsionicChannel(ab.id) end
+	if not (ab.no_energy or ab.no_break_channel) then self:breakPsionicChannel(ab.id) end
 
 	if ab.id ~= self.T_REDUX and self:hasEffect(self.EFF_REDUX) and ab.type[1]:find("^chronomancy/") and ab.mode == "activated" and self:getTalentLevel(self.T_REDUX) >= self:getTalentLevel(ab.id) then
 		self:removeEffect(self.EFF_REDUX)

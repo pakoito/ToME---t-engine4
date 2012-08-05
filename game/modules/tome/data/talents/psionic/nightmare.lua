@@ -80,7 +80,7 @@ newTalent{
 		local insomnia = t.getInsomniaPower(self, t)
 		return([[Puts targets in a radius %d cone into a nightmarish sleep for %d turns, rendering them unable to act.  Every %d points of damage the target suffers will reduce the effect duration by one turn.
 		Each turn they'll suffer %0.2f darkness damage.  This damage will not reduce the duration of the effect.
-		When Nightmare ends the target will suffer from Insomnia for a number of turns equal to the amount of time it was asleep, granting it %d%% sleep immunity for each turn of the Insomnia effect.
+		When Nightmare ends the target will suffer from Insomnia for a number of turns equal to the amount of time it was asleep (up to five turns max), granting it %d%% sleep immunity for each turn of the Insomnia effect.
 		The damage threshold and mind damage will scale with your mindpower.]]):format(radius, duration, power, damDesc(self, DamageType.DARKNESS, (damage)), insomnia)
 	end,
 }

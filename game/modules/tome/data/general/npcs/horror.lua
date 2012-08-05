@@ -682,7 +682,7 @@ With each slow breath it takes reality distorts around it.  Blue twirls into red
 		[Talents.T_BACKLASH]={base=2, every=6, max=8},
 		
 		[Talents.T_MENTAL_SHIELDING]={base=2, every=6, max=8},
-	
+
 		[Talents.T_SOLIPSISM]=7, -- Seven gives some damage to health though it's very small
 		[Talents.T_BALANCE]={base=2, every=6, max=8},
 		[Talents.T_CLARITY]={base=2, every=6, max=8},
@@ -695,10 +695,10 @@ With each slow breath it takes reality distorts around it.  Blue twirls into red
 		[Talents.T_DREAMSCAPE]=10,
 	},
 
-	resolvers.inscriptions(1, {"regeneration infusion"}),
-	
+	resolvers.inscriptions(2, {"regeneration infusion", "phase door rune"}, nil, true),  -- Really has a phase door rune :P
+
 	resolvers.sustains_at_birth(),
-	
+
 	-- Used to track if he's awake or spawning projections
 	dreamer_sleep_state = 1,
 	-- And some particles to show that we're asleep
@@ -709,7 +709,7 @@ With each slow breath it takes reality distorts around it.  Blue twirls into red
 			e.sleep_particle = e:addParticles(engine.Particles.new("ultrashield", 1, {rm=0, rM=0, gm=180, gM=255, bm=180, bM=255, am=70, aM=180, radius=0.4, density=60, life=14, instop=1, static=100}))
 		end
 	end),
-	
+
 	-- Spawn Dream Seeds
 	on_act = function(self)
 		if self.dreamer_sleep_state and self.ai_target.actor then 
@@ -738,7 +738,7 @@ With each slow breath it takes reality distorts around it.  Blue twirls into red
 				game.logSeen(self, "%s spawns a dream seed!", self.name:capitalize())
 			end
 		-- Script the AI to encourage opening with dream scape
-		elseif self.ai_target.actor and not game.zone.is_dream_scape then
+		elseif self.ai_target.actor and self.ai_target.actor.game_ender and not game.zone.is_dream_scape then
 			if not self:isTalentCoolingDown(self.T_SLUMBER) then
 				self:forceUseTalent(self.T_SLUMBER, {})
 			elseif not self:isTalentCoolingDown(self.T_DREAMSCAPE) and self.ai_target.actor:attr("sleep") then
@@ -769,20 +769,20 @@ newEntity{ base = "BASE_NPC_HORROR", define_as = "DREAM_SEED",
 	rank = 2,
 	max_life = 1, life_rating = 4,  -- Solipsism will take care of hit points
 	autolevel = "wildcaster",
-	
+
 	ai = "tactical",
 	ai_state = { ai_target="target_player_radius", sense_radius=20, talent_in=3, },
 	dont_pass_target = true,
 	can_pass = {pass_wall=20},
 	levitation = 1,
-	
+
 	combat_armor = 1, combat_def = 5,
 	combat = { dam=resolvers.levelup(20, 1, 1.1), atk=10, apr=10, dammod={wil=1}, damtype=engine.DamageType.MIND},
-	
+
 	resolvers.talents{
 		[Talents.T_BACKLASH]={base=2, every=6, max=8},
 		[Talents.T_DISTORTION_BOLT]={base=2, every=6, max=8},
-	
+
 		[Talents.T_SOLIPSISM]=8,
 
 		[Talents.T_SLEEP]={base=2, every=6, max=8},
@@ -791,7 +791,7 @@ newEntity{ base = "BASE_NPC_HORROR", define_as = "DREAM_SEED",
 	},
 
 	resolvers.sustains_at_birth(),
-	
+
 	-- Remove ourselves from the dream seed limit
 	on_die = function(self)
 		if self.summoner and self.summoner.dreamer_sleep_state then

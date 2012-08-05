@@ -73,7 +73,7 @@ newTalent{
 		local power = t.getSleepPower(self, t)
 		local insomnia = t.getInsomniaPower(self, t)
 		return([[Puts the target into a deep sleep for %d turns, rendering it unable to act.  Every %d points of damage the target suffers will reduce the effect duration by one turn.
-		When Slumber ends the target will suffer from Insomnia for a number of turns equal to the amount of time it was asleep, granting it %d%% sleep immunity for each turn of the Insomnia effect.
+		When Slumber ends the target will suffer from Insomnia for a number of turns equal to the amount of time it was asleep (up to five turns max), granting it %d%% sleep immunity for each turn of the Insomnia effect.
 		The damage threshold will scale with your mindpower.]]):format(duration, power, insomnia)
 	end,
 }
@@ -117,7 +117,7 @@ newTalent{
 	cooldown = 24,
 	psi = 40,
 	random_boss_rarity = 10,
-	tactical = { DISABLE = function(self, t, target) if target:attr("sleep") then return 4 else return 0 end end},
+	tactical = { DISABLE = function(self, t, target) if target.game_ender and target:attr("sleep") then return 4 else return 0 end end},
 	direct_hit = true,
 	requires_target = true,
 	range = function(self, t) return 5 + math.min(5, self:getTalentLevelRaw(t)) end,

@@ -528,7 +528,7 @@ newTalent{
 			game.party:hasMember(target).on_control = function(self)
 				self.summoner.over_mind_ai = self.summoner.ai
 				self.summoner.ai = "none"
-				target:hotkeyAutoTalents()
+				self:hotkeyAutoTalents()
 			end
 			game.party:hasMember(target).on_uncontrol = function(self)
 				self.summoner.ai = self.summoner.over_mind_ai

@@ -129,7 +129,7 @@ newTalent{
 	cooldown = 60,
 	no_sustain_autoreset = true,
 	random_boss_rarity = 10,
-	tactical = { DISABLE = 3 },
+	tactical = { DISABLE = function(self, t, target) if target.game_ender then return 3 else return 0 end end},
 	range = 5,
 	on_pre_use = function(self, t) return self:canBe("planechange") end,
 	activate = function(self, t)

@@ -91,7 +91,7 @@ newTalent{
 		local power = t.getSleepPower(self, t)
 		local insomnia = t.getInsomniaPower(self, t)
 		return([[Puts targets in a radius of %d to sleep for %d turns, rendering them unable to act.  Every %d points of damage the target suffers will reduce the effect duration by one turn.
-		When Sleep ends the target will suffer from Insomnia for a number of turns equal to the amount of time it was asleep, granting it %d%% sleep immunity for each turn of the Insomnia effect.
+		When Sleep ends the target will suffer from Insomnia for a number of turns equal to the amount of time it was asleep (up to five turns max), granting it %d%% sleep immunity for each turn of the Insomnia effect.
 		At talent level 5 Sleep will become contagious and has a 25%% chance to spread to nearby targets each turn.
 		The damage threshold will scale with your mindpower.]]):format(radius, duration, power, insomnia)
 	end,
@@ -198,7 +198,7 @@ newTalent{
 	require = psi_wil_req4,
 	mode = "sustained",
 	sustain_psi = 40,
-	cooldown = 50,
+	cooldown = function(self, t) return 50 - self:getTalentLevelRaw(t) * 5 end,
 	tactical = { DISABLE = function(self, t, target) if target:attr("sleep") then return 4 else return 0 end end},
 	range = function(self, t) return 5 + math.min(5, self:getTalentLevelRaw(t)) end,
 	requires_target = true,
@@ -222,7 +222,7 @@ newTalent{
 	info = function(self, t)
 		local drain = t.getDrain(self, t)
 		return ([[Imprisons all sleeping targets within range in their dream state, effectively extending sleeping effects for as long as Dream Prison is maintainted.
-		This powerful effect constantly drains %d Psi per turn and is considered a psionic channel as such it will break if you move, use a talent, or activate an item.
+		This powerful effect constantly drains %d Psi per turn and is considered a psionic channel as such it will break if you move, use a talent that consumes a turn, or activate an item.
 		(Note that sleeping effects that happen each turn, such as Nightmare's damage and Sleep's contagion, will cease to function for the duration of the effect.)]]):format(drain)
 	end,
 }
