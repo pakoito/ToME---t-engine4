@@ -10,3 +10,4 @@
 * sub-tile entities, like the spiders for the arachnomancer: split a tile in 16 (4x4)
 * fun caster egos: apply/change tthe cross-tier effects o some things funky
 * refit mindslayers a bit (remove trees)
+* make aegis & dispruption shield interract: casting argis rmoves X mana and puts them in a temp effect

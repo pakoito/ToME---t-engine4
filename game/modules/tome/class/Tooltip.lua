@@ -31,7 +31,6 @@ function _M:getTooltipAtMap(tmx, tmy, mx, my)
 	local tt = {}
 	local seen = game.level.map.seens(tmx, tmy)
 	local remember = game.level.map.remembers(tmx, tmy)
-	local ctrl_state = core.key.modState("ctrl")
 	
 	local check = function(check_type)
 		local to_add = game.level.map:checkEntity(tmx, tmy, check_type, "tooltip", game.level.map.actor_player)
@@ -46,11 +45,11 @@ function _M:getTooltipAtMap(tmx, tmy, mx, my)
 		return to_add
 	end
 	
-	if seen or remember and not ctrl_state then
+	if seen or remember and not core.key.modState("ctrl") then
 		check(Map.TRAP)
-		check(Map.ACTOR)
+		if seen then check(Map.ACTOR) end
 		check(Map.OBJECT)
-		check(Map.PROJECTILE)
+		if seen then check(Map.PROJECTILE) end
 		check(Map.TERRAIN)
 	end
 	
