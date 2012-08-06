@@ -55,6 +55,24 @@ newEffect{
 }
 
 newEffect{
+	name = "MANA_OVERFLOW", image = "talents/aegis.png",
+	desc = "Mana Overflow",
+	long_desc = function(self, eff) return ("The mana is overflowing, increasing your max mana by %d%%."):format(eff.power) end,
+	type = "magical",
+	subtype = { arcane=true },
+	status = "beneficial",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target# starts to overflow mana.", "+Mana Overflow" end,
+	on_lose = function(self, err) return "#Target# stops overflowing mana.", "-Mana Overflow" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("max_mana", eff.power * self:getMaxMana() / 100)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("max_mana", eff.tmpid)
+	end,
+}
+
+newEffect{
 	name = "STONED", image = "talents/stone_touch.png",
 	desc = "Stoned",
 	long_desc = function(self, eff) return "The target has been turned to stone, making it subject to shattering but improving physical(+20%), fire(+80%) and lightning(+50%) resistances." end,

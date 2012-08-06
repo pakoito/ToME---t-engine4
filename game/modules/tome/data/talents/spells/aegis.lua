@@ -127,6 +127,7 @@ newTalent{
 			local e = self.tempeffect_def[eff_id]
 			if e.on_aegis then return true end
 		end
+		if self:isTalentActive(self.T_DISRUPTION_SHIELD) then return true end
 	end,
 	action = function(self, t)
 		local target = self
@@ -148,6 +149,10 @@ newTalent{
 			eff.e.on_aegis(self, eff.p, shield)
 		end
 
+		if self:isTalentActive(self.T_DISRUPTION_SHIELD) then
+			self:setEffect(self.EFF_MANA_OVERFLOW, math.ceil(2 + self:getTalentLevel(t)), {power=shield})
+		end
+
 		game:playSoundNear(self, "talents/heal")
 		return true
 	end,
@@ -155,7 +160,7 @@ newTalent{
 		local shield = t.getShield(self, t)
 		return ([[Release arcane energies into any magical shield currently protecting you, further charging it by %d%% of its max absorb value.
 		It will affect at most %d shield effects.
-		Affected shields are: Damage Shield, Time Shield, Displacement Shield.
+		Affected shields are: Damage Shield, Time Shield, Displacement Shield, Disruption Shield.
 		The charging will increase with your Spellpower.]]):
 		format(shield, self:getTalentLevelRaw(t))
 	end,
