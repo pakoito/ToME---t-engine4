@@ -188,9 +188,10 @@ end
 function _M:generateRow(row, force)
 	local max_h = 0
 	row.cells = {}
+	local text
 	for j=1, #self.columns do
 		local col = self.columns[j]
-		row.cells[j] = row.cells[j] or {}
+		row.cells[j] = {}
 
 		-- if color for each column is different
 		if row.color and type(row.color[1]) == "table" then
@@ -200,31 +201,15 @@ function _M:generateRow(row, force)
 			row.color = row.color or {255,255,255}
 		end
 
-		if not row.cells[j]._tex then
-			if col.direct_draw then
-				row.cells[j].w, row.cells[j].h = col.direct_draw(row, 0, 0, col.width, self.row_height, 0, 0, 0, 0, self.dest_area) or self.row_height, self.row_height
-			else
-				if type(col.display_prop) == "function" then
-					text = col.display_prop(row)
-				else
-					text = row[col.display_prop or col.sort]
-				end
-				if type(text) ~= "table" or not text.is_tstring then
-					text = util.getval(text, row)
-					if type(text) ~= "table" then text = tstring.from(tostring(text)) end
-				end
+		if col.direct_draw then
+			row.cells[j].w, row.cells[j].h = col.direct_draw(row, 0, 0, col.width, self.row_height, 0, 0, 0, 0, self.dest_area) or self.row_height, self.row_height
+		else
+			text = tostring(row[col.display_prop or col.sort])
+			gen = self.font:draw(text, text:toTString():maxWidth(self.font), 255, 255, 255)
+			row.cells[j]._tex, row.cells[j]._tex_w, row.cells[j]._tex_h, row.cells[j].w, row.cells[j].h = gen[1]._tex, gen[1]._tex_w, gen[1]._tex_h, gen[1].w, gen[1].h
 
-				if text.is_tstring then
-					gen = self.font:draw(text:toString(), text:maxWidth(self.font), 255, 255, 255)
-				else
-					gen = self.font:draw(text, text:toTString():maxWidth(self.font), 255, 255, 255)
-				end
-
-				row.cells[j]._tex, row.cells[j]._tex_w, row.cells[j]._tex_h, row.cells[j].w, row.cells[j].h = gen[1]._tex, gen[1]._tex_w, gen[1]._tex_h, gen[1].w, gen[1].h
-
-				if row.cells[j].w > col.width - 2 * col.frame_sel.b4.w then
-					row.cells[j].display_offset = { x = 0, x_dir = 0 }
-				end
+			if row.cells[j].w > col.width - 2 * col.frame_sel.b4.w then
+				row.cells[j].display_offset = { x = 0, x_dir = 0 }
 			end
 		end
 		if row.cells[j].h > max_h then max_h = row.cells[j].h end
@@ -306,7 +291,7 @@ function _M:drawRow(row, row_i, nb_keyframes, x, y, total_w, total_h, loffset_x,
 			local one_by_tex_h = 1 / row.cells[j]._tex_h -- precalculate for using it to multiply instead of division
 			local one_by_tex_w = 1 / row.cells[j]._tex_w
 
-			if row.cells[j].display_offset then
+			if row.cells[j].display_offset and not self.only_display then
 				if self.sel == row_i then
 					-- if we are going right
 					if row.cells[j].display_offset.x_dir == 0 then
@@ -405,7 +390,7 @@ function _M:setList(list, force)
 		self.max_h = self.max_h_columns
 		for i=1, #self.list do
 			local row = self.list[i]
-			if self.focus_decay_max then self.list[i].focus_decay = 0 end
+			if self.focus_decay_max then row.focus_decay = 0 end
 			self:generateRow(row)
 			self.max_h = self.max_h + row.h
 		end

@@ -18,7 +18,6 @@
 -- darkgod@te4.org
 
 return { one_per_level=true,
-	{group="fareast-generic", percent_factor=1.5},
 	{group="majeyal-generic", percent_factor=1.5},
 	{name="cultists", percent=10},
 }

@@ -145,15 +145,9 @@ static int map_object_free(lua_State *L)
 static int map_object_cb(lua_State *L)
 {
 	map_object *obj = (map_object*)auxiliar_checkclass(L, "core{mapobj}", 1);
-	if (lua_isfunction(L, 2))
-	{
-		obj->cb_ref = luaL_ref(L, LUA_REGISTRYINDEX);
-	}
-	else
-	{
-		if (obj->cb_ref != LUA_NOREF) luaL_unref(L, LUA_REGISTRYINDEX, obj->cb_ref);
-		obj->cb_ref = LUA_NOREF;
-	}
+	if (obj->cb_ref != LUA_NOREF) luaL_unref(L, LUA_REGISTRYINDEX, obj->cb_ref);
+	if (lua_isfunction(L, 2)) obj->cb_ref = luaL_ref(L, LUA_REGISTRYINDEX);
+	else obj->cb_ref = LUA_NOREF;
 	return 0;
 }
 
@@ -492,7 +486,7 @@ static int map_objects_display(lua_State *L)
 	CHECKGL(glPushMatrix());
 	/* Reset The View */
 	glLoadIdentity();
-	
+
 
 	tglClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
 	CHECKGL(glClear(GL_COLOR_BUFFER_BIT));
@@ -567,7 +561,7 @@ static int map_objects_display(lua_State *L)
 	glMatrixMode(GL_PROJECTION);
 	CHECKGL(glPopMatrix());
 	glMatrixMode( GL_MODELVIEW );
-	
+
 	tglClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
 
 
@@ -1456,9 +1450,9 @@ static int map_to_screen(lua_State *L)
 
 	map->used_mx = mx;
 	map->used_my = my;
-	
+
 	int mini = mx - 1, maxi = mx + map->mwidth + 2, minj =  my - 1, maxj = my + map->mheight + 2;
-	
+
 	if(mini < 0)
 		mini = 0;
 	if(minj < 0)
@@ -1578,9 +1572,9 @@ static int minimap_to_screen(lua_State *L)
 	int ptr;
 	GLubyte *mm = map->minimap;
 	memset(mm, 0, map->mm_rh * map->mm_rw * 4 * sizeof(GLubyte));
-	
+
 	int mini = mdx, maxi = mdx + mdw, minj = mdy, maxj = mdy + mdh;
-	
+
 	if(mini < 0)
 		mini = 0;
 	if(minj < 0)
@@ -1589,7 +1583,7 @@ static int minimap_to_screen(lua_State *L)
 		maxi = map->w;
 	if(maxj > map->h)
 		maxj = map->h;
-	
+
 	for (z = 0; z < map->zdepth; z++)
 	{
 		for (j = minj; j < maxj; j++)

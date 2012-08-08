@@ -102,7 +102,7 @@ function _M:createItem(item, text)
 	if self.scrollbar then
 		gen = self.font:draw(text:toString(), self.fw - self.scrollbar.w , 255, 255, 255)
 	else
-		gen = self.font:draw(text:toString(), self.fw, 255, 255, 255) -- bug with UIDs displaying
+		gen = self.font:draw(text:toString(), self.fw, 255, 255, 255)
 	end
 
 	self.max_h = 0
