@@ -3659,16 +3659,27 @@ function _M:getTalentFullDescription(t, addlevel, config)
 		d:add(true)
 	end
 	if not config.ignore_ressources then
-		if t.mana or t.sustain_mana then d:add({"color",0x6f,0xff,0x83}, "Mana cost: ", {"color",0x7f,0xff,0xd4}, ""..(util.getval(t.sustain_mana or t.mana, self, t) * (100 + 2 * self:combatFatigue()) / 100), true) end
-		if t.stamina or t.sustain_stamina then d:add({"color",0x6f,0xff,0x83}, "Stamina cost: ", {"color",0xff,0xcc,0x80}, ""..(t.sustain_stamina or t.stamina * (100 + self:combatFatigue()) / 100), true) end
-		if t.equilibrium or t.sustain_equilibrium then d:add({"color",0x6f,0xff,0x83}, "Equilibrium cost: ", {"color",0x00,0xff,0x74}, ""..(t.equilibrium or t.sustain_equilibrium), true) end
-		if t.vim or t.sustain_vim then d:add({"color",0x6f,0xff,0x83}, "Vim cost: ", {"color",0x88,0x88,0x88}, ""..(t.sustain_vim or t.vim), true) end
-		if t.positive or t.sustain_positive then d:add({"color",0x6f,0xff,0x83}, "Positive energy cost: ", {"color",255, 215, 0}, ""..(t.sustain_positive or t.positive * (100 + self:combatFatigue()) / 100), true) end
-		if t.negative or t.sustain_negative then d:add({"color",0x6f,0xff,0x83}, "Negative energy cost: ", {"color", 127, 127, 127}, ""..(t.sustain_negative or t.negative * (100 + self:combatFatigue()) / 100), true) end
-		if t.hate or t.sustain_hate then d:add({"color",0x6f,0xff,0x83}, "Hate cost:  ", {"color", 127, 127, 127}, ""..(t.hate or t.sustain_hate * (100 + 2 * self:combatFatigue()) / 100), true) end
-		if t.paradox or t.sustain_paradox then d:add({"color",0x6f,0xff,0x83}, "Paradox cost: ", {"color",  176, 196, 222}, ("%0.2f"):format(t.sustain_paradox or t.paradox * (1 + (self.paradox / 300))), true) end
-		if t.psi or t.sustain_psi then d:add({"color",0x6f,0xff,0x83}, "Psi cost: ", {"color",0x7f,0xff,0xd4}, ""..(t.sustain_psi or t.psi * (100 + 2 * self:combatFatigue()) / 100), true) end
-		if t.feedback or t.sustain_feedback then d:add({"color",0x6f,0xff,0x83}, "Feedback cost: ", {"color",0xFF, 0xFF, 0x00}, ""..(t.sustain_feedback or t.feedback * (100 + 2 * self:combatFatigue()) / 100), true) end
+		if t.mana then d:add({"color",0x6f,0xff,0x83}, "Mana cost: ", {"color",0x7f,0xff,0xd4}, ""..(util.getval(t.mana, self, t) * (100 + 2 * self:combatFatigue()) / 100), true) end
+		if t.stamina then d:add({"color",0x6f,0xff,0x83}, "Stamina cost: ", {"color",0xff,0xcc,0x80}, ""..(t.stamina * (100 + self:combatFatigue()) / 100), true) end
+		if t.equilibrium then d:add({"color",0x6f,0xff,0x83}, "Equilibrium cost: ", {"color",0x00,0xff,0x74}, ""..(t.equilibrium), true) end
+		if t.vim then d:add({"color",0x6f,0xff,0x83}, "Vim cost: ", {"color",0x88,0x88,0x88}, ""..(t.vim), true) end
+		if t.positive then d:add({"color",0x6f,0xff,0x83}, "Positive energy cost: ", {"color",255, 215, 0}, ""..(t.positive * (100 + self:combatFatigue()) / 100), true) end
+		if t.negative then d:add({"color",0x6f,0xff,0x83}, "Negative energy cost: ", {"color", 127, 127, 127}, ""..(t.negative * (100 + self:combatFatigue()) / 100), true) end
+		if t.hate then d:add({"color",0x6f,0xff,0x83}, "Hate cost:  ", {"color", 127, 127, 127}, ""..(t.hate * (100 + 2 * self:combatFatigue()) / 100), true) end
+		if t.paradox then d:add({"color",0x6f,0xff,0x83}, "Paradox cost: ", {"color",  176, 196, 222}, ("%0.2f"):format(t.paradox * (1 + (self.paradox / 300))), true) end
+		if t.psi then d:add({"color",0x6f,0xff,0x83}, "Psi cost: ", {"color",0x7f,0xff,0xd4}, ""..(t.psi * (100 + 2 * self:combatFatigue()) / 100), true) end
+		if t.feedback then d:add({"color",0x6f,0xff,0x83}, "Feedback cost: ", {"color",0xFF, 0xFF, 0x00}, ""..(t.feedback * (100 + 2 * self:combatFatigue()) / 100), true) end
+
+		if t.sustain_mana then d:add({"color",0x6f,0xff,0x83}, "Sustain mana cost: ", {"color",0x7f,0xff,0xd4}, ""..(util.getval(t.sustain_mana, self, t)), true) end
+		if t.sustain_stamina then d:add({"color",0x6f,0xff,0x83}, "Sustain stamina cost: ", {"color",0xff,0xcc,0x80}, ""..(t.sustain_stamina), true) end
+		if t.sustain_equilibrium then d:add({"color",0x6f,0xff,0x83}, "Sustain equilibrium cost: ", {"color",0x00,0xff,0x74}, ""..(t.sustain_equilibrium), true) end
+		if t.sustain_vim then d:add({"color",0x6f,0xff,0x83}, "Sustain vim cost: ", {"color",0x88,0x88,0x88}, ""..(t.sustain_vim), true) end
+		if t.sustain_positive then d:add({"color",0x6f,0xff,0x83}, "Sustain positive energy cost: ", {"color",255, 215, 0}, ""..(t.sustain_positive), true) end
+		if t.sustain_negative then d:add({"color",0x6f,0xff,0x83}, "Sustain negative energy cost: ", {"color", 127, 127, 127}, ""..(t.sustain_negative), true) end
+		if t.sustain_hate then d:add({"color",0x6f,0xff,0x83}, "Sustain hate cost:  ", {"color", 127, 127, 127}, ""..(t.sustain_hate), true) end
+		if t.sustain_paradox then d:add({"color",0x6f,0xff,0x83}, "Sustain paradox cost: ", {"color",  176, 196, 222}, ("%0.2f"):format(t.sustain_paradox), true) end
+		if t.sustain_psi then d:add({"color",0x6f,0xff,0x83}, "Sustain psi cost: ", {"color",0x7f,0xff,0xd4}, ""..(t.sustain_psi), true) end
+		if t.sustain_feedback then d:add({"color",0x6f,0xff,0x83}, "Sustain feedback cost: ", {"color",0xFF, 0xFF, 0x00}, ""..(t.sustain_feedback), true) end
 	end
 	if t.mode ~= "passive" then
 		if self:getTalentRange(t) > 1 then d:add({"color",0x6f,0xff,0x83}, "Range: ", {"color",0xFF,0xFF,0xFF}, ("%0.2f"):format(self:getTalentRange(t)), true)
