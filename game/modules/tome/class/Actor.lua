@@ -493,6 +493,12 @@ function _M:actBase()
 				t.doMindStorm(self, t, p)
 			end
 		end
+		
+		if self:isTalentActive(self.T_DREAMFORGE) then
+			local t, p = self:getTalentFromId(self.T_DREAMFORGE), self:isTalentActive(self.T_DREAMFORGE)
+			t.doForgeStrike(self, t, p)
+		end	
+	
 
 		self:triggerHook{"Actor:actBase:Effects"}
 	end
@@ -2937,7 +2943,7 @@ function _M:learnPool(t)
 		self:learnTalent(self.T_PSI_POOL, true)
 		self.resource_pool_refs[self.T_PSI_POOL] = (self.resource_pool_refs[self.T_PSI_POOL] or 0) + 1
 	end
-	if t.type[1]:find("^psionic/feedback") or t.type[1]:find("^psionic/discharge")and not self:knowTalent(self.T_FEEDBACK_POOL) then
+	if t.type[1]:find("^psionic/feedback") or t.type[1]:find("^psionic/discharge") and not self:knowTalent(self.T_FEEDBACK_POOL) then
 		self:learnTalent(self.T_FEEDBACK_POOL, true)
 	end
 	-- If we learn an archery talent, also learn to shoot

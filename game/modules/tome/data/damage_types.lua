@@ -56,6 +56,10 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			local e = target.tempeffect_def[target.EFF_BLOCKING]
 			dam = e.do_block(type, dam, target.tmp[target.EFF_BLOCKING], target, src)
 		end
+		if target.isTalentActive and target:isTalentActive(target.T_FORGE_SHIELD) then
+			local t = target:getTalentFromId(target.T_FORGE_SHIELD)
+			dam = t.doForgeShield(type, dam, t, target, src)
+		end
 
 		-- Increases damage
 		local mind_linked = false
@@ -2135,6 +2139,50 @@ newDamageType{
 			-- Reset resists pen
 			if dam.penetrate then
 				src.resists_pen[engine.DamageType.PHYSICAL] = old_pen
+			end
+		end
+	end,
+}
+
+-- Mind/Fire damage with lots of parameter options
+newDamageType{
+	name = "dreamforge", type = "DREAMFORGE",
+	projector = function(src, x, y, type, dam, tmp)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if not target then return end
+		local power, dur, dist, do_particles
+		tmp = tmp or {}
+		if _G.type(dam) == "table" then dam, power, dur, dist, do_particles = dam.dam, dam.power, dam.dur, dam.dist, dam.do_particles end
+		if target and not tmp[target] then 
+			if src:checkHit(src:combatMindpower(), target:combatMentalResist(), 0, 95) then
+				DamageType:get(DamageType.MIND).projector(src, x, y, DamageType.MIND, {dam=dam/2, alwaysHit=true})
+				DamageType:get(DamageType.FIREBURN).projector(src, x, y, DamageType.FIREBURN, dam/2)
+				if power and power > 0 then 
+					local silent = true and target:hasEffect(target.EFF_BROKEN_DREAM) or false
+					target:setEffect(target.EFF_BROKEN_DREAM, dur, {power=power}, silent)
+					target:crossTierEffect(target.EFF_BRAINLOCKED, src:combatMindpower())
+				end
+				-- Do knockback
+				if dist then
+					if target:canBe("knockback") then
+						target:knockback(src.x, src.y, dist)
+						target:crossTierEffect(target.EFF_OFFBALANCE, src:combatMindpower())
+						game.logSeen(target, "%s is knocked back!", target.name:capitalize())
+					else
+						game.logSeen(target, "%s resists the forge bellow!", target.name:capitalize())
+					end
+				end
+				if do_particles then
+					if rng.percent(50) then
+						game.level.map:particleEmitter(target.x, target.y, 1, "generic_discharge", {rm=225, rM=255, gm=160, gM=160, bm=0, bM=0, am=35, aM=90})
+					elseif hit then
+						game.level.map:particleEmitter(target.x, target.y, 1, "generic_discharge", {rm=225, rM=255, gm=225, gM=255, bm=255, bM=255, am=35, aM=90})
+					end
+				end
+			else -- Save for half damage
+				DamageType:get(DamageType.MIND).projector(src, x, y, DamageType.MIND, {dam=dam/4, alwaysHit=true})
+				DamageType:get(DamageType.FIREBURN).projector(src, x, y, DamageType.FIREBURN, dam/4)
+				game.logSeen(target, "%s resists the dream forge!", target.name:capitalize())
 			end
 		end
 	end,

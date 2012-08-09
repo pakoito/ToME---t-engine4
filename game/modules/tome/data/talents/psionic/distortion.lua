@@ -152,7 +152,6 @@ newTalent{
 	target = function(self, t)
 		return {type="hit", range=self:getTalentRange(t), nolock=true, talent=t}
 	end,
-	tactical = { ATTACKAREA = { PHYSICAL = 2 }, DISABLE = 1 },
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
@@ -166,8 +165,8 @@ newTalent{
 		local e = Object.new{
 			old_feat = oe,
 			type = oe.type, subtype = oe.subtype,
-			name = "maelstrom", image = oe.image, --add_mos = {{image = "terrain/wormhole.png"}},
-			display = '&', color_r=255, color_g=255, color_b=255, back_color=colors.STEEL_BLUE,
+			name = "maelstrom", image = oe.image,
+			display = oe.display, color=oe.color, back_color=oe.back_color,
 			always_remember = true,
 			temporary = t.getDuration(self, t),
 			is_maelstrom = true,

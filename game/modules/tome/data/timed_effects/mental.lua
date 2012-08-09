@@ -2640,8 +2640,8 @@ newEffect{
 	type = "mental",
 	subtype = { psionic=true },
 	status = "detrimental",
-	on_gain = function(self, err) return "#Target# mental functions have been impaired.", "+Sundered Mind" end,
-	on_lose = function(self, err) return "#Target#'s regains it's senses.", "-Sundered Mind" end,
+	on_gain = function(self, err) return "#Target#'s mental functions have been impaired.", "+Sundered Mind" end,
+	on_lose = function(self, err) return "#Target# regains it's senses.", "-Sundered Mind" end,
 	parameters = { power=10 },
 	on_merge = function(self, old_eff, new_eff)
 		self:removeTemporaryValue("combat_mentalresist", old_eff.sunder)
@@ -2657,5 +2657,70 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("combat_mentalresist", eff.sunder)
+	end,
+}
+
+newEffect{
+	name = "BROKEN_DREAM", image = "effects/broken_dream.png",
+	desc = "Broken Dream",
+	long_desc = function(self, eff) return ("The target's dreams have been broken by the dreamforge, reducing it's mental save by %d and reducing it's chance of successfully casting a spell by %d%%."):format(eff.power, eff.power) end,
+	type = "mental",
+	subtype = { psionic=true, morale=true },
+	status = "detrimental",
+	on_gain = function(self, err) return "#Target#'s dreams have been broken.", "+Broken Dream" end,
+	on_lose = function(self, err) return "#Target# regains hope.", "-Broken Dream" end,
+	parameters = { power=10 },
+	activate = function(self, eff)
+		eff.silence = self:addTemporaryValue("spell_failure", eff.power)
+		eff.sunder = self:addTemporaryValue("combat_mentalresist", -eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("spell_failure", eff.silence)
+		self:removeTemporaryValue("combat_mentalresist", eff.sunder)
+	end,
+}
+
+newEffect{
+	name = "FORGE_SHIELD", image = "talents/block.png",
+	desc = "Forge Shield",
+	long_desc = function(self, eff)
+		local e_string = ""
+		if eff.number == 1 then
+			e_string = DamageType.dam_def[next(eff.d_types)].name
+		else
+			local list = table.keys(eff.d_types)
+			for i = 1, #list do
+				list[i] = DamageType.dam_def[list[i]].name
+			end
+			e_string = table.concat(list, ", ")
+		end
+		local function tchelper(first, rest)
+		  return first:upper()..rest:lower()
+		end
+		return ("Absorbs %d damage from the next blockable attack.  Currently Blocking: %s."):format(eff.power, e_string:gsub("(%a)([%w_']*)", tchelper))
+	end,
+	type = "mental",
+	subtype = { psionic=true },
+	status = "beneficial",
+	parameters = { power=1 },
+	on_gain = function(self, eff) return nil, nil end,
+	on_lose = function(self, eff) return nil, nil end,
+		damage_feedback = function(self, eff, src, value)
+		if eff.particle and eff.particle._shader and eff.particle._shader.shad and src and src.x and src.y then
+			local r = -rng.float(0.2, 0.4)
+			local a = math.atan2(src.y - self.y, src.x - self.x)
+			eff.particle._shader:setUniform("impact", {math.cos(a) * r, math.sin(a) * r})
+			eff.particle._shader:setUniform("impact_tick", core.game.getTime())
+		end
+	end,
+	activate = function(self, eff)
+		if core.shader.active() then
+			eff.particle = self:addParticles(Particles.new("shader_shield", 1, {img="shield2", size_factor=1}, {type="shield", time_factor=12000, color={1.0, 0.5, 0}}))
+		else
+			eff.particle = self:addParticles(Particles.new("time_shield_bubble", 1))
+		end
+	end,
+	deactivate = function(self, eff)
+		self:removeParticles(eff.particle)
 	end,
 }

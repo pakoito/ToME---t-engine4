@@ -56,7 +56,7 @@ newTalent{
 		return ([[You believe that your mind is the center of everything.  Permanently increases the amount of psi you gain per level by 10 and reduces your life rating (affects life at level up) by 50%% (one time only adjustment).
 		You also have learned to overcome damage with your mind alone and convert %d%% of all damage into Psi damage and %d%% of your healing and life regen now recovers Psi instead of life. 
 		The first talent point invested will also increase the amount of Psi you gain from willpower by 1 but reduce the amount of life you gain from constitution by 0.5.
-		The first talent point also increases your solipsism threshold by 20%% (currently %d%%).]]):format(conversion_ratio * 100, conversion_ratio * 100, self.solipsism_threshold * 100)
+		The first talent point also increases your solipsism threshold by 20%% (currently %d%%), reducing your global speed by 1%% for each percentage your current Psi falls below this threshold.]]):format(conversion_ratio * 100, conversion_ratio * 100, self.solipsism_threshold * 100)
 	end,
 }
 

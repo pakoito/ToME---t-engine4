@@ -103,6 +103,7 @@ newTalent{
 			max_life = resolvers.rngavg(100,110),
 			life_rating = 12,
 			combat_armor = 0, combat_def = 0,
+			stats = { mag=self:getMag(), wil=self:getWil(), cun=self:getCun()},
 			inc_stats = {
 				str = stat_bonus / 2,
 				dex = stat_bonus,
@@ -244,6 +245,7 @@ newTalent{
 			max_life = resolvers.rngavg(100,110),
 			life_rating = 15,
 			combat_armor = 0, combat_def = 0,
+			stats = { mag=self:getMag(), wil=self:getWil(), cun=self:getCun()},
 			inc_stats = {
 				str = stat_bonus,
 				dex = stat_bonus / 2,
@@ -384,6 +386,7 @@ newTalent{
 			max_life = resolvers.rngavg(100,110),
 			life_rating = 15,
 			combat_armor = 0, combat_def = 0,
+			stats = { mag=self:getMag(), wil=self:getWil(), cun=self:getCun()},
 			inc_stats = {
 				str = stat_bonus / 2,
 				dex = stat_bonus / 2,
@@ -478,7 +481,7 @@ newTalent{
 	info = function(self, t)
 		local bonus = t.getStatBonus(self, t)
 		local range = self:getTalentRange(t)
-		return([[Forge a guardian from your thoughts alone.  Your guardian's primary stat will be improved by %d and it's two secondary stats by %d.
+		return([[Forge a guardian from your thoughts alone.  Your guardian's primary stat will be improved by %d, it's two secondary stats by %d, and it will have magic, cunning, and willpower equal to your own.
 		At talent level one you may forge a mighty bowman clad in leather armor, at level three a powerful warrior wielding a two-handed weapon, and at level five a strong defender using a sword and shield.
 		Thought forms can only be maintained up to a range of %d and will rematerialize next to you if this range is exceeded.
 		Only one thought-form may be active at a time and the stat bonuses will improve with your mindpower.]]):format(bonus, bonus/2, range)

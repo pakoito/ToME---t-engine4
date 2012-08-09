@@ -34,10 +34,11 @@ newTalentType{ allow_random=true, type="psionic/psi-archery", name = "psi-archer
 newTalentType{ allow_random=true, type="psionic/greater-psi-fighting", name = "greater psi-fighting", description = "Elevate psi-fighting prowess to epic levels." }
 newTalentType{ allow_random=true, type="psionic/brainstorm", name = "brainstorm", description = "Focus your telekinetic powers in ways undreamed of by most mindslayers." }
 
--- Secret Project...
 -- Solipsist Talent Trees
 newTalentType{ allow_random=true, type="psionic/discharge", name = "discharge", description = "Project feedback on the world around you." }
 newTalentType{ allow_random=true, type="psionic/distortion", name = "distortion", description = "Distort reality with your mental energy." }
+newTalentType{ allow_random=true, type="psionic/dream-forge", name = "Dream Forge", description = "Master the dream forge to create powerful armor and effects." }
+newTalentType{ allow_random=true, type="psionic/dream-smith", name = "Dream Smith", description = "Call the dream-forge hammer to smite your foes." }
 newTalentType{ allow_random=true, type="psionic/nightmare", name = "nightmare", description = "Manifest your enemies nightmares." }
 newTalentType{ allow_random=true, type="psionic/psychic-assault", name = "Psychic Assault", description = "Directly attack your opponents minds." }
 newTalentType{ allow_random=true, type="psionic/slumber", name = "slumber", description = "Force enemies into a deep sleep." }
@@ -261,6 +262,8 @@ load("/data/talents/psionic/grip.lua")
 -- Solipsist
 load("/data/talents/psionic/discharge.lua")
 load("/data/talents/psionic/distortion.lua")
+load("/data/talents/psionic/dream-forge.lua")
+load("/data/talents/psionic/dream-smith.lua")
 load("/data/talents/psionic/dreaming.lua")
 load("/data/talents/psionic/mentalism.lua")
 load("/data/talents/psionic/feedback.lua")
@@ -269,7 +272,7 @@ load("/data/talents/psionic/psychic-assault.lua")
 load("/data/talents/psionic/slumber.lua")
 load("/data/talents/psionic/solipsism.lua")
 load("/data/talents/psionic/thought-forms.lua")
-load("/data/talents/psionic/trance.lua")
+--load("/data/talents/psionic/trance.lua")
 
 
 load("/data/talents/psionic/possession.lua")

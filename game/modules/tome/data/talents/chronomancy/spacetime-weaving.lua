@@ -64,7 +64,7 @@ newTalent{
 	info = function(self, t)
 		local range = self:getTalentRange(t)
 		return ([[Teleports you to up to %d tiles away to a targeted location in line of sight.  Additional talent points increase the range.
-		This spell takes no time to cast..]]):format(range)
+		This spell takes no time to cast.]]):format(range)
 	end,
 }
 

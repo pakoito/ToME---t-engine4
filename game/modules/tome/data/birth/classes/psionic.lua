@@ -169,6 +169,7 @@ newBirthDescriptor{
 	talents_types = {
 		-- class
 		["psionic/distortion"]={true, 0.3},
+		["psionic/dream-smith"]={true, 0.3},
 		["psionic/psychic-assault"]={true, 0.3},
 		["psionic/slumber"]={true, 0.3},
 		["psionic/solipsism"]={true, 0.3},
@@ -182,6 +183,7 @@ newBirthDescriptor{
 		
 		-- locked trees
 		["psionic/discharge"]={false, 0.3},
+		["psionic/dream-forge"]={false, 0.3},
 		["psionic/nightmare"]={false, 0.3},
 	},
 	talents = {

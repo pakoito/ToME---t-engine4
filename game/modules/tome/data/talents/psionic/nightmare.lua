@@ -107,7 +107,7 @@ newTalent{
 
 		local m = target:clone{
 			shader = "shadow_simulacrum",
-			shader_args = { color = {0.6, 0.0, 0.3}, base = 0.3, time_factor = 2000 },
+			shader_args = { color = {0.6, 0.0, 0.3}, base = 0.6, time_factor = 1500 },
 			no_drops = true,
 			faction = self.faction,
 			summoner = self, summoner_gain_exp=true,
