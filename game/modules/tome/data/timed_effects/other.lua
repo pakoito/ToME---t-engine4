@@ -1682,7 +1682,7 @@ newEffect{
 					m:resetCanSeeCache()
 				end
 			end
-			
+
 			-- Try to insure the AI isn't attacking the invulnerable actor
 			if self.ai_target and self.ai_target.actor and self.ai_target.actor:attr("invulnerable") then
 				self.ai_target.actor = nil
@@ -1701,7 +1701,7 @@ newEffect{
 		else
 			eff.particle = eff.target:addParticles(Particles.new("damage_shield", 1))
 		end
-		
+
 		-- Make the invader deadly
 		eff.pid = self:addTemporaryValue("inc_damage", {all=eff.power})
 		eff.did = self:addTemporaryValue("lucid_dreamer", 1)
@@ -1780,6 +1780,7 @@ newEffect{
 			-- Reload MOs
 			game.level.map:redisplay()
 			game.level.map:recreate()
+			game.uiset:setupMinimap(game.level)
 
 			game.logPlayer(game.player, "#LIGHT_BLUE#You are brought back from the Dreamscape!")
 
@@ -1788,7 +1789,7 @@ newEffect{
 				local kills = eff.projections_killed
 				eff.target:takeHit(eff.target.max_life/10 * kills, self)
 				eff.target:setEffect(eff.target.EFF_BRAINLOCKED, kills, {})
-				
+
 				local loss = "loss"
 				if kills >= 10 then loss = "potentially fatal loss" elseif kills >=8 then loss = "devastating loss" elseif kills >=6 then loss = "tremendous loss" elseif kills >=4 then loss = "terrible loss" end
 				game.logSeen(eff.target, "#LIGHT_RED#%s suffered a %s of self in the Dreamscape!", eff.target.name:capitalize(), loss)
