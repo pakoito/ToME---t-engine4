@@ -1841,3 +1841,43 @@ newEffect{
 		self:removeParticles(eff.particle)
 	end,
 }
+
+newEffect{
+	name = "DISABLE", image = "talents/cripple.png",
+	desc = "Disable",
+	long_desc = function(self, eff) return ("The target is disabled, reducing movement speed by %d%% and physical power by %d."):format(eff.speed * 100, eff.atk) end,
+	type = "physical",
+	subtype = { wound=true },
+	status = "detrimental",
+	parameters = { speed=0.15, atk=10 },
+	on_gain = function(self, err) return "#Target# is disabled.", "+Disabled" end,
+	on_lose = function(self, err) return "#Target# is not disabled anymore.", "-Disabled" end,
+	activate = function(self, eff)
+		eff.speedid = self:addTemporaryValue("movement_speed", -eff.speed)
+		eff.atkid = self:addTemporaryValue("combat_atk", -eff.atk)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("movement_speed", eff.speedid)
+		self:removeTemporaryValue("combat_atk", eff.atk)
+	end,
+}
+
+newEffect{
+	name = "ANGUISH", image = "talents/agony.png",
+	desc = "Anguish",
+	long_desc = function(self, eff) return ("The target is in extreme anguish, preventing them from making tactical decisions, and reducing Willpower by %d and Cunning by %d."):format(eff.will, eff.cun) end,
+	type = "physical",
+	subtype = { wound=true },
+	status = "detrimental",
+	parameters = { will=5, cun=5 },
+	on_gain = function(self, err) return "#Target# is in anguish.", "+Anguish" end,
+	on_lose = function(self, err) return "#Target# is no longer in anguish.", "-Anguish" end,
+	activate = function(self, eff)
+		eff.sid = self:addTemporaryValue("inc_stats", {[Stats.STAT_WIL]=-eff.will, [Stats.STAT_CUN]=-eff.cun})
+--		if self.ai_state then eff.ai = self:addTemporaryValue("ai_state", {forbid_tactical=1}) end
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("inc_stats", eff.sid)
+--		if eff.ai then self:removeTemporaryValue("ai_state", eff.ai) end
+	end,
+}

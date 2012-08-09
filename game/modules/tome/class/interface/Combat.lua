@@ -628,6 +628,18 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		t.do_weakness(self, t, target)
 	end
 
+	-- Lacerating Strikes
+	if hitted and not target.dead and self:knowTalent(self.T_LACERATING_STRIKES) then
+		local t = self:getTalentFromId(self.T_LACERATING_STRIKES)
+		t.do_cut(self, t, target, dam)
+	end
+
+	-- Scoundrel's Strategies
+	if hitted and not target.dead and self:knowTalent(self.T_SCOUNDREL) and target:hasEffect(target.EFF_CUT) then
+		local t = self:getTalentFromId(self.T_SCOUNDREL)
+		t.do_scoundrel(self, t, target)
+	end
+
 	-- Special effect
 	if hitted and weapon and weapon.special_on_hit and weapon.special_on_hit.fct and (not target.dead or weapon.special_on_hit.on_kill) then
 		weapon.special_on_hit.fct(weapon, self, target)
@@ -846,6 +858,10 @@ function _M:combatDefenseBase(fake)
 
 	if self:hasLightArmor() and self:knowTalent(self.T_MOBILE_DEFENCE) then
 		d = d * (1 + self:getTalentLevel(self.T_MOBILE_DEFENCE) * 0.08)
+	end
+
+	if self:knowTalent(self.T_MISDIRECTION) then
+		d = d * (1 + self:getTalentLevel(self.T_MISDIRECTION) * (0.02 * (1 + self:getCun() / 85)))
 	end
 
 	return d
@@ -1176,6 +1192,11 @@ function _M:physicalCrit(dam, weapon, target, atk, def, add_chance, crit_power_a
 
 	if target:hasEffect(target.EFF_DISMAYED) then
 		chance = 100
+	end
+
+	-- Scoundrel's Strategies
+	if self:attr("cut") and target:knowTalent(self.T_SCOUNDREL) then
+		chance = chance - (5 + (target:getTalentLevel(self.T_SCOUNDREL)*5))
 	end
 
 	if self:isTalentActive(self.T_STEALTH) and self:knowTalent(self.T_SHADOWSTRIKE) then

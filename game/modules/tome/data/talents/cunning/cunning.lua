@@ -30,6 +30,7 @@ newTalentType{ allow_random=true, type="cunning/shadow-magic", name = "shadow ma
 newTalentType{ allow_random=true, type="cunning/ambush", name = "ambush", min_lev = 10, description = "Using darkness and a bit of magic you manipulate the shadows." }
 newTalentType{ allow_random=true, type="cunning/survival", name = "survival", generic = true, description = "The knowledge of the dangers of the world, and how to best avoid them." }
 newTalentType{ allow_random=true, type="cunning/tactical", name = "tactical", description = "Tactical combat abilities." }
+newTalentType{ allow_random=true, type="cunning/scoundrel", name = "scoundrel", generic = true, description = "The use of ungentlemanly techniques." }
 
 -- Generic requires for cunning based on talent level
 cuns_req1 = {
@@ -82,3 +83,4 @@ load("/data/talents/cunning/tactical.lua")
 load("/data/talents/cunning/survival.lua")
 load("/data/talents/cunning/shadow-magic.lua")
 load("/data/talents/cunning/ambush.lua")
+load("/data/talents/cunning/scoundrel.lua")

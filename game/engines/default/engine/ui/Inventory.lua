@@ -43,7 +43,7 @@ function _M:init(t)
 	self.on_drag_end = t.on_drag_end
 	self.on_focus_change = t.on_focus_change
 	self.special_bg = t.special_bg
-	
+
 	self._last_x, _last_y, self._last_ox, self._last_oy = 0, 0, 0, 0
 
 	if self.tabslist == nil and self.default_tabslist then
@@ -62,11 +62,11 @@ function _M:generate()
 	self.uis = {}
 
 	if self.tabslist then
-		self.c_tabs = ImageList.new{width=self.w, height=36, tile_w=32, tile_h=32, padding=5, force_size=true, selection="ctrl-multiple", list=self.tabslist, 
-			fct=function() self:generateList() end, 
+		self.c_tabs = ImageList.new{width=self.w, height=36, tile_w=32, tile_h=32, padding=5, force_size=true, selection="ctrl-multiple", list=self.tabslist,
+			fct=function() self:generateList() end,
 			on_select=function(item, how) self:selectTab(item, how) end
 		}
-		
+
 		self.c_tabs.no_keyboard_focus = true
 		if _M._last_tabs then
 			for _, l in ipairs(_M._last_tabs) do self.c_tabs.dlist[l[1]][l[2]].selected = true end
@@ -74,36 +74,36 @@ function _M:generate()
 			self.c_tabs.dlist[1][1].selected = true
 		end
 		self.uis[#self.uis+1] = {x=0, y=0, ui=self.c_tabs}
-		self.c_tabs.on_focus_change = function(ui_self, status) 
-			if status == true then 
+		self.c_tabs.on_focus_change = function(ui_self, status)
+			if status == true then
 				local item = ui_self.dlist[ui_self.sel_j] and ui_self.dlist[ui_self.sel_j][ui_self.sel_i]
 				self.on_select(item, true)
 			end
 		end
 	end
-	
+
 	local direct_draw= function(item, x, y, w, h, total_w, total_h, loffset_x, loffset_y, dest_area)
 		-- if there is object and is withing visible bounds
-		if item.object and total_h + h > loffset_y and total_h < loffset_y + dest_area.h then 
+		if item.object and total_h + h > loffset_y and total_h < loffset_y + dest_area.h then
 			local clip_y_start, clip_y_end = 0, 0
 			-- if it started before visible area then compute its top clip
-			if total_h < loffset_y then 
+			if total_h < loffset_y then
 				clip_y_start = loffset_y - total_h
 			end
 			-- if it ended after visible area then compute its bottom clip
-			if total_h + h > loffset_y + dest_area.h then 
-			   clip_y_end = total_h + h - loffset_y - dest_area.h 
+			if total_h + h > loffset_y + dest_area.h then
+			   clip_y_end = total_h + h - loffset_y - dest_area.h
 			end
 			-- get entity texture with everything it has i.e particles
 			local texture = item.object:getEntityFinalTexture(nil, h, h)
 			local one_by_tex_h = 1 / h
 			texture:toScreenPrecise(x, y, h, h - clip_y_start - clip_y_end, 0, 1, clip_y_start * one_by_tex_h, (h - clip_y_end) * one_by_tex_h)
 			return h, h, 0, 0, clip_y_start, clip_y_end
-		end 
+		end
 		return 0, 0, 0, 0, 0, 0
 	end
 
-	self.c_inven = ListColumns.new{width=self.w, height=self.h - (self.c_tabs and self.c_tabs.h or 0), sortable=true, scrollbar=true, select_delay = 0.1, columns=self.columns or {
+	self.c_inven = ListColumns.new{width=self.w, height=self.h - (self.c_tabs and self.c_tabs.h or 0), sortable=true, scrollbar=true, columns=self.columns or {
 		{name="", width={33,"fixed"}, display_prop="char", sort="id"},
 		{name="", width={24,"fixed"}, display_prop="object", sort="sortname", direct_draw=direct_draw},
 		{name="Inventory", width=72, display_prop="name", sort="sortname"},

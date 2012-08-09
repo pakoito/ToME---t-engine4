@@ -384,3 +384,80 @@ newEntity{ base = "BASE_AMULET",
 	max_power = 60, power_regen = 1,
 	use_talent = { id = Talents.T_WORMHOLE, level = 2, power = 60 },
 }
+
+newEntity{ base = "BASE_KNIFE", define_as = "MANDIBLE_UNGOLMOR",
+	power_source = {nature=true},
+	unique = true,
+	name = "Mandible of Ungolmor", image = "object/artifact/dagger_life_drinker.png",
+	unided_name = "curved, serrated black dagger",
+	desc = [[This obsidian-crafted, curved blade is studded with the deadly fangs of the Ungolmor. It seems to drain light from the world around it.]],
+	level_range = {40, 50},
+	rarity = 270,
+	require = { stat = { cun=38 }, },
+	cost = 650,
+	material_level = 5,
+	combat = {
+		dam = 40,
+		apr = 12,
+		physcrit = 22,
+		dammod = {cun=0.30, str=0.35, dex=0.35},
+		convert_damage ={[DamageType.DARKNESS] = 30},
+		special_on_crit = {desc="inflicts pinning spydric poison upon the target", fct=function(combat, who, target)
+			if target:canBe("poison") then
+				local tg = {type="hit", range=1}
+				local x, y = who:getTarget(tg)
+				who:project(tg, target.x, target.y, engine.DamageType.SPYDRIC_POISON, {src=who, dam=30, dur=3})
+			end
+		end},
+	},
+	wielder = {
+		inc_damage={[DamageType.NATURE] = 30, [DamageType.DARKNESS] = 20,},
+		inc_stats = {[Stats.STAT_CUN] = 8, [Stats.STAT_DEX] = 4,},
+		combat_armor = 5,
+		combat_armor_hardiness = 5,
+		lite = -2,
+	},
+	max_power = 40, power_regen = 1,
+	use_talent = { id = Talents.T_CREEPING_DARKNESS, level = 3, power = 25 },
+}
+
+newEntity{ base = "BASE_KNIFE", define_as = "KINETIC_SPIKE",
+	power_source = {psionic=true},
+	unique = true,
+	name = "Kinetic Spike", image = "object/artifact/dagger_life_drinker.png",
+	unided_name = "bladeless hilt",
+	desc = [[A simple, rudely crafted stone hilt, this object manifests a blade of wavering, nearly invisible force, like a heat haze, as you grasp it. Despite its simple appearance, it is capable of shearing through solid granite, in the hands of those with the necessary mental fortitude to use it properly.]],
+	level_range = {42, 50},
+	rarity = 310,
+	require = { stat = { wil=42 }, },
+	cost = 450,
+	material_level = 5,
+	combat = {
+		dam = 38,
+		apr = 40, -- Hard to imagine much being harder to stop with armor.
+		physcrit = 10,
+		dammod = {wil=0.30, str=0.30, dex=0.40},
+	},
+	wielder = {
+		combat_atk = 8,
+		combat_dam = 15,
+		resists_pen = {[DamageType.PHYSICAL] = 30},
+	},
+	max_power = 10, power_regen = 1,
+	use_power = { name = "fires a bolt of kinetic force, doing 150%% weapon damage", power = 10,
+		use = function(self, who)
+			local tg = {type="bolt", range=8}
+			local x, y = who:getTarget(tg)
+			if not x or not y then return nil end
+			local _ _, x, y = who:canProject(tg, x, y)
+			local target = game.level.map(x, y, engine.Map.ACTOR)
+			if target then
+				who:attackTarget(target, engine.DamageType.PHYSICAL, 1.5, true)
+			game.logSeen(who, "The %s fires a bolt of kinetic force!", self:getName())
+			else
+				return
+			end
+			return {id=true, used=true}
+		end
+	},
+}
