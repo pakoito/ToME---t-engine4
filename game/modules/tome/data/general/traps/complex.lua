@@ -92,11 +92,9 @@ newEntity{ base = "TRAP_COMPLEX",
 			end
 		end
 		self.list = list
-		game.level:addEntity(self)
 		self.on_added = nil
 	end,
 	dammode = rng.table{engine.DamageType.ARCANE_SILENCE, engine.DamageType.DARKSTUN, engine.DamageType.COLDNEVERMOVE},
-	all_know = true,
 	dam = resolvers.mbonus_level(300, 5),
 	mag = resolvers.mbonus(200, 30),
 	combatSpellpower = function(self) return mod.class.interface.Combat:rescaleCombatStats(self.mag) end,
@@ -105,6 +103,8 @@ newEntity{ base = "TRAP_COMPLEX",
 			local dammode = self.dammode
 			while dammode == self.dammode do dammode = rng.table{engine.DamageType.ARCANE_SILENCE, engine.DamageType.DARKSTUN, engine.DamageType.COLDNEVERMOVE} end
 			self.dammode = dammode
+
+			if not self.added_to_level then game.level:addEntity(self) self.added_to_level = true end
 		end
 		return true
 	end,
@@ -144,12 +144,14 @@ newEntity{ base = "TRAP_COMPLEX",
 	on_added = function(self, level, x, y)
 		self.x, self.y = x, y
 		self.rad = rng.range(2, 8)
-		game.level:addEntity(self)
 		self.on_added = nil
 	end,
 	dam = resolvers.mbonus_level(450, 30),
 	triggered = function(self, x, y, who)
-		self:firePoison()
+		if self:reactionToward(who) < 0 then
+			if not self.added_to_level then game.level:addEntity(self) self.added_to_level = true end
+			self:firePoison()
+		end
 		return true
 	end,
 	disarmed = function(self, x, y, who)
@@ -166,7 +168,7 @@ newEntity{ base = "TRAP_COMPLEX",
 			self.rad,
 			5, nil,
 			{type="vapour"},
-			nil, 0, 0
+			nil, 0, 100
 		)
 		self:useEnergy(game.energy_to_act * 7)
 		self.nb = self.nb - 1
@@ -199,6 +201,8 @@ newEntity{ base = "TRAP_COMPLEX",
 	message = "Flames start to appear arround @target@.",
 	dam = resolvers.mbonus_level(300, 15),
 	triggered = function(self, x, y, who)
+		if self:reactionToward(who) >= 0 then return end
+
 		local ps, p = {}, self.points or {}
 		self.x, self.y = x, y
 		self:project({type="ball", radius=3}, x, y, function(px, py)

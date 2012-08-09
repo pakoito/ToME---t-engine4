@@ -77,7 +77,7 @@ end
 --- Forces the tooltip to pop with the given text
 function _M:tooltipDisplayAtMap(x, y, text, extra, force, nb_keyframes)
 	self.tooltip:displayAtMap(nil, nil, x, y, text, force, nb_keyframes)
-	if extra then
+	if extra and type(extra) == "table" then
 		if extra.up then self.tooltip.last_display_y = self.tooltip.last_display_y - self.tooltip.h end
 	end
 	self.tooltip_x = {}

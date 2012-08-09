@@ -40,12 +40,12 @@ function _M:init(title, inven, filter, action, actor)
 		select=function(item, force) self:select(item, force) end,
 		select_tab=function(item) self:select(item) end,
 	}
-	
+
 	self.c_inven.c_inven.on_focus_change = function(ui_self, status) if status == true then game.tooltip:erase() end end
-	
+
 	self.key.any_key = function(sym)
 		-- Control resets the tooltip
-		if sym == self.key._LCTRL or sym == self.key._RCTRL then 
+		if sym == self.key._LCTRL or sym == self.key._RCTRL then
 			local ctrl = core.key.modState("ctrl")
 			if self.prev_ctrl ~= ctrl then self:select(self.cur_item, true) end
 			self.prev_ctrl = ctrl
@@ -78,6 +78,7 @@ end
 
 function _M:select(item, force)
 	if self.cur_item == item and not force then return end
+	if not item then return end
 	if item.last_display_x and item.object then
 		if not item.desc or force then item.desc = item.object:getDesc({do_color=true}, self.actor:getInven(item.object:wornInven())) end
 		self.c_desc:switchItem(item, item.desc, true)

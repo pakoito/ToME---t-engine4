@@ -76,18 +76,24 @@ newTalent{
 		
 		-- Reset Dream Smith talents
 		if hit then
+			local trigger_discharge = false
+			local nb = self:getTalentLevel(t) >= 5 and 2 or 1
 			for tid, cd in pairs(self.talents_cd) do
 				local tt = self:getTalentFromId(tid)
-				if tt.type[1]=="psionic/dream-smith" then
+				if tt.type[1]=="psionic/dream-smith" and nb > 0 then
 					self.talents_cd[tid] = 0
+					trigger_discharge = true
+					nb = nb - 1
 				end
 			end
-			if rng.percent(50) then
-				game.level.map:particleEmitter(self.x, self.y, 1, "generic_charge", {rm=225, rM=255, gm=0, gM=0, bm=0, bM=0, am=35, aM=90})
-			elseif hit then
-				game.level.map:particleEmitter(self.x, self.y, 1, "generic_charge", {rm=225, rM=255, gm=225, gM=255, bm=0, bM=0, am=35, aM=90})
+			if hit and trigger_discharge then
+				if rng.percent(50) then
+					game.level.map:particleEmitter(self.x, self.y, 1, "generic_charge", {rm=225, rM=255, gm=0, gM=0, bm=0, bM=0, am=35, aM=90})
+				else
+					game.level.map:particleEmitter(self.x, self.y, 1, "generic_charge", {rm=225, rM=255, gm=225, gM=255, bm=0, bM=0, am=35, aM=90})
+				end
+				game:playSoundNear(self, "talents/heal")
 			end
-			game:playSoundNear(self, "talents/heal")
 		end
 
 		return true
@@ -99,7 +105,8 @@ newTalent{
 		local weapon_atk = useDreamHammer(self).atk
 		local weapon_apr = useDreamHammer(self).apr
 		local weapon_crit = useDreamHammer(self).physcrit
-		return ([[Smith a hammer from the dream forge and strike a nearby foe, inflicting %d%% weapon damage.  If the attack hits it will bring all Dream Smith talents off cooldown.
+		return ([[Smith a hammer from the dream forge and strike a nearby foe, inflicting %d%% weapon damage.  If the attack hits it will bring one random Dream Smith talent off cooldown.
+		At talent level five you'll bring a second random talent off cooldown.
 		The base power, accuracy, armour penetration, and critical strike chance of the weapon will scale with your mindpower.
 
 		Current Dream Hammer Stats
@@ -171,7 +178,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local attack_bonus = t.getAttack(self, t)
-		return ([[Throw your Dream Hammer at a distant target, inflicting %d%% weapon damage on all creatures between you and it.  After reaching it's destination the Dream Hammer will return, potentially hitting creatures a second time.
+		return ([[Throw your Dream Hammer at a distant location, inflicting %d%% weapon damage on all targets between you and it.  After reaching it's destination the Dream Hammer will return, potentially hitting targets a second time.
 		Learning this talent increases the accuracy of your Dream Hammer by %d.]]):format(damage * 100, attack_bonus)
 	end,
 }
