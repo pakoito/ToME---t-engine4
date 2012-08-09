@@ -148,6 +148,7 @@ newTalent{
 		if not tx or not ty or not target then return nil end
 		if not (target.player and target.game_ender) and not (self.player and self.game_ender) then return nil end
 		if target == self then return end
+		if target:attr("negative_status_effect_immune") or target:attr("status_effect_immune") then return nil end
 		if not (target and target:attr("sleep")) then
 			game.logPlayer(self, "Your target must be sleeping in order to enter it's dreamscape.")
 			return nil

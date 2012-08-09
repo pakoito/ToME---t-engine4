@@ -174,6 +174,7 @@ newEntity{
 	stats = { str=40, dex=60, cun=60, mag=30, con=40 },
 	inc_damage = {all=-70},
 	invulnerable = 1,
+	negative_status_effect_immune = 1,
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	resolvers.equip{
@@ -232,6 +233,7 @@ newEntity{
 	stats = { str=40, dex=60, cun=60, mag=30, con=40 },
 	inc_damage = {all=-70},
 	invulnerable = 1,
+	negative_status_effect_immune = 1,
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	resolvers.equip{

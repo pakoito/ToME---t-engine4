@@ -155,6 +155,7 @@ newTalent{
 		if not tx or not ty or not target then return nil end
 		if not (target.player and target.game_ender) and not (self.player and self.game_ender) then return nil end
 		if target == self then return end
+		if target:attr("negative_status_effect_immune") or target:attr("status_effect_immune") then return nil end
 
 		game:playSoundNear(self, "talents/flame")
 		local dam = self:combatTalentSpellDamage(t, 12, 140)
