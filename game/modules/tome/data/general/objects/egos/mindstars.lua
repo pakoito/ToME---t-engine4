@@ -154,7 +154,7 @@ newEntity{
 newEntity{
 	power_source = {psionic=true},
 	name = " of clarity", suffix=true, instant_resolve=true,
-	keywords = {power=true},
+	keywords = {clarity=true},
 	level_range = {1, 50},
 	rarity = 8,
 	cost = 8,

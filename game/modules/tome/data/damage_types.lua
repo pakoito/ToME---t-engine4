@@ -89,7 +89,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			-- Mind Link
 			if type == DamageType.MIND and target:hasEffect(target.EFF_MIND_LINK_TARGET) then
 				local eff = target:hasEffect(target.EFF_MIND_LINK_TARGET)
-				if eff.src == src then
+				if eff.src == src or eff.src == src.summoner then
 					mind_linked = true
 					inc = inc + eff.power
 					print("[PROJECTOR] after mind_link", dam + (dam * inc / 100))

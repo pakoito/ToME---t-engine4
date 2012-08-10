@@ -25,7 +25,7 @@ newTalent{
 	points = 5, 
 	require = psi_wil_req1,
 	mode = "passive",
-	getPsychometryCap = function(self, t) return self:getTalentLevelRaw(t) end,
+	getPsychometryCap = function(self, t) return self:getTalentLevelRaw(t)/2 end,
 	updatePsychometryCount = function(self, t)
 		-- Update psychometry power
 		local psychometry_count = 0
@@ -33,7 +33,7 @@ newTalent{
 			if inven.worn then
 				for item, o in ipairs(inven) do
 					if o and item and o.power_source and (o.power_source.psionic or o.power_source.nature or o.power_source.antimagic) then
-						psychometry_count = psychometry_count + math.min(o.material_level or 1, t.getPsychometryCap(self, t))
+						psychometry_count = psychometry_count + math.min(o.material_level/2 or 0.5, t.getPsychometryCap(self, t))
 					end
 				end
 			end
@@ -52,7 +52,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local max = t.getPsychometryCap(self, t)
-		return ([[Resonate with psionic, nature, and anti-magic powered objects, increasing your physical and mind power by %d or the objects material level (whichever is lower).
+		return ([[Resonate with psionic, nature, and anti-magic powered objects, increasing your physical and mind power by %0.2f or half the objects material level (whichever is lower).
 		This effect stacks and applies for each qualifying object worn.]]):format(max)
 	end,
 }
@@ -63,7 +63,7 @@ newTalent{
 	points = 5,
 	require = psi_wil_req2,
 	psi = 15,
-	cooldown = 24,
+	cooldown = function(self, t) return math.max(10, 20 - self:getTalentLevelRaw(t) * 2) end,
 	tactical = { BUFF = 1, CURE = function(self, t, target)
 		local nb = 0
 		for eff_id, p in pairs(self.tmp) do
@@ -119,7 +119,7 @@ newTalent{
 	points = 5, 
 	require = psi_wil_req3,
 	psi = 20,
-	cooldown = 24,
+	cooldown = function(self, t) return 20 - self:getTalentLevelRaw(t) * 2 end,
 	no_npc_use = true, -- this can be changed if the AI is improved.  I don't trust it to be smart enough to leverage this effect.
 	getPower = function(self, t) return math.ceil(self:combatTalentMindDamage(t, 5, 40)) end,
 	getDuration = function(self, t) return 4 + math.ceil(self:getTalentLevel(t)*2) end,
@@ -145,6 +145,7 @@ newTalent{
 		m:removeAllMOs()
 		m.make_escort = nil
 		m.on_added_to_level = nil
+		m._rst_full = true
 
 		m.energy.value = 0
 		m.player = nil
@@ -170,7 +171,7 @@ newTalent{
 				
 		m.can_pass = {pass_wall=70}
 		m.no_breath = 1
-		m.invisible = (m.invisible or 0) + t.getPower(self, t)
+		m.invisible = (m.invisible or 0) + t.getPower(self, t)/2
 		m.see_invisible = (m.see_invisible or 0) + t.getPower(self, t)
 		m.see_stealth = (m.see_stealth or 0) + t.getPower(self, t)
 		m.lite = 0
@@ -182,6 +183,16 @@ newTalent{
 		local summon_time = t.getDuration(self, t)
 		--summoner takes hit
 		m.on_takehit = function(self, value, src) self.summoner:takeHit(value, src) return value end
+		--pass actors targeting us back to the summoner to prevent super cheese
+		m.on_die = function(self)
+			local tg = {type="ball", radius=10}
+			self:project(tg, self.x, self.y, function(tx, ty)
+				local target = game.level.map(tx, ty, Map.ACTOR)
+				if target and target.ai_target.actor == self then
+					target.ai_target.actor = self.summoner
+				end
+			end)
+		end				
 		
 		game.zone:addEntity(game.level, m, "actor", x, y)
 		game.level.map:particleEmitter(m.x, m.y, 1, "generic_teleport", {rm=0, rM=0, gm=100, gM=180, bm=180, bM=255, am=35, aM=90})
@@ -221,7 +232,7 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		return ([[Activate to project your mind from your body for %d turns.  In this state you're invisible(+%d power), can see invisible and stealthed creatures (+%d detection power), can move through walls, and do not need air to survive.
 		All damage you suffer is shared with your physical body and while in this form you may only deal damage to 'ghosts' or through an active mind link (mind damage only in the second case.)
-		To return to your body, simply release control of the projection.]]):format(duration, power, power)
+		To return to your body, simply release control of the projection.]]):format(duration, power/2, power)
 	end,
 }
 
@@ -233,7 +244,7 @@ newTalent{
 	sustain_psi = 50,
 	mode = "sustained",
 	no_sustain_autoreset = true,
-	cooldown = 24,
+	cooldown = function(self, t) return 52 - self:getTalentLevelRaw(t) * 8 end,
 	tactical = { BUFF = 2, ATTACK = {MIND = 2}},
 	range = function(self, t) return 5 + math.min(5, self:getTalentLevelRaw(t)) end,
 	direct_hit = true,

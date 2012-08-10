@@ -132,7 +132,7 @@ newTalent{
 	tactical = { ATTACK = { MIND = 2}, DISABLE = 1},
 	range = 7,
 	requires_target = true,
-	getDamage = function(self, t) return self:combatTalentMindDamage(t, 10, 300) end,
+	getDamage = function(self, t) return self:combatTalentMindDamage(t, 10, 150) end,
 	target = function(self, t)
 		return {type="hit", range=self:getTalentRange(t), talent=t}
 	end,
@@ -145,6 +145,7 @@ newTalent{
 		if not target then return end
 		
 		local dam =self:mindCrit(t.getDamage(self, t))
+		if target:hasEffect(target.EFF_BRAINLOCKED) then dam = dam * 2 end
 		self:project(tg, x, y, DamageType.MIND, {dam=dam, alwaysHit=true}, {type="mind"})
 		target:setEffect(target.EFF_SUNDER_MIND, 2, {power=dam/10})
 		
@@ -155,6 +156,7 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local power = t.getDamage(self, t) / 10
 		return ([[Cripples the target's mind, inflicting %0.2f mind damage and reducing it's mental save by %d for 2 turns.  This attack always hits and the mental save reduction stacks.
+		Against brainlocked targets the damage and mental save reduction will be doubled.
 		The damage and save reduction will scale with your mindpower.]]):
 		format(damDesc(self, DamageType.MIND, (damage)), power)
 	end,

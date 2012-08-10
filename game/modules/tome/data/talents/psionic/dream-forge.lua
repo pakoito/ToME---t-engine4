@@ -24,19 +24,19 @@ newTalent{
 	type = {"psionic/dream-forge", 1},
 	points = 5, 
 	require = psi_wil_high1,
-	cooldown = 24,
+	cooldown = 12,
 	sustain_psi = 25,
 	mode = "sustained",
 	tactical = { DEFEND = 2, },
-	getPower = function(self, t) return self:combatTalentMindDamage(t, 15, 150) end,
+	getPower = function(self, t) return self:combatTalentMindDamage(t, 0, 100) end,
 	doForgeShield = function(type, dam, t, self, src)
 		-- Grab our damage threshold
-		local dam_threshold = self.max_life * 0.08
+		local dam_threshold = self.max_life * 0.15
 		if self:knowTalent(self.T_SOLIPSISM) then
 			local t = self:getTalentFromId(self.T_SOLIPSISM)
 			local ratio = t.getConversionRatio(self, t)
 			local psi_percent =  self:getMaxPsi() * t.getConversionRatio(self, t)
-			dam_threshold = (self.max_life * (1 - ratio) + psi_percent) * 0.08
+			dam_threshold = (self.max_life * (1 - ratio) + psi_percent) * 0.15
 		end
 
 		local dur = self:getTalentLevel(t) >= 5 and 2 or 1
@@ -87,9 +87,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		local power = t.getPower(self, t)
-		return ([[When an attack would deal 8%% or more of your effective health you forge the Dream Shield to protect yourself, reducing the damage of all attacks of that type by %0.2f for the next turn.
-		You may block multiple damage types at one time but the base damage threshold increases by 8%% per damage type the shield is already blocking.
-		If you block all of an attack's damage, the attacker will be vulnerable to a deadly counterstrike (a normal attack will instead deal 200%% damage) for one turn.
+		return ([[When an attack would deal 15%% or more of your effective total health you forge the Dream Shield to protect yourself, reducing the damage of all attacks of that type by %0.2f for the next turn.
+		You may block multiple damage types at one time but the base damage threshold increases by 15%% per damage type the shield is already blocking.
+		If you block all of an attack's damage, the attacker will be vulnerable to a deadly counterstrike (a normal melee or ranged attack will instead deal 200%% damage) for one turn.
 		At talent level five the block effect will last two turns.
 		This talent scales with your mindpower.]]):format(power)
 	end,
@@ -175,7 +175,7 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local forge_damage = t.getForgeDamage(self, t)
 		return ([[Release the bellows of the forge upon your surroundings, inflicting %0.2f mind damage, %0.2f burning damage, and knocking back your enemies in a radius %d cone.
-		Affected terrain may be changed (50%% chance) for %d turns into forge walls that block movement and inflict %0.2f mind and %0.2f fire damage on nearby enemies.
+		Empty terrain may be changed (50%% chance) for %d turns into forge walls that block movement and inflict %0.2f mind and %0.2f fire damage on nearby enemies.
 		The damage and knockback chance will scale with your mindpower.]]):
 		format(damDesc(self, DamageType.MIND, blast_damage), damDesc(self, DamageType.FIRE, blast_damage), radius, duration, damDesc(self, DamageType.MIND, forge_damage), damDesc(self, DamageType.FIRE, forge_damage))
 	end,
@@ -204,7 +204,7 @@ newTalent{
 	type = {"psionic/dream-forge", 4},
 	points = 5, 
 	require = psi_wil_high4,
-	cooldown = 24,
+	cooldown = 12,
 	sustain_psi = 50,
 	mode = "sustained",
 	no_sustain_autoreset = true,

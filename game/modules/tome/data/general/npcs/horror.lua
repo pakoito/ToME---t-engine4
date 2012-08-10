@@ -706,7 +706,7 @@ With each slow breath it takes reality distorts around it.  Blue twirls into red
 		if core.shader.active() then
 			e.sleep_particle = e:addParticles(engine.Particles.new("shader_shield", 1, {img="shield2", size_factor=1}, {type="shield", time_factor=6000, aadjust=2, color={0.6, 1, 0.6}}))
 		else
-			e.sleep_particle = e:addParticles(engine.Particles.new("ultrashield", 1, {rm=0, rM=0, gm=180, gM=255, bm=180, bM=255, am=70, aM=180, radius=0.4, density=60, life=14, instop=1, static=100}))
+			e.sleep_particle = e:addParticles(engine.Particles.new("generic_shield", 1, {r=0.6, g=1, b=0.6, a=1}))
 		end
 	end),
 

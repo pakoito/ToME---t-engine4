@@ -22,7 +22,7 @@ newTalent{
 	type = {"psionic/dreaming", 1},
 	points = 5, 
 	require = psi_wil_req1,
-	cooldown = 4,
+	cooldown = function(self, t) return math.max(4, 9 - self:getTalentLevelRaw(t)) end,
 	psi = 5,
 	tactical = { DISABLE = {sleep = 1} },
 	direct_hit = true,

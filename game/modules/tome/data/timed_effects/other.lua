@@ -1629,6 +1629,7 @@ newEffect{
 			m:removeAllMOs()
 			m.make_escort = nil
 			m.on_added_to_level = nil
+			m._rst_full = true
 
 			m.energy.value = 0
 			m.player = nil
@@ -1660,7 +1661,7 @@ newEffect{
 
 			-- track number killed
 			m.on_die = function(self, who)
-				local p = (who and who:hasEffect(who.EFF_DREAMSCAPE)) or (who.summoner and who.summoner:hasEffect(who.summoner.EFF_DREAMSCAPE))
+				local p = (who and who:hasEffect(who.EFF_DREAMSCAPE)) or (who and who.summoner and who.summoner:hasEffect(who.summoner.EFF_DREAMSCAPE))
 				if p then -- For the rare instance we die after the effect ends but before the dreamscape instance closes
 					p.projections_killed = p.projections_killed + 1
 					game.logSeen(p.target, "#LIGHT_RED#%s writhes in agony as a fragment of it's mind is destroyed!", p.target.name:capitalize())
@@ -1699,7 +1700,7 @@ newEffect{
 		if core.shader.active() then
 			eff.particle = eff.target:addParticles(Particles.new("shader_shield", 1, {img="shield2", size_factor=1.25}, {type="shield", time_factor=6000, aadjust=5, color={0, 1, 1}}))
 		else
-			eff.particle = eff.target:addParticles(Particles.new("damage_shield", 1))
+			eff.particle = eff.target:addParticles(Particles.new("generic_shield", 1, {r=0, g=1, b=1, a=1}))
 		end
 
 		-- Make the invader deadly

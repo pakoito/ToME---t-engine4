@@ -2378,9 +2378,10 @@ newEffect{
 		self.resonance_field_absorb = eff.power
 		eff.sid = self:addTemporaryValue("resonance_field", eff.power)
 		if core.shader.active() then
-			eff.particle = self:addParticles(Particles.new("shader_shield", 1, {img="shield2", size_factor=1.25}, {type="shield", time_factor=6000, color={1, 1, 0}}))
+			eff.particle = self:addParticles(Particles.new("shader_shield", 1, {size_factor=1.1}, {type="shield", time_factor=-8000, llpow=1, aadjust=7, color={1, 1, 0}}))
+		--	eff.particle = self:addParticles(Particles.new("shader_shield", 1, {img="shield2", size_factor=1.25}, {type="shield", time_factor=6000, color={1, 1, 0}}))
 		else
-			eff.particle = self:addParticles(Particles.new("time_shield_bubble", 1))
+			eff.particle = self:addParticles(Particles.new("generic_shield", 1, {r=1, g=1, b=0, a=1}))
 		end
 	end,
 	deactivate = function(self, eff)
@@ -2469,7 +2470,7 @@ newEffect{
 				if core.shader.active() then
 					eff.particle = self:addParticles(Particles.new("shader_shield", 1, {img="shield2", size_factor=1.25}, {type="shield", time_factor=6000, aadjust=5, color={0, 1, 1}}))
 				else
-					eff.particle = self:addParticles(engine.Particles.new("ultrashield", 1, {rm=0, rM=0, gm=180, gM=255, bm=180, bM=255, am=70, aM=180, radius=0.4, density=60, life=14, instop=1, static=100}))
+					eff.particle = self:addParticles(Particles.new("generic_shield", 1, {r=0, g=1, b=1, a=1}))
 				end
 			end
 		elseif eff.contagious > 0 and eff.dur > 1 then
@@ -2525,7 +2526,7 @@ newEffect{
 				if core.shader.active() then
 					eff.particle = self:addParticles(Particles.new("shader_shield", 1, {img="shield2", size_factor=1.25}, {type="shield", time_factor=6000, aadjust=5, color={0, 1, 1}}))
 				else
-					eff.particle = self:addParticles(engine.Particles.new("ultrashield", 1, {rm=0, rM=0, gm=180, gM=255, bm=180, bM=255, am=70, aM=180, radius=0.4, density=60, life=14, instop=1, static=100}))
+					eff.particle = self:addParticles(Particles.new("generic_shield", 1, {r=0, g=1, b=1, a=1}))
 				end
 			end
 		elseif eff.particle and not dream_prison then
@@ -2577,7 +2578,7 @@ newEffect{
 				if core.shader.active() then
 					eff.particle = self:addParticles(Particles.new("shader_shield", 1, {img="shield2", size_factor=1.25}, {type="shield", aadjust=5, color={0, 1, 1}}))
 				else
-					eff.particle = self:addParticles(engine.Particles.new("ultrashield", 1, {rm=0, rM=0, gm=180, gM=255, bm=180, bM=255, am=70, aM=180, radius=0.4, density=60, life=14, instop=1, static=100}))
+					eff.particle = self:addParticles(Particles.new("generic_shield", 1, {r=0, g=1, b=1, a=1}))
 				end
 			end
 		else
@@ -2736,9 +2737,9 @@ newEffect{
 	end,
 	activate = function(self, eff)
 		if core.shader.active() then
-			eff.particle = self:addParticles(Particles.new("shader_shield", 1, {img="shield2", size_factor=1}, {type="shield", time_factor=12000, color={1.0, 0.5, 0}}))
+			eff.particle = self:addParticles(Particles.new("shader_shield", 1, {size_factor=1.1}, {type="shield", time_factor=-8000, llpow=1, aadjust=7, color={1, 0.5, 0}}))
 		else
-			eff.particle = self:addParticles(Particles.new("time_shield_bubble", 1))
+			eff.particle = self:addParticles(Particles.new("generic_shield", 1, {r=1, g=0.5, b=0.0, a=1}))
 		end
 	end,
 	deactivate = function(self, eff)

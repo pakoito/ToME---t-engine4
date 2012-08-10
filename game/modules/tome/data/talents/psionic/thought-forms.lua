@@ -94,6 +94,16 @@ newTalent{
 					self:move(x, y, true)
 					game.level.map:particleEmitter(x, y, 1, "generic_teleport", {rm=225, rM=255, gm=225, gM=255, bm=225, bM=255, am=35, aM=90})
 				end
+				-- Pass our summoner back as the target if we're controlled...  to prevent super cheese.
+				if game.player == self then
+					local tg = {type="ball", radius=10}
+					self:project(tg, self.x, self.y, function(tx, ty)
+						local target = game.level.map(tx, ty, Map.ACTOR)
+						if target and target.ai_target.actor == self then
+							target.ai_target.actor = self.summoner
+						end
+					end)
+				end
 			end,
 
 			ai = "summoned", ai_real = "tactical",
@@ -218,6 +228,16 @@ newTalent{
 						self.summoner:forceUseTalent(self.summoner.T_OVER_MIND, {ignore_energy=true})
 					end
 				end)
+				-- Pass our summoner back as the target if we're controlled...  to prevent super cheese.
+				if game.player == self then
+					local tg = {type="ball", radius=10}
+					self:project(tg, self.x, self.y, function(tx, ty)
+						local target = game.level.map(tx, ty, Map.ACTOR)
+						if target and target.ai_target.actor == self then
+							target.ai_target.actor = self.summoner
+						end
+					end)
+				end
 			end,
 			-- Keep them on a leash
 			on_act = function(self)
@@ -359,6 +379,16 @@ newTalent{
 						self.summoner:forceUseTalent(self.summoner.T_OVER_MIND, {ignore_energy=true})
 					end
 				end)
+				-- Pass our summoner back as the target if we're controlled...  to prevent super cheese.
+				if game.player == self then
+					local tg = {type="ball", radius=10}
+					self:project(tg, self.x, self.y, function(tx, ty)
+						local target = game.level.map(tx, ty, Map.ACTOR)
+						if target and target.ai_target.actor == self then
+							target.ai_target.actor = self.summoner
+						end
+					end)
+				end
 			end,
 			-- Keep them on a leash
 			on_act = function(self)
