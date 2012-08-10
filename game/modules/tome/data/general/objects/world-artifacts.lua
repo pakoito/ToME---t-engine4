@@ -3159,7 +3159,7 @@ newEntity{ base = "BASE_MINDSTAR",
 	end,
 	max_power = 40, power_regen = 1,
 	--[[use_power = { name = "release a random breath", power = 40,
-	use = function(self, who)	
+	use = function(self, who)
 			local Talents = require "engine.interface.ActorTalents"
 			local breathe = rng.table{
 				{Talents.T_FIRE_BREATH},
@@ -3167,7 +3167,7 @@ newEntity{ base = "BASE_MINDSTAR",
 				{Talents.T_LIGHTNING_BREATH},
 				{Talents.T_SAND_BREATH},
 			}
-			
+
 			who:forceUseTalent(breathe[1], {ignore_cd=true, ignore_energy=true, force_level=4, ignore_ressources=true})
 			return {id=true, used=true}
 		end
@@ -3525,7 +3525,7 @@ newEntity{ base = "BASE_CLOTH_ARMOR",
 		use = function(self, who)
 			local dam = 15 + who:getWil()/3 + who:getCun()/3
 			local tg = {type="beam", range=5}
-			local x, y = who:getTarget(tg)	
+			local x, y = who:getTarget(tg)
 			if not x or not y then return nil end
 			who:project(tg, x, y, engine.DamageType.MINDKNOCKBACK, who:mindCrit(rng.avg(0.8*dam, dam)))
 			game.level.map:particleEmitter(who.x, who.y, tg.radius, "matter_beam", {tx=x-who.x, ty=y-who.y})
@@ -3574,7 +3574,7 @@ newEntity{ base = "BASE_LEATHER_CAP",
 	encumber = 1,
 	rarity = 140,
 	sentient=true,
-	desc = [[This thick blindfold, with an embedded marble eye, is said to allow the wearer to sense beings around them, at the cost of physical sight. 
+	desc = [[This thick blindfold, with an embedded marble eye, is said to allow the wearer to sense beings around them, at the cost of physical sight.
 You suspect the effects will require a moment to recover from.]],
 	cost = 200,
 	material_level=3,
@@ -3691,7 +3691,7 @@ newEntity{ base = "BASE_LONGSWORD", define_as="CORPUS",
 			}
 
 			m:resolve()
-			
+
 			game.zone:addEntity(game.level, m, "actor", x, y)
 	end,
 	wielder = {
@@ -3834,14 +3834,14 @@ newEntity{ base = "BASE_WHIP", define_as = "HYDRA_BITE",
 				else
 					game.logSeen(who, "%s's three headed flail lashes at %s!",who.name:capitalize(), target1.name:capitalize())
 				end
-				who:attackTarget(target1, engine.DamageType.PHYSICAL, 0.4,  true) 
+				who:attackTarget(target1, engine.DamageType.PHYSICAL, 0.4,  true)
 				if twohits then who:attackTarget(target2, engine.DamageType.PHYSICAL, 0.4,  true) end
 				o.running=0
 		end},
 	},
 	wielder = {
 		inc_damage={[DamageType.NATURE]=8,[DamageType.ACID]=8,[DamageType.LIGHTNING]=8,},
-		
+
 	},
 }
 
@@ -4001,7 +4001,7 @@ newEntity{ base = "BASE_GAUNTLETS",
 							local talent = target:getTalentFromId(tid)
 							if talent.is_spell then effs[#effs+1] = {"talent", tid} end
 						end
-					end				
+					end
 					local eff = rng.tableRemove(effs)
 					if eff then
 						if eff[1] == "effect" then
@@ -4020,7 +4020,7 @@ newEntity{ base = "BASE_GAUNTLETS",
 			game:playSoundNear(who, "talents/breath")
 			end
 		end
-		
+
 		who:onWear(self, true)
 	end,
 	max_power = 150, power_regen = 1,
@@ -4033,12 +4033,33 @@ newEntity{ base = "BASE_GAUNTLETS",
 			if not o then return end
 			who:removeObject(who:getInven("INVEN"), item)
 			who:sortInven(who:getInven("INVEN"))
-			
+
 			self.power_up(self, who, self.material_level)
-			
+
 			who.changed=true
 		end)
 	end },
+}
+
+newEntity{ base = "BASE_LONGBOW",
+	power_source = {arcane=true},
+	name = "Merkul's Second Eye", unided_name = "sleek stringed bow", unique=true, image = "object/artifact/thaloren_tree_longbow.png",
+	desc = [[This bow is said to be the tool of an infamous dwarven spy, rumours said it allowed him to tap into the eyes of all his enemies. Adversaries struck were left alive, only to unknowingly divulge their secrets to his unwavering sight.]],
+	level_range = {20, 38},
+	rarity = 250,
+	require = { stat = { dex=24 }, },
+	cost = 200,
+	material_level = 3,
+	combat = {
+		range = 15,
+		physspeed = 1.2,
+		travel_speed = 4,
+		talent_on_hit = { [Talents.T_ARCANE_EYE] = {level=4, chance=100} },
+	},
+	wielder = {
+		lite = 2,
+		ranged_project = {[DamageType.ARCANE] = 25},
+	},
 }
 
 --[=[
