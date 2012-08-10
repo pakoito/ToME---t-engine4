@@ -1610,8 +1610,8 @@ function core.fov.set_corner_block(l, block_corner)
 	block_corner = type(block_corner) == "function" and block_corner or
 		block_corner == false and function(_, x, y) return end or
 		type(block_corner) == "string" and function(_, x, y) return game.level.map:checkAllEntities(x, y, what) end or
-		function(_, x, y) return game.level.map:checkEntity(x, y, engine.Map.TERRAIN, "block_move") and
-			not game.level.map:checkEntity(x, y, engine.Map.TERRAIN, "pass_projectile") end
+		function(_, x, y) return (game.level.map:checkEntity(x, y, engine.Map.TERRAIN, "block_move") and
+			not game.level.map:checkEntity(x, y, engine.Map.TERRAIN, "pass_projectile")) or game.level.map:checkEntity(x, y, engine.Map.TERRAIN, "block_projectile") end
 	l.block = block_corner
 	return block_corner
 end

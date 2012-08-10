@@ -173,7 +173,7 @@ function _M:moveDirection(x, y)
 	local lx, ly = l()
 	if lx and ly then
 		-- if we are blocked, try some other way
-		if game.level.map:checkEntity(lx, ly, Map.TERRAIN, "block_move") and not game.level.map:checkEntity(lx, ly, Map.TERRAIN, "pass_projectile") then
+		if (game.level.map:checkEntity(lx, ly, Map.TERRAIN, "block_move") and not game.level.map:checkEntity(lx, ly, Map.TERRAIN, "pass_projectile")) or game.level.map:checkEntity(lx, ly, Map.TERRAIN, "block_projectile") then
 			local dirx = lx - self.x
 			local diry = ly - self.y
 			local dir = util.coordToDir(dirx, diry, self.x, self.y)
@@ -182,7 +182,7 @@ function _M:moveDirection(x, y)
 			-- Find possibilities
 			for _, dir in pairs(list) do
 				local dx, dy = util.coordAddDir(self.x, self.y, dir)
-				if not game.level.map:checkEntity(dx, dy, Map.TERRAIN, "block_move") or game.level.map:checkEntity(dx, dy, Map.TERRAIN, "pass_projectile") then
+				if (not game.level.map:checkEntity(dx, dy, Map.TERRAIN, "block_move") or game.level.map:checkEntity(dx, dy, Map.TERRAIN, "pass_projectile")) and not game.level.map:checkEntity(dx, dy, Map.TERRAIN, "block_projectile") then
 					l[#l+1] = {dx,dy, core.fov.distance(x,y,dx,dy)^2}
 				end
 			end

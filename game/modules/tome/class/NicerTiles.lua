@@ -293,7 +293,7 @@ end
 
 
 --- Make water have nice transition to other stuff
-function _M:niceTileGenericBorders(level, i, j, g, nt, type, allow)
+function _M:niceTileGenericBorders(level, i, j, g, nt, type, allow, outside)
 	local g8 = level.map:checkEntity(i, j-1, Map.TERRAIN, "subtype") or type
 	local g2 = level.map:checkEntity(i, j+1, Map.TERRAIN, "subtype") or type
 	local g4 = level.map:checkEntity(i-1, j, Map.TERRAIN, "subtype") or type
@@ -302,6 +302,17 @@ function _M:niceTileGenericBorders(level, i, j, g, nt, type, allow)
 	local g9 = level.map:checkEntity(i+1, j-1, Map.TERRAIN, "subtype") or type
 	local g1 = level.map:checkEntity(i-1, j+1, Map.TERRAIN, "subtype") or type
 	local g3 = level.map:checkEntity(i+1, j+1, Map.TERRAIN, "subtype") or type
+
+	if outside then
+		if not level.map:isBound(i, j-1) then g8 = outside end
+		if not level.map:isBound(i, j+1) then g2 = outside end
+		if not level.map:isBound(i-1, j) then g4 = outside end
+		if not level.map:isBound(i+1, j) then g6 = outside end
+		if not level.map:isBound(i-1, j-1) then g7 = outside end
+		if not level.map:isBound(i+1, j-1) then g9 = outside end
+		if not level.map:isBound(i-1, j+1) then g1 = outside end
+		if not level.map:isBound(i+1, j+1) then g3 = outside end
+	end
 
 	-- Sides
 	if     g4==type and g6==type and allow[g8] then self:replace(i, j, self:getTile(nt[g8.."8"]))
@@ -332,7 +343,7 @@ function _M:niceTileGrassSand(level, i, j, g, nt)
 end
 
 function _M:niceTileOuterSpace(level, i, j, g, nt)
-	self:niceTileGenericBorders(level, i, j, g, nt, "rocks", {void=true})
+	self:niceTileGenericBorders(level, i, j, g, nt, "rocks", {void=true}, "void")
 end
 
 local defs = {

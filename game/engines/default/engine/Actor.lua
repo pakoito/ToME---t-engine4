@@ -422,7 +422,7 @@ function _M:lineFOV(tx, ty, extra_block, block, sx, sy)
 	block = block
 		or sees_target and function(_, x, y)
 			return game.level.map:checkAllEntities(x, y, "block_sight") or
-				game.level.map:checkEntity(x, y, engine.Map.TERRAIN, "block_move") and not game.level.map:checkEntity(x, y, engine.Map.TERRAIN, "pass_projectile") or
+				(game.level.map:checkEntity(x, y, engine.Map.TERRAIN, "block_move") and not game.level.map:checkEntity(x, y, engine.Map.TERRAIN, "pass_projectile")) or game.level.map:checkEntity(x, y, engine.Map.TERRAIN, "block_projectile") or
 				extra_block and extra_block(self, x, y)
 			end
 		or function(_, x, y)

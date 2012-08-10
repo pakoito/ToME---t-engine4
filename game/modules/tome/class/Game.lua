@@ -1213,29 +1213,22 @@ function _M:setupCommands()
 			end end
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
-			local ps = next(game.player.__particles)
-
-			local a = math.rad(rng.float(0, 360))
-			local r = rng.float(0.2, 0.4)
-			ps._shader:setUniform("impact", {math.cos(a) * r, math.sin(a) * r})
-			ps._shader:setUniform("impact_tick", core.game.getTime())
-
-do return end
-			self:registerDialog(require("mod.dialogs.DownloadCharball").new())
-			local f, err = loadfile("/data/general/events/snowstorm.lua")
+			local f, err = loadfile("/data/general/events/fearscape-portal.lua")
 			print(f, err)
 			setfenv(f, setmetatable({level=self.level, zone=self.zone}, {__index=_G}))
 			print(pcall(f))
-			end end,
+do return end
+			self:registerDialog(require("mod.dialogs.DownloadCharball").new())
+		end end,
 		[{"_f","ctrl"}] = function() if config.settings.cheat then
 			self.player.quests["love-melinda"] = nil
 			self.player:grantQuest("love-melinda")
 			self.player:hasQuest("love-melinda"):melindaCompanion(self.player, "Defiler", "Corruptor")
 		end end,
-		[{"_UP","ctrl"}] = function() 
+		[{"_UP","ctrl"}] = function()
 			game.tooltip.container.scrollbar.pos = util.minBound(game.tooltip.container.scrollbar.pos - 1, 0, game.tooltip.container.scrollbar.max)
 		end,
-		[{"_DOWN","ctrl"}] = function() 
+		[{"_DOWN","ctrl"}] = function()
 			game.tooltip.container.scrollbar.pos = util.minBound(game.tooltip.container.scrollbar.pos + 1, 0, game.tooltip.container.scrollbar.max)
 		end,
 		[{"_HOME","ctrl"}] = function()
@@ -1531,7 +1524,7 @@ do return end
 			local ok, err = coroutine.resume(co)
 			if not ok and err then print(debug.traceback(co)) error(err) end
 		end,
-		
+
 		LOCK_TOOLTIP = function()
 			if not self.tooltip.empty then
 				self.tooltip.locked = not self.tooltip.locked
@@ -1539,7 +1532,7 @@ do return end
 				game.log("Tooltip %s", self.tooltip.locked and "locked" or "unlocked")
 			end
 		end,
-		
+
 		LOCK_TOOLTIP_COMPARE = function()
 			if not self.tooltip.empty then
 				self.tooltip.locked = not self.tooltip.locked
@@ -1582,10 +1575,10 @@ function _M:setupMouse(reset)
 	self.mouse:registerZone(Map.display_x, Map.display_y, Map.viewport.width, Map.viewport.height, function(button, mx, my, xrel, yrel, bx, by, event, extra)
 		self.tooltip.add_map_str = extra and extra.log_str
 
-		if game.tooltip.locked then 
+		if game.tooltip.locked then
 			if button == "wheelup" and event == "button" then
 				game.tooltip.container.scrollbar.pos = util.minBound(game.tooltip.container.scrollbar.pos - 1, 0, game.tooltip.container.scrollbar.max)
-			elseif button == "wheeldown" and event == "button" then 
+			elseif button == "wheeldown" and event == "button" then
 				game.tooltip.container.scrollbar.pos = util.minBound(game.tooltip.container.scrollbar.pos + 1, 0, game.tooltip.container.scrollbar.max)
 			end
 			if button == "middle" then
@@ -1602,7 +1595,7 @@ function _M:setupMouse(reset)
 				game.tooltip.container.draging = false
 			end
 		end
-		
+
 		-- Handle targeting
 		if self:targetMouse(button, mx, my, xrel, yrel, event) then return end
 

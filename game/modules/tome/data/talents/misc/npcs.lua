@@ -1802,3 +1802,4 @@ newTalent{
 		format(heal)
 	end,
 }
+
