@@ -108,6 +108,10 @@ return {
 					class = "mod.class.generator.actor.Random",
 					nb_npc = {0, 0},
 				},
+				trap = {
+					class = "engine.generator.trap.Random",
+					nb_trap = {0, 0},
+				},
 			},
 		},
 	},
