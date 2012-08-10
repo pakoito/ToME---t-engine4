@@ -142,13 +142,13 @@ function _M:setupInput()
 		MOVE_UP = function()
 			local prev = self.sel
 			self.last_input_was_keyboard = true
-			self.sel = util.minBound(self.sel - 1, 1, #self.list) 
+			self.sel = util.minBound(self.sel - 1, 1, #self.list)
 			self.prev_sel = self.sel ~= prev and prev or self.prev_sel
 			end,
 		MOVE_DOWN = function()
 			local prev = self.sel
 			self.last_input_was_keyboard = true
-			self.sel = util.minBound(self.sel + 1, 1, #self.list) 
+			self.sel = util.minBound(self.sel + 1, 1, #self.list)
 			self.prev_sel = self.sel ~= prev and prev or self.prev_sel
 			end,
 	}
@@ -372,10 +372,10 @@ function _M:setColumns(columns, force)
 		if col.h > max_h then max_h = col.h end
 	end
 	self.columns = columns
-	
+
 	self.max_h_columns = self.hide_columns and 0 or (self.row_height or max_h)
 	self.max_h = self.max_h_columns
-	
+
 	self.sel = 1
 	self:selectColumn(1, true)
 end
@@ -644,5 +644,5 @@ function _M:display(x, y, nb_keyframes, screen_x, screen_y, offset_x, offset_y, 
 		self.prev_sel = self.sel
 		if not self.click_select then self:onSelect() end
 	end
-	
+
 end
