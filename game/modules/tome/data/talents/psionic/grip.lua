@@ -22,7 +22,7 @@
 newTalent{
 	name = "Deflect Projectiles",
 	type = {"psionic/grip", 1},
-	require = psi_wil_20_1,
+	require = psi_cun_high1,
 	points = 5,
 	mode = "sustained",
 	sustain_psi = 35,
@@ -51,7 +51,7 @@ newTalent{
 newTalent{
 	name = "Bind",
 	type = {"psionic/grip", 2},
-	require = psi_wil_20_2,
+	require = psi_cun_high2,
 	points = 5,
 	random_ego = "attack",
 	cooldown = function(self, t)
@@ -101,7 +101,7 @@ newTalent{
 newTalent{
 	name = "Implode",
 	type = {"psionic/grip", 3},
-	require = psi_wil_20_3,
+	require = psi_cun_high3,
 	points = 5,
 	random_ego = "attack",
 	cooldown = function(self, t)
@@ -153,7 +153,7 @@ newTalent{
 newTalent{
 	name = "Greater Telekinetic Grasp",
 	type = {"psionic/grip", 4},
-	require = psi_wil_20_4,
+	require = psi_cun_high4,
 	points = 5,
 	mode = "passive",
 	stat_sub = function(self, t)

@@ -22,14 +22,14 @@ newTalentType{ allow_random=true, type="psionic/absorption", name = "absorption"
 newTalentType{ allow_random=true, type="psionic/projection", name = "projection", description = "Project energy to damage foes." }
 newTalentType{ allow_random=true, type="psionic/psi-fighting", name = "psi-fighting", description = "Wield melee weapons with mentally-manipulated forces." }
 newTalentType{ allow_random=true, type="psionic/focus", name = "focus", description = "Use gems to focus your energies." }
-newTalentType{ allow_random=true, type="psionic/augmented-mobility", name = "augmented mobility", min_lev = 20, description = "Use energy to move yourself and others." }
+newTalentType{ allow_random=true, type="psionic/augmented-mobility", name = "augmented mobility", min_lev = 10, description = "Use energy to move yourself and others." }
 newTalentType{ allow_random=true, type="psionic/voracity", generic = true, name = "voracity", description = "Pull energy from your surroundings." }
 newTalentType{ allow_random=true, type="psionic/finer-energy-manipulations", min_lev = 10, generic = true, name = "finer energy manipulations", description = "Subtle applications of the psionic arts." }
 newTalentType{ allow_random=true, type="psionic/mental-discipline", generic = true, name = "mental discipline", description = "Increase mental capacity, endurance, and flexibility." }
 newTalentType{ type="psionic/other", name = "other", description = "Various psionic talents." }
 
 -- Advanced Talent Trees
-newTalentType{ allow_random=true, type="psionic/grip", name = "grip", min_lev = 20, description = "Augment your telekinetic grip." }
+newTalentType{ allow_random=true, type="psionic/grip", name = "grip", min_lev = 10, description = "Augment your telekinetic grip." }
 newTalentType{ allow_random=true, type="psionic/psi-archery", name = "psi-archery", min_lev = 10, description = "Use your telekinetic powers to wield bows with deadly effectiveness." }
 newTalentType{ allow_random=true, type="psionic/greater-psi-fighting", name = "greater psi-fighting", description = "Elevate psi-fighting prowess to epic levels." }
 newTalentType{ allow_random=true, type="psionic/brainstorm", name = "brainstorm", description = "Focus your telekinetic powers in ways undreamed of by most mindslayers." }
@@ -180,7 +180,7 @@ end
 
 function setupThoughtForm(self, m, x, y)
 	-- Set up some basic stuff
-	m.display = "p" 
+	m.display = "p"
 	m.color=colors.YELLOW
 	m.blood_color = colors.YELLOW
 	m.type = "thought-form"
@@ -194,11 +194,11 @@ function setupThoughtForm(self, m, x, y)
 	m.lite = 1
 	m.no_breath = 1
 	m.move_others = true
-	
+
 	-- Less tedium
 	m.life_regen = 1
 	m.stamina_regen = 1
-	
+
 	-- Make sure we don't gain anything from leveling
 	m.autolevel = "none"
 	m.unused_stats = 0
@@ -213,7 +213,7 @@ function setupThoughtForm(self, m, x, y)
 	-- Try to use stored AI talents to preserve tweaking over multiple summons
 	m.ai_talents = self.stored_ai_talents and self.stored_ai_talents[m.name] or {}
 	m.save_hotkeys = true
-	
+
 	-- Inheret some attributes
 	if self:getTalentLevel(self.T_TF_UNITY) >=5 then
 		m.inc_damage.all = (m.inc_damage.all) or 0 + (self.inc_damage.all or 0) + (self.inc_damage[engine.DamageType.MIND] or 0)

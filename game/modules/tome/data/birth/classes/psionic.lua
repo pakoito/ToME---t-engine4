@@ -66,8 +66,7 @@ newBirthDescriptor{
 		["psionic/voracity"]={true, 0.3},
 		--Level 10 trees:
 		["psionic/finer-energy-manipulations"]={false, 0},
-		["psionic/psi-archery"]={false, 0.3},
-		--Level 20 trees:
+--		["psionic/psi-archery"]={false, 0.3},
 		["psionic/grip"]={false, 0},
 		["psionic/augmented-mobility"]={false, 0},
 		--Miscellaneous trees:
@@ -80,10 +79,8 @@ newBirthDescriptor{
 		[ActorTalents.T_KINETIC_AURA] = 1,
 		[ActorTalents.T_KINETIC_LEECH] = 1,
 		[ActorTalents.T_BEYOND_THE_FLESH] = 1,
-		[ActorTalents.T_TRAP_HANDLING] = 1,
 		[ActorTalents.T_TELEKINETIC_GRASP] = 1,
 		[ActorTalents.T_TELEKINETIC_SMASH] = 1,
-		[ActorTalents.T_SHOOT] = 1,
 	},
 	body = { PSIONIC_FOCUS = 1, QS_PSIONIC_FOCUS = 1,},
 	copy = {
@@ -91,11 +88,6 @@ newBirthDescriptor{
 		resolvers.equip{ id=true,
 			{type="armor", subtype="cloth", name="linen robe", autoreq=true, ego_chance=-1000},
 			{type="weapon", subtype="greatsword", name="iron greatsword", autoreq=true, ego_chance=-1000},
-		},
-		resolvers.inventory{ id=true,
-			{type="gem",},
-			{type="weapon", subtype="longbow", name="elm longbow", ego_chance=-1000},
-			{type="ammo", subtype="arrow", name="quiver of elm arrows", autoreq=true, ego_chance=-1000},
 		},
 		resolvers.generic(function(self)
 			-- Make and wield some alchemist gems
@@ -174,13 +166,13 @@ newBirthDescriptor{
 		["psionic/slumber"]={true, 0.3},
 		["psionic/solipsism"]={true, 0.3},
 		["psionic/thought-forms"]={true, 0.3},
-		
+
 		-- generic
 		["psionic/dreaming"]={true, 0.3},
 		["psionic/feedback"]={true, 0.3},
 		["psionic/mentalism"]={true, 0.3},
 		["cunning/survival"]={true, 0},
-		
+
 		-- locked trees
 		["psionic/discharge"]={false, 0.3},
 		["psionic/dream-forge"]={false, 0.3},
@@ -188,7 +180,7 @@ newBirthDescriptor{
 	},
 	talents = {
 		[ActorTalents.T_SLEEP] = 1,
-		
+
 		[ActorTalents.T_MIND_SEAR] = 1,
 		[ActorTalents.T_SOLIPSISM] = 1,
 		[ActorTalents.T_THOUGHT_FORMS] = 1,
