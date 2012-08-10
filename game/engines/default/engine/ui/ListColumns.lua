@@ -204,7 +204,11 @@ function _M:generateRow(row, force)
 		if col.direct_draw then
 			row.cells[j].w, row.cells[j].h = col.direct_draw(row, 0, 0, col.width, self.row_height, 0, 0, 0, 0, self.dest_area) or self.row_height, self.row_height
 		else
-			text = tostring(row[col.display_prop or col.sort])
+			if type(col.display_prop) == "function" then
+				text = tostring(col.display_prop(row))
+			else
+				text = tostring(row[col.display_prop or col.sort])
+			end
 			gen = self.font:draw(text, text:toTString():maxWidth(self.font), 255, 255, 255)
 			row.cells[j]._tex, row.cells[j]._tex_w, row.cells[j]._tex_h, row.cells[j].w, row.cells[j].h = gen[1]._tex, gen[1]._tex_w, gen[1]._tex_h, gen[1].w, gen[1].h
 
