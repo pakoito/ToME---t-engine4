@@ -302,7 +302,7 @@ function _M:getType(t)
 				if typ.requires_knowledge and not is_known then
 					return true, false, false
 				end
-				if not typ.pass_terrain and (game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_move") and not game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "pass_projectile")) or game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_projectile") then
+				if not typ.pass_terrain and game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_move") and not game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "pass_projectile") then
 					if for_highlights and not is_known then
 						return false, "unknown", true
 					else
@@ -310,7 +310,7 @@ function _M:getType(t)
 					end
 				-- If we explode due to something other than terrain, then we should explode ON the tile, not before it
 				elseif typ.stop_block then
-					local nb = game.level.map:checkAllEntitiesCount(lx, ly, "block_move") + game.level.map:checkAllEntitiesCount(lx, ly, "block_projectile")
+					local nb = game.level.map:checkAllEntitiesCount(lx, ly, "block_move")
 					-- Reduce for pass_projectile or pass_terrain, which was handled above
 					if game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_move") and (typ.pass_terrain or game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "pass_projectile")) then
 						nb = nb - 1
@@ -343,7 +343,7 @@ function _M:getType(t)
 			return false, true, true
 		end,
 		block_radius = function(typ, lx, ly, for_highlights)
-			return not typ.no_restrict and ((game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_move") and not game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "pass_projectile")) or  game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_projectile")) and not (for_highlights and not (game.level.map.remembers(lx, ly) or game.level.map.seens(lx, ly)))
+			return not typ.no_restrict and game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "block_move") and not game.level.map:checkEntity(lx, ly, engine.Map.TERRAIN, "pass_projectile") and not (for_highlights and not (game.level.map.remembers(lx, ly) or game.level.map.seens(lx, ly)))
 		end
 	}
 

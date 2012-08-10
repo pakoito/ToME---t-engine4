@@ -4041,35 +4041,6 @@ newEntity{ base = "BASE_GAUNTLETS",
 	end },
 }
 
-newEntity{ base = "BASE_WAND",
-	unique = true,
-	name = "Taroque's Dilemma", color = colors.RED,
-	unided_name = "decorated torch",
-	desc = [[This finely decorated torch belonged to pyromancer Taroque, in times before the Spellblaze. As he sought renown as the true master of fire magic, he attracted the ire of fellow pyromancers. Precautions had to be met.]],
-	level_range = {30, 42},
-	rarity = 250,
-	cost = 225,
-	material_level = 4,
-	wielder = {
-		resists = {
-			[DamageType.FIRE] = 20,
-		},
-		resists_cap = { [DamageType.FIRE] = 10, },
-		lite = 4,
-		talents_types_mastery = {
-			["spell/fire"] = 0.2,
-			["spell/wildfire"] = 0.2,
-		},
-		inc_damage = {
-			[DamageType.FIRE] = 10,
-		},
-		max_mana = 40,
-		mana_regen = 1,
-	},
-	max_power = 80, power_regen = 1,
-	use_talent = { id = Talents.T_INC_CURTAIN, level = 5, power = 50 },
-}
-
 --[=[
 newEntity{
 	unique = true,
