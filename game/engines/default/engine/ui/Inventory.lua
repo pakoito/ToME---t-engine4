@@ -128,8 +128,8 @@ function _M:generate()
 	end)
 	self.key = self.c_inven.key
 	self.key:addCommands{
-		_TAB = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = util.boundWrap(self.c_tabs.sel_i+1, 1, #self.tabslist) self.c_tabs:onUse("left") self.c_tabs:onSelect("key") end,
-		[{"_TAB","ctrl"}] = function() self.c_tabs.sel_j = 1 self.c_tabs.sel_i = util.boundWrap(self.c_tabs.sel_i-1, 1, #self.tabslist) self.c_tabs:onUse("left", false) self.c_tabs:onSelect("key") end,
+		_TAB = function() if not self.c_tabs then return end self.c_tabs.sel_j = 1 self.c_tabs.sel_i = util.boundWrap(self.c_tabs.sel_i+1, 1, #self.tabslist) self.c_tabs:onUse("left") self.c_tabs:onSelect("key") end,
+		[{"_TAB","ctrl"}] = function() if not self.c_tabs then return end self.c_tabs.sel_j = 1 self.c_tabs.sel_i = util.boundWrap(self.c_tabs.sel_i-1, 1, #self.tabslist) self.c_tabs:onUse("left", false) self.c_tabs:onSelect("key") end,
 	}
 	if self.tabslist then
 		for i = 1, #self.tabslist do

@@ -42,7 +42,7 @@ function _M:init(title, store_inven, actor_inven, store_filter, actor_filter, ac
 			{name="", width={24,"fixed"}, display_prop="object", direct_draw=function(item, x, y) item.object:toScreen(nil, x+4, y, 16, 16) end},
 			{name="Inventory", width=80, display_prop="name", sort="name"},
 			{name="Category", width=20, display_prop="cat", sort="cat"},
-			{name="Price", width={50,"fixed"}, display_prop=function(item) return self.descprice("sell", item.object) end, sort=function(a, b) return descprice("sell", a.object) < descprice("sell", b.object) end},
+			{name="Price", width={50,"fixed"}, display_prop=function(item) print("====", item.object.name,self.descprice("sell", item.object)) return self.descprice("sell", item.object) end, sort=function(a, b) return descprice("sell", a.object) < descprice("sell", b.object) end},
 		},
 		fct=function(item, sel, button, event) self:use(item, button, event) end,
 		select=function(item, sel) self:select(item) end,
@@ -50,28 +50,28 @@ function _M:init(title, store_inven, actor_inven, store_filter, actor_filter, ac
 		on_drag=function(item) self:onDrag(item, "store-sell") end,
 		on_drag_end=function() self:onDragTakeoff("store-buy") end,
 	}
-	
+
 	local direct_draw= function(item, x, y, w, h, total_w, total_h, loffset_x, loffset_y, dest_area)
 		-- if there is object and is withing visible bounds
-		if item.object and total_h + h > loffset_y and total_h < loffset_y + dest_area.h then 
+		if item.object and total_h + h > loffset_y and total_h < loffset_y + dest_area.h then
 			local clip_y_start, clip_y_end = 0, 0
 			-- if it started before visible area then compute its top clip
-			if total_h < loffset_y then 
+			if total_h < loffset_y then
 				clip_y_start = loffset_y - total_h
 			end
 			-- if it ended after visible area then compute its bottom clip
-			if total_h + h > loffset_y + dest_area.h then 
-			   clip_y_end = total_h + h - loffset_y - dest_area.h 
+			if total_h + h > loffset_y + dest_area.h then
+			   clip_y_end = total_h + h - loffset_y - dest_area.h
 			end
 			-- get entity texture with everything it has i.e particles
 			local texture = item.object:getEntityFinalTexture(nil, h, h)
 			local one_by_tex_h = 1 / h
 			texture:toScreenPrecise(x, y, h, h - clip_y_start - clip_y_end, 0, 1, clip_y_start * one_by_tex_h, (h - clip_y_end) * one_by_tex_h)
 			return h, h, 0, 0, clip_y_start, clip_y_end
-		end 
+		end
 		return 0, 0, 0, 0, 0, 0
 	end
-	
+
 	self.c_store = Inventory.new{actor=store_actor, inven=store_inven, filter=store_filter, width=math.floor(self.iw / 2 - 10), height=self.ih - 10, tabslist=false,
 		columns={
 			{name="", width={20,"fixed"}, display_prop="char", sort="id"},
@@ -91,10 +91,10 @@ function _M:init(title, store_inven, actor_inven, store_filter, actor_filter, ac
 		{right=0, top=0, ui=self.c_inven},
 		{hcenter=0, top=5, ui=Separator.new{dir="horizontal", size=self.ih - 10}},
 	}
-	
+
 	self.c_inven.c_inven.on_focus_change = function(ui_self, status) if status == true then self:select(ui_self.list[ui_self.sel]) end end
 	self.c_store.c_inven.on_focus_change = function(ui_self, status) if status == true then self:select(ui_self.list[ui_self.sel]) end end
-	
+
 	self:setFocus(self.c_inven)
 	self:setupUI()
 
@@ -126,7 +126,7 @@ function _M:init(title, store_inven, actor_inven, store_filter, actor_filter, ac
 			game:tooltipDisplayAtMap(item.last_display_x, item.last_display_y, item.data.desc, {up=true})
 		end
 	end
-	
+
 	self.key.any_key = function(sym)
 		-- Control resets the tooltip
 		if (sym == self.key._LCTRL or sym == self.key._RCTRL) and sym~=self.prev_ctrl then local i = self.cur_item self.cur_item = nil self:select(i, true) end
