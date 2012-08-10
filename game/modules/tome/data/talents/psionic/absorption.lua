@@ -83,11 +83,21 @@ newTalent{
 		--end
 		game:playSoundNear(self, "talents/heal")
 		local s_str = getShieldStrength(self, t)
+
+		local particle
+		if core.shader.active() then
+			particle = self:addParticles(Particles.new("shader_shield", 1, {size_factor=1.1}, {type="shield", time_factor=-10000, llpow=1, aadjust=3, color={1, 0, 0.3}}))
+		else
+			particle = self:addParticles(Particles.new("generic_shield", 1, {r=1, g=0, b=0.3, a=0.5}))
+		end
+
 		return {
 			am = self:addTemporaryValue("kinetic_shield", s_str),
+			particle = particle,
 		}
 	end,
 	deactivate = function(self, t, p)
+		self:removeParticles(p.particle)
 		local spike_str = getSpikeStrength(self, t)
 		self:removeTemporaryValue("kinetic_shield", p.am)
 		if self:attr("save_cleanup") then return true end
@@ -187,11 +197,19 @@ newTalent{
 		--end
 		game:playSoundNear(self, "talents/heal")
 		local s_str = getShieldStrength(self, t)
+		local particle
+		if core.shader.active() then
+			particle = self:addParticles(Particles.new("shader_shield", 1, {size_factor=1.1}, {type="shield", time_factor=-10000, llpow=1, aadjust=3, color={0.3, 1, 1}}))
+		else
+			particle = self:addParticles(Particles.new("generic_shield", 1, {r=0.3, g=1, b=1, a=0.5}))
+		end
 		return {
 			am = self:addTemporaryValue("thermal_shield", s_str),
+			particle = particle,
 		}
 	end,
 	deactivate = function(self, t, p)
+		self:removeParticles(p.particle)
 		local spike_str = getSpikeStrength(self, t)
 		self:removeTemporaryValue("thermal_shield", p.am)
 		if self:attr("save_cleanup") then return true end
@@ -288,11 +306,19 @@ newTalent{
 		--end
 		game:playSoundNear(self, "talents/heal")
 		local s_str = getShieldStrength(self, t)
+		local particle
+		if core.shader.active() then
+			particle = self:addParticles(Particles.new("shader_shield", 1, {size_factor=1.1}, {type="shield", time_factor=-10000, llpow=1, aadjust=3, color={0.8, 1, 0.2}}))
+		else
+			particle = self:addParticles(Particles.new("generic_shield", 1, {r=0.8, g=1, b=0.2, a=0.5}))
+		end
 		return {
 			am = self:addTemporaryValue("charged_shield", s_str),
+			particle = particle,
 		}
 	end,
 	deactivate = function(self, t, p)
+		self:removeParticles(p.particle)
 		local spike_str = getSpikeStrength(self, t)
 		self:removeTemporaryValue("charged_shield", p.am)
 		if self:attr("save_cleanup") then return true end

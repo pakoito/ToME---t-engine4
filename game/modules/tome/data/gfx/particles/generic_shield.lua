@@ -17,19 +17,32 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-return {
-	frag = "shield",
-	vert = nil,
-	args = {
-		tex = { texture = 0 },
-		color = color or {0.4, 0.7, 1.0},
-		time_factor = time_factor or 4000,
-		aadjust = aadjust or 10,
-		impact = {0, 0},
-		impact_tick = -1000,
-		impact_color = {1.0, 0.3, 1.0},
-		impact_time = 400,
-		llpow = 2,
-	},
-	clone = false,
-}
+base_size = 32
+
+local r = r
+local g = g
+local b = b
+local a = a
+
+return { generator = function()
+	return {
+		trail = 0,
+		life = 10,
+		size = 36, sizev = 0, sizea = 0,
+
+		x = 0, xv = 0, xa = 0,
+		y = 0, yv = 0, ya = 0,
+		dir = 0, dirv = dirv, dira = 0,
+		vel = 0, velv = 0, vela = 0,
+
+		r = r, rv = 0, ra = 0,
+		g = g, gv = 0, ga = 0,
+		b = b, bv = 0, ba = 0,
+		a = a, av = -0.02, aa = 0.005,
+	}
+end, },
+function(self)
+	self.ps:emit(1)
+end,
+1,
+"particles_images/shield_bubble_generic"

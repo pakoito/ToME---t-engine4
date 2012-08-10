@@ -1339,8 +1339,15 @@ newEffect{
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("kinspike_shield", eff.power)
 		self.kinspike_shield_absorb = eff.power
+
+		if core.shader.active() then
+			eff.particle = self:addParticles(Particles.new("shader_shield", 1, {size_factor=1.1}, {type="shield", time_factor=-8000, llpow=1, aadjust=7, color={1, 0, 0.3}}))
+		else
+			eff.particle = self:addParticles(Particles.new("generic_shield", 1, {r=1, g=0, b=0.3, a=1}))
+		end
 	end,
 	deactivate = function(self, eff)
+		self:removeParticles(eff.particle)
 		self:removeTemporaryValue("kinspike_shield", eff.tmpid)
 		self.kinspike_shield_absorb = nil
 	end,
@@ -1358,8 +1365,15 @@ newEffect{
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("thermspike_shield", eff.power)
 		self.thermspike_shield_absorb = eff.power
+
+		if core.shader.active() then
+			eff.particle = self:addParticles(Particles.new("shader_shield", 1, {size_factor=1.1}, {type="shield", time_factor=-8000, llpow=1, aadjust=7, color={0.3, 1, 1}}))
+		else
+			eff.particle = self:addParticles(Particles.new("generic_shield", 1, {r=0.3, g=1, b=1, a=1}))
+		end
 	end,
 	deactivate = function(self, eff)
+		self:removeParticles(eff.particle)
 		self:removeTemporaryValue("thermspike_shield", eff.tmpid)
 		self.thermspike_shield_absorb = nil
 	end,
@@ -1377,8 +1391,15 @@ newEffect{
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("chargespike_shield", eff.power)
 		self.chargespike_shield_absorb = eff.power
+
+		if core.shader.active() then
+			eff.particle = self:addParticles(Particles.new("shader_shield", 1, {size_factor=1.1}, {type="shield", time_factor=-8000, llpow=1, aadjust=7, color={0.8, 1, 0.2}}))
+		else
+			eff.particle = self:addParticles(Particles.new("generic_shield", 1, {r=0.8, g=1, b=0.2, a=1}))
+		end
 	end,
 	deactivate = function(self, eff)
+		self:removeParticles(eff.particle)
 		self:removeTemporaryValue("chargespike_shield", eff.tmpid)
 		self.chargespike_shield_absorb = nil
 	end,
@@ -1517,7 +1538,7 @@ newEffect{
 	on_timeout = function(self, eff)
 		if eff.src.dead or not game.level:hasEntity(eff.src) then eff.dur = 0 return true end
 		local t = eff.src:getTalentFromId(eff.src.T_INNER_DEMONS)
-		if rng.percent(eff.chance) then 
+		if rng.percent(eff.chance) then
 			if self:attr("sleep") or self:checkHit(eff.src:combatMindpower(), self:combatMentalResist(), 0, 95, 5) then
 				t.summon_inner_demons(eff.src, self, t)
 			else

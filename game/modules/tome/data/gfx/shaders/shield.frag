@@ -8,12 +8,13 @@ uniform vec3 impact_color;
 uniform vec2 impact;
 uniform float impact_tick;
 uniform float impact_time;
+uniform float llpow;
 
 void main(void)
 {
 	vec2 uv = vec2(0.5, 0.5) - gl_TexCoord[0].xy;
 	float l = length(uv) * 2.0;
-	float ll = l * l;
+	float ll = pow(l, llpow);
 
 	vec4 c1 = texture2D(tex, (uv * ll / 1.3 + vec2(tick / time_factor, 0.0)));
 	vec4 c2 = texture2D(tex, (uv * ll / 1.3 + vec2(0.0, tick / time_factor)));
