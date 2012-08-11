@@ -170,10 +170,10 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local blast_damage = t.getBlastDamage(self, t)
+		local blast_damage = t.getBlastDamage(self, t)/2
 		local radius = self:getTalentRadius(t)
 		local duration = t.getDuration(self, t)
-		local forge_damage = t.getForgeDamage(self, t)
+		local forge_damage = t.getForgeDamage(self, t)/2
 		return ([[Release the bellows of the forge upon your surroundings, inflicting %0.2f mind damage, %0.2f burning damage, and knocking back your enemies in a radius %d cone.
 		Empty terrain may be changed (50%% chance) for %d turns into forge walls that block movement and inflict %0.2f mind and %0.2f fire damage on nearby enemies.
 		The damage and knockback chance will scale with your mindpower.]]):
@@ -255,7 +255,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local radius = self:getTalentRadius(t)
-		local damage = t.getDamage(self, t)
+		local damage = t.getDamage(self, t)/2
 		local power = t.getPower(self, t)
 		local duration = t.getDuration(self, t)
 		return ([[The pounding forge of thought in your mind is released upon your surroundings.  Each turn that you remain stationary you'll strike the dreamforge, inflicting mind and burning damage on enemies around you.

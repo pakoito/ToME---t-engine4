@@ -659,12 +659,12 @@ With each slow breath it takes reality distorts around it.  Blue twirls into red
 	combat_armor = 1, combat_def = 15,
 	combat = { dam=resolvers.levelup(20, 1, 1.1), atk=20, apr=20, dammod={wil=1}, damtype=DamageType.MIND},
 
-	ai = "tactical",  ai_tactic = resolvers.tactic"ranged",
+	ai = "tactical", -- ai_tactic = resolvers.tactic"ranged",
 	ai_state = { ai_target="target_player_radius", sense_radius=20, talent_in=1 }, -- Huge radius for projections to target
 	dont_pass_target = true,
+	summon = {{type="horror", subtype="eldritch", name="dream seed", number=5, hasxp=false}, },
 
 	resists = { all = 35 },
-	inc_damage = { all = -50}, -- Set base damage low, in the dreamscape it will be much higher
 
 	combat_mindpower = resolvers.levelup(30, 1, 2),
 	
@@ -672,27 +672,33 @@ With each slow breath it takes reality distorts around it.  Blue twirls into red
 	resolvers.drops{chance=100, nb=5, {ego_chance=100} }, -- Gives good loot to encourage the player to wake it up
 
 	resolvers.talents{
-		[Talents.T_DISTORTION_BOLT]={base=2, every=6, max=8},
-		[Talents.T_DISTORTION_WAVE]={base=2, every=6, max=8},
-		[Talents.T_MAELSTROM]={base=2, every=6, max=8},
-		[Talents.T_RAVAGE]={base=2, every=6, max=8},
+		[Talents.T_DISTORTION_BOLT]={base=4, every=6, max=8},
+		[Talents.T_DISTORTION_WAVE]={base=4, every=6, max=8},
+		[Talents.T_MAELSTROM]={base=4, every=6, max=8},
+		[Talents.T_RAVAGE]={base=4, every=6, max=8},
 		
-		[Talents.T_BIOFEEDBACK]={base=2, every=6, max=8},
-		[Talents.T_RESONANCE_FIELD]={base=2, every=6, max=8},
-		[Talents.T_BACKLASH]={base=2, every=6, max=8},
+		[Talents.T_BIOFEEDBACK]={base=4, every=6, max=8},
+		[Talents.T_RESONANCE_FIELD]={base=4, every=6, max=8},
+		[Talents.T_BACKLASH]={base=4, every=6, max=8},
+		[Talents.T_AMPLIFICATION]={base=4, every=6, max=8},
+		[Talents.T_CONVERSION]={base=4, every=6, max=8},
 		
-		[Talents.T_MENTAL_SHIELDING]={base=2, every=6, max=8},
+		[Talents.T_MENTAL_SHIELDING]={base=4, every=6, max=8},
 
 		[Talents.T_SOLIPSISM]=7, -- Seven gives some damage to health though it's very small
-		[Talents.T_BALANCE]={base=2, every=6, max=8},
-		[Talents.T_CLARITY]={base=2, every=6, max=8},
-		[Talents.T_DISMISSAL]={base=2, every=6, max=8},
+		[Talents.T_BALANCE]={base=4, every=6, max=8},
+		[Talents.T_CLARITY]={base=4, every=6, max=8},
+		[Talents.T_DISMISSAL]={base=4, every=6, max=8},
 
 		[Talents.T_LUCID_DREAMER]={base=4, every=12, max=8},
 		[Talents.T_DREAM_WALK]={base=4, every=12, max=8},
-		[Talents.T_SLUMBER]={base=2, every=6, max=8},
-		[Talents.T_RESTLESS_NIGHT]={base=2, every=6, max=8},
+		[Talents.T_SLUMBER]={base=4, every=6, max=8},
+		[Talents.T_SLEEP]={base=4, every=6, max=8},
+		[Talents.T_RESTLESS_NIGHT]={base=4, every=6, max=8},
 		[Talents.T_DREAMSCAPE]=10,
+		
+		-- Summon Dream Seeds while awake
+		[Talents.T_SUMMON]=1,
 	},
 
 	resolvers.inscriptions(2, {"regeneration infusion", "phase door rune"}, nil, true),  -- Really has a phase door rune :P

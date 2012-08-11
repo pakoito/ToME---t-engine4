@@ -95,7 +95,7 @@ newTalent{
 	range = 10,
 	direct_hit = true,
 	requires_target = true,
-	tactical = { ATTACK = function(self, t, target) if target:attr("sleep") then return 4 else return 2 end end },
+	tactical = { ATTACK = function(self, t, target) if target and target:attr("sleep") then return 4 else return 2 end end },
 	getChance = function(self, t) return self:combatTalentMindDamage(t, 15, 50) end,
 	getDuration = function(self, t) return 2 + math.ceil(self:getTalentLevel(t) * 2) end,
 	summon_inner_demons = function(self, target, t)
@@ -220,7 +220,7 @@ newTalent{
 	range = 10,
 	direct_hit = true,
 	requires_target = true,
-	tactical = { ATTACK = { DARKNESS = 2 }, DISABLE = function(self, t, target) if target:attr("sleep") then return 4 else return 2 end end },
+	tactical = { ATTACK = { DARKNESS = 2 }, DISABLE = function(self, t, target) if target and target:attr("sleep") then return 4 else return 2 end end },
 	getChance = function(self, t) return self:combatTalentMindDamage(t, 15, 50) end,
 	getDamage = function(self, t) return self:combatTalentMindDamage(t, 5, 50) end,
 	getDuration = function(self, t) return 4 + math.ceil(self:getTalentLevel(t)) end,

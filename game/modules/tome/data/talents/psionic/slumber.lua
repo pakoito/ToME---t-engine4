@@ -117,7 +117,7 @@ newTalent{
 	cooldown = 24,
 	psi = 40,
 	random_boss_rarity = 10,
-	tactical = { DISABLE = function(self, t, target) if target.game_ender and target:attr("sleep") then return 4 else return 0 end end},
+	tactical = { DISABLE = function(self, t, target) if target and target.game_ender and target:attr("sleep") then return 4 else return 0 end end},
 	direct_hit = true,
 	requires_target = true,
 	range = function(self, t) return 5 + math.min(5, self:getTalentLevelRaw(t)) end,

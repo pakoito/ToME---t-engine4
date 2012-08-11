@@ -143,8 +143,8 @@ newTalent{
 	psi= 10,
 	cooldown = 10,
 	tactical = { 
-		CLOSEIN = function(self, t, target) if target:attr("sleep") or (self:getTalentLevel(t) >= 5 and self:attr("lucid_dreamer")) then return 2 else return 0 end end,
-		ESCAPE = function(self, t, target) if target:attr("sleep") or (self:getTalentLevel(t) >= 5 and self:attr("lucid_dreamer")) then return 2 else return 0 end end,
+		CLOSEIN = function(self, t, target) if target and target:attr("sleep") or (self:getTalentLevel(t) >= 5 and self:attr("lucid_dreamer")) then return 2 else return 0 end end,
+		ESCAPE = function(self, t, target) if target and target:attr("sleep") or (self:getTalentLevel(t) >= 5 and self:attr("lucid_dreamer")) then return 2 else return 0 end end,
 	},
 	range = function(self, t) return 5 + math.min(5, self:getTalentLevelRaw(t)) end,
 	requires_target = true,
@@ -199,7 +199,7 @@ newTalent{
 	mode = "sustained",
 	sustain_psi = 40,
 	cooldown = function(self, t) return 50 - self:getTalentLevelRaw(t) * 5 end,
-	tactical = { DISABLE = function(self, t, target) if target:attr("sleep") then return 4 else return 0 end end},
+	tactical = { DISABLE = function(self, t, target) if target and target:attr("sleep") then return 4 else return 0 end end},
 	range = function(self, t) return 5 + math.min(5, self:getTalentLevelRaw(t)) end,
 	requires_target = true,
 	target = function(self, t)
