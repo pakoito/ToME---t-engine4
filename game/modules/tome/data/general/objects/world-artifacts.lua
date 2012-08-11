@@ -4051,7 +4051,7 @@ newEntity{ base = "BASE_LONGBOW",
 	cost = 200,
 	material_level = 3,
 	combat = {
-		range = 15,
+		range = 9,
 		physspeed = 1.2,
 		travel_speed = 4,
 		talent_on_hit = { [Talents.T_ARCANE_EYE] = {level=4, chance=100} },
