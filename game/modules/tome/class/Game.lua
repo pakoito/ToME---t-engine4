@@ -1214,6 +1214,7 @@ function _M:setupCommands()
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
 			self:changeLevel(1, "noxious-caldera")
+--			FINISH CALDERA
 do return end
 			self:registerDialog(require("mod.dialogs.DownloadCharball").new())
 			local f, err = loadfile("/data/general/events/fearscape-portal.lua")
