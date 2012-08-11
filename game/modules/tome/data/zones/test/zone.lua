@@ -31,6 +31,13 @@ return {
 	generator =  {
 		map = {
 -- [[
+			class = "mod.class.generator.map.Caldera",
+			mountain = "MOUNTAIN_WALL",
+			tree = "JUNGLE_TREE",
+			grass = "JUNGLE_GRASS",
+			water = "POISON_DEEP_WATER",
+--]]
+--[[
 			class = "engine.generator.map.Building",
 			max_block_w = 15, max_block_h = 15,
 			max_building_w = 5, max_building_h = 5,

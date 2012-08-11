@@ -17,10 +17,16 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/grids/basic.lua")
-load("/data/general/grids/void.lua")
-load("/data/general/grids/forest.lua")
-load("/data/general/grids/jungle.lua")
-load("/data/general/grids/jungle_hut.lua")
-load("/data/general/grids/water.lua")
-load("/data/general/grids/mountain.lua")
+load("/data/general/npcs/bear.lua", rarity(0))
+load("/data/general/npcs/vermin.lua", rarity(3))
+load("/data/general/npcs/canine.lua", rarity(1))
+load("/data/general/npcs/snake.lua", rarity(0))
+load("/data/general/npcs/plant.lua", rarity(0))
+load("/data/general/npcs/faeros.lua", rarity(0))
+
+load("/data/general/npcs/all.lua", rarity(4, 35))
+
+-- Everything is poison immune in the caldera, they couldnt live there otherwise
+for i, e in ipairs(loading_list) do
+	if e.name then e.poison_immune = 1 end
+end

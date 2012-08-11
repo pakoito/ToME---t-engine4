@@ -808,6 +808,7 @@ function _M:loadList(file, no_default, res, mod, loaded)
 		resolvers = resolvers,
 		DamageType = require "engine.DamageType",
 		entity_mod = mod,
+		loading_list = res,
 		rarity = function(add, mult) add = add or 0; mult = mult or 1; return function(e) if e.rarity then e.rarity = math.ceil(e.rarity * mult + add) end end end,
 		newEntity = function(t)
 			-- Do we inherit things ?

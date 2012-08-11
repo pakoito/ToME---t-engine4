@@ -76,8 +76,8 @@ function _M:loadRoom(file)
 end
 
 --- Easy way to make an irregular shapped room
-function _M:makePod(x, y, radius, room_id, data)
-	self.map(x, y, Map.TERRAIN, self:resolve('.'))
+function _M:makePod(x, y, radius, room_id, data, floor, wall)
+	self.map(x, y, Map.TERRAIN, self:resolve(floor or '.'))
 	self.map.room_map[x][y].room = room_id
 
 	local lowest = {x=x, y=y}
@@ -97,7 +97,7 @@ function _M:makePod(x, y, radius, room_id, data)
 		while lx do
 			if core.fov.distance(lowest.x, lowest.y, lx, ly) >= breakdist then break end
 			if self.map:isBound(lx, ly) then
-				self.map(lx, ly, Map.TERRAIN, self:resolve('.'))
+				self.map(lx, ly, Map.TERRAIN, self:resolve(floor or '.'))
 				self.map.room_map[lx][ly].room = room_id
 			end
 			lx, ly = l()
@@ -127,10 +127,10 @@ function _M:makePod(x, y, radius, room_id, data)
 		local g8 = self.map.room_map[i] and self.map.room_map[i][j-1] and self.map.room_map[i][j-1].room == room_id
 		local g9 = self.map.room_map[i+1] and self.map.room_map[i+1][j-1] and self.map.room_map[i+1][j-1].room == room_id
 
-		if     not g8 and not g4 and not g6 and g2 then self.map(i, j, Map.TERRAIN, self:resolve('#')) self.map.room_map[i][j].room = nil
-		elseif not g2 and not g4 and not g6 and g8 then self.map(i, j, Map.TERRAIN, self:resolve('#')) self.map.room_map[i][j].room = nil
-		elseif not g6 and not g2 and not g8 and g4 then self.map(i, j, Map.TERRAIN, self:resolve('#')) self.map.room_map[i][j].room = nil
-		elseif not g4 and not g2 and not g8 and g6 then self.map(i, j, Map.TERRAIN, self:resolve('#')) self.map.room_map[i][j].room = nil
+		if     not g8 and not g4 and not g6 and g2 then self.map(i, j, Map.TERRAIN, self:resolve(wall or '#')) self.map.room_map[i][j].room = nil
+		elseif not g2 and not g4 and not g6 and g8 then self.map(i, j, Map.TERRAIN, self:resolve(wall or '#')) self.map.room_map[i][j].room = nil
+		elseif not g6 and not g2 and not g8 and g4 then self.map(i, j, Map.TERRAIN, self:resolve(wall or '#')) self.map.room_map[i][j].room = nil
+		elseif not g4 and not g2 and not g8 and g6 then self.map(i, j, Map.TERRAIN, self:resolve(wall or '#')) self.map.room_map[i][j].room = nil
 		end
 	end end
 end
