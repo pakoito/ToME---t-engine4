@@ -171,6 +171,9 @@ return {
 					game:onTickEnd(function()
 						game:changeLevel(1, "noxious-caldera")
 						if self.success then
+							require("engine.ui.Dialog"):simpleLongPopup("Deep slumber...", [[As your mind-mouse enters the dream portal you suddenly wake up.
+You feel good!]], 600)
+							game.player:setEffect(game.player.EFF_VICTORY_RUSH_ZIGUR, 4, {})
 							world:gainAchievement("ALL_DREAMS", self.summoner, "mice")
 						else
 							game.player:takeHit(game.player.life * 2 / 3, game.player)

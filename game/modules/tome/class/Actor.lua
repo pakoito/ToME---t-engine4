@@ -493,12 +493,12 @@ function _M:actBase()
 				t.doMindStorm(self, t, p)
 			end
 		end
-		
+
 		if self:isTalentActive(self.T_DREAMFORGE) then
 			local t, p = self:getTalentFromId(self.T_DREAMFORGE), self:isTalentActive(self.T_DREAMFORGE)
 			t.doForgeStrike(self, t, p)
-		end	
-	
+		end
+
 
 		self:triggerHook{"Actor:actBase:Effects"}
 	end
@@ -2630,6 +2630,15 @@ function _M:onWear(o, bypass_set)
 		end
 	end
 
+	if o.talent_on_wild_gift then
+		self.talent_on_wild_gift = self.talent_on_wild_gift or {}
+		for i = 1, #o.talent_on_wild_gift do
+			local id = util.uuid()
+			self.talent_on_wild_gift[id] = o.talent_on_wild_gift[i]
+			o.talent_on_wild_gift[i]._id = id
+		end
+	end
+
 	-- Apply any special cursed logic
 	if self:knowTalent(self.T_DEFILING_TOUCH) then
 		local t = self:getTalentFromId(self.T_DEFILING_TOUCH)
@@ -2702,6 +2711,14 @@ function _M:onTakeoff(o, bypass_set)
 		for i = 1, #o.talent_on_spell do
 			local id = o.talent_on_spell[i]._id
 			self.talent_on_spell[id] = nil
+		end
+	end
+
+	if o.talent_on_wild_gift then
+		self.talent_on_wild_gift = self.talent_on_wild_gift or {}
+		for i = 1, #o.talent_on_wild_gift do
+			local id = o.talent_on_wild_gift[i]._id
+			self.talent_on_wild_gift[id] = nil
 		end
 	end
 

@@ -1112,6 +1112,26 @@ function _M:getTextualDesc(compare_with)
 		desc:add(talents[tid][3] and {"color","GREEN"} or {"color","WHITE"}, ("Talent on hit(spell): %s (%d%% chance level %d)."):format(self:getTalentFromId(tid).name, talents[tid][1], talents[tid][2]), {"color","LAST"}, true)
 	end
 
+	local talents = {}
+	if self.talent_on_wild_gift then
+		for _, data in ipairs(self.talent_on_wild_gift) do
+			talents[data.talent] = {data.chance, data.level}
+		end
+	end
+	for i, v in ipairs(compare_with or {}) do
+		for _, data in ipairs(v[field] and (v[field].talent_on_wild_gift or {})or {}) do
+			local tid = data.talent
+			if not talents[tid] or talents[tid][1]~=data.chance or talents[tid][2]~=data.level then
+				desc:add({"color","RED"}, ("Talent on hit(nature): %s (%d%% chance level %d)."):format(self:getTalentFromId(tid).name, data.chance, data.level), {"color","LAST"}, true)
+			else
+				talents[tid][3] = true
+			end
+		end
+	end
+	for tid, data in pairs(talents) do
+		desc:add(talents[tid][3] and {"color","GREEN"} or {"color","WHITE"}, ("Talent on hit(nature): %s (%d%% chance level %d)."):format(self:getTalentFromId(tid).name, talents[tid][1], talents[tid][2]), {"color","LAST"}, true)
+	end
+
 	if self.curse then
 		local t = game.player:getTalentFromId(game.player.T_DEFILING_TOUCH)
 		if t and t.canCurseItem(game.player, t, self) then

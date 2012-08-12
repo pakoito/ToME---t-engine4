@@ -355,6 +355,17 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 						end
 					end
 				end
+
+				if src.talent_on_wild_gift and next(src.talent_on_wild_gift) and t.is_nature and not src.turn_procs.wild_gift_talent then
+					for id, d in pairs(src.talent_on_wild_gift) do
+						if rng.percent(d.chance) and t.id ~= d.talent then
+							src.turn_procs.wild_gift_talent = true
+							local old = src.__projecting_for
+							src:forceUseTalent(d.talent, {ignore_cd=true, ignore_energy=true, force_target=target, force_level=d.level, ignore_ressources=true})
+							src.__projecting_for = old
+						end
+					end
+				end
 			end
 		end
 
@@ -2153,11 +2164,11 @@ newDamageType{
 		local power, dur, dist, do_particles
 		tmp = tmp or {}
 		if _G.type(dam) == "table" then dam, power, dur, dist, do_particles = dam.dam, dam.power, dam.dur, dam.dist, dam.do_particles end
-		if target and not tmp[target] then 
+		if target and not tmp[target] then
 			if src:checkHit(src:combatMindpower(), target:combatMentalResist(), 0, 95) then
 				DamageType:get(DamageType.MIND).projector(src, x, y, DamageType.MIND, {dam=dam/2, alwaysHit=true})
 				DamageType:get(DamageType.FIREBURN).projector(src, x, y, DamageType.FIREBURN, dam/2)
-				if power and power > 0 then 
+				if power and power > 0 then
 					local silent = true and target:hasEffect(target.EFF_BROKEN_DREAM) or false
 					target:setEffect(target.EFF_BROKEN_DREAM, dur, {power=power}, silent)
 					target:crossTierEffect(target.EFF_BRAINLOCKED, src:combatMindpower())

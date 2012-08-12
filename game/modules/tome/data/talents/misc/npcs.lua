@@ -1802,3 +1802,38 @@ newTalent{
 		format(heal)
 	end,
 }
+
+newTalent{
+	name = "Call Lightning", image = "talents/lightning.png",
+	type = {"wild-gift/other", 1},
+	points = 5,
+	equi = 4,
+	cooldown = 3,
+	tactical = { ATTACK = 2 },
+	range = 10,
+	direct_hit = true,
+	reflectable = true,
+	requires_target = true,
+	target = function(self, t)
+		return {type="beam", range=self:getTalentRange(t), talent=t}
+	end,
+	getDamage = function(self, t) return self:combatTalentMindDamage(t, 20, 350) end,
+	action = function(self, t)
+		local tg = self:getTalentTarget(t)
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		local dam = self:mindCrit(t.getDamage(self, t))
+		self:project(tg, x, y, DamageType.LIGHTNING, rng.avg(dam / 3, dam, 3))
+		local _ _, x, y = self:canProject(tg, x, y)
+		game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(x-self.x), math.abs(y-self.y)), "lightning", {tx=x-self.x, ty=y-self.y})
+		game:playSoundNear(self, "talents/lightning")
+		return true
+	end,
+	info = function(self, t)
+		local damage = t.getDamage(self, t)
+		return ([[Calls forth a powerful beam of lightning doing %0.2f to %0.2f damage
+		The damage will increase with your Mindpower.]]):
+		format(damDesc(self, DamageType.LIGHTNING, damage / 3),
+		damDesc(self, DamageType.LIGHTNING, damage))
+	end,
+}

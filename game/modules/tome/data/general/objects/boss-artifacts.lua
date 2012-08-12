@@ -209,8 +209,8 @@ newEntity{ base = "BASE_LIGHT_ARMOR",
 	},
 
 	max_power = 50, power_regen = 1,
-	use_talent = { id = Talents.T_LIGHTNING, level=2, power = 18 },
-	talent_on_spell = { {chance=10, talent=Talents.T_LIGHTNING, level=2} },
+	use_talent = { id = Talents.T_CALL_LIGHTNING, level=2, power = 18 },
+	talent_on_wild_gift = { {chance=10, talent=Talents.T_CALL_LIGHTNING, level=2} },
 }
 
 newEntity{ base = "BASE_HEAVY_ARMOR",
