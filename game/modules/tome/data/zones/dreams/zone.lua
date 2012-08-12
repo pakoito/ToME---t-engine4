@@ -53,7 +53,7 @@ return {
 				},
 				actor = {
 					class = "mod.class.generator.actor.Random",
-					nb_npc = {30, 30},
+					nb_npc = {20, 20},
 					filter = {type="feline"},
 					randelite = 0,
 				},
@@ -127,10 +127,10 @@ return {
 			game.player:updateMainShader()
 
 			require("engine.ui.Dialog"):simpleLongPopup("Deep slumber...", [[The noxious fumes have invaded all your body, you suddently fall in a deep slumber...
-	... you feel weak ...
-	... you feel unimportant ...
-	... you feel like ... food ...
-	You feel like running away!]], 600)
+... you feel weak ...
+... you feel unimportant ...
+... you feel like ... food ...
+You feel like running away!]], 600)
 		end
 	end,
 }

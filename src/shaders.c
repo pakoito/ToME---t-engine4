@@ -248,7 +248,7 @@ static int program_use(lua_State *L)
 	{
 		glUseProgramObjectARB(p->shader);
 		GLfloat t = SDL_GetTicks();
-		glUniform1fvARB(glGetUniformLocationARB(p->shader, "tick"), 1, &t);
+		glUniform1fvARB(p->p_tick, 1, &t);
 	}
 	else
 	{

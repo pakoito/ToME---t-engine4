@@ -20,6 +20,7 @@
 require "engine.class"
 require "engine.Entity"
 local Particles = require "engine.Particles"
+local Shader = require "engine.Shader"
 local Map = require "engine.Map"
 local NameGenerator = require "engine.NameGenerator"
 local NameGenerator2 = require "engine.NameGenerator2"
@@ -626,6 +627,28 @@ function _M:displayWeather(level, ps, nb_keyframes)
 	local dx, dy = level.map:getScreenUpperCorner() -- Display at map border, always, so it scrolls with the map
 	for j = 1, #ps do
 		ps[j].ps:toScreen(dx, dy, true, 1)
+	end
+end
+
+function _M:makeWeatherShader(level, shader, params)
+	if not config.settings.tome.weather_effects then return end
+
+	local ps = level.data.weather_shader or {}
+	ps[#ps+1] = Shader.new(shader, params)
+	level.data.weather_shader = ps
+end
+
+function _M:displayWeatherShader(level, ps, x, y, nb_keyframes)
+	local dx, dy = level.map:getScreenUpperCorner() -- Display at map border, always, so it scrolls with the map
+
+	local sx, sy = level.map._map:getScroll()
+	local mapcoords = {(-sx + level.map.mx * level.map.tile_w) / level.map.viewport.width , (-sy + level.map.my * level.map.tile_h) / level.map.viewport.height}
+
+	for j = 1, #ps do
+		ps[j]:setUniform("mapCoord", mapcoords)
+		ps[j].shad:use(true)
+		core.display.drawQuad(x, y, level.map.viewport.width, level.map.viewport.height, 255, 255, 255, 255)
+		ps[j].shad:use(false)
 	end
 end
 

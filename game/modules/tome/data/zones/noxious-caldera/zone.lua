@@ -65,7 +65,7 @@ return {
 				},
 			},
 			post_process = function(level)
-				game.state:makeWeather(level, 6, {max_nb=15, chance=1, dir=120, speed={0.1, 0.9}, alpha={0.2, 0.4}, particle_name="weather/grey_cloud_%02d"})
+				game.state:makeWeatherShader(level, "weather_vapours", {move_factor=80000, evolve_factor=20000, color={1, 0.5, 0, 0.5}, zoom=3})
 			end,
 		},
 	},

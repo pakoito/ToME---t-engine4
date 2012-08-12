@@ -1086,6 +1086,7 @@ function _M:displayMap(nb_keyframes)
 				map:display(0, 0, nb_keyframes, config.settings.tome.smooth_fov)
 				if self.level.data.foreground then self.level.data.foreground(self.level, 0, 0, nb_keyframes) end
 				if self.level.data.weather_particle then self.state:displayWeather(self.level, self.level.data.weather_particle, nb_keyframes) end
+				if self.level.data.weather_shader then self.state:displayWeatherShader(self.level, self.level.data.weather_shader, map.display_x, map.display_y, nb_keyframes) end
 				if config.settings.tome.smooth_fov then map._map:drawSeensTexture(0, 0, nb_keyframes) end
 			self.fbo:use(false, self.full_fbo)
 
@@ -1100,6 +1101,7 @@ function _M:displayMap(nb_keyframes)
 			if self.target then self.target:display() end
 			if self.level.data.foreground then self.level.data.foreground(self.level, map.display_x, map.display_y, nb_keyframes) end
 			if self.level.data.weather_particle then self.state:displayWeather(self.level, self.level.data.weather_particle, nb_keyframes) end
+			if self.level.data.weather_shader then self.state:displayWeatherShader(self.level, self.level.data.weather_shader, map.display_x, map.display_y, nb_keyframes) end
 			if config.settings.tome.smooth_fov then map._map:drawSeensTexture(map.display_x, map.display_y, nb_keyframes) end
 		end
 
@@ -1213,8 +1215,22 @@ function _M:setupCommands()
 			end end
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
-			self:changeLevel(1, "dreams")
---			FINISH CALDERA
+			local s = Shader.new("test")
+			local d = Dialog.new("Foo", 500, 500)
+			d:loadUI{}
+			d.key:addBinds{ EXIT = function() game:unregisterDialog(d) end }
+			d:setupUI(false, false)
+			d.toScreen = function(self, x, y, nb_keyframes)
+				s.shad:use(true)
+				core.display.drawQuad(game.level.map.display_x, game.level.map.display_y, game.level.map.viewport.width, game.level.map.viewport.height, 255, 255, 255, 255)
+				s.shad:use(false)
+			end
+
+			game:registerDialog(d)
+
+--			self:changeLevel(1, "dreams")
+--			FINISH CALDERA : add a boss
+--			ADD NEW DREAMS
 do return end
 			self:registerDialog(require("mod.dialogs.DownloadCharball").new())
 			local f, err = loadfile("/data/general/events/fearscape-portal.lua")
