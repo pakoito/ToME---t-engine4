@@ -87,6 +87,9 @@ return {
 		game.level.turn_counter = game.level.turn_counter - 1
 		game.player.changed = true
 		if game.level.turn_counter < 0 then
+			game.level.turn_counter = nil
+			game.level.max_turn_counter = nil
+
 			local dream = rng.range(1, 1)
 			game:changeLevel(dream, "dreams")
 		end

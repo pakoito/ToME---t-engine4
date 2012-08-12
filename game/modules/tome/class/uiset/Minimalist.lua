@@ -1062,7 +1062,7 @@ function _M:displayResources(scale, bx, by, a)
 			dt[1]:toScreenFull(x+(front[6]-dt[6])/2, y+90, dt[6], dt[7], dt[2], dt[3], 1, 1, 1, a)
 
 			front[1]:toScreenFull(x, y, front[6], front[7], front[2], front[3], 1, 1, 1, a)
-			self:showResourceTooltip(bx+x*scale, by+y*scale, front[6], front[7], "res:hourglass", game.level.turn_counter_desc)
+			self:showResourceTooltip(bx+x*scale, by+y*scale, front[6], front[7], "res:hourglass", game.level.turn_counter_desc or "")
 			x, y = self:resourceOrientStep(orient, bx, by, scale, x, y, fshat[6], front[7])
 		elseif game.mouse:getZone("res:hourglass") then game.mouse:unregisterZone("res:hourglass") end
 

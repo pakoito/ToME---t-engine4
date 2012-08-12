@@ -17946,5 +17946,11 @@
     <property name="type" value="&quot;world-encounter&quot;"/>
    </properties>
   </object>
+  <object name="Noxious Caldera" x="1125" y="1125" width="21" height="20">
+   <properties>
+    <property name="subtype" value="&quot;noxious-caldera&quot;"/>
+    <property name="type" value="&quot;world-encounter&quot;"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>

@@ -448,6 +448,7 @@ addSpot({34, 25}, "world-encounter", "lost-merchant")
 addSpot({35, 25}, "world-encounter", "lost-merchant")
 addSpot({36, 25}, "world-encounter", "lost-merchant")
 addSpot({37, 25}, "world-encounter", "lost-merchant")
+addSpot({35, 35}, "world-encounter", "noxious-caldera")
 
 -- addZone section
 addZone({5, 1, 82, 43}, "zonename", "Maj'Eyal")

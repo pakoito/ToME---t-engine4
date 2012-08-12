@@ -84,11 +84,15 @@ return {
 		-- Only run once
 		level.data.post_nicer_tiles = nil
 	end,
+	on_enter_list = {},
 	on_enter = function(_, _, newzone)
 		if game.player.level >= 12 and game.player.level <= 20 and not game.player:hasQuest("lightning-overload") then
 			game.player:grantQuest("lightning-overload")
 		elseif game.player:hasQuest("lightning-overload") then
 			game.player:hasQuest("lightning-overload"):on_wilderness()
+		end
+		for name, f in pairs(game.level.data.on_enter_list) do
+			f()
 		end
 	end
 }

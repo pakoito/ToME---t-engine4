@@ -53,7 +53,7 @@ return {
 				},
 				actor = {
 					class = "mod.class.generator.actor.Random",
-					nb_npc = {40, 40},
+					nb_npc = {30, 30},
 					filter = {type="feline"},
 					randelite = 0,
 				},
@@ -73,7 +73,7 @@ return {
 		-- Dream of vulnerability
 		if lev == 1 then
 			local f = require("mod.class.Player").new{
-				name = "frail mice", image = "npc/vermin_rodent_giant_white_mouse.png",
+				name = "frail mouse", image = "npc/vermin_rodent_giant_white_mouse.png",
 				type = "vermin", subtype = "rodent",
 				display = "r", color=colors.WHITE,
 				body = { INVEN = 10 },
