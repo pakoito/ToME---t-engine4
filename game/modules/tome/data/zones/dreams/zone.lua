@@ -65,7 +65,75 @@ return {
 					class = "engine.generator.trap.Random",
 					nb_trap = {0, 0},
 				},
-			}
+			},
+			post_process = function(level)
+				-- Add mouse tunnels
+				local Map = require "engine.Map"
+				local dirs = {}
+				for i = 1, level.map.w - 2 do for j = 1, level.map.h - 2 do
+					while true do -- Breakable
+						if level.map:checkEntity(i, j, Map.TERRAIN, "block_move") then break end
+
+						local g4 = level.map:checkEntity(i - 1, j, Map.TERRAIN, "block_move")
+						local g6 = level.map:checkEntity(i + 1, j, Map.TERRAIN, "block_move")
+						local g8 = level.map:checkEntity(i, j - 1, Map.TERRAIN, "block_move")
+						local g2 = level.map:checkEntity(i, j + 1, Map.TERRAIN, "block_move")
+
+						if g4 then for z = i - 1, 1, -1 do
+							if not level.map:checkEntity(z, j, Map.TERRAIN, "block_move") then
+								dirs[#dirs+1] = {dir=4, x1=i-1, y1=j, x2=z+1, y2=j}
+								break
+							end
+						end end
+						if g6 then for z = i + 1, level.map.w - 2 do
+							if not level.map:checkEntity(z, j, Map.TERRAIN, "block_move") then
+								dirs[#dirs+1] = {dir=6, x1=i+1, y1=j, x2=z-1, y2=j}
+								break
+							end
+						end end
+						if g8 then for z = j - 1, 1, -1 do
+							if not level.map:checkEntity(i, z, Map.TERRAIN, "block_move") then
+								dirs[#dirs+1] = {dir=8, x1=i, y1=j-1, x2=i, y2=z+1}
+								break
+							end
+						end end
+						if g2 then for z = j + 1, level.map.h - 2 do
+							if not level.map:checkEntity(i, z, Map.TERRAIN, "block_move") then
+								dirs[#dirs+1] = {dir=2, x1=i, y1=j+1, x2=i, y2=z-1}
+								break
+							end
+						end end
+
+						break -- break the while
+					end
+				end end
+
+				local nb = 0
+				while nb < 15 and #dirs > 0 do
+					local spot = rng.tableRemove(dirs)
+
+					if not level.map:checkEntity(spot.x1, spot.y1, Map.TERRAIN, "mouse_hole") and not level.map:checkEntity(spot.x2, spot.y2, Map.TERRAIN, "mouse_hole") then
+						local t1, t2
+						if spot.dir == 4 then t1, t2 = {z=5, display_x=-1.5, display_w=2, image="terrain/road_going_left_01.png"}, {z=5, display_x=-0.5, display_w=2, image="terrain/road_going_right_01.png"}
+						elseif spot.dir == 6 then t1, t2 = {z=5, display_x=-0.5, display_w=2, image="terrain/road_going_right_01.png"}, {z=5, display_x=-1.5, display_w=2, image="terrain/road_going_left_01.png"}
+						elseif spot.dir == 8 then t1, t2 = {z=5, display_y=-1.5, display_h=2, image="terrain/road_upwards_01.png"}, {z=5, display_y=-0.5, display_h=2, image="terrain/road_downwards_01.png"}
+						elseif spot.dir == 2 then t1, t2 = {z=5, display_y=-0.5, display_h=2, image="terrain/road_downwards_01.png"}, {z=5, display_y=-1.5, display_h=2, image="terrain/road_upwards_01.png"}
+						end
+
+						local g = game.zone.grid_list.DREAM_MOUSE_HOLE:clone()
+						g.add_displays[#g.add_displays+1] = mod.class.Grid.new(t1)
+						g.mouse_hole = {x=spot.x2, y=spot.y2}
+						game.zone:addEntity(level, g, "terrain", spot.x1, spot.y1)
+
+						local g = game.zone.grid_list.DREAM_MOUSE_HOLE:clone()
+						g.add_displays[#g.add_displays+1] = mod.class.Grid.new(t2)
+						g.mouse_hole = {x=spot.x1, y=spot.y1}
+						game.zone:addEntity(level, g, "terrain", spot.x2, spot.y2)
+
+						nb = nb + 1
+					end
+				end
+			end,
 		},
 	},
 
@@ -89,6 +157,7 @@ return {
 				size_category = 1,
 				level_range = {1, 1}, exp_worth = 1,
 				max_life = 10,
+				mouse_turn = game.turn,
 				resolvers.talents{
 					T_STEALTH = 12,
 					T_SHADOWSTRIKE = 5,

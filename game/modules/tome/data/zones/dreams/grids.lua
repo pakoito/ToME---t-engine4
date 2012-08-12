@@ -36,3 +36,24 @@ newEntity{
 		end
 	end,
 }
+
+newEntity{
+	define_as = "DREAM_MOUSE_HOLE",
+	type = "wall", subtype = "grass",
+	name = "mouse hole",
+	desc = "A hole small enough that only you can go through.",
+	color_r=0, color_g=0, color_b=0, notice = true,
+	image = "terrain/jungle/jungle_grass_floor_01.png",
+	add_displays = class:makeTrees("terrain/jungle/jungle_tree_", 17, 7),
+	block_move = function(self, x, y, who, act)
+		if not act or not who or not who.size_category or who.size_category > 1 then return true end
+		return false
+	end,
+	on_move = function(self, x, y, who)
+		if not who or not who.size_category or who.size_category > 1 then return end
+		if who.mouse_turn >= game.turn then return end
+		who.mouse_turn = game.turn
+		who:move(self.mouse_hole.x, self.mouse_hole.y, true)
+		if config.settings.tome.smooth_move > 0 then who:resetMoveAnim() who:setMoveAnim(x, y, 8, 5) end
+	end,
+}
