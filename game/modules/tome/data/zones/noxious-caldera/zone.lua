@@ -19,55 +19,54 @@
 
 return {
 	name = "Noxious Caldera",
+	display_name = function(x, y) return "Dogroth Caldera" end,
+	variable_zone_name = true,
 	level_range = {25, 35},
 	level_scheme = "player",
 	max_level = 1,
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
+	persistent = "zone",
 	width = 70, height = 70,
---	all_remembered = true,
 	all_lited = true,
 	day_night = true,
-	persistent = "zone",
 	color_shown = {0.9, 0.7, 0.4, 1},
 	color_obscure = {0.9*0.6, 0.7*0.6, 0.4*0.6, 0.6},
 	ambient_music = "Woods of Eremae.ogg",
 	min_material_level = 3,
 	max_material_level = 3,
 	generator =  {
-		map = {
-			class = "mod.class.generator.map.Caldera",
-			mountain = "MOUNTAIN_WALL",
-			tree = "JUNGLE_TREE",
-			grass = "JUNGLE_GRASS",
-			water = "POISON_DEEP_WATER",
-		},
-		actor = {
-			class = "mod.class.generator.actor.Random",
-			nb_npc = {20, 30},
-			filters = { {max_ood=2}, },
-			guardian = "",
-		},
-		object = {
-			class = "engine.generator.object.Random",
-			nb_object = {6, 9},
-			filters = { {type="gem"} }
-		},
-		trap = {
-			class = "engine.generator.trap.Random",
-			nb_trap = {9, 15},
-		},
 	},
 	levels =
 	{
 		[1] = {
-			generator = { map = {
-				up = "JUNGLE_UP_WILDERNESS",
-			}, },
+			generator = {
+				map = {
+					class = "mod.class.generator.map.Caldera",
+					mountain = "MOUNTAIN_WALL",
+					tree = "JUNGLE_TREE",
+					grass = "JUNGLE_GRASS",
+					water = "POISON_DEEP_WATER",
+					up = "JUNGLE_GRASS_UP_WILDERNESS",
+				},
+				actor = {
+					class = "mod.class.generator.actor.Random",
+					nb_npc = {40, 40},
+					guardian = "",
+				},
+				object = {
+					class = "engine.generator.object.Random",
+					nb_object = {6, 9},
+					filters = { {type="gem"} }
+				},
+				trap = {
+					class = "engine.generator.trap.Random",
+					nb_trap = {9, 15},
+				},
+			},
+			post_process = function(level)
+				game.state:makeWeather(level, 6, {max_nb=15, chance=1, dir=120, speed={0.1, 0.9}, alpha={0.2, 0.4}, particle_name="weather/grey_cloud_%02d"})
+			end,
 		},
 	},
-
-	post_process = function(level)
-		game.state:makeWeather(level, 6, {max_nb=15, chance=1, dir=120, speed={0.1, 0.9}, alpha={0.2, 0.4}, particle_name="weather/grey_cloud_%02d"})
-	end,
 }

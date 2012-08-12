@@ -1213,7 +1213,7 @@ function _M:setupCommands()
 			end end
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
-			self:changeLevel(1, "noxious-caldera")
+			self:changeLevel(1, "dreams")
 --			FINISH CALDERA
 do return end
 			self:registerDialog(require("mod.dialogs.DownloadCharball").new())

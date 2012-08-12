@@ -28,7 +28,7 @@ newTalent{
 	no_energy = true,
 	tactical = { BUFF = 3 },
 	getStealthPower = function(self, t) return 4 + self:getCun(10, true) * self:getTalentLevel(t) end,
-	getRadius = function(self, t) return math.floor(10 - self:getTalentLevel(t) * 1.1) end,
+	getRadius = function(self, t) return math.max(0, math.floor(10 - self:getTalentLevel(t) * 1.1)) end,
 	on_pre_use = function(self, t, silent)
 		if self:isTalentActive(t.id) then return true end
 		local armor = self:getInven("BODY") and self:getInven("BODY")[1]
@@ -112,11 +112,17 @@ newTalent{
 		self.hide_chance = t.getChance(self, t)
 		self:useTalent(self.T_STEALTH)
 		self.hide_chance = nil
+
+		for uid, e in pairs(game.level.entities) do
+			if e.ai_target and e.ai_target.actor == self then e:setTarget(nil) end
+		end
+
 		return true
 	end,
 	info = function(self, t)
 		local chance = t.getChance(self, t)
-		return ([[You have learned how to be stealthy even when in plain sight of your foes, with a %d%% chance of success. This also resets the cooldown of your stealth talent.]]):
+		return ([[You have learned how to be stealthy even when in plain sight of your foes, with a %d%% chance of success. This also resets the cooldown of your stealth talent.
+		All creatures currently following you will loose all track.]]):
 		format(chance)
 	end,
 }

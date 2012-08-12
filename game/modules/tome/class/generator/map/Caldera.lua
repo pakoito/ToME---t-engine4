@@ -78,7 +78,35 @@ function _M:generate(lev, old_lev)
 		octave = data.octave or 4,
 	}, "water", "grass")
 
+	local sx, sy, ex, ey = 1, 1, 1, 1
+
+	local sl = {}
+	for i = 1, self.map.w -2 do
+		for j = 1, self.map.h - 2 do
+			if not self.map:checkEntity(i, j, Map.TERRAIN, "block_move") then sl[#sl+1] = {x=i, y=j} end
+		end
+		if #sl > 0 then break end
+	end
+	if #sl > 0 then
+		local s = rng.table(sl)
+		sx, sy = s.x, s.y
+	end
+
+	local el = {}
+	for i = self.map.w -2, 1, -1 do
+		for j = 1, self.map.h - 2 do
+			if not self.map:checkEntity(i, j, Map.TERRAIN, "block_move") then el[#el+1] = {x=i, y=j} end
+		end
+		if #el > 0 then break end
+	end
+	if #el > 0 then
+		local s = rng.table(el)
+		ex, ey = s.x, s.y
+	end
+
+	self.map(sx, sy, Map.TERRAIN, self:resolve("up"))
+	self.map(sx, sy, Map.TERRAIN, self:resolve("down"))
+
 	-- Make stairs
-	local spots = {}
-	return 1,1,1,1, spots
+	return sx, sy, ex, ey, self.spots
 end

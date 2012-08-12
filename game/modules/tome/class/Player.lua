@@ -327,6 +327,7 @@ function _M:updateMainShader()
 		-- Moving Blur shader
 		if self:attr("invisible") then game.fbo_shader:setUniform("motionblur", 3)
 		elseif self:attr("lightning_speed") then game.fbo_shader:setUniform("motionblur", 2)
+		elseif game.level and game.level.data and game.level.data.motionblur then game.fbo_shader:setUniform("motionblur", game.level.data.motionblur)
 		else game.fbo_shader:setUniform("motionblur", 0) -- Disable
 		end
 	end

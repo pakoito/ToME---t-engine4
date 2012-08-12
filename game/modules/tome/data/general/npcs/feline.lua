@@ -26,6 +26,7 @@ newEntity{
 	autolevel = "rogue",
 	size_category = 2,
 	rank = 2,
+	infravision = 10,
 	global_speed_base = 1.25,
 	type = "animal", subtype="feline",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=2, },

@@ -214,11 +214,6 @@ newTalent{
 			end
 
 			game.logPlayer(game.player, "#LIGHT_BLUE#You are taken to the Dreamscape!")
-
-			-- Learn about solipsists
-			if target == game.player then
-				game:setAllowedBuild("psionic_solipsist", true)
-			end
 		end)
 
 		local power = self:mindCrit(t.getPower(self, t))
