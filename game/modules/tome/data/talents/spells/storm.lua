@@ -39,16 +39,21 @@ newTalent{
 		local tg = self:getTalentTarget(t)
 		local dam = self:spellCrit(t.getDamage(self, t))
 		self:project(tg, self.x, self.y, DamageType.LIGHTNING_DAZE, {daze=75, dam=rng.avg(dam / 3, dam, 3)})
-		local x, y = self.x, self.y
-		-- Lightning ball gets a special treatment to make it look neat
-		local sradius = (tg.radius + 0.5) * (engine.Map.tile_w + engine.Map.tile_h) / 2
-		local nb_forks = 16
-		local angle_diff = 360 / nb_forks
-		for i = 0, nb_forks - 1 do
-			local a = math.rad(rng.range(0+i*angle_diff,angle_diff+i*angle_diff))
-			local tx = x + math.floor(math.cos(a) * tg.radius)
-			local ty = y + math.floor(math.sin(a) * tg.radius)
-			game.level.map:particleEmitter(x, y, tg.radius, "lightning", {radius=tg.radius, grids=grids, tx=tx-x, ty=ty-y, nb_particles=25, life=8})
+
+		if core.shader.active() then
+			game.level.map:particleEmitter(self.x, self.y, tg.radius, "shader_ring", {radius=tg.radius*2, life=8}, {type="sparks"})
+		else
+			local x, y = self.x, self.y
+			-- Lightning ball gets a special treatment to make it look neat
+			local sradius = (tg.radius + 0.5) * (engine.Map.tile_w + engine.Map.tile_h) / 2
+			local nb_forks = 16
+			local angle_diff = 360 / nb_forks
+			for i = 0, nb_forks - 1 do
+				local a = math.rad(rng.range(0+i*angle_diff,angle_diff+i*angle_diff))
+				local tx = x + math.floor(math.cos(a) * tg.radius)
+				local ty = y + math.floor(math.sin(a) * tg.radius)
+				game.level.map:particleEmitter(x, y, tg.radius, "lightning", {radius=tg.radius, grids=grids, tx=tx-x, ty=ty-y, nb_particles=25, life=8})
+			end
 		end
 
 		game:playSoundNear(self, "talents/lightning")
@@ -144,10 +149,16 @@ newTalent{
 	getResistPenalty = function(self, t) return self:getTalentLevelRaw(t) * 10 end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/thunderstorm")
+		local particle
+		if core.shader.active() then
+			particle = self:addParticles(Particles.new("shader_ring_rotating", 1, {radius=1.1}, {type="sparks", hide_center=0, zoom=3, xy={self.x, self.y}}))
+		else
+			particle = self:addParticles(Particles.new("tempest", 1))
+		end
 		return {
 			dam = self:addTemporaryValue("inc_damage", {[DamageType.LIGHTNING] = t.getLightningDamageIncrease(self, t)}),
 			resist = self:addTemporaryValue("resists_pen", {[DamageType.LIGHTNING] = t.getResistPenalty(self, t)}),
-			particle = self:addParticles(Particles.new("tempest", 1)),
+			particle = particle,
 		}
 	end,
 	deactivate = function(self, t, p)

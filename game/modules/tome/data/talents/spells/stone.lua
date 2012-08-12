@@ -187,10 +187,16 @@ newTalent{
 	getResistPenalty = function(self, t) return self:getTalentLevelRaw(t) * 10 end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/earth")
+		local particle
+		if core.shader.active() then
+			particle = self:addParticles(Particles.new("shader_ring_rotating", 1, {rotation=-0.01, radius=1.1}, {type="stone", hide_center=1, xy={self.x, self.y}}))
+		else
+			particle = self:addParticles(Particles.new("crystalline_focus", 1))
+		end
 		return {
 			dam = self:addTemporaryValue("inc_damage", {[DamageType.PHYSICAL] = t.getPhysicalDamageIncrease(self, t)}),
 			resist = self:addTemporaryValue("resists_pen", {[DamageType.PHYSICAL] = t.getResistPenalty(self, t)}),
-			particle = self:addParticles(Particles.new("crystalline_focus", 1)),
+			particle = particle,
 		}
 	end,
 	deactivate = function(self, t, p)

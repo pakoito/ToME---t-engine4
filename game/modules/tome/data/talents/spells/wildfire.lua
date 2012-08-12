@@ -120,11 +120,17 @@ newTalent{
 	getResistPenalty = function(self, t) return self:getTalentLevelRaw(t) * 10 end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/fire")
+
+		local particle
+		if core.shader.active() then
+			particle = self:addParticles(Particles.new("shader_ring_rotating", 1, {radius=1.1}, {type="flames", hide_center=0, xy={self.x, self.y}}))
+		else
+			particle = self:addParticles(Particles.new("wildfire", 1))
+		end
 		return {
 			dam = self:addTemporaryValue("inc_damage", {[DamageType.FIRE] = t.getFireDamageIncrease(self, t)}),
 			resist = self:addTemporaryValue("resists_pen", {[DamageType.FIRE] = t.getResistPenalty(self, t)}),
---			particle = self:addParticles(Particles.new("ultrashield", 1, {rm=180,rM=255, gm=100, gM=200, bm=0, bM=0, am=70, aM=255, radius=0.4, density=60, life=14, instop=20})),
-			particle = self:addParticles(Particles.new("wildfire", 1)),
+			particle = particle,
 		}
 	end,
 	deactivate = function(self, t, p)

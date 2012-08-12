@@ -1215,6 +1215,8 @@ function _M:setupCommands()
 			end end
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
+			game.level.map:particleEmitter(game.player.x, game.player.y, 2, "shader_ring_rotating", {rotation=0, radius=1.4}, {type="flames", hide_center=0, xy={game.player.x, game.player.y}})
+--[[
 			local s = Shader.new("test")
 			local d = Dialog.new("Foo", 500, 500)
 			d:loadUI{}
@@ -1225,9 +1227,8 @@ function _M:setupCommands()
 				core.display.drawQuad(game.level.map.display_x, game.level.map.display_y, game.level.map.viewport.width, game.level.map.viewport.height, 255, 255, 255, 255)
 				s.shad:use(false)
 			end
-
 			game:registerDialog(d)
-
+]]
 --			self:changeLevel(1, "dreams")
 --			FINISH CALDERA : add a boss
 --			ADD NEW DREAMS

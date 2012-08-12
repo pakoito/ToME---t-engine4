@@ -19,7 +19,7 @@
 
 local DamageType = require "engine.DamageType"
 
---local print = function() end
+local print = function() end
 
 -- Internal functions
 local checkLOS = function(sx, sy, tx, ty)
