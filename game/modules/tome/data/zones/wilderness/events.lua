@@ -18,5 +18,5 @@
 -- darkgod@te4.org
 
 return { one_per_level=true,
-	{name="noxious-caldera", percent=100},
+	{name="noxious-caldera", percent=20},
 }
