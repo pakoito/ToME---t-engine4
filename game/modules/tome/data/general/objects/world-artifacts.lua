@@ -423,19 +423,9 @@ newEntity{ base = "BASE_LITE",
 	wielder = {
 		lite = 4,
 		healing_factor = 0.1,
-		talent_cd_reduction= {
-			[Talents.T_HEALING_LIGHT] = 1,
-			[Talents.T_BATHE_IN_LIGHT] = 1,
-			[Talents.T_BARRIER] = 2,
-			[Talents.T_PROVIDENCE] = 5,
-		},
+		inc_damage = {[DamageType.LIGHT]=10},
+		resists = {[DamageType.LIGHT]=30},
 	},
-	on_wear = function(self, who)
-		if who.descriptor and who.descriptor.subclass == "Sun Paladin" then
-			self:specialWearAdd({"wielder", "positive_regen"}, 0.2)
-			game.logPlayer(who, "#GOLD#You feel a swell of positive energy!")
-		end
-	end,
 }
 
 newEntity{ base = "BASE_LITE",
