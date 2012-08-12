@@ -84,7 +84,7 @@ function _M:generate()
 
 	local direct_draw= function(item, x, y, w, h, total_w, total_h, loffset_x, loffset_y, dest_area)
 		-- if there is object and is withing visible bounds
-		if game.config.settings.fbo_active and item.object and total_h + h > loffset_y and total_h < loffset_y + dest_area.h then
+		if core.display.FBOActive() and item.object and total_h + h > loffset_y and total_h < loffset_y + dest_area.h then
 			local clip_y_start, clip_y_end = 0, 0
 			-- if it started before visible area then compute its top clip
 			if total_h < loffset_y then
@@ -96,6 +96,7 @@ function _M:generate()
 			end
 			-- get entity texture with everything it has i.e particles
 			local texture = item.object:getEntityFinalTexture(nil, h, h)
+			if not texture then return 0, 0, 0, 0, 0, 0 end
 			local one_by_tex_h = 1 / h
 			texture:toScreenPrecise(x, y, h, h - clip_y_start - clip_y_end, 0, 1, clip_y_start * one_by_tex_h, (h - clip_y_end) * one_by_tex_h)
 			return h, h, 0, 0, clip_y_start, clip_y_end
