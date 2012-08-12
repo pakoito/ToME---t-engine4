@@ -67,6 +67,7 @@ if tries < 100 then
 			on_enter = function(lev)
 				game.level.turn_counter = 101 * 10
 				game.level.max_turn_counter = 101 * 10
+				game.level.turn_counter_desc = "Undeads are raising from the ground, you must hold on!"
 				game.level.nb_pop = 1
 			end,
 			on_turn = function(self)

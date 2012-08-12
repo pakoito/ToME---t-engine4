@@ -110,6 +110,8 @@ return {
 		game.player.changed = true
 		level.turn_counter = 60 --5 turns before action starts.
 		level.max_turn_counter = 60 --5 turns before action starts.
+		level.turn_counter_desc = ""
+
 		--world.arena = nil
 		if not world.arena or not world.arena.ver then
 			local emptyScore = {name = nil, score = 0, perk = nil, wave = 1, sex = nil, race = nil, class = nil}

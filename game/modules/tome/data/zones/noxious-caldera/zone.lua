@@ -69,4 +69,26 @@ return {
 			end,
 		},
 	},
+
+	fumes_active = true,
+
+	on_enter = function()
+		if not game.level.data.fumes_active or game.player:attr("no_breath") then return end
+		if game.level.turn_counter then return end
+
+		game.level.turn_counter = 60 * 10
+		game.level.max_turn_counter = 60 * 10
+		game.level.turn_counter_desc = "The noxious fumes of the caldera are slowly affecting you..."
+	end,
+
+	on_turn = function(self)
+		if not game.level.turn_counter then return end
+
+		game.level.turn_counter = game.level.turn_counter - 1
+		game.player.changed = true
+		if game.level.turn_counter < 0 then
+			local dream = rng.range(1, 1)
+			game:changeLevel(dream, "dreams")
+		end
+	end,
 }

@@ -90,7 +90,7 @@ return {
 				level_range = {1, 1}, exp_worth = 1,
 				max_life = 10,
 				resolvers.talents{
-					T_STEALTH = 8,
+					T_STEALTH = 12,
 					T_SHADOWSTRIKE = 5,
 					T_HIDE_IN_PLAIN_SIGHT = 15,
 					T_EVASION = 30,
@@ -125,6 +125,12 @@ return {
 			f.energy.value = 1000
 			game.paused = true
 			game.player:updateMainShader()
+
+			require("engine.ui.Dialog"):simpleLongPopup("Deep slumber...", [[The noxious fumes have invaded all your body, you suddently fall in a deep slumber...
+	... you feel weak ...
+	... you feel unimportant ...
+	... you feel like ... food ...
+	You feel like running away!]], 600)
 		end
 	end,
 }

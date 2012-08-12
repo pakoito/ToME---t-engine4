@@ -113,6 +113,7 @@ for i, p in ipairs(list) do
 				game.level.event_cultists.queen_y = self.monolith_y
 				game.level.turn_counter = 10 * 210
 				game.level.max_turn_counter = 10 * 210
+				game.level.turn_counter_desc = "Something the cultists are doing is coming. Beware."
 				require("engine.ui.Dialog"):simplePopup("Cultist", "The cultist soul seems to be absorbed by the strange stone he was guarding. You feel like something is about to happen...")
 			end
 		end,

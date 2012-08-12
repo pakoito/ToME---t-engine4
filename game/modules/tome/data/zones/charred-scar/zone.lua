@@ -60,6 +60,7 @@ return {
 	post_process = function(level)
 		level.turn_counter = 600 * 10
 		level.max_turn_counter = 600 * 10
+		level.turn_counter_desc = "Hurry down south while the sun-paladins are holding off the orcs. Make their sacrifice worth it!"
 	end,
 
 	on_enter = function(lev, old_lev, newzone)
