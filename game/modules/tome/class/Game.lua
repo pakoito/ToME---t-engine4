@@ -1229,7 +1229,7 @@ function _M:setupCommands()
 			end
 			game:registerDialog(d)
 ]]
-			self:changeLevel(1, "dreams")
+			self:changeLevel(2, "dreams")
 --			FINISH CALDERA : add a boss
 --			ADD NEW DREAMS
 do return end

@@ -21,6 +21,7 @@ return {
 	name = "Dreams",
 	display_name = function(x, y)
 		if game.level.level == 1 then return "Dream of vulnerability" end
+		if game.level.level == 2 then return "Dream of loss" end
 		return "Dream ???"
 	end,
 	variable_zone_name = true,
@@ -135,6 +136,54 @@ return {
 				end
 			end,
 		},
+		[2] = {
+			motionblur = 3,
+			width = 50, height = 50,
+			color_shown = {0.9, 0.7, 0.4, 1},
+			color_obscure = {0.9*0.6, 0.7*0.6, 0.4*0.6, 0.6},
+			generator = {
+				map = {
+					class = "engine.generator.map.Building",
+					max_block_w = 15, max_block_h = 15,
+					max_building_w = 5, max_building_h = 5,
+					floor = "BAMBOO_HUT_FLOOR",
+					external_floor = "BAMBOO_HUT_FLOOR",
+					wall = "BAMBOO_HUT_WALL",
+					up = "BAMBOO_HUT_FLOOR",
+					down = "BAMBOO_HUT_FLOOR",
+					door = "BAMBOO_HUT_DOOR",
+					force_last_stair = true,
+					lite_room_chance = 100,
+				},
+				actor = {
+					class = "mod.class.generator.actor.Random",
+					nb_npc = {0, 0},
+					filter = {type="feline"},
+					randelite = 0,
+				},
+				object = {
+					class = "engine.generator.object.Random",
+					nb_object = {0, 0},
+				},
+				trap = {
+					class = "engine.generator.trap.Random",
+					nb_trap = {0, 0},
+				},
+			},
+			post_process = function(level)
+				level.back_shader = require("engine.Shader").new("funky_bubbles", {})
+			end,
+			background = function(level, x, y, nb_keyframes)
+				if not level.back_shader then return end
+				local sx, sy = level.map._map:getScroll()
+				local mapcoords = {(-sx + level.map.mx * level.map.tile_w) / level.map.viewport.width , (-sy + level.map.my * level.map.tile_h) / level.map.viewport.height}
+				table.print(mapcoords)
+				level.back_shader:setUniform("xy", mapcoords)
+				level.back_shader.shad:use(true)
+				core.display.drawQuad(x, y, level.map.viewport.width, level.map.viewport.height, 255, 255, 255, 255)
+				level.back_shader.shad:use(false)
+			end,
+		},
 	},
 
 	on_enter = function(lev, old_lev)
@@ -198,11 +247,65 @@ You feel good!]], 600)
 			game.paused = true
 			game.player:updateMainShader()
 
-			require("engine.ui.Dialog"):simpleLongPopup("Deep slumber...", [[The noxious fumes have invaded all your body, you suddently fall in a deep slumber...
+			require("engine.ui.Dialog"):simpleLongPopup("Deep slumber...", [[The noxious fumes have invaded all your body, you suddenty fall into a deep slumber...
 ... you feel weak ...
 ... you feel unimportant ...
 ... you feel like ... food ...
 You feel like running away!]], 600)
+		end
+
+		-- Dream of loss
+		if lev == 2 then
+			local f = require("mod.class.Player").new{
+				name = "lost man", image = "npc/humanoid_human_townsfolk_meanlooking_mercenary01_64.png",
+				type = "humanoid", subtype = "human",
+				display = "h", color=colors.VIOLET,
+				body = { INVEN = 10 },
+				infravision = 10,
+				stats = { str=12, dex=12, mag=3, con=10, cun=10, },
+				combat = {sound = {"actions/melee", pitch=0.6, vol=1.2}, sound_miss = {"actions/melee", pitch=0.6, vol=1.2}, dam=15, atk=15, apr=3 },
+				combat_armor = 5, combat_def = 5,
+				level_range = {1, 1}, exp_worth = 1,
+				max_life = 100,
+				resolvers.talents{
+				},
+				on_die = function(self)
+					game.level:addEntity(self.summoner)
+					game:onTickEnd(function()
+						game:changeLevel(1, "noxious-caldera")
+						if self.success then
+							require("engine.ui.Dialog"):simpleLongPopup("Deep slumber...", [[As you enter the dream portal you suddenly wake up.
+You feel good!]], 600)
+							game.player:setEffect(game.player.EFF_VICTORY_RUSH_ZIGUR, 4, {})
+							world:gainAchievement("ALL_DREAMS", self.summoner, "lost")
+						else
+							game.player:takeHit(game.player.life * 2 / 3, game.player)
+						end
+					end)
+				end,
+			}
+			f:resolve()
+			f:resolve(nil, true)
+			f.summoner = game.player
+
+			local oldp = game.player
+			game.party:addMember(f, {temporary_level=1, control="full"})
+			f.x = game.player.x
+			f.y = game.player.y
+			game.party:setPlayer(f, true)
+			game.level:addEntity(f)
+			game.level.map:remove(f.x, f.y, engine.Map.ACTOR)
+			game.level:removeEntity(oldp)
+			f:move(f.x, f.y, true)
+			f.energy.value = 1000
+			game.paused = true
+			game.player:updateMainShader()
+
+			require("engine.ui.Dialog"):simpleLongPopup("Deep slumber...", [[The noxious fumes have invaded all your body, you suddenty fall into a deep slumber...
+... you feel you forgot something ...
+... you feel lost ...
+... you feel sad ...
+You forgot your wife! Find her!]], 600)
 		end
 	end,
 }

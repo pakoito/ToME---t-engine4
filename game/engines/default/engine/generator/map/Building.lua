@@ -56,7 +56,13 @@ function _M:building(leaf, spots)
 			if not self.map.room_map[i][j].walled then self.map(i, j, Map.TERRAIN, self:resolve("wall")) end
 			self.map.room_map[i][j].walled = true
 			if not (i == x1 and j == y1) and not (i == x1 and j == y2) and not (i == x2 and j == y1) and not (i == x2 and j == y2) then
-				door_grids[#door_grids+1] = {x=i,y=j}
+				if i > 0 and i < self.map.w - 1 and j > 0 and j < self.map.h - 1 and not self.map.room_map[i][j].doored then
+					if leaf.dir == 4 and i == x1 then door_grids[#door_grids+1] = {x=i,y=j}
+					elseif leaf.dir == 6 and i == x2 then door_grids[#door_grids+1] = {x=i,y=j}
+					elseif leaf.dir == 8 and i == y1 then door_grids[#door_grids+1] = {x=i,y=j}
+					elseif leaf.dir == 2 and i == y2 then door_grids[#door_grids+1] = {x=i,y=j}
+					end
+				end
 			end
 		else
 			self.map(i, j, Map.TERRAIN, self:resolve("floor"))
@@ -69,11 +75,20 @@ function _M:building(leaf, spots)
 
 	-- Door
 	local door = rng.table(door_grids)
-	self.map(door.x, door.y, Map.TERRAIN, self:resolve("door"))
+	if door then
+		self.map(door.x, door.y, Map.TERRAIN, self:resolve("door"))
+		if door.x == x1 then for z = y1, y2 do self.map.room_map[x1][z].doored = true end end
+		if door.x == x2 then for z = y1, y2 do self.map.room_map[x2][z].doored = true end end
+		if door.y == y1 then for z = x1, x2 do self.map.room_map[z][y1].doored = true end end
+		if door.y == y2 then for z = x1, x2 do self.map.room_map[z][y2].doored = true end end
+	else
+		self.gone_wrong = true
+	end
+
 	-- Eliminate inner grids that face the door
 	for i = #inner_grids, 1, -1 do
 		local g = inner_grids[i]
-		if g.x == door.x or g.y == door.y then table.remove(inner_grids, i) end
+		if door and (g.x == door.x or g.y == door.y) then table.remove(inner_grids, i) end
 	end
 
 	spots[#spots+1] = {x=math.floor((x1+x2)/2), y=math.floor((y1+y2)/2), type="building", subtype="building"}
@@ -97,13 +112,23 @@ function _M:block(leaf, spots)
 			self.map(i, j, Map.TERRAIN, self:resolve("floor"))
 		elseif (i == x1+1 or i == x2-1 or j == y1+1 or j == y2-1) and
 			not (i == x1+1 and j == y1+1) and not (i == x1+1 and j == y2-1) and not (i == x2-1 and j == y1+1) and not (i == x2-1 and j == y2-1) then
-			door_grids[#door_grids+1] = {x=i,y=j}
+			if i > 0 and i < self.map.w - 1 and j > 0 and j < self.map.h - 1 and not self.map.room_map[i][j].doored then
+				door_grids[#door_grids+1] = {x=i,y=j}
+			end
 		end
 	end end
 
 	-- Door
 	local door = rng.table(door_grids)
-	self.map(door.x, door.y, Map.TERRAIN, self:resolve("door"))
+	if door then
+		self.map(door.x, door.y, Map.TERRAIN, self:resolve("door"))
+		if door.x == x1 then for z = y1, y2 do self.map.room_map[x1][z].doored = true end end
+		if door.x == x2 then for z = y1, y2 do self.map.room_map[x2][z].doored = true end end
+		if door.y == y1 then for z = x1, x2 do self.map.room_map[z][y1].doored = true end end
+		if door.y == y2 then for z = x1, x2 do self.map.room_map[z][y2].doored = true end end
+	else
+		self.gone_wrong = true
+	end
 
 	local bsp = BSP.new(leaf.w-2, leaf.h-2, self.max_building_w, self.max_building_h)
 	bsp:partition()
@@ -131,6 +156,8 @@ function _M:generate(lev, old_lev)
 	for z, leaf in ipairs(bsp.leafs) do
 		self:block(leaf, spots)
 	end
+
+	if self.gone_wrong then return self:generate(lev, old_lev) end
 
 	local ux, uy, dx, dy
 	if self.data.edge_entrances then

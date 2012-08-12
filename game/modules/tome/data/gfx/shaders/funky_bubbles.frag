@@ -1,4 +1,3 @@
-
 //
 // Description : Array and textureless GLSL 3D simplex noise function.
 //      Author : Ian McEwan, Ashima Arts.
@@ -8,8 +7,13 @@
 //               Distributed under the MIT License. See LICENSE file.
 //
 
-uniform vec2 xy;
 uniform float tick;
+uniform vec4 color1;
+uniform vec4 color2;
+uniform float npow;
+uniform float zoom;
+uniform float time_factor;
+uniform vec2 xy;
 
 vec4 permute( vec4 x ) {
 
@@ -113,10 +117,10 @@ float surface( vec3 coord ) {
 }
 
 void main( void ) {
-	vec3 coord = vec3((gl_TexCoord[0].xy + xy) * 3.0, -tick/7000.0);
+	vec3 coord = vec3((gl_TexCoord[0].xy + xy + vec2(tick/-9000.0,tick/12000.0)) * 3.0, -tick/7000.0);
 
 	float n = surface(coord);
 	float np = pow(n, 0.3);
 
-	gl_FragColor = mix(vec4(0.2, 0.1, 0.6, 1.0 ), vec4(0.09, 0.7, 0.0, 1.0 ), n) * np;
+	gl_FragColor = mix(color1, color2, n) * np;
 }

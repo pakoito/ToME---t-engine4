@@ -67,7 +67,7 @@ if tries < 100 then
 			on_enter = function(lev)
 				game.level.turn_counter = 101 * 10
 				game.level.max_turn_counter = 101 * 10
-				game.level.turn_counter_desc = "Undeads are raising from the ground, you must hold on!"
+				game.level.turn_counter_desc = "Undead are raising from the ground, you must hold on!"
 				game.level.nb_pop = 1
 			end,
 			on_turn = function(self)
@@ -92,7 +92,7 @@ if tries < 100 then
 						end
 
 						world:gainAchievement("EVENT_OLDBATTLEFIELD", game:getPlayer(true))
-						require("engine.ui.Dialog"):simpleLongPopup("Onslaught", "You have survived the onslaught of undeads, you notice a way to climb up you had not seen before in a wall nearby.", 400)
+						require("engine.ui.Dialog"):simpleLongPopup("Onslaught", "You have survived the onslaught of undead, you notice a way to climb up you had not seen before in a wall nearby.", 400)
 					elseif game.level.turn_counter % 50 == 0 then
 						for i = 1, math.floor(game.level.nb_pop) do
 							local spot = game.level:pickSpot{type="pop", subtype="undead"}

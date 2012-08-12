@@ -286,10 +286,13 @@ newAchievement{
 	mode = "world",
 	can_gain = function(self, who, kind)
 		self[kind] = true
-		if self.mice then return true end
+		if self.mice and self.lost then return true end
 	end,
 	track = function(self)
-		return tstring{tostring((self.mice and 1 or 0))," / 1"}
+		return tstring{tostring(
+			(self.mice and 1 or 0) +
+			(self.lost and 1 or 0)
+		)," / 1"}
 	end,
 	on_gain = function(_, src, personal)
 		game:setAllowedBuild("psionic")

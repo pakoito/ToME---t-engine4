@@ -76,6 +76,16 @@ newTalent{
 						self.summoner:forceUseTalent(self.summoner.T_OVER_MIND, {ignore_energy=true})
 					end
 				end)
+				-- Pass our summoner back as the target if we're controlled...  to prevent super cheese.
+				if game.player == self then
+					local tg = {type="ball", radius=10}
+					self:project(tg, self.x, self.y, function(tx, ty)
+						local target = game.level.map(tx, ty, Map.ACTOR)
+						if target and target.ai_target.actor == self then
+							target:setTarget(self.summoner)
+						end
+					end)
+				end
 			end,
 			-- Keep them on a leash
 			on_act = function(self)
@@ -90,19 +100,19 @@ newTalent{
 						return
 					end
 					-- Clear it's targeting on teleport
-					self.ai_target.actor = nil
+					self:setTarget(nil)
 					self:move(x, y, true)
 					game.level.map:particleEmitter(x, y, 1, "generic_teleport", {rm=225, rM=255, gm=225, gM=255, bm=225, bM=255, am=35, aM=90})
 				end
-				-- Pass our summoner back as the target if we're controlled...  to prevent super cheese.
-				if game.player == self then
-					local tg = {type="ball", radius=10}
-					self:project(tg, self.x, self.y, function(tx, ty)
-						local target = game.level.map(tx, ty, Map.ACTOR)
-						if target and target.ai_target.actor == self then
-							target.ai_target.actor = self.summoner
-						end
-					end)
+			end,
+			-- Hack to make sure we top off ammo after every battle
+			on_move = function(self)
+				if game.player ~= self then
+					local a = self:hasAmmo()
+					if not a then print("[Thought-Form Bowman Ammo] - ERROR, NO AMMO") end
+					if a and a.combat.shots_left < a.combat.capacity and not self.ai_target.actor and not self:hasEffect(self.EFF_RELOADING) then
+						self:forceUseTalent(self.T_RELOAD, {})
+					end
 				end
 			end,
 
@@ -121,14 +131,13 @@ newTalent{
 			},
 			
 			resolvers.talents{ 
-				[Talents.T_HEAVE]= math.ceil(self.level/10),
 				[Talents.T_WEAPON_COMBAT]= math.ceil(self.level/10),
 				[Talents.T_BOW_MASTERY]= math.ceil(self.level/10),
 				
+				[Talents.T_CRIPPLING_SHOT]= math.ceil(self.level/10),
 				[Talents.T_STEADY_SHOT]= math.ceil(self.level/10),
 				[Talents.T_RAPID_SHOT]= math.ceil(self.level/10),
 				
-
 				[Talents.T_PSYCHOMETRY]= math.floor(self:getTalentLevel(self.T_TRANSCENDENT_THOUGHT_FORMS)),
 				[Talents.T_BIOFEEDBACK]= math.floor(self:getTalentLevel(self.T_TRANSCENDENT_THOUGHT_FORMS)),
 				[Talents.T_LUCID_DREAMER]= math.floor(self:getTalentLevel(self.T_TRANSCENDENT_THOUGHT_FORMS)),
@@ -165,7 +174,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local stat = t.getStatBonus(self, t)
-		return ([[Forge a bowman clad in leather armor from your thoughts.  The bowman learns heave, bow mastery, combat accuracy, steady shot, and rapid shot as it levels up and has %d improved strength, %d dexterity, and %d constitution.
+		return ([[Forge a bowman clad in leather armor from your thoughts.  The bowman learns bow mastery, combat accuracy, steady shot, crippling shot, and rapid shot as it levels up and has %d improved strength, %d dexterity, and %d constitution.
 		The stat bonuses will improve with your mindpower.]]):format(stat/2, stat, stat/2)
 	end,
 }
@@ -234,7 +243,7 @@ newTalent{
 					self:project(tg, self.x, self.y, function(tx, ty)
 						local target = game.level.map(tx, ty, Map.ACTOR)
 						if target and target.ai_target.actor == self then
-							target.ai_target.actor = self.summoner
+							target:setTarget(self.summoner)
 						end
 					end)
 				end
@@ -252,7 +261,7 @@ newTalent{
 						return
 					end
 					-- Clear it's targeting on teleport
-					self.ai_target.actor = nil
+					self:setTarget(nil)
 					self:move(x, y, true)
 					game.level.map:particleEmitter(x, y, 1, "generic_teleport", {rm=225, rM=255, gm=225, gM=255, bm=225, bM=255, am=35, aM=90})
 				end
@@ -385,7 +394,7 @@ newTalent{
 					self:project(tg, self.x, self.y, function(tx, ty)
 						local target = game.level.map(tx, ty, Map.ACTOR)
 						if target and target.ai_target.actor == self then
-							target.ai_target.actor = self.summoner
+							target:setTarget(self.summoner)
 						end
 					end)
 				end
@@ -403,7 +412,7 @@ newTalent{
 						return
 					end
 					-- Clear it's targeting on teleport
-					self.ai_target.actor = nil
+					self:setTarget(nil)
 					self:move(x, y, true)
 					game.level.map:particleEmitter(x, y, 1, "generic_teleport", {rm=225, rM=255, gm=225, gM=255, bm=225, bM=255, am=35, aM=90})
 				end

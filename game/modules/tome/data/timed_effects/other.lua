@@ -1686,7 +1686,7 @@ newEffect{
 
 			-- Try to insure the AI isn't attacking the invulnerable actor
 			if self.ai_target and self.ai_target.actor and self.ai_target.actor:attr("invulnerable") then
-				self.ai_target.actor = nil
+				self:setTarget(nil)
 			end
 		end
 	end,

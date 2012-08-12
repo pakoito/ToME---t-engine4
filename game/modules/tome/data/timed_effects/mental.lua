@@ -1503,9 +1503,11 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is free from the nightmare.", "-Night Terrors" end,
 	on_timeout = function(self, eff)
 		DamageType:get(DamageType.DARKNESS).projector(eff.src or self, self.x, self.y, DamageType.DARKNESS, eff.dam)
-		if rng.percent(eff.chance) then
+		local chance = eff.chance
+		if self:attr("sleep") then chance = chance * 2 end
+		if rng.percent(chance) then
 			-- Pull random effect
-			local chance = rng.range(1, 3)
+			chance = rng.range(1, 3)
 			if chance == 1 then
 				if self:canBe("blind") then
 					self:setEffect(self.EFF_BLINDED, 3, {})
@@ -1538,7 +1540,9 @@ newEffect{
 	on_timeout = function(self, eff)
 		if eff.src.dead or not game.level:hasEntity(eff.src) then eff.dur = 0 return true end
 		local t = eff.src:getTalentFromId(eff.src.T_INNER_DEMONS)
-		if rng.percent(eff.chance) then
+		local chance = eff.chance
+		if self:attr("sleep") then chance = chance * 2 end
+		if rng.percent(chance) then
 			if self:attr("sleep") or self:checkHit(eff.src:combatMindpower(), self:combatMentalResist(), 0, 95, 5) then
 				t.summon_inner_demons(eff.src, self, t)
 			else

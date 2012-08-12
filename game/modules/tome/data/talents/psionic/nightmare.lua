@@ -191,7 +191,6 @@ newTalent{
 		end
 		
 		local chance = self:mindCrit(t.getChance(self, t))
-		if target:attr("sleep") then chance = chance * 2 end
 		if target:canBe("fear") then
 			target:setEffect(target.EFF_INNER_DEMONS, t.getDuration(self, t), {src = self, chance=chance, apply_power=self:combatMindpower()})
 		else
@@ -204,7 +203,7 @@ newTalent{
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		local chance = t.getChance(self, t)
-		return ([[Brings the target's inner demons to the surface.  Each turn for %d turns there's a %d%% chance that the a demon will surface, requiring the target to make a mental save to keep it form manifesting.
+		return ([[Brings the target's inner demons to the surface.  Each turn for %d turns there's a %d%% chance that the a demon will surface, requiring the target to make a mental save to keep it from manifesting.
 		If the target is sleeping the chance will be doubled and no saving throw will be allowed.  Otherwise if the summoning is resisted the effect will end early.
 		The summon chance will scale with your mindpower.]]):format(duration, chance)
 	end,
@@ -234,7 +233,6 @@ newTalent{
 		if not target then return nil end
 
 		local chance = self:mindCrit(t.getChance(self, t))
-		if target:attr("sleep") then chance = chance * 2 end
 		if target:canBe("fear") then
 			target:setEffect(target.EFF_WAKING_NIGHTMARE, t.getDuration(self, t), {src = self, chance=t.getChance(self, t), dam=self:mindCrit(t.getDamage(self, t)), apply_power=self:combatMindpower()})
 			game.level.map:particleEmitter(target.x, target.y, 1, "generic_charge", {rm=60, rM=130, gm=20, gM=110, bm=90, bM=130, am=70, aM=180})

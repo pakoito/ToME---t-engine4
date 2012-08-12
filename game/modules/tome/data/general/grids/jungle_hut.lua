@@ -25,7 +25,7 @@ newEntity{
 	type = "floor", subtype = "bamboo hut",
 	name = "bamboo hut floor", image = "terrain/bamboo/hut_dirt_floor_01.png",
 	display = '.', color=colors.UMBER, back_color=colors.DARK_UMBER,
-	grow = "WALL",
+	grow = "BAMBOO_HUT_WALL",
 }
 
 -----------------------------------------
