@@ -25,7 +25,7 @@ defineAction{
 }
 
 defineAction{
-	default = { "sym:=g:false:true:false:false" },
+	default = { "sym:=p:false:false:false:false", "sym:=g:false:true:false:false" },
 	type = "LEVELUP",
 	group = "actions",
 	name = "Levelup window",
@@ -94,7 +94,7 @@ defineAction{
 }
 
 defineAction{
-	default = { "sym:=c", "sym:=c:false:true:false:false" },
+	default = { "sym:=c:false:false:false:false", "sym:=c:false:true:false:false" },
 	type = "SHOW_CHARACTER_SHEET",
 	group = "actions",
 	name = "Show character sheet",

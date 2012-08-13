@@ -26,6 +26,9 @@ module(..., package.seeall, class.make)
 function _M:init(data)
 	self.rooms = {}
 
+	data.tunnel_change = self.data.tunnel_change or 30
+	data.tunnel_random = self.data.tunnel_random or 10
+
 	if not data.rooms then return end
 
 	for i, file in ipairs(data.rooms) do
@@ -205,4 +208,167 @@ function _M:roomAlloc(room, id, lev, old_lev, add_check)
 		tries = tries - 1
 	end
 	return false
+end
+
+--- Random tunnel dir
+function _M:randDir(sx, sy)
+	local dirs = util.primaryDirs() --{4,6,8,2}
+	return util.dirToCoord(dirs[rng.range(1, #dirs)], sx, sy)
+end
+
+--- Find the direction in which to tunnel
+function _M:tunnelDir(x1, y1, x2, y2)
+	-- HEX TODO ?
+	local xdir = (x1 == x2) and 0 or ((x1 < x2) and 1 or -1)
+	local ydir = (y1 == y2) and 0 or ((y1 < y2) and 1 or -1)
+	if xdir ~= 0 and ydir ~= 0 then
+		if rng.percent(50) then xdir = 0
+		else ydir = 0
+		end
+	end
+	return xdir, ydir
+end
+
+--- Marks a tunnel as a tunnel and the space behind it
+function _M:markTunnel(x, y, xdir, ydir, id)
+	-- Disable the many prints of tunnelling
+--	local print = function()end
+
+	x, y = x - xdir, y - ydir
+	local dir = util.coordToDir(xdir, ydir, x, y)
+	local sides = util.dirSides(dir, x, y)
+	local mark_dirs = {dir, sides.left, sides.right}
+	for i, d in ipairs(mark_dirs) do
+		local xd, yd = util.dirToCoord(d, x, y)
+		if self.map:isBound(x+xd, y+yd) and not self.map.room_map[x+xd][y+yd].tunnel then self.map.room_map[x+xd][y+yd].tunnel = id print("mark tunnel", x+xd, y+yd , id) end
+	end
+	if not self.map.room_map[x][y].tunnel then self.map.room_map[x][y].tunnel = id print("mark tunnel", x, y , id) end
+	self.map.room_map[x][y].real_tunnel = true
+end
+
+--- Can we create a door (will it lead anywhere)
+function _M:canDoor(x, y)
+	local open_spaces = {}
+	for dir, coord in pairs(util.adjacentCoords(x, y)) do
+		open_spaces[dir] = not self.map:checkEntity(coord[1], coord[2], Map.TERRAIN, "block_move")
+	end
+
+	-- Check the cardinal directions
+	for i, dir in pairs(util.primaryDirs()) do
+		local opposed_dir = util.opposedDir(dir, x, y)
+		if open_spaces[dir] and open_spaces[opposed_dir] then
+			local sides = util.dirSides(opposed_dir, x, y)
+			-- HEX TODO: hex tiles should not use hard left/right, but this is hackish
+			if util.isHex() then
+				sides = table.clone(sides)
+				sides.hard_left = nil
+				sides.hard_right = nil
+			end
+			local blocked = true
+			for _, check_dir in pairs(sides) do
+				blocked = blocked and not open_spaces[check_dir]
+			end
+			if blocked then return true end
+		end
+	end
+	return false
+end
+
+--- Tunnel from x1,y1 to x2,y2
+function _M:tunnel(x1, y1, x2, y2, id, virtual)
+	if x1 == x2 and y1 == y2 then return end
+	-- Disable the many prints of tunnelling
+--	local print = function()end
+
+	local xdir, ydir = self:tunnelDir(x1, y1, x2, y2)
+	print("tunneling from",x1, y1, "to", x2, y2, "initial dir", xdir, ydir)
+
+	local startx, starty = x1, y1
+	local tun = {}
+
+	local tries = 2000
+	local no_move_tries = 0
+	while tries > 0 do
+		if rng.percent(self.data.tunnel_change) then
+			if rng.percent(self.data.tunnel_random) then xdir, ydir = self:randDir(x1, x2)
+			else xdir, ydir = self:tunnelDir(x1, y1, x2, y2)
+			end
+		end
+
+		local nx, ny = x1 + xdir, y1 + ydir
+		while true do
+			if self.map:isBound(nx, ny) then break end
+
+			if rng.percent(self.data.tunnel_random) then xdir, ydir = self:randDir(nx, ny)
+			else xdir, ydir = self:tunnelDir(x1, y1, x2, y2)
+			end
+			nx, ny = x1 + xdir, y1 + ydir
+		end
+		print(feat, "try pos", nx, ny, "dir", util.coordToDir(xdir, ydir, nx, ny))
+
+		if self.map.room_map[nx][ny].special then
+			print(feat, "refuse special")
+		elseif self.map.room_map[nx][ny].room then
+			tun[#tun+1] = {nx,ny,false,true}
+			x1, y1 = nx, ny
+			print(feat, "accept room")
+		elseif self.map.room_map[nx][ny].can_open ~= nil then
+			if self.map.room_map[nx][ny].can_open then
+				print(feat, "tunnel crossing can_open", nx,ny)
+				for _, coord in pairs(util.adjacentCoords(nx, ny)) do
+					if self.map:isBound(coord[1], coord[2]) and self.map.room_map[coord[1]][coord[2]].can_open then
+						self.map.room_map[coord[1]][coord[2]].can_open = false
+						print(feat, "forbidding crossing at ", coord[1], coord[2])
+					end
+				end
+				tun[#tun+1] = {nx,ny,true}
+				x1, y1 = nx, ny
+				print(feat, "accept can_open")
+			else
+				print(feat, "reject can_open")
+			end
+		elseif self.map.room_map[nx][ny].tunnel then
+			if self.map.room_map[nx][ny].tunnel ~= id or no_move_tries >= 15 then
+				tun[#tun+1] = {nx,ny}
+				x1, y1 = nx, ny
+				print(feat, "accept tunnel", self.map.room_map[nx][ny].tunnel, id)
+			else
+				print(feat, "reject tunnel", self.map.room_map[nx][ny].tunnel, id)
+			end
+		else
+			tun[#tun+1] = {nx,ny}
+			x1, y1 = nx, ny
+			print(feat, "accept normal")
+		end
+
+		if x1 == nx and y1 == ny then
+			self:markTunnel(x1, y1, xdir, ydir, id)
+			no_move_tries = 0
+		else
+			no_move_tries = no_move_tries + 1
+		end
+
+		if x1 == x2 and y1 == y2 then print(feat, "done") break end
+
+		tries = tries - 1
+	end
+
+	local doors = {}
+	for _, t in ipairs(tun) do
+		local nx, ny = t[1], t[2]
+		if t[3] and self.data.door then self.possible_doors[#self.possible_doors+1] = t end
+		if not t[4] and not virtual then
+			self.map(nx, ny, Map.TERRAIN, self:resolve('.'))
+		end
+	end
+end
+
+function _M:placeDoors(chance)
+	-- Put doors where possible
+	for _, t in ipairs(self.possible_doors) do
+		local nx, ny = t[1], t[2]
+		if rng.percent(chance) and self:canDoor(nx, ny) then
+			self.map(nx, ny, Map.TERRAIN, self:resolve("door"))
+		end
+	end
 end

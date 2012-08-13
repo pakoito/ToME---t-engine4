@@ -38,6 +38,21 @@ newEntity{
 }
 
 newEntity{
+	define_as = "DREAM2_END",
+	type = "floor", subtype = "grass",
+	name = "Dream Portal", image = "invis.png", add_mos = {{image="terrain/demon_portal.png"}},
+	display = '<', color_r=255, color_g=0, color_b=255,
+	always_remember = true,
+	notice = true,
+	on_move = function(self, x, y, who)
+		if who and who.summoner then
+			who.success = true
+			who:die(who)
+		end
+	end,
+}
+
+newEntity{
 	define_as = "DREAM_MOUSE_HOLE",
 	type = "wall", subtype = "grass",
 	name = "mouse hole",
@@ -55,6 +70,25 @@ newEntity{
 		who.mouse_turn = game.turn
 		who:move(self.mouse_hole.x, self.mouse_hole.y, true)
 		if config.settings.tome.smooth_move > 0 then who:resetMoveAnim() who:setMoveAnim(x, y, 8, 5) end
+	end,
+}
+
+newEntity{
+	define_as = "DREAM_STONE",
+	type = "floor", subtype = "grass",
+	name = "Dreamstone", image = "invis.png", add_displays = {class.new{z=15, display_h=2, display_y=-1, image="terrain/darkgreen_moonstone_06.png"}},
+	display = '<', color_r=255, color_g=0, color_b=255,
+	always_remember = true,
+	notice = true,
+	block_move = function(self, x, y, who, act)
+		if who and who.summoner and act then
+			local g = game.zone.grid_list.BAMBOO_HUT_FLOOR:clone()
+			game.zone:addEntity(game.level, g, "terrain", x, y)
+			who:heal(100)
+			who:removeEffectsFilter{status="detrimental"}
+			game.logPlayer(who, "You touch the dreamstone and it disappears. You feel better.")
+		end
+		return true
 	end,
 }
 

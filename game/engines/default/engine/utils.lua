@@ -71,6 +71,22 @@ function table.iprint(src, offset)
 	end
 end
 
+--- Generate a containing indexes between a and b and set to value v
+function table.genrange(a, b, v)
+	local t = {}
+	for i = a, b do 
+		t[i] = v
+	end
+	return t
+end
+
+--- Return a new table containing the keys from t1 without the keys from t2
+function table.minus_keys(t1, t2)
+	local t = table.clone(t1)
+	for k, _ in pairs(t2) do t[k] = nil end
+	return t
+end
+
 --- Returns a clone of a table
 -- @param tbl The original table to be cloned
 -- @param deep Boolean to determine if recursive cloning occurs

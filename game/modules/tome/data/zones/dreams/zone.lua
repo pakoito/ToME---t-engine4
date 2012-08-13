@@ -25,7 +25,7 @@ return {
 		return "Dream ???"
 	end,
 	variable_zone_name = true,
-	level_range = {25, 35},
+	level_range = {1, 1},
 	level_scheme = "player",
 	max_level = 1,
 	decay = {300, 800},
@@ -55,7 +55,7 @@ return {
 				actor = {
 					class = "mod.class.generator.actor.Random",
 					nb_npc = {20, 20},
-					filter = {type="feline"},
+					filters = {{type="feline"}},
 					randelite = 0,
 				},
 				object = {
@@ -146,7 +146,7 @@ return {
 					class = "engine.generator.map.Building",
 					max_block_w = 15, max_block_h = 15,
 					max_building_w = 5, max_building_h = 5,
-					floor = "BAMBOO_HUT_FLOOR",
+					floor = function() if rng.chance(20) then return "DREAM_STONE" else return "BAMBOO_HUT_FLOOR" end end,
 					external_floor = "BAMBOO_HUT_FLOOR",
 					wall = "BAMBOO_HUT_WALL",
 					up = "BAMBOO_HUT_FLOOR",
@@ -157,8 +157,8 @@ return {
 				},
 				actor = {
 					class = "mod.class.generator.actor.Random",
-					nb_npc = {0, 0},
-					filter = {type="feline"},
+					nb_npc = {25, 25},
+					filters = {{name="yeek illusion"}},
 					randelite = 0,
 				},
 				object = {
@@ -171,13 +171,19 @@ return {
 				},
 			},
 			post_process = function(level)
+				local list = {}
+				for uid, e in pairs(level.entities) do
+					if e.subtype == "yeek" then list[#list+1] = e end
+				end
+				local wife = rng.table(list)
+				wife.is_wife = true
+
 				level.back_shader = require("engine.Shader").new("funky_bubbles", {})
 			end,
 			background = function(level, x, y, nb_keyframes)
 				if not level.back_shader then return end
 				local sx, sy = level.map._map:getScroll()
 				local mapcoords = {(-sx + level.map.mx * level.map.tile_w) / level.map.viewport.width , (-sy + level.map.my * level.map.tile_h) / level.map.viewport.height}
-				table.print(mapcoords)
 				level.back_shader:setUniform("xy", mapcoords)
 				level.back_shader.shad:use(true)
 				core.display.drawQuad(x, y, level.map.viewport.width, level.map.viewport.height, 255, 255, 255, 255)
@@ -263,10 +269,10 @@ You feel like running away!]], 600)
 				body = { INVEN = 10 },
 				infravision = 10,
 				stats = { str=12, dex=12, mag=3, con=10, cun=10, },
-				combat = {sound = {"actions/melee", pitch=0.6, vol=1.2}, sound_miss = {"actions/melee", pitch=0.6, vol=1.2}, dam=15, atk=15, apr=3 },
+				combat = {sound = {"actions/melee", pitch=0.6, vol=1.2}, sound_miss = {"actions/melee", pitch=0.6, vol=1.2}, dam=35, atk=15, apr=3 },
 				combat_armor = 5, combat_def = 5,
 				level_range = {1, 1}, exp_worth = 1,
-				max_life = 100,
+				max_life = 100, life_regen = 0,
 				resolvers.talents{
 				},
 				on_die = function(self)

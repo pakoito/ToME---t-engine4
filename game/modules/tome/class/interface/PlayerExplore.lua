@@ -1386,7 +1386,7 @@ function _M:autoExplore()
 				end
 			end
 			for _, c in ipairs(add_values) do
-				values[c] = values[c] + add_values[c]
+				values[c] = (values[c] or 0) + (add_values[c] or 0)
 			end
 		end
 		-- ...or vault door

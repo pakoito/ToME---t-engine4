@@ -280,7 +280,7 @@ newAchievement{
 	desc = [[Destroy the naga portal in the slazish fens and be caught in the aftereffect.]],
 }
 newAchievement{
-	name = "Dreams of loneliness", id = "ALL_DREAMS",
+	name = "Dreaming my dreams", id = "ALL_DREAMS",
 	show = "full",
 	desc = [[Experience and complete all the dreams in the Dogroth Caldera.]],
 	mode = "world",
@@ -292,7 +292,7 @@ newAchievement{
 		return tstring{tostring(
 			(self.mice and 1 or 0) +
 			(self.lost and 1 or 0)
-		)," / 1"}
+		)," / 2"}
 	end,
 	on_gain = function(_, src, personal)
 		game:setAllowedBuild("psionic")

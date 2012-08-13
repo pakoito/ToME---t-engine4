@@ -3816,8 +3816,8 @@ function _M:worthExp(target)
 		elseif self.rank == 3 then mult = 3
 		elseif self.rank == 3.2 then mult = 3
 		elseif self.rank == 3.5 then mult = 11
-		elseif self.rank == 4 then mult = 40
-		elseif self.rank >= 5 then mult = 90
+		elseif self.rank == 4 then mult = 35
+		elseif self.rank >= 5 then mult = 70
 		end
 
 		return self.level * mult * self.exp_worth * (target.exp_kill_multiplier or 1)
@@ -3834,6 +3834,23 @@ function _M:worthExp(target)
 
 		return self.level * mult * self.exp_worth * (target.exp_kill_multiplier or 1)
 	end
+end
+
+--- Remove all effects based on a filter
+function _M:removeEffectsFilter(t)
+	local effs = {}
+
+	for eff_id, p in pairs(self.tmp) do
+		local e = self.tempeffect_def[eff_id]
+		if (not t.type or e.type == e.type) and (not t.status or e.status == t.status) then
+			effs[#effs+1] = eff_id
+		end
+	end
+
+	while #effs > 0 do
+		local eff = rng.tableRemove(effs)
+		self:removeEffect(eff)
+	end	
 end
 
 --- Suffocate a bit, lose air

@@ -36,6 +36,46 @@ function _M:init(zone, map, level, data)
 	RoomsLoader.init(self, data)
 end
 
+function _M:doorOnWall(wall)
+	if wall.vert then
+		local j = rng.table(table.keys(wall.ps))
+		self.map(wall.base, j, Map.TERRAIN, self:resolve("door"))
+	else
+		local i = rng.table(table.keys(wall.ps))
+		self.map(i, wall.base, Map.TERRAIN, self:resolve("door"))
+	end
+	wall.doored = true
+end
+
+function _M:addWall(vert, base, p1, p2)
+	local walls = self.walls
+	local ps = table.genrange(p1, p2, true)
+
+	local todel = {}
+	for z, _ in pairs(ps) do
+		local x, y
+		if vert then x, y = base, z else x, y = z, base end
+		local nb = 
+			(game.level.map:checkEntity(x - 1, y, Map.TERRAIN, "block_move") and 1 or 0) + 
+			(game.level.map:checkEntity(x + 1, y, Map.TERRAIN, "block_move") and 1 or 0) + 
+			(game.level.map:checkEntity(x, y - 1, Map.TERRAIN, "block_move") and 1 or 0) + 
+			(game.level.map:checkEntity(x, y + 1, Map.TERRAIN, "block_move") and 1 or 0)
+		if nb ~= 2 then todel[#todel+1] = z end
+	end
+	for i, z in ipairs(todel) do ps[z] = nil end
+
+	for i = 1, #walls do
+		local w = walls[i]
+		if w.vert == vert and w.base == base then 
+			w.ps = table.minus_keys(w.ps, ps)
+		end
+	end
+
+	walls[#walls+1] = {vert=vert, base=base, ps=ps}
+
+	return walls[#walls]
+end
+
 function _M:building(leaf, spots)
 --	local x1, x2 = leaf.rx + rng.range(2, math.max(2, math.floor(leaf.w / 2 - 3))), leaf.rx + leaf.w - rng.range(2, math.max(2, math.floor(leaf.w / 2 - 3)))
 --	local y1, y2 = leaf.ry + rng.range(2, math.max(2, math.floor(leaf.h / 2 - 3))), leaf.ry + leaf.h - rng.range(2, math.max(2, math.floor(leaf.h / 2 - 3)))
@@ -55,15 +95,7 @@ function _M:building(leaf, spots)
 		if i == x1 or i == x2 or j == y1 or j == y2 then
 			if not self.map.room_map[i][j].walled then self.map(i, j, Map.TERRAIN, self:resolve("wall")) end
 			self.map.room_map[i][j].walled = true
-			if not (i == x1 and j == y1) and not (i == x1 and j == y2) and not (i == x2 and j == y1) and not (i == x2 and j == y2) then
-				if i > 0 and i < self.map.w - 1 and j > 0 and j < self.map.h - 1 and not self.map.room_map[i][j].doored then
-					if leaf.dir == 4 and i == x1 then door_grids[#door_grids+1] = {x=i,y=j}
-					elseif leaf.dir == 6 and i == x2 then door_grids[#door_grids+1] = {x=i,y=j}
-					elseif leaf.dir == 8 and i == y1 then door_grids[#door_grids+1] = {x=i,y=j}
-					elseif leaf.dir == 2 and i == y2 then door_grids[#door_grids+1] = {x=i,y=j}
-					end
-				end
-			end
+			self.map.room_map[i][j].can_open = true
 		else
 			self.map(i, j, Map.TERRAIN, self:resolve("floor"))
 			if is_lit then self.map.lites(i, j, true) end
@@ -73,17 +105,12 @@ function _M:building(leaf, spots)
 		end
 	end end
 
-	-- Door
-	local door = rng.table(door_grids)
-	if door then
-		self.map(door.x, door.y, Map.TERRAIN, self:resolve("door"))
-		if door.x == x1 then for z = y1, y2 do self.map.room_map[x1][z].doored = true end end
-		if door.x == x2 then for z = y1, y2 do self.map.room_map[x2][z].doored = true end end
-		if door.y == y1 then for z = x1, x2 do self.map.room_map[z][y1].doored = true end end
-		if door.y == y2 then for z = x1, x2 do self.map.room_map[z][y2].doored = true end end
-	else
-		self.gone_wrong = true
-	end
+	local walls = {}
+	walls.up = self:addWall(false, y1, x1 + 1, x2 - 1)
+	walls.down = self:addWall(false, y2, x1 + 1, x2 - 1)
+	walls.left = self:addWall(true,  x1, y1 + 1, y2 - 1)
+	walls.right = self:addWall(true,  x2, y1 + 1, y2 - 1)
+	self.rooms[#self.rooms+1] = {cx=math.floor((x1+x2)/2), cy=math.floor((y1+y2)/2), id=#self.rooms, walls=walls}
 
 	-- Eliminate inner grids that face the door
 	for i = #inner_grids, 1, -1 do
@@ -110,25 +137,8 @@ function _M:block(leaf, spots)
 	for i = x1, x2 do for j = y1, y2 do
 		if i == x1 or i == x2 or j == y1 or j == y2 then
 			self.map(i, j, Map.TERRAIN, self:resolve("floor"))
-		elseif (i == x1+1 or i == x2-1 or j == y1+1 or j == y2-1) and
-			not (i == x1+1 and j == y1+1) and not (i == x1+1 and j == y2-1) and not (i == x2-1 and j == y1+1) and not (i == x2-1 and j == y2-1) then
-			if i > 0 and i < self.map.w - 1 and j > 0 and j < self.map.h - 1 and not self.map.room_map[i][j].doored then
-				door_grids[#door_grids+1] = {x=i,y=j}
-			end
 		end
 	end end
-
-	-- Door
-	local door = rng.table(door_grids)
-	if door then
-		self.map(door.x, door.y, Map.TERRAIN, self:resolve("door"))
-		if door.x == x1 then for z = y1, y2 do self.map.room_map[x1][z].doored = true end end
-		if door.x == x2 then for z = y1, y2 do self.map.room_map[x2][z].doored = true end end
-		if door.y == y1 then for z = x1, x2 do self.map.room_map[z][y1].doored = true end end
-		if door.y == y2 then for z = x1, x2 do self.map.room_map[z][y2].doored = true end end
-	else
-		self.gone_wrong = true
-	end
 
 	local bsp = BSP.new(leaf.w-2, leaf.h-2, self.max_building_w, self.max_building_h)
 	bsp:partition()
@@ -148,6 +158,8 @@ function _M:generate(lev, old_lev)
 
 	local spots = {}
 	self.spots = spots
+	self.walls = {}
+	self.rooms = {}
 
 	local bsp = BSP.new(self.map.w, self.map.h, self.max_block_w, self.max_block_h)
 	bsp:partition()
@@ -157,7 +169,9 @@ function _M:generate(lev, old_lev)
 		self:block(leaf, spots)
 	end
 
-	if self.gone_wrong then return self:generate(lev, old_lev) end
+	for i = 1, #self.walls do
+		self:doorOnWall(self.walls[i])
+	end
 
 	local ux, uy, dx, dy
 	if self.data.edge_entrances then

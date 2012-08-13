@@ -36,8 +36,10 @@ function _M:bumpInto(target, x, y)
 		if game.player == self and ((not config.settings.tome.actor_based_movement_mode and game.bump_attack_disabled) or (config.settings.tome.actor_based_movement_mode and self.bump_attack_disabled)) then return end
 		return self:useTalent(self.T_ATTACK, nil, nil, nil, target)
 	elseif reaction >= 0 then
-		-- Talk ?
-		if self.player and target.can_talk then
+		-- Talk ? Bump ?
+		if self.player and target.on_bump then
+			target:on_bump(self)
+		elseif self.player and target.can_talk then
 			local chat = Chat.new(target.can_talk, target, self, {npc=target, player=self})
 			chat:invoke()
 			if target.can_talk_only_once then target.can_talk = nil end
