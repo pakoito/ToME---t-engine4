@@ -1024,7 +1024,10 @@ function _M:setTile(f, w, h, last)
 		if self.descriptors_by_type.subclass then
 			local d = self.birth_descriptor_def.subclass[self.descriptors_by_type.subclass]
 			if d and d.birth_example_particles then
-				self.actor:addParticles(Particles.new(d.birth_example_particles, 1))
+				local p = d.birth_example_particles
+				if type(p) == "table" then p = rng.table(p) end
+				p = util.getval(p, self.actor)
+				if type(p) == "string" then self.actor:addParticles(Particles.new(p, 1)) end
 			end
 		end
 	end

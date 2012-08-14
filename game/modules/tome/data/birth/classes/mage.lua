@@ -17,6 +17,8 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local Particles = require "engine.Particles"
+
 newBirthDescriptor{
 	type = "class",
 	name = "Mage",
@@ -122,6 +124,29 @@ newBirthDescriptor{
 	},
 	power_source = {arcane=true},
 	stats = { mag=5, wil=3, cun=1, },
+	birth_example_particles = {
+		"arcane_power",
+		function(actor)
+			if core.shader.active() then actor:addParticles(Particles.new("shader_ring_rotating", 1, {radius=1.1}, {type="flames", hide_center=0, xy={0, 0}}))
+			else actor:addParticles(Particles.new("wildfire", 1))
+			end
+		end,
+		function(actor)
+			if core.shader.active() then actor:addParticles(Particles.new("shader_ring_rotating", 1, {rotation=-0.2, radius=1.1}, {type="sparks", hide_center=0, time_factor=40000, color1={0, 0, 1, 1}, color2={0, 1, 1, 1}, zoom=0.5, xy={0, 0}}))
+			else actor:addParticles(Particles.new("uttercold", 1))
+			end
+		end,
+		function(actor)
+			if core.shader.active() then actor:addParticles(Particles.new("shader_ring_rotating", 1, {rotation=-0.01, radius=1.1}, {type="stone", hide_center=1, xy={0, 0}}))
+			else actor:addParticles(Particles.new("crystalline_focus", 1))
+			end
+		end,
+		function(actor)
+			if core.shader.active() then actor:addParticles(Particles.new("shader_ring_rotating", 1, {radius=1.1}, {type="sparks", hide_center=0, zoom=3, xy={0, 0}}))
+			else actor:addParticles(Particles.new("tempest", 1))
+			end
+		end,
+	},
 	talents_types = {
 		["spell/arcane"]={true, 0.3},
 		["spell/fire"]={true, 0.3},
@@ -142,7 +167,6 @@ newBirthDescriptor{
 		["spell/stone"]={false, 0.3, "mage_geomancer"},
 		["spell/storm"]={false, 0.3, "mage_tempest"},
 	},
-	birth_example_particles = "arcane_power",
 	talents = {
 		[ActorTalents.T_ARCANE_POWER] = 1,
 		[ActorTalents.T_FLAME] = 1,
@@ -204,7 +228,12 @@ newBirthDescriptor{
 	unlockable_talents_types = {
 		["spell/ice"]={false, 0.2, "mage_cryomancer"},
 	},
-	birth_example_particles = "necrotic-aura",
+	birth_example_particles = {
+		"necrotic-aura",
+		function(actor)
+			actor:addParticles(Particles.new("ultrashield", 1, {rm=0, rM=0, gm=0, gM=0, bm=10, bM=100, am=70, aM=180, radius=0.4, density=60, life=14, instop=20}))
+		end,
+	},
 	talents = {
 		[ActorTalents.T_NECROTIC_AURA] = 1,
 		[ActorTalents.T_CREATE_MINIONS] = 1,
