@@ -67,6 +67,9 @@ newEntity{ define_as = "BROTOQ",
 	autolevel = "warriormage",
 	ai = "tactical", ai_state = { talent_in=3, ai_move="move_astar", },
 
+	-- Remove free melee; poor brotoq
+	forbid_corrupted_strength_blow = 0,
+
 	on_die = function(self, who)
 		game.player:resolveSource():setQuestStatus("start-dwarf", engine.Quest.COMPLETED, "brotoq")
 	end,

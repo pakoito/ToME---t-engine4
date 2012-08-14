@@ -3429,7 +3429,7 @@ function _M:postUseTalent(ab, ret)
 		end
 
 		-- Free melee blow
-		if self:knowTalent(self.T_CORRUPTED_STRENGTH) then
+		if self:knowTalent(self.T_CORRUPTED_STRENGTH) and not self:attr("forbid_corrupted_strength_blow") then
 			local tgts = {}
 			for _, c in pairs(util.adjacentCoords(self.x, self.y)) do
 				local target = game.level.map(c[1], c[2], Map.ACTOR)
