@@ -17,6 +17,6 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-return { one_per_level=true,
-	{name="noxious-caldera", percent=20},
+return {
+	{name="noxious-caldera", percent=30},
 }

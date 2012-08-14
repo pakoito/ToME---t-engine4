@@ -36,6 +36,7 @@ level.data.on_enter_list.noxious_caldera = function()
 	g:initGlow()
 	game.zone:addEntity(game.level, g, "terrain", spot.x, spot.y)
 	print("[WORLDMAP] noxious caldera at", spot.x, spot.y)
+	require("engine.ui.Dialog"):simplePopup("Ground is shaking", "You feel a tremor in the ground for a few seconds and it disappears...")
 end
 
 return true

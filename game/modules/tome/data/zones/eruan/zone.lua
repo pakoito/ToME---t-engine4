@@ -29,7 +29,7 @@ return {
 	all_lited = true,
 	day_night = true,
 	persistent = "zone",
-	ambient_music = "Bazaar of Tal-Mashad.ogg",
+	ambient_music = {"Bazaar of Tal-Mashad.ogg", "weather/desert_base.ogg"},
 	min_material_level = 4,
 	max_material_level = 4,
 	generator =  {
@@ -88,5 +88,11 @@ return {
 
 		-- Sand storms over Eruan
 		game.state:makeWeather(level, 7, {max_nb=2, chance=1, dir=70, speed={24, 50}, alpha={0.2, 0.5}, particle_name="weather/sand_light_%02d"})
+
+		game.state:makeAmbientSounds(level, {
+			desert1={ chance=250, volume_mod=0.6, pitch=0.6, random_pos={rad=10}, files={"ambient/desert/desert1","ambient/desert/desert2","ambient/desert/desert3"}},
+			desert2={ chance=250, volume_mod=1, pitch=1, random_pos={rad=10}, files={"ambient/desert/desert1","ambient/desert/desert2","ambient/desert/desert3"}},
+			desert3={ chance=250, volume_mod=1.6, pitch=1.4, random_pos={rad=10}, files={"ambient/desert/desert1","ambient/desert/desert2","ambient/desert/desert3"}},
+		})
 	end,
 }

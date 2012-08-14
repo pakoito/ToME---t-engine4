@@ -29,7 +29,7 @@ return {
 --	all_remembered = true,
 	all_lited = true,
 	day_night = true,
-	ambient_music = "March.ogg",
+	ambient_music = {"March.ogg", "weather/desert_base.ogg"},
 	min_material_level = 4,
 	max_material_level = 5,
 	generator =  {
@@ -70,6 +70,12 @@ return {
 	},
 	post_process = function(level)
 		for uid, e in pairs(level.entities) do e.faction = e.hard_faction or "orc-pride" end
+
+		game.state:makeAmbientSounds(level, {
+			desert1={ chance=250, volume_mod=0.6, pitch=0.6, random_pos={rad=10}, files={"ambient/desert/desert1","ambient/desert/desert2","ambient/desert/desert3"}},
+			desert2={ chance=250, volume_mod=1, pitch=1, random_pos={rad=10}, files={"ambient/desert/desert1","ambient/desert/desert2","ambient/desert/desert3"}},
+			desert3={ chance=250, volume_mod=1.6, pitch=1.4, random_pos={rad=10}, files={"ambient/desert/desert1","ambient/desert/desert2","ambient/desert/desert3"}},
+		})
 	end,
 	levels =
 	{
