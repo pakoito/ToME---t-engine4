@@ -30,7 +30,7 @@ return {
 	all_remembered = true,
 	day_night = true,
 	all_lited = true,
-	ambient_music = "Virtue lost.ogg",
+	ambient_music = {"Virtue lost.ogg", "weather/jungle_base.ogg"},
 
 	max_material_level = 2,
 
@@ -48,6 +48,14 @@ return {
 			nb_object = {0, 0},
 		},
 	},
+
+	post_process = function(level)
+		game.state:makeAmbientSounds(level, {
+			jungle1={ chance=250, volume_mod=0.6, pitch=0.6, random_pos={rad=10}, files={"ambient/jungle/jungle1","ambient/jungle/jungle2","ambient/jungle/jungle3"}},
+			jungle2={ chance=250, volume_mod=1, pitch=1, random_pos={rad=10}, files={"ambient/jungle/jungle1","ambient/jungle/jungle2","ambient/jungle/jungle3"}},
+			jungle3={ chance=250, volume_mod=1.6, pitch=1.4, random_pos={rad=10}, files={"ambient/jungle/jungle1","ambient/jungle/jungle2","ambient/jungle/jungle3"}},
+		})
+	end,
 
 	foreground = function(level, x, y, nb_keyframes)
 		-- Make cosmetic birds fly over
