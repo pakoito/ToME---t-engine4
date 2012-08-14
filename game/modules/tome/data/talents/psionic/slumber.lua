@@ -39,9 +39,9 @@ newTalent{
 		local power = self:combatTalentMindDamage(t, 10, 100)
 		if self:knowTalent(self.T_SANDMAN) then
 			local t = self:getTalentFromId(self.T_SANDMAN)
-			power = power + t.getSleepPowerBonus(self, t)
+			power = power * t.getSleepPowerBonus(self, t)
 		end
-		return power
+		return math.ceil(power)
 	end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
@@ -98,14 +98,14 @@ newTalent{
 	points = 5,
 	require = psi_wil_req3,
 	mode = "passive",
-	getSleepPowerBonus = function(self, t) return self:combatTalentMindDamage(t, 5, 25) end,
+	getSleepPowerBonus = function(self, t) return 1 + math.min(2, self:getTalentLevel(t)/5) end,
 	getInsomniaPower = function(self, t) return math.min(10, self:getTalentLevel(t) * 1.2) end,
 	info = function(self, t)
-		local power_bonus = t.getSleepPowerBonus(self, t)
+		local power_bonus = t.getSleepPowerBonus(self, t) - 1
 		local insomnia = t.getInsomniaPower(self, t)
-		return([[Increases the amount of damage you can deal to sleeping targets before reducing the effect duration by %d and reduces the sleep immunity of your Insomnia effects by %d%%.
+		return([[Increases the amount of damage you can deal to sleeping targets before reducing the effect duration by %d%% and reduces the sleep immunity of your Insomnia effects by %d%%.
 		These effects will be directly reflected in the appropriate talent descriptions.
-		The damage threshold bonus will scale with your mindpower.]]):format(power_bonus, insomnia)
+		The damage threshold bonus will scale with your mindpower.]]):format(power_bonus * 100, insomnia)
 	end,
 }
 

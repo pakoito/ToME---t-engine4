@@ -1755,10 +1755,16 @@ function _M:onTakeHit(value, src)
 			local eff = rng.tableRemove(effs)
 			if eff[1] == "effect" then
 				local e = self:hasEffect(eff[2])
-				if e.power * e.dur < value then
-					game:onTickEnd(function() self:removeEffect(eff[2]) end) -- Happens on tick end so Night Terror can work properly
-				else
-					e.dur = math.max(0, e.dur - math.ceil(value/e.power))
+				-- Reduce the duration by 1 for every full incriment of the effect power
+				-- We add a temp_power parameter to track total damage over multiple turns
+				e.temp_power = (e.temp_power or e.power) - value
+				while e.temp_power <= 0 do
+					e.dur = e.dur - 1
+					e.temp_power = e.temp_power + e.power
+					if e.dur <=0 then
+						game:onTickEnd(function() self:removeEffect(eff[2]) end) -- Happens on tick end so Night Terror can work properly
+						break
+					end
 				end
 			end
 		end

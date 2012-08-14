@@ -40,9 +40,9 @@ newTalent{
 		local power = self:combatTalentMindDamage(t, 5, 25)
 		if self:knowTalent(self.T_SANDMAN) then
 			local t = self:getTalentFromId(self.T_SANDMAN)
-			power = power + t.getSleepPowerBonus(self, t)
+			power = power * t.getSleepPowerBonus(self, t)
 		end
-		return power
+		return math.ceil(power)
 	end,
 	doContagiousSleep = function(self, target, p, t)
 		local tg = {type="ball", radius=1, talent=t}

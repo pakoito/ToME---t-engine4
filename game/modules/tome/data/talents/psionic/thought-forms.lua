@@ -65,6 +65,12 @@ newTalent{
 				e.moddable_tile = e.summoner.moddable_tile and e.summoner.moddable_tile or nil
 				e.moddable_tile_base = e.summoner.moddable_tile_base and e.summoner.moddable_tile_base or nil
 				e.moddable_tile_ornament = e.summoner.moddable_tile_ornament and e.summoner.moddable_tile_ornament or nil
+				if e.summoner.image == "invis.png" and e.summoner.add_mos then
+					local summoner_image, summoner_h, summoner_y = e.summoner.add_mos[1].image or nil, e.summoner.add_mos[1].display_h or nil, e.summoner.add_mos[1].display_y or nil
+					if summoner_image and summoner_h and summoner_y then
+						e.add_mos = {{image=summoner_image, display_h=summoner_h, display_y=summoner_y}}
+					end
+				end
 			end),
 			-- Disable our sustain when we die
 			on_die = function(self)
@@ -226,6 +232,12 @@ newTalent{
 				e.moddable_tile = e.summoner.moddable_tile and e.summoner.moddable_tile or nil
 				e.moddable_tile_base = e.summoner.moddable_tile_base and e.summoner.moddable_tile_base or nil
 				e.moddable_tile_ornament = e.summoner.moddable_tile_ornament and e.summoner.moddable_tile_ornament or nil
+				if e.summoner.image == "invis.png" and e.summoner.add_mos then
+					local summoner_image, summoner_h, summoner_y = e.summoner.add_mos[1].image or nil, e.summoner.add_mos[1].display_h or nil, e.summoner.add_mos[1].display_y or nil
+					if summoner_image and summoner_h and summoner_y then
+						e.add_mos = {{image=summoner_image, display_h=summoner_h, display_y=summoner_y}}
+					end
+				end
 			end),
 			-- Disable our sustain when we die
 			on_die = function(self)
@@ -377,6 +389,12 @@ newTalent{
 				e.moddable_tile = e.summoner.moddable_tile and e.summoner.moddable_tile or nil
 				e.moddable_tile_base = e.summoner.moddable_tile_base and e.summoner.moddable_tile_base or nil
 				e.moddable_tile_ornament = e.summoner.moddable_tile_ornament and e.summoner.moddable_tile_ornament or nil
+				if e.summoner.image == "invis.png" and e.summoner.add_mos then
+					local summoner_image, summoner_h, summoner_y = e.summoner.add_mos[1].image or nil, e.summoner.add_mos[1].display_h or nil, e.summoner.add_mos[1].display_y or nil
+					if summoner_image and summoner_h and summoner_y then
+						e.add_mos = {{image=summoner_image, display_h=summoner_h, display_y=summoner_y}}
+					end
+				end
 			end),
 			-- Disable our sustain when we die
 			on_die = function(self)

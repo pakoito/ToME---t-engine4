@@ -39,9 +39,9 @@ newTalent{
 		local power = self:combatTalentMindDamage(t, 5, 25)
 		if self:knowTalent(self.T_SANDMAN) then
 			local t = self:getTalentFromId(self.T_SANDMAN)
-			power = power + t.getSleepPowerBonus(self, t)
+			power = power * t.getSleepPowerBonus(self, t)
 		end
-		return power
+		return math.ceil(power)
 	end,
 	getDamage = function(self, t) return self:combatTalentMindDamage(t, 10, 100) end,
 	action = function(self, t)
