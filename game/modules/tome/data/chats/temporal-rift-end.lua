@@ -38,7 +38,12 @@ I cannot stay. I still have much to do. But take this-- it should help you.
 			local g = game.zone:makeEntityByName(game.level, "terrain", "RIFT")
 			g.change_level = 3
 			g.change_zone = "daikara"
-			game.zone:addEntity(game.level, g, "terrain", player.x, player.y)
+			local oe = game.level.map(player.x, player.y, engine.Map.TERRAIN)
+			if oe:attr("temporary") and oe.old_feat then 
+				oe.old_feat = g
+			else
+				game.zone:addEntity(game.level, g, "terrain", player.x, player.y)
+			end
 		end},
 	}
 }

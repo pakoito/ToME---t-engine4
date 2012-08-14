@@ -102,27 +102,18 @@ newTalent{
 			self:unlearnTalent(self.T_JUMPGATE_TELEPORT)
  	end,
 	activate = function(self, t)
-		local terrain = game.level.map(game.player.x, game.player.y, engine.Map.TERRAIN)
-		local jumpgate = mod.class.Object.new(terrain)
-		-- Force the tile to be remembered
-	--	jumpgate.always_remember = true
-		jumpgate.old_feat = terrain
-		local jumpgate_overlay = engine.Entity.new{
-			image = "terrain/wormhole.png",
+		local oe = game.level.map(self.x, self.y, engine.Map.TERRAIN)
+		if not oe or oe:attr("temporary") then return false end
+		local e = mod.class.Object.new{
+			old_feat = oe, type = oe.type, subtype = oe.subtype,
+			name = "jumpgate", image = oe.image, add_mos = {{image = "terrain/wormhole.png"}},
 			display = '&', color=colors.PURPLE,
-			display_on_seen = true,
-			display_on_remember = true,
+			temporary = 1, -- This prevents overlapping of terrain changing effects; as this talent is a sustain it does nothing else
 		}
-		if not jumpgate.add_displays then
-			jumpgate.add_displays = {jumpgate_overlay}
-		else
-			table.append(jumpgate.add_displays, jumpgate_overlay)
-		end
-		game.level.map(game.player.x, game.player.y, engine.Map.TERRAIN, jumpgate)
+		game.level.map(game.player.x, game.player.y, engine.Map.TERRAIN, e)
+		
 		local ret = {
-			jumpgate = jumpgate,
-			jumpgate_x = game.player.x,
-			jumpgate_y = game.player.y,
+			jumpgate = e, jumpgate_x = game.player.x, jumpgate_y = game.player.y,
 			jumpgate_level = game.zone.short_name .. "-" .. game.level.level,
 			particle = self:addParticles(Particles.new("time_shield", 1))
 		}
@@ -138,6 +129,7 @@ newTalent{
 		local jumpgate_teleport = self:getTalentFromId(self.T_JUMPGATE_TELEPORT)
 		local range = jumpgate_teleport.getRange(self, jumpgate_teleport)
 		return ([[Create a shadow jumpgate at your location. As long as you sustain this spell you can use 'Jumpgate: Teleport' to instantly travel to the jumpgate as long as you are within %d tiles of it.
+		Note that stairs underneath the jumpgate will be unusable while the spell is sustained and you may need to cancel it in order to leave certain locations.
 		At talent level 4 you learn to create and sustain a second jumpgate.]]):format(range)
  	end,
  }
@@ -291,27 +283,18 @@ newTalent{
 		end
 	end,
 	activate = function(self, t)
-		local terrain = game.level.map(game.player.x, game.player.y, engine.Map.TERRAIN)
-		local jumpgate2 = mod.class.Object.new(terrain)
-		-- Force the tile to be remembered
-	--	jumpgate2.always_remember = true
-		jumpgate2.old_feat = terrain
-		local jumpgate2_overlay = engine.Entity.new{
+		local oe = game.level.map(self.x, self.y, engine.Map.TERRAIN)
+		if not oe or oe:attr("temporary") then return false end
+		local e = mod.class.Object.new{
+			old_feat = oe, type = oe.type, subtype = oe.subtype,
+			name = "jumpgate", image = oe.image, add_mos = {{image = "terrain/wormhole.png"}},
 			display = '&', color=colors.PURPLE,
-			image = "terrain/wormhole.png",
-			display_on_seen = true,
-			display_on_remember = true,
+			temporary = 1, -- This prevents overlapping of terrain changing effects; as this talent is a sustain it does nothing else
 		}
-		if not jumpgate2.add_displays then
-			jumpgate2.add_displays = {jumpgate2_overlay}
-		else
-			table.append(jumpgate2.add_displays, jumpgate2_overlay)
-		end
-		game.level.map(game.player.x, game.player.y, engine.Map.TERRAIN, jumpgate2)
+		
+		game.level.map(game.player.x, game.player.y, engine.Map.TERRAIN, e)
 		local ret = {
-			jumpgate2 = jumpgate2,
-			jumpgate2_x = game.player.x,
-			jumpgate2_y = game.player.y,
+			jumpgate2 = e, jumpgate2_x = game.player.x,	jumpgate2_y = game.player.y,
 			jumpgate2_level = game.zone.short_name .. "-" .. game.level.level,
 			particle = self:addParticles(Particles.new("time_shield", 1))
 		}

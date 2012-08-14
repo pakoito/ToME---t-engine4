@@ -220,7 +220,7 @@ newTalent{
 			triggered = function(self, x, y, who)
 				if who == self.summoned_by or who:checkHit(self.check_hit, who:combatSpellResist(), 0, 95, 15) and who:canBe("teleport") then
 					-- since we're using a precise teleport we'll look for a free grid first
-					local tx, ty = util.findFreeGrid(self.dest.x, self.dest.y, 5, true, {[Map.ACTOR]=true})
+					local tx, ty = util.findFreeGrid(self.dest.x, self.dest.y, 5, true, {[engine.Map.ACTOR]=true})
 					if tx and ty then
 						if not who:teleportRandom(tx, ty, 0) then
 							game.logSeen(who, "%s tries to enter the wormhole but a violent force pushes it back.", who.name:capitalize())

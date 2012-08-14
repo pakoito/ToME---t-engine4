@@ -1285,7 +1285,7 @@ newTalent{
 		if game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move") then return nil end
 
 		local oe = game.level.map(x, y, Map.TERRAIN)
-		if not oe or oe.is_volcano then return end
+		if not oe or oe:attr("temporary") then return end
 
 		local e = Object.new{
 			old_feat = oe,
@@ -1294,7 +1294,6 @@ newTalent{
 			display = '&', color=colors.LIGHT_RED, back_color=colors.RED,
 			always_remember = true,
 			temporary = 4 + self:getTalentLevel(t),
-			is_volcano = true,
 			x = x, y = y,
 			canAct = false,
 			nb_projs = math.floor(self:getTalentLevel(self.T_VOLCANO)),
@@ -1729,7 +1728,9 @@ newTalent{
 				game:playSoundNear(game.player, "talents/fireflash")
 
 				for i = x-1, x+1 do for j = y-1, y+1 do
-					if (core.fov.distance(x, y, i, j) < 1 or rng.percent(40)) and (game.level.map:checkEntity(i, j, engine.Map.TERRAIN, "dig") or game.level.map:checkEntity(i, j, engine.Map.TERRAIN, "grow")) then
+					local oe = game.level.map(x + i, y + j, Map.TERRAIN)
+					if oe and not oe:attr("temporary") and
+					(core.fov.distance(x, y, i, j) < 1 or rng.percent(40)) and (game.level.map:checkEntity(i, j, engine.Map.TERRAIN, "dig") or game.level.map:checkEntity(i, j, engine.Map.TERRAIN, "grow")) then
 						local g = terrains.LAVA_FLOOR:clone()
 						g:resolve() g:resolve(nil, true)
 						g.temporary = 8

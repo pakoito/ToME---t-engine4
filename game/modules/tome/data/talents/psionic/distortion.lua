@@ -157,10 +157,8 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		local _ _, x, y = self:canProject(tg, x, y)
-		if game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move") then return nil end
-
 		local oe = game.level.map(x, y, Map.TERRAIN)
-		if not oe or oe.is_maelstrom then return end
+		if not oe or oe:attr("temporary") or oe.is_maelstrom or game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move") then return nil end
 		
 		local e = Object.new{
 			old_feat = oe,

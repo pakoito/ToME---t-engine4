@@ -67,7 +67,12 @@ return {
 
 	portal_next = function(npc)
 		local g = game.zone:makeEntityByName(game.level, "terrain", "RIFT")
-		game.zone:addEntity(game.level, g, "terrain", npc.x, npc.y)
+		local oe = game.level.map(npc.x, npc.y, engine.Map.TERRAIN)
+		if oe:attr("temporary") and oe.old_feat then 
+			oe.old_feat = g
+		else
+			game.zone:addEntity(game.level, g, "terrain", npc.x, npc.y)
+		end
 	end,
 
 	background = function(level, x, y, nb_keyframes)

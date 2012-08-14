@@ -734,7 +734,7 @@ newInscription{
 	end,
 }
 
--- This is mostly a copy of Time Skip .. uuuglly
+-- This is mostly a copy of Time Skip :P
 newInscription{
 	name = "Rune of the Rift",
 	type = {"inscriptions/runes", 1},
@@ -745,40 +745,38 @@ newInscription{
 	reflectable = true,
 	requires_target = true,
 	range = 4,
+	target = function(self, t)
+		return {type="hit", range=self:getTalentRange(t), talent=t}
+	end,
 	getDamage = function(self, t) return 150 + self:getWil() * 4 end,
 	getDuration = function(self, t) return 4 end,
 	action = function(self, t)
-		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
-		local x, y, _ = self:getTarget(tg)
+		local tg = self:getTalentTarget(t)
+		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		_, x, y = self:canProject(tg, x, y)
-		local target = x and game.level.map(x, y, engine.Map.ACTOR) or nil
-		if not target then return nil end
-
+		local _ _, x, y = self:canProject(tg, x, y)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if not target then return end
 		local hit = self:checkHit(self:combatSpellpower(), target:combatSpellResist() + (target:attr("continuum_destabilization") or 0))
 		if not hit then game.logSeen(target, "%s resists!", target.name:capitalize()) return true end
 		
-		target:setEffect(target.EFF_CONTINUUM_DESTABILIZATION, 100, {power=self:combatSpellpower(0.3)})
 		self:project(tg, x, y, DamageType.TEMPORAL, self:spellCrit(t.getDamage(self, t)))
 		game.level.map:particleEmitter(x, y, 1, "temporal_thrust")
 		game:playSoundNear(self, "talents/arcane")
-
-		-- End it here if we've killed the target or the target is a player
+		self:incParadox(-60)
 		if target.dead or target.player then return true end
+		target:setEffect(target.EFF_CONTINUUM_DESTABILIZATION, 100, {power=self:combatSpellpower(0.3)})
 		
-		-- set up instability
-		local summoner = self
-		-- Store the current terrain
-		local terrain = game.level.map(target.x, target.y, engine.Map.TERRAIN)
-		-- Instability
-		local temporal_instability = mod.class.Object.new{
-			old_feat = game.level.map(target.x, target.y, engine.Map.TERRAIN),
-			name = "temporal instability", type="temporal", subtype="anomaly",
+		-- Replace the target with a temporal instability for a few turns
+		local oe = game.level.map(target.x, target.y, engine.Map.TERRAIN)
+		if not oe or oe:attr("temporary") then return true end
+		local e = mod.class.Object.new{
+			old_feat = oe, type = oe.type, subtype = oe.subtype,
+			name = "temporal instability", image = oe.image, add_mos = {{image="object/temporal_instability.png"}},
 			display = '&', color=colors.LIGHT_BLUE,
 			temporary = t.getDuration(self, t),
 			canAct = false,
 			target = target,
-			back_life = target.life,
 			act = function(self)
 				self:useEnergy()
 				self.temporary = self.temporary - 1
@@ -787,35 +785,19 @@ newInscription{
 					game.level.map(self.target.x, self.target.y, engine.Map.TERRAIN, self.old_feat)
 					game.level:removeEntity(self)
 					local mx, my = util.findFreeGrid(self.target.x, self.target.y, 20, true, {[engine.Map.ACTOR]=true})
+					self.target._rst_full = true
 					game.zone:addEntity(game.level, self.target, "actor", mx, my)
-					self.target.life = self.back_life
 				end
 			end,
-			summoner_gain_exp = true,
-			summoner = summoner,
+			summoner_gain_exp = true, summoner = self,
 		}
-		
-		-- Mixin the old terrain
-		table.update(temporal_instability, terrain)
-		-- Now update the display overlay
-		local overlay = engine.Entity.new{
-			display = '&', color=colors.LIGHT_BLUE, image="object/temporal_instability.png",
-			display_on_seen = true,
-			display_on_remember = true,
-		}
-		if not temporal_instability.add_displays then
-			temporal_instability.add_displays = {overlay}
-		else
-			table.append(temporal_instability.add_displays, overlay)
-		end
 		
 		game.logSeen(target, "%s has moved forward in time!", target.name:capitalize())
 		game.level:removeEntity(target)
-		game.level:addEntity(temporal_instability)
-		game.level.map(target.x, target.y, engine.Map.TERRAIN, temporal_instability)
-
-		self:incParadox(-60)
-
+		game.level:addEntity(e)
+		game.level.map(x, y, Map.TERRAIN, e)
+		game.nicer_tiles:updateAround(game.level, x, y)
+		game.level.map:updateMap(x, y)
 		return true
 	end,
 	info = function(self, t)

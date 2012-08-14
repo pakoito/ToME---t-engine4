@@ -133,13 +133,14 @@ newTalent{
 		end
 
 		for i = -1, 1 do for j = -1, 1 do if game.level.map:isBound(x + i, y + j) then
-			if not game.level.map:checkAllEntities(x + i, y + j, "block_move") then
+			local oe = game.level.map(x + i, y + j, Map.TERRAIN)
+			if oe and not oe:attr("temporary") and not game.level.map:checkAllEntities(x + i, y + j, "block_move") then
 				-- Ok some explanation, we make a new *OBJECT* because objects can have energy and act
 				-- it stores the current terrain in "old_feat" and restores it when it expires
 				-- We CAN set an object as a terrain because they are all entities
 
 				local e = Object.new{
-					old_feat = game.level.map(x + i, y + j, Map.TERRAIN),
+					old_feat = oe,
 					name = "summoned wall", image = "terrain/granite_wall1.png",
 					display = '#', color_r=255, color_g=255, color_b=255, back_color=colors.GREY,
 					always_remember = true,

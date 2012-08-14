@@ -126,7 +126,7 @@ newTalent{
 		-- Now build our Barrier
 		self:project(tg, x, y, function(px, py, tg, self)
 			local oe = game.level.map(px, py, Map.TERRAIN)
-			if rng.percent(50) or not oe or oe.is_forgebarrier or game.level.map:checkAllEntities(px, py, "block_move") then return end
+			if rng.percent(50) or not oe or oe:attr("temporary") or game.level.map:checkAllEntities(px, py, "block_move") then return end
 			
 			local e = Object.new{
 				old_feat = oe,
@@ -140,7 +140,6 @@ newTalent{
 				block_move = true,
 				block_sight = true,
 				temporary = t.getDuration(self, t),
-				is_forgebarrier = true,
 				x = px, y = py,
 				canAct = false,
 				dam = forge_damage,

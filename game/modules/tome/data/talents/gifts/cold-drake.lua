@@ -103,9 +103,11 @@ newTalent{
 		local _ _, _, _, x, y = self:canProject(tg, x, y)
 		if game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move") then return nil end
 
-		local addwall = function(x, y)
+		self:project(tg, x, y, function(px, py, tg, self)
+			local oe = game.level.map(px, py, Map.TERRAIN)
+			if not oe or oe:attr("temporary") or game.level.map:checkAllEntities(px, py, "block_move") then return end
 			local e = Object.new{
-				old_feat = game.level.map(x, y, Map.TRAP),
+				old_feat = oe,
 				name = "ice wall", image = "npc/iceblock.png",
 				type = "wall", subtype = "ice",
 				display = '#', color=colors.LIGHT_BLUE, back_color=colors.BLUE,
@@ -114,31 +116,26 @@ newTalent{
 				block_move = true,
 				block_sight = false,
 				temporary = 4 + self:getTalentLevel(t),
-				x = x, y = y,
+				x =px, y = py,
 				canAct = false,
 				act = function(self)
 					self:useEnergy()
 					self.temporary = self.temporary - 1
 					if self.temporary <= 0 then
-						if self.old_feat then game.level.map(self.x, self.y, engine.Map.TRAP, self.old_feat)
-						else game.level.map:remove(self.x, self.y, engine.Map.TRAP) end
+						game.level.map(self.x, self.y, engine.Map.TERRAIN, self.old_feat)
 						game.level:removeEntity(self)
+						game.level.map:updateMap(self.x, self.y)
 					end
 				end,
-				knownBy = function() return true end,
-				canTrigger = function() return false end,
-				canDisarm = function() return false end,
-				setKnown = function() end,
 				summoner_gain_exp = true,
 				summoner = self,
 			}
+			
 			game.level:addEntity(e)
-			game.level.map(x, y, Map.TRAP, e)
-		end
-
-		self:project(tg, x, y, addwall)
-
-		game.level.map:redisplay()
+			game.level.map(px, py, Map.TERRAIN, e)
+		--	game.nicer_tiles:updateAround(game.level, px, py)
+		--	game.level.map:updateMap(px, py)
+		end)
 		return true
 	end,
 	info = function(self, t)
