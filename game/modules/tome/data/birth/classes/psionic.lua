@@ -176,6 +176,13 @@ newBirthDescriptor{
 	},
 	power_source = {psionic=true},
 	stats = { str=0, wil=5, cun=4, },
+	birth_example_particles = {
+		function(actor)
+			if core.shader.active() then actor:addParticles(Particles.new("shader_shield", 1, {size_factor=1.1}, {type="shield", time_factor=-8000, llpow=1, aadjust=7, color={1, 1, 0}}))
+			else actor:addParticles(Particles.new("generic_shield", 1, {r=1, g=1, b=0, a=1}))
+			end
+		end,
+	},
 	talents_types = {
 		-- class
 		["psionic/distortion"]={true, 0.3},
