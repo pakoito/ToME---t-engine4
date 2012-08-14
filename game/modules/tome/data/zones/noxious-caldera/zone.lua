@@ -32,43 +32,44 @@ return {
 	day_night = true,
 	color_shown = {0.9, 0.7, 0.4, 1},
 	color_obscure = {0.9*0.6, 0.7*0.6, 0.4*0.6, 0.6},
-	ambient_music = "Woods of Eremae.ogg",
+	ambient_music = {"Mystery.ogg", "weather/jungle_base.ogg"},
 	min_material_level = 3,
 	max_material_level = 3,
 	generator =  {
-	},
-	levels =
-	{
-		[1] = {
-			generator = {
-				map = {
-					class = "mod.class.generator.map.Caldera",
-					mountain = "MOUNTAIN_WALL",
-					tree = "JUNGLE_TREE",
-					grass = "JUNGLE_GRASS",
-					water = "POISON_DEEP_WATER",
-					up = "JUNGLE_GRASS_UP_WILDERNESS",
-				},
-				actor = {
-					class = "mod.class.generator.actor.Random",
-					nb_npc = {40, 40},
-					guardian = "",
-				},
-				object = {
-					class = "engine.generator.object.Random",
-					nb_object = {6, 9},
-					filters = { {type="gem"} }
-				},
-				trap = {
-					class = "engine.generator.trap.Random",
-					nb_trap = {9, 15},
-				},
-			},
-			post_process = function(level)
-				game.state:makeWeatherShader(level, "weather_vapours", {move_factor=80000, evolve_factor=20000, color={1, 0.5, 0, 0.5}, zoom=3})
-			end,
+		map = {
+			class = "mod.class.generator.map.Caldera",
+			mountain = "MOUNTAIN_WALL",
+			tree = "JUNGLE_TREE",
+			grass = "JUNGLE_GRASS",
+			water = "POISON_DEEP_WATER",
+			up = "JUNGLE_GRASS_UP_WILDERNESS",
+		},
+		actor = {
+			class = "mod.class.generator.actor.Random",
+			nb_npc = {40, 40},
+			guardian = "",
+		},
+		object = {
+			class = "engine.generator.object.Random",
+			nb_object = {6, 9},
+			filters = { {type="gem"} }
+		},
+		trap = {
+			class = "engine.generator.trap.Random",
+			nb_trap = {9, 15},
 		},
 	},
+
+	post_process = function(level)
+		game.state:makeWeatherShader(level, "weather_vapours", {move_factor=80000, evolve_factor=20000, color={1, 0.5, 0, 0.5}, zoom=3})
+
+		game.state:makeAmbientSounds(level, {
+			wind={ chance=1200, volume_mod=1.9, pitch=2, random_pos={rad=10}, files={"ambient/forest/wind1","ambient/forest/wind2","ambient/forest/wind3","ambient/forest/wind4"}},
+			jungle1={ chance=250, volume_mod=0.6, pitch=0.6, random_pos={rad=10}, files={"ambient/jungle/jungle1","ambient/jungle/jungle2","ambient/jungle/jungle3"}},
+			jungle2={ chance=250, volume_mod=1, pitch=1, random_pos={rad=10}, files={"ambient/jungle/jungle1","ambient/jungle/jungle2","ambient/jungle/jungle3"}},
+			jungle3={ chance=250, volume_mod=1.6, pitch=1.4, random_pos={rad=10}, files={"ambient/jungle/jungle1","ambient/jungle/jungle2","ambient/jungle/jungle3"}},
+		})
+	end,
 
 	fumes_active = true,
 
