@@ -81,7 +81,7 @@ function _M:switchAddon(item)
 	elseif v == true then config.settings.addons[item.for_module][item.short_name] = false
 	elseif v == false then config.settings.addons[item.for_module][item.short_name] = nil
 	end
-	--self.c_adds:drawItem(item)
+	self.c_adds:generateRow(item)
 
 	local lines = {}
 	lines[#lines+1] = ("addons = {}"):format(w)
@@ -114,6 +114,5 @@ end
 
 function _M:switch()
 	self:generateList()
-	self.c_list.list = self.list
-	self.c_list:generate()
+	self.c_list:setList(self.list)
 end
