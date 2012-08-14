@@ -111,6 +111,14 @@ function _M:use(item)
 				end
 			end
 		end end
+	elseif act == "remove-all" then
+		local l = {}
+		for uid, e in pairs(game.level.entities) do
+			if not game.party:hasMember(e) then l[#l+1] = e end
+		end
+		for i, e in ipairs(l) do
+			game.level:removeEntity(e)
+		end
 	end
 end
 
@@ -128,6 +136,7 @@ function _M:generateList()
 	list[#list+1] = {name="Alter Faction", dialog="AlterFaction"}
 	list[#list+1] = {name="Give Sher'tul fortress energy", action="shertul-energy"}
 	list[#list+1] = {name="Create Trap", dialog="CreateTrap"}
+	list[#list+1] = {name="Remove all creatures", action="remove-all"}
 
 	local chars = {}
 	for i, v in ipairs(list) do
