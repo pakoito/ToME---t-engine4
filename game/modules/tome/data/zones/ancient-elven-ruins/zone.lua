@@ -28,7 +28,7 @@ return {
 --	all_remembered = true,
 --	all_lited = true,
 	persistent = "zone",
-	ambient_music = "Anne_van_Schothorst_-_Passed_Tense.ogg",
+	ambient_music = {"Anne_van_Schothorst_-_Passed_Tense.ogg", "weather/dungeon_base.ogg"},
 	min_material_level = 3,
 	max_material_level = 4,
 	generator =  {
@@ -89,5 +89,9 @@ return {
 	post_process = function(level)
 		-- Place a lore note on each level
 		game:placeRandomLoreObject("NOTE"..level.level)
+
+		game.state:makeAmbientSounds(level, {
+			dungeon2={ chance=250, volume_mod=1, pitch=1, random_pos={rad=10}, files={"ambient/dungeon/dungeon1","ambient/dungeon/dungeon2","ambient/dungeon/dungeon3","ambient/dungeon/dungeon4","ambient/dungeon/dungeon5"}},
+		})
 	end,
 }

@@ -29,7 +29,7 @@ return {
 --	all_lited = true,
 	persistent = "zone",
 	no_level_connectivity = true,
-	ambient_music = "Remembrance.ogg",
+	ambient_music = {"Remembrance.ogg","weather/dungeon_base.ogg"},
 	min_material_level = 3,
 	max_material_level = 4,
 	generator =  {
@@ -62,4 +62,9 @@ return {
 		[2] = { generator = { map = { map = "zones/tannen-tower-3" }, actor = { nb_npc = {22, 22}, filters={{special_rarity="aquatic_rarity"}} }, trap = { nb_trap = {6, 6} }, }, },
 		[1] = { generator = { map = { map = "zones/tannen-tower-4" }, }, },
 	},
+	post_process = function(level)
+		game.state:makeAmbientSounds(level, {
+			dungeon2={ chance=250, volume_mod=1, pitch=1, random_pos={rad=10}, files={"ambient/dungeon/dungeon1","ambient/dungeon/dungeon2","ambient/dungeon/dungeon3","ambient/dungeon/dungeon4","ambient/dungeon/dungeon5"}},
+		})
+	end,
 }

@@ -30,7 +30,7 @@ return {
 	persistent = "zone",
 	color_shown = {0.6, 0.6, 0.6, 1},
 	color_obscure = {0.6*0.6, 0.6*0.6, 0.6*0.6, 0.6},
-	ambient_music = "Anne_van_Schothorst_-_Passed_Tense.ogg",
+	ambient_music = {"Anne_van_Schothorst_-_Passed_Tense.ogg","weather/dungeon_base.ogg"},
 	min_material_level = 4,
 	max_material_level = 5,
 	generator =  {
@@ -80,4 +80,9 @@ return {
 			},
 		},
 	},
+	post_process = function(level)
+		game.state:makeAmbientSounds(level, {
+			dungeon2={ chance=250, volume_mod=1, pitch=1, random_pos={rad=10}, files={"ambient/dungeon/dungeon1","ambient/dungeon/dungeon2","ambient/dungeon/dungeon3","ambient/dungeon/dungeon4","ambient/dungeon/dungeon5"}},
+		})
+	end,
 }

@@ -28,7 +28,7 @@ return {
 --	all_remembered = true,
 --	all_lited = true,
 	persistent = "zone",
-	ambient_music = "Dark Secrets.ogg",
+	ambient_music = {"Dark Secrets.ogg","weather/dungeon_base.ogg"},
 	min_material_level = function() return game.state:isAdvanced() and 4 or 3 end,
 	max_material_level = function() return game.state:isAdvanced() and 5 or 4 end,
 	is_dreadfell = true,
@@ -102,6 +102,10 @@ return {
 		if level.level == 2 or level.level == 5 or level.level == 7 then
 			game:placeRandomLoreObject("UNDEAD_POEM_LEVEL_"..level.level)
 		end
+
+		game.state:makeAmbientSounds(level, {
+			dungeon2={ chance=250, volume_mod=1, pitch=1, random_pos={rad=10}, files={"ambient/dungeon/dungeon1","ambient/dungeon/dungeon2","ambient/dungeon/dungeon3","ambient/dungeon/dungeon4","ambient/dungeon/dungeon5"}},
+		})
 	end,
 	levels =
 	{

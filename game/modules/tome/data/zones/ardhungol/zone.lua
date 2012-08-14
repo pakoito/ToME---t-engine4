@@ -31,7 +31,7 @@ return {
 	-- Apply a greenish tint to all the map
 	color_shown = {0.5, 1, 0.7, 1},
 	color_obscure = {0.5*0.6, 1*0.6, 0.7*0.6, 0.6},
-	ambient_music = "The Ancients.ogg",
+	ambient_music = {"The Ancients.ogg","weather/dungeon_base.ogg"},
 	min_material_level = 3,
 	max_material_level = 4,
 	generator =  {
@@ -69,4 +69,10 @@ return {
 		[2] = { width = 40, height = 40, generator = {map = {min_floor=600}} },
 		[3] = { width = 20, height = 20, generator = {map = {min_floor=200}, actor = {nb_npc = {20, 25}}} },
 	},
+
+	post_process = function(level)
+		game.state:makeAmbientSounds(level, {
+			dungeon2={ chance=250, volume_mod=1, pitch=1, random_pos={rad=10}, files={"ambient/dungeon/dungeon1","ambient/dungeon/dungeon2","ambient/dungeon/dungeon3","ambient/dungeon/dungeon4","ambient/dungeon/dungeon5"}},
+		})
+	end,
 }

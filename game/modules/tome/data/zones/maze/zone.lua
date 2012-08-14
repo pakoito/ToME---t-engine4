@@ -28,7 +28,7 @@ return {
 --	all_remembered = true,
 --	all_lited = true,
 	persistent = "zone",
-	ambient_music = "The Ancients.ogg",
+	ambient_music = {"The Ancients.ogg","weather/dungeon_base.ogg"},
 	min_material_level = function() return game.state:isAdvanced() and 2 or 1 end,
 	max_material_level = function() return game.state:isAdvanced() and 4 or 3 end,
 	generator =  {
@@ -88,5 +88,9 @@ return {
 				end
 			end
 		end
+
+		game.state:makeAmbientSounds(level, {
+			dungeon2={ chance=250, volume_mod=1, pitch=1, random_pos={rad=10}, files={"ambient/dungeon/dungeon1","ambient/dungeon/dungeon2","ambient/dungeon/dungeon3","ambient/dungeon/dungeon4","ambient/dungeon/dungeon5"}},
+		})
 	end,
 }
