@@ -159,7 +159,13 @@ function _M:useTalent(id, who, force_level, ignore_cd, force_target, silent)
 			else
 				local old_level
 				if force_level then old_level = who.talents[id]; who.talents[id] = force_level end
-				local ret = ab.deactivate(who, ab, self.sustain_talents[id])
+				local p = self.sustain_talents[id]
+				if p.__tmpvals then
+					for i = 1, #p.__tmpvals do
+						self:removeTemporaryValue(p.__tmpvals[i][1], p.__tmpvals[i][2])
+					end
+				end
+				local ret = ab.deactivate(who, ab, p)
 				if force_level then who.talents[id] = old_level end
 
 				if not self:postUseTalent(ab, ret) then return end
@@ -291,7 +297,7 @@ function _M:learnTalent(t_id, force, nb)
 		end
 	end
 
-	for i = 1, (nb or 1) do 
+	for i = 1, (nb or 1) do
 		self.talents[t_id] = (self.talents[t_id] or 0) + 1
 		if t.on_learn then t.on_learn(self, t) end
 	end
@@ -644,4 +650,10 @@ end
 function _M:useTalents(add_cols)
 	local d = require("engine.dialogs.UseTalents").new(self, add_cols)
 	game:registerDialog(d)
+end
+
+--- Helper function to add temporary values and not have to remove them manualy
+function _M:talentTemporaryValue(p, k, v)
+	if not p.__tmpvals then p.__tmpvals = {} end
+	p.__tmpvals[#eff.__tmpvals+1] = {k, self:addTemporaryValue(k, v)}
 end

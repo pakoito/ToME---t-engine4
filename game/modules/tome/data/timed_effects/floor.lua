@@ -76,20 +76,6 @@ floorEffect{
 }
 
 floorEffect{
-	desc = "Spellblaze Scar", image = "talents/blood_boil.png",
-	long_desc = "The target is near a spellblaze scar, granting +25% spell critical chance, +10% fire and blight damage but critical spells will drain arcane forces.",
-	activate = function(self, eff)
-		self:effectTemporaryValue(eff, "combat_spellcrit", 25)
-		self:effectTemporaryValue(eff, "inc_damage", {[DamageType.FIRE]=10,[DamageType.BLIGHT]=10})
-		self:effectTemporaryValue(eff, "mana_on_crit", -15)
-		self:effectTemporaryValue(eff, "vim_on_crit", -10)
-		self:effectTemporaryValue(eff, "paradox_on_crit", 20)
-		self:effectTemporaryValue(eff, "positive_on_crit", -10)
-		self:effectTemporaryValue(eff, "negative_on_crit", -10)
-	end,
-}
-
-floorEffect{
 	desc = "Blighted Soil", image = "talents/blightzone.png",
 	long_desc = "The target is walking on blighted soil, reducing diseases resistance by 30% and giving a chance to be infected with a random disease.",
 	activate = function(self, eff)
