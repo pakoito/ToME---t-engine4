@@ -23,4 +23,5 @@ return { one_per_level=true,
 	{name="blighted-soil", minor=true, percent=40},
 	{name="protective-aura", minor=true, percent=20},
 	{name="necrotic-air", minor=true, percent=60, max_repeat=3},
+	{name="fell-aura", minor=true, percent=40},
 }

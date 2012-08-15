@@ -116,7 +116,7 @@ floorEffect{
 
 floorEffect{
 	desc = "Necrotic Air", image = "talents/repression.png",
-	long_desc = "The target is in a zone of necrotic air, granting -40%% healing mod. Undead creatures also get +15%% to all resistances.",
+	long_desc = "The target is in a zone of necrotic air, granting -40% healing mod. Undead creatures also get +15% to all resistances.",
 	activate = function(self, eff)
 		self:effectTemporaryValue(eff, "healing_factor", -0.4)
 		if self:attr("undead") then self:effectTemporaryValue(eff, "resists", {all=15}) end
@@ -131,5 +131,14 @@ floorEffect{
 		self:effectTemporaryValue(eff, "combat_def_ranged", eff.power)
 		self:effectTemporaryValue(eff, "combat_atk_ranged", -eff.power)
 		self:effectTemporaryValue(eff, "slow_projectiles", 30)
+	end,
+}
+
+floorEffect{
+	desc = "Fell Aura", image = "talents/shadow_mages.png",
+	long_desc = "The target is surrounded by a fell aura, granting 40% critical damage bonus but -20% to all resistances.",
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "combat_critical_power", 40)
+		self:effectTemporaryValue(eff, "resists", {all=-20})
 	end,
 }

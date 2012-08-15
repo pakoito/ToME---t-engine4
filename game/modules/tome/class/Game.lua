@@ -1219,7 +1219,7 @@ function _M:setupCommands()
 			end end
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
-			local f, err = loadfile("/data/general/events/whistling-vortex.lua")
+			local f, err = loadfile("/data/general/events/fell-aura.lua")
 			print(f, err)
 			setfenv(f, setmetatable({level=self.level, zone=self.zone}, {__index=_G}))
 			print(pcall(f))
