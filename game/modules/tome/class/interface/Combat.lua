@@ -924,6 +924,15 @@ function _M:combatAttack(weapon, ammo)
 	return self:rescaleCombatStats(self:combatAttackBase(weapon, ammo) + stats)
 end
 
+function _M:combatAttackRanged(weapon, ammo)
+	local stats
+	if self.use_psi_combat then stats = self:getCun(100, true) - 10
+	elseif weapon and weapon.wil_attack then stats = self:getWil(100, true) - 10
+	else stats = self:getDex(100, true) - 10
+	end
+	return self:rescaleCombatStats(self:combatAttackBase(weapon, ammo) + stats + (self.combat_atk_ranged or 0))
+end
+
 --- Gets the attack using only strength
 function _M:combatAttackStr(weapon, ammo)
 	return self:rescaleCombatStats(self:combatAttackBase(weapon, ammo) + (self:getStr(100, true) - 10))

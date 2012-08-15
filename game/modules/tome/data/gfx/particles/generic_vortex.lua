@@ -43,6 +43,6 @@ return { generator = function()
 	}
 end, },
 function(self)
-	self.ps:emit(500*radius)
+	self.ps:emit(200*radius)
 end,
-500*radius*2
+200*radius*2

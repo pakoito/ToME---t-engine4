@@ -127,7 +127,7 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 
 	-- Does the blow connect? yes .. complex :/
 	if tg.archery.use_psi_archery then self.use_psi_combat = true end
-	local atk, def = self:combatAttack(weapon, ammo), target:combatDefenseRanged()
+	local atk, def = self:combatAttackRanged(weapon, ammo), target:combatDefenseRanged()
 	local dam, apr, armor = self:combatDamage(ammo), self:combatAPR(ammo), target:combatArmor()
 	atk = atk + (tg.archery.atk or 0)
 	dam = dam + (tg.archery.dam or 0)
