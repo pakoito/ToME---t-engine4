@@ -59,6 +59,7 @@ newEntity{ define_as = "MINDWORM",
 		{type="jewelry", subtype="ring", autoreq=true},
 		{type="armor", subtype="light", autoreq=true},
 	},
+	resolvers.drops{chance=100, nb=1, {defined="NOTE5"} },
 	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
 
 	resolvers.talents{

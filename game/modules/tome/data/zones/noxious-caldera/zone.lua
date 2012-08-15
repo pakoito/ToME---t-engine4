@@ -37,12 +37,12 @@ return {
 	max_material_level = 3,
 	levels = {
 		[1] = {
-			width = 150, height = 30,
+			width = 150, height = 12,
 			generator =  {
 				map = {
 					class = "mod.class.generator.map.GenericTunnel",
-					start = 15,
-					stop = 15,
+					start = 6,
+					stop = 6,
 					['#'] = "MOUNTAIN_WALL",
 					['.'] = "JUNGLE_GRASS",
 					up = "JUNGLE_GRASS_UP_WILDERNESS",
@@ -108,6 +108,20 @@ return {
 			if x then
 				local m = game.zone:makeEntityByName(level, "actor", "MINDWORM")
 				if m then game.zone:addEntity(level, m, "actor", x, y) end
+			end
+		end
+
+		-- Add lore
+		if level.level == 2 then
+			game:placeRandomLoreObject("NOTE4", game.zone)
+		else
+			for i = 1, 3 do
+				local x = 25 + (i - 1) * 50
+				local ys = {}
+				for y = 1, level.map.h - 2 do if not level.map:checkEntity(x, y, engine.Map.TERRAIN, "block_move") then ys[#ys+1] = y end end
+				local y = rng.table(ys)
+				local o = game.zone:makeEntityByName(level, "object", "NOTE"..i)
+				if o then game.zone:addEntity(level, o, "object", x, y) o:identify(true) end
 			end
 		end
 	end,

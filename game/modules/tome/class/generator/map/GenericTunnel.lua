@@ -28,46 +28,33 @@ function _M:init(zone, map, level, data)
 	self.grid_list = zone.grid_list
 end
 
-function _M:makePath(sx, sy, ex, ey, wd, excentricity, points)
-	local ln = 0
-	local path = core.noise.new(1)
-
-	local j = sy
-	local dir = true
-	for i = sx, ex do
-		for jj = j - wd, j + wd do if self.map:isBound(i, jj) then self.map(i, jj, Map.TERRAIN, self:resolve(".")) end end
-		points[#points+1] = {x=i, y=j}
-
-		if i < ex - 10 then
-			local n = path:fbm_perlin(150 * i / self.map.w, 4)
-			if ln < -excentricity or ln > excentricity then
-				if (ln > 0 and n < 0) or (ln < 0 and n > 0) then dir = not dir end
-				j = util.bound(j + (dir and -1 or 1), 0, self.map.h - 1)
-			end
-			ln = n
-		else
-			-- Close in on the exit
-			if j < ey then j = j + 1
-			elseif j > ey then j = j - 1
-			end
-		end
-	end
-end
-
 function _M:generate(lev, old_lev)
 	for i = 0, self.map.w - 1 do for j = 0, self.map.h - 1 do
 		self.map(i, j, Map.TERRAIN, self:resolve("#"))
 	end end
 
-	local points = {}
-	self:makePath(0, self.data.start, self.map.w - 1, self.data.stop, 1, 0.35, points)
-	for i = 1, 10 do
-		local sp, ep
-		repeat
-			sp = rng.table(points)
-			ep = rng.table(points)
-		until ep.x - sp.x > 80
-		self:makePath(sp.x, sp.y, ep.x, ep.y, 0, 0.25, points)
+	local ln = 0
+	local path = core.noise.new(1)
+	local wideness = core.noise.new(1)
+
+	local j = self.data.start
+	local dir = true
+	for i = 0, self.map.w - 1 do
+		local wd = wideness:fbm_perlin(20 * i / self.map.w, 4)
+		wd = math.ceil(((wd + 1) / 2) * 4)
+		for jj = j - wd, j + wd do if self.map:isBound(i, jj) then self.map(i, jj, Map.TERRAIN, self:resolve(".")) end end
+
+		if i < self.map.w - 10 then
+			local n = path:fbm_perlin(350 * i / self.map.w, 4)
+			if (ln > 0 and n < 0) or (ln < 0 and n > 0) then dir = not dir end
+			j = util.bound(j + (dir and -1 or 1), 0, self.map.h - 1)
+			ln = n
+		else
+			-- Close in on the exit
+			if j < self.data.stop then j = j + 1
+			elseif j > self.data.stop then j = j - 1
+			end
+		end
 	end
 
 	-- Make stairs
