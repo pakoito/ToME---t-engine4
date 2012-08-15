@@ -156,7 +156,7 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 			if eff.nb == 0 then target:removeEffect(target.EFF_COUNTERSTRIKE) end
 			print("[ATTACK] after counterstrike", dam)
 		end
-		
+
 		if ammo and ammo.inc_damage_type then
 			for t, idt in pairs(ammo.inc_damage_type) do
 				if target.type.."/"..target.subtype == t or target.type == t then dam = dam + dam * idt / 100 break end
@@ -171,7 +171,7 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 		print("[ATTACK ARCHERY] after mult", dam)
 
 		if crit then game.logSeen(self, "#{bold}#%s performs a critical strike!#{normal}#", self.name:capitalize()) end
-		
+
 		-- Damage conversion?
 		-- Reduces base damage but converts it into another damage type
 		local conv_dam
@@ -188,7 +188,7 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 				end
 			end
 		end
-		
+
 		if weapon and weapon.convert_damage then
 			for typ, conv in pairs(weapon.convert_damage) do
 				if dam > 0 then
@@ -201,9 +201,9 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 				end
 			end
 		end
-		
+
 		DamageType:get(damtype).projector(self, target.x, target.y, damtype, math.max(0, dam), tmp)
-		
+
 		game.level.map:particleEmitter(target.x, target.y, 1, "archery")
 		hitted = true
 
@@ -214,7 +214,7 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 	end
 
 	-- cross-tier effect for accuracy vs. defense
-	local tier_diff = self:getTierDiff(atk, def)
+	local tier_diff = self:getTierDiff(atk, target:combatDefense(false, target:attr("combat_def_ct")))
 	if hitted and not target.dead and tier_diff > 0 then
 		local reapplied = false
 		-- silence the apply message it if the target already has the effect
@@ -240,7 +240,7 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 			DamageType:get(typ).projector(self, target.x, target.y, typ, dam, tmp)
 		end
 	end end
-	
+
 	if not tg.archery.hit_burst then
 		-- Ranged project (burst)
 		local weapon_burst_on_hit = weapon.burst_on_hit or {}
@@ -257,7 +257,7 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 			end
 		end end
 	end
-	
+
 	-- Ranged project (burst on crit)
 	if not tg.archery.crit_burst then
 		local weapon_burst_on_crit = weapon.burst_on_crit or {}
@@ -284,7 +284,7 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 			end
 		end
 	end
-	
+
 	-- Talent on hit...  AMMO!
 	if hitted and not target.dead and ammo and ammo.talent_on_hit and next(ammo.talent_on_hit) and not self.turn_procs.ranged_talent then
 		for tid, data in pairs(ammo.talent_on_hit) do
@@ -299,27 +299,27 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 	if hitted and weapon and weapon.special_on_hit and weapon.special_on_hit.fct and (not target.dead or weapon.special_on_hit.on_kill) then
 		weapon.special_on_hit.fct(weapon, self, target)
 	end
-	
+
 	-- Special effect... AMMO!
 	if hitted and ammo and ammo.special_on_hit and ammo.special_on_hit.fct and (not target.dead or ammo.special_on_hit.on_kill) then
 		ammo.special_on_hit.fct(ammo, self, target)
 	end
-	
+
 	-- Special effect on crit
 	if crit and weapon and weapon.special_on_crit and weapon.special_on_crit.fct and (not target.dead or weapon.special_on_crit.on_kill) then
 		weapon.special_on_crit.fct(weapon, self, target)
 	end
-	
+
 	-- Special effect on crit AMMO!
 	if crit and ammo and ammo.special_on_crit and ammo.special_on_crit.fct and (not target.dead or ammo.special_on_crit.on_kill) then
 		ammo.special_on_crit.fct(ammo, self, target)
 	end
-	
+
 	-- Special effect on kill
 	if hitted and weapon and weapon.special_on_kill and weapon.special_on_kill.fct and target.dead then
 		weapon.special_on_kill.fct(weapon, self, target)
 	end
-	
+
 	-- Special effect on kill A-A-A-AMMMO!
 	if hitted and ammo and ammo.special_on_kill and ammo.special_on_kill.fct and target.dead then
 		ammo.special_on_kill.fct(ammo, self, target)
@@ -363,7 +363,7 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 	if hitted and not target.dead and target:attr("equilibrium_regen_when_hit") then target:incEquilibrium(-target.equilibrium_regen_when_hit) end
 	if hitted and not target.dead and target:attr("psi_regen_when_hit") then target:incPsi(target.psi_regen_when_hit) end
 	if hitted and not target.dead and target:attr("hate_regen_when_hit") then target:incHate(target.hate_regen_when_hit) end
-	
+
 	-- Resource regen on hit
 	if hitted and self:attr("stamina_regen_on_hit") then self:incStamina(self.stamina_regen_on_hit) end
 	if hitted and self:attr("mana_regen_on_hit") then self:incMana(self.mana_regen_on_hit) end

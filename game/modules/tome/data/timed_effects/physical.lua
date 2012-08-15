@@ -1752,11 +1752,13 @@ newEffect{
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("block", eff.power)
 		eff.def = self:addTemporaryValue("combat_def", -eff.power)
+		eff.ctdef = self:addTemporaryValue("combat_def_ct", eff.power)
 		if eff.properties.sp then eff.spell = self:addTemporaryValue("combat_spellresist", eff.power) end
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("block", eff.tmpid)
 		self:removeTemporaryValue("combat_def", eff.def)
+		self:removeTemporaryValue("combat_def_ct", eff.ctdef)
 		if eff.properties.sp then self:removeTemporaryValue("combat_spellresist", eff.spell) end
 	end,
 }

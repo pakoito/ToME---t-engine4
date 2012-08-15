@@ -434,7 +434,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	end
 
 	-- cross-tier effect for accuracy vs. defense
-	local tier_diff = self:getTierDiff(atk, def)
+	local tier_diff = self:getTierDiff(atk, target:combatDefense(false, target:attr("combat_def_ct")))
 	if hitted and not target.dead and tier_diff > 0 then
 		local reapplied = false
 		-- silence the apply message it if the target already has the effect
@@ -870,18 +870,18 @@ function _M:combatDefenseBase(fake)
 end
 
 --- Gets the defense ranged
-function _M:combatDefense(fake)
+function _M:combatDefense(fake, add)
 	local base_defense = self:combatDefenseBase(true)
 	if not fake then base_defense = self:combatDefenseBase() end
-	local d = base_defense
+	local d = math.max(0, base_defense + (add or 0))
 	return self:rescaleCombatStats(d)
 end
 
 --- Gets the defense ranged
-function _M:combatDefenseRanged(fake)
+function _M:combatDefenseRanged(fake, add)
 	local base_defense = self:combatDefenseBase(true)
 	if not fake then base_defense = self:combatDefenseBase() end
-	local d = math.max(0, base_defense + (self.combat_def_ranged or 0))
+	local d = math.max(0, base_defense + (self.combat_def_ranged or 0) + (add or 0))
 	return self:rescaleCombatStats(d)
 end
 
