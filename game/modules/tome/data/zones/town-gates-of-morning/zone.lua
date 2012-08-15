@@ -30,7 +30,7 @@ return {
 	all_remembered = true,
 	all_lited = true,
 	day_night = true,
-	ambient_music = "For the king and the country!.ogg",
+	ambient_music = {"For the king and the country!.ogg", "weather/town_large_base.ogg"},
 
 	min_material_level = 3,
 	max_material_level = 4,
@@ -52,6 +52,10 @@ return {
 	},
 
 	post_process = function(level)
+		game.state:makeAmbientSounds(level, {
+			town_large={ chance=250, volume_mod=1, pitch=1, random_pos={rad=10}, files={"ambient/town/town_large1","ambient/town/town_large2","ambient/town/town_large3"}},
+		})
+
 		local p = game:getPlayer(true)
 		if p.faction ~= "sunwall" then return end
 

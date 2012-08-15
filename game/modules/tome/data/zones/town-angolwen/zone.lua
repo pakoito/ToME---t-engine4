@@ -31,7 +31,7 @@ return {
 	all_lited = true,
 	day_night = true,
 	persistent = "zone",
-	ambient_music = "Dreaming of Flying.ogg",
+	ambient_music = {"Dreaming of Flying.ogg", "weather/town_medium_base.ogg"},
 
 	min_material_level = function() return game.state:isAdvanced() and 3 or 1 end,
 	max_material_level = function() return game.state:isAdvanced() and 4 or 3 end,
@@ -50,6 +50,13 @@ return {
 			nb_object = {0, 0},
 		},
 	},
+
+	post_process = function(level)
+		game.state:makeAmbientSounds(level, {
+			town_medium={ chance=250, volume_mod=1, pitch=1, random_pos={rad=10}, files={"ambient/town/town_medium1","ambient/town/town_medium2","ambient/town/town_medium3","ambient/town/town_medium4"}},
+		})
+	end,
+
 	on_enter = function(lev, old_lev, zone)
 		-- Update the stairs
 		local spot = game.level:pickSpot{type="portal", subtype="back"}

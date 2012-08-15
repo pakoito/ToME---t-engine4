@@ -3856,7 +3856,7 @@ function _M:removeEffectsFilter(t)
 	while #effs > 0 do
 		local eff = rng.tableRemove(effs)
 		self:removeEffect(eff)
-	end	
+	end
 end
 
 --- Suffocate a bit, lose air

@@ -30,7 +30,7 @@ return {
 	all_remembered = true,
 	all_lited = true,
 	day_night = true,
-	ambient_music = "World of Ice.ogg",
+	ambient_music = {"World of Ice.ogg", "weather/town_small_base.ogg"},
 
 	max_material_level = 2,
 
@@ -48,4 +48,10 @@ return {
 			nb_object = {0, 0},
 		},
 	},
+
+	post_process = function(level)
+		game.state:makeAmbientSounds(level, {
+			town_small={ chance=250, volume_mod=1, pitch=1, random_pos={rad=10}, files={"ambient/town/town_small1","ambient/town/town_small2"}},
+		})
+	end,
 }

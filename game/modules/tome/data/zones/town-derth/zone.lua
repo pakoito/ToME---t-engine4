@@ -30,7 +30,7 @@ return {
 	all_remembered = true,
 	all_lited = true,
 	day_night = true,
-	ambient_music = "Virtue lost.ogg",
+	ambient_music = {"Virtue lost.ogg", "weather/town_small_base.ogg"},
 
 	max_material_level = 2,
 
@@ -48,6 +48,13 @@ return {
 			nb_object = {0, 0},
 		},
 	},
+
+	post_process = function(level)
+		game.state:makeAmbientSounds(level, {
+			town_small={ chance=250, volume_mod=1, pitch=1, random_pos={rad=10}, files={"ambient/town/town_small1","ambient/town/town_small2"}},
+		})
+	end,
+
 	on_enter = function(_, _, newzone)
 		if game.player.level <= 10 and not game.player:hasQuest("arena-unlock") then
 			local spot = game.level:pickSpot{type="npc", subtype="arena"}
@@ -60,6 +67,7 @@ return {
 			game.player:hasQuest("lightning-overload"):enter_derth()
 		end
 	end,
+
 
 	foreground = function(level, x, y, nb_keyframes)
 		-- Make cosmetic eagles fly over derth

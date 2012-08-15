@@ -51,8 +51,11 @@ newEntity{ base = "BASE_NPC_COLD_DRAKE",
 	rank = 1, size_category = 2,
 	max_life = resolvers.rngavg(40,60),
 	combat_armor = 5, combat_def = 0,
-	combat = { dam=resolvers.levelup(resolvers.rngavg(25,40), 1, 0.6), atk=resolvers.rngavg(25,50), apr=25, dammod={str=1.1} },
+	combat = { dam=resolvers.levelup(resolvers.rngavg(25,40), 1, 0.6), atk=resolvers.rngavg(25,50), apr=25, dammod={str=1.1}, sound={"creatures/cold_drake/attack%d",1,2, vol=0.4} },
 	on_melee_hit = {[DamageType.COLD]=resolvers.mbonus(7, 2)},
+
+	sound_moam = {"creatures/cold_drake/on_hit%d", 1, 2, vol=0.4},
+	sound_die = {"creatures/cold_drake/death%d", 1, 1, vol=0.4},
 
 	make_escort = {
 		{type="dragon", subtype="cold", name="cold drake hatchling", number=3, no_subescort=true},
@@ -66,9 +69,12 @@ newEntity{ base = "BASE_NPC_COLD_DRAKE", define_as = "NPC_COLD_DRAKE",
 	rarity = 3,
 	max_life = resolvers.rngavg(100,110),
 	combat_armor = 12, combat_def = 0,
-	combat = { dam=resolvers.levelup(resolvers.rngavg(25,70), 1, 1.2), atk=resolvers.rngavg(25,70), apr=25, dammod={str=1.1} },
+	combat = { dam=resolvers.levelup(resolvers.rngavg(25,70), 1, 1.2), atk=resolvers.rngavg(25,70), apr=25, dammod={str=1.1}, sound={"creatures/cold_drake/attack%d",1,2, vol=1} },
 	on_melee_hit = {[DamageType.COLD]=resolvers.mbonus(15, 10)},
 	lite = 1,
+
+	sound_moam = {"creatures/cold_drake/on_hit%d", 1, 2, vol=1},
+	sound_die = {"creatures/cold_drake/death%d", 1, 1, vol=1},
 
 	make_escort = {
 		{type="dragon", name="cold drake hatchling", number=1},
@@ -89,11 +95,14 @@ newEntity{ base = "BASE_NPC_COLD_DRAKE",
 	rank = 3,
 	max_life = resolvers.rngavg(170,190),
 	combat_armor = 30, combat_def = 0,
-	combat = { dam=resolvers.levelup(resolvers.rngavg(25,110), 1, 2), atk=resolvers.rngavg(25,70), apr=25, dammod={str=1.1} },
+	combat = { dam=resolvers.levelup(resolvers.rngavg(25,110), 1, 2), atk=resolvers.rngavg(25,70), apr=25, dammod={str=1.1}, sound={"creatures/cold_drake/attack%d",1,2, vol=1.4} },
 	on_melee_hit = {[DamageType.COLD]=resolvers.mbonus(25, 10)},
 	lite = 1,
 	stun_immune = 0.8,
 	blind_immune = 0.8,
+
+	sound_moam = {"creatures/cold_drake/on_hit%d", 1, 2, vol=1.4},
+	sound_die = {"creatures/cold_drake/death%d", 1, 1, vol=1.4},
 
 	make_escort = {
 		{type="dragon", name="cold drake", number=1},

@@ -23,11 +23,10 @@ return {
 	variable_zone_name = true,
 	level_range = {25, 35},
 	level_scheme = "player",
-	max_level = 1,
+	max_level = 2,
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
 	persistent = "zone",
-	width = 70, height = 70,
 	all_lited = true,
 	day_night = true,
 	color_shown = {0.9, 0.7, 0.4, 1},
@@ -36,29 +35,60 @@ return {
 	no_level_connectivity = true,
 	min_material_level = 3,
 	max_material_level = 3,
-	generator =  {
-		map = {
-			class = "mod.class.generator.map.Caldera",
-			mountain = "MOUNTAIN_WALL",
-			tree = "JUNGLE_TREE",
-			grass = "JUNGLE_GRASS",
-			water = "POISON_DEEP_WATER",
-			up = "JUNGLE_GRASS_UP_WILDERNESS",
-			down = "ALTAR",
+	levels = {
+		[1] = {
+			width = 150, height = 30,
+			generator =  {
+				map = {
+					class = "mod.class.generator.map.GenericTunnel",
+					start = 15,
+					stop = 15,
+					['#'] = "MOUNTAIN_WALL",
+					['.'] = "JUNGLE_GRASS",
+					up = "JUNGLE_GRASS_UP_WILDERNESS",
+					down = "JUNGLE_GRASS_DOWN6",
+				},
+				actor = {
+					class = "mod.class.generator.actor.Random",
+					nb_npc = {40, 40},
+				},
+				object = {
+					class = "engine.generator.object.Random",
+					nb_object = {6, 9},
+					filters = { {type="gem"} }
+				},
+				trap = {
+					class = "engine.generator.trap.Random",
+					nb_trap = {9, 15},
+				},
+			},
 		},
-		actor = {
-			class = "mod.class.generator.actor.Random",
-			nb_npc = {40, 40},
-			guardian = "",
-		},
-		object = {
-			class = "engine.generator.object.Random",
-			nb_object = {6, 9},
-			filters = { {type="gem"} }
-		},
-		trap = {
-			class = "engine.generator.trap.Random",
-			nb_trap = {9, 15},
+		[2] = {
+			width = 70, height = 70,
+			generator =  {
+				map = {
+					class = "mod.class.generator.map.Caldera",
+					mountain = "MOUNTAIN_WALL",
+					tree = "JUNGLE_TREE",
+					grass = "JUNGLE_GRASS",
+					water = "POISON_DEEP_WATER",
+					up = "JUNGLE_GRASS_UP4",
+					down = "ALTAR",
+				},
+				actor = {
+					class = "mod.class.generator.actor.Random",
+					nb_npc = {40, 40},
+				},
+				object = {
+					class = "engine.generator.object.Random",
+					nb_object = {6, 9},
+					filters = { {type="gem"} }
+				},
+				trap = {
+					class = "engine.generator.trap.Random",
+					nb_trap = {9, 15},
+				},
+			},
 		},
 	},
 
@@ -73,10 +103,12 @@ return {
 		})
 
 		-- Add the boss
-		local x, y = util.findFreeGrid(level.default_down.x, level.default_down.y, 10, true, {[engine.Map.ACTOR]=true})
-		if x then
-			local m = game.zone:makeEntityByName(level, "actor", "MINDWORM")
-			if m then game.zone:addEntity(level, m, "actor", x, y) end
+		if level.level == 2 then
+			local x, y = util.findFreeGrid(level.default_down.x, level.default_down.y, 10, true, {[engine.Map.ACTOR]=true})
+			if x then
+				local m = game.zone:makeEntityByName(level, "actor", "MINDWORM")
+				if m then game.zone:addEntity(level, m, "actor", x, y) end
+			end
 		end
 	end,
 
@@ -86,8 +118,8 @@ return {
 		if not game.level.data.fumes_active or game.player:attr("no_breath") then return end
 		if game.level.turn_counter then return end
 
-		game.level.turn_counter = 60 * 10
-		game.level.max_turn_counter = 60 * 10
+		game.level.turn_counter = 60 * 10 * (game.level.level == 1 and 10 or 1)
+		game.level.max_turn_counter = 60 * 10 * (game.level.level == 1 and 10 or 1)
 		game.level.turn_counter_desc = "The noxious fumes of the caldera are slowly affecting you..."
 	end,
 
@@ -105,8 +137,11 @@ return {
 	end,
 
 	run_dream = function(dangerous)
+		local x, y = game.player.x, game.player.y
 		local dream = rng.range(1, 2)
 		game:changeLevel(dream, "dreams")
 		game.level.data.real_death = dangerous
+		game.level.data.caldera_x = x
+		game.level.data.caldera_y = y
 	end,
 }

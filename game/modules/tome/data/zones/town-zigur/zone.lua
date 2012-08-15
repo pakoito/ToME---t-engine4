@@ -31,7 +31,7 @@ return {
 	all_remembered = true,
 	day_night = true,
 	all_lited = true,
-	ambient_music = "Straight Into Ambush.ogg",
+	ambient_music = {"Straight Into Ambush.ogg", "weather/town_large_base.ogg"},
 
 	min_material_level = function() return game.state:isAdvanced() and 3 or 2 end,
 	max_material_level = function() return game.state:isAdvanced() and 4 or 3 end,
@@ -50,4 +50,10 @@ return {
 			nb_object = {0, 0},
 		},
 	},
+
+	post_process = function(level)
+		game.state:makeAmbientSounds(level, {
+			town_large={ chance=250, volume_mod=1, pitch=1, random_pos={rad=10}, files={"ambient/town/town_large1","ambient/town/town_large2","ambient/town/town_large3"}},
+		})
+	end,
 }
