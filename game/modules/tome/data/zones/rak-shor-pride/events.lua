@@ -20,4 +20,5 @@
 return { one_per_level=true,
 	{group="fareast-generic", percent_factor=1.5},
 	{name="whistling-vortex", minor=true, percent=50},
+	{name="necrotic-air", minor=true, percent=100, max_repeat=3},
 }

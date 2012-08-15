@@ -19,5 +19,5 @@
 
 return { one_per_level=true,
 	{group="fareast-generic", percent_factor=1.5},
-	{name="antimagic-bush", minor=true, percent=80, max_repeat=3},
+	{name="antimagic-bush", minor=true, percent=80, max_repeat=3, forbid={1,3,5}},
 }

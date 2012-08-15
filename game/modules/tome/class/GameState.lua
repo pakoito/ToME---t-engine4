@@ -1897,14 +1897,22 @@ function _M:startEvents()
 			-- If we allow it, try to find a level to host it
 			if (e.always or rng.percent(e.percent)) and (not e.unique or not self:doneEvent(e.name)) then
 				local lev = nil
+				local forbid = e.forbid or {}
+				forbid = table.reverse(forbid)
 				if game.zone.events.one_per_level then
 					local list = {}
-					for i = 1, #levels do if #levels[i] == 0 then list[#list+1] = i end end
+					for i = 1, #levels do if #levels[i] == 0 and not forbid[i] then list[#list+1] = i end end
 					if #list > 0 then
 						lev = rng.table(list)
 					end
 				else
-					lev = rng.range(1, game.zone.max_level)
+					if forbid then
+						local t = table.genrange(1, game.zone.max_level, true)
+						t = table.minus_keys(t, forbid)
+						lev = rng.table(table.keys(t))
+					else
+						lev = rng.range(1, game.zone.max_level)
+					end
 				end
 
 				if lev then
@@ -1914,8 +1922,10 @@ function _M:startEvents()
 			end
 		end
 		for i, e in ipairs(mevts) do
+			local forbid = e.forbid or {}
+			forbid = table.reverse(forbid)
 			for lev = 1, game.zone.max_level do
-				if rng.percent(e.percent) then
+				if rng.percent(e.percent) and not forbid[lev] then
 					local lev = levels[lev]
 					lev[#lev+1] = e.name
 
