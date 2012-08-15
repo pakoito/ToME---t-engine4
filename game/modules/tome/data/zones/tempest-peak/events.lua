@@ -21,4 +21,5 @@ return { one_per_level=true,
 	{group="outdoor-majeyal-gloomy"},
 	{group="majeyal-generic"},
 	{name="icy-ground", minor=true, percent=40},
+	{name="whistling-vortex", minor=true, percent=100},
 }

@@ -24,4 +24,5 @@ return { one_per_level=true,
 	{name="cultists", percent=10},
 	{name="icy-ground", minor=true, percent=50},
 	{name="font-life", minor=true, percent=30},
+	{name="whistling-vortex", minor=true, percent=30},
 }

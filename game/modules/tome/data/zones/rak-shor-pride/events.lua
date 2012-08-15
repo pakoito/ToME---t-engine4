@@ -19,4 +19,5 @@
 
 return { one_per_level=true,
 	{group="fareast-generic", percent_factor=1.5},
+	{name="whistling-vortex", minor=true, percent=50},
 }
