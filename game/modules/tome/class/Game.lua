@@ -1215,23 +1215,8 @@ function _M:setupCommands()
 			end end
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
---			game.level.map:particleEmitter(game.player.x, game.player.y, 2, "shader_ring_rotating", {rotation=0, radius=1.4}, {type="flames", hide_center=0, xy={game.player.x, game.player.y}})
---[[
-			local s = Shader.new("test")
-			local d = Dialog.new("Foo", 500, 500)
-			d:loadUI{}
-			d.key:addBinds{ EXIT = function() game:unregisterDialog(d) end }
-			d:setupUI(false, false)
-			d.toScreen = function(self, x, y, nb_keyframes)
-				s.shad:use(true)
-				core.display.drawQuad(game.level.map.display_x, game.level.map.display_y, game.level.map.viewport.width, game.level.map.viewport.height, 255, 255, 255, 255)
-				s.shad:use(false)
-			end
-			game:registerDialog(d)
-]]
-			self:changeLevel(2, "dreams")
---			FINISH CALDERA : add a boss
---			ADD NEW DREAMS
+			local o = game.state:generateRandart{}
+			if o then o:identify(true) game.zone:addEntity(game.level,o,"object", game.player.x,game.player.y) end
 do return end
 			self:registerDialog(require("mod.dialogs.DownloadCharball").new())
 			local f, err = loadfile("/data/general/events/fearscape-portal.lua")

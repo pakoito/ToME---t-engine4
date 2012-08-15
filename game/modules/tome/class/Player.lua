@@ -459,6 +459,9 @@ function _M:playerFOV()
 			end
 			uid, e = next(game.level.entities, uid)
 		end
+	-- Inner Sight; works even while blinded
+	elseif self:attr("blind_sight") then
+		self:computeFOV(self:attr("blind_sight"), "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyLite(x, y, 0.6) end, true, true, true)
 	end
 end
 

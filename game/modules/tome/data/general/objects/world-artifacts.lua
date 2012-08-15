@@ -3518,7 +3518,6 @@ newEntity{ base = "BASE_LEATHER_CAP",
 	color=colors.WHITE,
 	encumber = 1,
 	rarity = 140,
-	sentient=true,
 	desc = [[This thick blindfold, with an embedded marble eye, is said to allow the wearer to sense beings around them, at the cost of physical sight.
 You suspect the effects will require a moment to recover from.]],
 	cost = 200,
@@ -3531,26 +3530,18 @@ You suspect the effects will require a moment to recover from.]],
 		combat_mindpower=6,
 		combat_mindcrit=4,
 		blind_immune=1,
+		blind_sight=1, -- So we can see walls, objects, and what not nearby and not break auto-explore.
 		combat_mentalresist = 12,
 		resists = {[DamageType.LIGHT] = 10,},
 		resists_cap = {[DamageType.LIGHT] = 10,},
 		resists_pen = {all=5, [DamageType.MIND] = 10,}
 	},
-	act = function(self)
-		self:useEnergy()
-		if not self.worn_by then return end
-		if game.level and not game.level:hasEntity(self.worn_by) and not self.worn_by.player then self.worn_by=nil return end
-		if self.worn_by:attr("dead") then return end
-		self.worn_by:magicMap(1)
-	end,
 	on_wear = function(self, who)
-		self.worn_by = who
 		game.logPlayer(who, "#CRIMSON#Your eyesight fades!")
 		who:resetCanSeeCache()
 		if who.player then for uid, e in pairs(game.level.entities) do if e.x then game.level.map:updateMap(e.x, e.y) end end game.level.map.changed = true end
 	end,
 	on_takeoff = function(self, who)
-		self.worn_by = nil
 		game.logPlayer(who, "#CRIMSON#As you remove the eye, your mind feels unprotected!")
 	end,
 }
