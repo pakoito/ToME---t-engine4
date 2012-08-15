@@ -101,7 +101,7 @@ add_foe = function(self, next_wave, first, foe_idx)
 		},
 	}
 
-	foe = rng.table(foes[foe_idx])
+	local foe = rng.table(foes[foe_idx])
 	local m = game.zone:makeEntity(game.level, "actor", foe, nil, true)
 
 	if m then
@@ -120,5 +120,8 @@ add_foe = function(self, next_wave, first, foe_idx)
 			if first then game.logSeen(m, "#VIOLET#A foe is summoned to the arena!")
 			else game.logSeen(m, "#VIOLET#Another foe is summoned to the arena!") end
 		end
+	else
+		-- err weird, lets try again
+		return self:add_foe(next_wave, first, foe_idx)
 	end
 end
