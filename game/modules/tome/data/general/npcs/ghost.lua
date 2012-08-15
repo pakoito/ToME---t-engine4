@@ -25,7 +25,11 @@ newEntity{
 	blood_color = colors.GREY,
 	display = "G", color=colors.WHITE,
 
-	combat = { dam=1, atk=1, apr=1 },
+	combat = { dam=1, atk=1, apr=1, sound={"creatures/ghost/attack%d", 1, 2} },
+
+	sound_moam = {"creatures/ghost/on_hit%d", 1, 2},
+	sound_die = {"creatures/ghost/death%d", 1, 1},
+	sound_random = {"creatures/ghost/random%d", 1, 1},
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	autolevel = "warriormage",
