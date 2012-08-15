@@ -21,3 +21,24 @@ load("/data/general/grids/basic.lua")
 load("/data/general/grids/mountain.lua")
 load("/data/general/grids/jungle.lua")
 load("/data/general/grids/water.lua")
+
+newEntity{
+	define_as = "ALTAR",
+	type = "wall", subtype = "grass",
+	name = "altar of dreams", image = "terrain/jungle/jungle_grass_floor_01.png", add_displays = {class.new{z=18, image="terrain/pedestal_orb_04.png", display_h=2, display_y=-1}},
+	display = '&', color_r=0, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	does_block_move = true,
+	block_sight = true,
+	block_move = function(self, x, y, who, act)
+		if who == game.player and act then
+			require("engine.ui.Dialog"):yesnoLongPopup("Altar of Dreams", "Looking into the altar will let you experience a dream. But should you die in it your real body might die too. Do you wish to look?", 400, function(ret)
+				if ret then
+					game.level.data.run_dream(true)
+				end
+			end)
+		end
+		return true
+	end,
+}

@@ -222,6 +222,7 @@ return {
 					T_PIERCING_SIGHT = 30,
 				},
 				on_die = function(self)
+					local danger = game.level.data.real_death
 					game.level:addEntity(self.summoner)
 					game:onTickEnd(function()
 						game:changeLevel(1, "noxious-caldera")
@@ -231,7 +232,11 @@ You feel good!]], 600)
 							game.player:setEffect(game.player.EFF_VICTORY_RUSH_ZIGUR, 4, {})
 							world:gainAchievement("ALL_DREAMS", self.summoner, "mice")
 						else
-							game.player:takeHit(game.player.life * 2 / 3, game.player)
+							if not danger then
+								game.player:takeHit(game.player.life * 2 / 3, game.player)
+							else
+								game.player:die(game.player)
+							end
 						end
 					end)
 				end,
@@ -276,6 +281,7 @@ You feel like running away!]], 600)
 				resolvers.talents{
 				},
 				on_die = function(self)
+					local danger = game.level.data.real_death
 					game.level:addEntity(self.summoner)
 					game:onTickEnd(function()
 						game:changeLevel(1, "noxious-caldera")
@@ -285,7 +291,11 @@ You feel good!]], 600)
 							game.player:setEffect(game.player.EFF_VICTORY_RUSH_ZIGUR, 4, {})
 							world:gainAchievement("ALL_DREAMS", self.summoner, "lost")
 						else
-							game.player:takeHit(game.player.life * 2 / 3, game.player)
+							if not danger then
+								game.player:takeHit(game.player.life * 2 / 3, game.player)
+							else
+								game.player:die(game.player)
+							end
 						end
 					end)
 				end,

@@ -319,7 +319,7 @@ function _M:updateMainShader()
 		end
 
 		-- Blur shader
-		if self:attr("confused") then game.fbo_shader:setUniform("blur", 2)
+		if self:attr("confused") and self.confused >= 1 then game.fbo_shader:setUniform("blur", 2)
 --		elseif game:hasDialogUp() then game.fbo_shader:setUniform("blur", 3)
 		else game.fbo_shader:setUniform("blur", 0) -- Disable
 		end

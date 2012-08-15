@@ -105,7 +105,7 @@ function _M:generate(lev, old_lev)
 	end
 
 	self.map(sx, sy, Map.TERRAIN, self:resolve("up"))
-	self.map(sx, sy, Map.TERRAIN, self:resolve("down"))
+	self.map(ex, ey, Map.TERRAIN, self:resolve("down"))
 
 	-- Make stairs
 	return sx, sy, ex, ey, self.spots

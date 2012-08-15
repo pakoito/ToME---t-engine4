@@ -221,7 +221,7 @@ newEntity{
 	wielder = {
 		resists={
 			[DamageType.ACID] = resolvers.mbonus_material(10, 5),
-			[DamageType.POISON] = resolvers.mbonus_material(10, 5),
+			[DamageType.NATURE] = resolvers.mbonus_material(10, 5),
 		},
 	},
 }

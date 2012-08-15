@@ -33,6 +33,7 @@ return {
 	color_shown = {0.9, 0.7, 0.4, 1},
 	color_obscure = {0.9*0.6, 0.7*0.6, 0.4*0.6, 0.6},
 	ambient_music = {"Mystery.ogg", "weather/jungle_base.ogg"},
+	no_level_connectivity = true,
 	min_material_level = 3,
 	max_material_level = 3,
 	generator =  {
@@ -43,6 +44,7 @@ return {
 			grass = "JUNGLE_GRASS",
 			water = "POISON_DEEP_WATER",
 			up = "JUNGLE_GRASS_UP_WILDERNESS",
+			down = "ALTAR",
 		},
 		actor = {
 			class = "mod.class.generator.actor.Random",
@@ -69,6 +71,13 @@ return {
 			jungle2={ chance=250, volume_mod=1, pitch=1, random_pos={rad=10}, files={"ambient/jungle/jungle1","ambient/jungle/jungle2","ambient/jungle/jungle3"}},
 			jungle3={ chance=250, volume_mod=1.6, pitch=1.4, random_pos={rad=10}, files={"ambient/jungle/jungle1","ambient/jungle/jungle2","ambient/jungle/jungle3"}},
 		})
+
+		-- Add the boss
+		local x, y = util.findFreeGrid(level.default_down.x, level.default_down.y, 10, true, {[engine.Map.ACTOR]=true})
+		if x then
+			local m = game.zone:makeEntityByName(level, "actor", "MINDWORM")
+			if m then game.zone:addEntity(level, m, "actor", x, y) end
+		end
 	end,
 
 	fumes_active = true,
@@ -84,15 +93,20 @@ return {
 
 	on_turn = function(self)
 		if not game.level.turn_counter then return end
+		if not game.level.data.fumes_active or game.player:attr("no_breath") then return end
 
 		game.level.turn_counter = game.level.turn_counter - 1
 		game.player.changed = true
 		if game.level.turn_counter < 0 then
 			game.level.turn_counter = nil
 			game.level.max_turn_counter = nil
-
-			local dream = rng.range(1, 1)
-			game:changeLevel(dream, "dreams")
+			game.level.data.run_dream(false)
 		end
+	end,
+
+	run_dream = function(dangerous)
+		local dream = rng.range(1, 2)
+		game:changeLevel(dream, "dreams")
+		game.level.data.real_death = dangerous
 	end,
 }

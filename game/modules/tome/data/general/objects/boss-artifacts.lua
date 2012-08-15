@@ -1582,3 +1582,48 @@ newEntity{ base = "BASE_RUNE", define_as = "RUNE_REFLECT",
 	},
 	inscription_talent = "RUNE:_REFLECTION_SHIELD",
 }
+
+newEntity{ base = "BASE_MINDSTAR", define_as = "PSIONIC_FURY",
+	power_source = {psionic=true},
+	unique = true,
+	name = "Psionic Fury",
+	unided_name = "vibrating mindstar",
+	level_range = {24, 32},
+	color=colors.AQUAMARINE, image = "object/artifact/psionic_fury.png",
+	rarity = 250,
+	desc = [[This mindstar constantly shakes and vibrates, as if a powerful force is desperately trying to escape.]],
+	cost = 85,
+	require = { stat = { wil=24 }, },
+	material_level = 3,
+	combat = {
+		dam = 12,
+		apr = 25,
+		physcrit = 5,
+		dammod = {wil=0.4, cun=0.2},
+		damtype = DamageType.MIND,
+	},
+	wielder = {
+		combat_mindpower = 10,
+		combat_mindcrit = 8,
+		inc_damage={
+			[DamageType.MIND] 		= 15,
+			[DamageType.PHYSICAL]	= 5,
+		},
+		resists={
+			[DamageType.MIND] 		= 10,
+		},
+		inc_stats = { [Stats.STAT_WIL] = 5, [Stats.STAT_CUN] = 4, },
+	},
+	max_power = 40, power_regen = 1,
+	use_power = { name = "release a wave of psionic power", power = 40,
+	use = function(self, who)
+		local radius = 4
+		local dam = (50 + who:getWil()*1.8)
+		local blast = {type="ball", range=0, radius=5, selffire=false}
+		who:project(blast, who.x, who.y, engine.DamageType.MIND, dam)
+		game.level.map:particleEmitter(who.x, who.y, blast.radius, "force_blast", {radius=blast.radius})
+		game.logSeen(who, "%s sends out a blast of psionic energy!", who.name:capitalize(), self:getName())
+		return {id=true, used=true}
+		end
+	},
+}
