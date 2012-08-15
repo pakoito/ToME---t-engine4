@@ -1870,7 +1870,11 @@ function _M:startEvents()
 
 	if not game.zone.assigned_events then
 		local levels = {}
-		for i = 1, game.zone.max_level do levels[i] = {} end
+		if game.zone.events_by_level then
+			levels[game.level.level] = {}
+		else
+			for i = 1, game.zone.max_level do levels[i] = {} end
+		end
 
 		-- Generate the events list for this zone, eventually loading from group files
 		local evts, mevts = {}, {}
@@ -1899,19 +1903,23 @@ function _M:startEvents()
 				local lev = nil
 				local forbid = e.forbid or {}
 				forbid = table.reverse(forbid)
-				if game.zone.events.one_per_level then
-					local list = {}
-					for i = 1, #levels do if #levels[i] == 0 and not forbid[i] then list[#list+1] = i end end
-					if #list > 0 then
-						lev = rng.table(list)
-					end
+				if game.zone.events_by_level then
+					lev = game.level.level
 				else
-					if forbid then
-						local t = table.genrange(1, game.zone.max_level, true)
-						t = table.minus_keys(t, forbid)
-						lev = rng.table(table.keys(t))
+					if game.zone.events.one_per_level then
+						local list = {}
+						for i = 1, #levels do if #levels[i] == 0 and not forbid[i] then list[#list+1] = i end end
+						if #list > 0 then
+							lev = rng.table(list)
+						end
 					else
-						lev = rng.range(1, game.zone.max_level)
+						if forbid then
+							local t = table.genrange(1, game.zone.max_level, true)
+							t = table.minus_keys(t, forbid)
+							lev = rng.table(table.keys(t))
+						else
+							lev = rng.range(1, game.zone.max_level)
+						end
 					end
 				end
 
@@ -1924,7 +1932,10 @@ function _M:startEvents()
 		for i, e in ipairs(mevts) do
 			local forbid = e.forbid or {}
 			forbid = table.reverse(forbid)
-			for lev = 1, game.zone.max_level do
+
+			local start, stop = 1, game.zone.max_level
+			if game.zone.events_by_level then start, stop = game.level.level, game.level.level end
+			for lev = start, stop do
 				if rng.percent(e.percent) and not forbid[lev] then
 					local lev = levels[lev]
 					lev[#lev+1] = e.name
@@ -1959,5 +1970,6 @@ function _M:startEvents()
 			f()
 		end
 		game.zone.assigned_events[game.level.level] = {}
+		if game.zone.events_by_level then game.zone.assigned_events = nil end
 	end
 end

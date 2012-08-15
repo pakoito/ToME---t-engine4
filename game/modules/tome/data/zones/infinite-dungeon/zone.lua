@@ -28,6 +28,7 @@ return {
 --	all_lited = true,
 	no_worldport = true,
 	infinite_dungeon = true,
+	events_by_level = true,
 	ambient_music = "Swashing the buck.ogg",
 	generator =  {
 		map = {
