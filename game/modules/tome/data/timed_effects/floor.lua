@@ -142,3 +142,12 @@ floorEffect{
 		self:effectTemporaryValue(eff, "resists", {all=-20})
 	end,
 }
+
+floorEffect{
+	desc = "Slimey Pool", image = "talents/acidic_skin.png",
+	long_desc = "The target is walking on slime. Decreasing movement speed by 20% and dealing 20 slime damage to any creatures attacking it.",
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "on_melee_hit", {[DamageType.SLIME] = 20})
+		self:effectTemporaryValue(eff, "movement_speed", -0.2)
+	end,
+}
