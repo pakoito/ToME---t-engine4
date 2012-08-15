@@ -17,7 +17,14 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-return { one_per_level=true,
-	{group="fareast-generic", percent_factor=1.5},
-	{name="glimmerstone", minor=true, percent=150, max_repeat=5},
-}
+local spots = game.state:findEventGridRadius(level, 3, 6)
+if not spots then return false end
+
+local list = mod.class.Grid:loadList("/data/general/grids/ice.lua")
+
+for _, spot in ipairs(spots) do
+	level.map(spot.x, spot.y, engine.Map.TERRAIN, list.ICY_FLOOR)
+end
+for _, spot in ipairs(spots) do game.nicer_tiles:updateAround(level, spot.x, spot.y) end
+
+return true

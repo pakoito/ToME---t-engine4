@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-return { one_per_level=true,
-	{group="fareast-generic", percent_factor=1.5},
-	{name="glimmerstone", minor=true, percent=150, max_repeat=5},
+return { one_per_level = true,
+	{name="antimagic-bush", minor=true, percent=60},
+	{name="font-life", minor=true, percent=30},
 }

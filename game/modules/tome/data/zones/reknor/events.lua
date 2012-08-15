@@ -20,4 +20,5 @@
 return { one_per_level=true,
 	{group="majeyal-generic", percent_factor=1.5},
 	{name="cultists", percent=10},
+	{name="glimmerstone", minor=true, percent=100, max_repeat=4},
 }

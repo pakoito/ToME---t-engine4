@@ -18,6 +18,6 @@
 -- darkgod@te4.org
 
 return { one_per_level=true,
-	{group="fareast-generic", percent_factor=1.5},
-	{name="glimmerstone", minor=true, percent=150, max_repeat=5},
+	{name="protective-aura", minor=true, percent=50},
+	{name="spellblaze-scar", minor=true, percent=50},
 }

@@ -22,4 +22,5 @@ return { one_per_level=true,
 	{group="outdoor-majeyal-generic"},
 	{group="majeyal-generic"},
 	{name="cultists", percent=10},
+	{name="spellblaze-scar", minor=true, percent=60},
 }

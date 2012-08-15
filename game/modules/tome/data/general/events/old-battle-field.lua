@@ -120,8 +120,8 @@ if tries < 100 then
 		g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/grave_unopened_0"..rng.range(1,3).."_64.png", display_y=-1, display_h=2}
 		g.nice_tiler = nil
 		g.block_move = function(self, x, y, who, act, couldpass)
-			if game.level.event_battlefield_entered then return false end
 			if not who or not who.player or not act then return false end
+			if game.level.event_battlefield_entered then return false end
 			who:runStop("grave")
 			require("engine.ui.Dialog"):yesnoPopup("Grave", "Do you wish to disturb the grave?", function(ret) if ret then
 				self.block_move = nil

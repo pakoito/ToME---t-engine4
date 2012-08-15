@@ -93,6 +93,8 @@ end
 -- @param p a table containing the effects parameters
 -- @parm silent true to suppress messages
 function _M:setEffect(eff_id, dur, p, silent)
+	local had = self.tmp[eff_id]
+
 	-- Beware, setting to 0 means removing
 	if dur <= 0 then return self:removeEffect(eff_id) end
 	dur = math.floor(dur)
@@ -118,7 +120,7 @@ function _M:setEffect(eff_id, dur, p, silent)
 	self.tmp[eff_id] = p
 	if _M.tempeffect_def[eff_id].on_gain then
 		local ret, fly = _M.tempeffect_def[eff_id].on_gain(self, p)
-		if not silent then
+		if not silent and not had then
 			if ret then
 				game.logSeen(self, ret:gsub("#Target#", self.name:capitalize()):gsub("#target#", self.name))
 			end
@@ -158,6 +160,11 @@ function _M:removeEffect(eff, silent, force)
 			end
 		end
 	end
+	if p.__tmpvals then
+		for i = 1, #p.__tmpvals do
+			self:removeTemporaryValue(p.__tmpvals[i][1], p.__tmpvals[i][2])
+		end
+	end
 	if _M.tempeffect_def[eff].deactivate then _M.tempeffect_def[eff].deactivate(self, p) end
 end
 
@@ -171,4 +178,10 @@ function _M:removeAllEffects()
 	while #todel > 0 do
 		self:removeEffect(table.remove(todel))
 	end
+end
+
+--- Helper function to add temporary values and not have to remove them manualy
+function _M:effectTemporaryValue(eff, k, v)
+	if not eff.__tmpvals then eff.__tmpvals = {} end
+	eff.__tmpvals[#eff.__tmpvals+1] = {k, self:addTemporaryValue(k, v)}
 end

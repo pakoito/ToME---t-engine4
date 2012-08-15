@@ -1833,6 +1833,38 @@ function _M:canEventGrid(level, x, y)
 	return game.player:canMove(x, y) and not level.map.attrs(x, y, "no_teleport") and not level.map:checkAllEntities(x, y, "change_level")
 end
 
+function _M:canEventGridRadius(level, x, y, radius, min)
+	local list = {}
+	for i = -radius, radius do for j = -radius, radius do
+		if game.state:canEventGrid(level, x+i, y+j) then list[#list+1] = {x=x+i, y=y+j} end
+	end end
+
+	if #list < min then return false
+	else return list end
+end
+
+function _M:findEventGrid(level)
+	local x, y = rng.range(1, level.map.w - 2), rng.range(1, level.map.h - 2)
+	local tries = 0
+	while not self:canEventGrid(level, x, y) and tries < 100 do
+		x, y = rng.range(1, level.map.w - 2), rng.range(1, level.map.h - 2)
+		tries = tries + 1
+	end
+	if tries >= 100 then return false end
+	return x, y
+end
+
+function _M:findEventGridRadius(level, radius, min)
+	local x, y = rng.range(3, level.map.w - 4), rng.range(3, level.map.h - 4)
+	local tries = 0
+	while not self:canEventGridRadius(level, x, y, radius, min) and tries < 100 do
+		x, y = rng.range(3, level.map.w - 4), rng.range(3, level.map.h - 4)
+		tries = tries + 1
+	end
+	if tries >= 100 then return false end
+	return self:canEventGridRadius(level, x, y, radius, min)
+end
+
 function _M:startEvents()
 	if not game.zone.events then print("No zone events loaded") return end
 
@@ -1841,9 +1873,9 @@ function _M:startEvents()
 		for i = 1, game.zone.max_level do levels[i] = {} end
 
 		-- Generate the events list for this zone, eventually loading from group files
-		local evts = {}
+		local evts, mevts = {}, {}
 		for i, e in ipairs(game.zone.events) do
-			if e.name then evts[#evts+1] = e
+			if e.name then if e.minor then mevts[#mevts+1] = e else evts[#evts+1] = e end
 			elseif e.group then
 				local f, err = loadfile("/data/general/events/groups/"..e.group..".lua")
 				if not f then error(err) end
@@ -1851,7 +1883,7 @@ function _M:startEvents()
 				local list = f()
 				for j, ee in ipairs(list) do
 					if e.percent_factor and ee.percent then ee.percent_factor = math.floor(ee.percent * e.percent_factor) end
-					if ee.name then evts[#evts+1] = ee end
+					if ee.name then if ee.minor then mevts[#mevts+1] = ee else evts[#evts+1] = ee end end
 				end
 			end
 		end
@@ -1859,11 +1891,13 @@ function _M:startEvents()
 		-- Randomize the order they are checked as
 		table.shuffle(evts)
 		table.print(evts)
+		table.shuffle(mevts)
+		table.print(mevts)
 		for i, e in ipairs(evts) do
 			-- If we allow it, try to find a level to host it
 			if (e.always or rng.percent(e.percent)) and (not e.unique or not self:doneEvent(e.name)) then
 				local lev = nil
-				if e.one_per_level then
+				if game.zone.events.one_per_level then
 					local list = {}
 					for i = 1, #levels do if #levels[i] == 0 then list[#list+1] = i end end
 					if #list > 0 then
@@ -1879,18 +1913,41 @@ function _M:startEvents()
 				end
 			end
 		end
+		for i, e in ipairs(mevts) do
+			for lev = 1, game.zone.max_level do
+				if rng.percent(e.percent) then
+					local lev = levels[lev]
+					lev[#lev+1] = e.name
+
+					if e.max_repeat then
+						local nb = 1
+						local p = e.percent
+						while nb <= e.max_repeat do
+							if rng.percent(p) then
+								lev[#lev+1] = e.name
+							else
+								break
+							end
+							p = p / 2
+						end
+					end
+				end
+			end
+		end
 
 		game.zone.assigned_events = levels
 	end
 
-	print("Assigned events list")
-	table.print(game.zone.assigned_events)
+	return function()
+		print("Assigned events list")
+		table.print(game.zone.assigned_events)
 
-	for i, e in ipairs(game.zone.assigned_events[game.level.level] or {}) do
-		local f, err = loadfile("/data/general/events/"..e..".lua")
-		if not f then error(err) end
-		setfenv(f, setmetatable({level=game.level, zone=game.zone, event_id=e.name}, {__index=_G}))
-		f()
+		for i, e in ipairs(game.zone.assigned_events[game.level.level] or {}) do
+			local f, err = loadfile("/data/general/events/"..e..".lua")
+			if not f then error(err) end
+			setfenv(f, setmetatable({level=game.level, zone=game.zone, event_id=e.name, Map=Map}, {__index=_G}))
+			f()
+		end
+		game.zone.assigned_events[game.level.level] = {}
 	end
-	game.zone.assigned_events[game.level.level] = {}
 end

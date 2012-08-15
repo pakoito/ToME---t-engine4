@@ -15,6 +15,7 @@ uniform float npow;
 uniform float zoom;
 uniform float time_factor;
 uniform float hide_center;
+uniform float aam;
 uniform vec2 xy;
 
 vec4 permute( vec4 x ) {
@@ -138,5 +139,5 @@ void main( void ) {
 	if (hide_center && d < 0.5) {
 		gl_FragColor.a *= d * d * 4.0;
 	}
-	gl_FragColor.a *= ba;
+	gl_FragColor.a *= ba * aam;
 }

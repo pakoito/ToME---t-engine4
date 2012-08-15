@@ -621,6 +621,7 @@ function _M:changeLevel(lev, zone, params)
 	local force_recreate = false
 	local recreate_nothing = false
 	local popup = nil
+	local afternicer = nil
 
 	-- We only switch temporarily, keep the old one around
 	if params.temporary_zone_shift then
@@ -696,7 +697,7 @@ function _M:changeLevel(lev, zone, params)
 		self.visited_zones[self.zone.short_name] = true
 
 		if new_level then
-			self.state:startEvents()
+			afternicer = self.state:startEvents()
 		end
 	end
 
@@ -705,6 +706,9 @@ function _M:changeLevel(lev, zone, params)
 
 	-- Post process if needed once the nicer tiles are done
 	if self.level.data and self.level.data.post_nicer_tiles then self.level.data.post_nicer_tiles(self.level) end
+
+	-- After ? events ?
+	if afternicer then afternicer() end
 
 	-- Check if we need to switch the current guardian
 	self.state:zoneCheckBackupGuardian()
@@ -1215,14 +1219,12 @@ function _M:setupCommands()
 			end end
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
-			local o = game.state:generateRandart{}
-			if o then o:identify(true) game.zone:addEntity(game.level,o,"object", game.player.x,game.player.y) end
-do return end
-			self:registerDialog(require("mod.dialogs.DownloadCharball").new())
-			local f, err = loadfile("/data/general/events/fearscape-portal.lua")
+			local f, err = loadfile("/data/general/events/necrotic-air.lua")
 			print(f, err)
 			setfenv(f, setmetatable({level=self.level, zone=self.zone}, {__index=_G}))
 			print(pcall(f))
+do return end
+			self:registerDialog(require("mod.dialogs.DownloadCharball").new())
 		end end,
 		[{"_f","ctrl"}] = function() if config.settings.cheat then
 			self.player.quests["love-melinda"] = nil

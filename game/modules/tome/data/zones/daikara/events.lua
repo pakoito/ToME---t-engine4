@@ -22,5 +22,6 @@ return { one_per_level=true,
 	{group="outdoor-majeyal-generic"},
 	{group="majeyal-generic"},
 	{name="cultists", percent=10},
---	{name="snowstorm", percent=10},
+	{name="icy-ground", minor=true, percent=50},
+	{name="font-life", minor=true, percent=30},
 }

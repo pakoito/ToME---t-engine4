@@ -21,4 +21,7 @@ return { one_per_level=true,
 	{group="outdoor-majeyal-gloomy"},
 	{group="outdoor-majeyal-generic"},
 	{group="majeyal-generic"},
+	{name="font-life", minor=true, percent=40},
+	{name="bligthed-soil", minor=true, percent=40},
+	{name="antimagic-bush", minor=true, percent=40},
 }

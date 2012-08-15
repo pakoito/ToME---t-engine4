@@ -28,6 +28,7 @@ return {
 		npow = npow or 1,
 		hide_center = hide_center or 1,
 		xy = xy or {0, 0},
+		aam = aam or 1,
 	},
 	clone = false,
 }

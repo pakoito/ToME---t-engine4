@@ -18,13 +18,8 @@
 -- darkgod@te4.org
 
 -- Find a random spot
-local x, y = rng.range(1, level.map.w - 2), rng.range(1, level.map.h - 2)
-local tries = 0
-while not game.state:canEventGrid(level, x, y) and tries < 100 do
-	x, y = rng.range(1, level.map.w - 2), rng.range(1, level.map.h - 2)
-	tries = tries + 1
-end
-if tries >= 100 then return false end
+local x, y = game.state:findEventGrid(level)
+if not x then return false end
 
 local id = "damp-cave-"..game.turn
 

@@ -1239,6 +1239,9 @@ function _M:spellCrit(dam, add_chance, crit_power_add)
 
 		if self:attr("mana_on_crit") then self:incMana(self:attr("mana_on_crit")) end
 		if self:attr("vim_on_crit") then self:incVim(self:attr("vim_on_crit")) end
+		if self:attr("paradox_on_crit") then self:incParadox(self:attr("paradox_on_crit")) end
+		if self:attr("positive_on_crit") then self:incPositive(self:attr("positive_on_crit")) end
+		if self:attr("negative_on_crit") then self:incNegative(self:attr("negative_on_crit")) end
 
 		if self:attr("spellsurge_on_crit") then
 			local power = self:attr("spellsurge_on_crit")
@@ -1254,7 +1257,6 @@ function _M:spellCrit(dam, add_chance, crit_power_add)
 			local t = self:getTalentFromId(self.T_CORONA)
 			t.on_crit(self, t)
 		end
-
 	end
 	return dam, crit
 end
