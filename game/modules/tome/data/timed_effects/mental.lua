@@ -2587,12 +2587,12 @@ newEffect{
 			end
 		else
 			-- Store the power for later
-			local real_power = eff.power
-			-- Temporarily spike the power so the nightmare doesn't break it
-			eff.power = 10000
+			local real_power = eff.temp_power or eff.power
+			-- Temporarily spike the temp_power so the nightmare doesn't break it
+			eff.temp_power = 10000
 			DamageType:get(DamageType.DARKNESS).projector(eff.src or self, self.x, self.y, DamageType.DARKNESS, eff.dam)
 			-- Set the power back to its baseline
-			eff.power = real_power
+			eff.temp_power = real_power
 		end
 		if eff.particle and not dream_prison then
 			self:removeParticles(eff.particle)

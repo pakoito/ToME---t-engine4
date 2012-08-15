@@ -57,6 +57,7 @@ newTalent{
 		end
 		
 		local damage = self:mindCrit(t.getDamage(self, t))
+		local power = self:mindCrit(t.getSleepPower(self, t))
 		self:project(tg, x, y, function(tx, ty)
 			local target = game.level.map(tx, ty, Map.ACTOR)
 			if target then
