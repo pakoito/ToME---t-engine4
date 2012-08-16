@@ -151,7 +151,7 @@ newTalent{
 		--	game.logSeen(self, "You may only sustain two auras at once. Aura activation cancelled.")
 		--	return false
 		--end
-		return true
+		return {}
 	end,
 	deactivate = function(self, t, p)
 		if self:attr("save_cleanup") then return true end
@@ -267,7 +267,7 @@ newTalent{
 		--	game.logSeen(self, "You may only sustain two auras at once. Aura activation cancelled.")
 		--	return false
 		--end
-		return true
+		return {}
 	end,
 	deactivate = function(self, t, p)
 		if self:attr("save_cleanup") then return true end
@@ -389,7 +389,7 @@ newTalent{
 		--	return false
 		--end
 		game:playSoundNear(self, "talents/thunderstorm")
-		return true
+		return {}
 	end,
 	deactivate = function(self, t, p)
 		if self:attr("save_cleanup") then return true end
