@@ -1910,6 +1910,7 @@ function _M:countBirthUnlocks()
 		chronomancer_paradox_mage = true,
 
 		psionic_mindslayer = true,
+		psionic_solipsist = true,
 
 		warrior_brawler = true,
 	}
