@@ -22,7 +22,7 @@ require "engine.Actor"
 require "engine.Autolevel"
 require "engine.interface.ActorInventory"
 require "engine.interface.ActorTemporaryEffects"
-require "engine.interface.ActorLife"
+require "mod.class.interface.ActorLife"
 require "engine.interface.ActorProject"
 require "engine.interface.ActorLevel"
 require "engine.interface.ActorStats"
@@ -44,7 +44,7 @@ module(..., package.seeall, class.inherit(
 	engine.Actor,
 	engine.interface.ActorInventory,
 	engine.interface.ActorTemporaryEffects,
-	engine.interface.ActorLife,
+	mod.class.interface.ActorLife,
 	engine.interface.ActorProject,
 	engine.interface.ActorLevel,
 	engine.interface.ActorStats,
@@ -201,7 +201,7 @@ function _M:init(t, no_default)
 	engine.Actor.init(self, t, no_default)
 	engine.interface.ActorInventory.init(self, t)
 	engine.interface.ActorTemporaryEffects.init(self, t)
-	engine.interface.ActorLife.init(self, t)
+	mod.class.interface.ActorLife.init(self, t)
 	engine.interface.ActorProject.init(self, t)
 	engine.interface.ActorTalents.init(self, t)
 	engine.interface.ActorResource.init(self, t)
@@ -2003,7 +2003,7 @@ function _M:takeHit(value, src, death_note)
 		end
 	end
 
-	local dead, val = engine.interface.ActorLife.takeHit(self, value, src, death_note)
+	local dead, val = mod.class.interface.ActorLife.takeHit(self, value, src, death_note)
 
 	if dead and src and src.attr and src:attr("overkill") and src.project and not src.turn_procs.overkill then
 		src.turn_procs.overkill = true
@@ -2038,7 +2038,7 @@ end
 function _M:die(src, death_note)
 	if self.dead then self:disappear(src) self:deleteFromMap(game.level.map) return true end
 
-	engine.interface.ActorLife.die(self, src, death_note)
+	mod.class.interface.ActorLife.die(self, src, death_note)
 
 	-- Gives the killer some exp for the kill
 	local killer = nil

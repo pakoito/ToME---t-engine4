@@ -1024,6 +1024,7 @@ function _M:displayDelayedLogDamage()
 			if target.dead then
 				if self.level.map.seens(x, y) and (rsrc == self.player or rtarget == self.player or self.party:hasMember(rsrc) or self.party:hasMember(rtarget)) then
 					self.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, rng.float(-2.5, -1.5), ("Kill (%d)!"):format(dams.total), {255,0,255}, true)
+					game.logSeen(target, "#{bold}#%s killed %s!#{normal}#", src.name:capitalize(), target.name)
 				end
 			else
 				if self.level.map.seens(x, y) and (rsrc == self.player or self.party:hasMember(rsrc)) then
@@ -1034,6 +1035,8 @@ function _M:displayDelayedLogDamage()
 			end
 		end
 	end
+	if self.delayed_death_message then game.log(self.delayed_death_message) end
+	self.delayed_death_message = nil
 	self.delayed_log_damage = {}
 end
 

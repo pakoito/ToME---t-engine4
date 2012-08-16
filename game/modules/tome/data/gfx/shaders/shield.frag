@@ -33,6 +33,7 @@ void main(void)
 
 	// Impact
 	float it = tick - impact_tick;
+	float vaadjust = aadjust;
 	if (it < impact_time) {
 		float v = (impact_time - it) / impact_time;
 		float il = distance(impact / ll, (vec2(0.5) - gl_TexCoord[0].xy) / ll);
@@ -40,11 +41,11 @@ void main(void)
 			v *= v * v;
 			float ic = (1.0 - length(uv - impact)) * v * 3.0;
 			c.rgb = mix(c.rgb, impact_color, ic);
-			aadjust *= 1.0 + v * 3.0;
+			vaadjust *= 1.0 + v * 3.0;
 		}
 	}
 
-	c.a *= aadjust;
+	c.a *= vaadjust;
 
 	if (l <= 1.0) c.a = max(0.15, c.a);
 
