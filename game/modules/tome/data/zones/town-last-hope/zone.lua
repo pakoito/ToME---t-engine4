@@ -47,7 +47,7 @@ return {
 			class = "engine.generator.object.Random",
 			nb_object = {0, 0},
 		},
-	}
+	},
 
 	post_process = function(level)
 		game.state:makeAmbientSounds(level, {

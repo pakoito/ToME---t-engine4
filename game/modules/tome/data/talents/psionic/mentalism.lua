@@ -33,7 +33,7 @@ newTalent{
 			if inven.worn then
 				for item, o in ipairs(inven) do
 					if o and item and o.power_source and (o.power_source.psionic or o.power_source.nature or o.power_source.antimagic) then
-						psychometry_count = psychometry_count + math.min(o.material_level/2 or 0.5, t.getPsychometryCap(self, t))
+						psychometry_count = psychometry_count + math.min((o.material_level or 1) / 2, t.getPsychometryCap(self, t))
 					end
 				end
 			end

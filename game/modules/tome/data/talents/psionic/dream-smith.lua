@@ -260,7 +260,7 @@ newTalent{
 			self:project(tg, target.x, target.y, function(px, py, tg, self)
 				local tmp_target = game.level.map(px, py, Map.ACTOR)
 				if tmp_target and tmp_target ~= self and tmp_target ~= target then
-					local hit = self:attackTargetWith(tmp_target, useDreamHammer(self), nil, t.getDamage(self, t))
+					local hit = self:attackTargetWith(tmp_target, useDreamHammer(self), DamageType.DREAMFORGE, t.getDamage(self, t))
 					if hit and rng.percent(50) then
 						game.level.map:particleEmitter(tmp_target.x, tmp_target.y, 1, "generic_discharge", {rm=225, rM=255, gm=0, gM=0, bm=0, bM=0, am=35, aM=90})
 					elseif hit then
@@ -275,7 +275,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local radius = self:getTalentRadius(t)
-		local project = t.getProject(self, t)
+		local project = t.getProject(self, t) /2
 		return ([[Strike the target with a mighty blow from the forge, inflicting %d%% weapon damage.  If the attack hits the echo of the attack will lash out at all enemies in a %d radius.
 		Learning this talent adds %0.2f mind damage and %0.2f burning damage to your Dream Hammer strikes.
 		The mind and fire damage will scale with your mindpower.]]):format(damage * 100, radius, damDesc(self, DamageType.MIND, project), damDesc(self, DamageType.FIRE, project))
