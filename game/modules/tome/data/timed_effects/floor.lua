@@ -51,8 +51,9 @@ floorEffect{
 
 floorEffect{
 	desc = "Font of Life", image = "talents/grand_arrival.png",
-	long_desc = function(self, eff) return ("The target is near a font of life, granting +%0.2f life regeneration, -%0.2f equilibrium regeneration, +%0.2f stamina regeneration and +%0.2f psi regeneration."):format(eff.power, eff.power, eff.power, eff.power) end,
+	long_desc = function(self, eff) return ("The target is near a font of life, granting +%0.2f life regeneration, -%0.2f equilibrium regeneration, +%0.2f stamina regeneration and +%0.2f psi regeneration. Undeads are not affected."):format(eff.power, eff.power, eff.power, eff.power) end,
 	activate = function(self, eff)
+		if self:attr("undead") then return end
 		eff.power = 3 + game.zone:level_adjust_level(game.level, game.zone, "object") / 2
 		self:effectTemporaryValue(eff, "life_regen", eff.power)
 		self:effectTemporaryValue(eff, "stamina_regen", eff.power)
