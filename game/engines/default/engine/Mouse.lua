@@ -27,6 +27,7 @@ function _M:init()
 	self.areas = {}
 	self.areas_name = {}
 	self.status = {}
+	self.last_pos = { x = 0, y = 0 }
 end
 
 --- Called when a mouse is pressed
@@ -36,6 +37,7 @@ end
 -- @param isup true if the key was released, false if pressed
 -- @param force_name if not nil only the zone with this name may trigger
 function _M:receiveMouse(button, x, y, isup, force_name, extra)
+	self.last_pos = { x = x, y = y }
 	self.status[button] = not isup
 	if not isup then return end
 
@@ -53,7 +55,12 @@ function _M:receiveMouse(button, x, y, isup, force_name, extra)
 	end
 end
 
+function _M:getPos()
+	return self.last_pos.x, self.last_pos.y
+end
+
 function _M:receiveMouseMotion(button, x, y, xrel, yrel, force_name, extra)
+	self.last_pos = { x = x, y = y }
 	if _M.drag then
 		if _M.drag.on_move then return _M.drag.on_move(_M.drag, button, x, y, xrel, yrel) end
 	end

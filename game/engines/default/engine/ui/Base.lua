@@ -168,107 +168,58 @@ function _M:drawFrame(f, x, y, r, g, b, a, w, h, total_w, total_h, loffset_x, lo
 	total_w = total_w or 0
 	total_h = total_h or 0
 	
-	f.w = w or f.w
-	f.h = h or f.h
+	x = math.floor(x)
+	y = math.floor(y)
+	
+	f.w = math.floor(w or f.w)
+	f.h = math.floor(h or f.h)
 	
 	clip_area = clip_area or { h = f.h, w = f.w }
 
-	-- check if anything is visible
+	-- first of all check if anything is visible
 	if total_h + f.h > loffset_y and total_h < loffset_y + clip_area.h then 
 		local clip_y_start = 0
 		local clip_y_end = 0
 		local total_clip_y_start = 0
 		local total_clip_y_end = 0
-		
-		local one_by_tex_h = 1
-		local fw = 0
-		local fh = 0
-		
-		-- if it started before visible area then compute its top clip
-		if total_h < loffset_y then 
-			clip_y_start = loffset_y - total_h 
-		end
-		-- if it ended after visible area then compute its bottom clip
-		if total_h + f.b7.h > loffset_y + clip_area.h then 
-		   clip_y_end = total_h + f.b7.h - loffset_y - clip_area.h
-		   total_clip_y_end = clip_y_end
-		end
-		
-		-- check if top is visible
-		if total_h + f.b7.h > loffset_y and total_h < loffset_y + clip_area.h then 
-			one_by_tex_h = 1 / f.b7.th
-			fw, fh = f.b7.w, f.b7.h
-			f.b7.t:toScreenPrecise(x, y, fw, fh - (clip_y_start + clip_y_end), 0, fw / f.b7.tw, clip_y_start * one_by_tex_h, (fh - clip_y_end) * one_by_tex_h, r, g, b, a ) -- left top
-			
-			one_by_tex_h = 1 / f.b8.th
-			fw, fh = f.w - f.b7.w - f.b9.w, f.b8.h
-			f.b8.t:toScreenPrecise(x + f.b7.w, y, fw, fh - (clip_y_start + clip_y_end), 0, fw / f.b8.tw, clip_y_start * one_by_tex_h, (fh - clip_y_end) * one_by_tex_h, r, g, b, a ) -- top
-			
-			one_by_tex_h = 1 / f.b9.th
-			fw, fh = f.b9.w, f.b9.h
-			f.b9.t:toScreenPrecise(x + f.w - f.b9.w, y, fw, fh - (clip_y_start + clip_y_end), 0, fw / f.b9.tw, clip_y_start * one_by_tex_h, (fh - clip_y_end) * one_by_tex_h, r, g, b, a ) -- right top
+
+		-- check if top (top right, top and top left) is visible
+		if total_h + f.b8.h > loffset_y and total_h < loffset_y + clip_area.h then
+			util.clipTexture({_tex = f.b7.t, _tex_w = f.b7.tw, _tex_h = f.b7.th}, x, y, f.b7.w, f.b7.h, 0, total_h, 0, loffset_y, clip_area, r, g, b, a) --left top
+			_, _, clip_y_start, clip_y_end = util.clipTexture({_tex = f.b8.t, _tex_w = f.b8.tw, _tex_h = f.b8.th}, x + f.b7.w, y, f.w - f.b7.w - f.b9.w, f.b8.h, 0, total_h, 0, loffset_y, clip_area, r, g, b, a) -- top
+			util.clipTexture({_tex = f.b9.t, _tex_w = f.b9.tw, _tex_h = f.b9.th}, x + f.w - f.b9.w, y, f.b9.w, f.b9.h, 0, total_h, 0, loffset_y, clip_area, r, g, b, a) -- right top
+
 			total_clip_y_start = clip_y_start
+			total_clip_y_end = clip_y_end
 		else
-			total_clip_y_start = f.b7.h 
+			total_clip_y_start = f.b8.h
 		end
-		total_h = total_h + f.b7.h 
-		
-		local mid_h = f.h - f.b2.h - f.b8.h
-		clip_y_start = 0
-		clip_y_end = 0
-		-- if it started before visible area then compute its top clip
-		if total_h < loffset_y then 
-			clip_y_start = loffset_y - total_h 
-		end
-		-- if it ended after visible area then compute its bottom clip
-		if total_h + mid_h > loffset_y + clip_area.h then 
-		   clip_y_end = total_h + mid_h - loffset_y - clip_area.h
-		   total_clip_y_end = total_clip_y_end + clip_y_end
-		end
-		-- check if center is visible
-		if total_h + mid_h > loffset_y and total_h < loffset_y + clip_area.h then 
-			one_by_tex_h = 1 / f.b4.th
-			fw, fh = f.b4.w, mid_h
-			f.b4.t:toScreenPrecise(x, y + f.b7.h - total_clip_y_start, fw, fh - (clip_y_start + clip_y_end), 0, fw / f.b4.tw, clip_y_start * one_by_tex_h, (fh - clip_y_end) * one_by_tex_h, r, g, b, a ) -- left
-			
-			one_by_tex_h = 1 / f.b6.th
-			fw, fh = f.b6.w, mid_h
-			f.b6.t:toScreenPrecise(x + f.w - f.b9.w, y + f.b7.h - total_clip_y_start, fw, fh - (clip_y_start + clip_y_end), 0, fw / f.b6.tw, clip_y_start * one_by_tex_h, (fh - clip_y_end) * one_by_tex_h, r, g, b, a ) -- right
-			
-			one_by_tex_h = 1 / f.b5.th
-			fw, fh = f.w - f.b7.w - f.b3.w, mid_h
-			f.b5.t:toScreenPrecise(x + f.b7.w, y + f.b7.h - total_clip_y_start, fw, fh - (clip_y_start + clip_y_end), 0, fw / f.b5.tw, clip_y_start * one_by_tex_h, (fh - clip_y_end) * one_by_tex_h, r, g, b, a ) -- center
+		total_h = total_h + f.b8.h
+		local mid_h = math.floor(f.h - f.b2.h - f.b8.h)
+
+		-- check if mid (right, center and left) is visible
+		if total_h + mid_h > loffset_y and total_h < loffset_y + clip_area.h then
+			util.clipTexture({_tex = f.b4.t, _tex_w = f.b4.tw, _tex_h = f.b4.th}, x, y + f.b7.h - total_clip_y_start, f.b4.w, mid_h, 0, total_h, 0, loffset_y, clip_area, r, g, b, a) -- left
+			_, _, clip_y_start, clip_y_end = util.clipTexture({_tex = f.b6.t, _tex_w = f.b6.tw, _tex_h = f.b6.th}, x + f.w - f.b9.w, y + f.b7.h - total_clip_y_start, f.b6.w, mid_h, 0, total_h, 0, loffset_y, clip_area, r, g, b, a) -- center
+			util.clipTexture({_tex = f.b5.t, _tex_w = f.b5.tw, _tex_h = f.b5.th}, x + f.b7.w, y + f.b7.h - total_clip_y_start, f.w - f.b7.w - f.b3.w, mid_h, 0, total_h, 0, loffset_y, clip_area, r, g, b, a) -- right
+
 			total_clip_y_start = total_clip_y_start + clip_y_start
+			total_clip_y_end = total_clip_y_end + clip_y_end
 		else
 			total_clip_y_start = total_clip_y_start + mid_h
 		end
 		total_h = total_h + mid_h
 		
-		clip_y_start = 0
-		clip_y_end = 0
- 		-- if it started before visible area then compute its top clip
-		if total_h < loffset_y then 
-			clip_y_start = loffset_y - total_h 
-		end
-		-- if it ended after visible area then compute its bottom clip
-		if total_h + f.b2.h > loffset_y + clip_area.h then 
-		   clip_y_end = total_h + f.b2.h - loffset_y - clip_area.h
-		   total_clip_y_end = total_clip_y_end + clip_y_end
-		end
-		
-		-- check if bottom is visible
-		if total_h + f.b2.h > loffset_y and total_h < loffset_y + clip_area.h then 
-			one_by_tex_h = 1 / f.b1.th
-			fw, fh = f.b1.w, f.b1.h
-			f.b1.t:toScreenPrecise(x, y + f.h - f.b1.h - total_clip_y_start, fw, fh - (clip_y_start + clip_y_end), 0, fw / f.b1.tw, clip_y_start * one_by_tex_h, (fh - clip_y_end) * one_by_tex_h, r, g, b, a ) -- left bottom
+		-- check if bottom (bottom right, bottom and bottom left) is visible
+		if total_h + f.b2.h > loffset_y and total_h < loffset_y + clip_area.h then
+			util.clipTexture({_tex = f.b1.t, _tex_w = f.b1.tw, _tex_h = f.b1.th}, x, y + f.h - f.b1.h - total_clip_y_start, f.b1.w, f.b1.h, 0, total_h, 0, loffset_y, clip_area, r, g, b, a) -- left bottom
+			_, _, clip_y_start, clip_y_end = util.clipTexture({_tex = f.b2.t, _tex_w = f.b2.tw, _tex_h = f.b2.th}, x + f.b7.w, y + f.h - f.b2.h - total_clip_y_start, f.w - f.b7.w - f.b9.w, f.b2.h, 0, total_h, 0, loffset_y, clip_area, r, g, b, a) -- bottom
+			util.clipTexture({_tex = f.b3.t, _tex_w = f.b3.tw, _tex_h = f.b3.th}, x + f.w - f.b3.w, y + f.h - f.b3.h - total_clip_y_start, f.b3.w, f.b3.h, 0, total_h, 0, loffset_y, clip_area, r, g, b, a) -- right bottom
 
-			one_by_tex_h = 1 / f.b2.th
-			fw, fh = f.w - f.b7.w - f.b9.w, f.b2.h
-			f.b2.t:toScreenPrecise(x + f.b7.w, y + f.h - f.b2.h - total_clip_y_start, fw, fh - (clip_y_start + clip_y_end), 0, fw / f.b2.tw, clip_y_start * one_by_tex_h, (fh - clip_y_end) * one_by_tex_h, r, g, b, a ) -- bottom
-
-			one_by_tex_h = 1 / f.b3.th
-			fw, fh = f.b3.w, f.b3.h
-			f.b3.t:toScreenPrecise(x + f.w - f.b3.w, y + f.h - f.b3.h - total_clip_y_start, fw, fh - (clip_y_start + clip_y_end), 0, fw / f.b3.tw, clip_y_start * one_by_tex_h, (fh - clip_y_end) * one_by_tex_h, r, g, b, a ) -- right bottom
+			total_clip_y_start = total_clip_y_start + clip_y_start
+			total_clip_y_end = total_clip_y_end + clip_y_end
+		else
+			total_clip_y_start = total_clip_y_start + f.b2.h
 		end
 		
 		return 0, 0, total_clip_y_start, total_clip_y_end

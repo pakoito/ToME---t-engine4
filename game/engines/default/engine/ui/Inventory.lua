@@ -92,7 +92,7 @@ function _M:generate()
 			end
 			-- if it ended after visible area then compute its bottom clip
 			if total_h + h > loffset_y + dest_area.h then
-			   clip_y_end = total_h + h - loffset_y - dest_area.h
+				clip_y_end = total_h + h - loffset_y - dest_area.h
 			end
 			-- get entity texture with everything it has i.e particles
 			local texture = item.object:getEntityFinalTexture(nil, h, h)

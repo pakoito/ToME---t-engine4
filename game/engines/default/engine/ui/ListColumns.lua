@@ -44,7 +44,7 @@ function _M:init(t)
 	self.all_clicks = t.all_clicks
 	self.floating_headers = t.floating_headers or true
 	self.hide_columns = t.hide_columns or false
-	self.dest_area = t.dest_area and t.dest_area or { h = self.h }
+	self.clip_area = t.clip_area and t.clip_area or { w = self.w, h = self.h }
 	self.text_shadow = t.text_shadow or self.text_shadow
 	self.click_select = t.click_select or false
 	self.only_display = t.only_display or false
@@ -202,7 +202,7 @@ function _M:generateRow(row, force)
 		end
 
 		if col.direct_draw then
-			row.cells[j].w, row.cells[j].h = col.direct_draw(row, 0, 0, col.width, self.row_height, 0, 0, 0, 0, self.dest_area) or self.row_height, self.row_height
+			row.cells[j].w, row.cells[j].h = col.direct_draw(row, 0, 0, col.width, self.row_height, 0, 0, 0, 0, self.clip_area) or self.row_height, self.row_height
 		else
 			if type(col.display_prop) == "function" then
 				text = tostring(col.display_prop(row))
@@ -221,9 +221,9 @@ function _M:generateRow(row, force)
 	row.h = self.row_height or max_h
 end
 
-function _M:drawRow(row, row_i, nb_keyframes, x, y, total_w, total_h, loffset_x, loffset_y, dest_area)
+function _M:drawRow(row, row_i, nb_keyframes, x, y, total_w, total_h, loffset_x, loffset_y, clip_area)
 	nb_keyframes = (nb_keyframes or 0) * 0.5
-	dest_area = dest_area or self.dest_area
+	clip_area = clip_area or self.clip_area
 	local column_w_offset = x
 	local clip_y_start = 0
 	local clip_y_end = 0
@@ -246,16 +246,16 @@ function _M:drawRow(row, row_i, nb_keyframes, x, y, total_w, total_h, loffset_x,
 		if not self.only_display then
 			if self.sel == row_i then
 				if self.focused then
-					self:drawFrame(col.frame_sel, column_w_offset, y, nil, nil, nil, nil, nil, nil, 0, total_h, 0, loffset_y, dest_area)
+					self:drawFrame(col.frame_sel, column_w_offset, y, nil, nil, nil, nil, nil, nil, 0, total_h, 0, loffset_y, clip_area)
 				else
-					self:drawFrame(col.frame_usel, column_w_offset, y, nil, nil, nil, nil, nil, nil, 0, total_h, 0, loffset_y, dest_area)
+					self:drawFrame(col.frame_usel, column_w_offset, y, nil, nil, nil, nil, nil, nil, 0, total_h, 0, loffset_y, clip_area)
 				end
 			else
 				if row.focus_decay then
-					if self.focused then self:drawFrame(col.frame_sel, column_w_offset, y, 1, 1, 1, row.focus_decay * self.one_by_focus_decay, nil, nil, 0, total_h, 0, loffset_y, dest_area)
-					else self:drawFrame(col.frame_usel, column_w_offset, y, 1, 1, 1, row.focus_decay * self.one_by_focus_decay, nil, nil, 0, total_h, 0, loffset_y, dest_area) end
+					if self.focused then self:drawFrame(col.frame_sel, column_w_offset, y, 1, 1, 1, row.focus_decay * self.one_by_focus_decay, nil, nil, 0, total_h, 0, loffset_y, clip_area)
+					else self:drawFrame(col.frame_usel, column_w_offset, y, 1, 1, 1, row.focus_decay * self.one_by_focus_decay, nil, nil, 0, total_h, 0, loffset_y, clip_area) end
 				else
-					self:drawFrame(col.frame, column_w_offset, y, nil, nil, nil, nil, nil, nil, 0, total_h, 0, loffset_y, dest_area)
+					self:drawFrame(col.frame, column_w_offset, y, nil, nil, nil, nil, nil, nil, 0, total_h, 0, loffset_y, clip_area)
 				end
 			end
 
@@ -263,7 +263,7 @@ function _M:drawRow(row, row_i, nb_keyframes, x, y, total_w, total_h, loffset_x,
 				local c = row.special_bg
 				if type(c) == "function" then c = c(row) end
 				if c then
-					self:drawFrame(col.frame_special, column_w_offset, y, c.r, c.g, c.b, c.a or 1, nil, nil, 0, total_h, 0, loffset_y, dest_area)
+					self:drawFrame(col.frame_special, column_w_offset, y, c.r, c.g, c.b, c.a or 1, nil, nil, 0, total_h, 0, loffset_y, clip_area)
 				end
 			end
 			if total_h < loffset_y then
@@ -274,7 +274,7 @@ function _M:drawRow(row, row_i, nb_keyframes, x, y, total_w, total_h, loffset_x,
 		if clip_y_start > clip_maxy_start then clip_maxy_start = clip_y_start end
 
 		if col.direct_draw then
-			_, _, clip_x_start, clip_x_end, clip_y_start, clip_y_end = col.direct_draw(row, column_w_offset, y, col.width, self.row_height, total_w, total_h, loffset_x, loffset_y, dest_area) or 0, 0, 0, 0, 0, 0
+			_, _, clip_x_start, clip_x_end, clip_y_start, clip_y_end = col.direct_draw(row, column_w_offset, y, col.width, self.row_height, total_w, total_h, loffset_x, loffset_y, clip_area) or 0, 0, 0, 0, 0, 0
 			frame_clip_y = 0
 		elseif row.cells[j]._tex then
 			local center_h = ( (self.row_height and self.row_height or row.cells[j].h) - row.cells[j].h) * 0.5
@@ -285,8 +285,8 @@ function _M:drawRow(row, row_i, nb_keyframes, x, y, total_w, total_h, loffset_x,
 				frame_clip_y = center_h
 			end
 			-- if it ended after visible area then compute its bottom clip
-			if total_h + row.cells[j].h + center_h > loffset_y + dest_area.h then
-			   clip_y_end = total_h + row.cells[j].h + center_h - loffset_y - dest_area.h
+			if total_h + row.cells[j].h + center_h > loffset_y + clip_area.h then
+			   clip_y_end = total_h + row.cells[j].h + center_h - loffset_y - clip_area.h
 			end
 
 			-- clip clipping to avoid texture display errors
@@ -526,8 +526,7 @@ function _M:display(x, y, nb_keyframes, screen_x, screen_y, offset_x, offset_y, 
 	local clip_y_start = 0
 	local clip_y_end = 0
 	local frame_clip_y = 0
-	local dest_area = {}
-	dest_area.h, dest_area.fixed = self.dest_area.h, self.dest_area.fixed
+	local clip_area = table.clone(self.clip_area)
 	local frame_clip_y_start, frame_clip_y_end
 
 	local max_h = 0
@@ -542,10 +541,10 @@ function _M:display(x, y, nb_keyframes, screen_x, screen_y, offset_x, offset_y, 
 				else self:drawFrame(col.frame_col_sel, x + current_x, y + current_y) end
 				local one_by_tex_h = 1 / col._tex_h
 				col._tex:toScreenPrecise(x + current_x + col.frame_sel.b4.w, y + current_y + center_h, col.w, col.h - (clip_y_start + clip_y_end), 0, col.w / col._tex_w, clip_y_start * one_by_tex_h, (col.h - clip_y_end) * one_by_tex_h )
-			elseif total_h + self.max_h_columns > loffset_y and total_h < loffset_y + dest_area.h then
+			elseif total_h + self.max_h_columns > loffset_y and total_h < loffset_y + clip_area.h then
 
-				if self.cur_col == j then _, _, frame_clip_y_start, frame_clip_y_end = self:drawFrame(col.frame_col, x + current_x, y + current_y, nil, nil, nil, nil, nil, nil, 0, total_h, 0, loffset_y, dest_area)
-				else _, _, frame_clip_y_start, frame_clip_y_end = self:drawFrame(col.frame_col_sel, x + current_x, y + current_y, nil, nil, nil, nil, nil, nil, 0, total_h, 0, loffset_y, dest_area) end
+				if self.cur_col == j then _, _, frame_clip_y_start, frame_clip_y_end = self:drawFrame(col.frame_col, x + current_x, y + current_y, nil, nil, nil, nil, nil, nil, 0, total_h, 0, loffset_y, clip_area)
+				else _, _, frame_clip_y_start, frame_clip_y_end = self:drawFrame(col.frame_col_sel, x + current_x, y + current_y, nil, nil, nil, nil, nil, nil, 0, total_h, 0, loffset_y, clip_area) end
 				self.mouse:updateZone(("column header%d"):format(j), current_x, current_y, col.width, self.row_height - frame_clip_y_start - frame_clip_y_end)
 
 				if self.only_display then frame_clip_y = center_h else frame_clip_y = loffset_y - total_h end
@@ -557,11 +556,11 @@ function _M:display(x, y, nb_keyframes, screen_x, screen_y, offset_x, offset_y, 
 				end
 
 				-- if it ended after visible area then compute its bottom clip
-				if total_h + col.h  + center_h > loffset_y + dest_area.h then
-				   clip_y_end = total_h + col.h + center_h - loffset_y - dest_area.h
+				if total_h + col.h  + center_h > loffset_y + clip_area.h then
+				   clip_y_end = total_h + col.h + center_h - loffset_y - clip_area.h
 				end
 				local one_by_tex_h = 1 / col._tex_h
-				if total_h + col.h > loffset_y and total_h < loffset_y + dest_area.h then
+				if total_h + col.h > loffset_y and total_h < loffset_y + clip_area.h then
 					col._tex:toScreenPrecise(x + current_x + col.frame_sel.b4.w, y + current_y + center_h - frame_clip_y, col.w, col.h - (clip_y_start + clip_y_end), 0, col.w / col._tex_w, clip_y_start * one_by_tex_h, (col.h - clip_y_end) * one_by_tex_h )
 				end
 			end
@@ -572,10 +571,10 @@ function _M:display(x, y, nb_keyframes, screen_x, screen_y, offset_x, offset_y, 
 		max_h = self.row_height or max_h
 
 		if self.floating_headers then
-			dest_area.h = dest_area.h - max_h
+			clip_area.h = clip_area.h - max_h
 			current_y = current_y + max_h
 			loffset_y = loffset_y + max_h
-		elseif total_h + max_h > loffset_y and total_h < loffset_y + dest_area.h then
+		elseif total_h + max_h > loffset_y and total_h < loffset_y + clip_area.h then
 			current_y = current_y + max_h
 			if not self.only_display then current_y = current_y + total_h - loffset_y end
 		end
@@ -592,12 +591,12 @@ function _M:display(x, y, nb_keyframes, screen_x, screen_y, offset_x, offset_y, 
 	if self.focus_decay_max then self.list[self.sel].focus_decay = self.focus_decay_max end
 
 	-- if we are too deep then end this
-	if total_h > loffset_y + dest_area.h then return end
+	if total_h > loffset_y + clip_area.h then return end
 	for i = 1, #self.list do
 		row = self.list[i]
 		-- if its visible then draw it
-		if total_h + row.h > loffset_y and total_h < loffset_y + dest_area.h then
-			_, _, clip_y_start, clip_y_end = self:drawRow(row, i, nb_keyframes, x, y + current_y, 0, total_h, 0, loffset_y, dest_area)
+		if total_h + row.h > loffset_y and total_h < loffset_y + clip_area.h then
+			_, _, clip_y_start, clip_y_end = self:drawRow(row, i, nb_keyframes, x, y + current_y, 0, total_h, 0, loffset_y, clip_area)
 
 			row.last_display_x = screen_x
 			row.last_display_y = screen_y + current_y
@@ -615,7 +614,7 @@ function _M:display(x, y, nb_keyframes, screen_x, screen_y, offset_x, offset_y, 
 		-- add full size of row
 		total_h = total_h + row.h
 		-- if we are too deep then end this
-		if total_h > loffset_y + dest_area.h then break end
+		if total_h > loffset_y + clip_area.h then break end
 	end
 
 	-- show scrollbar only if there is one, total size of UI element is greater than visible one and only_display switch is not set
