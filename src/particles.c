@@ -398,7 +398,9 @@ static int particles_emit(lua_State *L)
 			}
 			else
 			{
-				lua_rawgeti(L, LUA_REGISTRYINDEX, l->generator_ref);
+				lua_getglobal(L, "__fcts");
+				lua_pushnumber(L, l->generator_ref);
+				lua_rawget(L, -2);
 				if (lua_pcall(L, 0, 1, 0))
 				{
 					printf("Particle emitter error %x (%d): %s\n", (int)l, l->generator_ref, lua_tostring(L, -1));
@@ -448,6 +450,7 @@ static int particles_emit(lua_State *L)
 					getparticulefield(L, "aa", &(p->aa));
 				}
 				lua_pop(L, 1);
+				lua_pop(L, 1); // global table
 			}
 			p->ox = p->x;
 			p->oy = p->y;
@@ -480,7 +483,7 @@ int luaopen_particles(lua_State *L)
 	luaL_openlib(L, "core.particles", particleslib, 0);
 	lua_pushstring(L, "ETERNAL");
 	lua_pushnumber(L, PARTICLE_ETERNAL);
-	lua_settable(L, -3);
+	lua_rawset(L, -3);
 	lua_pop(L, 1);
 
 	// Make a table to store all textures
@@ -502,14 +505,18 @@ void thread_particle_run(particle_thread *pt, plist *l)
 	if (!ps || !ps->l || !ps->init || !ps->alive || ps->i_want_to_die) return;
 
 	// Update
-	lua_rawgeti(L, LUA_REGISTRYINDEX, l->updator_ref);
-	lua_rawgeti(L, LUA_REGISTRYINDEX, l->emit_ref);
+	lua_getglobal(L, "__fcts");
+	lua_pushnumber(L, l->updator_ref);
+	lua_rawget(L, -2);
+	lua_pushnumber(L, l->emit_ref);
+	lua_rawget(L, -3);
 	if (lua_pcall(L, 1, 0, 0))
 	{
 		printf("L(%x) Particle updater error %x (%d, %d): %s\n", (int)L, (int)l, l->updator_ref, l->emit_ref, lua_tostring(L, -1));
 //		ps->i_want_to_die = TRUE;
 		lua_pop(L, 1);
 	}
+	lua_pop(L, 1); // global table
 
 	particles_update(L, ps, TRUE);
 }
@@ -616,8 +623,12 @@ void thread_particle_init(particle_thread *pt, plist *l)
 	ps->particles = calloc(nb, sizeof(particle_type));
 
 	// Locate the updator
+	lua_getglobal(L, "__fcts");
+	l->updator_ref = lua_objlen(L, -1) + 1;
+	lua_pushnumber(L, lua_objlen(L, -1) + 1);
 	lua_pushvalue(L, 2);
-	l->updator_ref = luaL_ref(L, LUA_REGISTRYINDEX);
+	lua_rawset(L, -3);
+	lua_pop(L, 1);
 
 	// Grab all parameters
 	lua_pushvalue(L, 1);
@@ -637,7 +648,14 @@ void thread_particle_init(particle_thread *pt, plist *l)
 		l->generator_ref = LUA_NOREF;
 	}
 	else
-		l->generator_ref = luaL_ref(L, LUA_REGISTRYINDEX);
+	{
+		lua_getglobal(L, "__fcts");
+		l->generator_ref = lua_objlen(L, -1) + 1;
+		lua_pushnumber(L, lua_objlen(L, -1) + 1);
+		lua_pushvalue(L, -3);
+		lua_rawset(L, -3);
+		lua_pop(L, 2);
+	}
 
 	if (l->generator_ref == LUA_NOREF)
 	{
@@ -694,7 +712,13 @@ void thread_particle_init(particle_thread *pt, plist *l)
 
 	lua_settable(L, -3);
 
-	l->emit_ref = luaL_ref(L, LUA_REGISTRYINDEX);
+	lua_getglobal(L, "__fcts");
+	l->emit_ref = lua_objlen(L, -1) + 1;
+	lua_pushnumber(L, lua_objlen(L, -1) + 1);
+	lua_pushvalue(L, -3);
+	lua_rawset(L, -3);
+	lua_pop(L, 1);
+	lua_pop(L, 1);
 
 	free((char*)ps->name_def);
 	free((char*)ps->args);
@@ -708,9 +732,26 @@ void thread_particle_die(particle_thread *pt, plist *l)
 	particles_type *ps = l->ps;
 
 //	printf("Deleting particle from list %x :: %x\n", (int)l, (int)ps);
-	if (l->emit_ref != LUA_NOREF) luaL_unref(L, LUA_REGISTRYINDEX, l->emit_ref);
-	if (l->updator_ref != LUA_NOREF) luaL_unref(L, LUA_REGISTRYINDEX, l->updator_ref);
-	if (l->generator_ref != LUA_NOREF) luaL_unref(L, LUA_REGISTRYINDEX, l->generator_ref);
+	lua_getglobal(L, "__fcts");
+	if (l->emit_ref != LUA_NOREF)
+	{
+		lua_pushnumber(L, l->emit_ref);
+		lua_pushnil(L);
+		lua_rawset(L, -3);
+	}
+	if (l->updator_ref != LUA_NOREF)
+	{
+		lua_pushnumber(L, l->updator_ref);
+		lua_pushnil(L);
+		lua_rawset(L, -3);
+	}
+	if (l->generator_ref != LUA_NOREF)
+	{
+		lua_pushnumber(L, l->generator_ref);
+		lua_pushnil(L);
+		lua_rawset(L, -3);
+	}
+	lua_pop(L, 1);
 	l->emit_ref = LUA_NOREF;
 	l->updator_ref = LUA_NOREF;
 	l->generator_ref = LUA_NOREF;
@@ -736,6 +777,8 @@ int thread_particles(void *data)
 	luaopen_core(L);
 	luaopen_particles(L);
 	pt->L = L;
+	lua_newtable(L);
+	lua_setglobal(L, "__fcts");
 
 	// Override "print" if requested
 	if (no_debug)
@@ -883,7 +926,7 @@ void create_particles_thread()
 
 	MAX_THREADS = nb_cpus - 1;
 	MAX_THREADS = (MAX_THREADS < 1) ? 1 : MAX_THREADS;
-//	MAX_THREADS = 1;
+	MAX_THREADS = 1;
 	threads = calloc(MAX_THREADS, sizeof(particle_thread));
 
 	cur_thread = 0;
