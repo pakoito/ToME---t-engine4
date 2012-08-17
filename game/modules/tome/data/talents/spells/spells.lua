@@ -19,6 +19,7 @@
 
 -- Archmage spells
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, mana_regen=true, type="spell/arcane", name = "arcane", description = "Arcane manipulates the raw magic energies to shape them into both offensive and defensive spells." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, mana_regen=true, type="spell/aether", name = "aether", description = "Tap on the core arcane forces of the aether, unleashing devastating effects on your foes." }
 
 -- Elemental spells
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, mana_regen=true, type="spell/fire", name = "fire", description = "Harness the power of fire to burn your foes to ashes." }
@@ -214,6 +215,7 @@ end
 
 
 load("/data/talents/spells/arcane.lua")
+load("/data/talents/spells/aether.lua")
 load("/data/talents/spells/fire.lua")
 load("/data/talents/spells/wildfire.lua")
 load("/data/talents/spells/earth.lua")

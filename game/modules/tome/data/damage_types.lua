@@ -586,10 +586,13 @@ newDamageType{
 newDamageType{
 	name = "arcane silence", type = "ARCANE_SILENCE",
 	projector = function(src, x, y, type, dam)
+		local chance = 100
+		if _G.type(dam) == "table" then dam, chance = dam.dam, dam.chance end
+
 		local target = game.level.map(x, y, Map.ACTOR)
 		local realdam = DamageType:get(DamageType.ARCANE).projector(src, x, y, DamageType.ARCANE, dam)
 		if target then
-			if target:canBe("silence") then
+			if rng.percent(chance) and target:canBe("silence") then
 				target:setEffect(target.EFF_SILENCED, 3, {apply_power=src:combatSpellpower()})
 			else
 				game.logSeen(target, "%s resists!", target.name:capitalize())
