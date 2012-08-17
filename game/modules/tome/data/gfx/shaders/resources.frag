@@ -6,10 +6,10 @@
 uniform sampler2D tex;
 uniform vec3 color;
 uniform float tick;
-uniform float speed = 5000.0;
-uniform vec2 p2 = vec2(1.0, 1.0);
-uniform float a = 1.0;
-uniform float amp = 0.2;
+uniform float speed;
+uniform vec2 p2;
+uniform float a;
+uniform float amp;
 
 int LFSR_Rand_Gen(in int n)
 {

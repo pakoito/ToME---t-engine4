@@ -254,8 +254,6 @@ function _M:redrawAllItems()
 		for j = 1, #tree.nodes do
 			local tal = tree.nodes[j]
 			if not tal.texture then tal.texture = self:getImage(tal.entity.image):glTexture() end
-			print("tutu")
-			table.print(tal.entity)
 			self:drawItem(tal)
 		end
 	end
@@ -468,4 +466,4 @@ function _M:display(x, y, nb_keyframes, screen_x, screen_y, offset_x, offset_y, 
 	if self.focused and self.scrollbar and self.max_h > self.h then
 		self.scrollbar:display(x + self.w - self.scrollbar.w, y)
 	end
-end
+end
