@@ -1836,10 +1836,12 @@ newEffect{
 	status = "beneficial",
 	parameters = { dam=10 },
 	on_timeout = function(self, eff)
+		if game.zone.short_name.."-"..game.level.level ~= eff.level then return end
+
 		local spot = rng.table(eff.list)
 		self:project({type="ball", x=spot.x, y=spot.y, radius=2, selffire=self:spellFriendlyFire()}, spot.x, spot.y, DamageType.ARCANE, eff.dam)
 		if core.shader.active(4) then
-			game.level.map:particleEmitter(spot.x, spot.y, 2, "shader_ring", {radius=4, life=12}, {type="sparks", zoom=1, time_factor=400, hide_center=0, color1={0.6, 0.3, 0.8, 1}, color1={0.8, 0, 0.8, 1}})
+			game.level.map:particleEmitter(spot.x, spot.y, 2, "shader_ring", {radius=4, life=12}, {type="sparks", zoom=1, time_factor=400, hide_center=0, color1={0.6, 0.3, 0.8, 1}, color2={0.8, 0, 0.8, 1}})
 		else
 			game.level.map:particleEmitter(spot.x, spot.y, 2, "generic_ball", {rm=150, rM=180, gm=20, gM=60, bm=180, bM=200, am=80, aM=150, radius=2})
 		end
@@ -1847,6 +1849,22 @@ newEffect{
 		game:playSoundNear(self, "talents/arcane")
 	end,
 	activate = function(self, eff)
+	end,
+	deactivate = function(self, eff)
+	end,
+}
+
+newEffect{
+	name = "AETHER_AVATAR", image = "talents/aether_avatar.png",
+	desc = "Aether Avatar",
+	long_desc = function(self, eff) return ("Filled with pure aether forces!") end,
+	type = "magical",
+	subtype = { arcane=true },
+	status = "beneficial",
+	parameters = { },
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "use_only_arcane", 1)
+		self:effectTemporaryValue(eff, "arcane_cooldown_divide", 3)
 	end,
 	deactivate = function(self, eff)
 	end,

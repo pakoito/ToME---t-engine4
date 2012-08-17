@@ -3375,6 +3375,8 @@ function _M:preUseTalent(ab, silent, fake)
 
 	-- Special checks
 	if ab.on_pre_use and not (ab.mode == "sustained" and self:isTalentActive(ab.id)) and not ab.on_pre_use(self, ab, silent, fake) then return false end
+	
+	if self:attr("use_only_arcane") and ab.type[1] ~= "spell/arcane" and ab.type[1] ~= "spell/aether" then return false end
 
 	-- Cant heal
 	if ab.is_heal and self:attr("no_healing") then return false end
@@ -3754,6 +3756,8 @@ function _M:getTalentCooldown(t)
 	elseif t.type[1] == "inscriptions/taints" then
 		local eff = self:hasEffect(self.EFF_TAINT_COOLDOWN)
 		if eff and eff.power then cd = cd + eff.power end
+	elseif self:attr("arcane_cooldown_divide") and (t.type[1] == "spell/arcane" or t.type[1] == "spell/aether") then
+		cd = math.ceil(cd / self.arcane_cooldown_divide)
 	end
 
 	if self.talent_cd_reduction[t.id] then cd = cd - self.talent_cd_reduction[t.id] end
