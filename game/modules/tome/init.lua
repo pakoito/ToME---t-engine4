@@ -21,8 +21,8 @@ name = "T.o.M.E"
 long_name = "Tales of Maj'Eyal: Age of Ascendancy"
 short_name = "tome"
 author = { "DarkGod", "darkgod@te4.org" }
-homepage = "http://tome.te4.org/"
-version = {3,9,42}
+homepage = "http://te4.org/"
+version = {0,9,42}
 engine = {0,9,42,"te4"}
 description = [[
 Welcome to Maj'Eyal.

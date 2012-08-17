@@ -194,7 +194,7 @@ function _M:updateAll()
 		end
 		if restore then fs.setWritePath(restore) end
 
-		Dialog:simplePopup("Update", "All update installed, the game will now restart", function()
+		Dialog:simplePopup("Update", "All updates installed, the game will now restart", function()
 			util.showMainMenu()
 		end)
 	end
