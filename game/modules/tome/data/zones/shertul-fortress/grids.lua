@@ -138,7 +138,7 @@ newEntity{ base = "FARPORTAL", define_as = "CFARPORTAL",
 		class.new{image="terrain/farportal-base.png", display_x=-1, display_y=-1, display_w=3, display_h=3},
 	},
 	on_added = function(self, level, x, y)
-		if core.shader.active() then
+		if core.shader.active(4) then
 			level.map:particleEmitter(x, y, 3, "shader_shield", {}, {type="shield", time_factor=8000, color={0.3, 0.4, 0.7}})
 		end
 		level.map:particleEmitter(x, y, 3, "farportal_lightning")

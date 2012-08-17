@@ -188,7 +188,7 @@ newTalent{
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/earth")
 		local particle
-		if core.shader.active() then
+		if core.shader.active(4) then
 			particle = self:addParticles(Particles.new("shader_ring_rotating", 1, {rotation=-0.01, radius=1.1}, {type="stone", hide_center=1, xy={self.x, self.y}}))
 		else
 			particle = self:addParticles(Particles.new("crystalline_focus", 1))

@@ -47,33 +47,33 @@ local frames_colors = {
 
 -- Load the various shaders used to display resources
 air_c = {0x92/255, 0xe5, 0xe8}
-air_sha = Shader.new("resources", {delay_load=true, color=air_c, speed=100, amp=0.8, distort={2,2.5}})
+air_sha = Shader.new("resources", {require_shader=4, delay_load=true, color=air_c, speed=100, amp=0.8, distort={2,2.5}})
 life_c = {0xc0/255, 0, 0}
-life_sha = Shader.new("resources", {delay_load=true, color=life_c, speed=1000, distort={1.5,1.5}})
+life_sha = Shader.new("resources", {require_shader=4, delay_load=true, color=life_c, speed=1000, distort={1.5,1.5}})
 shield_c = {0.5, 0.5, 0.5}
-shield_sha = Shader.new("resources", {delay_load=true, color=shield_c, speed=5000, a=0.8, distort={0.5,0.5}})
+shield_sha = Shader.new("resources", {require_shader=4, delay_load=true, color=shield_c, speed=5000, a=0.8, distort={0.5,0.5}})
 stam_c = {0xff/255, 0xcc/255, 0x80/255}
-stam_sha = Shader.new("resources", {delay_load=true, color=stam_c, speed=700, distort={1,1.4}})
+stam_sha = Shader.new("resources", {require_shader=4, delay_load=true, color=stam_c, speed=700, distort={1,1.4}})
 mana_c = {106/255, 146/255, 222/255}
-mana_sha = Shader.new("resources", {delay_load=true, color=mana_c, speed=1000, distort={0.4,0.4}})
+mana_sha = Shader.new("resources", {require_shader=4, delay_load=true, color=mana_c, speed=1000, distort={0.4,0.4}})
 soul_c = {128/255, 128/255, 128/255}
-soul_sha = Shader.new("resources", {delay_load=true, color=soul_c, speed=1200, distort={0.4,-0.4}})
+soul_sha = Shader.new("resources", {require_shader=4, delay_load=true, color=soul_c, speed=1200, distort={0.4,-0.4}})
 equi_c = {0x00/255, 0xff/255, 0x74/255}
-equi_sha = Shader.new("resources", {delay_load=true, color=equi_c, amp=0.8, speed=20000, distort={0.3,0.25}})
+equi_sha = Shader.new("resources", {require_shader=4, delay_load=true, color=equi_c, amp=0.8, speed=20000, distort={0.3,0.25}})
 paradox_c = {0x2f/255, 0xa0/255, 0xb4/255}
-paradox_sha = Shader.new("resources", {delay_load=true, color=paradox_c, amp=0.8, speed=20000, distort={0.1,0.25}})
+paradox_sha = Shader.new("resources", {require_shader=4, delay_load=true, color=paradox_c, amp=0.8, speed=20000, distort={0.1,0.25}})
 pos_c = {colors.GOLD.r/255, colors.GOLD.g/255, colors.GOLD.b/255}
-pos_sha = Shader.new("resources", {delay_load=true, color=pos_c, speed=1000, distort={1.6,0.2}})
+pos_sha = Shader.new("resources", {require_shader=4, delay_load=true, color=pos_c, speed=1000, distort={1.6,0.2}})
 neg_c = {colors.DARK_GREY.r/255, colors.DARK_GREY.g/255, colors.DARK_GREY.b/255}
-neg_sha = Shader.new("resources", {delay_load=true, color=neg_c, speed=1000, distort={1.6,-0.2}})
+neg_sha = Shader.new("resources", {require_shader=4, delay_load=true, color=neg_c, speed=1000, distort={1.6,-0.2}})
 vim_c = {0x90/255, 0x40/255, 0x10/255}
-vim_sha = Shader.new("resources", {delay_load=true, color=vim_c, speed=1000, distort={0.4,0.4}})
+vim_sha = Shader.new("resources", {require_shader=4, delay_load=true, color=vim_c, speed=1000, distort={0.4,0.4}})
 hate_c = {0xF5/255, 0x3C/255, 0xBE/255}
-hate_sha = Shader.new("resources", {delay_load=true, color=hate_c, speed=1000, distort={0.4,0.4}})
+hate_sha = Shader.new("resources", {require_shader=4, delay_load=true, color=hate_c, speed=1000, distort={0.4,0.4}})
 psi_c = {colors.BLUE.r/255, colors.BLUE.g/255, colors.BLUE.b/255}
-psi_sha = Shader.new("resources", {delay_load=true, color=psi_c, speed=2000, distort={0.4,0.4}})
+psi_sha = Shader.new("resources", {require_shader=4, delay_load=true, color=psi_c, speed=2000, distort={0.4,0.4}})
 feedback_c = {colors.YELLOW.r/255, colors.YELLOW.g/255, colors.YELLOW.b/255}
-feedback_sha = Shader.new("resources", {delay_load=true, color=feedback_c, speed=2000, distort={0.4,0.4}})
+feedback_sha = Shader.new("resources", {require_shader=4, delay_load=true, color=feedback_c, speed=2000, distort={0.4,0.4}})
 save_c = pos_c
 save_sha = pos_sha
 

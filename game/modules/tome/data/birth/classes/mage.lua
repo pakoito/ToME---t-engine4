@@ -127,22 +127,22 @@ newBirthDescriptor{
 	birth_example_particles = {
 		"arcane_power",
 		function(actor)
-			if core.shader.active() then actor:addParticles(Particles.new("shader_ring_rotating", 1, {radius=1.1}, {type="flames", hide_center=0, xy={0, 0}}))
+			if core.shader.active(4) then actor:addParticles(Particles.new("shader_ring_rotating", 1, {radius=1.1}, {type="flames", hide_center=0, xy={0, 0}}))
 			else actor:addParticles(Particles.new("wildfire", 1))
 			end
 		end,
 		function(actor)
-			if core.shader.active() then actor:addParticles(Particles.new("shader_ring_rotating", 1, {rotation=-0.2, radius=1.1}, {type="sparks", hide_center=0, time_factor=40000, color1={0, 0, 1, 1}, color2={0, 1, 1, 1}, zoom=0.5, xy={0, 0}}))
+			if core.shader.active(4) then actor:addParticles(Particles.new("shader_ring_rotating", 1, {rotation=-0.2, radius=1.1}, {type="sparks", hide_center=0, time_factor=40000, color1={0, 0, 1, 1}, color2={0, 1, 1, 1}, zoom=0.5, xy={0, 0}}))
 			else actor:addParticles(Particles.new("uttercold", 1))
 			end
 		end,
 		function(actor)
-			if core.shader.active() then actor:addParticles(Particles.new("shader_ring_rotating", 1, {rotation=-0.01, radius=1.1}, {type="stone", hide_center=1, xy={0, 0}}))
+			if core.shader.active(4) then actor:addParticles(Particles.new("shader_ring_rotating", 1, {rotation=-0.01, radius=1.1}, {type="stone", hide_center=1, xy={0, 0}}))
 			else actor:addParticles(Particles.new("crystalline_focus", 1))
 			end
 		end,
 		function(actor)
-			if core.shader.active() then actor:addParticles(Particles.new("shader_ring_rotating", 1, {radius=1.1}, {type="sparks", hide_center=0, zoom=3, xy={0, 0}}))
+			if core.shader.active(4) then actor:addParticles(Particles.new("shader_ring_rotating", 1, {radius=1.1}, {type="sparks", hide_center=0, zoom=3, xy={0, 0}}))
 			else actor:addParticles(Particles.new("tempest", 1))
 			end
 		end,

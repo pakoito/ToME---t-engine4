@@ -129,7 +129,7 @@ newEffect{
 		--- Warning there can be only one time shield active at once for an actor
 		self.time_shield_absorb = eff.power
 		self.time_shield_absorb_max = eff.power
-		if core.shader.active() then
+		if core.shader.active(4) then
 			eff.particle = self:addParticles(Particles.new("shader_shield", 1, {img="shield3"}, {type="shield", time_factor=2000, color={1, 1, 0.3}}))
 		else
 			eff.particle = self:addParticles(Particles.new("time_shield_bubble", 1))
@@ -1697,7 +1697,7 @@ newEffect{
 		eff.tid = eff.target:addTemporaryValue("no_timeflow", 1)
 		eff.imid = eff.target:addTemporaryValue("status_effect_immune", 1)
 		eff.target.energy.value = 0
-		if core.shader.active() then
+		if core.shader.active(4) then
 			eff.particle = eff.target:addParticles(Particles.new("shader_shield", 1, {img="shield2", size_factor=1.25}, {type="shield", time_factor=6000, aadjust=5, color={0, 1, 1}}))
 		else
 			eff.particle = eff.target:addParticles(Particles.new("generic_shield", 1, {r=0, g=1, b=1, a=1}))

@@ -159,7 +159,7 @@ newTalent{
 		game:playSoundNear(self, "talents/ice")
 
 		local particle
-		if core.shader.active() then
+		if core.shader.active(4) then
 			particle = self:addParticles(Particles.new("shader_ring_rotating", 1, {rotation=-0.2, radius=1.1}, {type="sparks", hide_center=0, time_factor=40000, color1={0, 0, 1, 1}, color2={0, 1, 1, 1}, zoom=0.5, xy={self.x, self.y}}))
 		else
 			particle = self:addParticles(Particles.new("uttercold", 1))

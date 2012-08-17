@@ -441,7 +441,7 @@ newEffect{
 		self.displacement_shield_chance = eff.chance
 		--- Warning there can be only one time shield active at once for an actor
 		self.displacement_shield_target = eff.target
-		if core.shader.active() then
+		if core.shader.active(4) then
 			eff.particle = self:addParticles(Particles.new("shader_shield", 1, {img="shield3"}, {type="shield", time_factor=6000, color={0.5, 1, 0.2}}))
 		else
 			eff.particle = self:addParticles(Particles.new("displacement_shield", 1))
@@ -494,7 +494,7 @@ newEffect{
 		--- Warning there can be only one time shield active at once for an actor
 		self.damage_shield_absorb = eff.power
 		self.damage_shield_absorb_max = eff.power
-		if core.shader.active() then
+		if core.shader.active(4) then
 			eff.particle = self:addParticles(Particles.new("shader_shield", 1, nil, {type="shield", color={0.4, 0.7, 1.0}}))
 		else
 			eff.particle = self:addParticles(Particles.new("damage_shield", 1))
@@ -1838,7 +1838,7 @@ newEffect{
 	on_timeout = function(self, eff)
 		local spot = rng.table(eff.list)
 		self:project({type="ball", x=spot.x, y=spot.y, radius=2, selffire=self:spellFriendlyFire()}, spot.x, spot.y, DamageType.ARCANE, eff.dam)
-		if core.shader.active() then
+		if core.shader.active(4) then
 			game.level.map:particleEmitter(spot.x, spot.y, 2, "shader_ring", {radius=4, life=12}, {type="sparks", zoom=1, time_factor=400, hide_center=0, color1={0.6, 0.3, 0.8, 1}, color1={0.8, 0, 0.8, 1}})
 		else
 			game.level.map:particleEmitter(spot.x, spot.y, 2, "generic_ball", {rm=150, rM=180, gm=20, gM=60, bm=180, bM=200, am=80, aM=150, radius=2})

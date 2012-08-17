@@ -65,7 +65,7 @@ newBirthDescriptor{
 	stats = { wil=5, cun=3, dex=1, },
 	birth_example_particles = {
 		function(actor)
-			if core.shader.active() then actor:addParticles(Particles.new("shader_ring_rotating", 1, {radius=1.1}, {type="flames", zoom=2, npow=4, time_factor=4000, color1={0.2,0.7,0,1}, color2={0,1,0.3,1}, hide_center=0, xy={0, 0}}))
+			if core.shader.active(4) then actor:addParticles(Particles.new("shader_ring_rotating", 1, {radius=1.1}, {type="flames", zoom=2, npow=4, time_factor=4000, color1={0.2,0.7,0,1}, color2={0,1,0.3,1}, hide_center=0, xy={0, 0}}))
 			else actor:addParticles(Particles.new("master_summoner", 1))
 			end
 		end,

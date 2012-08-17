@@ -40,7 +40,7 @@ newTalent{
 		local dam = self:spellCrit(t.getDamage(self, t))
 		self:project(tg, self.x, self.y, DamageType.LIGHTNING_DAZE, {daze=75, dam=rng.avg(dam / 3, dam, 3)})
 
-		if core.shader.active() then
+		if core.shader.active(4) then
 			game.level.map:particleEmitter(self.x, self.y, tg.radius, "shader_ring", {radius=tg.radius*2, life=8}, {type="sparks"})
 		else
 			local x, y = self.x, self.y
@@ -150,7 +150,7 @@ newTalent{
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/thunderstorm")
 		local particle
-		if core.shader.active() then
+		if core.shader.active(4) then
 			particle = self:addParticles(Particles.new("shader_ring_rotating", 1, {radius=1.1}, {type="sparks", hide_center=0, zoom=3, xy={self.x, self.y}}))
 		else
 			particle = self:addParticles(Particles.new("tempest", 1))

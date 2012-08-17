@@ -122,7 +122,7 @@ newTalent{
 		game:playSoundNear(self, "talents/fire")
 
 		local particle
-		if core.shader.active() then
+		if core.shader.active(4) then
 			particle = self:addParticles(Particles.new("shader_ring_rotating", 1, {radius=1.1}, {type="flames", hide_center=0, xy={self.x, self.y}}))
 		else
 			particle = self:addParticles(Particles.new("wildfire", 1))

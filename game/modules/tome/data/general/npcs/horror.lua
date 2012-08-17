@@ -709,7 +709,7 @@ With each slow breath it takes reality distorts around it.  Blue twirls into red
 	dreamer_sleep_state = 1,
 	-- And some particles to show that we're asleep
 	resolvers.genericlast(function(e)
-		if core.shader.active() then
+		if core.shader.active(4) then
 			e.sleep_particle = e:addParticles(engine.Particles.new("shader_shield", 1, {img="shield2", size_factor=1}, {type="shield", time_factor=6000, aadjust=2, color={0.6, 1, 0.6}}))
 		else
 			e.sleep_particle = e:addParticles(engine.Particles.new("generic_shield", 1, {r=0.6, g=1, b=0.6, a=1}))

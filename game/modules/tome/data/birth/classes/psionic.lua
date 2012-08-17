@@ -60,17 +60,17 @@ newBirthDescriptor{
 	stats = { str=1, wil=4, cun=4, },
 	birth_example_particles = {
 		function(actor)
-			if core.shader.active() then actor:addParticles(Particles.new("shader_shield", 1, {size_factor=1.1}, {type="shield", time_factor=-10000, llpow=1, aadjust=3, color={1, 0, 0.3}}))
+			if core.shader.active(4) then actor:addParticles(Particles.new("shader_shield", 1, {size_factor=1.1}, {type="shield", time_factor=-10000, llpow=1, aadjust=3, color={1, 0, 0.3}}))
 			else actor:addParticles(Particles.new("generic_shield", 1, {r=1, g=0, b=0.3, a=0.5}))
 			end
 		end,
 		function(actor)
-			if core.shader.active() then actor:addParticles(Particles.new("shader_shield", 1, {size_factor=1.1}, {type="shield", time_factor=-10000, llpow=1, aadjust=3, color={0.3, 1, 1}}))
+			if core.shader.active(4) then actor:addParticles(Particles.new("shader_shield", 1, {size_factor=1.1}, {type="shield", time_factor=-10000, llpow=1, aadjust=3, color={0.3, 1, 1}}))
 			else actor:addParticles(Particles.new("generic_shield", 1, {r=0.3, g=1, b=1, a=0.5}))
 			end
 		end,
 		function(actor)
-			if core.shader.active() then actor:addParticles(Particles.new("shader_shield", 1, {size_factor=1.1}, {type="shield", time_factor=-10000, llpow=1, aadjust=3, color={0.8, 1, 0.2}}))
+			if core.shader.active(4) then actor:addParticles(Particles.new("shader_shield", 1, {size_factor=1.1}, {type="shield", time_factor=-10000, llpow=1, aadjust=3, color={0.8, 1, 0.2}}))
 			else actor:addParticles(Particles.new("generic_shield", 1, {r=0.8, g=1, b=0.2, a=0.5}))
 			end
 		end,
@@ -178,7 +178,7 @@ newBirthDescriptor{
 	stats = { str=0, wil=5, cun=4, },
 	birth_example_particles = {
 		function(actor)
-			if core.shader.active() then actor:addParticles(Particles.new("shader_shield", 1, {size_factor=1.1}, {type="shield", time_factor=-8000, llpow=1, aadjust=7, color={1, 1, 0}}))
+			if core.shader.active(4) then actor:addParticles(Particles.new("shader_shield", 1, {size_factor=1.1}, {type="shield", time_factor=-8000, llpow=1, aadjust=7, color={1, 1, 0}}))
 			else actor:addParticles(Particles.new("generic_shield", 1, {r=1, g=1, b=0, a=1}))
 			end
 		end,

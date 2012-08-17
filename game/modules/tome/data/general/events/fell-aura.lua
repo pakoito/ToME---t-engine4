@@ -21,7 +21,7 @@
 local x, y = game.state:findEventGrid(level)
 if not x then return false end
 
-if core.shader.active() then
+if core.shader.active(4) then
 	level.map:particleEmitter(x, y, 2, "shader_ring_rotating", {rotation=0, radius=4}, {type="flames", aam=0.1, zoom=7, npow=4, time_factor=2000, color1={0.1,0.1,0.1,6}, color2={0.3,0.3,0.3,1}, hide_center=0})
 else
 	level.map:particleEmitter(x, y, 2, "ultrashield", {rm=200, rM=250, gm=200, gM=250, bm=80, bM=120, am=80, aM=150, radius=2, density=60, life=14, instop=17})

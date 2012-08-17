@@ -1340,7 +1340,7 @@ newEffect{
 		eff.tmpid = self:addTemporaryValue("kinspike_shield", eff.power)
 		self.kinspike_shield_absorb = eff.power
 
-		if core.shader.active() then
+		if core.shader.active(4) then
 			eff.particle = self:addParticles(Particles.new("shader_shield", 1, {size_factor=1.1}, {type="shield", time_factor=-8000, llpow=1, aadjust=7, color={1, 0, 0.3}}))
 		else
 			eff.particle = self:addParticles(Particles.new("generic_shield", 1, {r=1, g=0, b=0.3, a=1}))
@@ -1366,7 +1366,7 @@ newEffect{
 		eff.tmpid = self:addTemporaryValue("thermspike_shield", eff.power)
 		self.thermspike_shield_absorb = eff.power
 
-		if core.shader.active() then
+		if core.shader.active(4) then
 			eff.particle = self:addParticles(Particles.new("shader_shield", 1, {size_factor=1.1}, {type="shield", time_factor=-8000, llpow=1, aadjust=7, color={0.3, 1, 1}}))
 		else
 			eff.particle = self:addParticles(Particles.new("generic_shield", 1, {r=0.3, g=1, b=1, a=1}))
@@ -1392,7 +1392,7 @@ newEffect{
 		eff.tmpid = self:addTemporaryValue("chargespike_shield", eff.power)
 		self.chargespike_shield_absorb = eff.power
 
-		if core.shader.active() then
+		if core.shader.active(4) then
 			eff.particle = self:addParticles(Particles.new("shader_shield", 1, {size_factor=1.1}, {type="shield", time_factor=-8000, llpow=1, aadjust=7, color={0.8, 1, 0.2}}))
 		else
 			eff.particle = self:addParticles(Particles.new("generic_shield", 1, {r=0.8, g=1, b=0.2, a=1}))
@@ -2381,7 +2381,7 @@ newEffect{
 	activate = function(self, eff)
 		self.resonance_field_absorb = eff.power
 		eff.sid = self:addTemporaryValue("resonance_field", eff.power)
-		if core.shader.active() then
+		if core.shader.active(4) then
 			eff.particle = self:addParticles(Particles.new("shader_shield", 1, {size_factor=1.1}, {type="shield", time_factor=-8000, llpow=1, aadjust=7, color={1, 1, 0}}))
 		--	eff.particle = self:addParticles(Particles.new("shader_shield", 1, {img="shield2", size_factor=1.25}, {type="shield", time_factor=6000, color={1, 1, 0}}))
 		else
@@ -2471,7 +2471,7 @@ newEffect{
 		if dream_prison then
 			eff.dur = eff.dur + 1
 			if not eff.particle then
-				if core.shader.active() then
+				if core.shader.active(4) then
 					eff.particle = self:addParticles(Particles.new("shader_shield", 1, {img="shield2", size_factor=1.25}, {type="shield", time_factor=6000, aadjust=5, color={0, 1, 1}}))
 				else
 					eff.particle = self:addParticles(Particles.new("generic_shield", 1, {r=0, g=1, b=1, a=1}))
@@ -2527,7 +2527,7 @@ newEffect{
 		if dream_prison then
 			eff.dur = eff.dur + 1
 			if not eff.particle then
-				if core.shader.active() then
+				if core.shader.active(4) then
 					eff.particle = self:addParticles(Particles.new("shader_shield", 1, {img="shield2", size_factor=1.25}, {type="shield", time_factor=6000, aadjust=5, color={0, 1, 1}}))
 				else
 					eff.particle = self:addParticles(Particles.new("generic_shield", 1, {r=0, g=1, b=1, a=1}))
@@ -2579,7 +2579,7 @@ newEffect{
 		if dream_prison then
 			eff.dur = eff.dur + 1
 			if not eff.particle then
-				if core.shader.active() then
+				if core.shader.active(4) then
 					eff.particle = self:addParticles(Particles.new("shader_shield", 1, {img="shield2", size_factor=1.25}, {type="shield", aadjust=5, color={0, 1, 1}}))
 				else
 					eff.particle = self:addParticles(Particles.new("generic_shield", 1, {r=0, g=1, b=1, a=1}))
@@ -2740,7 +2740,7 @@ newEffect{
 		end
 	end,
 	activate = function(self, eff)
-		if core.shader.active() then
+		if core.shader.active(4) then
 			eff.particle = self:addParticles(Particles.new("shader_shield", 1, {size_factor=1.1}, {type="shield", time_factor=-8000, llpow=1, aadjust=7, color={1, 0.5, 0}}))
 		else
 			eff.particle = self:addParticles(Particles.new("generic_shield", 1, {r=1, g=0.5, b=0.0, a=1}))

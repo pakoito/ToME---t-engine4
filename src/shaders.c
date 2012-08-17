@@ -260,6 +260,12 @@ static int program_use(lua_State *L)
 
 static int shader_is_active(lua_State *L)
 {
+	if (lua_isnumber(L, 1)) {
+		if (lua_tonumber(L, 1) == 4) {
+			lua_pushboolean(L, shaders_active && GLEW_EXT_gpu_shader4);
+			return 1;
+		}
+	}
 	lua_pushboolean(L, shaders_active);
 	return 1;
 }

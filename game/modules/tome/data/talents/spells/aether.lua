@@ -237,7 +237,7 @@ newTalent{
 		game:playSoundNear(self, "talents/arcane")
 
 		local particle
-		if core.shader.active() then
+		if core.shader.active(4) then
 			particle = self:addParticles(Particles.new("shader_shield", 1, {size_factor=1.3}, {type="shield", time_factor=-2500, color={0.8, 0.1, 1.0}, impact_color = {0, 1, 0}, impact_time=800}))
 		else
 			particle = self:addParticles(Particles.new("disruption_shield", 1))

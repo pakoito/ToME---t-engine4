@@ -36,6 +36,10 @@ function _M:init(name, args)
 	self.totalname = self:makeTotalName()
 --	print("[SHADER] making shader from", name, " into ", self.totalname)
 
+	if args.require_shader then
+		if not core.shader.active(args.require_shader) then return end
+	end
+
 	if not core.shader.active() then return end
 
 	if not self.args.delay_load then
