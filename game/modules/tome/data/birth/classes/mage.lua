@@ -153,6 +153,7 @@ newBirthDescriptor{
 	},
 	talents_types = {
 		["spell/arcane"]={true, 0.3},
+		["spell/aether"]={false, 0.3},
 		["spell/fire"]={true, 0.3},
 		["spell/earth"]={true, 0.3},
 		["spell/water"]={true, 0.3},
