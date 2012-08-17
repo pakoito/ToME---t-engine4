@@ -43,4 +43,4 @@ end, },
 function(self)
 	if nb < life / 5 then self.ps:emit(1) nb = nb + 1 end
 end,
-math.ceil(life / 5), "particles_images/square", true
+math.ceil(life / 5), "particles_images/square"

@@ -19,6 +19,7 @@
 
 local Stats = require "engine.interface.ActorStats"
 local Particles = require "engine.Particles"
+local Shader = require "engine.Shader"
 local Entity = require "engine.Entity"
 local Chat = require "engine.Chat"
 local Map = require "engine.Map"
@@ -1865,7 +1866,20 @@ newEffect{
 	activate = function(self, eff)
 		self:effectTemporaryValue(eff, "use_only_arcane", 1)
 		self:effectTemporaryValue(eff, "arcane_cooldown_divide", 3)
+
+		if not self.shader then
+			eff.set_shader = true
+			self.shader = "shadow_simulacrum"
+			self.shader_args = { color = {0.5, 0.1, 0.8}, base = 0.5, time_factor = 500 }
+			self:removeAllMOs()
+			game.level.map:updateMap(self.x, self.y)
+		end
 	end,
 	deactivate = function(self, eff)
+		if eff.set_shader then 
+			self.shader = nil 
+			self:removeAllMOs()
+			game.level.map:updateMap(self.x, self.y)
+		end
 	end,
 }
