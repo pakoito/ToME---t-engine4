@@ -151,6 +151,7 @@ function _M:useTalent(id, who, force_level, ignore_cd, force_target, silent)
 				local old_level
 				if force_level then old_level = who.talents[id]; who.talents[id] = force_level end
 				local ret = ab.activate(who, ab)
+				if ret == true then ret = {} end -- fix for badly coded talents
 				if force_level then who.talents[id] = old_level end
 
 				if not self:postUseTalent(ab, ret) then return end
@@ -160,7 +161,7 @@ function _M:useTalent(id, who, force_level, ignore_cd, force_target, silent)
 				local old_level
 				if force_level then old_level = who.talents[id]; who.talents[id] = force_level end
 				local p = self.sustain_talents[id]
-				if p.__tmpvals then
+				if p and type(p) == "table" and p.__tmpvals then
 					for i = 1, #p.__tmpvals do
 						self:removeTemporaryValue(p.__tmpvals[i][1], p.__tmpvals[i][2])
 					end
