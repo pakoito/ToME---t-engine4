@@ -36,7 +36,7 @@ function _M:init(name, args)
 	self.totalname = self:makeTotalName()
 --	print("[SHADER] making shader from", name, " into ", self.totalname)
 
-	if args.require_shader then
+	if args and args.require_shader then
 		if not core.shader.active(args.require_shader) then return end
 	end
 
