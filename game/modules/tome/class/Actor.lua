@@ -976,7 +976,7 @@ function _M:move(x, y, force)
 		self:breakPsionicChannel()
 	end
 
-	if not forced and moved and ox and oy and (ox ~= self.x or oy ~= self.y) and self:knowTalent(self.T_LIGHT_OF_FOOT) then
+	if not force and moved and ox and oy and (ox ~= self.x or oy ~= self.y) and self:knowTalent(self.T_LIGHT_OF_FOOT) then
 		self:incStamina(self:getTalentLevelRaw(self.T_LIGHT_OF_FOOT) * 0.2)
 	end
 
@@ -3375,7 +3375,7 @@ function _M:preUseTalent(ab, silent, fake)
 
 	-- Special checks
 	if ab.on_pre_use and not (ab.mode == "sustained" and self:isTalentActive(ab.id)) and not ab.on_pre_use(self, ab, silent, fake) then return false end
-	
+
 	if self:attr("use_only_arcane") and ab.type[1] ~= "spell/arcane" and ab.type[1] ~= "spell/aether" then return false end
 
 	-- Cant heal
@@ -3437,7 +3437,7 @@ function _M:postUseTalent(ab, ret)
 		end
 
 		-- Free melee blow
-		if self:knowTalent(self.T_CORRUPTED_STRENGTH) and not self:attr("forbid_corrupted_strength_blow") then
+		if ab.mode ~= "sustained" and self:knowTalent(self.T_CORRUPTED_STRENGTH) and not self:attr("forbid_corrupted_strength_blow") then
 			local tgts = {}
 			for _, c in pairs(util.adjacentCoords(self.x, self.y)) do
 				local target = game.level.map(c[1], c[2], Map.ACTOR)

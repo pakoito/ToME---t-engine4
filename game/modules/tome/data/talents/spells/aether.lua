@@ -180,8 +180,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Fill yourself if aether forces, completly surrounding your body for %d turns.
-		While active you can only cast arcane or aether spells, your cooldown for them is divived by 3.
-		The damage will increase with your Spellpower.]]):
+		While active you can only cast arcane or aether spells, your cooldown for them is divived by 3.]]):
 		format(t.getNb(self, t))
 	end,
 }
@@ -189,7 +188,7 @@ newTalent{
 newTalent{
 	name = "Pure Aether",
 	type = {"spell/aether",4},
-	require = spells_req_high4, 
+	require = spells_req_high4,
 	points = 5,
 	mode = "sustained",
 	sustain_mana = 50,

@@ -514,9 +514,11 @@ static int map_objects_display(lua_State *L)
 	 * Render to buffer
 	 ***************************************************/
 	int moid = 3;
+	int dz = moid;
 	while (lua_isuserdata(L, moid))
 	{
 		map_object *m = (map_object*)auxiliar_checkclass(L, "core{mapobj}", moid);
+		map_object *dm;
 
 		int z;
 		if (m->shader) useShader(m->shader, 1, 1, 1, 1, 1, 1, 1, 1);
@@ -526,19 +528,27 @@ static int map_objects_display(lua_State *L)
 			tglBindTexture(m->textures_is3d[z] ? GL_TEXTURE_3D : GL_TEXTURE_2D, m->textures[z]);
 		}
 
-		int dx = 0, dy = 0;
-		int dz = moid;
+		dm = m;
+		while (dm)
+		{
+			tglBindTexture(GL_TEXTURE_2D, dm->textures[0]);
 
-		texcoords[0] = m->tex_x[0]; texcoords[1] = m->tex_y[0];
-		texcoords[2] = m->tex_x[0] + m->tex_factorx[0]; texcoords[3] = m->tex_y[0];
-		texcoords[4] = m->tex_x[0] + m->tex_factorx[0]; texcoords[5] = m->tex_y[0] + m->tex_factory[0];
-		texcoords[6] = m->tex_x[0]; texcoords[7] = m->tex_y[0] + m->tex_factory[0];
+			int dx = 0, dy = 0;
 
-		vertices[0] = dx; vertices[1] = dy; vertices[2] = dz;
-		vertices[3] = w + dx; vertices[4] = dy; vertices[5] = dz;
-		vertices[6] = w + dx; vertices[7] = h + dy; vertices[8] = dz;
-		vertices[9] = dx; vertices[10] = h + dy; vertices[11] = dz;
-		glDrawArrays(GL_QUADS, 0, 4);
+			texcoords[0] = m->tex_x[0]; texcoords[1] = m->tex_y[0];
+			texcoords[2] = m->tex_x[0] + m->tex_factorx[0]; texcoords[3] = m->tex_y[0];
+			texcoords[4] = m->tex_x[0] + m->tex_factorx[0]; texcoords[5] = m->tex_y[0] + m->tex_factory[0];
+			texcoords[6] = m->tex_x[0]; texcoords[7] = m->tex_y[0] + m->tex_factory[0];
+
+			vertices[0] = dx; vertices[1] = dy; vertices[2] = dz;
+			vertices[3] = w + dx; vertices[4] = dy; vertices[5] = dz;
+			vertices[6] = w + dx; vertices[7] = h + dy; vertices[8] = dz;
+			vertices[9] = dx; vertices[10] = h + dy; vertices[11] = dz;
+			glDrawArrays(GL_QUADS, 0, 4);
+
+			dm = dm->next;
+			dz++;
+		}
 
 		if (m->shader) glUseProgramObjectARB(0);
 

@@ -754,7 +754,7 @@ function tstring:maxWidth(font)
 		elseif type(v) == "boolean" then max_w = math.max(max_w, line_max) line_max = 0 end
 	end
 	font:setStyle(old_style) 
-	max_w = math.max(max_w, line_max)
+	max_w = math.max(max_w, line_max) + 1
 	return max_w
 end
 
@@ -1313,6 +1313,8 @@ end
 function util.clipTexture(texture, x, y, w, h, total_w, total_h, loffset_x, loffset_y, dest_area, r, g, b, a)
 	if not texture then return 0, 0, 0, 0 end
 	x, y, w, h = math.floor(x), math.floor(y), math.floor(w), math.floor(h)
+	total_w, total_h, loffset_x, loffset_y = math.floor(total_w), math.floor(total_h), math.floor(loffset_x), math.floor(loffset_y)
+	dest_area.w , dest_area.h = math.floor(dest_area.w), math.floor(dest_area.h)
 	local clip_y_start = 0
 	local clip_y_end = 0
 	local clip_x_start = 0

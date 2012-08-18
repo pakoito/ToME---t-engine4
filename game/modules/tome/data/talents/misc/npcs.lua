@@ -933,7 +933,7 @@ newTalent{
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.PHYSKNOCKBACK, {dist=3+self:getTalentLevelRaw(t), dam=self:spellCrit(12 + self:getStr(50, true) * self:getTalentLevel(t))}, {type="archery"})
+		self:project(tg, x, y, DamageType.PHYSKNOCKBACK, {dist=3+self:getTalentLevelRaw(t), dam=self:mindCrit(12 + self:getStr(50, true) * self:getTalentLevel(t))}, {type="archery"})
 		game:playSoundNear(self, "talents/ice")
 		return true
 	end,
