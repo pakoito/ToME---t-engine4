@@ -321,6 +321,5 @@ function _M:getTooltipAtMap(tmx, tmy, mx, my)
 	if #tt > 0 then
 		return tt
 	end
-	if self.add_map_str then return self.add_map_str end
 	return nil
 end
