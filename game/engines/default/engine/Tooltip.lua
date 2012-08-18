@@ -76,12 +76,13 @@ function _M:set(str, ...)
 
 	if self.add_map_str then
 		if type(self.add_map_str) == "string" then
-			str = self.add_map_str:toTString()
+			table.append(str, {self.add_map_str:toTString()})
 		elseif type(self.add_map_str) == "table" then
-			str = tstring{}
-			str:merge(self.add_map_str)
+			local tstr = tstring{}
+			tstr:merge(self.add_map_str)
+			table.append(str, {tstr})
 		else
-			str = self.add_map_str
+			table.append(str, self.add_map_str)
 		end
 	end
 	
