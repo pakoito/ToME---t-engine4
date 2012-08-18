@@ -198,6 +198,10 @@ function _M:applyingDescriptor(i, d)
 			end
 		end
 	end
+	self:applyGameState(d)
+end
+
+function _M:applyGameState(d)
 	if d.game_state then
 		local copy = table.clone(d.game_state, true)
 		-- Append array part
@@ -281,6 +285,12 @@ function _M:atEnd(v)
 		self:checkNew(function()
 			game:unregisterDialog(self)
 			game:setPlayerName(self.c_name.text)
+
+			for type, kind in pairs(game.player.descriptor) do
+				local d = self:getBirthDescriptor(type, kind)
+				if d then self:applyGameState(d) end
+			end
+
 			self.at_end(true)
 		end)
 	elseif v == "quit" then
