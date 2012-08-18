@@ -51,7 +51,7 @@ function _M:init()
 			if mod and save.loadable then
 				save.usable = true
 				save.mod = mod
-				save.base_name = save.name
+				save.base_name = save.short_name
 				save.zone = Textzone.new{
 					width=self.c_desc.w,
 					height=self.c_desc.h,

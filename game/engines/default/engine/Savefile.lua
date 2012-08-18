@@ -42,6 +42,7 @@ function _M:init(savefile, coroutine)
 	self.save_dir = "/save/"..self.short_name.."/"
 	self.quickbirth_file = "/save/"..self.short_name..".quickbirth"
 	self.load_dir = "/tmp/loadsave/"
+	print("Loading savefile ", self.save_dir)
 
 	self.coroutine = coroutine
 	self.tables = {}

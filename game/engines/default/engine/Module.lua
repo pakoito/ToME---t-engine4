@@ -425,7 +425,7 @@ function _M:loadScreen(mod)
 				x = x + 10
 				y = y + 10
 
-				if img then 
+				if img then
 					img[1]:toScreenFull(x, y + (l.img_y_off or 0), img[6], img[7], img[2], img[3])
 					x = x + img[6] + 7
 				end
