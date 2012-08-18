@@ -319,7 +319,7 @@ newTalent{
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
-		if not x then return nil end
+		if not x or not target then return nil end
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 		self:attackTarget(target, DamageType.POISON, 2 + self:getTalentLevel(t), true)
 		return true

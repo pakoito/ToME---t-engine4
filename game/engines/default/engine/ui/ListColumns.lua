@@ -322,12 +322,12 @@ function _M:drawRow(row, row_i, nb_keyframes, x, y, total_w, total_h, loffset_x,
 				_, _, frame_clip_y, _ = util.clipOffset(0, center_h, total_w, total_h, loffset_x, loffset_y, clip_area)
 				total_h = tmp_total_h + center_h
 				if self.text_shadow then util.clipTexture(row.cells[j], column_w_offset + 1 + col.frame_sel.b4.w, y + 1 + center_h - frame_clip_y, row.cells[j].w, row.cells[j].h, 0, total_h, row.cells[j].display_offset.x, loffset_y, { w = col.width - 2 * col.frame_sel.b4.w, h = clip_area.h}, 0, 0, 0, self.text_shadow) end
-				util.clipTexture(row.cells[j], column_w_offset + col.frame_sel.b4.w, y + center_h - frame_clip_y, row.cells[j].w, row.cells[j].h, 0, total_h, row.cells[j].display_offset.x, loffset_y, { w = col.width - 2 * col.frame_sel.b4.w, h = clip_area.h })
+				util.clipTexture(row.cells[j], column_w_offset + col.frame_sel.b4.w, y + center_h - frame_clip_y, row.cells[j].w, row.cells[j].h, 0, total_h, row.cells[j].display_offset.x, loffset_y, { w = col.width - 2 * col.frame_sel.b4.w, h = clip_area.h }, row.color[1] * one_by_white, row.color[2] * one_by_white, row.color[3] * one_by_white, 1.0)
 			else
 				_, _, frame_clip_y, _ = util.clipOffset(0, center_h, total_w, total_h, loffset_x, loffset_y, clip_area)
 				total_h = tmp_total_h + center_h
 				if self.text_shadow then util.clipTexture(row.cells[j], column_w_offset + 1 + col.frame_sel.b4.w, y + 1 + center_h - frame_clip_y, row.cells[j].w, row.cells[j].h, 0, total_h, 0, loffset_y, clip_area, 0, 0, 0, self.text_shadow) end
-				util.clipTexture(row.cells[j], column_w_offset + col.frame_sel.b4.w, y + center_h - frame_clip_y, row.cells[j].w, row.cells[j].h, 0, total_h, 0, loffset_y, clip_area)
+				util.clipTexture(row.cells[j], column_w_offset + col.frame_sel.b4.w, y + center_h - frame_clip_y, row.cells[j].w, row.cells[j].h, 0, total_h, 0, loffset_y, clip_area, row.color[1] * one_by_white, row.color[2] * one_by_white, row.color[3] * one_by_white, 1.0)
 			end
 		end
 		clip_y_start = clip_y_start + frame_clip_y
