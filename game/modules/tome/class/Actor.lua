@@ -1167,6 +1167,7 @@ function _M:reactionToward(target, no_reflection)
 end
 
 function _M:incMoney(v)
+	if self.summoner then self = self.summoner end
 	self.money = self.money + v
 	if self.money < 0 then self.money = 0 end
 	self.changed = true
