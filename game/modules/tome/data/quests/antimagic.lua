@@ -119,6 +119,9 @@ add_foe = function(self, next_wave, first, foe_idx)
 			game.zone:addEntity(game.level, m, "actor", x, y)
 			if first then game.logSeen(m, "#VIOLET#A foe is summoned to the arena!")
 			else game.logSeen(m, "#VIOLET#Another foe is summoned to the arena!") end
+		else
+			-- err weird, lets try again
+			return self:add_foe(next_wave, first, foe_idx)
 		end
 	else
 		-- err weird, lets try again
