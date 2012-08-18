@@ -522,7 +522,8 @@ function _M:generateList()
 			stat=sid,
 			desc=s.description,
 			color=function(item)
-				if self.actor:getStat(sid, nil, nil, true) >= self.actor.level * 1.4 + 20 or
+				if self.actor:getStat(sid, nil, nil, true) ~= self.actor_dup:getStat(sid, nil, nil, true) then return {255, 215, 0}
+				elseif self.actor:getStat(sid, nil, nil, true) >= self.actor.level * 1.4 + 20 or
 				   self.actor:isStatMax(sid) or
 				   self.actor:getStat(sid, nil, nil, true) >= 60 + math.max(0, (self.actor.level - 50)) then
 					return {0, 255, 0}
