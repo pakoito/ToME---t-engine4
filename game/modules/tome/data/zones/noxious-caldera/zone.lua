@@ -151,11 +151,13 @@ return {
 	end,
 
 	run_dream = function(dangerous)
-		local x, y = game.player.x, game.player.y
+		if game.player.runStop then game.player:runStop("dream") end
+		local x, y, lev = game.player.x, game.player.y, game.level.level
 		local dream = rng.range(1, 2)
 		game:changeLevel(dream, "dreams")
 		game.level.data.real_death = dangerous
 		game.level.data.caldera_x = x
 		game.level.data.caldera_y = y
+		game.level.data.caldera_z = lev
 	end,
 }
