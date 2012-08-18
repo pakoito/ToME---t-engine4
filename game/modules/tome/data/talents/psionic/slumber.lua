@@ -153,6 +153,10 @@ newTalent{
 			game.logPlayer(self, "Your target must be sleeping in order to enter it's dreamscape.")
 			return nil
 		end
+		if self:reactionToward(target) >= 0 then
+			game.logPlayer(self, "You can't cast this on friendly targets.")
+			return nil
+		end
 
 		game:onTickEnd(function()
 			if self:attr("dead") then return end

@@ -1728,7 +1728,7 @@ newTalent{
 				game:playSoundNear(game.player, "talents/fireflash")
 
 				for i = x-1, x+1 do for j = y-1, y+1 do
-					local oe = game.level.map(x + i, y + j, Map.TERRAIN)
+					local oe = game.level.map(i, j, Map.TERRAIN)
 					if oe and not oe:attr("temporary") and
 					(core.fov.distance(x, y, i, j) < 1 or rng.percent(40)) and (game.level.map:checkEntity(i, j, engine.Map.TERRAIN, "dig") or game.level.map:checkEntity(i, j, engine.Map.TERRAIN, "grow")) then
 						local g = terrains.LAVA_FLOOR:clone()

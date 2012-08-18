@@ -53,7 +53,7 @@ function _M:init(title, store_inven, actor_inven, store_filter, actor_filter, ac
 
 	local direct_draw= function(item, x, y, w, h, total_w, total_h, loffset_x, loffset_y, dest_area)
 		-- if there is object and is withing visible bounds
-		if item.object and total_h + h > loffset_y and total_h < loffset_y + dest_area.h then
+		if core.display.FBOActive() and item.object and total_h + h > loffset_y and total_h < loffset_y + dest_area.h then
 			local clip_y_start, clip_y_end = 0, 0
 			-- if it started before visible area then compute its top clip
 			if total_h < loffset_y then

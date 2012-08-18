@@ -198,10 +198,8 @@ newTalent{
 	getTargetCount = function(self, t) return math.floor(self:getTalentLevel(t)) end,
 	getManaDrain = function(self, t) return -1.5 * self:getTalentLevelRaw(t) end,
 	do_storm = function(self, t)
-		if self:getMana() <= 0 then
-			self:forceUseTalent(t.id, {ignore_energy=true})
-			return
-		end
+		local mana = t.getManaDrain(self, t)
+		if self:getMana() <= mana + 1 then return end
 
 		local tgts = {}
 		local grids = core.fov.circle_grids(self.x, self.y, 6, true)
@@ -222,7 +220,7 @@ newTalent{
 			self:project(tg, a.x, a.y, DamageType.LIGHTNING, rng.avg(1, self:spellCrit(t.getDamage(self, t)), 3))
 			game.level.map:particleEmitter(a.x, a.y, tg.radius, "ball_lightning", {radius=tg.radius, tx=x, ty=y})
 			game:playSoundNear(self, "talents/lightning")
-			self:incMana(t.getManaDrain(self, t))
+			self:incMana(mana)
 		end
 	end,
 	activate = function(self, t)
