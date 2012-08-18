@@ -68,7 +68,7 @@ newTalent{
 			triggered = function(self, x, y, who) return true, true end,
 			combatSpellpower = function(self) return self.summoner:combatSpellpower() end,
 			rad = 3,
-			energy = {value=0, mod=4},
+			energy = {value=0, mod=16},
 			on_added = function(self, level, x, y)
 				self.x, self.y = x, y
 				local tries = {}
@@ -97,6 +97,7 @@ newTalent{
 
 				local tg = {type="beam", x=self.x, y=self.y, range=self.rad, selffire=self.summoner:spellFriendlyFire()}
 				self.summoner:project(tg, x, y, engine.DamageType.ARCANE_SILENCE, {dam=self.dam, chance=25}, nil)
+				self.summoner:project(tg, self.x, self.y, engine.DamageType.ARCANE, self.dam/3, nil)
 				local _ _, x, y = self:canProject(tg, x, y)
 				game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(x-self.x), math.abs(y-self.y)), "mana_beam", {tx=x-self.x, ty=y-self.y})
 			end,
@@ -114,7 +115,8 @@ newTalent{
 	info = function(self, t)
 		local dam = t.getDamage(self, t)
 		return ([[You focus the aether into a spinning beam of arcane energies doing %0.2f arcane damage and having 25%% chance to silence the creatures.
-		The beam will work for 11 turns, doing two full rotations.
+		The beam will also damage its epicenter each turn for 10%% of the damage (but it will not silence).
+		THe beam spins with incredible speed (1600%%).
 		The damage will increase with Spellpower.]]):
 		format(damDesc(self, DamageType.ARCANE, dam))
 	end,
@@ -167,10 +169,11 @@ newTalent{
 	require = spells_req_high3,
 	points = 5,
 	mana = 60,
-	cooldown = function(self, t) return self:attr("arcane_cooldown_divide") and 40 * self.arcane_cooldown_divide or 40 end,
+	cooldown = function(self, t) local rcd = math.floor(40 - self:getTalentLevel(t) * 3) return self:attr("arcane_cooldown_divide") and rcd * self.arcane_cooldown_divide or rcd end,
 	range = 10,
 	direct_hit = true,
 	requires_target = true,
+	no_energy = true,
 	tactical = { BUFF = 2 },
 	getNb = function(self, t) return 4 + math.floor(self:getTalentLevel(t)) end,
 	action = function(self, t)
@@ -179,8 +182,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Fill yourself if aether forces, completly surrounding your body for %d turns.
-		While active you can only cast arcane or aether spells, your cooldown for them is divived by 3.]]):
+		return ([[Fill yourself with aether forces, completely surrounding your body for %d turns.
+		While active you can only cast arcane or aether spells, your cooldown for them is divived by 3, your arcane damage is increased by 25%%, your Disruption Shield can be used at any time and your maximun mana is increased by 33%%.]]):
 		format(t.getNb(self, t))
 	end,
 }

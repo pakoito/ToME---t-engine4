@@ -1864,6 +1864,8 @@ newEffect{
 	status = "beneficial",
 	parameters = { },
 	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "inc_damage", {[DamageType.ARCANE]=25})
+		self:effectTemporaryValue(eff, "max_mana", self:getMaxMana() * 0.33)
 		self:effectTemporaryValue(eff, "use_only_arcane", 1)
 		self:effectTemporaryValue(eff, "arcane_cooldown_divide", 3)
 
@@ -1876,8 +1878,8 @@ newEffect{
 		end
 	end,
 	deactivate = function(self, eff)
-		if eff.set_shader then 
-			self.shader = nil 
+		if eff.set_shader then
+			self.shader = nil
 			self:removeAllMOs()
 			game.level.map:updateMap(self.x, self.y)
 		end
