@@ -62,6 +62,8 @@ function _M:bumpInto(target, x, y)
 			self.x = nil self.y = nil
 			target:move(sx, sy, true)
 			self:move(tx, ty, true)
+			if target.describeFloor then target:describeFloor(target.x, target.y, true) end
+			if self.describeFloor then self:describeFloor(self.x, self.y, true) end
 		end
 	end
 end

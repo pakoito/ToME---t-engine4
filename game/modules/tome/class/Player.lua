@@ -162,8 +162,8 @@ function _M:onWorldEncounter(target, x, y)
 	end
 end
 
-function _M:describeFloor(x, y)
-	if self.old_x == x and self.old_y == y then return end
+function _M:describeFloor(x, y, force)
+	if self.old_x == x and self.old_y == y and not force then return end
 
 	-- Autopickup money
 	if self:getInven(self.INVEN_INVEN) and not self.no_inventory_access then
