@@ -321,7 +321,7 @@ newTalent{
 	cooldown = 10,
 	tactical = { BUFF = 5 },
 	getLevel = function(self, t)
-		return self.level
+		return math.min(self.level, 50)
 	end,
 	getMaxShadows = function(self, t)
 		return math.min(4, math.max(1, math.floor(self:getTalentLevel(t) * 0.55)))
