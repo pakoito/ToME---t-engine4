@@ -559,17 +559,17 @@ Each level you gain 3 new stat points to use.
 
 You may only increase stats to a natural maximum of 60 or lower (relative to your level).]]):toTString()
 
-local desc_class = ([[Class talent points alow you to learn new class talents or improve them.
+local desc_class = ([[Class talent points allow you to learn new class talents or improve them.
 Class talents are core to your class and can not be learnt by training.
 
-Each level you gain 1 new class points to use.
+Each level you gain 1 new class point to use.
 Each five levels you gain one more.
 ]]):toTString()
 
-local desc_generic = ([[Generic talent points alow you to learn new generic talents or improve them.
+local desc_generic = ([[Generic talent points allow you to learn new generic talents or improve them.
 Generic talents comes from your class, your race or various outside training you can get during your adventures.
 
-Each level you gain 1 new class points to use.
+Each level you gain 1 new class point to use.
 Each five levels you gain one less.
 ]]):toTString()
 
