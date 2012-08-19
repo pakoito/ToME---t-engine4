@@ -1759,7 +1759,7 @@ function _M:createRandomBoss(base, data)
 	local force_classes = data.force_classes and table.clone(data.force_classes)
 	for name, cdata in pairs(classes) do
 		if force_classes and force_classes[cdata.name] then apply_class(table.clone(cdata, true)) force_classes[cdata.name] = nil
-		elseif not cdata.not_on_random_boss and (not data.class_filter or data.class_filter(cdata))then list[#list+1] = cdata
+		elseif not cdata.not_on_random_boss and (not cdata.random_rarity or rng.chance(cdata.random_rarity)) and (not data.class_filter or data.class_filter(cdata))then list[#list+1] = cdata
 		end
 	end
 	for i = 1, data.nb_classes or 2 do

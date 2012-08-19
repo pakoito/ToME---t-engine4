@@ -108,6 +108,7 @@ newBirthDescriptor{
 		"#GOLD#Life per level:#LIGHT_BLUE# +0",
 	},
 	power_source = {psionic=true},
+	random_rarity = 2,
 	stats = { wil=4, cun=5, },
 	talents_types = {
 		["cursed/dark-sustenance"]={true, 0.3},

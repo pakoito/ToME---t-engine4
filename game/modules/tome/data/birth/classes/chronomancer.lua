@@ -54,6 +54,7 @@ newBirthDescriptor{
 		"#GOLD#Life per level:#LIGHT_BLUE# -4",
 	},
 	power_source = {arcane=true},
+	random_rarity = 2,
 	stats = { mag=5, wil=3, cun=1, },
 	talents_types = {
 		["chronomancy/age-manipulation"]={true, 0.3},
@@ -104,6 +105,7 @@ newBirthDescriptor{
 		"#GOLD#Life per level:#LIGHT_BLUE# +0",
 	},
 	power_source = {technique=true, arcane=true},
+	random_rarity = 2,
 	stats = { str=2, wil=2, dex=3, mag=2},
 	talents_types = {
 		["technique/archery-bow"]={true, 0},

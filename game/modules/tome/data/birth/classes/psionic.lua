@@ -158,7 +158,7 @@ newBirthDescriptor{
 		life_rating = -4,
 	},
 }
--- Edge TODO: Unlock stuff
+
 newBirthDescriptor{
 	type = "subclass",
 	name = "Solipsist",
@@ -175,6 +175,7 @@ newBirthDescriptor{
 		"#GOLD#Life per level:#LIGHT_BLUE# -4 (*special*)",
 	},
 	power_source = {psionic=true},
+	random_rarity = 2,
 	stats = { str=0, wil=5, cun=4, },
 	birth_example_particles = {
 		function(actor)
