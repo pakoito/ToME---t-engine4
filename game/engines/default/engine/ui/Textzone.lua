@@ -40,7 +40,7 @@ function _M:init(t)
 	self.dest_area = t.dest_area and t.dest_area or { h = self.h }
 	
 	self.color = t.color or {r=255, g=255, b=255}
-	self.can_focus = false
+	if t.can_focus ~= nil then self.can_focus = t.can_focus end
 	self.scroll_inertia = 0
 
 	Base.init(self, t)

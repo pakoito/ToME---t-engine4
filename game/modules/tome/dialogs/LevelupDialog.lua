@@ -615,19 +615,14 @@ function _M:createDisplay()
 		no_tooltip = self.no_tooltip,
 	}
 
-	self.c_points = Textzone.new{
-		width=200, height=1, auto_height=true,
-		text=_points_left:format(self.actor.unused_stats, self.actor.unused_talents_types, self.actor.unused_talents, self.actor.unused_generics)
-	}
-
 	local vsep1 = Separator.new{dir="horizontal", size=self.ih - 20}
 	local vsep2 = Separator.new{dir="horizontal", size=self.ih - 20}
 	local hsep = Separator.new{dir="vertical", size=180}
 
-	self.b_stat = Button.new{text="Stats: "..self.actor.unused_stats, fct=function() end}
-	self.b_class = Button.new{text="Class points: "..self.actor.unused_talents, fct=function() end}
-	self.b_generic = Button.new{text="Generic points: "..self.actor.unused_generics, fct=function() end}
-	self.b_types = Button.new{text="Category points: "..self.actor.unused_talents_types, fct=function() end}
+	self.b_stat = Button.new{can_focus = false, text="Stats: "..self.actor.unused_stats, fct=function() end}
+	self.b_class = Button.new{can_focus = false, text="Class points: "..self.actor.unused_talents, fct=function() end}
+	self.b_generic = Button.new{can_focus = false, text="Generic points: "..self.actor.unused_generics, fct=function() end}
+	self.b_types = Button.new{can_focus = false, text="Category points: "..self.actor.unused_talents_types, fct=function() end}
 
 	local ret = {
 		{left=-10, top=0, ui=self.b_stat},
@@ -636,19 +631,19 @@ function _M:createDisplay()
 		{left=self.c_stat, top=40, ui=vsep1},
 
 		{left=vsep1, top=0, ui=self.b_class},
-		{left=vsep1, top=self.b_class, ui=self.c_ctree},
+		{left=vsep1, top=self.b_class.h + 10, ui=self.c_ctree},
 
 		{left=self.c_ctree, top=40, ui=vsep2},
 
 		{left=580, top=0, ui=self.b_generic},
-		{left=vsep2, top=self.b_generic, ui=self.c_gtree},
+		{left=vsep2, top=self.b_generic.h + 10, ui=self.c_gtree},
 
 		{left=330, top=0, ui=self.b_types},
 	}
 
 	if self.no_tooltip then
 		local vsep3 = Separator.new{dir="horizontal", size=self.ih - 20}
-        self.c_desc = TextzoneList.new{ width=self.iw - 200 - 530 - 40, height = self.ih, dest_area = { h = self.ih } }
+        self.c_desc = TextzoneList.new{ focus_check = true, scrollbar = true, width=self.iw - 200 - 530 - 40, height = self.ih, dest_area = { h = self.ih } }
 		ret[#ret+1] = {right=0, top=0, ui=self.c_desc}
 		ret[#ret+1] = {right=self.c_desc.w, top=0, ui=vsep3}
 	end

@@ -33,7 +33,8 @@ function _M:init(t)
 	self.text = assert(t.text, "no button text")
 	self.fct = assert(t.fct, "no button fct")
 	self.force_w = t.width
-
+	if t.can_focus ~= nil then self.can_focus = t.can_focus end
+	
 	Base.init(self, t)
 end
 

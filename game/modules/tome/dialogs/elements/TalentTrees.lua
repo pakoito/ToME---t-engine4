@@ -79,14 +79,14 @@ function _M:generate()
 	for i = 1, #self.tree do
 		local tree = self.tree[i]
 		local key = tree.text_status
-		local current_h = key and key.h or 0
-		if tree.shown then current_h = current_h + self.frame_size + (key and key.h or 0) + 16 end
+		local current_h = (key and key.h or 0) + 2
+		if tree.shown then current_h = current_h + self.frame_size + self.fh + 14 end
 		self.max_h = self.max_h + current_h
 		tree.h = current_h
 	end
 	
 	-- generate the scrollbar
-	if self.scrollbar then self.scrollbar.max = self.max_h - self.h + 2 end
+	if self.scrollbar then self.scrollbar.max = self.max_h - self.h end
 
 	-- Add UI controls
 	self.mouse:registerZone(0, 0, self.w, self.h, function(button, x, y, xrel, yrel, bx, by, event)
@@ -165,41 +165,44 @@ function _M:updateTooltip()
 end
 
 function _M:moveSel(i, j)
-	local match = nil
-
 	if i == 0 then
 		local t = self.tree[self.sel_i]
 		if t.nodes then
 			self.sel_j = util.bound(self.sel_j + j, 1, #t.nodes)
-			match = t.nodes[self.sel_j]
 		end
-	elseif i == 1 then
-		local t = self.tree[self.sel_i]
-		if t.shown and self.sel_j == 0 and t.nodes and #t.nodes > 0 then
-			self.sel_j = 1
-			match = t.nodes[1]
-		else
-			self.sel_i = util.bound(self.sel_i + i, 1, #self.tree)
-			self.sel_j = 0
+	elseif i == 1 then -- down
+		repeat
 			local t = self.tree[self.sel_i]
-			match = t
-		end
-	elseif i == -1 then
-		local t = self.tree[self.sel_i]
-		if t.shown and self.sel_j > 0 and t.nodes and #t.nodes > 0 then
-			self.sel_j = 0
-			match = t
-		else
-			self.sel_i = util.bound(self.sel_i + i, 1, #self.tree)
-			local t = self.tree[self.sel_i]
-			if t.shown and t.nodes and #t.nodes > 0 then
+			if t.shown and self.sel_j == 0 and t.nodes and #t.nodes > 0 then
 				self.sel_j = 1
-				match = t.nodes[1]
+				break
 			else
+				self.sel_i = util.bound(self.sel_i + 1, 1, #self.tree)
 				self.sel_j = 0
-				match = t
+				if self.tree[self.sel_i].text_status then
+					break
+				end
 			end
-		end
+		until self.sel_i > #self.tree
+	elseif i == -1 then -- up
+		repeat
+			local t = self.tree[self.sel_i]
+			if t.shown and self.sel_j > 0 and t.nodes and #t.nodes > 0 then
+				self.sel_j = 0
+			else
+				self.sel_i = util.bound(self.sel_i - 1, 1, #self.tree)
+				local t = self.tree[self.sel_i]
+				if t.shown and t.nodes and #t.nodes > 0 then
+					self.sel_j = 1
+					break
+				else
+					self.sel_j = 0
+				end
+			end
+			if self.tree[self.sel_i].text_status then
+				break
+			end
+		until self.sel_i < 1
 	end
 
 	if self.scrollbar and self.last_input_was_keyboard then
@@ -259,6 +262,33 @@ function _M:redrawAllItems()
 	end
 end
 
+function _M:on_focus_change(status)
+	self.last_input_was_keyboard = true
+	if status then
+		self.prev_item = nil
+		self.focus_decay = focus_decay_max * 32
+		if not self.last_mz then
+			for i = 1, #self.tree do
+				local tree = self.tree[i]
+				if tree.text_status then
+					self.sel_i = i
+					self.sel_j = 0
+					self:moveSel(0, 0)
+					break
+				end
+				if tree.shown then
+					for j = 1, #tree.nodes do
+						self.sel_i = i
+						self.sel_j = j
+						self:moveSel(0, 0)
+						break
+					end
+				end
+			end
+		end
+	end
+end
+
 function _M:on_select(item, force)
 	if self.prev_item == item and not force then return end
 	local str, fx, fy = self.tooltip(item)
@@ -277,6 +307,11 @@ function _M:display(x, y, nb_keyframes, screen_x, screen_y, offset_x, offset_y, 
 	self.last_display_x = screen_x
 	self.last_display_y = screen_y
 
+	if self.focus_decay then
+		core.display.drawQuad(x, y, self.w, self.h, 255, 255, 255, self.focus_decay * self.one_by_focus_decay)
+		self.focus_decay = self.focus_decay - nb_keyframes * 64
+		if self.focus_decay <= 0 then self.focus_decay = nil end
+	end
 	local tmp_inertia = 0 -- used to correct selection frame position
 
 	-- apply inertia to scrollbar

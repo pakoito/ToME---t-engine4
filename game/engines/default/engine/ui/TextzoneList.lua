@@ -33,13 +33,14 @@ function _M:init(t)
 	self.w = assert(t.width, "no list width")
 	self.h = assert(t.height, "no list height")
 	self.scrollbar = t.scrollbar
+	self.focus_check = t.focus_check
 	self.variable_height = t.variable_height
 	
 	self.dest_area = t.dest_area and t.dest_area or { h = self.h }
 	self.max_h = 0
 	self.scroll_inertia = 0
 	
-	if self.scrollbar then self.can_focus = true end
+	if t.can_focus ~= nil then self.can_focus = t.can_focus end
 
 	Base.init(self, t)
 
@@ -144,6 +145,11 @@ function _M:switchItem(item, create_if_needed, force)
 	if self.scrollbar then
 		self.scrollbar.max = self.max_h - self.h
 		self.scrollbar.pos = 0
+	end
+	if self.focus_check and self.max_h > self.h then
+		self.can_focus = true
+	else
+		self.can_focus = false
 	end
 	self.list = d.list
 	self.max_display = d.max_display
