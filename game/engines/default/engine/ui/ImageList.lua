@@ -192,7 +192,7 @@ function _M:display(x, y, nb_keyframes, screen_x, screen_y)
 
 	for j = self.scroll, math.min(self.scroll + self.nb_h, #self.dlist) do
 		local row = self.dlist[j]
-		for i = 1, #row do
+		if row then for i = 1, #row do
 			local item = row[i]
 
 			if item.selected then self:drawFrame(self.frame_selected, x + (i-1) * (self.tile_w + self.padding), y) end
@@ -211,7 +211,7 @@ function _M:display(x, y, nb_keyframes, screen_x, screen_y)
 			end
 			item.last_display_x = screen_x + (x - bx)
 			item.last_display_y = screen_y + (y - by)
-		end
+		end end
 		y = y + self.tile_h + self.padding
 	end
 

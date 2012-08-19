@@ -34,7 +34,7 @@ local basetrap = function(self, t, x, y, dur, add)
 			self.temporary = self.temporary - 1
 			if self.temporary <= 0 then
 				if game.level.map(self.x, self.y, engine.Map.TRAP) == self then game.level.map:remove(self.x, self.y, engine.Map.TRAP) end
-				game.level:removeEntity(self)
+				game.level:removeEntity(self, true)
 			end
 		end,
 	}
