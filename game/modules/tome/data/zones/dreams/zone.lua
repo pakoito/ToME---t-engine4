@@ -209,6 +209,7 @@ return {
 				combat_armor = 1, combat_def = 1,
 				rank = 1,
 				movement_speed = 1.4,
+				no_inventory_access = true,
 				size_category = 1,
 				level_range = {1, 1}, exp_worth = 1,
 				max_life = 10,
@@ -280,6 +281,7 @@ You feel like running away!]], 600)
 				combat_armor = 5, combat_def = 5,
 				level_range = {1, 1}, exp_worth = 1,
 				max_life = 100, life_regen = 0,
+				no_inventory_access = true,
 				resolvers.talents{
 				},
 				on_die = function(self)

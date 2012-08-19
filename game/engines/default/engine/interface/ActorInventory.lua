@@ -263,6 +263,7 @@ end
 -- @param filter nil or a function that filters the objects to list
 -- @param action a function called when an object is selected
 function _M:showInventory(title, inven, filter, action)
+	if not inven then return end
 	local d = ShowInventory.new(title, inven, filter, action, self)
 	game:registerDialog(d)
 	return d
