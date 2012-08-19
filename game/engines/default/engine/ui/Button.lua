@@ -32,9 +32,11 @@ frame_oy2 = 5
 function _M:init(t)
 	self.text = assert(t.text, "no button text")
 	self.fct = assert(t.fct, "no button fct")
+	self.on_select = t.on_select
 	self.force_w = t.width
 	if t.can_focus ~= nil then self.can_focus = t.can_focus end
-	
+	if t.can_focus_mouse ~= nil then self.can_focus_mouse = t.can_focus_mouse end
+
 	Base.init(self, t)
 end
 
@@ -54,7 +56,10 @@ function _M:generate()
 	self.font:setStyle("normal")
 
 	-- Add UI controls
-	self.mouse:registerZone(0, 0, self.w+6, self.h+6, function(button, x, y, xrel, yrel, bx, by, event) if button == "left" and event == "button" then self:sound("button") self.fct() end end)
+	self.mouse:registerZone(0, 0, self.w+6, self.h+6, function(button, x, y, xrel, yrel, bx, by, event)
+		if self.on_select then self.on_select() end
+		if button == "left" and event == "button" then self:sound("button") self.fct() end
+	end)
 	self.key:addBind("ACCEPT", function() self:sound("button") self.fct() end)
 
 	self.rw, self.rh = w, h
@@ -67,6 +72,8 @@ function _M:generate()
 end
 
 function _M:display(x, y, nb_keyframes, ox, oy)
+	self.last_display_x = ox
+	self.last_display_y = oy
 	x = x + 3
 	y = y + 3
 	ox = ox + 3

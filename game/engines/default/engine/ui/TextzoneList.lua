@@ -35,11 +35,11 @@ function _M:init(t)
 	self.scrollbar = t.scrollbar
 	self.focus_check = t.focus_check
 	self.variable_height = t.variable_height
-	
+
 	self.dest_area = t.dest_area and t.dest_area or { h = self.h }
 	self.max_h = 0
 	self.scroll_inertia = 0
-	
+
 	if t.can_focus ~= nil then self.can_focus = t.can_focus end
 
 	Base.init(self, t)
@@ -82,13 +82,13 @@ function _M:generate()
 			self.scroll_drag = false
 		end
 	end
-	
+
 	self.mouse:registerZone(0, 0, self.w, self.h, on_mousewheel)
 	self.key:addBinds{
 		MOVE_UP = function() if self.scrollbar then self.scroll_inertia = math.min(self.scroll_inertia, 0) - 10  end end,
 		MOVE_DOWN = function() if self.scrollbar then self.scroll_inertia = math.max(self.scroll_inertia, 0) + 10  end end
 	}
-	
+
 	self.key:addCommands{
 		_HOME = function() if self.scrollbar then self.scrollbar.pos = 0 end end,
 		_END = function() if self.scrollbar then self.scrollbar.pos = self.scrollbar.max end end,
@@ -120,9 +120,9 @@ function _M:createItem(item, text)
 				end
 			end
 		end
-		if gen[i].is_separator then 
+		if gen[i].is_separator then
 			self.max_h = self.max_h + (self.fh - self.sep.h)
-		else 
+		else
 			self.max_h = self.max_h + gen[i].h
 		end
 	end
@@ -140,7 +140,7 @@ function _M:switchItem(item, create_if_needed, force)
 	if (create_if_needed and not self.items[item]) or force then self:createItem(item, create_if_needed) end
 	if not item or not self.items[item] then self.list = nil return false end
 	local d = self.items[item]
-	
+
 	self.max_h = d.max_h
 	if self.scrollbar then
 		self.scrollbar.max = self.max_h - self.h
@@ -173,7 +173,7 @@ function _M:display(x, y, nb_keyframes, ox, oy, offset_x, offset_y, local_x, loc
 	offset_y = offset_y and offset_y or (self.scrollbar and self.scrollbar.pos or 0)
 	local_x = local_x and local_x or 0
 	local_y = local_y and local_y or 0
-	
+
 	if self.scrollbar then
 		self.scrollbar.pos = util.minBound(self.scrollbar.pos + self.scroll_inertia, 0, self.scrollbar.max)
 		if self.scroll_inertia > 0 then self.scroll_inertia = math.max(self.scroll_inertia - 1, 0)
@@ -181,7 +181,7 @@ function _M:display(x, y, nb_keyframes, ox, oy, offset_x, offset_y, local_x, loc
 		end
 		if self.scrollbar.pos == 0 or self.scrollbar.pos == self.scrollbar.max then self.scroll_inertia = 0 end
 	end
-	
+
 	local loffset_y = offset_y - local_y
 	local current_y = 0
 	local current_x = 0
@@ -192,16 +192,16 @@ function _M:display(x, y, nb_keyframes, ox, oy, offset_x, offset_y, local_x, loc
 		local item = self.list[i]
 		clip_y_start = 0
 		clip_y_end = 0
-		
+
 		local item_h = item.is_separator and (self.fh - self.sep.h) or item.h
 		-- if item is within visible area bounds
 		if total_h + item_h > loffset_y and total_h < loffset_y + self.dest_area.h then
 			-- if it started before visible area then compute its top clip
-			if total_h < loffset_y then 
-				clip_y_start = loffset_y - total_h 
+			if total_h < loffset_y then
+				clip_y_start = loffset_y - total_h
 			end
 			-- if it ended after visible area then compute its bottom clip
-			if total_h + item_h > loffset_y + self.dest_area.h then 
+			if total_h + item_h > loffset_y + self.dest_area.h then
 			   clip_y_end = total_h + item_h - (loffset_y + self.dest_area.h)
 			end
 			if item.background then

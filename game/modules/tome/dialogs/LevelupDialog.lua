@@ -554,6 +554,33 @@ Category points left: #00FF00#%d#LAST#
 Class talent points left: #00FF00#%d#LAST#
 Generic talent points left: #00FF00#%d#LAST#]]
 
+local desc_stats = ([[Stat points allow you to increase your core stats.
+Each level you gain 3 new stat points to use.
+
+You may only increase stats to a natural maximum of 60 or lower (relative to your level).]]):toTString()
+
+local desc_class = ([[Class talent points alow you to learn new class talents or improve them.
+Class talents are core to your class and can not be learnt by training.
+
+Each level you gain 1 new class points to use.
+Each five levels you gain one more.
+]]):toTString()
+
+local desc_generic = ([[Generic talent points alow you to learn new generic talents or improve them.
+Generic talents comes from your class, your race or various outside training you can get during your adventures.
+
+Each level you gain 1 new class points to use.
+Each five levels you gain one less.
+]]):toTString()
+
+local desc_types = ([[Talent category points allow you to either:
+- learn a new talent (class or generic) category
+- improve a known talent category efficiency by 0.2
+- learn a new inscription slot (up to a maximum of 5, learning it is automatic when using an inscription)
+
+You gain a new point at level 10, 20 and 30.
+Some races or items may increase them as well.]]):toTString()
+
 function _M:createDisplay()
 	self.c_ctree = TalentTrees.new{
 		font = core.display.newFont("/data/font/DroidSans.ttf", 14),
@@ -619,10 +646,42 @@ function _M:createDisplay()
 	local vsep2 = Separator.new{dir="horizontal", size=self.ih - 20}
 	local hsep = Separator.new{dir="vertical", size=180}
 
-	self.b_stat = Button.new{can_focus = false, text="Stats: "..self.actor.unused_stats, fct=function() end}
-	self.b_class = Button.new{can_focus = false, text="Class points: "..self.actor.unused_talents, fct=function() end}
-	self.b_generic = Button.new{can_focus = false, text="Generic points: "..self.actor.unused_generics, fct=function() end}
-	self.b_types = Button.new{can_focus = false, text="Category points: "..self.actor.unused_talents_types, fct=function() end}
+	self.b_stat = Button.new{can_focus = false, can_focus_mouse=true, text="Stats: "..self.actor.unused_stats, fct=function() end, on_select=function()
+		local str = desc_stats
+		if self.no_tooltip then
+			self.c_desc:erase()
+			self.c_desc:switchItem(str, str, true)
+		else
+			game:tooltipDisplayAtMap(self.b_stat.last_display_x + self.b_stat.w, self.b_stat.last_display_y, str)
+		end
+	end}
+	self.b_class = Button.new{can_focus = false, can_focus_mouse=true, text="Class points: "..self.actor.unused_talents, fct=function() end, on_select=function()
+		local str = desc_class
+		if self.no_tooltip then
+			self.c_desc:erase()
+			self.c_desc:switchItem(str, str, true)
+		else
+			game:tooltipDisplayAtMap(self.b_stat.last_display_x + self.b_stat.w, self.b_stat.last_display_y, str)
+		end
+	end}
+	self.b_generic = Button.new{can_focus = false, can_focus_mouse=true, text="Generic points: "..self.actor.unused_generics, fct=function() end, on_select=function()
+		local str = desc_generic
+		if self.no_tooltip then
+			self.c_desc:erase()
+			self.c_desc:switchItem(str, str, true)
+		else
+			game:tooltipDisplayAtMap(self.b_stat.last_display_x + self.b_stat.w, self.b_stat.last_display_y, str)
+		end
+	end}
+	self.b_types = Button.new{can_focus = false, can_focus_mouse=true, text="Category points: "..self.actor.unused_talents_types, fct=function() end, on_select=function()
+		local str = desc_types
+		if self.no_tooltip then
+			self.c_desc:erase()
+			self.c_desc:switchItem(str, str, true)
+		else
+			game:tooltipDisplayAtMap(self.b_stat.last_display_x + self.b_stat.w, self.b_stat.last_display_y, str)
+		end
+	end}
 
 	local ret = {
 		{left=-10, top=0, ui=self.b_stat},
