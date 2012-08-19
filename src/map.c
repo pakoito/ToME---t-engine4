@@ -286,7 +286,6 @@ static int map_object_set_move_anim(lua_State *L)
 	return 0;
 }
 
-
 static int map_object_get_move_anim(lua_State *L)
 {
 	map_object *obj = (map_object*)auxiliar_checkclass(L, "core{mapobj}", 1);
@@ -315,6 +314,14 @@ static int map_object_get_move_anim(lua_State *L)
 		lua_pushnumber(L, mapdx + obj->animdx);
 		lua_pushnumber(L, mapdy + obj->animdy);
 	}
+	return 2;
+}
+
+static int map_object_get_move_anim_raw(lua_State *L)
+{
+	map_object *obj = (map_object*)auxiliar_checkclass(L, "core{mapobj}", 1);
+	lua_pushnumber(L, obj->animdx);
+	lua_pushnumber(L, obj->animdy);
 	return 2;
 }
 
@@ -690,6 +697,7 @@ static int map_new(lua_State *L)
 	map->grids_seens = calloc(w * h, sizeof(float));
 	map->grids_remembers = calloc(w, sizeof(bool*));
 	map->grids_lites = calloc(w, sizeof(bool*));
+	map->grids_important = calloc(w, sizeof(bool*));
 	printf("C Map size %d:%d :: %d\n", mwidth, mheight,mwidth * mheight);
 
 	map->seens_texture = 0;
@@ -700,14 +708,16 @@ static int map_new(lua_State *L)
 	{
 		map->grids[i] = calloc(h, sizeof(map_object**));
 		map->grids_ref[i] = calloc(h, sizeof(int*));
+//		map->grids_seens[i] = calloc(h, sizeof(float));
+		map->grids_remembers[i] = calloc(h, sizeof(bool));
+		map->grids_lites[i] = calloc(h, sizeof(bool));
+		map->grids_important[i] = calloc(h, sizeof(bool));
 		for (j = 0; j < h; j++)
 		{
 			map->grids[i][j] = calloc(zdepth, sizeof(map_object*));
 			map->grids_ref[i][j] = calloc(zdepth, sizeof(int));
+			map->grids_important[i][j] = FALSE;
 		}
-//		map->grids_seens[i] = calloc(h, sizeof(float));
-		map->grids_remembers[i] = calloc(h, sizeof(bool));
-		map->grids_lites[i] = calloc(h, sizeof(bool));
 	}
 
 	return 1;
@@ -730,12 +740,14 @@ static int map_free(lua_State *L)
 //		free(map->grids_seens[i]);
 		free(map->grids_remembers[i]);
 		free(map->grids_lites[i]);
+		free(map->grids_important[i]);
 	}
 	free(map->grids);
 	free(map->grids_ref);
 	free(map->grids_seens);
 	free(map->grids_remembers);
 	free(map->grids_lites);
+	free(map->grids_important);
 
 	free(map->colors);
 	free(map->texcoords);
@@ -901,6 +913,19 @@ static int map_set_lite(lua_State *L)
 
 	if (x < 0 || y < 0 || x >= map->w || y >= map->h) return 0;
 	map->grids_lites[x][y] = v;
+	map->seen_changed = TRUE;
+	return 0;
+}
+
+static int map_set_important(lua_State *L)
+{
+	map_type *map = (map_type*)auxiliar_checkclass(L, "core{map}", 1);
+	int x = luaL_checknumber(L, 2);
+	int y = luaL_checknumber(L, 3);
+	bool v = lua_toboolean(L, 4);
+
+	if (x < 0 || y < 0 || x >= map->w || y >= map->h) return 0;
+	map->grids_important[x][y] = v;
 	map->seen_changed = TRUE;
 	return 0;
 }
@@ -1254,6 +1279,7 @@ void display_map_quad(GLuint *cur_tex, int *vert_idx, int *col_idx, map_type *ma
 	GLfloat *vertices = map->vertices;
 	GLfloat *colors = map->colors;
 	GLfloat *texcoords = map->texcoords;
+	bool up_important = FALSE;
 
 	/********************************************************
 	 ** Select the color to use
@@ -1373,6 +1399,8 @@ void display_map_quad(GLuint *cur_tex, int *vert_idx, int *col_idx, map_type *ma
 		}
 	}
 
+//	if ((j - 1 >= 0) && map->grids_important[i][j - 1] && map->grids[i][j-1][9] && !map->grids[i][j-1][9]->move_max) up_important = TRUE;
+
 	/********************************************************
 	 ** Display the entity
 	 ********************************************************/
@@ -1380,7 +1408,7 @@ void display_map_quad(GLuint *cur_tex, int *vert_idx, int *col_idx, map_type *ma
 	while (dm)
 	{
 		tglBindTexture(GL_TEXTURE_2D, dm->textures[0]);
-		DO_QUAD(dm, dx + (dm->dx + animdx) * map->tile_w, dy + (dm->dy + animdy) * map->tile_h, dm->dw, dm->dh, dm->scale, r, g, b, a, m->next);
+		DO_QUAD(dm, dx + (dm->dx + animdx) * map->tile_w, dy + (dm->dy + animdy) * map->tile_h, dm->dw, dm->dh, dm->scale, r, g, b, ((dm->dy < 0) && up_important) ? a / 3 : a, m->next);
 		dm->animdx = animdx;
 		dm->animdy = animdy;
 		dm = dm->next;
@@ -1685,6 +1713,7 @@ static const struct luaL_reg map_reg[] =
 	{"setSeen", map_set_seen},
 	{"setRemember", map_set_remember},
 	{"setLite", map_set_lite},
+	{"setImportant", map_set_important},
 	{"getSeensInfo", map_get_seensinfo},
 	{"setScroll", map_set_scroll},
 	{"getScroll", map_get_scroll},
@@ -1710,6 +1739,7 @@ static const struct luaL_reg map_object_reg[] =
 	{"resetMoveAnim", map_object_reset_move_anim},
 	{"setMoveAnim", map_object_set_move_anim},
 	{"getMoveAnim", map_object_get_move_anim},
+	{"getMoveAnimRaw", map_object_get_move_anim_raw},
 	{NULL, NULL},
 };
 

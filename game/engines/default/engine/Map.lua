@@ -383,6 +383,7 @@ function _M:updateMap(x, y)
 	-- Update minimap if any
 	local mos = {}
 
+	self._map:setImportant(x, y, false)
 	if not self.updateMapDisplay then
 		local g = self(x, y, TERRAIN)
 		local o = self(x, y, OBJECT)
@@ -422,6 +423,8 @@ function _M:updateMap(x, y)
 			if not self.actor_player or self.actor_player:canSee(a) then
 				a:getMapObjects(self.tiles, mos, 10)
 				a:setupMinimapInfo(a._mo, self)
+
+--				self._map:setImportant(x, y, true)
 			end
 		end
 		if p then

@@ -63,6 +63,7 @@ typedef struct {
 	float *grids_seens;
 	bool **grids_remembers;
 	bool **grids_lites;
+	bool **grids_important;
 
 	GLubyte *minimap;
 	GLuint mm_texture;
