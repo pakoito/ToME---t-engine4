@@ -220,6 +220,10 @@ end
 --- Attach or remove a display callback
 -- Defines particles to display
 function _M:defineDisplayCallback()
+	if self.add_displays then
+		for i, add in ipairs(self.add_displays) do add:defineDisplayCallback() end
+	end
+
 	if not self._mo then return end
 	if not next(self.__particles) then self._mo:displayCallback(nil) return end
 
