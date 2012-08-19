@@ -535,9 +535,9 @@ function _M:generateList()
 				if self.actor:getStat(sid, nil, nil, true) >= self.actor.level * 1.4 + 20 or
 				   self.actor:isStatMax(sid) or
 				   self.actor:getStat(sid, nil, nil, true) >= 60 + math.max(0, (self.actor.level - 50)) then
-					return tstring{{"color", 175, 175, 175}, ("%d/%d"):format(self.actor:getStat(sid), self.actor:getStat(sid, nil, nil, true))}
+					return tstring{{"color", 175, 175, 175}, ("%d (%d)"):format(self.actor:getStat(sid), self.actor:getStat(sid, nil, nil, true))}
 				else
-					return tstring{{"color", 0x00, 0xFF, 0x00}, ("%d/%d"):format(self.actor:getStat(sid), self.actor:getStat(sid, nil, nil, true))}
+					return tstring{{"color", 0x00, 0xFF, 0x00}, ("%d (%d)"):format(self.actor:getStat(sid), self.actor:getStat(sid, nil, nil, true))}
 				end
 			end,
 		}}}
