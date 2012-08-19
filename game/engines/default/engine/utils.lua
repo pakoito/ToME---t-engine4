@@ -1286,6 +1286,8 @@ util = {}
 
 function util.clipOffset(w, h, total_w, total_h, loffset_x, loffset_y, dest_area)
 	w, h = math.floor(w), math.floor(h)
+	total_w, total_h, loffset_x, loffset_y = math.floor(total_w), math.floor(total_h), math.floor(loffset_x), math.floor(loffset_y)
+	dest_area.w , dest_area.h = math.floor(dest_area.w), math.floor(dest_area.h)
 	local clip_y_start = 0
 	local clip_y_end = 0
 	local clip_x_start = 0

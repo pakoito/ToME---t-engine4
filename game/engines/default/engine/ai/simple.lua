@@ -30,7 +30,7 @@ newAI("move_simple", function(self)
 end)
 
 newAI("move_dmap", function(self)
-	if self.ai_target.actor then
+	if self.ai_target.actor and self.x and self.y then
 		local a = self.ai_target.actor
 		if self:hasLOS(a.x, a.y) then return self:runAI("move_simple") end
 

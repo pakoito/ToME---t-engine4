@@ -70,6 +70,7 @@ function _M:set(str, ...)
 	-- if locked change is forbiden
 	if self.locked then return end
 	self.pingpong = 0
+	str = str or {}
 	
 	if type(str) == "string" then str = ... and str:format(...):toTString() or str:toTString() end
 	if type(str) == "number" then str = tostring(str):toTString() end
@@ -266,7 +267,7 @@ function _M:displayAtMap(tmx, tmy, mx, my, text, force, nb_keyframes)
 				self.old_ttmx, self.old_ttmy = tmx, tmy
 				self.old_turn = game.turn
 				local ts = self:getTooltipAtMap(tmx, tmy, mx, my)
-				if ts then
+				if ts or self.add_map_str then
 					self:set(ts)
 				else
 					self:erase()
