@@ -1840,6 +1840,8 @@ newEffect{
 		if game.zone.short_name.."-"..game.level.level ~= eff.level then return end
 
 		local spot = rng.table(eff.list)
+		if not spot or not spot.x then return end
+
 		self:project({type="ball", x=spot.x, y=spot.y, radius=2, selffire=self:spellFriendlyFire()}, spot.x, spot.y, DamageType.ARCANE, eff.dam)
 		if core.shader.active(4) then
 			game.level.map:particleEmitter(spot.x, spot.y, 2, "shader_ring", {radius=4, life=12}, {type="sparks", zoom=1, time_factor=400, hide_center=0, color1={0.6, 0.3, 0.8, 1}, color2={0.8, 0, 0.8, 1}})

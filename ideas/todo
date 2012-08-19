@@ -1,10 +1,9 @@
 * RSS feed of events in a character's life, exportable to FB
 * PIC TALENTS AT LVL 45 FOR HIGH STAT, CLASS DEPENDANT
-* redo shops
 * make low level more fun
 * auto-leveling for beginners/lazy
+
+after v1:
 * donator's fight club
 * sub-tile entities, like the spiders for the arachnomancer: split a tile in 16 (4x4)
 * fun caster egos: apply/change tthe cross-tier effects o some things funky
-
-* improve profile speed: if starting a game before it finishes generic stuff it wont register
