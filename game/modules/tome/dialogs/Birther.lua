@@ -163,6 +163,11 @@ function _M:init(title, actor, order, at_end, quickbirth, w, h)
 	for i, item in ipairs(self.c_campaign.c_list.list) do if self.default_campaign == item.id then self.c_campaign.c_list.sel = i break end end
 	for i, item in ipairs(self.c_difficulty.c_list.list) do if self.default_difficulty == item.id then self.c_difficulty.c_list.sel = i break end end
 	for i, item in ipairs(self.c_permadeath.c_list.list) do if self.default_permadeath == item.id then self.c_permadeath.c_list.sel = i break end end
+	if config.settings.tome.default_birth and config.settings.tome.default_birth.sex then
+		self.c_female.checked = config.settings.tome.default_birth.sex == "Female"
+		self.c_male.checked = config.settings.tome.default_birth.sex ~= "Female"
+		self:setDescriptor("sex", self.c_female.checked and "Female" or "Male")
+	end
 	self:setFocus(self.c_campaign)
 	self:setFocus(self.c_name)
 
@@ -277,7 +282,7 @@ function _M:atEnd(v)
 			save:delete()
 			save:close()
 
-			game:saveSettings("tome.default_birth", ("tome.default_birth = {permadeath = %q}\n"):format(self.actor.descriptor.permadeath))
+			game:saveSettings("tome.default_birth", ("tome.default_birth = {permadeath=%q, sex=%q}\n"):format(self.actor.descriptor.permadeath, self.actor.descriptor.sex))
 
 			self.at_end(false)
 		end)

@@ -206,7 +206,6 @@ end
 function _M:handleOrder(o)
 	o = o:unserialize()
 	if not self.sock and o.o ~= "Login" and o.o ~= "CurrentCharacter" and o.o ~= "CheckModuleHash" and o.o ~= "CheckAddonHash" then return end -- Dont do stuff without a connection, unless we try to auth
-	print("===order", o.o)
 	if self["order"..o.o] then self["order"..o.o](self, o) end
 end
 
