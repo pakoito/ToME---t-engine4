@@ -27,6 +27,7 @@ return {
 	width = 50, height = 50,
 	all_remembered = true,
 	all_lited = true,
+	tier1 = true,
 	persistent = "zone",
 	ambient_music = "Suspicion.ogg",
 	max_material_level = 2,

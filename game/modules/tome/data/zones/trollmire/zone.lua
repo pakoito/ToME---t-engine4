@@ -28,6 +28,7 @@ return {
 --	all_remembered = true,
 	all_lited = true,
 	day_night = true,
+	tier1 = true,
 	persistent = "zone",
 	ambient_music = "Rainy Day.ogg",
 	min_material_level = function() return game.state:isAdvanced() and 3 or 1 end,

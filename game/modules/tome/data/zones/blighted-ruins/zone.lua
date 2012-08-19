@@ -26,6 +26,7 @@ return {
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + (zone.max_level - level.level) + rng.range(-1,2) end,
 	level_adjust_level = function(zone, level) return zone.base_level + (zone.max_level - level.level) end,
 	width = 50, height = 50,
+	tier1 = true,
 --	all_remembered = true,
 --	all_lited = true,
 	persistent = "zone",

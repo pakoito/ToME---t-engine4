@@ -46,6 +46,7 @@ newEntity{ define_as = "TROLL_PROX",
 	size_category = 4,
 	infravision = 10,
 	instakill_immune = 1,
+	tier1 = true,
 	move_others=true,
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, TOOL=1 },

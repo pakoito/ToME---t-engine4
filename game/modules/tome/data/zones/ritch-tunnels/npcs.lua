@@ -107,6 +107,7 @@ newEntity{ base = "BASE_NPC_RITCH_REL", define_as = "HIVE_MOTHER",
 	instakill_immune = 1,
 	blind_immune = 1,
 	no_breath = 1,
+	tier1 = true,
 	rank = 4,
 	size_category = 4,
 

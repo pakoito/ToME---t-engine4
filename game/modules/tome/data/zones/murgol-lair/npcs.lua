@@ -39,6 +39,7 @@ newEntity{ base = "BASE_NPC_YAECH", define_as = "MURGOL",
 	blind_immune = 1,
 	no_breath = 1,
 	rank = 4,
+	tier1 = true,
 
 	resists = { [DamageType.BLIGHT] = 40 },
 

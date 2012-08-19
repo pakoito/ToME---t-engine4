@@ -2061,6 +2061,8 @@ function _M:die(src, death_note)
 	end
 	if self.unique then game.state:registerUniqueDeath(self) end
 
+	if self.tier1 then game.state:tier1Kill() end
+
 	if self.on_death_lore then game.player:learnLore(self.on_death_lore) end
 
 	-- Do we get a blooooooody death ?

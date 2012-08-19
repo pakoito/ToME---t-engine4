@@ -696,6 +696,13 @@ function _M:changeLevelReal(lev, zone, params)
 			else
 				self.zone = zone
 			end
+			if self.zone.tier1 then
+				if lev == 1 and game.state:tier1Killed(3) then
+					lev = self.zone.max_level
+					self.zone.tier1 = nil
+					Dialog:simplePopup("Easy!", "This zone is so easy for you that you stroll to the last area with ease.")
+				end
+			end
 			if type(self.zone.save_per_level) == "nil" then self.zone.save_per_level = config.settings.tome.save_zone_levels and true or false end
 		end
 		local _, new_level = self.zone:getLevel(self, lev, old_lev)

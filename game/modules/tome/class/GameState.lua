@@ -39,6 +39,7 @@ function _M:init(t, no_default)
 	self.boss_killed = 0
 	self.stores_restock = 1
 	self.east_orc_patrols = 4
+	self.tier1_done = 0
 	self.birth = {}
 end
 
@@ -51,6 +52,16 @@ end
 --- Number of bosses killed
 function _M:bossKilled(rank)
 	self.boss_killed = self.boss_killed + 1
+end
+
+--- Register a tier1 boss kill
+function _M:tier1Kill()
+	self.tier1_done = self.tier1_done + 1
+end
+
+--- Return true if enough tier1 boss killed
+function _M:tier1Killed(nb)
+	return self.tier1_done >= nb
 end
 
 --- Sets unique as dead

@@ -81,6 +81,7 @@ This specimen looks like it was hastily assembled and is not really complete yet
 	melee_project = {[DamageType.BLIGHT]=resolvers.mbonus(5, 2)},
 	resolvers.talents{ [Talents.T_BONE_ARMOUR]=3, [Talents.T_THROW_BONES]=1, },
 	resolvers.sustains_at_birth(),
+	tier1 = true,
 
 	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
 	resolvers.drops{chance=100, nb=1, {defined="WINTERTIDE_PHIAL", random_art_replace={chance=75}} },
