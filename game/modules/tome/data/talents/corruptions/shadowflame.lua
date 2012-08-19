@@ -131,7 +131,7 @@ newTalent{
 	random_boss_rarity = 10,
 	tactical = { DISABLE = function(self, t, target) if target and target.game_ender then return 3 else return 0 end end},
 	range = 5,
-	on_pre_use = function(self, t) return self:canBe("planechange") end,
+	on_pre_use = function(self, t) return self:canBe("planechange") and self:getVim() >= 10 end,
 	activate = function(self, t)
 		if game.zone.is_demon_plane then
 			game.logPlayer(self, "This spell can not be used from within the Fearscape.")

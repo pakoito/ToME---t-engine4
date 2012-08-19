@@ -70,7 +70,7 @@ newEntity{
 	},
 }
 
--- Greater 
+-- Greater
 newEntity{
 	power_source = {technique=true},
 	name = "quick ", prefix=true, instant_resolve=true,
@@ -120,7 +120,7 @@ newEntity{
 		combat_physcrit = resolvers.mbonus_material(10, 5),
 		combat_dam = resolvers.mbonus_material(10, 5),
 	},
-	combat = { 
+	combat = {
 		special_on_crit = {desc="wounds the target", fct=function(combat, who, target)
 			local dam = 5 + (who:combatPhysicalpower()/5)
 			if target:canBe("cut") then
@@ -235,7 +235,7 @@ newEntity{
 			local a, id = rng.table(tgts)
 			table.remove(tgts, id)
 			local dam = 30 + (who:combatSpellpower())
-			
+
 			who:project(tg, a.x, a.y, engine.DamageType.LIGHTNING, rng.avg(1, dam, 3))
 			game.level.map:particleEmitter(x, y, math.max(math.abs(a.x-x), math.abs(a.y-y)), "lightning", {tx=a.x-x, ty=a.y-y})
 			game:playSoundNear(who, "talents/lightning")
@@ -361,7 +361,7 @@ newEntity{
 				{engine.DamageType.LIGHTNING_DAZE, "lightning_explosion"},
 				{engine.DamageType.ACID_BLIND, "acid"},
 			}
-			who:project(tg, target.x, target.y, elem[1], rng.avg(dam / 2, dam, 3), {type=elem[2]})		
+			who:project(tg, target.x, target.y, elem[1], rng.avg(dam / 2, dam, 3), {type=elem[2]})
 		end},
 	},
 }
@@ -488,7 +488,7 @@ newEntity{
 		},
 	},
 	combat = {
-		convert_damage = { 
+		convert_damage = {
 			[DamageType.FIRE] = resolvers.mbonus_material(25, 25),
 		},
 	},
@@ -509,7 +509,7 @@ newEntity{
 		},
 	},
 	combat = {
-		convert_damage = { 
+		convert_damage = {
 			[DamageType.ACID_BLIND] = resolvers.mbonus_material(25, 25),
 		},
 	},
@@ -530,7 +530,7 @@ newEntity{
 		},
 	},
 	combat = {
-		convert_damage = { 
+		convert_damage = {
 			[DamageType.ICE] = resolvers.mbonus_material(25, 25),
 		},
 	},
@@ -558,7 +558,7 @@ newEntity{
 		},
 	},
 	combat = {
-		convert_damage = { 
+		convert_damage = {
 			[DamageType.LIGHTNING_DAZE] = resolvers.mbonus_material(25, 25),
 		},
 	},
@@ -610,7 +610,7 @@ newEntity{
 		},
 	},
 	combat = {
-		convert_damage = { 
+		convert_damage = {
 			[DamageType.NATURE] = resolvers.mbonus_material(25, 25),
 		},
 	},
@@ -653,7 +653,7 @@ newEntity{
 	combat = {
 		inc_damage_type = {demon=resolvers.mbonus_material(25, 5)},
 	},
-	wielder = { 
+	wielder = {
 		inc_stats = { [Stats.STAT_WIL] = resolvers.mbonus_material(6, 1), },
 	}
 }
@@ -669,9 +669,9 @@ newEntity{
 		melee_project={[DamageType.NATURE] = resolvers.mbonus_material(15, 5)},
 		special_on_hit = {desc="25% chance to remove a magical effect", fct=function(combat, who, target)
 			if not rng.percent(25) then return end
-			
+
 			local effs = {}
-			
+
 			-- Go through all spell effects
 			for eff_id, p in pairs(target.tmp) do
 				local e = target.tempeffect_def[eff_id]
@@ -687,7 +687,7 @@ newEntity{
 					if talent.is_spell then effs[#effs+1] = {"talent", tid} end
 				end
 			end
-			
+
 			local eff = rng.tableRemove(effs)
 			if eff then
 				if eff[1] == "effect" then
@@ -715,21 +715,23 @@ newEntity{
 		special_on_crit = {desc="burns latent spell energy", fct=function(combat, who, target)
 			local turns = 1 + math.ceil(who:combatMindpower() / 20)
 			if not who:checkHit(who:combatMindpower(), target:combatMentalResist()) then game.logSeen(target, "%s resists!", target.name:capitalize()) return nil end
-			
+
 			local tids = {}
 			for tid, lev in pairs(target.talents) do
 				local t = target:getTalentFromId(tid)
 				if t and not target.talents_cd[tid] and t.mode == "activated" and t.is_spell and not t.innate then tids[#tids+1] = t end
 			end
-			
+
 			local t = rng.tableRemove(tids)
 			if not t then return nil end
 			local damage = t.mana or t.vim or t.positive or t.negative or t.paradox or 0
 			target.talents_cd[t.id] = turns
-			
+
 			local tg = {type="hit", range=1}
+			damage = util.getval(damage, target, t)
+			if type(damage) ~= "number" then damage = 0 end
 			who:project(tg, target.x, target.y, engine.DamageType.ARCANE, damage)
-			
+
 			game.logSeen(target, "%s's %s has been burned!", target.name:capitalize(), t.name)
 		end},
 	},
@@ -745,7 +747,7 @@ newEntity{
 	cost = 40,
 	combat = {
 		inc_damage_type = {
-			undead=resolvers.mbonus_material(25, 5), 
+			undead=resolvers.mbonus_material(25, 5),
 			construct=resolvers.mbonus_material(25, 5),
 		},
 		special_on_hit = {desc="disrupts spell-casting", fct=function(combat, who, target)
@@ -775,7 +777,7 @@ newEntity{
 				local leeched = math.min(leech, target:getStamina())
 				who:incStamina(leeched)
 				target:incStamina(-leeched)
-			end				
+			end
 		end},
 	},
 }
@@ -807,7 +809,7 @@ newEntity{
 		melee_project={
 			[DamageType.MIND] = resolvers.mbonus_material(15, 5),
 		},
-		convert_damage = { 
+		convert_damage = {
 			[DamageType.MIND] = resolvers.mbonus_material(25, 25),
 		},
 	},
@@ -836,13 +838,13 @@ newEntity{
 			local turns = 1 + math.ceil(who:combatMindpower() / 20)
 			local number = 2 + math.ceil(who:combatMindpower() / 50)
 			if not who:checkHit(who:combatMindpower(), target:combatMentalResist()) then game.logSeen(target, "%s resists!", target.name:capitalize()) return nil end
-			
+
 			local tids = {}
 			for tid, lev in pairs(target.talents) do
 				local t = target:getTalentFromId(tid)
 				if t and not target.talents_cd[tid] and t.mode == "activated" and not t.innate then tids[#tids+1] = t end
 			end
-			
+
 			for i = 1, number do
 				local t = rng.tableRemove(tids)
 				if not t then break end
@@ -875,7 +877,7 @@ newEntity{
 			return {id=true, used=true}
 		end
 	),
-	combat = {	
+	combat = {
 		melee_project={
 			[DamageType.MIND] = resolvers.mbonus_material(15, 5),
 		},
