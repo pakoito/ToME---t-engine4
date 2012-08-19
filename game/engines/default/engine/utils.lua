@@ -43,7 +43,7 @@ function table.max(t)
 	return m
 end
 
-function table.print(src, offset)
+function table.print(src, offset, ret)
 	offset = offset or ""
 	for k, e in pairs(src) do
 		-- Deep copy subtables, but not objects!
@@ -74,7 +74,7 @@ end
 --- Generate a containing indexes between a and b and set to value v
 function table.genrange(a, b, v)
 	local t = {}
-	for i = a, b do 
+	for i = a, b do
 		t[i] = v
 	end
 	return t
@@ -748,12 +748,12 @@ function tstring:maxWidth(font)
 	for i = 1, #self do
 		v = self[i]
 		if type(v) == "string" then line_max = line_max + font:size(v) + 1
-	elseif type(v) == "table" then if v[1] == "uid" then line_max = line_max + h -- UID surface is same as font size  
-		elseif v[1] == "font" and v[2] == "bold" then font:setStyle("bold") 
+	elseif type(v) == "table" then if v[1] == "uid" then line_max = line_max + h -- UID surface is same as font size
+		elseif v[1] == "font" and v[2] == "bold" then font:setStyle("bold")
 		elseif v[1] == "font" and v[2] == "normal" then font:setStyle("normal") end
 		elseif type(v) == "boolean" then max_w = math.max(max_w, line_max) line_max = 0 end
 	end
-	font:setStyle(old_style) 
+	font:setStyle(old_style)
 	max_w = math.max(max_w, line_max) + 1
 	return max_w
 end
@@ -917,10 +917,10 @@ function tstring:extractLines(keep_color)
 	local v
 	for i = 1, #self do
 		v = self[i]
-		if type(v) == "table" and v[1] == "color" then 
+		if type(v) == "table" and v[1] == "color" then
 			last_color = v
 		end
-		if v == true then	
+		if v == true then
 			rets[#rets+1] = ret
 			ret = tstring{}
 			if keep_color and #rets > 0 then ret:add(last_color) end
@@ -1303,7 +1303,7 @@ function util.clipOffset(w, h, total_w, total_h, loffset_x, loffset_y, dest_area
 
 	-- if it ended after visible area then compute its bottom clip
 	if total_w + w > loffset_x + dest_area.w then clip_x_end = total_w + w - (loffset_x + dest_area.w) end
-	
+
 	if clip_x_start > w then clip_x_start = w end
 	if clip_x_end < 0 then clip_x_end = 0 end
 	if clip_y_start > h then clip_y_start = h end
@@ -1332,17 +1332,17 @@ function util.clipTexture(texture, x, y, w, h, total_w, total_h, loffset_x, loff
 
 	-- if it ended after visible area then compute its bottom clip
 	if total_w + w > loffset_x + dest_area.w then clip_x_end = total_w + w - (loffset_x + dest_area.w) end
-	
+
 	local one_by_tex_h = 1 / texture._tex_h
 	local one_by_tex_w = 1 / texture._tex_w
 	--talent icon
 	texture._tex:toScreenPrecise(x, y, w - (clip_x_start + clip_x_end), h - (clip_y_start + clip_y_end), clip_x_start * one_by_tex_w, (w - clip_x_end) * one_by_tex_w, clip_y_start * one_by_tex_h, (h - clip_y_end) * one_by_tex_h, r, g, b, a)
-	
+
 	if clip_x_start > w then clip_x_start = w end
 	if clip_x_end < 0 then clip_x_end = 0 end
 	if clip_y_start > h then clip_y_start = h end
 	if clip_y_end < 0 then clip_y_end = 0 end
-	
+
 	return clip_x_start, clip_x_end, clip_y_start, clip_y_end
 end
 

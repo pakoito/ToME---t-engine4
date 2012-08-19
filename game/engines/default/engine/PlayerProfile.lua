@@ -441,6 +441,7 @@ function _M:eventGetConfigs(e)
 	local data = zlib.decompress(e.data):unserialize()
 	local module = e.module
 	if not data then print("[ONLINE PROFILE] get configs") return end
+	self:setConfigsBatch(true)
 	for i = 1, #data do
 		local val = data[i]
 
@@ -450,6 +451,7 @@ function _M:eventGetConfigs(e)
 			self:saveModuleProfile(e.kind, val, true, i < #data)
 		end
 	end
+	self:setConfigsBatch(false)
 	if self.evt_cbs.GetConfigs then self.evt_cbs.GetConfigs(e) self.evt_cbs.GetConfigs = nil end
 end
 
