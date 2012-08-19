@@ -565,9 +565,6 @@ function _M:changeLevel(lev, zone, params)
 		return
 	end
 
-	local st = core.game.getTime()
-	local sti = 1
-
 	-- Transmo!
 	local p = self:getPlayer(true)
 	if p:attr("has_transmo") and p:transmoGetNumberItems() > 0 then
@@ -591,12 +588,20 @@ function _M:changeLevel(lev, zone, params)
 					p:transmoInven(inven, i, o)
 				end
 			end
+			self:changeLevelReal(lev, zone, params)
 		end
 		-- Select the chest tab
 		d.c_inven.dont_update_last_tabs = true
 		d.c_inven:switchTab{kind="transmo"}
 		d:simplePopup("Transmogrification Chest", "When you close the inventory window, all items in the chest will be transmogrified.")
+	else
+		self:changeLevelReal(lev, zone, params)
 	end
+end
+
+function _M:changeLevelReal(lev, zone, params)
+	local st = core.game.getTime()
+	local sti = 1
 
 	-- Finish stuff registered for the previous level
 	self:onTickEndExecute()
