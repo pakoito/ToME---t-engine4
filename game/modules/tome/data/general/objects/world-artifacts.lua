@@ -3375,6 +3375,7 @@ newEntity{ base = "BASE_WHIP",
 				if not target then return end
 				who:attackTarget(target, engine.DamageType.MIND, 1, true)
 			end)
+			local _ _, x, y = who:canProject(tg, x, y)
 			game.level.map:particleEmitter(who.x, who.y, tg.radius, "matter_beam", {tx=x-who.x, ty=y-who.y})
 			game:playSoundNear(self, "talents/lightning")
 			return {id=true, used=true}
