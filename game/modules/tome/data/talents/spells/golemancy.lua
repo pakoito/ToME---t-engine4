@@ -26,8 +26,8 @@ function getGolem(self)
 	end
 end
 
-local function makeGolem()
-	return require("mod.class.NPC").new{
+local function makeGolem(self)
+	local g = require("mod.class.NPC").new{
 		type = "construct", subtype = "golem",
 		display = 'g', color=colors.WHITE, image = "npc/alchemist_golem.png",
 		moddable_tile = "runic_golem",
@@ -131,6 +131,13 @@ local function makeGolem()
 		no_breath = 1,
 		can_change_level = true,
 	}
+
+	if self.no_points_on_levelup then
+		g.max_level = nil
+		g.no_points_on_levelup = self.no_points_on_levelup
+	end
+
+	return g
 end
 
 newTalent{
@@ -148,7 +155,7 @@ newTalent{
 	end,
 	action = function(self, t)
 		if not self.alchemy_golem then
-			self.alchemy_golem = game.zone:finishEntity(game.level, "actor", makeGolem())
+			self.alchemy_golem = game.zone:finishEntity(game.level, "actor", makeGolem(self))
 			if game.party:hasMember(self) then
 				game.party:addMember(self.alchemy_golem, {
 					control="full", type="golem", title="Golem",
