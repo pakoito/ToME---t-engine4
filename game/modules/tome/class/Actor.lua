@@ -1609,7 +1609,7 @@ function _M:onTakeHit(value, src)
 			end
 		end
 		-- If we are at the end of the capacity, release the time shield damage
-		if self.damage_shield_absorb <= 0 then
+		if not self.damage_shield_absorb or self.damage_shield_absorb <= 0 then
 			game.logPlayer(self, "Your shield crumbles under the damage!")
 			self:removeEffect(self.EFF_DAMAGE_SHIELD)
 		end
