@@ -397,6 +397,7 @@ static int map_objects_toscreen(lua_State *L)
 			tglBindTexture(m->textures_is3d[z] ? GL_TEXTURE_3D : GL_TEXTURE_2D, m->textures[z]);
 		}
 
+		int nb = 0;
 		dm = m;
 		while (dm)
 		{
@@ -436,12 +437,18 @@ static int map_objects_toscreen(lua_State *L)
 					printf("Display callback error: UID %ld: %s\n", dm->uid, lua_tostring(L, -1));
 					lua_pop(L, 1);
 				}
+				if (lua_isboolean(L, -1)) {
+					glTexCoordPointer(2, GL_FLOAT, 0, texcoords);
+					glColorPointer(4, GL_FLOAT, 0, colors);
+					glVertexPointer(3, GL_FLOAT, 0, vertices);
+				}
 				lua_pop(L, 1);
 
 				if (m->shader) useShader(m->shader, 1, 1, 1, 1, 1, 1, 1, 1);
 			}
 
 			dm = dm->next;
+			nb++;
 		}
 
 		if (m->shader) glUseProgramObjectARB(0);
