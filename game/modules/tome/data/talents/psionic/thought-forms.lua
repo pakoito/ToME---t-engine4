@@ -86,7 +86,7 @@ newTalent{
 				if game.player == self then
 					local tg = {type="ball", radius=10}
 					self:project(tg, self.x, self.y, function(tx, ty)
-						local target = game.level.map(tx, ty, Map.ACTOR)
+						local target = game.level.map(tx, ty, engine.Map.ACTOR)
 						if target and target.ai_target.actor == self then
 							target:setTarget(self.summoner)
 						end
@@ -101,7 +101,7 @@ newTalent{
 				end
 				if game.level:hasEntity(self.summoner) and core.fov.distance(self.x, self.y, self.summoner.x, self.summoner.y) > self.summoner:getTalentRange(t) then
 					local Map = require "engine.Map"
-					local x, y = util.findFreeGrid(self.summoner.x, self.summoner.y, 5, true, {[Map.ACTOR]=true})
+					local x, y = util.findFreeGrid(self.summoner.x, self.summoner.y, 5, true, {[engine.Map.ACTOR]=true})
 					if not x then
 						return
 					end
@@ -253,7 +253,7 @@ newTalent{
 				if game.player == self then
 					local tg = {type="ball", radius=10}
 					self:project(tg, self.x, self.y, function(tx, ty)
-						local target = game.level.map(tx, ty, Map.ACTOR)
+						local target = game.level.map(tx, ty, engine.Map.ACTOR)
 						if target and target.ai_target.actor == self then
 							target:setTarget(self.summoner)
 						end
@@ -268,7 +268,7 @@ newTalent{
 				end
 				if game.level:hasEntity(self.summoner) and core.fov.distance(self.x, self.y, self.summoner.x, self.summoner.y) > self.summoner:getTalentRange(t) then
 					local Map = require "engine.Map"
-					local x, y = util.findFreeGrid(self.summoner.x, self.summoner.y, 5, true, {[Map.ACTOR]=true})
+					local x, y = util.findFreeGrid(self.summoner.x, self.summoner.y, 5, true, {[engine.Map.ACTOR]=true})
 					if not x then
 						return
 					end
@@ -410,7 +410,7 @@ newTalent{
 				if game.player == self then
 					local tg = {type="ball", radius=10}
 					self:project(tg, self.x, self.y, function(tx, ty)
-						local target = game.level.map(tx, ty, Map.ACTOR)
+						local target = game.level.map(tx, ty, engine.Map.ACTOR)
 						if target and target.ai_target.actor == self then
 							target:setTarget(self.summoner)
 						end
@@ -425,7 +425,7 @@ newTalent{
 				end
 				if game.level:hasEntity(self.summoner) and core.fov.distance(self.x, self.y, self.summoner.x, self.summoner.y) > self.summoner:getTalentRange(t) then
 					local Map = require "engine.Map"
-					local x, y = util.findFreeGrid(self.summoner.x, self.summoner.y, 5, true, {[Map.ACTOR]=true})
+					local x, y = util.findFreeGrid(self.summoner.x, self.summoner.y, 5, true, {[engine.Map.ACTOR]=true})
 					if not x then
 						return
 					end
