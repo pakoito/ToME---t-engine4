@@ -73,10 +73,12 @@ function _M:init(actor, on_finish, on_birth)
 
 	self.key:addCommands{
 		__TEXTINPUT = function(c)
-			if c == "+" and self.focus_ui and self.focus_ui.ui.onUse then
-				self.focus_ui.ui:onUse(self.focus_ui.ui.last_mz.item, true)
-			elseif c == "-" then
-				self.focus_ui.ui:onUse(self.focus_ui.ui.last_mz.item, false)
+			if self.focus_ui.ui.last_mz then
+				if c == "+" and self.focus_ui and self.focus_ui.ui.onUse then
+					self.focus_ui.ui:onUse(self.focus_ui.ui.last_mz.item, true)
+				elseif c == "-" then
+					self.focus_ui.ui:onUse(self.focus_ui.ui.last_mz.item, false)
+				end
 			end
 		end,
 	}

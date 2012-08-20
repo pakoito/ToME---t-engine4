@@ -181,7 +181,7 @@ return {
 				level.back_shader = require("engine.Shader").new("funky_bubbles", {})
 			end,
 			background = function(level, x, y, nb_keyframes)
-				if not level.back_shader then return end
+				if not level.back_shader or not level.back_shader.shad then return end
 				local sx, sy = level.map._map:getScroll()
 				local mapcoords = {(-sx + level.map.mx * level.map.tile_w) / level.map.viewport.width , (-sy + level.map.my * level.map.tile_h) / level.map.viewport.height}
 				level.back_shader:setUniform("xy", mapcoords)
