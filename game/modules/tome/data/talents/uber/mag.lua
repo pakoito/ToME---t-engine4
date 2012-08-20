@@ -37,3 +37,27 @@ uberTalent{
 		:format()
 	end,
 }
+
+uberTalent{
+	name = "Aether Permeation",
+	mode = "passive",
+	require = { special={desc="At least 25% arcane damage reduction and having been exposed to the void of space.", fct=function(self)
+		return self:attr("planetary_orbit") and self:combatGetResist(DamageType.ARCANE) >= 25
+	end} },
+	on_learn = function(self, t)
+		self.resists[DamageType.ARCANE] = (self.resists[DamageType.ARCANE] or 0) + 15
+		self:attr("max_mana", -70)
+		self.force_use_resist = DamageType.ARCANE
+	end,
+	on_unlearn = function(self, t)
+		self.resists[DamageType.ARCANE] = (self.resists[DamageType.ARCANE] or 0) - 15
+		self:attr("max_mana", 70)
+		self.force_use_resist = nil
+	end,
+	info = function(self, t)
+		return ([[Create a thin layer of aether all around you. Any attack passing through will check arcane resistance instead of the incomming damage resistance.
+		Also increases your arcane resistance by 15%%.
+		Your maximum mana will be premanently reduced by 70 to create the effect.]])
+		:format()
+	end,
+}

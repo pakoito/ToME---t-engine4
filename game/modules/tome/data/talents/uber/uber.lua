@@ -48,7 +48,7 @@ uberTalent = function(t)
 	t.require.stat.con = 80
 	newTalent(t)
 end
-load("/data/talents/uber/con.lua")
+load("/data/talents/uber/const.lua")
 
 uberTalent = function(t)
 	t.type = {"uber/uber", 1}

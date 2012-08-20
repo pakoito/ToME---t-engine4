@@ -1441,6 +1441,8 @@ end
 
 --- Returns the resistance
 function _M:combatGetResist(type)
+	if self.force_use_resist then type = self.force_use_resist end
+
 	local a = (self.resists.all or 0) / 100
 	local b = (self.resists[type] or 0) / 100
 	local r = math.min(100 * (1 - (1 - a) * (1 - b)), (self.resists_cap.all or 0) + (self.resists_cap[type] or 0))
