@@ -935,7 +935,13 @@ function _M:move(x, y, force)
 			local eff = self:hasEffect(self.EFF_CURSE_OF_SHROUDS)
 			if eff then eff.moved = true end
 
-			self:useEnergy(game.energy_to_act * self:combatMovementSpeed(x, y))
+			local speed = self:combatMovementSpeed(x, y)
+			self:useEnergy(game.energy_to_act * speed)
+
+			if speed <= 0.125 and self:knowTalent(self.T_FAST_AS_LIGHTNING) then
+				local t = self:getTalentFromId(self.T_FAST_AS_LIGHTNING)
+				t.trigger(self, t, ox, oy)
+			end
 		end
 	end
 	self.did_energy = nil
@@ -1985,6 +1991,11 @@ function _M:onTakeHit(value, src)
 		src:incHate(leech * 0.2)
 		src:incPsi(leech * 0.2)
 		game.logSeen(src, "#CRIMSON#%s leeches energies from its victim!", src.name:capitalize())
+	end
+
+	if self:knowTalent(self.T_DRACONIC_BODY) then
+		local t = self:getTalentFromId(self.T_DRACONIC_BODY)
+		t.trigger(self, t, value)
 	end
 
 	return value

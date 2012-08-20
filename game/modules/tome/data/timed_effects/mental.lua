@@ -2750,3 +2750,18 @@ newEffect{
 		self:removeParticles(eff.particle)
 	end,
 }
+
+newEffect{
+	name = "DRACONIC_WILL", image = "talents/draconic_will.png",
+	desc = "Draconic Will",
+	long_desc = function(self, eff) return "The target is immune to all detrimental effects." end,
+	type = "mental",
+	subtype = { nature=true },
+	status = "detrimental",
+	on_gain = function(self, err) return "#Target#'s skin hardens.", "+Draconic Will" end,
+	on_lose = function(self, err) return "#Target#'s skin is back to normal.", "-Draconic Will" end,
+	parameters = { },
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "negative_status_effect_immune", 1)
+	end,
+}

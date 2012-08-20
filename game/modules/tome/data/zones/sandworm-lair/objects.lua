@@ -59,6 +59,8 @@ newEntity{
 			if who:getTalentTypeMastery("wild-gift/harmony") == 0 then who:setTalentTypeMastery("wild-gift/harmony", 1) end
 			game.logPlayer(who, "You are transformed by the heart of the Queen!.")
 			game.logPlayer(who, "#00FF00#You gain an affinity for nature. You can now learn new Harmony talents (press G).")
+
+			who:attr("drake_touched", 1)
 		end
 
 		game:setAllowedBuild("wilder_wyrmic", true)
@@ -89,6 +91,8 @@ newEntity{
 		who:incStat("cun", cun) if cun >= 0 then cun="+"..cun end
 		who:incStat("con", con) if con >= 0 then con="+"..con end
 		game.logPlayer(who, "#00FF00#Your stats have changed! (Str %s, Dex %s, Mag %s, Wil %s, Cun %s, Con %s)", str, dex, mag, wil, cun, con)
+
+		who:attr("drake_touched", 1)
 
 		return {used=true, id=true, destroy=true}
 	end}

@@ -71,6 +71,7 @@ load("/data/talents/undeads/undeads.lua")
 load("/data/talents/cursed/cursed.lua")
 load("/data/talents/chronomancy/chronomancer.lua")
 load("/data/talents/psionic/psionic.lua")
+load("/data/talents/uber/uber.lua")
 
 print("[TALENTS TACTICS]")
 for k, _ in pairs(tacticals) do print(" * ", k) end

@@ -1883,3 +1883,25 @@ newEffect{
 --		if eff.ai then self:removeTemporaryValue("ai_state", eff.ai) end
 	end,
 }
+
+newEffect{
+	name = "FAST_AS_LIGHTNING", image = "talents/fast_as_lightning.png",
+	desc = "Fast As Lightning",
+	long_desc = function(self, eff) return ("The target is so fast it may blink throught obstacles if moving in the same direction for over two turns."):format() end,
+	type = "physical",
+	subtype = { speed=true },
+	status = "beneficial",
+	parameters = { },
+	on_merge = function(self, old_eff, new_eff)
+		return old_eff
+	end,
+	on_gain = function(self, err) return "#Target# is speeding up.", "+Fast As Lightning" end,
+	on_lose = function(self, err) return "#Target# is slowing down.", "-Fast As Lightning" end,
+	activate = function(self, eff)
+	end,
+	deactivate = function(self, eff)
+		if eff.particle then
+			self:removeParticles(eff.particle)
+		end
+	end,
+}
