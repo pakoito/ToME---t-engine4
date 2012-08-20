@@ -1126,8 +1126,20 @@ function _M:onWear(o, bypass_set)
 
 	if not self.no_power_reset_on_wear then
 		o:forAllStack(function(so)
-			if so.power and so:attr("power_regen") then so.power = 0 end
-			if so.talent_cooldown then self.talents_cd[so.talent_cooldown] = math.max(self.talents_cd[so.talent_cooldown] or 0, math.min(4, math.floor((so.use_power or so.use_talent or {power=10}).power / 5))) end
+			if so.power and so:attr("power_regen") then
+				if self:attr("quick_equip_cooldown") then
+					so.power = math.min(so.power, (so.max_power or 2) / self:attr("quick_equip_cooldown"))
+				else
+					so.power = 0
+				end
+			end
+			if so.talent_cooldown then
+				self.talents_cd[so.talent_cooldown] = math.max(self.talents_cd[so.talent_cooldown] or 0, math.min(4, math.floor((so.use_power or so.use_talent or {power=10}).power / 5)))
+				if self:attr("quick_equip_cooldown") then
+					self.talents_cd[so.talent_cooldown] = math.floor(self.talents_cd[so.talent_cooldown] / 2)
+					if self.talents_cd[so.talent_cooldown] <= 0 then self.talents_cd[so.talent_cooldown] = nil end
+				end
+			end
 		end)
 	end
 end

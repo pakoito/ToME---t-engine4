@@ -34,3 +34,21 @@ uberTalent{
 		:format()
 	end,
 }
+
+uberTalent{
+	name = "Swift Hands",
+	mode = "passive",
+	on_learn = function(self, t)
+		self:attr("quick_weapon_swap", 1)
+		self:attr("quick_equip_cooldown", 2)
+	end,
+	on_unlearn = function(self, t)
+		self:attr("quick_weapon_swap", -1)
+		self:attr("quick_equip_cooldown", -2)
+	end,
+	info = function(self, t)
+		return ([[You have very agile hands, swaping equipment sets (default x key) takes no turn.
+		Also the cooldown for equiping activable equipment is reduced by half.]])
+		:format()
+	end,
+}
