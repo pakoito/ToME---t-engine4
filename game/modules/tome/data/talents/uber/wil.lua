@@ -117,10 +117,15 @@ uberTalent{
 	on_unlearn = function(self, t)
 		self.inc_damage_actor_type.construct = (self.inc_damage_actor_type.construct or 0) - 500
 	end,
-	require = { special={desc="Possess and wear two of Garkul's artifacts", fct=function(self)
+	require = { special={desc="Possess and wear two of Garkul's artifacts and know all about Garkul's life", fct=function(self)
 		local o1 = self:findInAllInventoriesBy("define_as", "SET_GARKUL_TEETH")
 		local o2 = self:findInAllInventoriesBy("define_as", "HELM_OF_GARKUL")
-		return o1 and o2 and o1.wielded and o2.wielded
+		return o1 and o2 and o1.wielded and o2.wielded and
+			game.player:knownLore("garkul-history-1") and
+			game.player:knownLore("garkul-history-2") and
+			game.player:knownLore("garkul-history-3") and
+			game.player:knownLore("garkul-history-4") and
+			game.player:knownLore("garkul-history-5")
 	end} },
 	info = function(self, t)
 		return ([[Garkul's Spirit is with you, you now deal 500%% more damage to constructs.]])

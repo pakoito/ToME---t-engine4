@@ -51,6 +51,10 @@ function _M:addMember(actor, def)
 	self.m_list[#self.m_list+1] = actor
 	def.index = #self.m_list
 
+	if #self.m_list >= 6 then
+		game:getPlayer(true):attr("huge_party", 1)
+	end
+
 	actor.ai_state = actor.ai_state or {}
 	actor.ai_state.tactic_leash_anchor = actor.ai_state.tactic_leash_anchor or game.player
 	actor.ai_state.tactic_leash = actor.ai_state.tactic_leash or 10

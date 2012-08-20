@@ -16,3 +16,21 @@
 --
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
+
+uberTalent{
+	name = "Through The Crowd",
+	mode = "passive",
+	on_learn = function(self, t)
+		self:attr("bump_swap_speed_divide", 10)
+	end,
+	on_unlearn = function(self, t)
+		self:attr("bump_swap_speed_divide", -10)
+	end,
+	require = { special={desc="Have had at least 6 party members at the same time.", fct=function(self)
+		return self:attr("huge_party")
+	end} },
+	info = function(self, t)
+		return ([[You are used to a crowded party, you can swap place with friendly creatures for only one tenth of a turn.]])
+		:format()
+	end,
+}

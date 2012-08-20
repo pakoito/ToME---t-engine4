@@ -60,10 +60,16 @@ function _M:bumpInto(target, x, y)
 			local tx, ty, sx, sy = target.x, target.y, self.x, self.y
 			target.x = nil target.y = nil
 			self.x = nil self.y = nil
+
 			target:move(sx, sy, true)
 			self:move(tx, ty, true)
 			if target.describeFloor then target:describeFloor(target.x, target.y, true) end
 			if self.describeFloor then self:describeFloor(self.x, self.y, true) end
+
+			if self:attr("bump_swap_speed_divide") then
+				self:useEnergy(game.energy_to_act * self:combatMovementSpeed(x, y) / self:attr("bump_swap_speed_divide"))
+				self.did_energy = true
+			end
 		end
 	end
 end
