@@ -16,3 +16,24 @@
 --
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
+
+uberTalent{
+	name = "Spectral Shield",
+	mode = "passive",
+	require = { special={desc="Block talent, have mana and a block value over 200.", fct=function(self)
+		return self:knowTalent(self.T_BLOCK) and self:getTalentFromId(self.T_BLOCK).getBlockValue(self) >= 200 and self:getMaxMana() >= 70
+	end} },
+	on_learn = function(self, t)
+		self:attr("spectral_shield", 1)
+		self:attr("max_mana", -70)
+	end,
+	on_unlearn = function(self, t)
+		self:attr("spectral_shield", -1)
+		self:attr("max_mana", 70)
+	end,
+	info = function(self, t)
+		return ([[Infusing your shield with raw magic your Block can now block any damage type
+		Your maximum mana will be premanently reduced by 70 to create the effect.]])
+		:format()
+	end,
+}

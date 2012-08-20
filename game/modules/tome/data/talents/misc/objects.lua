@@ -206,10 +206,24 @@ newTalent{
 		local shield2 = self:getInven("MAINHAND") and self:getInven("MAINHAND")[1]
 		shield2 = shield2 and shield2.special_combat and shield2 or nil
 
-		if shield.wielder.resists then for res, v in pairs(shield.wielder.resists) do if v > 0 then bt[res] = true end end end
-		if shield.wielder.on_melee_hit then for res, v in pairs(shield.wielder.on_melee_hit) do if v > 0 then bt[res] = true end end end
-		if shield2 and shield2.wielder.resists then for res, v in pairs(shield2.wielder.resists) do if v > 0 then bt[res] = true end end end
-		if shield2 and shield2.wielder.on_melee_hit then for res, v in pairs(shield2.wielder.on_melee_hit) do if v > 0 then bt[res] = true end end end
+		if not self:attr("spectral_shield") then
+			if shield.wielder.resists then for res, v in pairs(shield.wielder.resists) do if v > 0 then bt[res] = true end end end
+			if shield.wielder.on_melee_hit then for res, v in pairs(shield.wielder.on_melee_hit) do if v > 0 then bt[res] = true end end end
+			if shield2 and shield2.wielder.resists then for res, v in pairs(shield2.wielder.resists) do if v > 0 then bt[res] = true end end end
+			if shield2 and shield2.wielder.on_melee_hit then for res, v in pairs(shield2.wielder.on_melee_hit) do if v > 0 then bt[res] = true end end end
+		else
+			bt[DamageType.FIRE] = true
+			bt[DamageType.LIGHTNING] = true
+			bt[DamageType.COLD] = true
+			bt[DamageType.ACID] = true
+			bt[DamageType.NATURE] = true
+			bt[DamageType.BLIGHT] = true
+			bt[DamageType.LIGHT] = true
+			bt[DamageType.DARKNESS] = true
+			bt[DamageType.ARCANE] = true
+			bt[DamageType.MIND] = true
+			bt[DamageType.TEMPORAL] = true
+		end
 
 		local n = 0
 		for t, _ in pairs(bt) do n = n + 1 end
