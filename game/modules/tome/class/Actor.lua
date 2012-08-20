@@ -3745,6 +3745,10 @@ function _M:getTalentFullDescription(t, addlevel, config)
 		if t.is_spell then
 			d:add({"color",0x6f,0xff,0x83}, "Is Spell: ", {"color",0xFF,0xFF,0xFF}, "true", true)
 		end
+	else
+		if not config.ignore_ressources then
+			if self:getTalentCooldown(t) then d:add({"color",0x6f,0xff,0x83}, "Cooldown: ", {"color",0xFF,0xFF,0xFF}, ""..self:getTalentCooldown(t), true) end
+		end
 	end
 
 	d:add({"color",0x6f,0xff,0x83}, "Description: ", {"color",0xFF,0xFF,0xFF})

@@ -658,3 +658,12 @@ function _M:talentTemporaryValue(p, k, v)
 	if not p.__tmpvals then p.__tmpvals = {} end
 	p.__tmpvals[#eff.__tmpvals+1] = {k, self:addTemporaryValue(k, v)}
 end
+
+--- Trigger a talent method
+function _M:triggerTalent(tid, name, ...)
+	if self:isTalentCoolingDown(tid) then return end
+
+	local t = _M.talents_def[tid]
+	name = name or "trigger"
+	if t[name] then return t[name](self, t, ...) end
+end

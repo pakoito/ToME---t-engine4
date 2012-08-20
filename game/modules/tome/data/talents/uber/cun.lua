@@ -57,6 +57,7 @@ uberTalent{
 			game.flyers:add(sx, sy, 30, rng.float(-3, -2), (rng.range(0,2)-1) * 0.5, "CRITICAL VELOCITY!", {0,128,255})
 			eff.particle = self:addParticles(Particles.new("megaspeed", 1, {angle=util.dirToAngle((dir == 4 and 6) or (dir == 6 and 4 or dir))}))
 			eff.blink = true
+			game:playSoundNear(self, "talents/thunderstorm")
 		end
 	end,
 	info = function(self, t)

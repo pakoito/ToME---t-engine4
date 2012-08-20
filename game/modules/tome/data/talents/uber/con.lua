@@ -29,8 +29,7 @@ uberTalent{
 		end
 	end,
 	info = function(self, t)
-		return ([[Your body hardens, when pushed below 30%% life you are healed for 40%% of your total life.
-		This effect can only happen every 40 turns.]])
+		return ([[Your body hardens, when pushed below 30%% life you are healed for 40%% of your total life.]])
 		:format()
 	end,
 }

@@ -65,6 +65,10 @@ return {
 		},
 	},
 
+	on_enter = function()
+		game.player:attr("planetary_orbit", 1)
+	end,
+
 	void_blast_hits = 0,
 	next_move = 10,
 	teleport_zones = true,

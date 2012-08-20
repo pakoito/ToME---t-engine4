@@ -142,6 +142,7 @@ g:initGlow()
 g.real_change = changer
 g.change_level_check = function(self)
 	game:changeLevel(1, self.real_change(self.change_zone), {temporary_zone_shift=true})
+	game.player:attr("planetary_orbit", 1)
 	self.change_level_check = nil
 	self.real_change = nil
 	return true
