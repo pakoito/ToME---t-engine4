@@ -1234,7 +1234,9 @@ function _M:setupCommands()
 			end end
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
-			self.player:learnTalentType("uber/uber", true)
+			package.loaded["mod.dialogs.UberTalent"] = nil
+			self:registerDialog(require("mod.dialogs.UberTalent").new(self.player))
+--			self.player:learnTalentType("uber/uber", true)
 do return end
 			local f, err = loadfile("/data/general/events/slimey-pool.lua")
 			print(f, err)

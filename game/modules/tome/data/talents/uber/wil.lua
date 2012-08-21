@@ -38,7 +38,7 @@ uberTalent{
 	mode = "passive",
 	cooldown = 15,
 	getDamage = function(self, t) return 100 + self:combatSpellpower() * 4 end,
-	require = { special={desc="Been into planetary orbit", fct=function(self) return self:attr("planetary_orbit") end} },
+	require = { special={desc="Witness a meteoric crash", fct=function(self) return self:attr("meteoric_crash") end} },
 	trigger = function(self, t, target)
 		self:startTalentCooldown(t)
 		local terrains = t.terrains or mod.class.Grid:loadList("/data/general/grids/lava.lua")
@@ -102,7 +102,7 @@ uberTalent{
 		local dam = t.getDamage(self, t)/2
 		return ([[With the release of your willpower when casting damaging spells you can call forth a meteor to crash down near your foes.
 		The affected area is turned into lava for 8 turns and the crash will deal %0.2f fire and %0.2f physical damage.
-		The meteor has 20%% chance to stun affected creatures for 3 turns.]])
+		The meteor also stun affected creatures for 3 turns.]])
 		:format(damDesc(self, DamageType.FIRE, dam), damDesc(self, DamageType.PHYSICAL, dam))
 	end,
 }
