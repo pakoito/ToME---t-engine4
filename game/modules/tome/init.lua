@@ -114,7 +114,7 @@ load_tips = {
 	{image="/data/gfx/shockbolt/object/rune_green.png", text=[[A movement infusion can let you quickly approach a ranged opponent, or quickly escape a melee one.]]},
 	{image="/data/gfx/shockbolt/object/rune_red.png", text=[[Invisibility lets you escape notice, giving you the freedom to move or recover your resources, but reduces your damage and your healing ability.]]},
 	{image="/data/gfx/shockbolt/npc/humanoid_human_assassin_lord.png", text=[[Poison is the domain of assassins and master rogues, and its cunning use can cripple or kill enemies over a long fight.]]},
-	{image="/data/gfx/shockbolt/loadtiles/summoner.png", text=[[Summoners can call upon a variety of natural creatures to protect and support them, reducing the risk to their own flesh considerably.]]},
+	{image="/data/gfx/loadtiles/summoner.png", text=[[Summoners can call upon a variety of natural creatures to protect and support them, reducing the risk to their own flesh considerably.]]},
 	{image="/data/gfx/shockbolt/npc/humanoid_human_linaniil_supreme_archmage.png", img_y_off=-50, text=[[The highest sorcerers are known as archmages, and the masters amongst them are said to have the power to change the world. They are feared immensely.]]},
 	{image="/data/gfx/shockbolt/npc/humanoid_orc_orc_elite_fighter.png", text=[[Bulwarks are defensive fighters that can take hits more readily than other warriors whilst preparing for the most effective counter attacks.]]},
 	{image="/data/gfx/shockbolt/npc/humanoid_human_slave_combatant.png", text=[[Brawler are trained in the use of their fists and mastery of their bodies. They can be as dangerous in combat as any swordsman.]]},

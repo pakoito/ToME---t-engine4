@@ -190,7 +190,7 @@ newTalent{
 		Generates %0.2f mana per damage point taken (Aegis Shielding talent affects the ratio).
 		If your mana is brought too high by the shield, it will de-activate and the chain reaction will release a deadly arcane storm with radius 3 for 10 turns, dealing 10%% of the damage absorbed each turn.
 		While the arcane storm rages you also get a %d%% arcane resistance.
-		Only usable when bellow 25%% mana.
+		Only usable when below 25%% mana.
 		The damage to mana ratio increases with your Spellpower.]]):
 		format(t.getManaRatio(self, t), t.getArcaneResist(self, t))
 	end,
