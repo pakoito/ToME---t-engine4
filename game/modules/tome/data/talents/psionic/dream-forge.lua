@@ -216,6 +216,7 @@ newTalent{
 	getDamage = function(self, t) return math.ceil(self:combatTalentMindDamage(t, 10, 100)) end,
 	getPower = function(self, t) return math.floor(self:combatTalentMindDamage(t, 5, 50)) end,
 	getDuration = function(self, t) return 1 + math.floor(self:getTalentLevel(t)/2) end,
+	getChance = function(self, t) return 5 * self:getTalentLevel(t) end,
 	doForgeStrike = function(self, t, p)
 		-- If we moved reset the forge
 		if self.x ~= p.x or self.y ~= p.y or p.new then
@@ -225,7 +226,6 @@ newTalent{
 			local max_radius = self:getTalentRadius(t)
 			local max_damage = t.getDamage(self, t)
 			local power = t.getPower(self, t)
-			local dur = 0
 			p.radius = math.min(p.radius + 1, max_radius)
 
 			if p.damage < max_damage then
@@ -234,17 +234,16 @@ newTalent{
 				game.logSeen(self, "#GOLD#%s strikes the dreamforge!", self.name:capitalize())
 			elseif p.power == 0 then
 				p.power = power
-				dur = t.getDuration(self, t)
 				game.logSeen(self, "#GOLD#%s begins breaking dreams!", self.name:capitalize())
 				game:playSoundNear(self, "talents/lightning_loud")
 			end
 			local tg = {type="ball", range=self:getTalentRange(t), friendlyfire=false, radius=p.radius, talent=t}
-			self:project(tg, self.x, self.y, engine.DamageType.DREAMFORGE, {dam=self:combatMindCrit(p.damage), power=p.power, dur=dur, do_particles=true })
+			self:project(tg, self.x, self.y, engine.DamageType.DREAMFORGE, {dam=self:combatMindCrit(p.damage), power=p.power, dur=p.dur, chance=p.chance, do_particles=true })
 		end
 	end,
 	activate = function(self, t)
 		local ret ={
-			x = self.x, y=self.y, radius=0, damage=0, power=0, new = true,
+			x = self.x, y=self.y, radius=0, damage=0, power=0, new = true, dur=t.getDuration(self, t), chance=t.getChance(self, t)
 		}
 		game:playSoundNear(self, "talents/devouringflame")
 		return ret
@@ -257,10 +256,12 @@ newTalent{
 		local damage = t.getDamage(self, t)/2
 		local power = t.getPower(self, t)
 		local duration = t.getDuration(self, t)
+		local chance = t.getChance(self, t)
 		return ([[The pounding forge of thought in your mind is released upon your surroundings.  Each turn that you remain stationary you'll strike the dreamforge, inflicting mind and burning damage on enemies around you.
 		The effect will build over five turns, until it reaches a maximum radius of %d, maximum mind damage of %0.2f, and maximum burning damage of %0.2f.
-		At this point you'll begin breaking the dreams of enemies who hear the forge, reducing their mental save by %d and giving them a %d%% chance of spell failure due too the tremendous echo in their minds for %d turns.
+		At this point you'll begin breaking the dreams of enemies who hear the forge, reducing their mental save by %d and giving them a %d%% chance of spell failure for %d turns due too the tremendous echo in their minds.
+		Broken Dreams has a %d%% chance to brainlock your enemies.
 		The damage and dream breaking effect will scale with your mindpower.]]):
-		format(radius, damDesc(self, DamageType.MIND, damage), damDesc(self, DamageType.FIRE, damage), power, power, duration)
+		format(radius, damDesc(self, DamageType.MIND, damage), damDesc(self, DamageType.FIRE, damage), power, power, duration, chance)
 	end,
 }

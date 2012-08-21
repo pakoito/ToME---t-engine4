@@ -225,7 +225,7 @@ newTalent{
 		local power = t.getMasteryDamage(self, t)
 		local percent = t.getPercentInc(self, t)
 		local stun = t.getStun(self, t)		
-		return ([[Crush your enemy with your Dream Hammer, inflicting %d%% of weapon damage.  If the attack hits, the target is stunned for %d turns.
+		return ([[Crush your enemy with your Dream Hammer, inflicting %d%% weapon damage.  If the attack hits, the target is stunned for %d turns.
 		Stun chance improves with your mindpower.  Learning this talent increases your Physical Power for Dream Hammer damage calculations by %d and all damage with Dream Hammer attacks by %d%%.
 		]]):format(damage * 100, stun, power, percent * 100)
 	end,

@@ -1721,7 +1721,7 @@ function _M:onTakeHit(value, src)
 		local feedback_gain = value * ratio
 		self:incFeedback(feedback_gain)
 		-- Give feedback to summoner
-		if self.summoner and self.summoner:getTalentLevel(self.summoner.T_TF_UNITY) >=1 and self.summoner:getMaxFeedback() > 0 then
+		if self.summoner and self.summoner:getTalentLevel(self.summoner.T_OVER_MIND) >=1 and self.summoner:getMaxFeedback() > 0 then
 			self.summoner:incFeedback(feedback_gain)
 		end
 		-- Trigger backlash retribution damage
@@ -3573,7 +3573,7 @@ function _M:postUseTalent(ab, ret)
 	if ab.id ~= self.T_GATHER_THE_THREADS and ab.id ~= self.T_SPACETIME_TUNING and ab.is_spell then self:breakChronoSpells() end
 	if ab.id ~= self.T_RELOAD then self:breakReloading() end
 	self:breakStepUp()
-	if not (ab.no_energy or ab.no_break_channel) then self:breakPsionicChannel(ab.id) end
+	if not (ab.no_energy or ab.no_break_channel) and not (ab.mode == "sustained" and self:isTalentActive(ab.id)) then self:breakPsionicChannel(ab.id) end
 
 	if ab.id ~= self.T_REDUX and self:hasEffect(self.EFF_REDUX) and ab.type[1]:find("^chronomancy/") and ab.mode == "activated" and self:getTalentLevel(self.T_REDUX) >= self:getTalentLevel(ab.id) then
 		self:removeEffect(self.EFF_REDUX)

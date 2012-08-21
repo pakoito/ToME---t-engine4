@@ -533,7 +533,7 @@ newTalent{
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
 			self.x, self.y, t.getDuration(self, t),
-			DamageType.SLIME, {dam=t.getDamage(self, t), x=self.x, y=self.y},
+			DamageType.SLIME, {dam=t.getDamage(self, t), power=0.15, x=self.x, y=self.y},
 			1,
 			5, nil,
 			engine.Entity.new{alpha=100, display='', color_br=30, color_bg=200, color_bb=60},

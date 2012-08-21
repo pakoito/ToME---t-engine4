@@ -181,7 +181,6 @@ end
 function setupThoughtForm(self, m, x, y)
 	-- Set up some basic stuff
 	m.display = "p"
-	m.color=colors.YELLOW
 	m.blood_color = colors.YELLOW
 	m.type = "thought-form"
 	m.subtype = "thought-form"
@@ -215,10 +214,10 @@ function setupThoughtForm(self, m, x, y)
 	m.save_hotkeys = true
 
 	-- Inheret some attributes
-	if self:getTalentLevel(self.T_TF_UNITY) >=5 then
+	if self:getTalentLevel(self.T_OVER_MIND) >=5 then
 		m.inc_damage.all = (m.inc_damage.all) or 0 + (self.inc_damage.all or 0) + (self.inc_damage[engine.DamageType.MIND] or 0)
 	end
-	if self:getTalentLevel(self.T_TF_UNITY) >=3 then
+	if self:getTalentLevel(self.T_OVER_MIND) >=3 then
 		local save_bonus = self:combatMentalResist(fake)
 		m:attr("combat_physresist", save_bonus)
 		m:attr("combat_mentalresist", save_bonus)

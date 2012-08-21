@@ -123,7 +123,7 @@ Your capacity for storing energy is determined by your Willpower.
 ]]
 
 TOOLTIP_FEEDBACK = [[#GOLD#Feedback#LAST#
-Feedback represents using pain as a means of psionic grounding and it can be used in place of Psi.
+Feedback represents using pain as a means of psionic grounding and it can be used to power feedback abilities.
 Fifty percent of all damage you take from an outside source will increase your Feedback.
 Feedback decays at the rate of 10% or 1 per turn (which ever is greater).
 ]]

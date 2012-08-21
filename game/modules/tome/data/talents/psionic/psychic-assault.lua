@@ -117,7 +117,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local radius = self:getTalentRadius(t)
-		return ([[Sends out a blast of telepathic static in a %d radius, inflicting %0.2f mind damage.  This attack can brain-lock affected targets.
+		return ([[Sends out a blast of telepathic static in a %d radius, inflicting %0.2f mind damage.  This attack can brainlock affected targets.
 		The damage will increase with your mindpower.]]):format(radius, damDesc(self, DamageType.MIND, damage))
 	end,
 }

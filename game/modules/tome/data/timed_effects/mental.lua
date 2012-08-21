@@ -2609,7 +2609,7 @@ newEffect{
 		if not self:attr("lucid_dreamer") and eff.insomnia_duration > 0 then
 			self:setEffect(self.EFF_INSOMNIA, eff.insomnia_duration, {power=eff.insomnia})
 		end
-		if not self:attr("sleep") or self:attr("sleep") < 0  and eff.waking > 0 then
+		if not self:attr("sleep") and eff.waking > 0 then
 			DamageType:get(DamageType.MIND).projector(eff.src or self, self.x, self.y, DamageType.MIND, eff.src:mindCrit(eff.waking))
 			game.level.map:particleEmitter(self.x, self.y, 1, "generic_discharge", {rm=180, rM=200, gm=100, gM=120, bm=30, bM=50, am=70, aM=180})
 		end

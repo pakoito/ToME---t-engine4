@@ -28,10 +28,7 @@ newTalent{
 	mode = "sustained",
 	no_sustain_autoreset = true,
 	cooldown = 24,
-	range = function(self, t)
-		local t = self:getTalentFromId(self.T_OVER_MIND)
-		return 10 + t.getRangeBonus(self, t)
-	end,
+	range = 10,
 	getStatBonus = function(self, t) 
 		local t = self:getTalentFromId(self.T_THOUGHT_FORMS)
 		return t.getStatBonus(self, t)
@@ -52,7 +49,7 @@ newTalent{
 		local NPC = require "mod.class.NPC"
 		local m = NPC.new{
 			name = "thought-forged bowman", summoner = self,
-			shader = "shadow_simulacrum",
+			color=colors.SANDY_BROWN, shader = "shadow_simulacrum",
 			shader_args = { color = {0.8, 0.8, 0.8}, base = 0.8, time_factor = 4000 },
 			desc = [[A thought-forged bowman.  It appears ready for battle.]],
 			body = { INVEN = 10, MAINHAND = 1, BODY = 1, QUIVER=1, HANDS = 1, FEET = 1},
@@ -149,11 +146,11 @@ newTalent{
 				[Talents.T_LUCID_DREAMER]= math.floor(self:getTalentLevel(self.T_TRANSCENDENT_THOUGHT_FORMS)),
 			},
 			resolvers.equip{
-				{type="weapon", subtype="longbow", autoreq=true, forbid_power_source={arcane=true, technique=true}, not_properties = {"unique"} },
-				{type="ammo", subtype="arrow", autoreq=true, forbid_power_source={arcane=true, technique=true}, not_properties = {"unique"} },
-				{type="armor", subtype="light", autoreq=true, forbid_power_source={arcane=true, technique=true}, not_properties = {"unique"} },
-				{type="armor", subtype="hands", autoreq=true, forbid_power_source={arcane=true, technique=true}, not_properties = {"unique"} },
-				{type="armor", subtype="feet", autoreq=true, forbid_power_source={arcane=true, technique=true}, not_properties = {"unique"} },
+				{type="weapon", subtype="longbow", autoreq=true, forbid_power_source={arcane=true}, not_properties = {"unique"} },
+				{type="ammo", subtype="arrow", autoreq=true, forbid_power_source={arcane=true}, not_properties = {"unique"} },
+				{type="armor", subtype="light", autoreq=true, forbid_power_source={arcane=true}, not_properties = {"unique"} },
+				{type="armor", subtype="hands", autoreq=true, forbid_power_source={arcane=true}, not_properties = {"unique"} },
+				{type="armor", subtype="feet", autoreq=true, forbid_power_source={arcane=true}, not_properties = {"unique"} },
 			},
 			resolvers.sustains_at_birth(),
 		}
@@ -195,10 +192,7 @@ newTalent{
 	mode = "sustained",
 	no_sustain_autoreset = true,
 	cooldown = 24,
-	range = function(self, t)
-		local t = self:getTalentFromId(self.T_OVER_MIND)
-		return 10 + t.getRangeBonus(self, t)
-	end,
+	range = 10,
 	getStatBonus = function(self, t) 
 		local t = self:getTalentFromId(self.T_THOUGHT_FORMS)
 		return t.getStatBonus(self, t)
@@ -219,7 +213,7 @@ newTalent{
 		local NPC = require "mod.class.NPC"
 		local m = NPC.new{
 			name = "thought-forged warrior", summoner = self, 
-			shader = "shadow_simulacrum",
+			color=colors.ORANGE, shader = "shadow_simulacrum",
 			shader_args = { color = {0.8, 0.8, 0.8}, base = 0.8, time_factor = 4000 },
 			desc = [[A thought-forged warrior wielding a massive hammer and clad in heavy armor.  It appears ready for battle.]],
 			body = { INVEN = 10, MAINHAND = 1, BODY = 1, HANDS = 1, FEET = 1},
@@ -307,10 +301,10 @@ newTalent{
 				[Talents.T_LUCID_DREAMER]= math.floor(self:getTalentLevel(self.T_TRANSCENDENT_THOUGHT_FORMS)),
 			},
 			resolvers.equip{
-				{type="weapon", subtype="battleaxe", autoreq=true, forbid_power_source={arcane=true, technique=true}, not_properties = {"unique"} },
-				{type="armor", subtype="heavy", autoreq=true, forbid_power_source={arcane=true, technique=true}, not_properties = {"unique"} },
-				{type="armor", subtype="hands", autoreq=true, forbid_power_source={arcane=true, technique=true}, not_properties = {"unique"} },
-				{type="armor", subtype="feet", autoreq=true, forbid_power_source={arcane=true, technique=true}, not_properties = {"unique"} },
+				{type="weapon", subtype="battleaxe", autoreq=true, forbid_power_source={arcane=true}, not_properties = {"unique"} },
+				{type="armor", subtype="heavy", autoreq=true, forbid_power_source={arcane=true}, not_properties = {"unique"} },
+				{type="armor", subtype="hands", autoreq=true, forbid_power_source={arcane=true}, not_properties = {"unique"} },
+				{type="armor", subtype="feet", autoreq=true, forbid_power_source={arcane=true}, not_properties = {"unique"} },
 			},
 			resolvers.sustains_at_birth(),
 		}
@@ -352,10 +346,7 @@ newTalent{
 	mode = "sustained",
 	no_sustain_autoreset = true,
 	cooldown = 24,
-	range = function(self, t)
-		local t = self:getTalentFromId(self.T_OVER_MIND)
-		return 10 + t.getRangeBonus(self, t)
-	end,
+	range = 10,
 	getStatBonus = function(self, t) 
 		local t = self:getTalentFromId(self.T_THOUGHT_FORMS)
 		return t.getStatBonus(self, t)
@@ -376,7 +367,7 @@ newTalent{
 		local NPC = require "mod.class.NPC"
 		local m = NPC.new{
 			name = "thought-forged defender", summoner = self,
-			shader = "shadow_simulacrum",
+			color=colors.GOLD, shader = "shadow_simulacrum", 
 			shader_args = { color = {0.8, 0.8, 0.8}, base = 0.8, time_factor = 4000 },
 			desc = [[A thought-forged defender clad in massive armor.  It wields a sword and shield and appears ready for battle.]],
 			body = { INVEN = 10, MAINHAND = 1, OFFHAND = 1, BODY = 1, HANDS = 1, FEET = 1},
@@ -465,11 +456,11 @@ newTalent{
 
 			},
 			resolvers.equip{
-				{type="weapon", subtype="longsword", autoreq=true, forbid_power_source={arcane=true, technique=true}, not_properties = {"unique"} },
-				{type="armor", subtype="shield", autoreq=true, forbid_power_source={arcane=true, technique=true}, not_properties = {"unique"} },
-				{type="armor", subtype="massive", autoreq=true, forbid_power_source={arcane=true, technique=true}, not_properties = {"unique"} },
-				{type="armor", subtype="hands", autoreq=true, forbid_power_source={arcane=true, technique=true}, not_properties = {"unique"} },
-				{type="armor", subtype="feet", autoreq=true, forbid_power_source={arcane=true, technique=true}, not_properties = {"unique"} },
+				{type="weapon", subtype="longsword", autoreq=true, forbid_power_source={arcane=true}, not_properties = {"unique"} },
+				{type="armor", subtype="shield", autoreq=true, forbid_power_source={arcane=true}, not_properties = {"unique"} },
+				{type="armor", subtype="massive", autoreq=true, forbid_power_source={arcane=true}, not_properties = {"unique"} },
+				{type="armor", subtype="hands", autoreq=true, forbid_power_source={arcane=true}, not_properties = {"unique"} },
+				{type="armor", subtype="feet", autoreq=true, forbid_power_source={arcane=true}, not_properties = {"unique"} },
 			},
 			resolvers.sustains_at_birth(),
 		}
@@ -508,10 +499,7 @@ newTalent{
 	points = 5, 
 	require = psi_wil_req1,
 	mode = "passive",
-	range = function(self, t)
-		local t = self:getTalentFromId(self.T_OVER_MIND)
-		return 10 + t.getRangeBonus(self, t)
-	end,
+	range = 10,
 	getStatBonus = function(self, t) return self:combatTalentMindDamage(t, 5, 50) end,
 	on_learn = function(self, t)
 		if self:getTalentLevel(t) >= 1 and not self:knowTalent(self.T_TF_BOWMAN) then
@@ -631,7 +619,8 @@ newTalent{
 		local bonus = t.getControlBonus(self, t)
 		local range = t.getRangeBonus(self, t)
 		return ([[Take direct control of your active thought-form, improving it's damage, attack speed, and maximum life by %d%% but leaving your body a defenseless shell.
-		Also increases the range at which you can maintain your thought forms (rather this talent is active or not) by %d.
+		At talent level one any Feedback your Thought-Forms gain will be given to you as well, at level three your Thought-Forms gain a bonus to all saves equal to your mental save, and at level five they gain a bonus to all damage equal to your bonus mind damage.
+		The secondary bonuses apply rather or not this talent is currently active.
 		The life, damage, and speed bonus will improve with your mindpower.]]):format(bonus, range)
 	end,
 }
@@ -650,8 +639,7 @@ newTalent{
 		local offense = t.getOffensePower(self, t)
 		local defense = t.getDefensePower(self, t)
 		local speed = t.getSpeedPower(self, t)
-		return([[You now gain a %d%% bonus to mind speed while Thought-Form: Bowman is active, a %d bonus to mind power while Thought-Form: Warrior is active, and a %d%% bonus to resist all while Thought-Form: Defender is active. 
-		At talent level one any Feedback your Thought-Forms gain will be given to you as well, at level three your Thought-Forms gain a bonus to all saves equal to your mental save, and at level five they gain a bonus to all damage equal to your bonus mind damage.
+		return([[You now gain %d%% mind speed while Thought-Form: Bowman is active, %d mind power while Thought-Form: Warrior is active, and %d%% resist all while Thought-Form: Defender is active. 
 		These bonuses scale with your mindpower.]]):format(speed, offense, defense, speed)
 	end,
 }

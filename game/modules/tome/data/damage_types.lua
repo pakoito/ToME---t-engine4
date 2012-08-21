@@ -285,7 +285,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 				dam = 0
 			end
 		end
-
+		
 		print("[PROJECTOR] final dam", dam)
 
 		local hd = {"DamageProjector:final", src=src, x=x, y=y, type=type, dam=dam}
@@ -503,7 +503,9 @@ newDamageType{
 	name = "mind", type = "MIND", text_color = "#YELLOW#",
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
-		if target then
+		local thought_form
+		if target and src and target.summoner and target.summoner == src and target.type and target.type == "thought-form" then thought_form = true end
+		if target and not thought_form then
 			local mindpower, mentalresist, alwaysHit, crossTierChance
 			if _G.type(dam) == "table" then dam, mindpower, mentalresist, alwaysHit, crossTierChance = dam.dam, dam.mindpower, dam.mentalresist, dam.alwaysHit, dam.crossTierChance end
 			local hit_power = mindpower or src:combatMindpower()
@@ -2169,9 +2171,9 @@ newDamageType{
 	projector = function(src, x, y, type, dam, tmp)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if not target then return end
-		local power, dur, dist, do_particles
+		local power, dur, chance, dist, do_particles
 		tmp = tmp or {}
-		if _G.type(dam) == "table" then dam, power, dur, dist, do_particles = dam.dam, dam.power, dam.dur, dam.dist, dam.do_particles end
+		if _G.type(dam) == "table" then dam, power, dur, chance, dist, do_particles = dam.dam, dam.power, dam.dur, dam.chance, dam.dist, dam.do_particles end
 		if target and not tmp[target] then
 			if src:checkHit(src:combatMindpower(), target:combatMentalResist(), 0, 95) then
 				DamageType:get(DamageType.MIND).projector(src, x, y, DamageType.MIND, {dam=dam/2, alwaysHit=true})
@@ -2179,7 +2181,9 @@ newDamageType{
 				if power and power > 0 then
 					local silent = true and target:hasEffect(target.EFF_BROKEN_DREAM) or false
 					target:setEffect(target.EFF_BROKEN_DREAM, dur, {power=power}, silent)
-					target:crossTierEffect(target.EFF_BRAINLOCKED, src:combatMindpower())
+					if rng.percent(chance) then
+						target:crossTierEffect(target.EFF_BRAINLOCKED, src:combatMindpower())
+					end
 				end
 				-- Do knockback
 				if dist then
