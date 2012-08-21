@@ -51,6 +51,7 @@ The Way will never forget you. Now go and make history!
 			player:die(player)
 			player:setQuestStatus("high-peak", engine.Quest.COMPLETED, "yeek")
 			player:hasQuest("high-peak"):win("yeek-sacrifice")
+			game:saveGame()
 		end},
 		{"But... I did so much, I could do so much more for the Way by staying alive!", jump="yeek-unsure"},
 	}
@@ -66,6 +67,7 @@ You will do as asked, for the good of all Yeeks! The Way is always right.
 			player:die(player)
 			player:setQuestStatus("high-peak", engine.Quest.COMPLETED, "yeek")
 			player:hasQuest("high-peak"):win("yeek-sacrifice")
+			game:saveGame()
 		end},
 	}
 }
