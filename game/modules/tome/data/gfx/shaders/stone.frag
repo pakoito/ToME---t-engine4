@@ -134,7 +134,7 @@ void main( void ) {
 	float d = length(uv) * 2.0;
 	if (d > 0.9) gl_FragColor.a *= 1.0 - 10.0 * (d - 0.9);
 	else if (d > 1.0) gl_FragColor.a = 0.0;
-	if (hide_center > 0 && d < 0.5) {
+	if (hide_center > 0.0 && d < 0.5) {
 		gl_FragColor.a *= d * d * 4.0;
 	}
 	gl_FragColor.a *= ba * 0.7;
