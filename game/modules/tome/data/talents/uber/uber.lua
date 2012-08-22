@@ -40,7 +40,7 @@ uberTalent = function(t)
 	t.require = t.require or {}
 	t.require.level = 40
 	t.require.stat = t.require.stat or {}
-	t.require.stat.str = 80
+	t.require.stat.str = 50
 	newTalent(t)
 end
 load("/data/talents/uber/str.lua")
@@ -51,7 +51,7 @@ uberTalent = function(t)
 	t.require = t.require or {}
 	t.require.stat = t.require.stat or {}
 	t.require.level = 40
-	t.require.stat.dex = 80
+	t.require.stat.dex = 50
 	newTalent(t)
 end
 load("/data/talents/uber/dex.lua")
@@ -62,7 +62,7 @@ uberTalent = function(t)
 	t.require = t.require or {}
 	t.require.stat = t.require.stat or {}
 	t.require.level = 40
-	t.require.stat.con = 80
+	t.require.stat.con = 50
 	newTalent(t)
 end
 load("/data/talents/uber/const.lua")
@@ -73,7 +73,7 @@ uberTalent = function(t)
 	t.require = t.require or {}
 	t.require.stat = t.require.stat or {}
 	t.require.level = 40
-	t.require.stat.mag = 80
+	t.require.stat.mag = 50
 	newTalent(t)
 end
 load("/data/talents/uber/mag.lua")
@@ -84,7 +84,7 @@ uberTalent = function(t)
 	t.require = t.require or {}
 	t.require.level = 40
 	t.require.stat = t.require.stat or {}
-	t.require.stat.wil = 80
+	t.require.stat.wil = 50
 	newTalent(t)
 end
 load("/data/talents/uber/wil.lua")
@@ -95,7 +95,7 @@ uberTalent = function(t)
 	t.require = t.require or {}
 	t.require.level = 40
 	t.require.stat = t.require.stat or {}
-	t.require.stat.cun = 80
+	t.require.stat.cun = 50
 	newTalent(t)
 end
 load("/data/talents/uber/cun.lua")
