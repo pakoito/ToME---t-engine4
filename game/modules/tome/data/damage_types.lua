@@ -919,12 +919,17 @@ newDamageType{
 	name = "wave", type = "WAVE",
 	projector = function(src, x, y, type, dam)
 		local srcx, srcy = dam.x, dam.y
+		local base = dam
 		dam = dam.dam
-		DamageType:get(DamageType.COLD).projector(src, x, y, DamageType.COLD, dam / 2)
-		DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam / 2)
+		if not base.st then
+			DamageType:get(DamageType.COLD).projector(src, x, y, DamageType.COLD, dam / 2)
+			DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam / 2)
+		else
+			DamageType:get(DamageType.BLIGHT).projector(src, x, y, DamageType.BLIGHT, dam)
+		end
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
-			if target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then
+			if target:checkHit(base.power or src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then
 				target:knockback(srcx, srcy, 1)
 				target:crossTierEffect(target.EFF_OFFBALANCE, src:combatSpellpower())
 				game.logSeen(target, "%s is knocked back!", target.name:capitalize())

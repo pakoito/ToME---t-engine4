@@ -984,7 +984,7 @@ function _M:playerTakeoff()
 end
 
 function _M:playerUseItem(object, item, inven)
-	if game.zone.wilderness then game.logPlayer(self, "You cannot use items on the world map.") return end
+	if not game.zone or game.zone.wilderness then game.logPlayer(self, "You cannot use items on the world map.") return end
 
 	local use_fct = function(o, inven, item)
 		if not o then return end

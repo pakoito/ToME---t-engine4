@@ -656,10 +656,12 @@ function _M:displayWeatherShader(level, ps, x, y, nb_keyframes)
 	local mapcoords = {(-sx + level.map.mx * level.map.tile_w) / level.map.viewport.width , (-sy + level.map.my * level.map.tile_h) / level.map.viewport.height}
 
 	for j = 1, #ps do
-		ps[j]:setUniform("mapCoord", mapcoords)
-		ps[j].shad:use(true)
-		core.display.drawQuad(x, y, level.map.viewport.width, level.map.viewport.height, 255, 255, 255, 255)
-		ps[j].shad:use(false)
+		if ps[j].shad then
+			ps[j]:setUniform("mapCoord", mapcoords)
+			ps[j].shad:use(true)
+			core.display.drawQuad(x, y, level.map.viewport.width, level.map.viewport.height, 255, 255, 255, 255)
+			ps[j].shad:use(false)
+		end
 	end
 end
 

@@ -33,3 +33,32 @@ uberTalent{
 		:format()
 	end,
 }
+
+uberTalent{
+	name = "Bloodspring",
+	mode = "passive",
+	cooldown = 12,
+	require = { special={desc="Be close to the draconic world", fct=function(self) return self:attr("drake_touched") and self:attr("drake_touched") >= 2 end} },
+	trigger = function(self, t)
+		-- Add a lasting map effect
+		game.level.map:addEffect(self,
+			self.x, self.y, 4,
+			DamageType.WAVE, {dam=100 + self:getCon() * 3, x=self.x, y=self.y, st=DamageType.BLIGHT, power=50 + self:getCon() * 2},
+			1,
+			5, nil,
+			engine.Entity.new{alpha=100, display='', color_br=200, color_bg=60, color_bb=20},
+			function(e)
+				e.radius = e.radius + 0.5
+				return true
+			end,
+			false
+		)
+		game:playSoundNear(self, "talents/tidalwave")
+		self:startTalentCooldown(t)
+	end,
+	info = function(self, t)
+		return ([[When a single blow deals more than 20%% of your total life blood gushes of your body, creating a bloody tidal wave for 4 turns that deals %0.2f blight damage and knocks back foes.
+			Damage increases with the Constitution stat.]])
+		:format(100 + self:getCon() * 3)
+	end,
+}

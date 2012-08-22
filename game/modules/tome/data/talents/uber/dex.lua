@@ -52,3 +52,34 @@ uberTalent{
 		:format()
 	end,
 }
+
+uberTalent{
+	name = "Windblade",
+	mode = "activated",
+	require = { special={desc="Know at least 20 talent levels of stamina using talents.", fct=function(self) return knowRessource(self, "stamina", 20) end} },
+	cooldown = 20,
+	stamina = 30,
+	radius = 2,
+	range = 1,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), selffire=false, radius=self:getTalentRadius(t)}
+	end,
+	action = function(self, t)
+		local tg = self:getTalentTarget(t)
+		self:project(tg, self.x, self.y, function(px, py, tg, self)
+			local target = game.level.map(px, py, Map.ACTOR)
+			if target and target ~= self then
+				local hit = self:attackTarget(target, nil, 1.3, true)
+				if hit and target:canBe("disarm") then
+					target:setEffect(target.EFF_DISARMED, 4, {})
+				end
+			end
+		end)
+
+		return true
+	end,
+	info = function(self, t)
+		return ([[You spin madly in a gust of wind, dealing 140%% weapon damage to all foes in a radius 2 and disarming them for 4 turns.]])
+		:format()
+	end,
+}

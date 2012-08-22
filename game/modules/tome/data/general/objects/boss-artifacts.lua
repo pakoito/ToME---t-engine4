@@ -837,7 +837,7 @@ newEntity{ base = "BASE_GEM", define_as = "CRYSTAL_FOCUS",
 
 	max_power = 1, power_regen = 1,
 	use_power = { name = "combine with a weapon", power = 1, use = function(self, who, gem_inven, gem_item)
-		who:showInventory("Fuse with which weapon?", who:getInven("INVEN"), function(o) return (o.type == "weapon" or o.subtype == "hands") and o.subtype ~= "mindstar" and not o.egoed and not o.unique and not o.rare end, function(o, item)
+		who:showInventory("Fuse with which weapon?", who:getInven("INVEN"), function(o) return (o.type == "weapon" or o.subtype == "hands") and o.subtype ~= "mindstar" and not o.egoed and not o.unique and not o.rare and not o.archery end, function(o, item)
 			local oldname = o:getName{do_color=true}
 
 			-- Remove the gem

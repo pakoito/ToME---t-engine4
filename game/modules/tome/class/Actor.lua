@@ -1607,7 +1607,7 @@ function _M:onTakeHit(value, src)
 			value = adjusted_value - self.damage_shield_absorb
 			self.damage_shield_absorb = 0
 		end
-		if reflection > 0 and reflect_damage > 0 and src.y and src.x and not src.dead then
+		if reflection and reflect_damage and reflection > 0 and reflect_damage > 0 and src.y and src.x and not src.dead then
 			local a = game.level.map(src.x, src.y, Map.ACTOR)
 			if a and self:reactionToward(a) < 0 then
 				a:takeHit(math.ceil(reflect_damage * reflection), self)
@@ -1940,6 +1940,11 @@ function _M:onTakeHit(value, src)
 	if value >= self.max_life * 0.15 and self:attr("invis_on_hit") and rng.percent(self:attr("invis_on_hit")) then
 		self:setEffect(self.EFF_INVISIBILITY, 5, {power=self:attr("invis_on_hit_power")})
 		for tid, _ in pairs(self.invis_on_hit_disable) do self:forceUseTalent(tid, {ignore_energy=true}) end
+	end
+
+	-- Bloodspring
+	if value >= self.max_life * 0.20 and self:knowTalent(self.T_BLOODSPRING) then
+		self:triggerTalent(self.T_BLOODSPRING)
 	end
 
 	if self:knowTalent(self.T_DUCK_AND_DODGE) then

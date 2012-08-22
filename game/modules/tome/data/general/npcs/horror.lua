@@ -938,7 +938,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	on_act = function(self)
 		if self.blades > 2 or not rng.percent(20) then return end
 		self.blades = self.blades + 1
-			self:forceUseTalent(Talents.T_ANIMATE_BLADE, {ignore_cd=true, force_level=1})
+			self:forceUseTalent(self.T_ANIMATE_BLADE, {ignore_cd=true, force_level=1})
 	end,
 	
 	resolvers.talents{
@@ -993,7 +993,7 @@ newEntity{ base="BASE_NPC_HORROR", define_as = "ANIMATED_BLADE",
 		game.logSeen(self, "A rift opens, spawning a free floating blade!")
 		game.level.map:addEffect(self,
 			self.x, self.y, 3,
-			DamageType.TEMPORAL, 25,
+			engine.DamageType.TEMPORAL, 25,
 			0,
 			5, nil,
 			{type="time_prison"},

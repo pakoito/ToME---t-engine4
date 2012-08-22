@@ -19,7 +19,7 @@
 
 uberTalent{
 	name = "Draconic Will",
-	cooldown = 20,
+	cooldown = 15,
 	no_energy = true,
 	action = function(self, t)
 		self:setEffect(self.EFF_DRACONIC_WILL, 5, {})

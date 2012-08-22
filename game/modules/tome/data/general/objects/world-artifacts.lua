@@ -3962,7 +3962,7 @@ newEntity{ base = "BASE_GAUNTLETS",
 	end,
 	max_power = 150, power_regen = 1,
 	use_power = { name = "destroy an arcane item", power = 1, use = function(self, who, obj_inven, obj_item)
-		local d = who:showInventory("Destroy which item?", who:getInven("INVEN"), function(o) return o.unique and o.power_source.arcane and o.power_source.arcane and o.power_source.arcane == true and o.material_level and o.material_level > self.material_level end, function(o, item, inven)
+		local d = who:showInventory("Destroy which item?", who:getInven("INVEN"), function(o) return o.unique and o.power_source and o.power_source.arcane and o.power_source.arcane and o.power_source.arcane == true and o.material_level and o.material_level > self.material_level end, function(o, item, inven)
 			if o.material_level <= self.material_level then return end
 			self.material_level=o.material_level
 			game.logPlayer(who, "You crush the %s, and the gloves take on an illustrious shine!", o:getName{do_color=true})

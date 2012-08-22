@@ -24,6 +24,16 @@ newTalentType{ hide = true, type="uber/magic", name = "magic", description = "Ul
 newTalentType{ hide = true, type="uber/willpower", name = "willpower", description = "Ultimate talents you may only know one." }
 newTalentType{ hide = true, type="uber/cunning", name = "cunning", description = "Ultimate talents you may only know one." }
 
+
+knowRessource = function(self, r, v)
+	local cnt = 0
+	for tid, l in pairs(self.talents) do
+		local t = self:getTalentFromId(tid)
+		if rawget(t, r) or rawget(t, "sustain_"..r) then cnt = cnt + l end
+	end
+	return cnt >= v
+end
+
 uberTalent = function(t)
 	t.type = {"uber/strength", 1}
 	t.uber = true

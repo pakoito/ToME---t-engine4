@@ -83,7 +83,7 @@ The ToME combat system has the following attributes:
 - armor penetration: reduction of target's armor
 - damage: raw damage done
 ]]
-function _M:attackTarget(target, damtype, mult, noenergy)
+function _M:attackTarget(target, damtype, mult, noenergy, force_unharmed)
 	local speed, hit = nil, false
 	local sound, sound_miss = nil, nil
 
@@ -145,7 +145,8 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 		break_stealth = true
 	end
 
-	if not speed and not self:attr("disarmed") and not self:isUnarmed() then
+	local mean
+	if not speed and not self:attr("disarmed") and not self:isUnarmed() and not force_unharmed then
 		-- All weapons in main hands
 		if self:getInven(self.INVEN_MAINHAND) then
 			for i, o in ipairs(self:getInven(self.INVEN_MAINHAND)) do
@@ -179,6 +180,7 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 				end
 			end
 		end
+		mean = "weapon"
 	end
 
 	-- Barehanded ?
@@ -191,6 +193,7 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 		if hit and not sound then sound = combat.sound
 		elseif not hit and not sound_miss then sound_miss = combat.sound_miss end
 		if not combat.no_stealth_break then break_stealth = true end
+		mean = "unharmed"
 	end
 
 	-- We use up our own energy
@@ -209,6 +212,15 @@ function _M:attackTarget(target, damtype, mult, noenergy)
 	if self:isTalentActive(self.T_CLEAVE) then
 		local t = self:getTalentFromId(self.T_CLEAVE)
 		t.on_attackTarget(self, t, target)
+	end
+
+	if self:attr("unharmed_attack_on_hit") then
+		local v = self:attr("unharmed_attack_on_hit")
+		self:attr("unharmed_attack_on_hit", -v)
+		if mean == "weapon" then self:attackTarget(target, nil, 1, true, true)
+		elseif mean == "unharmed" and rng.percent(60) then self:attackTarget(target, nil, 1, true, true)
+		end
+		self:attr("unharmed_attack_on_hit", v)
 	end
 
 	-- Cancel stealth!

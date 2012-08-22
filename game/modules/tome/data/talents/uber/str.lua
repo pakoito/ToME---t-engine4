@@ -16,3 +16,54 @@
 --
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
+
+uberTalent{
+	name = "Flexible Combat",
+	mode = "passive",
+	on_learn = function(self, t)
+		self:attr("unharmed_attack_on_hit", 1)
+	end,
+	on_unlearn = function(self, t)
+		self:attr("unharmed_attack_on_hit", -1)
+	end,
+	info = function(self, t)
+		return ([[Each time you make a melee attack you have 100%% chances to do an additional unharmed strike, if using weapons and 60%% chances if already fighting unharmed.]])
+		:format()
+	end,
+}
+
+uberTalent{
+	name = "Titan's Smash",
+	mode = "activated",
+	require = { special={desc="Be of at least size category 'huge' (also required to use it) and know at least 20 talent levels of stamina using talents.", fct=function(self) return self.size_category and self.size_category >= 5 and knowRessource(self, "stamina", 20) end} },
+	on_pre_use = function(self, t) return self.size_category and self.size_category >= 5 end,
+	cooldown = 10,
+	stamina = 20,
+	action = function(self, t)
+		local tg = {type="hit", range=self:getTalentRange(t)}
+		local x, y, target = self:getTarget(tg)
+		if not x or not y or not target then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
+
+		local hit = self:attackTarget(target, nil, 2.3, true)
+
+		if target:attr("dead") or not hit then return end
+
+		local dx, dy = (target.x - self.x), (target.y - self.y)
+		local dir = util.coordToDir(dx, dy, 0)
+		local sides = util.dirSides(dir, 0)
+
+		target:knockback(self.x, self.y, 5, function(t2)
+			local d = rng.chance(2) and sides.hard_left or sides.hard_right
+			local sx, sy = util.coordAddDir(t2.x, t2.y, d)
+			t2:knockback(sx, sy, 2)
+			if t2:canBe("stun") then t2:setEffect(t2.EFF_STUNNED, 3, {}) end
+		end)
+		if target:canBe("stun") then target:setEffect(target.EFF_STUNNED, 3, {}) end
+	end,
+	info = function(self, t)
+		return ([[You deal a massive blow to your foe, smashing it for 230%% weapon damage and knocking it back 6 tiles away.
+		All foes in its path will be knocked on the sides and stunned for 3 turns.]])
+		:format()
+	end,
+}

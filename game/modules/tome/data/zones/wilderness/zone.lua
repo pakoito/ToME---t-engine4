@@ -19,7 +19,7 @@
 
 return {
 	name = "World of Eyal",
-	display_name = function(x, y) return game.level.map.attrs(x or game.player.x, y or game.player.y, "zonename") or "Eyal" end,
+	display_name = function(x, y) return game.level and game.level.map.attrs(x or game.player.x, y or game.player.y, "zonename") or "Eyal" end,
 	variable_zone_name = true,
 	level_range = {1, 1},
 	max_level = 1,

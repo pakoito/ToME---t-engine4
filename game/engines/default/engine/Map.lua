@@ -730,6 +730,7 @@ end
 
 --- Sets the current view area if x and y are out of bounds
 function _M:moveViewSurround(x, y, marginx, marginy, ignore_padding)
+	if not x or not y then return end
 	local omx, omy = self.mx, self.my
 
 	if ignore_padding then

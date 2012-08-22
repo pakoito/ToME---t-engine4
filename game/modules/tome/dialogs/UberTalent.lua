@@ -107,6 +107,7 @@ function _M:onSelect(item)
 end
 
 function _M:use(item)
+	self.actor:learnTalent(item.data.talent, true)
 end
 
 function _M:getTalentDesc(item)

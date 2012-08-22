@@ -70,7 +70,7 @@ newEntity{
 
 newEntity{
 	name = "quiet ", prefix=true,
-	keywords = {quiest=true},
+	keywords = {quiet=true},
 	level_range = {30, 50},
 	rarity = 12,
 	greater_ego = 1,
