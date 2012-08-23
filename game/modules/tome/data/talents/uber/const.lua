@@ -38,7 +38,6 @@ uberTalent{
 	name = "Bloodspring",
 	mode = "passive",
 	cooldown = 12,
-	require = { special={desc="Be close to the draconic world", fct=function(self) return self:attr("drake_touched") and self:attr("drake_touched") >= 2 end} },
 	trigger = function(self, t)
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,

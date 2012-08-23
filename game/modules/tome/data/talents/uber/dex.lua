@@ -91,10 +91,12 @@ uberTalent{
 	on_learn = function(self, t)
 		self:attr("global_speed_add", 0.15)
 		self:attr("avoid_pressure_traps", 1)
+		self:recomputeGlobalSpeed()
 	end,
 	on_unlearn = function(self, t)
 		self:attr("global_speed_add", -0.15)
 		self:attr("avoid_pressure_traps", -1)
+		self:recomputeGlobalSpeed()
 	end,
 	info = function(self, t)
 		return ([[You are attuned wih Nature and she helps you in your fight against the arcane forces.
