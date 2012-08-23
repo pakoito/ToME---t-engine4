@@ -66,3 +66,14 @@ uberTalent{
 		:format()
 	end,
 }
+
+uberTalent{
+	name = "Tricky Defenses",
+	mode = "passive",
+	require = { special={desc="Antimagic", fct=function(self) return self:knowTalentType("wild-gift/antimagic") end} },
+	info = function(self, t)
+		return ([[You are full of tricks and surprises, your Antimagic Shield can absorb %d%% more damage.
+		The increase scales with Cunning.]])
+		:format(self:getCun() / 2)
+	end,
+}

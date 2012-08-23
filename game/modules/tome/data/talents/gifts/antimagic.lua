@@ -81,6 +81,13 @@ newTalent{
 	cooldown = 20,
 	range = 10,
 	tactical = { DEFEND = 2 },
+	getMax = function(self, t)
+		local v = self:combatTalentMindDamage(t, 20, 80)
+		if self:knowtTalent(self.T_TRICKY_DEFENSES) then
+			v = v * (100 + self:getCun() / 2) / 100
+		end
+		return v
+	end,
 	on_damage = function(self, t, damtype, dam)
 		if not DamageType:get(damtype).antimagic_resolve then return dam end
 
@@ -101,7 +108,7 @@ newTalent{
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/heal")
 		return {
-			am = self:addTemporaryValue("antimagic_shield", self:combatTalentMindDamage(t, 20, 80)),
+			am = self:addTemporaryValue("antimagic_shield", t.getMax(self, t)),
 		}
 	end,
 	deactivate = function(self, t, p)
@@ -112,7 +119,7 @@ newTalent{
 		return ([[Surround yourself with a shield that will absorb at most %d magical or elemental damage per attack.
 		Each time damage is absorbed your equilibrium increases by 1 for every 30 points of damage and a check is made, if it fails the shield will crumble.
 		Damage shield can absorb will increase with your Mindpower.]]):
-		format(self:combatTalentMindDamage(t, 20, 80))
+		format(t.getMax(self, t))
 	end,
 }
 
