@@ -331,6 +331,10 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			end
 		end
 
+		if not target.dead and dam > 0 and src.knowTalent and src:knowTalent(src.T_ENDLESS_WOES) then
+			src:triggerTalent(src.T_ENDLESS_WOES, nil, target, type, dam)
+		end
+
 		-- damage affinity healing
 		if not target.dead and affinity_heal > 0 then
 			target:heal(affinity_heal)

@@ -77,3 +77,29 @@ uberTalent{
 		:format(self:getCun() / 2)
 	end,
 }
+
+uberTalent{
+	name = "Endless Woes",
+	mode = "passive",
+	trigger = function(self, t, target, damtype, dam)
+		if dam < 100 then return end
+		if damtype == DamageType.ACID and rng.percent(15) then
+			target:setEffect(target.EFF_ACID_SPLASH, 5, {src=self, dam=(dam * self:getCun() / 2.5) / 100 / 5, atk=self:getCun() / 2, apply_power=self:combatSpellpower()})
+		elseif damtype == DamageType.BLIGHT and target:canBe("disease") and rng.percent(10) then
+			local diseases = {{self.EFF_WEAKNESS_DISEASE, "str"}, {self.EFF_ROTTING_DISEASE, "con"}, {self.EFF_DECREPITUDE_DISEASE, "dex"}}
+			local disease = rng.table(diseases)
+			target:setEffect(disease[1], 5, {src=self, dam=(dam * self:getCun() / 2.5) / 100 / 5, [disease[2]]=self:getCun() / 3, apply_power=self:combatSpellpower()})
+		elseif damtype == DamageType.DARKNESS and target:canBe("blind") and rng.percent(15) then
+			target:setEffect(target.EFF_BLINDED, 5, {apply_power=self:combatSpellpower()})
+		end
+	end,
+	info = function(self, t)
+		return ([[Surround yourself with a malovelant aura.
+		Any acid damage you do has 15%% chances to apply lasting acid that deals %d%% of the initial damage for 5 turns and reduces accuracy by %d.
+		Any blight damage you do has 10%% chances to cause a random disease that deals %d%% of the initial damage for 5 turns and reducing a stat by %d.
+		Any darkness damage you do has 15%% chances to blind the target for 5 turns.
+		This only triggers for hits over 100 damage.
+		Values increase with Cunning.]])
+		:format(self:getCun() / 2.5, self:getCun() / 2, self:getCun() / 2.5, self:getCun() / 2)
+	end,
+}
