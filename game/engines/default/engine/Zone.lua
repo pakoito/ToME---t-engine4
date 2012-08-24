@@ -326,7 +326,8 @@ function _M:makeEntityByName(level, type, name, force_unique)
 	resolvers.current_level = self.base_level + level.level - 1
 
 	local e
-	if type == "actor" then e = self.npc_list[name]
+	if _G.type(type) == "table" then e = type[name]
+	elseif type == "actor" then e = self.npc_list[name]
 	elseif type == "object" then e = self.object_list[name]
 	elseif type == "grid" or type == "terrain" then e = self.grid_list[name]
 	elseif type == "trap" then e = self.trap_list[name]

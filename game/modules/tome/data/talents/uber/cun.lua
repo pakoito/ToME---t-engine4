@@ -82,7 +82,7 @@ uberTalent{
 	name = "Endless Woes",
 	mode = "passive",
 	trigger = function(self, t, target, damtype, dam)
-		if dam < 100 then return end
+		if dam < 150 then return end
 		if damtype == DamageType.ACID and rng.percent(15) then
 			target:setEffect(target.EFF_ACID_SPLASH, 5, {src=self, dam=(dam * self:getCun() / 2.5) / 100 / 5, atk=self:getCun() / 2, apply_power=self:combatSpellpower()})
 		elseif damtype == DamageType.BLIGHT and target:canBe("disease") and rng.percent(10) then
@@ -98,7 +98,63 @@ uberTalent{
 		Any acid damage you do has 15%% chances to apply lasting acid that deals %d%% of the initial damage for 5 turns and reduces accuracy by %d.
 		Any blight damage you do has 10%% chances to cause a random disease that deals %d%% of the initial damage for 5 turns and reducing a stat by %d.
 		Any darkness damage you do has 15%% chances to blind the target for 5 turns.
-		This only triggers for hits over 100 damage.
+		This only triggers for hits over 150 damage.
+		Values increase with Cunning.]])
+		:format(self:getCun() / 2.5, self:getCun() / 2, self:getCun() / 2.5, self:getCun() / 2)
+	end,
+}
+
+uberTalent{
+	name = "Secrets of Telos",
+	mode = "passive",
+	require = { special={desc="Possess Telos Top Half, Telos Bottom Half, Telos Staff Crystal.", fct=function(self)
+		local o1 = self:findInAllInventoriesBy("define_as", "GEM_TELOS")
+		local o2 = self:findInAllInventoriesBy("define_as", "TELOS_TOP_HALF")
+		local o3 = self:findInAllInventoriesBy("define_as", "TELOS_BOTTOM_HALF")
+		return o1 and o2 and o3
+	end} },
+	on_learn = function(self, t)
+		local list = mod.class.Object:loadList("/data/general/objects/special-artifacts.lua")
+		local o = game.zone:makeEntityByName(game.level, list, "TELOS_SPIRE", true)
+		if o then
+			o:identify(true)
+			self:addObject(self.INVEN_INVEN, o)
+
+			local o1, item1, inven1 = self:findInAllInventoriesBy("define_as", "GEM_TELOS")
+			self:removeObject(inven1, item1, true)
+			local o2, item2, inven2 = self:findInAllInventoriesBy("define_as", "TELOS_TOP_HALF")
+			self:removeObject(inven2, item2, true)
+			local o3, item3, inven3 = self:findInAllInventoriesBy("define_as", "TELOS_BOTTOM_HALF")
+			self:removeObject(inven3, item3, true)
+
+			self:sortInven()
+
+			game.logSeen(self, "#VIOLET#%s assembles %s!", self.name:capitalize(), o:getName{do_colour=true, no_count=true})
+		end
+	end,
+	info = function(self, t)
+		return ([[You have long studied Telos three artifacts, you believe you can merge them back into a single potent staff.]])
+		:format()
+	end,
+}
+
+uberTalent{
+	name = "Elemental Surge",
+	mode = "passive",
+	trigger = function(self, t, target, damtype, dam)
+		if dam < 150 then return end
+		if damtype == DamageType.ARCANE and rng.percent(15) then
+		end
+	end,
+	info = function(self, t)
+		return ([[Surround yourself with an elemental aura, when you deal a critical hit with an element you have a chance to trigger a special effect.
+		Arcane damage has 15%% chances to .
+		Fire damage has 15%% chances to cleanse a physical or magical detrimental effect on you.
+		Cold damage has 15%% chances to turn your skin into ice for 5 turns, reflecting projectiles and dealing %d ice damage to attackers.
+		Lightning damage has 15%% chances to become pure lightning for 3 turns, any damage will teleport you to an adjacent tile and ignore the damage (can only happen once per turn).
+		Light damage has 15%% chances to .
+		Nature damage has 15%% chances to harden your skin, preventing the application of any physical detrimental effects for 5 turns.
+		This only triggers for hits over 150 damage.
 		Values increase with Cunning.]])
 		:format(self:getCun() / 2.5, self:getCun() / 2, self:getCun() / 2.5, self:getCun() / 2)
 	end,
