@@ -341,6 +341,10 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			game.logSeen(target, "%s is healed by the %s%s#LAST# damage!", target.name:capitalize(), DamageType:get(type).text_color or "#aaaaaa#", DamageType:get(type).name)
 		end
 
+		if dam > 0 and src.damage_log then
+			src.damage_log[type] = (src.damage_log[type] or 0) + dam
+		end
+
 		if dam > 0 and source_talent then
 			local t = source_talent
 

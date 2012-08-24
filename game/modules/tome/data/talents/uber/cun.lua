@@ -81,6 +81,13 @@ uberTalent{
 uberTalent{
 	name = "Endless Woes",
 	mode = "passive",
+	require = { special={desc="Dealt over 50000 acid, blight or darkness damage", fct=function(self) return 
+		self.damage_log and (
+			(self.damage_log[DamageType.ACID] and self.damage_log[DamageType.ACID] >= 50000) or
+			(self.damage_log[DamageType.BLIGHT] and self.damage_log[DamageType.BLIGHT] >= 50000) or
+			(self.damage_log[DamageType.DARKNESS] and self.damage_log[DamageType.DARKNESS] >= 50000)
+		)
+	end} },
 	trigger = function(self, t, target, damtype, dam)
 		if dam < 150 then return end
 		if damtype == DamageType.ACID and rng.percent(15) then
@@ -141,6 +148,16 @@ uberTalent{
 uberTalent{
 	name = "Elemental Surge",
 	mode = "passive",
+	require = { special={desc="Dealt over 50000 arcane, fire, cold, lightning, light or nature damage", fct=function(self) return 
+		self.damage_log and (
+			(self.damage_log[DamageType.ARCANE] and self.damage_log[DamageType.ARCANE] >= 50000) or
+			(self.damage_log[DamageType.FIRE] and self.damage_log[DamageType.FIRE] >= 50000) or
+			(self.damage_log[DamageType.COLD] and self.damage_log[DamageType.COLD] >= 50000) or
+			(self.damage_log[DamageType.LIGHTNING] and self.damage_log[DamageType.LIGHTNING] >= 50000) or
+			(self.damage_log[DamageType.LIGHT] and self.damage_log[DamageType.LIGHT] >= 50000) or
+			(self.damage_log[DamageType.NATURE] and self.damage_log[DamageType.NATURE] >= 50000)
+		)
+	end} },
 	trigger = function(self, t, target, damtype, dam)
 		if dam < 150 then return end
 		if damtype == DamageType.ARCANE and rng.percent(15) then

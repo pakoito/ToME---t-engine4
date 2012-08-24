@@ -91,6 +91,8 @@ function _M:init(t, no_default)
 	self.died_times = self.died_times or {}
 	self.last_learnt_talents = self.last_learnt_talents or { class={}, generic={} }
 	self.puuid = self.puuid or util.uuid()
+
+	self.damage_log = self.damage_log or {}
 end
 
 function _M:onBirth(birther)

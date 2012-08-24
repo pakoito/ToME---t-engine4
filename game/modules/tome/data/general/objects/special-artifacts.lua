@@ -20,6 +20,8 @@
 local Stats = require "engine.interface.ActorStats"
 local Talents = require "engine.interface.ActorTalents"
 
+load("/data/general/objects/staves.lua")
+
 -- This file describes artifacts not bound to a special location or quest, but still special(they do not get randomly generated)
 
 newEntity{ base = "BASE_STAFF", define_as = "TELOS_SPIRE",
@@ -59,6 +61,5 @@ newEntity{ base = "BASE_STAFF", define_as = "TELOS_SPIRE",
 		damage_affinity = { [DamageType.ARCANE] = 15, [DamageType.BLIGHT] = 15, [DamageType.COLD] = 15, [DamageType.DARKNESS] = 15, [DamageType.ACID] = 15, [DamageType.LIGHT] = 15, },
 		confusion_immune = 0.4,
 		vim_on_crit = 6,
-		learn_talent = {[Talents.T_COMMAND_STAFF] = 1,},
 	},
 }
