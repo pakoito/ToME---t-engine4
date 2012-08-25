@@ -236,3 +236,31 @@ newEntity{
 		return true
 	end,
 }
+
+newEntity{
+	name = "Tranquil Meadow",
+	type = "harmless", subtype = "special", unique = true,
+	immediate = {"world-encounter", "angolwen"},
+	on_encounter = function(self, where)
+		-- where contains x, y of random location based on .immediate as defined in eyal map
+		if not where then return end
+		if not game:getPlayer(true).descriptor or game:getPlayer(true).descriptor.subclass ~= "Cursed" then return end
+		
+		-- make sure "where" is ok
+		local x, y = self:findSpot(where)
+		if not x then return end
+
+		local g = game.level.map(x, y, engine.Map.TERRAIN):cloneFull()
+		g.__nice_tile_base = nil
+		g.name = "tranquil meadow"
+		g.display='>' g.color_r=0 g.color_g=255 g.color_b=128 g.notice = true
+		g.change_level=1 g.change_zone="keepsake-meadow" g.glow=true
+		g.add_displays = g.add_displays or {}
+		g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/meadow.png", z=5}
+		g.nice_tiler = nil
+		g:initGlow()
+		game.zone:addEntity(game.level, g, "terrain", x, y)
+		print("[WORLDMAP] Keepsake: Tranquil Meadow at", x, y)
+		return true
+	end,
+}

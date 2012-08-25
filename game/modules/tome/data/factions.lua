@@ -88,3 +88,4 @@ engine.Faction:add{ name="Neutral", reaction={}, }
 engine.Faction:setInitialReaction("neutral", "enemies", -100, true)
 
 engine.Faction:add{ name="Unaligned", reaction={}, }
+engine.Faction:add{ shortname="merchant-caravan", name="Merchant Caravan", reaction={}, }

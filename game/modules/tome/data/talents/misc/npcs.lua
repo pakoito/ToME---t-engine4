@@ -28,6 +28,7 @@ newTalentType{ is_nature=true, type="wild-gift/other", name = "other", hide = tr
 newTalentType{ type="psionic/other", name = "other", hide = true, description = "Talents of the various entities of the world." }
 newTalentType{ type="other/other", name = "other", hide = true, description = "Talents of the various entities of the world." }
 newTalentType{ type="undead/other", name = "other", hide = true, description = "Talents of the various entities of the world." }
+newTalentType{ type="undead/keepsake", name = "keepsake shadow", generic = true, description = "Keepsake shadows's innate abilities." }
 
 local oldTalent = newTalent
 local newTalent = function(t) if type(t.hide) == "nil" then t.hide = true end return oldTalent(t) end
@@ -1836,5 +1837,80 @@ newTalent{
 		The damage will increase with your Mindpower.]]):
 		format(damDesc(self, DamageType.LIGHTNING, damage / 3),
 		damDesc(self, DamageType.LIGHTNING, damage))
+	end,
+}
+
+newTalent{
+	short_name = "KEEPSAKE_FADE",
+	name = "Fade",
+	type = {"undead/keepsake",1},
+	points = 5,
+	cooldown = function(self, t)
+		return math.max(3, 8 - self:getTalentLevelRaw(t))
+	end,
+	action = function(self, t)
+		self:setEffect(self.EFF_FADED, 1, {})
+		return true
+	end,
+	info = function(self, t)
+		return ([[You fade from sight, making you invulnerable until the beginning of your next turn.]])
+	end,
+}
+
+newTalent{
+	short_name = "KEEPSAKE_PHASE_DOOR",
+	name = "Phase Door",
+	type = {"undead/keepsake",1},
+	points = 5,
+	range = 10,
+	tactical = { ESCAPE = 2 },
+	is_teleport = true,
+	action = function(self, t)
+		game.level.map:particleEmitter(self.x, self.y, 1, "teleport_out")
+		self:teleportRandom(self.x, self.y, self:getTalentRange(t))
+		game.level.map:particleEmitter(x, y, 1, "teleport_in")
+		return true
+	end,
+	info = function(self, t)
+		return ([[Teleports you within a small range.]])
+	end,
+}
+
+newTalent{
+	short_name = "KEEPSAKE_BLINDSIDE",
+	name = "Blindside",
+	type = {"undead/keepsake", 1},
+	points = 5,
+	random_ego = "attack",
+	range = 10,
+	requires_target = true,
+	tactical = { CLOSEIN = 2 },
+	action = function(self, t)
+		local tg = {type="hit", pass_terrain = true, range=self:getTalentRange(t)}
+		local x, y, target = self:getTarget(tg)
+		if not x or not y or not target then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > self:getTalentRange(t) then return nil end
+
+		local start = rng.range(0, 8)
+		for i = start, start + 8 do
+			local x = target.x + (i % 3) - 1
+			local y = target.y + math.floor((i % 9) / 3) - 1
+			if game.level.map:isBound(x, y)
+					and self:canMove(x, y)
+					and not game.level.map.attrs(x, y, "no_teleport") then
+				game.level.map:particleEmitter(self.x, self.y, 1, "teleport_out")
+				self:move(x, y, true)
+				game.level.map:particleEmitter(x, y, 1, "teleport_in")
+				local multiplier = self:combatTalentWeaponDamage(t, 0.9, 1.9)
+				self:attackTarget(target, nil, multiplier, true)
+				return true
+			end
+		end
+
+		return false
+	end,
+	info = function(self, t)
+		local multiplier = self:combatTalentWeaponDamage(t, 1.1, 1.9)
+		return ([[With blinding speed you suddenly appear next to a target up to %d spaces away and attack for %d%% damage.]]):format(self:getTalentRange(t), multiplier)
 	end,
 }
