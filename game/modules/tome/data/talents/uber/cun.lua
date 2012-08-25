@@ -176,3 +176,51 @@ uberTalent{
 		:format(self:getCun() / 2.5, self:getCun() / 2, self:getCun() / 2.5, self:getCun() / 2)
 	end,
 }
+
+uberTalent{
+	name = "Eye of the Tiger",
+	mode = "passive",
+	trigger = function(self, t, kind)
+		local tids = {}
+
+		for tid, _ in pairs(self.talents_cd) do
+			local t = self:getTalentFromId(tid)
+			if 
+				(kind == "physical" and
+					(
+						t.type[1]:find("^technique/") or
+						t.type[1]:find("^cunning/")
+					)
+				) or
+				(kind == "spell" and
+					(
+						t.type[1]:find("^spell/") or
+						t.type[1]:find("^corruption/") or
+						t.type[1]:find("^celestial/") or
+						t.type[1]:find("^chronomancy/")
+					)
+				) or
+				(kind == "mind" and
+					(
+						t.type[1]:find("^wild%-gift/") or
+						t.type[1]:find("^cursed/") or
+						t.type[1]:find("^psionic/")
+					)
+				)
+				then
+				tids[#tids+1] = tid
+			end
+		end
+		if #tids == 0 then return end
+		local tid = rng.table(tids)
+		self.talents_cd[tid] = self.talents_cd[tid] - (kind == "spell" and 1 or 2)
+		if self.talents_cd[tid] <= 0 then self.talents_cd[tid] = nil end
+		self.changed = true
+	end,
+	info = function(self, t)
+		return ([[All physical criticals reduce the remaining cooldown of a random technique or cunning talent by 2.
+		All spell criticals reduce the remaining cooldown of a random spell talent by 1.
+		All mind criticals reduce the remaining cooldown of a random wild gift/psionic/afflicted talent by 2.]])
+		:format()
+	end,
+}

@@ -1245,6 +1245,7 @@ function _M:physicalCrit(dam, weapon, target, atk, def, add_chance, crit_power_a
 		dam = dam * (1.5 + crit_power_add + (self.combat_critical_power or 0) / 100)
 		crit = true
 
+		if self:knowTalent(self.T_EYE_OF_THE_TIGER) then self:triggerTalent(self.T_EYE_OF_THE_TIGER, nil, "physical") end
 	end
 	return dam, crit
 end
@@ -1286,6 +1287,8 @@ function _M:spellCrit(dam, add_chance, crit_power_add)
 			local t = self:getTalentFromId(self.T_CORONA)
 			t.on_crit(self, t)
 		end
+
+		if self:knowTalent(self.T_EYE_OF_THE_TIGER) then self:triggerTalent(self.T_EYE_OF_THE_TIGER, nil, "spell") end
 	end
 	return dam, crit
 end
@@ -1311,6 +1314,7 @@ function _M:mindCrit(dam, add_chance, crit_power_add)
 		if self:attr("psi_on_crit") then self:incPsi(self:attr("psi_on_crit")) end
 		if self:attr("equilibrium_on_crit") then self:incEquilibrium(self:attr("equilibrium_on_crit")) end
 
+		if self:knowTalent(self.T_EYE_OF_THE_TIGER) then self:triggerTalent(self.T_EYE_OF_THE_TIGER, nil, "mind") end
 	end
 	return dam, crit
 end
