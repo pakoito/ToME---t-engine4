@@ -66,6 +66,7 @@ uberTalent{
 uberTalent{
 	name = "Eternal Guard",
 	mode = "passive",
+	require = { special={desc="Know the Block talent", fct=function(self) return self:knowTalent(self.T_BLOCK) end} },
 	info = function(self, t)
 		return ([[Your block now lasts 2 more turns.]])
 		:format()
