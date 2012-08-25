@@ -40,7 +40,7 @@ newChat{ id="die",
 I...had plans for you, but I can not go against your free will. Know that you had a destiny waiting for you.
 Are you sure?]],
 	answers = {
-		{"Just let me go please.", action=function(npc, player) game:getPlayer(true):die(game.player) end},
+		{"Just let me go please.", action=function(npc, player) game:getPlayer(true):die(game.player, {special_death_msg=("asked the Eidolon to let %s die in peace"):format(game.player.female and "her" or "his")}) end},
 		{"No actually, perhaps life is still worth it!"},
 	}
 }
