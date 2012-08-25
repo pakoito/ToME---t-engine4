@@ -143,6 +143,7 @@ newTalent{
 		return {type="hit", range=self:getTalentRange(t), talent=t}
 	end,
 	doBacklash = function(self, target, value, t)
+		self.no_backlash_loops = true
 		if core.fov.distance(self.x, self.y,target.x, target.y) > self:getTalentRange(t) then return nil end
 		local tg = self:getTalentTarget(t)
 		local a = game.level.map(target.x, target.y, Map.ACTOR)
@@ -159,6 +160,7 @@ newTalent{
 				game.level.map:particleEmitter(a.x, a.y, 1, "generic_discharge", {rm=255, rM=255, gm=180, gM=255, bm=0, bM=0, am=35, aM=90})
 			end
 		end
+		self.no_backlash_loops = nil
 	end,
 	info = function(self, t)
 		local range = self:getTalentRange(t)

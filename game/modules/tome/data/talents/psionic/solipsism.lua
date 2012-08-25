@@ -171,18 +171,18 @@ newTalent{
 		end
 	end,
 	doDismissalOnHit = function(self, value, src, t)
-		local saving_throw = self:mindCrit(self:combatMentalResist()) * t.getSavePercentage(self, t)
+		local saving_throw = self:combatMentalResist() * t.getSavePercentage(self, t)
 		print("[Dismissal] ", self.name:capitalize(), " attempting to ignore ", value, "damage from ", src.name:capitalize(), "using", saving_throw,  "mental save.")
 		if self:checkHit(saving_throw, value) then
 			game.logSeen(self, "%s dismisses %s's damage!", self.name:capitalize(), src.name:capitalize())
-			return 0
+			return value * math.max(0, 1 - self:mindCrit(0.5))
 		else
 			return value
 		end
 	end,
 	info = function(self, t)
 		local save_percentage = t.getSavePercentage(self, t)
-		return ([[Each time you take damage you roll %d%% of your mental save against it.  If the saving throw succeeds the damage will be reduced to 0.
+		return ([[Each time you take damage you roll %d%% of your mental save against it.  If the saving throw succeeds the damage will be reduced by 50%%.
 		The first talent point invested will also increase the amount of Psi you gain from willpower by 1 but reduce the amount of life you gain from constitution by 0.5.
 		The first talent point also increases your solipsism threshold by 10%% (currently %d%%).]]):format(save_percentage * 100, self.solipsism_threshold * 100)
 	end,

@@ -88,11 +88,11 @@ Each swing drips pestulant fluid before it, and each droplet writhes and wriggle
 		[Talents.T_DRAIN]={base=5, every=10, max=7},
 		[Talents.T_WORM_ROT]={base=4, every=8},
 		[Talents.T_EPIDEMIC]={base=4, every=8},
-		[Talents.T_REND]={base=4, every=8},
-		[Talents.T_ACID_STRIKE]={base=4, every=8},
-		[Talents.T_BLOODLUST]={base=4, every=8},
-		[Talents.T_RUIN]={base=4, every=8},
-		[Talents.T_CORRUPTED_STRENGTH]={base=3, every=15},
+		[Talents.T_REND]={base=2, every=8},
+		[Talents.T_ACID_STRIKE]={base=2, every=8},
+		[Talents.T_BLOODLUST]={base=2, every=8},
+		[Talents.T_RUIN]={base=2, every=8},
+		[Talents.T_CORRUPTED_STRENGTH]={base=2, every=8},
 
 		[Talents.T_BLINDSIDE]={base=3, every=12},
 
@@ -719,10 +719,10 @@ With each slow breath it takes reality distorts around it.  Blue twirls into red
 	-- Spawn Dream Seeds
 	on_act = function(self)
 		if self.dreamer_sleep_state and self.ai_target.actor then 
-			self.dreamer_sleep_state = math.min(self.dreamer_sleep_state + 1, 51) -- Caps at 51 so a new one doesn't spawn as soon as an old one dies
+			self.dreamer_sleep_state = math.min(self.dreamer_sleep_state + 1, 31) -- Caps at 31 so a new one doesn't spawn as soon as an old one dies
 			self:useEnergy() -- Always use energy when in the sleep state
 
-			if self.dreamer_sleep_state%10 == 0 and self.dreamer_sleep_state <= 50 then
+			if self.dreamer_sleep_state%10 == 0 and self.dreamer_sleep_state <= 30 then
 				-- Find Space
 				local x, y = util.findFreeGrid(self.x, self.y, 5, true, {[engine.Map.ACTOR]=true})
 				if not x then
@@ -741,7 +741,7 @@ With each slow breath it takes reality distorts around it.  Blue twirls into red
 				game.zone:addEntity(game.level, m, "actor", x, y)
 				
 				game.level.map:particleEmitter(x, y, 1, "generic_teleport", {rm=225, rM=255, gm=225, gM=255, bm=225, bM=255, am=35, aM=90})
-				game.logSeen(self, "%s spawns a dream seed!", self.name:capitalize())
+				game.logSeen(self, "#LIGHT_BLUE#A dream seed escapes %s's sleeping mind.", self.name:capitalize())
 			end
 		-- Script the AI to encourage opening with dream scape
 		elseif self.ai_target.actor and self.ai_target.actor.game_ender and not game.zone.is_dream_scape then

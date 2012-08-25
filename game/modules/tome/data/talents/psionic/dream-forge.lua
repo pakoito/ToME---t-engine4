@@ -28,7 +28,7 @@ newTalent{
 	sustain_psi = 25,
 	mode = "sustained",
 	tactical = { DEFEND = 2, },
-	getPower = function(self, t) return self:combatTalentMindDamage(t, 0, 100) end,
+	getPower = function(self, t) return self:combatTalentMindDamage(t, 5, 50) end,
 	doForgeShield = function(type, dam, t, self, src)
 		-- Grab our damage threshold
 		local dam_threshold = self.max_life * 0.15
@@ -109,7 +109,7 @@ newTalent{
 	target = function(self, t)
 		return {type="cone", range=self:getTalentRange(t), friendlyfire=false, radius = self:getTalentRadius(t), talent=t}
 	end,
-	getDuration = function(self, t) return 5 + math.floor(self:getTalentLevel(t)) end,
+	getDuration = function(self, t) return 2 + math.floor(self:getTalentLevel(t)/2) end,
 	getBlastDamage = function(self, t) return self:combatTalentMindDamage(t, 20, 200) end,
 	getForgeDamage = function(self, t) return self:combatTalentMindDamage(t, 0, 25) end,
 	action = function(self, t)
@@ -213,8 +213,8 @@ newTalent{
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), friendlyfire=false, radius = self:getTalentRadius(t), talent=t}
 	end,
-	getDamage = function(self, t) return math.ceil(self:combatTalentMindDamage(t, 10, 100)) end,
-	getPower = function(self, t) return math.floor(self:combatTalentMindDamage(t, 5, 50)) end,
+	getDamage = function(self, t) return math.ceil(self:combatTalentMindDamage(t, 5, 50)) end,
+	getPower = function(self, t) return math.floor(self:combatTalentMindDamage(t, 5, 25)) end,
 	getDuration = function(self, t) return 1 + math.floor(self:getTalentLevel(t)/2) end,
 	getChance = function(self, t) return 5 * self:getTalentLevel(t) end,
 	doForgeStrike = function(self, t, p)

@@ -73,7 +73,7 @@ newTalent{
 		local power = t.getSleepPower(self, t)
 		local insomnia = t.getInsomniaPower(self, t)
 		return([[Puts the target into a deep sleep for %d turns, rendering it unable to act.  Every %d points of damage the target suffers will reduce the effect duration by one turn.
-		When Slumber ends the target will suffer from Insomnia for a number of turns equal to the amount of time it was asleep (up to five turns max), granting it %d%% sleep immunity for each turn of the Insomnia effect.
+		When Slumber ends the target will suffer from Insomnia for a number of turns equal to the amount of time it was asleep (up to ten turns max), granting it %d%% sleep immunity for each turn of the Insomnia effect.
 		The damage threshold will scale with your mindpower.]]):format(duration, power, insomnia)
 	end,
 }
@@ -98,8 +98,8 @@ newTalent{
 	points = 5,
 	require = psi_wil_req3,
 	mode = "passive",
-	getSleepPowerBonus = function(self, t) return 1 + math.min(2, self:getTalentLevel(t)/5) end,
-	getInsomniaPower = function(self, t) return math.min(10, self:getTalentLevel(t) * 1.2) end,
+	getSleepPowerBonus = function(self, t) return 1 + math.min(1, self:getTalentLevel(t)/10) end,
+	getInsomniaPower = function(self, t) return math.min(10, self:getTalentLevelRaw(t) * 2) end,
 	info = function(self, t)
 		local power_bonus = t.getSleepPowerBonus(self, t) - 1
 		local insomnia = t.getInsomniaPower(self, t)
@@ -228,8 +228,8 @@ newTalent{
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		local power = t.getPower(self, t)
-		return([[Enter a sleeping target's dreams for %d turns.  While in the dreamscape you'll encounter the target's invulnerable sleeping form as well as dream projections that it will spawn every four turns to defend it's mind.  When the dreamscape ends the target's life will be reduced by 10%% and it will to be brainlocked for one turn for each projection destroyed.
-		Lucid dreamers will spawn projections every two turns instead of every four and their projections will deal more damage (generally projections have a 50%% penalty to all damage).
+		return([[Enter a sleeping target's dreams for %d turns.  While in the dreamscape you'll encounter the target's invulnerable sleeping form as well as dream projections that it will spawn every three turns to defend it's mind.  When the dreamscape ends the target's life will be reduced by 10%% and it will to be brainlocked for one turn for each projection destroyed.
+		Lucid dreamers will spawn projections every two turns instead of every three and their projections will deal more damage (generally projections have a 50%% penalty to all damage).
 		In the dreamscape your damage will be improved by %d%%.
 		The damage bonus will improve with your mindpower.]]):format(duration, power)
 	end,

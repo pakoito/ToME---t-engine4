@@ -2485,18 +2485,16 @@ newEffect{
 			self:removeParticles(eff.particle)
 		end
 		-- Incriment Insomnia Duration
-		eff.insomnia_duration = math.min(eff.insomnia_duration + 1, 5)
+		if not self:attr("lucid_dreamer") then
+			self:setEffect(self.EFF_INSOMNIA, 1, {power=eff.insomnia})
+		end
 	end,
 	activate = function(self, eff)
-		eff.insomnia_duration = 0
 		eff.sid = self:addTemporaryValue("sleep", 1)
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("sleep", eff.sid)
-		if not self:attr("lucid_dreamer") and eff.insomnia_duration > 0 then
-			self:setEffect(self.EFF_INSOMNIA, eff.insomnia_duration, {power=eff.insomnia})
-		end
-		if not self:attr("sleep") and eff.waking > 0 then
+		if not self:attr("sleep") and not self.dead and eff.waking > 0 then
 			DamageType:get(DamageType.MIND).projector(eff.src or self, self.x, self.y, DamageType.MIND, eff.src:mindCrit(eff.waking))
 			game.level.map:particleEmitter(self.x, self.y, 1, "generic_discharge", {rm=180, rM=200, gm=100, gM=120, bm=30, bM=50, am=70, aM=180})
 		end
@@ -2537,18 +2535,16 @@ newEffect{
 			self:removeParticles(eff.particle)
 		end
 		-- Incriment Insomnia Duration
-		eff.insomnia_duration = math.min(eff.insomnia_duration + 1, 5)
+		if not self:attr("lucid_dreamer") then
+			self:setEffect(self.EFF_INSOMNIA, 1, {power=eff.insomnia})
+		end
 	end,
 	activate = function(self, eff)
-		eff.insomnia_duration = 0
 		eff.sid = self:addTemporaryValue("sleep", 1)
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("sleep", eff.sid)
-		if not self:attr("lucid_dreamer") and eff.insomnia_duration > 0 then
-			self:setEffect(self.EFF_INSOMNIA, eff.insomnia_duration, {power=eff.insomnia})
-		end
-		if not self:attr("sleep") and eff.waking > 0 then
+		if not self:attr("sleep") and not self.dead and eff.waking > 0 then
 			DamageType:get(DamageType.MIND).projector(eff.src or self, self.x, self.y, DamageType.MIND, eff.src:mindCrit(eff.waking))
 			game.level.map:particleEmitter(self.x, self.y, 1, "generic_discharge", {rm=180, rM=200, gm=100, gM=120, bm=30, bM=50, am=70, aM=180})
 		end
@@ -2598,18 +2594,16 @@ newEffect{
 			self:removeParticles(eff.particle)
 		end
 		-- Incriment Insomnia Duration
-		eff.insomnia_duration = math.min(eff.insomnia_duration + 1, 5)
+		if not self:attr("lucid_dreamer") then
+			self:setEffect(self.EFF_INSOMNIA, 1, {power=eff.insomnia})
+		end
 	end,
 	activate = function(self, eff)
-		eff.insomnia_duration = 0
 		eff.sid = self:addTemporaryValue("sleep", 1)
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("sleep", eff.sid)
-		if not self:attr("lucid_dreamer") and eff.insomnia_duration > 0 then
-			self:setEffect(self.EFF_INSOMNIA, eff.insomnia_duration, {power=eff.insomnia})
-		end
-		if not self:attr("sleep") and eff.waking > 0 then
+		if not self:attr("sleep") and not self.dead and eff.waking > 0 then
 			DamageType:get(DamageType.MIND).projector(eff.src or self, self.x, self.y, DamageType.MIND, eff.src:mindCrit(eff.waking))
 			game.level.map:particleEmitter(self.x, self.y, 1, "generic_discharge", {rm=180, rM=200, gm=100, gM=120, bm=30, bM=50, am=70, aM=180})
 		end
@@ -2630,9 +2624,9 @@ newEffect{
 	on_gain = function(self, err) return "#Target# is suffering from insomnia.", "+Insomnia" end,
 	on_lose = function(self, err) return "#Target# is no longer suffering from insomnia.", "-Insomnia" end,
 	on_merge = function(self, old_eff, new_eff)
-		-- Take the longest of the two durations on merge
-		local dur = math.max(old_eff.dur, new_eff.dur)
-		old_eff.dur = dur
+		-- Add the durations on merge
+		local dur = old_eff.dur + new_eff.dur
+		old_eff.dur = math.min(10, dur)
 		old_eff.cur_power = old_eff.power * old_eff.dur
 		-- Need to remove and re-add the effect
 		self:removeTemporaryValue("sleep_immune", old_eff.sid)

@@ -17,7 +17,150 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
--- Thought Forms
+-- Thought Forms really only differ in the equipment they carry, the talents they have, and stat weights
+-- cancelThoughtForms is in psionic.lua since it's used a few other places
+-- Here we'll use a few functions to build them.
+
+-- Build our tile from the summoners tile
+local function buildTile(e) 
+	if e.summoner.female then
+		e.female = true
+	end
+	e.image = e.summoner.image
+	e.moddable_tile = e.summoner.moddable_tile and e.summoner.moddable_tile or nil
+	e.moddable_tile_base = e.summoner.moddable_tile_base and e.summoner.moddable_tile_base or nil
+	e.moddable_tile_ornament = e.summoner.moddable_tile_ornament and e.summoner.moddable_tile_ornament or nil
+	if e.summoner.image == "invis.png" and e.summoner.add_mos then
+		local summoner_image, summoner_h, summoner_y = e.summoner.add_mos[1].image or nil, e.summoner.add_mos[1].display_h or nil, e.summoner.add_mos[1].display_y or nil
+		if summoner_image and summoner_h and summoner_y then
+			e.add_mos = {{image=summoner_image, display_h=summoner_h, display_y=summoner_y}}
+		end
+	end
+end
+
+-- Set up our act function so we don't run all over the map
+local function setupAct(self)
+	self.on_act = function(self)
+		local tid = self.summoning_tid
+		if not game.level:hasEntity(self.summoner) or self.summoner.dead or not self.summoner:isTalentActive(tid) then
+			self:die(self)
+		end
+		if game.level:hasEntity(self.summoner) and core.fov.distance(self.x, self.y, self.summoner.x, self.summoner.y) > 10 then
+			local Map = require "engine.Map"
+			local x, y = util.findFreeGrid(self.summoner.x, self.summoner.y, 5, true, {[engine.Map.ACTOR]=true})
+			if not x then
+				return
+			end
+			-- Clear it's targeting on teleport
+			self:setTarget(nil)
+			self:move(x, y, true)
+			game.level.map:particleEmitter(x, y, 1, "generic_teleport", {rm=225, rM=255, gm=225, gM=255, bm=225, bM=255, am=35, aM=90})
+		end
+	end
+end
+
+-- And our die function to make sure our sustain is disabled properly
+local function setupDie(self)
+	self.on_die = function(self)
+		local tid = self.summoning_tid
+		game:onTickEnd(function() 
+			if self.summoner:isTalentActive(tid) then
+				self.summoner:forceUseTalent(tid, {ignore_energy=true})
+			end
+			if self.summoner:isTalentActive(self.summoner.T_OVER_MIND) then
+				self.summoner:forceUseTalent(self.summoner.T_OVER_MIND, {ignore_energy=true})
+			end
+		end)
+		-- Pass our summoner back as the target if we're controlled...  to prevent super cheese.
+		if game.player == self then
+			local tg = {type="ball", radius=10}
+			self:project(tg, self.x, self.y, function(tx, ty)
+				local target = game.level.map(tx, ty, engine.Map.ACTOR)
+				if target and target.ai_target.actor == self then
+					target:setTarget(self.summoner)
+				end
+			end)
+		end
+	end
+end
+
+-- Build our thought-form
+function setupThoughtForm(self, m, x, y, t)
+	-- Set up some basic stuff
+	m.display = "p"
+	m.blood_color = colors.YELLOW
+	m.type = "thought-form"
+	m.subtype = "thought-form"
+	m.summoner_gain_exp=true
+	m.faction = self.faction
+	m.no_inventory_access = true
+	m.rank = 2
+	m.size_category = 3
+	m.infravision = 10
+	m.lite = 1
+	m.no_breath = 1
+	m.move_others = true
+
+	-- Less tedium
+	m.life_regen = 1
+	m.stamina_regen = 1
+
+	-- Make sure we don't gain anything from leveling
+	m.autolevel = "none"
+	m.unused_stats = 0
+	m.unused_talents = 0
+	m.unused_generics = 0
+	m.unused_talents_types = 0
+	m.exp_worth = 0
+	m.no_points_on_levelup = true
+	m.silent_levelup = true
+	m.level_range = {self.level, self.level}
+
+	-- Try to use stored AI talents to preserve tweaking over multiple summons
+	m.ai_talents = self.stored_ai_talents and self.stored_ai_talents[m.name] or {}
+	m.save_hotkeys = true
+
+	-- Inheret some attributes
+	if self:getTalentLevel(self.T_OVER_MIND) >=5 then
+		m.inc_damage.all = (m.inc_damage.all) or 0 + (self.inc_damage.all or 0) + (self.inc_damage[engine.DamageType.MIND] or 0)
+	end
+	if self:getTalentLevel(self.T_OVER_MIND) >=3 then
+		local save_bonus = self:combatMentalResist(fake)
+		m:attr("combat_physresist", save_bonus)
+		m:attr("combat_mentalresist", save_bonus)
+		m:attr("combat_spellresist", save_bonus)
+	end
+
+	-- Add them to the party
+	if game.party:hasMember(self) then
+		m.remove_from_party_on_death = true
+		game.party:addMember(m, {
+			control="no",
+			type="thought-form",
+			title="thought-form",
+			orders = {target=true, leash=true, anchor=true, talents=true},
+		})
+	end
+	
+	-- Build our act and die functions
+	m.summoning_tid = t.id
+	setupAct(m); setupDie(m)
+	
+	-- Add the thought-form to the level
+	m:resolve() m:resolve(nil, true)
+	m:forceLevelup(self.level)
+	game.zone:addEntity(game.level, m, "actor", x, y)
+	game.level.map:particleEmitter(x, y, 1, "generic_teleport", {rm=225, rM=255, gm=225, gM=255, bm=225, bM=255, am=35, aM=90})
+
+	-- Summons never flee
+	m.ai_tactic = m.ai_tactic or {}
+	m.ai_tactic.escape = 0
+	if self.name == "thought-forged bowman" then
+		m.ai_tactic.safe_range = 2
+	end
+end
+
+-- Thought-forms
 newTalent{
 	name = "Thought-Form: Bowman",
 	short_name = "TF_BOWMAN",
@@ -34,7 +177,7 @@ newTalent{
 		return t.getStatBonus(self, t)
 	end,
 	activate = function(self, t)
-		cancelThoughtForms(self)
+		cancelThoughtForms(self, t.id)
 		
 		-- Find space
 		local x, y = util.findFreeGrid(self.x, self.y, 5, true, {[Map.ACTOR]=true})
@@ -53,71 +196,6 @@ newTalent{
 			shader_args = { color = {0.8, 0.8, 0.8}, base = 0.8, time_factor = 4000 },
 			desc = [[A thought-forged bowman.  It appears ready for battle.]],
 			body = { INVEN = 10, MAINHAND = 1, BODY = 1, QUIVER=1, HANDS = 1, FEET = 1},
-			-- Make a moddable tile
-			resolvers.generic(function(e)
-				if e.summoner.female then
-					e.female = true
-				end
-				e.image = e.summoner.image
-				e.moddable_tile = e.summoner.moddable_tile and e.summoner.moddable_tile or nil
-				e.moddable_tile_base = e.summoner.moddable_tile_base and e.summoner.moddable_tile_base or nil
-				e.moddable_tile_ornament = e.summoner.moddable_tile_ornament and e.summoner.moddable_tile_ornament or nil
-				if e.summoner.image == "invis.png" and e.summoner.add_mos then
-					local summoner_image, summoner_h, summoner_y = e.summoner.add_mos[1].image or nil, e.summoner.add_mos[1].display_h or nil, e.summoner.add_mos[1].display_y or nil
-					if summoner_image and summoner_h and summoner_y then
-						e.add_mos = {{image=summoner_image, display_h=summoner_h, display_y=summoner_y}}
-					end
-				end
-			end),
-			-- Disable our sustain when we die
-			on_die = function(self)
-				game:onTickEnd(function() 
-					if self.summoner:isTalentActive(self.summoner.T_TF_BOWMAN) then
-						self.summoner:forceUseTalent(self.summoner.T_TF_BOWMAN, {ignore_energy=true})
-					end
-					if self.summoner:isTalentActive(self.summoner.T_OVER_MIND) then
-						self.summoner:forceUseTalent(self.summoner.T_OVER_MIND, {ignore_energy=true})
-					end
-				end)
-				-- Pass our summoner back as the target if we're controlled...  to prevent super cheese.
-				if game.player == self then
-					local tg = {type="ball", radius=10}
-					self:project(tg, self.x, self.y, function(tx, ty)
-						local target = game.level.map(tx, ty, engine.Map.ACTOR)
-						if target and target.ai_target.actor == self then
-							target:setTarget(self.summoner)
-						end
-					end)
-				end
-			end,
-			-- Keep them on a leash
-			on_act = function(self)
-				local t = self.summoner:getTalentFromId(self.summoner.T_TF_BOWMAN)
-				if not game.level:hasEntity(self.summoner) or self.summoner.dead or not self.summoner:isTalentActive(self.summoner.T_TF_BOWMAN) then
-					self:die(self)
-				end
-				if game.level:hasEntity(self.summoner) and core.fov.distance(self.x, self.y, self.summoner.x, self.summoner.y) > self.summoner:getTalentRange(t) then
-					local Map = require "engine.Map"
-					local x, y = util.findFreeGrid(self.summoner.x, self.summoner.y, 5, true, {[engine.Map.ACTOR]=true})
-					if not x then
-						return
-					end
-					-- Clear it's targeting on teleport
-					self:setTarget(nil)
-					self:move(x, y, true)
-					game.level.map:particleEmitter(x, y, 1, "generic_teleport", {rm=225, rM=255, gm=225, gM=255, bm=225, bM=255, am=35, aM=90})
-				end
-			end,
-			-- Hack to make sure we top off ammo after every battle
-			on_move = function(self)
-				if game.player ~= self then
-					local a = self:hasAmmo()
-					if not a then print("[Thought-Form Bowman Ammo] - ERROR, NO AMMO") end
-					if a and a.combat.shots_left < a.combat.capacity and not self.ai_target.actor and not self:hasEffect(self.EFF_RELOADING) then
-						self:forceUseTalent(self.T_RELOAD, {})
-					end
-				end
-			end,
 
 			ai = "summoned", ai_real = "tactical",
 			ai_state = { ai_move="move_dmap", talent_in=3, ally_compassion=10 },
@@ -133,6 +211,7 @@ newTalent{
 				con = stat_bonus / 2,
 			},
 			
+			resolvers.generic(function(e) buildTile(e) end), -- Make a moddable tile
 			resolvers.talents{ 
 				[Talents.T_WEAPON_COMBAT]= math.ceil(self.level/10),
 				[Talents.T_BOW_MASTERY]= math.ceil(self.level/10),
@@ -153,10 +232,20 @@ newTalent{
 				{type="armor", subtype="feet", autoreq=true, forbid_power_source={arcane=true}, not_properties = {"unique"} },
 			},
 			resolvers.sustains_at_birth(),
+			
+			-- Hack to make sure we top off ammo after every battle
+			on_move = function(self)
+				if game.player ~= self then
+					local a = self:hasAmmo()
+					if not a then print("[Thought-Form Bowman Ammo] - ERROR, NO AMMO") end
+					if a and a.combat.shots_left < a.combat.capacity and not self.ai_target.actor and not self:hasEffect(self.EFF_RELOADING) then
+						self:forceUseTalent(self.T_RELOAD, {})
+					end
+				end
+			end,
 		}
 
-		setupThoughtForm(self, m, x, y)
-
+		setupThoughtForm(self, m, x, y, t)
 		game:playSoundNear(self, "talents/spell_generic")
 		
 		local ret = {
@@ -178,6 +267,7 @@ newTalent{
 	info = function(self, t)
 		local stat = t.getStatBonus(self, t)
 		return ([[Forge a bowman clad in leather armor from your thoughts.  The bowman learns bow mastery, combat accuracy, steady shot, crippling shot, and rapid shot as it levels up and has %d improved strength, %d dexterity, and %d constitution.
+		Activating this talent will put all other thought-forms on cooldown.
 		The stat bonuses will improve with your mindpower.]]):format(stat/2, stat, stat/2)
 	end,
 }
@@ -198,7 +288,7 @@ newTalent{
 		return t.getStatBonus(self, t)
 	end,
 	activate = function(self, t)
-		cancelThoughtForms(self)
+		cancelThoughtForms(self, t.id)
 		
 		-- Find space
 		local x, y = util.findFreeGrid(self.x, self.y, 5, true, {[Map.ACTOR]=true})
@@ -217,62 +307,7 @@ newTalent{
 			shader_args = { color = {0.8, 0.8, 0.8}, base = 0.8, time_factor = 4000 },
 			desc = [[A thought-forged warrior wielding a massive hammer and clad in heavy armor.  It appears ready for battle.]],
 			body = { INVEN = 10, MAINHAND = 1, BODY = 1, HANDS = 1, FEET = 1},
-			-- Make a moddable tile
-			resolvers.generic(function(e)
-				if e.summoner.female then
-					e.female = true
-				end
-				e.image = e.summoner.image
-				e.moddable_tile = e.summoner.moddable_tile and e.summoner.moddable_tile or nil
-				e.moddable_tile_base = e.summoner.moddable_tile_base and e.summoner.moddable_tile_base or nil
-				e.moddable_tile_ornament = e.summoner.moddable_tile_ornament and e.summoner.moddable_tile_ornament or nil
-				if e.summoner.image == "invis.png" and e.summoner.add_mos then
-					local summoner_image, summoner_h, summoner_y = e.summoner.add_mos[1].image or nil, e.summoner.add_mos[1].display_h or nil, e.summoner.add_mos[1].display_y or nil
-					if summoner_image and summoner_h and summoner_y then
-						e.add_mos = {{image=summoner_image, display_h=summoner_h, display_y=summoner_y}}
-					end
-				end
-			end),
-			-- Disable our sustain when we die
-			on_die = function(self)
-				game:onTickEnd(function() 
-					if self.summoner:isTalentActive(self.summoner.T_TF_WARRIOR) then
-						self.summoner:forceUseTalent(self.summoner.T_TF_WARRIOR, {ignore_energy=true})
-					end
-					if self.summoner:isTalentActive(self.summoner.T_OVER_MIND) then
-						self.summoner:forceUseTalent(self.summoner.T_OVER_MIND, {ignore_energy=true})
-					end
-				end)
-				-- Pass our summoner back as the target if we're controlled...  to prevent super cheese.
-				if game.player == self then
-					local tg = {type="ball", radius=10}
-					self:project(tg, self.x, self.y, function(tx, ty)
-						local target = game.level.map(tx, ty, engine.Map.ACTOR)
-						if target and target.ai_target.actor == self then
-							target:setTarget(self.summoner)
-						end
-					end)
-				end
-			end,
-			-- Keep them on a leash
-			on_act = function(self)
-				local t = self.summoner:getTalentFromId(self.summoner.T_TF_WARRIOR)
-				if not game.level:hasEntity(self.summoner) or self.summoner.dead or not self.summoner:isTalentActive(self.summoner.T_TF_WARRIOR) then
-					self:die(self)
-				end
-				if game.level:hasEntity(self.summoner) and core.fov.distance(self.x, self.y, self.summoner.x, self.summoner.y) > self.summoner:getTalentRange(t) then
-					local Map = require "engine.Map"
-					local x, y = util.findFreeGrid(self.summoner.x, self.summoner.y, 5, true, {[engine.Map.ACTOR]=true})
-					if not x then
-						return
-					end
-					-- Clear it's targeting on teleport
-					self:setTarget(nil)
-					self:move(x, y, true)
-					game.level.map:particleEmitter(x, y, 1, "generic_teleport", {rm=225, rM=255, gm=225, gM=255, bm=225, bM=255, am=35, aM=90})
-				end
-			end,
-			
+		
 			ai = "summoned", ai_real = "tactical",
 			ai_state = { ai_move="move_dmap", talent_in=3, ally_compassion=10 },
 			ai_tactic = resolvers.tactic("melee"),
@@ -286,7 +321,8 @@ newTalent{
 				dex = stat_bonus / 2,
 				con = stat_bonus / 2,
 			},
-			
+
+			resolvers.generic(function(e) buildTile(e) end), -- Make a moddable tile
 			resolvers.talents{ 
 				[Talents.T_ARMOUR_TRAINING]= 3,
 				[Talents.T_WEAPON_COMBAT]= math.ceil(self.level/10),
@@ -309,7 +345,7 @@ newTalent{
 			resolvers.sustains_at_birth(),
 		}
 
-		setupThoughtForm(self, m, x, y)
+		setupThoughtForm(self, m, x, y, t)
 
 		game:playSoundNear(self, "talents/spell_generic")
 		
@@ -332,6 +368,7 @@ newTalent{
 	info = function(self, t)
 		local stat = t.getStatBonus(self, t)
 		return ([[Forge a warrior wielding a battle-axe from your thoughts.  The warrior learns weapon mastery, combat accuracy, berserker, death dance, and rush as it levels up and has %d improved strength, %d dexterity, and %d constitution.
+		Activating this talent will put all other thought-forms on cooldown.
 		The stat bonuses will improve with your mindpower.]]):format(stat, stat/2, stat/2)
 	end,
 }
@@ -352,7 +389,7 @@ newTalent{
 		return t.getStatBonus(self, t)
 	end,
 	activate = function(self, t)
-		cancelThoughtForms(self)
+		cancelThoughtForms(self, t.id)
 		
 		-- Find space
 		local x, y = util.findFreeGrid(self.x, self.y, 5, true, {[Map.ACTOR]=true})
@@ -371,61 +408,6 @@ newTalent{
 			shader_args = { color = {0.8, 0.8, 0.8}, base = 0.8, time_factor = 4000 },
 			desc = [[A thought-forged defender clad in massive armor.  It wields a sword and shield and appears ready for battle.]],
 			body = { INVEN = 10, MAINHAND = 1, OFFHAND = 1, BODY = 1, HANDS = 1, FEET = 1},
-			-- Make a moddable tile
-			resolvers.generic(function(e)
-				if e.summoner.female then
-					e.female = true
-				end
-				e.image = e.summoner.image
-				e.moddable_tile = e.summoner.moddable_tile and e.summoner.moddable_tile or nil
-				e.moddable_tile_base = e.summoner.moddable_tile_base and e.summoner.moddable_tile_base or nil
-				e.moddable_tile_ornament = e.summoner.moddable_tile_ornament and e.summoner.moddable_tile_ornament or nil
-				if e.summoner.image == "invis.png" and e.summoner.add_mos then
-					local summoner_image, summoner_h, summoner_y = e.summoner.add_mos[1].image or nil, e.summoner.add_mos[1].display_h or nil, e.summoner.add_mos[1].display_y or nil
-					if summoner_image and summoner_h and summoner_y then
-						e.add_mos = {{image=summoner_image, display_h=summoner_h, display_y=summoner_y}}
-					end
-				end
-			end),
-			-- Disable our sustain when we die
-			on_die = function(self)
-				game:onTickEnd(function() 
-					if self.summoner:isTalentActive(self.summoner.T_TF_DEFENDER) then
-						self.summoner:forceUseTalent(self.summoner.T_TF_DEFENDER, {ignore_energy=true})
-					end
-					if self.summoner:isTalentActive(self.summoner.T_OVER_MIND) then
-						self.summoner:forceUseTalent(self.summoner.T_OVER_MIND, {ignore_energy=true})
-					end
-				end)
-				-- Pass our summoner back as the target if we're controlled...  to prevent super cheese.
-				if game.player == self then
-					local tg = {type="ball", radius=10}
-					self:project(tg, self.x, self.y, function(tx, ty)
-						local target = game.level.map(tx, ty, engine.Map.ACTOR)
-						if target and target.ai_target.actor == self then
-							target:setTarget(self.summoner)
-						end
-					end)
-				end
-			end,
-			-- Keep them on a leash
-			on_act = function(self)
-				local t = self.summoner:getTalentFromId(self.summoner.T_TF_DEFENDER)
-				if not game.level:hasEntity(self.summoner) or self.summoner.dead or not self.summoner:isTalentActive(self.summoner.T_TF_DEFENDER) then
-					self:die(self)
-				end
-				if game.level:hasEntity(self.summoner) and core.fov.distance(self.x, self.y, self.summoner.x, self.summoner.y) > self.summoner:getTalentRange(t) then
-					local Map = require "engine.Map"
-					local x, y = util.findFreeGrid(self.summoner.x, self.summoner.y, 5, true, {[engine.Map.ACTOR]=true})
-					if not x then
-						return
-					end
-					-- Clear it's targeting on teleport
-					self:setTarget(nil)
-					self:move(x, y, true)
-					game.level.map:particleEmitter(x, y, 1, "generic_teleport", {rm=225, rM=255, gm=225, gM=255, bm=225, bM=255, am=35, aM=90})
-				end
-			end,		
 			
 			ai = "summoned", ai_real = "tactical",
 			ai_state = { ai_move="move_dmap", talent_in=3, ally_compassion=10 },
@@ -441,6 +423,7 @@ newTalent{
 				con = stat_bonus,
 			},
 			
+			resolvers.generic(function(e) buildTile(e) end), -- Make a moddable tile
 			resolvers.talents{ 
 				[Talents.T_ARMOUR_TRAINING]= 3 + math.ceil(self.level/10),
 				[Talents.T_WEAPON_COMBAT]= math.ceil(self.level/10),
@@ -465,7 +448,7 @@ newTalent{
 			resolvers.sustains_at_birth(),
 		}
 
-		setupThoughtForm(self, m, x, y)
+		setupThoughtForm(self, m, x, y, t)
 
 		game:playSoundNear(self, "talents/spell_generic")
 		
@@ -488,6 +471,7 @@ newTalent{
 	info = function(self, t)
 		local stat = t.getStatBonus(self, t)
 		return ([[Forge a defender wielding a sword and shield from your thoughts.  The solider learns armor training, weapon mastery, combat accuracy, shield pummel, and shield wall as it levels up and has %d improved strength, %d dexterity, and %d constitution.
+		Activating this talent will put all other thought-forms on cooldown.
 		The stat bonuses will improve with your mindpower.]]):format(stat/2, stat/2, stat)
 	end,
 }
@@ -541,7 +525,7 @@ newTalent{
 	require = psi_wil_req2,
 	mode = "passive",
 	info = function(self, t)
-		local level = self:getTalentLevel(t)
+		local level = math.floor(self:getTalentLevel(t))
 		return([[Your thought-forms now know Lucid Dreamer, Biofeedback, and Psychometry at talent level %d.]]):format(level)
 	end,
 }

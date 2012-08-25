@@ -1601,8 +1601,8 @@ newEffect{
 	on_timeout = function(self, eff)
 		-- Dreamscape doesn't cooldown in the dreamscape
 		self.talents_cd[self.T_DREAMSCAPE] = self.talents_cd[self.T_DREAMSCAPE] + 1
-		-- Spawn every four turns, or every two for lucid dreamers
-		local spawn_time = 4
+		-- Spawn every three turns, or every two for lucid dreamers
+		local spawn_time = 3
 		if eff.target:attr("lucid_dreamer") then
 			spawn_time = 2
 		end
@@ -1612,7 +1612,6 @@ newEffect{
 				game.logPlayer(self, "Not enough space to summon!")
 				return
 			end
-
 			-- Create a clone for later spawning
 			local m = require("mod.class.NPC").new(eff.target:clone{
 				shader = "shadow_simulacrum",
@@ -1670,6 +1669,7 @@ newEffect{
 
 			game.zone:addEntity(game.level, m, "actor", x, y)
 			game.level.map:particleEmitter(x, y, 1, "generic_teleport", {rm=0, rM=0, gm=180, gM=255, bm=180, bM=255, am=35, aM=90})
+			game.logSeen(eff.target, "#LIGHT_BLUE#%s has spawned a dream projection to protect it's mind!", eff.target.name:capitalize())
 
 			if game.party:hasMember(eff.target) then
 				game.party:addMember(m, {
@@ -1688,6 +1688,14 @@ newEffect{
 			if self.ai_target and self.ai_target.actor and self.ai_target.actor:attr("invulnerable") then
 				self:setTarget(nil)
 			end
+		end
+		-- End the effect early if we've killed enough projections
+		if eff.projections_killed/10 >= eff.target.life/eff.target.max_life then
+			game:onTickEnd(function()
+				eff.target:die(self)
+				game.logSeen(eff.target, "#LIGHT_RED#%s's mind shatters into %d tiny fragments!", eff.target.name:capitalize(), eff.target.max_life)
+				eff.projections_killed = 0 -- clear this out to prevent closing messages
+			end)
 		end
 	end,
 	activate = function(self, eff)

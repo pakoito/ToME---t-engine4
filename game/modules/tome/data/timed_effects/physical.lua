@@ -1828,11 +1828,11 @@ newEffect{
 				end
 			end
 		end
-		self:setEffect(self.EFF_DISTORTION, 1, {})
+		self:setEffect(self.EFF_DISTORTION, 2, {})
 		DamageType:get(DamageType.PHYSICAL).projector(eff.src or self, self.x, self.y, DamageType.PHYSICAL, eff.dam)
 	end,
 	activate = function(self, eff)
-		self:setEffect(self.EFF_DISTORTION, 1, {})
+		self:setEffect(self.EFF_DISTORTION, 2, {})
 		if eff.ravage then
 			game.logSeen(self, "#LIGHT_RED#%s is being ravaged by distortion!", self.name:capitalize())
 			eff.dam = eff.dam * 1.5

@@ -27,7 +27,7 @@ newTalent{
 	tactical = { DISABLE = {sleep = 1}, ATTACK = { DARKNESS = 2 }, },
 	direct_hit = true,
 	requires_target = true,
-	range = function(self, t) return 2 + math.floor(self:getTalentLevel(t)/2) end,
+	range = function(self, t) return math.ceil(3 + self:getTalentLevel(t)) end,
 	target = function(self, t) return {type="cone", radius=self:getTalentRange(t), range=0, talent=t, selffire=false} end,
 	getDuration = function(self, t) return 2 + math.ceil(self:getTalentLevel(t)/2) end,
 	getInsomniaPower= function(self, t)
@@ -81,7 +81,7 @@ newTalent{
 		local insomnia = t.getInsomniaPower(self, t)
 		return([[Puts targets in a radius %d cone into a nightmarish sleep for %d turns, rendering them unable to act.  Every %d points of damage the target suffers will reduce the effect duration by one turn.
 		Each turn they'll suffer %0.2f darkness damage.  This damage will not reduce the duration of the effect.
-		When Nightmare ends the target will suffer from Insomnia for a number of turns equal to the amount of time it was asleep (up to five turns max), granting it %d%% sleep immunity for each turn of the Insomnia effect.
+		When Nightmare ends the target will suffer from Insomnia for a number of turns equal to the amount of time it was asleep (up to ten turns max), granting it %d%% sleep immunity for each turn of the Insomnia effect.
 		The damage threshold and mind damage will scale with your mindpower.]]):format(radius, duration, power, damDesc(self, DamageType.DARKNESS, (damage)), insomnia)
 	end,
 }
@@ -140,6 +140,8 @@ newTalent{
 		m.seen_by = nil
 		m.can_talk = nil
 		m.clone_on_hit = nil
+		if m.talents.T_SUMMON then m.talents.T_SUMMON = nil end
+		if m.talents.T_MULTIPLY then m.talents.T_MULTIPLY = nil end
 
 		-- Inner Demon's never flee
 		m.ai_tactic = m.ai_tactic or {}
@@ -192,7 +194,7 @@ newTalent{
 		end
 		
 		local chance = self:mindCrit(t.getChance(self, t))
-		if target:canBe("fear") then
+		if target:canBe("fear") or target:attr("sleep") then
 			target:setEffect(target.EFF_INNER_DEMONS, t.getDuration(self, t), {src = self, chance=chance, apply_power=self:combatMindpower()})
 		else
 			game.logSeen(target, "%s resists the demons!", target.name:capitalize())
@@ -205,7 +207,7 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local chance = t.getChance(self, t)
 		return ([[Brings the target's inner demons to the surface.  Each turn for %d turns there's a %d%% chance that the a demon will surface, requiring the target to make a mental save to keep it from manifesting.
-		If the target is sleeping the chance will be doubled and no saving throw will be allowed.  Otherwise if the summoning is resisted the effect will end early.
+		If the target is sleeping the chance will be doubled and fear immunity will be ignored.  Otherwise if the summoning is resisted the effect will end early.
 		The summon chance will scale with your mindpower.]]):format(duration, chance)
 	end,
 }
@@ -234,7 +236,7 @@ newTalent{
 		if not target then return nil end
 
 		local chance = self:mindCrit(t.getChance(self, t))
-		if target:canBe("fear") then
+		if target:canBe("fear") or target:attr("sleep") then
 			target:setEffect(target.EFF_WAKING_NIGHTMARE, t.getDuration(self, t), {src = self, chance=t.getChance(self, t), dam=self:mindCrit(t.getDamage(self, t)), apply_power=self:combatMindpower()})
 			game.level.map:particleEmitter(target.x, target.y, 1, "generic_charge", {rm=60, rM=130, gm=20, gM=110, bm=90, bM=130, am=70, aM=180})
 		else
@@ -249,7 +251,7 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local chance = t.getChance(self, t)
 		return ([[Inflicts %0.2f darkness damage each turn for %d turns and has a %d%% chance to randomly cause blindness, stun, or confusion (lasting 3 turns).
-		If the target is sleeping the chance of suffering a negative effect will be doubled.
+		If the target is sleeping the chance of suffering a negative effect will be doubled and fear immunity will be ignored.
 		The damage will scale with your mindpower.]]):
 		format(damDesc(self, DamageType.DARKNESS, (damage)), duration, chance)
 	end,

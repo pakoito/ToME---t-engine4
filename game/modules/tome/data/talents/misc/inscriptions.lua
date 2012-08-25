@@ -785,8 +785,10 @@ newInscription{
 					game.level.map(self.target.x, self.target.y, engine.Map.TERRAIN, self.old_feat)
 					game.level:removeEntity(self)
 					local mx, my = util.findFreeGrid(self.target.x, self.target.y, 20, true, {[engine.Map.ACTOR]=true})
-					self.target._rst_full = true
+					local old_levelup = self.target.forceLevelup
+					self.target.forceLevelup = function() end
 					game.zone:addEntity(game.level, self.target, "actor", mx, my)
+					self.target.forceLevelup = old_levelup
 				end
 			end,
 			summoner_gain_exp = true, summoner = self,

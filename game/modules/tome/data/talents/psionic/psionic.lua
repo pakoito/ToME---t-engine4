@@ -167,82 +167,20 @@ function getGemLevel(self)
 	return gem_level
 end
 
--- Thought Forms really only differ in the equipment they carry, the talents they have, and stat weights
--- So these function will handle everything else
-function cancelThoughtForms(self)
+-- Cancel Thought Forms, we do this here because we use it for dreamscape and projection as well as thought-forms
+function cancelThoughtForms(self, id)
 	local forms = {self.T_TF_DEFENDER, self.T_TF_WARRIOR, self.T_TF_BOWMAN}
 	for i, t in ipairs(forms) do
 		if self:isTalentActive(t) then
 			self:forceUseTalent(t, {ignore_energy=true})
 		end
-	end
-end
-
-function setupThoughtForm(self, m, x, y)
-	-- Set up some basic stuff
-	m.display = "p"
-	m.blood_color = colors.YELLOW
-	m.type = "thought-form"
-	m.subtype = "thought-form"
-	m.summoner_gain_exp=true
-	m.faction = self.faction
-	m.no_inventory_access = true
-	m.rank = 2
-	m.size_category = 3
-	m.infravision = 10
-	m.lite = 1
-	m.no_breath = 1
-	m.move_others = true
-
-	-- Less tedium
-	m.life_regen = 1
-	m.stamina_regen = 1
-
-	-- Make sure we don't gain anything from leveling
-	m.autolevel = "none"
-	m.unused_stats = 0
-	m.unused_talents = 0
-	m.unused_generics = 0
-	m.unused_talents_types = 0
-	m.exp_worth = 0
-	m.no_points_on_levelup = true
-	m.silent_levelup = true
-	m.level_range = {self.level, self.level}
-
-	-- Try to use stored AI talents to preserve tweaking over multiple summons
-	m.ai_talents = self.stored_ai_talents and self.stored_ai_talents[m.name] or {}
-	m.save_hotkeys = true
-
-	-- Inheret some attributes
-	if self:getTalentLevel(self.T_OVER_MIND) >=5 then
-		m.inc_damage.all = (m.inc_damage.all) or 0 + (self.inc_damage.all or 0) + (self.inc_damage[engine.DamageType.MIND] or 0)
-	end
-	if self:getTalentLevel(self.T_OVER_MIND) >=3 then
-		local save_bonus = self:combatMentalResist(fake)
-		m:attr("combat_physresist", save_bonus)
-		m:attr("combat_mentalresist", save_bonus)
-		m:attr("combat_spellresist", save_bonus)
-	end
-
-	if game.party:hasMember(self) then
-		m.remove_from_party_on_death = true
-		game.party:addMember(m, {
-			control="no",
-			type="thought-form",
-			title="thought-form",
-			orders = {target=true, leash=true, anchor=true, talents=true},
-		})
-	end
-	m:resolve() m:resolve(nil, true)
-	m:forceLevelup(self.level)
-	game.zone:addEntity(game.level, m, "actor", x, y)
-	game.level.map:particleEmitter(x, y, 1, "generic_teleport", {rm=225, rM=255, gm=225, gM=255, bm=225, bM=255, am=35, aM=90})
-
-	-- Summons never flee
-	m.ai_tactic = m.ai_tactic or {}
-	m.ai_tactic.escape = 0
-	if self.name == "thought-forged bowman" then
-		m.ai_tactic.safe_range = 2
+		-- Put other thought-forms on cooldown; checks for id to prevent dreamscape putting all thought-forms on cooldown
+		if id and id ~= t then
+			if self:knowTalent(t) then
+				local t = self:getTalentFromId(t)
+				self:startTalentCooldown(t)
+			end	
+		end
 	end
 end
 
