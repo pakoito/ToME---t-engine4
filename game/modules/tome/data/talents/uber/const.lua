@@ -62,3 +62,12 @@ uberTalent{
 		:format(100 + self:getCon() * 3)
 	end,
 }
+
+uberTalent{
+	name = "Eternal Guard",
+	mode = "passive",
+	info = function(self, t)
+		return ([[Your block now lasts 2 more turns.]])
+		:format()
+	end,
+}
