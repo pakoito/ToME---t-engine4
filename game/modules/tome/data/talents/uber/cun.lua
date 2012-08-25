@@ -233,3 +233,29 @@ uberTalent{
 		:format()
 	end,
 }
+
+uberTalent{
+	name = "Worldly Knowledge",
+	mode = "passive",
+	on_learn = function(self, t, kind)
+		local Chat = require "engine.Chat"
+		local chat = Chat.new("worldly-knowledge", {name="Wordly Knowledge"}, self)
+		chat:invoke()
+	end,
+	info = function(self, t)
+		return ([[Learn a new talent category from one of those at 0.9 mastery, unlocked:
+		- Technique / Conditioning
+		- Technique / Mobility
+		- Technique / Field Control
+		- Wild Gift / Call of the Wild
+		- Wild Gift / Mindstar Mastery
+		- Spell / Divination
+		- Spell / Staff Combat
+		- Spell / Stone Alchemy
+		- Cunning / Survival
+		- Celestial / Chants
+		- Celestial / Light		
+		Some will not be available depending on your status toward magic.]])
+		:format()
+	end,
+}
