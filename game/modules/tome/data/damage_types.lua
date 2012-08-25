@@ -382,6 +382,15 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			end
 		end
 
+		if src.turn_procs and src.turn_procs.is_crit then
+			if src.knowTalent and src:knowTalent(src.T_ELEMENTAL_SURGE) then
+				src:triggerTalent(src.T_ELEMENTAL_SURGE, nil, target, type, dam)
+			end
+
+			src.turn_procs.is_crit = nil
+		end
+
+
 		return dam
 	end
 	return 0

@@ -51,7 +51,7 @@ newTalent{
 		end
 		if self:getTalentLevel(t) >= 4 then
 			tg.selffire= false
-			self:project(tg, self.x, self.y, DamageType.LIGHT, t.getDamage(self, t))
+			self:project(tg, self.x, self.y, DamageType.LIGHT, self:spellCrit(t.getDamage(self, t)))
 		end
 		game:playSoundNear(self, "talents/heal")
 		return true

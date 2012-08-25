@@ -148,6 +148,7 @@ uberTalent{
 uberTalent{
 	name = "Elemental Surge",
 	mode = "passive",
+	cooldown = 12,
 	require = { special={desc="Dealt over 50000 arcane, fire, cold, lightning, light or nature damage", fct=function(self) return 
 		self.damage_log and (
 			(self.damage_log[DamageType.ARCANE] and self.damage_log[DamageType.ARCANE] >= 50000) or
@@ -159,21 +160,29 @@ uberTalent{
 		)
 	end} },
 	trigger = function(self, t, target, damtype, dam)
-		if dam < 150 then return end
-		if damtype == DamageType.ARCANE and rng.percent(15) then
+		if dam < 300 then return end
+
+		local ok = false
+		if damtype == DamageType.ARCANE and rng.percent(30) then ok=true self:setEffect(self.EFF_ELEMENTAL_SURGE_ARCANE, 5, {})
+		elseif damtype == DamageType.FIRE and rng.percent(15) then ok=true self:removeEffectsFilter{type="magical", status="detrimental"} self:removeEffectsFilter{type="physical", status="detrimental"}
+		elseif damtype == DamageType.COLD and rng.percent(30) then ok=true self:setEffect(self.EFF_ELEMENTAL_SURGE_COLD, 5, {})
+		elseif damtype == DamageType.LIGHTNING and rng.percent(20) then ok=true self:setEffect(self.EFF_ELEMENTAL_SURGE_LIGHTNING, 5, {})
+		elseif damtype == DamageType.LIGHT and rng.percent(30) then if not self:hasEffect(self.EFF_DAMAGE_SHIELD) then ok=true self:setEffect(self.EFF_DAMAGE_SHIELD, 5, {power=200}) end
+		elseif damtype == DamageType.NATURE and rng.percent(30) then ok=true self:setEffect(self.EFF_ELEMENTAL_SURGE_NATURE, 5, {})
 		end
+
+		if ok then self:startTalentCooldown(t) end
 	end,
 	info = function(self, t)
 		return ([[Surround yourself with an elemental aura, when you deal a critical hit with an element you have a chance to trigger a special effect.
-		Arcane damage has 15%% chances to .
-		Fire damage has 15%% chances to cleanse a physical or magical detrimental effect on you.
-		Cold damage has 15%% chances to turn your skin into ice for 5 turns, reflecting projectiles and dealing %d ice damage to attackers.
-		Lightning damage has 15%% chances to become pure lightning for 3 turns, any damage will teleport you to an adjacent tile and ignore the damage (can only happen once per turn).
-		Light damage has 15%% chances to .
-		Nature damage has 15%% chances to harden your skin, preventing the application of any physical detrimental effects for 5 turns.
-		This only triggers for hits over 150 damage.
-		Values increase with Cunning.]])
-		:format(self:getCun() / 2.5, self:getCun() / 2, self:getCun() / 2.5, self:getCun() / 2)
+		Arcane damage has 30%% chances to increase spellcasting speed by 20%% for 5 turns.
+		Fire damage has 15%% chances to cleanse all physical or magical detrimental effect on you.
+		Cold damage has 30%% chances to turn your skin into ice for 5 turns, reducing physical damage taken by 30%% and dealing 100 ice damage to attackers.
+		Lightning damage has 20%% chances to become pure lightning for 3 turns, any damage will teleport you to an adjacent tile and ignore the damage (can only happen once per turn).
+		Light damage has 30%% chances to create a barrier around you absorbing 200 damage for 5 turns.
+		Nature damage has 30%% chances to harden your skin, preventing the application of any physical detrimental effects for 5 turns.
+		This only triggers for hits over 300 damage.]])
+		:format()
 	end,
 }
 

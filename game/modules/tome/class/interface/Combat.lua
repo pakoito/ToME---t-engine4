@@ -1246,6 +1246,8 @@ function _M:physicalCrit(dam, weapon, target, atk, def, add_chance, crit_power_a
 		crit = true
 
 		if self:knowTalent(self.T_EYE_OF_THE_TIGER) then self:triggerTalent(self.T_EYE_OF_THE_TIGER, nil, "physical") end
+
+		self.turn_procs.is_crit = "physical"
 	end
 	return dam, crit
 end
@@ -1289,6 +1291,8 @@ function _M:spellCrit(dam, add_chance, crit_power_add)
 		end
 
 		if self:knowTalent(self.T_EYE_OF_THE_TIGER) then self:triggerTalent(self.T_EYE_OF_THE_TIGER, nil, "spell") end
+
+		self.turn_procs.is_crit = "spell"
 	end
 	return dam, crit
 end
@@ -1315,6 +1319,7 @@ function _M:mindCrit(dam, add_chance, crit_power_add)
 		if self:attr("equilibrium_on_crit") then self:incEquilibrium(self:attr("equilibrium_on_crit")) end
 
 		if self:knowTalent(self.T_EYE_OF_THE_TIGER) then self:triggerTalent(self.T_EYE_OF_THE_TIGER, nil, "mind") end
+		self.turn_procs.is_crit = "mind"
 	end
 	return dam, crit
 end

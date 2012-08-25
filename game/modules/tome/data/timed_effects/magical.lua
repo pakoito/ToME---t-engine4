@@ -1887,3 +1887,44 @@ newEffect{
 		end
 	end,
 }
+
+newEffect{
+	name = "ELEMENTAL_SURGE_ARCANE", image = "talents/elemental_surge.png",
+	desc = "Elemental Surge: Arcane",
+	long_desc = function(self, eff) return ("Spellcasting speed increased by 20%") end,
+	type = "magical",
+	subtype = { arcane=true },
+	status = "beneficial",
+	parameters = { },
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "combat_spellspeed", 0.2)
+	end,
+}
+
+newEffect{
+	name = "ELEMENTAL_SURGE_COLD", image = "talents/elemental_surge.png",
+	desc = "Elemental Surge: Cold",
+	long_desc = function(self, eff) return ("Physical damage reduced by 30% and deals 100 ice damage when hit in melee.") end,
+	type = "magical",
+	subtype = { arcane=true },
+	status = "beneficial",
+	parameters = { },
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "resists", {[DamageType.PHYSICAL]=30})
+		self:effectTemporaryValue(eff, "on_melee_hit", {[DamageType.ICE]=100})
+	end,
+}
+
+newEffect{
+	name = "ELEMENTAL_SURGE_LIGHTNING", image = "talents/elemental_surge.png",
+	desc = "Elemental Surge: Lightning",
+	long_desc = function(self, eff) return ("When hit you turn into pure lightning and reappear near where you where, ignoring the blow.") end,
+	type = "magical",
+	subtype = { arcane=true },
+	status = "beneficial",
+	parameters = { },
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "phase_shift", 1)
+	end,
+}
+

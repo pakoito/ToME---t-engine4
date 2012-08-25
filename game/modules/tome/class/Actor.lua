@@ -1526,6 +1526,18 @@ function _M:onTakeHit(value, src)
 		return 0
 	end
 
+	if self:attr("phase_shift") and not self.turn_procs.phase_shift then
+		self.turn_procs.phase_shift = true
+
+		local nx, ny = util.findFreeGrid(self.x, self.y, 1, true, {[Map.ACTOR]=true})
+		if nx then
+			local ox, oy = self.x, self.y
+			self:move(nx, ny, true)
+			game.level.map:particleEmitter(ox, oy, math.max(math.abs(nx-ox), math.abs(ny-oy)), "lightning", {tx=nx-ox, ty=ny-oy})
+			return 0
+		end
+	end
+
 	if self:attr("retribution") then
 	-- Absorb damage into the retribution
 		if value / 2 <= self.retribution_absorb then
@@ -4122,6 +4134,9 @@ function _M:on_set_temporary_effect(eff_id, e, p)
 		p.dur = 0
 		self:attr("mental_negative_status_effect_immune", -1)
 		if not self:attr("mental_negative_status_effect_immune") then self:removeEffect(self.EFF_CLEAR_MIND) end
+	end
+	if e.status == "detrimental" and e.type == "physical" and self:attr("physical_negative_status_effect_immune") and not e.subtype["cross tier"] then
+		p.dur = 0
 	end
 	if self:attr("status_effect_immune") then
 		p.dur = 0
