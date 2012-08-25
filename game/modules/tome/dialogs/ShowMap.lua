@@ -62,7 +62,7 @@ function _M:init()
 		local ts = game.tooltip:getTooltipAtMap(dx, dy, dx, dy)
 		if ts then game.tooltip:set(ts) game.tooltip:display() else game.tooltip:erase() end
 
-		if xrel and yrel and button == "left" and core.key.modState("ctrl") then
+		if button == "right" then
 			game.minimap_scroll_x = dx - math.floor(t_per_w / 2)
 			game.minimap_scroll_y = dy - math.floor(t_per_h / 2)
 
@@ -70,7 +70,7 @@ function _M:init()
 			game.minimap_scroll_y = util.bound(game.minimap_scroll_y, 0, math.max(0, map.h - t_per_h))
 		elseif button == "left" and not xrel and not yrel and event == "button" then
 			game.player:mouseMove(dx, dy)
-		elseif button == "right" then
+		elseif xrel or yrel then
 			game.level.map:moveViewSurround(dx, dy, 1000, 1000)
 		elseif event == "button" and button == "middle" then
 			self.key:triggerVirtual("SHOW_MAP")
