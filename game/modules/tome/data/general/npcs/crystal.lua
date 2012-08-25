@@ -19,6 +19,7 @@ newEntity{
 	combat_def = 1,
 	never_move = 1,
 	blind_immune = 1,
+	cut_immune = 1,
 	fear_immune = 1,
 	rank = 2,
 	size_category = 2,

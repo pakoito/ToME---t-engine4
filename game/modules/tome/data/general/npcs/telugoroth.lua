@@ -76,6 +76,7 @@ newEntity{
 	life_rating = 8,
 	rank = 2,
 	size_category = 3,
+	cut_immune = 1,
 	levitation = 1,
 
 	autolevel = "dexmage",

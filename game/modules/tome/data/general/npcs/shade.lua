@@ -50,6 +50,7 @@ newEntity{
 		e.teleport_immune = 1
 		e.disease_immune = 1
 		e.poison_immune = 1
+		e.cut_immune = 1
 		e.stun_immune = 1
 		e.blind_immune = 1
 		e.see_invisible = 80

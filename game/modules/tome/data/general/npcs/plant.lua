@@ -35,6 +35,7 @@ newEntity{
 	combat_armor = 1, combat_def = 1,
 	rank = 1,
 	size_category = 1,
+	cut_immune = 1,
 	never_move = 1,
 	fear_immune = 1,
 	not_power_source = {arcane=true, technique=true},

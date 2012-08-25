@@ -39,6 +39,7 @@ newEntity{
 	rank = 1,
 	size_category = 3,
 	infravision = 10,
+	cut_immune = 1,
 	blind_immune = 1,
 
 	clone_on_hit = {min_dam_pct=15, chance=30},

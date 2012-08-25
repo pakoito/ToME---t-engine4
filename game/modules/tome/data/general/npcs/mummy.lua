@@ -44,6 +44,7 @@ newEntity{
 	resolvers.tmasteries{ ["technique/2hweapon-offense"]=1, ["technique/2hweapon-cripple"]=1, },
 
 	blind_immune = 1,
+	cut_immune = 1,
 	see_invisible = 4,
 	undead = 1,
 	ingredient_on_death = "MUMMY_BONE",

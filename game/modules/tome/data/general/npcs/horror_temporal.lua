@@ -39,6 +39,7 @@ newEntity{
 	size_category = 3,
 
 	no_breath = 1,
+	cut_immune = 1,
 	fear_immune = 1,
 	not_power_source = {nature=true},
 }

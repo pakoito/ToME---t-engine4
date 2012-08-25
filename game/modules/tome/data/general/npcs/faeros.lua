@@ -43,6 +43,7 @@ newEntity{
 	resists = { [DamageType.PHYSICAL] = 10, [DamageType.FIRE] = 100, [DamageType.COLD] = -30, },
 
 	no_breath = 1,
+	cut_immune = 1,
 	poison_immune = 1,
 	disease_immune = 1,
 	stun_immune = 1,

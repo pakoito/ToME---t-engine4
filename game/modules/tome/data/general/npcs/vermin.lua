@@ -37,6 +37,7 @@ newEntity{
 	infravision = 10,
 	rank = 1,
 	size_category = 1,
+	cut_immune = 1,
 	blind_immune = 1,
 	life_rating = 6,
 	not_power_source = {arcane=true, technique_ranged=true},

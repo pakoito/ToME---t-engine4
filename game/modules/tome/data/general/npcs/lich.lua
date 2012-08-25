@@ -53,6 +53,7 @@ newEntity{
 	poison_immune = 1,
 	undead = 1,
 	blind_immune = 1,
+	cut_immune = 1,
 	see_invisible = 100,
 	infravision = 10,
 	silence_immune = 0.7,

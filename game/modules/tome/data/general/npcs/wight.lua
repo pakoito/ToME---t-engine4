@@ -52,6 +52,7 @@ newEntity{
 
 	resists = { [DamageType.COLD] = 80, [DamageType.FIRE] = 20, [DamageType.LIGHTNING] = 40, [DamageType.PHYSICAL] = 35, [DamageType.LIGHT] = -50, },
 	poison_immune = 1,
+	cut_immune = 1,
 	blind_immune = 1,
 	see_invisible = 7,
 	undead = 1,

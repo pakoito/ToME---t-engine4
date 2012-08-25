@@ -43,6 +43,7 @@ newEntity{
 
 	open_door = 1,
 	no_breath = 1,
+	cut_immune = 1,
 	confusion_immune = 1,
 	poison_immune = 1,
 	blind_immune = 1,

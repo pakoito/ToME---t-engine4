@@ -37,6 +37,7 @@ newEntity{
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=2, },
 	stats = { str=10, dex=8, mag=10, con=8 },
 
+	cut_immune = 1,
 	poison_immune = 0.5,
 	undead=1,
 	not_power_source = {nature=true, technique_ranged=true},
