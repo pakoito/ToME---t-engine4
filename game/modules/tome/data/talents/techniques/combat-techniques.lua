@@ -21,39 +21,10 @@
 -- Active techniques
 ----------------------------------------------------
 newTalent{
-	name = "Precise Strikes",
-	type = {"technique/combat-techniques-active", 1},
-	mode = "sustained",
-	points = 5,
-	require = techs_strdex_req1,
-	cooldown = 30,
-	sustain_stamina = 30,
-	tactical = { BUFF = 1 },
-	activate = function(self, t)
-		return {
-			speed = self:addTemporaryValue("combat_physspeed", -0.10),
-			atk = self:addTemporaryValue("combat_atk", 4 + (self:getTalentLevel(t) * self:getDex()) / 15),
-			crit = self:addTemporaryValue("combat_physcrit", 4 + (self:getTalentLevel(t) * self:getDex()) / 25),
-		}
-	end,
-	deactivate = function(self, t, p)
-		self:removeTemporaryValue("combat_physspeed", p.speed)
-		self:removeTemporaryValue("combat_physcrit", p.crit)
-		self:removeTemporaryValue("combat_atk", p.atk)
-		return true
-	end,
-	info = function(self, t)
-		return ([[You focus your strikes, reducing your attack speed by %d%% and increasing your accuracy by %d and critical chance by %d%%.
-		The effects will increase with your Dexterity stat.]]):
-		format(10, 4 + (self:getTalentLevel(t) * self:getDex()) / 15, 4 + (self:getTalentLevel(t) * self:getDex()) / 25)
-	end,
-}
-
-newTalent{
 	name = "Rush",
-	type = {"technique/combat-techniques-active", 2},
+	type = {"technique/combat-techniques-active", 1},
 	message = "@Source@ rushes out!",
-	require = techs_strdex_req2,
+	require = techs_strdex_req1,
 	points = 5,
 	random_ego = "attack",
 	stamina = 22,
@@ -105,6 +76,35 @@ newTalent{
 		return ([[Rushes toward your target with incredible speed. If the target is reached you get a free attack doing 120% weapon damage.
 		If the attack hits the target is dazed for 3 turns.
 		You must rush from at least 2 tiles away.]])
+	end,
+}
+
+newTalent{
+	name = "Precise Strikes",
+	type = {"technique/combat-techniques-active", 2},
+	mode = "sustained",
+	points = 5,
+	require = techs_strdex_req2,
+	cooldown = 30,
+	sustain_stamina = 30,
+	tactical = { BUFF = 1 },
+	activate = function(self, t)
+		return {
+			speed = self:addTemporaryValue("combat_physspeed", -0.10),
+			atk = self:addTemporaryValue("combat_atk", 4 + (self:getTalentLevel(t) * self:getDex()) / 15),
+			crit = self:addTemporaryValue("combat_physcrit", 4 + (self:getTalentLevel(t) * self:getDex()) / 25),
+		}
+	end,
+	deactivate = function(self, t, p)
+		self:removeTemporaryValue("combat_physspeed", p.speed)
+		self:removeTemporaryValue("combat_physcrit", p.crit)
+		self:removeTemporaryValue("combat_atk", p.atk)
+		return true
+	end,
+	info = function(self, t)
+		return ([[You focus your strikes, reducing your attack speed by %d%% and increasing your accuracy by %d and critical chance by %d%%.
+		The effects will increase with your Dexterity stat.]]):
+		format(10, 4 + (self:getTalentLevel(t) * self:getDex()) / 15, 4 + (self:getTalentLevel(t) * self:getDex()) / 25)
 	end,
 }
 
