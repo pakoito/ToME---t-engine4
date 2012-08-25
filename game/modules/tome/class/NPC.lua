@@ -297,11 +297,11 @@ end
 function _M:tooltip(x, y, seen_by)
 	local str = mod.class.Actor.tooltip(self, x, y, seen_by)
 	if not str then return end
-	local killed = game.player.all_kills and (game.player.all_kills[self.name] or 0) or 0
+	local killed = game:getPlayer(true).all_kills and (game:getPlayer(true).all_kills[self.name] or 0) or 0
 
 	str:add(
 		true,
-		("Killed by you: "):format(killed), true,
+		("Killed by you: %s"):format(killed), true,
 		"Target: ", self.ai_target.actor and self.ai_target.actor.name or "none"
 	)
 	if config.settings.cheat then str:add(true, "UID: "..self.uid, true, self.image) end
