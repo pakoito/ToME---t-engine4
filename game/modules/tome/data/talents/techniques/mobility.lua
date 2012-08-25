@@ -30,8 +30,11 @@ newTalent{
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.4, 1) end,
 	getDist = function(self, t) return 1 + math.ceil(self:getTalentLevel(t) / 2) end,
+	on_pre_use = function(self, t)
+		if self:attr("never_move") then return false end
+		return true
+	end,
 	action = function(self, t)
-		if self:attr("never_move") then game.logPlayer(self, "You can not do that currently.") return end
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
