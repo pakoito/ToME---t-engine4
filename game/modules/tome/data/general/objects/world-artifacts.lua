@@ -1316,6 +1316,7 @@ Finally The Scorpion was defeated by the alchemist Nessylia, who went to face th
 	wielder = {
 		inc_stats = { [Stats.STAT_STR] = 3, [Stats.STAT_WIL] = 3, [Stats.STAT_CUN] = 3, },
 		inc_damage = { [DamageType.PHYSICAL] = 8 },
+		combat_mindpower=3,
 		combat_armor = 4,
 		combat_def = 8,
 		disarm_immune = 0.4,
@@ -1330,8 +1331,8 @@ Finally The Scorpion was defeated by the alchemist Nessylia, who went to face th
 			talent_on_hit = { [Talents.T_BITE_POISON] = {level=3, chance=20} },
 		},
 	},
-	max_power = 30, power_regen = 1,
-	use_talent = { id = Talents.T_MINDHOOK, level = 4, power = 20 },
+	max_power = 24, power_regen = 1,
+	use_talent = { id = Talents.T_MINDHOOK, level = 4, power = 16 },
 }
 
 newEntity{ base = "BASE_GLOVES",
@@ -2822,7 +2823,7 @@ newEntity{ base = "BASE_MINDSTAR",
 		damtype = DamageType.MIND,
 	},
 	wielder = {
-		combat_mindpower = 15,
+		combat_mindpower = 20,
 		combat_mindcrit = 9,
 		confusion_immune=0.3,
 		inc_damage={
@@ -2842,7 +2843,7 @@ newEntity{ base = "BASE_MINDSTAR",
 		if who.descriptor and who.descriptor.race == "Yeek" then
 			local Talents = require "engine.interface.ActorStats"
 			self:specialWearAdd({"wielder", "talents_types_mastery"}, { ["race/yeek"] = 0.2 })
-			self:specialWearAdd({"wielder","combat_mindpower"}, 15)
+			self:specialWearAdd({"wielder","combat_mindpower"}, 5)
 			self:specialWearAdd({"wielder","combat_mentalresist"}, 15)
 			game.logPlayer(who, "#LIGHT_BLUE#You feel the power of the Way within you!")
 		end
@@ -3094,7 +3095,9 @@ newEntity{ base = "BASE_MINDSTAR",
 	end,
 	act = function(self)
 		self:useEnergy()
+		if self.power < self.max_power then
 		self.power=self.power + 1
+		end
 		if not self.worn_by then return end
 		if game.level and not game.level:hasEntity(self.worn_by) and not self.worn_by.player then self.worn_by = nil return end
 		if self.worn_by:attr("dead") then return end
@@ -3246,10 +3249,9 @@ newEntity{ base = "BASE_LONGBOW",
 	combat = {
 		range = 9,
 		physspeed = 0.75,
-		travel_speed = 2,
 	},
 	wielder = {
-		inc_damage={ [DamageType.PHYSICAL] = 6, },
+		inc_damage={ [DamageType.PHYSICAL] = 5, },
 		inc_stats = { [Stats.STAT_DEX] = 3},
 		combat_atk=12,
 		combat_physcrit=5,
@@ -3350,10 +3352,11 @@ newEntity{ base = "BASE_WHIP",
 	require = { stat = { dex=15 }, },
 	cost = 90,
 	rarity = 250,
-	level_range = {8, 18},
-	material_level = 2,
+	level_range = {18, 28},
+	material_level = 3,
 	combat = {
-		dam = 13,
+		is_psionic_focus=true,
+		dam = 19,
 		apr = 7,
 		physcrit = 5,
 		dammod = {dex=0.7, wil=0.2, cun=0.1},
@@ -3361,7 +3364,7 @@ newEntity{ base = "BASE_WHIP",
 		damtype=DamageType.MIND,
 	},
 	wielder = {
-		combat_mindpower = 10,
+		combat_mindpower = 8,
 		combat_mindcrit = 3,
 	},
 	max_power = 10, power_regen = 1,
@@ -3501,13 +3504,15 @@ newEntity{ base = "BASE_MINDSTAR",
 		convert_damage={[DamageType.POISON] = 30,}
 	},
 	wielder = {
-		combat_mindpower = 10,
+		combat_mindpower = 5,
 		combat_mindcrit = 5,
 		poison_immune = 0.5,
 		resists = {
 			[DamageType.NATURE] = 10,
 		}
 	},
+	max_power = 8, power_regen = 1,
+	use_talent = { id = Talents.T_SPIT_POISON, level = 2, power = 8 },
 }
 
 newEntity{ base = "BASE_LEATHER_CAP",
@@ -3541,9 +3546,6 @@ You suspect the effects will require a moment to recover from.]],
 		game.logPlayer(who, "#CRIMSON#Your eyesight fades!")
 		who:resetCanSeeCache()
 		if who.player then for uid, e in pairs(game.level.entities) do if e.x then game.level.map:updateMap(e.x, e.y) end end game.level.map.changed = true end
-	end,
-	on_takeoff = function(self, who)
-		game.logPlayer(who, "#CRIMSON#As you remove the eye, your mind feels unprotected!")
 	end,
 }
 
@@ -3599,8 +3601,8 @@ newEntity{ base = "BASE_LONGSWORD", define_as="CORPUS",
 				image="npc/horror_eldritch_oozing_horror.png",
 				desc = "This mass of putrid slime burst from Corpus, and seems intent to kill you.",
 				body = { INVEN = 10, MAINHAND=1, OFFHAND=1, },
-				rank = 3,
-				life_rating = 10, exp_worth = 0,
+				rank = 2,
+				life_rating = 8, exp_worth = 0,
 				max_vim=200,
 				max_life = resolvers.rngavg(50,90),
 				infravision = 20,
@@ -3741,7 +3743,7 @@ newEntity{ base = "BASE_WHIP", define_as = "HYDRA_BITE",
 	material_level = 4,
 	running = 0, --For the on hit
 	combat = {
-		dam = 38,
+		dam = 45,
 		apr = 7,
 		physcrit = 4,
 		dammod = {str=1.1},
@@ -3789,8 +3791,8 @@ newEntity{ base = "BASE_GAUNTLETS",
 	name = "Spellhunt Remnants", color = colors.GREY,
 	unided_name = "rusted voratun gauntlets",
 	desc = [[These once brilliant voratun gauntlets have fallen into a deep decay. Originally used in the spellhunt, it was often used to destroy arcane artifacts, curing the world of their influence.]],
-	level_range = {20, 40},
-	rarity = 300,
+	level_range = {1, 25}, --Relevent at all levels, though of course mat level 1 limits it to early game.
+	rarity = 450, -- But rare to make it not ALWAYS appear.
 	cost = 1000,
 	material_level = 1,
 	wielder = {
@@ -3799,11 +3801,6 @@ newEntity{ base = "BASE_GAUNTLETS",
 		combat_spellresist=4,
 		combat_def=1,
 		combat_armor=2,
-		learn_talent = {[Talents.T_WARD] = 1},
-		wards = {
-			[DamageType.ARCANE] = 1,
-			[DamageType.BLIGHT] = 1,
-		},
 		combat = {
 			dam = 12,
 			apr = 4,
@@ -3828,11 +3825,6 @@ newEntity{ base = "BASE_GAUNTLETS",
 			combat_spellresist=6,
 			combat_def=2,
 			combat_armor=3,
-			learn_talent = {[Talents.T_WARD] = 1},
-			wards = {
-				[DamageType.ARCANE] = 2,
-				[DamageType.BLIGHT] = 2,
-			},
 			combat = {
 				dam = 17,
 				apr = 8,
@@ -3851,11 +3843,6 @@ newEntity{ base = "BASE_GAUNTLETS",
 			combat_spellresist=8,
 			combat_def=3,
 			combat_armor=4,
-			learn_talent = {[Talents.T_WARD] = 1},
-			wards = {
-				[DamageType.ARCANE] = 3,
-				[DamageType.BLIGHT] = 3,
-			},
 			combat = {
 				dam = 22,
 				apr = 12,
@@ -3874,11 +3861,6 @@ newEntity{ base = "BASE_GAUNTLETS",
 			combat_spellresist=10,
 			combat_def=4,
 			combat_armor=5,
-			learn_talent = {[Talents.T_WARD] = 1},
-			wards = {
-				[DamageType.ARCANE] = 4,
-				[DamageType.BLIGHT] = 4,
-			},
 			combat = {
 				dam = 27,
 				apr = 15,
@@ -3897,11 +3879,6 @@ newEntity{ base = "BASE_GAUNTLETS",
 			combat_spellresist=12,
 			combat_def=5,
 			combat_armor=6,
-			learn_talent = {[Talents.T_WARD] = 1},
-			wards = {
-				[DamageType.ARCANE] = 5,
-				[DamageType.BLIGHT] = 5,
-			},
 			combat = {
 				dam = 32,
 				apr = 18,

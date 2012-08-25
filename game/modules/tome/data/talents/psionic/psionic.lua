@@ -155,7 +155,7 @@ function getGemLevel(self)
 	local gem_level = 0
 	if self:getInven("PSIONIC_FOCUS") then
 		local tk_item = self:getInven("PSIONIC_FOCUS")[1]
-		if tk_item and ((tk_item.type == "gem") or (tk_item.subtype == "mindstar")) then
+		if tk_item and ((tk_item.type == "gem") or (tk_item.subtype == "mindstar") or tk_item.combat.is_psionic_focus == true) then
 			gem_level = tk_item.material_level or 5
 		end
 	end

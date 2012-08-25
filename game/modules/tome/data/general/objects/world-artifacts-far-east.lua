@@ -328,16 +328,18 @@ newEntity{ base = "BASE_LONGSWORD",
 		},
 		talents_types_mastery = {
 			["celestial/sun"] = 0.2,
+			["celestial/light"] = 0.1,
 		},
 		talent_cd_reduction= {
 			[Talents.T_HEALING_LIGHT] = 2,
 			[Talents.T_BARRIER] = 2,
 			[Talents.T_SUN_FLARE] = 2,
+			[Talents.T_PROVIDENCE] = 4,
 		},
 		lite=2,
 	},
-	max_power = 40, power_regen = 1,
-	use_power = { name = "invoke dawn", power = 40,
+	max_power = 35, power_regen = 1,
+	use_power = { name = "invoke dawn", power = 35,
 		use = function(self, who)
 			local radius = 4
 			local dam = (75 + who:getMag()*2)
@@ -361,6 +363,12 @@ newEntity{ base = "BASE_LONGSWORD",
 			demon=25,
 		},
 	},
+	on_wear = function(self, who)
+		if who.descriptor and who.descriptor.subclass == "Sun Paladin" then
+			self:specialWearAdd({"wielder", "positive_regen"}, 0.2)
+			game.logPlayer(who, "#GOLD#You feel a swell of positive energy!")
+		end
+	end,
 }
 
 newEntity{ base = "BASE_AMULET",

@@ -462,6 +462,10 @@ function _M:getTextualDesc(compare_with)
 		if combat.wil_attack then
 			desc:add("Accuracy is based on willpower for this weapon.", true)
 		end
+		
+		if combat.is_psionic_focus then
+			desc:add("This weapon will act as a psionic focus.", true)
+		end
 
 		compare_fields(combat, compare_with, field, "atk", "%+d", "Accuracy: ", 1, false, false, add_table)
 		compare_fields(combat, compare_with, field, "apr", "%+d", "Armour Penetration: ", 1, false, false, add_table)
