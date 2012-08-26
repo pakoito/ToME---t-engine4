@@ -656,7 +656,7 @@ end
 --- Helper function to add temporary values and not have to remove them manualy
 function _M:talentTemporaryValue(p, k, v)
 	if not p.__tmpvals then p.__tmpvals = {} end
-	p.__tmpvals[#eff.__tmpvals+1] = {k, self:addTemporaryValue(k, v)}
+	p.__tmpvals[#p.__tmpvals+1] = {k, self:addTemporaryValue(k, v)}
 end
 
 --- Trigger a talent method

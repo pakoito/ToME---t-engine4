@@ -936,12 +936,16 @@ function _M:move(x, y, force)
 			local eff = self:hasEffect(self.EFF_CURSE_OF_SHROUDS)
 			if eff then eff.moved = true end
 
-			local speed = self:combatMovementSpeed(x, y)
-			self:useEnergy(game.energy_to_act * speed)
+			if self:attr("move_stamina_instead_of_energy") and self:getStamina() > 20 then
+				self:incStamina(-20)
+			else
+				local speed = self:combatMovementSpeed(x, y)
+				self:useEnergy(game.energy_to_act * speed)
 
-			if speed <= 0.125 and self:knowTalent(self.T_FAST_AS_LIGHTNING) then
-				local t = self:getTalentFromId(self.T_FAST_AS_LIGHTNING)
-				t.trigger(self, t, ox, oy)
+				if speed <= 0.125 and self:knowTalent(self.T_FAST_AS_LIGHTNING) then
+					local t = self:getTalentFromId(self.T_FAST_AS_LIGHTNING)
+					t.trigger(self, t, ox, oy)
+				end
 			end
 		end
 	end

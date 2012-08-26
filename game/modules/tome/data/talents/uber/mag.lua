@@ -85,3 +85,13 @@ uberTalent{
 		:format()
 	end,
 }
+
+uberTalent{
+	name = "Arcane Might",
+	mode = "passive",
+	info = function(self, t)
+		return ([[You have learnt to harness your latent arcane powers, channeling them through your weapon.
+		Treats all weapons has having an additional 50%% magic modifier.]])
+		:format()
+	end,
+}

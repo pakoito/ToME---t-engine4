@@ -1044,6 +1044,10 @@ function _M:combatDamage(weapon)
 		end
 	end
 
+	if self:knowTalent(self.T_ARCANE_MIGHT) then
+		totstat = totstat + self:getStat("mag") * 0.5
+	end
+
 	local talented_mod = math.sqrt(self:combatCheckTraining(weapon) / 5) / 2 + 1
 
 	local power = math.max((weapon.dam or 1), 1)

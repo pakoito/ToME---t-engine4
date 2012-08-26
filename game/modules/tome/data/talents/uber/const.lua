@@ -72,3 +72,23 @@ uberTalent{
 		:format()
 	end,
 }
+
+uberTalent{
+	name = "Never Stop Running",
+	mode = "sustained",
+	cooldown = 20,
+	sustain_stamina = 10,
+	require = { special={desc="Know at least 20 levels of stamina using talents", fct=function(self) return knowRessource(self, "stamina", 20) end} },
+	activate = function(self, t)
+		local ret = {}
+		self:talentTemporaryValue(ret, "move_stamina_instead_of_energy", 20)
+		return ret
+	end,
+	deactivate = function(self, t, p)
+		return true
+	end,
+	info = function(self, t)
+		return ([[While this talent is active you dig deep into your stamina reserves, allowing you to move without taking a turn but drains 20 stamina each move.]])
+		:format()
+	end,
+}
