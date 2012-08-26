@@ -59,7 +59,8 @@ mana_sha = Shader.new("resources", {require_shader=4, delay_load=true, color=man
 soul_c = {128/255, 128/255, 128/255}
 soul_sha = Shader.new("resources", {require_shader=4, delay_load=true, color=soul_c, speed=1200, distort={0.4,-0.4}})
 equi_c = {0x00/255, 0xff/255, 0x74/255}
-equi_sha = Shader.new("resources", {require_shader=4, delay_load=true, color=equi_c, amp=0.8, speed=20000, distort={0.3,0.25}})
+equi_c2 = {0x80/255, 0x9f/255, 0x44/255}
+equi_sha = Shader.new("resources2", {require_shader=4, delay_load=true, color1=equi_c, color2=equi_c2, amp=0.8, speed=20000, distort={0.3,0.25}})
 paradox_c = {0x2f/255, 0xa0/255, 0xb4/255}
 paradox_c2 = {0x8f/255, 0x80/255, 0x44/255}
 paradox_sha = Shader.new("resources2", {require_shader=4, delay_load=true, color1=paradox_c, color2=paradox_c2, amp=0.8, speed=20000, distort={0.1,0.25}})
@@ -748,12 +749,16 @@ function _M:displayResources(scale, bx, by, a)
 			sshat[1]:toScreenFull(x-6, y+8, sshat[6], sshat[7], sshat[2], sshat[3], 1, 1, 1, a)
 			bshat[1]:toScreenFull(x, y, bshat[6], bshat[7], bshat[2], bshat[3], 1, 1, 1, a)
 			local _, chance = player:equilibriumChance()
-			local s = math.max(50, 10000 - (math.sqrt(100 - chance) * 2000))
+			local s = 100 - chance
+			if s > 15 then s = 15 end
+			s = s / 15
 			if equi_sha.shad then
+				equi_sha:setUniform("pivot", math.sqrt(s))
 				equi_sha:setUniform("a", a)
-				equi_sha:setUniform("speed", s)
+				equi_sha:setUniform("speed", 10000 - s * 7000)
 				equi_sha.shad:use(true)
 			end
+
 			local p = chance / 100
 			shat[1]:toScreenPrecise(x+49, y+10, shat[6] * p, shat[7], 0, p * 1/shat[4], 0, 1/shat[5], equi_c[1], equi_c[2], equi_c[3], a)
 			if equi_sha.shad then equi_sha.shad:use(false) end
