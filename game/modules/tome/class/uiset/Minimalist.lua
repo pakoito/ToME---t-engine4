@@ -61,7 +61,8 @@ soul_sha = Shader.new("resources", {require_shader=4, delay_load=true, color=sou
 equi_c = {0x00/255, 0xff/255, 0x74/255}
 equi_sha = Shader.new("resources", {require_shader=4, delay_load=true, color=equi_c, amp=0.8, speed=20000, distort={0.3,0.25}})
 paradox_c = {0x2f/255, 0xa0/255, 0xb4/255}
-paradox_sha = Shader.new("resources", {require_shader=4, delay_load=true, color=paradox_c, amp=0.8, speed=20000, distort={0.1,0.25}})
+paradox_c2 = {0x8f/255, 0x80/255, 0x44/255}
+paradox_sha = Shader.new("resources2", {require_shader=4, delay_load=true, color1=paradox_c, color2=paradox_c2, amp=0.8, speed=20000, distort={0.1,0.25}})
 pos_c = {colors.GOLD.r/255, colors.GOLD.g/255, colors.GOLD.b/255}
 pos_sha = Shader.new("resources", {require_shader=4, delay_load=true, color=pos_c, speed=1000, distort={1.6,0.2}})
 neg_c = {colors.DARK_GREY.r/255, colors.DARK_GREY.g/255, colors.DARK_GREY.b/255}
@@ -849,10 +850,13 @@ function _M:displayResources(scale, bx, by, a)
 			sshat[1]:toScreenFull(x-6, y+8, sshat[6], sshat[7], sshat[2], sshat[3], 1, 1, 1, a)
 			bshat[1]:toScreenFull(x, y, bshat[6], bshat[7], bshat[2], bshat[3], 1, 1, 1, a)
 			local _, chance = player:paradoxFailChance()
-			local s = math.max(50, 10000 - (math.sqrt(chance) * 2000))
+			local s = chance
+			if s > 15 then s = 15 end
+			s = s / 15
 			if paradox_sha.shad then
+				paradox_sha:setUniform("pivot", math.sqrt(s))
 				paradox_sha:setUniform("a", a)
-				paradox_sha:setUniform("speed", s)
+				paradox_sha:setUniform("speed", 10000 - s * 7000)
 				paradox_sha.shad:use(true)
 			end
 			local p = 1 - chance / 100

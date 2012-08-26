@@ -108,3 +108,12 @@ uberTalent{
 		:format()
 	end,
 }
+
+uberTalent{
+	name = "Irresistible Sun",
+	cooldown = 20,
+	info = function(self, t)
+		return ([[]])
+		:format()
+	end,
+}
