@@ -914,6 +914,9 @@ function _M:combatArmor()
 	if self:knowTalent(self.T_CARBON_SPIKES) and self:isTalentActive(self.T_CARBON_SPIKES) then
 		add = add + self.carbon_armor
 	end
+	if self:knowTalent(self.T_ARMOUR_OF_SHADOWS) and not game.level.map.lites(self.x, self.y) then
+		add = add + 30
+	end
 	return self.combat_armor + add
 end
 
@@ -926,6 +929,9 @@ function _M:combatArmorHardiness()
 	end
 	if self:hasLightArmor() and self:knowTalent(self.T_MOBILE_DEFENCE) then
 		add = add + self:getTalentLevel(self.T_MOBILE_DEFENCE) * 6
+	end
+	if self:knowTalent(self.T_ARMOUR_OF_SHADOWS) and not game.level.map.lites(self.x, self.y) then
+		add = add + 50
 	end
 	return util.bound(30 + self.combat_armor_hardiness + add, 0, 100)
 end

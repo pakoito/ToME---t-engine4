@@ -92,3 +92,24 @@ uberTalent{
 		:format()
 	end,
 }
+
+uberTalent{
+	name = "Armour of Shadows",
+	mode = "passive",
+	require = { special={desc="Dealt over 50000 darkness damage", fct=function(self) return 
+		self.damage_log and (
+			(self.damage_log[DamageType.DARKNESS] and self.damage_log[DamageType.DARKNESS] >= 50000)
+		)
+	end} },
+	on_learn = function(self, t)
+		self:attr("darkness_darkens", 1)
+	end,
+	on_unlearn = function(self, t)
+		self:attr("darkness_darkens", -1)
+	end,	
+	info = function(self, t)
+		return ([[You know how to meld in the shadows. As long as you stand on an unlit tile you gain 30 armour and 50%% armour hardiness.
+		Also all darkness damage you deal will unlight the target terrain.]])
+		:format()
+	end,
+}

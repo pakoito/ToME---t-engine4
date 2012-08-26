@@ -517,6 +517,15 @@ newDamageType{
 	name = "darkness", type = "DARKNESS", text_color = "#GREY#",
 	antimagic_resolve = true,
 	death_message = {"shadowed", "darkened", "swallowed by the void"},
+	projector = function(src, x, y, type, dam, extra)
+		local realdam = DamageType.defaultProjector(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		-- Darken
+		if realdam > 0 and src:attr("darkness_darkens") then
+			game.level.map.lites(x, y, false)
+		end
+		return realdam
+	end,
 }
 
 -- Mind damage
