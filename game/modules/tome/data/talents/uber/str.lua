@@ -56,7 +56,8 @@ uberTalent{
 		target:knockback(self.x, self.y, 5, function(t2)
 			local d = rng.chance(2) and sides.hard_left or sides.hard_right
 			local sx, sy = util.coordAddDir(t2.x, t2.y, d)
-			t2:knockback(sx, sy, 2)
+			local ox, oy = t2.x, t2.y
+			t2:knockback(sx, sy, 2, true)
 			if t2:canBe("stun") then t2:setEffect(t2.EFF_STUNNED, 3, {}) end
 		end)
 		if target:canBe("stun") then target:setEffect(target.EFF_STUNNED, 3, {}) end
