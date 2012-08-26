@@ -49,7 +49,7 @@ newEntity{
 
 		if not who:attr("forbid_nature") then
 			if who:knowTalentType("wild-gift/harmony") then
-				who:setTalentTypeMastery("wild-gift/harmony", who:getTalentTypeMastery("wild-gift/harmony") + 0.1)
+				who:setTalentTypeMastery("wild-gift/harmony", who:getTalentTypeMastery("wild-gift/harmony") + 0.2)
 			elseif who:knowTalentType("wild-gift/harmony") == false then
 				who:learnTalentType("wild-gift/harmony", true)
 			else
