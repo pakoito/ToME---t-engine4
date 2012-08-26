@@ -1933,7 +1933,7 @@ newEffect{
 	desc = "Vulnerability Poison",
 	long_desc = function(self, eff) return ("The target is poisoned and sick, doing %0.2f arcane damage per turn. All resistances are reduced by %d%%."):format(eff.power, eff.res) end,
 	type = "magical",
-	subtype = { poison=true, arcane=true }, no_ct_effect = true,
+	subtype = { poison=true, arcane=true },
 	status = "detrimental",
 	parameters = {power=10, res=15},
 	on_gain = function(self, err) return "#Target# is poisoned!", "+Vulnerability Poison" end,
@@ -1949,5 +1949,39 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("resists", eff.tmpid)
+	end,
+}
+
+newEffect{
+	name = "IRRESISTIBLE_SUN", image = "talents/irresistible_sun.png",
+	desc = "Irresistible Sun",
+	long_desc = function(self, eff) return ("The target is attracting all toward it, also dealing fire, light and physical damage each turn.."):format() end,
+	type = "magical",
+	subtype = { sun=true },
+	status = "beneficial",
+	parameters = {dam=100},
+	on_gain = function(self, err) return "#Target# starts to attract all creatures around!", "+Irresistible Sun" end,
+	on_lose = function(self, err) return "#Target# is no longer attracting creatures.", "-Irresistible Sun" end,
+	on_timeout = function(self, eff)
+		local tgts = {}
+		self:project({type="ball", range=0, friendlyfire=false, radius=5}, self.x, self.y, function(px, py)
+			local target = game.level.map(px, py, Map.ACTOR)
+			if not target then return end
+			if not tgts[target] then
+				tgts[target] = true
+				local ox, oy = target.x, target.y
+				target:pull(self.x, self.y, 1)
+				if target.x ~= ox or target.y ~= oy then 
+					game.logSeen(target, "%s is pulled in!", target.name:capitalize()) 
+				end
+
+				if self:reactionToward(target) < 0 then
+					local dam = eff.dam * (1 + (5 - core.fov.distance(self.x, self.y, target.x, target.y)) / 5)
+					DamageType:get(DamageType.FIRE).projector(self, target.x, target.y, DamageType.FIRE, dam/3)
+					DamageType:get(DamageType.LIGHT).projector(self, target.x, target.y, DamageType.LIGHT, dam/3)
+					DamageType:get(DamageType.PHYSICAL).projector(self, target.x, target.y, DamageType.PHYSICAL, dam/3)
+				end
+			end
+		end)
 	end,
 }

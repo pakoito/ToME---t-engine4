@@ -111,9 +111,15 @@ uberTalent{
 
 uberTalent{
 	name = "Irresistible Sun",
-	cooldown = 20,
+	cooldown = 25,
+	action = function(self, t)
+		self:setEffect(self.EFF_IRRESISTIBLE_SUN, 6, {dam=50 + self:getStr() * 2})
+	end,
 	info = function(self, t)
-		return ([[]])
-		:format()
+		local dam = (50 + self:getStr() * 2) / 3
+		return ([[For 6 turns you gain the mass and power of a star, drawing all creatures in a radius 5 toward you and dealing %0.2f fire, %0.2f light and %0.2f physical damage to all foes.
+			Foes closer to you take up to 200%% more damage.
+			Damage will increase with Strength.]])
+		:format(damDesc(self, DamageType.FIRE, dam), damDesc(self, DamageType.LIGHT, dam), damDesc(self, DamageType.PHYSICAL, dam))
 	end,
 }
