@@ -72,7 +72,7 @@ uberTalent{
 uberTalent{
 	name = "Massive Blow", 
 	mode = "activated",
---	require = { special={desc=".", fct=function(self) return self.size_category and self.size_category >= 5 and knowRessource(self, "stamina", 20) end} },
+	require = { special={desc="Dug at least 30 walls/trees/... and know at least 20 talent levels of stamina using talents.", fct=function(self) return self.dug_times and self.dug_times >= 30 and knowRessource(self, "stamina", 20) end} },
 	cooldown = 10,
 	stamina = 20,
 	action = function(self, t)

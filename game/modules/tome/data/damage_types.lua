@@ -1219,6 +1219,7 @@ newDamageType{
 				local newfeat_name, newfeat, silence = feat.dig, nil, false
 				if type(feat.dig) == "function" then newfeat_name, newfeat, silence = feat.dig(src, x, y, feat) end
 				game.level.map(x, y, Map.TERRAIN, newfeat or game.zone.grid_list[newfeat_name])
+				src.dug_times = (src.dug_times or 0) + 1
 				game.nicer_tiles:updateAround(game.level, x, y)
 				if not silence then
 					game.logSeen({x=x,y=y}, "%s turns into %s.", feat.name:capitalize(), (newfeat or game.zone.grid_list[newfeat_name]).name)
