@@ -33,7 +33,7 @@ uberTalent{
 }
 
 uberTalent{
-	name = "Titan's Smash",
+	name = "You Shall Be My Weapon!", short_name="TITAN_S_SMASH", image = "talents/titan_s_smash.png",
 	mode = "activated",
 	require = { special={desc="Be of at least size category 'huge' (also required to use it) and know at least 20 talent levels of stamina using talents.", fct=function(self) return self.size_category and self.size_category >= 5 and knowRessource(self, "stamina", 20) end} },
 	on_pre_use = function(self, t) return self.size_category and self.size_category >= 5 end,
@@ -57,7 +57,7 @@ uberTalent{
 			local d = rng.chance(2) and sides.hard_left or sides.hard_right
 			local sx, sy = util.coordAddDir(t2.x, t2.y, d)
 			local ox, oy = t2.x, t2.y
-			t2:knockback(sx, sy, 2, true)
+			t2:knockback(sx, sy, 2, function(t3) return true end)
 			if t2:canBe("stun") then t2:setEffect(t2.EFF_STUNNED, 3, {}) end
 		end)
 		if target:canBe("stun") then target:setEffect(target.EFF_STUNNED, 3, {}) end
