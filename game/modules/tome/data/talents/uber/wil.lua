@@ -148,3 +148,38 @@ uberTalent{
 		:format()
 	end,
 }
+
+
+uberTalent{
+	name = "Lucky Day",
+	mode = "passive",
+	require = { special={desc="Be lucky already (at least +5 luck)", fct=function(self) return self:getLck() >= 55 end} },
+	on_learn = function(self, t)
+		self.inc_stats[self.STAT_LCK] = (self.inc_stats[self.STAT_LCK] or 0) + 40
+		self:onStatChange(self.STAT_LCK, 40)
+	end,
+	on_unlearn = function(self, t)
+		self.inc_stats[self.STAT_LCK] = (self.inc_stats[self.STAT_LCK] or 0) - 40
+		self:onStatChange(self.STAT_LCK, -40)
+	end,
+	info = function(self, t)
+		return ([[Every day is your lucky day! You gain a permanent +40 luck bonus.]])
+		:format()
+	end,
+}
+
+uberTalent{
+	name = "Unbreakable Will",
+	mode = "passive",
+	cooldown = 8,
+	trigger = function(self, t)
+		self:startTalentCooldown(t)
+		game.logSeen(self, "#LIGHT_BLUE#%s unbreakable will shrugs off the effect!", self.name:capitalize())
+		return true
+	end,
+	info = function(self, t)
+		return ([[Your will is so strong you simply ignore mental effects against you.
+		Warning: this has a cooldown.]])
+		:format()
+	end,
+}

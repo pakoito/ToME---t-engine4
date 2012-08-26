@@ -4147,6 +4147,9 @@ function _M:on_set_temporary_effect(eff_id, e, p)
 		self:attr("mental_negative_status_effect_immune", -1)
 		if not self:attr("mental_negative_status_effect_immune") then self:removeEffect(self.EFF_CLEAR_MIND) end
 	end
+	if e.status == "detrimental" and e.type == "mental" and self:knowTalent(self.T_UNBREAKABLE_WILL) and not e.subtype["cross tier"] then
+		if self:triggerTalent(self.T_UNBREAKABLE_WILL) then p.dur = 0 end
+	end
 	if e.status == "detrimental" and e.type == "physical" and self:attr("physical_negative_status_effect_immune") and not e.subtype["cross tier"] then
 		p.dur = 0
 	end
