@@ -2751,11 +2751,26 @@ newEffect{
 	long_desc = function(self, eff) return "The target is immune to all detrimental effects." end,
 	type = "mental",
 	subtype = { nature=true },
-	status = "detrimental",
+	status = "beneficial",
 	on_gain = function(self, err) return "#Target#'s skin hardens.", "+Draconic Will" end,
 	on_lose = function(self, err) return "#Target#'s skin is back to normal.", "-Draconic Will" end,
 	parameters = { },
 	activate = function(self, eff)
 		self:effectTemporaryValue(eff, "negative_status_effect_immune", 1)
+	end,
+}
+
+newEffect{
+	name = "HIDDEN_RESOURCES", image = "talents/hidden_resources.png",
+	desc = "Hidden Ressources",
+	long_desc = function(self, eff) return "The target does not consume any resources." end,
+	type = "mental",
+	subtype = { willpower=true },
+	status = "beneficial",
+	on_gain = function(self, err) return "#Target#'s focuses.", "+Hidden Ressources" end,
+	on_lose = function(self, err) return "#Target#'s loses some focus.", "-Hidden Ressources" end,
+	parameters = { },
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "force_talent_ignore_ressources", 1)
 	end,
 }

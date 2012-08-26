@@ -132,3 +132,19 @@ uberTalent{
 		:format()
 	end,
 }
+
+uberTalent{
+	name = "Hidden Resources",
+	cooldown = 15,
+	no_energy = true,
+	action = function(self, t)
+		self:setEffect(self.EFF_HIDDEN_RESOURCES, 5, {})
+		return true
+	end,
+	require = { special={desc="Be close to the draconic world", fct=function(self) return self:attr("drake_touched") and self:attr("drake_touched") >= 2 end} },
+	info = function(self, t)
+		return ([[You focus your mind on the task at hand.
+		For 5 turns none of your talents use any resources.]])
+		:format()
+	end,
+}
