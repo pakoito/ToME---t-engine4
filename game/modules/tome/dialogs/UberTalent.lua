@@ -24,15 +24,15 @@ local Dialog = require "engine.ui.Dialog"
 local Button = require "engine.ui.Button"
 local Textzone = require "engine.ui.Textzone"
 local TextzoneList = require "engine.ui.TextzoneList"
-local UIContainer = require "engine.ui.UIContainer"
-local ImageList = require "engine.ui.ImageList"
+local TalentGrid = require "mod.dialogs.elements.TalentGrid"
 local Separator = require "engine.ui.Separator"
 local DamageType = require "engine.DamageType"
 
 module(..., package.seeall, class.inherit(Dialog, mod.class.interface.TooltipsData))
 
-function _M:init(actor, on_finish)
+function _M:init(actor, levelup_end_prodigies)
 	self.actor = actor
+	self.levelup_end_prodigies = levelup_end_prodigies
 
 	self.font = core.display.newFont("/data/font/DroidSansMono.ttf", 12)
 	self.font_h = self.font:lineSkip()
@@ -40,7 +40,7 @@ function _M:init(actor, on_finish)
 	self.actor_dup = actor:clone()
 	self.actor_dup.uid = actor.uid -- Yes ...
 
-	Dialog.init(self, "Prodigies: "..actor.name, game.w * 0.9, game.h * 0.9, game.w * 0.05, game.h * 0.05)
+	Dialog.init(self, "Prodigies: "..actor.name, 800, game.h * 0.9)
 
 	self:generateList()
 
@@ -70,17 +70,50 @@ end
 function _M:generateList()
 
 	-- Makes up the list
+	local max = 0
+	local cols = {}
 	local list = {}
 	for tid, t in pairs(self.actor.talents_def) do
 		if t.uber then
-			list[#list+1] = {
-				image=t.image,
-				talent = tid,
-				rawname = t.name,
-			}
+			cols[t.type[1]] = cols[t.type[1]] or {}
+			local c = cols[t.type[1]]
+			c[#c+1] = t
 		end
 	end
-	table.print(list)
+	max = math.max(#cols["uber/strength"], #cols["uber/dexterity"], #cols["uber/constitution"], #cols["uber/magic"], #cols["uber/willpower"], #cols["uber/cunning"])
+
+	for _, s in ipairs{"uber/strength", "uber/dexterity", "uber/constitution", "uber/magic", "uber/willpower", "uber/cunning"} do
+		local n = {}
+		table.sort(cols[s], function(a,b) return a.name < b.name end)
+
+		for i = 1, max do
+			if not cols[s][i] then
+
+			else
+				local t = cols[s][i]
+				if t.display_entity then t.display_entity:getMapObjects(game.uiset.hotkeys_display_icons.tiles, {}, 1) end
+
+				n[#n+1] = {
+					rawname = t.name,
+					talent = t.id,
+					entity=t.display_entity,
+					do_shadow = function(item) if not self.actor:canLearnTalent(t) then return true else return false end end,
+					color=function(item)
+						if self.actor:knowTalent(t) or self.levelup_end_prodigies[t.id] then return {0,255,0} 
+						elseif not self.actor:canLearnTalent(t) then return {75,75,75} 
+						else return {175,175,175} 
+						end
+					end,
+					status = function(item)
+						return tstring{}
+					end,
+				}
+			end
+		end
+
+		list[#list+1] = n
+	end
+	list.max = max
 	self.list = list
 end
 
@@ -88,29 +121,63 @@ end
 -- UI Stuff
 -----------------------------------------------------------------
 
+local tuttext = [[Prodigies are special talents that only the most powerful of characters can attain.
+All of them require at least 50 in a core stat and many also have more special demands. You can learn a new prodigy at level 40 and 50.
+#LIGHT_GREEN#Prodigies available: %d]]
+
 function _M:createDisplay()
-	self.c_list = ImageList.new{width=self.iw, height=self.ih, tile_w=48, tile_h=48, padding=10, scrollbar=true, list=self.list, fct=function(item) self:use(item) end, on_select=function(item) self:onSelect(item) end}
+	self.c_tut = Textzone.new{ width=self.iw, auto_height = true, text=tuttext:format(self.actor.unused_prodigies or 0)}
+	
+	local vsep = Separator.new{dir="horizontal", size=self.ih - 20 - self.c_tut.h}
+	self.c_desc = TextzoneList.new{ focus_check = true, scrollbar = true, width=self.iw - 380 - 30, height = self.ih - self.c_tut.h, dest_area = { h = self.ih } }
+	
+	self.c_list = TalentGrid.new{
+		font = core.display.newFont("/data/font/DroidSans.ttf", 14),
+		tiles=game.uiset.hotkeys_display_icons,
+		grid=self.list,
+		width=370, height=self.ih - self.c_tut.h,
+		scrollbar = true,
+		tooltip=function(item)
+			local x = self.display_x + self.uis[2].x + self.uis[2].ui.w
+			if self.display_x + self.w + game.tooltip.max <= game.w then x = self.display_x + self.w end
+			local ret = self:getTalentDesc(item), x, nil
+			self.c_desc:erase()
+			self.c_desc:switchItem(ret, ret)
+			return ret
+		end,
+		on_use = function(item, inc) self:use(item) end,
+		no_tooltip = true,
+	}
 
 	local ret = {
-		{left=0, top=0, ui=self.c_list},
+		{left=0, top=0, ui=self.c_tut},
+		{left=0, top=self.c_tut.h, ui=self.c_list},
+		{left=self.c_list, top=self.c_tut.h, ui=vsep},
+		{right=0, top=self.c_tut.h, ui=self.c_desc},
 	}
 
 
 	return ret
 end
 
-function _M:onSelect(item)
-	if item == self.cur_sel then return end
-
-	game:tooltipDisplayAtMap(item.last_display_x+item.w, item.last_display_y, self:getTalentDesc(item.data))
-	self.cur_sel = item
-end
-
 function _M:use(item)
-	self.actor:learnTalent(item.data.talent, true)
+	if self.actor:knowTalent(item.talent) then
+	elseif (self.actor:canLearnTalent(self.actor:getTalentFromId(item.talent)) and self.actor.unused_prodigies > 0) or config.settings.cheat then
+		if self.levelup_end_prodigies[item.talent] then
+			self.levelup_end_prodigies[item.talent] = false
+			self.actor.unused_prodigies = self.actor.unused_prodigies + 1
+		else
+			self.levelup_end_prodigies[item.talent] = true
+			self.actor.unused_prodigies = math.max(0, self.actor.unused_prodigies - 1)
+		end
+		self.c_tut.text = tuttext:format(self.actor.unused_prodigies or 0)
+		self.c_tut:generate()
+	else
+	end
 end
 
 function _M:getTalentDesc(item)
+	if not item.talent then return end
 	local text = tstring{}
 
  	text:add({"color", "GOLD"}, {"font", "bold"}, util.getval(item.rawname, item), {"color", "LAST"}, {"font", "normal"})
@@ -120,7 +187,11 @@ function _M:getTalentDesc(item)
 		local t = self.actor:getTalentFromId(item.talent)
 		local req = self.actor:getTalentReqDesc(item.talent)
 		text:merge(req)
-		text:merge(self.actor:getTalentFullDescription(t, 1))
+		if self.actor:knowTalent(t) then
+			text:merge(self.actor:getTalentFullDescription(t))
+		else
+			text:merge(self.actor:getTalentFullDescription(t, 1))
+		end
 	end
 
 	return text

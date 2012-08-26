@@ -1191,6 +1191,7 @@ function _M:display(nb_keyframes)
 		self.full_fbo:use(false)
 		self.full_fbo:toScreen(0, 0, self.w, self.h, self.full_fbo_shader.shad)
 	end
+
 end
 
 --- Called when a dialog is registered to appear on screen
@@ -1234,9 +1235,12 @@ function _M:setupCommands()
 			end end
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
+			package.loaded["mod.dialogs.elements.TalentGrid"] = nil
 			package.loaded["mod.dialogs.UberTalent"] = nil
-			self:registerDialog(require("mod.dialogs.UberTalent").new(self.player))
---			self.player:learnTalentType("uber/uber", true)
+			local list = {}
+			local d = require("mod.dialogs.UberTalent").new(self.player, list)
+			d.unload = function() for tid, ok in pairs(list) do if ok then self.player:learnTalent(tid, true) end end end
+			self:registerDialog(d)
 do return end
 			local f, err = loadfile("/data/general/events/slimey-pool.lua")
 			print(f, err)

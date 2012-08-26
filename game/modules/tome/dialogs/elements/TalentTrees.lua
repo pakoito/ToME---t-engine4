@@ -256,8 +256,10 @@ function _M:redrawAllItems()
 		self:drawItem(tree)
 		for j = 1, #tree.nodes do
 			local tal = tree.nodes[j]
-			if not tal.texture then tal.texture = self:getImage(tal.entity.image):glTexture() end
-			self:drawItem(tal)
+			if not tal.none then
+				if not tal.texture then tal.texture = self:getImage(tal.entity.image):glTexture() end
+				self:drawItem(tal)
+			end
 		end
 	end
 end

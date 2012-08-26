@@ -704,7 +704,7 @@ function _M:createDisplay()
 
 	if self.no_tooltip then
 		local vsep3 = Separator.new{dir="horizontal", size=self.ih - 20}
-        self.c_desc = TextzoneList.new{ focus_check = true, scrollbar = true, width=self.iw - 200 - 530 - 40, height = self.ih, dest_area = { h = self.ih } }
+		self.c_desc = TextzoneList.new{ focus_check = true, scrollbar = true, width=self.iw - 200 - 530 - 40, height = self.ih, dest_area = { h = self.ih } }
 		ret[#ret+1] = {right=0, top=0, ui=self.c_desc}
 		ret[#ret+1] = {right=self.c_desc.w, top=0, ui=vsep3}
 	end

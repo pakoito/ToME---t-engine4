@@ -190,6 +190,8 @@ uberTalent{
 	name = "Eye of the Tiger",
 	mode = "passive",
 	trigger = function(self, t, kind)
+		if self.turn_procs.eye_tiger then return end
+
 		local tids = {}
 
 		for tid, _ in pairs(self.talents_cd) do
@@ -225,11 +227,13 @@ uberTalent{
 		self.talents_cd[tid] = self.talents_cd[tid] - (kind == "spell" and 1 or 2)
 		if self.talents_cd[tid] <= 0 then self.talents_cd[tid] = nil end
 		self.changed = true
+		self.turn_procs.eye_tiger = true
 	end,
 	info = function(self, t)
 		return ([[All physical criticals reduce the remaining cooldown of a random technique or cunning talent by 2.
 		All spell criticals reduce the remaining cooldown of a random spell talent by 1.
-		All mind criticals reduce the remaining cooldown of a random wild gift/psionic/afflicted talent by 2.]])
+		All mind criticals reduce the remaining cooldown of a random wild gift/psionic/afflicted talent by 2.
+		This can only happen once per turn.]])
 		:format()
 	end,
 }
@@ -254,7 +258,7 @@ uberTalent{
 		- Spell / Stone Alchemy
 		- Cunning / Survival
 		- Celestial / Chants
-		- Celestial / Light		
+		- Celestial / Light
 		Some will not be available depending on your status toward magic.]])
 		:format()
 	end,

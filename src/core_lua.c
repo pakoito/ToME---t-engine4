@@ -1859,6 +1859,15 @@ static int gl_depth_test(lua_State *L)
 	return 0;
 }
 
+static int gl_scissor(lua_State *L)
+{
+	if (lua_toboolean(L, 1)) {
+		glEnable(GL_SCISSOR_TEST);
+		glScissor(luaL_checknumber(L, 2), screen->h - luaL_checknumber(L, 3) - luaL_checknumber(L, 5), luaL_checknumber(L, 4), luaL_checknumber(L, 5));
+	} else glDisable(GL_SCISSOR_TEST);
+	return 0;
+}
+
 static int gl_color(lua_State *L)
 {
 	tglColor4f(luaL_checknumber(L, 1), luaL_checknumber(L, 2), luaL_checknumber(L, 3), luaL_checknumber(L, 4));
@@ -2564,6 +2573,7 @@ static const struct luaL_reg displaylib[] =
 	{"glColor", gl_color},
 	{"glMatrix", gl_matrix},
 	{"glDepthTest", gl_depth_test},
+	{"glScissor", gl_scissor},
 	{"getScreenshot", sdl_get_png_screenshot},
 	{NULL, NULL},
 };
