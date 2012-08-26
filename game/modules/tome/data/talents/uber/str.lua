@@ -129,3 +129,14 @@ uberTalent{
 		:format(damDesc(self, DamageType.FIRE, dam), damDesc(self, DamageType.LIGHT, dam), damDesc(self, DamageType.PHYSICAL, dam))
 	end,
 }
+
+uberTalent{
+	name = "I Can Carry The World!", short_name = "NO_FATIGUE",
+	mode = "passive",
+	require = { special={desc="Be able to use massive armours.", fct=function(self) return self:getTalentLevelRaw(self.T_ARMOUR_TRAINING) >= 4 end} },
+	info = function(self, t)
+		return ([[You are strong, fatigue means nothing to you
+		Fatigue is permanently set to 0.]])
+		:format()
+	end,
+}

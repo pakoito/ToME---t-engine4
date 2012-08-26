@@ -1154,6 +1154,7 @@ end
 --- Gets fatigue
 function _M:combatFatigue()
 	if self.fatigue < 0 then return 0 end
+	if self:knowTalent(self.T_NO_FATIGUE) then return 0 end
 	return self.fatigue
 end
 
