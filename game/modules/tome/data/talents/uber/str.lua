@@ -63,8 +63,38 @@ uberTalent{
 		if target:canBe("stun") then target:setEffect(target.EFF_STUNNED, 3, {}) end
 	end,
 	info = function(self, t)
-		return ([[You deal a massive blow to your foe, smashing it for 230%% weapon damage and knocking it back 6 tiles away.
+		return ([[You deal a massive blow to your foe, smashing it for 250%% weapon damage and knocking it back 6 tiles away.
 		All foes in its path will be knocked on the sides and stunned for 3 turns.]])
+		:format()
+	end,
+}
+
+uberTalent{
+	name = "Massive Blow", 
+	mode = "activated",
+--	require = { special={desc=".", fct=function(self) return self.size_category and self.size_category >= 5 and knowRessource(self, "stamina", 20) end} },
+	cooldown = 10,
+	stamina = 20,
+	action = function(self, t)
+		local tg = {type="hit", range=self:getTalentRange(t)}
+		local x, y, target = self:getTarget(tg)
+		if not x or not y or not target then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
+
+		local destroyed = false
+		target:knockback(self.x, self.y, 4, nil, function(g, x, y)
+			if g:attr("dig") and not destroyed then
+				DamageType:get(DamageType.DIG).projector(self, x, y, DamageType.DIG, 1)
+				destroyed = true
+			end
+		end)
+
+		self:attackTarget(target, nil, 1.5 + (destroyed and 1.5 or 0), true)
+		return true
+	end,
+	info = function(self, t)
+		return ([[You deal a massive blow to your foe, smashing it for 150%% weapon damage and knocking it back 4 tiles away.
+		If the knockback makes it hit a wall it will smash down the wall and deal an additional 150%% weapon damage.]])
 		:format()
 	end,
 }

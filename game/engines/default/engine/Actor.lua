@@ -285,7 +285,7 @@ function _M:teleportRandom(x, y, dist, min_dist)
 end
 
 --- Knock back the actor
-function _M:knockback(srcx, srcy, dist, recursive)
+function _M:knockback(srcx, srcy, dist, recursive, on_terrain)
 	print("[KNOCKBACK] from", srcx, srcx, "over", dist)
 
 	local block_actor = function(_, bx, by) return game.level.map:checkEntity(bx, by, Map.TERRAIN, "block_move", self) end
@@ -302,6 +302,12 @@ function _M:knockback(srcx, srcy, dist, recursive)
 			target:knockback(srcx, srcy, dist, recursive)
 		end
 	end
+	if on_terrain then
+		local g = game.level.map(lx, ly, Map.TERRAIN)
+		if g and on_terrain(g, lx, ly) then
+			dist = 0
+		end
+	end
 
 	while game.level.map:isBound(lx, ly) and not is_corner_blocked and not game.level.map:checkAllEntities(lx, ly, "block_move", self) and dist > 0 do
 		dist = dist - 1
@@ -313,6 +319,12 @@ function _M:knockback(srcx, srcy, dist, recursive)
 			local target = game.level.map(lx, ly, Map.ACTOR)
 			if target and recursive(target) then
 				target:knockback(srcx, srcy, dist, recursive)
+			end
+		end
+		if on_terrain then
+			local g = game.level.map(lx, ly, Map.TERRAIN)
+			if g and on_terrain(g, lx, ly) then
+				break
 			end
 		end
 	end

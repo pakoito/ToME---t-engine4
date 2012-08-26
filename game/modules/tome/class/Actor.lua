@@ -1014,9 +1014,9 @@ end
 
 --- Knock back the actor
 -- Overloaded to add move anim
-function _M:knockback(srcx, srcy, dist, recursive)
+function _M:knockback(srcx, srcy, dist, recursive, on_terrain)
 	local ox, oy = self.x, self.y
-	engine.Actor.knockback(self, srcx, srcy, dist, recursive)
+	engine.Actor.knockback(self, srcx, srcy, dist, recursive, on_terrain)
 	if config.settings.tome.smooth_move > 0 then
 		self:resetMoveAnim()
 		self:setMoveAnim(ox, oy, 9, 5)
