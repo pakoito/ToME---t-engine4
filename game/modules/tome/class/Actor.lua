@@ -115,6 +115,7 @@ function _M:init(t, no_default)
 	self.unused_talents = self.unused_talents or 2
 	self.unused_generics = self.unused_generics or 1
 	self.unused_talents_types = self.unused_talents_types or 0
+	self.unused_prodigies = self.unused_prodigies or 0
 
 	t.healing_factor = t.healing_factor or 1
 

@@ -390,3 +390,38 @@ newTalent{
 	end,
 }
 
+
+newTalent{
+	name = "Vulnerability Poison",
+	type = {"cunning/poisons-effects", 1},
+	points = 1,
+	mode = "sustained",
+	cooldown = 10,
+	no_break_stealth = true,
+	no_energy = true,
+	tactical = { BUFF = 2 },
+	getDuration = function(self, t) return 12 - self:getTalentLevel(self.T_VILE_POISONS) end,
+	getDOT = function(self, t) return 8 + self:combatTalentStatDamage(self.T_VILE_POISONS, "cun", 10, 30) * 0.4 end,
+	getEffect = function(self, t) return self:combatTalentStatDamage(self.T_VILE_POISONS, "cun", 15, 35) end,
+	proc = function(self, t, target)
+		if not checkChance(self, target) then return end
+		target:setEffect(target.EFF_VULNERABILITY_POISON, t.getDuration(self, t), {src=self, power=t.getDOT(self, t), res=t.getEffect(self, t)})
+	end,
+	activate = function(self, t)
+		cancelPoisons(self)
+		self.vile_poisons = self.vile_poisons or {}
+		self.vile_poisons[t.id] = true
+		return {}
+	end,
+	deactivate = function(self, t, p)
+		self.vile_poisons[t.id] = nil
+		return true
+	end,
+	info = function(self, t)
+		return ([[Coat your weapons with an arcane poison, inflicting %d arcane damage per turn for %d turns.
+		Poisoned creatures resistances are reduced by %d%%.
+		The damage scales with your Cunning.]]):
+		format(damDesc(self, DamageType.NATURE, t.getDOT(self, t)), t.getDuration(self, t), t.getEffect(self, t))
+	end,
+}
+

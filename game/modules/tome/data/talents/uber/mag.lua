@@ -61,3 +61,27 @@ uberTalent{
 		:format()
 	end,
 }
+
+uberTalent{
+	name = "Mystical Cunning", image = "talents/vulnerability_poison.png",
+	mode = "passive",
+	require = { special={desc="Know either traps or poisons.", fct=function(self)
+		return self:knowTalent(self.T_VILE_POISONS) or self:knowTalent(self.T_TRAP_MASTERY)
+	end} },
+	on_learn = function(self, t)
+		self:attr("combat_spellresist", 20)
+		self:learnTalent(self.T_VULNERABILITY_POISON, true, nil, {no_unlearn=true})
+		self:learnTalent(self.T_GRAVITIC_TRAP, true, nil, {no_unlearn=true})
+	end,
+	on_unlearn = function(self, t)
+		self:attr("combat_spellresist", -20)
+	end,
+	info = function(self, t)
+		return ([[Your study of arcane forces has let you develop new traps and poisons (depending on which you know when learning this prodigy).
+		You can learn:
+		- Vulnerability Poison: reduces all resistances and deals arcane damage
+		- Gravitic Trap: each turn all foes in a radius 5 around it are pulled in and take temporal damage
+		You also permanently gain 20 spell save.]])
+		:format()
+	end,
+}

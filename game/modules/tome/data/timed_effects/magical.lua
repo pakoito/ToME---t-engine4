@@ -1928,3 +1928,26 @@ newEffect{
 	end,
 }
 
+newEffect{
+	name = "VULNERABILITY_POISON", image = "talents/vulnerability_poison.png",
+	desc = "Vulnerability Poison",
+	long_desc = function(self, eff) return ("The target is poisoned and sick, doing %0.2f arcane damage per turn. All resistances are reduced by %d%%."):format(eff.power, eff.res) end,
+	type = "magical",
+	subtype = { poison=true, arcane=true }, no_ct_effect = true,
+	status = "detrimental",
+	parameters = {power=10, res=15},
+	on_gain = function(self, err) return "#Target# is poisoned!", "+Vulnerability Poison" end,
+	on_lose = function(self, err) return "#Target# is no longer poisoned.", "-Vulnerability Poison" end,
+	-- Damage each turn
+	on_timeout = function(self, eff)
+		if self:attr("purify_poison") then self:heal(eff.power)
+		else DamageType:get(DamageType.ARCANE).projector(eff.src, self.x, self.y, DamageType.ARCANE, eff.power)
+		end
+	end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("resists", {all=-eff.res})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("resists", eff.tmpid)
+	end,
+}

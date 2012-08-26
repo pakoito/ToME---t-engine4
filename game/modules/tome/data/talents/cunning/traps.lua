@@ -202,6 +202,7 @@ local basetrap = function(self, t, x, y, dur, add)
 		canAct = false,
 		energy = {value=0},
 		act = function(self)
+			if self.realact then self:realact() end
 			self:useEnergy()
 			self.temporary = self.temporary - 1
 			if self.temporary <= 0 then
@@ -547,6 +548,68 @@ newTalent{
 				)
 				game:playSoundNear(self, "talents/cloud")
 				return true, true
+			end,
+		})
+		t:identify(true)
+
+		t:resolve() t:resolve(nil, true)
+		t:setKnown(self, true)
+		game.level:addEntity(t)
+		game.zone:addEntity(game.level, t, "trap", x, y)
+		game.level.map:particleEmitter(x, y, 1, "summon")
+
+		return true
+	end,
+	info = function(self, t)
+		return ([[Lay a trap that explodes in a radius of 3, releasing a thick poisonous cloud lasting 4 turns.
+		Each turn the cloud infects all creatures with a poison that deals %0.2f nature damage over 5 turns.
+		High level lure can trigger this trap.]]):
+		format(20 + self:getCun() * 0.5 * self:getTalentLevel(self.T_TRAP_MASTERY))
+	end,
+}
+
+newTalent{
+	name = "Gravitic Trap",
+	type = {"cunning/traps", 1},
+	points = 1,
+	cooldown = 15,
+	stamina = 12,
+	tactical = { ATTACKAREA = { temporal = 2 } },
+	requires_target = true,
+	range = trap_range,
+	action = function(self, t)
+		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
+		local x, y, target = self:getTarget(tg)
+		if not x or not y then return nil end
+		local _ _, x, y = self:canProject(tg, x, y)
+		if game.level.map(x, y, Map.TRAP) then game.logPlayer(self, "You somehow fail to set the trap.") return nil end
+
+		local dam = 20 + self:getCun() * 0.5 * self:getTalentLevel(self.T_TRAP_MASTERY)
+
+		-- Need to pass the actor in to the triggered function for the apply_power to work correctly
+		local t = basetrap(self, t, x, y, 8 + self:getTalentLevel(self.T_TRAP_MASTERY), {
+			type = "arcane", name = "gravitic trap", color=colors.LIGHT_RED, image = "invis.png",
+			embed_particles = {{name="wormhole", rad=1, args={image="shockbolt/terrain/wormhole", speed=1}}},
+			dam = dam,
+			check_hit = self:combatAttack(),
+			triggered = function(self, x, y, who)
+				return true, true
+			end,
+			realact = function(self)
+				local tgts = {}
+				self:project({type="ball", range=0, friendlyfire=false, radius=5, talent=t}, self.x, self.y, function(px, py)
+					local target = game.level.map(px, py, Map.ACTOR)
+					if not target then return end
+					if self:reactionToward(target) < 0 and not tgts[target] then
+						tgts[target] = true
+						local ox, oy = target.x, target.y
+						target:pull(self.x, self.y, 1)
+						if target.x ~= ox or target.y ~= oy then 
+							game.logSeen(target, "%s is pulled in!", target.name:capitalize()) 
+							DamageType:get(DamageType.TEMPORAL).projector(self.summoner, target.x, target.y, DamageType.TEMPORAL, self.dam)
+						end
+					end
+				end)
 			end,
 		})
 		t:identify(true)

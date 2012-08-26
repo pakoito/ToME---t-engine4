@@ -93,7 +93,7 @@ on_status_change = function(self, who, status, sub)
 
 		game.party:reward("Select the party member to receive the hexes generic talent tree:", function(player)
 			if who:knowTalentType("corruption/hexes") then
-				who:setTalentTypeMastery("corruption/hexes", who:getTalentTypeMastery("corruption/hexes") + 0.1)
+				who:setTalentTypeMastery("corruption/hexes", who:getTalentTypeMastery("corruption/hexes") + 0.2)
 			elseif who:knowTalentType("corruption/hexes") == false then
 				who:learnTalentType("corruption/hexes", true)
 			else
