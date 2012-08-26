@@ -66,6 +66,8 @@ newTalent{
 
 		-- Attack ?
 		if core.fov.distance(self.x, self.y, x, y) == 1 then
+			if self:knowTalent(self.T_STEAMROLLER) then target:setEffect(target.EFF_STEAMROLLER, 2, {src=self}) end
+
 			if self:attackTarget(target, nil, 1.2, true) and target:canBe("stun") then
 				-- Daze, no save
 				target:setEffect(target.EFF_DAZED, 3, {})

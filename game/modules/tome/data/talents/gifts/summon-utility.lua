@@ -50,12 +50,12 @@ newTalent{
 	tactical = { DEFEND = 2 },
 	action = function(self, t)
 		local dur = math.ceil(4 + self:getTalentLevel(t) * 0.7)
-		local power = 34 + self:getTalentLevel(t) * 7
+		local power = 34 + (math.min(6.3, self:getTalentLevel(t)) * 7)
 		self:setEffect(self.EFF_SHELL_SHIELD, dur, {power=power})
 		return true
 	end,
 	info = function(self, t)
-		return ([[Under the cover of your shell you take %d%% less damage for %d turns]]):format(34 + self:getTalentLevel(t) * 7, math.ceil(4 + self:getTalentLevel(t) * 0.7))
+		return ([[Under the cover of your shell you take %d%% less damage for %d turns]]):format(34 + (math.min(6.3, self:getTalentLevel(t)) * 7), math.ceil(4 + self:getTalentLevel(t) * 0.7))
 	end,
 }
 

@@ -98,3 +98,13 @@ uberTalent{
 		:format()
 	end,
 }
+
+uberTalent{
+	name = "Steamroller", 
+	mode = "passive",
+	require = { special={desc="Know the Rush talent.", fct=function(self) return self:knowTalent(self.T_RUSH) end} },
+	info = function(self, t)
+		return ([[When you rush the creature you rush to is marked. If you kill it in the next two turns your rush cooldown is reset.]])
+		:format()
+	end,
+}

@@ -1918,3 +1918,19 @@ newEffect{
 		self:effectTemporaryValue(eff, "physical_negative_status_effect_immune", 1)
 	end,
 }
+
+newEffect{
+	name = "STEAMROLLER", image = "talents/steamroller.png",
+	desc = "Steamroller",
+	long_desc = function(self, eff) return ("Resets Rush cooldown if killed.") end,
+	type = "physical",
+	subtype = { status=true },
+	status = "detrimental",
+	parameters = { },
+	activate = function(self, eff)
+		self.reset_rush_on_death = eff.src
+	end,
+	deactivate = function(self, eff)
+		self.reset_rush_on_death = nil
+	end,
+}

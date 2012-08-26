@@ -2237,6 +2237,13 @@ function _M:die(src, death_note)
 		game:onTickEnd(function() src:setEffect(self.EFF_STEP_UP, 1, {}) end)
 	end
 
+	if src and self.reset_rush_on_death and self.reset_rush_on_death == src then
+		game:onTickEnd(function()
+			src.talents_cd[src.T_RUSH] = nil
+			src.changed = true
+		end)
+	end
+
 	if self:hasEffect(self.EFF_CORROSIVE_WORM) then
 		local p = self:hasEffect(self.EFF_CORROSIVE_WORM)
 		p.src:project({type="ball", radius=4, x=self.x, y=self.y}, self.x, self.y, DamageType.ACID, p.explosion, {type="acid"})
