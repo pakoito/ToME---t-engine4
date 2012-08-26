@@ -46,8 +46,6 @@ newEntity{
 
 	open_door = true,
 
-	resolvers.tmasteries{ ["technique/other"]=0.3 },
-
 	resists = { [DamageType.FIRE] = -50 },
 	fear_immune = 1,
 	ingredient_on_death = "TROLL_INTESTINE",

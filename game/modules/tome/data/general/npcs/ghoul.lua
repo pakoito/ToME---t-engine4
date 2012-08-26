@@ -36,7 +36,6 @@ newEntity{
 	infravision = 10,
 
 	resolvers.racial(),
-	resolvers.tmasteries{ ["technique/other"]=1, },
 
 	open_door = true,
 

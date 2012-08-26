@@ -40,7 +40,6 @@ newEntity{
 
 	resolvers.inscriptions(2, "infusion"),
 
-	resolvers.tmasteries{ ["technique/other"]=0.3 },
 	resolvers.sustains_at_birth(),
 
 	poison_immune = 0.9,

@@ -43,7 +43,6 @@ newEntity{
 	combat_armor = 1, combat_def = 1,
 	combat = { dam=resolvers.levelup(resolvers.rngavg(12, 25), 1, 1), atk=10, apr=3, physspeed=2, dammod={str=0.8} },
 	life_rating = 12,
-	resolvers.tmasteries{ ["technique/other"]=0.25 },
 
 	resists = { [DamageType.FIRE] = 20, [DamageType.COLD] = 20, [DamageType.NATURE] = 20 },
 	ingredient_on_death = "BEAR_PAW",
