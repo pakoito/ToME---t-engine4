@@ -141,7 +141,7 @@ uberTalent{
 		self:setEffect(self.EFF_HIDDEN_RESOURCES, 5, {})
 		return true
 	end,
-	require = { special={desc="Be close to the draconic world", fct=function(self) return self:attr("drake_touched") and self:attr("drake_touched") >= 2 end} },
+	require = { special={desc="Have been close to death (killed a foe while below 1 HP)", fct=function(self) return self:attr("barely_survived") end} },
 	info = function(self, t)
 		return ([[You focus your mind on the task at hand.
 		For 5 turns none of your talents use any resources.]])

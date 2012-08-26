@@ -2314,7 +2314,7 @@ function _M:die(src, death_note)
 	if src and ((src.resolveSource and src:resolveSource().player) or src.player) then
 		-- Achievements
 		local p = game.party:findMember{main=true}
-		if math.floor(p.life) <= 1 and not p.dead then world:gainAchievement("THAT_WAS_CLOSE", p) end
+		if math.floor(p.life) <= 1 and not p.dead then p:attr("barely_survived", 1) world:gainAchievement("THAT_WAS_CLOSE", p) end
 		world:gainAchievement("BOSS_REVENGE", p, self)
 		world:gainAchievement("EMANCIPATION", p, self)
 		world:gainAchievement("EXTERMINATOR", p, self)
