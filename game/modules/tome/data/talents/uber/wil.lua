@@ -171,7 +171,7 @@ uberTalent{
 uberTalent{
 	name = "Unbreakable Will",
 	mode = "passive",
-	cooldown = 8,
+	cooldown = 7,
 	trigger = function(self, t)
 		self:startTalentCooldown(t)
 		game.logSeen(self, "#LIGHT_BLUE#%s unbreakable will shrugs off the effect!", self.name:capitalize())
@@ -181,5 +181,22 @@ uberTalent{
 		return ([[Your will is so strong you simply ignore mental effects against you.
 		Warning: this has a cooldown.]])
 		:format()
+	end,
+}
+
+uberTalent{
+	name = "Spell Feedback",
+	mode = "passive",
+	cooldown = 3,
+	require = { special={desc="Antimagic", fct=function(self) return self:knowTalentType("wild-gift/antimagic") end} },
+	trigger = function(self, t, target)
+		self:startTalentCooldown(t)
+		game.logSeen(self, "#LIGHT_BLUE#%s punishes %s for casting a spell!", self.name:capitalize(), target.name)
+		DamageType:get(DamageType.MIND).projector(self, target.x, target.y, DamageType.MIND, 70 + self:getWil() * 2)
+		return true
+	end,
+	info = function(self, t)
+		return ([[Your will is a shield against the assault of crazy arcane users. Each time you take damage from a spell you punish the spellcaster with %0.2f mind damage.]])
+		:format(damDesc(self, DamageType.MIND, 20 + self:getWil() * 2))
 	end,
 }

@@ -379,6 +379,10 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 					src.turn_procs.meteoric_crash = true
 					src:triggerTalent(src.T_METEORIC_CRASH, nil, target)
 				end
+
+				if not target.dead and t.is_spell and target.knowTalent and target:knowTalent(src.T_SPELL_FEEDBACK) then
+					target:triggerTalent(target.T_SPELL_FEEDBACK, nil, src)
+				end
 			end
 		end
 
