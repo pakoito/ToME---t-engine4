@@ -119,10 +119,10 @@ uberTalent{
 	mode = "passive",
 	trigger = function(self, t)
 		if self:hasEffect(self.EFF_SPINE_OF_THE_WORLD) then return end
-		self:setEffect(self.EFF_SPINE_OF_THE_WORLD, 6, {})
+		self:setEffect(self.EFF_SPINE_OF_THE_WORLD, 4, {})
 	end,
 	info = function(self, t)
-		return ([[Your back is has hard as stone. Each time you are affected by a physical effect your body hardens, for 6 turns wil become immune to all physical effects.]])
+		return ([[Your back is has hard as stone. Each time you are affected by a physical effect your body hardens, for 5 turns wil become immune to all physical effects.]])
 		:format()
 	end,
 }
