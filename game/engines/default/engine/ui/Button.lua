@@ -83,7 +83,7 @@ function _M:display(x, y, nb_keyframes, ox, oy)
 			if button == 1 and mx > ox and mx < ox+self.w and my > oy and my < oy+self.h then
 				self:drawFrame(self.frame, x, y, 0, 1, 0, 1)
 			elseif self.glow then
-			local v = self.glow + (1 - self.glow) * (1 + math.cos(core.game.getTime() / 300)) / 2
+				local v = self.glow + (1 - self.glow) * (1 + math.cos(core.game.getTime() / 300)) / 2
 				self:drawFrame(self.frame, x, y, v*0.8, v, 0, 1)
 			else
 				self:drawFrame(self.frame_sel, x, y)

@@ -85,7 +85,7 @@ function _M:init(actor, on_finish, on_birth)
 	self.key:addBinds{
 		EXIT = function()
 			if self.actor.unused_stats~=self.actor_dup.unused_stats or self.actor.unused_talents_types~=self.actor_dup.unused_talents_types or
-			self.actor.unused_talents~=self.actor_dup.unused_talents or self.actor.unused_generics~=self.actor_dup.unused_generics then
+			self.actor.unused_talents~=self.actor_dup.unused_talents or self.actor.unused_generics~=self.actor_dup.unused_generics or self.actor.unused_prodigies~=self.actor_dup.unused_prodigies then
 				self:yesnocancelPopup("Finish","Do you accept changes?", function(yes, cancel)
 				if cancel then
 					return nil
@@ -159,6 +159,11 @@ function _M:finish()
 	for i, tid in ipairs(reset) do
 		self.actor:forceUseTalent(tid, {ignore_energy=true, ignore_cd=true, no_equilibrium_fail=true, no_paradox_fail=true})
 		if self.actor:knowTalent(tid) then self.actor:forceUseTalent(tid, {ignore_energy=true, ignore_cd=true, no_equilibrium_fail=true, no_paradox_fail=true, talent_reuse=true}) end
+	end
+
+	-- Prodigies
+	if self.on_finish_prodigies then
+		for tid, ok in pairs(self.on_finish_prodigies) do if ok then self.actor:learnTalent(tid, true) end end
 	end
 
 	if not self.on_birth then
@@ -583,7 +588,26 @@ local desc_types = ([[Talent category points allow you to either:
 You gain a new point at level 10, 20 and 30.
 Some races or items may increase them as well.]]):toTString()
 
+local desc_prodigies = ([[Prodigies are special talents that only the most powerful of characters can attain.
+All of them require at least 50 in a core stat and many also have more special demands. You can learn a new prodigy at level 40 and 50.]]):toTString()
+
 function _M:createDisplay()
+	self.b_prodigies = Button.new{text="Prodigies", fct=function()
+			self.on_finish_prodigies = self.on_finish_prodigies or {}
+			local d = require("mod.dialogs.UberTalent").new(self.actor, self.on_finish_prodigies)
+			game:registerDialog(d)
+		end, on_select=function()
+		local str = desc_prodigies
+		if self.no_tooltip then
+			self.c_desc:erase()
+			self.c_desc:switchItem(str, str, true)
+		else
+			game:tooltipDisplayAtMap(self.b_stat.last_display_x + self.b_stat.w, self.b_stat.last_display_y, str)
+		end
+	end}
+
+	if self.actor.unused_prodigies > 0 then self.b_prodigies.glow = 0.6 end
+
 	self.c_ctree = TalentTrees.new{
 		font = core.display.newFont("/data/font/DroidSans.ttf", 14),
 		tiles=game.uiset.hotkeys_display_icons,
@@ -608,7 +632,7 @@ function _M:createDisplay()
 		font = core.display.newFont("/data/font/DroidSans.ttf", 14),
 		tiles=game.uiset.hotkeys_display_icons,
 		tree=self.gtree,
-		width=320, height=self.ih-50,
+		width=320, height=self.ih-50 - (not self.b_prodigies and 0 or self.b_prodigies.h + 5),
 		tooltip=function(item)
 			local x = self.display_x + self.uis[8].x - game.tooltip.max
 			if self.display_x + self.w + game.tooltip.max <= game.w then x = self.display_x + self.w end
@@ -685,6 +709,7 @@ function _M:createDisplay()
 		end
 	end}
 
+
 	local ret = {
 		{left=-10, top=0, ui=self.b_stat},
 		{left=0, top=self.b_stat.h+10, ui=self.c_stat},
@@ -700,11 +725,13 @@ function _M:createDisplay()
 		{left=vsep2, top=self.b_generic.h + 10, ui=self.c_gtree},
 
 		{left=330, top=0, ui=self.b_types},
+
+		{right=0, bottom=0, ui=self.b_prodigies},
 	}
 
 	if self.no_tooltip then
 		local vsep3 = Separator.new{dir="horizontal", size=self.ih - 20}
-		self.c_desc = TextzoneList.new{ focus_check = true, scrollbar = true, width=self.iw - 200 - 530 - 40, height = self.ih, dest_area = { h = self.ih } }
+		self.c_desc = TextzoneList.new{ focus_check = true, scrollbar = true, width=self.iw - 200 - 530 - 40, height = self.ih - (self.b_prodigies and 0 or self.b_prodigies.h + 5), dest_area = { h = self.ih } }
 		ret[#ret+1] = {right=0, top=0, ui=self.c_desc}
 		ret[#ret+1] = {right=self.c_desc.w, top=0, ui=vsep3}
 	end

@@ -109,6 +109,9 @@ newBirthDescriptor{
 				if self.level == 10 or  self.level == 20 or self.level == 30 or self.level == 40 then
 					self.unused_talents_types = self.unused_talents_types + 1
 				end
+				if self.level == 40 or self.level == 50 then
+					self.unused_prodigies = self.unused_prodigies + 1
+				end
 			else
 				self.unused_stats = self.unused_stats + 1
 				if self.level % 2 == 0 then

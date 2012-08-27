@@ -2397,6 +2397,9 @@ function _M:levelup()
 		if self.level == 10 or self.level == 20 or self.level == 30 then
 			self.unused_talents_types = self.unused_talents_types + 1
 		end
+		if self.level == 40 or self.level == 50 then
+			self.unused_prodigies = self.unused_prodigies + 1
+		end
 	elseif type(self.no_points_on_levelup) == "function" then
 		self:no_points_on_levelup()
 	end
