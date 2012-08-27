@@ -60,6 +60,10 @@ return {
 		} },
 	},
 
+	on_enter = function()
+		game.player:attr("temporal_touched", 1)
+	end,
+
 	post_process = function(level)
 		local Map = require "engine.Map"
 		level.background_particle = require("engine.Particles").new("starfield", 1, {width=Map.viewport.width, height=Map.viewport.height})

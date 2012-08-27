@@ -1985,3 +1985,43 @@ newEffect{
 		end)
 	end,
 }
+
+newEffect{
+	name = "TEMPORAL_FORM", image = "talents/temporal_form.png",
+	desc = "Temporal Form",
+	long_desc = function(self, eff) return ("The target is assumes the form of a telugoroth."):format() end,
+	type = "magical",
+	subtype = { temporal=true },
+	status = "beneficial",
+	parameters = {},
+	on_gain = function(self, err) return "#Target# threads time as a shell!", "+Temporal Form" end,
+	on_lose = function(self, err) return "#Target# is no longer embeded in time.", "-Temporal Form" end,
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "stun_immune", 1)
+		self:effectTemporaryValue(eff, "pin_immune", 1)
+		self:effectTemporaryValue(eff, "cut_immune", 1)
+		self:effectTemporaryValue(eff, "blind_immune", 1)
+		self:effectTemporaryValue(eff, "resists", {[DamageType.TEMPORAL] = 30})
+		self:effectTemporaryValue(eff, "resists_pen", {[DamageType.TEMPORAL] = 20})
+		self:effectTemporaryValue(eff, "talent_cd_reduction", {[self.T_ANOMALY_REARRANGE] = -4, [self.T_ANOMALY_TEMPORAL_STORM] = -4})
+		self:learnTalent(self.T_ANOMALY_REARRANGE, true)
+		self:learnTalent(self.T_ANOMALY_TEMPORAL_STORM, true)
+		self:incParadox(600)
+
+		self.replace_display = mod.class.Actor.new{
+			image = "npc/elemental_temporal_telugoroth.png",
+			shader = "shadow_simulacrum",
+			shader_args = { color = {0.2, 0.1, 0.8}, base = 0.5, time_factor = 500 },
+		}
+		self:removeAllMOs()
+		game.level.map:updateMap(self.x, self.y)
+	end,
+	deactivate = function(self, eff)
+		self:incParadox(-600)
+		self:unlearnTalent(self.T_ANOMALY_REARRANGE)
+		self:unlearnTalent(self.T_ANOMALY_TEMPORAL_STORM)
+		self.replace_display = nil
+		self:removeAllMOs()
+		game.level.map:updateMap(self.x, self.y)
+	end,
+}

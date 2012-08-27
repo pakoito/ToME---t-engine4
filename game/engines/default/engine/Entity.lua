@@ -328,14 +328,18 @@ end
 -- You do *NOT* need this, this is used by the engine.Map class automatically.<br/>
 -- *DO NOT TOUCH!!!*
 function _M:getMapObjects(tiles, mos, z)
+	local tgt = self
+	if self.replace_display then tgt = self.replace_display end
+
 	local i = -1
 	local nextz = 0
 	local mo, dz, lm
 	local last_mo
 	repeat
 		i = i + 1
-		mo, dz, lm = self:makeMapObject(tiles, 1+i)
+		mo, dz, lm = tgt:makeMapObject(tiles, 1+i)
 		if mo then
+			if i == 0 then self._mo = mo end
 			if dz then mos[dz] = mo
 			else mos[z + nextz] = mo nextz = nextz + 1 end
 			last_mo = lm

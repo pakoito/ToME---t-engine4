@@ -124,6 +124,8 @@ return {
 	end,
 
 	on_enter = function(lev, old_lev, newzone)
+		game.player:attr("temporal_touched", 1)
+
 		local Dialog = require("engine.ui.Dialog")
 		if lev == 1 and not game.level.shown_warning then
 			Dialog:simplePopup("Temporal Rift", "Space and time distort and lose meaning as you pass through the rift. This place is alien.")
