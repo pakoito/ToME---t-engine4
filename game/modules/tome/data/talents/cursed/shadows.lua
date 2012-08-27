@@ -176,7 +176,7 @@ newTalent{
 }
 
 local function createShadow(self, level, tCallShadows, tShadowWarriors, tShadowMages, duration, target)
-	return require("mod.class.NPC").new{
+	local npc = require("mod.class.NPC").new{
 		type = "undead", subtype = "shadow",
 		name = "shadow",
 		desc = [[]],
@@ -309,6 +309,10 @@ local function createShadow(self, level, tCallShadows, tShadowWarriors, tShadowM
 			return mod.class.Actor.onTakeHit(self, value, src)
 		end,
 	}
+
+	if self:knowTalent(self.T_BLIGHTED_SUMMONING) then npc:learnTalent(npc.T_EMPATHIC_HEX, true, 3) end
+
+	return npc
 end
 
 newTalent{

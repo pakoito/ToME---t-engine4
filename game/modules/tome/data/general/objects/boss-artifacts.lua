@@ -623,6 +623,7 @@ newEntity{ base = "BASE_AMULET",
 		vampire:resolve()
 		game.zone:addEntity(game.level, vampire, "actor", x, y)
 		vampire:forceUseTalent(vampire.T_TAUNT, {})
+		if who:knowTalent(who.T_BLIGHTED_SUMMONING) then vampire:learnTalent(vampire.T_DARKFIRE, true, 3) end
 
 		game:playSoundNear(who, "talents/spell_generic")
 		return {id=true, used=true}

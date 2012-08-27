@@ -115,3 +115,36 @@ uberTalent{
 		:format()
 	end,
 }
+
+uberTalent{
+	name = "Blighted Summoning",
+	mode = "passive",
+	on_learn = function(self, t)
+		if self.alchemy_golem then self.alchemy_golem:learnTalent(self.alchemy_golem.T_DRAIN, true, 3) end
+	end,
+	require = { special={desc=".", fct=function(self)
+		return self:getTalentLevelRaw(self.T_IMBUE_ITEM) >= 5
+	end} },
+	info = function(self, t)
+		return ([[You infuse blighted energies in all your summons, giving them all a new talent:
+		- War Hound: Curse of Defenselessness
+		- Jelly: Vimsense
+		- Minotaur: Life Tap
+		- Golem: Bone Spear
+		- Ritch: Drain
+		- Hydra: Blood Spray
+		- Rimebark: Poison Storm
+		- Fire Drake: Darkfire
+		- Turtle: Curse of Impotence
+		- Spider: Corrosive Worm
+		- Skeletons: Bone Grab
+		- Ghouls: Blood Lock
+		- Vampires / Liches: Darkfire
+		- Ghosts / Wights: Blood Boil
+		- Alchemy Golems: Drain
+		- Shadows: Empathic Hex
+		- Thought-Forms: Flame of Urh'Rok
+		- Other race or object-based summons might be affected too
+		]]):format()
+	end,
+}
