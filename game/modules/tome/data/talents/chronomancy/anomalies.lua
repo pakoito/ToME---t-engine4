@@ -253,7 +253,7 @@ newTalent{
 			3,
 			5, nil,
 			engine.Entity.new{alpha=75, display='', color_br=200, color_bg=200, color_bb=0},
-			nil, self:spellFriendlyFire()
+			nil, false
 		)
 		return true
 	end,

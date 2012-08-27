@@ -165,7 +165,7 @@ local reward_types = {
 			["chronomancy/chronomancy"] = 0.7,
 		},
 		talents = {
-			[Talents.T_PPRECOGNIION] = 1,
+			[Talents.T_PRECOGNIION] = 1,
 			[Talents.T_SPIN_FATE] = 1,
 		},
 		stats = {

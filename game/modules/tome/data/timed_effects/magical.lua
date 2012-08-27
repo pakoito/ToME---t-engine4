@@ -1989,7 +1989,7 @@ newEffect{
 newEffect{
 	name = "TEMPORAL_FORM", image = "talents/temporal_form.png",
 	desc = "Temporal Form",
-	long_desc = function(self, eff) return ("The target is assumes the form of a telugoroth."):format() end,
+	long_desc = function(self, eff) return ("The target assumes the form of a telugoroth."):format() end,
 	type = "magical",
 	subtype = { temporal=true },
 	status = "beneficial",

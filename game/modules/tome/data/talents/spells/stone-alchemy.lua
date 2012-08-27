@@ -126,7 +126,7 @@ newTalent{
 	no_unlearn_last = true,
 	action = function(self, t)
 		local d d = self:showInventory("Use which gem?", self:getInven("INVEN"), function(gem) return gem.type == "gem" and gem.imbue_powers and gem.material_level and gem.material_level <= self:getTalentLevelRaw(t) end, function(gem, gem_item)
-			local nd = self:showInventory("Imbue which armour?", self:getInven("INVEN"), function(o) return o.type == "armor" and o.slot == "BODY" and not o.been_imbued end, function(o, item)
+			local nd = self:showInventory("Imbue which armour?", self:getInven("INVEN"), function(o) return o.type == "armor" and (o.slot == "BODY" or (self:knowTalent(self.T_CRAFTY_HANDS) and (o.slot == "HEAD" or o.slot == "BELT"))) and not o.been_imbued end, function(o, item)
 				self:removeObject(self:getInven("INVEN"), gem_item)
 				o.wielder = o.wielder or {}
 				table.mergeAdd(o.wielder, gem.imbue_powers, true)

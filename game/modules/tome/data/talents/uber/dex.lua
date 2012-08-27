@@ -69,7 +69,7 @@ uberTalent{
 		self:project(tg, self.x, self.y, function(px, py, tg, self)
 			local target = game.level.map(px, py, Map.ACTOR)
 			if target and target ~= self then
-				local hit = self:attackTarget(target, nil, 1.3, true)
+				local hit = self:attackTarget(target, nil, 1.4, true)
 				if hit and target:canBe("disarm") then
 					target:setEffect(target.EFF_DISARMED, 4, {})
 				end
@@ -101,6 +101,61 @@ uberTalent{
 	info = function(self, t)
 		return ([[You are attuned wih Nature and she helps you in your fight against the arcane forces.
 		You gain 15%% permanent global speed and avoidance of pressure traps.]])
+		:format()
+	end,
+}
+
+uberTalent{
+	name = "Giant Leap",
+	mode = "activated",
+	require = { special={desc="Know at least 20 talent levels of stamina using talents.", fct=function(self) return knowRessource(self, "stamina", 20) end} },
+	cooldown = 20,
+	stamina = 30,
+	radius = 1,
+	range = 10,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), selffire=false, radius=self:getTalentRadius(t)}
+	end,
+	action = function(self, t)
+		local tg = self:getTalentTarget(t)
+		local x, y, target = self:getTarget(tg)
+		if not x or not y or target then return nil end
+		local _ _, x, y = self:canProject(tg, x, y)
+		if game.level.map:checkAllEntities(x, y, "block_move") then return end
+
+		local ox, oy = self.x, self.y
+		self:move(x, y, true)
+		if config.settings.tome.smooth_move > 0 then
+			self:resetMoveAnim()
+			self:setMoveAnim(ox, oy, 8, 5)
+		end
+
+		self:project(tg, self.x, self.y, function(px, py, tg, self)
+			local target = game.level.map(px, py, Map.ACTOR)
+			if target and target ~= self then
+				local hit = self:attackTarget(target, nil, 1.3, true)
+				if hit and target:canBe("stun") then
+					target:setEffect(target.EFF_DAZED, 3, {})
+				end
+			end
+		end)
+
+		return true
+	end,
+	info = function(self, t)
+		return ([[You jump accurately to the target, dealing 130%% weapon damage to all foes in a radius 1 on impactand dazing them for 3 turns.]])
+		:format()
+	end,
+}
+
+uberTalent{
+	name = "Crafty Hands",
+	mode = "passive",
+	require = { special={desc="Know Imbue Item to level 5.", fct=function(self)
+		return self:getTalentLevelRaw(self.T_IMBUE_ITEM) >= 5
+	end} },
+	info = function(self, t)
+		return ([[You are very crafty, you can now also embed gems into your helm and belt.]])
 		:format()
 	end,
 }
