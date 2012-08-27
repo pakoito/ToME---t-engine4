@@ -4153,8 +4153,15 @@ function _M:on_set_temporary_effect(eff_id, e, p)
 	if e.status == "detrimental" and e.type == "physical" and self:attr("physical_negative_status_effect_immune") and not e.subtype["cross tier"] then
 		p.dur = 0
 	end
+	if e.status == "detrimental" and e.type == "spell" and self:attr("spell_negative_status_effect_immune") and not e.subtype["cross tier"] then
+		p.dur = 0
+	end
 	if self:attr("status_effect_immune") then
 		p.dur = 0
+	end
+
+	if e.status == "detrimental" and e.type == "physical" and self:knowTalent(self.T_SPINE_OF_THE_WORLD) then
+		self:triggerTalent(self.T_SPINE_OF_THE_WORLD)
 	end
 end
 

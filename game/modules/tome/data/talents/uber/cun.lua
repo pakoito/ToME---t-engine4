@@ -180,7 +180,7 @@ uberTalent{
 		Cold damage has 30%% chances to turn your skin into ice for 5 turns, reducing physical damage taken by 30%% and dealing 100 ice damage to attackers.
 		Lightning damage has 20%% chances to become pure lightning for 3 turns, any damage will teleport you to an adjacent tile and ignore the damage (can only happen once per turn).
 		Light damage has 30%% chances to create a barrier around you absorbing 200 damage for 5 turns.
-		Nature damage has 30%% chances to harden your skin, preventing the application of any physical detrimental effects for 5 turns.
+		Nature damage has 30%% chances to harden your skin, preventing the application of any magical detrimental effects for 5 turns.
 		This only triggers for hits over 300 damage.]])
 		:format()
 	end,

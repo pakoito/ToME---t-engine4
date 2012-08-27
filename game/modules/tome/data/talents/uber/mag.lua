@@ -122,8 +122,8 @@ uberTalent{
 	on_learn = function(self, t)
 		if self.alchemy_golem then self.alchemy_golem:learnTalent(self.alchemy_golem.T_DRAIN, true, 3) end
 	end,
-	require = { special={desc=".", fct=function(self)
-		return self:getTalentLevelRaw(self.T_IMBUE_ITEM) >= 5
+	require = { special={desc="Have summoned at least 100 creatures affected by this talent (alchemist golem count as 100).", fct=function(self)
+		return self:attr("summoned_times") and self:attr("summoned_times") >= 100
 	end} },
 	info = function(self, t)
 		return ([[You infuse blighted energies in all your summons, giving them all a new talent:

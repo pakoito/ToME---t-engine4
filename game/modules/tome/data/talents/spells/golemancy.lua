@@ -27,6 +27,7 @@ function getGolem(self)
 end
 
 local function makeGolem(self)
+	self:attr("summoned_times", 100)
 	local g = require("mod.class.NPC").new{
 		type = "construct", subtype = "golem",
 		display = 'g', color=colors.WHITE, image = "npc/alchemist_golem.png",

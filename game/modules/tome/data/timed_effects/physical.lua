@@ -1915,7 +1915,7 @@ newEffect{
 	status = "beneficial",
 	parameters = { },
 	activate = function(self, eff)
-		self:effectTemporaryValue(eff, "physical_negative_status_effect_immune", 1)
+		self:effectTemporaryValue(eff, "spell_negative_status_effect_immune", 1)
 	end,
 }
 
@@ -1934,3 +1934,19 @@ newEffect{
 		self.reset_rush_on_death = nil
 	end,
 }
+
+newEffect{
+	name = "SPINE_OF_THE_WORLD", image = "talents/spine_of_the_world.png",
+	desc = "Spine of the World",
+	long_desc = function(self, eff) return ("Immune to physical effects.") end,
+	type = "physical",
+	subtype = { status=true },
+	status = "beneficial",
+	parameters = { },
+	on_gain = function(self, err) return "#Target# become impreviosu to physical effects.", "+Spine of the World" end,
+	on_lose = function(self, err) return "#Target# is less imprevious to physical effects.", "-Spine of the World" end,
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "physical_negative_status_effect_immune", 1)
+	end,
+}
+
