@@ -18,20 +18,20 @@
 -- darkgod@te4.org
 
 local reward = {
-	normal = {
+	all = {
 		["technique/conditioning"] = true,
+		["cunning/survival"] = true,
+	},
+	normal = {
 		["spell/divination"] = true,
 		["spell/staff-combat"] = true,
 		["spell/stone-alchemy"] = true,
-		["cunning/survival"] = true,
 		["celestial/chants"] = true,
 		["celestial/light"] = true,
 	},
 	antimagic = {
-		["technique/conditioning"] = true,
 		["wild-gift/call"] = true,
 		["wild-gift/mindstar-mastery"] = true,
-		["cunning/survival"] = true,
 		["technique/mobility"] = true,
 		["technique/field-control"] = true,
 	},
