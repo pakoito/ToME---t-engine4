@@ -160,6 +160,33 @@ local reward_types = {
 			},
 		},
 	},
+	temporal = {
+		types = {
+			["chronomancy/chronomancy"] = 0.7,
+		},
+		talents = {
+			[Talents.T_PPRECOGNIION] = 1,
+			[Talents.T_SPIN_FATE] = 1,
+		},
+		stats = {
+			[Stats.STAT_MAG] = 2,
+			[Stats.STAT_CUN] = 1,
+		},
+		antimagic = {
+			types = {
+				["psionic/dreaming"] = 0.7,
+			},
+			talents = {
+				[Talents.T_SLEEP] = 1,
+				[Talents.T_DREAM_WALK] = 1,
+			},
+			saves = { spell = 4 },
+			stats = {
+				[Stats.STAT_WIL] = 1,
+				[Stats.STAT_CUN] = 2,
+			},
+		},
+	},
 	exotic = {
 		talents = {
 			[Talents.T_DISARM] = 1,

@@ -204,6 +204,34 @@ local possible_types = {
 			sunwall_query = true,
 		},
 	},
+	{ name="temporal explorer", random="player", portal="temporal portal", chance=30,
+		text = [[Oh but you are ... are you ?! ME?!
+So I was right, this is not my original time-thread!
+Please help me! I am afraid I lost myself in this place. I know there is a temporal portal left around here by a friend, but I have fought too many battles, and I fear I will not make it. Would you help me? Would you help .. yourself?]],
+		actor = {
+			name = "%s, temporal explorer",
+			type = "humanoid", subtype = "human", female=true, image = "player/higher_female.png",
+			display = "@", color=colors.YELLOW,
+			desc = [[She looks tired and wounded. She is so similar to you and yet completely different. Weird.]],
+			autolevel = "caster",
+			ai = "escort_quest", ai_state = { talent_in=4, },
+			stats = { str=8, dex=7, mag=18, con=12 },
+
+			body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },
+			resolvers.equip{ {type="weapon", subtype="staff", autoreq=true} },
+			resolvers.talents{ [Talents.T_DUST_TO_DUST]=1, },
+			lite = 4,
+			rank = 2,
+			exp_worth = 1,
+
+			max_life = 50, life_regen = 0,
+			life_rating = 11,
+			combat_armor = 3, combat_def = 3,
+			inc_damage = {all=-50},
+
+			reward_type = "temporal",
+		},
+	},
 	{ name="worried loremaster", random="female", chance=30,
 		text = [[Please help me! I am afraid I lost myself in this place. I know there is a recall portal left around here by a friend, but I have fought too many battles, and I fear I will not make it. Would you help me?]],
 		actor = {
@@ -314,10 +342,14 @@ on_grant = function(self, who)
 		if rng.percent(self.kind.chance) then break end
 	end
 
-	local ng = NameGenerator.new(name_rules[self.kind.random])
+	if self.kind.random == "player" then
+		self.kind.actor.name = self.kind.actor.name:format(game.player.name)
+	else
+		local ng = NameGenerator.new(name_rules[self.kind.random])
+		self.kind.actor.name = self.kind.actor.name:format(ng:generate())
+	end
 
 	self.kind.actor.level_range = {game.player.level, game.player.level}
-	self.kind.actor.name = self.kind.actor.name:format(ng:generate())
 	self.kind.actor.faction = who.faction
 	self.kind.actor.summoner = who
 	self.kind.actor.quest_id = self.id
@@ -350,7 +382,7 @@ on_grant = function(self, who)
 	g = g:cloneFull()
 	g.__nice_tile_base = nil
 	g.show_tooltip = true
-	g.name = "Recall Portal: "..npc.name
+	g.name = (self.kind.portal or "Recall Portal")..": "..npc.name
 	g.display = '&'
 	g.color_r = colors.VIOLET.r
 	g.color_g = colors.VIOLET.g

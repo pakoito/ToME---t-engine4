@@ -28,17 +28,20 @@ local reward = {
 		["spell/stone-alchemy"] = true,
 		["celestial/chants"] = true,
 		["celestial/light"] = true,
+		["chronomancy/chronomancy"] = true,
 	},
 	antimagic = {
 		["wild-gift/call"] = true,
 		["wild-gift/mindstar-mastery"] = true,
 		["technique/mobility"] = true,
 		["technique/field-control"] = true,
+		["psionic/dreaming"] = true,
 	},
 }
 local function generate_rewards()
 	local answers = {}
 	local what = game.player:attr("forbid_arcane") and reward.antimagic or reward.normal
+	table.merge(what, reward.all)
 	if what then
 		for tt, mastery in pairs(what) do if game.player:knowTalentType(tt) == nil then
 			local tt_def = game.player:getTalentTypeFrom(tt)
