@@ -198,7 +198,7 @@ uberTalent{
 	trigger = function(self, t, target)
 		self:startTalentCooldown(t)
 		game.logSeen(self, "#LIGHT_BLUE#%s punishes %s for casting a spell!", self.name:capitalize(), target.name)
-		DamageType:get(DamageType.MIND).projector(self, target.x, target.y, DamageType.MIND, 70 + self:getWil() * 2)
+		DamageType:get(DamageType.MIND).projector(self, target.x, target.y, DamageType.MIND, 20 + self:getWil() * 2)
 		return true
 	end,
 	info = function(self, t)
