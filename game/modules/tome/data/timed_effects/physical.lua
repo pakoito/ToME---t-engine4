@@ -1952,7 +1952,7 @@ newEffect{
 newEffect{
 	name = "FUNGAL_BLOOD", image = "talents/fungal_blood.png",
 	desc = "Fungal Blood",
-	long_desc = function(self, eff) return ("You have %d fungal energies stored. Release them to heal by using the Fungal Blood prodigy.") end,
+	long_desc = function(self, eff) return ("You have %d fungal energies stored. Release them to heal by using the Fungal Blood prodigy."):format(eff.power) end,
 	type = "physical",
 	subtype = { heal=true },
 	status = "beneficial",

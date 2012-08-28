@@ -1842,6 +1842,7 @@ newEffect{
 			game._chronoworlds = nil
 			game.player:startTalentCooldown(self.T_REVISIONIST_HISTORY)
 		end) else
+			game._chronoworlds = nil
 			self:startTalentCooldown(self.T_REVISIONIST_HISTORY)
 		end
 	end,

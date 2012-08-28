@@ -3833,6 +3833,7 @@ end
 --- Starts a talent cooldown; overloaded from the default to handle talent cooldown reduction
 -- @param t the talent to cooldown
 function _M:startTalentCooldown(t)
+	t = self:getTalentFromId(t)
 	if not t.cooldown then return end
 	self.talents_cd[t.id] = self:getTalentCooldown(t)
 	self.changed = true

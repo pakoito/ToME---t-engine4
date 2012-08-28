@@ -157,7 +157,7 @@ uberTalent{
 	end} },
 	on_learn = function(self, t)
 		self:learnTalent(self.T_SPIT_POISON, true, 5)
-		self:learnTalent(self.T_EXOTIC_WEAPON_MASTERY, true, 5)
+		self:learnTalent(self.T_EXOTIC_WEAPONS_MASTERY, true, 5)
 		self.can_breath = self.can_breath or {}
 		self.can_breath.water = (self.can_breath.water or 0) + 1
 	end,

@@ -135,18 +135,18 @@ uberTalent{
 	on_pre_use = function(self, t) return self:hasEffect(self.EFF_FUNGAL_BLOOD) and self:hasEffect(self.EFF_FUNGAL_BLOOD).power > 0 and not self:attr("undead") end,
 	trigger = function(self, t)
 		if self:attr("undead") then return end
-		self:setEffect(self.EFF_FUNGAL_BLOOD, 10, {power=self:getCon() * 1.5})
+		self:setEffect(self.EFF_FUNGAL_BLOOD, 6, {power=self:getCon() * 1.5})
 	end,
 	action = function(self, t)
 		local eff = self:hasEffect(self.EFF_FUNGAL_BLOOD)
-		self:heal(eff.power)
+		self:heal(math.min(eff.power, self:getCon() * self.max_life / 100))
 		return true
 	end,
 	info = function(self, t)
 		return ([[Fungal spores colonize your blood, each time you use an infusion you store %d fungal power.
-		When you use this prodigy the power is released as a heal.
-		Fungal power is stored for 8 turns and loses 10 potency each turn.
-		Fungal power generated increases with Constituion]])
-		:format(self:getCon() * 1.5)
+		When you use this prodigy the power is released as a heal (never higher than %d).
+		Fungal power is stored for 6 turns and loses 10 potency each turn.
+		Fungal power generated and max heal increases with Constitution.]])
+		:format(self:getCon() * 1.5, self:getCon() * self.max_life / 100)
 	end,
 }

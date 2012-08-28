@@ -159,7 +159,7 @@ uberTalent{
 	no_energy = true,
 	is_spell = true,
 	no_npc_use = true,
-	require = { special={desc="Have time-travelled at least once", fct=function(self) return self:attr("time_travel_times") >= 1 end} },
+	require = { special={desc="Have time-travelled at least once", fct=function(self) return self:attr("time_travel_times") and self:attr("time_travel_times") >= 1 end} },
 	action = function(self, t)
 		if game._chronoworlds and game._chronoworlds.revisionist_history then
 			self:hasEffect(self.EFF_REVISIONIST_HISTORY).back_in_time = true

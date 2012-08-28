@@ -174,13 +174,13 @@ uberTalent{
 	cooldown = 10,
 	tactical = { ESCAPE = 1 },
 	require = { special={desc="Having been knocked around at least 50 times.", fct=function(self) return self:attr("knockback_times") and self:attr("knockback_times") >= 50 end} },
-	activation = function(self, t)
+	activate = function(self, t)
 		local ret = {}
 		self:talentTemporaryValue(ret, "knockback_on_hit", 1)
 		self:talentTemporaryValue(ret, "resists", {[DamageType.PHYSICAL] = 10})
 		return ret
 	end,
-	deactivation = function(self, t, p)
+	deactivate = function(self, t, p)
 		return true
 	end,
 	info = function(self, t)
