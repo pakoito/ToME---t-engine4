@@ -140,8 +140,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Your abilities sowing confusion and chaos have reached their peak. Now even your most simple moves confuse your enemies, rendering their offense less effective.
-		Your defense increases by %d%%.
+		Your defense increases by %d%% and all projectiles fired at you have their speed reduced by %d
 		Your bonus percent to defense will increase with Cunning.]]):
-		format(self:getTalentLevel(self.T_MISDIRECTION) * (0.02 * (1 + self:getCun() / 85) *100),self:getTalentLevelRaw(t) * 3 ,self:getTalentLevelRaw(t) * 1)
+		format(self:getTalentLevel(self.T_MISDIRECTION) * (0.02 * (1 + self:getCun() / 85) *100),self:getTalentLevelRaw(t) * 3 ,self:getTalentLevelRaw(t) * 1, self:getTalentLevelRaw(t) * 3)
 	end,
 }

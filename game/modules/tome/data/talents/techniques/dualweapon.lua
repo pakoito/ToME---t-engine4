@@ -35,7 +35,8 @@ newTalent{
 	points = 5,
 	require = techs_dex_req2,
 	info = function(self, t)
-		return ([[You have learned to block incoming blows with your weapons, increasing your defense by %d.]]):format(4 + (self:getTalentLevel(t) * self:getDex()) / 12)
+		return ([[You have learned to block incoming blows with your weapons, increasing your defense by %d.
+		Defense scales with Dexterity]]):format(4 + (self:getTalentLevel(t) * self:getDex()) / 12)
 	end,
 }
 
