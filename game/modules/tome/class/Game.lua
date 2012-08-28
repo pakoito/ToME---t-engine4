@@ -928,6 +928,8 @@ end
 
 --- Clones the game world for chronomancy spells
 function _M:chronoClone(name)
+	self:getPlayer(true):attr("time_travel_times", 1)
+
 	local d = Dialog:simpleWaiter("Chronomancy", "Folding the space time structure...")
 
 	local to_reload = {}

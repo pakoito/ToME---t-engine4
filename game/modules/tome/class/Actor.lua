@@ -1025,6 +1025,8 @@ function _M:knockback(srcx, srcy, dist, recursive, on_terrain)
 		self:resetMoveAnim()
 		self:setMoveAnim(ox, oy, 9, 5)
 	end
+
+	self:attr("knockback_times", 1)
 end
 
 --- Pull in the actor
@@ -3462,6 +3464,7 @@ function _M:postUseTalent(ab, ret)
 	game:onTickEnd(function()
 		if ab.type[1] == "inscriptions/infusions" then
 			self:setEffect(self.EFF_INFUSION_COOLDOWN, 10, {power=1})
+			if self:knowTalent(self.T_FUNGAL_BLOOD) then self:triggerTalent(self.T_FUNGAL_BLOOD) end
 		elseif ab.type[1] == "inscriptions/runes" then
 			self:setEffect(self.EFF_RUNE_COOLDOWN, 10, {power=1})
 		elseif ab.type[1] == "inscriptions/taints" then

@@ -70,7 +70,7 @@ uberTalent{
 }
 
 uberTalent{
-	name = "Massive Blow", 
+	name = "Massive Blow",
 	mode = "activated",
 	require = { special={desc="Dug at least 30 walls/trees/... and know at least 20 talent levels of stamina using talents.", fct=function(self) return self.dug_times and self.dug_times >= 30 and knowRessource(self, "stamina", 20) end} },
 	cooldown = 10,
@@ -100,7 +100,7 @@ uberTalent{
 }
 
 uberTalent{
-	name = "Steamroller", 
+	name = "Steamroller",
 	mode = "passive",
 	require = { special={desc="Know the Rush talent.", fct=function(self) return self:knowTalent(self.T_RUSH) end} },
 	info = function(self, t)
@@ -112,7 +112,7 @@ uberTalent{
 uberTalent{
 	name = "Irresistible Sun",
 	cooldown = 25,
-	require = { special={desc="Dealt over 50000 light or fire damage", fct=function(self) return 
+	require = { special={desc="Dealt over 50000 light or fire damage", fct=function(self) return
 		self.damage_log and (
 			(self.damage_log[DamageType.FIRE] and self.damage_log[DamageType.FIRE] >= 50000) or
 			(self.damage_log[DamageType.L] and self.damage_log[DamageType.LIGHT] >= 50000)
@@ -137,6 +137,22 @@ uberTalent{
 	info = function(self, t)
 		return ([[You are strong, fatigue means nothing to you
 		Fatigue is permanently set to 0.]])
+		:format()
+	end,
+}
+
+uberTalent{
+	name = "Legacy of the Naloren",
+	mode = "passive",
+	on_learn = function(self, t)
+		self:learnTalent(self.T_SPIT_POISON, true, 5)
+		self:learnTalent(self.T_EXOTIC_WEAPON_MASTERY, true, 5)
+		self.can_breath = self.can_breath or {}
+		self.can_breath.water = (self.can_breath.water or 0) + 1
+	end,
+	info = function(self, t)
+		return ([[You sided with Slasul ad helped him vanquish Ukllmswwik. You are now able to breathe underwater with ease.
+		You also learnt to use tridents and other exotic weapons easily (gains 5 levels of exotic weapon mastery) and Spit Poison as nagas do.]])
 		:format()
 	end,
 }

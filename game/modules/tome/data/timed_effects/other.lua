@@ -1817,3 +1817,32 @@ newEffect{
 	parameters = { },
 	no_stop_enter_worlmap = true, no_stop_resting = true,
 }
+
+newEffect{
+	name = "REVISIONIST_HISTORY", image = "talents/revisionist_history.png",
+	desc = "Revisionist History",
+	long_desc = function(self, eff) return "While this effect holds you can decide recent history did not happen this way it did." end,
+	type = "other",
+	subtype = { time=true },
+	status = "beneficial",
+	parameters = { },
+	activate = function(self, eff)
+	end,
+	deactivate = function(self, eff)
+		if eff.back_in_time then game:onTickEnd(function()
+			-- Update the shader of the original player
+			self:updateMainShader()
+			if game._chronoworlds == nil then
+				game.logSeen(self, "#LIGHT_RED#The spell fizzles.")
+				self:startTalentCooldown(self.T_REVISIONIST_HISTORY)
+				return
+			end
+			game.logPlayer(game.player, "#LIGHT_BLUE#You go back in time to rewrite history!")
+			game:chronoRestore("revisionist_history", true)
+			game._chronoworlds = nil
+			game.player:startTalentCooldown(self.T_REVISIONIST_HISTORY)
+		end) else
+			self:startTalentCooldown(self.T_REVISIONIST_HISTORY)
+		end
+	end,
+}

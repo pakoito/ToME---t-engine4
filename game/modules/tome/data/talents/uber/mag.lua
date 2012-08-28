@@ -99,10 +99,11 @@ uberTalent{
 uberTalent{
 	name = "Temporal Form",
 	cooldown = 30,
-	require = { special={desc="Dealt over 50000 temporal damage and visited an out-of-time zone", fct=function(self) return 
-		self.damage_log and (self.damage_log[DamageType.TEMPORAL] and self.damage_log[DamageType.TEMPORAL] >= 50000) and self:attr("temporal_touched", 1)
+	require = { special={desc="Dealt over 50000 temporal damage and visited an out-of-time zone", fct=function(self) return
+		self.damage_log and (self.damage_log[DamageType.TEMPORAL] and self.damage_log[DamageType.TEMPORAL] >= 50000) and self:attr("temporal_touched")
 	end} },
 	no_energy = true,
+	is_spell = true,
 	action = function(self, t)
 		self:setEffect(self.EFF_TEMPORAL_FORM, 7, {})
 		return true
@@ -146,5 +147,34 @@ uberTalent{
 		- Thought-Forms: Flame of Urh'Rok
 		- Other race or object-based summons might be affected too
 		]]):format()
+	end,
+}
+
+uberTalent{
+	name = "Revisionist History",
+	cooldown = 40,
+	no_energy = true,
+	is_spell = true,
+	require = { special={desc="Have time-travelled at least once", fct=function(self) return self:attr("time_travel_times") >= 1 end} },
+	action = function(self, t)
+		if game._chronoworlds and game._chronoworlds.revisionist_history then
+			self:hasEffect(self.EFF_REVISIONIST_HISTORY).back_in_time = true
+			self:removeEffect(self.EFF_REVISIONIST_HISTORY)
+			return nil -- the effect removal starts the cooldown
+		end
+
+		if checkTimeline(self) == true then return end
+
+		game:onTickEnd(function()
+			game:chronoClone("revisionist_history")
+			self:setEffect(self.EFF_REVISIONIST_HISTORY, 9, {})
+		end)
+		return nil -- We do not start the cooldown!
+	end,
+	info = function(self, t)
+		return ([[You can now control the near-past, upon using this prodigy you gain a temporal effect for 10 turns.
+		While his effect holds you can use the prodigy again to rewrite history.
+		This prodigy splits the timeline. Attempting to use another spell that also splits the timeline while this effect is active will be unsuccessful.]])
+		:format()
 	end,
 }

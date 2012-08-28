@@ -749,6 +749,13 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		target:knockback(self.x, self.y, math.ceil(math.log(dam)))
 	end
 
+	-- Roll with it
+	if hitted and target:attr("knockback_on_hit") and not target.turn_procs.roll_with_it and rng.percent(util.bound(dam, 0, 100)) then
+		local ox, oy = self.x, self.y
+		game:onTickEnd(function() target:knockback(ox, oy, 1) end)
+		target.turn_procs.roll_with_it = true
+	end
+
 	-- Weakness hate bonus
 	if hitted and effGloomWeakness and effGloomWeakness.hateBonus or 0 > 0 then
 		self:incHate(effGloomWeakness.hateBonus)

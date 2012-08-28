@@ -88,9 +88,7 @@ newEffect{
 
 		if self:knowTalent(self.T_ANCESTRAL_LIFE) then
 			local t = self:getTalentFromId(self.T_ANCESTRAL_LIFE)
-			print("=====<", self.energy.value)
 			self.energy.value = self.energy.value + (t.getTurn(self, t) * game.energy_to_act / 100)
-			print("=====>", self.energy.value)
 		end
 	end,
 	on_timeout = function(self, eff)
@@ -1943,10 +1941,30 @@ newEffect{
 	subtype = { status=true },
 	status = "beneficial",
 	parameters = { },
-	on_gain = function(self, err) return "#Target# become impreviosu to physical effects.", "+Spine of the World" end,
+	on_gain = function(self, err) return "#Target# become imprevious to physical effects.", "+Spine of the World" end,
 	on_lose = function(self, err) return "#Target# is less imprevious to physical effects.", "-Spine of the World" end,
 	activate = function(self, eff)
 		self:effectTemporaryValue(eff, "physical_negative_status_effect_immune", 1)
+	end,
+}
+
+
+newEffect{
+	name = "FUNGAL_BLOOD", image = "talents/fungal_blood.png",
+	desc = "Fungal Blood",
+	long_desc = function(self, eff) return ("You have %d fungal energies stored. Release them to heal by using the Fungal Blood prodigy.") end,
+	type = "physical",
+	subtype = { heal=true },
+	status = "beneficial",
+	parameters = { power = 10 },
+	on_gain = function(self, err) return nil, "+Fungal Blood" end,
+	on_lose = function(self, err) return nil, "-Fungal Blood" end,
+	on_merge = function(self, old_eff, new_eff)
+		new_eff.power = new_eff.power + old_eff.power
+		return new_eff
+	end,
+	on_timeout = function(self, eff)
+		eff.power = math.max(0, eff.power - 10)
 	end,
 }
 

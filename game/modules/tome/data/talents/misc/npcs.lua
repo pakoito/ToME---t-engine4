@@ -731,13 +731,15 @@ newTalent{
 		local tg = {type="bolt", range=self:getTalentRange(t)}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.POISON, 20 + (self:getDex() * self:getTalentLevel(t)) * 0.8, {type="slime"})
+		local s = math.max(self:getDex(), self:getStr())
+		self:project(tg, x, y, DamageType.POISON, 20 + (s * self:getTalentLevel(t)) * 0.8, {type="slime"})
 		game:playSoundNear(self, "talents/slime")
 		return true
 	end,
 	info = function(self, t)
+		local s = math.max(self:getDex(), self:getStr())
 		return ([[Spit poison at your target doing %0.2f poison damage.
-		The damage will increase with the Dexterity stat]]):format(20 + (self:getDex() * self:getTalentLevel(t)) * 0.8)
+		The damage will increase with the Strength or Dexterity stat (whichever is higher)]]):format(20 + (s * self:getTalentLevel(t)) * 0.8)
 	end,
 }
 

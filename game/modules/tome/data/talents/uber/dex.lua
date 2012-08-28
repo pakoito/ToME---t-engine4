@@ -159,3 +159,24 @@ uberTalent{
 		:format()
 	end,
 }
+
+uberTalent{
+	name = "Roll With It",
+	mode = "sustained",
+	cooldown = 10,
+	require = { special={desc="Having been knocked around at least 50 times.", fct=function(self) return self:attr("knockback_times") and self:attr("knockback_times") >= 50 end} },
+	activation = function(self, t)
+		local ret = {}
+		self:talentTemporaryValue(ret, "knockback_on_hit", 1)
+		self:talentTemporaryValue(ret, "resists", {[DamageType.PHYSICAL] = 10})
+		return ret
+	end,
+	deactivation = function(self, t, p)
+		return true
+	end,
+	info = function(self, t)
+		return ([[You have learnt to take a few hits when needed, you know how to flow with them, reducing all physical damage by 10%%.
+		When you get hit by melee or archery you go back one tile (this can only happen once per turn) for free.]])
+		:format()
+	end,
+}

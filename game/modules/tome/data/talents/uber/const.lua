@@ -96,7 +96,7 @@ uberTalent{
 uberTalent{
 	name = "Armour of Shadows",
 	mode = "passive",
-	require = { special={desc="Dealt over 50000 darkness damage", fct=function(self) return 
+	require = { special={desc="Dealt over 50000 darkness damage", fct=function(self) return
 		self.damage_log and (
 			(self.damage_log[DamageType.DARKNESS] and self.damage_log[DamageType.DARKNESS] >= 50000)
 		)
@@ -106,7 +106,7 @@ uberTalent{
 	end,
 	on_unlearn = function(self, t)
 		self:attr("darkness_darkens", -1)
-	end,	
+	end,
 	info = function(self, t)
 		return ([[You know how to meld in the shadows. As long as you stand on an unlit tile you gain 30 armour and 50%% armour hardiness.
 		Also all darkness damage you deal will unlight the target terrain.]])
@@ -124,5 +124,27 @@ uberTalent{
 	info = function(self, t)
 		return ([[Your back is has hard as stone. Each time you are affected by a physical effect your body hardens, for 5 turns wil become immune to all physical effects.]])
 		:format()
+	end,
+}
+
+uberTalent{
+	name = "Fungal Blood",
+	require = { special={desc="Do not be undead.", fct=function(self) return not self:attr("undead") end} },
+	on_pre_use = function(self, t) return self:hasEffect(self.EFF_FUNGAL_BLOOD) and self:hasEffect(self.EFF_FUNGAL_BLOOD).power > 0 and not self:attr("undead") end,
+	trigger = function(self, t)
+		if self:attr("undead") then return end
+		self:setEffect(self.EFF_FUNGAL_BLOOD, 10, {power=self:getCon() * 1.5})
+	end,
+	action = function(self, t)
+		local eff = self:hasEffect(self.EFF_FUNGAL_BLOOD)
+		self:heal(eff.power)
+		return true
+	end,
+	info = function(self, t)
+		return ([[Fungal spores colonize your blood, each time you use an infusion you store %d fungal power.
+		When you use this prodigy the power is released as a heal.
+		Fungal power is stored for 8 turns and loses 10 potency each turn.
+		Fungal power generated increases with Constituion]])
+		:format(self:getCon() * 1.5)
 	end,
 }
