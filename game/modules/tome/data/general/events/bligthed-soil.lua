@@ -32,7 +32,7 @@ game.zone:addEntity(game.level, g, "terrain", x, y)
 if core.shader.active(4) then
 	level.map:particleEmitter(x, y, 3, "shader_ring_rotating", {rotation=0, radius=6}, {type="flames", aam=0.5, zoom=0.4, npow=1, time_factor=15000, color1={0.2,0.4,0,1}, color2={0.2,0.5,0.1,1}, hide_center=0})
 else
-	level.map:particleEmitter(x, y, 3, "ultrashield", {rm=50, rM=80, gm=80, gM=100, bm=30, bM=60, am=80, aM=150, radius=3, density=60, life=14, instop=17})
+	level.map:particleEmitter(x, y, 3, "ultrashield", {rm=50, rM=80, gm=80, gM=100, bm=30, bM=60, am=220, aM=250, radius=3, density=1, life=14, instop=17})
 end
 
 local on_stand = function(self, x, y, who) who:setEffect(who.EFF_BLIGHTED_SOIL, 1, {}) end

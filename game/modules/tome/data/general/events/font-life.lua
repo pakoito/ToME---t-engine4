@@ -32,7 +32,7 @@ game.zone:addEntity(game.level, g, "terrain", x, y)
 if core.shader.active(4) then
 	level.map:particleEmitter(x, y, 2, "shader_ring_rotating", {rotation=0, radius=4}, {type="flames", aam=0.5, zoom=3, npow=4, time_factor=4000, color1={0.2,0.7,0,1}, color2={0,1,0.3,1}, hide_center=0})
 else
-	level.map:particleEmitter(x, y, 2, "ultrashield", {rm=0, rM=0, gm=180, gM=220, bm=10, bM=80, am=80, aM=150, radius=2, density=60, life=14, instop=17})
+	level.map:particleEmitter(x, y, 2, "ultrashield", {rm=0, rM=0, gm=180, gM=220, bm=10, bM=80, am=220, aM=250, radius=2, density=1, life=14, instop=17})
 end
 
 local on_stand = function(self, x, y, who) who:setEffect(who.EFF_FONT_OF_LIFE, 1, {}) end

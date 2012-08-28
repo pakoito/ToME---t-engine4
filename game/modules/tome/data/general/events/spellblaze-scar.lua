@@ -32,7 +32,7 @@ game.nicer_tiles:updateAround(level, x, y)
 if core.shader.active(4) then
 	level.map:particleEmitter(x, y, 1, "shader_ring_rotating", {rotation=0, radius=2}, {type="flames", aam=0.5, zoom=3, npow=4, time_factor=1000, hide_center=0})
 else
-	level.map:particleEmitter(x, y, 1, "ultrashield", {rm=180, rM=220, gm=0, gM=0, bm=10, bM=80, am=30, aM=100, radius=1, density=60, life=14, instop=17})
+	level.map:particleEmitter(x, y, 1, "ultrashield", {rm=180, rM=220, gm=0, gM=0, bm=10, bM=80, am=220, aM=250, radius=1, density=1, life=14, instop=17})
 end
 
 local on_stand = function(self, x, y, who) who:setEffect(who.EFF_SPELLBLAZE_SCAR, 1, {}) end

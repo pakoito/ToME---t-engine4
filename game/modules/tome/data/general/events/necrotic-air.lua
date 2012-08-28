@@ -24,7 +24,7 @@ if not x then return false end
 if core.shader.active(4) then
 	level.map:particleEmitter(x, y, 2, "shader_ring_rotating", {rotation=0, radius=4}, {type="flames", aam=0.2, zoom=1, npow=8, time_factor=6000, color1={0.1,0.1,0.1,6}, color2={0.3,0.3,0.3,1}, hide_center=0})
 else
-	level.map:particleEmitter(x, y, 2, "ultrashield", {rm=200, rM=250, gm=200, gM=250, bm=80, bM=120, am=80, aM=150, radius=2, density=60, life=14, instop=17})
+	level.map:particleEmitter(x, y, 2, "ultrashield", {rm=200, rM=250, gm=200, gM=250, bm=80, bM=120, am=220, aM=250, radius=2, density=1, life=14, instop=17})
 end
 
 local on_stand = function(self, x, y, who) who:setEffect(who.EFF_NECROTIC_AIR, 1, {}) end
