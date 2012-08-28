@@ -121,11 +121,11 @@ uberTalent{
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y, target = self:getTarget(tg)
-		if not x or not y or target then return nil end
+		if not x or not y then return nil end
 		local _ _, x, y = self:canProject(tg, x, y)
 
 		if game.level.map(x, y, Map.ACTOR) then
-			local x, y = util.findFreeGrid(x, y, 1, true, {[Map.ACTOR]=true})
+			x, y = util.findFreeGrid(x, y, 1, true, {[Map.ACTOR]=true})
 			if not x then return end
 		end
 

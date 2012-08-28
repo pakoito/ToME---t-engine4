@@ -127,6 +127,8 @@ newEntity{ define_as = "SNAPROOT", -- backup guardian
 		[Talents.T_GRAB]=5,
 		[Talents.T_THROW_BOULDER]=5,
 		[Talents.T_CRUSH]=5,
+		[Talents.T_TITAN_S_SMASH] = 1, 
+		[Talents.T_MASSIVE_BLOW] = 1, 
 	},
 	autolevel = "warriorwill",
 	ai = "tactical", ai_state = { talent_in=2, ai_move="move_astar", },

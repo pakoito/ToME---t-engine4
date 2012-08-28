@@ -299,6 +299,11 @@ This one looks even nastier and looks toward you with what seems to be disdain. 
 		[Talents.T_INFERNO]={base=5, every=5, max=8},
 		[Talents.T_KNOCKBACK]={base=5, every=5, max=8},
 		[Talents.T_STUN]={base=2, every=5, max=5},
+		[Talents.T_WILDFIRE]={base=5, every=5, max=10},
+		[Talents.T_BLASTWAVE]={base=4, every=5, max=7},
+		[Talents.T_BURNING_WAKE]={base=3, every=5, max=5},
+		[Talents.T_CLEANSING_FLAMES]={base=2, every=5, max=5},
+		[Talents.T_ELEMENTAL_SURGE]=1,
 	},
 	resolvers.sustains_at_birth(),
 

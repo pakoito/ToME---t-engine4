@@ -81,6 +81,8 @@ newEntity{ base="BASE_NPC_ORC_VOR", define_as = "VOR",
 
 		[Talents.T_SPELLCRAFT]={base=5, every=7, max=7},
 		[Talents.T_ESSENCE_OF_SPEED]={base=1, every=6, max=7},
+
+		[Talents.T_METEORIC_CRASH]=1,
 	},
 	resolvers.sustains_at_birth(),
 

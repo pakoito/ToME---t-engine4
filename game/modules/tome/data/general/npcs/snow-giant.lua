@@ -133,6 +133,7 @@ newEntity{ base = "BASE_NPC_SNOW_GIANT",
 		[Talents.T_UTTERCOLD]={base=4, every=6, max=8},
 		[Talents.T_FREEZE]={base=4, every=6, max=8},
 		[Talents.T_ICE_STORM]={base=4, every=6, max=8},
+		[Talents.T_GIANT_LEAP]=1,
 		},
 	make_escort = {
 		{type="giant", subtype="ice", number=3},

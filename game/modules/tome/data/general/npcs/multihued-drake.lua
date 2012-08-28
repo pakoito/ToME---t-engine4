@@ -163,7 +163,7 @@ newEntity{ base = "BASE_NPC_MULTIHUED_DRAKE",
 	no_auto_resists = true,
 	color_switch = 2,
 	resists = { all=50, [DamageType.FIRE] = 100, [DamageType.COLD] = -100 },
-	resolvers.talents{ [Talents.T_FIRE_BREATH]=15, [Talents.T_FLAME]=7 },
+	resolvers.talents{ [Talents.T_DRACONIC_BODY] = 1, [Talents.T_FIRE_BREATH]=15, [Talents.T_FLAME]=7 },
 
 	stats = { str=20, dex=20, mag=80, con=16 },
 
@@ -172,27 +172,27 @@ newEntity{ base = "BASE_NPC_MULTIHUED_DRAKE",
 	colors = {
 		{"red", {
 			resists = { all=50, [DamageType.FIRE] = 100, [DamageType.COLD] = -100 },
-			talents = { [Talents.T_EQUILIBRIUM_POOL]=1, [Talents.T_MANA_POOL]=1, [Talents.T_FIRE_BREATH]=15, [Talents.T_FLAME]=7 },
+			talents = { [Talents.T_DRACONIC_BODY] = 1, [Talents.T_EQUILIBRIUM_POOL]=1, [Talents.T_MANA_POOL]=1, [Talents.T_FIRE_BREATH]=15, [Talents.T_FLAME]=7 },
 		}},
 		{"white", {
 			resists = { all=50, [DamageType.COLD] = 100, [DamageType.FIRE] = -100 },
-			talents = { [Talents.T_EQUILIBRIUM_POOL]=1, [Talents.T_MANA_POOL]=1, [Talents.T_ICE_BREATH]=15, [Talents.T_ICE_SHARDS]=7 },
+			talents = { [Talents.T_DRACONIC_BODY] = 1, [Talents.T_EQUILIBRIUM_POOL]=1, [Talents.T_MANA_POOL]=1, [Talents.T_ICE_BREATH]=15, [Talents.T_ICE_SHARDS]=7 },
 		}},
 		{"blue", {
 			resists = { all=50, [DamageType.LIGHTNING] = 100, [DamageType.PHYSICAL] = -100 },
-			talents = { [Talents.T_EQUILIBRIUM_POOL]=1, [Talents.T_MANA_POOL]=1, [Talents.T_LIGHTNING_BREATH]=15, [Talents.T_SHOCK]=7 },
+			talents = { [Talents.T_DRACONIC_BODY] = 1, [Talents.T_EQUILIBRIUM_POOL]=1, [Talents.T_MANA_POOL]=1, [Talents.T_LIGHTNING_BREATH]=15, [Talents.T_SHOCK]=7 },
 		}},
 		{"green", {
 			resists = { all=50, [DamageType.NATURE] = 100, [DamageType.BLIGHT] = -100 },
-			talents = { [Talents.T_EQUILIBRIUM_POOL]=1, [Talents.T_MANA_POOL]=1, [Talents.T_POISON_BREATH]=15, [Talents.T_SPIT_POISON]=7 },
+			talents = { [Talents.T_DRACONIC_BODY] = 1, [Talents.T_EQUILIBRIUM_POOL]=1, [Talents.T_MANA_POOL]=1, [Talents.T_POISON_BREATH]=15, [Talents.T_SPIT_POISON]=7 },
 		}},
 		{"dark", {
 			resists = { all=50, [DamageType.DARKNESS] = 100, [DamageType.LIGHT] = -100 },
-			talents = { [Talents.T_NEGATIVE_POOL]=1, [Talents.T_STARFALL]=7, [Talents.T_MOONLIGHT_RAY]=7 },
+			talents = { [Talents.T_DRACONIC_BODY] = 1, [Talents.T_NEGATIVE_POOL]=1, [Talents.T_STARFALL]=7, [Talents.T_MOONLIGHT_RAY]=7 },
 		}},
 		{"violet", {
 			resists = { all=-50 },
-			talents = { [Talents.T_MANA_POOL]=1, [Talents.T_MANATHRUST]=12 },
+			talents = { [Talents.T_DRACONIC_BODY] = 1, [Talents.T_MANA_POOL]=1, [Talents.T_MANATHRUST]=12 },
 		}},
 	},
 

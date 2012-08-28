@@ -179,6 +179,9 @@ newEntity{ define_as = "ALUIN",
 		[Talents.T_WEAPON_OF_LIGHT]={base=5, every=7, max=7},
 		[Talents.T_CRUSADE]={base=8, every=7, max=10},
 		[Talents.T_FIREBEAM]={base=7, every=7, max=9},
+
+		[Talents.T_ARCANE_MIGHT] = 1,
+		[Talents.T_IRRESISTIBLE_SUN] = 1,
 	},
 	resolvers.sustains_at_birth(),
 

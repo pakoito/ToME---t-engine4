@@ -72,7 +72,8 @@ newEntity{ define_as = "THE_MASTER",
 	necrotic_aura_base_souls = 10,
 
 	resolvers.talents{
-		[Talents.T_NECROTIC_AURA] = 1,
+		[Talents.T_HIDDEN_RESOURCES] = 1,
+
 		[Talents.T_AURA_MASTERY] = 6,
 		[Talents.T_CREATE_MINIONS]={base=4, every=5, max=7},
 		[Talents.T_RIGOR_MORTIS]={base=3, every=5, max=5},

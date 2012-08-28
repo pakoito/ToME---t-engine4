@@ -378,6 +378,8 @@ newEntity{ base = "BASE_NPC_SPIDER",
 		[Talents.T_STATIC_HISTORY]={base=7, every=6},
 
 		[Talents.T_SUMMON]=1,
+
+		[Talents.T_LUCKY_DAY] = 1,
 	},
 }
 

@@ -62,6 +62,7 @@ newEntity{ base = "BASE_NPC_ELVEN_CASTER", define_as = "GRAND_CORRUPTOR",
 		[Talents.T_CYST_BURST]={base=4, every=5, max=7},
 		[Talents.T_BURNING_HEX]={base=5, every=5, max=8},
 		[Talents.T_WRAITHFORM]={base=5, every=5, max=8},
+		[Talents.T_BLOODSPRING]=1,
 	},
 	resolvers.sustains_at_birth(),
 

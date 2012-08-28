@@ -65,6 +65,8 @@ newEntity{ base="BASE_NPC_ORC_GRUSHNAK", define_as = "GNARG",
 	talent_cd_reduction={[Talents.T_RUSH]=35,},
 
 	resolvers.talents{
+		[Talents.T_GIANT_LEAP] = 1,
+		[Talents.T_WINDBLADE] = 1,
 		[Talents.T_RUSH]=5,
 		[Talents.T_WARSHOUT]={base=5, every=7, max=7},
 		[Talents.T_STUNNING_BLOW]={base=5, every=7, max=7},

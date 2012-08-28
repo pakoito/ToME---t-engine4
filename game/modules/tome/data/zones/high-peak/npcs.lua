@@ -193,6 +193,9 @@ newEntity{
 		[Talents.T_WEAPON_COMBAT]=5,
 		[Talents.T_WEAPONS_MASTERY]={base=4, every=10},
 		[Talents.T_ARMOUR_TRAINING]={base=7, every=6},
+
+		[Talents.T_LUCKY_DAY]=1,
+		[Talents.T_EYE_OF_THE_TIGER]=1,
 	},
 	resolvers.sustains_at_birth(),
 
@@ -277,6 +280,8 @@ newEntity{ define_as = "FALLEN_SUN_PALADIN_AERYN",
 		[Talents.T_SECOND_LIFE]=7,
 		[Talents.T_BATHE_IN_LIGHT]=7,
 		[Talents.T_PROVIDENCE]=7,
+
+		[Talents.T_IRRESISTIBLE_SUN]=1,
 	},
 	resolvers.sustains_at_birth(),
 }
@@ -340,6 +345,8 @@ newEntity{ define_as = "HIGH_SUN_PALADIN_AERYN",
 		[Talents.T_SECOND_LIFE]=5,
 		[Talents.T_BATHE_IN_LIGHT]=5,
 		[Talents.T_PROVIDENCE]=5,
+
+		[Talents.T_IRRESISTIBLE_SUN]=1,
 	},
 	resolvers.sustains_at_birth(),
 }

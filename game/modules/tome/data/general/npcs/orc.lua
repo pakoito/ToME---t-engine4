@@ -316,6 +316,8 @@ newEntity{ base = "BASE_NPC_ORC",
 		[Talents.T_WEAPONS_MASTERY]={base=3, every=8, max=5},
 
 		[Talents.T_ARMOUR_TRAINING]={base=5, every=4, max=12},
+
+		[Talents.T_SPELL_FEEDBACK] = 1,
 	},
 	resolvers.sustains_at_birth(),
 }

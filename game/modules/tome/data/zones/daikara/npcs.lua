@@ -130,6 +130,7 @@ newEntity{ base="BASE_NPC_ORC_GRUSHNAK", define_as = "MASSOK",
 		[Talents.T_UNSTOPPABLE]=5,
 		[Talents.T_MORTAL_TERROR]=5,
 		[Talents.T_BLOODBATH]=5,
+		[Talents.T_MASSIVE_BLOW] = 1,
 	},
 	resolvers.sustains_at_birth(),
 }

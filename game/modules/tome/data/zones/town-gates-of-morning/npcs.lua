@@ -64,6 +64,7 @@ newEntity{ define_as = "HIGH_SUN_PALADIN_AERYN",
 		[Talents.T_MARTYRDOM]=5,
 		[Talents.T_BARRIER]=5,
 		[Talents.T_WEAPON_OF_LIGHT]=5,
+		[Talents.T_IRRESISTIBLE_SUN]=1,
 	},
 	resolvers.sustains_at_birth(),
 
