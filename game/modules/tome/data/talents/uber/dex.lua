@@ -61,6 +61,7 @@ uberTalent{
 	stamina = 30,
 	radius = 2,
 	range = 1,
+	tactical = { ATTACK = { PHYSICAL=2 }, DISABLE = { disarm = 2 } },
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), selffire=false, radius=self:getTalentRadius(t)}
 	end,
@@ -113,6 +114,7 @@ uberTalent{
 	stamina = 30,
 	radius = 1,
 	range = 10,
+	tactical = { CLOSEIN = 2, ATTACK = { PHYSICAL = 2 }, DISABLE = { daze = 1 } },
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), selffire=false, radius=self:getTalentRadius(t)}
 	end,
@@ -121,6 +123,12 @@ uberTalent{
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or target then return nil end
 		local _ _, x, y = self:canProject(tg, x, y)
+
+		if game.level.map(x, y, Map.ACTOR) then
+			local x, y = util.findFreeGrid(x, y, 1, true, {[Map.ACTOR]=true})
+			if not x then return end
+		end
+
 		if game.level.map:checkAllEntities(x, y, "block_move") then return end
 
 		local ox, oy = self.x, self.y
@@ -164,6 +172,7 @@ uberTalent{
 	name = "Roll With It",
 	mode = "sustained",
 	cooldown = 10,
+	tactical = { ESCAPE = 1 },
 	require = { special={desc="Having been knocked around at least 50 times.", fct=function(self) return self:attr("knockback_times") and self:attr("knockback_times") >= 50 end} },
 	activation = function(self, t)
 		local ret = {}

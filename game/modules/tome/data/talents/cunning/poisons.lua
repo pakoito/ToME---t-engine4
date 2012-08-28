@@ -399,6 +399,7 @@ newTalent{
 	cooldown = 10,
 	no_break_stealth = true,
 	no_energy = true,
+	is_spell = true,
 	tactical = { BUFF = 2 },
 	getDuration = function(self, t) return 12 - self:getTalentLevel(self.T_VILE_POISONS) end,
 	getDOT = function(self, t) return 8 + self:combatTalentStatDamage(self.T_VILE_POISONS, "cun", 10, 30) * 0.4 end,

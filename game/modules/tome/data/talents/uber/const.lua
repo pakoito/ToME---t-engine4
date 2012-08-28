@@ -78,6 +78,7 @@ uberTalent{
 	mode = "sustained",
 	cooldown = 20,
 	sustain_stamina = 10,
+	tactical = { CLOSEIN = 2, ESCAPE = 2 },
 	require = { special={desc="Know at least 20 levels of stamina using talents", fct=function(self) return knowRessource(self, "stamina", 20) end} },
 	activate = function(self, t)
 		local ret = {}
@@ -130,6 +131,7 @@ uberTalent{
 uberTalent{
 	name = "Fungal Blood",
 	require = { special={desc="Do not be undead.", fct=function(self) return not self:attr("undead") end} },
+	tactical = { HEAL = function(self) return not self:hasEffect(self.EFF_FUNGAL_BLOOD) and 0 or math.ceil(self:hasEffect(self.EFF_FUNGAL_BLOOD).power / 150) end },
 	on_pre_use = function(self, t) return self:hasEffect(self.EFF_FUNGAL_BLOOD) and self:hasEffect(self.EFF_FUNGAL_BLOOD).power > 0 and not self:attr("undead") end,
 	trigger = function(self, t)
 		if self:attr("undead") then return end

@@ -104,6 +104,9 @@ uberTalent{
 	end} },
 	no_energy = true,
 	is_spell = true,
+	requires_target = true,
+	range = 10,
+	tactical = { BUFF = 2 },
 	action = function(self, t)
 		self:setEffect(self.EFF_TEMPORAL_FORM, 7, {})
 		return true
@@ -155,6 +158,7 @@ uberTalent{
 	cooldown = 40,
 	no_energy = true,
 	is_spell = true,
+	no_npc_use = true,
 	require = { special={desc="Have time-travelled at least once", fct=function(self) return self:attr("time_travel_times") >= 1 end} },
 	action = function(self, t)
 		if game._chronoworlds and game._chronoworlds.revisionist_history then

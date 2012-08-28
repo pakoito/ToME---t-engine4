@@ -576,6 +576,7 @@ newTalent{
 	stamina = 12,
 	tactical = { ATTACKAREA = { temporal = 2 } },
 	requires_target = true,
+	is_spell = true,
 	range = trap_range,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
@@ -604,8 +605,8 @@ newTalent{
 						tgts[target] = true
 						local ox, oy = target.x, target.y
 						target:pull(self.x, self.y, 1)
-						if target.x ~= ox or target.y ~= oy then 
-							game.logSeen(target, "%s is pulled in!", target.name:capitalize()) 
+						if target.x ~= ox or target.y ~= oy then
+							game.logSeen(target, "%s is pulled in!", target.name:capitalize())
 							DamageType:get(DamageType.TEMPORAL).projector(self.summoner, target.x, target.y, DamageType.TEMPORAL, self.dam)
 						end
 					end

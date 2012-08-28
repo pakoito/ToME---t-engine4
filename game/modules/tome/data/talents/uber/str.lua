@@ -36,6 +36,8 @@ uberTalent{
 	name = "You Shall Be My Weapon!", short_name="TITAN_S_SMASH", image = "talents/titan_s_smash.png",
 	mode = "activated",
 	require = { special={desc="Be of at least size category 'huge' (also required to use it) and know at least 20 talent levels of stamina using talents.", fct=function(self) return self.size_category and self.size_category >= 5 and knowRessource(self, "stamina", 20) end} },
+	requires_target = true,
+	tactical = { ATTACK = 4 },
 	on_pre_use = function(self, t) return self.size_category and self.size_category >= 5 end,
 	cooldown = 10,
 	stamina = 20,
@@ -73,6 +75,8 @@ uberTalent{
 	name = "Massive Blow",
 	mode = "activated",
 	require = { special={desc="Dug at least 30 walls/trees/... and know at least 20 talent levels of stamina using talents.", fct=function(self) return self.dug_times and self.dug_times >= 30 and knowRessource(self, "stamina", 20) end} },
+	requires_target = true,
+	tactical = { ATTACK = 4 },
 	cooldown = 10,
 	stamina = 20,
 	action = function(self, t)
@@ -112,6 +116,9 @@ uberTalent{
 uberTalent{
 	name = "Irresistible Sun",
 	cooldown = 25,
+	requires_target = true,
+	range = 5,
+	tactical = { ATTACK = 4, CLOSEIN = 2 },
 	require = { special={desc="Dealt over 50000 light or fire damage", fct=function(self) return
 		self.damage_log and (
 			(self.damage_log[DamageType.FIRE] and self.damage_log[DamageType.FIRE] >= 50000) or

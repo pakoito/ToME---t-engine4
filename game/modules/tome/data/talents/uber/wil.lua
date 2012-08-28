@@ -21,6 +21,9 @@ uberTalent{
 	name = "Draconic Will",
 	cooldown = 15,
 	no_energy = true,
+	requires_target = true,
+	range = 10,
+	tactical = { BUFF = 2 },
 	action = function(self, t)
 		self:setEffect(self.EFF_DRACONIC_WILL, 5, {})
 		return true
@@ -139,6 +142,7 @@ uberTalent{
 	name = "Hidden Resources",
 	cooldown = 15,
 	no_energy = true,
+	tactical = { BUFF = 2 },
 	action = function(self, t)
 		self:setEffect(self.EFF_HIDDEN_RESOURCES, 5, {})
 		return true
