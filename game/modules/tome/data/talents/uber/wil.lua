@@ -112,10 +112,12 @@ uberTalent{
 	mode = "passive",
 	on_learn = function(self, t)
 		self.inc_damage_actor_type = self.inc_damage_actor_type or {}
-		self.inc_damage_actor_type.construct = (self.inc_damage_actor_type.construct or 0) + 500
+		self.inc_damage_actor_type.construct = (self.inc_damage_actor_type.construct or 0) + 1000
+		self.inc_damage_actor_type.humanoid = (self.inc_damage_actor_type.humanoid or 0) + 20
 	end,
 	on_unlearn = function(self, t)
-		self.inc_damage_actor_type.construct = (self.inc_damage_actor_type.construct or 0) - 500
+		self.inc_damage_actor_type.construct = (self.inc_damage_actor_type.construct or 0) - 1000
+		self.inc_damage_actor_type.humanoid = (self.inc_damage_actor_type.humanoid or 0) - 20
 	end,
 	require = { special={desc="Possess and wear two of Garkul's artifacts and know all about Garkul's life", fct=function(self)
 		local o1 = self:findInAllInventoriesBy("define_as", "SET_GARKUL_TEETH")
@@ -128,7 +130,7 @@ uberTalent{
 			game.player:knownLore("garkul-history-5")
 	end} },
 	info = function(self, t)
-		return ([[Garkul's Spirit is with you, you now deal 500%% more damage to constructs.]])
+		return ([[Garkul's Spirit is with you, you now deal 1000%% more damage to constructs and 20%% more damage to humanoids.]])
 		:format()
 	end,
 }
