@@ -144,6 +144,10 @@ uberTalent{
 uberTalent{
 	name = "Legacy of the Naloren",
 	mode = "passive",
+	require = { special={desc="Side wih Slasul and kill Ukllmswwik.", fct=function(self)
+		local q = self:hasQuest("temple-of-creation")
+		return q and not q:isCompleted("kill-slasul") and q:isCompleted("kill-drake")
+	end} },
 	on_learn = function(self, t)
 		self:learnTalent(self.T_SPIT_POISON, true, 5)
 		self:learnTalent(self.T_EXOTIC_WEAPON_MASTERY, true, 5)
