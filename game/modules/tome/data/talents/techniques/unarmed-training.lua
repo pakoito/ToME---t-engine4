@@ -60,7 +60,7 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	require = techs_cun_req2,
-	getDefense = function(self, t) return self:combatTalentStatDamage(t, "cun", 5, 35) end,
+	getDefense = function(self, t) return self:combatTalentStatDamage(t, "dex", 5, 35) end,
 	getMental = function(self, t) return self:combatTalentStatDamage(t, "cun", 5, 35) end,
 	info = function(self, t)
 		local defense = t.getDefense(self, t)

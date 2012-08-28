@@ -203,9 +203,6 @@ function _M:use(item)
 		self:resurrectBasic(self.actor)
 		self:restoreResources(self.actor)
 		self.actor:check("on_resurrect", "cheat")
-	elseif act == "precognition" then
-		self:resurrectBasic(self.actor)
-		self.actor:removeEffect(self.actor.EFF_PRECOGNITION)
 	elseif act == "blood_life" then
 		self.actor.blood_life = false
 		game.logPlayer(self.actor, "#LIGHT_RED#The Blood of Life rushes through your dead body. You come back to life!")
@@ -267,11 +264,6 @@ function _M:generateList()
 
 	if config.settings.cheat then list[#list+1] = {name="Resurrect by cheating", action="cheat"} end
 	if not self.actor.no_resurrect and allow_res then
-		if self.actor:hasEffect(self.actor.EFF_PRECOGNITION) then
-			self:use{action="precognition"}
-			self.dont_show = true
-			return
-		end
 		if self.actor:isTalentActive(self.actor.T_LICHFORM) then
 			self:use{action="lichform"}
 			self.dont_show = true

@@ -206,12 +206,13 @@ newTalent{
 		return {type="ball", radius=self:getTalentRange(t), range=0}
 	end,
 	direct_hit = true,
-	getDrain = function(self, t) return 10 - math.min(8, math.ceil(self:getTalentLevel(t))) end,
+	getDrain = function(self, t) return 5 - math.min(4, self:getTalentLevel(t)/2) end,
 	remove_on_zero = true,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/spell_generic")
+		local drain = self:getMaxPsi() * t.getDrain(self, t) / 100
 		local ret = {
-			drain = self:addTemporaryValue("psi_regen", -t.getDrain(self, t)),
+			drain = self:addTemporaryValue("psi_regen", -drain),
 		}
 		return ret
 	end,
@@ -222,7 +223,7 @@ newTalent{
 	info = function(self, t)
 		local drain = t.getDrain(self, t)
 		return ([[Imprisons all sleeping targets within range in their dream state, effectively extending sleeping effects for as long as Dream Prison is maintainted.
-		This powerful effect constantly drains %d Psi per turn and is considered a psionic channel as such it will break if you move, use a talent that consumes a turn, or activate an item.
+		This powerful effect constantly drains %0.2f%% of your maximum Psi per turn and is considered a psionic channel as such it will break if you move, use a talent that consumes a turn, or activate an item.
 		(Note that sleeping effects that happen each turn, such as Nightmare's damage and Sleep's contagion, will cease to function for the duration of the effect.)]]):format(drain)
 	end,
 }

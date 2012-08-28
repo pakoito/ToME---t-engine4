@@ -1602,10 +1602,7 @@ newEffect{
 		-- Dreamscape doesn't cooldown in the dreamscape
 		self.talents_cd[self.T_DREAMSCAPE] = self.talents_cd[self.T_DREAMSCAPE] + 1
 		-- Spawn every three turns, or every two for lucid dreamers
-		local spawn_time = 3
-		if eff.target:attr("lucid_dreamer") then
-			spawn_time = 2
-		end
+		local spawn_time = 2
 		if eff.dur%spawn_time == 0 then
 			local x, y = util.findFreeGrid(eff.target.x, eff.target.y, 1, true, {[Map.ACTOR]=true})
 			if not x then

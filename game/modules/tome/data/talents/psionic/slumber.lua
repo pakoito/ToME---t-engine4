@@ -122,7 +122,7 @@ newTalent{
 	requires_target = true,
 	range = function(self, t) return 5 + math.min(5, self:getTalentLevelRaw(t)) end,
 	target = function(self, t) return {type="hit", range=self:getTalentRange(t), talent=t} end,
-	getDuration = function(self, t) return 10 + math.ceil(self:getTalentLevel(t) * 4) end,
+	getDuration = function(self, t) return 4 + math.ceil(self:getTalentLevel(t) * 2) end,
 	getPower = function(self, t) return self:combatTalentMindDamage(t, 10, 100) end,
 	on_pre_use = function(self, t, silent) if self:attr("is_psychic_projection") then if not silent then game.logPlayer(self, "You feel it unwise to travel to the dreamscape in such a fragile form.") end return false end return true end,
 	action = function(self, t)
@@ -228,8 +228,9 @@ newTalent{
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		local power = t.getPower(self, t)
-		return([[Enter a sleeping target's dreams for %d turns.  While in the dreamscape you'll encounter the target's invulnerable sleeping form as well as dream projections that it will spawn every three turns to defend it's mind.  When the dreamscape ends the target's life will be reduced by 10%% and it will to be brainlocked for one turn for each projection destroyed.
-		Lucid dreamers will spawn projections every two turns instead of every three and their projections will deal more damage (generally projections have a 50%% penalty to all damage).
+		return([[Enter a sleeping target's dreams for %d turns.  While in the dreamscape you'll encounter the target's invulnerable sleeping form as well as dream projections that it will spawn every other turn to defend it's mind.
+		Projections inflict 50%% less damage then the original, unless the target has Lucid Dreamer active.
+		When the dreamscape ends the target's life will be reduced by 10%% and it will to be brainlocked for one turn for each projection destroyed.
 		In the dreamscape your damage will be improved by %d%%.
 		The damage bonus will improve with your mindpower.]]):format(duration, power)
 	end,

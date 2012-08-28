@@ -3378,17 +3378,19 @@ function _M:preUseTalent(ab, silent, fake)
 			for id, t in pairs(self.talents_def) do
 				if t.type[1] == "chronomancy/anomalies" then ts[#ts+1] = id end
 			end
-			if not silent then game.logPlayer(self, "You lose control and unleash an anomaly!") end
+			if not silent then game.logPlayer(self, "#LIGHT_RED#You lose control and unleash an anomaly!") end
 			self:forceUseTalent(rng.table(ts), {ignore_energy=true})
 			-- Anomalies correct the timeline and reduce Paradox
 			self:incParadox(- (ab.paradox and (ab.paradox * paradox_scaling) or ab.sustain_paradox) * 2)
+			game:playSoundNear(self, "talents/distortion")
 			self:useEnergy()
 			return false
 		-- Now check for failure
 		elseif not self:attr("no_paradox_fail") and self:paradoxFailChance() and not self:hasEffect(self.EFF_SPACETIME_STABILITY) then
-			if not silent then game.logPlayer(self, "You fail to use %s due to your paradox!", ab.name) end
+			if not silent then game.logPlayer(self, "#LIGHT_RED#You fail to use %s due to your paradox!", ab.name) end
 			self:incParadox(ab.paradox and (ab.paradox * paradox_scaling) or ab.sustain_paradox)
 			self:useEnergy()
+			game:playSoundNear(self, "talents/dispel")
 			return false
 		end
 	end
