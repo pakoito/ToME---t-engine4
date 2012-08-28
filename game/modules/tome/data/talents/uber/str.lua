@@ -115,7 +115,7 @@ uberTalent{
 	require = { special={desc="Dealt over 50000 light or fire damage", fct=function(self) return
 		self.damage_log and (
 			(self.damage_log[DamageType.FIRE] and self.damage_log[DamageType.FIRE] >= 50000) or
-			(self.damage_log[DamageType.L] and self.damage_log[DamageType.LIGHT] >= 50000)
+			(self.damage_log[DamageType.LIGHT] and self.damage_log[DamageType.LIGHT] >= 50000)
 		)
 	end} },
 	action = function(self, t)
