@@ -165,7 +165,7 @@ local reward_types = {
 			["chronomancy/chronomancy"] = 0.7,
 		},
 		talents = {
-			[Talents.T_PRECOGNIION] = 1,
+			[Talents.T_PRECOGNITION] = 1,
 			[Talents.T_SPIN_FATE] = 1,
 		},
 		stats = {
@@ -204,6 +204,10 @@ local reward_types = {
 		},
 	},
 }
+
+local hd = {"Quest:escort:reward", reward_types=reward_types}
+if require("engine.class"):triggerHook(hd) then reward_types = hd.reward_types end
+
 local reward = reward_types[npc.reward_type]
 local quest = game.player:hasQuest(npc.quest_id)
 if quest.to_zigur and reward.antimagic then reward = reward.antimagic reward.is_antimagic = true end
@@ -260,7 +264,7 @@ local function generate_rewards()
 				local doit = function(npc, player) game.party:reward("Select the party member to receive the reward:", function(player)
 					if game.player:knowTalentType(t.type[1]) == nil then player:setTalentTypeMastery(t.type[1], 0.7) end
 					player:learnTalent(tid, true, level, {no_unlearn=true})
-					if t.hide then player.__show_special_talents[tid] = true end
+					--if t.hide then player.__show_special_talents[tid] = true end
 					player:hasQuest(npc.quest_id).reward_message = ("%s talent %s (+%d level(s))"):format(game.player:knowTalent(tid) and "improved" or "learnt", t.name, level)
 				end) end
 				answers[#answers+1] = {

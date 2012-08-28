@@ -261,7 +261,6 @@ Please help me! I am afraid I lost myself in this place. I know there is a tempo
 	},
 }
 
-
 --------------------------------------------------------------------------------
 -- Quest code
 --------------------------------------------------------------------------------
@@ -336,6 +335,9 @@ on_grant = function(self, who)
 	if not x then return true end
 
 	self.on_grant = nil
+
+	local hd = {"Quest:escort:assign", possible_types=possible_types}
+	if self:triggerHook(hd) then possible_types = hd.possible_types end
 
 	while true do
 		self.kind = rng.table(possible_types)
