@@ -38,6 +38,7 @@ newTalent{
 	tactical = { DEFEND = 1, DISABLE = { confusion = 3 } },
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
+		self:project(tg, self.x, self.y, DamageType.PHYSICAL, self:mindCrit(self:combatTalentStatDamage(t, "str", 40, 400)))
 		self:project(tg, self.x, self.y, DamageType.CONFUSION, {
 			dur=3,
 			dam=40 + 6 * self:getTalentLevel(t),
@@ -49,7 +50,8 @@ newTalent{
 	info = function(self, t)
 		local radius = self:getTalentRadius(t)
 		return ([[You let out a powerful roar that sends your foes into utter confusion for 3 turns in a radius of %d.
-		Each point in fire drake talents also increases your fire resistance by 1%%.]]):format(radius)
+		The sound wave is so strong your foes also take %0.2f physical damage.
+		Each point in fire drake talents also increases your fire resistance by 1%%.]]):format(radius, self:combatTalentStatDamage(t, "str", 40, 400))
 	end,
 }
 
