@@ -275,7 +275,7 @@ newEffect{
 newEffect{
 	name = "BURNING_SHOCK", image = "talents/flameshock.png",
 	desc = "Burning Shock",
-	long_desc = function(self, eff) return ("The target is on fire, taking %0.2f fire damage per turn, reducing damage by 70%%, healing received by 50%%, putting random talents on cooldown and reducing movement speed by 50%%. While flameshocked talents do not cooldown."):format(eff.power) end,
+	long_desc = function(self, eff) return ("The target is on fire, taking %0.2f fire damage per turn, reducing damage by 70%%, putting random talents on cooldown and reducing movement speed by 50%%. While flameshocked talents do not cooldown."):format(eff.power) end,
 	type = "physical",
 	subtype = { fire=true, stun=true },
 	status = "detrimental",
@@ -311,7 +311,7 @@ newEffect{
 newEffect{
 	name = "STUNNED", image = "effects/stunned.png",
 	desc = "Stunned",
-	long_desc = function(self, eff) return ("The target is stunned, reducing damage by 70%%, healing received by 50%%, putting random talents on cooldown and reducing movement speed by 50%%. While stunned talents do not cooldown."):format() end,
+	long_desc = function(self, eff) return ("The target is stunned, reducing damage by 70%%, putting random talents on cooldown and reducing movement speed by 50%%. While stunned talents do not cooldown."):format() end,
 	type = "physical",
 	subtype = { stun=true },
 	status = "detrimental",

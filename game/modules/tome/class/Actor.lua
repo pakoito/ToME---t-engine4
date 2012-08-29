@@ -1448,7 +1448,7 @@ function _M:onHeal(value, src)
 
 	value = value * util.bound((self.healing_factor or 1), 0, 2.5)
 
-	if self:attr("stunned") then value = value / 2 end
+	--if self:attr("stunned") then value = value / 2 end
 
 	local eff = self:hasEffect(self.EFF_HEALING_NEXUS)
 	if eff and value > 0 and not self.heal_leech_active then

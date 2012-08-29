@@ -98,6 +98,7 @@ newEffect{
 	on_lose = function(self, err) return "#Target# seems more focused.", "-Confused" end,
 	activate = function(self, eff)
 		eff.power = math.floor(math.max(eff.power - (self:attr("confusion_immune") or 0) * 100, 10))
+		eff.power = util.bound(eff.power, 0, 50)
 		eff.tmpid = self:addTemporaryValue("confused", eff.power)
 		if eff.power <= 0 then eff.dur = 0 end
 	end,
@@ -242,7 +243,7 @@ newEffect{
 newEffect{
 	name = "GLOOM_STUNNED", image = "effects/gloom_stunned.png",
 	desc = "Stunned by the gloom",
-	long_desc = function(self, eff) return ("The gloom has stunned the target, reducing damage by 70%%, healing received by 50%%, putting random talents on cooldown and reducing movement speed by 50%%. While stunned talents do not cooldown."):format() end,
+	long_desc = function(self, eff) return ("The gloom has stunned the target, reducing damage by 70%%, putting random talents on cooldown and reducing movement speed by 50%%. While stunned talents do not cooldown."):format() end,
 	type = "mental",
 	subtype = { gloom=true, stun=true },
 	status = "detrimental",
@@ -289,6 +290,7 @@ newEffect{
 	activate = function(self, eff)
 		eff.particle = self:addParticles(Particles.new("gloom_confused", 1))
 		eff.power = math.floor(math.max(eff.power - (self:attr("confusion_immune") or 0) * 100, 10))
+		eff.power = util.bound(eff.power, 0, 50)
 		eff.tmpid = self:addTemporaryValue("confused", eff.power)
 		if eff.power <= 0 then eff.dur = 0 end
 	end,
@@ -865,7 +867,7 @@ newEffect{
 newEffect{
 	name = "MADNESS_STUNNED", image = "effects/madness_stunned.png",
 	desc = "Stunned by madness",
-	long_desc = function(self, eff) return ("Madness has stunned the target, reducing damage by 70%%, healing received by 50%%, lowering mind resistance by %d%%, putting random talents on cooldown and reducing movement speed by 50%%. While stunned talents do not cooldown."):format(eff.mindResistChange) end,
+	long_desc = function(self, eff) return ("Madness has stunned the target, reducing damage by 70%%, lowering mind resistance by %d%%, putting random talents on cooldown and reducing movement speed by 50%%. While stunned talents do not cooldown."):format(eff.mindResistChange) end,
 	type = "mental",
 	subtype = { madness=true, stun=true },
 	status = "detrimental",
@@ -915,6 +917,7 @@ newEffect{
 		eff.particle = self:addParticles(Particles.new("gloom_confused", 1))
 		eff.mindResistChangeId = self:addTemporaryValue("resists", { [DamageType.MIND]=eff.mindResistChange })
 		eff.power = math.floor(math.max(eff.power - (self:attr("confusion_immune") or 0) * 100, 10))
+		eff.power = util.bound(eff.power, 0, 50)
 		eff.tmpid = self:addTemporaryValue("confused", eff.power)
 	end,
 	deactivate = function(self, eff)
@@ -2300,6 +2303,7 @@ newEffect{
 	activate = function(self, eff)
 		DamageType:get(DamageType.MIND).projector(eff.src or self, self.x, self.y, DamageType.MIND, {dam=eff.dam, alwaysHit=true})
 		eff.power = math.floor(math.max(eff.power - (self:attr("confusion_immune") or 0) * 100, 10))
+		eff.power = util.bound(eff.power, 0, 50)
 		eff.tmpid = self:addTemporaryValue("confused", eff.power)
 		eff.cid = self:addTemporaryValue("inc_stats", {[Stats.STAT_CUN]=-eff.power/2})
 		if eff.power <= 0 then eff.dur = 0 end
