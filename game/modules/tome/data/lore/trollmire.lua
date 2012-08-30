@@ -21,13 +21,6 @@
 -- Trollmire
 --------------------------------------------------------------------------
 
-local check = function(who)
-	local p = game:getPlayer(true)
-	if p:knownLore("trollmire-note-1") and p:knownLore("trollmire-note-2") and p:knownLore("trollmire-note-3") then
-		p:grantQuest("trollmire-treasure")
-	end
-end
-
 newLore{
 	id = "trollmire-note-1",
 	category = "trollmire",
@@ -37,10 +30,7 @@ newLore{
 
 ...
 
-Saw an absolutely gigantic troll, but fortunately I threw him off my scent."
-
-Alongside the note is a part of a plan of the region.]],
-	on_learn = check,
+Saw an absolutely gigantic troll, but fortunately I threw him off my scent."]],
 }
 
 newLore{
@@ -52,10 +42,7 @@ newLore{
 
 ...
 
-...initely found his treasure stash further on, but had to turn back. If you get this, HELP!"
-
-Alongside the note is a part of a plan of the region.]],
-	on_learn = check,
+...initely found his treasure stash further on, but had to turn back. If you get this, HELP!"]],
 }
 
 newLore{
@@ -67,5 +54,8 @@ newLore{
 
 Alongside the note is a part of a plan of the region.]],
 	bloodstains = 3,
-	on_learn = check,
+	on_learn = function(who)
+		local p = game:getPlayer(true)
+		p:grantQuest("trollmire-treasure")
+	end,
 }
