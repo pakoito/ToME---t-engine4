@@ -193,6 +193,7 @@ local function createShadow(self, level, tCallShadows, tShadowWarriors, tShadowM
 		level_range = {level, level},
 		exp_worth=0,
 		hate_regen = 1,
+		avoid_traps = 1,
 
 		max_life = resolvers.rngavg(3,12), life_rating = 5,
 		stats = {
