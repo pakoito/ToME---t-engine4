@@ -88,15 +88,15 @@ newTalent{
 	type = {"cunning/shadow-magic", 4},
 	points = 5,
 	random_ego = "attack",
-	cooldown = 5,
+	cooldown = 6,
 	stamina = 30,
 	require = cuns_req4,
 	tactical = { CLOSEIN = 2, DISABLE = { stun = 1 } },
 	range = function(self, t) return math.floor(5 + self:getTalentLevel(t)) end,
 	direct_hit = true,
 	requires_target = true,
-	getDuration = function(self, t) return 2 + self:getTalentLevel(t) end,
-	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 1.2, 2.2) end,
+	getDuration = function(self, t) return math.min(5, 2 + math.ceil(self:getTalentLevel(t) / 2)) end,
+	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 1.2, 2.5) end,
 	action = function(self, t)
 		if self:attr("never_move") then game.logPlayer(self, "You can not do that currently.") return end
 
