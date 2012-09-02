@@ -1912,7 +1912,7 @@ function _M:startEvents()
 		table.print(mevts)
 		for i, e in ipairs(evts) do
 			-- If we allow it, try to find a level to host it
-			if (e.always or rng.percent(e.percent)) and (not e.unique or not self:doneEvent(e.name)) then
+			if (e.always or rng.percent(e.percent) or (e.special and e.special() == true)) and (not e.unique or not self:doneEvent(e.name)) then
 				local lev = nil
 				local forbid = e.forbid or {}
 				forbid = table.reverse(forbid)

@@ -18,5 +18,5 @@
 -- darkgod@te4.org
 
 return {
-	{name="noxious-caldera", percent=30},
+	{name="noxious-caldera", percent=30, special=function() if game:getPlayer(true) and game:getPlayer(true).descriptor and game:getPlayer(true).descriptor.race == "Yeek" then return true end end},
 }
