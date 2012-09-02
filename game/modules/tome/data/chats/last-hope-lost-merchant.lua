@@ -79,11 +79,24 @@ local maker_list = function()
 		local not_ps = player:attr("forbid_arcane") and {arcane=true} or {antimagic=true}
 		local force_themes = player:attr("forbid_arcane") and {'antimagic'} or nil
 
-		local o = game.zone:makeEntity(game.level, "object", {name=name, forbid_power_source=not_ps, ingore_material_restriction=true, no_tome_drops=true, ego_filter={keep_egos=true, ego_chance=-1000}}, nil, true)
+		local o, ok
+		repeat
+			o = game.zone:makeEntity(game.level, "object", {name=name, ingore_material_restriction=true, no_tome_drops=true, ego_filter={keep_egos=true, ego_chance=-1000}}, nil, true)
+			if o then ok = true end
+			if o and o.power_source and player:attr("forbid_arcane") and o.power_source.arcane then ok = false end
+		until ok
 		if o then
 			l[#l+1] = {o:getName{force_id=true, do_color=true, no_count=true}, action=function(npc, player)
-				local art = game.state:generateRandart{base=o, lev=70, egos=4, force_themes=force_themes, forbid_power_source=not_ps}
-				if art then
+				local art, ok
+				local nb = 0
+				repeat
+					art = game.state:generateRandart{base=o, lev=70, egos=4, force_themes=force_themes, forbid_power_source=not_ps}
+					if art then ok = true end
+					if art and art.power_source and player:attr("forbid_arcane") and art.power_source.arcane then ok = false end
+					nb = nb + 1
+					if nb == 40 then break end
+				until ok
+				if art and nb < 40 then
 					art:identify(true)
 					player:addObject(player.INVEN_INVEN, art)
 					player:incMoney(-4000)
@@ -108,6 +121,15 @@ local maker_list = function()
 						},
 					}
 					return "naming"
+				else
+					newChat{ id="oups",
+						text = "Oh I am sorry, it seems we could not make the item your require.",
+						answers = {
+							{"Oh, let's try something else then.", jump="make"},
+							{"Oh well, maybe later then."},
+						},
+					}
+					return "oups"
 				end
 			end}
 		end
