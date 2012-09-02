@@ -35,23 +35,26 @@ newTalent{
 		self.equilibrium_regen_on_rest = (self.equilibrium_regen_on_rest or 0) + 0.5
 	end,
 	activate = function(self, t)
+		local ret = {}
+
 		local pt = 2 + self:combatTalentMindDamage(t, 20, 120) / 10
 		local save = 5 + self:combatTalentMindDamage(t, 10, 40)
 		local heal = 5 + self:combatTalentMindDamage(t, 12, 30)
+		
+		if self:knowTalent(self.T_EARTH_S_EYES) then
+			local te = self:getTalentFromId(self.T_EARTH_S_EYES)
+			self:talentTemporaryValue(ret, "esp_all", 1)
+			self:talentTemporaryValue(ret, "esp_range", te.radius_esp(self, te))
+		end
 
 		game:playSoundNear(self, "talents/heal")
-		return {
-			equi = self:addTemporaryValue("equilibrium_regen", -pt),
-			save = self:addTemporaryValue("combat_mentalresist", save),
-			heal = self:addTemporaryValue("healing_factor", heal / 100),
-			dam = self:addTemporaryValue("numbed", 50),
-		}
+		self:talentTemporaryValue(ret, "equilibrium_regen", -pt)
+		self:talentTemporaryValue(ret, "combat_mentalresist", save)
+		self:talentTemporaryValue(ret, "healing_factor", heal / 100)
+		self:talentTemporaryValue(ret, "numbed", 50)
+		return ret
 	end,
 	deactivate = function(self, t, p)
-		self:removeTemporaryValue("equilibrium_regen", p.equi)
-		self:removeTemporaryValue("combat_mentalresist", p.save)
-		self:removeTemporaryValue("healing_factor", p.heal)
-		self:removeTemporaryValue("numbed", p.dam)
 		return true
 	end,
 	info = function(self, t)
@@ -109,21 +112,21 @@ newTalent{
 	equilibrium = 3,
 	cooldown = 10,
 	range = 100,
-	radius = function(self, t) return math.ceil(3 + self:getTalentLevel(t)) end,
+	radius = function(self, t) return math.ceil(5 + self:getTalentLevel(t) * 1.3) end,
+	radius_esp = function(self, t) return math.floor(3 + self:getTalentLevel(t) / 2) end,
 	requires_target = true,
 	no_npc_use = true,
 	action = function(self, t)
-		local x, y = self:getTarget{type="ball", nolock=true, no_restrict=true, nowarning=true, range=100, radius=self:getTalentRadius(t)}
-		if not x then return nil end
-
-		self:magicMap(math.ceil(3 + self:getTalentLevel(t)), x, y)
+		self:magicMap(math.ceil(5 + self:getTalentLevel(t) * 1.3), self.x, self.y)
 		game:playSoundNear(self, "talents/spell_generic2")
 		return true
 	end,
 	info = function(self, t)
 		local radius = self:getTalentRadius(t)
-		return ([[Using your connection to Nature you can see remote areas in a radius of %d.]]):
-		format(radius)
+		local radius_esp = t.radius_esp(self, t)
+		return ([[Using your connection to Nature you can see your surrounding area in a radius of %d.
+		Also while meditating you are able to detect the presence of creatures around your in a radius %d.]]):
+		format(radius, radius_esp)
 	end,
 }
 
