@@ -1339,7 +1339,7 @@ newEffect{
 	long_desc = function(self, eff) return ("All healing done to the target is instead redirected to %s by %d%%."):format(eff.src.name, eff.pct * 100, eff.src.name) end,
 	type = "physical",
 	subtype = { nature=true, heal=true },
-	status = "beneficial",
+	status = "detrimental",
 	parameters = { pct = 1 },
 	activate = function(self, eff)
 	end,
