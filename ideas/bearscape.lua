@@ -59,8 +59,35 @@ game:onLevelLoad("wilderness-1", function(wzone, level)
 
 		max_power = 100, power_regen = 1,
 		use_power = { name = "invoke your inner bearness", power = 100, use = function(self, who)
+			if not who.EFF_ESSENCE_OF_BEARNESS then
+				who:newEffect{
+					name = "ESSENCE_OF_BEARNESS", image = "shockbolt/object/bear_paw.png",
+					desc = "Essence of Bearness",
+					long_desc = function(self, eff) return ("The bear in you is awaken, you take 25%% less damage."):format() end,
+					type = "physical",
+					subtype = { resist=true },
+					status = "beneficial",
+					parameters = { },
+					on_gain = function(self, err) return nil, "+Essence of Bearness" end,
+					on_lose = function(self, err) return nil, "-Essence of Bearness" end,
+					activate = function(self, eff)
+						self:effectTemporaryValue(eff, "resists", {all=25})
+						self.replace_display = mod.class.Actor.new{
+							image="npc/animal_bear_norgos_the_guardian.png", display_h=2, display_y=-1,
+						}
+						self:removeAllMOs()
+						game.level.map:updateMap(self.x, self.y)
+					end,
+					deactivate = function(self, eff)
+						self.replace_display = nil
+						self:removeAllMOs()
+						game.level.map:updateMap(self.x, self.y)
+					end,
+				}
+			end
+
 			who:setEmote(require("engine.Emote").new("GROOOOOWWWLLLLL!!!!", 80))
-			who:setEffect(who.EFF_PAIN_SUPPRESSION, 5, {power=25})
+			who:setEffect(who.EFF_ESSENCE_OF_BEARNESS, 5, {})
 			return {id=true, used=true}
 		end },
 	}
