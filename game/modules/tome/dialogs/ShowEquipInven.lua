@@ -53,9 +53,16 @@ function _M:init(title, actor, filter, action, on_select)
 	self.c_doll = EquipDoll.new{actor=actor, drag_enable=true, filter=filter,
 		fct = function(item, button, event) self:use(item, button, event) end,
 		on_select = function(ui, inven, item, o) if ui.ui.last_display_x then self:select{last_display_x=ui.ui.last_display_x+ui.ui.w, last_display_y=ui.ui.last_display_y, object=o} end end,
-		actorWear = function(ui, ...)
-			if ui:getItem() then self.actor:doTakeoff(ui.inven, ui.item, ui:getItem(), true) end
-			self.actor:doWear(...)
+		actorWear = function(ui, wear_inven, wear_item, wear_o)
+			if ui:getItem() then 
+				local bi = self.actor:getInven(ui.inven)
+				local ws = self.actor:getInven(wear_o:wornInven())
+				local os = self.actor:getObjectOffslot(wear_o)
+				if (ws and ws.id == bi.id) or (os and self.actor:getInven(os).id == bi.id) then
+					self.actor:doTakeoff(ui.inven, ui.item, ui:getItem(), true) 
+				end
+			end
+			self.actor:doWear(wear_inven, wear_item, wear_o)
 			self.c_inven:generateList()
 		end
 	}
