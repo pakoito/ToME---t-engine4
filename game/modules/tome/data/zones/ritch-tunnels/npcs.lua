@@ -46,6 +46,7 @@ Vicious predators, they inject corrupting diseases into their foes, and their sh
 
 	poison_immune = 0.5,
 	disease_immune = 0.5,
+	ingredient_on_death = "RITCH_STINGER",
 	resists = { [DamageType.BLIGHT] = 20, [DamageType.FIRE] = 40 },
 }
 
