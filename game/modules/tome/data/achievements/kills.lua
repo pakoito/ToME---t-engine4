@@ -27,7 +27,7 @@ newAchievement{
 	show = "full",
 	desc = [[Do over 600 damage in one attack]],
 	on_gain = function(_, src, personal)
-		if src.descriptor and src.descriptor.subclass == "Rogue" then
+		if src.descriptor and (src.descriptor.subclass == "Rogue" or src.descriptor.subclass == "Shadowblade") then
 			game:setAllowedBuild("rogue_marauder", true)
 		end
 	end,
