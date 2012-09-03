@@ -1992,7 +1992,7 @@ newEntity{ base = "BASE_LIGHT_ARMOR",
 }
 
 newEntity{ base = "BASE_HEAVY_ARMOR",
-	power_source = {technique=true},
+	power_source = {arcane=true},
 	unique = true,
 	name = "Iron Mail of Bloodletting", image = "object/artifact/iron_mail_of_bloodletting.png",
 	unided_name = "gore-encrusted suit of iron mail",
@@ -2122,7 +2122,7 @@ newEntity{ base = "BASE_MASSIVE_ARMOR",
 }
 
 newEntity{ base = "BASE_GREATSWORD",
-	power_source = {technique=true},
+	power_source = {psionic=true},
 	unique = true,
 	name = "Golden Three-Edged Sword 'The Truth'", image = "object/artifact/golden_3_edged_sword.png",
 	unided_name = "three-edged sword",
@@ -2222,7 +2222,7 @@ newEntity{ base = "BASE_MACE",
 }
 
 newEntity{ base = "BASE_WARAXE",
-	power_source = {technique=true},
+	power_source = {psionic=true},
 	unique = true,
 	rarity = false, unided_name = "razor sharp war axe",
 	name = "Razorblade, the Cursed Waraxe", color = colors.LIGHT_BLUE, image = "object/artifact/razorblade_the_cursed_waraxe.png",
@@ -2406,7 +2406,7 @@ newEntity{ base = "BASE_GAUNTLETS",
 }
 
 newEntity{ base = "BASE_AMULET",
-	power_source = {arcane=true},
+	power_source = {arcane=true, psionic=true},
 	unique = true,
 	name = "Unflinching Eye", color = colors.WHITE, image = "object/artifact/amulet_unflinching_eye.png",
 	unided_name = "a bloodshot eye",
@@ -2939,7 +2939,7 @@ newEntity{ base = "BASE_STAFF",
 }
 
 newEntity{ base = "BASE_MINDSTAR",
-	power_source = {antimagic=true},
+	power_source = {nature=true, antimagic=true},
 	unique = true,
 	name = "Oozing Heart",
 	unided_name = "slimy mindstar",
@@ -3044,6 +3044,7 @@ newEntity{ base = "BASE_STAFF",
 }
 
 newEntity{ base = "BASE_MINDSTAR",
+	power_source = {nature=true},
 	name = "Eye of the Wyrm", define_as = "EYE_WYRM",
 	unided_name = "multi-colored mindstar", unique = true,
 	desc = [[A black iris cuts through the core of this mindstar, which shifts with myriad colours. It darts around, as if searching.]],
@@ -3125,6 +3126,7 @@ newEntity{ base = "BASE_MINDSTAR",
 }
 
 newEntity{ base = "BASE_MINDSTAR",
+	power_source = {nature=true},
 	name = "Great Caller",
 	unided_name = "humming mindstar", unique = true, image = "object",
 	desc = [[This mindstar constantly emits a low tone. Life seems to be pulled towards it.]],

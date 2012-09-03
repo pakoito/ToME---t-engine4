@@ -333,6 +333,11 @@ end
 function _M:actBase()
 	-- Solipsism speed effects; calculated before the actor gets energy
 	local current_psi_percentage = self:getPsi() / self:getMaxPsi()
+	local clarity
+	if self:knowTalent(self.T_CLARITY) then
+		local t = self:getTalentFromId(self.T_CLARITY)
+		clarity = t.getClarityThreshold(self, t)
+	end
 	if self:attr("solipsism_threshold") and current_psi_percentage < self:attr("solipsism_threshold") then
 		local solipsism_power = self:attr("solipsism_threshold") - current_psi_percentage
 		if self:hasEffect(self.EFF_CLARITY) then
@@ -342,14 +347,14 @@ function _M:actBase()
 		if (p and p.power ~= solipsism_power) or not p then
 			self:setEffect(self.EFF_SOLIPSISM, 1, {power = solipsism_power})
 		end
-	elseif self:attr("clarity_threshold") and current_psi_percentage > self:attr("clarity_threshold") then
-		local clarity_power = math.min(0.5, current_psi_percentage - self:attr("clarity_threshold"))
+	elseif clarity and current_psi_percentage > clarity then
+		local clarity_power = math.min(0.5, current_psi_percentage - clarity)
 		if self:hasEffect(self.EFF_SOLIPSISM) then
 			self:removeEffect(self.EFF_SOLIPSISM)
 		end
 		local p = self:hasEffect(self.EFF_CLARITY)
 		if (p and p.power ~= clarity_power) or not p then
-			self:setEffect(self.EFF_CLARITY, 1, {power = math.min(0.5, current_psi_percentage - self:attr("clarity_threshold"))})
+			self:setEffect(self.EFF_CLARITY, 1, {power = math.min(0.5, current_psi_percentage - clarity)})
 		end
 	elseif self:hasEffect(self.EFF_SOLIPSISM) then
 		self:removeEffect(self.EFF_SOLIPSISM)
@@ -490,7 +495,7 @@ function _M:actBase()
 		-- this handles Mind Storm
 		if self:isTalentActive(self.T_MIND_STORM) then
 			local t, p = self:getTalentFromId(self.T_MIND_STORM), self:isTalentActive(self.T_MIND_STORM)
-			if self:getFeedback() >= 1 or p.overcharge >= 1 then
+			if self:getFeedback() >=5 or p.overcharge >=1 then
 				t.doMindStorm(self, t, p)
 			end
 		end
@@ -542,7 +547,7 @@ function _M:act()
 			local t = self:getTalentFromId(tid)
 			if t.is_spell and rng.percent(self:attr("spell_failure")/10)then
 				self:forceUseTalent(tid, {ignore_energy=true})
-				if not silent then game.logPlayer(self, "%s has been disrupted!", t.name) end
+				if not silent then game.logPlayer(self, "%s has been disrupted by #ORCHID#anti-magic forces#LAST#!", t.name) end
 			end
 		end
 	end
@@ -1798,7 +1803,7 @@ function _M:onTakeHit(value, src)
 
 	-- Solipsism damage; set it up here but apply it after on_take_hit
 	local damage_to_psi = 0
-	if self:knowTalent(self.T_SOLIPSISM) and value > 0 then
+	if self:knowTalent(self.T_SOLIPSISM) and value > 0 and self:getPsi() > 0 then
 		local t = self:getTalentFromId(self.T_SOLIPSISM)
 		damage_to_psi = value * t.getConversionRatio(self, t)
 	end
@@ -3363,7 +3368,7 @@ function _M:preUseTalent(ab, silent, fake)
 	-- Spells can fail
 	if (ab.is_spell and not self:isTalentActive(ab.id)) and not fake and self:attr("spell_failure") then
 		if rng.percent(self:attr("spell_failure")) then
-			if not silent then game.logSeen(self, "%s's %s has been disrupted by anti-magic forces!", self.name:capitalize(), ab.name) end
+			if not silent then game.logSeen(self, "%s's %s has been disrupted by #ORCHID#anti-magic forces#LAST#!", self.name:capitalize(), ab.name) end
 			self:useEnergy()
 			return false
 		end

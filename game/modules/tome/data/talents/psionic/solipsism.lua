@@ -106,7 +106,6 @@ newTalent{
 	mode = "passive",
 	getClarityThreshold = function(self, t) return math.max(0.95 - self:getTalentLevel(t) * 0.06, 0.5) end,
 	on_learn = function(self, t)
-		self.clarity_threshold = t.getClarityThreshold(self, t)
 		if self:getTalentLevelRaw(t) == 1 then
 			self.inc_resource_multi.psi = (self.inc_resource_multi.psi or 0) + 1
 			self.inc_resource_multi.life = (self.inc_resource_multi.life or 0) - 0.5
@@ -122,14 +121,11 @@ newTalent{
 	end,
 	on_unlearn = function(self, t)
 		if not self:knowTalent(t) then
-			self.clarity_threshold = nil
 			self:incMaxPsi(-(self:getWil()-10) * 1)
 			self.max_life = self.max_life + (self:getCon()-10) * 0.5
 			self.inc_resource_multi.psi = self.inc_resource_multi.psi - 1
 			self.inc_resource_multi.life = self.inc_resource_multi.life + 0.5
 			self.solipsism_threshold = self.solipsism_threshold - 0.1
-		else
-			self.clarity_threshold = t.getClarityThreshold(self, t)
 		end
 	end,
 	info = function(self, t)

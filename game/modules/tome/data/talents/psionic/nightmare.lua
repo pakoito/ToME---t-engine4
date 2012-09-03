@@ -27,7 +27,7 @@ newTalent{
 	tactical = { DISABLE = {sleep = 1}, ATTACK = { DARKNESS = 2 }, },
 	direct_hit = true,
 	requires_target = true,
-	range = function(self, t) return math.ceil(3 + self:getTalentLevel(t)) end,
+	range = 7,
 	target = function(self, t) return {type="cone", radius=self:getTalentRange(t), range=0, talent=t, selffire=false} end,
 	getDuration = function(self, t) return 2 + math.ceil(self:getTalentLevel(t)/2) end,
 	getInsomniaPower= function(self, t)
@@ -43,7 +43,7 @@ newTalent{
 		end
 		return math.ceil(power)
 	end,
-	getDamage = function(self, t) return self:combatTalentMindDamage(t, 10, 100) end,
+	getDamage = function(self, t) return self:combatTalentMindDamage(t, 10, 50) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
@@ -93,11 +93,11 @@ newTalent{
 	require = psi_wil_high2,
 	cooldown = 18,
 	psi = 20,
-	range = 10,
+	range = 7,
 	direct_hit = true,
 	requires_target = true,
 	tactical = { ATTACK = function(self, t, target) if target and target:attr("sleep") then return 4 else return 2 end end },
-	getChance = function(self, t) return self:combatTalentMindDamage(t, 15, 50) end,
+	getChance = function(self, t) return self:combatTalentMindDamage(t, 15, 30) end,
 	getDuration = function(self, t) return 2 + math.ceil(self:getTalentLevel(t) * 2) end,
 	summon_inner_demons = function(self, target, t)
 		-- Find space
@@ -219,11 +219,11 @@ newTalent{
 	require = psi_wil_high3,
 	cooldown = 10,
 	psi = 20,
-	range = 10,
+	range = 7,
 	direct_hit = true,
 	requires_target = true,
 	tactical = { ATTACK = { DARKNESS = 2 }, DISABLE = function(self, t, target) if target and target:attr("sleep") then return 4 else return 2 end end },
-	getChance = function(self, t) return self:combatTalentMindDamage(t, 15, 50) end,
+	getChance = function(self, t) return self:combatTalentMindDamage(t, 15, 30) end,
 	getDamage = function(self, t) return self:combatTalentMindDamage(t, 5, 50) end,
 	getDuration = function(self, t) return 4 + math.ceil(self:getTalentLevel(t)) end,
 	action = function(self, t)

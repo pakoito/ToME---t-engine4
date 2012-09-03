@@ -27,7 +27,7 @@ newTalent{
 	tactical = { DISABLE = {sleep = 1} },
 	direct_hit = true,
 	requires_target = true,
-	range = function(self, t) return 5 + math.min(5, self:getTalentLevelRaw(t)) end,
+	range = 7,
 	radius = function(self, t) return 1 + math.floor(self:getTalentLevel(t)/4) end,
 	target = function(self, t) return {type="ball", radius=self:getTalentRadius(t), range=self:getTalentRange(t), talent=t} end,
 	getDuration = function(self, t) return 2 + math.ceil(self:getTalentLevel(t)/3) end,
@@ -142,11 +142,9 @@ newTalent{
 	require = psi_wil_req3,
 	psi= 10,
 	cooldown = 10,
-	tactical = { 
-		CLOSEIN = function(self, t, target) if target and target:attr("sleep") or (self:getTalentLevel(t) >= 5 and self:attr("lucid_dreamer")) then return 2 else return 0 end end,
-		ESCAPE = function(self, t, target) if target and target:attr("sleep") or (self:getTalentLevel(t) >= 5 and self:attr("lucid_dreamer")) then return 2 else return 0 end end,
-	},
-	range = function(self, t) return 5 + math.min(5, self:getTalentLevelRaw(t)) end,
+	tactical = { ESCAPE = 1, CLOSEIN = 1 },
+	range = 7,
+	radius = function(self, t) return math.max(0, 7 - math.floor(self:getTalentLevel(t))) end,
 	requires_target = true,
 	target = function(self, t)
 		return {type="hit", range=self:getTalentRange(t)}
@@ -162,12 +160,10 @@ newTalent{
 			return nil
 		end
 		local __, x, y = self:canProject(tg, x, y)
-		if not (self:getTalentLevel(t) >= 5 and self:attr("lucid_dreamer") or game.zone.is_dream_scape) then
-			target = game.level.map(x, y, Map.ACTOR)
-			if not (target and target:attr("sleep")) then
-				game.logPlayer(self, "Your target must be sleeping in order to dream walk.")
-				return nil
-			end
+		local teleport = self:getTalentRadius(t)
+		target = game.level.map(x, y, Map.ACTOR)
+		if (target and target:attr("sleep")) or game.zone.is_dream_scape then
+			teleport = 0
 		end
 		
 		game.level.map:particleEmitter(x, y, 1, "generic_teleport", {rm=0, rM=0, gm=180, gM=255, bm=180, bM=255, am=35, aM=90})
@@ -175,7 +171,7 @@ newTalent{
 		-- since we're using a precise teleport we'll look for a free grid first
 		local tx, ty = util.findFreeGrid(x, y, 5, true, {[Map.ACTOR]=true})
 		if tx and ty then
-			if not self:teleportRandom(tx, ty, 0) then
+			if not self:teleportRandom(tx, ty, teleport) then
 				game.logSeen(self, "The dream walk fizzles!")
 			end
 		end
@@ -186,8 +182,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local range = self:getTalentRange(t)
-		return ([[You move through the dream world, reappearing next to a sleeping target within range (%d).  At talent level 5 you may teleport anywhere within range as long as you have Lucid Dreamer active.]]):format(range)
+		local radius = self:getTalentRadius(t)
+		return ([[You move through the dream world, reappearing near the target location (%d teleport accuracy).  If the target is a sleeping creature you'll instead appear as close to them as possible.]]):format(radius)
 	end,
 }
 
@@ -200,7 +196,7 @@ newTalent{
 	sustain_psi = 40,
 	cooldown = function(self, t) return 50 - self:getTalentLevelRaw(t) * 5 end,
 	tactical = { DISABLE = function(self, t, target) if target and target:attr("sleep") then return 4 else return 0 end end},
-	range = function(self, t) return 5 + math.min(5, self:getTalentLevelRaw(t)) end,
+	range = 7,
 	requires_target = true,
 	target = function(self, t)
 		return {type="ball", radius=self:getTalentRange(t), range=0}

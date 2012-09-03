@@ -28,11 +28,11 @@ newTalent{
 	tactical = { ATTACKAREA = {MIND = 2}},
 	requires_target = true,
 	proj_speed = 10,
-	range = function(self, t) return 5 + math.min(5, (self:isTalentActive(self.T_MIND_STORM) and self:getTalentLevelRaw(self.T_MIND_STORM)) or 0) end,
+	range = 7,
 	target = function(self, t)
-		return {type="bolt", range=self:getTalentRange(t), talent=t, friendlyfire=false, display={particle="discharge_bolt", trail="lighttrail"}}
+		return {type="bolt", range=self:getTalentRange(t), talent=t, friendlyfire=false, friendlyblock=false, display={particle="discharge_bolt", trail="lighttrail"}}
 	end,
-	getDamage = function(self, t) return self:combatTalentMindDamage(t, 20, 140) end,
+	getDamage = function(self, t) return self:combatTalentMindDamage(t, 10, 100) end,
 	getTargetCount = function(self, t) return math.ceil(self:getTalentLevel(t)) end,
 	getOverchargeRatio = function(self, t) return 20 - math.ceil(self:getTalentLevel(t)) end,
 	doMindStorm = function(self, t, p)
@@ -52,7 +52,7 @@ newTalent{
 		-- Randomly take targets
 		local tg = self:getTalentTarget(t)
 		for i = 1, t.getTargetCount(self, t) do
-			if #tgts <= 0 or self:getFeedback() < 1 then break end
+			if #tgts <= 0 or self:getFeedback() < 5 then break end
 			local a, id = rng.table(tgts)
 			table.remove(tgts, id)
 			-- Divert the Bolt?
@@ -61,7 +61,7 @@ newTalent{
 			else
 				self:projectile(tg, a.x, a.y, DamageType.MIND, self:mindCrit(t.getDamage(self, t)))
 			end
-			self:incFeedback(-1)
+			self:incFeedback(-5)
 		end
 		
 		-- Randomly take overcharge targets
@@ -96,14 +96,13 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local range_increase = math.min(self:getTalentLevelRaw(t))
 		local targets = t.getTargetCount(self, t)
 		local damage = t.getDamage(self, t)
 		local charge_ratio = t.getOverchargeRatio(self, t)
-		return ([[Unleash your subconscious on the world around you.  While active the range of all Discharge talents will be increased by %d and you'll fire up to %d bolts each turn (one per hostile target) that deal %0.2f mind damage.  Each bolt consumes 1 Feedback.
+		return ([[Unleash your subconscious on the world around you.  While active you fire up to %d bolts each turn (one per hostile target) that deal %0.2f mind damage.  Each bolt consumes 1 Feedback.
 		Feedback gains beyond your maximum allowed amount may generate extra bolts (one bolt per %d excess Feedback per target), but no more then %d extra bolts per turn.
 		This effect is a psionic channel and will break if you move, use a talent that consumes a turn, or activate an item.
-		The damage will scale with your mindpower.]]):format(range_increase, targets, damDesc(self, DamageType.MIND, damage), charge_ratio, targets)
+		The damage will scale with your mindpower.]]):format(targets, damDesc(self, DamageType.MIND, damage), charge_ratio, targets)
 	end,
 }
 
@@ -137,7 +136,7 @@ newTalent{
 	points = 5, 
 	require = psi_wil_high3,
 	mode = "passive",
-	range = function(self, t) return 5 + math.min(5, (self:isTalentActive(self.T_MIND_STORM) and self:getTalentLevelRaw(self.T_MIND_STORM)) or 0) end,
+	range = 7,
 	getDamage = function(self, t) return self:combatTalentMindDamage(t, 10, 75) end,
 	target = function(self, t)
 		return {type="hit", range=self:getTalentRange(t), talent=t}
@@ -178,7 +177,7 @@ newTalent{
 	feedback = 25,
 	cooldown = 12,
 	tactical = { ATTACK = {MIND = 2}},
-	range = function(self, t) return 5 + math.min(5, (self:isTalentActive(self.T_MIND_STORM) and self:getTalentLevelRaw(self.T_MIND_STORM)) or 0) end,
+	range = 7,
 	getCritBonus = function(self, t) return self:combatTalentMindDamage(t, 10, 50) end,
 	target = function(self, t)
 		return {type="hit", range=self:getTalentRange(t)}

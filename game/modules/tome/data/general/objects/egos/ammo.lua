@@ -568,6 +568,7 @@ newEntity{
 		ranged_project={[DamageType.NATURE] = resolvers.mbonus_material(15, 5)},
 		special_on_hit = {desc="25% chance to remove a magical effect", fct=function(combat, who, target)
 			if not rng.percent(25) then return end
+			if not who:checkHit(who:combatMindpower(), target:combatMentalResist()) then game.logSeen(target, "%s resists!", target.name:capitalize()) return nil end
 			
 			local effs = {}
 			
@@ -594,6 +595,7 @@ newEntity{
 				else
 					target:forceUseTalent(eff[2], {ignore_energy=true})
 				end
+				game.logSeen(target, "%s's magic has been #ORCHID#purged#LAST#!", target.name:capitalize())
 			end
 		end},
 	},
@@ -630,7 +632,7 @@ newEntity{
 			local tg = {type="hit", range=1}
 			who:project(tg, target.x, target.y, engine.DamageType.ARCANE, damage)
 			
-			game.logSeen(target, "%s's %s has been burned!", target.name:capitalize(), t.name)
+			game.logSeen(target, "%s's %s has been #ORCHID#burned#LAST#!", target.name:capitalize(), t.name)
 		end},
 	},
 }

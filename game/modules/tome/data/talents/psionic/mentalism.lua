@@ -246,7 +246,7 @@ newTalent{
 	no_sustain_autoreset = true,
 	cooldown = function(self, t) return 52 - self:getTalentLevelRaw(t) * 8 end,
 	tactical = { BUFF = 2, ATTACK = {MIND = 2}},
-	range = function(self, t) return 5 + math.min(5, self:getTalentLevelRaw(t)) end,
+	range = 7,
 	direct_hit = true,
 	requires_target = true,
 	target = function(self, t)

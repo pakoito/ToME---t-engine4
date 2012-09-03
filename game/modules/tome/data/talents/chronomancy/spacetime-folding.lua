@@ -56,7 +56,7 @@ newTalent{
 		return 2 + math.floor(self:getTalentLevel(t))
 	end,
 	getConfuseDuration = function(self, t) return math.floor((self:getTalentLevel(t) + 2) * getParadoxModifier(self, pm)) end,
-	getConfuseEfficency = function(self, t) return (30 + self:getTalentLevelRaw(t) * 10) end,
+	getConfuseEfficency = function(self, t) return math.min(50, self:getTalentLevelRaw(t) * 10) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local tx, ty, target = self:getTarget(tg)

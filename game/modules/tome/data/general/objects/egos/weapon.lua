@@ -695,6 +695,7 @@ newEntity{
 				else
 					target:forceUseTalent(eff[2], {ignore_energy=true})
 				end
+				game.logSeen(target, "%s's magic has been #ORCHID#purged#LAST#!", target.name:capitalize())
 			end
 		end},
 	},
@@ -732,7 +733,7 @@ newEntity{
 			if type(damage) ~= "number" then damage = 0 end
 			who:project(tg, target.x, target.y, engine.DamageType.ARCANE, damage)
 
-			game.logSeen(target, "%s's %s has been burned!", target.name:capitalize(), t.name)
+			game.logSeen(target, "%s's %s has been #ORCHID#burned#LAST#!", target.name:capitalize(), t.name)
 		end},
 	},
 }

@@ -270,7 +270,7 @@ newEntity{ base = "BASE_RING",
 }
 
 newEntity{ base = "BASE_RING",
-	power_source = {arcane=true},
+	power_source = {psionic=true},
 	define_as = "NIGHT_SONG", rarity=false,
 	name = "Nightsong", unique=true, image = "object/artifact/ring_nightsong.png",
 	desc = [[A pitch black ring, unadorned. It seems as though tendrils of darkness creep upon it.]],
@@ -327,7 +327,7 @@ newEntity{ base = "BASE_HELM",
 }
 
 newEntity{ base = "BASE_SHIELD",
-	power_source = {nature=true},
+	power_source = {arcane=true},
 	define_as = "LUNAR_SHIELD",
 	unique = true,
 	name = "Lunar Shield", image = "object/artifact/shield_lunar_shield.png",

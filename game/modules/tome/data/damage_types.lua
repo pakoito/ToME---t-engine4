@@ -1819,7 +1819,7 @@ newDamageType{
 				end
 			elseif chance == 4 then
 				if target:canBe("confusion") then
-					target:setEffect(target.EFF_CONFUSED, 3, {power=60, apply_power=src:combatSpellpower()})
+					target:setEffect(target.EFF_CONFUSED, 3, {power=50, apply_power=src:combatSpellpower()})
 				else
 					game.logSeen(target, "%s resists the confusion!", target.name:capitalize())
 				end

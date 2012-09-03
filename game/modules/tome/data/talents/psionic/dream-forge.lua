@@ -104,7 +104,7 @@ newTalent{
 	psi = 30,
 	tactical = { ATTACKAREA = { FIRE = 2, MIND = 2}, ESCAPE = 2, },
 	range = 0,
-	radius = function(self, t) return math.min(10, 3 + math.ceil(self:getTalentLevel(t)/2)) end,
+	radius = function(self, t) return math.min(7, 2 + math.ceil(self:getTalentLevel(t)/2)) end,
 	requires_target = true,
 	target = function(self, t)
 		return {type="cone", range=self:getTalentRange(t), friendlyfire=false, radius = self:getTalentRadius(t), talent=t}

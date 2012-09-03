@@ -59,7 +59,7 @@ newTalent{
 	requires_target = true,
 	tactical = { ATTACK = { MIND = 2 }, DISABLE = { confusion = 2 } },
 	getDamage = function(self, t) return self:combatTalentMindDamage(t, 20, 200) end,
-	getPower = function(self, t) return self:combatTalentMindDamage(t, 20, 60) end,
+	getPower = function(self, t) return math.min(50, self:combatTalentMindDamage(t, 10, 50)) end,
 	getDuration = function(self, t) return 1 + math.floor(self:getTalentLevel(t)) end,
 	no_npc = true,
 	action = function(self, t)
@@ -103,7 +103,7 @@ newTalent{
 	range = 0,
 	direct_hit = true,
 	requires_target = true,
-	radius = function(self, t) return math.min(10, 3 + math.ceil(self:getTalentLevel(t)/2)) end,
+	radius = function(self, t) return math.min(7, 2 + math.ceil(self:getTalentLevel(t)/2)) end,
 	target = function(self, t) return {type="ball", radius=self:getTalentRadius(t), range=self:getTalentRange(t), talent=t, selffire=false} end,
 	tactical = { ATTACKAREA = { MIND = 3 }, DISABLE=1 },
 	getDamage = function(self, t) return self:combatTalentMindDamage(t, 20, 200) end,

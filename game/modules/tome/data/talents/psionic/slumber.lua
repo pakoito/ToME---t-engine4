@@ -27,7 +27,7 @@ newTalent{
 	tactical = { DISABLE = {sleep = 2} },
 	direct_hit = true,
 	requires_target = true,
-	range = function(self, t) return 5 + math.min(5, self:getTalentLevelRaw(t)) end,
+	range = 7,
 	target = function(self, t) return {type="hit", range=self:getTalentRange(t), talent=t} end,
 	getDuration = function(self, t) return 2 + math.ceil(self:getTalentLevel(t)/2) end,
 	getInsomniaPower = function(self, t)
@@ -120,7 +120,7 @@ newTalent{
 	tactical = { DISABLE = function(self, t, target) if target and target.game_ender and target:attr("sleep") then return 4 else return 0 end end},
 	direct_hit = true,
 	requires_target = true,
-	range = function(self, t) return 5 + math.min(5, self:getTalentLevelRaw(t)) end,
+	range = 7,
 	target = function(self, t) return {type="hit", range=self:getTalentRange(t), talent=t} end,
 	getDuration = function(self, t) return 4 + math.ceil(self:getTalentLevel(t) * 2) end,
 	getPower = function(self, t) return self:combatTalentMindDamage(t, 10, 100) end,
