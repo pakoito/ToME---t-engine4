@@ -56,6 +56,7 @@ newEntity{ base = "BASE_NPC_AQUATIC_CRITTER",
 	autolevel = "warriormage",
 	combat = {damtype=DamageType.LIGHTNING},
 	resolvers.talents{ [Talents.T_CHAIN_LIGHTNING]=3, [Talents.T_LIGHTNING]=3 },
+	lite = 1,
 	ingredient_on_death = "ELECTRIC_EEL_TAIL",
 }
 

@@ -56,6 +56,7 @@ newEntity{ base = "BASE_NPC_RITCH_REL",
 	rarity = 1,
 	max_life = 5,
 	life_rating = 3,
+	lite = 1,
 
 	rank = 2,
 
