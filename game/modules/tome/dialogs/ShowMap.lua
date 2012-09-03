@@ -23,7 +23,8 @@ local GenericContainer = require "engine.ui.GenericContainer"
 
 module(..., package.seeall, class.inherit(Dialog))
 
-function _M:init()
+function _M:init(mm_mode)
+	self.mm_mode = mm_mode
 	self.title_shadow = false
 	self.color = {r=0x3a, g=0x35, b=0x33}
 
@@ -94,6 +95,8 @@ end
 function _M:unload()
 	game.uiset.no_minimap = nil
 	game.uiset:setupMinimap(game.level)
+
+	if self.mm_mode then self.mm_mode() end
 end
 
 function _M:innerDisplay(x, y, nb_keyframes)
