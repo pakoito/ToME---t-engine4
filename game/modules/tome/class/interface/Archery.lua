@@ -63,6 +63,9 @@ function _M:archeryAcquireTargets(tg, params)
 			ammo.combat.shots_left = ammo.combat.shots_left - 1
 		end
 		if a then
+			local hd = {"Combat:archeryAcquire", tg=tg, params=params, weapon=weapon, ammo=a}
+			if self:triggerHook(hd) then hitted = hd.hitted end
+
 			targets = {{x=x, y=y, ammo=a.combat}}
 		end
 	else
@@ -85,7 +88,11 @@ function _M:archeryAcquireTargets(tg, params)
 					else break
 					end
 				end
-				if a then targets[#targets+1] = {x=tx, y=ty, ammo=a.combat}
+				if a then 
+					local hd = {"Combat:archeryAcquire", tg=tg, params=params, weapon=weapon, ammo=a}
+					if self:triggerHook(hd) then hitted = hd.hitted end
+
+					targets[#targets+1] = {x=tx, y=ty, ammo=a.combat}
 				else break end
 			end
 		end)
