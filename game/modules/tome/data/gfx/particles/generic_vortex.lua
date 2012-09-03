@@ -17,6 +17,8 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local density = density or 200
+
 return { generator = function()
 	local radius = radius
 	local sradius = (radius + 0.5) * (engine.Map.tile_w + engine.Map.tile_h) / 2
@@ -43,6 +45,6 @@ return { generator = function()
 	}
 end, },
 function(self)
-	self.ps:emit(200*radius)
+	self.ps:emit(density*radius)
 end,
-200*radius*2
+density*radius*2

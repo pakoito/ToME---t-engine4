@@ -21,7 +21,7 @@
 local x, y = game.state:findEventGrid(level)
 if not x then return false end
 
-level.map:particleEmitter(x, y, 3, "generic_vortex", {rm=200, rM=250, gm=200, gM=250, bm=80, bM=120, am=80, aM=150, radius=3})
+level.map:particleEmitter(x, y, 3, "generic_vortex", {rm=200, rM=250, gm=200, gM=250, bm=80, bM=120, am=80, aM=150, radius=3, density=50})
 
 local on_stand = function(self, x, y, who) who:setEffect(who.EFF_WHISTLING_VORTEX, 1, {}) end
 
