@@ -93,13 +93,10 @@ function _M:generateList()
 
 	local transmo_chest = self.actor:attr("has_transmo")
 
-	if not self.object.__transmo then
-		if self.object:canUseObject() then list[#list+1] = {name="Use", action="use"} end
-		if self.inven == self.actor.INVEN_INVEN and self.object:wornInven() and self.actor:getInven(self.object:wornInven()) then list[#list+1] = {name="Wield/Wear", action="wear"} end
-		if self.inven ~= self.actor.INVEN_INVEN and self.object:wornInven() then list[#list+1] = {name="Take off", action="takeoff"} end
-	else
-		list[#list+1] = {name="Move to normal inventory", action="toinven"}
-	end
+	if not self.object.__transmo then if self.object:canUseObject() then list[#list+1] = {name="Use", action="use"} end end
+	if self.inven == self.actor.INVEN_INVEN and self.object:wornInven() and self.actor:getInven(self.object:wornInven()) then list[#list+1] = {name="Wield/Wear", action="wear"} end
+	if not self.object.__transmo then if self.inven ~= self.actor.INVEN_INVEN and self.object:wornInven() then list[#list+1] = {name="Take off", action="takeoff"} end end
+	if self.object.__transmo then list[#list+1] = {name="Move to normal inventory", action="toinven"} end
 	if self.inven == self.actor.INVEN_INVEN then list[#list+1] = {name="Drop", action="drop"} end
 	if self.inven == self.actor.INVEN_INVEN and transmo_chest and self.actor:transmoFilter(self.object) then list[#list+1] = {name="Transmogrify now", action="transmo"} end
 	if profile.auth and profile.hash_valid then list[#list+1] = {name="Link item in chat", action="chat-link"} end
