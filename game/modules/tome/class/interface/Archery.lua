@@ -378,6 +378,9 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 		end
 	end
 
+	local hd = {"Combat:archeryHit", hitted=hitted, target=target, weapon=weapon, ammo=ammo, damtype=damtype, mult=mult, dam=dam}
+	if self:triggerHook(hd) then hitted = hd.hitted end
+
 	-- Zero gravity
 	if hitted and game.level.data.zero_gravity and rng.percent(util.bound(dam, 0, 100)) then
 		target:knockback(self.x, self.y, math.ceil(math.log(dam)))

@@ -23,7 +23,7 @@ local Stats = require("engine.interface.ActorStats")
 local reward_types = {
 	warrior = {
 		types = {
-			["technique/conditioning"] = 0.7,
+			["technique/conditioning"] = 0.8,
 		},
 		talents = {
 			[Talents.T_VITALITY] = 1,
@@ -37,7 +37,7 @@ local reward_types = {
 	},
 	divination = {
 		types = {
-			["spell/divination"] = 0.7,
+			["spell/divination"] = 0.8,
 		},
 		talents = {
 			[Talents.T_ARCANE_EYE] = 1,
@@ -50,7 +50,7 @@ local reward_types = {
 		},
 		antimagic = {
 			types = {
-				["wild-gift/call"] = 0.7,
+				["wild-gift/call"] = 0.8,
 			},
 			saves = { mind = 4 },
 			talents = {
@@ -65,8 +65,8 @@ local reward_types = {
 	},
 	alchemy = {
 		types = {
-			["spell/staff-combat"] = 0.7,
-			["spell/stone-alchemy"] = 0.7,
+			["spell/staff-combat"] = 0.8,
+			["spell/stone-alchemy"] = 0.8,
 		},
 		talents = {
 			[Talents.T_CHANNEL_STAFF] = 1,
@@ -79,7 +79,7 @@ local reward_types = {
 		},
 		antimagic = {
 			types = {
-				["wild-gift/mindstar-mastery"] = 0.7,
+				["wild-gift/mindstar-mastery"] = 0.8,
 			},
 			talents = {
 				[Talents.T_PSIBLADES] = 1,
@@ -94,7 +94,7 @@ local reward_types = {
 	},
 	survival = {
 		types = {
-			["cunning/survival"] = 0.7,
+			["cunning/survival"] = 0.8,
 		},
 		talents = {
 			[Talents.T_HEIGHTENED_SENSES] = 1,
@@ -108,7 +108,7 @@ local reward_types = {
 	},
 	sun_paladin = {
 		types = {
-			["celestial/chants"] = 0.7,
+			["celestial/chants"] = 0.8,
 		},
 		talents = {
 			[Talents.T_CHANT_OF_FORTITUDE] = 1,
@@ -120,7 +120,7 @@ local reward_types = {
 		},
 		antimagic = {
 			types = {
-				["technique/mobility"] = 0.7,
+				["technique/mobility"] = 0.8,
 			},
 			talents = {
 				[Talents.T_HACK_N_BACK] = 1,
@@ -135,7 +135,7 @@ local reward_types = {
 	},
 	anorithil = {
 		types = {
-			["celestial/light"] = 0.7,
+			["celestial/light"] = 0.8,
 		},
 		talents = {
 			[Talents.T_BATHE_IN_LIGHT] = 1,
@@ -147,7 +147,7 @@ local reward_types = {
 		},
 		antimagic = {
 			types = {
-				["technique/field-control"] = 0.7,
+				["technique/field-control"] = 0.8,
 			},
 			talents = {
 				[Talents.T_TRACK] = 1,
@@ -162,7 +162,7 @@ local reward_types = {
 	},
 	temporal = {
 		types = {
-			["chronomancy/chronomancy"] = 0.7,
+			["chronomancy/chronomancy"] = 0.8,
 		},
 		talents = {
 			[Talents.T_PRECOGNITION] = 1,
@@ -174,7 +174,7 @@ local reward_types = {
 		},
 		antimagic = {
 			types = {
-				["psionic/dreaming"] = 0.7,
+				["psionic/dreaming"] = 0.8,
 			},
 			talents = {
 				[Talents.T_SLEEP] = 1,
@@ -262,7 +262,7 @@ local function generate_rewards()
 			level = math.min(t.points - game.player:getTalentLevelRaw(tid), level)
 			if level > 0 then
 				local doit = function(npc, player) game.party:reward("Select the party member to receive the reward:", function(player)
-					if game.player:knowTalentType(t.type[1]) == nil then player:setTalentTypeMastery(t.type[1], 0.7) end
+					if game.player:knowTalentType(t.type[1]) == nil then player:setTalentTypeMastery(t.type[1], 0.8) end
 					player:learnTalent(tid, true, level, {no_unlearn=true})
 					--if t.hide then player.__show_special_talents[tid] = true end
 					player:hasQuest(npc.quest_id).reward_message = ("%s talent %s (+%d level(s))"):format(game.player:knowTalent(tid) and "improved" or "learnt", t.name, level)
@@ -284,8 +284,8 @@ local function generate_rewards()
 			local tt_def = npc:getTalentTypeFrom(tt)
 			local cat = tt_def.type:gsub("/.*", "")
 			local doit = function(npc, player) game.party:reward("Select the party member to receive the reward:", function(player)
+				if player:knowTalentType(tt) == nil then player:setTalentTypeMastery(tt, mastery) end
 				player:learnTalentType(tt, false)
-				player:setTalentTypeMastery(tt, math.max(mastery, player:getTalentTypeMastery(tt)))
 				player:hasQuest(npc.quest_id).reward_message = ("gained talent category %s (at mastery %0.2f)"):format(cat:capitalize().." / "..tt_def.name:capitalize(), mastery)
 			end) end
 			answers[#answers+1] = {("[Allow training of talent category %s (at mastery %0.2f)]"):format(cat:capitalize().." / "..tt_def.name:capitalize(), mastery),

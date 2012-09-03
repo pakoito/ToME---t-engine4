@@ -47,8 +47,8 @@ local function generate_rewards()
 			local tt_def = game.player:getTalentTypeFrom(tt)
 			local cat = tt_def.type:gsub("/.*", "")
 			local doit = function(npc, player)
+				if player:knowTalentType(tt) == nil then player:setTalentTypeMastery(tt, 0.9) end
 				player:learnTalentType(tt, true)
-				player:setTalentTypeMastery(tt, math.max(0.9, player:getTalentTypeMastery(tt)))
 			end
 			answers[#answers+1] = {("[%s (at mastery %0.2f)]"):format(cat:capitalize().." / "..tt_def.name:capitalize(), 0.9),
 				action=doit,
