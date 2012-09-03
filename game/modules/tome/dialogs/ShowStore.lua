@@ -107,6 +107,9 @@ function _M:init(title, store_inven, actor_inven, store_filter, actor_filter, ac
 			end
 		end,
 	}
+	self.key:addCommands{
+		[{"_TAB","shift"}] = function() self:moveFocus(1) end,
+	}
 	self.key:addBinds{
 		EXIT = function() game:unregisterDialog(self) end,
 	}
