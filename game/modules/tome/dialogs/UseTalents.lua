@@ -35,7 +35,7 @@ function _M:init(actor)
 	self.c_tut = Textzone.new{width=math.floor(self.iw / 2 - 10), height=1, auto_height=true, no_color_bleed=true, text=[[
 You can bind a non-passive talent to a hotkey by pressing the corresponding hotkey while selecting a talent or by right-clicking on the talent.
 Check out the keybinding screen in the game menu to bind hotkeys to a key (default is 1-0 plus control or shift).
-Right click or press '*' to configure.
+Right click or press '@' to configure.
 ]]}
 	self.c_desc = TextzoneList.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.c_tut.h - 20, scrollbar=true, no_color_bleed=true}
 
@@ -66,11 +66,13 @@ Right click or press '*' to configure.
 
 	self.key:addCommands{
 		__TEXTINPUT = function(c)
+			if c == '@' then
+				self:use(self.cur_item, "right")
+			end
 			if self.list and self.list.chars[c] then
 				self:use(self.list.chars[c])
 			end
 		end,
-		_ASTERISK = function() self:use(self.cur_item, "right") end,
 	}
 	engine.interface.PlayerHotkeys:bindAllHotkeys(self.key, function(i) self:defineHotkey(i) end)
 	self.key:addBinds{
