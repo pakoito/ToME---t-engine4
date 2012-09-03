@@ -130,10 +130,14 @@ function _M:init(title, store_inven, actor_inven, store_filter, actor_filter, ac
 		end
 	end
 
+
 	self.key.any_key = function(sym)
 		-- Control resets the tooltip
-		if (sym == self.key._LCTRL or sym == self.key._RCTRL) and sym~=self.prev_ctrl then local i = self.cur_item self.cur_item = nil self:select(i, true) end
-		self.prev_ctrl = sym
+		if sym == self.key._LCTRL or sym == self.key._RCTRL then 
+			local ctrl = core.key.modState("ctrl")
+			if self.prev_ctrl ~= ctrl then self:select(self.cur_item, true) end
+			self.prev_ctrl = ctrl
+		end
 	end
 end
 
