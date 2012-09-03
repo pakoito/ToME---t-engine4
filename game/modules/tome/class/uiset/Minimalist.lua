@@ -1157,6 +1157,12 @@ function _M:handleEffect(player, eff_id, e, p, x, y, hs, bx, by, is_first, scale
 			game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, desc)
 		end
 
+		local flash = 0
+
+		if p.__set_time and p.__set_time >= self.now - 500 then
+			flash = 5
+		end
+
 		self.tbuff[eff_id..":"..dur] = {eff_id, "tbuff"..eff_id, function(x, y)
 			core.display.drawQuad(x+4, y+4, 32, 32, 0, 0, 0, 255)
 			e.display_entity:toScreen(self.hotkeys_display_icons.tiles, x+4, y+4, 32, 32)
@@ -1164,6 +1170,12 @@ function _M:handleEffect(player, eff_id, e, p, x, y, hs, bx, by, is_first, scale
 			if txt then
 				txt._tex:toScreenFull(x+4+2 + (40 - txt.fw)/2, y+4+2 + (40 - txt.fh)/2, txt.w, txt.h, txt._tex_w, txt._tex_h, 0, 0, 0, 0.7)
 				txt._tex:toScreenFull(x+4 + (40 - txt.fw)/2, y+4 + (40 - txt.fh)/2, txt.w, txt.h, txt._tex_w, txt._tex_h)
+			end
+			if flash > 0 then
+				if e.status ~= "detrimental" then core.display.drawQuad(x+4, y+4, 32, 32, 0, 255, 0, 170 - flash * 30)
+				else core.display.drawQuad(x+4, y+4, 32, 32, 255, 0, 0, 170 - flash * 30)
+				end
+				flash = flash - 1
 			end
 		end, desc_fct}
 	end
@@ -1768,6 +1780,7 @@ end
 
 function _M:display(nb_keyframes)
 	local d = core.display
+	self.now = core.game.getTime()
 
 	-- Now the map, if any
 	game:displayMap(nb_keyframes)

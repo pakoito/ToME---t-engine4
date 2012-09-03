@@ -4178,6 +4178,10 @@ function _M:on_set_temporary_effect(eff_id, e, p)
 	if e.status == "detrimental" and e.type == "physical" and self:knowTalent(self.T_SPINE_OF_THE_WORLD) then
 		self:triggerTalent(self.T_SPINE_OF_THE_WORLD)
 	end
+
+	if self.player then
+		p.__set_time = core.game.getTime()
+	end
 end
 
 -- @param t a type table describing the attack, passed to engine.Target:getType() for interpretation
