@@ -104,7 +104,6 @@ function _M:restStop(msg)
 	end
 
 	local finish = self.resting.cnt and self.resting.rest_turns and self.resting.cnt > self.resting.rest_turns
-	game.log("========== %d %d", self.resting.cnt or -1, self.resting.rest_turns or -1)
 	local on_very_end = self.resting.on_very_end
 	if self.resting.on_end then self.resting.on_end(self.resting.cnt, self.resting.rest_turns) end
 	self:onRestStop()

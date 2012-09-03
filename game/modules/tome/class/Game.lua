@@ -1242,12 +1242,6 @@ function _M:setupCommands()
 			end end
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
-			local f, err = loadfile("/data/general/events/whistling-vortex.lua")
-			print(f, err)
-			setfenv(f, setmetatable({level=self.level, zone=self.zone}, {__index=_G}))
-			print(pcall(f))
-			self:registerDialog(require("mod.dialogs.DownloadCharball").new())
-do return end
 			package.loaded["mod.dialogs.elements.TalentGrid"] = nil
 			package.loaded["mod.dialogs.UberTalent"] = nil
 			local list = {}
