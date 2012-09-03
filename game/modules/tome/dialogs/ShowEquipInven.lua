@@ -138,6 +138,9 @@ function _M:init(title, actor, filter, action, on_select)
 		end
 	end
 	
+	self.key:addCommands{
+		[{"_TAB","shift"}] = function() self:moveFocus(1) end,
+	}
 	self.key:addBinds{
 		ACCEPT = function() if self.focus_ui and self.focus_ui.ui == self.c_inven then self:use(self.c_inven.c_inven.list[self.c_inven.c_inven.sel]) end end,
 		EXIT = function() game.tooltip.locked = false game:unregisterDialog(self) end,
