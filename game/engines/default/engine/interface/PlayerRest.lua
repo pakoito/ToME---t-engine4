@@ -24,13 +24,14 @@ local Dialog = require "engine.ui.Dialog"
 module(..., package.seeall, class.make)
 
 --- Initializes resting
-function _M:restInit(turns, what, past, on_end)
+function _M:restInit(turns, what, past, on_end, on_very_end)
 	what = what or "resting"
 	past = past or "rested"
 	self.resting = {
 		rest_turns = turns,
 		past = past,
 		on_end = on_end,
+		on_very_end = on_very_end,
 		cnt = 0,
 		dialog = Dialog:simplePopup(what:capitalize().."...", "You are "..what..", press Enter to stop.", function()
 			self:restStop()
@@ -102,8 +103,12 @@ function _M:restStop(msg)
 		game.log(self.resting.past:capitalize().." for %d turns.", self.resting.cnt)
 	end
 
+	local finish = self.resting.cnt and self.resting.rest_turns and self.resting.cnt > self.resting.rest_turns
+	game.log("========== %d %d", self.resting.cnt or -1, self.resting.rest_turns or -1)
+	local on_very_end = self.resting.on_very_end
 	if self.resting.on_end then self.resting.on_end(self.resting.cnt, self.resting.rest_turns) end
 	self:onRestStop()
 	self.resting = nil
+	if on_very_end then on_very_end(finish) end
 	return true
 end

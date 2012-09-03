@@ -1017,6 +1017,11 @@ function _M:tick()
 	-- Check damages to log
 	self:displayDelayedLogDamage()
 
+	if self.tick_loopback then
+		self.tick_loopback = nil
+		return self:tick()
+	end
+
 	if savefile_pipe.saving then self.player.changed = true end
 	if self.paused and not savefile_pipe.saving then return true end
 --	if self.on_tick_end and #self.on_tick_end > 0 then return true end
@@ -1303,7 +1308,7 @@ do return end
 		end,
 
 		RUN_AUTO = function()
-			if self.level and self.zone then
+			local ae = function() if self.level and self.zone then
 				local seen = {}
 				-- Check for visible monsters.  Only see LOS actors, so telepathy wont prevent it
 				core.fov.calc_circle(self.player.x, self.player.y, self.level.map.w, self.level.map.h, self.player.sight or 10,
@@ -1323,6 +1328,13 @@ do return end
 				elseif not self.player:autoExplore() then
 					self.log("There is nowhere left to explore.")
 				end
+			end end
+
+			if config.settings.tome.rest_before_explore then
+				local ok = false
+				self.player:restInit(nil, nil, nil, function() ok = self.player.resting.rested_fully end, function() if ok then self:onTickEnd(ae) self.tick_loopback = true end end)
+			else
+				ae()
 			end
 		end,
 

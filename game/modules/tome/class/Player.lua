@@ -730,6 +730,7 @@ function _M:restCheck()
 	end
 
 	self.resting.wait_recall = nil
+	self.resting.rested_fully = true
 
 	return false, "all resources and life at maximum"
 end

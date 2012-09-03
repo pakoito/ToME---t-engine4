@@ -273,6 +273,15 @@ function _M:generateList()
 		game:saveSettings("tome.autoassign_talents_on_birth", ("tome.autoassign_talents_on_birth = %s\n"):format(tostring(config.settings.tome.autoassign_talents_on_birth)))
 		self.c_list:drawItem(item)
 	end,}
+
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Always rest to full before auto-exploring.#WHITE#"}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Rest before auto-explore#WHITE##{normal}#", status=function(item)
+		return tostring(config.settings.tome.rest_before_explore and "enabled" or "disabled")
+	end, fct=function(item)
+		config.settings.tome.rest_before_explore = not config.settings.tome.rest_before_explore
+		game:saveSettings("tome.rest_before_explore", ("tome.rest_before_explore = %s\n"):format(tostring(config.settings.tome.rest_before_explore)))
+		self.c_list:drawItem(item)
+	end,}
 --[[
 	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Your movement mode depends on which character/creature you're currently controlling.#WHITE#"}
 	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Actor-based movement mode#WHITE##{normal}#", status=function(item)

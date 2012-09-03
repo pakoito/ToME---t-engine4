@@ -78,6 +78,7 @@ function _M:use(item)
 	elseif act == "levelup" then game.key:triggerVirtual("LEVELUP")
 	elseif act == "inventory" then game.key:triggerVirtual("SHOW_INVENTORY")
 	elseif act == "rest" then game.key:triggerVirtual("REST")
+	elseif act == "autoexplore" then game.key:triggerVirtual("RUN_AUTO")
 	elseif act == "chat-link" then profile.chat.uc_ext:sendActorLink(game.level.map(self.tmx, self.tmy, Map.ACTOR))
 	elseif act == "talent" then
 		local d = item
@@ -118,6 +119,7 @@ function _M:generateList()
 	if a and not self.on_player and game.party:canControl(a, false) then list[#list+1] = {name="Control", action="control", color=colors.simple(colors.TEAL), actor=a} end
 	if a and not self.on_player and game.party:canOrder(a, false) then list[#list+1] = {name="Give order", action="order", color=colors.simple(colors.TEAL), actor=a} end
 	if self.on_player then list[#list+1] = {name="Rest a while", action="rest", color=colors.simple(colors.ANTIQUE_WHITE)} end
+	if self.on_player then list[#list+1] = {name="Auto-explore", action="autoexplore", color=colors.simple(colors.ANTIQUE_WHITE)} end
 	if self.on_player then list[#list+1] = {name="Inventory", action="inventory", color=colors.simple(colors.ANTIQUE_WHITE)} end
 	if self.on_player then list[#list+1] = {name="Quest Log", action="quests", color=colors.simple(colors.ANTIQUE_WHITE)} end
 	if a then list[#list+1] = {name="Inspect Creature", action="character_sheet", color=colors.simple(colors.ANTIQUE_WHITE), actor=a} end
