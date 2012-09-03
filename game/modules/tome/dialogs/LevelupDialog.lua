@@ -31,6 +31,23 @@ local DamageType = require "engine.DamageType"
 
 module(..., package.seeall, class.inherit(Dialog, mod.class.interface.TooltipsData))
 
+local function backup(original)
+	local bak = original:clone()
+	bak.uid = original.uid -- Yes ...
+	return bak
+end
+
+local function restore(dest, backup)
+	local bx, by = dest.x, dest.y
+	backup.replacedWith = false
+	dest:replaceWith(backup)
+	dest.replacedWith = nil
+	dest.x, dest.y = bx, by
+	dest.changed = true
+	dest:removeAllMOs()
+	if game.level and dest.x then game.level.map:updateMap(dest.x, dest.y) end
+end
+
 function _M:init(actor, on_finish, on_birth)
 	self.on_birth = on_birth
 	actor.no_last_learnt_talents_cap = true
@@ -54,8 +71,8 @@ function _M:init(actor, on_finish, on_birth)
 	self.actor.__hidden_talent_types = self.actor.__hidden_talent_types or {}
 	self.actor.__increased_talent_types = self.actor.__increased_talent_types or {}
 
-	self.actor_dup = actor:clone()
-	self.actor_dup.uid = actor.uid -- Yes ...
+	self.actor_dup = backup(actor)
+	if actor.alchemy_golem then self.golem_dup = backup(actor.alchemy_golem) end
 
 	for _, v in pairs(game.engine.Birther.birth_descriptor_def) do
 		if v.type == "subclass" and v.name == actor.descriptor.subclass then self.desc_def = v break end
@@ -118,14 +135,8 @@ function _M:unload()
 end
 
 function _M:cancel()
-	local ax, ay = self.actor.x, self.actor.y
-	self.actor_dup.replacedWith = false
-	self.actor:replaceWith(self.actor_dup)
-	self.actor.replacedWith = nil
-	self.actor.x, self.actor.y = ax, ay
-	self.actor.changed = true
-	self.actor:removeAllMOs()
-	if game.level and self.actor.x then game.level.map:updateMap(self.actor.x, self.actor.y) end
+	restore(self.actor, self.actor_dup)
+	if self.golem_dup then restore(self.actor.alchemy_golem, self.golem_dup) end
 end
 
 function _M:getMaxTPoints(t)
