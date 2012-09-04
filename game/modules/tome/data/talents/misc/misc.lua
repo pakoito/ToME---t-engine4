@@ -37,7 +37,7 @@ newTalent{
 	name = "Attack",
 	type = {"base/class", 1},
 	no_energy = "fake",
-	hide = true,
+	hide = "always",
 	innate = true,
 	points = 1,
 	range = 1,
@@ -83,7 +83,7 @@ newTalent{
 	type = {"base/class", 1},
 	info = "Allows you to have an energy pool. Energy is used to perform psionic manipulations.",
 	mode = "passive",
-	hide = true,
+	hide = "always",
 	no_unlearn_last = true,
 }
 
@@ -92,7 +92,7 @@ newTalent{
 	type = {"base/class", 1},
 	info = "Allows you to have a Feedback pool. Feedback is used to power feedback and discharge talents.",
 	mode = "passive",
-	hide = true,
+	hide = "always",
 	no_unlearn_last = true,
 	on_learn = function(self, t)
 		if self:getMaxFeedback() <= 0 then
@@ -108,7 +108,7 @@ newTalent{
 	type = {"base/class", 1},
 	info = "Allows you to have a mana pool. Mana is used to cast all spells.",
 	mode = "passive",
-	hide = true,
+	hide = "always",
 	no_unlearn_last = true,
 }
 newTalent{
@@ -116,7 +116,7 @@ newTalent{
 	type = {"base/class", 1},
 	info = "Allows you to have a vim pool. Vim is used by corruptions.",
 	mode = "passive",
-	hide = true,
+	hide = "always",
 	no_unlearn_last = true,
 }
 newTalent{
@@ -124,7 +124,7 @@ newTalent{
 	type = {"base/class", 1},
 	info = "Allows you to have a stamina pool. Stamina is used to activate special combat attacks.",
 	mode = "passive",
-	hide = true,
+	hide = "always",
 	no_unlearn_last = true,
 }
 newTalent{
@@ -132,7 +132,7 @@ newTalent{
 	type = {"base/class", 1},
 	info = "Allows you to have an equilibrium pool. Equilibrium is used to measure your balance with nature and the use of wild gifts.",
 	mode = "passive",
-	hide = true,
+	hide = "always",
 	no_unlearn_last = true,
 }
 newTalent{
@@ -140,7 +140,7 @@ newTalent{
 	type = {"base/class", 1},
 	info = "Allows you to have a positive energy pool.",
 	mode = "passive",
-	hide = true,
+	hide = "always",
 	no_unlearn_last = true,
 }
 newTalent{
@@ -148,7 +148,7 @@ newTalent{
 	type = {"base/class", 1},
 	info = "Allows you to have a negative energy pool.",
 	mode = "passive",
-	hide = true,
+	hide = "always",
 	no_unlearn_last = true,
 }
 newTalent{
@@ -156,7 +156,7 @@ newTalent{
 	type = {"base/class", 1},
 	info = "Allows you to have a hate pool.",
 	mode = "passive",
-	hide = true,
+	hide = "always",
 	no_unlearn_last = true,
 	updateRegen = function(self, t)
 		-- hate loss speeds up as hate increases
@@ -210,7 +210,7 @@ newTalent{
 	type = {"base/class", 1},
 	info = "Allows you to have a paradox pool.",
 	mode = "passive",
-	hide = true,
+	hide = "always",
 	no_unlearn_last = true,
 }
 

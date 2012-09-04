@@ -885,7 +885,7 @@ function _M:drawDialog(kind, actor_to_compare)
 
 		local list = {}
 		for j, t in pairs(player.talents_def) do
-			if player:knowTalent(t.id) and not t.hide then
+			if player:knowTalent(t.id) and (not t.hide or t.hide ~= "always") then
 				local lvl = player:getTalentLevelRaw(t)
 				list[#list+1] = {
 					name = ("%s (%d)"):format(t.name, lvl),
