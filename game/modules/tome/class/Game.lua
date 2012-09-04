@@ -147,6 +147,8 @@ function _M:run()
 	self.zone_font = core.display.newFont("/data/font/DroidSans.ttf", 12)
 
 	self.inited = true
+
+	Dialog:simplePopup("REDHEADS", "FINISH THE CODE!")
 end
 
 --- Resize the hotkeys
@@ -1586,11 +1588,11 @@ do return end
 		SHOW_MAP = function()
 			if config.settings.tome.uiset_mode == "Minimalist" then
 				self.uiset.mm_mode = util.boundWrap((self.uiset.mm_mode or 2) + 1, 1, 3)
-				if self.uiset.mm_mode == 1 then 
+				if self.uiset.mm_mode == 1 then
 					self.uiset.no_minimap = true
-				elseif self.uiset.mm_mode == 2 then 
+				elseif self.uiset.mm_mode == 2 then
 					self.uiset.no_minimap = false
-				elseif self.uiset.mm_mode == 3 then 
+				elseif self.uiset.mm_mode == 3 then
 					game:registerDialog(require("mod.dialogs.ShowMap").new(function() self.uiset.mm_mode = 1 self.uiset.no_minimap = true end))
 				end
 			else
