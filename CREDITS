@@ -1,7 +1,7 @@
 General:
 - Shoob for many NPCs, much playtesting and ideas
 - Madmonk for much playtesting and ideas
-- Jules Bean for his help on the OpenGL code and quite a few other things
+- Jules Bean for his help on the OpenGL code and quite a few other things, mac builds & support
 - Neil Stevens for a Mac build
 - Brian Jeffears for texts revisions
 - Ralph Versteegen for texts revisions
@@ -12,6 +12,15 @@ General:
 - Graziel for many patches, notably great UI improvments
 - Susramanian for many ego items, quests, ...
 - Eric Wykoff for classes, items, ...
+- Yufra for all his AI work and various other things
+- Benli for classes, zones, ...
+- Tiger Eye for auto-explore and FOV code
+- PureQuestion for npcs and artifact work
+
+Lore:
+- Darren Grey
+- Burb Lulls
+- Gwai
 
 Graphics:
 - Shockbolt (Raymond Gaustadnes) http://shockbolt.deviantart.com
