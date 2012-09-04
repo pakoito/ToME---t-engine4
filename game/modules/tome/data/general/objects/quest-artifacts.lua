@@ -22,7 +22,7 @@ local Stats = require "engine.interface.ActorStats"
 -- The staff of absorption, the reason the game exists!
 newEntity{ define_as = "STAFF_ABSORPTION",
 	power_source = {unknown=true},
-	unique = true, quest=true,
+	unique = true, quest=true, no_curses=true,
 	slot = "MAINHAND",
 	slot_forbid = "OFFHAND",
 	type = "weapon", subtype="staff",

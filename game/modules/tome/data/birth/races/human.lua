@@ -91,6 +91,9 @@ newBirthDescriptor
 		starting_quest = "start-allied",
 		starting_intro = "higher",
 	},
+	cosmetic_unlock = {
+		cosmetic_race_human_redhead = {name="Redhead", on_actor=function(actor) actor.moddable_tile_base = "base_redhead_01.png" end},
+	},
 }
 
 newBirthDescriptor
@@ -117,5 +120,8 @@ newBirthDescriptor
 		starting_zone = "trollmire",
 		starting_quest = "start-allied",
 		starting_intro = "cornac",
+	},
+	cosmetic_unlock = {
+		cosmetic_race_human_redhead = {name="Redhead", on_actor=function(actor) actor.moddable_tile_base = "base_redhead_01.png" end},
 	},
 }

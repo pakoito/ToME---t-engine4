@@ -33,3 +33,11 @@ desc = function(self, who)
 	end
 	return table.concat(desc, "\n")
 end
+
+on_status_change = function(self, who, status, sub)
+	if not sub then
+		if self:isStatus(engine.Quest.DONE) then
+			game:setAllowedBuild("cosmetic_race_human_redhead", true)
+		end
+	end
+end
