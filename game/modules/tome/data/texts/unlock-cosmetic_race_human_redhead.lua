@@ -21,5 +21,7 @@ return "New Cosmetic Race Option: #LIGHT_GREEN#Redhead Humans",
 [[You have saved Melinda from untold horrors and torments.
 
 You may now create human characters with red hairs.
-This has no effect on gameplay at all.
+This has no effect on gameplay at all but it is fun!
+
+#LIGHT_GREEN#This is only available to donators. Thanks for your support
 ]]

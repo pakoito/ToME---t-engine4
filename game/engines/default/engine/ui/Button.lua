@@ -57,6 +57,7 @@ function _M:generate()
 
 	-- Add UI controls
 	self.mouse:registerZone(0, 0, self.w+6, self.h+6, function(button, x, y, xrel, yrel, bx, by, event)
+		if self.hide then return end
 		if self.on_select then self.on_select() end
 		if button == "left" and event == "button" then self:sound("button") self.fct() end
 	end)
@@ -74,6 +75,9 @@ end
 function _M:display(x, y, nb_keyframes, ox, oy)
 	self.last_display_x = ox
 	self.last_display_y = oy
+
+	if self.hide then return end
+
 	x = x + 3
 	y = y + 3
 	ox = ox + 3

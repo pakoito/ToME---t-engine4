@@ -48,6 +48,7 @@ function _M:init(title, actor, order, at_end, quickbirth, w, h)
 	self.actor_base = actor
 	self.order = order
 	self.at_end = at_end
+	self.selected_cosmetic_unlocks = {}
 	self.tiles = Tiles.new(64, 64, nil, nil, true, nil)
 
 	Dialog.init(self, title and title or "Character Creation", w or 600, h or 400)
@@ -65,6 +66,8 @@ function _M:init(title, actor, order, at_end, quickbirth, w, h)
 	self.c_tile = Button.new{text="Select custom tile", fct=function() self:selectTile() end}
 	self.c_cancel = Button.new{text="Cancel", fct=function() self:atEnd("quit") end}
 	self.c_tut = Button.new{text="Tutorial", fct=function() self:tutorial() end}
+	self.c_options = Button.new{text="Customize", fct=function() self:customizeOptions() end}
+	self.c_options.hide = true
 
 	self.c_name = Textbox.new{title="Name: ", text=(not config.settings.cheat and game.player_name == "player") and "" or game.player_name, chars=30, max_len=50, fct=function()
 		if config.settings.cheat then self:makeDefault() end
@@ -149,6 +152,7 @@ function _M:init(title, actor, order, at_end, quickbirth, w, h)
 		{left=self.c_ok, bottom=0, ui=self.c_random},
 		{left=self.c_random, bottom=0, ui=self.c_premade},
 		{left=self.c_premade, bottom=0, ui=self.c_tile},
+		{left=self.c_tile, bottom=0, ui=self.c_options},
 		{right=0, bottom=0, ui=self.c_cancel},
 	}
 	self:setupUI()
@@ -276,6 +280,7 @@ function _M:atEnd(v)
 				self.actor.make_tile = nil
 				self.actor.moddable_tile = nil
 			end
+			self:applyCosmeticActor()
 			game:setPlayerName(self.c_name.text)
 
 			local save = Savefile.new(game.save_name)
@@ -545,6 +550,19 @@ function _M:updateDescriptors()
 		table.insert(self.descriptors, self.birth_descriptor_def.class[self.descriptors_by_type.class])
 		table.insert(self.descriptors, self.birth_descriptor_def.subclass[self.descriptors_by_type.subclass])
 	end
+
+	self.cosmetic_unlocks = {}
+	for _, d in ipairs(self.descriptors) do
+		if d.cosmetic_unlock then
+			for u, datas in pairs(d.cosmetic_unlock) do for _, data in ipairs(datas) do
+				if profile.mod.allow_build[u] and (not data.check or data.check(self)) then
+					table.insert(self.cosmetic_unlocks, data)
+				end
+			end end
+		end
+	end
+	table.sort(self.cosmetic_unlocks, function(a, b) return a.name < b.name end)
+	self.c_options.hide = #self.cosmetic_unlocks == 0
 end
 
 function _M:setDescriptor(key, val)
@@ -1028,6 +1046,9 @@ function _M:setTile(f, w, h, last)
 		end
 		self.has_custom_tile = {f=f,w=w,h=h}
 	end
+
+	self:applyCosmeticActor()
+
 	if not last then
 		self:fakeEquip(true)
 		self.actor:updateModdableTile()
@@ -1045,6 +1066,12 @@ function _M:setTile(f, w, h, last)
 				if type(p) == "string" then self.actor:addParticles(Particles.new(p, 1)) end
 			end
 		end
+	end
+end
+
+function _M:applyCosmeticActor()
+	for i, d in ipairs(self.cosmetic_unlocks) do
+		if self.selected_cosmetic_unlocks[d.name] and d.on_actor then d.on_actor(self.actor) end
 	end
 end
 
@@ -1326,4 +1353,29 @@ end
 
 function _M:isDonator()
 	if not profile.auth or not tonumber(profile.auth.donated) or tonumber(profile.auth.donated) <= 1 then return false else return true end
+end
+
+function _M:customizeOptions()
+	local d = Dialog.new("Customization Options", 600, 550)
+
+	local sel = nil
+	local list list = List.new{width=450, list=self.cosmetic_unlocks, height=400,
+		fct=function(item)
+			if not item.donator or self:isDonator() then
+				self.selected_cosmetic_unlocks[item.name] = not self.selected_cosmetic_unlocks[item.name]
+				item.color = self.selected_cosmetic_unlocks[item.name] and colors.simple(colors.LIGHT_GREEN) or nil
+			end
+
+			local oldsel, oldscroll = list.sel, list.scroll
+			list:generate()
+			list.sel, list.scroll = oldsel, oldscroll
+			self:setTile()
+		end,
+	}
+	d:loadUI{
+		{left=0, top=0, ui=list},
+	}
+	d:setupUI(true, true)
+	d.key:addBind("EXIT", function() game:unregisterDialog(d) end)
+	game:registerDialog(d)
 end

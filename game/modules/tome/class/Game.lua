@@ -147,8 +147,6 @@ function _M:run()
 	self.zone_font = core.display.newFont("/data/font/DroidSans.ttf", 12)
 
 	self.inited = true
-
-	Dialog:simplePopup("REDHEADS", "FINISH THE CODE!")
 end
 
 --- Resize the hotkeys
