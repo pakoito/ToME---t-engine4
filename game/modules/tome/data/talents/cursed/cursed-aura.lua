@@ -41,6 +41,10 @@ newTalent{
 	canCurseItem = function(self, t, item, level)
 		if not item:wornInven() then return false end
 
+		-- Godslayers are far too powerful to be affected
+		if item.godslayer then return false end
+		if item.no_curses then return false end
+
 		-- possible slots:
 		-- body, head, feet, hands, cloak, belt (armor)
 		-- mainhand (weapon), offhand (weapon/armor;shield), psionic (weapon)
