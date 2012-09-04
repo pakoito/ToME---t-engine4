@@ -64,7 +64,7 @@ defineAction{
 }
 
 defineAction{
-	default = { "sym:=x:false:false:false:false", },
+	default = { "sym:=q:false:false:false:false", },
 	type = "QUICK_SWITCH_WEAPON",
 	group = "inventory",
 	name = "Quick switch weapons set",
