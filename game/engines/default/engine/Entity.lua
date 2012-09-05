@@ -640,6 +640,13 @@ function _M:addTemporaryValue(prop, v, noupdate)
 				base["__tlowest_"..prop] = base["__tlowest_"..prop] or {}
 				base["__tlowest_"..prop][id] = v
 				base[prop] = table.min(base["__tlowest_"..prop])
+			elseif method == "last" then
+				base["__tlast_"..prop] = base["__tlast_"..prop] or {}
+				local b = base["__tlast_"..prop]
+				b[id] = v
+				b = table.listify(b)
+				table.sort(b, function(a, b) return a > b end)
+				base[prop] = b[1]
 			else
 				base[prop] = (base[prop] or 0) + v
 			end
@@ -718,6 +725,14 @@ function _M:removeTemporaryValue(prop, id, noupdate)
 				base["__tlowest_"..prop][id] = nil
 				base[prop] = table.min(base["__tlowest_"..prop])
 				if not next(base["__tlowest_"..prop]) then base["__tlowest_"..prop] = nil end
+			elseif method == "last" then
+				base["__tlast_"..prop] = base["__tast_"..prop] or {}
+				local b = base["__tlast_"..prop]
+				b[id] = nil
+				b = table.listify(b)
+				table.sort(b, function(a, b) return a > b end)
+				base[prop] = b[1]
+				if not next(base["__tlast_"..prop]) then base["__tlast_"..prop] = nil end
 			else
 				base[prop] = base[prop] - v
 			end

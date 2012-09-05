@@ -839,7 +839,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	return self:combatSpeed(weapon), hitted
 end
 
-local weapon_talents = {
+_M.weapon_talents = {
 	sword =   Talents.T_WEAPONS_MASTERY,
 	axe =     Talents.T_WEAPONS_MASTERY,
 	mace =    Talents.T_WEAPONS_MASTERY,

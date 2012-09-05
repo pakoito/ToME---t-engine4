@@ -45,14 +45,16 @@ uberTalent{
 		return self:attr("planetary_orbit") and self:combatGetResist(DamageType.ARCANE) >= 25
 	end} },
 	on_learn = function(self, t)
+		local ret = {}
 		self.resists[DamageType.ARCANE] = (self.resists[DamageType.ARCANE] or 0) + 15
 		self:attr("max_mana", -70)
-		self.force_use_resist = DamageType.ARCANE
+		self:talentTemporaryValue(ret, "force_use_resist", DamageType.ARCANE)
+		CHECK IF I WORK !!
+		return ret
 	end,
 	on_unlearn = function(self, t)
 		self.resists[DamageType.ARCANE] = (self.resists[DamageType.ARCANE] or 0) - 15
 		self:attr("max_mana", 70)
-		self.force_use_resist = nil
 	end,
 	info = function(self, t)
 		return ([[Create a thin layer of aether all around you. Any attack passing through will check arcane resistance instead of the incomming damage resistance.

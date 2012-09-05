@@ -78,6 +78,9 @@ _M.temporary_values_conf.combat_mindspeed = "mult0"
 -- Damage cap takes the lowest
 _M.temporary_values_conf.flat_damage_cap = "lowest"
 
+-- Damage redirection takes last
+_M.temporary_values_conf.force_use_resist = "last"
+
 _M.projectile_class = "mod.class.Projectile"
 
 function _M:init(t, no_default)

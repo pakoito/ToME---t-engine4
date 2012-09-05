@@ -94,6 +94,7 @@ function _M:init(t)
 	self.talents_cd = self.talents_cd or {}
 	self.sustain_talents = self.sustain_talents or {}
 	self.talents_auto = self.talents_auto or {}
+	self.talents_learn_vals = {}
 end
 
 --- Resolve leveling talents
@@ -300,7 +301,13 @@ function _M:learnTalent(t_id, force, nb)
 
 	for i = 1, (nb or 1) do
 		self.talents[t_id] = (self.talents[t_id] or 0) + 1
-		if t.on_learn then t.on_learn(self, t) end
+		if t.on_learn then 
+			local ret = t.on_learn(self, t)
+			if ret then
+				self.talents_learn_vals[t.id] = self.talents_learn_vals[t.id] or {}
+				self.talents_learn_vals[t.id][self.talents[t_id]] = ret
+			end
+		end
 	end
 
 	self.changed = true
@@ -329,7 +336,18 @@ function _M:unlearnTalent(t_id, nb)
 		self.talents[t_id] = self.talents[t_id] - 1
 		if self.talents[t_id] == 0 then self.talents[t_id] = nil end
 
-		if t.on_unlearn then t.on_unlearn(self, t) end
+		if t.on_unlearn then 
+			local p = nil
+			if self.talents_learn_vals[t.id] and self.talents_learn_vals[t.id][self.talents[t_id] + 1] then
+				p = self.talents_learn_vals[t.id][self.talents[t_id] + 1]
+				if p.__tmpvals then
+					for i = 1, #p.__tmpvals do
+						self:removeTemporaryValue(p.__tmpvals[i][1], p.__tmpvals[i][2])
+					end
+				end
+			end
+			t.on_unlearn(self, t, p)
+		end
 	end
 
 	if self.talents[t_id] == nil then self.talents_auto[t_id] = nil end
