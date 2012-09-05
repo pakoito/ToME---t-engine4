@@ -39,7 +39,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Projects a bolt of pure blight, doing %0.2f blight damage.
 		This spell has an improved critical strike chance of +%0.2f%%.
-		The damage will increase with Magic stat.]]):format(self:combatTalentSpellDamage(t, 20, 250), self:getTalentLevel(t) * 5)
+		The damage will increase with Magic stat.]]):format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 20, 250)), self:getTalentLevel(t) * 5)
 	end,
 }
 

@@ -49,7 +49,6 @@ uberTalent{
 		self.resists[DamageType.ARCANE] = (self.resists[DamageType.ARCANE] or 0) + 15
 		self:attr("max_mana", -70)
 		self:talentTemporaryValue(ret, "force_use_resist", DamageType.ARCANE)
-		CHECK IF I WORK !!
 		return ret
 	end,
 	on_unlearn = function(self, t)

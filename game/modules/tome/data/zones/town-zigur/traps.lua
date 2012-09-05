@@ -55,6 +55,11 @@ newEntity{ base = "BASE_STORE", define_as = "KNIFE_WEAPON_STORE",
 	display='3', color=colors.UMBER,
 	resolvers.store("ZIGUR_KNIFE_WEAPON", "zigur", "store/shop_door.png", "store/shop_sign_million_cuts.png"),
 }
+newEntity{ base = "BASE_STORE", define_as = "MINDSTAR_WEAPON_STORE",
+	name="Purification Tools",
+	display='3', color=colors.UMBER,
+	resolvers.store("MINDSTAR", "zigur", "store/shop_door.png", "store/shop_sign_jewelry.png"),
+}
 
 newEntity{ base = "BASE_STORE", define_as = "LIBRARY",
 	name="Library",

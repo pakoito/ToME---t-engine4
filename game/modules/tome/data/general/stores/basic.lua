@@ -94,6 +94,19 @@ newEntity{
 }
 
 newEntity{
+	define_as = "MINDSTAR",
+	name = "mindstar collector",
+	display = '3', color=colors.UMBER,
+	store = {
+		purse = 25,
+		empty_before_restock = false,
+		filters = {
+			{type="weapon", subtype="mindstar", id=true, tome_drops="store"},
+		},
+	},
+}
+
+newEntity{
 	define_as = "MAUL_WEAPON",
 	name = "mace smith",
 	display = '3', color=colors.UMBER,

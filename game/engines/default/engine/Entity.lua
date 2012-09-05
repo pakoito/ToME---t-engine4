@@ -373,11 +373,14 @@ function _M:setMoveAnim(oldx, oldy, speed, blur)
 	if not self._mo then return end
 	self._mo:setMoveAnim(oldx, oldy, self.x, self.y, speed, blur)
 
-	if not self.add_displays then return end
+	local add_displays = self.add_displays
+	if self.replace_display then add_displays = self.replace_display.add_displays end
 
-	for i = 1, #self.add_displays do
-		if self.add_displays[i]._mo then
-			self.add_displays[i]._mo:setMoveAnim(oldx, oldy, self.x, self.y, speed, blur)
+	if not add_displays then return end
+
+	for i = 1, #add_displays do
+		if add_displays[i]._mo then
+			add_displays[i]._mo:setMoveAnim(oldx, oldy, self.x, self.y, speed, blur)
 		end
 	end
 end
@@ -645,8 +648,8 @@ function _M:addTemporaryValue(prop, v, noupdate)
 				local b = base["__tlast_"..prop]
 				b[id] = v
 				b = table.listify(b)
-				table.sort(b, function(a, b) return a > b end)
-				base[prop] = b[1]
+				table.sort(b, function(a, b) return a[1] > b[1] end)
+				base[prop] = b[1] and b[1][2]
 			else
 				base[prop] = (base[prop] or 0) + v
 			end
@@ -678,7 +681,6 @@ end
 function _M:removeTemporaryValue(prop, id, noupdate)
 	local oldval = self.compute_vals[id]
 	print("removeTempVal", prop, oldval, " :=: ", id)
-	print(table.serialize(self.compute_vals,1,1))
 	self.compute_vals[id] = nil
 
 	-- Find the base, one removed from the last prop
@@ -726,12 +728,12 @@ function _M:removeTemporaryValue(prop, id, noupdate)
 				base[prop] = table.min(base["__tlowest_"..prop])
 				if not next(base["__tlowest_"..prop]) then base["__tlowest_"..prop] = nil end
 			elseif method == "last" then
-				base["__tlast_"..prop] = base["__tast_"..prop] or {}
+				base["__tlast_"..prop] = base["__tlast_"..prop] or {}
 				local b = base["__tlast_"..prop]
 				b[id] = nil
 				b = table.listify(b)
-				table.sort(b, function(a, b) return a > b end)
-				base[prop] = b[1]
+				table.sort(b, function(a, b) return a[1] > b[1] end)
+				base[prop] = b[1] and b[1][2]
 				if not next(base["__tlast_"..prop]) then base["__tlast_"..prop] = nil end
 			else
 				base[prop] = base[prop] - v

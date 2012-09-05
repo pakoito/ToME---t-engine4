@@ -78,3 +78,13 @@ newEntity{ base = "BASE_STORE", define_as = "HERBALIST",
 	}},
 	resolvers.store("POTION", "thalore"),
 }
+
+newEntity{ base = "BASE_STORE", define_as = "MINDSTAR",
+	name="Night's Star",
+	display='3', color=colors.LIGHT_GREEN, image = "invis.png",
+	add_displays={engine.Entity.new{
+		z=18, image="terrain/large_tree_house.png", display_on_seen=true, display_on_remember=true, display_h=3.5, display_y=-2, display_w=2, display_x=-0.5,
+		add_mos = {{image="store/tree_leaves_sign.png", display_y=-0.3}},
+	}},
+	resolvers.store("MINDSTAR", "thalore"),
+}

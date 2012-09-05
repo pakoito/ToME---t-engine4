@@ -33,6 +33,7 @@ defineTile('4', "ROCKY_GROUND", nil, nil, "ARCHER_WEAPON_STORE")
 defineTile('5', "GRASS", nil, nil, "HEAVY_ARMOR_STORE")
 defineTile('6', "GRASS", nil, nil, "LIGHT_ARMOR_STORE")
 defineTile('7', "GRASS", nil, nil, "HERBALIST")
+defineTile('9', "GRASS", nil, nil, "MINDSTAR")
 
 startx = 30
 starty = 49
@@ -79,7 +80,7 @@ ttttttttttttttttttttttt.......tttttttttttttttttttt
 tttttttttttttttttttttt....ttt..ttttttttttttttttttt
 ttttttttttttttttttttt..tt.ttt....ttttttttttttttttt
 ttttttttttttttttttttt..tt.ttt.....tttttttttttttttt
-ttttttttttttttttttt....tt..tttt.......tttttttttttt
+ttttttttttttttttttt....tt..tttt.....9.tttttttttttt
 ttttttttttttt.6.......tttt.tttttt.....tttttttttttt
 ttttttttttttt........ttttt.ttttttttttttttttttttttt
 tttttttttttttttttttttttttt.ttttttttttttttttttttttt

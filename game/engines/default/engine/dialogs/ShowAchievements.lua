@@ -41,7 +41,7 @@ function _M:init(title, player)
 	self.c_all = Checkbox.new{title="Everything", default=false, fct=function() end, on_change=function(s) if s then self:switchTo("all") end end}
 
 	self.c_image = Image.new{file="trophy_gold.png", width=64, height=64, shadow=true}
-	self.c_desc = TextzoneList.new{width=math.floor(self.iw * 0.4 - 10), height=self.ih - self.c_self.h}
+	self.c_desc = TextzoneList.new{scrollbar=true, width=math.floor(self.iw * 0.4 - 10), height=self.ih - self.c_self.h}
 
 	self:generateList("main")
 	
