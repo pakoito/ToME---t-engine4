@@ -102,6 +102,8 @@ newEntity{
 		empty_before_restock = false,
 		filters = {
 			{type="weapon", subtype="mindstar", id=true, tome_drops="store"},
+			{type="charm", subtype="torque", id=true, tome_drops="store"},
+			{type="charm", subtype="totem", id=true, tome_drops="store"},
 		},
 	},
 }

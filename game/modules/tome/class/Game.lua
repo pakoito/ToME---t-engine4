@@ -969,6 +969,7 @@ function _M:chronoRestore(name, remove)
 
 	game.inited = nil
 	game:run()
+	game.key:setupRebootKeys() -- engine does it for us but not on chronoworld reload
 	game.key:setCurrent()
 	game.mouse:setCurrent()
 	profile.chat:setupOnGame()

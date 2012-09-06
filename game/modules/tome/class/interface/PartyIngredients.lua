@@ -64,6 +64,12 @@ function _M:getIngredient(id)
 	return self.__ingredients_def[id]
 end
 
+function _M:giveAllIngredients(nb)
+	for id, d in pairs(self.__ingredients_def) do
+		self:collectIngredient(id, nb, false)
+	end
+end
+
 function _M:collectIngredient(id, nb, silent)
 	if not self.ingredients then return end
 	if not self.__ingredients_def[id] then return end

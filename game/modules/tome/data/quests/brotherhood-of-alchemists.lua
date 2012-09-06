@@ -122,6 +122,7 @@ reward = function(self, player, reward)
 		player:addObject(player.INVEN_INVEN, o)
 		game.logPlayer(player, "You receive: %s", o:getName{do_color=true})
 	end
+	game:onTickEnd(function() game:saveGame() end)
 end
 
 --reward = function(self, player, reward)
@@ -190,7 +191,6 @@ on_turnin = function(self, player, alch_picked, e_picked, player_last_elixir)
 		self.winner = self.e[alch_picked][1].alchemist
 		self.player_won = false
 	end
-	game:onTickEnd(function() game:saveGame() end)
 end
 
 --sets the name of the winner. Only called in the case of the player turning in an alchemist's final potion. An alchemist that completes his third potion without the player's aid gets named the winner in the on_turning function above.
