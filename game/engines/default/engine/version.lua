@@ -36,3 +36,11 @@ end
 function engine.version_string(v)
 	return ("%s-%d.%d.%d"):format(v[4] or "te4", v[1], v[2], v[3])
 end
+
+function engine.version_compare(v, ev)
+	if v[1] > ev[1] then return "newer" end
+	if v[1] == ev[1] and v[2] > ev[2] then return "newer" end
+	if v[1] == ev[1] and v[2] == ev[2] and v[3] > ev[3] then return "newer" end
+	if v[1] == ev[1] and v[2] == ev[2] and v[3] == ev[3] then return "same" end
+	return "lower"
+end
