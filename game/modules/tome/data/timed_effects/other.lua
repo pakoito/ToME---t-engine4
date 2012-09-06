@@ -1599,6 +1599,8 @@ newEffect{
 	status = "beneficial",
 	parameters = { power=1, projections_killed=0 },
 	on_timeout = function(self, eff)
+		-- Clone protection
+		if not self.on_die then return end
 		-- Dreamscape doesn't cooldown in the dreamscape
 		self.talents_cd[self.T_DREAMSCAPE] = self.talents_cd[self.T_DREAMSCAPE] + 1
 		-- Spawn every three turns, or every two for lucid dreamers
@@ -1713,6 +1715,8 @@ newEffect{
 		eff.did = self:addTemporaryValue("lucid_dreamer", 1)
 	end,
 	deactivate = function(self, eff)
+		-- Clone protection
+		if not self.on_die then return end
 		-- Remove the target's invulnerability
 		eff.target:removeTemporaryValue("invulnerable", eff.iid)
 		eff.target:removeTemporaryValue("time_prison", eff.sid)

@@ -49,3 +49,118 @@ newEntity{
 		inc_stats = { [Stats.STAT_DEX] = resolvers.mbonus_material(3, 2), },
 	},
 }
+newEntity{
+	power_source = {technique=true},
+	name = "marauder's ", prefix=true, instant_resolve=true,
+	keywords = {marauder=true},
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 20,
+	cost = 40,
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_STR] = resolvers.mbonus_material(7, 3),
+			[Stats.STAT_DEX] = resolvers.mbonus_material(7, 3),
+		},
+		combat_def = resolvers.mbonus_material(8, 2),
+		combat_physresist = resolvers.mbonus_material(15, 5),
+	},
+}
+
+newEntity{
+	power_source = {nature=true},
+	name = " of the sky", suffix=true, instant_resolve=true,
+	keywords = {sky=true},
+	level_range = {20, 50},
+	greater_ego = 1,
+	rarity = 20,
+	cost = 35,
+	wielder = {
+		resists={
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(20, 10),
+			[DamageType.COLD] = resolvers.mbonus_material(20, 10),
+		},
+		inc_stats = {
+			[Stats.STAT_DEX] = resolvers.mbonus_material(6, 2),
+		},
+		combat_def = resolvers.mbonus_material(8, 2),
+		combat_def_ranged = resolvers.mbonus_material(8, 2),
+	},
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = " of Toknor", suffix=true, instant_resolve=true,
+	keywords = {toknor=true},
+	level_range = {20, 50},
+	greater_ego = 1,
+	rarity = 16,
+	cost = 30,
+	wielder = {
+		combat_dam = resolvers.mbonus_material(5, 5),
+		combat_physcrit = resolvers.mbonus_material(3, 3),
+		combat_critical_power = resolvers.mbonus_material(10, 10),
+	},
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = " of the wind", suffix=true, instant_resolve=true,
+	keywords = {wind=true},
+	level_range = {40, 50},
+	greater_ego = 1,
+	rarity = 30,
+	cost = 80,
+	resolvers.charmt(Talents.T_SECOND_WIND, {3,4,5}, 35),
+	wielder = {
+		max_life = resolvers.mbonus_material(60, 40, function(e, v) return 0, -v end),
+		combat_armor = resolvers.mbonus_material(7, 3, function(e, v) return 0, -v end),
+
+		combat_physcrit = resolvers.mbonus_material(7, 3),
+		combat_apr = resolvers.mbonus_material(15, 5),
+		combat_def = resolvers.mbonus_material(10, 5),
+	},
+}
+
+newEntity{
+	power_source = {nature=true},
+	name = "multi-hued ", prefix=true, instant_resolve=true,
+	keywords = {multihued=true},
+	level_range = {40, 50},
+	greater_ego = 1,
+	rarity = 29,
+	cost = 47,
+	wielder = {
+		resists={
+			[DamageType.ACID] = resolvers.mbonus_material(8, 5),
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(8, 5),
+			[DamageType.FIRE] = resolvers.mbonus_material(8, 5),
+			[DamageType.COLD] = resolvers.mbonus_material(8, 5),
+		},
+		on_melee_hit={
+			[DamageType.ACID] = resolvers.mbonus_material(8, 5),
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(8, 5),
+			[DamageType.FIRE] = resolvers.mbonus_material(8, 5),
+			[DamageType.COLD] = resolvers.mbonus_material(8, 5),
+		},
+	},
+}
+
+newEntity{
+	power_source = {nature=true},
+	name = "caller's", prefix=true, instant_resolve=true,
+	keywords = {callers=true},
+	level_range = {40, 50},
+	greater_ego = 1,
+	rarity = 29,
+	cost = 47,
+	wielder = {
+		resists={
+			[DamageType.FIRE] = resolvers.mbonus_material(8, 5),
+			[DamageType.COLD] = resolvers.mbonus_material(8, 5),
+			[DamageType.PHYSICAL] = resolvers.mbonus_material(8, 5),
+		},
+		comnbat_mindpower = resolvers.mbonus_material(10, 5),
+	},
+}
+

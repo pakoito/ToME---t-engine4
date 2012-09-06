@@ -94,7 +94,7 @@ newEntity{
 }
 
 newEntity{
-	power_source = {naturee=true},
+	power_source = {nature=true},
 	name = " of fire (#RESIST#)", suffix=true, instant_resolve=true,
 	keywords = {fire=true},
 	level_range = {1, 50},

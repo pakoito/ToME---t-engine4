@@ -188,8 +188,8 @@ newEntity{ base = "BASE_CLOAK",
 		},
 	},
 
-	max_power = 1000, power_regen = 1,
-	use_talent = { id = Talents.T_SEE_THE_THREADS, level = 1, power = 1000 },
+	max_power = 50, power_regen = 1,
+	use_talent = { id = Talents.T_SEE_THE_THREADS, level = 1, power = 50 },
 }
 
 newEntity{ base = "BASE_LONGSWORD", define_as = "BLOODEDGE",
@@ -389,8 +389,8 @@ newEntity{ base = "BASE_AMULET",
 		resists_cap = { [DamageType.TEMPORAL] = 5 },
 		spell_cooldown_reduction = 0.1,
 	},
-	max_power = 60, power_regen = 1,
-	use_talent = { id = Talents.T_WORMHOLE, level = 2, power = 60 },
+	max_power = 20, power_regen = 1,
+	use_talent = { id = Talents.T_WORMHOLE, level = 4, power = 20 },
 }
 
 newEntity{ base = "BASE_KNIFE", define_as = "MANDIBLE_UNGOLMOR",

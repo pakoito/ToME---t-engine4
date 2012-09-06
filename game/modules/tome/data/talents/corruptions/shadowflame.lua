@@ -232,6 +232,9 @@ newTalent{
 		return ret
 	end,
 	deactivate = function(self, t, p)
+		-- If we're a clone of the original fearscapper, just deactivate
+		if not self.on_die then return true end
+		
 		self:removeTemporaryValue("vim_regen", p.vim)
 
 		game:onTickEnd(function()
