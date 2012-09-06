@@ -81,17 +81,12 @@ return {
 		},
 	},
 
-	open_coffin = function(x, y, who)
-		local Dialog = require("engine.ui.Dialog")
-		Dialog:yesnoLongPopup("Open the coffin", "In rich families the dead are sometimes put to rest with some treasures. However they also sometime protect the coffins with powerful curses. Open?", 500, function(ret)
-			if not ret then return end
-			-- clear chrono worlds and their various effects
-			if game._chronoworlds then
-				game.log("#CRIMSON#Your timetravel has no effect on pre-determined outcomes such as this.")
-				game._chronoworlds = nil
-			end
-			local r = rng.range(1, 100)
-			if r <= 10 then
+	make_coffin = function(x, y, g)
+		local r = rng.range(1, 100)
+		local fct
+		if r <= 10 then
+			fct = function(self, x, y, who)
+				local Dialog = require("engine.ui.Dialog")
 				if not who:knowTalentType("cursed/cursed-aura") then
 					Dialog:simplePopup("Curse!", "The coffin was a decoy, a powerful curse was set upon you (check your talents).")
 					who:learnTalentType("cursed/cursed-aura", true)
@@ -99,26 +94,46 @@ return {
 				else
 					game.log("There is nothing there.")
 				end
-			elseif r <= 60 then
-				local m = game.zone:makeEntity(game.level, "actor", {properties={"undead"}, add_levels=10, random_boss={nb_classes=1, rank=3, ai = "tactical", loot_quantity = 0, no_loot_randart = true}}, nil, true)
+			end
+		elseif r <= 60 then
+			g.sumomn_npc = game.zone:makeEntity(game.level, "actor", {properties={"undead"}, add_levels=10, random_boss={nb_classes=1, rank=3, ai = "tactical", loot_quantity = 0, no_loot_randart = true}}, nil, true)
+			fct = function(self, x, y, who)
 				local x, y = util.findFreeGrid(who.x, who.y, 5, true, {[engine.Map.ACTOR]=true})
-				if m and x and y then
-					game.zone:addEntity(game.level, m, "actor", x, y)
+				if self.sumomn_npc and x and y then
+					game.zone:addEntity(game.level, self.sumomn_npc, "actor", x, y)
+					self.sumomn_npc = nil
 					game.log("You were not the first here: the corpse was turned into an undead.")
 				else
 					game.log("There is nothing there.")
 				end
-			elseif r <= 95 then
+			end
+		elseif r <= 95 then
+			fct = function(self, x, y, who)
 				game.log("There is nothing there.")
-			else
-				local o = game.zone:makeEntity(game.level, "object", {unique=true, not_properties={"lore"}}, nil, true)
+			end
+		else
+			g.coffin_obj = game.zone:makeEntity(game.level, "object", {unique=true, not_properties={"lore"}}, nil, true)
+			fct = function(self, x, y, who)
 				local x, y = util.findFreeGrid(who.x, who.y, 5, true, {[engine.Map.OBJECT]=true})
-				if o and x and y then
-					game.zone:addEntity(game.level, o, "object", x, y)
+				if self.coffin_obj and x and y then
+					game.zone:addEntity(game.level, self.coffin_obj, "object", x, y)
+					self.coffin_obj = nil
 					game.log("The corpse had a treasure!")
 				else
 					game.log("There is nothing there.")
 				end
+			end
+		end
+		g.coffin_open = fct
+	end,
+	
+	open_coffin = function(self, x, y, who)
+		local Dialog = require("engine.ui.Dialog")
+		Dialog:yesnoLongPopup("Open the coffin", "In rich families the dead are sometimes put to rest with some treasures. However they also sometime protect the coffins with powerful curses. Open?", 500, function(ret)
+			if not ret then return end
+
+			if self.coffin_open then
+				self.coffin_open(self, x, y, who)
 			end
 
 			local g = game.zone:makeEntityByName(game.level, "terrain", "COFFIN_OPEN")

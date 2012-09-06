@@ -66,9 +66,13 @@ newEntity{ base = "FLOOR", define_as = "COFFIN",
 	display='&', image="terrain/marble_floor.png", add_mos={{image="terrain/coffin_unopened_01_64.png", display_h=2, display_y=-1}},
 	does_block_move = true,
 	pass_projectile = true,
+	force_clone = true,
+	on_added = function(self, x, y)
+		game.zone.make_coffin(x, y, self)
+	end,
 	block_move = function(self, x, y, who, act, couldpass)
 		if not who or not who.player or not act then return true end
-		game.zone.open_coffin(x, y, who)
+		game.zone.open_coffin(self, x, y, who)
 		return true
 	end,
 }
