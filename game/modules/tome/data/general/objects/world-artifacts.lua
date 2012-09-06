@@ -3518,6 +3518,7 @@ newEntity{ base = "BASE_MINDSTAR",
 	use_talent = { id = Talents.T_SPIT_POISON, level = 2, power = 8 },
 }
 
+--[=[ FIX ME  ! I allow he player to wlk arround unbothered
 newEntity{ base = "BASE_LEATHER_CAP",
 	power_source = {psionic=true},
 	unique = true,
@@ -3551,6 +3552,7 @@ You suspect the effects will require a moment to recover from.]],
 		if who.player then for uid, e in pairs(game.level.entities) do if e.x then game.level.map:updateMap(e.x, e.y) end end game.level.map.changed = true end
 	end,
 }
+]=]
 
 newEntity{ base = "BASE_LONGSWORD", define_as="CORPUS",
 	power_source = {arcane=true, technique=true},
