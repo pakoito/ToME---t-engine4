@@ -239,7 +239,7 @@ end
 
 --- Something moved in the same spot as us, hit ?
 function _M:on_move(x, y, target)
-	if self.project then self.src:projectDoAct(self.project.def.typ, self.project.def.tg, self.project.def.damtype, self.project.def.dam, self.project.def.particles, self.x, self.y, self.tmp_proj) end
+	if self.project and self.project.def.typ.line then self.src:projectDoAct(self.project.def.typ, self.project.def.tg, self.project.def.damtype, self.project.def.dam, self.project.def.particles, self.x, self.y, self.tmp_proj) end
 	if self.project and self.project.def.typ.stop_block then
 		game.level:removeEntity(self, true)
 		self.dead = true
