@@ -511,15 +511,26 @@ void thread_particle_run(particle_thread *pt, plist *l)
 	lua_rawget(L, -2);
 	lua_pushnumber(L, l->emit_ref);
 	lua_rawget(L, -3);
-	if (lua_isnil(L, -1) || lua_isnil(L, -2)) {
+
+	if (!lua_isfunction(L, -2) || !lua_istable(L, -1)) {
 		printf("L(%x) Particle updater error %x (%d, %d) is nil: %s / %s\n", (int)L, (int)l, l->updator_ref, l->emit_ref, lua_tostring(L, -1), lua_tostring(L, -2));
 		lua_pop(L, 2);
 	}
-	else if (lua_pcall(L, 1, 0, 0))
-	{
-		printf("L(%x) Particle updater error %x (%d, %d): %s\n", (int)L, (int)l, l->updator_ref, l->emit_ref, lua_tostring(L, -1));
-//		ps->i_want_to_die = TRUE;
+	else {
+		bool run = FALSE;
+		lua_pushstring(L, "ps");
+		lua_rawget(L, -2);
+		if (!lua_isnil(L, -1)) run = TRUE;
 		lua_pop(L, 1);
+
+		if (run) {
+			if (lua_pcall(L, 1, 0, 0))
+			{
+				printf("L(%x) Particle updater error %x (%d, %d): %s\n", (int)L, (int)l, l->updator_ref, l->emit_ref, lua_tostring(L, -1));
+//				ps->i_want_to_die = TRUE;
+				lua_pop(L, 1);
+			}
+		}
 	}
 	lua_pop(L, 1); // global table
 
