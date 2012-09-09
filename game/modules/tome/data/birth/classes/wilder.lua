@@ -167,14 +167,17 @@ newBirthDescriptor{
 	not_on_random_boss = true,
 	stats = { wil=5, cun=4, },
 	talents_types = {
-		["wild-gift/call"]={true, 0.2},
-		["wild-gift/harmony"]={false, 0.1},
+		["wild-gift/call"]={true, 0.3},
+		["wild-gift/antimagic"]={true, 0.3},
+		["wild-gift/harmony"]={false, 0.3},
 		["wild-gift/mindstar-mastery"]={true, 0.3},
+		["wild-gift/ooze"]={true, 0.3},
 	},
 	talents = {
 		[ActorTalents.T_PSIBLADES] = 1,
 	},
 	copy = {
+		forbid_arcane = 2,
 		max_life = 90,
 		resolvers.equip{ id=true,
 			{type="weapon", subtype="mindstar", name="mossy mindstar", autoreq=true, ego_chance=-1000},

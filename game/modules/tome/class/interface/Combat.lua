@@ -1220,6 +1220,8 @@ end
 
 --- Computes physical crit for a damage
 function _M:physicalCrit(dam, weapon, target, atk, def, add_chance, crit_power_add)
+	self.turn_procs.is_crit = nil
+
 	local tier_diff = self:getTierDiff(atk, def)
 
 	local chance = self:combatCrit(weapon) + (add_chance or 0)
@@ -1257,6 +1259,8 @@ function _M:physicalCrit(dam, weapon, target, atk, def, add_chance, crit_power_a
 
 	print("[PHYS CRIT %]", chance)
 	if rng.percent(chance) then
+		self.turn_procs.is_crit = "physical"
+		self.turn_procs.uncrit_dam = dam
 		if target:hasEffect(target.EFF_OFFGUARD) then
 			crit_power_add = crit_power_add + 0.1
 		end
@@ -1264,14 +1268,14 @@ function _M:physicalCrit(dam, weapon, target, atk, def, add_chance, crit_power_a
 		crit = true
 
 		if self:knowTalent(self.T_EYE_OF_THE_TIGER) then self:triggerTalent(self.T_EYE_OF_THE_TIGER, nil, "physical") end
-
-		self.turn_procs.is_crit = "physical"
 	end
 	return dam, crit
 end
 
 --- Computes spell crit for a damage
 function _M:spellCrit(dam, add_chance, crit_power_add)
+	self.turn_procs.is_crit = nil
+
 	crit_power_add = crit_power_add or 0
 	local chance = self:combatSpellCrit() + (add_chance or 0)
 	local crit = false
@@ -1283,6 +1287,8 @@ function _M:spellCrit(dam, add_chance, crit_power_add)
 
 	print("[SPELL CRIT %]", chance)
 	if rng.percent(chance) then
+		self.turn_procs.is_crit = "spell"
+		self.turn_procs.uncrit_dam = dam
 		dam = dam * (1.5 + crit_power_add + (self.combat_critical_power or 0) / 100)
 		crit = true
 		game.logSeen(self, "#{bold}#%s's spell attains critical power!#{normal}#", self.name:capitalize())
@@ -1309,14 +1315,14 @@ function _M:spellCrit(dam, add_chance, crit_power_add)
 		end
 
 		if self:knowTalent(self.T_EYE_OF_THE_TIGER) then self:triggerTalent(self.T_EYE_OF_THE_TIGER, nil, "spell") end
-
-		self.turn_procs.is_crit = "spell"
 	end
 	return dam, crit
 end
 
 --- Computes mind crit for a damage
 function _M:mindCrit(dam, add_chance, crit_power_add)
+	self.turn_procs.is_crit = nil
+
 	crit_power_add = crit_power_add or 0
 	local chance = self:combatMindCrit() + (add_chance or 0)
 	local crit = false
@@ -1328,6 +1334,8 @@ function _M:mindCrit(dam, add_chance, crit_power_add)
 
 	print("[MIND CRIT %]", chance)
 	if rng.percent(chance) then
+		self.turn_procs.is_crit = "mind"
+		self.turn_procs.uncrit_dam = dam
 		dam = dam * (1.5 + crit_power_add + (self.combat_critical_power or 0) / 100)
 		crit = true
 		game.logSeen(self, "#{bold}#%s's mind surges with critical power!#{normal}#", self.name:capitalize())
@@ -1337,7 +1345,6 @@ function _M:mindCrit(dam, add_chance, crit_power_add)
 		if self:attr("equilibrium_on_crit") then self:incEquilibrium(self:attr("equilibrium_on_crit")) end
 
 		if self:knowTalent(self.T_EYE_OF_THE_TIGER) then self:triggerTalent(self.T_EYE_OF_THE_TIGER, nil, "mind") end
-		self.turn_procs.is_crit = "mind"
 	end
 	return dam, crit
 end

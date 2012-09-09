@@ -1968,3 +1968,30 @@ newEffect{
 	end,
 }
 
+newEffect{
+	name = "MITOSIS", image = "talents/mitosis.png",
+	desc = "Mitosis",
+	long_desc = function(self, eff) return ("You are split, both of you share the same healthpool but you gain %d%% damage reduction."):format(eff.power) end,
+	type = "physical",
+	subtype = { status=true },
+	status = "beneficial",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target# splits.", "+Mitosis" end,
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "resists", {all=eff.power})
+	end,
+}
+
+newEffect{
+	name = "MITOSIS_SWAP", image = "talents/swap.png",
+	desc = "Swap",
+	long_desc = function(self, eff) return ("You recently swaped with your other self, boosting your damage by %d%%."):format(eff.power) end,
+	type = "physical",
+	subtype = { status=true },
+	status = "beneficial",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target# swaps places.", "+Swap" end,
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "inc_damage", {all=eff.power})
+	end,
+}
