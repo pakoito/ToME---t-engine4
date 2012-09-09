@@ -2322,9 +2322,10 @@ newDamageType{
 				target:setEffect(target.EFF_POISONED, 5, {src=src, power=dam.dam, apply_power=src:combatMindpower()})
 			end
 		elseif not target and not src.turn_procs.living_mucus and src:knowTalent(src.T_LIVING_MUCUS) then
+			src.turn_procs.living_mucus = true
 			local t = src:getTalentFromId(src.T_LIVING_MUCUS)
 			if rng.percent(t.getChance(src, t)) then
-				t.spawn(src, t, x, y)
+				t.spawn(src, t)
 			end
 		end
 	end,

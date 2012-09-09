@@ -1978,7 +1978,7 @@ newEffect{
 	on_gain = function(self, err) return nil, "+Mucus" end,
 	on_lose = function(self, err) return nil, "-Mucus" end,
 	on_timeout = function(self, eff)
-		self:callTalent(self.T_MUCUS, nil, self.x, self.y, 0)
+		self:callTalent(self.T_MUCUS, nil, self.x, self.y, self:getTalentLevel(self.T_MUCUS) >=4 and 1 or 0)
 	end,
 }
 

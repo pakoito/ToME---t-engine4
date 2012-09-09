@@ -32,7 +32,7 @@ newTalent{
 	cooldown = 20,
 	no_energy = true,
 	tactical = { BUFF = 2 },
-	getDur = function(self, t) return math.max(5,  math.floor(self:getTalentLevel(t) * 1.2)) end,
+	getDur = function(self, t) return math.max(8,  math.floor(self:getTalentLevel(t) * 1.3)) end,
 	getDamage = function(self, t) return self:combatTalentMindDamage(t, 5, 90) end,
 	getEqui = function(self, t) return self:combatTalentMindDamage(t, 5, 20) end,
 	trigger = function(self, t, x, y, rad) 
@@ -58,6 +58,7 @@ newTalent{
 		Mucus will poison all foes crossing it, dealing %0.2f nature damage every turn for 5 turn (stacking).
 		Any friendly creature walking the mucus will restore equilibrium by %d per turn.
 		Mucus will disappear after %d turns.
+		At level 4 the mucus will grow in a radius 1.
 		Damage and equilibrium regen increase with Mindpower.]]):
 		format(dur, damDesc(self, DamageType.NATURE, dam), equi, dur)
 	end,
@@ -85,13 +86,42 @@ newTalent{
 		self:callTalent(self.T_MUCUS, nil, px, py, tg.radius)
 		game.level.map:particleEmitter(px, py, tg.radius, "acidflash", {radius=tg.radius, tx=px, ty=py})
 
+		local tgts = {}
+		for x, ys in pairs(grids) do for y, _ in pairs(ys) do
+			local target = game.level.map(x, y, Map.ACTOR)
+			if target and self:reactionToward(target) < 0 then tgts[#tgts+1] = target end
+		end end
+
+		if #tgts > 0 then
+			if game.party:hasMember(self) then
+				for act, def in pairs(game.party.members) do
+					local target = rng.table(tgts)
+					if act.summoner and act.summoner == self and act.is_mucus_ooze and act:hasLos(target.x, target.y) then
+						act.inc_damage.all = (act.inc_damage.all or 0) - 50
+						act:forceUseTalent(act.T_MUCUS_OOZE_SPIT, {force_target=target, ignore_energy=true})
+						act.inc_damage.all = (act.inc_damage.all or 0) + 50
+					end
+				end
+			else
+				for _, act in pairs(game.level.entities) do
+					local target = rng.table(tgts)
+					if act.summoner and act.summoner == self and act.is_mucus_ooze and act:hasLos(target.x, target.y) then
+						act.inc_damage.all = (act.inc_damage.all or 0) - 50
+						act:forceUseTalent(act.T_MUCUS_OOZE_SPIT, {force_target=target, ignore_energy=true})
+						act.inc_damage.all = (act.inc_damage.all or 0) + 50
+					end
+				end
+			end
+		end
+
+
 		game:playSoundNear(self, "talents/cloud")
 		return true
 	end,
 	info = function(self, t)
 		local dam = t.getDamage(self, t)
 		return ([[You call upon nature to turn the ground into an acidic explosion in a radius %d, dealing %0.2f acid damage to all creatures and creating mucus under it.
-		Also if you have any Mucus Oozes active they will, if in line of sight, instantly throw a slime spit (at half power) at one of the target hit by the splash.
+		Also if you have any Mucus Oozes active they will, if in line of sight, instantly throw a slime spit (at reduced power) at one of the target hit by the splash.
 		Damage will increase with Mindpower.]]):
 		format(self:getTalentRadius(t), damDesc(self, DamageType.ACID, dam))
 	end,
@@ -128,10 +158,20 @@ newTalent{
 	points = 5,
 	mode = "passive",
 	getMax = function(self, t) return math.floor(self:getCun() / 10) end,
-	getChance = function(self, t) return 10 + self:combatTalentMindDamage(t, 5, 400) / 10 end,
-	spawn = function(self, t, x, y)
-		self.turn_procs.living_mucus = true
+	getChance = function(self, t) return 10 + self:combatTalentMindDamage(t, 5, 300) / 10 end,
+	spawn = function(self, t)
 		if checkMaxSummon(self, true) or not self:canBe("summon") then return end
+
+		local ps = {}
+		for i, e in ipairs(game.level.map.effects) do
+			if e.damtype == DamageType.MUCUS then
+				for x, ys in pairs(e.grids) do for y, _ in pairs(ys) do
+					if self:canMove(x, y) then ps[#ps+1] = {x=x, y=y} end
+				end end
+			end
+		end
+		if #ps == 0 then return end
+		local p = rng.table(ps)
 
 		local m = mod.class.NPC.new{
 			type = "vermin", subtype = "oozes",
@@ -163,13 +203,13 @@ newTalent{
 
 			combat = { dam=5, atk=0, apr=5, damtype=DamageType.POISON },
 
-			summoner = self, summoner_gain_exp=true, wild_gift_summon=true,
+			summoner = self, summoner_gain_exp=true, wild_gift_summon=true, is_mucus_ooze = true,
 			summon_time = math.ceil(self:getTalentLevel(t)) + 5,
 		}
 		m:learnTalent(m.T_MUCUS_OOZE_SPIT, true, self:getTalentLevelRaw(t))
 		if self:knowTalent(self.T_BLIGHTED_SUMMONING) then m:learnTalent(m.T_VIRULENT_DISEASE, true, 3) end
 
-		setupSummon(self, m, x, y)
+		setupSummon(self, m, p.x, p.y)
 		return true
 	end,
 	info = function(self, t)

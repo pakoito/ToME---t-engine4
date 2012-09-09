@@ -148,7 +148,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Both of you swap place in an instant, creatures attacking one will target the other.
-		While swaping you briefly merge together, boosting all your nature and acid damage by %d%% for 6 turns and healing you for %d%.
+		While swaping you briefly merge together, boosting all your nature and acid damage by %d%% for 6 turns and healing you for %d.
 		Damage and healing increase with Mindpower.]]):
 		format(15 + self:combatTalentMindDamage(t, 5, 300) / 10, 40 + self:combatTalentMindDamage(t, 5, 300))
 	end,
