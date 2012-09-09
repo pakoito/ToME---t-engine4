@@ -169,9 +169,10 @@ newBirthDescriptor{
 	talents_types = {
 		["wild-gift/call"]={true, 0.3},
 		["wild-gift/antimagic"]={true, 0.3},
-		["wild-gift/harmony"]={false, 0.3},
 		["wild-gift/mindstar-mastery"]={true, 0.3},
+		["wild-gift/mucus"]={true, 0.3},
 		["wild-gift/ooze"]={true, 0.3},
+		["wild-gift/fungus"]={true, 0.3},
 	},
 	talents = {
 		[ActorTalents.T_PSIBLADES] = 1,
@@ -182,7 +183,10 @@ newBirthDescriptor{
 		resolvers.equip{ id=true,
 			{type="weapon", subtype="mindstar", name="mossy mindstar", autoreq=true, ego_chance=-1000},
 			{type="weapon", subtype="mindstar", name="mossy mindstar", autoreq=true, ego_chance=-1000},
-			{type="armor", subtype="light", name="rough leather armour", autoreq=true, ego_chance=-1000},
+			{type="armor", subtype="cloth", name="linen robe", autoreq=true, ego_chance=-1000},
 		},
+	},
+	copy_add = {
+		life_rating = -3,
 	},
 }

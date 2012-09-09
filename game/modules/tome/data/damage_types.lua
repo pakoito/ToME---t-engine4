@@ -1170,6 +1170,18 @@ newDamageType{
 	end,
 }
 
+-- Crippling poison: failure to act
+newDamageType{
+	name = "crippling poison", type = "CRIPPLING_POISON", text_color = "#LIGHT_GREEN#",
+	projector = function(src, x, y, type, dam)
+		DamageType:get(DamageType.NATURE).projector(src, x, y, DamageType.NATURE, dam.dam / dam.dur)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and target:canBe("poison") then
+			target:setEffect(target.EFF_CRIPPLING_POISON, dam.dur, {src=src, power=dam.dam / dam.dur, no_ct_effect=true})
+		end
+	end,
+}
+
 -- Insidious poison: prevents healing
 newDamageType{
 	name = "insidious poison", type = "INSIDIOUS_POISON", text_color = "#LIGHT_GREEN#",
@@ -1319,6 +1331,33 @@ newDamageType{
 	end,
 }
 
+newDamageType{
+	name = "% chances to cause a gloom effect", type = "RANDOM_GLOOM",
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and rng.percent(dam) then
+			if not src:checkHit(src:combatMindpower(), target:combatMentalResist()) then return end
+			local effect = rng.range(1, 3)
+			if effect == 1 then
+				-- confusion
+				if target:canBe("confusion") and not target:hasEffect(target.EFF_GLOOM_CONFUSED) then
+					target:setEffect(target.EFF_GLOOM_CONFUSED, 2, {power=70})
+				end
+			elseif effect == 2 then
+				-- stun
+				if target:canBe("stun") and not target:hasEffect(target.EFF_GLOOM_STUNNED) then
+					target:setEffect(target.EFF_GLOOM_STUNNED, 2, {})
+				end
+			elseif effect == 3 then
+				-- slow
+				if target:canBe("slow") and not target:hasEffect(target.EFF_GLOOM_SLOW) then
+					target:setEffect(target.EFF_GLOOM_SLOW, 2, {power=0.3})
+				end
+			end
+		end
+	end,
+}
+
 -- gBlind
 newDamageType{
 	name = "% chances to blind", type = "RANDOM_BLIND",
@@ -1327,7 +1366,7 @@ newDamageType{
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and rng.percent(dam.dam) then
 			if target:canBe("blind") then
-				target:setEffect(target.EFF_BLINDED, dam.dam, {apply_power=(dam.power_check or src.combatSpellpower)(src), no_ct_effect=true})
+				target:setEffect(target.EFF_BLINDED, 4, {apply_power=(dam.power_check or src.combatSpellpower)(src), no_ct_effect=true})
 			else
 				game.logSeen(target, "%s resists!", target.name:capitalize())
 			end
@@ -1481,6 +1520,20 @@ newDamageType{
 	end,
 }
 
+newDamageType{
+	name = "healing nature", type = "HEALING_NATURE",
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and not target:attr("undead") then
+			target:attr("allow_on_heal", 1)
+			target:heal(dam, src)
+			target:attr("allow_on_heal", -1)
+		elseif target then
+			DamageType:get(DamageType.NATURE).projector(src, x, y, DamageType.NATURE, dam)
+		end
+	end,
+}
+
 -- Corrupted blood, blight damage + potential diseases
 newDamageType{
 	name = "corrupted blood", type = "CORRUPTED_BLOOD", text_color = "#DARK_GREEN#",
@@ -1553,6 +1606,15 @@ newDamageType{
 	projector = function(src, x, y, type, dam)
 		DamageType:get(DamageType.TEMPORAL).projector(src, x, y, DamageType.TEMPORAL, dam / 2)
 		DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam / 2)
+	end,
+}
+
+-- Temporal/Darkness damage
+newDamageType{
+	name = "void", type = "VOID", text_color = "#GREY#",
+	projector = function(src, x, y, type, dam)
+		DamageType:get(DamageType.TEMPORAL).projector(src, x, y, DamageType.TEMPORAL, dam / 2)
+		DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.DARKNESS, dam / 2)
 	end,
 }
 
@@ -2242,6 +2304,27 @@ newDamageType{
 				DamageType:get(DamageType.MIND).projector(src, x, y, DamageType.MIND, {dam=dam/4, alwaysHit=true})
 				DamageType:get(DamageType.FIREBURN).projector(src, x, y, DamageType.FIREBURN, dam/4)
 				game.logSeen(target, "%s resists the dream forge!", target.name:capitalize())
+			end
+		end
+	end,
+}
+
+
+newDamageType{
+	name = "mucus", type = "MUCUS",
+	projector = function(src, x, y, type, dam, tmp)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and not target.turn_procs.mucus then
+			target.turn_procs.mucus = true
+			if src:reactionToward(target) >= 0 then
+				target:incEquilibrium(-dam.equi)
+			elseif target:canBe("poison") then
+				target:setEffect(target.EFF_POISONED, 5, {src=src, power=dam.dam, apply_power=src:combatMindpower()})
+			end
+		elseif not target and not src.turn_procs.living_mucus and src:knowTalent(src.T_LIVING_MUCUS) then
+			local t = src:getTalentFromId(src.T_LIVING_MUCUS)
+			if rng.percent(t.getChance(src, t)) then
+				t.spawn(src, t, x, y)
 			end
 		end
 	end,

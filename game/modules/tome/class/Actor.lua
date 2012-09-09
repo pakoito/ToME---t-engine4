@@ -1870,7 +1870,7 @@ function _M:onTakeHit(value, src)
 		t:onTakeHit(self, value / self.max_life)
 	end
 
-	if self:hasEffect(self.EFF_UNSTOPPABLE) then
+	if self:attr("unstoppable") then
 		if value > self.life then value = self.life - 1 end
 	end
 
@@ -3912,20 +3912,27 @@ function _M:worthExp(target)
 end
 
 --- Remove all effects based on a filter
-function _M:removeEffectsFilter(t)
+function _M:removeEffectsFilter(t, nb)
+	nb = nb or 100000
 	local effs = {}
+	local removed = 0
 
 	for eff_id, p in pairs(self.tmp) do
 		local e = self.tempeffect_def[eff_id]
-		if (not t.type or e.type == e.type) and (not t.status or e.status == t.status) then
+		if type(t) == "function" then 
+			if t(e) then effs[#effs+1] = eff_id end
+		elseif (not t.type or e.type == e.type) and (not t.status or e.status == t.status) then
 			effs[#effs+1] = eff_id
 		end
 	end
 
-	while #effs > 0 do
+	while #effs > 0 and nb > 0 do
 		local eff = rng.tableRemove(effs)
 		self:removeEffect(eff)
+		nb = nb - 1
+		removed = removed + 1
 	end
+	return removed
 end
 
 --- Suffocate a bit, lose air

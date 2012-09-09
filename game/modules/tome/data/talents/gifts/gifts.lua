@@ -33,6 +33,7 @@ newTalentType{ allow_random=true, is_nature=true, type="wild-gift/fire-drake", n
 newTalentType{ allow_random=true, is_nature=true, type="wild-gift/cold-drake", name = "cold drake aspect", description = "Take on the defining aspects of a Cold Drake." }
 newTalentType{ allow_random=true, is_nature=true, type="wild-gift/storm-drake", name = "storm drake aspect", description = "Take on the defining aspects of a Storm Drake." }
 newTalentType{ allow_random=true, is_nature=true, type="wild-gift/mindstar-mastery", name = "mindstar mastery", generic = true, description = "Learn to channel your mental power through mindstars, forming powerful psionic blades." }
+newTalentType{ allow_random=true, is_nature=true, type="wild-gift/mucus", name = "mucus", description = "Cover the floor with natural mucus." }
 newTalentType{ allow_random=true, is_nature=true, type="wild-gift/ooze", name = "ooze", description = "Your body and internal organs are becoming more ooze-like in nature, allowing you to spawn more of you." }
 
 -- Generic requires for gifts based on talent level
@@ -84,6 +85,7 @@ load("/data/talents/gifts/antimagic.lua")
 
 load("/data/talents/gifts/slime.lua")
 load("/data/talents/gifts/fungus.lua")
+load("/data/talents/gifts/mucus.lua")
 load("/data/talents/gifts/ooze.lua")
 
 load("/data/talents/gifts/sand-drake.lua")

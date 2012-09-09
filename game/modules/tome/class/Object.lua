@@ -895,6 +895,7 @@ function _M:getTextualDesc(compare_with)
 		compare_fields(w, compare_with, field, "hate_regen", "%+.2f", "Hate each turn: ")
 		compare_fields(w, compare_with, field, "psi_regen", "%+.2f", "Psi each turn: ")
 		compare_fields(w, compare_with, field, "positive_regen", "%+.2f", "P.Energy each turn: ")
+		compare_fields(w, compare_with, field, "negative_regen", "%+.2f", "N.Energy each turn: ")
 
 		compare_fields(w, compare_with, field, "stamina_regen_when_hit", "%+.2f", "Stamina when hit: ")
 		compare_fields(w, compare_with, field, "mana_regen_when_hit", "%+.2f", "Mana when hit: ")
@@ -932,6 +933,8 @@ function _M:getTextualDesc(compare_with)
 		compare_fields(w, compare_with, field, "lite", "%+d", "Light radius: ")
 		compare_fields(w, compare_with, field, "infravision", "%+d", "Infravision radius: ")
 		compare_fields(w, compare_with, field, "heightened_senses", "%+d", "Heightened senses radius: ")
+		
+		compare_fields(w, compare_with, field, "see_stealth", "%+d", "See stealth: ")
 
 		compare_fields(w, compare_with, field, "see_invisible", "%+d", "See invisible: ")
 		compare_fields(w, compare_with, field, "invisible", "%+d", "Invisibility: ")
@@ -940,6 +943,7 @@ function _M:getTextualDesc(compare_with)
 		compare_fields(w, compare_with, field, "movement_speed", "%+d%%", "Movement speed: ", 100)
 		compare_fields(w, compare_with, field, "combat_physspeed", "%+d%%", "Combat speed: ", 100)
 		compare_fields(w, compare_with, field, "combat_spellspeed", "%+d%%", "Casting speed: ", 100)
+		compare_fields(w, compare_with, field, "combat_mindspeed", "%+d%%", "Mental speed: ", 100)
 
 		compare_fields(w, compare_with, field, "healing_factor", "%+d%%", "Healing mod.: ", 100)
 		compare_fields(w, compare_with, field, "heal_on_nature_summon", "%+d", "Heals friendly targets nearby when you use a nature summon: ")
@@ -976,9 +980,17 @@ function _M:getTextualDesc(compare_with)
 		if w.blind then
 			desc:add("The wearer is blinded.", true)
 		end
+		
+		if w.sleep then
+			desc:add("The wearer is asleep.", true)
+		end
 
 		if w.blind_fight then
 			desc:add({"color", "YELLOW"}, "Blind-Fight:", {"color", "LAST"}, "This item allows the wearer to attack unseen targets without any penalties.", true)
+		end
+		
+		if w.lucid_dreamer then
+			desc:add({"color", "YELLOW"}, "Lucid-Dreamer:", {"color", "LAST"}, "This item allows the wearer to act while sleeping.", true)
 		end
 
 		if w.quick_weapon_swap then

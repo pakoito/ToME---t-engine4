@@ -117,7 +117,7 @@ newTalent{
 }
 
 newTalent{
-	name = "Swap",
+	name = "Swap", short_name = "MITOSIS_SWAP",
 	type = {"wild-gift/ooze", 3},
 	require = gifts_req3,
 	points = 5,
@@ -147,10 +147,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local eq = t.getEq(self, t)
-		local turn = t.getTurn(self, t)
 		return ([[Both of you swap place in an instant, creatures attacking one will target the other.
-		While swpaing you briefly merge together, boosting all your nature and acid damage by %d%% for 6 turns and healing you for %d%.
+		While swaping you briefly merge together, boosting all your nature and acid damage by %d%% for 6 turns and healing you for %d%.
 		Damage and healing increase with Mindpower.]]):
 		format(15 + self:combatTalentMindDamage(t, 5, 300) / 10, 40 + self:combatTalentMindDamage(t, 5, 300))
 	end,

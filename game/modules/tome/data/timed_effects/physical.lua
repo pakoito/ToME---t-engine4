@@ -1948,7 +1948,6 @@ newEffect{
 	end,
 }
 
-
 newEffect{
 	name = "FUNGAL_BLOOD", image = "talents/fungal_blood.png",
 	desc = "Fungal Blood",
@@ -1969,6 +1968,21 @@ newEffect{
 }
 
 newEffect{
+	name = "MUCUS", image = "talents/mucus.png",
+	desc = "Mucus",
+	long_desc = function(self, eff) return ("You lay mucus where you walk."):format() end,
+	type = "physical",
+	subtype = { mucus=true },
+	status = "beneficial",
+	parameters = { },
+	on_gain = function(self, err) return nil, "+Mucus" end,
+	on_lose = function(self, err) return nil, "-Mucus" end,
+	on_timeout = function(self, eff)
+		self:callTalent(self.T_MUCUS, nil, self.x, self.y, 0)
+	end,
+}
+
+newEffect{
 	name = "MITOSIS", image = "talents/mitosis.png",
 	desc = "Mitosis",
 	long_desc = function(self, eff) return ("You are split, both of you share the same healthpool but you gain %d%% damage reduction."):format(eff.power) end,
@@ -1983,7 +1997,7 @@ newEffect{
 }
 
 newEffect{
-	name = "MITOSIS_SWAP", image = "talents/swap.png",
+	name = "MITOSIS_SWAP", image = "talents/mitosis_swap.png",
 	desc = "Swap",
 	long_desc = function(self, eff) return ("You recently swaped with your other self, boosting your damage by %d%%."):format(eff.power) end,
 	type = "physical",

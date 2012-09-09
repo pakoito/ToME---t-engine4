@@ -685,3 +685,10 @@ function _M:triggerTalent(tid, name, ...)
 	name = name or "trigger"
 	if t[name] then return t[name](self, t, ...) end
 end
+
+--- Trigger a talent method
+function _M:callTalent(tid, name, ...)
+	local t = _M.talents_def[tid]
+	name = name or "trigger"
+	if t[name] then return t[name](self, t, ...) end
+end

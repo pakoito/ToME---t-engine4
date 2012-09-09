@@ -203,7 +203,7 @@ function _M:project(t, x, y, damtype, dam, particles)
 		if stop then break end
 	end
 	DamageType:projectingFor(self, nil)
-	return grids
+	return grids, stop_x, stop_y
 end
 
 --- Can we project to this grid ?

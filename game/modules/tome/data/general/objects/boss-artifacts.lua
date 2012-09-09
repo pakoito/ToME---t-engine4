@@ -23,7 +23,7 @@ local Talents = require "engine.interface.ActorTalents"
 -- This file describes artifacts associated with a boss of the game, they have a high chance of dropping their respective ones, but they can still be found elsewhere
 
 newEntity{ base = "BASE_LONGSWORD",
-	power_source = {nature=true},
+	power_source = {arcane=true}, --How is this nature based?
 	define_as = "LONGSWORD_WINTERTIDE", rarity=false, unided_name = "glittering longsword", image="object/artifact/wintertide.png",
 	name = "Wintertide", unique=true,
 	desc = [[The air seems to freeze around the blade of this sword, draining all heat from the area.
@@ -1346,7 +1346,7 @@ newEntity{ base = "BASE_CLOAK", define_as="GLACIAL_CLOAK",
 	cost = 300,
 	material_level = 5,
 	wielder = {
-		resists= {[DamageType.FIRE] = -15,[DamageType.COLD] = 25, all=5},
+		resists= {[DamageType.FIRE] = -15,[DamageType.COLD] = 25, all=8},
 		inc_stats = { [Stats.STAT_MAG] = 7,},
 		combat_def = 12,
 		on_melee_hit = {[DamageType.ICE]=60},

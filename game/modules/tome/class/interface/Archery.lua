@@ -35,7 +35,7 @@ function _M:archeryAcquireTargets(tg, params)
 		game.logPlayer(self, "You must wield a bow or a sling (%s)!", ammo)
 		return nil
 	end
-	if not ammo or ammo.combat.shots_left <= 0 then
+	if not ammo or (ammo.combat.shots_left <= 0 and not ammo.infinite) then
 		game.logPlayer(self, "You do not have enough ammo left!")
 		return nil
 	end

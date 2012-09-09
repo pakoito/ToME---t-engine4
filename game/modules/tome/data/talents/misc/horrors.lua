@@ -470,14 +470,15 @@ newTalent{
 				tgts[target] = true
 				local ox, oy = target.x, target.y
 				target:pull(self.x, self.y, 2)
-				self:project(tg, target.x, target.y, engine.DamageType.PHYSICAL, 25+self:getTalentLevel(t)*4)
+				self:project(tg, target.x, target.y, engine.DamageType.PHYSICAL, self:mindCrit(self:combatTalentMindDamage(t, 20, 120)))
 				if target.x ~= ox or target.y ~= oy then game.logSeen(target, "%s is pulled in!", target.name:capitalize()) end
 			end
 		end)
 		return true
 	end,
 	info = function(self, t)
-		return ([[Pull all foes toward you in radius 5 while dealing physical damage.]])
+		return ([[Pull all foes toward you in radius 5 while dealing %d physical damage.
+The damage will increase with your mindpower.]]):format(damDesc(self, DamageType.PHYSICAL, self:combatTalentMindDamage(t, 20, 120)))
 	end,
 }
 
@@ -710,6 +711,13 @@ newTalent{
 			end
 
 			game.zone:addEntity(game.level, m, "actor", x, y)
+			
+			if self:knowTalent(self.T_BLIGHTED_SUMMONING) then 
+				m:learnTalent(m.T_RUIN, true, 3) 
+				m:incIncStat("mag", self:getMag())
+				m.summon_time=15
+				m:forceUseTalent(m.T_RUIN, {ignore_cd=true})
+			end
 		end
 
 		return true
