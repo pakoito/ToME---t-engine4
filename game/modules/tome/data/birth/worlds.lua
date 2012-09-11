@@ -136,6 +136,7 @@ newBirthDescriptor{
 		campaign_name = "infinite-dungeon",
 		__allow_transmo_chest = true,
 		is_infinite_dungeon = true,
+		ignore_prodigies_special_reqs = true,
 	},
 }
 
@@ -167,6 +168,7 @@ newBirthDescriptor{
 	game_state = {
 		campaign_name = "arena",
 		is_arena = true,
+		ignore_prodigies_special_reqs = true,
 	},
 }
 

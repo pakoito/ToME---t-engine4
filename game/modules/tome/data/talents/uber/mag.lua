@@ -42,7 +42,7 @@ uberTalent{
 	name = "Aether Permeation",
 	mode = "passive",
 	require = { special={desc="At least 25% arcane damage reduction and having been exposed to the void of space.", fct=function(self)
-		return self:attr("planetary_orbit") and self:combatGetResist(DamageType.ARCANE) >= 25
+		return (game.state.birth.ignore_prodigies_special_reqs or self:attr("planetary_orbit")) and self:combatGetResist(DamageType.ARCANE) >= 25
 	end} },
 	on_learn = function(self, t)
 		local ret = {}
@@ -101,7 +101,7 @@ uberTalent{
 	name = "Temporal Form",
 	cooldown = 30,
 	require = { special={desc="Dealt over 50000 temporal damage and visited an out-of-time zone", fct=function(self) return
-		self.damage_log and (self.damage_log[DamageType.TEMPORAL] and self.damage_log[DamageType.TEMPORAL] >= 50000) and self:attr("temporal_touched")
+		self.damage_log and (self.damage_log[DamageType.TEMPORAL] and self.damage_log[DamageType.TEMPORAL] >= 50000) and (game.state.birth.ignore_prodigies_special_reqs or self:attr("temporal_touched"))
 	end} },
 	no_energy = true,
 	is_spell = true,
@@ -149,6 +149,7 @@ uberTalent{
 		- Alchemy Golems: Drain
 		- Shadows: Empathic Hex
 		- Thought-Forms: Flame of Urh'Rok
+		- Mucus Oozes: Virulent Disease
 		- Other race or object-based summons might be affected too
 		]]):format()
 	end,
@@ -160,7 +161,7 @@ uberTalent{
 	no_energy = true,
 	is_spell = true,
 	no_npc_use = true,
-	require = { special={desc="Have time-travelled at least once", fct=function(self) return self:attr("time_travel_times") and self:attr("time_travel_times") >= 1 end} },
+	require = { special={desc="Have time-travelled at least once", fct=function(self) return game.state.birth.ignore_prodigies_special_reqs or (self:attr("time_travel_times") and self:attr("time_travel_times") >= 1) end} },
 	action = function(self, t)
 		if game._chronoworlds and game._chronoworlds.revisionist_history then
 			self:hasEffect(self.EFF_REVISIONIST_HISTORY).back_in_time = true

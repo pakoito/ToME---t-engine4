@@ -38,7 +38,7 @@ uberTalent{
 	name = "Bloodspring",
 	mode = "passive",
 	cooldown = 12,
-	require = { special={desc="Let Melinda be sacrificed", fct=function(self) return self:hasQuest("kryl-feijan-escape") and self:hasQuest("kryl-feijan-escape"):isStatus(engine.Quest.FAILED) end} },
+	require = { special={desc="Let Melinda be sacrificed", fct=function(self) return game.state.birth.ignore_prodigies_special_reqs or (self:hasQuest("kryl-feijan-escape") and self:hasQuest("kryl-feijan-escape"):isStatus(engine.Quest.FAILED)) end} },
 	trigger = function(self, t)
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,

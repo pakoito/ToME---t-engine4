@@ -41,7 +41,7 @@ uberTalent{
 	mode = "passive",
 	cooldown = 15,
 	getDamage = function(self, t) return 100 + self:combatSpellpower() * 4 end,
-	require = { special={desc="Witness a meteoric crash", fct=function(self) return self:attr("meteoric_crash") end} },
+	require = { special={desc="Witness a meteoric crash", fct=function(self) return game.state.birth.ignore_prodigies_special_reqs or self:attr("meteoric_crash") end} },
 	trigger = function(self, t, target)
 		self:startTalentCooldown(t)
 		local terrains = t.terrains or mod.class.Grid:loadList("/data/general/grids/lava.lua")
@@ -125,12 +125,13 @@ uberTalent{
 	require = { special={desc="Possess and wear two of Garkul's artifacts and know all about Garkul's life", fct=function(self)
 		local o1 = self:findInAllInventoriesBy("define_as", "SET_GARKUL_TEETH")
 		local o2 = self:findInAllInventoriesBy("define_as", "HELM_OF_GARKUL")
-		return o1 and o2 and o1.wielded and o2.wielded and
+		return o1 and o2 and o1.wielded and o2.wielded and (game.state.birth.ignore_prodigies_special_reqs or (
 			game.player:knownLore("garkul-history-1") and
 			game.player:knownLore("garkul-history-2") and
 			game.player:knownLore("garkul-history-3") and
 			game.player:knownLore("garkul-history-4") and
 			game.player:knownLore("garkul-history-5")
+			))
 	end} },
 	info = function(self, t)
 		return ([[Garkul's Spirit is with you, you now deal 1000%% more damage to constructs and 20%% more damage to humanoids.]])
