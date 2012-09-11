@@ -19,6 +19,11 @@
 
 local lpeg = require "lpeg"
 
+function math.decimals(v, nb)
+	nb = 10 ^ nb
+	return math.floor(v * nb) / nb
+end
+
 function lpeg.anywhere (p)
 	return lpeg.P{ p + 1 * lpeg.V(1) }
 end

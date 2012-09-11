@@ -87,7 +87,7 @@ floorEffect{
 			local tid = rng.table{self.EFF_ROTTING_DISEASE, self.EFF_DECREPITUDE_DISEASE, self.EFF_DECREPITUDE_DISEASE}
 			if not self:hasEffect(tid) then
 				local l = game.zone:level_adjust_level(game.level, game.zone, "object")
-				local p = 4 + l / 2
+				local p = math.ceil(4 + l / 2)
 				self:setEffect(tid, 8, {str=p, con=p, dex=p, dam=5 + l / 2, src=self})
 			end
 		end
