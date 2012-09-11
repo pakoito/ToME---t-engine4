@@ -70,6 +70,11 @@ newTalent{
 		else
 			self:attackTarget(target)
 		end
+
+		if config.settings.tome.smooth_move > 0 and config.settings.tome.twitch_move then
+			self:setMoveAnim(self.x, self.y, config.settings.tome.smooth_move, blur, util.getDir(x, y, self.x, self.y), 0.2)
+		end
+
 		return true
 	end,
 	info = function(self, t)

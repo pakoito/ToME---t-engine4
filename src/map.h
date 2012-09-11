@@ -46,7 +46,8 @@ struct s_map_object {
 	bool on_unknown;
 	bool valid;
 	float oldx, oldy;
-	int move_step, move_max, move_blur;
+	int move_step, move_max, move_blur, move_twitch_dir;
+	float move_twitch;
 	int anim_max, anim_loop;
 	float anim_step, anim_speed;
 	enum {DL_NONE, DL_TRUE_LAST, DL_TRUE} display_last;

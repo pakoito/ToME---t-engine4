@@ -799,7 +799,7 @@ function _M:defineDisplayCallback()
 	local f_neutral = nil
 	local ichat = nil
 
-	local function tactical(x, y, w, h, zoom, on_map)
+	local function tactical(x, y, w, h, zoom, on_map, tlx, tly)
 		-- Tactical info
 		if game.level and game.always_target then
 			-- Tactical life info
@@ -890,14 +890,14 @@ function _M:defineDisplayCallback()
 	end
 
 	if self._mo == self._last_mo or not self._last_mo then
-		self._mo:displayCallback(function(x, y, w, h, zoom, on_map)
-			tactical(x, y, w, h, zoom, on_map)
+		self._mo:displayCallback(function(x, y, w, h, zoom, on_map, tlx, tly)
+			tactical(tlx or x, tly or y, w, h, zoom, on_map)
 			particles(x, y, w, h, zoom, on_map)
 			return true
 		end)
 	else
-		self._mo:displayCallback(function(x, y, w, h, zoom, on_map)
-			tactical(x, y, w, h, zoom, on_map)
+		self._mo:displayCallback(function(x, y, w, h, zoom, on_map, tlx, tly)
+			tactical(tlx or x, tly or y, w, h, zoom, on_map)
 			return true
 		end)
 		self._last_mo:displayCallback(function(x, y, w, h, zoom, on_map)
@@ -1003,7 +1003,7 @@ function _M:move(x, y, force)
 		local blur = 0
 		if game.level.data.zero_gravity or self:hasEffect(self.EFF_HASTE) then blur = 2 end
 		if self:attr("lightning_speed") or self:attr("step_up") or self:attr("wild_speed") then blur = 3 end
-		self:setMoveAnim(ox, oy, config.settings.tome.smooth_move, blur)
+		self:setMoveAnim(ox, oy, config.settings.tome.smooth_move, blur, 8, config.settings.tome.twitch_move and 0.15 or 0)
 	end
 
 	if moved and not force and self:knowTalent(self.T_HASTE) and self:hasEffect(self.EFF_HASTE) then

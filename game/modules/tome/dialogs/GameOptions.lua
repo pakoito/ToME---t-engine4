@@ -104,6 +104,15 @@ function _M:generateList()
 		end))
 	end,}
 
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Enables or disables 'twitch' movement.\nWhen enabled creatures will do small bumps when moving and attacking.#WHITE#"}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Twitch creatures movement and attack#WHITE##{normal}#", status=function(item)
+		return tostring(config.settings.tome.twitch_move and "enabled" or "disabled")
+	end, fct=function(item)
+		config.settings.tome.twitch_move = not config.settings.tome.twitch_move
+		game:saveSettings("tome.twitch_move", ("tome.twitch_move = %s\n"):format(tostring(config.settings.tome.twitch_move)))
+		self.c_list:drawItem(item)
+	end,}
+
 	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Enables or disables weather effects in some zones.\nDisabling it can gain some performance. It will not affect previously visited zones.#WHITE#"}
 	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Weather effects#WHITE##{normal}#", status=function(item)
 		return tostring(config.settings.tome.weather_effects and "enabled" or "disabled")

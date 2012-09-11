@@ -376,9 +376,11 @@ end
 -- @param oldy the coords from where the animation will seem to come from
 -- @param speed the number of frames the animation lasts (frames are normalized to 30/sec no matter the actual FPS)
 -- @param blur apply a motion blur effect of this number of frames
-function _M:setMoveAnim(oldx, oldy, speed, blur)
+-- @param twitch_dir defaults to 8, the direction to do movement twitch
+-- @param twitch_dir defaults to 0, the amplitude of movement twitch
+function _M:setMoveAnim(oldx, oldy, speed, blur, twitch_dir, twitch)
 	if not self._mo then return end
-	self._mo:setMoveAnim(oldx, oldy, self.x, self.y, speed, blur)
+	self._mo:setMoveAnim(oldx, oldy, self.x, self.y, speed, blur, twitch_dir, twitch)
 
 	local add_displays = self.add_displays
 	if self.replace_display then add_displays = self.replace_display.add_displays end
@@ -387,7 +389,7 @@ function _M:setMoveAnim(oldx, oldy, speed, blur)
 
 	for i = 1, #add_displays do
 		if add_displays[i]._mo then
-			add_displays[i]._mo:setMoveAnim(oldx, oldy, self.x, self.y, speed, blur)
+			add_displays[i]._mo:setMoveAnim(oldx, oldy, self.x, self.y, speed, blur, twitch_dir, twitch)
 		end
 	end
 end

@@ -1360,15 +1360,15 @@ function util.dirToAngle(dir, sx, sy)
 end
 
 function util.dirToCoord(dir, sx, sy)
-	return unpack(is_hex == 0 and dir_to_coord[dir] or hex_dir_to_coord[sx % 2][dir])
+	return unpack(is_hex == 0 and dir_to_coord[dir] or (sx and hex_dir_to_coord[sx % 2][dir]))
 end
 
 function util.coordToDir(dx, dy, sx, sy)
-	return is_hex == 0 and coord_to_dir[dx][dy] or hex_coord_to_dir[sx % 2][dx][dy]
+	return is_hex == 0 and coord_to_dir[dx][dy] or (sx and hex_coord_to_dir[sx % 2][dx][dy])
 end
 
 function util.dirSides(dir, sx, sy)
-	return is_hex == 0 and dir_sides[dir] or hex_dir_sides[sx % 2][dir]
+	return is_hex == 0 and dir_sides[dir] or (sx and hex_dir_sides[sx % 2][dir])
 end
 
 function util.dirZigZag(dir, sx, sy)
@@ -1388,7 +1388,7 @@ function util.dirNextZigZag(dir, sx, sy)
 end
 
 function util.opposedDir(dir, sx, sy)
-	return is_hex == 0 and opposed_dir[dir] or hex_opposed_dir[sx % 2][dir]
+	return is_hex == 0 and opposed_dir[dir] or (sx and hex_opposed_dir[sx % 2][dir])
 end
 
 function util.getDir(x1, y1, x2, y2)

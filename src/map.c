@@ -296,6 +296,8 @@ static int map_object_set_move_anim(lua_State *L)
 	obj->move_step = 0;
 	obj->move_max = luaL_checknumber(L, 6);
 	obj->move_blur = lua_tonumber(L, 7); // defaults to 0
+	obj->move_twitch_dir = lua_tonumber(L, 8); // defaults to 0 (which is equivalent to up or 8)
+	obj->move_twitch = lua_tonumber(L, 9); // defaults to 0
 	return 0;
 }
 
@@ -1242,7 +1244,7 @@ static int map_get_scroll(lua_State *L)
 }
 
 
-#define DO_QUAD(dm, anim, dx, dy, dw, dh, zoom, r, g, b, a, force) {\
+#define DO_QUAD(dm, anim, dx, dy, tldx, tldy, dw, dh, zoom, r, g, b, a, force) {\
 	vertices[(*vert_idx)] = (dx); vertices[(*vert_idx)+1] = (dy); \
 	vertices[(*vert_idx)+2] = map->tile_w * (dw) * (zoom) + (dx); vertices[(*vert_idx)+3] = (dy); \
 	vertices[(*vert_idx)+4] = map->tile_w * (dw) * (zoom) + (dx); vertices[(*vert_idx)+5] = map->tile_h * (dh) * (zoom) + (dy); \
@@ -1276,7 +1278,9 @@ static int map_get_scroll(lua_State *L)
 		lua_pushnumber(L, map->tile_h * (dh) * (zoom)); \
 		lua_pushnumber(L, (zoom)); \
 		lua_pushboolean(L, TRUE); \
-		if (lua_pcall(L, 6, 1, 0)) \
+		lua_pushnumber(L, tldx); \
+		lua_pushnumber(L, tldy); \
+		if (lua_pcall(L, 8, 1, 0)) \
 		{ \
 			printf("Display callback error: UID %ld: %s\n", dm->uid, lua_tostring(L, -1)); \
 			lua_pop(L, 1); \
@@ -1378,6 +1382,7 @@ void display_map_quad(GLuint *cur_tex, int *vert_idx, int *col_idx, map_type *ma
 	 ** Compute/display movement and motion blur
 	 ********************************************************/
 	float animdx = 0, animdy = 0;
+	float tlanimdx = 0, tlanimdy = 0;
 	if (m->display_last == DL_NONE) m->move_max = 0;
 	lua_is_hex(L);
 	int is_hex = luaL_checknumber(L, -1);
@@ -1401,13 +1406,13 @@ void display_map_quad(GLuint *cur_tex, int *vert_idx, int *col_idx, map_type *ma
 					step = m->move_step - z;
 					if (step >= 0)
 					{
-						animdx = map->tile_w * (adx * step / (float)m->move_max - adx);
-						animdy = map->tile_h * (ady * step / (float)m->move_max - ady);
+						animdx = tlanimdx = map->tile_w * (adx * step / (float)m->move_max - adx);
+						animdy = tlanimdy = map->tile_h * (ady * step / (float)m->move_max - ady);
 						dm = m;
 						while (dm)
 						{
 							tglBindTexture(GL_TEXTURE_2D, dm->textures[0]);
-							DO_QUAD(dm, 0, dx + dm->dx * map->tile_w + animdx, dy + dm->dy * map->tile_h + animdy, dm->dw, dm->dh, dm->scale, r, g, b, a * 2 / (3 + z), m->next);
+							DO_QUAD(dm, 0, dx + dm->dx * map->tile_w + animdx, dy + dm->dy * map->tile_h + animdy, dx + dm->dx * map->tile_w + tlanimdx, dy + dm->dy * map->tile_h + tlanimdy, dm->dw, dm->dh, dm->scale, r, g, b, a * 2 / (3 + z), m->next);
 							dm = dm->next;
 						}
 					}
@@ -1415,8 +1420,20 @@ void display_map_quad(GLuint *cur_tex, int *vert_idx, int *col_idx, map_type *ma
 			}
 
 			// Final step
-			animdx = adx * m->move_step / (float)m->move_max - adx;
-			animdy = ady * m->move_step / (float)m->move_max - ady;
+			animdx = tlanimdx = adx * m->move_step / (float)m->move_max - adx;
+			animdy = tlanimdy = ady * m->move_step / (float)m->move_max - ady;
+
+			if (m->move_twitch) {
+				if (m->move_twitch_dir == 4) animdx -= m->move_twitch * m->move_step / (float)m->move_max;
+				else if (m->move_twitch_dir == 6) animdx += m->move_twitch * m->move_step / (float)m->move_max;
+				else if (m->move_twitch_dir == 2) animdy += m->move_twitch * m->move_step / (float)m->move_max;
+				else if (m->move_twitch_dir == 1) { animdx -= m->move_twitch * m->move_step / (float)m->move_max; animdy += m->move_twitch * m->move_step / (float)m->move_max; }
+				else if (m->move_twitch_dir == 3) { animdx += m->move_twitch * m->move_step / (float)m->move_max; animdy += m->move_twitch * m->move_step / (float)m->move_max; }
+				else if (m->move_twitch_dir == 7) { animdx -= m->move_twitch * m->move_step / (float)m->move_max; animdy -= m->move_twitch * m->move_step / (float)m->move_max; }
+				else if (m->move_twitch_dir == 9) { animdx += m->move_twitch * m->move_step / (float)m->move_max; animdy -= m->move_twitch * m->move_step / (float)m->move_max; }
+				else animdy -= m->move_twitch * m->move_step / (float)m->move_max;
+			}
+
 //			printf("==computing %f x %f : %f x %f // %d/%d\n", animdx, animdy, adx, ady, m->move_step, m->move_max);
 		}
 	}
@@ -1441,7 +1458,7 @@ void display_map_quad(GLuint *cur_tex, int *vert_idx, int *col_idx, map_type *ma
 			}
 			anim = (float)anim_step / dm->anim_max;
 		}
-		DO_QUAD(dm, anim, dx + (dm->dx + animdx) * map->tile_w, dy + (dm->dy + animdy) * map->tile_h, dm->dw, dm->dh, dm->scale, r, g, b, ((dm->dy < 0) && up_important) ? a / 3 : a, m->next);
+		DO_QUAD(dm, anim, dx + (dm->dx + animdx) * map->tile_w, dy + (dm->dy + animdy) * map->tile_h, dx + (dm->dx + tlanimdx) * map->tile_w, dy + (dm->dy + tlanimdy) * map->tile_h, dm->dw, dm->dh, dm->scale, r, g, b, ((dm->dy < 0) && up_important) ? a / 3 : a, m->next);
 		dm->animdx = animdx;
 		dm->animdy = animdy;
 		dm = dm->next;

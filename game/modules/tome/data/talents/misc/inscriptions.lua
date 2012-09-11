@@ -461,7 +461,7 @@ The effect will scale with your magic stat.]]):format(100+1.5*self:getMag(), 5)
 	end,
 	short_info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		return ([[absorb and reflect %d for %d turns]]):format(100, 5)
+		return ([[absorb and reflect %d for %d turns]]):format(100+1.5*self:getMag(), 5)
 	end,
 }
 
