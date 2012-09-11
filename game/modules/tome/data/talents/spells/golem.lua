@@ -64,7 +64,12 @@ newTalent{
 				lx, ly, is_corner_blocked = l:step()
 			end
 
+			local ox, oy = self.x, self.y
 			self:move(tx, ty, true)
+			if config.settings.tome.smooth_move > 0 then
+				self:resetMoveAnim()
+				self:setMoveAnim(ox, oy, 8, 5)
+			end
 		end
 
 		-- Attack ?
@@ -174,7 +179,12 @@ newTalent{
 				lx, ly, is_corner_blocked = l:step()
 			end
 
+			local ox, oy = self.x, self.y
 			self:move(tx, ty, true)
+			if config.settings.tome.smooth_move > 0 then
+				self:resetMoveAnim()
+				self:setMoveAnim(ox, oy, 8, 5)
+			end
 		end
 
 		-- Attack ?
@@ -246,7 +256,12 @@ newTalent{
 				lx, ly, is_corner_blocked = l:step()
 			end
 
+			local ox, oy = self.x, self.y
 			self:move(tx, ty, true)
+			if config.settings.tome.smooth_move > 0 then
+				self:resetMoveAnim()
+				self:setMoveAnim(ox, oy, 8, 5)
+			end
 		end
 
 		if self.ai_target then self.ai_target.target = target end
