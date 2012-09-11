@@ -99,7 +99,7 @@ gain_energy = function(self, energy)
 		Dialog:simpleLongPopup("Fortress Shadow", "Master, you have sent enough energy to improve your rod of recall. Please return to the fortress.", 400)
 	end
 
-	if self.shertul_energy >= 30 and not self:isCompleted("farportal") then
+	if self.shertul_energy >= 45 and not self:isCompleted("farportal") then
 		game.player:setQuestStatus(self.id, self.COMPLETED, "farportal")
 		local Dialog = require "engine.ui.Dialog"
 		Dialog:simpleLongPopup("Fortress Shadow", "Master, you have sent enough energy to activate the exploratory farportal.\nHowever, there seems to be a disturbance in that room. Please return as soon as possible.", 400)
@@ -113,11 +113,11 @@ gain_energy = function(self, energy)
 end
 
 exploratory_energy = function(self, check_only)
-	if self.shertul_energy < 30 then return false end
+	if self.shertul_energy < 45 then return false end
 	if not self:isCompleted("farportal-done") then return false end
 	if check_only then return true end
 
-	self.shertul_energy = self.shertul_energy - 30
+	self.shertul_energy = self.shertul_energy - 45
 	self.explored = self.explored + 1
 	if self.explored == 7 then world:gainAchievement("EXPLORER", game.player) end
 	return true
