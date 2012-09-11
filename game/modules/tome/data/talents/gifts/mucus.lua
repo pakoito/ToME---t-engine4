@@ -243,7 +243,7 @@ newTalent{
 		end
 	end,
 	on_pre_use = function(self, t)
-		return isOnMucus(game.level.map, self.x, self.y)
+		return game.level and game.level.map and isOnMucus(game.level.map, self.x, self.y)
 	end,
 	action = function(self, t)
 		local tg = {type="hit", nolock=true, pass_terrain=true, nowarning=true, range=self:getTalentRange(t), requires_knowledge=false}

@@ -276,7 +276,14 @@ function _M:makeMapObject(tiles, idx)
 	-- Texture 0 is always the normal image/ascii tile
 	-- we pcall it because some weird cases can not find a tile
 	local ok, tex, texx, texy, pos_x, pos_y = pcall(tiles.get, tiles, self.display, self.color_r, self.color_g, self.color_b, self.color_br, self.color_bg, self.color_bb, self.image, self._noalpha and 255, self.ascii_outline, true)
-	if ok then self._mo:texture(0, tex, false, texx, texy, pos_x, pos_y) end
+	if ok then
+		if self.anim then
+			self._mo:texture(0, tex, false, texx / self.anim.max, texy, pos_x, pos_y)
+			self._mo:setAnim(0, self.anim.max, self.anim.speed or 1, self.anim.loop or -1)
+		else
+			self._mo:texture(0, tex, false, texx, texy, pos_x, pos_y)
+		end
+	end
 
 	-- Additional MO chained to the same Z order
 	if tiles.use_images and self.add_mos then

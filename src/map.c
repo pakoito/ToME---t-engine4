@@ -82,6 +82,7 @@ static int map_object_new(lua_State *L)
 	obj->on_unknown = lua_toboolean(L, 5);
 
 	obj->move_max = 0;
+	obj->anim_max = 0;
 
 	obj->cb_ref = LUA_NOREF;
 
@@ -246,6 +247,18 @@ static int map_object_invalid(lua_State *L)
 {
 	map_object *obj = (map_object*)auxiliar_checkclass(L, "core{mapobj}", 1);
 	obj->valid = FALSE;
+	return 0;
+}
+
+
+static int map_object_set_anim(lua_State *L)
+{
+	map_object *obj = (map_object*)auxiliar_checkclass(L, "core{mapobj}", 1);
+
+	obj->anim_step = luaL_checknumber(L, 2);
+	obj->anim_max = luaL_checknumber(L, 3);
+	obj->anim_speed = luaL_checknumber(L, 4);
+	obj->anim_loop = luaL_checknumber(L, 5);
 	return 0;
 }
 
@@ -1229,16 +1242,16 @@ static int map_get_scroll(lua_State *L)
 }
 
 
-#define DO_QUAD(dm, dx, dy, dw, dh, zoom, r, g, b, a, force) {\
+#define DO_QUAD(dm, anim, dx, dy, dw, dh, zoom, r, g, b, a, force) {\
 	vertices[(*vert_idx)] = (dx); vertices[(*vert_idx)+1] = (dy); \
 	vertices[(*vert_idx)+2] = map->tile_w * (dw) * (zoom) + (dx); vertices[(*vert_idx)+3] = (dy); \
 	vertices[(*vert_idx)+4] = map->tile_w * (dw) * (zoom) + (dx); vertices[(*vert_idx)+5] = map->tile_h * (dh) * (zoom) + (dy); \
 	vertices[(*vert_idx)+6] = (dx); vertices[(*vert_idx)+7] = map->tile_h * (dh) * (zoom) + (dy); \
 	\
-	texcoords[(*vert_idx)] = dm->tex_x[0]; texcoords[(*vert_idx)+1] = dm->tex_y[0]; \
-	texcoords[(*vert_idx)+2] = dm->tex_x[0] + dm->tex_factorx[0]; texcoords[(*vert_idx)+3] = dm->tex_y[0]; \
-	texcoords[(*vert_idx)+4] = dm->tex_x[0] + dm->tex_factorx[0]; texcoords[(*vert_idx)+5] = dm->tex_y[0] + dm->tex_factory[0]; \
-	texcoords[(*vert_idx)+6] = dm->tex_x[0]; texcoords[(*vert_idx)+7] = dm->tex_y[0] + dm->tex_factory[0]; \
+	texcoords[(*vert_idx)] = dm->tex_x[0]+anim; texcoords[(*vert_idx)+1] = dm->tex_y[0]; \
+	texcoords[(*vert_idx)+2] = dm->tex_x[0]+anim + dm->tex_factorx[0]; texcoords[(*vert_idx)+3] = dm->tex_y[0]; \
+	texcoords[(*vert_idx)+4] = dm->tex_x[0]+anim + dm->tex_factorx[0]; texcoords[(*vert_idx)+5] = dm->tex_y[0] + dm->tex_factory[0]; \
+	texcoords[(*vert_idx)+6] = dm->tex_x[0]+anim; texcoords[(*vert_idx)+7] = dm->tex_y[0] + dm->tex_factory[0]; \
 	\
 	colors[(*col_idx)] = r; colors[(*col_idx)+1] = g; colors[(*col_idx)+2] = b; colors[(*col_idx)+3] = (a); \
 	colors[(*col_idx)+4] = r; colors[(*col_idx)+5] = g; colors[(*col_idx)+6] = b; colors[(*col_idx)+7] = (a); \
@@ -1287,6 +1300,8 @@ void display_map_quad(GLuint *cur_tex, int *vert_idx, int *col_idx, map_type *ma
 	GLfloat *colors = map->colors;
 	GLfloat *texcoords = map->texcoords;
 	bool up_important = FALSE;
+	float anim;
+	int anim_step;
 
 	/********************************************************
 	 ** Select the color to use
@@ -1392,7 +1407,7 @@ void display_map_quad(GLuint *cur_tex, int *vert_idx, int *col_idx, map_type *ma
 						while (dm)
 						{
 							tglBindTexture(GL_TEXTURE_2D, dm->textures[0]);
-							DO_QUAD(dm, dx + dm->dx * map->tile_w + animdx, dy + dm->dy * map->tile_h + animdy, dm->dw, dm->dh, dm->scale, r, g, b, a * 2 / (3 + z), m->next);
+							DO_QUAD(dm, 0, dx + dm->dx * map->tile_w + animdx, dy + dm->dy * map->tile_h + animdy, dm->dw, dm->dh, dm->scale, r, g, b, a * 2 / (3 + z), m->next);
 							dm = dm->next;
 						}
 					}
@@ -1415,7 +1430,18 @@ void display_map_quad(GLuint *cur_tex, int *vert_idx, int *col_idx, map_type *ma
 	while (dm)
 	{
 		tglBindTexture(GL_TEXTURE_2D, dm->textures[0]);
-		DO_QUAD(dm, dx + (dm->dx + animdx) * map->tile_w, dy + (dm->dy + animdy) * map->tile_h, dm->dw, dm->dh, dm->scale, r, g, b, ((dm->dy < 0) && up_important) ? a / 3 : a, m->next);
+		if (!dm->anim_max) anim = 0;
+		else {
+			dm->anim_step += (dm->anim_speed * nb_keyframes);
+			anim_step = dm->anim_step;
+			if (dm->anim_step >= dm->anim_max) {
+				dm->anim_step = 0;
+				if (dm->anim_loop == 0) dm->anim_max = 0;
+				else if (dm->anim_loop > 0) dm->anim_loop--;
+			}
+			anim = (float)anim_step / dm->anim_max;
+		}
+		DO_QUAD(dm, anim, dx + (dm->dx + animdx) * map->tile_w, dy + (dm->dy + animdy) * map->tile_h, dm->dw, dm->dh, dm->scale, r, g, b, ((dm->dy < 0) && up_important) ? a / 3 : a, m->next);
 		dm->animdx = animdx;
 		dm->animdy = animdy;
 		dm = dm->next;
@@ -1747,6 +1773,7 @@ static const struct luaL_reg map_object_reg[] =
 	{"setMoveAnim", map_object_set_move_anim},
 	{"getMoveAnim", map_object_get_move_anim},
 	{"getMoveAnimRaw", map_object_get_move_anim_raw},
+	{"setAnim", map_object_set_anim},
 	{NULL, NULL},
 };
 
