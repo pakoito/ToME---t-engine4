@@ -600,6 +600,11 @@ function _M:changeLevel(lev, zone, params)
 end
 
 function _M:changeLevelReal(lev, zone, params)
+	-- Unlock first!
+	if not params.temporary_zone_shift_back and self.level and self.level.temp_shift_zone then
+		self:changeLevelReal(1, "useless", {temporary_zone_shift_back=true})
+	end
+
 	local st = core.game.getTime()
 	local sti = 1
 
@@ -1243,17 +1248,11 @@ function _M:setupCommands()
 			end end
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
-			package.loaded["mod.dialogs.elements.TalentGrid"] = nil
-			package.loaded["mod.dialogs.UberTalent"] = nil
-			local list = {}
-			local d = require("mod.dialogs.UberTalent").new(self.player, list)
-			d.unload = function() for tid, ok in pairs(list) do if ok then self.player:learnTalent(tid, true) end end end
-			self:registerDialog(d)
-do return end
-			local f, err = loadfile("/data/general/events/slimey-pool.lua")
+			local f, err = loadfile("/data/general/events/drake-cave.lua")
 			print(f, err)
 			setfenv(f, setmetatable({level=self.level, zone=self.zone}, {__index=_G}))
 			print(pcall(f))
+do return end
 			self:registerDialog(require("mod.dialogs.DownloadCharball").new())
 		end end,
 		[{"_f","ctrl"}] = function() if config.settings.cheat then
