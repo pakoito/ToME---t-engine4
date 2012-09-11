@@ -255,13 +255,13 @@ function _M:checkDeps(simple)
 
 	local checked = {}
 
-	local function check(t_id)
+	local function check(t_id, force)
 		if checked[t_id] then return end
 		checked[t_id] = true
 
 		local t = self.actor:getTalentFromId(t_id)
 		local ok, reason = self.actor:canLearnTalent(t, 0)
-		if not ok and self.actor:knowTalent(t) then talents = talents.."\n#GOLD##{bold}#    - "..t.name.."#{normal}##LAST#("..reason..")" end
+		if not ok and (self.actor:knowTalent(t) or force) then talents = talents.."\n#GOLD##{bold}#    - "..t.name.."#{normal}##LAST#("..reason..")" end
 		if reason == "not enough stat" then
 			stats_ok = false
 		end
@@ -271,6 +271,11 @@ function _M:checkDeps(simple)
 	end
 
 	for t_id, _ in pairs(self.talents_changed) do check(t_id) end
+
+	-- Prodigies
+	if self.on_finish_prodigies then
+		for tid, ok in pairs(self.on_finish_prodigies) do if ok then check(tid, true) end end
+	end
 
 	if talents ~="" then
 		return false, talents, stats_ok
