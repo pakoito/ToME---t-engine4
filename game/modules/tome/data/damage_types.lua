@@ -1614,7 +1614,7 @@ newDamageType{
 	name = "void", type = "VOID", text_color = "#GREY#",
 	projector = function(src, x, y, type, dam)
 		DamageType:get(DamageType.TEMPORAL).projector(src, x, y, DamageType.TEMPORAL, dam / 2)
-		DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.DARKNESS, dam / 2)
+		DamageType:get(DamageType.DARKNESS).projector(src, x, y, DamageType.DARKNESS, dam / 2)
 	end,
 }
 

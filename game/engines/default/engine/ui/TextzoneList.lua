@@ -146,11 +146,11 @@ function _M:switchItem(item, create_if_needed, force)
 		self.scrollbar.max = self.max_h - self.h
 		self.scrollbar.pos = 0
 	end
-	if self.focus_check and self.max_h > self.h then
+	if self.focus_check then if self.max_h > self.h then
 		self.can_focus = true
 	else
 		self.can_focus = false
-	end
+	end end
 	self.list = d.list
 	self.max_display = d.max_display
 	self.cur_item = item
