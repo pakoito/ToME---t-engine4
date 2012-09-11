@@ -315,7 +315,7 @@ function _M:unregisterDialog(d)
 	-- Update positions
 	for i, id in ipairs(self.dialogs) do id.__stack_id = i self.dialogs[id] = i end
 
-	local last = self.dialogs[#self.dialogs] or self
+	local last = (#self.dialogs > 0) and self.dialogs[#self.dialogs] or self
 	if last.key then last.key:setCurrent() end
 	if last.mouse then last.mouse:setCurrent() end
 	if self.onUnregisterDialog then self:onUnregisterDialog(d) end
