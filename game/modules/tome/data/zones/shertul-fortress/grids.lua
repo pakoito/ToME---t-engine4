@@ -163,12 +163,14 @@ newEntity{
 			core.wait.enableManualTick(true)
 			core.display.forceRedraw()
 
+			profile:setConfigsBatch(true)
 			if profile.mod.lore and profile.mod.lore.lore then
 				for lore, _ in pairs(profile.mod.lore.lore) do
 					game.player:learnLore(lore, true, true)
 					core.wait.manualTick(1)
 				end
 			end
+			profile:setConfigsBatch(false)
 
 			popup:done()
 
