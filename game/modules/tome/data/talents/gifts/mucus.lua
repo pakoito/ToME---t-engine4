@@ -73,7 +73,7 @@ newTalent{
 	cooldown = 10,
 	range = 7,
 	radius = function(self, t) return 3 + (self:getTalentLevel(t) >= 5 and 1 or 0) end,
-	target = function(self, t) return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)} end,
+	target = function(self, t) return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), friendlyfire=false} end,
 	tactical = { ATTACKAREA = { ACID = 2, NATURE = 1 } },
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentMindDamage(t, 20, 220) end,
@@ -96,7 +96,7 @@ newTalent{
 			if game.party:hasMember(self) then
 				for act, def in pairs(game.party.members) do
 					local target = rng.table(tgts)
-					if act.summoner and act.summoner == self and act.is_mucus_ooze and act:hasLos(target.x, target.y) then
+					if act.summoner and act.summoner == self and act.is_mucus_ooze then
 						act.inc_damage.all = (act.inc_damage.all or 0) - 50
 						act:forceUseTalent(act.T_MUCUS_OOZE_SPIT, {force_target=target, ignore_energy=true})
 						act.inc_damage.all = (act.inc_damage.all or 0) + 50
@@ -105,7 +105,7 @@ newTalent{
 			else
 				for _, act in pairs(game.level.entities) do
 					local target = rng.table(tgts)
-					if act.summoner and act.summoner == self and act.is_mucus_ooze and act:hasLos(target.x, target.y) then
+					if act.summoner and act.summoner == self and act.is_mucus_ooze then
 						act.inc_damage.all = (act.inc_damage.all or 0) - 50
 						act:forceUseTalent(act.T_MUCUS_OOZE_SPIT, {force_target=target, ignore_energy=true})
 						act.inc_damage.all = (act.inc_damage.all or 0) + 50
@@ -205,6 +205,7 @@ newTalent{
 
 			summoner = self, summoner_gain_exp=true, wild_gift_summon=true, is_mucus_ooze = true,
 			summon_time = math.ceil(self:getTalentLevel(t)) + 5,
+			max_summon_time = math.ceil(self:getTalentLevel(t)) + 5,
 		}
 		m:learnTalent(m.T_MUCUS_OOZE_SPIT, true, self:getTalentLevelRaw(t))
 		if self:knowTalent(self.T_BLIGHTED_SUMMONING) then m:learnTalent(m.T_VIRULENT_DISEASE, true, 3) end
@@ -212,10 +213,27 @@ newTalent{
 		setupSummon(self, m, p.x, p.y)
 		return true
 	end,
+	on_crit = function(self, t)
+		if game.party:hasMember(self) then
+			for act, def in pairs(game.party.members) do
+				if act.summoner and act.summoner == self and act.is_mucus_ooze then
+					act.summon_time = util.bound(act.summon_time + 2, 1, act.max_summon_time)
+				end
+			end
+		else
+			for _, act in pairs(game.level.entities) do
+				if act.summoner and act.summoner == self and act.is_mucus_ooze then
+					act.summon_time = util.bound(act.summon_time + 2, 1, act.max_summon_time)
+				end
+			end
+		end
+
+	end,
 	info = function(self, t)
 		return ([[Your mucus is brought to near sentience, each turn there %d%% chances that a random spot of your mucus will spawn a Mucus Ooze.
 		Mucus Oozes will attack any of your foes by spitting slime at them.
 		You may have up to %d Mucus Oozes active at any time (based on your Cunning).
+		Any time you deal a mental critical all your Mucus Oozes remaining time will increase by 2.
 		The effect will increase with your Mindpower.]]):
 		format(t.getChance(self, t), t.getMax(self, t))
 	end,

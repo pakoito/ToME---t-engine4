@@ -35,6 +35,7 @@ newTalentType{ allow_random=true, is_nature=true, type="wild-gift/storm-drake", 
 newTalentType{ allow_random=true, is_nature=true, type="wild-gift/mindstar-mastery", name = "mindstar mastery", generic = true, description = "Learn to channel your mental power through mindstars, forming powerful psionic blades." }
 newTalentType{ allow_random=true, is_nature=true, type="wild-gift/mucus", name = "mucus", description = "Cover the floor with natural mucus." }
 newTalentType{ allow_random=true, is_nature=true, type="wild-gift/ooze", name = "ooze", description = "Your body and internal organs are becoming more ooze-like in nature, allowing you to spawn more of you." }
+newTalentType{ allow_random=true, is_nature=true, type="wild-gift/malleable-body", name = "malleable body", description = "Your body's anatomy is starting to blur." }
 
 -- Generic requires for gifts based on talent level
 gifts_req1 = {
@@ -77,21 +78,6 @@ gifts_req_high5 = {
 	stat = { wil=function(level) return 54 + (level-1) * 2 end },
 	level = function(level) return 26 + (level-1)  end,
 }
-
-load("/data/talents/gifts/call.lua")
-load("/data/talents/gifts/harmony.lua")
-
-load("/data/talents/gifts/antimagic.lua")
-
-load("/data/talents/gifts/slime.lua")
-load("/data/talents/gifts/fungus.lua")
-load("/data/talents/gifts/mucus.lua")
-load("/data/talents/gifts/ooze.lua")
-
-load("/data/talents/gifts/sand-drake.lua")
-load("/data/talents/gifts/fire-drake.lua")
-load("/data/talents/gifts/cold-drake.lua")
-load("/data/talents/gifts/storm-drake.lua")
 
 function checkMaxSummon(self, silent)
 	local nb = 0
@@ -199,6 +185,22 @@ function setupSummon(self, m, x, y, no_control)
 
 	self:attr("summoned_times", 1)
 end
+
+load("/data/talents/gifts/call.lua")
+load("/data/talents/gifts/harmony.lua")
+
+load("/data/talents/gifts/antimagic.lua")
+
+load("/data/talents/gifts/slime.lua")
+load("/data/talents/gifts/fungus.lua")
+load("/data/talents/gifts/mucus.lua")
+load("/data/talents/gifts/ooze.lua")
+load("/data/talents/gifts/malleable-body.lua")
+
+load("/data/talents/gifts/sand-drake.lua")
+load("/data/talents/gifts/fire-drake.lua")
+load("/data/talents/gifts/cold-drake.lua")
+load("/data/talents/gifts/storm-drake.lua")
 
 load("/data/talents/gifts/summon-melee.lua")
 load("/data/talents/gifts/summon-distance.lua")

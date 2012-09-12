@@ -18,9 +18,34 @@
 -- darkgod@te4.org
 
 newTalent{
-	name = "Poisonous Spores",
+	name = "Slime Spit",
 	type = {"wild-gift/slime", 1},
 	require = gifts_req1,
+	points = 5,
+	random_ego = "attack",
+	equilibrium = 4,
+	cooldown = 30,
+	tactical = { ATTACK = { NATURE = 2} },
+	range = 10,
+	direct_hit = true,
+	proj_speed = 8,
+	action = function(self, t)
+		local tg = {type="bolt", range=self:getTalentRange(t), display={particle="bolt_arcane"}}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:projectile(tg, x, y, DamageType.SLIME, self:mindCrit(self:combatTalentStatDamage(t, "dex", 30, 290)), {type="slime"})
+		game:playSoundNear(self, "talents/slime")
+		return true
+	end,
+	info = function(self, t)
+		return ([[Spit slime at your target doing %0.2f nature damage and slowing it down by 30%% for 3 turns.
+		The damage will increase with the Dexterity stat]]):format(damDesc(self, DamageType.NATURE, self:combatTalentStatDamage(t, "dex", 30, 290)))
+	end,
+}
+newTalent{
+	name = "Poisonous Spores",
+	type = {"wild-gift/slime", 2},
+	require = gifts_req2,
 	random_ego = "attack",
 	points = 5,
 	message = "@Source@ releases poisonous spores at @target@.",
@@ -47,8 +72,8 @@ newTalent{
 
 newTalent{
 	name = "Acidic Skin",
-	type = {"wild-gift/slime", 2},
-	require = gifts_req2,
+	type = {"wild-gift/slime", 3},
+	require = gifts_req3,
 	points = 5,
 	mode = "sustained",
 	message = "The skin of @Source@ starts dripping acid.",
@@ -69,32 +94,6 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Your skin drips with acid, damaging all that hit you for %0.2f acid damage.]]):format(damDesc(self, DamageType.ACID, 10 + 5 * self:getTalentLevel(t)))
-	end,
-}
-
-newTalent{
-	name = "Slime Spit",
-	type = {"wild-gift/slime", 3},
-	require = gifts_req3,
-	points = 5,
-	random_ego = "attack",
-	equilibrium = 4,
-	cooldown = 30,
-	tactical = { ATTACK = { NATURE = 2} },
-	range = 10,
-	direct_hit = true,
-	proj_speed = 8,
-	action = function(self, t)
-		local tg = {type="bolt", range=self:getTalentRange(t), display={particle="bolt_arcane"}}
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
-		self:projectile(tg, x, y, DamageType.SLIME, self:mindCrit(self:combatTalentStatDamage(t, "dex", 30, 290)), {type="slime"})
-		game:playSoundNear(self, "talents/slime")
-		return true
-	end,
-	info = function(self, t)
-		return ([[Spit slime at your target doing %0.2f nature damage and slowing it down by 30%% for 3 turns.
-		The damage will increase with the Dexterity stat]]):format(damDesc(self, DamageType.NATURE, self:combatTalentStatDamage(t, "dex", 30, 290)))
 	end,
 }
 

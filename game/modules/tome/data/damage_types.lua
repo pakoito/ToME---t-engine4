@@ -30,6 +30,12 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 
 		print("[PROJECTOR] starting dam", dam)
 
+		if src.turn_procs and src.turn_procs.is_crit and target:attr("ignore_direct_crits") and rng.percent(target:attr("ignore_direct_crits")) then
+			dam = dam / src.turn_procs.crit_power
+			print("[PROJECTOR] crit power reduce dam", dam)
+			game.logSeen(target, "%s shrugs off the critical damage!", target.name:capitalize())
+		end
+
 		local hd = {"DamageProjector:base", src=src, x=x, y=y, type=type, dam=dam}
 		if src:triggerHook(hd) then dam = hd.dam end
 

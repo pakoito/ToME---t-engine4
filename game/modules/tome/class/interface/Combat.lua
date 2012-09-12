@@ -1259,11 +1259,11 @@ function _M:physicalCrit(dam, weapon, target, atk, def, add_chance, crit_power_a
 
 	print("[PHYS CRIT %]", chance)
 	if rng.percent(chance) then
-		self.turn_procs.is_crit = "physical"
-		self.turn_procs.uncrit_dam = dam
 		if target:hasEffect(target.EFF_OFFGUARD) then
 			crit_power_add = crit_power_add + 0.1
 		end
+		self.turn_procs.is_crit = "physical"
+		self.turn_procs.crit_power = (1.5 + crit_power_add + (self.combat_critical_power or 0) / 100)
 		dam = dam * (1.5 + crit_power_add + (self.combat_critical_power or 0) / 100)
 		crit = true
 
@@ -1288,7 +1288,7 @@ function _M:spellCrit(dam, add_chance, crit_power_add)
 	print("[SPELL CRIT %]", chance)
 	if rng.percent(chance) then
 		self.turn_procs.is_crit = "spell"
-		self.turn_procs.uncrit_dam = dam
+		self.turn_procs.crit_power = (1.5 + crit_power_add + (self.combat_critical_power or 0) / 100)
 		dam = dam * (1.5 + crit_power_add + (self.combat_critical_power or 0) / 100)
 		crit = true
 		game.logSeen(self, "#{bold}#%s's spell attains critical power!#{normal}#", self.name:capitalize())
@@ -1335,7 +1335,7 @@ function _M:mindCrit(dam, add_chance, crit_power_add)
 	print("[MIND CRIT %]", chance)
 	if rng.percent(chance) then
 		self.turn_procs.is_crit = "mind"
-		self.turn_procs.uncrit_dam = dam
+		self.turn_procs.crit_power = (1.5 + crit_power_add + (self.combat_critical_power or 0) / 100)
 		dam = dam * (1.5 + crit_power_add + (self.combat_critical_power or 0) / 100)
 		crit = true
 		game.logSeen(self, "#{bold}#%s's mind surges with critical power!#{normal}#", self.name:capitalize())
@@ -1345,6 +1345,7 @@ function _M:mindCrit(dam, add_chance, crit_power_add)
 		if self:attr("equilibrium_on_crit") then self:incEquilibrium(self:attr("equilibrium_on_crit")) end
 
 		if self:knowTalent(self.T_EYE_OF_THE_TIGER) then self:triggerTalent(self.T_EYE_OF_THE_TIGER, nil, "mind") end
+		if self:knowTalent(self.T_LIVING_MUCUS) then self:callTalent(self.T_LIVING_MUCUS, "on_crit") end
 	end
 	return dam, crit
 end
