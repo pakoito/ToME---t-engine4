@@ -111,7 +111,6 @@ newTalent{
 	random_ego = "utility",
 	equilibrium = 3,
 	cooldown = 10,
-	range = 100,
 	radius = function(self, t) return math.ceil(5 + self:getTalentLevel(t) * 1.3) end,
 	radius_esp = function(self, t) return math.floor(3 + self:getTalentLevel(t) / 2) end,
 	requires_target = true,
