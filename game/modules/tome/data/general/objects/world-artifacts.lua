@@ -4390,7 +4390,7 @@ newEntity{ base = "BASE_LITE", --Thanks Frumple!
 		
 		
 		who:project({type="ball", range=0, radius=self.wielder.lite}, who.x, who.y, function(px, py) -- The main event!
-			local is_lit = game.level.map.lites(who.x, who.y)
+			local is_lit = game.level.map.lites(px, py)
 			if is_lit then return end
 			
 			if not self.max_charge then
@@ -4401,14 +4401,15 @@ newEntity{ base = "BASE_LITE", --Thanks Frumple!
 					self.max_charge=true
 					game.logPlayer(who, "Umbraphage is fully powered!")
 				end
-				
-				who:onTakeoff(self, true)
-				self.wielder.lite = math.min(10, 5+math.floor(self.charge/20))
-				who:onWear(self, true)
 			
 			end
 		end)
-		who:project({type="ball", range=0, radius=self.wielder.lite}, px, py, engine.DamageType.LITE, 100) -- Light the space!
+		who:project({type="ball", range=0, radius=self.wielder.lite}, who.x, who.y, engine.DamageType.LITE, 100) -- Light the space!
+		if (5 + math.floor(self.charge/20)) > self.wielder.lite and self.wielder.lite < 10 then
+			who:onTakeoff(self, true)
+			self.wielder.lite = math.min(10, 5+math.floor(self.charge/20))
+			who:onWear(self, true)
+		end
 	end,
 	wielder = {
 		lite = 5,
