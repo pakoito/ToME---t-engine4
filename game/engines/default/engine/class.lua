@@ -160,7 +160,7 @@ function _M:clone(t)
 	return n
 end
 
-local function clonerecursfull(clonetable, d)
+local function clonerecursfull(clonetable, d, noclonecall)
 	local nb = 0
 	local add
 	local n = {}
@@ -170,18 +170,18 @@ local function clonerecursfull(clonetable, d)
 	while k do
 		local nk, ne = k, e
 		if clonetable[k] then nk = clonetable[k]
-		elseif type(k) == "table" then nk, add = clonerecursfull(clonetable, k) nb = nb + add
+		elseif type(k) == "table" then nk, add = clonerecursfull(clonetable, k, noclonecall) nb = nb + add
 		end
 
 		if clonetable[e] then ne = clonetable[e]
-		elseif type(e) == "table" and (type(k) ~= "string" or k ~= "__threads") then ne, add = clonerecursfull(clonetable, e) nb = nb + add
+		elseif type(e) == "table" and (type(k) ~= "string" or k ~= "__threads") then ne, add = clonerecursfull(clonetable, e, noclonecall) nb = nb + add
 		end
 		n[nk] = ne
 
 		k, e = next(d, k)
 	end
 	setmetatable(n, getmetatable(d))
-	if n.cloned and n.__CLASSNAME then n:cloned(d) end
+	if not noclonecall and n.cloned and n.__CLASSNAME then n:cloned(d) end
 	if n.__CLASSNAME then nb = nb + 1 end
 	return n, nb
 end
@@ -189,17 +189,17 @@ end
 --- Clones the object, all subobjects without cloning twice a subobject
 -- @return the clone and the number of cloned objects
 function _M:cloneFull()
---	local old = core.game.getTime()
---	core.serial.cloneFull(self)
---	print("CLONE C", core.game.getTime() - old)
-
---	old = core.game.getTime()
---	local clonetable = {}
---	clonerecursfull(clonetable, self)
---	print("CLONE LUA", core.game.getTime() - old)
-
 	local clonetable = {}
 	return clonerecursfull(clonetable, self)
+--	return core.serial.cloneFull(self)
+end
+
+--- Clones the object, all subobjects without cloning twice a subobject
+-- Does not invoke clone methods as this is not for reloading, just for saving
+-- @return the clone and the number of cloned objects
+function _M:cloneForSave()
+	local clonetable = {}
+	return clonerecursfull(clonetable, self, true)
 --	return core.serial.cloneFull(self)
 end
 

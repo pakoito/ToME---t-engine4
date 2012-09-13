@@ -64,7 +64,7 @@ function _M:push(savename, type, object, class, on_end)
 
 	if #self.pipe == 0 then savefile_pipe.current_nb = 0 end
 
-	local clone, nb = object:cloneFull()
+	local clone, nb = object:cloneForSave()
 	self.pipe[#self.pipe+1] = {id=id, savename = savename, type=type, object=clone, nb_objects=nb, baseobject=object, class=class, saveversion=game:saveVersion("new"), screenshot=screenshot, on_end=on_end}
 	local total_nb = 0
 	for i, p in ipairs(self.pipe) do total_nb = total_nb + p.nb_objects end
