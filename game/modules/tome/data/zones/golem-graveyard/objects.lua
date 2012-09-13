@@ -29,12 +29,14 @@ It is said it was made by the halflings during the Age of Pyre as a weapon again
 	cost = 100,
 	wielder = {
 		inc_damage = {[DamageType.FIRE]=20},
+		on_melee_hit={[DamageType.FIRE]=100},
 		lite = 2,
 		max_life = 60,
 		pin_immune = 0.5,
 	},
 	imbue_powers = {
 		inc_damage = {[DamageType.FIRE]=20},
+		on_melee_hit={[DamageType.FIRE]=100},
 		lite = 2,
 		max_life = 60,
 		pin_immune = 0.5,
