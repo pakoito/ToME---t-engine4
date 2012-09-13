@@ -83,5 +83,5 @@ function _M:logout()
 	profile:logOut()
 end
 
-HUM !! finish
-oh and Jumper algo test
+--HUM !! finish
+--oh and Jumper algo test
