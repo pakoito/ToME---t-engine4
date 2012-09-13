@@ -35,7 +35,7 @@ function _M:init()
 	self.list = l
 	l[#l+1] = {name="New Game", fct=function() game:registerDialog(require("mod.dialogs.NewGame").new()) end}
 	l[#l+1] = {name="Load Game", fct=function() game:registerDialog(require("mod.dialogs.LoadGame").new()) end}
-	l[#l+1] = {name="Online Profile", fct=function() game:registerDialog(require("mod.dialogs.Profile").new()) end}
+--	l[#l+1] = {name="Online Profile", fct=function() game:registerDialog(require("mod.dialogs.Profile").new()) end}
 	l[#l+1] = {name="View High Scores", fct=function() game:registerDialog(require("mod.dialogs.ViewHighScores").new()) end}
 	l[#l+1] = {name="Addons", fct=function() game:registerDialog(require("mod.dialogs.Addons").new()) end}
 --	if config.settings.install_remote then l[#l+1] = {name="Install Module", fct=function() end} end
@@ -63,14 +63,14 @@ function _M:init()
 
 	self.c_list = List.new{width=self.iw, nb_items=#self.list, list=self.list, fct=function(item) end, font={"/data/font/DroidSans-Bold.ttf", 16}}
 
---	self.mainlogin = MainLogin.new()
+	self.mainlogin = MainLogin.new()
 
 	self:loadUI{
 		{left=0, top=0, ui=self.c_list},
 		{left=0, bottom=0, absolute=true, ui=self.c_background},
 		{right=0, top=0, absolute=true, ui=self.c_version},
 		self.c_auth and {right=0, bottom=0, absolute=true, ui=self.c_auth} or nil,
---		{left=450, top=50 + self.c_list.h + 120, absolute=true, ui=self.mainlogin},
+		{left=450, top=50 + self.c_list.h + 120, absolute=true, ui=self.mainlogin},
 	}
 	self:setupUI(false, true)
 	self.key:addBind("LUA_CONSOLE", function()

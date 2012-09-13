@@ -664,6 +664,8 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 	core.wait.disable()
 
 	core.display.resetAllFonts("normal")
+
+	if mod.short_name ~= "boot" then profile:noMoreAuthWait() end
 end
 
 --- Setup write dir for a module

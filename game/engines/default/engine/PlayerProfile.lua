@@ -254,7 +254,7 @@ function _M:loadModuleProfile(short_name, mod_def)
 end
 
 --- Saves a profile data
-function _M:saveGenericProfile(name, data, no_sync, nowrite)
+function _M:saveGenericProfile(name, data, nosync, nowrite)
 	-- Delay when we are currently saving
 	if not profile then return end
 	if savefile_pipe and savefile_pipe.saving then savefile_pipe:pushGeneric("saveGenericProfile", function() self:saveGenericProfile(name, data, nosync) end) return end
@@ -397,7 +397,12 @@ function _M:waitEvent(name, cb, wait_max)
 	end
 end
 
+function _M:noMoreAuthWait()
+	self.no_more_wait_auth = true
+end
+
 function _M:waitFirstAuth(timeout)
+	if self.no_more_wait_auth then return end
 	if self.auth_tried and self.auth_tried >= 1 then return end
 	if not self.waiting_auth then return end
 	print("[PROFILE] waiting for first auth")

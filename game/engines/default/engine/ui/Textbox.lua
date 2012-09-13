@@ -27,6 +27,7 @@ module(..., package.seeall, class.inherit(Base, Focusable))
 function _M:init(t)
 	self.title = assert(t.title, "no textbox title")
 	self.text = t.text or ""
+	self.size_title = t.size_title or t.title
 	self.old_text = self.text
 	self.on_mouse = t.on_mouse
 	self.hide = t.hide
@@ -53,7 +54,7 @@ function _M:generate()
 	self.key:reset()
 
 	-- Draw UI
-	local title_w = self.font:size(self.title)
+	local title_w = self.font:size(self.size_title)
 	self.title_w = title_w
 	local frame_w = self.chars * self.font_mono_w + 12
 	self.w = title_w + frame_w

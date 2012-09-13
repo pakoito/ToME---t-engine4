@@ -232,7 +232,7 @@ end
 --- Marks a tunnel as a tunnel and the space behind it
 function _M:markTunnel(x, y, xdir, ydir, id)
 	-- Disable the many prints of tunnelling
---	local print = function()end
+	local print = function()end
 
 	x, y = x - xdir, y - ydir
 	local dir = util.coordToDir(xdir, ydir, x, y)
@@ -278,7 +278,7 @@ end
 function _M:tunnel(x1, y1, x2, y2, id, virtual)
 	if x1 == x2 and y1 == y2 then return end
 	-- Disable the many prints of tunnelling
---	local print = function()end
+	local print = function()end
 
 	local xdir, ydir = self:tunnelDir(x1, y1, x2, y2)
 	print("tunneling from",x1, y1, "to", x2, y2, "initial dir", xdir, ydir)

@@ -36,6 +36,7 @@ function _M:init(t)
 	self.scrollbar = t.scrollbar
 	self.auto_height = t.auto_height
 	self.auto_width = t.auto_width
+	self.fct = t.fct
 	
 	self.dest_area = t.dest_area and t.dest_area or { h = self.h }
 	
@@ -72,6 +73,7 @@ function _M:generate()
 
 	-- Add UI controls
 	self.mouse:registerZone(0, 0, self.w, self.h, function(button, x, y, xrel, yrel, bx, by, event)
+		if self.fct and button == "left" and event == "button" then self.fct() end
 		if button == "wheelup" and event == "button" then self.key:triggerVirtual("MOVE_UP")
 		elseif button == "wheeldown" and event == "button" then self.key:triggerVirtual("MOVE_DOWN")
 		end
