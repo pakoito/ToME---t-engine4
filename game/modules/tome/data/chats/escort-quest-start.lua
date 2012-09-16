@@ -46,7 +46,7 @@ newChat{ id="welcome",
 
 else
 
-if not npc.antimagic_ok then
+if not npc.antimagic_ok and profile.mod.allow_build.birth_zigur_sacrifice then
 
 newChat{ id="welcome",
 	text = text,

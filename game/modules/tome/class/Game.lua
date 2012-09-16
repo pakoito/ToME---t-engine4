@@ -1923,6 +1923,7 @@ function _M:countBirthUnlocks()
 	local max = 0
 	local list = {
 		birth_transmo_chest = true,
+		birth_zigur_sacrifice = true,
 
 		campaign_infinite_dungeon = true,
 		campaign_arena = true,

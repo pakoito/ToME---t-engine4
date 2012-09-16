@@ -35,6 +35,9 @@ newLore{
 8. You will report to the elders all activity you deem suspicious, especially evidence of cults or secret societies.
 
 These are the rules we live by, these are the rules by which we will save our world. All who fail in these rules will be purged with flame.]],
+	on_learn = function(who)
+		game:setAllowedBuild("birth_zigur_sacrifice", true)
+	end,
 }
 
 newLore{
