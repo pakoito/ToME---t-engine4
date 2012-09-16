@@ -2483,14 +2483,14 @@ function _M:levelup()
 		local x, y = game.level.map:getTileToScreen(self.x, self.y)
 		game.flyers:add(x, y, 80, 0.5, -2, "LEVEL UP!", {0,255,255})
 		game.log("#00ffff#Welcome to level %d [%s].", self.level, self.name:capitalize())
-		local more = "Press G to use them."
+		local more = "Press p to use them."
 		if game.player ~= self then more = "Select "..self.name.. " in the party list and press G to use them." end
 		local points = {}
 		if self.unused_stats > 0 then points[#points+1] = ("%d stat point(s)"):format(self.unused_stats) end
 		if self.unused_talents > 0 then points[#points+1] = ("%d class talent point(s)"):format(self.unused_talents) end
 		if self.unused_generics > 0 then points[#points+1] = ("%d generic talent point(s)"):format(self.unused_generics) end
 		if self.unused_talents_types > 0 then points[#points+1] = ("%d category point(s)"):format(self.unused_talents_types) end
-		if self.unused_prodigies > 0 then points[#points+1] = ("#VIOLET#%d prodigies point(s)"):format(self.unused_prodigies) end
+		if self.unused_prodigies > 0 then points[#points+1] = ("#VIOLET#%d prodigies point(s)#WHITE#"):format(self.unused_prodigies) end
 		if #points > 0 then game.log("%s has %s to spend. %s", self.name:capitalize(), table.concat(points, ", "), more) end
 
 		if self.level == 10 then world:gainAchievement("LEVEL_10", self) end
