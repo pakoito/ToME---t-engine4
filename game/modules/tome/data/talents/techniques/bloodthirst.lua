@@ -80,11 +80,11 @@ newTalent{
 	points = 5,
 	mode = "passive",
 	on_kill = function(self, t)
-		self:setEffect(self.EFF_BLOODRAGE, 5, {max=math.floor(self:getTalentLevel(t) * 6), inc=2})
+		self:setEffect(self.EFF_BLOODRAGE, math.floor(5 + self:getTalentLevel(t)), {max=math.floor(self:getTalentLevel(t) * 6), inc=2})
 	end,
 	info = function(self, t)
-		return ([[Each time one of your foes bites the dust you feel a surge of power, increasing your strength by 2 up to a maximum of %d.]]):
-		format(math.floor(self:getTalentLevel(t) * 6))
+		return ([[Each time one of your foes bites the dust you feel a surge of power, increasing your strength by 2 up to a maximum of %d for %d turns.]]):
+		format(math.floor(self:getTalentLevel(t) * 6), math.floor(5 + self:getTalentLevel(t)))
 	end,
 }
 
