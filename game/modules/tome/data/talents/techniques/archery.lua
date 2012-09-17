@@ -55,6 +55,7 @@ newTalent{
 	name = "Reload",
 	type = {"technique/archery-base", 1},
 	cooldown = 0,
+	innate = true,
 	points = 1,
 	tactical = { AMMO = 2 },
 	on_pre_use = function(self, t, silent) if not self:hasAmmo() then if not silent then game.logPlayer(self, "You must have a quiver or pouch equipped.") end return false end return true end,
