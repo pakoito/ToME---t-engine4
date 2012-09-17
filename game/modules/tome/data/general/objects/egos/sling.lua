@@ -18,6 +18,7 @@
 -- darkgod@te4.org
 local Talents = require("engine.interface.ActorTalents")
 local Stats = require("engine.interface.ActorStats")
+local DamageType = require "engine.DamageType"
 
 load("/data/general/objects/egos/ranged.lua")
 

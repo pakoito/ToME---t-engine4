@@ -24,37 +24,33 @@ local DamageType = require "engine.DamageType"
 
 newEntity{
 	power_source = {technique=true},
-	name = "shadow ", prefix=true, instant_resolve=true,
-	keywords = {shadow=true},
-	level_range = {20, 50},
-	rarity = 5,
-	cost = 6,
-	wielder = {
-		inc_stealth = resolvers.mbonus_material(20, 5),
-	},
-}
-
-newEntity{
-	power_source = {technique=true},
 	name = "thick ", prefix=true, instant_resolve=true,
 	keywords = {thick=true},
-	level_range = {1, 40},
+	level_range = {1, 50},
 	rarity = 6,
 	cost = 7,
 	wielder = {
+		combat_armor = resolvers.mbonus_material(8, 5),
 		resists={[DamageType.COLD] = resolvers.mbonus_material(20, 10)},
 	},
 }
 
 newEntity{
 	power_source = {technique=true},
-	name = "plush ", prefix=true, instant_resolve=true,
-	keywords = {plush=true},
-	level_range = {1, 50},
-	rarity = 6,
-	cost = 7,
+	name = "shadow ", prefix=true, instant_resolve=true,
+	keywords = {shadow=true},
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 18,
+	cost = 60,
 	wielder = {
-		combat_armor = resolvers.mbonus_material(8, 5),
+		inc_damage = {
+			[DamageType.DARKNESS] = resolvers.mbonus_material(20, 5),
+		},
+		resists_pen = {
+			[DamageType.DARKNESS] = resolvers.mbonus_material(15, 5),
+		},
+		inc_stealth = resolvers.mbonus_material(20, 5),
 	},
 }
 
@@ -69,7 +65,7 @@ newEntity{
 		inc_stats = {
 			[Stats.STAT_DEX] = resolvers.mbonus_material(3, 1),
 			[Stats.STAT_CUN] = resolvers.mbonus_material(3, 1),
-			},
+		},
 	},
 }
 
@@ -104,19 +100,6 @@ newEntity{
 }
 
 newEntity{
-	power_source = {technique=true},
-	name = "oiled ", prefix=true, instant_resolve=true,
-	keywords = {oiled=true},
-	level_range = {1, 40},
-	rarity = 6,
-	cost = 7,
-	wielder = {
-		resists={[DamageType.ACID] = resolvers.mbonus_material(15, 10)},
-	},
-}
-
-
-newEntity{
 	power_source = {nature=true},
 	name = " of fog", suffix=true, instant_resolve=true,
 	keywords = {fog=true},
@@ -130,11 +113,59 @@ newEntity{
 			[DamageType.LIGHT] = resolvers.mbonus_material(15, 10),
 		},
 		combat_def = resolvers.mbonus_material(6, 4),
-		lite = -1,
 		inc_stealth = resolvers.mbonus_material(10, 5),
 	},
 }
 
+newEntity{
+	power_source = {technique=true},
+	name = " of stability", suffix=true, instant_resolve=true,
+	keywords = {stablity=true},
+	level_range = {1, 50},
+	rarity = 7,
+	cost = 6,
+	wielder = {
+		combat_physresist = resolvers.mbonus_material(10, 2),
+	},
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = " of protection", suffix=true, instant_resolve=true,
+	keywords = {protection=true},
+	level_range = {1, 50},
+	rarity = 7,
+	cost = 6,
+	wielder = {
+		combat_spellresist = resolvers.mbonus_material(10, 2),
+	},
+}
+
+newEntity{
+	power_source = {psionic=true},
+	name = " of clarity", suffix=true, instant_resolve=true,
+	keywords = {clarity=true},
+	level_range = {1, 50},
+	rarity = 7,
+	cost = 6,
+	wielder = {
+		combat_mentalresist = resolvers.mbonus_material(10, 2),
+	},
+}
+
+newEntity{
+	power_source = {nature=true},
+	name = " of implacability", suffix=true, instant_resolve=true,
+	keywords = {implacable=true},
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 16,
+	cost = 50,
+	wielder = {
+		combat_physresist = resolvers.mbonus_material(5, 5),
+		combat_mentalresist = resolvers.mbonus_material(5, 5),
+	},
+}
 
 newEntity{
 	power_source = {nature=true},
@@ -150,26 +181,13 @@ newEntity{
 
 newEntity{
 	power_source = {technique=true},
-	name = " of stability", suffix=true, instant_resolve=true,
-	keywords = {stablity=true},
-	level_range = {1, 50},
-	rarity = 7,
-	cost = 6,
-	wielder = {
-		stun_immune = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return 0, v end),
-		knockback_immune = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return 0, v end),
-	},
-}
-
-newEntity{
-	power_source = {technique=true},
 	name = "enveloping ", prefix=true, instant_resolve=true,
 	keywords = {enveloping=true},
 	level_range = {1, 50},
 	rarity = 5,
 	cost = 6,
 	wielder = {
-		combat_def = resolvers.mbonus_material(4, 4),
+		combat_def = resolvers.mbonus_material(10, 2),
 	},
 }
 
@@ -186,35 +204,18 @@ newEntity{
 }
 
 newEntity{
-	power_source = {arcane=true},
-	name = " of sorcery", suffix=true, instant_resolve=true,
-	keywords = {sorcery=true},
-	level_range = {30, 50},
+	power_source = {psionic=true},
+	name = "regal ", prefix=true, instant_resolve=true,
+	keywords = {regal=true},
+	level_range = {15, 50},
 	greater_ego = 1,
-	rarity = 16,
-	cost = 50,
+	rarity = 15,
+	cost = 20,
 	wielder = {
 		inc_stats = {
-			[Stats.STAT_MAG] = resolvers.mbonus_material(2, 2),
 			[Stats.STAT_WIL] = resolvers.mbonus_material(2, 2),
-			[Stats.STAT_CUN] = resolvers.mbonus_material(2, 2),
-			},
-		combat_spellcrit = resolvers.mbonus_material(3, 3),
-	},
-}
-
-newEntity{
-	power_source = {technique=true},
-	name = " of implacability", suffix=true, instant_resolve=true,
-	keywords = {implacable=true},
-	level_range = {30, 50},
-	greater_ego = 1,
-	rarity = 16,
-	cost = 50,
-	wielder = {
-		pin_immune = resolvers.mbonus_material(3, 2, function(e, v) v=v/10 return 0, v end),
-		knockback_immune = resolvers.mbonus_material(3, 2, function(e, v) v=v/10 return 0, v end),
-		confusion_immune = resolvers.mbonus_material(3, 2, function(e, v) v=v/10 return 0, v end),
+		},
+		combat_mentalresist = resolvers.mbonus_material(10, 2),
 	},
 }
 
@@ -228,32 +229,16 @@ newEntity{
 	cost = 60,
 	wielder = {
 		healing_factor = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return 0, v end),
-		cut_immune = resolvers.mbonus_material(2, 2, function(e, v) v=v/10 return 0, v end),
 		life_regen = resolvers.mbonus_material(10, 5, function(e, v) v=v/10 return 0, v end),
-		poison_immune = resolvers.mbonus_material(10, 10, function(e, v) return 0, v/100 end),
-
-	},
-}
-
-newEntity{
-	power_source = {technique=true},
-	name = "regal ", prefix=true, instant_resolve=true,
-	keywords = {regal=true},
-	level_range = {15, 50},
-	greater_ego = 1,
-	rarity = 15,
-	cost = 20,
-	wielder = {
-		inc_stats = {
-			[Stats.STAT_WIL] = resolvers.mbonus_material(2, 2),
-			[Stats.STAT_MAG] = resolvers.mbonus_material(2, 2),
+		resists={
+			[DamageType.NATURE] = resolvers.mbonus_material(5, 5),
+			[DamageType.BLIGHT] = resolvers.mbonus_material(5, 5),
 		},
-		silence_immune = resolvers.mbonus_material(3, 2, function(e, v) v=v/10 return 0, v end),
 	},
 }
 
 newEntity{
-	power_source = {technique=true},
+	power_source = {nature=true},
 	name = "wyrmwaxed ", prefix=true, instant_resolve=true,
 	keywords = {wyrmwaxed=true},
 	level_range = {35, 50},
@@ -295,6 +280,40 @@ newEntity{
 
 newEntity{
 	power_source = {arcane=true},
+	name = " of sorcery", suffix=true, instant_resolve=true,
+	keywords = {sorcery=true},
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 16,
+	cost = 50,
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_MAG] = resolvers.mbonus_material(2, 2),
+			[Stats.STAT_WIL] = resolvers.mbonus_material(2, 2),
+		},
+		combat_spellcrit = resolvers.mbonus_material(3, 3),
+	},
+}
+
+newEntity{
+	power_source = {psionic=true},
+	name = " of mindcraft", suffix=true, instant_resolve=true,
+	keywords = {mindcraft=true},
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 16,
+	cost = 50,
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_WIL] = resolvers.mbonus_material(2, 2),
+			[Stats.STAT_CUN] = resolvers.mbonus_material(2, 2),
+		},
+		combat_mindcrit = resolvers.mbonus_material(3, 3),
+	},
+}
+
+newEntity{
+	power_source = {arcane=true},
 	name = "spellcowled ", prefix=true, instant_resolve=true,
 	keywords = {spellcowled=true},
 	level_range = {10, 50},
@@ -302,11 +321,12 @@ newEntity{
 	rarity = 15,
 	cost = 30,
 	wielder = {
-		blind_immune = resolvers.mbonus_material(10, 5, function(e, v) v=v/100 return 0, v end),
-		confusion_immune = resolvers.mbonus_material(10, 5, function(e, v) v=v/100 return 0, v end),
-		combat_mentalresist = resolvers.mbonus_material(4, 1),
-		combat_physresist = resolvers.mbonus_material(4, 1),
+		inc_stats = {
+			[Stats.STAT_MAG] = resolvers.mbonus_material(5, 1),
+			[Stats.STAT_WIL] = resolvers.mbonus_material(5, 1),
+		},
 		combat_spellresist = resolvers.mbonus_material(4, 1),
+		max_mana = resolvers.mbonus_material(40, 40),
 	},
 }
 
@@ -323,9 +343,7 @@ newEntity{
 			[Stats.STAT_STR] = resolvers.mbonus_material(5, 1),
 			[Stats.STAT_CON] = resolvers.mbonus_material(5, 1),
 		},
-		combat_mentalresist = resolvers.mbonus_material(4, 1),
 		combat_physresist = resolvers.mbonus_material(4, 1),
-		combat_spellresist = resolvers.mbonus_material(4, 1),
 		max_life = resolvers.mbonus_material(70, 40),
 	},
 }
@@ -384,13 +402,10 @@ newEntity{
 	power_source = {technique=true},
 	name = " of warlust", suffix=true, instant_resolve=true,
 	keywords = {warlust=true},
-	level_range = {10, 50},
-	greater_ego = 1,
+	level_range = {1, 50},
 	rarity = 15,
-	cost = 30,
+	cost = 15,
 	wielder = {
-		disarm_immune = resolvers.mbonus_material(15, 5, function(e, v) v=v/100 return 0, v end),
-		confusion_immune = resolvers.mbonus_material(15, 5, function(e, v) v=v/100 return 0, v end),
 		combat_physcrit = resolvers.mbonus_material(4, 1),
 		combat_dam = resolvers.mbonus_material(4, 1),
 	},

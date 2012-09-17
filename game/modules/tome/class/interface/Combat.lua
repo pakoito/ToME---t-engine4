@@ -554,6 +554,15 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 			end
 		end
 	end
+	-- On crit talent
+	if hitted and crit and not target.dead and weapon and weapon.talent_on_crit and next(weapon.talent_on_crit) and not self.turn_procs.melee_talent then
+		for tid, data in pairs(weapon.talent_on_crit) do
+			if rng.percent(data.chance) then
+				self.turn_procs.melee_talent = true
+				self:forceUseTalent(tid, {ignore_cd=true, ignore_energy=true, force_target=target, force_level=data.level, ignore_ressources=true})
+			end
+		end
+	end
 
 	-- Shattering Impact
 	if hitted and self:attr("shattering_impact") and (not self.shattering_impact_last_turn or self.shattering_impact_last_turn < game.turn) then

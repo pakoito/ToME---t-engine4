@@ -19,6 +19,81 @@
 
 local Stats = require "engine.interface.ActorStats"
 local Talents = require "engine.interface.ActorTalents"
+local DamageType = require "engine.DamageType"
+
+newEntity{
+	power_source = {technique=true},
+	name = " of stability", suffix=true, instant_resolve=true,
+	keywords = {stability=true},
+	level_range = {20, 50},
+	rarity = 12,
+	cost = 12,
+	wielder = {
+		combat_physresist = resolvers.mbonus_material(10, 2),
+	},
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = " of tirelessness", suffix=true, instant_resolve=true,
+	keywords = {tireless=true},
+	level_range = {1, 50},
+	rarity = 9,
+	cost = 7,
+	wielder = {
+		max_stamina = resolvers.mbonus_material(30, 10),
+		stamina_regen = resolvers.mbonus_material(10, 3, function(e, v) v=v/10 return 0, v end),
+	},
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = "traveler's ", prefix=true, instant_resolve=true,
+	keywords = {traveler=true},
+	level_range = {1, 50},
+	rarity = 5,
+	cost = 6,
+	wielder = {
+		max_encumber = resolvers.mbonus_material(30, 20),
+		fatigue = resolvers.mbonus_material(6, 4, function(e, v) return 0, -v end),
+	},
+}
+
+newEntity{
+	power_source = {psionic=true},
+	name = "stalker's ", prefix=true, instant_resolve=true,
+	keywords = {stalker=true},
+	level_range = {1, 50},
+	rarity = 5,
+	cost = 6,
+	wielder = {
+		infravision = resolvers.mbonus_material(2, 1),
+	},
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = "scholar's ", prefix=true, instant_resolve=true,
+	keywords = {scholar=true},
+	level_range = {1, 50},
+	rarity = 5,
+	cost = 6,
+	wielder = {
+		combat_spellpower = resolvers.mbonus_material(3, 3),
+	},
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = "miner's ", prefix=true, instant_resolve=true,
+	keywords = {miner=true},
+	level_range = {1, 50},
+	rarity = 5,
+	cost = 6,
+	wielder = {
+		combat_armor = resolvers.mbonus_material(6, 4),
+	},
+}
 
 newEntity{
 	power_source = {arcane=true},
@@ -53,6 +128,7 @@ newEntity{
 	rarity = 5,
 	cost = 6,
 	wielder = {
+		combat_def = resolvers.mbonus_material(8, 2),
 		combat_def_ranged = resolvers.mbonus_material(8, 2),
 	},
 }
@@ -88,6 +164,21 @@ newEntity{
 }
 
 newEntity{
+	power_source = {arcane=true},
+	name = " of void walking", suffix=true, instant_resolve=true,
+	keywords = {void=true},
+	level_range = {40, 50},
+	greater_ego = 1,
+	rarity = 20,
+	cost = 60,
+	wielder = {
+		resist_all_on_teleport = resolvers.mbonus_material(5, 5),
+		defense_on_teleport = resolvers.mbonus_material(10, 5),
+		effect_reduction_on_teleport = resolvers.mbonus_material(10, 5),
+	},
+}
+
+newEntity{
 	power_source = {technique=true},
 	name = " of disengagement", suffix=true, instant_resolve=true,
 	keywords = {disengage=true},
@@ -95,7 +186,6 @@ newEntity{
 	greater_ego = 1,
 	rarity = 18,
 	cost = 40,
-
 	resolvers.charmt(Talents.T_DISENGAGE, {1,2,3}, 25),
 	wielder = {
 		inc_stats = {
@@ -107,76 +197,16 @@ newEntity{
 
 newEntity{
 	power_source = {technique=true},
-	name = " of stability", suffix=true, instant_resolve=true,
-	keywords = {stability=true},
-	level_range = {20, 50},
-	rarity = 12,
-	cost = 12,
+	name = "blood-soaked ", prefix=true, instant_resolve=true,
+	keywords = {blood=true},
+	level_range = {15, 50},
+	greater_ego = 1,
+	rarity = 15,
+	cost = 20,
 	wielder = {
-		stun_immune = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return 0, v end),
-		knockback_immune = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return 0, v end),
-	},
-}
-
-newEntity{
-	power_source = {technique=true},
-	name = " of tirelessness", suffix=true, instant_resolve=true,
-	keywords = {tireless=true},
-	level_range = {1, 50},
-	rarity = 9,
-	cost = 7,
-	wielder = {
-		max_stamina = resolvers.mbonus_material(30, 10),
-		stamina_regen = resolvers.mbonus_material(10, 3, function(e, v) v=v/10 return 0, v end),
-	},
-}
-
-newEntity{
-	power_source = {technique=true},
-	name = "traveler's ", prefix=true, instant_resolve=true,
-	keywords = {traveler=true},
-	level_range = {1, 50},
-	rarity = 5,
-	cost = 6,
-	wielder = {
-		max_encumber = resolvers.mbonus_material(30, 20),
-	},
-}
-
-
-newEntity{
-	power_source = {arcane=true},
-	name = "scholar's ", prefix=true, instant_resolve=true,
-	keywords = {scholar=true},
-	level_range = {1, 50},
-	rarity = 5,
-	cost = 6,
-	wielder = {
-		combat_spellpower = resolvers.mbonus_material(3, 3),
-	},
-}
-
-newEntity{
-	power_source = {technique=true},
-	name = "miner's ", prefix=true, instant_resolve=true,
-	keywords = {miner=true},
-	level_range = {1, 50},
-	rarity = 5,
-	cost = 6,
-	wielder = {
-		combat_armor = resolvers.mbonus_material(6, 4),
-	},
-}
-
-newEntity{
-	power_source = {technique=true},
-	name = "stalker's ", prefix=true, instant_resolve=true,
-	keywords = {stalker=true},
-	level_range = {1, 50},
-	rarity = 5,
-	cost = 6,
-	wielder = {
-		infravision = resolvers.mbonus_material(2, 1),
+		combat_dam = resolvers.mbonus_material(3, 3),
+		combat_apr = resolvers.mbonus_material(3, 3),
+		combat_physcrit = resolvers.mbonus_material(3, 3),
 	},
 }
 
@@ -190,10 +220,7 @@ newEntity{
 	cost = 60,
 	wielder = {
 		healing_factor = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return 0, v end),
-		cut_immune = resolvers.mbonus_material(2, 2, function(e, v) v=v/10 return 0, v end),
 		life_regen = resolvers.mbonus_material(10, 5, function(e, v) v=v/10 return 0, v end),
-		poison_immune = resolvers.mbonus_material(10, 10, function(e, v) return 0, v/100 end),
-
 	},
 }
 
@@ -213,21 +240,6 @@ newEntity{
 }
 
 newEntity{
-	power_source = {technique=true},
-	name = "blood-soaked ", prefix=true, instant_resolve=true,
-	keywords = {blood=true},
-	level_range = {15, 50},
-	greater_ego = 1,
-	rarity = 15,
-	cost = 20,
-	wielder = {
-		combat_dam = resolvers.mbonus_material(3, 3),
-		combat_apr = resolvers.mbonus_material(3, 3),
-		pin_immune = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return 0, v end),
-	},
-}
-
-newEntity{
 	power_source = {arcane=true},
 	name = "blightbringer's ", prefix=true, instant_resolve=true,
 	keywords = {blight=true},
@@ -235,16 +247,10 @@ newEntity{
 	greater_ego = 1,
 	rarity = 35,
 	cost = 80,
-	max_power = 80, power_regen = 1,
 	wielder = {
-		resists={
-			[DamageType.NATURE] = resolvers.mbonus_material(20, 10, function(e, v) return 0, -v end),
-			[DamageType.LIGHT] = resolvers.mbonus_material(20, 10, function(e, v) return 0, -v end),
-		},
 		inc_stats = {
 			[Stats.STAT_WIL] = resolvers.mbonus_material(7, 3),
 		},
-		pin_immune = resolvers.mbonus_material(50, 40, function(e, v) v=v/100 return 0, v end),
 		combat_spellpower = resolvers.mbonus_material(7, 3),
 	},
 }
@@ -261,9 +267,8 @@ newEntity{
 		inc_stats = {
 			[Stats.STAT_CON] = resolvers.mbonus_material(5, 1),
 		},
-		blind_immune = resolvers.mbonus_material(15, 5, function(e, v) v=v/100 return 0, v end),
-		confusion_immune = resolvers.mbonus_material(15, 5, function(e, v) v=v/100 return 0, v end),
-		disease_immune = resolvers.mbonus_material(15, 5, function(e, v) v=v/100 return 0, v end),
+		combat_mentalresist = resolvers.mbonus_material(3, 3),
+		combat_physresist = resolvers.mbonus_material(3, 3),
 	},
 }
 
@@ -302,24 +307,6 @@ newEntity{
 }
 
 newEntity{
-	power_source = {nature=true},
-	name = "grounded ", prefix=true, instant_resolve=true,
-	keywords = {grounded=true},
-	level_range = {35, 50},
-	greater_ego = 1,
-	rarity = 35,
-	cost = 70,
-	wielder = {
-		resists={
-			[DamageType.LIGHTNING] = resolvers.mbonus_material(15, 5),
-		},
-		stun_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
-		pin_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
-		confusion_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
-	},
-}
-
-newEntity{
 	power_source = {technique=true},
 	name = " of heaving", suffix=true, instant_resolve=true,
 	keywords = {heaving=true},
@@ -332,10 +319,6 @@ newEntity{
 		inc_stats = {
 			[Stats.STAT_STR] = resolvers.mbonus_material(7, 3),
 		},
-		knockback_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
-		pin_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
-		poison_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, -v end),
-		disease_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, -v end),
 	},
 }
 
@@ -348,7 +331,6 @@ newEntity{
 	rarity = 30,
 	cost = 40,
 	wielder = {
-		disarm_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
 		combat_physcrit = resolvers.mbonus_material(4, 1),
 		combat_dam = resolvers.mbonus_material(3, 3),
 		resists_pen = {
@@ -384,8 +366,68 @@ newEntity{
 	cost = 30,
 	resolvers.charmt(Talents.T_EVASION, {2,3,4}, 30),
 	wielder = {
-		combat_mentalresist = resolvers.mbonus_material(7, 1),
-		combat_physresist = resolvers.mbonus_material(7, 1),
-		combat_spellresist = resolvers.mbonus_material(7, 1),
+		combat_def = resolvers.mbonus_material(10, 5),
+	},
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = "insulating ", prefix=true, instant_resolve=true,
+	keywords = {insulate=true},
+	level_range = {1, 50},
+	rarity = 6,
+	cost = 5,
+	wielder = {
+		resists={
+			[DamageType.FIRE] = resolvers.mbonus_material(10, 5),
+			[DamageType.COLD] = resolvers.mbonus_material(10, 5),
+		},
+	},
+}
+
+newEntity{
+	power_source = {nature=true},
+	name = "grounding ", prefix=true, instant_resolve=true,
+	keywords = {grounding=true},
+	level_range = {1, 50},
+	rarity = 6,
+	cost = 5,
+	wielder = {
+		resists={
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(10, 5),
+			[DamageType.TEMPORAL] = resolvers.mbonus_material(10, 5),
+		},
+	},
+}
+
+newEntity{
+	power_source = {psionic=true},
+	name = "dreamer's ", prefix=true, instant_resolve=true,
+	keywords = {dreamer=true},
+	level_range = {15, 50},
+	greater_ego = 1,
+	rarity = 15,
+	cost = 30,
+	wielder = {
+		combat_spellresist = resolvers.mbonus_material(3, 3),
+		combat_mentalresist = resolvers.mbonus_material(3, 3),
+		combat_physresist = resolvers.mbonus_material(3, 3),
+	},
+}
+
+newEntity{
+	power_source = {psionic=true},
+	name = " of strife", suffix=true, instant_resolve=true,
+	keywords = {rushing=true},
+	level_range = {40, 50},
+	greater_ego = 1,
+	rarity = 18,
+	cost = 40,
+	resolvers.charmt(Talents.T_BLINDSIDE, {1,2,3}, 25),
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_WIL] = resolvers.mbonus_material(2, 2),
+		},
+		combat_mindpower = resolvers.mbonus_material(3, 3),
 	},
 }

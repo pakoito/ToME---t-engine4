@@ -19,6 +19,7 @@
 
 local Talents = require("engine.interface.ActorTalents")
 local Stats = require "engine.interface.ActorStats"
+local DamageType = require "engine.DamageType"
 
 -- Common Resists
 newEntity{

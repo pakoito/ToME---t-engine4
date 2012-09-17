@@ -19,6 +19,7 @@
 
 local Stats = require "engine.interface.ActorStats"
 local Talents = require "engine.interface.ActorTalents"
+local DamageType = require "engine.DamageType"
 
 newEntity{
 	power_source = {technique=true},
@@ -55,7 +56,7 @@ newEntity{
 		inc_stats = {
 			[Stats.STAT_STR] = resolvers.mbonus_material(3, 1),
 			[Stats.STAT_CON] = resolvers.mbonus_material(3, 1),
-			},
+		},
 	},
 }
 
@@ -144,18 +145,18 @@ newEntity{
 }
 
 newEntity{
-	power_source = {technique=true},
-	name = "builder's ", prefix=true, instant_resolve=true,
-	keywords = {builder=true},
+	power_source = {psionic=true},
+	name = "dream-smith's ", prefix=true, instant_resolve=true,
+	keywords = {smiths=true},
 	level_range = {30, 50},
 	greater_ego = 1,
 	rarity = 15,
 	cost = 15,
 	wielder = {
-		inc_stats = {
-			[Stats.STAT_CUN] = resolvers.mbonus_material(2, 2),
-			},
-		confusion_immune = resolvers.mbonus_material(3, 2, function(e, v) v=v/10 return 0, v end),
+		melee_project={
+			[DamageType.DREAMFORGE] = resolvers.mbonus_material(10, 5),
+		},
+		combat_mentalresist = resolvers.mbonus_material(5, 5),
 	},
 	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 3) end),
 }
@@ -179,7 +180,7 @@ newEntity{
 	power_source = {arcane=true},
 	name = "bloodhexed ", prefix=true, instant_resolve=true,
 	keywords = {bloodhexed=true},
-	level_range = {1, 50},
+	level_range = {40, 50},
 	greater_ego = 1,
 	rarity = 15,
 	cost = 30,
@@ -202,7 +203,7 @@ newEntity{
 	cost = 40,
 	wielder = {
 		inc_stats = {
-			[Stats.STAT_CUN] = resolvers.mbonus_material(5, 1),
+			[Stats.STAT_MAG] = resolvers.mbonus_material(5, 1),
 		},
 		max_mana = resolvers.mbonus_material(40, 20),
 		combat_spellcrit = resolvers.mbonus_material(4, 1),
@@ -287,7 +288,6 @@ newEntity{
 		inc_stats = {
 			[Stats.STAT_DEX] = resolvers.mbonus_material(5, 1),
 		},
-		pin_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
 		combat_dam = resolvers.mbonus_material(7, 3),
 	},
 }
@@ -305,8 +305,6 @@ newEntity{
 		resists={
 			[DamageType.DARKNESS] = resolvers.mbonus_material(10, 5),
 		},
-		blind_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
-		confusion_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
 		infravision = resolvers.mbonus_material(2, 1),
 	},
 }

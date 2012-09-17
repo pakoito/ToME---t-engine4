@@ -21,6 +21,8 @@
 
 local Stats = require "engine.interface.ActorStats"
 local Talents = require "engine.interface.ActorTalents"
+local DamageType = require "engine.DamageType"
+
 -------------------------------------------------------
 --Nature and Antimagic---------------------------------
 -------------------------------------------------------

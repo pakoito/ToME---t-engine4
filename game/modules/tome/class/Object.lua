@@ -497,6 +497,25 @@ function _M:getTextualDesc(compare_with)
 		for tid, data in pairs(talents) do
 			desc:add(talents[tid][3] and {"color","WHITE"} or {"color","GREEN"}, ("When this weapon hits: %s (%d%% chance level %d)."):format(self:getTalentFromId(tid).name, talents[tid][1], talents[tid][2]), {"color","LAST"}, true)
 		end
+		
+		local talents = {}
+		if combat.talent_on_crit then
+			for tid, data in pairs(combat.talent_on_crit) do
+				talents[tid] = {data.chance, data.level}
+			end
+		end
+		for i, v in ipairs(compare_with or {}) do
+			for tid, data in pairs(v[field] and (v[field].talent_on_crit or {})or {}) do
+				if not talents[tid] or talents[tid][1]~=data.chance or talents[tid][2]~=data.level then
+					desc:add({"color","RED"}, ("When this weapon crits: %s (%d%% chance level %d)."):format(self:getTalentFromId(tid).name, data.chance, data.level), {"color","LAST"}, true)
+				else
+					talents[tid][3] = true
+				end
+			end
+		end
+		for tid, data in pairs(talents) do
+			desc:add(talents[tid][3] and {"color","WHITE"} or {"color","GREEN"}, ("When this weapon crits: %s (%d%% chance level %d)."):format(self:getTalentFromId(tid).name, talents[tid][1], talents[tid][2]), {"color","LAST"}, true)
+		end
 
 		local special = ""
 		if combat.special_on_hit then
@@ -972,7 +991,7 @@ function _M:getTextualDesc(compare_with)
 		if w.undead then
 			desc:add("The wearer is treated as an undead.", true)
 		end
-
+		
 		if w.demon then
 			desc:add("The wearer is treated as a demon.", true)
 		end
@@ -993,6 +1012,10 @@ function _M:getTextualDesc(compare_with)
 			desc:add({"color", "YELLOW"}, "Lucid-Dreamer:", {"color", "LAST"}, "This item allows the wearer to act while sleeping.", true)
 		end
 
+		if w.no_breath then
+			desc:add("The wearer no longer has to breath.", true)
+		end
+		
 		if w.quick_weapon_swap then
 			desc:add({"color", "YELLOW"}, "Quick Weapon Swap:", {"color", "LAST"}, "This item allows the wearer to swap to their secondary weapon without spending a turn.", true)
 		end

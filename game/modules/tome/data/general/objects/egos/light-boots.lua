@@ -21,6 +21,7 @@ load("/data/general/objects/egos/boots.lua")
 
 local Stats = require "engine.interface.ActorStats"
 local Talents = require "engine.interface.ActorTalents"
+local DamageType = require "engine.DamageType"
 
 
 newEntity{

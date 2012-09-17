@@ -21,6 +21,7 @@
 
 local Stats = require "engine.interface.ActorStats"
 local Talents = require "engine.interface.ActorTalents"
+local DamageType = require "engine.DamageType"
 
 -- Idea: Giant(technique, chance to stun on hit and increased weight), Sharp, Jagged, Deft  (of deftness-quick swap),
 -- Wolf, Bear, Snake based nature egos (maybe wolf could summon wolves),
