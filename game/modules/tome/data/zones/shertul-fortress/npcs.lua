@@ -37,7 +37,6 @@ newEntity{ base = "BASE_NPC_HORROR", define_as="WEIRDLING_BEAST",
 	resists = {[DamageType.ARCANE] = -10, [DamageType.BLIGHT] = 10, [DamageType.PHYSICAL] = 10},
 
 	disease_immune = 1,
-	poison_immune = 0.5,
 	blind_immune = 1,
 	fear_immune = 1,
 	see_invisible = 100,
