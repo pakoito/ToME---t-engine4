@@ -589,6 +589,9 @@ Uint32 redraw_timer(Uint32 interval, void *param)
 	if (!redraw_pending && isActive) {
 		SDL_PushEvent(&event);
 		redraw_pending = 1;
+	} else {
+		redraw_pending++;
+		if (redraw_pending > 600) { redraw_pending = 0; printf("==FORCE==\n"); } // Safety check
 	}
 	return(interval);
 }
