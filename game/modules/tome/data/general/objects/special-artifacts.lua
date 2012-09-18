@@ -27,7 +27,7 @@ load("/data/general/objects/staves.lua")
 newEntity{ base = "BASE_STAFF", define_as = "TELOS_SPIRE",
 	power_source = {arcane=true},
 	unique = true,
-	name = "Telos Spire of Power", image = "object/artifact/staff_lost_staff_archmage_tarelion.png",
+	name = "Telos Spire of Power", image = "object/artifact/telos_spire_of_power.png",
 	unided_name = "pulsing staff",
 	flavor_name = "magestaff",
 	level_range = {37, 50},

@@ -768,7 +768,7 @@ Blue burns into red, green bursts into yellow, and the air crackles and hisses b
 }
 
 newEntity{ base = "BASE_NPC_HORROR", define_as = "DREAM_SEED",
-	name = "dream seed", color=colors.PINK,
+	name = "dream seed", color=colors.PINK, image = "npc/dream_seed.png",
 	desc ="A pinkish bubble floats here, reflecting the world not as it is, but as it would be in that surreal place that exists only in our dreams.",
 	level_range = {20, nil}, exp_worth = 1,
 	rarity = 30,  -- Very rare; but they do spawn on their own to keep the players on thier toes
@@ -961,7 +961,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 }
 
 newEntity{ base="BASE_NPC_HORROR", define_as = "ANIMATED_BLADE",
-	type = "construct", subtype = "weapon", image="object/sword_dsteel.png",
+	type = "construct", subtype = "weapon", image="object/artifact/spectral_blade.png",
 	name = "Animated Sword",
 	color = colors.GREY,
 	desc = [[Time seems to warp and bend around this floating weapon.]],
@@ -1018,7 +1018,7 @@ newEntity{ base="BASE_NPC_HORROR", define_as = "ANIMATED_BLADE",
 }
 
 newEntity{ base="BASE_NPC_HORROR", define_as = "DISTORTED_BLADE",
-	type = "construct", subtype = "weapon", --image="object/artifact/distorted_blade.png",
+	type = "construct", subtype = "weapon", image="object/artifact/distorted_animated_sword.png",
 	name = "Distorted Animated Sword", unique=true,
 	color = colors.GREY,
 	desc = [[Time seems to collapse around this floating weapon.]],
