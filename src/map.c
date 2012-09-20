@@ -1424,14 +1424,15 @@ void display_map_quad(GLuint *cur_tex, int *vert_idx, int *col_idx, map_type *ma
 			animdy = tlanimdy = ady * m->move_step / (float)m->move_max - ady;
 
 			if (m->move_twitch) {
-				if (m->move_twitch_dir == 4) animdx -= m->move_twitch * m->move_step / (float)m->move_max;
-				else if (m->move_twitch_dir == 6) animdx += m->move_twitch * m->move_step / (float)m->move_max;
-				else if (m->move_twitch_dir == 2) animdy += m->move_twitch * m->move_step / (float)m->move_max;
-				else if (m->move_twitch_dir == 1) { animdx -= m->move_twitch * m->move_step / (float)m->move_max; animdy += m->move_twitch * m->move_step / (float)m->move_max; }
-				else if (m->move_twitch_dir == 3) { animdx += m->move_twitch * m->move_step / (float)m->move_max; animdy += m->move_twitch * m->move_step / (float)m->move_max; }
-				else if (m->move_twitch_dir == 7) { animdx -= m->move_twitch * m->move_step / (float)m->move_max; animdy -= m->move_twitch * m->move_step / (float)m->move_max; }
-				else if (m->move_twitch_dir == 9) { animdx += m->move_twitch * m->move_step / (float)m->move_max; animdy -= m->move_twitch * m->move_step / (float)m->move_max; }
-				else animdy -= m->move_twitch * m->move_step / (float)m->move_max;
+				float where = (0.5 - fabsf(m->move_step / (float)m->move_max - 0.5)) * 2;
+				if (m->move_twitch_dir == 4) animdx -= m->move_twitch * where;
+				else if (m->move_twitch_dir == 6) animdx += m->move_twitch * where;
+				else if (m->move_twitch_dir == 2) animdy += m->move_twitch * where;
+				else if (m->move_twitch_dir == 1) { animdx -= m->move_twitch * where; animdy += m->move_twitch * where; }
+				else if (m->move_twitch_dir == 3) { animdx += m->move_twitch * where; animdy += m->move_twitch * where; }
+				else if (m->move_twitch_dir == 7) { animdx -= m->move_twitch * where; animdy -= m->move_twitch * where; }
+				else if (m->move_twitch_dir == 9) { animdx += m->move_twitch * where; animdy -= m->move_twitch * where; }
+				else animdy -= m->move_twitch * where;
 			}
 
 //			printf("==computing %f x %f : %f x %f // %d/%d\n", animdx, animdy, adx, ady, m->move_step, m->move_max);
