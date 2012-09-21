@@ -61,6 +61,9 @@ module(..., package.seeall, class.inherit(
 -- Dont save the can_see_cache
 _M._no_save_fields.can_see_cache = true
 
+-- Activate fast regen computing
+_M._no_save_fields.regenResourcesFast = true
+
 -- Use distance maps
 _M.__do_distance_map = true
 
@@ -233,6 +236,12 @@ function _M:init(t, no_default)
 
 	self:resetCanSeeCache()
 	self:recomputeGlobalSpeed()
+	self:recomputeRegenResources()
+end
+
+function _M:loaded()
+	engine.Actor.loaded(self)
+	self:recomputeRegenResources()
 end
 
 function _M:onEntityMerge(a)
@@ -3036,6 +3045,8 @@ function _M:learnPool(t)
 		self.resource_pool_refs[self.T_RELOAD] = (self.resource_pool_refs[self.T_RELOAD] or 0) + 1
 	end
 
+	self:recomputeRegenResources()
+
 	return true
 end
 
@@ -3063,6 +3074,8 @@ function _M:unlearnTalent(t_id, nb, no_unsustain)
 
 	-- Unsustain ?
 	if not no_unsustain and not self:knowTalent(t_id) and t.mode == "sustained" and self:isTalentActive(t_id) then self:forceUseTalent(t_id, {ignore_energy=true}) end
+
+	self:recomputeRegenResources()
 
 	return true
 end

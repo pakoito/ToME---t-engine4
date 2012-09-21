@@ -108,8 +108,27 @@ function _M:init(t)
 	end
 end
 
+function _M:recomputeRegenResources()
+	if not self._no_save_fields.regenResourcesFast then return end
+	local fstr = "return function(self) "
+
+	local r
+	for i = 1, #_M.resources_def do
+		r = _M.resources_def[i]
+		if r.regen_prop and (not r.talent or self:knowTalent(r.talent)) then
+			fstr = fstr..("self.%s = util.bound(self.%s + self.%s, self.%s, self.%s) "):format(r.short_name, r.short_name, r.regen_prop, r.minname, r.maxname)
+			self[r.short_name] = util.bound(self[r.short_name] + self[r.regen_prop], self[r.minname], self[r.maxname])
+		end
+	end
+
+	fstr = fstr.." end"
+	self.regenResourcesFast = loadstring(fstr)()
+end
+
 --- Regen resources, shout be called in your actor's act() method
 function _M:regenResources()
+	if self.regenResourcesFast then return self:regenResourcesFast() end
+
 	local r
 	for i = 1, #_M.resources_def do
 		r = _M.resources_def[i]
