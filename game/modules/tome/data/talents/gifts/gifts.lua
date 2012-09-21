@@ -32,6 +32,8 @@ newTalentType{ allow_random=true, is_nature=true, type="wild-gift/sand-drake", n
 newTalentType{ allow_random=true, is_nature=true, type="wild-gift/fire-drake", name = "fire drake aspect", description = "Take on the defining aspects of a Fire Drake." }
 newTalentType{ allow_random=true, is_nature=true, type="wild-gift/cold-drake", name = "cold drake aspect", description = "Take on the defining aspects of a Cold Drake." }
 newTalentType{ allow_random=true, is_nature=true, type="wild-gift/storm-drake", name = "storm drake aspect", description = "Take on the defining aspects of a Storm Drake." }
+newTalentType{ allow_random=true, is_nature=true, type="wild-gift/venom-drake", name = "venom drake aspect", description = "Take on the defining aspects of a Venom Drake." }
+newTalentType{ allow_random=true, is_nature=true, type="wild-gift/higher-draconic", name = "higher draconic abilities", description = "Take on the aspects of aged and powerful dragons." }
 newTalentType{ allow_random=true, is_nature=true, type="wild-gift/mindstar-mastery", name = "mindstar mastery", generic = true, description = "Learn to channel your mental power through mindstars, forming powerful psionic blades." }
 newTalentType{ allow_random=true, is_nature=true, type="wild-gift/mucus", name = "mucus", description = "Cover the floor with natural mucus." }
 newTalentType{ allow_random=true, is_nature=true, type="wild-gift/ooze", name = "ooze", description = "Your body and internal organs are becoming more ooze-like in nature, allowing you to spawn more of you." }
@@ -201,6 +203,8 @@ load("/data/talents/gifts/sand-drake.lua")
 load("/data/talents/gifts/fire-drake.lua")
 load("/data/talents/gifts/cold-drake.lua")
 load("/data/talents/gifts/storm-drake.lua")
+load("/data/talents/gifts/venom-drake.lua")
+load("/data/talents/gifts/higher-draconic.lua")
 
 load("/data/talents/gifts/summon-melee.lua")
 load("/data/talents/gifts/summon-distance.lua")

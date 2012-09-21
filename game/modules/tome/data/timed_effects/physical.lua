@@ -2009,3 +2009,20 @@ newEffect{
 		self:effectTemporaryValue(eff, "inc_damage", {all=eff.power})
 	end,
 }
+
+newEffect{
+	name = "CORRODE", image = "talents/blightzone.png",
+	desc = "Corrode",
+	long_desc = function(self, eff) return ("The target is corroded, reducing their accuracy by %d, their armor by %d, and their defense by %d."):format(eff.atk, eff.armor, eff.defense) end,
+	type = "physical",
+	subtype = { acid=true },
+	status = "detrimental",
+	parameters = { atk=5, armor=5, defense=10 }, no_ct_effect = true,
+	on_gain = function(self, err) return "#Target# is corroded." end,
+	on_lose = function(self, err) return "#Target# has shook off the effects of their corrosion." end,
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "combat_atk", -eff.atk)
+		self:effectTemporaryValue(eff, "combat_armor", -eff.armor)
+		self:effectTemporaryValue(eff, "combat_def", -eff.defense)
+	end,
+}
