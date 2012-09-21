@@ -638,6 +638,23 @@ local function spotHostiles(self)
 	return seen
 end
 
+--- Try to auto use listed talents
+-- This should be called in your actors "act()" method
+function _M:automaticTalents()
+	local spotted = nil
+	for tid, c in pairs(self.talents_auto) do
+		local t = self.talents_def[tid]
+		if (t.mode ~= "sustained" or not self.sustain_talents[tid]) and not self.talents_cd[tid] and self:preUseTalent(t, true, true) and (not t.auto_use_check or t.auto_use_check(self, t)) then
+			if not t.no_energy then
+				if spotted == nil then spotted = spotHostiles(self) end
+				if #spotted == 0 then self:useTalent(tid) end
+			else
+				self:useTalent(tid)
+			end
+		end
+	end
+end
+
 --- We started resting
 function _M:onRestStart()
 	if self.resting and self:attr("equilibrium_regen_on_rest") and not self.resting.equilibrium_regen then
