@@ -24,6 +24,10 @@ module(..., package.seeall, class.make)
 
 _M.resources_def = {}
 
+local fast_cache = {}
+setmetatable(fast_cache, {__mode="v"})
+
+
 --- Defines resource
 -- Static!
 -- All actors will now have :getResourcename() and :incResourcename() methods as well as a .max_resourcename and .resourcename
@@ -122,7 +126,8 @@ function _M:recomputeRegenResources()
 	end
 
 	fstr = fstr.." end"
-	self.regenResourcesFast = loadstring(fstr)()
+	if not fast_cache[fstr] then fast_cache[fstr] = loadstring(fstr)() end
+	self.regenResourcesFast = fast_cache[fstr]
 end
 
 --- Regen resources, shout be called in your actor's act() method
