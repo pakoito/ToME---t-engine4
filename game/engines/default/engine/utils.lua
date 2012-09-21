@@ -188,6 +188,12 @@ function table.reverse(t)
 	return tt
 end
 
+function table.reversekey(t, k)
+	local tt = {}
+	for i, e in ipairs(t) do tt[e[k]] = i end
+	return tt
+end
+
 function table.listify(t)
 	local tt = {}
 	for k, e in pairs(t) do tt[#tt+1] = {k, e} end

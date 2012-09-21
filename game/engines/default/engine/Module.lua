@@ -292,22 +292,31 @@ function _M:listAddons(mod, ignore_compat)
 	return adds
 end
 
-function _M:loadAddons(mod)
+function _M:loadAddons(mod, saveuse)
 	local adds = self:listAddons(mod, true)
+
+	if saveuse then saveuse = table.reverse(saveuse) end
 
 	-- Filter based on settings
 	for i = #adds, 1, -1 do
 		local add = adds[i]
-		if config.settings.addons[add.for_module] and config.settings.addons[add.for_module][add.short_name] ~= nil then
-			-- Forbidden by config
-			if config.settings.addons[add.for_module][add.short_name] == false then
-				print("Removing addon"..add.short_name..": not allowed by config")
+		if saveuse then
+			if not saveuse[add.short_name] then
+				print("Removing addon "..add.short_name..": not allowed by savefile")
 				table.remove(adds, i)
 			end
 		else
-			-- Forbidden by version
-			if not add.natural_compatible then
-				table.remove(adds, i)
+			if config.settings.addons[add.for_module] and config.settings.addons[add.for_module][add.short_name] ~= nil then
+				-- Forbidden by config
+				if config.settings.addons[add.for_module][add.short_name] == false then
+					print("Removing addon "..add.short_name..": not allowed by config")
+					table.remove(adds, i)
+				end
+			else
+				-- Forbidden by version
+				if not add.natural_compatible then
+					table.remove(adds, i)
+				end
 			end
 		end
 	end
@@ -532,8 +541,10 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 
 	-- Load the savefile if it exists, or create a new one if not (or if requested)
 	local save = engine.Savefile.new(name)
+	local save_desc
 	if save:check() and not new_game then
 		savesize = savesize + save:loadGameSize()
+		save_desc = self:loadSavefileDescription(save.save_dir)
 	end
 	save:close()
 
@@ -577,7 +588,7 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 		end
 	end
 
-	self:loadAddons(mod)
+	self:loadAddons(mod, save_desc and save_desc.addons)
 
 	-- Check addons
 	if hash_valid then

@@ -49,13 +49,20 @@ function _M:init()
 			local mod_string = ("%s-%d.%d.%d"):format(m.short_name, save.module_version and save.module_version[1] or -1, save.module_version and save.module_version[2] or -1, save.module_version and save.module_version[3] or -1)
 			local mod = list[mod_string]
 			if mod and save.loadable then
+				local laddons = table.reversekey(Module:listAddons(mod, true), "short_name")
+				local addons = {}
 				save.usable = true
+				for i, add in ipairs(save.addons or {}) do
+					if laddons[add] then addons[#addons+1] = "#LIGHT_GREEN#"..add.."#WHITE#"
+					else addons[#addons+1] = "#LIGHT_RED#"..add.."#WHITE#" save.usable = false
+					end
+				end
 				save.mod = mod
 				save.base_name = save.short_name
 				save.zone = Textzone.new{
 					width=self.c_desc.w,
 					height=self.c_desc.h,
-					text=("#{bold}##GOLD#%s: %s#WHITE##{normal}#\nGame version: %d.%d.%d\n\n%s"):format(mod.long_name, save.name, mod.version[1], mod.version[2], mod.version[3], save.description)
+					text=("#{bold}##GOLD#%s: %s#WHITE##{normal}#\nGame version: %d.%d.%d\nRequires addons: %s\n\n%s"):format(mod.long_name, save.name, mod.version[1], mod.version[2], mod.version[3], save.addons and table.concat(addons, ", ") or "none", save.description)
 				}
 				if save.screenshot then
 					local w, h = save.screenshot:getSize()

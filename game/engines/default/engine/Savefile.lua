@@ -225,6 +225,9 @@ function _M:saveGame(game, no_dialog)
 	local f = fs.open(self.save_dir.."desc.lua", "w")
 	f:write(("module = %q\n"):format(game.__mod_info.short_name))
 	f:write(("module_version = {%d,%d,%d}\n"):format(game.__mod_info.version[1], game.__mod_info.version[2], game.__mod_info.version[3]))
+	local addons = {}
+	for add, _ in pairs(game.__mod_info.addons) do addons[#addons+1] = "'"..add.."'" end
+	f:write(("addons = {%s}\n"):format(table.concat(addons, ", ")))
 	f:write(("name = %q\n"):format(desc.name))
 	f:write(("short_name = %q\n"):format(self.short_name))
 	f:write(("timestamp = %d\n"):format(os.time()))
