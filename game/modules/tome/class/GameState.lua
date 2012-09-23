@@ -1186,7 +1186,7 @@ function _M:entityFilterPost(zone, level, type, e, filter)
 				no_loot_randart = true,
 				resources_boost = 1.5,
 				talent_cds_factor = (lev <= 10) and 3 or ((lev <= 20) and 2 or nil),
-				class_filter = function(c)
+				class_filter = filter.class_filter or function(c)
 					if e.power_source then
 						for ps, _ in pairs(e.power_source) do if c.power_source and c.power_source[ps] then return true end end
 						return false
@@ -1200,6 +1200,7 @@ function _M:entityFilterPost(zone, level, type, e, filter)
 				level = lev,
 				nb_rares = filter.random_elite.nb_rares or 1,
 				check_talents_level = true,
+				user_post = filter.post,
 				post = function(b, data)
 					if data.level <= 20 then
 						b.inc_damage = b.inc_damage or {}
@@ -1214,6 +1215,7 @@ function _M:entityFilterPost(zone, level, type, e, filter)
 							game.zone:addEntity(game.level, o, "object")
 						end
 					end
+					if data.user_post then data.user_post(b, data) end
 				end,
 			}
 			e = self:createRandomBoss(e, table.merge(base, filter.random_elite, true))

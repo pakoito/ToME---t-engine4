@@ -1916,3 +1916,25 @@ newTalent{
 		return ([[With blinding speed you suddenly appear next to a target up to %d spaces away and attack for %d%% damage.]]):format(self:getTalentRange(t), multiplier)
 	end,
 }
+
+newTalent{
+	name = "Suspended", image = "talents/arcane_feed.png",
+	type = {"other/other", 1},
+	points = 1,
+	mode = "sustained",
+	cooldown = 10,
+	activate = function(self, t)
+		local ret = {}
+		self:talentTemporaryValue(ret, "invulnerable", 1)
+		self:talentTemporaryValue(ret, "status_effect_immune", 1)
+		self:talentTemporaryValue(ret, "dazed", 1)
+		return ret
+	end,
+	deactivate = function(self, t, p)
+		game.logSeen("#VIOLET#%s is freed from the suspended state!", self.name:capitalize())
+		return true
+	end,
+	info = function(self, t)
+		return ([[The target will not react until attacked.]])
+	end,
+}

@@ -1537,6 +1537,10 @@ function _M:onTakeHit(value, src)
 		self:removeEffect(self.EFF_SPACETIME_TUNING)
 	end
 
+	if self:isTalentActive(self.T_SUSPENDED) then
+		self:forceUseTalent(self.T_SUSPENDED, {ignore_energy=true})
+	end
+
 	-- Remove domination hex
 	if self:hasEffect(self.EFF_DOMINATION_HEX) and src and src == self:hasEffect(self.EFF_DOMINATION_HEX).src then
 		self:removeEffect(self.EFF_DOMINATION_HEX)
