@@ -277,7 +277,7 @@ You feel like running away!]], 600)
 				body = { INVEN = 10 },
 				infravision = 10,
 				stats = { str=12, dex=12, mag=3, con=10, cun=10, },
-				combat = {sound = {"actions/melee", pitch=0.6, vol=1.2}, sound_miss = {"actions/melee", pitch=0.6, vol=1.2}, dam=35, atk=15, apr=3 },
+				combat = {sound = {"actions/melee", pitch=0.6, vol=1.2}, sound_miss = {"actions/melee", pitch=0.6, vol=1.2}, dam=90, atk=15, apr=3 },
 				combat_armor = 5, combat_def = 5,
 				level_range = {1, 1}, exp_worth = 1,
 				max_life = 100, life_regen = 0,

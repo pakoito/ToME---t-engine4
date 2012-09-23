@@ -127,7 +127,7 @@ newEntity{ base = "BASE_NPC_GHOUL", define_as = "ROTTING_TITAN",
 	stats = { str=40, dex=20, mag=24, con=25 },
 	resists = {all = 25, [DamageType.PHYSICAL]=15, [DamageType.ARCANE]=-50, [DamageType.FIRE]=-20},
 
-	resolvers.equip{ {type="weapon", subtype="greatmaul", defined="ROTTING_MAUL", random_art_replace={chance=30}, autoreq=true, force_drop=true}, },
+	resolvers.equip{ {type="weapon", subtype="greatmaul", defined="ROTTING_MAUL", random_art_replace={chance=50}, autoreq=true, force_drop=true}, },
 
 	combat = { dam=resolvers.levelup(80, 1, 2), atk=resolvers.levelup(70, 1, 1), apr=20, dammod={str=1.3}, damtype=engine.DamageType.PHYSICAL, },
 
@@ -228,7 +228,7 @@ newEntity{ base = "BASE_NPC_GHOST", define_as = "GLACIAL_LEGION",
 		[Talents.T_FROST_HANDS]={base=3, every=7, max=8},
 	},
 	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
-	resolvers.drops{chance=100, nb=1, {defined="GLACIAL_CLOAK"} },
+	resolvers.drops{chance=100, nb=1, {defined="GLACIAL_CLOAK", random_art_replace={chance=50}} },
 }
 
 --Heavy Sentinel, flaming bone giant.
@@ -275,7 +275,7 @@ newEntity{ base = "BASE_NPC_BONE_GIANT", define_as = "HEAVY_SENTINEL",
 	},
 	resolvers.sustains_at_birth(),
 	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
-	resolvers.drops{chance=100, nb=1, {defined="ARMOR_MOLTEN"} },
+	resolvers.drops{chance=100, nb=1, {defined="ARMOR_MOLTEN", random_art_replace={chance=50}} },
 }
 
 -- Arch Zephyr, Vampiric Storm Lord. Wields a bow and lightning magic with equal effectiveness, and moves quickly.
@@ -298,7 +298,7 @@ newEntity{ base = "BASE_NPC_VAMPIRE", unique=true, define_as="ARCH_ZEPHYR",
 	combat_spellpower = 40,
 
 	ai = "tactical", ai_state = { talent_in=4, },
-	resolvers.equip{ {type="weapon", subtype="longbow", defined="STORM_FURY", random_art_replace={chance=20}, autoreq=true, force_drop=true}, {type="ammo", subtype="arrow", autoreq=true} },
+	resolvers.equip{ {type="weapon", subtype="longbow", defined="STORM_FURY", random_art_replace={chance=50}, autoreq=true, force_drop=true}, {type="ammo", subtype="arrow", autoreq=true} },
 
 	resists = { [DamageType.LIGHTNING] = 100, [DamageType.PHYSICAL] = -20, [DamageType.LIGHT] = 30,  },
 	resolvers.talents{
@@ -322,4 +322,41 @@ newEntity{ base = "BASE_NPC_VAMPIRE", unique=true, define_as="ARCH_ZEPHYR",
 		[Talents.T_STEADY_SHOT]={base=4, every=5, max=10},
 	},
 	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
+}
+
+-- The Void Spectre, the Aether Wight. Minor talents in all elements, but arcane through and through.
+newEntity{ base = "BASE_NPC_WIGHT",
+	name = "Void Spectre", color=colors.RED, unique=true,
+	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/undead_wight_void_spectre.png", display_h=2, display_y=-1}}},
+	desc=[[Intense Arcane energy whirls in the air around this ethereal form. ]],
+	level_range = {45, nil}, exp_worth = 2,
+	life_rating=16,
+	rarity = 50,
+	rank = 3.5,
+	max_life = resolvers.rngavg(200,300),
+	max_mana = resolvers.rngavg(800,1200),
+	mana_regen = 5,
+	combat_armor = 12, combat_def = 30, combat_atk=30,
+	
+		combat = { dam=resolvers.mbonus(40, 20), atk=20, apr=15, damtype=DamageType.ARCANE },
+	
+		resists = { [DamageType.COLD] = 30, [DamageType.FIRE] = 30, [DamageType.LIGHTNING] = 30, [DamageType.PHYSICAL] = 0, [DamageType.LIGHT] = 0, [DamageType.ARCANE] = 100},
+
+	ai = "tactical",
+	resolvers.talents{ [Talents.T_FLAMESHOCK]={base=3, every=5, max=7}, [Talents.T_LIGHTNING]={base=4, every=5, max=8}, [Talents.T_GLACIAL_VAPOUR]={base=3, every=5, max=7}, [Talents.T_STRIKE]={base=3, every=5, max=7},
+		[Talents.T_ARCANE_POWER]={base=6, every=2, max=12},
+		[Talents.T_MANATHRUST]={base=6, every=4, max=10},
+		[Talents.T_ARCANE_VORTEX]={base=4, every=4, max=7},
+		[Talents.T_SPELLCRAFT]=5,
+		[Talents.T_AETHER_BEAM]={base=6, every=7, max=9},
+		[Talents.T_AETHER_BREACH]={base=3, every=6, max=6},
+		[Talents.T_HEAL]={base=2, every=6, max=6},
+		[Talents.T_SHIELDING]={base=3, every=6, max=6},
+		[Talents.T_ARCANE_SHIELD]={base=2, every=5, max=5},
+		[Talents.T_PURE_AETHER]={base=3, every=7, max=5},
+		[Talents.T_PHASE_DOOR]=10,
+	},
+	resolvers.sustains_at_birth(),
+	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
+	resolvers.drops{chance=100, nb=1, {defined="AETHER_RING", random_art_replace={chance=50}} },
 }
