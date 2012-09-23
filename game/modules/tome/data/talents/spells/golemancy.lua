@@ -57,8 +57,8 @@ local function makeGolem(self)
 		},
 
 		resolvers.equip{
-			{type="weapon", subtype="battleaxe", autoreq=true, id=true},
-			{type="armor", subtype="heavy", autoreq=true, id=true}
+			{type="weapon", subtype="battleaxe", autoreq=true, id=true, ego_chance=-1000},
+			{type="armor", subtype="heavy", autoreq=true, id=true, ego_chance=-1000}
 		},
 
 		talents_types = {
