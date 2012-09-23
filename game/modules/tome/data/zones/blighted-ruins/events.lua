@@ -20,4 +20,5 @@
 return { one_per_level=true,
 	{name="glimmerstone", minor=true, percent=50},
 	{name="necrotic-air", minor=true, percent=100, max_repeat=2},
+	{name="glowing-chest", minor=true, percent=10},
 }

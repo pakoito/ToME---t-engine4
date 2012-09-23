@@ -2344,7 +2344,7 @@ newDamageType{
 	projector = function(src, x, y, type, dam)
 		local realdam = DamageType:get(DamageType.ACID).projector(src, x, y, DamageType.ACID, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
-		if target and rng.percent(50) then
+		if target and rng.percent(25) then
 			if target:canBe("disarm") then
 				target:setEffect(target.EFF_DISARMED, 3, {src=src, apply_power=src:combatMindpower()})
 			else

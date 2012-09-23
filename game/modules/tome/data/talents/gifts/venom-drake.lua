@@ -56,7 +56,7 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		return ([[Spray forth a glob of acidic moisture at your enemy.
 		The target will take %0.2f mindpower-based acid damage.
-		Enemies struck have a 50%% chance to be Disarmed for three turns, as their weapon is rendered useless by an acid coating.
+		Enemies struck have a 25%% chance to be Disarmed for three turns, as their weapon is rendered useless by an acid coating.
 		At Talent Level 5, this becomes a piercing line of acid.
 		Each point in acid drake talents also increases your acid resistance by 1%%.]]):format(damDesc(self, DamageType.ACID, damage))
 	end,
@@ -186,8 +186,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[You breathe acid in a frontal cone of radius %d. Any target caught in the area will take %0.2f acid damage. 
-		Enemies caught in the acid have a 50%% chance of their weapons becoming useless for three turns.
+		Enemies caught in the acid have a 25%% chance of their weapons becoming useless for three turns.
 		The damage will increase with the Strength stat.
-		Each point in acid drake talents also increases your acid resistance by 1%%.]]):format(self:getTalentRadius(t), damDesc(self, DamageType.COLD, self:combatTalentStatDamage(t, "str", 30, 420)))
+		Each point in acid drake talents also increases your acid resistance by 1%%.]]):format(self:getTalentRadius(t), damDesc(self, DamageType.ACID, self:combatTalentStatDamage(t, "str", 30, 420)))
 	end,
 }

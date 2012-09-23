@@ -21,4 +21,4 @@ return { one_per_level=true,
 	{group="majeyal-generic"},
 	{name="protective-aura", minor=true, percent=50},
 	{name="necrotic-air", minor=true, percent=50},
-}
+	{name="glowing-chest", minor=true, percent=20},

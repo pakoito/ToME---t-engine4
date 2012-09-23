@@ -31,4 +31,5 @@ return { one_per_level=true,
 	{name="necrotic-air", minor=true, percent=20},
 	{name="protective-aura", minor=true, percent=20},
 	{name="spellblaze-scar", minor=true, percent=20},
+	{name="glowing-chest", minor=true, percent=30},
 }

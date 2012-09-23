@@ -19,4 +19,5 @@
 
 return { one_per_level=true,
 	{group="majeyal-generic"},
+	{name="glowing-chest", minor=true, percent=100, max_repeat=3},
 }

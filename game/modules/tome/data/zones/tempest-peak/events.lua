@@ -22,4 +22,5 @@ return { one_per_level=true,
 	{group="majeyal-generic"},
 	{name="icy-ground", minor=true, percent=40},
 	{name="whistling-vortex", minor=true, percent=100},
+	{name="glowing-chest", minor=true, percent=20},
 }

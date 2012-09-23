@@ -23,4 +23,5 @@ return { one_per_level=true,
 	{group="majeyal-generic"},
 	{name="bligthed-soil", minor=true, percent=40},
 	{name="spellblaze-scar", minor=true, percent=40},
+	{name="glowing-chest", minor=true, percent=80, max_repeat=3},
 }
