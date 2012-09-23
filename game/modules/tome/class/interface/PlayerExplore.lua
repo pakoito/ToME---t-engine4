@@ -2187,7 +2187,7 @@ function _M:autoExplore()
 			for _, c in ipairs(unseen_doors) do
 				local x, y = toDouble(c)
 				local terrain = game.level.map(x, y, Map.TERRAIN)
-				if not terrain.door_player_check then
+				if not terrain.door_player_check and not terrain.door_player_stop then
 					target_type = "door"
 					choices[#choices + 1] = c
 					-- we may take an extra step to approach a door squarely from a cardinal direction, so let's account for this
@@ -2230,7 +2230,7 @@ function _M:autoExplore()
 			for _, c in ipairs(unseen_doors) do
 				local x, y = toDouble(c)
 				local terrain = game.level.map(x, y, Map.TERRAIN)
-				if terrain.door_player_check then
+				if terrain.door_player_check or terrain.door_player_stop then
 					target_type = "door"
 					choices[#choices + 1] = c
 					local dist = core.fov.distance(self.x, self.y, x, y, true) + 10*door_values[c]

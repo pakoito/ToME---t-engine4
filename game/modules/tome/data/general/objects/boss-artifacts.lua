@@ -1400,7 +1400,7 @@ newEntity{ base = "BASE_GREATMAUL", define_as="ROTTING_MAUL",
 		dammod = {str=1.4},
 		convert_damage = {[DamageType.BLIGHT] = 20},
 		melee_project={[DamageType.CORRUPTED_BLOOD] = 30},
-		special_on_hit = {desc="25% to damage nearby foes", on_kill=true, fct=function(combat, who, target)
+		special_on_hit = {desc="25% to damage nearby creatures", on_kill=true, fct=function(combat, who, target)
 			if rng.percent(25) then
 			local o, item, inven_id = who:findInAllInventoriesBy("define_as", "ROTTING_MAUL")
 				local dam = rng.avg(1,2) * (70+ who:getStr() * 1.8)
