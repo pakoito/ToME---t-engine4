@@ -730,10 +730,8 @@ newEffect{
 		table.sort(l, function(a,b) return a[2] > b[2] end)
 		local inc = {}
 		for i = 1, 3 do inc[l[i][1]] = eff.power end
-		eff.stat = self:addTemporaryValue("inc_stats", inc)
-	end,
-	deactivate = function(self, eff)
-		self:removeTemporaryValue("inc_stats", eff.stat)
+		self:effectTemporaryValue(eff, "inc_stats", inc)
+		self:effectTemporaryValue(eff, "die_at", -eff.die_at)
 	end,
 }
 

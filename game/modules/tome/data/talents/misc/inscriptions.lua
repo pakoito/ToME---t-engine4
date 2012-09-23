@@ -246,17 +246,18 @@ newInscription{
 	tactical = { BUFF = 2 },
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		self:setEffect(self.EFF_HEROISM, data.dur, {power=data.power + data.inc_stat})
+		self:setEffect(self.EFF_HEROISM, data.dur, {power=data.power + data.inc_stat, die_at=data.die_at + data.inc_stat * 30})
 		return true
 	end,
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		return ([[Activate the infusion to increase three of your primary stats by %d for %d turns.
-		It will always increase your three highest stats.]]):format(data.power + data.inc_stat, data.dur)
+		Also while Heroism is active you will only die when reaching -%d life. However, when below 0 you cannot see how much life you have left and you will die if you did not heal before the effect ends.
+		It will always increase your three highest stats.]]):format(data.power + data.inc_stat, data.dur, data.die_at + data.inc_stat * 30)
 	end,
 	short_info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		return ([[+%d for %d turns]]):format(data.power + data.inc_stat, data.dur)
+		return ([[+%d for %d turns, die at -%d]]):format(data.power + data.inc_stat, data.dur, data.die_at + data.inc_stat * 30)
 	end,
 }
 
