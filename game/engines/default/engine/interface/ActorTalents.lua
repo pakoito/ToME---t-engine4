@@ -304,6 +304,7 @@ function _M:learnTalent(t_id, force, nb)
 		if t.on_learn then 
 			local ret = t.on_learn(self, t)
 			if ret then
+				if ret == true then ret = {} end
 				self.talents_learn_vals[t.id] = self.talents_learn_vals[t.id] or {}
 				self.talents_learn_vals[t.id][self.talents[t_id]] = ret
 			end

@@ -28,12 +28,6 @@ newTalent{
 	require = cursed_wil_req1,
 	points = 5,
 	no_unlearn_last = true,
-	on_learn = function(self, t)
-		return true
-	end,
-	on_unlearn = function(self, t)
-		return true
-	end,
 	getHealPerKill = function(self, t)
 		return combatTalentDamage(self, t, 15, 50)
 	end,
