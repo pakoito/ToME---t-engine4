@@ -34,7 +34,7 @@ newEntity{
 	rarity = 5,
 	cost = 4,
 	wielder = {
-		resists={[DamageType.FIRE] = resolvers.mbonus_material(20, 20)},
+		resists={[DamageType.FIRE] = resolvers.mbonus_material(15, 15)},
 	},
 }
 newEntity{
@@ -45,7 +45,7 @@ newEntity{
 	rarity = 5,
 	cost = 4,
 	wielder = {
-		resists={[DamageType.COLD] = resolvers.mbonus_material(20, 20)},
+		resists={[DamageType.COLD] = resolvers.mbonus_material(15, 15)},
 	},
 }
 newEntity{
@@ -56,7 +56,7 @@ newEntity{
 	rarity = 5,
 	cost = 4,
 	wielder = {
-		resists={[DamageType.ACID] = resolvers.mbonus_material(20, 20)},
+		resists={[DamageType.ACID] = resolvers.mbonus_material(15, 15)},
 	},
 }
 newEntity{
@@ -67,7 +67,7 @@ newEntity{
 	rarity = 5,
 	cost = 4,
 	wielder = {
-		resists={[DamageType.LIGHTNING] = resolvers.mbonus_material(20, 20)},
+		resists={[DamageType.LIGHTNING] = resolvers.mbonus_material(15, 15)},
 	},
 }
 -- rare resists
@@ -101,7 +101,7 @@ newEntity{
 	rarity = 12,
 	cost = 4,
 	wielder = {
-		resists={[DamageType.MIND] = resolvers.mbonus_material(10, 10)},
+		resists={[DamageType.PHYSICAL] = resolvers.mbonus_material(10, 10)},
 	},
 }
 newEntity{

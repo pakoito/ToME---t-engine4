@@ -29,7 +29,7 @@ newEntity{
 	rarity = 12,
 	cost = 12,
 	wielder = {
-		combat_physresist = resolvers.mbonus_material(10, 2),
+		combat_physresist = resolvers.mbonus_material(10, 5),
 	},
 }
 
@@ -267,8 +267,8 @@ newEntity{
 		inc_stats = {
 			[Stats.STAT_CON] = resolvers.mbonus_material(5, 1),
 		},
-		combat_mentalresist = resolvers.mbonus_material(3, 3),
-		combat_physresist = resolvers.mbonus_material(3, 3),
+		combat_mentalresist = resolvers.mbonus_material(10, 5),
+		combat_physresist = resolvers.mbonus_material(10, 5),
 	},
 }
 
@@ -409,9 +409,9 @@ newEntity{
 	rarity = 15,
 	cost = 30,
 	wielder = {
-		combat_spellresist = resolvers.mbonus_material(3, 3),
-		combat_mentalresist = resolvers.mbonus_material(3, 3),
-		combat_physresist = resolvers.mbonus_material(3, 3),
+		combat_spellresist = resolvers.mbonus_material(10, 5),
+		combat_mentalresist = resolvers.mbonus_material(10, 5),
+		combat_physresist = resolvers.mbonus_material(10, 5),
 	},
 }
 

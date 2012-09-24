@@ -71,7 +71,7 @@ newEntity{
 	cost = 10,
 	wielder = {
 		inc_stats = { [Stats.STAT_WIL] = resolvers.mbonus_material(2, 1) },
-		combat_mentalresist = resolvers.mbonus_material(3, 3),
+		combat_mentalresist = resolvers.mbonus_material(5, 5),
 	},
 }
 newEntity{
@@ -180,7 +180,7 @@ newEntity{
 	rarity = 6,
 	cost = 5,
 	wielder = {
-		combat_physresist = resolvers.mbonus_material(7, 3),
+		combat_physresist = resolvers.mbonus_material(10, 5),
 	},
 }
 
@@ -260,7 +260,7 @@ newEntity{
 	cost = 50,
 	wielder = {
 		combat_dam = resolvers.mbonus_material(6, 6),
-		combat_physresist = resolvers.mbonus_material(3, 3),
+		combat_physresist = resolvers.mbonus_material(10, 5),
 		inc_stats = {
 			[Stats.STAT_WIL] = resolvers.mbonus_material(4, 3),
 		},
@@ -278,7 +278,7 @@ newEntity{
 	wielder = {
 		combat_armor = resolvers.mbonus_material(5, 4),
 		combat_def = resolvers.mbonus_material(4, 4),
-		combat_physresist = resolvers.mbonus_material(7, 3),
+		combat_physresist = resolvers.mbonus_material(10, 5),
 	},
 }
 
@@ -334,7 +334,7 @@ newEntity{
 		resists={
 			[DamageType.MIND] = resolvers.mbonus_material(15, 5),
 		},
-		combat_mentalresist = resolvers.mbonus_material(7, 3),
+		combat_mentalresist = resolvers.mbonus_material(10, 5),
 	},
 }
 
@@ -351,7 +351,7 @@ newEntity{
 			[Stats.STAT_STR] = resolvers.mbonus_material(5, 1),
 			[Stats.STAT_WIL] = resolvers.mbonus_material(5, 1),
 		},
-		combat_mentalresist = resolvers.mbonus_material(7, 3),
+		combat_mentalresist = resolvers.mbonus_material(10, 5),
 		lite = resolvers.mbonus_material(1, 1),
 	},
 }
@@ -446,7 +446,7 @@ newEntity{
 			[DamageType.BLIGHT] = resolvers.mbonus_material(10, 5),
 			[DamageType.DARKNESS] = resolvers.mbonus_material(10, 5),
 		},
-		combat_mentalresist = resolvers.mbonus_material(7, 3),
+		combat_mentalresist = resolvers.mbonus_material(10, 5),
 	},
 }
 
@@ -463,7 +463,7 @@ newEntity{
 		inc_stats = {
 			[Stats.STAT_STR] = resolvers.mbonus_material(5, 1),
 		},
-		combat_mentalresist = resolvers.mbonus_material(7, 3),
-		combat_physresist = resolvers.mbonus_material(7, 3),
+		combat_mentalresist = resolvers.mbonus_material(10, 5),
+		combat_physresist = resolvers.mbonus_material(10, 5),
 	},
 }

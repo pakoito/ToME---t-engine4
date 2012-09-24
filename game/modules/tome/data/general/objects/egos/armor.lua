@@ -30,7 +30,7 @@ newEntity{
 	rarity = 5,
 	cost = 6,
 	wielder = {
-		resists={[DamageType.FIRE] = resolvers.mbonus_material(30, 10)},
+		resists={[DamageType.FIRE] = resolvers.mbonus_material(15, 15)},
 	},
 }
 newEntity{
@@ -41,7 +41,7 @@ newEntity{
 	rarity = 5,
 	cost = 6,
 	wielder = {
-		resists={[DamageType.COLD] = resolvers.mbonus_material(30, 10)},
+		resists={[DamageType.COLD] = resolvers.mbonus_material(15, 15)},
 	},
 }
 newEntity{
@@ -52,7 +52,7 @@ newEntity{
 	rarity = 5,
 	cost = 6,
 	wielder = {
-		resists={[DamageType.ACID] = resolvers.mbonus_material(30, 10)},
+		resists={[DamageType.ACID] = resolvers.mbonus_material(15, 15)},
 	},
 }
 newEntity{
@@ -63,7 +63,7 @@ newEntity{
 	rarity = 5,
 	cost = 6,
 	wielder = {
-		resists={[DamageType.LIGHTNING] = resolvers.mbonus_material(30, 10)},
+		resists={[DamageType.LIGHTNING] = resolvers.mbonus_material(15, 15)},
 	},
 }
 newEntity{
@@ -74,7 +74,7 @@ newEntity{
 	rarity = 10,
 	cost = 6,
 	wielder = {
-		resists={[DamageType.TEMPORAL] = resolvers.mbonus_material(30, 10)},
+		resists={[DamageType.TEMPORAL] = resolvers.mbonus_material(15, 15)},
 	},
 }
 newEntity{
@@ -86,8 +86,8 @@ newEntity{
 	cost = 7,
 	wielder = {
 		resists={
-			[DamageType.LIGHT] = resolvers.mbonus_material(20, 10),
-			[DamageType.DARKNESS] = resolvers.mbonus_material(20, 10),
+			[DamageType.LIGHT] = resolvers.mbonus_material(10, 10),
+			[DamageType.DARKNESS] = resolvers.mbonus_material(10, 10),
 		},
 	},
 }
@@ -100,7 +100,7 @@ newEntity{
 	cost = 7,
 	wielder = {
 		resists={
-			[DamageType.NATURE] = resolvers.mbonus_material(20, 10),
+			[DamageType.NATURE] = resolvers.mbonus_material(10, 10),
 			[DamageType.BLIGHT] = resolvers.mbonus_material(10, 10),
 		},
 	},
@@ -114,7 +114,7 @@ newEntity{
 	rarity = 7,
 	cost = 6,
 	wielder = {
-		combat_physresist = resolvers.mbonus_material(10, 5),
+		combat_physresist = resolvers.mbonus_material(15, 10),
 	},
 }
 newEntity{
@@ -125,7 +125,7 @@ newEntity{
 	rarity = 7,
 	cost = 6,
 	wielder = {
-		combat_spellresist = resolvers.mbonus_material(10, 5),
+		combat_spellresist = resolvers.mbonus_material(15, 10),
 	},
 }
 newEntity{
@@ -136,7 +136,7 @@ newEntity{
 	rarity = 7,
 	cost = 6,
 	wielder = {
-		combat_mentalresist = resolvers.mbonus_material(10, 5),
+		combat_mentalresist = resolvers.mbonus_material(15, 10),
 	},
 }
 
@@ -209,7 +209,7 @@ newEntity{
 	power_source = {psionic=true},
 	name = "enlightening ", prefix=true, instant_resolve=true,
 	keywords = {enlight=true},
-	level_range = {10, 50},
+	level_range = {20, 50},
 	greater_ego = 1,
 	rarity = 15,
 	cost = 30,
@@ -218,7 +218,7 @@ newEntity{
 			[Stats.STAT_WIL] = resolvers.mbonus_material(5, 1),
 			[Stats.STAT_CUN] = resolvers.mbonus_material(5, 1),
 		},
-		combat_mentalresist = resolvers.mbonus_material(10, 5),
+		combat_mentalresist = resolvers.mbonus_material(15, 10),
 	},
 }
 newEntity{
@@ -233,7 +233,7 @@ newEntity{
 		inc_stats = {
 			[Stats.STAT_CUN] = resolvers.mbonus_material(5, 1),
 		},
-		combat_mentalresist = resolvers.mbonus_material(10, 5),
+		combat_mentalresist = resolvers.mbonus_material(15, 10),
 		combat_armor = resolvers.mbonus_material(7, 3),
 		combat_def = resolvers.mbonus_material(10, 5),
 	},
@@ -258,7 +258,7 @@ newEntity{
 	power_source = {nature=true},
 	name = " of the deep", suffix=true, instant_resolve=true,
 	keywords = {deep=true},
-	level_range = {10, 50},
+	level_range = {20, 50},
 	greater_ego = 1,
 	rarity = 90,
 	cost = 20,

@@ -63,7 +63,6 @@ Each swing drips pestulant fluid before it, and each droplet writhes and wriggle
 	blind_immune = 1,
 	disease_immune = 1,
 
-	combat_spellspeed = 1.3,
 	combat_spellpower = resolvers.levelup(10, 1, 1),
 
 
@@ -693,9 +692,9 @@ With each slow breath it takes reality distorts around it.  Blue twirls into red
 
 		[Talents.T_LUCID_DREAMER]={base=4, every=12, max=8},
 		[Talents.T_DREAM_WALK]={base=4, every=12, max=8},
-		[Talents.T_SLUMBER]={base=4, every=6, max=8},
+	--	[Talents.T_SLUMBER]={base=4, every=6, max=8},
 		[Talents.T_SLEEP]={base=4, every=6, max=8},
-		[Talents.T_RESTLESS_NIGHT]={base=4, every=6, max=8},
+	--	[Talents.T_RESTLESS_NIGHT]={base=4, every=6, max=8},
 		[Talents.T_DREAMSCAPE]=10,
 		
 		-- Summon Dream Seeds while awake
@@ -746,8 +745,8 @@ With each slow breath it takes reality distorts around it.  Blue twirls into red
 			end
 		-- Script the AI to encourage opening with dream scape
 		elseif self.ai_target.actor and self.ai_target.actor.game_ender and not game.zone.is_dream_scape then
-			if not self:isTalentCoolingDown(self.T_SLUMBER) then
-				self:forceUseTalent(self.T_SLUMBER, {})
+			if not self:isTalentCoolingDown(self.T_SLEEP) then
+				self:forceUseTalent(self.T_SLEEP, {})
 			elseif not self:isTalentCoolingDown(self.T_DREAMSCAPE) and self.ai_target.actor:attr("sleep") then
 				self:forceUseTalent(self.T_DREAMSCAPE, {})
 			end

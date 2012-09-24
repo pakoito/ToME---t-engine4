@@ -125,7 +125,7 @@ newEntity{
 	rarity = 7,
 	cost = 6,
 	wielder = {
-		combat_physresist = resolvers.mbonus_material(10, 2),
+		combat_physresist = resolvers.mbonus_material(10, 5),
 	},
 }
 
@@ -137,7 +137,7 @@ newEntity{
 	rarity = 7,
 	cost = 6,
 	wielder = {
-		combat_spellresist = resolvers.mbonus_material(10, 2),
+		combat_spellresist = resolvers.mbonus_material(10, 5),
 	},
 }
 
@@ -149,7 +149,7 @@ newEntity{
 	rarity = 7,
 	cost = 6,
 	wielder = {
-		combat_mentalresist = resolvers.mbonus_material(10, 2),
+		combat_mentalresist = resolvers.mbonus_material(10, 5),
 	},
 }
 
@@ -162,8 +162,8 @@ newEntity{
 	rarity = 16,
 	cost = 50,
 	wielder = {
-		combat_physresist = resolvers.mbonus_material(5, 5),
-		combat_mentalresist = resolvers.mbonus_material(5, 5),
+		combat_physresist = resolvers.mbonus_material(10, 5),
+		combat_mentalresist = resolvers.mbonus_material(10, 5),
 	},
 }
 
@@ -187,7 +187,7 @@ newEntity{
 	rarity = 5,
 	cost = 6,
 	wielder = {
-		combat_def = resolvers.mbonus_material(10, 2),
+		combat_def = resolvers.mbonus_material(10, 5),
 	},
 }
 
@@ -215,7 +215,7 @@ newEntity{
 		inc_stats = {
 			[Stats.STAT_WIL] = resolvers.mbonus_material(2, 2),
 		},
-		combat_mentalresist = resolvers.mbonus_material(10, 2),
+		combat_mentalresist = resolvers.mbonus_material(10, 5),
 	},
 }
 
@@ -270,7 +270,7 @@ newEntity{
 			[Stats.STAT_CON] = resolvers.mbonus_material(5, 1),
 		},
 		combat_spellresist = resolvers.mbonus_material(20, 10, function(e, v) return 0, -v end),
-		stamina_regen = resolvers.mbonus_material(12, 3, function(e, v) v=v/10 return 0, -v end),
+		stamina_regen = resolvers.mbonus_material(12, 3, function(e, v) v=v/10 return 0, v end),
 		mana_regen = resolvers.mbonus_material(50, 10, function(e, v) v=v/100 return 0, -v end),
 		talents_types_mastery = {
 			["technique/combat-training"] = resolvers.mbonus_material(2, 2, function(e, v) v=v/10 return 0, v end),
@@ -325,7 +325,7 @@ newEntity{
 			[Stats.STAT_MAG] = resolvers.mbonus_material(5, 1),
 			[Stats.STAT_WIL] = resolvers.mbonus_material(5, 1),
 		},
-		combat_spellresist = resolvers.mbonus_material(4, 1),
+		combat_spellresist = resolvers.mbonus_material(10, 5),
 		max_mana = resolvers.mbonus_material(40, 40),
 	},
 }
@@ -343,7 +343,7 @@ newEntity{
 			[Stats.STAT_STR] = resolvers.mbonus_material(5, 1),
 			[Stats.STAT_CON] = resolvers.mbonus_material(5, 1),
 		},
-		combat_physresist = resolvers.mbonus_material(4, 1),
+		combat_physresist = resolvers.mbonus_material(10, 5),
 		max_life = resolvers.mbonus_material(70, 40),
 	},
 }

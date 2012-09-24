@@ -276,7 +276,7 @@ newEntity{
 	rarity = 6,
 	cost = 5,
 	wielder = {
-		combat_physresist = resolvers.mbonus_material(7, 3),
+		combat_physresist = resolvers.mbonus_material(10, 5),
 	},
 }
 
@@ -288,7 +288,7 @@ newEntity{
 	rarity = 6,
 	cost = 5,
 	wielder = {
-		combat_mentalresist = resolvers.mbonus_material(7, 3),
+		combat_mentalresist = resolvers.mbonus_material(10, 5),
 	},
 }
 
@@ -300,7 +300,7 @@ newEntity{
 	rarity = 6,
 	cost = 5,
 	wielder = {
-		combat_spellresist = resolvers.mbonus_material(7, 3),
+		combat_spellresist = resolvers.mbonus_material(10, 5),
 	},
 }
 
@@ -334,7 +334,7 @@ newEntity{
 		inc_damage = { [DamageType.FIRE] = resolvers.mbonus_material(10, 10) },
 		resists = {},
 	},
-	resolvers.genericlast(function(e) e.wielder.resists[engine.DamageType.FIRE] = (e.wielder.resists[engine.DamageType.FIRE] or 0) + (e.wielder.inc_damage[engine.DamageType.FIRE]*2) end),
+	resolvers.genericlast(function(e) e.wielder.resists[engine.DamageType.FIRE] = (e.wielder.resists[engine.DamageType.FIRE] or 0) + math.floor(e.wielder.inc_damage[engine.DamageType.FIRE]*1.5) end),
 }
 
 newEntity{
@@ -348,7 +348,7 @@ newEntity{
 		inc_damage = { [DamageType.COLD] = resolvers.mbonus_material(10, 10) },
 		resists = {},
 	},
-	resolvers.genericlast(function(e) e.wielder.resists[engine.DamageType.COLD] = (e.wielder.resists[engine.DamageType.COLD] or 0) + (e.wielder.inc_damage[engine.DamageType.COLD]*2) end),
+	resolvers.genericlast(function(e) e.wielder.resists[engine.DamageType.COLD] = (e.wielder.resists[engine.DamageType.COLD] or 0) + math.floor(e.wielder.inc_damage[engine.DamageType.COLD]*1.5) end),
 }
 
 newEntity{
@@ -362,7 +362,7 @@ newEntity{
 		inc_damage = { [DamageType.NATURE] = resolvers.mbonus_material(10, 10) },
 		resists = {},
 	},
-	resolvers.genericlast(function(e) e.wielder.resists[engine.DamageType.NATURE] = (e.wielder.resists[engine.DamageType.NATURE] or 0) + (e.wielder.inc_damage[engine.DamageType.NATURE]*2) end),
+	resolvers.genericlast(function(e) e.wielder.resists[engine.DamageType.NATURE] = (e.wielder.resists[engine.DamageType.NATURE] or 0) + math.floor(e.wielder.inc_damage[engine.DamageType.NATURE]*1.5) end),
 }
 
 newEntity{
@@ -376,7 +376,7 @@ newEntity{
 		inc_damage = { [DamageType.LIGHTNING] = resolvers.mbonus_material(10, 10) },
 		resists = {},
 	},
-	resolvers.genericlast(function(e) e.wielder.resists[engine.DamageType.LIGHTNING] = (e.wielder.resists[engine.DamageType.LIGHTNING] or 0) + (e.wielder.inc_damage[engine.DamageType.LIGHTNING]*2) end),
+	resolvers.genericlast(function(e) e.wielder.resists[engine.DamageType.LIGHTNING] = (e.wielder.resists[engine.DamageType.LIGHTNING] or 0) + math.floor(e.wielder.inc_damage[engine.DamageType.LIGHTNING]*1.5) end),
 }
 
 newEntity{
@@ -390,7 +390,7 @@ newEntity{
 		inc_damage = { [DamageType.LIGHT] = resolvers.mbonus_material(10, 10) },
 		resists = {},
 	},
-	resolvers.genericlast(function(e) e.wielder.resists[engine.DamageType.LIGHT] = (e.wielder.resists[engine.DamageType.LIGHT] or 0) + (e.wielder.inc_damage[engine.DamageType.LIGHT]*2) end),
+	resolvers.genericlast(function(e) e.wielder.resists[engine.DamageType.LIGHT] = (e.wielder.resists[engine.DamageType.LIGHT] or 0) + math.floor(e.wielder.inc_damage[engine.DamageType.LIGHT]*1.5) end),
 }
 
 newEntity{
@@ -404,7 +404,7 @@ newEntity{
 		inc_damage = { [DamageType.DARKNESS] = resolvers.mbonus_material(10, 10) },
 		resists = {},
 	},
-	resolvers.genericlast(function(e) e.wielder.resists[engine.DamageType.DARKNESS] = (e.wielder.resists[engine.DamageType.DARKNESS] or 0) + (e.wielder.inc_damage[engine.DamageType.DARKNESS]*2) end),
+	resolvers.genericlast(function(e) e.wielder.resists[engine.DamageType.DARKNESS] = (e.wielder.resists[engine.DamageType.DARKNESS] or 0) + math.floor(e.wielder.inc_damage[engine.DamageType.DARKNESS]*1.5) end),
 }
 
 newEntity{
@@ -418,7 +418,7 @@ newEntity{
 		inc_damage = { [DamageType.ACID] = resolvers.mbonus_material(10, 10) },
 		resists = {},
 	},
-	resolvers.genericlast(function(e) e.wielder.resists[engine.DamageType.ACID] = (e.wielder.resists[engine.DamageType.ACID] or 0) + (e.wielder.inc_damage[engine.DamageType.ACID]*2) end),
+	resolvers.genericlast(function(e) e.wielder.resists[engine.DamageType.ACID] = (e.wielder.resists[engine.DamageType.ACID] or 0) + math.floor(e.wielder.inc_damage[engine.DamageType.ACID]*1.5) end),
 }
 
 -- rare resists

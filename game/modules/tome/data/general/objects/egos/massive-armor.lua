@@ -58,7 +58,7 @@ newEntity{
 	rarity = 8,
 	cost = 7,
 	wielder = {
-		combat_armor = resolvers.mbonus_material(12, 3),
+		combat_armor = resolvers.mbonus_material(15, 5),
 	},
 }
 

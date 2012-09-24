@@ -321,7 +321,7 @@ newEntity{
 	wielder = {
 		inc_stats = { [Stats.STAT_STR] = resolvers.mbonus_material(8, 2) },
 	},
-	resolvers.genericlast(function(e) e.wielder.combat_armor = (e.wielder.combat_armor or 0) + e.wielder.inc_stats[engine.interface.ActorStats.STAT_STR] end),
+	resolvers.genericlast(function(e) e.wielder.combat_armor = (e.wielder.combat_armor or 0) + (e.wielder.inc_stats[engine.interface.ActorStats.STAT_STR]*2) end),
 }
 newEntity{
 	power_source = {technique=true},
@@ -333,7 +333,7 @@ newEntity{
 	wielder = {
 		inc_stats = { [Stats.STAT_CUN] = resolvers.mbonus_material(8, 2) },
 	},
-	resolvers.genericlast(function(e) e.wielder.combat_def = (e.wielder.combat_def or 0) + e.wielder.inc_stats[engine.interface.ActorStats.STAT_CUN] end),
+	resolvers.genericlast(function(e) e.wielder.combat_def = (e.wielder.combat_def or 0) + (e.wielder.inc_stats[engine.interface.ActorStats.STAT_CUN]*2) end),
 }
 newEntity{
 	power_source = {technique=true},
@@ -345,7 +345,7 @@ newEntity{
 	wielder = {
 		inc_stats = { [Stats.STAT_DEX] = resolvers.mbonus_material(8, 2) },
 	},
-	resolvers.genericlast(function(e) e.wielder.combat_atk = (e.wielder.combat_atk or 0) + e.wielder.inc_stats[engine.interface.ActorStats.STAT_DEX] end),
+	resolvers.genericlast(function(e) e.wielder.combat_atk = (e.wielder.combat_atk or 0) + (e.wielder.inc_stats[engine.interface.ActorStats.STAT_DEX]*2) end),
 }
 newEntity{
 	power_source = {nature=true},
@@ -357,7 +357,7 @@ newEntity{
 	wielder = {
 		inc_stats = { [Stats.STAT_CON] = resolvers.mbonus_material(8, 2) },
 	},
-	resolvers.genericlast(function(e) e.wielder.combat_physresist = (e.wielder.combat_physresist or 0) + e.wielder.inc_stats[engine.interface.ActorStats.STAT_CON] end),
+	resolvers.genericlast(function(e) e.wielder.combat_physresist = (e.wielder.combat_physresist or 0) + (e.wielder.inc_stats[engine.interface.ActorStats.STAT_CON]*2) end),
 }
 
 newEntity{
@@ -370,7 +370,7 @@ newEntity{
 	wielder = {
 		inc_stats = { [Stats.STAT_MAG] = resolvers.mbonus_material(8, 2) },
 	},
-	resolvers.genericlast(function(e) e.wielder.combat_spellresist = (e.wielder.combat_spellresist or 0) + e.wielder.inc_stats[engine.interface.ActorStats.STAT_MAG] end),
+	resolvers.genericlast(function(e) e.wielder.combat_spellresist = (e.wielder.combat_spellresist or 0) + (e.wielder.inc_stats[engine.interface.ActorStats.STAT_MAG]*2) end),
 }
 
 newEntity{
@@ -383,7 +383,7 @@ newEntity{
 	wielder = {
 		inc_stats = { [Stats.STAT_WIL] = resolvers.mbonus_material(8, 2) },
 	},
-	resolvers.genericlast(function(e) e.wielder.combat_mentalresist = (e.wielder.combat_mentalresist or 0) + e.wielder.inc_stats[engine.interface.ActorStats.STAT_WIL] end),
+	resolvers.genericlast(function(e) e.wielder.combat_mentalresist = (e.wielder.combat_mentalresist or 0) + (e.wielder.inc_stats[engine.interface.ActorStats.STAT_WIL]*2) end),
 }
 newEntity{
 	power_source = {technique=true},
@@ -503,7 +503,7 @@ newEntity{
 		inc_stats = {
 			[Stats.STAT_CON] = resolvers.mbonus_material(5, 1),
 		},
-		combat_spellresist = resolvers.mbonus_material(7, 3),
+		combat_spellresist = resolvers.mbonus_material(10, 5),
 		max_stamina = resolvers.mbonus_material(30, 10),
 	},
 }
@@ -522,7 +522,7 @@ newEntity{
 		},
 		poison_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
 		disease_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
-		combat_physresist = resolvers.mbonus_material(7, 3),
+		combat_physresist = resolvers.mbonus_material(10, 5),
 	},
 }
 
