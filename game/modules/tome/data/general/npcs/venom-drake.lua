@@ -55,7 +55,7 @@ newEntity{ base = "BASE_NPC_VENOM_DRAKE",
 	on_melee_hit = {[DamageType.ACID]=resolvers.mbonus(7, 2)},
 
 	make_escort = {
-		{type="dragon", subtype="acid", name="acid drake hatchling", number=3, no_subescort=true},
+		{type="dragon", subtype="venom", name="venom drake hatchling", number=3, no_subescort=true},
 	},
 }
 
@@ -72,7 +72,7 @@ newEntity{ base = "BASE_NPC_VENOM_DRAKE",
 	lite = 1,
 
 	make_escort = {
-		{type="dragon", name="acid drake hatchling", number=1},
+		{type="dragon", name="venom drake hatchling", number=1},
 	},
 
 	resolvers.talents{
