@@ -2366,3 +2366,33 @@ newDamageType{
 		end
 	end,
 }
+
+-- Bouncy slime!
+newDamageType{
+	name = "bouncing slime", type = "BOUNCE_SLIME",
+	projector = function(src, x, y, type, dam, tmp)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			local realdam = DamageType:get(DamageType.SLIME).projector(src, x, y, DamageType.SLIME, dam.dam)
+			if dam.nb > 0 then
+				dam.done = dam.done or {}
+				dam.done[target.uid] = true
+				dam.nb = dam.nb - 1
+
+				local list = {}
+				src:project({type="ball", selffire=false, x=x, y=y, radius=6, range=0}, x, y, function(bx, by)
+					local actor = game.level.map(bx, by, Map.ACTOR)
+					if actor and not dam.done[actor.uid] and src:reactionToward(actor) < 0 then
+						print("[BounceSlime] found possible actor", actor.name, bx, by, "distance", core.fov.distance(x, y, bx, by))
+						list[#list+1] = actor
+					end
+				end)
+				if #list > 0 then
+					local st = rng.table(list)
+					src:projectile({type="bolt", range=6, x=x, y=y, display={particle="bolt_slime"}}, st.x, st.y, DamageType.BOUNCE_SLIME, dam, {type="slime"})
+				end
+			end
+			return realdam
+		end		
+	end,
+}

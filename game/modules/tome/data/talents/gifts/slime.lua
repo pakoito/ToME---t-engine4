@@ -24,24 +24,26 @@ newTalent{
 	points = 5,
 	random_ego = "attack",
 	equilibrium = 4,
-	cooldown = 30,
+	cooldown = 5,
 	tactical = { ATTACK = { NATURE = 2} },
 	range = 10,
-	direct_hit = true,
 	proj_speed = 8,
+	requires_target = true,
 	action = function(self, t)
-		local tg = {type="bolt", range=self:getTalentRange(t), display={particle="bolt_arcane"}}
+		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_slime"}}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:projectile(tg, x, y, DamageType.SLIME, self:mindCrit(self:combatTalentStatDamage(t, "dex", 30, 290)), {type="slime"})
+		self:projectile(tg, x, y, DamageType.BOUNCE_SLIME, {nb=math.ceil(self:getTalentLevel(t)), dam=self:mindCrit(self:combatTalentMindDamage(t, 30, 290))}, {type="slime"})
 		game:playSoundNear(self, "talents/slime")
 		return true
 	end,
 	info = function(self, t)
 		return ([[Spit slime at your target doing %0.2f nature damage and slowing it down by 30%% for 3 turns.
-		The damage will increase with the Dexterity stat]]):format(damDesc(self, DamageType.NATURE, self:combatTalentStatDamage(t, "dex", 30, 290)))
+		The bolt can bounce to a nearby foe %d times.
+		The damage will increase with Mindpower]]):format(damDesc(self, DamageType.NATURE, self:combatTalentMindDamage(t, 30, 290)), math.ceil(self:getTalentLevel(t)))
 	end,
 }
+
 newTalent{
 	name = "Poisonous Spores",
 	type = {"wild-gift/slime", 2},
@@ -51,22 +53,30 @@ newTalent{
 	message = "@Source@ releases poisonous spores at @target@.",
 	equilibrium = 2,
 	cooldown = 10,
-	range = 1,
-	tactical = { ATTACK = { NATURE = 1, poison = 1 } },
+	range = 10,
+	tactical = { ATTACK = { NATURE = 3 } },
+	radius = 1,
 	requires_target = true,
 	action = function(self, t)
-		local tg = {type="hit", range=self:getTalentRange(t)}
-		local x, y, target = self:getTarget(tg)
-		if not x or not y or not target then return nil end
-		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
-		self.combat_apr = self.combat_apr + 1000
-		self:attackTarget(target, DamageType.POISON, 1.5 + self:getTalentLevel(t) / 4, true)
-		self.combat_apr = self.combat_apr - 1000
+		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), friendlyfire=false}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+
+		local dam = self:combatTalentMindDamage(t, 40, 900)
+
+		self:project(tg, x, y, function(px, py)
+			local target = game.level.map(px, py, Map.ACTOR)
+			if target and self:reactionToward(target) < 0 and target:canBe("poison") then
+				local poison = rng.table{target.EFF_SPYDRIC_POISON, target.EFF_INSIDIOUS_POISON, target.EFF_CRIPPLING_POISON, target.EFF_NUMBING_POISON}
+				target:setEffect(poison, 10, {src=self, power=dam/10, reduce=10+self:getTalentLevel(t)*2, fail=math.ceil(5+self:getTalentLevel(t)), heal_factor=20+self:getTalentLevel(t)*4})
+			end
+		end, 0, {type="slime"})
+
 		game:playSoundNear(self, "talents/slime")
 		return true
 	end,
 	info = function(self, t)
-		return ([[Releases poisonous spores at the target bypassing his armor and doing %d%% weapon damage.]]):format(damDesc(self, DamageType.POISON, 100 * (1.5 + self:getTalentLevel(t) / 4)))
+		return ([[Releases poisonous spores at an area of radius 1, infecting the foes inside with a random poison doing %0.2f nature damage over 10 turns.]]):format(damDesc(self, DamageType.NATURE, self:combatTalentMindDamage(t, 40, 900)))
 	end,
 }
 

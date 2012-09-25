@@ -67,7 +67,7 @@ newTalent{
 newTalent{
 	name = "Acid Splash",
 	type = {"wild-gift/mucus", 2},
-	require = gifts_req4,
+	require = gifts_req2,
 	points = 5,
 	equilibrium = 10,
 	cooldown = 10,
@@ -83,7 +83,7 @@ newTalent{
 		if not x or not y then return nil end
 
 		local grids, px, py = self:project(tg, x, y, DamageType.ACID, self:mindCrit(t.getDamage(self, t)))
-		self:callTalent(self.T_MUCUS, nil, px, py, tg.radius)
+		if self:knowTalent(self.T_MUCUS) then self:callTalent(self.T_MUCUS, nil, px, py, tg.radius) end
 		game.level.map:particleEmitter(px, py, tg.radius, "acidflash", {radius=tg.radius, tx=px, ty=py})
 
 		local tgts = {}
@@ -154,7 +154,7 @@ newTalent{ short_name = "MUCUS_OOZE_SPIT",
 newTalent{
 	name = "Living Mucus",
 	type = {"wild-gift/mucus", 3},
-	require = gifts_req2,
+	require = gifts_req3,
 	points = 5,
 	mode = "passive",
 	getMax = function(self, t) return math.floor(self:getCun() / 10) end,
@@ -242,7 +242,7 @@ newTalent{
 newTalent{
 	name = "Oozewalk",
 	type = {"wild-gift/mucus", 4},
-	require = gifts_req3,
+	require = gifts_req4,
 	points = 5,
 	cooldown = 7,
 	equilibrium = 10,
