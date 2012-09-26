@@ -127,8 +127,8 @@ newTalent{
 	end,
 }
 
-newTalent{ short_name = "MUCUS_OOZE_SPIT",
-	name = "Slime Spit",
+newTalent{ short_name = "MUCUS_OOZE_SPIT", 
+	name = "Slime Spit", image = "talents/slime_spit.png",
 	type = {"wild-gift/other",1},
 	points = 5,
 	equilibrium = 2,

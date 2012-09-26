@@ -130,11 +130,11 @@ uberTalent{
 
 uberTalent{
 	name = "Fungal Blood",
-	require = { special={desc="Do not be undead.", fct=function(self) return not self:attr("undead") end} },
+	require = { special={desc="Be able to use infusions.", fct=function(self) return not self.inscription_restrictions or self.inscription_restrictions['inscriptions/infusions'] end} },
 	tactical = { HEAL = function(self) return not self:hasEffect(self.EFF_FUNGAL_BLOOD) and 0 or math.ceil(self:hasEffect(self.EFF_FUNGAL_BLOOD).power / 150) end },
 	on_pre_use = function(self, t) return self:hasEffect(self.EFF_FUNGAL_BLOOD) and self:hasEffect(self.EFF_FUNGAL_BLOOD).power > 0 and not self:attr("undead") end,
 	trigger = function(self, t)
-		if self:attr("undead") then return end
+		if self.inscription_restrictions and not self.inscription_restrictions['inscriptions/infusions'] then return end
 		self:setEffect(self.EFF_FUNGAL_BLOOD, 6, {power=self:getCon() * 1.5})
 	end,
 	action = function(self, t)

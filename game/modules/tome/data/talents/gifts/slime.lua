@@ -55,7 +55,7 @@ newTalent{
 	cooldown = 10,
 	range = 10,
 	tactical = { ATTACK = { NATURE = 3 } },
-	radius = 1,
+	radius = function(self, t) if self:getTalentLevel(t) < 3 then return 1 else return 2 end end,
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), friendlyfire=false}
@@ -76,7 +76,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Releases poisonous spores at an area of radius 1, infecting the foes inside with a random poison doing %0.2f nature damage over 10 turns.]]):format(damDesc(self, DamageType.NATURE, self:combatTalentMindDamage(t, 40, 900)))
+		return ([[Releases poisonous spores at an area of radius %d, infecting the foes inside with a random poison doing %0.2f nature damage over 10 turns.]]):format(self:getTalentRadius(t), damDesc(self, DamageType.NATURE, self:combatTalentMindDamage(t, 40, 900)))
 	end,
 }
 

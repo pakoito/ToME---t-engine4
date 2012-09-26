@@ -35,7 +35,9 @@ return function(gen, id)
 					if e then gen:roomMapAddEntity(i-1+x, j-1+y, "object", e) end
 					-- Add guardians
 					if rng.percent(50) then
-						e = gen.zone:makeEntity(gen.level, "actor")
+						local filter = {}
+						if game.level.data and game.level.data.generator and game.level.data.generator.actor and game.level.data.generator.actor.filters then filter = rng.table(game.level.data.generator.actor.filters) end
+						e = gen.zone:makeEntity(gen.level, "actor", filter, nil, true)
 						if e then gen:roomMapAddEntity(i-1+x, j-1+y, "actor", e) end
 					end
 				end
