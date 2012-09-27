@@ -133,6 +133,7 @@ newTalent{
 		m.inc_damage.all = (m.inc_damage.all or 0) - 50
 		m.forceLevelup = function() end
 		m.on_die = nil
+		m.die = nil
 		m.puuid = nil
 		m.on_acquire_target = nil
 		m.no_inventory_access = true

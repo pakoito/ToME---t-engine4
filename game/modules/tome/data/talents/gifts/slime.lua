@@ -87,15 +87,16 @@ newTalent{
 	points = 5,
 	mode = "sustained",
 	message = "The skin of @Source@ starts dripping acid.",
-	sustain_equilibrium = 25,
-	cooldown = 10,
+	sustain_equilibrium = 30,
+	cooldown = 30,
 	range = 1,
+	requires_target = false,
 	tactical = { DEFEND = 1 },
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/slime")
 		local power = 10 + 5 * self:getTalentLevel(t)
 		return {
-			onhit = self:addTemporaryValue("on_melee_hit", {[DamageType.ACID]=power}),
+			onhit = self:addTemporaryValue("on_melee_hit", {[DamageType.ACID_DISARM]={dam=power, chance=5 + self:getTalentLevel(t) * 2}}),
 		}
 	end,
 	deactivate = function(self, t, p)
@@ -103,7 +104,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Your skin drips with acid, damaging all that hit you for %0.2f acid damage.]]):format(damDesc(self, DamageType.ACID, 10 + 5 * self:getTalentLevel(t)))
+		return ([[Your skin drips with acid, damaging all that hit you for %0.2f acid damage and giving %d%% chances to disarm them for 3 turns.]]):format(damDesc(self, DamageType.ACID, self:combatTalentMindDamage(t, 10, 50)), 5 + self:getTalentLevel(t) * 2)
 	end,
 }
 

@@ -619,7 +619,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 
 	-- Reactive target on hit damage
 	if hitted then for typ, dam in pairs(target.on_melee_hit) do
-		if dam > 0 then
+		if (type(dam) == "number" and dam > 0) or (dam.dam and dam.dam > 0) then
 			DamageType:get(typ).projector(target, self.x, self.y, typ, dam)
 		end
 	end end

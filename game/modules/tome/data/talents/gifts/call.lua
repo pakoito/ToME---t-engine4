@@ -44,7 +44,7 @@ newTalent{
 		if self:knowTalent(self.T_EARTH_S_EYES) then
 			local te = self:getTalentFromId(self.T_EARTH_S_EYES)
 			self:talentTemporaryValue(ret, "esp_all", 1)
-			self:talentTemporaryValue(ret, "esp_range", te.radius_esp(self, te))
+			self:talentTemporaryValue(ret, "esp_range", te.radius_esp(self, te) - 10)
 		end
 
 		game:playSoundNear(self, "talents/heal")
