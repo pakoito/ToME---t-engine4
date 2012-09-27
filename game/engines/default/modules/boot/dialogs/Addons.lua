@@ -61,7 +61,7 @@ function _M:init()
 	self:setFocus(self.c_list)
 	self:setupUI()
 
-	self:select(self.list[1])
+--	self:select(self.list[1])
 
 	self.key:addBinds{
 		EXIT = function() game:unregisterDialog(self) end,
