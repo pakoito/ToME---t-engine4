@@ -124,8 +124,11 @@ newTalent{
 	radius = function(self, t)
 		return util.bound(4 - self:getTalentLevel(t) / 2, 1, 4)
 	end,
-	getDuration = function(self, t)
-		return math.floor(util.bound(7 - self:getTalentLevel(t) / 2, 2, 7))
+	getNbTalents = function(self, t)
+		if self:getTalentLevel(t) < 3 then return 1
+		elseif self:getTalentLevel(t) < 5 then return 2
+		else return 3
+		end
 	end,
 	is_teleport = true,
 	action = function(self, t)
@@ -141,13 +144,13 @@ newTalent{
 		self:teleportRandom(x, y, self:getTalentRadius(t))
 		game.level.map:particleEmitter(self.x, self.y, 1, "slime")
 
-		local duration = t.getDuration(self, t)
+		local nb = t.getNbTalents(self, t)
 
-		for tid, lev in pairs(self.talents) do
-			local t = self:getTalentFromId(tid)
-			if t.mode == "activated" and not t.innate and (not self.talents_cd[t.id] or self.talents_cd[t.id] == 0) then
-				self.talents_cd[t.id] = duration
-			end
+		local list = {}
+		for tid, cd in pairs(self.talents_cd) do list[#list+1] = tid end
+		while #list > 0 and nb > 0 do
+			self.talents_cd[rng.tableRemove(list)] = nil
+			nb = nb - 1
 		end
 		game:playSoundNear(self, "talents/slime")
 		return true
@@ -155,9 +158,9 @@ newTalent{
 	info = function(self, t)
 		local range = self:getTalentRange(t)
 		local radius = self:getTalentRadius(t)
-		local duration = t.getDuration(self, t)
+		local talents = t.getNbTalents(self, t)
 		return ([[You extend slimy roots into the ground, follow them, and re-appear somewhere else in a range of %d with error margin of %d.
-		The process is quite a strain on your body and all your talents will be put on cooldown for %d turns.]]):format(range, radius, duration)
+		Doing so changes your internal structure slightly, taking %d random talent(s) off cooldown.]]):format(range, radius, talents)
 	end,
 }
 
