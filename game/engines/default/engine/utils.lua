@@ -1728,7 +1728,7 @@ function core.fov.line(sx, sy, tx, ty, block, start_at_end)
 end
 
 --- Sets the permissiveness of FoV based on the shape of blocked terrain
--- @param val can be a number between 0 and 1 (least permissive to most permissive) or the name of a shape: square, diamond, octagon, firstpeek.
+-- @param val can be any number between 0.0 and 1.0 (least permissive to most permissive) or the name of a shape: square, diamond, octagon, firstpeek.
 -- val = 0.0 is equivalent to "square", and val = 1.0 is equivalent to "diamond"
 -- "firstpeek" is the least permissive setting that allows @ to see r below:
 -- @##
@@ -1745,6 +1745,29 @@ function core.fov.set_permissiveness(val)
 	val = util.bound(val, 0.0, 0.5)
 	core.fov.set_permissiveness_base(val)
 	return 2*val
+end
+
+--- Sets the FoV vision size of the source actor (if applicable to the chosen FoV algorithm).
+-- @param should be any number between 0.0 and 1.0 (smallest to largest).  Default is 1.
+-- val = 1.0 will result in symmetric vision and targeting (i.e., I can see you if and only if you can see me)
+--           for applicable fov algorithms ("large_ass").
+function core.fov.set_actor_vision_size(val)
+	val = util.bound(0.5*val, 0.0, 0.5)
+	core.fov.set_actor_vision_size_base(val)
+	return 2*val
+end
+
+--- Sets the algorithm used for FoV (and LoS).
+-- @param val should be a string: "recursive_shadowcasting" (same as "default"), or "large_actor_recursive_shadowcasting" (same as "large_ass")
+-- "large_ass" is symmetric if "actor_vision_size" is set to 1.
+-- Note: Hexagonal vision shape currently only supports "recursive_shadowcasting", but all algorithms will eventually be supported in hex grids.
+function core.fov.set_algorithm(val)
+	val = type(val) == "string" and ((string.lower(val) == "default" or string.lower(val) == "recursive_shadowcasting") and 0 or
+						(string.lower(val) == "large_ass" or string.lower(val) == "large_actor_recursive_shadowcasting") and 1) or
+					type(tonumber(val)) == "number" and math.floor(util.bound(tonumber(val), 0, 1))
+
+	core.fov.set_algorithm_base(val)
+	return val
 end
 
 --- Sets the vision shape or distance metric for field of vision, talent ranges, AoEs, etc.

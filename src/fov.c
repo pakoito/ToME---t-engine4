@@ -47,9 +47,6 @@
  ******************************************************************
  ******************************************************************/
 
-static const char FOV_PERMISSIVE_KEY = 'k';
-static const char FOV_VISION_SHAPE_KEY = 'k';
-
 struct lua_fovcache
 {
 	bool *cache;
@@ -85,54 +82,37 @@ static int lua_fov_set_permissiveness(lua_State *L)
 	if (val < 0.0f) val = 0.0f;
 	else if (val > 0.5f) val = 0.5f;
 	val = 0.5f - val;
-	lua_pushlightuserdata(L, (void *)&FOV_PERMISSIVE_KEY); // push address as guaranteed unique key
-	lua_pushnumber(L, val);
-	lua_settable(L, LUA_REGISTRYINDEX);
+	fov_set_permissiveness(val);
 	return 0;
 }
 
-static int lua_fov_get_permissiveness(lua_State *L)
+static int lua_fov_set_actor_vision_size(lua_State *L)
 {
-	lua_pushlightuserdata(L, (void *)&FOV_PERMISSIVE_KEY); // push address as guaranteed unique key
-	lua_gettable(L, LUA_REGISTRYINDEX);  /* retrieve value */
-	if (lua_isnil(L, -1)) {
-		lua_pop(L, 1); // remove nil
-		lua_pushlightuserdata(L, (void *)&FOV_PERMISSIVE_KEY); // push address as guaranteed unique key
-		lua_pushnumber(L, 0.5f);
-		lua_settable(L, LUA_REGISTRYINDEX);
-		lua_pushnumber(L, 0.5f);
-	}
-	return 1;
+	float val = luaL_checknumber(L, 1);
+	if (val < 0.0f) val = 0.0f;
+	else if (val > 0.5f) val = 0.5f;
+	fov_set_actor_vision_size(val);
+	return 0;
 }
 
 static int lua_fov_set_vision_shape(lua_State *L)
 {
-	int val = luaL_checknumber(L, 1);
-	lua_pushlightuserdata(L, (void *)&FOV_VISION_SHAPE_KEY); // push address as guaranteed unique key
-	lua_pushnumber(L, val);
-	lua_settable(L, LUA_REGISTRYINDEX);
+	fov_shape_type val = luaL_checknumber(L, 1);
+	fov_set_vision_shape(val);
 	return 0;
 }
 
-static int lua_fov_get_vision_shape(lua_State *L)
+static int lua_fov_set_algorithm(lua_State *L)
 {
-	lua_pushlightuserdata(L, (void *)&FOV_VISION_SHAPE_KEY); // push address as guaranteed unique key
-	lua_gettable(L, LUA_REGISTRYINDEX);  /* retrieve value */
-	if (lua_isnil(L, -1)) {
-		lua_pop(L, 1); // remove nil
-		lua_pushlightuserdata(L, (void *)&FOV_VISION_SHAPE_KEY); // push address as guaranteed unique key
-		lua_pushnumber(L, FOV_SHAPE_CIRCLE_ROUND);
-		lua_settable(L, LUA_REGISTRYINDEX);
-		lua_pushnumber(L, FOV_SHAPE_CIRCLE_ROUND);
-	}
-	return 1;
+	fov_algo_type val = luaL_checknumber(L, 1);
+	fov_set_algorithm(val);
+	return 0;
 }
 
 // this is kinda ugly, so I may come back to it and make it purty
 static int lua_fov_get_distance(lua_State *L, double x1, double y1, double x2, double y2, bool ret_float)
 {
-	lua_fov_get_vision_shape(L);
-	int shape = luaL_checknumber(L, -1);
+	fov_shape_type shape = fov_get_vision_shape();
 	if (shape == FOV_SHAPE_HEX) {
 		int dx1 = (x1 < 0.0f) ? -(int)(0.5f - x1) : (int)(0.5f + x1);
 		int dy1 = (y1 < 0.0f) ? -(int)(0.5f - y1) : (int)(0.5f + y1);
@@ -184,7 +164,7 @@ static int lua_fov_get_distance(lua_State *L, double x1, double y1, double x2, d
 			dist = sqrt(dx*dx + dy*dy) + 0.5;
 			break;
 		}
-	
+
 		if (ret_float)
 			lua_pushnumber(L, dist);
 		else
@@ -264,14 +244,9 @@ static int lua_fov_calc_circle(lua_State *L)
 	fov_settings_init(&(fov.fov_settings));
 	fov_settings_set_opacity_test_function(&(fov.fov_settings), map_opaque);
 	fov_settings_set_apply_lighting_function(&(fov.fov_settings), map_seen);
-	lua_fov_get_permissiveness(L);
-	fov.fov_settings.permissiveness = luaL_checknumber(L, -1);
-	lua_fov_get_vision_shape(L);
-	fov.fov_settings.shape = luaL_checknumber(L, -1);
 
 	fov_circle(&(fov.fov_settings), &fov, NULL, x, y, radius);
 	map_seen(&fov, x, y, 0, 0, radius, NULL);
-	fov_settings_free(&(fov.fov_settings));
 
 	luaL_unref(L, LUA_REGISTRYINDEX, fov.apply_ref);
 	luaL_unref(L, LUA_REGISTRYINDEX, fov.opaque_ref);
@@ -324,14 +299,9 @@ static int lua_fov_calc_beam(lua_State *L)
 	fov_settings_init(&(fov.fov_settings));
 	fov_settings_set_opacity_test_function(&(fov.fov_settings), map_opaque);
 	fov_settings_set_apply_lighting_function(&(fov.fov_settings), map_seen);
-	lua_fov_get_permissiveness(L);
-	fov.fov_settings.permissiveness = luaL_checknumber(L, -1);
-	lua_fov_get_vision_shape(L);
-	fov.fov_settings.shape = luaL_checknumber(L, -1);
 
 	fov_beam(&(fov.fov_settings), &fov, NULL, x, y, radius, dir, angle);
 	map_seen(&fov, x, y, 0, 0, radius, NULL);
-	fov_settings_free(&(fov.fov_settings));
 
 	luaL_unref(L, LUA_REGISTRYINDEX, fov.apply_ref);
 	luaL_unref(L, LUA_REGISTRYINDEX, fov.opaque_ref);
@@ -374,14 +344,9 @@ static int lua_fov_calc_beam_any_angle(lua_State *L)
 	fov_settings_init(&(fov.fov_settings));
 	fov_settings_set_opacity_test_function(&(fov.fov_settings), map_opaque);
 	fov_settings_set_apply_lighting_function(&(fov.fov_settings), map_seen);
-	lua_fov_get_permissiveness(L);
-	fov.fov_settings.permissiveness = luaL_checknumber(L, -1);
-	lua_fov_get_vision_shape(L);
-	fov.fov_settings.shape = luaL_checknumber(L, -1);
 
 	fov_beam_any_angle(&(fov.fov_settings), &fov, NULL, x, y, radius, sx, sy, dx, dy, beam_angle);
 	map_seen(&fov, x, y, 0, 0, radius, NULL);
-	fov_settings_free(&(fov.fov_settings));
 
 	luaL_unref(L, LUA_REGISTRYINDEX, fov.apply_ref);
 	luaL_unref(L, LUA_REGISTRYINDEX, fov.opaque_ref);
@@ -615,14 +580,9 @@ static int lua_fov_calc_default_fov(lua_State *L)
 	fov_settings_init(&(fov.fov_settings));
 	fov_settings_set_opacity_test_function(&(fov.fov_settings), map_default_opaque);
 	fov_settings_set_apply_lighting_function(&(fov.fov_settings), map_default_seen);
-	lua_fov_get_permissiveness(L);
-	fov.fov_settings.permissiveness = luaL_checknumber(L, -1);
-	lua_fov_get_vision_shape(L);
-	fov.fov_settings.shape = luaL_checknumber(L, -1);
 
 	fov_circle(&(fov.fov_settings), &fov, &def, x, y, radius);
 	map_default_seen(&fov, x, y, 0, 0, radius, &def);
-	fov_settings_free(&(fov.fov_settings));
 
 //	printf(">TOP %d\n", lua_gettop(L));
 
@@ -643,10 +603,6 @@ static int lua_fov_line_init(lua_State *L)
 	int h = luaL_checknumber(L, 6);
 	bool start_at_end = lua_toboolean(L, 7);
 	int opaque_ref = luaL_ref(L, LUA_REGISTRYINDEX);
-	lua_fov_get_permissiveness(L);
-	float permissiveness = luaL_checknumber(L, -1);
-	lua_fov_get_vision_shape(L);
-	int shape = luaL_checknumber(L, -1);
 
 	lua_fov_line *lua_line = (lua_fov_line*)lua_newuserdata(L, sizeof(lua_fov_line));
 	fov_line_data *line = &(lua_line->line);
@@ -659,8 +615,6 @@ static int lua_fov_line_init(lua_State *L)
 	fov->h = h;
 	fov_settings_init(&(fov->fov_settings));
 	fov_settings_set_opacity_test_function(&(fov->fov_settings), map_opaque);
-	fov->fov_settings.permissiveness = permissiveness;
-	fov->fov_settings.shape = shape;
 
 	fov_create_los_line(&(fov->fov_settings), fov, NULL, line, source_x, source_y, dest_x, dest_y, start_at_end);
 	luaL_unref(L, LUA_REGISTRYINDEX, fov->opaque_ref);
@@ -693,12 +647,14 @@ static int lua_fov_line_step(lua_State *L)
 	// errors that would be inconsistent with FoV.  Therefore, let's be extra cautious!
 	float fx = (float)line->t * line->step_x - line->eps;
 	float fy = (float)line->t * line->step_y - line->eps;
-	int x_prev = (fx < 0.0f) ? -(int)(0.5f - fx) : (int)(0.5f + fx);
-	int y_prev = (fy < 0.0f) ? -(int)(0.5f - fy) : (int)(0.5f + fy);
+	float x0 = line->start_x;
+	float y0 = line->start_y;
+	int x_prev = (fx < 0.0f) ? -(int)(x0 - fx) : (int)(x0 + fx);
+	int y_prev = (fy < 0.0f) ? -(int)(y0 - fy) : (int)(y0 + fy);
 	fx += line->step_x;
 	fy += line->step_y;
-	int x = (fx < 0.0f) ? -(int)(0.5f - fx) : (int)(0.5f + fx);
-	int y = (fy < 0.0f) ? -(int)(0.5f - fy) : (int)(0.5f + fy);
+	int x = (fx < 0.0f) ? -(int)(x0 - fx) : (int)(x0 + fx);
+	int y = (fy < 0.0f) ? -(int)(y0 - fy) : (int)(y0 + fy);
 
 	// check if line is blocked by a corner of an adjacent tile
 	bool is_corner_blocked = false;
@@ -706,8 +662,8 @@ static int lua_fov_line_step(lua_State *L)
 	if (x != x_prev && y != y_prev && lua_line->fov.opaque_ref != LUA_NOREF) {
 		fx = (float)line->t * line->step_x;
 		fy = (float)line->t * line->step_y;
-		float dx = (line->step_x < 0.0f) ? ((float)x - fx + 0.5f) / line->step_x : ((float)x - fx - 0.5f) / line->step_x;
-		float dy = (line->step_y < 0.0f) ? ((float)y - fy + 0.5f) / line->step_y : ((float)y - fy - 0.5f) / line->step_y;
+		float dx = (line->step_x < 0.0f) ? ((float)x - fx + x0) / line->step_x : ((float)x - fx - x0) / line->step_x;
+		float dy = (line->step_y < 0.0f) ? ((float)y - fy + y0) / line->step_y : ((float)y - fy - y0) / line->step_y;
 
 		if (dx > dy) {
 			corner_x = line->source_x + x_prev;
@@ -810,9 +766,9 @@ static int lua_fov_line_blocked_xy(lua_State *L)
 
 	if (!line->is_blocked) return 0;
 	float val = (float)line->block_t * line->step_x - line->eps;
-	int x = (val < 0.0f) ? -(int)(0.5f - val) : (int)(0.5f + val);
+	int x = (val < 0.0f) ? -(int)(line->start_x - val) : (int)(line->start_x + val);
 	val = (float)line->block_t * line->step_y - line->eps;
-	int y = (val < 0.0f) ? -(int)(0.5f - val) : (int)(0.5f + val);
+	int y = (val < 0.0f) ? -(int)(line->start_y - val) : (int)(line->start_y + val);
 	lua_pushnumber(L, line->source_x + x);
 	lua_pushnumber(L, line->source_y + y);
 	return 2;
@@ -836,15 +792,15 @@ static int lua_fov_line_last_open_xy(lua_State *L)
 
 	if (line->is_blocked) {
 		val = (float)(line->block_t - 1) * line->step_x - line->eps;
-		x = (val < 0.0f) ? -(int)(0.5f - val) : (int)(0.5f + val);
+		x = (val < 0.0f) ? -(int)(line->start_x - val) : (int)(line->start_x + val);
 		val = (float)(line->block_t - 1) * line->step_y - line->eps;
-		y = (val < 0.0f) ? -(int)(0.5f - val) : (int)(0.5f + val);
+		y = (val < 0.0f) ? -(int)(line->start_y - val) : (int)(line->start_y + val);
 	}
 	else {
 		val = (float)line->dest_t * line->step_x - line->eps;
-		x = (val < 0.0f) ? -(int)(0.5f - val) : (int)(0.5f + val);
+		x = (val < 0.0f) ? -(int)(line->start_x - val) : (int)(line->start_x + val);
 		val = (float)line->dest_t * line->step_y - line->eps;
-		y = (val < 0.0f) ? -(int)(0.5f - val) : (int)(0.5f + val);
+		y = (val < 0.0f) ? -(int)(line->start_y - val) : (int)(line->start_y + val);
 	}
 	lua_pushnumber(L, line->source_x + x);
 	lua_pushnumber(L, line->source_y + y);
@@ -907,13 +863,15 @@ static int lua_fov_line_export(lua_State *L)
 	lua_pushnumber(L, line->t);
 	lua_pushnumber(L, line->block_t);
 	lua_pushnumber(L, line->dest_t);
+	lua_pushnumber(L, line->start_x);
+	lua_pushnumber(L, line->start_y);
 	lua_pushnumber(L, line->step_x);
 	lua_pushnumber(L, line->step_y);
 	lua_pushnumber(L, line->eps);
 	lua_pushboolean(L, line->is_blocked);
 	lua_pushboolean(L, line->start_at_end);
 
-	return 10;
+	return 12;
 }
 
 // load previously exported data (or create a specific line of your choice)
@@ -926,15 +884,13 @@ static int lua_fov_line_import(lua_State *L)
 	int t = luaL_checknumber(L, 5);
 	int block_t = luaL_checknumber(L, 6);
 	int dest_t = luaL_checknumber(L, 7);
-	float step_x = luaL_checknumber(L, 8);
-	float step_y = luaL_checknumber(L, 9);
-	float eps = luaL_checknumber(L, 10);
-	bool is_blocked = lua_toboolean(L, 11);
-	bool start_at_end = lua_toboolean(L, 12);
-	lua_fov_get_permissiveness(L);
-	float permissiveness = luaL_checknumber(L, -1);
-	lua_fov_get_vision_shape(L);
-	int shape = luaL_checknumber(L, -1);
+	float start_x = luaL_checknumber(L, 8);
+	float start_y = luaL_checknumber(L, 9);
+	float step_x = luaL_checknumber(L, 10);
+	float step_y = luaL_checknumber(L, 11);
+	float eps = luaL_checknumber(L, 12);
+	bool is_blocked = lua_toboolean(L, 13);
+	bool start_at_end = lua_toboolean(L, 14);
 
 	lua_fov_line *lua_line = (lua_fov_line*)lua_newuserdata(L, sizeof(lua_fov_line));
 	fov_line_data *line = &(lua_line->line);
@@ -943,6 +899,8 @@ static int lua_fov_line_import(lua_State *L)
 	line->t = t;
 	line->block_t = block_t;
 	line->dest_t = dest_t;
+	line->start_x = start_x;
+	line->start_y = start_y;
 	line->step_x = step_x;
 	line->step_y = step_y;
 	line->eps = eps;
@@ -958,8 +916,6 @@ static int lua_fov_line_import(lua_State *L)
 	fov->h = h;
 	fov_settings_init(&(fov->fov_settings));
 	fov_settings_set_opacity_test_function(&(fov->fov_settings), map_opaque);
-	fov->fov_settings.permissiveness = permissiveness;
-	fov->fov_settings.shape = shape;
 
 	auxiliar_setclass(L, "core{fovline}", -1);
 	return 1;
@@ -976,8 +932,6 @@ static int lua_free_fov_line(lua_State *L)
 		lua_line = (lua_fov_line*)auxiliar_checkclass(L, "core{fovline}", 1);
 	}
 
-	// Nothing should actually be allocated, but just in case...
-	fov_settings_free(&(lua_line->fov.fov_settings));
 	lua_pushnumber(L, 1);
 	return 1;
 }
@@ -1293,8 +1247,6 @@ static int lua_free_hex_fov_line(lua_State *L)
 		lua_line = (lua_hex_fov_line*)auxiliar_checkclass(L, "core{hexfovline}", 1);
 	}
 
-	// Nothing should actually be allocated, but just in case...
-	fov_settings_free(&(lua_line->fov.fov_settings));
 	lua_pushnumber(L, 1);
 	return 1;
 }
@@ -1312,7 +1264,9 @@ static const struct luaL_reg fovlib[] =
 	{"line_import", lua_fov_line_import},
 	{"hex_line_import", lua_hex_fov_line_import},
 	{"set_permissiveness_base", lua_fov_set_permissiveness},
+	{"set_actor_vision_size_base", lua_fov_set_actor_vision_size},
 	{"set_vision_shape_base", lua_fov_set_vision_shape},
+	{"set_algorithm_base", lua_fov_set_algorithm},
 	{NULL, NULL},
 };
 

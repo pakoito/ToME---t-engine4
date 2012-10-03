@@ -37,13 +37,14 @@
  * There were no, and are no, floating point precision guarantees for maps greater than 1024x1024.  Use double precision if desired.
  * Nevertheless, map sizes greater than 10000x10000 should still behave reasonably.
  */
-#define GRID_EPSILON 4.0e-6f
+#define GRID_EPSILON 1.0e-5f
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /** Eight-way directions. */
+/* Note: this has pretty much been deprecated */
 typedef enum {
     FOV_EAST = 0,
     FOV_NORTHEAST,
@@ -54,6 +55,10 @@ typedef enum {
     FOV_SOUTH,
     FOV_SOUTHEAST
 } fov_direction_type;
+
+/** The opposite direction to that given. */
+/* Note: this has pretty much been deprecated */
+#define fov_direction_opposite(direction) ((fov_direction_type)(((direction)+4)&0x7))
 
 /** Values for the shape setting.          Distance                       Y (given x, radius r)   Square distance check   */
 typedef enum {
@@ -67,25 +72,22 @@ typedef enum {
     FOV_SHAPE_HEX
 } fov_shape_type;
 
-/* The following aren't implemented and, hence, aren't used. If the the original library implements it later, we may want to copy it */
-/** Values for the corner peek setting. */
-/*
 typedef enum {
-    FOV_CORNER_NOPEEK,
-    FOV_CORNER_PEEK
-} fov_corner_peek_type;
-*/
-/** Values for the opaque apply setting. */
-/*
-typedef enum {
-    FOV_OPAQUE_APPLY,
-    FOV_OPAQUE_NOAPPLY
-} fov_opaque_apply_type;
-*/
+    FOV_ALGO_RECURSIVE_SHADOW,  /* Recursive shadowcasting (standard algorithm) */
+    FOV_ALGO_LARGE_ASS,         /* Large Actor recurSive Shadowcasting */
+    /*FOV_ALGO_SAVVY,*/         /* Symmetric And Variable permissiveness */
+    /*FOV_ALGO_THE_LAST*/       /* Tiger_eye's Heteromorphic Efficient Large Actor Symmetric Targeting */
+} fov_algo_type;
 
-/** @cond INTERNAL */
-typedef /*@null@*/ unsigned *height_array_t;
-/** @endcond */
+/* FOV_BUFFER_SIZE must be a power of two.  Could probably get by with 1024,
+   but certainly not with 512.  2048 is actually exceedingly conservative.
+*/
+#define FOV_BUFFER_SIZE 2048
+typedef struct {
+    int index;
+    int prev_len;
+    float buffer[FOV_BUFFER_SIZE];
+} fov_buffer_type;
 
 typedef struct {
     /** Opacity test callback. */
@@ -94,25 +96,20 @@ typedef struct {
     /** Lighting callback to set lighting on a map tile. */
     /*@null@*/ void (*apply)(void *map, int x, int y, int dx, int dy, int radius, void *src);
 
+    /** A measure of how much an opaque tile blocks a tile.  0.5 for square, 0 for diamond shape.  Shapes extend to the edge of the tile. */
+    float permissiveness;
+
+    /** A measure of the size of the source actor.  0 for smallest, 0.5 for full-width diamond.  Not applicable to all algorithms. */
+    float actor_vision_size;
+
+    /** Algorithm setting. */
+    fov_algo_type algorithm;
+
     /** Shape setting. */
     fov_shape_type shape;
 
-    /** Whether to peek around corners. */
-    /* fov_corner_peek_type corner_peek; */
-
-    /** Whether to call apply on opaque tiles. */
-    /* fov_opaque_apply_type opaque_apply; */
-
-    /** \cond INTERNAL */
-
-    /** Pre-calculated data. \internal */
-    /*@null@*/ height_array_t *heights;
-
-    /** Size of pre-calculated data. \internal */
-    unsigned numheights;
-
-    /** A measure of how much an opaque tile blocks a tile.  0 for square, 0.5 for diamond shape.  Shapes extend to the edge of the tile. */
-    float permissiveness;
+    /** Data buffer */
+    fov_buffer_type *buffer_data;
 
     /** \endcond */
 } fov_settings_type;
@@ -133,6 +130,12 @@ typedef struct {
 
     /** Parametrization value of t for where line reaches destination tile */
     int dest_t;
+
+    /** Position from within the tile that the line originates */
+    float start_x;
+
+    /** Position from within the tile that the line originates */
+    float start_y;
 
     /** Size of single step in x direction, so for t'th step, delta_x = t*step_x */
     float step_x;
@@ -186,8 +189,17 @@ typedef struct {
     bool start_at_end;
 } hex_fov_line_data;
 
-/** The opposite direction to that given. */
-#define fov_direction_opposite(direction) ((fov_direction_type)(((direction)+4)&0x7))
+/* set global parameters */
+void fov_set_permissiveness(float value);
+void fov_set_actor_vision_size(float value);
+void fov_set_algorithm(fov_algo_type value);
+void fov_set_vision_shape(fov_shape_type value);
+
+/* get global parameters */
+float fov_get_permissiveness();
+float fov_get_actor_vision_size();
+fov_algo_type fov_get_algorithm();
+fov_shape_type fov_get_vision_shape();
 
 /**
  * Set all the default options. You must call this option when you
@@ -196,8 +208,6 @@ typedef struct {
  * These settings are the defaults used:
  *
  * - shape: FOV_SHAPE_CIRCLE_PRECALCULATE
- * - corner_peek: FOV_CORNER_NOPEEK
- * - opaque_apply: FOV_OPAQUE_APPLY
  *
  * Callbacks still need to be set up after calling this function.
  *
@@ -224,45 +234,7 @@ void fov_settings_init(fov_settings_type *settings);
  *
  * - FOV_SHAPE_SQUARE: Limit the FOV to an R*R square.
  */
-void fov_settings_set_shape(fov_settings_type *settings, fov_shape_type value);
-
-/**
- * <em>NOT YET IMPLEMENTED</em>.
- *
- * Set whether sources will peek around corners.
- *
- * \param settings Pointer to data structure containing settings.
- * \param value One of the following values:
- *
- * - FOV_CORNER_PEEK \b (default): Renders:
-\verbatim
-  ........
-  ........
-  ........
-  ..@#
-  ...#
-\endverbatim
- * - FOV_CORNER_NOPEEK: Renders:
-\verbatim
-  ......
-  .....
-  ....
-  ..@#
-  ...#
-\endverbatim
- */
-/* void fov_settings_set_corner_peek(fov_settings_type *settings, fov_corner_peek_type value); */
-
-/**
- * Whether to call the apply callback on opaque tiles.
- *
- * \param settings Pointer to data structure containing settings.
- * \param value One of the following values:
- *
- * - FOV_OPAQUE_APPLY \b (default): Call apply callback on opaque tiles.
- * - FOV_OPAQUE_NOAPPLY: Do not call the apply callback on opaque tiles.
- */
-/* void fov_settings_set_opaque_apply(fov_settings_type *settings, fov_opaque_apply_type value); */
+/* void fov_settings_set_shape(fov_settings_type *settings, fov_shape_type value); */
 
 /**
  * Set the function used to test whether a map tile is opaque.
@@ -281,14 +253,6 @@ void fov_settings_set_opacity_test_function(fov_settings_type *settings, bool (*
 void fov_settings_set_apply_lighting_function(fov_settings_type *settings, void (*f)(void *map, int x, int y, int dx, int dy, int radius, void *src));
 
 /**
- * Free any memory that may have been cached in the settings
- * structure.
- *
- * \param settings Pointer to data structure containing settings.
- */
-void fov_settings_free(fov_settings_type *settings);
-
-/**
  * Calculate a full circle field of view from a source at (x,y).
  *
  * \param settings Pointer to data structure containing settings.
@@ -299,7 +263,7 @@ void fov_settings_free(fov_settings_type *settings);
  * \param radius Euclidean distance from (x,y) after which to stop.
  */
 void fov_circle(fov_settings_type *settings, void *map, void *source,
-                int source_x, int source_y, unsigned radius
+                int source_x, int source_y, int radius
 );
 
 /**
@@ -320,7 +284,7 @@ void fov_circle(fov_settings_type *settings, void *map, void *source,
  * \param angle The angle at the base of the beam of light, in degrees.
  */
 void fov_beam(fov_settings_type *settings, void *map, void *source,
-              int source_x, int source_y, unsigned radius,
+              int source_x, int source_y, int radius,
               fov_direction_type direction, float angle
 );
 
@@ -343,7 +307,7 @@ void fov_beam(fov_settings_type *settings, void *map, void *source,
  * \param beam_angle The angle at the base of the beam of light, in degrees.
  */
 void fov_beam_any_angle(fov_settings_type *settings, void *map, void *source,
-                        int source_x, int source_y, unsigned radius, int sx, int sy,
+                        int source_x, int source_y, int radius, int sx, int sy,
                         float dx, float dy, float beam_angle
 );
 
@@ -368,14 +332,14 @@ void fov_create_los_line(fov_settings_type *settings, void *map, void *source,
                          int source_x, int source_y,
                          int dest_x, int dest_y,
                          bool start_at_end
-); 
+);
 
 void hex_fov_create_los_line(fov_settings_type *settings, void *map, void *source,
                          hex_fov_line_data *line,
                          int source_x, int source_y,
                          int dest_x, int dest_y,
                          bool start_at_end
-); 
+);
 
 #ifdef __cplusplus
 } /* extern "C" */

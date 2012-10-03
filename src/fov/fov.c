@@ -70,6 +70,259 @@ centre
 Slope from @ to X
 */
 
+/* Lookup table of heights (given r, x) for up to 32 radius for all fov shapes (except hex).
+   We could, in principle, have a cache for radii up to 255 using char, but that would require 223 KB.
+   32 seemed like a reasonable cutoff, and requires less than 4 KB (actually uses 3696 B).
+   We may want to reconsider having tables for SQUARE, DIAMOND, and OCTAGON.
+*/
+static const char heights_tables[7][528] = {
+/* FOV_SHAPE_CIRCLE_ROUND: sqrt(r^2 + r - x^2) */
+    {
+         1,
+         2,  1,
+         3,  2,  1,
+         4,  4,  3,  2,
+         5,  5,  4,  3,  2,
+         6,  6,  5,  5,  4,  2,
+         7,  7,  6,  6,  5,  4,  2,
+         8,  8,  7,  7,  6,  6,  4,  2,
+         9,  9,  9,  8,  8,  7,  6,  5,  3,
+        10, 10, 10,  9,  9,  8,  7,  6,  5,  3,
+        11, 11, 11, 10, 10,  9,  9,  8,  7,  5,  3,
+        12, 12, 12, 11, 11, 10, 10,  9,  8,  7,  5,  3,
+        13, 13, 13, 12, 12, 12, 11, 10, 10,  9,  7,  6,  3,
+        14, 14, 14, 13, 13, 13, 12, 12, 11, 10,  9,  8,  6,  3,
+        15, 15, 15, 14, 14, 14, 13, 13, 12, 11, 10,  9,  8,  6,  3,
+        16, 16, 16, 16, 15, 15, 14, 14, 13, 13, 12, 11, 10,  8,  6,  4,
+        17, 17, 17, 17, 16, 16, 16, 15, 15, 14, 13, 12, 11, 10,  9,  7,  4,
+        18, 18, 18, 18, 17, 17, 17, 16, 16, 15, 14, 14, 13, 12, 10,  9,  7,  4,
+        19, 19, 19, 19, 18, 18, 18, 17, 17, 16, 16, 15, 14, 13, 12, 11,  9,  7,  4,
+        20, 20, 20, 20, 19, 19, 19, 18, 18, 17, 17, 16, 15, 14, 13, 12, 11,  9,  7,  4,
+        21, 21, 21, 21, 20, 20, 20, 19, 19, 19, 18, 17, 17, 16, 15, 14, 13, 11, 10,  7,  4,
+        22, 22, 22, 22, 21, 21, 21, 21, 20, 20, 19, 19, 18, 17, 16, 15, 14, 13, 12, 10,  8,  4,
+        23, 23, 23, 23, 22, 22, 22, 22, 21, 21, 20, 20, 19, 18, 18, 17, 16, 15, 13, 12, 10,  8,  4,
+        24, 24, 24, 24, 23, 23, 23, 23, 22, 22, 21, 21, 20, 20, 19, 18, 17, 16, 15, 14, 12, 10,  8,  4,
+        25, 25, 25, 25, 25, 24, 24, 24, 23, 23, 23, 22, 21, 21, 20, 19, 19, 18, 17, 15, 14, 12, 11,  8,  5,
+        26, 26, 26, 26, 26, 25, 25, 25, 24, 24, 24, 23, 23, 22, 21, 21, 20, 19, 18, 17, 16, 14, 13, 11,  8,  5,
+        27, 27, 27, 27, 27, 26, 26, 26, 25, 25, 25, 24, 24, 23, 23, 22, 21, 20, 19, 18, 17, 16, 15, 13, 11,  8,  5,
+        28, 28, 28, 28, 28, 27, 27, 27, 27, 26, 26, 25, 25, 24, 24, 23, 22, 22, 21, 20, 19, 18, 16, 15, 13, 11,  9,  5,
+        29, 29, 29, 29, 29, 28, 28, 28, 28, 27, 27, 26, 26, 25, 25, 24, 24, 23, 22, 21, 20, 19, 18, 17, 15, 13, 11,  9,  5,
+        30, 30, 30, 30, 30, 29, 29, 29, 29, 28, 28, 28, 27, 27, 26, 25, 25, 24, 23, 23, 22, 21, 20, 18, 17, 15, 14, 12,  9,  5,
+        31, 31, 31, 31, 31, 30, 30, 30, 30, 29, 29, 29, 28, 28, 27, 27, 26, 25, 25, 24, 23, 22, 21, 20, 19, 17, 16, 14, 12,  9,  5,
+        32, 32, 32, 32, 32, 31, 31, 31, 31, 30, 30, 30, 29, 29, 28, 28, 27, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 16, 14, 12,  9,  5
+    },
+/* FOV_SHAPE_CIRCLE_FLOOR: sqrt(r^2 + 2*r - x^2) */
+    {
+         1,
+         2,  2,
+         3,  3,  2,
+         4,  4,  3,  2,
+         5,  5,  5,  4,  3,
+         6,  6,  6,  5,  4,  3,
+         7,  7,  7,  6,  6,  5,  3,
+         8,  8,  8,  8,  7,  6,  5,  4,
+         9,  9,  9,  9,  8,  7,  7,  5,  4,
+        10, 10, 10, 10,  9,  9,  8,  7,  6,  4,
+        11, 11, 11, 11, 10, 10,  9,  8,  7,  6,  4,
+        12, 12, 12, 12, 11, 11, 10, 10,  9,  8,  6,  4,
+        13, 13, 13, 13, 13, 12, 12, 11, 10,  9,  8,  7,  5,
+        14, 14, 14, 14, 14, 13, 13, 12, 11, 11, 10,  8,  7,  5,
+        15, 15, 15, 15, 15, 14, 14, 13, 13, 12, 11, 10,  9,  7,  5,
+        16, 16, 16, 16, 16, 15, 15, 14, 14, 13, 12, 12, 10,  9,  7,  5,
+        17, 17, 17, 17, 17, 16, 16, 16, 15, 14, 14, 13, 12, 11,  9,  8,  5,
+        18, 18, 18, 18, 18, 18, 17, 17, 16, 16, 15, 14, 13, 12, 11, 10,  8,  6,
+        19, 19, 19, 19, 19, 19, 18, 18, 17, 17, 16, 15, 15, 14, 13, 11, 10,  8,  6,
+        20, 20, 20, 20, 20, 20, 19, 19, 18, 18, 17, 17, 16, 15, 14, 13, 12, 10,  8,  6,
+        21, 21, 21, 21, 21, 21, 20, 20, 20, 19, 19, 18, 17, 16, 16, 15, 13, 12, 11,  9,  6,
+        22, 22, 22, 22, 22, 22, 21, 21, 21, 20, 20, 19, 18, 18, 17, 16, 15, 14, 12, 11,  9,  6,
+        23, 23, 23, 23, 23, 23, 22, 22, 22, 21, 21, 20, 20, 19, 18, 17, 16, 15, 14, 13, 11,  9,  6,
+        24, 24, 24, 24, 24, 24, 23, 23, 23, 22, 22, 21, 21, 20, 19, 19, 18, 17, 16, 14, 13, 11,  9,  6,
+        25, 25, 25, 25, 25, 25, 25, 24, 24, 23, 23, 23, 22, 21, 21, 20, 19, 18, 17, 16, 15, 13, 12,  9,  7,
+        26, 26, 26, 26, 26, 26, 26, 25, 25, 25, 24, 24, 23, 23, 22, 21, 20, 20, 19, 18, 16, 15, 14, 12, 10,  7,
+        27, 27, 27, 27, 27, 27, 27, 26, 26, 26, 25, 25, 24, 24, 23, 22, 22, 21, 20, 19, 18, 17, 15, 14, 12, 10,  7,
+        28, 28, 28, 28, 28, 28, 28, 27, 27, 27, 26, 26, 25, 25, 24, 24, 23, 22, 21, 20, 19, 18, 17, 16, 14, 12, 10,  7,
+        29, 29, 29, 29, 29, 29, 29, 28, 28, 28, 27, 27, 27, 26, 25, 25, 24, 23, 23, 22, 21, 20, 19, 17, 16, 14, 13, 10,  7,
+        30, 30, 30, 30, 30, 30, 30, 29, 29, 29, 28, 28, 28, 27, 27, 26, 25, 25, 24, 23, 22, 21, 20, 19, 18, 16, 15, 13, 10,  7,
+        31, 31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 29, 29, 28, 28, 27, 27, 26, 25, 24, 24, 23, 22, 21, 19, 18, 17, 15, 13, 11,  7,
+        32, 32, 32, 32, 32, 32, 32, 32, 31, 31, 31, 30, 30, 29, 29, 28, 28, 27, 26, 26, 25, 24, 23, 22, 21, 20, 18, 17, 15, 13, 11,  8
+    },
+/* FOV_SHAPE_CIRCLE_CEIL: sqrt(r^2 - x^2) */
+    {
+         0,
+         1,  0,
+         2,  2,  0,
+         3,  3,  2,  0,
+         4,  4,  4,  3,  0,
+         5,  5,  5,  4,  3,  0,
+         6,  6,  6,  5,  4,  3,  0,
+         7,  7,  7,  6,  6,  5,  3,  0,
+         8,  8,  8,  8,  7,  6,  5,  4,  0,
+         9,  9,  9,  9,  8,  8,  7,  6,  4,  0,
+        10, 10, 10, 10,  9,  9,  8,  7,  6,  4,  0,
+        11, 11, 11, 11, 10, 10,  9,  8,  7,  6,  4,  0,
+        12, 12, 12, 12, 12, 11, 10, 10,  9,  8,  6,  5,  0,
+        13, 13, 13, 13, 13, 12, 12, 11, 10,  9,  8,  7,  5,  0,
+        14, 14, 14, 14, 14, 13, 13, 12, 12, 11, 10,  9,  7,  5,  0,
+        15, 15, 15, 15, 15, 14, 14, 13, 13, 12, 11, 10,  9,  7,  5,  0,
+        16, 16, 16, 16, 16, 15, 15, 15, 14, 13, 12, 12, 10,  9,  8,  5,  0,
+        17, 17, 17, 17, 17, 16, 16, 16, 15, 14, 14, 13, 12, 11,  9,  8,  5,  0,
+        18, 18, 18, 18, 18, 18, 17, 17, 16, 16, 15, 14, 13, 12, 11, 10,  8,  6,  0,
+        19, 19, 19, 19, 19, 19, 18, 18, 17, 17, 16, 16, 15, 14, 13, 12, 10,  8,  6,  0,
+        20, 20, 20, 20, 20, 20, 19, 19, 18, 18, 17, 17, 16, 15, 14, 13, 12, 10,  8,  6,  0,
+        21, 21, 21, 21, 21, 21, 20, 20, 20, 19, 19, 18, 17, 16, 16, 15, 13, 12, 11,  9,  6,  0,
+        22, 22, 22, 22, 22, 22, 21, 21, 21, 20, 20, 19, 18, 18, 17, 16, 15, 14, 12, 11,  9,  6,  0,
+        23, 23, 23, 23, 23, 23, 22, 22, 22, 21, 21, 20, 20, 19, 18, 17, 16, 15, 14, 13, 11,  9,  6,  0,
+        24, 24, 24, 24, 24, 24, 24, 23, 23, 22, 22, 21, 21, 20, 20, 19, 18, 17, 16, 15, 13, 11,  9,  7,  0,
+        25, 25, 25, 25, 25, 25, 25, 24, 24, 24, 23, 23, 22, 21, 21, 20, 19, 18, 17, 16, 15, 13, 12, 10,  7,  0,
+        26, 26, 26, 26, 26, 26, 26, 25, 25, 25, 24, 24, 23, 23, 22, 21, 20, 20, 19, 18, 16, 15, 14, 12, 10,  7,  0,
+        27, 27, 27, 27, 27, 27, 27, 26, 26, 26, 25, 25, 24, 24, 23, 22, 22, 21, 20, 19, 18, 17, 15, 14, 12, 10,  7,  0,
+        28, 28, 28, 28, 28, 28, 28, 27, 27, 27, 26, 26, 25, 25, 24, 24, 23, 22, 21, 21, 20, 18, 17, 16, 14, 12, 10,  7,  0,
+        29, 29, 29, 29, 29, 29, 29, 28, 28, 28, 27, 27, 27, 26, 25, 25, 24, 24, 23, 22, 21, 20, 19, 18, 16, 14, 13, 10,  7,  0,
+        30, 30, 30, 30, 30, 30, 30, 29, 29, 29, 28, 28, 28, 27, 27, 26, 25, 25, 24, 23, 22, 21, 20, 19, 18, 16, 15, 13, 10,  7,  0,
+        31, 31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 29, 29, 28, 28, 27, 27, 26, 25, 24, 24, 23, 22, 21, 19, 18, 17, 15, 13, 11,  7,  0
+    },
+/* FOV_SHAPE_CIRCLE_PLUS1: sqrt(r^2 + 1 - x^2) */
+    {
+         1,
+         2,  1,
+         3,  2,  1,
+         4,  3,  2,  1,
+         5,  4,  4,  3,  1,
+         6,  5,  5,  4,  3,  1,
+         7,  6,  6,  5,  5,  3,  1,
+         8,  7,  7,  7,  6,  5,  4,  1,
+         9,  8,  8,  8,  7,  6,  5,  4,  1,
+        10,  9,  9,  9,  8,  8,  7,  6,  4,  1,
+        11, 10, 10, 10,  9,  9,  8,  7,  6,  4,  1,
+        12, 11, 11, 11, 10, 10,  9,  9,  8,  6,  4,  1,
+        13, 12, 12, 12, 12, 11, 11, 10,  9,  8,  7,  5,  1,
+        14, 13, 13, 13, 13, 12, 12, 11, 10,  9,  8,  7,  5,  1,
+        15, 14, 14, 14, 14, 13, 13, 12, 12, 11, 10,  9,  7,  5,  1,
+        16, 15, 15, 15, 15, 14, 14, 13, 13, 12, 11, 10,  9,  7,  5,  1,
+        17, 16, 16, 16, 16, 15, 15, 15, 14, 13, 13, 12, 11,  9,  8,  5,  1,
+        18, 17, 17, 17, 17, 17, 16, 16, 15, 15, 14, 13, 12, 11, 10,  8,  6,  1,
+        19, 18, 18, 18, 18, 18, 17, 17, 16, 16, 15, 14, 13, 12, 11, 10,  8,  6,  1,
+        20, 19, 19, 19, 19, 19, 18, 18, 17, 17, 16, 16, 15, 14, 13, 12, 10,  8,  6,  1,
+        21, 20, 20, 20, 20, 20, 19, 19, 19, 18, 17, 17, 16, 15, 14, 13, 12, 10,  9,  6,  1,
+        22, 21, 21, 21, 21, 21, 20, 20, 20, 19, 19, 18, 17, 17, 16, 15, 14, 12, 11,  9,  6,  1,
+        23, 22, 22, 22, 22, 22, 21, 21, 21, 20, 20, 19, 19, 18, 17, 16, 15, 14, 13, 11,  9,  6,  1,
+        24, 23, 23, 23, 23, 23, 22, 22, 22, 21, 21, 20, 20, 19, 18, 17, 16, 15, 14, 13, 11,  9,  6,  1,
+        25, 24, 24, 24, 24, 24, 24, 23, 23, 22, 22, 21, 21, 20, 20, 19, 18, 17, 16, 15, 13, 11,  9,  7,  1,
+        26, 25, 25, 25, 25, 25, 25, 24, 24, 24, 23, 23, 22, 21, 21, 20, 19, 18, 17, 16, 15, 13, 12, 10,  7,  1,
+        27, 26, 26, 26, 26, 26, 26, 25, 25, 25, 24, 24, 23, 23, 22, 21, 21, 20, 19, 18, 17, 15, 14, 12, 10,  7,  1,
+        28, 27, 27, 27, 27, 27, 27, 26, 26, 26, 25, 25, 24, 24, 23, 23, 22, 21, 20, 19, 18, 17, 16, 14, 12, 10,  7,  1,
+        29, 28, 28, 28, 28, 28, 28, 27, 27, 27, 26, 26, 25, 25, 24, 24, 23, 22, 21, 21, 20, 18, 17, 16, 14, 12, 10,  7,  1,
+        30, 29, 29, 29, 29, 29, 29, 28, 28, 28, 27, 27, 27, 26, 26, 25, 24, 24, 23, 22, 21, 20, 19, 18, 16, 15, 13, 10,  7,  1,
+        31, 30, 30, 30, 30, 30, 30, 29, 29, 29, 29, 28, 28, 27, 27, 26, 25, 25, 24, 23, 22, 21, 20, 19, 18, 16, 15, 13, 11,  7,  1,
+        32, 31, 31, 31, 31, 31, 31, 31, 30, 30, 30, 29, 29, 28, 28, 27, 27, 26, 25, 25, 24, 23, 22, 21, 20, 18, 17, 15, 13, 11,  8,  1
+    },
+/* FOV_SHAPE_OCTAGON: 2*(r - x) + 1 */
+    {
+         1,
+         2,  1,
+         3,  2,  1,
+         4,  3,  3,  1,
+         5,  4,  4,  3,  1,
+         6,  5,  5,  4,  3,  1,
+         7,  6,  6,  5,  5,  3,  1,
+         8,  7,  7,  6,  6,  5,  3,  1,
+         9,  8,  8,  7,  7,  6,  5,  3,  1,
+        10,  9,  9,  8,  8,  7,  7,  5,  3,  1,
+        11, 10, 10,  9,  9,  8,  8,  7,  5,  3,  1,
+        12, 11, 11, 10, 10,  9,  9,  8,  7,  5,  3,  1,
+        13, 12, 12, 11, 11, 10, 10,  9,  9,  7,  5,  3,  1,
+        14, 13, 13, 12, 12, 11, 11, 10, 10,  9,  7,  5,  3,  1,
+        15, 14, 14, 13, 13, 12, 12, 11, 11, 10,  9,  7,  5,  3,  1,
+        16, 15, 15, 14, 14, 13, 13, 12, 12, 11, 11,  9,  7,  5,  3,  1,
+        17, 16, 16, 15, 15, 14, 14, 13, 13, 12, 12, 11,  9,  7,  5,  3,  1,
+        18, 17, 17, 16, 16, 15, 15, 14, 14, 13, 13, 12, 11,  9,  7,  5,  3,  1,
+        19, 18, 18, 17, 17, 16, 16, 15, 15, 14, 14, 13, 13, 11,  9,  7,  5,  3,  1,
+        20, 19, 19, 18, 18, 17, 17, 16, 16, 15, 15, 14, 14, 13, 11,  9,  7,  5,  3,  1,
+        21, 20, 20, 19, 19, 18, 18, 17, 17, 16, 16, 15, 15, 14, 13, 11,  9,  7,  5,  3,  1,
+        22, 21, 21, 20, 20, 19, 19, 18, 18, 17, 17, 16, 16, 15, 15, 13, 11,  9,  7,  5,  3,  1,
+        23, 22, 22, 21, 21, 20, 20, 19, 19, 18, 18, 17, 17, 16, 16, 15, 13, 11,  9,  7,  5,  3,  1,
+        24, 23, 23, 22, 22, 21, 21, 20, 20, 19, 19, 18, 18, 17, 17, 16, 15, 13, 11,  9,  7,  5,  3,  1,
+        25, 24, 24, 23, 23, 22, 22, 21, 21, 20, 20, 19, 19, 18, 18, 17, 17, 15, 13, 11,  9,  7,  5,  3,  1,
+        26, 25, 25, 24, 24, 23, 23, 22, 22, 21, 21, 20, 20, 19, 19, 18, 18, 17, 15, 13, 11,  9,  7,  5,  3,  1,
+        27, 26, 26, 25, 25, 24, 24, 23, 23, 22, 22, 21, 21, 20, 20, 19, 19, 18, 17, 15, 13, 11,  9,  7,  5,  3,  1,
+        28, 27, 27, 26, 26, 25, 25, 24, 24, 23, 23, 22, 22, 21, 21, 20, 20, 19, 19, 17, 15, 13, 11,  9,  7,  5,  3,  1,
+        29, 28, 28, 27, 27, 26, 26, 25, 25, 24, 24, 23, 23, 22, 22, 21, 21, 20, 20, 19, 17, 15, 13, 11,  9,  7,  5,  3,  1,
+        30, 29, 29, 28, 28, 27, 27, 26, 26, 25, 25, 24, 24, 23, 23, 22, 22, 21, 21, 20, 19, 17, 15, 13, 11,  9,  7,  5,  3,  1,
+        31, 30, 30, 29, 29, 28, 28, 27, 27, 26, 26, 25, 25, 24, 24, 23, 23, 22, 22, 21, 21, 19, 17, 15, 13, 11,  9,  7,  5,  3,  1,
+        32, 31, 31, 30, 30, 29, 29, 28, 28, 27, 27, 26, 26, 25, 25, 24, 24, 23, 23, 22, 22, 21, 19, 17, 15, 13, 11,  9,  7,  5,  3,  1
+    },
+/* FOV_SHAPE_DIAMOND: r - x */
+    {
+         0,
+         1,  0,
+         2,  1,  0,
+         3,  2,  1,  0,
+         4,  3,  2,  1,  0,
+         5,  4,  3,  2,  1,  0,
+         6,  5,  4,  3,  2,  1,  0,
+         7,  6,  5,  4,  3,  2,  1,  0,
+         8,  7,  6,  5,  4,  3,  2,  1,  0,
+         9,  8,  7,  6,  5,  4,  3,  2,  1,  0,
+        10,  9,  8,  7,  6,  5,  4,  3,  2,  1,  0,
+        11, 10,  9,  8,  7,  6,  5,  4,  3,  2,  1,  0,
+        12, 11, 10,  9,  8,  7,  6,  5,  4,  3,  2,  1,  0,
+        13, 12, 11, 10,  9,  8,  7,  6,  5,  4,  3,  2,  1,  0,
+        14, 13, 12, 11, 10,  9,  8,  7,  6,  5,  4,  3,  2,  1,  0,
+        15, 14, 13, 12, 11, 10,  9,  8,  7,  6,  5,  4,  3,  2,  1,  0,
+        16, 15, 14, 13, 12, 11, 10,  9,  8,  7,  6,  5,  4,  3,  2,  1,  0,
+        17, 16, 15, 14, 13, 12, 11, 10,  9,  8,  7,  6,  5,  4,  3,  2,  1,  0,
+        18, 17, 16, 15, 14, 13, 12, 11, 10,  9,  8,  7,  6,  5,  4,  3,  2,  1,  0,
+        19, 18, 17, 16, 15, 14, 13, 12, 11, 10,  9,  8,  7,  6,  5,  4,  3,  2,  1,  0,
+        20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10,  9,  8,  7,  6,  5,  4,  3,  2,  1,  0,
+        21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10,  9,  8,  7,  6,  5,  4,  3,  2,  1,  0,
+        22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10,  9,  8,  7,  6,  5,  4,  3,  2,  1,  0,
+        23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10,  9,  8,  7,  6,  5,  4,  3,  2,  1,  0,
+        24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10,  9,  8,  7,  6,  5,  4,  3,  2,  1,  0,
+        25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10,  9,  8,  7,  6,  5,  4,  3,  2,  1,  0,
+        26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10,  9,  8,  7,  6,  5,  4,  3,  2,  1,  0,
+        27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10,  9,  8,  7,  6,  5,  4,  3,  2,  1,  0,
+        28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10,  9,  8,  7,  6,  5,  4,  3,  2,  1,  0,
+        29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10,  9,  8,  7,  6,  5,  4,  3,  2,  1,  0,
+        30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10,  9,  8,  7,  6,  5,  4,  3,  2,  1,  0,
+        31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10,  9,  8,  7,  6,  5,  4,  3,  2,  1,  0
+    },
+/* FOV_SHAPE_SQUARE: r */
+    {
+         1,
+         2,  2,
+         3,  3,  3,
+         4,  4,  4,  4,
+         5,  5,  5,  5,  5,
+         6,  6,  6,  6,  6,  6,
+         7,  7,  7,  7,  7,  7,  7,
+         8,  8,  8,  8,  8,  8,  8,  8,
+         9,  9,  9,  9,  9,  9,  9,  9,  9,
+        10, 10, 10, 10, 10, 10, 10, 10, 10, 10,
+        11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11,
+        12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12,
+        13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
+        14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14,
+        15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
+        16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16,
+        17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
+        18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18,
+        19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19,
+        20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20,
+        21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21,
+        22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22,
+        23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
+        24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24,
+        25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25,
+        26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26,
+        27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27,
+        28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28,
+        29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29,
+        30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30,
+        31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31,
+        32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32
+    }
+};
+
 
 /* Types ---------------------------------------------------------- */
 
@@ -78,42 +331,67 @@ typedef struct {
     /*@observer@*/ fov_settings_type *settings;
     /*@observer@*/ void *map;
     /*@observer@*/ void *source;
+    const char *heights;
     int source_x;
     int source_y;
-    unsigned radius;
+    int radius;
 } fov_private_data_type;
 /** \endcond */
 
 /* Options -------------------------------------------------------- */
 
+/* Only one thread of T-Engine every interfaces with fov code, so let's use global static variables */
+/* Even though we are using static variables, all algorithms can be THREAD SAFE and RE-ENTRANT */
+static float global_permissiveness = 0.5f;
+static float global_actor_vision_size = 0.5f;
+static fov_algo_type global_algorithm = FOV_ALGO_RECURSIVE_SHADOW;
+static fov_shape_type global_shape = FOV_SHAPE_CIRCLE_ROUND;
+static fov_buffer_type global_buffer_data;
+
+/* set global parameters */
+void fov_set_permissiveness(float value) {
+    global_permissiveness = value;
+}
+
+void fov_set_actor_vision_size(float value) {
+    global_actor_vision_size = value;
+}
+
+void fov_set_algorithm(fov_algo_type value) {
+    global_algorithm = value;
+}
+
+void fov_set_vision_shape(fov_shape_type value) {
+    global_shape = value;
+}
+
+/* get global parameters */
+float fov_get_permissiveness() {
+    return global_permissiveness;
+}
+
+float fov_get_actor_vision_size() {
+    return global_actor_vision_size;
+}
+
+fov_algo_type fov_get_algorithm() {
+    return global_algorithm;
+}
+
+fov_shape_type fov_get_vision_shape() {
+    return global_shape;
+}
+
+/* set settings struct with defaults */
 void fov_settings_init(fov_settings_type *settings) {
-    settings->shape = FOV_SHAPE_CIRCLE_ROUND;
-    /* settings->corner_peek = FOV_CORNER_NOPEEK; */
-    /* settings->opaque_apply = FOV_OPAQUE_APPLY; */
     settings->opaque = NULL;
     settings->apply = NULL;
-    settings->heights = NULL;
-    settings->numheights = 0;
-    settings->permissiveness = 0.5f;
+    settings->permissiveness = global_permissiveness;
+    settings->actor_vision_size = global_actor_vision_size;
+    settings->algorithm = global_algorithm;
+    settings->shape = global_shape;
+    settings->buffer_data = &global_buffer_data;
 }
-
-void fov_settings_set_shape(fov_settings_type *settings,
-                            fov_shape_type value) {
-    settings->shape = value;
-}
-
-/*
-void fov_settings_set_corner_peek(fov_settings_type *settings,
-                           fov_corner_peek_type value) {
-    settings->corner_peek = value;
-}
-*/
-/*
-void fov_settings_set_opaque_apply(fov_settings_type *settings,
-                                   fov_opaque_apply_type value) {
-    settings->opaque_apply = value;
-}
-*/
 
 void fov_settings_set_opacity_test_function(fov_settings_type *settings,
                                             bool (*f)(void *map,
@@ -129,213 +407,142 @@ void fov_settings_set_apply_lighting_function(fov_settings_type *settings,
     settings->apply = f;
 }
 
-/* Circular FOV --------------------------------------------------- */
-
-/*@null@*/ static unsigned *precalculate_heights(unsigned maxdist) {
-    unsigned i;
-    unsigned *result = (unsigned *)malloc((maxdist+2)*sizeof(unsigned));
-    if (result) {
-        for (i = 0; i <= maxdist; ++i) {
-            result[i] = (unsigned)sqrtf((float)(maxdist*maxdist + maxdist - i*i));
-        }
-        result[maxdist+1] = 0;
-    }
-    return result;
-}
-
-static unsigned height(fov_settings_type *settings, int x,
-                unsigned maxdist) {
-    unsigned **newheights;
-
-    if (maxdist > settings->numheights) {
-        newheights = (unsigned **)calloc((size_t)maxdist, sizeof(unsigned*));
-        if (newheights != NULL) {
-            if (settings->heights != NULL && settings->numheights > 0) {
-                /* Copy the pointers to the heights arrays we've already
-                 * calculated. Once copied out, we can free the old
-                 * array of pointers. */
-                memcpy(newheights, settings->heights,
-                       settings->numheights*sizeof(unsigned*));
-                free(settings->heights);
-            }
-            settings->heights = newheights;
-            settings->numheights = maxdist;
-        }
-    }
-    if (settings->heights) {
-        if (settings->heights[maxdist-1] == NULL) {
-            settings->heights[maxdist-1] = precalculate_heights(maxdist);
-        }
-        if (settings->heights[maxdist-1] != NULL) {
-            return settings->heights[maxdist-1][abs(x)];
-        }
-    }
-    return 0;
-}
-
-void fov_settings_free(fov_settings_type *settings) {
-    unsigned i;
-    if (settings != NULL) {
-        if (settings->heights != NULL && settings->numheights > 0) {
-            /*@+forloopexec@*/
-            for (i = 0; i < settings->numheights; ++i) {
-                unsigned *h = settings->heights[i];
-                if (h != NULL) {
-                    free(h);
-                }
-                settings->heights[i] = NULL;
-            }
-            /*@=forloopexec@*/
-            free(settings->heights);
-            settings->heights = NULL;
-            settings->numheights = 0;
-        }
-    }
-}
-
-/* Slope ---------------------------------------------------------- */
-
-static float fov_slope(float dx, float dy) {
-    if (dx <= -FLT_EPSILON || dx >= FLT_EPSILON) {
-        return dy/dx;
-    } else {
-        return 0.0f;
-    }
-}
-
 /* Octants -------------------------------------------------------- */
 
-#define FOV_DEFINE_OCTANT(signx, signy, rx, ry, nx, ny, nf)                                     \
-    static void fov_octant_##nx##ny##nf(                                                        \
-                                        fov_private_data_type *data,                            \
-                                        int dx,                                                 \
-                                        float start_slope,                                      \
-                                        float end_slope,                                        \
-                                        bool blocked_below,                                     \
-                                        bool blocked_above,                                     \
-                                        bool apply_edge,                                        \
-                                        bool apply_diag) {                                      \
-        int x, y, dy, dy0, dy1;                                                                 \
-        unsigned h;                                                                             \
-        int prev_blocked = -1;                                                                  \
-        float start_slope_next, end_slope_next;                                                 \
-        fov_settings_type *settings = data->settings;                                           \
-                                                                                                \
-        if (start_slope - end_slope > GRID_EPSILON) {                                           \
-            return;                                                                             \
-        } else if (dx == 0) {                                                                   \
-            fov_octant_##nx##ny##nf(data, dx+1, start_slope, end_slope, blocked_below, blocked_above, apply_edge, apply_diag); \
-            return;                                                                             \
-        } else if ((unsigned)dx > data->radius) {                                               \
-            return;                                                                             \
-        }                                                                                       \
-        /* being "pinched" isn't blocked, but we need to handle it as a special case */         \
-        if (blocked_below && blocked_above && end_slope - start_slope < GRID_EPSILON) {         \
-            dy0 = (int)(0.5f + (float)dx*start_slope - GRID_EPSILON);                           \
-            dy1 = (int)(0.5f + (float)dx*end_slope - GRID_EPSILON);                             \
-        } else {                                                                                \
-            if (blocked_below) {                                                                \
-                dy0 = (int)(0.5f + (float)dx*start_slope + GRID_EPSILON);                       \
-            } else {                                                                            \
-                dy0 = (int)(0.5f + (float)dx*start_slope - GRID_EPSILON);                       \
-            }                                                                                   \
-            if (blocked_above) {                                                                \
-                dy1 = (int)(0.5f + (float)dx*end_slope - GRID_EPSILON);                         \
-            } else {                                                                            \
-                dy1 = (int)(0.5f + (float)dx*end_slope + GRID_EPSILON);                         \
-            }                                                                                   \
-        }                                                                                       \
-                                                                                                \
-        rx = data->source_##rx signx dx;                                                        \
-                                                                                                \
-        /* we need to check if the previous spot is blocked */                                  \
-        if (dy0 > 0) {                                                                          \
-            ry = data->source_##ry signy (dy0-1);                                               \
-            if (settings->opaque(data->map, x, y)) {                                            \
-                prev_blocked = 1;                                                               \
-            } else {                                                                            \
-                prev_blocked = 0;                                                               \
-            }                                                                                   \
-        }                                                                                       \
-                                                                                                \
-        switch (settings->shape) {                                                              \
-        case FOV_SHAPE_CIRCLE_ROUND :                                                           \
-            h = height(settings, dx, data->radius);                                             \
-            break;                                                                              \
-        case FOV_SHAPE_CIRCLE_FLOOR :                                                           \
-            h = (unsigned)(sqrt((data->radius)*(data->radius) + 2*data->radius - dx*dx));       \
-            break;                                                                              \
-        case FOV_SHAPE_CIRCLE_CEIL :                                                            \
-            h = (unsigned)(sqrt((data->radius)*(data->radius) - dx*dx));                        \
-            break;                                                                              \
-        case FOV_SHAPE_CIRCLE_PLUS1 :                                                           \
-            h = (unsigned)(sqrt((data->radius)*(data->radius) + 1 - dx*dx));                    \
-            break;                                                                              \
-        case FOV_SHAPE_OCTAGON:                                                                 \
-            h = 2u*(data->radius - (unsigned)dx) + 1u;                                          \
-            break;                                                                              \
-        case FOV_SHAPE_DIAMOND :                                                                \
-            h = data->radius - (unsigned)dx;                                                    \
-            break;                                                                              \
-        case FOV_SHAPE_SQUARE :                                                                 \
-            h = data->radius;                                                                   \
-            break;                                                                              \
-        default :                                                                               \
-            h = (unsigned)(sqrt((data->radius)*(data->radius) + data->radius - dx*dx));         \
-            break;                                                                              \
-        };                                                                                      \
-        if ((unsigned)dy1 > h) {                                                                \
-            dy1 = (int)h;                                                                       \
-        }                                                                                       \
-                                                                                                \
-        /*fprintf(stderr, "(%2d) = [%2d .. %2d] (%f .. %f), h=%d,edge=%d\n",                    \
-                dx, dy0, dy1, ((float)dx)*start_slope,                                          \
-                0.5f + ((float)dx)*end_slope, h, apply_edge);*/                                 \
-                                                                                                \
-        for (dy = dy0; dy <= dy1; ++dy) {                                                       \
-            ry = data->source_##ry signy dy;                                                    \
-                                                                                                \
-            if (settings->opaque(data->map, x, y)) {                                            \
-                if ((apply_edge || dy > 0) && (apply_diag || dy != dx)) {                       \
-                    settings->apply(data->map, x, y, x - data->source_x, y - data->source_y, data->radius, data->source); \
-                }                                                                               \
-                if (prev_blocked == 0 && dy != dy0) {                                           \
-                    end_slope_next = ((float)dy - 0.5f) / ((float)dx + settings->permissiveness); \
-                    fov_octant_##nx##ny##nf(data, dx+1, start_slope, end_slope_next, blocked_below, true, apply_edge, apply_diag); \
-                }                                                                               \
-                prev_blocked = 1;                                                               \
-            } else {                                                                            \
-                if (prev_blocked == 1) {                                                        \
-                    start_slope_next = ((float)dy - 0.5f) / ((float)dx - settings->permissiveness); \
-                    if (start_slope - start_slope_next < GRID_EPSILON) {                        \
-                        start_slope = start_slope_next;                                         \
-                        if (start_slope - end_slope > GRID_EPSILON) {                           \
-                            return;                                                             \
-                        }                                                                       \
-                        blocked_below = true;                                                   \
-                    }                                                                           \
-                }                                                                               \
-                if ((apply_edge || dy > 0) && (apply_diag || dy != dx)) {                       \
-                    settings->apply(data->map, x, y, x - data->source_x, y - data->source_y, data->radius, data->source); \
-                }                                                                               \
-                prev_blocked = 0;                                                               \
-            }                                                                                   \
-        }                                                                                       \
-                                                                                                \
-        if (prev_blocked == 0) {                                                                \
-            /* We need to check if the next spot is blocked and change end_slope accordingly */ \
-            if (dx != dy1) {                                                                    \
-                ry = data->source_##ry signy (dy1+1);                                           \
-                if (settings->opaque(data->map, x, y)) {                                        \
-                    end_slope_next = ((float)dy1 + 0.5f) / ((float)dx + settings->permissiveness); \
-                    if (end_slope_next - end_slope < GRID_EPSILON) {                            \
-                        end_slope = end_slope_next;                                             \
-                        blocked_below = true;                                                   \
-                    }                                                                           \
-                }                                                                               \
-            }                                                                                   \
-            fov_octant_##nx##ny##nf(data, dx+1, start_slope, end_slope, blocked_below, blocked_above, apply_edge, apply_diag); \
-        }                                                                                       \
+#define GET_HEIGHT(h, dx, data, settings)                                                         \
+    /* use lookup table if available (i.e., when radius < 33) */                                  \
+    if (data->heights) {                                                                          \
+        h = (int)(data->heights[dx]);                                                             \
+    } else {                                                                                      \
+        switch (settings->shape) {                                                                \
+        case FOV_SHAPE_CIRCLE_ROUND :                                                             \
+            h = (int)(sqrt((data->radius)*(data->radius) + data->radius - dx*dx));                \
+            break;                                                                                \
+        case FOV_SHAPE_CIRCLE_FLOOR :                                                             \
+            h = (int)(sqrt((data->radius)*(data->radius) + 2*data->radius - dx*dx));              \
+            break;                                                                                \
+        case FOV_SHAPE_CIRCLE_CEIL :                                                              \
+            h = (int)(sqrt((data->radius)*(data->radius) - dx*dx));                               \
+            break;                                                                                \
+        case FOV_SHAPE_CIRCLE_PLUS1 :                                                             \
+            h = (int)(sqrt((data->radius)*(data->radius) + 1 - dx*dx));                           \
+            break;                                                                                \
+        case FOV_SHAPE_OCTAGON :                                                                  \
+            h = 2*(data->radius - dx) + 1;                                                        \
+            break;                                                                                \
+        case FOV_SHAPE_DIAMOND :                                                                  \
+            h = data->radius - dx;                                                                \
+            break;                                                                                \
+        case FOV_SHAPE_SQUARE :                                                                   \
+            h = data->radius;                                                                     \
+            break;                                                                                \
+        default :                                                                                 \
+            h = (int)(sqrt((data->radius)*(data->radius) + data->radius - dx*dx));                \
+            break;                                                                                \
+        }                                                                                         \
+    }                                                                                             \
+
+#define FOV_DEFINE_OCTANT(signx, signy, rx, ry, nx, ny, nf)                                       \
+    static void fov_octant_##nx##ny##nf(                                                          \
+                                        fov_private_data_type *data,                              \
+                                        int dx,                                                   \
+                                        float start_slope,                                        \
+                                        float end_slope,                                          \
+                                        bool blocked_below,                                       \
+                                        bool blocked_above,                                       \
+                                        bool apply_edge,                                          \
+                                        bool apply_diag) {                                        \
+        int h, x, y, dy, dy0, dy1;                                                                \
+        int prev_blocked = -1;                                                                    \
+        float start_slope_next, end_slope_next;                                                   \
+        float fdx = (float)dx;                                                                    \
+        fov_settings_type *settings = data->settings;                                             \
+                                                                                                  \
+        if (dx > data->radius) {                                                                  \
+            return;                                                                               \
+        }                                                                                         \
+                                                                                                  \
+        /* being "pinched" isn't blocked, but we need to handle it as a special case */           \
+        if (blocked_below && blocked_above && end_slope - start_slope < GRID_EPSILON) {           \
+            dy0 = (int)(0.5f + fdx*start_slope - GRID_EPSILON);                                   \
+            dy1 = (int)(0.5f + fdx*end_slope - GRID_EPSILON);                                     \
+        } else {                                                                                  \
+            dy0 = (blocked_below) ? (int)(0.5f + fdx*start_slope + GRID_EPSILON)                  \
+                                  : (int)(0.5f + fdx*start_slope - GRID_EPSILON);                 \
+            dy1 = (blocked_above) ? (int)(0.5f + fdx*end_slope - GRID_EPSILON)                    \
+                                  : (int)(0.5f + fdx*end_slope + GRID_EPSILON);                   \
+        }                                                                                         \
+                                                                                                  \
+        rx = data->source_##rx signx dx;                                                          \
+                                                                                                  \
+        /* we need to check if the previous spot is blocked */                                    \
+        if (dy0 > 0) {                                                                            \
+            ry = data->source_##ry signy (dy0-1);                                                 \
+            prev_blocked = (int)settings->opaque(data->map, x, y);                                \
+        }                                                                                         \
+                                                                                                  \
+        GET_HEIGHT(h, dx, data, settings)                                                         \
+                                                                                                  \
+        if (dy1 > h) {                                                                            \
+            dy1 = h;                                                                              \
+        }                                                                                         \
+                                                                                                  \
+        for (dy = dy0; dy <= dy1; ++dy) {                                                         \
+            ry = data->source_##ry signy dy;                                                      \
+                                                                                                  \
+            if (settings->opaque(data->map, x, y)) {                                              \
+                if ((apply_edge || dy > 0) && (apply_diag || dy != dx)) {                         \
+                    settings->apply(data->map, x, y, x - data->source_x, y - data->source_y,      \
+                                    data->radius, data->source);                                  \
+                }                                                                                 \
+                if (prev_blocked == 0 && dy != dy0) {                                             \
+                    end_slope_next = ((float)dy - 0.5f) /                                         \
+                                     (fdx + settings->permissiveness);                            \
+                    if (start_slope - end_slope_next < GRID_EPSILON) {                            \
+                        fov_octant_##nx##ny##nf(data, dx+1, start_slope, end_slope_next,          \
+                                                blocked_below, true, apply_edge, apply_diag);     \
+                    }                                                                             \
+                }                                                                                 \
+                prev_blocked = 1;                                                                 \
+            } else {                                                                              \
+                if (prev_blocked == 1) {                                                          \
+                    start_slope_next = ((float)dy - 0.5f) /                                       \
+                                       (fdx - settings->permissiveness);                          \
+                    if (start_slope - start_slope_next < GRID_EPSILON) {                          \
+                        start_slope = start_slope_next;                                           \
+                        if (start_slope - end_slope > GRID_EPSILON) {                             \
+                            return;                                                               \
+                        }                                                                         \
+                        blocked_below = true;                                                     \
+                    }                                                                             \
+                }                                                                                 \
+                if ((apply_edge || dy > 0) && (apply_diag || dy != dx)) {                         \
+                    settings->apply(data->map, x, y, x - data->source_x, y - data->source_y,      \
+                                    data->radius, data->source);                                  \
+                }                                                                                 \
+                prev_blocked = 0;                                                                 \
+            }                                                                                     \
+        }                                                                                         \
+                                                                                                  \
+        if (prev_blocked == 0) {                                                                  \
+            /* We need to check if the next spot is blocked and change end_slope accordingly */   \
+            if (dx != dy1) {                                                                      \
+                ry = data->source_##ry signy (dy1+1);                                             \
+                if (settings->opaque(data->map, x, y)) {                                          \
+                    end_slope_next = ((float)dy1 + 0.5f) /                                        \
+                                     (fdx + settings->permissiveness);                            \
+                    if (end_slope_next - end_slope < GRID_EPSILON) {                              \
+                        end_slope = end_slope_next;                                               \
+                        if (start_slope - end_slope > GRID_EPSILON) {                             \
+                            return;                                                               \
+                        }                                                                         \
+                        blocked_below = true;                                                     \
+                    }                                                                             \
+                }                                                                                 \
+            }                                                                                     \
+            fov_octant_##nx##ny##nf(data, dx+1, start_slope, end_slope,                           \
+                                    blocked_below, blocked_above, apply_edge, apply_diag);        \
+        }                                                                                         \
     }
 
 FOV_DEFINE_OCTANT(+,+,x,y,p,p,n)
@@ -348,120 +555,445 @@ FOV_DEFINE_OCTANT(-,-,x,y,m,m,n)
 FOV_DEFINE_OCTANT(-,-,y,x,m,m,y)
 
 
-#define HEX_FOV_DEFINE_SEXTANT(signx, signy, nx, ny, one)                                                                       \
-    static void hex_fov_sextant_##nx##ny(                                                                                       \
-                                        fov_private_data_type *data,                                                            \
-                                        int dy,                                                                                 \
-                                        float start_slope,                                                                      \
-                                        float end_slope,                                                                        \
-                                        bool apply_edge1,                                                                       \
-                                        bool apply_edge2) {                                                                     \
-        int x, y, x0, x1, p;                                                                                                    \
-        int prev_blocked = -1;                                                                                                  \
-        float fdy, end_slope_next;                                                                                              \
-        fov_settings_type *settings = data->settings;                                                                           \
-                                                                                                                                \
-        if (start_slope - end_slope > GRID_EPSILON) {                                                                           \
-            return;                                                                                                             \
-        } else if ((unsigned)dy > data->radius) {                                                                               \
-            return;                                                                                                             \
-        }                                                                                                                       \
-                                                                                                                                \
-        fdy = (float)dy;                                                                                                        \
-        x0 = (int)(0.5f + fdy*start_slope / (SQRT_3_2 + 0.5f*start_slope) + GRID_EPSILON);                                      \
-        x1 = (int)(0.5f + fdy*end_slope / (SQRT_3_2 + 0.5f*end_slope) - GRID_EPSILON);                                          \
-        if (x1 < x0) return;                                                                                                    \
-                                                                                                                                \
-        x = data->source_x signx x0;                                                                                            \
-        p = ((x & 1) + one) & 1;                                                                                                \
-        fdy += 0.25f;                                                                                                           \
-        y = data->source_y signy (dy - (x0 + 1 - p)/2);                                                                         \
-                                                                                                                                \
-        for (; x0 <= x1; ++x0) {                                                                                                \
-            if (settings->opaque(data->map, x, y)) {                                                                            \
-                if ((apply_edge1 || x0 > 0) && (apply_edge2 || x0 != dy)) {                                                     \
-                    settings->apply(data->map, x, y, x - data->source_x, y - data->source_y, data->radius, data->source);       \
-                }                                                                                                               \
-                if (prev_blocked == 0) {                                                                                        \
-                    end_slope_next = (-SQRT_3_4 + SQRT_3_2*(float)x0) / (fdy - 0.5f*(float)x0);                                 \
-                    hex_fov_sextant_##nx##ny(data, dy+1, start_slope, end_slope_next, apply_edge1, apply_edge2);                \
-                }                                                                                                               \
-                prev_blocked = 1;                                                                                               \
-            } else {                                                                                                            \
-                if (prev_blocked == 1) {                                                                                        \
-                    start_slope = (-SQRT_3_4 + SQRT_3_2*(float)x0) / (fdy - 0.5f*(float)x0);                                    \
-                }                                                                                                               \
-                if ((apply_edge1 || x0 > 0) && (apply_edge2 || x0 != dy)) {                                                     \
-                    settings->apply(data->map, x, y, x - data->source_x, y - data->source_y, data->radius, data->source);       \
-                }                                                                                                               \
-                prev_blocked = 0;                                                                                               \
-            }                                                                                                                   \
-            y = y signy (-p);                                                                                                   \
-            x = x signx 1;                                                                                                      \
-            p = !p;                                                                                                             \
-        }                                                                                                                       \
-                                                                                                                                \
-        if (prev_blocked == 0) {                                                                                                \
-            hex_fov_sextant_##nx##ny(data, dy+1, start_slope, end_slope, apply_edge1, apply_edge2);                             \
-        }                                                                                                                       \
+/* Get a buffer that acts as a memory pool for small arrays of different lengths used for FoV.
+   This is very simple and naive (and, hence, very fast, especially compared to malloc/free),
+   yet it is large enough to prevent any overwriting of data resulting from round-robin access.
+   Obviously, don't use the same buffer for multiple threads.
+*/
+#define GET_BUFFER(target, buffer_data, len)                                                      \
+    /* hurray, no branching, modulus, or malloc! */                                               \
+    buffer_data->index = (buffer_data->index + buffer_data->prev_len) & (FOV_BUFFER_SIZE - 1);    \
+    buffer_data->prev_len = len;                                                                  \
+    target = buffer_data->buffer + buffer_data->index;
+
+/* Conveniences for code clarity */
+#define X 0
+#define Y 1
+#define K 2
+
+/* A macro to calculate the next slopes and boundaries due to a blocked tile.
+   This is written from the perspective of finding the next upper slope, but this
+   will also find the lower slope if min/max and low/upp are switched and sign is -.
+*/
+#define GET_NEXT_LARGE_ASS_DATA(min, max, low, upp, sign, do_command)                             \
+    if (do_command) next_blen = 3;                                                                \
+    next_slope = (fdy - y_##min) / fdx;                                                           \
+    if (do_command) next_start_y = y_##min;                                                       \
+    /* we may revise blen upper later, but request max possible anyway */                         \
+    GET_BUFFER(next_boundaries, buffer_data, upp##er_blen + 3)                                    \
+    boundary = next_boundaries;                                                                   \
+                                                                                                  \
+    /* set next_boundaries */                                                                     \
+    if (upp##er_blen == 0) {                                                                      \
+        boundary[X] = 0.5f + fdx;                                                                 \
+        boundary[Y] = fdy;                                                                        \
+        boundary[K] = (fdy - y_##max) / fdx;                                                      \
+/* printf("UPP\t%f\t%f\t%f\n", boundary[X], boundary[Y], boundary[K]); */                         \
+    } else {                                                                                      \
+        /* Three conditions must be met: */                                                       \
+        /* 1. Y_i < Y_{i+1}       -- increasing Y */                                              \
+        /* 2. K_i < K_{i+1}       -- concave curve */                                             \
+        /*  (a) K_i < slope to current */                                                         \
+        /* 3. Y - K_i*X_i < y_max -- intersects with source actor */                              \
+                                                                                                  \
+        /* For calculations of lower data, the conditions are: */                                 \
+        /* 1. Y_i < Y_{i+1}       -- increasing Y */                                              \
+        /* 2. K_i > K_{i+1}       -- convex curve */                                              \
+        /*  (a) K_i > slope to current */                                                         \
+        /* 3. Y - K_i*X_i > y_min -- intersects with source actor */                              \
+        prev_boundary = upp##er_boundaries;                                                       \
+        ptr_end = upp##er_boundaries + upp##er_blen;                                              \
+        is_first = true;                                                                          \
+        do {                                                                                      \
+            /* The previous boundary may have been rejected, so */                                \
+            /* recalculate the slope. */                                                          \
+            prev_slope = (is_first) ? (prev_boundary[Y] - y_##max) /                              \
+                                      (prev_boundary[X] - 0.5f)                                   \
+                                    : (prev_boundary[Y] - boundary[Y-3]) /                        \
+                                      (prev_boundary[X] - boundary[X-3]);                         \
+            slope = (fdy - prev_boundary[Y]) /                                                    \
+                    (fdx + 0.5f - prev_boundary[X]);                                              \
+            if (fdy - prev_boundary[Y] > GRID_EPSILON                       /* (1) */             \
+                && sign (slope - prev_slope) > GRID_EPSILON                 /* (2) */             \
+                && sign (prev_boundary[Y] - slope*(prev_boundary[X] - 0.5f)                       \
+                                          - y_##max) < GRID_EPSILON) {      /* (3) */             \
+                boundary[X] = prev_boundary[X];                                                   \
+                boundary[Y] = prev_boundary[Y];                                                   \
+                boundary[K] = prev_slope;                                                         \
+/* printf("UPP\t%f\t%f\t%f\n", boundary[X], boundary[Y], boundary[K]); */                         \
+                boundary += 3;                                                                    \
+                if (do_command) next_blen += 3;                                                   \
+                is_first = false;                                                                 \
+            }                                                                                     \
+            prev_boundary += 3;                                                                   \
+        } while (prev_boundary != ptr_end);                                                       \
+                                                                                                  \
+        /* now add the current opaque tile */                                                     \
+        boundary[X] = 0.5f + fdx;                                                                 \
+        boundary[Y] = fdy;                                                                        \
+        /* it's possible nothing was set */                                                       \
+        boundary[K] = (is_first) ? (boundary[Y] - y_##max) /                                      \
+                                   (boundary[X] - 0.5f)                                           \
+                                 : (boundary[Y] - boundary[Y-3]) /                                \
+                                   (boundary[X] - boundary[X-3]);                                 \
+/* printf("UPP\t%f\t%f\t%f\n", boundary[X], boundary[Y], boundary[K]); */                         \
+    }                                                                                             \
+                                                                                                  \
+    /* set next_slope, checking lower_boundaries */                                               \
+    if (low##er_blen > 0) {                                                                       \
+        prev_boundary = low##er_boundaries;                                                       \
+        ptr_end = low##er_boundaries + low##er_blen;                                              \
+        while (prev_boundary != ptr_end) {                                                        \
+            if (sign (prev_boundary[K] - next_slope) > GRID_EPSILON) {                            \
+                next_slope = (boundary[Y] - prev_boundary[Y]) /                                   \
+                             (boundary[X] - prev_boundary[X]);                                    \
+                prev_boundary += 3;                                                               \
+            } else {                                                                              \
+                break;                                                                            \
+            }                                                                                     \
+        }                                                                                         \
+        if (do_command) next_start_y = boundary[Y] - next_slope*(boundary[X] - 0.5f);             \
+   }                                                                                              \
+                                                                                                  \
+   if (sign (upp##er_slope - next_slope) < GRID_EPSILON) {                                        \
+       next_slope = upp##er_slope;                                                                \
+       if (do_command) next_start_y = boundary[Y] - next_slope*(boundary[X] - 0.5f);              \
+   }                                                                                              \
+   /* clean up noisy calculations to avoid precision errors */                                    \
+   if (do_command) {                                                                              \
+       if (next_start_y - y_min < GRID_EPSILON) {                                                 \
+           next_start_y = y_min;                                                                  \
+       }                                                                                          \
+   }
+
+
+#define LARGE_ASS_FOV_DEFINE_OCTANT(signx, signy, rx, ry, nx, ny, nf)                             \
+    static void large_ass_fov_octant_##nx##ny##nf(                                                \
+                                        fov_private_data_type *data,                              \
+                                        int dx,                                                   \
+                                        int lower_blen,                                           \
+                                        int upper_blen,                                           \
+                                        float lower_slope,  /* >= 0 */                            \
+                                        float upper_slope,  /* <= 2 */                            \
+                                        float lower_start_y,                                      \
+                                        float upper_start_y,                                      \
+                                        float y_min,  /* store in data? */                        \
+                                        float y_max,  /* store in data? */                        \
+                                        float *lower_boundaries,                                  \
+                                        float *upper_boundaries,                                  \
+                                        bool apply_edge,                                          \
+                                        bool apply_diag) {                                        \
+        int h, x, y, dy, dy0, dy1, cy0, cy1, next_blen;                                           \
+        int prev_blocked = -1;                                                                    \
+        fov_settings_type *settings = data->settings;                                             \
+        float fdy, next_slope, prev_slope, slope, next_start_y;                                   \
+        float fdx = (float)dx;                                                                    \
+        float pms = settings->permissiveness;                                                     \
+        float *boundary, *next_boundaries, *prev_boundary, *ptr_end;                              \
+        fov_buffer_type *buffer_data = settings->buffer_data;                                     \
+        bool is_first;                                                                            \
+                                                                                                  \
+        if (dx > data->radius) {                                                                  \
+            return;                                                                               \
+        }                                                                                         \
+                                                                                                  \
+        rx = data->source_##rx signx dx;                                                          \
+                                                                                                  \
+        dy0 = (int)(lower_start_y + (fdx - pms)*lower_slope + GRID_EPSILON);  /* lower left */    \
+        dy1 = (int)(upper_start_y + (fdx + pms)*upper_slope - GRID_EPSILON);  /* upper right */   \
+        cy0 = (int)(lower_start_y + fdx*lower_slope + GRID_EPSILON) - 1;      /* lower center */  \
+        cy1 = (int)(upper_start_y + fdx*upper_slope - GRID_EPSILON) + 1;      /* upper center */  \
+        if (dy1 > dx+1) dy1 = dx+1;                                                               \
+        if (cy1 > dx+1) cy1 = dx+1;                                                               \
+                                                                                                  \
+        GET_HEIGHT(h, dx, data, settings)                                                         \
+                                                                                                  \
+        if (dy1 > h) {                                                                            \
+            dy1 = h;                                                                              \
+        }                                                                                         \
+                                                                                                  \
+        for (dy = dy0; dy <= dy1; ++dy) {                                                         \
+            ry = data->source_##ry signy dy;                                                      \
+            /* if blocked, then shadowcast below the blocked tile if necessary */                 \
+            if (settings->opaque(data->map, x, y)) {                                              \
+                fdy = (float)dy;                                                                  \
+                if (prev_blocked == 0) {                                                          \
+                    fdx = (float)dx + pms;                                                        \
+                    /* don't double-apply edges or diags, apply only if seen (cy0 < dy < cy1) */  \
+                    if ((apply_edge || dy > 0) && (apply_diag || dy != dx) && (dy > cy0)          \
+                                                                           && (dy < cy1)) {       \
+                        settings->apply(data->map, x, y, x - data->source_x, y - data->source_y,  \
+                                        data->radius, data->source);                              \
+                    }                                                                             \
+                    /* if lower line blocked by tile, then no recursive call is needed */         \
+                    if (fdy - lower_start_y - fdx*lower_slope < GRID_EPSILON) {                   \
+                        goto skip_recurse_below;                                                  \
+                    }                                                                             \
+                                                                                                  \
+                    GET_NEXT_LARGE_ASS_DATA(min, max, low, upp, , true)                           \
+                                                                                                  \
+                    large_ass_fov_octant_##nx##ny##nf(data,             dx + 1,                   \
+                                                      lower_blen,       next_blen,                \
+                                                      lower_slope,      next_slope,               \
+                                                      lower_start_y,    next_start_y,             \
+                                                      y_min,            y_max,                    \
+                                                      lower_boundaries, next_boundaries,          \
+                                                      apply_edge,       apply_diag);              \
+                } else {  /* prev_blocked != 0 */                                                 \
+                    /* We need to calculate slopes to see if the tile is visible. */              \
+                    /* Recall that the previous tile and current tile are blocked, so the */      \
+                    /* previous tile may block the current tile. */                               \
+                    fdx = (float)dx - pms;                                                        \
+                                                                                                  \
+                    /* if upper line is blocked by previous tile, then we are done */             \
+                    if (fdy - upper_start_y - fdx*upper_slope > GRID_EPSILON) {                   \
+                        goto skip_recurse_below;                                                  \
+                    }                                                                             \
+                    if (lower_start_y + fdx*lower_slope - fdy < GRID_EPSILON) {                   \
+                                                                                                  \
+                        GET_NEXT_LARGE_ASS_DATA(max, min, upp, low, -, false)                     \
+                                                                                                  \
+                        if (upper_slope - next_slope < GRID_EPSILON) {                            \
+                            goto skip_recurse_below;                                              \
+                        }                                                                         \
+                    }                                                                             \
+                    /* don't double-apply edges or diags, apply only if seen (cy0 < dy < cy1) */  \
+                    if ((apply_edge || dy > 0) && (apply_diag || dy != dx) && (dy > cy0)          \
+                                                                           && (dy < cy1)) {       \
+                        settings->apply(data->map, x, y, x - data->source_x, y - data->source_y,  \
+                                        data->radius, data->source);                              \
+                    }                                                                             \
+                }                                                                                 \
+                skip_recurse_below:                                                               \
+                prev_blocked = 1;                                                                 \
+            } else {  /* not opaque */                                                            \
+                if (prev_blocked == 1) {                                                          \
+                    fdy = (float)dy;                                                              \
+                    fdx = (float)dx - pms;                                                        \
+                                                                                                  \
+                    /* if upper line is blocked by previous tile, then we are done */             \
+                    if (fdy - upper_start_y - fdx*upper_slope > GRID_EPSILON) {                   \
+                        return;                                                                   \
+                    }                                                                             \
+                                                                                                  \
+                    GET_NEXT_LARGE_ASS_DATA(max, min, upp, low, -, true)                          \
+                                                                                                  \
+                    if (upper_slope - next_slope < GRID_EPSILON) {                                \
+                        return;                                                                   \
+                    }                                                                             \
+                    lower_blen = next_blen;                                                       \
+                    lower_slope = next_slope;                                                     \
+                    lower_start_y = next_start_y;                                                 \
+                    lower_boundaries = next_boundaries;                                           \
+                }  /* end prev_blocked */                                                         \
+                if ((apply_edge || dy > 0) && (apply_diag || dy != dx) && (dy > cy0)              \
+                                                                       && (dy < cy1)) {           \
+                    settings->apply(data->map, x, y, x - data->source_x, y - data->source_y,      \
+                                    data->radius, data->source);                                  \
+                }                                                                                 \
+                prev_blocked = 0;                                                                 \
+            }  /* end if not opaque */                                                            \
+        }  /* end for */                                                                          \
+                                                                                                  \
+        if (prev_blocked == 0) {                                                                  \
+            large_ass_fov_octant_##nx##ny##nf(data,             dx + 1,                           \
+                                              lower_blen,       upper_blen,                       \
+                                              lower_slope,      upper_slope,                      \
+                                              lower_start_y,    upper_start_y,                    \
+                                              y_min,            y_max,                            \
+                                              lower_boundaries, upper_boundaries,                 \
+                                              apply_edge,       apply_diag);                      \
+        }                                                                                         \
+    } /* DONE! */
+
+LARGE_ASS_FOV_DEFINE_OCTANT(+,+,x,y,p,p,n)
+LARGE_ASS_FOV_DEFINE_OCTANT(+,+,y,x,p,p,y)
+LARGE_ASS_FOV_DEFINE_OCTANT(+,-,x,y,p,m,n)
+LARGE_ASS_FOV_DEFINE_OCTANT(+,-,y,x,p,m,y)
+LARGE_ASS_FOV_DEFINE_OCTANT(-,+,x,y,m,p,n)
+LARGE_ASS_FOV_DEFINE_OCTANT(-,+,y,x,m,p,y)
+LARGE_ASS_FOV_DEFINE_OCTANT(-,-,x,y,m,m,n)
+LARGE_ASS_FOV_DEFINE_OCTANT(-,-,y,x,m,m,y)
+
+#define LARGE_ASS_FOV_DEFINE_OCTANT_ZERO(signx, signy, rx, ry, nx, ny, nf)                        \
+    static void large_ass_fov_octant_zero_##nx##ny##nf(                                           \
+                                        fov_private_data_type *data,                              \
+                                        float lower_slope,  /* >= 0 */                            \
+                                        float upper_slope,  /* <= 2 */                            \
+                                        bool apply_edge,                                          \
+                                        bool apply_diag) {                                        \
+        int x, y;                                                                                 \
+        fov_settings_type *settings = data->settings;                                             \
+        float slope, upper_start_y;                                                               \
+        float *upper_boundaries;                                                                  \
+        float pms = settings->permissiveness;                                                     \
+        float y_min = 0.5f - settings->actor_vision_size;                                         \
+        float y_max = 0.5f + settings->actor_vision_size;                                         \
+                                                                                                  \
+        if (y_max + upper_slope * pms - 1.0f > GRID_EPSILON) {                                    \
+            rx = data->source_##rx;                                                               \
+            ry = data->source_##ry signy 1;                                                       \
+            if (settings->opaque(data->map, x, y)) {                                              \
+                slope = (1.0f - y_min) / pms;                                                     \
+                if (slope - upper_slope < GRID_EPSILON) {                                         \
+                    upper_slope = slope;                                                          \
+                }                                                                                 \
+                GET_BUFFER(upper_boundaries, settings->buffer_data, 3)                            \
+                upper_boundaries[X] = 0.5f + pms;                                                 \
+                upper_boundaries[Y] = 1.0f;                                                       \
+                upper_boundaries[K] = (1.0f - y_max) / pms;                                       \
+/* printf("UPP\t%f\t%f\t%f\n", upper_boundaries[X], upper_boundaries[Y], upper_boundaries[K]); */ \
+                upper_start_y = 1.0f - upper_slope * pms;                                         \
+                large_ass_fov_octant_##nx##ny##nf(data,             1,                            \
+                                                  0,                3,                            \
+                                                  lower_slope,      upper_slope,                  \
+                                                  y_min,            upper_start_y,                \
+                                                  y_min,            y_max,                        \
+                                                  NULL,             upper_boundaries,             \
+                                                  apply_edge,       apply_diag);                  \
+                return;                                                                           \
+            }                                                                                     \
+        }                                                                                         \
+        large_ass_fov_octant_##nx##ny##nf(data,             1,                                    \
+                                          0,                0,                                    \
+                                          lower_slope,      upper_slope,                          \
+                                          y_min,            y_max,                                \
+                                          y_min,            y_max,                                \
+                                          NULL,             NULL,                                 \
+                                          apply_edge,       apply_diag);                          \
+    }
+
+LARGE_ASS_FOV_DEFINE_OCTANT_ZERO(+,+,x,y,p,p,n)
+LARGE_ASS_FOV_DEFINE_OCTANT_ZERO(+,+,y,x,p,p,y)
+LARGE_ASS_FOV_DEFINE_OCTANT_ZERO(+,-,x,y,p,m,n)
+LARGE_ASS_FOV_DEFINE_OCTANT_ZERO(+,-,y,x,p,m,y)
+LARGE_ASS_FOV_DEFINE_OCTANT_ZERO(-,+,x,y,m,p,n)
+LARGE_ASS_FOV_DEFINE_OCTANT_ZERO(-,+,y,x,m,p,y)
+LARGE_ASS_FOV_DEFINE_OCTANT_ZERO(-,-,x,y,m,m,n)
+LARGE_ASS_FOV_DEFINE_OCTANT_ZERO(-,-,y,x,m,m,y)
+
+
+#define HEX_FOV_DEFINE_SEXTANT(signx, signy, nx, ny, one)                                         \
+    static void hex_fov_sextant_##nx##ny(                                                         \
+                                        fov_private_data_type *data,                              \
+                                        int dy,                                                   \
+                                        float start_slope,                                        \
+                                        float end_slope,                                          \
+                                        bool apply_edge1,                                         \
+                                        bool apply_edge2) {                                       \
+        int x, y, x0, x1, p;                                                                      \
+        int prev_blocked = -1;                                                                    \
+        float fdy, end_slope_next;                                                                \
+        fov_settings_type *settings = data->settings;                                             \
+                                                                                                  \
+        if (start_slope - end_slope > GRID_EPSILON) {                                             \
+            return;                                                                               \
+        } else if (dy > data->radius) {                                                           \
+            return;                                                                               \
+        }                                                                                         \
+                                                                                                  \
+        fdy = (float)dy;                                                                          \
+        x0 = (int)(0.5f + fdy*start_slope / (SQRT_3_2 + 0.5f*start_slope) + GRID_EPSILON);        \
+        x1 = (int)(0.5f + fdy*end_slope / (SQRT_3_2 + 0.5f*end_slope) - GRID_EPSILON);            \
+        if (x1 < x0) return;                                                                      \
+                                                                                                  \
+        x = data->source_x signx x0;                                                              \
+        p = ((x & 1) + one) & 1;                                                                  \
+        fdy += 0.25f;                                                                             \
+        y = data->source_y signy (dy - (x0 + 1 - p)/2);                                           \
+                                                                                                  \
+        for (; x0 <= x1; ++x0) {                                                                  \
+            if (settings->opaque(data->map, x, y)) {                                              \
+                if ((apply_edge1 || x0 > 0) && (apply_edge2 || x0 != dy)) {                       \
+                    settings->apply(data->map, x, y, x - data->source_x, y - data->source_y,      \
+                                    data->radius, data->source);                                  \
+                }                                                                                 \
+                if (prev_blocked == 0) {                                                          \
+                    end_slope_next = (-SQRT_3_4 + SQRT_3_2*(float)x0) / (fdy - 0.5f*(float)x0);   \
+                    hex_fov_sextant_##nx##ny(data, dy+1, start_slope, end_slope_next,             \
+                                             apply_edge1, apply_edge2);                           \
+                }                                                                                 \
+                prev_blocked = 1;                                                                 \
+            } else {                                                                              \
+                if (prev_blocked == 1) {                                                          \
+                    start_slope = (-SQRT_3_4 + SQRT_3_2*(float)x0) / (fdy - 0.5f*(float)x0);      \
+                }                                                                                 \
+                if ((apply_edge1 || x0 > 0) && (apply_edge2 || x0 != dy)) {                       \
+                    settings->apply(data->map, x, y, x - data->source_x, y - data->source_y,      \
+                                    data->radius, data->source);                                  \
+                }                                                                                 \
+                prev_blocked = 0;                                                                 \
+            }                                                                                     \
+            y = y signy (-p);                                                                     \
+            x = x signx 1;                                                                        \
+            p = !p;                                                                               \
+        }                                                                                         \
+                                                                                                  \
+        if (prev_blocked == 0) {                                                                  \
+            hex_fov_sextant_##nx##ny(data, dy+1, start_slope, end_slope,                          \
+                                     apply_edge1, apply_edge2);                                   \
+        }                                                                                         \
     }
 
 
-#define HEX_FOV_DEFINE_LR_SEXTANT(signx, nx)                                                                                    \
-    static void hex_fov_sextant_##nx(                                                                                           \
-                                        fov_private_data_type *data,                                                            \
-                                        int dx,                                                                                 \
-                                        float start_slope,                                                                      \
-                                        float end_slope,                                                                        \
-                                        bool apply_edge1,                                                                       \
-                                        bool apply_edge2) {                                                                     \
-        int x, y, y0, y1, p;                                                                                                    \
-        int prev_blocked = -1;                                                                                                  \
-        float fdx, fdy, end_slope_next;                                                                                         \
-        fov_settings_type *settings = data->settings;                                                                           \
-                                                                                                                                \
-        if (start_slope - end_slope > GRID_EPSILON) {                                                                           \
-            return;                                                                                                             \
-        } else if ((unsigned)dx > data->radius) {                                                                               \
-            return;                                                                                                             \
-        }                                                                                                                       \
-                                                                                                                                \
-        x = data->source_x signx dx;                                                                                            \
-        fdx = (float)dx * SQRT_3_2;                                                                                             \
-        fdy = -0.5f*(float)dx - 0.5f;                                                                                           \
-                                                                                                                                \
-        p = -dx / 2 - (dx & 1)*(x & 1);                                                                                         \
-        y0 = (int)(fdx*start_slope - fdy + GRID_EPSILON);                                                                       \
-        y1 = (int)(fdx*end_slope - fdy - GRID_EPSILON);                                                                         \
-        if (y1 < y0) return;                                                                                                    \
-                                                                                                                                \
-        y = data->source_y + y0 + p;                                                                                            \
-                                                                                                                                \
-        for (; y0 <= y1; ++y0) {                                                                                                \
-            if (settings->opaque(data->map, x, y)) {                                                                            \
-                if ((apply_edge1 || y0 > 0) && (apply_edge2 || y0 != dx)) {                                                     \
-                    settings->apply(data->map, x, y, x - data->source_x, y - data->source_y, data->radius, data->source);       \
-                }                                                                                                               \
-                if (prev_blocked == 0) {                                                                                        \
-                    end_slope_next = ((float)y0 + fdy) / fdx;                                                                   \
-                    hex_fov_sextant_##nx(data, dx+1, start_slope, end_slope_next, apply_edge1, apply_edge2);                    \
-                }                                                                                                               \
-                prev_blocked = 1;                                                                                               \
-            } else {                                                                                                            \
-                if (prev_blocked == 1) {                                                                                        \
-                    start_slope = ((float)y0 + fdy) / fdx;                                                                      \
-                }                                                                                                               \
-                if ((apply_edge1 || y0 > 0) && (apply_edge2 || y0 != dx)) {                                                     \
-                    settings->apply(data->map, x, y, x - data->source_x, y - data->source_y, data->radius, data->source);       \
-                }                                                                                                               \
-                prev_blocked = 0;                                                                                               \
-            }                                                                                                                   \
-            ++y;                                                                                                                \
-        }                                                                                                                       \
-                                                                                                                                \
-        if (prev_blocked == 0) {                                                                                                \
-            hex_fov_sextant_##nx(data, dx+1, start_slope, end_slope, apply_edge1, apply_edge2);                                 \
-        }                                                                                                                       \
+#define HEX_FOV_DEFINE_LR_SEXTANT(signx, nx)                                                      \
+    static void hex_fov_sextant_##nx(                                                             \
+                                        fov_private_data_type *data,                              \
+                                        int dx,                                                   \
+                                        float start_slope,                                        \
+                                        float end_slope,                                          \
+                                        bool apply_edge1,                                         \
+                                        bool apply_edge2) {                                       \
+        int x, y, y0, y1, p;                                                                      \
+        int prev_blocked = -1;                                                                    \
+        float fdx, fdy, end_slope_next;                                                           \
+        fov_settings_type *settings = data->settings;                                             \
+                                                                                                  \
+        if (start_slope - end_slope > GRID_EPSILON) {                                             \
+            return;                                                                               \
+        } else if (dx > data->radius) {                                                           \
+            return;                                                                               \
+        }                                                                                         \
+                                                                                                  \
+        x = data->source_x signx dx;                                                              \
+        fdx = (float)dx * SQRT_3_2;                                                               \
+        fdy = -0.5f*(float)dx - 0.5f;                                                             \
+                                                                                                  \
+        p = -dx / 2 - (dx & 1)*(x & 1);                                                           \
+        y0 = (int)(fdx*start_slope - fdy + GRID_EPSILON);                                         \
+        y1 = (int)(fdx*end_slope - fdy - GRID_EPSILON);                                           \
+        if (y1 < y0) return;                                                                      \
+                                                                                                  \
+        y = data->source_y + y0 + p;                                                              \
+                                                                                                  \
+        for (; y0 <= y1; ++y0) {                                                                  \
+            if (settings->opaque(data->map, x, y)) {                                              \
+                if ((apply_edge1 || y0 > 0) && (apply_edge2 || y0 != dx)) {                       \
+                    settings->apply(data->map, x, y, x - data->source_x, y - data->source_y,      \
+                                    data->radius, data->source);                                  \
+                }                                                                                 \
+                if (prev_blocked == 0) {                                                          \
+                    end_slope_next = ((float)y0 + fdy) / fdx;                                     \
+                    hex_fov_sextant_##nx(data, dx+1, start_slope, end_slope_next,                 \
+                                         apply_edge1, apply_edge2);                               \
+                }                                                                                 \
+                prev_blocked = 1;                                                                 \
+            } else {                                                                              \
+                if (prev_blocked == 1) {                                                          \
+                    start_slope = ((float)y0 + fdy) / fdx;                                        \
+                }                                                                                 \
+                if ((apply_edge1 || y0 > 0) && (apply_edge2 || y0 != dx)) {                       \
+                    settings->apply(data->map, x, y, x - data->source_x, y - data->source_y,      \
+                                    data->radius, data->source);                                  \
+                }                                                                                 \
+                prev_blocked = 0;                                                                 \
+            }                                                                                     \
+            ++y;                                                                                  \
+        }                                                                                         \
+                                                                                                  \
+        if (prev_blocked == 0) {                                                                  \
+            hex_fov_sextant_##nx(data, dx+1, start_slope, end_slope, apply_edge1, apply_edge2);   \
+        }                                                                                         \
     }
 
 HEX_FOV_DEFINE_SEXTANT(+,+,n,e,1)
@@ -491,14 +1023,25 @@ static void _fov_circle(fov_private_data_type *data) {
      *    /  |  \
      *   /mmy|mpy\
      */
-    fov_octant_ppn(data, 1, (float)0.0f, (float)1.0f, false, false, true, true);
-    fov_octant_ppy(data, 1, (float)0.0f, (float)1.0f, false, false, true, false);
-    fov_octant_pmy(data, 1, (float)0.0f, (float)1.0f, false, false, false, true);
-    fov_octant_mpn(data, 1, (float)0.0f, (float)1.0f, false, false, true, false);
-    fov_octant_mmn(data, 1, (float)0.0f, (float)1.0f, false, false, false, true);
-    fov_octant_mmy(data, 1, (float)0.0f, (float)1.0f, false, false, true, false);
-    fov_octant_mpy(data, 1, (float)0.0f, (float)1.0f, false, false, false, true);
-    fov_octant_pmn(data, 1, (float)0.0f, (float)1.0f, false, false, false, false);
+    fov_octant_ppn(data, 1, 0.0f, 1.0f, false, false,  true,  true);
+    fov_octant_ppy(data, 1, 0.0f, 1.0f, false, false,  true, false);
+    fov_octant_pmy(data, 1, 0.0f, 1.0f, false, false, false,  true);
+    fov_octant_mpn(data, 1, 0.0f, 1.0f, false, false,  true, false);
+    fov_octant_mmn(data, 1, 0.0f, 1.0f, false, false, false,  true);
+    fov_octant_mmy(data, 1, 0.0f, 1.0f, false, false,  true, false);
+    fov_octant_mpy(data, 1, 0.0f, 1.0f, false, false, false,  true);
+    fov_octant_pmn(data, 1, 0.0f, 1.0f, false, false, false, false);
+}
+
+static void _large_ass_fov_circle(fov_private_data_type *data) {
+    large_ass_fov_octant_zero_ppn(data, 0.0f, 2.0f,  true,  true);
+    large_ass_fov_octant_zero_ppy(data, 0.0f, 2.0f,  true, false);
+    large_ass_fov_octant_zero_pmy(data, 0.0f, 2.0f, false,  true);
+    large_ass_fov_octant_zero_mpn(data, 0.0f, 2.0f,  true, false);
+    large_ass_fov_octant_zero_mmn(data, 0.0f, 2.0f, false,  true);
+    large_ass_fov_octant_zero_mmy(data, 0.0f, 2.0f,  true, false);
+    large_ass_fov_octant_zero_mpy(data, 0.0f, 2.0f, false,  true);
+    large_ass_fov_octant_zero_pmn(data, 0.0f, 2.0f, false, false);
 }
 
 static void _hex_fov_circle(fov_private_data_type *data) {
@@ -526,7 +1069,7 @@ void fov_circle(fov_settings_type *settings,
                 void *source,
                 int source_x,
                 int source_y,
-                unsigned radius) {
+                int radius) {
     fov_private_data_type data;
 
     data.settings = settings;
@@ -536,10 +1079,16 @@ void fov_circle(fov_settings_type *settings,
     data.source_y = source_y;
     data.radius = radius;
 
-    if (settings->shape == FOV_SHAPE_HEX)
+    if (settings->shape == FOV_SHAPE_HEX) {
         _hex_fov_circle(&data);
-    else
-        _fov_circle(&data);
+    } else {
+        data.heights = (radius < 33) ? heights_tables[settings->shape] + (radius*(radius-1) / 2 - 1) : NULL;
+        if (settings->algorithm == FOV_ALGO_LARGE_ASS) {
+            _large_ass_fov_circle(&data);
+        } else {
+            _fov_circle(&data);
+        }
+    }
 }
 
 /**
@@ -555,168 +1104,172 @@ static float betweenf(float x, float a, float b) {
     }
 }
 
-#define BEAM_DIRECTION(d, p1, p2, p3, p4, p5, p6, p7, p8)                             \
-    if (direction == d) {                                                             \
-        end_slope = betweenf(a, 0.0f, 1.0f);                                          \
-        fov_octant_##p1(&data, 1, 0.0f, end_slope, false, false, true, true);         \
-        fov_octant_##p2(&data, 1, 0.0f, end_slope, false, false, false, true);        \
-        if (a - 1.0f > FLT_EPSILON) { /* a > 1.0f */                                  \
-            start_slope = betweenf(2.0f - a, 0.0f, 1.0f);                             \
-            fov_octant_##p3(&data, 1, start_slope, 1.0f, false, false, true, false);  \
-            fov_octant_##p4(&data, 1, start_slope, 1.0f, false, false, true, false);  \
-                                                                                      \
-        if (a - 2.0f > 2.0f * FLT_EPSILON) { /* a > 2.0f */                           \
-            end_slope = betweenf(a - 2.0f, 0.0f, 1.0f);                               \
-            fov_octant_##p5(&data, 1, 0.0f, end_slope, false, false, false, true);    \
-            fov_octant_##p6(&data, 1, 0.0f, end_slope, false, false, false, true);    \
-                                                                                      \
-        if (a - 3.0f > 3.0 * FLT_EPSILON) { /* a > 3.0f */                            \
-            start_slope = betweenf(4.0f - a, 0.0f, 1.0f);                             \
-            fov_octant_##p7(&data, 1, start_slope, 1.0f, false, false, true, false);  \
-            fov_octant_##p8(&data, 1, start_slope, 1.0f, false, false, false, false); \
-        }}}}
-
-#define BEAM_DIRECTION_DIAG(d, p1, p2, p3, p4, p5, p6, p7, p8)                        \
-    if (direction == d) {                                                             \
-        start_slope = betweenf(1.0f - a, 0.0f, 1.0f);                                 \
-        fov_octant_##p1(&data, 1, start_slope, 1.0f, false, false, true, true);       \
-        fov_octant_##p2(&data, 1, start_slope, 1.0f, false, false, true, false);      \
-        if (a - 1.0f > FLT_EPSILON) { /* a > 1.0f */                                  \
-            end_slope = betweenf(a - 1.0f, 0.0f, 1.0f);                               \
-            fov_octant_##p3(&data, 1, 0.0f, end_slope, false, false, false, true);    \
-            fov_octant_##p4(&data, 1, 0.0f, end_slope, false, false, false, true);    \
-                                                                                      \
-        if (a - 2.0f > 2.0f * FLT_EPSILON) { /* a > 2.0f */                           \
-            start_slope = betweenf(3.0f - a, 0.0f, 1.0f);                             \
-            fov_octant_##p5(&data, 1, start_slope, 1.0f, false, false, true, false);  \
-            fov_octant_##p6(&data, 1, start_slope, 1.0f, false, false, true, false);  \
-                                                                                      \
-        if (a - 3.0f > 3.0f * FLT_EPSILON) { /* a > 3.0f */                           \
-            end_slope = betweenf(a - 3.0f, 0.0f, 1.0f);                               \
-            fov_octant_##p7(&data, 1, 0.0f, end_slope, false, false, false, true);    \
-            fov_octant_##p8(&data, 1, 0.0f, end_slope, false, false, false, false);   \
-        }}}}
-
-void fov_beam(fov_settings_type *settings, void *map, void *source,
-              int source_x, int source_y, unsigned radius,
-              fov_direction_type direction, float angle) {
-
-    fov_private_data_type data;
-    float start_slope, end_slope, a;
-
-    data.settings = settings;
-    data.map = map;
-    data.source = source;
-    data.source_x = source_x;
-    data.source_y = source_y;
-    data.radius = radius;
-
-    if (angle <= 0.0f) {
-        return;
-    } else if (angle >= 360.0f) {
-        _fov_circle(&data);
-        return;
-    }
-
-    /* Calculate the angle as a percentage of 45 degrees, halved (for
-     * each side of the centre of the beam). e.g. angle = 180.0f means
-     * half the beam is 90.0 which is 2x45, so the result is 2.0.
-     */
-    a = angle/90.0f;
-
-    BEAM_DIRECTION(FOV_EAST, ppn, pmn, ppy, mpy, pmy, mmy, mpn, mmn);
-    BEAM_DIRECTION(FOV_WEST, mpn, mmn, pmy, mmy, ppy, mpy, ppn, pmn);
-    BEAM_DIRECTION(FOV_NORTH, mpy, mmy, pmn, mmn, ppn, mpn, ppy, pmy);
-    BEAM_DIRECTION(FOV_SOUTH, pmy, ppy, mpn, ppn, mmn, pmn, mmy, mpy);
-    BEAM_DIRECTION_DIAG(FOV_NORTHEAST, pmn, mpy, ppn, mmy, ppy, mmn, pmy, mpn);
-    BEAM_DIRECTION_DIAG(FOV_NORTHWEST, mmn, mmy, mpn, mpy, pmy, pmn, ppy, ppn);
-    BEAM_DIRECTION_DIAG(FOV_SOUTHEAST, ppy, ppn, pmy, pmn, mpn, mpy, mmn, mmy);
-    BEAM_DIRECTION_DIAG(FOV_SOUTHWEST, pmy, mpn, ppy, mmn, ppn, mmy, pmn, mpy);
-}
-
-#define BEAM_ANY_DIRECTION(offset, p1, p2, p3, p4, p5, p6, p7, p8)                    \
-    angle_begin -= offset;                                                            \
-    angle_end -= offset;                                                              \
-    start_slope = angle_begin;                                                        \
-    end_slope = betweenf(angle_end, 0.0f, 1.0f);                                      \
-    fov_octant_##p1(&data, 1, start_slope, end_slope, false, false, true, true);      \
-                                                                                      \
-    if (angle_end - 1.0f > FLT_EPSILON) {                                             \
-        start_slope = betweenf(2.0f - angle_end, 0.0f, 1.0f);                         \
-        fov_octant_##p2(&data, 1, start_slope, 1.0f, false, false, true, false);      \
-                                                                                      \
-    if (angle_end - 2.0f > 2.0f * FLT_EPSILON) {                                      \
-        end_slope = betweenf(angle_end - 2.0f, 0.0f, 1.0f);                           \
-        fov_octant_##p3(&data, 1, 0.0f, end_slope, false, false, false, true);        \
-                                                                                      \
-    if (angle_end - 3.0f > 3.0f * FLT_EPSILON) {                                      \
-        start_slope = betweenf(4.0f - angle_end, 0.0f, 1.0f);                         \
-        fov_octant_##p4(&data, 1, start_slope, 1.0f, false, false, true, false);      \
-                                                                                      \
-    if (angle_end - 4.0f > 4.0f * FLT_EPSILON) {                                      \
-        end_slope = betweenf(angle_end - 4.0f, 0.0f, 1.0f);                           \
-        fov_octant_##p5(&data, 1, 0.0f, end_slope, false, false, false, true);        \
-                                                                                      \
-    if (angle_end - 5.0f > 5.0f * FLT_EPSILON) {                                      \
-        start_slope = betweenf(6.0f - angle_end, 0.0f, 1.0f);                         \
-        fov_octant_##p6(&data, 1, start_slope, 1.0f, false, false, true, false);      \
-                                                                                      \
-    if (angle_end - 6.0f > 6.0f * FLT_EPSILON) {                                      \
-        end_slope = betweenf(angle_end - 6.0f, 0.0f, 1.0f);                           \
-        fov_octant_##p7(&data, 1, 0.0f, end_slope, false, false, false, true);        \
-                                                                                      \
-    if (angle_end - 7.0f > 7.0f * FLT_EPSILON) {                                      \
-        start_slope = betweenf(8.0f - angle_end, 0.0f, 1.0f);                         \
-        fov_octant_##p8(&data, 1, start_slope, 1.0f, false, false, true, false);      \
-                                                                                      \
-    if (angle_end - 8.0f > 8.0f * FLT_EPSILON) {                                      \
-        end_slope = betweenf(angle_end - 8.0f, 0.0f, 1.0f);                           \
-        start_slope = betweenf(angle_end - 8.0f, 0.0f, 1.0f);                         \
-        fov_octant_##p1(&data, 1, 0.0f, end_slope, false, false, false, false);       \
+#define BEAM_ANY_DIRECTION(offset, p1, p2, p3, p4, p5, p6, p7, p8)                                \
+    angle_begin -= offset;                                                                        \
+    angle_end -= offset;                                                                          \
+    start_slope = angle_begin;                                                                    \
+    end_slope = betweenf(angle_end, 0.0f, 1.0f);                                                  \
+    fov_octant_##p1(&data, 1, start_slope, end_slope, false, false, true, true);                  \
+                                                                                                  \
+    if (angle_end - 1.0f > FLT_EPSILON) {                                                         \
+        start_slope = betweenf(2.0f - angle_end, 0.0f, 1.0f);                                     \
+        fov_octant_##p2(&data, 1, start_slope, 1.0f, false, false, true, false);                  \
+                                                                                                  \
+    if (angle_end - 2.0f > 2.0f * FLT_EPSILON) {                                                  \
+        end_slope = betweenf(angle_end - 2.0f, 0.0f, 1.0f);                                       \
+        fov_octant_##p3(&data, 1, 0.0f, end_slope, false, false, false, true);                    \
+                                                                                                  \
+    if (angle_end - 3.0f > 3.0f * FLT_EPSILON) {                                                  \
+        start_slope = betweenf(4.0f - angle_end, 0.0f, 1.0f);                                     \
+        fov_octant_##p4(&data, 1, start_slope, 1.0f, false, false, true, false);                  \
+                                                                                                  \
+    if (angle_end - 4.0f > 4.0f * FLT_EPSILON) {                                                  \
+        end_slope = betweenf(angle_end - 4.0f, 0.0f, 1.0f);                                       \
+        fov_octant_##p5(&data, 1, 0.0f, end_slope, false, false, false, true);                    \
+                                                                                                  \
+    if (angle_end - 5.0f > 5.0f * FLT_EPSILON) {                                                  \
+        start_slope = betweenf(6.0f - angle_end, 0.0f, 1.0f);                                     \
+        fov_octant_##p6(&data, 1, start_slope, 1.0f, false, false, true, false);                  \
+                                                                                                  \
+    if (angle_end - 6.0f > 6.0f * FLT_EPSILON) {                                                  \
+        end_slope = betweenf(angle_end - 6.0f, 0.0f, 1.0f);                                       \
+        fov_octant_##p7(&data, 1, 0.0f, end_slope, false, false, false, true);                    \
+                                                                                                  \
+    if (angle_end - 7.0f > 7.0f * FLT_EPSILON) {                                                  \
+        start_slope = betweenf(8.0f - angle_end, 0.0f, 1.0f);                                     \
+        fov_octant_##p8(&data, 1, start_slope, 1.0f, false, false, true, false);                  \
+                                                                                                  \
+    if (angle_end - 8.0f > 8.0f * FLT_EPSILON) {                                                  \
+        end_slope = betweenf(angle_end - 8.0f, 0.0f, 1.0f);                                       \
+        fov_octant_##p1(&data, 1, 0.0f, end_slope, false, false, false, false);                   \
     }}}}}}}}
 
-#define BEAM_ANY_DIRECTION_DIAG(offset, p1, p2, p3, p4, p5, p6, p7, p8)               \
-    angle_begin -= offset;                                                            \
-    angle_end -= offset;                                                              \
-    start_slope = betweenf(1.0f - angle_end, 0.0f, 1.0f);                             \
-    end_slope = 1.0f - angle_begin;                                                   \
-    fov_octant_##p1(&data, 1, start_slope, end_slope, false, false, true, true);      \
-                                                                                      \
-    if (angle_end - 1.0f > FLT_EPSILON) {                                             \
-        end_slope = betweenf(angle_end - 1.0f, 0.0f, 1.0f);                           \
-        fov_octant_##p2(&data, 1, 0.0f, end_slope, false, false, false, true);        \
-                                                                                      \
-    if (angle_end - 2.0f > 2.0f * FLT_EPSILON) {                                      \
-        start_slope = betweenf(3.0f - angle_end, 0.0f, 1.0f);                         \
-        fov_octant_##p3(&data, 1, start_slope, 1.0f, false, false, true, false);      \
-                                                                                      \
-    if (angle_end - 3.0f > 3.0f * FLT_EPSILON) {                                      \
-        end_slope = betweenf(angle_end - 3.0f, 0.0f, 1.0f);                           \
-        fov_octant_##p4(&data, 1, 0.0f, end_slope, false, false, false, true);        \
-                                                                                      \
-    if (angle_end - 4.0f > 4.0f * FLT_EPSILON) {                                      \
-        start_slope = betweenf(5.0f - angle_end, 0.0f, 1.0f);                         \
-        fov_octant_##p5(&data, 1, start_slope, 1.0f, false, false, true, false);      \
-                                                                                      \
-    if (angle_end - 5.0f > 5.0f * FLT_EPSILON) {                                      \
-        end_slope = betweenf(angle_end - 5.0f, 0.0f, 1.0f);                           \
-        fov_octant_##p6(&data, 1, 0.0f, end_slope, false, false, false, true);        \
-                                                                                      \
-    if (angle_end - 6.0f > 6.0f * FLT_EPSILON) {                                      \
-        start_slope = betweenf(7.0f - angle_end, 0.0f, 1.0f);                         \
-        fov_octant_##p7(&data, 1, start_slope, 1.0f, false, false, true, false);      \
-                                                                                      \
-    if (angle_end - 7.0f > 7.0f * FLT_EPSILON) {                                      \
-        end_slope = betweenf(angle_end - 7.0f, 0.0f, 1.0f);                           \
-        fov_octant_##p8(&data, 1, 0.0f, end_slope, false, false, false, true);        \
-                                                                                      \
-    if (angle_end - 8.0f > 8.0f * FLT_EPSILON) {                                      \
-        start_slope = betweenf(9.0f - angle_end, 0.0f, 1.0f);                         \
-        fov_octant_##p1(&data, 1, start_slope, 1.0f, false, false, false, false);     \
+#define BEAM_ANY_DIRECTION_DIAG(offset, p1, p2, p3, p4, p5, p6, p7, p8)                           \
+    angle_begin -= offset;                                                                        \
+    angle_end -= offset;                                                                          \
+    start_slope = betweenf(1.0f - angle_end, 0.0f, 1.0f);                                         \
+    end_slope = 1.0f - angle_begin;                                                               \
+    fov_octant_##p1(&data, 1, start_slope, end_slope, false, false, true, true);                  \
+                                                                                                  \
+    if (angle_end - 1.0f > FLT_EPSILON) {                                                         \
+        end_slope = betweenf(angle_end - 1.0f, 0.0f, 1.0f);                                       \
+        fov_octant_##p2(&data, 1, 0.0f, end_slope, false, false, false, true);                    \
+                                                                                                  \
+    if (angle_end - 2.0f > 2.0f * FLT_EPSILON) {                                                  \
+        start_slope = betweenf(3.0f - angle_end, 0.0f, 1.0f);                                     \
+        fov_octant_##p3(&data, 1, start_slope, 1.0f, false, false, true, false);                  \
+                                                                                                  \
+    if (angle_end - 3.0f > 3.0f * FLT_EPSILON) {                                                  \
+        end_slope = betweenf(angle_end - 3.0f, 0.0f, 1.0f);                                       \
+        fov_octant_##p4(&data, 1, 0.0f, end_slope, false, false, false, true);                    \
+                                                                                                  \
+    if (angle_end - 4.0f > 4.0f * FLT_EPSILON) {                                                  \
+        start_slope = betweenf(5.0f - angle_end, 0.0f, 1.0f);                                     \
+        fov_octant_##p5(&data, 1, start_slope, 1.0f, false, false, true, false);                  \
+                                                                                                  \
+    if (angle_end - 5.0f > 5.0f * FLT_EPSILON) {                                                  \
+        end_slope = betweenf(angle_end - 5.0f, 0.0f, 1.0f);                                       \
+        fov_octant_##p6(&data, 1, 0.0f, end_slope, false, false, false, true);                    \
+                                                                                                  \
+    if (angle_end - 6.0f > 6.0f * FLT_EPSILON) {                                                  \
+        start_slope = betweenf(7.0f - angle_end, 0.0f, 1.0f);                                     \
+        fov_octant_##p7(&data, 1, start_slope, 1.0f, false, false, true, false);                  \
+                                                                                                  \
+    if (angle_end - 7.0f > 7.0f * FLT_EPSILON) {                                                  \
+        end_slope = betweenf(angle_end - 7.0f, 0.0f, 1.0f);                                       \
+        fov_octant_##p8(&data, 1, 0.0f, end_slope, false, false, false, true);                    \
+                                                                                                  \
+    if (angle_end - 8.0f > 8.0f * FLT_EPSILON) {                                                  \
+        start_slope = betweenf(9.0f - angle_end, 0.0f, 1.0f);                                     \
+        fov_octant_##p1(&data, 1, start_slope, 1.0f, false, false, false, false);                 \
+}}}}}}}}
+
+#define LARGE_ASS_BEAM_ANY_DIRECTION(offset, p1, p2, p3, p4, p5, p6, p7, p8)                      \
+    y_min = 0.5f - settings->actor_vision_size;                                                   \
+    y_max = 0.5f + settings->actor_vision_size;                                                   \
+    angle_begin -= offset;                                                                        \
+    angle_end -= offset;                                                                          \
+    start_slope = angle_begin;                                                                    \
+    end_slope = betweenf(angle_end, 0.0f, 2.0f);                                                  \
+    large_ass_fov_octant_zero_##p1(&data, start_slope, end_slope,  true,  true);                  \
+                                                                                                  \
+    if (angle_end - 1.0f > FLT_EPSILON) {                                                         \
+        start_slope = betweenf(2.0f - angle_end, 0.0f, 1.0f);                                     \
+        large_ass_fov_octant_zero_##p2(&data, start_slope, 2.0f,   true, false);                  \
+                                                                                                  \
+    if (angle_end - 2.0f > 2.0f * FLT_EPSILON) {                                                  \
+        end_slope = betweenf(angle_end - 2.0f, 0.0f, 2.0f);                                       \
+        large_ass_fov_octant_zero_##p3(&data, 0.0f, end_slope,    false,  true);                  \
+                                                                                                  \
+    if (angle_end - 3.0f > 3.0f * FLT_EPSILON) {                                                  \
+        start_slope = betweenf(4.0f - angle_end, 0.0f, 1.0f);                                     \
+        large_ass_fov_octant_zero_##p4(&data, start_slope, 2.0f,   true, false);                  \
+                                                                                                  \
+    if (angle_end - 4.0f > 4.0f * FLT_EPSILON) {                                                  \
+        end_slope = betweenf(angle_end - 4.0f, 0.0f, 2.0f);                                       \
+        large_ass_fov_octant_zero_##p5(&data, 0.0f, end_slope,    false,  true);                  \
+                                                                                                  \
+    if (angle_end - 5.0f > 5.0f * FLT_EPSILON) {                                                  \
+        start_slope = betweenf(6.0f - angle_end, 0.0f, 1.0f);                                     \
+        large_ass_fov_octant_zero_##p6(&data, start_slope, 2.0f,   true, false);                  \
+                                                                                                  \
+    if (angle_end - 6.0f > 6.0f * FLT_EPSILON) {                                                  \
+        end_slope = betweenf(angle_end - 6.0f, 0.0f, 2.0f);                                       \
+        large_ass_fov_octant_zero_##p7(&data, 0.0f, end_slope,    false,  true);                  \
+                                                                                                  \
+    if (angle_end - 7.0f > 7.0f * FLT_EPSILON) {                                                  \
+        start_slope = betweenf(8.0f - angle_end, 0.0f, 1.0f);                                     \
+        large_ass_fov_octant_zero_##p8(&data, start_slope, 2.0f,   true, false);                  \
+                                                                                                  \
+    if (angle_end - 8.0f > 8.0f * FLT_EPSILON) {                                                  \
+        end_slope = betweenf(angle_end - 8.0f, 0.0f, 2.0f);                                       \
+        large_ass_fov_octant_zero_##p1(&data, 0.0f, end_slope,    false, false);                  \
+    }}}}}}}}
+
+#define LARGE_ASS_BEAM_ANY_DIRECTION_DIAG(offset, p1, p2, p3, p4, p5, p6, p7, p8)                 \
+    y_min = 0.5f - settings->actor_vision_size;                                                   \
+    y_max = 0.5f + settings->actor_vision_size;                                                   \
+    angle_begin -= offset;                                                                        \
+    angle_end -= offset;                                                                          \
+    start_slope = betweenf(1.0f - angle_end, 0.0f, 1.0f);                                         \
+    end_slope = 1.0f - angle_begin;                                                               \
+    large_ass_fov_octant_zero_##p1(&data, start_slope, end_slope,  true,  true);                  \
+                                                                                                  \
+    if (angle_end - 1.0f > FLT_EPSILON) {                                                         \
+        end_slope = betweenf(angle_end - 1.0f, 0.0f, 2.0f);                                       \
+        large_ass_fov_octant_zero_##p2(&data, 0.0f, end_slope,    false,  true);                  \
+                                                                                                  \
+    if (angle_end - 2.0f > 2.0f * FLT_EPSILON) {                                                  \
+        start_slope = betweenf(3.0f - angle_end, 0.0f, 1.0f);                                     \
+        large_ass_fov_octant_zero_##p3(&data, start_slope, 2.0f,   true, false);                  \
+                                                                                                  \
+    if (angle_end - 3.0f > 3.0f * FLT_EPSILON) {                                                  \
+        end_slope = betweenf(angle_end - 3.0f, 0.0f, 2.0f);                                       \
+        large_ass_fov_octant_zero_##p4(&data, 0.0f, end_slope,    false,  true);                  \
+                                                                                                  \
+    if (angle_end - 4.0f > 4.0f * FLT_EPSILON) {                                                  \
+        start_slope = betweenf(5.0f - angle_end, 0.0f, 1.0f);                                     \
+        large_ass_fov_octant_zero_##p5(&data, start_slope, 2.0f,   true, false);                  \
+                                                                                                  \
+    if (angle_end - 5.0f > 5.0f * FLT_EPSILON) {                                                  \
+        end_slope = betweenf(angle_end - 5.0f, 0.0f, 2.0f);                                       \
+        large_ass_fov_octant_zero_##p6(&data, 0.0f, end_slope,    false,  true);                  \
+                                                                                                  \
+    if (angle_end - 6.0f > 6.0f * FLT_EPSILON) {                                                  \
+        start_slope = betweenf(7.0f - angle_end, 0.0f, 1.0f);                                     \
+        large_ass_fov_octant_zero_##p7(&data, start_slope, 2.0f,   true, false);                  \
+                                                                                                  \
+    if (angle_end - 7.0f > 7.0f * FLT_EPSILON) {                                                  \
+        end_slope = betweenf(angle_end - 7.0f, 0.0f, 2.0f);                                       \
+        large_ass_fov_octant_zero_##p8(&data, 0.0f, end_slope,    false,  true);                  \
+                                                                                                  \
+    if (angle_end - 8.0f > 8.0f * FLT_EPSILON) {                                                  \
+        start_slope = betweenf(9.0f - angle_end, 0.0f, 1.0f);                                     \
+        large_ass_fov_octant_zero_##p1(&data, start_slope, 2.0f,  false, false);                  \
 }}}}}}}}
 
 void fov_beam_any_angle(fov_settings_type *settings, void *map, void *source,
-                        int source_x, int source_y, unsigned radius, int sx, int sy,
+                        int source_x, int source_y, int radius, int sx, int sy,
                         float dx, float dy, float beam_angle) {
 
     /* Note: angle_begin and angle_end are misnomers, since FoV calculation uses slopes, not angles.
@@ -726,7 +1279,14 @@ void fov_beam_any_angle(fov_settings_type *settings, void *map, void *source,
      */
 
     fov_private_data_type data;
-    float start_slope, end_slope, angle_begin, angle_end, x_start, y_start, x_end, y_end;
+    float start_slope, end_slope, angle_begin, angle_end, x_start, y_start, x_end, y_end, y_min, y_max;
+
+    if (beam_angle <= 0.0f) {
+        return;
+    } else if (beam_angle >= 360.0f) {
+        fov_circle(settings, map, source, source_x, source_y, radius);
+        return;
+    }
 
     data.settings = settings;
     data.map = map;
@@ -735,22 +1295,14 @@ void fov_beam_any_angle(fov_settings_type *settings, void *map, void *source,
     data.source_y = source_y;
     data.radius = radius;
 
-    if (beam_angle <= 0.0f) {
-        return;
-    } else if (beam_angle >= 360.0f) {
-        if (settings->shape == FOV_SHAPE_HEX)
-            _hex_fov_circle(&data);
-        else
-            _fov_circle(&data);
-        return;
-    }
-
     if (settings->shape == FOV_SHAPE_HEX) {
         /* time for some slightly odd conventions.  We're assuming that dx and dy are still in coordinate space so
          * that "source_x + dx" gives the target tile coordinate.  dx, dy are floats, so we have sub-tile resolution.
          * We will then calculate the "real space" x's and y's to allow beam-casting at any angle. */
         dy += (float)(((int)(abs(dx) + 0.5f)) & 1) * (0.5f - (float)(sx & 1));
         dx *= SQRT_3_2;
+    } else {
+        data.heights = (radius < 33) ? heights_tables[settings->shape] + (radius*(radius-1) / 2 - 1) : NULL;
     }
 
     beam_angle = 0.5f * DtoR * beam_angle;
@@ -798,7 +1350,7 @@ void fov_beam_any_angle(fov_settings_type *settings, void *map, void *source,
         }
 
         if(angle_begin < INV_SQRT_3) {
-            //east
+            /* east */
             start_slope = angle_begin;
             end_slope = betweenf(angle_end, -INV_SQRT_3, INV_SQRT_3);
             hex_fov_sextant_e(&data, 1, start_slope, end_slope, true, true);
@@ -832,7 +1384,7 @@ void fov_beam_any_angle(fov_settings_type *settings, void *map, void *source,
                                     hex_fov_sextant_e(&data, 1, -INV_SQRT_3, end_slope, false, false);
             }   }   }   }   }   }
         } else if (angle_begin < 2.0f) {
-            //north-east
+            /* north-east */
             start_slope = betweenf(2.0f - angle_end, 0.0f, 2.0f - INV_SQRT_3);
             if (start_slope > 1.0f) start_slope = 1.0f / (2.0f - start_slope);
             end_slope = betweenf(2.0f - angle_begin, 0.0f, 2.0f - INV_SQRT_3);
@@ -868,7 +1420,7 @@ void fov_beam_any_angle(fov_settings_type *settings, void *map, void *source,
                                     hex_fov_sextant_ne(&data, 1, start_slope, SQRT_3, false, false);
             }   }   }   }   }   }
         } else if (angle_begin < 4.0f - INV_SQRT_3) {
-            //north-west
+            /* north-west */
             start_slope = betweenf(angle_begin - 2.0f, 0.0f, 2.0f - INV_SQRT_3);
             if (start_slope > 1.0f) start_slope = 1.0f / (2.0f - start_slope);
             end_slope = betweenf(angle_end - 2.0f, 0.0f, 2.0f - INV_SQRT_3);
@@ -904,7 +1456,7 @@ void fov_beam_any_angle(fov_settings_type *settings, void *map, void *source,
                                     hex_fov_sextant_nw(&data, 1, 0.0f, end_slope, false, false);
             }   }   }   }   }   }
         } else if (angle_begin < 4.0f + INV_SQRT_3) {
-            //west
+            /* west */
             start_slope = betweenf(4.0f - angle_end, -INV_SQRT_3, INV_SQRT_3);
             end_slope = betweenf(4.0f - angle_begin, -INV_SQRT_3, INV_SQRT_3);
             hex_fov_sextant_w(&data, 1, start_slope, end_slope, true, true);
@@ -938,7 +1490,7 @@ void fov_beam_any_angle(fov_settings_type *settings, void *map, void *source,
                                     hex_fov_sextant_w(&data, 1, start_slope, INV_SQRT_3, false, false);
             }   }   }   }   }   }
         } else if (angle_begin < 6.0f) {
-            //south-west
+            /* south-west */
             start_slope = betweenf(6.0f - angle_end, 0.0f, 2.0f - INV_SQRT_3);
             if (start_slope > 1.0f) start_slope = 1.0f / (2.0f - start_slope);
             end_slope = betweenf(6.0f - angle_begin, 0.0f, 2.0f - INV_SQRT_3);
@@ -974,7 +1526,7 @@ void fov_beam_any_angle(fov_settings_type *settings, void *map, void *source,
                                     hex_fov_sextant_sw(&data, 1, start_slope, SQRT_3, false, false);
             }   }   }   }   }   }
         } else if (angle_begin < 8.0f - INV_SQRT_3) {
-            //south-east
+            /* south-east */
             start_slope = betweenf(angle_begin - 6.0f, 0.0f, 2.0f - INV_SQRT_3);
             if (start_slope > 1.0f) start_slope = 1.0f / (2.0f - start_slope);
             end_slope = betweenf(angle_end - 6.0f, 0.0f, 2.0f - INV_SQRT_3);
@@ -1010,7 +1562,25 @@ void fov_beam_any_angle(fov_settings_type *settings, void *map, void *source,
                                     hex_fov_sextant_se(&data, 1, 0.0f, end_slope, false, false);
             }   }   }   }   }   }
         }
-    } else  {
+    } else if (settings->algorithm == FOV_ALGO_LARGE_ASS) {
+        if (1.0f - angle_begin > FLT_EPSILON) {
+            LARGE_ASS_BEAM_ANY_DIRECTION(0.0f, ppn, ppy, pmy, mpn, mmn, mmy, mpy, pmn);
+        } else if (2.0f - angle_begin > 2.0f * FLT_EPSILON) {
+            LARGE_ASS_BEAM_ANY_DIRECTION_DIAG(1.0f, ppy, pmy, mpn, mmn, mmy, mpy, pmn, ppn);
+        } else if (3.0f - angle_begin > 3.0f * FLT_EPSILON) {
+            LARGE_ASS_BEAM_ANY_DIRECTION(2.0f, pmy, mpn, mmn, mmy, mpy, pmn, ppn, ppy);
+        } else if (4.0f - angle_begin > 4.0f * FLT_EPSILON) {
+            LARGE_ASS_BEAM_ANY_DIRECTION_DIAG(3.0f, mpn, mmn, mmy, mpy, pmn, ppn, ppy, pmy);
+        } else if (5.0f - angle_begin > 5.0f * FLT_EPSILON) {
+            LARGE_ASS_BEAM_ANY_DIRECTION(4.0f, mmn, mmy, mpy, pmn, ppn, ppy, pmy, mpn);
+        } else if (6.0f - angle_begin > 6.0f * FLT_EPSILON) {
+            LARGE_ASS_BEAM_ANY_DIRECTION_DIAG(5.0f, mmy, mpy, pmn, ppn, ppy, pmy, mpn, mmn);
+        } else if (7.0f - angle_begin > 7.0f * FLT_EPSILON) {
+            LARGE_ASS_BEAM_ANY_DIRECTION(6.0f, mpy, pmn, ppn, ppy, pmy, mpn, mmn, mmy);
+        } else if (8.0f - angle_begin > 8.0f * FLT_EPSILON) {
+            LARGE_ASS_BEAM_ANY_DIRECTION_DIAG(7.0f, pmn, ppn, ppy, pmy, mpn, mmn, mmy, mpy);
+        }
+    } else {
         if (1.0f - angle_begin > FLT_EPSILON) {
             BEAM_ANY_DIRECTION(0.0f, ppn, ppy, pmy, mpn, mmn, mmy, mpy, pmn);
         } else if (2.0f - angle_begin > 2.0f * FLT_EPSILON) {
@@ -1031,153 +1601,400 @@ void fov_beam_any_angle(fov_settings_type *settings, void *map, void *source,
     }
 }
 
- // a work in progress
-#define HEX_LOS_DEFINE_SEXTANT(signx, signy, nx, ny, one)                                                                       \
-    static float hex_los_sextant_##nx##ny(                                                                                      \
-                                        fov_private_data_type *data,                                                            \
-                                        hex_fov_line_data *line,                                                                \
-                                        float start_slope,                                                                      \
-                                        float target_slope,                                                                     \
-                                        float end_slope) {                                                                      \
-        int x, y, x0, x1, p, prev_blocked;                                                                                      \
-        int dy = 1;                                                                                                             \
-        int delta = line->dest_t - 1;                                                                                           \
-        float fx0, fx1, fdx0, fdx1;                                                                                             \
-        float fdy = 1.0f;                                                                                                       \
-        fov_settings_type *settings = data->settings;                                                                           \
-                                                                                                                                \
-        fdx0 = start_slope / (SQRT_3_2 + 0.5f*start_slope);                                                                     \
-        fdx1 = end_slope / (SQRT_3_2 + 0.5f*end_slope);                                                                         \
-                                                                                                                                \
-        fx0 = 0.5f + fdx0 + GRID_EPSILON;                                                                                       \
-        fx1 = 0.5f + fdx1 - GRID_EPSILON;                                                                                       \
-        x0 = (int)fx0;                                                                                                          \
-        x1 = (int)fx1;                                                                                                          \
-        x = data->source_x signx x0;                                                                                            \
-        p = ((x & 1) + one) & 1;                                                                                                \
-        y = data->source_y signy (1 - (x0 + 1 - p)/2);                                                                          \
-                                                                                                                                \
-        for (;;) {                                                                                                              \
-            if (--delta < 0) {                                                                                                  \
-                line->step_x = signx target_slope / (INV_SQRT_3*target_slope + 1);                                              \
-                line->step_y = signy 1 / (INV_SQRT_3*target_slope + 1);                                                         \
-                return;                                                                                                         \
-            }                                                                                                                   \
-            prev_blocked = settings->opaque(data->map, x, y);                                                                   \
-            ++x0;                                                                                                               \
-            y = y signy (-p);                                                                                                   \
-            x = x signx 1;                                                                                                      \
-            if (x0 == x1) {                                                                                                     \
-                if (settings->opaque(data->map, x, y)) {                                                                        \
-                    if (prev_blocked == 0) {                                                                                    \
-                        end_slope = (-SQRT_3_4 + SQRT_3_2*(float)x0) / (fdy + 0.25 - 0.5f*(float)x0);                           \
-                        fdx1 = end_slope / (SQRT_3_2 + 0.5f*end_slope);                                                         \
-                        target_slope = end_slope;                                                                               \
-                        fx1 = 0.5f + fdy*fdx1 + GRID_EPSILON;                                                                   \
-                        line->eps_x = signx (-GRID_EPSILON);                                                                    \
-                        line->eps_y = signy GRID_EPSILON;                                                                       \
-                    } else if (prev_blocked == 1) {                                                                             \
-                        line->step_x = signx target_slope / (INV_SQRT_3*target_slope + 1);                                      \
-                        line->step_y = signy 1 / (INV_SQRT_3*target_slope + 1);                                                 \
-                        line->is_blocked = true;                                                                                \
-                        line->block_t = line->dest_t - delta - 1;                                                               \
-                        return;                                                                                                 \
-                    }                                                                                                           \
-                } else if (prev_blocked == 1) {                                                                                 \
-                    start_slope = (-SQRT_3_4 + SQRT_3_2*(float)x0) / (fdy + 0.25 - 0.5f*(float)x0);                             \
-                    fdx0 = start_slope / (SQRT_3_2 + 0.5f*start_slope);                                                         \
-                    target_slope = start_slope;                                                                                 \
-                    fx0 = 0.5f + fdy*fdx0 + GRID_EPSILON;                                                                       \
-                    line->eps_x = signx GRID_EPSILON;                                                                           \
-                    line->eps_y = signy (-GRID_EPSILON);                                                                        \
-                }                                                                                                               \
-            } else if (prev_blocked == 1) {                                                                                     \
-                line->step_x = signx target_slope / (INV_SQRT_3*target_slope + 1);                                              \
-                line->step_y = signy 1 / (INV_SQRT_3*target_slope + 1);                                                         \
-                line->is_blocked = true;                                                                                        \
-                line->block_t = line->dest_t - delta - 1;                                                                       \
-                return;                                                                                                         \
-            }                                                                                                                   \
-            fx0 += fdx0;                                                                                                        \
-            fx1 += fdx1;                                                                                                        \
-            x0 = (int)fx0;                                                                                                      \
-            x1 = (int)fx1;                                                                                                      \
-            x = data->source_x signx x0;                                                                                        \
-            ++dy;                                                                                                               \
-            fdy += 1.0f;                                                                                                        \
-            p = ((x & 1) + one) & 1;                                                                                            \
-            prev_blocked = -1;                                                                                                  \
-            y = data->source_y signy (dy - (x0 + 1 - p)/2);                                                                     \
-        }                                                                                                                       \
+#define LARGE_ASS_LOS_FINISH(do_blocked, signy, rx, ry)                                           \
+    fdx = (float)line->dest_t;                                                                    \
+    rx = dest_##rx;                                                                               \
+    if ((int)(lower_start_y + fdx*lower_slope + GRID_EPSILON) < delta_y) {                        \
+        ry = dest_##ry;                                                                           \
+        fdy = (float)delta_y;                                                                     \
+                                                                                                  \
+        GET_NEXT_LARGE_ASS_DATA(max, min, upp, low, -, true)                                      \
+                                                                                                  \
+        /* now set lowers */                                                                      \
+        lower_blen = next_blen;                                                                   \
+        lower_slope = next_slope;                                                                 \
+        lower_start_y = next_start_y;                                                             \
+        lower_boundaries = next_boundaries;                                                       \
+    }                                                                                             \
+    if ((int)(upper_start_y + fdx*upper_slope - GRID_EPSILON) > delta_y) {                        \
+        ry = dest_##ry signy 1;                                                                   \
+        fdy = (float)(delta_y + 1);                                                               \
+                                                                                                  \
+        GET_NEXT_LARGE_ASS_DATA(min, max, low, upp, , true)                                       \
+                                                                                                  \
+        /* now set uppers */                                                                      \
+        upper_slope = next_slope;                                                                 \
+        upper_start_y = next_start_y;                                                             \
+    }                                                                                             \
+                                                                                                  \
+    /* Calculate the best line to target (a simple average can make weird lines at times). */     \
+    /* This minimizes distance squared from the line to the center of source and target tile. */  \
+    /* Let's hope I (and nobody else) ever needs to touch this again ;-) */                       \
+    /* On the other hand, this would probably be done better if it were redone :-P */             \
+    slope = upper_start_y + fdx*upper_slope;                                                      \
+    next_slope = lower_start_y + fdx*lower_slope;                                                 \
+    next_start_y = -fdx*(upper_start_y*lower_slope +                                              \
+                         lower_start_y*upper_slope +                                              \
+                         fdx*lower_slope*upper_slope)                                             \
+                   - 2.0f*lower_start_y*upper_start_y;                                            \
+    slope = upper_start_y*upper_start_y + slope*slope;                                            \
+    prev_slope = lower_start_y - upper_start_y + fdx*lower_slope - fdx*upper_slope;               \
+                                                                                                  \
+    next_slope = slope + 2.0f*next_start_y + next_slope*next_slope + lower_start_y*lower_start_y; \
+    prev_slope = slope + next_start_y + 2*fdy*prev_slope + prev_slope + lower_start_y - upper_start_y; \
+    if (next_slope > GRID_EPSILON || next_slope < -GRID_EPSILON) {                                \
+        slope = prev_slope / next_slope;                                                          \
+        if (slope < 0.0f) {                                                                       \
+            slope = 0.0f;                                                                         \
+        } else if (slope > 1.0f) {                                                                \
+            slope = 1.0f;                                                                         \
+        } else {                                                                                  \
+        }                                                                                         \
+        line->step_##ry = signy (slope*lower_slope + (1.0f - slope)*upper_slope);                 \
+        line->start_##ry = slope*lower_start_y + (1.0f - slope)*upper_start_y;                    \
+    } else {                                                                                      \
+        line->step_##ry = signy 0.5f*(lower_slope + upper_slope);                                 \
+        line->start_##ry = 0.5f*(lower_start_y + upper_start_y);                                  \
+    }                                                                                             \
+    if (line->start_##ry > y_max) {                                                               \
+        line->start_##ry = y_max;                                                                 \
+    }                                                                                             \
+    if ((int)(line->start_##ry signy fdx*line->step_##ry - GRID_EPSILON) < delta_y) {             \
+        line->eps = signy (-GRID_EPSILON);                                                        \
+    }                                                                                             \
+    if (do_blocked) {                                                                             \
+        line->is_blocked = true;                                                                  \
+        line->block_t = line->dest_t - delta;                                                     \
     }
 
-#define HEX_LOS_DEFINE_LR_SEXTANT(signx, nx)                                                                                    \
-    static float hex_los_sextant_##nx(                                                                                          \
-                                        fov_private_data_type *data,                                                            \
-                                        hex_fov_line_data *line,                                                                \
-                                        float start_slope,                                                                      \
-                                        float target_slope,                                                                     \
-                                        float end_slope) {                                                                      \
-        int x, y, y0, y1, p, prev_blocked;                                                                                      \
-        int dx = 1;                                                                                                             \
-        int delta = line->dest_t - 1;                                                                                           \
-        float fy0, fy1;                                                                                                         \
-        float fdx = SQRT_3_2;                                                                                                   \
-        float fdy = -1.0f;                                                                                                      \
-        fov_settings_type *settings = data->settings;                                                                           \
-                                                                                                                                \
-        x = data->source_x signx 1;                                                                                             \
-        p = -(x & 1);                                                                                                           \
-        fy0 = SQRT_3_2 * start_slope + 1.0f + GRID_EPSILON;                                                                     \
-        fy1 = SQRT_3_2 * end_slope + 1.0f - GRID_EPSILON;                                                                       \
-        y0 = (int)fy0;                                                                                                          \
-        y1 = (int)fy1;                                                                                                          \
-        y = data->source_y + y0 + p;                                                                                            \
-                                                                                                                                \
-        for (;;) {                                                                                                              \
-            if (--delta < 0) {                                                                                                  \
-                line->step_y = SQRT_3_2 * target_slope;                                                                         \
-                return;                                                                                                         \
-            }                                                                                                                   \
-            prev_blocked = settings->opaque(data->map, x, y);                                                                   \
-            ++y0;                                                                                                               \
-            ++y;                                                                                                                \
-            if (y0 == y1) {                                                                                                     \
-                if (settings->opaque(data->map, x, y)) {                                                                        \
-                    if (prev_blocked == 0) {                                                                                    \
-                        end_slope = ((float)y0 + fdy) / fdx;                                                                    \
-                        fy1 = fdx*end_slope - fdy - GRID_EPSILON;                                                               \
-                        target_slope = end_slope;                                                                               \
-                        line->eps_y = -GRID_EPSILON;                                                                            \
-                    } else if (prev_blocked == 1) {                                                                             \
-                        line->step_y = SQRT_3_2 * target_slope;                                                                 \
-                        line->is_blocked = true;                                                                                \
-                        line->block_t = line->dest_t - delta - 1;                                                               \
-                        return;                                                                                                 \
-                    }                                                                                                           \
-                } else if (prev_blocked == 1) {                                                                                 \
-                    start_slope = ((float)y0 + fdy) / fdx;                                                                      \
-                    fy0 = fdx*start_slope - fdy + GRID_EPSILON;                                                                 \
-                    target_slope = start_slope;                                                                                 \
-                    line->eps_y = GRID_EPSILON;                                                                                 \
-                }                                                                                                               \
-            } else if (prev_blocked == 1) {                                                                                     \
-                line->step_y = SQRT_3_2 * target_slope;                                                                         \
-                line->is_blocked = true;                                                                                        \
-                line->block_t = line->dest_t - delta - 1;                                                                       \
-                return;                                                                                                         \
-            }                                                                                                                   \
-            x = x signx 1;                                                                                                      \
-            fdx += SQRT_3_2;                                                                                                    \
-            fdy -= 0.5f;                                                                                                        \
-            fy0 += SQRT_3_2*start_slope + 0.5f;                                                                                 \
-            fy1 += SQRT_3_2*end_slope + 0.5f;                                                                                   \
-            ++dx;                                                                                                               \
-            p = -dx / 2 - (dx & 1)*(x & 1);                                                                                     \
-            y0 = (int)fy0;                                                                                                      \
-            y1 = (int)fy1;                                                                                                      \
-            y = data->source_y + y0 + p;                                                                                        \
-        }                                                                                                                       \
+#define LARGE_ASS_LOS_DEFINE_OCTANT(signx, signy, rx, ry, nx, ny, nf)                             \
+    static void large_ass_los_octant_##nx##ny##nf(                                                \
+                                        fov_settings_type *settings,                              \
+                                        fov_line_data *line,                                      \
+                                        void *map,                                                \
+                                        int dest_x,                                               \
+                                        int dest_y                                                \
+        ) {                                                                                       \
+        int x, y, ly0, ly1, uy0, uy1, by0, by1, cy0, cy1, next_blen;                              \
+        int dx = 0, lower_blen = 0, upper_blen = 0;                                               \
+        int delta = signx (dest_##rx - line->source_##rx);                                        \
+        int delta_y = signy (dest_##ry - line->source_##ry);                                      \
+        fov_buffer_type *buffer_data = settings->buffer_data;                                     \
+        float next_slope, prev_slope, slope, next_start_y;                                        \
+        float y_min = 0.5f - settings->actor_vision_size;                                         \
+        float y_max = 0.5f + settings->actor_vision_size;                                         \
+        float fdx = signx (float)(dest_##rx - line->source_##rx);                                 \
+        float fdy = signy (float)(dest_##ry - line->source_##ry);                                 \
+        float fdt = (float)delta;                                                                 \
+        float lower_start_y = y_min;                                                              \
+        float upper_start_y = y_max;                                                              \
+        float pms = settings->permissiveness;                                                     \
+        float lower_slope = 0.0f;                                                                 \
+        float upper_slope = 2.0f;                                                                 \
+        float slope_min = (fdy - y_min) / fdx;                                                    \
+        float slope_max = (fdy + 1.0f - y_max) / fdx;                                             \
+        float *boundary, *lower_boundaries, *upper_boundaries,                                    \
+              *next_boundaries, *prev_boundary, *ptr_end;                                         \
+        bool is_first;                                                                            \
+                                                                                                  \
+        rx = line->source_##rx;                                                                   \
+        line->step_##rx = signx 1.0f;                                                             \
+        line->start_##rx = 0.5f;                                                                  \
+        line->eps = signy GRID_EPSILON;                                                           \
+        line->dest_t = delta;                                                                     \
+                                                                                                  \
+        /* check upper when dx == 0 */                                                            \
+        if (y_max + upper_slope * pms - 1.0f > GRID_EPSILON) {                                    \
+            ry = line->source_##ry signy 1;                                                       \
+            if (settings->opaque(map, x, y)) {                                                    \
+                slope = (1.0f - y_min) / pms;                                                     \
+                if (slope - upper_slope < GRID_EPSILON) {                                         \
+                    upper_slope = slope;                                                          \
+                }                                                                                 \
+                GET_BUFFER(upper_boundaries, buffer_data, 3)                                      \
+                upper_boundaries[X] = 0.5f + pms;                                                 \
+                upper_boundaries[Y] = 1.0f;                                                       \
+                upper_boundaries[K] = (1.0f - y_max) / pms;                                       \
+                upper_start_y = 1.0f - upper_slope * pms;                                         \
+            }                                                                                     \
+        }                                                                                         \
+                                                                                                  \
+        for (;;) {                                                                                \
+            if (--delta < 0) {                                                                    \
+                LARGE_ASS_LOS_FINISH(false, signy, rx, ry)                                        \
+                return;                                                                           \
+            }                                                                                     \
+            dx += 1;                                                                              \
+            rx = rx signx 1;                                                                      \
+            fdx = (float)dx;                                                                      \
+            ly0 = (int)(lower_start_y + (fdx - pms)*lower_slope + GRID_EPSILON); /* lower L */    \
+            ly1 = (int)(lower_start_y + (fdx + pms)*lower_slope - GRID_EPSILON); /* lower R */    \
+            uy0 = (int)(upper_start_y + (fdx - pms)*upper_slope + GRID_EPSILON); /* upper L */    \
+            uy1 = (int)(upper_start_y + (fdx + pms)*upper_slope - GRID_EPSILON); /* upper R */    \
+            by0 = (int)(y_min + (fdx - pms)*slope_min + GRID_EPSILON);     /* lower boundary */   \
+            by1 = (int)(y_max + (fdx + pms)*slope_max - GRID_EPSILON);     /* upper boundary */   \
+            cy0 = (int)(y_min + (fdx + pms)*slope_min + GRID_EPSILON);     /* lower constraint */ \
+            cy1 = (int)(y_max + (fdx - pms)*slope_max - GRID_EPSILON);     /* upper constraint */ \
+                                                                                                  \
+            if (ly1 < by0) {                                                                      \
+                ly0 = by0;                                                                        \
+                ly1 = by0;                                                                        \
+            } else if (ly0 < by0) {                                                               \
+                ly0 = by0;                                                                        \
+            }                                                                                     \
+                                                                                                  \
+            if (uy0 > by1) {                                                                      \
+                uy1 = by1;                                                                        \
+                uy0 = by1;                                                                        \
+            } else if (uy1 > by1) {                                                               \
+                uy1 = by1;                                                                        \
+            }                                                                                     \
+                                                                                                  \
+            ry = line->source_##ry signy ly0;                                                     \
+            if (settings->opaque(map, x, y)) {                                                    \
+                if (ly0 == uy0 || ly0 == cy1) {                                                   \
+                    /* BLOCKED */                                                                 \
+                    LARGE_ASS_LOS_FINISH(true, signy, rx, ry)                                     \
+                    return;                                                                       \
+                }                                                                                 \
+                /* CALC LOWER SLOPE */                                                            \
+                fdy = (float)uy0;                                                                 \
+                fdx -= pms;                                                                       \
+                                                                                                  \
+                GET_NEXT_LARGE_ASS_DATA(max, min, upp, low, -, true)                              \
+                                                                                                  \
+                if ((int)(next_start_y + fdt*next_slope + GRID_EPSILON) > delta_y) {              \
+                    LARGE_ASS_LOS_FINISH(true, signy, rx, ry)                                     \
+                    return;                                                                       \
+                }                                                                                 \
+                                                                                                  \
+                /* now set lowers */                                                              \
+                lower_blen = next_blen;                                                           \
+                lower_slope = next_slope;                                                         \
+                lower_start_y = next_start_y;                                                     \
+                lower_boundaries = next_boundaries;                                               \
+                                                                                                  \
+                ry = line->source_##ry signy uy0;                                                 \
+                if (settings->opaque(map, x, y)) {                                                \
+                    /* BLOCKED */                                                                 \
+                    LARGE_ASS_LOS_FINISH(true, signy, rx, ry)                                     \
+                    return;                                                                       \
+                }                                                                                 \
+                                                                                                  \
+                /* done setting lower slope, now set upper slope if necessary */                  \
+                ry = line->source_##ry signy uy1;                                                 \
+                if (uy0 != uy1 && settings->opaque(map, x, y)) {                                  \
+                    /* CALC UPPER SLOPE */                                                        \
+                    fdy = (float)uy1;                                                             \
+                    fdx += 2.0f * pms;                                                            \
+                                                                                                  \
+                    GET_NEXT_LARGE_ASS_DATA(min, max, low, upp, , true)                           \
+                                                                                                  \
+                    if ((int)(next_start_y + fdt*next_slope + GRID_EPSILON) < delta_y) {          \
+                        LARGE_ASS_LOS_FINISH(true, signy, rx, ry)                                 \
+                        return;                                                                   \
+                    }                                                                             \
+                                                                                                  \
+                    /* now set uppers */                                                          \
+                    upper_slope = next_slope;                                                     \
+                    upper_start_y = next_start_y;                                                 \
+                    upper_boundaries = next_boundaries;                                           \
+                    upper_blen = next_blen;                                                       \
+                }                                                                                 \
+                continue;                                                                         \
+            }                                                                                     \
+            ry = line->source_##ry signy uy1;                                                     \
+            if (ly0 != uy1 && settings->opaque(map, x, y)) {                                      \
+                ry = line->source_##ry signy ly1;                                                 \
+                if (uy1 == ly1 || uy1 == cy0 || settings->opaque(map, x, y)) {                    \
+                    /* BLOCKED */                                                                 \
+                    LARGE_ASS_LOS_FINISH(true, signy, rx, ry)                                     \
+                    return;                                                                       \
+                }                                                                                 \
+                /* CALC UPPER SLOPE */                                                            \
+                fdy = (float)uy1;                                                                 \
+                fdx += pms;                                                                       \
+                                                                                                  \
+                GET_NEXT_LARGE_ASS_DATA(min, max, low, upp, , true)                               \
+                                                                                                  \
+                if ((int)(next_start_y + fdt*next_slope + GRID_EPSILON) < delta_y) {              \
+                    LARGE_ASS_LOS_FINISH(true, signy, rx, ry)                                     \
+                    return;                                                                       \
+                }                                                                                 \
+                                                                                                  \
+                /* now set uppers */                                                              \
+                upper_slope = next_slope;                                                         \
+                upper_start_y = next_start_y;                                                     \
+                upper_boundaries = next_boundaries;                                               \
+                upper_blen = next_blen;                                                           \
+                continue;                                                                         \
+            }                                                                                     \
+            ry = line->source_##ry signy (ly0 + 1);                                               \
+            if (ly0 + 2 == uy1 && settings->opaque(map, x, y)) {                                  \
+                    /* BLOCKED */                                                                 \
+                    LARGE_ASS_LOS_FINISH(true, signy, rx, ry)                                     \
+                    return;                                                                       \
+            }                                                                                     \
+        }                                                                                         \
+    }
+
+LARGE_ASS_LOS_DEFINE_OCTANT(+,+,x,y,p,p,n)
+LARGE_ASS_LOS_DEFINE_OCTANT(+,+,y,x,p,p,y)
+LARGE_ASS_LOS_DEFINE_OCTANT(+,-,x,y,p,m,n)
+LARGE_ASS_LOS_DEFINE_OCTANT(+,-,y,x,p,m,y)
+LARGE_ASS_LOS_DEFINE_OCTANT(-,+,x,y,m,p,n)
+LARGE_ASS_LOS_DEFINE_OCTANT(-,+,y,x,m,p,y)
+LARGE_ASS_LOS_DEFINE_OCTANT(-,-,x,y,m,m,n)
+LARGE_ASS_LOS_DEFINE_OCTANT(-,-,y,x,m,m,y)
+
+#define HEX_LOS_DEFINE_SEXTANT(signx, signy, nx, ny, one)                                         \
+    static float hex_los_sextant_##nx##ny(                                                        \
+                                        fov_private_data_type *data,                              \
+                                        hex_fov_line_data *line,                                  \
+                                        float start_slope,                                        \
+                                        float target_slope,                                       \
+                                        float end_slope) {                                        \
+        int x, y, x0, x1, p, prev_blocked;                                                        \
+        int dy = 1;                                                                               \
+        int delta = line->dest_t - 1;                                                             \
+        float fx0, fx1, fdx0, fdx1;                                                               \
+        float fdy = 1.0f;                                                                         \
+        fov_settings_type *settings = data->settings;                                             \
+                                                                                                  \
+        fdx0 = start_slope / (SQRT_3_2 + 0.5f*start_slope);                                       \
+        fdx1 = end_slope / (SQRT_3_2 + 0.5f*end_slope);                                           \
+                                                                                                  \
+        fx0 = 0.5f + fdx0 + GRID_EPSILON;                                                         \
+        fx1 = 0.5f + fdx1 - GRID_EPSILON;                                                         \
+        x0 = (int)fx0;                                                                            \
+        x1 = (int)fx1;                                                                            \
+        x = data->source_x signx x0;                                                              \
+        p = ((x & 1) + one) & 1;                                                                  \
+        y = data->source_y signy (1 - (x0 + 1 - p)/2);                                            \
+                                                                                                  \
+        for (;;) {                                                                                \
+            if (--delta < 0) {                                                                    \
+                line->step_x = signx target_slope / (INV_SQRT_3*target_slope + 1);                \
+                line->step_y = signy 1 / (INV_SQRT_3*target_slope + 1);                           \
+                return;                                                                           \
+            }                                                                                     \
+            prev_blocked = settings->opaque(data->map, x, y);                                     \
+            ++x0;                                                                                 \
+            y = y signy (-p);                                                                     \
+            x = x signx 1;                                                                        \
+            if (x0 == x1) {                                                                       \
+                if (settings->opaque(data->map, x, y)) {                                          \
+                    if (prev_blocked == 0) {                                                      \
+                        end_slope = (-SQRT_3_4 + SQRT_3_2*(float)x0) /                            \
+                                    (fdy + 0.25 - 0.5f*(float)x0);                                \
+                        fdx1 = end_slope / (SQRT_3_2 + 0.5f*end_slope);                           \
+                        target_slope = end_slope;                                                 \
+                        fx1 = 0.5f + fdy*fdx1 + GRID_EPSILON;                                     \
+                        line->eps_x = signx (-GRID_EPSILON);                                      \
+                        line->eps_y = signy GRID_EPSILON;                                         \
+                    } else if (prev_blocked == 1) {                                               \
+                        line->step_x = signx target_slope / (INV_SQRT_3*target_slope + 1);        \
+                        line->step_y = signy 1 / (INV_SQRT_3*target_slope + 1);                   \
+                        line->is_blocked = true;                                                  \
+                        line->block_t = line->dest_t - delta - 1;                                 \
+                        return;                                                                   \
+                    }                                                                             \
+                } else if (prev_blocked == 1) {                                                   \
+                    start_slope = (-SQRT_3_4 + SQRT_3_2*(float)x0) /                              \
+                                  (fdy + 0.25 - 0.5f*(float)x0);                                  \
+                    fdx0 = start_slope / (SQRT_3_2 + 0.5f*start_slope);                           \
+                    target_slope = start_slope;                                                   \
+                    fx0 = 0.5f + fdy*fdx0 + GRID_EPSILON;                                         \
+                    line->eps_x = signx GRID_EPSILON;                                             \
+                    line->eps_y = signy (-GRID_EPSILON);                                          \
+                }                                                                                 \
+            } else if (prev_blocked == 1) {                                                       \
+                line->step_x = signx target_slope / (INV_SQRT_3*target_slope + 1);                \
+                line->step_y = signy 1 / (INV_SQRT_3*target_slope + 1);                           \
+                line->is_blocked = true;                                                          \
+                line->block_t = line->dest_t - delta - 1;                                         \
+                return;                                                                           \
+            }                                                                                     \
+            fx0 += fdx0;                                                                          \
+            fx1 += fdx1;                                                                          \
+            x0 = (int)fx0;                                                                        \
+            x1 = (int)fx1;                                                                        \
+            x = data->source_x signx x0;                                                          \
+            ++dy;                                                                                 \
+            fdy += 1.0f;                                                                          \
+            p = ((x & 1) + one) & 1;                                                              \
+            prev_blocked = -1;                                                                    \
+            y = data->source_y signy (dy - (x0 + 1 - p)/2);                                       \
+        }                                                                                         \
+    }
+
+#define HEX_LOS_DEFINE_LR_SEXTANT(signx, nx)                                                      \
+    static float hex_los_sextant_##nx(                                                            \
+                                        fov_private_data_type *data,                              \
+                                        hex_fov_line_data *line,                                  \
+                                        float start_slope,                                        \
+                                        float target_slope,                                       \
+                                        float end_slope) {                                        \
+        int x, y, y0, y1, p, prev_blocked;                                                        \
+        int dx = 1;                                                                               \
+        int delta = line->dest_t - 1;                                                             \
+        float fy0, fy1;                                                                           \
+        float fdx = SQRT_3_2;                                                                     \
+        float fdy = -1.0f;                                                                        \
+        fov_settings_type *settings = data->settings;                                             \
+                                                                                                  \
+        x = data->source_x signx 1;                                                               \
+        p = -(x & 1);                                                                             \
+        fy0 = SQRT_3_2 * start_slope + 1.0f + GRID_EPSILON;                                       \
+        fy1 = SQRT_3_2 * end_slope + 1.0f - GRID_EPSILON;                                         \
+        y0 = (int)fy0;                                                                            \
+        y1 = (int)fy1;                                                                            \
+        y = data->source_y + y0 + p;                                                              \
+                                                                                                  \
+        for (;;) {                                                                                \
+            if (--delta < 0) {                                                                    \
+                line->step_y = SQRT_3_2 * target_slope;                                           \
+                return;                                                                           \
+            }                                                                                     \
+            prev_blocked = settings->opaque(data->map, x, y);                                     \
+            ++y0;                                                                                 \
+            ++y;                                                                                  \
+            if (y0 == y1) {                                                                       \
+                if (settings->opaque(data->map, x, y)) {                                          \
+                    if (prev_blocked == 0) {                                                      \
+                        end_slope = ((float)y0 + fdy) / fdx;                                      \
+                        fy1 = fdx*end_slope - fdy - GRID_EPSILON;                                 \
+                        target_slope = end_slope;                                                 \
+                        line->eps_y = -GRID_EPSILON;                                              \
+                    } else if (prev_blocked == 1) {                                               \
+                        line->step_y = SQRT_3_2 * target_slope;                                   \
+                        line->is_blocked = true;                                                  \
+                        line->block_t = line->dest_t - delta - 1;                                 \
+                        return;                                                                   \
+                    }                                                                             \
+                } else if (prev_blocked == 1) {                                                   \
+                    start_slope = ((float)y0 + fdy) / fdx;                                        \
+                    fy0 = fdx*start_slope - fdy + GRID_EPSILON;                                   \
+                    target_slope = start_slope;                                                   \
+                    line->eps_y = GRID_EPSILON;                                                   \
+                }                                                                                 \
+            } else if (prev_blocked == 1) {                                                       \
+                line->step_y = SQRT_3_2 * target_slope;                                           \
+                line->is_blocked = true;                                                          \
+                line->block_t = line->dest_t - delta - 1;                                         \
+                return;                                                                           \
+            }                                                                                     \
+            x = x signx 1;                                                                        \
+            fdx += SQRT_3_2;                                                                      \
+            fdy -= 0.5f;                                                                          \
+            fy0 += SQRT_3_2*start_slope + 0.5f;                                                   \
+            fy1 += SQRT_3_2*end_slope + 0.5f;                                                     \
+            ++dx;                                                                                 \
+            p = -dx / 2 - (dx & 1)*(x & 1);                                                       \
+            y0 = (int)fy0;                                                                        \
+            y1 = (int)fy1;                                                                        \
+            y = data->source_y + y0 + p;                                                          \
+        }                                                                                         \
     }
 
 HEX_LOS_DEFINE_SEXTANT(+,+,n,e,1)
@@ -1255,8 +2072,8 @@ void hex_fov_create_los_line(fov_settings_type *settings, void *map, void *sourc
         }
     }
 
-/* // simple linex
-    if (SQRT_3*ady < adx) {
+/* simple line */
+/*  if (SQRT_3*ady < adx) {
         if (dest_x > source_x) {
             line->step_x = SQRT_3_2;
             line->dest_t = dest_x - source_x;
@@ -1282,10 +2099,12 @@ void hex_fov_create_los_line(fov_settings_type *settings, void *map, void *sourc
 }
 
 void fov_create_los_line(fov_settings_type *settings, void *map, void *source, fov_line_data *line,
-                         int source_x, int source_y,
-                         int dest_x, int dest_y,
-                         bool start_at_end) {
+                          int source_x, int source_y,
+                          int dest_x, int dest_y,
+                          bool start_at_end) {
 
+    line->start_x = 0.5f;
+    line->start_y = 0.5f;
     line->source_x = source_x;
     line->source_y = source_y;
     line->t = 0;
@@ -1341,6 +2160,39 @@ void fov_create_los_line(fov_settings_type *settings, void *map, void *source, f
             line->t = line->dest_t;
         }
     }
+    else if (settings->algorithm == FOV_ALGO_LARGE_ASS)
+    {
+        if (dest_x > source_x) {
+            if (dest_y > source_y) {
+                if (dest_x - source_x > dest_y - source_y) {
+                    large_ass_los_octant_ppn(settings, line, map, dest_x, dest_y);
+                } else {
+                    large_ass_los_octant_ppy(settings, line, map, dest_x, dest_y);
+                }
+            }
+            else {
+                if (dest_x - source_x > source_y - dest_y) {
+                    large_ass_los_octant_pmn(settings, line, map, dest_x, dest_y);
+                } else {
+                    large_ass_los_octant_mpy(settings, line, map, dest_x, dest_y);
+                }
+            }
+        } else {
+            if (dest_y > source_y) {
+                if (source_x - dest_x > dest_y - source_y) {
+                    large_ass_los_octant_mpn(settings, line, map, dest_x, dest_y);
+                } else {
+                    large_ass_los_octant_pmy(settings, line, map, dest_x, dest_y);
+                }
+            } else {
+                if (source_x - dest_x > source_y - dest_y) {
+                    large_ass_los_octant_mmn(settings, line, map, dest_x, dest_y);
+                } else {
+                    large_ass_los_octant_mmy(settings, line, map, dest_x, dest_y);
+                }
+            }
+        }
+    }
     else
     {
         /* hurray for a plethora of short but similar variable names!  (yeah, I'm sorry... I blame all the poorly written legacy physics code I've had to work with) */
@@ -1379,7 +2231,7 @@ void fov_create_los_line(fov_settings_type *settings, void *map, void *source, f
 
             /* include both source and dest x in loop, but don't include (source_x, source_y) or (target_x, target_y) */
             val = gx*0.5f*upper_slope + gx*GRID_EPSILON;
-            y1 = (val < 0.0f) ? -(int)(0.5f - val) : (int)(0.5f + val); 
+            y1 = (val < 0.0f) ? -(int)(0.5f - val) : (int)(0.5f + val);
             if (y1 != 0 && gabs * upper_slope > 1.0f && settings->permissiveness > 0.199f && settings->opaque(map, sx, sy + y1)) {
                 val = (gy*0.5f) / (gx*settings->permissiveness);
                 if (gabs * val < gabs * upper_slope) {
@@ -1499,7 +2351,7 @@ void fov_create_los_line(fov_settings_type *settings, void *map, void *source, f
 
             /* include both source and dest y in loop, but don't include (source_x, source_y) or (target_x, target_y) */
             val = gy*0.5f*upper_slope + gy*GRID_EPSILON;
-            x1 = (val < 0.0f) ? -(int)(0.5f - val) : (int)(0.5f + val); 
+            x1 = (val < 0.0f) ? -(int)(0.5f - val) : (int)(0.5f + val);
             if (x1 != 0 && gabs * upper_slope > 1.0f && settings->permissiveness > 0.199f && settings->opaque(map, sx + x1, sy)) {
                 val = (gx*0.5f) / (gy*settings->permissiveness);
                 if (gabs * val < gabs * upper_slope) {
@@ -1609,5 +2461,86 @@ void fov_create_los_line(fov_settings_type *settings, void *map, void *source, f
     if (start_at_end && line->is_blocked) {
         line->t = line->block_t;
     }
+}
+
+/* This has pretty much been deprecated (use "fov_beam_any_angle" instead of "fov_beam") */
+#define BEAM_DIRECTION(d, p1, p2, p3, p4, p5, p6, p7, p8)                             \
+    if (direction == d) {                                                             \
+        end_slope = betweenf(a, 0.0f, 1.0f);                                          \
+        fov_octant_##p1(&data, 1, 0.0f, end_slope, false, false, true, true);         \
+        fov_octant_##p2(&data, 1, 0.0f, end_slope, false, false, false, true);        \
+        if (a - 1.0f > FLT_EPSILON) { /* a > 1.0f */                                  \
+            start_slope = betweenf(2.0f - a, 0.0f, 1.0f);                             \
+            fov_octant_##p3(&data, 1, start_slope, 1.0f, false, false, true, false);  \
+            fov_octant_##p4(&data, 1, start_slope, 1.0f, false, false, true, false);  \
+                                                                                      \
+        if (a - 2.0f > 2.0f * FLT_EPSILON) { /* a > 2.0f */                           \
+            end_slope = betweenf(a - 2.0f, 0.0f, 1.0f);                               \
+            fov_octant_##p5(&data, 1, 0.0f, end_slope, false, false, false, true);    \
+            fov_octant_##p6(&data, 1, 0.0f, end_slope, false, false, false, true);    \
+                                                                                      \
+        if (a - 3.0f > 3.0 * FLT_EPSILON) { /* a > 3.0f */                            \
+            start_slope = betweenf(4.0f - a, 0.0f, 1.0f);                             \
+            fov_octant_##p7(&data, 1, start_slope, 1.0f, false, false, true, false);  \
+            fov_octant_##p8(&data, 1, start_slope, 1.0f, false, false, false, false); \
+        }}}}
+
+#define BEAM_DIRECTION_DIAG(d, p1, p2, p3, p4, p5, p6, p7, p8)                        \
+    if (direction == d) {                                                             \
+        start_slope = betweenf(1.0f - a, 0.0f, 1.0f);                                 \
+        fov_octant_##p1(&data, 1, start_slope, 1.0f, false, false, true, true);       \
+        fov_octant_##p2(&data, 1, start_slope, 1.0f, false, false, true, false);      \
+        if (a - 1.0f > FLT_EPSILON) { /* a > 1.0f */                                  \
+            end_slope = betweenf(a - 1.0f, 0.0f, 1.0f);                               \
+            fov_octant_##p3(&data, 1, 0.0f, end_slope, false, false, false, true);    \
+            fov_octant_##p4(&data, 1, 0.0f, end_slope, false, false, false, true);    \
+                                                                                      \
+        if (a - 2.0f > 2.0f * FLT_EPSILON) { /* a > 2.0f */                           \
+            start_slope = betweenf(3.0f - a, 0.0f, 1.0f);                             \
+            fov_octant_##p5(&data, 1, start_slope, 1.0f, false, false, true, false);  \
+            fov_octant_##p6(&data, 1, start_slope, 1.0f, false, false, true, false);  \
+                                                                                      \
+        if (a - 3.0f > 3.0f * FLT_EPSILON) { /* a > 3.0f */                           \
+            end_slope = betweenf(a - 3.0f, 0.0f, 1.0f);                               \
+            fov_octant_##p7(&data, 1, 0.0f, end_slope, false, false, false, true);    \
+            fov_octant_##p8(&data, 1, 0.0f, end_slope, false, false, false, false);   \
+        }}}}
+
+void fov_beam(fov_settings_type *settings, void *map, void *source,
+              int source_x, int source_y, int radius,
+              fov_direction_type direction, float angle) {
+
+    fov_private_data_type data;
+    float start_slope, end_slope, a;
+
+    if (angle <= 0.0f) {
+        return;
+    } else if (angle >= 360.0f) {
+        fov_circle(settings, map, source, source_x, source_y, radius);
+        return;
+    }
+
+    data.settings = settings;
+    data.map = map;
+    data.source = source;
+    data.source_x = source_x;
+    data.source_y = source_y;
+    data.radius = radius;
+    data.heights = (radius < 33) ? heights_tables[settings->shape] + (radius*(radius-1) / 2 - 1) : NULL;
+
+    /* Calculate the angle as a percentage of 45 degrees, halved (for
+     * each side of the centre of the beam). e.g. angle = 180.0f means
+     * half the beam is 90.0 which is 2x45, so the result is 2.0.
+     */
+    a = angle/90.0f;
+
+    BEAM_DIRECTION(FOV_EAST, ppn, pmn, ppy, mpy, pmy, mmy, mpn, mmn);
+    BEAM_DIRECTION(FOV_WEST, mpn, mmn, pmy, mmy, ppy, mpy, ppn, pmn);
+    BEAM_DIRECTION(FOV_NORTH, mpy, mmy, pmn, mmn, ppn, mpn, ppy, pmy);
+    BEAM_DIRECTION(FOV_SOUTH, pmy, ppy, mpn, ppn, mmn, pmn, mmy, mpy);
+    BEAM_DIRECTION_DIAG(FOV_NORTHEAST, pmn, mpy, ppn, mmy, ppy, mmn, pmy, mpn);
+    BEAM_DIRECTION_DIAG(FOV_NORTHWEST, mmn, mmy, mpn, mpy, pmy, pmn, ppy, ppn);
+    BEAM_DIRECTION_DIAG(FOV_SOUTHEAST, ppy, ppn, pmy, pmn, mpn, mpy, mmn, mmy);
+    BEAM_DIRECTION_DIAG(FOV_SOUTHWEST, pmy, mpn, ppy, mmn, ppn, mmy, pmn, mpy);
 }
 
