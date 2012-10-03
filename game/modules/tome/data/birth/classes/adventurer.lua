@@ -20,9 +20,10 @@
 newBirthDescriptor{
 	type = "class",
 	name = "Adventurer",
+	locked = function() return profile.mod.allow_build.adventurer and true or "hide"  end,
 	desc = {
 		"Adventurer can learn to do a bit of everything, getting training in whatever they happen to find.",
-		"#{bold}#This is a bonus class for winning the game, it is by no means balanced.#{normal}#",
+		"#{bold}##GOLD#This is a bonus class for winning the game, it is by no means balanced.#WHITE##{normal}#",
 	},
 	descriptor_choices =
 	{
@@ -40,9 +41,10 @@ newBirthDescriptor{
 newBirthDescriptor{
 	type = "subclass",
 	name = "Adventurer",
+	locked = function() return profile.mod.allow_build.adventurer and true or "hide"  end,
 	desc = {
 		"Adventurer can learn to do a bit of everything, getting training in whatever they happen to find.",
-		"#{bold}#This is a bonus class for winning the game, it is by no means balanced.#{normal}#",
+		"#{bold}##GOLD#This is a bonus class for winning the game, it is by no means balanced.#WHITE##{normal}#",
 		"Their most important stats depends on what they wish to do.",
 		"#GOLD#Stat modifiers:",
 		"#LIGHT_BLUE# * +2 Strength, +2 Dexterity, +2 Constitution",
@@ -54,7 +56,7 @@ newBirthDescriptor{
 	talents_types = function(birth)
 		local tts = {}
 		for _, class in ipairs(birth.all_classes) do
-			for _, sclass in ipairs(class.nodes) do if sclass.id ~= "Adventurer" then
+			for _, sclass in ipairs(class.nodes) do if sclass.id ~= "Adventurer" and not sclass.not_on_random_boss then
 				if birth.birth_descriptor_def.subclass[sclass.id].talents_types then
 					local tt = birth.birth_descriptor_def.subclass[sclass.id].talents_types
 					if type(tt) == "function" then tt = tt(birth) end

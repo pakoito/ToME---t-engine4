@@ -46,7 +46,7 @@ local default_eyal_descriptors = function(add)
 		Afflicted = "allow",
 		Chronomancer = "allow",
 		Psionic = "allow",
---		Adventurer = "allow",
+		Adventurer = "allow",
 	},
 	subclass =
 	{
