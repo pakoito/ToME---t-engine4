@@ -136,7 +136,11 @@ function _M:use(item, button)
 
 		--local t = self.actor:getTalentFromId(item.talent)
 		if self.actor:isTalentAuto(t) then table.insert(list, 1, {name="Disable automatic use", what="auto-dis"})
-		else table.insert(list, 1, {name="Enable automatic use", what="auto-en"})
+		else 
+			table.insert(list, 1, {name="Auto-use when enemies are visible and adjacent", what="auto-en-4"})
+			table.insert(list, 1, {name="Auto-use when enemies are visible", what="auto-en-3"})
+			table.insert(list, 1, {name="Auto-use when no enemies are visible", what="auto-en-2"})
+			table.insert(list, 1, {name="Auto-use when available", what="auto-en-1"})
 		end
 
 		for i = 1, 12 * self.actor.nb_hotkey_pages do list[#list+1] = {name="Hotkey "..i, what=i} end
@@ -160,8 +164,14 @@ function _M:use(item, button)
 				for i = 1, 12 * self.actor.nb_hotkey_pages do
 					if self.actor.hotkey[i] and self.actor.hotkey[i][1] == "talent" and self.actor.hotkey[i][2] == item.talent then self.actor.hotkey[i] = nil end
 				end
-			elseif b.what == "auto-en" then
-				self.actor:checkSetTalentAuto(item.talent, true)
+			elseif b.what == "auto-en-1" then
+				self.actor:checkSetTalentAuto(item.talent, true, 1)
+			elseif b.what == "auto-en-2" then
+				self.actor:checkSetTalentAuto(item.talent, true, 2)
+			elseif b.what == "auto-en-3" then
+				self.actor:checkSetTalentAuto(item.talent, true, 3)
+			elseif b.what == "auto-en-4" then
+				self.actor:checkSetTalentAuto(item.talent, true, 4)
 			elseif b.what == "auto-dis" then
 				self.actor:checkSetTalentAuto(item.talent, false)
 			end

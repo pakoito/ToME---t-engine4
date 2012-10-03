@@ -641,18 +641,28 @@ end
 --- Try to auto use listed talents
 -- This should be called in your actors "act()" method
 function _M:automaticTalents()
-	local spotted = nil
 	for tid, c in pairs(self.talents_auto) do
 		local t = self.talents_def[tid]
+		local spotted = spotHostiles(self)
 		if (t.mode ~= "sustained" or not self.sustain_talents[tid]) and not self.talents_cd[tid] and self:preUseTalent(t, true, true) and (not t.auto_use_check or t.auto_use_check(self, t)) then
-			if not t.no_energy then
-				if spotted == nil then spotted = spotHostiles(self) end
-				if #spotted == 0 then self:useTalent(tid) end
-			else
-				self:useTalent(tid)
+			if (c == 1) or (c == 2 and #spotted <= 0) or (c == 3 and #spotted > 0) then
+				if c ~= 2 then
+					self:useTalent(tid)
+				else
+					self:useTalent(tid,nil,nil,nil,self)
+				end
+			end
+			if c == 4 and #spotted > 0 then
+				for fid, foe in pairs(spotted) do
+					if foe.x >= self.x-1 and foe.x <= self.x+1 and foe.y >= self.y-1 and foe.y <= self.y+1 then
+						self:useTalent(tid)
+						break
+					end
+				end
 			end
 		end
 	end
+	return
 end
 
 --- We started resting

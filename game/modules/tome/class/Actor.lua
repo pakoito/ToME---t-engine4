@@ -3867,12 +3867,20 @@ function _M:startTalentCooldown(t)
 	self.changed = true
 end
 
+--- Setup the talent as autocast
+function _M:setTalentAuto(tid, v, opt)
+	if type(tid) == "table" then tid = tid.id end
+	if v then self.talents_auto[tid] = opt
+	else self.talents_auto[tid] = nil
+	end
+end
+
 --- Setups a talent automatic use
-function _M:checkSetTalentAuto(tid, v)
+function _M:checkSetTalentAuto(tid, v, opt)
 	local t = self:getTalentFromId(tid)
 	if v then
 		local doit = function()
-			self:setTalentAuto(tid, true)
+			self:setTalentAuto(tid, true, opt)
 			Dialog:simplePopup("Automatic use enabled", t.name:capitalize().." will now be used as often as possible automatically.")
 		end
 
@@ -3880,6 +3888,12 @@ function _M:checkSetTalentAuto(tid, v)
 		if t.no_energy ~= true then list[#list+1] = "- requires a turn to use" end
 		if t.requires_target then list[#list+1] = "- requires a target, your last hostile one will be automatically used" end
 		if t.auto_use_warning then list[#list+1] = t.auto_use_warning end
+		if opt == 2 then 
+			list[#list+1] = "- will only trigger if no enemies are visible" 
+			list[#list+1] = "- will automatically target you if a target is required" 
+		end
+		if opt == 3 then list[#list+1] = "- will only trigger if enemies are visible" end
+		if opt == 4 then list[#list+1] = "- will only trigger if enemies are visible and adjacent" end
 
 		if #list == 0 then
 			doit()
