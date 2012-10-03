@@ -28,7 +28,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local inc = t.getPercentInc(self, t)
-		return ([[Increases Physical Power by %d. Also increases damage done with bows by %d%%.
+		return ([[Increases Physical Power by %d and increases weapon damage by %d%% when using bows.
 		Also, when using Reload:
 		At level 2 it grants one more reload per turn.
 		At level 4 it grants two more reloads per turn.

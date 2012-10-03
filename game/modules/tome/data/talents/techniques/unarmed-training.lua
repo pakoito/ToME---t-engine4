@@ -48,9 +48,9 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local inc = t.getPercentInc(self, t)
-		return ([[Increases damage done with all unarmed attacks by %d%% (including grapples and kicks).  Also increases Physical Power by %d.
+		return ([[Increases Physical Power by %d and increases all unarmed damage by %d%% (including grapples and kicks).
 		Note that brawlers naturally gain 0.5 physical power per character level while unarmed (current brawler physical power bonus: %0.1f) and attack 40%% faster while unarmed.]]):
-		format(100*inc, damage, self.level * 0.5)
+		format(damage, 100*inc, self.level * 0.5)
 	end,
 }
 

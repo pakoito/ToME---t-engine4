@@ -107,7 +107,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local inc = t.getPercentInc(self, t)
-		return ([[Increases Physical Power by %d. Also increases damage done with swords, axes, maces by %d%%]]):
+		return ([[Increases Physical Power by %d and increases weapon damage by %d%% when using swords, axes or maces.]]):
 		format(damage, 100*inc)
 	end,
 }
@@ -124,7 +124,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local inc = t.getPercentInc(self, t)
-		return ([[Increases Physical Power by %d. Also increases damage done with daggers by %d%%]]):
+		return ([[Increases Physical Power by %d and increases weapon damage by %d%% when using daggers.]]):
 		format(damage, 100*inc)
 	end,
 }
@@ -141,7 +141,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local inc = t.getPercentInc(self, t)
-		return ([[Increases Physical Power by %d. Also increases damage done with exotic weapons by %d%%]]):
+		return ([[Increases Physical Power by %d and increases weapon damage by %d%% when using exotic weapons.]]):
 		format(damage, 100*inc)
 	end,
 }

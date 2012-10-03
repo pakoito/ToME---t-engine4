@@ -34,6 +34,8 @@ newTalent{
 	sustain_equilibrium = 18,
 	cooldown = 6,
 	tactical = { BUFF = 4 },
+	getDamage = function(self, t) return self:getTalentLevel(t) * 10 end,
+	getPercentInc = function(self, t) return math.sqrt(self:getTalentLevel(t) / 5) / 2 end,
 	activate = function(self, t)
 		local r = {
 			tmpid = self:addTemporaryValue("psiblades_active", self:getTalentLevel(t)),
@@ -55,9 +57,12 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local damage = t.getDamage(self, t)
+		local inc = t.getPercentInc(self, t)
 		return ([[Channel your mental power through your wielded mindstars, generating psionic blades sprouting from the mindstars.
-		Mindstar psiblades have their damage modifiers (how much damage they gain from stats) increased to %d%% and their armour penetration by %d%%.]]):
-		format(100 * (1.3 + self:getTalentLevel(t) / 10), 100 * (1 + self:getTalentLevel(t) / 6.3))
+		Mindstar psiblades have their damage modifiers (how much damage they gain from stats) increased to %d%% and their armour penetration by %d%%.
+		Also increases Physical Power by %d and increases weapon damage by %d%% when using mindstars.]]):
+		format(100 * (1.3 + self:getTalentLevel(t) / 10), 100 * (1 + self:getTalentLevel(t) / 6.3), damage, 100 * inc)
 	end,
 }
 
