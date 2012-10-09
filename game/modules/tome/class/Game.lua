@@ -1961,6 +1961,8 @@ function _M:countBirthUnlocks()
 		psionic_solipsist = true,
 
 		warrior_brawler = true,
+
+		adventurer = true,
 	}
 
 	for name, _ in pairs(list) do

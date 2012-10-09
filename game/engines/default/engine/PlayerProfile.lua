@@ -735,3 +735,8 @@ function _M:newProfile(Login, Name, Password, Email)
 	print("[ONLINE PROFILE] profile id ", id)
 	self:performlogin(Login, Password)
 end
+
+function _M:isDonator(s)
+	s = s or 1
+	if not self.auth or not tonumber(self.auth.donated) or tonumber(self.auth.donated) <= s then return false else return true end
+end
