@@ -1784,7 +1784,7 @@ newTalent{
 }
 
 newTalent{
-	name = "Heal", short_name = "HEAL_NATURE",
+	name = "Heal", short_name = "HEAL_NATURE", image = "talents/heal.png",
 	type = {"wild-gift/other", 1},
 	points = 5,
 	equilibrium = 10,

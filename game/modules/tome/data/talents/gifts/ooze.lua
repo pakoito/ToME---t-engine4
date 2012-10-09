@@ -21,12 +21,10 @@ newTalent{
 	name = "Mitosis",
 	type = {"wild-gift/ooze", 1},
 	require = gifts_req1,
-	points = 5,
-	equilibrium = 10,
-	cooldown = 30,
-	no_energy = true,
-	tactical = { BUFF = 2 },
+	mode = "passive",
+	cooldown = 10,
 	getDur = function(self, t) return math.max(5, math.floor(self:getTalentLevel(t) * 2)) end,
+	getMax = function(self, t) return math.floor(self:getCun() / 10) end,
 	action = function(self, t)
 		-- Find space
 		local x, y = util.findFreeGrid(self.x, self.y, 1, true, {[Map.ACTOR]=true})
@@ -85,14 +83,10 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local dur = t.getDur(self, t)
-		return ([[Your body is more like that of an ooze, you can split into two for %d turns.
-		Your original self has the original ooze aspect while your mitosis gains the acid aspect.
-		If you know the Oozing Blades tree all the talents inside are exchanged for those of the Corrosive Blades tree.
-		Your two selves share the same healthpool.
-		While you are split both of you gain %d%% all resistances.
-		Resistances will increase with Mindpower.]]):
-		format(dur, 10 + self:combatTalentMindDamage(t, 5, 200) / 10)
+		return ([[Your body is more like that of an ooze. When you get hit you have %d%% chances to split and create a Bloated Ooze with as much health as you have taken damage (up to %d).
+		All damage you take will be split equaly between you and your Bloated Oozes.
+		You may have up to %d Oozes active at any time (based on your Cunning).]]):
+		format(t.getChance(self, t), t.getMax(self, t))
 	end,
 }
 
