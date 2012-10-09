@@ -6,3 +6,4 @@ after v1:
 * donator's fight club
 * sub-tile entities, like the spiders for the arachnomancer: split a tile in 16 (4x4)
 * fun caster egos: apply/change tthe cross-tier effects o some things funky
+* server spawned events hat are time-locked, granting online "points"
