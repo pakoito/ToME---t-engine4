@@ -1761,7 +1761,13 @@ end
 -- @param val should be a string: "recursive_shadowcasting" (same as "default"), or "large_actor_recursive_shadowcasting" (same as "large_ass")
 -- "large_ass" is symmetric if "actor_vision_size" is set to 1.
 -- Note: Hexagonal vision shape currently only supports "recursive_shadowcasting", but all algorithms will eventually be supported in hex grids.
+-- For backwards compatibility, if val is "hex" or "hexagon", then grid is changed to hex (one should instead call core.fov.set_vision_shape("hex"))
 function core.fov.set_algorithm(val)
+	if type(val) == "string" and (string.lower(val) == "hex" or string.lower(val) == "hexagon") then
+		core.fov.set_vision_shape("hex")
+		is_hex = 1
+		return
+	end
 	val = type(val) == "string" and ((string.lower(val) == "default" or string.lower(val) == "recursive_shadowcasting") and 0 or
 						(string.lower(val) == "large_ass" or string.lower(val) == "large_actor_recursive_shadowcasting") and 1) or
 					type(tonumber(val)) == "number" and math.floor(util.bound(tonumber(val), 0, 1))
@@ -1788,26 +1794,12 @@ function core.fov.set_vision_shape(val)
 			type(tonumber(val)) == "number" and tonumber(val)
 
 	if type(val) ~= "number" then return end
-	core.fov.set_vision_shape_base(val)
-	return val
-end
-
-function core.fov.set_algorithm(val)
-	sval = type(val) == "string" and string.lower(val)
-	val = sval and ((sval == "default" or sval == "shadow" or sval == "shadowcasting") and 0 or
-				(sval == "hex" or sval == "hexagon") and 1) or
-			type(tonumber(val)) == "number" and tonumber(val)
-
-	if type(val) ~= "number" then return end
-	if val == 1 then
-		core.fov.set_vision_shape("hex")
+	if val == 7 then  -- hex
 		is_hex = 1
 	else
-		core.fov.set_vision_shape("circle")
-		core.fov.set_permissiveness("square")
 		is_hex = 0
 	end
---	core.fov.set_algorithm_base(val)
+	core.fov.set_vision_shape_base(val)
 	return val
 end
 
