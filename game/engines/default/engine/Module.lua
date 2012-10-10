@@ -307,7 +307,10 @@ function _M:loadAddons(mod, saveuse)
 				table.remove(adds, i)
 			end
 		else
-			if config.settings.addons[add.for_module] and config.settings.addons[add.for_module][add.short_name] ~= nil then
+			if add.dlc == "no" then
+				print("Removing addon "..add.short_name..": DLC required")
+				table.remove(adds, i)
+			elseif config.settings.addons[add.for_module] and config.settings.addons[add.for_module][add.short_name] ~= nil then
 				-- Forbidden by config
 				if config.settings.addons[add.for_module][add.short_name] == false then
 					print("Removing addon "..add.short_name..": not allowed by config")
