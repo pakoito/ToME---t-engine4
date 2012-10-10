@@ -45,26 +45,20 @@ function _M:selectUI()
 	end
 end
 
-function _M:uiLogin()
+function _M:uiLogin(uis)
 	local bt = Button.new{text="Login", width=50, fct=function() self:login() end}
 	self.c_login = Textbox.new{title="Username: ", text="", chars=30, max_len=20, fct=function(text) self:login() end}
 	self.c_pass = Textbox.new{title="Password: ", size_title=self.c_login.title, text="", chars=30, max_len=20, hide=true, fct=function(text) self:login() end}
 
-	self:loadUI{
-		{left=0, top=0, ui=self.c_login},
-		{left=0, top=self.c_login.h, ui=self.c_pass},
-		{hcenter=0, top=self.c_pass.h+self.c_login.h, ui=bt},
-	}
-	self:setupUI(false, true)
+	uis[#uis+1] = {left=0, bottom=0, ui=self.c_login}
+	uis[#uis+1] = {left=0, top=self.c_login.h, ui=self.c_pass}
+	uis[#uis+1] = {hcenter=0, top=self.c_pass.h+self.c_login.h, ui=bt}
 end
 
-function _M:uiStats()
+function _M:uiStats(uis)
 	local logoff = Textzone.new{text="#LIGHT_BLUE##{italic}#Logout", auto_height=true, width=50, fct=function() self:logout() end}
 
-	self:loadUI{
-		{right=0, top=0, ui=logoff},
-	}
-	self:setupUI(false, true)
+	uis[#uis+1] = {right=0, top=0, ui=logoff}
 end
 
 function _M:login()

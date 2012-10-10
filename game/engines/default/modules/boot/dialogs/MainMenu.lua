@@ -22,12 +22,13 @@ local Dialog = require "engine.ui.Dialog"
 local List = require "engine.ui.List"
 local Button = require "engine.ui.Button"
 local Textzone = require "engine.ui.Textzone"
-local MainLogin = require "mod.dialogs.MainLogin"
+local Textbox = require "engine.ui.Textbox"
+local Separator = require "engine.ui.Separator"
 
 module(..., package.seeall, class.inherit(Dialog))
 
 function _M:init()
-	Dialog.init(self, "Main Menu", 300, 400, 450, 50)
+	Dialog.init(self, "Main Menu", 250, 400, 450, 50)
 	self.__showup = false
 	self.absolute = true
 
@@ -35,7 +36,7 @@ function _M:init()
 	self.list = l
 	l[#l+1] = {name="New Game", fct=function() game:registerDialog(require("mod.dialogs.NewGame").new()) end}
 	l[#l+1] = {name="Load Game", fct=function() game:registerDialog(require("mod.dialogs.LoadGame").new()) end}
-	l[#l+1] = {name="Online Profile", fct=function() game:registerDialog(require("mod.dialogs.Profile").new()) end}
+--	l[#l+1] = {name="Online Profile", fct=function() game:registerDialog(require("mod.dialogs.Profile").new()) end}
 	l[#l+1] = {name="View High Scores", fct=function() game:registerDialog(require("mod.dialogs.ViewHighScores").new()) end}
 	l[#l+1] = {name="Addons", fct=function() game:registerDialog(require("mod.dialogs.Addons").new()) end}
 --	if config.settings.install_remote then l[#l+1] = {name="Install Module", fct=function() end} end
@@ -55,23 +56,27 @@ function _M:init()
 	self.c_background = Button.new{text=game.stopped and "Enable background" or "Disable background", width=150, fct=function() self:switchBackground() end}
 	self.c_version = Textzone.new{auto_width=true, auto_height=true, text=("#{bold}##B9E100#T-Engine4 version: %d.%d.%d"):format(engine.version[1], engine.version[2], engine.version[3])}
 
-	if profile.auth then
-		self.logged_url = "http://te4.org/users/"..profile.auth.page
-		local str = "#FFFF00#Online Profile: "..profile.auth.name.."#{normal}#[#LIGHT_BLUE##{underline}#"..self.logged_url.."#LAST##{normal}#]"
-		self.c_auth = Textzone.new{auto_width=true, auto_height=true, text=str}
-	end
-
 	self.c_list = List.new{width=self.iw, nb_items=#self.list, list=self.list, fct=function(item) end, font={"/data/font/DroidSans-Bold.ttf", 16}}
 
-	self.mainlogin = MainLogin.new()
-
-	self:loadUI{
+	self.base_uis = {
 		{left=0, top=0, ui=self.c_list},
 		{left=0, bottom=0, absolute=true, ui=self.c_background},
 		{right=0, top=0, absolute=true, ui=self.c_version},
-		self.c_auth and {right=0, bottom=0, absolute=true, ui=self.c_auth} or nil,
-		{left=450, top=50 + self.c_list.h + 120, absolute=true, ui=self.mainlogin},
 	}
+
+	self:updateUI()	
+end
+
+function _M:updateUI()
+	local uis = table.clone(self.base_uis)
+
+	if profile.auth then
+		self:uiStats(uis)
+	else
+		self:uiLogin(uis)
+	end
+
+	self:loadUI(uis)
 	self:setupUI(false, true)
 	self.key:addBind("LUA_CONSOLE", function()
 		if config.settings.cheat then
@@ -79,6 +84,45 @@ function _M:init()
 		end
 	end)
 	self.key:addBind("SCREENSHOT", function() game:saveScreenshot() end)
+end
+
+function _M:uiLogin(uis)
+	local bt = Button.new{text="Login", width=50, fct=function() self:login() end}
+	self.c_login = Textbox.new{title="Username: ", text="", chars=30, max_len=20, fct=function(text) self:login() end}
+	self.c_pass = Textbox.new{title="Password: ", size_title=self.c_login.title, text="", chars=30, max_len=20, hide=true, fct=function(text) self:login() end}
+
+	uis[#uis+1] = {left=10, bottom=bt.h + self.c_login.h + self.c_pass.h, ui=Separator.new{dir="vertical", size=self.iw - 20}}
+	uis[#uis+1] = {left=0, bottom=bt.h + self.c_pass.h, ui=self.c_login}
+	uis[#uis+1] = {left=0, bottom=bt.h, ui=self.c_pass}
+	uis[#uis+1] = {hcenter=0, bottom=0, ui=bt}
+end
+
+function _M:uiStats(uis)
+	self.logged_url = "http://te4.org/users/"..profile.auth.page
+	local str = "#FFFF00#Online Profile: "..profile.auth.name.."#{normal}#[#LIGHT_BLUE##{underline}#"..self.logged_url.."#LAST##{normal}#]"
+	local c_auth = Textzone.new{auto_width=true, auto_height=true, text=str, fct=function() util.browserOpenUrl(self.logged_url) end}
+
+	local logoff = Textzone.new{text="#LIGHT_BLUE##{italic}#Logout", auto_height=true, width=50, fct=function() self:logout() end}
+
+	uis[#uis+1] = {left=10, bottom=logoff.h + c_auth.h, ui=Separator.new{dir="vertical", size=self.iw - 20}}
+	uis[#uis+1] = {right=0, bottom=logoff.h, ui=c_auth}
+	uis[#uis+1] = {right=0, bottom=0, ui=logoff}
+end
+
+function _M:login()
+	if self.c_login.text:len() < 2 then
+		Dialog:simplePopup("Username", "Your username is too short")
+		return
+	end
+	if self.c_pass.text:len() < 4 then
+		Dialog:simplePopup("Password", "Your password is too short")
+		return
+	end
+	game:createProfile({create=false, login=self.c_login.text, pass=self.c_pass.text})
+end
+
+function _M:logout()
+	profile:logOut()
 end
 
 function _M:switchBackground()
