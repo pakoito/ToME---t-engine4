@@ -45,14 +45,22 @@ function _M:saveUUID(do_charball)
 	end
 	local data = {sections={}}
 	setmetatable(data, {__index={
+		version = function(self, v) self.version = v end,
 		hiddenData = function(self, key, value)
 			self.hidden = self.hidden or {}
 			self.hidden[key] = value
 		end,
-		newSection = function(self, display, table, type, column, sectable)
-			self.sections[#self.sections+1] = {display=display, table=table, type=type, column=column}
+		newSection = function(self, table, sectable)
+			self.sections[#self.sections+1] = table
 			self[table] = sectable or {}
 			return self[table]
+		end,
+		subsheet = function(self, name)
+			local s = {sections={}}
+			setmetatable(s, getmetatable(self))
+			self.subsheets = self.subsheets or {}
+			self.subsheets[#self.subsheets+1] = {name=name, sheet=s}
+			return s
 		end,
 	}})
 	local title, tags = self:dumpToJSON(data)
@@ -80,6 +88,6 @@ end
 
 --- Override this method to define dump sections
 function _M:dumpToJSON(js)
-	if not self.__te4_uuid then return end
+--	if not self.__te4_uuid then return end
 	return self.name
 end

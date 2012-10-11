@@ -159,7 +159,7 @@ newTalent{
 			self.alchemy_golem = game.zone:finishEntity(game.level, "actor", makeGolem(self))
 			if game.party:hasMember(self) then
 				game.party:addMember(self.alchemy_golem, {
-					control="full", type="golem", title="Golem",
+					control="full", type="golem", title="Golem", important=true,
 					orders = {target=true, leash=true, anchor=true, talents=true, behavior=true},
 				})
 			end
