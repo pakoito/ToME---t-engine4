@@ -1604,7 +1604,10 @@ function _M:onTakeHit(value, src)
 			a:takeHit(value / 2, self)
 			value = value / 2
 		end
+	end
 
+	if self:knowTalent(self.T_MITOSIS) and self:isTalentActive(self.T_MITOSIS) then
+		finish me
 	end
 
 	if self:attr("time_shield") then
