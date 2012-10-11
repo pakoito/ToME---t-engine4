@@ -149,6 +149,7 @@ uberTalent{
 		- Alchemy Golems: Drain
 		- Shadows: Empathic Hex
 		- Thought-Forms: Flame of Urh'Rok
+		- Bloated Oozes: Bone Shield
 		- Mucus Oozes: Virulent Disease
 		- Other race or object-based summons might be affected too
 		]]):format()

@@ -21,62 +21,59 @@ newTalent{
 	name = "Mitosis",
 	type = {"wild-gift/ooze", 1},
 	require = gifts_req1,
-	mode = "passive",
+	mode = "sustained",
 	cooldown = 10,
+	sustain_equilibrium = 10,
 	getDur = function(self, t) return math.max(5, math.floor(self:getTalentLevel(t) * 2)) end,
 	getMax = function(self, t) return math.floor(self:getCun() / 10) end,
-	action = function(self, t)
+	spawn = function(self, t, life)
+		if checkMaxSummon(self, true) or not self:canBe("summon") then return end
+
 		-- Find space
-		local x, y = util.findFreeGrid(self.x, self.y, 1, true, {[Map.ACTOR]=true})
+		local x, y = util.findFreeGrid(self.x, self.y, 5, true, {[Map.ACTOR]=true})
 		if not x then
-			game.logPlayer(self, "Not enough space for mitosis!")
+			game.logPlayer(self, "Not enough space to summon!")
 			return
 		end
 
-		local dur = t.getDur(self, t)
-		self:setEffect(self.EFF_MITOSIS, t.getDur(self, t), {power=10 + self:combatTalentMindDamage(t, 5, 200) / 10})
+		local m = mod.class.NPC.new{
+			type = "vermin", subtype = "oozes",
+			display = "j", color=colors.GREEN, image = "npc/vermin_oozes_green_ooze.png",
+			name = "bloated ooze",
+			desc = "It's made from your own flesh and it's oozing.",
+			sound_moam = {"creatures/jelly/jelly_%d", 1, 3},
+			sound_die = {"creatures/jelly/jelly_die_%d", 1, 2},
+			sound_random = {"creatures/jelly/jelly_%d", 1, 3},
+			body = { INVEN = 10 },
+			autolevel = "tank",
+			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=1, },
+			stats = { wil=10, dex=10, mag=3, str=self:getTalentLevel(t) / 5 * 4, con=self:getWil(), cun=self:getCun() },
+			global_speed_base = 0.5,
+			combat = {sound="creatures/jelly/jelly_hit"},
+			combat_armor = self:getTalentLevel(t) * 5, combat_def = self:getTalentLevel(t) * 5,
+			rank = 1,
+			size_category = 3,
+			infravision = 10,
+			cut_immune = 1,
+			blind_immune = 1,
 
-		local m = self:clone{
-			no_drops = true,
-			summoner = self, summoner_gain_exp=true,
-			summon_time = t.getDur(self, t),
-			ai_target = {actor=nil},
-			ai = "summoned", ai_real = "tactical",
-			name = "Mitosis of "..self.name,
-			desc = "Acidic mitosis of "..self.name..".",
+			resists = { [DamageType.LIGHT] = -50, [DamageType.COLD] = -50 },
+			fear_immune = 1,
+
+			blood_color = colors.GREEN,
+			level_range = {self.level, self.level}, exp_worth = 0,
+			max_life = 30,
+
+			combat = { dam=5, atk=0, apr=5, damtype=DamageType.POISON },
+
+			summoner = self, summoner_gain_exp=true, wild_gift_summon=true, is_mucus_ooze = true,
+			summon_time = math.ceil(self:getTalentLevel(t)) + 5,
+			max_summon_time = math.ceil(self:getTalentLevel(t)) + 5,
 		}
-		m:removeAllMOs()
-		m.make_escort = nil
-		m.on_added_to_level = nil
-
-		m.energy.value = 0
-		m.forceLevelup = function() end
-		m.die = nil
-		m.on_die = nil
-		m.on_acquire_target = nil
-		m.seen_by = nil
-		m.puuid = nil
-		m.on_takehit = nil
-		m.can_talk = nil
-		m.clone_on_hit = nil
-		m.exp_worth = 0
-		m.no_inventory_access = true
-		m.player = true
-		m:unlearnTalent(m.T_MITOSIS, m:getTalentLevel(m.T_MITOSIS))
-		m.remove_from_party_on_death = true
-
-		game.zone:addEntity(game.level, m, "actor", x, y)
-		game.level.map:particleEmitter(x, y, 1, "shadow")
-
-		if game.party:hasMember(self) then
-			game.party:addMember(m, {
-				control="full",
-				type="mitosis",
-				title="Mitosis of "..self.name,
-				temporary_level=1,
-				orders = {target=true},
-			})
-		end
+		if self:knowTalent(self.T_BLIGHTED_SUMMONING) then m:learnTalent(m.T_BONE_SHIELD, true, 2) end
+		setupSummon(self, m, x, y)
+		m.max_life = life
+		m.life = life
 
 		game:playSoundNear(self, "talents/spell_generic2")
 
