@@ -87,11 +87,13 @@ function _M:updateUI()
 end
 
 function _M:uiLogin(uis)
+	local str = Textzone.new{auto_width=true, auto_height=true, text="#GOLD#Online Profile"}
 	local bt = Button.new{text="Login", width=50, fct=function() self:login() end}
-	self.c_login = Textbox.new{title="Username: ", text="", chars=30, max_len=20, fct=function(text) self:login() end}
-	self.c_pass = Textbox.new{title="Password: ", size_title=self.c_login.title, text="", chars=30, max_len=20, hide=true, fct=function(text) self:login() end}
+	self.c_login = Textbox.new{title="Username: ", text="", chars=20, max_len=20, fct=function(text) self:login() end}
+	self.c_pass = Textbox.new{title="Password: ", size_title=self.c_login.title, text="", chars=20, max_len=20, hide=true, fct=function(text) self:login() end}
 
-	uis[#uis+1] = {left=10, bottom=bt.h + self.c_login.h + self.c_pass.h, ui=Separator.new{dir="vertical", size=self.iw - 20}}
+	uis[#uis+1] = {left=10, bottom=bt.h + self.c_login.h + self.c_pass.h + str.h, ui=Separator.new{dir="vertical", size=self.iw - 20}}
+	uis[#uis+1] = {hcenter=0, bottom=bt.h + self.c_login.h + self.c_pass.h, ui=str}
 	uis[#uis+1] = {left=0, bottom=bt.h + self.c_pass.h, ui=self.c_login}
 	uis[#uis+1] = {left=0, bottom=bt.h, ui=self.c_pass}
 	uis[#uis+1] = {hcenter=0, bottom=0, ui=bt}
@@ -99,13 +101,14 @@ end
 
 function _M:uiStats(uis)
 	self.logged_url = "http://te4.org/users/"..profile.auth.page
-	local str = "#FFFF00#Online Profile: "..profile.auth.name.."#{normal}#[#LIGHT_BLUE##{underline}#"..self.logged_url.."#LAST##{normal}#]"
-	local c_auth = Textzone.new{auto_width=true, auto_height=true, text=str, fct=function() util.browserOpenUrl(self.logged_url) end}
+	local str1 = Textzone.new{auto_width=true, auto_height=true, text="#GOLD#Online Profile#WHITE#"}
+	local str2 = Textzone.new{auto_width=true, auto_height=true, text="View online: #LIGHT_BLUE##{underline}#"..self.logged_url.."#LAST##{normal}#", fct=function() util.browserOpenUrl(self.logged_url) end}
 
-	local logoff = Textzone.new{text="#LIGHT_BLUE##{italic}#Logout", auto_height=true, width=50, fct=function() self:logout() end}
+	local logoff = Textzone.new{text="#LIGHT_BLUE##{underline}#Logout", auto_height=true, width=50, fct=function() self:logout() end}
 
-	uis[#uis+1] = {left=10, bottom=logoff.h + c_auth.h, ui=Separator.new{dir="vertical", size=self.iw - 20}}
-	uis[#uis+1] = {right=0, bottom=logoff.h, ui=c_auth}
+	uis[#uis+1] = {left=10, bottom=logoff.h + str2.h + str1.h, ui=Separator.new{dir="vertical", size=self.iw - 20}}
+	uis[#uis+1] = {hcenter=0, bottom=logoff.h + str2.h, ui=str1}
+	uis[#uis+1] = {left=0, bottom=logoff.h, ui=str2}
 	uis[#uis+1] = {right=0, bottom=0, ui=logoff}
 end
 
@@ -123,6 +126,7 @@ end
 
 function _M:logout()
 	profile:logOut()
+	self:on_recover_focus()
 end
 
 function _M:switchBackground()
