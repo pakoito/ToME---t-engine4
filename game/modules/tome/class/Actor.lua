@@ -1607,7 +1607,20 @@ function _M:onTakeHit(value, src)
 	end
 
 	if self:knowTalent(self.T_MITOSIS) and self:isTalentActive(self.T_MITOSIS) then
-		--finish me
+		local acts = {}
+		if game.party:hasMember(self) then
+			for act, def in pairs(game.party.members) do
+				if act.summoner and act.summoner == self and act.wild_gift_summon and act.bloated_ooze then acts[#acts+1] = act end
+			end
+		else
+			for _, act in pairs(game.level.entities) do
+				if act.summoner and act.summoner == self and act.wild_gift_summon and act.bloated_ooze then acts[#acts+1] = act end
+			end
+		end
+		if #acts > 0 then
+			value = value / #acts
+			for _, act in ipairs(acts) do act:takeHit(value, src) end
+		end
 	end
 
 	if self:attr("time_shield") then
