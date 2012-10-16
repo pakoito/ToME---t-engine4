@@ -127,6 +127,7 @@ uberTalent{
 	end} },
 	action = function(self, t)
 		self:setEffect(self.EFF_IRRESISTIBLE_SUN, 6, {dam=50 + self:getStr() * 2})
+		return true
 	end,
 	info = function(self, t)
 		local dam = (50 + self:getStr() * 2) / 3
