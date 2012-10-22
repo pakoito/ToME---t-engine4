@@ -21,7 +21,7 @@
 setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 	if not game.level.map:isBound(x, y) then return 0 end
 	local terrain = game.level.map(x, y, Map.TERRAIN)
-	if terrain then terrain:check("da", src, x, y, type, dam) end
+	if terrain then terrain:check("damage_project", src, x, y, type, dam) end
 
 	local target = game.level.map(x, y, Map.ACTOR)
 	if target then
