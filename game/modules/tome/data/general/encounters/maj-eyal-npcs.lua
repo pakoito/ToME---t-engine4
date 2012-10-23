@@ -74,3 +74,36 @@ newEntity{
 		}}}
 	},
 }
+
+newEntity{
+	name = "ziguranth patrol",
+	type = "hostile", subtype = "humanoid",
+	desc = "You have got nothing to fear if you are not using filthy arcane magic. Otherwise: DIE!",
+	display = '@', color = colors.UMBER,
+	level_range = {14, nil},
+	faction = "zigur",
+	sight = 1,
+	rarity = 4,
+	unit_power = 20,
+	hates_arcane = 1,
+	ai = "world_hostile", ai_state = {chase_distance=3},
+	on_encounter = {
+		type="ambush",
+		width=14,
+		height=14,
+		nb={2, 3},
+		filters={{special_rarity="humanoid_random_boss", random_boss={
+			nb_classes=1,
+			rank=3, ai = "tactical",
+			life_rating=function(v) return v * 1.3 + 2 end,
+			loot_quality = "store",
+			loot_quantity = 1,
+			class_filter = function(c)
+				if c.power_source and c.power_source.arcane then return false end
+				return true
+			end,
+			no_loot_randart = true,
+			add_trees = {["wild-gift/antimagic"]=true},
+		}}}
+	},
+}

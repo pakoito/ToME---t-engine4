@@ -1182,6 +1182,9 @@ end
 function _M:reactionToward(target, no_reflection)
 	if target == self and self:attr("encased_in_ice") then return -100 end
 
+	-- Neverending hatred
+	if self:attr("hates_arcane") and target:attr("has_arcane_knowledge") then return -100 end
+
 	-- If self or target is a summon bound to a master's will, use the master instead
 	if self.summoner then return self.summoner:reactionToward(target, no_reflection) end
 	if target.summoner then target = target.summoner end
@@ -2962,6 +2965,8 @@ function _M:learnTalent(t_id, force, nb, extra)
 		self:capLastLearntTalents(t.generic and "generic" or "class")
 	end
 
+	if t.is_spell then self:attr("has_arcane_knowledge", nb or 1) end
+
 	if t.dont_provide_pool then return true end
 
 	self:learnPool(t)
@@ -3096,6 +3101,8 @@ function _M:unlearnTalent(t_id, nb, no_unsustain)
 	if not no_unsustain and not self:knowTalent(t_id) and t.mode == "sustained" and self:isTalentActive(t_id) then self:forceUseTalent(t_id, {ignore_energy=true}) end
 
 	self:recomputeRegenResources()
+
+	if t.is_spell then self:attr("has_arcane_knowledge", -(nb or 1)) end
 
 	return true
 end

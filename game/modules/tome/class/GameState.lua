@@ -1727,7 +1727,7 @@ function _M:createRandomBoss(base, data)
 		-- Select additional talents from the class
 		local list = {}
 		for _, t in pairs(b.talents_def) do
-			if b.talents_types[t.type[1]] and not t.no_npc_use then
+			if (b.talents_types[t.type[1]] or (data.add_trees and data.add_trees[t.type[1]])) and not t.no_npc_use then
 				local ok = true
 				if data.check_talents_level and rawget(t, 'require') then
 					local req = t.require
@@ -1741,6 +1741,7 @@ function _M:createRandomBoss(base, data)
 				if ok then list[t.id] = true end
 			end
 		end
+
 		local nb = 4 + (data.level / 7)
 		nb = math.max(rng.range(math.floor(nb * 0.7), math.ceil(nb * 1.3)), 1)
 		print("Adding "..nb.." random class talents to boss")
