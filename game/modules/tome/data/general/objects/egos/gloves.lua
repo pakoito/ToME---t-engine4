@@ -652,7 +652,7 @@ newEntity{
 		combat = {
 			apr = resolvers.mbonus_material(5, 5),
 			atk = resolvers.mbonus_material(5, 5),
-			talent_on_hit = { [Talents.T_DISENGAGE] = {level=resolvers.genericlast(function(e) return e.material_level end), chance=35} }, -- yes, so archers can beat enemies with their 'fists' and hope for a disengage proc
+			talent_on_hit = { [Talents.T_PERFECT_STRIKE] = {level=resolvers.genericlast(function(e) return e.material_level end), chance=15} }, -- this is more for brawlers actually
 		},
 	},
 }
