@@ -96,7 +96,7 @@ newTalent{
 			local theorical_nb = ({ 9, 25, 45, 77, 109, 145 })[tg.radius] or 145
 			local nb = 0
 			local grids = self:project(tg, x, y, function(tx, ty) end)
-			for px, ys in pairs(grids or {}) do for py, _ in pairs(ys) do nb = nb + 1 end end
+			if grids then for px, ys in pairs(grids or {}) do for py, _ in pairs(ys) do nb = nb + 1 end end end
 			nb = theorical_nb - nb
 			if nb > 0 then
 				local mult = math.log10(nb) / (6 - math.min(self:getTalentLevelRaw(self.T_EXPLOSION_EXPERT), 5))
