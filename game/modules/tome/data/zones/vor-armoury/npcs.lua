@@ -87,6 +87,7 @@ newEntity{ base="GREATER_MULTI_HUED_WYRM", define_as="OVERPOWERED_WYRM",
 	no_breath = 1,
 	seen_by = function(self, who)
 		if game:getPlayer(true) ~= who then return end
+		self.seen_by = nil
 		world:gainAchievement("UBER_WYRMS_OPEN", who)
 		self:setTarget(who)
 	end,

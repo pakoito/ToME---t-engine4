@@ -79,6 +79,7 @@ newEntity{ define_as = "FILLAREL",
 
 	seen_by = function(self, who)
 		if not self.has_been_seen and who.player then
+			self.seen_by = nil
 			local Chat = require("engine.Chat")
 			local chat = Chat.new("unremarkable-cave-bosses", self, who)
 			chat:invoke()
