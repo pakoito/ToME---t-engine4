@@ -135,7 +135,7 @@ if tries < 100 then
 		g.change_level_check = function(self)
 			if game.level.event_battlefield_entered then return true end
 			game.level.event_battlefield_entered = true
-			game:changeLevel(1, self.real_change(self.change_zone), {temporary_zone_shift=true})
+			game:changeLevel(1, self.real_change(self.change_zone), {temporary_zone_shift=true, direct_switch=true})
 			return true
 		end
 

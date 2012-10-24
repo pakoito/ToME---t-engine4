@@ -192,7 +192,7 @@ newEntity{
 		nothing = true,
 		message = "#VIOLET#You enter the swirling portal and appear in a large room with other portals and the two wizards.",
 		on_use = function()
-			game:changeLevel(11) -- Special level, can not get to it any other way
+			game:changeLevel(11, nil, {direct_switch=true}) -- Special level, can not get to it any other way
 			if game.player:hasQuest("high-peak"):isCompleted("sanctum-chat") then return end
 			local Chat = require "engine.Chat"
 			local chat = Chat.new("sorcerer-fight", {name="Elandar"}, game.player)

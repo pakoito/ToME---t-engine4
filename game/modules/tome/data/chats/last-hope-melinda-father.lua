@@ -159,7 +159,7 @@ newChat{ id="home3",
 Daddy you won't have to fear for me anymore! I'm moving home!]],
 	answers = {
 		{"I take that as a yes. #LIGHT_GREEN#[wait for her return and go to the Fortress]#WHITE#", action=function(npc, player)
-			game:changeLevel(1, "shertul-fortress")
+			game:changeLevel(1, "shertul-fortress", {direct_switch=true})
 			player:hasQuest("love-melinda"):spawnFortress(player)
 		end},
 	}

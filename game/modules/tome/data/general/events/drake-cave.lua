@@ -93,7 +93,7 @@ g:initGlow()
 g.dragon_kind = kind
 g.real_change = changer
 g.change_level_check = function(self)
-	game:changeLevel(1, self.real_change(self.change_zone, self.dragon_kind), {temporary_zone_shift=true})
+	game:changeLevel(1, self.real_change(self.change_zone, self.dragon_kind), {temporary_zone_shift=true, direct_switch=true})
 	self.change_level_check = nil
 	self.real_change = nil
 	return true

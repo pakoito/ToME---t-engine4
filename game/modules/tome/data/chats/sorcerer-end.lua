@@ -102,7 +102,7 @@ Please, make sure the world is safe.]],
 	answers = {
 		{"You will never be forgotten.", action=function(npc, player)
 			local aeryn = aeryn_alive(npc, player)
-			game.level:removeEntity(aeryn)
+			game.level:removeEntity(aeryn, true)
 			player:hasQuest("high-peak"):win("aeryn-sacrifice")
 		end},
 	}

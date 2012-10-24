@@ -49,7 +49,7 @@ So, you think you can help us ?]],
 newChat{ id="teleport",
 	text = [[Good luck!]],
 	answers = {
-		{"[teleport]", action=function(npc, player) game:changeLevel(1, "abashed-expanse") end},
+		{"[teleport]", action=function(npc, player) game:changeLevel(1, "abashed-expanse", {direct_switch=true}) end},
 	}
 }
 

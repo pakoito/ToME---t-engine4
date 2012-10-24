@@ -148,7 +148,7 @@ g.nice_tiler = nil
 g:initGlow()
 g.real_change = changer
 g.change_level_check = function(self)
-	game:changeLevel(1, self.real_change(self.change_zone), {temporary_zone_shift=true})
+	game:changeLevel(1, self.real_change(self.change_zone), {temporary_zone_shift=true, direct_switch=true})
 	require("engine.ui.Dialog"):simplePopup("Forsaken Crypt", "You hear squeaks and the sounds of clicking bone echo around you...")
 	self.change_level_check = nil
 	self.real_change = nil

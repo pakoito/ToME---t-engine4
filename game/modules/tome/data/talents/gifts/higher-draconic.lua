@@ -157,7 +157,7 @@ newTalent{
 	info = function(self, t)
 		return ([[You have the mental prowess of a Wyrm.
 		Increases Cunning by %d.
-		Each point in Wyrmic Guile also increases your knockback resistance by 10%%, and your blindness and stun resistances by 5%%.]]):format(4*self:getTalentLevelRaw(t))
+		Each point in Wyrmic Guile also increases your knockback resistance by 10%%, and your blindness and stun resistances by 5%%.]]):format(2*self:getTalentLevelRaw(t))
 	end,
 }
 

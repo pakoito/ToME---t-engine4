@@ -38,7 +38,7 @@ But your wonder is cut short as the Sher'Tul notices you, and you feel its inten
 A wave of mental and magical power blasts into you with the might of a falling star. You are lifted into the air, and intense pressure bears down on every inch of your skin, threatening to crush you into nothingness. You try to resist for a moment, until--#{normal}#]],
 	answers = {
 		{"[continue]", jump="next", action=function(npc, player)
-			game:changeLevel(1, "shertul-fortress")
+			game:changeLevel(1, "shertul-fortress", {direct_switch=true})
 			local spot = game.level:pickSpot{type="spawn", subtype="farportal"} or {x=39, y=29}
 			game.player:move(spot.x, spot.y, true)
 			game.player:learnLore("shertul-fortress-caldizar")

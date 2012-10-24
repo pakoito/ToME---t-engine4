@@ -148,7 +148,7 @@ return {
 			end
 
 			if to_worldmap then
-				game:changeLevel(1, game.player.last_wilderness or "wilderness", {temporary_zone_shift_back=game.level.temp_shift_zone and true or false})
+				game:changeLevel(1, game.player.last_wilderness or "wilderness", {temporary_zone_shift_back=game.level.temp_shift_zone and true or false, direct_switch=true})
 			end
 
 			game.logPlayer(game.player, "#LIGHT_RED#You are sent back to the material plane!")

@@ -140,7 +140,7 @@ ask_east = function(self, player)
 end
 
 tannen_tower = function(self, player)
-	game:changeLevel(1, "tannen-tower")
+	game:changeLevel(1, "tannen-tower", {direct_switch=true})
 	player:setQuestStatus(self.id, engine.Quest.COMPLETED, "trapped")
 end
 
@@ -152,7 +152,7 @@ end
 
 back_to_last_hope = function(self)
 	-- TP last hope
-	game:changeLevel(1, "town-last-hope")
+	game:changeLevel(1, "town-last-hope", {direct_switch=true})
 	-- Move to the portal spot
 	local spot = game.level:pickSpot{type="pop-quest", subtype="farportal-player"}
 	game.player:move(spot.x, spot.y, true)

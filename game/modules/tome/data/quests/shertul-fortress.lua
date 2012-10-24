@@ -162,7 +162,7 @@ fly = function(self)
 	game.player:learnLore("shertul-fortress-takeoff")
 
 	local f = require("mod.class.FortressPC").new{}
-	game:changeLevel(1, "wilderness")
+	game:changeLevel(1, "wilderness", {direct_switch=true})
 	game.party:addMember(f, {temporary_level=1, control="full"})
 	f.x = game.player.x
 	f.y = game.player.y

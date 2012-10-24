@@ -65,7 +65,7 @@ It should automatically create a portal back, but it might not be near your arri
 	checkSpecialLocation = function(self, who, q)
 		-- Caldizar space fortress
 		if rng.percent(2) and not game.state:hasSeenSpecialFarportal("caldizar-space-fortress") then
-			game:changeLevel(1, "shertul-fortress-caldizar")
+			game:changeLevel(1, "shertul-fortress-caldizar", {direct_switch=true})
 			q:exploratory_energy()
 			game.log("#VIOLET#You enter the swirling portal and in the blink of an eye you set foot in a strangely familiar zone, right next to a farportal...")
 			game.state:seenSpecialFarportal("caldizar-space-fortress")
@@ -125,7 +125,7 @@ It should automatically create a portal back, but it might not be near your arri
 				self.on_die = self.explo_portal_on_die
 				self.explo_portal_on_die = nil
 			end
-			game:changeLevel(1, zone)
+			game:changeLevel(1, zone, {direct_switch=true})
 			q:exploratory_energy()
 			game.log("#VIOLET#You enter the swirling portal and in the blink of an eye you set foot in an unfamiliar zone, with no trace of the portal...")
 		end end)

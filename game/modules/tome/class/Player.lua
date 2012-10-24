@@ -1231,7 +1231,7 @@ function _M:useOrbPortal(portal)
 				self.wild_y = portal.change_wilderness.y or 0
 			end
 		end
-		game:changeLevel(portal.change_level, portal.change_zone)
+		game:changeLevel(portal.change_level, portal.change_zone, {direct_switch=true})
 
 		if portal.after_zone_teleport then
 			self:move(portal.after_zone_teleport.x, portal.after_zone_teleport.y, true)

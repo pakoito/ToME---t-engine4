@@ -79,7 +79,7 @@ newEntity{
 	name = "ziguranth patrol",
 	type = "hostile", subtype = "humanoid",
 	desc = "You have got nothing to fear if you are not using filthy arcane magic. Otherwise: DIE!",
-	display = '@', color = colors.UMBER,
+	display = '@', color = colors.GREEN,
 	level_range = {14, nil},
 	faction = "zigur",
 	sight = 1,

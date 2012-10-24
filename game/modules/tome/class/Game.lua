@@ -567,7 +567,7 @@ function _M:changeLevel(lev, zone, params)
 
 	-- Transmo!
 	local p = self:getPlayer(true)
-	if p:attr("has_transmo") and p:transmoGetNumberItems() > 0 then
+	if not params.direct_switch and p:attr("has_transmo") and p:transmoGetNumberItems() > 0 then
 		local d
 		local titleupdator = self.player:getEncumberTitleUpdator("Transmogrification Chest")
 		d = self.player:showEquipInven(titleupdator(), nil, function(o, inven, item, button, event)

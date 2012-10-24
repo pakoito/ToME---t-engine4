@@ -36,7 +36,7 @@ end
 on_grant = function(self, who)
 	engine.Faction:setFactionReaction(game.player.faction, "rhalore", 100, true)
 	engine.Faction:setFactionReaction(game.player.faction, "zigur", -100, true)
-	game:changeLevel(1, "town-zigur")
+	game:changeLevel(1, "town-zigur", {direct_switch=true})
 	game.zone.base_level = game.player.level
 
 	-- Clean up the player of bad effects

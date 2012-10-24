@@ -227,7 +227,7 @@ return {
 					game.level:addEntity(self.summoner)
 					game:onTickEnd(function()
 						local x, y, z = game.level.data.caldera_x, game.level.data.caldera_y, game.level.data.caldera_z
-						game:changeLevel(z, "noxious-caldera")
+						game:changeLevel(z, "noxious-caldera", {direct_switch=true})
 						game.player:move(x, y, true)
 						if self.success then
 							require("engine.ui.Dialog"):simpleLongPopup("Deep slumber...", [[As your mind-mouse enters the dream portal you suddenly wake up.
@@ -289,7 +289,7 @@ You feel like running away!]], 600)
 					game.level:addEntity(self.summoner)
 					game:onTickEnd(function()
 						local x, y, z = game.level.data.caldera_x, game.level.data.caldera_y, game.level.data.caldera_z
-						game:changeLevel(z, "noxious-caldera")
+						game:changeLevel(z, "noxious-caldera", {direct_switch=true})
 						game.player:move(x, y, true)
 						if self.success then
 							require("engine.ui.Dialog"):simpleLongPopup("Deep slumber...", [[As you enter the dream portal you suddenly wake up.
