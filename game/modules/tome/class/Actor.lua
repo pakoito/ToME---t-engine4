@@ -4239,7 +4239,7 @@ function _M:on_set_temporary_effect(eff_id, e, p)
 		p.dur = 0
 	end
 
-	if e.status == "detrimental" and e.type == "physical" and self:knowTalent(self.T_SPINE_OF_THE_WORLD) then
+	if p.dur > 0 and not e.subtype["cross tier"] and e.status == "detrimental" and e.type == "physical" and self:knowTalent(self.T_SPINE_OF_THE_WORLD) then
 		self:triggerTalent(self.T_SPINE_OF_THE_WORLD)
 	end
 

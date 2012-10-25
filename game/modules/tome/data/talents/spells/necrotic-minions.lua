@@ -664,6 +664,12 @@ newTalent{
 	tactical = { ATTACK = 10 },
 	requires_target = true,
 	range = 0,
+	on_learn = function(self, t)
+		self:learnTalent(self.T_NECROTIC_AURA, true, 1)
+	end,
+	on_unlearn = function(self, t)
+		self:unlearnTalent(self.T_NECROTIC_AURA, 1)
+	end,
 	radius = function(self, t)
 		local aura = self:getTalentFromId(self.T_NECROTIC_AURA)
 		return aura.getRadius(self, aura)
