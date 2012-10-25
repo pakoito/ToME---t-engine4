@@ -46,7 +46,7 @@ newChat{ id="welcome",
 
 else
 
-if not npc.antimagic_ok and profile.mod.allow_build.birth_zigur_sacrifice then
+if not npc.antimagic_ok and profile.mod.allow_build.birth_zigur_sacrifice and not p:attr("has_arcane_knowledge") then
 
 newChat{ id="welcome",
 	text = text,
