@@ -50,6 +50,8 @@
 #define WIDTH 800
 #define HEIGHT 600
 
+int start_xpos = -1, start_ypos = -1;
+
 int g_argc = 0;
 char **g_argv;
 SDL_Window *window = NULL;
@@ -736,7 +738,7 @@ void do_resize(int w, int h, bool fullscreen)
 {
 	if (!window)
 	{
-		window = SDL_CreateWindow("TE4", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, w, h, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | (fullscreen ? SDL_WINDOW_FULLSCREEN : 0));
+		window = SDL_CreateWindow("TE4", (start_xpos == -1) ? SDL_WINDOWPOS_CENTERED : start_xpos, (start_ypos == -1) ? SDL_WINDOWPOS_CENTERED : start_ypos, w, h, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | (fullscreen ? SDL_WINDOW_FULLSCREEN : 0));
 		if (window==NULL) {
 			printf("error opening screen: %s\n", SDL_GetError());
 			exit(1);
@@ -956,6 +958,8 @@ int main(int argc, char *argv[])
 #endif
 		}
 		if (!strncmp(arg, "--no-debug", 10)) no_debug = TRUE;
+		if (!strncmp(arg, "--xpos", 6)) start_xpos = strtol(argv[++i], NULL, 10);
+		if (!strncmp(arg, "--ypos", 6)) start_ypos = strtol(argv[++i], NULL, 10);
 	}
 
 	// Get cpu cores
