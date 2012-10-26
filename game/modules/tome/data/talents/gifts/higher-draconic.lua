@@ -130,7 +130,7 @@ newTalent{
 		return ([[You breathe insidious poison in a frontal cone of radius %d. Any target caught in the area will take %0.2f nature damage each turn for 6 turns.
 		The poison also reduces the healing of enemies poisoned by %d%% while it is in effect.
 		The damage will increase with the Strength stat.
-		Each point in Venomous Breath also increases your nature resistance by 2%%.]]):format(self:getTalentRadius(t), damDesc(self, DamageTypet.getDamage(self,t)/6), effect)
+		Each point in Venomous Breath also increases your nature resistance by 2%%.]]):format(self:getTalentRadius(t), damDesc(self, DamageType.NATURE, t.getDamage(self,t)/6), effect)
 	end,
 }
 
@@ -173,16 +173,18 @@ newTalent{
 		self.resists[DamageType.FIRE] = (self.resists[DamageType.FIRE] or 0) + 0.5
 		self.resists[DamageType.LIGHTNING] = (self.resists[DamageType.LIGHTNING] or 0) + 0.5
 		self.resists[DamageType.ACID] = (self.resists[DamageType.ACID] or 0) + 0.5
-		self.resists_pen[DamageType.PHYSICAL] = (self.resists[DamageType.PHYSICAL] or 0) + 4
-		self.resists_pen[DamageType.COLD] = (self.resists[DamageType.COLD] or 0) + 4
-		self.resists_pen[DamageType.FIRE] = (self.resists[DamageType.FIRE] or 0) + 4
-		self.resists_pen[DamageType.LIGHTNING] = (self.resists[DamageType.LIGHTNING] or 0) + 4
-		self.resists_pen[DamageType.ACID] = (self.resists[DamageType.ACID] or 0) + 4
-		self.inc_damage[DamageType.PHYSICAL] = (self.resists[DamageType.PHYSICAL] or 0) + 2
-		self.inc_damage[DamageType.COLD] = (self.resists[DamageType.COLD] or 0) + 2
-		self.inc_damage[DamageType.FIRE] = (self.resists[DamageType.FIRE] or 0) + 2
-		self.inc_damage[DamageType.LIGHTNING] = (self.resists[DamageType.LIGHTNING] or 0) + 2
-		self.inc_damage[DamageType.ACID] = (self.resists[DamageType.ACID] or 0) + 2
+
+		self.resists_pen[DamageType.PHYSICAL] = (self.resists_pen[DamageType.PHYSICAL] or 0) + 4
+		self.resists_pen[DamageType.COLD] = (self.resists_pen[DamageType.COLD] or 0) + 4
+		self.resists_pen[DamageType.FIRE] = (self.resists_pen[DamageType.FIRE] or 0) + 4
+		self.resists_pen[DamageType.LIGHTNING] = (self.resists_pen[DamageType.LIGHTNING] or 0) + 4
+		self.resists_pen[DamageType.ACID] = (self.resists_pen[DamageType.ACID] or 0) + 4
+		
+		self.inc_damage[DamageType.PHYSICAL] = (self.inc_damage[DamageType.PHYSICAL] or 0) + 2
+		self.inc_damage[DamageType.COLD] = (self.inc_damage[DamageType.COLD] or 0) + 2
+		self.inc_damage[DamageType.FIRE] = (self.inc_damage[DamageType.FIRE] or 0) + 2
+		self.inc_damage[DamageType.LIGHTNING] = (self.inc_damage[DamageType.LIGHTNING] or 0) + 2
+		self.inc_damage[DamageType.ACID] = (self.inc_damage[DamageType.ACID] or 0) + 2
 	end,
 	on_unlearn = function(self, t)
 		self.resists[DamageType.PHYSICAL] = (self.resists[DamageType.PHYSICAL] or 0) - 0.5
@@ -190,16 +192,18 @@ newTalent{
 		self.resists[DamageType.FIRE] = (self.resists[DamageType.FIRE] or 0) - 0.5
 		self.resists[DamageType.LIGHTNING] = (self.resists[DamageType.LIGHTNING] or 0) - 0.5
 		self.resists[DamageType.ACID] = (self.resists[DamageType.ACID] or 0) - 0.5
-		self.resists_pen[DamageType.PHYSICAL] = (self.resists[DamageType.PHYSICAL] or 0) - 4
-		self.resists_pen[DamageType.COLD] = (self.resists[DamageType.COLD] or 0) - 4
-		self.resists_pen[DamageType.FIRE] = (self.resists[DamageType.FIRE] or 0) - 4
-		self.resists_pen[DamageType.LIGHTNING] = (self.resists[DamageType.LIGHTNING] or 0) - 4
-		self.resists_pen[DamageType.ACID] = (self.resists[DamageType.ACID] or 0) - 4
-		self.inc_damage[DamageType.PHYSICAL] = (self.resists[DamageType.PHYSICAL] or 0) - 2
-		self.inc_damage[DamageType.COLD] = (self.resists[DamageType.COLD] or 0) - 2
-		self.inc_damage[DamageType.FIRE] = (self.resists[DamageType.FIRE] or 0) - 2
-		self.inc_damage[DamageType.LIGHTNING] = (self.resists[DamageType.LIGHTNING] or 0) - 2
-		self.inc_damage[DamageType.ACID] = (self.resists[DamageType.ACID] or 0) - 2
+
+		self.resists_pen[DamageType.PHYSICAL] = (self.resists_pen[DamageType.PHYSICAL] or 0) - 4
+		self.resists_pen[DamageType.COLD] = (self.resists_pen[DamageType.COLD] or 0) - 4
+		self.resists_pen[DamageType.FIRE] = (self.resists_pen[DamageType.FIRE] or 0) - 4
+		self.resists_pen[DamageType.LIGHTNING] = (self.resists_pen[DamageType.LIGHTNING] or 0) - 4
+		self.resists_pen[DamageType.ACID] = (self.resists_pen[DamageType.ACID] or 0) - 4
+
+		self.inc_damage[DamageType.PHYSICAL] = (self.inc_damage[DamageType.PHYSICAL] or 0) - 2
+		self.inc_damage[DamageType.COLD] = (self.inc_damage[DamageType.COLD] or 0) - 2
+		self.inc_damage[DamageType.FIRE] = (self.inc_damage[DamageType.FIRE] or 0) - 2
+		self.inc_damage[DamageType.LIGHTNING] = (self.inc_damage[DamageType.LIGHTNING] or 0) - 2
+		self.inc_damage[DamageType.ACID] = (self.inc_damage[DamageType.ACID] or 0) - 2
 	end,
 	info = function(self, t)
 		return ([[You have gained the full power of the multihued dragon, and your mastery over the elements is complete.
