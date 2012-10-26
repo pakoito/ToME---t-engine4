@@ -101,12 +101,15 @@ local g = game.level.map(x, y, engine.Map.TERRAIN):cloneFull()
 g.name = "naga invasion coral portal"
 g.display='&' g.color_r=0 g.color_g=0 g.color_b=255 g.notice = true
 g.change_level=1 g.change_zone=id g.glow=true
-g.add_displays = g.add_displays or {}
-g.add_displays[#g.add_displays+1] = mod.class.Grid.new{z=18, image="terrain/naga_portal.png", display_h=2, display_y=-1, embed_particles = {
-	{name="naga_portal_smoke", rad=2, args={smoke="particles_images/smoke_whispery_bright"}},
-	{name="naga_portal_smoke", rad=2, args={smoke="particles_images/smoke_heavy_bright"}},
-	{name="naga_portal_smoke", rad=2, args={smoke="particles_images/smoke_dark"}},
-}}
+g:removeAllMOs()
+if engine.Map.tiles.nicer_tiles then
+	g.add_displays = g.add_displays or {}
+	g.add_displays[#g.add_displays+1] = mod.class.Grid.new{z=18, image="terrain/naga_portal.png", display_h=2, display_y=-1, embed_particles = {
+		{name="naga_portal_smoke", rad=2, args={smoke="particles_images/smoke_whispery_bright"}},
+		{name="naga_portal_smoke", rad=2, args={smoke="particles_images/smoke_heavy_bright"}},
+		{name="naga_portal_smoke", rad=2, args={smoke="particles_images/smoke_dark"}},
+	}}
+end
 g.nice_tiler = nil
 g:initGlow()
 g.real_change = changer

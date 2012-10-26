@@ -53,8 +53,11 @@ end
 local g = game.level.map(x, y, engine.Map.TERRAIN):cloneFull()
 g.name = "glowing chest"
 g.display='~' g.color_r=255 g.color_g=215 g.color_b=0 g.notice = true
-g.add_displays = g.add_displays or {}
-g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="object/chest3.png", z=5}
+g:removeAllMOs()
+if engine.Map.tiles.nicer_tiles then
+	g.add_displays = g.add_displays or {}
+	g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="object/chest3.png", z=5}
+end
 g.nice_tiler = nil
 g.chest_item = o
 g.chest_guards = ms

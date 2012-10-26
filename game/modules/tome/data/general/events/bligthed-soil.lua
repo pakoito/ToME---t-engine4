@@ -24,8 +24,11 @@ if not x then return false end
 local g = game.level.map(x, y, engine.Map.TERRAIN):cloneFull()
 g.name = "blighted soil"
 g.display='~' g.color_r=0 g.color_g=255 g.color_b=0 g.notice = true
-g.add_displays = g.add_displays or {}
-g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/blight_root.png", z=5}
+g:removeAllMOs()
+if engine.Map.tiles.nicer_tiles then
+	g.add_displays = g.add_displays or {}
+	g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/blight_root.png", z=5}
+end
 g.nice_tiler = nil
 game.zone:addEntity(game.level, g, "terrain", x, y)
 

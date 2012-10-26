@@ -116,8 +116,11 @@ if tries < 100 then
 		local g = game.level.map(p.x, p.y, engine.Map.TERRAIN):cloneFull()
 		g.name = "grave"
 		g.display='&' g.color_r=255 g.color_g=255 g.color_b=255 g.notice = true
-		g.add_displays = g.add_displays or {}
-		g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/grave_unopened_0"..rng.range(1,3).."_64.png", display_y=-1, display_h=2}
+		g:removeAllMOs()
+		if engine.Map.tiles.nicer_tiles then
+			g.add_displays = g.add_displays or {}
+			g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/grave_unopened_0"..rng.range(1,3).."_64.png", display_y=-1, display_h=2}
+		end
 		g.nice_tiler = nil
 		g.block_move = function(self, x, y, who, act, couldpass)
 			if not who or not who.player or not act then return false end

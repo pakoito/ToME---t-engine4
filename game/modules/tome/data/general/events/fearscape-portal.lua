@@ -135,8 +135,11 @@ local g = game.level.map(x, y, engine.Map.TERRAIN):cloneFull()
 g.name = "fearscape invasion portal"
 g.display='&' g.color_r=0 g.color_g=0 g.color_b=255 g.notice = true
 g.change_level=1 g.change_zone=id g.glow=true
-g.add_displays = g.add_displays or {}
-g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/demon_portal3.png"}
+g:removeAllMOs()
+if engine.Map.tiles.nicer_tiles then
+	g.add_displays = g.add_displays or {}
+	g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/demon_portal3.png"}
+end
 g.nice_tiler = nil
 g:initGlow()
 g.real_change = changer

@@ -145,8 +145,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Imbue a body armour with a gem, granting it additional powers.
-		You can only imbue items once, and it is permanent.]])
+		return ([[Imbue %s with a gem (up to tier %d), granting it additional powers.
+		You can only imbue items once, and it is permanent.]]):format(self:knowTalent(self.T_CRAFTY_HANDS) and "a body armour, a belt or head piece" or "a body armour", self:getTalentLevelRaw(t))
 	end,
 }
 newTalent{

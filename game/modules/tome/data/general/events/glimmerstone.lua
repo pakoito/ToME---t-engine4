@@ -25,8 +25,11 @@ local g = game.level.map(x, y, engine.Map.TERRAIN):cloneFull()
 g = require("engine.Object").new(g)
 g.name = "glimmerstone"
 g.display='&' g.color_r=255 g.color_g=255 g.color_b=255 g.notice = true
-g.add_displays = g.add_displays or {}
-g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/moonstone_05.png", display_w=0.5, display_x=0.25, z=5}
+g:removeAllMOs()
+if engine.Map.tiles.nicer_tiles then
+	g.add_displays = g.add_displays or {}
+	g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/moonstone_05.png", display_w=0.5, display_x=0.25, z=5}
+end
 g.nice_tiler = nil
 g.act = function(self)
 	local grids = core.fov.circle_grids(x, y, rng.range(1, 2), "block_move")

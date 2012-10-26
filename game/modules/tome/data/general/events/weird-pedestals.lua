@@ -44,8 +44,11 @@ for i = 1, 3 do
 	local g = game.level.map(i, j, engine.Map.TERRAIN):cloneFull()
 	g.name = "weird pedestal"
 	g.display='&' g.color_r=255 g.color_g=255 g.color_b=255 g.notice = true
-	g.add_displays = g.add_displays or {}
-	g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/pedestal_01.png", display_y=-1, display_h=2}
+	g:removeAllMOs()
+	if engine.Map.tiles.nicer_tiles then
+		g.add_displays = g.add_displays or {}
+		g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/pedestal_01.png", display_y=-1, display_h=2}
+	end
 	g.nice_tiler = nil
 	g.x = i
 	g.y = j
