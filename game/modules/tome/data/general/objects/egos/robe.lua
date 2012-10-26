@@ -229,7 +229,7 @@ newEntity{
 }
 newEntity{
 	power_source = {psionic=true},
-	name = "dreamer's ", suffix=true, instant_resolve=true,
+	name = "dreamer's ", prefix=true, instant_resolve=true,
 	keywords = {dreamer=true},
 	level_range = {40, 50},
 	greater_ego = 1,
@@ -243,7 +243,7 @@ newEntity{
 }
 newEntity{
 	power_source = {arcane=true},
-	name = "dispeller's ", suffix=true, instant_resolve=true,
+	name = "dispeller's ", prefix=true, instant_resolve=true,
 	keywords = {dispeller=true},
 	level_range = {40, 50},
 	greater_ego = 1,
