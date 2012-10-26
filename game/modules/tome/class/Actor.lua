@@ -1135,7 +1135,7 @@ function _M:doQuake(tg, x, y)
 	local locs = {}
 	local ms = {}
 	self:project(tg, x, y, function(tx, ty)
-		if not game.level.map.attrs(tx, ty, "no_teleport") and not game.level.map:checkAllEntities(tx, ty, "change_level") then
+		if not game.level.map.attrs(tx, ty, "no_teleport") and not game.level.map:checkAllEntities(tx, ty, "change_level") and game.level.map(tx, ty, Map.TERRAIN) and (game.level.map(tx, ty, Map.TERRAIN).dig or game.level.map(tx, ty, Map.TERRAIN).grow) then
 			locs[#locs+1] = {x=tx,y=ty}
 			ms[#ms+1] = {map=game.level.map.map[tx + ty * w], attrs=game.level.map.attrs[tx + ty * w]}
 		end
