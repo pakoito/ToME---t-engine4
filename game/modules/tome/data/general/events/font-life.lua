@@ -44,6 +44,7 @@ local grids = core.fov.circle_grids(x, y, 2, "do not block")
 for x, yy in pairs(grids) do for y, _ in pairs(yy) do
 	local g = game.level.map(x, y, engine.Map.TERRAIN):cloneFull()
 	g.on_stand = g.on_stand or on_stand
+	g.on_stand_safe = true
 	game.zone:addEntity(game.level, g, "terrain", x, y)
 end end
 game.log("==== FONT at %dx%d", x,y)

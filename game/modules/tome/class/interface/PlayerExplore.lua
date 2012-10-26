@@ -1943,6 +1943,9 @@ function _M:autoExplore()
 					elseif terrain.mindam or terrain.maxdam then
 						move_cost = move_cost + 32
 						is_slow = true
+					elseif terrain.on_stand and not terrain.on_stand_safe then
+						move_cost = move_cost + 21
+						is_slow = true
 					elseif terrain.air_level and terrain.air_level < 0 and not ((self.can_breath.water or 0) > 0) then
 						move_cost = move_cost + 15
 						is_slow = true
@@ -1989,9 +1992,14 @@ function _M:autoExplore()
 								end
 							else -- door is safe to move through
 								node[3] = move_cost + 1
-								values[c] = move_cost + 1
-								current_tiles_next[#current_tiles_next + 1] = node
 								safe_doors[c] = true
+								if is_slow then
+									slow_values[c] = move_cost + 1
+									slow_tiles[#slow_tiles + 1] = node
+								else
+									values[c] = move_cost + 1
+									current_tiles_next[#current_tiles_next + 1] = node
+								end
 							end
 						-- go to next level, exit, previous level, or orb portal (in that order of precedence)
 						elseif terrain.change_level then
