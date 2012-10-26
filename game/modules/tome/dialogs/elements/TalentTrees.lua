@@ -144,7 +144,7 @@ function _M:generate()
 
 	self.scroll = 1
 	--self.max_h = self.grid.max * (self.frame_size + self.frame_offset)
-FIX ME SMOOTH SCROLL CLIP
+--FIX ME SMOOTH SCROLL CLIP
 	-- Draw the scrollbar
 	self.scroll_inertia = 0
 	if self.scrollbar then
