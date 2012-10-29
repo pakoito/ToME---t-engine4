@@ -31,7 +31,7 @@ newChat{ id="fool",
 		{"...", action = function(npc, player)
 			game:onTickEnd(function()
 				game.level:removeEntity(npc)
-				game:changeLevel(2, (rng.table{"trollmire","ruins-kor-pul","scintillating-caves","rhaloren-camp","norgos-lair","heart-gloom"}))
+				game:changeLevel(2, (rng.table{"trollmire","ruins-kor-pul","scintillating-caves","rhaloren-camp","norgos-lair","heart-gloom"}), {direct_switch=true})
 
 				local a = require("engine.Astar").new(game.level.map, player)
 
