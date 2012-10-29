@@ -1200,6 +1200,8 @@ function _M:playerCheckSustains()
 end
 
 function _M:playerLevelup(on_finish, on_birth)
+	package.loaded["mod.dialogs.LevelupDialog"] = nil
+	package.loaded["mod.dialogs.elements.TalentTrees"] = nil
 	local LevelupDialog = require "mod.dialogs.LevelupDialog"
 	local ds = LevelupDialog.new(self, on_finish, on_birth)
 	game:registerDialog(ds)

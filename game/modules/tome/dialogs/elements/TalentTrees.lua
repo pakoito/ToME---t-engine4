@@ -33,17 +33,24 @@ function _M:init(t)
 	self.tooltip = assert(t.tooltip, "no tooltip")
 	self.on_use = assert(t.on_use, "no on_use")
 	self.on_expand = t.on_expand
-	self.scrollbar = true
+	
 	self.no_cross = t.no_cross
 	self.dont_select_top = t.dont_select_top
 	self.no_tooltip = t.no_tooltip
+	self.clip_area = t.clip_area or { w = self.w, h = self.h }
 
 	self.icon_size = 48
 	self.frame_size = 50
 	self.icon_offset = 1
 	self.frame_offset = 5
-
+	_, self.fh = self.font:size("")
+	self.fh = self.fh - 2
+	
+	self.scrollbar = t.scrollbar
+	self.scroll_inertia = 0
+	
 	self.shadow = 0.7
+	self.last_input_was_keyboard = false
 
 	self.frame_sel = self:makeFrame("ui/selector-sel", self.frame_size, self.frame_size)
 	self.frame_usel = self:makeFrame("ui/selector", self.frame_size, self.frame_size)
@@ -54,18 +61,127 @@ function _M:init(t)
 	Base.init(self, t)
 end
 
+function _M:generate()
+	self.mouse:reset()
+	self.key:reset()
+	
+	-- generate the scrollbar
+	self.scroll_inertia = 0
+	self.scroll = 0
+	if self.scrollbar then self.scrollbar = Slider.new{size=self.h, max=10000} end
+	
+	self.sel_i = 1
+	self.sel_j = 1
+	self.max_h = 0
+	
+	self.mousezones = {}
+	self:redrawAllItems()
+	
+	-- calculate each tree items height
+	for i = 1, #self.tree do
+		local tree = self.tree[i]
+		local key = tree.text_status
+		local current_h = key and key.h or 0
+		if tree.shown then current_h = current_h + self.frame_size + (key and key.h or 0) + 16 end
+		self.max_h = self.max_h + current_h
+		tree.h = current_h
+	end
+	
+	-- generate the scrollbar
+--	if self.scrollbar then self.scrollbar.max = self.max_h - self.h + 2 end
+
+	-- Add UI controls
+	self.mouse:registerZone(0, 0, self.w, self.h, function(button, x, y, xrel, yrel, bx, by, event)
+		self.last_input_was_keyboard = false
+		
+		if event == "button" and button == "wheelup" then if self.scrollbar then self.scroll_inertia = math.min(self.scroll_inertia, 0) - 5 end
+		elseif event == "button" and button == "wheeldown" then if self.scrollbar then self.scroll_inertia = math.max(self.scroll_inertia, 0) + 5 end
+		end
+
+		if button == "middle" and self.scrollbar then
+			if not self.scroll_drag then
+				self.scroll_drag = true
+				self.scroll_drag_x_start = x
+				self.scroll_drag_y_start = y
+			else
+				self.scrollbar.pos = util.minBound(self.scrollbar.pos + y - self.scroll_drag_y_start, 0, self.scrollbar.max)
+				self.scroll_drag_x_start = x
+				self.scroll_drag_y_start = y
+			end
+		else
+			self.scroll_drag = false
+		end
+
+		local done = false
+		for i = 1, #self.mousezones do
+			local mz = self.mousezones[i]
+			if x >= mz.x1 and x <= mz.x2 and y >= mz.y1 and y <= mz.y2 then
+				if not self.last_mz or mz.item ~= self.last_mz.item then
+					local str, fx, fy = self.tooltip(mz.item)
+					mz.tx, mz.ty = fx or (self.last_display_x + mz.x2), fy or (self.last_display_y + mz.y1)
+					if not self.no_tooltip then game:tooltipDisplayAtMap(mz.tx, mz.ty, str) end
+				end
+
+				if event == "button" and (button == "left" or button == "right") then
+					if mz.item.type then
+						if x - mz.x1 >= self.plus.w then self:onUse(mz.item, button == "left")
+						else self:onExpand(mz.item, button == "left") end
+					else
+						self:onUse(mz.item, button == "left")
+					end
+				end
+
+				self.last_mz = mz
+				self.sel_i = mz.i
+				self.sel_j = mz.j
+				done = true
+				break
+			end
+		end
+		if not done then game.tooltip_x = nil self.last_mz = nil end
+
+
+		if self.last_mz and event == "button" and (button == "left" or button == "right") then
+			if self.last_mz.item.type then
+				if x - self.last_mz.x1 >= self.plus.w then self:onUse(self.last_mz.item, button == "left")
+				elseif not self.no_cross then self:onExpand(self.last_mz.item, button == "left") end
+			else
+				self:onUse(self.last_mz.item, button == "left")
+			end
+		end
+	end)
+	self.key:addBinds{
+		ACCEPT = function() if self.last_mz then self:onUse(self.last_mz.item, true) end end,
+		MOVE_UP = function() self.last_input_was_keyboard = true self:moveSel(-1, 0) end,
+		MOVE_DOWN = function() self.last_input_was_keyboard = true self:moveSel(1, 0) end,
+		MOVE_LEFT = function() self.last_input_was_keyboard = true self:moveSel(0, -1) end,
+		MOVE_RIGHT = function() self.last_input_was_keyboard = true self:moveSel(0, 1) end,
+	}
+	self.key:addCommands{
+		[{"_RETURN","ctrl"}] = function() if self.last_mz then self:onUse(self.last_mz.item, false) end end,
+		[{"_UP","ctrl"}] = function() self.last_input_was_keyboard = false if self.scrollbar then self.scroll_inertia = math.min(self.scroll_inertia, 0) - 5 end end,
+		[{"_DOWN","ctrl"}] = function() self.last_input_was_keyboard = false if self.scrollbar then self.scroll_inertia = math.max(self.scroll_inertia, 0) + 5 end end,
+		_HOME = function() if self.scrollbar then self.scrollbar.pos = 0 end end,
+		_END = function() if self.scrollbar then self.scrollbar.pos = self.scrollbar.max end end,
+		_PAGEUP = function() if self.scrollbar then self.scrollbar.pos = util.minBound(self.scrollbar.pos - self.h, 0, self.scrollbar.max) end end,
+		_PAGEDOWN = function() if self.scrollbar then self.scrollbar.pos = util.minBound(self.scrollbar.pos + self.h, 0, self.scrollbar.max) end end,
+		_SPACE = function() if self.last_mz and self.last_mz.item.type then self:onExpand(self.last_mz.item) end end
+	}
+end
+
 function _M:onUse(item, inc)
-	self.last_scroll = nil
 	self.on_use(item, inc)
 end
 
 function _M:onExpand(item, inc)
-	self.last_scroll = nil
 	item.shown = not item.shown
+	local current_h = item.shown and (self.frame_size + 2 * self.fh + 16) or self.fh
+	self.max_h = self.max_h + (item.shown and 1 or -1 ) * (self.frame_size + self.fh + 16)
 	if self.scrollbar then 
-		self.scrollbar.max = 10000
+		self.scrollbar.max = self.max_h - self.h 
 		self.scrollbar.pos = util.minBound(self.scrollbar.pos, 0, self.scrollbar.max)
 	end
+	item.h = current_h
 	if self.on_expand then self.on_expand(item) end
 end
 
@@ -77,10 +193,6 @@ function _M:updateTooltip()
 	local mz = self.last_mz
 	local str = self.tooltip(mz.item)
 	if not self.no_tooltip then game:tooltipDisplayAtMap(mz.tx or (self.last_display_x + mz.x2), mz.ty or (self.last_display_y + mz.y1), str) end
-end
-
-function _M:doScroll(v)
-	self.scroll = util.bound(self.scroll + v, 1, self.max_display)
 end
 
 function _M:moveSel(i, j)
@@ -121,98 +233,21 @@ function _M:moveSel(i, j)
 		end
 	end
 
-	self.last_scroll = nil
-	self.scroll = util.scroll(self.sel_i, self.scroll, self.max_display)
-	self:display(self.last_display_bx, self.last_display_by, 0, self.last_display_x, self.last_display_y)
-
-	for i = 1, #self.mousezones do
-		local mz = self.mousezones[i]
-		if mz.item == match then self.last_mz = mz break end
-	end
-
-	self:display(self.last_display_bx, self.last_display_by, 0, self.last_display_x, self.last_display_y)
-
-	if not self.last_mz then return end
-	local str, fx, fy = self.tooltip(self.last_mz.item)
-	self.last_mz.tx, self.last_mz.ty = fx or (self.last_display_x + self.last_mz.x2), fy or (self.last_display_y + self.last_mz.y1)
-	if not self.no_tooltip then game:tooltipDisplayAtMap(self.last_mz.tx, self.last_mz.ty, str) end
-end
-
-function _M:generate()
-	self.mouse:reset()
-	self.key:reset()
-
-	self.scroll = 1
-	--self.max_h = self.grid.max * (self.frame_size + self.frame_offset)
---FIX ME SMOOTH SCROLL CLIP
-	-- Draw the scrollbar
-	self.scroll_inertia = 0
-	if self.scrollbar then
-		self.scrollbar = Slider.new{size=self.h, max=10000}
-	end
-
-	self.sel_i = 1
-	self.sel_j = 1
-
-	self.mousezones = {}
-
-	self:redrawAllItems()
-
-	-- Add UI controls
-	self.mouse:registerZone(0, 0, self.w, self.h, function(button, x, y, xrel, yrel, bx, by, event)
-		if event == "button" and button == "wheelup" then if self.scrollbar then self.scroll_inertia = math.min(self.scroll_inertia, 0) - 5 end
-		elseif event == "button" and button == "wheeldown" then if self.scrollbar then self.scroll_inertia = math.max(self.scroll_inertia, 0) + 5 end
-		end
---		if event == "button" and button == "wheelup" then self:doScroll(-1)
---		elseif event == "button" and button == "wheeldown" then self:doScroll(1)
---		end
-
-		local done = false
-		for i = 1, #self.mousezones do
-			local mz = self.mousezones[i]
-			if x >= mz.x1 and x <= mz.x2 and y >= mz.y1 and y <= mz.y2 then
-				if not self.last_mz or mz.item ~= self.last_mz.item then
-					local str, fx, fy = self.tooltip(mz.item)
-					mz.tx, mz.ty = fx or (self.last_display_x + mz.x2), fy or (self.last_display_y + mz.y1)
-					if not self.no_tooltip then game:tooltipDisplayAtMap(mz.tx, mz.ty, str) end
+	if self.scrollbar and self.last_input_was_keyboard then
+		local pos = 0
+		for i = 1, #self.tree do
+			tree = self.tree[i]
+			pos = pos + tree.h
+			-- we've reached selected row
+			if self.sel_i == i then
+				-- check if it was visible if not go scroll over there
+				if pos - tree.h < self.scrollbar.pos then self.scrollbar.pos = util.minBound(pos - tree.h, 0, self.scrollbar.max)
+				elseif pos > self.scrollbar.pos + self.h then self.scrollbar.pos = util.minBound(pos - self.h, 0, self.scrollbar.max)
 				end
-
-				if event == "button" and (button == "left" or button == "right") then
-					if mz.item.type then
-						if x - mz.x1 >= self.plus.w then self:onUse(mz.item, button == "left")
-						else self:onExpand(mz.item, button == "left") end
-					else
-						self:onUse(mz.item, button == "left")
-					end
-				end
-
-				self.last_mz = mz
-				self.sel_i = mz.i
-				self.sel_j = mz.j
-				done = true
 				break
 			end
 		end
-		if not done then game.tooltip_x = nil self.last_mz = nil end
-	end)
-	self.key:addBinds{
-		ACCEPT = function() if self.last_mz then self:onUse(self.last_mz.item, true) end end,
-		MOVE_UP = function() self:moveSel(-1, 0) end,
-		MOVE_DOWN = function() self:moveSel(1, 0) end,
-		MOVE_LEFT = function() self:moveSel(0, -1) end,
-		MOVE_RIGHT = function() self:moveSel(0, 1) end,
-	}
-	self.key:addCommands{
-		[{"_RETURN","ctrl"}] = function() if self.last_mz then self:onUse(self.last_mz.item, false) end end,
-		[{"_UP","ctrl"}] = function() self.key:triggerVirtual("MOVE_UP") end,
-		[{"_DOWN","ctrl"}] = function() self.key:triggerVirtual("MOVE_DOWN") end,
-		[{"_LEFT","ctrl"}] = function() self.key:triggerVirtual("MOVE_LEFT") end,
-		[{"_RIGHT","ctrl"}] = function() self.key:triggerVirtual("MOVE_RIGHT") end,
-		_HOME = function() self.sel_i = 1 self:moveSel(-1, 0) end,
-		_END = function() self.sel_i = #self.tree self:moveSel(1, 0)  end,
-		_PAGEUP = function() self:doScroll(-self.max_display) end,
-		_PAGEDOWN = function() self:doScroll(self.max_display) end,
-	}
+	end
 end
 
 function _M:drawItem(item)
@@ -237,6 +272,9 @@ function _M:drawItem(item)
 		local d = self.font:draw(str, self.font:size(str), c[1], c[2], c[3], true)[1]
 		self.font:setStyle("normal")
 		item.text_status = d
+		if ((not self.no_cross) and self.plus.w + 3 or 0) + item.text_status.w > self.w - (self.scrollbar and self.scrollbar.sel.w * 0.8 or 0) + 10 then
+			item.text_status.display_offset = { x_dir = 0, x = 0 }
+		end
 	end
 end
 
@@ -246,9 +284,18 @@ function _M:redrawAllItems()
 		self:drawItem(tree)
 		for j = 1, #tree.nodes do
 			local tal = tree.nodes[j]
+			if not tal.texture then tal.texture = self:getImage(tal.entity.image):glTexture() end
 			self:drawItem(tal)
 		end
 	end
+end
+
+function _M:on_select(item, force)
+	if self.prev_item == item and not force then return end
+	local str, fx, fy = self.tooltip(item)
+	tx,ty = fx or (self.last_display_x + self.last_mz.x2), fy or (self.last_display_y + self.last_mz.y1)
+	if not self.no_tooltip then game:tooltipDisplayAtMap(tx, ty, str) end
+	self.prev_item = item
 end
 
 function _M:display(x, y, nb_keyframes, screen_x, screen_y)
@@ -259,7 +306,9 @@ function _M:display(x, y, nb_keyframes, screen_x, screen_y)
 
 	if self.scrollbar then
 		local tmp_pos = self.scrollbar.pos
+		print(self.scrollbar.pos,self.scrollbar.max, self.scroll_inertia)
 		self.scrollbar.pos = util.minBound(self.scrollbar.pos + self.scroll_inertia, 0, self.scrollbar.max)
+		print(" =>",self.scrollbar.pos)
 		if self.scroll_inertia > 0 then self.scroll_inertia = math.max(self.scroll_inertia - 1, 0)
 		elseif self.scroll_inertia < 0 then self.scroll_inertia = math.min(self.scroll_inertia + 1, 0)
 		end
@@ -269,16 +318,17 @@ function _M:display(x, y, nb_keyframes, screen_x, screen_y)
 	local mz = {}
 	if self.last_scroll ~= self.scroll then self.mousezones = mz end
 
-	local dx, dy = 0, -self.scrollbar.pos
+	local dx, dy = 0, self.scrollbar and -self.scrollbar.pos or 0
+	local bdx, bdy = dx, dy
 
 	core.display.glScissor(true, screen_x, screen_y, self.w, self.h)
 
 	if self.last_mz then
-		self:drawFrame(self.focused and self.frame_sel or self.frame_usel, x+self.last_mz.x1-2, y+self.last_mz.y1-2, 1, 1, 1, 1, self.last_mz.x2-self.last_mz.x1+4, self.last_mz.y2-self.last_mz.y1+4)
+		self:drawFrame(self.focused and self.frame_sel or self.frame_usel, dx+x+self.last_mz.x1-2, dy+y+self.last_mz.y1-2, 1, 1, 1, 1, self.last_mz.x2-self.last_mz.x1+4, self.last_mz.y2-self.last_mz.y1+4)
 	end
 
 	self.max_display = 1
-	for i = self.scroll, #self.tree do
+	for i = 1, #self.tree do
 		local tree = self.tree[i]
 
 		if tree.text_status then
@@ -315,12 +365,12 @@ function _M:display(x, y, nb_keyframes, screen_x, screen_y)
 				addh = key.h
 			end
 
-			mz[#mz+1] = {i=i, j=j, item=tal, x1=dx, y1=dy, x2=dx+self.frame_size, y2=dy+self.frame_size+addh}
+			mz[#mz+1] = {i=i, j=j, item=tal, x1=dx, y1=dy, x2=dx+self.frame_size-bdx, y2=dy-bdy+self.frame_size+addh}
 
 			dx = dx + self.frame_size + self.frame_offset
 			addh = addh + self.frame_size
 		end end
-		self.max_display = i - self.scroll + 1
+		--self.max_display = i - self.scroll + 1
 		dx = 0
 		dy = dy + addh + 12
 		if dy + self.frame_size >= self.h then break end
@@ -329,7 +379,7 @@ function _M:display(x, y, nb_keyframes, screen_x, screen_y)
 	core.display.glScissor(false)
 
 	if self.focused and self.scrollbar then
-		self.scrollbar.pos = self.scroll
+--		self.scrollbar.pos = self.scroll
 		self.scrollbar:display(x + self.w - self.scrollbar.w, y)
 	end
 
