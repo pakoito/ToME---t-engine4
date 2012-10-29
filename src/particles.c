@@ -37,6 +37,10 @@
 
 #define PARTICLE_ETERNAL 999999
 #define PARTICLES_PER_ARRAY 1000
+#define ENGINE_POINTS 0
+#define ENGINE_LINES 1
+#define BLEND_NORMAL 0
+#define BLEND_ADDITIVE 1
 
 int MAX_THREADS = 1;
 extern int nb_cpus;
@@ -175,6 +179,8 @@ static int particles_to_screen(lua_State *L)
 
 	SDL_mutexP(ps->lock);
 
+	if (ps->blend_mode == BLEND_ADDITIVE) glBlendFunc(GL_SRC_ALPHA,GL_ONE);
+
 	glBindTexture(GL_TEXTURE_2D, ps->texture);
 	glTexCoordPointer(2, GL_SHORT, 0, texcoords);
 	glColorPointer(4, GL_FLOAT, 0, colors);
@@ -201,6 +207,8 @@ static int particles_to_screen(lua_State *L)
 	glPopMatrix();
 	glTranslatef(-x, -y, 0);
 
+	if (ps->blend_mode) glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+
 	SDL_mutexV(ps->lock);
 
 	return 0;
@@ -214,6 +222,8 @@ static void particles_update(lua_State *L, particles_type *ps, bool last)
 	float zoom = 1;
 	int vert_idx = 0, col_idx = 0;
 	int i, j;
+	float a;
+	float lx, ly, lsize;
 
 	if (!ps->init) return;
 
@@ -267,45 +277,60 @@ static void particles_update(lua_State *L, particles_type *ps, bool last)
 
 			if (last)
 			{
-				if (!p->trail)
-				{
-					i = p->x * zoom - p->size / 2;
-					j = p->y * zoom - p->size / 2;
+				if (ps->engine == ENGINE_LINES) {
+					if (p->trail >= 0 && p->trail < ps->nb) {
+						lx = ps->particles[p->trail].x;
+						ly = ps->particles[p->trail].y;
+						lsize = ps->particles[p->trail].size;
+						a = atan2(p->y - ly, p->x - lx) + M_PI_2;
+//						printf("%d: trailing from %d: %fx%f(%f) with angle %f to %fx%f(%f)\n",w, p->trail, lx,ly,lsize,a*180/M_PI,p->x,p->y,p->size);
 
-					vertices[vert_idx] = i; vertices[vert_idx+1] = j;
-					vertices[vert_idx+2] = p->size + i; vertices[vert_idx+3] = j;
-					vertices[vert_idx+4] = p->size + i; vertices[vert_idx+5] = p->size + j;
-					vertices[vert_idx+6] = i; vertices[vert_idx+7] = p->size + j;
-				}
-				else
-				{
-					if ((p->ox <= p->x) && (p->oy <= p->y))
-					{
-						vertices[vert_idx+0] = 0 +  p->ox * zoom; vertices[vert_idx+1] = 0 +  p->oy * zoom;
-						vertices[vert_idx+2] = p->size +  p->x * zoom; vertices[vert_idx+3] = 0 +  p->y * zoom;
-						vertices[vert_idx+4] = p->size +  p->x * zoom; vertices[vert_idx+5] = p->size +  p->y * zoom;
-						vertices[vert_idx+6] = 0 +  p->x * zoom; vertices[vert_idx+7] = p->size +  p->y * zoom;
+						vertices[vert_idx] = lx + cos(a) * lsize / 2; vertices[vert_idx+1] = ly + sin(a) * lsize / 2;
+						vertices[vert_idx+2] = lx - cos(a) * lsize / 2; vertices[vert_idx+3] = ly - sin(a) * lsize / 2;
+						vertices[vert_idx+4] = p->x - cos(a) * p->size / 2; vertices[vert_idx+5] = p->y - sin(a) * p->size / 2;
+						vertices[vert_idx+6] = p->x + cos(a) * p->size / 2; vertices[vert_idx+7] = p->y + sin(a) * p->size / 2;
 					}
-					else if ((p->ox <= p->x) && (p->oy > p->y))
+				} else {
+					if (!p->trail)
 					{
-						vertices[vert_idx+0] = 0 +  p->x * zoom; vertices[vert_idx+1] = 0 +  p->y * zoom;
-						vertices[vert_idx+2] = p->size +  p->x * zoom; vertices[vert_idx+3] = 0 +  p->y * zoom;
-						vertices[vert_idx+4] = p->size +  p->x * zoom; vertices[vert_idx+5] = p->size +  p->y * zoom;
-						vertices[vert_idx+6] = 0 +  p->ox * zoom; vertices[vert_idx+7] = p->size +  p->oy * zoom;
+						i = p->x * zoom - p->size / 2;
+						j = p->y * zoom - p->size / 2;
+
+						vertices[vert_idx] = i; vertices[vert_idx+1] = j;
+						vertices[vert_idx+2] = p->size + i; vertices[vert_idx+3] = j;
+						vertices[vert_idx+4] = p->size + i; vertices[vert_idx+5] = p->size + j;
+						vertices[vert_idx+6] = i; vertices[vert_idx+7] = p->size + j;
 					}
-					else if ((p->ox > p->x) && (p->oy <= p->y))
+					else
 					{
-						vertices[vert_idx+0] = 0 +  p->x * zoom; vertices[vert_idx+1] = 0 +  p->y * zoom;
-						vertices[vert_idx+2] = p->size +  p->ox * zoom; vertices[vert_idx+3] = 0 +  p->oy * zoom;
-						vertices[vert_idx+4] = p->size +  p->x * zoom; vertices[vert_idx+5] = p->size +  p->y * zoom;
-						vertices[vert_idx+6] = 0 +  p->x * zoom; vertices[vert_idx+7] = p->size +  p->y * zoom;
-					}
-					else if ((p->ox > p->x) && (p->oy > p->y))
-					{
-						vertices[vert_idx+0] = 0 +  p->x * zoom; vertices[vert_idx+1] = 0 +  p->y * zoom;
-						vertices[vert_idx+2] = p->size +  p->x * zoom; vertices[vert_idx+3] = 0 +  p->y * zoom;
-						vertices[vert_idx+4] = p->size +  p->ox * zoom; vertices[vert_idx+5] = p->size +  p->oy * zoom;
-						vertices[vert_idx+6] = 0 +  p->x * zoom; vertices[vert_idx+7] = p->size +  p->y * zoom;
+						if ((p->ox <= p->x) && (p->oy <= p->y))
+						{
+							vertices[vert_idx+0] = 0 +  p->ox * zoom; vertices[vert_idx+1] = 0 +  p->oy * zoom;
+							vertices[vert_idx+2] = p->size +  p->x * zoom; vertices[vert_idx+3] = 0 +  p->y * zoom;
+							vertices[vert_idx+4] = p->size +  p->x * zoom; vertices[vert_idx+5] = p->size +  p->y * zoom;
+							vertices[vert_idx+6] = 0 +  p->x * zoom; vertices[vert_idx+7] = p->size +  p->y * zoom;
+						}
+						else if ((p->ox <= p->x) && (p->oy > p->y))
+						{
+							vertices[vert_idx+0] = 0 +  p->x * zoom; vertices[vert_idx+1] = 0 +  p->y * zoom;
+							vertices[vert_idx+2] = p->size +  p->x * zoom; vertices[vert_idx+3] = 0 +  p->y * zoom;
+							vertices[vert_idx+4] = p->size +  p->x * zoom; vertices[vert_idx+5] = p->size +  p->y * zoom;
+							vertices[vert_idx+6] = 0 +  p->ox * zoom; vertices[vert_idx+7] = p->size +  p->oy * zoom;
+						}
+						else if ((p->ox > p->x) && (p->oy <= p->y))
+						{
+							vertices[vert_idx+0] = 0 +  p->x * zoom; vertices[vert_idx+1] = 0 +  p->y * zoom;
+							vertices[vert_idx+2] = p->size +  p->ox * zoom; vertices[vert_idx+3] = 0 +  p->oy * zoom;
+							vertices[vert_idx+4] = p->size +  p->x * zoom; vertices[vert_idx+5] = p->size +  p->y * zoom;
+							vertices[vert_idx+6] = 0 +  p->x * zoom; vertices[vert_idx+7] = p->size +  p->y * zoom;
+						}
+						else if ((p->ox > p->x) && (p->oy > p->y))
+						{
+							vertices[vert_idx+0] = 0 +  p->x * zoom; vertices[vert_idx+1] = 0 +  p->y * zoom;
+							vertices[vert_idx+2] = p->size +  p->x * zoom; vertices[vert_idx+3] = 0 +  p->y * zoom;
+							vertices[vert_idx+4] = p->size +  p->ox * zoom; vertices[vert_idx+5] = p->size +  p->oy * zoom;
+							vertices[vert_idx+6] = 0 +  p->x * zoom; vertices[vert_idx+7] = p->size +  p->y * zoom;
+						}
 					}
 				}
 
@@ -485,6 +510,23 @@ int luaopen_particles(lua_State *L)
 	lua_pushstring(L, "ETERNAL");
 	lua_pushnumber(L, PARTICLE_ETERNAL);
 	lua_rawset(L, -3);
+
+	lua_pushstring(L, "ENGINE_LINES");
+	lua_pushnumber(L, ENGINE_LINES);
+	lua_rawset(L, -3);
+
+	lua_pushstring(L, "ENGINE_POINTS");
+	lua_pushnumber(L, ENGINE_POINTS);
+	lua_rawset(L, -3);
+
+	lua_pushstring(L, "BLEND_NORMAL");
+	lua_pushnumber(L, BLEND_NORMAL);
+	lua_rawset(L, -3);
+
+	lua_pushstring(L, "BLEND_ADDITIVE");
+	lua_pushnumber(L, BLEND_ADDITIVE);
+	lua_rawset(L, -3);
+
 	lua_pop(L, 1);
 
 	// Make a table to store all textures
@@ -652,9 +694,18 @@ void thread_particle_init(particle_thread *pt, plist *l)
 	lua_pushstring(L, "system_rotation");
 	lua_gettable(L, -2);
 	ps->rotate = lua_tonumber(L, -1); lua_pop(L, 1);
+
 	lua_pushstring(L, "system_rotationv");
 	lua_gettable(L, -2);
 	ps->rotate_v = lua_tonumber(L, -1); lua_pop(L, 1);
+
+	lua_pushstring(L, "engine");
+	lua_gettable(L, -2);
+	ps->engine = lua_tonumber(L, -1); lua_pop(L, 1);
+
+	lua_pushstring(L, "blend_mode");
+	lua_gettable(L, -2);
+	ps->blend_mode = lua_tonumber(L, -1); lua_pop(L, 1);
 
 	lua_pushstring(L, "generator");
 	lua_gettable(L, -2);

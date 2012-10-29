@@ -755,17 +755,9 @@ newEffect{
 		local tg = {type="ball", x=self.x, y=self.y, radius=eff.radius, selffire=false}
 		local dam = eff.dam
 		eff.src:project(tg, self.x, self.y, DamageType.LIGHTNING, rng.avg(dam / 3, dam, 3))
-		local x, y = self.x, self.y
-		-- Lightning ball gets a special treatment to make it look neat
-		local sradius = (tg.radius + 0.5) * (engine.Map.tile_w + engine.Map.tile_h) / 2
-		local nb_forks = 16
-		local angle_diff = 360 / nb_forks
-		for i = 0, nb_forks - 1 do
-			local a = math.rad(rng.range(0+i*angle_diff,angle_diff+i*angle_diff))
-			local tx = x + math.floor(math.cos(a) * tg.radius)
-			local ty = y + math.floor(math.sin(a) * tg.radius)
-			game.level.map:particleEmitter(x, y, tg.radius, "lightning", {radius=tg.radius, grids=grids, tx=tx-x, ty=ty-y, nb_particles=12, life=4})
-		end
+
+		if core.shader.active() then game.level.map:particleEmitter(self.x, self.y, tg.radius, "ball_lightning_beam", {radius=tg.radius}, {type="lightning"})
+		else game.level.map:particleEmitter(self.x, self.y, tg.radius, "ball_lightning_beam", {radius=tg.radius}) end
 
 		game:playSoundNear(self, "talents/lightning")
 	end,

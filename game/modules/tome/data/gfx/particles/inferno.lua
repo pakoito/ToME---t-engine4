@@ -19,7 +19,7 @@
 
 base_size = 32
 
-return { generator = function()
+return { blend_mode=core.particles.BLEND_ADDITIVE, generator = function()
 	local ad = rng.range(20+90, 160+90)
 	local a = math.rad(ad)
 	local dir = math.rad(ad + 90)

@@ -1248,7 +1248,10 @@ function _M:setupCommands()
 			end end
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
-			game.player:saveUUID()
+			local x, y = game.player.x + 5, game.player.y
+			game.level.map:particleEmitter(game.player.x, game.player.y, math.max(math.abs(x-game.player.x), math.abs(y-game.player.y)), "lightning_test", {tx=x-game.player.x, ty=y-game.player.y}, {type="lightning"})
+			game.level.map:particleEmitter(game.player.x, game.player.y, math.max(math.abs(-5), math.abs(y-game.player.y)), "lightning_test", {tx=-5, ty=y-game.player.y})
+			
 do return end
 			local f, err = loadfile("/data/general/events/glowing-chest.lua")
 			print(f, err)

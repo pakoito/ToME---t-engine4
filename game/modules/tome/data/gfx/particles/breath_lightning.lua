@@ -17,46 +17,62 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-local nb = 12
-local dir = 0
-local spread = spread or 55/2
 local radius = radius or 6
+local spread = math.rad(spread or 55/2)
 
-dir = math.deg(math.atan2(ty, tx))
+local points = {}
 
-return { generator = function()
-	local sradius = (radius + 0.5) * (engine.Map.tile_w + engine.Map.tile_h) / 2
-	local ad = rng.float(dir - spread, dir + spread)
-	local a = math.rad(ad)
-	local r = 0
-	local x = r * math.cos(a)
-	local y = r * math.sin(a)
-	local static = rng.percent(40)
-	local vel = sradius * ((24 - nb * 1.4) / 24) / 12
+local basedir = math.atan2(ty, tx)
+local basesize = radius * (engine.Map.tile_w + engine.Map.tile_h) / 2
+
+for fork_i = -15, 15 do
+	local tx = math.cos(basedir + fork_i * spread / 15) * basesize
+	local ty = math.sin(basedir + fork_i * spread / 15) * basesize
+	local basedir = math.atan2(ty, tx)
+
+	local bc = rng.float(0.8, 1)
+	local c = 1
+	local a = 1 or rng.float(0.3, 0.6)
+	local size = 3
+	local starta = basedir+math.pi/2
+	local starts = rng.range(-4, 4)
+	points[#points+1] = {bc=bc, c=c, a=a, size=size, x=math.cos(starta) * starts, y=math.sin(starta) * starts, prev=-1}
+
+	local nb = radius * 2
+	for i = 0, nb - 1 do
+		-- Split point in the segment
+		local split = rng.range(0, basesize / nb) + i * (basesize / nb)
+		
+		local dev = math.rad(rng.range(-8, 8))
+		
+		points[#points+1] = {bc=bc, c=c, a=a, movea=basedir+dev+math.pi/2, size=size + rng.range(-2, 2), x=math.cos(basedir+dev) * split, y=math.sin(basedir+dev) * split, prev=#points-1}
+	end
+
+	points[#points+1] = {bc=bc, c=c, a=a, size=size, x=tx, y=ty, prev=#points-1}
+end
+
+-- Populate the lightning based on the forks
+return { engine=core.particles.ENGINE_LINES, generator = function()
+	local p = table.remove(points, 1)
 
 	return {
-		trail = 1,
-		life = 12,
-		size = 12 - (12 - nb) * 0.7, sizev = 0, sizea = 0,
+		life = 10, trail=p.prev,
+		size = p.size, sizev = 0, sizea = 0,
 
-		x = x, xv = 0, xa = 0,
-		y = y, yv = 0, ya = 0,
-		dir = a, dirv = 0, dira = 0,
-		vel = rng.float(vel * 0.6, vel * 1.2), velv = 0, vela = 0,
+		x = p.x, xv = 0, xa = 0,
+		y = p.y, yv = 0, ya = 0,
+		dir = p.movea, dirv = 0, dira = 0,
+		vel = rng.float(-1, 1), velv = 0, vela = 0,
 
-		r = rng.range(140, 200)/255, rv = 0, ra = 0,
-		g = rng.range(180, 220)/255, gv = 0, ga = 0,
-		b = rng.range(220, 240)/255, bv = 0, ba = 0,
-		a = rng.range(230, 255)/255, av = 0, aa = 0,
+		r = p.bc, rv = 0, ra = 0,
+		g = p.bc, gv = 0, ga = 0,
+		b = p.c, bv = 0, ba = 0,
+		a = p.a, av = 0, aa = -0.02,
 	}
 end, },
 function(self)
-	if nb > 0 then
-		local i = math.min(nb, 6)
-		i = (i * i) * radius
-		self.ps:emit(i)
-		nb = nb - 1
+	while #points > 0 do
+		self.ps:emit(#points)
 	end
 end,
-30*radius*7*12,
-"particle_cloud"
+#points, "particles_images/beam"

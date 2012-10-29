@@ -31,7 +31,7 @@ typedef struct {
 	float dir, dirv, dira, vel, velv, vela;
 	float r, g, b, a, rv, gv, bv, av, ra, ga, ba, aa;
 	int life;
-	bool trail;
+	int trail;
 } particle_type;
 
 struct s_plist;
@@ -78,6 +78,8 @@ typedef struct {
 	int r_max, g_max, b_max, a_max, rv_max, gv_max, bv_max, av_max, ra_max, ga_max, ba_max, aa_max;
 
 	int life_min, life_max;
+
+	int engine, blend_mode;
 
 	float rotate, rotate_v;
 

@@ -204,15 +204,8 @@ newTalent{
 		local dam = self:mindCrit(t.getDamage(self, t))
 		self:project(tg, x, y, DamageType.LIGHTNING_DAZE, rng.avg(dam / 3, dam, 3))
 
-		local sradius = (tg.radius + 0.5) * (engine.Map.tile_w + engine.Map.tile_h) / 2
-		local nb_forks = 24
-		local angle_diff = 55 / nb_forks
-		local base_a = math.deg(math.atan2(y-self.y, x-self.x)) - 27.5
-		for i = 0, nb_forks - 1 do
-			local a = math.rad(rng.range(base_a+i*angle_diff,base_a+angle_diff+i*angle_diff))
-			local tx = x + math.floor(math.cos(a) * tg.radius)
-			local ty = y + math.floor(math.sin(a) * tg.radius)
-			game.level.map:particleEmitter(self.x, self.y, tg.radius, "lightning", {radius=tg.radius, grids=grids, tx=tx-x, ty=ty-y, nb_particles=25, life=12})
+		if core.shader.active() then game.level.map:particleEmitter(self.x, self.y, tg.radius, "breath_lightning", {radius=tg.radius, tx=x-self.x, ty=y-self.y}, {type="lightning"})
+		else game.level.map:particleEmitter(self.x, self.y, tg.radius, "breath_lightning", {radius=tg.radius, tx=x-self.x, ty=y-self.y})
 		end
 
 		game:playSoundNear(self, "talents/breath")
