@@ -99,9 +99,12 @@ function _M:generate()
 			self.scroll_drag = false
 		end
 
+		y = y - (self.scrollbar and -self.scrollbar.pos or 0)
+
 		local done = false
 		for i = 1, #self.mousezones do
 			local mz = self.mousezones[i]
+			print("====",x,y,"::",mz.x1,mz.x2,"x",mz.y1,mz.y2,"::",mz.name)
 			if x >= mz.x1 and x <= mz.x2 and y >= mz.y1 and y <= mz.y2 then
 				if not self.last_mz or mz.item ~= self.last_mz.item then
 					local str, fx, fy = self.tooltip(mz.item)
@@ -127,7 +130,7 @@ function _M:generate()
 		end
 		if not done then game.tooltip_x = nil self.last_mz = nil end
 
-
+--[[
 		if self.last_mz and event == "button" and (button == "left" or button == "right") then
 			if self.last_mz.item.type then
 				if x - self.last_mz.x1 >= self.plus.w then self:onUse(self.last_mz.item, button == "left")
@@ -136,6 +139,7 @@ function _M:generate()
 				self:onUse(self.last_mz.item, button == "left")
 			end
 		end
+]]
 	end)
 	self.key:addBinds{
 		ACCEPT = function() if self.last_mz then self:onUse(self.last_mz.item, true) end end,
@@ -162,15 +166,14 @@ end
 
 function _M:onExpand(item, inc)
 	item.shown = not item.shown
-	print("=====")
-	table.print(item)
 	local current_h = item.shown and (self.frame_size + 2 * self.fh + 16) or self.fh
 	self.max_h = self.max_h + (item.shown and 1 or -1 ) * (self.frame_size + self.fh + 16)
 	if self.scrollbar then 
-		self.scrollbar.max = self.max_h - self.h 
+		self.scrollbar.max = self.max_h
 		self.scrollbar.pos = util.minBound(self.scrollbar.pos, 0, self.scrollbar.max)
 	end
 	item.h = current_h
+	self.last_scroll = nil
 	if self.on_expand then self.on_expand(item) end
 end
 
@@ -336,7 +339,7 @@ function _M:display(x, y, nb_keyframes, screen_x, screen_y)
 			local key = tree.text_status
 			local cross = not tree.shown and self.plus or self.minus
 
-			mz[#mz+1] = {i=i,j=1, item=tree, x1=dx, y1=dy, x2=dx+cross.w + 3 + key.w, y2=dy+cross.h}
+			mz[#mz+1] = {i=i,j=1, name=tree.name, item=tree, x1=dx, y1=dy, x2=dx+cross.w + 3 + key.w, y2=dy+cross.h}
 
 			if not self.no_cross then
 				cross.t:toScreenFull(dx+x, dy+y + (-cross.h + key.h) / 2, cross.w, cross.h, cross.tw, cross.th)
@@ -366,7 +369,7 @@ function _M:display(x, y, nb_keyframes, screen_x, screen_y)
 				addh = key.h
 			end
 
-			mz[#mz+1] = {i=i, j=j, item=tal, x1=dx, y1=dy, x2=dx+self.frame_size-bdx, y2=dy-bdy+self.frame_size+addh}
+			mz[#mz+1] = {i=i, j=j, name=tal.name, item=tal, x1=dx, y1=dy, x2=dx+self.frame_size-bdx, y2=dy-bdy+self.frame_size+addh}
 
 			dx = dx + self.frame_size + self.frame_offset
 			addh = addh + self.frame_size
