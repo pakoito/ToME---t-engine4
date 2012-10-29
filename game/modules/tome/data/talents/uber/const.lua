@@ -140,6 +140,7 @@ uberTalent{
 	action = function(self, t)
 		local eff = self:hasEffect(self.EFF_FUNGAL_BLOOD)
 		self:heal(math.min(eff.power, self:getCon() * self.max_life / 100))
+		self:removeEffect(self.EFF_FUNGAL_BLOOD)
 		return true
 	end,
 	info = function(self, t)

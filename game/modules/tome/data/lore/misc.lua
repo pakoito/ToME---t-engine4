@@ -560,6 +560,16 @@ To gifts of Nature trust
 Your faith instead in tools arcane
 Now to Nature you are dust"]] }
 
+newLore{
+	id = "dreamscape-entry",
+	category = "dreamscape",
+	name = "If I Should Die Before I Wake",
+	lore = [[You wake suddenly from your unexpected slumber and attempt to quickly regain your bearings. However, you are not prepared for the bizarre vision that greets you: instead of land and sky you see only amorphous shapes and varying degrees of light. A strange psychedelic haze permeates the air and otherworldly colors and shadows flicker in and out of your peripheral vision. 
+As you begin to come to grips with this strange environment, you realize with horror that you cannot move! Your body feels as if it is completely without weight and try as you may you cannot budge an inch. You experience a sense of Déjà Vu as you recall past nightmares of being paralyzed. That's when it strikes you: you never woke up at all, you're still asleep! This epiphany is only reinforced when you notice a strange phenomenon: mirror copies of yourself are being slowly projected from where you stand and are moving about of their own volition.
+They all seem to be focused on something in particular, but what? Just as soon as you set your mind to discerning what your dreamselves are focusing on, you feel it. With horror, you realize that you are not alone here. 
+Somehow, your foe has invaded your very subconcious and is attacking you in your dreams. Still unable to move, your lucid mind races on how to handle such an insane and horrible situation. On a whim you concentrate on one of your projections and you find that you can control it. 
+Free now to face this nightmare, you turn to find your foe. While you have a sense that having one of your dreamselves destroyed may not by itself be catastrophic, what would happen if several or many are cut down? Unwilling to find out, you resolve yourself to end this offensive intrustion into your mind.]],
+}
 
 --------------------------------------------------------------
 -- Misc bosses

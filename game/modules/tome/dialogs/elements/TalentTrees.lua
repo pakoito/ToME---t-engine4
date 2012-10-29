@@ -77,23 +77,10 @@ function _M:generate()
 	self.mousezones = {}
 	self:redrawAllItems()
 	
-	-- calculate each tree items height
-	for i = 1, #self.tree do
-		local tree = self.tree[i]
-		local key = tree.text_status
-		local current_h = key and key.h or 0
-		if tree.shown then current_h = current_h + self.frame_size + (key and key.h or 0) + 16 end
-		self.max_h = self.max_h + current_h
-		tree.h = current_h
-	end
-	
-	-- generate the scrollbar
---	if self.scrollbar then self.scrollbar.max = self.max_h - self.h + 2 end
-
 	-- Add UI controls
 	self.mouse:registerZone(0, 0, self.w, self.h, function(button, x, y, xrel, yrel, bx, by, event)
 		self.last_input_was_keyboard = false
-		
+
 		if event == "button" and button == "wheelup" then if self.scrollbar then self.scroll_inertia = math.min(self.scroll_inertia, 0) - 5 end
 		elseif event == "button" and button == "wheeldown" then if self.scrollbar then self.scroll_inertia = math.max(self.scroll_inertia, 0) + 5 end
 		end
@@ -175,6 +162,8 @@ end
 
 function _M:onExpand(item, inc)
 	item.shown = not item.shown
+	print("=====")
+	table.print(item)
 	local current_h = item.shown and (self.frame_size + 2 * self.fh + 16) or self.fh
 	self.max_h = self.max_h + (item.shown and 1 or -1 ) * (self.frame_size + self.fh + 16)
 	if self.scrollbar then 
@@ -288,6 +277,20 @@ function _M:redrawAllItems()
 			self:drawItem(tal)
 		end
 	end
+
+	-- calculate each tree items height
+	self.max_h = 0
+	for i = 1, #self.tree do
+		local tree = self.tree[i]
+		local key = tree.text_status
+		local current_h = key and key.h or 0
+		if tree.shown then current_h = current_h + self.frame_size + (key and key.h or 0) + 16 end
+		self.max_h = self.max_h + current_h
+		tree.h = current_h
+	end
+	
+	-- generate the scrollbar
+	if self.scrollbar then self.scrollbar.max = self.max_h end
 end
 
 function _M:on_select(item, force)
@@ -306,9 +309,7 @@ function _M:display(x, y, nb_keyframes, screen_x, screen_y)
 
 	if self.scrollbar then
 		local tmp_pos = self.scrollbar.pos
-		print(self.scrollbar.pos,self.scrollbar.max, self.scroll_inertia)
 		self.scrollbar.pos = util.minBound(self.scrollbar.pos + self.scroll_inertia, 0, self.scrollbar.max)
-		print(" =>",self.scrollbar.pos)
 		if self.scroll_inertia > 0 then self.scroll_inertia = math.max(self.scroll_inertia - 1, 0)
 		elseif self.scroll_inertia < 0 then self.scroll_inertia = math.min(self.scroll_inertia + 1, 0)
 		end
@@ -373,7 +374,7 @@ function _M:display(x, y, nb_keyframes, screen_x, screen_y)
 		--self.max_display = i - self.scroll + 1
 		dx = 0
 		dy = dy + addh + 12
-		if dy + self.frame_size >= self.h then break end
+		if dy >= self.h then break end
 	end
 
 	core.display.glScissor(false)
