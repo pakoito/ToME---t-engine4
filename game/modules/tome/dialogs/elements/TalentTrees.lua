@@ -104,7 +104,6 @@ function _M:generate()
 		local done = false
 		for i = 1, #self.mousezones do
 			local mz = self.mousezones[i]
-			print("====",x,y,"::",mz.x1,mz.x2,"x",mz.y1,mz.y2,"::",mz.name)
 			if x >= mz.x1 and x <= mz.x2 and y >= mz.y1 and y <= mz.y2 then
 				if not self.last_mz or mz.item ~= self.last_mz.item then
 					local str, fx, fy = self.tooltip(mz.item)
@@ -320,7 +319,7 @@ function _M:display(x, y, nb_keyframes, screen_x, screen_y)
 	end
 
 	local mz = {}
-	if self.last_scroll ~= self.scroll then self.mousezones = mz end
+	if self.scrollbar and self.last_scroll ~= self.scrollbar.pos then self.mousezones = mz end
 
 	local dx, dy = 0, self.scrollbar and -self.scrollbar.pos or 0
 	local bdx, bdy = dx, dy
@@ -334,12 +333,12 @@ function _M:display(x, y, nb_keyframes, screen_x, screen_y)
 	self.max_display = 1
 	for i = 1, #self.tree do
 		local tree = self.tree[i]
-
+ 	
 		if tree.text_status then
 			local key = tree.text_status
 			local cross = not tree.shown and self.plus or self.minus
 
-			mz[#mz+1] = {i=i,j=1, name=tree.name, item=tree, x1=dx, y1=dy, x2=dx+cross.w + 3 + key.w, y2=dy+cross.h}
+			mz[#mz+1] = {i=i,j=1, name=tree.name, item=tree, x1=dx-bdx, y1=dy-bdy, x2=dx-bdx+cross.w + 3 + key.w, y2=dy-bdy+cross.h}
 
 			if not self.no_cross then
 				cross.t:toScreenFull(dx+x, dy+y + (-cross.h + key.h) / 2, cross.w, cross.h, cross.tw, cross.th)
@@ -369,7 +368,7 @@ function _M:display(x, y, nb_keyframes, screen_x, screen_y)
 				addh = key.h
 			end
 
-			mz[#mz+1] = {i=i, j=j, name=tal.name, item=tal, x1=dx, y1=dy, x2=dx+self.frame_size-bdx, y2=dy-bdy+self.frame_size+addh}
+			mz[#mz+1] = {i=i, j=j, name=tal.name, item=tal, x1=dx-bdx, y1=dy-bdy, x2=dx+self.frame_size-bdx, y2=dy-bdy+self.frame_size+addh}
 
 			dx = dx + self.frame_size + self.frame_offset
 			addh = addh + self.frame_size
@@ -385,7 +384,7 @@ function _M:display(x, y, nb_keyframes, screen_x, screen_y)
 	if self.focused and self.scrollbar then
 --		self.scrollbar.pos = self.scroll
 		self.scrollbar:display(x + self.w - self.scrollbar.w, y)
-	end
 
-	self.last_scroll = self.scroll
+		self.last_scroll = self.scrollbar.pos
+	end
 end
