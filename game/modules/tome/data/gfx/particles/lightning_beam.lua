@@ -29,19 +29,37 @@ for fork_i = 1, 10 do
 	local bc = rng.float(0.8, 1)
 	local c = 1
 	local a = 1 or rng.float(0.3, 0.6)
-	local size = 2
+	local size = fork_i == 1 and 6 or 2
 	local starta = basedir+math.pi/2
 	local starts = rng.range(-4, 4)
 	points[#points+1] = {bc=bc, c=c, a=a, size=size, x=math.cos(starta) * starts, y=math.sin(starta) * starts, prev=-1}
 
-	local nb = 5
+	local nb = 6
 	for i = 0, nb - 1 do
 		-- Split point in the segment
 		local split = rng.range(0, basesize / nb) + i * (basesize / nb)
-		
+--[[	
 		local dev = math.rad(rng.range(-8, 8))
-		
-		points[#points+1] = {bc=bc, c=c, a=a, movea=basedir+dev+math.pi/2, size=size + rng.range(-2, 2), x=math.cos(basedir+dev) * split, y=math.sin(basedir+dev) * split, prev=#points-1}
+		points[#points+1] = {
+			bc=bc, c=c, a=a, 
+			movea=basedir+dev+math.pi/2, 
+			size=size + rng.range(-2, 2), 
+			x=math.cos(basedir+dev) * split, 
+			y=math.sin(basedir+dev) * split, 
+			prev=#points-1
+		}
+--]]
+-- [[
+		local dev = rng.range(-16, 16) * (9 + fork_i) / 10
+		points[#points+1] = {
+			bc=bc, c=c, a=a, 
+			movea=basedir+dev+math.pi/2, 
+			size=size + rng.range(-2, 2), 
+			x=math.cos(basedir) * split + math.cos(basedir+math.pi/2) * dev,
+			y=math.sin(basedir) * split + math.sin(basedir+math.pi/2) * dev,
+			prev=#points-1
+		}
+--]]
 	end
 
 	points[#points+1] = {bc=bc, c=c, a=a, size=size, x=tx, y=ty, prev=#points-1}
@@ -63,7 +81,7 @@ return { engine=core.particles.ENGINE_LINES, generator = function()
 		r = p.bc, rv = 0, ra = 0,
 		g = p.bc, gv = 0, ga = 0,
 		b = p.c, bv = 0, ba = 0,
-		a = p.a, av = 0, aa = -0.06,
+		a = p.a, av = 0, aa = -0.04,
 	}
 end, },
 function(self)
