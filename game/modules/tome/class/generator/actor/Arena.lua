@@ -118,6 +118,7 @@ function _M:generateMiniboss(e)
 			game.level.arena.danger = game.level.arena.danger + self.arenaPower
 			game.level.map:particleEmitter(self.x, self.y, 1, "teleport")
 			game.level.arena.pinchValue = game.level.arena.pinchValue + self.arenaPower
+			self.on_added = nil
 		end
 		if m.on_die then m.on_die_orig = m.on_die end
 		m.on_die = function (self)
@@ -126,6 +127,7 @@ function _M:generateMiniboss(e)
 			game.level.arena.bonus = game.level.arena.bonus + self.arenaScore
 			game.level.arena.raiseRank(self.arenaRank)
 			game.level.map:particleEmitter(self.x, self.y, 1, "ball_fire", {radius = 1})
+			self.on_die = nil
 		end
 		self:place(m, entry, true)
 	else print("[ARENA] Miniboss error ("..e.display..")")
@@ -219,6 +221,7 @@ function _M:generateBoss(val)
 			game.level.map:particleEmitter(self.x, self.y, 1, "teleport")
 			game:playSoundNear(game.player, "talents/teleport")
 			game.level.arena.pinchValue = game.level.arena.pinchValue + self.arenaPower
+			self.on_added = nil
 		end
 		m.on_die = function (self)
 			game.level.arena.raiseRank(0.5)
@@ -226,6 +229,7 @@ function _M:generateBoss(val)
 			game.level.arena.bonus = game.level.arena.bonus + self.arenaScore
 			game.level.map:particleEmitter(self.x, self.y, 1, "ball_fire", {radius = 3})
 			self.arenaDefeat()
+			self.on_die = nil
 		end
 		e.start()
 		m.arenaDefeat = e.finish
@@ -265,12 +269,14 @@ function _M:generateMaster()
 				game.level.map:particleEmitter(self.x, self.y, 3, "teleport")
 				game:playSoundNear(game.player, "talents/teleport")
 				game.level.arena.pinchValue = game.level.arena.pinchValue + 100
+				self.on_added = nil
 			end
 			m.on_die = function (self)
 				game.level.arena.danger = 0
 				game.level.arena.bonus = 100
 				game.level.map:particleEmitter(self.x, self.y, 1, "ball_fire", {radius = 5})
 				game.level.arena.clear()
+				self.on_die = nil
 				local Chat = require "engine.Chat"
 				local chat = Chat.new("arena", {name="Congratulations!"}, game.player)
 				chat:invoke("master-defeat")
@@ -300,12 +306,14 @@ function _M:generateMaster()
 			game.level.map:particleEmitter(self.x, self.y, 3, "teleport")
 			game:playSoundNear(game.player, "talents/teleport")
 			game.level.arena.pinchValue = game.level.arena.pinchValue + 100
+			self.on_added = nil
 		end
 		m.on_die = function (self)
 			game.level.arena.danger = 0
 			game.level.arena.bonus = 100
 			game.level.map:particleEmitter(self.x, self.y, 1, "ball_fire", {radius = 3})
 			game.level.arena.clear()
+			self.on_die = nil
 			local Chat = require "engine.Chat"
 			local chat = Chat.new("arena", {name="Congratulations!"}, game.player)
 			chat:invoke("master-defeat")
@@ -468,11 +476,13 @@ function _M:setArenaTriggers(e, entry)
 			game.level.arena.danger = game.level.arena.danger + self.arenaPower
 			game:playSoundNear(game.player, "talents/teleport")
 			game.level.map:particleEmitter(self.x, self.y, 0.5, "teleport")
+			self.on_added = nil
 		end
 	else
 		e.on_added = function (self)
 			if self.on_added_orig then self.on_added_orig(self) end
 			game.level.arena.danger = game.level.arena.danger + self.arenaPower
+			self.on_added = nil
 		end
 	end
 	e.on_takehit = function(self, value, src)
@@ -482,6 +492,7 @@ function _M:setArenaTriggers(e, entry)
 	end
 	e.on_die = function (self)
 		if self.on_die_orig then self.on_die_orig(self) end
+		self.on_die = nil
 		if self.arenaLastHit >= self.max_life then
 			if self.arenaLastHit >= self.max_life * 2 then
 				local x, y = game.level.map:getTileToScreen(self.x, self.y)

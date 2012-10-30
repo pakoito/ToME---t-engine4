@@ -121,6 +121,7 @@ newTalent{
 		m:removeAllMOs()
 		m.make_escort = nil
 		m.on_added_to_level = nil
+		m.on_added = nil
 
 		mod.class.NPC.castAs(m)
 		engine.interface.ActorAI.init(m, m)

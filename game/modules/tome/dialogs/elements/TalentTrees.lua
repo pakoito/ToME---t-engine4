@@ -269,6 +269,34 @@ function _M:drawItem(item)
 	end
 end
 
+function _M:on_focus_change(status)
+	self.last_input_was_keyboard = true
+	if status then
+		self.prev_item = nil
+		self.focus_decay = focus_decay_max * 32
+		if not self.last_mz then
+			for i = 1, #self.tree do
+				local tree = self.tree[i]
+				if tree.text_status then
+					self.sel_i = i
+					self.sel_j = 0
+					self:moveSel(0, 0)
+					break
+				end
+				if tree.shown then
+					for j = 1, #tree.nodes do
+						self.sel_i = i
+						self.sel_j = j
+						self:moveSel(0, 0)
+						break
+					end
+				end
+			end
+		end
+	end
+end
+
+
 function _M:redrawAllItems()
 	for i = 1, #self.tree do
 		local tree = self.tree[i]
@@ -309,6 +337,12 @@ function _M:display(x, y, nb_keyframes, screen_x, screen_y)
 	self.last_display_x = screen_x
 	self.last_display_y = screen_y
 
+	if self.focus_decay then
+		core.display.drawQuad(x, y, self.w, self.h, 255, 255, 255, self.focus_decay * self.one_by_focus_decay)
+		self.focus_decay = self.focus_decay - nb_keyframes * 64
+		if self.focus_decay <= 0 then self.focus_decay = nil end
+	end
+
 	if self.scrollbar then
 		local tmp_pos = self.scrollbar.pos
 		self.scrollbar.pos = util.minBound(self.scrollbar.pos + self.scroll_inertia, 0, self.scrollbar.max)
@@ -319,7 +353,7 @@ function _M:display(x, y, nb_keyframes, screen_x, screen_y)
 	end
 
 	local mz = {}
-	if self.scrollbar and self.last_scroll ~= self.scrollbar.pos then self.mousezones = mz end
+	if not self.scrollbar or self.last_scroll ~= self.scrollbar.pos then self.mousezones = mz end
 
 	local dx, dy = 0, self.scrollbar and -self.scrollbar.pos or 0
 	local bdx, bdy = dx, dy

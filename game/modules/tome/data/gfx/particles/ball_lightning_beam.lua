@@ -47,6 +47,8 @@ for fork_i = 0, 35 do
 	points[#points+1] = {bc=bc, c=c, a=a, size=size, x=tx, y=ty, prev=#points-1}
 end
 
+local nbp =  #points
+
 -- Populate the lightning based on the forks
 return { engine=core.particles.ENGINE_LINES, generator = function()
 	local p = table.remove(points, 1)
@@ -67,8 +69,9 @@ return { engine=core.particles.ENGINE_LINES, generator = function()
 	}
 end, },
 function(self)
-	while #points > 0 do
-		self.ps:emit(#points)
+	if nbp > 0 then
+		self.ps:emit(nbp)
+		nbp = 0
 	end
 end,
-#points, "particles_images/beam"
+nbp, "particles_images/beam"

@@ -4514,7 +4514,7 @@ newEntity{ base = "BASE_LITE", --Thanks Grayswandir!
 				display = "G", color=colors.WHITE,
 				combat = { dam=1, atk=1, apr=1 },
 				autolevel = "warriormage",
-				ai = "dumb_talented_simple", ai_state = { talent_in=1, },
+				ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=1, },
 				dont_pass_target = true,
 				movement_speed = 2,
 				stats = { str=14, dex=18, mag=20, con=12 },
@@ -4540,6 +4540,7 @@ newEntity{ base = "BASE_LITE", --Thanks Grayswandir!
 				
 				faction = who.faction,
 				summoner = who, summoner_gain_exp=true,
+				summon_time = 20,
 			}
 
 			m:resolve()
@@ -4771,7 +4772,7 @@ newEntity{ base = "BASE_SHIELD", --Thanks SageAcrin!
 	},
 	on_block = function(self, who, target, type, dam, eff)
 		if rng.percent(30) then
-			if not target then return end
+			if not target or target:attr("dead") or not target.x or not target.y then return end
 
 			local burst = {type="cone", range=0, radius=4, force_target=target, selffire=false,}
 		
