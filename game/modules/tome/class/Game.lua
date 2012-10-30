@@ -1249,7 +1249,8 @@ function _M:setupCommands()
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
 			local x, y = game.player.x + 5, game.player.y
-			game.level.map:particleEmitter(game.player.x, game.player.y, math.max(math.abs(x-game.player.x), math.abs(y-game.player.y)), "lightning_beam", {tx=x-game.player.x, ty=y-game.player.y}, {type="lightning"})
+			--game.level.map:particleEmitter(game.player.x, game.player.y, math.max(math.abs(x-game.player.x), math.abs(y-game.player.y)), "lightning_beam", {tx=x-game.player.x, ty=y-game.player.y}, {type="lightning"})
+			game.level.map:particleEmitter(game.player.x, game.player.y, math.max(math.abs(x-game.player.x), math.abs(y-game.player.y)), "lightning_beam", {tx=x-game.player.x, ty=y-game.player.y}, {type="lightning", color1={0.2,0,0}, color2={1,0.6,0}})
 			game.level.map:particleEmitter(game.player.x, game.player.y, math.max(math.abs(-5), math.abs(y-game.player.y)), "lightning_beam", {tx=-5, ty=y-game.player.y})
 			
 do return end
