@@ -890,7 +890,7 @@ function _M:onUseTalent(item, inc)
 		self:learnType(item.type, inc)
 		item.shown = (self.actor.__hidden_talent_types[item.type] == nil and self.actor:knowTalentType(item.type)) or (self.actor.__hidden_talent_types[item.type] ~= nil and not self.actor.__hidden_talent_types[item.type])
 		local t = (item.isgeneric==0 and self.c_gtree or self.c_ctree)
-		if not inc then t:onExpand(item, inc) end
+		item.shown = not item.shown t:onExpand(item, inc)
 		t:redrawAllItems()
 	elseif item.talent then
 		self:learnTalent(item.talent, inc)

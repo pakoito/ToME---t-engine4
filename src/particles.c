@@ -427,10 +427,13 @@ static int particles_emit(lua_State *L)
 				lua_pushnumber(L, l->generator_ref);
 				lua_rawget(L, -2);
 				if (lua_isnil(L, -1)) { printf("Particle emitter error %x (%d) is nil\n", (int)l, l->generator_ref); }
-				else if (lua_pcall(L, 0, 1, 0))
-				{
-					printf("Particle emitter error %x (%d): %s\n", (int)l, l->generator_ref, lua_tostring(L, -1));
-					lua_pop(L, 1);
+				else {
+					lua_pushnumber(L, i);
+					if (lua_pcall(L, 1, 1, 0))
+					{
+						printf("Particle emitter error %x (%d): %s\n", (int)l, l->generator_ref, lua_tostring(L, -1));
+						lua_pop(L, 1);
+					}
 				}
 				if (!lua_isnil(L, -1))
 				{
