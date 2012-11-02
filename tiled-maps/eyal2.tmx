@@ -17691,7 +17691,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup name="addZone#pops" width="170" height="100" visible="0">
+ <objectgroup name="addZone#pops" width="170" height="100">
   <object name="Lumjberjack quest" x="1837" y="747" width="174" height="551">
    <properties>
     <property name="subtype" value="&quot;lumberjack-cursed&quot;"/>
@@ -17723,12 +17723,6 @@
    </properties>
   </object>
   <object name="Trapped merchant quest" x="1803" y="259" width="298" height="185">
-   <properties>
-    <property name="subtype" value="&quot;merchant-quest&quot;"/>
-    <property name="type" value="&quot;world-encounter&quot;"/>
-   </properties>
-  </object>
-  <object name="Trapped merchant quest" x="2089" y="689" width="234" height="203">
    <properties>
     <property name="subtype" value="&quot;merchant-quest&quot;"/>
     <property name="type" value="&quot;world-encounter&quot;"/>

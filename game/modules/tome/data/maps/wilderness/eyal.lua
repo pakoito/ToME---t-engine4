@@ -467,7 +467,6 @@ addZone({2, 3, 14, 12}, "world-encounter", "merchant-quest")
 addZone({23, 1, 30, 9}, "world-encounter", "merchant-quest")
 addZone({37, 5, 50, 9}, "world-encounter", "merchant-quest")
 addZone({56, 8, 65, 13}, "world-encounter", "merchant-quest")
-addZone({65, 21, 72, 27}, "world-encounter", "merchant-quest")
 addZone({69, 3, 77, 17}, "world-encounter", "merchant-quest")
 addZone({30, 28, 35, 33}, "world-encounter", "merchant-quest")
 
