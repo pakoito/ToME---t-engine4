@@ -111,6 +111,7 @@ if engine.Map.tiles.nicer_tiles then
 	}}
 end
 g.nice_tiler = nil
+g.grow = nil g.dig = nil
 g:initGlow()
 g.real_change = changer
 g.change_level_check = function(self)

@@ -50,6 +50,7 @@ for i = 1, 3 do
 		g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/pedestal_01.png", display_y=-1, display_h=2}
 	end
 	g.nice_tiler = nil
+	g.grow = nil g.dig = nil
 	g.x = i
 	g.y = j
 	g.block_move = function(self, x, y, who, act, couldpass)
