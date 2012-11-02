@@ -4975,7 +4975,7 @@ newEntity{ base = "BASE_GREATSWORD", --Thanks Grayswandir!
 }
 
 newEntity{ base = "BASE_GLOVES", --Thanks SageAcrin /AND/ Edge2054!
-	power_source = {technique=true},
+	power_source = {technique=true, arcane=true},
 	unique = true,
 	name = "Crystle's Astral Bindings", --Yes, CRYSTLE. It's a name.
 	unided_name = "crystalline gloves", image = "object/artifact/crystles_astral_bindings.png",
