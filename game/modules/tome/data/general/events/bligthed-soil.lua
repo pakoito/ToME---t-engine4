@@ -38,7 +38,7 @@ else
 	level.map:particleEmitter(x, y, 3, "ultrashield", {rm=50, rM=80, gm=80, gM=100, bm=30, bM=60, am=220, aM=250, radius=3, density=1, life=14, instop=17})
 end
 
-local on_stand = function(self, x, y, who) who:setEffect(who.EFF_BLIGHTED_SOIL, 1, {}) end
+local on_stand = function(self, x, y, who) if who.life and who.life < who.max_life then who:setEffect(who.EFF_BLIGHTED_SOIL, 1, {}) end end
 
 local grids = core.fov.circle_grids(x, y, 3, "do not block")
 for x, yy in pairs(grids) do for y, _ in pairs(yy) do
