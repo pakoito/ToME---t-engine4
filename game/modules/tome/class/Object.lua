@@ -62,6 +62,11 @@ function _M:act()
 	self:useEnergy()
 end
 
+function _M:canUseObject()
+	if self.__transmo then return false end
+	return engine.interface.ObjectActivable.canUseObject(self)
+end
+
 --- Use the object (quaff, read, ...)
 function _M:use(who, typ, inven, item)
 	inven = who:getInven(inven)
