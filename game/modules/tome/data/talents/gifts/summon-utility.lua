@@ -115,7 +115,9 @@ newTalent{
 		self:project(tg, m.x, m.y, function(px, py)
 			local target = game.level.map(px, py, Map.ACTOR)
 			if not target or self:reactionToward(target) < 0 then return end
+			target:attr("allow_on_heal", 1)
 			target:heal(30 + self:combatTalentMindDamage(t, 10, 350))
+			target:attr("allow_on_heal", -1)
 		end, nil, {type="acid"})
 	end,
 	action = function(self, t)
