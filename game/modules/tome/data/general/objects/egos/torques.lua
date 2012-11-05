@@ -45,7 +45,7 @@ newEntity{
 
 	charm_on_use = {
 		[function(self, who)
-			who:incHate(-self:getCharmPower(true) / 7)
+			who:incHate(self:getCharmPower(true) / 7)
 		end] = {100, function(self, who) return ("regenerate %d hate"):format(self:getCharmPower(true) / 7) end},
 	}
 }
