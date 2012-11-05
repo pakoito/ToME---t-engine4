@@ -69,7 +69,7 @@ return {
 		},
 		trap = {
 			class = "engine.generator.trap.Random",
-			nb_trap = {15, 20},
+			nb_trap = {0, 0},
 		},
 	},
 	post_process = function(level)

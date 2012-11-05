@@ -46,7 +46,7 @@ return {
 		},
 		object = {
 			class = "engine.generator.object.Random",
-			nb_trap = {4, 10},
+			nb_object = {4, 10},
 		},
 	},
 }

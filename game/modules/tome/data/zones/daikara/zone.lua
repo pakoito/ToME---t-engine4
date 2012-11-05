@@ -58,7 +58,7 @@ return {
 		},
 		trap = {
 			class = "engine.generator.trap.Random",
-			nb_trap = {9, 15},
+			nb_trap = {0, 0},
 		},
 	},
 	levels =

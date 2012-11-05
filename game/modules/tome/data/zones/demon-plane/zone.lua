@@ -61,7 +61,7 @@ return {
 		},
 		trap = {
 			class = "engine.generator.trap.Random",
-			nb_trap = {12, 15},
+			nb_trap = {0, 0},
 		},
 	},
 	on_enter = function(lev, old_lev, newzone)
