@@ -374,7 +374,7 @@ newEntity{
 }
 
 newEntity{
-	power_source = {arcane=true},
+	power_source = {psionic=true},
 	name = "psionicist's ", prefix=true, instant_resolve=true,
 	keywords = {psionic=true},
 	level_range = {1, 50},
