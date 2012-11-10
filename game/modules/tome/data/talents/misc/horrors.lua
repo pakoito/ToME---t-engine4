@@ -458,7 +458,7 @@ newTalent{
 		return 5
 	end,
 	target = function(self, t)
-		return {type="ball", range=0, friendlyfire=true, radius=self:getTalentRadius(t), talent=t}
+		return {type="ball", range=0, friendlyfire=false, radius=self:getTalentRadius(t), talent=t}
 	end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)

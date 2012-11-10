@@ -85,6 +85,8 @@ function _M:use(item)
 		self.onuse(self.inven, self.item, self.object, false)
 	elseif act == "chat-link" then
 		profile.chat.uc_ext:sendObjectLink(self.object)
+	else
+		self:triggerHook{"UseItemMenu:use", actor=self.actor, object=self.object, inven=self.inven, item=self.item, act=act}
 	end
 end
 
@@ -100,6 +102,8 @@ function _M:generateList()
 	if self.inven == self.actor.INVEN_INVEN then list[#list+1] = {name="Drop", action="drop"} end
 	if self.inven == self.actor.INVEN_INVEN and transmo_chest and self.actor:transmoFilter(self.object) then list[#list+1] = {name="Transmogrify now", action="transmo"} end
 	if profile.auth and profile.hash_valid then list[#list+1] = {name="Link item in chat", action="chat-link"} end
+
+	self:triggerHook{"UseItemMenu:generate", actor=self.actor, object=self.object, inven=self.inven, item=self.item, menu=list}
 
 	self.max = 0
 	self.maxh = 0

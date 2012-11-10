@@ -48,7 +48,7 @@ newAI("target_world", function(self)
 end)
 
 newAI("world_patrol", function(self)
-	if not self.energy.used then
+	if not self.energy.used and self.x and self.y then
 		if self:runAI("target_world") and self:reactionToward(self.ai_target.actor) < 0 and game.level.map:isBound(self.ai_target.actor.x, self.ai_target.actor.y) then
 			self:runAI("move_dmap")
 		else
@@ -80,7 +80,7 @@ newAI("move_world_patrol", function(self)
 end)
 
 newAI("world_hostile", function(self)
-	if not self.energy.used then
+	if not self.energy.used and self.x and self.y then
 		if self:runAI("target_world") and self:reactionToward(self.ai_target.actor) < 0 and core.fov.distance(self.x, self.y, self.ai_target.actor.x, self.ai_target.actor.y) <= self.ai_state.chase_distance then
 			self:runAI("move_dmap")
 		else
