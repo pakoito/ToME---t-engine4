@@ -65,7 +65,7 @@ uberTalent{
 		if target:canBe("stun") then target:setEffect(target.EFF_STUNNED, 3, {}) end
 	end,
 	info = function(self, t)
-		return ([[You deal a massive blow to your foe, smashing it for 250%% weapon damage and knocking it back 6 tiles away.
+		return ([[You deal a massive blow to your foe, smashing it for 230%% weapon damage and knocking it back 6 tiles away.
 		All foes in its path will be knocked on the sides and stunned for 3 turns.]])
 		:format()
 	end,

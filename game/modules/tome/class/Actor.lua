@@ -2871,7 +2871,7 @@ function _M:checkMindstar(o)
 		local nm = {}
 		for s, v in pairs(o.combat.dammod) do nm[s] = v * (1.3 + pv / 10) end
 		o.combat.dammod = nm
-		o.combat.apr = math.floor(o.combat.apr * (1 + pv / 6.3))
+		o.combat.apr = o.combat.apr * (1 + pv / 6.3)
 
 		print("Activating psiblade", o.name)
 	elseif not new and old then
@@ -2880,7 +2880,7 @@ function _M:checkMindstar(o)
 		local nm = {}
 		for s, v in pairs(o.combat.dammod) do nm[s] = v / (1.3 + pv / 10) end
 		o.combat.dammod = nm
-		o.combat.apr = math.floor(o.combat.apr / (1 + pv / 6.3))
+		o.combat.apr = o.combat.apr / (1 + pv / 6.3)
 
 		o.moddable_tile_ornament = nil
 		o.psiblade_active = false
