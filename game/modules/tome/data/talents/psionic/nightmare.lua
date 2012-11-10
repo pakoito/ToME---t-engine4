@@ -142,9 +142,10 @@ newTalent{
 		m.seen_by = nil
 		m.can_talk = nil
 		m.clone_on_hit = nil
+		m.self_resurrect = nil
 		if m.talents.T_SUMMON then m.talents.T_SUMMON = nil end
 		if m.talents.T_MULTIPLY then m.talents.T_MULTIPLY = nil end
-
+		
 		-- Inner Demon's never flee
 		m.ai_tactic = m.ai_tactic or {}
 		m.ai_tactic.escape = 0
@@ -271,6 +272,12 @@ newTalent{
 	getDamageBonus = function(self, t) return self:combatTalentMindDamage(t, 10, 50) end,
 	getSummonTime = function(self, t) return math.floor(self:getTalentLevel(t)*2) end,
 	summonNightTerror = function(self, target, t)
+		-- Only spawns from hostile targets
+		if self:reactionToward(target) >= 0 then
+			game.logPlayer(self, "You can't cast this on friendly targets.")
+			return nil
+		end
+	
 		-- Find space
 		local x, y = util.findFreeGrid(target.x, target.y, 1, true, {[Map.ACTOR]=true})
 		if not x then

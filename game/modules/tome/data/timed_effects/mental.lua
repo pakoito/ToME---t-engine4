@@ -2461,7 +2461,7 @@ newEffect{
 	type = "mental",
 	subtype = { sleep=true },
 	status = "detrimental",
-	parameters = { power=1, insomnia=1, waking=0, contagious=0, },
+	parameters = { power=1, insomnia=1, waking=0, contagious=0 },
 	on_gain = function(self, err) return "#Target# has been put to sleep.", "+Sleep" end,
 	on_lose = function(self, err) return "#Target# is no longer sleeping.", "-Sleep" end,
 	on_timeout = function(self, eff)
@@ -2498,7 +2498,7 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("sleep", eff.sid)
-		if not self:attr("sleep") and not self.dead and eff.waking > 0 then
+		if not self:attr("sleep") and not self.dead and game.level:hasEntity(self) and eff.waking > 0 then
 			DamageType:get(DamageType.MIND).projector(eff.src or self, self.x, self.y, DamageType.MIND, eff.src:mindCrit(eff.waking))
 			game.level.map:particleEmitter(self.x, self.y, 1, "generic_discharge", {rm=180, rM=200, gm=100, gM=120, bm=30, bM=50, am=70, aM=180})
 		end
@@ -2548,7 +2548,7 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("sleep", eff.sid)
-		if not self:attr("sleep") and not self.dead and eff.waking > 0 then
+		if not self:attr("sleep") and not self.dead and game.level:hasEntity(self) and eff.waking > 0 then
 			DamageType:get(DamageType.MIND).projector(eff.src or self, self.x, self.y, DamageType.MIND, eff.src:mindCrit(eff.waking))
 			game.level.map:particleEmitter(self.x, self.y, 1, "generic_discharge", {rm=180, rM=200, gm=100, gM=120, bm=30, bM=50, am=70, aM=180})
 		end
@@ -2607,7 +2607,7 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("sleep", eff.sid)
-		if not self:attr("sleep") and not self.dead and eff.waking > 0 then
+		if not self:attr("sleep") and not self.dead and game.level:hasEntity(self) and eff.waking > 0 then
 			DamageType:get(DamageType.MIND).projector(eff.src or self, self.x, self.y, DamageType.MIND, eff.src:mindCrit(eff.waking))
 			game.level.map:particleEmitter(self.x, self.y, 1, "generic_discharge", {rm=180, rM=200, gm=100, gM=120, bm=30, bM=50, am=70, aM=180})
 		end
