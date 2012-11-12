@@ -264,7 +264,7 @@ local function generate_rewards()
 				local doit = function(npc, player) game.party:reward("Select the party member to receive the reward:", function(player)
 					if game.player:knowTalentType(t.type[1]) == nil then player:setTalentTypeMastery(t.type[1], 0.8) end
 					player:learnTalent(tid, true, level, {no_unlearn=true})
-					--if t.hide then player.__show_special_talents[tid] = true end
+					if t.hide then player.__show_special_talents = player.__show_special_talents or {} player.__show_special_talents[tid] = true end
 					player:hasQuest(npc.quest_id).reward_message = ("%s talent %s (+%d level(s))"):format(game.player:knowTalent(tid) and "improved" or "learnt", t.name, level)
 				end) end
 				answers[#answers+1] = {
