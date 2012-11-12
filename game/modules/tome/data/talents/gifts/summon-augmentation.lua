@@ -67,6 +67,15 @@ newTalent{
 		dt.on_detonate(self, t, target)
 		target:die(self)
 
+		local l = {}
+		for tid, cd in pairs(self.talents_cd) do
+			local t = self:getTalentFromId(tid)
+			if t.is_summon then l[#l+1] = tid end
+		end
+		if #l > 0 then 
+			self.talents_cd[rng.table(l)] = nil
+		end
+
 		game:playSoundNear(self, "talents/fireflash")
 		return true
 	end,
@@ -83,6 +92,7 @@ newTalent{
 		- Stone Golem: Knocks back all creatures
 		- Turtle: Grants a small shell shield to all friendly creatures
 		- Spider: Pins all foes around
+		In addition a random summon will come off cooldown.
 		The effects improves with your Willpower.]]):format(radius)
 	end,
 }
