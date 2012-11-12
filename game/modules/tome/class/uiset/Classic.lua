@@ -366,7 +366,7 @@ function _M:setupMouse(mouse)
 	mouse:registerZone(self.hotkeys_display.display_x, self.hotkeys_display.display_y, game.w, game.h, function(button, mx, my, xrel, yrel, bx, by, event)
 		if self.show_npc_list then return end
 		if event == "out" then self.hotkeys_display.cur_sel = nil return end
-		if event == "button" and button == "left" and ((self.zone and self.zone.wilderness) or (game.key ~= game.normal_key)) then return end
+		if event == "button" and button == "left" and ((game.zone and game.zone.wilderness) or (game.key ~= game.normal_key)) then return end
 		self.hotkeys_display:onMouse(button, mx, my, event == "button",
 			function(text)
 				text = text:toTString()
