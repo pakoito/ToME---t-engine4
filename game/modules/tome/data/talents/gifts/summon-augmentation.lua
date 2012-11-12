@@ -30,7 +30,7 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t, first_target="friend"}
 		local tx, ty, target = self:getTarget(tg)
 		if not tx or not ty or not target or not target.summoner or not target.summoner == self or not target.wild_gift_summon then return nil end
-		target:setEffect(target.EFF_ALL_STAT, 10, {power=self:combatTalentMindDamage(t, 10, 100)/4})
+		target:setEffect(target.EFF_ALL_STAT, 10, {power=self:mindCrit(self:combatTalentMindDamage(t, 10, 100))/4})
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,

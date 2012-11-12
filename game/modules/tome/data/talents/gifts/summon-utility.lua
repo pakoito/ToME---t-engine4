@@ -107,7 +107,7 @@ newTalent{
 		self:project(tg, m.x, m.y, function(px, py)
 			local target = game.level.map(px, py, Map.ACTOR)
 			if not target or self:reactionToward(target) < 0 then return end
-			target:setEffect(target.EFF_SHELL_SHIELD, 4, {power=self:combatTalentMindDamage(t, 10, 35)})
+			target:setEffect(target.EFF_SHELL_SHIELD, 4, {power=self:mindCrit(self:combatTalentMindDamage(t, 10, 35))})
 		end, nil, {type="flame"})
 	end,
 	on_arrival = function(self, t, m)
@@ -215,7 +215,7 @@ newTalent{
 			local target = game.level.map(px, py, Map.ACTOR)
 			if not target or self:reactionToward(target) >= 0 then return end
 			if target:canBe("pin") then
-				target:setEffect(target.EFF_PINNED, 3, {apply_power=self:combatMindpower()})
+				target:setEffect(target.EFF_PINNED, 3, {apply_power=self:mindCrit(self:combatMindpower())})
 			end
 		end, nil, {type="flame"})
 	end,

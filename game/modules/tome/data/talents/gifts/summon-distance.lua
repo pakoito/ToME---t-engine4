@@ -229,7 +229,7 @@ newTalent{
 	end,
 	on_detonate = function(self, t, m)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t, x=m.x, y=m.y}
-		self:project(tg, m.x, m.y, DamageType.FIREBURN, self:combatTalentMindDamage(t, 30, 300), {type="flame"})
+		self:project(tg, m.x, m.y, DamageType.FIREBURN, self:mindCrit(self:combatTalentMindDamage(t, 30, 300)), {type="flame"})
 	end,
 	on_arrival = function(self, t, m)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t, x=m.x, y=m.y}
@@ -327,7 +327,7 @@ newTalent{
 	end,
 	on_detonate = function(self, t, m)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t, x=m.x, y=m.y}
-		self:project(tg, m.x, m.y, rng.table{DamageType.LIGHTNING,DamageType.ACID,DamageType.POISON}, self:combatTalentMindDamage(t, 30, 250), {type="flame"})
+		self:project(tg, m.x, m.y, rng.table{DamageType.LIGHTNING,DamageType.ACID,DamageType.POISON}, self:mindCrit(self:combatTalentMindDamage(t, 30, 250)), {type="flame"})
 	end,
 	on_arrival = function(self, t, m)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t, x=m.x, y=m.y}
@@ -432,7 +432,7 @@ newTalent{
 	end,
 	on_detonate = function(self, t, m)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t, x=m.x, y=m.y}
-		self:project(tg, m.x, m.y, DamageType.ICE, self:combatTalentMindDamage(t, 30, 300), {type="freeze"})
+		self:project(tg, m.x, m.y, DamageType.ICE, self:mindCrit(self:combatTalentMindDamage(t, 30, 300)), {type="freeze"})
 	end,
 	on_arrival = function(self, t, m)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t, x=m.x, y=m.y}
@@ -533,7 +533,7 @@ newTalent{
 	on_detonate = function(self, t, m)
 		game.level.map:addEffect(self,
 			m.x, m.y, 6,
-			DamageType.FIRE, self:combatTalentMindDamage(t, 10, 70),
+			DamageType.FIRE, self:mindCrit(self:combatTalentMindDamage(t, 10, 70)),
 			self:getTalentRadius(t),
 			5, nil,
 			{type="inferno"},
