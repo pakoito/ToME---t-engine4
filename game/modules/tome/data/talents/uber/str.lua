@@ -27,7 +27,7 @@ uberTalent{
 		self:attr("unharmed_attack_on_hit", -1)
 	end,
 	info = function(self, t)
-		return ([[Each time you make a melee attack you have 100%% chances to do an additional unharmed strike, if using weapons and 60%% chances if already fighting unharmed.]])
+		return ([[Each time you make a melee attack you have 100%% chances to do an additional unarmed strike, if using weapons and 60%% chances if already fighting unarmed.]])
 		:format()
 	end,
 }
