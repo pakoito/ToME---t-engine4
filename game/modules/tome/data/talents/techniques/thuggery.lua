@@ -60,6 +60,9 @@ newTalent{
 			else
 				game.logSeen(target, "%s resists the headblow!", target.name:capitalize())
 			end
+			if target:attr("dead") then
+				world:gainAchievement("HEADBANG", self, target)
+			end
 		end
 
 		return true

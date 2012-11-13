@@ -152,6 +152,19 @@ newAchievement{
 }
 
 newAchievement{
+	name = "Headbanger", id = "HEADBANG",
+	show = "full",
+	desc = [[Headbanged 20 bosses to death.]],
+	mode = "player",
+	can_gain = function(self, who, target)
+		if target.rank < 3.5 then return false end
+		self.nb = (self.nb or 0) + 1
+		if self.nb >= 20 then return true end
+	end,
+	track = function(self) return tstring{tostring(self.nb or 0)," / 20"} end,
+}
+
+newAchievement{
 	name = "Are you out of your mind?!", id = "UBER_WYRMS_OPEN",
 	image = "npc/dragon_multihued_multi_hued_drake.png",
 	show = "name",

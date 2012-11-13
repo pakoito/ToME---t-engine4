@@ -5123,7 +5123,7 @@ newEntity{ base = "BASE_TOOL_MISC", --Sorta Thanks Donkatsu!
 
 newEntity{ base = "BASE_RING",
 	power_source = {technique=true, nature=true},
-	name = "Ring of Growth", unique=true, image = "object/ring_of_growth.png",
+	name = "Ring of Growth", unique=true, image = "object/artifact/ring_of_growth.png",
 	desc = [[This small wooden ring has a single green stem wrapped around it. Thin leaves still seem to be growing from it.]],
 	unided_name = "vine encircled ring",
 	level_range = {6, 20},
