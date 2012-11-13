@@ -156,7 +156,9 @@ function _M:generateList()
 	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#HUD Style#WHITE##{normal}#", status=function(item)
 		return tostring(config.settings.tome.uiset_mode):capitalize()
 	end, fct=function(item)
-		Dialog:listPopup("HUD style", "Select style", {{name="Minimalist", ui="Minimalist"}, {name="Classic", ui="Classic"}}, 300, 200, function(sel)
+		local huds = {{name="Minimalist", ui="Minimalist"}, {name="Classic", ui="Classic"}}
+		self:triggerHook{"GameOptions:HUDs", huds=huds}
+		Dialog:listPopup("HUD style", "Select style", huds, 300, 200, function(sel)
 			if not sel or not sel.ui then return end
 			game:saveSettings("tome.uiset_mode", ("tome.uiset_mode = %q\n"):format(sel.ui))
 			config.settings.tome.uiset_mode = sel.ui
