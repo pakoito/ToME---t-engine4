@@ -3339,6 +3339,7 @@ newEntity{ base = "BASE_WHIP",
 			local blast = {type="ball", range=0, radius=1, selffire=false}
 			local x, y = who:getTarget(tg)
 			if not x or not y then return nil end
+			local _ _, x, y = who:canProject(tg, x, y)
 			local target = game.level.map(x, y, engine.Map.ACTOR)
 			if not target then return end
 			who:attackTarget(target, engine.DamageType.LIGHTNING, 1, true)
