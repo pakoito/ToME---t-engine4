@@ -18,7 +18,7 @@ solution "TEngine"
 		"src/physfs",
 		"src/physfs/zlib123",
 		"src/bzip2",
-		"/opt/SDL-2.0/include/SDL2/",
+		"/home/nicolas/local/include/SDL2/",
 		"/usr/include/GL",
 	}
 	if _OPTIONS.lua == "default" then includedirs{"src/lua"}

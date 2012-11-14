@@ -222,14 +222,14 @@ function _M:dumpToJSON(js, bypass, nosub)
 
 	c.spell = {
 		spellpower = self:combatSpellpower(),
-		crit = self:combatSpellCrit(),
+		crit = string.format("%d%%", self:combatSpellCrit()),
 		speed = self:combatSpellSpeed(),
 		cooldown = (self.spell_cooldown_reduction or 0) * 100,
 	}
 
 	c.mind = {
 		mindpower = self:combatMindpower(),
-		crit = self:combatMindCrit(),
+		crit = string.format("%d%%", self:combatMindCrit()),
 		speed = self:combatMindSpeed(),
 	}
 
@@ -239,6 +239,15 @@ function _M:dumpToJSON(js, bypass, nosub)
 	for i, t in ipairs(DamageType.dam_def) do
 		if self.inc_damage[DamageType[t.type]] and self.inc_damage[DamageType[t.type]] ~= 0 then
 			c.damage[t.name] = string.format("%d%%", self.inc_damage[DamageType[t.type]] + (self.inc_damage.all or 0))
+		end
+	end
+
+	c.damage_pen = {}
+
+	if self.resists_pen.all then c.damage_pen.all = string.format("%d%%", self.resists_pen.all) end
+	for i, t in ipairs(DamageType.dam_def) do
+		if self.resists_pen[DamageType[t.type]] and self.resists_pen[DamageType[t.type]] ~= 0 then
+			c.damage_pen[t.name] = string.format("%d%%", self.resists_pen[DamageType[t.type]] + (self.resists_pen.all or 0))
 		end
 	end
 
