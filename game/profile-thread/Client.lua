@@ -23,6 +23,11 @@ local UserChat = require "profile-thread.UserChat"
 
 module(..., package.seeall, class.make)
 
+local debug = true
+
+local mport = debug and 2259 or 2257
+local pport = debug and 2260 or 2258
+
 function _M:init()
 	self.last_ping = os.time()
 	self.chat = UserChat.new(self)
@@ -30,7 +35,7 @@ end
 
 function _M:connected()
 	if self.sock then return true end
-	self.sock = socket.connect("te4.org", 2257)
+	self.sock = socket.connect("te4.org", mport)
 	if not self.sock then return false end
 --	self.sock:settimeout(10)
 	print("[PROFILE] Thread connected to te4.org")
@@ -43,7 +48,7 @@ end
 --- Connects the second tcp channel to receive data
 function _M:connectedPull()
 	if self.psock then return true end
-	self.psock = socket.connect("te4.org", 2258)
+	self.psock = socket.connect("te4.org", pport)
 	if not self.psock then return false end
 --	self.psock:settimeout(10)
 	print("[PROFILE] Pull socket connected to te4.org")
@@ -453,6 +458,41 @@ function _M:orderGetDLCD(o)
 		cprofile.pushEvent(string.format("e='GetDLCD' data=%q", body))
 	else
 		cprofile.pushEvent("e='GetDLCD' data=''")
+	end
+end
+
+function _M:orderEntityInfos(o)
+	self:command("EVLT", "INFO", o.module, o.kind)
+	if not self:read("200") then return end
+	self.sock:send(o.data)
+	if self:read("200") then
+		local _, _, size = self.last_line:find("^([0-9]+)")
+		size = tonumber(size)
+		if not size or size < 1 then return end
+		local body = self:receive(size)
+		cprofile.pushEvent(string.format("e='EntityInfos' module=%q kind=%q data=%q", o.module, o.kind, body))
+	else
+		cprofile.pushEvent(string.format("e='EntityInfos' module=%q kind=%q data='list={} max=0'", o.module, o.kind))
+	end
+end
+
+function _M:orderEntityPoke(o)
+	self:command("EVLT", "POKE", o.data:len(), o.module, o.kind, o.name)
+	if not self:read("200") then return end
+	self.sock:send(o.data)
+	cprofile.pushEvent("e='EntityPoke' ok=true")
+end
+
+function _M:orderEntityPeek(o)
+	self:command("EVLT", "PEEK", o.id_profile, o.uuid, o.module)
+	if self:read("200") then
+		local _, _, size = self.last_line:find("^([0-9]+)")
+		size = tonumber(size)
+		if not size or size < 1 then return end
+		local body = self:receive(size)
+		cprofile.pushEvent(string.format("e='EntityPeek' id_profile=%q uuid=%q data=%q", o.id_profile, o.uuid, body))
+	else
+		cprofile.pushEvent(string.format("e='EntityPeek' id_profile=%q uuid=%q unknown=true", o.id_profile, o.uuid))
 	end
 end
 
