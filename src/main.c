@@ -346,7 +346,15 @@ void on_event(SDL_Event *event)
 			switch (event->button.button)
 			{
 			case SDL_BUTTON_LEFT:
+#if 1
+				{
+				SDL_Keymod _pKeyState = SDL_GetModState();
+				if (_pKeyState & KMOD_ALT) lua_pushstring(L, "right");
+				else lua_pushstring(L, "left");
+				}
+#else
 				lua_pushstring(L, "left");
+#endif
 				break;
 			case SDL_BUTTON_MIDDLE:
 				lua_pushstring(L, "middle");

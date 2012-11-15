@@ -28,7 +28,7 @@ newTalent{
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/flame")
 		return {
-			max_vim = self:addTemporaryValue("max_vim", self:getTalentLevel(t) * 15),
+			vim = self:addTemporaryValue("max_vim", self:getTalentLevel(t) * 15),
 		}
 	end,
 	deactivate = function(self, t, p)

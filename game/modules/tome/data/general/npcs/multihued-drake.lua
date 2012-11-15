@@ -201,7 +201,9 @@ newEntity{ base = "BASE_NPC_MULTIHUED_DRAKE",
 		if self.color_switch <= 0 then
 			self.color_switch = 2
 			-- Reset cooldowns
+			local db_cd = self.talents_cd[self.T_DRACONIC_BODY]
 			self.talents_cd = {}
+			self.talents_cd[self.T_DRACONIC_BODY] = db_cd
 			self:incEquilibrium(-100)
 			self:incMana(100)
 			self:incNegative(100)

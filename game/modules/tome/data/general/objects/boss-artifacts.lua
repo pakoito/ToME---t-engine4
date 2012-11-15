@@ -1588,7 +1588,7 @@ newEntity{ base = "BASE_LONGSWORD", define_as = "RIFT_SWORD",
 		special_on_hit = {desc="20% to slow target", fct=function(combat, who, target)
 			if not rng.percent(20) then return end
 			local dam = (20 + who:getMag()/2)
-			local slow = (10 + who:getMag()/5)
+			local slow = (10 + who:getMag()/5)/100
 			who:project({type="hit", range=1}, target.x, target.y, engine.DamageType.CHRONOSLOW, {dam=dam, slow=slow})
 		end},
 	},
