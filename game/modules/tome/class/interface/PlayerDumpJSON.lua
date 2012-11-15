@@ -316,20 +316,22 @@ function _M:dumpToJSON(js, bypass, nosub)
 	-------------------------------------------------------------------
 	-- Effects
 	-------------------------------------------------------------------
-	local e = js:newSection("effects")
+	local ee = js:newSection("effects")
 	for tid, act in pairs(self.sustain_talents) do
 		if act then
 			local t = self:getTalentFromId(tid)
-			e[#e+1] = { name = t.name, kind="talent" }
+			ee[#ee+1] = { name = t.name, kind="talent", desc="" }
 		end
 	end
 	for eff_id, p in pairs(self.tmp) do
 		local e = self.tempeffect_def[eff_id]
+		local name = e.desc
+		if e.display_desc then name = e.display_desc(self, p) end
 		local desc = e.long_desc(self, p)
 		if e.status == "detrimental" then
-			e[#e+1] = { kind="detrimental effect", name = e.desc }
+			ee[#ee+1] = { kind="detrimental effect", name = name, desc=desc }
 		else
-			e[#e+1] = { kind="beneficial effect", name = e.desc }
+			ee[#ee+1] = { kind="beneficial effect", name = name, desc=desc }
 		end
 	end
 

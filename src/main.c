@@ -86,6 +86,21 @@ bool multitexture_active;
 /* Error handling */
 lua_err_type *last_lua_error_head = NULL, *last_lua_error_tail = NULL;
 
+/*
+ * Locks for thread safety with respect to the rendering and realtime timers.
+ * The locks are used to control access to each timer's respective id and flag.
+ */
+SDL_mutex *renderingLock;
+SDL_mutex *realtimeLock;
+int redraw_pending = 0;
+int realtime_pending = 0;
+
+/*
+ * Used to clean up a lock and its corresponding timer/flag.
+ */
+static void cleanupTimerLock(SDL_mutex *lock, SDL_TimerID *timer
+	, int *timerFlag);
+
 void del_lua_error()
 {
 	lua_err_type *cur = last_lua_error_head;
@@ -569,8 +584,6 @@ void pass_command_args(int argc, char *argv[])
 	}
 }
 
-int redraw_pending = 0;
-
 Uint32 redraw_timer(Uint32 interval, void *param)
 {
 	SDL_Event event;
@@ -588,17 +601,17 @@ Uint32 redraw_timer(Uint32 interval, void *param)
 	event.type = SDL_USEREVENT;
 	event.user = userevent;
 
+	// Grab the rendering lock and see if a redraw should be requested.
+	SDL_mutexP(renderingLock);
+	// If there is no redraw pending, request one.  Otherwise, ignore.
 	if (!redraw_pending && isActive) {
 		SDL_PushEvent(&event);
 		redraw_pending = 1;
-	} else {
-		redraw_pending++;
-		if (redraw_pending > 600) { redraw_pending = 0; printf("==FORCE==\n"); } // Safety check
 	}
+	SDL_mutexV(renderingLock);
+
 	return(interval);
 }
-
-int realtime_pending = 0;
 
 Uint32 realtime_timer(Uint32 interval, void *param)
 {
@@ -617,10 +630,15 @@ Uint32 realtime_timer(Uint32 interval, void *param)
 	event.type = SDL_USEREVENT;
 	event.user = userevent;
 
+	// Grab the realtime lock and see if a tick should be requested.
+	SDL_mutexP(realtimeLock);
+	// If there is no realtime tick pending, request one.  Otherwise, ignore.
 	if (!realtime_pending && isActive) {
 		SDL_PushEvent(&event);
-//		realtime_pending = 1;
+		realtime_pending = 1;
 	}
+	SDL_mutexV(realtimeLock);
+
 	return(interval);
 }
 
@@ -646,6 +664,8 @@ void on_music_stop()
 // Setup realtime
 void setupRealtime(float freq)
 {
+	SDL_mutexP(realtimeLock);
+
 	if (!freq)
 	{
 		if (realtime_timer_id) SDL_RemoveTimer(realtime_timer_id);
@@ -658,14 +678,22 @@ void setupRealtime(float freq)
 		realtime_timer_id = SDL_AddTimer((int)interval, realtime_timer, NULL);
 		printf("[ENGINE] Switching to realtime, interval %d ms\n", (int)interval);
 	}
+	
+	SDL_mutexV(realtimeLock);
+	
 }
 
 void setupDisplayTimer(int fps)
 {
+	SDL_mutexP(renderingLock);
+	
 	if (display_timer_id) SDL_RemoveTimer(display_timer_id);
 	requested_fps = fps;
 	display_timer_id = SDL_AddTimer(1000 / fps, redraw_timer, NULL);
 	printf("[ENGINE] Setting requested FPS to %d (%d ms)\n", fps, 1000 / fps);
+	
+	SDL_mutexV(renderingLock);
+
 }
 
 
@@ -962,6 +990,10 @@ int main(int argc, char *argv[])
 		if (!strncmp(arg, "--ypos", 6)) start_ypos = strtol(argv[++i], NULL, 10);
 	}
 
+	// Initialize display lock for thread safety.
+	renderingLock = SDL_CreateMutex();
+	realtimeLock = SDL_CreateMutex();
+	
 	// Get cpu cores
 	nb_cpus = get_number_cpus();
 	printf("[CPU] Detected %d CPUs\n", nb_cpus);
@@ -1109,11 +1141,17 @@ int main(int argc, char *argv[])
 			case SDL_USEREVENT:
 				if (event.user.code == 0 && isActive) {
 					on_redraw();
+					SDL_mutexP(renderingLock);
 					redraw_pending = 0;
+					SDL_mutexV(renderingLock);
+
 				}
 				else if (event.user.code == 2 && isActive) {
 					on_tick();
+					SDL_mutexP(realtimeLock);
 					realtime_pending = 0;
+					SDL_mutexV(realtimeLock);
+					
 				}
 				else if (event.user.code == 1) {
 					on_music_stop();
@@ -1125,7 +1163,20 @@ int main(int argc, char *argv[])
 		}
 
 		/* draw the scene */
-		if (!realtime_timer_id && isActive && !tickPaused) on_tick();
+		// Note: since realtime_timer_id is accessed, have to lock first
+		int doATick = 0;
+		SDL_mutexP(realtimeLock);
+			if (!realtime_timer_id && isActive && !tickPaused) {
+				doATick = 1;
+				realtime_pending = 1;
+			}
+		SDL_mutexV(realtimeLock);
+		if (doATick) {
+			on_tick();
+			SDL_mutexP(realtimeLock);
+			realtime_pending = 0;	
+			SDL_mutexV(realtimeLock);
+		}
 
 		/* Reboot the lua engine */
 		if (core_def->corenum)
@@ -1150,6 +1201,10 @@ int main(int argc, char *argv[])
 		}
 	}
 
+	// Clean up locks.
+	cleanupTimerLock(renderingLock, &display_timer_id, &redraw_pending);
+	cleanupTimerLock(realtimeLock, &realtime_timer_id, &realtime_pending);
+	
 	SDL_Quit();
 	deinit_openal();
 	printf("Thanks for having fun!\n");
@@ -1157,4 +1212,28 @@ int main(int argc, char *argv[])
 #ifdef SELFEXE_WINDOWS
 	fclose(stdout);
 #endif
+}
+
+/* Cleans up a timer lock.  See function declaration for more info. */
+void cleanupTimerLock(SDL_mutex *lock, SDL_TimerID *timer
+	, int *timerFlag)
+{
+	// Grab the lock and start cleaning up
+	SDL_mutexP(lock);
+		// Cancel the timer (if it is running)
+		if (*timer) SDL_RemoveTimer(*timer);
+		*timer = 0;
+		*timerFlag = -1;
+		
+	SDL_mutexV(lock);
+	
+	/*
+	 * Need to get lock once more just in case a timer call was stuck waiting on
+	 * the lock when we altered the variables.
+	 */
+	SDL_mutexP(lock);
+	SDL_mutexV(lock);
+	
+	// Can now safely destroy the lock.
+	SDL_DestroyMutex(lock);
 }
