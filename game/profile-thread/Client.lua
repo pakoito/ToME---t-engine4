@@ -463,12 +463,13 @@ end
 
 function _M:orderEntityInfos(o)
 	self:command("EVLT", "INFO", o.module, o.kind)
-	if not self:read("200") then return end
-	self.sock:send(o.data)
 	if self:read("200") then
 		local _, _, size = self.last_line:find("^([0-9]+)")
 		size = tonumber(size)
-		if not size or size < 1 then return end
+		if not size or size < 1 then 
+			cprofile.pushEvent(string.format("e='EntityInfos' module=%q kind=%q data='list={} max=0'", o.module, o.kind))
+			return 
+		end
 		local body = self:receive(size)
 		cprofile.pushEvent(string.format("e='EntityInfos' module=%q kind=%q data=%q", o.module, o.kind, body))
 	else
@@ -485,16 +486,20 @@ function _M:orderEntityPoke(o)
 	cprofile.pushEvent("e='EntityPoke' ok=true")
 end
 
+function _M:orderEntityEmpty(o)
+	self:command("EVLT", "EMPTY", o.module, o.kind, o.id)
+end
+
 function _M:orderEntityPeek(o)
-	self:command("EVLT", "PEEK", o.id_profile, o.uuid, o.module)
+	self:command("EVLT", "PEEK", o.module, o.kind, o.id)
 	if self:read("200") then
 		local _, _, size = self.last_line:find("^([0-9]+)")
 		size = tonumber(size)
-		if not size or size < 1 then return end
+		if not size or size < 1 then cprofile.pushEvent("e='EntityPeek' ok=false") return end
 		local body = self:receive(size)
-		cprofile.pushEvent(string.format("e='EntityPeek' id_profile=%q uuid=%q data=%q", o.id_profile, o.uuid, body))
+		cprofile.pushEvent(string.format("e='EntityPeek' ok=true id=%d data=%q", o.id, body))
 	else
-		cprofile.pushEvent(string.format("e='EntityPeek' id_profile=%q uuid=%q unknown=true", o.id_profile, o.uuid))
+		cprofile.pushEvent("e='EntityPeek' ok=false")
 	end
 end
 

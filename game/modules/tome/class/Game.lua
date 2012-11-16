@@ -1523,6 +1523,7 @@ do return end
 				self.tooltip.container.focused = self.tooltip.locked
 				game.log("Tooltip %s", self.tooltip.locked and "locked" or "unlocked")
 			end
+			local menu
 			local l = {
 				"resume",
 				"achievements",
@@ -1541,7 +1542,8 @@ do return end
 			}
 			local adds = self.uiset:getMainMenuItems()
 			for i = #adds, 1, -1 do table.insert(l, 10, adds[i]) end
-			local menu menu = require("engine.dialogs.GameMenu").new(l)
+			self:triggerHook{"Game:alterGameMenu", menu=l, unregister=function() self:unregisterDialog(menu) end}
+			menu = require("engine.dialogs.GameMenu").new(l)
 			self:registerDialog(menu)
 		end,
 

@@ -749,6 +749,37 @@ function _M:entityVaultPoke(module, kind, name, desc, data)
 	print("[ONLINE PROFILE] poke entity vault", module, kind, name)
 end
 
+function _M:entityVaultPeek(module, kind, id)
+	if not id then return end
+	if not self.auth then return end
+	core.profile.pushOrder(table.serialize{o="EntityPeek",
+		module=module,
+		kind=kind,
+		id=id,
+	})
+	print("[ONLINE PROFILE] peek entity vault", module, kind, id)
+end
+
+function _M:entityVaultEmpty(module, kind, id)
+	if not id then return end
+	if not self.auth then return end
+	core.profile.pushOrder(table.serialize{o="EntityEmpty",
+		module=module,
+		kind=kind,
+		id=id,
+	})
+	print("[ONLINE PROFILE] empty entity vault", module, kind, id)
+end
+
+function _M:entityVaultInfos(module, kind)
+	if not self.auth then return end
+	core.profile.pushOrder(table.serialize{o="EntityInfos",
+		module=module,
+		kind=kind,
+	})
+	print("[ONLINE PROFILE] list entity vault", module, kind)
+end
+
 function _M:isDonator(s)
 	s = s or 1
 	if not self.auth or not tonumber(self.auth.donated) or tonumber(self.auth.donated) <= s then return false else return true end
