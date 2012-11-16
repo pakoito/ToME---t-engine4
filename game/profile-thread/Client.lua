@@ -23,7 +23,7 @@ local UserChat = require "profile-thread.UserChat"
 
 module(..., package.seeall, class.make)
 
-local debug = true
+local debug = false
 
 local mport = debug and 2259 or 2257
 local pport = debug and 2260 or 2258
@@ -477,8 +477,10 @@ function _M:orderEntityInfos(o)
 end
 
 function _M:orderEntityPoke(o)
-	self:command("EVLT", "POKE", o.data:len(), o.module, o.kind, o.name)
-	if not self:read("200") then return end
+	self:command("EVLT", "POKE", o.desc:len(), o.data:len(), o.module, o.kind, o.name)
+	if not self:read("200") then return cprofile.pushEvent("e='EntityPoke' ok=false") end
+	self.sock:send(o.desc)
+	if not self:read("200") then return cprofile.pushEvent("e='EntityPoke' ok=false") end
 	self.sock:send(o.data)
 	cprofile.pushEvent("e='EntityPoke' ok=true")
 end

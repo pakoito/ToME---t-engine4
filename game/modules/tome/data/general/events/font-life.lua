@@ -47,5 +47,4 @@ for x, yy in pairs(grids) do for y, _ in pairs(yy) do
 	g.on_stand_safe = true
 	game.zone:addEntity(game.level, g, "terrain", x, y)
 end end
-game.log("==== FONT at %dx%d", x,y)
 return true

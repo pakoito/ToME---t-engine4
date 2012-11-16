@@ -736,6 +736,19 @@ function _M:newProfile(Login, Name, Password, Email)
 	self:performlogin(Login, Password)
 end
 
+function _M:entityVaultPoke(module, kind, name, desc, data)
+	if not data then return end
+	if not self.auth then return end
+	core.profile.pushOrder(table.serialize{o="EntityPoke",
+		module=module,
+		kind=kind,
+		name=name,
+		desc=desc,
+		data=data,
+	})
+	print("[ONLINE PROFILE] poke entity vault", module, kind, name)
+end
+
 function _M:isDonator(s)
 	s = s or 1
 	if not self.auth or not tonumber(self.auth.donated) or tonumber(self.auth.donated) <= s then return false else return true end

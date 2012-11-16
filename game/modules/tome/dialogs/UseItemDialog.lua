@@ -86,7 +86,7 @@ function _M:use(item)
 	elseif act == "chat-link" then
 		profile.chat.uc_ext:sendObjectLink(self.object)
 	else
-		self:triggerHook{"UseItemMenu:use", actor=self.actor, object=self.object, inven=self.inven, item=self.item, act=act}
+		self:triggerHook{"UseItemMenu:use", actor=self.actor, object=self.object, inven=self.inven, item=self.item, act=act, onuse=self.onuse}
 	end
 end
 
