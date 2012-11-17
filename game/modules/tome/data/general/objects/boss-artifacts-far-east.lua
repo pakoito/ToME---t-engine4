@@ -23,7 +23,7 @@ local Talents = require "engine.interface.ActorTalents"
 -- This file describes artifacts associated with a boss of the game, they have a high chance of dropping their respective ones, but they can still be found elsewhere
 
 newEntity{ base = "BASE_KNIFE", define_as = "LIFE_DRINKER",
-	power_source = {technique=true},
+	power_source = {arcane=true},
 	unique = true,
 	name = "Life Drinker", image = "object/artifact/dagger_life_drinker.png",
 	unided_name = "blood coated dagger",
