@@ -5161,8 +5161,8 @@ newEntity{ base = "BASE_CLOAK",
 		inc_damage={ [DamageType.PHYSICAL] = 5,},
 		resists={ [DamageType.PHYSICAL] = 5,},
 	},
-	max_power = 18, power_regen = 1,
-	use_talent = { id = Talents.T_STONE_WALL, level = 2, power = 18 },
+	max_power = 50, power_regen = 1,
+	use_talent = { id = Talents.T_STONE_WALL, level = 1, power = 50 },
 }
 
 newEntity{ base = "BASE_LIGHT_ARMOR", --Thanks SageAcrin!

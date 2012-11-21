@@ -28,3 +28,37 @@ newEntity{ base = "BASE_LORE",
 	encumberance = 0,
 }
 end
+
+newEntity{ base = "BASE_CLOTH_ARMOR",
+	power_source = {psionic=true},
+	unique = true,
+	name = "Yeek-fur Robe", color = colors.WHITE, image = "object/artifact/yeek_fur_robe.png",
+	unided_name = "sleek fur robe",
+	desc = [[A beautifully soft robe of fine white fur. It looks designed for a halfling noble, with glorious sapphires sewn across the hems. But entrancing as it is you can't help but feel a little queasy wearing it.]],
+	level_range = {12, 22},
+	rarity = 50,
+	cost = 250,
+	material_level = 2,
+	wielder = {
+		combat_def = 9,
+		combat_armor = 3,
+		combat_mindpower = 5,
+		combat_mentalresist = 10,
+		inc_damage={[DamageType.MIND] = 5},
+		resists={[DamageType.COLD] = 20},
+	},
+	on_wear = function(self, who)
+		if who.descriptor and who.descriptor.race == "Yeek" then
+			local Talents = require "engine.interface.ActorStats"
+			self:specialWearAdd({"wielder","combat_mindpower"}, -15)
+			self:specialWearAdd({"wielder","combat_mentalresist"}, -25)
+			game.logPlayer(who, "#RED#You feel disgusted touching this thing!")
+		end
+		if who.descriptor and who.descriptor.race == "Halfling" then
+			local Talents = require "engine.interface.ActorStats"
+			self:specialWearAdd({"wielder","resists"}, {[engine.DamageType.MIND] = 15,})
+			self:specialWearAdd({"wielder","combat_mentalresist"}, 10)
+			game.logPlayer(who, "#LIGHT_BLUE#You feel this robe was made for you!")
+		end
+	end,
+}
