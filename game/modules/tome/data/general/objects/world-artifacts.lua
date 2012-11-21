@@ -3756,9 +3756,9 @@ newEntity{ base = "BASE_WHIP", define_as = "HYDRA_BITE",
 	material_level = 4,
 	running = 0, --For the on hit
 	combat = {
-		dam = 45,
+		dam = 56,
 		apr = 7,
-		physcrit = 4,
+		physcrit = 14,
 		dammod = {str=1.1},
 		convert_damage = {[DamageType.NATURE]=25,[DamageType.ACID]=25,[DamageType.LIGHTNING]=25},
 		special_on_hit = {desc="hit up to two adjacent enemies",on_kill=1, fct=function(combat, who, target)
