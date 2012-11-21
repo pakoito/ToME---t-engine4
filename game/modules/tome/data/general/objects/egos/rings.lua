@@ -433,7 +433,7 @@ newEntity{
 	},
 }
 newEntity{
-	power_source = {arcane=true},
+	power_source = {psionic=true},
 	name = "solipsist's ", prefix=true, instant_resolve=true,
 	keywords = {solipsist=true},
 	level_range = {15, 50},
