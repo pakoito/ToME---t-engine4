@@ -428,7 +428,7 @@ newEntity{ base = "BASE_LITE",
 	},
 }
 
-newEntity{ base = "BASE_LITE",
+newEntity{ base = "BASE_GEM",
 	power_source = {arcane=true},
 	unique = true,
 	name = "Burning Star", image = "object/artifact/jewel_gem_burning_star.png",
@@ -443,15 +443,15 @@ This star is the culmination of their craft. Light radiates from its ever-shifti
 	cost = 400,
 
 	max_power = 30, power_regen = 1,
-	use_power = { name = "map surroundings", power = 10,
+	use_power = { name = "map surroundings", power = 30,
 		use = function(self, who)
 			who:magicMap(20)
 			game.logSeen(who, "%s brandishes the %s which radiates in all directions!", who.name:capitalize(), self:getName())
 			return {id=true, used=true}
 		end
 	},
-	wielder = {
-		lite = 5,
+	carrier = {
+		lite = 1,
 	},
 }
 
