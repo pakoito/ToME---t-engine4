@@ -100,7 +100,7 @@ newEntity{ base = "BASE_NPC_SUNWALL_TOWN",
 	ai_tactic = resolvers.tactic"ranged",
 	max_life = resolvers.rngavg(70,80),
 	resolvers.equip{
-		{type="weapon", subtype="stagg", forbid_power_source={antimagic=true}, autoreq=true},
+		{type="weapon", subtype="staff", forbid_power_source={antimagic=true}, autoreq=true},
 		{type="armor", subtype="robe", forbid_power_source={antimagic=true}, autoreq=true},
 	},
 	resolvers.talents{

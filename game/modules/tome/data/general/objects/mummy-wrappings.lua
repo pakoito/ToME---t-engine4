@@ -31,7 +31,7 @@ newEntity{
 	desc = [[Decaying mummy wrappings.]],
 	egos = "/data/general/objects/egos/armor.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
 	wielder = {
-		resists={[DamageType.FIRE] = -50},
+		resists={[DamageType.FIRE] = -25},
 	}
 }
 
