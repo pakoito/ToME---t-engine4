@@ -50,8 +50,17 @@ function _M:loadMap(file)
 		data = self.data,
 		Map = require("engine.Map"),
 		specialList = function(kind, files)
-			assert(kind == "terrain", "kind unsupported")
-			self.grid_list = self.zone.grid_class:loadList(files)
+			if kind == "terrain" then
+				self.grid_list = self.zone.grid_class:loadList(files)
+			elseif kind == "trap" then
+				self.trap_list = self.zone.trap_class:loadList(files)
+			elseif kind == "object" then
+				self.object_list = self.zone.object_class:loadList(files)
+			elseif kind == "actor" then
+				self.npc_list = self.zone.npc_class:loadList(files)
+			else
+				error("kind unsupported")
+			end
 		end,
 		subGenerator = function(g)
 			self.subgen[#self.subgen+1] = g
