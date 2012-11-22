@@ -218,7 +218,7 @@ newTalent{
 
 		-- Try to insta-kill
 		if hit then
-			if target:checkHit(self:combatPhysicalpower(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("instakill") and target.life > 0 and target.life < target.max_life * 0.2 then
+			if target:checkHit(self:combatPhysicalpower(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("instakill") and target.life > target.die_at and target.life < target.max_life * 0.2 then
 				-- KILL IT !
 				game.logSeen(target, "%s feels the pain of the death blow!", target.name:capitalize())
 				target:die(self)
