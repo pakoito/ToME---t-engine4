@@ -43,7 +43,7 @@ newEntity{ base = "BASE_MINDSTAR",
 	},
 	wielder = {
 		combat_mindpower = 15,
-		ombat_mindcrit =  3,
+		combat_mindcrit =  3,
 		inc_damage= {
 			[DamageType.MIND] = 10,
 			[DamageType.DARKNESS] = 10,
