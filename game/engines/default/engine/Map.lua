@@ -933,6 +933,7 @@ function _M:addEffect(src, x, y, duration, damtype, dam, radius, dir, angle, ove
 			e.particles[#e.particles+1] = self:particleEmitter(x, y, 1, overlay.type, overlay.args)
 			e.particles_only_one = true
 		else
+			e.fake_overlay = overlay
 			for lx, ys in pairs(grids) do
 				for ly, _ in pairs(ys) do
 					e.particles[#e.particles+1] = self:particleEmitter(lx, ly, 1, overlay.type, overlay.args)
@@ -1000,7 +1001,7 @@ function _M:processEffects()
 						e.particles = {}
 						for lx, ys in pairs(e.grids) do
 							for ly, _ in pairs(ys) do
-								e.particles[#e.particles+1] = self:particleEmitter(lx, ly, 1, overlay.type, overlay.args)
+								e.particles[#e.particles+1] = self:particleEmitter(lx, ly, 1, e.fake_overlay.type, e.fake_overlay.args)
 							end
 						end
 					end
