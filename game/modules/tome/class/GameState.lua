@@ -1902,7 +1902,7 @@ function _M:startEvents()
 				setfenv(f, setmetatable({level=game.level, zone=game.zone}, {__index=_G}))
 				local list = f()
 				for j, ee in ipairs(list) do
-					if e.percent_factor and ee.percent then ee.percent_factor = math.floor(ee.percent * e.percent_factor) end
+					if e.percent_factor and ee.percent then ee.percent = math.floor(ee.percent * e.percent_factor) end
 					if ee.name then if ee.minor then mevts[#mevts+1] = ee else evts[#evts+1] = ee end end
 				end
 			end
