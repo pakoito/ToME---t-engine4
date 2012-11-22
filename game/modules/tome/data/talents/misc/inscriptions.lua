@@ -452,7 +452,7 @@ newInscription{
 	end,
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		self:setEffect(self.EFF_DAMAGE_SHIELD, 6, {power=100+1.5*self:getMag(), reflect=100})
+		self:setEffect(self.EFF_DAMAGE_SHIELD, 5, {power=100+1.5*self:getMag(), reflect=100})
 		return true
 	end,
 	info = function(self, t)
