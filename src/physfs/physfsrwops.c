@@ -121,7 +121,6 @@ static int physfsrwops_write(SDL_RWops *rw, const void *ptr, int size, int num)
     return((int) rc);
 } /* physfsrwops_write */
 
-
 static int physfsrwops_close(SDL_RWops *rw)
 {
     PHYSFS_File *handle = (PHYSFS_File *) rw->hidden.unknown.data1;
@@ -134,6 +133,12 @@ static int physfsrwops_close(SDL_RWops *rw)
     SDL_FreeRW(rw);
     return(0);
 } /* physfsrwops_close */
+
+static int physfsrwops_size(SDL_RWops *rw)
+{
+    PHYSFS_File *handle = (PHYSFS_File *) rw->hidden.unknown.data1;
+    return PHYSFS_fileLength(handle);
+} /* physfsrwops_size */
 
 
 static SDL_RWops *create_rwops(PHYSFS_File *handle)
@@ -151,6 +156,7 @@ static SDL_RWops *create_rwops(PHYSFS_File *handle)
             retval->read  = physfsrwops_read;
             retval->write = physfsrwops_write;
             retval->close = physfsrwops_close;
+            retval->size  = physfsrwops_size;
             retval->hidden.unknown.data1 = handle;
         } /* if */
     } /* else */
