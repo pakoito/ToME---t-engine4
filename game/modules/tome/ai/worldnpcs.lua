@@ -110,7 +110,7 @@ newAI("move_world_hostile", function(self)
 
 	if tx and ty then
 		if (tx == self.x and ty == self.y) or rng.percent(10) then self.ai_state.wander_x, self.ai_state.wander_y = nil, nil return true end
-		self:moveDirection(tx, ty)
+		pcall(self.moveDirection, self, tx, ty)
 	end
 	return true
 end)
