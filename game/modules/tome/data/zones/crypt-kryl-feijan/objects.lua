@@ -25,7 +25,7 @@ local Talents = require "engine.interface.ActorTalents"
 newEntity{ base = "BASE_MINDSTAR",
 	power_source = {psionic = true },
 	unique = true,
-	name = "Writhing Essence of Nightmares", image = "",
+	name = "Writhing Essence of Nightmares",
 	desc = [[Whispers seem to ceaselessly emanate from this writhing mass of black tentacles, murmuring unspeakable horrors into the ears of any unfortunate enough to hear them.]],
 	unided_name = "writhing mindstar",
 	level_range = {20, 32},
