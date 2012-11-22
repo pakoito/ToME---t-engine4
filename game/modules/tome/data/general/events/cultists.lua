@@ -51,6 +51,7 @@ for i, p in ipairs(list) do
 	g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/moonstone_0"..rng.range(1,8)..".png", display_y=-1, display_h=2, z=18}
 	g.nice_tiler = nil
 	g.grow = nil g.dig = nil
+	g.special = true
 	g.is_monolith = true
 	game.zone:addEntity(game.level, g, "terrain", p.x, p.y)
 

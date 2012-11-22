@@ -134,7 +134,7 @@ newTalent{
 
 		for i = -1, 1 do for j = -1, 1 do if game.level.map:isBound(x + i, y + j) then
 			local oe = game.level.map(x + i, y + j, Map.TERRAIN)
-			if oe and not oe:attr("temporary") and not game.level.map:checkAllEntities(x + i, y + j, "block_move") then
+			if oe and not oe:attr("temporary") and not game.level.map:checkAllEntities(x + i, y + j, "block_move") and not oe.special then
 				-- Ok some explanation, we make a new *OBJECT* because objects can have energy and act
 				-- it stores the current terrain in "old_feat" and restores it when it expires
 				-- We CAN set an object as a terrain because they are all entities

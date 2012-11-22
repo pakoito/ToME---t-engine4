@@ -53,6 +53,7 @@ for i = 1, 3 do
 	g.grow = nil g.dig = nil
 	g.x = i
 	g.y = j
+	g.special = true
 	g.block_move = function(self, x, y, who, act, couldpass)
 		if not who or not who.player or not act then return false end
 		who:runStop("weird pedestal")
