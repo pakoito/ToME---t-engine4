@@ -313,7 +313,7 @@ end
 
 --- Try to totally evade an attack
 function _M:checkEvasion(target)
-	if not target:attr("evasion") then return end
+	if not target:attr("evasion") or self == target then return end
 
 	local evasion = target:attr("evasion")
 	print("checkEvasion", evasion, target.level, self.level)
