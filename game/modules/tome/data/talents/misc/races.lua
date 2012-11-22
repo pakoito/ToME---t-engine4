@@ -64,9 +64,13 @@ newTalent{
 	mode = "passive",
 	on_learn = function(self, t)
 		self.sight = self.sight + 1
+		self.heightened_senses = (self.heightened_senses or 0) + 1
+		self.infravision = (self.infravision or 0) + 1
 	end,
 	on_unlearn = function(self, t)
 		self.sight = self.sight - 1
+		self.heightened_senses = (self.heightened_senses or 0) - 1
+		self.infravision = (self.infravision or 0) - 1
 	end,
 	info = function(self, t)
 		return ([[While Highers are not meant to rule other humans - and show no particular will to do so - they are frequently called to higher duties.

@@ -398,7 +398,7 @@ function _M:loadScreen(mod)
 		local has_max = mod.loading_wait_ticks
 		if has_max then core.wait.addMaxTicks(has_max) end
 		local i, max, dir = has_max or 20, has_max or 20, -1
-		local backname = util.getval(mod.background_name)
+		local backname = util.getval(mod.background_name) or "tome"
 
 		local bkgs = core.display.loadImage("/data/gfx/background/"..backname..".png") or core.display.loadImage("/data/gfx/background/tome.png")
 		local sw, sh = core.display.size()
