@@ -461,19 +461,42 @@ function _M:historyColumns(strings, offset)
 	local offset_str = string.rep(" ", offset and offset or 0)
 	local ox, oy = self.font:size(offset_str)
 	local longest_key = ""
+	local width = 0  --
+	local max_width = 80 -- Maximum field width to print
+	
+--	for i, k in ipairs(strings) do
+--		if #k > #longest_key then
+--			longest_key = k
+--		end
+--	end
+
 	for i, k in ipairs(strings) do
-		if #k > #longest_key then
+		if #k > width then
 			longest_key = k
+			width = #k
+			if width >= max_width then
+				width = max_width
+				break
+			end
 		end
 	end
-	local tx, ty = self.font:size(longest_key .. "  ")
+	
+--	local tx, ty = self.font:size(longest_key .. "  ")
+	local tx, ty = self.font:size(string.sub(longest_key,1,width) .. "...  ") --
 	local num_columns = math.floor((self.w - ox) / tx)
 	local num_rows = math.ceil(#strings / num_columns)
-	local line_format = offset_str..string.rep("%-"..tostring(#longest_key).."s ", num_columns)
+
+--	local line_format = offset_str..string.rep("%-"..tostring(#longest_key).."s ", num_columns)
+	local line_format = offset_str..string.rep("%-"..tostring(math.min(max_width+5,width+5)).."s ", num_columns) --
+	
 	for i=1,num_rows do
 		vals = {}
 		for j=1,num_columns do
 			vals[j] = strings[i + (j - 1) * num_rows] or ""
+			--Truncate and annotate if too long
+			if #vals[j] > width then --
+				vals[j] = string.sub(vals[j],1,width) .. "..." --
+			end --
 		end
 		table.insert(_M.history, line_format:format(unpack(vals)))
 	end
