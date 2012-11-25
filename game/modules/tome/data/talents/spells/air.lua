@@ -216,7 +216,7 @@ newTalent{
 		end end
 
 		-- Randomly take targets
-		local tg = {type="ball", radius=1, range=self:getTalentRange(t), talent=t}
+		local tg = {type="ball", radius=1, range=self:getTalentRange(t), talent=t, selffire=self:spellFriendlyFire()}
 		for i = 1, t.getTargetCount(self, t) do
 			if #tgts <= 0 then break end
 			local a, id = rng.table(tgts)
