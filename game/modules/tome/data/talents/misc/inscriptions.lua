@@ -610,7 +610,7 @@ newInscription{
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:projectile(tg, x, y, DamageType.ICE, data.power + data.inc_stat, {type="freeze"})
+		self:project(tg, x, y, DamageType.ICE, data.power + data.inc_stat, {type="freeze"})
 		game:playSoundNear(self, "talents/ice")
 		attack_rune(self, t.id)
 		return true
