@@ -418,6 +418,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 				local l = game.zone:level_adjust_level(game.level, game.zone, "object")
 				local p = math.ceil(4 + l / 2)
 				target:setEffect(tid, 8, {str=p, con=p, dex=p, dam=5 + l / 2, src=src})
+				src.turn_procs.blighted_soil = true
 			end
 		end
 
