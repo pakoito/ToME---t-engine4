@@ -78,19 +78,10 @@ floorEffect{
 
 floorEffect{
 	desc = "Blighted Soil", image = "talents/blightzone.png",
-	long_desc = "The target is walking on blighted soil, reducing diseases resistance by 30% and giving a chance to be infected with a random disease.",
+	long_desc = "The target is walking on blighted soil, reducing diseases resistance by 60% and giving all attacks a 40% chance to infect the target with a random disease (can only happen once per turn).",
 	activate = function(self, eff)
-		self:effectTemporaryValue(eff, "disease_immune", -0.3)
-	end,
-	on_timeout = function(self, eff)
-		if rng.chance(10) then
-			local tid = rng.table{self.EFF_ROTTING_DISEASE, self.EFF_DECREPITUDE_DISEASE, self.EFF_DECREPITUDE_DISEASE}
-			if not self:hasEffect(tid) then
-				local l = game.zone:level_adjust_level(game.level, game.zone, "object")
-				local p = math.ceil(4 + l / 2)
-				self:setEffect(tid, 8, {str=p, con=p, dex=p, dam=5 + l / 2, src=self})
-			end
-		end
+		self:effectTemporaryValue(eff, "disease_immune", -0.6)
+		self:effectTemporaryValue(eff, "blighted_soil", 40)
 	end,
 }
 

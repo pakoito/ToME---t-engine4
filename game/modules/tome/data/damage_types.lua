@@ -412,6 +412,14 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			src.turn_procs.is_crit = nil
 		end
 
+		if src.turn_procs and not src.turn_procs.blighted_soil and src:attr("blighted_soil") and rng.percent(src:attr("blighted_soil")) then
+			local tid = rng.table{src.EFF_ROTTING_DISEASE, src.EFF_DECREPITUDE_DISEASE, src.EFF_DECREPITUDE_DISEASE}
+			if not target:hasEffect(tid) then
+				local l = game.zone:level_adjust_level(game.level, game.zone, "object")
+				local p = math.ceil(4 + l / 2)
+				target:setEffect(tid, 8, {str=p, con=p, dex=p, dam=5 + l / 2, src=src})
+			end
+		end
 
 		return dam + add_dam
 	end

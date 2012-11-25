@@ -189,6 +189,7 @@ function _M:dumpToJSON(js, bypass, nosub)
 	if self:isUnarmed() then
 		local mean, dam = self.combat, self.combat
 		local d = {}
+		c.barehand = {}
 		c.barehand[#c.barehand+1] = d
 		if mean and dam then
 			d.accuracy = string.format("%d", self:combatAttack(mean))
@@ -200,6 +201,7 @@ function _M:dumpToJSON(js, bypass, nosub)
 		if mean and mean.range then d.range = mean.range end
 	end
 	if self:getInven(self.INVEN_OFFHAND) then
+		c.offhand = {}
 		for i, o in ipairs(self:getInven(self.INVEN_OFFHAND)) do
 			local offmult = self:getOffHandMult(o.combat)
 			local mean, dam = o.combat, o.combat
