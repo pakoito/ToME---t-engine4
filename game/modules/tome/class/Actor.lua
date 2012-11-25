@@ -2155,7 +2155,8 @@ function _M:die(src, death_note)
 						local d = core.fov.distance(self.x, self.y, i, j)
 						if game.level.map:isBound(i, j) and
 						   d <= dist and
-						   not game.level.map:checkAllEntities(i, j, "block_move") then
+						   not game.level.map:checkAllEntities(i, j, "block_move") and
+						   not game.level.map.attrs(i, j, "no_drop") then
 							poss[#poss+1] = {i,j,d}
 						end
 					end

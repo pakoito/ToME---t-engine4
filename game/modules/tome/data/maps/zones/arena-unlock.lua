@@ -19,11 +19,11 @@
 
 defineTile("#", "HARDWALL")
 defineTile("+", "GENERIC_LEVER_DOOR")
-defineTile(":", "GRASS", nil, nil, nil, {no_teleport=true})
+defineTile(":", "GRASS", nil, nil, nil, {no_teleport=true, no_drop=true})
 defineTile(".", "SAND")
 defineTile("-", "FLOOR")
-defineTile("_", "FLOOR", nil, nil, nil, {no_teleport=true})
-defineTile("T", "TREE", nil, nil, nil, {no_teleport=true})
+defineTile("_", "FLOOR", nil, nil, nil, {no_teleport=true, no_drop=true})
+defineTile("T", "TREE", nil, nil, nil, {no_teleport=true, no_drop=true})
 
 startx = 8
 starty = 12
