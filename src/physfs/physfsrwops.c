@@ -156,7 +156,9 @@ static SDL_RWops *create_rwops(PHYSFS_File *handle)
             retval->read  = physfsrwops_read;
             retval->write = physfsrwops_write;
             retval->close = physfsrwops_close;
+#ifndef NO_RWOPS_SIZE
             retval->size  = physfsrwops_size;
+#endif
             retval->hidden.unknown.data1 = handle;
         } /* if */
     } /* else */

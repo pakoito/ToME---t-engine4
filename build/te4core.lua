@@ -28,6 +28,8 @@ project "TEngine"
 
 	links { "m" }
 
+	if _OPTIONS.no_rwops_size then defines{"NO_RWOPS_SIZE"} end
+
 	configuration "macosx"
 		files { "../src/mac/SDL*" }
 		includedirs {
@@ -57,7 +59,7 @@ project "TEngine"
 
 
 	configuration "linux"
-		libdirs {"/home/nicolas/local/lib/"}
+		libdirs {"/opt/SDL-2.0/lib/"}
 		links { "dl", "SDL2", "SDL2_ttf", "SDL2_image", "png", "openal", "vorbisfile", "GL", "GLU", "m", "pthread" }
 		defines { [[TENGINE_HOME_PATH='".t-engine"']], 'SELFEXE_LINUX' }
 
@@ -78,6 +80,7 @@ project "physfs"
 	targetname "physfs"
 
 	defines {"PHYSFS_SUPPORTS_ZIP"}
+	if _OPTIONS.no_rwops_size then defines{"NO_RWOPS_SIZE"} end
 
 	files { "../src/physfs/*.c", "../src/physfs/zlib123/*.c", "../src/physfs/archivers/*.c", }
 

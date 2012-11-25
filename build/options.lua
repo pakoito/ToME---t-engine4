@@ -52,4 +52,9 @@ newoption {
 	description = "Doesnt remove jit2 build files",
 }
 
+newoption {
+	trigger	    = "no_rwops_size",
+	description = "Compat for old SDL2 dev verions"
+}
+
 _OPTIONS.lua = _OPTIONS.lua or "jit2"
