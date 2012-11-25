@@ -38,6 +38,7 @@ function _M:init(t, no_default)
 	self.members = {}
 	self.m_list = {}
 	self.energy = {value = 0, mod=100000} -- "Act" every tick
+	self.on_death_show_achieved = {}
 end
 
 function _M:addMember(actor, def)

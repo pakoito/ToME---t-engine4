@@ -37,10 +37,16 @@ function _M:init(actor)
 	if self.dont_show then return end
 	if not config.settings.cheat then game:saveGame() end
 
-	self.c_desc = Textzone.new{width=self.iw, auto_height=true, text=[[You have #LIGHT_RED#died#LAST#!
+	local text = [[You have #LIGHT_RED#died#LAST#!
 Death in ToME is usually permanent, but if you have a means of resurrection it will be proposed in the menu below.
 You can dump your character data to a file to remember her/him forever, or you can exit and try once again to survive in the wilds!
-]]}
+]]
+
+	if #game.party.on_death_show_achieved > 0 then
+		text = text.."#LIGHT_GREEN#During your game you#WHITE#:\n* "..table.concat(game.party.on_death_show_achieved, "\n* ")
+	end
+
+	self.c_desc = Textzone.new{width=self.iw, auto_height=true, text=text}
 	self.c_list = List.new{width=self.iw, nb_items=#self.list, list=self.list, fct=function(item) self:use(item) end}
 
 	self:loadUI{

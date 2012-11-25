@@ -1044,7 +1044,7 @@ function _M:getTextualDesc(compare_with)
 			compare_unarmed[i] = compare_with[i].wielder or {}
 		end
 
-		if (w and w.combat or can_combat_unarmed) and game.player:knowTalent(game.player.T_EMPTY_HAND) then
+		if (w and w.combat or can_combat_unarmed) and (game.player:knowTalent(game.player.T_EMPTY_HAND) or game.player:attr("show_gloves_combat")) then
 			desc:add({"color","YELLOW"}, "When used to modify unarmed attacks:", {"color", "LAST"}, true)
 			compare_tab = { dam=1, atk=1, apr=0, physcrit=0, physspeed =0.6, dammod={str=1}, damrange=1.1 }
 			desc_combat(w, compare_unarmed, "combat", compare_tab)

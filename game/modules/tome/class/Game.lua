@@ -1880,6 +1880,8 @@ function _M:setAllowedBuild(what, notify)
 	if notify then
 		self.state:checkDonation() -- They gained someting nice, they could be more receptive
 		self:registerDialog(require("mod.dialogs.UnlockDialog").new(what))
+
+		if type(unlocks_list[what]) == "string" then self.party.on_death_show_achieved[#self.party.on_death_show_achieved+1] = "Unlocked: "..unlocks_list[what] end
 	end
 
 	return true
@@ -1926,55 +1928,56 @@ function _M:placeRandomLoreObject(define, zone)
 	end
 end
 
+unlocks_list = {
+	birth_transmo_chest = "Birth option: Transmogrification Chest",
+	birth_zigur_sacrifice = "Birth option: Zigur sacrifice",
+
+	campaign_infinite_dungeon = "Campaign: Infinite Dungeon",
+	campaign_arena = "Campaign: The Arena",
+
+	undead_ghoul = "Race: Ghoul",
+	undead_skeleton = "Race: Skeleton",
+	yeek = "Race: Yeek",
+
+	mage = "Class: Archmage",
+	mage_tempest = "Class tree: Storm",
+	mage_geomancer = "Class tree: Stone",
+	mage_pyromancer = "Class tree: Wildfire",
+	mage_cryomancer = "Class tree: uttercold",
+	mage_necromancer = "Class: Necromancer",
+
+	rogue_marauder = "Class: Marauder",
+	rogue_poisons = "Class tree: Poisons",
+
+	divine_anorithil = "Class: Anorithil",
+	divine_sun_paladin = "Class: Sun Paladin",
+
+	wilder_wyrmic = "Class: Wyrmic",
+	wilder_summoner = "Class: Summoner",
+
+	corrupter_reaver = "Class: Reaver",
+	corrupter_corruptor = "Class: Corruptor",
+
+	afflicted_cursed = "Class: Cursed",
+	afflicted_doomed = "Class: Doomed",
+
+	chronomancer_temporal_warden = "Class: Temporal Warden",
+	chronomancer_paradox_mage = "Class: Paradox Mage",
+
+	psionic_mindslayer = "Class: Mindslayer",
+	psionic_solipsist = "Class: Solipsist",
+
+	warrior_brawler = "Class: Brawler",
+
+	adventurer = "Class: Adventurer",
+}
+
 --- Returns the current number of birth unlocks and the max
 function _M:countBirthUnlocks()
 	local nb = 0
 	local max = 0
-	local list = {
-		birth_transmo_chest = true,
-		birth_zigur_sacrifice = true,
 
-		campaign_infinite_dungeon = true,
-		campaign_arena = true,
-
-		undead_ghoul = true,
-		undead_skeleton = true,
-		yeek = true,
-
-		mage = true,
-		mage_tempest = true,
-		mage_geomancer = true,
-		mage_pyromancer = true,
-		mage_cryomancer = true,
-		mage_necromancer = true,
-
-		rogue_marauder = true,
-		rogue_poisons = true,
-
-		divine_anorithil = true,
-		divine_sun_paladin = true,
-
-		wilder_wyrmic = true,
-		wilder_summoner = true,
-
-		corrupter_reaver = true,
-		corrupter_corruptor = true,
-
-		afflicted_cursed = true,
-		afflicted_doomed = true,
-
-		chronomancer_temporal_warden = true,
-		chronomancer_paradox_mage = true,
-
-		psionic_mindslayer = true,
-		psionic_solipsist = true,
-
-		warrior_brawler = true,
-
-		adventurer = true,
-	}
-
-	for name, _ in pairs(list) do
+	for name, _ in pairs(self.unlocks_list) do
 		max = max + 1
 		if profile.mod.allow_build[name] then nb = nb + 1 end
 	end

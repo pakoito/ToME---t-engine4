@@ -57,5 +57,8 @@ function _M:gainAchievement(id, src, ...)
 	if game.permadeath == game.PERMADEATH_INFINITE then id = "EXPLORATION_"..id end
 	if game.difficulty == game.DIFFICULTY_INSANE and game.permadeath == game.PERMADEATH_ONE then id = "INSANE_"..id end
 
+	local knew = self.achieved[id]
+
 	mod.class.interface.WorldAchievements.gainAchievement(self, id, src, ...)
+	if not knew and self.achieved[id] then game.party.on_death_show_achieved[#game.party.on_death_show_achieved+1] = "Gained new achievement: "..a.name end
 end

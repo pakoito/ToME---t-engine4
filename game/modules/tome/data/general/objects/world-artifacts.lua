@@ -4782,8 +4782,8 @@ newEntity{ base = "BASE_SHIELD", --Thanks SageAcrin!
 			local burst = {type="cone", range=0, radius=4, force_target=target, selffire=false,}
 		
 			who:project(burst, target.x, target.y, engine.DamageType.COLD, 30)
-			game.level.map:particleEmitter(target.x, target.y, burst.radius, "breath_ice", {radius=burst.radius, tx=target.x-who.x, ty=target.y-who.y})
-			game.logSeen(who, "A burst of chilling water launches from your shield to %s!", who.name:capitalize())
+			game.level.map:particleEmitter(target.x, target.y, burst.radius, "breath_cold", {radius=burst.radius, tx=target.x-who.x, ty=target.y-who.y})
+			game.logSeen(who, "A burst of chilling water launches from %s's shield to %s!", who.name:capitalize(), target.name:capitalize())
 		end
 	end,
 }
