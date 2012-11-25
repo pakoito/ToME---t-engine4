@@ -20,6 +20,18 @@
 -- The basic stuff used to damage a grid
 setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 	if not game.level.map:isBound(x, y) then return 0 end
+
+	local add_dam = 0
+	if src:attr("all_damage_convert") then
+		local ndam = dam * src.all_damage_convert_percent / 100
+		dam = dam - ndam
+		local nt = src.all_damage_convert
+		src.all_damage_convert = nil
+		add_dam = DamageType.defaultProjector(src, x, y, nt, ndam, tmp, no_martyr)
+		src.all_damage_convert = nt
+		if dam <= 0 then return add_dam end
+	end
+
 	local terrain = game.level.map(x, y, Map.TERRAIN)
 	if terrain then terrain:check("damage_project", src, x, y, type, dam) end
 
@@ -127,7 +139,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 					src:removeEffect(src.EFF_FROZEN)
 				end
 			end
-			return 0
+			return 0 + add_dam
 		end
 
 		-- dark vision increases damage done in creeping dark
@@ -401,9 +413,9 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 		end
 
 
-		return dam
+		return dam + add_dam
 	end
-	return 0
+	return 0 + add_dam
 end)
 
 local function tryDestroy(who, inven, dam, destroy_prop, proof_prop, msg)

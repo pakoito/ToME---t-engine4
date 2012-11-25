@@ -83,6 +83,8 @@ _M.temporary_values_conf.flat_damage_cap = "lowest"
 
 -- Damage redirection takes last
 _M.temporary_values_conf.force_use_resist = "last"
+_M.temporary_values_conf.all_damage_convert = "last"
+_M.temporary_values_conf.all_damage_convert_percent = "last"
 
 _M.projectile_class = "mod.class.Projectile"
 
