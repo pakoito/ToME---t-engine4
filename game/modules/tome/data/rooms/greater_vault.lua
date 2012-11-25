@@ -22,7 +22,7 @@ local list = {
 	"double-t", "crypt", "treasure1", "diggers", "hillbert_curve", "quiet", "lightning-vault", "water-vault",
 	"32-chambers", "demon-nest-1", "demon-nest-2", "demon-nest-3", "frost-dragon-lair", "greater-money-vault",
 	"trapped-hexagon", "yin-yang", "zigzag-chambers", "rain-of-death", "paladin-vs-vampire", "orc-hatred", "lich-lair",
-	"greater-crypt", "trickvault",
+	"greater-crypt", "trickvault", "spider-den", "acidic-vault",
 }
 
 return function(gen, id, lev, old_lev)
