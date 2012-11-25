@@ -27,6 +27,7 @@ newTalent{
 	points = 5,
 	cooldown = 20,
 	positive = -10,
+	no_energy = true,
 	requires_target = true,
 	tactical = { DISABLE = 2 },
 	range = function(self, t) return math.floor (self:getTalentLevel(t)) end,
@@ -40,7 +41,7 @@ newTalent{
 		local trap = game.level.map(tx, ty, Map.TRAP)
 		if trap then return end
 
-		local dam = t.getDazeDuration(self, t)
+		local dam = self:spellCrit(t.getDazeDuration(self, t))
 		local trap = Trap.new{
 			name = "glyph of paralysis",
 			type = "elemental", id_by_type=true, unided_name = "trap",
@@ -92,6 +93,7 @@ newTalent{
 	points = 5,
 	positive = -10,
 	cooldown = 20,
+	no_energy = true,
 	tactical = { DISABLE = 2 },
 	requires_target = true,
 	range = function(self, t) return math.floor (self:getTalentLevel(t)) end,
@@ -105,7 +107,7 @@ newTalent{
 		local trap = game.level.map(tx, ty, Map.TRAP)
 		if trap then return end
 
-		local dam = t.getDamage(self, t)
+		local dam = self:spellCrit(t.getDamage(self, t))
 		local sp = self:combatSpellpower()
 		local trap = Trap.new{
 			name = "glyph of repulsion",
@@ -165,6 +167,7 @@ newTalent{
 	points = 5,
 	cooldown = 20,
 	positive = -10,
+	no_energy = true,
 	tactical = { ATTACKAREA = {LIGHT = 2} },
 	requires_target = true,
 	range = function(self, t) return math.floor (self:getTalentLevel(t)) end,
@@ -178,7 +181,7 @@ newTalent{
 		local trap = game.level.map(tx, ty, Map.TRAP)
 		if trap then return end
 
-		local dam = t.getDamage(self, t)
+		local dam = self:spellCrit(t.getDamage(self, t))
 		local trap = Trap.new{
 			name = "glyph of explosion",
 			type = "elemental", id_by_type=true, unided_name = "trap",
@@ -233,6 +236,7 @@ newTalent{
 	points = 5,
 	cooldown = 20,
 	positive = -10,
+	no_energy = true,
 	tactical = { DISABLE = 2 },
 	requires_target = true,
 	range = function(self, t) return math.floor (self:getTalentLevel(t)) end,
@@ -246,7 +250,7 @@ newTalent{
 		local trap = game.level.map(tx, ty, Map.TRAP)
 		if trap then return end
 
-		local dam = t.getSlow(self, t)
+		local dam = self:spellCrit(t.getSlow(self, t))
 		local trap = Trap.new{
 			name = "glyph of fatigue",
 			type = "elemental", id_by_type=true, unided_name = "trap",

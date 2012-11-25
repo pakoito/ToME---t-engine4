@@ -25,6 +25,7 @@ newTalent{
 	points = 5,
 	cooldown = 20,
 	negative = 20,
+	no_energy = true,
 	tactical = { DEFEND = 2, ATTACKAREA = {DARKNESS = 1} },
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 4, 30) end,
 	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)) end,
@@ -38,8 +39,8 @@ newTalent{
 	action = function(self, t)
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
-			self.x, self.y, t.getDuration(self, t),
-			DamageType.SHIFTINGSHADOWS, t.getDamage(self, t),
+			self.x, self.y, self:spellCrit(t.getDuration(self, t)),
+			DamageType.SHIFTINGSHADOWS, self:spellCrit(t.getDamage(self, t)),
 			self:getTalentRadius(t),
 			5, nil,
 			engine.Entity.new{alpha=75, display='', color_br=60, color_bg=10, color_bb=60},
@@ -65,6 +66,7 @@ newTalent{
 	points = 5,
 	cooldown = 20,
 	positive = 20,
+	no_energy = true,
 	tactical = { DEFEND = 2, ATTACKAREA = {FIRE = 0.5, LIGHT = 0.5} },
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 2, 15) end,
 	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)) end,
@@ -81,8 +83,8 @@ newTalent{
 		self:project(tg, self.x, self.y, DamageType.LITE, 1)
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
-			self.x, self.y, t.getDuration(self, t),
-			DamageType.BLAZINGLIGHT, t.getDamage(self, t),
+			self.x, self.y, self:spellCrit(t.getDuration(self, t)),
+			DamageType.BLAZINGLIGHT, self:spellCrit(t.getDamage(self, t)),
 			radius,
 			5, nil,
 			engine.Entity.new{alpha=75, display='', color_br=250, color_bg=200, color_bb=10},
@@ -109,6 +111,7 @@ newTalent{
 	cooldown = 20,
 	positive = 20,
 	negative = 20,
+	no_energy = true,
 	tactical = { DEFEND = 2, ATTACKAREA = 1 },
 	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)) end,
 	range = 0,
@@ -121,7 +124,7 @@ newTalent{
 	action = function(self, t)
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
-			self.x, self.y, t.getDuration(self, t),
+			self.x, self.y, self:spellCrit(t.getDuration(self, t)),
 			DamageType.SANCTITY, 1,
 			self:getTalentRadius(t),
 			5, nil,
@@ -147,6 +150,7 @@ newTalent{
 	cooldown = 20,
 	positive = 20,
 	negative = 20,
+	no_energy = true,
 	tactical = { DEFEND = 2, ATTACKAREA = {LIGHT = 0.5, DARKNESS = 0.5} },
 	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)) end,
 	range = 0,
@@ -160,8 +164,8 @@ newTalent{
 	action = function(self, t)
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
-			self.x, self.y, t.getDuration(self, t),
-			DamageType.WARDING, t.getDamage(self, t),
+			self.x, self.y, self:spellCrit(t.getDuration(self, t)),
+			DamageType.WARDING, self:spellCrit(t.getDamage(self, t)),
 			self:getTalentRadius(t),
 			5, nil,
 			engine.Entity.new{alpha=75, display='', color_br=200, color_bg=200, color_bb=200},
@@ -179,4 +183,3 @@ newTalent{
 		format(radius, damage, (damDesc (self, DamageType.LIGHT, damage)), (damDesc (self, DamageType.DARKNESS, damage)), duration)
 	end,
 }
-

@@ -29,8 +29,8 @@ return { generator = function()
 
 	return {
 		trail = 1,
-		life = 10,
-		size = 4, sizev = 0.1, sizea = 0,
+		life = rng.range(10,20),
+		size = rng.range(2,6), sizev = -0.1, sizea = 0,
 
 		x = r * math.cos(a), xv = 0, xa = 0,
 		y = r * math.sin(a), yv = 0, ya = 0,
@@ -40,10 +40,10 @@ return { generator = function()
 		r = col,  rv = 0, ra = 0,
 		g = col,  gv = 0, ga = 0,
 		b = col,  bv = 0, ba = 0,
-		a = rng.range(220, 255)/255,  av = 0, aa = 0,
+		a = rng.range(220, 255)/255, av = -0.05, aa = 0,
 	}
 end, },
 function(self)
 	self.ps:emit(10)
 end,
-100
+100, "particle_torus"

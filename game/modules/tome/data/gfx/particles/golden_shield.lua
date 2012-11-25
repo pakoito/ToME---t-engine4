@@ -19,7 +19,7 @@
 
 base_size = 32
 
-return { generator = function()
+return { blend_mode=core.particles.BLEND_ADDITIVE, generator = function()
 	local ad = rng.range(0, 360)
 	local a = math.rad(ad)
 	local dir = math.rad(ad + 90)
@@ -27,22 +27,22 @@ return { generator = function()
 	local dirv = math.rad(1)
 
 	return {
-		trail = 1,
-		life = 10,
-		size = 4, sizev = -0.1, sizea = 0,
+		trail = 0,
+		life = rng.range(10, 20),
+		size = rng.range(2, 6), sizev = -0.1, sizea = 0,
 
 		x = r * math.cos(a), xv = 0, xa = 0,
 		y = r * math.sin(a), yv = 0, ya = 0,
-		dir = dir, dirv = dirv, dira = 0,
+		dir = dir, dirv = -dirv, dira = 0,
 		vel = rng.percent(50) and -1 or 1, velv = 0, vela = 0,
 
 		r = rng.range(220, 255)/255,  rv = 0, ra = 0,
 		g = rng.range(200, 230)/255,  gv = 0, ga = 0,
 		b = 0,                        bv = 0, ba = 0,
-		a = rng.range(25, 220)/255,   av = 0, aa = 0,
+		a = rng.range(25, 220)/255,   av = -0.03, aa = 0,
 	}
 end, },
 function(self)
 	self.ps:emit(10)
 end,
-100
+200, "particle_torus"
