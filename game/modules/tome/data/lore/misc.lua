@@ -571,6 +571,18 @@ Somehow, your foe has invaded your very subconcious and is attacking you in your
 Free now to face this nightmare, you turn to find your foe. While you have a sense that having one of your dreamselves destroyed may not by itself be catastrophic, what would happen if several or many are cut down? Unwilling to find out, you resolve yourself to end this offensive intrustion into your mind.]],
 }
 
+
+newLore{
+	id = "loot-vault-empty", always_pop = true,
+	category = "vault",
+	name = "Mocking Note",
+	lore = [[Dear graverobber,
+
+Try to be a little faster next time.
+
+Love, #{italic}#Eden#{normal}#]]
+}
+
 --------------------------------------------------------------
 -- Misc bosses
 --------------------------------------------------------------
