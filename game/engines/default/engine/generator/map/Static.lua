@@ -28,6 +28,8 @@ function _M:init(zone, map, level, data)
 	self.subgen = {}
 	self.spots = {}
 	self.data = data
+	data.__import_offset_x = data.__import_offset_x or 0
+	data.__import_offset_y = data.__import_offset_y or 0
 
 	if data.adjust_level then
 		self.adjust_level = {base=zone.base_level, lev = self.level.level, min=data.adjust_level[1], max=data.adjust_level[2]}
@@ -96,12 +98,12 @@ function _M:loadMap(file)
 			self.spots[#self.spots+1] = {x=dst[1], y=dst[2], check_connectivity=src, type=type or "static", subtype=subtype or "static"}
 		end,
 		addSpot = function(dst, type, subtype, additional)
-			local spot = {x=dst[1], y=dst[2], type=type or "static", subtype=subtype or "static"}
+			local spot = {x=self.data.__import_offset_x+dst[1], y=self.data.__import_offset_y+dst[2], type=type or "static", subtype=subtype or "static"}
 			table.update(spot, additional or {})
 			self.spots[#self.spots+1] = spot
 		end,
 		addZone = function(dst, type, subtype, additional)
-			local zone = {x1=dst[1], y1=dst[2], x2=dst[3], y2=dst[4], type=type or "static", subtype=subtype or "static"}
+			local zone = {x1=self.data.__import_offset_x+dst[1], y1=self.data.__import_offset_y+dst[2], x2=self.data.__import_offset_x+dst[3], y2=self.data.__import_offset_y+dst[4], type=type or "static", subtype=subtype or "static"}
 			table.update(zone, additional or {})
 			self.level.custom_zones = self.level.custom_zones or {}
 			self.level.custom_zones[#self.level.custom_zones+1] = zone
@@ -267,11 +269,13 @@ function _M:generate(lev, old_lev)
 			define_spot = table.clone(define_spot)
 			assert(define_spot.type, "defineTile auto spot without type field")
 			assert(define_spot.subtype, "defineTile auto spot without subtype field")
-			define_spot.x = i-1
-			define_spot.y = j-1
+			define_spot.x = self.data.__import_offset_x+i-1
+			define_spot.y = self.data.__import_offset_y+j-1
 			self.spots[#self.spots+1] = define_spot
 		end
 	end end
+
+	self:triggerHook{"mapGeneratorStatic:subgenRegister", mapfile=self.data.map, list=self.subgen}
 
 	for i = 1, #self.subgen do
 		local g = self.subgen[i]
@@ -279,6 +283,8 @@ function _M:generate(lev, old_lev)
 		if type(data) == "string" and data == "pass" then data = self.data end
 
 		local map = self.zone.map_class.new(g.w, g.h)
+		data.__import_offset_x = self.data.__import_offset_x+g.x
+		data.__import_offset_y = self.data.__import_offset_y+g.y
 		local generator = require(g.generator).new(
 			self.zone,
 			map,
@@ -291,8 +297,8 @@ function _M:generate(lev, old_lev)
 
 		table.append(self.spots, subspots)
 
-		if g.define_up then self.gen_map.startx, self.gen_map.starty = ux + g.x, uy + g.y end
-		if g.define_down then self.gen_map.endx, self.gen_map.endy = dx + g.x, dy + g.y end
+		if g.define_up then self.gen_map.startx, self.gen_map.starty = ux + self.data.__import_offset_x+g.x, uy + self.data.__import_offset_y+g.y end
+		if g.define_down then self.gen_map.endx, self.gen_map.endy = dx + self.data.__import_offset_x+g.x, dy + self.data.__import_offset_y+g.y end
 	end
 
 	if self.gen_map.startx and self.gen_map.starty then

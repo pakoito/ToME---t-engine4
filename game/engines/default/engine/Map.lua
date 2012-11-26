@@ -888,6 +888,7 @@ function _M:import(map, dx, dy, sx, sy, sw, sh)
 
 		self:updateMap(x, y)
 	end end
+
 	self.changed = true
 end
 
