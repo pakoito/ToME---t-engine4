@@ -149,6 +149,11 @@ newAchievement{
 	desc = [[Killed Slasul.]],
 }
 newAchievement{
+	name = "Treacherous Bastard", id = "SLASUL_DEAD_PRODIGY_LEARNT",
+	show = "name",
+	desc = [[Killed Slasul even though you sided with him to learn the Legacy of the Naloren prodigy.]],
+}
+newAchievement{
 	name = "Flooder", id = "UKLLMSWWIK_DEAD",
 	show = "name",
 	desc = [[Defeated Ukllmswwik while doing his own quest.]],

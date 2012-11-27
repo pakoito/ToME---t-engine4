@@ -38,7 +38,9 @@ end
 on_status_change = function(self, who, status, sub)
 	if sub and (sub == "kill-slasul" or sub == "kill-drake") then
 		who:setQuestStatus(self.id, engine.Quest.DONE)
-		if sub == "kill-slasul" then world:gainAchievement("SLASUL_DEAD", game.player)
+		if sub == "kill-slasul" then 
+			world:gainAchievement("SLASUL_DEAD", game.player)
+			if game:getPlayer(true):knowTalent(game.player.T_LEGACY_OF_THE_NALOREN) then world:gainAchievement("SLASUL_DEAD_PRODIGY_LEARNT", game.player) end
 		elseif sub == "kill-drake" then world:gainAchievement("UKLLMSWWIK_DEAD", game.player) end
 	end
 end
