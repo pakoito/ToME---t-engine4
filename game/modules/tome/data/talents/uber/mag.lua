@@ -46,18 +46,17 @@ uberTalent{
 	end} },
 	on_learn = function(self, t)
 		local ret = {}
-		self.resists[DamageType.ARCANE] = (self.resists[DamageType.ARCANE] or 0) + 15
 		self:attr("max_mana", -70)
 		self:talentTemporaryValue(ret, "force_use_resist", DamageType.ARCANE)
+		self:talentTemporaryValue(ret, "force_use_resist_percent", 50)
 		return ret
 	end,
 	on_unlearn = function(self, t)
-		self.resists[DamageType.ARCANE] = (self.resists[DamageType.ARCANE] or 0) - 15
 		self:attr("max_mana", 70)
 	end,
 	info = function(self, t)
 		return ([[Create a thin layer of aether all around you. Any attack passing through will check arcane resistance instead of the incomming damage resistance.
-		Also increases your arcane resistance by 15%%.
+		In effect all your resistances are equal to 50%% of your arcane resistance.
 		Your maximum mana will be premanently reduced by 70 to create the effect.]])
 		:format()
 	end,
