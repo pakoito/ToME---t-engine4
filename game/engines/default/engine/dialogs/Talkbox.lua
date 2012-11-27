@@ -34,7 +34,7 @@ function _M:init(chat, on_end)
 	self.max = 300
 	self.absolute = absolute
 
-	Dialog.init(self, self:getTitle(), 320, 110)
+	Dialog.init(self, self:getTitle(), 320, 110, nil, nil, nil, nil, false)
 
 	local c_box = Textbox.new{title="Say: ", text="", chars=60, max_len=max,
 		fct=function(text) self:okclick() end,
