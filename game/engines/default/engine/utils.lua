@@ -28,6 +28,18 @@ function lpeg.anywhere (p)
 	return lpeg.P{ p + 1 * lpeg.V(1) }
 end
 
+function table.concatNice(t, sep, endsep)
+	if not endsep then return table.concat(t, sep) end
+	local str = ""
+	for i, s in ipairs(t) do 
+		if i == #t then str = str..endsep..s
+		elseif i == 1 then str = s
+		else str = str..sep..s
+		end
+	end
+	return str
+end
+
 function table.min(t)
 	local m = nil
 	for _, v in pairs(t) do

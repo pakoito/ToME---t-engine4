@@ -275,7 +275,7 @@ function _M:generate(lev, old_lev)
 		end
 	end end
 
-	self:triggerHook{"mapGeneratorStatic:subgenRegister", mapfile=self.data.map, list=self.subgen}
+	self:triggerHook{"MapGeneratorStatic:subgenRegister", mapfile=self.data.map, list=self.subgen}
 
 	for i = 1, #self.subgen do
 		local g = self.subgen[i]
@@ -293,7 +293,11 @@ function _M:generate(lev, old_lev)
 		)
 		local ux, uy, dx, dy, subspots = generator:generate(lev, old_lev)
 
-		self.map:import(map, g.x, g.y)
+		if g.overlay then
+			self.map:overlay(map, g.x, g.y)
+		else
+			self.map:import(map, g.x, g.y)
+		end
 
 		table.append(self.spots, subspots)
 
