@@ -128,7 +128,7 @@ This is the troll the notes spoke about, no doubt.]],
 
 	on_die = function(self, who)
 		game.player:resolveSource():setQuestStatus("trollmire-treasure", engine.Quest.COMPLETED)
-		if who and who.level and who.level == 1 then
+		if who and game:getPlayer(true).level == 1 then
 			world:gainAchievement("KILL_BILL", game.player)
 		end
 	end,
