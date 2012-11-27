@@ -82,9 +82,9 @@ uberTalent{
 					game.nicer_tiles:updateAround(game.level, i, j)
 				end end
 
-				src:project({type="ball", radius=2, selffire=src:spellFriendlyFire()}, x, y, engine.DamageType.FIRE, dam/2)
-				src:project({type="ball", radius=2, selffire=src:spellFriendlyFire()}, x, y, engine.DamageType.PHYSICAL, dam/2)
-				src:project({type="ball", radius=2, selffile=src:spellFriendlyFire()}, x, y, function(px, py)
+				src:project({type="ball", radius=2, selffire=false}, x, y, engine.DamageType.FIRE, dam/2)
+				src:project({type="ball", radius=2, selffire=false}, x, y, engine.DamageType.PHYSICAL, dam/2)
+				src:project({type="ball", radius=2, selffile=false}, x, y, function(px, py)
 					local target = game.level.map(px, py, Map.ACTOR)
 					if target then
 						if target:canBe("stun") then
