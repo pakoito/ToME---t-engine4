@@ -1761,6 +1761,7 @@ newTalent{
 
 				src:project({type="ball", radius=2, selffire=src:spellFriendlyFire()}, x, y, engine.DamageType.FIRE, dam/2)
 				src:project({type="ball", radius=2, selffire=src:spellFriendlyFire()}, x, y, engine.DamageType.PHYSICAL, dam/2)
+				game:getPlayer(true):attr("meteoric_crash", 1)
 			end
 		end
 
