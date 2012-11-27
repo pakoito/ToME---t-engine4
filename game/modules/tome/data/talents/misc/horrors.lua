@@ -467,7 +467,6 @@ newTalent{
 			local target = game.level.map(px, py, Map.ACTOR)
 			if not target then return end
 			if self:reactionToward(target) < 0 and not tgts[target] then
-				print("===HIT", target.name)
 				tgts[target] = true
 				local ox, oy = target.x, target.y
 				target:pull(self.x, self.y, 2)
@@ -667,7 +666,6 @@ newTalent{
 	info = function(self, t)
 		local range = self:getTalentRange(t)
 		local radius = self:getTalentRadius(t)
-		local duration = t.getDuration(self, t)
 		return ([[You extend slimy roots into the ground, follow them, and re-appear somewhere else in a range of %d with error margin of %d.]]):format(range, radius)
 	end,
 }
