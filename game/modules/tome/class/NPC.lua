@@ -336,7 +336,12 @@ end
 --- Call when added to a level
 -- Used to make escorts and such
 function _M:addedToLevel(level, x, y)
-	if game.difficulty == game.DIFFICULTY_INSANE and not game.party:hasMember(self) then
+	if game.difficulty == game.DIFFICULTY_NIGHTMARE and not game.party:hasMember(self) then
+		-- Increase talent level
+		for tid, lev in pairs(self.talents) do
+			self:learnTalent(tid, true, math.ceil(lev / 2))
+		end
+	elseif game.difficulty == game.DIFFICULTY_INSANE and not game.party:hasMember(self) then
 		-- Increase talent level
 		for tid, lev in pairs(self.talents) do
 			self:learnTalent(tid, true, lev)

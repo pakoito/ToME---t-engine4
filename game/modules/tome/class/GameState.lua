@@ -144,7 +144,11 @@ function _M:zoneCheckBackupGuardian()
 	if self.allow_backup_guardians[game.zone.short_name] then
 		local data = self.allow_backup_guardians[game.zone.short_name]
 		game.zone.base_level = data.new_level
-		if game.difficulty == game.DIFFICULTY_INSANE then
+		if game.difficulty == game.DIFFICULTY_NIGHTMARE then
+			game.zone.base_level_range = table.clone(game.zone.level_range, true)
+			game.zone.specific_base_level.object = -10 -game.zone.base_level
+			game.zone.base_level = game.zone.base_level * 1.2 + 10
+		elseif game.difficulty == game.DIFFICULTY_INSANE then
 			game.zone.base_level_range = table.clone(game.zone.level_range, true)
 			game.zone.specific_base_level.object = -10 -game.zone.base_level
 			game.zone.base_level = game.zone.base_level * 2 + 10

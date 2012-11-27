@@ -162,7 +162,7 @@ newBirthDescriptor{
 	selection_default = true,
 	desc =
 	{
-		"#GOLD##{bold}#Adventure mode#WHITE##{normal}#",
+		"#GOLD##{bold}#Normal mode#WHITE##{normal}#",
 		"Provides the normal level of chalenges.",
 	},
 	descriptor_choices =
@@ -176,11 +176,32 @@ newBirthDescriptor{
 }
 newBirthDescriptor{
 	type = "difficulty",
+	name = "Nightmare",
+	desc =
+	{
+		"#GOLD##{bold}#Nightmare mode#WHITE##{normal}#",
+		"Unfair game setting",
+		"All zone levels increased by 20% + 10",
+		"All creatures talent levels increased by 50%",
+	},
+	descriptor_choices =
+	{
+		race = { ["Tutorial Human"] = "forbid", },
+		class = { ["Tutorial Adventurer"] = "forbid", },
+	},
+	copy = {
+		__game_difficulty = 3,
+	},
+}
+newBirthDescriptor{
+	type = "difficulty",
 	name = "Insane",
+	locked = function() return profile.mod.allow_build.difficulty_insane end,
+	locked_desc = "Easy is for the weak! Normal is for the weak! Nightmare is too easy! Bring on the true pain!",
 	desc =
 	{
 		"#GOLD##{bold}#Insane mode#WHITE##{normal}#",
-		"Absolutely unfair game setting",
+		"Absolutely unfair game setting, you are really mentally ill to play this mode!",
 		"All zone levels increased by 100% + 10",
 		"All creatures talent levels increased by 100%",
 		"Player rank is normal instead of elite",

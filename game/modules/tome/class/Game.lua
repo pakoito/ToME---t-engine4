@@ -325,7 +325,12 @@ function _M:loaded()
 			-- Increases zone level for higher difficulties
 			if not zone.__applied_difficulty then
 				zone.__applied_difficulty = true
-				if self.difficulty == self.DIFFICULTY_INSANE then
+				if self.difficulty == self.DIFFICULTY_NIGHTMARE then
+					zone.base_level_range = table.clone(zone.level_range, true)
+					zone.specific_base_level.object = -10 -zone.level_range[1]
+					zone.level_range[1] = zone.level_range[1] * 1.2 + 10
+					zone.level_range[2] = zone.level_range[2] * 1.2 + 10
+				elseif self.difficulty == self.DIFFICULTY_INSANE then
 					zone.base_level_range = table.clone(zone.level_range, true)
 					zone.specific_base_level.object = -10 -zone.level_range[1]
 					zone.level_range[1] = zone.level_range[1] * 2 + 10
