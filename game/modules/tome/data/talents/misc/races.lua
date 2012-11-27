@@ -75,7 +75,7 @@ newTalent{
 	info = function(self, t)
 		return ([[While Highers are not meant to rule other humans - and show no particular will to do so - they are frequently called to higher duties.
 		Their nature grants them better senses than other humans.
-		Increase maximum sight range by %d and increases existing lite, infravision, and heightened senses range by %d.]]):
+		Increase maximum sight range by %d and increases existing infravision, and heightened senses range by %d.]]):
 		format(self:getTalentLevelRaw(t), math.ceil(self:getTalentLevelRaw(t)/2))
 	end,
 }
