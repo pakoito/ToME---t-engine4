@@ -85,9 +85,11 @@ for i = 1, 3 do
 						m.pedestal_y = self.y
 						m.on_die = function(self)
 							local g = game.level.map(self.pedestal_x, self.pedestal_y, engine.Map.TERRAIN)
-							local ov = g.add_displays[#g.add_displays]
 							g:removeAllMOs()
-							ov.image = "terrain/pedestal_orb_0"..rng.range(1, 5)..".png"
+							if g.add_displays then
+								local ov = g.add_displays[#g.add_displays]
+								ov.image = "terrain/pedestal_orb_0"..rng.range(1, 5)..".png"
+							end
 							game.level.map:updateMap(self.pedestal_x, self.pedestal_y)
 							game.level.pedestal_events = (game.level.pedestal_events or 0) + 1
 							game.logSeen(self, "%s soul is absorbed by the pedestal. A glowing orb appears.", self.name:capitalize())
