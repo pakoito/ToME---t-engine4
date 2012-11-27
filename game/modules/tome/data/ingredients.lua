@@ -17,6 +17,10 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+-------------------------------------------------------------------
+-- For alchemist quests
+-------------------------------------------------------------------
+
 newIngredient{ id = "TROLL_INTESTINE",
 	type = "organic",
 	icon = "object/troll_intestine.png",
