@@ -141,7 +141,7 @@ newTalent{
 		return tg
 	end,
 	getNb = function(self, t) return 3 + math.floor(self:getTalentLevel(t) / 3) end,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 230) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 180) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
