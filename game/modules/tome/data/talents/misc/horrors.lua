@@ -467,10 +467,11 @@ newTalent{
 			local target = game.level.map(px, py, Map.ACTOR)
 			if not target then return end
 			if self:reactionToward(target) < 0 and not tgts[target] then
+				print("===HIT", target.name)
 				tgts[target] = true
 				local ox, oy = target.x, target.y
 				target:pull(self.x, self.y, 2)
-				self:project(tg, target.x, target.y, engine.DamageType.PHYSICAL, self:mindCrit(self:combatTalentMindDamage(t, 20, 120)))
+				self:project({type="hit", range=10, friendlyfire=false, talent=t}, target.x, target.y, engine.DamageType.PHYSICAL, self:mindCrit(self:combatTalentMindDamage(t, 20, 120)))
 				if target.x ~= ox or target.y ~= oy then game.logSeen(target, "%s is pulled in!", target.name:capitalize()) end
 			end
 		end)
