@@ -19,6 +19,7 @@
 
 require "engine.class"
 require "engine.Entity"
+local Dialog = require "engine.ui.Dialog"
 local Map = require "engine.Map"
 local Particles = require "engine.Particles"
 require "mod.class.Player"
@@ -29,12 +30,15 @@ function _M:init(t, no_default)
 	mod.class.Player.init(self, t, no_default)
 
 	self.name = "Yiilkgur, the Sher'Tul Fortress"
+	self.is_fortress = true
+	self.allow_talents_worldmap = true
 	self.faction = game:getPlayer(true).faction
+	self.no_inventory_access = true
 	self.no_breath = true
 	self.no_party_class = true
 	self.no_leave_control = true
-	self.can_change_level = true
-	self.can_change_zone = true
+--	self.can_change_level = true
+--	self.can_change_zone = true
 	self.display = ' '
 	self.moddable_tile = nil
 	self.can_pass = {pass_water=500, pass_wall=500, pass_tree=500}
@@ -46,6 +50,8 @@ function _M:init(t, no_default)
 	self.max_life = 10000
 	self.life = 10000
 	self.energy.mod = 2
+
+	self:learnTalent(self.T_SHERTUL_FORTRESS_GETOUT, true)
 
 	self:addParticles(Particles.new("shertul_fortress_orbiters", 1, {}))
 end
@@ -223,8 +229,15 @@ end
 --- Checks if something bumps in us
 -- If it happens the method attack is called on the target with the attacker as parameter.
 -- Do not touch!
-function _M:block_move(x, y, e, can_attack)
-	return true
+function _M:block_move(x, y, e, act)
+	if act and e == game.player then
+		Dialog:yesnoPopup(self.name, "Do you wish to teleport to the fortress?", function(ret) if ret then
+			game.party:addMember(self, {temporary_level=1, control="full"})
+			game.party:setPlayer(self, true)
+			game.level.map:remove(e.x, e.y, engine.Map.ACTOR)
+		end end)
+	end
+	return false
 end
 
 function _M:deleteFromMap(map)

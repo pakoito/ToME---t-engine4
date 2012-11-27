@@ -306,3 +306,18 @@ newTalent{
 		format(physical_reduction, spell_reduction, mental_reduction)
 	end,
 }
+
+newTalent{
+	short_name = "SHERTUL_FORTRESS_GETOUT",
+	name = "Teleport to the ground",
+	type = {"base/race", 1},
+	no_npc_use = true,
+	no_unlearn_last = true,
+	action = function(self, t)
+		game.party:removeMember(self, true)
+		game.party:findSuitablePlayer()
+		game.player:move(self.x, self.y, true)
+		return true
+	end,
+	info = [[Use the onboard short-range teleport of the Fortress to beam down to the surface.]]
+}

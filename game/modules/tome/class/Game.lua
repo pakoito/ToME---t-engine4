@@ -572,7 +572,7 @@ function _M:changeLevel(lev, zone, params)
 
 	-- Transmo!
 	local p = self:getPlayer(true)
-	if not params.direct_switch and p:attr("has_transmo") and p:transmoGetNumberItems() > 0 then
+	if not params.direct_switch and p:attr("has_transmo") and p:transmoGetNumberItems() > 0 and not game.player.no_inventory_access then
 		local d
 		local titleupdator = self.player:getEncumberTitleUpdator("Transmogrification Chest")
 		d = self.player:showEquipInven(titleupdator(), nil, function(o, inven, item, button, event)
@@ -1238,7 +1238,7 @@ function _M:setupCommands()
 	self.gestures = Gestures.new("Gesture: ", self.key, true)
 
 	-- Helper function to not allow some actions on the wilderness map
-	local not_wild = function(f) return function(...) if self.zone and not self.zone.wilderness then f(...) else self.logPlayer(self.player, "You cannot do that on the world map.") end end end
+	local not_wild = function(f, bypass) return function(...) if self.zone and (not self.zone.wilderness or (bypass and bypass())) then f(...) else self.logPlayer(self.player, "You cannot do that on the world map.") end end end
 
 	-- Debug mode
 	self.key:addCommands{
@@ -1632,7 +1632,7 @@ do return end
 			end
 		end
 	}
-	engine.interface.PlayerHotkeys:bindAllHotkeys(self.key, not_wild(function(i) self.player:activateHotkey(i) end))
+	engine.interface.PlayerHotkeys:bindAllHotkeys(self.key, not_wild(function(i) self.player:activateHotkey(i) end, function() return self.player.allow_talents_worldmap end))
 
 	self.key:setCurrent()
 end
