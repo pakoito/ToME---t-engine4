@@ -197,6 +197,11 @@ newTalent{
 			return
 		end
 
+		if target:attr("summon_time") then
+			game.logPlayer(self, "Wrong target!")
+			return
+		end
+
 		allowed = 2 + math.ceil(self:getTalentLevelRaw(t) / 2 )
 
 		if target.rank >= 3.5 or -- No boss

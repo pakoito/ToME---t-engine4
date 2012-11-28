@@ -105,6 +105,7 @@ newTalent{
 		if not x then
 			return
 		end
+		if target:attr("summon_time") then return end
 
 		local m = target:clone{
 			shader = "shadow_simulacrum",
