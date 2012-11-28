@@ -1186,7 +1186,7 @@ function _M:reactionToward(target, no_reflection)
 	if target == self and self:attr("encased_in_ice") then return -100 end
 
 	-- Neverending hatred
-	if self:attr("hates_arcane") and target:attr("has_arcane_knowledge") then return -100 end
+	if self:attr("hates_arcane") and target:attr("has_arcane_knowledge") and not target:attr("forbid_arcane") then return -100 end
 
 	-- If self or target is a summon bound to a master's will, use the master instead
 	if self.summoner then return self.summoner:reactionToward(target, no_reflection) end
