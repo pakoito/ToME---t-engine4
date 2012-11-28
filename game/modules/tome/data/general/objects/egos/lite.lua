@@ -89,7 +89,7 @@ newEntity{
 
 newEntity{
 	power_source = {psionic=true},
-	name = " of the forge", prefix=true, instant_resolve=true,
+	name = " of the forge", suffix=true, instant_resolve=true,
 	keywords = {forge=true},
 	level_range = {30, 50},
 	greater_ego = 1,
