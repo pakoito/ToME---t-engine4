@@ -859,13 +859,14 @@ newEntity{ base = "BASE_GEM", define_as = "CRYSTAL_FOCUS",
 			end
 			o.is_crystalline_weapon = true
 			o.wielder = o.wielder or {}
-			o.wielder.combat_spellpower = 12
-			o.wielder.combat_dam = 12
+			o.wielder.combat_spellpower = (o.wielder.combat_spellpower or 0) + 12
+			o.wielder.combat_dam = (o.wielder.combat_dam or 0) + 12
 			o.wielder.inc_stats = o.wielder.inc_stats or {}
 			o.wielder.inc_stats[engine.interface.ActorStats.STAT_WIL] = 3
 			o.wielder.inc_stats[engine.interface.ActorStats.STAT_CON] = 3
 			o.wielder.inc_damage = o.wielder.inc_damage or {}
 			o.wielder.inc_damage[engine.DamageType.ARCANE] = 10
+			if o.wielder.learn_talent then o.wielder.learn_talent[who.T_COMMAND_STAFF] = nil end
 
 			o.set_list = { {"is_crystalline_armor", true} }
 			o.on_set_complete = function(self, who)
