@@ -39,12 +39,13 @@ newEntity{ define_as = "LAVA_WALL_OPAQUE",
 
 newEntity{
 	define_as = "CONTROL_ORB",
-	name = "Slave Control Orb", image = "terrain/marble_floor.png", add_displays = {class.new{image="terrain/worldmap.png"}},
+	name = "Slave Control Orb", image = "terrain/marble_floor.png", add_displays = {class.new{image="terrain/control_orb_red.png"}},
 	display = '*', color=colors.PURPLE,
 	notice = true,
 	always_remember = true,
+	faction = "slavers",
 	block_move = function(self, x, y, e, act, couldpass)
-		if e and e.player and act then
+		if e and e.player and act and e:reactionToward(self) >= 0 then
 			local chat = require("engine.Chat").new("ring-of-blood-orb", self, e)
 			chat:invoke()
 		end
