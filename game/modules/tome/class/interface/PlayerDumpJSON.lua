@@ -106,12 +106,12 @@ function _M:dumpToJSON(js, bypass, nosub)
 	-- Inscriptions
 	-------------------------------------------------------------------
 	local ins = js:newSection("inscriptions", {used=("%d/%d"):format(nb_inscriptions, self.max_inscriptions)})
+	ins.all = {}
+	ins = ins.all
 	for i = 1, self.max_inscriptions do if self.inscriptions[i] then
 		local t = self:getTalentFromId("T_"..self.inscriptions[i])
 		local desc = tostring(self:getTalentFullDescription(t))
-		local p = t.name:split(": ")
-		ins[p[1]] = ins[p[1]] or {}
-		ins[p[1]][p[2]] = desc
+		ins[#ins+1] = {name=t.name, kind=t.type[1], desc=desc}
 	end end
 
 	-------------------------------------------------------------------
