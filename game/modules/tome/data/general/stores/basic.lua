@@ -474,3 +474,28 @@ newEntity{
 		end,
 	},
 }
+
+-------------------------------------------------------------
+-- Elvala
+-------------------------------------------------------------
+newEntity{
+	define_as = "ELVALA_LIBRARY",
+	name = "shady library",
+	display = '*', color=colors.LIGHT_RED,
+	store = {
+		purse = 10,
+		empty_before_restock = false,
+		filters = {
+		},
+		fixed = {
+			{id=true, defined="SPELLBLAZE_NOTE1"},
+			{id=true, defined="SPELLBLAZE_NOTE2"},
+			{id=true, defined="SPELLBLAZE_NOTE3"},
+			{id=true, defined="SPELLBLAZE_NOTE4"},
+			{id=true, defined="SPELLBLAZE_NOTE5"},
+			{id=true, defined="SPELLBLAZE_NOTE6"},
+			{id=true, defined="SPELLBLAZE_NOTE7"},
+			{id=true, defined="SPELLBLAZE_NOTE8"},
+		},
+	},
+}

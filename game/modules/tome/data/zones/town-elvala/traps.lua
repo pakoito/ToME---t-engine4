@@ -50,5 +50,11 @@ newEntity{ base = "BASE_STORE", define_as = "RUNEMASTER",
 newEntity{ base = "BASE_STORE", define_as = "ALCHEMIST",
 	name="Home of Marus the Alchemist",
 	display='*', color=colors.UMBER, image = "store/shop_door_barred.png",
-	resolvers.chatfeature("alchemist-elvala", "allied-kingdoms"),
+	resolvers.chatfeature("alchemist-elvala", "shalore"),
+}
+
+newEntity{ base = "BASE_STORE", define_as = "LIBRARY",
+	name="Shady Library",
+	display='5', color=colors.LIGHT_RED,
+	resolvers.store("ELVALA_LIBRARY", "shalore", "store/shop_door.png", "store/shop_sign_library.png"),
 }

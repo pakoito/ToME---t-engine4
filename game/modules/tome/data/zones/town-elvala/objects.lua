@@ -18,3 +18,15 @@
 -- darkgod@te4.org
 
 load("/data/general/objects/objects-maj-eyal.lua")
+
+for i = 1, 8 do
+local l = mod.class.interface.PlayerLore.lore_defs["spellblaze-chronicles-"..i]
+newEntity{ base = "BASE_LORE",
+	define_as = "SPELLBLAZE_NOTE"..i,
+	subtype = "spellblaze", unique=true, no_unique_lore=true, not_in_stores=false,
+	name = l.name, lore="spellblaze-chronicles-"..i,
+	rarity = false,
+	encumberance = 0,
+	cost = 70,
+}
+end

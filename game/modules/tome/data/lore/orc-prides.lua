@@ -69,6 +69,7 @@ newLore{
 It was the halflings we first did war with, in the Age of Allure. We were weak then, and disorganised, and in their arrogance they sought to enslave us. But we fought back! And we have been fighting back ever since. They used magic on us, though we had never come in touch with the arts before. They used whips and chains and tried to beat us down. They used us for labour, butchering any young that were not strong enough for them, burning any constructions we tried to make for ourselves.
 
 At first we escaped and fled, and hid in dark caves. Our numbers grew, though we had to endure squalor and hardship. After many years we could hide no longer, as starvation and disease threatened to kill us all. And so seeing our enemy weak we rose upon them in wrath. We were not organised, but we were determined. The elves and the humans and the dwarves tried to oppose us too, but we would not allow ourselves to be beaten! They tried to use their magics against us, but we overcame them with numbers, five of us dying for every mage we managed to kill. With blood we paid and finally we had lands for our own!]],
+	on_learn = function(who) world:gainAchievement("ORC_LORE") end,
 }
 
 newLore{
@@ -80,6 +81,7 @@ newLore{
 But then the accursed Shaloren mages began experimenting with Sher'Tul ruins. Oh what a dark and terrible a day it was for our race! The Spellblaze massacred our people. Earthquakes tore up our new-built towns, fires raged over old and young alike, and the whole world was turned to turmoil. Afterwards disease and blight ravaged our people, utterly ruining all the progress we had made.
 
 Only the strongest of us lived through the dark times that followed. We fled east, back to our dark and hidden places, but our people swore terrible oaths of vengeance on the races that had brought such bloody ruin upon us.]],
+	on_learn = function(who) world:gainAchievement("ORC_LORE") end,
 }
 
 newLore{
@@ -91,6 +93,7 @@ newLore{
 The effects of magic left a grave impression on us then, and we knew we must learn its secrets in order to compete. For centuries we studied the effects of the Spellblaze, and captured enemy mages to experiment on them. Finally we were able to master the arts of magic and use them for ourselves. We built up our capabilities in secret, waiting for the right moment to strike a decisive vengeance. Garkul the Devourer, the greatest of our race, brought the plans to fruition. Under his awe-inspiring leadership we marched out upon the halfling kingdoms and burnt all before us. What glorious retribution we had! Whole cities were felled beneath our wrath. Everywhere we went we piled the bodies of our victims high and lit them in blazing pyres, as a symbol of our indomitable strength.
 
 The Age of Pyre was our age, the time when we showed ourselves the strongest of the races, standing alone and unbeatable.]],
+	on_learn = function(who) world:gainAchievement("ORC_LORE") end,
 }
 
 newLore{
@@ -102,6 +105,7 @@ newLore{
 During the Age of Pyre we discovered the farportal, deep beneath the dwarven cities. We were more cautious than the foolish elves before us, and managed to harness the portal's power to open a gateway to the lost east. We sent military forces over, and easily beat back the puny elves and humans that were hoveling there already. We established the Prides there - training camps for our soldiers where they could hone their battle skills before returning to fight the wars in the west.
 
 But all in the west did not go well. We conquered many lands, and came close to wiping out many races, but we became spread thin. As the other races began to fight back our Age of Pyre was to dwindle.]],
+	on_learn = function(who) world:gainAchievement("ORC_LORE") end,
 }
 
 newLore{
@@ -117,6 +121,7 @@ What forces we could muster we sent east, leaving behind token troops who bravel
 But what was left of our people in the east was a broken picture. Gone were the majority of our women and children, gone were our centres of culture, gone was all softness that ever lived in us. Our military forces were all that were left, consolidated in the Prides. By arcane experimentation we found ways to breed again, but we are left a hollow people. Until we are free from the threats of the other races we can focus on only one thing - revenge.
 
 We still have a secret presence in the west, in our rightful lands across which we have spilled rivers of our own blood. We are building up our military force at an accelerating rate, and when the time comes we shall sweep across Maj'Eyal with a vengeance that cannot be held back. The other races will suffer as they have made us suffer, and all that they have built will be brought to ruin.]],
+	on_learn = function(who) world:gainAchievement("ORC_LORE") end,
 }
 
 --------------------------------------------------------------------------
@@ -147,6 +152,7 @@ The pyromancer began by shooting a wreath of flames at the fighter, but Garkul d
 Garkul turned to the amazed Verikor and bowed. "You have bested me - I had to use my head for the last one." But Verikor was in awe of the fighter's skills - his incredible speed, his amazing strength, and his quick-wittedness in battle were all far beyond anything he had seen before. The two talked a while, and Garkul brought forth many ideas for how the army of mages could work together with the warriors and the wilders of the tribes to produce an unequalled force. His eyes were open now to the potential for magic, and his brain wrought together new tactics and strategies for how it could be used in battle.
 
 Verikor kept Garkul as his guest for many months, and though Garkul had no inkling for the Art he learnt many things about how to resist and avoid the effects of magic. Verikor never ceased to be impressed by the young orc's talents, and it became clear to him that here was one who was destined to lead their race to great things.]],
+	on_learn = function(who) world:gainAchievement("GARKUL_LORE") end,
 }
 
 newLore{
@@ -181,6 +187,7 @@ Wargon clenched his teeth, and not wanting to appear weak he reached for his dag
 He dropped the twitching body on the ground, bent over it and pummelled his fist down on the wounded head, cracking Wargon's skull apart and smashing out all his teeth. He turned then to the other leaders and cried, "See?! For each eye one takes from me, I take two! Follow me, and I will kill two halflings for every one they take of us. There will be no more snivelling and sneaking - we will rise up and bring a blaze of wrath across the lands!" Confronted by Garkul's strength and surrounded by his warriors, the tribal leaders without hesitation all agreed to follow him.
 
 So ended the name Garkul One-Eye, for a new name was born: Garkul the Devourer. The teeth of Wargon he collected and made into a necklace, and he added more teeth to it as he dealt with dissent amongst the tribes, until all followed him without question.]],
+	on_learn = function(who) world:gainAchievement("GARKUL_LORE") end,
 }
 
 newLore{
@@ -205,6 +212,7 @@ The pyre could be seen for miles around, and the other races sent out scouts to 
 These early victories came easy, but as they advanced they met more resistance, as the races had more forewarning of their attacks. But Garkul was always master of any situation, and his strategy and tactics overcame all defences. And after each victory was always the great pyre, and our armies would chant songs of victory as the flames reached into the cold night sky. The battles would become known as the Pyre Wars, and the flames of conquest would spread across all of Maj'Eyal.
 
 Within three months the Eldoral kingdom was broken, and refugees flooded south to the halfling kingdom of Nargol, desperate to escape the deadly pyres. Garkul then consolidated his forces, building new bases in the conquered lands, before advancing out against the other races. None would escape the wrath of the people that had suffered so long from the attacks of the other races. Centuries of oppression had hardened us, and now the flames of vengeance that rose in our hearts could not be quenched.]],
+	on_learn = function(who) world:gainAchievement("GARKUL_LORE") end,
 }
 
 newLore{
@@ -227,6 +235,7 @@ Then beneath the dwarven city of Reknor our scouts discovered an amazing thing -
 But while Garkul was busy establishing the Prides the Nargol king was planning a strategy of defence. He knew that the orcish armies would come for his kingdom soon, and he drew on the powers of his greatest strategists to prepare a force that could not be overcome. He summoned the mightiest alchemists from all the lands and together they laid plans for a creation that could not be beaten: the giant golem Atamathon.
 
 When Garkul next returned from the east he heard from his spies of great operations afoot in the Nargol kingdom, and he knew that he must face down the halflings. He did not know that it would be his last battle.]],
+	on_learn = function(who) world:gainAchievement("GARKUL_LORE") end,
 }
 
 newLore{
@@ -261,6 +270,7 @@ Then the alchemists threw their bombs at him, scorching his flesh. And the arche
 But the fight could not carry on forever. A stab from a sword crippled his leg, and a blast from a bomb blinded his eye, and though he continued to battle, wading through the corpses around him, blood now seeped through cuts all over his body. The blades of the axes he wielded became cracked and dented, and he was left wielding the shafts as clubs. He swung them through the troops before him, until his movements slowed to a stop, and the alchemists rained down bomb after bomb until his charred corpse moved no more. So died Garkul the Devourer, though his body stayed upright even in death, clutching his weapons above his head, and standing atop a field of over ten thousand bodies. For when the halflings counted their numbers after, only a few hundred remained.
 
 Our forces never full recovered from the loss of our great leader. The wars continued, but without his strategies failure became more frequent. Eventually the other races began to fight back, and we were driven from our homeland. But the spirit of Garkul remains with us all, and his lessons stay in our hearts and minds. One day we will return to the place of his birth, and the glory he began shall be completed - Maj'Eyal will be ours.]],
+	on_learn = function(who) world:gainAchievement("GARKUL_LORE") end,
 }
 
 --------------------------------------------------------------------------
