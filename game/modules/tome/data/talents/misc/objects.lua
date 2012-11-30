@@ -335,7 +335,7 @@ newTalent{
 			end
 				if self:getTalentLevel(t)>4 then
 					if target.undead or target.construct then
-						self.project(target.x,target.y,engine.DamageType.ARCANE,40+self:getMindpower())
+						self:project({type="hit"}, target.x, target.y, engine.DamageType.ARCANE, 40+self:combatMindpower())
 						if target:canBe("stun") then target:setEffect(target.EFF_STUNNED, 5, {apply_power=self:combatMindpower()}) end
 						game.logSeen(self, "%s's animating magic is disrupted!", target.name:capitalize())
 					end

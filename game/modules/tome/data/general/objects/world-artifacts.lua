@@ -3939,7 +3939,7 @@ newEntity{ base = "BASE_GAUNTLETS",
 					end
 				end
 				if target.undead or target.construct then
-					who.project(target.x,target.y,engine.DamageType.ARCANE,100+who:getMindpower())
+					who:project({type="hit"}, target.x, target.y, engine.DamageType.ARCANE,100+who:combatMindpower())
 					if target:canBe("stun") then target:setEffect(target.EFF_STUNNED, 10, {apply_power=who:combatMindpower()}) end
 					game.logSeen(who, "%s's animating magic is disrupted by the burst of power!", who.name:capitalize())
 				end

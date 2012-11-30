@@ -38,6 +38,7 @@ newTalent{
 		return -self:combatTalentMindDamage(t, 15, 40)
 	end,
 	hasEffect = function(self, t, target)
+		if not target then return false end
 		if target:hasEffect(target.EFF_PARANOID) then return true end
 		if target:hasEffect(target.EFF_DISPAIR) then return true end
 		if target:hasEffect(target.EFF_TERRIFIED) then return true end
