@@ -124,7 +124,10 @@ uberTalent{
 	name = "Blighted Summoning",
 	mode = "passive",
 	on_learn = function(self, t)
-		if self.alchemy_golem then self.alchemy_golem:learnTalent(self.alchemy_golem.T_DRAIN, true, 3) end
+		if self.alchemy_golem then 
+			self.alchemy_golem:learnTalent(self.alchemy_golem.T_CORRUPTED_STRENGTH, true, 1)
+			self.alchemy_golem:learnTalentType("corruption/reaving-combat", true)
+		end
 	end,
 	require = { special={desc="Have summoned at least 100 creatures affected by this talent (alchemist golem count as 100).", fct=function(self)
 		return self:attr("summoned_times") and self:attr("summoned_times") >= 100
@@ -145,7 +148,7 @@ uberTalent{
 		- Ghouls: Blood Lock
 		- Vampires / Liches: Darkfire
 		- Ghosts / Wights: Blood Boil
-		- Alchemy Golems: Drain
+		- Alchemy Golems: Corrupted Strength and the Reaving Combat tree
 		- Shadows: Empathic Hex
 		- Thought-Forms: Flame of Urh'Rok
 		- Bloated Oozes: Bone Shield
