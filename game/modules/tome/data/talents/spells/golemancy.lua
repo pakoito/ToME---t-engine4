@@ -154,28 +154,43 @@ newTalent{
 		local ammo = self:hasAlchemistWeapon()
 		return 50 + self:combatTalentSpellDamage(self.T_GOLEM_POWER, 15, 550, ((ammo and ammo.alchemist_power or 0) + self:combatSpellpower()) / 2)
 	end,
+	on_learn = function(self, t)
+		if self:getTalentLevelRaw(t) == 1 and not self.innate_alchemy_golem then
+			t.invoke_golem(self, t)
+		end
+	end,
+	on_unlearn = function(self, t)
+		if self:getTalentLevelRaw(t) == 0 and self.alchemy_golem and not self.innate_alchemy_golem then
+			if game.party:hasMember(self) and game.party:hasMember(self.alchemy_golem) then game.party:removeMember(self.alchemy_golem) end
+			self.alchemy_golem:disappear()
+			self.alchemy_golem = nil
+		end
+	end,
+	invoke_golem = function(self, t)
+		self.alchemy_golem = game.zone:finishEntity(game.level, "actor", makeGolem(self))
+		if game.party:hasMember(self) then
+			game.party:addMember(self.alchemy_golem, {
+				control="full", type="golem", title="Golem", important=true,
+				orders = {target=true, leash=true, anchor=true, talents=true, behavior=true},
+			})
+		end
+		if not self.alchemy_golem then return end
+		self.alchemy_golem.faction = self.faction
+		self.alchemy_golem.name = "golem (servant of "..self.name..")"
+		self.alchemy_golem.summoner = self
+		self.alchemy_golem.summoner_gain_exp = true
+
+		-- Find space
+		local x, y = util.findFreeGrid(self.x, self.y, 5, true, {[Map.ACTOR]=true})
+		if not x then
+			game.logPlayer(self, "Not enough space to refit!")
+			return
+		end
+		game.zone:addEntity(game.level, self.alchemy_golem, "actor", x, y)
+	end,
 	action = function(self, t)
 		if not self.alchemy_golem then
-			self.alchemy_golem = game.zone:finishEntity(game.level, "actor", makeGolem(self))
-			if game.party:hasMember(self) then
-				game.party:addMember(self.alchemy_golem, {
-					control="full", type="golem", title="Golem", important=true,
-					orders = {target=true, leash=true, anchor=true, talents=true, behavior=true},
-				})
-			end
-			if not self.alchemy_golem then return end
-			self.alchemy_golem.faction = self.faction
-			self.alchemy_golem.name = "golem (servant of "..self.name..")"
-			self.alchemy_golem.summoner = self
-			self.alchemy_golem.summoner_gain_exp = true
-
-			-- Find space
-			local x, y = util.findFreeGrid(self.x, self.y, 5, true, {[Map.ACTOR]=true})
-			if not x then
-				game.logPlayer(self, "Not enough space to refit!")
-				return
-			end
-			game.zone:addEntity(game.level, self.alchemy_golem, "actor", x, y)
+			t.invoke_golem(self, t)
 			return
 		end
 
@@ -255,12 +270,20 @@ newTalent{
 	require = spells_req1,
 	points = 5,
 	on_learn = function(self, t)
+		if self:getTalentLevelRaw(t) == 1 and not self.innate_alchemy_golem then
+			self:learnTalent(self.T_REFIT_GOLEM, true)
+		end
+
 		self.alchemy_golem:learnTalent(Talents.T_WEAPON_COMBAT, true, nil, {no_unlearn=true})
 		self.alchemy_golem:learnTalent(Talents.T_WEAPONS_MASTERY, true, nil, {no_unlearn=true})
 	end,
 	on_unlearn = function(self, t)
 		self.alchemy_golem:unlearnTalent(Talents.T_WEAPON_COMBAT)
 		self.alchemy_golem:unlearnTalent(Talents.T_WEAPONS_MASTERY)
+
+		if self:getTalentLevelRaw(t) == 0 and not self.innate_alchemy_golem then
+			self:unlearnTalent(self.T_REFIT_GOLEM)
+		end
 	end,
 	info = function(self, t)
 		if not self.alchemy_golem then return "Improves your golem's proficiency with weapons, increasing its attack and damage." end

@@ -4040,7 +4040,7 @@ newEntity{ base = "BASE_SHIELD",
 		damtype = DamageType.LIGHT,
 		special_on_hit = {desc="releases a burst of light", fct=function(combat, who, target)
 			local tg = {type="ball", range=0, radius=1, selffire=false}
-			local grids = who:project(tg, target.x, target.y, DamageType.LITE_LIGHT, 30 + who:getWil()*0.5)
+			local grids = who:project(tg, target.x, target.y, engine.DamageType.LITE_LIGHT, 30 + who:getWil()*0.5)
 			game.level.map:particleEmitter(target.x, target.y, tg.radius, "ball_light", {radius=tg.radius})
 		end},
 		melee_project = {[DamageType.RANDOM_BLIND]=20},

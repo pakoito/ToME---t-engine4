@@ -87,6 +87,7 @@ newBirthDescriptor{
 			{type="gem",},
 		},
 		resolvers.generic(function(self) self:birth_create_alchemist_golem() end),
+		innate_alchemy_golem = true,
 		birth_create_alchemist_golem = function(self)
 			-- Make and wield some alchemist gems
 			local t = self:getTalentFromId(self.T_CREATE_ALCHEMIST_GEMS)
@@ -97,7 +98,7 @@ newBirthDescriptor{
 			-- Invoke the golem
 			if not self.alchemy_golem then
 				local t = self:getTalentFromId(self.T_REFIT_GOLEM)
-				t.action(self, t)
+				t.invoke_golem(self, t)
 			end
 		end,
 	},
