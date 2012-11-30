@@ -2119,6 +2119,12 @@ function _M:die(src, death_note)
 
 	mod.class.interface.ActorLife.die(self, src, death_note)
 
+	-- Trigegr on_die effects if any
+	for eff_id, p in pairs(self.tmp) do
+		local e = self.tempeffect_def[eff_id]
+		if e.on_die then e.on_die(self, p) end
+	end
+
 	-- Gives the killer some exp for the kill
 	local killer = nil
 	if src and src.resolveSource and src:resolveSource().gainExp then

@@ -1788,7 +1788,7 @@ newEffect{
 newEffect{
 	name = "ARCANE_VORTEX", image = "talents/arcane_vortex.png",
 	desc = "Arcane Vortex",
-	long_desc = function(self, eff) return ("An arcane vortex followes the target. Each turn a manathrust fires from it to a random foe in sight doing %0.2f arcane damage to all. If no foes are found the main target takes 150%% more arcane damage this turn."):format(eff.dam) end,
+	long_desc = function(self, eff) return ("An arcane vortex followes the target. Each turn a manathrust fires from it to a random foe in sight doing %0.2f arcane damage to all. If no foes are found the main target takes 150%% more arcane damage this turn. If the target dies the remaining damage is deal as a radius 2 ball of arcane."):format(eff.dam) end,
 	type = "magical",
 	subtype = { arcane=true },
 	status = "detrimental",
@@ -1812,6 +1812,15 @@ newEffect{
 		end
 
 		game:playSoundNear(self, "talents/arcane")
+	end,
+	on_die = function(self, eff)
+		local tg = {type="ball", radius=2, selffire=false, x=self.x, y=self.y}
+		eff.src:project(tg, self.x, self.y, DamageType.ARCANE, eff.dam * eff.dur)
+		if core.shader.active(4) then
+			game.level.map:particleEmitter(self.x, self.y, 2, "shader_ring", {radius=4, life=12}, {type="sparks", zoom=1, time_factor=400, hide_center=0, color1={0.6, 0.3, 0.8, 1}, color2={0.8, 0, 0.8, 1}})
+		else
+			game.level.map:particleEmitter(self.x, self.y, 2, "generic_ball", {rm=150, rM=180, gm=20, gM=60, bm=180, bM=200, am=80, aM=150, radius=2})
+		end
 	end,
 	activate = function(self, eff)
 		eff.particle = self:addParticles(Particles.new("arcane_vortex", 1))
