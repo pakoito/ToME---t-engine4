@@ -5104,9 +5104,9 @@ newEntity{ base = "BASE_TOOL_MISC", --Sorta Thanks Donkatsu!
 	on_wear = function(self, who)
 		self.worn_by=who
 		if core.shader.active(4) then
-			self.particle = who:addParticles(engine.Particles.new("shader_ring_rotating", {rotation=0, radius=4}, {type="flames", aam=0.5, zoom=3, npow=4, time_factor=4000, color1={0.2,0.7,0,1}, color2={0,1,0.3,1}, hide_center=0}))
+			self.particle = who:addParticles(engine.Particles.new("shader_ring_rotating", 1, {rotation=0, radius=4}, {type="flames", aam=0.5, zoom=3, npow=4, time_factor=4000, color1={0.2,0.7,0,1}, color2={0,1,0.3,1}, hide_center=0}))
 		else
-			self.particle = who:addParticles(engine.Particles.new("ultrashield",1, {rm=0, rM=0, gm=180, gM=220, bm=10, bM=80, am=80, aM=150, radius=2, density=30, life=14, instop=17}))
+			self.particle = who:addParticles(engine.Particles.new("ultrashield", 1, {rm=0, rM=0, gm=180, gM=220, bm=10, bM=80, am=80, aM=150, radius=2, density=30, life=14, instop=17}))
 		end
 		game.logPlayer(who, "#CRIMSON# A powerful healing aura appears around you as you equip the %s.", self:getName())
 	end,
