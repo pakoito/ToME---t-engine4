@@ -44,6 +44,7 @@ newEntity{ define_as = "ATAMATHON", base = "BASE_NPC_CONSTRUCT",
 		{type="armour", subtype="massive", tome_drops="boss", tome_mod="uvault", forbid_power_source={antimagic=true}, autoreq=true },
 	},
 	combat_armor = 50,
+	combat_def = 30,
 	resolvers.drops{chance=100, nb=7, {type="gem"} },
 	resolvers.drops{chance=100, nb=2, {name="voratun amulet", ego_chance=-1000} },
 	resolvers.drops{chance=100, nb=4, {name="voratun ring", ego_chance=-1000} },
@@ -60,6 +61,9 @@ newEntity{ define_as = "ATAMATHON", base = "BASE_NPC_CONSTRUCT",
 	resists = {
 		all = 80,
 	},
+	combat_spellresist = 140,
+	combat_mentalresist = 180,
+	combat_physresist = 140,
 
 	resolvers.talents{
 		[Talents.T_WEAPON_COMBAT]={base=6, every=6},

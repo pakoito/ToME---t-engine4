@@ -96,11 +96,8 @@ newBirthDescriptor{
 		[ActorTalents.T_KINETIC_SHIELD] = 1,
 		[ActorTalents.T_KINETIC_AURA] = 1,
 		[ActorTalents.T_KINETIC_LEECH] = 1,
-		[ActorTalents.T_BEYOND_THE_FLESH] = 1,
-		[ActorTalents.T_TELEKINETIC_GRASP] = 1,
 		[ActorTalents.T_TELEKINETIC_SMASH] = 1,
 	},
-	body = { PSIONIC_FOCUS = 1, QS_PSIONIC_FOCUS = 1,},
 	copy = {
 		max_life = 110,
 		resolvers.equip{ id=true,

@@ -325,6 +325,7 @@ function _M:redrawAllItems()
 		self.max_h = self.max_h + current_h
 		tree.h = current_h
 	end
+	self.max_h = self.max_h*3
 	
 	-- generate the scrollbar
 	if self.scrollbar then self.scrollbar.max = self.max_h end

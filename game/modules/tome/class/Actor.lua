@@ -2980,6 +2980,23 @@ function _M:learnTalent(t_id, force, nb, extra)
 	if t.dont_provide_pool then return true end
 
 	self:learnPool(t)
+
+	-- If we learn mindslayer things we learn telekinetic grasp & beyond the flesh
+	if t.autolearn_mindslayer then
+		if not self:attr("autolearn_mindslayer_done") then
+			self:learnTalent(self.T_TELEKINETIC_GRASP, true)
+			self:learnTalent(self.T_BEYOND_THE_FLESH, true)
+			if self.body then
+				self.body.PSIONIC_FOCUS = 1
+				self.body.QS_PSIONIC_FOCUS = 1
+			else
+				self.body = { PSIONIC_FOCUS = 1, QS_PSIONIC_FOCUS = 1 }
+				self:initBody()
+			end
+		end
+		self:attr("autolearn_mindslayer_done", 1)
+	end
+
 	return true
 end
 
@@ -3113,6 +3130,15 @@ function _M:unlearnTalent(t_id, nb, no_unsustain)
 	self:recomputeRegenResources()
 
 	if t.is_spell then self:attr("has_arcane_knowledge", -(nb or 1)) end
+
+	-- If we learn mindslayer things we learn telekinetic grasp & beyond the flesh
+	if t.autolearn_mindslayer then
+		self:attr("autolearn_mindslayer_done", -1)
+		if not self:attr("autolearn_mindslayer_done") then
+			self:unlearnTalent(self.T_TELEKINETIC_GRASP)
+			self:unlearnTalent(self.T_BEYOND_THE_FLESH)			
+		end
+	end
 
 	return true
 end

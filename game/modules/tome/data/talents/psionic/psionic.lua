@@ -18,21 +18,21 @@
 -- darkgod@te4.org
 
 -- Talent trees
-newTalentType{ allow_random=true, type="psionic/absorption", name = "absorption", description = "Absorb damage and gain energy." }
-newTalentType{ allow_random=true, type="psionic/projection", name = "projection", description = "Project energy to damage foes." }
-newTalentType{ allow_random=true, type="psionic/psi-fighting", name = "psi-fighting", description = "Wield melee weapons with mentally-manipulated forces." }
-newTalentType{ allow_random=true, type="psionic/focus", name = "focus", description = "Use gems to focus your energies." }
-newTalentType{ allow_random=true, type="psionic/augmented-mobility", name = "augmented mobility", min_lev = 10, description = "Use energy to move yourself and others." }
-newTalentType{ allow_random=true, type="psionic/voracity", generic = true, name = "voracity", description = "Pull energy from your surroundings." }
-newTalentType{ allow_random=true, type="psionic/finer-energy-manipulations", min_lev = 10, generic = true, name = "finer energy manipulations", description = "Subtle applications of the psionic arts." }
-newTalentType{ allow_random=true, type="psionic/mental-discipline", generic = true, name = "mental discipline", description = "Increase mental capacity, endurance, and flexibility." }
+newTalentType{ allow_random=true, autolearn_mindslayer=true, type="psionic/absorption", name = "absorption", description = "Absorb damage and gain energy." }
+newTalentType{ allow_random=true, autolearn_mindslayer=true, type="psionic/projection", name = "projection", description = "Project energy to damage foes." }
+newTalentType{ allow_random=true, autolearn_mindslayer=true, type="psionic/psi-fighting", name = "psi-fighting", description = "Wield melee weapons with mentally-manipulated forces." }
+newTalentType{ allow_random=true, autolearn_mindslayer=true, type="psionic/focus", name = "focus", description = "Use gems to focus your energies." }
+newTalentType{ allow_random=true, autolearn_mindslayer=true, type="psionic/augmented-mobility", name = "augmented mobility", min_lev = 10, description = "Use energy to move yourself and others." }
+newTalentType{ allow_random=true, autolearn_mindslayer=true, type="psionic/voracity", generic = true, name = "voracity", description = "Pull energy from your surroundings." }
+newTalentType{ allow_random=true, autolearn_mindslayer=true, type="psionic/finer-energy-manipulations", min_lev = 10, generic = true, name = "finer energy manipulations", description = "Subtle applications of the psionic arts." }
+newTalentType{ allow_random=true, autolearn_mindslayer=true, type="psionic/mental-discipline", generic = true, name = "mental discipline", description = "Increase mental capacity, endurance, and flexibility." }
 newTalentType{ type="psionic/other", name = "other", description = "Various psionic talents." }
 
 -- Advanced Talent Trees
-newTalentType{ allow_random=true, type="psionic/grip", name = "grip", min_lev = 10, description = "Augment your telekinetic grip." }
-newTalentType{ allow_random=true, type="psionic/psi-archery", name = "psi-archery", min_lev = 10, description = "Use your telekinetic powers to wield bows with deadly effectiveness." }
-newTalentType{ allow_random=true, type="psionic/greater-psi-fighting", name = "greater psi-fighting", description = "Elevate psi-fighting prowess to epic levels." }
-newTalentType{ allow_random=true, type="psionic/brainstorm", name = "brainstorm", description = "Focus your telekinetic powers in ways undreamed of by most mindslayers." }
+newTalentType{ allow_random=true, autolearn_mindslayer=true, type="psionic/grip", name = "grip", min_lev = 10, description = "Augment your telekinetic grip." }
+newTalentType{ allow_random=true, autolearn_mindslayer=true, type="psionic/psi-archery", name = "psi-archery", min_lev = 10, description = "Use your telekinetic powers to wield bows with deadly effectiveness." }
+newTalentType{ allow_random=true, autolearn_mindslayer=true, type="psionic/greater-psi-fighting", name = "greater psi-fighting", description = "Elevate psi-fighting prowess to epic levels." }
+newTalentType{ allow_random=true, autolearn_mindslayer=true, type="psionic/brainstorm", name = "brainstorm", description = "Focus your telekinetic powers in ways undreamed of by most mindslayers." }
 
 -- Solipsist Talent Trees
 newTalentType{ allow_random=true, type="psionic/discharge", name = "discharge", description = "Project feedback on the world around you." }
