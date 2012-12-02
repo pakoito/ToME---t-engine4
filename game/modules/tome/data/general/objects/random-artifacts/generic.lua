@@ -494,6 +494,3 @@ newEntity{ theme={misc=true, mental=true}, name="dragon telepathy", points = 8, 
 newEntity{ theme={misc=true, mental=true}, name="demon telepathy", points = 8, rarity = 40, level_range = {1, 50},
 	wielder = { esp = {["demon/minor"]=1, ["demon/major"]=1}, },
 }
-newEntity{ theme={misc=true}, name="no teleport", points = 1, rarity = 17, level_range = {1, 50},
-	copy = { no_teleport = 1, },
-}
