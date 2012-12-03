@@ -23,7 +23,7 @@ local Dialog = require "engine.ui.Dialog"
 local Map = require "engine.Map"
 local Astar = require "engine.Astar"
 local forceprint = print
---local print = function() end
+local print = function() end
 
 --- Defines a zone: a set of levels, with depth, npcs, objects, level generator, ...
 module(..., package.seeall, class.make)
