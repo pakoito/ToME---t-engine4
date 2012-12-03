@@ -239,7 +239,7 @@ newTalent{
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty, target = self:getTarget(tg)
 		if not tx or not ty then return nil end
-		local _ _, tx, ty = self:canProject(tg, tx, ty)
+		local _ _, _, _, tx, ty = self:canProject(tg, tx, ty)
 		target = game.level.map(tx, ty, Map.ACTOR)
 		if target == self then target = nil end
 
@@ -344,7 +344,7 @@ newTalent{
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty, target = self:getTarget(tg)
 		if not tx or not ty then return nil end
-		local _ _, tx, ty = self:canProject(tg, tx, ty)
+		local _ _, _, _, tx, ty = self:canProject(tg, tx, ty)
 		target = game.level.map(tx, ty, Map.ACTOR)
 		if target == self then target = nil end
 
@@ -443,7 +443,7 @@ newTalent{
 		local tx, ty, target = self:getTarget(tg)
 		if not tx or not ty then return nil end
 		target = game.level.map(tx, ty, Map.ACTOR)
-		local _ _, tx, ty = self:canProject(tg, tx, ty)
+		local _ _, _, _, tx, ty = self:canProject(tg, tx, ty)
 
 		if target == self then target = nil end
 
@@ -579,7 +579,7 @@ newTalent{
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty, target = self:getTarget(tg)
 		if not tx or not ty then return nil end
-		local _ _, tx, ty = self:canProject(tg, tx, ty)
+		local _ _, _, _, tx, ty = self:canProject(tg, tx, ty)
 		target = game.level.map(tx, ty, Map.ACTOR)
 		if target == self then target = nil end
 

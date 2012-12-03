@@ -71,7 +71,7 @@ newEntity{ define_as = "ORB_MANY_WAYS2",
 	unided_name = "swirling orb",
 	name = "Orb of Many Ways",
 	level_range = {30, 30},
-	display = "*", color=colors.VIOLET, image = "object/pearl.png",
+	display = "*", color=colors.VIOLET, image = "object/artifact/orb_many_ways.png",
 	encumber = 1,
 	desc = [[The orb projects images of distant places, some that seem to not be of this world, switching rapidly.
 If used near a portal it could probably activate it.]],
