@@ -25,12 +25,13 @@ local Map = require "engine.Map"
 
 module(..., package.seeall, class.inherit(engine.ui.Dialog))
 
-function _M:init(center_mouse, actor, object, item, inven, onuse)
+function _M:init(center_mouse, actor, object, item, inven, onuse, no_use)
 	self.actor = actor
 	self.object = object
 	self.inven = inven
 	self.item = item
 	self.onuse = onuse
+	self.no_use_allowed = no_use
 
 	self:generateList()
 	local name = object:getName()
@@ -100,7 +101,7 @@ function _M:generateList()
 
 	if not self.object:isIdentified() and self.actor:attr("auto_id") and self.actor:attr("auto_id") >= 2 then list[#list+1] = {name="Identify", action="identify"} end
 	if self.object.__transmo then list[#list+1] = {name="Move to normal inventory", action="toinven"} end
-	if not self.object.__transmo then if self.object:canUseObject() then list[#list+1] = {name="Use", action="use"} end end
+	if not self.object.__transmo and not self.no_use_allowed then if self.object:canUseObject() then list[#list+1] = {name="Use", action="use"} end end
 	if self.inven == self.actor.INVEN_INVEN and self.object:wornInven() and self.actor:getInven(self.object:wornInven()) then list[#list+1] = {name="Wield/Wear", action="wear"} end
 	if not self.object.__transmo then if self.inven ~= self.actor.INVEN_INVEN and self.object:wornInven() then list[#list+1] = {name="Take off", action="takeoff"} end end
 	if self.inven == self.actor.INVEN_INVEN then list[#list+1] = {name="Drop", action="drop"} end

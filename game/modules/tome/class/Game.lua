@@ -582,7 +582,7 @@ function _M:changeLevel(lev, zone, params)
 				d:generateList()
 				d:updateTitle(titleupdator())
 				if stop then self:unregisterDialog(d) end
-			end)
+			end, true)
 			self:registerDialog(ud)
 		end)
 		d.unload = function()
