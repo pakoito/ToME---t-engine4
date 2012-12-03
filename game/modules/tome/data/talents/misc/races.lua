@@ -273,7 +273,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Call upon the power of the Eternals, increasing all damage by %d%% and reducing all damage taken by %d%% for 5 turns.
-		The bonus will increase with the Willpower stat.]]):format(7 + self:getWil(10, true), 7 + self:getWil(10, true))
+		The bonus will increase with the Willpower stat.]]):format(10 + self:getWil(10, true), 10 + self:getWil(10, true))
 	end,
 }
 
@@ -323,7 +323,7 @@ newTalent{
 	require = racial_req4,
 	points = 5,
 	no_energy = true,
-	cooldown = function(self, t) return 50 - self:getTalentLevel(t) * 3 end,
+	cooldown = function(self, t) return 50 - self:getTalentLevel(t) * 4 end,
 	tactical = { ATTACK = { PHYSICAL = 2 }, DISABLE = { stun = 1, knockback = 1 } },
 	range = 4,
 	action = function(self, t)
@@ -360,18 +360,20 @@ newTalent{
 				autolevel = "none",
 				ai = "summoned", ai_real = "tactical", ai_state = { talent_in=2, },
 				stats = {str=0, dex=0, con=0, cun=0, wil=0, mag=0},
-				combat = { dam=resolvers.levelup(resolvers.rngavg(15,25), 1, 1.3), atk=resolvers.levelup(resolvers.rngavg(15,25), 1, 1.3), dammod={str=1.1} },
+				combat = { dam=resolvers.levelup(resolvers.rngavg(15,25), 1, 1.3), atk=resolvers.levelup(resolvers.rngavg(15,25), 1, 1.6), dammod={str=1.1} },
 				inc_stats = { str=25 + self:getWil() * self:getTalentLevel(t) / 5, dex=18, con=10 + self:getTalentLevel(t) * 2, },
 
 				level_range = {1, nil}, exp_worth = 0,
 				silent_levelup = true,
 
+				resists = {all = self:combatGetResist(DamageType.BLIGHT)},
+
 				combat_armor = 13, combat_def = 8,
-				resolvers.talents{ [Talents.T_STUN]=3, [Talents.T_KNOCKBACK]=2, },
+				resolvers.talents{ [Talents.T_STUN]=self:getTalentLevelRaw(t), [Talents.T_KNOCKBACK]=self:getTalentLevelRaw(t), [Talents.T_TAUNT]=self:getTalentLevelRaw(t), },
 
 				faction = self.faction,
 				summoner = self, summoner_gain_exp=true,
-				summon_time = 6,
+				summon_time = 8,
 				ai_target = {actor=target}
 			}
 			setupSummon(self, m, x, y)
@@ -382,7 +384,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Nature is with you, you can always feel the call of the woods.
-		Summons two elite Treants to your side for 6 turns.
+		Summons two elite Treants to your side for 8 turns.
+		The treants have a global resistance equal to your blight resistance and can stun, knockback and taunt your foes.
 		Their strength increases with your Willpower stat.]]):format()
 	end,
 }
