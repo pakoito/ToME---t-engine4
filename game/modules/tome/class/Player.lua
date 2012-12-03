@@ -649,7 +649,9 @@ function _M:automaticTalents()
 				if c ~= 2 then
 					self:useTalent(tid)
 				else
-					self:useTalent(tid,nil,nil,nil,self)
+					if not self:attr("blind") then
+						self:useTalent(tid,nil,nil,nil,self)
+					end
 				end
 			end
 			if c == 4 and #spotted > 0 then
