@@ -110,7 +110,6 @@ newBirthDescriptor
 		"#GOLD#Experience penalty:#LIGHT_BLUE# 35%",
 	},
 	inc_stats = { str=2, mag=-2, wil=1, cun=0, dex=3, con=1 },
-	experience = 1.3,
 	talents_types = { ["race/thalore"]={true, 0} },
 	talents = { [ActorTalents.T_THALOREN_WRATH]=1 },
 	copy = {
@@ -127,6 +126,6 @@ newBirthDescriptor
 		resolvers.inscription("INFUSION:_REGENERATION", {cooldown=10, dur=5, heal=60}),
 		resolvers.inscription("INFUSION:_WILD", {cooldown=12, what={physical=true}, dur=4, power=14}),
 	},
-	experience = 1.20,
+	experience = 1.30,
 	random_escort_possibilities = { {"norgos-lair", 2, 3}, {"heart-gloom", 1, 2}, {"daikara", 1, 3}, {"old-forest", 1, 4}, {"dreadfell", 1, 8}, {"reknor", 1, 2}, },
 }
