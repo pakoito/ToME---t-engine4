@@ -55,7 +55,7 @@ return {
 				actor = {
 					class = "mod.class.generator.actor.Random",
 					nb_npc = {20, 20},
-					filters = {{type="feline"}},
+					filters = {{subtype="feline"}},
 					randelite = 0,
 				},
 				object = {
