@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-return "New Cosmetic Race Option: #LIGHT_GREEN#Redhead Humans",
+return "New Cosmetic Race Option: #LIGHT_GREEN#Redhead Characters",
 [[You have saved Melinda from untold horrors and torments.
 
 You may now create human and dwarf characters with red hairs.
