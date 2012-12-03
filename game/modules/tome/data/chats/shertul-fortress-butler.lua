@@ -28,6 +28,7 @@ Welcome, master.]],
 	answers = {
 		{"You asked me to come, about a farportal?", jump="farportal", cond=function() return q:isCompleted("farportal") and not q:isCompleted("farportal-spawn") end},
 		{"You asked me to come, about the rod of recall?", jump="recall", cond=function() return q:isCompleted("recall") and not q:isCompleted("recall-done") end},
+		{"I find your appearance unsettling, any way you can change it?", jump="changetile", cond=function() return q:isCompleted("recall-done") end},
 		{"What are you and what is this place?", jump="what", cond=isNotSet"what", action=set"what"},
 		{"Master? I am not your mas..", jump="master", cond=isNotSet"master", action=set"master"},
 		{"Why do I understand you, the texts are unreadable to me.", jump="understand", cond=isNotSet"understand", action=set"understand"},
@@ -128,6 +129,40 @@ The Fortress now has enough energy to upgrade it. It can be changed to recall yo
 	answers = {
 		{"I like it the way it is now, thanks anyway."},
 		{"That could be quite useful yes, please do it.", action=function() q:upgrade_rod() end},
+	}
+}
+
+newChat{ id="changetile",
+	text = [[I can alter the Fortress holographic projection matrix to accomodate to your race tastes. This will require 60 energy however.]],
+	answers = {
+		{"Can you try for a human female appearance please?", cond=function() return q.shertul_energy >= 60 end, action=function(npc, player)
+			q.shertul_energy = q.shertul_energy - 60
+			npc.replace_display = mod.class.Actor.new{
+				add_mos={{image = "npc/humanoid_female_sluttymaid.png", display_y=-1, display_h=2}},
+--				shader = "shadow_simulacrum",
+--				shader_args = { color = {0.2, 0.1, 0.8}, base = 0.5, time_factor = 500 },
+			}
+			npc:removeAllMOs()
+			game.level.map:updateMap(npc.x, npc.y)
+		end},
+		{"Can you try for a human male appearance please?", cond=function() return q.shertul_energy >= 60 end, action=function(npc, player)
+			q.shertul_energy = q.shertul_energy - 60
+			npc.replace_display = mod.class.Actor.new{
+				image = "invis.png",
+				add_mos={{image = "npc/humanoid_male_sluttymaid.png", display_y=-1, display_h=2}},
+--				shader = "shadow_simulacrum",
+--				shader_args = { color = {0.2, 0.1, 0.8}, base = 0.5, time_factor = 500 },
+			}
+			npc:removeAllMOs()
+			game.level.map:updateMap(npc.x, npc.y)
+		end},
+		{"Please revert to your default appearance.", cond=function() return q.shertul_energy >= 60 end, action=function(npc, player)
+			q.shertul_energy = q.shertul_energy - 60
+			npc.replace_display = nil
+			npc:removeAllMOs()
+			game.level.map:updateMap(npc.x, npc.y)
+		end},
+		{"Well you do not look so bad actually, let it be for now."},
 	}
 }
 
