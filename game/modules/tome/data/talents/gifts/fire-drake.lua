@@ -33,7 +33,7 @@ newTalent{
 		return 2 + self:getTalentLevelRaw(t)
 	end,
 	target = function(self, t)
-		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), friendlyfire=false, talent=t}
 	end,
 	tactical = { DEFEND = 1, DISABLE = { confusion = 3 } },
 	action = function(self, t)

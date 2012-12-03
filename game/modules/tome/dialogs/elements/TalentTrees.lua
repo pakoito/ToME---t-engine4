@@ -318,14 +318,26 @@ function _M:redrawAllItems()
 	-- calculate each tree items height
 	self.max_h = 0
 	for i = 1, #self.tree do
+		local dy = 0
 		local tree = self.tree[i]
-		local key = tree.text_status
-		local current_h = key and key.h or 0
-		if tree.shown then current_h = current_h + self.frame_size + (key and key.h or 0) + 16 end
-		self.max_h = self.max_h + current_h
-		tree.h = current_h
+
+		if tree.text_status then
+			local key = tree.text_status
+			dy = dy + key.h + 4
+		end
+		local addh = 0
+		if tree.shown then for j = 1, #tree.nodes do
+			local tal = tree.nodes[j]
+			if tal.text_status then
+				local key = tal.text_status
+				addh = key.h
+			end
+			addh = addh + self.frame_size
+		end end
+		dy = dy + addh + 12
+		tree.h = dy
+		self.max_h = self.max_h + dy
 	end
-	self.max_h = self.max_h*3
 	
 	-- generate the scrollbar
 	if self.scrollbar then self.scrollbar.max = self.max_h end
