@@ -624,9 +624,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Lay a trap that explodes in a radius of 3, releasing a thick poisonous cloud lasting 4 turns.
-		Each turn the cloud infects all creatures with a poison that deals %0.2f nature damage over 5 turns.
-		High level lure can trigger this trap.]]):
+		return ([[Lay a trap that creates a gravitic anomaly, pulling in all foes around it in a radius of 5.
+		All foes caught inside take %0.2f temporal damage per turn.]]):
 		format(20 + self:getCun() * 0.5 * self:getTalentLevel(self.T_TRAP_MASTERY))
 	end,
 }
