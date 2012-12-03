@@ -673,6 +673,10 @@ function _M:onRestStart()
 		self:attr("equilibrium_regen", self:attr("equilibrium_regen_on_rest"))
 		self.resting.equilibrium_regen = self:attr("equilibrium_regen_on_rest")
 	end
+	if self.resting and self:attr("mana_regen_on_rest") and not self.resting.mana_regen then
+		self:attr("mana_regen", self:attr("mana_regen_on_rest"))
+		self.resting.mana_regen = self:attr("mana_regen_on_rest")
+	end
 end
 
 --- We stopped resting
@@ -680,6 +684,10 @@ function _M:onRestStop()
 	if self.resting and self.resting.equilibrium_regen then
 		self:attr("equilibrium_regen", -self.resting.equilibrium_regen)
 		self.resting.equilibrium_regen = nil
+	end
+	if self.resting and self.resting.mana_regen then
+		self:attr("mana_regen", -self.resting.mana_regen)
+		self.resting.mana_regen = nil
 	end
 end
 

@@ -712,6 +712,12 @@ newInscription{
 	on_pre_use = function(self, t)
 		return self:knowTalent(self.T_MANA_POOL) and not self:hasEffect(self.EFF_MANASURGE)
 	end,
+	on_learn = function(self, t)
+		self.mana_regen_on_rest = (self.mana_regen_on_rest or 0) + 0.5
+	end,
+	on_unlearn = function(self, t)
+		self.mana_regen_on_rest = (self.mana_regen_on_rest or 0) - 0.5
+	end,
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:incMana((data.mana + data.inc_stat) / 20)
@@ -728,7 +734,8 @@ newInscription{
 	end,
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		return ([[Activate the rune to unleash a manasurge upon yourself, increasing mana regeneration by %d%% over %d turns and instantly restoring %d mana.]]):format(data.mana + data.inc_stat, data.dur, (data.mana + data.inc_stat) / 20)
+		return ([[Activate the rune to unleash a manasurge upon yourself, increasing mana regeneration by %d%% over %d turns and instantly restoring %d mana.
+			Also when resting your mana will regenerate at 0.5 per turn.]]):format(data.mana + data.inc_stat, data.dur, (data.mana + data.inc_stat) / 20)
 	end,
 	short_info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
