@@ -119,6 +119,7 @@ end
 
 function _M:createProgram(def)
 	local shad = core.shader.newProgram()
+	if not shad then return nil end
 	if def.vert then shad:attach(self:getVertex(def.vert)) end
 	if def.frag then shad:attach(self:getFragment(def.frag)) end
 	if not shad:compile() then return nil end
