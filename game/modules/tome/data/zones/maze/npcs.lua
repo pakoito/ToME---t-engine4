@@ -58,7 +58,7 @@ newEntity{ define_as = "MINOTAUR_MAZE",
 	resolvers.drops{chance=100, nb=5, {tome_drops="boss"} },
 
 	resolvers.talents{
-		[Talents.T_ARMOUR_TRAINING]={base=2, every=6, max=5},
+		[Talents.T_ARMOUR_TRAINING]={base=1, every=9, max=4},
 		[Talents.T_STAMINA_POOL]={base=1, every=6, max=5},
 		[Talents.T_WARSHOUT]={base=1, every=6, max=5},
 		[Talents.T_STUNNING_BLOW]={base=1, every=6, max=5},

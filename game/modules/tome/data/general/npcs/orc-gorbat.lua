@@ -165,7 +165,7 @@ newEntity{ base = "BASE_NPC_ORC_GORBAT",
 	resolvers.talents{
 		[Talents.T_WEAPONS_MASTERY]={base=2, every=10, max=7},
 		[Talents.T_WEAPON_COMBAT]={base=2, every=10, max=7},
-		[Talents.T_ARMOUR_TRAINING]={base=5, every=5, max=14},
+		[Talents.T_ARMOUR_TRAINING]={base=3, every=9, max=7},
 		[Talents.T_RESOLVE]={base=4, every=5, max=9},
 		[Talents.T_ANTIMAGIC_SHIELD]={base=4, every=5, max=9},
 		[Talents.T_AURA_OF_SILENCE]={base=4, every=5, max=9},

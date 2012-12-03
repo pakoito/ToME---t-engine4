@@ -43,7 +43,7 @@ newEntity{
 
 	resolvers.racial(),
 
-	resolvers.talents{ [Talents.T_ARMOUR_TRAINING]=4, },
+	resolvers.talents{ [Talents.T_ARMOUR_TRAINING]=2, },
 	resolvers.inscriptions(1, "infusion"),
 
 	autolevel = "warrior",

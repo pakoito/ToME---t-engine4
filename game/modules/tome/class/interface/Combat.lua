@@ -925,7 +925,12 @@ end
 function _M:combatArmor()
 	local add = 0
 	if self:hasHeavyArmor() and self:knowTalent(self.T_ARMOUR_TRAINING) then
-		add = add + self:getTalentLevel(self.T_ARMOUR_TRAINING) * 1.4
+		local at = Talents:getTalentFromId(Talents.T_ARMOUR_TRAINING)
+		add = add + at.getArmor(self, at)
+		if self:knowTalent(self.T_GOLEM_ARMOUR) then
+			local ga = Talents:getTalentFromId(Talents.T_GOLEM_ARMOUR)
+			add = add + ga.getArmor(self, ga)
+		end
 	end
 	if self:knowTalent(self.T_CARBON_SPIKES) and self:isTalentActive(self.T_CARBON_SPIKES) then
 		add = add + self.carbon_armor
@@ -941,7 +946,12 @@ end
 function _M:combatArmorHardiness()
 	local add = 0
 	if self:hasHeavyArmor() and self:knowTalent(self.T_ARMOUR_TRAINING) then
-		add = add + self:getTalentLevel(self.T_ARMOUR_TRAINING) * 5
+		local at = Talents:getTalentFromId(Talents.T_ARMOUR_TRAINING)
+		add = add + at.getArmorHardiness(self, at)
+		if self:knowTalent(self.T_GOLEM_ARMOUR) then
+			local ga = Talents:getTalentFromId(Talents.T_GOLEM_ARMOUR)
+			add = add + ga.getArmorHardiness(self, ga)
+		end
 	end
 	if self:hasLightArmor() and self:knowTalent(self.T_MOBILE_DEFENCE) then
 		add = add + self:getTalentLevel(self.T_MOBILE_DEFENCE) * 6
@@ -1219,7 +1229,12 @@ end
 function _M:combatCritReduction()
 	local crit_reduction = 0
 	if self:hasHeavyArmor() and self:knowTalent(self.T_ARMOUR_TRAINING) then
-		crit_reduction = crit_reduction + self:getTalentLevel(self.T_ARMOUR_TRAINING) * 1.9
+		local at = Talents:getTalentFromId(Talents.T_ARMOUR_TRAINING)
+		crit_reduction = crit_reduction + at.getCriticalChanceReduction(self, at)
+		if self:knowTalent(self.T_GOLEM_ARMOUR) then
+			local ga = Talents:getTalentFromId(Talents.T_GOLEM_ARMOUR)
+			crit_reduction = crit_reduction + ga.getCriticalChanceReduction(self, ga)
+		end
 	end
 	if self:attr("combat_crit_reduction") then
 		crit_reduction = crit_reduction + self:attr("combat_crit_reduction")

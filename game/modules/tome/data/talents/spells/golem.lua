@@ -509,3 +509,22 @@ newTalent{
 	end,
 }
 
+-- Compensate for changes to Armour Training by introducing a new golem skill
+newTalent{
+	name = "Armour Configuration", short_name = "GOLEM_ARMOUR",
+	type = {"golem/golem", 1},
+	mode = "passive",
+	points = 6,
+	getArmorHardiness = function(self, t) return self:getTalentTypeMastery("technique/combat-training") * (self:getTalentLevelRaw(t) * 5 - 15) end,
+	getArmor = function(self, t) return self:getTalentTypeMastery("technique/combat-training") * (self:getTalentLevelRaw(t) * 1.4 - 4.2) end,
+	getCriticalChanceReduction = function(self, t) return self:getTalentTypeMastery("technique/combat-training") * (self:getTalentLevelRaw(t) * 1.9 - 5.7) end,
+	info = function(self, t)
+		local hardiness = t.getArmorHardiness(self, t)
+		local armor = t.getArmor(self, t)
+		local critreduce = t.getCriticalChanceReduction(self, t)
+		local dir = self:getTalentLevelRaw(t) >= 3 and "In" or "De"
+		return ([[The golem automatically reconfigures heavy mail and massive armours designed for living creatures to protect its own vital areas.
+	%screases armour value by %d, armour hardiness by %d%%, and provides %d%% critical hit reduction when wearing heavy mail or massive armour.]]):
+		format(dir, armor, hardiness, critreduce)
+	end,
+}

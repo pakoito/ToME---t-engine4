@@ -84,7 +84,7 @@ newBirthDescriptor{
 		[ActorTalents.T_SEARING_LIGHT] = 1,
 		[ActorTalents.T_WEAPON_OF_LIGHT] = 1,
 		[ActorTalents.T_CHANT_OF_FORTITUDE] = 1,
-		[ActorTalents.T_ARMOUR_TRAINING] = 3,
+		[ActorTalents.T_ARMOUR_TRAINING] = 2,
 	},
 	copy = {
 		max_life = 110,

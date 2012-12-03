@@ -26,7 +26,7 @@ newEntity{
 	add_name = " (#ARMOR#)",
 	display = "[", color=colors.SLATE, image = resolvers.image_material("plate", "metal"),
 	moddable_tile = resolvers.moddable_tile("massive"),
-	require = { talent = { {Talents.T_ARMOUR_TRAINING,4} }, },
+	require = { talent = { {Talents.T_ARMOUR_TRAINING,3} }, },
 	encumber = 17,
 	rarity = 5,
 	metallic = true,

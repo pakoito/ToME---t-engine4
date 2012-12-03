@@ -48,7 +48,8 @@ local function makeGolem(self)
 		size_category = 4,
 
 		resolvers.talents{
-			[Talents.T_ARMOUR_TRAINING]=4,
+			[Talents.T_ARMOUR_TRAINING]=3,
+			[Talents.T_GOLEM_ARMOUR]=1,
 			[Talents.T_WEAPON_COMBAT]=1,
 			[Talents.T_MANA_POOL]=1,
 			[Talents.T_STAMINA_POOL]=1,
@@ -308,30 +309,30 @@ newTalent{
 	points = 5,
 	on_learn = function(self, t)
 		self.alchemy_golem:learnTalent(Talents.T_THICK_SKIN, true, nil, {no_unlearn=true})
-		self.alchemy_golem:learnTalent(Talents.T_ARMOUR_TRAINING, true, nil, {no_unlearn=true})
+		self.alchemy_golem:learnTalent(Talents.T_GOLEM_ARMOUR, true, nil, {no_unlearn=true})
 		self.alchemy_golem.healing_factor = (self.alchemy_golem.healing_factor or 1) + 0.1
 	end,
 	on_unlearn = function(self, t)
 		self.alchemy_golem:unlearnTalent(Talents.T_THICK_SKIN)
-		self.alchemy_golem:unlearnTalent(Talents.T_ARMOUR_TRAINING)
+		self.alchemy_golem:unlearnTalent(Talents.T_GOLEM_ARMOUR)
 		self.alchemy_golem.healing_factor = (self.alchemy_golem.healing_factor or 1) - 0.1
 	end,
 	info = function(self, t)
 		if not self.alchemy_golem then return "Improves your golem's armour training and damage resistance." end
 		local rawlev = self:getTalentLevelRaw(t)
-		local oldh, olda = self.alchemy_golem.talents[Talents.T_THICK_SKIN], self.alchemy_golem.talents[Talents.T_ARMOUR_TRAINING]
-		self.alchemy_golem.talents[Talents.T_THICK_SKIN], self.alchemy_golem.talents[Talents.T_ARMOUR_TRAINING] = rawlev, 4 + rawlev
-		local th, ta = self:getTalentFromId(Talents.T_THICK_SKIN), self:getTalentFromId(Talents.T_ARMOUR_TRAINING)
+		local oldh, olda = self.alchemy_golem.talents[Talents.T_THICK_SKIN], self.alchemy_golem.talents[Talents.T_GOLEM_ARMOUR]
+		self.alchemy_golem.talents[Talents.T_THICK_SKIN], self.alchemy_golem.talents[Talents.T_GOLEM_ARMOUR] = rawlev, 1 + rawlev
+		local th, ta, ga = self:getTalentFromId(Talents.T_THICK_SKIN), self:getTalentFromId(Talents.T_ARMOUR_TRAINING), self:getTalentFromId(Talents.T_GOLEM_ARMOUR)
 		local res = th.getRes(self.alchemy_golem, th)
-		local heavyarmor = ta.getArmor(self.alchemy_golem, ta)
-		local hardiness = ta.getArmorHardiness(self.alchemy_golem, ta)
-		local crit = ta.getCriticalChanceReduction(self.alchemy_golem, ta)
-		self.alchemy_golem.talents[Talents.T_THICK_SKIN], self.alchemy_golem.talents[Talents.T_ARMOUR_TRAINING] = oldh, olda
+		local heavyarmor = ta.getArmor(self.alchemy_golem, ta) + ga.getArmor(self.alchemy_golem, ga)
+		local hardiness = ta.getArmorHardiness(self.alchemy_golem, ta) + ga.getArmorHardiness(self.alchemy_golem, ga)
+		local crit = ta.getCriticalChanceReduction(self.alchemy_golem, ta) + ga.getCriticalChanceReduction(self.alchemy_golem, ga)
+		self.alchemy_golem.talents[Talents.T_THICK_SKIN], self.alchemy_golem.talents[Talents.T_GOLEM_ARMOUR] = oldh, olda
 
 		return ([[Improves your golem's armour training and damage resistance.
-		Increases all damage resistance by %d%%, increases armour value by %d, reduces chance to be critically hit by %d%% when wearing a heavy mail armour or a massive plate armour, increases armour hardiness by %d%% and increases healing factor by %d%%.
-		The golem can always use all kind of armours, including massive ones.]]):
-		format(res, heavyarmor, crit, hardiness, rawlev * 10)
+		Increases all damage resistance by %d%%; increases armour value by %d, armour hardiness by %d%%, and reduces chance to be critically hit by %d%% when wearing heavy mail or massive plate armour; and increases healing factor by %d%%.
+		The golem can always use any kind of armour, including massive.]]):
+		format(res, heavyarmor, hardiness, crit, rawlev * 10)
 	end,
 }
 

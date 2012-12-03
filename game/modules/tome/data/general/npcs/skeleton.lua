@@ -137,7 +137,7 @@ newEntity{ base = "BASE_NPC_SKELETON",
 	resolvers.talents{
 		[Talents.T_WEAPON_COMBAT]={base=1, every=10, max=5},
 		[Talents.T_WEAPONS_MASTERY]={base=1, every=10, max=5},
-		[Talents.T_ARMOUR_TRAINING]={base=4, every=7, max=8},
+		[Talents.T_ARMOUR_TRAINING]={base=2, every=11, max=5},
 		[Talents.T_SHIELD_PUMMEL]={base=1, every=7, max=5},
 		[Talents.T_RIPOSTE]={base=3, every=7, max=7},
 		[Talents.T_OVERPOWER]={base=1, every=7, max=5},

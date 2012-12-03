@@ -87,7 +87,7 @@ newEntity{ base = "BASE_NPC_ZIGURANTH", define_as = "PROTECTOR_MYSSIL",
 
 	combat_armor = 5, combat_def = 10,
 	resolvers.talents{
-		[Talents.T_ARMOUR_TRAINING]=5,
+		[Talents.T_ARMOUR_TRAINING]=6,
 		[Talents.T_WEAPON_COMBAT]=2,
 		[Talents.T_WEAPONS_MASTERY]=2,
 		[Talents.T_RESOLVE]=5,

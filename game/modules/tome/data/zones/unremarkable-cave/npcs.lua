@@ -115,7 +115,7 @@ newEntity{ define_as = "CORRUPTOR",
 	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
 
 	resolvers.talents{
-		[Talents.T_ARMOUR_TRAINING]=3,
+		[Talents.T_ARMOUR_TRAINING]=2,
 		[Talents.T_MOONLIGHT_RAY]=4,
 		[Talents.T_STARFALL]=5,
 		[Talents.T_SHADOW_BLAST]=3,

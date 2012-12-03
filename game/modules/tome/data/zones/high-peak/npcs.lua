@@ -192,7 +192,7 @@ newEntity{
 
 		[Talents.T_WEAPON_COMBAT]=5,
 		[Talents.T_WEAPONS_MASTERY]={base=4, every=10},
-		[Talents.T_ARMOUR_TRAINING]={base=7, every=6},
+		[Talents.T_ARMOUR_TRAINING]={base=5, every=6},
 
 		[Talents.T_LUCKY_DAY]=1,
 		[Talents.T_EYE_OF_THE_TIGER]=1,
@@ -260,7 +260,7 @@ newEntity{ define_as = "FALLEN_SUN_PALADIN_AERYN",
 	positive_regen = 25,
 
 	resolvers.talents{
-		[Talents.T_ARMOUR_TRAINING]=7,
+		[Talents.T_ARMOUR_TRAINING]=4,
 		[Talents.T_WEAPON_COMBAT]=5,
 		[Talents.T_WEAPONS_MASTERY]=5,
 		[Talents.T_RUSH]=3,

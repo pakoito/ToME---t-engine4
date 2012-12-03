@@ -2123,7 +2123,7 @@ newDamageType{
 			combat_armor = 0, combat_def = 5,
 
 			resolvers.talents{
-				[src.T_ARMOUR_TRAINING]={base=4, every=5, max=5},
+				[src.T_ARMOUR_TRAINING]={base=2, every=10, max=4},
 				[src.T_WEAPON_COMBAT]={base=2, every=10, max=4},
 				[src.T_WEAPONS_MASTERY]={base=2, every=10, max=4},
 				[src.T_RUSH]={base=3, every=7, max=6},

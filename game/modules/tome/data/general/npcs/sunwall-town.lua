@@ -83,7 +83,7 @@ newEntity{ base = "BASE_NPC_SUNWALL_TOWN",
 		{type="armor", subtype="massive", forbid_power_source={antimagic=true}, autoreq=true},
 	},
 	resolvers.talents{
-		[Talents.T_ARMOUR_TRAINING]=4,
+		[Talents.T_ARMOUR_TRAINING]=2,
 		[Talents.T_CHANT_OF_FORTITUDE]=2,
 		[Talents.T_SEARING_LIGHT]=2,
 	},

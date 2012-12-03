@@ -88,7 +88,7 @@ newEntity{ define_as = "THE_MASTER",
 		[Talents.T_PHASE_DOOR]=2,
 		[Talents.T_STRIKE]={base=3, every=5, max=7},
 
-		[Talents.T_ARMOUR_TRAINING]={base=3, every=5, max=10},
+		[Talents.T_ARMOUR_TRAINING]={base=2, every=8, max=5},
 		[Talents.T_WEAPONS_MASTERY]={base=2, every=8, max=5},
 		[Talents.T_STUNNING_BLOW]={base=1, every=5, max=5},
 		[Talents.T_RUSH]={base=4, every=5, max=8},
@@ -241,7 +241,7 @@ What proud hero of renown was this before he was condemned to such a terrible fa
 		[Talents.T_SHIELD_EXPERTISE]=6,
 
 		[Talents.T_THICK_SKIN]={base=3, every=5, max=5},
-		[Talents.T_ARMOUR_TRAINING]={base=4, every=5, max=10},
+		[Talents.T_ARMOUR_TRAINING]={base=2, every=8, max=5},
 		[Talents.T_WEAPONS_MASTERY]={base=2, every=10, max=5},
 		[Talents.T_WEAPON_COMBAT]={base=2, every=10, max=5},
 

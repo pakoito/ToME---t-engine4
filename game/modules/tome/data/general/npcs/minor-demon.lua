@@ -100,7 +100,7 @@ newEntity{ base = "BASE_NPC_DEMON",
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 
 	resolvers.talents{
-		[Talents.T_ARMOUR_TRAINING]={base=3, every=6, max=7},
+		[Talents.T_ARMOUR_TRAINING]={base=2, every=10, max=5},
 		[Talents.T_SHIELD_PUMMEL]={base=2, every=6, max=5},
 		[Talents.T_RIPOSTE]={base=3, every=6, max=6},
 		[Talents.T_OVERPOWER]={base=1, every=6, max=5},

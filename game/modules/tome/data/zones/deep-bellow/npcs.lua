@@ -156,7 +156,7 @@ newEntity{ base="BASE_NPC_CORRUPTED_HORROR", define_as = "ABOMINATION",
 	resolvers.drops{chance=100, nb=1, {defined="ADV_LTR_8"} },
 
 	resolvers.talents{
-		[Talents.T_ARMOUR_TRAINING]=5,
+		[Talents.T_ARMOUR_TRAINING]=3,
 		[Talents.T_WEAPON_COMBAT]={base=2, every=10, max=5},
 		[Talents.T_WEAPONS_MASTERY]={base=2, every=10, max=5},
 

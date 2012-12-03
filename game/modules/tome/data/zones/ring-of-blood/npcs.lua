@@ -127,7 +127,7 @@ newEntity{ define_as = "PLAYER_SLAVE",
 		[Talents.T_MAIM] = 2,
 		[Talents.T_UNARMED_MASTERY] = 2,
 		[Talents.T_WEAPON_COMBAT] = 2,
-		[Talents.T_ARMOUR_TRAINING]=3,
+		[Talents.T_ARMOUR_TRAINING]=2,
 	},
 
 	resolvers.inscriptions(2, {"regeneration infusion","healing infusion"}, nil, true),
@@ -161,7 +161,7 @@ newEntity{
 	open_door = true,
 
 	resolvers.racial(),
-	resolvers.talents{ [Talents.T_ARMOUR_TRAINING]=3, [Talents.T_WEAPON_COMBAT]={base=1, every=10, max=5}, [Talents.T_WEAPONS_MASTERY]={base=1, every=10, max=5} },
+	resolvers.talents{ [Talents.T_ARMOUR_TRAINING]=2, [Talents.T_WEAPON_COMBAT]={base=1, every=10, max=5}, [Talents.T_WEAPONS_MASTERY]={base=1, every=10, max=5} },
 
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=3, },

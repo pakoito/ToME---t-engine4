@@ -182,7 +182,7 @@ local minions_list = {
 		resolvers.talents{
 			T_WEAPON_COMBAT={base=1, every=7, max=10},
 			T_WEAPONS_MASTERY={base=1, every=7, max=10},
-			T_ARMOUR_TRAINING={base=4, every=7, max=8},
+			T_ARMOUR_TRAINING={base=2, every=14, max=4},
 			T_SHIELD_PUMMEL={base=1, every=7, max=5},
 			T_RIPOSTE={base=3, every=7, max=7},
 			T_OVERPOWER={base=1, every=7, max=5},

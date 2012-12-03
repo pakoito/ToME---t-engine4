@@ -63,7 +63,7 @@ newEntity{ base = "BASE_NPC_ORC_GRUSHNAK",
 	combat_armor = 0, combat_def = 5,
 
 	resolvers.talents{
-		[Talents.T_ARMOUR_TRAINING]={base=4, every=5, max=5},
+		[Talents.T_ARMOUR_TRAINING]={base=2, every=8, max=5},
 		[Talents.T_WEAPON_COMBAT]={base=2, every=10, max=4},
 		[Talents.T_WEAPONS_MASTERY]={base=2, every=10, max=4},
 		[Talents.T_RUSH]={base=3, every=9, max=5},
@@ -91,7 +91,7 @@ newEntity{ base = "BASE_NPC_ORC_GRUSHNAK",
 	ai_tactic = resolvers.tactic"melee",
 
 	resolvers.talents{
-		[Talents.T_ARMOUR_TRAINING]={base=5, every=5, max=8},
+		[Talents.T_ARMOUR_TRAINING]={base=3, every=8, max=6},
 		[Talents.T_WEAPON_COMBAT]={base=4, every=10, max=6},
 		[Talents.T_WEAPONS_MASTERY]={base=3, every=10, max=6},
 		[Talents.T_RUSH]={base=3, every=7, max=6},
@@ -117,7 +117,7 @@ newEntity{ base = "BASE_NPC_ORC_GRUSHNAK",
 	combat_armor = 0, combat_def = 5,
 
 	resolvers.talents{
-		[Talents.T_ARMOUR_TRAINING]={base=4, every=5, max=5},
+		[Talents.T_ARMOUR_TRAINING]={base=2, every=8, max=4},
 		[Talents.T_WEAPON_COMBAT]={base=2, every=10, max=4},
 		[Talents.T_WEAPONS_MASTERY]={base=2, every=10, max=4},
 		[Talents.T_RUSH]={base=3, every=7, max=6},
@@ -143,7 +143,7 @@ newEntity{ base = "BASE_NPC_ORC_GRUSHNAK",
 	ai_tactic = resolvers.tactic"melee",
 
 	resolvers.talents{
-		[Talents.T_ARMOUR_TRAINING]={base=5, every=5, max=8},
+		[Talents.T_ARMOUR_TRAINING]={base=3, every=8, max=5},
 		[Talents.T_WEAPON_COMBAT]={base=4, every=10, max=6},
 		[Talents.T_WEAPONS_MASTERY]={base=3, every=10, max=6},
 		[Talents.T_RUSH]={base=3, every=7, max=6},

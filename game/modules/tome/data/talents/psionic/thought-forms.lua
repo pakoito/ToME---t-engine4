@@ -326,7 +326,7 @@ newTalent{
 
 			resolvers.generic(function(e) buildTile(e) end), -- Make a moddable tile
 			resolvers.talents{ 
-				[Talents.T_ARMOUR_TRAINING]= 3,
+				[Talents.T_ARMOUR_TRAINING]= 2,
 				[Talents.T_WEAPON_COMBAT]= math.ceil(self.level/10),
 				[Talents.T_WEAPONS_MASTERY]= math.ceil(self.level/10),
 				
@@ -427,7 +427,7 @@ newTalent{
 			
 			resolvers.generic(function(e) buildTile(e) end), -- Make a moddable tile
 			resolvers.talents{ 
-				[Talents.T_ARMOUR_TRAINING]= 3 + math.ceil(self.level/10),
+				[Talents.T_ARMOUR_TRAINING]= 2 + math.ceil(self.level/20),
 				[Talents.T_WEAPON_COMBAT]= math.ceil(self.level/10),
 				[Talents.T_WEAPONS_MASTERY]= math.ceil(self.level/10),
 				

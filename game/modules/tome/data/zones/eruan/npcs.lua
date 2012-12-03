@@ -56,7 +56,7 @@ newEntity{ define_as = "SUN_PALADIN_GUREN",
 		{type="armor", subtype="massive", forbid_power_source={antimagic=true}, autoreq=true},
 	},
 	resolvers.talents{
-		[Talents.T_ARMOUR_TRAINING]=5,
+		[Talents.T_ARMOUR_TRAINING]=3,
 		[Talents.T_CHANT_OF_LIGHT]=5,
 		[Talents.T_SEARING_LIGHT]=5,
 		[Talents.T_MARTYRDOM]=5,

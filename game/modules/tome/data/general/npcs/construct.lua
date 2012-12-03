@@ -49,7 +49,7 @@ newEntity{
 	stats = { str=20, mag=16, con=22 },
 	resolvers.talents{
 		[Talents.T_STAMINA_POOL]=1, [Talents.T_MANA_POOL]=1,
-		[Talents.T_ARMOUR_TRAINING]={base=4, every=5, max=10},
+		[Talents.T_ARMOUR_TRAINING]={base=2, every=10, max=5},
 	},
 	not_power_source = {nature=true},
 }

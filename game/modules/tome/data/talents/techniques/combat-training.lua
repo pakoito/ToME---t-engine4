@@ -41,8 +41,8 @@ newTalent{
 	name = "Armour Training",
 	type = {"technique/combat-training", 1},
 	mode = "passive",
-	points = 10,
-	require = { stat = { str=function(level) return 18 + level - 1 end }, },
+	points = 5,
+	require = {stat = {str = function(level) return 16 + (level + 2) * (level - 1) end}},
 	on_unlearn = function(self, t)
 		for inven_id, inven in pairs(self.inven) do if inven.worn then
 			for i = #inven, 1, -1 do
@@ -57,9 +57,9 @@ newTalent{
 			end
 		end end
 	end,
-	getArmorHardiness = function(self, t) return self:getTalentLevel(t) * 5 end,
-	getArmor = function(self, t) return self:getTalentLevel(t) * 1.4 end,
-	getCriticalChanceReduction = function(self, t) return self:getTalentLevel(t) * 1.9 end,
+	getArmorHardiness = function(self, t) return self:getTalentLevel(t) * 10 end,
+	getArmor = function(self, t) return self:getTalentLevel(t) * 2.8 end,
+	getCriticalChanceReduction = function(self, t) return self:getTalentLevel(t) * 3.8 end,
 	info = function(self, t)
 		local hardiness = t.getArmorHardiness(self, t)
 		local armor = t.getArmor(self, t)
@@ -71,14 +71,11 @@ newTalent{
 		if self:knowTalent(self.T_STEALTH) then
 			classrestriction = "(Note that wearing mail or plate armour will interfere with stealth.)"
 		end
-		return ([[Teaches the usage of armours. Increases armour value by %d and reduces chance to be critically hit by %d%% when wearing a heavy mail armour or a massive plate armour.
-		It also increases armour hardiness by %d%%.
-		At level 1 it allows you to wear gauntlets, helms and heavy boots.
-		At level 2 it allows you to wear heavy mail armour.
-		At level 3 it allows you to wear shields.
-		At level 4 it allows you to wear massive plate armour.
-		%s]]):
-		format(armor, criticalreduction, hardiness, classrestriction)
+		return ([[Teaches the usage of armours. Increases armour value by %d, armour hardiness by %d%%, and reduces chance to be critically hit by %d%% when wearing heavy mail or massive plate armour.
+		At level 1 it allows you to wear heavy mail armour, gauntlets, helms, and heavy boots.
+		At level 2 it allows you to wear shields.
+		At level 3 it allows you to wear massive plate armour.
+		%s]]):format(armor, hardiness, criticalreduction, classrestriction)
 	end,
 }
 
