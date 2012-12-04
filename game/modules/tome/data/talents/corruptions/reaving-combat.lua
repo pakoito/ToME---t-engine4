@@ -36,7 +36,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Allows you to dual wield any type of one handed weapons and increases the damage of the off-hand weapon to %d%%.
 		Also casting a spell (which uses a turn) will give a free melee attack at a random target in melee range for %d%% blight damage.]]):
-		format(100 / (2 - self:getTalentLevel(t) / 9), 100 * self:combatTalentWeaponDamage(t, 0.5, 1.1))
+		format(100 / (2 - (math.min(self:getTalentLevel(t), 8) / 9)), 100 * self:combatTalentWeaponDamage(t, 0.5, 1.1))
 	end,
 }
 

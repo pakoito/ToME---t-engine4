@@ -24,7 +24,7 @@ newTalent{
 	points = 5,
 	require = techs_dex_req1,
 	info = function(self, t)
-		return ([[Increases the damage of the off-hand weapon to %d%%.]]):format(100 / (2 - self:getTalentLevel(t) / 6))
+		return ([[Increases the damage of the off-hand weapon to %d%%.]]):format(100 / (2 - (math.min(self:getTalentLevel(t), 8) / 6)))
 	end,
 }
 
