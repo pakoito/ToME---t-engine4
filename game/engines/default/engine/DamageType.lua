@@ -63,3 +63,7 @@ end
 function _M:projectingFor(src, v)
 	src.__projecting_for = v
 end
+
+function _M:getProjectingFor(src)
+	return src.__projecting_for
+end

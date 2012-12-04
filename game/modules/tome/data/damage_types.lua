@@ -316,7 +316,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 		-- Log damage for later
 		if not DamageType:get(type).hideMessage then
 			local srcname = src.x and src.y and game.level.map.seens(src.x, src.y) and src.name:capitalize() or "Something"
-			if src.turn_procs.is_crit then
+			if src.turn_procs and src.turn_procs.is_crit then
 				game:delayedLogDamage(src, target, dam, ("#{bold}#%s%d %s#{normal}##LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", math.ceil(dam), DamageType:get(type).name), true)
 			else
 				game:delayedLogDamage(src, target, dam, ("%s%d %s#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", math.ceil(dam), DamageType:get(type).name), false)
@@ -397,7 +397,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 					end
 				end
 
-				if not target.dead and t.is_spell and not src.turn_procs.meteoric_crash and src.knowTalent and src:knowTalent(src.T_METEORIC_CRASH) then
+				if not target.dead and (t.is_spell or t.is_mind) and not src.turn_procs.meteoric_crash and src.knowTalent and src:knowTalent(src.T_METEORIC_CRASH) then
 					src.turn_procs.meteoric_crash = true
 					src:triggerTalent(src.T_METEORIC_CRASH, nil, target)
 				end

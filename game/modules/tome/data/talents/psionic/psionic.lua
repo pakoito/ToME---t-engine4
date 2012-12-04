@@ -18,40 +18,40 @@
 -- darkgod@te4.org
 
 -- Talent trees
-newTalentType{ allow_random=true, autolearn_mindslayer=true, type="psionic/absorption", name = "absorption", description = "Absorb damage and gain energy." }
-newTalentType{ allow_random=true, autolearn_mindslayer=true, type="psionic/projection", name = "projection", description = "Project energy to damage foes." }
-newTalentType{ allow_random=true, autolearn_mindslayer=true, type="psionic/psi-fighting", name = "psi-fighting", description = "Wield melee weapons with mentally-manipulated forces." }
-newTalentType{ allow_random=true, autolearn_mindslayer=true, type="psionic/focus", name = "focus", description = "Use gems to focus your energies." }
-newTalentType{ allow_random=true, autolearn_mindslayer=true, type="psionic/augmented-mobility", name = "augmented mobility", min_lev = 10, description = "Use energy to move yourself and others." }
-newTalentType{ allow_random=true, autolearn_mindslayer=true, type="psionic/voracity", generic = true, name = "voracity", description = "Pull energy from your surroundings." }
-newTalentType{ allow_random=true, autolearn_mindslayer=true, type="psionic/finer-energy-manipulations", min_lev = 10, generic = true, name = "finer energy manipulations", description = "Subtle applications of the psionic arts." }
-newTalentType{ allow_random=true, autolearn_mindslayer=true, type="psionic/mental-discipline", generic = true, name = "mental discipline", description = "Increase mental capacity, endurance, and flexibility." }
-newTalentType{ type="psionic/other", name = "other", description = "Various psionic talents." }
+newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/absorption", name = "absorption", description = "Absorb damage and gain energy." }
+newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/projection", name = "projection", description = "Project energy to damage foes." }
+newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/psi-fighting", name = "psi-fighting", description = "Wield melee weapons with mentally-manipulated forces." }
+newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/focus", name = "focus", description = "Use gems to focus your energies." }
+newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/augmented-mobility", name = "augmented mobility", min_lev = 10, description = "Use energy to move yourself and others." }
+newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/voracity", generic = true, name = "voracity", description = "Pull energy from your surroundings." }
+newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/finer-energy-manipulations", min_lev = 10, generic = true, name = "finer energy manipulations", description = "Subtle applications of the psionic arts." }
+newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/mental-discipline", generic = true, name = "mental discipline", description = "Increase mental capacity, endurance, and flexibility." }
+newTalentType{ is_mind=true, type="psionic/other", name = "other", description = "Various psionic talents." }
 
 -- Advanced Talent Trees
-newTalentType{ allow_random=true, autolearn_mindslayer=true, type="psionic/grip", name = "grip", min_lev = 10, description = "Augment your telekinetic grip." }
-newTalentType{ allow_random=true, autolearn_mindslayer=true, type="psionic/psi-archery", name = "psi-archery", min_lev = 10, description = "Use your telekinetic powers to wield bows with deadly effectiveness." }
-newTalentType{ allow_random=true, autolearn_mindslayer=true, type="psionic/greater-psi-fighting", name = "greater psi-fighting", description = "Elevate psi-fighting prowess to epic levels." }
-newTalentType{ allow_random=true, autolearn_mindslayer=true, type="psionic/brainstorm", name = "brainstorm", description = "Focus your telekinetic powers in ways undreamed of by most mindslayers." }
+newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/grip", name = "grip", min_lev = 10, description = "Augment your telekinetic grip." }
+newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/psi-archery", name = "psi-archery", min_lev = 10, description = "Use your telekinetic powers to wield bows with deadly effectiveness." }
+newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/greater-psi-fighting", name = "greater psi-fighting", description = "Elevate psi-fighting prowess to epic levels." }
+newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/brainstorm", name = "brainstorm", description = "Focus your telekinetic powers in ways undreamed of by most mindslayers." }
 
 -- Solipsist Talent Trees
-newTalentType{ allow_random=true, type="psionic/discharge", name = "discharge", description = "Project feedback on the world around you." }
-newTalentType{ allow_random=true, type="psionic/distortion", name = "distortion", description = "Distort reality with your mental energy." }
-newTalentType{ allow_random=true, type="psionic/dream-forge", name = "Dream Forge", description = "Master the dream forge to create powerful armor and effects." }
-newTalentType{ allow_random=true, type="psionic/dream-smith", name = "Dream Smith", description = "Call the dream-forge hammer to smite your foes." }
-newTalentType{ allow_random=true, type="psionic/nightmare", name = "nightmare", description = "Manifest your enemies nightmares." }
-newTalentType{ allow_random=true, type="psionic/psychic-assault", name = "Psychic Assault", description = "Directly attack your opponents minds." }
-newTalentType{ allow_random=true, type="psionic/slumber", name = "slumber", description = "Force enemies into a deep sleep." }
-newTalentType{ allow_random=true, type="psionic/solipsism", name = "solipsism", description = "Nothing exists outside the minds ability to perceive it." }
-newTalentType{ allow_random=true, type="psionic/thought-forms", name = "Thought-Forms", description = "Manifest your thoughts as psionic summons." }
+newTalentType{ allow_random=true, is_mind=true, type="psionic/discharge", name = "discharge", description = "Project feedback on the world around you." }
+newTalentType{ allow_random=true, is_mind=true, type="psionic/distortion", name = "distortion", description = "Distort reality with your mental energy." }
+newTalentType{ allow_random=true, is_mind=true, type="psionic/dream-forge", name = "Dream Forge", description = "Master the dream forge to create powerful armor and effects." }
+newTalentType{ allow_random=true, is_mind=true, type="psionic/dream-smith", name = "Dream Smith", description = "Call the dream-forge hammer to smite your foes." }
+newTalentType{ allow_random=true, is_mind=true, type="psionic/nightmare", name = "nightmare", description = "Manifest your enemies nightmares." }
+newTalentType{ allow_random=true, is_mind=true, type="psionic/psychic-assault", name = "Psychic Assault", description = "Directly attack your opponents minds." }
+newTalentType{ allow_random=true, is_mind=true, type="psionic/slumber", name = "slumber", description = "Force enemies into a deep sleep." }
+newTalentType{ allow_random=true, is_mind=true, type="psionic/solipsism", name = "solipsism", description = "Nothing exists outside the minds ability to perceive it." }
+newTalentType{ allow_random=true, is_mind=true, type="psionic/thought-forms", name = "Thought-Forms", description = "Manifest your thoughts as psionic summons." }
 
 -- Generic Solipsist Trees
-newTalentType{ allow_random=true, type="psionic/dreaming", generic = true, name = "dreaming", description = "Manipulate the sleep cycles of yourself and your enemies." }
-newTalentType{ allow_random=true, type="psionic/mentalism", generic = true, name = "mentalism", description = "Various mind based effects." }
-newTalentType{ allow_random=true, type="psionic/feedback", generic = true, name = "feedback", description = "Store feedback as you get damaged and use it to protect and heal your body." }
-newTalentType{ allow_random=true, type="psionic/trance", generic = true, name = "trance", description = "Put your mind into a deep trance." }
+newTalentType{ allow_random=true, is_mind=true, type="psionic/dreaming", generic = true, name = "dreaming", description = "Manipulate the sleep cycles of yourself and your enemies." }
+newTalentType{ allow_random=true, is_mind=true, type="psionic/mentalism", generic = true, name = "mentalism", description = "Various mind based effects." }
+newTalentType{ allow_random=true, is_mind=true, type="psionic/feedback", generic = true, name = "feedback", description = "Store feedback as you get damaged and use it to protect and heal your body." }
+newTalentType{ allow_random=true, is_mind=true, type="psionic/trance", generic = true, name = "trance", description = "Put your mind into a deep trance." }
 
-newTalentType{ allow_random=true, type="psionic/possession", name = "possession", description = "You have learnt to shed away your body, allowing you to possess any other." }
+newTalentType{ allow_random=true, is_mind=true, type="psionic/possession", name = "possession", description = "You have learnt to shed away your body, allowing you to possess any other." }
 
 
 -- Level 0 wil tree requirements:

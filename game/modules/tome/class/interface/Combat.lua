@@ -413,6 +413,9 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		if weapon and weapon.phasing then
 			self:attr("damage_shield_penetrate", weapon.phasing)
 		end
+	
+		local oldproj = DamageType:getProjectingFor(self)
+		if self.__talent_running then DamageType:projectingFor(self, {project_type={talent=self.__talent_running}}) end
 
 		-- Damage conversion?
 		-- Reduces base damage but converts it into another damage type
@@ -436,6 +439,8 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		if dam > 0 then
 			DamageType:get(damtype).projector(self, target.x, target.y, damtype, math.max(0, dam))
 		end
+
+		if self.__talent_running then DamageType:projectingFor(self, oldproj) end
 
 		-- remove phasing
 		if weapon and weapon.phasing then

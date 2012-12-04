@@ -185,7 +185,7 @@ uberTalent{
 	end,
 	info = function(self, t)
 		return ([[You have learnt to take a few hits when needed, you know how to flow with them, reducing all physical damage by 10%%.
-		When you get hit by melee or archery you go back one tile (this can only happen once per turn) for free.]])
+		When you get hit by melee or archery you go back one tile (this can only happen once per turn) for free and gain 300% movement speed for a turn.]])
 		:format()
 	end,
 }

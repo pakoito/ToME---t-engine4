@@ -103,7 +103,7 @@ uberTalent{
 	end,
 	info = function(self, t)
 		local dam = t.getDamage(self, t)/2
-		return ([[With the release of your willpower when casting damaging spells you can call forth a meteor to crash down near your foes.
+		return ([[With the release of your willpower when casting damaging spells or mind attacks you can call forth a meteor to crash down near your foes.
 		The affected area is turned into lava for 8 turns and the crash will deal %0.2f fire and %0.2f physical damage.
 		The meteor also stun affected creatures for 3 turns.]])
 		:format(damDesc(self, DamageType.FIRE, dam), damDesc(self, DamageType.PHYSICAL, dam))

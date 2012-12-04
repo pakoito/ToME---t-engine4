@@ -3872,8 +3872,13 @@ function _M:getTalentFullDescription(t, addlevel, config, fake_mastery)
 			if t.no_energy and type(t.no_energy) == "boolean" and t.no_energy == true then uspeed = "instant" end
 			d:add({"color",0x6f,0xff,0x83}, "Usage Speed: ", {"color",0xFF,0xFF,0xFF}, uspeed, true)
 		end
-		if t.is_spell then
-			d:add({"color",0x6f,0xff,0x83}, "Is Spell: ", {"color",0xFF,0xFF,0xFF}, "true", true)
+		local is_a = {}
+		if t.is_spell then is_a[#is_a+1] = "a spell" end
+		if t.is_mind then is_a[#is_a+1] = "a mind power" end
+		if t.is_nature then is_a[#is_a+1] = "a nature gift" end
+		if t.is_summon then is_a[#is_a+1] = " a summon power" end
+		if #is_a > 0 then
+			d:add({"color",0x6f,0xff,0x83}, "Is: ", {"color",0xFF,0xFF,0xFF}, table.concatNice(is_a, ", ", " and "), true)
 		end
 	else
 		if not config.ignore_ressources then

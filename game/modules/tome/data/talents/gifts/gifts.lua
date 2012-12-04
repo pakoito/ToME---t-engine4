@@ -18,26 +18,26 @@
 -- darkgod@te4.org
 
 -- Wild Gifts
-newTalentType{ allow_random=true, is_nature=true, type="wild-gift/call", name = "call of the wild", generic = true, description = "Be at one with nature." }
-newTalentType{ allow_random=true, is_nature=true, type="wild-gift/harmony", name = "harmony", generic = true, description = "Nature heals and cleans you." }
-newTalentType{ allow_random=true, is_nature=true, type="wild-gift/antimagic", name = "antimagic", generic = true, description = "The way to combat magic, or even nullify it." }
-newTalentType{ allow_random=true, is_nature=true, type="wild-gift/summon-melee", name = "summoning (melee)", description = "The art of calling creatures to your aid." }
-newTalentType{ allow_random=true, is_nature=true, type="wild-gift/summon-distance", name = "summoning (distance)", description = "The art of calling creatures to your aid." }
-newTalentType{ allow_random=true, is_nature=true, type="wild-gift/summon-utility", name = "summoning (utility)", description = "The art of calling creatures to your aid." }
-newTalentType{ allow_random=true, is_nature=true, type="wild-gift/summon-augmentation", name = "summoning (augmentation)", description = "The art of calling creatures to your aid." }
-newTalentType{ allow_random=true, is_nature=true, type="wild-gift/summon-advanced", name = "summoning (advanced)", min_lev = 10, description = "The art of calling creatures to your aid." }
-newTalentType{ allow_random=true, is_nature=true, type="wild-gift/slime", name = "slime aspect", description = "Through dedicated consumption of slime mold juice, you have gained an affinity with slime molds." }
-newTalentType{ allow_random=true, is_nature=true, type="wild-gift/fungus", name = "fungus", generic = true, description = "By covering yourself in fungus you better your healing." }
-newTalentType{ allow_random=true, is_nature=true, type="wild-gift/sand-drake", name = "sand drake aspect", description = "Take on the defining aspects of a Sand Drake." }
-newTalentType{ allow_random=true, is_nature=true, type="wild-gift/fire-drake", name = "fire drake aspect", description = "Take on the defining aspects of a Fire Drake." }
-newTalentType{ allow_random=true, is_nature=true, type="wild-gift/cold-drake", name = "cold drake aspect", description = "Take on the defining aspects of a Cold Drake." }
-newTalentType{ allow_random=true, is_nature=true, type="wild-gift/storm-drake", name = "storm drake aspect", description = "Take on the defining aspects of a Storm Drake." }
-newTalentType{ allow_random=true, is_nature=true, type="wild-gift/venom-drake", name = "venom drake aspect", description = "Take on the defining aspects of a Venom Drake." }
-newTalentType{ allow_random=true, is_nature=true, type="wild-gift/higher-draconic", name = "higher draconic abilities", description = "Take on the aspects of aged and powerful dragons." }
-newTalentType{ allow_random=true, is_nature=true, type="wild-gift/mindstar-mastery", name = "mindstar mastery", generic = true, description = "Learn to channel your mental power through mindstars, forming powerful psionic blades." }
-newTalentType{ allow_random=true, is_nature=true, type="wild-gift/mucus", name = "mucus", description = "Cover the floor with natural mucus." }
-newTalentType{ allow_random=true, is_nature=true, type="wild-gift/ooze", name = "ooze", description = "Your body and internal organs are becoming more ooze-like in nature, allowing you to spawn more of you." }
-newTalentType{ allow_random=true, is_nature=true, type="wild-gift/malleable-body", name = "malleable body", description = "Your body's anatomy is starting to blur." }
+newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/call", name = "call of the wild", generic = true, description = "Be at one with nature." }
+newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/harmony", name = "harmony", generic = true, description = "Nature heals and cleans you." }
+newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/antimagic", name = "antimagic", generic = true, description = "The way to combat magic, or even nullify it." }
+newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/summon-melee", name = "summoning (melee)", description = "The art of calling creatures to your aid." }
+newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/summon-distance", name = "summoning (distance)", description = "The art of calling creatures to your aid." }
+newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/summon-utility", name = "summoning (utility)", description = "The art of calling creatures to your aid." }
+newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/summon-augmentation", name = "summoning (augmentation)", description = "The art of calling creatures to your aid." }
+newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/summon-advanced", name = "summoning (advanced)", min_lev = 10, description = "The art of calling creatures to your aid." }
+newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/slime", name = "slime aspect", description = "Through dedicated consumption of slime mold juice, you have gained an affinity with slime molds." }
+newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/fungus", name = "fungus", generic = true, description = "By covering yourself in fungus you better your healing." }
+newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/sand-drake", name = "sand drake aspect", description = "Take on the defining aspects of a Sand Drake." }
+newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/fire-drake", name = "fire drake aspect", description = "Take on the defining aspects of a Fire Drake." }
+newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/cold-drake", name = "cold drake aspect", description = "Take on the defining aspects of a Cold Drake." }
+newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/storm-drake", name = "storm drake aspect", description = "Take on the defining aspects of a Storm Drake." }
+newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/venom-drake", name = "venom drake aspect", description = "Take on the defining aspects of a Venom Drake." }
+newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/higher-draconic", name = "higher draconic abilities", description = "Take on the aspects of aged and powerful dragons." }
+newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/mindstar-mastery", name = "mindstar mastery", generic = true, description = "Learn to channel your mental power through mindstars, forming powerful psionic blades." }
+newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/mucus", name = "mucus", description = "Cover the floor with natural mucus." }
+newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/ooze", name = "ooze", description = "Your body and internal organs are becoming more ooze-like in nature, allowing you to spawn more of you." }
+newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/malleable-body", name = "malleable body", description = "Your body's anatomy is starting to blur." }
 
 -- Generic requires for gifts based on talent level
 gifts_req1 = {
