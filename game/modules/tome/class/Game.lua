@@ -1253,11 +1253,9 @@ function _M:setupCommands()
 			end end
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
-			local x, y = game.player.x + 5, game.player.y
-			--game.level.map:particleEmitter(game.player.x, game.player.y, math.max(math.abs(x-game.player.x), math.abs(y-game.player.y)), "lightning_beam", {tx=x-game.player.x, ty=y-game.player.y}, {type="lightning"})
-			game.level.map:particleEmitter(game.player.x, game.player.y, math.max(math.abs(-5), math.abs(y-game.player.y)), "lightning_beam", {tx=-5, ty=y-game.player.y}, {type="lightning"})
---			game.level.map:particleEmitter(game.player.x, game.player.y, 3, "lightning_shield", {radius=2}, {type="lightning"})
---			game.level.map:particleEmitter(game.player.x, game.player.y, math.max(math.abs(-5), math.abs(y-game.player.y)), "lightning_beam", {tx=-5, ty=y-game.player.y})
+			local o = game.zone:makeEntity(game.level,"object", {random_object=true}, nil, true)
+			o:identify(true)
+			if o then game.zone:addEntity(game.level, o, "object", game.player.x, game.player.y) end
 			
 do return end
 			local f, err = loadfile("/data/general/events/glowing-chest.lua")

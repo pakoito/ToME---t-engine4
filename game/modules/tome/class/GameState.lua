@@ -1231,7 +1231,7 @@ function _M:entityFilterPost(zone, level, type, e, filter)
 			e = game.state:generateRandart{
 				lev = lev,
 				egos = 0,
-				power_points_factor = data.power_points_factor or 3,
+				power_points_factor = data.power_points_factor or 7,
 				nb_powers_add = data.nb_powers_add or 1,
 				nb_themes = data.nb_themes or math.max(2, math.floor(lev / 20)),
 				force_themes = data.force_themes or nil,

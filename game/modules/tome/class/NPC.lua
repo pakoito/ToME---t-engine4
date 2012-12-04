@@ -336,15 +336,19 @@ end
 --- Call when added to a level
 -- Used to make escorts and such
 function _M:addedToLevel(level, x, y)
-	if game.difficulty == game.DIFFICULTY_NIGHTMARE and not game.party:hasMember(self) then
-		-- Increase talent level
-		for tid, lev in pairs(self.talents) do
-			self:learnTalent(tid, true, math.ceil(lev / 2))
-		end
-	elseif game.difficulty == game.DIFFICULTY_INSANE and not game.party:hasMember(self) then
-		-- Increase talent level
-		for tid, lev in pairs(self.talents) do
-			self:learnTalent(tid, true, lev)
+	if not self:attr("difficulty_boosted") then
+		if game.difficulty == game.DIFFICULTY_NIGHTMARE and not game.party:hasMember(self) then
+			-- Increase talent level
+			for tid, lev in pairs(self.talents) do
+				self:learnTalent(tid, true, math.ceil(lev / 2))
+			end
+			self:attr("difficulty_boosted", 1)
+		elseif game.difficulty == game.DIFFICULTY_INSANE and not game.party:hasMember(self) then
+			-- Increase talent level
+			for tid, lev in pairs(self.talents) do
+				self:learnTalent(tid, true, lev)
+			end
+			self:attr("difficulty_boosted", 1)
 		end
 	end
 
