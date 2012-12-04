@@ -144,6 +144,11 @@ newTalent{
 		m.summon_time = 20
 		m.exp_worth = 0
 		m.no_drops = true
+		if self:knowTalent(self.T_BLIGHTED_SUMMONING) then 
+			m:incIncStat("mag", self:getMag()) 
+			m:learnTalent(m.T_REND, true, 3)
+		end
+		self:attr("summoned_times", 1)
 		
 		game.zone:addEntity(game.level, m, "actor", target.x, target.y)
 		game.level.map:particleEmitter(target.x, target.y, 1, "slime")

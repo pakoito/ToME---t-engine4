@@ -151,6 +151,9 @@ uberTalent{
 		- Alchemy Golems: Corrupted Strength and the Reaving Combat tree
 		- Shadows: Empathic Hex
 		- Thought-Forms: Flame of Urh'Rok
+		- Treants: Corrosive Worm
+		- Yeek Wayists: Dark Portal
+		- Ghoul Rot ghoul: Rend
 		- Bloated Oozes: Bone Shield
 		- Mucus Oozes: Virulent Disease
 		- Other race or object-based summons might be affected too

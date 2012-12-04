@@ -65,6 +65,7 @@ function _M:use(item)
 		game.player.invulnerable = 1
 		game.player.money = 500
 		game.player.auto_id = 100
+		game.state.birth.ignore_prodigies_special_reqs = true
 		game.player.inc_damage.all = 100000
 		game.player:incStat("str", 100) game.player:incStat("dex", 100) game.player:incStat("mag", 100) game.player:incStat("wil", 100) game.player:incStat("cun", 100) game.player:incStat("con", 100)
 	elseif act == "all_arts" then
