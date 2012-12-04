@@ -92,7 +92,7 @@ function _M:init(t, no_default)
 	self.last_learnt_talents = self.last_learnt_talents or { class={}, generic={} }
 	self.puuid = self.puuid or util.uuid()
 
-	self.damage_log = self.damage_log or {}
+	self.damage_log = self.damage_log or {weapon={}}
 end
 
 function _M:onBirth(birther)

@@ -365,6 +365,10 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 
 		if dam > 0 and src.damage_log then
 			src.damage_log[type] = (src.damage_log[type] or 0) + dam
+			if src.turn_procs and src.turn_procs.weapon_type then
+				src.damage_log.weapon[src.turn_procs.weapon_type.kind] = (src.damage_log.weapon[src.turn_procs.weapon_type.kind] or 0) + dam
+				src.damage_log.weapon[src.turn_procs.weapon_type.mode] = (src.damage_log.weapon[src.turn_procs.weapon_type.mode] or 0) + dam
+			end
 		end
 
 		if dam > 0 and source_talent then

@@ -393,6 +393,16 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 		target:knockback(self.x, self.y, math.ceil(math.log(dam)))
 	end
 
+	-- Roll with it
+	if hitted and target:attr("knockback_on_hit") and not target.turn_procs.roll_with_it and rng.percent(util.bound(dam, 0, 100)) then
+		local ox, oy = self.x, self.y
+		game:onTickEnd(function() 
+			target:knockback(ox, oy, 1) 
+			if not target:hasEffect(target.EFF_WILD_SPEED) then target:setEffect(target.EFF_WILD_SPEED, 1, {power=200}) end
+		end)
+		target.turn_procs.roll_with_it = true
+	end
+
 	self.use_psi_combat = false
 end
 

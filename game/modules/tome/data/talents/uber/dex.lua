@@ -56,9 +56,8 @@ uberTalent{
 uberTalent{
 	name = "Windblade",
 	mode = "activated",
-	require = { special={desc="Know at least 20 talent levels of stamina using talents.", fct=function(self) return knowRessource(self, "stamina", 20) end} },
+	require = { special={desc="Dealt over 50000 damage with dual wielded weapons.", fct=function(self) return self.damage_log and self.damage_log.weapon.dualwield and self.damage_log.weapon.dualwield >= 50000 end} },
 	cooldown = 20,
-	stamina = 30,
 	radius = 2,
 	range = 1,
 	tactical = { ATTACK = { PHYSICAL=2 }, DISABLE = { disarm = 2 } },
@@ -109,9 +108,15 @@ uberTalent{
 uberTalent{
 	name = "Giant Leap",
 	mode = "activated",
-	require = { special={desc="Know at least 20 talent levels of stamina using talents.", fct=function(self) return knowRessource(self, "stamina", 20) end} },
+	require = { special={desc="Dealt over 50000 damage with any weapon or unarmed.", fct=function(self) return 
+		self.damage_log and (
+			(self.damage_log.weapon.twohanded and self.damage_log.weapon.twohanded >= 50000) or
+			(self.damage_log.weapon.shield and self.damage_log.weapon.shield >= 50000) or
+			(self.damage_log.weapon.dualwield and self.damage_log.weapon.dualwield >= 50000) or
+			(self.damage_log.weapon.other and self.damage_log.weapon.other >= 50000)
+		)
+	end} },
 	cooldown = 20,
-	stamina = 30,
 	radius = 1,
 	range = 10,
 	tactical = { CLOSEIN = 2, ATTACK = { PHYSICAL = 2 }, DISABLE = { daze = 1 } },
@@ -177,6 +182,7 @@ uberTalent{
 	activate = function(self, t)
 		local ret = {}
 		self:talentTemporaryValue(ret, "knockback_on_hit", 1)
+		self:talentTemporaryValue(ret, "movespeed_on_hit", {speed=3, dur=1})
 		self:talentTemporaryValue(ret, "resists", {[DamageType.PHYSICAL] = 10})
 		return ret
 	end,
@@ -185,7 +191,7 @@ uberTalent{
 	end,
 	info = function(self, t)
 		return ([[You have learnt to take a few hits when needed, you know how to flow with them, reducing all physical damage by 10%%.
-		When you get hit by melee or archery you go back one tile (this can only happen once per turn) for free and gain 300% movement speed for a turn.]])
+		When you get hit by melee or archery you go back one tile (this can only happen once per turn) for free and gain 200%% movement speed for a turn.]])
 		:format()
 	end,
 }

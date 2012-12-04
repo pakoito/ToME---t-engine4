@@ -327,6 +327,13 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	damtype = damtype or (weapon and weapon.damtype) or DamageType.PHYSICAL
 	mult = mult or 1
 
+	local mode = "other"
+	if self:hasShield() then mode = "shield"
+	elseif self:hasTwoHandedWeapon() then mode = "twohanded" 
+	elseif self:hasDualWeapon() then mode = "dualwield"
+	end
+	self.turn_procs.weapon_type = {kind=weapon.talented, mode=mode}
+
 	-- Does the blow connect? yes .. complex :/
 	local atk, def = self:combatAttack(weapon), target:combatDefense()
 
@@ -771,7 +778,10 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	-- Roll with it
 	if hitted and target:attr("knockback_on_hit") and not target.turn_procs.roll_with_it and rng.percent(util.bound(dam, 0, 100)) then
 		local ox, oy = self.x, self.y
-		game:onTickEnd(function() target:knockback(ox, oy, 1) end)
+		game:onTickEnd(function() 
+			target:knockback(ox, oy, 1) 
+			if not target:hasEffect(target.EFF_WILD_SPEED) then target:setEffect(target.EFF_WILD_SPEED, 1, {power=200}) end
+		end)
 		target.turn_procs.roll_with_it = true
 	end
 
@@ -854,6 +864,8 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 
 	-- Visual feedback
 	if hitted then game.level.map:particleEmitter(target.x, target.y, 1, "melee_attack", {color=target.blood_color}) end
+
+	self.turn_procs.weapon_type = nil
 
 	return self:combatSpeed(weapon), hitted
 end

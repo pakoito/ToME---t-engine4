@@ -37,12 +37,11 @@ uberTalent{
 uberTalent{
 	name = "You Shall Be My Weapon!", short_name="TITAN_S_SMASH", image = "talents/titan_s_smash.png",
 	mode = "activated",
-	require = { special={desc="Be of at least size category 'huge' (also required to use it) and know at least 20 talent levels of stamina using talents.", fct=function(self) return self.size_category and self.size_category >= 5 and knowRessource(self, "stamina", 20) end} },
+	require = { special={desc="Be of at least size category 'huge' (also required to use it).", fct=function(self) return self.size_category and self.size_category >= 5 end} },
 	requires_target = true,
 	tactical = { ATTACK = 4 },
 	on_pre_use = function(self, t) return self.size_category and self.size_category >= 5 end,
-	cooldown = 10,
-	stamina = 20,
+	cooldown = 12,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -76,11 +75,13 @@ uberTalent{
 uberTalent{
 	name = "Massive Blow",
 	mode = "activated",
-	require = { special={desc="Dug at least 30 walls/trees/... and know at least 20 talent levels of stamina using talents.", fct=function(self) return self.dug_times and self.dug_times >= 30 and knowRessource(self, "stamina", 20) end} },
+	require = { special={desc="Dug at least 30 walls/trees/... and dealt over 50000 damage with a two handed weapon.", fct=function(self) return 
+		self.dug_times and self.dug_times >= 30 and 
+		self.damage_log and self.damage_log.weapon.twohanded and self.damage_log.weapon.twohanded >= 50000
+	end} },
 	requires_target = true,
 	tactical = { ATTACK = 4 },
-	cooldown = 10,
-	stamina = 20,
+	cooldown = 12,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
