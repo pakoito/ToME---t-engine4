@@ -70,7 +70,7 @@ uberTalent{
 		self:project(tg, self.x, self.y, function(px, py, tg, self)
 			local target = game.level.map(px, py, Map.ACTOR)
 			if target and target ~= self then
-				local hit = self:attackTarget(target, nil, 1.4, true)
+				local hit = self:attackTarget(target, nil, 2.2, true)
 				if hit and target:canBe("disarm") then
 					target:setEffect(target.EFF_DISARMED, 4, {})
 				end
@@ -80,7 +80,7 @@ uberTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You spin madly in a gust of wind, dealing 140%% weapon damage to all foes in a radius 2 and disarming them for 4 turns.]])
+		return ([[You spin madly in a gust of wind, dealing 220%% weapon damage to all foes in a radius 2 and disarming them for 4 turns.]])
 		:format()
 	end,
 }
