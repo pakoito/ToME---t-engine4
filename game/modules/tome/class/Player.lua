@@ -93,6 +93,7 @@ function _M:init(t, no_default)
 	self.puuid = self.puuid or util.uuid()
 
 	self.damage_log = self.damage_log or {weapon={}}
+	self.talent_kind_log = self.talent_kind_log or {}
 end
 
 function _M:onBirth(birther)

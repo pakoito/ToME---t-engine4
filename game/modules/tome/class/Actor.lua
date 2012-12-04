@@ -3547,6 +3547,13 @@ function _M:postUseTalent(ab, ret)
 
 	self.changed = true
 
+	if self.talent_kind_log then 
+		if ab.is_spell then self.talent_kind_log.spell = (self.talent_kind_log.spell or 0) + 1 end
+		if ab.is_summon then self.talent_kind_log.summon = (self.talent_kind_log.summon or 0) + 1 end
+		if ab.is_mind then self.talent_kind_log.mind = (self.talent_kind_log.mind or 0) + 1 end
+		if ab.is_nature then self.talent_kind_log.nature = (self.talent_kind_log.nature or 0) + 1 end
+	end
+
 	-- Handle inscriptions (delay it so it does not affect current inscription)
 	game:onTickEnd(function()
 		if ab.type[1] == "inscriptions/infusions" then

@@ -20,20 +20,17 @@
 uberTalent{
 	name = "Spectral Shield",
 	mode = "passive",
-	require = { special={desc="Block talent, have mana and a block value over 200.", fct=function(self)
-		return self:knowTalent(self.T_BLOCK) and self:getTalentFromId(self.T_BLOCK).getBlockValue(self) >= 200 and self:getMaxMana() >= 70
+	require = { special={desc="Block talent, have cast at least 100 spells and a block value over 200.", fct=function(self)
+		return self:knowTalent(self.T_BLOCK) and self:getTalentFromId(self.T_BLOCK).getBlockValue(self) >= 200 and self.talent_kind_log and self.talent_kind_log.spell and self.talent_kind_log.spell >= 100
 	end} },
 	on_learn = function(self, t)
 		self:attr("spectral_shield", 1)
-		self:attr("max_mana", -70)
 	end,
 	on_unlearn = function(self, t)
 		self:attr("spectral_shield", -1)
-		self:attr("max_mana", 70)
 	end,
 	info = function(self, t)
-		return ([[Infusing your shield with raw magic your Block can now block any damage type
-		Your maximum mana will be premanently reduced by 70 to create the effect.]])
+		return ([[Infusing your shield with raw magic your Block can now block any damage type.]])
 		:format()
 	end,
 }
@@ -46,18 +43,15 @@ uberTalent{
 	end} },
 	on_learn = function(self, t)
 		local ret = {}
-		self:attr("max_mana", -70)
 		self:talentTemporaryValue(ret, "force_use_resist", DamageType.ARCANE)
 		self:talentTemporaryValue(ret, "force_use_resist_percent", 50)
 		return ret
 	end,
 	on_unlearn = function(self, t)
-		self:attr("max_mana", 70)
 	end,
 	info = function(self, t)
 		return ([[Create a thin layer of aether all around you. Any attack passing through will check arcane resistance instead of the incomming damage resistance.
-		In effect all your resistances are equal to 50%% of your arcane resistance.
-		Your maximum mana will be premanently reduced by 70 to create the effect.]])
+		In effect all your resistances are equal to 50%% of your arcane resistance.]])
 		:format()
 	end,
 }
