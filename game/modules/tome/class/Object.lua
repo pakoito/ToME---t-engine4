@@ -1472,13 +1472,15 @@ end
 
 --- On identification, add to lore
 function _M:on_identify()
-	if self.on_id_lore then
-		game.player:learnLore(self.on_id_lore, false, false, true)
-	end
-	if self.unique and self.desc and not self.no_unique_lore then
-		game.player:additionalLore(self.unique, self:getName{no_add_name=true, do_color=false, no_count=true}, "artifacts", self.desc)
-		game.player:learnLore(self.unique, false, false, true)
-	end
+	game:onTickEnd(function()
+		if self.on_id_lore then
+			game.player:learnLore(self.on_id_lore, false, false, true)
+		end
+		if self.unique and self.desc and not self.no_unique_lore then
+			game.player:additionalLore(self.unique, self:getName{no_add_name=true, do_color=false, no_count=true}, "artifacts", self.desc)
+			game.player:learnLore(self.unique, false, false, true)
+		end
+	end)
 end
 
 --- Add some special properties right before wearing it
