@@ -41,8 +41,10 @@ newTalent{
 		if hitted then
 			if target:canBe("stun") then
 				target:setEffect(target.EFF_STUNNED, t.getDuration(self, t), {apply_power=self:combatAttack()})
-			else
-				game.logSeen(target, "%s resists the stun!", target.name:capitalize())
+			end
+			if not target:hasEffect(target.EFF_STUNNED) then
+				game.logSeen(target, "%s resists the stun and %s quickly gets back on feet!", target.name:capitalize(), self.name:capitalize())
+				self.energy.value = self.energy.value + game.energy_to_act * self:combatSpeed()
 			end
 		end
 
@@ -52,7 +54,8 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local duration = t.getDuration(self, t)
 		return ([[You hit your target doing %d%% damage, trying to stun it instead of damaging it. If your attack hits, the target is stunned for %d turns.
-		Stun chance increase with talent level and your Dexterity stat.]]):
+		Stun chance increase your accuracy.
+		If you fail to stun the target (of if it shrugs the effect) you quickly get back on your feet, not using your current turn.]]):
 		format(100 * damage, duration)
 	end,
 }
