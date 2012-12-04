@@ -3802,7 +3802,7 @@ end
 
 --- Return the full description of a talent
 -- You may overload it to add more data (like power usage, ...)
-function _M:getTalentFullDescription(t, addlevel, config)
+function _M:getTalentFullDescription(t, addlevel, config, fake_mastery)
 	if not t then return tstring{"no talent"} end
 
 	config = config or {}
@@ -3811,6 +3811,11 @@ function _M:getTalentFullDescription(t, addlevel, config)
 		self.talents[t.id] = config.force_level
 	else
 		self.talents[t.id] = (self.talents[t.id] or 0) + (addlevel or 0)
+	end
+
+	local oldmastery = nil
+	if fake_mastery then
+		self.talents_types_mastery[t.type[1]] = fake_mastery - 1
 	end
 
 	local d = tstring{}
@@ -3880,6 +3885,10 @@ function _M:getTalentFullDescription(t, addlevel, config)
 	d:merge(t.info(self, t):toTString():tokenize(" ()[]"))
 
 	self.talents[t.id] = old
+
+	if fake_mastery then
+		self.talents_types_mastery[t.type[1]] = oldmastery
+	end
 
 	return d
 end
