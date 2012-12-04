@@ -1928,6 +1928,29 @@ newEffect{
 	end,
 }
 
+
+newEffect{
+	name = "STEAMROLLER_USER", image = "talents/steamroller.png",
+	desc = "Steamroller",
+	long_desc = function(self, eff) return ("Grants a +%d%% damage bonus."):format(eff.buff) end,
+	type = "physical",
+	subtype = { status=true },
+	status = "beneficial",
+	parameters = { buff=20 },
+	on_merge = function(self, old_eff, new_eff)
+		new_eff.buff = math.min(100, old_eff.buff + new_eff.buff)
+		self:removeTemporaryValue("inc_damage", old_eff.buffid)
+		new_eff.buffid = self:addTemporaryValue("inc_damage", {all=new_eff.buff})
+		return new_eff
+	end,
+	activate = function(self, eff)
+		eff.buffid = self:addTemporaryValue("inc_damage", {all=eff.buff})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("inc_damage", eff.buffid)
+	end,
+}
+
 newEffect{
 	name = "SPINE_OF_THE_WORLD", image = "talents/spine_of_the_world.png",
 	desc = "Spine of the World",
