@@ -684,6 +684,11 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		weapon.special_on_kill.fct(weapon, self, target)
 	end
 
+	if hitted and crit and not target.dead and self:knowTalent(self.T_BACKSTAB) and not target:attr("stunned") and rng.percent(self:getTalentLevel(self.T_BACKSTAB) * 3) then
+		if target:canBe("stun") then
+			target:setEffect(target.EFF_STUNNED, 3, {apply_power=self:combatAttack()})
+		end
+	end
 
 	-- Poison coating
 	if hitted and not target.dead and self.vile_poisons and next(self.vile_poisons) and target:canBe("poison") then

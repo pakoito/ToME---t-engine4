@@ -67,10 +67,11 @@ newTalent{
 	points = 5,
 	require = cuns_req2,
 	getCriticalChance = function(self, t) return self:getTalentLevel(t) * 10 end,
+	getStunChance = function(self, t) return self:getTalentLevel(t) * 3 end,
 	info = function(self, t)
-		local chance = t.getCriticalChance(self, t)
-		return ([[Your quick wit gives you a big advantage against stunned targets; all your hits will have a %d%% greater chance of being critical.]]):
-		format(chance)
+		return ([[Your quick wit gives you a big advantage against stunned targets; all your hits will have a %d%% greater chance of being critical.
+		Also your melee critical strikes have %d%% chance to stun the target for 3 turns.]]):
+		format(t.getCriticalChance(self, t), t.getStunChance(self, t))
 	end,
 }
 newTalent{
@@ -125,10 +126,9 @@ newTalent{
 	require = cuns_req4,
 	requires_target = true,
 	tactical = { DISABLE = 2, ATTACK = {weapon = 2} },
-	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.9, 1.4) end,
+	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 1, 1.9) end,
 	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)) end,
-	getAttackPenalty = function(self, t) return 5 + self:combatTalentStatDamage(t, "cun", 10, 60) end,
-	getDamagePenalty = function(self, t) return 5 + self:combatTalentStatDamage(t, "cun", 10, 50) end,
+	getSpeedPenalty = function(self, t) return 20 + self:combatTalentStatDamage(t, "cun", 5, 50) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -137,14 +137,8 @@ newTalent{
 		local hitted = self:attackTarget(target, nil, t.getDamage(self, t), true)
 
 		if hitted then
-			local tw = target:getInven("MAINHAND")
-			if tw then
-				tw = tw[1] and tw[1].combat
-			end
-			tw = tw or target.combat
-			local atk = target:combatAttack(tw) * (t.getAttackPenalty(self, t)) / 100
-			local dam = target:combatDamage(tw) * (t.getDamagePenalty(self, t)) / 100
-			target:setEffect(target.EFF_CRIPPLE, t.getDuration(self, t), {atk=atk, dam=dam, apply_power=self:combatAttack()})
+			local speed = t.getSpeedPenalty(self, t) / 100
+			target:setEffect(target.EFF_CRIPPLE, t.getDuration(self, t), {speed=speed, apply_power=self:combatAttack()})
 		end
 
 		return true
@@ -152,11 +146,10 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local duration = t.getDuration(self, t)
-		local attackpen = t.getAttackPenalty(self, t)
-		local damagepen = t.getDamagePenalty(self, t)
-		return ([[You hit your target doing %d%% damage. If your attack hits, the target is crippled for %d turns, losing %d%% accuracy and %d%% damage.
+		local speedpen = t.getSpeedPenalty(self, t)
+		return ([[You hit your target doing %d%% damage. If your attack hits, the target is crippled for %d turns, losing %d%% melee, spellcasting and mind speed.
 		Hit chance improves with talent level and your Dexterity stat.]]):
-		format(100 * damage, duration, attackpen, damagepen)
+		format(100 * damage, duration, speedpen)
 	end,
 }
 

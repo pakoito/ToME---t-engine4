@@ -806,20 +806,17 @@ newEffect{
 newEffect{
 	name = "CRIPPLE", image = "talents/cripple.png",
 	desc = "Cripple",
-	long_desc = function(self, eff) return ("The target is crippled, reducing attack by %d and damage by %d."):format(eff.atk, eff.dam) end,
+	long_desc = function(self, eff) return ("The target is crippled, reducing melee, spellcasting and mind speed by %d%%."):format(eff.speed) end,
 	type = "physical",
 	subtype = { wound=true },
 	status = "detrimental",
-	parameters = { atk=10, dam=10 },
+	parameters = { speed=0.3 },
 	on_gain = function(self, err) return "#Target# is crippled." end,
 	on_lose = function(self, err) return "#Target# is not cripple anymore." end,
 	activate = function(self, eff)
-		eff.atkid = self:addTemporaryValue("combat_atk", -eff.atk)
-		eff.damid = self:addTemporaryValue("combat_dam", -eff.dam)
-	end,
-	deactivate = function(self, eff)
-		self:removeTemporaryValue("combat_atk", eff.atkid)
-		self:removeTemporaryValue("combat_dam", eff.damid)
+		self:effectTemporaryValue(eff, "combat_physspeed", -eff.speed)
+		self:effectTemporaryValue(eff, "combat_spellspeed", -eff.speed)
+		self:effectTemporaryValue(eff, "combat_mindspeed", -eff.speed)
 	end,
 }
 
