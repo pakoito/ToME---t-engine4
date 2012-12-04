@@ -52,7 +52,11 @@ newEntity{ define_as = "SUPREME_ARCHMAGE_LINANIIL",
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	resolvers.drops{chance=100, nb=5, {tome_drops="boss"} },
 
-	resists = {[DamageType.FIRE]=100, [DamageType.LIGHTNING]=100},
+	combat_spellcrit = 70,
+	combat_spellpower = 60,
+	inc_damage = {all=80},
+
+	resists = {[DamageType.ARCANE]=100},
 
 	resolvers.equip{
 		{type="weapon", subtype="staff", autoreq=true, forbid_power_source={antimagic=true}, tome_drops="boss"},
@@ -61,6 +65,12 @@ newEntity{ define_as = "SUPREME_ARCHMAGE_LINANIIL",
 
 	talent_cd_reduction = {all=23},
 	resolvers.talents{
+		[Talents.T_AETHER_PERMEATION]=1,
+		[Talents.T_DRACONIC_BODY]=1,
+		[Talents.T_METEORIC_CRASH]=1,
+		[Talents.T_LUCKY_DAY]=1,
+		[Talents.T_ELEMENTAL_SURGE]=1,
+		[Talents.T_EYE_OF_THE_TIGER]=1,
 		[Talents.T_WILDFIRE]=5,
 		[Talents.T_FLAME]=5,
 		[Talents.T_FLAMESHOCK]=5,
