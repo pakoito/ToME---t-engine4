@@ -141,7 +141,7 @@ uberTalent{
 		self:project(tg, self.x, self.y, function(px, py, tg, self)
 			local target = game.level.map(px, py, Map.ACTOR)
 			if target and target ~= self then
-				local hit = self:attackTarget(target, nil, 1.3, true)
+				local hit = self:attackTarget(target, nil, 2, true)
 				if hit and target:canBe("stun") then
 					target:setEffect(target.EFF_DAZED, 3, {})
 				end
@@ -151,7 +151,7 @@ uberTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You jump accurately to the target, dealing 130%% weapon damage to all foes in a radius 1 on impactand dazing them for 3 turns.]])
+		return ([[You jump accurately to the target, dealing 200%% weapon damage to all foes in a radius 1 on impact and dazing them for 3 turns.]])
 		:format()
 	end,
 }

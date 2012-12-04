@@ -49,7 +49,7 @@ uberTalent{
 		if not x or not y or not target then return nil end
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 
-		local hit = self:attackTarget(target, nil, 2.3, true)
+		local hit = self:attackTarget(target, nil, 3.5, true)
 
 		if target:attr("dead") or not hit then return end
 
@@ -67,7 +67,7 @@ uberTalent{
 		if target:canBe("stun") then target:setEffect(target.EFF_STUNNED, 3, {}) end
 	end,
 	info = function(self, t)
-		return ([[You deal a massive blow to your foe, smashing it for 230%% weapon damage and knocking it back 6 tiles away.
+		return ([[You deal a massive blow to your foe, smashing it for 350%% weapon damage and knocking it back 6 tiles away.
 		All foes in its path will be knocked on the sides and stunned for 3 turns.]])
 		:format()
 	end,
@@ -95,12 +95,12 @@ uberTalent{
 			end
 		end)
 
-		self:attackTarget(target, nil, 1.5 + (destroyed and 1.5 or 0), true)
+		self:attackTarget(target, nil, 1.5 + (destroyed and 3.5 or 0), true)
 		return true
 	end,
 	info = function(self, t)
 		return ([[You deal a massive blow to your foe, smashing it for 150%% weapon damage and knocking it back 4 tiles away.
-		If the knockback makes it hit a wall it will smash down the wall and deal an additional 150%% weapon damage.]])
+		If the knockback makes it hit a wall it will smash down the wall and deal an additional 350%% weapon damage.]])
 		:format()
 	end,
 }
