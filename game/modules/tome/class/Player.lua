@@ -1181,10 +1181,10 @@ function _M:onWear(o, bypass_set)
 					so.power = 0
 				end
 			end
-			if so.talent_cooldown then
+			if so.talent_cooldown and (not self:attr("quick_equip_cooldown") or self:attr("quick_equip_cooldown") > 1) then
 				self.talents_cd[so.talent_cooldown] = math.max(self.talents_cd[so.talent_cooldown] or 0, math.min(4, math.floor((so.use_power or so.use_talent or {power=10}).power / 5)))
 				if self:attr("quick_equip_cooldown") then
-					self.talents_cd[so.talent_cooldown] = math.floor(self.talents_cd[so.talent_cooldown] / 2)
+					self.talents_cd[so.talent_cooldown] = math.floor(self.talents_cd[so.talent_cooldown] / self:attr("quick_equip_cooldown"))
 					if self.talents_cd[so.talent_cooldown] <= 0 then self.talents_cd[so.talent_cooldown] = nil end
 				end
 			end
