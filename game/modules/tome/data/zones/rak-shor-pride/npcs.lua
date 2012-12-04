@@ -102,6 +102,7 @@ newEntity{ base="BASE_NPC_ORC_RAK_SHOR", define_as = "RAK_SHOR",
 
 --Rotting Titan, undead mass of flesh and stone. Regenerates quickly, moves slow, and hits hard.
 newEntity{ base = "BASE_NPC_GHOUL", define_as = "ROTTING_TITAN",
+	allow_infinite_dungeon = true,
 	name = "Rotting Titan", color={128,64,0}, unique=true,
 	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/undead_ghoul_rotting_titan.png", display_h=2, display_y=-1}}},
 	desc = [[This gigantic mass of flesh and stone moves slowly, the ground rumbling with each step it takes. Its body seems to constantly pulsate and reform. Massive stones at the end of each limb form massive blunt weapons.]],
@@ -171,6 +172,7 @@ newEntity{ base = "BASE_NPC_GHOUL", define_as = "ROTTING_TITAN",
 
 --Glacial Legion, icy fused soul. Leaves trails that freeze any who try to pass over them.
 newEntity{ base = "BASE_NPC_GHOST", define_as = "GLACIAL_LEGION",
+	allow_infinite_dungeon = true,
 	name = "Glacial Legion", color=colors.BLUE, unique=true,
 	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/undead_ghost_glacial_legion.png", display_h=2, display_y=-1}}},
 	desc = [[A massive, shifting, ethereal form floats in the air around an orb of frozen blood. Vapor pools on the floor beneath it.]],
@@ -233,6 +235,7 @@ newEntity{ base = "BASE_NPC_GHOST", define_as = "GLACIAL_LEGION",
 
 --Heavy Sentinel, flaming bone giant.
 newEntity{ base = "BASE_NPC_BONE_GIANT", define_as = "HEAVY_SENTINEL",
+	allow_infinite_dungeon = true,
 	name = "Heavy Sentinel", color=colors.ORANGE, unique=true,
 	desc = [[A towering creature, made from the bones of countless bodies. An aura of flame bellows from within its chest.]],
 	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/undead_giant_heavy_sentinel.png", display_h=2, display_y=-1}}},
@@ -280,6 +283,7 @@ newEntity{ base = "BASE_NPC_BONE_GIANT", define_as = "HEAVY_SENTINEL",
 
 -- Arch Zephyr, Vampiric Storm Lord. Wields a bow and lightning magic with equal effectiveness, and moves quickly.
 newEntity{ base = "BASE_NPC_VAMPIRE", unique=true, define_as="ARCH_ZEPHYR",
+	allow_infinite_dungeon = true,
 	name = "Arch Zephyr", color=colors.BLUE,
 	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/undead_vampire_arch_zephyr.png", display_h=2, display_y=-1}}},
 	desc=[[The robes of this ancient vampire billow with intense winds. Bolts of lightning arc along its body. In its hand it holds a bow, electricity streaking across it.]],
@@ -326,6 +330,7 @@ newEntity{ base = "BASE_NPC_VAMPIRE", unique=true, define_as="ARCH_ZEPHYR",
 
 -- The Void Spectre, the Aether Wight. Minor talents in all elements, but arcane through and through.
 newEntity{ base = "BASE_NPC_WIGHT",
+	allow_infinite_dungeon = true,
 	name = "Void Spectre", color=colors.RED, unique=true,
 	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/undead_wight_void_spectre.png", display_h=2, display_y=-1}}},
 	desc=[[Intense Arcane energy whirls in the air around this ethereal form. ]],
