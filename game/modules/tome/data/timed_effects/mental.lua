@@ -408,7 +408,7 @@ newEffect{
 	long_desc = function(self, eff)
 		local message = ("The target has been beckoned by %s and is heeding the call. There is a %d%% chance of moving towards the beckoner each turn."):format(eff.source.name, eff.chance)
 		if eff.spellpowerChangeId and eff.mindpowerChangeId then
-			message = message..(" (spellpower: -%d, mindpower: -%d"):format(eff.spellpowerChange, eff.mindpowerChange)
+			message = message..(" (spellpower: %d, mindpower: %d"):format(eff.spellpowerChange, eff.mindpowerChange)
 		end
 		return message
 	end,
