@@ -65,7 +65,7 @@ newAchievement{
 	desc = [[Killed 1000 reproducing vermin]],
 	mode = "player",
 	can_gain = function(self, who, target)
-		if target:knowTalent(target.T_MULTIPLY) then
+		if target:knowTalent(target.T_MULTIPLY) or target.clone_on_hit then
 			self.nb = (self.nb or 0) + 1
 			if self.nb >= 1000 then return true end
 		end
