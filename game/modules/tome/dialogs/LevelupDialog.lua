@@ -525,11 +525,15 @@ function _M:generateList()
 		end
 	end
 	table.sort(ctree, function(a, b)
-		return a.order_id < b.order_id
+		if self.actor:knowTalentType(a.type) and not self.actor:knowTalentType(b.type) then return 1
+		elseif not self.actor:knowTalentType(a.type) and self.actor:knowTalentType(b.type) then return nil
+		else return a.order_id < b.order_id end
 	end)
 	self.ctree = ctree
 	table.sort(gtree, function(a, b)
-		return a.order_id < b.order_id
+		if self.actor:knowTalentType(a.type) and not self.actor:knowTalentType(b.type) then return 1
+		elseif not self.actor:knowTalentType(a.type) and self.actor:knowTalentType(b.type) then return nil
+		else return a.order_id < b.order_id end
 	end)
 	self.gtree = gtree
 
