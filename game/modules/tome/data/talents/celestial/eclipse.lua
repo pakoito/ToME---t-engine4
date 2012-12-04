@@ -88,7 +88,7 @@ newTalent{
 			return nil
 		end
 		local tgts = {}
-		local grids = core.fov.circle_grids(self.x, self.y, 10, true)
+		local grids = core.fov.circle_grids(self.x, self.y, self:getTalentRange(t), true)
 		for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
 			local a = game.level.map(x, y, Map.ACTOR)
 			if a and self:reactionToward(a) < 0 then
@@ -126,10 +126,10 @@ newTalent{
 		local targetcount = t.getTargetCount(self, t)
 		local lightdamage = t.getLightDamage(self, t)
 		local darknessdamage = t.getDarknessDamage(self, t)
-		return ([[Each time one of your spells is a critical you project a bolt of light or shadow at %d targets in a radius of 10, doing %0.2f light damage or %0.2f darkness damage.
+		return ([[Each time one of your spells is a critical you project a bolt of light or shadow at %d targets in a radius of %d, doing %0.2f light damage or %0.2f darkness damage.
 		This effect costs 2 positive or 2 negative energy each time it's triggered and will not trigger if either your positive or negative energy is below 2.
 		The damage scales with the Magic stat.]]):
-		format(targetcount, damDesc(self, DamageType.LIGHT, lightdamage), damDesc(self, DamageType.DARKNESS, darknessdamage))
+		format(targetcount, self:getTalentRange(t), damDesc(self, DamageType.LIGHT, lightdamage), damDesc(self, DamageType.DARKNESS, darknessdamage))
 	end,
 }
 
