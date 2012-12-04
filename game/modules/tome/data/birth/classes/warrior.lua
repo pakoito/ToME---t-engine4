@@ -217,6 +217,9 @@ newBirthDescriptor{
 		["technique/combat-techniques-passive"]={false, 0.1},
 		["technique/combat-training"]={true, 0.1},
 		["technique/magical-combat"]={true, 0.3},
+		["technique/shield-offense"]={false, 0},
+		["technique/2hweapon-cripple"]={false, 0},
+		["technique/dualweapon-attack"]={false, 0},
 		["cunning/survival"]={true, 0.1},
 		["cunning/dirty"]={true, 0.2},
 	},
@@ -231,7 +234,7 @@ newBirthDescriptor{
 	},
 	copy = {
 		max_life = 100,
-		talent_cd_reduction={[ActorTalents.T_FLAME]=-3, [ActorTalents.T_LIGHTNING]=-3, [ActorTalents.T_EARTHEN_MISSILES]=-3, },
+--		talent_cd_reduction={[ActorTalents.T_FLAME]=-3, [ActorTalents.T_LIGHTNING]=-3, [ActorTalents.T_EARTHEN_MISSILES]=-3, },
 		resolvers.equip{ id=true,
 			{type="weapon", subtype="greatsword", name="iron greatsword", autoreq=true, ego_chance=-1000, ego_chance=-1000},
 			{type="armor", subtype="light", name="rough leather armour", autoreq=true, ego_chance=-1000, ego_chance=-1000},
