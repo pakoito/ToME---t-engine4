@@ -1058,9 +1058,9 @@ function _M:displayDelayedLogDamage()
 				end
 			else
 				if self.level.map.seens(x, y) and (rsrc == self.player or self.party:hasMember(rsrc)) then
-					self.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, rng.float(-3, -2), tostring(-math.ceil(dams.total)), {0,255,0})
+					self.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, rng.float(-3, -2), tostring(-math.ceil(dams.total)), {dams.is_crit and 200 or 0,255,0}, dams.is_crit)
 				elseif self.level.map.seens(x, y) and (rtarget == self.player or self.party:hasMember(rtarget)) then
-					self.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, -rng.float(-3, -2), tostring(-math.ceil(dams.total)), {255,0,0})
+					self.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, -rng.float(-3, -2), tostring(-math.ceil(dams.total)), {255,dams.is_crit and 200 or 0,0}, dams.is_crit)
 				end
 			end
 		end
@@ -1070,12 +1070,13 @@ function _M:displayDelayedLogDamage()
 	self.delayed_log_damage = {}
 end
 
-function _M:delayedLogDamage(src, target, dam, desc)
+function _M:delayedLogDamage(src, target, dam, desc, crit)
 	self.delayed_log_damage[src] = self.delayed_log_damage[src] or {}
 	self.delayed_log_damage[src][target] = self.delayed_log_damage[src][target] or {total=0, descs={}}
 	local t = self.delayed_log_damage[src][target]
 	t.descs[#t.descs+1] = desc
 	t.total = t.total + dam
+	t.is_crit = t.is_crit or crit
 end
 
 --- Called every game turns
