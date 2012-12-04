@@ -65,15 +65,18 @@ function _M:useObject(who, ...)
 	-- Make sure the object is registered with the game, if need be
 	if not game:hasEntity(self) then game:addEntity(self) end
 
+	local reduce = 100 - util.bound(who:attr("use_object_cooldown_reduce") or 0, 0, 100)
+	local usepower = function(power) return math.ceil(power * reduce / 100) end
+
 	if self.use_power then
 		if (self.talent_cooldown and not who:isTalentCoolingDown(self.talent_cooldown)) or (not self.talent_cooldown and self.power >= self.use_power.power) then
 			local ret = self.use_power.use(self, who, ...) or {}
 			local no_power = not ret.used or ret.no_power
 			if not no_power then 
 				if self.talent_cooldown then
-					who.talents_cd[self.talent_cooldown] = self.use_power.power
+					who.talents_cd[self.talent_cooldown] = usepower(self.use_power.power)
 				else
-					self.power = self.power - self.use_power.power 
+					self.power = self.power - usepower(self.use_power.power)
 				end
 			end
 			return ret
@@ -97,9 +100,9 @@ function _M:useObject(who, ...)
 
 			if ret then 
 				if self.talent_cooldown then
-					who.talents_cd[self.talent_cooldown] = self.use_talent.power
+					who.talents_cd[self.talent_cooldown] = usepower(self.use_talent.power)
 				else
-					self.power = self.power - self.use_talent.power 
+					self.power = self.power - usepower(self.use_talent.power)
 				end
 			end
 

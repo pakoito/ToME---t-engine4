@@ -174,15 +174,16 @@ function _M:descAttribute(attr)
 	elseif attr == "CHARM" then
 		return (" [power %d]"):format(self:getCharmPower())
 	elseif attr == "CHARGES" then
+		local reduce = 100 - util.bound(game.player:attr("use_object_cooldown_reduce") or 0, 0, 100)
 		if self.talent_cooldown and (self.use_power or self.use_talent) then
 			local cd = game.player.talents_cd[self.talent_cooldown]
 			if cd and cd > 0 then
-				return " ("..cd.."/"..(self.use_power or self.use_talent).power.." cooldown)"
+				return " ("..cd.."/"..(math.ceil((self.use_power or self.use_talent).power * reduce / 100)).." cooldown)"
 			else
-				return " ("..(self.use_power or self.use_talent).power.." cooldown)"
+				return " ("..(math.ceil((self.use_power or self.use_talent).power * reduce / 100)).." cooldown)"
 			end
 		elseif self.use_power or self.use_talent then
-			return (" (%d/%d)"):format(math.floor(self.power / (self.use_power or self.use_talent).power), math.floor(self.max_power / (self.use_power or self.use_talent).power))
+			return (" (%d/%d)"):format(math.floor(self.power / (math.ceil((self.use_power or self.use_talent).power * reduce / 100))), math.floor(self.max_power / (math.ceil((self.use_power or self.use_talent).power * reduce / 100))))
 		else
 			return ""
 		end
@@ -1192,23 +1193,25 @@ end
 
 function _M:getUseDesc()
 	local ret = tstring{}
+	local reduce = 100 - util.bound(game.player:attr("use_object_cooldown_reduce") or 0, 0, 100)
+	local usepower = function(power) return math.ceil(power * reduce / 100) end
 	if self.use_power then
 		if self.show_charges then
-			ret = tstring{{"color","YELLOW"}, ("It can be used to %s, with %d charges out of %d."):format(util.getval(self.use_power.name, self), math.floor(self.power / self.use_power.power), math.floor(self.max_power / self.use_power.power)), {"color","LAST"}}
+			ret = tstring{{"color","YELLOW"}, ("It can be used to %s, with %d charges out of %d."):format(util.getval(self.use_power.name, self), math.floor(self.power / usepower(self.use_power.power)), math.floor(self.max_power / usepower(self.use_power.power))), {"color","LAST"}}
 		elseif self.talent_cooldown then
-			ret = tstring{{"color","YELLOW"}, ("It can be used to %s, placing all other charms into a %d cooldown."):format(util.getval(self.use_power.name, self):format(self:getCharmPower()), self.use_power.power), {"color","LAST"}}
+			ret = tstring{{"color","YELLOW"}, ("It can be used to %s, placing all other charms into a %d cooldown."):format(util.getval(self.use_power.name, self):format(self:getCharmPower()), usepower(self.use_power.power)), {"color","LAST"}}
 		else
-			ret = tstring{{"color","YELLOW"}, ("It can be used to %s, costing %d power out of %d/%d."):format(util.getval(self.use_power.name, self), self.use_power.power, self.power, self.max_power), {"color","LAST"}}
+			ret = tstring{{"color","YELLOW"}, ("It can be used to %s, costing %d power out of %d/%d."):format(util.getval(self.use_power.name, self), usepower(self.use_power.power), self.power, self.max_power), {"color","LAST"}}
 		end
 	elseif self.use_simple then
 		ret = tstring{{"color","YELLOW"}, ("It can be used to %s."):format(self.use_simple.name), {"color","LAST"}}
 	elseif self.use_talent then
 		local t = game.player:getTalentFromId(self.use_talent.id)
-		local desc = game.player:getTalentFullDescription(t, nil, {force_level=self.use_talent.level, ignore_cd=true, ignore_ressources=true, ignore_use_time=true, ignore_mode=true, custom=self.use_talent.power and tstring{{"color",0x6f,0xff,0x83}, "Power cost: ", {"color",0x7f,0xff,0xd4},("%d out of %d/%d."):format(self.use_talent.power, self.power, self.max_power)}})
+		local desc = game.player:getTalentFullDescription(t, nil, {force_level=self.use_talent.level, ignore_cd=true, ignore_ressources=true, ignore_use_time=true, ignore_mode=true, custom=self.use_talent.power and tstring{{"color",0x6f,0xff,0x83}, "Power cost: ", {"color",0x7f,0xff,0xd4},("%d out of %d/%d."):format(usepower(self.use_talent.power), self.power, self.max_power)}})
 		if self.talent_cooldown then
-			ret = tstring{{"color","YELLOW"}, "It can be used to activate talent ", t.name,", placing all other charms into a ", tostring(math.floor(self.use_talent.power)) ," cooldown :", {"color","LAST"}, true}
+			ret = tstring{{"color","YELLOW"}, "It can be used to activate talent ", t.name,", placing all other charms into a ", tostring(math.floor(usepower(self.use_talent.power))) ," cooldown :", {"color","LAST"}, true}
 		else
-			ret = tstring{{"color","YELLOW"}, "It can be used to activate talent ", t.name," (costing ", tostring(math.floor(self.use_talent.power)), " power out of ", tostring(math.floor(self.power)), "/", tostring(math.floor(self.max_power)), ") :", {"color","LAST"}, true}
+			ret = tstring{{"color","YELLOW"}, "It can be used to activate talent ", t.name," (costing ", tostring(math.floor(usepower(self.use_talent.power))), " power out of ", tostring(math.floor(self.power)), "/", tostring(math.floor(self.max_power)), ") :", {"color","LAST"}, true}
 		end
 		ret:merge(desc)
 	end

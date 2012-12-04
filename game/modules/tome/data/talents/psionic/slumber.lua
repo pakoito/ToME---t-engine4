@@ -84,10 +84,15 @@ newTalent{
 	points = 5,
 	require = psi_wil_req2,
 	mode = "passive",
-	getDamage = function(self, t) return self:combatTalentMindDamage(t, 20, 200) end,
+	getDamage = function(self, t) return self:combatTalentMindDamage(t, 5, 40) end,
+	doRestlessNight = function (self, target, damage)
+		local dam = self:mindCrit(damage)
+		target:setEffect(target.EFF_RESTLESS_NIGHT, 5, {power=dam, src=self, no_ct_effect=true})
+		game.level.map:particleEmitter(target.x, target.y, 1, "generic_discharge", {rm=180, rM=200, gm=100, gM=120, bm=30, bM=50, am=70, aM=180})
+	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return([[Targets you have slept now take %0.2f mind damage upon waking.
+		return([[Targets you have slept now take %0.2f mind damage each turn for five turns upon waking.
 		The damage will scale with your mindpower.]]):format(damDesc(self, DamageType.MIND, (damage)))
 	end,
 }

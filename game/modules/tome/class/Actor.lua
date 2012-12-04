@@ -972,8 +972,8 @@ function _M:move(x, y, force)
 	self.did_energy = nil
 
 	-- Try to detect traps
-	if self:knowTalent(self.T_TRAP_HANDLING) then
-		local power = self:getTalentLevel(self.T_TRAP_HANDLING) * self:getCun(25, true)
+	if self:knowTalent(self.T_HEIGHTENED_SENSES) then
+		local power = self:getTalentLevel(self.T_HEIGHTENED_SENSES) * self:getCun(25, true)
 		local grids = core.fov.circle_grids(self.x, self.y, 1, true)
 		for x, yy in pairs(grids) do for y, _ in pairs(yy) do
 			local trap = game.level.map(x, y, Map.TRAP)
@@ -4200,7 +4200,7 @@ function _M:canBe(what)
 	if what == "disarm" and rng.percent(100 * (self:attr("disarm_immune") or 0)) then return false end
 	if what == "pin" and rng.percent(100 * (self:attr("pin_immune") or 0)) and not self:attr("levitation") then return false end
 	if what == "stun" and rng.percent(100 * (self:attr("stun_immune") or 0)) then return false end
-	if what == "sleep" and rng.percent(100 * (self:attr("sleep_immune") or 0)) then return false end
+	if what == "sleep" and rng.percent(100 * math.max((self:attr("sleep_immune") or 0), (self:attr("confusion_immune") or 0))) then return false end
 	if what == "fear" and rng.percent(100 * (self:attr("fear_immune") or 0)) then return false end
 	if what == "knockback" and (rng.percent(100 * (self:attr("knockback_immune") or 0)) or self:attr("never_move")) then return false end
 	if what == "stone" and rng.percent(100 * (self:attr("stone_immune") or 0)) then return false end

@@ -130,7 +130,7 @@ newTalent{
 		m.exp_worth = 0
 		m.energy.value = 0
 		m.player = nil
-		m.max_life = m.max_life / 4
+		m.max_life = m.max_life / 2 / m.rank
 		m.life = util.bound(m.life, 0, m.max_life)
 		m.inc_damage.all = (m.inc_damage.all or 0) - 50
 		m.forceLevelup = function() end
@@ -212,7 +212,7 @@ newTalent{
 		local chance = t.getChance(self, t)
 		return ([[Brings the target's inner demons to the surface.  Each turn for %d turns there's a %d%% chance that the a demon will surface, requiring the target to make a mental save to keep it from manifesting.
 		If the target is sleeping the chance will be doubled and fear immunity will be ignored.  Otherwise if the summoning is resisted the effect will end early.
-		The summon chance will scale with your mindpower.]]):format(duration, chance)
+		The summon chance will scale with your mindpower and the demon's life will scale with the target's rank.]]):format(duration, chance)
 	end,
 }
 

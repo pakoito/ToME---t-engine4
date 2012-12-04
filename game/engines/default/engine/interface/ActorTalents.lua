@@ -339,8 +339,8 @@ function _M:unlearnTalent(t_id, nb)
 
 		if t.on_unlearn then 
 			local p = nil
-			if self.talents_learn_vals[t.id] and self.talents_learn_vals[t.id][self.talents[t_id] + 1] then
-				p = self.talents_learn_vals[t.id][self.talents[t_id] + 1]
+			if self.talents_learn_vals[t.id] and self.talents_learn_vals[t.id][(self.talents[t_id] or 0) + 1] then
+				p = self.talents_learn_vals[t.id][(self.talents[t_id] or 0) + 1]
 				if p.__tmpvals then
 					for i = 1, #p.__tmpvals do
 						self:removeTemporaryValue(p.__tmpvals[i][1], p.__tmpvals[i][2])
@@ -522,10 +522,24 @@ function _M:getTalentTypeMastery(tt)
 	return (self.talents_types_mastery[tt] or 0) + 1
 end
 
+--- Return talent type mastery for this talent
+function _M:getTalentMastery(t)
+	local tt = t.type[1]
+	return self:getTalentTypeMastery(tt)
+end
+
 --- Sets talent type mastery
 function _M:setTalentTypeMastery(tt, v)
 	-- "v - 1" because a mastery is expressed as x + 1, not x, so that 0 is the default value (thus getting 1)
 	self.talents_types_mastery[tt] = v - 1
+
+	for i, t in pairs(self.talents_types_def[tt].talents) do
+		if t.auto_relearn_passive then
+			local lvl = self:getTalentLevelRaw(t)
+			self:unlearnTalent(t.id, lvl)
+			self:learnTalent(t.id, true, lvl)
+		end
+	end
 end
 
 --- Return talent definition from id

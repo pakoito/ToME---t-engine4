@@ -18,22 +18,9 @@
 -- darkgod@te4.org
 
 newTalent{
-	name = "Trap Handling",
+	name = "Heightened Senses",
 	type = {"cunning/survival", 1},
 	require = cuns_req1,
-	mode = "passive",
-	points = 5,
-	info = function(self, t)
-		return ([[Your attention to detail allows you to detect traps around you (%d detection 'power').
-		At level 3 you learn to disarm known traps (%d disarm 'power').]]):
-		format(self:getTalentLevel(t) * self:getCun(25, true), self:getTalentLevel(t) * self:getCun(25, true))
-	end,
-}
-
-newTalent{
-	name = "Heightened Senses",
-	type = {"cunning/survival", 2},
-	require = cuns_req2,
 	mode = "passive",
 	points = 5,
 	on_learn = function(self, t)
@@ -48,8 +35,30 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[You notice the small things others do not notice, allowing you to "see" creatures in a %d radius even outside of light radius.
-		This is not telepathy though, and is still limited to line of sight.]]):
-		format(4 + math.ceil(self:getTalentLevel(t)))
+		This is not telepathy though, and is still limited to line of sight.
+		Also, your attention to detail allows you to detect traps around you (%d detection 'power').
+		At level 3 you learn to disarm known traps (%d disarm 'power').]]):
+		format(4 + math.ceil(self:getTalentLevel(t)), self:getTalentLevel(t) * self:getCun(25, true), self:getTalentLevel(t) * self:getCun(25, true))
+	end,
+}
+
+newTalent{
+	name = "Charm Mastery",
+	type = {"cunning/survival", 2},
+	require = cuns_req2,
+	mode = "passive",
+	points = 5,
+	auto_relearn_passive = true,
+	on_learn = function(self, t)
+		local ret = {}
+		self:talentTemporaryValue(ret, "use_object_cooldown_reduce", math.floor(self:getTalentMastery(t) * 8))
+		return ret
+	end,
+	on_unlearn = function(self, t)
+	end,
+	info = function(self, t)
+		return ([[Your cunning allows you to use charms (wands, totems and torques) more efficiently, reducing their cooldowns by %d%%.]]):
+		format(self:getTalentLevelRaw(t) * math.floor(self:getTalentMastery(t) * 8))
 	end,
 }
 

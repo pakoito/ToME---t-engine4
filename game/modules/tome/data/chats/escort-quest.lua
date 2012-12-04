@@ -98,7 +98,7 @@ local reward_types = {
 		},
 		talents = {
 			[Talents.T_HEIGHTENED_SENSES] = 1,
-			[Talents.T_TRAP_HANDLING] = 1,
+			[Talents.T_CHARM_MASTERY] = 1,
 			[Talents.T_PIERCING_SIGHT] = 1,
 		},
 		stats = {

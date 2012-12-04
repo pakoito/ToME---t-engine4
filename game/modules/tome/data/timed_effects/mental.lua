@@ -2499,8 +2499,8 @@ newEffect{
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("sleep", eff.sid)
 		if not self:attr("sleep") and not self.dead and game.level:hasEntity(self) and eff.waking > 0 then
-			DamageType:get(DamageType.MIND).projector(eff.src or self, self.x, self.y, DamageType.MIND, eff.src:mindCrit(eff.waking))
-			game.level.map:particleEmitter(self.x, self.y, 1, "generic_discharge", {rm=180, rM=200, gm=100, gM=120, bm=30, bM=50, am=70, aM=180})
+			local t = eff.src:getTalentFromId(self.T_RESTLESS_NIGHT)
+			t.doRestlessNight(eff.src, self, eff.waking)
 		end
 		if eff.particle then
 			self:removeParticles(eff.particle)
@@ -2549,8 +2549,8 @@ newEffect{
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("sleep", eff.sid)
 		if not self:attr("sleep") and not self.dead and game.level:hasEntity(self) and eff.waking > 0 then
-			DamageType:get(DamageType.MIND).projector(eff.src or self, self.x, self.y, DamageType.MIND, eff.src:mindCrit(eff.waking))
-			game.level.map:particleEmitter(self.x, self.y, 1, "generic_discharge", {rm=180, rM=200, gm=100, gM=120, bm=30, bM=50, am=70, aM=180})
+			local t = eff.src:getTalentFromId(self.T_RESTLESS_NIGHT)
+			t.doRestlessNight(eff.src, self, eff.waking)
 		end
 		if eff.particle then
 			self:removeParticles(eff.particle)
@@ -2608,12 +2608,36 @@ newEffect{
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("sleep", eff.sid)
 		if not self:attr("sleep") and not self.dead and game.level:hasEntity(self) and eff.waking > 0 then
-			DamageType:get(DamageType.MIND).projector(eff.src or self, self.x, self.y, DamageType.MIND, eff.src:mindCrit(eff.waking))
-			game.level.map:particleEmitter(self.x, self.y, 1, "generic_discharge", {rm=180, rM=200, gm=100, gM=120, bm=30, bM=50, am=70, aM=180})
+			local t = eff.src:getTalentFromId(self.T_RESTLESS_NIGHT)
+			t.doRestlessNight(eff.src, self, eff.waking)
 		end
 		if eff.particle then
 			self:removeParticles(eff.particle)
 		end
+	end,
+}
+
+newEffect{
+	name = "RESTLESS_NIGHT", image = "talents/restless_night.png",
+	desc = "Restless Night",
+	long_desc = function(self, eff) return ("Fatigue from poor sleep, dealing %0.2f mind damage per turn."):format(eff.power) end,
+	type = "mental",
+	subtype = { psionic=true},
+	status = "detrimental",
+	parameters = { power=1 },
+	on_gain = function(self, err) return "#Target# had a restless night.", "+Restless Night" end,
+	on_lose = function(self, err) return "#Target# has recovered from poor sleep.", "-Restless Night" end,
+	on_merge = function(self, old_eff, new_eff)
+		-- Merge the flames!
+		local olddam = old_eff.power * old_eff.dur
+		local newdam = new_eff.power * new_eff.dur
+		local dur = math.ceil((old_eff.dur + new_eff.dur) / 2)
+		old_eff.dur = dur
+		old_eff.power = (olddam + newdam) / dur
+		return old_eff
+	end,
+	on_timeout = function(self, eff)
+		DamageType:get(DamageType.MIND).projector(eff.src or self, self.x, self.y, DamageType.MIND, eff.power)
 	end,
 }
 
