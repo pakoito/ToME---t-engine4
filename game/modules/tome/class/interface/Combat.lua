@@ -1256,6 +1256,11 @@ function _M:physicalCrit(dam, weapon, target, atk, def, add_chance, crit_power_a
 
 	local chance = self:combatCrit(weapon) + (add_chance or 0)
 	crit_power_add = crit_power_add or 0
+
+	if target:hasEffect(target.EFF_DISMAYED) then
+		chance = 100
+	end
+
 	local crit = false
 	if self:knowTalent(self.T_BACKSTAB) and target:attr("stunned") then chance = chance + self:getTalentLevel(self.T_BACKSTAB) * 10 end
 
@@ -1270,10 +1275,6 @@ function _M:physicalCrit(dam, weapon, target, atk, def, add_chance, crit_power_a
 	end
 
 	chance = chance - target:combatCritReduction()
-
-	if target:hasEffect(target.EFF_DISMAYED) then
-		chance = 100
-	end
 
 	-- Scoundrel's Strategies
 	if self:attr("cut") and target:knowTalent(self.T_SCOUNDREL) then
