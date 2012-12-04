@@ -24,6 +24,7 @@ load("/data/general/npcs/major-demon.lua", function(e) e.rarity = nil end)
 local Talents = require("engine.interface.ActorTalents")
 
 newEntity{ base="BASE_NPC_MAJOR_DEMON", define_as = "KRYL_FEIJAN",
+	allow_infinite_dungeon = true,
 	name = "Kryl-Feijan", color=colors.VIOLET, unique = true,
 	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/demon_major_kryl_feijan.png", display_h=2, display_y=-1}}},
 	desc = [[This huge demon is covered in darkness. The ripped flesh of its "mother" still hangs from its sharp claws.]],
