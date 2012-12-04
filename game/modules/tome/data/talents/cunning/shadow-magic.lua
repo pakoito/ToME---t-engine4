@@ -68,18 +68,23 @@ newTalent{
 	tactical = { BUFF = 2 },
 	getManaRegen = function(self, t) return self:getTalentLevel(t) / 14 end,
 	activate = function(self, t)
+		local speed = self:getTalentLevel(t) * 2.2 / 100
 		return {
 			regen = self:addTemporaryValue("mana_regen", t.getManaRegen(self, t)),
+			ps = self:addTemporaryValue("combat_physspeed", speed),
+			ss = self:addTemporaryValue("combat_spellspeed", speed),
 		}
 	end,
 	deactivate = function(self, t, p)
 		self:removeTemporaryValue("mana_regen", p.regen)
+		self:removeTemporaryValue("combat_physspeed", p.ps)
+		self:removeTemporaryValue("combat_spellspeed", p.ss)
 		return true
 	end,
 	info = function(self, t)
 		local manaregen = t.getManaRegen(self, t)
-		return ([[Regenerates %0.2f mana per turn while active.]]):
-		format(manaregen)
+		return ([[Regenerates %0.2f mana per turn and increases physical and spell attack speed by %d%% while active.]]):
+		format(manaregen, 2.2 * self:getTalentLevel(t))
 	end,
 }
 
