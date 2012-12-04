@@ -1192,6 +1192,39 @@ function _M:onWear(o, bypass_set)
 	end
 end
 
+--- Call when an object is added
+function _M:onAddObject(o)
+	mod.class.Actor.onAddObject(self, o)
+	if self.hotkey and o:attr("auto_hotkey") then
+		local position
+		local name = o:getName{no_count=true, force_id=true, no_add_name=true}
+
+		if self.player then
+			if self == game:getPlayer(true) then
+				position = self:findQuickHotkey("Player: Specific", "inventory", name)
+				if not position then
+					local global_hotkeys = engine.interface.PlayerHotkeys.quickhotkeys["Player: Global"]
+					if global_hotkeys and global_hotkeys["talent"] then position = global_hotkeys["inventory"][name] end
+				end
+			else
+				position = self:findQuickHotkey(self.name, "inventory", name)
+			end
+		end
+
+		if position and not self.hotkey[position] then
+			self.hotkey[position] = {"inventory", name}
+		else
+			for i = 1, 12 * (self.nb_hotkey_pages or 5) do
+				if not self.hotkey[i] then
+					self.hotkey[i] = {"inventory", name}
+					break
+				end
+			end
+		end
+	end
+end
+
+
 -- Go through all sustained talents and turn them off if pre_use fails
 function _M:playerCheckSustains()
 	for tid, _ in pairs(self.talents) do

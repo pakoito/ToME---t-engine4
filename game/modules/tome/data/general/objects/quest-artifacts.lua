@@ -83,6 +83,8 @@ newEntity{ define_as = "ORB_MANY_WAYS",
 	desc = [[The orb projects images of distant places, some that seem to be not of this world, switching rapidly.
 If used near a portal it could probably activate it.]],
 
+	auto_hotkey = 1,
+
 	max_power = 30, power_regen = 1,
 	use_power = { name = "activate a portal", power = 10,
 		use = function(self, who)
@@ -311,6 +313,8 @@ newEntity{ base = "BASE_ROD",
 	desc = [[This rod is made entirely of voratun, infused with raw magical energies that can bend space itself.
 You have heard of such items before. They are very useful to adventurers, allowing faster travel.]],
 	cost = 0, quest=true,
+
+	auto_hotkey = 1,
 
 	max_power = 400, power_regen = 1,
 	use_power = { name = "recall the user to the worldmap", power = 202,
