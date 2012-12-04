@@ -54,8 +54,8 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local duration = t.getDuration(self, t)
 		return ([[You hit your target doing %d%% damage, trying to stun it instead of damaging it. If your attack hits, the target is stunned for %d turns.
-		Stun chance increase your accuracy.
-		If you fail to stun the target (of if it shrugs the effect) you quickly get back on your feet, not using your current turn.]]):
+		Stun chance increase with your accuracy.
+		If you fail to stun the target (or if it shrugs the effect) you quickly get back on your feet, not using your current turn.]]):
 		format(100 * damage, duration)
 	end,
 }
