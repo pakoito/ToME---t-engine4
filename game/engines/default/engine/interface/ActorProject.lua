@@ -268,8 +268,8 @@ function _M:canProject(t, x, y)
 		return
 	end
 
-	if stop_x == x and stop_y == y then return true, stop_x, stop_y, stop_x, stop_y end
-	return false, stop_x, stop_y, stop_radius_x, stop_radius_y
+	local is_hit = stop_x == x and stop_y == y
+	return is_hit, stop_x, stop_y, stop_radius_x, stop_radius_y
 end
 
 --- Project damage to a distance using a moving projectile
