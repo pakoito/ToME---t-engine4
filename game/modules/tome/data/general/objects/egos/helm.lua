@@ -467,3 +467,38 @@ newEntity{
 		combat_physresist = resolvers.mbonus_material(10, 5),
 	},
 }
+
+newEntity{
+	power_source = {technique=true},
+	name = "bladed ", prefix=true, instant_resolve=true,
+	keywords = {bladed=true},
+	level_range = {15, 50},
+	greater_ego = 1,
+	rarity = 15,
+	cost = 20,
+	skullcracker_mult = resolvers.mbonus_material(2, 1),
+	resolvers.charmt(Talents.T_SKULLCRACKER, 3, 20),
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_STR] = resolvers.mbonus_material(3, 2),
+		},
+		on_melee_hit={[DamageType.PHYSICAL] = resolvers.mbonus_material(5, 5)},
+	},
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = " of the bounder", suffix=true, instant_resolve=true,
+	keywords = {bounder=true},
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 17,
+	cost = 50,
+	skullcracker_mult = resolvers.mbonus_material(2, 1),
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_STR] = resolvers.mbonus_material(4, 5),
+			[Stats.STAT_DEX] = resolvers.mbonus_material(4, 5),
+		},
+	},
+}
