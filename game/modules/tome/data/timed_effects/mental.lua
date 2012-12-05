@@ -2802,3 +2802,18 @@ newEffect{
 		self:effectTemporaryValue(eff, "force_talent_ignore_ressources", 1)
 	end,
 }
+
+newEffect{
+	name = "SPELL_FEEDBACK", image = "talents/spell_feedback.png",
+	desc = "Spell Feedback",
+	long_desc = function(self, eff) return ("The target suffers %d%% spell failue."):format(eff.power) end,
+	type = "mental",
+	subtype = { nature=true },
+	status = "detrimental",
+	on_gain = function(self, err) return "#Target#'s is surrounded by antimagic forces.", "+Spell Feedback" end,
+	on_lose = function(self, err) return "#Target#'s antimagic forces vanishes.", "-Spell Feedback" end,
+	parameters = { power=30 },
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "spell_failure", eff.power)
+	end,
+}

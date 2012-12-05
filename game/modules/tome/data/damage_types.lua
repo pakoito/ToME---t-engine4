@@ -407,7 +407,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 				end
 
 				if not target.dead and t.is_spell and target.knowTalent and target:knowTalent(src.T_SPELL_FEEDBACK) then
-					target:triggerTalent(target.T_SPELL_FEEDBACK, nil, src)
+					target:triggerTalent(target.T_SPELL_FEEDBACK, nil, src, t)
 				end
 			end
 		end
