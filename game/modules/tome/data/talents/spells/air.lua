@@ -152,6 +152,7 @@ newTalent{
 	getEncumberance = function(self, t) return math.floor(self:combatTalentSpellDamage(t, 10, 110)) end,
 	getRangedDefence = function(self, t) return self:combatTalentSpellDamage(t, 4, 30) end,
 	getSpeed = function(self, t) return 0.05 * self:getTalentLevel(t) end,
+	getFatigue = function(self, t) return math.floor(2.5 * self:getTalentLevel(t)) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/spell_generic2")
 		local ret = {
@@ -164,6 +165,7 @@ newTalent{
 		end
 		if self:getTalentLevel(t) >= 5 then
 			ret.ms = self:addTemporaryValue("movement_speed", t.getSpeed(self, t))
+			self:talentTemporaryValue(ret, "fatigue", -t.getFatigue(self, t))
 		end
 
 		self:checkEncumbrance()
@@ -183,8 +185,8 @@ newTalent{
 		local rangedef = t.getRangedDefence(self, t)
 		return ([[A gentle wind circles around the caster, increasing carrying capacity by %d and increasing defense against projectiles by %d.
 		At level 4 it also makes you slightly levitate, allowing you to ignore some traps.
-		At level 5 it also grants %d%% movement speed.]]):
-		format(encumberance, rangedef, t.getSpeed(self, t) * 100)
+		At level 5 it also grants %d%% movement speed and removes %d fatigue.]]):
+		format(encumberance, rangedef, t.getSpeed(self, t) * 100, t.getFatigue(self, t))
 	end,
 }
 

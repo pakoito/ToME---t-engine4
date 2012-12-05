@@ -535,7 +535,7 @@ function _M:setTalentTypeMastery(tt, v)
 	-- "v - 1" because a mastery is expressed as x + 1, not x, so that 0 is the default value (thus getting 1)
 	self.talents_types_mastery[tt] = v - 1
 
-	for i, t in pairs(self.talents_types_def[tt].talents) do
+	for i, t in pairs(self.talents_types_def[tt] and self.talents_types_def[tt].talents or {}) do
 		if t.auto_relearn_passive then
 			local lvl = self:getTalentLevelRaw(t)
 			self:unlearnTalent(t.id, lvl)
