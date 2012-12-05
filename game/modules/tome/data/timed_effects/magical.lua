@@ -1999,10 +1999,21 @@ newEffect{
 	on_gain = function(self, err) return "#Target# threads time as a shell!", "+Temporal Form" end,
 	on_lose = function(self, err) return "#Target# is no longer embeded in time.", "-Temporal Form" end,
 	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "all_damage_convert", DamageType.TEMPORAL)
+		self:effectTemporaryValue(eff, "all_damage_convert_percent", 100)
 		self:effectTemporaryValue(eff, "stun_immune", 1)
 		self:effectTemporaryValue(eff, "pin_immune", 1)
 		self:effectTemporaryValue(eff, "cut_immune", 1)
 		self:effectTemporaryValue(eff, "blind_immune", 1)
+
+		local highest = self.inc_damage.all or 0
+		for kind, v in pairs(self.inc_damage) do
+			if kind ~= "all" then
+				local inc = (self.inc_damage.all or 0) + v
+				highest = math.max(highest, inc)
+			end
+		end
+		self:effectTemporaryValue(eff, "inc_damage", {[DamageType.TEMPORAL] = 30 + highest - (self.inc_damage[DamageType.TEMPORAL] or 0) - (self.inc_damage.all or 0)})
 		self:effectTemporaryValue(eff, "resists", {[DamageType.TEMPORAL] = 30})
 		self:effectTemporaryValue(eff, "resists_pen", {[DamageType.TEMPORAL] = 20})
 		self:effectTemporaryValue(eff, "talent_cd_reduction", {[self.T_ANOMALY_REARRANGE] = -4, [self.T_ANOMALY_TEMPORAL_STORM] = -4})

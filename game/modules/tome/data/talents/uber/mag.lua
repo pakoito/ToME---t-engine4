@@ -93,8 +93,8 @@ uberTalent{
 uberTalent{
 	name = "Temporal Form",
 	cooldown = 30,
-	require = { special={desc="Dealt over 50000 temporal damage and visited an out-of-time zone", fct=function(self) return
-		self.damage_log and (self.damage_log[DamageType.TEMPORAL] and self.damage_log[DamageType.TEMPORAL] >= 50000) and (game.state.birth.ignore_prodigies_special_reqs or self:attr("temporal_touched"))
+	require = { special={desc="Cast over 1000 spells and visited an out-of-time zone", fct=function(self) return
+		self.talent_kind_log and self.talent_kind_log.spell and self.talent_kind_log.spell >= 1000 and (game.state.birth.ignore_prodigies_special_reqs or self:attr("temporal_touched"))
 	end} },
 	no_energy = true,
 	is_spell = true,
@@ -102,12 +102,12 @@ uberTalent{
 	range = 10,
 	tactical = { BUFF = 2 },
 	action = function(self, t)
-		self:setEffect(self.EFF_TEMPORAL_FORM, 7, {})
+		self:setEffect(self.EFF_TEMPORAL_FORM, 10, {})
 		return true
 	end,
 	info = function(self, t)
-		return ([[You can wrap temporal threads around you, assuming the form of a telugoroth for 7 turns.
-		While in this form you gain pinning, bleeding, blindness and stun immunity, 30%% temporal resistance and 20%% temporal resistance penetration.
+		return ([[You can wrap temporal threads around you, assuming the form of a telugoroth for 10 turns.
+		While in this form you gain pinning, bleeding, blindness and stun immunity, 30%% temporal resistance, your temporal damage bonus is set to your current highest damage bonus + 30%%, all damage you deal becomes temporal and 20%% temporal resistance penetration.
 		You also are able to cast two anomalies: Anomaly Rearrange and Anomaly Temporal Storm.
 		Transforming in this form will increase your paradox by 600 and revert it back at the end of the effect.]])
 		:format()
