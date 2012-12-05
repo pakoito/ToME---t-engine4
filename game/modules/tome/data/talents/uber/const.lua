@@ -110,7 +110,7 @@ uberTalent{
 	end,
 	info = function(self, t)
 		return ([[You know how to meld in the shadows. As long as you stand on an unlit tile you gain 30 armour and 50%% armour hardiness.
-		Also all darkness damage you deal will unlight the target terrain.]])
+		Also all darkness damage you deal will unlight both the target terrain and yours.]])
 		:format()
 	end,
 }

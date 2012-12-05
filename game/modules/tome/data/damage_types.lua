@@ -558,6 +558,7 @@ newDamageType{
 		-- Darken
 		if realdam > 0 and src:attr("darkness_darkens") then
 			game.level.map.lites(x, y, false)
+			if src.x and src.y then game.level.map.lites(src.x, src.y, false) end
 		end
 		return realdam
 	end,
