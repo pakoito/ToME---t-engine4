@@ -332,7 +332,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	elseif self:hasTwoHandedWeapon() then mode = "twohanded" 
 	elseif self:hasDualWeapon() then mode = "dualwield"
 	end
-	self.turn_procs.weapon_type = {kind=weapon.talented, mode=mode}
+	self.turn_procs.weapon_type = {kind=weapon and weapon.talented or "unknown", mode=mode}
 
 	-- Does the blow connect? yes .. complex :/
 	local atk, def = self:combatAttack(weapon), target:combatDefense()
