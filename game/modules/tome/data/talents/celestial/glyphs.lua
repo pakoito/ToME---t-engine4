@@ -34,7 +34,7 @@ newTalent{
 	getDazeDuration = function(self, t) return 3 + self:getTalentLevelRaw(t) end,
 	getDuration = function(self, t) return 5 + self:getTalentLevel(t) end,
 	action = function(self, t)
-		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
+		local tg = {type="hit", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty = self:getTarget(tg)
 		if not tx or not ty then return nil end
 		local _ _, tx, ty = self:canProject(tg, tx, ty)
@@ -100,7 +100,7 @@ newTalent{
 	getDamage = function(self, t) return 15 + self:combatSpellpower(0.12) * self:getTalentLevel(t) end,
 	getDuration = function(self, t) return 5 + self:getTalentLevel(t) end,
 	action = function(self, t)
-		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
+		local tg = {type="hit", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty = self:getTarget(tg)
 		if not tx or not ty then return nil end
 		local _ _, tx, ty = self:canProject(tg, tx, ty)
@@ -174,7 +174,7 @@ newTalent{
 	getDamage = function(self, t) return 15 + self:combatSpellpower(0.12) * self:getTalentLevel(t) end,
 	getDuration = function(self, t) return 5 + self:getTalentLevel(t) end,
 	action = function(self, t)
-		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
+		local tg = {type="hit", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty = self:getTarget(tg)
 		if not tx or not ty then return nil end
 		local _ _, tx, ty = self:canProject(tg, tx, ty)
@@ -243,7 +243,7 @@ newTalent{
 	getSlow = function(self, t) return math.min(self:getTalentLevel(t) * 0.07 + 0.2, 0.65) end,
 	getDuration = function(self, t) return 5 + self:getTalentLevel(t) end,
 	action = function(self, t)
-		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
+		local tg = {type="hit", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty = self:getTarget(tg)
 		if not tx or not ty then return nil end
 		local _ _, tx, ty = self:canProject(tg, tx, ty)
