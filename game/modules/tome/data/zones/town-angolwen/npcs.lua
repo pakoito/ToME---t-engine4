@@ -58,6 +58,10 @@ newEntity{ define_as = "SUPREME_ARCHMAGE_LINANIIL",
 
 	resists = {[DamageType.ARCANE]=100},
 
+	combat_spellresist = 250,
+	combat_mentalresist = 250,
+	combat_physresist = 250,
+
 	resolvers.equip{
 		{type="weapon", subtype="staff", autoreq=true, forbid_power_source={antimagic=true}, tome_drops="boss"},
 		{type="armor", subtype="cloth", autoreq=true, forbid_power_source={antimagic=true}, tome_drops="boss"},

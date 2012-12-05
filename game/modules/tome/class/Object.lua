@@ -97,8 +97,8 @@ function _M:use(who, typ, inven, item)
 		local ret = self:useObject(who, inven, item)
 		if ret.used then
 			if self.charm_on_use then
-				for fct, d in pairs(self.charm_on_use) do
-					if rng.percent(d[1]) then fct(self, who) end
+				for i, d in ipairs(self.charm_on_use) do
+					if rng.percent(d[1]) then d[3](self, who) end
 				end
 			end
 
@@ -1218,7 +1218,7 @@ function _M:getUseDesc()
 
 	if self.charm_on_use then
 		ret:add(true, "When used:", true)
-		for fct, d in pairs(self.charm_on_use) do
+		for i, d in ipairs(self.charm_on_use) do
 			ret:add(tostring(d[1]), "% chances to ", d[2](self, game.player), ".", true)
 		end
 	end

@@ -30,9 +30,9 @@ newEntity{
 	cost = 5,
 
 	charm_on_use = {
-		[function(self, who)
+		{100, function(self, who) return ("regenerate %d psi"):format(self:getCharmPower(true) / 7) end, function(self, who)
 			who:incPsi(self:getCharmPower(true) / 7)
-		end] = {100, function(self, who) return ("regenerate %d psi"):format(self:getCharmPower(true) / 7) end},
+		end},
 	}
 }
 
@@ -44,9 +44,9 @@ newEntity{
 	cost = 5,
 
 	charm_on_use = {
-		[function(self, who)
+		{100, function(self, who) return ("regenerate %d hate"):format(self:getCharmPower(true) / 7) end, function(self, who)
 			who:incHate(self:getCharmPower(true) / 7)
-		end] = {100, function(self, who) return ("regenerate %d hate"):format(self:getCharmPower(true) / 7) end},
+		end},
 	}
 }
 

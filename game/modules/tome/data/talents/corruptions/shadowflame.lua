@@ -225,7 +225,7 @@ newTalent{
 		end)
 
 		local ret = {
-			vim = self:addTemporaryValue("vim_regen", -3),
+			vim = self:addTemporaryValue("vim_regen", -5),
 			target = target,
 			x = self.x, y = self.y,
 		}

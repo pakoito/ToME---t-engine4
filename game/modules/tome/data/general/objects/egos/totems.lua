@@ -30,9 +30,9 @@ newEntity{
 	cost = 5,
 
 	charm_on_use = {
-		[function(self, who)
+		{100, function(self, who) return ("regenerate %d equilibrium"):format(self:getCharmPower(true) / 5) end, function(self, who)
 			who:incEquilibrium(-self:getCharmPower(true) / 5)
-		end] = {100, function(self, who) return ("regenerate %d equilibrium"):format(self:getCharmPower(true) / 5) end},
+		end},
 	}
 }
 
@@ -44,9 +44,9 @@ newEntity{
 	cost = 5,
 
 	charm_on_use = {
-		[function(self, who)
+		{100, function(self, who) return ("regenerate %d stamina"):format(self:getCharmPower(true) / 6) end, function(self, who)
 			who:incStamina(self:getCharmPower(true) / 6)
-		end] = {100, function(self, who) return ("regenerate %d stamina"):format(self:getCharmPower(true) / 6) end},
+		end},
 	}
 }
 
