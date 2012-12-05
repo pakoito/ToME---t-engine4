@@ -562,7 +562,7 @@ function _M:act()
 			local t = self:getTalentFromId(tid)
 			if t.is_spell and rng.percent(self:attr("spell_failure")/10)then
 				self:forceUseTalent(tid, {ignore_energy=true})
-				if not silent then game.logPlayer(self, "%s has been disrupted by #ORCHID#anti-magic forces#LAST#!", t.name) end
+				if not silent then game.logSeen(self, "%s has been disrupted by #ORCHID#anti-magic forces#LAST#!", t.name) end
 			end
 		end
 	end
