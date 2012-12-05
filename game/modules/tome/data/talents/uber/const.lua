@@ -68,7 +68,7 @@ uberTalent{
 	mode = "passive",
 	require = { special={desc="Know the Block talent", fct=function(self) return self:knowTalent(self.T_BLOCK) end} },
 	info = function(self, t)
-		return ([[Your block now lasts 2 more turns.]])
+		return ([[Your block now lasts 1 more turn and does not end when hit.]])
 		:format()
 	end,
 }

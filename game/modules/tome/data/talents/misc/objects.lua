@@ -244,7 +244,7 @@ newTalent{
 	action = function(self, t)
 		local properties = t.getProperties(self, t)
 		local bt, bt_string = t.getBlockedTypes(self, t)
-		self:setEffect(self.EFF_BLOCKING, 1 + (self:knowTalent(self.T_ETERNAL_GUARD) and 2 or 0), {power = t.getBlockValue(self, t), d_types=bt, properties=properties})
+		self:setEffect(self.EFF_BLOCKING, 1 + (self:knowTalent(self.T_ETERNAL_GUARD) and 1 or 0), {power = t.getBlockValue(self, t), d_types=bt, properties=properties})
 		return true
 	end,
 	info = function(self, t)

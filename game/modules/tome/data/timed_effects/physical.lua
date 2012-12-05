@@ -1732,7 +1732,7 @@ newEffect{
 		local b = false
 		if eff.d_types[type] then b = true end
 		if not b then return dam end
-		eff.dur = 0
+		if not self:knowTalent(self.T_ETERNAL_GUARD) then eff.dur = 0 end
 		local amt = util.bound(dam - eff.power, 0, dam)
 		local blocked = dam - amt
 		local shield = self:hasShield()
