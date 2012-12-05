@@ -20,7 +20,7 @@
 return "New Cosmetic Race Option: #LIGHT_GREEN#Redhead Characters",
 [[You have saved Melinda from untold horrors and torments.
 
-You may now create human, elf and dwarf characters with red hairs.
+You may now create human, elf, halfling and dwarf characters with red hairs.
 This has no effect on gameplay at all but it is fun!
 
 #LIGHT_GREEN#This is only available to donators. Thanks for your support
