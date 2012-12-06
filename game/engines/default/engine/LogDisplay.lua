@@ -243,7 +243,7 @@ function _M:resetFade()
 
 	-- Reset fade
 	local time = core.game.getTime()
-	for i = 1, #self.dlist do
-		self.dlist[i].date = time
+	for i = 1, #self.log do
+		self.log[i].timestamp = time
 	end
 end
