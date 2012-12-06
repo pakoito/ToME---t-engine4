@@ -41,6 +41,7 @@ newTalent{
 	name = "Armour Training",
 	type = {"technique/combat-training", 1},
 	mode = "passive",
+	no_unlearn_last = true,
 	points = 5,
 	require = {stat = {str = function(level) return 16 + (level + 2) * (level - 1) end}},
 	on_unlearn = function(self, t)
