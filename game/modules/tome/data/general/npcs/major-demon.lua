@@ -236,6 +236,7 @@ newEntity{ base = "BASE_NPC_MAJOR_DEMON",
 		[Talents.T_SUNDER_ARMOUR]={base=5, every=8, max=10},
 		[Talents.T_SUNDER_ARMS]={base=5, every=8, max=10},
 		[Talents.T_SPELL_FEEDBACK]=1,
+		[Talents.T_MASSIVE_BLOW]=1,
 	},
 }
 
