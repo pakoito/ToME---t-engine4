@@ -991,7 +991,7 @@ newDamageType{
 			DamageType:get(DamageType.COLD).projector(src, x, y, DamageType.COLD, dam / 2)
 			DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam / 2)
 		else
-			DamageType:get(DamageType.BLIGHT).projector(src, x, y, DamageType.BLIGHT, dam)
+			DamageType:get(base.st).projector(src, x, y, base.st, dam)
 		end
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
