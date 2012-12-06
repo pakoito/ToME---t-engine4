@@ -981,6 +981,8 @@ function _M:getTextualDesc(compare_with)
 
 		compare_fields(w, compare_with, field, "damage_shield_penetrate", "%+d%%", "Damage Shield penetration: ")
 
+		compare_fields(w, compare_with, field, "projectile_evasion", "%+d%%", "Deflect projectiles away: ")
+
 		compare_fields(w, compare_with, field, "defense_on_teleport", "%+d", "Defense after a teleport: ")
 		compare_fields(w, compare_with, field, "resist_all_on_teleport", "%+d%%", "Resist all after a teleport: ")
 		compare_fields(w, compare_with, field, "effect_reduction_on_teleport", "%+d%%", "Effect duration reduction after a teleport: ")
