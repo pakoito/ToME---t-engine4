@@ -1,4 +1,4 @@
--- ToME - Tales of Middle-Earth
+-- ToME - Tales of Maj'Eyal
 -- Copyright (C) 2009, 2010, 2011, 2012 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -18,66 +18,77 @@
 -- darkgod@te4.org
 
 -- Make the 2 main forks
-local forks = {{}, {}}
-local m1 = forks[1]
-local m2 = forks[2]
-local tiles = math.ceil(math.sqrt(tx*tx+ty*ty))
 local tx = tx * engine.Map.tile_w
 local ty = ty * engine.Map.tile_h
-local breakdir = math.rad(rng.range(-8, 8))
-m1.bx = 0
-m1.by = 0
-m1.thick = 5
-m1.dir = math.atan2(ty, tx) + breakdir
-m1.size = math.sqrt(tx*tx+ty*ty) / 2
+local basesize = math.sqrt((ty*ty)+(tx*tx))
+local basedir = math.atan2(ty, tx)
 
-m2.bx = m1.size * math.cos(m1.dir)
-m2.by = m1.size * math.sin(m1.dir)
-m2.thick = 5
-m2.dir = math.atan2(ty, tx) - breakdir
-m2.size = math.sqrt(tx*tx+ty*ty) / 2
+local points = {}
 
--- Add more forks
-for i = 1, math.min(math.max(3, m1.size / 5), 20) do
-	local m = rng.percent(50) and forks[1] or forks[2]
-	if rng.percent(60) then m = rng.table(forks) end
-	local f = {}
-	f.thick = 2
-	f.dir = m.dir + math.rad(rng.range(-30,30))
-	f.size = rng.range(6, 25)
-	local br = rng.range(1, m.size)
-	f.bx = br * math.cos(m.dir) + m.bx
-	f.by = br * math.sin(m.dir) + m.by
-	forks[#forks+1] = f
+for fork_i = 1, 10 do
+	local bc = rng.float(0.8, 1)
+	local c = 1
+	local a = 1 or rng.float(0.3, 0.6)
+	local size = fork_i == 1 and 6 or 2
+	local starta = basedir+math.pi/2
+	local starts = rng.range(-4, 4)
+	points[#points+1] = {bc=bc, c=c, a=a, size=size, x=math.cos(starta) * starts, y=math.sin(starta) * starts, prev=-1}
+
+	local nb = 6
+	for i = 0, nb - 1 do
+		-- Split point in the segment
+		local split = rng.range(0, basesize / nb) + i * (basesize / nb)
+--[[	
+		local dev = math.rad(rng.range(-8, 8))
+		points[#points+1] = {
+			bc=bc, c=c, a=a, 
+			movea=basedir+dev+math.pi/2, 
+			size=size + rng.range(-2, 2), 
+			x=math.cos(basedir+dev) * split, 
+			y=math.sin(basedir+dev) * split, 
+			prev=#points-1
+		}
+--]]
+-- [[
+		local dev = rng.range(-16, 16) * (9 + fork_i) / 10
+		points[#points+1] = {
+			bc=bc, c=c, a=a, 
+			movea=basedir+dev+math.pi/2, 
+			size=size + rng.range(-2, 2), 
+			x=math.cos(basedir) * split + math.cos(basedir+math.pi/2) * dev,
+			y=math.sin(basedir) * split + math.sin(basedir+math.pi/2) * dev,
+			prev=#points-1
+		}
+--]]
+	end
+
+	points[#points+1] = {bc=bc, c=c, a=a, size=size, x=tx, y=ty, prev=#points-1}
 end
+local nbp = #points
 
 -- Populate the lightning based on the forks
-return { generator = function()
-	local f = rng.table(forks)
-	local a = f.dir
-	local rad = rng.range(-3,3)
-	local ra = math.rad(rad)
-	local r = rng.range(1, f.size)
+return { engine=core.particles.ENGINE_LINES, generator = function()
+	local p = table.remove(points, 1)
 
 	return {
-		life = life or 4,
-		size = f.thick, sizev = 0, sizea = 0,
+		life = 8, trail=p.prev,
+		size = p.size, sizev = 0, sizea = 0,
 
-		x = r * math.cos(a) + 3 * math.cos(ra) + f.bx, xv = 0, xa = 0,
-		y = r * math.sin(a) + 3 * math.sin(ra) + f.by, yv = 0, ya = 0,
-		dir = 0, dirv = 0, dira = 0,
-		vel = 0, velv = 0, vela = 0,
+		x = p.x, xv = 0, xa = 0,
+		y = p.y, yv = 0, ya = 0,
+		dir = p.movea, dirv = 0, dira = 0,
+		vel = rng.float(-1, 1), velv = 0, vela = 0,
 
-		r = rng.range(140, 200)/255, rv = 0, ra = 0,
-		g = rng.range(180, 220)/255, gv = 0, ga = 0,
-		b = rng.range(220, 240)/255, bv = 0, ba = 0,
-		a = rng.range(230, 255)/255, av = 0, aa = 0,
+		r = p.bc, rv = 0, ra = 0,
+		g = p.bc, gv = 0, ga = 0,
+		b = p.c, bv = 0, ba = 0,
+		a = p.a, av = 0, aa = -0.04,
 	}
 end, },
 function(self)
-	self.nb = (self.nb or 0) + 1
-	if self.nb < 4 then
-		self.ps:emit(230*tiles)
+	if nbp > 0 then
+		self.ps:emit(10)
+		nbp = nbp - 10
 	end
 end,
-4*(nb_particles or 230)*tiles
+nbp, "particles_images/beam"
