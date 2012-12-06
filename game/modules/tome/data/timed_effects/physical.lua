@@ -806,7 +806,7 @@ newEffect{
 newEffect{
 	name = "CRIPPLE", image = "talents/cripple.png",
 	desc = "Cripple",
-	long_desc = function(self, eff) return ("The target is crippled, reducing melee, spellcasting and mind speed by %d%%."):format(eff.speed) end,
+	long_desc = function(self, eff) return ("The target is crippled, reducing melee, spellcasting and mind speed by %d%%."):format(eff.speed*100) end,
 	type = "physical",
 	subtype = { wound=true },
 	status = "detrimental",
