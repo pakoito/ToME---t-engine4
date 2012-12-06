@@ -159,4 +159,14 @@ g.change_level_check = function(self)
 end
 game.zone:addEntity(game.level, g, "terrain", x, y)
 
+-- Pop undead rats at the stairs
+local npcs = mod.class.NPC:loadList{"/data/general/npcs/undead-rat.lua"}
+for z = 1, 3 do
+	local m = game.zone:makeEntity(game.level, "actor", {base_list=npcs, name="skeletal rat"}, nil, true)
+	local i, j = util.findFreeGrid(x, y, 10, true, {[engine.Map.ACTOR]=true})
+	if i and j and m then
+		game.zone:addEntity(game.level, m, "actor", i, j)
+	end
+end
+
 return true

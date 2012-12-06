@@ -63,6 +63,11 @@ function _M:generate()
 end
 
 function _M:display(x, y)
-	self:drawFrame(self.frame, x, y)
-	self.tex[1]:toScreenFull(x-frame_ox1, y-frame_oy1, self.rw, self.rh, self.tex[2], self.tex[3])
+	local a = 1
+	if self.dur < 10 then
+		a = (self.dur) / 10
+	end
+
+	self:drawFrame(self.frame, x, y, 1, 1, 1, a * 0.7)
+	self.tex[1]:toScreenFull(x-frame_ox1, y-frame_oy1, self.rw, self.rh, self.tex[2], self.tex[3], 1, 1, 1, a)
 end
