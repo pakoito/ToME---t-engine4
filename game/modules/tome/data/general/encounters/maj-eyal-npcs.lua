@@ -29,6 +29,20 @@ newEntity{
 	rarity = 3,
 	unit_power = 10,
 	ai = "world_patrol", ai_state = {route_kind="allied-kingdoms"},
+	on_encounter = {
+		type="ambush",
+		width=14,
+		height=14,
+		nb={3, 4},
+		filters={{special_rarity="humanoid_random_boss", subtype="human", random_boss={
+			nb_classes=1,
+			rank=3, ai = "tactical",
+			life_rating=function(v) return v * 1.4 + 3 end,
+			loot_quality = "store",
+			loot_quantity = 1,
+			no_loot_randart = true,
+		}}}
+	},
 }
 
 newEntity{
@@ -41,6 +55,20 @@ newEntity{
 	rarity = 3,
 	unit_power = 10,
 	ai = "world_patrol", ai_state = {route_kind="allied-kingdoms"},
+	on_encounter = {
+		type="ambush",
+		width=14,
+		height=14,
+		nb={3, 4},
+		filters={{special_rarity="humanoid_random_boss", subtype="halfling", random_boss={
+			nb_classes=1,
+			rank=3, ai = "tactical",
+			life_rating=function(v) return v * 1.4 + 3 end,
+			loot_quality = "store",
+			loot_quantity = 1,
+			no_loot_randart = true,
+		}}}
+	},
 }
 
 newEntity{
