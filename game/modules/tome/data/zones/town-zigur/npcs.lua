@@ -77,7 +77,7 @@ newEntity{ base = "BASE_NPC_ZIGURANTH", define_as = "PROTECTOR_MYSSIL",
 	rank = 4,
 	size_category = 2,
 	stamina_regen = 40,
-	max_life = resolvers.rngavg(300, 310), life_rating = 21,
+	max_life = resolvers.rngavg(300, 310), life_rating = 25,
 	resolvers.equip{
 		{type="weapon", subtype="greatsword", forbid_power_source={arcane=true}, autoreq=true},
 		{type="armor", subtype="massive", forbid_power_source={arcane=true}, autoreq=true},
