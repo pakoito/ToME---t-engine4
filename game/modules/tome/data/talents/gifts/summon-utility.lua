@@ -94,7 +94,7 @@ newTalent{
 	message = "@Source@ summons a Turtle!",
 	equilibrium = 2,
 	cooldown = 10,
-	range = 10,
+	range = 5,
 	is_summon = true,
 	requires_target = true,
 	tactical = { DEFEND = 2, PROTECT = 2 },
@@ -201,7 +201,7 @@ newTalent{
 	message = "@Source@ summons a Spider!",
 	equilibrium = 5,
 	cooldown = 10,
-	range = 10,
+	range = 5,
 	is_summon = true,
 	tactical = { ATTACK = 1, DISABLE = { pin = 2 } },
 	on_pre_use = function(self, t, silent)
