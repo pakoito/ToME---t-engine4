@@ -224,17 +224,18 @@ newInscription{
 		self:project(tg, self.x, self.y, engine.DamageType.BLINDCUSTOMMIND, {power=data.power + data.inc_stat, turns=data.turns})
 		self:project(tg, self.x, self.y, engine.DamageType.BREAK_STEALTH, {power=(data.power + data.inc_stat)/2, turns=data.turns})
 		tg.selffire = true
-		self:project(tg, self.x, self.y, engine.DamageType.LITE, 1)
+		self:project(tg, self.x, self.y, engine.DamageType.LITE, data.power >= 19 and 100 or 1)
 		return true
 	end,
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		return ([[Activate the infusion to brighten the area in a radius of %d and illuminate stealthy creatures, possibly revealing them (reduces stealth power by %d).
-		It will also blind any creatures caught inside (power %d) for %d turns.]]):format(data.range, (data.power + data.inc_stat)/2, data.power + data.inc_stat, data.turns)
+		return ([[Activate the infusion to brighten the area in a radius of %d and illuminate stealthy creatures, possibly revealing them (reduces stealth power by %d).%s
+		It will also blind any creatures caught inside (power %d) for %d turns.]]):
+		format(data.range, (data.power + data.inc_stat)/2, data.power >= 19 and "\nThe light is so powerful it will also banish magical darkness" or "", data.power + data.inc_stat, data.turns)
 	end,
 	short_info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		return ([[rad %d; power %d; turns %d]]):format(data.range, data.power + data.inc_stat, data.turns)
+		return ([[rad %d; power %d; turns %d%s]]):format(data.range, data.power + data.inc_stat, data.turns, data.power >= 19 and "; dispells darkness" or "")
 	end,
 }
 
