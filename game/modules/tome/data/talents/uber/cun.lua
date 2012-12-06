@@ -81,30 +81,38 @@ uberTalent{
 uberTalent{
 	name = "Endless Woes",
 	mode = "passive",
-	require = { special={desc="Dealt over 50000 acid, blight or darkness damage", fct=function(self) return 
+	require = { special={desc="Dealt over 50000 acid, blight, darkness, mind or temporal damage", fct=function(self) return 
 		self.damage_log and (
 			(self.damage_log[DamageType.ACID] and self.damage_log[DamageType.ACID] >= 50000) or
 			(self.damage_log[DamageType.BLIGHT] and self.damage_log[DamageType.BLIGHT] >= 50000) or
-			(self.damage_log[DamageType.DARKNESS] and self.damage_log[DamageType.DARKNESS] >= 50000)
+			(self.damage_log[DamageType.DARKNESS] and self.damage_log[DamageType.DARKNESS] >= 50000) or
+			(self.damage_log[DamageType.MIND] and self.damage_log[DamageType.MIND] >= 50000) or
+			(self.damage_log[DamageType.TEMPORAL] and self.damage_log[DamageType.TEMPORAL] >= 50000)
 		)
 	end} },
 	trigger = function(self, t, target, damtype, dam)
 		if dam < 150 then return end
-		if damtype == DamageType.ACID and rng.percent(15) then
-			target:setEffect(target.EFF_ACID_SPLASH, 5, {src=self, dam=(dam * self:getCun() / 2.5) / 100 / 5, atk=self:getCun() / 2, apply_power=self:combatSpellpower()})
-		elseif damtype == DamageType.BLIGHT and target:canBe("disease") and rng.percent(10) then
+		if damtype == DamageType.ACID and rng.percent(20) then
+			target:setEffect(target.EFF_ACID_SPLASH, 5, {src=self, dam=(dam * self:getCun() / 2.5) / 100 / 5, atk=self:getCun() / 2, apply_power=math.max(self:combatSpellpower(), self:combatMindpower())})
+		elseif damtype == DamageType.BLIGHT and target:canBe("disease") and rng.percent(20) then
 			local diseases = {{self.EFF_WEAKNESS_DISEASE, "str"}, {self.EFF_ROTTING_DISEASE, "con"}, {self.EFF_DECREPITUDE_DISEASE, "dex"}}
 			local disease = rng.table(diseases)
-			target:setEffect(disease[1], 5, {src=self, dam=(dam * self:getCun() / 2.5) / 100 / 5, [disease[2]]=self:getCun() / 3, apply_power=self:combatSpellpower()})
-		elseif damtype == DamageType.DARKNESS and target:canBe("blind") and rng.percent(15) then
-			target:setEffect(target.EFF_BLINDED, 5, {apply_power=self:combatSpellpower()})
+			target:setEffect(disease[1], 5, {src=self, dam=(dam * self:getCun() / 2.5) / 100 / 5, [disease[2]]=self:getCun() / 3, apply_power=math.max(self:combatSpellpower(), self:combatMindpower())})
+		elseif damtype == DamageType.DARKNESS and target:canBe("blind") and rng.percent(20) then
+			target:setEffect(target.EFF_BLINDED, 5, {apply_power=math.max(self:combatSpellpower(), self:combatMindpower())})
+		elseif damtype == DamageType.TEMPORAL and target:canBe("slow") and rng.percent(20) then
+			target:setEffect(target.EFF_SLOW, 5, {apply_power=math.max(self:combatSpellpower(), self:combatMindpower()), power=0.3})
+		elseif damtype == DamageType.MIND and target:canBe("confusion") and rng.percent(20) then
+			target:setEffect(target.EFF_CONFUSED, 5, {apply_power=math.max(self:combatSpellpower(), self:combatMindpower()), power=20})
 		end
 	end,
 	info = function(self, t)
 		return ([[Surround yourself with a malovelant aura.
-		Any acid damage you do has 15%% chances to apply lasting acid that deals %d%% of the initial damage for 5 turns and reduces accuracy by %d.
-		Any blight damage you do has 10%% chances to cause a random disease that deals %d%% of the initial damage for 5 turns and reducing a stat by %d.
-		Any darkness damage you do has 15%% chances to blind the target for 5 turns.
+		Any acid damage you do has 20%% chances to apply lasting acid that deals %d%% of the initial damage for 5 turns and reduces accuracy by %d.
+		Any blight damage you do has 20%% chances to cause a random disease that deals %d%% of the initial damage for 5 turns and reducing a stat by %d.
+		Any darkness damage you do has 20%% chances to blind the target for 5 turns.
+		Any temporal damage you do has 20%% chances to slow (30%%) the target for 5 turns.
+		Any mind damage you do has 20%% chances to confused (20%%) the target for 5 turns.
 		This only triggers for hits over 150 damage.
 		Values increase with Cunning.]])
 		:format(self:getCun() / 2.5, self:getCun() / 2, self:getCun() / 2.5, self:getCun() / 2)
