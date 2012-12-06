@@ -149,7 +149,7 @@ newEntity{
 
 newEntity{
 	power_source = {nature=true},
-	name = "caller's", prefix=true, instant_resolve=true,
+	name = "caller's ", prefix=true, instant_resolve=true,
 	keywords = {callers=true},
 	level_range = {40, 50},
 	greater_ego = 1,

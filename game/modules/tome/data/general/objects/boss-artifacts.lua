@@ -304,7 +304,7 @@ newEntity{ base = "BASE_HELM",
 	require = { stat = { str=16 }, },
 	level_range = {12, 22},
 	rarity = 200,
-	cost = 20,
+	cost = 500,
 	material_level = 2,
 	skullcracker_mult = 5,
 
