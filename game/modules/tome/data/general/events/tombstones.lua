@@ -43,6 +43,14 @@ if tries < 100 then
 		if not who or not who.player or not act then return false end
 		who:runStop("grave")
 		require("engine.ui.Dialog"):yesnoPopup("Grave", "Do you wish to disturb the grave?", function(ret) if ret then
+			local g = game.level.map(x, y, engine.Map.TERRAIN)
+			g:removeAllMOs()
+			if g.add_displays then
+				local ov = g.add_displays[#g.add_displays]
+				ov.image = "terrain/grave_opened_0"..rng.range(1, 3).."_64.png"
+			end
+			game.level.map:updateMap(x, y)
+
 			self.block_move = nil
 			if rng.percent(20) then game.log("There is nothing there.") return end
 

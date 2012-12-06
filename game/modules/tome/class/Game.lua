@@ -1254,12 +1254,7 @@ function _M:setupCommands()
 			end end
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
-			local o = game.zone:makeEntity(game.level,"object", {random_object=true}, nil, true)
-			o:identify(true)
-			if o then game.zone:addEntity(game.level, o, "object", game.player.x, game.player.y) end
-			
-do return end
-			local f, err = loadfile("/data/general/events/glowing-chest.lua")
+			local f, err = loadfile("/data/general/events/old-battle-field.lua")
 			print(f, err)
 			setfenv(f, setmetatable({level=self.level, zone=self.zone}, {__index=_G}))
 			print(pcall(f))

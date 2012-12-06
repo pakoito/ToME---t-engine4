@@ -129,6 +129,14 @@ if tries < 100 then
 			if game.level.event_battlefield_entered then return false end
 			who:runStop("grave")
 			require("engine.ui.Dialog"):yesnoPopup("Grave", "Do you wish to disturb the grave?", function(ret) if ret then
+				local g = game.level.map(x, y, engine.Map.TERRAIN)
+				g:removeAllMOs()
+				if g.add_displays then
+					local ov = g.add_displays[#g.add_displays]
+					ov.image = "terrain/grave_opened_0"..rng.range(1, 3).."_64.png"
+				end
+				game.level.map:updateMap(x, y)
+
 				self.block_move = nil
 				self:change_level_check()
 				require("engine.ui.Dialog"):simplePopup("Fall...", "As you tried to dig the grave the ground fell under you. You find yourself stranded in an eerie lit cavern.")
