@@ -2812,7 +2812,7 @@ newEffect{
 	status = "detrimental",
 	on_gain = function(self, err) return "#Target#'s is surrounded by antimagic forces.", "+Spell Feedback" end,
 	on_lose = function(self, err) return "#Target#'s antimagic forces vanishes.", "-Spell Feedback" end,
-	parameters = { power=30 },
+	parameters = { power=40 },
 	activate = function(self, eff)
 		self:effectTemporaryValue(eff, "spell_failure", eff.power)
 	end,

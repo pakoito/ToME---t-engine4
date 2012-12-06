@@ -211,7 +211,11 @@ newEntity{ base = "BASE_NPC_MAJOR_DEMON",
 	combat_armor = 90, combat_def = 60,
 	mana_regen = 100, positive_regen = 100, negative_regen = 100, equilibrium_regen = -100, vim_regen = 100, stamina_regen = 100,
 
+	stats = { str=22, dex=10, mag=20, con=13, wil=60 },
+
 	ai = "tactical",
+
+	combat_dam = resolvers.levelup(resolvers.mbonus(40, 20), 1, 2),
 
 	resolvers.equip{ {type="weapon", subtype="greatsword", autoreq=true}, },
 
@@ -231,6 +235,7 @@ newEntity{ base = "BASE_NPC_MAJOR_DEMON",
 		[Talents.T_STUNNING_BLOW]={base=5, every=8, max=8},
 		[Talents.T_SUNDER_ARMOUR]={base=5, every=8, max=10},
 		[Talents.T_SUNDER_ARMS]={base=5, every=8, max=10},
+		[Talents.T_SPELL_FEEDBACK]=1,
 	},
 }
 
@@ -327,6 +332,9 @@ newEntity{ base = "BASE_NPC_MAJOR_DEMON",
 		[Talents.T_FLAME]={base=5, every=8, max=10},
 			--Special
 		[Talents.T_INFERNAL_BREATH]={base=3, every=5, max=7},
+
+		[Talents.T_ELEMENTAL_SURGE]=1,
+		[Talents.T_SPELL_FEEDBACK]=1,
 	},
 	resolvers.sustains_at_birth(),
 	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },

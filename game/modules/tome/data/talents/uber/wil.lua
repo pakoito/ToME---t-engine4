@@ -203,14 +203,14 @@ uberTalent{
 
 		local dur = target:getTalentCooldown(source_t)
 		if dur and dur > 0 then
-			target:setEffect(target.EFF_SPELL_FEEDBACK, dur, {power=30})
+			target:setEffect(target.EFF_SPELL_FEEDBACK, dur, {power=40})
 		end
 		return true
 	end,
 	info = function(self, t)
 		return ([[Your will is a shield against the assault of crazy arcane users.
 		Each time you take damage from a spell you punish the spellcaster with %0.2f mind damage.
-		Also they will suffer a 30%% spell failure chance for the durtion of the spell cooldown they used on you.]])
+		Also they will suffer a 40%% spell failure chance for the durtion of the spell cooldown they used on you.]])
 		:format(damDesc(self, DamageType.MIND, 20 + self:getWil() * 2))
 	end,
 }
