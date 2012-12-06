@@ -329,7 +329,7 @@ newTalent{
 			m:forceLevelup(self.level)
 			game.zone:addEntity(game.level, m, "actor", x, y)
 			game.level.map:particleEmitter(x, y, 1, "summon")
-			m:setEffect(m.EFF_TEMPORAL_DESTABILIZATION, 5, {src=self, dam=t.getDamage(self, t), explosion=self:spellCrit(t.getExplosion(self, t))})
+			m:setEffect(m.EFF_TEMPORAL_DESTABILIZATION_START, 2, {src=self, dam=t.getDamage(self, t), explosion=self:spellCrit(t.getExplosion(self, t))})
 
 		end
 		game:playSoundNear(self, "talents/spell_generic")

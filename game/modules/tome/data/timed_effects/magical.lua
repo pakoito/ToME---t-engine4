@@ -1255,6 +1255,25 @@ newEffect{
 }
 
 newEffect{
+	name = "TEMPORAL_DESTABILIZATION_START", image = "talents/destabilize.png",
+	desc = "Temporal Destabilization",
+	long_desc = function(self, eff) return ("Target is destabilized and in %d turns will start suffering %0.2f temporal damage per turn.  If it dies with this effect active after the damage starts it will explode."):format(eff.dur, eff.dam) end,
+	type = "magical",
+	subtype = { temporal=true },
+	status = "detrimental",
+	parameters = { dam=1, explosion=10 },
+	on_gain = function(self, err) return "#Target# is unstable.", "+Temporal Destabilization" end,
+	on_lose = function(self, err) return "#Target# has regained stability.", "-Temporal Destabilization" end,
+	activate = function(self, eff)
+		eff.particle = self:addParticles(Particles.new("destabilized", 1))
+	end,
+	deactivate = function(self, eff)
+		self:removeParticles(eff.particle)
+		self:setEffect(self.EFF_TEMPORAL_DESTABILIZATION, 5, {src=eff.src, dam=eff.dam, explosion=eff.explosion})
+	end,
+}
+
+newEffect{
 	name = "TEMPORAL_DESTABILIZATION", image = "talents/destabilize.png",
 	desc = "Temporal Destabilization",
 	long_desc = function(self, eff) return ("Target is destabilized and suffering %0.2f temporal damage per turn.  If it dies with this effect active it will explode."):format(eff.dam) end,
