@@ -125,7 +125,7 @@ newGem("Onyx",		"object/onyx.png",	3,	12,	"black",	20,	30, 3, 50,
 	{ power=15 }
 )
 newGem("Amethyst",	"object/amethyst.png",2,	10,	"violet",	10,	20, 2, 35,
-	{ inc_damage = {all=3}, combat_physcrit=2, combat_mindcrit=2, combat_spellcrit=2, },
+	{ inc_damage = {all=4}, combat_physcrit=2, combat_mindcrit=2, combat_spellcrit=2, },
 	{ splash={type="ARCANE", dam=25}}
 )
 newGem("Opal",		"object/opal.png",	2,	10,	"blue",		10,	20, 2, 35,
