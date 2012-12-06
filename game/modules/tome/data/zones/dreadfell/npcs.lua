@@ -181,6 +181,8 @@ newEntity{ define_as = "PALE_DRAKE",
 		[Talents.T_DRAIN]={base=5, every=5, max=8},
 
 		[Talents.T_PHASE_DOOR]=2,
+
+		[Talents.T_ELEMENTAL_SURGE] = 1,
 	},
 	resolvers.sustains_at_birth(),
 
