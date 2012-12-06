@@ -32,7 +32,7 @@ function table.concatNice(t, sep, endsep)
 	if not endsep then return table.concat(t, sep) end
 	local str = ""
 	for i, s in ipairs(t) do 
-		if i == #t then str = str..endsep..s
+		if i == #t and i > 1 then str = str..endsep..s
 		elseif i == 1 then str = s
 		else str = str..sep..s
 		end

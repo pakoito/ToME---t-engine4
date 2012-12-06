@@ -23,15 +23,8 @@ newTalent{
 	require = cuns_req1,
 	mode = "passive",
 	points = 5,
-	on_learn = function(self, t)
-		self.heightened_senses = 4 + math.ceil(self:getTalentLevel(t))
-	end,
-	on_unlearn = function(self, t)
-		if self:knowTalent(t) then
-			self.heightened_senses = 4 + math.ceil(self:getTalentLevel(t))
-		else
-			self.heightened_senses = nil
-		end
+	passives = function(self, t, p)
+		self:talentTemporaryValue(p, "heightened_senses", 4 + math.ceil(self:getTalentLevel(t)))
 	end,
 	info = function(self, t)
 		return ([[You notice the small things others do not notice, allowing you to "see" creatures in a %d radius even outside of light radius.
@@ -48,17 +41,14 @@ newTalent{
 	require = cuns_req2,
 	mode = "passive",
 	points = 5,
-	auto_relearn_passive = true,
-	on_learn = function(self, t)
-		local ret = {}
-		self:talentTemporaryValue(ret, "use_object_cooldown_reduce", math.floor(self:getTalentMastery(t) * 8))
-		return ret
+	passives = function(self, t, p)
+		self:talentTemporaryValue(p, "use_object_cooldown_reduce", math.floor(self:getTalentLevel(t) * 8))
 	end,
 	on_unlearn = function(self, t)
 	end,
 	info = function(self, t)
 		return ([[Your cunning allows you to use charms (wands, totems and torques) more efficiently, reducing their cooldowns by %d%%.]]):
-		format(self:getTalentLevelRaw(t) * math.floor(self:getTalentMastery(t) * 8))
+		format(math.floor(self:getTalentLevel(t) * 8))
 	end,
 }
 

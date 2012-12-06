@@ -185,6 +185,8 @@ function _M:init(t, no_default)
 	t.vim_regen = t.vim_regen or 0 -- Vim does not regen
 	t.positive_regen = t.positive_regen or -0.2 -- Positive energy slowly decays
 	t.negative_regen = t.negative_regen or -0.2 -- Positive energy slowly decays
+	t.positive_regen_ref = t.positive_regen_ref or 0.2
+	t.negative_regen_ref = t.negative_regen_ref or 0.2
 	t.paradox_regen = t.paradox_regen or 0 -- Paradox does not regen
 	t.psi_regen = t.psi_regen or 0.2 -- Energy regens slowly
 	t.hate_regen = t.hate_regen or 0 -- Hate does not regen
@@ -416,6 +418,19 @@ function _M:actBase()
 	if self:knowTalent(self.T_HATE_POOL) then
 		local t = self:getTalentFromId(self.T_HATE_POOL)
 		t.updateRegen(self, t)
+	end
+
+	if self:attr("positive_at_rest") then
+		local v = self.positive_at_rest * self.max_positive / 100
+		if self:getPositive() > v or self:attr("positive_at_rest_disable") then self.positive_regen = -self.positive_regen_ref
+		elseif self:getPositive() < v then self.positive_regen = self.positive_regen_ref
+		end
+	end
+	if self:attr("negative_at_rest") then
+		local v = self.negative_at_rest * self.max_negative / 100
+		if self:getNegative() > v or self:attr("negative_at_rest_disable")  then self.negative_regen = -self.negative_regen_ref
+		elseif self:getNegative() < v then self.negative_regen = self.negative_regen_ref
+		end
 	end
 
 	self:regenResources()
@@ -2596,6 +2611,8 @@ function _M:onTemporaryValueChange(prop, v, base)
 		self:onStatChange(prop, v)
 	elseif prop == "global_speed_add" then
 		self:recomputeGlobalSpeed()
+	elseif base == self.talents_types_mastery then
+		self:updateTalentTypeMastery(prop)
 	end
 end
 

@@ -366,6 +366,7 @@ newEntity{ base = "BASE_LONGSWORD",
 	on_wear = function(self, who)
 		if who.descriptor and who.descriptor.subclass == "Sun Paladin" then
 			self:specialWearAdd({"wielder", "positive_regen"}, 0.2)
+			self:specialWearAdd({"wielder", "positive_regen_ref"}, 0.2)
 			game.logPlayer(who, "#GOLD#You feel a swell of positive energy!")
 		end
 	end,

@@ -152,8 +152,10 @@ newTalent{
 		local ret = {
 			invisible = self:addTemporaryValue("invisible", t.getInvisibilityPower(self, t)),
 			invisible_damage_penalty = self:addTemporaryValue("invisible_damage_penalty", 0.5),
-			fill = self:addTemporaryValue("positive_regen", timer),
-			drain = self:addTemporaryValue("negative_regen", - timer),
+			fill = self:addTemporaryValue("positive_regen_ref", -timer),
+			drain = self:addTemporaryValue("negative_regen_ref", timer),
+			pstop = self:addTemporaryValue("positive_at_rest_disable", 1),
+			nstop = self:addTemporaryValue("negative_at_rest_disable", 1),
 		}
 		self:resetCanSeeCacheOf()
 		return ret
@@ -161,8 +163,10 @@ newTalent{
 	deactivate = function(self, t, p)
 		self:removeTemporaryValue("invisible", p.invisible)
 		self:removeTemporaryValue("invisible_damage_penalty", p.invisible_damage_penalty)
-		self:removeTemporaryValue("positive_regen", p.fill)
-		self:removeTemporaryValue("negative_regen", p.drain)
+		self:removeTemporaryValue("positive_regen_ref", p.fill)
+		self:removeTemporaryValue("negative_regen_ref", p.drain)
+		self:removeTemporaryValue("positive_at_rest_disable", p.pstop)
+		self:removeTemporaryValue("negative_at_rest_disable", p.nstop)
 		local tg = {type="ball", range=0, selffire=true, radius= t.getRadius(self, t), talent=t}
 		self:project(tg, self.x, self.y, DamageType.LITE, 1)
 		tg.selffire = false

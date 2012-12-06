@@ -991,10 +991,10 @@ newEffect{
 	status = "beneficial",
 	parameters = {power = 1},
 	activate = function(self, eff)
-		eff.pos = self:addTemporaryValue("positive_regen", eff.power)
+		self:effectTemporaryValue(eff, "positive_regen_ref", -eff.power)
+		self:effectTemporaryValue(eff, "positive_at_rest_disable", 1)
 	end,
 	deactivate = function(self, eff)
-		self:removeTemporaryValue("positive_regen", eff.pos)
 	end,
 }
 

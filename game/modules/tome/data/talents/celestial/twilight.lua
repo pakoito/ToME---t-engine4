@@ -28,7 +28,12 @@ newTalent{
 	positive = 15,
 	tactical = { BUFF = 1 },
 	range = 10,
+	getRestValue = function(self, t) return 17 + math.floor(3.5 * self:getTalentLevel(t)) end,
 	getNegativeGain = function(self, t) return 20 + self:getTalentLevel(t) * self:getCun(40, true) end,
+	passives = function(self, t, p)
+		self:talentTemporaryValue(p, "positive_at_rest", t.getRestValue(self, t))
+		self:talentTemporaryValue(p, "negative_at_rest", t.getRestValue(self, t))
+	end,
 	action = function(self, t)
 		if self:isTalentActive(self.T_DARKEST_LIGHT) then
 			game.logPlayer(self, "You can't use Twilight while Darkest Light is active.")
@@ -39,10 +44,10 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local neggain = t.getNegativeGain(self, t)
 		return ([[You stand between the darkness and the light, allowing you to convert 15 positive energy into %d negative energy.
+		In addition, change the default level of positive and negative energies to %d%% of their maximun. Each turn the energies will slowly fall/raise to this value instead of 0.
 		The effect will increase with the Cunning stat.]]):
-		format(neggain)
+		format(t.getNegativeGain(self, t), t.getRestValue(self, t))
 	end,
 }
 

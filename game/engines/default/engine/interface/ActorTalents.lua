@@ -313,6 +313,18 @@ function _M:learnTalent(t_id, force, nb)
 		end
 	end
 
+	if t.passives then 
+		self.talents_learn_vals[t.id] = self.talents_learn_vals[t.id] or {}
+		local p = self.talents_learn_vals[t.id]
+
+		if p.__tmpvals then for i = 1, #p.__tmpvals do
+			self:removeTemporaryValue(p.__tmpvals[i][1], p.__tmpvals[i][2])
+		end end
+		self.talents_learn_vals[t.id] = {}
+
+		t.passives(self, t, self.talents_learn_vals[t.id])
+	end
+
 	self.changed = true
 	return true
 end
@@ -351,6 +363,18 @@ function _M:unlearnTalent(t_id, nb)
 			end
 			t.on_unlearn(self, t, p)
 		end
+	end
+
+	if t.passives then 
+		self.talents_learn_vals[t.id] = self.talents_learn_vals[t.id] or {}
+		local p = self.talents_learn_vals[t.id]
+
+		if p.__tmpvals then for i = 1, #p.__tmpvals do
+			self:removeTemporaryValue(p.__tmpvals[i][1], p.__tmpvals[i][2])
+		end end
+		self.talents_learn_vals[t.id] = {}
+
+		t.passives(self, t, self.talents_learn_vals[t.id])
 	end
 
 	if self.talents[t_id] == nil then self.talents_auto[t_id] = nil end
@@ -535,8 +559,13 @@ function _M:setTalentTypeMastery(tt, v)
 	-- "v - 1" because a mastery is expressed as x + 1, not x, so that 0 is the default value (thus getting 1)
 	self.talents_types_mastery[tt] = v - 1
 
+	self:updateTalentTypeMastery(tt)
+end
+
+--- Recompute things that need recomputing
+function _M:updateTalentTypeMastery(tt)
 	for i, t in pairs(self.talents_types_def[tt] and self.talents_types_def[tt].talents or {}) do
-		if t.auto_relearn_passive then
+		if t.auto_relearn_passive or t.passives then
 			local lvl = self:getTalentLevelRaw(t)
 			self:unlearnTalent(t.id, lvl)
 			self:learnTalent(t.id, true, lvl)

@@ -1785,7 +1785,7 @@ newDamageType{
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
 			if target == src then
-				target:setEffect(target.EFF_WARDING, 1, {power=dam, no_ct_effect=true})
+				target:setEffect(target.EFF_WARDING, 1, {power=dam*5, no_ct_effect=true})
 			elseif target ~= src then
 				DamageType:get(DamageType.LIGHT).projector(src, x, y, DamageType.LIGHT, dam )
 				DamageType:get(DamageType.DARKNESS).projector(src, x, y, DamageType.DARKNESS, dam)

@@ -24,7 +24,7 @@ newTalent{
 	require = divi_req_high1,
 	points = 5,
 	cooldown = 20,
-	negative = 20,
+	negative = 10,
 	no_energy = true,
 	tactical = { DEFEND = 2, ATTACKAREA = {DARKNESS = 1} },
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 4, 30) end,
@@ -65,7 +65,7 @@ newTalent{
 	require = divi_req_high2,
 	points = 5,
 	cooldown = 20,
-	positive = 20,
+	positive = 10,
 	no_energy = true,
 	tactical = { DEFEND = 2, ATTACKAREA = {FIRE = 0.5, LIGHT = 0.5} },
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 2, 15) end,
@@ -109,8 +109,8 @@ newTalent{
 	require = divi_req_high3,
 	points = 5,
 	cooldown = 20,
-	positive = 20,
-	negative = 20,
+	positive = 10,
+	negative = 10,
 	no_energy = true,
 	tactical = { DEFEND = 2, ATTACKAREA = 1 },
 	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)) end,
@@ -148,8 +148,8 @@ newTalent{
 	require = divi_req_high4,
 	points = 5,
 	cooldown = 20,
-	positive = 20,
-	negative = 20,
+	positive = 10,
+	negative = 10,
 	no_energy = true,
 	tactical = { DEFEND = 2, ATTACKAREA = {LIGHT = 0.5, DARKNESS = 0.5} },
 	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)) end,
@@ -180,7 +180,7 @@ newTalent{
 		local radius = self:getTalentRadius(t)
 		return ([[Creates a circle of radius %d at your feet, it slows incoming projectiles %d%% and attempts to push all creatures other then yourself out of its radius, inflicting %0.2f light damage and %0.2f darkness damage per turn as it does so.  The circle lasts %d turns.
 		The slow effect and damage will increase with the Magic stat.]]):
-		format(radius, damage, (damDesc (self, DamageType.LIGHT, damage)), (damDesc (self, DamageType.DARKNESS, damage)), duration)
+		format(radius, damage*5, (damDesc (self, DamageType.LIGHT, damage)), (damDesc (self, DamageType.DARKNESS, damage)), duration)
 	end,
 }
 
