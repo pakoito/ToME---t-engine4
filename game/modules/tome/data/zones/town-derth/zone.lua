@@ -56,7 +56,7 @@ return {
 	end,
 
 	on_enter = function(_, _, newzone)
-		if game.player.level <= 10 and not game.player:hasQuest("arena-unlock") then
+		if game.player.level <= 13 and not game.player:hasQuest("arena-unlock") then
 			local spot = game.level:pickSpot{type="npc", subtype="arena"}
 			local m = game.zone:makeEntityByName(game.level, "actor", "ARENA_AGENT")
 			if spot and m then
