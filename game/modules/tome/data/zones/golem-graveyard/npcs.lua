@@ -76,6 +76,8 @@ newEntity{ define_as = "ATAMATHON", base = "BASE_NPC_CONSTRUCT",
 		[Talents.T_GOLEM_CRUSH]={base=8, every=3},
 		[Talents.T_GOLEM_POUND]={base=8, every=3},
 		[Talents.T_RUSH]={base=8, every=6},
+		[Talents.T_IRRESISTIBLE_SUN]=1,
+		[Talents.T_GIANT_LEAP]=1,
 	},
 	resolvers.inscriptions(5, "rune"),
 
