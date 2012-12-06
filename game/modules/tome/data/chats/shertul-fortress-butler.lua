@@ -28,6 +28,7 @@ Welcome, master.]],
 	answers = {
 		{"You asked me to come, about a farportal?", jump="farportal", cond=function() return q:isCompleted("farportal") and not q:isCompleted("farportal-spawn") end},
 		{"You asked me to come, about the rod of recall?", jump="recall", cond=function() return q:isCompleted("recall") and not q:isCompleted("recall-done") end},
+		{"Would it be possible for my Transmogrification Chest to automatically extract gems?", jump="transmo-gems", cond=function(npc, player) return not q:isCompleted("transmo-chest-extract-gems") and q:isCompleted("transmo-chest") and player:knowTalent(player.T_EXTRACT_GEMS) end},
 		{"I find your appearance unsettling, any way you can change it?", jump="changetile", cond=function() return q:isCompleted("recall-done") end},
 		{"What are you and what is this place?", jump="what", cond=isNotSet"what", action=set"what"},
 		{"Master? I am not your mas..", jump="master", cond=isNotSet"master", action=set"master"},
@@ -132,6 +133,15 @@ The Fortress now has enough energy to upgrade it. It can be changed to recall yo
 	}
 }
 
+newChat{ id="transmo-gems",
+	text = [[Ah yes, you seem to master the simple art of alchemy. I can change the chest to automatically use your power to extract a gem if the transmogrification of the gem would reward more energy.
+However I will need to use 25 energy to do this.]],
+	answers = {
+		{"Maybe sometime later."},
+		{"That could be quite useful yes, please do it.", cond=function() return q.shertul_energy >= 25 end, action=function() q:upgrade_transmo_gems() end},
+	}
+}
+
 newChat{ id="changetile",
 	text = [[I can alter the Fortress holographic projection matrix to accomodate to your race tastes. This will require 60 energy however.]],
 	answers = {
@@ -144,6 +154,7 @@ newChat{ id="changetile",
 			}
 			npc:removeAllMOs()
 			game.level.map:updateMap(npc.x, npc.y)
+			game.level.map:particleEmitter(npc.x, npc.y, 1, "demon_teleport")
 		end},
 		{"Can you try for a human male appearance please?", cond=function() return q.shertul_energy >= 60 end, action=function(npc, player)
 			q.shertul_energy = q.shertul_energy - 60
@@ -155,12 +166,14 @@ newChat{ id="changetile",
 			}
 			npc:removeAllMOs()
 			game.level.map:updateMap(npc.x, npc.y)
+			game.level.map:particleEmitter(npc.x, npc.y, 1, "demon_teleport")
 		end},
 		{"Please revert to your default appearance.", cond=function() return q.shertul_energy >= 60 end, action=function(npc, player)
 			q.shertul_energy = q.shertul_energy - 60
 			npc.replace_display = nil
 			npc:removeAllMOs()
 			game.level.map:updateMap(npc.x, npc.y)
+			game.level.map:particleEmitter(npc.x, npc.y, 1, "demon_teleport")
 		end},
 		{"Well you do not look so bad actually, let it be for now."},
 	}

@@ -4432,6 +4432,22 @@ function _M:transmoInven(inven, idx, o)
 	price = math.floor(price * 100) / 100 -- Make sure we get at most 2 digit precision
 	if price ~= price or not tostring(price):find("^[0-9]") then price = 1 end -- NaN is the only value that does not equals itself, this is the way to check it since we do not have a math.isnan method
 	if inven and idx then self:removeObject(inven, idx, true) end
+
+	if self.hasQuest and self:hasQuest("shertul-fortress") and self:isQuestStatus("shertul-fortress", engine.Quest.COMPLETED, "transmo-chest-extract-gems") and self:knowTalent(self.T_EXTRACT_GEMS) and self:callTalent(self.T_EXTRACT_GEMS, "filterGem", o) then
+		local gem = self:callTalent(self.T_EXTRACT_GEMS, "getGem", o)
+
+		local gprice = math.min(gem:getPrice() * self:transmoPricemod(gem), 25) * gem:getNumber()
+		local gprice = math.min(gem:getPrice() * self:transmoPricemod(gem), 25) * gem:getNumber()
+		gprice = math.floor(gprice * 100) / 100 -- Make sure we get at most 2 digit precision
+		if gprice ~= gprice or not tostring(gprice):find("^[0-9]") then gprice = 1 end -- NaN is the only value that does not equals itself, this is the way to check it since we do not have a math.isnan method
+
+		if gprice > price then
+			price = gprice
+			game.logPlayer(self, "You extract %s from %s", gem:getName{do_color=true, do_count=true}, o:getName{do_color=true, do_count=true})
+			o = gem
+		end
+	end
+
 	self:sortInven()
 	self:incMoney(price)
 	if self.hasQuest and self:hasQuest("shertul-fortress") and self:isQuestStatus("shertul-fortress", engine.Quest.COMPLETED, "transmo-chest") then self:hasQuest("shertul-fortress"):gain_energy(price/10) end

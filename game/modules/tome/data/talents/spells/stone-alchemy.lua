@@ -70,7 +70,6 @@ newTalent{
 	type = {"spell/stone-alchemy", 1},
 	require = spells_req1,
 	points = 5,
-	mana = 5,
 	no_npc_use = true,
 	no_unlearn_last = true,
 	on_learn = function(self, t)
@@ -83,21 +82,30 @@ newTalent{
 			self:unlearnTalent(self.T_CREATE_ALCHEMIST_GEMS)
 		end
 	end,
-	action = function(self, t)
-		local d d = self:showEquipInven("Try to extract gems from which metallic item?", function(o) return o.metallic and (o.material_level or 1) <= self:getTalentLevelRaw(t) end, function(o, inven, item)
-			if not o then return end
-			self:removeObject(inven, item)
+	filterGem = function(self, t, o) return o.metallic and (o.material_level or 1) <= self:getTalentLevelRaw(t) end,
+	getGem = function(self, t, o)
+		if not o then return end
 
-			local level = o.material_level or 1
-			local gem = game.zone:makeEntity(game.level, "object", {ingore_material_restriction=true, type="gem", special=function(e) return not e.unique and e.material_level == level end}, nil, true)
-			if gem then
-				self:addObject(self.INVEN_INVEN, gem)
-				game.logPlayer(self, "You extract: %s", gem:getName{do_color=true, do_count=true})
-				self:sortInven()
-				d.used_talent = true
-			end
-			return true
-		end)
+		local level = o.material_level or 1
+		local gem = game.zone:makeEntity(game.level, "object", {ingore_material_restriction=true, type="gem", special=function(e) return not e.unique and e.material_level == level end}, nil, true)
+		if gem then return gem end
+	end,
+	extractGem = function(self, t, o, inven, item, d)
+		if not o then return end
+		self:removeObject(inven, item)
+
+		local level = o.material_level or 1
+		local gem = t.getGem(self, t, o)
+		if gem then
+			self:addObject(self.INVEN_INVEN, gem)
+			game.logPlayer(self, "You extract %s from %s", gem:getName{do_color=true, do_count=true}, o:getName{do_color=true, do_count=true})
+			self:sortInven()
+			if d then d.used_talent = true end
+		end
+		return true
+	end,
+	action = function(self, t)
+		local d d = self:showEquipInven("Try to extract gems from which metallic item?", function(o) return t.filterGem(self, t, o) end, function(o, inven, item) return t.extractGem(self, t, o, inven, item, d) end)
 		local co = coroutine.running()
 		d.unload = function(self) coroutine.resume(co, self.used_talent) end
 		if not coroutine.yield() then return nil end

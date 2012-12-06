@@ -23,39 +23,45 @@ desc = function(self, who)
 	desc[#desc+1] = "You found notes from an explorer inside the Old Forest. He spoke about Sher'Tul ruins sunken below the surface of the lake of Nur, at the forest's center."
 	desc[#desc+1] = "With one of the notes there was a small gem that looks like a key."
 	if self:isCompleted("entered") then
-		desc[#desc+1] = "You used the key inside the ruins of Nur and found a way into the fortress of old."
+		desc[#desc+1] = "#LIGHT_GREEN#* You used the key inside the ruins of Nur and found a way into the fortress of old.#WHITE#"
 	end
 	if self:isCompleted("weirdling") then
-		desc[#desc+1] = "The Weirdling Beast is dead, freeing the way into the fortress itself."
+		desc[#desc+1] = "#LIGHT_GREEN#* The Weirdling Beast is dead, freeing the way into the fortress itself.#WHITE#"
 	end
 	if self:isCompleted("butler") then
-		desc[#desc+1] = "You have activated what seems to be a ... butler? with your rod of recall."
+		desc[#desc+1] = "#LIGHT_GREEN#* You have activated what seems to be a ... butler? with your rod of recall.#WHITE#"
+	end
+	if self:isCompleted("transmo-chest") then
+		desc[#desc+1] = "#LIGHT_GREEN#* You have bound the transmogrification chest to the Fortress pwoer system.#WHITE#"
+	end
+	if self:isCompleted("transmo-chest-extract-gems") then
+		desc[#desc+1] = "#LIGHT_GREEN#* You have upgraded the transmogrification chest to automatically transmute metallic items into gems before transmogrifying them.#WHITE#"
 	end
 	if self:isCompleted("recall") then
 		if self:isCompleted("recall-done") then
-			desc[#desc+1] = "You have upgraded your rod of recall to transport you to the fortress."
+			desc[#desc+1] = "#LIGHT_GREEN#* You have upgraded your rod of recall to transport you to the fortress.#WHITE#"
 		else
-			desc[#desc+1] = "The fortress shadow has asked that you come back as soon as possible."
+			desc[#desc+1] = "#SLATE#* The fortress shadow has asked that you come back as soon as possible.#WHITE#"
 		end
 	end
 	if self:isCompleted("farportal") then
 		if self:isCompleted("farportal-broken") then
-			desc[#desc+1] = "You have forced a recall while into an exploratory farportal zone, the farportal was rendered unusable in the process."
+			desc[#desc+1] = "#RED#* You have forced a recall while into an exploratory farportal zone, the farportal was rendered unusable in the process.#WHITE#"
 		elseif self:isCompleted("farportal-done") then
-			desc[#desc+1] = "You have entered the exploratory farportal room and defeated the horror lurking there, you can now use the farportal."
+			desc[#desc+1] = "#LIGHT_GREEN#* You have entered the exploratory farportal room and defeated the horror lurking there, you can now use the farportal.#WHITE#"
 		else
-			desc[#desc+1] = "The fortress shadow has asked that you come back as soon as possible."
+			desc[#desc+1] = "#SLATE#* The fortress shadow has asked that you come back as soon as possible.#WHITE#"
 		end
 	end
 	if self:isCompleted("flight") then
 		if self:isCompleted("flight-done") then
-			desc[#desc+1] = "You have re-enabled the fortress flight systems. You can now fly around in your fortress!"
+			desc[#desc+1] = "#LIGHT_GREEN#* You have re-enabled the fortress flight systems. You can now fly around in your fortress!#WHITE#"
 		else
-			desc[#desc+1] = "The fortress shadow has asked that you find an Ancient Storm Saphir, along with at least 250 energy, to re-enable the fortress flight systems."
+			desc[#desc+1] = "#SLATE#* The fortress shadow has asked that you find an Ancient Storm Saphir, along with at least 250 energy, to re-enable the fortress flight systems.#WHITE#"
 		end
 	end
 	if self.shertul_energy > 0 then
-		desc[#desc+1] = ("The fortress's current energy level is: %d."):format(self.shertul_energy)
+		desc[#desc+1] = ("\nThe fortress's current energy level is: #LIGHT_GREEN#%d#WHITE#."):format(self.shertul_energy)
 	end
 	return table.concat(desc, "\n")
 end
@@ -156,6 +162,18 @@ upgrade_rod = function(self)
 	game.player:setQuestStatus("shertul-fortress", self.COMPLETED, "recall-done")
 	rod.shertul_fortress = true
 	game.log("#VIOLET#Your rod of recall glows brightly for a moment.")
+end
+
+upgrade_transmo_gems = function(self)
+	if self.shertul_energy < 25 then
+		local Dialog = require "engine.ui.Dialog"
+		Dialog:simplePopup("Fortress Shadow", "The energy is too low. It needs to be at least 25.")
+		return
+	end
+	self.shertul_energy = self.shertul_energy - 25
+
+	game.player:setQuestStatus("shertul-fortress", self.COMPLETED, "transmo-chest-extract-gems")
+	game.log("#VIOLET#Your transmogrification chest glows brightly for a moment.")
 end
 
 fly = function(self)
