@@ -45,7 +45,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[You stand between the darkness and the light, allowing you to convert 15 positive energy into %d negative energy.
-		In addition, change the default level of positive and negative energies to %d%% of their maximun. Each turn the energies will slowly fall/raise to this value instead of 0.
+		In addition, change the default level of positive and negative energies to %d%% of their maximum. Each turn the energies will slowly fall/raise to this value instead of 0.
 		The effect will increase with the Cunning stat.]]):
 		format(t.getNegativeGain(self, t), t.getRestValue(self, t))
 	end,
