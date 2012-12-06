@@ -82,7 +82,7 @@ newBirthDescriptor{
 	end,
 	copy_add = {
 		unused_generics = 2,
-		unused_talent_points = 3,
+		unused_talents_points = 3,
 		unused_talents_types = 7,
 	},
 	copy = {
