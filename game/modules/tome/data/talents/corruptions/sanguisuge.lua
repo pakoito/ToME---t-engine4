@@ -115,15 +115,15 @@ newTalent{
 	mode = "sustained",
 	require = corrs_req3,
 	points = 5,
-	sustain_vim = 30,
+	sustain_vim = 5,
 	cooldown = 30,
 	range = 10,
 	tactical = { BUFF = 2 },
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/spell_generic2")
 		local ret = {
-			vim_regen = self:addTemporaryValue("vim_regen", -1),
-			vim_on_death = self:addTemporaryValue("vim_on_death", math.ceil(self:getTalentLevel(t))),
+			vim_regen = self:addTemporaryValue("vim_regen", -0.5),
+			vim_on_death = self:addTemporaryValue("vim_on_death", math.ceil(4+self:getTalentLevel(t)*2)),
 		}
 		return ret
 	end,
@@ -135,7 +135,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Absorbs the life force of your foes as you kill them.
 		As long as this talent is active vim will decrease by one per turn and increase by %d for each kill of a non-undead creature (in addition to natural increase based on Willpower).]]):
-		format(math.ceil(self:getTalentLevel(t)))
+		format(4+math.ceil(self:getTalentLevel(t)*2))
 	end,
 }
 
