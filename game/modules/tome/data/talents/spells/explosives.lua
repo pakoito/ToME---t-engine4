@@ -59,7 +59,7 @@ newTalent{
 		local frosti = self:getTalentFromId(Talents.T_FROST_INFUSION)
 		local fireinf = self:getTalentFromId(Talents.T_FIRE_INFUSION)
 		if self:isTalentActive(self.T_ACID_INFUSION) then inc_dam = acidi.getIncrease(self,acidi); damtype = DamageType.ACID_BLIND; particle = "ball_acid"
-		elseif self:isTalentActive(self.T_LIGHTNING_INFUSION) then inc_dam = lightningi.getIncrease(self,lightningi); damtype = DamageType.LIGHTNING_DAZE; particle = "ball_lightning"
+		elseif self:isTalentActive(self.T_LIGHTNING_INFUSION) then inc_dam = lightningi.getIncrease(self,lightningi); damtype = DamageType.LIGHTNING_DAZE; particle = "ball_lightning_beam"
 		elseif self:isTalentActive(self.T_FROST_INFUSION) then inc_dam = frosti.getIncrease(self,frosti); damtype = DamageType.ICE; particle = "ball_ice"
 		else inc_dam = fireinf.getIncrease(self,fireinf); damtype = self:knowTalent(self.T_FIRE_INFUSION) and DamageType.FIREBURN or DamageType.FIRE
 		end
@@ -131,20 +131,7 @@ newTalent{
 		if ammo.alchemist_bomb and ammo.alchemist_bomb.leech then self:heal(math.min(self.max_life * ammo.alchemist_bomb.leech / 100, dam_done)) end
 
 		local _ _, x, y = self:canProject(tg, x, y)
-		-- Lightning ball gets a special treatment to make it look neat
-		if particle == "ball_lightning" then
-			local sradius = (tg.radius + 0.5) * (engine.Map.tile_w + engine.Map.tile_h) / 2
-			local nb_forks = 16
-			local angle_diff = 360 / nb_forks
-			for i = 0, nb_forks - 1 do
-				local a = math.rad(rng.range(0+i*angle_diff,angle_diff+i*angle_diff))
-				local tx = x + math.floor(math.cos(a) * tg.radius)
-				local ty = y + math.floor(math.sin(a) * tg.radius)
-				game.level.map:particleEmitter(x, y, tg.radius, "lightning", {radius=tg.radius, grids=grids, tx=tx-x, ty=ty-y, nb_particles=25, life=8})
-			end
-		else
-			game.level.map:particleEmitter(x, y, tg.radius, particle, {radius=tg.radius, grids=grids, tx=x, ty=y})
-		end
+		game.level.map:particleEmitter(x, y, tg.radius, particle, {radius=tg.radius, grids=grids, tx=x, ty=y})
 
 		if ammo.alchemist_bomb and ammo.alchemist_bomb.mana then self:incMana(ammo.alchemist_bomb.mana) end
 

@@ -604,8 +604,9 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 
 	-- Arcane Destruction
 	if hitted and crit and weapon and self:knowTalent(self.T_ARCANE_DESTRUCTION) then
-		local typ = rng.table{DamageType.FIRE, DamageType.LIGHTNING, DamageType.ARCANE}
-		self:project({type="ball", radius=2, friendlyfire=false}, target.x, target.y, typ, self:combatSpellpower() * 2)
+		local typ = rng.table{{DamageType.FIRE,"ball_fire"}, {DamageType.LIGHTNING,"ball_lightning_beam"}, {DamageType.ARCANE,"ball_arcane"}}
+		self:project({type="ball", radius=2, friendlyfire=false}, target.x, target.y, typ[1], self:combatSpellpower() * 2)
+		game.level.map:particleEmitter(target.x, target.y, 2, typ[2], {radius=2, tx=target.x, ty=target.y})
 	end
 
 	-- Onslaught
