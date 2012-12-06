@@ -91,6 +91,7 @@ newEntity{ base="BASE_NPC_ORC_GRUSHNAK", define_as = "GRUSHNAK",
 		[Talents.T_BLOODBATH]={base=5, every=6, max=7},
 		[Talents.T_ETERNAL_GUARD]=1,
 		[Talents.T_UNBREAKABLE_WILL]=1,
+		[Talents.T_GIANT_LEAP]=1,
 	},
 	resolvers.sustains_at_birth(),
 

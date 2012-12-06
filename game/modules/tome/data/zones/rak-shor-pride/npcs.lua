@@ -95,6 +95,12 @@ newEntity{ base="BASE_NPC_ORC_RAK_SHOR", define_as = "RAK_SHOR",
 			game.player:grantQuest("pre-charred-scar")
 		end
 	end,
+	on_act = function(self)
+		if self:isTalentActive(self.T_NECROTIC_AURA) then
+			local pt = self:isTalentActive(self.T_NECROTIC_AURA)
+			pt.souls = util.bound(pt.souls + 1, 0, pt.souls_max)
+		end
+	end,
 }
 
 -- Super Undead Uniques!!
