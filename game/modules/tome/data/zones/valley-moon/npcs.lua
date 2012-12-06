@@ -112,7 +112,7 @@ newEntity{ define_as = "LIMMIR",
 	end,
 
 	on_takehit = function(self, value, who)
-		if self.last_took_hit_cry and game.turn < self.last_took_hit_cry + 10 and (not who or who.type ~= "demon") then return value end
+		if self.last_took_hit_cry and game.turn < self.last_took_hit_cry + 100 and (not who or who.type ~= "demon") then return value end
 		self.last_took_hit_cry = game.turn
 
 		game.bignews:say(90, "#VIOLET#Limmir is attacked! Defend him!")
