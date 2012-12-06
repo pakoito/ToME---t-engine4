@@ -110,4 +110,13 @@ newEntity{ define_as = "LIMMIR",
 		game.level.turn_counter = nil
 		game.player:hasQuest("master-jeweler"):ritual_end()
 	end,
+
+	on_takehit = function(self, value, who)
+		if self.last_took_hit_cry and game.turn < self.last_took_hit_cry + 10 and (not who or who.type ~= "demon") then return value end
+		self.last_took_hit_cry = game.turn
+
+		game.bignews:say(90, "#VIOLET#Limmir is attacked! Defend him!")
+
+		return value
+	end,
 }
