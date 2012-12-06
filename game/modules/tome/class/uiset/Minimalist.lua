@@ -1209,7 +1209,6 @@ function _M:displayBuffs(scale, bx, by)
 					local displayName = t.name
 					if t.getDisplayName then displayName = t.getDisplayName(player, t, player:isTalentActive(tid)) end
 
-					local desc = "#GOLD##{bold}#"..displayName.."#{normal}##WHITE#\n"..tostring(player:getTalentFullDescription(t))
 					local is_first = is_first
 					local desc_fct = function(button, mx, my, xrel, yrel, bx, by, event)
 						if is_first then
@@ -1218,6 +1217,7 @@ function _M:displayBuffs(scale, bx, by)
 							-- Move handle
 							if not self.locked and bx >= self.mhandle_pos.buffs.x and bx <= self.mhandle_pos.buffs.x + move_handle[6] and by >= self.mhandle_pos.buffs.y and by <= self.mhandle_pos.buffs.y + move_handle[7] then self:uiMoveResize("buffs", button, mx, my, xrel, yrel, bx, by, event) end
 						end
+						local desc = "#GOLD##{bold}#"..displayName.."#{normal}##WHITE#\n"..tostring(player:getTalentFullDescription(t))
 						game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, desc)
 					end
 					self.pbuff[tid] = {tid, "pbuff"..tid, function(x, y)
