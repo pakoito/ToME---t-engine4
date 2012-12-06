@@ -60,7 +60,7 @@ function _M:edit(i, j, id, e)
 	self.edits[i] = self.edits[i] or {}
 	self.edits[i][j] = self.edits[i][j] or {}
 	local ee = self.edits[i][j]
-	ee[#ee+1] = {use_id=id, add_displays=e.add_displays, add_mos=e.add_mos, add_mos_shader=e.add_mos_shader, image=e.image, min=e.min, max=e.max}
+	ee[#ee+1] = {use_id=id, add_displays=e.add_displays, add_mos=e.add_mos, add_mos_shader=e.add_mos_shader, image=e.image, min=e.min, max=e.max, z=e.z, copy_base=e.copy_base}
 end
 
 function _M:handle(level, i, j)
@@ -125,6 +125,8 @@ function _M:replaceAll(level)
 			local gd = g.add_displays[g.__edit_d]
 
 			for __, e in ipairs(ee) do
+				if e.z then gd.z = e.z end
+				if e.copy_base then gd.image = g.image end
 				if e.add_mos then
 					-- Add all the mos
 					gd.add_mos = gd.add_mos or {}
@@ -490,52 +492,52 @@ molten_lava = { method="borders", type="molten_lava", forbid={grass=true, jungle
 	default9i={add_mos_shader="lava", add_mos={{image="terrain/lava/molten_lava_inner_9_%02d.png", display_x=1, display_y=-1}}, min=1, max=2},
 },
 mountain = { method="borders", type="mountain", forbid={}, use_type=true,
-	default8={add_displays={{image="terrain/mountain8.png", display_y=-1, z=16}}, min=1, max=1},
-	default2={add_mos={{image="terrain/mountain2.png", display_y=1}}, min=1, max=1},
-	default4={add_mos={{image="terrain/mountain4.png", display_x=-1}}, min=1, max=1},
-	default6={add_mos={{image="terrain/mountain6.png", display_x=1}}, min=1, max=1},
+	default8={z=3, copy_base=true, add_displays={{image="terrain/mountain8.png", display_y=-1, z=16}}, min=1, max=1},
+	default2={z=3, copy_base=true, add_mos={{image="terrain/mountain2.png", display_y=1}}, min=1, max=1},
+	default4={z=3, copy_base=true, add_mos={{image="terrain/mountain4.png", display_x=-1}}, min=1, max=1},
+	default6={z=3, copy_base=true, add_mos={{image="terrain/mountain6.png", display_x=1}}, min=1, max=1},
 
-	default1={add_mos={{image="terrain/mountain9i.png", display_x=-1, display_y=1}}, min=1, max=1},
-	default3={add_mos={{image="terrain/mountain7i.png", display_x=1, display_y=1}}, min=1, max=1},
-	default7={add_mos={{image="terrain/mountain3i.png", display_x=-1, display_y=-1}}, min=1, max=1},
-	default9={add_mos={{image="terrain/mountain1i.png", display_x=1, display_y=-1}}, min=1, max=1},
+	default1={z=3, copy_base=true, add_mos={{image="terrain/mountain9i.png", display_x=-1, display_y=1}}, min=1, max=1},
+	default3={z=3, copy_base=true, add_mos={{image="terrain/mountain7i.png", display_x=1, display_y=1}}, min=1, max=1},
+	default7={z=3, copy_base=true, add_mos={{image="terrain/mountain3i.png", display_x=-1, display_y=-1}}, min=1, max=1},
+	default9={z=3, copy_base=true, add_mos={{image="terrain/mountain1i.png", display_x=1, display_y=-1}}, min=1, max=1},
 
-	default1i={add_mos={{image="terrain/mountain1.png", display_x=-1, display_y=1}}, min=1, max=1},
-	default3i={add_mos={{image="terrain/mountain3.png", display_x=1, display_y=1}}, min=1, max=1},
-	default7i={add_displays={{image="terrain/mountain7.png", display_x=-1, display_y=-1, z=17}}, min=1, max=1},
-	default9i={add_displays={{image="terrain/mountain9.png", display_x=1, display_y=-1, z=18}}, min=1, max=1},
+	default1i={z=3, copy_base=true, add_mos={{image="terrain/mountain1.png", display_x=-1, display_y=1}}, min=1, max=1},
+	default3i={z=3, copy_base=true, add_mos={{image="terrain/mountain3.png", display_x=1, display_y=1}}, min=1, max=1},
+	default7i={z=3, copy_base=true, add_displays={{image="terrain/mountain7.png", display_x=-1, display_y=-1, z=17}}, min=1, max=1},
+	default9i={z=3, copy_base=true, add_displays={{image="terrain/mountain9.png", display_x=1, display_y=-1, z=18}}, min=1, max=1},
 },
 gold_mountain = { method="borders", type="gold_mountain", forbid={}, use_type=true,
-	default8={add_displays={{image="terrain/golden_mountain8.png", display_y=-1, z=16}}, min=1, max=1},
-	default2={add_mos={{image="terrain/golden_mountain2.png", display_y=1}}, min=1, max=1},
-	default4={add_mos={{image="terrain/golden_mountain4.png", display_x=-1}}, min=1, max=1},
-	default6={add_mos={{image="terrain/golden_mountain6.png", display_x=1}}, min=1, max=1},
+	default8={z=3, copy_base=true, add_displays={{image="terrain/golden_mountain8.png", display_y=-1, z=16}}, min=1, max=1},
+	default2={z=3, copy_base=true, add_mos={{image="terrain/golden_mountain2.png", display_y=1}}, min=1, max=1},
+	default4={z=3, copy_base=true, add_mos={{image="terrain/golden_mountain4.png", display_x=-1}}, min=1, max=1},
+	default6={z=3, copy_base=true, add_mos={{image="terrain/golden_mountain6.png", display_x=1}}, min=1, max=1},
 
-	default1={add_mos={{image="terrain/golden_mountain9i.png", display_x=-1, display_y=1}}, min=1, max=1},
-	default3={add_mos={{image="terrain/golden_mountain7i.png", display_x=1, display_y=1}}, min=1, max=1},
-	default7={add_mos={{image="terrain/golden_mountain3i.png", display_x=-1, display_y=-1}}, min=1, max=1},
-	default9={add_mos={{image="terrain/golden_mountain1i.png", display_x=1, display_y=-1}}, min=1, max=1},
+	default1={z=3, copy_base=true, add_mos={{image="terrain/golden_mountain9i.png", display_x=-1, display_y=1}}, min=1, max=1},
+	default3={z=3, copy_base=true, add_mos={{image="terrain/golden_mountain7i.png", display_x=1, display_y=1}}, min=1, max=1},
+	default7={z=3, copy_base=true, add_mos={{image="terrain/golden_mountain3i.png", display_x=-1, display_y=-1}}, min=1, max=1},
+	default9={z=3, copy_base=true, add_mos={{image="terrain/golden_mountain1i.png", display_x=1, display_y=-1}}, min=1, max=1},
 
-	default1i={add_mos={{image="terrain/golden_mountain1.png", display_x=-1, display_y=1}}, min=1, max=1},
-	default3i={add_mos={{image="terrain/golden_mountain3.png", display_x=1, display_y=1}}, min=1, max=1},
-	default7i={add_displays={{image="terrain/golden_mountain7.png", display_x=-1, display_y=-1, z=17}}, min=1, max=1},
-	default9i={add_displays={{image="terrain/golden_mountain9.png", display_x=1, display_y=-1, z=18}}, min=1, max=1},
+	default1i={z=3, copy_base=true, add_mos={{image="terrain/golden_mountain1.png", display_x=-1, display_y=1}}, min=1, max=1},
+	default3i={z=3, copy_base=true, add_mos={{image="terrain/golden_mountain3.png", display_x=1, display_y=1}}, min=1, max=1},
+	default7i={z=3, copy_base=true, add_displays={{image="terrain/golden_mountain7.png", display_x=-1, display_y=-1, z=17}}, min=1, max=1},
+	default9i={z=3, copy_base=true, add_displays={{image="terrain/golden_mountain9.png", display_x=1, display_y=-1, z=18}}, min=1, max=1},
 },
 lava_mountain = { method="borders", type="lava_mountain", forbid={}, use_type=true,
-	default8={add_displays={{image="terrain/lava/lava_mountain8.png", display_y=-1, z=16}}, min=1, max=1},
-	default2={add_mos={{image="terrain/lava/lava_mountain2_%d.png", display_y=1}}, min=1, max=2},
-	default4={add_mos={{image="terrain/lava/lava_mountain4_%d.png", display_x=-1}}, min=1, max=2},
-	default6={add_mos={{image="terrain/lava/lava_mountain6.png", display_x=1}}, min=1, max=1},
+	default8={z=3, copy_base=true, add_displays={{image="terrain/lava/lava_mountain8.png", display_y=-1, z=16}}, min=1, max=1},
+	default2={z=3, copy_base=true, add_mos={{image="terrain/lava/lava_mountain2_%d.png", display_y=1}}, min=1, max=2},
+	default4={z=3, copy_base=true, add_mos={{image="terrain/lava/lava_mountain4_%d.png", display_x=-1}}, min=1, max=2},
+	default6={z=3, copy_base=true, add_mos={{image="terrain/lava/lava_mountain6.png", display_x=1}}, min=1, max=1},
 
-	default1={add_mos={{image="terrain/lava/lava_mountain9i%d.png", display_x=-1, display_y=1}}, min=1, max=2},
-	default3={add_mos={{image="terrain/lava/lava_mountain7i%d.png", display_x=1, display_y=1}}, min=1, max=2},
-	default7={add_mos={{image="terrain/lava/lava_mountain3i%d.png", display_x=-1, display_y=-1}}, min=1, max=2},
-	default9={add_mos={{image="terrain/lava/lava_mountain1i%d.png", display_x=1, display_y=-1}}, min=1, max=2},
+	default1={z=3, copy_base=true, add_mos={{image="terrain/lava/lava_mountain9i%d.png", display_x=-1, display_y=1}}, min=1, max=2},
+	default3={z=3, copy_base=true, add_mos={{image="terrain/lava/lava_mountain7i%d.png", display_x=1, display_y=1}}, min=1, max=2},
+	default7={z=3, copy_base=true, add_mos={{image="terrain/lava/lava_mountain3i%d.png", display_x=-1, display_y=-1}}, min=1, max=2},
+	default9={z=3, copy_base=true, add_mos={{image="terrain/lava/lava_mountain1i%d.png", display_x=1, display_y=-1}}, min=1, max=2},
 
-	default1i={add_mos={{image="terrain/lava/lava_mountain1.png", display_x=-1, display_y=1}}, min=1, max=1},
-	default3i={add_mos={{image="terrain/lava/lava_mountain3.png", display_x=1, display_y=1}}, min=1, max=1},
-	default7i={add_displays={{image="terrain/lava/lava_mountain7.png", display_x=-1, display_y=-1, z=17}}, min=1, max=1},
-	default9i={add_displays={{image="terrain/lava/lava_mountain9.png", display_x=1, display_y=-1, z=18}}, min=1, max=1},
+	default1i={z=3, copy_base=true, add_mos={{image="terrain/lava/lava_mountain1.png", display_x=-1, display_y=1}}, min=1, max=1},
+	default3i={z=3, copy_base=true, add_mos={{image="terrain/lava/lava_mountain3.png", display_x=1, display_y=1}}, min=1, max=1},
+	default7i={z=3, copy_base=true, add_displays={{image="terrain/lava/lava_mountain7.png", display_x=-1, display_y=-1, z=17}}, min=1, max=1},
+	default9i={z=3, copy_base=true, add_displays={{image="terrain/lava/lava_mountain9.png", display_x=1, display_y=-1, z=18}}, min=1, max=1},
 },
 slime_wall = { method="borders", type="slime_wall", forbid={}, use_type=true,
 	default8={add_displays={{image="terrain/slime/slime_wall_V2_top_01.png", display_y=-1, z=18}}, min=1, max=1},

@@ -1249,9 +1249,14 @@ function _M:setupCommands()
 			for i, a in ipairs(g.add_mos or {}) do print(" => ", a.image) end
 			local add = g.add_displays
 			if add then for i, e in ipairs(add) do
-				print(" -", e.image, e.z)
+				print(" -", e.image, e.z or "+"..i)
 				for i, a in ipairs(e.add_mos or {}) do print("   => ", a.image) end
 			end end
+			print("---")
+			local mos = {}
+			g:getMapObjects(game.level.map.tiles, mos, 1)
+			table.print(mos)
+			print("===============")
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
 			local f, err = loadfile("/data/general/events/rat-lich.lua")
