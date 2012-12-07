@@ -2761,6 +2761,15 @@ function _M:onWear(o, bypass_set)
 		end
 	end
 
+	if o.talent_on_mind then
+		self.talent_on_mind = self.talent_on_mind or {}
+		for i = 1, #o.talent_on_mind do
+			local id = util.uuid()
+			self.talent_on_mind[id] = o.talent_on_mind[i]
+			o.talent_on_mind[i]._id = id
+		end
+	end
+
 	-- Apply any special cursed logic
 	if self:knowTalent(self.T_DEFILING_TOUCH) then
 		local t = self:getTalentFromId(self.T_DEFILING_TOUCH)
@@ -2841,6 +2850,15 @@ function _M:onTakeoff(o, bypass_set)
 		for i = 1, #o.talent_on_wild_gift do
 			local id = o.talent_on_wild_gift[i]._id
 			self.talent_on_wild_gift[id] = nil
+		end
+	end
+
+
+	if o.talent_on_mind then
+		self.talent_on_mind = self.talent_on_mind or {}
+		for i = 1, #o.talent_on_mind do
+			local id = o.talent_on_mind[i]._id
+			self.talent_on_mind[id] = nil
 		end
 	end
 

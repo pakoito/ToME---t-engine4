@@ -1021,7 +1021,7 @@ function _M:getTextualDesc(compare_with)
 		end
 
 		if w.no_breath then
-			desc:add("The wearer no longer has to breath.", true)
+			desc:add("The wearer no longer has to breathe.", true)
 		end
 		
 		if w.quick_weapon_swap then
