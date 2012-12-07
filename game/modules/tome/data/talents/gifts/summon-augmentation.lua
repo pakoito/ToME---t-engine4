@@ -93,6 +93,7 @@ newTalent{
 		- Turtle: Grants a small shell shield to all friendly creatures
 		- Spider: Pins all foes around
 		In addition a random summon will come off cooldown.
+		Hostile effects will not hit you or your other summons.
 		The effects improves with your Willpower.]]):format(radius)
 	end,
 }
