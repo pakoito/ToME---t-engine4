@@ -24,6 +24,9 @@ desc = function(self, who)
 	if self:isCompleted("slasul-story") then
 		desc[#desc+1] = "Slasul told you his side of the story. Now you must decide: which of them is corrupt?"
 	end
+	if self:isCompleted("legacy-naloren") then
+		desc[#desc+1] = "Slasul bound his lifeforce to your and gave your a powerful trident in return."
+	end
 
 	if self:isCompleted("kill-slasul") and self:isCompleted("kill-drake") then
 		desc[#desc+1] = "#LIGHT_GREEN#* You have killed both Ukllmswwik and Slasul, betraying them both.#WHITE#"

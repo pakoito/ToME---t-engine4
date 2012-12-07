@@ -97,6 +97,7 @@ Slasul gave it to you as a sign of his faith in you. It is a sign of hope for al
 		lite = 2,
 		combat_dam = 12,
 		combat_mindpower = 12,
+		combat_mindcrit = 12,
 		inc_stats = {
 			[Stats.STAT_STR] = 4,
 			[Stats.STAT_DEX] = 4,
@@ -124,6 +125,7 @@ Slasul gave it to you as a sign of his faith in you. It is a sign of hope for al
 			["technique/combat-training"] = 0.3,
 			["technique/combat-techniques-active"] = 0.3,
 			["psionic/psychic-assault"] = 0.3,
+		},
 	},
 
 	max_power = 60, power_regen = 1,

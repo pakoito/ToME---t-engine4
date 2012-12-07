@@ -61,7 +61,12 @@ Recently, that water dragon that sent you here started sending "agents" to secur
 newChat{ id="portal_back",
 	text = [[Use this portal. It will bring you back to his cave; ask him the truth.]],
 	answers = {
-		{"I will make him pay for his treachery.", action=function(npc, player) player:hasQuest("temple-of-creation"):portal_back() end},
+		{"I will make him pay for his treachery.", action=function(npc, player) 
+			player:hasQuest("temple-of-creation"):portal_back() 
+			for uid, e in pairs(game.level.entities) do
+				if e.faction == "enemies" then e.faction = "temple-of-creation" end
+			end
+		end},
 	}
 }
 
@@ -72,10 +77,34 @@ else
 newChat{ id="welcome",
 	text = [[Thank you for listening to me.]],
 	answers = {
-		{"[attack]", action=attack("So be it... Die now!")},
+		{"The dragon was lying, I can feel it. I have decided to embrace your cause.", jump="cause", cond=function(npc, player) return player:knowTalent(player.T_LEGACY_OF_THE_NALOREN) and not player:isQuestStatus("temple-of-creation", engine.Quest.COMPLETED, "legacy-naloren") end},
 		{"Farewell, Slasul."},
+		{"[attack]", action=attack("So be it... Die now!")},
 	}
 }
+
+newChat{ id="cause",
+	text = [[I secretly hoped you would.
+Then let us seal this alliance, share your lifeforce with me! So long you should live I shall not be killed!
+In return let me offer you this powerful trident.]],
+	answers = {
+		{"I shall accept your offer my liege.", action=function(npc, player)
+			local o = game.zone:makeEntityByName(game.level, "object", "LEGACY_NALOREN", true)
+			if o then
+				o:identify(true)
+				player:addObject(player.INVEN_INVEN, o)
+				npc:doEmote("LET US BE BOUND!", 150)
+				game.level.map:particleEmitter(npc.x, npc.y, 1, "demon_teleport")
+				game.level.map:particleEmitter(player.x, player.y, 1, "demon_teleport")
+				npc.invulnerable = 1
+				npc.never_angry = 1
+				player:setQuestStatus("temple-of-creation", engine.Quest.COMPLETED, "legacy-naloren")
+			end
+		end},
+		{"This sounds strange, I need to think about it."},
+	}
+}
+
 end
 
 return "welcome"
