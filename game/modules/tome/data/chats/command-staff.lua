@@ -48,6 +48,7 @@ local function intro(o)
 		fawning = [[O wise wielder, instruct me that I may better serve you.]],
 		penitent = [[Make amends, magic-user, for the harm ye have wrought is beyond compare.]],
 		telos = [[You really could have chosen a better home for me, you know. I was reasonably happy in my old crystal. This stick smells like armpit.]],
+		telos_full = [[Tremble before the might of Telos!]],
 	}
 	if o.no_command then
 		return [[It is not yet your place to command such a staff as this. To do so invites obliteration.]]
@@ -67,6 +68,7 @@ local function how_speak(o)
 		fawning = [[My old master-- who, though a powerful enchanter, did not compare to you and your glory-- saw fit to imprison me in this fine staff to aid him in his work. Alas, he is long gone, but I despair not, for I have found a mighty new master.]],
 		penitent = [[I am a portion of the very spirit of the world that was ripped free during the Spellblaze. I speak that I might enlighten those who bear me.]],
 		telos = [[What's the good of immortality if you can't even speak? No archmage worth his salt is going to concoct some immoral life-after-death scheme without including some sort of capacity for making his opinions known. And, by the way, your energy manipulation techniques are on the same level as those of my average pair of shoes. Best study up if you don't want to die forgotten and incompetent.]],
+		telos_full = [[What's the good of immortality if you can't even speak? No archmage worth his salt is going to concoct some immoral life-after-death scheme without including some sort of capacity for making his opinions known. And, by the way, your energy manipulation techniques are on the same level as those of my average pair of shoes. Best study up if you don't want to die forgotten and incompetent.]],
 	}
 	return sentient_responses[o.combat.sentient] or sentient_responses["default"]
 end
@@ -79,6 +81,7 @@ local function which_aspect(o)
 		fawning = [[I live to serve-- though my use of the word 'live' is perhaps loose here.]],
 		penitent = [[Choose wisely. Powers beyond your comprehension will tolerate only so much interference in their carefully-laid natural order.]],
 		telos = [[Back in my day, we didn't need to go changing our staves around willy-nilly. We picked an element and stuck with it, by the gods.]],
+		telos_full = [[Back in my day, we didn't need to go changing our staves around willy-nilly. We picked an element and stuck with it, by the gods.]],
 	}
 	return sentient_responses[o.combat.sentient] or sentient_responses["default"]
 end

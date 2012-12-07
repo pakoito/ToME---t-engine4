@@ -33,15 +33,16 @@ newEntity{ base = "BASE_STAFF", define_as = "TELOS_SPIRE",
 	level_range = {37, 50},
 	color=colors.VIOLET,
 	rarity = false,
-	desc = [[Telos was an extremely powerful mage during the Age of Dusk, hated by his peers, feared by the common folk he was hunted for a long while. He finaly fell in his place of power, Telmur, butt his spirit still lingered on.]],
+	desc = [[Telos was an extremely powerful mage during the Age of Dusk, hated by his peers, feared by the common folk he was hunted for a long while. He finaly fell in his place of power, Telmur, but his spirit still lingered on.]],
 	cost = 400,
 	material_level = 5,
 
 	require = { stat = { mag=48 }, },
 	modes = {"fire", "cold", "lightning", "arcane"},
 	combat = {
+		sentient = "telos_full",
 		is_greater = true,
-		dam = 30,
+		dam = 45,
 		apr = 4,
 		dammod = {mag=1.5},
 		damtype = DamageType.BLIGHT,
@@ -57,9 +58,17 @@ newEntity{ base = "BASE_STAFF", define_as = "TELOS_SPIRE",
 		combat_critical_power = 30,
 		spellsurge_on_crit = 7,
 		damage_resonance = 15,
-		inc_damage = { [DamageType.ARCANE] = 30, [DamageType.BLIGHT] = 30, [DamageType.COLD] = 30, [DamageType.DARKNESS] = 30, [DamageType.ACID] = 30, [DamageType.LIGHT] = 30, },
+		inc_damage = { [DamageType.ARCANE] = 45, [DamageType.BLIGHT] = 45, [DamageType.COLD] = 45, [DamageType.DARKNESS] = 45, [DamageType.ACID] = 45, [DamageType.LIGHT] = 45, },
 		damage_affinity = { [DamageType.ARCANE] = 15, [DamageType.BLIGHT] = 15, [DamageType.COLD] = 15, [DamageType.DARKNESS] = 15, [DamageType.ACID] = 15, [DamageType.LIGHT] = 15, },
 		confusion_immune = 0.4,
 		vim_on_crit = 6,
+	},
+	max_power = 30, power_regen = 1,
+	use_power = { name = "turn into a corrupted losgoroth (poison, disease, cut and confusion immune; converts half damage into life drain; does not requrie breath", power = 30,
+		use = function(self, who)
+			game.logSeen(who, "%s brandishes %s, turning into a corrupted losgoroth!", who.name:capitalize(), self:getName())
+			who:setEffect(who.EFF_CORRUPT_LOSGOROTH_FORM, 8, {})
+			return {id=true, used=true}
+		end
 	},
 }

@@ -27,7 +27,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 		dam = dam - ndam
 		local nt = src.all_damage_convert
 		src.all_damage_convert = nil
-		add_dam = DamageType.defaultProjector(src, x, y, nt, ndam, tmp, no_martyr)
+		add_dam = DamageType:get(nt).projector(src, x, y, nt, ndam, tmp, no_martyr)
 		src.all_damage_convert = nt
 		if dam <= 0 then return add_dam end
 	end
@@ -1449,7 +1449,7 @@ newDamageType{
 	name = "drain experience", type = "DRAINEXP",
 	projector = function(src, x, y, type, dam)
 		if _G.type(dam) == "number" then dam = {dam=dam} end
-		DamageType:get(DamageType.BLIGHT).projector(src, x, y, DamageType.BLIGHT, dam.dam)
+		local realdam = DamageType:get(DamageType.BLIGHT).projector(src, x, y, DamageType.BLIGHT, dam.dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
 			if target:checkHit((dam.power_check or src.combatSpellpower)(src), (dam.resist_check or target.combatMentalResist)(target), 0, 95, 15) then
@@ -1459,6 +1459,7 @@ newDamageType{
 				game.logSeen(target, "%s resists!", target.name:capitalize())
 			end
 		end
+		return realdam
 	end,
 }
 
@@ -1473,6 +1474,7 @@ newDamageType{
 			src:heal(realdam * dam.healfactor)
 			game.logSeen(target, "%s drains life from %s!", src.name:capitalize(), target.name)
 		end
+		return realdam
 	end,
 }
 
@@ -1486,6 +1488,7 @@ newDamageType{
 		if target and target ~= src and realdam > 0 then
 			src:incVim(realdam * dam.vim * target:getRankVimAdjust())
 		end
+		return realdam
 	end,
 }
 

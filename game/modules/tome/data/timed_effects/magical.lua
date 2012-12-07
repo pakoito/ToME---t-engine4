@@ -2057,3 +2057,38 @@ newEffect{
 		game.level.map:updateMap(self.x, self.y)
 	end,
 }
+
+newEffect{
+	name = "CORRUPT_LOSGOROTH_FORM", image = "shockbolt/npc/elemental_void_losgoroth_corrupted.png",
+	desc = "Corrupted Losgoroth Form",
+	long_desc = function(self, eff) return ("The target assumes the form of a corrupted losgoroth."):format() end,
+	type = "magical",
+	subtype = { blight=true, arcane=true },
+	status = "beneficial",
+	parameters = {},
+	on_gain = function(self, err) return "#Target# turns into a losgoroth!", "+Corrupted Losgoroth Form" end,
+	on_lose = function(self, err) return "#Target# is no longer transformed.", "-Corrupted Losgoroth Form" end,
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "all_damage_convert", DamageType.DRAINLIFE)
+		self:effectTemporaryValue(eff, "all_damage_convert_percent", 50)
+		self:effectTemporaryValue(eff, "no_breath", 1)
+		self:effectTemporaryValue(eff, "poison_immune", 1)
+		self:effectTemporaryValue(eff, "disease_immune", 1)
+		self:effectTemporaryValue(eff, "cut_immune", 1)
+		self:effectTemporaryValue(eff, "confusion_immune", 1)
+
+		self.replace_display = mod.class.Actor.new{
+			image = "npc/elemental_void_losgoroth_corrupted.png",
+		}
+		self:removeAllMOs()
+		game.level.map:updateMap(self.x, self.y)
+
+		eff.particle = self:addParticles(Particles.new("blight_power", 1, {density=4}))
+	end,
+	deactivate = function(self, eff)
+		self:removeParticles(eff.particle)
+		self.replace_display = nil
+		self:removeAllMOs()
+		game.level.map:updateMap(self.x, self.y)
+	end,
+}
