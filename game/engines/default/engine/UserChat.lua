@@ -68,10 +68,19 @@ function _M:filterMessage(item)
 	if config.settings.chat.filter[item.kind] then return true end
 end
 
+local urlfind = (lpeg.P"http://" + lpeg.P"https://") * (1-lpeg.P" ")^0
+local urlmatch = lpeg.anywhere(lpeg.C(urlfind))
+
 function _M:addMessage(kind, channel, login, name, msg, extra_data, no_change)
 	local color_name = colors.WHITE
 	if type(name) == "table" then name, color_name = name[1], name[2] end
-	local item = {kind=kind, login=login, name=name, color_name=color_name, msg=msg, extra_data=extra_data, timestamp=core.game.getTime()}
+
+	local url = urlmatch:match(msg)
+	if url then
+		msg = msg:lpegSub(urlfind, "#LIGHT_BLUE##{italic}#"..url.."#{normal}##LAST#")
+	end
+
+	local item = {kind=kind, login=login, name=name, color_name=color_name, msg=msg, url=url, extra_data=extra_data, timestamp=core.game.getTime()}
 	if self:filterMessage(item) then return end
 	if self.uc_ext and self.uc_ext.filterMessage then
 		if self.uc_ext:filterMessage(item) then return end
@@ -419,7 +428,12 @@ function _M:mouseEvent(button, x, y, xrel, yrel, bx, by, event)
 			local item = self.dlist[i]
 			if item.dh and by >= item.dh - self.mouse.delegate_offset_y then citem = self.dlist[i].src ci=i break end
 		end
-		self.on_mouse(citem and citem.login and self.channels[self.cur_channel].users[citem.login], citem and citem.login and citem, button, event, x, y, xrel, yrel, bx, by)
+
+		if citem and citem.url and button == "left" and event == "button" then
+			util.browserOpenUrl(citem.url)
+		else
+			self.on_mouse(citem and citem.login and self.channels[self.cur_channel].users[citem.login], citem and citem.login and citem, button, event, x, y, xrel, yrel, bx, by)
+		end
 	end
 end
 

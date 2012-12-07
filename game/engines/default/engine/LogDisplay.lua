@@ -85,9 +85,15 @@ function _M:resize(x, y, w, h)
 end
 
 --- Returns the full log
-function _M:getLog()
+function _M:getLog(extra)
 	local log = {}
-	for i = 1, #self.log do log[#log+1] = self.log[i].str end
+	for i = 1, #self.log do 
+		if not extra then
+			log[#log+1] = self.log[i].str
+		else
+			log[#log+1] = {str=self.log[i].str, src=self.log[i]}
+		end
+	end
 	return log
 end
 
@@ -103,6 +109,9 @@ function _M:showLogDialog(title, shadow)
 	game:registerDialog(d)
 end
 
+local urlfind = (lpeg.P"http://" + lpeg.P"https://") * (1-lpeg.P" ")^0
+local urlmatch = lpeg.anywhere(lpeg.C(urlfind))
+
 --- Appends text to the log
 -- This method is set as the call methamethod too, this means it is usable like this:<br/>
 -- log = LogDisplay.new(...)<br/>
@@ -112,7 +121,13 @@ function _M:call(str, ...)
 	print("[LOG]", str)
 	local tstr = str:toString()
 	if self.out_f then self.out_f:write(tstr:removeColorCodes()) self.out_f:write("\n") end
-	table.insert(self.log, 1, {str=tstr, timestamp = core.game.getTime()})
+
+	local url = urlmatch:match(tstr)
+	if url then
+		tstr = tstr:lpegSub(urlfind, "#LIGHT_BLUE##{italic}#"..url.."#{normal}##LAST#")
+	end
+
+	table.insert(self.log, 1, {str=tstr, timestamp = core.game.getTime(), url=url})
 	while #self.log > self.max_log do
 		local old = table.remove(self.log)
 		self.cache[old] = nil
@@ -158,7 +173,12 @@ function _M:mouseEvent(button, x, y, xrel, yrel, bx, by, event)
 		if citem then
 			local sub_es = {}
 			for di = 1, #citem.item._dduids do sub_es[#sub_es+1] = citem.item._dduids[di].e end
-			self.on_mouse(citem, sub_es, button, event, x, y, xrel, yrel, bx, by)
+
+			if citem.url and button == "left" and event == "button" then
+				util.browserOpenUrl(citem.url)
+			else
+				self.on_mouse(citem, sub_es, button, event, x, y, xrel, yrel, bx, by)
+			end
 		else
 			self.on_mouse(nil, nil, button, event, x, y, xrel, yrel, bx, by)
 		end
@@ -185,7 +205,7 @@ function _M:display()
 			self.cache[tstr] = gen
 		end
 		for i = #gen, 1, -1 do
-			self.dlist[#self.dlist+1] = {item=gen[i], date=self.log[z].timestamp}
+			self.dlist[#self.dlist+1] = {item=gen[i], date=self.log[z].timestamp, url=self.log[z].url}
 			h = h + self.fh
 			if h > self.h - self.fh then stop=true break end
 		end
@@ -212,6 +232,7 @@ function _M:toScreen()
 			if fade < self.fading * 1000 then fade = 1
 			elseif fade < self.fading * 2000 then fade = (self.fading * 2000 - fade) / (self.fading * 1000)
 			else fade = 0 end
+			self.dlist[i].faded = fade
 		end
 
 		self.dlist[i].dh = h

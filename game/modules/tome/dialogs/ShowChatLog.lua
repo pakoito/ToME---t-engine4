@@ -112,17 +112,24 @@ function _M:mouseEvent(button, x, y, xrel, yrel, bx, by, event)
 
 	if button == "wheelup" and event == "button" then self.key:triggerVirtual("MOVE_UP")
 	elseif button == "wheeldown" and event == "button" then self.key:triggerVirtual("MOVE_DOWN")
-	elseif event == "motion" then
+	else
 		if not self.dlist then return end
 		local citem = nil
 		for i = #self.dlist, 1, -1 do
 			local item = self.dlist[i]
 			if item.dh and by >= item.dh then citem = self.dlist[i].src break end
 		end
-		if citem and citem.extra_data and citem.extra_data.mode == "tooltip" then
-			game:tooltipDisplayAtMap(game.w, game.h, citem.extra_data.tooltip)
-		else
-			game.tooltip_x, game.tooltip_y = nil, nil
+
+		if event == "motion" then
+			if citem and citem.extra_data and citem.extra_data.mode == "tooltip" then
+				game:tooltipDisplayAtMap(game.w, game.h, citem.extra_data.tooltip)
+			else
+				game.tooltip_x, game.tooltip_y = nil, nil
+			end
+		elseif event == "button" and button == "left" then
+			if citem and citem.url then
+				util.browserOpenUrl(citem.url)
+			end
 		end
 	end
 end
@@ -153,7 +160,7 @@ function _M:switchTo(ui)
 	for i, ui in ipairs(self.tabs) do ui.ui.selected = false end
 	ui.ui.selected = true
 	if ui.tab_channel == "__log" then
-		self:loadLog(self.log:getLog())
+		self:loadLog(self.log:getLog(true))
 	else
 		local s = nil
 		if _M.last_tab == ui.tab_channel and self.max and self.max_display and self.scroll < self.max - self.max_display + 1 then

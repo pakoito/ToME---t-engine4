@@ -1867,15 +1867,18 @@ function _M:setupMouse(mouse)
 	-- Log tooltips
 	self.logdisplay:onMouse(function(item, sub_es, button, event, x, y, xrel, yrel, bx, by)
 		local mx, my = core.mouse.get()
-		if not item or not sub_es or #sub_es == 0 then game.mouse:delegate(button, mx, my, xrel, yrel, nil, nil, event, "playmap") return end
+		if ((not item or not sub_es or #sub_es == 0) and (not item or not item.url)) or (item and item.faded == 0) then game.mouse:delegate(button, mx, my, xrel, yrel, nil, nil, event, "playmap") return end
 
 		local tooltips = {}
-		for i, e in ipairs(sub_es) do
+		if sub_es then for i, e in ipairs(sub_es) do
 			if e.tooltip then
 				table.append(tooltips, e:tooltip())
 				if i < #sub_es then table.append(tooltips, { tstring{ true, "---" } } )
 				else table.append(tooltips, { tstring{ true } } ) end
 			end
+		end end
+		if item.url then
+			table.append(tooltips, tstring{"Clicking will open ", {"color", "LIGHT_BLUE"}, {"font", "italic"}, item.url, {"color", "WHITE"}, {"font", "normal"}, " in your browser"})
 		end
 
 		local extra = {}
@@ -1899,6 +1902,10 @@ function _M:setupMouse(mouse)
 		end
 		str:add({"color","ANTIQUE_WHITE"}, "Playing: ", {"color", "LAST"}, user.current_char, true)
 		str:add({"color","ANTIQUE_WHITE"}, "Game: ", {"color", "LAST"}, user.module, "(", user.valid, ")",true)
+
+		if item.url then
+			str:add(true, "---", true, "Clicking will open ", {"color", "LIGHT_BLUE"}, {"font", "italic"}, item.url, {"color", "WHITE"}, {"font", "normal"}, " in your browser")
+		end
 
 		local extra = {}
 		if item.extra_data and item.extra_data.mode == "tooltip" then
