@@ -1723,7 +1723,7 @@ function _M:mouseLeftClick(mx, my)
 
 	local target_dist = core.fov.distance(p.x, p.y, a.x, a.y)
 
-	if p:enoughEnergy() and p:reactionToward(a) < 0 and not p:isTalentCoolingDown(t) and p:preUseTalent(t, true, true) and target_dist <= p:getTalentRange(t) and p:canProject({type="hit"}, a.x, a.y) then
+	if p:enoughEnergy() and p:reactionToward(a) < 0 and p:knowTalent(t) and not p:isTalentCoolingDown(t) and p:preUseTalent(t, true, true) and target_dist <= p:getTalentRange(t) and p:canProject({type="hit"}, a.x, a.y) then
 		p:useTalent(t.id, nil, nil, nil, a)
 		return true
 	end
@@ -1742,7 +1742,7 @@ function _M:mouseMiddleClick(mx, my)
 
 	local target_dist = core.fov.distance(p.x, p.y, a.x, a.y)
 
-	if p:enoughEnergy() and p:reactionToward(a) < 0 and not p:isTalentCoolingDown(t) and p:preUseTalent(t, true, true) and target_dist <= p:getTalentRange(t) and p:canProject({type="hit"}, a.x, a.y) then
+	if p:enoughEnergy() and p:reactionToward(a) < 0 and p:knowTalent(t) and not p:isTalentCoolingDown(t) and p:preUseTalent(t, true, true) and target_dist <= p:getTalentRange(t) and p:canProject({type="hit"}, a.x, a.y) then
 		p:useTalent(t.id, nil, nil, nil, a)
 		return true
 	end
