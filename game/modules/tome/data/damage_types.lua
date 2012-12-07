@@ -401,6 +401,17 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 					end
 				end
 
+				if src.talent_on_mind and next(src.talent_on_mind) and t.is_mind and not src.turn_procs.mind_talent then
+					for id, d in pairs(src.talent_on_mind) do
+						if rng.percent(d.chance) and t.id ~= d.talent then
+							src.turn_procs.turn_procs = true
+							local old = src.__projecting_for
+							src:forceUseTalent(d.talent, {ignore_cd=true, ignore_energy=true, force_target=target, force_level=d.level, ignore_ressources=true})
+							src.__projecting_for = old
+						end
+					end
+				end
+
 				if not target.dead and (t.is_spell or t.is_mind) and not src.turn_procs.meteoric_crash and src.knowTalent and src:knowTalent(src.T_METEORIC_CRASH) then
 					src.turn_procs.meteoric_crash = true
 					src:triggerTalent(src.T_METEORIC_CRASH, nil, target)
