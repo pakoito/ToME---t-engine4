@@ -51,9 +51,9 @@ function _M:newEffect(t)
 	t.status = t.status or "detrimental"
 	t.decrease = t.decrease or 1
 
-	table.insert(self.tempeffect_def, t)
-	t.id = #self.tempeffect_def
-	self["EFF_"..t.name] = #self.tempeffect_def
+	self.tempeffect_def["EFF_"..t.name] = t
+	t.id = "EFF_"..t.name
+	self["EFF_"..t.name] = "EFF_"..t.name
 end
 
 
