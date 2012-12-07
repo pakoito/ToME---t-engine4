@@ -4464,7 +4464,7 @@ newEntity{ base = "BASE_KNIFE", -- Thanks Grayswandir!
 	desc = [[This jagged crystal glows with an unnatural light. A strap of cloth is wrapped around one end, as a handle.]],
 	level_range = {12, 25},
 	rarity = 200,
-	require = { stat = { dex=32 }, },
+	require = { stat = { dex=17 }, },
 	cost = 250,
 	material_level = 2,
 	combat = {
