@@ -410,7 +410,7 @@ function _M:waitFirstAuth(timeout)
 	timeout = timeout or 40
 	while self.waiting_auth and timeout > 0 do
 		if not first then
-			core.display.forceRedraw()
+			if not self.waiting_auth_no_redraw then core.display.forceRedraw() end
 			core.game.sleep(50)
 		end
 		local evt = core.profile.popEvent()

@@ -554,6 +554,7 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 	save:close()
 
 	-- Display the loading bar
+	profile.waiting_auth_no_redraw = true
 	self:loadScreen(mod)
 	core.wait.addMaxTicks(savesize)
 
@@ -678,6 +679,7 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 	if engine.interface.PlayerHotkeys then engine.interface.PlayerHotkeys:loadQuickHotkeys(mod.short_name, Savefile.hotkeys_file) end
 
 	core.wait.disable()
+	profile.waiting_auth_no_redraw = false
 
 	core.display.resetAllFonts("normal")
 
