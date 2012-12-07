@@ -861,6 +861,7 @@ newTalent{
 			level_range = {self.level, self.level},
 			message = "@Target@ is caught in a web!",
 			pin_dur = dur,
+			faction = false,
 			canTrigger = function(self, x, y, who)
 				if who.type == "spiderkin" then return false end
 				return mod.class.Trap.canTrigger(self, x, y, who)
