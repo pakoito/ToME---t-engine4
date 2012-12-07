@@ -647,7 +647,7 @@ function _M:act()
 		end
 		if nb_foes > 1 then
 			nb_foes = math.min(nb_foes, 5)
-			self:setEffect(self.EFF_MILITANT_MIND, 4, {power=self:getTalentLevel(self.T_MILITANT_MIND) * nb_foes * 0.6})
+			self:setEffect(self.EFF_MILITANT_MIND, 4, {power=self:getTalentLevel(self.T_MILITANT_MIND) * nb_foes * 1.4})
 		end
 	end
 

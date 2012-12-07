@@ -500,7 +500,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Call upon the luck and cunning of the Little Folk to increase your physical, mental, and spell critical strike chance by %d%% for 5 turns.
+		return ([[Call upon the luck and cunning of the Little Folk to increase your physical, mental, and spell critical strike chance by %d%% and saves by %d for 5 turns.
 		The bonus will increase with the Cunning stat.]]):format(10 + self:getCun() / 2, 10 + self:getCun() / 2)
 	end,
 }
@@ -533,7 +533,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Halflings have always been a very organised and methodical race, the more foes they face the more organised they are.
 		If two or more foes are in sight your physical power, physical save, spellpower, spell save, mental save, and mindpower are increased by %0.1f per foes (up to 5 foes).]]):
-		format(self:getTalentLevel(t) * 0.6)
+		format(self:getTalentLevel(t) * 1.5)
 	end,
 }
 

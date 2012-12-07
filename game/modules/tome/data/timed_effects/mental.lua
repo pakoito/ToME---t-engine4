@@ -1657,14 +1657,12 @@ newEffect{
 	on_gain = function(self, err) return "#Target# seems more aware." end,
 	on_lose = function(self, err) return "#Target#'s awareness returns to normal." end,
 	activate = function(self, eff)
-		eff.pid = self:addTemporaryValue("combat_physcrit", eff.physical)
-		eff.sid = self:addTemporaryValue("combat_spellcrit", eff.spell)
-		eff.mid = self:addTemporaryValue("combat_mindcrit", eff.mind)
-	end,
-	deactivate = function(self, eff)
-		self:removeTemporaryValue("combat_physcrit", eff.pid)
-		self:removeTemporaryValue("combat_spellcrit", eff.sid)
-		self:removeTemporaryValue("combat_mindcrit", eff.mid)
+		self:effectTemporaryValue(eff, "combat_physcrit", eff.physical)
+		self:effectTemporaryValue(eff, "combat_spellcrit", eff.spell)
+		self:effectTemporaryValue(eff, "combat_mindcrit", eff.mind)
+		self:effectTemporaryValue(eff, "combat_physresist", eff.physical)
+		self:effectTemporaryValue(eff, "combat_spellresist", eff.spell)
+		self:effectTemporaryValue(eff, "combat_mindresist", eff.mind)
 	end,
 }
 
