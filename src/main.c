@@ -98,8 +98,7 @@ int realtime_pending = 0;
 /*
  * Used to clean up a lock and its corresponding timer/flag.
  */
-static void cleanupTimerLock(SDL_mutex *lock, SDL_TimerID *timer
-	, int *timerFlag);
+static void cleanupTimerLock(SDL_mutex *lock, SDL_TimerID *timer, int *timerFlag);
 
 void del_lua_error()
 {
