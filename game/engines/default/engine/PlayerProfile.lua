@@ -410,7 +410,7 @@ function _M:waitFirstAuth(timeout)
 	timeout = timeout or 40
 	while self.waiting_auth and timeout > 0 do
 		if not first then
---			core.display.forceRedraw()
+			core.display.forceRedraw()
 			core.game.sleep(50)
 		end
 		local evt = core.profile.popEvent()
@@ -502,7 +502,7 @@ end
 
 function _M:tryAuth()
 	print("[ONLINE PROFILE] auth")
---	core.profile.pushOrder(table.serialize{o="Login", l=self.login, p=self.pass})
+	core.profile.pushOrder(table.serialize{o="Login", l=self.login, p=self.pass})
 	self.waiting_auth = true
 end
 
