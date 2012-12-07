@@ -41,8 +41,6 @@ function _M:generate()
 	self.check = self:getUITexture("ui/checkbox.png")
 	self.tick = self:getUITexture("ui/checkbox-ok.png")
 
-	self.h = r_h
-
 	-- Draw UI
 	self.title_w, self.title_h = self.font:size(self.title)
 	self.w, self.h = self.title_w + self.check.w, math.max(self.font_h, self.check.h)
