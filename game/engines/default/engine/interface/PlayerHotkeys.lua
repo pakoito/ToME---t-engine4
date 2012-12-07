@@ -126,6 +126,13 @@ function _M:hotkeyInventory(name)
 	end
 end
 
+--- Check if something is bound, and return the spot if it is
+function _M:isHotkeyBound(kind, id)
+	for position, hotkey_info in pairs(self.hotkey) do 
+		if hotkey_info[1] == kind and hotkey_info[2] == id then return position end
+	end
+end
+
 --- Switch to previous hotkey page
 function _M:prevHotkeyPage()
 	self.hotkey_page = util.boundWrap(self.hotkey_page - 1, 1, self.nb_hotkey_pages)

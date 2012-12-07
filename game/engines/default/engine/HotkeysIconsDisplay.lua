@@ -191,7 +191,8 @@ function _M:display()
 				elseif o and (o.use_talent or o.use_power) then
 					angle = 360 * ((o.power / o.max_power))
 					color = {255,0,0}
-					local need = (o.use_talent and o.use_talent.power) or (o.use_power and o.use_power.power) or 0
+					local reduce = 1 - util.bound(a:attr("use_object_cooldown_reduce") or 0, 0, 100)/100
+					local need = ((o.use_talent and o.use_talent.power) or (o.use_power and o.use_power.power) or 0)*reduce
 					if o.power < need then
 						if o.power_regen and o.power_regen > 0 then
 							frame = "cooldown"

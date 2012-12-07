@@ -4632,7 +4632,7 @@ newEntity{ base = "BASE_TOOL_MISC",
 				knockback_resist,
 				combat_mentalresist=50,
 				combat_spellresist=100,
-				on_act = function(self) self:project({type="ball", range=0, radius=5, selffire=false}, self.x, self.y, DamageType.SILENCE, {dur=2, power_check=self:combatMindpower()}) end,
+				on_act = function(self) self:project({type="ball", range=0, radius=5, selffire=false}, self.x, self.y, engine.DamageType.SILENCE, {dur=2, power_check=self:combatMindpower()}) end,
 				resolvers.talents{
 					[Talents.T_RESOLVE]={base=3, every=6},
 					[Talents.T_MANA_CLASH]={base=3, every=5},

@@ -41,14 +41,18 @@ newTalent{
 	require = cuns_req2,
 	mode = "passive",
 	points = 5,
+	cdReduc = function(tl) 
+		if tl <=0 then return 0 end
+		return math.floor(100*tl/(tl+7.5)) --I5 Limit < 100%
+	end,
 	passives = function(self, t, p)
-		self:talentTemporaryValue(p, "use_object_cooldown_reduce", math.floor(self:getTalentLevel(t) * 8))
+		self:talentTemporaryValue(p, "use_object_cooldown_reduce", t.cdReduc(self:getTalentLevel(t))) --I5
 	end,
 	on_unlearn = function(self, t)
 	end,
 	info = function(self, t)
 		return ([[Your cunning allows you to use charms (wands, totems and torques) more efficiently, reducing their cooldowns by %d%%.]]):
-		format(math.floor(self:getTalentLevel(t) * 8))
+		format(t.cdReduc(self:getTalentLevel(t))) --I5
 	end,
 }
 

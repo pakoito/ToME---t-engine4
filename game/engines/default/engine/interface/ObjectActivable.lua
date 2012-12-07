@@ -69,7 +69,8 @@ function _M:useObject(who, ...)
 	local usepower = function(power) return math.ceil(power * reduce / 100) end
 
 	if self.use_power then
-		if (self.talent_cooldown and not who:isTalentCoolingDown(self.talent_cooldown)) or (not self.talent_cooldown and self.power >= self.use_power.power) then
+		if (self.talent_cooldown and not who:isTalentCoolingDown(self.talent_cooldown)) or (not self.talent_cooldown and self.power >= usepower(self.use_power.power)) then
+		
 			local ret = self.use_power.use(self, who, ...) or {}
 			local no_power = not ret.used or ret.no_power
 			if not no_power then 
@@ -91,7 +92,8 @@ function _M:useObject(who, ...)
 	elseif self.use_simple then
 		return self.use_simple.use(self, who, ...) or {}
 	elseif self.use_talent then
-		if (self.talent_cooldown and not who:isTalentCoolingDown(self.talent_cooldown)) or (not self.talent_cooldown and (not self.use_talent.power or self.power >= self.use_talent.power)) then
+		if (self.talent_cooldown and not who:isTalentCoolingDown(self.talent_cooldown)) or (not self.talent_cooldown and (not self.use_talent.power or self.power >= usepower(self.use_talent.power))) then
+		
 			local id = self.use_talent.id
 			local ab = self:getTalentFromId(id)
 			local old_level = who.talents[id]; who.talents[id] = self.use_talent.level
