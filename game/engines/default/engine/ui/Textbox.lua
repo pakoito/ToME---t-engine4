@@ -134,6 +134,19 @@ function _M:generate()
 				end
 			end
 		end,
+		[{"_v", "ctrl"}] = function(c)
+			local s = core.key.getClipboard()
+			if s then
+				for i = 1, #s do
+					if #self.tmp >= self.max_len then break end
+					local c = string.sub(s, i, i)
+					table.insert(self.tmp, self.cursor, self.filter(c))
+					self.cursor = self.cursor + 1
+					self.scroll = util.scroll(self.cursor, self.scroll, self.max_display)
+				end
+				self:updateText()
+			end
+		end,
 	}
 end
 
