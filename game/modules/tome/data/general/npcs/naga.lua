@@ -56,7 +56,7 @@ newEntity{ base = "BASE_NPC_NAGA",
 	rarity = 1,
 	max_life = resolvers.rngavg(120,150), life_rating = 16,
 	resolvers.equip{
-		{type="weapon", subtype="trident", autoreq=true, special_rarity="trident_rarity"},
+		{type="weapon", subtype="trident", autoreq=true, force_drop=true, special_rarity="trident_rarity"},
 	},
 	combat_armor = 20, combat_def = 10,
 	resolvers.talents{
@@ -104,7 +104,7 @@ newEntity{ base = "BASE_NPC_NAGA",
 	female = true,
 	max_life = resolvers.rngavg(100,110), life_rating = 11,
 	resolvers.equip{
-		{type="weapon", subtype="trident", autoreq=true, special_rarity="trident_rarity"},
+		{type="weapon", subtype="trident", autoreq=true, force_drop=true, special_rarity="trident_rarity"},
 	},
 	combat_armor = 5, combat_def = 10,
 	autolevel = "wildcaster",

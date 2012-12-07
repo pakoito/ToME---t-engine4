@@ -70,3 +70,62 @@ newEntity{ base = "BASE_LORE",
 	rarity = false,
 	encumberance = 0,
 }
+
+newEntity{ base = "BASE_TRIDENT",
+	power_source = {nature=true, psionic=true},
+	define_as = "LEGACY_NALOREN",
+	unided_name = "ornate orichalcum trident",
+	name = "Legacy of the Naloren", unique=true, image = "object/artifact/trident_of_the_tides.png",
+	desc = [[This incredibly beautiful-and powerful-trident is made of the rare metal orichalcum. An amazing pearl is seated in head of the trident, as it spreads into three razor sharp prongs.
+It is imbued with the greatest strengths of all of the most powerful Naga warriors.
+Slasul gave it to you as a sign of his faith in you. It is a sign of hope for all of the Naloren race, that one outside of their tribe could be so trusted.]],
+	require = { stat = { str=35 }, },
+	level_range = {40, 50},
+	rarity = false,
+	cost = 350,
+	material_level = 5,
+	combat = {
+		dam = 84,
+		apr = 20,
+		physcrit = 20,
+		dammod = {str=1.4},
+		damrange = 1.4,
+		talent_on_hit = { T_STUNNING_BLOW = {level=1, chance=10}, T_SILENCE = {level=3, chance=10}, T_SPIT_POISON = {level=5, chance=10} }
+	},
+
+	wielder = {
+		lite = 2,
+		combat_dam = 12,
+		combat_mindpower = 12,
+		inc_stats = {
+			[Stats.STAT_STR] = 4,
+			[Stats.STAT_DEX] = 4,
+			[Stats.STAT_MAG] = 4,
+			[Stats.STAT_WIL] = 4,
+			[Stats.STAT_CUN] = 4,
+			[Stats.STAT_CON] = 4,
+			[Stats.STAT_LCK] = 10,
+		},
+		resists = {
+			[DamageType.COLD] = 15,
+			[DamageType.NATURE] = 20,
+			[DamageType.ACID] = 10,
+		},
+		inc_damage = {
+			[DamageType.COLD] = 15,
+			[DamageType.NATURE] = 25,
+			[DamageType.MIND] = 10,
+		},
+		talent_cd_reduction={
+			[Talents.T_RUSH]=3,
+			[Talents.T_SPIT_POISON]=2,
+		},
+		talents_types_mastery = {
+			["technique/combat-training"] = 0.3,
+			["technique/combat-techniques-active"] = 0.3,
+			["psionic/psychic-assault"] = 0.3,
+	},
+
+	max_power = 60, power_regen = 1,
+	use_talent = { id = Talents.T_IMPLODE, level=2, power = 40 },
+}

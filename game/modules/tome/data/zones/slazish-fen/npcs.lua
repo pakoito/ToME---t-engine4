@@ -66,7 +66,7 @@ newEntity{ base = "BASE_NPC_NAGA", define_as = "NAGA_TIDEWARDEN",
 	rarity = 1,
 	max_life = resolvers.rngavg(100,120), life_rating = 13,
 	resolvers.equip{
-		{type="weapon", subtype="trident", autoreq=true, special_rarity="trident_rarity"},
+		{type="weapon", subtype="trident", autoreq=true, force_drop=true, special_rarity="trident_rarity"},
 	},
 	resolvers.talents{
 		[Talents.T_SPIT_POISON]={base=1, every=10, max=5},
