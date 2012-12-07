@@ -5354,6 +5354,7 @@ newEntity{ base = "BASE_WIZARD_HAT", --Thanks SageAcrin!
 		},
 	},
 	talent_on_spell = { {chance=10, talent=Talents.T_AGONY, level=2} },
+	talent_on_mind  = { {chance=10, talent=Talents.T_HATEFUL_WHISPER, level=2} },
 }
 
 newEntity{ base = "BASE_TOOL_MISC", --And finally, Thank you, Darkgod, for making such a wonderful game!
