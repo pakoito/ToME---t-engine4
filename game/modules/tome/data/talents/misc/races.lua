@@ -268,7 +268,7 @@ newTalent{
 	cooldown = function(self, t) return 50 - self:getTalentLevel(t) * 5 end,
 	tactical = { ATTACK = 1, DEFEND = 1 },
 	action = function(self, t)
-		self:setEffect(self.EFF_ETERNAL_WRATH, 5, {power=7 + self:getWil(10, true)})
+		self:setEffect(self.EFF_ETERNAL_WRATH, 5, {power=10 + self:getWil(10, true)})
 		return true
 	end,
 	info = function(self, t)
