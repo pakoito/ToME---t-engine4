@@ -4295,7 +4295,7 @@ function _M:on_set_temporary_effect(eff_id, e, p)
 		local e = self.tempeffect_def[self.EFF_HAUNTED]
 		e.on_setFearEffect(self, e)
 	end
-	if e.status == "detrimental" and self:attr("negative_status_effect_immune") then
+	if e.status == "detrimental" and e.type ~= "other" and self:attr("negative_status_effect_immune") then
 		p.dur = 0
 	end
 	if e.status == "detrimental" and e.type == "mental" and self:attr("mental_negative_status_effect_immune") and not e.subtype["cross tier"] then
