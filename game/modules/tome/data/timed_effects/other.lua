@@ -1286,7 +1286,7 @@ newEffect{
 	end,
 	on_merge = function(self, old_eff, new_eff) return old_eff end,
 	doUnfortunateEnd = function(self, eff, target, dam)
-		if math.min(eff.unlockLevel, eff.level) then
+		if math.min(eff.unlockLevel, eff.level) >=4 then
 			local def = self.tempeffect_def[self.EFF_CURSE_OF_MISFORTUNE]
 			if target.life - dam > 0 and rng.percent(def.getUnfortunateEndChance(eff.level)) then
 				local multiplier = 1 + def.getUnfortunateEndIncrease(eff.level) / 100
