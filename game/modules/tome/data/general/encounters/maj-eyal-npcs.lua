@@ -83,8 +83,8 @@ newEntity{
 	ai = "world_hostile", ai_state = {chase_distance=3},
 	on_encounter = {
 		type="ambush",
-		width=14,
-		height=14,
+		width=18,
+		height=18,
 		nb={2, 3},
 		filters={{special_rarity="humanoid_random_boss", random_boss={
 			nb_classes=1,
@@ -119,8 +119,8 @@ newEntity{
 	ai = "world_hostile", ai_state = {chase_distance=3},
 	on_encounter = {
 		type="ambush",
-		width=14,
-		height=14,
+		width=18,
+		height=18,
 		nb={2, 3},
 		filters={{special_rarity="humanoid_random_boss", random_boss={
 			nb_classes=1,
