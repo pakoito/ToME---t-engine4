@@ -1470,7 +1470,7 @@ function _M:displayPlayer(scale, bx, by)
 end
 
 function _M:displayMinimap(scale, bx, by)
-	if self.no_minimap then return end
+	if self.no_minimap then game.mouse:unregisterZone("minimap") return end
 
 	local map = game.level.map
 
@@ -1494,6 +1494,7 @@ function _M:displayMinimap(scale, bx, by)
 		local desc_fct = function(button, mx, my, xrel, yrel, bx, by, event)
 			if event == "out" then self.mhandle.minimap = nil return
 			else self.mhandle.minimap = true end
+			if self.no_minimap then return end
 
 			game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, "Left mouse to move\nRight mouse to scroll\nMiddle mouse to show full map")
 
