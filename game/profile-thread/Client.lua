@@ -42,6 +42,7 @@ function _M:connected()
 	self:login()
 	self.chat:reconnect()
 	cprofile.pushEvent("e='Connected'")
+	self:orderFunFactsGrab{module="tome"}
 	return true
 end
 
@@ -510,6 +511,24 @@ function _M:orderPing(o)
 	local lat = core.game.getTime() - time
 	print("Server latency", lat)
 	self.server_latency = lat
+end
+
+function _M:orderFunFactsGrab(o)
+	if self.funfacts then
+		cprofile.pushEvent(string.format("e='FunFacts' data=%q", self.funfacts))
+		return
+	end
+	if self.funfacts_wait then return end
+
+	self.funfacts_wait = true
+	self:command("FACT", o.module)
+	if self:read("200") then
+		local _, _, size = self.last_line:find("^([0-9]+)")
+		size = tonumber(size)
+		if not size or size < 1 then return end
+		self.funfacts = self:receive(size)
+		cprofile.pushEvent(string.format("e='FunFacts' data=%q", self.funfacts))
+	end
 end
 
 --------------------------------------------------------------------

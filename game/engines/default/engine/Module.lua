@@ -391,6 +391,29 @@ function _M:loadAddons(mod, saveuse)
 --	os.exit()
 end
 
+-- Grab some fun facts!
+function _M:selectFunFact(ffdata)
+	local l = {}
+
+	print("Computing fun facts")
+	print(pcall(function()
+
+		if ffdata.total_time then l[#l+1] = "Total playtime of all registered players:\n"..ffdata.total_time end
+		if ffdata.top_five_races then l[#l+1] = ("#LIGHT_BLUE#%s#WHITE# is one of the top five played races"):format(rng.table(ffdata.top_five_races).name) end
+		if ffdata.top_five_classes then l[#l+1] = ("#LIGHT_BLUE#%s#WHITE# is one of the top five played classes"):format(rng.table(ffdata.top_five_classes).name) end
+		if ffdata.top_ten_killer then l[#l+1] = ("#CRIMSON#%s#WHITE# is one of the top ten killer"):format(rng.table(ffdata.top_ten_killer).name:capitalize()) end
+		if ffdata.top_ten_raceclass then l[#l+1] = ("#LIGHT_BLUE#%s#WHITE# is one of the top ten race/class combo"):format(rng.table(ffdata.top_ten_raceclass).name:capitalize()) end
+		if ffdata.nb_players then l[#l+1] = ("There is currently %d people playing online"):format(ffdata.nb_players) end
+		if ffdata.total_deaths then l[#l+1] = ("The character's vault has registered a total of #RED#%d#WHITE# character's deaths"):format(ffdata.total_deaths) end
+		if ffdata.wins_this_version then l[#l+1] = ("The character's vault has registered a total of #LIGHT_BLUE#%d#WHITE# winners for the current version"):format(ffdata.wins_this_version) end
+		if ffdata.latest_donator then l[#l+1] = ("The latest donator is #LIGHT_GREEN#%s#WHITE#. Many thanks to all donators, you are keepign this game alive!"):format(ffdata.latest_donator) end
+
+	end))
+	table.print(l)
+
+	return #l > 0 and rng.table(l) or false
+end
+
 --- Make a module loadscreen
 function _M:loadScreen(mod)
 	core.display.forceRedraw()
@@ -417,6 +440,16 @@ function _M:loadScreen(mod)
 
 		local dw, dh = math.floor(sw / 2), left[7]
 		local dx, dy = math.floor((sw - dw) / 2), sh - dh
+
+		-- Check profile thread events
+		local evt = core.profile.popEvent()
+		while evt do
+			profile:handleEvent(evt)
+			evt = core.profile.popEvent()
+		end
+
+		local funfacts = nil
+		local ffdata = profile.funfacts
 
 		local tip = nil
 		if mod.load_tips then
@@ -451,6 +484,35 @@ function _M:loadScreen(mod)
 					item._tex:toScreenFull(x+2, y+2, item.w, item.h, item._tex_w, item._tex_h, 0, 0, 0, 0.8)
 					item._tex:toScreenFull(x, y, item.w, item.h, item._tex_w, item._tex_h)
 					y = y + item.h
+				end
+			end
+		end
+
+		local ffw = math.ceil(sw / 4)
+		if ffdata then
+			local str = self:selectFunFact(ffdata)
+			if str then
+				local text, _, tw = font:draw(str, ffw, 255, 255, 255)
+				local text_h = #text * text[1].h
+				ffw = math.min(ffw, tw)
+
+				local Base = require "engine.ui.Base"
+				local frame = Base:makeFrame("ui/tooltip/", ffw + 30, text_h + 30)
+				funfacts = function(x, y)
+					x = x - ffw - 30
+					Base:drawFrame(frame, x+1, y+1, 0, 0, 0, 0.3)
+					Base:drawFrame(frame, x-3, y-3, 1, 1, 1, 0.5)
+					x = x + 10
+					y = y + 10
+
+					y = y - 10 + math.floor((frame.h - text_h) / 2)
+					for i = 1, #text do
+						local item = text[i]
+						if not item then break end
+						item._tex:toScreenFull(x+2, y+2, item.w, item.h, item._tex_w, item._tex_h, 0, 0, 0, 0.5)
+						item._tex:toScreenFull(x, y, item.w, item.h, item._tex_w, item._tex_h, 1, 1, 1, 0.85)
+						y = y + item.h
+					end
 				end
 			end
 		end
@@ -505,6 +567,7 @@ function _M:loadScreen(mod)
 			end
 
 			if tip then tip(dw / 2, dy) end
+			if funfacts then funfacts(sw, 10) end
 		end
 	end)
 	core.display.forceRedraw()

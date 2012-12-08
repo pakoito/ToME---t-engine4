@@ -86,6 +86,8 @@ function _M:init()
 		["^achievements$"] = { invalid = { read={offline=true,online=true}, write="offline" }, valid = { read={online=true}, write="online" } },
 	}
 
+	self:funFactsGrab()
+
 	self.auth = false
 	self:loadGenericProfile()
 
@@ -376,7 +378,7 @@ function _M:waitEvent(name, cb, wait_max)
 	local tries = 0
 	while not stop do
 		if not first then
-			core.display.forceRedraw()
+			if not self.waiting_event_no_redraw then core.display.forceRedraw() end
 			core.game.sleep(50)
 		end
 		local evt = core.profile.popEvent()
@@ -480,6 +482,12 @@ end
 
 function _M:eventDisconnected(e)
 	if game and type(game) == "table" and game.log then game.log("#YELLOW#Connection to online server lost, trying to reconnect.") end
+end
+
+function _M:eventFunFacts(e)
+	if e.data then
+		self.funfacts = zlib.decompress(e.data):unserialize()
+	end
 end
 
 --- Got an event from the profile thread
@@ -778,6 +786,11 @@ function _M:entityVaultInfos(module, kind)
 		kind=kind,
 	})
 	print("[ONLINE PROFILE] list entity vault", module, kind)
+end
+
+function _M:funFactsGrab(module)
+	core.profile.pushOrder(table.serialize{o="FunFactsGrab", module=module})
+	print("[ONLINE PROFILE] fun facts", module)
 end
 
 function _M:isDonator(s)
