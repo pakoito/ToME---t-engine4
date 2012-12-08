@@ -406,7 +406,7 @@ function _M:selectFunFact(ffdata)
 		if ffdata.nb_players then l[#l+1] = ("There is currently %d people playing online"):format(ffdata.nb_players) end
 		if ffdata.total_deaths then l[#l+1] = ("The character's vault has registered a total of #RED#%d#WHITE# character's deaths"):format(ffdata.total_deaths) end
 		if ffdata.wins_this_version then l[#l+1] = ("The character's vault has registered a total of #LIGHT_BLUE#%d#WHITE# winners for the current version"):format(ffdata.wins_this_version) end
-		if ffdata.latest_donator then l[#l+1] = ("The latest donator is #LIGHT_GREEN#%s#WHITE#. Many thanks to all donators, you are keepign this game alive!"):format(ffdata.latest_donator) end
+		if ffdata.latest_donator then l[#l+1] = ("The latest donator is #LIGHT_GREEN#%s#WHITE#. Many thanks to all donators, you are keeping this game alive!"):format(ffdata.latest_donator) end
 
 	end))
 	table.print(l)

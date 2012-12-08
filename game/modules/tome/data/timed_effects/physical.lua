@@ -386,7 +386,7 @@ newEffect{
 newEffect{
 	name = "DAZED", image = "effects/dazed.png",
 	desc = "Dazed",
-	long_desc = function(self, eff) return "The target is dazed, rendering it unable to act. Any damage will remove the daze." end,
+	long_desc = function(self, eff) return "The target is dazed, rendering it unable to move, halving all damage done, defense and saves. Any damage will remove the daze." end,
 	type = "physical",
 	subtype = { stun=true },
 	status = "detrimental",
@@ -394,10 +394,10 @@ newEffect{
 	on_gain = function(self, err) return "#Target# is dazed!", "+Dazed" end,
 	on_lose = function(self, err) return "#Target# is not dazed anymore.", "-Dazed" end,
 	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("dazed", 1)
+		self:effectTemporaryValue(eff, "dazed", 1)
+		self:effectTemporaryValue(eff, "never_move", 1)
 	end,
 	deactivate = function(self, eff)
-		self:removeTemporaryValue("dazed", eff.tmpid)
 	end,
 }
 

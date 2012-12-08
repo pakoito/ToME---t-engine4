@@ -933,6 +933,7 @@ function _M:combatDefense(fake, add)
 	local base_defense = self:combatDefenseBase(true)
 	if not fake then base_defense = self:combatDefenseBase() end
 	local d = math.max(0, base_defense + (add or 0))
+	if self:attr("dazed") then d = d / 2 end
 	return self:rescaleCombatStats(d)
 end
 
@@ -941,6 +942,7 @@ function _M:combatDefenseRanged(fake, add)
 	local base_defense = self:combatDefenseBase(true)
 	if not fake then base_defense = self:combatDefenseBase() end
 	local d = math.max(0, base_defense + (self.combat_def_ranged or 0) + (add or 0))
+	if self:attr("dazed") then d = d / 2 end
 	return self:rescaleCombatStats(d)
 end
 
@@ -1135,7 +1137,8 @@ function _M:combatPhysicalpower(mod, weapon, add)
 
 	add = add + 10 * self:combatCheckTraining(weapon)
 
-	return self:rescaleCombatStats((self.combat_dam > 0 and self.combat_dam or 0) + add + self:getStr()) * mod
+	local d = (self.combat_dam > 0 and self.combat_dam or 0) + add + self:getStr()
+	return self:rescaleCombatStats(d) * mod
 end
 
 --- Gets damage based on talent
@@ -1163,7 +1166,8 @@ function _M:combatSpellpower(mod, add)
 	local am = 1
 	if self:attr("spellpower_reduction") then am = 1 / (1 + self:attr("spellpower_reduction")) end
 
-	return self:rescaleCombatStats((self.combat_spellpower > 0 and self.combat_spellpower or 0) + add + self:getMag()) * mod * am
+	local d = (self.combat_spellpower > 0 and self.combat_spellpower or 0) + add + self:getMag()
+	return self:rescaleCombatStats(d) * mod * am
 end
 
 --- Gets damage based on talent
@@ -1423,7 +1427,8 @@ function _M:combatMindpower(mod, add)
 		add = add + self:attr("psychometry_power")
 	end
 
-	return self:rescaleCombatStats((self.combat_mindpower > 0 and self.combat_mindpower or 0) + add + self:getWil() * 0.7 + self:getCun() * 0.4) * mod
+	local d = (self.combat_mindpower > 0 and self.combat_mindpower or 0) + add + self:getWil() * 0.7 + self:getCun() * 0.4
+	return self:rescaleCombatStats(d) * mod
 end
 
 --- Gets damage based on talent
@@ -1473,7 +1478,9 @@ function _M:combatPhysicalResist(fake)
 	end
 
 	-- To return later
-	local total = self:rescaleCombatStats(self.combat_physresist + (self:getCon() + self:getStr() + (self:getLck() - 50) * 0.5) * 0.35 + add)
+	local d = self.combat_physresist + (self:getCon() + self:getStr() + (self:getLck() - 50) * 0.5) * 0.35 + add
+	if self:attr("dazed") then d = d / 2 end
+	local total = self:rescaleCombatStats(d)
 
 	-- Psionic Balance
 	if self:knowTalent(self.T_BALANCE) then
@@ -1496,7 +1503,9 @@ function _M:combatSpellResist(fake)
 	end
 
 	-- To return later
-	local total = self:rescaleCombatStats(self.combat_spellresist + (self:getMag() + self:getWil() + (self:getLck() - 50) * 0.5) * 0.35 + add)
+	local d = self.combat_spellresist + (self:getMag() + self:getWil() + (self:getLck() - 50) * 0.5) * 0.35 + add
+	if self:attr("dazed") then d = d / 2 end
+	local total = self:rescaleCombatStats(d)
 
 	-- Psionic Balance
 	if self:knowTalent(self.T_BALANCE) then
@@ -1521,7 +1530,10 @@ function _M:combatMentalResist(fake)
 	if self:knowTalent(self.T_POWER_IS_MONEY) then
 		add = add + util.bound(self.money / (90 - self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 5), 0, self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 7)
 	end
-	return self:rescaleCombatStats(self.combat_mentalresist + (self:getCun() + self:getWil() + (self:getLck() - 50) * 0.5) * 0.35 + add)
+
+	local d = self.combat_mentalresist + (self:getCun() + self:getWil() + (self:getLck() - 50) * 0.5) * 0.35 + add
+	if self:attr("dazed") then d = d / 2 end
+	return self:rescaleCombatStats(d)
 end
 
 -- Called when a Save or Defense is checked

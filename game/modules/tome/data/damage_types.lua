@@ -57,6 +57,11 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 		end
 		print("[PROJECTOR] after difficulty dam", dam)
 
+		-- Daze
+		if target:attr("dazed") then
+			dam = dam * 0.5
+		end
+
 		-- Preemptive shielding
 		if target.isTalentActive and target:isTalentActive(target.T_PREMONITION) then
 			local t = target:getTalentFromId(target.T_PREMONITION)

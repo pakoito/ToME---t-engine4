@@ -44,28 +44,6 @@ newEffect{
 }
 
 newEffect{
-	name = "MEDITATION", image = "talents/meditation.png",
-	desc = "Meditation",
-	long_desc = function(self, eff) return "The target is meditating. Any damage will stop it." end,
-	type = "mental",
-	subtype = { focus=true },
-	status = "detrimental",
-	parameters = {},
-	on_timeout = function(self, eff)
-		self:incEquilibrium(-eff.per_turn)
-	end,
-	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("dazed", 1)
-	end,
-	deactivate = function(self, eff)
-		self:removeTemporaryValue("dazed", eff.tmpid)
-		if eff.dur <= 0 then
-			self:incEquilibrium(-eff.final)
-		end
-	end,
-}
-
-newEffect{
 	name = "SUMMON_CONTROL", image = "talents/summon_control.png",
 	desc = "Summon Control",
 	long_desc = function(self, eff) return ("Reduces damage received by %d%% and increases summon time by %d."):format(eff.res, eff.incdur) end,

@@ -90,6 +90,56 @@ return {
 	end,
 	levels =
 	{
+		[1] = {
+			generator = {
+				map = {
+					class = "engine.generator.map.Cavern",
+					zoom = 16,
+					min_floor = 1200,
+					floor = "CAVEFLOOR",
+					wall = "CAVEWALL",
+					up = "CAVEFLOOR",
+					down = "CAVE_HIGH_PEAK_UP",
+					door = "CAVEFLOOR",
+				},
+			},
+		},
+		[2] = {
+			generator = {
+				map = {
+					['+'] = "CAVEFLOOR",
+					['.'] = "CAVEFLOOR",
+					['#'] = "CAVEWALL",
+					up = "CAVEFLOOR",
+					down = "CAVE_HIGH_PEAK_UP",
+					door = "CAVEFLOOR",
+				},
+			},
+		},
+		[3] = {
+			generator = {
+				map = {
+					['+'] = "CAVEFLOOR",
+					['.'] = "CAVEFLOOR",
+					['#'] = "CAVEWALL",
+					up = "CAVEFLOOR",
+					down = "CAVE_HIGH_PEAK_UP",
+					door = "CAVEFLOOR",
+				},
+			},
+		},
+		[4] = {
+			generator = {
+				map = {
+					['+'] = "CAVEFLOOR",
+					['.'] = "CAVEFLOOR",
+					['#'] = "CAVEWALL",
+					up = "CAVEFLOOR",
+					down = "CAVE_HIGH_PEAK_UP",
+					door = "CAVEFLOOR",
+				},
+			},
+		},
 		[10] = {
 			generator = {
 				map = {

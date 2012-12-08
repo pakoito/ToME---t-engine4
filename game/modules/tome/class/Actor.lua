@@ -610,7 +610,7 @@ function _M:act()
 		end
 	end
 	if self:attr("stoned") then self.energy.value = 0 end
-	if self:attr("dazed") then self.energy.value = 0 end
+--	if self:attr("dazed") then self.energy.value = 0 end
 	if self:attr("sleep") and not self:attr("lucid_dreamer") then self.energy.value = 0 end
 	if self:attr("time_stun") then self.energy.value = 0 end
 	if self:attr("time_prison") then self.energy.value = 0 end
@@ -1549,10 +1549,6 @@ function _M:onTakeHit(value, src)
 	-- Un-daze
 	if self:hasEffect(self.EFF_DAZED) then
 		self:removeEffect(self.EFF_DAZED)
-	end
-	-- Un-meditate
-	if self:hasEffect(self.EFF_MEDITATION) then
-		self:removeEffect(self.EFF_MEDITATION)
 	end
 	if self:hasEffect(self.EFF_SPACETIME_TUNING) then
 		self:removeEffect(self.EFF_SPACETIME_TUNING)

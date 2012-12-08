@@ -21,6 +21,7 @@ load("/data/general/grids/basic.lua")
 load("/data/general/grids/water.lua")
 load("/data/general/grids/forest.lua")
 load("/data/general/grids/lava.lua")
+load("/data/general/grids/cave.lua")
 
 newEntity{
 	define_as = "FAR_EAST_PORTAL",
@@ -205,6 +206,15 @@ newEntity{
 
 newEntity{
 	define_as = "HIGH_PEAK_UP", image = "terrain/marble_floor.png", add_mos = {{image = "terrain/stair_up.png"}},
+	name = "next level",
+	display = '>', color_r=255, color_g=255, color_b=0,
+	notice = true,
+	always_remember = true,
+	change_level = 1,
+}
+
+newEntity{
+	define_as = "CAVE_HIGH_PEAK_UP", image = "terrain/cave/cave_floor_1_01.png", add_displays = {class.new{image="terrain/cave/cave_stairs_up_2_01.png"}},
 	name = "next level",
 	display = '>', color_r=255, color_g=255, color_b=0,
 	notice = true,
