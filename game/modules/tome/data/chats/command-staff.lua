@@ -120,6 +120,8 @@ end
 local function set_element(element, new_flavor, player)
 	state.set_element = true
 	player.no_power_reset_on_wear = true
+
+	local prev_name = o:getName{no_count=true, force_id=true, no_add_name=true}
 	
 	local dam = o.combat.dam
 	local inven = player:getInven("MAINHAND")
@@ -141,11 +143,22 @@ local function set_element(element, new_flavor, player)
 	o.flavor_name = new_flavor
 	o:resolve()
 	o:resolve(nil, true)	
+
+	local next_name = o:getName{no_count=true, force_id=true, no_add_name=true}
+
+	if player.hotkey then
+		local pos = player:isHotkeyBound("inventory", prev_name)
+		if pos then
+			player.hotkey[pos] = {"inventory", next_name}
+		end
+	end
+
 	player:addObject(inven, o)	
 	player.no_power_reset_on_wear = nil
 	print("(in chat's set_element) state.set_element is ", state.set_element)
+
 	coroutine.resume(co, true)
-	
+
 end
 
 newChat{ id="welcome",
