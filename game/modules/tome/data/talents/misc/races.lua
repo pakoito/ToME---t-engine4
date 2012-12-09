@@ -236,7 +236,7 @@ newTalent{
 					p.dur = p.dur + self:getTalentLevelRaw(t)
 				elseif e.status == "detrimental" then
 					p.dur = p.dur - self:getTalentLevelRaw(t) * 2
-					if p.dur <= 0 then todel[#todel+1] = eff end
+					if p.dur <= 0 then todel[#todel+1] = eff_id end
 				end
 			end
 		end
