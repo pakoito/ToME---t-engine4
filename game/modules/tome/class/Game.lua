@@ -850,12 +850,21 @@ function _M:changeLevelReal(lev, zone, params)
 	self.zone_name_s = nil
 
 	-- Special stuff
+	for uid, act in pairs(self.level.entities) do if act.setEffect then act:removeEffectsFilter(function(e) return e.zone_wide_effect end, nil, nil, true) end end
 	for uid, act in pairs(self.level.entities) do
 		if act.setEffect then
 			if self.level.data.zero_gravity then act:setEffect(act.EFF_ZERO_GRAVITY, 1, {})
 			else act:removeEffect(act.EFF_ZERO_GRAVITY, nil, true) end
 		end
 	end
+	if self.level.data.effects then
+		for uid, act in pairs(self.level.entities) do 
+			if act.setEffect then for _, effid in ipairs(self.level.data.effects) do
+				act:setEffect(effid, 1, {})
+			end end
+		end
+	end
+	self.level.data.effects_allow = true
 
 	-- Level feeling
 	local feeling

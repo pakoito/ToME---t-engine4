@@ -617,7 +617,7 @@ newEffect{
 	type = "other",
 	subtype = { spacetime=true },
 	status = "detrimental",
-	cancel_on_level_change = true,
+	zone_wide_effect = true,
 	parameters = {},
 	on_merge = function(self, old_eff, new_eff)
 		return old_eff
@@ -1846,5 +1846,257 @@ newEffect{
 			game._chronoworlds = nil
 			self:startTalentCooldown(self.T_REVISIONIST_HISTORY)
 		end
+	end,
+}
+
+newEffect{
+	name = "ZONE_AURA_FIRE",
+	desc = "Oil mist",
+	no_stop_enter_worlmap = true,
+	long_desc = function(self, eff) return ("Zone-wide effect: +10% fire damage, -10% fire resistance, -10% armour, -2 sight range.") end,
+	decrease = 0, no_remove = true,
+	type = "other",
+	subtype = { aura=true },
+	status = "detrimental",
+	zone_wide_effect = true,
+	parameters = {},
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "resists", {[DamageType.FIRE]=-10})
+		self:effectTemporaryValue(eff, "inc_damage", {[DamageType.FIRE]=10})
+		self:effectTemporaryValue(eff, "sight", -2)
+		self:effectTemporaryValue(eff, "combat_armor", -math.ceil(self:combatArmor() * 0.1))
+	end,
+	deactivate = function(self, eff)
+	end,
+}
+
+newEffect{
+	name = "ZONE_AURA_COLD",
+	desc = "Grave chill",
+	no_stop_enter_worlmap = true,
+	long_desc = function(self, eff) return ("Zone-wide effect: +10% cold damage, -10% cold resistance, -10% physical save, -20% confusion immunity.") end,
+	decrease = 0, no_remove = true,
+	type = "other",
+	subtype = { aura=true },
+	status = "detrimental",
+	zone_wide_effect = true,
+	parameters = {},
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "resists", {[DamageType.COLD]=-10})
+		self:effectTemporaryValue(eff, "inc_damage", {[DamageType.COLD]=10})
+		self:effectTemporaryValue(eff, "confusion_immune", -0.2)
+		self:effectTemporaryValue(eff, "combat_physresist", -math.ceil(self:combatPhysicalResist(true) * 0.1))
+	end,
+	deactivate = function(self, eff)
+	end,
+}
+
+newEffect{
+	name = "ZONE_AURA_LIGHTNING",
+	desc = "Static discharge",
+	no_stop_enter_worlmap = true,
+	long_desc = function(self, eff) return ("Zone-wide effect: +10% lightning damage, -10% lightning resistance, -10% physical power, -20% stun immunity.") end,
+	decrease = 0, no_remove = true,
+	type = "other",
+	subtype = { aura=true },
+	status = "detrimental",
+	zone_wide_effect = true,
+	parameters = {},
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "resists", {[DamageType.LIGHTNING]=-10})
+		self:effectTemporaryValue(eff, "inc_damage", {[DamageType.LIGHTNING]=10})
+		self:effectTemporaryValue(eff, "stun_immune", -0.2)
+		self:effectTemporaryValue(eff, "combat_dam", -math.ceil(self:combatPhysicalpower() * 0.1))
+	end,
+	deactivate = function(self, eff)
+	end,
+}
+
+newEffect{
+	name = "ZONE_AURA_ACID",
+	desc = "Noxious fumes",
+	no_stop_enter_worlmap = true,
+	long_desc = function(self, eff) return ("Zone-wide effect: +10% acid damage, -10% acid resistance, -10% defense, -20% disarm immunity.") end,
+	decrease = 0, no_remove = true,
+	type = "other",
+	subtype = { aura=true },
+	status = "detrimental",
+	zone_wide_effect = true,
+	parameters = {},
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "resists", {[DamageType.ACID]=-10})
+		self:effectTemporaryValue(eff, "inc_damage", {[DamageType.ACID]=10})
+		self:effectTemporaryValue(eff, "disarm_immune", -0.2)
+		self:effectTemporaryValue(eff, "combat_def", -math.ceil(self:combatDefense(true) * 0.1))
+	end,
+	deactivate = function(self, eff)
+	end,
+}
+
+newEffect{
+	name = "ZONE_AURA_DARKNESS",
+	desc = "Echoes of the void",
+	no_stop_enter_worlmap = true,
+	long_desc = function(self, eff) return ("Zone-wide effect: +10% darkness damage, -10% darkness resistance, -10% mental save, -20% fear immunity.") end,
+	decrease = 0, no_remove = true,
+	type = "other",
+	subtype = { aura=true },
+	status = "detrimental",
+	zone_wide_effect = true,
+	parameters = {},
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "resists", {[DamageType.DARKNESS]=-10})
+		self:effectTemporaryValue(eff, "inc_damage", {[DamageType.DARKNESS]=10})
+		self:effectTemporaryValue(eff, "fear_immune", -0.2)
+		self:effectTemporaryValue(eff, "combat_mentalresist", -math.ceil(self:combatMentalResist(true) * 0.1))
+	end,
+	deactivate = function(self, eff)
+	end,
+}
+
+newEffect{
+	name = "ZONE_AURA_MIND",
+	desc = "Eerie silence",
+	no_stop_enter_worlmap = true,
+	long_desc = function(self, eff) return ("Zone-wide effect: +10% mind damage, -10% mind resistance, -10% spellpower, -20% silence immunity.") end,
+	decrease = 0, no_remove = true,
+	type = "other",
+	subtype = { aura=true },
+	status = "detrimental",
+	zone_wide_effect = true,
+	parameters = {},
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "resists", {[DamageType.MIND]=-10})
+		self:effectTemporaryValue(eff, "inc_damage", {[DamageType.MIND]=10})
+		self:effectTemporaryValue(eff, "silence_immune", -0.2)
+		self:effectTemporaryValue(eff, "combat_spellpower", -math.ceil(self:combatSpellpower() * 0.1))
+	end,
+	deactivate = function(self, eff)
+	end,
+}
+
+newEffect{
+	name = "ZONE_AURA_LIGHT",
+	desc = "Aura of light",
+	no_stop_enter_worlmap = true,
+	long_desc = function(self, eff) return ("Zone-wide effect: +10% light damage, -10% light resistance, -10% accuracy, -20% blind immunity.") end,
+	decrease = 0, no_remove = true,
+	type = "other",
+	subtype = { aura=true },
+	status = "detrimental",
+	zone_wide_effect = true,
+	parameters = {},
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "resists", {[DamageType.LIGHT]=-10})
+		self:effectTemporaryValue(eff, "inc_damage", {[DamageType.LIGHT]=10})
+		self:effectTemporaryValue(eff, "blind_immune", -0.2)
+		self:effectTemporaryValue(eff, "combat_atk", -math.ceil(self:combatAttack() * 0.1))
+	end,
+	deactivate = function(self, eff)
+	end,
+}
+
+newEffect{
+	name = "ZONE_AURA_ARCANE",
+	desc = "Aether residue",
+	no_stop_enter_worlmap = true,
+	long_desc = function(self, eff) return ("Zone-wide effect: +10% arcane damage, -10% arcane resistance, -10% armour hardiness, -20% stoning immunity.") end,
+	decrease = 0, no_remove = true,
+	type = "other",
+	subtype = { aura=true },
+	status = "detrimental",
+	zone_wide_effect = true,
+	parameters = {},
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "resists", {[DamageType.ARCANE]=-10})
+		self:effectTemporaryValue(eff, "inc_damage", {[DamageType.ARCANE]=10})
+		self:effectTemporaryValue(eff, "stone_immune", -0.2)
+		self:effectTemporaryValue(eff, "combat_armor_hardiness", -math.ceil(self:combatArmorHardiness() * 0.1))
+	end,
+	deactivate = function(self, eff)
+	end,
+}
+
+newEffect{
+	name = "ZONE_AURA_TEMPORAL",
+	desc = "Impossible geometries",
+	no_stop_enter_worlmap = true,
+	long_desc = function(self, eff) return ("Zone-wide effect: +10% temporal damage, -10% temporal resistance, -10% spell save, -20% pinning immunity.") end,
+	decrease = 0, no_remove = true,
+	type = "other",
+	subtype = { aura=true },
+	status = "detrimental",
+	zone_wide_effect = true,
+	parameters = {},
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "resists", {[DamageType.TEMPORAL]=-10})
+		self:effectTemporaryValue(eff, "inc_damage", {[DamageType.TEMPORAL]=10})
+		self:effectTemporaryValue(eff, "pin_immune", -0.2)
+		self:effectTemporaryValue(eff, "combat_spellresist", -math.ceil(self:combatSpellResist(true) * 0.1))
+	end,
+	deactivate = function(self, eff)
+	end,
+}
+
+newEffect{
+	name = "ZONE_AURA_PHYSICAL",
+	desc = "Uncontrolled anger",
+	no_stop_enter_worlmap = true,
+	long_desc = function(self, eff) return ("Zone-wide effect: +10% physical damage, -10% physical resistance, -10% mindpower, -20% knockback immunity.") end,
+	decrease = 0, no_remove = true,
+	type = "other",
+	subtype = { aura=true },
+	status = "detrimental",
+	zone_wide_effect = true,
+	parameters = {},
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "resists", {[DamageType.PHYSICAL]=-10})
+		self:effectTemporaryValue(eff, "inc_damage", {[DamageType.PHYSICAL]=10})
+		self:effectTemporaryValue(eff, "knockback_immune", -0.2)
+		self:effectTemporaryValue(eff, "combat_mindpower", -math.ceil(self:combatMindpower() * 0.1))
+	end,
+	deactivate = function(self, eff)
+	end,
+}
+
+newEffect{
+	name = "ZONE_AURA_BLIGHT",
+	desc = "Miasma",
+	no_stop_enter_worlmap = true,
+	long_desc = function(self, eff) return ("Zone-wide effect: +10% blight damage, -10% blight resistance, -20% healing mod, -20% disease immunity.") end,
+	decrease = 0, no_remove = true,
+	type = "other",
+	subtype = { aura=true },
+	status = "detrimental",
+	zone_wide_effect = true,
+	parameters = {},
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "resists", {[DamageType.BLIGHT]=-10})
+		self:effectTemporaryValue(eff, "inc_damage", {[DamageType.BLIGHT]=10})
+		self:effectTemporaryValue(eff, "stone_immune", -0.2)
+		self:effectTemporaryValue(eff, "healing_factor", -0.2)
+	end,
+	deactivate = function(self, eff)
+	end,
+}
+
+newEffect{
+	name = "ZONE_AURA_NATURE",
+	desc = "Slimy floor",
+	no_stop_enter_worlmap = true,
+	long_desc = function(self, eff) return ("Zone-wide effect: +10% nature damage, -10% nature resistance, -10% ranged defense, -20% poison immunity.") end,
+	decrease = 0, no_remove = true,
+	type = "other",
+	subtype = { aura=true },
+	status = "detrimental",
+	zone_wide_effect = true,
+	parameters = {},
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "resists", {[DamageType.NATURE]=-10})
+		self:effectTemporaryValue(eff, "inc_damage", {[DamageType.NATURE]=10})
+		self:effectTemporaryValue(eff, "poison_immune", -0.2)
+		self:effectTemporaryValue(eff, "combat_def_ranged", -math.ceil(self:combatDefenseRanged(true) * 0.1))
+	end,
+	deactivate = function(self, eff)
 	end,
 }

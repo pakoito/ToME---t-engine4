@@ -4057,7 +4057,7 @@ function _M:worthExp(target)
 end
 
 --- Remove all effects based on a filter
-function _M:removeEffectsFilter(t, nb)
+function _M:removeEffectsFilter(t, nb, silent, force)
 	nb = nb or 100000
 	local effs = {}
 	local removed = 0
@@ -4073,7 +4073,7 @@ function _M:removeEffectsFilter(t, nb)
 
 	while #effs > 0 and nb > 0 do
 		local eff = rng.tableRemove(effs)
-		self:removeEffect(eff)
+		self:removeEffect(eff, silent, force)
 		nb = nb - 1
 		removed = removed + 1
 	end
@@ -4444,6 +4444,12 @@ function _M:addedToLevel(level, x, y)
 
 	if game.level.data.zero_gravity then self:setEffect(self.EFF_ZERO_GRAVITY, 1, {})
 	else self:removeEffect(self.EFF_ZERO_GRAVITY, nil, true) end
+
+	if game.level.data.effects and game.level.data.effects_allow then
+		for _, effid in ipairs(game.level.data.effects) do
+			self:setEffect(effid, 1, {})
+		end
+	end
 
 	self:check("on_added_to_level", level, x, y)
 end

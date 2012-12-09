@@ -40,7 +40,7 @@ return {
 		map = {
 			class = "engine.generator.map.Roomer",
 			nb_rooms = 10,
-			rooms = {"random_room", {"pit",3}, {"lesser_vault",3}, {"greater_vault",5}},
+			rooms = {"random_room", {"pit",3}, {"lesser_vault",2}, {"greater_vault",3}},
 			rooms_config = {pit={filters={{type="orc"}, {type="naga"}, {type="dragon"}, {type="demon"}}}},
 			lesser_vaults_list = {"circle"},
 			lite_room_chance = 10,
@@ -82,6 +82,16 @@ return {
 			if not mtdm or mtdm:isCompleted("not-stopped") then
 				game.player:hasQuest("high-peak"):failed_charred_scar(level)
 			end
+		end
+
+		if level.level <= 10 then
+			local p = game.player
+			local effid = rng.table{
+				p.EFF_ZONE_AURA_FIRE, p.EFF_ZONE_AURA_COLD, p.EFF_ZONE_AURA_LIGHTNING, p.EFF_ZONE_AURA_ACID,
+				p.EFF_ZONE_AURA_DARKNESS, p.EFF_ZONE_AURA_MIND, p.EFF_ZONE_AURA_LIGHT, p.EFF_ZONE_AURA_ARCANE,
+				p.EFF_ZONE_AURA_TEMPORAL, p.EFF_ZONE_AURA_PHYSICAL, p.EFF_ZONE_AURA_BLIGHT, p.EFF_ZONE_AURA_NATURE,
+			}
+			level.data.effects = {effid}
 		end
 	end,
 	on_turn = function(self)
