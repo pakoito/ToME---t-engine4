@@ -834,6 +834,7 @@ function _M:loadList(file, no_default, res, mod, loaded)
 	if err then error(err) end
 
 	loaded = loaded or {}
+	if res.ignore_loaded and loaded[file] then return res end
 	loaded[file] = true
 
 	local newenv newenv = {
@@ -869,8 +870,8 @@ function _M:loadList(file, no_default, res, mod, loaded)
 		load = function(f, new_mod)
 			self:loadList(f, no_default, res, new_mod or mod, loaded)
 		end,
-		loadList = function(f, new_mod)
-			return self:loadList(f, no_default, nil, new_mod or mod, nil)
+		loadList = function(f, new_mod, list, loaded)
+			return self:loadList(f, no_default, list, new_mod or mod, loaded)
 		end,
 	}
 	setfenv(f, setmetatable(newenv, {__index=_G}))

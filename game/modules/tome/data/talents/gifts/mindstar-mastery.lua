@@ -60,9 +60,9 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local inc = t.getPercentInc(self, t)
 		return ([[Channel your mental power through your wielded mindstars, generating psionic blades sprouting from the mindstars.
-		Mindstar psiblades have their damage modifiers (how much damage they gain from stats) increased to %d%% and their armour penetration by %d%%.
+		Mindstar psiblades have their damage modifiers (how much damage they gain from stats) multiplied by %0.2f and their armour penetration by %0.2f.
 		Also increases Physical Power by %d and increases weapon damage by %d%% when using mindstars.]]):
-		format(100 * (1.3 + self:getTalentLevel(t) / 10), 100 * (1 + self:getTalentLevel(t) / 6.3), damage, 100 * inc)
+		format(1 * (1.3 + self:getTalentLevel(t) / 10), 1 * (1 + self:getTalentLevel(t) / 6.3), damage, 100 * inc)
 	end,
 }
 

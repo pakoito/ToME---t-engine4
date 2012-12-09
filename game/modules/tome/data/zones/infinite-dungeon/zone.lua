@@ -66,21 +66,6 @@ return {
 		},
 	},
 	post_process = function(level)
-		-- Everything hates you in the infinite dungeon!
-		for uid, e in pairs(level.entities) do e.faction = e.hard_faction or "enemies" end
-
-		-- Some lore
-		if level.level == 1 or level.level == 10 or level.level == 20 or level.level == 30 or level.level == 40 then
-			local l = game.zone:makeEntityByName(level, "terrain", "ID_HISTORY"..level.level)
-			if not l then return end
-			for _, coord in pairs(util.adjacentCoords(level.default_up.x, level.default_up.y)) do
-				if game.level.map:isBound(coord[1], coord[2]) and (i ~= 0 or j ~= 0) and not game.level.map:checkEntity(coord[1], coord[2], engine.Map.TERRAIN, "block_move") then
-					game.zone:addEntity(level, l, "terrain", coord[1], coord[2])
-					return
-				end
-			end
-		end
-
 		-- Provide some achievements
 		if level.level == 10 then world:gainAchievement("INFINITE_X10", game.player)
 		elseif level.level == 20 then world:gainAchievement("INFINITE_X20", game.player)
@@ -97,6 +82,21 @@ return {
 		elseif level.level == 300 then world:gainAchievement("INFINITE_X300", game.player)
 		elseif level.level == 400 then world:gainAchievement("INFINITE_X400", game.player)
 		elseif level.level == 500 then world:gainAchievement("INFINITE_X500", game.player)
+		end
+
+		-- Everything hates you in the infinite dungeon!
+		for uid, e in pairs(level.entities) do e.faction = e.hard_faction or "enemies" end
+
+		-- Some lore
+		if level.level == 1 or level.level == 10 or level.level == 20 or level.level == 30 or level.level == 40 then
+			local l = game.zone:makeEntityByName(level, "terrain", "ID_HISTORY"..level.level)
+			if not l then return end
+			for _, coord in pairs(util.adjacentCoords(level.default_up.x, level.default_up.y)) do
+				if game.level.map:isBound(coord[1], coord[2]) and (i ~= 0 or j ~= 0) and not game.level.map:checkEntity(coord[1], coord[2], engine.Map.TERRAIN, "block_move") then
+					game.zone:addEntity(level, l, "terrain", coord[1], coord[2])
+					return
+				end
+			end
 		end
 	end,
 }
