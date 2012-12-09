@@ -71,7 +71,7 @@ newTalent{
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 180) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 280) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local grids = self:project(tg, self.x, self.y, DamageType.COLDNEVERMOVE, {dur=4, dam=self:spellCrit(t.getDamage(self, t))})
@@ -98,7 +98,7 @@ newTalent{
 	tactical = { ATTACKAREA = { COLD = function(self, t, target) if target:attr("frozen") then return 2 end return 0 end } },
 	range = 10,
 	requires_target = true,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 180) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 320) end,
 	getTargetCount = function(self, t) return math.ceil(self:getTalentLevel(t) + 2) end,
 	action = function(self, t)
 		local max = t.getTargetCount(self, t)
@@ -117,7 +117,7 @@ newTalent{
 				if not act.dead then
 					local add_crit = 0
 					if act.rank == 2 then add_crit = 50
-					elseif act.rank == 3 then add_crit = 10 end
+					elseif act.rank >= 3 then add_crit = 25 end
 					local tg = {type="hit", friendlyfire=false, talent=t}
 					local grids = self:project(tg, act.x, act.y, DamageType.COLD, self:spellCrit(t.getDamage(self, t), add_crit))
 					game.level.map:particleEmitter(act.x, act.y, tg.radius, "ball_ice", {radius=1})
@@ -137,7 +137,7 @@ newTalent{
 		Depending on the target's rank, there will also be an additional effect:
 		* Critters will be instantly killed
 		* +50%% critical chance against Normal rank
-		* +10%% critical chance against Elites
+		* +25%% critical chance against Elites or Bosses
 		At most it will affect %d foes.
 		The damage will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.COLD, damage), targetcount)

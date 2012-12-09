@@ -352,6 +352,12 @@ You have heard of such items before. They are very useful to adventurers, allowi
 			return true
 		end
 	end,
+
+	on_pickup = function(self, who)
+		if who == game.player then
+			require("engine.ui.Dialog"):simplePopup("Rod of Recall", "You found a Rod of Recall, you can use it to quickly get out of your current zone and return to the worldmap.")
+		end
+	end,
 }
 
 newEntity{ base = "BASE_ROD",
