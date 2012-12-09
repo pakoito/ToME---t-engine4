@@ -100,6 +100,7 @@ newEntity{ base = "BASE_NPC_XORN",
 	max_life = 230, life_rating = 12,
 	combat_armor = 15, combat_def = 10,
 	combat = { damtype=DamageType.ACID },
+	timetravel_immune = 1,
 
 	ai = "tactical",
 	ai_tactic = resolvers.tactic"melee",

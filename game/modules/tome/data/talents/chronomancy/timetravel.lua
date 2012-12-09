@@ -74,6 +74,12 @@ newTalent{
 		local _ _, x, y = self:canProject(tg, x, y)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if not target then return end
+
+		if target:attr("timetravel_immune") then
+			game.logSeen(target, "%s is immune!", target.name:capitalize())
+			return
+		end
+
 		local hit = self:checkHit(self:combatSpellpower(), target:combatSpellResist() + (target:attr("continuum_destabilization") or 0))
 		if not hit then game.logSeen(target, "%s resists!", target.name:capitalize()) return true end
 		
