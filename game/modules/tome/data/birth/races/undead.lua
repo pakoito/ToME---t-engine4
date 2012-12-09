@@ -57,7 +57,7 @@ newBirthDescriptor{
 		-- Force undead faction to undead
 		resolvers.genericlast(function(e) e.faction = "undead" end),
 		starting_zone = "blighted-ruins",
-		starting_level = 4, starting_level_force_down = true,
+		starting_level = 3, starting_level_force_down = true,
 		starting_quest = "start-undead",
 		undead = 1,
 		forbid_nature = 1,

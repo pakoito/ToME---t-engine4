@@ -21,7 +21,7 @@ return {
 	name = "Blighted Ruins",
 	level_range = {1, 8},
 	level_scheme = "player",
-	max_level = 4,
+	max_level = 3,
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + (zone.max_level - level.level) + rng.range(-1,2) end,
 	level_adjust_level = function(zone, level) return zone.base_level + (zone.max_level - level.level) end,
@@ -69,7 +69,7 @@ return {
 				up = "UP_WILDERNESS",
 			}, },
 		},
-		[4] = {
+		[3] = {
 			no_level_connectivity = true,
 			generator = { map = {
 				class = "engine.generator.map.Static",
@@ -77,23 +77,9 @@ return {
 			}, },
 		},
 	},
-	on_enter = function(_, _, newzone)
-		if newzone and not game.zone.created_lore then
-			local levels = {2,3,4,5,6}
-			game.zone.created_lore = {}
-			for i = 1, 4 do
-				local lev = rng.tableRemove(levels)
-				game.zone.created_lore[lev] = i
-				print("Lore "..i.." on level "..lev)
-			end
-		end
-	end,
 	post_process = function(level)
 		-- Put lore near the up stairs
-		if game.zone.created_lore and game.zone.created_lore[level.level] then
-			-- Place a lore note on the level
-			game:placeRandomLoreObject("NOTE"..game.zone.created_lore[level.level])
-		end
+		game:placeRandomLoreObjectScale("NOTE", 5, level.level)
 
 		game.state:makeAmbientSounds(level, {
 			dungeon2={ chance=250, volume_mod=1, pitch=1, random_pos={rad=10}, files={"ambient/dungeon/dungeon1","ambient/dungeon/dungeon2","ambient/dungeon/dungeon3","ambient/dungeon/dungeon4","ambient/dungeon/dungeon5"}},
