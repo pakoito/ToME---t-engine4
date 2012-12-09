@@ -142,6 +142,9 @@ newTalent{
 		return {type="hit", range=self:getTalentRange(t), talent=t}
 	end,
 	doBacklash = function(self, target, value, t)
+		if self.turn_procs.psi_backlash and self.turn_procs.psi_backlash[target.uid] then return nil end
+		self.turn_procs.psi_backlash = self.turn_procs.psi_backlash or {}
+		self.turn_procs.psi_backlash[target.uid] = true
 		self.no_backlash_loops = true
 		if core.fov.distance(self.x, self.y,target.x, target.y) > self:getTalentRange(t) then return nil end
 		local tg = self:getTalentTarget(t)
@@ -165,6 +168,7 @@ newTalent{
 		local range = self:getTalentRange(t)
 		local damage = t.getDamage(self, t)
 		return ([[Your subconscious now retaliates when you take damage.  If the attacker is within range (%d) you'll inflict mind damage equal to the Feedback gained from the attack or %0.2f, whichever is lower.
+		This effect can only happen once per creature per turn.
 		The damage will scale with your mindpower.]]):format(range, damDesc(self, DamageType.MIND, damage))
 	end,
 }
