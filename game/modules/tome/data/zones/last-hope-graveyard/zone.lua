@@ -142,6 +142,10 @@ return {
 	end,
 
 	open_all_coffins = function(who, celia)
+		for i = 0, game.level.map.w - 1 do for j = 0, game.level.map.h - 1 do
+			game.level.map.attrs(i, j, "no_teleport", false)
+		end end
+
 		local floor = game.zone:makeEntityByName(game.level, "terrain", "FLOOR")
 		local coffin_open = game.zone:makeEntityByName(game.level, "terrain", "COFFIN_OPEN")
 		local spot = game.level:pickSpotRemove{type="door", subtype="chamber"}

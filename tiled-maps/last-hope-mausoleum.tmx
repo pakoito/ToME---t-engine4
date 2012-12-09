@@ -22,6 +22,11 @@
     <property name="display" value="#"/>
    </properties>
   </tile>
+  <tile id="38">
+   <properties>
+    <property name="display" value=";"/>
+   </properties>
+  </tile>
   <tile id="73">
    <properties>
     <property name="display" value="&gt;"/>
@@ -40,7 +45,7 @@
  </tileset>
  <layer name="Terrain" width="50" height="25">
   <data encoding="base64" compression="zlib">
-   eJztlkEKwCAMBJO7IP6r/v87tuClYMBoIzbuYZBVD06CYiKiBAAAP4Jvch0t8koPpvc5vszw2NODFcy4WOeW50MQ1kc8onFu1TwI89q+XMpejxI790lep/TD2/3w8l6t8rDGk4eH/xUAAOxOAWBHRis=
+   eJwTZGBgEBzFo3gUj+IhhBmB2BdK04JPT38wMqC6g5r8UX8MTn+ok4Ap8Qst+cjuQ3czDw55cvzBT2M+tjDnwSFOarz4MKCmAVphfiLci89fIyU+hlv+GC7l1Wj9Mfj8MRzaV6N4FI/iUTzYMQCv4lJX
   </data>
  </layer>
  <objectgroup name="Actor" width="50" height="25">
