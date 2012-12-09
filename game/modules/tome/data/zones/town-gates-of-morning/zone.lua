@@ -34,6 +34,7 @@ return {
 
 	min_material_level = 3,
 	max_material_level = 4,
+	store_levels_by_restock = { 8, 40, 50 },
 
 	generator =  {
 		map = {

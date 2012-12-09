@@ -33,6 +33,7 @@ return {
 	ambient_music = {"For the king and the country!.ogg", "weather/town_large_base.ogg"},
 
 	max_material_level = 3,
+	store_levels_by_restock = { 20, 35, 45 },
 
 	generator =  {
 		map = {

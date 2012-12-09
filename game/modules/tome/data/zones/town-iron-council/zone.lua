@@ -32,6 +32,7 @@ return {
 	ambient_music = {"Virtue lost.ogg", "weather/town_large_base.ogg"},
 
 	max_material_level = 2,
+	store_levels_by_restock = { 8, 25, 40 },
 
 	generator =  {
 		map = {

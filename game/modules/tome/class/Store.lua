@@ -64,9 +64,19 @@ end
 -- @param level the level to generate for (instance of type engine.Level)
 -- @param zone the zone to generate for
 function _M:loadup(level, zone)
+	local oldlev = zone.base_level
+
+	if zone.store_levels_by_restock then
+		zone.base_level = zone.store_levels_by_restock[game.state.stores_restock] or zone.base_level
+	end
+
+	print("STORE LEVEL ===================================================", zone.base_level)
 	if Store.loadup(self, level, zone, self.store.nb_fill) then
 		self.last_filled = game.state.stores_restock
 	end
+
+	zone.base_level = oldlev
+
 	-- clear chrono worlds and their various effects
 	if game._chronoworlds then
 		game.log("#CRIMSON#Your timetravel has no effect on pre-determined outcomes such as this.")
