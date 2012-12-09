@@ -104,7 +104,6 @@ end
 -- @return true if an achievement was gained
 function _M:gainAchievement(id, src, ...)
 	local a = self.achiev_defs[id]
-	print("=============== ach", id, a)
 	if not a then error("Unknown achievement "..id) return end
 
 	if self.achieved[id] and src.achievements and src.achievements[id] then return end
