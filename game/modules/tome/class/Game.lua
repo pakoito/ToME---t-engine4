@@ -786,6 +786,7 @@ function _M:changeLevelReal(lev, zone, params)
 			if lev > old_lev and not params.force_down then x, y = self.level.default_up.x, self.level.default_up.y
 			else x, y = self.level.default_down.x, self.level.default_down.y
 			end
+			if not x then x, y = self.level.default_up.x, self.level.default_up.y end
 		end
 
 		-- Check if there is already an actor at that location, if so move it
