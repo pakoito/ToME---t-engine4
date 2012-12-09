@@ -2073,7 +2073,7 @@ newEffect{
 	activate = function(self, eff)
 		self:effectTemporaryValue(eff, "resists", {[DamageType.BLIGHT]=-10})
 		self:effectTemporaryValue(eff, "inc_damage", {[DamageType.BLIGHT]=10})
-		self:effectTemporaryValue(eff, "stone_immune", -0.2)
+		self:effectTemporaryValue(eff, "disease_immune", -0.2)
 		self:effectTemporaryValue(eff, "healing_factor", -0.2)
 	end,
 	deactivate = function(self, eff)
