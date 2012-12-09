@@ -78,7 +78,7 @@ function _M:learnLore(lore, nopopup, silent, nostop)
 	if not l then return end
 	local learnt = false
 
-	if not config.settings.tome.lore_popup and profile.mod.lore and profile.mod.lore.lore and profile.mod.lore.lore[lore] then nopopup = true end
+	if not config.settings.tome.lore_popup and profile.mod.lore and profile.mod.lore.lore and profile.mod.lore.lore[lore] and not l.always_pop then nopopup = true end
 
 	if not self:knownLore(lore) or l.always_pop then
 		game.logPlayer(self, "Lore found: #0080FF#%s", l.name)
