@@ -436,7 +436,8 @@ function _M:randomName()
 end
 
 function _M:on_focus(id, ui)
-	if self.focus_ui and self.focus_ui.ui == self.c_female then self.c_desc:switchItem(self.c_female, self.birth_descriptor_def.sex.Female.desc)
+	if self.focus_ui and self.focus_ui.ui == self.c_name then self.c_desc:switchItem(self.c_name, "This is the name of your character.\nRight mouse click to generate a random name based on race and sex.")
+	elseif self.focus_ui and self.focus_ui.ui == self.c_female then self.c_desc:switchItem(self.c_female, self.birth_descriptor_def.sex.Female.desc)
 	elseif self.focus_ui and self.focus_ui.ui == self.c_male then self.c_desc:switchItem(self.c_male, self.birth_descriptor_def.sex.Male.desc)
 	elseif self.focus_ui and self.focus_ui.ui == self.c_campaign then
 		local item = self.c_campaign.c_list.list[self.c_campaign.c_list.sel]
