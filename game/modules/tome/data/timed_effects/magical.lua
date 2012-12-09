@@ -2092,3 +2092,53 @@ newEffect{
 		game.level.map:updateMap(self.x, self.y)
 	end,
 }
+
+newEffect{
+	name = "SHIVGOROTH_FORM", image = "shockbolt/npc/elemental_void_losgoroth_corrupted.png",
+	desc = "Shivgoroth Form",
+	long_desc = function(self, eff) return ("The target assumes the form of a shivgoroth."):format() end,
+	type = "magical",
+	subtype = { ice=true },
+	status = "beneficial",
+	parameters = {},
+	on_gain = function(self, err) return "#Target# turns into a shivgoroth!", "+Shivgoroth Form" end,
+	on_lose = function(self, err) return "#Target# is no longer transformed.", "-Shivgoroth Form" end,
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "damage_affinity", {[DamageType.COLD]=50 + 100 * eff.power})
+		self:effectTemporaryValue(eff, "resists", {[DamageType.COLD]=100 * eff.power / 2})
+		self:effectTemporaryValue(eff, "no_breath", 1)
+		self:effectTemporaryValue(eff, "cut_immune", eff.power)
+		self:effectTemporaryValue(eff, "stun_immune", eff.power)
+
+		if self.hotkey then
+			local pos = self:isHotkeyBound("talent", self.T_SHIVGOROTH_FORM)
+			if pos then
+				self.hotkey[pos] = {"talent", self.T_ICE_STORM}
+			end
+		end
+
+		local ohk = self.hotkey
+		self.hotkey = nil -- Prevent assigning hotkey, we just did
+		self:learnTalent(self.T_ICE_STORM, true, eff.lvl)
+		self.hotkey = ohk
+
+		self.replace_display = mod.class.Actor.new{
+			image = "npc/elemental_void_losgoroth_corrupted.png",
+		}
+		self:removeAllMOs()
+		game.level.map:updateMap(self.x, self.y)
+	end,
+	deactivate = function(self, eff)
+		if self.hotkey then
+			local pos = self:isHotkeyBound("talent", self.T_ICE_STORM)
+			if pos then
+				self.hotkey[pos] = {"talent", self.T_SHIVGOROTH_FORM}
+			end
+		end
+
+		self:unlearnTalent(self.T_ICE_STORM, eff.lvl)
+		self.replace_display = nil
+		self:removeAllMOs()
+		game.level.map:updateMap(self.x, self.y)
+	end,
+}

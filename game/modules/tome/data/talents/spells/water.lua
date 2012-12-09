@@ -140,9 +140,37 @@ newTalent{
 }
 
 newTalent{
-	name = "Ice Storm",
+	name = "Shivgoroth Form",
 	type = {"spell/water",4},
 	require = spells_req4,
+	points = 5,
+	random_ego = "attack",
+	mana = 25,
+	cooldown = 20,
+	tactical = { BUFF = 3, ATTACKAREA = { COLD = 0.5, PHYSICAL = 0.5 }, DISABLE = { knockback = 1 } },
+	direct_hit = true,
+	range = 10,
+	requires_target = true,
+	getDuration = function(self, t) return 4 + math.ceil(self:getTalentLevel(t)) end,
+	getPower = function(self, t) return util.bound(50 + self:combatTalentSpellDamage(t, 50, 450), 0, 500) / 500 end,
+	action = function(self, t)
+		self:setEffect(self.EFF_SHIVGOROTH_FORM, t.getDuration(self, t), {power=t.getPower(self, t), lvl=self:getTalentLevelRaw(t)})
+		game:playSoundNear(self, "talents/tidalwave")
+		return true
+	end,
+	info = function(self, t)
+		local power = t.getPower(self, t)
+		local dur = t.getDuration(self, t)
+		return ([[You absorb latent cold around you, turning into an ice elemental - a shivgoroth - for %d turns.
+		While transformed you gain access to the Ice Storm talent level %d, %d%% resistance to cuts and stuns, %d%% cold resistance, you do not need to breath and all cold damage heals you for %d%% of the damage done.
+		The power will increase with your Spellpower.]]):
+		format(dur, self:getTalentLevelRaw(t), power * 100, power * 100 / 2, 50 + power * 100)
+	end,
+}
+
+newTalent{
+	name = "Ice Storm",
+	type = {"spell/other",1},
 	points = 5,
 	random_ego = "attack",
 	mana = 25,
