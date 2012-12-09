@@ -27,6 +27,12 @@ newTalent{
 	cooldown = 30,
 	tactical = { BUFF = 2 },
 	activate = function(self, t)
+		if not self:hasQuest("lichform") and not self:attr("undead") then
+			self:grantQuest("lichform")
+			if game.state.birth.campaign_name ~= "maj-eyal" then self:setQuestStatus("lichform", engine.Quest.DONE) end
+			require("engine.ui.Dialog"):simplePopup("Lichform", "You have mastered the lesser arts of overcoming death, but your true goal is before you: the true immortality of Lichform!")
+		end
+
 		local ret = {
 			die_at = self:addTemporaryValue("die_at", -50 * self:getTalentLevelRaw(t)),
 		}

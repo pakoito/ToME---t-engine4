@@ -258,9 +258,5 @@ newBirthDescriptor{
 	},
 	copy_add = {
 		life_rating = -3,
-		resolvers.generic(function(self)
-			self:grantQuest("lichform")
-			if game.state.birth.campaign_name ~= "maj-eyal" then self:setQuestStatus("lichform", engine.Quest.DONE) end
-		end),
 	},
 }
