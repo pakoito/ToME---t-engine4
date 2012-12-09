@@ -998,7 +998,9 @@ function _M:combatAttack(weapon, ammo)
 	elseif weapon and weapon.wil_attack then stats = self:getWil(100, true) - 10
 	else stats = self:getDex(100, true) - 10
 	end
-	return self:rescaleCombatStats(self:combatAttackBase(weapon, ammo) + stats)
+	local d = self:combatAttackBase(weapon, ammo) + stats
+	if self:attr("dazed") then d = d / 2 end
+	return self:rescaleCombatStats(d)
 end
 
 function _M:combatAttackRanged(weapon, ammo)
@@ -1007,22 +1009,29 @@ function _M:combatAttackRanged(weapon, ammo)
 	elseif weapon and weapon.wil_attack then stats = self:getWil(100, true) - 10
 	else stats = self:getDex(100, true) - 10
 	end
+	if self:attr("dazed") then d = d / 2 end
 	return self:rescaleCombatStats(self:combatAttackBase(weapon, ammo) + stats + (self.combat_atk_ranged or 0))
 end
 
 --- Gets the attack using only strength
 function _M:combatAttackStr(weapon, ammo)
-	return self:rescaleCombatStats(self:combatAttackBase(weapon, ammo) + (self:getStr(100, true) - 10))
+	local d = self:combatAttackBase(weapon, ammo) + (self:getStr(100, true) - 10)
+	if self:attr("dazed") then d = d / 2 end
+	return self:rescaleCombatStats(d)
 end
 
 --- Gets the attack using only dexterity
 function _M:combatAttackDex(weapon, ammo)
-	return self:rescaleCombatStats(self:combatAttackBase(weapon, ammo) + (self:getDex(100, true) - 10))
+	local d = self:combatAttackBase(weapon, ammo) + (self:getDex(100, true) - 10)
+	if self:attr("dazed") then d = d / 2 end
+	return self:rescaleCombatStats(d)
 end
 
 --- Gets the attack using only magic
 function _M:combatAttackMag(weapon, ammo)
-	return self:rescaleCombatStats(self:combatAttackBase(weapon, ammo) + (self:getMag(100, true) - 10))
+	local d = self:combatAttackBase(weapon, ammo) + (self:getMag(100, true) - 10)
+	if self:attr("dazed") then d = d / 2 end
+	return self:rescaleCombatStats(d)
 end
 
 --- Gets the armor penetration
@@ -1138,6 +1147,7 @@ function _M:combatPhysicalpower(mod, weapon, add)
 	add = add + 10 * self:combatCheckTraining(weapon)
 
 	local d = (self.combat_dam > 0 and self.combat_dam or 0) + add + self:getStr()
+	if self:attr("dazed") then d = d / 2 end
 	return self:rescaleCombatStats(d) * mod
 end
 
@@ -1167,6 +1177,7 @@ function _M:combatSpellpower(mod, add)
 	if self:attr("spellpower_reduction") then am = 1 / (1 + self:attr("spellpower_reduction")) end
 
 	local d = (self.combat_spellpower > 0 and self.combat_spellpower or 0) + add + self:getMag()
+	if self:attr("dazed") then d = d / 2 end
 	return self:rescaleCombatStats(d) * mod * am
 end
 
@@ -1428,6 +1439,7 @@ function _M:combatMindpower(mod, add)
 	end
 
 	local d = (self.combat_mindpower > 0 and self.combat_mindpower or 0) + add + self:getWil() * 0.7 + self:getCun() * 0.4
+	if self:attr("dazed") then d = d / 2 end
 	return self:rescaleCombatStats(d) * mod
 end
 

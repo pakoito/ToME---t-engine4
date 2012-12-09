@@ -386,7 +386,7 @@ newEffect{
 newEffect{
 	name = "DAZED", image = "effects/dazed.png",
 	desc = "Dazed",
-	long_desc = function(self, eff) return "The target is dazed, rendering it unable to move, halving all damage done, defense and saves. Any damage will remove the daze." end,
+	long_desc = function(self, eff) return "The target is dazed, rendering it unable to move, halving all damage done, defense, saves, accuracy, spell, mind and physical power. Any damage will remove the daze." end,
 	type = "physical",
 	subtype = { stun=true },
 	status = "detrimental",
