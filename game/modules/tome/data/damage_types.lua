@@ -2252,7 +2252,7 @@ newDamageType{
 		if target then
 			if src:reactionToward(target) < 0 then
 				local reapplied = target:hasEffect(target.EFF_CUT)
-				target:setEffect(target.EFF_CUT, 2, { power=dam.dam }, reapplied)
+				target:setEffect(target.EFF_CUT, 2, { power=dam.dam, src=src }, reapplied)
 			else
 				local reapplied = target:hasEffect(target.EFF_LEAVES_COVER)
 				target:setEffect(target.EFF_LEAVES_COVER, 1, { power=dam.chance }, reapplied)

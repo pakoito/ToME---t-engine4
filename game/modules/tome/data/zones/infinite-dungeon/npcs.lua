@@ -34,6 +34,7 @@ local function loadOuter(file)
 			e.can_talk = nil
 			e.on_acquire_target = nil
 		end
+--	end, {ignore_loaded=true, import_source=loading_list}, loaded)
 	end)
 	for i, e in ipairs(list) do
 		if e.allow_infinite_dungeon then

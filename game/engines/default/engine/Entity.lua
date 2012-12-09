@@ -848,8 +848,10 @@ function _M:loadList(file, no_default, res, mod, loaded)
 		newEntity = function(t)
 			-- Do we inherit things ?
 			if t.base then
-				local temp = table.clone(res[t.base], true, {uid=true, define_as = true})
-				if res[t.base].onEntityMerge then res[t.base]:onEntityMerge(temp) end
+				local base = res[t.base]
+				if not base and res.import_source then base = res.import_source[t.base] end
+				local temp = table.clone(base, true, {uid=true, define_as = true})
+				if base.onEntityMerge then base:onEntityMerge(temp) end
 				table.mergeAppendArray(temp, t, true)
 				t = temp
 				t.base = nil
