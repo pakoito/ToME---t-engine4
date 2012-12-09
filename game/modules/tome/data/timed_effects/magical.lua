@@ -2094,7 +2094,7 @@ newEffect{
 }
 
 newEffect{
-	name = "SHIVGOROTH_FORM", image = "shockbolt/npc/elemental_void_losgoroth_corrupted.png",
+	name = "SHIVGOROTH_FORM", image = "talents/shivgoroth_form.png",
 	desc = "Shivgoroth Form",
 	long_desc = function(self, eff) return ("The target assumes the form of a shivgoroth."):format() end,
 	type = "magical",
@@ -2123,7 +2123,7 @@ newEffect{
 		self.hotkey = ohk
 
 		self.replace_display = mod.class.Actor.new{
-			image = "npc/elemental_void_losgoroth_corrupted.png",
+			image = "npc/elemental_ice_shivgoroth.png",
 		}
 		self:removeAllMOs()
 		game.level.map:updateMap(self.x, self.y)
