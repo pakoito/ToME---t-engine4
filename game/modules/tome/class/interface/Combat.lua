@@ -1009,8 +1009,9 @@ function _M:combatAttackRanged(weapon, ammo)
 	elseif weapon and weapon.wil_attack then stats = self:getWil(100, true) - 10
 	else stats = self:getDex(100, true) - 10
 	end
+	local d = self:combatAttackBase(weapon, ammo) + stats + (self.combat_atk_ranged or 0)
 	if self:attr("dazed") then d = d / 2 end
-	return self:rescaleCombatStats(self:combatAttackBase(weapon, ammo) + stats + (self.combat_atk_ranged or 0))
+	return self:rescaleCombatStats(d)
 end
 
 --- Gets the attack using only strength
