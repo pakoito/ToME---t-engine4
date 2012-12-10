@@ -3063,9 +3063,10 @@ newEntity{ base = "BASE_MINDSTAR",
 		dammod = {wil=0.4, cun=0.1, str=0.2},
 		damtype=DamageType.PHYSICAL,
 		convert_damage = {
-			[DamageType.COLD] = 25,
-			[DamageType.FIRE] = 25,
-			[DamageType.LIGHTNING] = 25,
+			[DamageType.COLD] = 18,
+			[DamageType.FIRE] = 18,
+			[DamageType.ACID] = 18,
+			[DamageType.LIGHTNING] = 18,
 		},
 	},
 	wielder = {
@@ -3076,11 +3077,13 @@ newEntity{ base = "BASE_MINDSTAR",
 			[DamageType.FIRE] 	= 8,
 			[DamageType.COLD] 	= 8,
 			[DamageType.LIGHTNING] 	= 8,
+			[DamageType.ACID] 	= 8,
 		},
 		resists={
 			[DamageType.PHYSICAL] 	= 8,
 			[DamageType.FIRE] 	= 8,
 			[DamageType.COLD] 	= 8,
+			[DamageType.ACID] 	= 8,
 			[DamageType.LIGHTNING] 	= 8,
 		},
 		talents_types_mastery = {
@@ -3088,6 +3091,7 @@ newEntity{ base = "BASE_MINDSTAR",
 			["wild-gift/fire-drake"] = 0.1,
 			["wild-gift/cold-drake"] = 0.1,
 			["wild-gift/storm-drake"] = 0.1,
+			["wild-gift/venom-drake"] = 0.1,
 		}
 	},
 	on_wear = function(self, who)
@@ -3105,7 +3109,7 @@ newEntity{ base = "BASE_MINDSTAR",
 		if game.level and not game.level:hasEntity(self.worn_by) and not self.worn_by.player then self.worn_by = nil return end
 		if self.worn_by:attr("dead") then return end
 		if not rng.percent(25)  then return end
-		self.use_talent.id=rng.table{ "T_FIRE_BREATH", "T_ICE_BREATH", "T_LIGHTNING_BREATH", "T_SAND_BREATH" }
+		self.use_talent.id=rng.table{ "T_FIRE_BREATH", "T_ICE_BREATH", "T_LIGHTNING_BREATH", "T_SAND_BREATH", "T_CORROSIVE_BREATH" }
 		game.logSeen(self.worn_by, "#GOLD#The %s shifts colour!", self.name:capitalize())
 	end,
 	max_power = 30, power_regen = 1,
@@ -3123,7 +3127,7 @@ newEntity{ base = "BASE_MINDSTAR",
 			return {id=true, used=true}
 		end
 	},]]
-	use_talent = { id = rng.table{ Talents.T_FIRE_BREATH, Talents.T_ICE_BREATH, Talents.T_LIGHTNING_BREATH, Talents.T_SAND_BREATH }, level = 4, power = 30 }
+	use_talent = { id = rng.table{ Talents.T_FIRE_BREATH, Talents.T_ICE_BREATH, Talents.T_LIGHTNING_BREATH, Talents.T_SAND_BREATH, Talents.T_CORROSIVE_BREATH }, level = 4, power = 30 }
 }
 
 newEntity{ base = "BASE_MINDSTAR",
