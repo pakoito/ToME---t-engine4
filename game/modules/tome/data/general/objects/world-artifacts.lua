@@ -3103,14 +3103,14 @@ newEntity{ base = "BASE_MINDSTAR",
 	act = function(self)
 		self:useEnergy()
 		if self.power < self.max_power then
-		self.power=self.power + 1
+			self.power=self.power + 1
 		end
 		if not self.worn_by then return end
 		if game.level and not game.level:hasEntity(self.worn_by) and not self.worn_by.player then self.worn_by = nil return end
 		if self.worn_by:attr("dead") then return end
 		if not rng.percent(25)  then return end
 		self.use_talent.id=rng.table{ "T_FIRE_BREATH", "T_ICE_BREATH", "T_LIGHTNING_BREATH", "T_SAND_BREATH", "T_CORROSIVE_BREATH" }
-		game.logSeen(self.worn_by, "#GOLD#The %s shifts colour!", self.name:capitalize())
+--		game.logSeen(self.worn_by, "#GOLD#The %s shifts colour!", self.name:capitalize())
 	end,
 	max_power = 30, power_regen = 1,
 	--[[use_power = { name = "release a random breath", power = 40,
