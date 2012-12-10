@@ -44,7 +44,7 @@ if zone == "Maj'Eyal" then
 
 	-- Spawn random encounters
 	local g = game.level.map(game.player.x, game.player.y, Map.TERRAIN)
-	if g and g.can_encounter then
+	if g and g.can_encounter and not game.player.no_worldmap_encounter then
 		local type = encounter_chance(game.player)
 		if type then
 			game.level:setEntitiesList("maj_eyal_encounters_rng", game.zone:computeRarities("maj_eyal_encounters_rng", game.level:getEntitiesList("maj_eyal_encounters"), game.level, nil))
