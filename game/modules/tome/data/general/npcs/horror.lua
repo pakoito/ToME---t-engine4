@@ -695,7 +695,7 @@ With each slow breath it takes reality distorts around it.  Blue twirls into red
 	--	[Talents.T_SLUMBER]={base=4, every=6, max=8},
 		[Talents.T_SLEEP]={base=4, every=6, max=8},
 	--	[Talents.T_RESTLESS_NIGHT]={base=4, every=6, max=8},
-		[Talents.T_DREAMSCAPE]=10,
+		[Talents.T_DREAMSCAPE]={base=4, every=5, max=10},
 		
 		-- Summon Dream Seeds while awake
 		[Talents.T_SUMMON]=1,
