@@ -150,6 +150,7 @@ newTalent{
 	tactical = { BUFF = 3, ATTACKAREA = { COLD = 0.5, PHYSICAL = 0.5 }, DISABLE = { knockback = 1 } },
 	direct_hit = true,
 	range = 10,
+	no_energy = true,
 	requires_target = true,
 	getDuration = function(self, t) return 4 + math.ceil(self:getTalentLevel(t)) end,
 	getPower = function(self, t) return util.bound(50 + self:combatTalentSpellDamage(t, 50, 450), 0, 500) / 500 end,

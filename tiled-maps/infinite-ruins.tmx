@@ -38,6 +38,12 @@
     <property name="value" value="&quot;PORTAL&quot;"/>
    </properties>
   </tile>
+  <tile id="60">
+   <properties>
+    <property name="display" value="&amp;"/>
+    <property name="value" value="&quot;GUARDIAN&quot;"/>
+   </properties>
+  </tile>
   <tile id="70">
    <properties>
     <property name="display" value="&gt;"/>
@@ -88,51 +94,27 @@
   </tile>
  </tileset>
  <layer name="Terrain" width="50" height="50">
-  <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+2YS27DMAxEla1XOUPPUMBHyCaHb5MLFV4EMBRT/MxQagwtCMeGJfFxSErOpZRyAex+YDfhObJOtm3+fRtsckwOlON5Eo5P1UNjifSr1nwjWKI9dwTHnmWzr2LbNyQ/l4Nna5ADYdfGWWLL0APV0sKRnVesOKAcqNV+a3kr5fZSZP5sjrqWGHqM4GAwaBw9eifqv5Ujm4EVr5qj5z7GjsVoHybH5PgPdlTDjN49OeK+a+cS9LyG+KW9j+rRi6O1Tg+OiH7bO/vvN228R6/IO9F8XMv7f5hIbls5NJN8Wk+uB1IfGRxIfSB5Y6nzCGu2nYlDsh77IDrewmXVgxXDT+BoabkK8zIZmX5b4uYdn8nhWbfVO/ZajeJg5MFIPX5JHKx4ROdi9h6px7TuW3U4OobWa2t9r1+LUzdLDC3Xo99ejsgez+TQNIn6xOCQ9mKLDvt5X2eqh8On+psH5dB08dRGzdWymsMyRuOQdPH2qqy8stRcJPbomlGOH0cMmXHycHjyarNrgm8j7Q9PRrZcECcAAA==
+  <data encoding="base64" compression="zlib">
+   eJztmE1uAyEMhck2q56hZ6jU1ay7yeH7c6GKRSREwLznHwijLKzJTAL487MNk0tK6WKwW8O+Os8t60Rb9u8DsBfHi8PK8XcSjl31GLFo+pU03woWbc9dwVGyZHtP2L7R8/PaeHYoOSzso3FIbD30YMcidc5wenBoxufvPgtr3bMcVqv9lvI2Ug+L1bWk9QXJwxlajBgsHDN6J+K/B0c0AxOvZ+dgeM/CIe3FrT15Vm3M0Gon25GjlTNo734m25lDOn8gdR7Fxa4hna1QPWZxoHtAFIdGv/yb8v3NcrZCY42cwdj4HunxP0xLbqMcI+v5dJxcD0t9RHBY6sOSN0ida1ij7UwcPZuxD1rHI1yoHl4x3IFD0vLozOvJ6Ok3Ejd2fCQHs67UO0qtVnF45MFKPX6cOLzioZ3Ls/f0eox0L9Xh6hiiV2l91q8rqRsSQ+Ta+sxyaPZ4T46RJlqfPDh6ezGiQznv/Uz1S/hUv/NYOUa6MLVRc0lWcyBjRhw9XdheFZVXSM1pYm9dU8vxTcTQM04MB5NX2d4CfFtp/xYOmS0=
   </data>
  </layer>
  <objectgroup name="addSpot" width="50" height="50">
-  <object name="Portal" x="1349" y="261" width="21" height="21">
+  <object name="Portal" x="587" y="358" width="78" height="21">
    <properties>
-    <property name="subtype" value="portal"/>
-    <property name="type" value="portal"/>
-   </properties>
-  </object>
-  <object name="Portal" x="1446" y="869" width="21" height="21">
-   <properties>
-    <property name="subtype" value="portal"/>
-    <property name="type" value="portal"/>
-   </properties>
-  </object>
-  <object name="Portal" x="1476" y="1093" width="21" height="21">
-   <properties>
-    <property name="subtype" value="portal"/>
-    <property name="type" value="portal"/>
-   </properties>
-  </object>
-  <object name="Portal" x="100" y="1188" width="21" height="21">
-   <properties>
-    <property name="subtype" value="portal"/>
-    <property name="type" value="portal"/>
-   </properties>
-  </object>
-  <object name="Portal" x="100" y="420" width="21" height="21">
-   <properties>
-    <property name="subtype" value="portal"/>
-    <property name="type" value="portal"/>
-   </properties>
-  </object>
-  <object name="Portal" x="36" y="871" width="21" height="21">
-   <properties>
-    <property name="subtype" value="portal"/>
-    <property name="type" value="portal"/>
+    <property name="subtype" value="&quot;portal&quot;"/>
+    <property name="type" value="&quot;portal&quot;"/>
    </properties>
   </object>
   <object name="Sealed door" x="677" y="261" width="22" height="22">
    <properties>
     <property name="subtype" value="&quot;sealed&quot;"/>
     <property name="type" value="&quot;door&quot;"/>
+   </properties>
+  </object>
+  <object name="Portal" x="712" y="358" width="78" height="21">
+   <properties>
+    <property name="subtype" value="&quot;portal&quot;"/>
+    <property name="type" value="&quot;portal&quot;"/>
    </properties>
   </object>
  </objectgroup>

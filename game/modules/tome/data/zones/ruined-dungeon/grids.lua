@@ -78,6 +78,12 @@ newEntity{
 	block_move = function(self, x, y, who, act, couldpass)
 		if not who or not who.player or not act then return true end
 		if not game.level.data.touch_orb then return true end
+
+		if not self.orb_allowed then
+			require("engine.ui.Dialog"):simplePopup("Strange Orb", "The orb looks inactive.")
+			return true
+		end
+
 		local text = "???"
 		if self.portal_type == "water" then text = "The orb seems to drip water."
 		elseif self.portal_type == "earth" then text = "The orb is covered in dust."
