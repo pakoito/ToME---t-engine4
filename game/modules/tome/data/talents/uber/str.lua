@@ -169,7 +169,7 @@ uberTalent{
 		self.can_breath = self.can_breath or {}
 		self.can_breath.water = (self.can_breath.water or 0) + 1
 
-		require("engine.ui.Dialog"):simplePopup("Legacy of the Naloren", "Slasul will be happy to know your faith in his cause. You should return speak to him.")
+		require("engine.ui.Dialog"):simplePopup("Legacy of the Naloren", "Slasul will be happy to know your faith in his cause. You should return to speak to him.")
 	end,
 	info = function(self, t)
 		return ([[You sided with Slasul ad helped him vanquish Ukllmswwik. You are now able to breathe underwater with ease.

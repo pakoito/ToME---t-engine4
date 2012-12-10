@@ -58,7 +58,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 		print("[PROJECTOR] after difficulty dam", dam)
 
 		-- Daze
-		if target:attr("dazed") then
+		if src:attr("dazed") then
 			dam = dam * 0.5
 		end
 

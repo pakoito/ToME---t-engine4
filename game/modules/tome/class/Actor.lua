@@ -2895,7 +2895,8 @@ function _M:checkMindstar(o)
 
 	local new
 	local old
-
+	local psb = self:getTalentFromId(self.T_PSIBLADES) --I5
+	
 	if o.wielded then
 		new = self:attr("psiblades_active")
 		old = o.psiblade_active
@@ -2910,18 +2911,18 @@ function _M:checkMindstar(o)
 		o.psiblade_active = new
 
 		local nm = {}
-		for s, v in pairs(o.combat.dammod) do nm[s] = v * (1.3 + pv / 10) end
+		for s, v in pairs(o.combat.dammod) do nm[s] = v * psb.getStatmult(self, psb) end --I5
 		o.combat.dammod = nm
-		o.combat.apr = o.combat.apr * (1 + pv / 6.3)
+		o.combat.apr = o.combat.apr * psb.getAPRmult(self,psb) --I5		
 
 		print("Activating psiblade", o.name)
 	elseif not new and old then
 		local pv = o.psiblade_active
 
 		local nm = {}
-		for s, v in pairs(o.combat.dammod) do nm[s] = v / (1.3 + pv / 10) end
+		for s, v in pairs(o.combat.dammod) do nm[s] = v / psb.getStatmult(self,psb,pv) end --I5		
 		o.combat.dammod = nm
-		o.combat.apr = o.combat.apr / (1 + pv / 6.3)
+		o.combat.apr = o.combat.apr / psb.getAPRmult(self,psb,pv) --I5 		
 
 		o.moddable_tile_ornament = nil
 		o.psiblade_active = false
