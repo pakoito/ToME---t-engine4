@@ -40,6 +40,7 @@ newEntity{ define_as = "SUPREME_ARCHMAGE_LINANIIL",
 	move_others=true,
 	combat_spellpower = 30,
 	anger_emote = "Remove @himher@!",
+	hates_antimagic = 1,
 
 	open_door = true,
 
@@ -118,6 +119,7 @@ newEntity{ define_as = "TARELION",
 	move_others=true,
 	combat_spellpower = 30,
 	anger_emote = "Remove @himher@!",
+	hates_antimagic = 1,
 
 	open_door = true,
 
@@ -161,6 +163,7 @@ newEntity{
 	display = "p", color=colors.WHITE,
 	faction = "angolwen",
 	anger_emote = "Catch @himher@!",
+	hates_antimagic = 1,
 
 	resolvers.racial(),
 
