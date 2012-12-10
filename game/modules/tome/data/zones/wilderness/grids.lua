@@ -470,7 +470,8 @@ newEntity{ base="CHARRED_SCAR", define_as = "CHARRED_SCAR_VOLCANO",
 	color={r=200, g=255, b=55},
 	display='>', color=colors.RED, back_color=colors.LIGHT_DARK,
 	add_mos={{image="terrain/lava/volcano_02.png"}}, add_displays={class.new{image="terrain/lava/volcano_02_up.png", display_y=-1, z=18}},
-	notice = true, change_level=1, change_zone="charred-scar",
+	notice = true, 
+	--change_level=1, change_zone="charred-scar",
 }
 
 newEntity{ base="ZONE_JUNGLE_PLAINS", define_as = "REL_TUNNEL",

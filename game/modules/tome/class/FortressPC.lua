@@ -38,6 +38,7 @@ function _M:init(t, no_default)
 	self.no_breath = true
 	self.no_party_class = true
 	self.no_leave_control = true
+	self.no_levelup_access = true
 --	self.can_change_level = true
 --	self.can_change_zone = true
 	self.display = ' '

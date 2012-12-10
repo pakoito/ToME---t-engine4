@@ -85,7 +85,7 @@ if game.player.descriptor.race == "Dwarf" then defineTile('iron-council', "TOWN_
 
 -- Far East
 defineTile('gates-of-morning', "TOWN_GATES_OF_MORNING")
-quickEntity('high-peak', {always_remember = true, show_tooltip=true, name="High Peak", display='>', color=colors.VIOLET, notice = true, change_level=1, glow=true, change_zone="high-peak"})
+defineTile('high-peak', "MOUNTAIN")
 defineTile('unremarkable-cave', "UNREMARKABLE_CAVE")
 
 -- Island of Rel
