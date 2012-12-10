@@ -55,11 +55,11 @@ on_status_change = function(self, who, status, sub)
 				if game.player:reactionToward(e) < 0 then game.level:removeEntity(e) end
 			end
 
-			self:end_end_combat()
-
 			local Chat = require"engine.Chat"
 			local chat = Chat.new("sorcerer-end", {name="Endgame"}, game:getPlayer(true))
 			chat:invoke()
+
+			self:end_end_combat()
 		end
 	end
 end
@@ -127,6 +127,7 @@ function win(self, how)
 	local p = game:getPlayer(true)
 	p.winner = how
 	game:registerDialog(require("engine.dialogs.ShowText").new("Winner", "win", {playername=p.name, how=how}, game.w * 0.6))
+	game:saveGame()
 end
 
 function onWin(self, who)
