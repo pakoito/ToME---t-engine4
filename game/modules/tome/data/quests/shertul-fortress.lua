@@ -177,15 +177,33 @@ upgrade_transmo_gems = function(self)
 end
 
 fly = function(self)
-	game.player:learnLore("shertul-fortress-takeoff")
+	if self:isStatus(self.COMPLETED, "flying") then
+		game:changeLevel(1, "wilderness", {direct_switch=true})
 
-	local f = require("mod.class.FortressPC").new{}
-	game:changeLevel(1, "wilderness", {direct_switch=true})
-	game.party:addMember(f, {temporary_level=1, control="full"})
-	f.x = game.player.x
-	f.y = game.player.y
-	game.party:setPlayer(f, true)
-	game.level:addEntity(f)
-	game.level.map:remove(f.x, f.y, engine.Map.ACTOR)
-	f:move(f.x, f.y, true)
+		local f = nil
+		for uid, e in pairs(game.level.entities) do
+			if e.is_fortress then f = e break end
+		end
+
+		if not f then
+			game.log("The fortress is not found!")
+			return
+		end
+
+		f:takeControl(game.player)
+	else
+		game.player:learnLore("shertul-fortress-takeoff")
+
+		local f = require("mod.class.FortressPC").new{}
+		game:changeLevel(1, "wilderness", {direct_switch=true})
+		game.party:addMember(f, {temporary_level=1, control="full"})
+		f.x = game.player.x
+		f.y = game.player.y
+		game.party:setPlayer(f, true)
+		game.level:addEntity(f)
+		game.level.map:remove(f.x, f.y, engine.Map.ACTOR)
+		f:move(f.x, f.y, true)
+
+		game.player:setQuestStatus("shertul-fortress", self.COMPLETED, "flying")
+	end
 end

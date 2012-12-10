@@ -28,7 +28,7 @@ newChat{ id="welcome",
 #{italic}#"Rokzan krilt copru."#{normal}#]] or [[#WHITE#*#{italic}#"Insert control rod."#{normal}#]]),
 	answers = {
 		{"[Examine the orb]", jump="examine", cond=has_rod},
---		{"[Fly the fortress]", action=function(npc, player) player:hasQuest("shertul-fortress"):fly() end},
+		{"[Fly the fortress -- #LIGHT_RED#FOR TESTING ONLY#LAST#]", action=function(npc, player) player:hasQuest("shertul-fortress"):fly() end, cond=function() return config.settings.cheat end},
 		{"[Begin the Lichform ceremory]", cond=function(npc, player) local q = player:hasQuest("lichform") return q and q:check_lichform(player) end, action=function(npc, player) player:setQuestStatus("lichform", engine.Quest.COMPLETED) end},
 		{"[Leave the orb alone]"},
 	}

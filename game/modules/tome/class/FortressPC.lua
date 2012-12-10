@@ -31,6 +31,7 @@ function _M:init(t, no_default)
 
 	self.name = "Yiilkgur, the Sher'Tul Fortress"
 	self.is_fortress = true
+	self.no_worldmap_encounter = true
 	self.allow_talents_worldmap = true
 	self.faction = game:getPlayer(true).faction
 	self.no_inventory_access = true
@@ -226,15 +227,23 @@ function _M:moveEngineMove(x, y, force)
 	return true
 end
 
+function _M:takeControl(from)
+	game.party:addMember(self, {temporary_level=1, control="full"})
+	game.party:setPlayer(self, true)
+	game.level.map:remove(from.x, from.y, engine.Map.ACTOR)
+end
+
 --- Checks if something bumps in us
 -- If it happens the method attack is called on the target with the attacker as parameter.
 -- Do not touch!
 function _M:block_move(x, y, e, act)
 	if act and e == game.player then
 		Dialog:yesnoPopup(self.name, "Do you wish to teleport to the fortress?", function(ret) if ret then
-			game.party:addMember(self, {temporary_level=1, control="full"})
-			game.party:setPlayer(self, true)
-			game.level.map:remove(e.x, e.y, engine.Map.ACTOR)
+			if not game.zone.wilderness then
+				Dialog:simplePopup(self.name, "The teleport fizzles!")
+				return
+			end
+			self:takeControl(e)
 		end end)
 	end
 	return false

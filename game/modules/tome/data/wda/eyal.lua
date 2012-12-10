@@ -97,7 +97,7 @@ elseif zone == "Far East" then
 
 	-- Spawn random encounters
 	local g = game.level.map(game.player.x, game.player.y, Map.TERRAIN)
-	if g and g.can_encounter then
+	if g and g.can_encounter and not game.player.no_worldmap_encounter then
 		local type = encounter_chance(game.player)
 		if type then
 			game.level:setEntitiesList("fareast_encounters_rng", game.zone:computeRarities("fareast_encounters_rng", game.level:getEntitiesList("fareast_encounters"), game.level, nil))
