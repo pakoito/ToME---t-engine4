@@ -54,6 +54,8 @@ function _M:block_move(x, y, e, act, couldpass)
 					if ret then
 						game.level.map(x, y, engine.Map.TERRAIN, game.zone.grid_list[self.door_opened])
 						game:playSoundNear({x=x,y=y}, {"ambient/door_creaks/creak_%d",1,4})
+
+						if game.level.map.attrs(x, y, "vault_id") and e.openVault then e:openVault(game.level.map.attrs(x, y, "vault_id")) end
 					end
 				end, "Open", "Leave")
 			end
@@ -64,6 +66,8 @@ function _M:block_move(x, y, e, act, couldpass)
 		else
 			game.level.map(x, y, engine.Map.TERRAIN, game.zone.grid_list[self.door_opened])
 			game:playSoundNear({x=x,y=y}, {"ambient/door_creaks/creak_%d",1,4})
+
+			if game.level.map.attrs(x, y, "vault_id") and e.openVault then e:openVault(game.level.map.attrs(x, y, "vault_id")) end
 		end
 		return true
 	elseif self.door_opened and not couldpass then

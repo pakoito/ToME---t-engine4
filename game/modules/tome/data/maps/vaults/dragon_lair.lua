@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-setStatusAll{no_teleport=true}
+setStatusAll{no_teleport=true, vault_only_door_open=true}
 
 startx = 25
 starty = 6

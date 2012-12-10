@@ -610,7 +610,7 @@ function _M:act()
 		end
 	end
 	if self:attr("stoned") then self.energy.value = 0 end
---	if self:attr("dazed") then self.energy.value = 0 end
+	if self:attr("dont_act") then self.energy.value = 0 end
 	if self:attr("sleep") and not self:attr("lucid_dreamer") then self.energy.value = 0 end
 	if self:attr("time_stun") then self.energy.value = 0 end
 	if self:attr("time_prison") then self.energy.value = 0 end

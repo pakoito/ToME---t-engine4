@@ -201,6 +201,22 @@ function _M:describeFloor(x, y, force)
 	end
 end
 
+function _M:openVault(vault_id)
+	local v = game.level.vaults_list[vault_id]
+	if not v then return end
+
+	print("Vault id", vault_id, "opens:", v.x, v.y, v.w, v.h)
+	for i = v.x, v.x + v.w - 1 do for j = v.y, v.y + v.h - 1 do
+		if  game.level.map.attrs(i, j, "vault_id") == vault_id then
+			 game.level.map.attrs(i, j, "vault_id", false)
+			 local act = game.level.map(i, j, Map.ACTOR)
+			 if act and not act.player then
+			 	act:removeEffect(act.EFF_VAULTED, true, true)
+			 end
+		end
+	end end
+end
+
 function _M:move(x, y, force)
 	local ox, oy = self.x, self.y
 	local moved = mod.class.Actor.move(self, x, y, force)
@@ -217,6 +233,8 @@ function _M:move(x, y, force)
 		game.level.map.attrs(self.x, self.y, "walked", true)
 
 		if self.describeFloor then self:describeFloor(self.x, self.y) end
+
+		if not force and game.level.map.attrs(self.x, self.y, "vault_id") and not game.level.map.attrs(self.x, self.y, "vault_only_door_open") then self:openVault(game.level.map.attrs(self.x, self.y, "vault_id")) end
 	end
 
 --	if not force and ox == self.x and oy == self.y and self.tryPlayerSlide then

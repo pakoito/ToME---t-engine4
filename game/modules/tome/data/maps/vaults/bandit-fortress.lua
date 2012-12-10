@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 --bandit fortress
-setStatusAll{no_teleport=true}
+setStatusAll{no_teleport=true, vault_only_door_open=true}
 rotates = {"default", "90", "180", "270", "flipx", "flipy"}
 defineTile('%', "WALL")
 defineTile('.', "FLOOR")

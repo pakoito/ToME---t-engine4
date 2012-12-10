@@ -54,7 +54,6 @@ function resolvers.calc.equip(t, e)
 			if filter.autoreq and rawget(o, "require") and rawget(o, "require").stat then
 --				print("Autorequire stats")
 				for s, v in pairs(rawget(o, "require").stat) do
-					print(s,v)
 					if e:getStat(s) < v then
 						e.unused_stats = e.unused_stats - (v - e:getStat(s))
 						e:incStat(s, v - e:getStat(s))
@@ -67,7 +66,7 @@ function resolvers.calc.equip(t, e)
 			end
 
 			-- Do not drop it unless it is an ego or better
-			if not o.unique then o.no_drop = true print(" * "..o.name.." => no drop") end
+			if not o.unique then o.no_drop = true --[[print(" * "..o.name.." => no drop")]] end
 			if filter.force_drop then o.no_drop = nil end
 			if filter.never_drop then o.no_drop = true end
 			game.zone:addEntity(game.level, o, "object")
@@ -215,7 +214,7 @@ function resolvers.calc.store(t, e)
 		return true
 	end
 	e.store = game:getStore(t)
-	print("[STORE] created for entity", t, e, e.name)
+--	print("[STORE] created for entity", t, e, e.name)
 
 	-- Delete the origin field
 	return nil
@@ -442,7 +441,7 @@ function resolvers.calc.sustains_at_birth(_, e)
 			local t = self:getTalentFromId(tid)
 			if t and t.mode == "sustained" then
 				self.energy.value = game.energy_to_act
-				print("===== activating sustain", self.name, tid)
+--				print("===== activating sustain", self.name, tid)
 				self:useTalent(tid)
 			end
 		end

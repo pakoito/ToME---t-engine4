@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-setStatusAll{no_teleport=true}
+setStatusAll{no_teleport=true, no_vaulted=true}
 
 rotates = {"default", "90", "180", "270", "flipx", "flipy"}
 

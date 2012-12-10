@@ -1007,7 +1007,7 @@ local loot_mod = {
 local default_drops = function(zone, level, what)
 	if zone.default_drops then return zone.default_drops end
 	local lev = util.bound(math.ceil(zone:level_adjust_level(level, "object") / 10), 1, 5)
-	print("[TOME ENTITY FILTER] making default loot table for", what, lev)
+--	print("[TOME ENTITY FILTER] making default loot table for", what, lev)
 	return table.clone(drop_tables[what][lev])
 end
 
@@ -1038,7 +1038,7 @@ function _M:entityFilterAlter(zone, level, type, filter)
 			t = table.clone(t)
 			if _G.type(filter.tome_mod) == "string" then filter.tome_mod = loot_mod[filter.tome_mod] end
 			for k, v in pairs(filter.tome_mod) do
-				print(" ***** LOOT MOD", k, v)
+--				print(" ***** LOOT MOD", k, v)
 				t[k] = (t[k] or 0) * v
 			end
 		end

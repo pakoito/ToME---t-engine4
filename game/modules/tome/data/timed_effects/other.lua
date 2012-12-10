@@ -2100,3 +2100,23 @@ newEffect{
 	deactivate = function(self, eff)
 	end,
 }
+
+newEffect{
+	name = "VAULTED", image = "talents/time_prison.png",
+	desc = "In Vault",
+	long_desc = function(self, eff) return "The target is part of a vault and can not act until it has been openend." end,
+	decrease = 0, no_remove = true,
+	type = "other",
+	subtype = { vault=true },
+	status = "neutral",
+	parameters = {},
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "invulnerable", 1)
+		self:effectTemporaryValue(eff, "dont_act", 1)
+		self:effectTemporaryValue(eff, "no_timeflow", 1)
+		self:effectTemporaryValue(eff, "status_effect_immune", 1)
+		self.energy.value = 0
+	end,
+	deactivate = function(self, eff)
+	end,
+}

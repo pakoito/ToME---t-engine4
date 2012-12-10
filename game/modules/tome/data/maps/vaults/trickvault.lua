@@ -25,7 +25,6 @@ setStatusAll{no_teleport=true}
 specialList("terrain", {
 	"/data/general/grids/basic.lua",
 	"/data/general/grids/lava.lua",
-	"/data/general/grids/.lua",
 })
 
 defineTile('#', "HARDWALL")

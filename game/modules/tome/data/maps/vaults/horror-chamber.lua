@@ -19,7 +19,7 @@
 
 -- Horror Chamber
 
-setStatusAll{no_teleport=true}
+setStatusAll{no_teleport=true, vault_only_door_open=true}
 
 startx = 2
 starty = 1

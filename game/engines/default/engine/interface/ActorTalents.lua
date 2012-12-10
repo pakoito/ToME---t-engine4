@@ -263,7 +263,7 @@ end
 -- @param nb the amount to increase the raw talent level by, default 1
 -- @return true if the talent was learnt, nil and an error message otherwise
 function _M:learnTalent(t_id, force, nb)
-	print("[TALENT]", self.name, self.uid, "learning", t_id, force, nb)
+--	print("[TALENT]", self.name, self.uid, "learning", t_id, force, nb)
 	local t = _M.talents_def[t_id]
 
 	if not force then

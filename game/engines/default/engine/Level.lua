@@ -160,7 +160,7 @@ function _M:setEntitiesList(type, list, permanent)
 	else
 		self.entities_list[type] = list
 	end
-	print("Stored entities list", type, list)
+--	print("Stored entities list", type, list)
 end
 
 --- Gets an entity list for the level, this allows the Zone to pick objects/actors/...
