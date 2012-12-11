@@ -238,7 +238,7 @@ function _M:atEnd(v)
 				self.actor.has_custom_tile = self.has_custom_tile.f
 			end
 			-- Prevent the game from auto-assigning talents if necessary.
-			if (not config.settings.tome.autoassign_talents_on_birth) then
+			if (not config.settings.tome.autoassign_talents_on_birth) and not game.state.birth.always_learn_birth_talents then
 				for _, d in pairs(self.descriptors) do
 					local unlearned_talents = { }
 

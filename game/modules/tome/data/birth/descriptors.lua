@@ -133,6 +133,9 @@ newBirthDescriptor{
 		__allow_rod_recall = false,
 		__allow_transmo_chest = false,
 	},
+	game_state = {
+		always_learn_birth_talents = true,
+	},
 }
 newBirthDescriptor{
 	type = "difficulty",
