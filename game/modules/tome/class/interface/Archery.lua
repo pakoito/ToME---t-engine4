@@ -221,6 +221,7 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 	end
 
 	-- cross-tier effect for accuracy vs. defense
+--[[
 	local tier_diff = self:getTierDiff(atk, target:combatDefense(false, target:attr("combat_def_ct")))
 	if hitted and not target.dead and tier_diff > 0 then
 		local reapplied = false
@@ -233,7 +234,7 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 		end
 		target:setEffect(target.EFF_OFFGUARD, tier_diff, {}, reapplied)
 	end
-
+]]
 	-- Ranged project
 	local weapon_ranged_project = weapon.ranged_project or {}
 	local ammo_ranged_project = ammo.ranged_project or {}

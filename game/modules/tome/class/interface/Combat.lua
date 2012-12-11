@@ -466,6 +466,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	end
 
 	-- cross-tier effect for accuracy vs. defense
+--[[
 	local tier_diff = self:getTierDiff(atk, target:combatDefense(false, target:attr("combat_def_ct")))
 	if hitted and not target.dead and tier_diff > 0 then
 		local reapplied = false
@@ -478,7 +479,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		end
 		target:setEffect(target.EFF_OFFGUARD, tier_diff, {}, reapplied)
 	end
-
+]]
 	-- handle stalk targeting for hits (also handled in Actor for turn end effects)
 	if hitted and target ~= self then
 		if effStalker then
