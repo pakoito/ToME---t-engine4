@@ -690,7 +690,7 @@ newTalent{
 		-- Find an actor with that filter
 		local m = false
 		local list = mod.class.NPC:loadList("/data/general/npcs/horror.lua")
-		if self.is_akgishil and rng.percent(3) and not self.summoned_distort then
+		if self.is_akgishil and rng.percent(10) and not self.summoned_distort then
 			m = list.DISTORTED_BLADE:clone()
 			self.summoned_distort=1
 		else

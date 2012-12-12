@@ -962,7 +962,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 }
 
 newEntity{ base="BASE_NPC_HORROR", define_as = "ANIMATED_BLADE",
-	type = "construct", subtype = "weapon", image="object/artifact/magical_animated_sword.png",
+	type = "construct", subtype = "weapon", image="object/magical_animated_sword.png",
 	name = "Animated Sword",
 	color = colors.GREY,
 	desc = [[Time seems to warp and bend around this floating weapon.]],
