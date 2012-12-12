@@ -17,6 +17,8 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+bx = x or 0
+by = y or 0
 local nb = 0
 return { generator = function()
 	local radius = radius
@@ -35,8 +37,8 @@ return { generator = function()
 		life = 30,
 		size = 3, sizev = 0, sizea = 0,
 
-		x = x, xv = 0, xa = 0,
-		y = y, yv = 0, ya = 0,
+		x = bx + x, xv = 0, xa = 0,
+		y = by + y, yv = 0, ya = 0,
 		dir = a, dirv = 0, dira = 0,
 		vel = sradius / 2 / 30, velv = 0, vela = 0,
 		

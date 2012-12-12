@@ -114,21 +114,56 @@ function _M:mouseEvent(button, x, y, xrel, yrel, bx, by, event)
 	elseif button == "wheeldown" and event == "button" then self.key:triggerVirtual("MOVE_DOWN")
 	else
 		if not self.dlist then return end
-		local citem = nil
+		local citem, gitem = nil, nil
 		for i = #self.dlist, 1, -1 do
 			local item = self.dlist[i]
-			if item.dh and by >= item.dh then citem = self.dlist[i].src break end
+			if item.dh and by >= item.dh then citem = self.dlist[i].src gitem = self.dlist[i].d break end
 		end
 
 		if event == "motion" then
+			local tooltip = nil
 			if citem and citem.extra_data and citem.extra_data.mode == "tooltip" then
-				game:tooltipDisplayAtMap(game.w, game.h, citem.extra_data.tooltip)
+				tooltip = citem.extra_data.tooltip
+				tooltip = tooltip:toTString()
+			end
+
+			if gitem then
+				local sub_es = {}
+				for di = 1, #gitem._dduids do sub_es[#sub_es+1] = gitem._dduids[di].e end
+				if sub_es and #sub_es > 0 then
+					if not tooltip then tooltip = tstring{} end
+					for i, e in ipairs(sub_es) do
+						if e.tooltip then
+							tooltip:merge(e:tooltip())
+							if e:getEntityKind() == "actor" then tooltip:add(true, "Right click to inspect.", true) end
+							if i < #sub_es then tooltip:add(true, "---", true)
+							else tooltip:add(true) end
+						end
+					end
+				end
+			end
+
+			if tooltip then
+				game:tooltipDisplayAtMap(game.w, game.h, tooltip)
 			else
 				game.tooltip_x, game.tooltip_y = nil, nil
 			end
-		elseif event == "button" and button == "left" then
-			if citem and citem.url then
+		elseif event == "button" then
+			if citem and citem.url and button == "left" then
 				util.browserOpenUrl(citem.url)
+			end
+
+			if gitem and button == "right" then
+				local sub_es = {}
+				for di = 1, #gitem._dduids do sub_es[#sub_es+1] = gitem._dduids[di].e end
+				if sub_es and #sub_es > 0 then
+					if not tooltip then tooltip = tstring{} end
+					for i, e in ipairs(sub_es) do
+						if e:getEntityKind() == "actor" then
+							game:registerDialog(require("mod.dialogs.CharacterSheet").new(e))
+						end
+					end
+				end
 			end
 		end
 	end
@@ -184,7 +219,7 @@ function _M:setScroll(i)
 		local stop = false
 		local tstr = self.lines[z]
 		if not tstr then break end
-		local gen = self.font:draw(tstr.str, self.iw - 10, 255, 255, 255)
+		local gen = self.font:draw(tstr.str, self.iw - 10, 255, 255, 255, false, true)
 		for i = 1, #gen do
 			self.dlist[#self.dlist+1] = {d=gen[i], src=self.lines[z].src}
 			nb = nb + 1
@@ -201,6 +236,9 @@ function _M:innerDisplay(x, y, nb_keyframes, tx, ty)
 		local item = self.dlist[i].d
 		if self.shadow then item._tex:toScreenFull(x+2, h+2, item.w, item.h, item._tex_w, item._tex_h, 0,0,0, self.shadow) end
 		item._tex:toScreenFull(x, h, item.w, item.h, item._tex_w, item._tex_h)
+
+		for di = 1, #item._dduids do item._dduids[di].e:toScreen(nil, x + item._dduids[di].x, h, item._dduids[di].w, item._dduids[di].w, 1) end
+
 		self.dlist[i].dh = h - y
 --		print("<<",i,"::",h + ty)
 		h = h + self.font_h

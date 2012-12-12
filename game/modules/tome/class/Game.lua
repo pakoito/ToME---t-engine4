@@ -1052,9 +1052,9 @@ function _M:displayDelayedLogDamage()
 	for src, tgts in pairs(self.delayed_log_damage) do
 		for target, dams in pairs(tgts) do
 			if #dams.descs > 1 then
-				self.logSeen(target, "%s hits %s for %s damage (total %0.2f).", src.name:capitalize(), target.name, table.concat(dams.descs, ", "), dams.total)
+				self.logSeen(target, "%s%s hits %s for %s damage (total %0.2f).", src:getDisplayString(), src.name:capitalize(), target.name, table.concat(dams.descs, ", "), dams.total)
 			else
-				self.logSeen(target, "%s hits %s for %s damage.", src.name:capitalize(), target.name, table.concat(dams.descs, ", "))
+				self.logSeen(target, "%s%s hits %s for %s damage.", src:getDisplayString(), src.name:capitalize(), target.name, table.concat(dams.descs, ", "))
 			end
 
 			local rsrc = src.resolveSource and src:resolveSource() or src
@@ -1064,7 +1064,7 @@ function _M:displayDelayedLogDamage()
 			if target.dead then
 				if self.level.map.seens(x, y) and (rsrc == self.player or rtarget == self.player or self.party:hasMember(rsrc) or self.party:hasMember(rtarget)) then
 					self.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, rng.float(-2.5, -1.5), ("Kill (%d)!"):format(dams.total), {255,0,255}, true)
-					game.logSeen(target, "#{bold}#%s killed %s!#{normal}#", src.name:capitalize(), target.name)
+					game.logSeen(target, "#{bold}#%s%s killed %s!#{normal}#", src:getDisplayString(), src.name:capitalize(), target.name)
 				end
 			else
 				if self.level.map.seens(x, y) and (rsrc == self.player or self.party:hasMember(rsrc)) then

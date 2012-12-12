@@ -306,3 +306,8 @@ function _M:makeHoming(src, display, def, target, count, on_move, on_hit)
 
 	return p
 end
+
+--- Return the kind of the entity
+function _M:getEntityKind()
+	return "projectile"
+end

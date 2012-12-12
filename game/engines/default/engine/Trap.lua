@@ -159,3 +159,8 @@ end
 function _M:canTrigger(x, y, who)
 	return true
 end
+
+--- Return the kind of the entity
+function _M:getEntityKind()
+	return "trap"
+end

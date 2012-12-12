@@ -239,3 +239,8 @@ function _M:getMapStackMO(map, x, y)
 
 	return _mo
 end
+
+--- Return the kind of the entity
+function _M:getEntityKind()
+	return "object"
+end

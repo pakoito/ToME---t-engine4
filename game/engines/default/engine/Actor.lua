@@ -479,3 +479,8 @@ function _M:isNear(x, y, radius)
 	return true
 end
 
+
+--- Return the kind of the entity
+function _M:getEntityKind()
+	return "actor"
+end

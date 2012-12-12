@@ -883,3 +883,8 @@ function _M:loadList(file, no_default, res, mod, loaded)
 
 	return res
 end
+
+--- Return the kind of the entity
+function _M:getEntityKind()
+	return "entity"
+end

@@ -42,3 +42,9 @@ function _M:setupMinimapInfo(mo, map)
 	else mo:minimap(0, 0, 0)
 	end
 end
+
+
+--- Return the kind of the entity
+function _M:getEntityKind()
+	return "grid"
+end
