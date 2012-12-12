@@ -28,7 +28,7 @@ uberTalent{
 		self:setEffect(self.EFF_DRACONIC_WILL, 5, {})
 		return true
 	end,
-	require = { special={desc="Be close to the draconic world", fct=function(self) return self:attr("drake_touched") and self:attr("drake_touched") >= 2 end} },
+	require = { special={desc="Be close to the draconic world", fct=function(self) return game.state.birth.ignore_prodigies_special_reqs or (self:attr("drake_touched") and self:attr("drake_touched") >= 2) end} },
 	info = function(self, t)
 		return ([[Your body is like that of a drake, easily resisting detrimental effects.
 		For 5 turns no detrimental effects may target you.]])
