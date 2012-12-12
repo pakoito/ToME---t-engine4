@@ -25,7 +25,7 @@ defineAction{
 }
 
 defineAction{
-	default = { "sym:=m:true:false:false:false" },
+	default = { "sym:=h:false:false:false:false", "sym:=m:true:false:false:false" },
 	type = "SHOW_MESSAGE_LOG",
 	group = "actions",
 	name = "Show message log",
