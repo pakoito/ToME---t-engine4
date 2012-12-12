@@ -26,7 +26,7 @@ newEntity{
 	moddable_tile = resolvers.moddable_tile("heavy"),
 	add_name = " (#ARMOR#)",
 	display = "[", color=colors.SLATE,
-	require = { talent = { {Talents.T_ARMOUR_TRAINING,1} }, },
+	require = { talent = { Talents.T_ARMOUR_TRAINING }, },
 	encumber = 14,
 	rarity = 5,
 	metallic = true,

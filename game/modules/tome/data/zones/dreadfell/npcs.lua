@@ -382,6 +382,7 @@ There is a cunning air to his hollow skull, and his empty sockets reveal nothing
 		[Talents.T_SHADOWSTRIKE]={base=1, every=6, max=7},
 		[Talents.T_HIDE_IN_PLAIN_SIGHT]={base=1, every=6, max=7},
 
+		[Talents.T_SMOKE_BOMB]={base=2, every=6, max=7},
 		[Talents.T_DISENGAGE]={base=3, every=6, max=7},
 		[Talents.T_EVASION]={base=5, every=6, max=7},
 		[Talents.T_PIERCING_SIGHT]={base=3, every=6, max=7},
