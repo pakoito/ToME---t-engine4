@@ -398,6 +398,7 @@ on_grant = function(self, who)
 		game.player:setQuestStatus(who.quest_id, engine.Quest.DONE)
 		local Chat = require "engine.Chat"
 		Chat.new("escort-quest", who, game.player, {npc=who}):invoke()
+		world:gainAchievement("ESCORT_SAVED", game.player)
 		who:disappear()
 		who:removed()
 		game.party:removeMember(who, true)

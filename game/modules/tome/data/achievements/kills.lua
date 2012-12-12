@@ -116,6 +116,18 @@ newAchievement{
 }
 
 newAchievement{
+	name = "Guiding Hand", id = "ESCORT_SAVED",
+	show = "full",
+	desc = [[Saved all escorted adventurers.]],
+	mode = "player",
+	can_gain = function(self, who, target)
+		self.nb = (self.nb or 0) + 1
+		if self.nb >= 9 then return true end
+	end,
+	track = function(self) return tstring{tostring(self.nb or 0)," / 9"} end,
+}
+
+newAchievement{
 	name = "Earth Master", id = "GEOMANCER",
 	show = "name",
 	desc = [[Killed Harkor'Zun and unlocked Stone magic]],
