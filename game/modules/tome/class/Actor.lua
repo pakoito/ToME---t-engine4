@@ -1038,7 +1038,7 @@ function _M:move(x, y, force)
 		t.do_haste_double(self, t, ox, oy)
 	end
 
-	if moved and not force and self:hasEffect(self.EFF_RAMPAGE) then
+	if moved and not force and ox and oy and (ox ~= self.x or oy ~= self.y) and self:hasEffect(self.EFF_RAMPAGE) then
 		local eff = self:hasEffect(self.EFF_RAMPAGE)
 		if not eff.moved and eff.actualDuration < eff.maxDuration then
 			game.logPlayer(self, "#F53CBE#Your movements fuel your rampage! (+1 duration)")
