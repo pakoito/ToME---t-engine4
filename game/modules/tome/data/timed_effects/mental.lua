@@ -1640,7 +1640,7 @@ newEffect{
 		self:effectTemporaryValue(eff, "combat_mindcrit", eff.mind)
 		self:effectTemporaryValue(eff, "combat_physresist", eff.physical)
 		self:effectTemporaryValue(eff, "combat_spellresist", eff.spell)
-		self:effectTemporaryValue(eff, "combat_mindresist", eff.mind)
+		self:effectTemporaryValue(eff, "combat_mentalresist", eff.mind)
 	end,
 }
 
