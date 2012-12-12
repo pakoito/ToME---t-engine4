@@ -1460,7 +1460,7 @@ newEffect{
 newEffect{
 	name = "OFFGUARD",
 	desc = "Off-guard", image = "talents/precise_strikes.png",
-	long_desc = function(self, eff) return ("Badly off guard. Attackers gain a 10% bonus to physical critcal strike chance and physical critcal strike power.") end,
+	long_desc = function(self, eff) return ("Badly off guard. Attackers gain a 10% bonus to physical critical strike chance and physical critcal strike power.") end,
 	type = "physical",
 	subtype = { ["cross tier"]=true },
 	status = "detrimental",

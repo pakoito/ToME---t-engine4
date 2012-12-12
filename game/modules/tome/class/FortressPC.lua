@@ -54,6 +54,7 @@ function _M:init(t, no_default)
 	self.energy.mod = 2
 
 	self:learnTalent(self.T_SHERTUL_FORTRESS_GETOUT, true)
+	self:learnTalent(self.T_SHERTUL_FORTRESS_BEAM, true)
 
 	self:addParticles(Particles.new("shertul_fortress_orbiters", 1, {}))
 end

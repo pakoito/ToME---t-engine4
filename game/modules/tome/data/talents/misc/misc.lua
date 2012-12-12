@@ -322,3 +322,16 @@ newTalent{
 	end,
 	info = [[Use the onboard short-range teleport of the Fortress to beam down to the surface.]]
 }
+
+newTalent{
+	short_name = "SHERTUL_FORTRESS_BEAM",
+	name = "Fire a blast of energy", --FINISH ME
+	type = {"base/race", 1},
+	no_npc_use = true,
+	no_unlearn_last = true,
+	action = function(self, t)
+
+		return true
+	end,
+	info = [[Use 10 Fortress energy to send a powerful blast to the ground, directly below the Fortress, heavily damaging any creatures caught inside.]]
+}

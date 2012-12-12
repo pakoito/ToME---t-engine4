@@ -133,6 +133,10 @@ Represents the raw materials for creating undead minions.
 It increases each time you or your minions kill something that is inside the aura radius.
 ]]
 
+TOOLTIP_FORTRESS_ENERGY = [[#GOLD#Fortress Energy#LAST#
+The energy of the Sher'Tul Fortress. It is replenished by transmogrifying items and used to power all the Fortress systems.
+]]
+
 TOOLTIP_LEVEL = [[#GOLD#Level and experience#LAST#
 Each time you kill a creature that is over your own level - 5 you gain some experience.
 When you reach enough experience you advance to the next level. There is a maximum of 50 levels you can gain.

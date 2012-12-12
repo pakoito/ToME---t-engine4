@@ -2123,7 +2123,7 @@ newEffect{
 		self.hotkey = ohk
 
 		self.replace_display = mod.class.Actor.new{
-			image = "npc/elemental_ice_shivgoroth.png",
+			image="invis.png", add_mos = {{image = "npc/elemental_ice_greater_shivgoroth.png", display_y = -1, display_h = 2}},
 		}
 		self:removeAllMOs()
 		game.level.map:updateMap(self.x, self.y)

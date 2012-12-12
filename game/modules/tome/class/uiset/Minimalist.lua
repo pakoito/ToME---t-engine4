@@ -76,6 +76,8 @@ psi_c = {colors.BLUE.r/255, colors.BLUE.g/255, colors.BLUE.b/255}
 psi_sha = Shader.new("resources", {require_shader=4, delay_load=true, color=psi_c, speed=2000, distort={0.4,0.4}})
 feedback_c = {colors.YELLOW.r/255, colors.YELLOW.g/255, colors.YELLOW.b/255}
 feedback_sha = Shader.new("resources", {require_shader=4, delay_load=true, color=feedback_c, speed=2000, distort={0.4,0.4}})
+fortress_c = {0x39/255, 0xd5/255, 0x35/255}
+fortress_sha = Shader.new("resources", {require_shader=4, delay_load=true, color=fortress_c, speed=2000, distort={0.4,0.4}})
 save_c = pos_c
 save_sha = pos_sha
 
@@ -111,6 +113,8 @@ fshat_feedback = {core.display.loadImage("/data/gfx/ui/resources/front_psi.png")
 fshat_feedback_dark = {core.display.loadImage("/data/gfx/ui/resources/front_psi_dark.png"):glTexture()}
 fshat_air = {core.display.loadImage("/data/gfx/ui/resources/front_air.png"):glTexture()}
 fshat_air_dark = {core.display.loadImage("/data/gfx/ui/resources/front_air_dark.png"):glTexture()}
+fshat_fortress = {core.display.loadImage("/data/gfx/ui/resources/front_fortress.png"):glTexture()}
+fshat_fortress_dark = {core.display.loadImage("/data/gfx/ui/resources/front_fortress_dark.png"):glTexture()}
 
 fshat_hourglass = {core.display.loadImage("/data/gfx/ui/resources/hourglass_front.png"):glTexture()}
 sshat_hourglass = {core.display.loadImage("/data/gfx/ui/resources/hourglass_shadow.png"):glTexture()}
@@ -1017,6 +1021,35 @@ function _M:displayResources(scale, bx, by, a)
 			self:showResourceTooltip(bx+x*scale, by+y*scale, fshat[6], fshat[7], "res:feedback", self.TOOLTIP_FEEDBACK)
 			x, y = self:resourceOrientStep(orient, bx, by, scale, x, y, fshat[6], fshat[7])
 		elseif game.mouse:getZone("res:feedback") then game.mouse:unregisterZone("res:feedback") end
+
+		-----------------------------------------------------------------------------------
+		-- Fortress Energy
+		if player.is_fortress and not player._hide_resource_fortress then
+			local q = game:getPlayer(true):hasQuest("shertul-fortress")
+			sshat[1]:toScreenFull(x-6, y+8, sshat[6], sshat[7], sshat[2], sshat[3], 1, 1, 1, a)
+			bshat[1]:toScreenFull(x, y, bshat[6], bshat[7], bshat[2], bshat[3], 1, 1, 1, a)
+			local p = 100 / 100
+			if fortress_sha.shad then fortress_sha:setUniform("a", a) fortress_sha.shad:use(true) end
+			shat[1]:toScreenPrecise(x+49, y+10, shat[6] * p, shat[7], 0, p * 1/shat[4], 0, 1/shat[5], fortress_c[1], fortress_c[2], fortress_c[3], a)
+			if fortress_sha.shad then fortress_sha.shad:use(false) end
+
+			if not self.res.fortress or self.res.fortress.vc ~= q.shertul_energy then
+				self.res.fortress = {
+					hidable = "Fortress",
+					vc = q.shertul_energy,
+					cur = {core.display.drawStringBlendedNewSurface(font_sha, ("%d"):format(q.shertul_energy), 255, 255, 255):glTexture()},
+				}
+			end
+			local dt = self.res.fortress.cur
+			dt[1]:toScreenFull(2+x+64, 2+y+10 + (shat[7]-dt[7])/2, dt[6], dt[7], dt[2], dt[3], 0, 0, 0, 0.7 * a)
+			dt[1]:toScreenFull(x+64, y+10 + (shat[7]-dt[7])/2, dt[6], dt[7], dt[2], dt[3], 1, 1, 1, a)
+
+			local front = fshat_fortress
+			front[1]:toScreenFull(x, y, front[6], front[7], front[2], front[3], 1, 1, 1, a)
+			self:showResourceTooltip(bx+x*scale, by+y*scale, fshat[6], fshat[7], "res:fortress", self.TOOLTIP_FORTRESS_ENERGY)
+			x, y = self:resourceOrientStep(orient, bx, by, scale, x, y, fshat[6], fshat[7])
+		elseif game.mouse:getZone("res:fortress") then game.mouse:unregisterZone("res:fortress") end
+
 
 		-----------------------------------------------------------------------------------
 		-- Ammo
