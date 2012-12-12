@@ -165,6 +165,30 @@ function _M:mouseEvent(button, x, y, xrel, yrel, bx, by, event)
 					end
 				end
 			end
+
+			if citem and citem.login then
+				local data = profile.chat:getUserInfo(citem.login)
+				if data then
+					local list = {{name="Show infos", ui="show"}, {name="Open profile(in brower)", ui="profile"}, {name="Report for bad behavior", ui="report"}}
+					if data.char_link then table.insert(list, 3, {name="Open charsheet(in brower)", ui="charsheet"}) end
+					Dialog:listPopup("User: "..citem.login, "Action", list, 300, 200, function(sel)
+						if not sel or not sel.ui then return end
+						if sel.ui == "show" then
+							local UserInfo = require "engine.dialogs.UserInfo"
+							game:registerDialog(UserInfo.new(data))
+						elseif sel.ui == "profile" then
+							util.browserOpenUrl(data.profile)
+						elseif sel.ui == "charsheet" then
+							util.browserOpenUrl(data.char_link)
+						elseif sel.ui == "report" then
+							game:registerDialog(require('engine.dialogs.GetText').new("Reason to report: "..citem.login, "Reason", 4, 500, function(text)
+								profile.chat:reportUser(citem.login, text)
+								game.log("#VIOLET#", "Report sent.")
+							end))							
+						end
+					end)
+				end
+			end
 		end
 	end
 end

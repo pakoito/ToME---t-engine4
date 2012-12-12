@@ -248,6 +248,16 @@ function _M:whisper(to, msg)
 	if type(game) == "table" and game.logChat then game.logChat("#GOLD#<Whisper to %s> %s", to, msg) end
 end
 
+function _M:reportUser(to, msg)
+	if not profile.auth then return end
+	if not to or not msg or msg == "" then return end
+	msg = msg:removeColorCodes()
+	core.profile.pushOrder(string.format("o='ReportUser' target=%q msg=%q", to, msg))
+
+	self:addMessage("report", self.cur_channel, to, to, "#VIOLET#Report for "..to.." sent.#LAST#")
+	if type(game) == "table" and game.logChat then game.logChat("#VIOLET#Report for %s sent.#LAST#", to) end
+end
+
 function _M:achievement(name)
 	if not profile.auth then return end
 	core.profile.pushOrder(string.format("o='ChatAchievement' channel=%q msg=%q", self.cur_channel, name))
@@ -318,6 +328,26 @@ function _M:showUserInfo(login)
 
 	local UserInfo = require "engine.dialogs.UserInfo"
 	game:registerDialog(UserInfo.new(data))
+end
+
+--- Get user infos
+function _M:getUserInfo(login)
+	if not profile.auth then return end
+
+	local popup = Dialog:simpleWaiter("Requesting...", "Requesting user info...")
+	core.display.forceRedraw()
+
+	core.profile.pushOrder(string.format("o='ChatUserInfo' login=%q", login))
+	local data = nil
+	profile:waitEvent("UserInfo", function(e) data=e.data end, 5000)
+
+	popup:done()
+
+	if not data then
+		return
+	end
+	data = zlib.decompress(data):unserialize()
+	return data
 end
 
 ----------------------------------------------------------------

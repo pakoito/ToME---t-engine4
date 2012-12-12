@@ -27,9 +27,9 @@ module(..., package.seeall, class.inherit(engine.ui.Dialog))
 function _M:init(mx, my, tmx, tmy, extra)
 	self.tmx, self.tmy = util.bound(tmx, 0, game.level.map.w - 1), util.bound(tmy, 0, game.level.map.h - 1)
 	if tmx == game.player.x and tmy == game.player.y then self.on_player = true end
+	self.extra = extra
 
 	self:generateList()
-	if extra then table.insert(self.list, 1, {name=extra.name, action="extra", action_fct=extra.fct, color=extra.color}) end
 	self.__showup = false
 
 	local name = "Actions"
@@ -178,6 +178,16 @@ function _M:generateList()
 			end
 		end)
 		for i = 1, #tals do list[#list+1] = tals[i] end
+	end
+
+	if self.extra then 
+		if self.extra.name then
+			table.insert(list, 1, {name=self.extra.name, action="extra", action_fct=self.extra.fct, color=self.extra.color}) 
+		else
+			for i, extra in ipairs(self.extra) do
+				table.insert(list, i, {name=extra.name, action="extra", action_fct=extra.fct, color=extra.color}) 
+			end
+		end
 	end
 
 	self.max = 0
