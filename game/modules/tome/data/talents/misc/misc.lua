@@ -315,9 +315,12 @@ newTalent{
 	no_unlearn_last = true,
 	action = function(self, t)
 		if game.level.map:checkAllEntities(self.x, self.y, "block_move") then game.log("You can not teleport there.") return true end
-		game.party:removeMember(self, true)
-		game.party:findSuitablePlayer()
-		game.player:move(self.x, self.y, true)
+		game:onTickEnd(function()
+			game.party:removeMember(self, true)
+			game.party:findSuitablePlayer()
+			game.player:move(self.x, self.y, true)
+			game.player:attr("dont_act", -1)
+		end)
 		return true
 	end,
 	info = [[Use the onboard short-range teleport of the Fortress to beam down to the surface.]]

@@ -141,7 +141,7 @@ newTalent{
 			game.logPlayer(self, "This spell can not be cast here.")
 			return
 		end
-		if not self:canBe("planechange") then
+		if not self:canBe("planechange") or target.summon_time or target.summon then
 			game.logPlayer(self, "The spell fizzles...")
 			return
 		end
