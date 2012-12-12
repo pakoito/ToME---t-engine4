@@ -32,6 +32,19 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 		if dam <= 0 then return add_dam end
 	end
 
+	if src:attr("elemental_mastery") then
+		local ndam = dam * 0.3
+		local old = src.elemental_mastery
+		src.elemental_mastery = nil
+		dam = 0
+		dam = dam + DamageType:get(DamageType.FIRE).projector(src, x, y, DamageType.FIRE, ndam, tmp, no_martyr)
+		dam = dam + DamageType:get(DamageType.COLD).projector(src, x, y, DamageType.COLD, ndam, tmp, no_martyr)
+		dam = dam + DamageType:get(DamageType.LIGHTNING).projector(src, x, y, DamageType.LIGHTNING, ndam, tmp, no_martyr)
+		dam = dam + DamageType:get(DamageType.ARCANE).projector(src, x, y, DamageType.ARCANE, ndam, tmp, no_martyr)
+		src.elemental_mastery = old
+		return dam
+	end
+
 	local terrain = game.level.map(x, y, Map.TERRAIN)
 	if terrain then terrain:check("damage_project", src, x, y, type, dam) end
 
