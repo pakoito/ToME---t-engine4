@@ -149,6 +149,14 @@ function _M:defineDisplayCallback()
 	end)
 end
 
+function _M:takePowerHit(val, src)
+	self.unit_power = (self.unit_power or 0) - val
+	if self.unit_power <= 0 then
+		game.logSeen(self, "%s kills %s.", src.name:capitalize(), self.name)
+		self:die(src)
+	end
+end
+
 function _M:encounterAttack(target, x, y)
 	if target.player then target:onWorldEncounter(self, self.x, self.y) return end
 

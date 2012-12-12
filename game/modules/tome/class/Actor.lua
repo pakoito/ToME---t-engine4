@@ -3463,6 +3463,10 @@ function _M:preUseTalent(ab, silent, fake)
 			if not silent then game.logPlayer(self, "You do not have enough feedback to use %s.", ab.name) end
 			return false
 		end
+		if ab.fortress_energy and game:getPlayer(true):hasQuest("shertul-fortress") and game:getPlayer(true):hasQuest("shertul-fortress").shertul_energy < ab.fortress_energy then
+			if not silent then game.logPlayer(self, "You do not have enough fortress energy to use %s.", ab.name) end
+			return false
+		end
 	end
 
 	-- Equilibrium is special, it has no max, but the higher it is the higher the chance of failure (and loss of the turn)
@@ -3725,6 +3729,9 @@ function _M:postUseTalent(ab, ret)
 		if ab.feedback and not self:attr("zero_resource_cost") then
 			trigger = true; self:incFeedback(-ab.feedback * (100 + 2 * self:combatFatigue()) / 100)
 		end
+		if ab.fortress_energy and game:getPlayer(true):hasQuest("shertul-fortress") and not self:attr("zero_resource_cost") then
+			trigger = true; game:getPlayer(true):hasQuest("shertul-fortress").shertul_energy = game:getPlayer(true):hasQuest("shertul-fortress").shertul_energy - ab.fortress_energy
+		end
 	end
 
 	if trigger and self:hasEffect(self.EFF_BURNING_HEX) then
@@ -3884,6 +3891,7 @@ function _M:getTalentFullDescription(t, addlevel, config, fake_mastery)
 		if t.paradox then d:add({"color",0x6f,0xff,0x83}, "Paradox cost: ", {"color",  176, 196, 222}, ("%0.2f"):format(t.paradox * (1 + (self.paradox / 300))), true) end
 		if t.psi then d:add({"color",0x6f,0xff,0x83}, "Psi cost: ", {"color",0x7f,0xff,0xd4}, ""..(t.psi * (100 + 2 * self:combatFatigue()) / 100), true) end
 		if t.feedback then d:add({"color",0x6f,0xff,0x83}, "Feedback cost: ", {"color",0xFF, 0xFF, 0x00}, ""..(t.feedback * (100 + 2 * self:combatFatigue()) / 100), true) end
+		if t.fortress_energy then d:add({"color",0x6f,0xff,0x83}, "Fortress Energy cost: ", {"color",0x00,0xff,0xa0}, ""..(t.fortress_energy), true) end
 
 		if t.sustain_mana then d:add({"color",0x6f,0xff,0x83}, "Sustain mana cost: ", {"color",0x7f,0xff,0xd4}, ""..(util.getval(t.sustain_mana, self, t)), true) end
 		if t.sustain_stamina then d:add({"color",0x6f,0xff,0x83}, "Sustain stamina cost: ", {"color",0xff,0xcc,0x80}, ""..(t.sustain_stamina), true) end
