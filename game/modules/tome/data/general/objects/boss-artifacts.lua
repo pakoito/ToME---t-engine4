@@ -871,7 +871,9 @@ newEntity{ base = "BASE_GEM", define_as = "CRYSTAL_FOCUS",
 			o.set_list = { {"is_crystalline_armor", true} }
 			o.on_set_complete = function(self, who)
 				self.talent_on_spell = { {chance=10, talent="T_MANATHRUST", level=3} }
-				self.combat.talent_on_hit = { T_MANATHRUST = {level=3, chance=10} }
+				if(self.combat) then self.combat.talent_on_hit = { T_MANATHRUST = {level=3, chance=10} }
+				else self.wielder.combat.talent_on_hit = { T_MANATHRUST = {level=3, chance=10} }
+				end
 				self:specialSetAdd({"wielder","combat_spellcrit"}, 10)
 				self:specialSetAdd({"wielder","combat_physcrit"}, 10)
 				self:specialSetAdd({"wielder","resists_pen"}, {[engine.DamageType.ARCANE]=20, [engine.DamageType.PHYSICAL]=15})
@@ -879,7 +881,9 @@ newEntity{ base = "BASE_GEM", define_as = "CRYSTAL_FOCUS",
 			end
 			o.on_set_broken = function(self, who)
 				self.talent_on_spell = nil
-				self.combat.talent_on_hit = nil
+				if (self.combat) then self.combat.talent_on_hit = nil
+				else self.wielder.combat.talent_on_hit = nil
+				end
 				game.logPlayer(who, "#GOLD#The humming from the crystalline artifacts fades as they are separated.")
 			end
 
