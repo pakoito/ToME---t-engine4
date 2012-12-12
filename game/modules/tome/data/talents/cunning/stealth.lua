@@ -39,14 +39,19 @@ newTalent{
 
 		-- Check nearby actors
 		if not self.x or not self.y or not game.level then return end
-		local grids = core.fov.circle_grids(self.x, self.y, t.getRadius(self, t), true)
-		for x, yy in pairs(grids) do for y in pairs(yy) do
-			local actor = game.level.map(x, y, game.level.map.ACTOR)
-			if actor and actor ~= self and actor:reactionToward(self) < 0 and not rng.percent(self.hide_chance or 0) then
-				if not silent then game.logPlayer(self, "You cannot Stealth with nearby foes watching!") end
-				return nil
-			end
-		end end
+
+		if not rng.percent(self.hide_chance or 0) then
+			local grids = core.fov.circle_grids(self.x, self.y, t.getRadius(self, t), true)
+			for x, yy in pairs(grids) do for y in pairs(yy) do
+				local actor = game.level.map(x, y, game.level.map.ACTOR)
+				if actor and actor ~= self and actor:reactionToward(self) < 0 then
+					if not actor:hasEffect(actor.EFF_DIM_VISION) then
+						if not silent then game.logPlayer(self, "You cannot Stealth with nearby foes watching!") end
+						return nil
+					end
+				end
+			end end
+		end
 		return true
 	end,
 	activate = function(self, t)

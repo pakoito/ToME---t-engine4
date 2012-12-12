@@ -159,9 +159,10 @@ newTalent{
 	proj_speed = 10,
 	requires_target = true,
 	range = 10,
+	radius = function(self, t) return math.floor(0.5 * self:getTalentLevel(t)) end,
 	tactical = { DISABLE = { blind = 2 } },
 	action = function(self, t)
-		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
+		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:projectile(tg, x, y, DamageType.STICKY_SMOKE, math.ceil(self:getTalentLevel(t) * 1.2), {type="slime"})
@@ -169,9 +170,10 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Throws a vial of sticky smoke that explodes on your foe, reducing its vision range by %d for 5 turns.
+		return ([[Throws a vial of sticky smoke that explodes in radius %d on your foe, reducing its vision range by %d for 5 turns.
+		Creatures affected by smoke bomb can never prevent you from stealthing even if they are close to you.
 		This can be used while stealthed.]]):
-		format(math.ceil(self:getTalentLevel(t) * 1.2))
+		format(self:getTalentRadius(t), math.ceil(self:getTalentLevel(t) * 1.2))
 	end,
 }
 
