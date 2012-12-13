@@ -89,7 +89,7 @@ newTalent{
 
 		-- Try to knockback !
 		local can = function(target)
-			if target:checkHit(self:combatPhysicalpower(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("knockback") then
+			if target:checkHit(math.max(self:combatAttack(), self:combatPhysicalpower()), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("knockback") then
 				return true
 			else
 				game.logSeen(target, "%s resists the knockback!", target.name:capitalize())
@@ -106,7 +106,7 @@ newTalent{
 	info = function(self, t)
 		return ([[A mighty kick that pushes your target away %d grids.
 		If another creature is in the way it will also be pushed away.
-		Knockback chance increase with your Dexterity stat.]]):format(math.floor(2 + self:getTalentLevel(t)))
+		Knockback chance increase with your accuracy or physical power stat (whichever is greater).]]):format(math.floor(2 + self:getTalentLevel(t)))
 	end,
 }
 
