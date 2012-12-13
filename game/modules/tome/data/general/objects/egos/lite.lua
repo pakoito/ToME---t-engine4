@@ -171,7 +171,7 @@ newEntity{
 newEntity{
 	power_source = {nature=true},
 	name = "healer's ", prefix=true, instant_resolve=true,
-	keywords = {heakler=true},
+	keywords = {healer=true},
 	level_range = {1, 50},
 	rarity = 9,
 	cost = 12,
