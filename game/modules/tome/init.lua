@@ -84,7 +84,7 @@ load_tips = {
 	{image="/data/gfx/shockbolt/object/rune_red.png", text=[[Shield runes act instantly, letting one protect oneself quickly whilst also preparing to flee or launch a counter attack.]]},
 	{image="/data/gfx/shockbolt/object/plate_voratun.png", text=[[Greater training in the use of armour lets it be used more effectively, blocking more damage and reducing the chance of an enemy hitting a critical spot.]]},
 	{image="/data/gfx/talents/thick_skin.png", text=[[The Thick Skin talent reducing all incoming damage, letting you survive for longer before needing to heal.]]},
-	{image="/data/gfx/shockbolt/object/rune_green", text=[[Regeneration infusions act over several turns, letting you anticipate damage that will be taken and prepare for it.]]},
+	{image="/data/gfx/shockbolt/object/rune_green.png", text=[[Regeneration infusions act over several turns, letting you anticipate damage that will be taken and prepare for it.]]},
 	{image="/data/gfx/shockbolt/object/wand_elm.png", text=[[In the most dire circumstances teleportation can be the best escape, but is not without risk.]]},
 	{image="/data/gfx/shockbolt/npc/humanoid_halfling_protector_myssil.png", text=[[The Ziguranth are an ancient order vehemently opposed to magic. Some have become so attuned to nature they can resist arcane forces with their will alone.]]},
 	{image="/data/gfx/shockbolt/npc/giant_ice_snow_giant.png", img_y_off=-20, text=[[Records say that giants once lived civilised lives, with mastery of many crafts and sciences. Now though they have adopted nomadic cultures, turning hostile against those that encroach on their lands.]]},
