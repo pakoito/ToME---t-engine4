@@ -35,10 +35,31 @@ local function getEfficiency(self, t)
 	return 0.01*(50 + math.min(self:getCun(30, true), 50))
 end
 
+local function kineticElement(self, t, damtype)
+	if damtype == DamageType.PHYSICAL or damtype == DamageType.ACID then return true end
+	if damtype == DamageType.NATURE and self:getTalentLevel(self.T_ABSORPTION_MASTERY) >= 3 then return true end
+	if damtype == DamageType.TEMPORAL and self:getTalentLevel(self.T_ABSORPTION_MASTERY) >= 6 then return true end
+	return false
+end
+
+local function thermalElement(self, t, damtype)
+	if damtype == DamageType.FIRE or damtype == DamageType.COLD then return true end
+	if damtype == DamageType.LIGHT and self:getTalentLevel(self.T_ABSORPTION_MASTERY) >= 3 then return true end
+	if damtype == DamageType.ARCANE and self:getTalentLevel(self.T_ABSORPTION_MASTERY) >= 6 then return true end
+	return false
+end
+
+local function chargedElement(self, t, damtype)
+	if damtype == DamageType.LIGHTNING or damtype == DamageType.BLIGHT then return true end
+	if damtype == DamageType.DARKNESS and self:getTalentLevel(self.T_ABSORPTION_MASTERY) >= 3 then return true end
+	if damtype == DamageType.MIND and self:getTalentLevel(self.T_ABSORPTION_MASTERY) >= 6 then return true end
+	return false
+end
+
 newTalent{
 	name = "Kinetic Shield",
 	type = {"psionic/absorption", 1},
-	require = psi_absorb,
+	require = psi_wil_req1,
 	mode = "sustained", no_sustain_autoreset = true,
 	points = 5,
 	sustain_psi = 30,
@@ -62,7 +83,7 @@ newTalent{
 		local absorbable_dam = getEfficiency(self,t)* total_dam
 		local guaranteed_dam = total_dam - absorbable_dam
 		dam = absorbable_dam
-		if damtype ~= DamageType.PHYSICAL and damtype ~= DamageType.ACID then return total_dam end
+		if not kineticElement(self, t, damtype) then return total_dam end
 
 		if dam <= self.kinetic_shield then
 			self:incPsi(2 + dam/mast)
@@ -113,7 +134,7 @@ newTalent{
 		local guaranteed_dam = total_dam - absorbable_dam
 		dam = absorbable_dam
 
-		if damtype == DamageType.PHYSICAL or damtype == DamageType.ACID then
+		if kineticElement(self, t, damtype) then
 			-- Absorb damage into the shield
 			if dam <= self.kinspike_shield_absorb then
 				self.kinspike_shield_absorb = self.kinspike_shield_absorb - dam
@@ -151,8 +172,8 @@ newTalent{
 
 newTalent{
 	name = "Thermal Shield",
-	type = {"psionic/absorption", 1},
-	require = psi_absorb,
+	type = {"psionic/absorption", 2},
+	require = psi_wil_req2,
 	mode = "sustained", no_sustain_autoreset = true,
 	points = 5,
 	sustain_psi = 30,
@@ -177,7 +198,7 @@ newTalent{
 		local absorbable_dam = getEfficiency(self,t)* total_dam
 		local guaranteed_dam = total_dam - absorbable_dam
 		dam = absorbable_dam
-		if damtype ~= DamageType.FIRE and damtype ~= DamageType.COLD then return total_dam end
+		if not thermalElement(self, t, damtype) then return total_dam end
 
 		if dam <= self.thermal_shield then
 			self:incPsi(2 + dam/mast)
@@ -225,7 +246,7 @@ newTalent{
 		local guaranteed_dam = total_dam - absorbable_dam
 		dam = absorbable_dam
 
-		if damtype == DamageType.FIRE or damtype == DamageType.COLD then
+		if thermalElement(self, t, damtype) then
 			-- Absorb damage into the shield
 			if dam <= self.thermspike_shield_absorb then
 				self.thermspike_shield_absorb = self.thermspike_shield_absorb - dam
@@ -261,8 +282,8 @@ newTalent{
 
 newTalent{
 	name = "Charged Shield",
-	type = {"psionic/absorption", 1},
-	require = psi_absorb,
+	type = {"psionic/absorption", 3},
+	require = psi_wil_req3,
 	mode = "sustained", no_sustain_autoreset = true,
 	points = 5,
 	sustain_psi = 30,
@@ -286,7 +307,7 @@ newTalent{
 		local absorbable_dam = getEfficiency(self,t)* total_dam
 		local guaranteed_dam = total_dam - absorbable_dam
 		dam = absorbable_dam
-		if damtype ~= DamageType.LIGHTNING and damtype ~= DamageType.BLIGHT then return total_dam end
+		if not chargedElement(self, t, damtype) then return total_dam end
 
 		if dam <= self.charged_shield then
 			self:incPsi(2 + dam/mast)
@@ -333,7 +354,7 @@ newTalent{
 		local absorbable_dam = 1* total_dam
 		local guaranteed_dam = total_dam - absorbable_dam
 		dam = absorbable_dam
-		if damtype == DamageType.LIGHTNING or damtype == DamageType.BLIGHT then
+		if chargedElement(self, t, damtype) then
 			-- Absorb damage into the shield
 			if dam <= self.chargespike_shield_absorb then
 				self.chargespike_shield_absorb = self.chargespike_shield_absorb - dam
@@ -370,7 +391,7 @@ newTalent{
 newTalent{
 	name = "Absorption Mastery",
 	type = {"psionic/absorption", 4},
-	require = psi_wil_req2,
+	require = psi_wil_req4,
 	cooldown = function(self, t)
 		return math.floor(120 - self:getTalentLevel(t)*12)
 	end,
@@ -390,6 +411,11 @@ newTalent{
 	end,
 
 	info = function(self, t)
-		return ([[When activated, brings all shields off cooldown. Additional talent points spent in Absorption Mastery allow it to be used more frequently.]])
+		return ([[When activated, brings all shields off cooldown. Additional talent points spent in Absorption Mastery allow it to be used more frequently.
+		At level 3 and 6 your shields gain new elemental absorption too:
+		- Kinetic Shield: Nature at level 3, Temporal at level 6
+		- Thermal Shield: Light at level 3, Arcane at level 6
+		- Charged Shield: Darkness at level 3, Mind at level 6
+		]])
 	end,
 }
