@@ -235,7 +235,9 @@ newTalent{
 	end,
 	on_arrival = function(self, t, m)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t, x=m.x, y=m.y}
-		self:project(tg, m.x, m.y, DamageType.TEMP_EFFECT, {foes=true, eff=self.EFF_SLOW_MOVE, dur=4+self:getTalentLevelRaw(t), p={power=0.1+self:combatTalentMindDamage(t, 5, 500)/1000}}, {type="flame"})
+		local duration = 4 + math.ceil(2*self:getTalentLevel(t)^.5) 
+		local slowdown = self:combatTalentMindDamage(t, 5, 100)/(self:combatTalentMindDamage(t, 5, 100) + 85) -- Limit speed loss to 100%
+		self:project(tg, m.x, m.y, DamageType.TEMP_EFFECT, {foes=true, eff=self.EFF_SLOW_MOVE, dur=duration, p={power=slowdown}}, {type="flame"}) 
 	end,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
