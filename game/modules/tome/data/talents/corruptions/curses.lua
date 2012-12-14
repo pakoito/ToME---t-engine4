@@ -100,7 +100,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Curses your target, stopping any natural healing and dealing %0.2f darkness damage each turn for 10 turns.
-		The damage will increase with Magic stat.]]):format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 10, 70)))
+		The damage will increase with Magic stat.]]):format(damDesc(self, DamageType.DARKNESS, self:combatTalentSpellDamage(t, 10, 70)))
 	end,
 }
 
