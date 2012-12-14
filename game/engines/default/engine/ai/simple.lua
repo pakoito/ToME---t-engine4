@@ -32,17 +32,59 @@ end)
 newAI("move_dmap", function(self)
 	if self.ai_target.actor and self.x and self.y then
 		local a = self.ai_target.actor
+		local ax, ay = self:aiSeeTargetPos(a)
 
 		local c = a:distanceMap(self.x, self.y)
-		if not c then return self:runAI("move_simple") end
 		local dir = 5
-		for _, i in ipairs(util.adjacentDirs()) do
-			local sx, sy = util.coordAddDir(self.x, self.y, i)
-			local cd = a:distanceMap(sx, sy)
---			print("looking for dmap", dir, i, "::", c, cd)
-			if cd and cd > c and self:canMove(sx, sy) then c = cd; dir = i end
-		end
 
+		if c and ax == a.x and ay == a.y then
+			for _, i in ipairs(util.adjacentDirs()) do
+				local sx, sy = util.coordAddDir(self.x, self.y, i)
+				local cd = a:distanceMap(sx, sy)
+--				print("looking for dmap", dir, i, "::", c, cd)
+				if cd and cd > c and self:canMove(sx, sy) then c = cd; dir = i end
+			end
+			return self:moveDirection(util.coordAddDir(self.x, self.y, dir))
+		else
+			return self:runAI("move_simple")
+		end
+	end
+end)
+
+newAI("flee_simple", function(self)
+	if self.ai_target.actor then
+		local a = self.ai_target.actor
+		local ax, ay = self:aiSeeTargetPos(a)
+		local dir = util.opposedDir(util.getDir(ax, ay, self.x, self.y), self.x, self.y)
+		local sx, sy = util.coordAddDir(self.x, self.y, dir)
+
+		-- If we cannot move directly away, try to move to the sides
+		if not self:canMove(sx, sy) then
+			local sides = util.dirSides(dir, self.x, self.y)
+			local check_order = {}
+			if rng.percent(50) then
+				table.insert(check_order, "left")
+				table.insert(check_order, "right")
+			else
+				table.insert(check_order, "right")
+				table.insert(check_order, "left")
+			end
+			if rng.percent(50) then
+				table.insert(check_order, "hard_left")
+				table.insert(check_order, "hard_right")
+			else
+				table.insert(check_order, "hard_right")
+				table.insert(check_order, "hard_left")
+			end
+			for _, side in ipairs(check_order) do
+				local check_dir = sides[side]
+				local sx, sy = util.coordAddDir(self.x, self.y, check_dir)	
+				if self:canMove(sx, sy) then
+					dir = check_dir
+					break
+				end
+			end
+		end
 		return self:moveDirection(util.coordAddDir(self.x, self.y, dir))
 	end
 end)
@@ -50,6 +92,7 @@ end)
 newAI("flee_dmap", function(self)
 	if self.ai_target.actor then
 		local a = self.ai_target.actor
+		local ax, ay = self:aiSeeTargetPos(a)
 
 		local c = a:distanceMap(self.x, self.y)
 		local dir = 5
@@ -64,46 +107,18 @@ newAI("flee_dmap", function(self)
 		end
 
 		-- If we do not accurately know the targets position, move away from where we think it is
-		local ax, ay = self:aiSeeTargetPos(a)
-		if (ax ~= a.x or ay ~= a.y or dir == 5) then
-			dir = util.opposedDir(util.getDir(ax, ay, self.x, self.y), self.x, self.y)
-			local sx, sy = util.coordAddDir(self.x, self.y, dir)
-			-- If we cannot move directly away, try to move to the sides
-			if not self:canMove(sx, sy) then
-				local sides = util.dirSides(dir, self.x, self.y)
-				local check_order = {}
-				if rng.percent(50) then
-					table.insert(check_order, "left")
-					table.insert(check_order, "right")
-				else
-					table.insert(check_order, "right")
-					table.insert(check_order, "left")
-				end
-				if rng.percent(50) then
-					table.insert(check_order, "hard_left")
-					table.insert(check_order, "hard_right")
-				else
-					table.insert(check_order, "hard_right")
-					table.insert(check_order, "hard_left")
-				end
-				for _, side in ipairs(check_order) do
-					local check_dir = sides[side]
-					local sx, sy = util.coordAddDir(self.x, self.y, check_dir)	
-					if self:canMove(sx, sy) then
-						dir = check_dir
-						break
-					end
-				end
-			end
+		if  dir == 5 then
+			return self:runAI("flee_simple")
+		-- Otherwise, move in the dmap direction
+		else
+			return self:moveDirection(util.coordAddDir(self.x, self.y, dir))
 		end
 
-		return self:moveDirection(util.coordAddDir(self.x, self.y, dir))
 	end
 end)
 
 newAI("move_astar", function(self, add_check)
 	if self.ai_target.actor then
-		print("add_check: ", add_check)
 		local tx, ty = self:aiSeeTargetPos(self.ai_target.actor)
 		local a = Astar.new(game.level.map, self)
 		local path = a:calc(self.x, self.y, tx, ty, nil, nil, add_check)
