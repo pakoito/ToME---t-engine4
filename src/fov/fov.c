@@ -1618,14 +1618,17 @@ void fov_beam_any_angle(fov_settings_type *settings, void *map, void *source,
 
 #define LARGE_ASS_LOS_FINISH(do_blocked, signy, rx, ry)                                           \
     fdx = (float)line->dest_t;                                                                    \
+    fdy = (float)delta_y;                                                                         \
     rx = dest_##rx;                                                                               \
+    ly0 = lower_blen;                                                                             \
+    uy0 = upper_blen;                                                                             \
     if ((int)(lower_start_y + fdx*lower_slope + GRID_EPSILON) < delta_y) {                        \
         ry = dest_##ry;                                                                           \
-        fdy = (float)delta_y;                                                                     \
                                                                                                   \
         GET_NEXT_LARGE_ASS_DATA(max, min, upp, low, -, true)                                      \
                                                                                                   \
         /* now set lowers */                                                                      \
+        ly0 = next_blen - 3;                                                                      \
         lower_blen = next_blen;                                                                   \
         lower_slope = next_slope;                                                                 \
         lower_start_y = next_start_y;                                                             \
@@ -1638,8 +1641,10 @@ void fov_beam_any_angle(fov_settings_type *settings, void *map, void *source,
         GET_NEXT_LARGE_ASS_DATA(min, max, low, upp, , true)                                       \
                                                                                                   \
         /* now set uppers */                                                                      \
+        uy0 = next_blen - 3;                                                                      \
         upper_slope = next_slope;                                                                 \
         upper_start_y = next_start_y;                                                             \
+        fdy = (float)delta_y;                                                                     \
     }                                                                                             \
                                                                                                   \
     /* Calculate the best line to target (a simple average can make weird lines at times). */     \
@@ -1648,22 +1653,22 @@ void fov_beam_any_angle(fov_settings_type *settings, void *map, void *source,
     /* On the other hand, this would probably be done better if it were redone :-P */             \
     slope = upper_start_y + fdx*upper_slope;                                                      \
     next_slope = lower_start_y + fdx*lower_slope;                                                 \
-    next_start_y = -fdx*(upper_start_y*lower_slope +                                              \
+    next_start_y = -2.0f*fdx*(upper_start_y*lower_slope +                                         \
                          lower_start_y*upper_slope +                                              \
                          fdx*lower_slope*upper_slope)                                             \
-                   - 2.0f*lower_start_y*upper_start_y;                                            \
+                   - 4.0f*lower_start_y*upper_start_y;                                            \
     slope = upper_start_y*upper_start_y + slope*slope;                                            \
     prev_slope = lower_start_y - upper_start_y + fdx*lower_slope - fdx*upper_slope;               \
                                                                                                   \
-    next_slope = slope + 2.0f*next_start_y + next_slope*next_slope + lower_start_y*lower_start_y; \
-    prev_slope = slope + next_start_y + 2*fdy*prev_slope + prev_slope + lower_start_y - upper_start_y; \
+    next_slope = slope + next_start_y + next_slope*next_slope + lower_start_y*lower_start_y;      \
+    prev_slope = 2.0f*slope + next_start_y + 2.0f*fdy*prev_slope + prev_slope + lower_start_y - upper_start_y; \
+                                                                                                  \
     if (next_slope > GRID_EPSILON || next_slope < -GRID_EPSILON) {                                \
-        slope = prev_slope / next_slope;                                                          \
-        if (slope < 0.0f) {                                                                       \
-            slope = 0.0f;                                                                         \
-        } else if (slope > 1.0f) {                                                                \
-            slope = 1.0f;                                                                         \
-        } else {                                                                                  \
+        slope = 0.5f * prev_slope / next_slope;                                                   \
+        if (slope < 0.01f) {                                                                      \
+            slope = 0.01f;                                                                        \
+        } else if (slope > 0.99f) {                                                               \
+            slope = 0.99f;                                                                        \
         }                                                                                         \
         line->step_##ry = signy (slope*lower_slope + (1.0f - slope)*upper_slope);                 \
         line->start_##ry = slope*lower_start_y + (1.0f - slope)*upper_start_y;                    \
@@ -1674,13 +1679,71 @@ void fov_beam_any_angle(fov_settings_type *settings, void *map, void *source,
     if (line->start_##ry > y_max) {                                                               \
         line->start_##ry = y_max;                                                                 \
     }                                                                                             \
-    if ((int)(line->start_##ry signy fdx*line->step_##ry - GRID_EPSILON) < delta_y) {             \
-        line->eps = signy (-GRID_EPSILON);                                                        \
-    }                                                                                             \
     if (do_blocked) {                                                                             \
         line->is_blocked = true;                                                                  \
         line->block_t = line->dest_t - delta;                                                     \
-    }
+                                                                                                  \
+        if (ly0 > 0) {                                                                            \
+            if (uy0 > 0) { /* gotta iterate over constraints and set eps to maximize line */      \
+                slope = fabs(line->step_##ry / line->step_##rx);                                  \
+                boundary = upper_boundaries;                                                      \
+                ptr_end = upper_boundaries + uy0;                                                 \
+                do {                                                                              \
+                    if (boundary[Y] - line->start_##ry - slope*(boundary[X] - 0.5f) < GRID_EPSILON) { \
+                        fdt = boundary[X];                                                        \
+                        break;                                                                    \
+                    }                                                                             \
+                    boundary += 3;                                                                \
+                } while (boundary != ptr_end);                                                    \
+                                                                                                  \
+                boundary = lower_boundaries;                                                      \
+                ptr_end = lower_boundaries + ly0;                                                 \
+                do {                                                                              \
+                    if (boundary[X] - fdt > GRID_EPSILON) {                                       \
+                        break;                                                                    \
+                    }                                                                             \
+                    if (line->start_##ry + slope*(boundary[X] - 0.5f) - boundary[Y] < GRID_EPSILON) { \
+                        line->eps_##ry = signy 2.0f * GRID_EPSILON;                               \
+                        break;                                                                    \
+                    }                                                                             \
+                    boundary += 3;                                                                \
+                } while (boundary != ptr_end);                                                    \
+                                                                                                  \
+            } else {                                                                              \
+                line->eps_##ry = signy 2.0f * GRID_EPSILON;                                       \
+            }                                                                                     \
+        }                                                                                         \
+    } else if (ly0 > 0) {                                                                         \
+        line->eps_##ry = signy (-0.5f * GRID_EPSILON);                                            \
+        slope = fabs(line->step_##ry / line->step_##rx);                                          \
+        if (uy0 > 0) { /* gotta iterate over constraints and set eps to maximize line */          \
+            boundary = upper_boundaries;                                                          \
+            ptr_end = upper_boundaries + uy0;                                                     \
+            do {                                                                                  \
+                if (boundary[Y] - line->start_##ry - slope*(boundary[X] - 0.5f) < GRID_EPSILON) { \
+                    fdt = boundary[X];                                                            \
+                    break;                                                                        \
+                }                                                                                 \
+                boundary += 3;                                                                    \
+            } while (boundary != ptr_end);                                                        \
+        }                                                                                         \
+        boundary = lower_boundaries;                                                              \
+        ptr_end = lower_boundaries + ly0;                                                         \
+        do {                                                                                      \
+            if (boundary[X] - fdt > GRID_EPSILON) {                                               \
+                break;                                                                            \
+            }                                                                                     \
+            if (line->start_##ry + slope*(boundary[X] - 0.5f) - boundary[Y] < GRID_EPSILON) {     \
+                line->eps_##ry = signy 2.0f * GRID_EPSILON;                                       \
+                break;                                                                            \
+            }                                                                                     \
+            boundary += 3;                                                                        \
+        } while (boundary != ptr_end);                                                            \
+    }                                                                                             \
+    if ((int)(line->start_##ry signy fdx*line->step_##ry - GRID_EPSILON) < delta_y) {             \
+        line->eps_##ry = signy 0.5f * GRID_EPSILON;  /* is this still necessary? */               \
+    }                                                                                             \
+
 
 #define LARGE_ASS_LOS_DEFINE_OCTANT(signx, signy, rx, ry, nx, ny, nf)                             \
     static void large_ass_los_octant_##nx##ny##nf(                                                \
@@ -1690,7 +1753,7 @@ void fov_beam_any_angle(fov_settings_type *settings, void *map, void *source,
                                         int dest_x,                                               \
                                         int dest_y                                                \
         ) {                                                                                       \
-        int x, y, ly0, ly1, uy0, uy1, by0, by1, cy0, cy1, next_blen;                              \
+        int x, y, ly0, ly1, uy0, uy1, lc0, lc1, uc0, uc1, next_blen;                              \
         int dx = 0, lower_blen = 0, upper_blen = 0;                                               \
         int delta = signx (dest_##rx - line->source_##rx);                                        \
         int delta_y = signy (dest_##ry - line->source_##ry);                                      \
@@ -1715,7 +1778,8 @@ void fov_beam_any_angle(fov_settings_type *settings, void *map, void *source,
         rx = line->source_##rx;                                                                   \
         line->step_##rx = signx 1.0f;                                                             \
         line->start_##rx = 0.5f;                                                                  \
-        line->eps = signy GRID_EPSILON;                                                           \
+        line->eps_##rx = 0.0f;                                                                    \
+        line->eps_##ry = signy (-2.0f * GRID_EPSILON);                                            \
         line->dest_t = delta;                                                                     \
                                                                                                   \
         /* check upper when dx == 0 */                                                            \
@@ -1731,6 +1795,7 @@ void fov_beam_any_angle(fov_settings_type *settings, void *map, void *source,
                 upper_boundaries[Y] = 1.0f;                                                       \
                 upper_boundaries[K] = (1.0f - y_max) / pms;                                       \
                 upper_start_y = 1.0f - upper_slope * pms;                                         \
+                upper_blen = 3;                                                                   \
             }                                                                                     \
         }                                                                                         \
                                                                                                   \
@@ -1742,43 +1807,52 @@ void fov_beam_any_angle(fov_settings_type *settings, void *map, void *source,
             dx += 1;                                                                              \
             rx = rx signx 1;                                                                      \
             fdx = (float)dx;                                                                      \
+                                                                                                  \
             ly0 = (int)(lower_start_y + (fdx - pms)*lower_slope + GRID_EPSILON); /* lower L */    \
-            ly1 = (int)(lower_start_y + (fdx + pms)*lower_slope - GRID_EPSILON); /* lower R */    \
-            uy0 = (int)(upper_start_y + (fdx - pms)*upper_slope + GRID_EPSILON); /* upper L */    \
+            lc0 = (int)(y_min + (fdx - pms)*slope_min + GRID_EPSILON);     /* lower boundary */   \
+            ly1 = (int)(lower_start_y + (fdx + pms)*lower_slope + GRID_EPSILON); /* lower R */    \
+            lc1 = (int)(y_min + (fdx + pms)*slope_min + GRID_EPSILON); /* lower constraint */     \
+                                                                                                  \
+            uy0 = (int)(upper_start_y + (fdx - pms)*upper_slope - GRID_EPSILON); /* upper L */    \
+            uc0 = (int)(y_max + (fdx - pms)*slope_max - GRID_EPSILON); /* upper constraint */     \
             uy1 = (int)(upper_start_y + (fdx + pms)*upper_slope - GRID_EPSILON); /* upper R */    \
-            by0 = (int)(y_min + (fdx - pms)*slope_min + GRID_EPSILON);     /* lower boundary */   \
-            by1 = (int)(y_max + (fdx + pms)*slope_max - GRID_EPSILON);     /* upper boundary */   \
-            cy0 = (int)(y_min + (fdx + pms)*slope_min + GRID_EPSILON);     /* lower constraint */ \
-            cy1 = (int)(y_max + (fdx - pms)*slope_max - GRID_EPSILON);     /* upper constraint */ \
+            uc1 = (int)(y_max + (fdx + pms)*slope_max - GRID_EPSILON);     /* upper boundary */   \
                                                                                                   \
-            if (ly1 < by0) {                                                                      \
-                ly0 = by0;                                                                        \
-                ly1 = by0;                                                                        \
-            } else if (ly0 < by0) {                                                               \
-                ly0 = by0;                                                                        \
+            if (ly0 < lc0) {                                                                      \
+                ly0 = lc0;                                                                        \
             }                                                                                     \
-                                                                                                  \
-            if (uy0 > by1) {                                                                      \
-                uy1 = by1;                                                                        \
-                uy0 = by1;                                                                        \
-            } else if (uy1 > by1) {                                                               \
-                uy1 = by1;                                                                        \
+            if (ly1 < lc1) {                                                                      \
+                ly1 = lc1;                                                                        \
+            }                                                                                     \
+            if (uy0 > uc0) {                                                                      \
+                uy0 = uc0;                                                                        \
+            }                                                                                     \
+            if (uy1 > uc1) {                                                                      \
+                uy1 = uc1;                                                                        \
             }                                                                                     \
                                                                                                   \
             ry = line->source_##ry signy ly0;                                                     \
             if (settings->opaque(map, x, y)) {                                                    \
-                if (ly0 == uy0 || ly0 == cy1) {                                                   \
+                if (ly0 == uy0 &&                                                                 \
+                    (upper_blen == 0 || fdx - upper_boundaries[upper_blen - 3 + X] > GRID_EPSILON)) \
+                {                                                                               \
                     /* BLOCKED */                                                                 \
-                    LARGE_ASS_LOS_FINISH(true, signy, rx, ry)                                     \
+                    if (delta || ly0 != delta_y) {                                                \
+                        LARGE_ASS_LOS_FINISH(true, signy, rx, ry)                                 \
+                    } else {                                                                      \
+                        LARGE_ASS_LOS_FINISH(false, signy, rx, ry)                                \
+                    }                                                                             \
                     return;                                                                       \
                 }                                                                                 \
                 /* CALC LOWER SLOPE */                                                            \
-                fdy = (float)uy0;                                                                 \
+                fdy = (float)(ly0 + 1);                                                           \
                 fdx -= pms;                                                                       \
                                                                                                   \
                 GET_NEXT_LARGE_ASS_DATA(max, min, upp, low, -, true)                              \
                                                                                                   \
-                if ((int)(next_start_y + fdt*next_slope + GRID_EPSILON) > delta_y) {              \
+                if ((int)(next_start_y + fdt*next_slope + GRID_EPSILON) > delta_y ||              \
+                    upper_slope - next_slope < GRID_EPSILON)                                      \
+                {                                                                                 \
                     LARGE_ASS_LOS_FINISH(true, signy, rx, ry)                                     \
                     return;                                                                       \
                 }                                                                                 \
@@ -1790,22 +1864,28 @@ void fov_beam_any_angle(fov_settings_type *settings, void *map, void *source,
                 lower_boundaries = next_boundaries;                                               \
                                                                                                   \
                 ry = line->source_##ry signy uy0;                                                 \
-                if (settings->opaque(map, x, y)) {                                                \
+                if (ly0 != uy0 && settings->opaque(map, x, y)) {                                  \
                     /* BLOCKED */                                                                 \
-                    LARGE_ASS_LOS_FINISH(true, signy, rx, ry)                                     \
+                    if (delta) {                                                                  \
+                        LARGE_ASS_LOS_FINISH(true, signy, rx, ry)                                 \
+                    } else {                                                                      \
+                        LARGE_ASS_LOS_FINISH(false, signy, rx, ry)                                \
+                    }                                                                             \
                     return;                                                                       \
                 }                                                                                 \
                                                                                                   \
                 /* done setting lower slope, now set upper slope if necessary */                  \
                 ry = line->source_##ry signy uy1;                                                 \
-                if (uy0 != uy1 && settings->opaque(map, x, y)) {                                  \
+                if (delta && uy0 != uy1 && settings->opaque(map, x, y)) {                         \
                     /* CALC UPPER SLOPE */                                                        \
                     fdy = (float)uy1;                                                             \
                     fdx += 2.0f * pms;                                                            \
                                                                                                   \
                     GET_NEXT_LARGE_ASS_DATA(min, max, low, upp, , true)                           \
                                                                                                   \
-                    if ((int)(next_start_y + fdt*next_slope + GRID_EPSILON) < delta_y) {          \
+                    if ((int)(next_start_y + fdt*next_slope - GRID_EPSILON) < delta_y ||          \
+                        next_slope - lower_slope < GRID_EPSILON)                                  \
+                    {                                                                             \
                         LARGE_ASS_LOS_FINISH(true, signy, rx, ry)                                 \
                         return;                                                                   \
                     }                                                                             \
@@ -1821,34 +1901,42 @@ void fov_beam_any_angle(fov_settings_type *settings, void *map, void *source,
             ry = line->source_##ry signy uy1;                                                     \
             if (ly0 != uy1 && settings->opaque(map, x, y)) {                                      \
                 ry = line->source_##ry signy ly1;                                                 \
-                if (uy1 == ly1 || uy1 == cy0 || settings->opaque(map, x, y)) {                    \
+                if (uy1 == ly1 || ly0 != ly1 && settings->opaque(map, x, y)) {                    \
                     /* BLOCKED */                                                                 \
-                    LARGE_ASS_LOS_FINISH(true, signy, rx, ry)                                     \
+                    if (delta) {                                                                  \
+                        LARGE_ASS_LOS_FINISH(true, signy, rx, ry)                                 \
+                    } else {                                                                      \
+                        LARGE_ASS_LOS_FINISH(false, signy, rx, ry)                                \
+                    }                                                                             \
                     return;                                                                       \
+                } else if(delta) {                                                                \
+                    /* CALC UPPER SLOPE */                                                        \
+                    fdy = (float)uy1;                                                             \
+                    fdx += pms;                                                                   \
+                                                                                                  \
+                    GET_NEXT_LARGE_ASS_DATA(min, max, low, upp, , true)                           \
+                                                                                                  \
+                    if ((int)(next_start_y + fdt*next_slope - GRID_EPSILON) < delta_y) {          \
+                        LARGE_ASS_LOS_FINISH(true, signy, rx, ry)                                 \
+                        return;                                                                   \
+                    }                                                                             \
+                    /* now set uppers */                                                          \
+                    upper_slope = next_slope;                                                     \
+                    upper_start_y = next_start_y;                                                 \
+                    upper_boundaries = next_boundaries;                                           \
+                    upper_blen = next_blen;                                                       \
                 }                                                                                 \
-                /* CALC UPPER SLOPE */                                                            \
-                fdy = (float)uy1;                                                                 \
-                fdx += pms;                                                                       \
-                                                                                                  \
-                GET_NEXT_LARGE_ASS_DATA(min, max, low, upp, , true)                               \
-                                                                                                  \
-                if ((int)(next_start_y + fdt*next_slope + GRID_EPSILON) < delta_y) {              \
-                    LARGE_ASS_LOS_FINISH(true, signy, rx, ry)                                     \
-                    return;                                                                       \
-                }                                                                                 \
-                                                                                                  \
-                /* now set uppers */                                                              \
-                upper_slope = next_slope;                                                         \
-                upper_start_y = next_start_y;                                                     \
-                upper_boundaries = next_boundaries;                                               \
-                upper_blen = next_blen;                                                           \
                 continue;                                                                         \
             }                                                                                     \
             ry = line->source_##ry signy (ly0 + 1);                                               \
             if (ly0 + 2 == uy1 && settings->opaque(map, x, y)) {                                  \
-                    /* BLOCKED */                                                                 \
+                /* BLOCKED */                                                                     \
+                if (delta) {                                                                      \
                     LARGE_ASS_LOS_FINISH(true, signy, rx, ry)                                     \
-                    return;                                                                       \
+                } else {                                                                          \
+                    LARGE_ASS_LOS_FINISH(false, signy, rx, ry)                                    \
+                }                                                                                 \
+                return;                                                                           \
             }                                                                                     \
         }                                                                                         \
     }
@@ -2129,7 +2217,8 @@ void fov_create_los_line(fov_settings_type *settings, void *map, void *source, f
     if (source_x == dest_x)
     {
         line->dest_t = abs(dest_y - source_y);
-        line->eps = 0.0f;
+        line->eps_x = 0.0f;
+        line->eps_y = 0.0f;
 
         if (source_y == dest_y) {
             return;
@@ -2155,7 +2244,8 @@ void fov_create_los_line(fov_settings_type *settings, void *map, void *source, f
     else if (source_y == dest_y)
     {
         line->dest_t = abs(dest_x - source_x);
-        line->eps = 0.0f;
+        line->eps_x = 0.0f;
+        line->eps_y = 0.0f;
 
         /* iterate through all x */
         int dx = (dest_x < source_x) ? -1 : 1;
@@ -2332,7 +2422,8 @@ void fov_create_los_line(fov_settings_type *settings, void *map, void *source, f
 
             /* if blocked, still try to make a "smartest line" that goes the farthest before becoming blocked */
             line->step_x = gx;
-            line->eps = gy * GRID_EPSILON;
+            line->eps_x = 0.0f;
+            line->eps_y = -gy * 2.0f * GRID_EPSILON;
             if (line->is_blocked) {
                 lower_slope = lower_slope_prev;
                 upper_slope = upper_slope_prev;
@@ -2341,7 +2432,7 @@ void fov_create_los_line(fov_settings_type *settings, void *map, void *source, f
                 line->step_y = 0.5f * gx * (lower_slope + upper_slope);
             } else if (gabs * (slope - lower_slope) < GRID_EPSILON && 0.5f - fabs((float)(sy - ty) + (float)x*lower_slope) > GRID_EPSILON) {
                 line->step_y = gx * lower_slope;
-                line->eps = -gy * GRID_EPSILON;
+                line->eps_y = gy * 2.0f * GRID_EPSILON;
             } else if (gabs * (upper_slope - slope) < GRID_EPSILON && 0.5f - fabs((float)(sy - ty) + (float)x*upper_slope) > GRID_EPSILON) {
                 line->step_y = gx * upper_slope;
             } else {
@@ -2452,7 +2543,8 @@ void fov_create_los_line(fov_settings_type *settings, void *map, void *source, f
 
             /* if blocked, still try to make a "smartest line" that goes the farthest before becoming blocked */
             line->step_y = gy;
-            line->eps = gx * GRID_EPSILON;
+            line->eps_y = 0.0f;
+            line->eps_x = -gx * 2.0f * GRID_EPSILON;
             if (line->is_blocked) {
                 lower_slope = lower_slope_prev;
                 upper_slope = upper_slope_prev;
@@ -2461,7 +2553,7 @@ void fov_create_los_line(fov_settings_type *settings, void *map, void *source, f
                 line->step_x = 0.5f * gy * (lower_slope + upper_slope);
             } else if (gabs * (slope - lower_slope) < GRID_EPSILON && 0.5f - fabs((float)(sx - tx) + (float)y*lower_slope) > GRID_EPSILON) {
                 line->step_x = gy * lower_slope;
-                line->eps = -gx * GRID_EPSILON;
+                line->eps_x = gx * 2.0f * GRID_EPSILON;
             } else if (gabs * (upper_slope - slope) < GRID_EPSILON && 0.5f - fabs((float)(sx - tx) + (float)y*upper_slope) > GRID_EPSILON) {
                 line->step_x = gy * upper_slope;
             } else {
@@ -2494,7 +2586,7 @@ void fov_create_los_line(fov_settings_type *settings, void *map, void *source, f
             fov_octant_##p5(&data, 1, 0.0f, end_slope, false, false, false, true);    \
             fov_octant_##p6(&data, 1, 0.0f, end_slope, false, false, false, true);    \
                                                                                       \
-        if (a - 3.0f > 3.0 * FLT_EPSILON) { /* a > 3.0f */                            \
+        if (a - 3.0f > 3.0f * FLT_EPSILON) { /* a > 3.0f */                           \
             start_slope = betweenf(4.0f - a, 0.0f, 1.0f);                             \
             fov_octant_##p7(&data, 1, start_slope, 1.0f, false, false, true, false);  \
             fov_octant_##p8(&data, 1, start_slope, 1.0f, false, false, false, false); \

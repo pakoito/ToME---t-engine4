@@ -160,7 +160,10 @@ typedef struct {
     float step_y;
 
     /** Epsilon used to round toward or away from cardinal directions based on adjacent obstructed grids */
-    float eps;
+    float eps_x;
+
+    /** Epsilon used to round toward or away from cardinal directions based on adjacent obstructed grids */
+    float eps_y;
 
     /** Whether or not the line is blocked */
     bool is_blocked;

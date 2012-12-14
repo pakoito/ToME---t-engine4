@@ -645,8 +645,8 @@ static int lua_fov_line_step(lua_State *L)
 	// If there is a tie, then choose the tile closer to a cardinal direction.
 	// If we weren't careful, this would be the most likely place to have floating precision
 	// errors that would be inconsistent with FoV.  Therefore, let's be extra cautious!
-	float fx = (float)line->t * line->step_x - line->eps;
-	float fy = (float)line->t * line->step_y - line->eps;
+	float fx = (float)line->t * line->step_x + line->eps_x;
+	float fy = (float)line->t * line->step_y + line->eps_y;
 	float x0 = line->start_x;
 	float y0 = line->start_y;
 	int x_prev = (fx < 0.0f) ? -(int)(x0 - fx) : (int)(x0 + fx);
@@ -668,15 +668,25 @@ static int lua_fov_line_step(lua_State *L)
 		if (dx > dy) {
 			corner_x = line->source_x + x_prev;
 			corner_y = line->source_y + y;
-			float val = fx - (float)x_prev + dy*line->step_x;
-			if (lua_line->fov.fov_settings.permissiveness - fabs(val) > GRID_EPSILON && lua_line->fov.fov_settings.opaque(&(lua_line->fov), corner_x, corner_y)) {
+			// XXX Note to future self: this checks the value of the line to the edge of the tile.  It needs to
+			// extend past the edge of the tile by an amount "0.5 - permissiveness".  Smallest and largest values
+			// of permissiveness will still work fine, but intermediate values will allow some trick shots.
+			fx += line->eps_x;
+			float val = (line->step_x < 0.0f) ? fx - (float)x_prev + dy*line->step_x : -fx + (float)x_prev - dy*line->step_x;
+			if (val + 0.5f + lua_line->fov.fov_settings.permissiveness - x0 > GRID_EPSILON &&
+				lua_line->fov.fov_settings.opaque(&(lua_line->fov), corner_x, corner_y)
+			) {
 				is_corner_blocked = true;
 			}
 		} else {
 			corner_x = line->source_x + x;
 			corner_y = line->source_y + y_prev;
-			float val = fy - (float)y_prev + dx*line->step_y;
-			if (lua_line->fov.fov_settings.permissiveness - fabs(val) > GRID_EPSILON && lua_line->fov.fov_settings.opaque(&(lua_line->fov), corner_x, corner_y)) {
+			// XXX Note to future self: see above note.
+			fy += line->eps_y;
+			float val = (line->step_y < 0.0f) ? fy - (float)y_prev + dx*line->step_y : -fy + (float)y_prev - dx*line->step_y;
+			if (val + 0.5f + lua_line->fov.fov_settings.permissiveness - y0 > GRID_EPSILON &&
+				lua_line->fov.fov_settings.opaque(&(lua_line->fov), corner_x, corner_y)
+			) {
 				is_corner_blocked = true;
 			}
 		}
@@ -765,9 +775,9 @@ static int lua_fov_line_blocked_xy(lua_State *L)
 	bool dont_stop_at_end = lua_toboolean(L, 2);
 
 	if (!line->is_blocked) return 0;
-	float val = (float)line->block_t * line->step_x - line->eps;
+	float val = (float)line->block_t * line->step_x + line->eps_x;
 	int x = (val < 0.0f) ? -(int)(line->start_x - val) : (int)(line->start_x + val);
-	val = (float)line->block_t * line->step_y - line->eps;
+	val = (float)line->block_t * line->step_y + line->eps_y;
 	int y = (val < 0.0f) ? -(int)(line->start_y - val) : (int)(line->start_y + val);
 	lua_pushnumber(L, line->source_x + x);
 	lua_pushnumber(L, line->source_y + y);
@@ -791,15 +801,15 @@ static int lua_fov_line_last_open_xy(lua_State *L)
 	float val;
 
 	if (line->is_blocked) {
-		val = (float)(line->block_t - 1) * line->step_x - line->eps;
+		val = (float)(line->block_t - 1) * line->step_x + line->eps_x;
 		x = (val < 0.0f) ? -(int)(line->start_x - val) : (int)(line->start_x + val);
-		val = (float)(line->block_t - 1) * line->step_y - line->eps;
+		val = (float)(line->block_t - 1) * line->step_y + line->eps_y;
 		y = (val < 0.0f) ? -(int)(line->start_y - val) : (int)(line->start_y + val);
 	}
 	else {
-		val = (float)line->dest_t * line->step_x - line->eps;
+		val = (float)line->dest_t * line->step_x + line->eps_x;
 		x = (val < 0.0f) ? -(int)(line->start_x - val) : (int)(line->start_x + val);
-		val = (float)line->dest_t * line->step_y - line->eps;
+		val = (float)line->dest_t * line->step_y + line->eps_y;
 		y = (val < 0.0f) ? -(int)(line->start_y - val) : (int)(line->start_y + val);
 	}
 	lua_pushnumber(L, line->source_x + x);
@@ -867,11 +877,12 @@ static int lua_fov_line_export(lua_State *L)
 	lua_pushnumber(L, line->start_y);
 	lua_pushnumber(L, line->step_x);
 	lua_pushnumber(L, line->step_y);
-	lua_pushnumber(L, line->eps);
+	lua_pushnumber(L, line->eps_x);
+	lua_pushnumber(L, line->eps_y);
 	lua_pushboolean(L, line->is_blocked);
 	lua_pushboolean(L, line->start_at_end);
 
-	return 12;
+	return 13;
 }
 
 // load previously exported data (or create a specific line of your choice)
@@ -888,9 +899,10 @@ static int lua_fov_line_import(lua_State *L)
 	float start_y = luaL_checknumber(L, 9);
 	float step_x = luaL_checknumber(L, 10);
 	float step_y = luaL_checknumber(L, 11);
-	float eps = luaL_checknumber(L, 12);
-	bool is_blocked = lua_toboolean(L, 13);
-	bool start_at_end = lua_toboolean(L, 14);
+	float eps_x = luaL_checknumber(L, 12);
+	float eps_y = luaL_checknumber(L, 13);
+	bool is_blocked = lua_toboolean(L, 14);
+	bool start_at_end = lua_toboolean(L, 15);
 
 	lua_fov_line *lua_line = (lua_fov_line*)lua_newuserdata(L, sizeof(lua_fov_line));
 	fov_line_data *line = &(lua_line->line);
@@ -903,7 +915,8 @@ static int lua_fov_line_import(lua_State *L)
 	line->start_y = start_y;
 	line->step_x = step_x;
 	line->step_y = step_y;
-	line->eps = eps;
+	line->eps_x = eps_x;
+	line->eps_y = eps_y;
 	line->is_blocked = is_blocked;
 	line->start_at_end = start_at_end;
 
