@@ -105,13 +105,13 @@ newTalent{
 	tactical = { ATTACK = function(self, t)
 		local vals = {}
 		if self:isTalentActive(self.T_KINETIC_AURA) then
-			vals[PHYSICAL] = 1
+			vals.PHYSICAL = 1
 		end
 		if self:isTalentActive(self.T_THERMAL_AURA) then
-			vals[FIRE] = 1
+			val.FIRE = 1
 		end
 		if self:isTalentActive(self.T_CHARGED_AURA) then
-			vals[LIGHTNING] = 1
+			vals.LIGHTNING = 1
 		end
 		return vals
 	end},
