@@ -44,7 +44,7 @@ newEntity{ define_as = "BROTOQ",
 	stats = { str=20, dex=10, cun=12, mag=20, con=12 },
 	instakill_immune = 1,
 	move_others=true,
-	inc_damage = {all=-40},
+	inc_damage = {all=-55},
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	equipment = resolvers.equip{
@@ -56,7 +56,7 @@ newEntity{ define_as = "BROTOQ",
 	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
 
 	resolvers.talents{
-		[Talents.T_VIRULENT_DISEASE]=2,
+		[Talents.T_VIRULENT_DISEASE]=1,
 		[Talents.T_CORRUPTED_STRENGTH]=1,
 		[Talents.T_CARRIER]=1,
 		[Talents.T_ACID_BLOOD]=1,
