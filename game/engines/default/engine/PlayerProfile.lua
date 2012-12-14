@@ -74,6 +74,8 @@ module(..., package.seeall, class.make)
 
 function _M:init()
 	self.chat = UserChat.new()
+	self.dlc_files = {classes={}, files={}}
+	self.saved_events = {}
 	self.generic = {}
 	self.modules = {}
 	self.evt_cbs = {}
@@ -371,6 +373,24 @@ end
 -- Events from the profile thread
 -----------------------------------------------------------------------
 
+function _M:popEvent(specific)
+	if not specific then
+		if #self.saved_events > 0 then return table.remove(self.saved_events, 1) end
+		return core.profile.popEvent()
+	else
+		for i, evt in ipairs(self.saved_events) do
+			if evt.e == specific then return table.remove(self.saved_events, i) end
+		end
+		local evt = core.profile.popEvent()
+		if evt then
+			if type(evt) == "string" then evt = evt:unserialize() end
+
+			if evt.e == specific then return evt end
+			self.saved_events[#self.saved_events+1] = evt
+		end
+	end
+end
+
 function _M:waitEvent(name, cb, wait_max)
 	-- Wait anwser, this blocks thegame but cant really be avoided :/
 	local stop = false
@@ -381,7 +401,7 @@ function _M:waitEvent(name, cb, wait_max)
 			if not self.waiting_event_no_redraw then core.display.forceRedraw() end
 			core.game.sleep(50)
 		end
-		local evt = core.profile.popEvent()
+		local evt = self:popEvent(name)
 		while evt do
 			if type(game) == "table" then evt = game:handleProfileEvent(evt)
 			else evt = self:handleEvent(evt) end
@@ -391,7 +411,7 @@ function _M:waitEvent(name, cb, wait_max)
 				cb(evt)
 				break
 			end
-			evt = core.profile.popEvent()
+			evt = self:popEvent(name)
 		end
 		first = false
 		tries = tries + 1
@@ -415,12 +435,12 @@ function _M:waitFirstAuth(timeout)
 			if not self.waiting_auth_no_redraw then core.display.forceRedraw() end
 			core.game.sleep(50)
 		end
-		local evt = core.profile.popEvent()
+		local evt = self:popEvent()
 		while evt do
 			if type(game) == "table" then game:handleProfileEvent(evt)
 			else self:handleEvent(evt) end
 			if not self.waiting_auth then break end
-			evt = core.profile.popEvent()
+			evt = self:popEvent()
 		end
 		first = false
 		timeout = timeout - 1
@@ -492,7 +512,7 @@ end
 
 --- Got an event from the profile thread
 function _M:handleEvent(e)
-	e = e:unserialize()
+	if type(e) == "string" then e = e:unserialize() end
 	if not e then return end
 	if self["event"..e.e] then self["event"..e.e](self, e) end
 	return e
@@ -663,8 +683,12 @@ function _M:getDLCD(name, version, file)
 	local data = nil
 	core.profile.pushOrder(table.serialize{o="GetDLCD", name=name, version=version, file=file})
 	self:waitEvent("GetDLCD", function(e) data = e.data end, 30000)
-	if not data then return "" end
-	return zlib.decompress(data)
+	if not data then 
+		print("DLCD for", name, version, file, "got a result of size0")
+		return "" 
+	end
+	print("DLCD for", name, version, file, "got a result of size", (data or ""):len())
+	return (data:len() > 0) and zlib.decompress(data) or data
 end
 
 function _M:registerSaveCharball(module, uuid, data)

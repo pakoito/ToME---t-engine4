@@ -301,25 +301,42 @@ function _M:loadAddons(mod, saveuse)
 	-- Filter based on settings
 	for i = #adds, 1, -1 do
 		local add = adds[i]
+		local removed = false
 		if saveuse then
 			if not saveuse[add.short_name] then
 				print("Removing addon "..add.short_name..": not allowed by savefile")
-				table.remove(adds, i)
+				table.remove(adds, i) removed = true
 			end
 		else
 			if add.dlc == "no" then
 				print("Removing addon "..add.short_name..": DLC required")
-				table.remove(adds, i)
+				table.remove(adds, i) removed = true
 			elseif config.settings.addons[add.for_module] and config.settings.addons[add.for_module][add.short_name] ~= nil then
 				-- Forbidden by config
 				if config.settings.addons[add.for_module][add.short_name] == false then
 					print("Removing addon "..add.short_name..": not allowed by config")
-					table.remove(adds, i)
+					table.remove(adds, i) removed = true
 				end
 			else
 				-- Forbidden by version
 				if not add.natural_compatible then
-					table.remove(adds, i)
+					table.remove(adds, i) removed = true
+				end
+			end
+		end
+
+		if add.dlc and add.dlc_files then
+			if not removed and add.dlc_files.classes then
+				for _, name in ipairs(add.dlc_files.classes) do
+					print("Preloading DLC class", name)
+					local data = profile:getDLCD(add.for_module.."-"..add.short_name, ("%d.%d.%d"):format(add.version[1],add.version[2],add.version[3]), name:gsub("%.", "/")..".lua")
+					if data and data ~= '' then
+						profile.dlc_files.classes[name] = data
+					else
+						print("Removing addon "..add.short_name..": DLC class not received")
+						table.remove(adds, i) removed = true
+						break
+					end
 				end
 			end
 		end
@@ -442,10 +459,10 @@ function _M:loadScreen(mod)
 		local dx, dy = math.floor((sw - dw) / 2), sh - dh
 
 		-- Check profile thread events
-		local evt = core.profile.popEvent()
+		local evt = profile:popEvent()
 		while evt do
 			profile:handleEvent(evt)
-			evt = core.profile.popEvent()
+			evt = profile:popEvent()
 		end
 
 		local funfacts = nil

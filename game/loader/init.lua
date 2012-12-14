@@ -165,7 +165,14 @@ local dlcd_loader = function(name)
 	if not fs.exists("/"..name:gsub("%.", "/")..".lua.stub") then return end
 	print("===DLCLOADER:class", "/"..name:gsub("%.", "/")..".lua.stub")
 	local d = oldload("/"..name:gsub("%.", "/")..".lua.stub")()
-	local data = profile:getDLCD(d.name, d.version, name:gsub("%.", "/")..".lua")
+	local data
+	if profile.dlc_files.classes[name] then
+		data = profile.dlc_files.classes[name]
+		print("===DLCLOADER:class using preloaded file")
+	else
+		data = profile:getDLCD(d.name, d.version, name:gsub("%.", "/")..".lua")
+		print("===DLCLOADER:class loaded", (data or ""):len())
+	end
 	return loadstring(data)
 end
 table.insert(package.loaders, 2, dlcd_loader)

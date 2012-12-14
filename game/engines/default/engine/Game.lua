@@ -151,10 +151,10 @@ function _M:display(nb_keyframes)
 	end
 
 	-- Check profile thread events
-	local evt = core.profile.popEvent()
+	local evt = profile:popEvent()
 	while evt do
 		self:handleProfileEvent(evt)
-		evt = core.profile.popEvent()
+		evt = profile:popEvent()
 	end
 end
 
