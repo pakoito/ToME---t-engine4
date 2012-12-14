@@ -243,7 +243,7 @@ return {
 					local text = ""
 					local tmp = ""
 					local line = function (txt, col) return " "..col..txt.."\n" end
-					local stri = "%s (%s %s %s)\n Score %d[%s]) - Wave: %d"
+					local stri = "%s (%s %s %s)\n Score %d) - Wave: %d"
 					local i = 1
 					while(scores[i] and scores[i].name) do
 						p = scores[i]
