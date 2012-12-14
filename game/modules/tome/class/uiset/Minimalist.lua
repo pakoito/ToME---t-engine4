@@ -1050,6 +1050,11 @@ function _M:displayResources(scale, bx, by, a)
 			x, y = self:resourceOrientStep(orient, bx, by, scale, x, y, fshat[6], fshat[7])
 		elseif game.mouse:getZone("res:fortress") then game.mouse:unregisterZone("res:fortress") end
 
+		-- Any hooks
+		local hd = {"UISet:Minimalist:Resources", a=a, player=player, x=x, y=y, bx=bx, by=by, orient=orient, scale=scale}
+		if self:triggerHook(hd) then 
+			x, y = hd.x, hd.y
+		end
 
 		-----------------------------------------------------------------------------------
 		-- Ammo
