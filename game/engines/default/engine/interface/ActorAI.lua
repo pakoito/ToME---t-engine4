@@ -117,9 +117,9 @@ function _M:doAI()
 	return self:runAI(self.ai)
 end
 
-function _M:runAI(ai)
+function _M:runAI(ai, ...)
 	if not ai or not self.x then return end
-	return _M.ai_def[ai](self)
+	return _M.ai_def[ai](self, ...)
 end
 
 --- Returns the current target
@@ -138,20 +138,31 @@ end
 -- This will usually return the exact coords, but if the target is only partially visible (or not at all)
 -- it will return estimates, to throw the AI a bit off
 -- @param target the target we are tracking
+-- @param ignoreLOS ignores LOS check
 -- @return x, y coords to move/cast to
-function _M:aiSeeTargetPos(target)
+function _M:aiSeeTargetPos(target, ignoreLOS)
 	if not target then return self.x, self.y end
 	local tx, ty = target.x, target.y
 	local see, chance = self:canSee(target)
 
-	-- Directly seeing it, no spread at all
-	if see then
+	-- Compute the maximum spread if we need to obfuscate 
+	local spread = see and 0 or math.floor((100 - chance) / 10)
+	
+	-- Do we check for LOS?
+	if not ignoreLOS then
+		local los, lx, ly = self:hasLOS(tx, ty)
+		if not los then
+			spread = math.max(spread, core.fov.distance(tx, ty, lx, ly))
+		end
+	end
+
+	-- We don't know the exact position, so we obfuscate
+	if spread > 0 then
+		tx = tx + rng.range(0, spread * 2) - spread
+		ty = ty + rng.range(0, spread * 2) - spread
 		return util.bound(tx, 0, game.level.map.w - 1), util.bound(ty, 0, game.level.map.h - 1)
-	-- Ok we can see it, spread coords around, the less chance to see it we had the more we spread
+	-- Directly seeing it, no spread at all
 	else
-		chance = math.floor((100 - chance) / 10)
-		tx = tx + rng.range(0, chance * 2) - chance
-		ty = ty + rng.range(0, chance * 2) - chance
 		return util.bound(tx, 0, game.level.map.w - 1), util.bound(ty, 0, game.level.map.h - 1)
 	end
 end

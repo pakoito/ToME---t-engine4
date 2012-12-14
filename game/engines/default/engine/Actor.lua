@@ -451,22 +451,42 @@ function _M:lineFOV(tx, ty, extra_block, block, sx, sy)
 end
 
 --- Does the actor have LOS to the target
-function _M:hasLOS(x, y, what)
-	if not x or not y then return false, self.x, self.y end
+-- @param x the spot we test for LOS
+-- @param y the spot we test for LOS
+-- @param what the property to check for, defaults to block_sight
+-- @param range the maximum range to see, defaults to self.sight
+-- @param source_x the spot to test from (defaults to self.x)
+-- @param source_y the spot to test from (defaults to self.y)
+-- @return has_los, last_x, last_y
+function _M:hasLOS(x, y, what, range, source_x, source_y)
+	source_x = source_x or self.x
+	source_y = source_y or self.y
+	if not x or not y then return false, source_x, source_y end
 	what = what or "block_sight"
-	local l = core.fov.line(self.x, self.y, x, y, what)
+	range = range or self.sight
+	local last_x, last_y = source_x, source_y
+	local l = core.fov.line(source_x, source_y, x, y, what)
 	local lx, ly, is_corner_blocked = l:step()
 
+	-- Is within range, so no need to check every iteration
+	if range and core.fov.distance(source_x, source_y, x, y) <= range then range = nil end
+
 	while lx and ly and not is_corner_blocked do
+		-- Check for the range
+		if range and core.fov.distance(source_x, source_y, lx, ly) > range then
+			break
+		end
+		last_x, last_y = lx, ly
 		if game.level.map:checkAllEntities(lx, ly, what) then break end
 
 		lx, ly, is_corner_blocked = l:step()
 	end
+
 	-- Ok if we are at the end reset lx and ly for the next code
 	if not lx and not ly and not is_corner_blocked then lx, ly = x, y end
 
-	if lx == x and ly == y then return true, lx, ly end
-	return false, lx, ly
+	if lx == x and ly == y then return true, last_x, last_y end
+	return false, last_x, last_y
 end
 
 --- Are we within a certain distance of the target

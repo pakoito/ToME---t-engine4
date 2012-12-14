@@ -21,23 +21,6 @@ local DamageType = require "engine.DamageType"
 
 local print = function() end
 
--- Internal functions
-local checkLOS = function(sx, sy, tx, ty)
-	what = what or "block_sight"
-	local l = core.fov.line(sx, sy, tx, ty, what)
-	local lx, ly, is_corner_blocked = l:step()
-	while lx and ly and not is_corner_blocked do
-		if game.level.map:checkAllEntities(lx, ly, what) then break end
-
-		lx, ly, is_corner_blocked = l:step()
-	end
-	-- Ok if we are at the end reset lx and ly for the next code
-	if not lx and not ly and not is_corner_blocked then lx, ly = x, y end
-
-	if lx == x and ly == y then return true, lx, ly end
-	return false, lx, ly
-end
-
 local canFleeDmapKeepLos = function(self)
 	if self.never_move then return false end -- Dont move, dont flee
 	if self.ai_target.actor then
@@ -48,7 +31,7 @@ local canFleeDmapKeepLos = function(self)
 		for _, i in ipairs(util.adjacentDirs()) do
 			local sx, sy = util.coordAddDir(self.x, self.y, i)
 			-- Check LOS first
-			if checkLOS(sx, sy, act.x, act.y) then
+			if self:hasLOS(act.x, act.y, nil, nil, sx, sy) then
 				local cd = act:distanceMap(sx, sy)
 	--			print("looking for dmap", dir, i, "::", c, cd)
 				if not cd or (c and (cd < c and self:canMove(sx, sy))) then c = cd; dir = i end
@@ -68,9 +51,10 @@ newAI("use_tactical", function(self)
 	print("============================== TACTICAL AI", self.name)
 	local avail = {}
 	local ok = false
-	local target_dist = self.ai_target.actor and core.fov.distance(self.x, self.y, self.ai_target.actor.x, self.ai_target.actor.y)
+	local ax, ay = self:aiSeeTargetPos(self.ai_target.actor)
+	local target_dist = self.ai_target.actor and core.fov.distance(self.x, self.y, ax, ay)
 	local hate = self.ai_target.actor and (self:reactionToward(self.ai_target.actor) < 0)
-	local has_los = self.ai_target.actor and self:hasLOS(self.ai_target.actor.x, self.ai_target.actor.y)
+	local has_los = self.ai_target.actor and self:hasLOS(ax, ay)
 	local self_compassion = (self.ai_state.self_compassion == false and 0) or self.ai_state.self_compassion or 5
 	local ally_compassion = (self.ai_state.ally_compassion == false and 0) or self.ai_state.ally_compassion or 1
 	for tid, lvl in pairs(self.talents) do
@@ -101,7 +85,7 @@ newAI("use_tactical", function(self)
 				local typ = engine.Target:getType(tg or default_tg)
 				if tg or self:getTalentRequiresTarget(t) then
 					local target_actor = self.ai_target.actor or self
-					self:project(typ, target_actor.x, target_actor.y, function(px, py)
+					self:project(typ, ax, ay, function(px, py)
 						local act = game.level.map(px, py, engine.Map.ACTOR)
 						if act and not act.dead then
 							if self:reactionToward(act) < 0 then
@@ -388,8 +372,9 @@ newAI("tactical", function(self)
 
 	-- Keep your distance
 	local special_move = false
-	if self.ai_tactic.safe_range and self.ai_target.actor and self:hasLOS(self.ai_target.actor.x, self.ai_target.actor.y) then
-		local target_dist = core.fov.distance(self.x, self.y, self.ai_target.actor.x, self.ai_target.actor.y)
+	local ax, ay = self:aiSeeTargetPos(self.ai_target.actor)
+	if self.ai_tactic.safe_range and self.ai_target.actor and self:hasLOS(ax, ay) then
+		local target_dist = core.fov.distance(self.x, self.y, ax, ay)
 		if self.ai_tactic.safe_range == target_dist then
 			special_move = "none"
 		elseif self.ai_tactic.safe_range > target_dist then
@@ -408,8 +393,15 @@ newAI("tactical", function(self)
 	end
 
 	if targeted and not self.energy.used then
+		game.log("%s thinks the player is at %d/%d", self.name:capitalize(), ax, ay)
 		if special_move then
+			game.log("%s moving with %s", self.name:capitalize(), special_move)
 			return self:runAI(special_move)
+		elseif self.ai_tactic.safe_range and not self:hasLOS(ax, ay) then
+			local moved = self:runAI("flee_dmap_keep_los")
+			if moved then game.log("%s moving with %s", self.name:capitalize(), "flee_dmap_keep_los") return moved end
+			game.log("%s moving with %s", self.name:capitalize(), self.ai_state.ai_move or "move_simple")
+			return self:runAI(self.ai_state.ai_move or "move_simple")
 		else
 			return self:runAI(self.ai_state.ai_move or "move_simple")
 		end

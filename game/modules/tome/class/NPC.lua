@@ -33,6 +33,20 @@ function _M:init(t, no_default)
 	if not self.image and self.name ~= "unknown actor" then self.image = "npc/"..tostring(self.type or "unknown").."_"..tostring(self.subtype or "unknown"):lower():gsub("[^a-z0-9]", "_").."_"..(self.name or "unknown"):lower():gsub("[^a-z0-9]", "_")..".png" end
 end
 
+function _M:actBase()
+		-- Reduce shoving pressure every turn
+		if self.shove_pressure then
+			if self._last_shove_pressure and (self.shove_pressure < self._last_shove_pressure) then
+				self.shove_pressure = nil
+				self._last_shove_pressure = nil
+			else
+				self._last_shove_pressure = self.shove_pressure
+				self.shove_pressure = self.shove_pressure / 2
+			end
+		end
+		return mod.class.Actor.actBase(self)
+end
+
 function _M:act()
 	while self:enoughEnergy() and not self.dead do
 		-- Do basic actor stuff
@@ -43,7 +57,6 @@ function _M:act()
 		self:doFOV()
 
 		-- Let the AI think .... beware of Shub !
-		-- If AI did nothing, use energy anyway
 		self:doAI()
 
 		if self.emote_random and self.x and self.y and game.level.map.seens(self.x, self.y) and rng.range(0, 999) < self.emote_random.chance * 10 then
@@ -54,6 +67,7 @@ function _M:act()
 			end
 		end
 
+		-- If AI did nothing, use energy anyway
 		if not self.energy.used then self:useEnergy() end
 		if old_energy == self.energy.value then break end -- Prevent infinite loops
 	end
@@ -186,6 +200,13 @@ function _M:checkAngered(src, set, value)
 	end
 end
 
+--- Counts down timedEffects, but need to avoid the move_damaged_astar pathing
+function _M:timedEffects(filter)
+	self._in_timed_effects = true
+	mod.class.Actor.timedEffects(self, filter)
+	self._in_timed_effects = nil
+end
+
 --- Called by ActorLife interface
 -- We use it to pass aggression values to the AIs
 function _M:onTakeHit(value, src)
@@ -193,6 +214,13 @@ function _M:onTakeHit(value, src)
 
 	if not self.ai_target.actor and src and src.targetable and value > 0 then
 		self.ai_target.actor = src
+	end
+
+	-- Switch to astar pathing temporarily
+	if src and src == self.ai_target.actor and not self._in_timed_effects then
+		self.ai_state._old_ai_move = self.ai_state._old_ai_move or self.ai_state.ai_move
+		self.ai_state.ai_move = "move_damaged_astar"
+		self.ai_state.switch_move = 10
 	end
 
 	-- Get angry if attacked by a friend
@@ -357,3 +385,47 @@ function _M:addedToLevel(level, x, y)
 	return mod.class.Actor.addedToLevel(self, level, x, y)
 end
 
+local shove_algorithm = function(self)
+	return 3 * self.rank + self.size_category * self.size_category
+end
+
+function _M:aiCanPass(x, y)
+	-- If there is a friendly actor, add shove_pressure to it
+	local target = game.level.map(x, y, engine.Map.ACTOR)
+	if target and target ~= game.player and self:reactionToward(target) > 0 and not self:attr("never_move") then
+		target.shove_pressure = (target.shove_pressure or 0) + shove_algorithm(self) + (self.shove_pressure or 0)
+		-- Shove the target?
+		if target.shove_pressure > shove_algorithm(target) * 1.7 then
+			local dir = util.getDir(target.x, target.y, self.x, self.y)
+			local sides = util.dirSides(dir, target.x, target.y)
+			local check_order = {}
+			if rng.percent(50) then
+				table.insert(check_order, "left")
+				table.insert(check_order, "right")
+			else
+				table.insert(check_order, "right")
+				table.insert(check_order, "left")
+			end
+			if rng.percent(50) then
+				table.insert(check_order, "hard_left")
+				table.insert(check_order, "hard_right")
+			else
+				table.insert(check_order, "hard_right")
+				table.insert(check_order, "hard_left")
+			end
+			for _, side in ipairs(check_order) do
+				local check_dir = sides[side]
+				local sx, sy = util.coordAddDir(target.x, target.y, check_dir)
+				if target:canMove(sx, sy) then
+					game.logSeen(target, "%s shoves %s forward.", self.name:capitalize(), target.name)
+					target:move(sx, sy, true)
+					target.shove_pressure = nil
+					target._last_shove_pressure = nil
+					break
+				end
+			end
+			return true
+		end
+	end
+	return engine.interface.ActorAI.aiCanPass(self, x, y)
+end

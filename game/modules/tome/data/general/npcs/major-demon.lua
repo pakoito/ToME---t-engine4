@@ -283,6 +283,7 @@ newEntity{ base = "BASE_NPC_MAJOR_DEMON",
 		[Talents.T_BURNING_WAKE]={base=5, every=8, max=10},
 		[Talents.T_CLEANSING_FLAMES]={base=5, every=8, max=10},
 	},
+	resolvers.sustains_at_birth(),
 }
 
 newEntity{ base = "BASE_NPC_MAJOR_DEMON",

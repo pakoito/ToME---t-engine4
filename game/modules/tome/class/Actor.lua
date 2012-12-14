@@ -4193,11 +4193,17 @@ function _M:resetCanSeeCacheOf()
 end
 
 --- Does the actor have LOS to the target
-function _M:hasLOS(x, y, what)
-	if not x or not y then return false, self.x, self.y end
+function _M:hasLOS(x, y, what, range, source_x, source_y)
+	source_x = source_x or self.x
+	source_y = source_y or self.y
+	if not x or not y then return false, source_x, source_y end
 	what = what or "block_sight"
+	range = range or self.sight
 
+	-- Is within range, so no need to check every iteration
+	if range and core.fov.distance(source_x, source_y, x, y) <= range then range = nil end
 	local lx, ly, is_corner_blocked
+	local last_x, last_y = source_x, source_y
 	if what == "block_sight" then
 		local darkVisionRange
 		if self:knowTalent(self.T_DARK_VISION) then
@@ -4205,10 +4211,15 @@ function _M:hasLOS(x, y, what)
 			darkVisionRange = self:getTalentRange(t)
 		end
 
-		local l = core.fov.line(self.x, self.y, x, y, "block_sight")
-		local inCreepingDark, lastX, lastY = false
+		local l = core.fov.line(source_x, source_y, x, y, "block_sight")
+		local inCreepingDark = false
 		lx, ly, is_corner_blocked = l:step()
 		while lx and ly and not is_corner_blocked do
+			-- Check for the range
+			if range and core.fov.distance(source_x, source_y, lx, ly) > range then
+				break
+			end
+			last_x, last_y = lx, ly
 			if game.level.map:checkAllEntities(lx, ly, "block_sight") then
 				if darkVisionRange and game.level.map:checkAllEntities(lx, ly, "creepingDark") then
 					inCreepingDark = true
@@ -4216,18 +4227,21 @@ function _M:hasLOS(x, y, what)
 					break
 				end
 			end
-			if inCreepingDark and darkVisionRange and core.fov.distance(self.x, self.y, lx, ly) > darkVisionRange then
-				lx, ly = lastX or lx, lastY or ly
+			if inCreepingDark and darkVisionRange and core.fov.distance(source_x, source_y, lx, ly) > darkVisionRange then
 				break
 			end
 
-			lastX, lastY = lx, ly
 			lx, ly, is_corner_blocked = l:step()
 		end
 	else
-		local l = core.fov.line(self.x, self.y, x, y, what)
+		local l = core.fov.line(source_x, source_y, x, y, what)
 		lx, ly, is_corner_blocked = l:step()
 		while lx and ly and not is_corner_blocked do
+			-- Check for the range
+			if range and core.fov.distance(source_x, source_y, lx, ly) > range then
+				break
+			end
+			last_x, last_y = lx, ly
 			if game.level.map:checkAllEntities(lx, ly, what) then break end
 
 			lx, ly, is_corner_blocked = l:step()
@@ -4237,8 +4251,8 @@ function _M:hasLOS(x, y, what)
 	-- Ok if we are at the end reset lx and ly for the next code
 	if not lx and not ly and not is_corner_blocked then lx, ly = x, y end
 
-	if lx == x and ly == y then return true, lx, ly end
-	return false, lx, ly
+	if lx == x and ly == y then return true, last_x, last_y end
+	return false, last_x, last_y
 end
 
 --- Can the target be applied some effects

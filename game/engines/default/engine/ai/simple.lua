@@ -32,7 +32,10 @@ end)
 newAI("move_dmap", function(self)
 	if self.ai_target.actor and self.x and self.y then
 		local a = self.ai_target.actor
-		if self:hasLOS(a.x, a.y) then return self:runAI("move_simple") end
+		if self:hasLOS(a.x, a.y) then 
+			local simple = self:runAI("move_simple")
+			if simple then return simple end
+		end
 
 		local c = a:distanceMap(self.x, self.y)
 		if not c then return self:runAI("move_simple") end
@@ -40,11 +43,57 @@ newAI("move_dmap", function(self)
 		for _, i in ipairs(util.adjacentDirs()) do
 			local sx, sy = util.coordAddDir(self.x, self.y, i)
 			local cd = a:distanceMap(sx, sy)
---			print("looking for dmap", dir, i, "::", c, cd)
+			print("looking for dmap", dir, i, "::", c, cd)
 			if cd and cd > c and self:canMove(sx, sy) then c = cd; dir = i end
 		end
 
+		if dir == 5 then
+			-- Make sure that we are indeed blocked
+			local simple = self:runAI("move_simple")
+			if simple then return simple end
+			-- Wait at least 5 turns of not moving before switching to blocked_astar
+			self.ai_state.blocked_turns = (self.ai_state.blocked_turns or 0) + 1
+			if self.ai_state.blocked_turns >= 5 then
+				self.ai_state._old_ai_move = self.ai_state.ai_move
+				self.ai_state.ai_move = "move_blocked_astar"
+				return self:runAI("move_blocked_astar")
+			end
+		elseif self.ai_state.blocked_turns then
+			self.ai_state.blocked_turns = self.ai_state.blocked_turns - 1
+			if self.ai_state.blocked_turns <= 0 then self.ai_state.blocked_turns = nil end
+		end
+
 		return self:moveDirection(util.coordAddDir(self.x, self.y, dir))
+	end
+end)
+
+-- Use A* pathing if we were blocked for several turns, to avoid stacking up in simple chokepoints
+newAI("move_blocked_astar", function(self)
+	if self.ai_target.actor then
+		self.ai_state.blocked_turns = self.ai_state.blocked_turns - 1
+		if self.ai_state.blocked_turns <= 0 then
+			self.ai_state.ai_move = self.ai_state._old_ai_move
+			self.ai_state._old_ai_move = nil
+			self.ai_state.blocked_turns = nil
+			return self:runAI(self.ai_state.ai_move or "move_simple")
+		else
+			local check_all_block_move = function(nx, ny)
+				local actor = game.level.map(nx, ny, engine.Map.ACTOR)
+				if actor and actor == self.ai_target.actor then
+					return true
+				else
+					return not game.level.map:checkAllEntities(nx, ny, "block_move", self)
+				end
+			end
+			local astar = self:runAI("move_astar", check_all_block_move)
+			-- If A* did not work we add a penalty to trying A* again
+			if not astar then
+				self.ai_state.ai_move = self.ai_state._old_ai_move
+				self.ai_state._old_ai_move = nil
+				self.ai_state.blocked_turns = -5
+			end
+			return astar
+		end
 	end
 end)
 
@@ -53,24 +102,61 @@ newAI("flee_dmap", function(self)
 		local a = self.ai_target.actor
 
 		local c = a:distanceMap(self.x, self.y)
-		if not c then return end
 		local dir = 5
-		for _, i in ipairs(util.adjacentDirs()) do
-			local sx, sy = util.coordAddDir(self.x, self.y, i)
-			local cd = a:distanceMap(sx, sy)
---			print("looking for dmap", dir, i, "::", c, cd)
-			if not cd or (c and (cd < c and self:canMove(sx, sy))) then c = cd; dir = i end
+		
+		if c and ax == a.x and ay == a.y then
+			for _, i in ipairs(util.adjacentDirs()) do
+				local sx, sy = util.coordAddDir(self.x, self.y, i)
+				local cd = a:distanceMap(sx, sy)
+--				print("looking for dmap", dir, i, "::", c, cd)
+				if not cd or (c and (cd < c and self:canMove(sx, sy))) then c = cd; dir = i end
+			end
+		end
+
+		-- If we do not accurately know the targets position, move away from where we think it is
+		local ax, ay = self:aiSeeTargetPos(a)
+		if (ax ~= a.x or ay ~= a.y or dir == 5) then
+			dir = util.opposedDir(util.getDir(ax, ay, self.x, self.y), self.x, self.y)
+			local sx, sy = util.coordAddDir(self.x, self.y, dir)
+			-- If we cannot move directly away, try to move to the sides
+			if not self:canMove(sx, sy) then
+				local sides = util.dirSides(dir, self.x, self.y)
+				local check_order = {}
+				if rng.percent(50) then
+					table.insert(check_order, "left")
+					table.insert(check_order, "right")
+				else
+					table.insert(check_order, "right")
+					table.insert(check_order, "left")
+				end
+				if rng.percent(50) then
+					table.insert(check_order, "hard_left")
+					table.insert(check_order, "hard_right")
+				else
+					table.insert(check_order, "hard_right")
+					table.insert(check_order, "hard_left")
+				end
+				for _, side in ipairs(check_order) do
+					local check_dir = sides[side]
+					local sx, sy = util.coordAddDir(self.x, self.y, check_dir)	
+					if self:canMove(sx, sy) then
+						dir = check_dir
+						break
+					end
+				end
+			end
 		end
 
 		return self:moveDirection(util.coordAddDir(self.x, self.y, dir))
 	end
 end)
 
-newAI("move_astar", function(self)
+newAI("move_astar", function(self, add_check)
 	if self.ai_target.actor then
+		print("add_check: ", add_check)
 		local tx, ty = self:aiSeeTargetPos(self.ai_target.actor)
 		local a = Astar.new(game.level.map, self)
-		local path = a:calc(self.x, self.y, tx, ty)
+		local path = a:calc(self.x, self.y, tx, ty, nil, nil, add_check)
 		if not path then
 			return self:runAI("move_simple")
 		else
