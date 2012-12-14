@@ -140,6 +140,8 @@ end
 
 --- Give target to others
 function _M:seen_by(who)
+	if self:hasEffect(self.EFF_VAULTED) and who and game.party:hasMember(who) then self:removeEffect(self.EFF_VAULTED, true, true) end
+
 	if self.ai_target.actor then return end
 	if self.dont_pass_target then return end
 	if not who.ai_target then return end
