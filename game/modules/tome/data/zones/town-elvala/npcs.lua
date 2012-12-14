@@ -43,7 +43,7 @@ newEntity{
 	resolvers.inscriptions(1, "rune"),
 
 	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=3, },
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=3, },
 	stats = { str=12, dex=8, mag=6, con=10 },
 
 	emote_random = resolvers.emote_random{allow_backup_guardian=true},

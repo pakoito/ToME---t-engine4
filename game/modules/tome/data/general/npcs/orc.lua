@@ -40,7 +40,7 @@ newEntity{
 	open_door = true,
 
 	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=3, },
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=3, },
 	stats = { str=20, dex=8, mag=6, con=16 },
 	resolvers.talents{ [Talents.T_WEAPON_COMBAT]={base=1, every=10, max=5}, },
 	ingredient_on_death = "ORC_HEART",

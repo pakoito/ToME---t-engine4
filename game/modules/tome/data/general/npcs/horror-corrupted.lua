@@ -26,7 +26,7 @@ newEntity{
 	blood_color = colors.BLUE,
 	body = { INVEN = 10 },
 	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=3, },
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=3, },
 
 	combat_armor = 0, combat_def = 0,
 	combat = { atk=2, dammod={str=0.6} },
@@ -124,7 +124,7 @@ newEntity{ base = "BASE_NPC_CORRUPTED_HORROR",
 	rank = 2,
 	size_category = 3,
 	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=1, },
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=1, },
 	hate_regen = 2,
 
 	open_door = true,
@@ -225,7 +225,7 @@ newEntity{ base = "BASE_NPC_CORRUPTED_HORROR",
 	rank = 2,
 	size_category = 4,
 	autolevel = "caster",
-	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=2, },
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=2, },
 
 	global_speed_base = 0.8,
 

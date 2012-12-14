@@ -80,7 +80,7 @@ newEntity{
 	levitation = 1,
 
 	autolevel = "dexmage",
-	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=2, },
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=2, },
 	global_speed_base = 1.5,
 	stats = { str=8, dex=12, mag=12, wil=12, con=10 },
 

@@ -29,7 +29,7 @@ newEntity{
 	infravision = 10,
 	global_speed_base = 1.25,
 	type = "animal", subtype="feline",
-	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=2, },
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=2, },
 
 	combat_physspeed = 2, -- Double attack per turn
 

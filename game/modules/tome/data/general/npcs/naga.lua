@@ -43,7 +43,7 @@ newEntity{
 	resolvers.inscriptions(1, "rune"),
 
 	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=1, },
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=1, },
 	global_speed_base = 1.2,
 	stats = { str=15, dex=15, mag=15, con=10 },
 	ingredient_on_death = "NAGA_TONGUE",

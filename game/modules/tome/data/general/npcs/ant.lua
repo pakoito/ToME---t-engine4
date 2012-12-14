@@ -30,7 +30,7 @@ newEntity{
 	sound_moam = {"creatures/ants/ant_%d", 1, 2},
 	sound_die = {"creatures/ants/ant_die_%d", 1, 4},
 	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=1, },
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=1, },
 	stats = { str=12, dex=10, mag=3, con=13 },
 	energy = { mod=1 },
 	combat_armor = 1, combat_def = 1,

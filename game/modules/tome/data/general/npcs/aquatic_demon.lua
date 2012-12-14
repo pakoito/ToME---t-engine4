@@ -28,7 +28,7 @@ newEntity{
 	blood_color = colors.GREEN,
 	body = { INVEN = 10 },
 	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=1, },
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=1, },
 	stats = { str=12, dex=10, mag=3, con=13 },
 	combat_armor = 1, combat_def = 1,
 	combat = { dam=resolvers.levelup(resolvers.mbonus(46, 20), 1, 1), atk=15, apr=7, dammod={str=0.7} },

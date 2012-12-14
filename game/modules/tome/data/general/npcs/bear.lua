@@ -33,7 +33,7 @@ newEntity{
 	max_stamina = 100,
 
 	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=5, },
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=5, },
 	global_speed_base = 0.9,
 	stats = { str=18, dex=13, mag=5, con=15 },
 	infravision = 10,

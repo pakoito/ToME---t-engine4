@@ -38,7 +38,7 @@ newEntity{
 	size_category = 3,
 
 	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=4, },
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=4, },
 	stats = { str=14, dex=12, mag=10, con=12 },
 
 	resolvers.racial(),

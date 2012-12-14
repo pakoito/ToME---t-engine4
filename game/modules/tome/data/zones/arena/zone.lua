@@ -39,7 +39,7 @@ return {
 		map = {
 			class = "engine.generator.map.Static",
 			map = "zones/arena",
-			zoom = 4,
+			zoom = 5,
 		},
 		actor = { },
 		--object = { },
@@ -63,9 +63,6 @@ return {
 				elseif game.level.arena.event == 3 then game.log("#LIGHT_RED#Final round starts!!!!")
 				end
 				game.level.arena.removeStuff()
-				if game.player.money > 0 then
-					game.level.arena.goldToScore()
-				end
 				game.level.arena.openGates()
 			end
 		end
@@ -87,7 +84,7 @@ return {
 
 
 	post_process = function(level)
-		game.player.money = 0
+		game.player.money = 100
 		game.player.no_resurrect = true
 		game.player.on_die = function (self, src)
 			local rank = math.floor(game.level.arena.rank)
@@ -96,7 +93,6 @@ return {
 			local lastScore = {
 				name = game.player.name.." the "..drank,
 				score = game.level.arena.score,
-				perk = game.level.arena.perk,
 				wave = game.level.arena.currentWave,
 				sex = game.player.descriptor.sex,
 				race = game.player.descriptor.subrace,
@@ -112,9 +108,13 @@ return {
 		level.max_turn_counter = 60 --5 turns before action starts.
 		level.turn_counter_desc = ""
 
+--TODO(Hetdegon@2012-12-11):Finish display, add shop, enforce enemy drops to be more regular.
+--TODO(Hetdegon@2012-12-11):Drops on high combo.
+
+
 		--world.arena = nil
 		if not world.arena or not world.arena.ver then
-			local emptyScore = {name = nil, score = 0, perk = nil, wave = 1, sex = nil, race = nil, class = nil}
+			local emptyScore = {name = nil, score = 0, wave = 1, sex = nil, race = nil, class = nil}
 			world.arena = {
 				master30 = nil,
 				master60 = nil,
@@ -127,9 +127,8 @@ return {
 			if o then game.zone:addEntity(game.level, o, "object", 7, 3) end
 		end
 		level.arena = {
-			ranks = { "nobody", "rat stomper", "aspirant", "fighter", "brave", "dangerous", "promise", "powerful", "rising star", "destroyer", "obliterator", "annihilator", "grandious", "glorious", "victorious", "ultimate", "ultimate", "ultimate", "ultimate", "ultimate", "grand master" },
+			ranks = { "nobody", "rat stomper", "bear beater", "aspirant", "fighter", "bold", "gladiator", "brave", "dangerous", "promise", "powerful", "rising star", "destroyer", "obliterator", "annihilator", "grandious", "glorious", "victorious", "ultimate", "ultimate", "ultimate", "ultimate", "ultimate", "grand master" },
 			rank = 1,
-			perk = nil,
 			event = 0,
 			initEvent = false,
 			lockEvent = false,
@@ -202,6 +201,7 @@ return {
 					function () return 12, 10 end,
 				}
 			},
+
 			clear = function()
 				game.player:setQuestStatus("arena", engine.Quest.COMPLETED)
 				local master = game.player:cloneFull()
@@ -235,6 +235,7 @@ return {
 					world.arena.master30 = master
 				end
 			end,
+
 			printRankings = function (val)
 				local scores = world.arena.scores
 				if not scores or not scores[1] or not scores[1].name then return "#LIGHT_GREEN#...but it's been wiped out recently."
@@ -246,20 +247,22 @@ return {
 					local i = 1
 					while(scores[i] and scores[i].name) do
 						p = scores[i]
-						tmp = stri:format(p.name:capitalize(), p.sex or "???", p.race or "???", p.class or "???", p.score or 0, p.perk or "???", p.wave or 0)
+						tmp = stri:format(p.name:capitalize(), p.sex or "???", p.race or "???", p.class or "???", p.score or 0, p.wave or 0)
 						text = text..line(tmp, "#LIGHT_BLUE#")
 						i = i + 1
 					end
 					p = world.arena.lastScore
-					tmp = "\n#YELLOW#LAST:"..stri:format(p.name:capitalize(), p.sex or "unknown", p.race or "unknown", p.class or "unknown", p.score or 0, p.perk or "", p.wave or 0)
+					tmp = "\n#YELLOW#LAST SCORE:"..stri:format(p.name:capitalize(), p.sex or "unknown", p.race or "unknown", p.class or "unknown", p.score or 0, p.wave or 0)
 					return text..line(tmp, "#YELLOW#")
 				end
 			end,
+
 			printRank = function (r, ranks)
 				local rank = math.floor(r)
 				if rank > #ranks then rank = #ranks end
 				return ranks[rank]
 			end,
+
 			updateScores = function(l)
 				local scores = world.arena.scores or {}
 				table.insert(scores, l)
@@ -269,6 +272,7 @@ return {
 				if l.wave > world.arena.bestWave then world.arena.bestWave = l.wave end
 				world.arena.lastScore = l
 			end,
+
 			openGates = function()
 				local gates = game.level.arena.entry.door
 				local g = game.zone:makeEntityByName(game.level, "terrain", "LOCK_OPEN")
@@ -279,8 +283,9 @@ return {
 					game.nicer_tiles:updateAround(game.level, x, y)
 				end
 				game:playSoundNear(game.player, "talents/earth")
-				game.log("#LIGHT_GREEN#The gates open!")
+				game.log("#YELLOW#The gates open!")
 			end,
+
 			closeGates = function()
 				local gates = game.level.arena.entry.door
 				local g = game.zone:makeEntityByName(game.level, "terrain", "LOCK")
@@ -294,6 +299,7 @@ return {
 				game:playSoundNear(game.player, "talents/earth")
 				game.log("#LIGHT_RED#The gates close!")
 			end,
+
 			raiseRank = function (val)
 				if game.level.arena.rank >= 21 then return end
 				local currentRank = math.floor(game.level.arena.rank)
@@ -302,13 +308,14 @@ return {
 				local newRank = math.floor(game.level.arena.rank)
 				if currentRank < newRank then --Player's rank increases!
 					local x, y = game.level.map:getTileToScreen(game.player.x, game.player.y)
-					if newRank == 10 then world:gainAchievement("XXX_THE_DESTROYER", game.player)
+					if newRank == 13 then world:gainAchievement("XXX_THE_DESTROYER", game.player)
 					elseif newRank == 21 then world:gainAchievement("GRAND_MASTER", game.player)
 					end
 					game.flyers:add(x, y, 90, 0, -0.5, "RANK UP!!", { 2, 57, 185 }, true)
-					game.log("#LIGHT_GREEN#The public is pleased by your performance! You now have the rank of #WHITE#"..game.level.arena.ranks[newRank].."!")
+					game.log("#LIGHT_GREEN#The public is pleased by your performance! You now have the rank of #WHITE#"..game.level.arena.ranks[newRank].."#LIGHT_GREEN#!")
 				end
 			end,
+
 			checkCombo = function (k)
 				if k >= 10 then world:gainAchievement("TEN_AT_ONE_BLOW", game.player) end
 				if k > 2 then
@@ -317,35 +324,24 @@ return {
 					game.level.arena.raiseRank(b)
 					game.flyers:add(x, y, 90, 0.5, 0, k.." kills!", { 2, 57, 185 }, false)
 					game.log("#YELLOW#You killed "..k.." enemies in a single turn! The public is excited!")
+					if k >= 4 and k < 6 then
+						local drop = game.zone:makeEntity(game.level, "object", {tome = { ego=30, double_ego=15, greater=7, greater_normal=1 }}, nil, true)
+						game.zone:addEntity(game.level, drop, "object", game.player.x, game.player.y)
+					elseif k >= 6 and k < 8 then
+						local drop = game.zone:makeEntity(game.level, "object", {tome = { ego=60, double_ego=30, greater=15, greater_normal=10, double_greater=1 }}, nil, true)
+						game.zone:addEntity(game.level, drop, "object", game.player.x, game.player.y)
+					elseif k >= 8 and k < 10 then
+						local drop = game.zone:makeEntity(game.level, "object", {tome = { double_ego=60, greater=35, greater_normal=20, double_greater=5 }}, nil, true)
+						game.zone:addEntity(game.level, drop, "object", game.player.x, game.player.y)
+					elseif k >= 10 then
+						local drop = game.zone:makeEntity(game.level, "object", {tome = { greater=70, greater_normal=40, double_greater=25 }}, nil, true)
+						game.zone:addEntity(game.level, drop, "object", game.player.x, game.player.y)
+					end
+
 				else return
 				end
 			end,
-			addTrap = function ()
-				local g = game.zone:makeEntity(game.level, "trap", nil, nil, true)
-				local d = game.level.arena.currentWave
-				g.dam = 5 + (d * 2) + rng.range(d, d * 1.5)
-				game.zone:addEntity(game.level, g, "trap", 7, 7)
-				g:setKnown(game.player, true)
-				game.level.map:updateMap(7, 7)
-				game.level.map:particleEmitter(7, 7, 0.3, "demon_teleport")
-				if d > 1 then game.log("#YELLOW#The trap changes...") end
-			end,
-			goldToScore = function ()
-				local x, y = game.level.map:getTileToScreen(game.player.x, game.player.y)
-				local goldAward = game.player.money * 100
-				local healthAward = game.player.money * 10
-				local regStamina = goldAward * 0.5
-				game.level.arena.score = game.level.arena.score + goldAward
-				game.flyers:add(x, y, 90, 0, -0.6, "GOLD BONUS! +"..goldAward.." SCORE!", { 2, 57, 185 }, false)
-				game.log("#ROYAL_BLUE#Gold bonus! Score increased by #WHITE#"..goldAward.."#ROYAL_BLUE#! #LIGHT_GREEN#You also recover some health(#WHITE#+"..healthAward.."#LIGHT_GREEN#!)#LAST#")
-				if game.player:knowTalent(game.player.T_STAMINA_POOL) then
-					game.player:incStamina(regStamina)
-					game.log("#LIGHT_GREEN#Stamina(#WHITE#+"..regStamina.."#LIGHT_GREEN#)")
-				end
-				game.player.money = 0
-				game.player:heal(healthAward)
-				game.player.changed = true
-			end,
+
 			initWave = function (val) --Clean up and start a new wave.
 				if val > 20 then --If the player has more than 20 turns of rest, clean up all items lying around.
 					game.level.arena.clearItems = true
@@ -360,6 +356,7 @@ return {
 				game.level.arena.pinchValue = 0
 				game.level.arena.pinch = false
 				if game.level.arena.display then game.level.arena.display = nil end
+				--NOTE(Hetdegon@2012-10-02):Replace this to an event table.
 				if game.level.arena.currentWave % game.level.arena.eventWave == 0 then
 					if game.level.arena.currentWave % (game.level.arena.eventWave * 3) == 0 then --Boss round!
 						game.log("#VIOLET#Boss round!!!")
@@ -376,11 +373,11 @@ return {
 				end
 				game.level.arena.initEvent = false
 				game.level.arena.lockEvent = false
-				game.level.arena.addTrap()
 				if game.level.arena.currentWave == 21 then world:gainAchievement("ARENA_BATTLER_20", game.player)
 				elseif game.level.arena.currentWave == 51 then world:gainAchievement("ARENA_BATTLER_50", game.player)
 				end
 			end,
+
 			removeStuff = function ()
 				for i = 0, game.level.map.w - 1 do
 					for j = 0, game.level.map.h - 1 do
@@ -389,6 +386,7 @@ return {
 					end
 				end
 			end,
+
 			doReward = function (val)
 				local col = "#ROYAL_BLUE#"
 				local hgh = "#WHITE#"
@@ -406,6 +404,7 @@ return {
 				game.log(col.."Your experience increases by"..hgh..expAward..col.."!")
 				game.player.changed = true
 			end,
+
 			clearRound = function () --Relax and give rewards.
 				--Do rewarding.
 				local val = game.level.arena.pinchValue
@@ -424,6 +423,7 @@ return {
 				game.level.max_turn_counter = rest_time * 10
 				game.level.arena.initWave(val)
 			end,
+
 			checkPinch = function ()
 				if game.level.arena.danger > game.level.arena.dangerTop and game.level.arena.pinch == false then --The player is in a pinch!
 					if game.level.arena.danger - game.level.arena.dangerTop < 10 then return end --Ignore minimal excess of power.
@@ -445,6 +445,5 @@ return {
 		local Chat = require "engine.Chat"
 		local chat = Chat.new("arena-start", {name="Arena mode"}, game.player, {text = level.arena.printRankings()})
 		chat:invoke()
-		game.level.arena.addTrap()
 	end
 }

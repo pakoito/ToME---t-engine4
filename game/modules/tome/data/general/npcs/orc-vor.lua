@@ -45,7 +45,7 @@ newEntity{
 	resolvers.inscriptions(2, "rune"),
 
 	autolevel = "caster",
-	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=1, },
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=1, },
 	stats = { str=10, dex=8, mag=20, con=16 },
 	ingredient_on_death = "ORC_HEART",
 }

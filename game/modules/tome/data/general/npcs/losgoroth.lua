@@ -39,7 +39,7 @@ newEntity{
 	can_pass = {pass_void=70},
 
 	autolevel = "dexmage",
-	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=2, },
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=2, },
 	stats = { str=10, dex=8, mag=6, con=16 },
 
 	resists = { [DamageType.PHYSICAL] = -30, [DamageType.ARCANE] = 100 },

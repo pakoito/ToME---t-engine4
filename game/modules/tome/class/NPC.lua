@@ -200,7 +200,7 @@ function _M:checkAngered(src, set, value)
 	end
 end
 
---- Counts down timedEffects, but need to avoid the move_damaged_astar pathing
+--- Counts down timedEffects, but need to avoid the damaged A* pathing
 function _M:timedEffects(filter)
 	self._in_timed_effects = true
 	mod.class.Actor.timedEffects(self, filter)
@@ -218,9 +218,7 @@ function _M:onTakeHit(value, src)
 
 	-- Switch to astar pathing temporarily
 	if src and src == self.ai_target.actor and not self._in_timed_effects then
-		self.ai_state._old_ai_move = self.ai_state._old_ai_move or self.ai_state.ai_move
-		self.ai_state.ai_move = "move_damaged_astar"
-		self.ai_state.switch_move = 10
+		self.ai_state.damaged_turns = 10
 	end
 
 	-- Get angry if attacked by a friend

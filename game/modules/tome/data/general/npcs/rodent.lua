@@ -31,7 +31,7 @@ newEntity{ --rodent base
 	sound_random = {"creatures/rats/rat_%d", 1, 3},
 
 	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=3, },
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=3, },
 	stats = { str=8, dex=15, mag=3, con=5 },
 	combat = {sound="creatures/rats/rat_attack"},
 	combat_armor = 1, combat_def = 1,

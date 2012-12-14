@@ -29,7 +29,7 @@ newEntity{
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=2, },
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=2, },
 	global_speed_base = 0.8,
 	stats = { str=14, dex=12, mag=10, con=12 },
 	infravision = 10,

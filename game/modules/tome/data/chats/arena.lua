@@ -17,6 +17,13 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local entershop = function (self, player)
+	local arenashop = game:getStore("ARENA_SHOP")
+	arenashop:loadup(game.level, game.zone)
+	arenashop:interact(player, "Gladiator's wares")
+	arenashop = nil
+end
+
 newChat{ id="ryal-entry",
 text = [[#LIGHT_GREEN#*A gigantic bone giant walks through the main gate.
 #LIGHT_GREEN#Its shape is intricate and sharp, resembling a drake, but with countless
@@ -41,8 +48,8 @@ text = [[#LIGHT_GREEN#*After taking several hits, the undead giant finally succu
 #LIGHT_GREEN#*Ryal quietly turns towards the gate and leaves, seemingly unharmed*
 ]],
 	answers = {
-		{"It was fun, bone giant!"},
-		{"...what? unharmed?"}
+		{"It was fun, bone giant!", action=entershop},
+		{"...what? unharmed?", action=entershop}
 	}
 }
 
@@ -52,7 +59,7 @@ text = [[#LIGHT_GREEN#*The wind chills as a young girl walks calmly through the 
 #LIGHT_GREEN#long black hair. She examines you with eerie calmness*#WHITE#
 I am known as Fryjia the Hailstorm. That's all you need to know, @playerdescriptor.race@. Let us begin.
 #LIGHT_GREEN#*The whole arena starts to get colder as she speaks, and the audience
-#LIGHT_GREEN#starts wearing their finest cloaks*]],
+#LIGHT_GREEN#starts wearing their finest winter cloaks*]],
 	answers = {
 		{"Bring it!"},
 	}
@@ -68,8 +75,8 @@ text = [[#LIGHT_GREEN#*With your final blow, Fryjia falls, unable to continue*
 #LIGHT_GREEN#towards the gate. As it closes, you realize her eyes are wet with tears.
 ]],
 	answers = {
-		{"..."},
-		{"w...what was that about?"}
+		{"...", action=entershop},
+		{"w...what was that about?", action=entershop}
 	}
 }
 
@@ -98,8 +105,8 @@ Oh, and please forgive her behavior. You will understand when you meet her fathe
 And, if you keep fighting like this, it will be really soon.
 So, it's been my pleasure, @playername@. #LIGHT_GREEN#*She vanishes in a spiral of flame*]],
 	answers = {
-		{"I am pumped up! What's next?"},
-		{"Am I the only person with a name that can die here?"}
+		{"I am pumped up! What's next?", action=entershop},
+		{"Am I the only person with a name that can die here?", action=entershop}
 	}
 }
 
@@ -139,9 +146,9 @@ Good luck...
 #RED#The final battle begins when the gate closes, just this final time!!
 ]],
 	answers = {
-		{"I will defeat you, Master of the Arena!!!"},
-		{"I will become Master of the Arena instead of the Master of the Arena!!"},
-		{"Wealth and glory! Wealth and glory!"},
+		{"I will defeat you, Master of the Arena!!!", action=entershop},
+		{"I will become Master of the Arena instead of the Master of the Arena!!", action=entershop},
+		{"Wealth and glory! Wealth and glory!", action=entershop},
 	}
 }
 

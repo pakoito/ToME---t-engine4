@@ -41,7 +41,7 @@ newEntity{
 	size_category = 4,
 
 	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=3, },
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=3, },
 	stats = { str=20, dex=8, mag=6, con=16 },
 
 	open_door = true,

@@ -19,7 +19,7 @@
 
 local DamageType = require "engine.DamageType"
 
-local print = function() end
+--local print = function() end
 
 local canFleeDmapKeepLos = function(self)
 	if self.never_move then return false end -- Dont move, dont flee
@@ -393,14 +393,10 @@ newAI("tactical", function(self)
 	end
 
 	if targeted and not self.energy.used then
-		game.log("%s thinks the player is at %d/%d", self.name:capitalize(), ax, ay)
 		if special_move then
-			game.log("%s moving with %s", self.name:capitalize(), special_move)
 			return self:runAI(special_move)
 		elseif self.ai_tactic.safe_range and not self:hasLOS(ax, ay) then
 			local moved = self:runAI("flee_dmap_keep_los")
-			if moved then game.log("%s moving with %s", self.name:capitalize(), "flee_dmap_keep_los") return moved end
-			game.log("%s moving with %s", self.name:capitalize(), self.ai_state.ai_move or "move_simple")
 			return self:runAI(self.ai_state.ai_move or "move_simple")
 		else
 			return self:runAI(self.ai_state.ai_move or "move_simple")

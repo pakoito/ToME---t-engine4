@@ -32,10 +32,6 @@ end)
 newAI("move_dmap", function(self)
 	if self.ai_target.actor and self.x and self.y then
 		local a = self.ai_target.actor
-		if self:hasLOS(a.x, a.y) then 
-			local simple = self:runAI("move_simple")
-			if simple then return simple end
-		end
 
 		local c = a:distanceMap(self.x, self.y)
 		if not c then return self:runAI("move_simple") end
@@ -43,57 +39,11 @@ newAI("move_dmap", function(self)
 		for _, i in ipairs(util.adjacentDirs()) do
 			local sx, sy = util.coordAddDir(self.x, self.y, i)
 			local cd = a:distanceMap(sx, sy)
-			print("looking for dmap", dir, i, "::", c, cd)
+--			print("looking for dmap", dir, i, "::", c, cd)
 			if cd and cd > c and self:canMove(sx, sy) then c = cd; dir = i end
 		end
 
-		if dir == 5 then
-			-- Make sure that we are indeed blocked
-			local simple = self:runAI("move_simple")
-			if simple then return simple end
-			-- Wait at least 5 turns of not moving before switching to blocked_astar
-			self.ai_state.blocked_turns = (self.ai_state.blocked_turns or 0) + 1
-			if self.ai_state.blocked_turns >= 5 then
-				self.ai_state._old_ai_move = self.ai_state.ai_move
-				self.ai_state.ai_move = "move_blocked_astar"
-				return self:runAI("move_blocked_astar")
-			end
-		elseif self.ai_state.blocked_turns then
-			self.ai_state.blocked_turns = self.ai_state.blocked_turns - 1
-			if self.ai_state.blocked_turns <= 0 then self.ai_state.blocked_turns = nil end
-		end
-
 		return self:moveDirection(util.coordAddDir(self.x, self.y, dir))
-	end
-end)
-
--- Use A* pathing if we were blocked for several turns, to avoid stacking up in simple chokepoints
-newAI("move_blocked_astar", function(self)
-	if self.ai_target.actor then
-		self.ai_state.blocked_turns = self.ai_state.blocked_turns - 1
-		if self.ai_state.blocked_turns <= 0 then
-			self.ai_state.ai_move = self.ai_state._old_ai_move
-			self.ai_state._old_ai_move = nil
-			self.ai_state.blocked_turns = nil
-			return self:runAI(self.ai_state.ai_move or "move_simple")
-		else
-			local check_all_block_move = function(nx, ny)
-				local actor = game.level.map(nx, ny, engine.Map.ACTOR)
-				if actor and actor == self.ai_target.actor then
-					return true
-				else
-					return not game.level.map:checkAllEntities(nx, ny, "block_move", self)
-				end
-			end
-			local astar = self:runAI("move_astar", check_all_block_move)
-			-- If A* did not work we add a penalty to trying A* again
-			if not astar then
-				self.ai_state.ai_move = self.ai_state._old_ai_move
-				self.ai_state._old_ai_move = nil
-				self.ai_state.blocked_turns = -5
-			end
-			return astar
-		end
 	end
 end)
 
@@ -162,6 +112,79 @@ newAI("move_astar", function(self, add_check)
 		else
 			return self:move(path[1].x, path[1].y)
 		end
+	end
+end)
+
+-- Use A* pathing if we were blocked for several turns, to avoid stacking up in simple chokepoints
+newAI("move_blocked_astar", function(self)
+	if self.ai_target.actor then
+		self.ai_state.blocked_turns = self.ai_state.blocked_turns - 1
+		if self.ai_state.blocked_turns <= 0 then
+			self.ai_state.ai_move = self.ai_state._old_ai_move
+			self.ai_state._old_ai_move = nil
+			self.ai_state.blocked_turns = nil
+			return self:runAI(self.ai_state.ai_move or "move_simple")
+		else
+			local check_all_block_move = function(nx, ny)
+				local actor = game.level.map(nx, ny, engine.Map.ACTOR)
+				if actor and actor == self.ai_target.actor then
+					return true
+				else
+					return not game.level.map:checkAllEntities(nx, ny, "block_move", self)
+				end
+			end
+			local astar = self:runAI("move_astar", check_all_block_move)
+			-- If A* did not work we add a penalty to trying A* again
+			if not astar then
+				self.ai_state.ai_move = self.ai_state._old_ai_move
+				self.ai_state._old_ai_move = nil
+				self.ai_state.blocked_turns = -5
+			end
+			return astar
+		end
+	end
+end)
+
+newAI("move_complex", function(self)
+	if self.ai_target.actor and self.x and self.y then
+		local moved
+		-- Can we use A* due to damage?
+		if not moved and self.ai_state.damaged_turns and self.ai_state.damaged_turns > 0 then
+			moved = self:runAI("move_astar")
+		end
+
+		-- Check if we can use dmap
+		if not moved then
+			moved = self:runAI("move_dmap")
+		end
+
+		-- Check blocking
+		if not moved then 
+			-- Make sure that we are indeed blocked
+			moved = self:runAI("move_simple")
+			if not moved then
+				-- Wait at least 5 turns of not moving before switching to blocked_astar
+				-- add 2 since we remove 1 every turn
+				self.ai_state.blocked_turns = (self.ai_state.blocked_turns or 0) + 2
+				if self.ai_state.blocked_turns >= 5 then
+					self.ai_state._old_ai_move = self.ai_state.ai_move
+					self.ai_state.ai_move = "move_blocked_astar"
+					moved = self:runAI("move_blocked_astar")
+				end
+			end
+		end
+
+		-- Tick down the ai_state counters
+		if self.ai_state.damaged_turns then
+			self.ai_state.damaged_turns = self.ai_state.damaged_turns - 1
+			if self.ai_state.damaged_turns <= 0 then self.ai_state.damaged_turns = nil end
+		end
+		if self.ai_state.blocked_turns then
+			self.ai_state.blocked_turns = self.ai_state.blocked_turns - 1
+			if self.ai_state.blocked_turns <= 0 then self.ai_state.blocked_turns = nil end
+		end
+
+		return moved
 	end
 end)
 

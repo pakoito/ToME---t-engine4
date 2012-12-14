@@ -17,6 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+--[[
 local give_boots_rush = function(self, player)
 	local o = game.zone:makeEntityByName(game.level, "object", "ARENA_BOOTS_RUSH")
 	if o then
@@ -120,23 +121,35 @@ local give_debugarms = function(self, player)
 
 	game.level.arena.perk = "Debug"..game.level.arena.modeString
 end
-
+]]--
 local arena_3 = function(self, player)
 	game.level.arena.eventWave = 2
 	game.level.arena.finalWave = 3
 	game.level.arena.modeString = "3"
+	local arenashop = game:getStore("ARENA_SHOP")
+	arenashop:loadup(game.level, game.zone)
+	arenashop:interact(game.player, "Gladiator's wares")
+	arenashop = nil
 end
 
 local arena_30 = function(self, player)
 	game.level.arena.eventWave = 5
 	game.level.arena.finalWave = 31
 	game.level.arena.modeString = "30"
+	local arenashop = game:getStore("ARENA_SHOP")
+	arenashop:loadup(game.level, game.zone)
+	arenashop:interact(game.player, "Gladiator's wares")
+	arenashop = nil
 end
 
 local arena_60 = function(self, player)
 	game.level.arena.eventWave = 5
 	game.level.arena.finalWave = 61
 	game.level.arena.modeString = "60"
+	local arenashop = game:getStore("ARENA_SHOP")
+	arenashop:loadup(game.level, game.zone)
+	arenashop:interact(game.player, "Gladiator's wares")
+	arenashop = nil
 end
 
 local give_bonus = function(self, player)
@@ -162,39 +175,22 @@ local save_clear = function(self, player)
 	if o then game.zone:addEntity(game.level, o, "object", 7, 3) end
 end
 
-
-newChat{ id="perks",
-	text = [[#LIGHT_GREEN#Preparing for the arena, you brought with you...]],
-	answers = {
-		{"A pair of boots of disengagement...", action=give_boots_dise},
-		{"A pair of boots of rushing...", action=give_boots_rush},
-		{"A pair of boots of phasing...", action=give_boots_phas},
-		{"A movement infusion...", action=give_moveinfu},
-		{"A healing infusion...", action=give_healinfu},
-		{"A bow of piercing arrows...", action=give_bow},
-		{"A sling of flare...", action=give_sling},
-		{"The talent to imbue gems...", action=give_imbue},
-		--{"[DEBUG] Debug arms!", action=give_debugarms},
-		{"Nothing!", action=give_bonus},
-	}
-}
-
 newChat{ id="welcome",
 	text = "#LIGHT_GREEN#You take a look at the ranking boards before entering.\n"..text,
 	answers = {
 		--{"Enter the arena for 3 rounds[DEBUG]", action=arena_3, jump="perks"},
-		{"Enter the arena (60 waves)", action=arena_60, jump="perks"},
-		{"Enter the arena (shorter mode, 30 rounds)", action=arena_30, jump="perks"},
+		{"Enter the arena (60 waves)", action=arena_60},
+		{"Enter the arena (shorter mode, 30 rounds)", action=arena_30},
 		--{"Enter the arena for as long as you can last", action=arena_inf, jump="perks"},
-		{"#LIGHT_RED#[Reset all arena save data]", action=save_clear, jump="welcome2"},
+		{"#LIGHT_RED#[Reset all arena save data]", action=save_clear},
 	}
 }
 
 newChat{ id="welcome2",
 	text = "What will you do now?",
 	answers = {
-		{"Enter the arena for 60 rounds", action=arena_60, jump="perks"},
-		{"Enter the arena for 30 rounds", action=arena_30, jump="perks"},
+		{"Enter the arena for 60 rounds", action=arena_60},
+		{"Enter the arena for 30 rounds", action=arena_30},
 		--{"Enter the arena for as long as you can last", action=arena_inf, jump="perks"},
 	}
 }

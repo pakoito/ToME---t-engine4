@@ -1114,6 +1114,65 @@ function _M:displayResources(scale, bx, by, a)
 		elseif game.mouse:getZone("res:hourglass") then game.mouse:unregisterZone("res:hourglass") end
 
 		-----------------------------------------------------------------------------------
+		-- Arena display
+		if game.level and game.level.arena then
+			local h = self.init_font_h + 2
+			if not self.arenaframe then
+				self.arenaframe = UI:makeFrame("ui/textbox", 250, 7 + h * 6)
+				UI:drawFrame(self.arenaframe, x, y, 1, 1, 1, 0.65)
+			else
+				UI:drawFrame(self.arenaframe, x, y, 1, 1, 1, 0.65)
+			end
+			local py = y + 2
+			local px = x + 5
+			local arena = game.level.arena
+			local aprint = function (_x, _y, _text, r, g, b)
+				local surf = { core.display.drawStringBlendedNewSurface(font_sha, _text, r, g, b):glTexture() }
+				surf[1]:toScreenFull(_x, _y, surf[6], surf[7], surf[2], surf[3], 0, 0, 0, 0.7 * a)
+				surf[1]:toScreenFull(_x, _y, surf[6], surf[7], surf[2], surf[3], 1, 1, 1, a)
+			end
+			if arena.score > world.arena.scores[1].score then
+				aprint(px, py, ("Score[1st]: %d"):format(arena.score), 255, 255, 100)
+			else
+				aprint(px, py, ("Score: %d"):format(arena.score), 255, 255, 255)
+			end
+			local _event
+			if arena.event > 0 then
+				if arena.event == 1 then
+					_event = "[MiniBoss]"
+				elseif arena.event == 2 then
+					_event = "[Boss]"
+				elseif arena.event == 3 then
+					_event = "[Final]"
+				end
+			else
+				_event = ""
+			end
+			py = py + h
+			if arena.currentWave > world.arena.bestWave then
+				aprint(px, py, ("Wave(TOP) %d %s"):format(arena.currentWave, _event), 255, 255, 100)
+			elseif arena.currentWave > world.arena.lastScore.wave then
+				aprint(px, py, ("Wave %d %s"):format(arena.currentWave, _event), 100, 100, 255)
+			else
+				aprint(px, py, ("Wave %d %s"):format(arena.currentWave, _event), 255, 255, 255)
+			end
+			py = py + h
+			if arena.pinch == true then
+				aprint(px, py, ("Bonus: %d (x%.1f)"):format(arena.bonus, arena.bonusMultiplier), 255, 50, 50)
+			else
+				aprint(px, py, ("Bonus: %d (x%.1f)"):format(arena.bonus, arena.bonusMultiplier), 255, 255, 255)
+			end
+			py = py + h
+			if arena.display then
+				aprint(px, py, arena.display[1], 255, 0, 255)
+				aprint(px, py + h, " VS", 255, 0, 255)
+				aprint(px, py + h + h,  arena.display[2], 255, 0, 255)
+			else
+				aprint(px, py, "Rank: "..arena.printRank(arena.rank, arena.ranks), 255, 255, 255)
+			end
+		end
+
+		-----------------------------------------------------------------------------------
 		-- Saving
 		if savefile_pipe.saving then
 			sshat[1]:toScreenFull(x-6, y+8, sshat[6], sshat[7], sshat[2], sshat[3], 1, 1, 1, a)
@@ -1954,13 +2013,13 @@ function _M:setupMouse(mouse)
 		else
 			extra.log_str = str
 			if button == "right" and event == "button" then
-				extra.add_map_action = { 
+				extra.add_map_action = {
 					{ name="Show chat user", fct=function() profile.chat:showUserInfo(user.login) end },
 					{ name="Report user for bad behavior", fct=function()
 						game:registerDialog(require('engine.dialogs.GetText').new("Reason to report: "..user.login, "Reason", 4, 500, function(text)
 							profile.chat:reportUser(user.login, text)
 							game.log("#VIOLET#", "Report sent.")
-						end))							
+						end))
 					end },
 				}
 			end

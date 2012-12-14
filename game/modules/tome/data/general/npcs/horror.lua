@@ -28,7 +28,7 @@ newEntity{
 	blood_color = colors.BLUE,
 	body = { INVEN = 10 },
 	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=3, },
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=3, },
 
 	stats = { str=20, dex=20, wil=20, mag=20, con=20, cun=20 },
 	combat_armor = 5, combat_def = 10,
@@ -54,7 +54,7 @@ Each swing drips pestulant fluid before it, and each droplet writhes and wriggle
 	hate_regen = 10,
 
 	autolevel = "warriormage",
-	ai = "tactical", ai_state = { ai_move="move_dmap", talent_in=1, ally_compassion=0 },
+	ai = "tactical", ai_state = { ai_move="move_complex", talent_in=1, ally_compassion=0 },
 	ai_tactic = resolvers.tactic "melee",
 
 	see_invisible = 100,
@@ -199,7 +199,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	max_life = resolvers.rngavg(200,220),
 	life_rating = 16,
 	autolevel = "warrior",
-	ai = "tactical", ai_state = { ai_move="move_dmap", talent_in=1, },
+	ai = "tactical", ai_state = { ai_move="move_complex", talent_in=1, },
 	combat = { dam=20, atk=20, apr=10, dammod={str=1} },
 	combat = {damtype=DamageType.PHYSICAL},
 	no_auto_resists = true,
@@ -262,7 +262,7 @@ newEntity{ base = "BASE_NPC_HORROR", define_as = "BASE_NPC_ELDRICTH_EYE",
 	rank = 2,
 	size_category = 1,
 	autolevel = "caster",
-	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=1, },
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=1, },
 	combat_armor = 1, combat_def = 0,
 	levitation = 1,
 	no_auto_resists = true,
@@ -408,7 +408,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	autolevel = "caster",
 	combat_armor = 1, combat_def = 10,
 	combat = { dam=5, atk=15, apr=20, dammod={mag=0.6}, damtype=DamageType.LIGHT},
-	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=1.5, },
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=1.5, },
 	lite = 3,
 
 	resists = {all = 35, [DamageType.DARKNESS] = -50, [DamageType.LIGHT] = 100, [DamageType.FIRE] = 100},
@@ -445,7 +445,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	life_rating = 16,
 	combat_armor = 1, combat_def = 10,
 	combat = { dam=20, atk=30, apr=40, dammod={mag=1}, damtype=DamageType.LIGHT},
-	ai = "tactical", ai_state = { ai_move="move_dmap", talent_in=1, },
+	ai = "tactical", ai_state = { ai_move="move_complex", talent_in=1, },
 	lite = 5,
 
 	resists = {all = 40, [DamageType.DARKNESS] = -50, [DamageType.LIGHT] = 100, [DamageType.FIRE] = 100},
@@ -521,7 +521,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	life_regen = 0.25,
 	combat_armor = 12, combat_def = 24,
 
-	ai = "tactical", ai_state = { ai_move="move_dmap", talent_in=2, ally_compassion=0 },
+	ai = "tactical", ai_state = { ai_move="move_complex", talent_in=2, ally_compassion=0 },
 
 	on_melee_hit = {[DamageType.PHYSICALBLEED]=resolvers.mbonus(14, 2)},
 	combat = { dam=resolvers.levelup(resolvers.rngavg(16,22), 1, 1.5), atk=resolvers.levelup(18, 1, 1), apr=4, dammod={wil=0.25, cun=0.1}, damtype=engine.DamageType.PHYSICALBLEED, },
@@ -584,7 +584,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 		damtype=engine.DamageType.SLIME,
 	},
 
-	ai = "tactical", ai_state = { ai_move="move_dmap", talent_in=1, ally_compassion=0 },
+	ai = "tactical", ai_state = { ai_move="move_complex", talent_in=1, ally_compassion=0 },
 
 	resists = {all=15, [DamageType.PHYSICAL] = -10, [DamageType.NATURE] = 100, [DamageType.ARCANE] = 40, [DamageType.BLIGHT] = 24},
 
@@ -623,7 +623,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	},
 	combat_physspeed = 2,
 
-	ai = "tactical", ai_state = { ai_move="move_dmap", talent_in=1, ally_compassion=0 },
+	ai = "tactical", ai_state = { ai_move="move_complex", talent_in=1, ally_compassion=0 },
 
 	resists = {[DamageType.PHYSICAL] = -10, [DamageType.DARKNESS] = 100, [DamageType.LIGHT] = -60},
 
@@ -924,7 +924,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	
 	resolvers.drops{chance=100, nb=1, {defined="BLADE_RIFT"} },
 	
-	ai = "tactical", ai_state = { ai_move="move_dmap", talent_in=2, ally_compassion=0 },
+	ai = "tactical", ai_state = { ai_move="move_complex", talent_in=2, ally_compassion=0 },
 		
 	on_melee_hit = {[DamageType.PHYSICALBLEED]=resolvers.mbonus(30, 4)},
 	combat = { dam=resolvers.levelup(resolvers.rngavg(20,28), 1, 1.5), physspeed = 0.25,atk=resolvers.levelup(24, 1.2, 1.2), apr=4, dammod={wil=0.3, cun=0.15}, damtype=engine.DamageType.PHYSICALBLEED, },

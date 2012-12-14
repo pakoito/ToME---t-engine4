@@ -72,7 +72,7 @@ for i, p in ipairs(list) do
 		silence_immune = 0.5,
 		resolvers.racial(),
 		autolevel = "caster",
-		ai = "tactical", ai_state = { ai_move="move_dmap", talent_in=1, },
+		ai = "tactical", ai_state = { ai_move="move_complex", talent_in=1, },
 		ai_tactic = resolvers.tactic"ranged",
 		stats = { str=10, dex=8, mag=20, con=16 },
 		level_range = {5, nil}, exp_worth = 1,

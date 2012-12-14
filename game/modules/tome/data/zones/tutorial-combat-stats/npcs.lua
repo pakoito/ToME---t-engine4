@@ -393,7 +393,7 @@ newEntity{
 	rank = 1,
 
 	autolevel = "spider",
-	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=4, },
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=4, },
 	global_speed_base = 1,
 	stats = { str=15, dex=15, mag=8, con=10 },
 	resolvers.tmasteries{ ["technique/other"]=0.3 },

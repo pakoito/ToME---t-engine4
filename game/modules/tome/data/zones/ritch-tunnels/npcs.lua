@@ -41,7 +41,7 @@ Vicious predators, they inject corrupting diseases into their foes, and their sh
 	rank = 2,
 
 	autolevel = "slinger",
-	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=3, },
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=3, },
 	stats = { str=15, dex=15, mag=8, con=10 },
 
 	poison_immune = 0.5,
@@ -60,7 +60,7 @@ newEntity{ base = "BASE_NPC_RITCH_REL",
 
 	rank = 2,
 
-	ai_state = { ai_move="move_dmap", talent_in=1, },
+	ai_state = { ai_move="move_complex", talent_in=1, },
 	resolvers.talents{
 		[Talents.T_RITCH_FLAMESPITTER_BOLT]=1,
 	},
@@ -75,7 +75,7 @@ newEntity{ base = "BASE_NPC_RITCH_REL",
 
 	rank = 2,
 
-	ai_state = { ai_move="move_dmap", talent_in=1, },
+	ai_state = { ai_move="move_complex", talent_in=1, },
 	resolvers.talents{
 		[Talents.T_RUSHING_CLAWS]=1,
 	},
@@ -91,7 +91,7 @@ newEntity{ base = "BASE_NPC_RITCH_REL",
 	rank = 2,
 	combat_armor = 6,
 
-	ai_state = { ai_move="move_dmap", talent_in=1, },
+	ai_state = { ai_move="move_complex", talent_in=1, },
 }
 
 newEntity{ base = "BASE_NPC_RITCH_REL", define_as = "HIVE_MOTHER",

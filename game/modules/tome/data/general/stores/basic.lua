@@ -499,3 +499,54 @@ newEntity{
 		},
 	},
 }
+
+
+-------------------------------------------------------------
+-- Arena
+-------------------------------------------------------------
+newEntity{
+	define_as = "ARENA_SHOP",
+	name = "gladiator's wares",
+	display = '*', colors=colors.BLACK,
+	store = {
+		purse = 100,
+		nb_fill = 64,
+		empty_before_restock = false,
+		filters = {
+			{type="weapon", subtype="longsword", id=true, tome_drops="boss"},
+			{type="weapon", subtype="greatsword", id=true, tome_drops="boss"},
+			{type="weapon", subtype="waraxe", id=true, tome_drops="boss"},
+			{type="weapon", subtype="battleaxe", id=true, tome_drops="boss"},
+			{type="weapon", subtype="mace", id=true, tome_drops="boss"},
+			{type="weapon", subtype="greatmaul", id=true, tome_drops="boss"},
+			{type="weapon", subtype="mindstar", id=true, tome_drops="boss"},
+			{type="weapon", subtype="dagger", id=true, tome_drops="boss"},
+			{type="weapon", subtype="staff", id=true, tome_drops="boss"},
+			{type="weapon", subtype="longbow", id=true, tome_drops="boss"},
+			{type="weapon", subtype="sling", id=true, tome_drops="boss"},
+			{type="ammo", id=true, tome_drops="boss"},
+			{type="ammo", id=true, tome_drops="store"},
+			{type="armor", subtype="heavy", id=true, tome_drops="boss"},
+			{type="armor", subtype="massive", id=true, tome_drops="boss"},
+			{type="armor", subtype="shield", id=true, tome_drops="boss"},
+			{type="armor", subtype="head", id=true, tome_drops="boss"},
+			{type="armor", subtype="light", id=true, tome_drops="boss"},
+			{type="armor", subtype="hands", id=true, tome_drops="boss"},
+			{type="armor", subtype="feet", id=true, tome_drops="boss"},
+			{type="armor", subtype="belt", id=true, tome_drops="boss"},
+			{type="armor", subtype="cloth", id=true, tome_drops="store"},
+			{type="armor", subtype="robe", id=true, tome_drops="store"},
+			{type="armor", subtype="cloak", id=true, tome_drops="store"},
+			{type="armor", subtype="belt", id=true, tome_drops="store"},
+			{type="charm", subtype="torque", id=true, tome_drops="boss"},
+			{type="charm", subtype="totem", id=true, tome_drops="boss"},
+			{type="charm", subtype="wand", id=true, tome_drops="boss"},
+			{type="scroll", subtype="infusion", id=true},
+			{type="scroll", subtype="rune", id=true},
+			{type="jewelry", id=true, tome_drops="store"},
+			{type="jewelry", id=true, tome_drops="boss"},
+
+
+		}
+	}
+}

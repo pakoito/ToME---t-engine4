@@ -36,7 +36,7 @@ newEntity{
 	infravision = 10,
 
 	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=2, },
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=2, },
 	global_speed_base = 1.2,
 	stats = { str=10, dex=17, mag=3, con=7 },
 	combat = { dammod={str=0.6}, sound="creatures/wolves/wolf_attack_1" },

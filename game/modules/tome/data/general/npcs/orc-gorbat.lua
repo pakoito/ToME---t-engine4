@@ -45,7 +45,7 @@ newEntity{
 	resolvers.inscriptions(2, "infusion"),
 
 	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=3, },
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=3, },
 	stats = { str=20, dex=8, mag=6, con=16 },
 	ingredient_on_death = "ORC_HEART",
 }

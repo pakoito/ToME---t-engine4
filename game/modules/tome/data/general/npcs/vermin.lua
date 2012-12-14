@@ -30,7 +30,7 @@ newEntity{
 	combat = {sound={"creatures/worms/worm_%d", 1, 4}},
 
 	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=3, },
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=3, },
 	global_speed_base = 0.9,
 	stats = { str=10, dex=15, mag=3, con=3 },
 	combat_armor = 1, combat_def = 1,

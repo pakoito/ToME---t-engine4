@@ -2151,7 +2151,7 @@ newDamageType{
 			resolvers.racial(),
 			resolvers.sustains_at_birth(),
 			autolevel = "warrior",
-			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=2, },
+			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=2, },
 			stats = { str=20, dex=8, mag=6, con=16 },
 			name = "orc spirit", color=colors.SALMON, image = "npc/humanoid_orc_orc_berserker.png",
 			desc = [[An orc clad in a massive armour, wielding a huge axe.]],

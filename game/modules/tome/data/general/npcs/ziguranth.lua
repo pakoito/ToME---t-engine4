@@ -47,7 +47,7 @@ newEntity{
 	resolvers.inscriptions(1, "infusion"),
 
 	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=3, },
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=3, },
 	stats = { str=20, dex=15, mag=1, con=16, wil=19 },
 	not_power_source = {arcane=true},
 }
@@ -91,7 +91,7 @@ newEntity{ base = "BASE_NPC_ZIGURANTH",
 	equilibrium_regen = -20,
 
 	autolevel = "wildcaster",
-	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=1, },
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=1, },
 
 	resolvers.talents{
 		[Talents.T_RESOLVE]={base=4, every=5, max=8},
@@ -121,7 +121,7 @@ newEntity{ base = "BASE_NPC_ZIGURANTH",
 	equilibrium_regen = -20,
 
 	autolevel = "warriorwill",
-	ai_state = { ai_move="move_dmap", talent_in=2, },
+	ai_state = { ai_move="move_complex", talent_in=2, },
 	ai = "tactical",
 
 	resolvers.talents{

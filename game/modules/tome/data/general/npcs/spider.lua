@@ -34,7 +34,7 @@ newEntity{
 	rank = 1,
 
 	autolevel = "spider",
-	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=4, },
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=4, },
 	global_speed_base = 1.2,
 	stats = { str=15, dex=15, mag=8, con=10 },
 
@@ -302,7 +302,7 @@ newEntity{ base = "BASE_NPC_SPIDER",
 	rank = 3,
 
 	ai = "tactical",
-	ai_tactic = resolvers.tactic"melee", ai_state = { ai_move="move_dmap", talent_in=2, },
+	ai_tactic = resolvers.tactic"melee", ai_state = { ai_move="move_complex", talent_in=2, },
 
 	combat = { dam=resolvers.levelup(resolvers.mbonus(40, 70), 1, 0.9), atk=16, apr=9, damtype=DamageType.WASTING, dammod={dex=1.2} },
 
@@ -340,7 +340,7 @@ newEntity{ base = "BASE_NPC_SPIDER",
 	resolvers.drops{chance=100, nb=5, {ego_chance=100} },
 
 	ai = "tactical",
-	ai_tactic = resolvers.tactic"melee", ai_state = { ai_move="move_dmap", talent_in=1, },
+	ai_tactic = resolvers.tactic"melee", ai_state = { ai_move="move_complex", talent_in=1, },
 
 	combat = { dam=resolvers.levelup(resolvers.mbonus(100, 15), 1, 0.9), atk=16, apr=9, damtype=DamageType.WASTING, dammod={dex=1.2} },
 
@@ -398,7 +398,7 @@ newEntity{
 	infravision = 10,
 
 	autolevel = "spider",
-	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=2, },
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=2, },
 	global_speed_base = 1.2,
 	stats = { str=10, dex=17, mag=3, con=7 },
 	combat = { dammod={dex=0.8} },

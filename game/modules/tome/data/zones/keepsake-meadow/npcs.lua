@@ -44,7 +44,7 @@ newEntity{
 	resolvers.talents{ [Talents.T_ARMOUR_TRAINING]=2, [Talents.T_WEAPON_COMBAT]={base=1, every=10, max=5}, [Talents.T_WEAPONS_MASTERY]={base=1, every=10, max=5} },
 
 	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=3, },
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=3, },
 	stats = { str=20, dex=8, mag=6, con=16 },
 	
 	emote_random = {chance=10, "To arms!", "Monster!", "Die!", "You will not kill us!", "We will end this!"},
@@ -165,7 +165,7 @@ newEntity{
 	resolvers.talents{ [Talents.T_ARMOUR_TRAINING]=2, [Talents.T_WEAPON_COMBAT]={base=1, every=10, max=5}, [Talents.T_WEAPONS_MASTERY]={base=1, every=10, max=5} },
 
 	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=3, },
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=3, },
 }
 
 newEntity{ base = "BASE_SHADOW", define_as = "SHADOW_CLAW",
@@ -244,7 +244,7 @@ newEntity{ base = "BASE_SHADOW", define_as = "SHADOW_CASTER",
 		[Talents.T_REPROACH]={base=1, every=10, max=5},
 		[Talents.T_MIND_SEAR]={base=1, every=10, max=5},
 	},
-	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=1, },
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=1, },
 }
 
 newEntity{
@@ -266,7 +266,7 @@ newEntity{
 
 	open_door = true,
 
-	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=3, },
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=3, },
 	power_source = {technique=true},
 }
 

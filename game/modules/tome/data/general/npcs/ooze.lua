@@ -31,7 +31,7 @@ newEntity{
 	sound_random = {"creatures/jelly/jelly_%d", 1, 3},
 	body = { INVEN = 10 },
 	autolevel = "warrior",
-	ai = "dumb_talented_simple", ai_state = { ai_move="move_dmap", talent_in=1, },
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=1, },
 	stats = { str=10, dex=15, mag=3, con=10 },
 	global_speed_base = 0.7,
 	combat = {sound="creatures/jelly/jelly_hit"},

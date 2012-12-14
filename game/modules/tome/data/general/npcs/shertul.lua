@@ -28,7 +28,7 @@ newEntity{
 	blood_color = colors.BLUE,
 	body = { INVEN = 10 },
 	autolevel = "caster",
-	ai = "tactical", ai_state = { ai_move="move_dmap",  },
+	ai = "tactical", ai_state = { ai_move="move_complex",  },
 
 	stats = { str=40, dex=40, wil=40, con=40, mag=40, cun=40, lck=100 },
 	combat_armor = 0, combat_def = 0,

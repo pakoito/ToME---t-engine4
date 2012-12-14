@@ -200,7 +200,7 @@ newTalent{
 			body = { INVEN = 10, MAINHAND = 1, BODY = 1, QUIVER=1, HANDS = 1, FEET = 1},
 
 			ai = "summoned", ai_real = "tactical",
-			ai_state = { ai_move="move_dmap", talent_in=3, ally_compassion=10 },
+			ai_state = { ai_move="move_complex", talent_in=3, ally_compassion=10 },
 			ai_tactic = resolvers.tactic("ranged"),
 			
 			max_life = resolvers.rngavg(100,110),
@@ -311,7 +311,7 @@ newTalent{
 			body = { INVEN = 10, MAINHAND = 1, BODY = 1, HANDS = 1, FEET = 1},
 		
 			ai = "summoned", ai_real = "tactical",
-			ai_state = { ai_move="move_dmap", talent_in=3, ally_compassion=10 },
+			ai_state = { ai_move="move_complex", talent_in=3, ally_compassion=10 },
 			ai_tactic = resolvers.tactic("melee"),
 			
 			max_life = resolvers.rngavg(100,110),
@@ -412,7 +412,7 @@ newTalent{
 			body = { INVEN = 10, MAINHAND = 1, OFFHAND = 1, BODY = 1, HANDS = 1, FEET = 1},
 			
 			ai = "summoned", ai_real = "tactical",
-			ai_state = { ai_move="move_dmap", talent_in=3, ally_compassion=10 },
+			ai_state = { ai_move="move_complex", talent_in=3, ally_compassion=10 },
 			ai_tactic = resolvers.tactic("tank"),
 			
 			max_life = resolvers.rngavg(100,110),

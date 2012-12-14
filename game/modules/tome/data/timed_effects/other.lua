@@ -1620,7 +1620,7 @@ newEffect{
 				summoner = eff.target, summoner_gain_exp=true,
 				ai_target = {actor=nil},
 				ai = "summoned", ai_real = "tactical",
-				ai_state = eff.target.ai_state or { ai_move="move_dmap", talent_in=1 },
+				ai_state = eff.target.ai_state or { ai_move="move_complex", talent_in=1 },
 				name = eff.target.name.."'s dream projection",
 			})
 			m.ai_state.ally_compassion = 10

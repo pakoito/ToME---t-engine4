@@ -99,10 +99,10 @@ local function shadowMoveToActorTarget(self)
 	end
 
 	-- move to target
-	if self:runAI("move_dmap") then
+	if self:runAI("move_complex") then
 		self.turns_on_target = (self.turns_on_target or 0) + 1
 
-		--game.logPlayer(self.summoner, "#PINK#%s -> move_dmap", self.name:capitalize())
+		--game.logPlayer(self.summoner, "#PINK#%s -> move_complex", self.name:capitalize())
 		return true
 	end
 
