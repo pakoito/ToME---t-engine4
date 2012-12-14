@@ -611,8 +611,10 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 	core.game.setRealtime(0)
 
 	-- FOV Shape
-	core.fov.set_vision_shape("circle")
+	core.fov.set_algorithm("large_ass")
 	core.fov.set_permissiveness("square")
+	core.fov.set_actor_vision_size(1)
+	core.fov.set_vision_shape("circle")
 
 	-- Init the module directories
 	fs.mount(engine.homepath, "/")
