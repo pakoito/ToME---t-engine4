@@ -2445,6 +2445,7 @@ function _M:resetToFull()
 	self.equilibrium = self.min_equilibrium
 	self.air = self.max_air
 	self.psi = self.max_psi
+	self.hate = self.max_hate
 end
 
 function _M:levelup()
