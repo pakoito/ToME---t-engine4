@@ -58,3 +58,9 @@ newAchievement{
 	show = "name",
 	desc = [[Killed a Bringer of Doom.]],
 }
+
+newAchievement{
+	name = "A living one!", id = "CALDIZAR",
+	show = "name",
+	desc = [[Have been teleported into Caldizar's Fortress, far into the void between the stars.]],
+}

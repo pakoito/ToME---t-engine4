@@ -827,6 +827,43 @@ newEffect{
 }
 
 newEffect{
+	name = "TELEPORT_POINT_ZERO", image = "talents/teleport_point_zero.png",
+	desc = "Timeport: Point Zero",
+	long_desc = function(self, eff) return "The target is waiting to be recalled back to Point Zero." end,
+	type = "magical",
+	subtype = { timeport=true },
+	status = "beneficial",
+	cancel_on_level_change = true,
+	parameters = { },
+	activate = function(self, eff)
+		eff.leveid = game.zone.short_name.."-"..game.level.level
+	end,
+	deactivate = function(self, eff)
+		local seen = false
+		-- Check for visible monsters, only see LOS actors, so telepathy wont prevent it
+		core.fov.calc_circle(self.x, self.y, game.level.map.w, game.level.map.h, 20, function(_, x, y) return game.level.map:opaque(x, y) end, function(_, x, y)
+			local actor = game.level.map(x, y, game.level.map.ACTOR)
+			if actor and actor ~= self then seen = true end
+		end, nil)
+		if seen then
+			game.log("There are creatures that could be watching you; you cannot take the risk of timeporting to Point Zero.")
+			return
+		end
+
+		if self:canBe("worldport") and not self:attr("never_move") and eff.dur <= 0 then
+			game:onTickEnd(function()
+				if eff.leveid == game.zone.short_name.."-"..game.level.level and game.player.can_change_zone then
+					game.logPlayer(self, "You are yanked out of this time!")
+					game:changeLevel(1, "town-point-zero")
+				end
+			end)
+		else
+			game.logPlayer(self, "Time restabilizes around you.")
+		end
+	end,
+}
+
+newEffect{
 	name = "PREMONITION_SHIELD", image = "talents/premonition.png",
 	desc = "Premonition Shield",
 	long_desc = function(self, eff) return ("Reduces %s damage received by %d%%."):format(DamageType:get(eff.damtype).name, eff.resist) end,

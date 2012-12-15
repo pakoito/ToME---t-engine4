@@ -59,7 +59,7 @@ Thank you for your kindness!]]}
 
 	self.c_donate = Numberbox.new{title="Donation amount: ", number=10, max=1000, min=5, chars=5, fct=function() end}
 	local euro = Textzone.new{auto_width=true, auto_height=true, text=[[€]]}
-	self.c_recur = Checkbox.new{title="Make it a recurring montly donation", default=recur, fct=function() end}
+	self.c_recur = Checkbox.new{title="Make it a recurring monthly donation", default=recur, fct=function() end}
 	local ok = require("engine.ui.Button").new{text="Accept", fct=function() self:ok() end}
 	local cancel = require("engine.ui.Button").new{text="Cancel", fct=function() self:cancel() end}
 

@@ -254,6 +254,43 @@ newTalent{
 	The spell will take time to activate. You must be out of sight of any creature when you cast it and when the teleportation takes effect.]]
 }
 
+-- Chronomancer class talent, teleport to Point Zero
+newTalent{
+	short_name = "TELEPORT_POINT_ZERO",
+	name = "Timeport: Point Zero",
+	type = {"base/class", 1},
+	cooldown = 400,
+	no_npc_use = true,
+	no_unlearn_last = true,
+	no_silence=true, is_spell=true,
+	action = function(self, t)
+		if not self:canBe("worldport") or self:attr("never_move") then
+			game.logPlayer(self, "The spell fizzles...")
+			return
+		end
+
+		local seen = false
+		-- Check for visible monsters, only see LOS actors, so telepathy wont prevent it
+		core.fov.calc_circle(self.x, self.y, game.level.map.w, game.level.map.h, 20, function(_, x, y) return game.level.map:opaque(x, y) end, function(_, x, y)
+			local actor = game.level.map(x, y, game.level.map.ACTOR)
+			if actor and actor ~= self then seen = true end
+		end, nil)
+		if seen then
+			game.log("There are creatures that could be watching you; you cannot take the risk.")
+			return
+		end
+
+		self:setEffect(self.EFF_TELEPORT_POINT_ZERO, 40, {})
+		self:attr("temporal_touched", 1)
+		self:attr("time_travel_times", 1)
+		return true
+	end,
+	info = [[Allows a chronomancer to timeport to Point Zero.
+	You have studied the chronomancy there and have been granted a special portal spell to teleport there.
+	Nobody must learn about this spell and so it should never be used while seen by any creatures.
+	The spell will take time to activate. You must be out of sight of any creature when you cast it and when the timeportation takes effect.]]
+}
+
 newTalent{
 	name = "Relentless Pursuit",
 	type = {"base/class", 1},
