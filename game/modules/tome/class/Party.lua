@@ -133,6 +133,14 @@ function _M:findMember(filter)
 	end
 end
 
+function _M:countInventoryAble()
+	local nb = 0
+	for i, actor in ipairs(self.m_list) do
+		if not actor.no_inventory_access then nb = nb + 1 end
+	end
+	return nb
+end
+
 function _M:setDeathTurn(actor, turn)
 	local def = self.members[actor]
 	if not def then return end

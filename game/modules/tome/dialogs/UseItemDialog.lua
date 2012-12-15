@@ -22,6 +22,7 @@ require "engine.ui.Dialog"
 local List = require "engine.ui.List"
 local Savefile = require "engine.Savefile"
 local Map = require "engine.Map"
+local PartySendItem = require "mod.dialogs.PartySendItem"
 
 module(..., package.seeall, class.inherit(engine.ui.Dialog))
 
@@ -78,6 +79,10 @@ function _M:use(item)
 	elseif act == "takeoff" then
 		self.actor:doTakeoff(self.inven, self.item, self.object)
 		self.onuse(self.inven, self.item, self.object, false)
+	elseif act == "transfer" then
+		game:registerDialog(PartySendItem.new(self.actor, self.object, self.inven, self.item, function()
+			self.onuse(self.inven, self.item, self.object, false)
+		end))		
 	elseif act == "transmo" then
 		self:yesnoPopup("Transmogrify", "Really transmogrify "..self.object:getName{}, function(ret)
 			if not ret then return end
@@ -105,6 +110,7 @@ function _M:generateList()
 	if self.inven == self.actor.INVEN_INVEN and self.object:wornInven() and self.actor:getInven(self.object:wornInven()) then list[#list+1] = {name="Wield/Wear", action="wear"} end
 	if not self.object.__transmo then if self.inven ~= self.actor.INVEN_INVEN and self.object:wornInven() then list[#list+1] = {name="Take off", action="takeoff"} end end
 	if self.inven == self.actor.INVEN_INVEN then list[#list+1] = {name="Drop", action="drop"} end
+	if self.inven == self.actor.INVEN_INVEN and game.party:countInventoryAble() >= 2 then list[#list+1] = {name="Transfer to party", action="transfer"} end
 	if self.inven == self.actor.INVEN_INVEN and transmo_chest and self.actor:transmoFilter(self.object) then list[#list+1] = {name="Transmogrify now", action="transmo"} end
 	if profile.auth and profile.hash_valid then list[#list+1] = {name="Link item in chat", action="chat-link"} end
 
