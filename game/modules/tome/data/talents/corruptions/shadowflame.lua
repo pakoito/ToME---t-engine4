@@ -141,10 +141,6 @@ newTalent{
 			game.logPlayer(self, "This spell can not be cast here.")
 			return
 		end
-		if not self:canBe("planechange") or target.summon_time or target.summon then
-			game.logPlayer(self, "The spell fizzles...")
-			return
-		end
 
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local tx, ty, target = self:getTarget(tg)
@@ -156,6 +152,11 @@ newTalent{
 		if not (target.player and target.game_ender) and not (self.player and self.game_ender) then return nil end
 		if target == self then return end
 		if target:attr("negative_status_effect_immune") or target:attr("status_effect_immune") then return nil end
+
+		if not self:canBe("planechange") or target.summon_time or target.summon then
+			game.logPlayer(self, "The spell fizzles...")
+			return
+		end
 
 		game:playSoundNear(self, "talents/flame")
 		local dam = self:combatTalentSpellDamage(t, 12, 140)

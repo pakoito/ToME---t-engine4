@@ -44,6 +44,8 @@ Let us join forces and crush the fools!]],
 	answers = {
 		{"Magic shall triumph!", jump="quest3", action=function(npc, player)
 			if npc:isTalentActive(npc.T_DEMON_PLANE) then npc:forceUseTalent(npc.T_DEMON_PLANE, {ignore_energy=true}) end
+			if player:isTalentActive(player.T_DEMON_PLANE) then player:forceUseTalent(player.T_DEMON_PLANE, {ignore_energy=true}) end
+			if player:hasEffect(player.EFF_DREAMSCAPE) then player:removeEffect(player.EFF_DREAMSCAPE, true) end
 		end},
 		{"Magic has a purpose. Those men are wrong, but you seem much worse.", quick_reply="Then you must leave... THIS WORLD! DIE!"},
 	}
