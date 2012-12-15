@@ -110,6 +110,7 @@ newChat{ id="go",
 
 
 newChat{ id="win",
+	action = function(npc, player) player:attr("invulnerable", 1) end,
 	text = [[#LIGHT_GREEN#*The Cornac rogue comes back from the shadows*#WHITE#
 Well done, @playerdescriptor.race@! I knew you had potential.
 #LIGHT_GREEN#*The rogue takes out his hood, showing a fairly young, but unmistakingly
@@ -126,6 +127,8 @@ Good luck in your adventures, and come visit us when you are done!
 ]],
 	answers = {
 		{ "I will. Farewell for now.", action = function (self, player)
+			player:attr("invulnerable", -1)
+
 			local g = game.zone:makeEntityByName(game.level, "terrain", "SAND_UP_WILDERNESS")
 			g.change_level = 1
 			g.change_zone = "town-derth"

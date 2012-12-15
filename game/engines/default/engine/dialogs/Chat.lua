@@ -43,9 +43,6 @@ function _M:init(chat, id)
 	self:generateList()
 
 	self.c_desc = Textzone.new{width=self.iw - 10 - xoff, height=1, auto_height=true, text=self.text.."\n"}
-
-	self:generateList()
-
 	self.c_list = VariableList.new{width=self.iw - 10 - xoff, list=self.list, fct=function(item) self:use(item) end, select=function(item) self:select(item) end}
 
 	local uis = {
@@ -144,6 +141,10 @@ function _M:generateList()
 	self.list = list
 
 	self.text = self.chat:replace(self.chat:get(self.cur_id).text)
+
+	if self.chat:get(self.cur_id).action then
+		self.chat:get(self.cur_id).action(self.npc, self.player)
+	end
 
 	return true
 end

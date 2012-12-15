@@ -136,6 +136,12 @@ function _M:call(str, ...)
 	self.changed = true
 end
 
+--- Gets the last log line
+function _M:getNewestLine()
+	if self.log[1] then return self.log[1].str end
+	return nil
+end
+
 --- Clear the log
 function _M:empty()
 	self.cache = {}
