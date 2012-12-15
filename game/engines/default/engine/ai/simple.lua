@@ -125,7 +125,8 @@ newAI("move_astar", function(self, add_check)
 		if not path then
 			return self:runAI("move_simple")
 		else
-			return self:move(path[1].x, path[1].y)
+			local moved = self:move(path[1].x, path[1].y)
+			if not moved then return self:runAI("move_simple") end
 		end
 	end
 end)

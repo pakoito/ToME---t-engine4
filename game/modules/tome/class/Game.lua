@@ -1682,7 +1682,9 @@ function _M:setupMouse(reset)
 		if config.settings.cheat and button == "right" and core.key.modState("ctrl") and core.key.modState("shift") and not xrel and not yrel and event == "button" and self.zone and not self.zone.wilderness then
 			local tmx, tmy = game.level.map:getMouseTile(mx, my)
 			local target = game.level.map(tmx, tmy, Map.ACTOR)
-			target:die(game.player)
+			if target then
+				target:die(game.player)
+			end
 			return
 		end
 

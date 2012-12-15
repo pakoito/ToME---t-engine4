@@ -46,8 +46,14 @@ end)
 newAI("move_anchor", function(self)
 	local anchor = self.ai_state.tactic_leash_anchor
 	if anchor and anchor.x and anchor.y then
-		local tx, ty = anchor.x, anchor.y
-		return self:moveDirection(tx, ty)
+		local a = engine.Astar.new(game.level.map, self)
+		local path = a:calc(self.x, self.y, anchor.x, anchor.y)
+		if not path then
+			return self:moveDirection(anchor.x, anchor.y)
+		else
+			local moved = self:move(path[1].x, path[1].y)
+			if not moved then return self:moveDirection(anchor.x, anchor.y) end
+		end
 	end
 end)
 

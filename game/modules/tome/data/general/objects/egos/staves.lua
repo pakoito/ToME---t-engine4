@@ -221,6 +221,10 @@ newEntity{
 		function(self, who)
 			local tg = {type="bolt", range= 5 + self.material_level, speed=20, display = {particle=particle, trail=trail},}
 			local weapon = who:hasStaffWeapon()
+			if not weapon then
+				game.logPlayer(who, "You have no appropriate weapon.")
+				return
+			end
 			local combat = weapon.combat
 
 			local DamageType = require "engine.DamageType"
