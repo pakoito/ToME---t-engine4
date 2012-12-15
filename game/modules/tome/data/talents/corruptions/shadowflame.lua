@@ -254,7 +254,7 @@ newTalent{
 			local level = game.level.source_level
 
 			if not self.dead then
-				oldlevel:removeEntity(self)
+				oldlevel:removeEntity(self, true)
 				level:addEntity(self)
 			end
 
@@ -279,7 +279,7 @@ newTalent{
 					p.target.on_die, p.target.demon_plane_on_die = p.target.demon_plane_on_die, nil
 					game.level.map:particleEmitter(x2, y2, 1, "demon_teleport")
 				end
-				if oldlevel:hasEntity(p.target) then oldlevel:removeEntity(p.target) end
+				if oldlevel:hasEntity(p.target) then oldlevel:removeEntity(p.target, true) end
 				level:addEntity(p.target)
 			else
 				p.target.x, p.target.y = x2, y2
