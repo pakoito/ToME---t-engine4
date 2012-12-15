@@ -159,7 +159,7 @@ newEntity{ base = "BASE_NPC_TROLL", unique=true,
 	ai = "tactical",
 	
 	on_added_to_level = function(self)
-		self.inc_damage={[DamageType.FIRE]=math.min(self.level*2,50),}
+		self.inc_damage={[engine.DamageType.FIRE]=math.min(self.level*2,50),}
 	end,
 	
 	resolvers.talents{

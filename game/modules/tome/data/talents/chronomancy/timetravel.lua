@@ -117,7 +117,7 @@ newTalent{
 		}
 		
 		game.logSeen(target, "%s has moved forward in time!", target.name:capitalize())
-		game.level:removeEntity(target)
+		game.level:removeEntity(target, true)
 		game.level:addEntity(e)
 		game.level.map(x, y, Map.TERRAIN, e)
 		game.nicer_tiles:updateAround(game.level, x, y)
