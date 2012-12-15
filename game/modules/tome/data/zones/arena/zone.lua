@@ -397,6 +397,7 @@ return {
 				local expAward = (dangerBonus + scoreBonus + clearBonus + rankBonus) * game.level.arena.bonusMultiplier
 				local x, y = game.level.map:getTileToScreen(game.player.x, game.player.y)
 				game.player:gainExp(expAward)
+				game.player:incMoney(scoreBonus)
 				game.level.arena.score = game.level.arena.score + game.level.arena.bonus
 				game.flyers:add(x, y, 90, 0, -1, "Round Clear! +"..expAward.." EXP!", { 2, 57, 185 }, true)
 				game.log(col.."Wave clear!")

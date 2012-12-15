@@ -509,7 +509,7 @@ newEntity{
 	name = "gladiator's wares",
 	display = '*', colors=colors.BLACK,
 	store = {
-		purse = 100,
+		purse = 1,
 		nb_fill = 64,
 		empty_before_restock = false,
 		filters = {
@@ -542,6 +542,8 @@ newEntity{
 			{type="charm", subtype="totem", id=true, tome_drops="boss"},
 			{type="charm", subtype="wand", id=true, tome_drops="boss"},
 			{type="scroll", subtype="infusion", id=true},
+			{type="scroll", subtype="infusion", id=true},
+			{type="scroll", subtype="rune", id=true},
 			{type="scroll", subtype="rune", id=true},
 			{type="jewelry", id=true, tome_drops="store"},
 			{type="jewelry", id=true, tome_drops="boss"},

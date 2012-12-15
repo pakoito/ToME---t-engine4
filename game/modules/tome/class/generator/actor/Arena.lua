@@ -207,6 +207,7 @@ _M.bosses = {
 	finish = function ()
 		local Chat = require "engine.Chat"
 		local chat = Chat.new("arena", {name="Victory!!"}, game.player)
+		game.player:incMoney(35)
 		chat:invoke("ryal-defeat")
 	end
 	},
@@ -220,6 +221,7 @@ _M.bosses = {
 	finish = function ()
 		local Chat = require "engine.Chat"
 		local chat = Chat.new("arena", {name="Victory!!"}, game.player)
+		game.player:incMoney(50)
 		chat:invoke("fryjia-defeat")
 	end
 	},
@@ -233,7 +235,9 @@ _M.bosses = {
 	finish = function ()
 		local Chat = require "engine.Chat"
 		local chat = Chat.new("arena", {name="Victory!!"}, game.player)
+		game.player:incMoney(70)
 		chat:invoke("riala-defeat")
+
 	end
 	},
 	{ name = "ARENA_BOSS_VALFREN", display = "Valfren the Rampage", chat = "arena_boss_valfren",
@@ -250,6 +254,7 @@ _M.bosses = {
 		game.level.map:setObscure(1*0.6, 1*0.6, 1*0.6, 1)
 		local Chat = require "engine.Chat"
 		local chat = Chat.new("arena", {name="Victory!!"}, game.player)
+		game.player:incMoney(90)
 		chat:invoke("valfren-defeat")
 	end
 	},
@@ -333,7 +338,7 @@ function _M:generateMiniboss(e)
 			self.on_added  = nil
 		end
 		if m.on_die then m.on_die_orig = m.on_die end
-		m.on_die = function (self)
+z		m.on_die = function (self)
 			if self.on_die_orig then self.on_die_orig(self) end
 			game.level.arena.danger = game.level.arena.danger - self.arenaPower
 			game.level.arena.bonus = game.level.arena.bonus + self.arenaScore
