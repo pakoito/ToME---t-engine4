@@ -419,6 +419,8 @@ end
 function _M:scan(dir, radius, sx, sy, filter)
 	sx = sx or self.target.x
 	sy = sy or self.target.y
+	if not sx or not sy then return end
+	
 	radius = radius or 20
 	local actors = {}
 	local checker = function(_, x, y)
