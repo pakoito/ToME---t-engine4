@@ -633,9 +633,9 @@ rift = { method="walls", type="riftwall", forbid={}, use_type=true, extended=tru
 	default91i={add_displays={{image="terrain/rift/riftwall_73d_1.png", display_y=-1, z=16}}, min=1, max=1},
 
 	default2={image="terrain/rift/rift_V3_8_0%d.png", min=1, max=1},
-	default2p={image="terrain/rift/rift_floor_1_01.png", add_mos={{image="terrain/rift/rift_V3_pillar_bottom_01.png"}}, min=1, max=1},
-	default1={image="terrain/rift/rift_floor_1_01.png", add_mos={{image="terrain/rift/rift_V3_inner_1_01.png"}}, min=1, max=1},
-	default3={image="terrain/rift/rift_floor_1_01.png", add_mos={{image="terrain/rift/rift_V3_inner_3_01.png"}}, min=1, max=1},
+	default2p={image="invis.png", add_mos={{image="terrain/rift/rift_V3_pillar_bottom_01.png"}}, min=1, max=1},
+	default1={image="invis.png", add_mos={{image="terrain/rift/rift_V3_inner_1_01.png"}}, min=1, max=1},
+	default3={image="invis.png", add_mos={{image="terrain/rift/rift_V3_inner_3_01.png"}}, min=1, max=1},
 	default1i={image="terrain/rift/rift_V3_7_01.png", min=1, max=1},
 	default2i={image="terrain/rift/riftwall_2h_1.png", min=1, max=1},
 	default3i={image="terrain/rift/rift_V3_9_01.png", min=1, max=1},

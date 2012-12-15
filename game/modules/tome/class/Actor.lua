@@ -349,7 +349,7 @@ end
 
 function _M:actBase()
 	-- Stupid sanity check that is actualy useful
-	if not self.life ~= self.life then self.life = self.max_life end
+	if self.life ~= self.life then self.life = self.max_life end
 
 	-- Solipsism speed effects; calculated before the actor gets energy
 	local current_psi_percentage = self:getPsi() / self:getMaxPsi()

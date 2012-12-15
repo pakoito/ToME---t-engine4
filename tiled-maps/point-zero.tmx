@@ -1,0 +1,414 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="50" height="50" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="dg_grounds32" tilewidth="32" tileheight="32">
+  <image source="gfx/dg_grounds32.gif" width="288" height="640"/>
+  <tile id="0">
+   <properties>
+    <property name="display" value=":"/>
+   </properties>
+  </tile>
+  <tile id="2">
+   <properties>
+    <property name="display" value="*"/>
+   </properties>
+  </tile>
+  <tile id="9">
+   <properties>
+    <property name="display" value="."/>
+   </properties>
+  </tile>
+  <tile id="12">
+   <properties>
+    <property name="display" value=","/>
+   </properties>
+  </tile>
+  <tile id="18">
+   <properties>
+    <property name="display" value="~"/>
+   </properties>
+  </tile>
+  <tile id="28">
+   <properties>
+    <property name="display" value="-"/>
+   </properties>
+  </tile>
+  <tile id="30">
+   <properties>
+    <property name="display" value="_"/>
+   </properties>
+  </tile>
+  <tile id="33">
+   <properties>
+    <property name="display" value="="/>
+   </properties>
+  </tile>
+  <tile id="52">
+   <properties>
+    <property name="display" value="_"/>
+   </properties>
+  </tile>
+  <tile id="54">
+   <properties>
+    <property name="display" value="t"/>
+   </properties>
+  </tile>
+  <tile id="72">
+   <properties>
+    <property name="display" value="~"/>
+   </properties>
+  </tile>
+  <tile id="81">
+   <properties>
+    <property name="display" value="^"/>
+   </properties>
+  </tile>
+  <tile id="90">
+   <properties>
+    <property name="display" value="s"/>
+   </properties>
+  </tile>
+  <tile id="105">
+   <properties>
+    <property name="display" value="="/>
+   </properties>
+  </tile>
+  <tile id="117">
+   <properties>
+    <property name="display" value="^"/>
+   </properties>
+  </tile>
+  <tile id="159">
+   <properties>
+    <property name="display" value="-"/>
+   </properties>
+  </tile>
+  <tile id="168">
+   <properties>
+    <property name="display" value="!"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="181" name="numbers" tilewidth="32" tileheight="32">
+  <image source="gfx/numbers.png" width="192" height="192"/>
+  <tile id="0">
+   <properties>
+    <property name="display" value="1"/>
+   </properties>
+  </tile>
+  <tile id="1">
+   <properties>
+    <property name="display" value="2"/>
+   </properties>
+  </tile>
+  <tile id="2">
+   <properties>
+    <property name="display" value="3"/>
+   </properties>
+  </tile>
+  <tile id="3">
+   <properties>
+    <property name="display" value="4"/>
+   </properties>
+  </tile>
+  <tile id="4">
+   <properties>
+    <property name="display" value="5"/>
+   </properties>
+  </tile>
+  <tile id="5">
+   <properties>
+    <property name="display" value="6"/>
+   </properties>
+  </tile>
+  <tile id="6">
+   <properties>
+    <property name="display" value="7"/>
+   </properties>
+  </tile>
+  <tile id="7">
+   <properties>
+    <property name="display" value="8"/>
+   </properties>
+  </tile>
+  <tile id="8">
+   <properties>
+    <property name="display" value="Z"/>
+   </properties>
+  </tile>
+  <tile id="9">
+   <properties>
+    <property name="display" value="&lt;"/>
+   </properties>
+  </tile>
+  <tile id="35">
+   <properties>
+    <property name="display" value="&amp;"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="217" name="dg_town632" tilewidth="32" tileheight="32">
+  <image source="gfx/dg_town632.gif" width="288" height="128"/>
+  <tile id="0">
+   <properties>
+    <property name="display" value="#"/>
+   </properties>
+  </tile>
+  <tile id="4">
+   <properties>
+    <property name="display" value="3"/>
+   </properties>
+  </tile>
+  <tile id="5">
+   <properties>
+    <property name="display" value="2"/>
+   </properties>
+  </tile>
+  <tile id="8">
+   <properties>
+    <property name="display" value="9"/>
+   </properties>
+  </tile>
+  <tile id="13">
+   <properties>
+    <property name="display" value="6"/>
+   </properties>
+  </tile>
+  <tile id="14">
+   <properties>
+    <property name="display" value="1"/>
+   </properties>
+  </tile>
+  <tile id="15">
+   <properties>
+    <property name="display" value="5"/>
+   </properties>
+  </tile>
+  <tile id="22">
+   <properties>
+    <property name="display" value="4"/>
+   </properties>
+  </tile>
+  <tile id="24">
+   <properties>
+    <property name="display" value="9"/>
+   </properties>
+  </tile>
+  <tile id="30">
+   <properties>
+    <property name="display" value="+"/>
+   </properties>
+  </tile>
+  <tile id="32">
+   <properties>
+    <property name="display" value="'"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="Terrain" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJztmU2OgzAMRiN1123XPUbFPWbLDbjf9G9meo+5zShSUCPLJI6JY4dh8YkKQXgvdkCUg3PusGdPZzkToslUcvzvQlo7ceczPobiIOkCr7HEQzn3k+Ag4YFdo8QjV0vqGDU8IPM1/L6t9MDmo6UHtw/gOV9hzO8GNfHj3jMea/tUY42fkf01xmztge2vOUdaHpRzJbjWuHD9tflr1FCbZff439lK/bbSi55/3IhH63pIvyNYmzvrPU/t5a15aPP2Os8cF22OnmpnYc789V+FHC3fr7hMXA9LDhwPTf5Ub/T0zMn9H5Ji7MnBAmcNB8suM5uV7xxra+CZH2H7zHhYccG4MGaNbzZcfthTqX1UFynv0nUsmZr8Q8gRCYVldO/3GEmP1DhDlBMIxWUEae0xONxhrkvskuL4AFk6bgqBv0tcqHWA/RXXBPOBDks+M/clSuxSa11giWsCfY4ZB8xj5v9BXCTuU0PYxsxw3eQcUh4wHA+OG3YP84HrO7XOp0wkn5E1nzPSnFbzB65PpAc=
+  </data>
+ </layer>
+ <objectgroup name="addSpot" width="50" height="50">
+  <object name="Foes pop" x="54" y="64" width="22" height="226">
+   <properties>
+    <property name="subtype" value="&quot;foes&quot;"/>
+    <property name="type" value="&quot;pop&quot;"/>
+   </properties>
+  </object>
+  <object name="Foes pop" x="1518" y="994" width="22" height="226">
+   <properties>
+    <property name="subtype" value="&quot;foes&quot;"/>
+    <property name="type" value="&quot;pop&quot;"/>
+   </properties>
+  </object>
+  <object name="Foes pop" x="1476" y="134" width="22" height="226">
+   <properties>
+    <property name="subtype" value="&quot;foes&quot;"/>
+    <property name="type" value="&quot;pop&quot;"/>
+   </properties>
+  </object>
+  <object name="Foes pop" x="71" y="1008" width="20" height="47">
+   <properties>
+    <property name="subtype" value="&quot;foes&quot;"/>
+    <property name="type" value="&quot;pop&quot;"/>
+   </properties>
+  </object>
+  <object name="Defender pop" x="228" y="229" width="22" height="20">
+   <properties>
+    <property name="subtype" value="&quot;defender&quot;"/>
+    <property name="type" value="&quot;pop&quot;"/>
+   </properties>
+  </object>
+  <object name="Defender pop" x="358" y="131" width="22" height="20">
+   <properties>
+    <property name="subtype" value="&quot;defender&quot;"/>
+    <property name="type" value="&quot;pop&quot;"/>
+   </properties>
+  </object>
+  <object name="Defender pop" x="227" y="420" width="22" height="20">
+   <properties>
+    <property name="subtype" value="&quot;defender&quot;"/>
+    <property name="type" value="&quot;pop&quot;"/>
+   </properties>
+  </object>
+  <object name="Defender pop" x="387" y="840" width="22" height="20">
+   <properties>
+    <property name="subtype" value="&quot;defender&quot;"/>
+    <property name="type" value="&quot;pop&quot;"/>
+   </properties>
+  </object>
+  <object name="Defender pop" x="327" y="1286" width="22" height="20">
+   <properties>
+    <property name="subtype" value="&quot;defender&quot;"/>
+    <property name="type" value="&quot;pop&quot;"/>
+   </properties>
+  </object>
+  <object name="Defender pop" x="483" y="1185" width="22" height="20">
+   <properties>
+    <property name="subtype" value="&quot;defender&quot;"/>
+    <property name="type" value="&quot;pop&quot;"/>
+   </properties>
+  </object>
+  <object name="Defender pop" x="679" y="1029" width="22" height="20">
+   <properties>
+    <property name="subtype" value="&quot;defender&quot;"/>
+    <property name="type" value="&quot;pop&quot;"/>
+   </properties>
+  </object>
+  <object name="Defender pop" x="265" y="1479" width="22" height="20">
+   <properties>
+    <property name="subtype" value="&quot;defender&quot;"/>
+    <property name="type" value="&quot;pop&quot;"/>
+   </properties>
+  </object>
+  <object name="Defender pop" x="1414" y="1336" width="22" height="20">
+   <properties>
+    <property name="subtype" value="&quot;defender&quot;"/>
+    <property name="type" value="&quot;pop&quot;"/>
+   </properties>
+  </object>
+  <object name="Defender pop" x="1220" y="1250" width="22" height="20">
+   <properties>
+    <property name="subtype" value="&quot;defender&quot;"/>
+    <property name="type" value="&quot;pop&quot;"/>
+   </properties>
+  </object>
+  <object name="Defender pop" x="903" y="1058" width="22" height="20">
+   <properties>
+    <property name="subtype" value="&quot;defender&quot;"/>
+    <property name="type" value="&quot;pop&quot;"/>
+   </properties>
+  </object>
+  <object name="Defender pop" x="1191" y="1030" width="22" height="20">
+   <properties>
+    <property name="subtype" value="&quot;defender&quot;"/>
+    <property name="type" value="&quot;pop&quot;"/>
+   </properties>
+  </object>
+  <object name="Defender pop" x="1283" y="900" width="22" height="20">
+   <properties>
+    <property name="subtype" value="&quot;defender&quot;"/>
+    <property name="type" value="&quot;pop&quot;"/>
+   </properties>
+  </object>
+  <object name="Defender pop" x="1127" y="613" width="22" height="20">
+   <properties>
+    <property name="subtype" value="&quot;defender&quot;"/>
+    <property name="type" value="&quot;pop&quot;"/>
+   </properties>
+  </object>
+  <object name="Defender pop" x="1126" y="390" width="22" height="20">
+   <properties>
+    <property name="subtype" value="&quot;defender&quot;"/>
+    <property name="type" value="&quot;pop&quot;"/>
+   </properties>
+  </object>
+  <object name="Defender pop" x="1125" y="293" width="22" height="20">
+   <properties>
+    <property name="subtype" value="&quot;defender&quot;"/>
+    <property name="type" value="&quot;pop&quot;"/>
+   </properties>
+  </object>
+  <object name="Defender pop" x="1127" y="131" width="22" height="20">
+   <properties>
+    <property name="subtype" value="&quot;defender&quot;"/>
+    <property name="type" value="&quot;pop&quot;"/>
+   </properties>
+  </object>
+  <object name="Defender pop" x="741" y="132" width="22" height="20">
+   <properties>
+    <property name="subtype" value="&quot;defender&quot;"/>
+    <property name="type" value="&quot;pop&quot;"/>
+   </properties>
+  </object>
+  <object name="Defender pop" x="900" y="99" width="22" height="20">
+   <properties>
+    <property name="subtype" value="&quot;defender&quot;"/>
+    <property name="type" value="&quot;pop&quot;"/>
+   </properties>
+  </object>
+  <object name="Foes pop" x="500" y="3" width="138" height="14">
+   <properties>
+    <property name="subtype" value="&quot;foes&quot;"/>
+    <property name="type" value="&quot;pop&quot;"/>
+   </properties>
+  </object>
+  <object name="Foes pop" x="1091" y="3" width="138" height="14">
+   <properties>
+    <property name="subtype" value="&quot;foes&quot;"/>
+    <property name="type" value="&quot;pop&quot;"/>
+   </properties>
+  </object>
+  <object name="Foes pop" x="4" y="1295" width="11" height="133">
+   <properties>
+    <property name="subtype" value="&quot;foes&quot;"/>
+    <property name="type" value="&quot;pop&quot;"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup color="#ff00ff" name="addZone#particles" width="50" height="50">
+  <object name="Highways" x="743" y="814" width="19" height="97">
+   <properties>
+    <property name="subtype" value="&quot;house_flamebeam&quot;"/>
+    <property name="type" value="&quot;particle&quot;"/>
+   </properties>
+  </object>
+  <object name="Highways" x="711" y="524" width="15" height="227">
+   <properties>
+    <property name="subtype" value="&quot;house_flamebeam&quot;"/>
+    <property name="type" value="&quot;particle&quot;"/>
+   </properties>
+  </object>
+  <object name="Highways" x="745" y="208" width="15" height="227">
+   <properties>
+    <property name="subtype" value="&quot;house_flamebeam&quot;"/>
+    <property name="type" value="&quot;particle&quot;"/>
+   </properties>
+  </object>
+  <object name="Highways" x="421" y="438" width="19" height="277">
+   <properties>
+    <property name="subtype" value="&quot;house_flamebeam&quot;"/>
+    <property name="type" value="&quot;particle&quot;"/>
+   </properties>
+  </object>
+  <object name="Highways" x="555" y="268" width="233" height="13">
+   <properties>
+    <property name="subtype" value="&quot;house_flamebeam&quot;"/>
+    <property name="type" value="&quot;particle&quot;"/>
+   </properties>
+  </object>
+  <object name="Highways" x="851" y="1000" width="311" height="13">
+   <properties>
+    <property name="subtype" value="&quot;house_flamebeam&quot;"/>
+    <property name="type" value="&quot;particle&quot;"/>
+   </properties>
+  </object>
+  <object name="Highways" x="1063" y="396" width="15" height="197">
+   <properties>
+    <property name="subtype" value="&quot;house_flamebeam&quot;"/>
+    <property name="type" value="&quot;particle&quot;"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

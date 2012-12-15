@@ -17,8 +17,15 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-dir = math.rad(110)
+dir = dir or math.rad(110)
 factor = factor or 1
+
+r = r or 1
+g = g or 1
+b = b or 1
+rv = rv or 1
+gv = gv or 1
+bv = bv or 1
 
 return { generator = function()
 	local x, y = rng.range(-width/2, width), rng.range(-height/2, height)
@@ -35,9 +42,9 @@ return { generator = function()
 		dir = dir, dirv = blur, dira = 0,
 		vel = vel, velv = 0, vela = 0,
 
-		r = 1, rv = 0, ra = 0,
-		g = 1, gv = 0, ga = 0,
-		b = 1, bv = 0, ba = 0,
+		r = r, rv = rv, ra = 0,
+		g = g, gv = gv, ga = 0,
+		b = b, bv = bv, ba = 0,
 		a = rng.float(0.6, 0.9), av = 0, aa = 0,
 	}
 end, },

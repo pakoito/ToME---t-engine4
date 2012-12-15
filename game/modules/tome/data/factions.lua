@@ -19,35 +19,36 @@
 
 -- CSV export
 local src = [[
-,Enemies,Undead,Allied Kingdoms,Shalore,Thalore,Iron Throne,The Way,Angolwen,Dreadfell,,Temple of Creation|H,Water lair|H,Assassin lair|H,Rhalore,Zigur,,Vargh Republic,Sunwall,Orc Pride,,Sandworm Burrowers,Victim,Slavers,,Sorcerers,Fearscape,,Sher'Tul
-Enemies,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Undead,-1,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Allied Kingdoms,-1,-1,,,,,,,,,,,,,,,,,,,,,,,,,,
-Shalore,-1,-1,0.5,,,,,,,,,,,,,,,,,,,,,,,,,
-Thalore,-1,-1,0.7,0.2,,,,,,,,,,,,,,,,,,,,,,,,
-Iron Throne,-1,-1,0.2,0.2,0.2,,,,,,,,,,,,,,,,,,,,,,,
-The Way,-1,-1,0,0,0,0,,,,,,,,,,,,,,,,,,,,,,
-Angolwen,-1,-1,,,,,,,,,,,,,,,,,,,,,,,,,,
-Dreadfell,,-1,-1,-1,-1,-1,-1,-1,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Temple of Creation|H,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Water lair|H,-1,,,,,,,,,,-1,,,,,,,,,,,,,,,,,
-Assassin lair|H,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Rhalore,-1,-1,-1,-1,-1,-1,-1,-1,-1,,-1,-1,-1,,,,,,,,,,,,,,,
-Zigur,-1,-1,1,1,1,1,0.2,-1,-1,,,,,-1,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Vargh Republic,-1,-1,-1,-1,-1,-1,-1,-1,-1,,-1,,-1,-1,-1,,,,,,,,,,,,,
-Sunwall,-1,-1,,,,,,,-1,,,,-1,-1,,,-1,,,,,,,,,,,
-Orc Pride,,-1,-1,-1,-1,-1,-1,-1,-1,,,,,-1,-1,,-1,-1,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Sandworm Burrowers,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Victim,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Slavers,-1,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Sorcerers,,-1,-1,-1,-1,-1,-1,-1,-1,,,,,-1,-1,,-1,-1,1,,,,,,,,,
-Fearscape,,-1,-1,-1,-1,-1,-1,-1,,,-1,-1,-1,-1,-1,,-1,-1,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Sher'Tul,,,,,,,,,,,,,,,,,,,,,,,,,,-1,,
+,Enemies,Undead,Allied Kingdoms,Shalore,Thalore,Iron Throne,The Way,Angolwen,Keepers of Reality,Dreadfell,,Temple of Creation|H,Water lair|H,Assassin lair|H,Rhalore,Zigur,,Vargh Republic,Sunwall,Orc Pride,,Sandworm Burrowers,Victim,Slavers,,Sorcerers,Fearscape,,Sher'Tul
+Enemies,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Undead,-1,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Allied Kingdoms,-1,-1,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Shalore,-1,-1,0.5,,,,,,,,,,,,,,,,,,,,,,,,,,
+Thalore,-1,-1,0.7,0.2,,,,,,,,,,,,,,,,,,,,,,,,,
+Iron Throne,-1,-1,0.2,0.2,0.2,,,,,,,,,,,,,,,,,,,,,,,,
+The Way,-1,-1,0,0,0,0,,,,,,,,,,,,,,,,,,,,,,,
+Angolwen,-1,-1,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Keepers of Reality,-1,-1,,,,,,0.2,,,,,,,,,,,,,,,,,,,,,
+Dreadfell,,-1,-1,-1,-1,-1,-1,-1,-1,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Temple of Creation|H,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Water lair|H,-1,,,,,,,,,,,-1,,,,,,,,,,,,,,,,,
+Assassin lair|H,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Rhalore,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,,-1,-1,-1,,,,,,,,,,,,,,,
+Zigur,-1,-1,1,1,1,1,0.2,-1,-1,-1,,,,,-1,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Vargh Republic,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,,-1,,-1,-1,-1,,,,,,,,,,,,,
+Sunwall,-1,-1,,,,,,,,-1,,,,-1,-1,,,-1,,,,,,,,,,,
+Orc Pride,,-1,-1,-1,-1,-1,-1,-1,-1,-1,,,,,-1,-1,,-1,-1,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Sandworm Burrowers,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Victim,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Slavers,-1,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Sorcerers,,-1,-1,-1,-1,-1,-1,-1,-1,-1,,,,,-1,-1,,-1,-1,1,,,,,,,,,
+Fearscape,,-1,-1,-1,-1,-1,-1,-1,-1,,,-1,-1,-1,-1,-1,,-1,-1,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Sher'Tul,,,,,,,,,,,,,,,,,,,,,,,,,,,-1,,
 ]]
 
 local facts = {}
@@ -89,3 +90,7 @@ engine.Faction:setInitialReaction("neutral", "enemies", -100, true)
 
 engine.Faction:add{ name="Unaligned", reaction={}, }
 engine.Faction:add{ shortname="merchant-caravan", name="Merchant Caravan", reaction={}, }
+
+engine.Faction:add{ name="Point Zero Onslaught", reaction={}, }
+engine.Faction:add{ name="Point Zero Guardians", reaction={}, }
+engine.Faction:setInitialReaction("point-zero-onslaught", "point-zero-guardians", -100, true)
