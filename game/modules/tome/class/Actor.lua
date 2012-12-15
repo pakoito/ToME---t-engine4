@@ -4370,6 +4370,14 @@ function _M:on_project_acquire(tx, ty, who, t, x, y, damtype, dam, particles, is
 		local spread = self.projectile_evasion_spread or 1
 		mods.x = x + rng.range(-spread, spread)
 		mods.y = y + rng.range(-spread, spread)
+		
+		local dir = game.level.map:compassDirection(mods.x-x, mods.y-y)
+		if not dir then
+			dir = "but fumbles!"
+		else
+			dir = "to the "..dir.."!"
+		end
+		game.logSeen(self, "%s deflects the projectile from %s %s", self.name:capitalize(), who.name, dir)
 		return true
 	end
 end

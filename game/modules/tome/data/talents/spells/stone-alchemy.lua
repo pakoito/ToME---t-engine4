@@ -59,9 +59,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Carve 40 to 80 alchemist gems out of natural gems.
-		Alchemists gems are used for lots of other spells.
-		Each gem type posses different effect.]]):format()
+		return ([[Carve 40 to 80 alchemist gems out of a natural gemstone.
+		Alchemists gems are used for many other spells, and each gem type creates a different effect.]]):format()
 	end,
 }
 
@@ -154,7 +153,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Imbue %s with a gem (up to tier %d), granting it additional powers.
-		You can only imbue items once, and it is permanent.]]):format(self:knowTalent(self.T_CRAFTY_HANDS) and "a body armour, a belt or head piece" or "a body armour", self:getTalentLevelRaw(t))
+		You can only imbue items once, and it is permanent.]]):format(self:knowTalent(self.T_CRAFTY_HANDS) and "body armour, a belt, or a head piece" or "a body armour", self:getTalentLevelRaw(t))
 	end,
 }
 newTalent{
@@ -194,8 +193,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local range = t.getRange(self, t)
-		return ([[Crush 5 alchemists gems into dust to mark an impassable terrain. You immediately enter it and appear on the other side of the obstacle.
-		Works up to %d grids away.]]):
+		return ([[Crush 5 alchemists gems into dust to mark impassable terrain next to you. You immediately enter it and appear on the other side of the obstacle, up to %d grids away.]]):
 		format(range)
 	end,
 }
@@ -241,7 +239,8 @@ newTalent{
 		Stoned creatures are unable to act or regen life and are very brittle.
 		If a stoned creature is hit by an attack that deals more than 30%% of its life it will shatter and be destroyed.
 		Stoned creatures are highly resistant to fire and lightning and somewhat resistant to physical attacks.
-		At level 3 it will become a beam.]]):
+		At level 3 it will become a beam.
+		This spell may fail against creatures resistant to being stunned, that are specifically immune to stoning, or certain bosses.]]):
 		format(duration)
 	end,
 }

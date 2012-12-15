@@ -1185,6 +1185,20 @@ function _M:displayParticles(nb_keyframes)
 	end
 end
 
+-- Returns the compass direction from a vector 
+-- dx, dy = x change (+ is east), y change (+ is south)
+function _M:compassDirection(dx, dy)
+	local dir = ""
+	if dx == 0 and dy == 0 then 
+		return nil
+	else
+		local dydx, dxdy = dy/math.abs(dx), dx/math.abs(dy)
+		if dydx <= -0.5 then dir = "north" elseif dydx >= 0.5 then dir="south" end
+		if dxdy < -0.5 then dir = dir.."west" 
+		elseif dxdy > 0.5 then dir = dir.."east" end
+	end
+	return dir
+end
 -------------------------------------------------------------
 -------------------------------------------------------------
 -- Emotes

@@ -26,10 +26,11 @@ uberTalent{
 		if self.life - value < self.max_life * 0.3 and not self:isTalentCoolingDown(t) then
 			self:heal(self.max_life * 0.4)
 			self:startTalentCooldown(t)
+			game.logSeen(self,"%s's draconic body hardens and heals!",self.name) --I5 
 		end
 	end,
 	info = function(self, t)
-		return ([[Your body hardens, when pushed below 30%% life you are healed for 40%% of your total life.]])
+		return ([[Your body hardens: When pushed below 30%% life you are healed for 40%% of your total life.]])
 		:format()
 	end,
 }
@@ -57,7 +58,7 @@ uberTalent{
 		self:startTalentCooldown(t)
 	end,
 	info = function(self, t)
-		return ([[When a single blow deals more than 20%% of your total life blood gushes of your body, creating a bloody tidal wave for 4 turns that deals %0.2f blight damage, heal you for 50%% of the damage done and knocks back foes.
+		return ([[When a single blow deals more than 20%% of your total life, a torrent of blood gushes from your body, creating a bloody tidal wave for 4 turns that deals %0.2f blight damage, heals you for 50%% of the damage done and knocks foes back.
 		Damage increases with the Constitution stat.]])
 		:format(100 + self:getCon() * 3)
 	end,
@@ -89,7 +90,7 @@ uberTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[While this talent is active you dig deep into your stamina reserves, allowing you to move without taking a turn but drains 20 stamina each move.]])
+		return ([[While this talent is active you dig deep into your stamina reserves, allowing you to move without taking a turn, but costing 20 stamina for each tile you cross.]])
 		:format()
 	end,
 }
@@ -109,8 +110,8 @@ uberTalent{
 		self:attr("darkness_darkens", -1)
 	end,
 	info = function(self, t)
-		return ([[You know how to meld in the shadows. As long as you stand on an unlit tile you gain 30 armour and 50%% armour hardiness.
-		Also all darkness damage you deal will unlight both the target terrain and yours.]])
+		return ([[You know how to protect yourself with shadow. As long as you stand on an unlit tile you gain 30 armour and 50%% armour hardiness.
+		Any time you deal darkness damage, you will unlight both the target terrain and yours.]])
 		:format()
 	end,
 }
@@ -123,7 +124,7 @@ uberTalent{
 		self:setEffect(self.EFF_SPINE_OF_THE_WORLD, 4, {})
 	end,
 	info = function(self, t)
-		return ([[Your back is has hard as stone. Each time you are affected by a physical effect your body hardens, for 5 turns you will become immune to all physical effects.]])
+		return ([[Your back is as hard as stone. Each time you are affected by a physical effect your body hardens, making you immune to all other physical effects for 5 turns.]])
 		:format()
 	end,
 }
@@ -144,10 +145,10 @@ uberTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Fungal spores colonize your blood, each time you use an infusion you store %d fungal power.
-		When you use this prodigy the power is released as a heal (never higher than %d).
-		Fungal power is stored for 6 turns and loses 10 potency each turn.
-		Fungal power generated and max heal increases with Constitution.]])
+		return ([[Fungal spores colonize your blood, so that each time you use an infusion you store %d fungal power.
+		You may use this prodigy to release the power as a heal (never more than than %d life).
+		Fungal power lasts for up to 6 turns, losing 10 potency each turn.
+		The amount of fungal power produced and the maximum heal increase with Constitution.]])
 		:format(self:getCon() * 1.5, self:getCon() * self.max_life / 100)
 	end,
 }

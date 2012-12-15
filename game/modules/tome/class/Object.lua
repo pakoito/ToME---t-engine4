@@ -1117,16 +1117,22 @@ function _M:getTextualDesc(compare_with)
 		desc_wielder(self, compare_with, "imbue_powers")
 	end
 
-	if self.alchemist_bomb then
+	if self.alchemist_bomb or self.type == "gem" and game.player:knowTalent(Talents.T_CREATE_ALCHEMIST_GEMS) then
 		local a = self.alchemist_bomb
-		desc:add({"color","YELLOW"}, "When used as an alchemist bomb:", {"color", "LAST"}, true)
-		if a.power then desc:add(("Bomb damage +%d%%"):format(a.power), true) end
-		if a.range then desc:add(("Bomb thrown range +%d"):format(a.range), true) end
-		if a.mana then desc:add(("Mana regain %d"):format(a.mana), true) end
-		if a.daze then desc:add(("%d%% chance to daze for %d turns"):format(a.daze.chance, a.daze.dur), true) end
-		if a.stun then desc:add(("%d%% chance to stun for %d turns"):format(a.stun.chance, a.stun.dur), true) end
-		if a.splash then desc:add(("Additional %d %s damage"):format(a.splash.dam, DamageType:get(DamageType[a.splash.type]).name), true) end
-		if a.leech then desc:add(("Life regen %d%% of max life"):format(a.leech), true) end
+		if not a then
+			a = game.zone.object_list["ALCHEMIST_GEM_"..self.name:upper()]
+			if a then a = a.alchemist_bomb end
+		end
+		if a then
+			desc:add({"color","YELLOW"}, "When used as an alchemist bomb:", {"color", "LAST"}, true)
+			if a.power then desc:add(("Bomb damage +%d%%"):format(a.power), true) end
+			if a.range then desc:add(("Bomb thrown range +%d"):format(a.range), true) end
+			if a.mana then desc:add(("Mana regain %d"):format(a.mana), true) end
+			if a.daze then desc:add(("%d%% chance to daze for %d turns"):format(a.daze.chance, a.daze.dur), true) end
+			if a.stun then desc:add(("%d%% chance to stun for %d turns"):format(a.stun.chance, a.stun.dur), true) end
+			if a.splash then desc:add(("Additional %d %s damage"):format(a.splash.dam, DamageType:get(DamageType[a.splash.type]).name), true) end
+			if a.leech then desc:add(("Life regen %d%% of max life"):format(a.leech), true) end
+		end
 	end
 
 	if self.inscription_data and self.inscription_talent then

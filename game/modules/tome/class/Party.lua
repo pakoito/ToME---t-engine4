@@ -368,18 +368,8 @@ function _M:giveOrder(actor, order)
 		else dist = "still far away"
 		end
 
-		local dir
-		if     actor.escort_target.x < actor.x and actor.escort_target.y < actor.y then dir = "north-west"
-		elseif actor.escort_target.x > actor.x and actor.escort_target.y < actor.y then dir = "north-east"
-		elseif actor.escort_target.x < actor.x and actor.escort_target.y > actor.y then dir = "south-west"
-		elseif actor.escort_target.x > actor.x and actor.escort_target.y > actor.y then dir = "south-east"
-		elseif actor.escort_target.x > actor.x and actor.escort_target.y == actor.y then dir = "east"
-		elseif actor.escort_target.x < actor.x and actor.escort_target.y == actor.y then dir = "west"
-		elseif actor.escort_target.x == actor.x and actor.escort_target.y < actor.y then dir = "north"
-		elseif actor.escort_target.x == actor.x and actor.escort_target.y > actor.y then dir = "south"
-		end
-
-		actor:doEmote(("The portal is %s, to the %s."):format(dist, dir), 45)
+		local dir = game.level.map:compassDirection(actor.escort_target.x - actor.x, actor.escort_target.y - actor.y)
+		actor:doEmote(("The portal is %s, to the %s."):format(dist, dir or "???"), 45)
 	end
 
 	return true
