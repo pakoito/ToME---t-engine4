@@ -255,6 +255,11 @@ newAchievement{
 	desc = [[Stabilized the Abashed Expanse to maintain it in orbit.]],
 }
 newAchievement{
+	name = "Wibbly Wobbly Timey Wimey Stuff", id = "UNHALLOWED_MORASS",
+	show = "name",
+	desc = [[Killed the weaver queen and the temporal defiler.]],
+}
+newAchievement{
 	name = "Matrix style!", id = "ABASHED_EXPANSE_NO_BLAST",
 	show = "full",
 	desc = [[Finished the whole Abashed Expanse zone without being hit by a single void blast or manaworm. Dodging's fun!]],
