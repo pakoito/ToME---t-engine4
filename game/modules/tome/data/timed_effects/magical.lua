@@ -2185,7 +2185,7 @@ newEffect{
 	desc = "Keepers of Reality Rally Call",
 	long_desc = function(self, eff) return "The keepers of reality have called upon all to defend Point Zero. Life increased by 5000, damage by 300%." end,
 	type = "magical",
-	decrease = 0, no_remove = true,
+	decrease = 0,
 	subtype = { temporal=true },
 	status = "beneficial",
 	cancel_on_level_change = true,
