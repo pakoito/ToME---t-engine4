@@ -34,6 +34,11 @@ newAI("move_dmap", function(self)
 		local a = self.ai_target.actor
 		local ax, ay = self:aiSeeTargetPos(a)
 
+		-- If we have a vision, go straight towards the target
+		if self:hasLOS(ax, ay) then
+			return self:runAI("move_simple")
+		end
+
 		local c = a:distanceMap(self.x, self.y)
 		local dir = 5
 
@@ -42,7 +47,8 @@ newAI("move_dmap", function(self)
 				local sx, sy = util.coordAddDir(self.x, self.y, i)
 				local cd = a:distanceMap(sx, sy)
 --				print("looking for dmap", dir, i, "::", c, cd)
-				if cd and cd > c and self:canMove(sx, sy) then c = cd; dir = i end
+				local tile_available = self:canMove(sx, sy) or (sx == ax and sy == ay)
+				if cd and cd > c and tile_available then c = cd; dir = i end
 			end
 			return self:moveDirection(util.coordAddDir(self.x, self.y, dir))
 		else

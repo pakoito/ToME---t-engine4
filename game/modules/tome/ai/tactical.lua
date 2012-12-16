@@ -25,19 +25,22 @@ local canFleeDmapKeepLos = function(self)
 	if self.never_move then return false end -- Dont move, dont flee
 	if self.ai_target.actor then
 		local act = self.ai_target.actor
-		local c = act:distanceMap(self.x, self.y)
-		if not c then return end
-		local dir
+		local dir, c
+		if self:hasLOS(act.x, act.y) then
+			dir = 5
+			c = act:distanceMap(self.x, self.y)
+			if not c then return end
+		end
 		for _, i in ipairs(util.adjacentDirs()) do
 			local sx, sy = util.coordAddDir(self.x, self.y, i)
 			-- Check LOS first
 			if self:hasLOS(act.x, act.y, nil, nil, sx, sy) then
 				local cd = act:distanceMap(sx, sy)
 	--			print("looking for dmap", dir, i, "::", c, cd)
-				if not cd or (c and (cd < c and self:canMove(sx, sy))) then c = cd; dir = i end
+				if not cd or ((not c or cd < c) and self:canMove(sx, sy)) then c = cd; dir = i end
 			end
 		end
-		if dir then
+		if dir and dir ~= 5 then
 			local dx, dy = util.dirToCoord(dir, self.x, self.y)
 			return true, self.x + dx, self.y + dy
 		else
@@ -393,12 +396,14 @@ newAI("tactical", function(self)
 	end
 
 	if targeted and not self.energy.used then
+		local moved
 		if special_move then
-			return self:runAI(special_move)
-		elseif self.ai_tactic.safe_range and not self:hasLOS(ax, ay) then
-			local moved = self:runAI("flee_dmap_keep_los")
-			return self:runAI(self.ai_state.ai_move or "move_simple")
-		else
+			moved = self:runAI(special_move)
+		end
+		if not moved and self.ai_tactic.safe_range and not self:hasLOS(ax, ay) then
+			moved = self:runAI("flee_dmap_keep_los")
+		end
+		if not moved then
 			return self:runAI(self.ai_state.ai_move or "move_simple")
 		end
 	end
