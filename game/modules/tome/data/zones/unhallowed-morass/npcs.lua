@@ -118,6 +118,9 @@ newEntity{ base = "BASE_NPC_SPIDER", define_as = "WEAVER_QUEEN",
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 
+
+	inc_damage = {all=-20},
+	healing_factor = 0.5,
 	talent_cd_reduction = {[Talents.T_RETHREAD]=-10},
 
 	resolvers.talents{

@@ -1581,9 +1581,9 @@ newDamageType{
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and not target:attr("undead") then
 			target:setEffect(target.EFF_EMPOWERED_HEALING, 1, {power=(dam/100)})
-			target:attr("allow_on_heal", 1)
+			if dam >= 100 then target:attr("allow_on_heal", 1) end
 			target:heal(dam, src)
-			target:attr("allow_on_heal", -1)
+			if dam >= 100 then target:attr("allow_on_heal", -1) end
 		elseif target then
 			DamageType:get(DamageType.LIGHT).projector(src, x, y, DamageType.LIGHT, dam)
 		end
@@ -1595,9 +1595,9 @@ newDamageType{
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and not target:attr("undead") then
-			target:attr("allow_on_heal", 1)
+			if dam >= 100 then target:attr("allow_on_heal", 1) end
 			target:heal(dam, src)
-			target:attr("allow_on_heal", -1)
+			if dam >= 100 then target:attr("allow_on_heal", -1) end
 		elseif target then
 			DamageType:get(DamageType.NATURE).projector(src, x, y, DamageType.NATURE, dam)
 		end
