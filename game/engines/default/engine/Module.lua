@@ -458,13 +458,6 @@ function _M:loadScreen(mod)
 		local dw, dh = math.floor(sw / 2), left[7]
 		local dx, dy = math.floor((sw - dw) / 2), sh - dh
 
-		-- Check profile thread events
-		local evt = profile:popEvent()
-		while evt do
-			profile:handleEvent(evt)
-			evt = profile:popEvent()
-		end
-
 		local funfacts = nil
 		local ffdata = profile.funfacts
 
