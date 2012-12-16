@@ -49,6 +49,7 @@ return {
 			nb_npc = {50, 60},
 			filters = { {max_ood=2}, },
 			nb_spots = 2, on_spot_chance = 35,
+			randelite = 0,
 		},
 		object = {
 			class = "engine.generator.object.Random",

@@ -469,7 +469,7 @@ function _M:loadScreen(mod)
 		local ffdata = profile.funfacts
 
 		local tip = nil
-		if mod.load_tips then
+		if mod.load_tips then pcall(function()
 			local l = rng.table(mod.load_tips)
 			local img = nil
 			if l.image then
@@ -503,12 +503,12 @@ function _M:loadScreen(mod)
 					y = y + item.h
 				end
 			end
-		end
+		end) end
 
 		local ffw = math.ceil(sw / 4)
 		if ffdata then
 			local str = self:selectFunFact(ffdata)
-			if str then
+			if str then pcall(function()
 				local text, _, tw = font:draw(str, ffw, 255, 255, 255)
 				local text_h = #text * text[1].h
 				ffw = math.min(ffw, tw)
@@ -531,7 +531,7 @@ function _M:loadScreen(mod)
 						y = y + item.h
 					end
 				end
-			end
+			end) end
 		end
 
 		return function()
