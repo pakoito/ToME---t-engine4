@@ -51,7 +51,7 @@ newEntity{
 
 				local spot = level:pickSpot{type="pop", subtype="player-attack"}
 				game.player:move(spot.x, spot.y, true)
-				require("engine.ui.Dialog"):simpleLongPopup("Point Zero", "The rift has brought you back to Point Zero, and the source of the disturbances.\nA temporal defiler is attacking the town, all the Keepers in range are atatcking it!", 400)
+				require("engine.ui.Dialog"):simpleLongPopup("Point Zero", "The rift has brought you back to Point Zero, and the source of the disturbances.\nA temporal defiler is attacking the town, all the Keepers in range are attacking it!", 400)
 
 				for uid, e in pairs(game.level.entities) do
 					if e.faction == "keepers-of-reality" or e.faction == "point-zero-guardians" then
