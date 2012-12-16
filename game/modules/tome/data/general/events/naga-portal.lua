@@ -135,6 +135,7 @@ g.block_move = function(self, x, y, who, act, couldpass)
 		end
 		self.broken = true
 		self.change_level = nil
+		self.autoexplore_ignore = true
 	end, "Destroy", "Enter")
 
 	return false

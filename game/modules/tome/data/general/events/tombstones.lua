@@ -52,6 +52,7 @@ if tries < 100 then
 			game.level.map:updateMap(x, y)
 
 			self.block_move = nil
+			self.autoexplore_ignore = true
 			if rng.percent(20) then game.log("There is nothing there.") return end
 
 			local m = game.zone:makeEntity(game.level, "actor", {properties={"undead"}, add_levels=10, random_boss={nb_classes=1, rank=3, ai = "tactical", loot_quantity = 0, no_loot_randart = true}}, nil, true)

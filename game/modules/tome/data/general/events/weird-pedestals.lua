@@ -62,6 +62,8 @@ for i = 1, 3 do
 			who:restInit(20, "inspecting", "inspected", function(cnt, max)
 				if cnt > max then
 					self.pedestal_activated = true
+					self.block_move = nil
+					self.autoexplore_ignore = true
 					require("engine.ui.Dialog"):simplePopup("Weird Pedestal", "As you inspect it a shadow materializes near you, and suddenly it is no more a shadow!")
 
 					local m = game.zone:makeEntity(game.level, "actor", {

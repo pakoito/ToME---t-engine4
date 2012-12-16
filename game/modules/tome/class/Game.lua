@@ -1344,7 +1344,8 @@ do return end
 				if self.zone.no_autoexplore or self.level.no_autoexplore then
 					self.log("You may not auto-explore this level.")
 				elseif #seen > 0 then
-					self.log("You may not auto-explore with enemies in sight!")
+					local dir = game.level.map:compassDirection(seen[1].x - self.player.x, seen[1].y - self.player.y)
+					self.log("You may not auto-explore with enemies in sight (%s to the %s%s)!", seen[1].actor.name, dir, self.level.map:isOnScreen(seen[1].x, seen[1].y) and "" or " - offscreen")
 					for _, node in ipairs(seen) do
 						node.actor:addParticles(engine.Particles.new("notice_enemy", 1))
 					end

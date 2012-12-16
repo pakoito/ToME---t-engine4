@@ -138,6 +138,7 @@ if tries < 100 then
 				game.level.map:updateMap(x, y)
 
 				self.block_move = nil
+				self.autoexplore_ignore = true
 				self:change_level_check()
 				require("engine.ui.Dialog"):simplePopup("Fall...", "As you tried to dig the grave the ground fell under you. You find yourself stranded in an eerie lit cavern.")
 			end end)

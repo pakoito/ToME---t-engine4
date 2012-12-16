@@ -52,6 +52,7 @@ for i, p in ipairs(list) do
 	g.nice_tiler = nil
 	g.grow = nil g.dig = nil
 	g.special = true
+	g.autoexplore_ignore = true
 	g.is_monolith = true
 	game.zone:addEntity(game.level, g, "terrain", p.x, p.y)
 

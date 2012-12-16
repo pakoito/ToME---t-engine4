@@ -593,7 +593,8 @@ end
 function _M:suffocate(value, src, death_msg)
 	local dead, affected = mod.class.Actor.suffocate(self, value, src, death_msg)
 	if affected and value > 0 and self.runStop then
-		self:runStop("suffocating")
+		-- only stop autoexplore when air is less than 75% of max.
+		if self.air < 0.75 * self.max_air then self:runStop("suffocating") end
 		self:restStop("suffocating")
 	end
 	return dead, affected
@@ -719,7 +720,8 @@ function _M:restCheck()
 		for _, node in ipairs(spotted) do
 			node.actor:addParticles(engine.Particles.new("notice_enemy", 1))
 		end
-		return false, ("hostile spotted (%s%s)"):format(spotted[1].actor.name, game.level.map:isOnScreen(spotted[1].x, spotted[1].y) and "" or " - offscreen")
+		local dir = game.level.map:compassDirection(spotted[1].x - self.x, spotted[1].y - self.y)
+		return false, ("hostile spotted to the %s (%s%s)"):format(dir, spotted[1].actor.name, game.level.map:isOnScreen(spotted[1].x, spotted[1].y) and "" or " - offscreen")
 	end
 
 	-- Resting improves regen
@@ -801,9 +803,12 @@ end
 -- 'ignore_memory' is only used when checking for paths around traps.  This ensures we don't remember items "obj_seen" that we aren't supposed to
 function _M:runCheck(ignore_memory)
 	local spotted = spotHostiles(self)
-	if #spotted > 0 then return false, ("hostile spotted (%s%s)"):format(spotted[1].actor.name, game.level.map:isOnScreen(spotted[1].x, spotted[1].y) and "" or " - offscreen") end
+	if #spotted > 0 then
+		local dir = game.level.map:compassDirection(spotted[1].x - self.x, spotted[1].y - self.y)
+		return false, ("hostile spotted to the %s (%s%s)"):format(dir, spotted[1].actor.name, game.level.map:isOnScreen(spotted[1].x, spotted[1].y) and "" or " - offscreen")
+	end
 
-	if self.air_regen < 0 then return false, "losing breath!" end
+	if self.air_regen < 0 and self.air < 0.75 * self.max_air then return false, "losing breath!" end
 
 	-- Notice any noticeable terrain
 	local noticed = false
@@ -812,15 +817,22 @@ function _M:runCheck(ignore_memory)
 		if what == "self" and not game.level.map.attrs(x, y, "obj_seen") then
 			local obj = game.level.map:getObject(x, y, 1)
 			if obj then
-				noticed = "object seen"
 				if not ignore_memory then game.level.map.attrs(x, y, "obj_seen", true) end
-				return
+				noticed = "object seen"
+				return false, noticed
 			end
 		end
 
-		-- Only notice interesting terrains, but allow auto-explore and A* to take us to the exit.  Auto-explore can also take us through "safe" doors
 		local grid = game.level.map(x, y, Map.TERRAIN)
-		if grid and grid.notice and not (self.running and self.running.path and (game.level.map.attrs(x, y, "noticed")
+		if grid and grid.special and not grid.autoexplore_ignore and not game.level.map.attrs(x, y, "autoexplore_ignore") and self.running and self.running.path then
+			game.level.map.attrs(x, y, "autoexplore_ignore", true)
+			noticed = "something interesting"
+			return false, noticed
+		end
+
+		-- Only notice interesting terrains, but allow auto-explore and A* to take us to the exit.  Auto-explore can also take us through "safe" doors
+		if grid and grid.notice and not (grid.special and self.running and self.running.explore and not grid.block_move and (grid.autoexplore_ignore or game.level.map.attrs(x, y, "autoexplore_ignore")))
+			and not (self.running and self.running.path and (game.level.map.attrs(x, y, "noticed")
 				or (what ~= self and (self.running.explore and grid.door_opened                     -- safe door
 				or #self.running.path == self.running.cnt and (self.running.explore == "exit"       -- auto-explore onto exit
 				or not self.running.explore and grid.change_level))                                 -- A* onto exit
@@ -829,23 +841,26 @@ function _M:runCheck(ignore_memory)
 				or self.running.cnt < 3 and grid.orb_portal and                                     -- path from portal
 				game.level.map:checkEntity(self.running.path[1].x, self.running.path[1].y, Map.TERRAIN, "orb_portal"))))
 		then
-			if self.running and self.running.explore and self.running.path and self.running.explore ~= "unseen" and self.running.cnt == #self.running.path + 1 then
+			if grid and grid.special then
+				game.level.map.attrs(x, y, "autoexplore_ignore", true)
+				noticed = "something interesting"
+			elseif self.running and self.running.explore and self.running.path and self.running.explore ~= "unseen" and self.running.cnt == #self.running.path + 1 then
 				noticed = "at " .. self.running.explore
 			else
 				noticed = "interesting terrain"
 			end
 			-- let's only remember and ignore standard interesting terrain
-			if not ignore_memory and (grid.change_level or grid.orb_portal) then game.level.map.attrs(x, y, "noticed", true) end
-			return
+			if not ignore_memory and (grid.change_level or grid.orb_portal or grid.escort_portal) then game.level.map.attrs(x, y, "noticed", true) end
+			return false, noticed
 		end
-		if grid and grid.type and grid.type == "store" then noticed = "store entrance spotted"; return end
+		if grid and grid.type and grid.type == "store" then noticed = "store entrance spotted" ; return false, noticed end
 
 		-- Only notice interesting characters
 		local actor = game.level.map(x, y, Map.ACTOR)
-		if actor and actor.can_talk then noticed = "interesting character"; return end
+		if actor and actor.can_talk then noticed = "interesting character" ; return false, noticed end
 
 		-- We let the engine take care of traps, but we should still notice "trap" stores.
-		if game.level.map:checkAllEntities(x, y, "store") then noticed = "store entrance spotted"; return end
+		if game.level.map:checkAllEntities(x, y, "store") then noticed = "store entrance spotted" ; return false, noticed end
 	end)
 	if noticed then return false, noticed end
 
@@ -1307,8 +1322,11 @@ function _M:useOrbPortal(portal)
 	if portal.special then portal:special(self) return end
 
 	local spotted = spotHostiles(self)
-	if #spotted > 0 then game.logPlayer(self, "You can not use the Orb with foes in sight.") return end
-
+	if #spotted > 0 then
+		local dir = game.level.map:compassDirection(spotted[1].x - self.x, spotted[1].y - self.y)
+		game.logPlayer(self, "You can not use the Orb with foes in sight (%s to the %s%s)", spotted[1].actor.name, dir, game.level.map:isOnScreen(spotted[1].x, spotted[1].y) and "" or " - offscreen")
+		return
+	end
 	if portal.on_preuse then portal:on_preuse(self) end
 
 	if portal.nothing then -- nothing

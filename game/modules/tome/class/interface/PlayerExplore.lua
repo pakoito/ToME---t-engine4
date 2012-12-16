@@ -1833,6 +1833,7 @@ function _M:autoExplore()
 	local unseen_tiles = {}
 	local unseen_singlets = {}
 	local unseen_items = {}
+	local unseen_special = {}
 	local unseen_doors = {}
 	local exits = {}
 	local portals = {}
@@ -1846,6 +1847,7 @@ function _M:autoExplore()
 	local running = true
 	local minval = 999999999999999
 	local minval_items = 999999999999999
+	local minval_special = 999999999999999
 	local minval_portals = 999999999999999
 	local val, _, anode, tile_list
 
@@ -1853,6 +1855,18 @@ function _M:autoExplore()
 	local extra_iters = 5     -- number of extra iterations to do after we found an item or unseen tile
 	local singlet_greed = 4   -- number of additional moves we're willing to do to explore a single unseen tile
 	local item_greed = 5      -- number of additional moves we're willing to do to visit an unseen item rather than an unseen tile
+	local special_greed = 5   -- number of additional moves we're willing to do to visit a special tile rather than an unseen tile
+
+	-- we only run to a vault or locked door once, but if we are next to it, then we should try to open it if appropriate
+	local c = toSingle(self.x, self.y)
+	for _, node in ipairs(listAdjacentNodes(c)) do
+		local ax, ay = node[0], node[1]
+		local terrain = game.level.map(ax, ay, Map.TERRAIN)
+		if terrain and game.level.map.attrs(ax, ay, "autoexplore_ignore") and (terrain.door_player_check or terrain.door_player_stop) then
+			unseen_doors[#unseen_doors + 1] = toSingle(ax, ay)
+			door_values[toSingle(ax, ay)] = 1
+		end
+	end
 
 	-- Create a distance map array via flood-fill to locate unseen tiles, unvisited items, closed doors, and exits
 	while running do
@@ -1967,9 +1981,15 @@ function _M:autoExplore()
 								current_tiles_next[#current_tiles_next + 1] = node
 							end
 						end
+						-- go to special terrain unless it should be ignored
+						if terrain.special and not terrain.autoexplore_ignore and not game.level.map.attrs(x, y, "autoexplore_ignore") then
+							unseen_special[#unseen_special + 1] = c
+							values[c] = move_cost
+							if move_cost < minval_special then
+								minval_special = move_cost
+							end
 						-- only go to objects we haven't walked over yet
-						local obj = game.level.map:getObject(x, y, 1)
-						if obj and not game.level.map.attrs(x, y, "obj_seen") then
+						elseif game.level.map:getObject(x, y, 1) and not game.level.map.attrs(x, y, "obj_seen") then
 							unseen_items[#unseen_items + 1] = c
 							values[c] = move_cost
 							if move_cost < minval_items then
@@ -1985,12 +2005,12 @@ function _M:autoExplore()
 									break
 								end
 							end
-							if is_unexplored then
+							if is_unexplored and not game.level.map.attrs(x, y, "autoexplore_ignore") then
 								unseen_doors[#unseen_doors + 1] = c
 								if not door_values[c] or door_values[c] > move_cost then
 									door_values[c] = move_cost
 								end
-							else -- door is safe to move through
+							elseif not is_unexplored then -- door is safe to move through
 								node[3] = move_cost + 1
 								safe_doors[c] = true
 								if is_slow then
@@ -2028,7 +2048,7 @@ function _M:autoExplore()
 			end
 		end
 		-- Continue the loop if we haven't found any destination tiles or if lower cost paths to the destination tiles may exist
-		running = #unseen_tiles == 0 and #unseen_items == 0
+		running = #unseen_tiles == 0 and #unseen_items == 0 and #unseen_special == 0
 		for _, c in ipairs(unseen_tiles) do
 			if values[c] > iter then
 				running = true
@@ -2050,7 +2070,7 @@ function _M:autoExplore()
 		end
 
 		-- if we need to continue running but have no more tiles to iterate over, propagate from "slow_tiles" such as traps
-		if #current_tiles_next == 0 and #slow_tiles > 0 and #unseen_tiles == 0 and #unseen_items == 0 then
+		if #current_tiles_next == 0 and #slow_tiles > 0 and #unseen_tiles == 0 and #unseen_items == 0 and #unseen_special == 0 then
 			running = true
 			current_tiles = slow_tiles
 			for _, node in ipairs(slow_tiles) do
@@ -2071,7 +2091,7 @@ function _M:autoExplore()
 
 	-- Negligible time is spent below
 	-- Choose target
-	if #unseen_tiles > 0 or #unseen_items > 0 or #unseen_doors > 0 or #exits > 0 or #portals > 0 then
+	if #unseen_tiles > 0 or #unseen_items > 0 or #unseen_special > 0 or #unseen_doors > 0 or #exits > 0 or #portals > 0 then
 		local target_type
 		local choices = {}
 		local distances = {}
@@ -2103,7 +2123,22 @@ function _M:autoExplore()
 				end
 			end
 		end
-		-- go to closest items first
+		-- go to closest special terrain first
+		if #choices == 0 and minval_special <= minval + special_greed then
+			for _, c in ipairs(unseen_special) do
+				if values[c] == minval_special then
+					target_type = "special"
+					choices[#choices + 1] = c
+					local x, y = toDouble(c)
+					local dist = core.fov.distance(self.x, self.y, x, y, true)
+					distances[c] = dist
+					if dist < mindist then
+						mindist = dist
+					end
+				end
+			end
+		end
+		-- go to closest items next
 		if #choices == 0 and minval_items <= minval + item_greed then
 			for _, c in ipairs(unseen_items) do
 				if values[c] == minval_items then
@@ -2399,23 +2434,32 @@ function _M:autoExplore()
 				if self.running and self.running.explore then
 					-- take care of a couple fringe cases
 					-- don't open adjacent or target doors if we've already been running
+					local x, y = path[1].x, path[1].y
+					local terrain = game.level.map(x, y, Map.TERRAIN)
 					if target_type == "door" then
 						if #path == 1 then
 							self:runStop("at door")
+							if terrain and (terrain.door_player_check or terrain.door_player_stop) then game.level.map.attrs(x, y, "autoexplore_ignore", true) end
 							return false
 						else
 							path[#path] = nil
 						end
 					end
+					-- don't bump into special terrain if we've already been running
+					if target_type == "special" then
+						if #path == 1 then
+							self:runStop("something interesting")
+							game.level.map.attrs(x, y, "autoexplore_ignore", true)
+							return false
+						end
+					end
 
 					-- don't run into adjacent interesting terrain if we've already been running
-					local x, y = path[1].x, path[1].y
-					local terrain = game.level.map(x, y, Map.TERRAIN)
 					if terrain.notice and (target_type ~= "exit" and target_type ~= "portal" or #path ~= 1) then
 						if safe_doors[toSingle(x, y)] and not self.running.busy then
 							self.running.busy = { type = "opening door", do_move = true, no_energy = true }
 						elseif not game.level.map.attrs(x, y, "noticed") then
-							if terrain.change_level or terrain.orb_portal then game.level.map.attrs(x, y, "noticed", true) end
+							if terrain.change_level or terrain.orb_portal or terrain.escort_portal then game.level.map.attrs(x, y, "noticed", true) end
 							self:runStop("interesting terrain")
 							return false
 						end
@@ -2432,10 +2476,22 @@ function _M:autoExplore()
 					-- end hack!
 					checkAmbush(self)
 				else
-					-- another fringe case: if we target an item in an adjacent wall that we've probably already targeted, then mark it as seen and find a new target
-					if #path == 1 and target_type == "object" and game.level.map:checkEntity(target_x, target_y, Map.TERRAIN, "block_move", self, nil, true) then
-						game.level.map.attrs(target_x, target_y, "obj_seen", true)
-						return self:autoExplore()
+					if #path == 1 then
+						-- another fringe case: if we target an item in an adjacent wall that we've probably already targeted, then mark it as seen and find a new target
+						if target_type == "object" and game.level.map:checkEntity(target_x, target_y, Map.TERRAIN, "block_move", self, nil, true) then
+							game.level.map.attrs(target_x, target_y, "obj_seen", true)
+							return self:autoExplore()
+						end
+						-- similar deal for adjacent "special" terrain
+						if target_type == "special" then
+							game.level.map.attrs(target_x, target_y, "autoexplore_ignore", true)
+							return self:autoExplore()
+						end
+						local x, y = path[1].x, path[1].y
+						local terrain = game.level.map(x, y, Map.TERRAIN)
+						if target_type == "door" and terrain and (terrain.door_player_check or terrain.door_player_stop) then
+							game.level.map.attrs(x, y, "autoexplore_ignore", true)
+						end
 					end
 					-- don't open non-adjacent target doors
 					if target_type == "door" and #path > 1 then path[#path] = nil end
@@ -2512,6 +2568,17 @@ function _M:checkAutoExplore()
 		if self.running.explore == "unseen" or self.running.explore == "object" and not obj then
 			return self:autoExplore()
 		else
+			--only go to locked vault doors once
+			if self.running.explore == "door" then
+				local c = toSingle(tx, ty)
+				for _, anode in ipairs(listAdjacentNodes(c)) do
+					local ax, ay = anode[0], anode[1]
+					local aterrain = game.level.map(ax, ay, Map.TERRAIN)
+					if aterrain and (aterrain.door_player_check or aterrain.door_player_stop) then
+						game.level.map.attrs(ax, ay, "autoexplore_ignore", true)
+					end
+				end
+			end
 			self:runStop("at " .. self.running.explore)
 			return false
 		end
@@ -2521,7 +2588,7 @@ function _M:checkAutoExplore()
 	if game.level.map.has_seens(cx, cy) and game.level.map:checkEntity(cx, cy, Map.TERRAIN, "block_move", self, nil, true) then
 	-- game.level.map:checkAllEntities(cx, cy, "block_move", self) then
 		if terrain.notice then
-			if terrain.change_level or terrain.orb_portal then game.level.map.attrs(cx, cy, "noticed", true) end
+			if terrain.change_level or terrain.orb_portal or terrain.escort_portal then game.level.map.attrs(cx, cy, "noticed", true) end
 			self:runStop("interesting terrain")
 			return false
 		elseif self.running.explore == "unseen" or self.running.explore == "object" and self.running.cnt ~= #self.running.path then
