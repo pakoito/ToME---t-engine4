@@ -65,7 +65,8 @@ game.zone.on_turn = function()
 		local npcs = mod.class.NPC:loadList("/data/general/npcs/losgoroth.lua")
 
 		for i = x-2, x+2 do for j = y-2, y+2 do
-			if core.fov.distance(x, y, i, j) <= 1 or rng.percent(40) then
+			local og = game.level.map(i, j, engine.Map.TERRAIN)
+			if (core.fov.distance(x, y, i, j) <= 1 or rng.percent(40)) and og and not og.escort_portal then
 				local g = terrains.LAVA_FLOOR:clone()
 				g:resolve() g:resolve(nil, true)
 				game.zone:addEntity(game.level, g, "terrain", i, j)
