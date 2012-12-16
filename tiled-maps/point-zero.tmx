@@ -366,6 +366,18 @@
     <property name="type" value="&quot;pop&quot;"/>
    </properties>
   </object>
+  <object name="Player pop quest" x="792" y="1029" width="22" height="20">
+   <properties>
+    <property name="subtype" value="&quot;player-attack&quot;"/>
+    <property name="type" value="&quot;pop&quot;"/>
+   </properties>
+  </object>
+  <object name="Defiler pop quest" x="837" y="1159" width="22" height="20">
+   <properties>
+    <property name="subtype" value="&quot;defiler&quot;"/>
+    <property name="type" value="&quot;pop&quot;"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup color="#ff00ff" name="addZone#particles" width="50" height="50">
   <object name="Highways" x="743" y="814" width="19" height="97">

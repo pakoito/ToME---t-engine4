@@ -996,6 +996,8 @@ function _M:getTextualDesc(compare_with)
 
 		compare_fields(w, compare_with, field, "slow_projectiles", "%+d%%", "Slows Projectiles: ")
 
+		compare_fields(w, compare_with, field, "paradox_reduce_fails", "%+d", "Reduces paradox failures(equivalent to willpower): ")
+
 		if w.undead then
 			desc:add("The wearer is treated as an undead.", true)
 		end

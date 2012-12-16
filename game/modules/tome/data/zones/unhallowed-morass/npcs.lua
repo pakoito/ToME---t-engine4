@@ -99,8 +99,8 @@ newEntity{ base = "BASE_NPC_SPIDER",
 	},
 }
 
-newEntity{ base = "BASE_NPC_SPIDER",
-	name = "weaver queen", color=colors.WHITE,
+newEntity{ base = "BASE_NPC_SPIDER", define_as = "WEAVER_QUEEN",
+	name = "Weaver Queen", color=colors.WHITE,
 	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/spiderkin_spider_weaver_queen.png", display_h=2, display_y=-1}}},
 	desc = [[A large white spider.]],
 	level_range = {7, nil}, exp_worth = 1,
@@ -111,13 +111,12 @@ newEntity{ base = "BASE_NPC_SPIDER",
 	tier1 = true,
 	size_category = 4,
 	instakill_immune = 1,
+	no_rod_recall = 1,
 
 	combat_armor = 3, combat_def = 4,
 	combat = { dam=resolvers.levelup(8, 1, 0.9), atk=15, apr=3, damtype=DamageType.CLOCK, },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
-	resolvers.drops{chance=100, nb=1, {defined="TIMESHARD"} },
-	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
 
 	talent_cd_reduction = {[Talents.T_RETHREAD]=-10},
 
@@ -136,51 +135,8 @@ newEntity{ base = "BASE_NPC_SPIDER",
 
 	on_die = function(self, who)
 		game.player:resolveSource():setQuestStatus("start-point-zero", engine.Quest.COMPLETED, "morass")
-		require("engine.ui.Dialog"):simplePopup("As you vanquish the queen you notice a temporal thread that seems to have been controlling her. It seems to go through a rift.")
+		require("engine.ui.Dialog"):simplePopup("Weaver Queen", "As you vanquish the queen you notice a temporal thread that seems to have been controlling her. It seems to go through a rift.")
 		local rift = game.zone:makeEntityByName(game.level, "terrain", "RIFT_HOME")
 		game.zone:addEntity(game.level, rift, "terrain", self.x, self.y)
 	end,
 }
-
---[=[
-newEntity{ base="BASE_NPC_LOSGOROTH", define_as = "SPACIAL_DISTURBANCE",
-	unique = true,
-	name = "Spacial Disturbance",
-	color=colors.VIOLET,
-	resolvers.nice_tile{image="invis.png"},
-	resolvers.generic(function(e) if engine.Map.tiles.nicer_tiles then e:addParticles(engine.Particles.new("wormhole", 1, {image="shockbolt/npc/elemental_losgoroth_space_disturbance", speed=1})) end end),
-	desc = [[A hole in the fabric of space, it seems to be the source of the expanse unstability.]],
-	killer_message = "and folded out of existence",
-	level_range = {7, nil}, exp_worth = 2,
-	max_life = 150, life_rating = 10, fixed_rating = true,
-	mana_regen = 7,
-	stats = { str=10, dex=10, cun=12, mag=20, con=10 },
-	rank = 4,
-	tier1 = true,
-	size_category = 4,
-	infravision = 10,
-	instakill_immune = 1,
-	can_pass = {pass_void=0},
-
-	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
-	resolvers.drops{chance=100, nb=1, {defined="VOID_STAR"} },
-	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
-
-	resolvers.talents{
-		[Talents.T_VOID_BLAST]={base=1, every=7, max=7},
-		[Talents.T_MANATHRUST]={base=1, every=7, max=7},
-		[Talents.T_PHASE_DOOR]=2,
-	},
-	resolvers.inscriptions(1, {"manasurge rune"}),
-
-	autolevel = "caster",
-	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
-	ai_tactic = resolvers.tactic"ranged",
-
-	on_die = function(self, who)
-		local q = game.player:hasQuest("start-archmage")
-		if q then q:stabilized() end
-		game.player:resolveSource():setQuestStatus("start-archmage", engine.Quest.COMPLETED, "abashed")
-	end,
-}
-]=]

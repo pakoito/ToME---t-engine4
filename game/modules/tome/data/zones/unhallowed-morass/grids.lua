@@ -41,6 +41,26 @@ newEntity{
 	desc = [[The rift leads to an other part of the morass.]],
 	change_level = 1,
 	change_zone = "town-point-zero",
+	change_level_check = function()
+		game:onLevelLoad("town-point-zero-1", function(zone, level)
+			game:onTickEnd(function()
+				local npc = game.zone:makeEntityByName(level, "actor", "TEMPORAL_DEFILER")
+				local spot = level:pickSpot{type="pop", subtype="defiler"}
+				game.zone:addEntity(level, npc, "actor", spot.x, spot.y)
+				npc:setTarget(game.player)
+
+				local spot = level:pickSpot{type="pop", subtype="player-attack"}
+				game.player:move(spot.x, spot.y, true)
+				require("engine.ui.Dialog"):simpleLongPopup("Point Zero", "The rift has brought you back to Point Zero, and the source of the disturbances.\nA temporal defiler is attacking the town, all the Keepers in range are atatcking it!", 400)
+
+				for uid, e in pairs(game.level.entities) do
+					if e.faction == "keepers-of-reality" or e.faction == "point-zero-guardians" then
+						e:setEffect(e.EFF_KEEPER_OF_REALITY, 20, {})
+					end
+				end
+			end)
+		end)
+	end,
 }
 
 local rift_editer = { method="sandWalls_def", def="rift"}

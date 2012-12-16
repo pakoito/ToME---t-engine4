@@ -18,3 +18,26 @@
 -- darkgod@te4.org
 
 load("/data/general/objects/objects-maj-eyal.lua")
+
+local Stats = require "engine.interface.ActorStats"
+local Talents = require "engine.interface.ActorTalents"
+
+newEntity{ base = "BASE_TOOL_MISC",
+	power_source = {arcane=true},
+	define_as = "TIME_SHARD",
+	unique = true,
+	name = "Shard of Crystalized Time", color = colors.YELLOW,
+	unided_name = "glowing shard", image = "object/artifact/time_shard.png",
+	desc = [[]],
+	level_range = {5, 12},
+	rarity = false,
+	cost = 10,
+	material_level = 1,
+	metallic = false,
+	wielder = {
+		inc_stats = { [Stats.STAT_WIL] = 4, [Stats.STAT_CON] = 2, },
+		combat_def = 5,
+		inc_damage = { [DamageType.TEMPORAL] = 7 },
+		paradox_reduce_fails = 25,
+	},
+}

@@ -47,51 +47,6 @@ newEntity{
 	stats = { str=12, dex=8, mag=6, con=10 },
 }
 
-newEntity{ base = "BASE_NPC_POINT_ZERO_TOWN",
-	name = "POINT_ZERO guard", color=colors.LIGHT_UMBER,
-	desc = [[A stern-looking guard, he will not let you disturb the town.]],
-	level_range = {1, nil}, exp_worth = 1,
-	rarity = 3,
-	max_life = resolvers.rngavg(70,80),
-	resolvers.equip{
-		{type="weapon", subtype="longsword", autoreq=true},
-		{type="armor", subtype="shield", autoreq=true},
-	},
-	combat_armor = 2, combat_def = 0,
-	resolvers.talents{ [Talents.T_RUSH]=1, [Talents.T_PERFECT_STRIKE]=1, },
-}
-
-newEntity{ base = "BASE_NPC_POINT_ZERO_TOWN",
-	name = "halfling slinger", color=colors.UMBER,
-	subtype = "halfling",
-	desc = [[A Halfling, with a sling. Beware.]],
-	level_range = {1, nil}, exp_worth = 1,
-	rarity = 3,
-	max_life = resolvers.rngavg(50,60),
-	resolvers.talents{ [Talents.T_SHOOT]=1, },
-	ai_state = { talent_in=2, },
-	autolevel = "slinger",
-	resolvers.equip{ {type="weapon", subtype="sling", autoreq=true}, {type="ammo", subtype="shot", autoreq=true} },
-}
-
-newEntity{ base = "BASE_NPC_POINT_ZERO_TOWN",
-	name = "human farmer", color=colors.WHITE,
-	desc = [[A weather-worn Human farmer.]],
-	level_range = {1, nil}, exp_worth = 1,
-	rarity = 1,
-	max_life = resolvers.rngavg(30,40),
-	combat_armor = 2, combat_def = 0,
-}
-
-newEntity{ base = "BASE_NPC_POINT_ZERO_TOWN",
-	name = "halfling gardener", color=colors.WHITE,
-	subtype = "halfling",
-	desc = [[A Halfling, he seems to be looking for plants.]],
-	level_range = {1, nil}, exp_worth = 1,
-	rarity = 1,
-	max_life = resolvers.rngavg(30,40),
-}
-
 newEntity{ base = "BASE_NPC_POINT_ZERO_TOWN", define_as = "DEFENDER_OF_REALITY",
 	name = "guardian of reality", color=colors.YELLOW,
 	image = resolvers.rngtable{"npc/humanoid_elf_star_crusader.png", "npc/humanoid_elf_anorithil.png"},
@@ -240,4 +195,49 @@ newEntity{ base = "BASE_NPC_POINT_ZERO_TOWN", define_as = "ZEMEKKYS",
 		[Talents.T_BODY_REVERSION]=5,
 	},
 	resolvers.sustains_at_birth(),
+}
+
+newEntity{ define_as = "TEMPORAL_DEFILER",
+	type = "horror", subtype = "temporal", unique = true,
+	name = "Temporal Defiler",
+	display = "h", color=colors.VIOLET,
+	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/horror_temporal_temporal_defiler.png", display_h=2, display_y=-1}}},
+	desc = [[A huge slender metallic monstrosity with long claws in place of fingers, and razor-sharp teeth., it seems to seek something here.]],
+	level_range = {50, nil}, exp_worth = 0.1,
+	max_life = 1500, life_rating = 35, fixed_rating = true,
+	stats = { str=20, dex=10, cun=8, mag=10, con=20 },
+	rank = 4,
+	size_category = 4,
+	infravision = 10,
+	instakill_immune = 1,
+	move_others=true,
+
+	global_speed_base = 1.2,
+	autolevel = "rogue",
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=2, },
+	combat_armor = 10, combat_def = 10,
+	combat = { dam=resolvers.levelup(resolvers.rngavg(25,100), 1, 1.2), atk=resolvers.rngavg(25,100), apr=25, dammod={dex=1.1} },
+
+	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
+	resolvers.drops{chance=100, nb=1, {defined="TIME_SHARD"} },
+	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
+
+	inc_damage = {all = -30},
+
+	resolvers.talents{
+		[Talents.T_PERFECT_AIM]={base=3, every=7, max=5},
+		[Talents.T_SPIN_FATE]={base=5, every=7, max=8},
+		[Talents.T_STEALTH]={base=3, every=7, max=5},
+		[Talents.T_SHADOWSTRIKE]={base=3, every=7, max=5},
+		[Talents.T_UNSEEN_ACTIONS]={base=3, every=7, max=5},
+	},
+
+	resolvers.inscriptions(1, "rune"),
+	resolvers.inscriptions(1, "infusion"),
+
+	resolvers.sustains_at_birth(),
+
+	on_die = function(self, who)
+		game.player:resolveSource():setQuestStatus("start-point-zero", engine.Quest.COMPLETED, "saved")
+	end,
 }

@@ -2179,3 +2179,21 @@ newEffect{
 		game.level.map:updateMap(self.x, self.y)
 	end,
 }
+
+newEffect{
+	name = "KEEPER_OF_REALITY", image = "effects/continuum_destabilization.png",
+	desc = "Keepers of Reality Rally Call",
+	long_desc = function(self, eff) return "The keepers of reality have called upon all to defend Point Zero. Life increased by 5000, damage by 300%." end,
+	type = "magical",
+	subtype = { temporal=true },
+	status = "beneficial",
+	cancel_on_level_change = true,
+	parameters = { },
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "max_life", 5000)
+		self:heal(5000)
+		self:effectTemporaryValue(eff, "inc_damage", {all=300})
+	end,
+	deactivate = function(self, eff)
+	end,
+}

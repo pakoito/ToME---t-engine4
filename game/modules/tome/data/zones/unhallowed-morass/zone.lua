@@ -24,7 +24,7 @@ return {
 	max_level = 3,
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
-	width = 60, height = 60,
+	width = 50, height = 50,
 	all_remembered = true,
 	all_lited = true,
 	tier1 = true,
@@ -38,7 +38,7 @@ return {
 		map = {
 			class = "engine.generator.map.Cavern",
 			zoom = 25,
-			min_floor = 1100,
+			min_floor = 900,
 			floor = "VOID",
 			wall = "SPACETIME_RIFT",
 			up = "VOID",

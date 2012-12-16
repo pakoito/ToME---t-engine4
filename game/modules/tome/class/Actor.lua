@@ -3196,7 +3196,7 @@ end
 --- Paradox checks
 function _M:getModifiedParadox()
 	local will_modifier = 1 + (self:getTalentLevel(self.T_PARADOX_MASTERY)/10) or 0
-	local modified_paradox = math.max(0, self:getParadox() - (self:getWil() * will_modifier))
+	local modified_paradox = math.max(0, self:getParadox() - ((self:getWil() + (self:attr("paradox_reduce_fails") or 0)) * will_modifier))
 	return modified_paradox
 end
 

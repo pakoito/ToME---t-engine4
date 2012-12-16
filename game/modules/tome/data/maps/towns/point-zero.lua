@@ -121,6 +121,9 @@ addSpot({0, 41}, "pop", "foes")
 addSpot({0, 42}, "pop", "foes")
 addSpot({0, 43}, "pop", "foes")
 addSpot({0, 44}, "pop", "foes")
+addSpot({24, 32}, "pop", "player-attack")
+addSpot({25, 32}, "pop", "player-attack")
+addSpot({26, 36}, "pop", "defiler")
 
 -- addZone section
 addZone({23, 25, 23, 28}, "particle", "house_flamebeam")

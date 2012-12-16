@@ -304,7 +304,7 @@ function _M:die(src, death_note)
 		return
 	end
 
-	if self.rank >= 4 and game.state:allowRodRecall() then
+	if self.rank >= 4 and game.state:allowRodRecall() and not self:attr("no_rod_recall") then
 		local rod = game.zone:makeEntityByName(game.level, "object", "ROD_OF_RECALL")
 		if rod then
 			game.zone:addEntity(game.level, rod, "object", self.x, self.y)
