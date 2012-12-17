@@ -2051,7 +2051,7 @@ function _M:onTakeHit(value, src)
 	end
 
 	-- Life leech
-	if value > 0 and src and src:attr("life_leech_chance") and rng.percent(src.life_leech_chance) then
+	if value > 0 and src and not src.dead and src:attr("life_leech_chance") and rng.percent(src.life_leech_chance) then
 		local leech = math.min(value, self.life) * src.life_leech_value / 100
 		if leech > 0 then
 			src:heal(leech)
