@@ -37,9 +37,9 @@ newTalent{
 			local spells = {}
 			local fatigue = (100 + 2 * self:combatFatigue()) / 100
 			local mana = self:getMana() - 1
-			if self:knowTalent(self.T_FLAME) and mana > self:getTalentFromId(self.T_FLAME).mana * fatigue then spells[#spells+1] = self.T_FLAME end
-			if self:knowTalent(self.T_LIGHTNING) and mana > self:getTalentFromId(self.T_LIGHTNING).mana * fatigue then spells[#spells+1] = self.T_LIGHTNING end
-			if self:knowTalent(self.T_EARTHEN_MISSILES) and mana > self:getTalentFromId(self.T_EARTHEN_MISSILES).mana * fatigue then spells[#spells+1] = self.T_EARTHEN_MISSILES end
+			if self:knowTalent(self.T_FLAME) and not self:isTalentCoolingDown(self.T_FLAME)and mana > self:getTalentFromId(self.T_FLAME).mana * fatigue then spells[#spells+1] = self.T_FLAME end
+			if self:knowTalent(self.T_LIGHTNING) and not self:isTalentCoolingDown(self.T_LIGHTNING)and mana > self:getTalentFromId(self.T_LIGHTNING).mana * fatigue then spells[#spells+1] = self.T_LIGHTNING end
+			if self:knowTalent(self.T_EARTHEN_MISSILES) and not self:isTalentCoolingDown(self.T_EARTHEN_MISSILES)and mana > self:getTalentFromId(self.T_EARTHEN_MISSILES).mana * fatigue then spells[#spells+1] = self.T_EARTHEN_MISSILES end
 			local tid = rng.table(spells)
 			if tid then
 				local l = self:lineFOV(target.x, target.y)
