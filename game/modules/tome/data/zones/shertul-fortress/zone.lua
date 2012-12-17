@@ -83,7 +83,7 @@ return {
 
 		local Dialog = require("engine.ui.Dialog")
 		if not game.level.shown_warning then
-			Dialog:simplePopup("Yiilkgur", "This level seems to be removed from the rest of the ruins. The air is fresh and the level is lighted. You hear the distant crackling of magical energies.")
+			Dialog:simpleLongPopup("Yiilkgur", "This level seems to be removed from the rest of the ruins. The air is fresh and the level is lighted. You hear the distant crackling of magical energies.", 400)
 			game.level.shown_warning = true
 		end
 	end,
