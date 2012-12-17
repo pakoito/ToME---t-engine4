@@ -31,7 +31,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local power = self:getTalentLevelRaw(t) * 10
-		return ([[Increases your movement speed by %d%% and switching between already equipped weapon sets (default hotkey x) no longer takes a turn.]]):
+		return ([[Increases your movement speed by %d%% and switching between already equipped weapon sets (default hotkey q) no longer takes a turn.]]):
 		format(power)
 	end,
 }
