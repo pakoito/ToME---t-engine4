@@ -112,7 +112,7 @@ newEntity{
 
 newEntity{ base = "BASE_NPC_LOSGOROTH", define_as = "MONSTROUS_LOSGOROTH",
 	name = "monstrous losgoroth", color=colors.GREY, image = "npc/elemental_void_losgoroth.png",
-	level_range = {50, nil}, exp_worth = 1,
+	level_range = {50, nil}, exp_worth = 0,
 	rarity = false,
 	max_life = 500,
 	combat_armor = 0, combat_def = 20,
