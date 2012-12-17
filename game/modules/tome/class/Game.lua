@@ -1068,7 +1068,7 @@ function _M:displayDelayedLogDamage()
 				end
 			else
 				if self.level.map.seens(x, y) and (rsrc == self.player or self.party:hasMember(rsrc)) then
-					self.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, rng.float(-3, -2), tostring(-math.ceil(dams.total)), {dams.is_crit and 200 or 0,255,0}, dams.is_crit)
+					self.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, rng.float(-3, -2), tostring(-math.ceil(dams.total)), {0,255,dams.is_crit and 200 or 0}, dams.is_crit)
 				elseif self.level.map.seens(x, y) and (rtarget == self.player or self.party:hasMember(rtarget)) then
 					self.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, -rng.float(-3, -2), tostring(-math.ceil(dams.total)), {255,dams.is_crit and 200 or 0,0}, dams.is_crit)
 				end
