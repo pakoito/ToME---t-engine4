@@ -148,23 +148,25 @@ function _M:display()
 			if ts[3] == "talent" then
 				local tid = ts[1]
 				local t = a:getTalentFromId(tid)
-				display_entity = t.display_entity
-				if a:isTalentCoolingDown(t) then
-					if not a:preUseTalent(t, true, true) then
+				if t then
+					display_entity = t.display_entity
+					if a:isTalentCoolingDown(t) then
+						if not a:preUseTalent(t, true, true) then
+							color = {190,190,190}
+							frame = "disabled"
+						else
+							frame = "cooldown"
+							color = {255,0,0}
+							angle = 360 * (1 - (a.talents_cd[t.id] / a:getTalentCooldown(t)))
+						end
+						txt = tostring(a:isTalentCoolingDown(t))
+					elseif a:isTalentActive(t.id) then
+						color = {255,255,0}
+						frame = "sustain"
+					elseif not a:preUseTalent(t, true, true) then
 						color = {190,190,190}
 						frame = "disabled"
-					else
-						frame = "cooldown"
-						color = {255,0,0}
-						angle = 360 * (1 - (a.talents_cd[t.id] / a:getTalentCooldown(t)))
 					end
-					txt = tostring(a:isTalentCoolingDown(t))
-				elseif a:isTalentActive(t.id) then
-					color = {255,255,0}
-					frame = "sustain"
-				elseif not a:preUseTalent(t, true, true) then
-					color = {190,190,190}
-					frame = "disabled"
 				end
 			elseif ts[3] == "inventory" then
 				local o = a:findInAllInventories(ts[1], {no_add_name=true, force_id=true, no_count=true})
