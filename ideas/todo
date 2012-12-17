@@ -7,3 +7,5 @@ after v1:
 * sub-tile entities, like the spiders for the arachnomancer: split a tile in 16 (4x4)
 * fun caster egos: apply/change tthe cross-tier effects o some things funky
 * server spawned events hat are time-locked, granting online "points"
+
+* donators could maybe select one of the donator tile as their "avatar" and have it appear in chat .. hum

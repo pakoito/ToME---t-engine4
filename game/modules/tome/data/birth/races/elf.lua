@@ -114,7 +114,7 @@ newBirthDescriptor
 		"#LIGHT_BLUE# * +2 Strength, +3 Dexterity, +1 Constitution",
 		"#LIGHT_BLUE# * -2 Magic, +1 Willpower, +0 Cunning",
 		"#GOLD#Life per level:#LIGHT_BLUE# 11",
-		"#GOLD#Experience penalty:#LIGHT_BLUE# 35%",
+		"#GOLD#Experience penalty:#LIGHT_BLUE# 30%",
 	},
 	inc_stats = { str=2, mag=-2, wil=1, cun=0, dex=3, con=1 },
 	talents_types = { ["race/thalore"]={true, 0} },

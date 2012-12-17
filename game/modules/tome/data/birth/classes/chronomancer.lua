@@ -37,7 +37,7 @@ newBirthDescriptor{
 	copy = {
 		-- Chronomancers start in Point Zero
 		class_start_check = function(self)
-			if self.descriptor.world == "Maj'Eyal" then
+			if self.descriptor.world == "Maj'Eyal" and (self.descriptor.race ~= "Undead" and self.descriptor.race ~= "Yeek") then
 				self.chronomancer_race_start_quest = self.starting_quest
 				self.default_wilderness = {"zone-pop", "angolwen-portal"}
 				self.starting_zone = "town-point-zero"
