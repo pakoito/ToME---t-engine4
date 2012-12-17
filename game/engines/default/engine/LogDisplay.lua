@@ -244,7 +244,7 @@ function _M:toScreen()
 		self.dlist[i].dh = h
 		if self.shadow then item._tex:toScreenFull(self.display_x+2, h+2, item.w, item.h, item._tex_w, item._tex_h, 0,0,0, self.shadow * fade) end
 		item._tex:toScreenFull(self.display_x, h, item.w, item.h, item._tex_w, item._tex_h, 1, 1, 1, fade)
-		for di = 1, #item._dduids do item._dduids[di].e:toScreen(nil, self.display_x + item._dduids[di].x, h, item._dduids[di].w, item._dduids[di].w, fade) end
+		for di = 1, #item._dduids do item._dduids[di].e:toScreen(nil, self.display_x + item._dduids[di].x, h, item._dduids[di].w, item._dduids[di].w, fade, false, false) end
 		h = h - self.fh
 	end
 

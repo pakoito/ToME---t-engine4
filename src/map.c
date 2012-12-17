@@ -376,6 +376,10 @@ static int map_objects_toscreen(lua_State *L)
 	int w = luaL_checknumber(L, 3);
 	int h = luaL_checknumber(L, 4);
 	float a = (lua_isnumber(L, 5) ? lua_tonumber(L, 5) : 1);
+	bool allow_cb = TRUE;
+	bool allow_shader = TRUE;
+	if (lua_isboolean(L, 6)) allow_cb = lua_toboolean(L, 6);
+	if (lua_isboolean(L, 7)) allow_shader = lua_toboolean(L, 7);
 
 	GLfloat vertices[3*4];
 	GLfloat texcoords[2*4] = {
@@ -398,14 +402,14 @@ static int map_objects_toscreen(lua_State *L)
 	/***************************************************
 	 * Render
 	 ***************************************************/
-	int moid = 6;
+	int moid = 8;
 	while (lua_isuserdata(L, moid))
 	{
 		map_object *m = (map_object*)auxiliar_checkclass(L, "core{mapobj}", moid);
 		map_object *dm;
 
 		int z;
-		if (m->shader) useShader(m->shader, 1, 1, 1, 1, 1, 1, 1, 1);
+		if (allow_shader && m->shader) useShader(m->shader, 1, 1, 1, 1, 1, 1, 1, 1);
 		for (z = (!shaders_active) ? 0 : (m->nb_textures - 1); z >= 0; z--)
 		{
 			if (multitexture_active && shaders_active) tglActiveTexture(GL_TEXTURE0+z);
@@ -434,9 +438,9 @@ static int map_objects_toscreen(lua_State *L)
 			vertices[9] = dx; vertices[10] = dh + dy; vertices[11] = dz;
 			glDrawArrays(GL_QUADS, 0, 4);
 
-			if (dm->cb_ref != LUA_NOREF)
+			if (allow_cb && (dm->cb_ref != LUA_NOREF))
 			{
-				if (m->shader) glUseProgramObjectARB(0);
+				if (allow_shader && m->shader) glUseProgramObjectARB(0);
 				int dx = x + dm->dx * w, dy = y + dm->dy * h;
 				float dw = w * dm->dw;
 				float dh = h * dm->dh;
@@ -459,14 +463,14 @@ static int map_objects_toscreen(lua_State *L)
 				}
 				lua_pop(L, 1);
 
-				if (m->shader) useShader(m->shader, 1, 1, 1, 1, 1, 1, 1, 1);
+				if (allow_shader && m->shader) useShader(m->shader, 1, 1, 1, 1, 1, 1, 1, 1);
 			}
 
 			dm = dm->next;
 			nb++;
 		}
 
-		if (m->shader) glUseProgramObjectARB(0);
+		if (allow_shader && m->shader) glUseProgramObjectARB(0);
 
 		moid++;
 	}
