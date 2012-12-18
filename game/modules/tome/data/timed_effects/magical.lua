@@ -2196,5 +2196,6 @@ newEffect{
 		self:effectTemporaryValue(eff, "inc_damage", {all=300})
 	end,
 	deactivate = function(self, eff)
+		self:heal(1)
 	end,
 }
