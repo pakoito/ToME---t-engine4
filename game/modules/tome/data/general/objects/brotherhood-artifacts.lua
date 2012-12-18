@@ -33,6 +33,7 @@ newEntity{
 	desc = [[A vial of pink, airy fluid.]],
 	no_unique_lore = true,
 	cost = 1000,
+	quest = 1,
 
 	use_simple = { name="permanently increase your dexterity and cunning by three", use = function(self, who)
 		game.logPlayer(who, "#00FFFF#You drink the elixir and feel forever transformed!")
@@ -54,6 +55,7 @@ newEntity{
 	desc = [[A vial of opaque green fluid.]],
 	no_unique_lore = true,
 	cost = 1000,
+	quest = 1,
 
 	use_simple = { name="permanently increase your defense and ranged defense by six", use = function(self, who)
 		game.logPlayer(who, "#00FFFF#You drink the elixir and feel forever transformed!")
@@ -72,6 +74,7 @@ newEntity{
 	desc = [[A vial of chunky red fluid.]],
 	no_unique_lore = true,
 	cost = 1000,
+	quest = 1,
 
 	use_simple = { name="permanently increase your physical critical strike chance by 4%", use = function(self, who)
 		game.logPlayer(who, "#00FFFF#You drink the elixir and feel forever transformed!")
@@ -90,6 +93,7 @@ newEntity{
 	desc = [[A vial of glowing cyan fluid.]],
 	no_unique_lore = true,
 	cost = 1000,
+	quest = 1,
 
 	use_simple = { name="permanently increase your magic and willpower by three", use = function(self, who)
 		game.logPlayer(who, "#00FFFF#You drink the elixir and feel forever transformed!")
@@ -111,6 +115,7 @@ newEntity{
 	desc = [[A vial of bubbling, slate-colored fluid.]],
 	no_unique_lore = true,
 	cost = 1000,
+	quest = 1,
 
 	use_simple = { name="permanently increase all your saving throws by 4", use = function(self, who)
 		game.logPlayer(who, "#00FFFF#You drink the elixir and feel forever transformed!")
@@ -131,6 +136,7 @@ newEntity{
 	desc = [[A vial of thick maroon fluid.]],
 	no_unique_lore = true,
 	cost = 1000,
+	quest = 1,
 
 	use_simple = { name="grant you four additional stat points", use = function(self, who)
 		game.logPlayer(who, "#00FFFF#You drink the elixir and feel forever transformed!")
@@ -150,6 +156,7 @@ newEntity{
 	desc = [[A vial of churning orange fluid.]],
 	no_unique_lore = true,
 	cost = 1000,
+	quest = 1,
 
 	use_simple = { name="permanently increase your chance to critically strike with spells by 4%", use = function(self, who)
 		game.logPlayer(who, "#00FFFF#You drink the elixir and feel forever transformed!")
@@ -168,6 +175,7 @@ newEntity{
 	desc = [[A vial of lifelike yellow fluid.]],
 	no_unique_lore = true,
 	cost = 1000,
+	quest = 1,
 
 	use_simple = { name="permanently increase your luck by 5", use = function(self, who)
 		game.logPlayer(who, "#00FFFF#You drink the elixir and feel forever transformed!")
@@ -187,6 +195,7 @@ newEntity{
 	desc = [[A vial of clear, steaming fluid.]],
 	no_unique_lore = true,
 	cost = 1000,
+	quest = 1,
 
 	use_simple = { name="grant you two additional class talent points", use = function(self, who)
 		game.logPlayer(who, "#00FFFF#You drink the elixir and feel forever transformed!")
@@ -205,6 +214,7 @@ newEntity{
 	desc = [[A vial of sluggish tan fluid.]],
 	no_unique_lore = true,
 	cost = 1000,
+	quest = 1,
 
 	use_simple = { name="permanently increase your strength and constitution by three", use = function(self, who)
 		game.logPlayer(who, "#00FFFF#You drink the elixir and feel forever transformed!")
@@ -226,6 +236,7 @@ newEntity{
 	desc = [[A vial of grainy, iron-colored fluid.]],
 	no_unique_lore = true,
 	cost = 1000,
+	quest = 1,
 
 	use_simple = { name="permanently increase your armor by four", use = function(self, who)
 		game.logPlayer(who, "#00FFFF#You drink the elixir and feel forever transformed!")
@@ -244,6 +255,7 @@ newEntity{
 	desc = [[A vial of murky white fluid.]],
 	no_unique_lore = true,
 	cost = 1000,
+	quest = 1,
 
 	use_simple = { name="grant you two additional generic talent points", use = function(self, who)
 		game.logPlayer(who, "#00FFFF#You drink the elixir and feel forever transformed!")
@@ -262,6 +274,7 @@ newEntity{ base = "BASE_TAINT",
 	identified = true,
 	cost = 200,
 	material_level = 3,
+	quest = 1,
 
 	inscription_kind = "utility",
 	inscription_data = {
@@ -278,6 +291,7 @@ newEntity{ base = "BASE_INFUSION",
 	identified = true,
 	cost = 200,
 	material_level = 3,
+	quest = 1,
 
 	inscription_kind = "utility",
 	inscription_data = {
@@ -296,6 +310,7 @@ newEntity{ base = "BASE_GEM",
 	color = colors.GREEN,
 	desc = [[A lopsided, heavy emerald with murky green clouds shifting sluggishly under the surface.]],
 	cost = 200,
+	quest = 1,
 	material_level = 5,
 	wielder = {
 		inc_stats = {[Stats.STAT_CON] = 10, },
@@ -325,6 +340,7 @@ newEntity{
 	display = "!", color=colors.SLATE,
 	desc = [[A vial of thick fluid, metallic and reflective. It's incredibly heavy.]],
 	cost = 200,
+	quest = 1,
 
 	use_simple = { name="grant you complete invulnerability for five turns", use = function(self, who)
 		who:setEffect(who.EFF_DAMAGE_SHIELD, 5, {power=1000000})
