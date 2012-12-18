@@ -1136,7 +1136,7 @@ function _M:displayResources(scale, bx, by, a)
 			else
 				aprint(px, py, ("Score: %d"):format(arena.score), 255, 255, 255)
 			end
-			local _event
+			local _event = ""
 			if arena.event > 0 then
 				if arena.event == 1 then
 					_event = "[MiniBoss]"
@@ -1145,8 +1145,6 @@ function _M:displayResources(scale, bx, by, a)
 				elseif arena.event == 3 then
 					_event = "[Final]"
 				end
-			else
-				_event = ""
 			end
 			py = py + h
 			if arena.currentWave > world.arena.bestWave then
