@@ -37,6 +37,7 @@ newEntity{
 	display = "*", color=colors.VIOLET,
 	desc = [[The heart of the Sandworm Queen, ripped from her dead body. You could ... consume it, should you feel mad enough.]],
 	cost = 3000,
+	quest = 1,
 
 	use_simple = { name="consume the heart", use = function(self, who)
 		game.logPlayer(who, "#00FFFF#You consume the heart and feel the knowledge of this very old creature fill you!")
@@ -77,6 +78,7 @@ newEntity{
 	display = "*", color=colors.VIOLET,
 	desc = [[A vial of thick, lumpy fluid. Who knows what this will do to you if you drink it?]],
 	cost = 3000,
+	quest = 1,
 
 	use_simple = { name="drink the vile blood", use = function(self, who)
 		game.logPlayer(who, "#00FFFF#You drink the wyrm bile and feel forever transformed!")
