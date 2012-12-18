@@ -953,7 +953,7 @@ function _M:hotkeyInventory(name)
 	end
 end
 
-function _M:doDrop(inven, item, on_done)
+function _M:doDrop(inven, item, on_done, nb)
 	if game.zone.wilderness then
 		Dialog:yesnoLongPopup("Warning", "You cannot drop items on the world map.\nIf you drop it, it will be lost forever.", 300, function(ret)
 			-- The test is reversed because the buttons are reversed, to prevent mistakes
@@ -967,7 +967,11 @@ function _M:doDrop(inven, item, on_done)
 		end, "Cancel", "Destroy")
 		return
 	end
-	self:dropFloor(inven, item, true, true)
+	if nb == nil or nb >= self:getInven(inven)[item]:getNumber() then
+		self:dropFloor(inven, item, true, true)
+	else
+		for i = 1, nb do self:dropFloor(inven, item, true) end
+	end
 	self:sortInven(inven)
 	self:useEnergy()
 	self.changed = true

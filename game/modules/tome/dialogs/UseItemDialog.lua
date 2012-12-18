@@ -22,6 +22,7 @@ require "engine.ui.Dialog"
 local List = require "engine.ui.List"
 local Savefile = require "engine.Savefile"
 local Map = require "engine.Map"
+local GetQuantity = require "engine.dialogs.GetQuantity"
 local PartySendItem = require "mod.dialogs.PartySendItem"
 
 module(..., package.seeall, class.inherit(engine.ui.Dialog))
@@ -72,7 +73,14 @@ function _M:use(item)
 		self.object:identify(true)
 		self.onuse(self.inven, self.item, self.object, false)
 	elseif act == "drop" then
-		self.actor:doDrop(self.inven, self.item, function() self.onuse(self.inven, self.item, self.object, false) end)
+		if self.object:getNumber() > 1 then
+			game:registerDialog(GetQuantity.new("Drop how many?", "1 to "..self.object:getNumber(), self.object:getNumber(), self.object:getNumber(), function(qty)
+				qty = util.bound(qty, 1, self.object:getNumber())
+				self.actor:doDrop(self.inven, self.item, function() self.onuse(self.inven, self.item, self.object, false) end, qty)
+			end, 1))
+		else
+			self.actor:doDrop(self.inven, self.item, function() self.onuse(self.inven, self.item, self.object, false) end)
+		end
 	elseif act == "wear" then
 		self.actor:doWear(self.inven, self.item, self.object)
 		self.onuse(self.inven, self.item, self.object, false)
