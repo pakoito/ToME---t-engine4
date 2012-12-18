@@ -195,7 +195,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You switch to a fluid and fast battle stance, increasing your firing speed by %d%% at the cost of your accuracy(%d), physical powere(%d), and critical chance(%d).]]):
+		return ([[You switch to a fluid and fast battle stance, increasing your firing speed by %d%% at the cost of your accuracy(%d), physical power(%d), and critical chance(%d).]]):
 		format(self:getTalentLevel(t) * 10, -8 - self:getTalentLevelRaw(t) * 2.4, -8 - self:getTalentLevelRaw(t) * 2.4, -8 - self:getTalentLevelRaw(t) * 2.4)
 	end,
 }
