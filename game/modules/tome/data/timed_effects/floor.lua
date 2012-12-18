@@ -117,7 +117,7 @@ floorEffect{
 
 floorEffect{
 	desc = "Whistling Vortex", image = "talents/shadow_blast.png",
-	long_desc = function(self, eff) return ("The target is in a whistling vortex, granting +%d ranged defense, -%d ranged accuracy and incomming projectiles are 30%% slower."):format(eff.power, eff.power) end,
+	long_desc = function(self, eff) return ("The target is in a whistling vortex, granting +%d ranged defense, -%d ranged accuracy and incoming projectiles are 30%% slower."):format(eff.power, eff.power) end,
 	activate = function(self, eff)
 		eff.power = 10 + game.zone:level_adjust_level(game.level, game.zone, "object") / 2
 		self:effectTemporaryValue(eff, "combat_def_ranged", eff.power)

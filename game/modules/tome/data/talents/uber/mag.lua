@@ -50,7 +50,7 @@ uberTalent{
 	on_unlearn = function(self, t)
 	end,
 	info = function(self, t)
-		return ([[Create a thin layer of aether all around you. Any attack passing through will check arcane resistance instead of the incomming damage resistance.
+		return ([[Create a thin layer of aether all around you. Any attack passing through will check arcane resistance instead of the incoming damage resistance.
 		In effect all your resistances are equal to 50%% of your arcane resistance.]])
 		:format()
 	end,
