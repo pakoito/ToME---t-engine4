@@ -302,6 +302,15 @@ function _M:generateList()
 		game:saveSettings("tome.lore_popup", ("tome.lore_popup = %s\n"):format(tostring(config.settings.tome.lore_popup)))
 		self.c_list:drawItem(item)
 	end,}
+
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"If disabled items with activations will not be auto-added to your hotkeys, you will need to manualty drag them from the inventory screen.#WHITE#"}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Always add objects to hotkeys.#WHITE##{normal}#", status=function(item)
+		return tostring(config.settings.tome.auto_hotkey_object and "enabled" or "disabled")
+	end, fct=function(item)
+		config.settings.tome.auto_hotkey_object = not config.settings.tome.auto_hotkey_object
+		game:saveSettings("tome.auto_hotkey_object", ("tome.auto_hotkey_object = %s\n"):format(tostring(config.settings.tome.auto_hotkey_object)))
+		self.c_list:drawItem(item)
+	end,}
 --[[
 	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Your movement mode depends on which character/creature you're currently controlling.#WHITE#"}
 	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Actor-based movement mode#WHITE##{normal}#", status=function(item)

@@ -78,6 +78,7 @@ if type(config.settings.tome.chat_log) == "nil" then config.settings.tome.chat_l
 if type(config.settings.tome.actor_based_movement_mode) == "nil" then config.settings.tome.actor_based_movement_mode = true end
 if type(config.settings.tome.rest_before_explore) == "nil" then config.settings.tome.rest_before_explore = true end
 if type(config.settings.tome.lore_popup) == "nil" then config.settings.tome.lore_popup = true end
+if type(config.settings.tome.auto_hotkey_object) == "nil" then config.settings.tome.auto_hotkey_object = true end
 if not config.settings.tome.fonts then config.settings.tome.fonts = {type="fantasy", size="normal"} end
 if not config.settings.tome.ui_theme2 then config.settings.tome.ui_theme2 = "metal" end
 if not config.settings.tome.uiset_mode then config.settings.tome.uiset_mode = "Minimalist" end

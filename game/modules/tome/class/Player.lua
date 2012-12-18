@@ -1230,7 +1230,7 @@ function _M:onWear(o, bypass_set)
 		end)
 	end
 
-	if self.hotkey and o:canUseObject() then
+	if self.hotkey and o:canUseObject() and config.settings.tome.auto_hotkey_object then
 		local position
 		local name = o:getName{no_count=true, force_id=true, no_add_name=true}
 
