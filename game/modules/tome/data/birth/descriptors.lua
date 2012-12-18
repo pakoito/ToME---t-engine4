@@ -184,7 +184,7 @@ newBirthDescriptor{
 	{
 		"#GOLD##{bold}#Nightmare mode#WHITE##{normal}#",
 		"Unfair game setting",
-		"All zone levels increased by 20% + 10",
+		"All zone levels increased by 50% + 3",
 		"All creatures talent levels increased by 50%",
 	},
 	descriptor_choices =
@@ -205,7 +205,7 @@ newBirthDescriptor{
 	{
 		"#GOLD##{bold}#Insane mode#WHITE##{normal}#",
 		"Absolutely unfair game setting, you are really mentally ill to play this mode!",
-		"All zone levels increased by 100% + 10",
+		"All zone levels increased by 120% + 5",
 		"All creatures talent levels increased by 100%",
 		"Player rank is normal instead of elite",
 		"Player can earn Insane version of achievements if also playing in Roguelike permadeath mode.",

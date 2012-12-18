@@ -328,13 +328,13 @@ function _M:loaded()
 				if self.difficulty == self.DIFFICULTY_NIGHTMARE then
 					zone.base_level_range = table.clone(zone.level_range, true)
 					zone.specific_base_level.object = -10 -zone.level_range[1]
-					zone.level_range[1] = zone.level_range[1] * 1.2 + 10
-					zone.level_range[2] = zone.level_range[2] * 1.2 + 10
+					zone.level_range[1] = zone.level_range[1] * 1.5 + 3
+					zone.level_range[2] = zone.level_range[2] * 1.5 + 3
 				elseif self.difficulty == self.DIFFICULTY_INSANE then
 					zone.base_level_range = table.clone(zone.level_range, true)
 					zone.specific_base_level.object = -10 -zone.level_range[1]
-					zone.level_range[1] = zone.level_range[1] * 2 + 10
-					zone.level_range[2] = zone.level_range[2] * 2 + 10
+					zone.level_range[1] = zone.level_range[1] * 2.2 + 5
+					zone.level_range[2] = zone.level_range[2] * 2.2 + 5
 				end
 			end
 		end,

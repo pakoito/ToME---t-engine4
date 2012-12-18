@@ -40,9 +40,9 @@ Someone foolish has tried to reconstruct it, but it seems like it misses an eye 
 				require("engine.ui.Dialog"):yesnoPopup("Atamathon", "It seems that your "..eye:getName{do_color=true}.." is made to fit inside the empty eye socket of Atamathon. This is probably very unwise.", function(ret)
 					if not ret then return end
 					if game.difficulty == game.DIFFICULTY_NIGHTMARE then
-						game.zone.base_level = 50 * 1.2 + 10
+						game.zone.base_level = 50 * 1.5 + 3
 					elseif game.difficulty == game.DIFFICULTY_INSANE then
-						game.zone.base_level = 50 * 2 + 10
+						game.zone.base_level = 50 * 2.2 + 5
 					else
 						game.zone.base_level = 50
 					end
