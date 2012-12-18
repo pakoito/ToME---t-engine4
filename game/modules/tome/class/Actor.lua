@@ -3571,7 +3571,7 @@ function _M:preUseTalent(ab, silent, fake)
 			game.logSeen(self, "%s deactivates %s.", self.name:capitalize(), ab.name)
 		elseif ab.is_spell then
 			game.logSeen(self, "%s casts %s.", self.name:capitalize(), ab.name)
-		else
+		elseif not ab.no_message then
 			game.logSeen(self, "%s uses %s.", self.name:capitalize(), ab.name)
 		end
 	end
