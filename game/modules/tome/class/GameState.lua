@@ -1706,6 +1706,8 @@ function _M:createRandomBoss(base, data)
 					d.force_drop = (data.drop_equipment == nil) and true or data.drop_equipment
 				end
 				b[#b+1] = resolver
+			elseif k == "innate_alchemy_golem" then 
+				b.innate_alchemy_golem = true
 			elseif k == "birth_create_alchemist_golem" then
 				b.birth_create_alchemist_golem = resolver
 			elseif k == "necrotic_aura_base_souls" then
