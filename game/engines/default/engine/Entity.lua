@@ -745,6 +745,7 @@ function _M:removeTemporaryValue(prop, id, noupdate)
 				base[prop] = b[1] and b[1][2]
 				if not next(base["__tlast_"..prop]) then base["__tlast_"..prop] = nil end
 			else
+				if not base[prop] then error("Error removing property "..tostring(prop).." with value "..tostring(v).." : base[prop] is nil") end
 				base[prop] = base[prop] - v
 			end
 			self:onTemporaryValueChange(prop, -v, base)

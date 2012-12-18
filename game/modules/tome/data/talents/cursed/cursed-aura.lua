@@ -73,6 +73,7 @@ newTalent{
 		end
 
 		local def = self.tempeffect_def[item.curse]
+		item.special = true
 		item.add_name = (item.add_name or "").." ("..def.short_desc..")"
 	end,
 	-- curses all items on the floor

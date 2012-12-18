@@ -64,6 +64,7 @@ newTalent{
 				o.old_atk = t.boost(self, t)
 				o.old_dam = t.boost(self, t)
 				game.logPlayer(self, "You reshape your %s.", o:getName{do_colour=true, no_count=true})
+				o.special = true
 				if not o.been_reshaped then
 					o.name = "reshaped" .. " "..o.name..""
 					o.been_reshaped = true
@@ -134,6 +135,7 @@ newTalent{
 					o.wielder.fatigue = o.orig_fat
 				end
 				o.old_fat = t.fat_red(self, t)
+				o.special = true
 				game.logPlayer(self, "You reshape your %s.", o:getName{do_colour=true, no_count=true})
 				if not o.been_reshaped then
 					o.name = "reshaped" .. " "..o.name..""

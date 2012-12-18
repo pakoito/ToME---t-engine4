@@ -425,5 +425,7 @@ function _M:dumpToJSON(js, bypass, nosub)
 		js:hiddenData("tile", self.has_custom_tile)
 	end
 
+	self:triggerHook{"ToME:PlayerDumpJSON", title=title, js=js, tags=tags}
+
 	return title, tags
 end

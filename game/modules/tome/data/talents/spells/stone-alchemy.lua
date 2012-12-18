@@ -140,6 +140,7 @@ newTalent{
 				o.been_imbued = true
 				game.logPlayer(self, "You imbue your %s with %s.", o:getName{do_colour=true, no_count=true}, gem:getName{do_colour=true, no_count=true})
 				o.name = o.name .. " ("..gem.name..")"
+				o.special = true
 				d.used_talent = true
 				game:unregisterDialog(d)
 			end)

@@ -1802,7 +1802,7 @@ function _M:onTakeHit(value, src)
 			self.summoner:incFeedback(feedback_gain)
 		end
 		-- Trigger backlash retribution damage
-		if self:knowTalent(self.T_BACKLASH) and not src.no_backlash_loops  and not src.turn_procs.backlash then
+		if src and src.turn_procs and self:knowTalent(self.T_BACKLASH) and not src.no_backlash_loops and not src.turn_procs.backlash then         
 			if src.y and src.x and not src.dead then
 				local t = self:getTalentFromId(self.T_BACKLASH)
 				t.doBacklash(self, src, feedback_gain, t)
