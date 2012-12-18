@@ -136,7 +136,7 @@ end
 function _M:countInventoryAble()
 	local nb = 0
 	for i, actor in ipairs(self.m_list) do
-		if not actor.no_inventory_access then nb = nb + 1 end
+		if not actor.no_inventory_access and actor:getInven(actor.INVEN_INVEN) then nb = nb + 1 end
 	end
 	return nb
 end
