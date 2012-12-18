@@ -74,7 +74,7 @@ newBirthDescriptor
 		"Halflings are a race of very short stature, rarely exceeding four feet in height.",
 		"They are like humans in that they can do just about anything they set their minds to, yet they excel at ordering and studying things.",
 		"Halfling armies have brought many kingdoms to their knees and they kept a balance of power with the Human kingdoms during the Age of Allure.",
-		"They possess the #GOLD#Luck of the Little Folk#WHITE# which allows them to increase their critical strike chance for a few turns.",
+		"They possess the #GOLD#Luck of the Little Folk#WHITE# which allows them to increase their critical strike chance and saves for a few turns.",
 		"#GOLD#Stat modifiers:",
 		"#LIGHT_BLUE# * -3 Strength, +3 Dexterity, +1 Constitution",
 		"#LIGHT_BLUE# * +0 Magic, +0 Willpower, +3 Cunning",

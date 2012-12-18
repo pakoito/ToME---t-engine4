@@ -459,7 +459,7 @@ newEntity{
 newEntity{
 	power_source = {nature=true},
 	name = "tundral ", prefix=true, instant_resolve=true,
-	keywords = {fiery=true},
+	keywords = {tundral=true},
 	level_range = {1, 50},
 	rarity = 10,
 	cost = 20,

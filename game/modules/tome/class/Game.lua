@@ -1849,7 +1849,7 @@ function _M:saveGame()
 		self.party:setPlayer(self:getPlayer(true), true)
 
 		_G.game = clone
-		pcall(function()
+		print("Saving JSON", pcall(function()
 			local party = game.party:cloneFull()
 			party.__te4_uuid = game:getPlayer(true).__te4_uuid
 			for m, _ in pairs(party.members) do
@@ -1857,7 +1857,7 @@ function _M:saveGame()
 			end
 			party:stripForExport()
 			game.player:saveUUID(party)
-		end)
+		end))
 		_G.game = self
 
 		self.party:setPlayer(oldplayer, true)
