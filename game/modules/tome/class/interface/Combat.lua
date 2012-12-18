@@ -186,7 +186,7 @@ function _M:attackTarget(target, damtype, mult, noenergy, force_unharmed)
 	-- Barehanded ?
 	if not speed and self.combat then
 		print("[ATTACK] attacking with innate combat")
-		local combat = self:getObjectCombat(o, "barehand")
+		local combat = self:getObjectCombat(nil, "barehand")
 		local s, h = self:attackTargetWith(target, combat, damtype, mult)
 		speed = math.max(speed or 0, s)
 		hit = hit or h

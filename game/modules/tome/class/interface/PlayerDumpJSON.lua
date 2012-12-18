@@ -169,7 +169,7 @@ function _M:dumpToJSON(js, bypass, nosub)
 	if self:getInven(self.INVEN_MAINHAND) then
 		c.mainhand = {}
 		for i, o in ipairs(self:getInven(self.INVEN_MAINHAND)) do
-			local mean, dam = o.combat, o.combat
+			local mean, dam = self:getObjectCombat(o, "mainhand"), self:getObjectCombat(o, "mainhand")
 			if o.archery and mean then
 				dam = (self:getInven("QUIVER")[1] and self:getInven("QUIVER")[1].combat)
 			end
@@ -187,7 +187,7 @@ function _M:dumpToJSON(js, bypass, nosub)
 	end
 	--Unarmed?
 	if self:isUnarmed() then
-		local mean, dam = self.combat, self.combat
+		local mean, dam = self:getObjectCombat(nil, "barehand"), self:getObjectCombat(nil, "barehand")
 		local d = {}
 		c.barehand = {}
 		c.barehand[#c.barehand+1] = d
@@ -204,7 +204,7 @@ function _M:dumpToJSON(js, bypass, nosub)
 		c.offhand = {}
 		for i, o in ipairs(self:getInven(self.INVEN_OFFHAND)) do
 			local offmult = self:getOffHandMult(o.combat)
-			local mean, dam = o.combat, o.combat
+			local mean, dam = self:getObjectCombat(o, "offhand"), self:getObjectCombat(o, "offhand")
 			if o.archery and mean then
 				dam = (self:getInven("QUIVER")[1] and self:getInven("QUIVER")[1].combat)
 			end

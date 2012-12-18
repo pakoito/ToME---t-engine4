@@ -559,7 +559,7 @@ function _M:drawDialog(kind, actor_to_compare)
 			WeaponTxt = WeaponTxt..":"
 
 			for i, o in ipairs(player:getInven(player.INVEN_MAINHAND)) do
-				local mean, dam = o.combat, o.combat
+				local mean, dam = player:getObjectCombat(o, "mainhand"), player:getObjectCombat(o, "mainhand")
 				if o.archery and mean then
 					dam = (player:getInven("QUIVER") and player:getInven("QUIVER")[1] and player:getInven("QUIVER")[1].combat)
 				end
@@ -584,7 +584,7 @@ function _M:drawDialog(kind, actor_to_compare)
 		-- Handle bare-handed combat
 		else
 			s:drawColorStringBlended(self.font, "#LIGHT_BLUE#Unarmed:", w, h, 255, 255, 255, true) h = h + self.font_h
-			local mean, dam = player.combat, player.combat
+			local mean, dam = player:getObjectCombat(nil, "barehand"), player:getObjectCombat(nil, "barehand")
 			if mean and dam then
 				text = compare_fields(player, actor_to_compare, function(actor, ...) return math.floor(actor:combatAttack(...)) end, "%3d", "%+.0f", 1, false, false, mean)
 				dur_text = ("%d"):format(math.floor(player:combatAttack(player.combat)/5))
@@ -609,7 +609,7 @@ function _M:drawDialog(kind, actor_to_compare)
 		if player:getInven(player.INVEN_OFFHAND) then
 			for i, o in ipairs(player:getInven(player.INVEN_OFFHAND)) do
 				local offmult = player:getOffHandMult(o.combat)
-				local mean, dam = o.combat, o.combat
+				local mean, dam = player:getObjectCombat(o, "offhand"), player:getObjectCombat(o, "offhand")
 				if o.archery and mean then
 					dam = (player:getInven("QUIVER") and player:getInven("QUIVER")[1] and player:getInven("QUIVER")[1].combat)
 				end
