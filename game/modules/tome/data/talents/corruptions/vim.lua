@@ -70,7 +70,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Feel the very existence of creatures around you for %d turns in a radius of 10.
 		The evil touch will reduce their blight resistance by %d%% but also make them aware of you.
-		The resistance will decrease with Magic stat.]]):format(3 + self:getTalentLevel(t), self:combatTalentSpellDamage(t, 10, 45))
+		Their resistance will decrease with Magic stat.]]):format(3 + self:getTalentLevel(t), self:combatTalentSpellDamage(t, 10, 45))
 	end,
 }
 
