@@ -110,7 +110,7 @@ newTalent{
 				if act.rank <= 1 then
 					if act:canBe("instakill") then
 						game.logSeen(act, "%s shatters!", act.name:capitalize())
-						act:takeHit(100000, self)
+						act:die(self)
 					end
 				end
 
