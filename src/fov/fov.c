@@ -2297,6 +2297,9 @@ void fov_create_los_line(fov_settings_type *settings, void *map, void *source, f
                 }
             }
         }
+        if (start_at_end) {
+            line->t = line->dest_t;
+        }
     }
     else
     {
