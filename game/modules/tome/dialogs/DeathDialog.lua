@@ -43,17 +43,26 @@ You can dump your character data to a file to remember her/him forever, or you c
 ]]
 
 	if #game.party.on_death_show_achieved > 0 then
-		text = text.."#LIGHT_GREEN#During your game you#WHITE#:\n* "..table.concat(game.party.on_death_show_achieved, "\n* ")
+		self.c_achv = Textzone.new{width=self.iw, scrollbar=true, height=100, text="#LIGHT_GREEN#During your game you#WHITE#:\n* "..table.concat(game.party.on_death_show_achieved, "\n* ")}
 	end
 
 	self.c_desc = Textzone.new{width=self.iw, auto_height=true, text=text}
 	self.c_list = List.new{width=self.iw, nb_items=#self.list, list=self.list, fct=function(item) self:use(item) end}
 
-	self:loadUI{
-		{left=0, top=0, ui=self.c_desc},
-		{left=5, top=self.c_desc.h, padding_h=10, ui=Separator.new{dir="vertical", size=self.iw - 10}},
-		{left=0, bottom=0, ui=self.c_list},
-	}
+	if self.c_achv then
+		self:loadUI{
+			{left=0, top=0, ui=self.c_desc},
+			{left=0, top=self.c_desc.h, ui=self.c_achv},
+			{left=5, top=self.c_desc.h+self.c_achv.h, padding_h=10, ui=Separator.new{dir="vertical", size=self.iw - 10}},
+			{left=0, bottom=0, ui=self.c_list},
+		}
+	else
+		self:loadUI{
+			{left=0, top=0, ui=self.c_desc},
+			{left=5, top=self.c_desc.h, padding_h=10, ui=Separator.new{dir="vertical", size=self.iw - 10}},
+			{left=0, bottom=0, ui=self.c_list},
+		}
+	end
 	self:setFocus(self.c_list)
 	self:setupUI(false, true)
 end
