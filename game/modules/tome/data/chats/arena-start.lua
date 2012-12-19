@@ -173,6 +173,11 @@ local save_clear = function(self, player)
 	end
 	local o = game.zone:makeEntityByName(game.level, "object", "ARENA_SCORING")
 	if o then game.zone:addEntity(game.level, o, "object", 7, 3) end
+
+	local arenashop = game:getStore("ARENA_SHOP")
+	arenashop:loadup(game.level, game.zone)
+	arenashop:interact(game.player, "Gladiator's wares")
+	arenashop = nil
 end
 
 newChat{ id="welcome",
