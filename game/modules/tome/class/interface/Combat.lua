@@ -797,7 +797,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	-- Rampage
 	if hitted and crit then
 		local eff = self:hasEffect(self.EFF_RAMPAGE)
-		if eff and not eff.critHit and eff.actualDuration < eff.maxDuration then
+		if eff and not eff.critHit and eff.actualDuration < eff.maxDuration and self:knowTalent(self.T_BRUTALITY) then
 			game.logPlayer(self, "#F53CBE#Your rampage is invigorated by your fierce attack! (+1 duration)")
 			eff.critHit = true
 			eff.actualDuration = eff.actualDuration + 1
