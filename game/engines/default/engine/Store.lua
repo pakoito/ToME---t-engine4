@@ -64,8 +64,8 @@ function _M:loadup(level, zone, force_nb)
 
 	for i = #inven, 1, -1 do
 		local e = inven[i]
-		inven[i] = nil
 		if (s.empty_before_restock and not e.__store_forget) or (e.__force_store_forget) then
+			table.remove(inven, i)
 			e:removed()
 		end
 	end
