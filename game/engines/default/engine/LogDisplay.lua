@@ -117,6 +117,7 @@ local urlmatch = lpeg.anywhere(lpeg.C(urlfind))
 -- log = LogDisplay.new(...)<br/>
 -- log("foo %s", s)
 function _M:call(str, ...)
+	str = str or ""
 	str = str:format(...)
 	print("[LOG]", str)
 	local tstr = str:toString()
