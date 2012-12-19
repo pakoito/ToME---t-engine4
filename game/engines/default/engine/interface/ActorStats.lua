@@ -126,9 +126,9 @@ function _M:getStat(stat, scale, raw, no_inc)
 		inc = self.inc_stats[stat]
 	end
 	if _M.stats_def[stat].no_max then
-		val = math.max(val, _M.stats_def[stat].min) + ((not no_inc) and inc or 0)
+		val = math.max(val + ((not no_inc) and inc or 0), _M.stats_def[stat].min)
 	else
-		val = util.bound(val, _M.stats_def[stat].min, _M.stats_def[stat].max) + ((not no_inc) and inc or 0)
+		val = math.max(util.bound(val, _M.stats_def[stat].min, _M.stats_def[stat].max) + ((not no_inc) and inc or 0), _M.stats_def[stat].min)
 	end
 	if scale then
 		if not raw then
