@@ -126,6 +126,7 @@ newTalent{
 	mode = "sustained",
 	points = 5,
 	sustain_vim = 90,
+	remove_on_zero = true,
 	cooldown = 60,
 	no_sustain_autoreset = true,
 	random_boss_rarity = 10,

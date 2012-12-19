@@ -558,12 +558,14 @@ function _M:act()
 	self.turn_procs = {}
 
 	-- If resources are too low, disable sustains
-	if self.mana < 1 or self.stamina < 1 or self.psi < 1 then
+	if self.mana < 1 or self.stamina < 1 or self.psi < 1 or self.vim < 1 then
 		for tid, _ in pairs(self.sustain_talents) do
 			local t = self:getTalentFromId(tid)
 			if (t.sustain_mana and self.mana < 1) or (t.sustain_stamina and self.stamina < 1 and not self:hasEffect(self.EFF_ADRENALINE_SURGE)) then
 				self:forceUseTalent(tid, {ignore_energy=true})
 			elseif (t.sustain_psi and self.psi < 1) and t.remove_on_zero then
+				self:forceUseTalent(tid, {ignore_energy=true})
+			elseif (t.sustain_vim and self.vim < 1) and t.remove_on_zero then
 				self:forceUseTalent(tid, {ignore_energy=true})
 			end
 		end
