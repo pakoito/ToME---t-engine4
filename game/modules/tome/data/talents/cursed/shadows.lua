@@ -272,7 +272,11 @@ local function createShadow(self, level, tCallShadows, tShadowWarriors, tShadowM
 			return self:useTalent(self.T_SHADOW_LIGHTNING)
 		end,
 		farAttackSpell = function(self)
-			return self:useTalent(self.T_SHADOW_FLAMES)
+			if self:knowTalent(self.T_EMPATHIC_HEX) and not self:isTalentCoolingDown(self.T_EMPATHIC_HEX) and rng.percent(50) then
+				return self:useTalent(self.T_EMPATHIC_HEX)
+			else
+				return self:useTalent(self.T_SHADOW_FLAMES)
+			end
 		end,
 		dominate = function(self)
 			return self:useTalent(self.T_DOMINATE)
@@ -313,6 +317,7 @@ local function createShadow(self, level, tCallShadows, tShadowWarriors, tShadowM
 
 	if self:knowTalent(self.T_BLIGHTED_SUMMONING) then npc:learnTalent(npc.T_EMPATHIC_HEX, true, 3) end
 
+	self:attr("summoned_times", 1)
 	return npc
 end
 

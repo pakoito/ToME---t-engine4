@@ -97,7 +97,7 @@ newTalent{
 	direct_hit = true,
 	requires_target = true,
 	target = function(self, t)
-		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t}
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), friendlyfire=false, talent=t}
 	end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
