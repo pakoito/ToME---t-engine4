@@ -2813,7 +2813,7 @@ newEntity{ base = "BASE_MINDSTAR",
 	level_range = {38, 50},
 	color=colors.AQUAMARINE, image = "object/artifact/nexus_of_the_way.png",
 	rarity = 350,
-	desc = [[The vast psionic force of the Way reverberates through this gemstone. With a single touch, you can sense overwhelming power, and countless thoughts.]],
+	desc = [[The vast psionic force of the Way reverberates through this gemstone. With a single touch, you can sense overwhelming power, and hear countless thoughts.]],
 	cost = 280,
 	require = { stat = { wil=48 }, },
 	material_level = 5,
@@ -2983,7 +2983,7 @@ newEntity{ base = "BASE_MINDSTAR",
 	level_range = {10, 20},
 	color=colors.GREEN, image = "object/artifact/bloomsoul.png",
 	rarity = 180,
-	desc = [[Pristine flowers coat the surface of this mindstar. Touching it fills you with calm and refreshes your body.]],
+	desc = [[Pristine flowers coat the surface of this mindstar. Touching it fills you with a sense of calm and refreshes your body.]],
 	cost = 40,
 	require = { stat = { wil=18 }, },
 	material_level = 2,
@@ -3048,7 +3048,7 @@ newEntity{ base = "BASE_MINDSTAR",
 	power_source = {nature=true},
 	name = "Eye of the Wyrm", define_as = "EYE_WYRM",
 	unided_name = "multi-colored mindstar", unique = true,
-	desc = [[A black iris cuts through the core of this mindstar, which shifts with myriad colours. It darts around, as if searching.]],
+	desc = [[A black iris cuts through the core of this mindstar, which shifts with myriad colours. It darts around, as if searching for something.]],
 	color = colors.BLUE, image = "object/artifact/eye_of_the_wyrm.png",
 	level_range = {30, 40},
 	require = { stat = { wil=45, }, },
@@ -3176,7 +3176,7 @@ newEntity{ base = "BASE_HELM",
 	unique = true,
 	name = "Corrupted Gaze", image = "object/artifact/corrupted_gaze.png",
 	unided_name = "dark visored helm",
-	desc = [[This helmet radiates a dark power. Its visor seems to twist and corrupt the vision of its wearer. You should be careful to never lower it for long, lest the visions affect your mind.]],
+	desc = [[This helmet radiates a dark power. Its visor seems to twist and corrupt the vision of its wearer. You feel worried that if you were to lower it for long, the visions may affect your mind.]],
 	require = { stat = { mag=16 } },
 	level_range = {28, 40},
 	rarity = 300,
@@ -3468,7 +3468,7 @@ newEntity{ base = "BASE_CLOTH_ARMOR",
 	unique = true,
 	name = "Robe of Force", color = colors.YELLOW, image = "object/artifact/robe_of_force.png",
 	unided_name = "rippling cloth robe",
-	desc = [[This thin cloth robe is surrounded by a thick shroud of telekinetic forces.]],
+	desc = [[This thin cloth robe is surrounded by a pulsating shroud of telekinetic force.]],
 	level_range = {20, 28},
 	rarity = 190,
 	cost = 250,
@@ -3837,6 +3837,7 @@ newEntity{ base = "BASE_GAUNTLETS",
 		who:onTakeoff(self, true)
 		self.wielder=nil
 		if level==2 then -- LEVEL 2
+		self.desc = [[These once brilliant voratun gauntlets appear heavily decayed. Originally used in the spellhunt, it was often used to destroy arcane artifacts, curing the world of their influence.]]
 		self.wielder={
 			combat_mindpower=6,
 			combat_mindcrit=2,
@@ -3855,6 +3856,7 @@ newEntity{ base = "BASE_GAUNTLETS",
 			},
 		}
 		elseif  level==3 then -- LEVEL 3
+		self.desc = [[These voratun gauntlets appear to have suffered considerable damage. Originally used in the spellhunt, it was often used to destroy arcane artifacts, curing the world of their influence.]]
 		self.wielder={
 			combat_mindpower=8,
 			combat_mindcrit=3,
@@ -3873,6 +3875,7 @@ newEntity{ base = "BASE_GAUNTLETS",
 			},
 		}
 		elseif  level==4 then -- LEVEL 4
+		self.desc = [[These voratun gauntlets shine brightly beneath a thin layer of wear. Originally used in the spellhunt, it was often used to destroy arcane artifacts, curing the world of their influence.]]
 		self.wielder={
 			combat_mindpower=10,
 			combat_mindcrit=4,
@@ -3891,14 +3894,16 @@ newEntity{ base = "BASE_GAUNTLETS",
 			},
 		}
 		elseif  level==5 then -- LEVEL 5
+		self.desc = [[These brilliant voratun gauntlets shine with an almost otherworldly glow. Originally used in the spellhunt, it was often used to destroy arcane artifacts, curing the world of their influence. You feel proud of having fulfilled this ancient duty.]]
 		self.wielder={
 			combat_mindpower=12,
 			combat_mindcrit=5,
-			combat_spellresist=12,
-			combat_def=5,
-			combat_armor=6,
+			combat_spellresist=15,
+			combat_def=6,
+			combat_armor=8,
+			lite=1,
 			combat = {
-				dam = 32,
+				dam = 33,
 				apr = 18,
 				physcrit = 12,
 				physspeed = 0.2,
@@ -3976,7 +3981,7 @@ newEntity{ base = "BASE_GAUNTLETS",
 newEntity{ base = "BASE_LONGBOW",
 	power_source = {arcane=true},
 	name = "Merkul's Second Eye", unided_name = "sleek stringed bow", unique=true, image = "object/artifact/merkuls_second_eye.png",
-	desc = [[This bow is said to be the tool of an infamous dwarven spy, rumours said it allowed him to tap into the eyes of all his enemies. Adversaries struck were left alive, only to unknowingly divulge their secrets to his unwavering sight.]],
+	desc = [[This bow is said to be the tool of an infamous dwarven spy, rumours said it allowed him to "steal" the eyes of his enemies. Adversaries struck were left alive, only to unknowingly divulge their secrets to his unwavering sight.]],
 	level_range = {20, 38},
 	rarity = 250,
 	require = { stat = { dex=24 }, },
@@ -4068,9 +4073,10 @@ newEntity{ base = "BASE_SHIELD",
 			[DamageType.FIRE] 	= 10,
 		},
 		resists={
-			[DamageType.LIGHT] 	= 20,
-			[DamageType.MIND] 	= 12,
-			[DamageType.FIRE] 	= 10,
+			[DamageType.LIGHT] 		= 20,
+			[DamageType.DARKNESS] 	= 15,
+			[DamageType.MIND] 		= 12,
+			[DamageType.FIRE] 		= 10,
 		},
 		resists_pen={
 			[DamageType.LIGHT] 	= 10,
@@ -4256,7 +4262,7 @@ newEntity{ base = "BASE_LEATHER_BOOT", --Thanks Grayswandir!
 			local _ _, x, y = who:canProject(tg, x, y)
 
 			-- Check LOS
-			local rad = 3
+			local rad = 2
 			if not who:hasLOS(x, y) and rng.percent(35 + (game.level.map.attrs(who.x, who.y, "control_teleport_fizzle") or 0)) then
 				game.logPlayer(who, "The targetted phase door fizzles and works randomly!")
 				x, y = who.x, who.y
@@ -4329,7 +4335,7 @@ newEntity{ base = "BASE_ARROW", --Thanks Grayswandir!
 	unique = true,
 	name = "Void Quiver",
 	unided_name = "etheral quiver",
-	desc = [[An endless supply of arrows lay within this deep black quiver. Tiny white lights dot it.]],
+	desc = [[An endless supply of arrows lay within this deep black quiver. Tiny white lights dot its surface.]],
 	color = colors.BLUE, image = "object/artifact/void_quiver.png",
 	level_range = {35, 50},
 	rarity = 300,
@@ -5376,8 +5382,8 @@ His last known words were "Somehow this feels like an ending, yet I know there i
 	cost = 350,
 	material_level = 4,
 	wielder = {
-		resists={[DamageType.PHYSICAL] = 5,},
-		inc_damage={[DamageType.PHYSICAL] = 5,},
+		resists={[DamageType.PHYSICAL] = 4,},
+		inc_damage={[DamageType.PHYSICAL] = 3,},
 		
 		inc_stats = {[Stats.STAT_LCK] = 5, [Stats.STAT_CUN] = 5,},
 		combat_atk=12,

@@ -908,25 +908,25 @@ newEntity{ base = "BASE_NPC_HORROR",
 	name = "Ak'Gishil", color=colors.GREY, unique = true,
 	desc = "This blade horror has grown in power dramatically, and become a nexus of temporal energy. Rifts in space open around it constantly, summoning and banishing blades before vanishing as quickly as they appear.",
 	resolvers.nice_tile{tall=1},
-	level_range = {30, nil}, exp_worth = 1,
-	rarity = 55,
+	level_range = {30, nil}, exp_worth = 2,
+	rarity = 50,
 	rank = 3.5,
 	levitate=1,
-	max_psi= 300,
-	psi_regen= 4,
+	max_psi= 320,
+	psi_regen= 5,
 	size_category = 4,
 	autolevel = "wildcaster",
-	max_life = resolvers.rngavg(130, 160),
-	life_rating = 30,
+	max_life = resolvers.rngavg(150, 180),
+	life_rating = 32,
 	life_regen = 0.25,
-	combat_armor = 25, combat_def = 15,
+	combat_armor = 30, combat_def = 18,
 	is_akgishil = true,
 	
 	resolvers.drops{chance=100, nb=1, {defined="BLADE_RIFT"} },
 	
 	ai = "tactical", ai_state = { ai_move="move_complex", talent_in=2, ally_compassion=0 },
 		
-	on_melee_hit = {[DamageType.PHYSICALBLEED]=resolvers.mbonus(30, 4)},
+	on_melee_hit = {[DamageType.PHYSICALBLEED]=resolvers.mbonus(32, 5)},
 	combat = { dam=resolvers.levelup(resolvers.rngavg(20,28), 1, 1.5), physspeed = 0.25,atk=resolvers.levelup(24, 1.2, 1.2), apr=4, dammod={wil=0.3, cun=0.15}, damtype=engine.DamageType.PHYSICALBLEED, },
 	--combat_physspeed = 4, --Crazy fast attack rate
 	
@@ -937,7 +937,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	end,
 
 	on_act = function(self)
-		if self.blades > 2 or not rng.percent(20) then return end
+		if self.blades > 3 or not rng.percent(18) then return end
 		self.blades = self.blades + 1
 			self:forceUseTalent(self.T_ANIMATE_BLADE, {ignore_cd=true, force_level=1})
 	end,
@@ -948,9 +948,9 @@ newEntity{ base = "BASE_NPC_HORROR",
 		[Talents.T_BIND]={base=2, every=6, max=5},
 		[Talents.T_RAZOR_KNIFE]={base=3, every=4, max=7},
 		[Talents.T_PSIONIC_PULL]={base=5, every=3, max=7},
-		[Talents.T_KINETIC_AURA]={base=3, every=3, max=8},
-		[Talents.T_KINETIC_SHIELD]={base=3, every=2, max=9},
-		[Talents.T_KINETIC_LEECH]={base=2, every=3, max=5},
+		[Talents.T_KINETIC_AURA]={base=4, every=3, max=8},
+		[Talents.T_KINETIC_SHIELD]={base=5, every=2, max=9},
+		[Talents.T_KINETIC_LEECH]={base=3, every=3, max=5},
 		--TEMPORAL
 		[Talents.T_STATIC_HISTORY]={base=1, every=4, max=5},
 		[Talents.T_QUANTUM_SPIKE]={base=1, every=4, max=5},
@@ -967,7 +967,7 @@ newEntity{ base="BASE_NPC_HORROR", define_as = "ANIMATED_BLADE",
 	color = colors.GREY,
 	desc = [[Time seems to warp and bend around this floating weapon.]],
 	level_range = {30, nil}, exp_worth = 0,
-	max_life = 80, life_rating = 3,
+	max_life = 75, life_rating = 3,
 	rank = 2,
 	no_breath = 1,
 	size_category = 2,
@@ -1022,9 +1022,9 @@ newEntity{ base="BASE_NPC_HORROR", define_as = "DISTORTED_BLADE",
 	type = "construct", subtype = "weapon", image="object/artifact/distorted_animated_sword.png",
 	name = "Distorted Animated Sword", unique=true,
 	color = colors.GREY,
-	desc = [[Time seems to collapse around this floating weapon.]],
+	desc = [[This floating weapon shifts and shimmers, time and space warping and bending as it moves. It appears to vibrate, as if it may explode at any moment.]],
 	level_range = {30, nil}, exp_worth = 0,
-	max_life = 80, life_rating = 5,
+	max_life = 100, life_rating = 6,
 	rank = 3.5,
 	no_breath = 1,
 	size_category = 2,
@@ -1050,7 +1050,7 @@ newEntity{ base="BASE_NPC_HORROR", define_as = "DISTORTED_BLADE",
 	
 	on_added_to_level = function(self)
 		self:teleportRandom(self.x, self.y, 3)
-		game.logSeen(self, "When the rift opens, you see a blade quickly emerge. It does not look like the others.")
+		game.logSeen(self, "A rift opens, a blade emerging. It does not look like the others.")
 		game.level.map:addEffect(self,
 			self.x, self.y, 5,
 			DamageType.TEMPORAL, 50,
