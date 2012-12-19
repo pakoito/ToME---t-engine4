@@ -325,7 +325,7 @@ function _M:learnTalent(t_id, v)
 				return
 			end
 			if not self:isUnlearnable(t, true) and self.actor_dup:getTalentLevelRaw(t_id) >= self.actor:getTalentLevelRaw(t_id) then
-				self:simplePopup("Impossible", "You cannot unlearn talents!")
+				self:simplePopup("Impossible", "You cannot unlearn this talent!")
 				return
 			end
 			self.actor:unlearnTalent(t_id, nil, true)
@@ -367,7 +367,7 @@ function _M:learnTalent(t_id, v)
 				return
 			end
 			if not self:isUnlearnable(t, true) and self.actor_dup:getTalentLevelRaw(t_id) >= self.actor:getTalentLevelRaw(t_id) then
-				self:simplePopup("Impossible", "You cannot unlearn talents!")
+				self:simplePopup("Impossible", "You cannot unlearn this talent!")
 				return
 			end
 			self.actor:unlearnTalent(t_id, nil, true)

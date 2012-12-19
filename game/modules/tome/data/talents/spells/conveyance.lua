@@ -136,6 +136,7 @@ newTalent{
 		if target ~= self and target:reactionToward(self) < 0 then target:setTarget(self) end
 
 		local x, y = self.x, self.y
+		local newpos
 		if self:getTalentLevel(t) >= 5 then
 			game.logPlayer(self, "Selects a teleport location...")
 			local tg = {type="ball", nolock=true, pass_terrain=true, nowarning=true, range=t.getRange(self, t), radius=t.getRadius(self, t), requires_knowledge=false}
@@ -145,11 +146,11 @@ newTalent{
 			-- but we cant ...
 			local _ _, x, y = self:canProject(tg, x, y)
 			game.level.map:particleEmitter(target.x, target.y, 1, "teleport")
-			target:teleportRandom(x, y, t.getRadius(self, t))
+			newpos = target:teleportRandom(x, y, t.getRadius(self, t))
 			game.level.map:particleEmitter(target.x, target.y, 1, "teleport")
 		else
 			game.level.map:particleEmitter(target.x, target.y, 1, "teleport")
-			target:teleportRandom(x, y, t.getRange(self, t), 15)
+			newpos = target:teleportRandom(x, y, t.getRange(self, t), 15)
 			game.level.map:particleEmitter(target.x, target.y, 1, "teleport")
 		end
 
@@ -157,6 +158,9 @@ newTalent{
 			target:setEffect(target.EFF_CONTINUUM_DESTABILIZATION, 100, {power=self:combatSpellpower(0.3)})
 		end
 
+		if not newpos then
+			game.logSeen(game.player,"The spell fails: no suitable places to teleport to.")
+		end
 		game:playSoundNear(self, "talents/teleport")
 		return true
 	end,

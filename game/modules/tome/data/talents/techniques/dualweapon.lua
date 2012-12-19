@@ -35,7 +35,7 @@ newTalent{
 	points = 5,
 	require = techs_dex_req2,
 	info = function(self, t)
-		return ([[You have learned to block incoming blows with your weapons, increasing your defense by %d.
+		return ([[You have learned to block incoming blows with your weapons.  When dual wielding, your defense is increased by %d.
 		Defense scales with Dexterity]]):format(4 + (self:getTalentLevel(t) * self:getDex()) / 12)
 	end,
 }
@@ -67,7 +67,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You have learned to hit the right spot, increasing your armor penetration by %d.
+		return ([[You have learned to hit the right spot, increasing your armor penetration by %d when dual wielding.
 		Armor penetration will increase with your Dexterity stat.]]):format(4 + (self:getTalentLevel(t) * self:getDex()) / 20)
 	end,
 }
