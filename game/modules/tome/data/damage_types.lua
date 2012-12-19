@@ -449,6 +449,15 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			src.turn_procs.is_crit = nil
 		end
 
+		if src.turn_procs and not src.turn_procs.dazing_damage and src.hasEffect and src:hasEffect(src.EFF_DAZING_DAMAGE) then
+			if target:canBe("stun") then
+				local power = math.max(src:combatSpellpower(), src:combatMindpower(), src:combatPhysicalpower())
+				target:setEffect(target.EFF_DAZED, 2, {})
+			end
+			src:removeEffect(src.EFF_DAZING_DAMAGE)
+			src.turn_procs.dazing_damage = true
+		end
+
 		if src.turn_procs and not src.turn_procs.blighted_soil and src:attr("blighted_soil") and rng.percent(src:attr("blighted_soil")) then
 			local tid = rng.table{src.EFF_ROTTING_DISEASE, src.EFF_DECREPITUDE_DISEASE, src.EFF_DECREPITUDE_DISEASE}
 			if not target:hasEffect(tid) then

@@ -86,6 +86,13 @@ floorEffect{
 }
 
 floorEffect{
+	desc = "Glimmerstone", image = "effects/dazed.png", name = "DAZING_DAMAGE",
+	long_desc = "The target is affected by a glimmerstone, its next attack will try to daze.",
+	activate = function(self, eff)
+	end,
+}
+
+floorEffect{
 	desc = "Protective Aura", image = "talents/barrier.png",
 	long_desc = function(self, eff) return ("The target is near a protective aura, granting +%d armour and +%d physical save."):format(eff.power, eff.power * 3) end,
 	activate = function(self, eff)

@@ -1269,10 +1269,7 @@ function _M:setupCommands()
 			print("===============")
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
-			local npc = game.zone:makeEntity(game.level, "actor", {random_boss={class_filter=function(c) return c.name=="Alchemist" end}})
-			if npc then game.zone:addEntity(game.level, npc, "actor", game.player.x+1, game.player.y) end
-do return end
-			local f, err = loadfile("/data/general/events/rat-lich.lua")
+			local f, err = loadfile("/data/general/events/glimmerstone.lua")
 			print(f, err)
 			setfenv(f, setmetatable({level=self.level, zone=self.zone}, {__index=_G}))
 			print(pcall(f))

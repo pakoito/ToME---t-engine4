@@ -31,10 +31,11 @@ if engine.Map.tiles.nicer_tiles then
 	g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/moonstone_05.png", display_w=0.5, display_x=0.25, z=5}
 end
 g.nice_tiler = nil
+g.canAct = false
 g.act = function(self)
 	local grids = core.fov.circle_grids(x, y, rng.range(1, 2), "block_move")
 	for x, yy in pairs(grids) do for y, _ in pairs(yy) do
-		if rng.chance(4) then
+		if rng.chance(6) then
 			if game.level.map.lites(x, y) then
 				game.level.map.lites(x, y, false)
 			else
@@ -42,10 +43,8 @@ g.act = function(self)
 			end
 			local target = game.level.map(x, y, engine.Map.ACTOR)
 			if target then
-				if target:canBe("stun") then
-					target:setEffect(target.EFF_DAZED, 3, {})
-					game.logSeen(target, "%s is affected by the glimmerstone!", target.name:capitalize())
-				end
+				target:setEffect(target.EFF_DAZING_DAMAGE, 1, {})
+				game.logSeen(target, "%s is affected by the glimmerstone!", target.name:capitalize())
 			end
 		end
 	end end
