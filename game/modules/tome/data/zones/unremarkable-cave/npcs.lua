@@ -45,6 +45,7 @@ newEntity{ define_as = "FILLAREL",
 	instakill_immune = 1,
 	teleport_immune = 1,
 	move_others=true,
+	never_angry=true,
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	equipment = resolvers.equip{
