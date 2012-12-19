@@ -324,6 +324,7 @@ newTalent{
 	require = cursed_cun_req1,
 	points = 5,
 	cooldown = 10,
+	hate = 0,
 	tactical = { BUFF = 5 },
 	getLevel = function(self, t)
 		return math.min(self.level, 50)

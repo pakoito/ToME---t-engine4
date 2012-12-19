@@ -25,6 +25,7 @@ newTalent{
 	random_ego = "attack",
 	cooldown = 6,
 	range = 7,
+	hate = 0,
 	tactical = { BUFF = 2, DEFEND = 1 },
 	requires_target = function(self, t) return self:getTalentLevel(t) >= 5 end,
 	direct_hit = true,
