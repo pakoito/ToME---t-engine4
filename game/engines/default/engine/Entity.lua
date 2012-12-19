@@ -663,7 +663,7 @@ function _M:addTemporaryValue(prop, v, noupdate)
 				base[prop] = (base[prop] or 0) + v
 			end
 			self:onTemporaryValueChange(prop, v, base)
---			print("addTmpVal", base, prop, v, " :=: ", #t, id, method)
+			print("addTmpVal", base, prop, v, " :=: ", #t, id, method)
 		elseif type(v) == "table" then
 			for k, e in pairs(v) do
 --				print("addTmpValTable", base[prop], k, e)
@@ -689,7 +689,7 @@ end
 -- @param noupdate if true the actual property is not changed and needs to be changed by the caller
 function _M:removeTemporaryValue(prop, id, noupdate)
 	local oldval = self.compute_vals[id]
---	print("removeTempVal", prop, oldval, " :=: ", id)
+	print("removeTempVal", prop, oldval, " :=: ", id)
 	self.compute_vals[id] = nil
 
 	-- Find the base, one removed from the last prop

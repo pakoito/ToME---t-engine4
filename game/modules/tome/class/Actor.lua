@@ -3739,6 +3739,8 @@ function _M:postUseTalent(ab, ret)
 		end
 	end
 
+	self:triggerHook{"Actor:postUseTalent", t=ab, ret=ret, trigger=trigger}
+
 	if trigger and self:hasEffect(self.EFF_BURNING_HEX) then
 		local p = self:hasEffect(self.EFF_BURNING_HEX)
 		DamageType:get(DamageType.FIRE).projector(p.src, self.x, self.y, DamageType.FIRE, p.dam)
