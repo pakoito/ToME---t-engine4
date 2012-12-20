@@ -129,7 +129,6 @@ newEntity{ base = "BASE_NPC_SPIDER", define_as = "WEAVER_QUEEN",
 		[Talents.T_RETHREAD]=2,
 		[Talents.T_STATIC_HISTORY]=2,
 		[Talents.T_FADE_FROM_TIME]=3,
-		[Talents.T_BODY_REVERSION]=1,
 	},
 
 	autolevel = "caster",
