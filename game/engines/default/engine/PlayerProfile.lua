@@ -86,6 +86,7 @@ function _M:init()
 		[checkstats]     = { invalid = { read={online=true}, write="online" }, valid = { read={online=true}, write="online" } },
 		["^allow_build$"] = { invalid = { read={offline=true,online=true}, write="offline" }, valid = { read={offline=true,online=true}, write="online" } },
 		["^achievements$"] = { invalid = { read={offline=true,online=true}, write="offline" }, valid = { read={online=true}, write="online" } },
+		["^donations$"] = { invalid = { read={offline=true}, write="offline" }, valid = { read={offline=true}, write="offline" } },
 	}
 
 	self:funFactsGrab()
