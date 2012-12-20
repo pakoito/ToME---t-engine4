@@ -24,6 +24,7 @@ newTalent{
 	points = 5,
 	require = cuns_req1,
 	sustain_stamina = 20,
+	mana = 0,
 	cooldown = 5,
 	tactical = { BUFF = 2 },
 	getDamage = function(self, t) return 2 + self:combatTalentSpellDamage(t, 2, 50) end,
