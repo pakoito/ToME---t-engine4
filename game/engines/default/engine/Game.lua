@@ -34,7 +34,7 @@ function _M:init(keyhandler)
 	self.level = nil
 	self.log = function() end
 	self.logSeen = function() end
-	self.w, self.h = core.display.size()
+	self.w, self.h, self.fullscreen = core.display.size()
 	self.dialogs = {}
 	self.save_name = ""
 	self.player_name = ""
@@ -80,7 +80,7 @@ function _M:updateMouseCursor()
 end
 
 function _M:loaded()
-	self.w, self.h = core.display.size()
+	self.w, self.h, self.fullscreen = core.display.size()
 	self.dialogs = {}
 	self.key = engine.Key.current
 	self.mouse = engine.Mouse.new()
@@ -358,10 +358,10 @@ end
 
 available_resolutions =
 {
-	["800x600"] = {800, 600, false},
-	["1024x768"] = {1024, 768, false},
-	["1200x1024"] = {1200, 1024, false},
-	["1600x1200"] = {1600, 1200, false},
+	["800x600 Windowed"] = {800, 600, false},
+	["1024x768 Windowed"] = {1024, 768, false},
+	["1200x1024 Windowed"] = {1200, 1024, false},
+	["1600x1200 Windowed"] = {1600, 1200, false},
 --	["800x600 Fullscreen"] = {800, 600, true},
 --	["1024x768 Fullscreen"] = {1024, 768, true},
 --	["1200x1024 Fullscreen"] = {1200, 1024, true},
@@ -382,18 +382,27 @@ function _M:setResolution(res, force)
 		local _, _, w, h, f = res:find("([0-9][0-9][0-9]+)x([0-9][0-9][0-9]+)(.*)")
 		w = tonumber(w)
 		h = tonumber(h)
-		if w and h then r = {w, h, f==" Fullscreen" and true or false} end
+		if f == " Fullscreen" then
+			f = true
+		elseif f ~= " Windowed" then
+			-- If no windowed/fullscreen option sent, use the old value.
+			-- If no old value, opt for windowed mode.
+			f = self.fullscreen
+		else
+			f = false
+		end 
+		if w and h then r = {w, h, f} end
 	end
 	if not r then return false, "unknown resolution" end
 
 	print("Switching resolution to", res, r[1], r[2], r[3])
-	local old_w, old_h = self.w, self.h
+	local old_w, old_h, old_f = self.w, self.h, self.fullscreen
 	core.display.setWindowSize(r[1], r[2], r[3])
-	self.w, self.h = core.display.size()
+	self.w, self.h, self.fullscreen = core.display.size()
 
-	if self.w ~= old_w or self.h ~= old_h then
+	-- Save settings if need be
+	if self.w ~= old_w or self.h ~= old_h or self.fullscreen ~= old_f then
 		self:onResolutionChange()
-
 		self:saveSettings("resolution", ("window.size = %q\n"):format(res))
 	end
 end
@@ -401,13 +410,13 @@ end
 --- Called when screen resolution changes
 function _M:onResolutionChange()
 	if game and not self.change_res_dialog_oldw then
-		self.change_res_dialog_oldw, self.change_res_dialog_oldh = self.w, self.h
+		self.change_res_dialog_oldw, self.change_res_dialog_oldh, self.change_res_dialog_oldf = self.w, self.h, self.fullscreen
 	end
 
-	local ow, oh = self.w, self.h
-	local fs
-	self.w, self.h, fs = core.display.size()
-	config.settings.window.size = ("%dx%d%s"):format(self.w, self.h, fs and " Fullscreen" or "")
+	local ow, oh, of = self.w, self.h, self.fullscreen
+	
+	self.w, self.h, self.fullscreen = core.display.size()
+	config.settings.window.size = ("%dx%d%s"):format(self.w, self.h, self.fullscreen and " Fullscreen" or " Windowed")
 	self:saveSettings("resolution", ("window.size = '%s'\n"):format(config.settings.window.size))
 	print("[RESOLUTION] changed to ", self.w, self.h, "from", ow, oh)
 
@@ -430,9 +439,9 @@ function _M:onResolutionChange()
 			util.showMainMenu(false, nil, nil, self.__mod_info.short_name, self.save_name, false)
 		else
 			self.change_res_dialog = "revert"
-			self:setResolution(self.change_res_dialog_oldw.."x"..self.change_res_dialog_oldh, true)
+			self:setResolution(("%dx%d%s"):format(self.change_res_dialog_oldw, self.change_res_dialog_oldh, self.change_res_dialog_oldf and " Fullscreen" or " Windowed"), true)
 			self.change_res_dialog = nil
-			self.change_res_dialog_oldw, self.change_res_dialog_oldh = nil, nil
+			self.change_res_dialog_oldw, self.change_res_dialog_oldh, self.change_res_dialog_oldf = nil, nil, nil
 		end
 	end, "Accept", "Revert")
 end
