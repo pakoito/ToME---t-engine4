@@ -615,6 +615,8 @@ Some races or items may increase them as well.]]):toTString()
 local desc_prodigies = ([[Prodigies are special talents that only the most powerful of characters can attain.
 All of them require at least 50 in a core stat and many also have more special demands. You can learn a new prodigy at level 40 and 50.]]):toTString()
 
+local desc_inscriptions = ([[You can use a category point to unlock a new inscription slot (up to 5 slots).]]):toTString()
+
 function _M:createDisplay()
 	self.b_prodigies = Button.new{text="Prodigies", fct=function()
 			self.on_finish_prodigies = self.on_finish_prodigies or {}
@@ -630,7 +632,32 @@ function _M:createDisplay()
 		end
 	end}
 
+	if self.actor.inscriptions_slots_added < 2 then
+		self.b_inscriptions = Button.new{text="Inscriptions", fct=function()
+				if self.actor.unused_talents_types > 0 then
+					Dialog:yesnoPopup("Inscriptions", ("You can learn %d new slot(s). Do you with to buy with for one category point?"):format(2 - self.actor.inscriptions_slots_added), function(ret) if ret then
+						self.actor.unused_talents_types = self.actor.unused_talents_types - 1
+						self.actor.max_inscriptions = self.actor.max_inscriptions + 1
+						self.actor.inscriptions_slots_added = self.actor.inscriptions_slots_added + 1
+						self.b_types.text = "Category points: "..self.actor.unused_talents_types
+						self.b_types:generate()
+					end end)
+				else
+					Dialog:simplePopup("Inscriptions", ("You can still learn %d new slot(s) but you need a category point."):format(2 - self.actor.inscriptions_slots_added))
+				end
+			end, on_select=function()
+			local str = desc_inscriptions
+			if self.no_tooltip then
+				self.c_desc:erase()
+				self.c_desc:switchItem(str, str, true)
+			else
+				game:tooltipDisplayAtMap(self.b_stat.last_display_x + self.b_stat.w, self.b_stat.last_display_y, str)
+			end
+		end}
+	end
+
 	if self.actor.unused_prodigies > 0 then self.b_prodigies.glow = 0.6 end
+	if self.actor.unused_talents_types > 0 and self.b_inscriptions then self.b_inscriptions.glow = 0.6 end
 
 	self.c_ctree = TalentTrees.new{
 		font = core.display.newFont("/data/font/DroidSans.ttf", 14),
@@ -656,7 +683,7 @@ function _M:createDisplay()
 		font = core.display.newFont("/data/font/DroidSans.ttf", 14),
 		tiles=game.uiset.hotkeys_display_icons,
 		tree=self.gtree,
-		width=320, height=self.ih-50 - (not self.b_prodigies and 0 or self.b_prodigies.h + 5),
+		width=320, height=self.ih-50 - math.max((not self.b_prodigies and 0 or self.b_prodigies.h + 5), (not self.b_inscriptions and 0 or self.b_inscriptions.h + 5)),
 		tooltip=function(item)
 			local x = self.display_x + self.uis[8].x - game.tooltip.max
 			if self.display_x + self.w + game.tooltip.max <= game.w then x = self.display_x + self.w end
@@ -752,6 +779,7 @@ function _M:createDisplay()
 
 		{right=0, bottom=0, ui=self.b_prodigies},
 	}
+	if self.b_inscriptions then table.insert(ret, {right=self.b_prodigies.w, bottom=0, ui=self.b_inscriptions}) end
 
 	if self.no_tooltip then
 		local vsep3 = Separator.new{dir="horizontal", size=self.ih - 20}
