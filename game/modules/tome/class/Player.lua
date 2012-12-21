@@ -1258,7 +1258,7 @@ function _M:onWear(o, bypass_set)
 					position = self:findQuickHotkey("Player: Specific", "inventory", name)
 					if not position then
 						local global_hotkeys = engine.interface.PlayerHotkeys.quickhotkeys["Player: Global"]
-						if global_hotkeys and global_hotkeys["talent"] then position = global_hotkeys["inventory"][name] end
+						if global_hotkeys and global_hotkeys["inventory"] then position = global_hotkeys["inventory"][name] end
 					end
 				else
 					position = self:findQuickHotkey(self.name, "inventory", name)
@@ -1293,7 +1293,7 @@ function _M:onAddObject(o)
 				position = self:findQuickHotkey("Player: Specific", "inventory", name)
 				if not position then
 					local global_hotkeys = engine.interface.PlayerHotkeys.quickhotkeys["Player: Global"]
-					if global_hotkeys and global_hotkeys["talent"] then position = global_hotkeys["inventory"][name] end
+					if global_hotkeys and global_hotkeys["inventory"] then position = global_hotkeys["inventory"][name] end
 				end
 			else
 				position = self:findQuickHotkey(self.name, "inventory", name)
