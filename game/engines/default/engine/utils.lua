@@ -733,6 +733,23 @@ getmetatable(tmps).__index.size = function(font, str)
 	return mw, mh
 end
 
+local virtualimages = {}
+function core.display.virtualImage(path, data)
+	virtualimages[path] = data
+end
+
+local oldloadimage = core.display.loadImage
+function core.display.loadImage(path)
+	if virtualimages[path] then return core.display.loadImageMemory(virtualimages[path]) end
+	return oldloadimage(path)
+end
+
+local oldfsexists = fs.exists
+function fs.exists(path)
+	if virtualimages[path] then return true end
+	return oldfsexists(path)
+end
+
 tstring = {}
 tstring.is_tstring = true
 
