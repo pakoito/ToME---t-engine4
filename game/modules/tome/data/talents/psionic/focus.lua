@@ -41,13 +41,13 @@ newTalent{
 			local c =  self:getTalentFromId(self.T_CONDUIT)
 			local auras = self:isTalentActive(c.id)
 			if auras.k_aura_on then
-				val[PHYSICAL] = val[PHYSICAL] + 1
+				val.PHYSICAL = val.PHYSICAL + 1
 			end
 			if auras.t_aura_on then
-				val[FIRE] = 1
+				val.FIRE = 1
 			end
 			if auras.c_aura_on then
-				val[LIGHTNING] = 1
+				val.LIGHTNING = 1
 			end
 			return val
 		end
