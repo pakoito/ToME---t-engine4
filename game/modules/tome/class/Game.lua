@@ -1949,6 +1949,9 @@ end
 unlocks_list = {
 	birth_transmo_chest = "Birth option: Transmogrification Chest",
 	birth_zigur_sacrifice = "Birth option: Zigur sacrifice",
+	cosmetic_race_human_redhead = "Cosmetic: Redheads",
+	
+	difficulty_insane = "Difficulty: Insane",
 
 	campaign_infinite_dungeon = "Campaign: Infinite Dungeon",
 	campaign_arena = "Campaign: The Arena",
@@ -1961,7 +1964,7 @@ unlocks_list = {
 	mage_tempest = "Class tree: Storm",
 	mage_geomancer = "Class tree: Stone",
 	mage_pyromancer = "Class tree: Wildfire",
-	mage_cryomancer = "Class tree: uttercold",
+	mage_cryomancer = "Class tree: Uttercold",
 	mage_necromancer = "Class: Necromancer",
 
 	rogue_marauder = "Class: Marauder",

@@ -49,7 +49,7 @@ newBirthDescriptor{
 		resolvers.inventory{ id=true, {defined="ORB_SCRYING"} },
 		resolvers.generic(function(e) e.hotkey[10] = {"inventory", "Orb of Scrying"} end),
 	},
-	random_escort_possibilities = { {"trollmire", 2, 3}, {"ruins-kor-pul", 1, 2}, {"daikara", 1, 2}, {"old-forest", 1, 4}, {"dreadfell", 1, 8}, {"reknor", 1, 2}, },
+	random_escort_possibilities = { {"tier1.1", 1, 2}, {"tier1.2", 1, 2}, {"daikara", 1, 2}, {"old-forest", 1, 4}, {"dreadfell", 1, 8}, {"reknor", 1, 2}, },
 
 	cosmetic_unlock = {
 		cosmetic_race_human_redhead = {

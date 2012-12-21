@@ -27,6 +27,7 @@ return {
 	width = 50, height = 50,
 --	all_remembered = true,
 	tier1 = true,
+	tier1_escort = 2,
 	all_lited = true,
 	persistent = "zone",
 	ambient_music = "Mystery.ogg",

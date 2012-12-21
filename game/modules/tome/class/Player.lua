@@ -118,8 +118,29 @@ function _M:onEnterLevel(zone, level)
 	-- mark entrance (if applicable) as noticed
 	game.level.map.attrs(self.x, self.y, "noticed", true)
 
+	local escort_zone_name = zone.short_name
+	local escort_zone_offset = 0
+
+	if zone.tier1_escort then
+		escort_zone_offset = zone.tier1_escort - 1
+
+		self.entered_tier1_zones = self.entered_tier1_zones or {}
+		self.entered_tier1_zones.seen = self.entered_tier1_zones.seen or {}
+		self.entered_tier1_zones.nb = self.entered_tier1_zones.nb or 0
+		if not self.entered_tier1_zones.seen[zone.short_name] then
+			self.entered_tier1_zones.nb = self.entered_tier1_zones.nb + 1
+			self.entered_tier1_zones.seen[zone.short_name] = self.entered_tier1_zones.nb
+		end
+
+		escort_zone_name = "tier1."..self.entered_tier1_zones.seen[zone.short_name]
+		print("Entering tier1 zone for escort", escort_zone_name, escort_zone_offset, level.level - escort_zone_offset)
+		if self.random_escort_levels and self.random_escort_levels[escort_zone_name] then
+			table.print(self.random_escort_levels[escort_zone_name])
+		end
+	end
+
 	-- Fire random escort quest
-	if self.random_escort_levels and self.random_escort_levels[zone.short_name] and self.random_escort_levels[zone.short_name][level.level] then
+	if self.random_escort_levels and self.random_escort_levels[escort_zone_name] and self.random_escort_levels[escort_zone_name][level.level - escort_zone_offset] then
 		self:grantQuest("escort-duty")
 	end
 

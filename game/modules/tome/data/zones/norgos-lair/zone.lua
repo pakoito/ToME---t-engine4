@@ -28,6 +28,7 @@ return {
 --	all_remembered = true,
 	all_lited = true,
 	tier1 = true,
+	tier1_escort = 2,
 	day_night = true,
 	persistent = "zone",
 	color_shown = {0.7, 0.7, 0.7, 1},
