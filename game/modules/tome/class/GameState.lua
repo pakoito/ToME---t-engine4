@@ -292,7 +292,7 @@ function _M:generateRandart(data)
 	local points = math.ceil(((lev * 0.7 + rng.range(5, 15)) / 2) * (data.power_points_factor or 1))
 	local nb_powers = 1 + rng.dice(math.max(1, lev / 17), 2) + (data.nb_powers_add or 0)
 	local powers = {}
-	print("Powers:", points, nb_powers, lev)
+--	print("Powers:", points, nb_powers, lev)
 
 	o.cost = o.cost + points * 7
 
@@ -307,7 +307,7 @@ function _M:generateRandart(data)
 			powers[#powers+1] = powers[p.name]
 		end
 	end
-	print("Selected powers:") table.print(powers)
+--	print("Selected powers:") table.print(powers)
 	power_themes = table.listify(power_themes)
 	table.sort(power_themes, function(a, b) return a[2] < b[2] end)
 
@@ -363,7 +363,7 @@ function _M:generateRandart(data)
 			local pick_egos = game.zone:computeRarities("object", list, game.level, filter, nil, nil)
 			local ego = game.zone:pickEntity(pick_egos)
 			if ego then
-				print(" ** selected ego", ego.name)
+--				print(" ** selected ego", ego.name)
 				ego = ego:clone()
 				if ego.instant_resolve then ego:resolve(nil, nil, o) end
 				ego.instant_resolve = nil
@@ -418,7 +418,7 @@ function _M:generateRandart(data)
 		i = util.boundWrap(i + 1, 1, #powers)
 		local p = powers[i]
 		if p.points <= hpoints then
-			print(" * adding power: "..p.name)
+--			print(" * adding power: "..p.name)
 			if p.wielder then
 				o.wielder = o.wielder or {}
 				merger(o.wielder, p.wielder)
@@ -454,7 +454,7 @@ function _M:generateRandart(data)
 				merger(o.wielder, p.wielder)
 			end
 			if p.copy then merger(o, p.copy) end
-			print(" * adding bias power: "..p.name)
+--			print(" * adding bias power: "..p.name)
 		end
 		hpoints = hpoints - (p and p.points or 1) * 2
 		if p then p.points = p.points * 1.5 end
