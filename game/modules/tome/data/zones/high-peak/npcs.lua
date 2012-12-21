@@ -280,8 +280,10 @@ newEntity{ define_as = "FALLEN_SUN_PALADIN_AERYN",
 		[Talents.T_SECOND_LIFE]=7,
 		[Talents.T_BATHE_IN_LIGHT]=7,
 		[Talents.T_PROVIDENCE]=7,
+		[Talents.T_THICK_SKIN]=5,
 
 		[Talents.T_IRRESISTIBLE_SUN]=1,
+		[Talents.T_DRACONIC_BODY]=1,
 	},
 	resolvers.sustains_at_birth(),
 }
@@ -345,8 +347,10 @@ newEntity{ define_as = "HIGH_SUN_PALADIN_AERYN",
 		[Talents.T_SECOND_LIFE]=5,
 		[Talents.T_BATHE_IN_LIGHT]=5,
 		[Talents.T_PROVIDENCE]=5,
+		[Talents.T_THICK_SKIN]=5,
 
 		[Talents.T_IRRESISTIBLE_SUN]=1,
+		[Talents.T_DRACONIC_BODY]=1,
 	},
 	resolvers.sustains_at_birth(),
 }

@@ -381,7 +381,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			game.logSeen(target, "%s is healed by the %s%s#LAST# damage!", target.name:capitalize(), DamageType:get(type).text_color or "#aaaaaa#", DamageType:get(type).name)
 		end
 
-		if dam > 0 and src.damage_log then
+		if dam > 0 and src.damage_log and src.damage_log.weapon then
 			src.damage_log[type] = (src.damage_log[type] or 0) + dam
 			if src.turn_procs and src.turn_procs.weapon_type then
 				src.damage_log.weapon[src.turn_procs.weapon_type.kind] = (src.damage_log.weapon[src.turn_procs.weapon_type.kind] or 0) + dam
