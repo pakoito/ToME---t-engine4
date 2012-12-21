@@ -101,6 +101,7 @@ function _M:defaultSavedFields(t)
 		memory_levels=true, achievement_data=true, factions=true, playing_musics=true,
 		state=true,
 		__savefile_version_tokens = true, bad_md5_loaded = true,
+		__persistent_hooks=true,
 	}
 	table.merge(def, t)
 	return def
@@ -110,6 +111,13 @@ end
 function _M:setPlayerName(name)
 	self.save_name = name
 	self.player_name = name
+end
+
+--- Do not touch
+function _M:prerun()
+	if self.__persistent_hooks then for _, h in ipairs(self.__persistent_hooks) do
+		self:bindHook(h.hook, h.fct)
+	end end
 end
 
 --- Starts the game
@@ -563,4 +571,12 @@ function _M:saveScreenshot()
 
 	local Dialog = require "engine.ui.Dialog"
 	Dialog:simplePopup("Screenshot taken!", "File: "..fs.getRealPath(file))
+end
+
+--- Register a hook that will be saved in the savefile
+-- Obviously only run it once per hook per save
+function _M:registerPersistentHook(hook, fct)
+	self.__persistent_hooks = self.__persistent_hooks or {}
+	table.insert(self.__persistent_hooks, {hook=hook, fct=fct})
+	self:bindHook(hook, fct)
 end

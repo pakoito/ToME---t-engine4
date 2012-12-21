@@ -1754,7 +1754,7 @@ function _M:displayHotkeys(scale, bx, by)
 					game:tooltipDisplayAtMap(game.w, game.h, text)
 				end,
 				function(i, hk)
-					if button == "right" and hk[1] == "talent" then
+					if button == "right" and kh and hk[1] == "talent" then
 						local d = require("mod.dialogs.UseTalents").new(game.player)
 						d:use({talent=hk[2], name=game.player:getTalentFromId(hk[2]).name}, "right")
 						return true

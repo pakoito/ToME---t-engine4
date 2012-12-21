@@ -85,6 +85,8 @@ function _M:init()
 end
 
 function _M:run()
+	class:triggerHook{"ToME:run"}
+
 	self.delayed_log_damage = {}
 	self.calendar = Calendar.new("/data/calendar_allied.lua", "Today is the %s %s of the %s year of the Age of Ascendancy of Maj'Eyal.\nThe time is %02d:%02d.", 122, 167, 11)
 

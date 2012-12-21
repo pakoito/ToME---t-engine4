@@ -725,6 +725,7 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 	core.wait.enableManualTick(false)
 
 	-- And now run it!
+	_G.game:prerun()
 	_G.game:run()
 
 	-- Try to bind some debug keys
