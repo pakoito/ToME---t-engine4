@@ -3184,6 +3184,14 @@ function _M:unlearnTalent(t_id, nb, no_unsustain)
 	return true
 end
 
+--- Recompute things that need recomputing
+function _M:updateTalentTypeMastery(tt)
+	local ll = self.last_learnt_talents
+	self.last_learnt_talents = nil
+	engine.interface.ActorTalents.updateTalentTypeMastery(self, tt)
+	self.last_learnt_talents = ll
+end
+
 --- Equilibrium check
 function _M:equilibriumChance(eq)
 	eq = self:getEquilibrium()
