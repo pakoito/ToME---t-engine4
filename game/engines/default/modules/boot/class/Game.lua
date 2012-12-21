@@ -51,7 +51,7 @@ function _M:init()
 	engine.interface.GameSound.init(self)
 	engine.GameEnergyBased.init(self, engine.KeyBind.new(), 100, 100)
 	self.profile_font = core.display.newFont("/data/font/DroidSerif-Italic.ttf", 14)
-	self.background = core.display.loadImage("/data/gfx/background/tome.png")
+	self.background = core.display.loadImage("/data/gfx/background/tome3.png")
 	if self.background then
 		self.background_w, self.background_h = self.background:getSize()
 		self.background, self.background_tw, self.background_th = self.background:glTexture()
