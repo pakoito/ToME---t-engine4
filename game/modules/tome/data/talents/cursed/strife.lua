@@ -70,8 +70,8 @@ newTalent{
 		local armorChange = t.getArmorChange(self, t)
 		local defenseChange = t.getDefenseChange(self, t)
 		local resistPenetration = t.getResistPenetration(self, t)
-		return ([[Turn your attention to a nearby foe and dominate them with your overwhelming presence. If the target fails to save versus Mindpower, it will be unable to move for %d turns and vulnerable to attacks. They will lose %d armor, %d defense and your attacks will gain %d%% resistance penetration. If the target is adjacent to you, your domination will include a melee attack.
-		Effects will improve with the Strength stat.]]):format(duration, -armorChange, -defenseChange, resistPenetration)
+		return ([[Turn your attention to a nearby foe, and dominate them with your overwhelming presence. If the target fails to save versus your Mindpower, it will be unable to move for %d turns and vulnerable to attacks. They will lose %d Armour, %d Defense and your attacks will gain %d%% resistance penetration. If the target is adjacent to you, your domination will include a melee attack.
+		Effects will improve with your Willpower.]]):format(duration, -armorChange, -defenseChange, resistPenetration)
 	end,
 }
 
@@ -261,7 +261,8 @@ newTalent{
 	info = function(self, t)
 		local multiplier = self:combatTalentWeaponDamage(t, 0.7, 1.9)
 		local defenseChange = t.getDefenseChange(self, t)
-		return ([[With blinding speed you suddenly appear next to a target up to %d spaces away and attack for %d%% (at 0 Hate) to %d%% (at 100+ Hate) damage. Your sudden appearance catches everyone off-guard giving you %d extra defense for 1 turn.]]):format(self:getTalentRange(t), multiplier * 30, multiplier * 100, defenseChange)
+		return ([[With blinding speed, you suddenly appear next to a target up to %d spaces away and attack for %d%% (at 0 Hate) to %d%% (at 100+ Hate) damage. Your sudden appearance catches everyone off-guard, giving you %d extra Defense for 1 turn.
+		The Defense boost improves with your Strength.]]):format(self:getTalentRange(t), multiplier * 30, multiplier * 100, defenseChange)
 	end,
 }
 
@@ -406,7 +407,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local chance = t.getChance(self, t)
-		return ([[Rather than hide from the onslaught you face down every threat. While active you have a %d%% chance of repelling a melee attack. The recklessness of your defense brings you bad luck (luck -3). Cleave, repel and surge cannot be activate simultaneously and activating one will place the others in cooldown.
-		Chance increases with the Strength stat and when equipped with a shield.]]):format(chance)
+		return ([[Rather than hide from the onslaught, you face down every threat. While active you have a %d%% chance of repelling a melee attack. The recklessness of your defense brings you bad luck (Luck -3). 
+		Cleave, Repel and Surge cannot be active simultaneously, and activating one will place the others in cooldown.
+		Repel chance increases with your Strength, and when equipped with a shield.]]):format(chance)
 	end,
 }

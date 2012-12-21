@@ -40,7 +40,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Fires a bolt of blight, doing %0.2f blight damage and replenishing 20%% of it as vim energy.
 		The amount of vim regained depends on the target's rank (higher ranks give more vim).
-		The effect will increase with your Magic stat.]]):
+		The effect will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 25, 200)))
 	end,
 }
@@ -104,7 +104,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[For %d turns your corruption spells will consume health instead of vim if their cost is higher than your vim.]]):
+		return ([[For %d turns, your corruption spells will consume health instead of vim if their cost is higher than your vim.]]):
 		format(2 + math.floor(self:getTalentLevel(t)))
 	end,
 }
@@ -134,7 +134,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Absorbs the life force of your foes as you kill them.
-		As long as this talent is active vim will decrease by one per turn and increase by %d for each kill of a non-undead creature (in addition to natural increase based on Willpower).]]):
+		As long as this talent is active, vim will decrease by one per turn and increase by %d for each kill of a non-undead creature (in addition to natural increase based on Willpower).]]):
 		format(4+math.ceil(self:getTalentLevel(t)*2))
 	end,
 }
@@ -155,7 +155,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Tap your life force to provide a furious boost, increasing all your damage by %d%% for 7 turns.]]):
+		return ([[Tap your life force to provide a furious boost, increasing all damage you deal by %d%% for 7 turns.]]):
 		format(math.ceil(6 + self:getTalentLevel(t) * 2))
 	end,
 }

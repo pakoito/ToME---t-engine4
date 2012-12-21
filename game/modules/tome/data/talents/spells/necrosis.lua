@@ -44,7 +44,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[The line between life and death blurs for you; you can only die when you reach -%d life.
-		However, when below 0 you cannot see how much life you have left.]]):
+		However, when below 0 HP, you cannot see how much life you have left.]]):
 		format(50 * self:getTalentLevelRaw(t))
 	end,
 }
@@ -75,7 +75,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Your target's doom draws near. It cannot regenerate or heal at all and will take %d%% of its remaining life (or %0.2f, whichever is lower) over 10 turns as arcane damage.
+		return ([[Your target's doom draws near. It cannot regenerate or heal at all, and will take %d%% of its remaining life (or %0.2f, whichever is lower) over 10 turns as arcane damage.
 		The damage will increase with your Spellpower.]]):
 		format(t.getDamage(self, t), t.getMax(self, t))
 	end,
@@ -229,24 +229,23 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Your true goal. The purpose of all necromancy, to become a powerful and everliving Lich!
-		If you are killed while this spell is active the arcane forces you unleash will be able to rebuild your body into Lichform.
+		return ([[This is your true goal and the purpose of all necromancy - to become a powerful and everliving Lich!
+		If you are killed while this spell is active, the arcane forces you unleash will be able to rebuild your body into the desired Lichform.
 		All liches gain the following intrinsics:
-		- Poison, cut, fear immunity
-		- Disease resistance 50%%
-		- Stun resistance 50%%
-		- Cold and darkness resistance 20%%
-		- No need to breathe
-		- Infusions do not work
+		- Poison, cut, and fear immunity.
+		- 50%% disease and stun resistance.
+		- 20%% cold and darkness resistance.
+		- No need to breathe.
+		- Infusions do not work.
 		Also:
 		At level 1: -3 to all stats, -10%% to all resistances. Such meagre devotion!
-		At level 2: Nothing
-		At level 3: +3 Magic and Willpower, +1 life rating (not retroactive)
-		At level 4: +3 Magic and Willpower, +2 life rating (not retroactive), +10 spell and mental saves, Celestial/Star Fury category (0.7) and 0.1 negative energies regeneration
-		At level 5: +5 Magic and Willpower, +2 life rating (not retroactive), +10 spell and mental saves, all resistance caps raised by 10%%, Celestial/Star Fury category (0.9) and 0.5 negative energies regeneration
-		At level 6: +6 Magic, Willpower and Cunning, +3 life rating (not retroactive), +15 spell and mental saves, all resistance caps raised by 15%%, Celestial/Star Fury category (1.1) and 1.0 negative energies regeneration. Fear my power!
+		At level 2: Nothing.
+		At level 3: +3 Magic and Willpower, +1 life rating (not retroactive).
+		At level 4: +3 Magic and Willpower, +2 life rating (not retroactive), +10 spell and mental saves, Celestial/Star Fury category (0.7) and 0.1 negative energies regeneration.
+		At level 5: +5 Magic and Willpower, +2 life rating (not retroactive), +10 spell and mental saves, all resistance caps raised by 10%%, Celestial/Star Fury category (0.9) and 0.5 negative energy regeneration.
+		At level 6: +6 Magic, Willpower and Cunning, +3 life rating (not retroactive), +15 spell and mental saves, all resistance caps raised by 15%%, Celestial/Star Fury category (1.1) and 1.0 negative energy regeneration. Fear my power!
 		The undead cannot use this talent.
-		While active it will drain 4 mana per turn.]]):
+		While active, it will drain 4 mana per turn.]]):
 		format()
 	end,
 }

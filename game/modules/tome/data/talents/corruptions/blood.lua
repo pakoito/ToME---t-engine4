@@ -51,8 +51,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[You extract corrupted blood from your own body, hitting everything in a frontal cone of radius %d for %0.2f blight damage.
-		Each affected creature has a %d%% chance of being infected by a random disease doing %0.2f blight damage over 6 turns.
-		The damage will increase with Magic stat.]]):format(self:getTalentRadius(t), damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 10, 190)), 20 + self:getTalentLevel(t) * 10, damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 10, 220)))
+		Each creature hit has a %d%% chance of being infected by a random disease, doing %0.2f blight damage and weakening either Constitution, Strength or Dexterity for 6 turns.
+		The damage will increase with your Spellpower.]]):format(self:getTalentRadius(t), damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 10, 190)), 20 + self:getTalentLevel(t) * 10, damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 10, 220)))
 	end,
 }
 
@@ -79,8 +79,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Project a bolt of corrupted blood doing %0.2f blight damage and healing you for half the damage done.
-		The damage will increase with Magic stat.]]):format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 10, 290)))
+		return ([[Project a bolt of corrupted blood, doing %0.2f blight damage and healing you for half the damage done.
+		The damage will increase with your Spellpower.]]):format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 10, 290)))
 	end,
 }
 
@@ -109,7 +109,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Make the blood of all creatures around you in radius %d boil, doing %0.2f blight damage and slowing them by 20%%.
-		The damage will increase with Magic stat.]]):format(self:getTalentRadius(t), damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 28, 190)))
+		The damage will increase with your Spellpower.]]):format(self:getTalentRadius(t), damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 28, 190)))
 	end,
 }
 
@@ -138,8 +138,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Concentrate on the corruption you bring, increasing your spell critical chance by %d%%.
-		Each time your spells go critical you enter a blood rage for 5 turns, increasing your blight and acid damage by %d%%.
-		The damage will increase with your Magic stat.]]):
+		Each time your spells go critical, you enter a blood rage for 5 turns, increasing your blight and acid damage by %d%%.
+		The critical chance and damage increase will improve with your Spellpower.]]):
 		format(self:combatTalentSpellDamage(t, 10, 14), self:combatTalentSpellDamage(t, 10, 30))
 	end,
 }

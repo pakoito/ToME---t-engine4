@@ -76,10 +76,10 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Allows one to use a melee weapon to focus spells, granting %d%% chance per melee attack to deliver a Flame, Lightning or Earthen Missiles spell as a free action on the target.
-		When using two weapons the chance is half for each weapon.
-		Delivering the spell this way will not trigger a spell cooldown, but only works if the spell is not cooling-down.
-		The chance increases with cunning.]]):
+		return ([[Allows you to use a melee weapon to focus your spells, granting %d%% chance per melee attack to deliver a Flame, Lightning or Earthen Missiles spell as a free action on the target.
+		When using two weapons, the chance is halved for each weapon.
+		Delivering the spell this way will not trigger a spell cooldown, but only works if the spell is not cooling down.
+		The chance increases with your Cunning.]]):
 		format(20 + self:getTalentLevel(t) * (1 + self:getCun(9, true)))
 	end,
 }
@@ -91,7 +91,7 @@ newTalent{
 	points = 5,
 	require = techs_req2,
 	info = function(self, t)
-		return ([[The user gains a bonus to spellpower equal to %d%% of their cunning.]]):
+		return ([[The user gains a bonus to Spellpower equal to %d%% of their Cunning.]]):
 		format(15 + self:getTalentLevel(t) * 5)
 	end,
 }
@@ -122,7 +122,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Regenerates %0.2f mana per turn and increases physical and spell critical chance by %d%% while active.]]):format(self:getTalentLevel(t) / 7, self:getTalentLevel(t) * 2.2)
+		return ([[Regenerates %0.2f mana per turn, and increases physical and spell critical chance by %d%% while active.]]):format(self:getTalentLevel(t) / 7, self:getTalentLevel(t) * 2.2)
 	end,
 }
 
@@ -133,9 +133,9 @@ newTalent{
 	points = 5,
 	require = techs_req4,
 	info = function(self, t)
-		return ([[Raw magical damage channels through the caster's weapon, increasing physical power by %d.
-		Each time your crit with a melee blow you will unleash a radius 2 ball of either fire, lightning or arcane damage doing %0.2f.
-		The bonus scales with Magic and Cunning.]]):
+		return ([[Raw magical damage channels through the caster's weapon, increasing Physical Power by %d.
+		Each time your crit with a melee blow, you will unleash a radius 2 ball of either fire, lightning or arcane damage, doing %0.2f.
+		The bonus scales with your Spellpower.]]):
 		format(self:combatSpellpower() * self:getTalentLevel(Talents.T_ARCANE_DESTRUCTION) / 7, self:combatSpellpower() * 2)
 	end,
 }

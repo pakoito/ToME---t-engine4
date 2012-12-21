@@ -70,9 +70,9 @@ newTalent{
 	info = function(self, t)
 		local dam = t.getDamage(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[You smack your forehead against your enemy's head (or whatever sensitive part you can find), causing %0.2f physical damage. If the attack hits the target is confused for %d turns.
-		Damage done increases with the quality of your headgear, your strength and your physical damage bonuses.
-		Confusion power and chance increase with your Dexterity stat.]]):
+		return ([[You smack your forehead against your enemy's head (or whatever sensitive part you can find), causing %0.2f physical damage. If the attack hits, the target is confused for %d turns.
+		Damage done increases with the quality of your headgear, your Strength, and your physical damage bonuses.
+		Confusion power and chance increase with your Dexterity and Accuracy.]]):
 		format(dam, duration)
 	end,
 }
@@ -111,7 +111,7 @@ newTalent{
 		self.combat_apr = self.combat_apr - 4
 	end,
 	info = function(self, t)
-		return ([[You know how to hit the right places, giving +%d%% critical damage modifier and %d armour penetration.]]):
+		return ([[You know how to hit the right places, giving +%d%% critical damage modifier and %d Armour penetration.]]):
 		format(self:getTalentLevelRaw(t) * 5, self:getTalentLevelRaw(t) * 4)
 	end,
 }
@@ -147,7 +147,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[You go all out, trying to burn down your foes as fast as possible.
-		Every hit in battle has +%d%% critical chance and +%d%% physical penetration, but each strike drains %d stamina.]]):
+		Every hit in battle has +%d%% critical chance and +%d%% physical resistance penetration, but each strike drains %d stamina.]]):
 		format(t.getCrit(self, t), t.getPen(self, t), t.getDrain(self, t))
 	end,
 }

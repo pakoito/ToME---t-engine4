@@ -80,8 +80,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Rushes toward your target with incredible speed. If the target is reached you get a free attack doing 120% weapon damage.
-		If the attack hits the target is dazed for 3 turns.
+		return ([[Rushes toward your target with incredible speed. If the target is reached, you get a free attack doing 120% weapon damage.
+		If the attack hits, the target is dazed for 3 turns.
 		You must rush from at least 2 tiles away.]])
 	end,
 }
@@ -109,8 +109,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You focus your strikes, reducing your attack speed by %d%% and increasing your accuracy by %d and critical chance by %d%%.
-		The effects will increase with your Dexterity stat.]]):
+		return ([[You focus your strikes, reducing your attack speed by %d%% and increasing your Accuracy by %d and critical chance by %d%%.
+		The effects will increase with your Dexterity.]]):
 		format(10, 4 + (self:getTalentLevel(t) * self:getDex()) / 15, 4 + (self:getTalentLevel(t) * self:getDex()) / 25)
 	end,
 }
@@ -130,7 +130,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You have learned to focus your blows to hit your target, granting +100 accuracy and allowing you to attack creatures you can not see without penalty for the next %d turns.]]):format(1 + self:getTalentLevel(t))
+		return ([[You have learned to focus your blows to hit your target, granting +100 accuracy and allowing you to attack creatures you cannot see without penalty for the next %d turns.]]):format(1 + self:getTalentLevel(t))
 	end,
 }
 
@@ -149,7 +149,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Through rigorous training you have learned to focus your actions for a short while, increasing your speed by %d%% for 5 turns.]]):format(self:getTalentLevel(t) * 9)
+		return ([[Through rigorous training, you have learned to focus your actions for a short while, increasing your speed by %d%% for 5 turns.]]):format(self:getTalentLevel(t) * 9)
 	end,
 }
 

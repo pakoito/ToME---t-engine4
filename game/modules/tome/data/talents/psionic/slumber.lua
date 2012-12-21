@@ -73,8 +73,8 @@ newTalent{
 		local power = t.getSleepPower(self, t)
 		local insomnia = t.getInsomniaPower(self, t)
 		return([[Puts the target into a deep sleep for %d turns, rendering it unable to act.  Every %d points of damage the target suffers will reduce the effect duration by one turn.
-		When Slumber ends the target will suffer from Insomnia for a number of turns equal to the amount of time it was asleep (up to ten turns max), granting it %d%% sleep immunity for each turn of the Insomnia effect.
-		The damage threshold will scale with your mindpower.]]):format(duration, power, insomnia)
+		When Slumber ends, the target will suffer from Insomnia for a number of turns equal to the amount of time it was asleep (up to ten turns max), granting it %d%% sleep immunity for each turn of the Insomnia effect.
+		The damage threshold will scale with your Mindpower.]]):format(duration, power, insomnia)
 	end,
 }
 
@@ -92,8 +92,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return([[Targets you have slept now take %0.2f mind damage each turn for five turns upon waking.
-		The damage will scale with your mindpower.]]):format(damDesc(self, DamageType.MIND, (damage)))
+		return([[Targets you have slept take %0.2f mind damage each turn for five turns upon waking.
+		The damage will scale with your Mindpower.]]):format(damDesc(self, DamageType.MIND, (damage)))
 	end,
 }
 
@@ -108,9 +108,9 @@ newTalent{
 	info = function(self, t)
 		local power_bonus = t.getSleepPowerBonus(self, t) - 1
 		local insomnia = t.getInsomniaPower(self, t)
-		return([[Increases the amount of damage you can deal to sleeping targets before reducing the effect duration by %d%% and reduces the sleep immunity of your Insomnia effects by %d%%.
+		return([[Increases the amount of damage you can deal to sleeping targets before reducing the effect duration by %d%%, and reduces the sleep immunity of your Insomnia effects by %d%%.
 		These effects will be directly reflected in the appropriate talent descriptions.
-		The damage threshold bonus will scale with your mindpower.]]):format(power_bonus * 100, insomnia)
+		The damage threshold bonus will scale with your Mindpower.]]):format(power_bonus * 100, insomnia)
 	end,
 }
 
@@ -237,10 +237,10 @@ newTalent{
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		local power = t.getPower(self, t)
-		return([[Enter a sleeping target's dreams for %d turns.  While in the dreamscape you'll encounter the target's invulnerable sleeping form as well as dream projections that it will spawn every other turn to defend it's mind.
+		return([[Enter a sleeping target's dreams for %d turns.  While in the Dreamscape, you'll encounter the target's invulnerable sleeping form as well as dream projections that it will spawn every other turn to defend its mind.
 		Projections inflict 50%% less damage then the original, unless the target has Lucid Dreamer active.
-		When the dreamscape ends the target's life will be reduced by 10%% and it will to be brainlocked for one turn for each projection destroyed.
-		In the dreamscape your damage will be improved by %d%%.
-		The damage bonus will improve with your mindpower.]]):format(duration, power)
+		When the Dreamscape ends, for each projection destroyed, the target's life will be reduced by 10%% and it will be brainlocked for one turn.
+		In the Dreamscape, your damage will be improved by %d%%.
+		The damage bonus will improve with your Mindpower.]]):format(duration, power)
 	end,
 }

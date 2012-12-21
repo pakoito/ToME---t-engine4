@@ -122,7 +122,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You fire multiple arrows at the area of %d radius, doing %d%% damage.]])
+		return ([[You fire multiple arrows at an area of %d radius, doing %d%% damage with each arrow.]])
 		:format(2 + self:getTalentLevel(t)/3,
 		100 * self:combatTalentWeaponDamage(t, 0.6, 1.3))
 	end,

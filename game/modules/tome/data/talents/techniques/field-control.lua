@@ -67,7 +67,7 @@ newTalent{
 	info = function(self, t)
 		local rad = self:getTalentRadius(t)
 		return ([[Sense foes around you in a radius of %d for %d turns.
-		The radius will increase with the Cunning stat]]):format(rad, 3 + self:getTalentLevel(t))
+		The radius will increase with your Cunning.]]):format(rad, 3 + self:getTalentLevel(t))
 	end,
 }
 
@@ -105,8 +105,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[A mighty kick that pushes your target away %d grids.
-		If another creature is in the way it will also be pushed away.
-		Knockback chance increase with your accuracy or physical power stat (whichever is greater).]]):format(math.floor(2 + self:getTalentLevel(t)))
+		If another creature is in the way, it will also be pushed away.
+		Knockback chance increase with your Accuracy or your Physical, whichever is greater.]]):format(math.floor(2 + self:getTalentLevel(t)))
 	end,
 }
 
@@ -131,7 +131,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Your great dexterity allows you to see incoming projectiles (spells, arrows, ...), slowing them down by %d%%.]]):
+		return ([[Your great dexterity allows you to see incoming projectiles (spells, arrows, ...), effectively slowing them down by %d%%.]]):
 		format(math.min(90, 15 + self:getDex(10, true) * self:getTalentLevel(t)))
 	end,
 }

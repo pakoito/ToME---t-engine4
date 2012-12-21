@@ -57,9 +57,9 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local damagestat = t.getDamageStat(self, t)
-		return ([[Projects a bolt of temporal energy that deals %0.2f temporal damage and reduces all of the target's stats by %d for 3 turns.
+		return ([[Projects a bolt of temporal energy that deals %0.2f temporal damage, and reduces all of the target's stats by %d for 3 turns.
 		At talent level 4 you may project a second bolt.
-		The damage will scale with your Paradox and Spellpower.]]):format(damDesc(self, DamageType.TEMPORAL, damage), damagestat)
+		The damage dealt will scale with your Paradox and Spellpower.]]):format(damDesc(self, DamageType.TEMPORAL, damage), damagestat)
 	end,
 }
 
@@ -98,7 +98,7 @@ newTalent{
 	info = function(self, t)
 		local duration = t.getConfuseDuration(self, t)
 		local radius = self:getTalentRadius(t)
-		return ([[Reverts the minds of all creatures in a %d radius cone to an infantile state, in effect confusing them for %d turns.
+		return ([[Reverts the minds of all creatures in a radius %d cone to an infantile state, in effect confusing them for %d turns.
 		The duration will scale with your Paradox.]]):
 		format(radius, duration)
 	end,
@@ -145,8 +145,8 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local duration = t.getDuration(self, t)
 		local radius = self:getTalentRadius(t)
-		return ([[You surround yourself with a radius %d aura of time distortion that deals %0.2f stacking temporal damage over 3 turns to all creatures.  The effect lasts %d turns.
-		The damage will scale with your Paradox and Spellpower.]]):format(radius, damDesc(self, DamageType.TEMPORAL, damage), duration)
+		return ([[You surround yourself with a radius %d distortion of time, which deals %0.2f stacking temporal damage over 3 turns to all other creatures.  The effect lasts %d turns.
+		The damage dealt will scale with your Paradox and Spellpower.]]):format(radius, damDesc(self, DamageType.TEMPORAL, damage), duration)
 	end,
 }
 
@@ -200,7 +200,7 @@ newTalent{
 		local heal = t.getHeal(self, t)
 		local count = t.getRemoveCount(self, t)
 		return ([[You revert your body to a previous state, healing yourself for %0.2f life and removing %d physical status effects (both good and bad).
-		The life healed will scale with your Paradox and Spellpower.]]):
+		The amount of life healed will scale with your Paradox and Spellpower.]]):
 		format(heal, count)
 	end,
 }

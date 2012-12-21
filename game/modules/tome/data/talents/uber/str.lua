@@ -29,7 +29,7 @@ uberTalent{
 		self:attr("show_gloves_combat", -1)
 	end,
 	info = function(self, t)
-		return ([[Each time you make a melee attack you have 100%% chances to do an additional unarmed strike, if using weapons and 60%% chances if already fighting unarmed.]])
+		return ([[Each time you make a melee attack, you have 100%% chances to do an additional unarmed strike, if using weapons. This is instead a 60%% chance if you are already fighting unarmed.]])
 		:format()
 	end,
 }
@@ -67,7 +67,7 @@ uberTalent{
 	end,
 	info = function(self, t)
 		return ([[You deal a massive blow to your foe, smashing it for 350%% weapon damage and knocking it back 6 tiles away.
-		All foes in its path will be knocked on the sides and stunned for 3 turns.]])
+		All foes in its path will be knocked to the side and stunned for 3 turns.]])
 		:format()
 	end,
 }
@@ -101,7 +101,7 @@ uberTalent{
 	end,
 	info = function(self, t)
 		return ([[You deal a massive blow to your foe, smashing it for 150%% weapon damage and knocking it back 4 tiles away.
-		If the knockback makes it hit a wall it will smash down the wall and deal an additional 350%% weapon damage.]])
+		If the knockback makes it hit a wall, it will smash down the wall and deal an additional 350%% weapon damage.]])
 		:format()
 	end,
 }
@@ -111,8 +111,8 @@ uberTalent{
 	mode = "passive",
 	require = { special={desc="Know the Rush talent.", fct=function(self) return self:knowTalent(self.T_RUSH) end} },
 	info = function(self, t)
-		return ([[When you rush the creature you rush to is marked. If you kill it in the next two turns your rush cooldown is reset.
-		Each time this effect triggers you gain a stacking +20%% damage buff, up to 100%%.]])
+		return ([[When you rush, the creature you rush to is marked. If you kill it in the next two turns, your rush cooldown is reset.
+		Each time this effect triggers, you gain a stacking +20%% damage buff, up to 100%%.]])
 		:format()
 	end,
 }
@@ -135,9 +135,9 @@ uberTalent{
 	end,
 	info = function(self, t)
 		local dam = (50 + self:getStr() * 2) / 3
-		return ([[For 6 turns you gain the mass and power of a star, drawing all creatures in a radius 5 toward you and dealing %0.2f fire, %0.2f light and %0.2f physical damage to all foes.
-			Foes closer to you take up to 200%% more damage.
-			Damage will increase with Strength.]])
+		return ([[For 6 turns you gain the mass and power of a star, drawing all creatures within radius 5 toward you and dealing %0.2f fire, %0.2f light and %0.2f physical damage to all foes.
+		Foes closer to you take up to 200%% more damage.
+		Damage will increase with your Strength.]])
 		:format(damDesc(self, DamageType.FIRE, dam), damDesc(self, DamageType.LIGHT, dam), damDesc(self, DamageType.PHYSICAL, dam))
 	end,
 }
@@ -147,7 +147,7 @@ uberTalent{
 	mode = "passive",
 	require = { special={desc="Be able to use massive armours.", fct=function(self) return self:getTalentLevelRaw(self.T_ARMOUR_TRAINING) >= 3 end} },
 	info = function(self, t)
-		return ([[You are strong, fatigue means nothing to you
+		return ([[You are strong; fatigue and physical exertion mean nothing to you.
 		Fatigue is permanently set to 0.]])
 		:format()
 	end,
@@ -172,8 +172,8 @@ uberTalent{
 		require("engine.ui.Dialog"):simplePopup("Legacy of the Naloren", "Slasul will be happy to know your faith in his cause. You should return to speak to him.")
 	end,
 	info = function(self, t)
-		return ([[You sided with Slasul ad helped him vanquish Ukllmswwik. You are now able to breathe underwater with ease.
-		You also learnt to use tridents and other exotic weapons easily (gains 5 levels of exotic weapon mastery) and Spit Poison as nagas do.]])
+		return ([[You sided with Slasul and helped him vanquish Ukllmswwik. You are now able to breathe underwater with ease.
+		You also learnt to use tridents and other exotic weapons easily (gains 5 levels of Exotic Weapon Mastery), and can Spit Poison as nagas do.]])
 		:format()
 	end,
 }

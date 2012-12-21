@@ -79,11 +79,11 @@ newTalent{
 	end,
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[When you focus your attacks on a single foe and melee strike them for two consecutive turns your hated of them overcomes you and you begin to stalk them with single-minded purpose. The effect will last for %d turns or until your prey is dead. Stalking gives you bonuses against your foe that grow each turn you hit them and diminish each turn you don't.
-		bonus level 1: +%d attack, +%d%% melee damage, +%0.2f hate/turn prey was hit
-		bonus level 2: +%d attack, +%d%% melee damage, +%0.2f hate/turn prey was hit
-		bonus level 3: +%d attack, +%d%% melee damage, +%0.2f hate/turn prey was hit
-		Attack and damage increase with the Willpower stat.]]):format(duration,
+		return ([[When you focus your attacks on a single foe and strike them in melee for two consecutive turns, your hatred of them overcomes you and you begin to stalk them with single-minded purpose. The effect will last for %d turns, or until your prey is dead. Stalking gives you bonuses against your foe that grow each turn you hit them, and diminish each turn you don't.
+		Bonus level 1: +%d Accuracy, +%d%% melee damage, +%0.2f hate/turn prey was hit
+		Bonus level 2: +%d Accuracy, +%d%% melee damage, +%0.2f hate/turn prey was hit
+		Bonus level 3: +%d Accuracy, +%d%% melee damage, +%0.2f hate/turn prey was hit
+		The accuracy bonus improves with your Willpower, and the melee damage bonus with your Strength.]]):format(duration,
 		t.getAttackChange(self, t, 1), t.getStalkedDamageMultiplier(self, t, 1) * 100 - 100, t.getHitHateChange(self, t, 1),
 		t.getAttackChange(self, t, 2), t.getStalkedDamageMultiplier(self, t, 2) * 100 - 100, t.getHitHateChange(self, t, 2),
 		t.getAttackChange(self, t, 3), t.getStalkedDamageMultiplier(self, t, 3) * 100 - 100, t.getHitHateChange(self, t, 3))
@@ -132,8 +132,8 @@ newTalent{
 		local chance = t.getChance(self, t)
 		local spellpowerChange = t.getSpellpowerChange(self, t)
 		local mindpowerChange = t.getMindpowerChange(self, t)
-		return ([[The connection between predator and prey allows you to speak to the mind of your target and beckon them closer. For %d turns they will try to come to you, even pushing others aside to do so. They will move towards you instead of acting %d%% of the time but can save verses Mindpower to slow the effect. If they take significant damage, the beckoning may be overcome altogether. The effect makes concentration difficult for your target, reducing spellpower and mindpower by %d until they reach you.
-		Spellpower and Mindpower reduction increases with the Willpower stat.]]):format(duration, chance, -spellpowerChange)
+		return ([[The connection between predator and prey allows you to speak to the mind of your target and beckon them closer. For %d turns, they will try to come to you, even pushing others aside to do so. They will move towards you instead of acting %d%% of the time, but can save verses Mindpower to slow the effect. If they take significant damage, the beckoning may be overcome altogether. The effect makes concentration difficult for your target, reducing Spellpower and Mindpower by %d until they reach you.
+		The Spellpower and Mindpower reduction increases with your Willpower.]]):format(duration, chance, -spellpowerChange)
 	end,
 }
 
@@ -253,7 +253,9 @@ newTalent{
 	info = function(self, t)
 		local movementSpeedChange = t.getMovementSpeedChange(self, t)
 		local defenseChange = t.getDefenseChange(self, t, true)
-		return ([[Let hate fuel your movements. While active you gain %d%% movement speed. The recklessness of your movement brings you bad luck (luck -3). Cleave, repel and surge cannot be activate simultaneously and activating one will place the others in cooldown. The speed of your movements combined with the balance and utility of two weapons gives you %d extra defense while dual-wielding.
-		Movement speed and dual-wielding defense increase with with the Willpower stat.]]):format(movementSpeedChange * 100, defenseChange)
+		return ([[Let hate fuel your movements. While active, you gain %d%% movement speed. The recklessness of your movement brings you bad luck (Luck -3). 
+		Cleave, Repel and Surge cannot be active simultaneously, and activating one will place the others in cooldown. 
+		The speed of your movements, combined with the balance and utility of two weapons, gives you %d extra Defense while dual-wielding.
+		Movement speed and dual-wielding Defense both increase with with the Willpower stat.]]):format(movementSpeedChange * 100, defenseChange)
 	end,
 }

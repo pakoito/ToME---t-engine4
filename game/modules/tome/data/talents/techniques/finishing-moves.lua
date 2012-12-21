@@ -62,8 +62,8 @@ newTalent{
 		local damage = t.getDamage(self, t) * 100
 		local stun = math.ceil(self:getTalentLevel(t) * 0.25)
 		local stunmax = math.ceil (self:getTalentLevel(t) * 1.25)
-		return ([[A finishing uppercut that deals %d%% damage and attempts to stun your target for %d to %d turns (depending on combo points).
-		The stun chance will improve with the strength stat.
+		return ([[A finishing uppercut that deals %d%% damage, and attempts to stun your target for %d to %d turns, depending on the amount of combo points you've accumulated.
+		The stun chance will improve with your Physical Power.
 		Using this talent removes your combo points.]])
 		:format(damage, stun, stunmax)
 	end,
@@ -119,8 +119,8 @@ newTalent{
 		local area = t.getAreaDamage(self, t) * 0.25
 		local areamax = t.getAreaDamage(self, t) * 1.25
 		local radius = self:getTalentRadius(t)
-		return ([[A powerful concussive punch that deals %d%% weapon damage to your target.  If the punch hits all targets in a radius of %d will take %0.2f - %0.2f (depending on combo points) physical damage.
-		The area damage will scale with the Strength stat and the radius will increase by 1 for every four talent levels.
+		return ([[A powerful concussive punch that deals %d%% weapon damage to your target.  If the punch hits, all targets in a radius of %d will take %0.2f to %0.2f damage, depending on the amount of combo points you've accumulated.
+		The area damage will scale with your Strength, and the radius will increase by 1 for every four talent levels.
 		Using this talent removes your combo points.]])
 		:format(damage, radius, damDesc(self, DamageType.PHYSICAL, area), damDesc(self, DamageType.PHYSICAL, areamax))
 	end,
@@ -177,8 +177,8 @@ newTalent{
 		local drain = self:getTalentLevel(t) * 2
 		local daze = math.ceil(self:getTalentLevel(t) * 0.25)
 		local dazemax = math.ceil (self:getTalentLevel(t) * 1.25)
-		return ([[A punch to the body that deals %d%% damage, drains %d of the target's stamina per combo point, and dazes the target for %d to %d turns (depending on combo points).
-		The daze chance will increase with the strength stat.
+		return ([[A punch to the body that deals %d%% damage, drains %d of the target's stamina per combo point, and dazes the target for %d to %d turns, depending on the amount of combo points you've accumulated.
+		The daze chance will increase with your Physical Power.
 		Using this talent removes your combo points.]])
 		:format(damage, drain, daze, dazemax)
 	end,
@@ -240,8 +240,8 @@ newTalent{
 		local damage = t.getDamage(self, t) * 100
 		local stamina = math.ceil((self:getTalentLevel(t) + 1)) * 2
 		local staminamax = math.ceil((self:getTalentLevel(t) + 5)) * 2
-		return ([[A vicious finishing strike that deals %d%% damage + 10%% damage per combo point you have.  If the target ends up with low enough life(<20%%) it might be instantly killed.
-		Killing a target with Haymaker will instantly restore %d%% to %d%% of your maximum stamina (depending on combo points).
+		return ([[A vicious finishing strike that deals %d%% damage + 10%% damage per combo point you have.  If the target ends up with low enough life (<20%%), it might be instantly killed.
+		Killing a target with Haymaker will instantly restore %d%% to %d%% of your maximum stamina, depending on the amount of combo points you've accumulated.
 		Using this talent removes your combo points.]])
 		:format(damage, stamina, staminamax)
 	end,

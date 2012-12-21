@@ -134,7 +134,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Orders your golem to taunt targets in a radius of %d, forcing it to attack the golem.]]):format(self:getTalentLevelRaw(t) / 2 + 1)
+		return ([[Orders your golem to taunt targets in a radius of %d, forcing them to attack the golem.]]):format(self:getTalentLevelRaw(t) / 2 + 1)
 	end,
 }
 
@@ -205,7 +205,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local duration = t.getPinDuration(self, t)
-		return ([[Your golem rushes to the target, crushing it to the ground for %d turns and doing %d%% damage.
+		return ([[Your golem rushes to the target, crushing it into the ground for %d turns and doing %d%% damage.
 		Pinning chance will increase with talent level.]]):
 		format(duration, 100 * damage)
 	end,
@@ -285,7 +285,7 @@ newTalent{
 	info = function(self, t)
 		local duration = t.getDazeDuration(self, t)
 		local damage = t.getGolemDamage(self, t)
-		return ([[Your golem rushes to the target, pounding the area of radius 2, dazing all foes for %d turns and doing %d%% damage.
+		return ([[Your golem rushes to the target and creates a shockwave with radius 2, dazing all foes for %d turns and doing %d%% damage.
 		Daze chance increases with talent level.]]):
 		format(duration, 100 * damage)
 	end,
@@ -356,8 +356,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Fire a beam from your eyes doing %0.2f fire damage, %0.2f cold damage or %0.2f lightning damage.
-		The damage will increase with your Spellpower.]]):
+		return ([[Your golem fires a beam from his eyes, doing %0.2f fire damage, %0.2f cold damage or %0.2f lightning damage.
+		The damage will increase with your golem's Spellpower.]]):
 		format(damDesc(self, DamageType.FIRE, damage), damDesc(self, DamageType.COLD, damage), damDesc(self, DamageType.LIGHTNING, damage))
 	end,
 }
@@ -388,7 +388,7 @@ newTalent{
 		return ([[Your golem's skin shimmers with eldritch energies.
 		Any damage it takes is partly reflected (%d%%) to the attacker.
 		The golem still takes full damage.
-		Damage returned will increase with your Spellpower.]]):
+		Damage returned will increase with your golem's Spellpower.]]):
 		format(20 + self:combatTalentSpellDamage(t, 12, 40))
 	end,
 }
@@ -432,7 +432,7 @@ newTalent{
 	info = function(self, t)
 		local rad = self:getTalentRadius(t)
 		local dam = t.getDamage(self, t)
-		return ([[Your golem pulls all foes within %d toward itself, also dealing %0.2f arcane damage.]]):
+		return ([[Your golem pulls all foes within radius %d toward itself while dealing %0.2f arcane damage.]]):
 		format(rad, dam)
 	end,
 }
@@ -472,8 +472,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Turns the golems skin into molten rock. The heat generated sets ablaze all inside a radius of 3 for doing %0.2f fire damage in 3 turns for %d turns.
-		Burning is cumulative, the longer they stay in they higher the fire damage they take.
+		return ([[Turns the golem's skin into molten rock. The heat generated sets ablaze everything inside a radius of 3, doing %0.2f fire damage in 3 turns for %d turns.
+		Burning is cumulative; the longer they stay within range, they higher the fire damage they take.
 		In addition the golem gains %d%% fire resistance.
 		Molten Skin damage will not affect the golem's master.
 		The damage and resistance will increase with your Spellpower.]]):format(damDesc(self, DamageType.FIRE, self:combatTalentSpellDamage(t, 12, 120)), 5 + self:getTalentLevel(t), 30 + self:combatTalentSpellDamage(t, 12, 60))

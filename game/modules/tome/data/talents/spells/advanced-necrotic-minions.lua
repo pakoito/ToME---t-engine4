@@ -200,7 +200,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Minions are only tools. You may dispose of them... violently.
-		Makes the targetted minion explode for %d%% of its maximum life as blight damage.
+		Makes the targeted minion explode for %d%% of its maximum life as blight damage.
 		Beware! Don't get caught in the blast!]]):
 		format(t.getDamage(self, t))
 	end,
@@ -273,10 +273,10 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Combines 3 of your skeletons into a bone giant.
-		At level 1 it makes a bone giant.
-		At level 3 it makes a heavy bone giant.
-		At level 5 it makes an eternal bone giant.
-		At level 6 it has a 20%% chance to produce a runed bone giant.
+		At level 1, it makes a bone giant.
+		At level 3, it makes a heavy bone giant.
+		At level 5, it makes an eternal bone giant.
+		At level 6, it has a 20%% chance to produce a runed bone giant.
 		Only one bone giant can be active at any time.]]):
 		format()
 	end,
@@ -330,7 +330,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Sacrifice a bone giant minion. Using its bones you make a temporary shield around you that prevents any attacks from doing more than %d%% of your total life.
+		return ([[Sacrifice a bone giant minion. Using its bones, you make a temporary shield around you that prevents any attacks from doing more than %d%% of your total life.
 		The effect lasts %d turns.]]):
 		format(t.getPower(self, t), t.getTurns(self, t))
 	end,

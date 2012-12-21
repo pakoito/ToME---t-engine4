@@ -427,7 +427,7 @@ newTalent{
 		local level = t.getLevel(self, t)
 		local healLevel = t.getHealLevel(self, t)
 		local blindsideLevel = t.getBlindsideLevel(self, t)
-		return ([[While this ability is active you will continually call up to %d level %d shadows to aid you in battle. Each shadow costs 6 hate to summon. Shadows are weak combatants that can: Use Arcane Reconstruction to heal themselves (level %d), Blindside their opponents (level %d) and Phase Door from place to place.]]):format(maxShadows, level, healLevel, blindsideLevel)
+		return ([[While this ability is active, you will continually call up to %d level %d shadows to aid you in battle. Each shadow costs 6 hate to summon. Shadows are weak combatants that can: Use Arcane Reconstruction to heal themselves (level %d), Blindside their opponents (level %d), and Phase Door from place to place.]]):format(maxShadows, level, healLevel, blindsideLevel)
 	end,
 }
 
@@ -484,7 +484,7 @@ newTalent{
 		local dominateChance = t.getDominateChance(self, t)
 		local dominateLevel = t.getDominateLevel(self, t)
 		local fadeCooldown = math.max(3, 8 - self:getTalentLevelRaw(t))
-		return ([[Instill hate in your shadows, strengthening their attacks. They gain %d%% extra accuracy and %d%% extra damage. The fury of their attacks gives them the ability to try to Dominate their foes, increasing all damage taken by that foe for 4 turns (level %d, %d%% chance at range 1). They also gain the ability to Fade when hit, avoiding all damage until their next turn (%d turn cooldown).]]):format(combatAtk, incDamage, dominateLevel, dominateChance, fadeCooldown)
+		return ([[Instill hate in your shadows, strengthening their attacks. They gain %d%% extra Accuracy and %d%% extra damage. The fury of their attacks gives them the ability to try to Dominate their foes, increasing all damage taken by that foe for 4 turns (level %d, %d%% chance at range 1). They also gain the ability to Fade when hit, avoiding all damage until their next turn (%d turn cooldown).]]):format(combatAtk, incDamage, dominateLevel, dominateChance, fadeCooldown)
 	end,
 }
 
@@ -559,7 +559,7 @@ newTalent{
 		local spellpowerChange = t.getSpellpowerChange(self, t)
 		local lightningLevel = t.getLightningLevel(self, t)
 		local flamesLevel = t.getFlamesLevel(self, t)
-		return ([[Infuse magic into your shadows to give them fearsome spells. Your shadows receive a bonus of %d to their spellpower.
+		return ([[Infuse magic into your shadows to give them fearsome spells. Your shadows receive a bonus of %d to their Spellpower.
 		Your shadows can strike adjacent foes with Lightning (level %d, %d%% chance at range 1).
 		At level 3 your shadows can sear their enemies from a distance with Flames (level %d, %d%% chance at range 2 to 6).
 		At level 5 when your shadows are struck down they will attempt to Reform, becoming whole again (50%% chance).]]):format(spellpowerChange, lightningLevel, closeAttackSpellChance, flamesLevel, farAttackSpellChance)
@@ -639,7 +639,7 @@ newTalent{
 	info = function(self, t)
 		local defenseDuration = t.getDefenseDuration(self, t)
 		local blindsideChance = t.getBlindsideChance(self, t)
-		return ([[Focus your shadows on a single target. Friendly targets will be defended for %d turns. Hostile targets will be attacked with a %d%% chance they will blindside the target.
+		return ([[Focus your shadows on a single target. Friendly targets will be defended for %d turns. Hostile targets will be attacked, with a %d%% chance the shadows will blindside the target.
 		This talent has no cost.]]):format(defenseDuration, blindsideChance)
 	end,
 }

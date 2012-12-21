@@ -89,7 +89,8 @@ newTalent{
 		local maxDuration = t.getMaxDuration(self, t)
 		local movementSpeedChange = t.getMovementSpeedChange(self, t)
 		local combatPhysSpeedChange = t.getCombatPhysSpeedChange(self, t)
-		return ([[You enter a terrible rampage for %d turns (up to a maximum of %d turns), destroying everything in your path. Starting a rampage is instantaneous. There is also a small chance when you take damage that you will rampage. Any talent, rune or infusion you use while rampaging becomes a distraction and reduces the duration of the rampage by 1. Your first movement while rampaging increases the rampage duration by 1.
+		return ([[You enter a terrible rampage for %d turns (up to a maximum of %d turns), destroying everything in your path. Starting a rampage is instantaneous. You may also enter a rampage (50%% chance) when you are hit for more than 8%% of your max life. 
+		Any talent, rune or infusion you use while rampaging becomes a distraction, and reduces the duration of the rampage by 1. Your first movement while rampaging increases the rampage duration by 1.
 		Rampage Bonus: +%d%% movement speed.
 		Rampage Bonus: +%d%% attack speed]]):format(duration, maxDuration, movementSpeedChange * 100, combatPhysSpeedChange * 100)
 	end,
@@ -120,7 +121,7 @@ newTalent{
 		local combatMentalResistChange = t.getCombatMentalResistChange(self, t)
 		return ([[You attack with mindless brutality. The first critical hit inflicted while rampaging increases the rampage duration by 1.
 		Rampage Bonus: Your physical damage increases by %d%%.
-		Rampage Bonus: Your physical save increases by %d and mental save increases by %d.]]):format(physicalDamageChange, combatPhysResistChange, combatMentalResistChange)
+		Rampage Bonus: Your Physical Save increases by %d and Mental Save increases by %d.]]):format(physicalDamageChange, combatPhysResistChange, combatMentalResistChange)
 	end,
 }
 
@@ -145,7 +146,7 @@ newTalent{
 		local damageShieldBonus = t.getDamageShieldBonus(self, t)
 		return ([[Nothing will stop your rampage.
 		Rampage Bonus: You shrug off up to %d damage each turn during your rampage. If you shrug off more than %d damage, the rampage duration increases by 1.
-		Damage increases with the Strength Stat.]]):format(damageShield, damageShieldBonus)
+		The amount of damage you can shrug off improves with your Strength.]]):format(damageShield, damageShieldBonus)
 	end,
 }
 

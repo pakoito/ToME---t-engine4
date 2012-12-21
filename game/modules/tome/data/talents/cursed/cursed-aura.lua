@@ -115,7 +115,7 @@ newTalent{
 		t.updateCurses(self, t)
 	end,
 
-	-- chooses whether the player accepts the cursed aura tree when a cursable item is found..only offered once for Afflicted classes
+	-- chooses whether the player accepts the cursed aura tree when a cursable item is found. only offered once for Afflicted classes
 	chooseCursedAuraTree = function(self, t)
 		local choose = false
 		local x, y, i = self.x, self.y, 1
@@ -241,11 +241,11 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Your defiling touch permeates everything around you, imparting a random curse on each item you find. When you equip a cursed item, you gain the effects of that curse. Multiple items with the same curse increase the power of those effects up to a maximum level of 5. Initially curses are harmful, but powerful benefits can be unlocked with multiple items and the Dark Gifts.
-At level 1 you gain the ability to curse weapons.
-At level 2 you gain the ability to curse body armor and cloaks.
-At level 3 you gain the ability to curse shields and helmets.
-At level 4 you gain the ability to curse gloves, boots and belts.
-At level 5 you can activate this talent to surround yourself with an aura that adds 2 levels to a curse of your choosing. (Currently %s)]]):format(t.getCursedAuraName(self, t))
+		At level 1 you gain the ability to curse weapons.
+		At level 2 you gain the ability to curse body armor and cloaks.
+		At level 3 you gain the ability to curse shields and helmets.
+		At level 4 you gain the ability to curse gloves, boots and belts.
+		At level 5 you can activate this talent to surround yourself with an aura that adds 2 levels to a curse of your choosing. (Currently %s)]]):format(t.getCursedAuraName(self, t))
 	end,
 }
 
@@ -266,7 +266,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local level = math.min(4, self:getTalentLevelRaw(t))
-		return ([[Your curses will also bring dark gifts. Unlocks bonus level %d effects on all of your curses allowing you to gain that effect when the power level of your curse reaches that level. At talent level 5 the luck penalty of cursed effects is reduced to 1.]]):format(level)
+		return ([[Your curses bring you dark gifts. Unlocks bonus level %d effects on all of your curses, allowing you to gain that effect when the power level of your curse reaches that level. At talent level 5, the luck penalty of cursed effects is reduced to 1.]]):format(level)
 	end,
 }
 
@@ -473,6 +473,6 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local attackSpeed = 100/t.getAttackSpeed(self, t)
 
-		return ([[Instill a part of your living curse into a weapon in your inventory and toss it nearby. This nearly impervious sentry will attack all nearby enemies for %d turns. When the curse ends the weapon will crumble to dust. Attack Speed: %d%%]]):format(duration, attackSpeed)
+		return ([[Instill a part of your living curse into a weapon in your inventory, and toss it nearby. This nearly impervious sentry will attack all nearby enemies for %d turns. When the curse ends, the weapon will crumble to dust, worn through by your hatred. Attack Speed: %d%%]]):format(duration, attackSpeed)
 	end,
 }

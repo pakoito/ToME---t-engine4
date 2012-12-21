@@ -63,9 +63,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Fires a bolt of pure filth, diseasing your target with a disease doing %0.2f blight damage per turns for 6 turns and reducing one of its physical stats (strength, constitution, dexterity) by %d. The three diseases can stack.
-		Virulent Disease will always try to apply a disease the target does not currently have, and also one that will have the most debilitaing effect for the target.
-		The effect will increase with your Magic stat.]]):
+		return ([[Fires a bolt of pure filth, diseasing your target with a disease doing %0.2f blight damage per turns for 6 turns, and reducing one of its physical stats (strength, constitution, dexterity) by %d. The three diseases can stack.
+		Virulent Disease will always try to apply a disease the target does not currently have, and also one that will have the most debilitating effect for the target.
+		The effect will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.BLIGHT, 7 + self:combatTalentSpellDamage(t, 6, 65)), self:combatTalentSpellDamage(t, 5, 35))
 	end,
 }
@@ -145,7 +145,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Make your target's diseases burst, doing %0.2f blight damage for each disease it is infected with.
 		This will also spread any decrepitude, weakness, rotting or epidemic diseases to any nearby foes in a radius of %d.
-		The damage will increase with your Magic stat.]]):
+		The damage will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 15, 85)), self:getTalentRadius(t))
 	end,
 }
@@ -214,7 +214,7 @@ newTalent{
 		local radius = t.getRadius(self, t)
 		local duration = t.getDuration(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[All your foes within a radius %d ball infected with a disease enter a catalepsy, stunning them for %d turns and dealing %d%% of all remaining disease damage instantly.]]):
+		return ([[All your foes within a radius %d ball infected with a disease enter a cataleptic state, stunning them for %d turns and dealing %d%% of all remaining disease damage instantly.]]):
 		format(radius, duration, damage * 100)
 	end,
 }
@@ -277,11 +277,11 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Infects the target with a very contagious disease doing %0.2f damage per turn for 6 turns.
+		return ([[Infects the target with a very contagious disease, doing %0.2f damage per turn for 6 turns.
 		If any blight damage from non-diseases hits the target, the epidemic may activate and spread a random disease to nearby targets within a radius 2 ball.
 		Creatures suffering from that disease will also suffer healing reduction (%d%%) and diseases immunity reduction (%d%%).
-		Epidemic is an extremely potent disease, as such it fully ignores the target's diseases immunity.
-		The damage will increase with your Magic stat, and the spread chance increases with the blight damage.]]):
+		Epidemic is an extremely potent disease; as such, it fully ignores the target's diseases immunity.
+		The damage will increase with your Spellpower, and the spread chance increases with the amount of blight damage dealt.]]):
 		format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 15, 70)), 40 + self:getTalentLevel(t) * 4, 30 + self:getTalentLevel(t) * 6)
 	end,
 }

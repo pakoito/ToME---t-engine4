@@ -80,9 +80,9 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local insomnia = t.getInsomniaPower(self, t)
 		return([[Puts targets in a radius %d cone into a nightmarish sleep for %d turns, rendering them unable to act.  Every %d points of damage the target suffers will reduce the effect duration by one turn.
-		Each turn they'll suffer %0.2f darkness damage.  This damage will not reduce the duration of the effect.
-		When Nightmare ends the target will suffer from Insomnia for a number of turns equal to the amount of time it was asleep (up to ten turns max), granting it %d%% sleep immunity for each turn of the Insomnia effect.
-		The damage threshold and mind damage will scale with your mindpower.]]):format(radius, duration, power, damDesc(self, DamageType.DARKNESS, (damage)), insomnia)
+		Each turn, they'll suffer %0.2f darkness damage.  This damage will not reduce the duration of the effect.
+		When Nightmare ends, the target will suffer from Insomnia for a number of turns equal to the amount of time it was asleep (up to ten turns max), granting it %d%% sleep immunity for each turn of the Insomnia effect.
+		The damage threshold and mind damage will scale with your Mindpower.]]):format(radius, duration, power, damDesc(self, DamageType.DARKNESS, (damage)), insomnia)
 	end,
 }
 
@@ -210,9 +210,9 @@ newTalent{
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		local chance = t.getChance(self, t)
-		return ([[Brings the target's inner demons to the surface.  Each turn for %d turns there's a %d%% chance that the a demon will surface, requiring the target to make a mental save to keep it from manifesting.
-		If the target is sleeping the chance will be doubled and fear immunity will be ignored.  Otherwise if the summoning is resisted the effect will end early.
-		The summon chance will scale with your mindpower and the demon's life will scale with the target's rank.]]):format(duration, chance)
+		return ([[Brings the target's inner demons to the surface.  Each turn, for %d turns, there's a %d%% chance that the a demon will surface, requiring the target to make a Mental Save to keep it from manifesting.
+		If the target is sleeping, the chance will be doubled, and fear immunity will be ignored.  Otherwise, if the summoning is resisted, the effect will end early.
+		The summon chance will scale with your Mindpower and the demon's life will scale with the target's rank.]]):format(duration, chance)
 	end,
 }
 
@@ -254,9 +254,9 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local duration = t.getDuration(self, t)
 		local chance = t.getChance(self, t)
-		return ([[Inflicts %0.2f darkness damage each turn for %d turns and has a %d%% chance to randomly cause blindness, stun, or confusion (lasting 3 turns).
-		If the target is sleeping the chance of suffering a negative effect will be doubled and fear immunity will be ignored.
-		The damage will scale with your mindpower.]]):
+		return ([[Inflicts %0.2f darkness damage each turn for %d turns, and has a %d%% chance to randomly cause blindness, stun, or confusion (lasting 3 turns).
+		If the target is sleeping, the chance of suffering a negative effect will be doubled and fear immunity will be ignored.
+		The damage will scale with your Mindpower.]]):
 		format(damDesc(self, DamageType.DARKNESS, (damage)), duration, chance)
 	end,
 }
@@ -356,7 +356,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamageBonus(self, t)
 		local summon = t.getSummonTime(self, t)
-		return ([[Increases your damage and resistance penetration on sleeping targets by %d%%.  Additionally every time you slay a sleeping target a Night Terror will be summoned for %d turns.
-		The Night Terror's stats will scale with your mindpower as will the damage bonus to sleeping targets.]]):format(damage, summon)
+		return ([[Increases your damage and resistance penetration on sleeping targets by %d%%.  Additionally, every time you slay a sleeping target, a Night Terror will be summoned for %d turns.
+		The Night Terror's stats will scale with your Mindpower, as will the damage bonus to sleeping targets.]]):format(damage, summon)
 	end,
 }

@@ -58,7 +58,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local radius = self:getTalentRadius(t)
-		return ([[A wave of fire emanates from you with radius %d, knocking back anything caught inside and setting them ablaze and doing %0.2f fire damage over 3 turns.
+		return ([[A wave of fire emanates from you with a radius of %d, knocking back anything caught inside and setting them ablaze, doing %0.2f fire damage over 3 turns.
 		The damage will increase with your Spellpower.]]):format(radius, damDesc(self, DamageType.FIRE, damage))
 	end,
 }
@@ -88,7 +88,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Your Flame, Flameshock, Fireflash and Blastwave spells leave a burning wake on the ground, burning all for %0.2f fire damage for 4 turns.
+		return ([[Your Flame, Flameshock, Fireflash and Blastwave spells leave a burning wake on the ground, burning all within for %0.2f fire damage for 4 turns.
 		The damage will increase with your Spellpower.]]):format(damDesc(self, DamageType.FIRE, damage))
 	end,
 }
@@ -101,9 +101,9 @@ newTalent{
 	points = 5,
 	getChance = function(self, t) return self:getTalentLevelRaw(t) * 10 end,
 	info = function(self, t)
-		return ([[When your Burning Wake talent is active, your inferno and burning wake effects have %d%% chance each turn to remove a status effect(physical, magical, curse or hex) from the targets.
-		If the target is hostile it will remove a beneficial effect.
-		If the target is friendly it will remove a detrimental effect (but still burn).]]):format(t.getChance(self, t))
+		return ([[When your Burning Wake talent is active, your Inferno and Burning Wake effects have a %d%% chance, each turn, to remove a status effect (physical, magical, curse or hex) from the targets.
+		If the target is hostile, it will remove a beneficial effect.
+		If the target is friendly, it will remove a detrimental effect (but still burn).]]):format(t.getChance(self, t))
 	end,
 }
 

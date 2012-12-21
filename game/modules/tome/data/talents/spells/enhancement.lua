@@ -45,7 +45,7 @@ newTalent{
 	info = function(self, t)
 		local firedamage = t.getFireDamage(self, t)
 		local firedamageinc = t.getFireDamageIncrease(self, t)
-		return ([[Engulfs your hands (and weapons) in a sheath of fire, dealing %0.2f fire damage per melee attack and increasing all fire damage by %d%%.
+		return ([[Engulfs your hands (and weapons) in a sheath of fire, dealing %0.2f fire damage per melee attack and increasing all fire damage dealt by %d%%.
 		Each hit will also regenerate %0.2f stamina.
 		The effects will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.FIRE, firedamage), firedamageinc, self:getTalentLevel(t) / 3)
@@ -104,7 +104,7 @@ newTalent{
 	info = function(self, t)
 		local icedamage = t.getIceDamage(self, t)
 		local icedamageinc = t.getIceDamageIncrease(self, t)
-		return ([[Engulfs your hands (and weapons) in a sheath of lightnings, dealing %d lightning damage with a chance to daze per melee attack and increasing all lightning damage by %d%%.
+		return ([[Engulfs your hands (and weapons) in a sheath of lightning, dealing %d lightning damage with a chance to daze per melee attack and increasing all lightning damage dealt by %d%%.
 		Each hit will also regenerate %0.2f mana.
 		The effects will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.LIGHTNING, icedamage), icedamageinc, self:getTalentLevel(t) / 3)
@@ -142,7 +142,7 @@ newTalent{
 	info = function(self, t)
 		local statinc = t.getStatIncrease(self, t)
 		return ([[You concentrate on your inner self, increasing your stats each by %d up to +11.
-		Stats increase will improve with your Spellpower.]]):
+		The stat increase will improve with your Spellpower.]]):
 		format(statinc)
 	end,
 }

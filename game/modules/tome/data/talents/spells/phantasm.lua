@@ -60,9 +60,9 @@ newTalent{
 		local radius = self:getTalentRadius(t)
 		local turn = t.getBlindPower(self, t)
 		local dam = t.getDamage(self, t)
-		return ([[Creates a globe of pure light with a radius of %d that illuminates the area.
-		At level 3 it also blinds all who see it (except the caster) for %d turns.
-		At level 4 it also deals %0.2f light damage.]]):
+		return ([[Creates a globe of pure light within a radius of %d that illuminates the area.
+		At level 3, it also blinds all who see it (except the caster) for %d turns.
+		At level 4, it also deals %0.2f light damage.]]):
 		format(radius, turn, dam)
 	end,
 }
@@ -91,7 +91,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local defence = t.getDefense(self, t)
-		return ([[The caster's image blurs, granting %d bonus to defense.
+		return ([[The caster's image blurs, granting a %d bonus to Defense.
 		The bonus will increase with your Spellpower.]]):
 		format(defence)
 	end,
@@ -158,7 +158,7 @@ newTalent{
 		local invisi = t.getInvisibilityPower(self, t)
 		return ([[The caster fades from sight, granting %d bonus to invisibility.
 		Beware -- you should take off your light, or you will still be easily spotted.
-		As you become invisible you fade out of phase with reality. All your damage is reduced by 70%%.
+		As you become invisible, you fade out of phase with reality. All your damage is reduced by 70%%.
 		This powerful spell constantly drains your mana (2 per turn) while active.
 		The invisibility bonus will increase with your Spellpower.]]):
 		format(invisi)

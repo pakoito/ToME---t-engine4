@@ -27,7 +27,7 @@ newTalent{
 	info = function(self, t)
 		local heal = t.getHealRatio(self, t)
 		return ([[Your Feedback decay now heals you for %d%% of the loss.
-		The healing effect will scale with your mindpower.]]):format(heal*100)
+		The healing effect will scale with your Mindpower.]]):format(heal*100)
 	end,
 }
 
@@ -50,7 +50,7 @@ newTalent{
 		local shield_power = t.getShieldPower(self, t)
 		return ([[Activate to create a resonance field that will absorb 50%% of all damage you take (%d max absorption).  The field will not interfere with Feedback gain.
 		Using this talent will not break psionic channels (such as Mind Storm).
-		The max absorption value will scale with your mindpower and the effect lasts up to ten turns.]]):format(shield_power)
+		The max absorption value will scale with your Mindpower, and the effect lasts up to ten turns.]]):format(shield_power)
 	end,
 }
 
@@ -71,8 +71,8 @@ newTalent{
 	info = function(self, t)
 		local max_feedback = t.getMaxFeedback(self, t)
 		local gain = t.getFeedbackGain(self, t)
-		return ([[Increases your maximum Feedback by %d and increases your base Feedback gain ratio to %d%%.
-		The Feedback gain will scale with your mindpower.]]):format(max_feedback, gain * 100)
+		return ([[Increases your maximum Feedback by %d, and increases your base Feedback gain ratio to %d%%.
+		The Feedback gain will scale with your Mindpower.]]):format(max_feedback, gain * 100)
 	end,
 }
 
@@ -119,8 +119,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local data = t.getData(self, t)
-		return ([[Use Feedback to replinish yourself.  Heals you for %d life and restores %d stamina, %d mana, %d equilibrium, %d vim, %d positive and negative energies, %d psi energy, and %d hate.
+		return ([[Use Feedback to replenish yourself.  This heals you for %d life, and restores %d stamina, %d mana, %d equilibrium, %d vim, %d positive and negative energies, %d psi energy, and %d hate.
 		Using this talent will not break psionic channels (such as Mind Storm).
-		The heal and resource gain will improve with your mindpower.]]):format(data.heal, data.stamina, data.mana, -data.equilibrium, data.vim, data.positive, data.psi, data.hate)
+		The heal and resource gain will improve with your Mindpower.]]):format(data.heal, data.stamina, data.mana, -data.equilibrium, data.vim, data.positive, data.psi, data.hate)
 	end,
 }

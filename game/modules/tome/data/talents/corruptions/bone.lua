@@ -41,8 +41,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Conjures up a spear of bones doing %0.2f physical damage to all targets in line.
-		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.PHYSICAL, self:combatTalentSpellDamage(t, 20, 200)))
+		return ([[Conjures up a spear of bones, doing %0.2f physical damage to all targets in line.
+		The damage will increase with your Spellpower.]]):format(damDesc(self, DamageType.PHYSICAL, self:combatTalentSpellDamage(t, 20, 200)))
 	end,
 }
 
@@ -83,7 +83,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Grab a target and teleport it to your side, pinning it there with a bone rising from the ground for %d turns.
 		The bone will also deal %0.2f physical damage.
-		The damage will increase with your Magic stat.]]):
+		The damage will increase with your Spellpower.]]):
 		format(math.floor(3 + self:getTalentLevel(t)), damDesc(self, DamageType.PHYSICAL, self:combatTalentSpellDamage(t, 5, 140)))
 	end,
 }
@@ -110,8 +110,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Fire bone spears in all directions, hitting all your foes within radius %d for %0.2f physical damage.
-		The damage will increase with your Magic stat.]]):format(self:getTalentRadius(t), damDesc(self, DamageType.PHYSICAL, self:combatTalentSpellDamage(t, 8, 180)))
+		return ([[Fire bone spears in all directions, hitting all foes within radius %d for %0.2f physical damage.
+		The damage will increase with your Spellpower.]]):format(self:getTalentRadius(t), damDesc(self, DamageType.PHYSICAL, self:combatTalentSpellDamage(t, 8, 180)))
 	end,
 }
 

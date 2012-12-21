@@ -39,9 +39,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Infuse your weapon of the power of the Sun, doing %0.2f light damage with each hit and costing 3 positive energy.
-		If you do not have enough positive energy, the effect will not trigger.
-		The damage will increase with the Magic stat]]):
+		return ([[Infuse your weapon with the power of the Sun, doing %0.2f light damage at the cost of 3 positive energy for each blow dealt.
+		If you do not have enough positive energy, the sustain will have no effect.
+		The damage dealt will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.LIGHT, damage))
 	end,
 }
@@ -75,7 +75,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local returndamage = t.getReturnDamage(self, t)
-		return ([[Designate a target as martyr for 10 turns. When the martyr deals damage it also damages itself for %d%% of its damage dealt.]]):
+		return ([[Designate a target as a martyr for 10 turns. When the martyr deals damage, it also damages itself for %d%% of the damage dealt.]]):
 		format(returndamage)
 	end,
 }
@@ -107,8 +107,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[In a pure display of power you project a melee attack, doing %d%% damage.
-		The range will increase with the Strength stat.]]):
+		return ([[In a pure display of power, you project a melee attack, doing %d%% damage.
+		The range will increase with your Strength.]]):
 		format(100 * damage)
 	end,
 }
@@ -136,7 +136,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Concentrate the power of the sun in a two blows doing %d%% weapon damage each as light damage.]]):
+		return ([[Concentrate the power of the Sun into two blows; each blow does %d%% of your weapon damage as light damage.]]):
 		format(100 * damage)
 	end,
 }

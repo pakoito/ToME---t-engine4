@@ -53,8 +53,8 @@ newTalent{
 	info = function(self, t)
 		local attack = t.getAttack(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Increases your accuracy by %d and the damage multiplier of your striking talents (pugilism and finishing moves) by %d%%.
-		The bonuses will scale with the Dexterity stat.]]):
+		return ([[Increases your Accuracy by %d, and the damage multiplier of your striking talents (Pugilism and Finishing Moves) by %d%%.
+		The bonuses will scale with your Dexterity.]]):
 		format(attack, damage)
 	end,
 }
@@ -128,8 +128,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t) * 100
-		return ([[Two quick punches that deal %d%% damage each and switches your stance to Striking Stance.  If you already have Striking Stance active and Double Strike isn't on cooldown this talent will automatically replace your normal attacks (and trigger the cooldown).
-		If either jab connects you earn one combo point.  At talent level 4 or greater if both jabs connect you'll earn two combo points.]])
+		return ([[Deliver two quick punches that deal %d%% damage each, and switch your stance to Striking Stance.  If you already have Striking Stance active and Double Strike isn't on cooldown, this talent will automatically replace your normal attacks (and trigger the cooldown).
+		If either jab connects, you earn one combo point.  At talent level 4 or greater, if both jabs connect, you'll earn two combo points.]])
 		:format(damage)
 	end,
 }
@@ -146,7 +146,7 @@ newTalent{
 	info = function(self, t)
 		local stamina = t.getStamina(self, t)
 		local cooldown = t.getCooldownReduction(self, t)
-		return ([[Reduces the cooldown on all your pugilism talents by %d%%.  Additionally every time you earn a combo point you will regain %0.2f stamina.
+		return ([[Reduces the cooldown on all your Pugilism talents by %d%%.  Additionally, every time you earn a combo point, you will regain %0.2f stamina.
 		Note that stamina gains from combo points occur before any talent stamina costs.]])
 		:format(cooldown * 100, stamina)
 	end,
@@ -246,8 +246,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t) * 100
-		return ([[Attack your foes in a frontal arc with a spinning backhand doing %d%% damage.  If you're not adjacent to the target you'll step forward as you spin, gaining 10%% bonus damage for each tile you move.
-		This attack will remove any grapples you're maintaining and earn one combo point (or one combo point per attack that connects if your talent level is four or greater).]])
+		return ([[Attack your foes in a frontal arc with a spinning backhand, doing %d%% damage.  If you're not adjacent to the target, you'll step forward as you spin, gaining 10%% bonus damage for each tile you move.
+		This attack will remove any grapples you're maintaining, and earn one combo point (or one combo point per attack that connects, if the talent level is 4 or greater).]])
 		:format(damage)
 	end,
 }
@@ -311,7 +311,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t) * 100
 		return ([[Lashes out at the target with three quick punches that each deal %d%% damage.
-		Earns one combo point.  If your talent level is four or greater earns one combo point per blow that connects.]])
+		Earns one combo point.  If your talent level is 4 or greater, this instead earns one combo point per blow that connects.]])
 		:format(damage)
 	end,
 }

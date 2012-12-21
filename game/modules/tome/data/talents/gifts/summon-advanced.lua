@@ -64,7 +64,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local radius = self:getTalentRadius(t)
-		return ([[While Master Summoner is active, when a creature you summon appears in the world it will trigger a wild effect:
+		return ([[While Master Summoner is active, when a creature you summon appears in the world, it will trigger a wild effect:
 		- Ritch Flamespitter: Reduce fire resistance of all foes in a radius
 		- Hydra: Generates a cloud of lingering poison
 		- Rimebark: Reduce cold resistance of all foes in a radius
@@ -89,7 +89,7 @@ newTalent{
 	getChance = function(self, t) return math.min(100, 30 + self:getTalentLevel(t) * 15) end,
 	getReduction = function(self, t) return math.ceil(self:getTalentLevel(t) / 2) end,
 	info = function(self, t)
-		return ([[While Master Summoner is active each new summons will reduce the remaining cooldown of Rage, Detonate and Wild Summon.
+		return ([[While Master Summoner is active, each new summon will reduce the remaining cooldown of Rage, Detonate and Wild Summon.
 		%d%% chance to reduce them by %d.]]):format(t.getChance(self, t), t.getReduction(self, t))
 	end,
 }
@@ -113,7 +113,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[For %d turn(s) you have 100%% chance that your summons appear as a wild version.
+		return ([[For %d turn(s), you have 100%% chance that your summons appear as a wild version.
 		Each turn the chance disminishes.
 		Wild creatures have one more talent/power than the base versions:
 		- Ritch Flamespitter: sends a blast of flames around it, knocking foes away

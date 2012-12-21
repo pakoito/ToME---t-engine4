@@ -36,7 +36,7 @@ newTalent{
 		local boost = t.getBoost(self, t)
 		local dur = 5 + self:getTalentLevelRaw(t)
 		return ([[Encase your body in a sheath of thought-quick forces, allowing you to control your body's movements directly without the inefficiency of dealing with crude mechanisms like nerves and muscles.
-		Increases attack by %d and critical strike chance by %0.2f%% for %d turns.]]):
+		Increases Accuracy by %d and critical strike chance by %0.2f%% for %d turns.]]):
 		format(boost, 0.5*boost, dur)
 	end,
 }
@@ -81,7 +81,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local weapon_boost = t.boost(self, t)
-		return ([[Manipulate forces on the molecular level to realign, rebalance, and hone your weapon. Permanently increases the accuracy and damage of any weapon by %d.]]):
+		return ([[Manipulate forces on the molecular level to realign, rebalance, and hone your weapon. Permanently increases the Accuracy and damage of any weapon by %d.
+		These values scale with your Mindpower.]]):
 		format(weapon_boost)
 	end,
 }
@@ -154,8 +155,8 @@ newTalent{
 	info = function(self, t)
 		local arm = t.arm_boost(self, t)
 		local fat = t.fat_red(self, t)
-		return ([[Manipulate forces on the molecular level to realign, rebalance, and reinforce a piece of armour. Permanently increases the armour rating of any piece of armour by %d. Also permanently reduces the fatigue rating of any piece of armour by %d.
-		These values scale with Willpower.]]):
+		return ([[Manipulate forces on the molecular level to realign, rebalance, and reinforce a piece of armour. Permanently increases the armour rating of any piece of Armour by %d, and permanently reduces the fatigue rating of any piece of armour by %d.
+		These values scale with your Willpower.]]):
 		format(arm, fat)
 	end,
 }

@@ -39,7 +39,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Projects a bolt of pure blight, doing %0.2f blight damage.
 		This spell has an improved critical strike chance of +%0.2f%%.
-		The damage will increase with Magic stat.]]):format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 20, 250)), self:getTalentLevel(t) * 5)
+		The damage will increase with your Spellpower.]]):format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 20, 250)), self:getTalentLevel(t) * 5)
 	end,
 }
 
@@ -68,9 +68,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Feel the very existence of creatures around you for %d turns in a radius of 10.
-		The evil touch will reduce their blight resistance by %d%% but also make them aware of you.
-		Their resistance will decrease with Magic stat.]]):format(3 + self:getTalentLevel(t), self:combatTalentSpellDamage(t, 10, 45))
+		return ([[Feel the very existence of creatures around you for %d turns, in a radius of 10.
+		The evil touch will reduce their blight resistance by %d%%, but also make them aware of you.
+		The resistance reduction will improve with your Spellpower.]]):format(3 + self:getTalentLevel(t), self:combatTalentSpellDamage(t, 10, 45))
 	end,
 }
 
@@ -81,7 +81,7 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	info = function(self, t)
-		return ([[Each time a creature affected by vimsense hurts you you regain %0.2f vim and %0.2f health.]]):
+		return ([[Each time a creature affected by vimsense hurts you, you regain %0.2f vim and %0.2f health.]]):
 		format(3 + self:getTalentLevel(t) * 0.7, 5 + self:getTalentLevel(t) * 3)
 	end,
 }
@@ -127,8 +127,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Open a dark portal to the target zone. All creatures caught inside will be teleported to your location and you to theirs.
-		All creatures(except you) traversing the portal will catch a random disease doing %0.2f blight damage per turn for 6 turns and reducing one of its physical stats (strength, constitution, dexterity) by %d.
-		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 12, 80)), self:combatTalentSpellDamage(t, 5, 25))
+		return ([[Open a dark portal to the target zone. All creatures caught inside will be teleported to your location, and you to theirs.
+		All creatures (except you) traversing the portal will catch a random disease, doing %0.2f blight damage per turn for 6 turns and reducing one of its physical stats (strength, constitution, dexterity) by %d.
+		The damage will increase with your Spellpower.]]):format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 12, 80)), self:combatTalentSpellDamage(t, 5, 25))
 	end,
 }

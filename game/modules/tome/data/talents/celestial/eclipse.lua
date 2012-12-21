@@ -61,8 +61,8 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local penetration = t.getResistancePenetration(self, t)
 		local cooldownreduction = t.getCooldownReduction(self, t)
-		return ([[Increases your light and darkness resistance penetration by %d%% for %d turns and brings all your celestial talents on cooldown, %d turns closer to being off cooldown.
-		The resistance penetration will increase with your Cunning stat.]]):
+		return ([[Increases your light and darkness resistance penetration by %d%% for %d turns, and reduces the cooldown of all Celestial skills by %d.
+		The resistance penetration will increase with your Cunning.]]):
 		format(penetration, duration, cooldownreduction)
 	end,
 }
@@ -126,9 +126,9 @@ newTalent{
 		local targetcount = t.getTargetCount(self, t)
 		local lightdamage = t.getLightDamage(self, t)
 		local darknessdamage = t.getDarknessDamage(self, t)
-		return ([[Each time one of your spells is a critical you project a bolt of light or shadow at %d targets in a radius of %d, doing %0.2f light damage or %0.2f darkness damage.
-		This effect costs 2 positive or 2 negative energy each time it's triggered and will not trigger if either your positive or negative energy is below 2.
-		The damage scales with the Magic stat.]]):
+		return ([[Each time one of your spells criticals, you project a bolt of light or shadow at up to %d targets within radius %d, doing %0.2f light damage or %0.2f darkness damage per bolt.
+		This effect costs 2 positive or 2 negative energy each time it's triggered, and will not activate if either your positive or negative energy is below 2.
+		The damage scales with your Spellpower.]]):
 		format(targetcount, self:getTalentRange(t), damDesc(self, DamageType.LIGHT, lightdamage), damDesc(self, DamageType.DARKNESS, darknessdamage))
 	end,
 }
@@ -182,10 +182,10 @@ newTalent{
 		local convert = t.getEnergyConvert(self, t)
 		local damage = t.getDamage(self, t)
 		local radius = t.getRadius(self, t)
-		return ([[This powerful spell grants you %d bonus invisibility, but converts %d negative energy into positive energy each turn.  Once your positive energy exceeds your negative energy, or you deactivate the talent, the effect ends in an explosion of light, converting all of your positive energy into damage and inflicting an additional %0.2f damage on everything in a radius of %d.
-		As you become invisible you fade out of phase with reality, all your damage is reduced by 50%%.
-		You may not cast Twilight while this spell is active and you should take off your light source otherwise you will still easily be spotted.
-		The invisibility bonus will increase with your Cunning stat and the explosion damage will increase with the Magic Stat..]]):
+		return ([[This powerful spell grants you %d bonus invisibility, but converts %d negative energy into positive energy each turn.  Once your positive energy exceeds your negative energy, or you deactivate the talent, the effect ends in an explosion of light, converting all of your positive energy into damage and inflicting an additional %0.2f damage to everything in a radius of %d.
+		As you become invisible, you fade out of phase with reality; all your damage is reduced by 50%%.
+		You may not cast Twilight while this spell is active, and you should take off your light source; otherwise, others will spot you with ease.
+		The invisibility bonus will increase with your Cunning, and the explosion damage will increase with your Spellpower.]]):
 		format(invisibilitypower, convert, damDesc(self, DamageType.LIGHT, damage), radius)
 	end,
 }

@@ -95,8 +95,8 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamageOnMeleeHit(self, t)
 		local armor = t.getArmor(self, t)
-		return ([[Fragile spikes of carbon protrude from your flesh, clothing, and armor, increasing your armor rating by %d and inflicting %0.2f bleed damage over six turns on attackers.   Each time you're struck the armor increase will be reduced by 1.  Each turn the spell will regenerate 1 armor up to it's starting value.
-		If the armor increase from the spell ever falls below 1 the sustain will deactivate and the effect will end.
+		return ([[Fragile spikes of carbon protrude from your flesh, clothing, and armor, increasing your armor rating by %d and inflicting %0.2f bleed damage over six turns on attackers.   Each time you're struck, the armor increase will be reduced by 1.  Each turn the spell will regenerate 1 armor up to its starting value.
+		If the armor increase from the spell ever falls below 1, the sustain will deactivate and the effect will end.
 		The armor and bleed damage will increase with your Spellpower.]]):
 		format(armor, damDesc(self, DamageType.PHYSICAL, damage))
 	end,
@@ -132,8 +132,8 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local explosion = t.getExplosion(self, t)
-		return ([[Destabilizes the target, inflicting %0.2f temporal damage per turn for 10 turns.  If the target dies while destabilized it will explode doing %0.2f temporal damage and %0.2f physical damage in a radius of 4.
-		If the target dies while also under the effects of continuum destabilization all explosion damage will be done as temporal damage.
+		return ([[Destabilizes the target, inflicting %0.2f temporal damage per turn for 10 turns.  If the target dies while destabilized, it will explode, doing %0.2f temporal damage and %0.2f physical damage in a radius of 4.
+		If the target dies while also under the effects of continuum destabilization, all explosion damage will be done as temporal damage.
 		The damage will scale with your Paradox and Spellpower.]]):
 		format(damDesc(self, DamageType.TEMPORAL, damage), damDesc(self, DamageType.TEMPORAL, explosion/2), damDesc(self, DamageType.PHYSICAL, explosion/2))
 	end,
@@ -195,8 +195,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Attempts to pull the target apart at a molecular level, inflicing %0.2f temporal damage and %0.2f physical damage.  If the target ends up with low enough life(<20%%) it might be instantly killed.
-		Quantum Spike deals 50%% additional damage to targets effected by temporal destabilization and/or continuum destabilization.
+		return ([[Attempts to pull the target apart at a molecular level, inflicing %0.2f temporal damage and %0.2f physical damage.  If the target ends up with low enough life (<20%%), it might be instantly killed.
+		Quantum Spike deals 50%% additional damage to targets affected by temporal destabilization and/or continuum destabilization.
 		The damage will scale with your Paradox and Spellpower.]]):format(damDesc(self, DamageType.TEMPORAL, damage/2), damDesc(self, DamageType.PHYSICAL, damage/2))
 	end,
 }

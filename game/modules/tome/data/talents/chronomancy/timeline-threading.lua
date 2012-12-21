@@ -35,10 +35,10 @@ newTalent{
 	info = function(self, t)
 		local primary = t.getThread(self, t)
 		local reduction = t.getReduction(self, t)
-		return ([[You begin to gather energy from other timelines, increasing spellpower by %0.2f on the first turn and %0.2f more each additional turn.
-		The effect will end when you cast a spell, otherwise the spell ends after five turns.
-		Eacn turn the effect is active your Paradox will be reduced by %d.
-		This spell will not break Spactime Tuning, nor will it be broken by activating Spactime Tuning.]]):format(primary + (primary/5), primary/5, reduction)
+		return ([[You begin to gather energy from other timelines. Your Spellpower will increase by %0.2f on the first turn and %0.2f more each additional turn.
+		The effect ends either when you cast a spell, or after five turns.
+		Eacn turn the effect is active, your Paradox will be reduced by %d.
+		This spell will not break Spacetime Tuning, nor will it be broken by activating Spacetime Tuning.]]):format(primary + (primary/5), primary/5, reduction)
 	end,
 }
 
@@ -70,8 +70,8 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local reduction = t.getReduction(self, t)
-		return ([[Creates a wake of temporal energy that deals %0.2f damage in a beam as you attempt to rethread the timeline.  Affected targets may be stunned, blinded, pinned, or confused for 3 turns.
-		Each target you hit with rethread will reduce your Paradox by %d.
+		return ([[Creates a wake of temporal energy that deals %0.2f damage in a beam, as you attempt to rethread the timeline.  Affected targets may be stunned, blinded, pinned, or confused for 3 turns.
+		Each target you hit with Rethread will reduce your Paradox by %d.
 		The damage will increase with your Paradox and Spellpower.]]):
 		format(damDesc(self, DamageType.TEMPORAL, damage), reduction)
 	end,
@@ -159,7 +159,7 @@ newTalent{
 		else
 			size = "huge"
 		end
-		return ([[Pulls a %s size or smaller copy of the target from another timeline that stays for %d turns. The copy and the target will be compelled to attack each other immediately.
+		return ([[Pulls a %s size or smaller copy of the target from another timeline; the copy stays for %d turns. The copy and the target will be compelled to attack each other immediately.
 		The duration will scale with your Paradox.]]):
 		format(size, duration)
 	end,
@@ -184,7 +184,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[You peer into three possible futures, allowing you to explore each for %d turns.  When the effect expires you'll choose which of the three futures becomes your present.  Note that seeing visions of your own death can still be fatal
+		return ([[You peer into three possible futures, allowing you to explore each for %d turns.  When the effect expires, you'll choose which of the three futures becomes your present.  Note that seeing visions of your own death can still be fatal.
 		This spell splits the timeline.  Attempting to use another spell that also splits the timeline while this effect is active will be unsuccessful.
 		This spell takes no time to cast.]])
 		:format(duration)

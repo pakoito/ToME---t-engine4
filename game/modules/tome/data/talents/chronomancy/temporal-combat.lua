@@ -44,8 +44,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local power = t.getPower(self, t)
-		return ([[You've learned to boost your strength through your control of the spacetime continuum.  Increases your strength and your physical saves by %d.
-		The effect will scale with your Willpower stat.]]):format(power)
+		return ([[You've learned to boost your strength through your control of the spacetime continuum.  Increases your Strength and your Physical Save by %d.
+		The effect will scale with your Willpower.]]):format(power)
 	end
 }
 
@@ -66,7 +66,7 @@ newTalent{
 	info = function(self, t)
 		local power = t.getPower(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[For the next %d turns you recover %d stamina each turn and all other talents on cooldown will refresh twice as fast as usual.
+		return ([[For the next %d turns, you recover %d stamina each turn and all other talents on cooldown will refresh twice as fast as usual.
 		The duration will scale with your Paradox.]]):format(duration, power)
 	end,
 }
@@ -98,8 +98,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local power = t.getPower(self, t)
-		return ([[You've learned to boost your magic through your control over the spacetime continuum.  Increases your magic and your spell saves by %d.
-		The effect will scale with your Willpower stat.]]):format(power)
+		return ([[You've learned to boost your magic through your control over the spacetime continuum.  Increases your Magic and your Spell Save by %d.
+		The effect will scale with your Willpower.]]):format(power)
 	end
 }
 
@@ -120,7 +120,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[For the next %d turns you convert all non-temporal damage you receive into temporal damage spread out over six turns.
-		This spell takes no time to cast and the duration will scale with your Paradox.]]):format (duration)
+		return ([[For the next %d turns, you convert all non-temporal damage you receive into temporal damage spread out over six turns.
+		This spell takes no time to cast, and the duration will scale with your Paradox.]]):format (duration)
 	end,
 }

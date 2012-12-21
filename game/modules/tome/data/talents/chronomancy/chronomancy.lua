@@ -45,7 +45,7 @@ newTalent{
 		local _, failure = self:paradoxFailChance()
 		local _, anomaly = self:paradoxAnomalyChance()
 		local _, backfire = self:paradoxBackfireChance()
-		return ([[Reduces your paradox by one each turn while sustained.  Casting a spell will cancel this effect.
+		return ([[Reduces your paradox by one each turn while sustained.  Casting a spell will cancel this sustain.
 		
 		Current failure chance  : %d%%
 		Current anomaly chance  : %d%%
@@ -72,7 +72,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[You peer into the future, allowing you to explore your surroundings for %d turns.  When precognition expires you'll return to the point in time you first cast the spell.  Dying with precognition active will end the spell prematurely.
+		return ([[You peer into the future, allowing you to explore your surroundings for %d turns.  When Precognition expires, you'll return to the point in time you first cast the spell.  Dying with precognition active will end the spell prematurely.
 		This spell splits the timeline.  Attempting to use another spell that also splits the timeline while this effect is active will be unsuccessful.]]):format(duration)
 	end,
 }
@@ -95,7 +95,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local radius = t.getRadius(self, t)
-		return ([[When the duration of your Precognition expires you'll be given a vision of your surroundings, sensing terrain, enemies, objects, and traps in a %d radius.]]):
+		return ([[When the duration of your Precognition expires, you'll be given a vision of your surroundings, sensing terrain, enemies, objects, and traps in a %d radius.]]):
 		format(radius)
 	end,
 }
@@ -127,8 +127,8 @@ newTalent{
 	info = function(self, t)
 		local power = t.getPower(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[You pull your awareness fully into the moment increasing your stealth detection, see invisibility, defense, and accuracy by %d for %d turns.
-		If you have Spin Fate going when you cast this spell you'll gain a bonus to these values equal to 50%% of your spin.
+		return ([[You pull your awareness fully into the moment, increasing your stealth detection, see invisibility, defense, and accuracy by %d for %d turns.
+		If you have Spin Fate active when you cast this spell, you'll gain a bonus to these values equal to 50%% of your spin.
 		This spell takes no time to cast.]]):
 		format(power, duration)
 	end,
@@ -157,8 +157,8 @@ newTalent{
 	info = function(self, t)
 		local save = t.getSaveBonus(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[You've learned to make minor corrections in how future events unfold.  Each time you make a saving throw all your saves are increased by %d (stacking up to a maximum increase of %d for each value).
-		The effect will last %d turns but the duration will refresh everytime it's reapplied.]]):
+		return ([[You've learned to make minor corrections in how future events unfold.  Each time you make a saving throw, all your saves are increased by %d (stacking up to a maximum increase of %d for each value).
+		The effect will last %d turns, but the duration will refresh everytime it's reapplied.]]):
 		format(save, save * 5, duration)
 	end,
 }

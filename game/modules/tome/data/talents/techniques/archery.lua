@@ -7,7 +7,7 @@
 -- (at your option) any later version.
 --
 -- This program is distributed in the hope that it will be useful,
--- but WITHOUT ANY WARRANTY; without even the implied warranty of
+	-- but WITHOUT ANY WARRANTY; without even the implied warranty of
 -- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 -- GNU General Public License for more details.
 --
@@ -152,8 +152,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You enter a calm, focused stance, increasing your physical power(+%d), accuracy(+%d), armor penetration(+%d), and critical chance(+%d%%) but reducing your firing speed by %d%% and making you unable to move.
-		The effects will increase with your Dexterity stat.]]):
+		return ([[You enter a calm, focused stance, increasing your Physical Power (+%d), Accuracy (+%d), Armour penetration (+%d), and critical chance (+%d%%), but reducing your firing speed by %d%% and making you unable to move.
+		The effects will increase with your Dexterity.]]):
 		format(4 + self:getTalentLevel(t) * self:getDex(10, true), 4 + self:getTalentLevel(t) * self:getDex(10, true),
 		3 + self:getTalentLevel(t) * self:getDex(10, true), 7 + self:getTalentLevel(t) * self:getDex(10, true),
 		self:getTalentLevelRaw(t) * 5)
@@ -195,7 +195,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You switch to a fluid and fast battle stance, increasing your firing speed by %d%% at the cost of your accuracy(%d), physical power(%d), and critical chance(%d).]]):
+		return ([[You switch to a fluid and fast battle stance, increasing your firing speed by %d%% at the cost of your Accuracy (%d), Physical Power (%d), and critical chance (%d).]]):
 		format(self:getTalentLevel(t) * 10, -8 - self:getTalentLevelRaw(t) * 2.4, -8 - self:getTalentLevelRaw(t) * 2.4, -8 - self:getTalentLevelRaw(t) * 2.4)
 	end,
 }
@@ -220,7 +220,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You fire a shot without putting much strength in it, doing %d%% damage.
+		return ([[You fire a shot without putting much strength into it, doing %d%% damage.
 		That brief moment of relief allows you to regain %d stamina.]]):format(self:combatTalentWeaponDamage(t, 0.5, 1.1) * 100, 12 + self:getTalentLevel(t) * 8)
 	end,
 }
@@ -267,8 +267,8 @@ newTalent{
 		local rad = 1
 		if self:getTalentLevel(t) >= 3 then rad = rad + 1 end
 		if self:getTalentLevel(t) >= 5 then rad = rad + 1 end
-		return ([[You fire a flame shot, doing %d%% fire damage and lighting up the target area in a radius of %d.
-		At level 3 it also has a chance to blind for 3 turns.]]):
+		return ([[You fire a burning shot, doing %d%% fire damage to the target and lighting up the area around the target in a radius of %d.
+		At level 3, it also has a chance to blind for 3 turns.]]):
 		format(self:combatTalentWeaponDamage(t, 0.5, 1.2) * 100, rad)
 	end,
 }
@@ -296,7 +296,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You fire a crippling shot, doing %d%% damage and reducing your target's speed by %d%% for 7 turns.]]):format(self:combatTalentWeaponDamage(t, 1, 1.5) * 100, util.bound((self:combatAttack() * 0.15 * self:getTalentLevel(t)) / 100, 0.1, 0.4) * 100)
+		return ([[You fire a crippling shot, doing %d%% damage and reducing your target's speed by %d%% for 7 turns.
+		The status power and status hit chance improve with your Accuracy.]]):format(self:combatTalentWeaponDamage(t, 1, 1.5) * 100, util.bound((self:combatAttack() * 0.15 * self:getTalentLevel(t)) / 100, 0.1, 0.4) * 100)
 	end,
 }
 
@@ -329,7 +330,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[You fire a pinning shot, doing %d%% damage and pinning your target to the ground for %d turns.
-		Pinning chance increase with your Dexterity stat.]])
+		The pinning chance increases with your Dexterity.]])
 		:format(self:combatTalentWeaponDamage(t, 1, 1.4) * 100,
 		t.getDur(self, t))
 	end,
@@ -369,8 +370,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You fire multiple shots in a circular pattern with radius %d, doing %d%% damage and stunning your targets for %d turns.
-		Stun chance increase with your Dexterity stat.]])
+		return ([[You fire multiple shots in a circular pattern with radius %d, doing %d%% damage and stunning everyone hit for %d turns.
+		The stun chance increases with your Dexterity.]])
 		:format(self:getTalentRadius(t), self:combatTalentWeaponDamage(t, 0.5, 1.5) * 100, 2 + self:getTalentLevelRaw(t))
 	end,
 }

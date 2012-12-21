@@ -62,7 +62,7 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local inc = t.getPercentInc(self, t)
 		return ([[Channel your mental power through your wielded mindstars, generating psionic blades sprouting from the mindstars.
-		Mindstar psiblades have their damage modifiers (how much damage they gain from stats) multiplied by %0.2f and their armour penetration by %0.2f.
+		Mindstar psiblades have their damage modifiers (how much damage they gain from stats) multiplied by %0.2f and their Armour penetration by %0.2f.
 		Also increases Physical Power by %d and increases weapon damage by %d%% when using mindstars.]]):
 		format(t.getStatmult(self, t), t.getAPRmult(self, t), damage, 100 * inc) --I5
 	end,
@@ -90,9 +90,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You touch the target with your psiblade, bringing the forces of nature onto your foe.
+		return ([[You touch the target with your psiblade, bringing the forces of nature to bear on your foe.
 		Thorny vines will grab the target, slowing it by %d%% and dealing %0.2f nature damage each turn for 10 turns.
-		Damage will increase with Mindpower and Mindstar power (requires two mindstars, multiplier %2.f).]]):
+		Damage will increase with your Mindpower and Mindstar power (requires two mindstars, multiplier %2.f).]]):
 		format(20 + self:getTalentLevel(t) * 2, damDesc(self, DamageType.NATURE, self:combatTalentMindDamage(t, 15, 250) / 10 * get_mindstar_power_mult(self)), get_mindstar_power_mult(self))
 	end,
 }
@@ -132,7 +132,7 @@ newTalent{
 		return ([[Smash your psiblades into the ground, creating a tide of crystallized leaves circling you in a radius of 3 for 7 turns.
 		All foes hit by the leaves will start bleeding for %0.2f per turn (cumulative).
 		All allies hit will be covered in leaves, granting them %d%% chance to completely avoid any damaging attack.
-		Damage and avoidance will increase with Mindpower and Mindstar power (requires two mindstars, multiplier %2.f).]]):
+		Damage and avoidance will increase with your Mindpower and Mindstar power (requires two mindstars, multiplier %2.f).]]):
 		format(dam, c, get_mindstar_power_mult(self))
 	end,
 }
@@ -180,8 +180,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[You hit a foe with your mainhand psiblade doing %d%% weapon damage, channeling all the damage done through your offhand psiblade with which you touch a friendly creature to heal it.
-		Maximum heal possible %d. Equilibrium of the healed target will also decrease.
-		Max heal will increase with Mindpower and Mindstar power (requires two mindstars, multiplier %2.f).]]):
+		The maximum heal possible is %d. Equilibrium of the healed target will also decrease.
+		Max heal will increase with your Mindpower and Mindstar power (requires two mindstars, multiplier %2.f).]]):
 		format(self:combatTalentWeaponDamage(t, 2.5, 4) * 100, t.getMaxDamage(self, t), get_mindstar_power_mult(self))
 	end,
 }

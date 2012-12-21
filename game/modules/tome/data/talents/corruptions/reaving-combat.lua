@@ -35,8 +35,8 @@ newTalent{
 		end
 	end,
 	info = function(self, t)
-		return ([[Allows you to dual wield any type of one handed weapons and increases the damage of the off-hand weapon to %d%%.
-		Also casting a spell (which uses a turn) will give a free melee attack at a random target in melee range for %d%% blight damage.]]):
+		return ([[Allows you to dual wield any type of one handed weapons, and increases the damage of the off-hand weapon to %d%%.
+		Also, casting a spell (which uses a turn) will give a free melee attack at a random target in melee range for %d%% blight damage.]]):
 		format(100 / (2 - (math.min(self:getTalentLevel(t), 8) / 9)), 100 * self:combatTalentWeaponDamage(t, 0.5, 1.1))
 	end,
 }
@@ -48,9 +48,9 @@ newTalent{
 	require = str_corrs_req2,
 	points = 5,
 	info = function(self, t)
-		return ([[When you damage one of your foes you enter a bloodlust, increasing your spell power by 1 for each target, up to a maximum of %d per turn.
-		The maximum reachable is +%d spell power.
-		The bonus decreases by one per turn.]]):
+		return ([[When you damage one of your foes, you enter a bloodlust, increasing your Spellpower by 1 for each target up to a maximum of %d per turn.
+		The maximum reachable is +%d Spellpower.
+		The bonus decreases by one point per turn.]]):
 		format(math.floor(self:getTalentLevel(t)), math.floor(6 * self:getTalentLevel(t)))
 	end,
 }
@@ -68,7 +68,7 @@ newTalent{
 		self:attr("disease_immune", -0.2)
 	end,
 	info = function(self, t)
-		return ([[You gain a %d%% resistance to diseases and have a %d%% chance on melee attacks to spread any existing diseases on your target.]]):
+		return ([[You gain a %d%% resistance to diseases, and have a %d%% chance on melee attacks to spread any existing diseases on your target.]]):
 		format(20 * self:getTalentLevelRaw(t), 4 * self:getTalentLevelRaw(t))
 	end,
 }
@@ -90,10 +90,10 @@ newTalent{
 		end
 	end,
 	info = function(self, t)
-		return ([[Your blood turns into an acidic mixture. When you get hit the attacker is splashed with acid.
-		This deals %0.2f acid damage each turn for 5 turns and reduces the attacker's accuracy by %d.
-		At level 3 it will also reduce armour by %d for 5 turns.
-		The damage will increase with your Magic stat.]]):
+		return ([[Your blood turns into an acidic mixture. When you get hit, the attacker is splashed with acid.
+		This deals %0.2f acid damage each turn for 5 turns, and reduces the attacker's Accuracy by %d.
+		At level 3, it will also reduce Armour by %d for 5 turns.
+		The damage will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.ACID, self:combatTalentSpellDamage(t, 5, 30)), self:combatTalentSpellDamage(t, 15, 35), self:combatTalentSpellDamage(t, 15, 40))
 	end,
 }

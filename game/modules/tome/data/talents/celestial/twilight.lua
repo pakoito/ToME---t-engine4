@@ -45,8 +45,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[You stand between the darkness and the light, allowing you to convert 15 positive energy into %d negative energy.
-		In addition, change the default level of positive and negative energies to %d%% of their maximum. Each turn the energies will slowly fall/raise to this value instead of 0.
-		The effect will increase with the Cunning stat.]]):
+		In addition, this will change the default level of positive and negative energies to %d%% of their maximum. Each turn, the energies will slowly fall/rise to this value, instead of 0.
+		The effect will increase with your Cunning.]]):
 		format(t.getNegativeGain(self, t), t.getRestValue(self, t))
 	end,
 }
@@ -80,7 +80,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Instantly travel to your jumpgate as long as you are within %d tiles of it.]]):format(t.getRange(self, t))
+		return ([[Instantly travel to your jumpgate, as long as you are within %d tiles of it.]]):format(t.getRange(self, t))
  	end,
 }
 
@@ -133,9 +133,9 @@ newTalent{
 	info = function(self, t)
 		local jumpgate_teleport = self:getTalentFromId(self.T_JUMPGATE_TELEPORT)
 		local range = jumpgate_teleport.getRange(self, jumpgate_teleport)
-		return ([[Create a shadow jumpgate at your location. As long as you sustain this spell you can use 'Jumpgate: Teleport' to instantly travel to the jumpgate as long as you are within %d tiles of it.
-		Note that stairs underneath the jumpgate will be unusable while the spell is sustained and you may need to cancel it in order to leave certain locations.
-		At talent level 4 you learn to create and sustain a second jumpgate.]]):format(range)
+		return ([[Create a shadow jumpgate at your current location. As long as you sustain this spell, you can use 'Jumpgate: Teleport' to instantly travel to the jumpgate, as long as you are within %d tiles of it.
+		Note that any stairs underneath the jumpgate will be unusable while the spell is sustained, and you may need to cancel this sustain in order to leave certain locations.
+		At talent level 4, you learn to create and sustain a second jumpgate.]]):format(range)
  	end,
  }
 
@@ -169,7 +169,7 @@ newTalent{
 	info = function(self, t)
 		local duration = t.getConfuseDuration(self, t)
 		return ([[Let out a mental cry that shatters the will of your targets within radius 3, confusing them for %d turns.
-		The duration will improve with the Cunning stat.]]):
+		The duration will improve with your Cunning.]]):
 		format(duration)
 	end,
 }
@@ -264,8 +264,8 @@ newTalent{
 		else
 			size = "huge"
 		end
-		return ([[Creates a shadowy copy of a target up to %s size. The copy will attack its progenitor immediately.
-		It stays for %d turns and its duration, life and resistances scale with the Cunning stat.]]):
+		return ([[Creates a shadowy copy of a target of up to %s size. The copy will attack its progenitor immediately.
+		It stays for %d turns; its duration, life and resistances scale with your Cunning.]]):
 		format(size, duration)
 	end,
 }
@@ -319,7 +319,7 @@ newTalent{
 	info = function(self, t)
 		local jumpgate_teleport = self:getTalentFromId(self.T_JUMPGATE_TELEPORT_TWO)
 		local range = jumpgate_teleport.getRange(self, jumpgate_teleport)
-		return ([[Create a second shadow jumpgate at your location. As long as you sustain this spell you can use 'Jumpgate: Teleport' to instantly travel to the jumpgate as long as you are within %d tiles of it.]]):format(range)
+		return ([[Create a second shadow jumpgate at your location. As long as you sustain this spell, you can use 'Jumpgate: Teleport' to instantly travel to the jumpgate, as long as you are within %d tiles of it.]]):format(range)
 	end,
 }
 
@@ -352,6 +352,6 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Instantly travel to your second jumpgate as long as you are within %d tiles of it.]]):format(t.getRange(self, t))
+		return ([[Instantly travel to your second jumpgate, as long as you are within %d tiles of it.]]):format(t.getRange(self, t))
 	end,
 }

@@ -49,7 +49,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Conjures up mana into a powerful beam of lightning doing %0.2f to %0.2f damage
+		return ([[Conjures up mana into a powerful beam of lightning, doing %0.2f to %0.2f damage
 		The damage will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.LIGHTNING, damage / 3),
 		damDesc(self, DamageType.LIGHTNING, damage))
@@ -132,7 +132,7 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local targets = t.getTargetCount(self, t)
 		return ([[Invokes a forking beam of lightning doing %0.2f to %0.2f damage and forking to another target.
-		It can hit up to %d targets up to 10 grids apart and will never hit the same one twice; nor will it hit the caster.
+		It can hit up to %d targets up to 10 grids apart, and will never hit the same one twice; nor will it hit the caster.
 		The damage will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.LIGHTNING, damage / 3),
 			damDesc(self, DamageType.LIGHTNING, damage),
@@ -184,7 +184,7 @@ newTalent{
 		local encumberance = t.getEncumberance(self, t)
 		local rangedef = t.getRangedDefence(self, t)
 		return ([[A gentle wind circles around the caster, increasing carrying capacity by %d and increasing defense against projectiles by %d.
-		At level 4 it also makes you slightly levitate, allowing you to ignore some traps.
+		At level 4 it also makes you levitate slightly above the ground, allowing you to ignore some traps.
 		At level 5 it also grants %d%% movement speed and removes %d fatigue.]]):
 		format(encumberance, rangedef, t.getSpeed(self, t) * 100, t.getFatigue(self, t))
 	end,
@@ -246,7 +246,7 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local manadrain = t.getManaDrain(self, t)
 		return ([[Conjures a furious, raging lightning storm with a radius of 6 that follows you as long as this spell is active.
-		Each turn a random lightning bolt will hit up to %d of your foes for 1 to %0.2f damage in a radius of 1.
+		Each turn, a random lightning bolt will hit up to %d of your foes for 1 to %0.2f damage in a radius of 1.
 		This powerful spell will drain %0.2f mana with each hit.
 		The damage will increase with your Spellpower.]]):
 		format(targetcount, damDesc(self, DamageType.LIGHTNING, damage),-manadrain)

@@ -142,8 +142,8 @@ newTalent{
 		local chance = t.getChance(self, t)
 		local duration = t.getDuration(self, t)
 		local mindpowerChange = self:getTalentLevelRaw(self.T_GLOOM) + self:getTalentLevelRaw(self.T_WEAKNESS) + self:getTalentLevelRaw(self.T_DISMAY) + self:getTalentLevelRaw(self.T_SANCTUARY)
-		return ([[A terrible gloom surrounds you, affecting all those who approach. Each turn, those caught in your gloom must save against your mindpower or have an %d%% chance to suffer from slowness, stun or confusion for %d turns.
-		This ability is innate and carries no cost to activate or deactivate. Each point in Gloom increases the mindpower of all gloom effects (current: %+d).]]):format(chance, duration, mindpowerChange)
+		return ([[A terrible gloom surrounds you, affecting all those who approach to within radius 3. Each turn, those caught in your gloom must save against your Mindpower, or have an %d%% chance to suffer from slowness, stun or confusion for %d turns.
+		This ability is innate, and carries no cost to activate or deactivate. Each point in Gloom increases the mindpower of all gloom effects (current: %+d).]]):format(chance, duration, mindpowerChange)
 	end,
 }
 
@@ -171,8 +171,8 @@ newTalent{
 		local incDamageChange = t.getIncDamageChange(self, t)
 		local hateBonus = t.getHateBonus(self, t)
 		local mindpowerChange = self:getTalentLevelRaw(self.T_GLOOM) + self:getTalentLevelRaw(self.T_WEAKNESS) + self:getTalentLevelRaw(self.T_DISMAY) + self:getTalentLevelRaw(self.T_SANCTUARY)
-		return ([[Each turn, those caught in your gloom must save against your mindpower or have an %d%% chance to be crippled by fear for %d turns, reducing damage they inflict by %d%%. The first time you melee strike a foe after they have been weakened will give you %d hate.
-		Each point in Weakness increases the mindpower of all gloom effects (current: %+d).]]):format(chance, duration, -incDamageChange, hateBonus, mindpowerChange)
+		return ([[Each turn, those caught in your gloom must save against your Mindpower, or have an %d%% chance to be crippled by fear for %d turns, reducing damage they inflict by %d%%. The first time you melee strike a foe after they have been weakened will give you %d hate.
+		Each point in Weakness increases the Mindpower of all gloom effects (current: %+d).]]):format(chance, duration, -incDamageChange, hateBonus, mindpowerChange)
 	end,
 }
 
@@ -192,8 +192,8 @@ newTalent{
 		local chance = t.getChance(self, t)
 		local duration = t.getDuration(self, t)
 		local mindpowerChange = self:getTalentLevelRaw(self.T_GLOOM) + self:getTalentLevelRaw(self.T_WEAKNESS) + self:getTalentLevelRaw(self.T_DISMAY) + self:getTalentLevelRaw(self.T_SANCTUARY)
-		return ([[Each turn, those caught in your gloom must save against your mindpower or have an %0.1f%% chance of becoming dismayed for %d turns. When dismayed, the first melee attack against the foe will result in a critical hit.
-		Each point in Dismay increases the mindpower of all gloom effects (current: %+d).]]):format(chance, duration, mindpowerChange)
+		return ([[Each turn, those caught in your gloom must save against your Mindpower or have an %0.1f%% chance of becoming dismayed for %d turns. When dismayed, the first melee attack against the foe will result in a critical hit.
+		Each point in Dismay increases the Mindpower of all gloom effects (current: %+d).]]):format(chance, duration, mindpowerChange)
 	end,
 }
 
@@ -231,6 +231,6 @@ newTalent{
 		local damageChange = t.getDamageChange(self, t)
 		local mindpowerChange = self:getTalentLevelRaw(self.T_GLOOM) + self:getTalentLevelRaw(self.T_WEAKNESS) + self:getTalentLevelRaw(self.T_DISMAY) + self:getTalentLevelRaw(self.T_SANCTUARY)
 		return ([[Your gloom has become a sanctuary from the outside world. Damage from any attack that originates beyond the boundary of your gloom is reduced by %d%%.
-		Each point in Sanctuary increases the mindpower of all gloom effects (current: %+d).]]):format(-damageChange, mindpowerChange)
+		Each point in Sanctuary increases the Mindpower of all gloom effects (current: %+d).]]):format(-damageChange, mindpowerChange)
 	end,
 }

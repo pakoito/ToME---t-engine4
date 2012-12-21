@@ -105,9 +105,9 @@ newTalent{
 		local weapon_atk = useDreamHammer(self).atk
 		local weapon_apr = useDreamHammer(self).apr
 		local weapon_crit = useDreamHammer(self).physcrit
-		return ([[Smith a hammer from the dream forge and strike a nearby foe, inflicting %d%% weapon damage.  If the attack hits it will bring one random Dream Smith talent off cooldown.
-		At talent level five you'll bring a second random talent off cooldown.
-		The base power, accuracy, armour penetration, and critical strike chance of the weapon will scale with your mindpower.
+		return ([[Smith a hammer from the dream forge and strike a nearby foe, inflicting %d%% weapon damage.  If the attack hits, it will bring one random Dream Smith talent off cooldown.
+		At talent level 5, you'll bring a second random talent off cooldown.
+		The base power, Accuracy, Armour penetration, and critical strike chance of the weapon will scale with your Mindpower.
 
 		Current Dream Hammer Stats
 		Base Power: %0.2f - %0.2f
@@ -178,8 +178,8 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local attack_bonus = t.getAttack(self, t)
-		return ([[Throw your Dream Hammer at a distant location, inflicting %d%% weapon damage on all targets between you and it.  After reaching it's destination the Dream Hammer will return, potentially hitting targets a second time.
-		Learning this talent increases the accuracy of your Dream Hammer by %d.]]):format(damage * 100, attack_bonus)
+		return ([[Throw your Dream Hammer at a distant location, inflicting %d%% weapon damage on all targets between you and it.  After reaching it's destination, the Dream Hammer will return, potentially hitting targets a second time.
+		Learning this talent increases the Accuracy of your Dream Hammer by %d.]]):format(damage * 100, attack_bonus)
 	end,
 }
 
@@ -226,7 +226,7 @@ newTalent{
 		local percent = t.getPercentInc(self, t)
 		local stun = t.getStun(self, t)		
 		return ([[Crush your enemy with your Dream Hammer, inflicting %d%% weapon damage.  If the attack hits, the target is stunned for %d turns.
-		Stun chance improves with your mindpower.  Learning this talent increases your Physical Power for Dream Hammer damage calculations by %d and all damage with Dream Hammer attacks by %d%%.
+		Stun chance improves with your Mindpower.  Learning this talent increases your Physical Power for Dream Hammer damage calculations by %d and all damage with Dream Hammer attacks by %d%%.
 		]]):format(damage * 100, stun, power, percent * 100)
 	end,
 }
@@ -276,8 +276,8 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local radius = self:getTalentRadius(t)
 		local project = t.getProject(self, t) /2
-		return ([[Strike the target with a mighty blow from the forge, inflicting %d%% weapon damage.  If the attack hits the echo of the attack will lash out at all enemies in a %d radius.
+		return ([[Strike the target with a mighty blow from the forge, inflicting %d%% weapon damage.  If the attack hits, the echo of the attack will lash out at all enemies in a %d radius.
 		Learning this talent adds %0.2f mind damage and %0.2f burning damage to your Dream Hammer strikes.
-		The mind and fire damage will scale with your mindpower.]]):format(damage * 100, radius, damDesc(self, DamageType.MIND, project), damDesc(self, DamageType.FIRE, project))
+		The mind and fire damage will scale with your Mindpower.]]):format(damage * 100, radius, damDesc(self, DamageType.MIND, project), damDesc(self, DamageType.FIRE, project))
 	end,
 }

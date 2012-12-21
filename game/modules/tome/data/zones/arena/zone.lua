@@ -301,7 +301,7 @@ return {
 			end,
 
 			raiseRank = function (val)
-				if game.level.arena.rank >= 21 then return end
+				if game.level.arena.rank >= 24 then return end
 				local currentRank = math.floor(game.level.arena.rank)
 				game.level.arena.rank = game.level.arena.rank + val
 				if game.level.arena.rank >= #game.level.arena.ranks then game.level.arena.rank = #game.level.arena.ranks end
@@ -309,7 +309,7 @@ return {
 				if currentRank < newRank then --Player's rank increases!
 					local x, y = game.level.map:getTileToScreen(game.player.x, game.player.y)
 					if newRank == 13 then world:gainAchievement("XXX_THE_DESTROYER", game.player)
-					elseif newRank == 21 then world:gainAchievement("GRAND_MASTER", game.player)
+					elseif newRank == 24 then world:gainAchievement("GRAND_MASTER", game.player)
 					end
 					game.flyers:add(x, y, 90, 0, -0.5, "RANK UP!!", { 2, 57, 185 }, true)
 					game.log("#LIGHT_GREEN#The public is pleased by your performance! You now have the rank of #WHITE#"..game.level.arena.ranks[newRank].."#LIGHT_GREEN#!")

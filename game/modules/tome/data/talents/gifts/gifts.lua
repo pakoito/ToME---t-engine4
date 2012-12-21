@@ -21,13 +21,13 @@
 newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/call", name = "call of the wild", generic = true, description = "Be at one with nature." }
 newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/harmony", name = "harmony", generic = true, description = "Nature heals and cleans you." }
 newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/antimagic", name = "antimagic", generic = true, description = "The way to combat magic, or even nullify it." }
-newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/summon-melee", name = "summoning (melee)", description = "The art of calling creatures to your aid." }
-newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/summon-distance", name = "summoning (distance)", description = "The art of calling creatures to your aid." }
-newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/summon-utility", name = "summoning (utility)", description = "The art of calling creatures to your aid." }
-newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/summon-augmentation", name = "summoning (augmentation)", description = "The art of calling creatures to your aid." }
-newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/summon-advanced", name = "summoning (advanced)", min_lev = 10, description = "The art of calling creatures to your aid." }
+newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/summon-melee", name = "summoning (melee)", description = "The art of calling creatures adept in melee combat to your aid." }
+newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/summon-distance", name = "summoning (distance)", description = "The art of calling creatures adept in elemental destruction to your aid." }
+newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/summon-utility", name = "summoning (utility)", description = "The art of calling versatile creatures to your aid." }
+newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/summon-augmentation", name = "summoning (augmentation)", description = "The art of manipulating the lifespan and location of your summons." }
+newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/summon-advanced", name = "summoning (advanced)", min_lev = 10, description = "The art of improving the quality of your summons." }
 newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/slime", name = "slime aspect", description = "Through dedicated consumption of slime mold juice, you have gained an affinity with slime molds." }
-newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/fungus", name = "fungus", generic = true, description = "By covering yourself in fungus you better your healing." }
+newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/fungus", name = "fungus", generic = true, description = "By covering yourself in fungus, you better your healing." }
 newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/sand-drake", name = "sand drake aspect", description = "Take on the defining aspects of a Sand Drake." }
 newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/fire-drake", name = "fire drake aspect", description = "Take on the defining aspects of a Fire Drake." }
 newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/cold-drake", name = "cold drake aspect", description = "Take on the defining aspects of a Cold Drake." }

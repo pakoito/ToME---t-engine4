@@ -38,7 +38,8 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local manacost = t.getManaCost(self, t)
-		return ([[Channel raw magical energy into your melee attacks, each doing %.2f darkness damage and costing %.2f mana.]]):
+		return ([[Channel raw magical energy into your melee attacks; each blow you land will do an additional %.2f darkness damage and cost %.2f mana.
+		The damage will improve with your Spellpower.]]):
 		format(damDesc(self, DamageType.DARKNESS, damage), manacost)
 	end,
 }
@@ -52,7 +53,7 @@ newTalent{
 	getSpellpower = function(self, t) return 15 + self:getTalentLevel(t) * 5 end,
 	info = function(self, t)
 		local spellpower = t.getSpellpower(self, t)
-		return ([[The user gains a bonus to spellpower equal to %d%% of their cunning.]]):
+		return ([[Your preparations give you greater magical capabilities. You gain a bonus to Spellpower equal to %d%% of your Cunning.]]):
 		format(spellpower)
 	end,
 }
@@ -84,7 +85,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local manaregen = t.getManaRegen(self, t)
-		return ([[Regenerates %0.2f mana per turn and increases physical and spell attack speed by %d%% while active.]]):
+		return ([[You draw energy from the depths of the shadows.
+		While sustained, you regenerate %0.2f mana per turn, and your physical and spell attack speed increases by %d%%.]]):
 		format(manaregen, 2.2 * self:getTalentLevel(t))
 	end,
 }
@@ -130,7 +132,7 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		return ([[Step through the shadows to your target, dazing it for %d turns and hitting it with all your weapons for %d%% darkness weapon damage.
 		Dazed targets can not act, but any damage will free them.
-		To shadowstep you need to be able to see the target.]]):
+		To Shadowstep, you need to be able to see the target.]]):
 		format(duration, t.getDamage(self, t) * 100)
 	end,
 }

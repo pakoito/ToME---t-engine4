@@ -24,7 +24,7 @@ newTalent{
 	points = 5,
 	require = techs_dex_req1,
 	info = function(self, t)
-		return ([[Increases the damage of the off-hand weapon to %d%%.]]):format(100 / (2 - (math.min(self:getTalentLevel(t), 8) / 6)))
+		return ([[Increases the damage of your off-hand weapon to %d%%.]]):format(100 / (2 - (math.min(self:getTalentLevel(t), 8) / 6)))
 	end,
 }
 
@@ -68,7 +68,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[You have learned to hit the right spot, increasing your armor penetration by %d when dual wielding.
-		Armor penetration will increase with your Dexterity stat.]]):format(4 + (self:getTalentLevel(t) * self:getDex()) / 20)
+		The Armour penetration bonus will increase with your Dexterity.]]):format(4 + (self:getTalentLevel(t) * self:getDex()) / 20)
 	end,
 }
 
@@ -102,7 +102,7 @@ newTalent{
 	info = function(self, t)
 		local weapon, offweapon = self:hasDualWeapon()
 		weapon = weapon or {}
-		return ([[Increases attack speed by %d%%, but drains stamina quickly(-6 stamina/turn).]]):format(self:getTalentLevel(t) * 14)
+		return ([[Increases attack speed by %d%%, but drains stamina quickly (-6 stamina/turn).]]):format(self:getTalentLevel(t) * 14)
 	end,
 }
 
@@ -150,8 +150,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hit with your offhand weapon for %d%% damage. If the attack hits, the target is stunned for %d turns and you hit it with your mainhand weapon doing %d%% damage.
-		Stun chance increase with your Dexterity stat.]])
+		return ([[Attack with your offhand weapon for %d%% damage. If the attack hits, the target is stunned for %d turns, and you hit it with your mainhand weapon doing %d%% damage.
+		The stun chance increases with your Accuracy.]])
 		:format(100 * self:combatTalentWeaponDamage(t, 0.7, 1.5),
 		2 + self:getTalentLevel(t),
 		100 * self:combatTalentWeaponDamage(t, 0.7, 1.5))
@@ -240,7 +240,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Attack your foes in a frontal arc doing %d%% weapon damage and making your targets bleed for %d each turn for %d turns.]]):
+		return ([[Attack your foes in a frontal arc, doing %d%% weapon damage and making your targets bleed for %d each turn for %d turns.]]):
 		format(100 * self:combatTalentWeaponDamage(t, 1, 1.7), self:getDex() * 0.5, 3 + self:getTalentLevel(t))
 	end,
 }

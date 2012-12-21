@@ -36,7 +36,7 @@ newTalent{
 		self:onStatChange(self.STAT_CON, -2)
 	end,
 	info = function(self, t)
-		return ([[Improves your ghoulish body, increasing strength and constitution by %d.]]):format(2 * self:getTalentLevelRaw(t))
+		return ([[Improves your ghoulish body, increasing Strength and Constitution by %d.]]):format(2 * self:getTalentLevelRaw(t))
 	end,
 }
 
@@ -109,8 +109,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local dam = 10 + self:combatTalentStatDamage(t, "con", 10, 60)
-		return ([[Vomit on the ground around you, healing any undead in the area and damaging others.
-		Lasts %d turns and deals %d blight damage or heals %d life.]]):format(self:getTalentLevelRaw(t) * 2 + 5, damDesc(self, DamageType.BLIGHT, dam), dam * 1.5)
+		return ([[Vomit on the ground around you, healing any undead in the area and damaging anyone else.
+		Lasts %d turns, and deals %d blight damage or heals %d life.]]):format(self:getTalentLevelRaw(t) * 2 + 5, damDesc(self, DamageType.BLIGHT, dam), dam * 1.5)
 	end,
 }
 
@@ -190,9 +190,9 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local disease_damage = t.getDiseaseDamage(self, t)
 		local stat_damage = t.getStatDamage(self, t)
-		return ([[Gnaw your target for %d%% damage.  If your attack hits, the target may be infected with ghoul rot for %d turns.
-		Each turn Ghoul Rot inflicts %0.2f blight damage.  At talent level two Ghoul Rot also reduces Strength by %d, at level three it reduces Dexterity by %d, and at level four it reduces Constitution by %d.
-		At talent level five targets suffering from Ghoul Rot rise as friendly ghouls when slain.
+		return ([[Gnaw your target for %d%% damage.  If your attack hits, the target may be infected with Ghoul Rot for %d turns.
+		Each turn, Ghoul Rot inflicts %0.2f blight damage.  At talent level 2, Ghoul Rot also reduces Strength by %d; at level 3 it reduces Dexterity by %d, and at level 4 it reduces Constitution by %d.
+		At talent level 5 targets suffering from Ghoul Rot rise as friendly ghouls when slain.
 		The blight damage and stat damage scales with your Constitution.]]):
 		format(100 * damage, duration, damDesc(self, DamageType.BLIGHT, disease_damage), stat_damage, stat_damage, stat_damage)
 	end,

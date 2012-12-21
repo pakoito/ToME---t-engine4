@@ -32,8 +32,8 @@ newTalent{
 	getCriticalChance = function(self, t) return 1 + self:getTalentLevel(t) * 1.3 end,
 	info = function(self, t)
 		local critchance = t.getCriticalChance(self, t)
-		return ([[You have learned to find and hit the weak spots. Your strikes have a %0.2f%% greater chance to be critical hits and your critical hits do %d%% more damage.
-		Also, when using knives, you now use your cunning score instead of your strength for bonus damage.]]):
+		return ([[You have learned to find and hit weak spots. Your strikes have a %0.2f%% greater chance to be critical hits, and your critical hits do %d%% more damage.
+		Also, when using knives, you now use your Cunning instead of your Strength for bonus damage.]]):
 		format(critchance, self:getTalentLevelRaw(t) * 5)
 	end,
 }
@@ -69,8 +69,8 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local apr = t.getArmorPierce(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[You hit your target doing %d%% damage. If your attack hits, you gain %d armour penetration for %d turns.
-		The APR will increase with Cunning.]]):
+		return ([[You hit your target, doing %d%% damage. If your attack hits, you gain %d armour penetration for %d turns.
+		The APR will increase with your Cunning.]]):
 		format(100 * damage, apr, duration)
 	end,
 }
@@ -94,8 +94,8 @@ newTalent{
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[For %d turns you put all your will into your blows, adding %d damage to each strike.
-		Damage will improve with your Cunning and Willpower stats.]]):
+		return ([[For %d turns, you put all your will into your blows, adding %d damage to each strike.
+		The effect will improve with your Cunning and Willpower stats.]]):
 		format(duration, damage)
 	end,
 }
@@ -130,7 +130,7 @@ newTalent{
 	info = function(self, t)
 		local talentcount = t.getTalentCount(self, t)
 		local maxlevel = t.getMaxLevel(self, t)
-		return ([[Your quick wits allow you to reset the cooldown of %d of your combat talents(cunning or technique) of level %d or less.]]):
+		return ([[Your quick wits allow you to reset the cooldown of %d of your combat talents (cunning or technique) of level %d or less.]]):
 		format(talentcount, maxlevel)
 	end,
 }

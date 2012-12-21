@@ -47,8 +47,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[For an instant your weapons turn into a shadow leash that tries to grab the target's weapon, disarming it for %d turns.
-		Duration increases with talent level and chance to succeed with your Dexterity stat.]]):
+		return ([[For an instant, your weapons turn into a shadow leash that tries to grab the target's weapon, disarming it for %d turns.
+		The chance to hit improves with your Accuracy.]]):
 		format(duration)
 	end,
 }
@@ -93,8 +93,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[You reach out with shadow vines toward your target, pulling it to you and silencing it for %d turns and dazing it for 2 turns.
-		Duration increases with talent level and chance to succeed with your Dexterity stat.]]):
+		return ([[You reach out with shadowy vines toward your target, pulling it to you and silencing it for %d turns and dazing it for 2 turns.
+		The chance to hit improves with your Accuracy.]]):
 		format(duration)
 	end,
 }
@@ -193,8 +193,8 @@ newTalent{
 	info = function(self, t)
 		return ([[You take full control of your own shadow for %d turns.
 		Your shadow possesses your talents and stats, has %d%% life and deals %d%% damage, -30%% all resistances, -100%% light resistance and 100%% darkness resistance.
-		Your shadow is permanently stealthed (%d power) and all melee damage it deals is converted to darkness damage.
-		If you release control early your shadow will dissipate.]]):
+		Your shadow is permanently stealthed (%d power), and all melee damage it deals is converted to darkness damage.
+		If you release control early, your shadow will dissipate.]]):
 		format(t.getDuration(self, t), t.getHealth(self, t) * 100, t.getDam(self, t) * 100, t.getStealthPower(self, t))
 	end,
 }
@@ -221,9 +221,9 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local duration = t.getDuration(self, t)
 		local res = t.getDamageRes(self, t)
-		return ([[You veil yourself in shadows for %d turns and let them control you.
-		While in the veil you become immune to status effects, and gain %d%% all damage reduction. Each turn you blink to a nearby foe, hitting it for %d%% darkness weapon damage.
-		While this goes on you cannot be stopped unless you are killed, and you cannot control your character.]]):
+		return ([[You veil yourself in shadows for %d turns, and let them control you.
+		While in the veil, you become immune to status effects and gain %d%% all damage reduction. Each turn, you blink to a nearby foe, hitting it for %d%% darkness weapon damage.
+		While this goes on, you cannot be stopped unless you are killed, and you cannot control your character.]]):
 		format(duration, res, 100 * damage)
 	end,
 }

@@ -52,7 +52,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Call upon the gift of the highborn to regenerate your body for %d life every turn for 10 turns.
-		The life healed will increase with the Willpower stat.]]):format(5 + self:getWil() * 0.5)
+		The life healed will increase with your Willpower.]]):format(5 + self:getWil() * 0.5)
 	end,
 }
 
@@ -75,7 +75,7 @@ newTalent{
 	info = function(self, t)
 		return ([[While Highers are not meant to rule other humans - and show no particular will to do so - they are frequently called to higher duties.
 		Their nature grants them better senses than other humans.
-		Increase maximum sight range by %d and increases existing infravision, and heightened senses range by %d.]]):
+		Increase maximum sight range by %d, and increases existing infravision, and heightened senses range by %d.]]):
 		format(self:getTalentLevelRaw(t), math.ceil(self:getTalentLevelRaw(t)/2))
 	end,
 }
@@ -118,8 +118,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[Activate some of your inner magic, using it to power your abilities.  For the next %d turns all active talents will be used without resource cost.
-		Your resources must still be high enough to initially power the talent and failure rates (etc.) still apply.
+		return ([[Activate some of your inner magic, using it to power your abilities.  For the next %d turns, all active talents will be used without resource cost.
+		Your resources must still be high enough to initially power the talent, and failure rates (etc.) still apply.
 		]]):format(duration)
 	end,
 }
@@ -144,7 +144,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Call upon the grace of the Eternals to increase your general speed by %d%% for 8 turns.
-		The speed bonus will increase with the Dexterity stat.]]):format((0.1 + self:getDex() / 210) * 100)
+		The speed bonus will increase with your Dexterity.]]):format((0.1 + self:getDex() / 210) * 100)
 	end,
 }
 
@@ -165,7 +165,7 @@ newTalent{
 		self.combat_mindcrit = self.combat_mindcrit - 2
 	end,
 	info = function(self, t)
-		return ([[Reality bends slightly in the presence of a Shaloren due to their inherent magical nature.
+		return ([[Reality bends slightly in the presence of a Shaloren, due to their inherent magical nature.
 		Increases critical chance by %d%%.]]):format(self:getTalentLevelRaw(t) * 2)
 	end,
 }
@@ -196,7 +196,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[As the only immortal race of Eyal, Shaloren have learnt, over the long years, to use their innate inner magic to protect themselves.
-		%d%% chance to become invisible (power %d) for 5 turns when hit by a blow doing at least 15%% of their total life.]]):
+		%d%% chance to become invisible (power %d) for 5 turns, when hit by a blow doing at least 15%% of their total life.]]):
 		format(self:getTalentLevelRaw(t) * 5, 5 + self:getMag(20, true))
 	end,
 }
@@ -248,8 +248,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[The world grows old as you stand the ages. To you time is different.
-		Reduces the time remaining on detrimental effects by %d and increases the time remaining on beneficial effects by %d.]]):
+		return ([[The world grows old as you stand through the ages. To you, time is different.
+		Reduces the time remaining on detrimental effects by %d, and increases the time remaining on beneficial effects by %d.]]):
 		format(self:getTalentLevelRaw(t) * 2, self:getTalentLevelRaw(t))
 	end,
 }
@@ -273,7 +273,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Call upon the power of the Eternals, increasing all damage by %d%% and reducing all damage taken by %d%% for 5 turns.
-		The bonus will increase with the Willpower stat.]]):format(10 + self:getWil(10, true), 10 + self:getWil(10, true))
+		The bonus will increase with your Willpower.]]):format(10 + self:getWil(10, true), 10 + self:getWil(10, true))
 	end,
 }
 
@@ -292,8 +292,8 @@ newTalent{
 		self.combat_mentalresist = self.combat_mentalresist - 5
 	end,
 	info = function(self, t)
-		return ([[Thaloren have always been a free people, living in their beloved forest, never caring much about the world outside.
-		Increase physical and mental save by +%d.]]):format(self:getTalentLevelRaw(t) * 5)
+		return ([[Thaloren have always been a free people, living in their beloved forest and never caring much about the world outside.
+		Increase Physical and Mental Save by +%d.]]):format(self:getTalentLevelRaw(t) * 5)
 	end,
 }
 
@@ -314,8 +314,8 @@ newTalent{
 		self.resists.all = (self.resists.all or 0) - 2
 	end,
 	info = function(self, t)
-		return ([[You are part of the wood, it shields you from corruption.
-		Increase disease immunity by %d%%, blight resistance by %d%% and all resistances by %d%%.]]):format(self:getTalentLevelRaw(t) * 20, self:getTalentLevelRaw(t) * 4, self:getTalentLevelRaw(t) * 2)
+		return ([[You are part of the wood; it shields you from corruption.
+		Increase disease immunity by %d%%, blight resistance by %d%%, and all resistances by %d%%.]]):format(self:getTalentLevelRaw(t) * 20, self:getTalentLevelRaw(t) * 4, self:getTalentLevelRaw(t) * 2)
 	end,
 }
 
@@ -386,10 +386,10 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Nature is with you, you can always feel the call of the woods.
+		return ([[Nature is with you; you can always feel the call of the woods.
 		Summons two elite Treants to your side for 8 turns.
-		The treants have a global resistance equal to your blight resistance and can stun, knockback and taunt your foes.
-		Their strength increases with your Willpower stat.]]):format()
+		The treants have a global resistance equal to your blight resistance, and can stun, knockback and taunt your foes.
+		Their power increases with your Willpower.]]):format()
 	end,
 }
 
@@ -415,8 +415,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Call upon the legendary resilience of the Dwarven race to increase your armor(+%d), spell(+%d) and physical(+%d) saves for 8 turns.
-		The bonus will increase with the Constitution stat.]]):format(5 + self:getCon() / 5, 10 + self:getCon() / 5, 10 + self:getCon() / 5)
+		return ([[Call upon the legendary resilience of the Dwarven race to increase your Armor (+%d), Spell (+%d) and Physical (+%d) saves for 8 turns.
+		The bonus will increase with your Constitution.]]):format(5 + self:getCon() / 5, 10 + self:getCon() / 5, 10 + self:getCon() / 5)
 	end,
 }
 
@@ -434,7 +434,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Dwarf skin is a complex structure, it can automatically react to physical blows to harden itself.
-		15%% chance when hit in melee to increase armour total by %d for 5 turns.]]):format(self:getTalentLevelRaw(t) * 6)
+		15%% chance when hit in melee to increase Armour total by %d for 5 turns.]]):format(self:getTalentLevelRaw(t) * 6)
 	end,
 }
 
@@ -445,8 +445,8 @@ newTalent{
 	points = 5,
 	mode = "passive",
 	info = function(self, t)
-		return ([[Money is the heart of the dwarven Empire, it rules over all other considerations.
-		Increases physical, mental and spell saves based on the amount of gold you possess.
+		return ([[Money is the heart of the Dwarven Empire; it rules over all other considerations.
+		Increases Physical, Mental and Spell Saves based on the amount of gold you possess.
 		+1 save every %d gold, up to +%d.]]):format(90 - self:getTalentLevelRaw(t) * 5, self:getTalentLevelRaw(t) * 7)
 	end,
 }
@@ -471,7 +471,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local range = t.getRange(self, t)
-		return ([[While the origins of the dwarves remain clouded in mysteries to the other races it is obvious they share strong ties to the stone.
+		return ([[While the origins of the dwarves remain clouded in mysteries to the other races, it is obvious they share strong ties to the stone.
 		You can target any wall and immediately enter it and appear on the other side of the obstacle.
 		Works up to %d grids away (increases with Constitution and talent level).]]):
 		format(range)
@@ -501,7 +501,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Call upon the luck and cunning of the Little Folk to increase your physical, mental, and spell critical strike chance by %d%% and saves by %d for 5 turns.
-		The bonus will increase with the Cunning stat.]]):format(10 + self:getCun() / 2, 10 + self:getCun() / 2)
+		The bonus will increase with your Cunning.]]):format(10 + self:getCun() / 2, 10 + self:getCun() / 2)
 	end,
 }
 
@@ -519,7 +519,7 @@ newTalent{
 		local evasion = t.getEvasionChance(self, t)
 		local duration = t.getDuration(self, t)
 		return ([[Your incredible luck kicks in at just the right moment to save your skin.
-		Whenever you take %d%% or more of your life from a single attack you gain Evasion equal to your luck stat (currently %d%%) for the next %d turns.]]):
+		Whenever you take %d%% or more of your life from a single attack, you gain Evasion equal to your luck stat (currently %d%%) for the next %d turns.]]):
 		format(threshold * 100, evasion, duration)
 	end,
 }
@@ -531,8 +531,8 @@ newTalent{
 	points = 5,
 	mode = "passive",
 	info = function(self, t)
-		return ([[Halflings have always been a very organised and methodical race, the more foes they face the more organised they are.
-		If two or more foes are in sight your physical power, physical save, spellpower, spell save, mental save, and mindpower are increased by %0.1f per foes (up to 5 foes).]]):
+		return ([[Halflings have always been a very organised and methodical race; the more foes they face, the more organised they are.
+		If two or more foes are in sight your Physical Power, Physical Save, Spellpower, Spell Save, Mental Save, and Mindpower are increased by %0.1f per foe (up to 5 foes).]]):
 		format(self:getTalentLevel(t) * 1.5)
 	end,
 }
@@ -573,8 +573,8 @@ newTalent{
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		local count = t.getRemoveCount(self, t)
-		return ([[Halflings are one of the more powerful military force of the known world, they have been at war with most other races for thousand of years.
-		Removes %d stun, daze, or pin effects and makes you immune to stuns, dazes and pins for %d turns.
+		return ([[Halflings are one of the more powerful military force of the known world; they have been at war with most other races for thousand of years.
+		Removes %d stun, daze, or pin effects, and makes you immune to stuns, dazes and pins for %d turns.
 		This talent takes no time to use.]]):format(duration, count)
 	end,
 }
@@ -597,8 +597,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Summons your lust for blood and destruction, increasing all damage by %d%% for 5 turns.
-		The bonus will increase with the Willpower stat.]]):format(10 + self:getWil(20, true))
+		return ([[Summons your lust for blood and destruction, increasing all damage dealt by %d%% for 5 turns.
+		The bonus will increase with your Willpower.]]):format(10 + self:getWil(20, true))
 	end,
 }
 
@@ -635,7 +635,7 @@ newTalent{
 		self.resists_pen.all = (self.resists_pen.all or 0) - 5
 	end,
 	info = function(self, t)
-		return ([[Orcs have seen many battles, and won many of them.
+		return ([[Orcs have seen countless battles, and won many of them.
 		Increase all damage penetration by %d%%.]]):format(self:getTalentLevelRaw(t) * 5)
 	end,
 }
@@ -685,8 +685,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Call upon the will of all the Orc Prides to survive this battle.
-		Heals for %d life and removes up to %d detrimental effects.
-		The bonus will increase with the Constitution stat.]]):format(25 + self:getCon() * 2.3, math.ceil(self:getTalentLevel(t) * 3 / 5))
+		Heals you for %d life, and removes up to %d detrimental effects.
+		The bonus will increase with your Constitution.]]):format(25 + self:getCon() * 2.3, math.ceil(self:getTalentLevel(t) * 3 / 5))
 	end,
 }
 
@@ -727,9 +727,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Shatters the mind of your victim, giving you full control over its actions for %s turns.
-		When the effect ends you pull out your mind and the victim's body collapses dead.
-		This effect does not work on elite or undeads.
-		The duration will increase with the Willpower stat.]]):format(4 + self:getWil(10))
+		When the effect ends, you pull out your mind and the victim's body collapses, dead.
+		This effect does not work on elites or undeads.
+		The duration will increase with your Willpower.]]):format(4 + self:getWil(10))
 	end,
 }
 
@@ -750,8 +750,8 @@ newTalent{
 		self.combat_mentalresist = self.combat_mentalresist - 4
 	end,
 	info = function(self, t)
-		return ([[Your mind becomes more attuned to the Way and is shielded from outside effects.
-		Increase confusion and silence immunities by %d%% and your mental save by +%d.]]):format(self:getTalentLevelRaw(t) * 12, self:getTalentLevelRaw(t) * 4)
+		return ([[Your mind becomes more attuned to the Way, and is shielded from outside effects.
+		Increase confusion and silence immunities by %d%%, and your Mental Save by +%d.]]):format(self:getTalentLevelRaw(t) * 12, self:getTalentLevelRaw(t) * 4)
 	end,
 }
 
@@ -868,7 +868,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You merge your mind with the rest of the Way for a brief moment, the sum of all yeek knowledge gathers in your mind
+		return ([[You merge your mind with the rest of the Way for a brief moment; the sum of all yeek knowledge gathers in your mind,
 		and allows you to identify any item you could not recognize yourself.]])
 	end,
 }

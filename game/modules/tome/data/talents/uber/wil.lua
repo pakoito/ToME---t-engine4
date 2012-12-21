@@ -31,7 +31,7 @@ uberTalent{
 	require = { special={desc="Be close to the draconic world", fct=function(self) return game.state.birth.ignore_prodigies_special_reqs or (self:attr("drake_touched") and self:attr("drake_touched") >= 2) end} },
 	info = function(self, t)
 		return ([[Your body is like that of a drake, easily resisting detrimental effects.
-		For 5 turns no detrimental effects may target you.]])
+		For 5 turns, no detrimental effects may target you.]])
 		:format()
 	end,
 }
@@ -103,9 +103,9 @@ uberTalent{
 	end,
 	info = function(self, t)
 		local dam = t.getDamage(self, t)/2
-		return ([[With the release of your willpower when casting damaging spells or mind attacks you can call forth a meteor to crash down near your foes.
-		The affected area is turned into lava for 8 turns and the crash will deal %0.2f fire and %0.2f physical damage.
-		The meteor also stun affected creatures for 3 turns.]])
+		return ([[With the release of your willpower when casting damaging spells or mind attacks, you can call forth a meteor to crash down near your foes.
+		The affected area is turned into lava for 8 turns, and the crash will deal %0.2f fire and %0.2f physical damage.
+		The meteor also stuns affected creatures for 3 turns. The damage scales with your Spellpower.]])
 		:format(damDesc(self, DamageType.FIRE, dam), damDesc(self, DamageType.PHYSICAL, dam))
 	end,
 }
@@ -134,7 +134,7 @@ uberTalent{
 			))
 	end} },
 	info = function(self, t)
-		return ([[Garkul's Spirit is with you, you now deal 1000%% more damage to constructs and 20%% more damage to humanoids.]])
+		return ([[Garkul's Spirit is with you; you now deal 1000%% more damage to constructs and 20%% more damage to humanoids.]])
 		:format()
 	end,
 }
@@ -150,8 +150,8 @@ uberTalent{
 	end,
 	require = { special={desc="Have been close to death (killed a foe while below 1 HP)", fct=function(self) return self:attr("barely_survived") end} },
 	info = function(self, t)
-		return ([[You focus your mind on the task at hand.
-		For 5 turns none of your talents use any resources.]])
+		return ([[You focus your mind on the task at hand, regardless of how dire the situation is.
+		For 5 turns, none of your talents use any resources.]])
 		:format()
 	end,
 }
@@ -185,7 +185,7 @@ uberTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Your will is so strong you simply ignore mental effects against you.
+		return ([[Your will is so strong, you simply ignore mental effects used against you.
 		Warning: this has a cooldown.]])
 		:format()
 	end,
@@ -209,8 +209,8 @@ uberTalent{
 	end,
 	info = function(self, t)
 		return ([[Your will is a shield against the assault of crazy arcane users.
-		Each time you take damage from a spell you punish the spellcaster with %0.2f mind damage.
-		Also they will suffer a 40%% spell failure chance for the durtion of the spell cooldown they used on you.]])
+		Each time you take damage from a spell, you punish the spellcaster with %0.2f mind damage.
+		Also, they will suffer a 40%% spell failure chance for the duration of the spell cooldown they used on you.]])
 		:format(damDesc(self, DamageType.MIND, 20 + self:getWil() * 2))
 	end,
 }

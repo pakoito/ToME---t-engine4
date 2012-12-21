@@ -61,7 +61,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Take an offensive stance. As you walk through your foes, you knock them all back in an frontal arc (up to %d grids).
-		This consumes stamina rapidly(-4 stamina/turn).]]):
+		This consumes stamina rapidly (-4 stamina/turn).]]):
 		format(math.floor(self:getTalentLevel(t)))
 	end,
 }

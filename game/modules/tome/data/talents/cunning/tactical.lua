@@ -55,8 +55,8 @@ newTalent{
 	info = function(self, t)
 		local defense = t.getDefense(self, t)
 		local maximum = t.getMaximum(self, t)
-		return ([[Your defense is increased by %d for every adjacent visible foe up to a maximum of +%d defense.
-		The defense increase per enemy and maximum defense bonus will scale with the cunning stat.]]):format(defense, maximum)
+		return ([[Your Defense is increased by %d for every adjacent visible foe, up to a maximum of +%d Defense.
+		The Defense increase per enemy and maximum Defense bonus will scale with your Cunning.]]):format(defense, maximum)
 	end,
 }
 
@@ -69,10 +69,10 @@ newTalent{
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.5, 0.9) + getStrikingStyle(self, dam) end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t) * 100
-		return ([[When you avoid a melee blow you have a %d%% chance to get a free, automatic attack against your foe for %d%% damage.
-		Unarmed fighters using it do consider it a strike for the purpose of stance damage bonuses (if have any) and will have a damage bonus.
-		Armed fighters use it normaly.
-		The chance of countering increases with the cunning stat.]]):format(self:getTalentLevel(t) * (5 + self:getCun(5, true)), damage)
+		return ([[When you avoid a melee blow, you have a %d%% chance to get a free, automatic attack against your foe for %d%% damage.
+		Unarmed fighters using it do consider it a strike for the purpose of stance damage bonuses (if they have any), and will have a damage bonus as a result.
+		Armed fighters get a normal physical.
+		The chance of countering increases with your Cunning.]]):format(self:getTalentLevel(t) * (5 + self:getCun(5, true)), damage)
 	end,
 }
 
@@ -96,8 +96,8 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local power = t.getPower(self, t)
 		local defense = t.getDefense(self, t)
-		return ([[Increases defense by %d for %d turns.  When you avoid a melee blow you set the target up, increasing the chance of you landing a critical strike on them by %d%% and reducing their saving throws by %d.
-		The defense increase will scale with the cunning stat.]])
+		return ([[Increases Defense by %d for %d turns.  When you avoid a melee blow, you set the target up, increasing the chance of you landing a critical strike on them by %d%% and reducing their saving throws by %d.
+		The effects will scale with your Cunning.]])
 		:format(defense, duration, power, power)
 	end,
 }
@@ -126,7 +126,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local reduction = t.getReductionMax(self, t)
-		return ([[Systematically find the weaknesses in your opponents physical resists at the cost of 10%% of your physical damage.  Each time you hit an opponent with a melee attack you reduce their physical resistance by 5%% up to a maximum of %d%%.
+		return ([[Systematically find the weaknesses in your opponents' physical resists, at the cost of 10%% of your physical damage.  Each time you hit an opponent with a melee attack, you reduce their physical resistance by 5%%, up to a maximum of %d%%.
 		]]):format(reduction)
 	end,
 }

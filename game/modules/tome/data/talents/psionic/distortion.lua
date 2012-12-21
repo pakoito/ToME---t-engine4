@@ -52,9 +52,9 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local radius = self:getTalentRadius(t)
 		return ([[Fire a bolt of distortion that ignores resistance and inflicts %0.2f physical damage.  This damage will distort affected targets, rendering them vulnerable to distortion effects for two turns.
-		If the bolt comes in contact with a target that's already distorted a detonation will occur, inflicting 150%% of the base damage in a radius of %d.
-		At talent level five you learn to shape your distortion effects, preventing them from hitting you or your allies.
-		The damage will scale with your mindpower.]]):format(damDesc(self, DamageType.PHYSICAL, damage), radius)
+		If the bolt comes in contact with a target that's already distorted, a detonation will occur, inflicting 150%% of the base damage in a radius of %d.
+		At talent level 5, you learn to shape your distortion effects, preventing them from hitting you or your allies.
+		The damage will scale with your Mindpower.]]):format(damDesc(self, DamageType.PHYSICAL, damage), radius)
 	end,
 }
 
@@ -96,8 +96,8 @@ newTalent{
 		local power = t.getPower(self, t)
 		return ([[Creates a distortion wave in a radius %d cone that deals %0.2f physical damage and knocks back targets in the blast radius.
 		This damage will distort affected targets, rendering them vulnerable to distortion effects for two turns.
-		If the target is already distorted they'll be stunned for %d turns as well.
-		The damage will scale with your mindpower.]]):format(radius, damDesc(self, DamageType.PHYSICAL, damage), power)
+		If the target is already distorted, they'll be stunned for %d turns as well.
+		The damage will scale with your Mindpower.]]):format(radius, damDesc(self, DamageType.PHYSICAL, damage), power)
 	end,
 }
 
@@ -140,8 +140,8 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		return ([[Ravages the target with distortion, inflicting %0.2f physical damage each turn for %d turns.
 		This damage will distort affected targets, rendering them vulnerable to distortion effects for two turns.
-		If the target is already distorted when ravage is applied the damage will be increased by 50%% and the target will lose one beneficial physical effect or sustain each turn.
-		The damage will scale with your mindpower.]]):format(damDesc(self, DamageType.PHYSICAL, damage), duration)
+		If the target is already distorted when Ravage is applied, the damage will be increased by 50%% and the target will lose one beneficial physical effect or sustain each turn.
+		The damage will scale with your Mindpower.]]):format(damDesc(self, DamageType.PHYSICAL, damage), duration)
 	end,
 }
 
@@ -232,8 +232,8 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local damage = t.getDamage(self, t)
 		local radius = self:getTalentRadius(t)
-		return ([[Create a powerful maelstorm for %d turns.  Each turn the maelstrom will pull in targets within a radius of %d and inflict %0.2f physical damage.
+		return ([[Create a powerful maelstorm for %d turns.  Each turn, the maelstrom will pull in targets within a radius of %d, and inflict %0.2f physical damage.
 		This damage will distort affected targets, rendering them vulnerable to distortion effects for two turns.
-		The damage will scale with your mindpower.]]):format(duration, radius, damDesc(self, DamageType.PHYSICAL, damage))
+		The damage will scale with your Mindpower.]]):format(duration, radius, damDesc(self, DamageType.PHYSICAL, damage))
 	end,
 }

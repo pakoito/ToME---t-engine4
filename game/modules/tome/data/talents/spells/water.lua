@@ -55,7 +55,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[Glacial fumes rise from the ground doing %0.2f cold damage in a radius of 3 each turn for %d turns.
+		return ([[Glacial fumes rise from the ground, doing %0.2f cold damage in a radius of 3 each turn for %d turns.
 		The damage will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.COLD, damage), duration)
 	end,
@@ -133,7 +133,8 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local duration = t.getDuration(self, t)
 		local radius = self:getTalentRadius(t)
-		return ([[A wall of water rushes out from the caster with radius 1, increasing 1 per turn to a maximum eventual radius of %d, doing %0.2f cold damage and %0.2f physical damage as well as knocking back targets each turn for %d turns.
+		return ([[A wall of water rushes out from the caster with an initial radius of 1, increasing 1 per turn to a maximum eventual radius of %d, doing %0.2f cold damage and %0.2f physical damage to all inside, as well as knocking back targets each turn.
+		The tidal wave lasts for %d turns.
 		The damage and duration will increase with your Spellpower.]]):
 		format(radius, damDesc(self, DamageType.COLD, damage/2), damDesc(self, DamageType.PHYSICAL, damage/2), duration)
 	end,
@@ -163,7 +164,7 @@ newTalent{
 		local power = t.getPower(self, t)
 		local dur = t.getDuration(self, t)
 		return ([[You absorb latent cold around you, turning into an ice elemental - a shivgoroth - for %d turns.
-		While transformed you gain access to the Ice Storm talent level %d, %d%% resistance to cuts and stuns, %d%% cold resistance, you do not need to breath and all cold damage heals you for %d%% of the damage done.
+		While transformed, you do not need to breathe, gain access to the Ice Storm talent at level %d, gain %d%% resistance to cuts and stuns, gain %d%% cold resistance, and all cold damage heals you for %d%% of the damage done.
 		The power will increase with your Spellpower.]]):
 		format(dur, self:getTalentLevelRaw(t), power * 100, power * 100 / 2, 50 + power * 100)
 	end,
@@ -206,8 +207,8 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[A furious ice storm rages around the caster doing %0.2f cold damage in a radius of 3 each turn for %d turns.
-		It has 25%% chance to freeze damaged targets.
+		return ([[A furious ice storm rages around the caster ,doing %0.2f cold damage in a radius of 3 each turn for %d turns.
+		It has a 25%% chance to freeze damaged targets.
 		The damage and duration will increase with your Spellpower.]]):format(damDesc(self, DamageType.COLD, damage), duration)
 	end,
 }

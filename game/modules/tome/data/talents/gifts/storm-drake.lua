@@ -93,7 +93,7 @@ newTalent{
 	info = function(self, t)
 		local percent = t.getPercent(self, t)
 		return ([[Generate an electrical field around you in a radius of 1. Any creature caught inside will lose %d%% of its current life (effect decreased for higher creature ranks).
-		This effect can not kill creatures.
+		This effect cannot kill creatures.
 		Life loss will increase with your Mindpower.
 		Each point in storm drake talents also increases your lightning resistance by 1%%.]]):format(percent)
 	end,
@@ -162,9 +162,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Summons a tornado that moves slowly toward its target, following it if it changes position.
-		Any foe caught in its path take %0.2f lightning damage.
-		When it reaches its target it explodes in a radius of 1 for %0.2f lightning damage, %0.2f physical damage. All affected creatures will be knocked back and the targeted creature will be stunned for 4 turns.
-		The tornado will last for %d turns or until it reaches its target.
+		Any foe caught in its path takes %0.2f lightning damage.
+		When it reaches its target, it explodes in a radius of 1 for %0.2f lightning damage and %0.2f physical damage. All affected creatures will be knocked back, and the targeted creature will be stunned for 4 turns.
+		The tornado will last for %d turns, or until it reaches its target.
 		Damage will increase with your Mindpower.
 		Each point in storm drake talents also increases your lightning resistance by 1%%.]]):format(
 			damDesc(self, DamageType.LIGHTNING, self:combatTalentMindDamage(t, 10, 110)),
@@ -213,8 +213,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[You breathe lightning in a frontal cone of radius %d. Any target caught in the area will take %0.2f to %0.2f lightning damage and can be dazed for 3 turns.
-		The damage will increase with the Strength stat.
+		return ([[You breathe lightning in a frontal cone of radius %d. Any target caught in the area will take %0.2f to %0.2f lightning damage, and can be dazed for 3 turns.
+		The damage will increase with your Strength.
 		Each point in storm drake talents also increases your lightning resistance by 1%%.]]):format(
 			self:getTalentRadius(t),
 			damDesc(self, DamageType.LIGHTNING, damage / 3),

@@ -28,9 +28,10 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[You notice the small things others do not notice, allowing you to "see" creatures in a %d radius even outside of light radius.
-		This is not telepathy though, and is still limited to line of sight.
+		This is not telepathy, however, and it is still limited to line of sight.
 		Also, your attention to detail allows you to detect traps around you (%d detection 'power').
-		At level 3 you learn to disarm known traps (%d disarm 'power').]]):
+		At level 3, you learn to disarm known traps (%d disarm 'power').
+		The trap detection and disarming ability improves with your Cunning.]]):
 		format(4 + math.ceil(self:getTalentLevel(t)), self:getTalentLevel(t) * self:getCun(25, true), self:getTalentLevel(t) * self:getCun(25, true))
 	end,
 }
@@ -51,7 +52,7 @@ newTalent{
 	on_unlearn = function(self, t)
 	end,
 	info = function(self, t)
-		return ([[Your cunning allows you to use charms (wands, totems and torques) more efficiently, reducing their cooldowns by %d%%.]]):
+		return ([[Your cunning manipulations allows you to use charms (wands, totems and torques) more efficiently, reducing their cooldowns by %d%%.]]):
 		format(t.cdReduc(self:getTalentLevel(t))) --I5
 	end,
 }
@@ -65,7 +66,7 @@ newTalent{
 	info = function(self, t)
 		return ([[You look at your surroundings with more intensity than most people, allowing you to see stealthed or invisible creatures.
 		Increases stealth detection by %d and invisibility detection by %d.
-		The detection power increases with Cunning.]]):
+		The detection power increases with your Cunning.]]):
 		format(5 + self:getTalentLevel(t) * self:getCun(15, true), 5 + self:getTalentLevel(t) * self:getCun(15, true))
 	end,
 }
@@ -85,7 +86,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Your quick wit allows you to see attacks before they come, granting you a %d%% chance to completely evade them for %d turns.
-		Duration increases with Willpower, and chance to evade with Cunning and Dexterity.]]):format(5 * self:getTalentLevel(t) + self:getCun(25, true) + self:getDex(25, true), 5 + self:getWil(10))
+		return ([[Your quick wit allows you to see attacks before they land, granting you a %d%% chance to completely evade them for %d turns.
+		Duration increases with your Willpower, and the chance to evade improves with your Cunning and Dexterity.]]):format(5 * self:getTalentLevel(t) + self:getCun(25, true) + self:getDex(25, true), 5 + self:getWil(10))
 	end,
 }

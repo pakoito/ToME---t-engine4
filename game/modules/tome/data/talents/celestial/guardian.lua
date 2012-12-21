@@ -45,9 +45,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		local heal = t.getHeal(self, t)
-		return ([[Infuse your shield with light energy, healing you for %0.2f each time you take damage and costing up to 2 positive energy.
-		If you do not have enough positive energy, the effect will not trigger.
-		The healing done will increase with the Magic stat]]):
+		return ([[Infuse your shield with light, healing you for %0.2f each time you take damage at the expense of up to 2 positive energy.
+		If you do not have any positive energy, the effect will not trigger.
+		The healing done will increase with your Spellpower.]]):
 		format(heal)
 	end,
 }
@@ -101,8 +101,8 @@ newTalent{
 		local shielddamage = t.getShieldDamage(self, t)
 		local lightdamage = t.getLightDamage(self, t)
 		local radius = self:getTalentRadius(t)
-		return ([[Hits the target with your weapon doing %d%% damage and a shield strike doing %d%% damage.  If the shield strike hits your shield will explode in a burst of light, inflicting %0.2f light damage on all within a radius of %d of the target, lighting up the affected grids.
-		Light damage will increase with your Magic stat.]]):
+		return ([[Hits the target with your weapon doing %d%% damage, and with a shield strike doing %d%% damage. If the shield strike connects, your shield will explode in a burst of light that inflicts %0.2f light damage on all targets except yourself within radius %d of the target, and light up all tiles in that radius.
+		The light damage will increase with your Spellpower.]]):
 		format(100 * weapondamage, 100 * shielddamage, damDesc(self, DamageType.LIGHT, lightdamage), radius)
 	end,
 }
@@ -140,8 +140,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Negates half of all damage you take.  Once retribution has negated %0.2f damage your shield will explode in a burst of light, inflicting damage equal to the amount negated in a radius of %d and deactivating the talent.
-		The amount absorbed will increase with the Magic stat.]]):
+		return ([[Retribution negates half of all damage you take while it is active. Once Retribution has negated %0.2f damage, your shield will explode in a burst of light, inflicting damage equal to the amount negated in a radius of %d and deactivating the talent.
+		The amount absorbed will increase with your Spellpower.]]):
 		format(damage, self:getTalentRange(t))
 	end,
 }
@@ -168,7 +168,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Any attack that would drop you below 1 hit point triggers Second Life, deactivating the talent and setting your hit points to %d.]]):
+		return ([[Any attack that would drop you below 1 hit point instead triggers Second Life, deactivating the talent and setting your hit points to %d.]]):
 		format(t.getLife(self, t))
 	end,
 }

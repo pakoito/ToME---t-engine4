@@ -66,9 +66,9 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local push = t.getPush(self, t)
-		return ([[A push kick that knocks the target back %d tiles, moves you back 1 tile, and inflicts %0.2f physical damage.  If another creature is in the way that creature will be affected too.  Targets knocked into other targets may take extra damage.
-		This will earn one combo point and break any grapples you're maintaining.
-		The damage will scale with your physical power.]]):
+		return ([[A push kick that knocks the target back %d tiles, moves you back 1 tile, and inflicts %0.2f physical damage.  If another creature is in the way, that creature will be affected as well.  Targets knocked into other targets may take extra damage.
+		This will earn one combo point, and break any grapples you're maintaining.
+		The damage will scale with your Physical Power.]]):
 		format(push, damDesc(self, DamageType.PHYSICAL, (damage)))
 	end,
 }
@@ -102,8 +102,8 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local damagetwo = t.getDamageTwo(self, t)
-		return ([[When you avoid a melee blow you have a %d%% chance to throw the target to the ground.  If the throw lands the target will take %0.2f damage and be dazed for 2 turns or %0.2f damage and be stunned for 2 turns if grappled.
-		The chance of throwing increases with the cunning stat and the damage will scale with your physical power.]]):
+		return ([[When you avoid a melee blow, you have a %d%% chance to throw the target to the ground.  If the throw lands, the target will take %0.2f damage and be dazed for 2 turns, or %0.2f damage and be stunned for 2 turns if the target is grappled.
+		The chance of throwing increases with your Accuracy, and the damage will scale with your Physical Power.]]):
 		format(self:getTalentLevel(t) * (5 + self:getCun(5, true)), damDesc(self, DamageType.PHYSICAL, (damage)), damDesc(self, DamageType.PHYSICAL, (damagetwo)))
 	end,
 }
@@ -167,8 +167,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Attack your foes in a frontal arc with a roundhouse kick that deals %0.2f physical damage and knocks your foes back.
-		This will break any grapples you're maintaining and the damage will scale with your physical power.]]):
+		return ([[Attack your foes in a frontal arc with a roundhouse kick, which deals %0.2f physical damage and knocks your foes back.
+		This will break any grapples you're maintaining, and the damage will scale with your Physical Power.]]):
 		format(damDesc(self, DamageType.PHYSICAL, (damage)))
 	end,
 }

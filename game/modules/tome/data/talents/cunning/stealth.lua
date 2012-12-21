@@ -33,7 +33,7 @@ newTalent{
 		if self:isTalentActive(t.id) then return true end
 		local armor = self:getInven("BODY") and self:getInven("BODY")[1]
 		if armor and (armor.subtype == "heavy" or armor.subtype == "massive") then
-			if not silent then game.logPlayer(self, "You cannot Stealth with such heavy armour!") end
+			if not silent then game.logPlayer(self, "You cannot Stealth with such heavy armour on!") end
 			return nil
 		end
 
@@ -75,9 +75,9 @@ newTalent{
 	info = function(self, t)
 		local stealthpower = t.getStealthPower(self, t) + (self:attr("inc_stealth") or 0)
 		local radius = t.getRadius(self, t)
-		return ([[Enters stealth mode (power %d, based on cunning), making you harder to detect.
-		If successful (re-checked each turn), enemies will not know exactly where you are or may not notice you at all.
-		Stealth reduces your light radius to 0 and will not work with heavy or massive armours.
+		return ([[Enters stealth mode (power %d, based on Cunning), making you harder to detect.
+		If successful (re-checked each turn), enemies will not know exactly where you are, or may not notice you at all.
+		Stealth reduces your light radius to 0, and will not work with heavy or massive armours.
 		You cannot enter stealth if there are foes in sight within range %d.]]):
 		format(stealthpower, radius)
 	end,
@@ -92,7 +92,7 @@ newTalent{
 	getMultiplier = function(self, t) return self:getTalentLevel(t) / 7 end,
 	info = function(self, t)
 		local multiplier = t.getMultiplier(self, t)
-		return ([[When striking from stealth, hits are automatically criticals if the target does not notice you.
+		return ([[When striking from stealth, hits are automatically criticals if the target does not notice you just before you land the blow.
 		Shadowstrikes do +%.02f%% damage versus a normal critical hit.]]):
 		format(multiplier * 100)
 	end,
@@ -125,8 +125,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local chance = t.getChance(self, t)
-		return ([[You have learned how to be stealthy even when in plain sight of your foes, with a %d%% chance of success. This also resets the cooldown of your stealth talent.
-		All creatures currently following you will loose all track.]]):
+		return ([[You have learned how to be stealthy even when in plain sight of your foes, with a %d%% chance of success. This also resets the cooldown of your Stealth talent.
+		All creatures currently following you will lose all track.]]):
 		format(chance)
 	end,
 }

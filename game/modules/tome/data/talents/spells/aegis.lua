@@ -73,8 +73,8 @@ newTalent{
 		local shield = t.getShield(self, t)
 		local dur = t.getDur(self, t)
 		return ([[Surround yourself with strengthening arcane forces.
-		Every damage shield, time shield, displacement shield, disruption shield affecting you has its power increased by %d%%.
-		At level 5 it also increases the duration of all shields by 1 turn.
+		Every damage shield, time shield, displacement shield, and disruption shield affecting you has its power increased by %d%%.
+		At level 5, it also increases the duration of all shields by 1 turn.
 		The shield value will increase with your Spellpower.]]):
 		format(shield, dur)
 	end,
@@ -106,7 +106,7 @@ newTalent{
 	info = function(self, t)
 		local shield = t.getShield(self, t)
 		return ([[Surround yourself with protective arcane forces.
-		Each time you receive a direct heal (not a life regeneration effect) you automatically get a damage shield of %d%% of the heal value for 3 turns.
+		Each time you receive a direct heal (not a life regeneration effect), you automatically get a damage shield of %d%% of the heal value for 3 turns.
 		The shield value will increase with your Spellpower.]]):
 		format(shield)
 	end,
@@ -160,7 +160,7 @@ newTalent{
 		local shield = t.getShield(self, t)
 		return ([[Release arcane energies into any magical shield currently protecting you, further charging it by %d%% of its max absorb value.
 		It will affect at most %d shield effects.
-		Affected shields are: Damage Shield, Time Shield, Displacement Shield, Disruption Shield.
+		Affected shields are: Damage Shield, Time Shield, Displacement Shield, and Disruption Shield.
 		The charging will increase with your Spellpower.]]):
 		format(shield, self:getTalentLevelRaw(t))
 	end,

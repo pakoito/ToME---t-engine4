@@ -47,7 +47,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local absorption = t.getAbsorption(self, t)
-		return ([[Reduces all incoming energy damage (all except mind and physical damage) by 30%% up to a maximum of %d.
+		return ([[Reduces all incoming energy damage (all except mind and physical damage) by 30%%, up to a maximum of %d.
 		The maximum damage reduction will scale with your Spellpower.]]):format(absorption)
 	end,
 }
@@ -78,7 +78,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local power = t.getPower(self, t)
-		return ([[You encase yourself in a field that slows incoming projectiles by %d%% and increases your physical resistance by %d%%.
+		return ([[You encase yourself in a field that slows incoming projectiles by %d%%, and increases your physical resistance by %d%%.
 		The effect will scale with your Spellpower.]]):format(power, power / 2)
 	end,
 }
@@ -175,7 +175,7 @@ newTalent{
 	info = function(self, t)
 		local maxlevel = t.getMaxLevel(self, t)
 		return ([[You may recast the next activated chronomancy spell (up to talent level %0.1f) that you cast within the next 5 turns on the turn following its initial casting.
-		The Paradox cost of the initial spell will be paid each time it is cast and the second casting will still consume a turn.
+		The Paradox cost of the initial spell will be paid each time it is cast, and the second casting will still consume a turn.
 		This spell takes no time to cast.]]):
 		format(maxlevel)
 	end,

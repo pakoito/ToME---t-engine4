@@ -72,10 +72,10 @@ newTalent{
 		if self:knowTalent(self.T_STEALTH) then
 			classrestriction = "(Note that wearing mail or plate armour will interfere with stealth.)"
 		end
-		return ([[Teaches the usage of armours. Increases armour value by %d, armour hardiness by %d%%, and reduces chance to be critically hit by %d%% when wearing heavy mail or massive plate armour.
-		At level 1 it allows you to wear heavy mail armour, gauntlets, helms, and heavy boots.
-		At level 2 it allows you to wear shields.
-		At level 3 it allows you to wear massive plate armour.
+		return ([[Improves your usage of armours. Increases Armour value by %d, Armour hardiness by %d%%, and reduces chance to be critically hit by %d%% when wearing heavy mail or massive plate armour.
+		At level 1, it allows you to wear heavy mail armour, gauntlets, helms, and heavy boots.
+		At level 2, it allows you to wear shields.
+		At level 3, it allows you to wear massive plate armour.
 		%s]]):format(armor, hardiness, criticalreduction, classrestriction)
 	end,
 }
@@ -89,7 +89,7 @@ newTalent{
 	getAttack = function(self, t) return self:getTalentLevel(t) * 10 end,
 	info = function(self, t)
 		local attack = t.getAttack(self, t)
-		return ([[Increases accuracy of unarmed, melee and ranged weapons by %d.]]):
+		return ([[Increases the accuracy of unarmed, melee and ranged weapons by %d.]]):
 		format(attack)
 	end,
 }
@@ -105,7 +105,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local inc = t.getPercentInc(self, t)
-		return ([[Increases Physical Power by %d and increases weapon damage by %d%% when using swords, axes or maces.]]):
+		return ([[Increases Physical Power by %d, and increases weapon damage by %d%% when using swords, axes or maces.]]):
 		format(damage, 100*inc)
 	end,
 }
@@ -122,7 +122,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local inc = t.getPercentInc(self, t)
-		return ([[Increases Physical Power by %d and increases weapon damage by %d%% when using daggers.]]):
+		return ([[Increases Physical Power by %d, and increases weapon damage by %d%% when using daggers.]]):
 		format(damage, 100*inc)
 	end,
 }
@@ -139,7 +139,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local inc = t.getPercentInc(self, t)
-		return ([[Increases Physical Power by %d and increases weapon damage by %d%% when using exotic weapons.]]):
+		return ([[Increases Physical Power by %d, and increases weapon damage by %d%% when using exotic weapons.]]):
 		format(damage, 100*inc)
 	end,
 }

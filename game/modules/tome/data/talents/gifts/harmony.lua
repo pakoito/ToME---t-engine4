@@ -53,9 +53,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[The waters of life flow through you, purifying any poisons or diseases currently affecting you.
-		For %d turns all poisons and diseases will heal you instead of damaging you.
-		When activated it also heals you for %d life per diseases or poisons on you.
-		The healing will increase with your Willpower stat.]]):
+		For %d turns, all poisons and diseases will heal you instead of damaging you.
+		When activated, it also heals you for %d life per diseases or poisons on you.
+		The healing per disease/poison will increase with your Willpower.]]):
 		format(5 + self:getTalentLevel(t), self:combatTalentStatDamage(t, "wil", 20, 60))
 	end,
 }
@@ -86,9 +86,9 @@ newTalent{
 		local lightning = math.floor(power)
 		local acid = 5 + power * 2
 		local nature = 5 + power * 1.4
-		return ([[Befriend the natural elements that constitute nature. Each time you are hit by one of the elements you gain a special effect for %d turns. This can only happen every %d turns.
+		return ([[Befriend the natural elements that constitute nature. Each time you are hit by one of the elements, you gain a special effect for %d turns. This can only happen every %d turns.
 		Fire: +%d%% global speed
-		Cold: +%d armour
+		Cold: +%d Armour
 		Lightning: +%d to all stats
 		Acid: +%0.2f life regen
 		Nature: +%d%% to all resists]]):
@@ -157,9 +157,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[A wave a natural energies flow around you in a radius of %d, all creatures hit will suffer healing nexus for %d turns.
-		While under the effect all healing done to the creature will instead heal you for %d%% of the heal value (and no healing at all goes to the target).
-		Each heal leeched will also restore %d equilibrium]]):
+		return ([[A wave of natural energies flow around you in a radius of %d; all creatures hit will suffer from the Healing Nexus status for %d turns.
+		While under the effect, all healing done to the creature will instead heal you for %d%% of the heal value (and no healing at all goes to the target).
+		Each heal leeched will also restore %d equilibrium.]]):
 		format(self:getTalentRadius(t), 3 + self:getTalentLevelRaw(t), (0.4 + self:getTalentLevel(t) / 10) * 100, 5 + self:getTalentLevel(t))
 	end,
 }

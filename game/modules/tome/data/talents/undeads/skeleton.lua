@@ -36,7 +36,7 @@ newTalent{
 		self:onStatChange(self.STAT_DEX, -2)
 	end,
 	info = function(self, t)
-		return ([[Improves your skeletal condition, increasing strength and dexterity by %d.]]):format(2 * self:getTalentLevelRaw(t))
+		return ([[Improves your skeletal condition, increasing Strength and Dexterity by %d.]]):format(2 * self:getTalentLevelRaw(t))
 	end,
 }
 
@@ -52,8 +52,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Creates a shield of bones absorbing %d damage. Lasts for 10 turns.
-		The damage absorbed increases with dexterity.]]):
+		return ([[Creates a shield of bones, absorbing %d damage. Lasts for 10 turns.
+		The total damage the shield can absorb increases with your Dexterity.]]):
 		format(50 + 70 * self:getTalentLevel(t) + self:getDex(350, true))
 	end,
 }
@@ -98,7 +98,7 @@ newTalent{ short_name = "SKELETON_REASSEMBLE",
 	end,
 	info = function(self, t)
 		return ([[Re-position some of your bones, healing yourself for %d.
-		At level 5 you will gain the ability to completely re-assemble your body should it be destroyed (can only be used once)]]):
+		At level 5, you will gain the ability to completely re-assemble your body should it be destroyed (can only be used once)]]):
 		format(100 * self:getTalentLevel(t))
 	end,
 }

@@ -90,8 +90,8 @@ newTalent{
 		local radius = self:getTalentRadius(t)
 		return ([[Unleash raw, chaotic elemental damage upon your enemy.
 		You strike your enemy for %d%% weapon damage in one of blinding sand, disarming acid, freezing ice, stunning lightning or burning flames, with equal odds.
-		Additionally, you will cause a burst of that deals %0.2f of that damage to enemies in radius %d, regardless of if you hit with the blow.
-		Each point in Prismatic Slash increase your physical, spell and mind saves by 1.]]):format(100 * self:combatTalentWeaponDamage(t, 1.2, 2.0), burstdamage, radius)
+		Additionally, you will cause a burst that deals %0.2f of that damage to enemies in radius %d, regardless of if you hit with the blow.
+		Each point in Prismatic Slash increase your Physical, Spell and Mind Saves by 1.]]):format(100 * self:combatTalentWeaponDamage(t, 1.2, 2.0), burstdamage, radius)
 	end,
 }
 
@@ -129,7 +129,7 @@ newTalent{
 		local effect = t.getEffect(self, t)
 		return ([[You breathe insidious poison in a frontal cone of radius %d. Any target caught in the area will take %0.2f nature damage each turn for 6 turns.
 		The poison also reduces the healing of enemies poisoned by %d%% while it is in effect.
-		The damage will increase with the Strength stat.
+		The damage will increase with your Strength.
 		Each point in Venomous Breath also increases your nature resistance by 2%%.]]):format(self:getTalentRadius(t), damDesc(self, DamageType.NATURE, t.getDamage(self,t)/6), effect)
 	end,
 }

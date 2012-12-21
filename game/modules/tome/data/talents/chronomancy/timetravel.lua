@@ -44,7 +44,7 @@ newTalent{
 	info = function(self, t)
 		local reduction = t.getReduction(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[By slightly reorganizing history you reduce your Paradox by %d and temporarily stabilize the timeline; allowing chronomancy to be used without chance of failure for %d turns.(backfires and anomalies may still occur).
+		return ([[By slightly reorganizing history, you reduce your Paradox by %d and temporarily stabilize the timeline; this allows chronomancy to be used without chance of failure for %d turns (backfires and anomalies may still occur).
 		The paradox reduction will increase with your Spellpower.]]):
 		format(reduction, duration)
 	end,
@@ -127,7 +127,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[Inflicts %0.2f temporal damage if the target fails a spell save.  If your target survives it will be removed from time for %d turns.
+		return ([[Inflicts %0.2f temporal damage, if the target fails a spell save.  If your target survives, it will be removed from time for %d turns.
 		The duration will scale with your Paradox.  The damage will scale with your Paradox and Spellpower.]]):format(damDesc(self, DamageType.TEMPORAL, damage), duration)
 	end,
 }
@@ -163,7 +163,7 @@ newTalent{
 		local percent = t.getPercent(self, t) * 100
 		local radius = self:getTalentRadius(t)
 		local damage = t.getDamage(self, t)
-		return ([[Creates a temporal echo in a nova around you in a radius of %d.  Affected targets will take %0.2f temporal damage and %d%% of the difference between their current life and max life as additional temporal damage.
+		return ([[Creates a temporal echo in a nova around you, in a radius of %d.  Affected targets will take %0.2f temporal damage, as well as %d%% of the difference between their current life and max life as additional temporal damage.
 		The percentage and damage scales with your Paradox and Spellpower.]]):
 		format(radius, damage, percent)
 	end,
@@ -202,7 +202,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local reduction = t.getCooldownReduction(self, t)
-		return ([[Manipulate the flow of time; reducing the cooldown of all your talents on cooldown by %d turns and reducing the duration of most status effects currently affecting you (good or bad) by %d turns.
+		return ([[Manipulate the flow of time, reducing the cooldown of all your talents on cooldown by %d turns, and reducing the duration of most status effects currently affecting you (good or bad) by %d turns.
 		The effect will scale with your Paradox.]]):
 		format(reduction, reduction)
 	end,

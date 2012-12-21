@@ -78,9 +78,9 @@ newTalent{
 		local time_reduc = t.getTimeReduction(self,t)
 		return ([[This intricate spell instantly erects a time shield around the caster, preventing any incoming damage and sending it forward in time.
 		Once either the maximum damage (%d) is absorbed, or the time runs out (%d turns), the stored damage will return as a temporal wake over time (%d turns).
-		Each turn the temporal wake is active a temporal vortex will spawn at your feet, damaging any inside after one turn for three turns.
-		While under the effect of Time Shield all newly applied magical, physical and mental effects will have their durations reduced by %d%%.
-		Max absorption will increase with your Spellpower.]]):
+		Each turn the temporal wake is active, a temporal vortex will spawn at your feet, damaging any inside after one turn for three turns.
+		While under the effect of Time Shield, all newly applied magical, physical and mental effects will have their durations reduced by %d%%.
+		The shield's max absorption will increase with your Spellpower.]]):
 		format(maxabsorb, duration, dotdur, time_reduc)
 	end,
 }
@@ -109,8 +109,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[Removes the target from the flow of time for %d turns. In this state the target can neither act nor be harmed.
-		Time does not pass at all for the target, no talents will cooldown, no resources will regen, ...
+		return ([[Removes the target from the flow of time for %d turns. In this state, the target can neither act nor be harmed.
+		Time does not pass at all for the target, no talents will cooldown, no resources will regen, and so forth.
 		The duration will increase with your Spellpower.]]):
 		format(duration)
 	end,

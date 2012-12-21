@@ -38,9 +38,9 @@ newTalent{
 	info = function(self, t)
 		local resist = t.getResist(self, t)
 		local regen = t.getRegen(self, t)
-		return ([[You stand in the way of magical damage. That which does not kill you makes you stronger.
-		Each time you are hit by a magical damage you get a %d%% resistance to this elemental for 7 turns.
-		If antimagic shield is not active you also absorb part of the impact and use it to fuel your own powers, decreasing your equilibrium and increasing your stamina by %0.2f.
+		return ([[You stand in the way of magical damage. That which does not kill you will make you stronger.
+		Each time you are hit by non-physical, non-mind damage, you get a %d%% resistance to that element for 7 turns.
+		If Antimagic Shield is not active, you also absorb part of the impact and use it to fuel your own powers, decreasing your equilibrium and increasing your stamina by %0.2f each hit.
 		The effects will increase with your Mindpower.]]):
 		format(	resist, regen )
 	end,
@@ -116,9 +116,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Surround yourself with a shield that will absorb at most %d magical or elemental damage per attack.
-		Each time damage is absorbed your equilibrium increases by 1 for every 30 points of damage and a check is made, if it fails the shield will crumble.
-		Damage shield can absorb will increase with your Mindpower.]]):
+		return ([[Surround yourself with a shield that will absorb at most %d non-physical, non-mind element damage per attack.
+		Each time damage is absorbed by the shield, your equilibrium increases by 1 for every 30 points of damage and a check is made. If the check fails, the shield will crumble and Antimagic Shield will go on cooldown.
+		The damage the shield can absorb will increase with your Mindpower.]]):
 		format(t.getMax(self, t))
 	end,
 }

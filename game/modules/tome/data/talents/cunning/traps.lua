@@ -60,14 +60,14 @@ newTalent{
 		end
 	end,
 	info = function(self, t)
-		return ([[Learn how to setup traps. Each level you will learn a new kind of trap:
+		return ([[Learn how to set up traps. Each level, you will learn a new kind of trap:
 		Level 1: Explosion Trap
 		Level 2: Bear Trap
 		Level 3: Catapult Trap
 		Level 4: Disarm Trap
 		Level 5: Nightshade Trap
 		New traps can also be learned from special teachers in the world.
-		Also increases the effectiveness of your traps by %d%%. (The effect varies for each trap)]]):
+		This talent also increases the effectiveness of your traps by %d%% (The effect varies for each trap).]]):
 		format(self:getTalentLevel(t) * 20)
 	end,
 }
@@ -142,9 +142,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Project a noisy lure for %d turns that attracts all creatures in a radius %d to it.
-		At level 5, when the lure is destroyed it will trigger some traps in a radius of 2 around it (check individual traps to see if they are triggered).
-		This can be used while stealthed.]]):format(4 + self:getTalentLevelRaw(t), 3 + self:getTalentLevelRaw(t))
+		return ([[Project a noisy lure for %d turns that attracts all creatures in radius %d to it.
+		At level 5, when the lure is destroyed, it will trigger some traps in a radius of 2 around it (check individual traps to see if they are triggered).
+		Use of this talent will not break stealth.]]):format(4 + self:getTalentLevelRaw(t), 3 + self:getTalentLevelRaw(t))
 	end,
 }
 newTalent{
@@ -170,9 +170,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Throws a vial of sticky smoke that explodes in radius %d on your foe, reducing its vision range by %d for 5 turns.
-		Creatures affected by smoke bomb can never prevent you from stealthing even if they are close to you.
-		This can be used while stealthed.]]):
+		return ([[Throws a vial of sticky smoke that explodes in radius %d on your foes, reducing their vision range by %d for 5 turns.
+		Creatures affected by smoke bomb can never prevent you from stealthing, even if their proximity would normally forbid it.
+		Use of this will not break stealth.]]):
 		format(self:getTalentRadius(t), math.ceil(self:getTalentLevel(t) * 1.2))
 	end,
 }
@@ -306,7 +306,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Lay a bear trap. The first creature passing by will be caught in the trap, unable to move and bleeding for %0.2f physical damage each turn for 5 turns.]]):
+		return ([[Lay a bear trap. The first creature passing by will be caught in the trap, pinned and bleeding for %0.2f physical damage each turn for 5 turns.]]):
 		format(damDesc(self, DamageType.PHYSICAL, (40 + self:getCun() * 0.7 * self:getTalentLevel(self.T_TRAP_MASTERY)) / 5))
 	end,
 }
@@ -361,7 +361,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Lay a catapult trap that knocks back any creatures by %d grids away and dazes them.]]):
+		return ([[Lay a catapult trap that knocks back any creature that steps over it up to %d grids away, dazing them.]]):
 		format(2 + math.ceil(self:getTalentLevel(self.T_TRAP_MASTERY)))
 	end,
 }
@@ -454,7 +454,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Lay a trap cotted with a potent venom, doing %0.2f nature damage to a creature and stunning it for 4 turns.]]):
+		return ([[Lay a trap cotted with a potent venom, doing %0.2f nature damage to a creature passing by and stunning it for 4 turns.]]):
 		format(damDesc(self, DamageType.COLD, 20 + self:getCun() * 0.7 * self:getTalentLevel(self.T_TRAP_MASTERY)))
 	end,
 }
@@ -508,7 +508,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Lay a trap that explodes in a radius of 2, blinding or dazing anything caught inside for %d turns.
-		Duration increases with Trap Mastery.
+		The duration increases with Trap Mastery.
 		High level lure can trigger this trap.]]):
 		format(math.floor(self:getTalentLevel(self.T_TRAP_MASTERY) + 4))
 	end,
@@ -564,7 +564,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Lay a trap that explodes in a radius of 3, releasing a thick poisonous cloud lasting 4 turns.
-		Each turn the cloud infects all creatures with a poison that deals %0.2f nature damage over 5 turns.
+		Each turn, the cloud infects all creatures with a poison that deals %0.2f nature damage over 5 turns.
 		High level lure can trigger this trap.]]):
 		format(20 + self:getCun() * 0.5 * self:getTalentLevel(self.T_TRAP_MASTERY))
 	end,

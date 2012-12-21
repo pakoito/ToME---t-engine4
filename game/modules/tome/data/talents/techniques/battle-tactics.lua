@@ -32,8 +32,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Concentrate on your blows, each strike has %d%% chance to deal another similar blow for %d turns.
-		This works for all blows, even ones from other talents and shield bashes.
+		return ([[Concentrate on your blows; each strike has a %d%% chance to deal another, similar, blow for %d turns.
+		This works for all blows, even ones from other talents and from shield bashes.
 		The chance increases with your Dexterity.]]):format(self:combatTalentStatDamage(t, "dex", 10, 90), math.floor(4 + self:getTalentLevel(t) * 1.3))
 	end,
 }
@@ -45,7 +45,7 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	info = function(self, t)
-		return ([[After killing a foe you have %d%% chances to gain a 1000%% movement speed bonus for 1 game turns.
+		return ([[After killing a foe, you have a %d%% chance to gain a 1000%% movement speed bonus for 1 game turn.
 		The bonus disappears as soon as any action other than moving is done.
 		Note: since you will be moving very fast, game turns will pass very slowly.]]):format(self:getTalentLevelRaw(t) * 20)
 	end,
@@ -86,7 +86,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Lashes at the target, doing %d%% weapon damage.
-		If the attack hits the target will bleed for %d%% weapon damage over 7 turns and all healing will be reduced by %d%%.]]):
+		If the attack hits, the target will bleed for %d%% weapon damage over 7 turns, and all healing will be reduced by %d%%.]]):
 		format(100 * self:combatTalentWeaponDamage(t, 1, 1.7), 100 * self:combatTalentWeaponDamage(t, 2, 3.2), self:getTalentLevel(t) * 10)
 	end,
 }
@@ -125,8 +125,8 @@ newTalent{
 	info = function(self, t)
 		local drain = t.getStaminaDrain(self, t)
 		return ([[Take a defensive stance to resist the onslaught of your foes.
-		For each 10%% of your total life you lack, you gain 5%% global damage resistance and global damage resistance cap.
-		This consumes stamina rapidly(%d stamina/turn).]]):
+		For each 10%% of your health below maximum you are currently at,, you gain 5%% all damage resistance and all damage resistance cap.
+		This consumes stamina rapidly (%d stamina/turn).]]):
 		format(drain)
 	end,
 }

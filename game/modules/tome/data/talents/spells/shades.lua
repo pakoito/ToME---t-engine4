@@ -55,7 +55,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local chance = t.getChance(self, t)
-		return ([[Surround your minions in a veil of darkness. The darkness will teleport them to you and grant them %d%% evasion for 5 turns.
+		return ([[Surround your minions in a veil of darkness. The darkness will teleport them to you, and grant them %d%% evasion for 5 turns.
 		The evasion chance will increase with your Spellpower.]]):
 		format(chance)
 	end,
@@ -151,9 +151,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Reaches through the shadows into quiter places, summoning %d harmless creatures.
+		return ([[Reaches through the shadows into quieter places, summoning %d harmless creatures.
 		Those creatures are then cursed with a Curse of Hate, making all hostile foes try to kill them.
-		If killed by hostile foes you have 70%% chance to gain a soul.]]):
+		If the summoned creatures are killed by hostile foes, you have 70%% chance to gain a soul.]]):
 		format(math.ceil(self:getTalentLevel(t)))
 	end,
 }
@@ -230,7 +230,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Through the shadows you forge a temporary copy of yourself, existing for %d turns.
+		return ([[Through the shadows, you forge a temporary copy of yourself, existing for %d turns.
 		The copy possesses your exact talents and stats, has %d%% life and deals %d%% damage.]]):
 		format(t.getDuration(self, t), t.getHealth(self, t) * 100, t.getDam(self, t) * 100)
 	end,
@@ -264,7 +264,7 @@ newTalent{
 	info = function(self, t)
 		local damageinc = t.getDarknessDamageIncrease(self, t)
 		local ressistpen = t.getResistPenalty(self, t)
-		return ([[Surround yourself with Frostdusk, increasing all your darkness and cold damage by %d%% and ignoring %d%% of the darkness resistance of your targets.]])
+		return ([[Surround yourself with Frostdusk, increasing all your darkness and cold damage by %d%%, and ignoring %d%% of the darkness resistance of your targets.]])
 		:format(damageinc, ressistpen)
 	end,
 }

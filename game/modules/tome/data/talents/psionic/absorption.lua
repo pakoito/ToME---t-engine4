@@ -162,7 +162,7 @@ newTalent{
 		local mast = 30 - (2*self:getTalentLevel(self.T_SHIELD_DISCIPLINE) or 0) - 0.4*getGemLevel(self)
 		local absorb = 100*getEfficiency(self,t)
 		return ([[Surround yourself with a shield that will absorb %d%% of any physical or acidic attack, up to a maximum of %d damage per attack. Deactivating the shield spikes it up to a temporary (five turns) %d point shield.
-		Every time your shield absorbs damage, you gain two points of energy plus an additional point for every %d points of damage absorbed. Spiked shields absorb energy more efficiently.
+		Every time your shield absorbs damage, you gain two points of Psi, plus an additional point for every %d points of damage absorbed. Spiked shields absorb energy as Psi more efficiently.
 		These values scale with your Mindpower.]]):
 		format(absorb, s_str, spike_str, mast)
 	end,
@@ -274,7 +274,7 @@ newTalent{
 		local mast = 30 - (2*self:getTalentLevel(self.T_SHIELD_DISCIPLINE) or 0) - 0.4*getGemLevel(self)
 		local absorb = 100*getEfficiency(self,t)
 		return ([[Surround yourself with a shield that will absorb %d%% of any fire or cold attack, up to a maximum of %d damage per attack. Deactivating the shield spikes it up to a temporary (five turns) %d point shield.
-		Every time your shield absorbs damage, you gain two points of energy plus an additional point for every %d points of damage absorbed. Spiked shields absorb energy more efficiently.
+		Every time your shield absorbs damage, you gain two points of Psi, plus an additional point for every %d points of damage absorbed. Spiked shields absorb energy as Psi more efficiently.
 		These values scale with your Mindpower.]]):
 		format(absorb, s_str, spike_str, mast)
 	end,
@@ -382,7 +382,7 @@ newTalent{
 		local mast = 30 - (2*self:getTalentLevel(self.T_SHIELD_DISCIPLINE) or 0) - 0.4*getGemLevel(self)
 		local absorb = 100*getEfficiency(self,t)
 		return ([[Surround yourself with a shield that will absorb %d%% of any lightning or blight attack, up to a maximum of %d damage per attack. Deactivating the shield spikes it up to a temporary (five turns) %d point shield.
-		Every time your shield absorbs damage, you gain two points of energy plus an additional point for every %d points of damage absorbed. Spiked shields absorb energy more efficiently.
+		Every time your shield absorbs damage, you gain two points of Psi, plus an additional point for every %d points of damage absorbed. Spiked shields absorb energy as Psi more efficiently.
 		These values scale with your Mindpower.]]):
 		format(absorb, s_str, spike_str, mast)
 	end,
@@ -412,7 +412,7 @@ newTalent{
 
 	info = function(self, t)
 		return ([[When activated, brings all shields off cooldown. Additional talent points spent in Absorption Mastery allow it to be used more frequently.
-		At level 3 and 6 your shields gain new elemental absorption too:
+		At level 3 and 6, your shields gain new elemental absorption:
 		- Kinetic Shield: Nature at level 3, Temporal at level 6
 		- Thermal Shield: Light at level 3, Arcane at level 6
 		- Charged Shield: Darkness at level 3, Mind at level 6

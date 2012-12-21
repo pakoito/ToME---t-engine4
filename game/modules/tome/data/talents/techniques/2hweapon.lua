@@ -93,9 +93,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Enters an aggressive battle stance, increasing accuracy by %d and physical power by %d at the cost of -10 defense and -10 armor.
-		While berserking you are nearly unstoppable, granting %d%% stun and pinning resistance.
-		Accuracy increase with your Dexterity stat and damage with your Strength stat]]):
+		return ([[Enters an aggressive battle stance, increasing Accuracy by %d and Physical Power by %d, at the cost of -10 Defense and -10 Armour.
+		While berserking, you are nearly unstoppable, granting you %d%% stun and pinning resistance.
+		The Accuracy bonus increases with your Dexterity, and the Physical Power bonus with your Strength.]]):
 		format(
 			5 + self:getDex(7, true) * self:getTalentLevel(t),
 			5 + self:getStr(7, true) * self:getTalentLevel(t),
@@ -197,9 +197,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Tries to perform a killing blow doing %d%% weapon damage, granting an automatic critical hit. If the target ends up with low enough life(<20%%) it might be instantly killed.
-		At level 4 it drains half your remaining stamina and uses it to increase the blow damage by 100%% of it.
-		Chance to instant kill will increase with your Strength stat.]]):format(100 * self:combatTalentWeaponDamage(t, 0.8, 1.3))
+		return ([[Tries to perform a killing blow, doing %d%% weapon damage and dealing an automatic critical hit. If the target ends up with low enough life (<20%%), it might be instantly killed.
+		At level 4, it drains half your remaining stamina, and uses it to increase the blow damage by 100%% of it.
+		The chance to instantly kill will increase with your Physical Power.]]):format(100 * self:combatTalentWeaponDamage(t, 0.8, 1.3))
 	end,
 }
 
@@ -242,8 +242,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target with your weapon doing %d%% damage. If the attack hits, the target is stunned for %d turns.
-		Stun chance increase with your Strength stat.]])
+		return ([[Hits the target with your weapon, doing %d%% damage. If the attack hits, the target is stunned for %d turns.
+		The stun chance increases with your Physical Power.]])
 		:format(100 * self:combatTalentWeaponDamage(t, 1, 1.5),
 		2 + math.floor(self:getTalentLevel(t)))
 	end,
@@ -281,8 +281,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target with your weapon doing %d%% damage. If the attack hits, the target's armour is reduced by %d for %d turns.
-		Armor reduction chance increase with your Strength stat.]])
+		return ([[Hits the target with your weapon, doing %d%% damage. If the attack hits, the target's Armour is reduced by %d for %d turns.
+		Armor reduction chance increases with your Physical Power.]])
 		:format(
 			100 * self:combatTalentWeaponDamage(t, 1, 1.5),
 			5 * self:getTalentLevel(t),
@@ -323,8 +323,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target with your weapon doing %d%% damage. If the attack hits, the target's accuracy is reduced by %d for %d turns.
-		Attack power reduction chance increase with your Strength stat.]])
+		return ([[Hits the target with your weapon, doing %d%% damage. If the attack hits, the target's Accuracy is reduced by %d for %d turns.
+		Accuracy reduction chance increases with your Physical Power.]])
 		:format(
 			100 * self:combatTalentWeaponDamage(t, 1, 1.5),
 			3 * self:getTalentLevel(t),
@@ -366,8 +366,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Enter a blood frenzy, draining stamina quickly(-2 stamina/turn). Each time you kill a foe while in blood frenzy you gain a cumulative bonus to physical power of %d.
-		Each turn the bonus decreases by 2.]]):format(2 * self:getTalentLevel(t))
+		return ([[Enter a blood frenzy, draining stamina quickly (-2 stamina/turn). Each time you kill a foe while in the blood frenzy, you gain a cumulative bonus to Physical Power of %d.
+		Each turn, the bonus decreases by 2.]]):format(2 * self:getTalentLevel(t))
 	end,
 }
 

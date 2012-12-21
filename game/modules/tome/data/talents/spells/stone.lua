@@ -63,8 +63,8 @@ newTalent{
 			count = count + 1
 		end
 		local damage = t.getDamage(self, t)
-		return ([[Conjures %d missile shaped rocks that you target individually at any target or targets in range.  Each missile deals %0.2f physical damage and an additional %0.2f bleeding damage every turn for 5 turns.
-		At talent level 5 you can conjure one additional missile.
+		return ([[Conjures %d missile shaped rocks that you target individually at any target or targets in range.  Each missile deals %0.2f physical damage, and an additional %0.2f bleeding damage every turn for 5 turns.
+		At talent level 5, you can conjure one additional missile.
 		The damage will increase with your Spellpower.]]):format(count,damDesc(self, DamageType.PHYSICAL, damage/2), damDesc(self, DamageType.PHYSICAL, damage/12))
 	end,
 }
@@ -117,11 +117,11 @@ newTalent{
 		local acidres = t.getAcidRes(self, t)
 		local cooldownred = t.getCooldownReduction(self, t)
 		local stunres = t.getStunRes(self, t)
-		return ([[You root yourself into the earth and transform your flesh into stone.  While this spell is sustained you may not move and any forced movement will end the effect.
-		Your stoned form and your affinity with the earth while the spell is active has the following effects:
-		* Reduces the cooldown of Earthen Missiles, Earthquake, and Mudslide by %d
-		* Grants %d%% Fire Resistance, %d%% Lightning Resistance, %d%% Acid Resistance, and %d%% Stun Resistance
-		Resistances scale with the Magic Stat.]])
+		return ([[You root yourself into the earth, and transform your flesh into stone.  While this spell is sustained, you may not move, and any forced movement will end the effect.
+		Your stone form and your affinity with the earth while the spell is active has the following effects:
+		* Reduces the cooldown of Earthen Missiles, Earthquake, and Mudslide by %d.
+		* Grants %d%% Fire Resistance, %d%% Lightning Resistance, %d%% Acid Resistance, and %d%% Stun Resistance.
+		Resistances scale with your Spellpower.]])
 		:format(cooldownred, fireres, lightningres, acidres, stunres*100)
 	end,
 }
@@ -168,7 +168,7 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local radius = self:getTalentRadius(t)
 		local duration = t.getDuration(self, t)
-		return ([[Causes a violent earthquake that deals %0.2f physical damage in a radius of %d each turn for %d turns and potentially stuns all creatures it affects.
+		return ([[Causes a violent earthquake that deals %0.2f physical damage in a radius of %d each turn for %d turns, and potentially stuns any and all creatures it affects.
 		The damage will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.PHYSICAL, damage), radius, duration)
 	end,

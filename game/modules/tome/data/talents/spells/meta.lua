@@ -89,8 +89,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local count = t.getRemoveCount(self, t)
-		return ([[Removes up to %d magical effects (good effects from foes and bad effects from friends) from the target.
-		At level 3 it can be targeted.]]):
+		return ([[Removes up to %d magical effects (good effects from foes, and bad effects from friends) from the target.
+		At level 3, it can be targeted.]]):
 		format(count)
 	end,
 }
@@ -118,8 +118,8 @@ newTalent{
 	info = function(self, t)
 		local chance = t.getChance(self, t)
 		return ([[You learn to finely craft and tune your offensive spells.
-		You try to carve a hole spells that affect an area to avoid damaging yourself.  The chance of success is %d%%.
-		You hone your damaging spells to spellshock their targets, if your spellpower exceeds the target's spell save. This talent gives a bonus of %d to spellpower solely for the purposes of overcoming the target's spell save. Spellshocked targets suffer a temporary 20%% penalty to damage resistances.]]):
+		You try to carve a hole in spells that affect an area to avoid damaging yourself.  The chance of success is %d%%.
+		In addition, you hone your damaging spells to spellshock their targets. This talent gives a bonus of %d to Spellpower solely for the purposes of overcoming the target's Spell Save. Spellshocked targets suffer a temporary 20%% penalty to damage resistances.]]):
 		format(chance, self:combatTalentSpellDamage(t, 10, 320) / 4)
 	end,
 }

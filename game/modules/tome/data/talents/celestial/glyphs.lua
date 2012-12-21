@@ -80,7 +80,7 @@ newTalent{
 	info = function(self, t)
 		local dazeduration = t.getDazeDuration(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[You bind light in a glyph on the floor. All targets passing by will be dazed for %d turns.
+		return ([[You bind light in a glyph on the floor. All targets walking over the glyph will be dazed for %d turns.
 		The glyph lasts for %d turns.]]):format(dazeduration, duration)
 	end,
 }
@@ -152,10 +152,10 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[You bind light in a glyph on the floor. All targets passing by will be hit by a blast of light doing %0.2f damage and knocked back.
+		return ([[You bind light in a glyph on the floor. All targets walking over the glyph will be hit by a blast that knocks them back and does %0.2f damage.
 		The glyph lasts for %d turns.
-		The damage will increase with the Magic stat]]):
-		format(damage, duration)
+		The damage will increase with your Spellpower.]]):
+		format(damDesc(self, DamageType.LIGHT, damage), duration)
 	end,
 }
 
@@ -221,9 +221,9 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[You bind light in a glyph on the floor. All targets passing by will trigger blast of light doing %0.2f damage.
+		return ([[You bind light in a glyph on the floor. All targets walking over the glyph will trigger an explosion of light that does %0.2f damage to everyone within 1 tile.
 		The glyph lasts for %d turns.
-		The damage will increase with the Magic stat]]):
+		The damage will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.LIGHT, damage), duration)
 	end,
 }
@@ -289,7 +289,7 @@ newTalent{
 	info = function(self, t)
 		local slow = t.getSlow(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[You bind light in a glyph on the floor. All targets passing by will be slowed by %d%%.
+		return ([[You bind light in a glyph on the floor. All targets walking over the glyph will be slowed by %d%% for 5 turns.
 		The glyph lasts for %d turns.]]):format(100 * slow, duration)
 	end,
 }

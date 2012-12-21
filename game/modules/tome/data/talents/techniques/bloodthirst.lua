@@ -32,8 +32,8 @@ newTalent{
 	info = function(self, t)
 		local regen = t.getRegen(self, t)
 		local max_regen = t.getMax(self, t)
-		return ([[Delight in spilling the blood of your foes.  After scoring a critical hit your maximum hit points will be increased by %d%%, your life regeneration by %0.2f per turn, and your stamina regeneration by %0.2f per turn.
-		The life and stamina regeneration will stack up to five times for a maximum of %0.2f and %0.2f each turn, respectively.]]):
+		return ([[Delight in spilling the blood of your foes.  After scoring a critical hit, your maximum hit points will be increased by %d%%, your life regeneration by %0.2f per turn, and your stamina regeneration by %0.2f per turn.
+		The life and stamina regeneration will stack up to five times, for a maximum of %0.2f and %0.2f each turn, respectively.]]):
 		format(math.floor(self:getTalentLevel(t) * 2), regen, regen/5, max_regen, max_regen/5)
 	end,
 }
@@ -68,7 +68,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Your mighty blows inspire utter terror on your foes. Any melee strike you do that deals more than %d%% of the target's total life puts them in a mortal terror, dazing them for 5 turns.
 		Your critical strike chance also increase by %d%%.
-		Daze chance increase with your Strength stat.]]):
+		The daze chance increase with your Physical Power.]]):
 		format(20 + (30 - self:getTalentLevelRaw(t) * 5), self:getTalentLevelRaw(t) * 2.8)
 	end,
 }
@@ -83,7 +83,7 @@ newTalent{
 		self:setEffect(self.EFF_BLOODRAGE, math.floor(5 + self:getTalentLevel(t)), {max=math.floor(self:getTalentLevel(t) * 6), inc=2})
 	end,
 	info = function(self, t)
-		return ([[Each time one of your foes bites the dust you feel a surge of power, increasing your strength by 2 up to a maximum of %d for %d turns.]]):
+		return ([[Each time one of your foes bites the dust, you feel a surge of power, increasing your strength by 2 up to a maximum of %d for %d turns.]]):
 		format(math.floor(self:getTalentLevel(t) * 6), math.floor(5 + self:getTalentLevel(t)))
 	end,
 }
@@ -101,8 +101,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You enter a battle frenzy for %d turns. During the time you can not use items, healing has no effect and your health can not drop below 1.
-		At the end of the frenzy you regain %d%% of your health per foes slain during the frenzy.]]):
+		return ([[You enter a battle frenzy for %d turns. During that time, you can not use items, healing has no effect, and your health cannot drop below 1.
+		At the end of the frenzy, you regain %d%% of your health per foes slain during the frenzy.]]):
 		format(2 + self:getTalentLevelRaw(t), math.floor(self:getTalentLevel(t) * 3.5))
 	end,
 }

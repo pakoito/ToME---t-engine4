@@ -63,7 +63,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local range = self:getTalentRange(t)
-		return ([[Teleports you to up to %d tiles away to a targeted location in line of sight.  Additional talent points increase the range.
+		return ([[Teleports you to up to %d tiles away, to a targeted location in line of sight.  Additional talent points increase the range.
 		This spell takes no time to cast.]]):format(range)
 	end,
 }
@@ -128,7 +128,7 @@ newTalent{
 	info = function(self, t)
 		local radius = self:getTalentRadius(t)
 		local range = t.getTeleport(self, t)
-		return ([[Randomly teleports all targets with in a radius of %d around you.  Targets will be teleported between %d and %d tiles from their current location.
+		return ([[Randomly teleports all targets within a radius of %d around you.  Targets will be teleported between %d and %d tiles from their current location.
 		The teleport range will scale with your Paradox.]]):format(radius, range / 2, range)
 	end,
 }
@@ -272,7 +272,7 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local radius = self:getTalentRadius(t)
 		return ([[You fold the space between yourself and a random point within range, creating a pair of wormholes.  Any creature stepping on either wormhole will be teleported to the other.  The wormholes will last %d turns.
-		At level 4 you may choose the exit location target area (radius %d).  The duration will scale with your Paradox.]])
+		At level 4, you may choose the exit location target area (radius %d).  The duration will scale with your Paradox.]])
 		:format(duration, radius)
 	end,
 }
@@ -301,7 +301,7 @@ newTalent{
 		local cooldown = self:getTalentLevelRaw(t)
 		local wormhole = self:getTalentLevelRaw(t) * 2
 		local power = self:getTalentLevel(t) * 10
-		return ([[Your mastery of spacetime reduces the cooldown of banish, dimensional step, swap, and temporal wake by %d and the cooldown of wormhole by %d.  Also improves your chances of hitting targets with chronomancy effects that may cause continuum destablization (Banish, Time Skip, etc.) as well as your chance of overcoming continuum destabilization by %d%%.]]):
+		return ([[Your mastery of spacetime reduces the cooldown of Banish, Dimensional Step, Swap, and Temporal Wake by %d, and the cooldown of Wormhole by %d.  Also improves your chances of hitting targets with chronomancy effects that may cause continuum destablization (Banish, Time Skip, etc.), as well as your chance of overcoming continuum destabilization, by %d%%.]]):
 		format(cooldown, wormhole, power)
 	end,
 }

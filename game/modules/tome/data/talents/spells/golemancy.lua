@@ -257,9 +257,10 @@ newTalent{
 	end,
 	info = function(self, t)
 		local heal = t.getHeal(self, t)
-		return ([[Interact with your golem
-		- If it is destroyed you will take some time to reconstruct it (takes 15 alchemist gems).
-		- If it is alive you will be able to talk to it, change its weapon and armour or repair it for %d (takes 2 alchemist gems). Spellpower, alchemist gem and Golem Power talent all influence the healing done.]]):
+		return ([[Interact with your golem!
+		- If it is destroyed, you will take some time to reconstruct it (this takes 15 alchemist gems).
+		- If it is alive but hurt, you will be able to repair it for %d (takes 2 alchemist gems). Spellpower, alchemist gem and Golem Power talent all influence the healing done.
+		- If it is alive and unhurt, you can rename it, or adjust its equipment or gems.]]):
 		format(heal)
 	end,
 }
@@ -296,7 +297,7 @@ newTalent{
 		local power = td.getDamage(self.alchemy_golem, td)
 		local damage = td.getPercentInc(self.alchemy_golem, td)
 		self.alchemy_golem.talents[Talents.T_WEAPON_COMBAT], self.alchemy_golem.talents[Talents.T_WEAPONS_MASTERY] = olda, oldd
-		return ([[Improves your golem's proficiency with weapons, increasing its attack by %d, physical power by %d and damage by %d%%.]]):
+		return ([[Improves your golem's proficiency with weapons, increasing its Accuracy by %d, Physical Power by %d and damage by %d%%.]]):
 		format(attack, power, 100 * damage)
 	end,
 }
@@ -330,8 +331,8 @@ newTalent{
 		self.alchemy_golem.talents[Talents.T_THICK_SKIN], self.alchemy_golem.talents[Talents.T_GOLEM_ARMOUR] = oldh, olda
 
 		return ([[Improves your golem's armour training and damage resistance.
-		Increases all damage resistance by %d%%; increases armour value by %d, armour hardiness by %d%%, and reduces chance to be critically hit by %d%% when wearing heavy mail or massive plate armour; and increases healing factor by %d%%.
-		The golem can always use any kind of armour, including massive.]]):
+		Increases all damage resistance by %d%%; increases Armour value by %d, Armour hardiness by %d%%, and reduces chance to be critically hit by %d%% when wearing heavy mail or massive plate armour; and increases healing factor by %d%%.
+		The golem can always use any kind of armour, including massive armours.]]):
 		format(res, heavyarmor, hardiness, crit, rawlev * 10)
 	end,
 }

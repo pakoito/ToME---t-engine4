@@ -62,9 +62,9 @@ newTalent{
 	info = function(self, t)
 		local healFactorChange = t.getHealFactorChange(self, t)
 		local woundDuration = t.getWoundDuration(self, t)
-		return ([[Slashes wildly at your target for %d%% (at 0 Hate) to %d%% (at 100+ Hate) damage.
-		At level 3 any wound you inflict carries a part of your curse, reducing the effectiveness of healing by %d%% for %d turns. The effect will stack.
-		Damage increases with the Strength stat.]]):format(t.getDamageMultiplier(self, t, 0) * 100, t.getDamageMultiplier(self, t, 100) * 100, -healFactorChange * 100, woundDuration)
+		return ([[You slash wildly at your target for %d%% (at 0 Hate) to %d%% (at 100+ Hate) damage.
+		At level 3, any wound you inflict with this carries a part of your curse, reducing the effectiveness of healing by %d%% for %d turns. The effect will stack.
+		The damage multiplier increases with your Strength.]]):format(t.getDamageMultiplier(self, t, 0) * 100, t.getDamageMultiplier(self, t, 100) * 100, -healFactorChange * 100, woundDuration)
 	end,
 }
 
@@ -125,8 +125,8 @@ newTalent{
 	info = function(self, t)
 		local attackChange = t.getAttackChange(self, t)
 		return ([[Assault nearby foes with 4 fast attacks for %d%% (at 0 Hate) to %d%% (at 100+ Hate) damage each. Stalked prey are always targeted if nearby.
-		At level 3 the intensity of your assault overwhelms anyone who is struck, reducing their attack by %d for 3 turns.
-		Damage and attack reduction increase with the Strength stat.]]):format(t.getDamageMultiplier(self, t, 0) * 100, t.getDamageMultiplier(self, t, 100) * 100, -attackChange)
+		At level 3 the intensity of your assault overwhelms anyone who is struck, reducing their Accuracy by %d for 3 turns.
+		The damage multiplier and Accuracy reduction increase with your Strength.]]):format(t.getDamageMultiplier(self, t, 0) * 100, t.getDamageMultiplier(self, t, 100) * 100, -attackChange)
 	end,
 }
 
@@ -238,7 +238,7 @@ newTalent{
 		else
 			size = "Small"
 		end
-		return ([[Charge through your opponents, attacking anyone near your path for %d%% (at 0 Hate) to %d%% (at 100+ Hate) damage. %s opponents may be knocked from your path. You can attack a maximum of %d times.]]):format(t.getDamageMultiplier(self, t, 0) * 100, t.getDamageMultiplier(self, t, 100) * 100, size, maxAttackCount)
+		return ([[Charge through your opponents, attacking anyone near your path for %d%% (at 0 Hate) to %d%% (at 100+ Hate) damage. %s opponents may be knocked away from your path. You can attack a maximum of %d times, and can hit targets along your path more than once.]]):format(t.getDamageMultiplier(self, t, 0) * 100, t.getDamageMultiplier(self, t, 100) * 100, size, maxAttackCount)
 	end,
 }
 
@@ -354,8 +354,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		local chance = t.getChance(self, t)
-		return ([[While active every swing of your weapon has a %d%% chance of striking a second nearby target for %d%% (at 0 Hate) to %d%% (at 100+ Hate) damage. The recklessness of your attacks brings you bad luck (luck -3). Cleave, repel and surge cannot be activate simultaneously and activating one will place the others in cooldown.
-		Chance and damage increase with with the Strength stat and when wielding a two-handed weapon (+15%% chance, +25%% damage).]]):format(chance, t.getDamageMultiplier(self, t, 0) * 100, t.getDamageMultiplier(self, t, 100) * 100)
+		return ([[While active, every swing of your weapon has a %d%% chance of striking a second nearby target for %d%% (at 0 Hate) to %d%% (at 100+ Hate) damage. The recklessness of your attacks brings you bad luck (luck -3). 
+		Cleave, Repel and Surge cannot be active simultaneously, and activating one will place the others in cooldown.
+		The Cleave chance and damage increase with your Strength, and when wielding a two-handed weapon (+15%% chance, +25%% damage).]]):format(chance, t.getDamageMultiplier(self, t, 0) * 100, t.getDamageMultiplier(self, t, 100) * 100)
 	end,
 }
 

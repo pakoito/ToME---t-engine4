@@ -67,7 +67,7 @@ newTalent{
 		self.stun_immune = (self.stun_immune or 0) - .1
 	end,
 	info = function(self, t)
-		return ([[Improves mental saves by %d and stun immunity by %d%%]]):
+		return ([[Improves Mental Saves by %d, and stun immunity by %d%%.]]):
 		format(self:getTalentLevelRaw(t)*6, self:getTalentLevelRaw(t)*10)
 	end,
 }

@@ -85,8 +85,8 @@ newTalent{
 		local radius = t.getRadius(self, t)
 		local decay = t.getDecay(self, t)
 		return ([[Emits a necrotic aura, sustaining your undead minions in a radius of %d. Minions outside the radius will lose %d%% life per turn.
-		Any creature you or your minions kill within your aura will be absorbed and can be used to raise minions.
-		Retch from your ghouls will also heal you even if you are not undead.]]):
+		Any creature you or your minions kill within your aura will be absorbed as a soul that can be used to raise minions.
+		Retch from your ghouls will also heal you, even if you are not undead.]]):
 		format(radius, decay)
 	end,
 }
@@ -731,7 +731,7 @@ newTalent{
 		local nb = t.getMax(self, t)
 		local lev = t.getLevel(self, t)
 		local c = getMinionChances(self)
-		return ([[Fires powerful undead energies through your necrotic aura. For each recent death that happened inside your aura you will raise an undead minion (up to %d minions). These minions will be raised within a cone that extends to the edge of your necrotic aura.
+		return ([[Fires powerful undead energies through your necrotic aura. For each recent death that happened inside your aura, you will raise an undead minion (up to %d minions). These minions will be raised within a cone that extends to the edge of your necrotic aura.
 		The minions level is your level %+d.
 		Each minion has a chance to be:
 		Degenerated skeleton warrior: %d%%
@@ -763,7 +763,7 @@ newTalent{
 		self:forceUseTalent(self.T_NECROTIC_AURA, {ignore_energy=true, ignore_cd=true, no_equilibrium_fail=true, no_paradox_fail=true})
 	end,
 	info = function(self, t)
-		return ([[Your dark power radiates further as you grow stronger. Increases the radius of your necrotic aura by %d and reduces the decay rate of your minions outside the aura by %d%%.]]):
+		return ([[Your dark power radiates further as you grow stronger. Increases the radius of your necrotic aura by %d, and reduces the decay rate of your minions outside the aura by %d%%.]]):
 		format(self:getTalentLevelRaw(t), self:getTalentLevelRaw(t))
 	end,
 }
@@ -798,7 +798,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[A surge of power radiates to all your minions, increasing their physical power, spellpower and accuracy by %d, their armour penetration by %d and their critical hit chance by %d for 6 turns.
+		return ([[A surge of power radiates to all your minions, increasing their Physical Power, Spellpower and Accuracy by %d, their Armour penetration by %d and their critical hit chance by %d for 6 turns.
 		The effects will increase with your Spellpower.]]):
 		format(t.getPower(self, t), t.getAPR(self, t), t.getCrit(self, t))
 	end,

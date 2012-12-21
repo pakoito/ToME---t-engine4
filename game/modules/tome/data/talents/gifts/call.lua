@@ -63,10 +63,10 @@ newTalent{
 		local heal = 5 + self:combatTalentMindDamage(t, 12, 30)
 		local rest = 0.5 * self:getTalentLevelRaw(t)
 		return ([[Meditate on your link with Nature.
-		While meditating you regenerate %d equilibrium per turn, your mental save is increased by %d and your healing factor by %d%%.
-		Your deep meditation does not however let you deal damage correctly, reducing your damage done by 50%%.
-		Also, any time you are resting (even with Meditation not sustained) you enter a simple meditation state that lets you regenerate %0.2f equilibrium per turn.
-		The effects will increase with your mindpower.]]):
+		While meditating, you regenerate %d equilibrium per turn, your Mental Save is increased by %d, and your healing factor increases by %d%%.
+		Your deep meditation does not, however, let you deal damage correctly, reducing your damage done by 50%%.
+		Also, any time you are resting (even with Meditation not sustained) you enter a simple meditative state that lets you regenerate %0.2f equilibrium per turn.
+		The effects will increase with your Mindpower.]]):
 		format(pt, save, heal, rest)
 	end,
 }
@@ -97,8 +97,8 @@ newTalent{ short_name = "NATURE_TOUCH",
 		return true
 	end,
 	info = function(self, t)
-		return ([[Touch a target (or yourself) to infuse it with Nature, healing it for %d (heal does not work on undead).
-		Heal will increase with your mindpower.]]):
+		return ([[Touch a target (or yourself) to infuse it with Nature, healing it for %d (this heal does not work on undead).
+		The amount healed will increase with your Mindpower.]]):
 		format(20 + self:combatTalentMindDamage(t, 20, 500))
 	end,
 }
@@ -123,8 +123,8 @@ newTalent{
 	info = function(self, t)
 		local radius = self:getTalentRadius(t)
 		local radius_esp = t.radius_esp(self, t)
-		return ([[Using your connection to Nature you can see your surrounding area in a radius of %d.
-		Also while meditating you are able to detect the presence of creatures around your in a radius %d.]]):
+		return ([[Using your connection to Nature, you can see your surrounding area in a radius of %d.
+		Also, while meditating, you are able to detect the presence of creatures around your in a radius of %d.]]):
 		format(radius, radius_esp)
 	end,
 }

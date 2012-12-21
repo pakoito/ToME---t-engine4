@@ -46,8 +46,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Calls the power of the Moon into a beam of shadows doing %0.2f damage.
-		The damage will increase with the Magic stat]]):
+		return ([[Focuses the power of the Moon into a beam of shadows, doing %0.2f damage.
+		The damage dealt will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.DARKNESS, damage))
 	end,
 }
@@ -96,8 +96,8 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local damageonspot = t.getDamageOnSpot(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[Invokes a blast of shadows dealing %0.2f darkness damage and leaving a field of radius 3 that does %0.2f darkness damage per turn for %d turns.
-		The damage will increase with the Magic stat]]):
+		return ([[Invokes a blast of shadows that deals %0.2f darkness damage, and leaves a radius 3 field that does %0.2f darkness damage per turn for %d turns.
+		The damage dealt will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.DARKNESS, damage),damDesc(self, DamageType.DARKNESS, damageonspot),duration)
 	end,
 }
@@ -133,9 +133,9 @@ newTalent{
 		local lightdam = t.getLightDamage(self, t)
 		local darknessdam = t.getDarknessDamage(self, t)
 		local radius = self:getTalentRadius(t)
-		return ([[A surge of twilight pulses from you, doing %0.2f light and %0.2f darkness damage within radius %d.
-		It also regenerates both your negative and positive energies.
-		The damage will increase with the Magic stat]]):
+		return ([[A surge of twilight pulses from you, doing %0.2f light and %0.2f darkness damage to all others within radius %d.
+		This skill also increases both your positive and negative energy.
+		The damage dealt will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.LIGHT, lightdam),damDesc(self, DamageType.DARKNESS, darknessdam), radius)
 	end,
 }
@@ -173,8 +173,8 @@ newTalent{
 	info = function(self, t)
 		local radius = self:getTalentRadius(t)
 		local damage = t.getDamage(self, t)
-		return ([[A star falls into area of radius %d, stunning all for 4 turns and doing %0.2f darkness damage.
-		The damage will increase with the Magic stat.]]):
+		return ([[A star falls on a radius %d area, doing %0.2f darkness damage on impact and stunning all within the area for 4 turns.
+		The damage dealt will increase with your Spellpower.]]):
 		format(radius, damDesc(self, DamageType.DARKNESS, damage))
 	end,
 }

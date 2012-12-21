@@ -58,7 +58,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target with two shield strikes doing %d%% and %d%% shield damage. If it hits a second time it stuns target for %d turns.]])
+		return ([[Hits the target with two shield strikes, doing %d%% and %d%% shield damage. If it hits a second time, it stuns the target for %d turns.
+		The stun chance increases with your Accuracy and your Strength.]])
 		:format(100 * self:combatTalentWeaponDamage(t, 1, 1.7, self:getTalentLevel(self.T_SHIELD_EXPERTISE)),
 		100 * self:combatTalentWeaponDamage(t, 1.2, 2.1, self:getTalentLevel(self.T_SHIELD_EXPERTISE)),
 		2 + self:getTalentLevel(t) / 2)
@@ -83,7 +84,7 @@ newTalent{
 		Allows counterstrikes after incomplete blocks.
 		Increases the duration of the counterstrike debuff on attackers by %d turn%s.
 		Increases the number of counterstrikes you can perform on a target while they're vulnerable by %d.
-		Increases the crit chance of counterstrikes by %d%%. This increase scales with Dexterity.]]):format(inc, (inc > 1 and "s" or ""), inc, t.getCritInc(self, t))
+		Increases the crit chance of counterstrikes by %d%%. This increase scales with your Dexterity.]]):format(inc, (inc > 1 and "s" or ""), inc, t.getCritInc(self, t))
 	end,
 }
 
@@ -130,7 +131,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Hits the target with your weapon doing %d%% and two shield strikes doing %d%% damage, trying to overpower your target.
-		If the last attack hits, the target is knocked back. The chance for knock back increases with talent level.]])
+		If the last attack hits, the target is knocked back. The chance for knockback increases with your Accuracy.]])
 		:format(100 * self:combatTalentWeaponDamage(t, 0.8, 1.3), 100 * self:combatTalentWeaponDamage(t, 0.8, 1.3, self:getTalentLevel(self.T_SHIELD_EXPERTISE)))
 	end,
 }
@@ -172,7 +173,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target with your shield doing %d%% damage. If it hits, you follow up with two weapon strikes which are automatic critical hits.]]):
+		return ([[Hits the target with your shield, doing %d%% damage. If it hits, you follow up with two weapon strikes which are automatic critical hits.]]):
 		format(100 * self:combatTalentWeaponDamage(t, 1, 1.5, self:getTalentLevel(self.T_SHIELD_EXPERTISE)))
 	end,
 }
@@ -215,8 +216,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Enter a protective battle stance, increasing defense by %d and armor by %d at the cost of -20%% physical damage. The defense and armor increase is based on dexterity.
-		It also grants resistance to stunning and knockback (%d%%).]]):format(
+		return ([[Enter a protective battle stance, increasing Defense by %d and Armour by %d at the cost of -20%% physical damage. The Defense and Armor increase is based on your Dexterity.
+		It also grants %d%% resistance to stunning and knockback.]]):format(
 		5 + (1 + self:getDex(4, true)) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE)* 2,
 		5 + (1 + self:getDex(4, true)) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE),
 		10 * self:getTalentLevel(t), 10 * self:getTalentLevel(t)
@@ -263,8 +264,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Let all your foes pile up on your shield, then put all your strength in one mighty thrust and repel them all away %d grids.
-		In addition all creature knocked back will also be dazed for %d turns.
-		The distance increases with talent level and the daze with Strength.]]):format(math.floor(2 + self:getTalentLevel(t)), 3 + self:getStr(8))
+		In addition, all creature knocked back will also be dazed for %d turns.
+		The distance increases with your talent level, and the daze with Strength.]]):format(math.floor(2 + self:getTalentLevel(t)), 3 + self:getStr(8))
 	end,
 }
 
@@ -283,7 +284,7 @@ newTalent{
 		self.combat_spellresist = self.combat_spellresist - 2
 	end,
 	info = function(self, t)
-		return ([[Improves your damage with shield attacks and increases your spell(+%d) and physical(+%d) saves.]]):format(2 * self:getTalentLevelRaw(t), 4 * self:getTalentLevelRaw(t))
+		return ([[Improves your damage and defense with shield-based skills, and increases your Spell (+%d) and Physical (+%d) Saves.]]):format(2 * self:getTalentLevelRaw(t), 4 * self:getTalentLevelRaw(t))
 	end,
 }
 
@@ -318,8 +319,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You brace yourself for the final stand, increasing defense by %d and maximum life by %d, but making you unable to move.
-		The increase in defense is based on Dexterity and life on Constitution.]]):
+		return ([[You brace yourself for the final stand, increasing Defense by %d and maximum life by %d, but making you unable to move.
+		The increase in Defense is based on your Dexterity, and the increase in life is based on your Constitution.]]):
 		format(5 + self:getDex(4, true) * self:getTalentLevel(t),
 		(10 + self:getCon() * 0.7) * self:getTalentLevel(t))
 	end,

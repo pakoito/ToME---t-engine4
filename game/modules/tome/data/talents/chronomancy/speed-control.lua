@@ -31,7 +31,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local power = self:getTalentLevelRaw(t) * 10
-		return ([[Increases your movement speed by %d%% and switching between already equipped weapon sets (default hotkey q) no longer takes a turn.]]):
+		return ([[Increases your movement speed by %d%%, and switching between already equipped weapon sets (default hotkey q) no longer takes a turn.]]):
 		format(power)
 	end,
 }
@@ -72,8 +72,8 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local radius = self:getTalentRadius(t)
 		local duration = t.getDuration(self, t)
-		return ([[Inflicts %0.2f temporal damage and attempts to stun all creatures in a radius %d ball for %d turns.
-		The stun duration will scale with your Paradox and the damage will scale with your Paradox and Spellpower.]]):
+		return ([[Inflicts %0.2f temporal damage, and attempts to stun all creatures in a radius %d ball for %d turns.
+		The stun duration will scale with your Paradox, and the damage will scale with your Paradox and Spellpower.]]):
 		format(damage, radius, duration)
 	end,
 }
@@ -121,8 +121,8 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local radius = self:getTalentRadius(t)
 		local duration = t.getDuration(self, t)
-		return ([[Creates a time distortion in a radius of %d that lasts for %d turns, decreasing affected targets global speed by %d%% for 3 turns and inflicting %0.2f temporal damage each turn they remain in the area.
-		The slow effect and damage will scale with your Paradox and Spellpower.]]):
+		return ([[Creates a time distortion in a radius of %d that lasts for %d turns, decreasing global speed by %d%% for 3 turns and inflicting %0.2f temporal damage each turn to all targets within the area.
+		The slow effect and damage dealt will scale with your Paradox and Spellpower.]]):
 		format(radius, duration, 100 * slow, damDesc(self, DamageType.TEMPORAL, damage))
 	end,
 }
@@ -181,7 +181,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local power = t.getPower(self, t)
-		return ([[Increases your global speed by %d%% for the next 4 game turns.  Each time you move with this effect active you'll leave behind an image of yourself for two turns that may draw enemy attacks.
+		return ([[Increases your global speed by %d%% for the next 4 game turns.  Each time you move with this effect active, you'll leave behind an image of yourself for two turns that may draw enemy attacks.
 		The speed increase will scale with your Paradox and Spellpower.]]):format(100 * power)
 	end,
 }

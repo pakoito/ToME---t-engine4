@@ -45,7 +45,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local spellpowerinc = t.getSpellpowerIncrease(self, t)
-		return ([[Your mastery of magic allows you to enter a deep concentration state, increasing your spellpower by %d.]]):
+		return ([[Your mastery of magic allows you to enter a state of deep concentration, increasing your Spellpower by %d.]]):
 		format(spellpowerinc)
 	end,
 }
@@ -86,7 +86,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		return ([[Conjures up mana into a powerful bolt doing %0.2f arcane damage.
-		At level 3 it becomes a beam.
+		At level 3, it becomes a beam.
 		The damage will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.ARCANE, damage))
 	end,
@@ -119,9 +119,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		local dam = t.getDamage(self, t)
-		return ([[Creates a vortex of arcane energies on the target for 6 turns. Each turn the vortex will look for an other foe in sight and fire a manathrust doing %0.2f arcane damage to all foes in line.
-		If no foes are found the target will take 150%% more arcane damage.
-		If the target dies the remaining damage is deal as a radius 2 ball of arcane.
+		return ([[Creates a vortex of arcane energies on the target for 6 turns. Each turn the vortex will look for another foe in sight and fire a manathrust doing %0.2f arcane damage to all foes in line.
+		If no foes are found, the target will take 150%% more arcane damage.
+		If the target dies, the vortex explodes, releasing all remaining damage in a radius 2 ball of arcane force.
 		The damage will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.ARCANE, dam))
 	end,
@@ -189,8 +189,8 @@ newTalent{
 	info = function(self, t)
 		return ([[Surround yourself with arcane forces, disrupting any attemps to harm you and instead generating mana.
 		Generates %0.2f mana per damage point taken (Aegis Shielding talent affects the ratio).
-		If your mana is brought too high by the shield, it will de-activate and the chain reaction will release a deadly arcane storm with radius 3 for 10 turns, dealing 10%% of the damage absorbed each turn.
-		While the arcane storm rages you also get a %d%% arcane resistance.
+		If your mana is brought too high by the shield, it will de-activate and the chain reaction will release a deadly arcane storm around you with radius 3 for 10 turns, dealing 10%% of the damage absorbed over the sustain's duration each turn.
+		While the arcane storm rages, you also get %d%% arcane resistance.
 		Only usable when below 25%% mana.
 		The damage to mana ratio increases with your Spellpower.]]):
 		format(t.getManaRatio(self, t), t.getArcaneResist(self, t))

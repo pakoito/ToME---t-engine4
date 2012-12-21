@@ -55,8 +55,8 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local damageonspot = t.getDamageOnSpot(self, t)
-		return ([[Calls the power of the Sun into a searing lance doing %0.2f damage and leaving a spot on the ground for 4 turns doing %0.2f light damage.
-		The damage will increase with the Magic stat.]]):
+		return ([[Calls the power of the Sun into a searing lance, doing %0.2f damage to the target and leaving a spot on the ground for 4 turns that does %0.2f light damage to anyone within it.
+		The damage dealt will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.LIGHT, damage), damageonspot)
 	end,
 }
@@ -100,9 +100,9 @@ newTalent{
 		local radius = self:getTalentRadius(t)
 		local damage = t.getDamage(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[Invokes Sun flare with radius of %d, blinding your foes for %d turns and lighting up your immediate area (radius %d).
-		At level 3 it will start dealing %0.2f light damage (radius %d).
-		The damage will increase with the Magic stat.]]):
+		return ([[Invokes the Sun to cause a flare within radius %d, blinding your foes for %d turns and lighting up your immediate area (radius %d).
+		At level 3 it will also do %0.2f light damage within radius %d.
+		The damage done will increase with your Spellpower.]]):
 		format(radius, duration, radius * 2, damDesc(self, DamageType.LIGHT, damage), radius)
    end,
 }
@@ -136,8 +136,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Fire a beam of Sun flames at your foes, burning all those in a line for %0.2f fire damage.
-		The damage will increase with the Magic stat.]]):
+		return ([[Call forth the Sun to summon a fiery beam, burning all targets in a line for %0.2f fire damage.
+		The damage done will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.FIRE, damage))
 	end,
 }
@@ -170,7 +170,7 @@ newTalent{
 	info = function(self, t)
 		local radius = self:getTalentRadius(t)
 		local damage = t.getDamage(self, t)
-		return ([[Conjures a furious burst of Sunlight, dealing %0.2f light damage to all those around you in a radius of %d.
-		The damage will increase with the Magic stat.]]):format(damDesc(self, DamageType.LIGHT, damage), radius)
+		return ([[Conjures a furious burst of Sunlight, dealing %0.2f light damage to all around you in a radius of %d.
+		The damage done will increase with your Spellpower.]]):format(damDesc(self, DamageType.LIGHT, damage), radius)
 	end,
 }

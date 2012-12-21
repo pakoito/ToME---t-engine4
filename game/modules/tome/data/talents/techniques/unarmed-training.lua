@@ -30,7 +30,7 @@ newTalent{
 	getDamage = function(self, t) return self.level * 0.5 end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Grants %d physical power when fightning unarmed (or with gloves or gauntlets).
+		return ([[Grants %d Physical Power when fightning unarmed (or with gloves or gauntlets).
 		This talent's effects will scale with your level.]]):
 		format(damage)
 	end,
@@ -48,8 +48,8 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local inc = t.getPercentInc(self, t)
-		return ([[Increases Physical Power by %d and increases all unarmed damage by %d%% (including grapples and kicks).
-		Note that brawlers naturally gain 0.5 physical power per character level while unarmed (current brawler physical power bonus: %0.1f) and attack 40%% faster while unarmed.]]):
+		return ([[Increases Physical Power by %d, and increases all unarmed damage by %d%% (including grapples and kicks).
+		Note that brawlers naturally gain 0.5 Physical Power per character level while unarmed (current brawler physical power bonus: %0.1f) and attack 40%% faster while unarmed.]]):
 		format(damage, 100*inc, self.level * 0.5)
 	end,
 }
@@ -65,8 +65,8 @@ newTalent{
 	info = function(self, t)
 		local defense = t.getDefense(self, t)
 		local saves = t.getMental(self, t)
-		return ([[Superior cunning and training allows you to out think and out wit your opponents physical and mental assualts.  Increases defense by %d and mental saves by %d.
-		The defense bonus will scale with the Dexterity stat and the save bonus with the Cunning stat.]]):
+		return ([[Superior cunning and training allows you to outthink and outwit your opponents' physical and mental assualts.  Increases Defense by %d and Mental Save by %d.
+		The Defense bonus will scale with your Dexterity, and the save bonus with your Cunning.]]):
 		format(defense, saves)
 	end,
 }
@@ -83,7 +83,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local power = t.getPower(self, t)
-		return ([[When you're targeted by a projectile your global speed is increased by %d%% for 1 turn.  Taking any action other then movement will break the effect.]]):
+		return ([[When you're targeted by a projectile, your global speed is increased by %d%% for 1 turn.  Taking any action other then movement will break the effect.]]):
 		format(power * 100)
 	end,
 }
@@ -99,8 +99,8 @@ newTalent{
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		local chance = t.getChance(self, t)
-		return ([[When building a combo point you have a %d%% chance to gain an extra combo point.  Additionally your combo points will last %d turns longer before expiring.
-		The chance of building a second combo point will improve with the cunning stat.]]):
+		return ([[When gaining a combo point, you have a %d%% chance to gain an extra combo point.  Additionally, your combo points will last %d turns longer before expiring.
+		The chance of building a second combo point will improve with your Cunning.]]):
 		format(chance, duration)
 	end,
 }

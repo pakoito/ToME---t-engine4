@@ -43,8 +43,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[A powerful shout, doing %0.2f physical damage in a radius %d cone in front of you.
-		The damage increases with Strength.]]):format(damDesc(self, DamageType.PHYSICAL, (50 + self:getTalentLevel(t) * self:getStr()) / 2.3), 3 + self:getTalentLevelRaw(t))
+		return ([[Release a powerful shout, doing %0.2f physical damage in a radius %d cone in front of you.
+		The damage increases with your Strength.]]):format(damDesc(self, DamageType.PHYSICAL, (50 + self:getTalentLevel(t) * self:getStr()) / 2.3), 3 + self:getTalentLevelRaw(t))
 	end,
 }
 
@@ -80,7 +80,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Boost your life and stamina by %d%% for %d turns by uttering your battle shout.]]):format( 10 + self:getTalentLevelRaw(t), 5 + self:getTalentLevelRaw(t) * 2)
+		return ([[Boost your life and stamina by %d%% for %d turns by bellowing your battle shout.]]):format( 10 + self:getTalentLevelRaw(t), 5 + self:getTalentLevelRaw(t) * 2)
 	end,
 }
 
@@ -113,8 +113,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Your battle cry shatters the will of your foes within a radius of %d, lowering their defense by %d for 7 turns, making them easier to hit.
-		Lowering defense chance increase with your Strength stat.]]):
+		return ([[Your battle cry shatters the will of your foes within a radius of %d, lowering their Defense by %d for 7 turns, making them easier to hit.
+		The chance to hit increases with your Physical Power.]]):
 		format(self:getTalentRadius(t), 7 * self:getTalentLevel(t))
 	end,
 }

@@ -50,7 +50,8 @@ newTalent{
 	info = function(self, t)
 		local radius = self:getTalentRadius(t)
 		return ([[You let out a powerful roar that sends your foes into utter confusion for 3 turns in a radius of %d.
-		The sound wave is so strong your foes also take %0.2f physical damage.
+		The sound wave is so strong, your foes also take %0.2f physical damage.
+		The damage improves with your Strength.
 		Each point in fire drake talents also increases your fire resistance by 1%%.]]):format(radius, self:combatTalentStatDamage(t, "str", 40, 400))
 	end,
 }
@@ -85,7 +86,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[You summon a powerful gust of wind, knocking back your foes within a radius of %d up to 4 tiles away and damaging them for %d.
-		The damage will increase with the Strength stat.
+		The damage will increase with your Strength.
 		Each point in fire drake talents also increases your fire resistance by 1%%.]]):format(self:getTalentRadius(t), self:combatTalentStatDamage(t, "str", 15, 90))
 	end,
 }
@@ -138,8 +139,8 @@ newTalent{
 		local dam = t.getDamage(self, t)
 		local radius = self:getTalentRadius(t)
 		local duration = t.getDuration(self, t)
-		return ([[Spit a cloud of flames doing %0.2f fire damage in a radius of %d each turn for %d turns.
-		The damage will increase with the Willpower stat.
+		return ([[Spit a cloud of flames, doing %0.2f fire damage in a radius of %d each turn for %d turns.
+		The damage will increase with your Willpower.
 		Each point in fire drake talents also increases your fire resistance by 1%%.]]):format(damDesc(self, DamageType.FIRE, dam), radius, duration)
 	end,
 }
@@ -174,7 +175,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[You breathe fire in a frontal cone of radius %d. Any target caught in the area will take %0.2f fire damage over 3 turns.
-		The damage will increase with the Strength stat.
+		The damage will increase with your Strength.
 		Each point in fire drake talents also increases your fire resistance by 1%%.]]):format(self:getTalentRadius(t), damDesc(self, DamageType.FIRE, self:combatTalentStatDamage(t, "str", 30, 550)))
 	end,
 }

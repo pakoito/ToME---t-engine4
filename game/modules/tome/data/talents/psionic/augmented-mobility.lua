@@ -53,7 +53,7 @@ newTalent{
 	info = function(self, t)
 		local range = self:getTalentRange(t)
 		return ([[Briefly extend your telekinetic reach to grab an enemy and haul them towards you.
-		Works on enemies up to %d squares away. The cooldown decreases and the range increases with additional talent points spent.]]):
+		Works on enemies up to %d squares away. The cooldown decreases, and the range increases, with additional talent points spent.]]):
 		format(range)
 	end,
 }
@@ -80,7 +80,8 @@ newTalent{
 		local inc = self:getTalentLevel(t)*0.2
 		local percentinc = 100 * inc
 		--local percentinc = ((1/(1-inc))-1)*100
-		return ([[You encase your legs in precise sheathes of force, increasing your movement speed by %d%% for %d turns.]]):
+		return ([[You encase your legs in precise sheathes of force, increasing your movement speed by %d%% for %d turns.
+		The duration improves with your Mindpower.]]):
 		format(percentinc, t.getDuration(self, t))
 	end,
 }
@@ -215,8 +216,8 @@ newTalent{
 	info = function(self, t)
 		local range = self:getTalentRange(t)
 		local dam = self:combatTalentMindDamage(t, 20, 600)
-		return ([[You expend massive amounts of energy to launch yourself across %d squares at incredible speed. All enemies in your path will be knocked flying and dealt between %d and %d damage. At talent level five, you can batter through solid walls.
-		You must have a spiked Kinetic Shield erected in order to not get smashed to a pulp when using this ability. Shattering charge automatically spikes your Kinetic Shield if available and not already spiked. If no such shield is available, you cannot use Shattering Charge.]]):
+		return ([[You expend massive amounts of energy to launch yourself across %d squares at incredible speed. All enemies in your path will be knocked flying and dealt between %d and %d damage. At talent level 5, you can batter through solid walls.
+		You must have a spiked Kinetic Shield erected in order to not get smashed to a pulp when using this ability. Shattering Charge automatically spikes your Kinetic Shield if available and not already spiked. If no such shield is available, you cannot use Shattering Charge.]]):
 		format(range, 2*dam/3, dam)
 	end,
 }

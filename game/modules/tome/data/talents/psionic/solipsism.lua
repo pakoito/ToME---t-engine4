@@ -54,8 +54,8 @@ newTalent{
 	info = function(self, t)
 		local conversion_ratio = t.getConversionRatio(self, t)
 		return ([[You believe that your mind is the center of everything.  Permanently increases the amount of psi you gain per level by 10 and reduces your life rating (affects life at level up) by 50%% (one time only adjustment).
-		You also have learned to overcome damage with your mind alone and convert %d%% of all damage into Psi damage and %d%% of your healing and life regen now recovers Psi instead of life. 
-		The first talent point invested will also increase the amount of Psi you gain from willpower by 1 but reduce the amount of life you gain from constitution by 0.5.
+		You also have learned to overcome damage with your mind alone, and convert %d%% of all damage into Psi damage and %d%% of your healing and life regen now recovers Psi instead of life. 
+		The first talent point invested will also increase the amount of Psi you gain from Willpower by 1, but reduce the amount of life you gain from Constitution by 0.5.
 		The first talent point also increases your solipsism threshold by 20%% (currently %d%%), reducing your global speed by 1%% for each percentage your current Psi falls below this threshold.]]):format(conversion_ratio * 100, conversion_ratio * 100, (self.solipsism_threshold or 0) * 100)
 	end,
 }
@@ -92,8 +92,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local ratio = t.getBalanceRatio(self, t) * 100
-		return ([[You now substitute %d%% of your mental save for %d%% of your physical and spell saves throws (so at 100%% you would effectively use mental save for all saving throw rolls).
-		The first talent point invested will also increase the amount of Psi you gain from willpower by 1 but reduce the amount of life you gain from constitution by 0.5.
+		return ([[You now substitute %d%% of your Mental Save for %d%% of your Physical and Spell Saves throws (so at 100%%, you would effectively use mental save for all saving throw rolls).
+		The first talent point invested will also increase the amount of Psi you gain from Willpower by 1, but reduce the amount of life you gain from Constitution by 0.5.
 		Learning this talent also increases your solipsism threshold by 10%% (currently %d%%).]]):format(ratio, ratio, (self.solipsism_threshold or 0) * 100)
 	end,
 }
@@ -130,8 +130,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local threshold = t.getClarityThreshold(self, t)
-		return ([[For every percent that your Psi pool exceeds %d%% you gain 1%% global speed (up to a maximum of 50%%).
-		The first talent point invested will also increase the amount of Psi you gain from willpower by 1 but reduce the amount of life you gain from constitution by 0.5.
+		return ([[For every percent that your Psi pool exceeds %d%%, you gain 1%% global speed (up to a maximum of 50%%).
+		The first talent point invested will also increase the amount of Psi you gain from Willpower by 1, but reduce the amount of life you gain from Constitution by 0.5.
 		The first talent point also increases your solipsism threshold by 10%% (currently %d%%).]]):format(threshold * 100, (self.solipsism_threshold or 0) * 100)
 	end,
 }
@@ -178,8 +178,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local save_percentage = t.getSavePercentage(self, t)
-		return ([[Each time you take damage you roll %d%% of your mental save against it.  If the saving throw succeeds the damage will be reduced by 50%%.
-		The first talent point invested will also increase the amount of Psi you gain from willpower by 1 but reduce the amount of life you gain from constitution by 0.5.
+		return ([[Each time you take damage, you roll %d%% of your mental save against it.  If the saving throw succeeds, the damage will be reduced by 50%%.
+		The first talent point invested will also increase the amount of Psi you gain from Willpower by 1, but reduce the amount of life you gain from Constitution by 0.5.
 		The first talent point also increases your solipsism threshold by 10%% (currently %d%%).]]):format(save_percentage * 100, (self.solipsism_threshold or 0) * 100)
 	end,
 }

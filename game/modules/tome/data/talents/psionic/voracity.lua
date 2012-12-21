@@ -62,7 +62,7 @@ newTalent{
 		local slow = t.getSlow(self, t)
 		local en = t.getLeech(self, t)
 		return ([[You suck the kinetic energy out of your surroundings, slowing all targets in a radius of %d by %d%% for four turns.
-		For each target drained, you gain %d energy.]]):format(range, slow, en)
+		For each target drained, you gain %d Psi. The Psi gain will improve with your Mindpower.]]):format(range, slow, en)
 	end,
 }
 
@@ -110,7 +110,7 @@ newTalent{
 		local dam = t.getDam(self, t)
 		local en = t.getLeech(self, t)
 		--local duration = self:getTalentLevel(t) + 2
-		return ([[You leech the heat out of all targets in a radius of %d, freezing them for up to %d turns and gaining %d energy for each target frozen.]]):
+		return ([[You leech the heat out of all targets in a radius of %d, freezing them for up to %d turns. For each target drained, you gain %d Psi. The Psi gain will improve with your Mindpower.]]):
 		format(range, dam, en)
 	end,
 }
@@ -171,7 +171,7 @@ newTalent{
 		local range = self:getTalentRadius(t)
 		local en = t.getLeech(self, t)
 		local dam = damDesc(self, DamageType.LIGHTNING, t.getDam(self, t))
-		return ([[You pull electric potential from all targets around you in a radius of %d, gaining %d energy for each one affected and giving them a nasty shock in the process. Deals between %d and %d damage and has a chance to daze.]]):format(range, en, dam / 3, dam)
+		return ([[You pull electric potential from all targets around you in a radius of %d, giving them a nasty shock in the process. Deals between %d and %d damage, and has a chance to daze. For each target drained, you gain %d Psi. The Psi gain and damage will improve with your Mindpower.]]):format(range, dam / 3, dam, en)
 	end,
 }
 newTalent{
@@ -187,7 +187,7 @@ newTalent{
 		self.max_psi = self.max_psi - 10
 	end,
 	info = function(self, t)
-		return ([[Increases your maximum energy by %d]]):format(10 * self:getTalentLevelRaw(t))
+		return ([[Increases your maximum energy by %d.]]):format(10 * self:getTalentLevelRaw(t))
 	end,
 }
 

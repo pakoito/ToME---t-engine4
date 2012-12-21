@@ -35,7 +35,7 @@ newTalent{
 	getIncrease = function(self, t) return self:getTalentLevel(t) * 0.07 end,
 	info = function(self, t)
 		local daminc = t.getIncrease(self, t)
-		return ([[When you throw your alchemist bombs you infuse them with explosive fire, increasing damage by %d%%, and setting foes ablaze.]]):
+		return ([[When you throw your alchemist bombs, you infuse them with explosive fire, increasing damage by %d%%, and setting foes ablaze.]]):
 		format(100 * daminc)
 	end,
 }
@@ -65,8 +65,8 @@ newTalent{
 	info = function(self, t)
 		local daminc = t.getIncrease(self, t)
 		local conv = t.getConvert(self, t)
-		return ([[When you throw your alchemist bombs you infuse them with explosive acid that can blind, increasing damage by %d%%.
-		In addition all fire damage you do, from any source, is converted to %d%% acid damage(without any special effects).]]):
+		return ([[When you throw your alchemist bombs, you infuse them with explosive acid that can blind, increasing damage by %d%%.
+		In addition all fire damage you do, from any source, is converted to %d%% acid damage (without any special effects).]]):
 		format(100 * daminc, conv)
 	end,
 }
@@ -96,8 +96,8 @@ newTalent{
 	info = function(self, t)
 		local daminc = t.getIncrease(self, t)
 		local conv = t.getConvert(self, t)
-		return ([[When you throw your alchemist bombs you infuse them with lightning that can daze, increasing damage by %d%%.
-		In addition all fire damage you do, from any source, is converted to %d%% lightning damage(without any special effects).]]):
+		return ([[When you throw your alchemist bombs, you infuse them with lightning that can daze, increasing damage by %d%%.
+		In addition all fire damage you do, from any source, is converted to %d%% lightning damage (without any special effects).]]):
 		format(100 * daminc, conv)
 	end,
 }
@@ -127,8 +127,8 @@ newTalent{
 	info = function(self, t)
 		local daminc = t.getIncrease(self, t)
 		local conv = t.getConvert(self, t)
-		return ([[When you throw your alchemist bombs you infuse them with frost that can freeze, increasing damage by %d%%.
-		In addition all fire damage you do, from any source, is converted to %d%% cold damage(without any special effects).]]):
+		return ([[When you throw your alchemist bombs, you infuse them with frost that can freeze, increasing damage by %d%%.
+		In addition all fire damage you do, from any source, is converted to %d%% cold damage (without any special effects).]]):
 		format(100 * daminc, conv)
 	end,
 }

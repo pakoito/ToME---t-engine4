@@ -74,7 +74,7 @@ newTalent{
 			local hateBonus = t.getHateBonus(self, t)
 			hateDesc = (" Every kill of a marked sub-type gives you an additional +%d hate regardless of your current effectiveness."):format(hateBonus)
 		end
-		return ([[Mark a single opponent as your prey, gaining bonuses against the targeted creature's type and sub-type. Bonuses scale with the experience you gain from killing your marked type (+0.25 kill experience) and marked sub-type (+1 kill experience). At %0.1f kill experience, you reach 100%% effectiveness. Combat attacks against the marked type gain +%d%% damage while those against the marked sub-type gain +%d%% damage.%s
+		return ([[Mark a single opponent as your prey, gaining bonuses against the targeted creature's type and sub-type. Bonuses scale with the experience you gain from killing your marked type (+0.25 kill experience) and marked sub-type (+1 kill experience). At %0.1f kill experience, you reach 100%% effectiveness. Combat attacks against the marked type gain +%d%% damage, while those against the marked sub-type gain +%d%% damage.%s
 		Each point in Mark Prey reduces the kill experience required to reach 100%% effectivess as a Predator.]]):format(maxKillExperience, typeDamageChange * 100, subtypeDamageChange * 100, hateDesc)
 	end,
 }
@@ -110,7 +110,7 @@ newTalent{
 		local subtypeAttackChange = t.getSubtypeAttackChange(self, t)
 		local typeAttackChange = t.getTypeAttackChange(self, t)
 		local subtypeStunChance = t.getSubtypeStunChance(self, t)
-		return ([[Your knowledge of your prey allows you to strike with extra precision. Attacks against the marked type gain +%d attack while those against the marked sub-type gain +%d attack. Melee hits also gain a %0.1f%% chance to stun the marked sub-type for 3 turns with each attack.
+		return ([[Your knowledge of your prey allows you to strike with extra precision. Attacks against the marked type gain +%d Accuracy, while those against the marked sub-type gain +%d Accuracy. Melee hits also gain a %0.1f%% chance to stun the marked sub-type for 3 turns with each attack.
 		Each point in Anatomy reduces the kill experience required to reach 100%% effectivess as a Predator.]]):format(typeAttackChange, subtypeAttackChange, subtypeStunChance)
 	end,
 }
@@ -158,7 +158,7 @@ newTalent{
 		local physicalResistChange = t.getPhysicalResistChange(self, t)
 		local statReduction = t.getStatReduction(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[Each melee hit gives you a chance to outmaneuver your marked prey, lowering their physical resistance by %d%% and reducing their highest statistic by %d. Subject to your effectiveness against the marked prey, there is a %0.1f%% chance to outmaneuver your marked type and a %0.1f%% maximum chance to outmaneuver your marked sub-type. The effects last for %d turns and can accumulate.
+		return ([[Each melee hit gives you a chance to outmaneuver your marked prey, lowering their physical resistance by %d%% and reducing their highest statistic by %d. Subject to your effectiveness against the marked prey, there is a %0.1f%% chance to outmaneuver your marked type and a %0.1f%% maximum chance to outmaneuver your marked sub-type. The effects last for %d turns, and can accumulate.
 		Each point in Outmaneuver reduces the kill experience required to reach 100%% effectivess as a Predator.]]):format(-physicalResistChange, statReduction, typeChance, subtypeChance, duration)
 	end,
 }

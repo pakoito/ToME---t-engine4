@@ -137,7 +137,7 @@ newTalent{
 		local jumpCount = t.getJumpCount(self, t)
 		local jumpChance = t.getJumpChance(self, t)
 		local hateGain = t.getHateGain(self, t)
-		return ([[Send a whisper filled with hate to spread throughout your foes. When first heard they will suffer %d mind damage and feed you %d hate. For the first %d turns the whisper will travel from the original victim to a new one within a range of %0.1f. Every victim of the whisper has a %d%% chance of spreading it to another victim every turn.
+		return ([[Send a whisper filled with hate to spread throughout your foes. When the whisper is first heard, they will suffer %d mind damage and feed you %d hate. For the first %d turns, the whisper will travel from the original victim to a new one within a range of %0.1f. Every victim of the whisper has a %d%% chance of spreading it to another victim every turn.
 		25%% chance of cross tier effects. The damage increases with your Mindpower.]]):format(damDesc(self, DamageType.MIND, damage), hateGain, jumpCount, jumpRange, jumpChance)
 	end,
 }
@@ -300,7 +300,7 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local maxDamage = t.getDamage(self, t)
 		local minDamage = maxDamage / duration
-		return ([[Unleash agony upon your target. The pain will grow over the course of %d turns. The first turn will inflict %d damage and slowly increase to %d on the last turn (%d total).
+		return ([[Unleash agony upon your target. The pain will grow over the course of %d turns. The first turn will inflict %d damage, and slowly increase to %d on the last turn (%d total).
 		25%% chance of cross tier effects. The damage will increase with your Mindpower.]]):format(duration, damDesc(self, DamageType.MIND, minDamage), damDesc(self, DamageType.MIND, maxDamage), maxDamage * (duration + 1) / 2)
 	end,
 }
@@ -346,7 +346,7 @@ newTalent{
 	info = function(self, t)
 		local chance = t.getChance(self, t)
 		local mindResistChange = t.getMindResistChange(self, t)
-		return ([[Every time you inflict mental damage there is a %d%% chance that your foe must save against your Mindpower or go mad. Madness can cause them to become confused, slowed or stunned for 3 turns and lowers resistance to mental damage by %d%%.]]):format(chance, -mindResistChange)
+		return ([[Every time you inflict mental damage, there is a %d%% chance that your foe must save against your Mindpower or go mad. Madness can cause them to become confused, slowed or stunned for 3 turns, and lowers resistance to mental damage by %d%%.]]):format(chance, -mindResistChange)
 	end,
 }
 

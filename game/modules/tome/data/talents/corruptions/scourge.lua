@@ -65,8 +65,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hit the target with both weapons doing %d%% damage. For each hit the target will bleed for %0.2f damage each turn for 5 turns.
-		The bleeding effect will increase with your Magic stat.]]):
+		return ([[Hit the target with both weapons, doing %d%% damage with each hit. For each hit, the target will bleed for %0.2f damage each turn for 5 turns.
+		The bleeding effect will increase with your Spellpower.]]):
 		format(100 * self:combatTalentWeaponDamage(t, 0.8, 1.6), self:combatTalentSpellDamage(t, 5, 40))
 	end,
 }
@@ -92,7 +92,7 @@ newTalent{
 	info = function(self, t)
 		local dam = damDesc(self, DamageType.BLIGHT, t.getDamage(self, t))
 		return ([[Concentrate on the corruption you bring, enhancing each of your melee strikes with %0.2f blight damage (which also heals you for %0.2f each hit).
-		The damage will increase with your Magic stat.]]):
+		The damage will increase with your Spellpower.]]):
 		format(dam, dam * 0.4)
 	end,
 }
@@ -140,8 +140,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Strike with each of your weapons, doing %d%% acid weapon damage. If at least one of the strikes hits an acid splash is generated doing %0.2f acid damage to all targets adjacent to the foe you struck.
-		The splash damage will increase with your Magic stat.]]):
+		return ([[Strike with each of your weapons, doing %d%% acid weapon damage with each hit. 
+		If at least one of the strikes hits, an acid splash is generated, doing %0.2f acid damage to all targets other than yourself adjacent to the foe you struck.
+		The splash damage will increase with your Spellpower.]]):
 		format(100 * self:combatTalentWeaponDamage(t, 0.8, 1.6), damDesc(self, DamageType.ACID, self:combatTalentSpellDamage(t, 10, 130)))
 	end,
 }
@@ -186,7 +187,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target with your main weapon, doing %d%% darkness weapon damage. If the attack hits you attack with your second weapon, doing %d%% blight weapon damage and granting an automatic critical. If this attack hits the target is blinded for 4 turns.]]):
+		return ([[Hits the target with your main weapon, doing %d%% darkness weapon damage. If the attack hits you attack with your second weapon, doing %d%% blight weapon damage and granting an automatic critical. If the second attack hits, the target is blinded for 4 turns.]]):
 		format(100 * self:combatTalentWeaponDamage(t, 0.6, 1.4), 100 * self:combatTalentWeaponDamage(t, 0.6, 1.4))
 	end,
 }

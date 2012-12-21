@@ -50,7 +50,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local dist = t.getDist(self, t)
-		return ([[You hit your target doing %d%% damage, distracting it while you jump back %d squares away.]]):
+		return ([[You hit your target, doing %d%% damage, distracting it while you jump back %d squares away.]]):
 		format(100 * damage, dist)
 	end,
 }
@@ -64,7 +64,7 @@ newTalent{
 	getDef = function(self, t) return self:getTalentLevel(t) * 0.08 end,
 	getHardiness = function(self, t) return self:getTalentLevel(t) * 0.06 end,
 	info = function(self, t)
-		return ([[Whilst wearing leather or lighter armour you gain %d%% defence and %d%% armour hardiness.]]):
+		return ([[Whilst wearing leather or lighter armour, you gain %d%% Defense and %d%% Armour hardiness.]]):
 		format(t.getDef(self, t) * 100, t.getHardiness(self, t) * 100)
 	end,
 }
@@ -84,7 +84,7 @@ newTalent{
 		if self:getTalentLevelRaw(t) == 2 then self:attr("avoid_pressure_traps", -1) end
 	end,
 	info = function(self, t)
-		return ([[You are light on foot, handling your armour better. Each step you take regenerates %0.2f stamina and your fatigue is permanently reduced by %d%%.
+		return ([[You are light on foot, handling your armour better. Each step you take regenerates %0.2f stamina, and your fatigue is permanently reduced by %d%%.
 		At level 3 you are able to walk so lightly that you never trigger traps that require pressure.]]):
 		format(self:getTalentLevelRaw(t) * 0.2, self:getTalentLevelRaw(t) * 1.5)
 	end,
@@ -111,7 +111,7 @@ newTalent{
 		self.talent_cd_reduction[Talents.T_EVASION] = (self.talent_cd_reduction[Talents.T_EVASION] or 0) - 1
 	end,
 	info = function(self, t)
-		return ([[You literally dance around your foes, increasing movement speed by %d%% and reducing the cooldown of Hack'n'Back, Rush, Disengage and Evasion by %d turns.]]):
+		return ([[You literally dance around your foes, increasing your movement speed by %d%% and reducing the cooldown of Hack'n'Back, Rush, Disengage and Evasion by %d turns.]]):
 		format(self:getTalentLevelRaw(t) * 2, self:getTalentLevelRaw(t))
 	end,
 }

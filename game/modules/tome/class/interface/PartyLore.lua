@@ -92,7 +92,7 @@ function _M:learnLore(lore, nopopup, silent, nostop)
 	self.lore_known[lore] = true
 	if learnt and not self.additional_lore[lore] and self.registerLoreFound then self:registerLoreFound(lore) end
 	print("[LORE] learnt", lore)
-	if learnt then if l.on_learn then l.on_learn(self) end end
+	if learnt then if l.on_learn then l.on_learn(self:findMember{main=true}) end end
 
 	if self.runStop and not nostop then
 		self:runStop("learnt lore")

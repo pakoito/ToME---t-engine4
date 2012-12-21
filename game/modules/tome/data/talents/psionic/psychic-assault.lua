@@ -43,7 +43,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		return ([[Sends a telepathic attack, trying to destroy the brains of any target in the beam, doing %0.2f mind damage.
-		The damage will increase with your mindpower.]]):format(damDesc(self, DamageType.MIND, damage))
+		The damage will increase with your Mindpower.]]):format(damDesc(self, DamageType.MIND, damage))
 	end,
 }
 
@@ -88,7 +88,7 @@ newTalent{
 		local power = t.getPower(self, t)
 		local duration = t.getDuration(self, t)
 		return ([[Inflicts %0.2f mind damage and cripples the target's higher mental functions, reducing cunning by %d and confusing (%d%% power) the target for %d turns.
-		The damage, cunning penalty, and confusion power will scale with your mindpower.]]):
+		The damage, cunning penalty, and confusion power will scale with your Mindpower.]]):
 		format(damDesc(self, DamageType.MIND, (damage)), cunning_damage, power, duration)
 	end,
 }
@@ -118,7 +118,7 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local radius = self:getTalentRadius(t)
 		return ([[Sends out a blast of telepathic static in a %d radius, inflicting %0.2f mind damage.  This attack can brainlock affected targets.
-		The damage will increase with your mindpower.]]):format(radius, damDesc(self, DamageType.MIND, damage))
+		The damage will increase with your Mindpower.]]):format(radius, damDesc(self, DamageType.MIND, damage))
 	end,
 }
 
@@ -155,9 +155,9 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local power = t.getDamage(self, t) / 10
-		return ([[Cripples the target's mind, inflicting %0.2f mind damage and reducing it's mental save by %d for 4 turns.  This attack always hits and the mental save reduction stacks.
-		Against brainlocked targets the damage and mental save reduction will be doubled.
-		The damage and save reduction will scale with your mindpower.]]):
+		return ([[Cripples the target's mind, inflicting %0.2f mind damage and reducing its Mental Save by %d for 4 turns.  This attack always hits, and the mental save reduction stacks.
+		Against brainlocked targets, the damage and Mental Save reduction will be doubled.
+		The damage and save reduction will scale with your Mindpower.]]):
 		format(damDesc(self, DamageType.MIND, (damage)), power)
 	end,
 }

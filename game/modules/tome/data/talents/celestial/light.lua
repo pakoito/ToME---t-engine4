@@ -38,7 +38,7 @@ newTalent{
 	info = function(self, t)
 		local heal = t.getHeal(self, t)
 		return ([[An invigorating ray of Sunlight shines on you, healing your body for %d life.
-		The life healed will increase with the Magic stat]]):
+		The amount healed will increase with your Spellpower.]]):
 		format(heal)
 	end,
 }
@@ -78,9 +78,9 @@ newTalent{
 		local radius = self:getTalentRadius(t)
 		local heal = t.getHeal(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[A magical zone of Sunlight appears around you, healing all within a radius of %d for %0.2f per turn and increasing healing effects on those within by %d%%.  The effect lasts %d turns.
-		It will also light up the affected zone.
-		The life healed will increase with the Magic stat]]):
+		return ([[A magical zone of Sunlight appears around you, healing all within radius %d for %0.2f per turn and increasing healing effects on everyone within by %d%%. The effect lasts for %d turns.
+		It also lights up the affected zone.
+		The amount healed will increase with the Magic stat]]):
 		format(radius, heal, heal, duration)
 	end,
 }
@@ -102,8 +102,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local absorb = t.getAbsorb(self, t)
-		return ([[A protective shield forms around you that lasts for up to 10 turns, negating %d damage.
-		The max damage barrier can absorb will increase with your Magic stat.]]):
+		return ([[A protective shield forms around you that lasts for up to 10 turns and negates %d damage.
+		The total damage the barrier can absorb will increase with your Spellpower.]]):
 		format(absorb)
 	end,
 }
@@ -127,9 +127,9 @@ newTalent{
 	info = function(self, t)
 		local regen = t.getRegeneration(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[Places you under light's protection, regenerating your body for %d life and removing a single negative effect from you each turn for %d turns.
-		The life healed will increase with the Magic stat]]):
-		format(regen, duration)
+		return ([[Places you under the protection of Light itself. For %d turns, the light heals %d life and removes a single negative effect from you.
+		The amount healed will increase with your Spellpower.]]):
+		format(duration, regen)
 	end,
 }
 

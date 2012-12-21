@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 -- Corruptions
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="corruption/sanguisuge", name = "sanguisuge", description = "Manipulate the life force to feed your own dark powers." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="corruption/sanguisuge", name = "sanguisuge", description = "Manipulate life force to feed your own dark powers." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="corruption/torment", name = "torment", generic = true, description = "All the tools to torment your foes." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="corruption/vim", name = "vim", description = "Touch the very essence of your victims." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="corruption/bone", name = "bone", description = "Harness the power of bones." }

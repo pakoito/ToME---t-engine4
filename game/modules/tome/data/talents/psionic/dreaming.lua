@@ -91,9 +91,9 @@ newTalent{
 		local power = t.getSleepPower(self, t)
 		local insomnia = t.getInsomniaPower(self, t)
 		return([[Puts targets in a radius of %d to sleep for %d turns, rendering them unable to act.  Every %d points of damage the target suffers will reduce the effect duration by one turn.
-		When Sleep ends the target will suffer from Insomnia for a number of turns equal to the amount of time it was asleep (up to ten turns max), granting it %d%% sleep immunity for each turn of the Insomnia effect.
+		When Sleep ends, the target will suffer from Insomnia for a number of turns equal to the amount of time it was asleep (up to ten turns max), granting it %d%% sleep immunity for each turn of the Insomnia effect.
 		At talent level 5 Sleep will become contagious and has a 25%% chance to spread to nearby targets each turn.
-		The damage threshold will scale with your mindpower.]]):format(radius, duration, power, insomnia)
+		The damage threshold will scale with your Mindpower.]]):format(radius, duration, power, insomnia)
 	end,
 }
 
@@ -129,9 +129,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		local power = t.getPower(self, t)
-		return ([[Slip into a lucid dream.  While in this state you are considered sleeping but can still act, are immune to insomnia, inflict %d%% more damage to targets under the effects of Insomnia, and your physical, mental, and spell saves are increased by %d.
+		return ([[Slip into a lucid dream.  While in this state, you are considered sleeping, but can still act, are immune to insomnia, inflict %d%% more damage to targets under the effects of Insomnia, and your Physical, Mental, and Spell saves are increased by %d.
 		Note that being asleep may make you more vulnerable to certain effects (such as Inner Demons, Night Terror, and Waking Nightmare).
-		The saving throw bonuses scale with your mindpower.]]):format(power, power)
+		The saving throw bonuses scale with your Mindpower.]]):format(power, power)
 	end,
 }
 
@@ -183,7 +183,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local radius = self:getTalentRadius(t)
-		return ([[You move through the dream world, reappearing near the target location (%d teleport accuracy).  If the target is a sleeping creature you'll instead appear as close to them as possible.]]):format(radius)
+		return ([[You move through the dream world, reappearing near the target location (%d teleport accuracy).  If the target is a sleeping creature, you'll instead appear as close to them as possible.]]):format(radius)
 	end,
 }
 
@@ -219,7 +219,7 @@ newTalent{
 	info = function(self, t)
 		local drain = t.getDrain(self, t)
 		return ([[Imprisons all sleeping targets within range in their dream state, effectively extending sleeping effects for as long as Dream Prison is maintainted.
-		This powerful effect constantly drains %0.2f%% of your maximum Psi per turn and is considered a psionic channel as such it will break if you move, use a talent that consumes a turn, or activate an item.
+		This powerful effect constantly drains %0.2f%% of your maximum Psi per turn, and is considered a psionic channel; as such it will break if you move, use a talent that consumes a turn, or activate an item.
 		(Note that sleeping effects that happen each turn, such as Nightmare's damage and Sleep's contagion, will cease to function for the duration of the effect.)]]):format(drain)
 	end,
 }

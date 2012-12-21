@@ -32,7 +32,7 @@ newTalent{
 	info = function(self, t)
 		local resist = self:getTalentLevelRaw(t) * 7
 		local stability = math.floor(self:getTalentLevel(t)/2)
-		return ([[You've learned to focus your control over the spacetime continuum and resist anomalous effects.  Increases your Temporal resistance by %d%%, extends the duration of the Static History stability effect by %d turns, and increases your effective willpower for failure, anomaly, and backfire calculations by %d%%.]]):
+		return ([[You've learned to focus your control over the spacetime continuum, and quell anomalous effects.  Increases your Temporal resistance by %d%%, extends the duration of the Static History stability effect by %d turns, and increases your effective willpower for failure, anomaly, and backfire calculations by %d%%.]]):
 		format(resist, stability, self:getTalentLevel(t) * 10)
 	end,
 }
@@ -106,9 +106,9 @@ newTalent{
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		local power = t.getPower(self, t)
-		return ([[Over the next %d turns you attempt to remove the target from the timeline.  It's resistances will be reduced by %d%% and if you manage to kill it while the spell is in effect you'll be returned to the point in time you cast this spell and the target will be slain.
+		return ([[Over the next %d turns, you attempt to remove the target from the timeline.  Its resistances will be reduced by %d%%, and if you manage to kill it while the spell is in effect, you'll be returned to the point in time you cast this spell and the target will be slain.
 		This spell splits the timeline.  Attempting to use another spell that also splits the timeline while this effect is active will be unsuccessful.
-		The duration will scale with your Paradox and the resistance penalty will scale with your paradox and spellpower.]])
+		The duration will scale with your Paradox and the resistance penalty will scale with your Paradox and S	pellpower.]])
 		:format(duration, power)
 	end,
 }
@@ -130,7 +130,7 @@ newTalent{
 	info = function(self, t)
 		local resist = t.getResist(self, t)
 		return ([[You partially remove yourself from the timeline for 10 turns, increasing your resistance to all damage by %d%%, reducing the duration of all effects by %d%%, and reducing all damage you deal by 20%%.
-		The resistance bonus, effect reduction, and damage penalty will gradually lose power over the course of the spell.
+		The resistance bonus, effect reduction, and damage penalty will gradually lose power over the duration of the spell.
 		The effect will scale with your Paradox and Spellpower.]]):
 		format(resist, resist, resist/10)
 	end,
@@ -225,7 +225,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[You summon your future self to fight alongside you for %d turns.  At some point in the future you'll be pulled into the past to fight along side your past self after the initial effect ends.
+		return ([[You summon your future self to fight alongside you for %d turns.  At some point in the future, you'll be pulled into the past to fight alongside your past self after the initial effect ends.
 		This spell splits the timeline.  Attempting to use another spell that also splits the timeline while this effect is active will be unsuccessful.
 		The duration will scale with your Paradox.]]):format(duration)
 	end,

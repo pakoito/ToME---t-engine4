@@ -62,7 +62,7 @@ newTalent{
 	info = function(self, t)
 		local p = t.getPower(self, t)
 		return ([[Improve your fungus to allow it to take a part of any healing you receive and improve it.
-		Each time you are healed you get a regeneration effect for 6 turns that heals you of %d%% of the direct heal you received.
+		Each time you are healed, you get a regeneration effect for 6 turns that heals you for %d%% of the direct heal you received.
 		The effect will increase with your Mindpower.]]):
 		format(p)
 	end,
@@ -79,9 +79,9 @@ newTalent{
 	info = function(self, t)
 		local eq = t.getEq(self, t)
 		local turn = t.getTurn(self, t)
-		return ([[Your fungus can reach in the primordial ages of the world.
-		Each time a regeneration effect is used on you you gain %d%% of a turn.
-		Also regeneration effects on you will decrease your equilibrium by %d each turn.]]):
+		return ([[Your fungus can reach into the primordial ages of the world, granting you ancient instincts.
+		Each time a regeneration effect is used on you, you gain %d%% of a turn.
+		Also, regeneration effects on you will decrease your equilibrium by %d each turn.]]):
 		format(turn, eq)
 	end,
 }

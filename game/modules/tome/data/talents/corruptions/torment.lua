@@ -82,7 +82,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Reach out to your foe's blood and health. Any creature struck by Blood Lock will be unable to heal above their current life value (at the time of the casting) for %d turns in a radius 2.]]):
+		return ([[Reach out to your foe's blood and health. Any creatures in the radius 2 ball will be unable to heal above their current life value (at the time of the casting) for %d turns.]]):
 		format(2 + math.ceil(self:getTalentLevel(t) * 2))
 	end,
 }
@@ -107,8 +107,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[When you kill a creature, the remainer of the damage done will not be lost. Instead %d%% of it will splash in a radius 2, doing blight damage.
-		The damage will increase with Magic stat.]]):format(20 + self:combatTalentSpellDamage(t, 10, 70))
+		return ([[When you kill a creature, the remainder of the damage done will not be lost. Instead, %d%% of it will splash in radius 2 as blight damage.
+		The damage will increase with your Spellpower.]]):format(20 + self:combatTalentSpellDamage(t, 10, 70))
 	end,
 }
 
@@ -137,8 +137,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local l, c = t.getPower(self, t)
-		return ([[When you are dealt a blow that reduces your life by at least %d%% you have %d%% chances to reduce the remaining cooldown of all your spells by 1.
-		The chance will increase with Magic stat.]]):
+		return ([[When you are dealt a blow that reduces your life by at least %d%%, you have a %d%% chance to reduce the remaining cooldown of all your spells by 1.
+		The chance will increase with your Spellpower.]]):
 		format(l, c)
 	end,
 }

@@ -77,7 +77,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local hateGain = t.getHateGain(self, t)
-		return ([[Feed from the essence of your enemy. Draws %0.1f hate per turn from a targeted foe as long as they remain in your line of sight.
+		return ([[Feed from the essence of your enemy. Draws %0.1f hate per turn from a targeted foe, as long as they remain in your line of sight.
 		Hate gain improves with your Mindpower.]]):format(hateGain)
 	end,
 }
@@ -127,7 +127,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local lifeSteal = t.getLifeSteal(self, t)
-		return ([[Devours life from the target of your feeding. %d life from the victim will be added to your own. This healing cannot be reduced. At level 5 Devour Life can be used like the Feed talent to begin feeding.
+		return ([[Devours life from the target of your feeding. %d life from the victim will be added to your own. This healing cannot be reduced. At level 5, Devour Life can be used like the Feed talent to begin feeding.
 		Improves with your Mindpower.]]):format(lifeSteal)
 	end,
 }
@@ -171,7 +171,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damageGain = t.getDamageGain(self, t)
-		return ([[Enhances your feeding by reducing your targeted foe's damage by %d%% and increasing yours by the same amount.
+		return ([[Enhances your feeding by reducing your targeted foe's damage by %d%%, and increasing yours by the same amount.
 		Improves with your Mindpower.]]):format(damageGain)
 	end,
 }
@@ -190,7 +190,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local resistGain = t.getResistGain(self, t)
-		return ([[Enhances your feeding by reducing your targeted foe's positive resistances by %d%% and increasing yours by the same amount. Resistance to "all" is not affected.
+		return ([[Enhances your feeding by reducing your targeted foe's positive resistances by %d%%, and increasing yours by the same amount. Resistance to "all" is not affected.
 		Improves with your Mindpower.]]):format(resistGain)
 	end,
 }

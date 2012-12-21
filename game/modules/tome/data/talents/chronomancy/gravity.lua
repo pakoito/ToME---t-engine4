@@ -47,8 +47,8 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local radius = self:getTalentRadius(t)
-		return ([[Sends out a blast wave of gravity in a %d radius cone, dealing %0.2f physical damage and knocking back creatures caught in the area.  Deals 50%% extra damage to pinned targets.
-		The blast wave may hit targets more then once depending on radius and the knockback effect.
+		return ([[Sends out a blast wave of gravity in a %d radius cone, dealing %0.2f physical damage and knocking back creatures caught in the area.  This deals 50%% extra damage to pinned targets, in addition to the knockback.
+		The blast wave may hit targets more then once, depending on the radius and the knockback effect.
 		The damage will scale with your Paradox and Spellpower.]]):
 		format(radius, damDesc(self, DamageType.PHYSICAL, t.getDamage(self, t)))
 	end,
@@ -96,8 +96,8 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local radius = self:getTalentRadius(t)
-		return ([[Creates a gravity spike in a radius of %d that moves all targets towards the spells center and inflicts %0.2f physical damage.  Deals 50%% extra damage to pinned targets.
-		The damage will scale with your Paradox and Spellpower.]]):format(radius, damDesc(self, DamageType.PHYSICAL, t.getDamage(self, t)))
+		return ([[Creates a gravity spike in a radius of %d that moves all targets towards the spells center and inflicts %0.2f physical damage.  This deals 50%% extra damage to pinned targets, in addition to the knockback.
+		The damage dealt will scale with your Paradox and Spellpower.]]):format(radius, damDesc(self, DamageType.PHYSICAL, t.getDamage(self, t)))
 	end,
 }
 
@@ -142,8 +142,8 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local duration = t.getDuration(self, t)
 		local radius = self:getTalentRadius(t)
-		return ([[You surround yourself with a radius %d aura of gravity distortion that will knockback and deal %0.2f physical damage to all creatures.  The effect lasts %d turns.  Deals 50%% extra damage to pinned targets. 
-		The blast wave may hit targets more then once depending on radius and the knockback effect.
+		return ([[You surround yourself with a radius %d distortion of gravity, knocking back and dealing %0.2f physical damage to all creatures inside it.  The effect lasts %d turns.  Deals 50%% extra damage to pinned targets, in addition to the knockback.
+		The blast wave may hit targets more then once, depending on the radius and the knockback effect.
 		The damage will scale with your Paradox and Spellpower.]]):format(radius, damDesc(self, DamageType.PHYSICAL, damage), duration)
 	end,
 }
@@ -192,7 +192,7 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local duration = t.getDuration(self, t)
 		local radius = self:getTalentRadius(t)
-		return ([[Increases local gravity, doing %0.2f physical damage with a chance to pin in a radius of %d each turn for %d turns.
-		The damage will scale with your Paradox and Spellpower.]]):format(damDesc(self, DamageType.PHYSICAL, damage), radius, duration)
+		return ([[Increases local gravity of an area, doing %0.2f physical damage with a chance to pin in a radius of %d each turn for %d turns.
+		The damage done will scale with your Paradox and Spellpower.]]):format(damDesc(self, DamageType.PHYSICAL, damage), radius, duration)
 	end,
 }

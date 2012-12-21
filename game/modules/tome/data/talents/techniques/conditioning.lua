@@ -35,7 +35,7 @@ newTalent{
 		local regen = t.getLifeRegen(self, t)
 		local healmod = t.getHealMod(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[You recover faster from poisons, diseases and wounds; reducing the duration of all such affects by %d%%.  Additionally you gain %0.2f life regen and %d%% healing modifier for %d turns when your life drops below 50%%.
+		return ([[You recover faster from poisons, diseases and wounds, reducing the duration of all such effects by %d%%.  Additionally, you gain %0.2f life regen and %d%% healing modifier for %d turns when your life drops below 50%%.
 		The healing modifier and life regen will scale with your Constitution stat.]]):
 		format(wounds, regen, healmod, duration)
 	end,
@@ -82,8 +82,9 @@ newTalent{
 		local radius = t.getRadius(self, t)
 		local penalty = t.getPenalty(self, t)
 		local min_life = t.getMinimumLife(self, t)
-		return ([[Enemies are intimidated by how composed you remain under fire.  When you take more then 5%% of your maximum life in a single hit all enemies in a radius of %d will be intimidated, reducing their physical power, mind power, and spellpower by %d for 4 turns.
-		If your health drops below %d you'll be unable to maintain your daunting presence and the sustain will deactivate.  The power of the intimidation effect will scale with your Constitution stat.]]):
+		return ([[Enemies are intimidated by how composed you remain under fire.  When you take more then 5%% of your maximum life in a single hit, all enemies in a radius of %d will be intimidated, reducing their Physical Power, Mindpower, and Spellpower by %d for 4 turns.
+		If your health drops below %d, you'll be unable to maintain your daunting presence, and the sustain will deactivate.  
+		The power of the intimidation effect will scale with your Constitution, and the accuracy of the effect will improve with your Strength.]]):
 		format(radius, penalty, min_life)
 	end,
 }
@@ -125,9 +126,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		local chance = t.getChance(self, t)
-		return ([[You've learned to recover quickly from effects that would disable you. Each turn you have a %d%% chance to recover from a single stun effect.
+		return ([[You've learned to recover quickly from effects that would disable you. Each turn, you have a %d%% chance to recover from a single stun effect.
 		At talent level 2 you may also recover from blindness, at level 3 confusion, level 4 pins, and level 5 slows. 
-		Only one effect may be recovered from each turn and the chance to recover from an effect scales with your Constitution stat.]]):
+		Only one effect may be recovered from each turn, and the chance to recover from an effect scales with your Constitution.]]):
 		format(chance)
 	end,
 }
@@ -149,9 +150,9 @@ newTalent{
 	info = function(self, t)
 		local attack_power = t.getAttackPower(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[You release a surge of adrenaline that increases your physical power by %d for %d turns. While the effect is active you may continue to fight beyond the point of exhaustion.
-		Your stamina based sustains will not be disabled if your stamina reaches zero and you may continue to use stamina based talents while at zero stamina at the cost of life.
-		The attack power increase will scale with your Constitution stat.
+		return ([[You release a surge of adrenaline that increases your Physical Power by %d for %d turns. While the effect is active, you may continue to fight beyond the point of exhaustion.
+		Your stamina based sustains will not be disabled if your stamina reaches zero, and you may continue to use stamina based talents while at zero stamina at the cost of life.
+		The Physical Power increase will scale with your Constitution.
 		Using this talent does not take a turn.]]):
 		format(attack_power, duration)
 	end,

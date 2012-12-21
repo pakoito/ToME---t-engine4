@@ -31,8 +31,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Turn into a wraith, allowing you to walk through walls (but not preventing suffocation) for %d turns.
-		Also increases your defense and armor by %d and %d.
-		The bonuses will increase with your Magic stat.]]):
+		Also increases your Defense and Armour by %d and %d, respectively.
+		The bonuses will increase with your Spellpower.]]):
 		format(4 + self:getTalentLevel(t), self:combatTalentSpellDamage(t, 5, 19), self:combatTalentSpellDamage(t, 5, 15))
 	end,
 }
@@ -68,8 +68,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Conjures up a bolt of shadowflame moving toward the target that explodes into a flash of darkness and fire doing %0.2f fire damage and %0.2f darkness damage in a radius of %d.
-		The damage will increase with the Magic stat]]):format(
+		return ([[Conjures up a bolt of shadowflame that moves toward the target and explodes into a flash of darkness and fire, doing %0.2f fire damage and %0.2f darkness damage in a radius of %d.
+		The damage will increase with your Spellpower.]]):format(
 			damDesc(self, DamageType.FIRE, self:combatTalentSpellDamage(t, 28, 220) / 2),
 			damDesc(self, DamageType.DARKNESS, self:combatTalentSpellDamage(t, 28, 220) / 2),
 			self:getTalentRadius(t)
@@ -109,9 +109,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Call upon the essence of the supreme demon overlord Urh'Rok to turn into a demon.
-		While in demon form you gain %d%% fire resistance, %d%% darkness resistance and your global speed is increased by %d%%.
-		The flames of the fearscape will heal you while in demon form.
-		The resistances and heal will increase with Magic stat.]]):
+		While in demon form, you gain %d%% fire resistance, %d%% darkness resistance, and your global speed is increased by %d%%.
+		The flames of the Fearscape will heal you while in demon form.
+		The resistances and heal will increase with your Spellpower.]]):
 		format(
 			self:combatTalentSpellDamage(t, 20, 30), self:combatTalentSpellDamage(t, 20, 35),
 			self:getTalentLevel(t) * 3
@@ -313,10 +313,10 @@ newTalent{
 	info = function(self, t)
 		return ([[Summon a part of the Fearscape to intersect with the current level.
 		Your target and yourself are taken to the Fearscape, trapped there until you end the spell or until your target dies.
-		While inside a constant aura of flames will burn both of you (unless you are a demon) for %0.2f fire damage.
-		When the spell ends only you and the target (if still alive) are taken back to your home plane, all summons are left in the Fearscape.
+		While inside, a constant aura of flames will burn both of you (and heal demons) for %0.2f fire damage.
+		When the spell ends, only you and the target (if still alive) are taken back to your home plane; all summons are left in the Fearscape.
 		Objects will be moved as well.
 		This spell has no effect if cast when already inside the Fearscape.
-		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.FIRE, self:combatTalentSpellDamage(t, 12, 140)))
+		The damage will increase with your Spellpower.]]):format(damDesc(self, DamageType.FIRE, self:combatTalentSpellDamage(t, 12, 140)))
 	end,
 }

@@ -183,7 +183,7 @@ newTalent{
 		local spikecost = t.getSpikeCost(self, t)
 		return ([[Fills the air around you with reactive currents of force that do %d physical damage to all who approach. All damage done by the aura will drain one point of energy per %0.2f points of damage dealt.
 		When deactivated, if you have at least %d energy, a massive spike of kinetic energy is released as a beam, smashing targets for %d physical damage and sending them flying.  Telekinetically wielding a gem or mindstar will result in improved spike efficiency.
-		To turn off an aura without spiking it, deactivate it and target yourself.]]):format(dam, mast, spikecost, spikedam)
+		To turn off an aura without spiking it, deactivate it and target yourself. The damage will improve with your Mindpower.]]):format(dam, mast, spikecost, spikedam)
 	end,
 }
 
@@ -300,7 +300,7 @@ newTalent{
 		local spikecost = t.getSpikeCost(self, t)
 		return ([[Fills the air around you with reactive currents of furnace-like heat that do %d fire damage to all who approach. All damage done by the aura will drain one point of energy per %0.2f points of damage dealt.
 		When deactivated, if you have at least %d energy, a massive spike of thermal energy is released as a conical blast (radius %d) of superheated air. Anybody caught in it will suffer %d fire damage over several turns.  Telekinetically wielding a gem or mindstar will result in improved spike efficiency.
-		To turn off an aura without spiking it, deactivate it and target yourself.]]):format(dam, mast, spikecost, rad, spikedam)
+		To turn off an aura without spiking it, deactivate it and target yourself. The damage will improve with your Mindpower.]]):format(dam, mast, spikecost, rad, spikedam)
 	end,
 }
 

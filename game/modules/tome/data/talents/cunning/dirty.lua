@@ -54,8 +54,8 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local duration = t.getDuration(self, t)
 		return ([[You hit your target doing %d%% damage, trying to stun it instead of damaging it. If your attack hits, the target is stunned for %d turns.
-		Stun chance increase with your accuracy.
-		If you fail to stun the target (or if it shrugs the effect) you quickly get back on your feet, not using your current turn.]]):
+		Stun chance increase with your Accuracy.
+		If you fail to stun the target (or if it shrugs off the effect), you quickly recover; the use of the skill does not take a turn.]]):
 		format(100 * damage, duration)
 	end,
 }
@@ -70,7 +70,7 @@ newTalent{
 	getStunChance = function(self, t) return self:getTalentLevel(t) * 3 end,
 	info = function(self, t)
 		return ([[Your quick wit gives you a big advantage against stunned targets; all your hits will have a %d%% greater chance of being critical.
-		Also your melee critical strikes have %d%% chance to stun the target for 3 turns.]]):
+		Also, your melee critical strikes have %d%% chance to stun the target for 3 turns.]]):
 		format(t.getCriticalChance(self, t), t.getStunChance(self, t))
 	end,
 }
@@ -110,8 +110,8 @@ newTalent{
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		return ([[Using a series of tricks and maneuvers, you switch places with your target.
-		Switching places will confuse your foes, granting you evasion(50%%) for %d turns.
-		While switching places your weapon(s) will connect with the target, not damaging it but on hit effects can trigger.]]):
+		Switching places will confuse your foes, granting you Evasion (50%%) for %d turns.
+		While switching places, your weapon(s) will connect with the target; this will not do weapon damage, but on hit effects of the weapons can trigger.]]):
 		format(duration)
 	end,
 }
@@ -147,8 +147,8 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local duration = t.getDuration(self, t)
 		local speedpen = t.getSpeedPenalty(self, t)
-		return ([[You hit your target doing %d%% damage. If your attack hits, the target is crippled for %d turns, losing %d%% melee, spellcasting and mind speed.
-		Hit chance improves with talent level and your Dexterity stat.]]):
+		return ([[You hit your target, doing %d%% damage. If your attack connects, the target is crippled for %d turns, losing %d%% melee, spellcasting and mind speed.
+		The chance to land the status improves with Accuracy, and the status power improves with Cunning.]]):
 		format(100 * damage, duration, speedpen)
 	end,
 }

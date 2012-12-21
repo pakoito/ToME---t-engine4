@@ -67,8 +67,8 @@ newTalent{
 		local cun = t.getCunPenalty(self, t)
 		return ([[Learn to take advantage of your enemy's pain.
 		If your enemy is bleeding and attempts to attack you, their critical hit rate is reduced by %d%%, as their wounds make them more predictable.
-		If you attack a bleeding enemy, there is a %d%% chance that, for %d turns, they are disabled as you take advantage of openings (reducing their movement speed by %d%% and accuracy by %d) or anguished as you strike their painful wounds (reducing their willpower by %d and their cunning by %d).
-		The statistical reductions will increase with the Cunning stat.
+		If you attack a bleeding enemy, there is a %d%% chance that, for %d turns, they are disabled as you take advantage of openings (reducing their movement speed by %d%% and Accuracy by %d) or anguished as you strike their painful wounds (reducing their Willpower by %d and their Cunning by %d).
+		The statistical reductions will increase with your Cunning.
 		]]):format(5+(self:getTalentLevel(t)*5),5+(self:getTalentLevel(t)*3),duration,move * 100,attack,will,cun)
 	end,
 }
@@ -138,10 +138,11 @@ newTalent{
 		self.projectile_evasion = (self.projectile_evasion or 0) - 3
 		self.projectile_evasion_spread = (self.projectile_evasion_spread or 0) - 1
 	end,
+	-- Talking with SageAcrin, this is definitely an accurate portrayal of the skill's effects. 
 	info = function(self, t)
-		return ([[Your abilities sowing confusion and chaos have reached their peak. Now even your most simple moves confuse your enemies, rendering their offense less effective.
-		Your defense increases by %d%% and all projectiles fired at you have their speed reduced by %d
-		Your bonus percent to defense will increase with Cunning.]]):
-		format(self:getTalentLevel(self.T_MISDIRECTION) * (0.02 * (1 + self:getCun() / 85) *100),self:getTalentLevelRaw(t) * 3 ,self:getTalentLevelRaw(t) * 1, self:getTalentLevelRaw(t) * 3)
+		return ([[Your abilities in sowing confusion and chaos have reached their peak. Now, even your most simple moves confuse your enemies, rendering their offense less effective.
+		Your Defense increases by %d%%, and enemies have a %d%% chance of targetting a random square within %d squares of you.
+		The bonus to Defense will increase with Cunning.]]):
+		format(self:getTalentLevel(self.T_MISDIRECTION) * (0.02 * (1 + self:getCun() / 85) *100), self:getTalentLevelRaw(t) * 3, self:getTalentLevelRaw(t) * 1)
 	end,
 }

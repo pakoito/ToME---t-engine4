@@ -253,7 +253,7 @@ newInscription{
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		return ([[Activate the infusion to increase three of your primary stats by %d for %d turns.
-		Also while Heroism is active you will only die when reaching -%d life. However, when below 0 you cannot see how much life you have left and you will die if you did not heal before the effect ends.
+		Also while Heroism is active, you will only die when reaching -%d life. However, when below 0 you cannot see how much life you have left, and you will die if you did not heal before the effect ends.
 		It will always increase your three highest stats.]]):format(data.power + data.inc_stat, data.dur, data.die_at + data.inc_stat * 30)
 	end,
 	short_info = function(self, t)
@@ -283,7 +283,7 @@ newInscription{
 	end,
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		return ([[Activate the infusion to spit a bolt of poison doing %0.2f nature damage per turns for 7 turns and reducing the target's healing received by %d%%.]]):format(damDesc(self, DamageType.COLD, data.power + data.inc_stat) / 7, data.heal_factor)
+		return ([[Activate the infusion to spit a bolt of poison doing %0.2f nature damage per turns for 7 turns, and reducing the target's healing received by %d%%.]]):format(damDesc(self, DamageType.COLD, data.power + data.inc_stat) / 7, data.heal_factor)
 	end,
 	short_info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
@@ -481,7 +481,7 @@ newInscription{
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		return ([[Activate the rune to become invisible (power %d) for %d turns.
-		As you become invisible you fade out of phase with reality, all your damage is reduced by 40%% and you can not heal or regen life while invisible.
+		As you become invisible you fade out of phase with reality, all your damage is reduced by 40%% and you cannot heal or regen life while invisible.
 		]]):format(data.power + data.inc_stat, data.dur)
 	end,
 	short_info = function(self, t)
@@ -582,7 +582,7 @@ newInscription{
 	end,
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		return ([[Activate the rune to fire a beam of heat doing %0.2f fire damage over 5 turns.]]):format(damDesc(self, DamageType.FIRE, data.power + data.inc_stat))
+		return ([[Activate the rune to fire a beam of heat, doing %0.2f fire damage over 5 turns.]]):format(damDesc(self, DamageType.FIRE, data.power + data.inc_stat))
 	end,
 	short_info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
@@ -618,7 +618,7 @@ newInscription{
 	end,
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		return ([[Activate the rune to fire a bolt of ice doing %0.2f cold damage with a chance to freeze the target.]]):format(damDesc(self, DamageType.COLD, data.power + data.inc_stat))
+		return ([[Activate the rune to fire a bolt of ice, doing %0.2f cold damage with a chance to freeze the target.]]):format(damDesc(self, DamageType.COLD, data.power + data.inc_stat))
 	end,
 	short_info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
@@ -821,7 +821,7 @@ newInscription{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[Inflicts %0.2f temporal damage.  If your target survives it will be sent %d turns into the future.
+		return ([[Inflicts %0.2f temporal damage.  If your target survives, it will be sent %d turns into the future.
 		It will also lower your paradox by 60 (if you have any).
 		Note that messing with the spacetime continuum may have unforeseen consequences.]]):format(damDesc(self, DamageType.TEMPORAL, damage), duration)
 	end,

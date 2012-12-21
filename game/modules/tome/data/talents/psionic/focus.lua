@@ -99,7 +99,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local dam = t.getDamage(self, t)
-		return ([[Focus energies on a distant target to lash it with physical force, doing %d damage as well as any Conduit damage.
+		return ([[Focus energies on a distant target to lash it with physical force, doing %d damage in addition to any Conduit damage.
 		Mindslayers do not do this sort of ranged attack naturally. The use of a telekinetically-wielded gem or mindstar as a focus will improve the effects considerably.]]):
 		format(dam)
 	end,
@@ -142,7 +142,7 @@ newTalent{
 	info = function(self, t)
 		local radius = self:getTalentRadius(t)
 		local dam = t.getDamage(self, t)
-		return ([[Focus energies on all foes within %d squares, setting them ablaze. Does %d damage over ten turns.
+		return ([[Kinetically vibrate the essence of all foes within %d squares, setting them ablaze. Does %d damage over ten turns.
 		Mindslayers do not do this sort of ranged attack naturally. The use of a telekinetically-wielded gem or mindstar as a focus will improve the effects considerably.]]):
 		format(radius, dam)
 	end,
@@ -169,7 +169,7 @@ newTalent{
 	points = 5,
 	info = function(self, t)
 		local inc = 1 + 0.15*self:getTalentLevel(t)
-		return ([[You can channel more energy with your auras and shields using a telekinetically-wielded gemstone or mindstar as a focus. Increases the base strength of all auras and shields by %0.2f to %0.2f, depending on the quality of the gem or mindstar used as a focus.]]):
+		return ([[You can channel more energy with your auras and shields, using a telekinetically-wielded gemstone or mindstar as a focus. Increases the base strength of all auras and shields by %0.2f to %0.2f, depending on the quality of the gem or mindstar used as a focus.]]):
 		format(inc, 5*inc)
 	end,
 }

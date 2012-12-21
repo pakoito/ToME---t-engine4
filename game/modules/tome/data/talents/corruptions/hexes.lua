@@ -45,8 +45,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hexes your target, dazing it and everything in a 2 radius ball of it for 3 turns and giving %d%% chance to daze affected targets again each turn for 20 turns.
-		The chance will increase with Magic stat.]]):format(self:combatTalentSpellDamage(t, 30, 50))
+		return ([[Hexes your target, dazing it and everything in a 2 radius ball around it for 3 turns, and giving %d%% chance to daze affected targets again each turn for 20 turns.
+		The chance will increase with your Spellpower.]]):format(self:combatTalentSpellDamage(t, 30, 50))
 	end,
 }
 
@@ -78,9 +78,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hexes your target and everything within a radius 2 ball of your target for 20 turns. Each time your affected targets use a resource (stamina, mana, vim, ...) they take %0.2f fire damage.
-		In addition the affected talent will have its cooldown increased by 1 turn + %d%%.
-		The damage will increase with Magic stat.]]):format(damDesc(self, DamageType.FIRE, self:combatTalentSpellDamage(t, 4, 90)), ((self:getTalentLevel(t) / 10))*100)
+		return ([[Hexes your target and everything within a radius 2 ball of your target for 20 turns. Each time your affected targets use a resource (stamina, mana, vim, ...), they take %0.2f fire damage.
+		In addition, the affected talent will have its cooldown increased by %d%% + 1 turn(s).
+		The damage will increase with your Spellpower.]]):format(damDesc(self, DamageType.FIRE, self:combatTalentSpellDamage(t, 4, 90)), ((self:getTalentLevel(t) / 10))*100)
 	end,
 }
 
@@ -112,8 +112,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hexes your target and everything within a radius 2 ball of your target. Each time they do damage they take %d%% of the same damage for 20 turns.
-		The damage will increase with Magic stat.]]):format(self:combatTalentSpellDamage(t, 4, 20))
+		return ([[Hexes your target and everything within a radius 2 ball of your target. Each time they do damage, they take %d%% of the same damage for 20 turns.
+		The damage will increase with your Spellpower.]]):format(self:combatTalentSpellDamage(t, 4, 20))
 	end,
 }
 
@@ -147,6 +147,6 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Hexes your target, forcing it to be your thrall for %d turns.
-		If you damage the target it will be free from the hex.]]):format(2 + self:getTalentLevel(t))
+		If you damage the target, it will be freed from the hex.]]):format(2 + self:getTalentLevel(t))
 	end,
 }

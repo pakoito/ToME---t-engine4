@@ -72,8 +72,8 @@ newTalent{
 		local maxUnnaturalBodyHeal = t.getMaxUnnaturalBodyHeal(self, t)
 		local regenRate = t.getRegenRate(self, t)
 
-		return ([[Your body's strength is fed by your hatred. This causes most forms of healing to be 50%% effective (at 0 Hate) to 100%% effective (at 100+ Hate). In addition, after each kill you regenerate %d life (up to a maximum of %d) at a rate of %0.1f life per turn. This healing cannot be reduced by your hate.
-		Healing from kills improves with the Willpower stat.]]):format(healPerKill, maxUnnaturalBodyHeal, regenRate)
+		return ([[Your body's strength is fed by your hatred. This causes most forms of healing to be between 50%% effective (at 0 Hate) to 100%% effective (at 100+ Hate). In addition, after each kill, you regenerate %d life (up to a maximum of %d) at a rate of %0.1f life per turn. This healing cannot be reduced by your hatred levels.
+		Healing from kills improves with your Willpower.]]):format(healPerKill, maxUnnaturalBodyHeal, regenRate)
 	end,
 }
 
@@ -113,7 +113,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local incDamageChangeMax = t.getIncDamageChange(self, t, 5)
-		return ([[You have learned to hold onto your hate and use your suffering to fuel your body's rage. Every turn you take damage, the damage you inflict increases until it reaches a maximum of +%d%% after 5 turns. Any turn in which you do not take damage will reduce the bonus.]]):format(incDamageChangeMax)
+		return ([[You have learned to hold onto your hate and use your suffering to fuel your body's rage. Every turn you take damage, the damage you inflict increases, until it reaches a maximum of +%d%% after 5 turns. Any turn in which you do not take damage will reduce the bonus.]]):format(incDamageChangeMax)
 	end
 }
 
@@ -132,7 +132,7 @@ newTalent{
 	info = function(self, t)
 		local statChangeMax = t.getStatChange(self, t, 5)
 		local neutralizeChance = t.getNeutralizeChance(self, t)
-		return ([[You rise to meet the pain that others would inflict on you. Every turn you take damage, your Strength and Willpower increase until it reaches maximum of +%d after 5 turns. Any turn in which you do not take damage will reduce the bonus. While in effect, your body also has a %d%% chance to overcome poisons and diseases each turn.]]):format(statChangeMax, neutralizeChance)
+		return ([[You rise to meet the pain that others would inflict on you. Every turn you take damage, your Strength and Willpower increase until they reach a maximum of +%d after 5 turns. Any turn in which you do not take damage will reduce the bonus. While in effect, your body also has a %d%% chance to overcome poisons and diseases each turn.]]):format(statChangeMax, neutralizeChance)
 	end,
 }
 

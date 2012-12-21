@@ -61,7 +61,7 @@ uberTalent{
 		end
 	end,
 	info = function(self, t)
-		return ([[When moving over 800%% speed for at least 3 turns in the same direction you become so fast you can blink throught obstacles as if they were not there.
+		return ([[When moving over 800%% speed for at least 3 turns in the same direction, you become so fast you can blink through obstacles as if they were not there.
 		Changing direction will break the effect.]])
 		:format()
 	end,
@@ -72,8 +72,8 @@ uberTalent{
 	mode = "passive",
 	require = { special={desc="Antimagic", fct=function(self) return self:knowTalentType("wild-gift/antimagic") end} },
 	info = function(self, t)
-		return ([[You are full of tricks and surprises, your Antimagic Shield can absorb %d%% more damage.
-		The increase scales with Cunning.]])
+		return ([[You are full of tricks and surprises; your Antimagic Shield can absorb %d%% more damage.
+		The increase scales with your Cunning.]])
 		:format(self:getCun() / 2)
 	end,
 }
@@ -107,14 +107,14 @@ uberTalent{
 		end
 	end,
 	info = function(self, t)
-		return ([[Surround yourself with a malovelant aura.
-		Any acid damage you do has 20%% chances to apply lasting acid that deals %d%% of the initial damage for 5 turns and reduces accuracy by %d.
-		Any blight damage you do has 20%% chances to cause a random disease that deals %d%% of the initial damage for 5 turns and reducing a stat by %d.
+		return ([[Surround yourself with a malevolent aura.
+		Any acid damage you do has 20%% chances to apply a lasting acid, that deals %d%% of the initial damage for 5 turns and reduces accuracy by %d.
+		Any blight damage you do has 20%% chances to cause a random disease, that deals %d%% of the initial damage for 5 turns and reducing a stat by %d.
 		Any darkness damage you do has 20%% chances to blind the target for 5 turns.
 		Any temporal damage you do has 20%% chances to slow (30%%) the target for 5 turns.
-		Any mind damage you do has 20%% chances to confused (20%%) the target for 5 turns.
+		Any mind damage you do has 20%% chances to confuse (20%%) the target for 5 turns.
 		This only triggers for hits over 150 damage.
-		Values increase with Cunning.]])
+		Values increase with your Cunning.]])
 		:format(self:getCun() / 2.5, self:getCun() / 2, self:getCun() / 2.5, self:getCun() / 2)
 	end,
 }
@@ -148,7 +148,7 @@ uberTalent{
 		end
 	end,
 	info = function(self, t)
-		return ([[You have long studied Telos three artifacts, you believe you can merge them back into a single potent staff.]])
+		return ([[You have obtained the three parts of the Staff of Telos and studied them carefully. You believe you can merge them back into a single, highly potent, staff.]])
 		:format()
 	end,
 }
@@ -182,13 +182,13 @@ uberTalent{
 		if ok then self:startTalentCooldown(t) end
 	end,
 	info = function(self, t)
-		return ([[Surround yourself with an elemental aura, when you deal a critical hit with an element you have a chance to trigger a special effect.
-		Arcane damage has 30%% chances to increase spellcasting speed by 20%% for 5 turns.
-		Fire damage has 30%% chances to cleanse all physical or magical detrimental effect on you.
-		Cold damage has 30%% chances to turn your skin into ice for 5 turns, reducing physical damage taken by 30%% and dealing 100 ice damage to attackers.
-		Lightning damage has 30%% chances to become pure lightning for 3 turns, any damage will teleport you to an adjacent tile and ignore the damage (can only happen once per turn).
-		Light damage has 30%% chances to create a barrier around you absorbing 200 damage for 5 turns.
-		Nature damage has 30%% chances to harden your skin, preventing the application of any magical detrimental effects for 5 turns.
+		return ([[Surround yourself with an elemental aura. When you deal a critical hit with an element, you have a chance to trigger a special effect.
+		Arcane damage has a 30%% chance to increase your spellcasting speed by 20%% for 5 turns.
+		Fire damage has a 30%% chance to cleanse all physical or magical detrimental effects on you.
+		Cold damage has a 30%% chance to turn your skin into ice for 5 turns, reducing physical damage taken by 30%% and dealing 100 ice damage to attackers.
+		Lightning damage has a 30%% chance to transform you into pure lightning for 3 turns; any damage will teleport you to an adjacent tile and ignore the damage (can only happen once per turn).
+		Light damage has a 30%% chance to create a barrier around you, absorbing 200 damage for 5 turns.
+		Nature damage has a 30%% chance to harden your skin, preventing the application of any magical detrimental effects for 5 turns.
 		This only triggers for hits over 200 damage.]])
 		:format()
 	end,
@@ -241,7 +241,7 @@ uberTalent{
 		return ([[All physical criticals reduce the remaining cooldown of a random technique or cunning talent by 2.
 		All spell criticals reduce the remaining cooldown of a random spell talent by 1.
 		All mind criticals reduce the remaining cooldown of a random wild gift/psionic/afflicted talent by 2.
-		This can only happen once per turn and can not affect the talent that procs it.]])
+		This can only happen once per turn, and can not affect the talent that triggers it.]])
 		:format()
 	end,
 }
@@ -255,7 +255,7 @@ uberTalent{
 		chat:invoke()
 	end,
 	info = function(self, t)
-		return ([[Learn a new talent category from one of those at 0.9 mastery, unlocked:
+		return ([[Learn a new talent category from one of these at 0.9 mastery, unlocked:
 		- Technique / Conditioning
 		- Technique / Mobility
 		- Technique / Field Control
@@ -267,7 +267,7 @@ uberTalent{
 		- Cunning / Survival
 		- Celestial / Chants
 		- Celestial / Light
-		Some will not be available depending on your status toward magic.]])
+		Some will not be available, depending on your status toward magic.]])
 		:format()
 	end,
 }

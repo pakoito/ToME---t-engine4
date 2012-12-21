@@ -43,8 +43,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local armor = t.getArmor(self, t)
-		return ([[The caster's skin grows as hard as stone, granting %d bonus to armor.
-		The bonus to armor will increase with your Spellpower.]]):
+		return ([[The caster's skin grows as hard as stone, granting a %d bonus to Armour.
+		The bonus to Armour will increase with your Spellpower.]]):
 		format(armor)
 	end,
 }
@@ -77,7 +77,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local radius = self:getTalentRadius(t)
-		return ([[Conjures a mudslide dealing %0.2f physical damage in a radius of %d. Any creatures caught inside will be knocked back.
+		return ([[Conjures a mudslide, dealing %0.2f physical damage in a radius of %d. Any creatures caught inside will be knocked back.
 		The damage will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.PHYSICAL, damage), self:getTalentRadius(t))
 	end,
@@ -178,7 +178,7 @@ newTalent{
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		return ([[Entomb yourself in a wall of stone for %d turns.
-		At level 4 it becomes targetable.
+		At level 4, it becomes targetable.
 		Duration will improve with your Spellpower.]]):
 		format(duration)
 	end,

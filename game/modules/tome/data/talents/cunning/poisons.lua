@@ -60,7 +60,7 @@ newTalent{
 		end
 	end,
 	info = function(self, t)
-		return ([[Learn how to coat your weapons with poison. Each level you will learn a new kind of poison:
+		return ([[Learn how to coat your weapons with poison. Each level, you will learn a new kind of poison:
 		Level 1: Deadly Poison
 		Level 2: Numbing Poison
 		Level 3: Insidious Poison
@@ -70,8 +70,8 @@ newTalent{
 		Also increases the effectiveness of your poisons by %d%%. (The effect varies for each poison).
 		Coating your weapons in poisons does not break stealth.
 		You may only have two poisons active at once.
-		Every time you hit a creature with one of your weapons you have %d%% chance to randomly apply one of your active poisons.
-		The chance to apply a poison lowers if the target already has poisons.]]):
+		Every time you hit a creature with one of your weapons, you have a %d%% chance to randomly apply one of your active poisons.
+		The chance to apply a poison lowers if the target is already poisoned.]]):
 		format(self:getTalentLevel(t) * 20, 20 + self:getTalentLevel(t) * 5)
 	end,
 }
@@ -114,7 +114,7 @@ newTalent{
 		local dam1 = 100 * self:combatTalentWeaponDamage(t, 0.5 + 0.6,   0.9 + 1)
 		local dam2 = 100 * self:combatTalentWeaponDamage(t, 0.5 + 0.6*2, 0.9 + 1*2)
 		local dam3 = 100 * self:combatTalentWeaponDamage(t, 0.5 + 0.6*3, 0.9 + 1*3)
-		return ([[You hit your target doing nature damage depending on the number of poisons on the target:
+		return ([[You hit your target, doing nature damage depending on the number of poisons on the target:
 		- 0 poisons: %d%%
 		- 1 poisons: %d%%
 		- 2 poisons: %d%%
@@ -153,8 +153,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Reduce the duration of all poisons on the target by 50%% but increases their damage by %d%%.
-		Effect increases with your Cunning.]]):
+		return ([[Reduce the duration of all poisons on the target by 50%%, but increases their damage by %d%%.
+		The effect increases with your Cunning.]]):
 		format(100 + self:combatTalentStatDamage(t, "cun", 40, 250))
 	end,
 }
@@ -191,7 +191,7 @@ newTalent{
 		end
 	end,
 	info = function(self, t)
-		return ([[When you kill a creature all the poisons affecting it will have %d%% chances to spread to each adjacent foes.]]):format(20 + self:getTalentLevelRaw(t) * 8)
+		return ([[When you kill a creature, all the poisons affecting it will have %d%% chances to spread to adjacent foes.]]):format(20 + self:getTalentLevelRaw(t) * 8)
 	end,
 }
 
@@ -315,7 +315,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Coat your weapons with an insidious poison, inflicting %d nature damage per turn for %d turns.
-		Poisoned creatures heals are reduced by %d%%.
+		Poisoned creatures have their healing reduced by %d%%.
 		The effects scales with your Cunning.]]):
 		format(damDesc(self, DamageType.NATURE, t.getDOT(self, t)), t.getDuration(self, t), t.getEffect(self, t))
 	end,
@@ -349,7 +349,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Coat your weapons with a crippling poison, inflicting %d nature damage per turn for %d turns.
-		Every time a poisoned creature tries to use a talent it will have %d%% chances to fail and lose a turn.
+		Every time a poisoned creature tries to use a talent, it will have %d%% chances to fail and lose a turn.
 		The damage scales with your Cunning.]]):
 		format(damDesc(self, DamageType.NATURE, t.getDOT(self, t)), t.getDuration(self, t), t.getEffect(self, t))
 	end,
@@ -384,7 +384,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Coat your weapons with a stoning poison, inflicting %d nature damage per turn for %d turns.
-		When the poison ends the victim turns into stone for %d turns.
+		When the poison ends, the victim turns to stone for %d turns.
 		The damage scales with your Cunning.]]):
 		format(damDesc(self, DamageType.NATURE, t.getDOT(self, t)), t.getDuration(self, t), t.getEffect(self, t))
 	end,
@@ -420,7 +420,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Coat your weapons with an arcane poison, inflicting %d arcane damage per turn for %d turns.
-		Poisoned creatures resistances are reduced by %d%%.
+		The resistances of poisoned creatures are reduced by %d%%.
 		The damage scales with your Cunning.]]):
 		format(damDesc(self, DamageType.NATURE, t.getDOT(self, t)), t.getDuration(self, t), t.getEffect(self, t))
 	end,

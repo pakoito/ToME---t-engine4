@@ -52,7 +52,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local max = t.getPsychometryCap(self, t)
-		return ([[Resonate with psionic, nature, and anti-magic powered objects, increasing your physical and mind power by %0.2f or half the objects material level (whichever is lower).
+		return ([[Resonate with psionic, nature, and anti-magic powered objects, increasing your physical and mind power by %0.2f or half the objects' material level (whichever is lower).
 		This effect stacks and applies for each qualifying object worn.]]):format(max)
 	end,
 }
@@ -108,8 +108,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local count = t.getRemoveCount(self, t)
-		return ([[Clears your mind of current mental effects and block additional ones over 6 turns.  At most %d mental effects will be affected.
-		This talent takes not time to use.]]):format(count)
+		return ([[Clears your mind of current mental effects, and blocks additional ones over 6 turns.  At most, %d mental effects will be affected.
+		This talent takes no time to use.]]):format(count)
 	end,
 }
 
@@ -230,8 +230,8 @@ newTalent{
 	info = function(self, t)
 		local power = t.getPower(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[Activate to project your mind from your body for %d turns.  In this state you're invisible(+%d power), can see invisible and stealthed creatures (+%d detection power), can move through walls, and do not need air to survive.
-		All damage you suffer is shared with your physical body and while in this form you may only deal damage to 'ghosts' or through an active mind link (mind damage only in the second case.)
+		return ([[Activate to project your mind from your body for %d turns.  In this state you're invisible (+%d power), can see invisible and stealthed creatures (+%d detection power), can move through walls, and do not need air to survive.
+		All damage you suffer is shared with your physical body, and while in this form you may only deal damage to 'ghosts' or through an active mind link (mind damage only in the second case.)
 		To return to your body, simply release control of the projection.]]):format(duration, power/2, power)
 	end,
 }
@@ -291,8 +291,8 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getBonusDamage(self, t)
 		local range = self:getTalentRange(t) * 2
-		return ([[Link minds with the target.  While your minds are linked you'll inflict %d%% more mind damage to the target and gain telepathy to it's creature type.
-		Only one mindlink can be maintained at a time and the effect will break if the target dies or goes beyond range (%d)).
-		The mind damage bonus will scale with your mindpower.]]):format(damage, range)
+		return ([[Link minds with the target.  While your minds are linked, you'll inflict %d%% more mind damage to the target and gain telepathy to it's creature type.
+		Only one mindlink can be maintained at a time, and the effect will break if the target dies or goes beyond range (%d)).
+		The mind damage bonus will scale with your Mindpower.]]):format(damage, range)
 	end,
 }

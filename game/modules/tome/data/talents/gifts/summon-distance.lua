@@ -36,8 +36,8 @@ newTalent{ short_name = "RITCH_FLAMESPITTER_BOLT",
 		return true
 	end,
 	info = function(self, t)
-		return ([[Spits a bolt of fire doing %0.2f fire damage.
-		The damage will increase with mindpower.]]):format(damDesc(self, DamageType.FIRE, self:combatTalentMindDamage(t, 8, 120)))
+		return ([[Spits a bolt of fire, doing %0.2f fire damage.
+		The damage will increase with your Mindpower.]]):format(damDesc(self, DamageType.FIRE, self:combatTalentMindDamage(t, 8, 120)))
 	end,
 }
 
@@ -97,7 +97,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Breathe acid on your foes, doing %0.2f damage.
-		The damage will increase with the Willpower stat]]):format(damDesc(self, DamageType.ACID, self:combatTalentStatDamage(t, "wil", 30, 430)))
+		The damage will increase with your Willpower.]]):format(damDesc(self, DamageType.ACID, self:combatTalentStatDamage(t, "wil", 30, 430)))
 	end,
 }
 
@@ -130,7 +130,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Breathe lightning on your foes, doing %d to %d damage.
-		The damage will increase with the Willpower stat]]):
+		The damage will increase with your Willpower.]]):
 		format(
 			damDesc(self, DamageType.LIGHTNING, (self:combatTalentStatDamage(t, "wil", 30, 500)) / 3),
 			damDesc(self, DamageType.LIGHTNING, self:combatTalentStatDamage(t, "wil", 30, 500))
@@ -164,7 +164,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Breathe poison on your foes, doing %d damage over a few turns.
-		The damage will increase with the Willpower stat]]):format(damDesc(self, DamageType.NATURE, self:combatTalentStatDamage(t, "wil", 30, 460)))
+		The damage will increase with your Willpower.]]):format(damDesc(self, DamageType.NATURE, self:combatTalentStatDamage(t, "wil", 30, 460)))
 	end,
 }
 
@@ -206,7 +206,7 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		return ([[A furious ice storm rages around the user doing %0.2f cold damage in a radius of 3 each turn for %d turns.
 		It has 25%% chance to freeze damaged targets.
-		The damage and duration will increase with the Willpower stat]]):format(damDesc(self, DamageType.COLD, damage), duration)
+		The damage and duration will increase with your Willpower.]]):format(damDesc(self, DamageType.COLD, damage), duration)
 	end,
 }
 
@@ -298,9 +298,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Summon a Ritch Flamespitter for %d turns to burn your foes to death. Flamespitters are really weak in melee and die easily, but they can burn your foes from afar.
-		It will get %d willpower, %d cunning and %d constitution.
+		It will get %d Willpower, %d Cunning and %d Constitution.
 		Your summons inherit some of your stats: increased damage%%, stun/pin/confusion/blindness resistance, armour penetration.
-		Willpower stat will increase with your Mindpower stat.]])
+		Their Willpower and Cunning will increase with your Mindpower.]])
 		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
 		15 + (self:combatMindpower(2) * self:getTalentLevel(t) / 5),
 		15 + (self:combatMindpower(1.7) * self:getTalentLevel(t) / 5),
@@ -404,9 +404,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Summon a 3-headed Hydra for %d turns to destroy your foes. 3-headed hydras are able to breathe poison, acid and lightning.
-		It will get %d willpower and %d constitution and 18 strength.
+		It will get %d Willpower, %d Constitution and 18 Strength.
 		Your summons inherit some of your stats: increased damage%%, stun/pin/confusion/blindness resistance, armour penetration.
-		Willpower stat will increase with your Mindpower stat.]])
+		Their Willpower will increase with your Mindpower.]])
 		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
 		15 + (self:combatMindpower(1.6) * self:getTalentLevel(t) / 5),
 		10 + self:getTalentLevel(t) * 2 + self:getTalentLevelRaw(self.T_RESILIENCE)*2)
@@ -502,10 +502,10 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Summon a Rimebark for %d turns to harass your foes. Rimebarks can not move but they have a permanent ice storm around them, damaging and freezing anything coming close in a radius of 3.
-		It will get %d willpower, %d cunning and %d constitution.
+		return ([[Summon a Rimebark for %d turns to harass your foes. Rimebarks cannot move, but they have a permanent ice storm around them, damaging and freezing anything coming close in a radius of 3.
+		It will get %d Willpower, %d Cunning and %d Constitution.
 		Your summons inherit some of your stats: increased damage%%, stun/pin/confusion/blindness resistance, armour penetration.
-		Willpower stat will increase with your Mindpower stat.]])
+		Their Willpower and Cunning will increase with your Mindpower.]])
 		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
 		15 + (self:combatMindpower(2) * self:getTalentLevel(t) / 5),
 		15 + (self:combatMindpower(1.6) * self:getTalentLevel(t) / 5),
@@ -641,9 +641,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Summon a Fire Drake for %d turns to burn and crush your foes to death. Fire Drakes are behemoths that can burn your foes from afar with their fiery breath.
-		It will get %d strength, %d constitution and 38 willpower.
+		It will get %d Strength, %d Constitution and 38 Willpower.
 		Your summons inherit some of your stats: increased damage%%, stun/pin/confusion/blindness resistance, armour penetration.
-		Strength stat will increase with your Mindpower stat.]])
+		Their Strength and Constitution will increase with your Mindpower.]])
 		:format(math.ceil(self:getTalentLevel(t)) + 2 + self:getTalentLevelRaw(self.T_RESILIENCE),
 		15 + (self:combatMindpower(2) * self:getTalentLevel(t) / 5),
 		20 + (self:combatMindpower(1.5) * self:getTalentLevel(t) / 5) + self:getTalentLevelRaw(self.T_RESILIENCE) * 2)

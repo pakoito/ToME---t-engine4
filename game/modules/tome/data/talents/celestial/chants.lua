@@ -62,10 +62,10 @@ newTalent{
 	info = function(self, t)
 		local saves = t.getResists(self, t)
 		local damageonmeleehit = t.getDamageOnMeleeHit(self, t)
-		return ([[Chant the glory of the sun, granting you %d physical and spell save.
-		In addition it surrounds you with a shield of light, damaging anything that attacks you for %0.2f light damage.
+		return ([[You chant the glory of the Sun, granting you %d Physical Save and Spell Save.
+		In addition, this talent surrounds you with a shield of light, dealing %0.2f light damage to anything that attacks you.
 		You may only have one Chant active at once.
-		The saves and damage will increase with the Magic stat]]):
+		The effects will increase with your Spellpower.]]):
 		format(saves, damDesc(self, DamageType.LIGHT, damageonmeleehit))
 	end,
 }
@@ -103,10 +103,10 @@ newTalent{
 	info = function(self, t)
 		local physicalresistance = t.getPhysicalResistance(self, t)
 		local damageonmeleehit = t.getDamageOnMeleeHit(self, t)
-		return ([[Chant the glory of the sun, granting you %d%% physical damage resistance.
-		In addition it surrounds you with a shield of light, damaging anything that attacks you for %0.2f light damage.
+		return ([[You chant the glory of the Sun, granting you %d%% physical damage resistance.
+		In addition, this talent surrounds you with a shield of light, dealing %0.2f light damage to anything that attacks you.
 		You may only have one Chant active at once.
-		The resistance and damage will increase with the Magic stat]]):
+		The effects will increase with your Spellpower.]]):
 		format(physicalresistance, damDesc(self, DamageType.LIGHT, damageonmeleehit))
 	end,
 }
@@ -150,10 +150,10 @@ newTalent{
 	info = function(self, t)
 		local resists = t.getResists(self, t)
 		local damage = t.getDamageOnMeleeHit(self, t)
-		return ([[Chant the glory of the sun, granting you %d%% elemental resistances.
-		In addition it surrounds you with a shield of light, damaging anything that attacks you for %0.2f light damage.
+		return ([[You chant the glory of the Sun, granting you %d%% fire, lightning, acid and cold damage resistance.
+		In addition, this talent surrounds you with a shield of light, dealing %0.2f light damage to anything that attacks you.
 		You may only have one Chant active at once.
-		The resistance and damage will increase with the Magic stat]]):
+		The effects will increase with your Spellpower.]]):
 		format(resists, damDesc(self, DamageType.LIGHT, damage))
 	end,
 }
@@ -195,11 +195,11 @@ newTalent{
 		local damageinc = t.getLightDamageIncrease(self, t)
 		local damage = t.getDamageOnMeleeHit(self, t)
 		local lite = t.getLite(self, t)
-		return ([[Chant the glory of the sun, granting you %d%% more light damage.
-		In addition it surrounds you with a shield of light, damaging anything that attacks you for %0.2f light damage.
+		return ([[You chant the glory of the Sun, empowering your light elemental attacks so that they do %d%% additional light damage.
+		In addition, this talent surrounds you with a shield of light, dealing %0.2f light damage to anything that attacks you.
 		Your lite radius is also increased by %d.
 		You may only have one Chant active at once.
-		The effects will increase with the Magic stat]]):
+		The effects will increase with your Spellpower.]]):
 		format(damageinc, damDesc(self, DamageType.LIGHT, damage), lite)
 	end,
 }

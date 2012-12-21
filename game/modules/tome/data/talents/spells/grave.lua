@@ -51,7 +51,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local radius = self:getTalentRadius(t)
-		return ([[Conjures up a bolt of cold moving toward the target that explodes into a chilly circle of death doing %0.2f cold damage in a radius of %d.
+		return ([[Conjures up a bolt of cold that moves toward the target and explodes into a chilly circle of death, doing %0.2f cold damage in a radius of %d.
 		The damage will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.COLD, damage), radius)
 	end,
@@ -316,7 +316,7 @@ newTalent{
 		local radius = self:getTalentRadius(t)
 		local damage = t.getDamage(self, t)
 		local darkCount = t.getDarkCount(self, t)
-		return ([[Cold Flames slowly spread from %d spots in a radius of %d around the targeted location. The flames deal %0.2f cold damage and has a chance of freezing.
+		return ([[Cold Flames slowly spread from %d spots in a radius of %d around the targeted location. The flames deal %0.2f cold damage, and have a chance of freezing.
 		Damage improves with your Spellpower.]]):format(darkCount, radius, damDesc(self, DamageType.COLD, damage))
 	end,
 }
@@ -347,7 +347,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local chance, val = t.getParams(self, t)
-		return ([[Vampiric energies fill you; each time you deal damage you have %d%% chance to heal for %d%% of the damage done.
+		return ([[Vampiric energies fill you; each time you deal damage, you have %d%% chance to heal for %d%% of the damage done.
 		The absorption percent will increase with your Spellpower.]]):
 		format(chance, val)
 	end,

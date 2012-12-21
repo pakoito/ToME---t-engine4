@@ -78,9 +78,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damagemod = t.getDamageMod(self, t)
-		return ([[Channel raw mana through your staff, projecting a bolt of your staff's damage type doing %d%% staff damage.
-		The bolt will only hurt hostile targets and pass safely through friendly ones.
-		This attack always has a 100%% chance to hit and ignores target armour.]]):
+		return ([[Channel raw mana through your staff, projecting a bolt of your staff's damage type, doing %d%% staff damage.
+		The bolt will only hurt hostile targets, and pass safely through friendly ones.
+		This attack always has a 100%% chance to hit, and ignores the target's Armour.]]):
 		format(damagemod * 100)
 	end,
 }
@@ -128,7 +128,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local defense = t.getDefense(self, t)
-		return ([[Adopt a defensive posture, increasing your defense and armour by %d.]]):
+		return ([[Adopt a defensive posture, increasing your Defense and Armour by %d.]]):
 		format(defense)
 	end,
 }
@@ -179,7 +179,7 @@ newTalent{
 		local dazedur = t.getDazeDuration(self, t)
 		return ([[Hit a target for %d%% melee damage and stun it for %d turns.
 		Stun chance will improve with talent level.
-		At level 5 this attack can not miss.]]):
+		At level 5, this attack can not miss.]]):
 		format(100 * damage, dazedur)
 	end,
 }

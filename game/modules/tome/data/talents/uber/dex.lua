@@ -30,7 +30,7 @@ uberTalent{
 		return self:attr("huge_party")
 	end} },
 	info = function(self, t)
-		return ([[You are used to a crowded party, you can swap place with friendly creatures for only one tenth of a turn.]])
+		return ([[You are used to a crowded party; you can swap place with friendly creatures in only one tenth of a turn.]])
 		:format()
 	end,
 }
@@ -47,8 +47,8 @@ uberTalent{
 		self:attr("quick_equip_cooldown", -1)
 	end,
 	info = function(self, t)
-		return ([[You have very agile hands, swaping equipment sets (default q key) takes no turn.
-		Also the cooldown for equiping activable equipment is removed.]])
+		return ([[You have very agile hands; swapping equipment sets (default q key) takes no time.
+		Also the cooldown for equipping activatable equipment is removed.]])
 		:format()
 	end,
 }
@@ -79,7 +79,7 @@ uberTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You spin madly in a gust of wind, dealing 220%% weapon damage to all foes in a radius 2 and disarming them for 4 turns.]])
+		return ([[You spin madly, generating a sharp gust of wind with your weapon, dealing 220%% weapon damage to all foes within radius 2 and disarming them for 4 turns.]])
 		:format()
 	end,
 }
@@ -99,8 +99,8 @@ uberTalent{
 		self:recomputeGlobalSpeed()
 	end,
 	info = function(self, t)
-		return ([[You are attuned wih Nature and she helps you in your fight against the arcane forces.
-		You gain 15%% permanent global speed and avoidance of pressure traps.]])
+		return ([[You are attuned wih Nature, and she helps you in your fight against the arcane forces.
+		You gain 15%% permanent global speed, and do not trigger pressure traps.]])
 		:format()
 	end,
 }
@@ -156,7 +156,7 @@ uberTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You jump accurately to the target, dealing 200%% weapon damage to all foes in a radius 1 on impact and dazing them for 3 turns.]])
+		return ([[You jump accurately to the target, dealing 200%% weapon damage to all foes within radius 1 on impact and dazing them for 3 turns.]])
 		:format()
 	end,
 }
@@ -190,8 +190,8 @@ uberTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You have learnt to take a few hits when needed, you know how to flow with them, reducing all physical damage by 10%%.
-		When you get hit by melee or archery you go back one tile (this can only happen once per turn) for free and gain 200%% movement speed for a turn.]])
+		return ([[You have learnt to take a few hits when needed and can flow with the tide of battle, reducing all physical damage by 10%%.
+		When you get hit by a melee or archery attack, you go back one tile (this can only happen once per turn) for free and gain 200%% movement speed for a turn.]])
 		:format()
 	end,
 }

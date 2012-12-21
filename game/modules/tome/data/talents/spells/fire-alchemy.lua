@@ -90,7 +90,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[Throw a smoke bomb, blocking line of sight. The smoke dissipates after %d turns.
+		return ([[Throw a smoke bomb, blocking everyone's line of sight. The smoke dissipates after %d turns.
 		Duration will increase with your Spellpower.]]):
 		format(duration)
 	end,
@@ -133,7 +133,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[A furious fire storm rages around the caster doing %0.2f fire damage in a radius of 3 each turn for %d turns.
+		return ([[A furious fire storm rages around the caster, doing %0.2f fire damage in a radius of 3 each turn for %d turns.
 		You closely control the firestorm, preventing it from harming your party members.
 		The damage and duration will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.FIRE, damage), duration)
@@ -203,7 +203,7 @@ newTalent{
 		local insightdam = t.getFireDamageInSight(self, t)
 		local res = t.getResistance(self, t)
 		local manadrain = t.getManaDrain(self, t)
-		return ([[Turn your body into pure flame, increasing your fire resistance by %d%%, burning any creatures attacking you for %0.2f fire damage and projecting random slow-moving fire bolts at targets in sight doing %0.2f fire damage.
+		return ([[Turn your body into pure flame, increasing your fire resistance by %d%%, burning any creatures attacking you for %0.2f fire damage, and projecting random slow-moving fire bolts at targets in sight, doing %0.2f fire damage with each bolt.
 		This powerful spell drains %0.2f mana while active.
 		The damage and resistance will increase with your Spellpower.]]):
 		format(res,onhitdam,insightdam,-manadrain)

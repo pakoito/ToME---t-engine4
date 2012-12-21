@@ -82,8 +82,8 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local radius = self:getTalentRadius(t)
-		return ([[Blast a wave of cold all around you with radius %d, doing %0.2f cold damage and freezing creatures to the ground for 4 turns.
-		Affected creatures can still act but not move.
+		return ([[Blast a wave of cold all around you with a radius of %d, doing %0.2f cold damage and freezing creatures to the ground for 4 turns.
+		Affected creatures can still act, but cannot move.
 		The damage will increase with your Spellpower.]]):format(radius, damDesc(self, DamageType.COLD, damage))
 	end,
 }
@@ -138,7 +138,7 @@ newTalent{
 		* Critters will be instantly killed
 		* +50%% critical chance against Normal rank
 		* +25%% critical chance against Elites or Bosses
-		At most it will affect %d foes.
+		At most, it will affect %d foes.
 		The damage will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.COLD, damage), targetcount)
 	end,

@@ -62,7 +62,7 @@ newTalent{
 	info = function(self, t)
 		local dam = damDesc(self, DamageType.LIGHTNING, t.getDamage(self, t))
 		local radius = self:getTalentRadius(t)
-		return ([[Lightning emanates from you in a circular wave with radius %d, doing %0.2f to %0.2f lightning damage and possibly dazing (75%% chance).
+		return ([[Lightning emanates from you in a circular wave with radius %d, doing %0.2f to %0.2f lightning damage and possibly dazing anyone affected (75%% chance).
 		The damage will increase with your Spellpower.]]):format(radius, dam / 3, dam)
 	end,
 }
@@ -130,8 +130,8 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local chance = t.getChance(self, t)
 		local radius = t.getRadius(self, t)
-		return ([[Each time one of your lightning spells dazes a target it has a %d%% chance to creates a chain reaction that summons a mighty Hurricane that lasts for 10 turns around the target with radius of %d.
-		Each turn all creatures around it will take %0.2f to %0.2f lightning damage.
+		return ([[Each time one of your lightning spells dazes a target, it has a %d%% chance to creates a chain reaction that summons a mighty Hurricane that lasts for 10 turns around the target with a radius of %d.
+		Each turn, the afflicted creature and all creatures around it will take %0.2f to %0.2f lightning damage.
 		The damage will increase with your Spellpower.]]):format(chance, radius, damage / 3, damage)
 	end,
 }

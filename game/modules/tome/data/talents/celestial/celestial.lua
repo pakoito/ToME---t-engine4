@@ -19,16 +19,16 @@
 
 -- Corruptions
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="celestial/guardian", name = "guardian", min_lev = 10, description = "Your devotion grants you additional protection." }
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="celestial/chants", name = "chants", generic = true, description = "Chant the glory of the sun." }
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="celestial/light", name = "light", generic = true, description = "Invoke the power of light to heal and mend." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="celestial/chants", name = "chants", generic = true, description = "Chant the glory of the Sun." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="celestial/light", name = "light", generic = true, description = "Invoke the power of the light to heal and mend." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="celestial/combat", name = "combat", description = "Your devotion allows you to combat your foes with indomitable determination." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="celestial/sun", name = "sun", description = "Summon the power of the Sun to burn your foes." }
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="celestial/glyphs", name = "glyphs", min_lev = 10, description = "Bind the holy powers into glyphs to trap your foes." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="celestial/glyphs", name = "glyphs", min_lev = 10, description = "Bind the brilliant powers into glyphs to trap your foes." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="celestial/twilight", name = "twilight", description = "Stand between the darkness and the light, harnessing both." }
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="celestial/star-fury", name = "star fury", description = "Call fury of the stars and moon to destroy your foes." }
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="celestial/hymns", name = "hymns", generic = true, description = "Chant the glory of the moon." }
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="celestial/circles", name = "circles", min_lev = 10, description = "Bind the power of the moon into circles at your feet." }
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="celestial/eclipse", name = "eclipse", description = "The moment of the Eclipse is the moment of Truth, when Sun and Moon are in tandem and the energies of the world hang in balance. Intense focus allows the greatest Anorithils to harness these energies to unleash devastating forces.." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="celestial/star-fury", name = "star fury", description = "Call the fury of the Stars and the Moon to destroy your foes." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="celestial/hymns", name = "hymns", generic = true, description = "Chant the glory of the Moon." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="celestial/circles", name = "circles", min_lev = 10, description = "Bind the power of the Moon into circles at your feet." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="celestial/eclipse", name = "eclipse", description = "The moment of the Eclipse is the moment of Truth, when Sun and Moon are in tandem and the energies of the world hang in the balance. Intense focus allows the greatest Anorithils to harness these energies to unleash devastating forces..." }
 
 
 newTalentType{ no_silence=true, is_spell=true, type="celestial/other", name = "other", description = "Various celestial talents." }

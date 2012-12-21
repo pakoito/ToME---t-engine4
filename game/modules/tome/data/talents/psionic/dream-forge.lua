@@ -87,11 +87,11 @@ newTalent{
 	end,
 	info = function(self, t)
 		local power = t.getPower(self, t)
-		return ([[When an attack would deal 15%% or more of your effective total health you forge the Dream Shield to protect yourself, reducing the damage of all attacks of that type by %0.2f for the next turn.
-		You may block multiple damage types at one time but the base damage threshold increases by 15%% per damage type the shield is already blocking.
+		return ([[When an attack would deal 15%% or more of your effective total health, you forge the Dream Shield to protect yourself, reducing the damage of all attacks of that type by %0.2f for the next turn.
+		You may block multiple damage types at one time, but the base damage threshold increases by 15%% per damage type the shield is already blocking.
 		If you block all of an attack's damage, the attacker will be vulnerable to a deadly counterstrike (a normal melee or ranged attack will instead deal 200%% damage) for one turn.
-		At talent level five the block effect will last two turns.
-		This talent scales with your mindpower.]]):format(power)
+		At talent level 5, the block effect will last two turns.
+		This talent scales with your Mindpower.]]):format(power)
 	end,
 }
 
@@ -174,8 +174,8 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local forge_damage = t.getForgeDamage(self, t)/2
 		return ([[Release the bellows of the forge upon your surroundings, inflicting %0.2f mind damage, %0.2f burning damage, and knocking back your enemies in a radius %d cone.
-		Empty terrain may be changed (50%% chance) for %d turns into forge walls that block movement and inflict %0.2f mind and %0.2f fire damage on nearby enemies.
-		The damage and knockback chance will scale with your mindpower.]]):
+		Empty terrain may be changed (50%% chance) for %d turns into forge walls, which block movement and inflict %0.2f mind and %0.2f fire damage on nearby enemies.
+		The damage and knockback chance will scale with your Mindpower.]]):
 		format(damDesc(self, DamageType.MIND, blast_damage), damDesc(self, DamageType.FIRE, blast_damage), radius, duration, damDesc(self, DamageType.MIND, forge_damage), damDesc(self, DamageType.FIRE, forge_damage))
 	end,
 }
@@ -193,8 +193,8 @@ newTalent{
 		local armor = t.getArmor(self, t)
 		local defense = t.getDefense(self, t)
 		local psi = t.getPsiRegen(self, t)
-		return([[Your Forge Shield talent now increses your armor by %d, your defense by %d, and gives you %0.2f psi when you're hit by a melee or ranged attack.
-		The bonuses will scale with your mindpower.]]):format(armor, defense, psi)
+		return([[Your Forge Shield talent now increses your Armour by %d, your Defense by %d, and gives you %0.2f psi when you're hit by a melee or ranged attack.
+		The bonuses will scale with your Mindpower.]]):format(armor, defense, psi)
 	end,
 }
 
@@ -257,11 +257,11 @@ newTalent{
 		local power = t.getPower(self, t)
 		local duration = t.getDuration(self, t)
 		local chance = t.getChance(self, t)
-		return ([[The pounding forge of thought in your mind is released upon your surroundings.  Each turn that you remain stationary you'll strike the dreamforge, inflicting mind and burning damage on enemies around you.
+		return ([[The pounding forge of thought in your mind is released upon your surroundings.  Each turn that you remain stationary, you'll strike the dreamforge, inflicting mind and burning damage on enemies around you.
 		The effect will build over five turns, until it reaches a maximum radius of %d, maximum mind damage of %0.2f, and maximum burning damage of %0.2f.
-		At this point you'll begin breaking the dreams of enemies who hear the forge, reducing their mental save by %d and giving them a %d%% chance of spell failure for %d turns due too the tremendous echo in their minds.
+		At this point you'll begin breaking the dreams of enemies who hear the forge, reducing their Mental Save by %d and giving them a %d%% chance of spell failure for %d turns due to the tremendous echo in their minds.
 		Broken Dreams has a %d%% chance to brainlock your enemies.
-		The damage and dream breaking effect will scale with your mindpower.]]):
+		The damage and dream breaking effect will scale with your Mindpower.]]):
 		format(radius, damDesc(self, DamageType.MIND, damage), damDesc(self, DamageType.FIRE, damage), power, power, duration, chance)
 	end,
 }

@@ -42,7 +42,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[You call upon the mighty claw of a cold drake, doing %d%% weapon damage as cold damage.
-		At level 4 the attack becomes pure ice, giving a chance to freeze the target.
+		At level 4, the attack becomes pure ice, giving a chance to freeze the target.
 		Each point in cold drake talents also increases your cold resistance by 1%%.]]):format(100 * (1.4 + self:getTalentLevel(t) / 8))
 	end,
 }
@@ -73,9 +73,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Your skin forms icy scales, damaging all that hit you for %0.2f cold damage and increasing your armor by %d.
+		return ([[Your skin forms icy scales, damaging anyone that hits you for %0.2f cold damage and increasing your Armour by %d.
 		Each point in cold drake talents also increases your cold resistance by 1%%.
-		The damage and defense will scale with your Willpower stat.]]):format(damDesc(self, DamageType.COLD, t.getDamage(self, t)), t.getArmor(self, t))
+		The damage and Armor will scale with your Willpower.]]):format(damDesc(self, DamageType.COLD, t.getDamage(self, t)), t.getArmor(self, t))
 	end,
 }
 
@@ -174,8 +174,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You breathe ice in a frontal cone of radius %d. Any target caught in the area will take %0.2f cold damage and has a 25%% to be frozen for a few turns(higher rank enemies will be frozen for a shorter time).
-		The damage will increase with the Strength stat.
+		return ([[You breathe ice in a frontal cone of radius %d. Any target caught in the area will take %0.2f cold damage, and has a 25%% to be frozen for a few turns (higher rank enemies will be frozen for a shorter time).
+		The damage will increase with your Strength.
 		Each point in cold drake talents also increases your cold resistance by 1%%.]]):format(self:getTalentRadius(t), damDesc(self, DamageType.COLD, self:combatTalentStatDamage(t, "str", 30, 430)))
 	end,
 }

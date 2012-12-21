@@ -114,10 +114,10 @@ newTalent{
 	end,
 	info = function(self, t)
 		local dam = t.getDamage(self, t)
-		return ([[You focus the aether into a spinning beam of arcane energies doing %0.2f arcane damage and having 25%% chance to silence the creatures.
+		return ([[You focus the aether into a spinning beam of arcane energies, doing %0.2f arcane damage and having 25%% chance to silence the creatures it pierces.
 		The beam will also damage its epicenter each turn for 10%% of the damage (but it will not silence).
 		The beam spins with incredible speed (1600%%).
-		The damage will increase with Spellpower.]]):
+		The damage will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.ARCANE, dam))
 	end,
 }
@@ -157,7 +157,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		return ([[Rupture reality to temporarily open a passage to the aether, triggering %d random arcane explosions in the target area.
-		Each explosion does %0.2f arcane damage in radius 2 and will each trigger at one turn of interval.
+		Each explosion does %0.2f arcane damage in radius 2, and will each trigger at one turn intervals.
 		The damage will increase with your Spellpower.]]):
 		format(t.getNb(self, t), damDesc(self, DamageType.ARCANE, damage))
 	end,
@@ -183,7 +183,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Fill yourself with aether forces, completely surrounding your body for %d turns.
-		While active you can only cast arcane or aether spells, your cooldown for them is divived by 3, your arcane damage is increased by 25%%, your Disruption Shield can be used at any time and your maximum mana is increased by 33%%.]]):
+		While active, you can only cast arcane or aether spells, your cooldown for them is divived by 3, your arcane damage is increased by 25%%, your Disruption Shield can be used at any time, and your maximum mana is increased by 33%%.]]):
 		format(t.getNb(self, t))
 	end,
 }

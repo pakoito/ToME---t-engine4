@@ -54,7 +54,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Gather your will and brutally smash the target with your mainhand weapon, doing %d%% weapon damage. If Conduit is active, it will extend to include your mainhand weapon for this attack. This attack uses your Willpower and Cunning instead of Strength and Dexterity to determine accuracy and damage.]]):
+		return ([[Gather your will, and brutally smash the target with your mainhand weapon, doing %d%% weapon damage. If Conduit is active, it will extend to include your mainhand weapon for this attack. This attack uses your Willpower and Cunning instead of Strength and Dexterity to determine Accuracy and damage.]]):
 		format(100 * self:combatTalentWeaponDamage(t, 1.8, 3))
 	end,
 }

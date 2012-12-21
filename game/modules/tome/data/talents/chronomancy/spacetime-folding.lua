@@ -37,7 +37,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local paradox_reduction = t.getParadoxReduction(self, t)
-		return ([[Folds a single dimension of your weapons (or ammo), adding %0.2f temporal damage to your strikes (%0.2f for ammo) and reducing your Paradox by %0.1f every time you land an attack (%0.1f for ammo).
+		return ([[Folds a single dimension of your weapons (or ammo) upon itself, adding %0.2f temporal damage to your strikes (%0.2f for ammo) and reducing your Paradox by %0.1f every time you land an attack (%0.1f for ammo).
 		The damage will increase with your Spellpower.]]):format(damDesc(self, DamageType.TEMPORAL, damage), damDesc(self, DamageType.TEMPORAL, damage * 2), paradox_reduction, paradox_reduction * 2)
 	end,
 }
@@ -108,7 +108,7 @@ newTalent{
 		local duration = t.getConfuseDuration(self, t)
 		local power = t.getConfuseEfficency(self, t)
 		return ([[You manipulate the spacetime continuum in such a way that you switch places with another creature with in a range of %d.  The targeted creature will be confused (power %d%%) for %d turns.
-		The spells hit chance will increase with your Spellpower.]]):format (range, power, duration)
+		The spell's hit chance will increase with your Spellpower.]]):format (range, power, duration)
 	end,
 }
 
@@ -129,7 +129,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Space bends around you, giving you a %d%% chance to displace half of any damage you recieve onto a random enemy within a range of %d.
+		return ([[Space bends around you, giving you a %d%% chance to displace half of any damage you recieve onto a random enemy within radius %d.
 		]]):format(5 + self:getTalentLevel(t) * 5, self:getTalentLevelRaw(t) * 2)
 	end,
 }
@@ -186,8 +186,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Violently fold the space between yourself and another point within range.  You move to the target location and leave a temporal wake behind that stuns for 4 turns and inflicts %0.2f temporal damage to everything in the path.
-		The damage will scale with your Paradox and Spellpower and the range will increase with the talent level.]]):
+		return ([[Violently fold the space between yourself and another point within range.  You move to the target location, and leave a temporal wake behind that stuns for 4 turns and inflicts %0.2f temporal damage to everything in the path.
+		The damage will scale with your Paradox and Spellpower, and the range will increase with the talent level.]]):
 		format(damDesc(self, DamageType.TEMPORAL, damage))
 	end,
 }

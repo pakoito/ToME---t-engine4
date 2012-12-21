@@ -143,7 +143,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Instill fear in your target, causing one of several possible fears that lasts for %d turns. There is also a 25%% chance of instilling fear in any foe in a radius of %d. The target can save versus Mindpower to resist the effect and can be affected by multiple fears.  You gain 2 new fears: The Paranoid effect gives the target an %d%% chance to physically attack a nearby creature, friend or foe. If hit, their target will be afflicted with paranoia as well. The Despair effect reduces the targets resistance to all damage by %d%%.
+		return ([[Instill fear in your target, causing one of several possible fears that lasts for %d turns. There is also a 25%% chance of instilling fear in any foe in a radius of %d. The target can save versus Mindpower to resist the effect, and can be affected by multiple fears.  
+		You gain 2 new fears: The Paranoid effect gives the target an %d%% chance to physically attack a nearby creature, friend or foe. If hit, their target will be afflicted with Paranoia as well. The Despair effect reduces the target's resistance to all damage by %d%%.
 		Fear effects improve with your Mindpower.]]):format(t.getDuration(self, t), self:getTalentRadius(t),
 		t.getParanoidAttackChance(self, t),
 		-t.getDespairResistAllChange(self, t))
@@ -174,7 +175,8 @@ newTalent{
 		local range = self:getTalentRange(t)
 		local turnsUntilTrigger = t.getTurnsUntilTrigger(self, t)
 		local duration = tInstillFear.getDuration(self, tInstillFear)
-		return ([[Heighten the fears of everyone around you. Any foe experiencing at least one fear who remains in a radius of %d and in sight of you for %d (non-consecutive) turns will gain a new fear that lasts for %d turns. The target can save versus Mindpower to resist the effect and each heightened fear reduces the chances of another by 10%%. You gain 2 new fears: The Terrified effect causes talents and attacks to fail %d%% of the time. The Distressed effect reduces all saves by %d.
+		return ([[Heighten the fears of everyone around you. Any foe experiencing at least one fear, who remains in a radius of %d and in sight of you for %d (non-consecutive) turns, will gain a new fear that lasts for %d turns. The target can save versus Mindpower to resist the effect, and each heightened fear reduces the chances of another by 10%%. 
+		You gain 2 new fears: The Terrified effect causes talents and attacks to fail %d%% of the time. The Distressed effect reduces all saves by %d.
 		Fear effects improve with your Mindpower.]]):format(range, turnsUntilTrigger, duration,
 		t.getTerrifiedActionFailureChance(self, t),
 		-t.getDistressedSaveChange(self, t))
@@ -204,7 +206,8 @@ newTalent{
 		return self:combatTalentMindDamage(t, 40, 60)
 	end,
 	info = function(self, t)
-		return ([[Impose your tyranny on the minds of those who fear you. Your mindpower is increased by %d against foes who attempt to resist your fears. You gain 2 new fears: The Haunted effect causes each existing or new fear effect that the target suffers from to inflict %d mind damage. The Tormented effect causes %d apparitions to manifest and attack the target, inflicting %d mind damage each before disappearing.
+		return ([[Impose your tyranny on the minds of those who fear you. Your mindpower is increased by %d against foes who attempt to resist your fears. 
+		You gain 2 new fears: The Haunted effect causes each existing or new fear effect that the target suffers from to inflict %d mind damage. The Tormented effect causes %d apparitions to manifest and attack the target, inflicting %d mind damage each before disappearing.
 		Fear effects improve with your Mindpower.]]):format(t.getMindpowerChange(self, t),
 		t.getHauntedDamage(self, t),
 		t.getTormentedCount(self, t), t.getTormentedDamage(self, t))
@@ -252,6 +255,6 @@ newTalent{
 		local range = self:getTalentRange(t)
 		local duration = t.getDuration(self, t)
 		local chance = t.getChance(self, t)
-		return ([[Panic your enemies within a range of %d for %d turns. Anyone who fails to make a mental save has a %d%% chance each turn of trying to run from you.]]):format(range, duration, chance)
+		return ([[Panic your enemies within a range of %d for %d turns. Anyone who fails to make a mental save against your Mindpower has a %d%% chance each turn of trying to run away from you.]]):format(range, duration, chance)
 	end,
 }

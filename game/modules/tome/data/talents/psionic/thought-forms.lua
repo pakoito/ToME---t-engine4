@@ -268,9 +268,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		local stat = t.getStatBonus(self, t)
-		return ([[Forge a bowman clad in leather armor from your thoughts.  The bowman learns bow mastery, combat accuracy, steady shot, crippling shot, and rapid shot as it levels up and has %d improved strength, %d dexterity, and %d constitution.
+		return ([[Forge a bowman, clad in leather armor, from your thoughts.  The bowman learns Bow Mastery, Combat Accuracy, Steady Shot, Crippling Shot, and Rapid Shot as it levels up, and has +%d Strength, +%d Dexterity, and +%d Constitution.
 		Activating this talent will put all other thought-forms on cooldown.
-		The stat bonuses will improve with your mindpower.]]):format(stat/2, stat, stat/2)
+		The stat bonuses will improve with your Mindpower.]]):format(stat/2, stat, stat/2)
 	end,
 }
 
@@ -369,9 +369,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		local stat = t.getStatBonus(self, t)
-		return ([[Forge a warrior wielding a battle-axe from your thoughts.  The warrior learns weapon mastery, combat accuracy, berserker, death dance, and rush as it levels up and has %d improved strength, %d dexterity, and %d constitution.
+		return ([[Forge a warrior wielding a battle-axe from your thoughts.  The warrior learns Weapon Mastery, Combat Accuracy, Berserker, Death Dance, and Rush as it levels up, and has +%d Strength, +%d Dexterity, and +%d Constitution.
 		Activating this talent will put all other thought-forms on cooldown.
-		The stat bonuses will improve with your mindpower.]]):format(stat, stat/2, stat/2)
+		The stat bonuses will improve with your Mindpower.]]):format(stat, stat/2, stat/2)
 	end,
 }
 
@@ -472,9 +472,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		local stat = t.getStatBonus(self, t)
-		return ([[Forge a defender wielding a sword and shield from your thoughts.  The solider learns armor training, weapon mastery, combat accuracy, shield pummel, and shield wall as it levels up and has %d improved strength, %d dexterity, and %d constitution.
+		return ([[Forge a defender wielding a sword and shield from your thoughts.  The solider learns Armor Rraining, Weapon Mastery, Combat Accuracy, Shield Pummel, and Shield Wall as it levels up, and has +%d Strength, +%d Dexterity, and +%d Constitution.
 		Activating this talent will put all other thought-forms on cooldown.
-		The stat bonuses will improve with your mindpower.]]):format(stat/2, stat/2, stat)
+		The stat bonuses will improve with your Mindpower.]]):format(stat/2, stat/2, stat)
 	end,
 }
 
@@ -512,10 +512,10 @@ newTalent{
 	info = function(self, t)
 		local bonus = t.getStatBonus(self, t)
 		local range = self:getTalentRange(t)
-		return([[Forge a guardian from your thoughts alone.  Your guardian's primary stat will be improved by %d, it's two secondary stats by %d, and it will have magic, cunning, and willpower equal to your own.
-		At talent level one you may forge a mighty bowman clad in leather armor, at level three a powerful warrior wielding a two-handed weapon, and at level five a strong defender using a sword and shield.
-		Thought forms can only be maintained up to a range of %d and will rematerialize next to you if this range is exceeded.
-		Only one thought-form may be active at a time and the stat bonuses will improve with your mindpower.]]):format(bonus, bonus/2, range)
+		return([[Forge a guardian from your thoughts alone.  Your guardian's primary stat will be improved by %d, its two secondary stats by %d, and it will have Magic, Cunning, and Willpower equal to your own.
+		At talent level one, you may forge a mighty bowman clad in leather armor; at level three a powerful warrior wielding a two-handed weapon; and at level five a strong defender using a sword and shield.
+		Thought forms can only be maintained up to a range of %d, and will rematerialize next to you if this range is exceeded.
+		Only one thought-form may be active at a time, and the stat bonuses will improve with your Mindpower.]]):format(bonus, bonus/2, range)
 	end,
 }
 
@@ -604,10 +604,10 @@ newTalent{
 	info = function(self, t)
 		local bonus = t.getControlBonus(self, t)
 		local range = t.getRangeBonus(self, t)
-		return ([[Take direct control of your active thought-form, improving it's damage, attack speed, and maximum life by %d%% but leaving your body a defenseless shell.
-		At talent level one any Feedback your Thought-Forms gain will be given to you as well, at level three your Thought-Forms gain a bonus to all saves equal to your mental save, and at level five they gain a bonus to all damage equal to your bonus mind damage.
-		The secondary bonuses apply rather or not this talent is currently active.
-		The life, damage, and speed bonus will improve with your mindpower.]]):format(bonus, range)
+		return ([[Take direct control of your active thought-form, improving its damage, attack speed, and maximum life by %d%%, but leaving your body a defenseless shell.
+		At talent level 1, any Feedback your Thought-Forms gain will be given to you as well. At level 3, your Thought-Forms gain a bonus to all saves equal to your Mental Save. At level 5, they gain a bonus to all damage equal to your bonus mind damage.
+		The secondary bonuses apply whether or not this talent is currently active.
+		The life, damage, and speed bonus will improve with your Mindpower.]]):format(bonus, range)
 	end,
 }
 
@@ -625,7 +625,7 @@ newTalent{
 		local offense = t.getOffensePower(self, t)
 		local defense = t.getDefensePower(self, t)
 		local speed = t.getSpeedPower(self, t)
-		return([[You now gain %d%% mind speed while Thought-Form: Bowman is active, %d mind power while Thought-Form: Warrior is active, and %d%% resist all while Thought-Form: Defender is active. 
-		These bonuses scale with your mindpower.]]):format(speed, offense, defense, speed)
+		return([[You now gain %d%% mind speed while Thought-Form: Bowman is active, %d Mindpower while Thought-Form: Warrior is active, and %d%% resist all while Thought-Form: Defender is active. 
+		These bonuses scale with your Mindpower.]]):format(speed, offense, defense, speed)
 	end,
 }

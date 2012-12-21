@@ -81,7 +81,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local radius = self:getTalentRadius(t)
-		return ([[Destroys one of your summons, make it detonate in radius of %d.
+		return ([[Destroys one of your summons, making it detonate in radius of %d.
 		- Ritch Flamespitter: Explodes into a fireball
 		- Hydra: Explodes into a ball of lightning, acid or poison
 		- Rimebark: Explodes into an iceball
@@ -92,9 +92,9 @@ newTalent{
 		- Stone Golem: Knocks back all creatures
 		- Turtle: Grants a small shell shield to all friendly creatures
 		- Spider: Pins all foes around
-		In addition a random summon will come off cooldown.
+		In addition, a random summon will come off cooldown.
 		Hostile effects will not hit you or your other summons.
-		The effects improves with your Willpower.]]):format(radius)
+		The effects improve with your Willpower.]]):format(radius)
 	end,
 }
 

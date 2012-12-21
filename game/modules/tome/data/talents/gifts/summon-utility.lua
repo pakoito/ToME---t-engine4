@@ -55,7 +55,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Under the cover of your shell you take %d%% less damage for %d turns]]):format(34 + (math.min(6.3, self:getTalentLevel(t)) * 7), math.ceil(4 + self:getTalentLevel(t) * 0.7))
+		return ([[Under the cover of your shell, you take %d%% less damage for %d turns]]):format(34 + (math.min(6.3, self:getTalentLevel(t)) * 7), math.ceil(4 + self:getTalentLevel(t) * 0.7))
 	end,
 }
 
@@ -182,10 +182,10 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Summon a Turtle for %d turns to distract your foes. Turtles are resilient, but not very powerful. However, they will periodically force any foes to attack them and can protect themselves with their shell.
-		It will get %d constitution, %d dexterity and 18 willpower.
+		return ([[Summon a Turtle for %d turns to distract your foes. Turtles are resilient, but not very powerful. However, they will periodically force any foes to attack them, and can protect themselves with their shell.
+		It will get %d Constitution, %d Dexterity and 18 willpower.
 		Your summons inherit some of your stats: increased damage%%, stun/pin/confusion/blindness resistance, armour penetration.
-		Constitution stat will increase with your Mindpower stat.]])
+		Their Constitution will increase with your Mindpower.]])
 		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
 		15 + (self:combatMindpower(2.1) * self:getTalentLevel(t) / 5) + self:getTalentLevelRaw(self.T_RESILIENCE)*2,
 		10 + self:getTalentLevel(t) * 2)
@@ -287,9 +287,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Summon a Spider for %d turns to harass your foes. Spiders can poison your foes and throw webs to pin them to the ground.
-		It will get %d dexterity, %d strength, 18 willpower and %d constitution.
+		It will get %d Dexterity, %d Strength, 18 Willpower and %d Constitution.
 		Your summons inherit some of your stats: increased damage%%, stun/pin/confusion/blindness resistance, armour penetration.
-		Dexterity stat will increase with your Mindpower stat.]])
+		Their Dexterity will increase with your Mindpower.]])
 		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
 		15 + (self:combatMindpower(2) * self:getTalentLevel(t) / 5),
 		10 + self:getTalentLevel(t) * 2,
@@ -316,8 +316,8 @@ newTalent{
 	info = function(self, t)
 		local reduc = t.getReduc(self, t)
 		return ([[You focus yourself on nature, allowing you to summon creatures much faster (%d%% of a normal summon time) and with no chance to fail from high equilibrium for %d turns.
-		When activating this power a random summoning talent will come off cooldown.
-		Each time you summon the duration of the frantic summoning effect will reduce by 1.]]):
+		When activating this power, a random summoning talent will come off cooldown.
+		Each time you summon, the duration of the frantic summoning effect will reduce by 1.]]):
 		format(100 - reduc, t.getDuration(self, t))
 	end,
 }
@@ -330,9 +330,9 @@ newTalent{
 	points = 5,
 	info = function(self, t)
 		return ([[Allows you to take direct control of any of your summons.
-		The summons will appear on the interface, a simple click on them will let you switch control.
+		The summons will appear on the interface; a simple click on them will let you switch control.
 		You can also press control+tab to switch.
-		When taking control, your summon has its lifetime increased by %d turns and takes %d%% less damage.
+		When taking control, your summon has its lifetime increased by %d turns, and it takes %d%% less damage.
 		The damage reduction is based on your Cunning.]]):format(2 + self:getTalentLevel(t) * 3, self:getCun(7, true) * self:getTalentLevelRaw(t))
 	end,
 }

@@ -179,8 +179,8 @@ newTalent{
 			speed = self:combatSpeed(o.combat)
 			self.use_psi_combat = false
 		end
-		return ([[Allows you to wield a weapon telekinetically, directing it with your willpower and cunning rather than crude flesh. When activated, the telekinetically-wielded weapon will attack a random melee-range target each turn.
-		The telekinetically-wielded weapon uses Willpower in place of Strength and Cunning in place of Dexterity to determine attack and damage.
+		return ([[Allows you to wield a weapon telekinetically, directing it with your Willpower and Cunning rather than crude flesh. When activated, the telekinetically-wielded weapon will attack a random melee-range target each turn.
+		The telekinetically-wielded weapon uses Willpower in place of Strength, and Cunning in place of Dexterity, to determine Accuracy and damage.
 		Combat stats:
 		Accuracy: %d
 		Damage: %d

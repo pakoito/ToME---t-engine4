@@ -19,7 +19,7 @@
 
 -- Cursed
 newTalentType{ allow_random=true, type="cursed/slaughter", name = "slaughter", description = "Your weapon yearns for its next victim." }
-newTalentType{ allow_random=true, type="cursed/endless-hunt", name = "endless hunt", description = "Each day you lift your weary body and begin the unending hunt." }
+newTalentType{ allow_random=true, type="cursed/endless-hunt", name = "endless hunt", description = "Each day, you lift your weary body and begin the unending hunt." }
 newTalentType{ allow_random=true, type="cursed/strife", name = "strife", description = "The battlefield is your home; death and confusion, your comfort." }
 newTalentType{ allow_random=true, is_mind=true, type="cursed/gloom", name = "gloom", description = "All those in your sight must share your despair." }
 newTalentType{ allow_random=true, type="cursed/rampage", name = "rampage", description = "Let loose the hate that has grown within." }

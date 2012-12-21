@@ -30,7 +30,7 @@ uberTalent{
 		self:attr("spectral_shield", -1)
 	end,
 	info = function(self, t)
-		return ([[Infusing your shield with raw magic your Block can now block any damage type.]])
+		return ([[Infusing your shield with raw magic, your Block can now block any damage type.]])
 		:format()
 	end,
 }
@@ -51,7 +51,7 @@ uberTalent{
 	end,
 	info = function(self, t)
 		return ([[Create a thin layer of aether all around you. Any attack passing through will check arcane resistance instead of the incoming damage resistance.
-		In effect all your resistances are equal to 66%% of your arcane resistance.]])
+		In effect, all your resistances are equal to 66%% of your arcane resistance.]])
 		:format()
 	end,
 }
@@ -73,9 +73,9 @@ uberTalent{
 	info = function(self, t)
 		return ([[Your study of arcane forces has let you develop new traps and poisons (depending on which you know when learning this prodigy).
 		You can learn:
-		- Vulnerability Poison: reduces all resistances and deals arcane damage
-		- Gravitic Trap: each turn all foes in a radius 5 around it are pulled in and take temporal damage
-		You also permanently gain 20 spell save.]])
+		- Vulnerability Poison: reduces all resistances and deals arcane damage.
+		- Gravitic Trap: each turn, all foes in a radius 5 around it are pulled in and take temporal damage.
+		You also permanently gain 20 Spell Save.]])
 		:format()
 	end,
 }
@@ -85,7 +85,7 @@ uberTalent{
 	mode = "passive",
 	info = function(self, t)
 		return ([[You have learnt to harness your latent arcane powers, channeling them through your weapon.
-		Treats all weapons has having an additional 50%% magic modifier.]])
+		Treats all weapons as having an additional 50%% Magic modifier.]])
 		:format()
 	end,
 }
@@ -107,9 +107,9 @@ uberTalent{
 	end,
 	info = function(self, t)
 		return ([[You can wrap temporal threads around you, assuming the form of a telugoroth for 10 turns.
-		While in this form you gain pinning, bleeding, blindness and stun immunity, 30%% temporal resistance, your temporal damage bonus is set to your current highest damage bonus + 30%%, all damage you deal becomes temporal and 20%% temporal resistance penetration.
+		While in this form, you gain pinning, bleeding, blindness and stun immunity, 30%% temporal resistance, your temporal damage bonus is set to your current highest damage bonus + 30%%, all damage you deal becomes temporal, and 20%% temporal resistance penetration.
 		You also are able to cast two anomalies: Anomaly Rearrange and Anomaly Temporal Storm.
-		Transforming in this form will increase your paradox by 600 and revert it back at the end of the effect.]])
+		Transforming in this form will increase your paradox by 600, and revert it back at the end of the effect.]])
 		:format()
 	end,
 }
@@ -127,7 +127,7 @@ uberTalent{
 		return self:attr("summoned_times") and self:attr("summoned_times") >= 100
 	end} },
 	info = function(self, t)
-		return ([[You infuse blighted energies in all your summons, giving them all a new talent:
+		return ([[You infuse blighted energies into all your summons, giving them all a new talent:
 		- War Hound: Curse of Defenselessness
 		- Jelly: Vimsense
 		- Minotaur: Life Tap
@@ -150,7 +150,7 @@ uberTalent{
 		- Ghoul Rot ghoul: Rend
 		- Bloated Oozes: Bone Shield
 		- Mucus Oozes: Virulent Disease
-		- Other race or object-based summons might be affected too
+		- Other race or object-based summons might be affected, too.
 		]]):format()
 	end,
 }
@@ -178,8 +178,8 @@ uberTalent{
 		return nil -- We do not start the cooldown!
 	end,
 	info = function(self, t)
-		return ([[You can now control the near-past, upon using this prodigy you gain a temporal effect for 10 turns.
-		While his effect holds you can use the prodigy again to rewrite history.
+		return ([[You can now control the near-past; upon using this prodigy, you gain a temporal effect for 10 turns.
+		While this effect holds, you can use the prodigy again to rewrite history.
 		This prodigy splits the timeline. Attempting to use another spell that also splits the timeline while this effect is active will be unsuccessful.]])
 		:format()
 	end,

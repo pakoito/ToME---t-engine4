@@ -46,8 +46,8 @@ newTalent{
 	info = function(self, t)
 		local save = t.getSave(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Increases your physical saves by %d and your physical power by %d.
-		The bonuses will scale with the strength stat.]])
+		return ([[Increases your Physical Save by %d and your Physical Power by %d.
+		The bonuses will scale with your Strength.]])
 		:format(save, damage)
 	end,
 }
@@ -123,9 +123,9 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local power = t.getPower(self, t)
 		local drain = t.getDrain(self, t)
-		return ([[Grapples a target up to one size category larger then yourself for %d turns. A grappled opponent will be unable to move and its attack and defense will be reduced by %d.  Any movement from the target or you will break the grapple.  Maintaining a grapple drains %d stamina per turn.
-		You may only grapple a single target at a time and using any targeted unarmed talent on a target that you're not grappling will break the grapple.
-		The grapple attack and defense reduction as well as success chance will scale with your physical power.
+		return ([[Grapples a target up to one size category larger then yourself for %d turns. A grappled opponent will be unable to move, and its Accuracy and Defense will be reduced by %d.  Any movement from the target or you will break the grapple.  Maintaining a grapple drains %d stamina per turn.
+		You may only grapple a single target at a time, and using any targeted unarmed talent on a target that you're not grappling will break the grapple.
+		The grapple Accuracy and Defense reduction, as well as the grapple success chance, will scale with your Physical Power.
 		Performing this action will switch your stance to Grappling Stance.]])
 		:format(duration, power, drain)
 	end,
@@ -184,8 +184,8 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local damage = t.getDamage(self, t)
 		local maim = t.getMaim(self, t)
-		return ([[Grapples the target and inflicts %0.2f physical damage.  If the target is already grappled the target will be maimed as well, reducing damage by %d and global speed by 30%% for %d turns.
-		The grapple effects will be based off your grapple talent effect if you have it and the damage will with your physical power.]])
+		return ([[Grapples the target and inflicts %0.2f physical damage.  If the target is already grappled, the target will be maimed as well, reducing damage by %d and global speed by 30%% for %d turns.
+		The grapple effects will be based off your grapple talent, if you have it, and the damage will scale with your Physical Power.]])
 		:format(damDesc(self, DamageType.PHYSICAL, (damage)), maim, duration)
 	end,
 }
@@ -201,9 +201,9 @@ newTalent{
 	getDamage = function(self, t) return self:combatTalentPhysicalDamage(t, 5, 50) * getUnarmedTrainingBonus(self) end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Your clinch talent now starts a crushing hold that deals %0.2f physical damage each turn.  If the target is already grappled the hold will instead become a strangle hold, silencing the target and inflicting %0.2f physical damage each turn.
-		Undead, targets immune to silence, and creatures that do not breathe are immune to the strangle effect and will only be affected by the crushing hold.
-		The damage will scale with your physical power.]])
+		return ([[Your clinch talent now starts a crushing hold that deals %0.2f physical damage each turn.  If the target is already grappled, the hold will instead become a stranglehold, silencing the target and inflicting %0.2f physical damage each turn.
+		Undead, targets immune to silence, and creatures that do not breathe are immune to the strangle effect, and will only be affected by the crushing hold.
+		The damage will scale with your Physical Power.]])
 		:format(damDesc(self, DamageType.PHYSICAL, (damage)), damDesc(self, DamageType.PHYSICAL, (damage * 1.5)))
 	end,
 }
@@ -291,7 +291,7 @@ newTalent{
 		local takedown = t.getTakeDown(self, t)
 		local slam = t.getSlam(self, t)
 		return ([[Rushes forward and attempts to take the target to the ground, starting a grapple, inflicting %0.2f physical damage, and dazing the target for %d turns.  If you're already grappling the target you'll instead slam them into the ground for %0.2f physical damage and potentially stun them for %d turns.
-		The grapple effects and duration will be based off your grapple talent effect if you have it and the damage will scale with your physical power.]])
+		The grapple effects and duration will be based off your grapple talent, if you have it, and the damage will scale with your Physical Power.]])
 		:format(damDesc(self, DamageType.PHYSICAL, (takedown)), duration, damDesc(self, DamageType.PHYSICAL, (slam)), duration)
 	end,
 }

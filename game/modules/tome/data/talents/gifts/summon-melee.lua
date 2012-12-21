@@ -100,9 +100,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Summon a War Hound for %d turns to attack your foes. War hounds are good basic melee attackers.
-		It will get %d strength, %d dexterity and %d constitution.
+		It will get %d Strength, %d Dexterity and %d Constitution.
 		Your summons inherit some of your stats: increased damage%%, stun/pin/confusion/blindness resistance, armour penetration.
-		Strength stat will increase with your Mindpower stat.]])
+		Their Strength and Dexterity will increase with your Mindpower.]])
 		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
 		15 + (self:combatMindpower(2) * self:getTalentLevel(t) / 5) + (self:getTalentLevel(t) * 2),
 		15 + (self:combatMindpower(2) * self:getTalentLevel(t) / 5) + (self:getTalentLevel(t) * 2),
@@ -203,9 +203,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Summon a Jelly for %d turns to attack your foes. Jellies do not move, but your equilibrium will be reduced by 10%% of all damage received by the jelly.
-		It will get %d constitution and %d strength.
+		It will get %d Constitution and %d Strength.
 		Your summons inherit some of your stats: increased damage%%, stun/pin/confusion/blindness resistance, armour penetration.
-		Constitution stat will increase with your Mindpower stat.]])
+		Their Constitution stat will increase with your Mindpower.]])
 		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
 		10 + (self:combatMindpower(1.8) * self:getTalentLevel(t) / 5) + self:getTalentLevelRaw(self.T_RESILIENCE) * 3,
 		10 + self:getTalentLevel(t) * 2)
@@ -304,9 +304,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Summon a Minotaur for %d turns to attack your foes. Minotaurs cannot stay summoned for long, but they deal a lot of damage.
-		It will get %d strength, %d constitution and %d dexterity.
+		It will get %d Strength, %d Constitution and %d Dexterity.
 		Your summons inherit some of your stats: increased damage%%, stun/pin/confusion/blindness resistance, armour penetration.
-		Strength stat will increase with your Mindpower stat.]])
+		Their Strength and Dexterity will increase with your Mindpower.]])
 		:format(self:getTalentLevel(t) + 2 + self:getTalentLevelRaw(self.T_RESILIENCE),
 		25 + (self:combatMindpower(2.1) * self:getTalentLevel(t) / 5) + (self:getTalentLevel(t) * 2),
 		10 + self:getTalentLevel(t) * 2 + self:getTalentLevelRaw(self.T_RESILIENCE)*2,
@@ -405,10 +405,10 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Summon a Stone Golem for %d turns to attack your foes. Stone golems are formidable foes that can become unstoppable foes.
-		It will get %d strength, %d constitution and %d dexterity.
+		return ([[Summon a Stone Golem for %d turns to attack your foes. Stone golems are formidable foes that can become unstoppable.
+		It will get %d Strength, %d Constitution and %d Dexterity.
 		Your summons inherit some of your stats: increased damage%%, stun/pin/confusion/blindness resistance, armour penetration.
-		Strength stat will increase with your Mindpower stat.]])
+		Their Strength and Dexterity will increase with your Mindpower.]])
 		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
 		15 + (self:combatMindpower(2) * self:getTalentLevel(t) / 5) + (self:getTalentLevel(t) * 2),
 		10 + self:getTalentLevel(t) * 2 + self:getTalentLevelRaw(self.T_RESILIENCE)*2,

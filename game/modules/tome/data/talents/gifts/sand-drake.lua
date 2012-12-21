@@ -60,7 +60,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Attack the target for %d%% nature weapon damage.
-		If the attack brings your target below %d%% life (or kills it) you can try to swallow it, killing it automatically and regaining life and equilibrium depending on its level.
+		If the attack brings your target below %d%% life (or kills it), you can try to swallow it, killing it automatically and regaining life and equilibrium depending on its level.
 		Each point in sand drake talents also increases your physical resistance by 0.5%%.]]):
 		format(100 * self:combatTalentWeaponDamage(t, 1, 1.5), 10 + 3 * self:getTalentLevel(t))
 	end,
@@ -96,9 +96,9 @@ newTalent{
 		local radius = self:getTalentRadius(t)
 		local dam = t.getDamage(self, t)
 		return ([[You slam your foot onto the ground, shaking the area around you in a radius of %d.
-		Creatures caught by the quake will be damaged for %d and knocked back up to 4 titles away.
+		Creatures caught by the quake will be damaged for %d and knocked back up to 4 tiles away.
 		The terrain will also be moved around within the quake's radius.
-		The damage will increase with the Strength stat.
+		The damage will increase with your Strength.
 		Each point in sand drake talents also increases your physical resistance by 0.5%%.]]):format(radius, dam)
 	end,
 }
@@ -161,8 +161,8 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[You breathe sand in a frontal cone of radius %d. Any target caught in the area will take %0.2f physical damage and be blinded for %d turns.
-		The damage will increase with the Strength stat.
+		return ([[You breathe sand in a frontal cone of radius %d. Any target caught in the area will take %0.2f physical damage, and be blinded for %d turns.
+		The damage will increase with your Strength.
 		Each point in sand drake talents also increases your physical resistance by 0.5%%.]]):format(self:getTalentRadius(t), damDesc(self, DamageType.PHYSICAL, damage), duration)
 	end,
 }
