@@ -380,6 +380,8 @@ end
 --- Updates the map on the given spot
 -- This updates many things, from the C map object, the FOV caches, the minimap if it exists, ...
 function _M:updateMap(x, y)
+	if not x or not y or x < 0 or y < 0 or x >= self.w or y >= self.h then return end
+
 	-- Update minimap if any
 	local mos = {}
 
