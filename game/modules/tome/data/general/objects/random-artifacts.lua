@@ -307,9 +307,9 @@ newEntity{ theme={light=true}, name="lite radius", points = 1, rarity = 14, leve
 newEntity{ theme={nature=true}, name="water breathing", points = 10, rarity = 15, level_range = {1, 50},
 	wielder = { can_breath = {water=1}, },
 }
-newEntity{ theme={psionic=true}, name="telepathy", points = 60, rarity = 65, level_range = {1, 50},
-	wielder = { esp_all = 1 },
-}
+--newEntity{ theme={psionic=true}, name="telepathy", points = 60, rarity = 65, level_range = {1, 50},
+--	wielder = { esp_all = 1 },
+--}
 newEntity{ theme={psionic=true}, name="orc telepathy", points = 15, rarity = 25, level_range = {1, 50},
 	wielder = { esp = {["humanoid/orc"]=1}, },
 }
