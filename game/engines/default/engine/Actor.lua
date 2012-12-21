@@ -482,10 +482,7 @@ function _M:hasLOS(x, y, what, range, source_x, source_y)
 		lx, ly, is_corner_blocked = l:step()
 	end
 
-	-- Ok if we are at the end reset lx and ly for the next code
-	if not lx and not ly and not is_corner_blocked then lx, ly = x, y end
-
-	if lx == x and ly == y then return true, last_x, last_y end
+	if last_x == x and last_y == y then return true, last_x, last_y end
 	return false, last_x, last_y
 end
 

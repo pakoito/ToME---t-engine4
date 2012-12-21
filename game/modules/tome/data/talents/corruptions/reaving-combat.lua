@@ -22,6 +22,7 @@ newTalent{
 	type = {"corruption/reaving-combat", 1},
 	mode = "passive",
 	points = 5,
+	vim = 8,
 	require = str_corrs_req1,
 	on_learn = function(self, t)
 		if self:getTalentLevelRaw(t) == 1 then

@@ -642,55 +642,242 @@ static int lua_fov_line_step(lua_State *L)
 	bool dont_stop_at_end = lua_toboolean(L, 2);
 	if (!dont_stop_at_end && line->dest_t == line->t || line->dest_t == 0) return 0;
 
+	bool is_corner_blocked = false;
+	float fx, fy, x0, y0, fx2, fy2, dx, dy;
+	int x, y, x_prev, y_prev, corner_x, corner_y;
+
 	// If there is a tie, then choose the tile closer to a cardinal direction.
 	// If we weren't careful, this would be the most likely place to have floating precision
 	// errors that would be inconsistent with FoV.  Therefore, let's be extra cautious!
-	float fx = (float)line->t * line->step_x + line->eps_x;
-	float fy = (float)line->t * line->step_y + line->eps_y;
-	float x0 = line->start_x;
-	float y0 = line->start_y;
-	int x_prev = (fx < 0.0f) ? -(int)(x0 - fx) : (int)(x0 + fx);
-	int y_prev = (fy < 0.0f) ? -(int)(y0 - fy) : (int)(y0 + fy);
-	fx += line->step_x;
-	fy += line->step_y;
-	int x = (fx < 0.0f) ? -(int)(x0 - fx) : (int)(x0 + fx);
-	int y = (fy < 0.0f) ? -(int)(y0 - fy) : (int)(y0 + fy);
 
-	// check if line is blocked by a corner of an adjacent tile
-	bool is_corner_blocked = false;
-	int corner_x, corner_y;
-	if (x != x_prev && y != y_prev && lua_line->fov.opaque_ref != LUA_NOREF) {
-		fx = (float)line->t * line->step_x;
-		fy = (float)line->t * line->step_y;
-		float dx = (line->step_x < 0.0f) ? ((float)x - fx + x0) / line->step_x : ((float)x - fx - x0) / line->step_x;
-		float dy = (line->step_y < 0.0f) ? ((float)y - fy + y0) / line->step_y : ((float)y - fy - y0) / line->step_y;
+	fx = (float)line->t * line->step_x;
+	fy = (float)line->t * line->step_y;
+	x0 = line->start_x;
+	y0 = line->start_y;
+	fx2 = fx + line->step_x + line->eps_x;
+	fy2 = fy + line->step_y + line->eps_y;
 
-		if (dx > dy) {
-			corner_x = line->source_x + x_prev;
-			corner_y = line->source_y + y;
-			// XXX Note to future self: this checks the value of the line to the edge of the tile.  It needs to
-			// extend past the edge of the tile by an amount "0.5 - permissiveness".  Smallest and largest values
-			// of permissiveness will still work fine, but intermediate values will allow some trick shots.
-			fx += line->eps_x;
-			float val = (line->step_x < 0.0f) ? fx - (float)x_prev + dy*line->step_x : -fx + (float)x_prev - dy*line->step_x;
-			if (val + 0.5f + lua_line->fov.fov_settings.permissiveness - x0 > GRID_EPSILON &&
-				lua_line->fov.fov_settings.opaque(&(lua_line->fov), corner_x, corner_y)
-			) {
-				is_corner_blocked = true;
+	// *sighs*
+	if (fx2 < 0.0f) {
+		x_prev = -(int)(x0 - fx - line->eps_x);
+		x = -(int)(x0 - fx2);
+
+		if (fy2 < 0.0f) {
+			y_prev = -(int)(y0 - fy - line->eps_y);
+			y = -(int)(y0 - fy2);
+
+			if (x != x_prev && y != y_prev && lua_line->fov.opaque_ref != LUA_NOREF) {
+				if (fy2 < fx2) {
+					dx = ((float)x - fx + x0) / line->step_x;
+					dy = ((float)y - fy + y0 - 0.5f + lua_line->fov.fov_settings.permissiveness) / line->step_y;
+					if (dx > dy) {
+						corner_x = line->source_x + x_prev;
+						corner_y = line->source_y + y;
+
+						if (-(float)x + fx - x0 + dy*line->step_x + line->eps_x > GRID_EPSILON &&
+							lua_line->fov.fov_settings.opaque(&(lua_line->fov), corner_x, corner_y)
+						) {
+							is_corner_blocked = true;
+						}
+					} else {
+						corner_x = line->source_x + x;
+						corner_y = line->source_y + y_prev;
+
+						if (-(float)y_prev + 0.5f + lua_line->fov.fov_settings.permissiveness + fy - y0 + dx*line->step_y + line->eps_y > GRID_EPSILON &&
+							lua_line->fov.fov_settings.opaque(&(lua_line->fov), corner_x, corner_y)
+						) {
+							is_corner_blocked = true;
+						}
+					}
+				} else {
+					dx = ((float)x - fx + x0 - 0.5f + lua_line->fov.fov_settings.permissiveness) / line->step_x;
+					dy = ((float)y - fy + y0) / line->step_y;
+					if (dx > dy) {
+						corner_x = line->source_x + x_prev;
+						corner_y = line->source_y + y;
+
+						if (-(float)x_prev + 0.5f + lua_line->fov.fov_settings.permissiveness + fx - x0 + dy*line->step_x + line->eps_x > GRID_EPSILON &&
+							lua_line->fov.fov_settings.opaque(&(lua_line->fov), corner_x, corner_y)
+						) {
+							is_corner_blocked = true;
+						}
+					} else {
+						corner_x = line->source_x + x;
+						corner_y = line->source_y + y_prev;
+
+						if (-(float)y + fy - y0 + dx*line->step_y + line->eps_y > GRID_EPSILON &&
+							lua_line->fov.fov_settings.opaque(&(lua_line->fov), corner_x, corner_y)
+						) {
+							is_corner_blocked = true;
+						}
+					}
+				}
 			}
+		// *laughs*
 		} else {
-			corner_x = line->source_x + x;
-			corner_y = line->source_y + y_prev;
-			// XXX Note to future self: see above note.
-			fy += line->eps_y;
-			float val = (line->step_y < 0.0f) ? fy - (float)y_prev + dx*line->step_y : -fy + (float)y_prev - dx*line->step_y;
-			if (val + 0.5f + lua_line->fov.fov_settings.permissiveness - y0 > GRID_EPSILON &&
-				lua_line->fov.fov_settings.opaque(&(lua_line->fov), corner_x, corner_y)
-			) {
-				is_corner_blocked = true;
+			y_prev = (int)(y0 + fy + line->eps_y);
+			y = (int)(y0 + fy2);
+
+			if (x != x_prev && y != y_prev && lua_line->fov.opaque_ref != LUA_NOREF) {
+				if (-fy2 < fx2) {
+					dx = ((float)x - fx + x0) / line->step_x;
+					dy = ((float)y - fy - y0 + 0.5f - lua_line->fov.fov_settings.permissiveness) / line->step_y;
+					if (dx > dy) {
+						corner_x = line->source_x + x_prev;
+						corner_y = line->source_y + y;
+
+						if (-(float)x + fx - x0 + dy*line->step_x + line->eps_x > GRID_EPSILON &&
+							lua_line->fov.fov_settings.opaque(&(lua_line->fov), corner_x, corner_y)
+						) {
+							is_corner_blocked = true;
+						}
+					} else {
+						corner_x = line->source_x + x;
+						corner_y = line->source_y + y_prev;
+
+						if ((float)y_prev + 0.5f + lua_line->fov.fov_settings.permissiveness - fy - y0 - dx*line->step_y - line->eps_y > GRID_EPSILON &&
+							lua_line->fov.fov_settings.opaque(&(lua_line->fov), corner_x, corner_y)
+						) {
+							is_corner_blocked = true;
+						}
+					}
+				} else {
+					dx = ((float)x - fx + x0 - 0.5f + lua_line->fov.fov_settings.permissiveness) / line->step_x;
+					dy = ((float)y - fy - y0) / line->step_y;
+					if (dx > dy) {
+						corner_x = line->source_x + x_prev;
+						corner_y = line->source_y + y;
+
+						if (-(float)x_prev + 0.5f + lua_line->fov.fov_settings.permissiveness + fx - x0 + dy*line->step_x + line->eps_x > GRID_EPSILON &&
+							lua_line->fov.fov_settings.opaque(&(lua_line->fov), corner_x, corner_y)
+						) {
+							is_corner_blocked = true;
+						}
+					} else {
+						corner_x = line->source_x + x;
+						corner_y = line->source_y + y_prev;
+
+						if ((float)y - fy - y0 - dx*line->step_y - line->eps_y > GRID_EPSILON &&
+							lua_line->fov.fov_settings.opaque(&(lua_line->fov), corner_x, corner_y)
+						) {
+							is_corner_blocked = true;
+						}
+					}
+				}
+			}
+		}
+	// *cries*
+	} else {
+		x_prev = (int)(x0 + fx + line->eps_x);
+		x = (int)(x0 + fx2);
+
+		if (fy2 < 0.0f) {
+			y_prev = -(int)(y0 - fy - line->eps_y);
+			y = -(int)(y0 - fy2);
+
+			if (x != x_prev && y != y_prev && lua_line->fov.opaque_ref != LUA_NOREF) {
+				if (-fy2 > fx2) {
+					dx = ((float)x - fx - x0) / line->step_x;
+					dy = ((float)y - fy + y0 - 0.5f + lua_line->fov.fov_settings.permissiveness) / line->step_y;
+					if (dx > dy) {
+						corner_x = line->source_x + x_prev;
+						corner_y = line->source_y + y;
+
+						if ((float)x - fx - x0 - dy*line->step_x - line->eps_x > GRID_EPSILON &&
+							lua_line->fov.fov_settings.opaque(&(lua_line->fov), corner_x, corner_y)
+						) {
+							is_corner_blocked = true;
+						}
+					} else {
+						corner_x = line->source_x + x;
+						corner_y = line->source_y + y_prev;
+
+						if (-(float)y_prev + 0.5f + lua_line->fov.fov_settings.permissiveness + fy - y0 + dx*line->step_y + line->eps_y > GRID_EPSILON &&
+							lua_line->fov.fov_settings.opaque(&(lua_line->fov), corner_x, corner_y)
+						) {
+							is_corner_blocked = true;
+						}
+					}
+				} else {
+					dx = ((float)x - fx - x0 + 0.5f - lua_line->fov.fov_settings.permissiveness) / line->step_x;
+					dy = ((float)y - fy + y0) / line->step_y;
+					if (dx > dy) {
+						corner_x = line->source_x + x_prev;
+						corner_y = line->source_y + y;
+
+						if ((float)x_prev + 0.5f + lua_line->fov.fov_settings.permissiveness - fx - x0 - dy*line->step_x - line->eps_x > GRID_EPSILON &&
+							lua_line->fov.fov_settings.opaque(&(lua_line->fov), corner_x, corner_y)
+						) {
+							is_corner_blocked = true;
+						}
+					} else {
+						corner_x = line->source_x + x;
+						corner_y = line->source_y + y_prev;
+
+						if (-(float)y + fy - y0 + dx*line->step_y + line->eps_y > GRID_EPSILON &&
+							lua_line->fov.fov_settings.opaque(&(lua_line->fov), corner_x, corner_y)
+						) {
+							is_corner_blocked = true;
+						}
+					}
+				}
+			}
+		// *hides*
+		} else {
+			y_prev = (int)(y0 + fy + line->eps_y);
+			y = (int)(y0 + fy2);
+
+			if (x != x_prev && y != y_prev && lua_line->fov.opaque_ref != LUA_NOREF) {
+				if (fy2 > fx2) {
+					dx = ((float)x - fx - x0) / line->step_x;
+					dy = ((float)y - fy - y0 + 0.5f - lua_line->fov.fov_settings.permissiveness) / line->step_y;
+					if (dx > dy) {
+						corner_x = line->source_x + x_prev;
+						corner_y = line->source_y + y;
+
+						if ((float)x - fx - x0 - dy*line->step_x - line->eps_x > GRID_EPSILON &&
+							lua_line->fov.fov_settings.opaque(&(lua_line->fov), corner_x, corner_y)
+						) {
+							is_corner_blocked = true;
+						}
+					} else {
+						corner_x = line->source_x + x;
+						corner_y = line->source_y + y_prev;
+
+						if ((float)y_prev + 0.5f + lua_line->fov.fov_settings.permissiveness - fy - y0 - dx*line->step_y - line->eps_y > GRID_EPSILON &&
+							lua_line->fov.fov_settings.opaque(&(lua_line->fov), corner_x, corner_y)
+						) {
+							is_corner_blocked = true;
+						}
+					}
+				} else {
+					dx = ((float)x - fx - x0 + 0.5f - lua_line->fov.fov_settings.permissiveness) / line->step_x;
+					dy = ((float)y - fy - y0) / line->step_y;
+					if (dx > dy) {
+						corner_x = line->source_x + x_prev;
+						corner_y = line->source_y + y;
+
+						if ((float)x_prev + 0.5f + lua_line->fov.fov_settings.permissiveness - fx - x0 - dy*line->step_x - line->eps_x > GRID_EPSILON &&
+							lua_line->fov.fov_settings.opaque(&(lua_line->fov), corner_x, corner_y)
+						) {
+							is_corner_blocked = true;
+						}
+					} else {
+						corner_x = line->source_x + x;
+						corner_y = line->source_y + y_prev;
+
+						if ((float)y - fy - y0 - dx*line->step_y - line->eps_y > GRID_EPSILON &&
+							lua_line->fov.fov_settings.opaque(&(lua_line->fov), corner_x, corner_y)
+						) {
+							is_corner_blocked = true;
+						}
+					}
+				}
 			}
 		}
 	}
+	// *weeps*
+
 	line->t += 1;
 
 	luaL_unref(L, LUA_REGISTRYINDEX, lua_line->fov.opaque_ref);
