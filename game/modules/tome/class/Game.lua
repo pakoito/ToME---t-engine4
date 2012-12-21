@@ -1906,7 +1906,7 @@ function _M:setAllowedBuild(what, notify)
 end
 
 function _M:playSoundNear(who, name)
-	if who and self.level.map.seens(who.x, who.y) then
+	if who and self.level and self.level.map.seens(who.x, who.y) then
 		local pos = {x=0,y=0,z=0}
 		if self.player and self.player.x then pos.x, pos.y = who.x - self.player.x, who.y - self.player.y end
 		self:playSound(name, pos)

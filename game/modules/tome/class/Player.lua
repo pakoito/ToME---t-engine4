@@ -739,7 +739,7 @@ function _M:restCheck()
 			node.actor:addParticles(engine.Particles.new("notice_enemy", 1))
 		end
 		local dir = game.level.map:compassDirection(spotted[1].x - self.x, spotted[1].y - self.y)
-		return false, ("hostile spotted to the %s (%s%s)"):format(dir, spotted[1].actor.name, game.level.map:isOnScreen(spotted[1].x, spotted[1].y) and "" or " - offscreen")
+		return false, ("hostile spotted to the %s (%s%s)"):format(dir or "???", spotted[1].actor.name, game.level.map:isOnScreen(spotted[1].x, spotted[1].y) and "" or " - offscreen")
 	end
 
 	-- Resting improves regen
@@ -823,7 +823,7 @@ function _M:runCheck(ignore_memory)
 	local spotted = spotHostiles(self)
 	if #spotted > 0 then
 		local dir = game.level.map:compassDirection(spotted[1].x - self.x, spotted[1].y - self.y)
-		return false, ("hostile spotted to the %s (%s%s)"):format(dir, spotted[1].actor.name, game.level.map:isOnScreen(spotted[1].x, spotted[1].y) and "" or " - offscreen")
+		return false, ("hostile spotted to the %s (%s%s)"):format(dir or "???", spotted[1].actor.name, game.level.map:isOnScreen(spotted[1].x, spotted[1].y) and "" or " - offscreen")
 	end
 
 	if self.air_regen < 0 and self.air < 0.75 * self.max_air then return false, "losing breath!" end
