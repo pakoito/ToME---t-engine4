@@ -48,6 +48,8 @@ newEntity{
 	min_level = 6,
 	on_world_encounter = "merchant-quest",
 	on_encounter = function(self, who)
+		who.energy.value = game.energy_to_act
+		game.paused = true
 		who:runStop()
 		engine.ui.Dialog:yesnoPopup("Encounter", "You find a hidden trap door, and hear cries for help from within...", function(ok)
 			if not ok then
@@ -71,6 +73,8 @@ newEntity{
 	min_level = 24,
 	coords = {{ x=0, y=0, w=100, h=100}},
 	on_encounter = function(self, who)
+		who.energy.value = game.energy_to_act
+		game.paused = true
 		who:runStop()
 		engine.ui.Dialog:yesnoLongPopup("Encounter", "You find an entrance to an old crypt. An aura of terrible evil emanates from this place, you feel threatened just standing there.\nYou hear the muffled cries of a woman coming from inside.", 400, function(ok)
 			if not ok then
@@ -115,6 +119,9 @@ newEntity{
 	rarity = 8,
 	on_world_encounter = "lumberjack-cursed",
 	on_encounter = function(self, who)
+		who.energy.value = game.energy_to_act
+		game.paused = true
+		who:runStop()
 		local Chat = require "engine.Chat"
 		local chat = Chat.new("lumberjack-quest", {name="Half-dead lumberjack"}, who)
 		chat:invoke()
