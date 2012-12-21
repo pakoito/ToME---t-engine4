@@ -59,6 +59,7 @@ mouse_cursor = true
 display_fps = 30
 gamma_correction = 120
 mouse_move = true
+censor_boot = true
 chat.filter = {}
 addons = {}
 ]]

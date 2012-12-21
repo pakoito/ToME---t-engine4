@@ -51,7 +51,13 @@ function _M:init()
 	engine.interface.GameSound.init(self)
 	engine.GameEnergyBased.init(self, engine.KeyBind.new(), 100, 100)
 	self.profile_font = core.display.newFont("/data/font/DroidSerif-Italic.ttf", 14)
-	self.background = core.display.loadImage("/data/gfx/background/tome3.png")
+
+	local background_name
+	if not config.settings.censor_boot then background_name = {"tome","tome2","tome3"}
+	else background_name = {"tome3"}
+	end
+	
+	self.background = core.display.loadImage("/data/gfx/background/"..util.getval(background_name)..".png")
 	if self.background then
 		self.background_w, self.background_h = self.background:getSize()
 		self.background, self.background_tw, self.background_th = self.background:glTexture()

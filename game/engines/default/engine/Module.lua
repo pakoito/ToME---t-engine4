@@ -106,7 +106,7 @@ function _M:loadDefinition(dir, team, incompatible)
 --	print("Loading module definition from", team and (dir.."/mod/init.lua") or (dir.."/init.lua"))
 	if mod_def then
 		-- Call the file body inside its own private environment
-		local mod = {rng=rng}
+		local mod = {rng=rng, config=config}
 		setfenv(mod_def, mod)
 		mod_def()
 		mod.rng = nil

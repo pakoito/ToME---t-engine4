@@ -30,5 +30,6 @@ Bootmenu!
 ]]
 starter = "mod.load"
 loading_wait_ticks = 1600
---background_name = {"tome","tome2","tome3"}
-background_name = {"tome3"}
+if not config.settings.censor_boot then background_name = {"tome","tome2","tome3"}
+else background_name = {"tome3"}
+end
