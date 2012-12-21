@@ -405,11 +405,10 @@ function _M:resizeIconsHotkeysToolbar()
 end
 
 function _M:handleResolutionChange(w, h, ow, oh)
-	local w, h = core.display.size()
-	game:setResolution(w.."x"..h, true)
-
-	self.no_ui = not self.no_ui
-	self:toggleUI()
+	print("minimalist:handleResolutionChange: adjusting UI")
+	-- what was the point of this recursive call?
+--	local w, h = core.display.size()
+--	game:setResolution(w.."x"..h, true)
 
 	-- Adjust UI
 	local w2, h2 = math.floor(ow / 2), math.floor(oh / 2)
@@ -418,8 +417,14 @@ function _M:handleResolutionChange(w, h, ow, oh)
 		if d.y > h2 then d.y = d.y + h - oh end
 	end
 
+	print("minimalist:handleResolutionChange: toggling UI to refresh")
+	-- Toggle the UI to refresh the changes
+	self:toggleUI()
+	self:toggleUI()
+
 	self:boundPlaces()
 	self:saveSettings()
+	print("minimalist:handleResolutionChange: saved settings")
 
 	return true
 end

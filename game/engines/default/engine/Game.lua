@@ -366,9 +366,11 @@ end
 
 available_resolutions =
 {
-	["800x600 Windowed"] = {800, 600, false},
-	["1024x768 Windowed"] = {1024, 768, false},
-	["1200x1024 Windowed"] = {1200, 1024, false},
+	["800x600 Windowed"] 	= {800, 600, false},
+	["1024x768 Windowed"] 	= {1024, 768, false},
+	["1200x1024 Windowed"] 	= {1200, 1024, false},
+	["1280x720 Windowed"] 	= {1280, 720, false},
+	["1600x900 Windowed"] 	= {1600, 900, false},
 	["1600x1200 Windowed"] = {1600, 1200, false},
 --	["800x600 Fullscreen"] = {800, 600, true},
 --	["1024x768 Fullscreen"] = {1024, 768, true},
@@ -403,55 +405,85 @@ function _M:setResolution(res, force)
 	end
 	if not r then return false, "unknown resolution" end
 
-	print("Switching resolution to", res, r[1], r[2], r[3])
+	-- Change the window size
+	print("setResolution: switching resolution to", res, r[1], r[2], r[3], force and "(forced)")
 	local old_w, old_h, old_f = self.w, self.h, self.fullscreen
 	core.display.setWindowSize(r[1], r[2], r[3])
-	self.w, self.h, self.fullscreen = core.display.size()
+	
+	-- Don't write self.w/h/fullscreen yet
+	local new_w, new_h, new_f = core.display.size()
 
-	-- Save settings if need be
-	if self.w ~= old_w or self.h ~= old_h or self.fullscreen ~= old_f then
+	-- Check if a resolution change actually happened
+	if new_w ~= old_w or new_h ~= old_h or new_f ~= old_f then
+		print("setResolution: performing onResolutionChange...\n")
 		self:onResolutionChange()
-		self:saveSettings("resolution", ("window.size = %q\n"):format(res))
+		-- onResolutionChange saves settings...
+		-- self:saveSettings("resolution", ("window.size = %q\n"):format(res))
+	else
+		print("setResolution: resolution change requested from same resolution!\n")
 	end
 end
 
 --- Called when screen resolution changes
 function _M:onResolutionChange()
-	if game and not self.change_res_dialog_oldw then
-		self.change_res_dialog_oldw, self.change_res_dialog_oldh, self.change_res_dialog_oldf = self.w, self.h, self.fullscreen
-	end
-
 	local ow, oh, of = self.w, self.h, self.fullscreen
+
+	-- Save old values for a potential revert
+	if game and not self.change_res_dialog_oldw then
+		print("onResolutionChange: saving current resolution for potential revert.")
+		self.change_res_dialog_oldw, self.change_res_dialog_oldh, self.change_res_dialog_oldf = ow, oh, of
+	end
 	
+	-- Get new resolution and save
 	self.w, self.h, self.fullscreen = core.display.size()
 	config.settings.window.size = ("%dx%d%s"):format(self.w, self.h, self.fullscreen and " Fullscreen" or " Windowed")
 	self:saveSettings("resolution", ("window.size = '%s'\n"):format(config.settings.window.size))
-	print("[RESOLUTION] changed to ", self.w, self.h, "from", ow, oh)
+	print("onResolutionChange: resolution changed to ", self.w, self.h, "from", ow, oh)
 
 	-- We do not even have a game yet
-	if not game then return end
+	if not game then
+		print("onResolutionChange: no game yet!") 
+		return 
+	end
 
 	-- No actual resize
-	if ow == self.w and oh == self.h then return end
+	if ow == self.w and oh == self.h then 
+		print("onResolutionChange: no actual resize, no confirm dialog.")
+		return 
+	end
 
-	if self:checkResolutionChange(self.w, self.h, ow, oh) then return end
+	-- Extra game logic to be updated on a resize
+	if not self:checkResolutionChange(self.w, self.h, ow, oh) then
+		print("onResolutionChange: checkResolutionChange returned false, no confirm dialog.")
+		return
+	end
 
 	-- Do not repop if we just revert back
-	if self.change_res_dialog and type(self.change_res_dialog) == "string" and self.change_res_dialog == "revert" then return end
+	if self.change_res_dialog and type(self.change_res_dialog) == "string" and self.change_res_dialog == "revert" then
+		print("onResolutionChange: Reverting, no popup.")
+		return 
+	end
+	
 	-- Unregister old dialog if there was one
-	if self.change_res_dialog and type(self.change_res_dialog) == "table" then self:unregisterDialog(self.change_res_dialog) end
-	-- Ask if we want to switch
-	self.change_res_dialog = require("engine.ui.Dialog"):yesnoPopup("Resolution changed", "Accept the new resolution?", function(ret)
-		if ret then
-			if not self.creating_player then self:saveGame() end
-			util.showMainMenu(false, nil, nil, self.__mod_info.short_name, self.save_name, false)
-		else
-			self.change_res_dialog = "revert"
-			self:setResolution(("%dx%d%s"):format(self.change_res_dialog_oldw, self.change_res_dialog_oldh, self.change_res_dialog_oldf and " Fullscreen" or " Windowed"), true)
-			self.change_res_dialog = nil
-			self.change_res_dialog_oldw, self.change_res_dialog_oldh, self.change_res_dialog_oldf = nil, nil, nil
-		end
-	end, "Accept", "Revert")
+	if self.change_res_dialog and type(self.change_res_dialog) == "table" then 
+		print("onResolutionChange: Unregistering dialog")
+		self:unregisterDialog(self.change_res_dialog) 
+	end
+	
+	-- Are you sure you want to save these settings?  Somewhat obnoxious...
+--	self.change_res_dialog = require("engine.ui.Dialog"):yesnoPopup("Resolution changed", "Accept the new resolution?", function(ret)
+--		if ret then
+--			if not self.creating_player then self:saveGame() end
+--			util.showMainMenu(false, nil, nil, self.__mod_info.short_name, self.save_name, false)
+--		else
+--			self.change_res_dialog = "revert"
+--			self:setResolution(("%dx%d%s"):format(self.change_res_dialog_oldw, self.change_res_dialog_oldh, self.change_res_dialog_oldf and " Fullscreen" or " Windowed"), true)
+--			self.change_res_dialog = nil
+--			self.change_res_dialog_oldw, self.change_res_dialog_oldh, self.change_res_dialog_oldf = nil, nil, nil
+--		end
+--	end, "Accept", "Revert")
+	print("onResolutionChange: (Would have) created popup.")
+	
 end
 
 --- Checks if we must reload to change resolution

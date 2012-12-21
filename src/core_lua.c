@@ -1322,6 +1322,23 @@ static int sdl_load_image(lua_State *L)
 	return 3;
 }
 
+static int sdl_load_image_mem(lua_State *L)
+{
+	size_t len;
+	const char *data = luaL_checklstring(L, 1, &len);
+
+	SDL_Surface **s = (SDL_Surface**)lua_newuserdata(L, sizeof(SDL_Surface*));
+	auxiliar_setclass(L, "sdl{surface}", -1);
+
+	*s = IMG_Load_RW(SDL_RWFromConstMem(data, len), TRUE);
+	if (!*s) return 0;
+
+	lua_pushnumber(L, (*s)->w);
+	lua_pushnumber(L, (*s)->h);
+
+	return 3;
+}
+
 static int sdl_free_surface(lua_State *L)
 {
 	SDL_Surface **s = (SDL_Surface**)auxiliar_checkclass(L, "sdl{surface}", 1);
@@ -2557,6 +2574,7 @@ static const struct luaL_reg displaylib[] =
 	{"drawStringNewSurface", sdl_surface_drawstring_newsurface},
 	{"drawStringBlendedNewSurface", sdl_surface_drawstring_newsurface_aa},
 	{"loadImage", sdl_load_image},
+	{"loadImageMemory", sdl_load_image_mem},
 	{"setWindowTitle", sdl_set_window_title},
 	{"setWindowSize", sdl_set_window_size},
 	{"setWindowPos", sdl_set_window_pos},

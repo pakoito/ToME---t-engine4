@@ -771,30 +771,90 @@ int resizeWindow(int width, int height)
 
 void do_resize(int w, int h, bool fullscreen)
 {
-	if (!window)
-	{
-		window = SDL_CreateWindow("TE4", (start_xpos == -1) ? SDL_WINDOWPOS_CENTERED : start_xpos, (start_ypos == -1) ? SDL_WINDOWPOS_CENTERED : start_ypos, w, h, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | (fullscreen ? SDL_WINDOW_FULLSCREEN : 0));
+	/* Temporary width, height (since SDL might reject our resize) */
+	int aw, ah;
+	int mustPushEvent = 0;
+	SDL_Event fsEvent;
+
+	printf("[DO RESIZE] Requested: %dx%d (%d)\n", w, h, fullscreen);
+
+	/* If there is no current window, we have to make one and initialize */
+	if (!window) {
+		window = SDL_CreateWindow("TE4",
+				(start_xpos == -1) ? SDL_WINDOWPOS_CENTERED : start_xpos,
+				(start_ypos == -1) ? SDL_WINDOWPOS_CENTERED : start_ypos, w, h,
+				SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE
+						| (fullscreen ? SDL_WINDOW_FULLSCREEN : 0));
 		if (window==NULL) {
 			printf("error opening screen: %s\n", SDL_GetError());
 			exit(1);
 		}
+		is_fullscreen = fullscreen;
 		screen = SDL_GetWindowSurface(window);
 		maincontext = SDL_GL_CreateContext(window);
 		SDL_GL_MakeCurrent(window, maincontext);
 		glewInit();
-	}
-	else
-	{
+
+	} else {
+		/* SDL won't allow a fullscreen resolution change in one go.  Check. */
+		if (is_fullscreen) {
+			/* Drop out of fullscreen so we can change resolution. */
+			SDL_SetWindowFullscreen(window, SDL_FALSE);
+			is_fullscreen = 0;
+			mustPushEvent = 1; /* Actually just a maybe for now, confirmed later */
+
+		}
+
+		/* Update window size */
 		SDL_SetWindowSize(window, w, h);
+
+		/* Jump [back] into fullscreen if requested */
+		if (fullscreen) {
+			if (!SDL_SetWindowFullscreen(window, SDL_TRUE)) {
+				/* Fullscreen change successful */
+				is_fullscreen = SDL_TRUE;
+
+			} else {
+				/* Error switching fullscreen mode */
+				printf("[DO RESIZE] Unable to switch window"
+						" to fullscreen mode:  %s\n", SDL_GetError());
+				SDL_ClearError();
+			}
+
+		} else if (mustPushEvent) {
+			/*
+			 * Our changes will get clobbered by an automatic event from
+			 * setWindowFullscreen.  Push an event to the event loop to make
+			 * sure these changes are applied after whatever that other event
+			 * throws.
+			 */
+			/* Create an event to push */
+			fsEvent.type = SDL_WINDOWEVENT;
+			fsEvent.window.timestamp = SDL_GetTicks();
+			fsEvent.window.windowID = SDL_GetWindowID(window);
+			// windowId
+			fsEvent.window.event = SDL_WINDOWEVENT_RESIZED;
+			fsEvent.window.data1 = w;
+			fsEvent.window.data2 = h;
+
+			/* Push the event, but don't bother waiting */
+			SDL_PushEvent(&fsEvent);
+			printf("[DO RESIZE]: pushed fullscreen compensation event\n");
+
+		}
+
+		/* Finally, update the screen info */
 		screen = SDL_GetWindowSurface(window);
+
+
 	}
 
-	printf("[DO RESIZE] %dx%d (%d)\n", w, h, fullscreen);
-	is_fullscreen = fullscreen;
-	SDL_SetWindowFullscreen(window, fullscreen);
-	SDL_GetWindowSize(window, &w, &h);
+	/* Check and see if SDL honored our resize request */
+	SDL_GetWindowSize(window, &aw, &ah);
+	printf("[DO RESIZE] Got: %dx%d (%d)\n", aw, ah, is_fullscreen);
 	SDL_GL_MakeCurrent(window, maincontext);
-	resizeWindow(w, h);
+	resizeWindow(aw, ah);
+
 }
 
 void boot_lua(int state, bool rebooting, int argc, char *argv[])
@@ -1087,17 +1147,22 @@ int main(int argc, char *argv[])
 				switch (event.window.event)
 				{
 				case SDL_WINDOWEVENT_RESIZED:
-					printf("resize %d x %d\n", event.window.data1, event.window.data2);
-					do_resize(event.window.data1, event.window.data2, is_fullscreen);
+					/* Note: SDL can't resize a fullscreen window, so don't bother! */
+					if (!is_fullscreen) {
+						printf("SDL_WINDOWEVENT_RESIZED: %d x %d\n", event.window.data1, event.window.data2);
+						do_resize(event.window.data1, event.window.data2, is_fullscreen);
+						if (current_game != LUA_NOREF)
+						{
+							lua_rawgeti(L, LUA_REGISTRYINDEX, current_game);
+							lua_pushstring(L, "onResolutionChange");
+							lua_gettable(L, -2);
+							lua_remove(L, -2);
+							lua_rawgeti(L, LUA_REGISTRYINDEX, current_game);
+							docall(L, 1, 0);
+						}
+					} else {
+						printf("SDL_WINDOWEVENT_RESIZED: ignored due to fullscreen\n");
 
-					if (current_game != LUA_NOREF)
-					{
-						lua_rawgeti(L, LUA_REGISTRYINDEX, current_game);
-						lua_pushstring(L, "onResolutionChange");
-						lua_gettable(L, -2);
-						lua_remove(L, -2);
-						lua_rawgeti(L, LUA_REGISTRYINDEX, current_game);
-						docall(L, 1, 0);
 					}
 					break;
 				case SDL_WINDOWEVENT_MOVED: {
@@ -1146,22 +1211,33 @@ int main(int argc, char *argv[])
 				exit_engine = TRUE;
 				break;
 			case SDL_USEREVENT:
-				if (event.user.code == 0 && isActive) {
-					on_redraw();
-					SDL_mutexP(renderingLock);
-					redraw_pending = 0;
-					SDL_mutexV(renderingLock);
+				/* TODO: Enumerate user event codes */
+				switch(event.user.code)
+				{
+				case 0:
+					if (isActive) {
+						on_redraw();
+						SDL_mutexP(renderingLock);
+						redraw_pending = 0;
+						SDL_mutexV(renderingLock);
+					}
+					break;
 
-				}
-				else if (event.user.code == 2 && isActive) {
-					on_tick();
-					SDL_mutexP(realtimeLock);
-					realtime_pending = 0;
-					SDL_mutexV(realtimeLock);
-					
-				}
-				else if (event.user.code == 1) {
+				case 1:
 					on_music_stop();
+					break;
+
+				case 2:
+					if (isActive) {
+						on_tick();
+						SDL_mutexP(realtimeLock);
+						realtime_pending = 0;
+						SDL_mutexV(realtimeLock);
+					}
+					break;
+
+				default:
+					break;
 				}
 				break;
 			default:
