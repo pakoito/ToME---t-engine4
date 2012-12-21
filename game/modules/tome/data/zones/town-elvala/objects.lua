@@ -20,7 +20,7 @@
 load("/data/general/objects/objects-maj-eyal.lua")
 
 for i = 1, 8 do
-local l = mod.class.interface.PlayerLore.lore_defs["spellblaze-chronicles-"..i]
+local l = mod.class.interface.PartyLore.lore_defs["spellblaze-chronicles-"..i]
 newEntity{ base = "BASE_LORE",
 	define_as = "SPELLBLAZE_NOTE"..i,
 	subtype = "spellblaze", unique=true, no_unique_lore=true, not_in_stores=false,

@@ -42,7 +42,7 @@ A wave of mental and magical power blasts into you with the might of a falling s
 			local spot = game.level:pickSpot{type="spawn", subtype="farportal"} or {x=39, y=29}
 			game.player:move(spot.x, spot.y, true)
 			world:gainAchievement("CALDIZAR", game.player)
-			game.player:learnLore("shertul-fortress-caldizar")
+			game.party:learnLore("shertul-fortress-caldizar")
 		end},
 	}
 }

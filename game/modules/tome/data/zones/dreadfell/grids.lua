@@ -30,6 +30,6 @@ newEntity{
 	add_displays = {class.new{image="terrain/signpost.png"}},
 	always_remember = true,
 	on_move = function(self, x, y, who)
-		if who.player then who:learnLore(self.lore) end
+		if who.player then game.party:learnLore(self.lore) end
 	end,
 }

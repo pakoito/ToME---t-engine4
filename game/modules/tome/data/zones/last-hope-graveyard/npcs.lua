@@ -102,10 +102,10 @@ newEntity{ define_as = "CELIA",
 			Dialog:simpleLongPopup("Celia", "As you deal the last blow you quickly carve out Celia's heart for your Lichform ritual.\nCarefully weaving magic around it to keep it beating.", 400)
 			p:setQuestStatus("grave-necromancer", engine.Quest.COMPLETED, "kill-necromancer")
 		else
-			if game.player:knownLore("necromancer-primer-1") and
-			   game.player:knownLore("necromancer-primer-2") and
-			   game.player:knownLore("necromancer-primer-3") and
-			   game.player:knownLore("necromancer-primer-4") then
+			if game.party:knownLore("necromancer-primer-1") and
+			   game.party:knownLore("necromancer-primer-2") and
+			   game.party:knownLore("necromancer-primer-3") and
+			   game.party:knownLore("necromancer-primer-4") then
 				game:setAllowedBuild("mage_necromancer", true)
 			end
 			p:setQuestStatus("grave-necromancer", engine.Quest.COMPLETED, "kill")

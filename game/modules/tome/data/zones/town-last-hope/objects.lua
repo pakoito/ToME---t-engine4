@@ -32,7 +32,7 @@ newEntity{ base = "BASE_LORE",
 end
 
 for i = 0, 2 do
-local l = mod.class.interface.PlayerLore.lore_defs["races-"..i]
+local l = mod.class.interface.PartyLore.lore_defs["races-"..i]
 newEntity{ base = "BASE_LORE",
 	define_as = "RACES_NOTE"..i,
 	subtype = "analysis", unique=true, no_unique_lore=true, not_in_stores=false,

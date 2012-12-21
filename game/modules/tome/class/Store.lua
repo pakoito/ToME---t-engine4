@@ -163,7 +163,7 @@ function _M:doBuy(who, o, item, nb, store_dialog)
 			-- Learn lore ?
 			if who.player and o.lore then
 				self:removeObject(self:getInven("INVEN"), item)
-				who:learnLore(o.lore)
+				game.party:learnLore(o.lore)
 			else
 				self:transfer(self, who, item, nb)
 			end

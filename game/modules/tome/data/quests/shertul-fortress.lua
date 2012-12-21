@@ -192,7 +192,7 @@ fly = function(self)
 
 		f:takeControl(game.player)
 	else
-		game.player:learnLore("shertul-fortress-takeoff")
+		game.party:learnLore("shertul-fortress-takeoff")
 
 		local f = require("mod.class.FortressPC").new{}
 		game:changeLevel(1, "wilderness", {direct_switch=true})

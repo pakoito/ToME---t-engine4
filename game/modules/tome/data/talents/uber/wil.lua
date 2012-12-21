@@ -126,11 +126,11 @@ uberTalent{
 		local o1 = self:findInAllInventoriesBy("define_as", "SET_GARKUL_TEETH")
 		local o2 = self:findInAllInventoriesBy("define_as", "HELM_OF_GARKUL")
 		return o1 and o2 and o1.wielded and o2.wielded and (game.state.birth.ignore_prodigies_special_reqs or (
-			game.player:knownLore("garkul-history-1") and
-			game.player:knownLore("garkul-history-2") and
-			game.player:knownLore("garkul-history-3") and
-			game.player:knownLore("garkul-history-4") and
-			game.player:knownLore("garkul-history-5")
+			game.party:knownLore("garkul-history-1") and
+			game.party:knownLore("garkul-history-2") and
+			game.party:knownLore("garkul-history-3") and
+			game.party:knownLore("garkul-history-4") and
+			game.party:knownLore("garkul-history-5")
 			))
 	end} },
 	info = function(self, t)

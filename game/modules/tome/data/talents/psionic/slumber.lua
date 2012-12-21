@@ -226,7 +226,7 @@ newTalent{
 
 			game.logPlayer(game.player, "#LIGHT_BLUE#You are taken to the Dreamscape!")
 
-			if game.party:hasMember(target) then game.player:learnLore("dreamscape-entry") end
+			if game.party:hasMember(target) then game.party:learnLore("dreamscape-entry") end
 		end)
 
 		local power = self:mindCrit(t.getPower(self, t))

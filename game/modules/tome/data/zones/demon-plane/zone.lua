@@ -65,6 +65,6 @@ return {
 		},
 	},
 	on_enter = function(lev, old_lev, newzone)
-		if newzone then game.player:learnLore("fearscape-entry") end
+		if newzone then game.party:learnLore("fearscape-entry") end
 	end,
 }

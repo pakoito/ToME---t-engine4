@@ -28,7 +28,7 @@ module(..., package.seeall, class.inherit(Dialog))
 
 function _M:init(title, actor)
 	self.actor = actor
-	print("Lore of player", actor.name)
+	print("Lore")
 	local total = #actor.lore_defs + actor.additional_lore_nb
 	local nb = 0
 	for id, data in pairs(actor.lore_known) do nb = nb + 1 end

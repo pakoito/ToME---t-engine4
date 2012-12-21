@@ -222,7 +222,7 @@ newTalent{
 			end
 
 			game.logPlayer(game.player, "#LIGHT_RED#You are taken to the Fearscape!")
-			game.player:learnLore("fearscape-entry")
+			game.party:learnLore("fearscape-entry")
 			level.allow_demon_plane_damage = true
 		end)
 

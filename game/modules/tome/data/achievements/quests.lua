@@ -61,7 +61,7 @@ newAchievement{
 	show = "name",
 	desc = [[Activated a portal using the Orb of Many Ways.]],
 	on_gain = function()
-		game:onTickEnd(function() game.player:learnLore("first-farportal") end)
+		game:onTickEnd(function() game.party:learnLore("first-farportal") end)
 	end
 }
 newAchievement{

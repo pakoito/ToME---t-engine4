@@ -103,7 +103,7 @@ newEntity{
 	unided_name = "scroll", identified=true,
 	display = "?", color=colors.ANTIQUE_WHITE, image="object/scroll-lore.png",
 	encumber = 0,
-	checkFilter = function(self) if self.lore and game:getPlayer(true).lore_known and game:getPlayer(true).lore_known[self.lore] then print('[LORE] refusing', self.lore) return false else return true end end,
+	checkFilter = function(self) if self.lore and game.party.lore_known and game.party.lore_known[self.lore] then print('[LORE] refusing', self.lore) return false else return true end end,
 	desc = [[This parchment contains some lore.]],
 }
 
@@ -113,7 +113,7 @@ newEntity{
 	unided_name = "scroll", identified=true,
 	display = "?", color=colors.ANTIQUE_WHITE, image="object/scroll.png",
 	encumber = 0,
-	checkFilter = function(self) if self.lore and game:getPlayer(true).lore_known and game:getPlayer(true).lore_known[self.lore] then print('[LORE] refusing', self.lore) return false else return true end end,
+	checkFilter = function(self) if self.lore and game.party.lore_known and game.party.lore_known[self.lore] then print('[LORE] refusing', self.lore) return false else return true end end,
 	desc = [[This parchment contains some lore.]],
 }
 

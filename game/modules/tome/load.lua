@@ -43,7 +43,7 @@ local ActorLevel = require "engine.interface.ActorLevel"
 local Birther = require "engine.Birther"
 local Store = require "mod.class.Store"
 local WorldAchievements = require "mod.class.interface.WorldAchievements"
-local PlayerLore = require "mod.class.interface.PlayerLore"
+local PartyLore = require "mod.class.interface.PartyLore"
 local PartyIngredients = require "mod.class.interface.PartyIngredients"
 local PlayerHotkeys = require "engine.interface.PlayerHotkeys"
 local Quest = require "engine.Quest"
@@ -146,7 +146,7 @@ _2DNoise = n:makeTexture2D(64, 64)
 WorldAchievements:loadDefinition("/data/achievements/")
 
 -- Lore
-PlayerLore:loadDefinition("/data/lore/lore.lua")
+PartyLore:loadDefinition("/data/lore/lore.lua")
 
 -- Useful keybinds
 KeyBind:load("move,hotkeys,inventory,actions,interface,tome,debug")

@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 for i = 3, 10 do
-local l = mod.class.interface.PlayerLore.lore_defs["races-"..i]
+local l = mod.class.interface.PartyLore.lore_defs["races-"..i]
 newEntity{ base = "BASE_LORE_RANDOM",
 	define_as = "RACES_NOTE"..i,
 	subtype = "analysis", unique=true,

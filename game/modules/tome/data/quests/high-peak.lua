@@ -113,7 +113,7 @@ end
 
 function win(self, how)
 	game:playAndStopMusic("Lords of the Sky.ogg")
-	game.player:learnLore("closing-farportal")
+	game.party:learnLore("closing-farportal")
 
 	if how == "full" then world:gainAchievement("WIN_FULL", game.player)
 	elseif how == "aeryn-sacrifice" then world:gainAchievement("WIN_AERYN", game.player)

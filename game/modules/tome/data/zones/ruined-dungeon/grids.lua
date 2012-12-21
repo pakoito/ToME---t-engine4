@@ -33,7 +33,7 @@ newEntity{
 		if self.lore == "infinite-dungeon-4" then
 			game:setAllowedBuild("campaign_infinite_dungeon", true)
 		end
-		who:learnLore(self.lore)
+		game.party:learnLore(self.lore)
 	end,
 }
 end

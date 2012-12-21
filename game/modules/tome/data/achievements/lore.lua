@@ -23,15 +23,14 @@ newAchievement{
 	show = "full",
 	mode = "player",
 	can_gain = function(self, who, obj)
-		local p = game:getPlayer(true)
-		if not p:knownLore("spellblaze-chronicles-1") then return false end
-		if not p:knownLore("spellblaze-chronicles-2") then return false end
-		if not p:knownLore("spellblaze-chronicles-3") then return false end
-		if not p:knownLore("spellblaze-chronicles-4") then return false end
-		if not p:knownLore("spellblaze-chronicles-5") then return false end
-		if not p:knownLore("spellblaze-chronicles-6") then return false end
-		if not p:knownLore("spellblaze-chronicles-7") then return false end
-		if not p:knownLore("spellblaze-chronicles-8") then return false end
+		if not game.party:knownLore("spellblaze-chronicles-1") then return false end
+		if not game.party:knownLore("spellblaze-chronicles-2") then return false end
+		if not game.party:knownLore("spellblaze-chronicles-3") then return false end
+		if not game.party:knownLore("spellblaze-chronicles-4") then return false end
+		if not game.party:knownLore("spellblaze-chronicles-5") then return false end
+		if not game.party:knownLore("spellblaze-chronicles-6") then return false end
+		if not game.party:knownLore("spellblaze-chronicles-7") then return false end
+		if not game.party:knownLore("spellblaze-chronicles-8") then return false end
 		return true
 	end
 }
@@ -42,12 +41,11 @@ newAchievement{
 	show = "full",
 	mode = "player",
 	can_gain = function(self, who, obj)
-		local p = game:getPlayer(true)
-		if not p:knownLore("garkul-history-1") then return false end
-		if not p:knownLore("garkul-history-2") then return false end
-		if not p:knownLore("garkul-history-3") then return false end
-		if not p:knownLore("garkul-history-4") then return false end
-		if not p:knownLore("garkul-history-5") then return false end
+		if not game.party:knownLore("garkul-history-1") then return false end
+		if not game.party:knownLore("garkul-history-2") then return false end
+		if not game.party:knownLore("garkul-history-3") then return false end
+		if not game.party:knownLore("garkul-history-4") then return false end
+		if not game.party:knownLore("garkul-history-5") then return false end
 		return true
 	end
 }
@@ -58,12 +56,11 @@ newAchievement{
 	show = "full",
 	mode = "player",
 	can_gain = function(self, who, obj)
-		local p = game:getPlayer(true)
-		if not p:knownLore("orc-history-1") then return false end
-		if not p:knownLore("orc-history-2") then return false end
-		if not p:knownLore("orc-history-3") then return false end
-		if not p:knownLore("orc-history-4") then return false end
-		if not p:knownLore("orc-history-5") then return false end
+		if not game.party:knownLore("orc-history-1") then return false end
+		if not game.party:knownLore("orc-history-2") then return false end
+		if not game.party:knownLore("orc-history-3") then return false end
+		if not game.party:knownLore("orc-history-4") then return false end
+		if not game.party:knownLore("orc-history-5") then return false end
 		return true
 	end
 }

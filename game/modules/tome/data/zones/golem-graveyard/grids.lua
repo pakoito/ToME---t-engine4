@@ -34,7 +34,7 @@ Someone foolish has tried to reconstruct it, but it seems like it misses an eye 
 	dig = false,
 	block_move = function(self, x, y, e, act, couldpass)
 		if e and e.player and act then
-			e:learnLore("broken-atamathon")
+			game.party:learnLore("broken-atamathon")
 			local eye, eye_item = e:findInInventoryBy(e:getInven("INVEN"), "define_as", "ATAMATHON_ACTIVATE")
 			if eye then
 				require("engine.ui.Dialog"):yesnoPopup("Atamathon", "It seems that your "..eye:getName{do_color=true}.." is made to fit inside the empty eye socket of Atamathon. This is probably very unwise.", function(ret)

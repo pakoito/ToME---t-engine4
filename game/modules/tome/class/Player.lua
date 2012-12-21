@@ -25,7 +25,6 @@ require "engine.interface.PlayerHotkeys"
 require "engine.interface.PlayerSlide"
 require "engine.interface.PlayerMouse"
 require "mod.class.interface.PlayerStats"
-require "mod.class.interface.PlayerLore"
 require "mod.class.interface.PlayerDumpJSON"
 require "mod.class.interface.PlayerExplore"
 require "mod.class.interface.PartyDeath"
@@ -44,7 +43,6 @@ module(..., package.seeall, class.inherit(
 	engine.interface.PlayerMouse,
 	engine.interface.PlayerSlide,
 	mod.class.interface.PlayerStats,
-	mod.class.interface.PlayerLore,
 	mod.class.interface.PlayerDumpJSON,
 	mod.class.interface.PlayerExplore,
 	mod.class.interface.PartyDeath
@@ -85,7 +83,6 @@ function _M:init(t, no_default)
 
 	mod.class.Actor.init(self, t, no_default)
 	engine.interface.PlayerHotkeys.init(self, t)
-	mod.class.interface.PlayerLore.init(self, t)
 
 	self.descriptor = self.descriptor or {}
 	self.died_times = self.died_times or {}

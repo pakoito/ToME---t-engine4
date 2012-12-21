@@ -24,16 +24,18 @@ local Dialog = require "engine.ui.Dialog"
 local GetQuantity = require "engine.dialogs.GetQuantity"
 local PartyOrder = require "mod.dialogs.PartyOrder"
 local PartyIngredients = require "mod.class.interface.PartyIngredients"
+local PartyLore = require "mod.class.interface.PartyLore"
 local PartyRewardSelector = require "mod.dialogs.PartyRewardSelector"
 
 module(..., package.seeall, class.inherit(
-	engine.Entity, PartyIngredients
+	engine.Entity, PartyIngredients, PartyLore
 ))
 
 function _M:init(t, no_default)
 	t.name = t.name or "party"
 	engine.Entity.init(self, t, no_default)
 	PartyIngredients.init(self, t)
+	PartyLore.init(self, t)
 
 	self.members = {}
 	self.m_list = {}
@@ -201,8 +203,8 @@ function _M:setPlayer(actor, bypass)
 	if actor == game.player then return true end
 
 	-- Stop!!
-	if game.player.runStop then game.player:runStop("Switching control") end
-	if game.player.restStop then game.player:restStop("Switching control") end
+	if game.player and game.player.runStop then game.player:runStop("Switching control") end
+	if game.player and game.player.restStop then game.player:restStop("Switching control") end
 
 	local def = self.members[actor]
 	local oldp = self.player

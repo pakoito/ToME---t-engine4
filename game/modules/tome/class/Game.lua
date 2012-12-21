@@ -1543,7 +1543,7 @@ do return end
 			local l = {
 				"resume",
 				"achievements",
-				{ "Show known Lore", function() self:unregisterDialog(menu) self:registerDialog(require("mod.dialogs.ShowLore").new("Tales of Maj'Eyal Lore", self.player)) end },
+				{ "Show known Lore", function() self:unregisterDialog(menu) self:registerDialog(require("mod.dialogs.ShowLore").new("Tales of Maj'Eyal Lore", self.party)) end },
 				{ "Show ingredients", function() self:unregisterDialog(menu) self:registerDialog(require("mod.dialogs.ShowIngredients").new(self.party)) end },
 				"highscores",
 				{ "Inventory", function() self:unregisterDialog(menu) self.key:triggerVirtual("SHOW_INVENTORY") end },

@@ -42,7 +42,7 @@ desc = function(self, who)
 end
 
 on_grant = function(self, who)
-	who:learnLore("master-slain")
+	game.party:learnLore("master-slain")
 	game.logPlayer(who, "#00FFFF#You can feel the power of this staff just by carrying it. This is both ancient and dangerous.")
 	game.logPlayer(who, "#00FFFF#It should be shown to the wise elders in Last Hope!")
 end

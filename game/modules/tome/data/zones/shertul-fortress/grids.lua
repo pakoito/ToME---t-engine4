@@ -166,7 +166,7 @@ newEntity{
 			profile:setConfigsBatch(true)
 			if profile.mod.lore and profile.mod.lore.lore then
 				for lore, _ in pairs(profile.mod.lore.lore) do
-					game.player:learnLore(lore, true, true)
+					game.party:learnLore(lore, true, true)
 					core.wait.manualTick(1)
 				end
 			end
@@ -174,7 +174,7 @@ newEntity{
 
 			popup:done()
 
-			game:registerDialog(require("mod.dialogs.ShowLore").new("Yiilkgur's Library of Lost Mysteries", game.player))
+			game:registerDialog(require("mod.dialogs.ShowLore").new("Yiilkgur's Library of Lost Mysteries", game.party))
 		end
 		return true
 	end,
@@ -186,6 +186,6 @@ newEntity{ define_as = "MURAL_PAINTING"..i,
 	name="mural painting", lore = "shertul-fortress-"..i,
 	display='#', color=colors.LIGHT_RED,
 	image="terrain/solidwall/solid_wall_mural_shertul"..i..".png",
-	block_move=function(self, x, y, e, act, couldpass) if e and e.player and act then e:learnLore(self.lore) end return true end
+	block_move=function(self, x, y, e, act, couldpass) if e and e.player and act then game.party:learnLore(self.lore) end return true end
 }
 end

@@ -80,7 +80,7 @@ on_enter_cave_entrance = function(self, who)
 end
 
 on_start_dream = function(self, who)
-	who:learnLore("keepsake-dream")
+	game.party:learnLore("keepsake-dream")
 	game.logPlayer(who, "#VIOLET#You find yourself in a dream.")
 	
 	-- make sure waking up returns to the same spot
@@ -107,14 +107,14 @@ on_start_dream = function(self, who)
 end
 
 on_pickup_acorn = function(self, who)
-	who:learnLore("keepsake-acorn")
+	game.party:learnLore("keepsake-acorn")
 	game.logPlayer(who, "#VIOLET#You have discovered a small iron acorn, a link to your past.")
 	
 	who:setQuestStatus("keepsake", engine.Quest.COMPLETED, "acorn-found")
 end
 
 on_find_caravan = function(self, who)
-	who:learnLore("keepsake-caravan")
+	game.party:learnLore("keepsake-caravan")
 	game.logPlayer(who, "#VIOLET#The merchant caravan from the past has appeared in your dream.")
 	
 	-- turn the caravaneers hostile
@@ -154,22 +154,22 @@ on_caravan_destroyed_chat_over = function(self, who)
 	who.die = who.old_die
 	who.old_die = nil
 	
-	who:learnLore("keepsake-dreams-end")
+	game.party:learnLore("keepsake-dreams-end")
 	game.logPlayer(who, "#VIOLET#You have begun your hunt for Kyless!")
 end
 
 on_cave_marker = function(self, who)
-	who:learnLore("keepsake-cave-marker")
+	game.party:learnLore("keepsake-cave-marker")
 	game.logPlayer(who, "#VIOLET#You have a marker to the entrance of Kyless' cave!")
 end
 
 on_cave_entrance = function(self, who)
-	who:learnLore("keepsake-cave-entrance")
+	game.party:learnLore("keepsake-cave-entrance")
 	game.logPlayer(who, "#VIOLET#You have found the entrance to Kyless' cave!")
 end
 
 on_cave_description = function(self, who)
-	who:learnLore("keepsake-cave-description")
+	game.party:learnLore("keepsake-cave-description")
 	
 	-- spawn the guards
 	spot = game.level:pickSpot{type="guards", subtype="wardog"}
@@ -186,7 +186,7 @@ on_cave_description = function(self, who)
 end
 
 on_vault_entrance = function(self, who)
-	who:learnLore("keepsake-vault-entrance")
+	game.party:learnLore("keepsake-vault-entrance")
 	game.logPlayer(who, "#VIOLET#You have found the entrance to a vault!")
 end
 
@@ -205,7 +205,7 @@ on_dog_vault = function(self, who)
 end
 
 on_kyless_encounter = function(self, who)
-	who:learnLore("keepsake-kyless-encounter")
+	game.party:learnLore("keepsake-kyless-encounter")
 	game.logPlayer(who, "#VIOLET#You have found Kyless. You must destroy him.")
 end
 
@@ -250,10 +250,10 @@ on_berethh_death = function(self, who, berethh)
 	
 	if self.balance > 0 then
 		who:setQuestStatus("keepsake", engine.Quest.COMPLETED, "berethh-killed-good")
-		who:learnLore("keepsake-berethh-death-good")
+		game.party:learnLore("keepsake-berethh-death-good")
 	else
 		who:setQuestStatus("keepsake", engine.Quest.COMPLETED, "berethh-killed-evil")
-		who:learnLore("keepsake-berethh-death-evil")
+		game.party:learnLore("keepsake-berethh-death-evil")
 	end
 	self.spawn_companions = true
 	

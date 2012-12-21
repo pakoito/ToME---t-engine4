@@ -2166,7 +2166,7 @@ function _M:die(src, death_note)
 
 	if self.tier1 then game.state:tier1Kill() end
 
-	if self.on_death_lore then game.player:learnLore(self.on_death_lore) end
+	if self.on_death_lore then game.party:learnLore(self.on_death_lore) end
 
 	-- Do we get a blooooooody death ?
 	if rng.percent(33) then self:bloodyDeath() end
