@@ -200,6 +200,10 @@ function _M:setPlayer(actor, bypass)
 
 	if actor == game.player then return true end
 
+	-- Stop!!
+	if game.player.runStop then game.player:runStop("Switching control") end
+	if game.player.restStop then game.player:restStop("Switching control") end
+
 	local def = self.members[actor]
 	local oldp = self.player
 	self.player = actor
