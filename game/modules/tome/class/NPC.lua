@@ -88,7 +88,7 @@ function _M:lineFOV(tx, ty, extra_block, block, sx, sy)
 	sy = sy or self.y
 	local act = game.level.map(tx, ty, engine.Map.ACTOR)
 	local sees_target = core.fov.distance(sx, sy, tx, ty) <= self.sight and game.level.map.lites(tx, ty) or
-		act and self:canSee(act) and core.fov.distance(sx, sy, tx, ty) <= math.max(self.sight, (self.heightened_senses or 0) + (self.infravision or 0))
+		act and self:canSee(act) and core.fov.distance(sx, sy, tx, ty) <= math.max(self.sight, math.min(self.sight, (self.heightened_senses or 0) + (self.infravision or 0)))
 
 	local darkVisionRange
 	if self:knowTalent(self.T_DARK_VISION) then
