@@ -55,7 +55,7 @@ newEntity{ base = "FLOOR", define_as = "GRAVE",
 	nice_editer = grass_editer,
 	block_move = function(self, x, y, who, act, couldpass)
 		if not who or not who.player or not act then return true end
-		if self.lore then who:learnLore(self.lore) end
+		if self.lore then game.party:learnLore(self.lore) end
 		return true
 	end,
 }
