@@ -208,7 +208,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target doing %d%% damage. If the attack hits, the target is stunned.]]):format(100 * self:combatTalentWeaponDamage(t, 0.5, 1))
+		return ([[Hits the target doing %d%% damage. If the attack hits, the target is stunned. The chance to stun improves with your Physical Power.]]):format(100 * self:combatTalentWeaponDamage(t, 0.5, 1))
 	end,
 }
 
@@ -238,7 +238,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target doing %d%% damage and trying to disarm the target.]]):format(100 * self:combatTalentWeaponDamage(t, 0.5, 1))
+		return ([[Hits the target doing %d%% damage and trying to disarm the target. The chance improves with your Physical Power.]]):format(100 * self:combatTalentWeaponDamage(t, 0.5, 1))
 	end,
 }
 
@@ -270,7 +270,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target doing %d%% damage. If the attack hits, the target is constricted.]]):format(100 * self:combatTalentWeaponDamage(t, 0.5, 1))
+		return ([[Hits the target doing %d%% damage. If the attack hits, the target is constricted. The constriction power improves with your Physical Power.]]):format(100 * self:combatTalentWeaponDamage(t, 0.5, 1))
 	end,
 }
 
@@ -303,7 +303,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target with your weapon doing %d%% damage. If the attack hits, the target is knocked back.]]):format(100 * self:combatTalentWeaponDamage(t, 1.5, 2))
+		return ([[Hits the target with your weapon doing %d%% damage. If the attack hits, the target is knocked back. The chance improves with your Physical Power.]]):format(100 * self:combatTalentWeaponDamage(t, 1.5, 2))
 	end,
 }
 
@@ -528,7 +528,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Condenses ambient water on a target, damaging it for %0.2f.
-		The damage will increase with the Magic stat]]):format(12 + self:combatSpellpower(0.25) * self:getTalentLevel(t))
+		The damage will increase with your Spellpower.]]):format(12 + self:combatSpellpower(0.25) * self:getTalentLevel(t))
 	end,
 }
 
@@ -553,7 +553,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Condenses ambient water on a target, damaging it for %0.2f and stunning it for 4 turns.
-		The damage will increase with the Magic stat]]):format(12 + self:combatSpellpower(0.20) * self:getTalentLevel(t))
+		The damage will increase with your Spellpower]]):format(12 + self:combatSpellpower(0.20) * self:getTalentLevel(t))
 	end,
 }
 
@@ -579,7 +579,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Fires a blast of void energies that slowly travel to their target, dealing %0.2f arcane damage on impact.
-		The damage will increase with the Magic stat]]):format(damDesc(self, DamageType.ARCANE, self:combatTalentSpellDamage(t, 15, 240)))
+		The damage will increase with your Spellpower.]]):format(damDesc(self, DamageType.ARCANE, self:combatTalentSpellDamage(t, 15, 240)))
 	end,
 }
 
@@ -738,8 +738,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local s = math.max(self:getDex(), self:getStr())
-		return ([[Spit poison at your target doing %0.2f poison damage.
-		The damage will increase with the Strength or Dexterity stat (whichever is higher)]]):format(20 + (s * self:getTalentLevel(t)) * 0.8)
+		return ([[Spit poison at your target, doing %0.2f poison damage over six turns.
+		The damage will increase with your Strength or Dexterity (whichever is higher).]]):format(20 + (s * self:getTalentLevel(t)) * 0.8)
 	end,
 }
 
@@ -762,7 +762,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Spit blight at your target doing %0.2f blight damage.
-		The damage will increase with the Magic stat]]):format(20 + (self:getMag() * self:getTalentLevel(t)) * 0.8)
+		The damage will increase with your Magic.]]):format(20 + (self:getMag() * self:getTalentLevel(t)) * 0.8)
 	end,
 }
 
@@ -809,7 +809,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Rushes toward your target with incredible speed. If the target is reached you use your claws to pin it to the ground for 5 turns.
+		return ([[Rushes toward your target with incredible speed. If the target is reached, you use your claws to pin it to the ground for 5 turns.
 		You must rush from at least 2 tiles away.]])
 	end,
 }
@@ -943,7 +943,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Throws a huge boulder at a target, damaging it for %0.2f and knocking it back.
-		The damage will increase with the Strength stat]]):format(12 + self:getStr(50, true) * self:getTalentLevel(t))
+		The damage will increase with your Strength.]]):format(12 + self:getStr(50, true) * self:getTalentLevel(t))
 	end,
 }
 
@@ -1340,8 +1340,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Summons a small raging volcano for %d turns. Every turns it will fire %d molten boulders toward your foes, dealing %0.2f fire and %0.2f physical damage.
-		The damage will scale with Spellpower.]]):
+		return ([[Summons a small raging volcano for %d turns. Every turn, it will fire %d molten boulders toward your foes, dealing %0.2f fire and %0.2f physical damage.
+		The damage will scale with your Spellpower.]]):
 		format(4 + self:getTalentLevel(t), math.floor(self:getTalentLevel(self.T_VOLCANO)), damDesc(self, DamageType.FIRE, self:combatTalentSpellDamage(self.T_VOLCANO, 15, 80) / 2), damDesc(self, DamageType.PHYSICAL, self:combatTalentSpellDamage(self.T_VOLCANO, 15, 80) / 2))
 	end,
 }
@@ -1513,7 +1513,7 @@ newTalent{
 
 		-- Find space
 		local x, y = util.findFreeGrid(tx, ty, 3, true, {[Map.ACTOR]=true})
-		if not x then
+		if not x then	
 			game.logPlayer(self, "Not enough space to invoke!")
 			return
 		end
@@ -1566,7 +1566,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Conjures up a fist of stone doing %0.2f physical damage and knocking the target back.
+		return ([[Conjures up a fist of stone, doing %0.2f physical damage and knocking the target back.
 		The damage will increase with your Spellpower.]]):format(damDesc(self, DamageType.PHYSICAL, damage))
 	end,
 }
@@ -1837,7 +1837,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Calls forth a powerful beam of lightning doing %0.2f to %0.2f damage
+		return ([[Calls forth a powerful beam of lightning doing %0.2f to %0.2f damage.
 		The damage will increase with your Mindpower.]]):
 		format(damDesc(self, DamageType.LIGHTNING, damage / 3),
 		damDesc(self, DamageType.LIGHTNING, damage))

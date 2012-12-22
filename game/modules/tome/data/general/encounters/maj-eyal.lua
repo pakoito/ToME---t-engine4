@@ -32,7 +32,7 @@ newEntity{
 			display='@', color=colors.RED,
 			image = "npc/humanoid_human_apprentice_mage.png",
 			can_talk = "mage-apprentice-quest",
-			unit_power = 300,
+			unit_power = 3000,
 		}
 		g:resolve() g:resolve(nil, true)
 		game.zone:addEntity(game.level, g, "actor", x, y)
@@ -212,7 +212,7 @@ newEntity{
 			type="humanoid", subtype="human", faction="neutral",
 			display='@', color=colors.BLUE,
 			can_talk = "alchemist-hermit",
-			unit_power = 300,
+			unit_power = 3000,
 		}
 		g:resolve() g:resolve(nil, true)
 		game.zone:addEntity(game.level, g, "actor", x, y)
