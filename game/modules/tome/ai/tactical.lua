@@ -19,7 +19,7 @@
 
 local DamageType = require "engine.DamageType"
 
---local print = function() end
+local print = function() end
 
 local canFleeDmapKeepLos = function(self)
 	if self.never_move then return false end -- Dont move, dont flee
