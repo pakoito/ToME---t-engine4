@@ -728,7 +728,7 @@ function _M:createDisplay()
 		if self.no_tooltip then
 			self.c_desc:erase()
 			self.c_desc:switchItem(str, str, true)
-		else
+		elseif self.b_stat.last_display_x then
 			game:tooltipDisplayAtMap(self.b_stat.last_display_x + self.b_stat.w, self.b_stat.last_display_y, str)
 		end
 	end}
@@ -737,7 +737,7 @@ function _M:createDisplay()
 		if self.no_tooltip then
 			self.c_desc:erase()
 			self.c_desc:switchItem(str, str, true)
-		else
+		elseif self.b_stat.last_display_x then
 			game:tooltipDisplayAtMap(self.b_stat.last_display_x + self.b_stat.w, self.b_stat.last_display_y, str)
 		end
 	end}
@@ -746,7 +746,7 @@ function _M:createDisplay()
 		if self.no_tooltip then
 			self.c_desc:erase()
 			self.c_desc:switchItem(str, str, true)
-		else
+		elseif self.b_stat.last_display_x then
 			game:tooltipDisplayAtMap(self.b_stat.last_display_x + self.b_stat.w, self.b_stat.last_display_y, str)
 		end
 	end}
@@ -755,7 +755,7 @@ function _M:createDisplay()
 		if self.no_tooltip then
 			self.c_desc:erase()
 			self.c_desc:switchItem(str, str, true)
-		else
+		elseif self.b_stat.last_display_x then
 			game:tooltipDisplayAtMap(self.b_stat.last_display_x + self.b_stat.w, self.b_stat.last_display_y, str)
 		end
 	end}

@@ -417,9 +417,8 @@ function _M:aiCanPass(x, y)
 			for _, side in ipairs(check_order) do
 				local check_dir = sides[side]
 				local sx, sy = util.coordAddDir(target.x, target.y, check_dir)
-				if target:canMove(sx, sy) then
+				if target:canMove(sx, sy) and target:move(sx, sy) then
 					game.logSeen(target, "%s shoves %s forward.", self.name:capitalize(), target.name)
-					target:move(sx, sy, true)
 					target.shove_pressure = nil
 					target._last_shove_pressure = nil
 					break
