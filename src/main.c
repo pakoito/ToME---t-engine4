@@ -49,6 +49,7 @@
 
 #define WIDTH 800
 #define HEIGHT 600
+#define DEFAULT_IDLE_FPS (2)
 
 int start_xpos = -1, start_ypos = -1;
 
@@ -73,7 +74,13 @@ int mouse_drag_w = 32, mouse_drag_h = 32;
 int mouse_drag_tex = 0, mouse_drag_tex_ref = LUA_NOREF;
 int mousex = 0, mousey = 0;
 float gamma_correction = 1;
+/* The currently requested fps for the program */
 int requested_fps = 30;
+/* The requested fps for when the program is idle (i.e., doesn't have focus) */
+int requested_fps_idle = DEFAULT_IDLE_FPS;
+/* The currently "saved" fps, used for idle transitions. */
+int requested_fps_idle_saved = 0;
+
 SDL_TimerID display_timer_id = 0;
 SDL_TimerID realtime_timer_id = 0;
 
@@ -97,8 +104,29 @@ int realtime_pending = 0;
 
 /*
  * Used to clean up a lock and its corresponding timer/flag.
+ *
+ * @param lock
+ *  The lock which is used by the timer and its event handler.
+ *
+ * @param timer
+ *  The id of the timer to clean up.
+ *
+ * @param timerFlag
+ *  The flag variable that timer and its events use.
+ *
  */
 static void cleanupTimerLock(SDL_mutex *lock, SDL_TimerID *timer, int *timerFlag);
+
+/*
+ * Handles transitions to and from idle mode.
+ *
+ * A transition is only performed if the game already has a running render timer
+ *  and there is an actual idle->normal or normal->idle transition.
+ *
+ * @param goIdle
+ *  Return to normal game rendering speed if zero, go idle otherwise.
+ */
+static void handleIdleTransition(int goIdle);
 
 void del_lua_error()
 {
@@ -1016,6 +1044,50 @@ static void define_core(core_boot_type *core_def, const char *coretype, int id, 
 #define main tengine_main
 #endif
 
+/* Cleans up a timer lock.  See function declaration for more info. */
+void cleanupTimerLock(SDL_mutex *lock, SDL_TimerID *timer
+	, int *timerFlag)
+{
+	// Grab the lock and start cleaning up
+	SDL_mutexP(lock);
+		// Cancel the timer (if it is running)
+		if (*timer) SDL_RemoveTimer(*timer);
+		*timer = 0;
+		*timerFlag = -1;
+
+	SDL_mutexV(lock);
+
+	/*
+	 * Need to get lock once more just in case a timer call was stuck waiting on
+	 * the lock when we altered the variables.
+	 */
+	SDL_mutexP(lock);
+	SDL_mutexV(lock);
+
+	// Can now safely destroy the lock.
+	SDL_DestroyMutex(lock);
+}
+
+/* Handles game idle transition.  See function declaration for more info. */
+void handleIdleTransition(int goIdle)
+{
+	/* Only allow if a display timer is already running. */
+	if (display_timer_id) {
+		if (goIdle) {
+			/* Make sure this isn't an idle->idle transition */
+			if (requested_fps != requested_fps_idle) {
+				requested_fps_idle_saved = requested_fps;
+				setupDisplayTimer(requested_fps_idle);
+			}
+
+		} else if (requested_fps_idle_saved && (requested_fps != requested_fps_idle_saved)) {
+			/* Made sure this wasn't a nonidle->nonidle */
+			setupDisplayTimer(requested_fps_idle_saved);
+		}
+
+	}
+
+}
 
 /**
  * Core entry point.
@@ -1186,13 +1258,25 @@ int main(int argc, char *argv[])
 					event.type = SDL_QUIT;
 					SDL_PushEvent(&event);
 					break;
+
 				case SDL_WINDOWEVENT_SHOWN:
-				case SDL_WINDOWEVENT_HIDDEN:
 				case SDL_WINDOWEVENT_FOCUS_GAINED:
-				case SDL_WINDOWEVENT_FOCUS_LOST:
 					SDL_SetModState(KMOD_NONE);
-//					printf("SDL Activity %d\n", isActive);
+					/* break from idle */
+					printf("[EVENT HANDLER]: Got a SHOW/FOCUS_GAINED event, restoring full FPS.\n");
+					handleIdleTransition(0);
 					break;
+
+				case SDL_WINDOWEVENT_HIDDEN:
+				case SDL_WINDOWEVENT_FOCUS_LOST:
+					/* go idle */
+					SDL_SetModState(KMOD_NONE);
+					printf("[EVENT HANDLER]: Got a HIDDEN/FOCUS_LOST event, going idle.\n");
+					handleIdleTransition(1);
+					break;
+				default:
+					break;
+
 				}
 				break;
 			case SDL_TEXTINPUT:
@@ -1295,28 +1379,4 @@ int main(int argc, char *argv[])
 #ifdef SELFEXE_WINDOWS
 	fclose(stdout);
 #endif
-}
-
-/* Cleans up a timer lock.  See function declaration for more info. */
-void cleanupTimerLock(SDL_mutex *lock, SDL_TimerID *timer
-	, int *timerFlag)
-{
-	// Grab the lock and start cleaning up
-	SDL_mutexP(lock);
-		// Cancel the timer (if it is running)
-		if (*timer) SDL_RemoveTimer(*timer);
-		*timer = 0;
-		*timerFlag = -1;
-		
-	SDL_mutexV(lock);
-	
-	/*
-	 * Need to get lock once more just in case a timer call was stuck waiting on
-	 * the lock when we altered the variables.
-	 */
-	SDL_mutexP(lock);
-	SDL_mutexV(lock);
-	
-	// Can now safely destroy the lock.
-	SDL_DestroyMutex(lock);
 }
