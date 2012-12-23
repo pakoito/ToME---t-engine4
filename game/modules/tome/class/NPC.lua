@@ -160,9 +160,12 @@ function _M:seen_by(who)
 	if self.dont_pass_target then return end
 	if not who.ai_target then return end
 	if not who.ai_target.actor then return end
+	if not who.ai_target.actor.x then return end
 	if self:reactionToward(who) <= 0 then return end
 	if not who:canSee(who.ai_target.actor) then return end
 	if not who.x or not self:hasLOS(who.x, who.y) then return end
+	if core.fov.distance(self.x, self.y, who.x, who.y) > self.sight then return end
+	if core.fov.distance(self.x, self.y, who.ai_target.actor.x, who.ai_target.actor.y) > self.sight then return end
 	self:setTarget(who.ai_target.actor)
 	print("[TARGET] Passing target", self.name, "from", who.name, "to", who.ai_target.actor.name)
 end
