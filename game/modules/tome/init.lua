@@ -22,8 +22,8 @@ long_name = "Tales of Maj'Eyal: Age of Ascendancy"
 short_name = "tome"
 author = { "DarkGod", "darkgod@te4.org" }
 homepage = "http://te4.org/"
-version = {0,9,45}
-engine = {0,9,45,"te4"}
+version = {0,9,46}
+engine = {0,9,46,"te4"}
 description = [[
 Welcome to Maj'Eyal.
 
@@ -56,8 +56,9 @@ loading_wait_ticks = 260
 profile_stats_fields = {"artifacts", "characters", "deaths", "uniques", "scores", "lore", "escorts"}
 allow_userchat = true -- We can talk to the online community
 no_get_name = true -- Name setting for new characters is done by the module itself
---background_name = {"tome","tome2","tome3"}
-background_name = {"tome3"}
+if not config.settings.censor_boot then background_name = {"tome","tome2","tome3"}
+else background_name = {"tome3"}
+end
 
 load_tips = {
 	{image="/data/gfx/shockbolt/npc/humanoid_human_linaniil_supreme_archmage.png", img_y_off=-50, text=[[Though magic is still shunned in Maj'Eyal, rumours abound of secret havens of mages.]]},

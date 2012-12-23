@@ -23,8 +23,8 @@ short_name = "boot"
 author = { "DarkGod", "darkgod@te4.org" }
 homepage = "http://te4.org/"
 is_boot = true
-version = {0,9,44}
-engine = {0,9,44,"te4"}
+version = {0,9,46}
+engine = {0,9,46,"te4"}
 description = [[
 Bootmenu!
 ]]
