@@ -32,7 +32,7 @@ desc = function(self, who)
 		desc[#desc+1] = "#LIGHT_GREEN#* You have activated what seems to be a ... butler? with your rod of recall.#WHITE#"
 	end
 	if self:isCompleted("transmo-chest") then
-		desc[#desc+1] = "#LIGHT_GREEN#* You have bound the transmogrification chest to the Fortress pwoer system.#WHITE#"
+		desc[#desc+1] = "#LIGHT_GREEN#* You have bound the transmogrification chest to the Fortress power system.#WHITE#"
 	end
 	if self:isCompleted("transmo-chest-extract-gems") then
 		desc[#desc+1] = "#LIGHT_GREEN#* You have upgraded the transmogrification chest to automatically transmute metallic items into gems before transmogrifying them.#WHITE#"

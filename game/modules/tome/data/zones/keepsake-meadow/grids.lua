@@ -51,7 +51,7 @@ newEntity{
 		
 		-- meadow starts the quest
 		who:grantQuest("keepsake")
-		who:learnLore("keepsake-meadow")
+		game.party:learnLore("keepsake-meadow")
 	end,
 }
 

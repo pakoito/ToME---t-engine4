@@ -39,7 +39,7 @@ defineTile(" ", "OLD_FLOOR", nil, {random_filter={random_elite={name_scheme="#rn
 	local spot = game.level:pickSpotRemove{type="portal", subtype="portal"}
 	if spot then
 		game.level.map(spot.x, spot.y, engine.Map.TERRAIN).orb_allowed = true
-		require("engine.ui.Dialog"):simplePopup("Guardian", "You can ear a magical trigger firing off.")
+		require("engine.ui.Dialog"):simplePopup("Guardian", "You can hear a magical trigger firing off.")
 	end
 end}, add_levels=5}})
 

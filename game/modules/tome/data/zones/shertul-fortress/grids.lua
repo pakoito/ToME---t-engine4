@@ -157,7 +157,7 @@ newEntity{
 	block_move = function(self, x, y, e, act, couldpass)
 		if e and e.player and act then
 			local nb = 0
-			for lore, _ in pairs(profile.mod.lore.lore) do nb = nb + 1 end
+			if profile.mod.lore then for lore, _ in pairs(profile.mod.lore.lore) do nb = nb + 1 end end
 
 			local popup = require("engine.ui.Dialog"):simpleWaiter("Yiilkgur's Library of Lost Mysteries", "Receiving the lost knowledge of the universe...", nil, nil, nb)
 			core.wait.enableManualTick(true)
