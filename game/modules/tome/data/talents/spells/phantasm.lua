@@ -112,7 +112,7 @@ newTalent{
 		game:playSoundNear(self, "talents/heal")
 		return {
 			particle = self:addParticles(Particles.new("phantasm_shield", 1)),
-			onhit = self:addTemporaryValue("on_melee_hit", {[DamageType.ARCANE]=t.getDamage(self, t)}),
+			onhit = self:addTemporaryValue("on_melee_hit", {[DamageType.LIGHT]=t.getDamage(self, t)}),
 		}
 	end,
 	deactivate = function(self, t, p)
@@ -122,9 +122,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[The caster is surrounded by a phantasmal shield. If hit in melee, the shield will deal %d arcane damage to the attacker.
+		return ([[The caster is surrounded by a phantasmal shield. If hit in melee, the shield will deal %d light damage to the attacker.
 		The damage will increase with your Spellpower.]]):
-		format(damDesc(self, DamageType.ARCANE, damage))
+		format(damDesc(self, DamageType.LIGHT, damage))
 	end,
 }
 
