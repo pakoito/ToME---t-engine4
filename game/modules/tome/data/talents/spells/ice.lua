@@ -155,6 +155,7 @@ newTalent{
 	tactical = { BUFF = 2 },
 	getColdDamageIncrease = function(self, t) return self:getTalentLevelRaw(t) * 2 end,
 	getResistPenalty = function(self, t) return self:getTalentLevelRaw(t) * 10 end,
+	getPierce = function(self, t) return self:getTalentLevelRaw(t) * 20 end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/ice")
 
@@ -168,6 +169,7 @@ newTalent{
 		return {
 			dam = self:addTemporaryValue("inc_damage", {[DamageType.COLD] = t.getColdDamageIncrease(self, t)}),
 			resist = self:addTemporaryValue("resists_pen", {[DamageType.COLD] = t.getResistPenalty(self, t)}),
+			pierce = self:addTemporaryValue("iceblock_pierce", t.getPierce(self, t)),
 			particle = particle,
 		}
 	end,
@@ -175,12 +177,15 @@ newTalent{
 		self:removeParticles(p.particle)
 		self:removeTemporaryValue("inc_damage", p.dam)
 		self:removeTemporaryValue("resists_pen", p.resist)
+		self:removeTemporaryValue("iceblock_pierce", p.pierce)
 		return true
 	end,
 	info = function(self, t)
 		local damageinc = t.getColdDamageIncrease(self, t)
 		local ressistpen = t.getResistPenalty(self, t)
-		return ([[Surround yourself with Uttercold, increasing all your cold damage by %d%% and ignoring %d%% cold resistance of your targets.]])
-		:format(damageinc, ressistpen)
+		local pierce = t.getPierce(self, t)
+		return ([[Surround yourself with Uttercold, increasing all your cold damage by %d%% and ignoring %d%% cold resistance of your targets
+		In addition you pierce through iceblocks easily, reducing damage absorbed from your attacks by iceblocks by %d%%.]])
+		:format(damageinc, ressistpen, pierce)
 	end,
 }

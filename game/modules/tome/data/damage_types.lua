@@ -248,6 +248,17 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 		end
 		print("[PROJECTOR] after resists dam", dam)
 
+		-- Reduce damage with resistance against self
+		if src == target and target.resists_self then
+			local res = target.resists_self[type] or 0
+			print("[PROJECTOR] res", res, (100 - res) / 100, " on dam", dam)
+			if res >= 100 then dam = 0
+			elseif res <= -100 then dam = dam * 2
+			else dam = dam * ((100 - res) / 100)
+			end
+			print("[PROJECTOR] after self-resists dam", dam)
+		end
+
 		-- Static reduce damage
 		if target.isTalentActive and target:isTalentActive(target.T_ANTIMAGIC_SHIELD) then
 			local t = target:getTalentFromId(target.T_ANTIMAGIC_SHIELD)
@@ -1003,7 +1014,7 @@ newDamageType{
 		if _G.type(dam) == "number" then dam = {dam=dam, daze=25} end
 		local realdam = DamageType:get(DamageType.LIGHTNING).projector(src, x, y, DamageType.LIGHTNING, dam.dam)
 		local target = game.level.map(x, y, Map.ACTOR)
-		if target and rng.percent(dam.daze) then
+		if target and dam.daze > 0 and rng.percent(dam.daze) then
 			if target:canBe("stun") then
 				game:onTickEnd(function() target:setEffect(target.EFF_DAZED, 3, {src=src, apply_power=src:combatSpellpower()}) end) -- Do it at the end so we don't break our own daze
 				if src:isTalentActive(src.T_HURRICANE) then

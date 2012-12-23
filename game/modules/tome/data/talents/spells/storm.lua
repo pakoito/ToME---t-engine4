@@ -147,6 +147,7 @@ newTalent{
 	cooldown = 30,
 	getLightningDamageIncrease = function(self, t) return self:getTalentLevelRaw(t) * 2 end,
 	getResistPenalty = function(self, t) return self:getTalentLevelRaw(t) * 10 end,
+	getDaze = function(self, t) return self:getTalentLevel(t) * 9 end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/thunderstorm")
 		local particle
@@ -158,6 +159,7 @@ newTalent{
 		return {
 			dam = self:addTemporaryValue("inc_damage", {[DamageType.LIGHTNING] = t.getLightningDamageIncrease(self, t)}),
 			resist = self:addTemporaryValue("resists_pen", {[DamageType.LIGHTNING] = t.getResistPenalty(self, t)}),
+			daze = self:addTemporaryValue("lightning_daze_tempest", t.getDaze(self, t)),
 			particle = particle,
 		}
 	end,
@@ -165,12 +167,15 @@ newTalent{
 		self:removeParticles(p.particle)
 		self:removeTemporaryValue("inc_damage", p.dam)
 		self:removeTemporaryValue("resists_pen", p.resist)
+		self:removeTemporaryValue("lightning_daze_tempest", p.daze)
 		return true
 	end,
 	info = function(self, t)
 		local damageinc = t.getLightningDamageIncrease(self, t)
 		local ressistpen = t.getResistPenalty(self, t)
-		return ([[Surround yourself with a Tempest, increasing all your lightning damage by %d%% and ignoring %d%% lightning resistance of your targets.]])
-		:format(damageinc, ressistpen)
+		local daze = t.getDaze(self, t)
+		return ([[Surround yourself with a Tempest, increasing all your lightning damage by %d%% and ignoring %d%% lightning resistance of your targets.
+		Your Lightning and Chain Lightning spells also gain %d%% chances to daze and your Thunderstorm spell %d%% chances to daze.]])
+		:format(damageinc, ressistpen, daze, daze / 2)
 	end,
 }

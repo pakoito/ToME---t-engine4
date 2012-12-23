@@ -185,6 +185,7 @@ newTalent{
 	tactical = { BUFF = 2 },
 	getPhysicalDamageIncrease = function(self, t) return self:getTalentLevelRaw(t) * 2 end,
 	getResistPenalty = function(self, t) return self:getTalentLevelRaw(t) * 10 end,
+	getSaves = function(self, t) return self:getTalentLevel(t) * 5 end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/earth")
 		local particle
@@ -196,6 +197,8 @@ newTalent{
 		return {
 			dam = self:addTemporaryValue("inc_damage", {[DamageType.PHYSICAL] = t.getPhysicalDamageIncrease(self, t)}),
 			resist = self:addTemporaryValue("resists_pen", {[DamageType.PHYSICAL] = t.getResistPenalty(self, t)}),
+			psave = self:addTemporaryValue("combat_physresist", t.getSaves(self, t)),
+			msave = self:addTemporaryValue("combat_spellresist", t.getSaves(self, t)),
 			particle = particle,
 		}
 	end,
@@ -203,12 +206,16 @@ newTalent{
 		self:removeParticles(p.particle)
 		self:removeTemporaryValue("inc_damage", p.dam)
 		self:removeTemporaryValue("resists_pen", p.resist)
+		self:removeTemporaryValue("combat_physresist", p.psave)
+		self:removeTemporaryValue("combat_spellresist", p.ssave)
 		return true
 	end,
 	info = function(self, t)
 		local damageinc = t.getPhysicalDamageIncrease(self, t)
 		local ressistpen = t.getResistPenalty(self, t)
-		return ([[Concentrate on maintaining a Crystalline Focus, increasing all your physical damage by %d%% and ignoring %d%% physical resistance of your targets.]])
-		:format(damageinc, ressistpen)
+		local saves = t.getSaves(self, t)
+		return ([[Concentrate on maintaining a Crystalline Focus, increasing all your physical damage by %d%% and ignoring %d%% physical resistance of your targets.
+		Also raises your physical and magical saves by %d.]])
+		:format(damageinc, ressistpen, saves)
 	end,
 }

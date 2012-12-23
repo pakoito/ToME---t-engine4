@@ -118,6 +118,7 @@ newTalent{
 	tactical = { BUFF = 2 },
 	getFireDamageIncrease = function(self, t) return self:getTalentLevelRaw(t) * 2 end,
 	getResistPenalty = function(self, t) return self:getTalentLevelRaw(t) * 10 end,
+	getResistSelf = function(self, t) return self:getTalentLevel(t) * 14 end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/fire")
 
@@ -130,6 +131,7 @@ newTalent{
 		return {
 			dam = self:addTemporaryValue("inc_damage", {[DamageType.FIRE] = t.getFireDamageIncrease(self, t)}),
 			resist = self:addTemporaryValue("resists_pen", {[DamageType.FIRE] = t.getResistPenalty(self, t)}),
+			selfres = self:addTemporaryValue("resists_self", {[DamageType.FIRE] = t.getResistSelf(self, t)}),
 			particle = particle,
 		}
 	end,
@@ -137,12 +139,14 @@ newTalent{
 		self:removeParticles(p.particle)
 		self:removeTemporaryValue("inc_damage", p.dam)
 		self:removeTemporaryValue("resists_pen", p.resist)
+		self:removeTemporaryValue("resists_self", p.selfres)
 		return true
 	end,
 	info = function(self, t)
 		local damageinc = t.getFireDamageIncrease(self, t)
 		local ressistpen = t.getResistPenalty(self, t)
-		return ([[Surround yourself with Wildfire, increasing all your fire damage by %d%% and ignoring %d%% fire resistance of your targets.]])
-		:format(damageinc, ressistpen)
+		local selfres = t.getResistSelf(self, t)
+		return ([[Surround yourself with Wildfire, increasing all your fire damage by %d%%, ignoring %d%% fire resistance of your targets and reducing self-inflicted fire damage by %d%%.]])
+		:format(damageinc, ressistpen, selfres)
 	end,
 }

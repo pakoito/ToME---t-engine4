@@ -163,6 +163,7 @@ function _M:init(t, no_default)
 	t.resists = t.resists or {}
 	t.resists_cap = t.resists_cap or { all = 100 }
 	t.resists_pen = t.resists_pen or {}
+	t.resists_self = t.resists_self or {}
 	t.resists_actor_type = t.resists_actor_type or {}
 	t.resists_cap_actor_type = 70
 
@@ -1777,8 +1778,12 @@ function _M:onTakeHit(value, src)
 	-- Frozen: absorb some damage into the iceblock
 	if self:attr("encased_in_ice") then
 		local eff = self:hasEffect(self.EFF_FROZEN)
-		eff.hp = eff.hp - value * 0.4
-		value = value * 0.6
+		local absorb = 0.4
+		if src and src.attr then
+			absorb = absorb - absorb * (util.bound(src:attr("iceblock_pierce") or 0, 0, 100)) / 100
+		end
+		eff.hp = eff.hp - value * absorb
+		value = value * (1 - absorb)
 		if eff.hp < 0 and not eff.begone then
 			game:onTickEnd(function() self:removeEffect(self.EFF_FROZEN) end)
 			eff.begone = game.turn
