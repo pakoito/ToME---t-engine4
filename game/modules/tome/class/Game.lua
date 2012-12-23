@@ -1271,6 +1271,33 @@ function _M:setupCommands()
 			print("===============")
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
+			local elf = mod.class.NPC.new{
+				name = "red helper elf", type="humanoid", subtype="elf",
+				image = "player/elf_female/base_shadow_01.png", display_w = 0.7, display_h = 0.7, display_x = 0.15, display_y = 0.15,
+				add_mos = {
+					{image="player/elf_female/cloak_behind_02.png", display_w = 0.7, display_h = 0.7, display_x = 0.15, display_y = 0.15},
+					{image="player/elf_female/base_redhead_01.png", display_w = 0.7, display_h = 0.7, display_x = 0.15, display_y = 0.15},
+					{image="player/elf_female/lower_body_06.png", display_w = 0.7, display_h = 0.7, display_x = 0.15, display_y = 0.15},
+					{image="player/elf_female/upper_body_09.png", display_w = 0.7, display_h = 0.7, display_x = 0.15, display_y = 0.15},
+					{image="player/elf_female/braid_redhead_02.png", display_w = 0.7, display_h = 0.7, display_x = 0.15, display_y = 0.15},
+				},
+			}
+			game.zone:addEntity(game.level, elf, "actor", game.player.x, game.player.y+1)
+
+			local elf = mod.class.NPC.new{
+				name = "green helper elf", type="humanoid", subtype="elf",
+				image = "player/elf_female/base_shadow_01.png", display_w = 0.7, display_h = 0.7, display_x = 0.15, display_y = 0.15,
+				add_mos = {
+					{image="player/elf_female/cloak_behind_06.png", display_w = 0.7, display_h = 0.7, display_x = 0.15, display_y = 0.15},
+					{image="player/elf_female/base_thalore_01.png", display_w = 0.7, display_h = 0.7, display_x = 0.15, display_y = 0.15},
+					{image="player/elf_female/lower_body_04.png", display_w = 0.7, display_h = 0.7, display_x = 0.15, display_y = 0.15},
+					{image="player/elf_female/upper_body_06.png", display_w = 0.7, display_h = 0.7, display_x = 0.15, display_y = 0.15},
+					{image="player/elf_female/braid_01.png", display_w = 0.7, display_h = 0.7, display_x = 0.15, display_y = 0.15},
+				},
+			}
+			game.zone:addEntity(game.level, elf, "actor", game.player.x+1, game.player.y+1)
+
+do return end
 			self:registerDialog(require("mod.dialogs.DownloadCharball").new())
 do return end
 			local f, err = loadfile("/data/general/events/glimmerstone.lua")
