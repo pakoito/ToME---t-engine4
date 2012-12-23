@@ -1143,7 +1143,7 @@ function _M:combatPhysicalpower(mod, weapon, add)
 
 	if not weapon then
 		local inven = self:getInven(self.INVEN_MAINHAND)
-		if inven and inven[1] then weapon = inven[1].combat else weapon = self.combat end
+		if inven and inven[1] then weapon = self:getObjectCombat(inven[1], "mainhand") else weapon = self.combat end
 	end
 
 	add = add + 10 * self:combatCheckTraining(weapon)
