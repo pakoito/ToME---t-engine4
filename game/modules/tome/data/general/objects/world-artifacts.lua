@@ -2565,7 +2565,7 @@ Touching the cloth you feel a sense of knowledge and power from bygone ages, yet
 	on_set_complete = function(self, who)
 		local Talents = require "engine.interface.ActorTalents"
 		self.use_talent = { id = Talents.T_METAFLOW, level = 3, power = 40 }
-		game.player:learnLore("channelers-set")
+		game.party:learnLore("channelers-set")
 	end,
 	on_set_broken = function(self, who)
 		self.use_talent = nil
