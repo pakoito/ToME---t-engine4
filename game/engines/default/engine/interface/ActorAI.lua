@@ -114,6 +114,12 @@ function _M:doAI()
 	-- we forget it
 	if self.ai_target.actor and self.ai_target.actor.dead then self.ai_target.actor = nil end
 
+	-- Update the ai_target table
+	local target_pos = self.ai_target.actor and self.fov and self.fov.actors and self.fov.actors[self.ai_target.actor]
+	if target_pos then
+		self.ai_state.target_last_seen = {x=target_pos.x, y=target_pos.y, turn=self.fov_last_turn}
+	end
+
 	return self:runAI(self.ai)
 end
 
@@ -130,31 +136,32 @@ function _M:getTarget(typ)
 end
 
 --- Sets the current target
-function _M:setTarget(target)
+function _M:setTarget(target, last_seen)
 	self.ai_target.actor = target
+	if last_seen then
+		self.ai_state.target_last_seen = last_seen
+	else
+		local target_pos = target and self.fov and self.fov.actors and self.fov.actors[self.ai_target.actor] or {x=self.x, y=self.y}
+		self.ai_state.target_last_seen = {x=target_pos.x, y=target_pos.y, turn=game.turn}
+	end
 end
 
 --- Returns the seen coords of the target
 -- This will usually return the exact coords, but if the target is only partially visible (or not at all)
 -- it will return estimates, to throw the AI a bit off
 -- @param target the target we are tracking
--- @param ignoreLOS ignores LOS check
 -- @return x, y coords to move/cast to
-function _M:aiSeeTargetPos(target, ignoreLOS)
+function _M:aiSeeTargetPos(target)
 	if not target then return self.x, self.y end
 	local tx, ty = target.x, target.y
+	if target == self.ai_target.actor then tx, ty = self.ai_state.target_last_seen.x, self.ai_state.target_last_seen.y end
 	local see, chance = self:canSee(target)
 
 	-- Compute the maximum spread if we need to obfuscate 
 	local spread = see and 0 or math.floor((100 - chance) / 10)
 	
-	-- Do we check for LOS?
-	if not ignoreLOS then
-		local los, lx, ly = self:hasLOS(tx, ty)
-		if not los then
-			spread = math.max(spread, core.fov.distance(tx, ty, lx, ly))
-		end
-	end
+	-- Additional spread due to last_seen
+	spread = spread + math.floor((game.turn - self.ai_state.target_last_seen.turn) / (game.energy_to_act / game.energy_per_tick))
 
 	-- We don't know the exact position, so we obfuscate
 	if spread > 0 then

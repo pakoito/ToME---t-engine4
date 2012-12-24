@@ -43,7 +43,7 @@ newAI("target_simple", function(self)
 				(self:canSee(act) and (self.fov.actors[act].sqdist <= sqsense) or game.level.map.lites(act.x, act.y))
 			) and not act:attr("invulnerable") then
 
-			self.ai_target.actor = act
+			self:setTarget(act)
 			self:check("on_acquire_target", act)
 			act:check("on_targeted", self)
 			print("AI took for target", self.uid, self.name, "::", act.uid, act.name, self.fov.actors[act].sqdist, "<", sqsense)
@@ -58,7 +58,7 @@ newAI("target_player_radius", function(self)
 	if self.ai_target.actor and not self.ai_target.actor.dead and rng.percent(90) then return true end
 
 	if core.fov.distance(self.x, self.y, game.player.x, game.player.y) < self.ai_state.sense_radius then
-		self.ai_target.actor = game.player
+		self:setTarget(game.player)
 		self:check("on_acquire_target", game.player)
 		return true
 	end
@@ -69,7 +69,7 @@ newAI("target_simple_or_player_radius", function(self)
 	if self:runAI("target_simple") then return true end
 
 	if game.player.x and core.fov.distance(self.x, self.y, game.player.x, game.player.y) < self.ai_state.sense_radius then
-		self.ai_target.actor = game.player
+		self:setTarget(game.player)
 		return true
 	end
 end)
@@ -77,6 +77,6 @@ end)
 -- Special targetting for charred scar, select a normal target, if none is found go for the player
 newAI("charred_scar_target", function(self)
 	if self:runAI("target_simple") then return true end
-	self.ai_target.actor = game.player
+	self:setTarget(game.player)
 	return true
 end)

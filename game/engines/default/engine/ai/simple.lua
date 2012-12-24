@@ -32,19 +32,28 @@ end)
 newAI("move_dmap", function(self)
 	if self.ai_target.actor and self.x and self.y then
 		local a = self.ai_target.actor
-		if self:hasLOS(a.x, a.y) then return self:runAI("move_simple") end
+		local ax, ay = self:aiSeeTargetPos(a)
 
-		local c = a:distanceMap(self.x, self.y)
-		if not c then return self:runAI("move_simple") end
-		local dir = 5
-		for _, i in ipairs(util.adjacentDirs()) do
-			local sx, sy = util.coordAddDir(self.x, self.y, i)
-			local cd = a:distanceMap(sx, sy)
---			print("looking for dmap", dir, i, "::", c, cd)
-			if cd and cd > c and self:canMove(sx, sy) then c = cd; dir = i end
+		-- If we have a vision, go straight towards the target
+		if self:hasLOS(ax, ay) then
+			return self:runAI("move_simple")
 		end
 
-		return self:moveDirection(util.coordAddDir(self.x, self.y, dir))
+		local c = a:distanceMap(self.x, self.y)
+		local dir = 5
+
+		if c and ax == a.x and ay == a.y then
+			for _, i in ipairs(util.adjacentDirs()) do
+				local sx, sy = util.coordAddDir(self.x, self.y, i)
+				local cd = a:distanceMap(sx, sy)
+--				print("looking for dmap", dir, i, "::", c, cd)
+				local tile_available = self:canMove(sx, sy) or (sx == ax and sy == ay)
+				if cd and cd > c and tile_available then c = cd; dir = i end
+			end
+			return self:moveDirection(util.coordAddDir(self.x, self.y, dir))
+		else
+			return self:runAI("move_simple")
+		end
 	end
 end)
 
@@ -159,8 +168,6 @@ newAI("move_blocked_astar", function(self)
 end)
 
 newAI("move_complex", function(self)
-	do return self:runAI("move_dmap") end
-
 	if self.ai_target.actor and self.x and self.y then
 		local tx, ty = self:aiSeeTargetPos(self.ai_target.actor)
 		local moved
@@ -177,7 +184,7 @@ newAI("move_complex", function(self)
 		-- Check blocking
 		if not moved then 
 			-- Make sure that we are indeed blocked
---			moved = self:runAI("move_simple")
+			moved = self:runAI("move_simple")
 			if not moved and self:hasLOS(tx, ty) then
 				-- Wait at least 5 turns of not moving before switching to blocked_astar
 				-- add 2 since we remove 1 every turn
