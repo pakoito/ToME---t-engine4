@@ -36,6 +36,7 @@ newEntity{ base = "BASE_STAFF", define_as = "TELOS_SPIRE",
 	desc = [[Telos was an extremely powerful mage during the Age of Dusk, hated by his peers, feared by the common folk he was hunted for a long while. He finaly fell in his place of power, Telmur, but his spirit still lingered on.]],
 	cost = 400,
 	material_level = 5,
+	plot = true,
 
 	require = { stat = { mag=48 }, },
 	modes = {"fire", "cold", "lightning", "arcane"},

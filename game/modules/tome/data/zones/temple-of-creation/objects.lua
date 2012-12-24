@@ -84,6 +84,7 @@ Slasul gave it to you as a sign of his faith in you. It is a sign of hope for al
 	rarity = false,
 	cost = 350,
 	material_level = 5,
+	plot = true,
 	combat = {
 		dam = 84,
 		apr = 20,
