@@ -233,7 +233,7 @@ newAI("target_simple", function(self)
 end)
 
 newAI("target_player", function(self)
-	self.ai_target.actor = game.player
+	self:setTarget(game.player)
 	return true
 end)
 
