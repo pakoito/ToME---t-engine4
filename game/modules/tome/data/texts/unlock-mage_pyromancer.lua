@@ -20,9 +20,9 @@
 return "New Talent Category: #LIGHT_GREEN#Wildfire",
 [[Since the dawn of time mages have experimented with the elements.
 While most mages are content using the Fire school, a few of them took their research deeper and created Wildfire magic.
-At its core lies the Wildfire, a fire so hot it can even damage creatures normaly immune.
+At its core lies the Wildfire, a fire so hot it can even damage creatures normally immune.
 
-You have mastered wildfire magic and can now create new Archmage characters that can learn the #LIGHT_GREEN#Wildfire talents#WHITE#.
+You have mastered Wildfire magic and can now create new Archmage characters that can learn the #LIGHT_GREEN#Wildfire talents#WHITE#.
 
 Talents:
 - #YELLOW#Blastwave: #WHITE#Unleash a fire nova around you, damaging and knocking back anything caught inside

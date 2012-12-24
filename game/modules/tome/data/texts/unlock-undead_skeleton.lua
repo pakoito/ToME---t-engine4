@@ -27,5 +27,5 @@ Race features:#YELLOW#
 - Bleeding immunity
 - Fear immunity
 - No need to breathe
-- Special skeleton talents: bone amour, resilient bones, re-assemble#WHITE#
+- Special skeleton talents: bone armour, resilient bones, re-assemble#WHITE#
 ]]

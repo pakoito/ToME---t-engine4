@@ -19,11 +19,11 @@
 
 return [[Welcome #LIGHT_GREEN#@name@#WHITE#.
 You are a chronomancer, a Keeper of Reality.
-Keepers of Reality are a group of chronomancers, who took upon the self-assigned task of preserving the timelines around Eyal.
+Keepers of Reality are a group of chronomancers who took upon the self-assigned task of preserving the timelines around Eyal.
 
-You have trained most of your life in Point Zero, the 'town' is the stronghold of the Keepers, placed at the very center of all time threads since the Spellblaze disrupted the temporal streams and permited chronomancy to exist.
-Point Zero keepers must constantly stay vigilant of the monstrous horrors of the unreality outside.
+You have trained most of your life in the 'town' of Point Zero, the stronghold of the Keepers, placed at the very center of all time threads since the Spellblaze disrupted the temporal streams and permitted chronomancy to exist.
+Point Zero keepers must constantly stay vigilant against the monstrous horrors of the unreality outside.
 
 You have heard about temporal disruptions in Maj'Eyal and want to investigate.
-However Grand Keeper of Reality Zemekkys has requested to see you.
+However, Grand Keeper of Reality Zemekkys has requested to see you.
 ]]

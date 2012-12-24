@@ -20,11 +20,11 @@
 newChat{ id="welcome",
 	text = [[#LIGHT_GREEN#*Before you stands... you. You seem to be slightly older, and by the look of it you have been through hell.*#WHITE#
 NO! YOU CAN'T! NO GOING THERE! YOU... I... YOU MUST NOT GO THERE!
-THIS CAN NOT BE AVOIDED! I MUST STOP IT! PLEASE DONT!
+THIS CANNOT BE AVOIDED! I MUST STOP IT! PLEASE DON'T!
 I MUST KILL MYSELF TO PROTECT MYSELF!
 ]],
 	answers = {
-		{"What the.."},
+		{"What the..."},
 	}
 }
 

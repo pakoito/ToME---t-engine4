@@ -31,7 +31,7 @@ newChat{ id="welcome",
 }
 
 newChat{ id="return",
-	text = [[@playername@! We thought you had died in the portal explosion. I am glad we were wrong, you saved the sunwall.
+	text = [[@playername@! We thought you had died in the portal explosion. I am glad we were wrong. You saved the Sunwall.
 The news about the staff is troubling. Ah well, please at least take time to rest for a while.]],
 	answers = {
 		{"I shall, thank you, my lady.", jump="welcome"},

@@ -22,8 +22,8 @@ You are a member of the proud, but secretive, race of the Dwarves.
 Hailing from the Dwarven Empire of the Iron Throne, you have been sent to investigate the old fortress of Reknor which has been overrun by orcs.
 
 Upon arriving most of your team got killed and now you must crawl back to the Iron Council and report what you saw there.
-Only Norgan, a fellow dwarf berserker, and you have survived, but the orcs will not let you go easily.
+Only you and Norgan, a fellow Dwarf berserker, have survived, but the orcs will not let you go easily.
 
-You have sworn that once you reach the Iron Council safely you will take on a life of adventurer, looking for treasures and fame of old.
-Away from all those orcs...
+You have sworn that once you reach the Iron Council safely you will take on a life of adventurer, looking for fame and treasures of old.
+Away from all those orcs....
 ]]

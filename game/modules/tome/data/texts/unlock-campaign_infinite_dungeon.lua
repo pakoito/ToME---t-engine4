@@ -20,8 +20,8 @@
 return "New game campaign: #LIGHT_GREEN#Infinite Dungeon: The Neverending Descent",
 [[
 During the Age of Haze, the nine Godslayers set out to destroy the gods.
-The god Ralkur, while trying to escape one of the godslayer, created the Infinite Dungeon.
-He retreated there, but the Godslayer followed, and each time he would reach the God, Ralkur would create a new level.
+The god Ralkur, while trying to escape one of the Godslayers, created the Infinite Dungeon.
+He retreated there, but the Godslayer followed, and each time he would reach the god, Ralkur would create a new level.
 It is said the hunt continues even now, deep, very deep within the dungeon.
 
 You have unlocked the secret of the Infinite Dungeon and can now create new characters in a new campaign: #LIGHT_GREEN#Infinite Dungeon#WHITE#.
@@ -29,6 +29,6 @@ You have unlocked the secret of the Infinite Dungeon and can now create new char
 The Infinite Dungeon is a set of ever-increasing levels filled with terrible foes.
 Campaign features:#YELLOW#
 - No quests, plots, friendly creatures or ways out: only you against all odds.
-- No win condition: you WILL die in the dungeon, but you can prove your worth by going as deep as possible
+- No win condition: you WILL die in the dungeon, but you can prove your worth by going as deep as possible.
 - Pure hack and slash MAYHEM!#WHITE#
 ]]

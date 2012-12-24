@@ -29,10 +29,10 @@ Welcome, master.]],
 		{"You asked me to come, about a farportal?", jump="farportal", cond=function() return q:isCompleted("farportal") and not q:isCompleted("farportal-spawn") end},
 		{"You asked me to come, about the rod of recall?", jump="recall", cond=function() return q:isCompleted("recall") and not q:isCompleted("recall-done") end},
 		{"Would it be possible for my Transmogrification Chest to automatically extract gems?", jump="transmo-gems", cond=function(npc, player) return not q:isCompleted("transmo-chest-extract-gems") and q:isCompleted("transmo-chest") and player:knowTalent(player.T_EXTRACT_GEMS) end},
-		{"I find your appearance unsettling, any way you can change it?", jump="changetile", cond=function() return q:isCompleted("recall-done") end},
-		{"What are you and what is this place?", jump="what", cond=isNotSet"what", action=set"what"},
-		{"Master? I am not your mas..", jump="master", cond=isNotSet"master", action=set"master"},
-		{"Why do I understand you, the texts are unreadable to me.", jump="understand", cond=isNotSet"understand", action=set"understand"},
+		{"I find your appearance unsettling. Any way you can change it?", jump="changetile", cond=function() return q:isCompleted("recall-done") end},
+		{"What are you, and what is this place?", jump="what", cond=isNotSet"what", action=set"what"},
+		{"Master? I am not your mas...", jump="master", cond=isNotSet"master", action=set"master"},
+		{"Why do I understand you? The texts are unreadable to me.", jump="understand", cond=isNotSet"understand", action=set"understand"},
 		{"What can I do here?", jump="storage", cond=isNotSet"storage", action=set"storage"},
 		{"What else can this place do?", jump="energy", cond=isNotSet"energy", action=set"energy"},
 		{"[leave]"},
@@ -41,7 +41,7 @@ Welcome, master.]],
 
 newChat{ id="master",
 	text = [[*#LIGHT_GREEN#The creature glares at you.#WHITE#*
-You posses a control rod. You are the master.]],
+You possess a control rod. You are the master.]],
 	answers = {
 		{"Err... ok.", jump="welcome"},
 	}
@@ -102,12 +102,12 @@ Take this Transmogrification Chest. It is linked by a permanent farportal to the
 There are, however, unwanted byproducts to this operation: the generation of a metal known as gold. It is of no use to the Fortress and thus will be sent back to you.]],
 	answers = {
 		{"I will, thanks.", jump="welcome", action=function() q:spawn_transmo_chest() end, cond=function(npc, player) return not player:attr("has_transmo") end},
-		{"I have already found such a chest in my travel, will it work?", jump="alreadychest", action=function() q:setStatus(q.COMPLETED, "transmo-chest") end, cond=function(npc, player) return player:attr("has_transmo") end},
+		{"I have already found such a chest in my travel. Will it work?", jump="alreadychest", action=function() q:setStatus(q.COMPLETED, "transmo-chest") end, cond=function(npc, player) return player:attr("has_transmo") end},
 	}
 }
 
 newChat{ id="alreadychest",
-	text = [[Yes it will, I will attune it to this fortress.
+	text = [[Yes, it will. I will attune it to this fortress.
 Done.]],
 	answers = {
 		{"Thanks.", jump="welcome"},
@@ -115,8 +115,8 @@ Done.]],
 }
 
 newChat{ id="farportal",
-	text = [[Long ago the Sher'tuls used farportals not only for transportation to known locations but also to explore new parts of the world, or even other worlds.
-This Fortress is equiped with an exploratory farportal, and now has enough energy to allow one teleportation. Each teleportation will take you to a random part of the universe and use 30 energy.
+	text = [[Long ago the Sher'tuls used farportals not only for transportation to known locations, but also to explore new parts of the world, or even other worlds.
+This Fortress is equipped with an exploratory farportal, and now has enough energy to allow one teleportation. Each teleportation will take you to a random part of the universe and use 30 energy.
 Beware that the return portal may not be nearby your arrival point; you will need to find it. You can use the rod of recall to try to force an emergency recall, but it has high chances of breaking the exploratory farportal forever.
 You may use the farportal; however, beware - I sense a strange presence in the farportal room.]],
 	answers = {
@@ -125,25 +125,25 @@ You may use the farportal; however, beware - I sense a strange presence in the f
 }
 
 newChat{ id="recall",
-	text = [[The rod of recall you possess is not a Sher'tul artifact but it is based on Sher'tul design.
+	text = [[The rod of recall you possess is not a Sher'tul artifact, but it is based on Sher'tul design.
 The Fortress now has enough energy to upgrade it. It can be changed to recall you to the Fortess.]],
 	answers = {
-		{"I like it the way it is now, thanks anyway."},
-		{"That could be quite useful yes, please do it.", action=function() q:upgrade_rod() end},
+		{"I like it the way it is now. Thanks anyway."},
+		{"That could be quite useful. Yes, please do it.", action=function() q:upgrade_rod() end},
 	}
 }
 
 newChat{ id="transmo-gems",
 	text = [[Ah yes, you seem to master the simple art of alchemy. I can change the chest to automatically use your power to extract a gem if the transmogrification of the gem would reward more energy.
-However I will need to use 25 energy to do this.]],
+However, I will need to use 25 energy to do this.]],
 	answers = {
 		{"Maybe sometime later."},
-		{"That could be quite useful yes, please do it.", cond=function() return q.shertul_energy >= 25 end, action=function() q:upgrade_transmo_gems() end},
+		{"That could be quite useful. Yes, please do it.", cond=function() return q.shertul_energy >= 25 end, action=function() q:upgrade_transmo_gems() end},
 	}
 }
 
 newChat{ id="changetile",
-	text = [[I can alter the Fortress holographic projection matrix to accomodate to your race tastes. This will require 60 energy however.]],
+	text = [[I can alter the Fortress holographic projection matrix to accomodate your racial tastes. This will require 60 energy, however.]],
 	answers = {
 		{"Can you try for a human female appearance please?", cond=function() return q.shertul_energy >= 60 end, action=function(npc, player)
 			q.shertul_energy = q.shertul_energy - 60
@@ -175,7 +175,7 @@ newChat{ id="changetile",
 			game.level.map:updateMap(npc.x, npc.y)
 			game.level.map:particleEmitter(npc.x, npc.y, 1, "demon_teleport")
 		end},
-		{"Well you do not look so bad actually, let it be for now."},
+		{"Well, you do not look so bad actually. Let it be for now."},
 	}
 }
 

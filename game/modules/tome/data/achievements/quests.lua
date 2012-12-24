@@ -89,7 +89,7 @@ newAchievement{
 newAchievement{
 	name = "Evil denied", id = "WIN_FULL",
 	show = "name",
-	desc = [[Won ToME by preventing the Void portal to open.]],
+	desc = [[Won ToME by preventing the Void portal from opening.]],
 }
 newAchievement{
 	name = "The High Lady's destiny", id = "WIN_AERYN",
@@ -206,7 +206,7 @@ newAchievement{
 newAchievement{
 	name = "Home sweet home", id = "SHERTUL_FORTRESS",
 	show = "name",
-	desc = [[Dispatched the Weirdling Beast and taken possession of Yiilkgur, the Sher'Tul Fortress for your own usage.]],
+	desc = [[Dispatched the Weirdling Beast and took possession of Yiilkgur, the Sher'Tul Fortress for your own usage.]],
 }
 newAchievement{
 	name = "Squadmate", id = "NORGAN_SAVED",
@@ -226,7 +226,7 @@ newAchievement{
 newAchievement{
 	name = "Impossible Death", id = "PARADOX_NOW",
 	show = "name",
-	desc = [[Being killed by your future self.]],
+	desc = [[Got killed by your future self.]],
 	on_gain = function(_, src, personal)
 		if world:hasAchievement("PARADOX_FUTURE") then world:gainAchievement("PARADOX_FULL", src) end
 	end,
@@ -247,7 +247,7 @@ newAchievement{
 newAchievement{
 	name = "Explorer", id = "EXPLORER",
 	show = "name",
-	desc = [[Use the Sher'Tul fortress exploratory farportal at least 7 times with the same character.]],
+	desc = [[Used the Sher'Tul fortress exploratory farportal at least 7 times with the same character.]],
 }
 newAchievement{
 	name = "Orbituary", id = "ABASHED_EXPANSE",
@@ -271,13 +271,13 @@ newAchievement{
 newAchievement{
 	name = "The Right thing to do", id = "RING_BLOOD_KILL",
 	show = "name",
-	desc = [[You did the righteous thing in the ring of blood and disposed of the Blood Master.]],
+	desc = [[Did the righteous thing in the ring of blood and disposed of the Blood Master.]],
 }
 newAchievement{
 	name = "Thralless", id = "RING_BLOOD_FREED",
 	show = "full",
 	mode = "player",
-	desc = [[Free at least 30 enthralled slaves in the slavers compound.]],
+	desc = [[Freed at least 30 enthralled slaves in the slavers compound.]],
 	can_gain = function(self)
 		self.nb = (self.nb or 0) + 1
 		if self.nb >= 30 then return true end
@@ -287,12 +287,12 @@ newAchievement{
 newAchievement{
 	name = "Lost in translation", id = "SUNWALL_LOST",
 	show = "name",
-	desc = [[Destroy the naga portal in the slazish fens and be caught in the aftereffect.]],
+	desc = [[Destroyed the naga portal in the slazish fens and got caught in the after-effect.]],
 }
 newAchievement{
 	name = "Dreaming my dreams", id = "ALL_DREAMS",
 	show = "full",
-	desc = [[Experience and complete all the dreams in the Dogroth Caldera.]],
+	desc = [[Experienced and completed all the dreams in the Dogroth Caldera.]],
 	mode = "world",
 	can_gain = function(self, who, kind)
 		self[kind] = true

@@ -46,7 +46,7 @@ newAchievement{
 newAchievement{
 	name = "Unstoppable",
 	show = "full",
-	desc = [[Has returned from the dead.]],
+	desc = [[Returned from the dead.]],
 }
 
 newAchievement{
@@ -68,7 +68,7 @@ newAchievement{
 	name = "Emancipation", id = "EMANCIPATION",
 	image = "npc/alchemist_golem.png",
 	show = "name",
-	desc = [[Have the golem kill a boss while its master is already dead.]],
+	desc = [[Had the golem kill a boss while its master was already dead.]],
 	mode = "player",
 	can_gain = function(self, who, target)
 		local p = game.party:findMember{main=true}
@@ -85,7 +85,7 @@ newAchievement{
 newAchievement{
 	name = "Take you with me", id = "BOSS_REVENGE",
 	show = "full",
-	desc = [[Kill a boss while already dead.]],
+	desc = [[Killed a boss while already dead.]],
 	mode = "player",
 	can_gain = function(self, who, target)
 		local p = game.party:findMember{main=true}
@@ -98,11 +98,11 @@ newAchievement{
 newAchievement{
 	name = "Look at me, I'm playing a roguelike!", id = "SELF_CENTERED",
 	show = "name",
-	desc = [[Linking yourself in the ingame chat.]],
+	desc = [[Linked yourself in the ingame chat.]],
 }
 
 newAchievement{
 	name = "Fear me not!", id = "FEARSCAPE",
 	show = "full",
-	desc = [[Survive the Fearscape!]],
+	desc = [[Survived the Fearscape!]],
 }

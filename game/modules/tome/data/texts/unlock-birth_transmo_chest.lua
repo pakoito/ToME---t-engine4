@@ -19,7 +19,7 @@
 
 return "New birth equipment: #LIGHT_GREEN#Transmogrification Chest",
 [[You have discovered an old Fortress belonging to the mysterious Sher'tul race.
-The fortress shadow gave you a transmogrification chest which shall make your dealing with storage and gold much easier.
+The Fortress shadow gave you a transmogrification chest which shall make your dealing with storage and gold much easier.
 
 All your new characters will now start with a transmogrification chest at birth. All items transmogrified before you find the Fortress with them will only yield gold.
 ]]

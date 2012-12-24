@@ -163,7 +163,7 @@ newBirthDescriptor{
 	locked_desc = "Some believe that the world is the collective dream of those that live in it.  Find and wake the sleeper and you'll unlock the potential of your dreams.",
 	desc = {
 		"The Solipsist believes that reality is malleable and nothing more than the collective vision of those that experience it.",
-		"They wield this knowledge to both create and destory, to invade the minds of others, and to manipulate the dreams of those around them.",
+		"They wield this knowledge to both create and destroy, to invade the minds of others, and to manipulate the dreams of those around them.",
 		"This knowledge comes with a heavy price and the Solipsist must guard his thoughts, lest he come to believe that the world exists only within his own mind.",
 		"Their most important stats are: Willpower and Cunning",
 		"#GOLD#Stat modifiers:",

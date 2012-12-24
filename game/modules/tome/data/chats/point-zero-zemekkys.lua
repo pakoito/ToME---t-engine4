@@ -19,20 +19,20 @@
 
 newChat{ id="welcome",
 	action = function(npc, player) npc.talked_times = (npc.talked_times or 0) + 1 end,
-	text = [[@playername@, nice to see you again! Or is it the first time you see me ?]],
+	text = [[@playername@, nice to see you again! Or is this the first time you see me?]],
 	answers = {
-		{"Farewell Grand Keeper."},
-		{"Yes it is the first time I see you.", jump="first", cond=function(npc, player) return not npc.talked_times end},
+		{"Farewell, Grand Keeper."},
+		{"Yes, this is our first meeting.", jump="first", cond=function(npc, player) return not npc.talked_times end},
 	}
 }
 
 newChat{ id="first",
 	text = [[Ah, for you perhaps, but not for me.
-Listen, someday you will encounter me again but this will not be me as of now. A younger me if you will.
-This is very important, do not tell my previous me about me. Understood?]],
+Listen, someday you will encounter me again but it will not be me as of now. A younger me, if you will.
+This is very important: do not tell my previous me about me. Understood?]],
 	answers = {
 		{"I think so..."},
-		{"Yes Grand Keeper."},
+		{"Yes, Grand Keeper."},
 	}
 }
 

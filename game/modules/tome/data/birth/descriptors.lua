@@ -166,7 +166,7 @@ newBirthDescriptor{
 	desc =
 	{
 		"#GOLD##{bold}#Normal mode#WHITE##{normal}#",
-		"Provides the normal level of chalenges.",
+		"Provides the normal level of challenges.",
 	},
 	descriptor_choices =
 	{
@@ -185,7 +185,7 @@ newBirthDescriptor{
 		"#GOLD##{bold}#Nightmare mode#WHITE##{normal}#",
 		"Unfair game setting",
 		"All zone levels increased by 50% + 3",
-		"All creatures talent levels increased by 50%",
+		"All creature talent levels increased by 50%",
 	},
 	descriptor_choices =
 	{
@@ -204,9 +204,9 @@ newBirthDescriptor{
 	desc =
 	{
 		"#GOLD##{bold}#Insane mode#WHITE##{normal}#",
-		"Absolutely unfair game setting, you are really mentally ill to play this mode!",
+		"Absolutely unfair game setting.  You are really mentally ill to play this mode!",
 		"All zone levels increased by 120% + 5",
-		"All creatures talent levels increased by 100%",
+		"All creature talent levels increased by 100%",
 		"Player rank is normal instead of elite",
 		"Player can earn Insane version of achievements if also playing in Roguelike permadeath mode.",
 	},
@@ -247,7 +247,7 @@ newBirthDescriptor{
 		"#GOLD##{bold}#Adventure mode#WHITE#",
 		"Provides you with limited extra lives.",
 		"Use it if you want normal playing conditions but do not feel ready for just one life.#{normal}#",
-		"At level 1,2,5,7,14,24,35 get one more 'life' that allows to resurrect at the start of the level.",
+		"At level 1,2,5,7,14,24,35 get one more 'life' that allows you to resurrect at the start of the level.",
 	},
 	copy = {
 		easy_mode_lifes = 1,

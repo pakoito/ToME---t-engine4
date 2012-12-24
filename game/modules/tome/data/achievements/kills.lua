@@ -20,12 +20,12 @@
 newAchievement{
 	name = "That was close",
 	show = "full",
-	desc = [[Kill your target while having only 1 life left.]],
+	desc = [[Killed your target while having only 1 life left.]],
 }
 newAchievement{
 	name = "Size matters",
 	show = "full",
-	desc = [[Do over 600 damage in one attack]],
+	desc = [[Did over 600 damage in one attack.]],
 	on_gain = function(_, src, personal)
 		if src.descriptor and (src.descriptor.subclass == "Rogue" or src.descriptor.subclass == "Shadowblade") then
 			game:setAllowedBuild("rogue_marauder", true)
@@ -35,22 +35,22 @@ newAchievement{
 newAchievement{
 	name = "Size is everything", id = "DAMAGE_1500",
 	show = "full",
-	desc = [[Do over 1500 damage in one attack]],
+	desc = [[Did over 1500 damage in one attack.]],
 }
 newAchievement{
 	name = "The bigger the better!", id = "DAMAGE_3000",
 	show = "full",
-	desc = [[Do over 3000 damage in one attack]],
+	desc = [[Did over 3000 damage in one attack.]],
 }
 newAchievement{
 	name = "Overpowered!", id = "DAMAGE_6000",
 	show = "full",
-	desc = [[Do over 6000 damage in one attack]],
+	desc = [[Did over 6000 damage in one attack.]],
 }
 newAchievement{
 	name = "Exterminator",
 	show = "full",
-	desc = [[Killed 1000 creatures]],
+	desc = [[Killed 1000 creatures.]],
 	mode = "player",
 	can_gain = function(self, who)
 		self.nb = (self.nb or 0) + 1
@@ -62,7 +62,7 @@ newAchievement{
 	name = "Pest Control",
 	image = "npc/vermin_worms_green_worm_mass.png",
 	show = "full",
-	desc = [[Killed 1000 reproducing vermin]],
+	desc = [[Killed 1000 reproducing vermin.]],
 	mode = "player",
 	can_gain = function(self, who, target)
 		if target:knowTalent(target.T_MULTIPLY) or target.clone_on_hit then
@@ -75,7 +75,7 @@ newAchievement{
 newAchievement{
 	name = "Reaver",
 	show = "full",
-	desc = [[Killed 1000 humanoids]],
+	desc = [[Killed 1000 humanoids.]],
 	mode = "world",
 	can_gain = function(self, who, target)
 		if target.type == "humanoid" then
@@ -94,7 +94,7 @@ newAchievement{
 	name = "Backstabbing Traitor", id = "ESCORT_KILL",
 	image = "object/knife_stralite.png",
 	show = "full",
-	desc = [[Killed 6 escorted adventurers while you were supposed to save them]],
+	desc = [[Killed 6 escorted adventurers while you were supposed to save them.]],
 	mode = "player",
 	can_gain = function(self, who, target)
 		self.nb = (self.nb or 0) + 1
@@ -130,7 +130,7 @@ newAchievement{
 newAchievement{
 	name = "Earth Master", id = "GEOMANCER",
 	show = "name",
-	desc = [[Killed Harkor'Zun and unlocked Stone magic]],
+	desc = [[Killed Harkor'Zun and unlocked Stone magic.]],
 	mode = "player",
 }
 
@@ -138,7 +138,7 @@ newAchievement{
 	name = "Kill Bill!", id = "KILL_BILL",
 	image = "object/artifact/bill_treestump.png",
 	show = "full",
-	desc = [[Killed Bill in the Trollmire with a level one character]],
+	desc = [[Killed Bill in the Trollmire with a level one character.]],
 	mode = "player",
 }
 
@@ -208,7 +208,7 @@ newAchievement{
 	name = "Kickin' it old-school", id = "FIRST_BOSS_URKIS",
 	image = "npc/humanoid_human_urkis__the_high_tempest.png",
 	show = "full",
-	desc = [[Kill Urkis, the Tempest, causing him to drop the Rod of Recall.]],
+	desc = [[Killed Urkis, the Tempest, causing him to drop the Rod of Recall.]],
 	mode = "player",
 }
 
@@ -216,7 +216,7 @@ newAchievement{
 	name = "Leave the big boys alone", id = "FIRST_BOSS_MASTER",
 	image = "npc/the_master.png",
 	show = "full",
-	desc = [[Kill The Master, causing him to drop the Rod of Recall.]],
+	desc = [[Killed The Master, causing him to drop the Rod of Recall.]],
 	mode = "player",
 }
 
@@ -224,7 +224,7 @@ newAchievement{
 	name = "You know who's to blame", id = "FIRST_BOSS_GRAND_CORRUPTOR",
 	image = "npc/humanoid_shalore_grand_corruptor.png",
 	show = "full",
-	desc = [[Kill the Grand Corruptor, causing him to drop the Rod of Recall.]],
+	desc = [[Killed the Grand Corruptor, causing him to drop the Rod of Recall.]],
 	mode = "player",
 }
 
@@ -232,6 +232,6 @@ newAchievement{
 	name = "You know who's to blame (reprise)", id = "FIRST_BOSS_MYSSIL",
 	image = "npc/humanoid_halfling_protector_myssil.png",
 	show = "full",
-	desc = [[Kill Myssil, causing her to drop the Rod of Recall.]],
+	desc = [[Killed Myssil, causing her to drop the Rod of Recall.]],
 	mode = "player",
 }

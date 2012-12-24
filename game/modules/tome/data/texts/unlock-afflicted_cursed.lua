@@ -26,7 +26,7 @@ Some of them, however, strive to redeem their faults by using their Cursed power
 
 You have "lifted" the curse of Ben Cruthdar. You can now create new characters with the #LIGHT_GREEN#Cursed class#WHITE#.
 
-Cursed are heavy melee warriors, fighting with a battle-axe and focusing all their hatred into their blows.
+Cursed are heavy melee warriors, focusing all their hatred into their blows.
 Class features:#YELLOW#
 - Engulf your foes in your Gloom, weakening, confusing, stunning and damaging them
 - Hunt your prey, tracking them and marking them for death

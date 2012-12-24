@@ -25,14 +25,14 @@ newChat{ id="welcome",
 	text = [[#LIGHT_GREEN#*Before you stands a small humanoid creature with a disproportionate head.*#WHITE#
 Ah, what have we here? @playerdescriptor.race@, I believe you have turned at the wrong corner.]],
 	answers = {
-		{"So it would seem, what is going on here?", jump="what"},
+		{"So it would seem. What is going on here?", jump="what"},
 	}
 }
 
 newChat{ id="what",
 	text = [[This is my Ring of Blood! Listen, you have now two choices.
 Since you do not look like slave fodder to me I will offer to let you pay to play the game.
-If you feel you can not take part in a slaver's game, I am afraid you will need to.. disappear.]],
+If you feel you cannot take part in a slaver's game, I am afraid you will need to... disappear.]],
 	answers = {
 		{"Slavers? This is so wrong! [attack]", action=attack("You think so? Die.")},
 		{"Game? I like playing, what's this about?", jump="game"},
@@ -40,7 +40,7 @@ If you feel you can not take part in a slaver's game, I am afraid you will need 
 }
 
 newChat{ id="game",
-	text = [[Well you see, it's quite simple. I will mentally take control of various wild creatures or slaves while you use the orb of command on the other side of that room to take control of a slave.
+	text = [[Well, you see, it's quite simple. I will mentally take control of various wild creatures or slaves while you use the orb of command on the other side of this room to take control of a slave.
 Then we fight using our pawns for 10 rounds. If your slave survives you will win the Bloodcaller.]],
 	answers = {
 		{"What if I lose?", jump="lose"},
@@ -56,10 +56,10 @@ newChat{ id="lose",
 }
 
 newChat{ id="price",
-	text = [[Superb. Oh yes before I forget, to use the orb you will need to pay the standard fee of 150 gold pieces.
+	text = [[Superb. Oh yes, before I forget, to use the orb you will need to pay the standard fee of 150 gold pieces.
 I'm sure this is small money to an adventurer of your class.]],
 	answers = {
-		{"150 gold? Err.. yes sure.", action=function(npc) npc.can_talk = nil end},
+		{"150 gold? Err... yes, sure.", action=function(npc) npc.can_talk = nil end},
 	}
 }
 

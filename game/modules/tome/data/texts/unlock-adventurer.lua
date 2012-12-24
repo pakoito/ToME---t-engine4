@@ -21,6 +21,6 @@ return "New Class: #LIGHT_GREEN#Adventurer",
 [[Congratulations, you have won the game!
 You can now create new characters with the #LIGHT_GREEN#Adventurer class#WHITE#.
 
-Adventurers start the game with 7 talent categories points and all possible class and generic trees in the game.
-They are a #{bold}#bonus#{normal}# class, they are in no way meant to be balanced or even working with all possible talents combos.
-Use at your own risk and fun.]]
+Adventurers start the game with 7 talent category points and all possible class and generic trees in the game.
+They are a #{bold}#bonus#{normal}# class, in no way meant to be balanced or even working with all possible talent combos.
+Use at your own risk, and have fun.]]

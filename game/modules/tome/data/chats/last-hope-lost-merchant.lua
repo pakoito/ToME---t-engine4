@@ -37,7 +37,7 @@ newChat{ id="unique1",
 	text = [[I normally offer this service only for a truly deserved price, but for you my friend I am willing to offer a 20% discount - #{italic}#only#{normal}# 4000 gold to make an utterly unique item of your choice.  What do you say?]],
 	answers = {
 		{"Why, 'tis a paltry sum - take my order, man, and be quick about it!", cond=function(npc, player) return player.money >= 10000 end, jump="make"},
-		{"Yes please!", cond=function(npc, player) return player.money >= 4000 end, jump="make"},
+		{"Yes, please!", cond=function(npc, player) return player.money >= 4000 end, jump="make"},
 		{"HOW MUCH?! Please, excuse me, I- I need some fresh air...", cond=function(npc, player) return player.money < 500 end},
 		{"Not now, thank you."},
 	}
@@ -110,7 +110,7 @@ local maker_list = function()
 					newChat{ id="naming",
 						text = "Do you want to name your item?\n"..tostring(art:getTextualDesc()),
 						answers = {
-							{"Yes please.", action=function(npc, player)
+							{"Yes, please.", action=function(npc, player)
 								local d = require("engine.dialogs.GetText").new("Name your item", "Name", 2, 40, function(txt)
 									art.name = txt:removeColorCodes():gsub("#", " ")
 									game.log("#LIGHT_BLUE#The merchant carefully hands you: %s", art:getName{do_color=true})

@@ -159,7 +159,7 @@ newBirthDescriptor{
 	locked = function() return profile.mod.allow_build.wilder_oozemancer and true or "hide"  end,
 	locked_desc = "TODO",
 	desc = {
-		"Oozemancers are Nature's last resort. They stand behind the frontline, throwing lobs of acid and lumps of slime at all Nature's foes.",
+		"Oozemancers are Nature's last resort. They stand behind the front line, throwing lobs of acid and lumps of slime at all Nature's foes.",
 		"",
 		"Their most important stats are: Willpower and Cunning",
 		"#GOLD#Stat modifiers:",

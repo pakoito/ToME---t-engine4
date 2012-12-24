@@ -22,8 +22,8 @@ newBirthDescriptor{
 	name = "Adventurer",
 	locked = function() return profile.mod.allow_build.adventurer and true or "hide"  end,
 	desc = {
-		"Adventurer can learn to do a bit of everything, getting training in whatever they happen to find.",
-		"#{bold}##GOLD#This is a bonus class for winning the game, it is by no means balanced.#WHITE##{normal}#",
+		"Adventurers can learn to do a bit of everything, getting training in whatever they happen to find.",
+		"#{bold}##GOLD#This is a bonus class for winning the game.  It is by no means balanced.#WHITE##{normal}#",
 	},
 	descriptor_choices =
 	{
@@ -43,9 +43,9 @@ newBirthDescriptor{
 	name = "Adventurer",
 	locked = function() return profile.mod.allow_build.adventurer and true or "hide"  end,
 	desc = {
-		"Adventurer can learn to do a bit of everything, getting training in whatever they happen to find.",
-		"#{bold}##GOLD#This is a bonus class for winning the game, it is by no means balanced.#WHITE##{normal}#",
-		"Their most important stats depends on what they wish to do.",
+		"Adventurers can learn to do a bit of everything, getting training in whatever they happen to find.",
+		"#{bold}##GOLD#This is a bonus class for winning the game.  It is by no means balanced.#WHITE##{normal}#",
+		"Their most important stats depend on what they wish to do.",
 		"#GOLD#Stat modifiers:",
 		"#LIGHT_BLUE# * +2 Strength, +2 Dexterity, +2 Constitution",
 		"#LIGHT_BLUE# * +2 Magic, +2 Willpower, +2 Cunning",

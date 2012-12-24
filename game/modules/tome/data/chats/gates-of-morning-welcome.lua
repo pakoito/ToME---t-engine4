@@ -21,7 +21,7 @@ newChat{ id="welcome",
 	text = [[#LIGHT_GREEN#*Before you stands a beautiful woman clad in shining golden armour*#WHITE#
 Stop! You are clearly a stranger! Where do you come from? The Gates of Morning are the last bastion of freedom in these lands, so who are you? A spy?]],
 	answers = {
-		{"My lady, I am indeed a stranger in those lands. I come from the west, from Maj'Eyal.", jump="from",
+		{"My lady, I am indeed a stranger in these lands. I come from the west, from Maj'Eyal.", jump="from",
 		  cond=function(npc, player) return player:hasQuest("strange-new-world") and player:hasQuest("strange-new-world"):isCompleted("helped-fillarel") end},
 		{"Sorry, I have to go!"},
 	}

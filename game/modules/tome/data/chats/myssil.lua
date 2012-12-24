@@ -23,7 +23,7 @@ newChat{ id="welcome",
 	text = [[#LIGHT_GREEN#*A Halfling woman stands before you, clad in dark steel plate.*#WHITE#
 Take the test, and then we can talk.]],
 	answers = {
-		{"But.."},
+		{"But..."},
 	}
 }
 return "welcome"
@@ -54,11 +54,11 @@ Erase him.]],
 }
 
 newChat{ id="tempest-dead",
-	text = [[So have I heard, @playername@. You prove worthy of your training, go with the blessing and nature @playername@ of Zigur.
-#LIGHT_GREEN#*She touches your skin, you can feel nature infusing your very being.*#WHITE#
+	text = [[So have I heard, @playername@. You prove worthy of your training. Go with the blessing of nature, @playername@ of Zigur.
+#LIGHT_GREEN#*She touches your skin.  You can feel nature infusing your very being.*#WHITE#
 This shall help your on your travels. Farewell!]],
 	answers = {
-		{"Thank you Protector.", action=function(npc, player)
+		{"Thank you, Protector.", action=function(npc, player)
 			player:hasQuest("lightning-overload"):create_entrance()
 			if player:knowTalentType("wild-gift/fungus") then
 				player:setTalentTypeMastery("wild-gift/fungus", player:getTalentTypeMastery("wild-gift/fungus") + 0.1)

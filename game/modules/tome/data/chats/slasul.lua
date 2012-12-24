@@ -36,7 +36,7 @@ Speak or die, for I am Slasul and you shall not disrupt my plans.]],
 }
 
 newChat{ id="quest",
-	text = [[I see, so the dragon sent you. He told you I am insane, I assume?
+	text = [[I see. So the dragon sent you. He told you I am insane, I assume?
 But which of us is truly evil? Myself, working to better my people, doing no harm to anyone, or you, who comes here to kill me, destroying my friends and planning to do the same to me?
 Who is the insane one?]],
 	answers = {
@@ -53,7 +53,7 @@ When Nalore sank, many of us died, so we resorted to using the magic of this tem
 If you do not believe anything else of what I say, please believe at least this: the Sher'Tul are hiding, not gone, and they are not benevolent entities.
 Recently, that water dragon that sent you here started sending "agents" to secure the temple. I can only imagine his goals, but they are clearly not peaceful.]],
 	answers = {
-		{"You do not sound mad to me ... could Ukllmswwik have lied?", jump="portal_back", action=function(npc, player) player:setQuestStatus("temple-of-creation", engine.Quest.COMPLETED, "slasul-story") end},
+		{"You do not sound mad to me... could Ukllmswwik have lied?", jump="portal_back", action=function(npc, player) player:setQuestStatus("temple-of-creation", engine.Quest.COMPLETED, "slasul-story") end},
 		{"I will not be deceived by your lies! I will make your pay for your victims!", action=attack("As you wish. It did not have to come to this...")},
 	}
 }
@@ -85,10 +85,10 @@ newChat{ id="welcome",
 
 newChat{ id="cause",
 	text = [[I secretly hoped you would.
-Then let us seal this alliance, share your lifeforce with me! So long you should live I shall not be killed!
+Then let us seal this alliance. Share your lifeforce with me! So long you should live I shall not be killed!
 In return let me offer you this powerful trident.]],
 	answers = {
-		{"I shall accept your offer my liege.", action=function(npc, player)
+		{"I shall accept your offer, my liege.", action=function(npc, player)
 			local o = game.zone:makeEntityByName(game.level, "object", "LEGACY_NALOREN", true)
 			if o then
 				o:identify(true)
@@ -101,7 +101,7 @@ In return let me offer you this powerful trident.]],
 				player:setQuestStatus("temple-of-creation", engine.Quest.COMPLETED, "legacy-naloren")
 			end
 		end},
-		{"This sounds strange, I need to think about it."},
+		{"This sounds strange. I need to think about it."},
 	}
 }
 

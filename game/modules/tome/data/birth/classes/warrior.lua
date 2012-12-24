@@ -142,7 +142,7 @@ newBirthDescriptor{
 		"Archers are dexterous ranged fighters, able to pin their foes to the ground and rain down a carpet of arrows on them.",
 		"Skilled archers can fire special shots that pierce, cripple or pin their foes.",
 		"Archers can become good with either longbows or slings.",
-		"Their most important stats are: Dexterity and Strength (when using bows) or Cunning (when using Slings)",
+		"Their most important stats are: Dexterity and Strength (when using bows) or Cunning (when using slings)",
 		"#GOLD#Stat modifiers:",
 		"#LIGHT_BLUE# * +2 Strength, +5 Dexterity, +0 Constitution",
 		"#LIGHT_BLUE# * +0 Magic, +0 Willpower, +2 Cunning",

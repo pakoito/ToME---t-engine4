@@ -42,14 +42,14 @@ Please! Before I die I have one request. Destroy the book. It wasn't me. The boo
 newChat{ id="destroy_book",
 	text = [[#VIOLET#*You destroy the book. When you finish you look up and see that Kyless is already dead.*#LAST#]],
 	answers = {
-		{"Goodbye Kyless."},
+		{"Goodbye, Kyless."},
 	}
 }
 
 newChat{ id="keep_book",
 	text = [[#VIOLET#*You place the book in your pack. When you finish you look up and see that Kyless is already dead.*#LAST#]],
 	answers = {
-		{"Goodbye Kyless."},
+		{"Goodbye, Kyless."},
 	}
 }
 

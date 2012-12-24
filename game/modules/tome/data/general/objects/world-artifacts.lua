@@ -3748,6 +3748,7 @@ newEntity{ base = "BASE_LONGSWORD",
 
 newEntity{ base = "BASE_WHIP", define_as = "HYDRA_BITE",
 	slot_forbid = "OFFHAND",
+	offslot = false,
 	twohanded=true,
 	power_source = {technique=true, nature=true},
 	unique = true,
@@ -3808,7 +3809,7 @@ newEntity{ base = "BASE_GAUNTLETS",
 	unique = true,
 	name = "Spellhunt Remnants", color = colors.GREY, image = "object/artifact/spellhunt_remnants.png",
 	unided_name = "rusted voratun gauntlets",
-	desc = [[These once brilliant voratun gauntlets have fallen into a deep decay. Originally used in the spellhunt, it was often used to destroy arcane artifacts, curing the world of their influence.]],
+	desc = [[These once brilliant voratun gauntlets have fallen into a deep decay. Originally used in the spellhunt, they were often used to destroy arcane artifacts, curing the world of their influence.]],
 	level_range = {1, 25}, --Relevent at all levels, though of course mat level 1 limits it to early game.
 	rarity = 450, -- But rare to make it not ALWAYS appear.
 	cost = 1000,

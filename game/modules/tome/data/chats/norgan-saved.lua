@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 newChat{ id="welcome",
-	text = [[Thank you @playername@ we both survived for the wealth of the Empire. I will bring them the news and then rest.
+	text = [[Thank you, @playername@! We both survived for the wealth of the Empire. I will bring them the news and then rest.
 I do not think I want to see death so closely for some time now.
 Farewell.]],
 	answers = {

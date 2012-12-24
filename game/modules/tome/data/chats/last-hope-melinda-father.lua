@@ -24,7 +24,7 @@ if not q or not q:isStatus(q.DONE) then
 
 newChat{ id="welcome",
 	text = [[#LIGHT_GREEN#*A man talks to you from inside, the door half open. His voice is sad.*#WHITE#
-Sorry the store is closed.]],
+Sorry, the store is closed.]],
 	answers = {
 		{"[leave]"},
 	}
@@ -150,13 +150,13 @@ newChat{ id="home2",
 	text = [[An ancient fortress of a mythical race?! How #{bold}#exciting#{normal}#!]],
 	answers = {
 		{"Yes indeed, I will probably spend quite some time there and I wondered if, well maybe, if you would like to stay there with me, there is much free room and...", jump="home3"},
-		{"But really dangerous, anyway I must be on my way. I will try to stop by again soon. #LIGHT_GREEN#[kiss her]#WHITE#"},
+		{"But really dangerous... anyway, I must be on my way. I will try to stop by again soon. #LIGHT_GREEN#[kiss her]#WHITE#"},
 	}
 }
 
 newChat{ id="home3",
 	text = [[#LIGHT_GREEN#*Melinda hugs you fiercely, kisses you and rushes to the inside of the shop. While she runs you hear:*#WHITE#
-Daddy you won't have to fear for me anymore! I'm moving home!]],
+Daddy, you won't have to fear for me anymore! I'm moving home!]],
 	answers = {
 		{"I take that as a yes. #LIGHT_GREEN#[wait for her return and go to the Fortress]#WHITE#", action=function(npc, player)
 			game:changeLevel(1, "shertul-fortress", {direct_switch=true})

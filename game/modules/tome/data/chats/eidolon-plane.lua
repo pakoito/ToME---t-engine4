@@ -37,7 +37,7 @@ As for your probable many questions, they will stay unanswered. I may help, but 
 
 newChat{ id="die",
 	text = [[#LIGHT_GREEN#*It seems to stare at you in weird way.*#WHITE#
-I...had plans for you, but I can not go against your free will. Know that you had a destiny waiting for you.
+I...had plans for you, but I cannot go against your free will. Know that you had a destiny waiting for you.
 Are you sure?]],
 	answers = {
 		{"Just let me go please.", action=function(npc, player) game:getPlayer(true):die(game.player, {special_death_msg=("asked the Eidolon to let %s die in peace"):format(game.player.female and "her" or "him")}) end},

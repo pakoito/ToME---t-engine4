@@ -19,7 +19,7 @@
 
 newAchievement{
 	name = "Tales of the Spellblaze", id = "SPELLBLAZE_LORE",
-	desc = [[Learn the eight chapters of the Spellblaze Chronicles.]],
+	desc = [[Learned the eight chapters of the Spellblaze Chronicles.]],
 	show = "full",
 	mode = "player",
 	can_gain = function(self, who, obj)
@@ -37,7 +37,7 @@ newAchievement{
 
 newAchievement{
 	name = "The Legend of Garkul", id = "GARKUL_LORE",
-	desc = [[Learn the five chapters of the Legend of Garkul.]],
+	desc = [[Learned the five chapters of the Legend of Garkul.]],
 	show = "full",
 	mode = "player",
 	can_gain = function(self, who, obj)
@@ -52,7 +52,7 @@ newAchievement{
 
 newAchievement{
 	name = "A different point of view", id = "ORC_LORE",
-	desc = [[Learn the five chapters of Orc's race history throught loremaster Hadak tales.]],
+	desc = [[Learned the five chapters of Orc history through loremaster Hadak's tales.]],
 	show = "full",
 	mode = "player",
 	can_gain = function(self, who, obj)

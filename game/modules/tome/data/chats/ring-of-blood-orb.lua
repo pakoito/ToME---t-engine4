@@ -19,15 +19,15 @@
 
 newChat{ id="welcome",
 	text = [[#LIGHT_GREEN#*You place your hands on the orb.*#WHITE#
-You must provide 150 golds to take part in the fight.]],
+You must provide 150 gold to take part in the fight.]],
 	answers = {
-		{"[pay 150 gold]", jump="pay",
+		{"[Pay 150 gold]", jump="pay",
 			cond=function(npc, player)
 				return player:hasQuest("ring-of-blood") and player:hasQuest("ring-of-blood"):find_master() and player.money >= 150
 			end,
 			action=function(npc, player) player:incMoney(-150) end
 		},
-		{"[leave]"},
+		{"[Leave]"},
 	}
 }
 

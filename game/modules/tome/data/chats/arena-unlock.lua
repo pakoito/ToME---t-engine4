@@ -73,7 +73,7 @@ newChat{ id="refuse",
 That's unfortunate. We could have used someone like you.
 You are just the type the audience likes. You could have been a champion.
 Alas, if you stand by your choice, we shall never meet again.
-However, if you change your mind...I will #YELLOW#stay on Derth just a little
+However, if you change your mind...I will #YELLOW#stay in Derth just a little
 longer.#WHITE#
 If I am still around, we can have a deal. Think about it, @playerdescriptor.race@.
 ]],
@@ -113,7 +113,7 @@ newChat{ id="win",
 	action = function(npc, player) player:attr("invulnerable", 1) end,
 	text = [[#LIGHT_GREEN#*The Cornac rogue comes back from the shadows*#WHITE#
 Well done, @playerdescriptor.race@! I knew you had potential.
-#LIGHT_GREEN#*The rogue takes out his hood, showing a fairly young, but unmistakingly
+#LIGHT_GREEN#*The rogue takes off his hood, showing a fairly young, but unmistakably
 #LIGHT_GREEN#battle-hardened man.#WHITE#
 The name's Rej. I work for the arena to recruit great fighters who can give a
 good show... and not die in two blows. You are one of those, indeed!
@@ -121,7 +121,7 @@ I won't keep you away from your adventures. I was there too, long ago.
 But we can make you a true champion, beloved by many and bathing in diamonds.
 
 #LIGHT_GREEN#*As you travel back to Derth in company of the rogue, you discuss your
-#LIGHT_GREEN#battles in the forest. He provides you with great insight on your combat technique(#WHITE#+2 generic talent points#LIGHT_GREEN#)*
+#LIGHT_GREEN#battles in the forest. He provides you with great insight on your combat technique (#WHITE#+2 generic talent points#LIGHT_GREEN#)*
 #WHITE#Very well, @playername@. I must go now.
 Good luck in your adventures, and come visit us when you are done!
 ]],
@@ -147,7 +147,7 @@ Good luck in your adventures, and come visit us when you are done!
 }
 
 newChat{ id="ok",
-	text = "#WHITE#I see... I will be waiting...#YELLOW#But not for long.",
+	text = "#WHITE#I see. I will be waiting... #YELLOW#But not for long.",
 	answers = {
 		{ "See you."},
 	}

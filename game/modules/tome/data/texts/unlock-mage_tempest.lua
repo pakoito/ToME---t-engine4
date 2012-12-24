@@ -20,13 +20,13 @@
 return "New Talent Category: #LIGHT_GREEN#Storm",
 [[Since the dawn of time mages have experimented with the elements.
 While most mages are content using the Air school, a few of them took their research deeper and created Storm magic.
-At its core lies the Tempest, a storm so powerful it can even damage creatures normaly immune.
+At its core lies the Tempest, a storm so powerful it can even damage creatures normally immune.
 
 You have mastered storm magic and can now create new Archmage characters that can learn the #LIGHT_GREEN#Storm talents#WHITE#.
 
 Talents:
-- #YELLOW#Nova: #WHITE#Unleash of lightning nova around you, dazing and damaging creatures caught inside
+- #YELLOW#Nova: #WHITE#Unleash a lightning nova around you, dazing and damaging creatures caught inside
 - #YELLOW#Shock: #WHITE#Fire a fast bolt of lightning, dazing the target
-- #YELLOW#Hurricane: #WHITE#Call down a Hurricane on any creature you daze, creating a lightning storm around each of them
+- #YELLOW#Hurricane: #WHITE#Call down a Hurricane on any creatures you daze, creating a lightning storm around each of them
 - #YELLOW#Tempest: #WHITE#Master the Tempest and pierce even through lightning immunities
 ]]

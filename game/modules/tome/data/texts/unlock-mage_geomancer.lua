@@ -25,7 +25,7 @@ At its core lies the Crystalline Focus, which can create attacks so sharp they c
 You have mastered stone magic and can now create new Archmage and Arcane Blade characters that can learn the #LIGHT_GREEN#Stone talents#WHITE#.
 
 Talents:
-- #YELLOW#Earthen Missiles: #WHITE#Fires multiple missiles of stone indepentenly to targets
+- #YELLOW#Earthen Missiles: #WHITE#Fire multiple missiles of stone independently at targets
 - #YELLOW#Body of Stone: #WHITE#Turn into stone, reducing the cooldown of many stone/earth talents
 - #YELLOW#Earthquake: #WHITE#Create a localized earthquake, stunning all in the area
 - #YELLOW#Crystalline Focus: #WHITE#Master the Stone and pierce even through physical immunities

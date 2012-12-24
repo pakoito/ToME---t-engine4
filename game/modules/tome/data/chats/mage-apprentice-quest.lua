@@ -76,15 +76,15 @@ I am a novice mage, as you might have noticed, and my goal is to be accepted by 
 }
 newChat{ id="quest3",
 	text = [[The keepers of ar... err, I do not think I am supposed to talk about them... sorry, my friend...
-In any case, I must collect many items. I have some already but I am still looking for an arcane-infused artefact. You do not happen to have one I imagine... Well if you do, tell me please!]],
+In any case, I must collect many items. I have some already but I am still looking for an arcane-infused artefact. You do not happen to have one, I imagine... Well, if you do, tell me please!]],
 	answers = {
 		{"I will keep that in mind!", action=function(npc, player) player:grantQuest("mage-apprentice") end},
 		{"No way, bye!"},
 	}
 }
 newChat{ id="quest3_mage",
-	text = [[I hope I will too ...
-In any case, I must collect many items. I have some already but I am still looking for an arcane-infused artefact. You do not happen to have one I imagine... Well if you do, tell me please!]],
+	text = [[I hope I will too...
+In any case, I must collect many items. I have some already but I am still looking for an arcane-infused artefact. You do not happen to have one, I imagine... Well, if you do, tell me please!]],
 	answers = {
 		{"I will keep that in mind!", action=function(npc, player) player:grantQuest("mage-apprentice") end},
 		{"No way, bye!"},
@@ -93,7 +93,7 @@ In any case, I must collect many items. I have some already but I am still looki
 
 newChat{ id="unique",
 	text = [[Let me examine it.
-Oh yes, my friend, this is indeed a powerful artefact! I think that it alone should suffice to complete my quest! Many thanks!]],
+Oh yes, my friend, this is indeed a powerful artefact! I think that it should suffice to complete my quest! Many thanks!]],
 	answers = {
 		{"Well, I cannot use it anyway.", jump="welcome"},
 	}

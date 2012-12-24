@@ -18,9 +18,9 @@
 -- darkgod@te4.org
 
 return "New Class: #LIGHT_GREEN#Temporal Warden (Chronomancer)",
-[[Time isn't a linear thing, it only appears to be.  In truth it's a fabric, the very fabric that holds the universe together.
-Like all great powers though there are those who seek to manipulate it and pervert it, but there are also those who seek to uphold rather then destroy.
-Those who have learned to bend rather then break the fabric so they can keep the balance against dark or power hungry forces.
+[[Time isn't a linear thing; it only appears to be.  In truth it's a fabric, the very fabric that holds the universe together.
+As with all great powers, there are those who seek to manipulate it and pervert it, but there are also those who seek to uphold rather than destroy.
+Those who have learned to bend, rather than break, the fabric can keep the balance against dark or power-hungry forces.
 
 You have been taught the ways of chronomancy by a Temporal Warden and can now create new characters with the #LIGHT_GREEN#Temporal Warden class#WHITE#.
 
@@ -30,6 +30,6 @@ Class features:#YELLOW#
 - Manipulate space and time to speed yourself up, create wormholes, or even throw an opponent into the future
 - See into the future or even travel into the past#WHITE#
 
-Temporal Warden's use Paradox for their powers.  It represents how much damage they've done to the spacetime continuum.
+Temporal Wardens use Paradox for their powers.  It represents how much damage they've done to the spacetime continuum.
 The higher their paradox the greater the effect of their powers but the harder they'll be to control.
 ]]

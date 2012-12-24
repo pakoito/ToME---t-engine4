@@ -20,7 +20,7 @@
 return "New Class: #LIGHT_GREEN#Doomed (Afflicted)",
 [[Through ignorance, greed or folly, the Doomed served some dark design and must now pay for their sins.
 Their only master now is the hatred they carry for every living thing.
-Drawing strength from the death of all they encounter, the Doomed become terrifying combatants.
+Drawing strength from the death of all they encounter, the Doomed become terrifying foes.
 Their mere presence engulfs the area in darkness.
 Some of them, however, strive to redeem their faults by using their Doomed powers to battle evil.
 

@@ -107,7 +107,7 @@ newBirthDescriptor{
 	desc = {
 		"Anorithils hail from the Gates of Morning, the last bastion of the free people in the Far East.",
 		"Their way of life is well represented by their motto 'We stand betwixt the Sun and Moon, where light and darkness meet. In the grey twilight we seek our destiny.'",
-		"They can channel the power of the Sun and the Moon to burn and tear apart all who seek to destroy the Sunwall.",
+		"They can channel the power of the Sun and the Moons to burn and tear apart all who seek to destroy the Sunwall.",
 		"Masters of Sun and Moon magic, they usually burn their foes with Sun rays before calling the fury of the stars.",
 		"Their most important stats are: Magic and Cunning",
 		"#GOLD#Stat modifiers:",

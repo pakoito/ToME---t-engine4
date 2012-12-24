@@ -18,16 +18,16 @@
 -- darkgod@te4.org
 
 return "New game difficulty mode: #LIGHT_GREEN#Insane",
-[[You won the game on Nightmare mode, you are a big tought player.
+[[You won the game on Nightmare mode.  You are a big tough player!
 You thought you had seen it all, done it all...
 
-But no! If nightmare mode couldnt bring you down, Insane mode will!
+But no! If nightmare mode couldn't bring you down, Insane mode will!
 
 Insane features:#YELLOW#
-- all zone levels increased by 100% + 10
-- all creatures talent levels increased by 100%
-- player rank is normal instead of elite
-- player can earn Insane version of achievements if also playing in Roguelike permadeath mode.
+- All zone levels increased by 100% + 10
+- All creature talent levels increased by 100%
+- Player rank is normal instead of elite
+- Player can earn Insane version of achievements if also playing in Roguelike permadeath mode.
 
 #WHITE#May you suffer many fun and unfair deaths!
 ]]

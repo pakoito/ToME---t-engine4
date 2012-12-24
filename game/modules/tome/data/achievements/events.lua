@@ -20,31 +20,31 @@
 newAchievement{
 	name = "The sky is falling!", id = "EVENT_METEOR",
 	show = "name",
-	desc = [[See a huge meteor falling down the sky.]],
+	desc = [[Saw a huge meteor falling from the sky.]],
 }
 
 newAchievement{
 	name = "Demonic Invasion", id = "EVENT_FEARSCAPE",
 	show = "name",
-	desc = [[Stop a demonic invasion by closing their portal.]],
+	desc = [[Stopped a demonic invasion by closing their portal.]],
 }
 
 newAchievement{
 	name = "Invasion from the Depths", id = "EVENT_NAGA",
 	show = "name",
-	desc = [[Stop a naga invasion by closing their portal.]],
+	desc = [[Stopped a naga invasion by closing their portal.]],
 }
 
 newAchievement{
 	name = "The Restless Dead", id = "EVENT_OLDBATTLEFIELD",
 	show = "name",
-	desc = [[Disturb an old battle field and survive the consequences.]],
+	desc = [[Disturbed an old battlefield and survived the consequences.]],
 }
 
 newAchievement{
 	name = "The Rat Lich", id = "EVENT_RATLICH",
 	show = "name",
-	desc = [[Killed the terrible Rat Lich]],
+	desc = [[Killed the terrible Rat Lich.]],
 }
 
 newAchievement{
@@ -62,5 +62,5 @@ newAchievement{
 newAchievement{
 	name = "A living one!", id = "CALDIZAR",
 	show = "name",
-	desc = [[Have been teleported into Caldizar's Fortress, far into the void between the stars.]],
+	desc = [[Was teleported into Caldizar's Fortress, far into the void between the stars.]],
 }

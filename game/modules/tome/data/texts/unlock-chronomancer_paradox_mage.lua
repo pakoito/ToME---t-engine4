@@ -18,8 +18,8 @@
 -- darkgod@te4.org
 
 return "New Class: #LIGHT_GREEN#Paradox Mage (Chronomancer)",
-[[Time isn't a linear thing, it only appears to be.  In truth it's a fabric, the very fabric that holds the universe together.
-Some seek to weave this fabric, to bend it and shape it to their own will.  Only the truely dedicated or the truely mad manage to unlock the secrets of time and space.
+[[Time isn't a linear thing; it only appears to be.  In truth it's a fabric, the very fabric that holds the universe together.
+Some seek to weave this fabric, to bend it and shape it to their own will.  Only the truly dedicated or the truly mad manage to unlock the secrets of time and space.
 
 You have learned such secrets and can now create new characters with the #LIGHT_GREEN#Paradox Mage class#WHITE#.
 

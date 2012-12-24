@@ -19,7 +19,7 @@
 
 return "New Class: #LIGHT_GREEN#Solipsist (Psionic)",
 [[Solipsists are powerful psionicists that believe that the world is made up of nothing more than the thoughts and dreams of those that live in it.
-This power does not come without a price however, and the Solipsist must constantly fight with their own ego in order to keep a clear view of reality, lest they fall into a state of solipsism, the belief that the world and those that live in it is nothing more than a figment of thier mind.
+This power does not come without a price, however.  The Solipsist must constantly fight with their own ego in order to keep a clear view of reality, lest they fall into a state of solipsism, the belief that the world and those that live in it are nothing more than figments of their own mind.
 
 You've experienced the power of dreams first hand and may now create characters with the #LIGHT_GREEN#Solipsist class#WHITE#.
 
@@ -32,5 +32,5 @@ Class features:#YELLOW#
 - Put your foes to sleep, enter their dreams, and become their worst nightmare#WHITE#
 
 Solipsists use their mind to manipulate the world around them.
-They require energy to do so, which they recover naturally over time and through methods others use to heal the body.
+They require energy to do so, which they recover naturally over time, and through methods others use to heal the body.
 ]]

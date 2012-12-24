@@ -24,12 +24,12 @@ These unarmed techniques still exist today.
 
 You have learned these techniques and can now create new characters with the #LIGHT_GREEN#Brawler class#WHITE#.
 
-Brawlers are warriors who fight with little more then their own bodies as weapons.
+Brawlers are warriors who fight with little more than their own bodies as weapons.
 Class features:#YELLOW#
 - Build deadly combination attacks with your strikes
 - Wear gauntlets or gloves to boost your damage
 - Outwit your foes and set them up for deadly counter attacks
 - Control your enemies and break their bones with fierce grappling techniques#WHITE#
 
-Brawlers use stamina and must remain at least semi-mobile.  As such they can not perform their unarmed talents in massive armor.
+Brawlers use stamina and must remain at least semi-mobile.  As such they cannot perform their unarmed talents in massive armor.
 ]]

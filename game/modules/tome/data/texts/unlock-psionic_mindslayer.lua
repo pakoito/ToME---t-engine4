@@ -18,10 +18,10 @@
 -- darkgod@te4.org
 
 return "New Class: #LIGHT_GREEN#Mindslayer (Psionic)",
-[[Mindslayers are the frontline fighters of the yeek's Way. Absolutly devoted to serving the Way, and thus all yeeks, they dive into battle with nothing but their own mind.
-Yeeks are natively psionic and thus most of them are yeeks, but psionic powers do happen - rarely - in other races too.
+[[Mindslayers are the frontline fighters of the Yeeks' Way. Absolutly devoted to serving the Way, and thus all Yeeks, they dive into battle with nothing but their own mind.
+Yeeks are natively psionic and thus most Mindslayers are Yeeks, but psionic powers do happen - rarely - in other races too.
 
-You have saved a fellow yeek mindslayer and can now create characters with the #LIGHT_GREEN#Mindslayer class#WHITE#.
+You have saved a fellow Yeek Mindslayer and can now create characters with the #LIGHT_GREEN#Mindslayer class#WHITE#.
 
 Mindslayers use their powerful psionic powers to supplement their low physical strength and dive into battle.
 Class features:#YELLOW#

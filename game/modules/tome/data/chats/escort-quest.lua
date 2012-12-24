@@ -304,7 +304,7 @@ local function generate_rewards()
 end
 
 newChat{ id="welcome",
-	text = reward.is_antimagic and [[At the last moment you invoke the power of nature, the portal fizzles and transports @npcname@ to Zigur.
+	text = reward.is_antimagic and [[At the last moment you invoke the power of nature.  The portal fizzles and transports @npcname@ to Zigur.
 You can feel Nature thanking you.]] or
 	[[Thank you, my friend. I do not think I would have survived without you.
 Please let me reward you:]],
