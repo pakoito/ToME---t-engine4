@@ -1242,7 +1242,8 @@ function _M:dump()
 	nl()
 	for item, o in ipairs(player:getInven("INVEN")) do
 		if not self.filter or self.filter(o) then
-			local char = string.char(string.byte('a') + item - 1)
+			local char = " "
+			if item < 26 then string.char(string.byte('a') + item - 1) end
 			nl(("%s) %s"):format(char, o:getName{force_id=true}))
 			nl(("   %s"):format(tostring(o:getTextualDesc())))
 			if o.droppedBy then

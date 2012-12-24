@@ -24,6 +24,7 @@ local TreeList = require "engine.ui.TreeList"
 local Button = require "engine.ui.Button"
 local Textzone = require "engine.ui.Textzone"
 local Separator = require "engine.ui.Separator"
+local Checkbox = require "engine.ui.Checkbox"
 local Savefile = require "engine.Savefile"
 
 module(..., package.seeall, class.inherit(Dialog))
@@ -31,12 +32,47 @@ module(..., package.seeall, class.inherit(Dialog))
 function _M:init()
 	Dialog.init(self, "Load Game", game.w * 0.8, game.h * 0.8)
 
-	local list = Module:listSavefiles()
-
+	self.c_compat = Checkbox.new{default=false, width=math.floor(self.iw / 3 - 40), title="Show incompatible", on_change=function() self:switch() end}
 	self.c_play = Button.new{text="  Play!  ", fct=function(text) self:playSave() end}
 	self.c_delete = Button.new{text="Delete", fct=function(text) self:deleteSave() end}
 	self.c_desc = Textzone.new{width=math.floor(self.iw / 3 * 2 - 10), height=self.ih - self.c_delete.h - 10, text=""}
 
+	self:generateList()
+
+	self.save_sel = nil
+	self.c_tree = TreeList.new{width=math.floor(self.iw / 3 - 10), height=self.ih, scrollbar=true, columns={
+		{width=100, display_prop="name"},
+	}, tree=self.tree,
+		fct=function(item)
+			if self.save_sel == item then self:playSave() end
+			if self.save_sel then self.save_sel.color = nil self.c_tree:drawItem(self.save_sel) end
+			item.color = function() return colors.simple(colors.LIGHT_GREEN) end
+			self.save_sel = item
+			self.c_tree:drawItem(item)
+			if item.usable then self:toggleDisplay(self.c_play, true) end
+			self:toggleDisplay(self.c_delete, true)
+		end,
+		select=function(item, sel) self:select(item) end,
+	}
+
+	self:loadUI{
+		{left=0, top=0, ui=self.c_tree},
+		{right=0, top=0, ui=self.c_desc},
+		{right=0, bottom=0, ui=self.c_delete, hidden=true},
+		{left=0, bottom=0, ui=self.c_play, hidden=true},
+		{left=self.c_tree.w + 5, top=5, ui=Separator.new{dir="horizontal", size=self.ih - 10}},
+		{left=0, bottom=0, ui=self.c_compat},
+	}
+	self:setFocus(self.c_tree)
+	self:setupUI(false, true)
+
+	self.key:addBinds{
+		EXIT = function() game:unregisterDialog(self) end,
+	}
+end
+
+function _M:generateList()
+	local list = Module:listSavefiles()
 	self.tree = {}
 	local found = false
 	for i = #list, 1, -1 do
@@ -48,7 +84,9 @@ function _M:init()
 		for j, save in ipairs(m.savefiles) do
 			local mod_string = ("%s-%d.%d.%d"):format(m.short_name, save.module_version and save.module_version[1] or -1, save.module_version and save.module_version[2] or -1, save.module_version and save.module_version[3] or -1)
 			local mod = list[mod_string]
+			if not mod and self.c_compat.checked then mod = m end
 			if mod and save.loadable then
+			for k,e in pairs(mod) do print("<<<===", k, e) end
 				local laddons = table.reversekey(Module:listAddons(mod, true), "short_name")
 				local addons = {}
 				save.usable = true
@@ -86,36 +124,12 @@ function _M:init()
 			})
 		end
 	end
+end
 
-	self.save_sel = nil
-	self.c_tree = TreeList.new{width=math.floor(self.iw / 3 - 10), height=self.ih, scrollbar=true, columns={
-		{width=100, display_prop="name"},
-	}, tree=self.tree,
-		fct=function(item)
-			if self.save_sel == item then self:playSave() end
-			if self.save_sel then self.save_sel.color = nil self.c_tree:drawItem(self.save_sel) end
-			item.color = function() return colors.simple(colors.LIGHT_GREEN) end
-			self.save_sel = item
-			self.c_tree:drawItem(item)
-			if item.usable then self:toggleDisplay(self.c_play, true) end
-			self:toggleDisplay(self.c_delete, true)
-		end,
-		select=function(item, sel) self:select(item) end,
-	}
-
-	self:loadUI{
-		{left=0, top=0, ui=self.c_tree},
-		{right=0, top=0, ui=self.c_desc},
-		{right=0, bottom=0, ui=self.c_delete, hidden=true},
-		{left=0, bottom=0, ui=self.c_play, hidden=true},
-		{left=self.c_tree.w + 5, top=5, ui=Separator.new{dir="horizontal", size=self.ih - 10}},
-	}
-	self:setFocus(self.c_tree)
-	self:setupUI(false, true)
-
-	self.key:addBinds{
-		EXIT = function() game:unregisterDialog(self) end,
-	}
+function _M:switch()
+	self:generateList()
+	self.c_tree.tree = self.tree
+	self.c_tree:generate()
 end
 
 function _M:on_focus(id, ui)

@@ -178,6 +178,7 @@ function _M:listSavefiles(moddir_filter)
 	local mods = self:listModules(nil, moddir_filter)
 	for _, mod in ipairs(mods) do
 		local lss = {}
+		print("Listing saves for module", mod.short_name)
 		for i, short_name in ipairs(fs.list("/tmp/listsaves/"..mod.short_name.."/save/")) do
 			local dir = "/tmp/listsaves/"..mod.short_name.."/save/"..short_name
 			if fs.exists(dir.."/game.teag") then
@@ -788,6 +789,7 @@ function _M:loadSavefileDescription(dir)
 
 		if not ls.name or not ls.description then return end
 		ls.dir = dir
+		print(" * save", ls.dir)
 		return ls
 	end
 end
