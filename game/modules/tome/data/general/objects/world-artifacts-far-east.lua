@@ -136,6 +136,7 @@ newEntity{ base = "BASE_GEM",
 	rarity = 300,
 	cost = 300,
 	material_level = 5,
+	identified = false,
 	carrier = {
 		on_melee_hit = {[DamageType.HEAL] = 34},
 		life_regen = -2,

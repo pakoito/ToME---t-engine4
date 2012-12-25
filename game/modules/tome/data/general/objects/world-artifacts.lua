@@ -436,6 +436,7 @@ newEntity{ base = "BASE_GEM",
 	level_range = {20, 30},
 	color=colors.YELLOW,
 	encumber = 1,
+	identified = false,
 	rarity = 250,
 	material_level = 3,
 	desc = [[The first Halfling mages during the Age of Allure discovered how to capture the Sunlight and infuse gems with it.
@@ -1584,6 +1585,7 @@ newEntity{ base = "BASE_GEM", define_as = "GEM_TELOS",
 	level_range = {35, 45},
 	desc = [[A closer look at this pure white crystal reveals that it is really a plethora of colors swirling and scintillating.]],
 	rarity = 240,
+	identified = false,
 	cost = 200,
 	material_level = 5,
 	carrier = {
@@ -5033,6 +5035,7 @@ newEntity{ base = "BASE_GEM", --Thanks SageAcrin and Graziel!
 	desc = [[This cracked gemstone appears faded with age. It appears to have once been the eye of a golem.]],
 	rarity = 240,
 	cost = 200,
+	identified = false,
 	material_level = 3,
 	wielder = {
 		inc_stats = {[Stats.STAT_MAG] = 5, [Stats.STAT_CON] = 5, },
