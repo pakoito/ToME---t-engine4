@@ -24,7 +24,13 @@ local Astar = require "engine.Astar"
 
 newAI("move_simple", function(self)
 	if self.ai_target.actor then
-		local tx, ty = self:aiSeeTargetPos(self.ai_target.actor)
+		local tx, ty
+		-- Move towards the last seen position if we have one
+		if self.ai_state.target_last_seen then
+			tx, ty = self.ai_state.target_last_seen.x, self.ai_state.target_last_seen.y
+		else
+			tx, ty = self:aiSeeTargetPos(self.ai_target.actor)
+		end
 		return self:moveDirection(tx, ty)
 	end
 end)
@@ -167,13 +173,32 @@ newAI("move_blocked_astar", function(self)
 	end
 end)
 
+newAI("move_wander", function(self)
+	local coords = {}
+	for _, coor in pairs(util.adjacentCoords(self.x, self.y)) do
+		if self:canMove(coor[1], coor[2]) then
+			coords[#coords+1] = coor
+		end
+	end
+	if #coords > 0 then
+		local selected = rng.table(coords)
+		return self:moveDirection(selected[1], selected[2])
+	end
+end)
+
 newAI("move_complex", function(self)
 	if self.ai_target.actor and self.x and self.y then
 		local tx, ty = self:aiSeeTargetPos(self.ai_target.actor)
 		local moved
+		
 		-- Can we use A* due to damage?
 		if not moved and self.ai_state.damaged_turns and self.ai_state.damaged_turns > 0 then
 			moved = self:runAI("move_astar")
+		end
+
+		-- Wander if it has been a while since we last saw the target
+		if not moved and self.ai_state.target_last_seen and (game.turn - (self.ai_state.target_last_seen.turn or game.turn)) / (game.energy_to_act / game.energy_per_tick) > 10 then
+			moved = self:runAI("move_wander")
 		end
 
 		-- Check if we can use dmap
@@ -182,10 +207,10 @@ newAI("move_complex", function(self)
 		end
 
 		-- Check blocking
-		if not moved then 
+		if not moved and self:hasLOS(tx, ty) then 
 			-- Make sure that we are indeed blocked
 			moved = self:runAI("move_simple")
-			if not moved and self:hasLOS(tx, ty) then
+			if not moved then
 				-- Wait at least 5 turns of not moving before switching to blocked_astar
 				-- add 2 since we remove 1 every turn
 				self.ai_state.blocked_turns = (self.ai_state.blocked_turns or 0) + 2

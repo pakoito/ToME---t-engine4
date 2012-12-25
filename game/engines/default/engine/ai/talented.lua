@@ -23,7 +23,8 @@
 newAI("dumb_talented", function(self)
 	-- Find available talents
 	local avail = {}
-	local target_dist = core.fov.distance(self.x, self.y, self.ai_target.actor.x, self.ai_target.actor.y)
+	local tx, ty = self:aiSeeTargetPos(self.ai_target.actor)
+	local target_dist = core.fov.distance(self.x, self.y, tx, ty)
 	for tid, _ in pairs(self.talents) do
 		local t = self:getTalentFromId(tid)
 --		print(self.name, self.uid, "dumb ai talents can try use", t.name, tid, "::", t.mode, not self:isTalentCoolingDown(t), target_dist <= self:getTalentRange(t), self:preUseTalent(t, true), self:canProject({type="bolt"}, self.ai_target.actor.x, self.ai_target.actor.y))
@@ -33,7 +34,7 @@ newAI("dumb_talented", function(self)
 		local tg = {type=util.getval(t.direct_hit, self, t) and "hit" or "bolt", range=total_range}
 		if t.mode == "activated" and not t.no_npc_use and
 		   not self:isTalentCoolingDown(t) and self:preUseTalent(t, true, true) and
-		   (not self:getTalentRequiresTarget(t) or self:canProject(tg, self.ai_target.actor.x, self.ai_target.actor.y))
+		   (not self:getTalentRequiresTarget(t) or self:canProject(tg, tx, ty))
 		   then
 			avail[#avail+1] = tid
 			print(self.name, self.uid, "dumb ai talents can use", t.name, tid)

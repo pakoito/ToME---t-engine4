@@ -25,8 +25,9 @@ local canFleeDmapKeepLos = function(self)
 	if self.never_move then return false end -- Dont move, dont flee
 	if self.ai_target.actor then
 		local act = self.ai_target.actor
+		local ax, ay = self:aiSeeTargetPos(self.ai_target.actor)
 		local dir, c
-		if self:hasLOS(act.x, act.y) then
+		if self:hasLOS(ax, ay) then
 			dir = 5
 			c = act:distanceMap(self.x, self.y)
 			if not c then return end
@@ -34,7 +35,7 @@ local canFleeDmapKeepLos = function(self)
 		for _, i in ipairs(util.adjacentDirs()) do
 			local sx, sy = util.coordAddDir(self.x, self.y, i)
 			-- Check LOS first
-			if self:hasLOS(act.x, act.y, nil, nil, sx, sy) then
+			if self:hasLOS(ax, ay, nil, nil, sx, sy) then
 				local cd = act:distanceMap(sx, sy)
 	--			print("looking for dmap", dir, i, "::", c, cd)
 				if not cd or ((not c or cd < c) and self:canMove(sx, sy)) then c = cd; dir = i end
