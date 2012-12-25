@@ -873,7 +873,8 @@ function _M:drawDialog(kind, actor_to_compare)
 
 		for i, t in ipairs(DamageType.dam_def) do
 			if player.on_melee_hit[DamageType[t.type]] and player.on_melee_hit[DamageType[t.type]] ~= 0 then
-				self:mouseTooltip(self.TOOLTIP_ON_HIT_DAMAGE, s:drawColorStringBlended(self.font, ("%s%-10s#LAST#: #00ff00#%.2f"):format((t.text_color or "#WHITE#"), t.name:capitalize(), player.on_melee_hit[DamageType[t.type]]), w, h, 255, 255, 255, true)) h = h + self.font_h
+				local dval = player.on_melee_hit[DamageType[t.type]]
+				self:mouseTooltip(self.TOOLTIP_ON_HIT_DAMAGE, s:drawColorStringBlended(self.font, ("%s%-10s#LAST#: #00ff00#%.2f"):format((t.text_color or "#WHITE#"), t.name:capitalize(), (type(dval)=="number") and dval or dval.dam), w, h, 255, 255, 255, true)) h = h + self.font_h
 			end
 		end
 
