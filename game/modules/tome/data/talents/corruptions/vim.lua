@@ -95,8 +95,9 @@ newTalent{
 	cooldown = 15,
 	tactical = { ATTACKAREA = {BLIGHT = 1}, DISABLE = 2, ESCAPE = 2 },
 	range = 7,
+	radius = 3,
 	action = function(self, t)
-		local tg = {type="ball", radius=3, range=self:getTalentRange(t), talent=t}
+		local tg = {type="ball", radius=self:getTargetRadius(t), range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		local actors = {}
@@ -127,7 +128,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Open a dark portal to the target zone. All creatures caught inside will be teleported to your location, and you to theirs.
+		return ([[Open a dark portal (radius 3) to the target zone. All creatures caught inside will be teleported to your location, and you to theirs.
 		All creatures (except you) traversing the portal will catch a random disease, doing %0.2f blight damage per turn for 6 turns and reducing one of its physical stats (strength, constitution, dexterity) by %d.
 		The damage will increase with your Spellpower.]]):format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 12, 80)), self:combatTalentSpellDamage(t, 5, 25))
 	end,

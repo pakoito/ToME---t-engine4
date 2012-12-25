@@ -34,7 +34,7 @@ defineTile('u', mod.class.Grid.new{
 	on_move = function(self, x, y, actor, forced)
 		if not actor.player then return end
 		if forced then return end
-		local g = game.zone:makeEntityByName(game.level, "terrain", "DOOR_OPEN")
+		local g = game.zone:makeEntityByName(game.level, "terrain", "FLOOR")
 		game.zone:addEntity(game.level, g, "terrain", x - 4, y - 4)
 		game.zone:addEntity(game.level, g, "terrain", x + 4, y - 4)
 		game.zone:addEntity(game.level, g, "terrain", x + 4, y + 4)
@@ -51,19 +51,8 @@ defineTile('u', mod.class.Grid.new{
 {random_filter={add_levels=10, tome_mod="gvault"}}
 )
 
-defineTile('+', mod.class.Grid.new{
-	define_as = "TRIGGERED_DOOR",
-	name = "sealed door", image = "terrain/sealed_door.png",
-	type = "door", subtype = 1,
-	display = '+', color=colors.WHITE, back_color=colors.DARK_UMBER,
-	notice = true,
-	always_remember = true,
-	block_sight = true,
-	does_block_move = true,
-}
-)
-
 defineTile('.', "FLOOR")
+defineTile('+', "HARDWALL")
 defineTile('#', "HARDWALL")
 defineTile('X', "DOOR_VAULT")
 defineTile('&', "LAVA_FLOOR")
