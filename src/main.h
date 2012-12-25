@@ -38,6 +38,7 @@ extern void do_resize(int w, int h, bool fullscreen);
 extern void setupRealtime(float freq);
 extern void setupDisplayTimer(int fps);
 extern int docall (lua_State *L, int narg, int nret);
+extern bool safe_mode;
 extern bool fbo_active;
 extern bool multitexture_active;
 extern long total_keyframes;

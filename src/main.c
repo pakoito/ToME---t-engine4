@@ -61,6 +61,7 @@ bool is_fullscreen = FALSE;
 lua_State *L = NULL;
 int nb_cpus;
 bool no_debug = FALSE;
+bool safe_mode = FALSE;
 int current_mousehandler = LUA_NOREF;
 int current_keyhandler = LUA_NOREF;
 int current_game = LUA_NOREF;
@@ -1127,6 +1128,7 @@ int main(int argc, char *argv[])
 		if (!strncmp(arg, "--no-debug", 10)) no_debug = TRUE;
 		if (!strncmp(arg, "--xpos", 6)) start_xpos = strtol(argv[++i], NULL, 10);
 		if (!strncmp(arg, "--ypos", 6)) start_ypos = strtol(argv[++i], NULL, 10);
+		if (!strncmp(arg, "--safe-mode", 11)) safe_mode = TRUE;
 	}
 
 	// Initialize display lock for thread safety.
@@ -1187,13 +1189,13 @@ int main(int argc, char *argv[])
 	shaders_active = GLEW_ARB_shader_objects;
 	fbo_active = GLEW_EXT_framebuffer_object || GLEW_ARB_framebuffer_object;
 	if (!multitexture_active) shaders_active = FALSE;
-	if (!GLEW_VERSION_2_1)
+	if (!GLEW_VERSION_2_1 || safe_mode)
 	{
 		multitexture_active = FALSE;
 		shaders_active = FALSE;
 		fbo_active = FALSE;
 	}
-	printf("===fbo %d\n", fbo_active);
+	if (safe_mode) printf("Safe mode activated\n");
 
 //	setupDisplayTimer(30);
 	init_blank_surface();

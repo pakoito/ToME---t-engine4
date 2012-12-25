@@ -2389,6 +2389,12 @@ static int get_text_aa(lua_State *L)
 	return 1;
 }
 
+static int is_safe_mode(lua_State *L)
+{
+	lua_pushboolean(L, safe_mode);
+	return 1;
+}
+
 static int sdl_get_modes_list(lua_State *L)
 {
 	SDL_PixelFormat format;
@@ -2570,6 +2576,7 @@ static const struct luaL_reg displaylib[] =
 	{"drawQuad", gl_draw_quad},
 	{"drawQuadPart", gl_draw_quad_part},
 	{"FBOActive", gl_fbo_is_active},
+	{"safeMode", is_safe_mode},
 	{"disableFBO", gl_fbo_disable},
 	{"drawStringNewSurface", sdl_surface_drawstring_newsurface},
 	{"drawStringBlendedNewSurface", sdl_surface_drawstring_newsurface_aa},

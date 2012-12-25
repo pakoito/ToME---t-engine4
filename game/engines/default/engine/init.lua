@@ -69,6 +69,17 @@ for i, file in ipairs(fs.list("/settings/")) do
 	end
 end
 
+if core.display.safeMode() then
+	config.settings.aa_text = false
+	config.settings.fbo_active = false
+	config.settings.shaders_active = false
+	config.settings.particles_density = 5
+	config.settings.background_saves = false
+	config.settings.mouse_cursor = false
+	config.settings.display_fps = 10
+	config.settings.window = {size='800x600 Windowed'}
+end
+
 -- Default resolution as big as possible
 if not config.settings.window or not config.settings.window.size then
 	local list = core.display.getModesList()

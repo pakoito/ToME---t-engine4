@@ -68,6 +68,7 @@ function _M:init()
 --	self.refuse_threads = true
 	self.normal_key = self.key
 	self.stopped = config.settings.boot_menu_background
+	if core.display.safeMode() then self.stopped = true end
 	if self.stopped then
 		core.game.setRealtime(0)
 	else
