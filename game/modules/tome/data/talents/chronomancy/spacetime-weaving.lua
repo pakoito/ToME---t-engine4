@@ -30,7 +30,7 @@ newTalent{
 	end,
 	requires_target = true,
 	target = function(self, t)
-		return {type="hit", range=self:getTalentRange(t)}
+		return {type="hit", range=self:getTalentRange(t), nolock=true, nowarning=true}
 	end,
 	direct_hit = true,
 	no_energy = true,

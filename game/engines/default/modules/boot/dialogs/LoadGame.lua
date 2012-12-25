@@ -61,7 +61,7 @@ function _M:init()
 		{right=0, bottom=0, ui=self.c_delete, hidden=true},
 		{left=0, bottom=0, ui=self.c_play, hidden=true},
 		{left=self.c_tree.w + 5, top=5, ui=Separator.new{dir="horizontal", size=self.ih - 10}},
-		{left=0, bottom=0, ui=self.c_compat},
+		{left=self.c_tree.w - self.c_compat.w, bottom=0, ui=self.c_compat},
 	}
 	self:setFocus(self.c_tree)
 	self:setupUI(false, true)
@@ -84,9 +84,8 @@ function _M:generateList()
 		for j, save in ipairs(m.savefiles) do
 			local mod_string = ("%s-%d.%d.%d"):format(m.short_name, save.module_version and save.module_version[1] or -1, save.module_version and save.module_version[2] or -1, save.module_version and save.module_version[3] or -1)
 			local mod = list[mod_string]
-			if not mod and self.c_compat.checked then mod = m end
+			if not mod and self.c_compat.checked and m.versions and m.versions[1] then mod = m.versions[1] end
 			if mod and save.loadable then
-			for k,e in pairs(mod) do print("<<<===", k, e) end
 				local laddons = table.reversekey(Module:listAddons(mod, true), "short_name")
 				local addons = {}
 				save.usable = true
@@ -100,7 +99,7 @@ function _M:generateList()
 				save.zone = Textzone.new{
 					width=self.c_desc.w,
 					height=self.c_desc.h,
-					text=("#{bold}##GOLD#%s: %s#WHITE##{normal}#\nGame version: %d.%d.%d\nRequires addons: %s\n\n%s"):format(mod.long_name, save.name, mod.version[1], mod.version[2], mod.version[3], save.addons and table.concat(addons, ", ") or "none", save.description)
+					text=("#{bold}##GOLD#%s: %s#WHITE##{normal}#\nGame version: %d.%d.%d\nRequires addons: %s\n\n%s"):format(mod.long_name, save.name, save.module_version and save.module_version[1] or -1, save.module_version and save.module_version[2] or -1, save.module_version and save.module_version[3] or -1, save.addons and table.concat(addons, ", ") or "none", save.description)
 				}
 				if save.screenshot then
 					local w, h = save.screenshot:getSize()
