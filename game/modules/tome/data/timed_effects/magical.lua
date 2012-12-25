@@ -1926,7 +1926,7 @@ newEffect{
 	activate = function(self, eff)
 		self:effectTemporaryValue(eff, "inc_damage", {[DamageType.ARCANE]=25})
 		self:effectTemporaryValue(eff, "max_mana", self:getMaxMana() * 0.33)
-		self:effectTemporaryValue(eff, "use_only_arcane", 1)
+		self:effectTemporaryValue(eff, "use_only_arcane", (self:isTalentActive(self.T_PURE_AETHER) and self:getTalentLevel(self.T_PURE_AETHER) >= 5) and 2 or 1)
 		self:effectTemporaryValue(eff, "arcane_cooldown_divide", 3)
 
 		if not self.shader then

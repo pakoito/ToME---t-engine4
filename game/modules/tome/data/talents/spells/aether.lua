@@ -223,7 +223,8 @@ newTalent{
 	info = function(self, t)
 		local damageinc = t.getDamageIncrease(self, t)
 		local ressistpen = t.getResistPenalty(self, t)
-		return ([[Surround yourself with Pure Aether, increasing all your arcane damage by %d%% and ignoring %d%% arcane resistance of your targets.]])
+		return ([[Surround yourself with Pure Aether, increasing all your arcane damage by %d%% and ignoring %d%% arcane resistance of your targets.
+		At level 5 it allows Aegis spells to be used while in Aether Avatar form.]])
 		:format(damageinc, ressistpen)
 	end,
 }
