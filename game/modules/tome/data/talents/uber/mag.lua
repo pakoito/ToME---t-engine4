@@ -139,6 +139,7 @@ uberTalent{
 		- Turtle: Curse of Impotence
 		- Spider: Corrosive Worm
 		- Skeletons: Bone Grab
+		- Bone Giants: Bone Shield
 		- Ghouls: Blood Lock
 		- Vampires / Liches: Darkfire
 		- Ghosts / Wights: Blood Boil

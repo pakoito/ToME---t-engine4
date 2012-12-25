@@ -716,7 +716,8 @@ newTalent{
 				p.souls = p.souls - 1
 				necroSetupSummon(self, minion, pos.x, pos.y, lev, true)
 				if self:knowTalent(self.T_BLIGHTED_SUMMONING) then 
-					if minion.subtype == "skeleton" or minion.subtype == "giant" then minion:learnTalent(minion.T_BONE_GRAB, true, 3) end
+					if minion.subtype == "skeleton" then minion:learnTalent(minion.T_BONE_GRAB, true, 3) end
+					if minion.subtype == "giant" then minion:learnTalent(minion.T_BONE_SHIELD, true, 3) end
 					if minion.subtype == "ghoul" then minion:learnTalent(minion.T_BLOOD_LOCK, true, 3) end
 					if minion.subtype == "vampire" or minion.subtype == "lich" then minion:learnTalent(minion.T_DARKFIRE, true, 3) end
 					if minion.subtype == "ghost" or minion.subtype == "wight" then minion:learnTalent(minion.T_BLOOD_BOIL, true, 3) end
