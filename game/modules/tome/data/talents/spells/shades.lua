@@ -247,11 +247,13 @@ newTalent{
 	tactical = { BUFF = 2 },
 	getDarknessDamageIncrease = function(self, t) return self:getTalentLevelRaw(t) * 2 end,
 	getResistPenalty = function(self, t) return self:getTalentLevelRaw(t) * 10 end,
+	getAffinity = function(self, t) return self:getTalentLevel(t) * 10 end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/spell_generic")
 		return {
 			dam = self:addTemporaryValue("inc_damage", {[DamageType.DARKNESS] = t.getDarknessDamageIncrease(self, t), [DamageType.COLD] = t.getDarknessDamageIncrease(self, t)}),
 			resist = self:addTemporaryValue("resists_pen", {[DamageType.DARKNESS] = t.getResistPenalty(self, t)}),
+			affinity = self:addTemporaryValue("damage_affinity", {[DamageType.DARKNESS] = t.getAffinity(self, t)}),
 			particle = self:addParticles(Particles.new("ultrashield", 1, {rm=0, rM=0, gm=0, gM=0, bm=10, bM=100, am=70, aM=180, radius=0.4, density=60, life=14, instop=20})),
 		}
 	end,
@@ -259,12 +261,15 @@ newTalent{
 		self:removeParticles(p.particle)
 		self:removeTemporaryValue("inc_damage", p.dam)
 		self:removeTemporaryValue("resists_pen", p.resist)
+		self:removeTemporaryValue("damage_affinity", p.affinity)
 		return true
 	end,
 	info = function(self, t)
 		local damageinc = t.getDarknessDamageIncrease(self, t)
 		local ressistpen = t.getResistPenalty(self, t)
-		return ([[Surround yourself with Frostdusk, increasing all your darkness and cold damage by %d%%, and ignoring %d%% of the darkness resistance of your targets.]])
-		:format(damageinc, ressistpen)
+		local affinity = t.getAffinity(self, t)
+		return ([[Surround yourself with Frostdusk, increasing all your darkness and cold damage by %d%%, and ignoring %d%% of the darkness resistance of your targets.
+		In addition, all darkness damage you take heals you for %d%% of the damage.]])
+		:format(damageinc, ressistpen, affinity)
 	end,
 }
