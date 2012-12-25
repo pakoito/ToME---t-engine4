@@ -609,11 +609,11 @@ local desc_types = ([[Talent category points allow you to either:
 - improve a known talent category efficiency by 0.2
 - learn a new inscription slot (up to a maximum of 5, learning it is automatic when using an inscription)
 
-You gain a new point at level 10, 20 and 30.
+You gain a new point at level 10, 20 and 36.
 Some races or items may increase them as well.]]):toTString()
 
 local desc_prodigies = ([[Prodigies are special talents that only the most powerful of characters can attain.
-All of them require at least 50 in a core stat and many also have more special demands. You can learn a new prodigy at level 40 and 50.]]):toTString()
+All of them require at least 50 in a core stat and many also have more special demands. You can learn a new prodigy at level 30 and 42.]]):toTString()
 
 local desc_inscriptions = ([[You can use a category point to unlock a new inscription slot (up to 5 slots).]]):toTString()
 

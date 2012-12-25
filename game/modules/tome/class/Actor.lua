@@ -2483,12 +2483,20 @@ function _M:levelup()
 		self.unused_generics = self.unused_generics + 1
 		if self.level % 5 == 0 then self.unused_talents = self.unused_talents + 1 end
 		if self.level % 5 == 0 then self.unused_generics = self.unused_generics - 1 end
-		-- At levels 10, 20 and 30 we gain a new talent type
-		if self.level == 10 or self.level == 20 or self.level == 30 then
+		-- At levels 10, 20 and 36 we gain a new talent type
+		if self.level == 10 or self.level == 20 or self.level == 36 then
 			self.unused_talents_types = self.unused_talents_types + 1
 		end
-		if self.level == 40 or self.level == 50 then
+		if self.level == 30 or self.level == 42 then
 			self.unused_prodigies = self.unused_prodigies + 1
+		end
+		if self.level == 50 then
+			self.unused_stats = self.unused_stats + 10
+			self.unused_talents = self.unused_talents + 3
+			self.unused_generics = self.unused_generics + 3
+		end
+		if self.player and not config.settings.cheat then
+			Dialog:simpleLongPopup("Level 50!", "You have achieved #LIGHT_GREEN#level 50#WHITE#, congratulations!\n\nThis level is special, it granted you #LIGHT_GREEN#10#WHITE# more stat points, #LIGHT_GREEN#3#WHITE# more class talent points and #LIGHT_GREEN#3#WHITE# more generic talent points.\nNow go forward boldly and triumph!", 400)
 		end
 	elseif type(self.no_points_on_levelup) == "function" then
 		self:no_points_on_levelup()
