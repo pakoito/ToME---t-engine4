@@ -94,6 +94,7 @@ uberTalent{
 						end
 					end
 				end)
+				game:getPlayer(true):attr("meteoric_crash", 1)
 			end
 		end
 
