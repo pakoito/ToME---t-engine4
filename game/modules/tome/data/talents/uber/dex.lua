@@ -195,3 +195,31 @@ uberTalent{
 		:format()
 	end,
 }
+
+uberTalent{
+	name = "Vital Shot",
+	no_energy = "fake",
+	cooldown = 20,
+	range = archery_range,
+	require = { special={desc="Dealt over 50000 damage with ranged weapons.", fct=function(self) return self.damage_log and self.damage_log.weapon.archery and self.damage_log.weapon.archery >= 50000 end} },
+	tactical = { ATTACK = { weapon = 3 }, DISABLE = 3 },
+	requires_target = true,
+	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow or sling for this talent.") end return false end return true end,
+	archery_onhit = function(self, t, target, x, y)
+		if target:canBe("stun") then
+			target:setEffect(target.EFF_STUNNED, 5, {apply_power=self:combatAttack()})
+		end
+		target:setEffect(target.EFF_CRIPPLE, 5, {speed=0.50, apply_power=self:combatAttack()})
+	end,
+	action = function(self, t)
+		local targets = self:archeryAcquireTargets(nil, {one_shot=true})
+		if not targets then return end
+		self:archeryShoot(targets, t, nil, {mult=4.5})
+		return true
+	end,
+	info = function(self, t)
+		return ([[You fire a shot straight at your enemy's vital areas, wounding them terribly.
+		Enemies hit by this shot will take 450%% weapon damage, and will be stunned and crippled (Losing 50%% physical, magical and mental attack speeds) for five turns, due to the incredibly disabling impact of the shot.
+		The stun and cripple chances increase with your Accuracy.]]):format()
+	end,
+}

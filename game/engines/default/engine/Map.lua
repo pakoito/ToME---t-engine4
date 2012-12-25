@@ -1144,7 +1144,7 @@ function _M:displayParticles(nb_keyframes)
 	local dx, dy = self.display_x, self.display_y
 	for i = #self.particles, 1, -1 do
 		e = self.particles[i]
-		if e.ps then
+		if e and e.ps then
 			adx, ady = 0, 0
 			if e.x and e.y then
 				-- Make sure we display on the real screen coords: handle current move anim position

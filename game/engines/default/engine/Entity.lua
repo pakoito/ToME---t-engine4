@@ -690,6 +690,7 @@ end
 function _M:removeTemporaryValue(prop, id, noupdate)
 	local oldval = self.compute_vals[id]
 	print("removeTempVal", prop, oldval, " :=: ", id)
+	if not id then error("error removing prop "..tostring(prop).." with id nil") end
 	self.compute_vals[id] = nil
 
 	-- Find the base, one removed from the last prop

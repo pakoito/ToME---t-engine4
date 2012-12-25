@@ -157,7 +157,7 @@ uberTalent{
 
 uberTalent{
 	name = "Revisionist History",
-	cooldown = 40,
+	cooldown = 30,
 	no_energy = true,
 	is_spell = true,
 	no_npc_use = true,
@@ -182,5 +182,26 @@ uberTalent{
 		While this effect holds, you can use the prodigy again to rewrite history.
 		This prodigy splits the timeline. Attempting to use another spell that also splits the timeline while this effect is active will be unsuccessful.]])
 		:format()
+	end,
+}
+
+uberTalent{
+	name = "Cauterize",
+	mode = "passive",
+	cooldown = 12,
+	require = { special={desc="Received at least 50000 fire damage and have cast at least 1000 spells.", fct=function(self) return
+		self.talent_kind_log and self.talent_kind_log.spell and self.talent_kind_log.spell >= 1000 and self.damage_intake_log and self.damage_intake_log[DamageType.FIRE] and self.damage_intake_log[DamageType.FIRE] >= 50000
+	end} },
+	trigger = function(self, t, value)
+		self:startTalentCooldown(t)
+
+		self:setEffect(self.EFF_CAUTERIZE, 8, {dam=value/10})
+		return true
+	end,
+	info = function(self, t)
+		return ([[Your inner flame is strong, each time you receive a blow that would kill you your body is wreathed in flames.
+		The flames will cauterize the wound, fully absorbing all damage done this turn but they will continue to burn for 8 turns.
+		Each turn 10% of the damage absorbed will be dealt by the flames (this will bypass resistance and affinity).
+		Warning, this has a cooldown.]])
 	end,
 }

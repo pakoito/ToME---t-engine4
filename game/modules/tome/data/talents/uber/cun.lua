@@ -271,3 +271,29 @@ uberTalent{
 		:format()
 	end,
 }
+
+uberTalent{
+	name = "Tricks of the Trade",
+	mode = "passive",
+	require = { special={desc="Sided with the Assassin Lord.", fct=function(self) return game.state.birth.ignore_prodigies_special_reqs or (self:isQuestStatus("lost-merchant", engine.Quest.COMPLETED, "evil")) end} },
+	on_learn = function(self, t) 
+		if self:knowTalentType("cunning/stealth") then
+			self:setTalentTypeMastery("cunning/stealth", self:getTalentTypeMastery("cunning/stealth") + 0.2)
+		elseif self:knowTalentType("cunning/stealth") == false then
+			self:learnTalentType("cunning/stealth", true)
+		end
+		if self:knowTalentType("cunning/scoundrel") then
+			self:setTalentTypeMastery("cunning/scoundrel", self:getTalentTypeMastery("cunning/scoundrel") + 0.1)
+		else
+			self:learnTalentType("cunning/scoundrel", true)
+			self:setTalentTypeMastery("cunning/scoundrel", 0.9)
+		end
+		self.invisible_damage_penalty_divisor = (self.invisible_damage_penalty_divisor or 0) + 2
+	end,
+	info = function(self, t)
+		return ([[You have friends in low places, and have learned some underhanded tricks.
+		Gain 0.2 Category Mastery to the Cunning/Stealth Category (or unlock it, if locked), and either gain +0.1 to the Cunning/Scoundrel category or learn and unlock the category at 0.9, if you lack it.
+		Additionally, all of your damage penalties from invisibility are permanently halved.]]):
+		format()
+	end,
+}

@@ -32,8 +32,12 @@ function _M:takeHit(value, src, death_note)
 	self.life = self.life - value
 	self.changed = true
 	if self.life <= self.die_at then
-		if src.on_kill and src:on_kill(self) then return false, value end
-		return self:die(src, death_note), value
+		if self:knowTalent(self.T_CAUTERIZE) and self:triggerTalent(self.T_CAUTERIZE, nil, value) then
+			return false, 0
+		else
+			if src.on_kill and src:on_kill(self) then return false, value end
+			return self:die(src, death_note), value
+		end
 	end
 	return false, value
 end

@@ -132,6 +132,8 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 	local damtype = tg.archery.damtype or ammo.damtype or DamageType.PHYSICAL
 	local mult = tg.archery.mult or 1
 
+	self.turn_procs.weapon_type = {kind=weapon and weapon.talented or "unknown", mode="archery"}
+
 	-- Does the blow connect? yes .. complex :/
 	if tg.archery.use_psi_archery then self.use_psi_combat = true end
 	local atk, def = self:combatAttackRanged(weapon, ammo), target:combatDefenseRanged()
@@ -404,6 +406,7 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 		target.turn_procs.roll_with_it = true
 	end
 
+	self.turn_procs.weapon_type = nil
 	self.use_psi_combat = false
 end
 

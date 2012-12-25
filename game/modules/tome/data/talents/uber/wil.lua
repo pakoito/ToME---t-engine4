@@ -214,3 +214,38 @@ uberTalent{
 		:format(damDesc(self, DamageType.MIND, 20 + self:getWil() * 2))
 	end,
 }
+
+uberTalent{
+	name = "Mental Tyranny",
+	mode = "sustained",
+	require = { },
+	cooldown = 20,
+	tactical = { BUFF = 2 },
+	require = { special={desc="Dealt over 50000 mind damage", fct=function(self) return 
+		self.damage_log and (
+			(self.damage_log[DamageType.MIND] and self.damage_log[DamageType.MIND] >= 50000)
+		)
+	end} },
+	activate = function(self, t)
+		game:playSoundNear(self, "talents/distortion")
+		return {
+			converttype = self:addTemporaryValue("all_damage_convert", DamageType.MIND),
+			convertamount = self:addTemporaryValue("all_damage_convert_percent", 100),
+			dam = self:addTemporaryValue("inc_damage", {[DamageType.MIND] = 10}),
+			resist = self:addTemporaryValue("resists_pen", {[DamageType.MIND] = 30}),
+		}
+	end,
+	deactivate = function(self, t, p)
+		self:removeTemporaryValue("all_damage_convert", p.converttype)
+		self:removeTemporaryValue("all_damage_convert_percent", p.convertamount)
+		self:removeTemporaryValue("inc_damage", p.dam)
+		self:removeTemporaryValue("resists_pen", p.resist)
+		return true
+	end,
+	info = function(self, t)
+		return ([[Transcend the physical and rule over all with an iron will.
+		While this sustain is active, all of your damage is converted into mind damage.
+		Additionally, you gain +30%% mind resistance penetration, and +10%% mind damage.]]):
+		format()
+	end,
+}

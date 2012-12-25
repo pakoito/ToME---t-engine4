@@ -116,6 +116,8 @@ function _M:init(t, no_default)
 	self.combat_spellresist = 0
 	self.combat_mentalresist = 0
 
+	t.old_life = 0
+
 	self.fatigue = 0
 
 	self.spell_cooldown_reduction = 0
@@ -634,6 +636,9 @@ function _M:act()
 
 	-- Still not dead ?
 	if self.dead then return false end
+
+	-- Register life for this turn
+	self.old_life = self.life
 
 	-- Ok reset the seen cache
 	self:resetCanSeeCache()
@@ -1831,6 +1836,14 @@ function _M:onTakeHit(value, src)
 		if self.resonance_field_absorb <= 0 then
 			game.logPlayer(self, "Your resonance field crumbles under the damage!")
 			self:removeEffect(self.EFF_RESONANCE_FIELD)
+		end
+	end
+
+	if self:hasEffect(self.EFF_CAUTERIZE) then
+		local eff = self:hasEffect(self.EFF_CAUTERIZE)
+		if eff.invulnerable then 
+			eff.dam = eff.dam + value / 10
+			return 0
 		end
 	end
 

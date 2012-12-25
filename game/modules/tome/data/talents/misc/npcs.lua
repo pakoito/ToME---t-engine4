@@ -1724,7 +1724,9 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 
-		local terrains = mod.class.Grid:loadList("/data/general/grids/lava.lua")
+		local terrains = t.terrains or mod.class.Grid:loadList("/data/general/grids/lava.lua")
+		t.terrains = terrains -- cache
+
 		local meteor = function(src, x, y, dam)
 			game.level.map:particleEmitter(x, y, 10, "meteor", {x=x, y=y}).on_remove = function(self)
 				local x, y = self.args.x, self.args.y

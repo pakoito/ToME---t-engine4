@@ -75,7 +75,6 @@ function _M:init(t, no_default)
 	t.lite = t.lite or 0
 
 	t.rank = t.rank or 3
-	t.old_life = 0
 	t.old_air = 0
 	t.old_psi = 0
 
@@ -90,6 +89,7 @@ function _M:init(t, no_default)
 	self.puuid = self.puuid or util.uuid()
 
 	self.damage_log = self.damage_log or {weapon={}}
+	self.damage_intake_log = self.damage_intake_log or {weapon={}}
 	self.talent_kind_log = self.talent_kind_log or {}
 end
 
@@ -296,7 +296,6 @@ function _M:act()
 	-- Funky shader things !
 	self:updateMainShader()
 
-	self.old_life = self.life
 	self.old_air = self.air
 	self.old_psi = self.psi
 

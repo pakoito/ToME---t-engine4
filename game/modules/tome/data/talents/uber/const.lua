@@ -152,3 +152,25 @@ uberTalent{
 		:format(self:getCon() * 1.5, self:getCon() * self.max_life / 100)
 	end,
 }
+
+uberTalent{
+	name = "Corrupted Shell",
+	mode = "passive",
+	require = { special={desc="Received at least 50000 blight damage and destroyed Zigur with the Grand Corruptor.", fct=function(self) return
+		(self.damage_intake_log and self.damage_intake_log[DamageType.BLIGHT] and self.damage_intake_log[DamageType.BLIGHT] >= 50000) and
+		(game.state.birth.ignore_prodigies_special_reqs or (
+			self:hasQuest("anti-antimagic") and 
+			self:hasQuest("anti-antimagic"):isStatus(engine.Quest.DONE) and
+			not self:hasQuest("anti-antimagic"):isStatus(engine.Quest.COMPLETED, "grand-corruptor-treason")
+		))
+	end} },
+	on_learn = function(self, t)
+		self.max_life = self.max_life + 150
+	end,
+	info = function(self, t)
+		return ([[Thanks to your newfound knowledge of corruption, you've learned some tricks for toughening your body... but only if you are healthy enough to withstand the strain from the changes.
+		Improves your life by 150, your Defense by %d, and your saves by %d, as your natural toughness and reflexes are pushed beyond their normal limits.
+		Your saves and Defense will improve with your Constitution.]])
+		:format(self:getCon() / 3, self:getCon() / 3)
+	end,
+}

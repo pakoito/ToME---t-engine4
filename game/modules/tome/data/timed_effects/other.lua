@@ -2120,3 +2120,39 @@ newEffect{
 	deactivate = function(self, eff)
 	end,
 }
+
+newEffect{
+	name = "CAUTERIZE", image = "talents/cauterize.png",
+	desc = "Cauterize",
+	long_desc = function(self, eff) return ("Your body is cauterizing, burns for %0.2f damage each turn."):format(eff.dam) end,
+	type = "other",
+	subtype = { fire=true },
+	status = "detrimental",
+	parameters = { dam=10 },
+	on_gain = function(self, err) return "#CRIMSON##Target# is wreathed in flames on the brink of death!", "+Cauterize" end,
+	on_lose = function(self, err) return "#CRIMSON#The flames around #target# vanishes.", "-Cauterize" end,
+	on_merge = function(self, old_eff, new_eff)
+		old_eff.dur = new_eff.dur
+		old_eff.dam = old_eff.dam + new_eff.dam
+		return old_eff
+	end,
+	activate = function(self, eff)
+		self.life = self.old_life or 10
+		eff.invulnerable = true
+		eff.particle1 = self:addParticles(Particles.new("inferno", 1))
+		eff.particle2 = self:addParticles(Particles.new("inferno", 1))
+	end,
+	deactivate = function(self, eff)
+		self:removeParticles(eff.particle1)
+		self:removeParticles(eff.particle2)
+	end,
+	on_timeout = function(self, eff)
+		if eff.invulnerable then
+			eff.invulnerable = nil
+		end
+		local dead, val = self:takeHit(eff.dam, self, {special_death_msg="burnt to death by cauterize"})
+
+		local srcname = self.x and self.y and game.level.map.seens(self.x, self.y) and self.name:capitalize() or "Something"
+		game:delayedLogDamage(self, self, val, ("%s%d %s#LAST#"):format(DamageType:get(DamageType.FIRE).text_color or "#aaaaaa#", math.ceil(val), DamageType:get(DamageType.FIRE).name), false)
+	end,
+}

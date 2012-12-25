@@ -908,6 +908,9 @@ function _M:combatDefenseBase(fake)
 		local t = self:getTalentFromId(self.T_TACTICAL_EXPERT)
 		add = add + t.do_tact_update(self, t)
 	end
+	if self:knowTalent(self.T_CORRUPTED_SHELL) then
+		add = add + self:getCon() / 3
+	end
 	if self:knowTalent(self.T_STEADY_MIND) then
 		local t = self:getTalentFromId(self.T_STEADY_MIND)
 		add = add + t.getDefense(self, t)
@@ -1110,6 +1113,10 @@ function _M:combatDamage(weapon)
 		else
 			totstat = totstat * 0.6
 		end
+	end
+
+	if self:knowTalent(self.T_SUPERPOWER) then
+		totstat = totstat + self:getStat("wil") * 0.3
 	end
 
 	if self:knowTalent(self.T_ARCANE_MIGHT) then
@@ -1432,6 +1439,10 @@ function _M:combatMindpower(mod, add)
 	mod = mod or 1
 	add = add or 0
 
+	if self:knowTalent(self.T_SUPERPOWER) then
+		add = add + 25 * self:getStr() / 100
+	end
+
 	if self:knowTalent(self.T_GESTURE_OF_POWER) then
 		local t = self:getTalentFromId(self.T_GESTURE_OF_POWER)
 		add = add + t.getMindpowerChange(self, t)
@@ -1487,6 +1498,9 @@ function _M:combatPhysicalResist(fake)
 	if not fake then
 		add = add + (self:checkOnDefenseCall("physical") or 0)
 	end
+	if self:knowTalent(self.T_CORRUPTED_SHELL) then
+		add = add + self:getCon() / 3
+	end
 	if self:knowTalent(self.T_POWER_IS_MONEY) then
 		add = add + util.bound(self.money / (90 - self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 5), 0, self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 7)
 	end
@@ -1512,6 +1526,9 @@ function _M:combatSpellResist(fake)
 	if not fake then
 		add = add + (self:checkOnDefenseCall("spell") or 0)
 	end
+	if self:knowTalent(self.T_CORRUPTED_SHELL) then
+		add = add + self:getCon() / 3
+	end
 	if self:knowTalent(self.T_POWER_IS_MONEY) then
 		add = add + util.bound(self.money / (90 - self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 5), 0, self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 7)
 	end
@@ -1536,6 +1553,9 @@ function _M:combatMentalResist(fake)
 	local add = 0
 	if not fake then
 		add = add + (self:checkOnDefenseCall("mental") or 0)
+	end
+	if self:knowTalent(self.T_CORRUPTED_SHELL) then
+		add = add + self:getCon() / 3
 	end
 	if self:knowTalent(self.T_STEADY_MIND) then
 		local t = self:getTalentFromId(self.T_STEADY_MIND)

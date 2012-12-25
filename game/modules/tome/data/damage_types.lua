@@ -293,7 +293,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			print("[PROJECTOR] stunned dam", dam)
 		end
 		if src:attr("invisible_damage_penalty") then
-			dam = dam * util.bound(1 - src.invisible_damage_penalty, 0, 1)
+			dam = dam * util.bound(1 - (src.invisible_damage_penalty / (src.invisible_damage_penalty_divisor or 1)), 0, 1)
 			print("[PROJECTOR] invisible dam", dam)
 		end
 		if src:attr("numbed") then
@@ -397,6 +397,14 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			if src.turn_procs and src.turn_procs.weapon_type then
 				src.damage_log.weapon[src.turn_procs.weapon_type.kind] = (src.damage_log.weapon[src.turn_procs.weapon_type.kind] or 0) + dam
 				src.damage_log.weapon[src.turn_procs.weapon_type.mode] = (src.damage_log.weapon[src.turn_procs.weapon_type.mode] or 0) + dam
+			end
+		end
+
+		if dam > 0 and target.damage_intake_log and target.damage_intake_log.weapon then
+			target.damage_intake_log[type] = (target.damage_intake_log[type] or 0) + dam
+			if src.turn_procs and src.turn_procs.weapon_type then
+				target.damage_intake_log.weapon[src.turn_procs.weapon_type.kind] = (target.damage_intake_log.weapon[src.turn_procs.weapon_type.kind] or 0) + dam
+				target.damage_intake_log.weapon[src.turn_procs.weapon_type.mode] = (target.damage_intake_log.weapon[src.turn_procs.weapon_type.mode] or 0) + dam
 			end
 		end
 
