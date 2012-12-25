@@ -333,6 +333,10 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			end
 		end
 
+		if src.necrotic_minion_be_nice and src.summoner == target then 
+			dam = dam * (1 - src.necrotic_minion_be_nice)
+		end
+
 		print("[PROJECTOR] final dam", dam)
 
 		local hd = {"DamageProjector:final", src=src, x=x, y=y, type=type, dam=dam}

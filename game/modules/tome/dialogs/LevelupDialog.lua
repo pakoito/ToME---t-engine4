@@ -634,16 +634,20 @@ function _M:createDisplay()
 
 	if self.actor.inscriptions_slots_added < 2 then
 		self.b_inscriptions = Button.new{text="Inscriptions", fct=function()
-				if self.actor.unused_talents_types > 0 then
-					Dialog:yesnoPopup("Inscriptions", ("You can learn %d new slot(s). Do you with to buy with for one category point?"):format(2 - self.actor.inscriptions_slots_added), function(ret) if ret then
-						self.actor.unused_talents_types = self.actor.unused_talents_types - 1
-						self.actor.max_inscriptions = self.actor.max_inscriptions + 1
-						self.actor.inscriptions_slots_added = self.actor.inscriptions_slots_added + 1
-						self.b_types.text = "Category points: "..self.actor.unused_talents_types
-						self.b_types:generate()
-					end end)
+				if self.actor.inscriptions_slots_added >= 2 then
+					Dialog:simplePopup("Inscriptions", "You have learnt all the inscription slots you could.")
 				else
-					Dialog:simplePopup("Inscriptions", ("You can still learn %d new slot(s) but you need a category point."):format(2 - self.actor.inscriptions_slots_added))
+					if self.actor.unused_talents_types > 0 then
+						Dialog:yesnoPopup("Inscriptions", ("You can learn %d new slot(s). Do you with to buy with for one category point?"):format(2 - self.actor.inscriptions_slots_added), function(ret) if ret then
+							self.actor.unused_talents_types = self.actor.unused_talents_types - 1
+							self.actor.max_inscriptions = self.actor.max_inscriptions + 1
+							self.actor.inscriptions_slots_added = self.actor.inscriptions_slots_added + 1
+							self.b_types.text = "Category points: "..self.actor.unused_talents_types
+							self.b_types:generate()
+						end end)
+					else
+						Dialog:simplePopup("Inscriptions", ("You can still learn %d new slot(s) but you need a category point."):format(2 - self.actor.inscriptions_slots_added))
+					end
 				end
 			end, on_select=function()
 			local str = desc_inscriptions

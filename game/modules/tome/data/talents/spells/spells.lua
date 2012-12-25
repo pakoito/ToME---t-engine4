@@ -159,6 +159,8 @@ function necroSetupSummon(self, m, x, y, level, no_control, no_decay)
 		m.knockback_immune = (m.knockback_immune or 0) + (self:attr("knockback_immune") or 0) * perc / 100
 		m.stone_immune = (m.stone_immune or 0) + (self:attr("stone_immune") or 0) * perc / 100
 		m.teleport_immune = (m.teleport_immune or 0) + (self:attr("teleport_immune") or 0) * perc / 100
+
+		m.necrotic_minion_be_nice = self:getTalentLevelRaw(self.T_DARK_EMPATHY) * 0.2
 	end
 
 	if game.party:hasMember(self) then
