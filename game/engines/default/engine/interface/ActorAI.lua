@@ -154,14 +154,14 @@ end
 function _M:aiSeeTargetPos(target)
 	if not target then return self.x, self.y end
 	local tx, ty = target.x, target.y
-	if target == self.ai_target.actor then tx, ty = self.ai_state.target_last_seen.x, self.ai_state.target_last_seen.y end
+	if target == self.ai_target.actor and self.ai_state.target_last_seen then tx, ty = self.ai_state.target_last_seen.x, self.ai_state.target_last_seen.y end
 	local see, chance = self:canSee(target)
 
 	-- Compute the maximum spread if we need to obfuscate 
 	local spread = see and 0 or math.floor((100 - chance) / 10)
 	
 	-- Additional spread due to last_seen
-	spread = spread + math.floor((game.turn - self.ai_state.target_last_seen.turn) / (game.energy_to_act / game.energy_per_tick))
+	spread = spread + math.floor((game.turn - (self.ai_state.target_last_seen and self.ai_state.target_last_seen.turn or game.turn)) / (game.energy_to_act / game.energy_per_tick))
 
 	-- We don't know the exact position, so we obfuscate
 	if spread > 0 then

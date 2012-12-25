@@ -168,9 +168,9 @@ function _M:seen_by(who)
 	if self.ai_target.actor then
 		-- Pass last seen coordinates
 		if self.ai_target.actor == who.ai_target.actor then
-				local last_seen = (self.ai_state.target_last_seen.turn > who.ai_state.target_last_seen.turn) and self.ai_state.target_last_seen or who.ai_state.target_last_seen
-				self.ai_state.target_last_seen = last_seen
-				who.ai_state.target_last_seen = last_seen
+			local last_seen = ((self.ai_state.target_last_seen and self.ai_state.target_last_seen.turn or game.turn) > (who.ai_state.target_last_seen and who.ai_state.target_last_seen.turn or game.turn)) and self.ai_state.target_last_seen or who.ai_state.target_last_seen
+			self.ai_state.target_last_seen = last_seen
+			who.ai_state.target_last_seen = last_seen
 		end
 		return
 	end

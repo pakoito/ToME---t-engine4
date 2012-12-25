@@ -86,6 +86,10 @@ end
 
 function _M:run()
 	class:triggerHook{"ToME:run"}
+	return self:runReal()
+end
+
+function _M:runReal()
 
 	self.delayed_log_damage = {}
 	self.calendar = Calendar.new("/data/calendar_allied.lua", "Today is the %s %s of the %s year of the Age of Ascendancy of Maj'Eyal.\nThe time is %02d:%02d.", 122, 167, 11)
@@ -990,7 +994,7 @@ function _M:chronoRestore(name, remove)
 	_G.game = ngame
 
 	game.inited = nil
-	game:run()
+	game:runReal()
 	game.key:setupRebootKeys() -- engine does it for us but not on chronoworld reload
 	game.key:setCurrent()
 	game.mouse:setCurrent()

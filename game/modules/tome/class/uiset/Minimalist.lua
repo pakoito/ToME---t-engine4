@@ -1973,7 +1973,8 @@ function _M:setupMouse(mouse)
 		local tooltips = {}
 		if sub_es then for i, e in ipairs(sub_es) do
 			if e.tooltip then
-				table.append(tooltips, e:tooltip())
+				local t = e:tooltip()
+				if t then table.append(tooltips, t) end
 				if i < #sub_es then table.append(tooltips, { tstring{ true, "---" } } )
 				else table.append(tooltips, { tstring{ true } } ) end
 			end
