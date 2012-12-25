@@ -30,6 +30,7 @@ newEntity{ define_as = "STAFF_ABSORPTION_AWAKENED", base="BASE_STAFF",
 	name = "Awakened Staff of Absorption", identified=true, force_lore_artifact=true,
 	display = "\\", color=colors.VIOLET, image = "object/artifact/staff_absorption.png",
 	encumber = 7,
+	plot=true,
 	desc = [[Carved with runes of power, this staff seems to have been made long ago. Yet it bears no signs of tarnishment.
 Light around it seems to dim and you can feel its tremendous power simply by touching it.
 The Sorcerers seem to have awakened its power.
@@ -109,6 +110,7 @@ newEntity{ define_as = "PEARL_LIFE_DEATH",
 	name = "Pearl of Life and Death",
 	display = "*", color=colors.WHITE, image = "object/artifact/pearl_of_life.png",
 	encumber = 2,
+	plot=true,
 	desc = [[A pearl, three times a normal sized one, that glitters in infinite colours, with slight patterns ever shifting away.]],
 
 	carrier = {

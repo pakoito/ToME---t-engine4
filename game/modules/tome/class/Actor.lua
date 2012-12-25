@@ -2494,9 +2494,9 @@ function _M:levelup()
 			self.unused_stats = self.unused_stats + 10
 			self.unused_talents = self.unused_talents + 3
 			self.unused_generics = self.unused_generics + 3
-		end
-		if self.player and not config.settings.cheat then
-			Dialog:simpleLongPopup("Level 50!", "You have achieved #LIGHT_GREEN#level 50#WHITE#, congratulations!\n\nThis level is special, it granted you #LIGHT_GREEN#10#WHITE# more stat points, #LIGHT_GREEN#3#WHITE# more class talent points and #LIGHT_GREEN#3#WHITE# more generic talent points.\nNow go forward boldly and triumph!", 400)
+			if self.player and not config.settings.cheat then
+				Dialog:simpleLongPopup("Level 50!", "You have achieved #LIGHT_GREEN#level 50#WHITE#, congratulations!\n\nThis level is special, it granted you #LIGHT_GREEN#10#WHITE# more stat points, #LIGHT_GREEN#3#WHITE# more class talent points and #LIGHT_GREEN#3#WHITE# more generic talent points.\nNow go forward boldly and triumph!", 400)
+			end
 		end
 	elseif type(self.no_points_on_levelup) == "function" then
 		self:no_points_on_levelup()
