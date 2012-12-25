@@ -38,7 +38,7 @@ uberTalent = function(t)
 	t.type = {"uber/strength", 1}
 	t.uber = true
 	t.require = t.require or {}
-	t.require.level = 40
+	t.require.level = 30
 	t.require.stat = t.require.stat or {}
 	t.require.stat.str = 50
 	newTalent(t)
@@ -50,7 +50,7 @@ uberTalent = function(t)
 	t.uber = true
 	t.require = t.require or {}
 	t.require.stat = t.require.stat or {}
-	t.require.level = 40
+	t.require.level = 30
 	t.require.stat.dex = 50
 	newTalent(t)
 end
@@ -61,7 +61,7 @@ uberTalent = function(t)
 	t.uber = true
 	t.require = t.require or {}
 	t.require.stat = t.require.stat or {}
-	t.require.level = 40
+	t.require.level = 30
 	t.require.stat.con = 50
 	newTalent(t)
 end
@@ -72,7 +72,7 @@ uberTalent = function(t)
 	t.uber = true
 	t.require = t.require or {}
 	t.require.stat = t.require.stat or {}
-	t.require.level = 40
+	t.require.level = 30
 	t.require.stat.mag = 50
 	newTalent(t)
 end
@@ -82,7 +82,7 @@ uberTalent = function(t)
 	t.type = {"uber/willpower", 1}
 	t.uber = true
 	t.require = t.require or {}
-	t.require.level = 40
+	t.require.level = 30
 	t.require.stat = t.require.stat or {}
 	t.require.stat.wil = 50
 	newTalent(t)
@@ -93,7 +93,7 @@ uberTalent = function(t)
 	t.type = {"uber/cunning", 1}
 	t.uber = true
 	t.require = t.require or {}
-	t.require.level = 40
+	t.require.level = 30
 	t.require.stat = t.require.stat or {}
 	t.require.stat.cun = 50
 	newTalent(t)
