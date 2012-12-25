@@ -75,6 +75,7 @@ function _M:init(t, no_default)
 	t.lite = t.lite or 0
 
 	t.rank = t.rank or 3
+	t.shader_old_life = 0
 	t.old_air = 0
 	t.old_psi = 0
 
@@ -296,6 +297,7 @@ function _M:act()
 	-- Funky shader things !
 	self:updateMainShader()
 
+	self.shader_old_life = self.life
 	self.old_air = self.air
 	self.old_psi = self.psi
 
@@ -332,7 +334,7 @@ end
 function _M:updateMainShader()
 	if game.fbo_shader then
 		-- Set shader HP warning
-		if self.life ~= self.old_life then
+		if self.life ~= self.shader_old_life then
 			if self.life < self.max_life / 2 then game.fbo_shader:setUniform("hp_warning", 1 - (self.life / self.max_life))
 			else game.fbo_shader:setUniform("hp_warning", 0) end
 		end
