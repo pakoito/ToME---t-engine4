@@ -156,7 +156,8 @@ function _M:aiSeeTargetPos(target)
 	local tx, ty = target.x, target.y
 	local spread = 0
 
-	if target == self.ai_target.actor and self.ai_state.target_last_seen and not self:hasLOS(self.ai_state.target_last_seen.x, self.ai_state.target_last_seen.y) then
+	-- Adding some type-safety checks, but this isn't fixing the source of the errors
+	if target == self.ai_target.actor and self.ai_state.target_last_seen and type(self.ai_state.target_last_seen) == "table" and self.ai_state.target_last_seen.x and not self:hasLOS(self.ai_state.target_last_seen.x, self.ai_state.target_last_seen.y) then
 		tx, ty = self.ai_state.target_last_seen.x, self.ai_state.target_last_seen.y
 		spread = spread + math.floor((game.turn - (self.ai_state.target_last_seen.turn or game.turn)) / (game.energy_to_act / game.energy_per_tick))
 	end
