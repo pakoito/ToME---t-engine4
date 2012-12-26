@@ -97,7 +97,7 @@ newTalent{
 	range = 7,
 	radius = 3,
 	action = function(self, t)
-		local tg = {type="ball", radius=self:getTargetRadius(t), range=self:getTalentRange(t), talent=t}
+		local tg = {type="ball", radius=self:getTalentRadius(t), range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		local actors = {}
