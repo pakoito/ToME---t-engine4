@@ -363,6 +363,12 @@ function string.a_an(str)
 	else return "a "..str end
 end
 
+function string.his_her(actor)
+	if actor.female then return "her"
+	else return "his"
+	end
+end
+
 function string.capitalize(str)
 	if #str > 1 then
 		return string.upper(str:sub(1, 1))..str:sub(2)

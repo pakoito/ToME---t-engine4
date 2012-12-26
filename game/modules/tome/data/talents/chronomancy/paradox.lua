@@ -84,6 +84,13 @@ newTalent{
 		
 		local target = game.level.map(tx, ty, Map.ACTOR)
 		if not target then return end
+
+		if target == self then
+			game.logSeen(self, "#LIGHT_STEEL_BLUE#%s tries to remove %sself from existance!", self.name, string.his_her(self))
+			self:incParadox(400)
+			game.level.map:particleEmitter(self.x, self.y, 1, "ball_temporal", {radius=1, tx=self.x, ty=self.y})
+			return true
+		end
 		
 		-- does the spell hit?  if not nothing happens
 		if not self:checkHit(self:combatSpellpower(), target:combatSpellResist()) then

@@ -734,11 +734,20 @@ function _M:checkDonation(back_insert)
 	end
 
 	-- Dont ask often
-	local last = profile.mod.donations and profile.mod.donations.last_ask or 0
-	local min_interval = 15 * 24 * 60 * 60 -- 1 month
-	if os.time() < last + min_interval then
-		print("Donation check: too soon")
-		return
+	if profile.auth and tonumber(profile.auth.donated) then
+		local last = profile.mod.donations and profile.mod.donations.last_ask or 0
+		local min_interval = 30 * 24 * 60 * 60 -- 1 month
+		if os.time() < last + min_interval then
+			print("Donation check: too soon (donator)")
+			return
+		end
+	else
+		local last = profile.mod.donations and profile.mod.donations.last_ask or 0
+		local min_interval = 7 * 24 * 60 * 60 -- 1 week
+		if os.time() < last + min_interval then
+			print("Donation check: too soon (player)")
+			return
+		end
 	end
 
 	-- Not as soon as they start playing, wait 15 minutes
