@@ -638,7 +638,7 @@ function _M:createDisplay()
 					Dialog:simplePopup("Inscriptions", "You have learnt all the inscription slots you could.")
 				else
 					if self.actor.unused_talents_types > 0 then
-						Dialog:yesnoPopup("Inscriptions", ("You can learn %d new slot(s). Do you with to buy with for one category point?"):format(2 - self.actor.inscriptions_slots_added), function(ret) if ret then
+						Dialog:yesnoPopup("Inscriptions", ("You can learn %d new slot(s). Do you wish to buy one with one category point?"):format(2 - self.actor.inscriptions_slots_added), function(ret) if ret then
 							self.actor.unused_talents_types = self.actor.unused_talents_types - 1
 							self.actor.max_inscriptions = self.actor.max_inscriptions + 1
 							self.actor.inscriptions_slots_added = self.actor.inscriptions_slots_added + 1
