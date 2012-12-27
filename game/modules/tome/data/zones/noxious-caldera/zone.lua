@@ -150,10 +150,11 @@ return {
 		end
 	end,
 
+	max_dreams = 2,
 	run_dream = function(dangerous, dream)
 		if game.player.runStop then game.player:runStop("dream") end
 		local x, y, lev = game.player.x, game.player.y, game.level.level
-		local dream = dream or rng.range(1, 2)
+		local dream = dream or rng.range(1, game.zone.max_dreams)
 		game:changeLevel(dream, "dreams", {direct_switch=true})
 		game.level.data.real_death = dangerous
 		game.level.data.caldera_x = x

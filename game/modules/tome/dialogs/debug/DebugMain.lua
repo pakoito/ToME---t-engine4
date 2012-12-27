@@ -62,11 +62,20 @@ function _M:use(item)
 		game.player.esp_all = 1
 		game.player.esp_range = 50
 		game.player.no_breath = 1
-		game.player.invulnerable = 1
 		game.player.money = 500
 		game.player.auto_id = 100
 		game.state.birth.ignore_prodigies_special_reqs = true
 		game.player.inc_damage.all = 100000
+		game.player:incStat("str", 100) game.player:incStat("dex", 100) game.player:incStat("mag", 100) game.player:incStat("wil", 100) game.player:incStat("cun", 100) game.player:incStat("con", 100)
+	elseif act == "semigodmode" then
+		game.player:forceLevelup(50)
+		game.player.life_regen = 2000
+		game.player.esp_all = 1
+		game.player.esp_range = 50
+		game.player.money = 500
+		game.player.auto_id = 100
+		game.state.birth.ignore_prodigies_special_reqs = true
+		game.player.inc_damage.all = 500
 		game.player:incStat("str", 100) game.player:incStat("dex", 100) game.player:incStat("mag", 100) game.player:incStat("wil", 100) game.player:incStat("cun", 100) game.player:incStat("con", 100)
 	elseif act == "all_arts" then
 		for i, e in ipairs(game.zone.object_list) do
@@ -138,6 +147,7 @@ function _M:generateList()
 	list[#list+1] = {name="Give Sher'tul fortress energy", action="shertul-energy"}
 	list[#list+1] = {name="Create Trap", dialog="CreateTrap"}
 	list[#list+1] = {name="Remove all creatures", action="remove-all"}
+	list[#list+1] = {name="Semi-Godmode", action="semigodmode"}
 
 	local chars = {}
 	for i, v in ipairs(list) do

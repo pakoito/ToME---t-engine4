@@ -31,11 +31,14 @@ newEntity{
 	always_remember = true,
 	does_block_move = true,
 	block_sight = true,
+	next_dream = 1,
 	block_move = function(self, x, y, who, act)
 		if who == game.player and act then
 			require("engine.ui.Dialog"):yesnoLongPopup("Altar of Dreams", "Looking into the altar will let you experience a dream. But should you die in it your real body might die too. Do you wish to look?", 400, function(ret)
 				if ret then
-					game.level.data.run_dream(true)
+					local dream = self.next_dream
+					self.next_dream = util.boundWrap(self.next_dream+1, 1, game.zone.max_dreams)
+					game.level.data.run_dream(true, dream)
 				end
 			end)
 		end
