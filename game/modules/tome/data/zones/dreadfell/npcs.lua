@@ -335,7 +335,7 @@ Now and then she seems to see something and her jaw pulls back, her whole face s
 	resolvers.sustains_at_birth(),
 
 	autolevel = "wildcaster",
-	ai = "tactical", ai_state = { ai_target="target_player_radius", sense_radius=40, talent_in=1, },
+	ai = "tactical", ai_state = { ai_target="target_player_radius", ai_move="move_complex", sense_radius=40, talent_in=1, },
 	ai_tactic = resolvers.tactic"ranged",
 }
 

@@ -36,6 +36,7 @@ newEntity{
 	rank = 2,
 	size_category = 2,
 	blind_immune = 1,
+	sand_dweller = 1,
 
 	drops = resolvers.drops{chance=5, nb=1, {type="scroll"} },
 

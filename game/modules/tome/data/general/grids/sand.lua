@@ -65,7 +65,7 @@ newEntity{
 					game.nicer_tiles:updateAround(game.level, self.x, self.y)
 
 					local a = game.level.map(self.x, self.y, engine.Map.ACTOR)
-					if a then
+					if a and not a:attr("sand_dweller") then
 						game.logPlayer(a, "You are crushed by the collapsing tunnel! You suffocate!")
 						a:suffocate(30, self, "was buried alive")
 						engine.DamageType:get(engine.DamageType.PHYSICAL).projector(self, self.x, self.y, engine.DamageType.PHYSICAL, a.life / 2)

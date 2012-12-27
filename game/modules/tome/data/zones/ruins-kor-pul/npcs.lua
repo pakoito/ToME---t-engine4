@@ -124,7 +124,7 @@ newEntity{ define_as = "KOR_FURY",
 	},
 
 	autolevel = "caster",
-	ai = "tactical", ai_state = { ai_target="target_player_radius", sense_radius=50, talent_in=1, },
+	ai = "tactical", ai_state = { ai_target="target_player_radius", ai_move="move_complex", sense_radius=50, talent_in=1, },
 	ai_tactic = resolvers.tactic"ranged",
 	resolvers.inscriptions(4, "rune"),
 	resolvers.inscriptions(1, {"manasurge rune"}),
