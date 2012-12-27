@@ -803,7 +803,12 @@ function _M:changeLevelReal(lev, zone, params)
 			if newx and newy then blocking_actor:move(newx, newy, true)
 			else blocking_actor:teleportRandom(x, y, 200) end
 		end
-		self.player:move(x, y, true)
+		if self.player:canMove(x, y) then
+			self.player:move(x, y, true)
+		else
+			self.player:move(x, y, true)
+			self.player:teleportRandom(x, y, 200)
+		end
 	end
 	self.player.changed = true
 	if self.to_re_add_actors and not self.zone.wilderness then for act, _ in pairs(self.to_re_add_actors) do
