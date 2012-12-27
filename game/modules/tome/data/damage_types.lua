@@ -534,7 +534,16 @@ newDamageType{
 	antimagic_resolve = true,
 	projector = function(src, x, y, type, dam)
 		if src.fire_convert_to then
-			return DamageType:get(src.fire_convert_to[1]).projector(src, x, y, src.fire_convert_to[1], dam * src.fire_convert_to[2] / 100)
+			if src.fire_convert_to[2] >= 100 then
+				return DamageType:get(src.fire_convert_to[1]).projector(src, x, y, src.fire_convert_to[1], dam * src.fire_convert_to[2] / 100)
+			else
+				local old = src.fire_convert_to
+				src.fire_convert_to = nil
+				dam = DamageType:get(old[1]).projector(src, x, y, old[1], dam * old[2] / 100) + 
+				       DamageType:get(type).projector(src, x, y, type, dam * (100 - old[2]) / 100)
+				src.fire_convert_to = old
+				return dam
+			end
 		end
 		local realdam = DamageType.defaultProjector(src, x, y, type, dam)
 		if realdam > 0 then

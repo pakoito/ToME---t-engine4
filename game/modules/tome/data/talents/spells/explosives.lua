@@ -25,7 +25,7 @@ newTalent{
 	mana = 5,
 	cooldown = 4,
 	range = function(self, t)
-		return math.ceil(5 + self:getDex(6))
+		return math.ceil(4 + self:getTalentLevelRaw(t))
 	end,
 	radius = function(self, t)
 		return util.bound(1+self:getTalentLevelRaw(self.T_EXPLOSION_EXPERT), 1, 6)
@@ -201,7 +201,7 @@ newTalent{
 	mana = 32,
 	cooldown = 10,
 	range = function(self, t)
-		return math.ceil(5 + self:getDex(6))
+		return math.ceil(4 + self:getTalentLevelRaw(t))
 	end,
 	radius = 2,
 	direct_hit = true,
