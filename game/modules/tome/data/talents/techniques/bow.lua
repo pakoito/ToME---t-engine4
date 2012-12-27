@@ -103,7 +103,7 @@ newTalent{
 	require = techs_dex_req4,
 	range = archery_range,
 	radius = function(self, t)
-		return 2 + self:getTalentLevel(t)/3
+		return math.floor(2 + self:getTalentLevel(t)/3)
 	end,
 	direct_hit = true,
 	tactical = { ATTACKAREA = { weapon = 2 } },
@@ -123,7 +123,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[You fire multiple arrows at an area of %d radius, doing %d%% damage with each arrow.]])
-		:format(2 + self:getTalentLevel(t)/3,
+		:format(self:getTalentRadius(t),
 		100 * self:combatTalentWeaponDamage(t, 0.6, 1.3))
 	end,
 }

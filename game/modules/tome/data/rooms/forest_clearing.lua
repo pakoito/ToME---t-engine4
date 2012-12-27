@@ -108,7 +108,10 @@ return function(gen, id)
 					if ispit then
 						local e = gen.zone:makeEntity(gen.level, "actor", ispit, nil, true)
 						if e then
-							if e then gen:roomMapAddEntity(i-1+x, j-1+y, "actor", e) end
+							if e then
+								gen:roomMapAddEntity(i-1+x, j-1+y, "actor", e) 
+								e:setEffect(e.EFF_VAULTED, 1, {})
+							end
 							gen.map.attrs(i-1+x, j-1+y, "no_decay", true)
 						end
 					end
