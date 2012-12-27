@@ -24,7 +24,7 @@ return {
 	max_level = 1,
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
-	width = 140, height = 140,
+	width = 70, height = 70,
 --	all_remembered = true,
 --	all_lited = true,
 	persistent = "zone",
@@ -44,7 +44,7 @@ return {
 		},
 		actor = {
 			class = "mod.class.generator.actor.Random",
-			nb_npc = {120, 140},
+			nb_npc = {70, 70},
 			guardian = "BRIAGH",
 		},
 		object = {
