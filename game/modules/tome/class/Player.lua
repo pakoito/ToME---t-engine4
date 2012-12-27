@@ -1322,7 +1322,7 @@ end
 function _M:playerCheckSustains()
 	for tid, _ in pairs(self.talents) do
 		local t = self:getTalentFromId(tid)
-		if t.mode == "sustained" and self:isTalentActive(t.id) then
+		if t and t.mode == "sustained" and self:isTalentActive(t.id) then
 			-- handles unarmed
 			if t.is_unarmed and (self:hasMassiveArmor() or not self:isUnarmed()) then
 				self:forceUseTalent(tid, {ignore_energy=true})
