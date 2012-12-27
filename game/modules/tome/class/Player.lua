@@ -1293,7 +1293,7 @@ end
 --- Call when an object is added
 function _M:onAddObject(o)
 	mod.class.Actor.onAddObject(self, o)
-	if self.hotkey and o:attr("auto_hotkey") then
+	if self.hotkey and o:attr("auto_hotkey") and config.settings.tome.auto_hotkey_object then
 		local position
 		local name = o:getName{no_count=true, force_id=true, no_add_name=true}
 
