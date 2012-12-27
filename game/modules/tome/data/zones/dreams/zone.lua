@@ -138,7 +138,7 @@ return {
 		},
 		[2] = {
 			motionblur = 3,
-			width = 50, height = 50,
+			width = 30, height = 30,
 			color_shown = {0.9, 0.7, 0.4, 1},
 			color_obscure = {0.9*0.6, 0.7*0.6, 0.4*0.6, 0.6},
 			generator = {
@@ -146,7 +146,7 @@ return {
 					class = "engine.generator.map.Building",
 					max_block_w = 15, max_block_h = 15,
 					max_building_w = 5, max_building_h = 5,
-					floor = function() if rng.chance(20) then return "DREAM_STONE" else return "BAMBOO_HUT_FLOOR" end end,
+					floor = function() if rng.chance(22) then return "DREAM_STONE" else return "BAMBOO_HUT_FLOOR" end end,
 					external_floor = "BAMBOO_HUT_FLOOR",
 					wall = "BAMBOO_HUT_WALL",
 					up = "BAMBOO_HUT_FLOOR",
@@ -157,7 +157,7 @@ return {
 				},
 				actor = {
 					class = "mod.class.generator.actor.Random",
-					nb_npc = {25, 25},
+					nb_npc = {10, 10},
 					filters = {{name="yeek illusion"}},
 					randelite = 0,
 				},
