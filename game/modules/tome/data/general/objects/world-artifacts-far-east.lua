@@ -454,7 +454,7 @@ newEntity{ base = "BASE_KNIFE", define_as = "KINETIC_SPIKE",
 		resists_pen = {[DamageType.PHYSICAL] = 30},
 	},
 	max_power = 10, power_regen = 1,
-	use_power = { name = "fires a bolt of kinetic force, doing 150%% weapon damage", power = 10,
+	use_power = { name = "fires a bolt of kinetic force, doing 150% weapon damage", power = 10,
 		use = function(self, who)
 			local tg = {type="bolt", range=8}
 			local x, y = who:getTarget(tg)

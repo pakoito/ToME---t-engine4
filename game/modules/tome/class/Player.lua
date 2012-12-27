@@ -973,6 +973,7 @@ function _M:hotkeyInventory(name)
 end
 
 function _M:doDrop(inven, item, on_done, nb)
+	if self.no_inventory_access then return end
 	if game.zone.wilderness then
 		Dialog:yesnoLongPopup("Warning", "You cannot drop items on the world map.\nIf you drop it, it will be lost forever.", 300, function(ret)
 			-- The test is reversed because the buttons are reversed, to prevent mistakes
@@ -999,6 +1000,7 @@ function _M:doDrop(inven, item, on_done, nb)
 end
 
 function _M:doWear(inven, item, o)
+	if self.no_inventory_access then return end
 	self:removeObject(inven, item, true)
 	local ro = self:wearObject(o, true, true)
 	if ro then
@@ -1013,6 +1015,7 @@ function _M:doWear(inven, item, o)
 end
 
 function _M:doTakeoff(inven, item, o, simple)
+	if self.no_inventory_access then return end
 	if self:takeoffObject(inven, item) then
 		self:addObject(self.INVEN_INVEN, o)
 	end
@@ -1059,6 +1062,7 @@ function _M:playerPickup()
 end
 
 function _M:playerDrop()
+	if self.no_inventory_access then return end
 	local inven = self:getInven(self.INVEN_INVEN)
 	local titleupdator = self:getEncumberTitleUpdator("Drop object")
 	local d d = self:showInventory(titleupdator(), inven, nil, function(o, item)
@@ -1069,6 +1073,7 @@ function _M:playerDrop()
 end
 
 function _M:playerWear()
+	if self.no_inventory_access then return end
 	local inven = self:getInven(self.INVEN_INVEN)
 	local titleupdator = self:getEncumberTitleUpdator("Wield/wear object")
 	local d d = self:showInventory(titleupdator(), inven, function(o)
@@ -1081,6 +1086,7 @@ function _M:playerWear()
 end
 
 function _M:playerTakeoff()
+	if self.no_inventory_access then return end
 	local titleupdator = self:getEncumberTitleUpdator("Take off object")
 	local d d = self:showEquipment(titleupdator(), nil, function(o, inven, item)
 		self:doTakeoff(inven, item, o)
@@ -1090,6 +1096,7 @@ function _M:playerTakeoff()
 end
 
 function _M:playerUseItem(object, item, inven)
+	if self.no_inventory_access then return end
 	if not game.zone or game.zone.wilderness then game.logPlayer(self, "You cannot use items on the world map.") return end
 
 	local use_fct = function(o, inven, item)
@@ -1151,6 +1158,7 @@ function _M:playerUseItem(object, item, inven)
 end
 
 function _M:quickSwitchWeapons()
+	if self.no_inventory_access then return end
 	local mh1, mh2 = self.inven[self.INVEN_MAINHAND], self.inven[self.INVEN_QS_MAINHAND]
 	local oh1, oh2 = self.inven[self.INVEN_OFFHAND], self.inven[self.INVEN_QS_OFFHAND]
 	local pf1, pf2 = self.inven[self.INVEN_PSIONIC_FOCUS], self.inven[self.INVEN_QS_PSIONIC_FOCUS]
