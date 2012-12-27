@@ -1280,14 +1280,12 @@ function _M:setupCommands()
 			print("===============")
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
-			game.player:takeHit(1500, game.player)
-do return end
-			self:registerDialog(require("mod.dialogs.DownloadCharball").new())
-do return end
-			local f, err = loadfile("/data/general/events/glimmerstone.lua")
+			local f, err = loadfile("/data/general/events/naga-portal.lua")
 			print(f, err)
 			setfenv(f, setmetatable({level=self.level, zone=self.zone}, {__index=_G}))
 			print(pcall(f))
+do return end
+			self:registerDialog(require("mod.dialogs.DownloadCharball").new())
 		end end,
 		[{"_f","ctrl"}] = function() if config.settings.cheat then
 			self.player.quests["love-melinda"] = nil
