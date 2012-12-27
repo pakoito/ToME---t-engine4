@@ -93,7 +93,7 @@ It slowly decreases and is replenished by using some talents.
 
 TOOLTIP_VIM = [[#GOLD#Vim#LAST#
 Vim represents the amount of life energy you control. Each corruption talent requires some.
-It does not regenerates naturally, you need to drain it from yourself or you victims.
+It does not regenerate naturally, you need to drain it from yourself or your victims.
 Each time you kill a creature you drain 10% of your Willpower as Vim.
 Also if you used a Corruption spell that cost Vim to kill a creature, that cost is refunded on death.
 ]]
