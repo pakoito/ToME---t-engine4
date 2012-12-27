@@ -121,6 +121,6 @@ newTalent{
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		return ([[For the next %d turns, you convert all non-temporal damage you receive into temporal damage spread out over six turns.
-		This spell takes no time to cast, and the duration will scale with your Paradox.]]):format (duration)
+		The duration will scale with your Paradox.]]):format (duration)
 	end,
 }
