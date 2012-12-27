@@ -277,7 +277,7 @@ newEntity{ base = "BASE_NPC_HORROR", define_as = "BASE_NPC_ELDRICTH_EYE",
 
 		-- Blind the main horror if no more eyes
 		local nb = 0
-		for eye, _ in pairs(self.summoner.eyes) do
+		for eye, _ in pairs(self.summoner.eyes or {}) do
 			if not eye.dead then nb = nb + 1 end
 		end
 		if nb == 0 then

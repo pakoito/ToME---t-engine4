@@ -690,7 +690,7 @@ end
 function _M:removeTemporaryValue(prop, id, noupdate)
 	local oldval = self.compute_vals[id]
 	print("removeTempVal", prop, oldval, " :=: ", id)
-	if not id then error("error removing prop "..tostring(prop).." with id nil") end
+	if not id then util.send_error_backtrace("error removing prop "..tostring(prop).." with id nil") return end
 	self.compute_vals[id] = nil
 
 	-- Find the base, one removed from the last prop
@@ -746,7 +746,7 @@ function _M:removeTemporaryValue(prop, id, noupdate)
 				base[prop] = b[1] and b[1][2]
 				if not next(base["__tlast_"..prop]) then base["__tlast_"..prop] = nil end
 			else
-				if not base[prop] then error("Error removing property "..tostring(prop).." with value "..tostring(v).." : base[prop] is nil") end
+				if not base[prop] then util.send_error_backtrace("Error removing property "..tostring(prop).." with value "..tostring(v).." : base[prop] is nil") return end
 				base[prop] = base[prop] - v
 			end
 			self:onTemporaryValueChange(prop, -v, base)
@@ -757,10 +757,9 @@ function _M:removeTemporaryValue(prop, id, noupdate)
 			end
 		else
 			if type(v) == "nil" then
-				print("ERROR!!! unsupported temporary value type: "..type(v).." :=: "..tostring(v))
-				util.show_backtrace()
+				util.send_error_backtrace("ERROR!!! unsupported temporary value type: "..type(v).." :=: "..tostring(v))
 			else
-				error("unsupported temporary value type: "..type(v).." :=: "..tostring(v))
+				util.send_error_backtrace("unsupported temporary value type: "..type(v).." :=: "..tostring(v))
 			end
 		end
 	end

@@ -1939,6 +1939,21 @@ function util.show_backtrace()
 	end
 end
 
+function util.send_error_backtrace(msg)
+	local level = 2
+	local trace = {}
+
+	trace[#trace+1] = "backtrace:"
+	while true do
+		local stacktrace = debug.getinfo(level, "nlS")
+		if stacktrace == nil then break end
+		trace[#trace+1] = (("    function: %s (%s) at %s:%d"):format(stacktrace.name or "???", stacktrace.what, stacktrace.source or stacktrace.short_src or "???", stacktrace.currentline))
+		level = level + 1
+	end
+
+	profile:sendError(msg, table.concat(trace, "\n"))
+end
+
 function util.uuid()
 	local x = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'}
 	local y = {'8', '9', 'a', 'b'}

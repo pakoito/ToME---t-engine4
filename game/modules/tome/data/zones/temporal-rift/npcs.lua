@@ -131,7 +131,7 @@ local twin_take_hit = function(self, value, src)
 		local o = self.brother.onTakeHit
 		self.brother.onTakeHit = nil
 		self.brother:takeHit(value, src)
-		self.brother.onTakeHit = o
+		if self.brother then self.brother.onTakeHit = o end
 	end
 	return value
 end
