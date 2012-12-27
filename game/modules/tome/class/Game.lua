@@ -713,7 +713,7 @@ function _M:changeLevelReal(lev, zone, params)
 				self.zone = zone
 			end
 			if self.zone.tier1 then
-				if lev == 1 and game.state:tier1Killed(3) then
+				if lev == 1 and game.state:tier1Killed(game.state.birth.start_tier1_skip or 3) then
 					lev = self.zone.max_level
 					self.zone.tier1 = nil
 					Dialog:simplePopup("Easy!", "This zone is so easy for you that you stroll to the last area with ease.")
