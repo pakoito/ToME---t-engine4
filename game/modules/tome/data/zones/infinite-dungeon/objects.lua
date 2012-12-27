@@ -86,7 +86,7 @@ newEntity{
 					for i = #inven, 1, -1 do
 						local o = inven[i]
 						if o.power_source and o.power_source.arcane then
-							game.logPlayer(who, "You can not use your %s anymore, it is tainted by magic.", o:getName{do_color=true})
+							game.logPlayer(who, "You cannot use your %s anymore; it is tainted by magic.", o:getName{do_color=true})
 							local o = who:removeObject(inven, i, true)
 							who:addObject(who.INVEN_INVEN, o)
 							who:sortInven()

@@ -25,7 +25,7 @@ local Talents = require("engine.interface.ActorTalents")
 
 newEntity{ define_as="SUBJECT_Z",
 	name = "Subject Z", color=colors.VIOLET, display = "p",
-	desc = "This seems to be the 'subject Z' the notes spoke about. He looks human, but this can not be, he would be about five thousands years old!",
+	desc = "This seems to be the 'subject Z' the notes spoke about. He looks human, but this cannot be -- he would be about five thousands years old!",
 	type = "humanoid", subtype = "human",
 	killer_message = "and bloodily smeared across the granite walls",
 	level_range = {10, nil}, exp_worth = 2,

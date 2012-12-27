@@ -45,8 +45,8 @@ newTalent{
 		local radius = t.getRadius(self, t)
 		local duration = t.getDuration(self, t)
 		return ([[Summons an ethereal magical eye at the designated location that lasts for %d turns.
-		The eye can not be seen or attacked by other creatures, and possesses magical vision that allows it to see any creature in a %d range around it.
-		It does not require light to do so, but it can not see through walls.
+		The eye cannot be seen or attacked by other creatures, and possesses magical vision that allows it to see any creature in a %d range around it.
+		It does not require light to do so, but it cannot see through walls.
 		Casting the eye does not take a turn.
 		Only one arcane eye can exist at any given time.
 		At level 4, if cast on a creature it will follow it until it expires, or until the creature dies.

@@ -46,9 +46,9 @@ desc = function(self, who)
 	end
 	if self:isCompleted("farportal") then
 		if self:isCompleted("farportal-broken") then
-			desc[#desc+1] = "#RED#* You have forced a recall while into an exploratory farportal zone, the farportal was rendered unusable in the process.#WHITE#"
+			desc[#desc+1] = "#RED#* You have forced a recall while in an exploratory farportal zone. The farportal was rendered unusable in the process.#WHITE#"
 		elseif self:isCompleted("farportal-done") then
-			desc[#desc+1] = "#LIGHT_GREEN#* You have entered the exploratory farportal room and defeated the horror lurking there, you can now use the farportal.#WHITE#"
+			desc[#desc+1] = "#LIGHT_GREEN#* You have entered the exploratory farportal room and defeated the horror lurking there. You can now use the farportal.#WHITE#"
 		else
 			desc[#desc+1] = "#SLATE#* The fortress shadow has asked that you come back as soon as possible.#WHITE#"
 		end

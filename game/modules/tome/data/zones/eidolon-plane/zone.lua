@@ -73,7 +73,7 @@ return {
 		local map = game.level.map
 		map:removeObject(dx, dy, idx)
 
-		game.logPlayer(who, "The Eidolon Plane seems to not physicaly exists in the same way the normal world does, you can not seem to drop anything here. %s comes back into your backpack.", o:getName{do_color=true})
+		game.logPlayer(who, "The Eidolon Plane seems not to physically exist in the same way the normal world does. You cannot seem to drop anything here. %s comes back into your backpack.", o:getName{do_color=true})
 		who:addObject(who.INVEN_INVEN, o)
 	end,
 

@@ -265,7 +265,7 @@ newEffect{
 newEffect{
 	name = "DAMAGE_SMEARING", image = "talents/damage_smearing.png",
 	desc = "Damage Smearing",
-	long_desc = function(self, eff) return ("Passes damage received in the present off onto the future self."):format(eff.power) end,
+	long_desc = function(self, eff) return ("Passes damage received in the present onto the future self."):format(eff.power) end,
 	type = "other",
 	subtype = { time=true },
 	status = "beneficial",
@@ -500,12 +500,12 @@ newEffect{
 newEffect{
 	name = "SEVER_LIFELINE", image = "talents/sever_lifeline.png",
 	desc = "Sever Lifeline",
-	long_desc = function(self, eff) return ("The target lifeline is being cut. When the effect ends %0.2f temporal damage will hit the target."):format(eff.power) end,
+	long_desc = function(self, eff) return ("The target's lifeline is being cut. When the effect ends %0.2f temporal damage will hit the target."):format(eff.power) end,
 	type = "other",
 	subtype = { time=true },
 	status = "detrimental",
 	parameters = {power=10000},
-	on_gain = function(self, err) return "#Target# lifeline is being severed!", "+Sever Lifeline" end,
+	on_gain = function(self, err) return "#Target#'s lifeline is being severed!", "+Sever Lifeline" end,
 	deactivate = function(self, eff)
 		if not eff.src or eff.src.dead then return end
 		if not eff.src:hasLOS(self.x, self.y) then return end
@@ -533,7 +533,7 @@ newEffect{
 newEffect{
 	name = "FADE_FROM_TIME", image = "talents/fade_from_time.png",
 	desc = "Fade From Time",
-	long_desc = function(self, eff) return ("The target is partially removed from the timeline, reducing all damage dealt by %d%%, all damage recieved by %d%%, and the duration of all detrimental effects by %d%%."):
+	long_desc = function(self, eff) return ("The target is partially removed from the timeline, reducing all damage dealt by %d%%, all damage received by %d%%, and the duration of all detrimental effects by %d%%."):
 	format(eff.dur * 2 + 2, eff.cur_power or eff.power, eff.cur_power or eff.power) end,
 	type = "other",
 	subtype = { time=true },
@@ -573,7 +573,7 @@ newEffect{
 newEffect{
 	name = "SHADOW_VEIL", image = "talents/shadow_veil.png",
 	desc = "Shadow Veil",
-	long_desc = function(self, eff) return ("You veil yourself in shadows and let them control you. While in the veil you become immune to status effects, gain %d%% all damage reduction and each turn you blink to a nearby foe, hitting it for %d%% darkness weapon damage. While this goes on you can not be stopped unless you are killed and can not control you character."):format(eff.res, eff.dam * 100) end,
+	long_desc = function(self, eff) return ("You veil yourself in shadows and let them control you. While in the veil you become immune to status effects, and gain %d%% all damage reduction. Each turn you blink to a nearby foe, hitting it for %d%% darkness weapon damage. While this goes on you cannot be stopped unless you are killed, and you cannot control your character."):format(eff.res, eff.dam * 100) end,
 	type = "other",
 	subtype = { darkness=true },
 	status = "beneficial",
@@ -612,7 +612,7 @@ newEffect{
 	name = "ZERO_GRAVITY", image = "effects/zero_gravity.png",
 	desc = "Zero Gravity",
 	no_stop_enter_worlmap = true,
-	long_desc = function(self, eff) return ("There is no gravity here, you float in the air. Movement three times as slow, any melee or archery blows have a chance to knockback. Maximum encumberance is greatly increased.") end,
+	long_desc = function(self, eff) return ("There is no gravity here; you float in the air. Movement is three times as slow, and any melee or archery blows have a chance to knockback. Maximum encumbrance is greatly increased.") end,
 	decrease = 0, no_remove = true,
 	type = "other",
 	subtype = { spacetime=true },
@@ -982,7 +982,7 @@ newEffect{
 newEffect{
 	name = "SHROUD_OF_WEAKNESS",
 	desc = "Shroud of Weakness",
-	long_desc = function(self, eff) return ("The target is enveloped in a shroud that seems to hang upon it like a heavy burden. (reduces damage dealt by %d%%)."):format(-eff.power) end,
+	long_desc = function(self, eff) return ("The target is enveloped in a shroud that seems to hang upon it like a heavy burden. (Reduces damage dealt by %d%%)."):format(-eff.power) end,
 	type = "other",
 	subtype = { time=true },
 	status = "detrimental",
@@ -999,7 +999,7 @@ newEffect{
 newEffect{
 	name = "SHROUD_OF_PASSING",
 	desc = "Shroud of Passing",
-	long_desc = function(self, eff) return ("The target is enveloped in a shroud that seems to not only obscure it but also to fade it's form (+%d%% resist all)."):format(eff.power) end,
+	long_desc = function(self, eff) return ("The target is enveloped in a shroud that seems to not only obscure it but also to fade its form (+%d%% resist all)."):format(eff.power) end,
 	type = "other",
 	subtype = { time=true },
 	status = "beneficial",
@@ -1016,7 +1016,7 @@ newEffect{
 newEffect{
 	name = "SHROUD_OF_DEATH",
 	desc = "Shroud of Death",
-	long_desc = function(self, eff) return ("The target is enveloped in a shroud that seems to not only obscure it but also to fade it's form (+%d%% resist all)."):format(eff.power) end,
+	long_desc = function(self, eff) return ("The target is enveloped in a shroud that seems to not only obscure it but also to fade its form (+%d%% resist all)."):format(eff.power) end,
 	type = "other",
 	subtype = { time=true },
 	status = "beneficial",
@@ -1063,11 +1063,11 @@ newEffect{
 	long_desc = function(self, eff)
 		local def, level, bonusLevel = self.tempeffect_def[self.EFF_CURSE_OF_NIGHTMARES], eff.level, math.min(eff.unlockLevel, eff.level)
 
-		return ([[Horrible visions fill you mind. #LIGHT_BLUE#Level %d%s#WHITE#
-#CRIMSON#Penalty: #WHITE#Plagued by Visions: Your mental save has a 20%% chance to be reduced by %d%% when tested,
+		return ([[Horrible visions fill your mind. #LIGHT_BLUE#Level %d%s#WHITE#
+#CRIMSON#Penalty: #WHITE#Plagued by Visions: Your mental save has a 20%% chance to be reduced by %d%% when tested.
 #CRIMSON#Level 1: %sRemoved from Reality: %+d Physical Resistance, %+d Maximum Physical Resistance
 #CRIMSON#Level 2: %s%+d Luck, %+d Willpower
-#CRIMSON#Level 3: %sSuffocate: Your touch instills a horror that suffocates any weak, non-elite foe that hits you or that you hit in melee. At 3 levels below yours they loose %d air and an additional %d air for each level below that.
+#CRIMSON#Level 3: %sSuffocate: Your touch instills a horror that suffocates any weak, non-elite foe that hits you or that you hit in melee. At 3 levels below yours they lose %d air and an additional %d air for each level below that.
 #CRIMSON#Level 4: %sNightmare: Each time you are damaged by a foe there is %d%% chance of triggering a radius %d nightmare (slow effects, hateful whispers, and summoned Terrors) for 8 turns. This chance grows each time you are struck.]]):format(
 		level, self.cursed_aura == self.EFF_CURSE_OF_NIGHTMARES and ", Cursed Aura" or "",
 		def.getVisionsReduction(level),
@@ -1507,7 +1507,7 @@ newEffect{
 newEffect{
 	name = "POSSESSION", image = "talents/possess.png",
 	desc = "Psionic Consume",
-	long_desc = function(self, eff) return "This creature's mind has been destroyed and a possessor is now controlling the husk. However the intense psionic energies are burning the body away, it will soon disappear." end,
+	long_desc = function(self, eff) return "This creature's mind has been destroyed and a possessor is now controlling the husk. However, the intense psionic energies are burning the body away, and it will soon disappear." end,
 	type = "other",
 	subtype = { psionic=true, possess=true },
 	status = "detrimental",
@@ -1662,13 +1662,13 @@ newEffect{
 				local p = (who and who:hasEffect(who.EFF_DREAMSCAPE)) or (who and who.summoner and who.summoner:hasEffect(who.summoner.EFF_DREAMSCAPE))
 				if p then -- For the rare instance we die after the effect ends but before the dreamscape instance closes
 					p.projections_killed = p.projections_killed + 1
-					game.logSeen(p.target, "#LIGHT_RED#%s writhes in agony as a fragment of it's mind is destroyed!", p.target.name:capitalize())
+					game.logSeen(p.target, "#LIGHT_RED#%s writhes in agony as a fragment of its mind is destroyed!", p.target.name:capitalize())
 				end
 			end
 
 			game.zone:addEntity(game.level, m, "actor", x, y)
 			game.level.map:particleEmitter(x, y, 1, "generic_teleport", {rm=0, rM=0, gm=180, gM=255, bm=180, bM=255, am=35, aM=90})
-			game.logSeen(eff.target, "#LIGHT_BLUE#%s has spawned a dream projection to protect it's mind!", eff.target.name:capitalize())
+			game.logSeen(eff.target, "#LIGHT_BLUE#%s has spawned a dream projection to protect its mind!", eff.target.name:capitalize())
 
 			if game.party:hasMember(eff.target) then
 				game.party:addMember(m, {
@@ -1822,7 +1822,7 @@ newEffect{
 newEffect{
 	name = "REVISIONIST_HISTORY", image = "talents/revisionist_history.png",
 	desc = "Revisionist History",
-	long_desc = function(self, eff) return "While this effect holds you can decide recent history did not happen this way it did." end,
+	long_desc = function(self, eff) return "While this effect holds you can decide recent history did not happen the way it did." end,
 	type = "other",
 	subtype = { time=true },
 	status = "beneficial",
@@ -2104,7 +2104,7 @@ newEffect{
 newEffect{
 	name = "VAULTED", image = "talents/time_prison.png",
 	desc = "In Vault",
-	long_desc = function(self, eff) return "The target is part of a vault and can not act until it has been openend." end,
+	long_desc = function(self, eff) return "The target is part of a vault and cannot act until it has been openend." end,
 	decrease = 0, no_remove = true,
 	type = "other",
 	subtype = { vault=true },
@@ -2124,13 +2124,13 @@ newEffect{
 newEffect{
 	name = "CAUTERIZE", image = "talents/cauterize.png",
 	desc = "Cauterize",
-	long_desc = function(self, eff) return ("Your body is cauterizing, burns for %0.2f damage each turn."):format(eff.dam) end,
+	long_desc = function(self, eff) return ("Your body is cauterizing, burning for %0.2f damage each turn."):format(eff.dam) end,
 	type = "other",
 	subtype = { fire=true },
 	status = "detrimental",
 	parameters = { dam=10 },
 	on_gain = function(self, err) return "#CRIMSON##Target# is wreathed in flames on the brink of death!", "+Cauterize" end,
-	on_lose = function(self, err) return "#CRIMSON#The flames around #target# vanishes.", "-Cauterize" end,
+	on_lose = function(self, err) return "#CRIMSON#The flames around #target# vanish.", "-Cauterize" end,
 	on_merge = function(self, old_eff, new_eff)
 		old_eff.dur = new_eff.dur
 		old_eff.dam = old_eff.dam + new_eff.dam

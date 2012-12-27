@@ -41,7 +41,7 @@ newEntity{
 
 newEntity{ base = "BASE_NPC_SPIDER",
 	name = "orb spinner", color=colors.UMBER,
-	desc = [[A large brownish arachnid, it's fangs drip with a strange fluid.]],
+	desc = [[A large brownish arachnid, its fangs drip with a strange fluid.]],
 	level_range = {1, nil}, exp_worth = 1,
 	rarity = 1,
 	max_life = resolvers.rngavg(20,40),
@@ -51,7 +51,7 @@ newEntity{ base = "BASE_NPC_SPIDER",
 
 newEntity{ base = "BASE_NPC_SPIDER",
 	name = "orb weaver", color=colors.DARK_UMBER,
-	desc = [[A large brownish arachnid spinning it's web.  It doesn't look pleased that you've disturbed it's work.]],
+	desc = [[A large brownish arachnid spinning its web.  It doesn't look pleased that you've disturbed its work.]],
 	level_range = {3, nil}, exp_worth = 1,
 	rarity = 3,
 	max_life = resolvers.rngavg(40,60),

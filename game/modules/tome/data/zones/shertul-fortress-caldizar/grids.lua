@@ -39,8 +39,8 @@ newEntity{
 	notice = true,
 	always_remember = true,
 	show_tooltip = true,
-	desc = [[A farportal is a way to travel incredible distances in the blink of an eye. They are left over of the powerful Sher'tul race.
-This farportal is not connected to any other portal, it is made for exploration, you can not know where it will send you.
+	desc = [[A farportal is a way to travel incredible distances in the blink of an eye. They were left behind by the powerful Sher'tul race.
+This farportal is not connected to any other portal. It is made for exploration; you cannot know where it will send you.
 It should automatically create a portal back, but it might not be near your arrival zone.]],
 
 	block_move = function(self, x, y, who, act, couldpass)

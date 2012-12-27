@@ -241,7 +241,7 @@ uberTalent{
 		return ([[All physical criticals reduce the remaining cooldown of a random technique or cunning talent by 2.
 		All spell criticals reduce the remaining cooldown of a random spell talent by 1.
 		All mind criticals reduce the remaining cooldown of a random wild gift/psionic/afflicted talent by 2.
-		This can only happen once per turn, and can not affect the talent that triggers it.]])
+		This can only happen once per turn, and cannot affect the talent that triggers it.]])
 		:format()
 	end,
 }

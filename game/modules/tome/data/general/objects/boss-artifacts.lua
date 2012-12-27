@@ -575,7 +575,7 @@ newEntity{ base = "BASE_AMULET",
 	},
 	max_power = 60, power_regen = 1,
 	use_power = { name = "summon an elder vampire to your side", power = 60, use = function(self, who)
-		if not who:canBe("summon") then game.logPlayer(who, "You can not summon, you are suppressed!") return end
+		if not who:canBe("summon") then game.logPlayer(who, "You cannot summon; you are suppressed!") return end
 
 		-- Find space
 		local x, y = util.findFreeGrid(who.x, who.y, 5, true, {[engine.Map.ACTOR]=true})

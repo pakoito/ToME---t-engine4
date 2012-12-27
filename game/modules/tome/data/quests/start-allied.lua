@@ -23,7 +23,7 @@ desc = function(self, who)
 	local desc = {}
 	desc[#desc+1] = "Explore the caves below the ruins of Kor'Pul and the Trollmire in search of treasure and glory!\n"
 	if self:isCompleted("trollmire") then
-		desc[#desc+1] = "#LIGHT_GREEN#* You have explored the Trollmire and vanquished the Prox the Troll.#WHITE#"
+		desc[#desc+1] = "#LIGHT_GREEN#* You have explored the Trollmire and vanquished Prox the Troll.#WHITE#"
 	else
 		desc[#desc+1] = "#SLATE#* You must explore the Trollmire and find out what lurks there and what treasures are to be gained!#WHITE#"
 	end

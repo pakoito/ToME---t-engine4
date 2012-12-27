@@ -36,7 +36,7 @@ newTalent{
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.8, 1.6) end,
 	tactical = { DEFEND = { knockback = 2 }, DISABLE = { knockback = 1 } },
 	action = function(self, t)
-		if self:attr("never_move") then game.logPlayer(self, "Your golem can not do that currently.") return end
+		if self:attr("never_move") then game.logPlayer(self, "Your golem cannot do that currently.") return end
 
 		local tg = self:getTalentTarget(t)
 		local olds = game.target.source_actor
@@ -151,7 +151,7 @@ newTalent{
 	getPinDuration = function(self, t) return 2 + self:getTalentLevel(t) end,
 	tactical = { ATTACK = { PHYSICAL = 0.5 }, DISABLE = { pin = 2 } },
 	action = function(self, t)
-		if self:attr("never_move") then game.logPlayer(self, "Your golem can not do that currently.") return end
+		if self:attr("never_move") then game.logPlayer(self, "Your golem cannot do that currently.") return end
 
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local olds = game.target.source_actor
@@ -230,7 +230,7 @@ newTalent{
 	getDazeDuration = function(self, t) return 2 + self:getTalentLevel(t) end,
 	tactical = { ATTACKAREA = { PHYSICAL = 0.5 }, DISABLE = { daze = 3 } },
 	action = function(self, t)
-		if self:attr("never_move") then game.logPlayer(self, "Your golem can not do that currently.") return end
+		if self:attr("never_move") then game.logPlayer(self, "Your golem cannot do that currently.") return end
 
 		local tg = self:getTalentTarget(t)
 		local olds = game.target.source_actor

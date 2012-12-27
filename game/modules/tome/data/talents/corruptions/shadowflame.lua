@@ -135,11 +135,11 @@ newTalent{
 	on_pre_use = function(self, t) return self:canBe("planechange") and self:getVim() >= 10 end,
 	activate = function(self, t)
 		if game.zone.is_demon_plane then
-			game.logPlayer(self, "This spell can not be used from within the Fearscape.")
+			game.logPlayer(self, "This spell cannot be used from within the Fearscape.")
 			return
 		end
 		if game.zone.no_planechange then
-			game.logPlayer(self, "This spell can not be cast here.")
+			game.logPlayer(self, "This spell cannot be cast here.")
 			return
 		end
 

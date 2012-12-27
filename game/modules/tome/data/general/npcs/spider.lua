@@ -266,7 +266,7 @@ newEntity{ base = "BASE_NPC_SPIDER",
 
 newEntity{ base = "BASE_NPC_SPIDER",
 	name = "weaver patriarch", color=colors.STEEL_BLUE,
-	desc = [[A large blue arachnid with white markings on it's thorax.  It shifts and shimmers as though only partially connected to the timeline.]],
+	desc = [[A large blue arachnid with white markings on its thorax.  It shifts and shimmers as though only partially connected to the timeline.]],
 	level_range = {27, nil}, exp_worth = 1,
 	rarity = 12, -- the rarest of the weavers; they spend most of their time courting females in their home realm
 	max_life = 120,
@@ -293,7 +293,7 @@ newEntity{ base = "BASE_NPC_SPIDER",
 newEntity{ base = "BASE_NPC_SPIDER",
 	name = "weaver matriarch", female =1, color=colors.DARK_BLUE,
 	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/spiderkin_spider_weaver_matriarch.png", display_h=2, display_y=-1}}},
-	desc = [[A large dark blue arachnid with a shifting yellow and white pattern on it's thorax.  It shifts and shimmers as though only partially connected to the timeline.]],
+	desc = [[A large dark blue arachnid with a shifting yellow and white pattern on its thorax.  It shifts and shimmers as though only partially connected to the timeline.]],
 	level_range = {38, nil}, exp_worth = 1,
 	rarity = 6, -- rarer then most spiderkin; only encountered in Maj'Eyal while laying eggs or caring for her young
 	size_category = 3,

@@ -104,7 +104,7 @@ local function makeGolem(self)
 
 		on_can_control = function(self, vocal)
 			if not self:hasLOS(self.summoner.x, self.summoner.y) then
-				if vocal then game.logPlayer(game.player, "Your golem is out of sight, you can not establish direct control.") end
+				if vocal then game.logPlayer(game.player, "Your golem is out of sight; you cannot establish direct control.") end
 				return false
 			end
 			return true

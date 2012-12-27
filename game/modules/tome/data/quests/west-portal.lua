@@ -63,7 +63,7 @@ wyrm_lair = function(self, who)
 		game.nicer_tiles:updateAround(game.level, spot.x, spot.y)
 	end)
 
-	game.logPlayer(game.player, "Zemekkys points to the location of Briagh lair on your map.")
+	game.logPlayer(game.player, "Zemekkys points to the location of Briagh's lair on your map.")
 end
 
 create_portal = function(self, npc, player)

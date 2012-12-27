@@ -341,7 +341,7 @@ newTalent{
 	tactical = { ATTACK = 2 },
 	is_summon = true,
 	action = function(self, t)
-		if not self:canBe("summon") then game.logPlayer(self, "You can not summon, you are suppressed!") return end
+		if not self:canBe("summon") then game.logPlayer(self, "You cannot summon; you are suppressed!") return end
 
 		local filters = self.summon or {{type=self.type, subtype=self.subtype, number=1, hasxp=true, lastfor=20}}
 		if #filters == 0 then return end
@@ -777,7 +777,7 @@ newTalent{
 	requires_target = true,
 	range = function(self, t) return math.floor(5 + self:getTalentLevelRaw(t)) end,
 	action = function(self, t)
-		if self:attr("never_move") then game.logPlayer(self, "You can not do that currently.") return end
+		if self:attr("never_move") then game.logPlayer(self, "You cannot do that currently.") return end
 
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)

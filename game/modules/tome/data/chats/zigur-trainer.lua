@@ -19,7 +19,7 @@
 
 if game.player:isQuestStatus("antimagic", engine.Quest.DONE) then
 newChat{ id="welcome",
-	text = [[Well met friend.]],
+	text = [[Well met, friend.]],
 	answers = {
 		{"Farewell."},
 	}
@@ -40,7 +40,7 @@ local remove_magic = function(npc, player)
 		for i = #inven, 1, -1 do
 			local o = inven[i]
 			if o.power_source and o.power_source.arcane then
-				game.logPlayer(player, "You can not use your %s anymore, it is tainted by magic.", o:getName{do_color=true})
+				game.logPlayer(player, "You cannot use your %s anymore; it is tainted by magic.", o:getName{do_color=true})
 				local o = player:removeObject(inven, i, true)
 				player:addObject(player.INVEN_INVEN, o)
 				player:sortInven()

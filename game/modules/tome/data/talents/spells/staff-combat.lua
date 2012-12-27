@@ -179,7 +179,7 @@ newTalent{
 		local dazedur = t.getDazeDuration(self, t)
 		return ([[Hit a target for %d%% melee damage and stun it for %d turns.
 		Stun chance will improve with talent level.
-		At level 5, this attack can not miss.]]):
+		At level 5, this attack cannot miss.]]):
 		format(100 * damage, dazedur)
 	end,
 }

@@ -2336,7 +2336,7 @@ newEntity{ base = "BASE_LONGSWORD",
 	unique = true,
 	name = "Witch-Bane", color = colors.LIGHT_STEEL_BLUE, image = "object/artifact/sword_witch_bane.png",
 	unided_name = "an ivory handled voratun longsword",
-	desc = [[A thin voratun blade with an ivory handle wrapped in purple cloth.  The weapon is nearly as legendary as it's former owner, Marcus Dunn, and was thought to have been destroyed after Marcus' was slain near the end of the Spellhunt.
+	desc = [[A thin voratun blade with an ivory handle wrapped in purple cloth.  The weapon is nearly as legendary as its former owner, Marcus Dunn, and was thought to have been destroyed after Marcus was slain near the end of the Spellhunt.
 It seems somebody well versed in antimagic could use it to its fullest potential.]],
 	level_range = {38, 50},
 	rarity = 250,

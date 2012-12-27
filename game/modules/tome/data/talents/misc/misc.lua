@@ -351,7 +351,7 @@ newTalent{
 	no_npc_use = true,
 	no_unlearn_last = true,
 	action = function(self, t)
-		if game.level.map:checkAllEntities(self.x, self.y, "block_move") then game.log("You can not teleport there.") return true end
+		if game.level.map:checkAllEntities(self.x, self.y, "block_move") then game.log("You cannot teleport there.") return true end
 		game:onTickEnd(function()
 			game.party:removeMember(self, true)
 			game.party:findSuitablePlayer()

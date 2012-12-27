@@ -106,7 +106,7 @@ newTalent{
 	getDuration = function(self, t) return math.min(5, 2 + math.ceil(self:getTalentLevel(t) / 2)) end,
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 1.2, 2.5) end,
 	action = function(self, t)
-		if self:attr("never_move") then game.logPlayer(self, "You can not do that currently.") return end
+		if self:attr("never_move") then game.logPlayer(self, "You cannot do that currently.") return end
 
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -131,7 +131,7 @@ newTalent{
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		return ([[Step through the shadows to your target, dazing it for %d turns and hitting it with all your weapons for %d%% darkness weapon damage.
-		Dazed targets can not act, but any damage will free them.
+		Dazed targets cannot act, but any damage will free them.
 		To Shadowstep, you need to be able to see the target.]]):
 		format(duration, t.getDamage(self, t) * 100)
 	end,

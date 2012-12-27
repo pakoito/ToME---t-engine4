@@ -178,7 +178,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local attack_bonus = t.getAttack(self, t)
-		return ([[Throw your Dream Hammer at a distant location, inflicting %d%% weapon damage on all targets between you and it.  After reaching it's destination, the Dream Hammer will return, potentially hitting targets a second time.
+		return ([[Throw your Dream Hammer at a distant location, inflicting %d%% weapon damage on all targets between you and it.  After reaching its destination, the Dream Hammer will return, potentially hitting targets a second time.
 		Learning this talent increases the Accuracy of your Dream Hammer by %d.]]):format(damage * 100, attack_bonus)
 	end,
 }

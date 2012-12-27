@@ -479,7 +479,7 @@ newEntity{ base="ZONE_JUNGLE_PLAINS", define_as = "REL_TUNNEL",
 	colors.LIGHT_BLUE,
 	add_mos={{image="terrain/ruin_entrance01.png"}},
 	force_down=true, change_level=4, change_zone="halfling-ruins",
-	change_level_check = function() local p = game.party:findMember{main=true} if p:hasQuest("start-yeek") and not p:isQuestStatus("start-yeek", engine.Quest.DONE) then require("engine.ui.Dialog"):simplePopup("Long tunnel", "You can not abandon the yeeks of Rel to the dangers that lie within the island.") return true end p:setQuestStatus("rel-tunnel", engine.Quest.DONE) return false end,
+	change_level_check = function() local p = game.party:findMember{main=true} if p:hasQuest("start-yeek") and not p:isQuestStatus("start-yeek", engine.Quest.DONE) then require("engine.ui.Dialog"):simplePopup("Long tunnel", "You cannot abandon the yeeks of Rel to the dangers that lie within the island.") return true end p:setQuestStatus("rel-tunnel", engine.Quest.DONE) return false end,
 }
 
 newEntity{ base="ZONE_PLAINS", define_as = "UNREMARKABLE_CAVE",

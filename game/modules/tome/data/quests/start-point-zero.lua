@@ -22,7 +22,7 @@ stables = 0
 desc = function(self, who)
 	local desc = {}
 	desc[#desc+1] = "The unhallowed morass is the name of the 'zone' surrounding Point Zero."
-	desc[#desc+1] = "The temporal spiders that inhabit it are growing restless and started attacking at random, you need to investigate what is going on."
+	desc[#desc+1] = "The temporal spiders that inhabit it are growing restless and started attacking at random. You need to investigate what is going on."
 	if self:isCompleted("morass") then
 		desc[#desc+1] = "#LIGHT_GREEN#* You have explored the morass and destroyed the weaver queen, finding strange traces on it.#WHITE#"
 	else

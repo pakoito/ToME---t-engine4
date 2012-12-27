@@ -129,7 +129,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Space bends around you, giving you a %d%% chance to displace half of any damage you recieve onto a random enemy within radius %d.
+		return ([[Space bends around you, giving you a %d%% chance to displace half of any damage you receive onto a random enemy within radius %d.
 		]]):format(5 + self:getTalentLevel(t) * 5, self:getTalentLevelRaw(t) * 2)
 	end,
 }

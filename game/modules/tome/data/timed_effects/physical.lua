@@ -560,7 +560,7 @@ newEffect{
 newEffect{
 	name = "FROZEN", image = "talents/freeze.png",
 	desc = "Frozen",
-	long_desc = function(self, eff) return ("The target is encased in ice. All damage done to you will be split, 40%% absorbed by the ice and 60%% by yourself. Your defense is nullified while in the ice and you may only attack the ice but you are also immune to any new detrimental status effects. The target can not teleport or heal while frozen. %d HP on the iceblock remaining."):format(eff.hp) end,
+	long_desc = function(self, eff) return ("The target is encased in ice. All damage done to it will be split, 40%% absorbed by the ice and 60%% by it. The target's defense is nullified while in the ice, and it may only attack the ice, but it is also immune to any new detrimental status effects. The target cannot teleport or heal while frozen. %d HP on the iceblock remaining."):format(eff.hp) end,
 	type = "physical", -- Frozen has some serious effects beyond just being frozen, no healing, no teleport, etc.  But it can be applied by clearly non-magical sources i.e. Ice Breath
 	subtype = { cold=true, stun=true },
 	status = "detrimental",
@@ -1034,7 +1034,7 @@ newEffect{
 newEffect{
 	name = "GRAPPLED", image = "talents/grab.png",
 	desc = "Grappled",
-	long_desc = function(self, eff) return ("The target is grappled, unable to move, and has it's defense and attack reduced by %d."):format(eff.power) end,
+	long_desc = function(self, eff) return ("The target is grappled, unable to move, and has its defense and attack reduced by %d."):format(eff.power) end,
 	type = "physical",
 	subtype = { grapple=true, pin=true },
 	status = "detrimental",
@@ -1175,7 +1175,7 @@ newEffect{
 newEffect{
 	name = "SET_UP", image = "talents/set_up.png",
 	desc = "Set Up",
-	long_desc = function(self, eff) return ("The target is off balance and is %d%% more likely to be crit by the target that set it up.  In addition all it's saves are reduced by %d."):format(eff.power, eff.power) end,
+	long_desc = function(self, eff) return ("The target is off balance and is %d%% more likely to be crit by the target that set it up.  In addition all its saves are reduced by %d."):format(eff.power, eff.power) end,
 	type = "physical",
 	subtype = { tactic=true },
 	status = "detrimental",
@@ -1197,7 +1197,7 @@ newEffect{
 newEffect{
 	name = "Recovery",
 	desc = "Recovery",
-	long_desc = function(self, eff) return ("The target is recovering %d life each turn and it's healing modifier has been increased by %d%%."):format(eff.regen, eff.heal_mod) end,
+	long_desc = function(self, eff) return ("The target is recovering %d life each turn and its healing modifier has been increased by %d%%."):format(eff.regen, eff.heal_mod) end,
 	type = "physical",
 	subtype = { heal=true },
 	status = "beneficial",
@@ -1612,7 +1612,7 @@ newEffect{
 newEffect{
 	name = "LUMINESCENCE",
 	desc = "Luminescence ", image = "talents/infusion__sun.png",
-	long_desc = function(self, eff) return ("The target has been revealed, reducing it's stealth power by %d."):format(eff.power) end,
+	long_desc = function(self, eff) return ("The target has been revealed, reducing its stealth power by %d."):format(eff.power) end,
 	type = "physical",
 	subtype = { nature=true, light=true },
 	status = "detrimental",

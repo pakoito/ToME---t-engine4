@@ -2283,7 +2283,7 @@ function _M:die(src, death_note)
 	if src and src.summoner and src.summoner_hate_per_kill then
 		if src.summoner.knowTalent and src.summoner:knowTalent(src.summoner.T_HATE_POOL) then
 			src.summoner.hate = math.min(src.summoner.max_hate, src.summoner.hate + src.summoner_hate_per_kill)
-			game.logPlayer(src.summoner, "%s feeds you hate from it's latest victim. (+%d hate)", src.name:capitalize(), src.summoner_hate_per_kill)
+			game.logPlayer(src.summoner, "%s feeds you hate from its latest victim. (+%d hate)", src.name:capitalize(), src.summoner_hate_per_kill)
 		end
 	end
 

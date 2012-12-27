@@ -291,7 +291,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getBonusDamage(self, t)
 		local range = self:getTalentRange(t) * 2
-		return ([[Link minds with the target.  While your minds are linked, you'll inflict %d%% more mind damage to the target and gain telepathy to it's creature type.
+		return ([[Link minds with the target.  While your minds are linked, you'll inflict %d%% more mind damage to the target and gain telepathy for its creature type.
 		Only one mindlink can be maintained at a time, and the effect will break if the target dies or goes beyond range (%d)).
 		The mind damage bonus will scale with your Mindpower.]]):format(damage, range)
 	end,

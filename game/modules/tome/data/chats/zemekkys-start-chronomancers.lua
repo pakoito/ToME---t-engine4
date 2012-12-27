@@ -22,7 +22,7 @@ newChat{ id="welcome",
 You must go there and find the source.]],
 	answers = {
 		{"I will, Grand Keeper.", action=function() game:changeLevel(1, "unhallowed-morass") end},
-		{"I am sorry, I can not do that.", action=function(npc, player) player:setQuestStatus("start-point-zero", engine.Quest.FAILED) end},
+		{"I am sorry, but I cannot do that.", action=function(npc, player) player:setQuestStatus("start-point-zero", engine.Quest.FAILED) end},
 	}
 }
 

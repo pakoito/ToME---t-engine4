@@ -50,7 +50,7 @@ newTalent{
 				local o = inven[i]
 				local ok, err = self:canWearObject(o)
 				if not ok and err == "missing dependency" then
-					game.logPlayer(self, "You can not use your %s anymore.", o:getName{do_color=true})
+					game.logPlayer(self, "You cannot use your %s anymore.", o:getName{do_color=true})
 					local o = self:removeObject(inven, i, true)
 					self:addObject(self.INVEN_INVEN, o)
 					self:sortInven()

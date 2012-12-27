@@ -19,9 +19,9 @@
 
 return [[During your adventures you will encounter a variety of terrains you can pass on: grass, sand, water, lava, ...
 
-Some of those terrains have innate penalties or tricks, you will have to learn them and how to deal with them.
+Some of those terrains have innate penalties or tricks. You will have to learn them and how to deal with them.
 
-You are about to enter a pond of water, you will not be able to breath inside. When you are in an area where you can not breathe an "Air" counter will appear on the left side of the screen. Do not let it reach zero or you will die.
+You are about to enter a pond of water; you will not be able to breath inside. When you are in an area where you cannot breathe, an "Air" counter will appear on the left side of the screen. Do not let it reach zero or you will die.
 
 Now go to the other side of the pond.
 ]]

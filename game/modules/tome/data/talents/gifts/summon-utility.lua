@@ -99,7 +99,7 @@ newTalent{
 	requires_target = true,
 	tactical = { DEFEND = 2, PROTECT = 2 },
 	on_pre_use = function(self, t, silent)
-		if not self:canBe("summon") and not silent then game.logPlayer(self, "You can not summon, you are suppressed!") return end
+		if not self:canBe("summon") and not silent then game.logPlayer(self, "You cannot summon; you are suppressed!") return end
 		return not checkMaxSummon(self, silent)
 	end,
 	on_detonate = function(self, t, m)
@@ -205,7 +205,7 @@ newTalent{
 	is_summon = true,
 	tactical = { ATTACK = 1, DISABLE = { pin = 2 } },
 	on_pre_use = function(self, t, silent)
-		if not self:canBe("summon") and not silent then game.logPlayer(self, "You can not summon, you are suppressed!") return end
+		if not self:canBe("summon") and not silent then game.logPlayer(self, "You cannot summon; you are suppressed!") return end
 		return not checkMaxSummon(self, silent)
 	end,
 	requires_target = true,

@@ -1414,7 +1414,7 @@ newEffect{
 newEffect{
 	name = "ABYSSAL_SHROUD", image = "talents/abyssal_shroud.png",
 	desc = "Abyssal Shroud",
-	long_desc = function(self, eff) return ("The target's lite radius has been reduced by %d and it's darkness resistance by %d%%."):format(eff.lite, eff.power) end,
+	long_desc = function(self, eff) return ("The target's lite radius has been reduced by %d, and its darkness resistance by %d%%."):format(eff.lite, eff.power) end,
 	type = "magical",
 	subtype = { darkness=true },
 	status = "detrimental",
@@ -1805,7 +1805,7 @@ newEffect{
 newEffect{
 	name = "BLOOD_LOCK", image = "talents/blood_lock.png",
 	desc = "Blood Lock",
-	long_desc = function(self, eff) return ("Can not heal higher than %d life."):format(eff.power) end,
+	long_desc = function(self, eff) return ("Cannot heal higher than %d life."):format(eff.power) end,
 	type = "magical",
 	subtype = { blood=true },
 	status = "detrimental",

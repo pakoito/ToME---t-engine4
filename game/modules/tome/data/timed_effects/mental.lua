@@ -518,7 +518,7 @@ newEffect{
 newEffect{
 	name = "HARASSED", image = "talents/harass_prey.png",
 	desc = "Harassed",
-	long_desc = function(self, eff) return ("The target has been harassed by it's stalker, reducing damage by %d%%."):format( -eff.damageChange * 100) end,
+	long_desc = function(self, eff) return ("The target has been harassed by its stalker, reducing damage by %d%%."):format( -eff.damageChange * 100) end,
 	type = "mental",
 	subtype = { fear=true },
 	status = "detrimental",
@@ -1685,7 +1685,7 @@ newEffect{
 newEffect{
 	name = "FRENZY", image = "effects/frenzy.png",
 	desc = "Frenzy",
-	long_desc = function(self, eff) return ("Increases global action speed by %d%% and physical crit by %d%%.\nAdditionally the target will continue to fight until it's hit points reach -%d%%."):format(eff.power * 100, eff.crit, eff.dieat * 100) end,
+	long_desc = function(self, eff) return ("Increases global action speed by %d%% and physical crit by %d%%.\nAdditionally the target will continue to fight until its Life reaches -%d%%."):format(eff.power * 100, eff.crit, eff.dieat * 100) end,
 	type = "mental",
 	subtype = { frenzy=true, speed=true },
 	status = "beneficial",
@@ -2163,12 +2163,12 @@ newEffect{
 newEffect{
 	name = "INTIMIDATED",
 	desc = "Intimidated",
-	long_desc = function(self, eff) return ("The target's morale is weakened; reducing it's attack power, mind power, and spellpower by %d."):format(eff.power) end,
+	long_desc = function(self, eff) return ("The target's morale is weakened, reducing its attack power, mind power, and spellpower by %d."):format(eff.power) end,
 	type = "mental",
 	subtype = { fear=true },
 	status = "detrimental",
 	on_gain = function(self, err) return "#Target#'s morale has been lowered.", "+Intimidated" end,
-	on_lose = function(self, err) return "#Target# has regained it's confidence.", "-Intimidated" end,
+	on_lose = function(self, err) return "#Target# has regained its confidence.", "-Intimidated" end,
 	parameters = { power=1 },
 	activate = function(self, eff)
 		eff.damid = self:addTemporaryValue("combat_dam", -eff.power)
@@ -2269,12 +2269,12 @@ newEffect{
 newEffect{
 	name = "LOBOTOMIZED", image = "talents/psychic_lobotomy.png",
 	desc = "Lobotomized",
-	long_desc = function(self, eff) return ("The target's mental faculties have been impaired, confusing the target, making it act randomly (%d%% chance) and reducing it's cunning by %d."):format(eff.power, eff.power/2) end,
+	long_desc = function(self, eff) return ("The target's mental faculties have been impaired, confusing the target, making it act randomly (%d%% chance) and reducing its cunning by %d."):format(eff.power, eff.power/2) end,
 	type = "mental",
 	subtype = { confusion=true },
 	status = "detrimental",
 	on_gain = function(self, err) return "#Target# higher mental functions have been imparied.", "+Lobotomized" end,
-	on_lose = function(self, err) return "#Target#'s regains it's senses.", "-Lobotomized" end,
+	on_lose = function(self, err) return "#Target#'s regains its senses.", "-Lobotomized" end,
 	parameters = { power=1, dam=1 },
 	activate = function(self, eff)
 		DamageType:get(DamageType.MIND).projector(eff.src or self, self.x, self.y, DamageType.MIND, {dam=eff.dam, alwaysHit=true})
@@ -2378,7 +2378,7 @@ newEffect{
 newEffect{
 	name = "MIND_LINK_TARGET", image = "talents/mind_link.png",
 	desc = "Mind Link",
-	long_desc = function(self, eff) return ("The target's mind has been invaded, increasing all mind damage it recieves from %s by %d%%."):format(eff.src.name:capitalize(), eff.power) end,
+	long_desc = function(self, eff) return ("The target's mind has been invaded, increasing all mind damage it receives from %s by %d%%."):format(eff.src.name:capitalize(), eff.power) end,
 	type = "mental",
 	subtype = { psionic=true },
 	status = "detrimental",
@@ -2416,7 +2416,7 @@ newEffect{
 newEffect{
 	name = "FOCUSED_WRATH", image = "talents/focused_wrath.png",
 	desc = "Focused Wrath",
-	long_desc = function(self, eff) return ("The target's subconscious has focused it's attention on %s."):format(eff.target.name:capitalize()) end,
+	long_desc = function(self, eff) return ("The target's subconscious has focused its attention on %s."):format(eff.target.name:capitalize()) end,
 	type = "mental",
 	subtype = { psionic=true },
 	status = "beneficial",
@@ -2660,12 +2660,12 @@ newEffect{
 newEffect{
 	name = "SUNDER_MIND", image = "talents/sunder_mind.png",
 	desc = "Sundered Mind",
-	long_desc = function(self, eff) return ("The target's mental faculties have been impaired, reducing it's mental save by %d."):format(eff.cur_power or eff.power) end,
+	long_desc = function(self, eff) return ("The target's mental faculties have been impaired, reducing its mental save by %d."):format(eff.cur_power or eff.power) end,
 	type = "mental",
 	subtype = { psionic=true },
 	status = "detrimental",
 	on_gain = function(self, err) return "#Target#'s mental functions have been impaired.", "+Sundered Mind" end,
-	on_lose = function(self, err) return "#Target# regains it's senses.", "-Sundered Mind" end,
+	on_lose = function(self, err) return "#Target# regains its senses.", "-Sundered Mind" end,
 	parameters = { power=10 },
 	on_merge = function(self, old_eff, new_eff)
 		self:removeTemporaryValue("combat_mentalresist", old_eff.sunder)
@@ -2687,7 +2687,7 @@ newEffect{
 newEffect{
 	name = "BROKEN_DREAM", image = "effects/broken_dream.png",
 	desc = "Broken Dream",
-	long_desc = function(self, eff) return ("The target's dreams have been broken by the dreamforge, reducing it's mental save by %d and reducing it's chance of successfully casting a spell by %d%%."):format(eff.power, eff.power) end,
+	long_desc = function(self, eff) return ("The target's dreams have been broken by the dreamforge, reducing its mental save by %d and reducing its chance of successfully casting a spell by %d%%."):format(eff.power, eff.power) end,
 	type = "mental",
 	subtype = { psionic=true, morale=true },
 	status = "detrimental",

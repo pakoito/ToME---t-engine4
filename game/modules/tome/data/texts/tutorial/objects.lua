@@ -18,12 +18,12 @@
 -- darkgod@te4.org
 
 return [[During your adventures you will find items.
-Each item has a weight. How much you can carry depends on your Strength: this is your maximum encumberance.
+Each item has a weight. How much you can carry depends on your Strength: this is your maximum encumbrance.
 To pickup an item, press 'g' or right click on yourself while standing over it.
 To view your inventory, press 'i' or right-click on yourself.
 
 Your inventory is split in two panels: your equipped items and your backpack.
-To select an item, use the movement keys and press enter, click it with the mouse, or press the key next to it's name.
+To select an item, use the movement keys and press enter, click it with the mouse, or press the key next to its name.
 
 The item you've found is an infusion. Infusions and runes allow you to bind a power to your body, gaining new abilities.
 Infusions come from the powers of nature while runes use magic.

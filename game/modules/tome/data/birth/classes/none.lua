@@ -21,7 +21,7 @@ newBirthDescriptor{
 	type = "class",
 	name = "None",
 	desc = {
-		"Your race can not select a class, it has its own powers.",
+		"Your race cannot select a class; it has its own powers.",
 	},
 	descriptor_choices =
 	{
@@ -37,7 +37,7 @@ newBirthDescriptor{
 	type = "subclass",
 	name = "None",
 	desc = {
-		"Your race can not select a class, it has its own powers.",
+		"Your race cannot select a class; it has its own powers.",
 	},
 	not_on_random_boss = true,
 }

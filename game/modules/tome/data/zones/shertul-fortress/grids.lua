@@ -57,8 +57,8 @@ newEntity{
 	notice = true,
 	always_remember = true,
 	show_tooltip = true,
-	desc = [[A farportal is a way to travel incredible distances in the blink of an eye. They are left over of the powerful Sher'tul race.
-This farportal is not connected to any other portal, it is made for exploration, you can not know where it will send you.
+	desc = [[A farportal is a way to travel incredible distances in the blink of an eye. They were left behind by the powerful Sher'tul race.
+This farportal is not connected to any other portal. It is made for exploration; you cannot know where it will send you.
 It should automatically create a portal back, but it might not be near your arrival zone.]],
 
 
@@ -81,7 +81,7 @@ It should automatically create a portal back, but it might not be near your arri
 		if not q:exploratory_energy(true) then Dialog:simplePopup("Exploratory Farportal", "The fortress does not have enough energy to power a trip through the portal.") return end
 		if q:isCompleted("farportal-broken") then Dialog:simplePopup("Exploratory Farportal", "The farportal is broken and will not be usable anymore.") return end
 
-		Dialog:yesnoPopup("Exploratory Farportal", "Do you want to travel in the farportal? You can not know where you will end up.", function(ret) if ret then
+		Dialog:yesnoPopup("Exploratory Farportal", "Do you want to travel in the farportal? You cannot know where you will end up.", function(ret) if ret then
 			if self:checkSpecialLocation(who, q) then return end
 
 			local zone, boss = game.state:createRandomZone()

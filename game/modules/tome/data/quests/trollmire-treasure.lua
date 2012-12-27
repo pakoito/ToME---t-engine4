@@ -46,7 +46,7 @@ enter_level3 = function(self)
 	g.name = "way to the hidden trollmire treasure"
 	g.desc = "Beware!"
 	g.change_level_check = function()
-		require("engine.ui.Dialog"):yesnoPopup("Danger...", "This way lead to the lair of a mighty troll, traces of blood are everywhere. Are you sure?", function(ret)
+		require("engine.ui.Dialog"):yesnoPopup("Danger...", "This way leads to the lair of a mighty troll. Traces of blood are everywhere. Are you sure?", function(ret)
 			if ret then game:changeLevel(4) end
 		end)
 		return true

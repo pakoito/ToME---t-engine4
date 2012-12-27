@@ -132,11 +132,11 @@ newTalent{
 	on_pre_use = function(self, t, silent) if self:attr("is_psychic_projection") then if not silent then game.logPlayer(self, "You feel it unwise to travel to the dreamscape in such a fragile form.") end return false end return true end,
 	action = function(self, t)
 		if game.zone.is_dream_scape then
-			game.logPlayer(self, "This talent can not be used from within the Dreamscape.")
+			game.logPlayer(self, "This talent cannot be used from within the Dreamscape.")
 			return
 		end
 		if game.zone.no_planechange then
-			game.logPlayer(self, "This talent can not be used here.")
+			game.logPlayer(self, "This talent cannot be used here.")
 			return
 		end
 
@@ -157,7 +157,7 @@ newTalent{
 		end
 
 		if not (target and target:attr("sleep")) then
-			game.logPlayer(self, "Your target must be sleeping in order to enter it's dreamscape.")
+			game.logPlayer(self, "Your target must be sleeping in order to enter its dreamscape.")
 			return nil
 		end
 		if self:reactionToward(target) >= 0 then
