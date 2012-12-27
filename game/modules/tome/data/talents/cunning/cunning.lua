@@ -26,8 +26,8 @@ newTalentType{ allow_random=true, type="cunning/poisons", name = "poisons", min_
 newTalentType{ allow_random=true, type="cunning/poisons-effects", name = "poisons", description = "Collection of known poisons." }
 newTalentType{ allow_random=true, type="cunning/dirty", name = "dirty fighting", description = "Teaches various talents to cripple your foes." }
 newTalentType{ allow_random=true, type="cunning/lethality", name = "lethality", description = "How to make your foes feel the pain." }
-newTalentType{ allow_random=true, type="cunning/shadow-magic", name = "shadow magic", description = "Blending magic and shadows." }
-newTalentType{ allow_random=true, type="cunning/ambush", name = "ambush", min_lev = 10, description = "Using darkness and a bit of magic, you manipulate the shadows." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="cunning/shadow-magic", name = "shadow magic", description = "Blending magic and shadows." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="cunning/ambush", name = "ambush", min_lev = 10, description = "Using darkness and a bit of magic, you manipulate the shadows." }
 newTalentType{ allow_random=true, type="cunning/survival", name = "survival", generic = true, description = "The knowledge of the dangers of the world, and how to best avoid them." }
 newTalentType{ allow_random=true, type="cunning/tactical", name = "tactical", description = "Tactical combat abilities." }
 newTalentType{ allow_random=true, type="cunning/scoundrel", name = "scoundrel", generic = true, description = "The use of ungentlemanly techniques." }
