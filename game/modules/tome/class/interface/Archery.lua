@@ -430,7 +430,7 @@ function _M:archeryShoot(targets, talent, tg, params)
 	tg.talent = tg.talent or talent
 
 	if not tg.range then tg.range=weapon.range or 6 end
-	tg.display = tg.display or {display=' ', particle="arrow", particle_args={tile="shockbolt/"..(ammo.proj_image or realweapon.proj_image):gsub("%.png$", "")}}
+	tg.display = tg.display or self:archeryDefaultProjectileVisual(realweapon, ammo)
 	tg.speed = (tg.speed or 10) + (ammo.combat.travel_speed or 0) + (weapon.travel_speed or 0) + (self.travel_speed or 0)
 	tg.archery = params or {}
 	tg.archery.weapon = weapon
@@ -439,6 +439,10 @@ function _M:archeryShoot(targets, talent, tg, params)
 		tg.archery.ammo = targets[i].ammo
 		self:projectile(tg, targets[i].x, targets[i].y, archery_projectile)
 	end
+end
+
+function _M:archeryDefaultProjectileVisual(weapon, ammo)
+	return {display=' ', particle="arrow", particle_args={tile="shockbolt/"..(ammo.proj_image or realweapon.proj_image):gsub("%.png$", "")}}
 end
 
 --- Check if the actor has a bow or sling and corresponding ammo
