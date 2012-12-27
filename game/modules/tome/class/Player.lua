@@ -600,11 +600,6 @@ function _M:die(src, death_note)
 	if self.runStop then self:runStop("died") end
 	if self.restStop then self:restStop("died") end
 	
-	if self:hasEffect(self.EFF_PRECOGNITION) then
-		self:removeEffect(self.EFF_PRECOGNITION)
-		return
-	end
-
 	return self:onPartyDeath(src, death_note)
 end
 
