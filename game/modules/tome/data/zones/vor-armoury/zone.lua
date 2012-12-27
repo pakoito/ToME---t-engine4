@@ -58,6 +58,9 @@ return {
 	},
 	post_process = function(level)
 		for uid, e in pairs(level.entities) do e.faction="orc-pride" end
+		if level.level == 2 then
+			for uid, e in pairs(level.entities) do e:setEffect(e.EFF_VAULTED, 1, {}) end
+		end
 	end,
 	levels =
 	{
