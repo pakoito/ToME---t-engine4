@@ -84,7 +84,7 @@ function _M:init(title, actor, order, at_end, quickbirth, w, h)
 
 	self:generateCampaigns()
 	self.c_campaign_text = Textzone.new{auto_width=true, auto_height=true, text="Campaign: "}
-	self.c_campaign = Dropdown.new{width=300, fct=function(item) self:campaignUse(item) end, on_select=function(item) self:updateDesc(item) end, list=self.all_campaigns, nb_items=#self.all_campaigns}
+	self.c_campaign = Dropdown.new{width=400, fct=function(item) self:campaignUse(item) end, on_select=function(item) self:updateDesc(item) end, list=self.all_campaigns, nb_items=#self.all_campaigns}
 
 	self:generateDifficulties()
 	self.c_difficulty_text = Textzone.new{auto_width=true, auto_height=true, text="Difficulty: "}
