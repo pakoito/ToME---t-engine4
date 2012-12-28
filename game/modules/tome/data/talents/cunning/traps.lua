@@ -203,6 +203,7 @@ local basetrap = function(self, t, x, y, dur, add)
 		x = x, y = y,
 		canAct = false,
 		energy = {value=0},
+		inc_damage = table.clone(self.inc_damage or {}, true),
 		act = function(self)
 			if self.realact then self:realact() end
 			self:useEnergy()
