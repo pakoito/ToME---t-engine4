@@ -567,8 +567,10 @@ function _M:updateTalentTypeMastery(tt)
 	for i, t in pairs(self.talents_types_def[tt] and self.talents_types_def[tt].talents or {}) do
 		if t.auto_relearn_passive or t.passives then
 			local lvl = self:getTalentLevelRaw(t)
-			self:unlearnTalent(t.id, lvl)
-			self:learnTalent(t.id, true, lvl)
+			if lvl > 0 then
+				self:unlearnTalent(t.id, lvl)
+				self:learnTalent(t.id, true, lvl)
+			end
 		end
 	end
 end
