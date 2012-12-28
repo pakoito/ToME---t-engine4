@@ -32,17 +32,18 @@ function _M:takeHit(value, src, death_note)
 	self.life = self.life - value
 	self.changed = true
 	if self.life <= self.die_at then
+		if self:hasEffect(self.EFF_PRECOGNITION) then
+			game.log("%s dies during precognition, ending the effect!", self.name:capitalize())
+			self:removeEffect(self.EFF_PRECOGNITION)
+			return false, 0
+		end
+
 		if self:knowTalent(self.T_CAUTERIZE) and self:triggerTalent(self.T_CAUTERIZE, nil, value) then
 			return false, 0
 		else
 			if src.on_kill and src:on_kill(self) then return false, value end
 			return self:die(src, death_note), value
 		end
-	end
-	if self:hasEffect(self.EFF_PRECOGNITION) then
-		game.log("%s dies during precognition, ending the effect!", self.name:capitalize())
-		self:removeEffect(self.EFF_PRECOGNITION)
-		return false, 0
 	end
 	return false, value
 end
