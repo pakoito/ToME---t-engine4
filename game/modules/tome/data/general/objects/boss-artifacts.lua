@@ -861,6 +861,8 @@ newEntity{ base = "BASE_GEM", define_as = "CRYSTAL_FOCUS",
 				o.wielder.combat.convert_damage[engine.DamageType.ARCANE] = 100
 			end
 			o.is_crystalline_weapon = true
+			o.power_source = o.power_source or {}
+			o.power_source.arcane = true
 			o.wielder = o.wielder or {}
 			o.wielder.combat_spellpower = (o.wielder.combat_spellpower or 0) + 12
 			o.wielder.combat_dam = (o.wielder.combat_dam or 0) + 12
@@ -926,6 +928,8 @@ newEntity{ base = "BASE_GEM", define_as = "CRYSTAL_HEART",
 			o.unique = o.name
 			o.no_unique_lore = true
 			o.is_crystalline_armor = true
+			o.power_source = o.power_source or {}
+			o.power_source.arcane = true
 
 			o.wielder = o.wielder or {}
 			-- This is supposed to add 1 def for crap cloth robes if for some reason you choose it instead of better robes, and then multiply by 1.25.
