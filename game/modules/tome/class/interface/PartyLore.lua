@@ -57,10 +57,12 @@ function _M:init(t)
 end
 
 function _M:knownLore(lore)
+	self.lore_known = self.lore_known or {}
 	return self.lore_known[lore] and true or false
 end
 
 function _M:getLore(lore, silent)
+	self.lore_known = self.lore_known or {}
 	self.additional_lore = self.additional_lore or {}
 	if not silent then assert(self.lore_defs[lore] or self.additional_lore[lore], "bad lore id "..lore) end
 	return self.lore_defs[lore] or self.additional_lore[lore]
@@ -77,6 +79,8 @@ function _M:learnLore(lore, nopopup, silent, nostop)
 	local l = self:getLore(lore, silent)
 	if not l then return end
 	local learnt = false
+
+	self.lore_known = self.lore_known or {}
 
 	if not config.settings.tome.lore_popup and profile.mod.lore and profile.mod.lore.lore and profile.mod.lore.lore[lore] and not l.always_pop then nopopup = true end
 
