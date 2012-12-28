@@ -1235,7 +1235,7 @@ newEffect{
 newEffect{
 	name = "WEAKENED_DEFENSES", image = "talents/exploit_weakness.png",
 	desc = "Weakened Defenses",
-	long_desc = function(self, eff) return ("The target's physical resistance has been reduced by %d%%."):format(eff.inc) end,
+	long_desc = function(self, eff) return ("The target's physical resistance has been reduced by %d%%."):format(eff.cur_inc) end,
 	type = "physical",
 	subtype = { sunder=true },
 	status = "detrimental",
