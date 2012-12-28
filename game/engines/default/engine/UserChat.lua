@@ -111,6 +111,13 @@ function _M:event(e)
 		elseif e.donator == "recurring" then color = colors.ROYAL_BLUE end
 
 		self.channels[e.channel] = self.channels[e.channel] or {users={}, log={}}
+		if profile.auth and profile.auth.name then
+			local tokens = e.msg:split(" ")
+			for i = 1, #tokens do
+				if tokens[i]:lower() == profile.auth.name:lower() then tokens[i] = "#YELLOW#"..tokens[i].."#LAST#" end
+			end
+			e.msg = table.concat(tokens, " ")
+		end
 		self:addMessage("talk", e.channel, e.login, {e.name, color}, e.msg)
 
 		if type(game) == "table" and game.logChat and self.cur_channel == e.channel then
