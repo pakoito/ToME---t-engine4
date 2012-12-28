@@ -442,7 +442,11 @@ function _M:archeryShoot(targets, talent, tg, params)
 end
 
 function _M:archeryDefaultProjectileVisual(weapon, ammo)
-	return {display=' ', particle="arrow", particle_args={tile="shockbolt/"..(ammo.proj_image or weapon.proj_image):gsub("%.png$", "")}}
+	if (ammo and ammo.proj_image) or (weapon and weapon.proj_image) then
+		return {display=' ', particle="arrow", particle_args={tile="shockbolt/"..(ammo.proj_image or weapon.proj_image):gsub("%.png$", "")}}
+	else
+		return {display='/'}
+	end
 end
 
 --- Check if the actor has a bow or sling and corresponding ammo

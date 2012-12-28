@@ -532,6 +532,7 @@ newEntity{
 	rarity = 350,
 	desc = [[The Blood of Life! It can let a living being resurrect in case of an untimely demise. But only once!]],
 	cost = 1000,
+	special = true,
 
 	use_simple = { name = "quaff the Blood of Life to grant an extra life", use = function(self, who)
 		game.logSeen(who, "%s quaffs the %s!", who.name:capitalize(), self:getName())
