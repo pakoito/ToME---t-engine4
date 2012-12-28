@@ -71,7 +71,7 @@ end
 function _M:additionalLore(id, name, category, lore)
 	self.additional_lore = self.additional_lore or {}
 	if self.additional_lore[id] then return end
-	self.additional_lore_nb = self.additional_lore_nb + 1
+	self.additional_lore_nb = (self.additional_lore_nb or 0) + 1
 	self.additional_lore[id] = {id=id, name=name, category=category, lore=lore, order=self.additional_lore_nb + #self.lore_defs}
 end
 

@@ -56,7 +56,7 @@ newBirthDescriptor{
 	talents_types = function(birth)
 		local tts = {}
 		for _, class in ipairs(birth.all_classes) do
-			for _, sclass in ipairs(class.nodes) do if sclass.id ~= "Adventurer" and not sclass.not_on_random_boss then
+			for _, sclass in ipairs(class.nodes) do if sclass.id ~= "Adventurer" and sclass.def and not sclass.def.not_on_random_boss then
 				if birth.birth_descriptor_def.subclass[sclass.id].talents_types then
 					local tt = birth.birth_descriptor_def.subclass[sclass.id].talents_types
 					if type(tt) == "function" then tt = tt(birth) end

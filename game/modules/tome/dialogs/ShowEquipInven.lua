@@ -58,7 +58,7 @@ function _M:init(title, actor, filter, action, on_select)
 				local bi = self.actor:getInven(ui.inven)
 				local ws = self.actor:getInven(wear_o:wornInven())
 				local os = self.actor:getObjectOffslot(wear_o)
-				if bi and (ws and ws.id == bi.id) or (os and self.actor:getInven(os).id == bi.id) then
+				if bi and ((ws and ws.id == bi.id) or (os and self.actor:getInven(os).id == bi.id)) then
 					self.actor:doTakeoff(ui.inven, ui.item, ui:getItem(), true) 
 				end
 			end
