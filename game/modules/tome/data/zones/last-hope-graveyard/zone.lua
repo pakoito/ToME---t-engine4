@@ -84,6 +84,7 @@ return {
 	make_coffin = function(x, y, g)
 		local r = rng.range(1, 100)
 		local fct
+--[[
 		if r <= 10 then
 			fct = function(self, x, y, who)
 				local Dialog = require("engine.ui.Dialog")
@@ -95,7 +96,7 @@ return {
 					game.log("There is nothing there.")
 				end
 			end
-		elseif r <= 60 then
+		else]] if r <= 60 then
 			g.sumomn_npc = game.zone:makeEntity(game.level, "actor", {properties={"undead"}, add_levels=10, random_boss={nb_classes=1, rank=3, ai = "tactical", loot_quantity = 0, no_loot_randart = true}}, nil, true)
 			fct = function(self, x, y, who)
 				local x, y = util.findFreeGrid(who.x, who.y, 5, true, {[engine.Map.ACTOR]=true})
