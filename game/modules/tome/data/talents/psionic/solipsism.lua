@@ -27,10 +27,10 @@ newTalent{
 	getConversionRatio = function(self, t) return math.min(0.25 + self:getTalentLevel(t) * 0.1, 1) end,
 	on_learn = function(self, t)
 		if self:getTalentLevelRaw(t) == 1 then
-			self.inc_resource_multi.psi = (self.inc_resource_multi.psi or 0) + 1
-			self.inc_resource_multi.life = (self.inc_resource_multi.life or 0) - 0.5
+			self.inc_resource_multi.psi = (self.inc_resource_multi.psi or 0) + 0.5
+			self.inc_resource_multi.life = (self.inc_resource_multi.life or 0) - 0.25
 			self.life_rating = math.ceil(self.life_rating/2)
-			self.psi_rating =  self.psi_rating + 10
+			self.psi_rating =  self.psi_rating + 5
 			self.solipsism_threshold = (self.solipsism_threshold or 0) + 0.2
 			
 			-- Adjust the values onTickEnd for NPCs to make sure these table values are resolved
@@ -44,18 +44,18 @@ newTalent{
 	end,
 	on_unlearn = function(self, t)
 		if not self:knowTalent(t) then
-			self:incMaxPsi(-(self:getWil()-10) * 1)
-			self.max_life = self.max_life + (self:getCon()-10) * 0.5
-			self.inc_resource_multi.psi = self.inc_resource_multi.psi - 1
-			self.inc_resource_multi.life = self.inc_resource_multi.life + 0.5
+			self:incMaxPsi(-(self:getWil()-10) * 0.5)
+			self.max_life = self.max_life + (self:getCon()-10) * 0.25
+			self.inc_resource_multi.psi = self.inc_resource_multi.psi - 0.5
+			self.inc_resource_multi.life = self.inc_resource_multi.life + 0.25
 			self.solipsism_threshold = self.solipsism_threshold - 0.2
 		end
 	end,
 	info = function(self, t)
 		local conversion_ratio = t.getConversionRatio(self, t)
-		return ([[You believe that your mind is the center of everything.  Permanently increases the amount of psi you gain per level by 10 and reduces your life rating (affects life at level up) by 50%% (one time only adjustment).
+		return ([[You believe that your mind is the center of everything.  Permanently increases the amount of psi you gain per level by 5 and reduces your life rating (affects life at level up) by 50%% (one time only adjustment).
 		You also have learned to overcome damage with your mind alone, and convert %d%% of all damage into Psi damage and %d%% of your healing and life regen now recovers Psi instead of life. 
-		The first talent point invested will also increase the amount of Psi you gain from Willpower by 1, but reduce the amount of life you gain from Constitution by 0.5.
+		The first talent point invested will also increase the amount of Psi you gain from Willpower by 0.5, but reduce the amount of life you gain from Constitution by 0.25.
 		The first talent point also increases your solipsism threshold by 20%% (currently %d%%), reducing your global speed by 1%% for each percentage your current Psi falls below this threshold.]]):format(conversion_ratio * 100, conversion_ratio * 100, (self.solipsism_threshold or 0) * 100)
 	end,
 }
@@ -69,31 +69,31 @@ newTalent{
 	getBalanceRatio = function(self, t) return math.min(0.25 + self:getTalentLevel(t) * 0.1, 1) end,
 	on_learn = function(self, t)
 		if self:getTalentLevelRaw(t) == 1 then
-			self.inc_resource_multi.psi = (self.inc_resource_multi.psi or 0) + 1
-			self.inc_resource_multi.life = (self.inc_resource_multi.life or 0) - 0.5
+			self.inc_resource_multi.psi = (self.inc_resource_multi.psi or 0) + 0.5
+			self.inc_resource_multi.life = (self.inc_resource_multi.life or 0) - 0.25
 			self.solipsism_threshold = (self.solipsism_threshold or 0) + 0.1
 			-- Adjust the values onTickEnd for NPCs to make sure these table values are filled out
 			-- If we're not the player, we resetToFull to ensure correct values
 			game:onTickEnd(function()
-				self:incMaxPsi((self:getWil()-10) * 1)
-				self.max_life = self.max_life - (self:getCon()-10) * 0.5
+				self:incMaxPsi((self:getWil()-10) * 0.5)
+				self.max_life = self.max_life - (self:getCon()-10) * 0.25
 				if self ~= game.player then self:resetToFull() end
 			end)
 		end
 	end,
 	on_unlearn = function(self, t)
 		if not self:knowTalent(t) then
-			self:incMaxPsi(-(self:getWil()-10) * 1)
-			self.max_life = self.max_life + (self:getCon()-10) * 0.5
-			self.inc_resource_multi.psi = self.inc_resource_multi.psi - 1
-			self.inc_resource_multi.life = self.inc_resource_multi.life + 0.5
+			self:incMaxPsi(-(self:getWil()-10) * 0.5)
+			self.max_life = self.max_life + (self:getCon()-10) * 0.25
+			self.inc_resource_multi.psi = self.inc_resource_multi.psi - 0.5
+			self.inc_resource_multi.life = self.inc_resource_multi.life + 0.25
 			self.solipsism_threshold = self.solipsism_threshold - 0.1
 		end
 	end,
 	info = function(self, t)
 		local ratio = t.getBalanceRatio(self, t) * 100
 		return ([[You now substitute %d%% of your Mental Save for %d%% of your Physical and Spell Saves throws (so at 100%%, you would effectively use mental save for all saving throw rolls).
-		The first talent point invested will also increase the amount of Psi you gain from Willpower by 1, but reduce the amount of life you gain from Constitution by 0.5.
+		The first talent point invested will also increase the amount of Psi you gain from Willpower by 0.5, but reduce the amount of life you gain from Constitution by 0.25.
 		Learning this talent also increases your solipsism threshold by 10%% (currently %d%%).]]):format(ratio, ratio, (self.solipsism_threshold or 0) * 100)
 	end,
 }
@@ -107,31 +107,31 @@ newTalent{
 	getClarityThreshold = function(self, t) return math.max(0.95 - self:getTalentLevel(t) * 0.06, 0.5) end,
 	on_learn = function(self, t)
 		if self:getTalentLevelRaw(t) == 1 then
-			self.inc_resource_multi.psi = (self.inc_resource_multi.psi or 0) + 1
-			self.inc_resource_multi.life = (self.inc_resource_multi.life or 0) - 0.5
+			self.inc_resource_multi.psi = (self.inc_resource_multi.psi or 0) + 0.5
+			self.inc_resource_multi.life = (self.inc_resource_multi.life or 0) - 0.25
 			self.solipsism_threshold = (self.solipsism_threshold or 0) + 0.1
 			-- Adjust the values onTickEnd for NPCs to make sure these table values are resolved
 			-- If we're not the player, we resetToFull to ensure correct values
 			game:onTickEnd(function()
-				self:incMaxPsi((self:getWil()-10) * 1)
-				self.max_life = self.max_life - (self:getCon()-10) * 0.5
+				self:incMaxPsi((self:getWil()-10) * 0.5)
+				self.max_life = self.max_life - (self:getCon()-10) * 0.25
 				if self ~= game.player then self:resetToFull() end
 			end)
 		end
 	end,
 	on_unlearn = function(self, t)
 		if not self:knowTalent(t) then
-			self:incMaxPsi(-(self:getWil()-10) * 1)
-			self.max_life = self.max_life + (self:getCon()-10) * 0.5
-			self.inc_resource_multi.psi = self.inc_resource_multi.psi - 1
-			self.inc_resource_multi.life = self.inc_resource_multi.life + 0.5
+			self:incMaxPsi(-(self:getWil()-10) * 0.5)
+			self.max_life = self.max_life + (self:getCon()-10) * 0.25
+			self.inc_resource_multi.psi = self.inc_resource_multi.psi - 0.5
+			self.inc_resource_multi.life = self.inc_resource_multi.life + 0.25
 			self.solipsism_threshold = self.solipsism_threshold - 0.1
 		end
 	end,
 	info = function(self, t)
 		local threshold = t.getClarityThreshold(self, t)
 		return ([[For every percent that your Psi pool exceeds %d%%, you gain 1%% global speed (up to a maximum of 50%%).
-		The first talent point invested will also increase the amount of Psi you gain from Willpower by 1, but reduce the amount of life you gain from Constitution by 0.5.
+		The first talent point invested will also increase the amount of Psi you gain from Willpower by 0.5, but reduce the amount of life you gain from Constitution by 0.25.
 		The first talent point also increases your solipsism threshold by 10%% (currently %d%%).]]):format(threshold * 100, (self.solipsism_threshold or 0) * 100)
 	end,
 }
@@ -145,24 +145,24 @@ newTalent{
 	getSavePercentage = function(self, t) return math.min(0.25 + self:getTalentLevel(t) * 0.1, 1) end,
 	on_learn = function(self, t)
 		if self:getTalentLevelRaw(t) == 1 then
-			self.inc_resource_multi.psi = (self.inc_resource_multi.psi or 0) + 1
-			self.inc_resource_multi.life = (self.inc_resource_multi.life or 0) - 0.5
+			self.inc_resource_multi.psi = (self.inc_resource_multi.psi or 0) + 0.5
+			self.inc_resource_multi.life = (self.inc_resource_multi.life or 0) - 0.25
 			self.solipsism_threshold = (self.solipsism_threshold or 0) + 0.1
 			-- Adjust the values onTickEnd for NPCs to make sure these table values are resolved
 			-- If we're not the player, we resetToFull to ensure correct values
 			game:onTickEnd(function()
-				self:incMaxPsi((self:getWil()-10) * 1)
-				self.max_life = self.max_life - (self:getCon()-10) * 0.5
+				self:incMaxPsi((self:getWil()-10) * 0.5)
+				self.max_life = self.max_life - (self:getCon()-10) * 0.25
 				if self ~= game.player then self:resetToFull() end
 			end)
 		end
 	end,
 	on_unlearn = function(self, t)
 		if not self:knowTalent(t) then
-			self:incMaxPsi(-(self:getWil()-10) * 1)
-			self.max_life = self.max_life + (self:getCon()-10) * 0.5
-			self.inc_resource_multi.psi = self.inc_resource_multi.psi - 1
-			self.inc_resource_multi.life = self.inc_resource_multi.life + 0.5
+			self:incMaxPsi(-(self:getWil()-10) * 0.5)
+			self.max_life = self.max_life + (self:getCon()-10) * 0.25
+			self.inc_resource_multi.psi = self.inc_resource_multi.psi - 0.5
+			self.inc_resource_multi.life = self.inc_resource_multi.life + 0.25
 			self.solipsism_threshold = self.solipsism_threshold - 0.1
 		end
 	end,
@@ -179,7 +179,7 @@ newTalent{
 	info = function(self, t)
 		local save_percentage = t.getSavePercentage(self, t)
 		return ([[Each time you take damage, you roll %d%% of your mental save against it.  If the saving throw succeeds, the damage will be reduced by 50%%.
-		The first talent point invested will also increase the amount of Psi you gain from Willpower by 1, but reduce the amount of life you gain from Constitution by 0.5.
+		The first talent point invested will also increase the amount of Psi you gain from Willpower by 0.5, but reduce the amount of life you gain from Constitution by 0.25.
 		The first talent point also increases your solipsism threshold by 10%% (currently %d%%).]]):format(save_percentage * 100, (self.solipsism_threshold or 0) * 100)
 	end,
 }
