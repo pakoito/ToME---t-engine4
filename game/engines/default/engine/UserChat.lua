@@ -111,7 +111,7 @@ function _M:event(e)
 		elseif e.donator == "recurring" then color = colors.ROYAL_BLUE end
 
 		self.channels[e.channel] = self.channels[e.channel] or {users={}, log={}}
-		if profile.auth and profile.auth.name then
+		if profile and profile.auth and profile.auth.name then
 			local tokens = e.msg:split(" ")
 			for i = 1, #tokens do
 				if tokens[i]:lower() == profile.auth.name:lower() then tokens[i] = "#YELLOW##{underline}#"..tokens[i].."#{normal}##LAST#" end
