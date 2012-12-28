@@ -114,7 +114,7 @@ function _M:event(e)
 		if profile.auth and profile.auth.name then
 			local tokens = e.msg:split(" ")
 			for i = 1, #tokens do
-				if tokens[i]:lower() == profile.auth.name:lower() then tokens[i] = "#YELLOW#"..tokens[i].."#LAST#" end
+				if tokens[i]:lower() == profile.auth.name:lower() then tokens[i] = "#YELLOW##{underline}#"..tokens[i].."#{normal}##LAST#" end
 			end
 			e.msg = table.concat(tokens, " ")
 		end
