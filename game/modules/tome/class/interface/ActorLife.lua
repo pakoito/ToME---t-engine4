@@ -40,7 +40,7 @@ function _M:takeHit(value, src, death_note)
 		end
 	end
 	if self:hasEffect(self.EFF_PRECOGNITION) then
-		game.log("%s dies during his precognition, ending the effect!", self.name:capitalize())
+		game.log("%s dies during precognition, ending the effect!", self.name:capitalize())
 		self:removeEffect(self.EFF_PRECOGNITION)
 		return false, 0
 	end

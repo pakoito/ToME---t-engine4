@@ -74,7 +74,7 @@ newEntity{ base = "BASE_NPC_WILD_DRAKE",
 
 newEntity{ base = "BASE_NPC_WILD_DRAKE",
 	name = "blinkwyrm", color=colors.YELLOW, display="D",
-	desc = [[A shifting, writhing, snake-like dragon, blinking in and out of existance, just waiting for you to turn your back.]],
+	desc = [[A shifting, writhing, snake-like dragon, blinking in and out of existence, just waiting for you to turn your back.]],
 	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/dragon_wild_blinkwyrm.png", display_h=2, display_y=-1}}},
 	level_range = {40, nil}, exp_worth = 1,
 	rarity = 7,

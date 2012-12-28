@@ -87,7 +87,7 @@ game.zone.on_turn = function()
 
 		world:gainAchievement("EVENT_METEOR", game:getPlayer(true))
 		game:getPlayer(true):attr("meteoric_crash", 1)
-		require("engine.ui.Dialog"):simplePopup("Meteor!", "As you walk you notice a huge rock falling from the sky, it crashes right near you!")
+		require("engine.ui.Dialog"):simplePopup("Meteor!", "As you walk you notice a huge rock falling from the sky. It crashes right near you!")
 	end
 end
 

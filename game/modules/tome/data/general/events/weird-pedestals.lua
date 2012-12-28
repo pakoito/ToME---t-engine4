@@ -94,7 +94,7 @@ for i = 1, 3 do
 							end
 							game.level.map:updateMap(self.pedestal_x, self.pedestal_y)
 							game.level.pedestal_events = (game.level.pedestal_events or 0) + 1
-							game.logSeen(self, "%s soul is absorbed by the pedestal. A glowing orb appears.", self.name:capitalize())
+							game.logSeen(self, "%s's soul is absorbed by the pedestal. A glowing orb appears.", self.name:capitalize())
 
 							if game.level.pedestal_events >= 3 then
 								game.level.pedestal_events = 0
@@ -120,7 +120,7 @@ for i = 1, 3 do
 										game.zone:addEntity(game.level, o, "object")
 										m:addObject(m.INVEN_INVEN, o)
 									end
-									require("engine.ui.Dialog"):simplePopup("Weird Pedestal", "You hear a terrible voice saying 'Their lifes are mine! I am coming!'.")
+									require("engine.ui.Dialog"):simplePopup("Weird Pedestal", "You hear a terrible voice saying 'Their lives are mine! I am coming!'")
 								end
 							end
 						end

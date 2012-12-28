@@ -44,8 +44,8 @@ newEntity{
 
 newEntity{ base = "BASE_NPC_HORROR",
 	name = "worm that walks", color=colors.SANDY_BROWN,
-	desc = [[A bulging rotten robe seems to tear at the seams, with masses of bloated worms spilling from out and around the moving form.  Two arm-like appendages, each made up of overlapping mucous-drenched maggots, grasp tightly around the handles of bile-coated waraxes.
-Each swing drips pestulant fluid before it, and each droplet writhes and wriggles in the air before splashing against the ground.]],
+	desc = [[A bulging rotten robe seems to tear at the seams, with masses of bloated worms spilling out all around the moving form.  Two arm-like appendages, each made up of overlapping mucous-drenched maggots, grasp tightly around the handles of bile-coated waraxes.
+Each swing drips pustulant fluid before it, and each droplet writhes and wriggles in the air before splashing against the ground.]],
 	level_range = {25, nil}, exp_worth = 1,
 	rarity = 5,
 	max_life = resolvers.rngavg(150,170),
@@ -113,7 +113,7 @@ Each swing drips pestulant fluid before it, and each droplet writhes and wriggle
 
 newEntity{ base = "BASE_NPC_HORROR",
 	name = "bloated horror", color=colors.WHITE,
-	desc ="A bulbous humanoid form floats here. Its bald, child-like head is disproportionately large compared to its body, and its skin is pock-marked in nasty red sores.",
+	desc ="A bulbous humanoid form floats here. Its bald, child-like head is disproportionately large compared to its body, and its skin is pock-marked with nasty red sores.",
 	level_range = {10, nil}, exp_worth = 1,
 	rarity = 1,
 	rank = 2,
@@ -544,7 +544,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 newEntity{ base = "BASE_NPC_HORROR",
 	subtype = "eldritch",
 	name = "oozing horror", color=colors.GREEN,
-	desc = "A massive, amorphous blob of green slime crawls on the ground towards you. Eyes, drifting through the viscous mass, scanning for potential prey.",
+	desc = "A massive, amorphous blob of green slime crawls on the ground towards you. Eyes drift through the viscous mass, scanning for potential prey.",
 	level_range = {16, nil}, exp_worth = 1,
 	rarity = 7,
 	rank = 3,

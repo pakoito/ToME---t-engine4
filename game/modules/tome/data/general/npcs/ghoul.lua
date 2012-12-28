@@ -118,7 +118,7 @@ newEntity{ base = "BASE_NPC_GHOUL",
 newEntity{ base = "BASE_NPC_GHOUL", define_as = "RISEN_CORPSE",
 	display = "z", color=colors.GREY, image="npc/undead_ghoul_ghoul.png",
 	name = "risen corpse",
-	desc = [[a body raised through dark magic]],
+	desc = [[A body raised through dark magic.]],
 	exp_worth = 1,
 	combat_armor = 5, combat_def = 3,
 	resolvers.equip{

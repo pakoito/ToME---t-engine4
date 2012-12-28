@@ -114,7 +114,7 @@ newEntity{ base = "BASE_NPC_SNAKE",
 
 newEntity{ base = "BASE_NPC_SNAKE",
 	name = "anaconda", color=colors.YELLOW_GREEN, image="npc/yellow-green-snake.png",
-	desc = [[You recoil in fear as you notice this huge, 10-meter-long snake.  It seeks to crush the life out of you.]],
+	desc = [[You recoil in fear as you notice this gigantic snake.  It seeks to crush the life out of you.]],
 	level_range = {20, nil}, exp_worth = 1,
 	rarity = 5,
 	rank = 3,

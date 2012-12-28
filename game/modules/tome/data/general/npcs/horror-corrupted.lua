@@ -157,7 +157,7 @@ newEntity{ base = "BASE_NPC_CORRUPTED_HORROR",
 
 newEntity{ base = "BASE_NPC_CORRUPTED_HORROR",
 	name = "brecklorn", color=colors.PINK,  -- gloom bat
-	desc = "A giant hairless bat with the face of a Dwarf twisted into a constant scream.  Pestulant sores cover its malformed body, and your heart weakens as it nears.",
+	desc = "A giant hairless bat with the face of a Dwarf twisted into a constant scream.  Pustulant sores cover its malformed body, and your heart weakens as it nears.",
 	level_range = {1, nil}, exp_worth = 1,
 
 	combat = { atk=10, dammod={dex=0.6} },

@@ -54,7 +54,7 @@ newEntity{ base = "TRAP_ALARM",
 	rarity = 3, level_range = {10, 50},
 	color=colors.DARK_UMBER,
 	nb_summon = resolvers.mbonus(3, 2),
-	message = "A alarm rings!",
+	message = "An alarm rings!",
 	triggered = function(self, sx, sy, who)
 		for i = 1, self.nb_summon do
 			-- Find space

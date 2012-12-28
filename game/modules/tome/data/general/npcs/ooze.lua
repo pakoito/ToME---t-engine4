@@ -114,8 +114,8 @@ newEntity{ base = "BASE_NPC_OOZE",
 
 newEntity{ base = "BASE_NPC_OOZE",
 	name = "gelatinous cube", color=colors.BLACK,
-	desc = [["It is a strange, vast gelatinous structure that assumes cubic proportions as it lines all four walls of the corridors it patrols.
-Through its transparent jelly structure you can see treasures it has engulfed, and a few corpses as well. "]],
+	desc = [[It is a strange, vast gelatinous structure that assumes cubic proportions as it lines all four walls of the corridors it patrols.
+Through its transparent jelly structure you can see treasures it has engulfed, and a few corpses as well.]],
 	level_range = {12, nil}, exp_worth = 1,
 	rarity = 3,
 	max_life = resolvers.rngavg(50,100),

@@ -64,7 +64,7 @@ newTalent{
 		return ([[Creates a globe of pure light within a radius of %d that illuminates the area.
 		At level 3, it also blinds all who see it (except the caster) for %d turns.
 		At level 4, it also deals %0.2f light damage.]]):
-		format(radius, turn, dam)
+		format(radius, turn, damDesc(self, DamageType.LIGHT, dam))
 	end,
 }
 

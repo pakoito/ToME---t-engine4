@@ -59,7 +59,7 @@ for i, p in ipairs(list) do
 	local m = mod.class.NPC.new{
 		type = "humanoid", subtype = "shalore", image = "npc/humanoid_shalore_elven_corruptor.png",
 		name = "Cultist",
-		desc = [[An elven cultist, he doesnt seem to mind you.]],
+		desc = [[An elven cultist. He doesn't seem to mind you.]],
 		display = "p", color=colors.ORCHID,
 		faction = "unaligned",
 		combat = { dam=resolvers.rngavg(5,12), atk=2, apr=6, physspeed=2 },
@@ -117,7 +117,7 @@ for i, p in ipairs(list) do
 				game.level.turn_counter = 10 * 210
 				game.level.max_turn_counter = 10 * 210
 				game.level.turn_counter_desc = "Something the cultists are doing is coming. Beware."
-				require("engine.ui.Dialog"):simplePopup("Cultist", "The cultist soul seems to be absorbed by the strange stone he was guarding. You feel like something is about to happen...")
+				require("engine.ui.Dialog"):simplePopup("Cultist", "The cultist's soul seems to be absorbed by the strange stone he was guarding. You feel like something is about to happen...")
 			end
 		end,
 	}

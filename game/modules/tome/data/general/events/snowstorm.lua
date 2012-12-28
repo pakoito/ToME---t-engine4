@@ -45,6 +45,6 @@ game.zone.on_turn = function()
 
 end
 
-require("engine.ui.Dialog"):simplePopup("Snowstorm", "As you walk into the area you notice a huge snowstorm over your head, beware.")
+require("engine.ui.Dialog"):simplePopup("Snowstorm", "As you walk into the area you notice a huge snowstorm over your head. Beware!")
 
 return true

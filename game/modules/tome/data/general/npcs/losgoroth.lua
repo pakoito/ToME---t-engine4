@@ -24,7 +24,7 @@ newEntity{
 	type = "elemental", subtype = "void",
 	blood_color = colors.DARK_GREY,
 	display = "E", color=colors.DARK_GREY,
-	desc = [[Losgoroth are mighty void elementals, native to the void between the stars, they are rarely seen on the planet's surface.]],
+	desc = [[Losgoroth are mighty void elementals, native to the void between the stars. They are rarely seen on a planet's surface.]],
 
 	combat = { dam=resolvers.levelup(resolvers.mbonus(40, 15), 1, 1.2), atk=15, apr=15, dammod={mag=0.8}, damtype=DamageType.ARCANE },
 
@@ -71,7 +71,7 @@ newEntity{ base = "BASE_NPC_LOSGOROTH",
 newEntity{ base = "BASE_NPC_LOSGOROTH",
 	name = "manaworm", color=colors.BLUE,
 	level_range = {2, nil}, exp_worth = 1,
-	desc = [[Manaworms are losgoroth which feed of the mana of arcane users. If they ever come in melee contact with a spellcaster they latch onto him and start draining their mana away.]],
+	desc = [[Manaworms are losgoroth which feed on the mana of arcane users. If they ever come in contact with a spellcaster, they latch on and start draining mana away.]],
 	rarity = 3,
 	max_life = resolvers.rngavg(40,60),
 	movement_speed = 0.7,

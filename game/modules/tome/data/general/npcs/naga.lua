@@ -71,7 +71,7 @@ newEntity{ base = "BASE_NPC_NAGA",
 
 newEntity{ base = "BASE_NPC_NAGA",
 	name = "naga tide huntress", color=colors.RED, image="npc/naga_tide_huntress.png",
-	desc = [[Though the sharp point of an arrow pointed steadily at your head is of concern, more unnerving is the creature that wields it. A slim and lithe woman from the waist up, but a terrifying giant serpent beneath, her tail stretching for several feet behind her. Her eyes turn cold and ice seems to magically condense on the tip of her barbed arrow. Suddenly it is of concern again.]],
+	desc = [[Though the sharp point of an arrow pointed steadily at your head is of concern, more unnerving is the creature that wields it: a slim and lithe woman from the waist up, but a terrifying giant serpent beneath, her tail stretching for several feet behind her. Her eyes turn cold and ice seems to magically condense on the tip of her barbed arrow. Suddenly it is of concern again.]],
 	level_range = {34, nil}, exp_worth = 1,
 	rarity = 4,
 	rank = 3,

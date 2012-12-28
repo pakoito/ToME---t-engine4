@@ -144,7 +144,7 @@ newEntity{ base = "BASE_NPC_ORC_GORBAT",
 
 newEntity{ base = "BASE_NPC_ORC_GORBAT",
 	name = "orc mage-hunter", color=colors.HONEYDEW,
-	desc = [[An orc clad in massive armour, magic seems to die down all around him.]],
+	desc = [[An orc clad in massive armour. Magic seems to die down all around him.]],
 	level_range = {30, nil}, exp_worth = 1,
 	rarity = 4,
 	rank = 3,

@@ -33,7 +33,7 @@ newEntity{ base = "TRAP_COMPLEX",
 	detect_power = resolvers.mbonus(40, 5), disarm_power = resolvers.mbonus(50, 10),
 	rarity = 3, level_range = {1, nil},
 	color = colors.UMBER,
-	message = "@Target@ walks on a trap, there is a loud noise.",
+	message = "@Target@ walks on a trap, and there is a loud noise.",
 	pressure_trap = true,
 	on_added = function(self, level, x, y)
 		local walls = {}
@@ -75,7 +75,7 @@ newEntity{ base = "TRAP_COMPLEX",
 	detect_power = resolvers.mbonus(40, 5), disarm_power = resolvers.mbonus(50, 10),
 	rarity = 3, level_range = {1, nil},
 	color=colors.PURPLE,
-	message = "@Target@ walks on a trap, the beam changes.",
+	message = "@Target@ walks on a trap, and the beam changes.",
 	on_added = function(self, level, x, y)
 		self.x, self.y = x, y
 		self.rad = rng.range(2, 8)
