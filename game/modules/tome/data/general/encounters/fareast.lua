@@ -30,6 +30,7 @@ newEntity{
 		if not x then return end
 
 		local g = game.level.map(x, y, engine.Map.TERRAIN):cloneFull()
+		g:removeAllMOs()
 		g.__nice_tile_base = nil
 		g.name = "Entrance to an underwater cave"
 		g.display='>' g.color_r=colors.AQUAMARINE.r g.color_g=colors.AQUAMARINE.g g.color_b=colors.AQUAMARINE.b g.notice = true
