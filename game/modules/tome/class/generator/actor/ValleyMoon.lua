@@ -84,6 +84,10 @@ function _M:generateOne()
 			else
 				m:setTarget(game.player)
 			end
+			if not m.unique then
+				m.ai_state = m.ai_state or {}
+				m.ai_state.ai_move = "move_dmap"
+			end
 			self.zone:addEntity(self.level, m, "actor", x, y)
 		end
 	end

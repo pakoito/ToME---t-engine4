@@ -185,9 +185,9 @@ function _M:seen_by(who)
 	end
 	if who.ai_state and who.ai_state.target_last_seen then
 		-- Don't believe allies if they saw the target far, far away
-		if core.fov.distance(self.x, self.y, who.ai_state.target_last_seen.x, who.ai_state.target_last_seen.y) > self.sight then return end
+		if who.ai_state.target_last_seen.x and who.ai_state.target_last_seen.y and core.fov.distance(self.x, self.y, who.ai_state.target_last_seen.x, who.ai_state.target_last_seen.y) > self.sight then return end
 		-- Don't believe allies if they saw the target over 10 turns ago
-		if (game.turn - who.ai_state.target_last_seen.turn) / (game.energy_to_act / game.energy_per_tick) > 10 then return end 
+		if (game.turn - (who.ai_state.target_last_seen.turn or game.turn)) / (game.energy_to_act / game.energy_per_tick) > 10 then return end 
 	end
 	-- And only trust the ally if they can actually see the target
 	if not who:canSee(who.ai_target.actor) then return end
