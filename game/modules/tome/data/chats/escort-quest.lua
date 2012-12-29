@@ -195,12 +195,12 @@ local reward_types = {
 			[Talents.T_MIND_SEAR] = 1,
 		},
 		stats = {
-			[Stats.STAT_STR] = 1,
-			[Stats.STAT_DEX] = 1,
-			[Stats.STAT_MAG] = 1,
-			[Stats.STAT_WIL] = 1,
-			[Stats.STAT_CUN] = 1,
-			[Stats.STAT_CON] = 1,
+			[Stats.STAT_STR] = 2,
+			[Stats.STAT_DEX] = 2,
+			[Stats.STAT_MAG] = 2,
+			[Stats.STAT_WIL] = 2,
+			[Stats.STAT_CUN] = 2,
+			[Stats.STAT_CON] = 2,
 		},
 	},
 }
