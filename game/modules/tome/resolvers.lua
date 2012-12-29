@@ -417,7 +417,7 @@ function resolvers.calc.moddable_tile(t, e)
 	elseif slot == "bow" then r = {"%s_hand_01"}
 	elseif slot == "sling" then r = {"%s_hand_02"}
 	elseif slot == "dagger" then r = {"%s_hand_03"}
-	elseif slot == "mindstar" then r = {{"mindstar_mossy_%s_01",true},{"mindstar_vines_%s_01",true},{"mindstar_thorn_%s_01",true},{"mindstar_pusling_%s_01",true},{"mindstar_living_%s_01",true},}
+	elseif slot == "mindstar" then r = {{"mindstar_mossy_%s_01",true},{"mindstar_vines_%s_01",true},{"mindstar_thorn_%s_01",true},{"mindstar_pulsing_%s_01",true},{"mindstar_living_%s_01",true},}
 	elseif slot == "helm" then r = {"head_05","head_06","head_08","head_10","head_09",}
 	elseif slot == "leather_cap" then r = {"head_03"}
 	elseif slot == "mummy_wrapping" then r = {{"special/mummy_wrappings",true}}
