@@ -68,6 +68,8 @@ function _M:use(item)
 		game.player.inc_damage.all = 100000
 		game.player:incStat("str", 100) game.player:incStat("dex", 100) game.player:incStat("mag", 100) game.player:incStat("wil", 100) game.player:incStat("cun", 100) game.player:incStat("con", 100)
 	elseif act == "semigodmode" then
+		game.player.invulnerable = 0
+		game.player.no_breath = 0
 		game.player:forceLevelup(50)
 		game.player.life_regen = 2000
 		game.player.esp_all = 1

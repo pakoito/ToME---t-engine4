@@ -88,7 +88,7 @@ on_start_dream = function(self, who)
 	game.level.default_down.y = who.y
 	
 	-- move to dream
-	game:changeLevel(2)
+	game:changeLevel(2, nil, {direct_switch=true})
 	game:playSound("ambient/forest/wind1")
 	
 	-- make yourself immortal
@@ -131,7 +131,7 @@ on_caravan_destroyed_chat_over = function(self, who)
 	who:setQuestStatus("keepsake", engine.Quest.COMPLETED, "caravan-destroyed")
 	
 	-- return to the meadow and create the cave exit
-	game:changeLevel(1)
+	game:changeLevel(1, nil, {direct_switch=true})
 	local g = mod.class.Grid.new{
 		show_tooltip=true, always_remember = true,
 		type="floor", subtype="grass",
