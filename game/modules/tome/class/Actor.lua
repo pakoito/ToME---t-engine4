@@ -1579,6 +1579,9 @@ function _M:onTakeHit(value, src)
 	if self:attr("invulnerable") then
 		return 0
 	end
+	if self:attr("invulnerable_others") and src ~= self then
+		return 0
+	end
 
 	if self:attr("cancel_damage_chance") and rng.percent(self.cancel_damage_chance) then
 		return 0

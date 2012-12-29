@@ -47,6 +47,8 @@ return {
 		},
 	},
 
+	effects = {"EFF_EIDOLON_PROTECT"},
+
 	post_process = function(level)
 		if level.level == 1 then
 			local Map = require "engine.Map"
@@ -106,6 +108,7 @@ return {
 			local acts = {}
 			for act, _ in pairs(game.party.members) do
 				if not act.dead then
+					act:removeEffect(act.EFF_EIDOLON_PROTECT, true, true)
 					acts[#acts+1] = act
 					if oldlevel:hasEntity(act) then oldlevel:removeEntity(act) end
 				end

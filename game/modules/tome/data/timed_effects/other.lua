@@ -2156,3 +2156,19 @@ newEffect{
 		game:delayedLogDamage(self, self, val, ("%s%d %s#LAST#"):format(DamageType:get(DamageType.FIRE).text_color or "#aaaaaa#", math.ceil(val), DamageType:get(DamageType.FIRE).name), false)
 	end,
 }
+
+newEffect{
+	name = "EIDOLON_PROTECT", image = "shockbolt/npc/unknown_unknown_the_eidolon.png",
+	desc = "Protected by the Eidolon",
+	long_desc = function(self, eff) return "The target is protected by the Eidolon, no creature may harm it (except self-harm)." end,
+	decrease = 0, no_remove = true,
+	type = "other",
+	subtype = { eidolon=true },
+	status = "neutral",
+	parameters = {},
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "invulnerable_others", 1)
+	end,
+	deactivate = function(self, eff)
+	end,
+}
