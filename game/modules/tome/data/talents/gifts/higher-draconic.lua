@@ -129,7 +129,7 @@ newTalent{
 		local effect = t.getEffect(self, t)
 		return ([[You breathe insidious poison in a frontal cone of radius %d. Any target caught in the area will take %0.2f nature damage each turn for 6 turns.
 		The poison also reduces the healing of enemies poisoned by %d%% while it is in effect.
-		The damage will increase with your Strength.
+		The damage will increase with your Strength, and the critical chance is based on your Mental crit rate.
 		Each point in Venomous Breath also increases your nature resistance by 2%%.]]):format(self:getTalentRadius(t), damDesc(self, DamageType.NATURE, t.getDamage(self,t)/6), effect)
 	end,
 }

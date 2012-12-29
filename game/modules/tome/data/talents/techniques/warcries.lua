@@ -61,7 +61,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Take a deep breath to recover %d%% stamina.]]):
+		return ([[Take a deep breath to recover %d%% of your stamina.]]):
 		format(20 + self:getTalentLevel(t) * 7)
 	end,
 }

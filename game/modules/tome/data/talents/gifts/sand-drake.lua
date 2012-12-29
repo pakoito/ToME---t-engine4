@@ -162,7 +162,7 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local duration = t.getDuration(self, t)
 		return ([[You breathe sand in a frontal cone of radius %d. Any target caught in the area will take %0.2f physical damage, and be blinded for %d turns.
-		The damage will increase with your Strength.
+		The damage will increase with your Strength, and the critical chance is based on your Mental crit rate.
 		Each point in sand drake talents also increases your physical resistance by 0.5%%.]]):format(self:getTalentRadius(t), damDesc(self, DamageType.PHYSICAL, damage), duration)
 	end,
 }

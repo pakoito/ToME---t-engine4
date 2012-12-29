@@ -32,7 +32,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local res = t.getRes(self, t)
-		return ([[Your skin becomes more resilient to damage. Increases resistance to all damage by %d%%]]):
+		return ([[Your skin becomes more resilient to damage. Increases resistance to all damage by %d%%.]]):
 		format(res)
 	end,
 }

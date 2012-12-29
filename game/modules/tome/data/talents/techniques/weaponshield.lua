@@ -130,7 +130,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target with your weapon doing %d%% and two shield strikes doing %d%% damage, trying to overpower your target.
+		return ([[Hits the target with your weapon doing %d%% damage and two shield strikes doing %d%% damage, trying to overpower your target.
 		If the last attack hits, the target is knocked back. The chance for knockback increases with your Accuracy.]])
 		:format(100 * self:combatTalentWeaponDamage(t, 0.8, 1.3), 100 * self:combatTalentWeaponDamage(t, 0.8, 1.3, self:getTalentLevel(self.T_SHIELD_EXPERTISE)))
 	end,
@@ -265,7 +265,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Let all your foes pile up on your shield, then put all your strength in one mighty thrust and repel them all away %d grids.
 		In addition, all creature knocked back will also be dazed for %d turns.
-		The distance increases with your talent level, and the daze with Strength.]]):format(math.floor(2 + self:getTalentLevel(t)), 3 + self:getStr(8))
+		The distance increases with your talent level, and the daze with your Strength.]]):format(math.floor(2 + self:getTalentLevel(t)), 3 + self:getStr(8))
 	end,
 }
 

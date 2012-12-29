@@ -117,7 +117,7 @@ newTalent{
 		local cordur = t.getCorrodeDur(self, t)
 		local atk = t.getAtk(self, t)
 		local radius = 2 + self:getTalentLevel(t)/2
-		return ([[Exhale a mist of lingering acid, dealing %0.2f acid damage in a radius of %d each turn for %d turns.
+		return ([[Exhale a mist of lingering acid, dealing %0.2f acid damage that can critical in a radius of %d each turn for %d turns.
 		Enemies in this mist will be corroded for %d turns, lowering their Accuracy, their Armour and their Defense by %d.
 		The damage and duration will increase with your Mindpower, and the radius will increase with talent level.
 		Each point in acid drake talents also increases your acid resistance by 1%%.]]):format(damDesc(self, DamageType.ACID, damage), radius, duration, cordur, atk)
@@ -187,7 +187,7 @@ newTalent{
 	info = function(self, t)
 		return ([[You breathe acid in a frontal cone of radius %d. Any target caught in the area will take %0.2f acid damage. 
 		Enemies caught in the acid have a 25%% chance of their weapons becoming useless for three turns.
-		The damage will increase with your Strength.
+		The damage will increase with your Strength, and the critical chance is based on your Mental crit rate.
 		Each point in acid drake talents also increases your acid resistance by 1%%.]]):format(self:getTalentRadius(t), damDesc(self, DamageType.ACID, self:combatTalentStatDamage(t, "str", 30, 420)))
 	end,
 }

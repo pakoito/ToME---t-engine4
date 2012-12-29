@@ -255,19 +255,23 @@ uberTalent{
 		chat:invoke()
 	end,
 	info = function(self, t)
-		return ([[Learn a new talent category from one of these at 0.9 mastery, unlocked:
+		return ([[Learn a new talent category from one of the below at 0.9 mastery, unlocked. Group 1 categories are available to anyone; Group 2 are available only to people without any spells or runes, and Group 3 are not available to followers of Zigur.
+		GROUP 1:
 		- Technique / Conditioning
+		- Cunning / Survival
+		GROUP 2:
 		- Technique / Mobility
 		- Technique / Field Control
 		- Wild Gift / Call of the Wild
 		- Wild Gift / Mindstar Mastery
+		- Psionic / Dreaming
+		GROUP 3:
 		- Spell / Divination
 		- Spell / Staff Combat
 		- Spell / Stone Alchemy
-		- Cunning / Survival
 		- Celestial / Chants
 		- Celestial / Light
-		Some will not be available, depending on your status toward magic.]])
+		- Chronomancy / Chronomancy]])
 		:format()
 	end,
 }

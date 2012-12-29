@@ -36,7 +36,7 @@ newTalent{
 	require = techs_dex_req2,
 	info = function(self, t)
 		return ([[You have learned to block incoming blows with your weapons.  When dual wielding, your defense is increased by %d.
-		Defense scales with Dexterity]]):format(4 + (self:getTalentLevel(t) * self:getDex()) / 12)
+		The Defense bonus scales with your Dexterity.]]):format(4 + (self:getTalentLevel(t) * self:getDex()) / 12)
 	end,
 }
 
@@ -278,7 +278,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Spin around, damaging all targets around you with both weapons for %d%%.]]):format(100 * self:combatTalentWeaponDamage(t, 1.2, 1.9))
+		return ([[Spin around, damaging all targets around you with both weapons for %d%% weapon damage.]]):format(100 * self:combatTalentWeaponDamage(t, 1.2, 1.9))
 	end,
 }
 

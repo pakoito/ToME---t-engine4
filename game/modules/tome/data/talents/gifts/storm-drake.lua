@@ -214,7 +214,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		return ([[You breathe lightning in a frontal cone of radius %d. Any target caught in the area will take %0.2f to %0.2f lightning damage, and can be dazed for 3 turns.
-		The damage will increase with your Strength.
+		The damage will increase with your Strength, and the critical chance is based on your Mental crit rate.
 		Each point in storm drake talents also increases your lightning resistance by 1%%.]]):format(
 			self:getTalentRadius(t),
 			damDesc(self, DamageType.LIGHTNING, damage / 3),

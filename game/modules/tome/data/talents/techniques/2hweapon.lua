@@ -93,7 +93,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Enters an aggressive battle stance, increasing Accuracy by %d and Physical Power by %d, at the cost of -10 Defense and -10 Armour.
+		return ([[You enter an aggressive battle stance, increasing Accuracy by %d and Physical Power by %d, at the cost of -10 Defense and -10 Armour.
 		While berserking, you are nearly unstoppable, granting you %d%% stun and pinning resistance.
 		The Accuracy bonus increases with your Dexterity, and the Physical Power bonus with your Strength.]]):
 		format(
@@ -367,7 +367,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Enter a blood frenzy, draining stamina quickly (-2 stamina/turn). Each time you kill a foe while in the blood frenzy, you gain a cumulative bonus to Physical Power of %d.
-		Each turn, the bonus decreases by 2.]]):format(2 * self:getTalentLevel(t))
+		Each turn, this bonus decreases by 2.]]):format(2 * self:getTalentLevel(t))
 	end,
 }
 

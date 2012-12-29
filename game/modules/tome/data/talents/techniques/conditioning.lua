@@ -36,7 +36,7 @@ newTalent{
 		local healmod = t.getHealMod(self, t)
 		local duration = t.getDuration(self, t)
 		return ([[You recover faster from poisons, diseases and wounds, reducing the duration of all such effects by %d%%.  Additionally, you gain %0.2f life regen and %d%% healing modifier for %d turns when your life drops below 50%%.
-		The healing modifier and life regen will scale with your Constitution stat.]]):
+		The healing modifier and life regen will scale with your Constitution.]]):
 		format(wounds, regen, healmod, duration)
 	end,
 }

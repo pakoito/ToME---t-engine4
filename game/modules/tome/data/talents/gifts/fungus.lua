@@ -81,7 +81,8 @@ newTalent{
 		local turn = t.getTurn(self, t)
 		return ([[Your fungus can reach into the primordial ages of the world, granting you ancient instincts.
 		Each time a regeneration effect is used on you, you gain %d%% of a turn.
-		Also, regeneration effects on you will decrease your equilibrium by %d each turn.]]):
+		Also, regeneration effects on you will decrease your equilibrium by %d each turn.
+		The turn gain increases with your Mindpower.]]):
 		format(turn, eq)
 	end,
 }

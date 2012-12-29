@@ -84,7 +84,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local spt = t.shots_per_turn(self, t)
-		return ([[Reload your quiver or shot pouch at the rate of %d shot%s per turn (depends of the ammo used).]]):format(spt, (spt > 1 and "s") or "")
+		return ([[Reload your quiver or shot pouch at the rate of %d shot%s per turn (depends on the ammo used).]]):format(spt, (spt > 1 and "s") or "")
 	end,
 }
 

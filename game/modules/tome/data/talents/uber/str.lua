@@ -173,7 +173,7 @@ uberTalent{
 	end,
 	info = function(self, t)
 		return ([[You sided with Slasul and helped him vanquish Ukllmswwik. You are now able to breathe underwater with ease.
-		You also learnt to use tridents and other exotic weapons easily (gains 5 levels of Exotic Weapon Mastery), and can Spit Poison as nagas do.]])
+		You also learnt to use tridents and other exotic weapons easily (gains 5 levels of Exotic Weapon Mastery), and can Spit Poison as nagas do. In addition, should Slasul still live, he may have a further reward for you as thanks...]])
 		:format()
 	end,
 }

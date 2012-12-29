@@ -175,7 +175,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[You breathe ice in a frontal cone of radius %d. Any target caught in the area will take %0.2f cold damage, and has a 25%% to be frozen for a few turns (higher rank enemies will be frozen for a shorter time).
-		The damage will increase with your Strength.
+		The damage will increase with your Strength, and the critical chance is based on your Mental crit rate.
 		Each point in cold drake talents also increases your cold resistance by 1%%.]]):format(self:getTalentRadius(t), damDesc(self, DamageType.COLD, self:combatTalentStatDamage(t, "str", 30, 430)))
 	end,
 }

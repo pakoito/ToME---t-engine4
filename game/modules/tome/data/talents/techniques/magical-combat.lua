@@ -76,7 +76,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Allows you to use a melee weapon to focus your spells, granting %d%% chance per melee attack to deliver a Flame, Lightning or Earthen Missiles spell as a free action on the target.
+		return ([[Allows you to use a melee weapon to focus your spells, granting a %d%% chance per melee attack to deliver a Flame, Lightning or Earthen Missiles spell as a free action on the target.
 		When using two weapons, the chance is halved for each weapon.
 		Delivering the spell this way will not trigger a spell cooldown, but only works if the spell is not cooling down.
 		The chance increases with your Cunning.]]):

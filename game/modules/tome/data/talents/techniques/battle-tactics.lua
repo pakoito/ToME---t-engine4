@@ -125,7 +125,7 @@ newTalent{
 	info = function(self, t)
 		local drain = t.getStaminaDrain(self, t)
 		return ([[Take a defensive stance to resist the onslaught of your foes.
-		For each 10%% of your health below maximum you are currently at,, you gain 5%% all damage resistance and all damage resistance cap.
+		For each 10%% of your health below maximum you are currently at, you gain 5%% all damage resistance and all damage resistance cap.
 		This consumes stamina rapidly (%d stamina/turn).]]):
 		format(drain)
 	end,

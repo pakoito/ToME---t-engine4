@@ -140,7 +140,7 @@ newTalent{
 		local radius = self:getTalentRadius(t)
 		local duration = t.getDuration(self, t)
 		return ([[Spit a cloud of flames, doing %0.2f fire damage in a radius of %d each turn for %d turns.
-		The damage will increase with your Willpower.
+		The damage will increase with your Willpower, and can critical.
 		Each point in fire drake talents also increases your fire resistance by 1%%.]]):format(damDesc(self, DamageType.FIRE, dam), radius, duration)
 	end,
 }
@@ -175,7 +175,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[You breathe fire in a frontal cone of radius %d. Any target caught in the area will take %0.2f fire damage over 3 turns.
-		The damage will increase with your Strength.
+		The damage will increase with your Strength, and the critical chance is based on your Mental crit rate.
 		Each point in fire drake talents also increases your fire resistance by 1%%.]]):format(self:getTalentRadius(t), damDesc(self, DamageType.FIRE, self:combatTalentStatDamage(t, "str", 30, 550)))
 	end,
 }

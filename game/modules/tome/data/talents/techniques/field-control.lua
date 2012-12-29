@@ -106,7 +106,7 @@ newTalent{
 	info = function(self, t)
 		return ([[A mighty kick that pushes your target away %d grids.
 		If another creature is in the way, it will also be pushed away.
-		Knockback chance increase with your Accuracy or your Physical, whichever is greater.]]):format(math.floor(2 + self:getTalentLevel(t)))
+		The knockback chance increases with your Accuracy or your Physical Power, whichever is greater.]]):format(math.floor(2 + self:getTalentLevel(t)))
 	end,
 }
 
