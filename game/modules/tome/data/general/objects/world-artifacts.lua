@@ -3959,7 +3959,8 @@ newEntity{ base = "BASE_GAUNTLETS",
 				end
 			end, nil, {type="slime"})
 			game:playSoundNear(who, "talents/breath")
-			end
+			return {id=true, used=true}
+		end
 		end
 
 		who:onWear(self, true)
