@@ -1011,7 +1011,7 @@ newEntity{ base="BASE_NPC_HORROR", define_as = "ANIMATED_BLADE",
 	end,
 
 	on_act = function(self)
-		if self.summoner:attr("dead") then
+		if self.summoner and self.summoner:attr("dead") then
 			self:die()
 			game.logSeen(self, "#AQUAMARINE#With the horror's death the blade clatters to the ground!")
 		end
@@ -1070,7 +1070,7 @@ newEntity{ base="BASE_NPC_HORROR", define_as = "DISTORTED_BLADE",
 	end,
 
 	on_act = function(self)
-		if self.summoner:attr("dead") then
+		if self.summoner and self.summoner:attr("dead") then
 			self:die()
 			game.logSeen(self, "#AQUAMARINE#With the horror's death the chaotic blade clatters to the ground!")
 		end

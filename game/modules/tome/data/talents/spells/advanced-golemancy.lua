@@ -21,7 +21,11 @@ local Chat = require "engine.Chat"
 newTalent{
 	name = "Life Tap", short_name = "GOLEMANCY_LIFE_TAP",
 	type = {"spell/advanced-golemancy", 1},
-	require = spells_req_high1,
+	require = {
+		special = { desc="Having an Alchemist Golem", fct=function(self, t) return self.alchemy_golem end},
+		stat = { mag=function(level) return 22 + (level-1) * 2 end },
+		level = function(level) return 10 + (level-1)  end,
+	},
 	points = 5,
 	mana = 25,
 	cooldown = 12,
