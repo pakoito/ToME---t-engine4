@@ -136,6 +136,7 @@ function _M:event(e)
 		if type(game) == "table" and game.logChat then
 			game.logChat("#GOLD#<Whisper from %s> %s", e.name, e.msg)
 		end
+		e.channel = self.cur_channel
 	elseif e.se == "Achievement" then
 		e.msg = e.msg:removeColorCodes()
 		local color = colors.WHITE
@@ -253,6 +254,7 @@ function _M:whisper(to, msg)
 
 	self:addMessage("whisper", self.cur_channel, to, to, "#GOLD#<whisper to "..to.."> #LAST#"..msg)
 	if type(game) == "table" and game.logChat then game.logChat("#GOLD#<Whisper to %s> %s", to, msg) end
+	for fct, _ in pairs(self.on_event) do fct{channel=self.cur_channel, se="JustUpdate"} end
 end
 
 function _M:reportUser(to, msg)
