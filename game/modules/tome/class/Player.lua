@@ -975,6 +975,7 @@ function _M:doDrop(inven, item, on_done, nb)
 			if not ret then
 				local o = self:getInven(inven) and self:getInven(inven)[item]
 				if o and not o.plot then
+					if o:check("on_drop", self) then return end
 					local o = self:removeObject(inven, item, true)
 					game.logPlayer(self, "You destroy %s.", o:getName{do_colour=true, do_count=true})
 					self:sortInven()
