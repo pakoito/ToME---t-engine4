@@ -183,7 +183,7 @@ function _M:seen_by(who)
 		end
 		return
 	end
-	if who.ai_state and who.ai_state.target_last_seen then
+	if who.ai_state and who.ai_state.target_last_seen and type(who.ai_state.target_last_seen) == "table" then
 		-- Don't believe allies if they saw the target far, far away
 		if who.ai_state.target_last_seen.x and who.ai_state.target_last_seen.y and core.fov.distance(self.x, self.y, who.ai_state.target_last_seen.x, who.ai_state.target_last_seen.y) > self.sight then return end
 		-- Don't believe allies if they saw the target over 10 turns ago
