@@ -39,7 +39,7 @@ uberTalent{
 	name = "Bloodspring",
 	mode = "passive",
 	cooldown = 12,
-	require = { special={desc="Let Melinda be sacrificed", fct=function(self) return game.state.birth.ignore_prodigies_special_reqs or (self:hasQuest("kryl-feijan-escape") and self:hasQuest("kryl-feijan-escape"):isStatus(engine.Quest.FAILED)) end} },
+	require = { special={desc="Have let Melinda be sacrificed", fct=function(self) return game.state.birth.ignore_prodigies_special_reqs or (self:hasQuest("kryl-feijan-escape") and self:hasQuest("kryl-feijan-escape"):isStatus(engine.Quest.FAILED)) end} },
 	trigger = function(self, t)
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
@@ -80,7 +80,7 @@ uberTalent{
 	cooldown = 20,
 	sustain_stamina = 10,
 	tactical = { CLOSEIN = 2, ESCAPE = 2 },
-	require = { special={desc="Know at least 20 levels of stamina using talents", fct=function(self) return knowRessource(self, "stamina", 20) end} },
+	require = { special={desc="Know at least 20 levels of stamina-using talents", fct=function(self) return knowRessource(self, "stamina", 20) end} },
 	activate = function(self, t)
 		local ret = {}
 		self:talentTemporaryValue(ret, "move_stamina_instead_of_energy", 20)
@@ -98,7 +98,7 @@ uberTalent{
 uberTalent{
 	name = "Armour of Shadows",
 	mode = "passive",
-	require = { special={desc="Dealt over 50000 darkness damage", fct=function(self) return
+	require = { special={desc="Have dealt over 50000 darkness damage", fct=function(self) return
 		self.damage_log and (
 			(self.damage_log[DamageType.DARKNESS] and self.damage_log[DamageType.DARKNESS] >= 50000)
 		)
@@ -131,7 +131,7 @@ uberTalent{
 
 uberTalent{
 	name = "Fungal Blood",
-	require = { special={desc="Be able to use infusions.", fct=function(self) return not self.inscription_restrictions or self.inscription_restrictions['inscriptions/infusions'] end} },
+	require = { special={desc="Be able to use infusions", fct=function(self) return not self.inscription_restrictions or self.inscription_restrictions['inscriptions/infusions'] end} },
 	tactical = { HEAL = function(self) return not self:hasEffect(self.EFF_FUNGAL_BLOOD) and 0 or math.ceil(self:hasEffect(self.EFF_FUNGAL_BLOOD).power / 150) end },
 	on_pre_use = function(self, t) return self:hasEffect(self.EFF_FUNGAL_BLOOD) and self:hasEffect(self.EFF_FUNGAL_BLOOD).power > 0 and not self:attr("undead") end,
 	trigger = function(self, t)
@@ -156,7 +156,7 @@ uberTalent{
 uberTalent{
 	name = "Corrupted Shell",
 	mode = "passive",
-	require = { special={desc="Received at least 50000 blight damage and destroyed Zigur with the Grand Corruptor.", fct=function(self) return
+	require = { special={desc="Have received at least 50000 blight damage and destroyed Zigur with the Grand Corruptor.", fct=function(self) return
 		(self.damage_intake_log and self.damage_intake_log[DamageType.BLIGHT] and self.damage_intake_log[DamageType.BLIGHT] >= 50000) and
 		(game.state.birth.ignore_prodigies_special_reqs or (
 			self:hasQuest("anti-antimagic") and 

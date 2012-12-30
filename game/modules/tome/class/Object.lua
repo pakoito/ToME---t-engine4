@@ -892,7 +892,7 @@ function _M:getTextualDesc(compare_with)
 
 		compare_fields(w, compare_with, field, "disarm_bonus", "%+d", "Trap disarming bonus: ")
 		compare_fields(w, compare_with, field, "inc_stealth", "%+d", "Stealth bonus: ")
-		compare_fields(w, compare_with, field, "max_encumber", "%+d", "Maximum encumberance: ")
+		compare_fields(w, compare_with, field, "max_encumber", "%+d", "Maximum encumbrance: ")
 
 		compare_fields(w, compare_with, field, "combat_physresist", "%+d", "Physical save: ")
 		compare_fields(w, compare_with, field, "combat_spellresist", "%+d", "Spell save: ")
@@ -1249,7 +1249,7 @@ function _M:getUseDesc()
 	if self.charm_on_use then
 		ret:add(true, "When used:", true)
 		for i, d in ipairs(self.charm_on_use) do
-			ret:add(tostring(d[1]), "% chances to ", d[2](self, game.player), ".", true)
+			ret:add(tostring(d[1]), "% chance to ", d[2](self, game.player), ".", true)
 		end
 	end
 

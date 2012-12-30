@@ -80,7 +80,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Your body is more like that of an ooze. When you get hit you have %d%% chances to split and create a Bloated Ooze with as much health as you have taken damage (up to %d).
+		return ([[Your body is more like that of an ooze. When you get hit you have a %d%% chance to split and create a Bloated Ooze with as much health as you have taken damage (up to %d).
 		All damage you take will be split equaly between you and your Bloated Oozes.
 		You may have up to %d Oozes active at any time (based on your Cunning).]]):
 		format(t.getChance(self, t), t.getMax(self, t))

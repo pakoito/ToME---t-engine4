@@ -29,7 +29,7 @@ uberTalent{
 		self:attr("show_gloves_combat", -1)
 	end,
 	info = function(self, t)
-		return ([[Each time you make a melee attack, you have 100%% chances to do an additional unarmed strike, if using weapons. This is instead a 60%% chance if you are already fighting unarmed.]])
+		return ([[Each time you make a melee attack, you have a 100%% chance to do an additional unarmed strike, if using weapons. This is instead a 60%% chance if you are already fighting unarmed.]])
 		:format()
 	end,
 }
@@ -37,7 +37,7 @@ uberTalent{
 uberTalent{
 	name = "You Shall Be My Weapon!", short_name="TITAN_S_SMASH", image = "talents/titan_s_smash.png",
 	mode = "activated",
-	require = { special={desc="Be of at least size category 'huge' (also required to use it).", fct=function(self) return self.size_category and self.size_category >= 5 end} },
+	require = { special={desc="Be of at least size category 'huge' (also required to use it)", fct=function(self) return self.size_category and self.size_category >= 5 end} },
 	requires_target = true,
 	tactical = { ATTACK = 4 },
 	on_pre_use = function(self, t) return self.size_category and self.size_category >= 5 end,
@@ -75,7 +75,7 @@ uberTalent{
 uberTalent{
 	name = "Massive Blow",
 	mode = "activated",
-	require = { special={desc="Dug at least 30 walls/trees/... and dealt over 50000 damage with a two handed weapon.", fct=function(self) return 
+	require = { special={desc="Have dug at least 30 walls/trees/... and dealt over 50000 damage with a two-handed weapon", fct=function(self) return 
 		self.dug_times and self.dug_times >= 30 and 
 		self.damage_log and self.damage_log.weapon.twohanded and self.damage_log.weapon.twohanded >= 50000
 	end} },
@@ -109,7 +109,7 @@ uberTalent{
 uberTalent{
 	name = "Steamroller",
 	mode = "passive",
-	require = { special={desc="Know the Rush talent.", fct=function(self) return self:knowTalent(self.T_RUSH) end} },
+	require = { special={desc="Know the Rush talent", fct=function(self) return self:knowTalent(self.T_RUSH) end} },
 	info = function(self, t)
 		return ([[When you rush, the creature you rush to is marked. If you kill it in the next two turns, your rush cooldown is reset.
 		Each time this effect triggers, you gain a stacking +20%% damage buff, up to 100%%.]])
@@ -123,7 +123,7 @@ uberTalent{
 	requires_target = true,
 	range = 5,
 	tactical = { ATTACK = 4, CLOSEIN = 2 },
-	require = { special={desc="Dealt over 50000 light or fire damage", fct=function(self) return
+	require = { special={desc="Have dealt over 50000 light or fire damage", fct=function(self) return
 		self.damage_log and (
 			(self.damage_log[DamageType.FIRE] and self.damage_log[DamageType.FIRE] >= 50000) or
 			(self.damage_log[DamageType.LIGHT] and self.damage_log[DamageType.LIGHT] >= 50000)
@@ -145,7 +145,7 @@ uberTalent{
 uberTalent{
 	name = "I Can Carry The World!", short_name = "NO_FATIGUE",
 	mode = "passive",
-	require = { special={desc="Be able to use massive armours.", fct=function(self) return self:getTalentLevelRaw(self.T_ARMOUR_TRAINING) >= 3 end} },
+	require = { special={desc="Be able to use massive armours", fct=function(self) return self:getTalentLevelRaw(self.T_ARMOUR_TRAINING) >= 3 end} },
 	info = function(self, t)
 		return ([[You are strong; fatigue and physical exertion mean nothing to you.
 		Fatigue is permanently set to 0.]])
@@ -156,7 +156,7 @@ uberTalent{
 uberTalent{
 	name = "Legacy of the Naloren",
 	mode = "passive",
-	require = { special={desc="Side wih Slasul and kill Ukllmswwik.", fct=function(self)
+	require = { special={desc="Have sided wih Slasul and killed Ukllmswwik", fct=function(self)
 		if game.state.birth.ignore_prodigies_special_reqs then return true end
 		local q = self:hasQuest("temple-of-creation")
 		return q and not q:isCompleted("kill-slasul") and q:isCompleted("kill-drake")
@@ -172,8 +172,8 @@ uberTalent{
 		require("engine.ui.Dialog"):simplePopup("Legacy of the Naloren", "Slasul will be happy to know your faith in his cause. You should return to speak to him.")
 	end,
 	info = function(self, t)
-		return ([[You sided with Slasul and helped him vanquish Ukllmswwik. You are now able to breathe underwater with ease.
-		You also learnt to use tridents and other exotic weapons easily (gains 5 levels of Exotic Weapon Mastery), and can Spit Poison as nagas do. In addition, should Slasul still live, he may have a further reward for you as thanks...]])
+		return ([[You have sided with Slasul and helped him vanquish Ukllmswwik. You are now able to breathe underwater with ease.
+		You have also learnt to use tridents and other exotic weapons easily (gaining 5 levels of Exotic Weapon Mastery), and can Spit Poison as nagas do. In addition, should Slasul still live, he may have a further reward for you as thanks...]])
 		:format()
 	end,
 }

@@ -26,7 +26,7 @@ uberTalent{
 	on_unlearn = function(self, t)
 		self:attr("bump_swap_speed_divide", -10)
 	end,
-	require = { special={desc="Have had at least 6 party members at the same time.", fct=function(self)
+	require = { special={desc="Have had at least 6 party members at the same time", fct=function(self)
 		return self:attr("huge_party")
 	end} },
 	info = function(self, t)
@@ -56,7 +56,7 @@ uberTalent{
 uberTalent{
 	name = "Windblade",
 	mode = "activated",
-	require = { special={desc="Dealt over 50000 damage with dual wielded weapons.", fct=function(self) return self.damage_log and self.damage_log.weapon.dualwield and self.damage_log.weapon.dualwield >= 50000 end} },
+	require = { special={desc="Have dealt over 50000 damage with dual wielded weapons", fct=function(self) return self.damage_log and self.damage_log.weapon.dualwield and self.damage_log.weapon.dualwield >= 50000 end} },
 	cooldown = 20,
 	radius = 2,
 	range = 1,
@@ -87,7 +87,7 @@ uberTalent{
 uberTalent{
 	name = "Windtouched Speed",
 	mode = "passive",
-	require = { special={desc="Know at least 20 talent levels of equilibrium using talents.", fct=function(self) return knowRessource(self, "equilibrium", 20) end} },
+	require = { special={desc="Know at least 20 talent levels of equilibrium-using talents", fct=function(self) return knowRessource(self, "equilibrium", 20) end} },
 	on_learn = function(self, t)
 		self:attr("global_speed_add", 0.15)
 		self:attr("avoid_pressure_traps", 1)
@@ -108,7 +108,7 @@ uberTalent{
 uberTalent{
 	name = "Giant Leap",
 	mode = "activated",
-	require = { special={desc="Dealt over 50000 damage with any weapon or unarmed.", fct=function(self) return 
+	require = { special={desc="Have dealt over 50000 damage with any weapon or unarmed", fct=function(self) return 
 		self.damage_log and (
 			(self.damage_log.weapon.twohanded and self.damage_log.weapon.twohanded >= 50000) or
 			(self.damage_log.weapon.shield and self.damage_log.weapon.shield >= 50000) or
@@ -164,11 +164,11 @@ uberTalent{
 uberTalent{
 	name = "Crafty Hands",
 	mode = "passive",
-	require = { special={desc="Know Imbue Item to level 5.", fct=function(self)
+	require = { special={desc="Know Imbue Item to level 5", fct=function(self)
 		return self:getTalentLevelRaw(self.T_IMBUE_ITEM) >= 5
 	end} },
 	info = function(self, t)
-		return ([[You are very crafty, you can now also embed gems into your helm and belt.]])
+		return ([[You are very crafty. You can now also embed gems into your helm and belt.]])
 		:format()
 	end,
 }
@@ -178,7 +178,7 @@ uberTalent{
 	mode = "sustained",
 	cooldown = 10,
 	tactical = { ESCAPE = 1 },
-	require = { special={desc="Having been knocked around at least 50 times.", fct=function(self) return self:attr("knockback_times") and self:attr("knockback_times") >= 50 end} },
+	require = { special={desc="Have been knocked around at least 50 times", fct=function(self) return self:attr("knockback_times") and self:attr("knockback_times") >= 50 end} },
 	activate = function(self, t)
 		local ret = {}
 		self:talentTemporaryValue(ret, "knockback_on_hit", 1)
@@ -201,7 +201,7 @@ uberTalent{
 	no_energy = "fake",
 	cooldown = 20,
 	range = archery_range,
-	require = { special={desc="Dealt over 50000 damage with ranged weapons.", fct=function(self) return self.damage_log and self.damage_log.weapon.archery and self.damage_log.weapon.archery >= 50000 end} },
+	require = { special={desc="Have dealt over 50000 damage with ranged weapons", fct=function(self) return self.damage_log and self.damage_log.weapon.archery and self.damage_log.weapon.archery >= 50000 end} },
 	tactical = { ATTACK = { weapon = 3 }, DISABLE = 3 },
 	requires_target = true,
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow or sling for this talent.") end return false end return true end,
@@ -219,7 +219,7 @@ uberTalent{
 	end,
 	info = function(self, t)
 		return ([[You fire a shot straight at your enemy's vital areas, wounding them terribly.
-		Enemies hit by this shot will take 450%% weapon damage, and will be stunned and crippled (Losing 50%% physical, magical and mental attack speeds) for five turns, due to the incredibly disabling impact of the shot.
+		Enemies hit by this shot will take 450%% weapon damage, and will be stunned and crippled (losing 50%% physical, magical and mental attack speeds) for five turns, due to the incredibly disabling impact of the shot.
 		The stun and cripple chances increase with your Accuracy.]]):format()
 	end,
 }

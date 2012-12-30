@@ -93,8 +93,8 @@ newTalent{
 		self:attr("ignore_direct_crits", -15)
 	end,
 	info = function(self, t)
-		return ([[Your body internal organs are melted together, making it much harder to gain critical hits.
-		All direct critical hits (physical, mental, spells) against you have %d%% chances to instead do their normal damage.]]):
+		return ([[Your body's internal organs are melted together, making it much harder to suffer critical hits.
+		All direct critical hits (physical, mental, spells) against you have a %d%% chance to instead do their normal damage.]]):
 		format(self:getTalentLevelRaw(t) * 15)
 	end,
 }

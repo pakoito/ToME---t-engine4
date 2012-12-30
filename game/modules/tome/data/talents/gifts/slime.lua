@@ -104,7 +104,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Your skin drips with acid, damaging all that hit you for %0.2f acid damage and giving %d%% chances to disarm them for 3 turns.]]):format(damDesc(self, DamageType.ACID, self:combatTalentMindDamage(t, 10, 50)), 5 + self:getTalentLevel(t) * 2)
+		return ([[Your skin drips with acid, damaging all that hit you for %0.2f acid damage and giving a %d%% chance to disarm them for 3 turns.]]):format(damDesc(self, DamageType.ACID, self:combatTalentMindDamage(t, 10, 50)), 5 + self:getTalentLevel(t) * 2)
 	end,
 }
 

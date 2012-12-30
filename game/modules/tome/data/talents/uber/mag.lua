@@ -20,7 +20,7 @@
 uberTalent{
 	name = "Spectral Shield",
 	mode = "passive",
-	require = { special={desc="Block talent, have cast at least 100 spells and a block value over 200.", fct=function(self)
+	require = { special={desc="Know the Block talent, and have cast 100 spells, and have a block value over 200", fct=function(self)
 		return self:knowTalent(self.T_BLOCK) and self:getTalentFromId(self.T_BLOCK).getBlockValue(self) >= 200 and self.talent_kind_log and self.talent_kind_log.spell and self.talent_kind_log.spell >= 100
 	end} },
 	on_learn = function(self, t)
@@ -38,7 +38,7 @@ uberTalent{
 uberTalent{
 	name = "Aether Permeation",
 	mode = "passive",
-	require = { special={desc="At least 25% arcane damage reduction and having been exposed to the void of space.", fct=function(self)
+	require = { special={desc="Have at least 25% arcane damage reduction, and have been exposed to the void of space", fct=function(self)
 		return (game.state.birth.ignore_prodigies_special_reqs or self:attr("planetary_orbit")) and self:combatGetResist(DamageType.ARCANE) >= 25
 	end} },
 	on_learn = function(self, t)
@@ -59,7 +59,7 @@ uberTalent{
 uberTalent{
 	name = "Mystical Cunning", image = "talents/vulnerability_poison.png",
 	mode = "passive",
-	require = { special={desc="Know either traps or poisons.", fct=function(self)
+	require = { special={desc="Know either traps or poisons", fct=function(self)
 		return self:knowTalent(self.T_VILE_POISONS) or self:knowTalent(self.T_TRAP_MASTERY)
 	end} },
 	on_learn = function(self, t)
@@ -93,7 +93,7 @@ uberTalent{
 uberTalent{
 	name = "Temporal Form",
 	cooldown = 30,
-	require = { special={desc="Cast over 1000 spells and visited an out-of-time zone", fct=function(self) return
+	require = { special={desc="Have cast over 1000 spells and visited an out-of-time zone", fct=function(self) return
 		self.talent_kind_log and self.talent_kind_log.spell and self.talent_kind_log.spell >= 1000 and (game.state.birth.ignore_prodigies_special_reqs or self:attr("temporal_touched"))
 	end} },
 	no_energy = true,
@@ -107,9 +107,9 @@ uberTalent{
 	end,
 	info = function(self, t)
 		return ([[You can wrap temporal threads around you, assuming the form of a telugoroth for 10 turns.
-		While in this form, you gain pinning, bleeding, blindness and stun immunity, 30%% temporal resistance, your temporal damage bonus is set to your current highest damage bonus + 30%%, all damage you deal becomes temporal, and 20%% temporal resistance penetration.
+		While in this form, you gain pinning, bleeding, blindness and stun immunity, 30%% temporal resistance, your temporal damage bonus is set to your current highest damage bonus + 30%%, all damage you deal becomes temporal, and you gain 20%% temporal resistance penetration.
 		You also are able to cast two anomalies: Anomaly Rearrange and Anomaly Temporal Storm.
-		Transforming in this form will increase your paradox by 600, and revert it back at the end of the effect.]])
+		Transforming to this form will increase your paradox by 600, and revert it back at the end of the effect.]])
 		:format()
 	end,
 }
@@ -123,7 +123,7 @@ uberTalent{
 			self.alchemy_golem:learnTalentType("corruption/reaving-combat", true)
 		end
 	end,
-	require = { special={desc="Have summoned at least 100 creatures affected by this talent (alchemist golem count as 100).", fct=function(self)
+	require = { special={desc="Have summoned at least 100 creatures affected by this talent (alchemist golem count as 100)", fct=function(self)
 		return self:attr("summoned_times") and self:attr("summoned_times") >= 100
 	end} },
 	info = function(self, t)
@@ -151,7 +151,7 @@ uberTalent{
 		- Ghoul Rot ghoul: Rend
 		- Bloated Oozes: Bone Shield
 		- Mucus Oozes: Virulent Disease
-		- Other race or object-based summons might be affected, too.
+		- Other race- or object-based summons might be affected, too.
 		]]):format()
 	end,
 }
@@ -190,7 +190,7 @@ uberTalent{
 	name = "Cauterize",
 	mode = "passive",
 	cooldown = 12,
-	require = { special={desc="Received at least 50000 fire damage and have cast at least 1000 spells.", fct=function(self) return
+	require = { special={desc="Have received at least 50000 fire damage, and have cast at least 1000 spells", fct=function(self) return
 		self.talent_kind_log and self.talent_kind_log.spell and self.talent_kind_log.spell >= 1000 and self.damage_intake_log and self.damage_intake_log[DamageType.FIRE] and self.damage_intake_log[DamageType.FIRE] >= 50000
 	end} },
 	trigger = function(self, t, value)
@@ -200,9 +200,9 @@ uberTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Your inner flame is strong, each time you receive a blow that would kill you your body is wreathed in flames.
-		The flames will cauterize the wound, fully absorbing all damage done this turn but they will continue to burn for 8 turns.
+		return ([[Your inner flame is strong. Each time you receive a blow that would kill you, your body is wreathed in flames.
+		The flames will cauterize the wound, fully absorbing all damage done this turn, but they will continue to burn for 8 turns.
 		Each turn 10% of the damage absorbed will be dealt by the flames (this will bypass resistance and affinity).
-		Warning, this has a cooldown.]])
+		Warning: this has a cooldown.]])
 	end,
 }

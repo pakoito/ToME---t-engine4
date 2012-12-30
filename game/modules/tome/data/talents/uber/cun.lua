@@ -81,7 +81,7 @@ uberTalent{
 uberTalent{
 	name = "Endless Woes",
 	mode = "passive",
-	require = { special={desc="Dealt over 50000 acid, blight, darkness, mind or temporal damage", fct=function(self) return 
+	require = { special={desc="Have dealt over 50000 acid, blight, darkness, mind or temporal damage", fct=function(self) return 
 		self.damage_log and (
 			(self.damage_log[DamageType.ACID] and self.damage_log[DamageType.ACID] >= 50000) or
 			(self.damage_log[DamageType.BLIGHT] and self.damage_log[DamageType.BLIGHT] >= 50000) or
@@ -108,11 +108,11 @@ uberTalent{
 	end,
 	info = function(self, t)
 		return ([[Surround yourself with a malevolent aura.
-		Any acid damage you do has 20%% chances to apply a lasting acid, that deals %d%% of the initial damage for 5 turns and reduces accuracy by %d.
-		Any blight damage you do has 20%% chances to cause a random disease, that deals %d%% of the initial damage for 5 turns and reducing a stat by %d.
-		Any darkness damage you do has 20%% chances to blind the target for 5 turns.
-		Any temporal damage you do has 20%% chances to slow (30%%) the target for 5 turns.
-		Any mind damage you do has 20%% chances to confuse (20%%) the target for 5 turns.
+		Any acid damage you do has a 20%% chance to apply a lasting acid, that deals %d%% of the initial damage for 5 turns and reduces accuracy by %d.
+		Any blight damage you do has a 20%% chance to cause a random disease, that deals %d%% of the initial damage for 5 turns and reduces a stat by %d.
+		Any darkness damage you do has a 20%% chance to blind the target for 5 turns.
+		Any temporal damage you do has a 20%% chance to slow (30%%) the target for 5 turns.
+		Any mind damage you do has a 20% chance to confuse (20%%) the target for 5 turns.
 		This only triggers for hits over 150 damage.
 		Values increase with your Cunning.]])
 		:format(self:getCun() / 2.5, self:getCun() / 2, self:getCun() / 2.5, self:getCun() / 2)
@@ -122,7 +122,7 @@ uberTalent{
 uberTalent{
 	name = "Secrets of Telos",
 	mode = "passive",
-	require = { special={desc="Possess Telos Top Half, Telos Bottom Half, Telos Staff Crystal.", fct=function(self)
+	require = { special={desc="Possess Telos Top Half, Telos Bottom Half, and Telos Staff Crystal", fct=function(self)
 		local o1 = self:findInAllInventoriesBy("define_as", "GEM_TELOS")
 		local o2 = self:findInAllInventoriesBy("define_as", "TELOS_TOP_HALF")
 		local o3 = self:findInAllInventoriesBy("define_as", "TELOS_BOTTOM_HALF")
@@ -157,7 +157,7 @@ uberTalent{
 	name = "Elemental Surge",
 	mode = "passive",
 	cooldown = 12,
-	require = { special={desc="Dealt over 50000 arcane, fire, cold, lightning, light or nature damage", fct=function(self) return 
+	require = { special={desc="Have dealt over 50000 arcane, fire, cold, lightning, light or nature damage", fct=function(self) return 
 		self.damage_log and (
 			(self.damage_log[DamageType.ARCANE] and self.damage_log[DamageType.ARCANE] >= 50000) or
 			(self.damage_log[DamageType.FIRE] and self.damage_log[DamageType.FIRE] >= 50000) or
@@ -279,7 +279,7 @@ uberTalent{
 uberTalent{
 	name = "Tricks of the Trade",
 	mode = "passive",
-	require = { special={desc="Sided with the Assassin Lord.", fct=function(self) return game.state.birth.ignore_prodigies_special_reqs or (self:isQuestStatus("lost-merchant", engine.Quest.COMPLETED, "evil")) end} },
+	require = { special={desc="Have sided with the Assassin Lord", fct=function(self) return game.state.birth.ignore_prodigies_special_reqs or (self:isQuestStatus("lost-merchant", engine.Quest.COMPLETED, "evil")) end} },
 	on_learn = function(self, t) 
 		if self:knowTalentType("cunning/stealth") then
 			self:setTalentTypeMastery("cunning/stealth", self:getTalentTypeMastery("cunning/stealth") + 0.2)

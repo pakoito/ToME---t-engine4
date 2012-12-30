@@ -98,7 +98,7 @@ newEntity{
 		[Talents.T_HYMN_OF_SHADOWS]={base=7, every=6},
 
 		[Talents.T_FLAME]={base=7, every=6},
-		[Talents.T_FREEZE]={base=7, every=6},
+		[Talents.T_FREEZE]={base=5, every=6},
 		[Talents.T_LIGHTNING]={base=7, every=6},
 		[Talents.T_MANATHRUST]={base=7, every=6},
 		[Talents.T_FLAMESHOCK]={base=7, every=6},

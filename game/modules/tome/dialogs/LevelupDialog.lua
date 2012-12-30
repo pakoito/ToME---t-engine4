@@ -834,7 +834,7 @@ function _M:getStatDesc(item)
 		end
 	elseif stat_id == self.actor.STAT_STR then
 		text:add("Physical power: ", color, ("%0.2f"):format(diff), dc, true)
-		text:add("Max encumberance: ", color, ("%0.2f"):format(diff * 1.8), dc, true)
+		text:add("Max encumbrance: ", color, ("%0.2f"):format(diff * 1.8), dc, true)
 		text:add("Physical save: ", color, ("%0.2f"):format(diff * 0.35), dc, true)
 	elseif stat_id == self.actor.STAT_CUN then
 		text:add("Crit. chance: ", color, ("%0.2f"):format(diff * 0.3), dc, true)

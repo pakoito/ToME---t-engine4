@@ -41,7 +41,7 @@ uberTalent{
 	mode = "passive",
 	cooldown = 15,
 	getDamage = function(self, t) return math.max(100 + self:combatSpellpower() * 5, 100 + self:combatMindpower() * 5) end,
-	require = { special={desc="Witness a meteoric crash", fct=function(self) return game.state.birth.ignore_prodigies_special_reqs or self:attr("meteoric_crash") end} },
+	require = { special={desc="Have witnessed a meteoric crash", fct=function(self) return game.state.birth.ignore_prodigies_special_reqs or self:attr("meteoric_crash") end} },
 	trigger = function(self, t, target)
 		self:startTalentCooldown(t)
 		local terrains = t.terrains or mod.class.Grid:loadList("/data/general/grids/lava.lua")
@@ -182,7 +182,7 @@ uberTalent{
 	cooldown = 7,
 	trigger = function(self, t)
 		self:startTalentCooldown(t)
-		game.logSeen(self, "#LIGHT_BLUE#%s unbreakable will shrugs off the effect!", self.name:capitalize())
+		game.logSeen(self, "#LIGHT_BLUE#%s's unbreakable will shrugs off the effect!", self.name:capitalize())
 		return true
 	end,
 	info = function(self, t)
@@ -211,7 +211,7 @@ uberTalent{
 	info = function(self, t)
 		return ([[Your will is a shield against the assault of crazy arcane users.
 		Each time you take damage from a spell, you punish the spellcaster with %0.2f mind damage.
-		Also, they will suffer a 35%% spell failure chance for the duration of the spell cooldown they used on you.]])
+		Also, they will suffer a 35%% spell failure chance for the cooldown duration of the spell they used on you.]])
 		:format(damDesc(self, DamageType.MIND, 20 + self:getWil() * 2))
 	end,
 }
@@ -222,7 +222,7 @@ uberTalent{
 	require = { },
 	cooldown = 20,
 	tactical = { BUFF = 2 },
-	require = { special={desc="Dealt over 50000 mind damage", fct=function(self) return 
+	require = { special={desc="Have dealt over 50000 mind damage", fct=function(self) return 
 		self.damage_log and (
 			(self.damage_log[DamageType.MIND] and self.damage_log[DamageType.MIND] >= 50000)
 		)

@@ -230,10 +230,10 @@ newTalent{
 
 	end,
 	info = function(self, t)
-		return ([[Your mucus is brought to near sentience, each turn there %d%% chances that a random spot of your mucus will spawn a Mucus Ooze.
+		return ([[Your mucus is brought to near sentience. Each turn there is a %d%% chance that a random spot of your mucus will spawn a Mucus Ooze.
 		Mucus Oozes will attack any of your foes by spitting slime at them.
 		You may have up to %d Oozes active at any time (based on your Cunning).
-		Any time you deal a mental critical all your Mucus Oozes remaining time will increase by 2.
+		Any time you deal a mental critical, all your Mucus Oozes' remaining time will increase by 2.
 		The effect will increase with your Mindpower.]]):
 		format(t.getChance(self, t), t.getMax(self, t))
 	end,

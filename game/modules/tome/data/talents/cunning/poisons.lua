@@ -67,7 +67,7 @@ newTalent{
 		Level 4: Crippling Poison
 		Level 5: Stoning Poison
 		New poisons can also be learned from special teachers in the world.
-		Also increases the effectiveness of your poisons by %d%%. (The effect varies for each poison).
+		Also increases the effectiveness of your poisons by %d%%. (The effect varies for each poison.)
 		Coating your weapons in poisons does not break stealth.
 		You may only have two poisons active at once.
 		Every time you hit a creature with one of your weapons, you have a %d%% chance to randomly apply one of your active poisons.
@@ -153,7 +153,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Reduce the duration of all poisons on the target by 50%%, but increases their damage by %d%%.
+		return ([[Reduces the duration of all poisons on the target by 50%%, but increases their damage by %d%%.
 		The effect increases with your Cunning.]]):
 		format(100 + self:combatTalentStatDamage(t, "cun", 40, 250))
 	end,
@@ -191,7 +191,7 @@ newTalent{
 		end
 	end,
 	info = function(self, t)
-		return ([[When you kill a creature, all the poisons affecting it will have %d%% chances to spread to adjacent foes.]]):format(20 + self:getTalentLevelRaw(t) * 8)
+		return ([[When you kill a creature, all the poisons affecting it will have a %d%% chance to spread to adjacent foes.]]):format(20 + self:getTalentLevelRaw(t) * 8)
 	end,
 }
 
@@ -282,7 +282,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Coat your weapons with a numbing poison, inflicting %d nature damage per turn for %d turns.
 		Poisoned creatures will deal %d%% less damage.
-		The effects scales with your Cunning.]]):
+		The effects scale with your Cunning.]]):
 		format(damDesc(self, DamageType.NATURE, t.getDOT(self, t)), t.getDuration(self, t), t.getEffect(self, t))
 	end,
 }
@@ -316,7 +316,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Coat your weapons with an insidious poison, inflicting %d nature damage per turn for %d turns.
 		Poisoned creatures have their healing reduced by %d%%.
-		The effects scales with your Cunning.]]):
+		The effects scale with your Cunning.]]):
 		format(damDesc(self, DamageType.NATURE, t.getDOT(self, t)), t.getDuration(self, t), t.getEffect(self, t))
 	end,
 }
@@ -349,7 +349,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Coat your weapons with a crippling poison, inflicting %d nature damage per turn for %d turns.
-		Every time a poisoned creature tries to use a talent, it will have %d%% chances to fail and lose a turn.
+		Every time a poisoned creature tries to use a talent, it will have a %d%% chance to fail and lose a turn.
 		The damage scales with your Cunning.]]):
 		format(damDesc(self, DamageType.NATURE, t.getDOT(self, t)), t.getDuration(self, t), t.getEffect(self, t))
 	end,

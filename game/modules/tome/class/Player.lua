@@ -1030,7 +1030,7 @@ function _M:getEncumberTitleUpdator(title)
 		elseif enc > max * 0.9 then color = "#ff8a00#"
 		elseif enc > max * 0.75 then color = "#fcff00#"
 		end
-		return ("%s - %sEncumberance %d/%d"):format(title, color, enc, max)
+		return ("%s - %sEncumbrance %d/%d"):format(title, color, enc, max)
 	end
 end
 

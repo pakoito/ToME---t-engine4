@@ -2247,7 +2247,7 @@ newEffect{
 newEffect{
 	name = "WILD_SUMMON", image = "talents/wild_summon.png",
 	desc = "Wild Summon",
-	long_desc = function(self, eff) return ("%d%% chances to get a more powerful summon."):format(eff.chance) end,
+	long_desc = function(self, eff) return ("%d%% chance to get a more powerful summon."):format(eff.chance) end,
 	type = "mental",
 	subtype = { summon=true },
 	status = "beneficial",

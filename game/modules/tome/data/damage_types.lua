@@ -1425,7 +1425,7 @@ newDamageType{
 
 -- Confusion
 newDamageType{
-	name = "% chances to confuse", type = "RANDOM_CONFUSION",
+	name = "% chance to confuse", type = "RANDOM_CONFUSION",
 	projector = function(src, x, y, type, dam)
 		if _G.type(dam) == "number" then dam = {dam=dam} end
 		local target = game.level.map(x, y, Map.ACTOR)
@@ -1440,7 +1440,7 @@ newDamageType{
 }
 
 newDamageType{
-	name = "% chances to cause a gloom effect", type = "RANDOM_GLOOM",
+	name = "% chance to cause a gloom effect", type = "RANDOM_GLOOM",
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and rng.percent(dam) then
@@ -1468,7 +1468,7 @@ newDamageType{
 
 -- gBlind
 newDamageType{
-	name = "% chances to blind", type = "RANDOM_BLIND",
+	name = "% chance to blind", type = "RANDOM_BLIND",
 	projector = function(src, x, y, type, dam)
 		if _G.type(dam) == "number" then dam = {dam=dam} end
 		local target = game.level.map(x, y, Map.ACTOR)

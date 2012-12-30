@@ -175,7 +175,7 @@ newTalent{
 		local ressistpen = t.getResistPenalty(self, t)
 		local daze = t.getDaze(self, t)
 		return ([[Surround yourself with a Tempest, increasing all your lightning damage by %d%% and ignoring %d%% lightning resistance of your targets.
-		Your Lightning and Chain Lightning spells also gain %d%% chances to daze and your Thunderstorm spell %d%% chances to daze.]])
+		Your Lightning and Chain Lightning spells also gain a %d%% chance to daze, and your Thunderstorm spell gains a %d%% chance to daze.]])
 		:format(damageinc, ressistpen, daze, daze / 2)
 	end,
 }
