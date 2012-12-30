@@ -32,6 +32,7 @@ newEntity{ define_as = "STAFF_ABSORPTION",
 	level_range = {30, 30},
 	display = "\\", color=colors.VIOLET, image = "object/artifact/staff_absorption.png",
 	encumber = 7,
+	plot = true, quest = true,
 	desc = [[Carved with runes of power, this staff seems to have been made long ago. Yet it bears no signs of tarnishment.
 Light around it seems to dim and you can feel its tremendous power simply by touching it.]],
 
@@ -80,6 +81,7 @@ newEntity{ define_as = "ORB_MANY_WAYS",
 	level_range = {30, 30},
 	display = "*", color=colors.VIOLET, image = "object/artifact/orb_many_ways.png",
 	encumber = 1,
+	plot = true, quest = true,
 	desc = [[The orb projects images of distant places, some that seem to be not of this world, switching rapidly.
 If used near a portal it could probably activate it.]],
 
@@ -118,6 +120,7 @@ newEntity{ define_as = "ORB_MANY_WAYS_DEMON",
 	level_range = {30, 30},
 	display = "*", color=colors.VIOLET, image = "object/artifact/orb_many_ways.png",
 	encumber = 1,
+	plot = true, quest = true,
 	desc = [[The orb projects images of distant places, some that seem to be not of this world, switching rapidly.
 If used near a portal it could probably activate it.]],
 
@@ -165,6 +168,7 @@ newEntity{ define_as = "ORB_UNDEATH",
 	level_range = {50, 50},
 	display = "*", color=colors.VIOLET, image = "object/artifact/orb_undeath.png",
 	encumber = 1,
+	plot = true, quest = true,
 	desc = [[Dark visions fill your mind as you lift the orb. It is cold to the touch.]],
 
 	on_drop = function(self, who)
@@ -194,6 +198,7 @@ newEntity{ define_as = "ORB_DRAGON",
 	level_range = {50, 50},
 	display = "*", color=colors.VIOLET, image = "object/artifact/orb_dragon.png",
 	encumber = 1,
+	plot = true, quest = true,
 	desc = [[This orb is warm to the touch.]],
 
 	on_drop = function(self, who)
@@ -223,6 +228,7 @@ newEntity{ define_as = "ORB_ELEMENTS",
 	level_range = {50, 50},
 	display = "*", color=colors.VIOLET, image = "object/artifact/elemental_orb.png",
 	encumber = 1,
+	plot = true, quest = true,
 	desc = [[Flames swirl on the icy surface of this orb.]],
 
 	on_drop = function(self, who)
@@ -252,6 +258,7 @@ newEntity{ define_as = "ORB_DESTRUCTION",
 	level_range = {50, 50},
 	display = "*", color=colors.VIOLET, image = "object/artifact/orb_destruction.png",
 	encumber = 1,
+	plot = true, quest = true,
 	desc = [[Visions of death and destruction fill your mind as you lift this orb.]],
 
 	on_drop = function(self, who)
@@ -280,6 +287,7 @@ newEntity{ define_as = "ORB_SCRYING",
 	name = "Orb of Scrying",
 	display = "*", color=colors.VIOLET, image = "object/artifact/orb_scrying.png",
 	encumber = 1,
+	plot = true, quest = true,
 	save_hotkey = true,
 	desc = [[This orb was given to you by Elisa the Halfling scryer. It will automatically identify normal and rare items for you and can be activated to contact Elisa for rarer items.]],
 

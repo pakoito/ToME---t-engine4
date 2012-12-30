@@ -973,11 +973,16 @@ function _M:doDrop(inven, item, on_done, nb)
 		Dialog:yesnoLongPopup("Warning", "You cannot drop items on the world map.\nIf you drop it, it will be lost forever.", 300, function(ret)
 			-- The test is reversed because the buttons are reversed, to prevent mistakes
 			if not ret then
-				local o = self:removeObject(inven, item, true)
-				game.logPlayer(self, "You destroy %s.", o:getName{do_colour=true, do_count=true})
-				self:sortInven()
-				self:useEnergy()
-				if on_done then on_done() end
+				local o = self:getInven(inven) and self:getInven(inven)[item]
+				if o and not o.plot then
+					local o = self:removeObject(inven, item, true)
+					game.logPlayer(self, "You destroy %s.", o:getName{do_colour=true, do_count=true})
+					self:sortInven()
+					self:useEnergy()
+					if on_done then on_done() end
+				elseif o then
+					game.logPlayer(self, "You can not destroy %s.", o:getName{do_colour=true})
+				end
 			end
 		end, "Cancel", "Destroy")
 		return

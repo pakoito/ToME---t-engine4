@@ -145,7 +145,7 @@ function _M:generateList()
 		end), 50)
 	end,}
 
-	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Disallow boot images that could be fuond 'offensive'.#WHITE#"}
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Disallow boot images that could be found 'offensive'.#WHITE#"}
 	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Censor boot#WHITE##{normal}#", status=function(item)
 		return tostring(config.settings.censor_boot and "enabled" or "disabled")
 	end, fct=function(item)
