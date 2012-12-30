@@ -29,7 +29,7 @@ Each level brings more life and resources (like stamina, mana, etc.) and differe
 
 Levels are gained when experience reaches 100%. You gain experience from killing a hostile creature whose level is similar to yours.
 
-To open the character levelup screen either press 'shift+G' or right-click on yourself.
+To open the character levelup screen either press 'p' or right-click on yourself and choose 'Levelup'.
 
 Now open the levelup screen and assign your points.
 ]]

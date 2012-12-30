@@ -40,6 +40,7 @@ Some talents require a target, when you use them the interface will change to le
 * #GOLD#Using the mouse#WHITE#: Moving your mouse will move the target around. Left-click will confirm it.
 
 Now go forward and try using your talents:
-* #GOLD#Shield Pummel#WHITE#: This talent will attack the target trying to stun it, rendering it unable to harm you for a few turns.
-* #GOLD#Shield Wall#WHITE#: This talent will increase your defense and armour but reduce your attack and damage.
+* #GOLD#Shield Pummel#WHITE#: This talent will attack the target trying to stun it, rendering much slower and less able to harm you for a few turns.
+* #GOLD#Shield Wall#WHITE#: This talent will increase your defense and armour but reduce your damage.
+* #GOLD#Block#WHITE#: This talent is given by your shield, letting you block the next blow and triggering a deadly counterstrike opportunity.
 ]]

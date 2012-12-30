@@ -23,6 +23,7 @@ return [[Movement is simple. You can use the keyboard, the mouse, or both.
 - Press the arrow keys or keypad to move in the given direction.
 - Press shift + the arrow keys or keypad to run in the given direction.
 - Press 5 on the keypad to stay put for a turn (doing nothing).
+- Press z to "auto explore" until you find something dangerous or interesting.
 
 #GOLD#Mouse:#WHITE#
 - Click on a spot on the map to move there.

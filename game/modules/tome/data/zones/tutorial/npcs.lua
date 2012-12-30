@@ -55,6 +55,7 @@ newEntity{ base = "BASE_NPC_CANINE", define_as = "TUTORIAL_NPC_LONE_WOLF",
 	max_life = 220,
 	combat_armor = 8, combat_def = 0,
 	combat = { dam=20, atk=15, apr=4 },
+	no_rod_recall = 1,
 
 	stats = { str=25, dex=20, cun=15, mag=10, con=15 },
 

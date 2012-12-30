@@ -24,7 +24,7 @@ end
 
 return [[Ranged combat typically revolves around firing arrows, slinging stones, or casting spells.
 You have been given a bow, which you wield with both hands.
-You have infinite normal arrows, but you can add special arrows to your quiver for extra damage and/or effects.
+Arrows are infinite but need reloading from time to time, using the Reload talent, but you can add special arrows to your quiver for extra damage and/or effects.
 To fire an arrow, use the shoot talent. The target interface will pop-up, just like for other talents.
 
 To equip your bow and arrows:

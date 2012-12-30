@@ -21,14 +21,14 @@ return [[Melee attacks work like movement. Just move in your foe's direction, or
 If it is not hostile you will talk to it, or switch places with it.
 
 Melee combat mainly uses five stats:
-* #GOLD#Attack#WHITE#: Your chance to hit.
+* #GOLD#Accuracy#WHITE#: Your chance to hit.
 * #GOLD#Damage#WHITE#: How much damage you do per blow.
 * #GOLD#Defense#WHITE#: Your chance to avoid attacks.
 * #GOLD#Armour#WHITE#: Flat reduction to damage done.
 * #GOLD#Armour Penetration#WHITE#: How much of the target's armour you can ignore.
 
 You can view those stats, and many others, in the character sheet.
-Press 'C' or right-click your character to open the character sheet.
+Press 'C' or right-click your character and choose 'Inspect Creature' to open the character sheet.
 
 You have spotted some hostile jellies guarding an item.
 Attack them!
