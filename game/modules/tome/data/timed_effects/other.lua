@@ -2172,3 +2172,24 @@ newEffect{
 	deactivate = function(self, eff)
 	end,
 }
+
+
+newEffect{
+	name = "CLOAK_OF_DECEPTION", image = "shockbolt/object/artifact/black_cloak.png",
+	desc = "Cloak of Deception",
+	long_desc = function(self, eff) return "The target is under the effect of the cloak of deception, making it look alive." end,
+	decrease = 0, no_remove = true,
+	type = "other",
+	subtype = { undead=true },
+	status = "neutral",
+	parameters = {},
+	activate = function(self, eff)
+		self.old_faction_cloak = self.faction
+		self.faction = "allied-kingdoms"
+		if self.player then engine.Map:setViewerFaction(self.faction) end
+	end,
+	deactivate = function(self, eff)
+		self.faction = self.old_faction_cloak
+		if self.player then engine.Map:setViewerFaction(self.faction) end
+	end,
+}

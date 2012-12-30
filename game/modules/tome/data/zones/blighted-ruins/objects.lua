@@ -39,17 +39,21 @@ newEntity{ define_as = "CLOAK_DECEPTION",
 	},
 
 	on_wear = function(self, who)
-		who.old_faction_cloak = who.faction
-		who.faction = "allied-kingdoms"
-		if who.alchemy_golem then who.alchemy_golem.faction = who.faction end
-		if who.player then engine.Map:setViewerFaction(who.faction) end
-		game.logPlayer(who, "#LIGHT_BLUE#An illusion appears around %s, making it appear human.", who.name:capitalize())
+		if game.party:hasMember(who) then
+			for m, _ in pairs(game.party.members) do
+				m:setEffect(m.EFF_CLOAK_OF_DECEPTION, 1, {})
+			end
+			game.logPlayer(who, "#LIGHT_BLUE#An illusion appears around %s, making it appear human.", who.name:capitalize())
+		end
 	end,
 	on_takeoff = function(self, who)
-		who.faction = who.old_faction_cloak
-		if who.alchemy_golem then who.alchemy_golem.faction = who.faction end
-		if who.player then engine.Map:setViewerFaction(who.faction) end
-		game.logPlayer(who, "#LIGHT_BLUE#The illusion covering %s disappears", who.name:capitalize())
+		if self.upgraded_cloak then return end
+		if game.party:hasMember(who) then
+			for m, _ in pairs(game.party.members) do
+				m:removeEffect(m.EFF_CLOAK_OF_DECEPTION, true, true)
+			end
+			game.logPlayer(who, "#LIGHT_BLUE#The illusion covering %s disappears", who.name:capitalize())
+		end
 	end,
 	on_pickup = function(self, who)
 		who:setQuestStatus("start-undead", engine.Quest.COMPLETED, "black-cloak")

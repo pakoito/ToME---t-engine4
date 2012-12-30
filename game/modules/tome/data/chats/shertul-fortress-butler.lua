@@ -35,6 +35,11 @@ Welcome, master.]],
 		{"Why do I understand you? The texts are unreadable to me.", jump="understand", cond=isNotSet"understand", action=set"understand"},
 		{"What can I do here?", jump="storage", cond=isNotSet"storage", action=set"storage"},
 		{"What else can this place do?", jump="energy", cond=isNotSet"energy", action=set"energy"},
+		{"Would it be possible to improve my Cloak of Deception so I do not need to wear it to pass as a living being?", jump="permanent-cloak", 
+			cond=function(npc, player)
+				local cloak = player:findInAllInventoriesBy("define_as", "CLOAK_DECEPTION")
+				return not q:isCompleted("permanent-cloak") and q:isCompleted("transmo-chest") and cloak
+		end},
 		{"[leave]"},
 	}
 }
@@ -176,6 +181,20 @@ newChat{ id="changetile",
 			game.level.map:particleEmitter(npc.x, npc.y, 1, "demon_teleport")
 		end},
 		{"Well, you do not look so bad actually. Let it be for now."},
+	}
+}
+
+newChat{ id="permanent-cloak",
+	text = [[Yes Master. I can use 10 energy to infuse your cloak. When you take it off the effect should still persist.
+However, I suggest you still carry it with you in case something manages to remove it from you.]],
+	answers = {
+		{"Not now."},
+		{"That could be quite useful. Yes, please do it.", action=function(npc, player)
+			local cloak = player:findInAllInventoriesBy("define_as", "CLOAK_DECEPTION")
+			cloak.upgraded_cloak = true
+			q.shertul_energy = q.shertul_energy - 60
+			q:setStatus(engine.Quest.COMPLETED, "permanent-cloak")
+		end},
 	}
 }
 

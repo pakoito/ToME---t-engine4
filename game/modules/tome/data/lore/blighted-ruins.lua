@@ -38,7 +38,7 @@ newLore{
 	id = "blighted-ruins-note-3",
 	category = "blighted ruins",
 	name = "note from the Necromancer",
-	lore = function() return [[Fate smiles upon me. What did I come across today but the body of an unfortunate ]]..game.player.descriptor.subclass..[[? Unfortunate indeed, but rather fortunate for me. The body displays next to no decomposition... it shall be perfect! With this new minion and the cloak of deception, the completion of my project is all but assured. I must prepare for the ritual... my dark menagerie shall soon have a new member.]] end,
+	lore = function() return [[Fate smiles upon me. What did I come across today but the body of an unfortunate ]]..game:getPlayer(true).descriptor.subclass..[[? Unfortunate indeed, but rather fortunate for me. The body displays next to no decomposition... it shall be perfect! With this new minion and the cloak of deception, the completion of my project is all but assured. I must prepare for the ritual... my dark menagerie shall soon have a new member.]] end,
 }
 
 newLore{
