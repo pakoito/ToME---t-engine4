@@ -974,7 +974,7 @@ newEntity{ base = "BASE_ROD", define_as = "ROD_OF_ANNULMENT",
 	material_level = 2,
 
 	max_power = 30, power_regen = 1,
-	use_power = { name = "force some of your foes infusions, runes or talents on cooldown", power = 30,
+	use_power = { name = "force some of your foe's infusions, runes or talents on cooldown", power = 30,
 		use = function(self, who)
 			local tg = {type="bolt", range=5}
 			local x, y = who:getTarget(tg)

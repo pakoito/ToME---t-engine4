@@ -600,7 +600,7 @@ Each five levels you gain one more.
 local desc_generic = ([[Generic talent points allow you to learn new generic talents or improve them.
 Generic talents comes from your class, your race or various outside training you can get during your adventures.
 
-Each level you gain 1 new class point to use.
+Each level you gain 1 new generic point to use.
 Each five levels you gain one less.
 ]]):toTString()
 
