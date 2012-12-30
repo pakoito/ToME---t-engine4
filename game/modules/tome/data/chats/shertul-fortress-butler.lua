@@ -192,7 +192,7 @@ However, I suggest you still carry it with you in case something manages to remo
 		{"That could be quite useful. Yes, please do it.", action=function(npc, player)
 			local cloak = player:findInAllInventoriesBy("define_as", "CLOAK_DECEPTION")
 			cloak.upgraded_cloak = true
-			q.shertul_energy = q.shertul_energy - 60
+			q.shertul_energy = q.shertul_energy - 10
 			q:setStatus(engine.Quest.COMPLETED, "permanent-cloak")
 		end},
 	}
