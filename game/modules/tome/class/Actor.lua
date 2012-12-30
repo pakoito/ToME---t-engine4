@@ -4252,7 +4252,7 @@ end
 function _M:hasLOS(x, y, what, range, source_x, source_y)
 	source_x = source_x or self.x
 	source_y = source_y or self.y
-	if not x or not y then return false, source_x, source_y end
+	if not x or not y or not source_x or not source_y then return false, source_x, source_y end
 	what = what or "block_sight"
 	range = range or self.sight
 
