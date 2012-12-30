@@ -146,9 +146,12 @@ uberTalent{
 	name = "I Can Carry The World!", short_name = "NO_FATIGUE",
 	mode = "passive",
 	require = { special={desc="Be able to use massive armours", fct=function(self) return self:getTalentLevelRaw(self.T_ARMOUR_TRAINING) >= 3 end} },
+	on_learn = function(self, t)
+		self:attr("max_encumber", 500)
+	end,
 	info = function(self, t)
 		return ([[You are strong; fatigue and physical exertion mean nothing to you.
-		Fatigue is permanently set to 0.]])
+		Fatigue is permanently set to 0 and carrying capacity increased by 500.]])
 		:format()
 	end,
 }
