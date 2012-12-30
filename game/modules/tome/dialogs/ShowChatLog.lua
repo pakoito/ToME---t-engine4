@@ -169,8 +169,8 @@ function _M:mouseEvent(button, x, y, xrel, yrel, bx, by, event)
 			if citem and citem.login then
 				local data = profile.chat:getUserInfo(citem.login)
 				if data then
-					local list = {{name="Show infos", ui="show"}, {name="Open profile(in brower)", ui="profile"}, {name="Report for bad behavior", ui="report"}}
-					if data.char_link then table.insert(list, 3, {name="Open charsheet(in brower)", ui="charsheet"}) end
+					local list = {{name="Show infos", ui="show"}, {name="Open profile(in browser)", ui="profile"}, {name="Report for bad behavior", ui="report"}}
+					if data.char_link then table.insert(list, 3, {name="Open charsheet(in browser)", ui="charsheet"}) end
 					Dialog:listPopup("User: "..citem.login, "Action", list, 300, 200, function(sel)
 						if not sel or not sel.ui then return end
 						if sel.ui == "show" then
