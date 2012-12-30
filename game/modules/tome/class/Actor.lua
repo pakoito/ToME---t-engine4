@@ -4174,10 +4174,10 @@ function _M:canSeeNoCache(actor, def, def_pct)
 		local esp = self.esp
 		local t, st = rawget(actor, "type") or "???", rawget(actor, "subtype") or "???"
 		-- Type based ESP
-		if esp[actor.type] and esp[actor.type] > 0 then
+		if esp[t] and esp[t] > 0 then
 			return true, 100
 		end
-		if esp[actor.type.."/"..actor.subtype] and esp[actor.type.."/"..actor.subtype] > 0 then
+		if esp[t.."/"..st] and esp[t.."/"..st] > 0 then
 			return true, 100
 		end
 	end
