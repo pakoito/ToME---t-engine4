@@ -2019,6 +2019,7 @@ function _M:setupMouse(mouse)
 			if button == "right" and event == "button" then
 				extra.add_map_action = {
 					{ name="Show chat user", fct=function() profile.chat:showUserInfo(user.login) end },
+					{ name="Whisper", fct=function() profile.chat:setCurrentTarget(false, user.login) profile.chat:talkBox() end },
 					{ name="Report user for bad behavior", fct=function()
 						game:registerDialog(require('engine.dialogs.GetText').new("Reason to report: "..user.login, "Reason", 4, 500, function(text)
 							profile.chat:reportUser(user.login, text)
