@@ -156,8 +156,8 @@ uberTalent{
 uberTalent{
 	name = "Corrupted Shell",
 	mode = "passive",
-	require = { special={desc="Have received at least 50000 blight damage and destroyed Zigur with the Grand Corruptor.", fct=function(self) return
-		(self.damage_intake_log and self.damage_intake_log[DamageType.BLIGHT] and self.damage_intake_log[DamageType.BLIGHT] >= 50000) and
+	require = { special={desc="Have received at least 15000 blight damage and destroyed Zigur with the Grand Corruptor.", fct=function(self) return
+		(self.damage_intake_log and self.damage_intake_log[DamageType.BLIGHT] and self.damage_intake_log[DamageType.BLIGHT] >= 15000) and
 		(game.state.birth.ignore_prodigies_special_reqs or (
 			self:hasQuest("anti-antimagic") and 
 			self:hasQuest("anti-antimagic"):isStatus(engine.Quest.DONE) and
