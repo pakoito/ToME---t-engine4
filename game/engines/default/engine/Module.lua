@@ -419,7 +419,7 @@ function _M:selectFunFact(ffdata)
 		if ffdata.total_time then l[#l+1] = "Total playtime of all registered players:\n"..ffdata.total_time end
 		if ffdata.top_five_races then l[#l+1] = ("#LIGHT_BLUE#%s#WHITE# is one of the top five played races"):format(rng.table(ffdata.top_five_races).name) end
 		if ffdata.top_five_classes then l[#l+1] = ("#LIGHT_BLUE#%s#WHITE# is one of the top five played classes"):format(rng.table(ffdata.top_five_classes).name) end
-		if ffdata.top_ten_killer then l[#l+1] = ("#CRIMSON#%s#WHITE# is one of the top ten killer"):format(rng.table(ffdata.top_ten_killer).name:capitalize()) end
+		if ffdata.top_ten_killer then l[#l+1] = ("#CRIMSON#%s#WHITE# is one of the top ten killers"):format(rng.table(ffdata.top_ten_killer).name:capitalize()) end
 		if ffdata.top_ten_raceclass then l[#l+1] = ("#LIGHT_BLUE#%s#WHITE# is one of the top ten race/class combo"):format(rng.table(ffdata.top_ten_raceclass).name:capitalize()) end
 		if ffdata.nb_players then l[#l+1] = ("There are currently %d people playing online"):format(ffdata.nb_players) end
 		if ffdata.total_deaths then l[#l+1] = ("The character's vault has registered a total of #RED#%d#WHITE# character's deaths"):format(ffdata.total_deaths) end

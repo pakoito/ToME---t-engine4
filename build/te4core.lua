@@ -35,19 +35,14 @@ project "TEngine"
 		includedirs {
   	      "/System/Library/Frameworks/OpenGL.framework/Headers",
   	      "/System/Library/Frameworks/OpenAL.framework/Headers",
-		      "/Library/Frameworks/SDL.framework/Headers",
-		      "/Library/Frameworks/SDL.framework/Headers",
-  	      "/Library/Frameworks/SDL_net.framework/Headers",
-		      "/Library/Frameworks/SDL_image.framework/Headers",
-  	      "/Library/Frameworks/SDL_ttf.framework/Headers",
-		      "/Library/Frameworks/SDL_mixer.framework/Headers",
-			"/opt/local/include",
-			"/opt/local/include/Vorbis"
+	      "/Library/Frameworks/SDL2.framework/Headers",
+  	      "/Library/Frameworks/SDL2_image.framework/Headers",
+  	      "/Library/Frameworks/SDL2_ttf.framework/Headers"
   	}
 	  defines { "USE_TENGINE_MAIN", 'SELFEXE_MACOSX'  }
-		linkoptions { "-framework SDL", "-framework SDL_image", "-framework SDL_ttf", "-framework SDL_mixer", "-framework Cocoa", "-framework OpenGL" , "-framework OpenAL", "-pagezero_size 10000","-image_base 100000000" }
+		linkoptions { "-framework SDL2", "-framework SDL2_image", "-framework SDL2_ttf", "-framework libpng", "-framework Cocoa", "-framework OpenGL" , "-framework OpenAL", "-pagezero_size 10000", "-image_base 100000000", "-isysroot /Developer/SDKs/MacOSX10.5.sdk", "-mmacosx-version-min=10.5" }
 		targetdir "."
-		links { "IOKit" }
+		links { "IOKit", "vorbisfile" }
 
 	configuration "windows"
 		links { "mingw32", "SDL2main", "SDL2", "SDL2_ttf", "SDL2_image", "openal32", "vorbisfile", "OPENGL32", "GLU32", "wsock32", "png" }

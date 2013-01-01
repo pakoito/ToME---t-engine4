@@ -37,7 +37,12 @@
 #include "useshader.h"
 #include <math.h>
 #include <time.h>
+
+#ifdef __APPLE__
+#include <libpng/png.h>
+#else
 #include <png.h>
+#endif
 
 extern SDL_Window *window;
 

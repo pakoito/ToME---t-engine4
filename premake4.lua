@@ -37,7 +37,7 @@ configuration "windows"
 	}
 
 configuration "macosx"
-	buildoptions { "-pagezero_size 10000", "-image_base 100000000" }
+	buildoptions { "-pagezero_size 10000", "-image_base 100000000", "-Wno-return-type", "-isysroot /Developer/SDKs/MacOSX10.5.sdk", "-mmacosx-version-min=10.5" }
 
 configuration "Debug"
 	defines { }

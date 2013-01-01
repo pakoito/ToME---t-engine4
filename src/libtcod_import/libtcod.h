@@ -82,7 +82,7 @@
 
 // SDL_main support for OSX
 #ifdef TCOD_MACOSX
-#include "SDL/SDL.h"
+#include "SDL2/SDL.h"
 #endif
 
 // base types

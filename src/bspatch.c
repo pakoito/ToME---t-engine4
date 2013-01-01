@@ -30,6 +30,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <sys/types.h>
 
 static off_t offtin(u_char *buf)
 {

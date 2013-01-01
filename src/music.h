@@ -22,21 +22,25 @@
 #define _MUSIC_H_
 
 #ifdef __APPLE__
-#include <al.h>
-#include <alc.h>
-#include <vorbisfile.h>
+#include <OpenAL/al.h>
+#include <OpenAL/alc.h>
+#include <vorbis/vorbisfile.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_thread.h>
 #elif defined(WIN32)
 #include <AL/al.h>
 #include <AL/alc.h>
 #include <vorbis/vorbisfile.h>
+#include "SDL.h"
+#include "SDL_thread.h"
 #else
 #include <AL/al.h>
 #include <AL/alc.h>
 #include <vorbis/vorbisfile.h>
-#endif
-
 #include "SDL.h"
 #include "SDL_thread.h"
+#endif
+
 #include "lua.h"
 #include "lauxlib.h"
 #include "types.h"
