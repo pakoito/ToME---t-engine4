@@ -109,7 +109,7 @@ uberTalent{
 		return ([[You can wrap temporal threads around you, assuming the form of a telugoroth for 10 turns.
 		While in this form, you gain pinning, bleeding, blindness and stun immunity, 30%% temporal resistance, your temporal damage bonus is set to your current highest damage bonus + 30%%, all damage you deal becomes temporal, and you gain 20%% temporal resistance penetration.
 		You also are able to cast two anomalies: Anomaly Rearrange and Anomaly Temporal Storm.
-		Transforming to this form will increase your paradox by 600, and revert it back at the end of the effect.]])
+		Transforming to this form will increase your paradox by 600 but also grant an equivalent of +600 willpower to control paradoxes and failures, and revert it back at the end of the effect.]])
 		:format()
 	end,
 }
