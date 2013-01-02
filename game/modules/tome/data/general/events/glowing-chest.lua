@@ -82,6 +82,7 @@ g.block_move = function(self, x, y, who, act, couldpass)
 		self.chest_item = nil
 		self.chest_guards = nil
 		self.block_move = nil
+		self.special = nil
 		self.autoexplore_ignore = true
 	end end, "Open", "Leave")
 
