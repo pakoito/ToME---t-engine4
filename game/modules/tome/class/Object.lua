@@ -1285,6 +1285,7 @@ function _M:getDesc(name_param, compare_with, never_compare)
 		if self.power_source.technique then desc:add("Crafted by ", {"color", "LIGHT_UMBER"}, "a master", {"color", "LAST"}, true) end
 		if self.power_source.psionic then desc:add("Infused by ", {"color", "YELLOW"}, "psionic forces", {"color", "LAST"}, true) end
 		if self.power_source.unknown then desc:add("Powered by ", {"color", "CRIMSON"}, "unknown forces", {"color", "LAST"}, true) end
+		self:triggerHook{"Object:descPowerSource", desc=desc, object=self}
 	end
 
 	if self.encumber then

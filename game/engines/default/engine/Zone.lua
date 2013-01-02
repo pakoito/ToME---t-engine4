@@ -289,7 +289,14 @@ function _M:makeEntity(level, type, filter, force_level, prob_filter)
 	-- Generate a specific probability list, slower to generate but no need to "try and be lucky"
 	elseif filter then
 		local base_list = nil
-		if filter.base_list then base_list = filter.base_list
+		if filter.base_list then 
+			if _G.type(filter.base_list) == "table" then base_list = filter.base_list
+			else
+				local _, _, class, file = filter.base_list:find("(.*):(.*)")
+				if class and file then
+					base_list = require(class):loadList(file)
+				end
+			end
 		elseif type == "actor" then base_list = self.npc_list
 		elseif type == "object" then base_list = self.object_list
 		elseif type == "trap" then base_list = self.trap_list
