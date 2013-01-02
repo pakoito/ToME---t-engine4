@@ -1025,7 +1025,7 @@ newEntity{ name = "anorithil",
 
 newEntity{ name = "sun paladin",
 	base = "BASE_NPC_ARENA1",
-	type = "humanoid", subtype = "human",
+	type = "humanoid", subtype = "human", image = "npc/humanoid_human_human_sun_paladin.png",
 	color=colors.LIGHT_UMBER,
 	life_rating = 12,
 
