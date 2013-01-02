@@ -151,7 +151,7 @@ newBirthDescriptor{
 		["technique/dualweapon-attack"]={true, 0.2},
 		["technique/dualweapon-training"]={true, 0.2},
 		["technique/combat-techniques-active"]={true, 0.3},
-		["technique/combat-techniques-passive"]={false, 0.0},
+		["technique/combat-techniques-passive"]={true, 0.0},
 		["technique/combat-training"]={true, 0.3},
 		["technique/field-control"]={true, 0.3},
 		["technique/battle-tactics"]={false, 0.2},
