@@ -99,7 +99,7 @@ newTalent{
 
 		if hit then
 			local stunChance = t.getStunChance(self, t)
-			if rng.percent(stunChance) then
+			if rng.percent(stunChance) and target:canBe("stun") then
 				target:setEffect(target.EFF_STUNNED, 3, {apply_power=self:combatMindpower()})
 			end
 			
