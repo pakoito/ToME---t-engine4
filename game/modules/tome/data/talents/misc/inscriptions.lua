@@ -441,7 +441,7 @@ newInscription{
 }
 
 newInscription{
-	name = "Rune: Reflection Shield", image = "talents/rune__shielding.png",
+	name = "Rune: Reflection Shield",
 	type = {"inscriptions/runes", 1},
 	points = 1,
 	is_spell = true,
