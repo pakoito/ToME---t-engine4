@@ -59,10 +59,11 @@ function _M:init(dialogdef, profile_help_text)
 		}
 		self:setFocus(self.c_login)
 	else
-		self.c_login = Textbox.new{title="Username: ", text="", chars=30, max_len=20, filter=login_filter, fct=function(text) self:okclick() end}
-		self.c_pass = Textbox.new{title="Password: ", text="", chars=30, max_len=20, hide=true, filter=pass_filter, fct=function(text) self:okclick() end}
-		self.c_pass2 = Textbox.new{title="Password again: ", text="", chars=30, max_len=20, hide=true, filter=pass_filter, fct=function(text) self:okclick() end}
-		self.c_email = Textbox.new{title="Email: ", text="", chars=30, max_len=60, filter=pass_filter, fct=function(text) self:okclick() end}
+		local pwa = "Password again: "
+		self.c_login = Textbox.new{title="Username: ", size_title=pwa, text="", chars=30, max_len=20, filter=login_filter, fct=function(text) self:okclick() end}
+		self.c_pass = Textbox.new{title="Password: ", size_title=pwa, text="", chars=30, max_len=20, hide=true, filter=pass_filter, fct=function(text) self:okclick() end}
+		self.c_pass2 = Textbox.new{title=pwa, text="", size_title=pwa, chars=30, max_len=20, hide=true, filter=pass_filter, fct=function(text) self:okclick() end}
+		self.c_email = Textbox.new{title="Email: ", size_title=pwa, text="", chars=30, max_len=60, filter=pass_filter, fct=function(text) self:okclick() end}
 		local ok = require("engine.ui.Button").new{text="Create", fct=function() self:okclick() end}
 		local cancel = require("engine.ui.Button").new{text="Cancel", fct=function() self:cancelclick() end}
 
