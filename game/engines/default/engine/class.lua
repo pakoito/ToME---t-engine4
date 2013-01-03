@@ -42,6 +42,7 @@ function make(c)
 	return c
 end
 
+local skip_key = {init=true, _NAME=true, _M=true, _PACKAGE=true, new=true, _BASES=true, castAs=true}
 function inherit(...)
 	local bases = {...}
 	return function(c)
@@ -49,7 +50,6 @@ function inherit(...)
 		-- Recursive inheritance caching
 		-- Inheritance proceeds from the first to last argument, so if the first and last base classes share a key the value will match the last base class
 		if #bases > 1 then
-			local skip_key = {init=true, _NAME=true, _M=true, _PACKAGE=true, new=true, _BASES=true, castAs=true}
 			local completed_bases = {}
 --			local inheritance_mapper = {}
 			local cache_inheritance
@@ -111,6 +111,14 @@ function inherit(...)
 			end
 		end
 		return c
+	end
+end
+
+function _M:importInterface(base)
+	for k, e in pairs(base) do
+		if not skip_key[k] and (base[k] ~= nil) then
+			self[k] = base[k]
+		end
 	end
 end
 

@@ -90,12 +90,21 @@ end
 function resolvers.calc.inventory(t, e)
 	-- Iterate of object requests, try to create them and equip them
 	for i, filter in ipairs(t[1]) do
---		print("Inventory resolver", e.name, filter.type, filter.subtype)
+		print("Inventory resolver", e.name, e.filter, filter.type, filter.subtype)
 		local o
 		if not filter.defined then
 			o = game.zone:makeEntity(game.level, "object", filter, nil, true)
 		else
-			o = game.zone:makeEntityByName(game.level, "object", filter.defined)
+			if filter.base_list then
+				local _, _, class, file = filter.base_list:find("(.*):(.*)")
+				if class and file then
+					local base_list = require(class):loadList(file)
+					base_list.__real_type = "object"
+					o = game.zone:makeEntityByName(game.level, base_list, filter.defined)
+				end
+			else
+				o = game.zone:makeEntityByName(game.level, "object", filter.defined)
+			end
 		end
 		if o then
 --			print("Zone made us an inventory according to filter!", o:getName())

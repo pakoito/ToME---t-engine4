@@ -4585,3 +4585,11 @@ function _M:transmoGetNumberItems()
 	for i, o in ipairs(inven) do if o.__transmo then nb = nb + 1 end end
 	return nb
 end
+
+function _M:transmoHelpPopup()
+	Dialog:simplePopup("Transmogrification Chest", "When you close the inventory window, all items in the chest will be transmogrified.")
+end
+
+function _M:transmoGetName()
+	return "Transmogrification Chest"
+end

@@ -580,7 +580,7 @@ function _M:changeLevel(lev, zone, params)
 	local p = self:getPlayer(true)
 	if not params.direct_switch and p:attr("has_transmo") and p:transmoGetNumberItems() > 0 and not game.player.no_inventory_access then
 		local d
-		local titleupdator = self.player:getEncumberTitleUpdator("Transmogrification Chest")
+		local titleupdator = self.player:getEncumberTitleUpdator(p:transmoGetName())
 		d = self.player:showEquipInven(titleupdator(), nil, function(o, inven, item, button, event)
 			if not o then return end
 			local ud = require("mod.dialogs.UseItemDialog").new(event == "button", self.player, o, item, inven, function(_, _, _, stop)
@@ -604,7 +604,7 @@ function _M:changeLevel(lev, zone, params)
 		-- Select the chest tab
 		d.c_inven.dont_update_last_tabs = true
 		d.c_inven:switchTab{kind="transmo"}
-		d:simplePopup("Transmogrification Chest", "When you close the inventory window, all items in the chest will be transmogrified.")
+		p:transmoHelpPopup()
 	else
 		self:changeLevelReal(lev, zone, params)
 	end
