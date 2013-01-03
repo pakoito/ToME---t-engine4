@@ -67,7 +67,8 @@ newTalent{
 		Level 4: Disarm Trap
 		Level 5: Nightshade Trap
 		New traps can also be learned from special teachers in the world.
-		This talent also increases the effectiveness of your traps by %d%% (The effect varies for each trap).]]):
+		This talent also increases the effectiveness of your traps by %d%% (The effect varies for each trap).
+		If a trap is not triggered 80%% of its stamina cost will be refunded when it expires.]]):
 		format(self:getTalentLevel(t) * 20)
 	end,
 }
@@ -211,6 +212,9 @@ local basetrap = function(self, t, x, y, dur, add)
 			if self.temporary <= 0 then
 				if game.level.map(self.x, self.y, engine.Map.TRAP) == self then game.level.map:remove(self.x, self.y, engine.Map.TRAP) end
 				game.level:removeEntity(self)
+				if self.summoner and self.stamina then -- Refund
+					self.summoner:incStamina(self.stamina * 0.8)
+				end
 			end
 		end,
 	}
@@ -239,6 +243,7 @@ newTalent{
 		local t = basetrap(self, t, x, y, 8 + self:getTalentLevel(self.T_TRAP_MASTERY), {
 			type = "elemental", name = "explosion trap", color=colors.LIGHT_RED, image = "trap/blast_fire01.png",
 			dam = dam,
+			stamina = t.stamina,
 			lure_trigger = true,
 			triggered = function(self, x, y, who)
 				self:project({type="ball", x=x,y=y, radius=2}, x, y, engine.DamageType.FIREBURN, self.dam)
@@ -285,6 +290,7 @@ newTalent{
 		local t = basetrap(self, t, x, y, 8 + self:getTalentLevel(self.T_TRAP_MASTERY), {
 			type = "physical", name = "bear trap", color=colors.UMBER, image = "trap/beartrap01.png",
 			dam = dam,
+			stamina = t.stamina,
 			check_hit = self:combatAttack(),
 			triggered = function(self, x, y, who)
 				if who and who:canBe("cut") then who:setEffect(who.EFF_CUT, 5, {src=self.summoner, power=self.dam}) end
@@ -334,6 +340,7 @@ newTalent{
 			type = "physical", name = "catapult trap", color=colors.LIGHT_UMBER, image = "trap/trap_catapult_01_64.png",
 			dist = 2 + math.ceil(self:getTalentLevel(self.T_TRAP_MASTERY)),
 			check_hit = self:combatAttack(),
+			stamina = t.stamina,
 			triggered = function(self, x, y, who)
 				-- Try to knockback !
 				local can = function(target)
@@ -384,11 +391,15 @@ newTalent{
 		if game.level.map(x, y, Map.TRAP) then game.logPlayer(self, "You somehow fail to set the trap.") return nil end
 
 		local Trap = require "mod.class.Trap"
+		local dam = 60 + self:getCun() * 0.9 * self:getTalentLevel(self.T_TRAP_MASTERY)
 		local t = basetrap(self, t, x, y, 8 + self:getTalentLevel(self.T_TRAP_MASTERY), {
 			type = "physical", name = "disarming trap", color=colors.DARK_GREY, image = "trap/trap_magical_disarm_01_64.png",
 			dur = 2 + math.ceil(self:getTalentLevel(self.T_TRAP_MASTERY) / 2),
 			check_hit = self:combatAttack(),
+			dam = dam,
+			stamina = t.stamina,
 			triggered = function(self, x, y, who)
+				self:project({type="hit", x=x,y=y}, x, y, engine.DamageType.ACID, self.dam, {type="acid"})
 				if who:canBe("disarm") then
 					who:setEffect(who.EFF_DISARMED, self.dur, {apply_power=self.check_hit})
 				else
@@ -408,8 +419,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Lay a tricky trap that maims the arms of creatures passing by, disarming them for %d turns.]]):
-		format(2 + math.ceil(self:getTalentLevel(self.T_TRAP_MASTERY) / 2))
+		return ([[Lay a tricky trap that maims the arms of creatures passing by with acid doing %0.2f damage and disarming them for %d turns.]]):
+		format(damDesc(self, DamageType.ACID, 30 + self:getCun() * 0.8 * self:getTalentLevel(self.T_TRAP_MASTERY)), 2 + math.ceil(self:getTalentLevel(self.T_TRAP_MASTERY) / 2))
 	end,
 }
 
@@ -435,6 +446,7 @@ newTalent{
 		local t = basetrap(self, t, x, y, 5 + self:getTalentLevel(self.T_TRAP_MASTERY), {
 			type = "nature", name = "nightshade trap", color=colors.LIGHT_BLUE, image = "trap/poison_vines01.png",
 			dam = dam,
+			stamina = t.stamina,
 			check_hit = self:combatAttack(),
 			triggered = function(self, x, y, who)
 				self:project({type="hit", x=x,y=y}, x, y, engine.DamageType.NATURE, self.dam, {type="slime"})
@@ -482,6 +494,7 @@ newTalent{
 			dur = math.floor(self:getTalentLevel(self.T_TRAP_MASTERY) + 4),
 			check_hit = self:combatAttack(),
 			lure_trigger = true,
+			stamina = t.stamina,
 			triggered = function(self, x, y, who)
 				self:project({type="ball", x=x,y=y, radius=2}, x, y, function(px, py)
 					local who = game.level.map(px, py, engine.Map.ACTOR)
@@ -538,6 +551,7 @@ newTalent{
 			type = "nature", name = "poison gas trap", color=colors.LIGHT_RED, image = "trap/blast_acid01.png",
 			dam = dam,
 			check_hit = self:combatAttack(),
+			stamina = t.stamina,
 			lure_trigger = true,
 			triggered = function(self, x, y, who)
 				-- Add a lasting map effect
@@ -595,6 +609,7 @@ newTalent{
 			type = "arcane", name = "gravitic trap", color=colors.LIGHT_RED, image = "invis.png",
 			embed_particles = {{name="wormhole", rad=1, args={image="shockbolt/terrain/wormhole", speed=1}}},
 			dam = dam,
+			stamina = t.stamina,
 			check_hit = self:combatAttack(),
 			triggered = function(self, x, y, who)
 				return true, true
