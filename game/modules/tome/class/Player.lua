@@ -1289,6 +1289,9 @@ function _M:onWear(o, bypass_set)
 		end
 	end
 
+	if o.power_source and o.power_source.antimagic and not game.party:knownLore("nature-vs-magic") and self:attr("has_arcane_knowledge") then
+		game.party:learnLore("nature-vs-magic")
+	end
 end
 
 --- Call when an object is added

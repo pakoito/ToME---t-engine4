@@ -3562,6 +3562,10 @@ function _M:preUseTalent(ab, silent, fake)
 		end
 	end
 
+	if self:triggerHook{"Actor:preUseTalent", t=ab, silent=silent, fale=fake} then
+		return false
+	end
+
 	-- Confused ? lose a turn!
 	if self:attr("confused") and (ab.mode ~= "sustained" or not self:isTalentActive(ab.id)) and ab.no_energy ~= true and not fake and not self:attr("force_talent_ignore_ressources") then
 		if rng.percent(self:attr("confused")) then
@@ -3785,7 +3789,10 @@ function _M:postUseTalent(ab, ret)
 		end
 	end
 
-	self:triggerHook{"Actor:postUseTalent", t=ab, ret=ret, trigger=trigger}
+	local hd = {"Actor:postUseTalent", t=ab, ret=ret, trigger=trigger}
+	if self:triggerHook(hd) then
+		trigger = hd.trigger
+	end
 
 	if trigger and self:hasEffect(self.EFF_BURNING_HEX) then
 		local p = self:hasEffect(self.EFF_BURNING_HEX)
@@ -3956,6 +3963,8 @@ function _M:getTalentFullDescription(t, addlevel, config, fake_mastery)
 		if t.sustain_paradox then d:add({"color",0x6f,0xff,0x83}, "Sustain paradox cost: ", {"color",  176, 196, 222}, ("%0.2f"):format(t.sustain_paradox), true) end
 		if t.sustain_psi then d:add({"color",0x6f,0xff,0x83}, "Sustain psi cost: ", {"color",0x7f,0xff,0xd4}, ""..(t.sustain_psi), true) end
 		if t.sustain_feedback then d:add({"color",0x6f,0xff,0x83}, "Sustain feedback cost: ", {"color",0xFF, 0xFF, 0x00}, ""..(t.sustain_feedback), true) end
+
+		self:triggerHook{"Actor:getTalentFullDescription:ressources", str=d, t=t, addlevel=addlevel, config=config, fake_mastery=fake_mastery}
 	end
 	if t.mode ~= "passive" then
 		if self:getTalentRange(t) > 1 then d:add({"color",0x6f,0xff,0x83}, "Range: ", {"color",0xFF,0xFF,0xFF}, ("%0.2f"):format(self:getTalentRange(t)), true)

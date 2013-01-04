@@ -127,7 +127,7 @@ newTalent{
 		local bonusCritical = t.getBonusCritical(self, t)
 		return ([[Use a gesture of pain in place of an normal attack to strike into the minds of your enemies, inflicting between %0.1f and %0.1f mind damage. If you strike your target, there is a %d%% chance to stun your opponent for 3 turns.
 		This strike replaces your melee physical and checks Mindpower versus Mental Save, and is thus not affected by your Accuracy or the enemy's Defense. It also does not trigger any physical on-hit effects. However, the base damage and the critical chance of Mindstars equipped is added in when this attack is performed.
-		25%% chance of cross tier effects. Requires at least one free or mindstar-equipped hand. Can cause critical hits with cross tier effects. The damage will increase with your Mindpower. Mindstars bonuses from damage and physical criticals: (+%d damage, +%d critical chance)]]):format(damDesc(self, DamageType.MIND, baseDamage * 0.5), damDesc(self, DamageType.MIND, baseDamage), stunChance, bonusDamage, bonusCritical)
+		25%% chance of cross tier effects. Requires two free or mindstar-equipped hands. Can cause critical hits with cross tier effects. The damage will increase with your Mindpower. Mindstars bonuses from damage and physical criticals: (+%d damage, +%d critical chance)]]):format(damDesc(self, DamageType.MIND, baseDamage * 0.5), damDesc(self, DamageType.MIND, baseDamage), stunChance, bonusDamage, bonusCritical)
 	end,
 }
 
@@ -171,7 +171,7 @@ newTalent{
 		local mindpowerChange = t.getMindpowerChange(self, t, 2)
 		local mindCritChange = t.getMindCritChange(self, t)
 		return ([[Enhance your mental attacks with a single gesture. You gain +%d mindpower and +%d%% chance to inflict critical damage with mind-based attacks (current chance is %d%%).
-		Requires at least one free or mindstar-equipped hand; does not require Gesture of Pain to be sustained.]]):format(mindpowerChange, mindCritChange, self:combatMindCrit())
+		Requires two free or mindstar-equipped hands; does not require Gesture of Pain to be sustained.]]):format(mindpowerChange, mindCritChange, self:combatMindCrit())
 	end,
 }
 
@@ -202,6 +202,6 @@ newTalent{
 		local damageChange = t.getDamageChange(self, t)
 		local counterAttackChance = t.getCounterAttackChance(self, t)
 		return ([[You guard against melee damage with a sweep of you hand. All damage from melee attacks is reduced by %d%%. There is also a %d%% chance of counterattacking while Gesture of Pain is active.
-		Requires at least one free or mindstar-equipped hand; does not require Gesture of Pain to be sustained.]]):format(-damageChange, counterAttackChance)
+		Requires two free or mindstar-equipped hands; does not require Gesture of Pain to be sustained.]]):format(-damageChange, counterAttackChance)
 	end,
 }
