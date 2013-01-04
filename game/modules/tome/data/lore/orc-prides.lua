@@ -345,3 +345,34 @@ I see his notes also suggest the mothers may be in pain. I will allow a doping i
 
 ]]
 }
+
+--------------------------------------------------------------------------
+-- Misc Orc lore
+--------------------------------------------------------------------------
+
+newLore{
+	id = "ukruk-log",
+	category = "orc prides",
+	name = "Ukruk's log",
+	lore = [[Sher'Tul ruin matches description from high command. Investigation begun, but slow. Looks like it crashed into the ground long ago - hard to access many areas. Target item has been described by command as a staff. Do not know why a staff so important. Surely the ultimate weapon should be a sword or axe, like that wielded by the great Garkul?
+
+Have heard many rumours against high command lately - strange rumours, indeed. Perhaps by completing this mission I shall get closer to them so that I might seek the truth...
+
+...
+
+Curses and banes! Some bastard blaze-born THIEF has raided the ruins! And a halfling no less, a curr-damned halfling! I am pyred with rage!
+
+He got in during dusk somehow, crawling through a tunnel too narrow for my workers to reach. He grabbed a staff from the ruins and snuck out past my orcs! The dirty, treacherous sneak has run away, and my career with him! I have sent scouts to track him, but he is proving elusive. But I will not let him escape! This is unforgiveable!
+
+...
+
+We've followed the tracks of the wretch. It seems as if he met up with a dwarf and a human near a town called Derth, and they travelled south-east from there. Following the three of them was much easier than the sneak alone, but we still must take care to remain hidden. Our orders from high command strictly forbid showing ourselves, and we must avoid battle as much as possible. I have a trained team of archers and fighters with me that know how to stay hidden in the woods.
+
+The thief and his cursed allies have entered an old ruined tower called Dreadfell. It an ancient place, known to be filled with undead in its dungeons. If we break in we're bound to cause a stir, and so close to the big human town east of here... I am not sure how to proceed, and have sent a message to command requesting instructions. For now we wait in the woods, keeping an eye on the entrance for any change. If anyone comes out from the tower with that staff they will face my wrath!
+
+...
+
+Word is finally back from command - hold position and wait for the staff to emerge. If it doesn't happen soon then they will send their own agents in time.
+
+In time! Bah! This will be my ruin if it comes to that. If there is any appearance of the staff I must snatch it and get back East as soon as possible...]],
+}

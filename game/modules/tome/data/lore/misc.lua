@@ -593,6 +593,7 @@ newLore{
 Eyal is a torn world, and the forces of nature can react strongly to the arcane energies that seek to manipulate them. Some items and areas are imbued with anti-magic, a natural energy that disrupts magical abilities and effects. There are even those who have learned to harness anti-magic into their own wild abilities, and who use them to hunt down and destroy those who practise magic. So beware, caster! It is a hostile world ye wander in.]],
 }
 
+
 --------------------------------------------------------------
 -- Misc bosses
 --------------------------------------------------------------
