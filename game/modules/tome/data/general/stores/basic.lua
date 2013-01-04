@@ -326,6 +326,7 @@ newEntity{
 			{id=true, defined="RACES_NOTE2"},
 			{id=true, defined="SOUTHSPAR_NOTE1"},
 			{id=true, defined="SOUTHSPAR_NOTE2"},
+			{id=true, defined="OCEANS_OF_EYAL"},
 		},
 	},
 }

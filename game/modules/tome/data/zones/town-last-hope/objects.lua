@@ -54,3 +54,13 @@ newEntity{ base = "BASE_LORE",
 	cost = 2,
 }
 end
+
+newEntity{ base = "BASE_LORE",
+	define_as = "OCEANS_OF_EYAL",
+	subtype = "oceans", unique=true, no_unique_lore=true, not_in_stores=false,
+	name = "The Oceans of Eyal", lore="oceans-of-yeal",
+	desc = [[Thoughts about the impossibility of sea travel.]],
+	rarity = false,
+	encumberance = 0,
+	cost = 10,
+}

@@ -217,6 +217,27 @@ To those who oppose this, let thee be afeared, for a new dawn is rising and it s
 All hail the reign of King Toknor and Queen Mirvenia! All hail the Allied Kingdoms! All hail the Age of Ascendancy!]],
 }
 
+newLore{
+	id = "oceans-of-yeal",
+	category = "last hope",
+	name = "The Oceans of Eyal",
+	lore = [[The Oceans of Eyal represent a frontier which we have been powerless to break. In spite of advanced craft and skill, and even the more forbidden areas of magic, there are natural barriers that we simply cannot overcome. Long range seafaring has become seen as unprofitable and a fruitless endeavour. The last great ship to be built was the Vanguard, over a thousand years ago, which disappeared over the eastern horizon and was never seen again.
+
+Yet we know that the Sher’Tul once travelled the whole globe, that records exist from our younger days of other continents, of sailing routes that go right round the whole of Eyal. How it stirs my heart to think of the unexplored lands that lie beyond our stormy coasts!
+
+Alas, records from the time of the Spellblaze and the Cataclysm show that those old routes can no longer be traversed. A reshaping of currents, an increase in storms and a greater abundance of dangerous sea creatures have all locked us onto the continent of Maj’Eyal.
+
+Yet my desire for knowledge is not sated. I spoke some time ago with an old fisherman - a halfling sea dog with a crusty beard, hideous scars, and the foul stench of stale ale all about him. Inbetween the wretched smelling breaths from his toothless mouth he told me some valuable information. I transcribe it as best I can here:
+
+“Nay, ya’ll not get long out b’ond coast thar. In th’orth ya’ll run inta ice floes, miles wide stretches at’ll close in on ya and crush yar hull fro’neath. Out west be a field o’ storms, cyclones and hur’canes tha’ll swaller up any ‘at go near. And out east... ack, out east be th’orst. Nagas and sea dragons, switchin’ currents and ocean rifts, storms of hate like y’never seen in yar worst nightmares. As fer south, well tha’s best spot fer fishin’ and the like, we gots some good patches thar. But venture too far and ya meet a... I ‘unno, some magicy barrier or whatnot. Ships hit ‘gainst it like a wall o’ air. Go too fast and ya smash yar prow apart! And out b’ond it... some cloud of darkness lies on t’rizon. We stays clear o’ that, I tells ya.”
+
+It’s a remarkable report, and one I’m minded to believe, in spite of the notorious unreliability of seafarer tales. South was once the continent of Tar’Eyal, said to be a desert-smothered land full of wild energies. What fate has swallowed it from our access now is hard to say. But my curiosity is sorely piqued, and I shall endeavour to charter a ship to investigate this strange barrier to the south. Likely the lesser races that crew these vessels would balk at such an enterprise, but I’m sure that with the leadership and influence of a Higher like myself I can persuade them to have a little more backbone.
+
+- Lord Estevan Asimir
+
+#{italic}#Footnote: After this paper was published Lord Asimir was found dead and stripped of all valuables in one of the ports of Last Hope.#{normal}#]],
+}
+
 --------------------------------------------------------------------------
 -- Last Hope Graveyard
 --------------------------------------------------------------------------
