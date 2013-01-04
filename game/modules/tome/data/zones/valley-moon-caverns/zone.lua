@@ -72,4 +72,12 @@ return {
 			}, },
 		},
 	},
+	post_process = function(level)
+		if level.level == 1 then
+			game:placeRandomLoreObject("NOTE1")
+			game:placeRandomLoreObject("NOTE2")
+		elseif level.level == 2 then
+			game:placeRandomLoreObject("NOTE3")
+		end
+	end,
 }

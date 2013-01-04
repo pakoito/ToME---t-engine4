@@ -19,3 +19,13 @@
 
 load("/data/general/objects/objects-far-east.lua")
 load("/data/general/objects/lore/sunwall.lua")
+
+for i = 1, 3 do
+newEntity{ base = "BASE_LORE",
+	define_as = "NOTE"..i,
+	name = "tattered paper scrap", lore="valley-moon-"..i,
+	desc = [[A paper scrap, left by somebody named Rassir.]],
+	rarity = false,
+	encumberance = 0,
+}
+end
