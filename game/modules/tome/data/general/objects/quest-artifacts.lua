@@ -128,7 +128,7 @@ If used near a portal it could probably activate it.]],
 	use_power = { name = "activate a portal", power = 10,
 		use = function(self, who)
 			local g = game.level.map(who.x, who.y, game.level.map.TERRAIN)
-			if g and g.orb_portal then
+			if g and g.orb_portal and game.zone.short_name ~= "high-peak" then
 				world:gainAchievement("SLIDERS", who:resolveSource())
 				who:useOrbPortal{
 					change_level = 1,
