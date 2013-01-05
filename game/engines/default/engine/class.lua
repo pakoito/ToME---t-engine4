@@ -234,8 +234,21 @@ end
 -- ---------------------------------------------------------------------
 
 local _hooks = {hooks={}, list={}}
+local _current_hook_dir = nil
+
+function _M:setCurrentHookDir(dir)
+	_current_hook_dir = dir
+end
 
 function _M:bindHook(hook, fct)
+	if type(fct) == "string" and _current_hook_dir then
+		local f, err = loadfile(_current_hook_dir..fct..".lua")
+		if not f then error(err) end
+		local ok, hook = pcall(f)
+		if not ok then error(hook) end
+		fct = hook
+	end
+
 	_hooks.list[hook] = _hooks.list[hook] or {}
 	table.insert(_hooks.list[hook], fct)
 

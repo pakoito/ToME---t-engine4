@@ -43,6 +43,7 @@ function _M:init(t)
 	self.fct = t.fct
 	self.filter = t.filter
 	self.name_pos = t.name_pos
+	self.subobject = t.subobject
 
 	Base.init(self, t)
 end
@@ -75,6 +76,7 @@ end
 function _M:getItem()
 	local o = self.inven[self.item]
 	if not o then return end
+	if self.subobject then o = o[self.subobject](o) if not o then return end end
 	if self.filter and not self.filter(o) then return end
 	return o
 end

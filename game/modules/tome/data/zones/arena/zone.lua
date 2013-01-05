@@ -423,7 +423,7 @@ return {
 				end
 				game.level.turn_counter = rest_time * 10
 				game.level.max_turn_counter = rest_time * 10
-				game.level.arena.initWave(val)
+				game.level.arena.initWave(rest_time)
 			end,
 
 			checkPinch = function ()

@@ -364,7 +364,9 @@ function _M:loadAddons(mod, saveuse)
 		if add.overload then fs.mount(base.."/overload", "/", false) print(" * with overload") end
 		if add.hooks then
 			fs.mount(base.."/hooks", "/hooks/"..add.short_name, true)
+			self:setCurrentHookDir("/hooks/"..add.short_name.."/")
 			dofile("/hooks/"..add.short_name.."/load.lua")
+			self:setCurrentHookDir(nil)
 			print(" * with hooks")
 		end
 

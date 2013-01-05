@@ -86,6 +86,8 @@ function _M:init(title, actor, filter, action, on_select)
 		{left=self.c_doll.w, top=5, ui=Separator.new{dir="horizontal", size=self.ih - 10}},
 	}
 
+	self:triggerHook{"EquipInvenDialog:makeUI", uis=uis}
+
 	self:loadUI(uis)
 	self:setFocus(self.c_inven)
 	self:setupUI()
