@@ -166,8 +166,8 @@ newEntity{
 }
 newEntity{
 	power_source = {arcane=true},
-	name = "dark ", prefix=true, instant_resolve=true,
-	keywords = {dark=true},
+	name = "umbral ", prefix=true, instant_resolve=true,
+	keywords = {umbral=true},
 	level_range = {1, 50},
 	rarity = 9,
 	cost = 5,
@@ -184,8 +184,8 @@ newEntity{
 }
 newEntity{
 	power_source = {arcane=true},
-	name = "light ", prefix=true, instant_resolve=true,
-	keywords = {light=true},
+	name = "radiant ", prefix=true, instant_resolve=true,
+	keywords = {radiant=true},
 	level_range = {1, 50},
 	rarity = 9,
 	cost = 5,

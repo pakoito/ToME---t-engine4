@@ -92,7 +92,7 @@ newEntity{
 	},
 }
 newEntity{
-	power_source = {nature=true},
+	power_source = {antimagic=true},
 	name = "cleansing ", prefix=true, instant_resolve=true,
 	keywords = {cleansing=true},
 	level_range = {10, 50},

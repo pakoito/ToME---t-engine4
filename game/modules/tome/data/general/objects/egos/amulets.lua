@@ -198,7 +198,7 @@ newEntity{
 	},
 }
 newEntity{
-	power_source = {nature=true},
+	power_source = {antimagic=true},
 	name = "cleansing ", prefix=true, instant_resolve=true,
 	keywords = {cleansing=true},
 	level_range = {1, 50},
@@ -206,13 +206,13 @@ newEntity{
 	cost = 5,
 	wielder = {
 		resists={
-			[DamageType.NATURE] = resolvers.mbonus_material(20, 10),
+			[DamageType.BLIGHT] = resolvers.mbonus_material(20, 10),
 		},
-		poison_immune = resolvers.mbonus_material(30, 20, function(e, v) return 0, v/100 end),
+		disease_immune = resolvers.mbonus_material(30, 20, function(e, v) return 0, v/100 end),
 	},
 }
 newEntity{
-	power_source = {antimagic=true},
+	power_source = {nature=true},
 	name = "purifying ", prefix=true, instant_resolve=true,
 	keywords = {purifying=true},
 	level_range = {1, 50},
@@ -220,9 +220,9 @@ newEntity{
 	cost = 5,
 	wielder = {
 		resists={
-			[DamageType.BLIGHT] = resolvers.mbonus_material(20, 10),
+			[DamageType.NATURE] = resolvers.mbonus_material(20, 10),
 		},
-		disease_immune = resolvers.mbonus_material(30, 20, function(e, v) return 0, v/100 end),
+		poison_immune = resolvers.mbonus_material(30, 20, function(e, v) return 0, v/100 end),
 	},
 }
 newEntity{
