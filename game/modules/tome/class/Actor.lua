@@ -1060,6 +1060,8 @@ function _M:move(x, y, force)
 		end
 	end
 
+	self:triggerHook{"Actor:move", moved=moved, force=force, ox=ox, oy=oy}
+
 	return moved
 end
 
@@ -3102,6 +3104,9 @@ function _M:unlearnItemTalent(o, tid, level)
 	if not self.item_talent_surplus_levels then self.item_talent_surplus_levels = {} end
 	--local item_talent_surplus_levels = self.item_talent_surplus_levels or {}
 	if not self.item_talent_surplus_levels[tid] then self.item_talent_surplus_levels[tid] = 0 end
+
+	if self:isTalentActive(t) then self:forceUseTalent(t, {ignore_energy=true}) end
+
 	for i = 1, level do
 		if self.item_talent_surplus_levels[tid] > 0 then
 			self.item_talent_surplus_levels[tid] = self.item_talent_surplus_levels[tid] - 1
