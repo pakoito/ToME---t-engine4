@@ -1317,6 +1317,7 @@ function _M:selectTile()
 		"npc/humanoid_human_townsfolk_village_idiot01_64.png",
 		"npc/snowman01.png",
 		"npc/snaproot_pimp.png",
+		"npc/R2D2_01.png",
 		"player/ascii_player_dorfhelmet_01_64.png",
 		"player/ascii_player_fedora_feather_04_64.png",
 		"player/ascii_player_helmet_02_64.png",
