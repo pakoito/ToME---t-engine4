@@ -413,6 +413,13 @@ function _M:setupUI(resizex, resizey, on_resize, addmw, addmh)
 			elseif ui.hcenter then
 				if type(ui.hcenter) == "table" then ui.hcenter = self.ui_by_ui[ui.hcenter].x + ui.hcenter.w end
 				ux = ux + math.floor(self.iw / 2) + ui.hcenter - ui.ui.w / 2
+			elseif ui.hcenter_left then
+				if type(ui.hcenter_left) == "table" then 
+					ui.hcenter_left = self.ui_by_ui[ui.hcenter_left].x + ui.hcenter_left.w
+					ux = ux + ui.hcenter_left - self.ix
+				else
+					ux = ux + math.floor(self.iw / 2) + ui.hcenter_left
+				end
 			end
 		else
 			ux, uy = 0, 0
