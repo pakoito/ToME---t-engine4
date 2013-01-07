@@ -1284,7 +1284,7 @@ newEntity{ base = "BASE_LONGBOW",
 	name = "Storm Fury", unique=true, --THESE
 	unided_name = "crackling longbow", color=colors.BLUE,
 	desc = [[This dragonbone longbow is enhanced with bands of steel, which arc with intense lightning. Bolts travel up and down the string, ignorant of you.]],
-	require = { stat = { dex=60 }, },
+	require = { stat = { dex=30, mag=30 }, },
 	level_range = {40, 50},
 	rarity = 250,
 	cost = 300,
@@ -1295,14 +1295,19 @@ newEntity{ base = "BASE_LONGBOW",
 		physspeed = 0.7,
 	},
 	wielder = {
-		combat_spellpower=8,
-		ranged_project = {[DamageType.LIGHTNING] = 50},
+		combat_spellpower=20,
+		inc_stats = { [Stats.STAT_MAG] = 7, [Stats.STAT_DEX] = 5},
+		combat_def_ranged = 15,
+		ranged_project = {[DamageType.LIGHTNING] = 75},
 		talents_types_mastery = {
 			["spell/air"] = 0.2,
 			["spell/storm"] = 0.1,
 		},
 		inc_damage={
-			[DamageType.LIGHTNING] = 15,
+			[DamageType.LIGHTNING] = 20,
+		},
+		resists={
+			[DamageType.LIGHTNING] = 20,
 		},
 	},
 	act = function(self)

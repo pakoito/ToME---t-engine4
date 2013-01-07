@@ -74,7 +74,7 @@ newEntity{ base = "BASE_AMULET",
 	use_talent = { id = Talents.T_CIRCLE_OF_SANCTITY, level = 3, power = 30 },
 }
 
-newEntity{ base = "BASE_SHIELD",
+newEntity{ base = "BASE_SHIELD", define_as = "SHIELD_UNSETTING",
 	power_source = {arcane=true},
 	unique = true,
 	unided_name = "shimmering gold shield",
@@ -103,6 +103,14 @@ newEntity{ base = "BASE_SHIELD",
 		resists = {[DamageType.BLIGHT] = 30, [DamageType.DARKNESS] = 30},
 		learn_talent = { [Talents.T_BLOCK] = 5, },
 	},
+	set_list = { {"define_as","SWORD_DAWN"} },
+	on_set_complete = function(self, who)
+		self:specialSetAdd({"wielder","life_regen"}, 0.25)
+		self:specialSetAdd({"wielder","lite"}, 1)
+	end,
+	on_set_broken = function(self, who)
+		
+	end,
 }
 
 newEntity{ base = "BASE_HEAVY_BOOTS",
@@ -208,22 +216,22 @@ Now the broken fragments of Raasul's soul are trapped in this terrible artifact,
 	material_level = 5,
 	wielder = {
 		esp = {["undead/blood"]=1,},
-		combat_spellpower = 12,
-		combat_spellcrit = 4,
+		combat_spellpower = 21,
+		combat_spellcrit = 8,
 		inc_damage={
-			[DamageType.PHYSICAL] = 12,
-			[DamageType.BLIGHT] = 12,
+			[DamageType.PHYSICAL] = 15,
+			[DamageType.BLIGHT] = 15,
 		},
-		max_vim = 20,
+		max_vim = 25,
 	},
 
-	max_power = 30, power_regen = 1,
-	use_talent = { id = Talents.T_BLEEDING_EDGE, level = 4, power = 30 },
+	max_power = 28, power_regen = 1,
+	use_talent = { id = Talents.T_BLEEDING_EDGE, level = 4, power = 28 },
 	combat = {
-		dam = 38,
+		dam = 44,
 		apr = 4,
 		physcrit = 5,
-		dammod = {str=0.5, mag=0.5},
+		dammod = {str=0.55, mag=0.5},
 		convert_damage = {[DamageType.BLIGHT] = 50},
 
 		special_on_hit = {desc="15% chance to animate a bleeding foe's blood", fct=function(combat, who, target)
@@ -284,7 +292,7 @@ Now the broken fragments of Raasul's soul are trapped in this terrible artifact,
 				resolvers.sustains_at_birth(),
 				faction = who.faction,
 				summoner = who, summoner_gain_exp=true,
-				summon_time = 7,
+				summon_time = 9,
 			}
 
 			m:resolve()
@@ -306,7 +314,7 @@ Now the broken fragments of Raasul's soul are trapped in this terrible artifact,
 	},
 }
 
-newEntity{ base = "BASE_LONGSWORD",
+newEntity{ base = "BASE_LONGSWORD", define_as = "SWORD_DAWN",
 	power_source = {arcane=true},
 	unique = true,
 	name = "Dawn's Blade",
@@ -325,7 +333,7 @@ newEntity{ base = "BASE_LONGSWORD",
 			[DamageType.LIGHT] = 18,
 		},
 		resists_pen={
-			[DamageType.LIGHT] = 20,
+			[DamageType.LIGHT] = 25,
 		},
 		talents_types_mastery = {
 			["celestial/sun"] = 0.2,
@@ -354,15 +362,15 @@ newEntity{ base = "BASE_LONGSWORD",
 		end
 	},
 	combat = {
-		dam = 42,
-		apr = 4,
+		dam = 50,
+		apr = 7,
 		physcrit = 5,
-		dammod = {str=0.75, mag=0.25},
+		dammod = {str=0.8, mag=0.25},
 		convert_damage = {[DamageType.LIGHT] = 30},
 		inc_damage_type={
 			undead=25,
 			demon=25,
-		},
+		},		
 	},
 	on_wear = function(self, who)
 		if who.descriptor and who.descriptor.subclass == "Sun Paladin" then
@@ -370,6 +378,16 @@ newEntity{ base = "BASE_LONGSWORD",
 			self:specialWearAdd({"wielder", "positive_regen_ref"}, 0.2)
 			game.logPlayer(who, "#GOLD#You feel a swell of positive energy!")
 		end
+	end,
+	
+	set_list = { {"define_as","SHIELD_UNSETTING"} },
+	on_set_complete = function(self, who)
+		self:specialSetAdd({"combat","melee_project"}, {[engine.DamageType.LIGHT]=15, [engine.DamageType.FIRE]=15})
+		self:specialSetAdd({"wielder","inc_damage"}, {[engine.DamageType.LIGHT]=12, [engine.DamageType.FIRE]=10})
+		game.logPlayer(who, "#GOLD#As you wield the sword and shield of the Sunwall, you feel the Sun's light radiating from your core.")
+	end,
+	on_set_broken = function(self, who)
+		game.logPlayer(who, "#GOLD#You feel the Sun's light vanish from within you.")
 	end,
 }
 

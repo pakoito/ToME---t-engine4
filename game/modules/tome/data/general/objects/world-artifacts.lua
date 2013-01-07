@@ -2694,6 +2694,17 @@ newEntity{ base = "BASE_SHIELD",
 		return {id=true, used=true}
 	end,
 	},
+	on_wear = function(self, who)
+		if who:attr("forbid_arcane") then
+			local Stats = require "engine.interface.ActorStats"
+			local DamageType = require "engine.DamageType"
+
+			self:specialWearAdd({"wielder","resists"}, {[DamageType.ARCANE] = 15, [DamageType.BLIGHT] = 5})
+			self:specialWearAdd({"wielder","disease_immune"}, 15)
+			self:specialWearAdd({"wielder","poison_immune"}, 50)
+			game.logPlayer(who, "#DARK_GREEN#You feel nature's power protecting you!")
+		end
+	end,
 }
 
 newEntity{ base = "BASE_SHOT",
@@ -3031,11 +3042,11 @@ newEntity{ base = "BASE_STAFF",
 		combat_spellpower = 25,
 		combat_spellcrit = 7,
 		inc_damage={
-			[DamageType.PHYSICAL] 	= 18,
-			[DamageType.TEMPORAL] 	= 10,
+			[DamageType.PHYSICAL] 	= 20,
+			[DamageType.TEMPORAL] 	= 12,
 		},
 		resists={
-			[DamageType.PHYSICAL] 	= 14,
+			[DamageType.PHYSICAL] 	= 15,
 		},
 		talents_types_mastery = {
 			["chronomancy/gravity"] = 0.2,
@@ -3246,7 +3257,7 @@ newEntity{ base = "BASE_LEATHER_BELT",
 	material_level = 2,
 	wielder = {
 		inc_stats = { [Stats.STAT_LCK] = 2, [Stats.STAT_DEX] = 5, [Stats.STAT_CUN] = 3,},
-		slow_projectiles = 15,
+		slow_projectiles = 20,
 		combat_def_ranged = 8,
 	},
 	max_power = 40, power_regen = 1,
@@ -3330,7 +3341,7 @@ newEntity{ base = "BASE_WHIP",
 	level_range = {6, 15},
 	material_level = 1,
 	combat = {
-		dam = 15,
+		dam = 17,
 		apr = 7,
 		physcrit = 5,
 		dammod = {dex=1},
@@ -3417,7 +3428,7 @@ newEntity{ base = "BASE_GREATSWORD",
 	require = { stat = { str=40 }, },
 	material_level = 4,
 	combat = {
-		dam = 44,
+		dam = 64,
 		apr = 5,
 		physcrit = 10,
 		dammod = {str=1.2},
@@ -3619,10 +3630,11 @@ newEntity{ base = "BASE_LONGSWORD", define_as="CORPUS",
 				display = "h",
 				name = "Vilespawn", color=colors.GREEN,
 				image="npc/horror_eldritch_oozing_horror.png",
-				desc = "This mass of putrid slime burst from Corpus, and seems intent to kill you.",
+				desc = "This mass of putrid slime burst from Corpathus, and seems quite hungry.",
 				body = { INVEN = 10, MAINHAND=1, OFFHAND=1, },
 				rank = 2,
 				life_rating = 8, exp_worth = 0,
+				life_regen=0,
 				max_vim=200,
 				max_life = resolvers.rngavg(50,90),
 				infravision = 20,
@@ -3646,7 +3658,7 @@ newEntity{ base = "BASE_LONGSWORD", define_as="CORPUS",
 					[who.T_BLOOD_FURY]={base=1, every=8, max = 6},
 				},
 				resolvers.sustains_at_birth(),
-				faction = "enemies",
+				faction = who.faction,
 			}
 
 			m:resolve()
@@ -3674,7 +3686,7 @@ newEntity{ base = "BASE_LONGSWORD",
 	cost = 300,
 	material_level = 4,
 	combat = {
-		dam = 38,
+		dam = 47,
 		apr = 20,
 		physcrit = 7,
 		dammod = {str=0.8,wil=0.2},
@@ -3705,7 +3717,7 @@ newEntity{ base = "BASE_LONGSWORD",
 		end},
 	},
 	wielder = {
-		combat_mindpower=8,
+		combat_mindpower=9,
 		combat_mentalresist=-30,
 		inc_damage={
 			[DamageType.MIND] = 8,
@@ -4017,10 +4029,10 @@ newEntity{ base = "BASE_AMULET", --Thanks Grayswandir!
 	material_level = 3,
 	wielder = {
 		inc_damage={
-			[DamageType.LIGHT] = 10,
+			[DamageType.LIGHT] = 12,
 		},
 		resists={
-			[DamageType.LIGHT] = 20,
+			[DamageType.LIGHT] = 25,
 		},
 		lite=1,
 		on_melee_hit = {[DamageType.RANDOM_BLIND]=10},
@@ -4170,7 +4182,7 @@ newEntity{ base = "BASE_WHIP", --Thanks Grayswandir!
 	level_range = {4, 12},
 	material_level = 1,
 	combat = {
-		dam = 13,
+		dam = 19,
 		apr = 8,
 		physcrit = 5,
 		dammod = {dex=1},
@@ -4245,12 +4257,12 @@ newEntity{ base = "BASE_LEATHER_BOOT", --Thanks Grayswandir!
 	cost = 100,
 	material_level = 4,
 	wielder = {
-		combat_def = 4,
+		combat_def = 6,
 		fatigue = 1,
-		spellpower=4,
-		inc_stats = { [Stats.STAT_MAG] = 5, },
+		spellpower=5,
+		inc_stats = { [Stats.STAT_MAG] = 8, [Stats.STAT_CUN] = 8,},
 		resists={
-			[DamageType.ARCANE] = 10,
+			[DamageType.ARCANE] = 12,
 		},
 		resists_cap={
 			[DamageType.ARCANE] = 5,
@@ -4716,10 +4728,10 @@ newEntity{ base = "BASE_TOOL_MISC",
 	material_level = 5,
 	wielder = {
 		resists={[DamageType.DARKNESS] = 10, [DamageType.TEMPORAL] = 10},
-		inc_damage={[DamageType.DARKNESS] = 10, [DamageType.TEMPORAL] = 10},
-		on_melee_hit={[DamageType.VOID] = 10},
-		combat_spellresist = 12,
-		inc_stats = {[Stats.STAT_MAG] = 7,},
+		inc_damage={[DamageType.DARKNESS] = 12, [DamageType.TEMPORAL] = 12},
+		on_melee_hit={[DamageType.VOID] = 16},
+		combat_spellresist = 15,
+		inc_stats = {[Stats.STAT_MAG] = 8,},
 		combat_spellpower=3,
 	},
 	max_power = 40, power_regen = 1,
@@ -4899,7 +4911,7 @@ newEntity{ base = "BASE_GREATMAUL",
 	cost = 650,
 	material_level = 2,
 	combat = {
-		dam = 28,
+		dam = 30,
 		apr = 4,
 		physcrit = 4,
 		dammod = {str=1.2},
@@ -4984,7 +4996,7 @@ newEntity{ base = "BASE_GREATSWORD", --Thanks Grayswandir!
 	require = { stat = { str=24, }, },
 	material_level = 2,
 	combat = {
-		dam = 23,
+		dam = 24,
 		physspeed=0.9,
 		apr = 4,
 		physcrit = 3,
