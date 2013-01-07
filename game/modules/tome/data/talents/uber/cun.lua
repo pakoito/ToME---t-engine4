@@ -168,7 +168,7 @@ uberTalent{
 		)
 	end} },
 	trigger = function(self, t, target, damtype, dam)
-		if dam < 300 then return end
+		if dam < 200 then return end
 
 		local ok = false
 		if damtype == DamageType.ARCANE and rng.percent(30) then ok=true self:setEffect(self.EFF_ELEMENTAL_SURGE_ARCANE, 5, {})
