@@ -143,7 +143,7 @@ newTalent{
 	require = {
 		stat = { mag=function(level) return 40 + (level-1) * 2 end },
 		level = function(level) return 20 + (level-1)  end,
-		special = { desc="'From Death, Life' quest completed", fct=function(self, t) return self:isQuestStatus("lichform", engine.Quest.DONE) end},
+		special = { desc="'From Death, Life' quest completed and not already undead", fct=function(self, t) return not self:attr("undead") and self:isQuestStatus("lichform", engine.Quest.DONE) end},
 	},
 	mode = "sustained",
 	points = 5,
@@ -152,6 +152,7 @@ newTalent{
 	no_unlearn_last = true,
 	no_npc_use = true,
 	becomeLich = function(self, t)
+		self.has_used_lichform = true
 		self.descriptor.race = "Undead"
 		self.descriptor.subrace = "Lich"
 		self.moddable_tile = "skeleton"
@@ -245,7 +246,8 @@ newTalent{
 		At level 5: +5 Magic and Willpower, +2 life rating (not retroactive), +10 spell and mental saves, all resistance caps raised by 10%%, Celestial/Star Fury category (0.9) and 0.5 negative energy regeneration.
 		At level 6: +6 Magic, Willpower and Cunning, +3 life rating (not retroactive), +15 spell and mental saves, all resistance caps raised by 15%%, Celestial/Star Fury category (1.1) and 1.0 negative energy regeneration. Fear my power!
 		The undead cannot use this talent.
-		While active, it will drain 4 mana per turn.]]):
+		While active, it will drain 4 mana per turn.
+		Once you die and turn into a Lich you can not invest any more in this talent.]]):
 		format()
 	end,
 }
