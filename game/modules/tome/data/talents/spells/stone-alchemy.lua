@@ -72,14 +72,10 @@ newTalent{
 	no_npc_use = true,
 	no_unlearn_last = true,
 	on_learn = function(self, t)
-		if not self:knowTalent(self.T_CREATE_ALCHEMIST_GEMS) then
-			self:learnTalent(self.T_CREATE_ALCHEMIST_GEMS, true)
-		end
+		self:learnTalent(self.T_CREATE_ALCHEMIST_GEMS, true)
 	end,
 	on_unlearn = function(self, t)
-		if self:getTalentLevelRaw(t) == 0 and self:knowTalent(self.T_CREATE_ALCHEMIST_GEMS) then
-			self:unlearnTalent(self.T_CREATE_ALCHEMIST_GEMS)
-		end
+		self:unlearnTalent(self.T_CREATE_ALCHEMIST_GEMS)
 	end,
 	filterGem = function(self, t, o) return o.metallic and (o.material_level or 1) <= self:getTalentLevelRaw(t) end,
 	getGem = function(self, t, o)
