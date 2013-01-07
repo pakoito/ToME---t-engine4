@@ -102,7 +102,7 @@ To the south you will find the storage room.]],
 newChat{ id="energy",
 	text = [[This Fortress is designed as a mobile base for the Godslayers - it can fly.
 It is also equiped with various facilities: exploratory farportal, emergency containment field, remote storage, ...
-However, the Fortess is badly damaged and has lain dormant for too long. Its energies are nearly depleted.
+However, the Fortress is badly damaged and has lain dormant for too long. Its energies are nearly depleted.
 Take this Transmogrification Chest. It is linked by a permanent farportal to the Fortress. Any item you put inside will be sent to the power core and dismantled for energy.
 There are, however, unwanted byproducts to this operation: the generation of a metal known as gold. It is of no use to the Fortress and thus will be sent back to you.]],
 	answers = {
@@ -131,7 +131,7 @@ You may use the farportal; however, beware - I sense a strange presence in the f
 
 newChat{ id="recall",
 	text = [[The rod of recall you possess is not a Sher'tul artifact, but it is based on Sher'tul design.
-The Fortress now has enough energy to upgrade it. It can be changed to recall you to the Fortess.]],
+The Fortress now has enough energy to upgrade it. It can be changed to recall you to the Fortress.]],
 	answers = {
 		{"I like it the way it is now. Thanks anyway."},
 		{"That could be quite useful. Yes, please do it.", action=function() q:upgrade_rod() end},

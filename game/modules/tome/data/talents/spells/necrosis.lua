@@ -70,7 +70,7 @@ newTalent{
 			if not target then return end
 			local dam = target.life * t.getDamage(self, t) / 100
 			dam = math.min(dam, t.getMax(self, t))
-			target:setEffect(target.EFF_IMPENDING_DOOM, 10, {dam=dam/10, src=self})
+			target:setEffect(target.EFF_IMPENDING_DOOM, 10, {apply_power=self:combatSpellpower(), dam=dam/10, src=self})
 		end, 1, {type="freeze"})
 		return true
 	end,
