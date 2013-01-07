@@ -384,7 +384,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Coat your weapons with a stoning poison, inflicting %d nature damage per turn for %d turns.
-		When the poison ends, the victim turns to stone for %d turns.
+		When the poison runs its full duration, the victim will turn to stone for %d turns.
 		The damage scales with your Cunning.]]):
 		format(damDesc(self, DamageType.NATURE, t.getDOT(self, t)), t.getDuration(self, t), t.getEffect(self, t))
 	end,

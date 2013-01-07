@@ -242,7 +242,7 @@ newEffect{
 	activate = function(self, eff)
 	end,
 	deactivate = function(self, eff)
-		if self:canBe("stun") and self:canBe("stone") and self:canBe("instakill") then
+		if eff.dur <= 0 and self:canBe("stun") and self:canBe("stone") and self:canBe("instakill") then
 			self:setEffect(self.EFF_STONED, eff.stone, {})
 		end
 	end,
