@@ -417,6 +417,10 @@ newEntity{ base = "BASE_GEM",
 		resists = { [DamageType.NATURE] = 25, [DamageType.DARKNESS] = 10, [DamageType.COLD] = 10 },
 		inc_stats = { [Stats.STAT_CON] = 25, },
 	},
+	wielder = {
+		resists = { [DamageType.NATURE] = 25, [DamageType.DARKNESS] = 10, [DamageType.COLD] = 10 },
+		inc_stats = { [Stats.STAT_CON] = 25, },
+	},
 }
 
 newEntity{ base = "BASE_CLOTH_ARMOR",
