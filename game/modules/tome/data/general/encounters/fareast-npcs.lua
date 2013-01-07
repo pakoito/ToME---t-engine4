@@ -28,6 +28,7 @@ newEntity{
 	sight = 4,
 	rarity = 3,
 	unit_power = 10,
+	cant_be_moved = false,
 	ai = "world_patrol", ai_state = {route_kind="sunwall"},
 	on_encounter = {
 		type="ambush",
@@ -54,6 +55,7 @@ newEntity{
 	sight = 4,
 	rarity = 3,
 	unit_power = 10,
+	cant_be_moved = false,
 	ai = "world_patrol", ai_state = {route_kind="sunwall"},
 	on_encounter = {
 		type="ambush",

@@ -28,6 +28,7 @@ newEntity{
 	sight = 4,
 	rarity = 3,
 	unit_power = 10,
+	cant_be_moved = false,
 	ai = "world_patrol", ai_state = {route_kind="allied-kingdoms"},
 	on_encounter = {
 		type="ambush",
@@ -54,6 +55,7 @@ newEntity{
 	sight = 4,
 	rarity = 3,
 	unit_power = 10,
+	cant_be_moved = false,
 	ai = "world_patrol", ai_state = {route_kind="allied-kingdoms"},
 	on_encounter = {
 		type="ambush",
@@ -116,6 +118,7 @@ newEntity{
 	unit_power = 20,
 	hates_arcane = 1,
 	movement_speed = 0.75,
+	cant_be_moved = false,
 	ai = "world_hostile", ai_state = {chase_distance=3},
 	on_encounter = {
 		type="ambush",

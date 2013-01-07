@@ -32,6 +32,7 @@ newEntity{
 			display='@', color=colors.RED,
 			image = "npc/humanoid_human_apprentice_mage.png",
 			can_talk = "mage-apprentice-quest",
+			cant_be_moved = false,
 			unit_power = 3000,
 		}
 		g:resolve() g:resolve(nil, true)
@@ -212,6 +213,7 @@ newEntity{
 			type="humanoid", subtype="human", faction="neutral",
 			display='@', color=colors.BLUE,
 			can_talk = "alchemist-hermit",
+			cant_be_moved = false,
 			unit_power = 3000,
 		}
 		g:resolve() g:resolve(nil, true)
