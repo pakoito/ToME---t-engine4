@@ -3432,7 +3432,7 @@ function _M:preUseTalent(ab, silent, fake)
 
 	if ab.is_inscription and self.inscription_restrictions and not self.inscription_restrictions[ab.type[1]] then
 		if not silent then game.logSeen(self, "%s is unable to use this kind of inscription.", self.name:capitalize()) end
-		return
+		return false
 	end
 
 	-- when using unarmed techniques check for weapons and heavy armor
@@ -3614,11 +3614,12 @@ function _M:preUseTalent(ab, silent, fake)
 
 	if not silent then
 		-- Allow for silent talents
-		if ab.message ~= nil then
-			if ab.message then
-				game.logSeen(self, "%s", self:useTalentMessage(ab))
-			end
-		elseif ab.mode == "sustained" and not self:isTalentActive(ab.id) then
+--		if ab.message ~= nil then
+--			if ab.message then
+--				game.logSeen(self, "PREuse: %s", self:useTalentMessage(ab))
+--			end
+--		else
+		if ab.mode == "sustained" and not self:isTalentActive(ab.id) then
 			game.logSeen(self, "%s activates %s.", self.name:capitalize(), ab.name)
 		elseif ab.mode == "sustained" and self:isTalentActive(ab.id) then
 			game.logSeen(self, "%s deactivates %s.", self.name:capitalize(), ab.name)
@@ -3637,9 +3638,13 @@ end
 -- @param ab the talent (not the id, the table)
 -- @param ret the return of the talent action
 -- @return true to continue, false to stop
-function _M:postUseTalent(ab, ret)
+function _M:postUseTalent(ab, ret, silent)
 	if not ret then return end
 
+	if not silent and ab.message then
+		game.logSeen(self, "POSTuse: %s", self:useTalentMessage(ab))
+	end
+	
 	self.changed = true
 
 	if self.talent_kind_log then 
@@ -4607,3 +4612,4 @@ end
 function _M:transmoGetName()
 	return "Transmogrification Chest"
 end
+

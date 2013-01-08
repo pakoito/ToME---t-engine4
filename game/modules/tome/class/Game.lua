@@ -2015,3 +2015,18 @@ function _M:countBirthUnlocks()
 	end
 	return nb, max
 end
+
+-- get a text-compatible texture (icon) for an entity
+function _M:getGenericTextTiles(en)
+	local disp = en
+	if not disp then return "" end
+	if not en.getDisplayString then
+		if en.display_entity and en.display_entity.getDisplayString then
+			disp = en.display_entity 
+		else
+			return ""
+		end
+	end
+	disp:getMapObjects(game.uiset.hotkeys_display_icons.tiles, {}, 1)
+	return tostring((disp:getDisplayString() or ""):toTString())
+end

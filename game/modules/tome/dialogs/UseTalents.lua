@@ -26,6 +26,30 @@ local TextzoneList = require "engine.ui.TextzoneList"
 local Separator = require "engine.ui.Separator"
 
 module(..., package.seeall, class.inherit(Dialog))
+-- Could use better icons when available
+local confirmMark = require("engine.Entity").new({image="ui/chat-icon.png"})
+local autoMark = require("engine.Entity").new({image = "/ui/hotkeys/mainmenu.png"})
+
+-- generate talent status separately to enable quicker refresh of Dialog
+local function TalentStatus(who,t) 
+	local status = tstring{{"color", "LIGHT_GREEN"}, "Active"} 
+	if who:isTalentCoolingDown(t) then
+		status = tstring{{"color", "LIGHT_RED"}, who:isTalentCoolingDown(t).." turns"}
+	elseif not who:preUseTalent(t, true, true) then
+		status = tstring{{"color", "GREY"}, "Unavailable"}
+	elseif t.mode == "sustained" then
+		status = who:isTalentActive(t.id) and tstring{{"color", "YELLOW"}, "Sustaining"} or tstring{{"color", "LIGHT_GREEN"}, "Sustain"}
+	elseif t.mode == "passive" then
+		status = tstring{{"color", "LIGHT_BLUE"}, "Passive"}
+	end
+	if who:isTalentAuto(t.id) then 
+		status:add(autoMark:getDisplayString())
+	end
+	if who:isTalentConfirmable(t.id) then 
+		status:add(confirmMark:getDisplayString())
+	end
+	return tostring(status) 
+end
 
 function _M:init(actor)
 	self.actor = actor
@@ -34,8 +58,8 @@ function _M:init(actor)
 
 	self.c_tut = Textzone.new{width=math.floor(self.iw / 2 - 10), height=1, auto_height=true, no_color_bleed=true, text=[[
 You can bind a non-passive talent to a hotkey by pressing the corresponding hotkey while selecting a talent or by right-clicking on the talent.
-Check out the keybinding screen in the game menu to bind hotkeys to a key (default is 1-0 plus control or shift).
-Right click or press '@' to configure.
+Check out the keybinding screen in the game menu to bind hotkeys to a key (default is 1-0 plus control, shift, or alt).
+Right click or press '~' to configure talent confirmation and automatic use.
 ]]}
 	self.c_desc = TextzoneList.new{width=math.floor(self.iw / 2 - 10), height=self.ih - self.c_tut.h - 20, scrollbar=true, no_color_bleed=true}
 
@@ -44,7 +68,9 @@ Right click or press '@' to configure.
 	local cols = {
 		{name="", width={40,"fixed"}, display_prop="char"},
 		{name="Talent", width=80, display_prop="name"},
-		{name="Status", width=20, display_prop="status"},
+		{name="Status", width=20, display_prop=function(item)
+			if item.talent then return TalentStatus(actor, actor:getTalentFromId(item.talent)) else return "" end
+		end},
 		{name="Hotkey", width={75,"fixed"}, display_prop="hotkey"},
 		{name="Mouse Click", width={60,"fixed"}, display_prop=function(item)
 			if item.talent and item.talent == self.actor.auto_shoot_talent then return "LeftClick"
@@ -66,7 +92,7 @@ Right click or press '@' to configure.
 
 	self.key:addCommands{
 		__TEXTINPUT = function(c)
-			if c == '@' then
+			if c == '~' then
 				self:use(self.cur_item, "right")
 			end
 			if self.list and self.list.chars[c] then
@@ -134,14 +160,17 @@ function _M:use(item, button)
 			{name="Bind to middle mouse click (on a target)", what="middle"},
 		}
 
-		--local t = self.actor:getTalentFromId(item.talent)
-		if self.actor:isTalentAuto(t) then table.insert(list, 1, {name="Disable automatic use", what="auto-dis"})
-		else 
-			table.insert(list, 1, {name="Auto-use when enemies are visible and adjacent", what="auto-en-4"})
-			table.insert(list, 1, {name="Auto-use when enemies are visible", what="auto-en-3"})
-			table.insert(list, 1, {name="Auto-use when no enemies are visible", what="auto-en-2"})
-			table.insert(list, 1, {name="Auto-use when available", what="auto-en-1"})
+		if self.actor:isTalentConfirmable(t) then
+			table.insert(list, 1, {name="#YELLOW#Disable talent confirmation", what="unset-confirm"})
+		else
+			table.insert(list, 1, {name=confirmMark:getDisplayString().."Request confirmation before using this talent", what="set-confirm"})
 		end
+		local automode = self.actor:isTalentAuto(t)
+		local ds = "#YELLOW#Disable "
+		table.insert(list, 2, {name=autoMark:getDisplayString()..(automode==1 and ds or "").."Auto-use when available", what=(automode==1 and "auto-dis" or "auto-en-1")})
+		table.insert(list, 2, {name=autoMark:getDisplayString()..(automode==2 and ds or "").."Auto-use when no enemies are visible", what=(automode==2 and "auto-dis" or "auto-en-2")})
+		table.insert(list, 2, {name=autoMark:getDisplayString()..(automode==3 and ds or "").."Auto-use when enemies are visible", what=(automode==3 and "auto-dis" or "auto-en-3")})
+		table.insert(list, 2, {name=autoMark:getDisplayString()..(automode==4 and ds or "").."Auto-use when enemies are visible and adjacent", what=(automode==4 and "auto-dis" or "auto-en-4")})
 
 		for i = 1, 12 * self.actor.nb_hotkey_pages do list[#list+1] = {name="Hotkey "..i, what=i} end
 		Dialog:listPopup("Bind talent: "..item.name:toString(), "How do you want to bind this talent?", list, 400, 500, function(b)
@@ -164,20 +193,31 @@ function _M:use(item, button)
 				for i = 1, 12 * self.actor.nb_hotkey_pages do
 					if self.actor.hotkey[i] and self.actor.hotkey[i][1] == "talent" and self.actor.hotkey[i][2] == item.talent then self.actor.hotkey[i] = nil end
 				end
+			elseif b.what == "set-confirm" then
+				self.actor:setTalentConfirmable(item.talent, true)
+			elseif b.what == "unset-confirm" then
+				self.actor:setTalentConfirmable(item.talent, false)
 			elseif b.what == "auto-en-1" then
+				self.actor:setTalentAuto(item.talent, true, 1)
 				self.actor:checkSetTalentAuto(item.talent, true, 1)
+				--self.actor:setTalentAuto(item.talent, true, automode)
 			elseif b.what == "auto-en-2" then
+				self.actor:setTalentAuto(item.talent, true, 2)
 				self.actor:checkSetTalentAuto(item.talent, true, 2)
 			elseif b.what == "auto-en-3" then
+				self.actor:setTalentAuto(item.talent, true, 3)
 				self.actor:checkSetTalentAuto(item.talent, true, 3)
 			elseif b.what == "auto-en-4" then
+				self.actor:setTalentAuto(item.talent, true, 4)
 				self.actor:checkSetTalentAuto(item.talent, true, 4)
 			elseif b.what == "auto-dis" then
 				self.actor:checkSetTalentAuto(item.talent, false)
 			end
 			self.c_list:drawTree()
+			if b.what ~= "auto-dis" and automode then self.actor:setTalentAuto(item.talent, true, automode) else self.actor:setTalentAuto(item.talent, false) end
 			self.actor.changed = true
 		end)
+		self.c_list:drawTree()
 		return
 	end
 
@@ -250,27 +290,22 @@ function _M:generateList()
 	local actives, sustains, sustained, unavailables, cooldowns, passives = {}, {}, {}, {}, {}, {}
 	local chars = {}
 
-	-- Find all talents of this school
+	-- Generate lists of all talents by category
 	for j, t in pairs(self.actor.talents_def) do
 		if self.actor:knowTalent(t.id) and not (t.hide and t.mode == "passive") then
-			local typename = "talent"
 			local nodes = (t.mode == "sustained" and sustains) or (t.mode =="passive" and passives) or actives
-			local status = tstring{{"color", "LIGHT_GREEN"}, "Active"}
 			if self.actor:isTalentCoolingDown(t) then
 				nodes = cooldowns
-				status = tstring{{"color", "LIGHT_RED"}, self.actor:isTalentCoolingDown(t).." turns"}
 			elseif not self.actor:preUseTalent(t, true, true) then
 				nodes = unavailables
-				status = tstring{{"color", "GREY"}, "Unavailable"}
 			elseif t.mode == "sustained" then
 				if self.actor:isTalentActive(t.id) then nodes = sustained end
-				status = self.actor:isTalentActive(t.id) and tstring{{"color", "YELLOW"}, "Sustaining"} or tstring{{"color", "LIGHT_GREEN"}, "Sustain"}
 			elseif t.mode == "passive" then
 				nodes = passives
-				status = tstring{{"color", "LIGHT_BLUE"}, "Passive"}
 			end
-
-			-- Pregenenerate icon with the Tiles instance that allows images
+			status = TalentStatus(self.actor,t)
+			
+			-- Pregenerate icon with the Tiles instance that allows images
 			if t.display_entity then t.display_entity:getMapObjects(game.uiset.hotkeys_display_icons.tiles, {}, 1) end
 
 			nodes[#nodes+1] = {
@@ -303,7 +338,6 @@ function _M:generateList()
 	for i, node in ipairs(cooldowns) do node.char = self:makeKeyChar(letter) chars[node.char] = node letter = letter + 1 end
 	for i, node in ipairs(unavailables) do node.char = self:makeKeyChar(letter) chars[node.char] = node letter = letter + 1 end
 	for i, node in ipairs(passives) do node.char = "" end
-
 
 	list = {
 		{ char='', name=('#{bold}#Activable talents#{normal}#'):toTString(), status='', hotkey='', desc="All activable talents you can currently use.", color=function() return colors.simple(colors.LIGHT_GREEN) end, nodes=actives, shown=true },

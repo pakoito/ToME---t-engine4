@@ -612,3 +612,8 @@ function _M:registerPersistentHook(hook, fct)
 	table.insert(self.__persistent_hooks, {hook=hook, fct=fct})
 	self:bindHook(hook, fct)
 end
+
+-- get a text-compatible texture for a game entity (overload in module)
+function _M:getGenericTextTiles(en)
+	return "" 
+end

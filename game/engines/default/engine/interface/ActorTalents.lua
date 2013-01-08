@@ -94,6 +94,7 @@ function _M:init(t)
 	self.talents_cd = self.talents_cd or {}
 	self.sustain_talents = self.sustain_talents or {}
 	self.talents_auto = self.talents_auto or {}
+	self.talents_confirm_use = self.talents_confirm_use or {}
 	self.talents_learn_vals = {}
 end
 
@@ -111,21 +112,34 @@ function _M:resolveLevelTalents()
 	end
 end
 
---- Make the actor use the talent
-function _M:useTalent(id, who, force_level, ignore_cd, force_target, silent)
+-- Make the actor use the talent
+-- @param id talent ID
+-- @param who talent user
+-- @param force_level talent level(raw) override 
+-- @param ignore_cd do not affect or consider cooldown
+-- @param force_target the target of the talent (override)
+-- @param silent do not display messages about use
+-- @param no_confirm  Never ask confirmation
+function _M:useTalent(id, who, force_level, ignore_cd, force_target, silent, no_confirm)
 	who = who or self
 	local ab = _M.talents_def[id]
 	assert(ab, "trying to cast talent "..tostring(id).." but it is not defined")
 
+	local cancel = false
 	if ab.mode == "activated" and ab.action then
 		if self:isTalentCoolingDown(ab) and not ignore_cd then
 			game.logPlayer(who, "%s is still on cooldown for %d turns.", ab.name:capitalize(), self.talents_cd[ab.id])
 			return
 		end
-		if not self:preUseTalent(ab, silent) then return end
 		local co = coroutine.create(function()
+			if cancel then
+				success = false
+				return false
+			end
+			if not self:preUseTalent(ab, silent) then return end
 			local old_level
 			local old_target
+			
 			if force_level then old_level = who.talents[id]; who.talents[id] = force_level end
 			if force_target then old_target = rawget(who, "getTarget"); who.getTarget = function(a) return force_target.x, force_target.y, not force_target.__no_self and force_target end end
 			self.__talent_running = ab
@@ -136,20 +150,38 @@ function _M:useTalent(id, who, force_level, ignore_cd, force_target, silent)
 
 			if not ok then error(ret) end
 
-			if not self:postUseTalent(ab, ret) then return end
+			if not self:postUseTalent(ab, ret, silent) then return end
 
 			-- Everything went ok? then start cooldown if any
 			if not ignore_cd then self:startTalentCooldown(ab) end
 		end)
-		local ok, err = coroutine.resume(co)
-		if not ok and err then print(debug.traceback(co)) error(err) end
+		local success, err
+		if not no_confirm and self:isTalentConfirmable(ab) then
+			local abname = game:getGenericTextTiles(ab)..ab.name
+			require "engine.ui.Dialog":yesnoPopup("Talent Use Confirmation", ("Use %s?"):format(abname),
+			function(quit)
+				if quit ~= false then
+					cancel = true
+				end
+				success, err = coroutine.resume(co)
+			end,
+			"Cancel","Continue")
+		else
+			-- cancel checked in coroutine
+			success, err = coroutine.resume(co)
+		end
+		if not success and err then print(debug.traceback(co)) error(err) end
 	elseif ab.mode == "sustained" and ab.activate and ab.deactivate then
 		if self:isTalentCoolingDown(ab) and not ignore_cd then
 			game.logPlayer(who, "%s is still on cooldown for %d turns.", ab.name:capitalize(), self.talents_cd[ab.id])
 			return
 		end
-		if not self:preUseTalent(ab, silent) then return end
 		local co = coroutine.create(function()
+			if cancel then
+				success = false
+				return false
+			end
+			if not self:preUseTalent(ab, silent) then return end
 			if not self.sustain_talents[id] then
 				local old_level
 				if force_level then old_level = who.talents[id]; who.talents[id] = force_level end
@@ -172,20 +204,36 @@ function _M:useTalent(id, who, force_level, ignore_cd, force_target, silent)
 				local ret = ab.deactivate(who, ab, p)
 				if force_level then who.talents[id] = old_level end
 
-				if not self:postUseTalent(ab, ret) then return end
+				if not self:postUseTalent(ab, ret, silent) then return end
 
 				-- Everything went ok? then start cooldown if any
 				if not ignore_cd then self:startTalentCooldown(ab) end
 				self.sustain_talents[id] = nil
 			end
 		end)
-		local ret, err = coroutine.resume(co)
-		if not ret and err then print(debug.traceback(co)) error(err) end
+		local success, err
+		if not no_confirm and self:isTalentConfirmable(ab) then
+			local abname = game:getGenericTextTiles(ab)..ab.name
+			require "engine.ui.Dialog":yesnoPopup("Talent Use Confirmation", ("%s %s?"):
+			format(self:isTalentActive(ab.id) and "Deactivate" or "Activate",abname),
+			function(quit)
+				if quit ~= false then
+					cancel = true
+				end
+				success, err = coroutine.resume(co)
+			end,
+			"Cancel","Continue")
+		else
+			-- cancel checked in coroutine
+			success, err = coroutine.resume(co)
+		end
+		if not success and err then print(debug.traceback(co)) error(err) end
 	else
 		error("Activating non activable or sustainable talent: "..id.." :: "..ab.name.." :: "..ab.mode)
 	end
 	self.changed = true
 	return true
+
 end
 
 --- Replace some markers in a string with info on the talent
@@ -217,7 +265,7 @@ end
 -- @param ab the talent (not the id, the table)
 -- @param ret the return of the talent action
 -- @return true to continue, false to stop
-function _M:postUseTalent(talent, ret)
+function _M:postUseTalent(talent, ret, silent)
 	return true
 end
 
@@ -230,7 +278,7 @@ function _M:forceUseTalent(t, def)
 	if def.ignore_energy then self.energy.value = 10000 end
 
 	if def.ignore_ressources then self:attr("force_talent_ignore_ressources", 1) end
-	local ret = {self:useTalent(t, def.force_who, def.force_level, def.ignore_cd, def.force_target, def.silent)}
+	local ret = {self:useTalent(t, def.force_who, def.force_level, def.ignore_cd, def.force_target, def.silent, true)}
 	if def.ignore_ressources then self:attr("force_talent_ignore_ressources", -1) end
 
 	if def.ignore_energy then
@@ -695,7 +743,6 @@ function _M:setTalentAuto(tid, v)
 	end
 end
 
-
 --- Setup the talent as autocast
 function _M:isTalentAuto(tid)
 	if type(tid) == "table" then tid = tid.id end
@@ -711,6 +758,21 @@ function _M:automaticTalents()
 			self:useTalent(tid)
 		end
 	end
+end
+
+--- Set the talent confirmation
+function _M:setTalentConfirmable(tid, v)
+	if type(tid) == "table" then tid = tid.id end
+	if v then self.talents_confirm_use[tid] = true
+	else self.talents_confirm_use[tid] = nil
+	end
+end
+
+--- Does the talent require confirmation to use?
+function _M:isTalentConfirmable(tid)
+	if type(tid) == "table" then tid = tid.id end
+	if not self.talents_confirm_use then self.talents_confirm_use = {} end -- For compatibility with older versions, can be removed
+	return self.talents_confirm_use[tid]
 end
 
 --- Show usage dialog

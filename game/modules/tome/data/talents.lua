@@ -77,3 +77,4 @@ load("/data/talents/uber/uber.lua")
 
 print("[TALENTS TACTICS]")
 for k, _ in pairs(tacticals) do print(" * ", k) end
+
