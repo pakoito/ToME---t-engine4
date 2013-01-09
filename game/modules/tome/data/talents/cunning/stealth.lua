@@ -102,7 +102,7 @@ newTalent{
 	name = "Hide in Plain Sight",
 	type = {"cunning/stealth",3},
 	require = cuns_req3,
-	no_energy = "fake",
+	no_energy = true,
 	points = 5,
 	stamina = 20,
 	cooldown = 40,
