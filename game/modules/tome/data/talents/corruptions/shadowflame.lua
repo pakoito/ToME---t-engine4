@@ -317,6 +317,7 @@ newTalent{
 		When the spell ends, only you and the target (if still alive) are taken back to your home plane; all summons are left in the Fearscape.
 		Objects will be moved as well.
 		This spell has no effect if cast when already inside the Fearscape.
+		This powerful spell drains 5 vim per turn, ending when it reaches 0.
 		The damage will increase with your Spellpower.]]):format(damDesc(self, DamageType.FIRE, self:combatTalentSpellDamage(t, 12, 140)))
 	end,
 }
