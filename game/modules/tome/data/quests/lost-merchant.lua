@@ -38,6 +38,7 @@ end
 
 leave_zone = function(self, who)
 	if self:isStatus(self.COMPLETED, "evil") then return end
+	if game.level.level == 1 or self:is_assassin_alive() then who:setQuestStatus(self.id, engine.Quest.FAILED) return end
 	local merchant_alive = false
 	for uid, e in pairs(game.level.entities) do
 		if e.is_merchant and not e.dead then
