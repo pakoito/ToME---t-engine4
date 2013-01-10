@@ -217,7 +217,7 @@ function _M:attackTarget(target, damtype, mult, noenergy, force_unharmed)
 	if self:attr("unharmed_attack_on_hit") then
 		local v = self:attr("unharmed_attack_on_hit")
 		self:attr("unharmed_attack_on_hit", -v)
-		if mean == "unharmed" and rng.percent(60) then self:attackTarget(target, nil, 1, true, true) end
+		if rng.percent(60) then self:attackTarget(target, nil, 1, true, true) end
 		self:attr("unharmed_attack_on_hit", v)
 	end
 
