@@ -3614,12 +3614,11 @@ function _M:preUseTalent(ab, silent, fake)
 
 	if not silent then
 		-- Allow for silent talents
---		if ab.message ~= nil then
---			if ab.message then
---				game.logSeen(self, "PREuse: %s", self:useTalentMessage(ab))
---			end
---		else
-		if ab.mode == "sustained" and not self:isTalentActive(ab.id) then
+		if ab.message ~= nil then
+			if ab.message then
+				game.logSeen(self, "%s", self:useTalentMessage(ab))
+			end
+		elseif ab.mode == "sustained" and not self:isTalentActive(ab.id) then
 			game.logSeen(self, "%s activates %s.", self.name:capitalize(), ab.name)
 		elseif ab.mode == "sustained" and self:isTalentActive(ab.id) then
 			game.logSeen(self, "%s deactivates %s.", self.name:capitalize(), ab.name)
@@ -3641,10 +3640,6 @@ end
 function _M:postUseTalent(ab, ret, silent)
 	if not ret then return end
 
-	if not silent and ab.message then
-		game.logSeen(self, "POSTuse: %s", self:useTalentMessage(ab))
-	end
-	
 	self.changed = true
 
 	if self.talent_kind_log then 
