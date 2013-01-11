@@ -39,6 +39,7 @@ newEntity{ define_as = "GREATER_MUMMY_LORD",
 	max_life = 250, life_rating = 21, fixed_rating = true,
 	max_stamina = 200,
 	max_mana = 200,
+	mana_regen = 7;
 	stats = { str=25, dex=10, cun=8, mag=35, wil=20, con=20 },
 	rank = 4,
 	size_category = 2,
@@ -67,6 +68,7 @@ newEntity{ define_as = "GREATER_MUMMY_LORD",
 		[Talents.T_INVISIBILITY]={base=4, every=5, max=7},
 
 		[Talents.T_ROTTING_DISEASE]={base=6, every=5, max=8},
+		[Talents.T_TRICKS_OF_THE_TRADE] = 1,
 	},
 
 	instakill_immune = 1,
