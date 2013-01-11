@@ -772,7 +772,7 @@ end
 function _M:isTalentConfirmable(tid)
 	if type(tid) == "table" then tid = tid.id end
 	if not self.talents_confirm_use then self.talents_confirm_use = {} end -- For compatibility with older versions, can be removed
-	return self.talents_confirm_use[tid]
+	return self.player and self.talents_confirm_use[tid]
 end
 
 --- Show usage dialog
