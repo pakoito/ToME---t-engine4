@@ -37,10 +37,10 @@ uberTalent{
 uberTalent{
 	name = "You Shall Be My Weapon!", short_name="TITAN_S_SMASH", image = "talents/titan_s_smash.png",
 	mode = "activated",
-	require = { special={desc="Be of at least size category 'huge' (also required to use it)", fct=function(self) return self.size_category and self.size_category >= 5 end} },
+	require = { special={desc="Be of at least size category 'big' (also required to use it)", fct=function(self) return self.size_category and self.size_category >= 4 end} },
 	requires_target = true,
 	tactical = { ATTACK = 4 },
-	on_pre_use = function(self, t) return self.size_category and self.size_category >= 5 end,
+	on_pre_use = function(self, t) return self.size_category and self.size_category >= 4 end,
 	cooldown = 12,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
@@ -48,7 +48,7 @@ uberTalent{
 		if not x or not y or not target then return nil end
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 
-		local hit = self:attackTarget(target, nil, 3.5, true)
+		local hit = self:attackTarget(target, nil, 3.5 + 0.8 * (self.size_category - 4), true)
 
 		if target:attr("dead") or not hit then return end
 
@@ -67,6 +67,7 @@ uberTalent{
 	end,
 	info = function(self, t)
 		return ([[You deal a massive blow to your foe, smashing it for 350%% weapon damage and knocking it back 6 tiles away.
+		For each size category over 'big' you gain an additional +80%% weapon damage.
 		All foes in its path will be knocked to the side and stunned for 3 turns.]])
 		:format()
 	end,
