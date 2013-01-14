@@ -132,6 +132,7 @@ newBirthDescriptor{
 		__game_difficulty = 1,
 		__allow_rod_recall = false,
 		__allow_transmo_chest = false,
+		instakill_immune = 1,
 	},
 	game_state = {
 		always_learn_birth_talents = true,
@@ -156,6 +157,7 @@ newBirthDescriptor{
 		class = { ["Tutorial Adventurer"] = "forbid", },
 	},
 	copy = {
+		instakill_immune = 1,
 		__game_difficulty = 1,
 	},
 }
@@ -174,6 +176,7 @@ newBirthDescriptor{
 		class = { ["Tutorial Adventurer"] = "forbid", },
 	},
 	copy = {
+		instakill_immune = 1,
 		__game_difficulty = 2,
 	},
 }
@@ -194,6 +197,7 @@ newBirthDescriptor{
 		class = { ["Tutorial Adventurer"] = "forbid", },
 	},
 	copy = {
+		instakill_immune = 1,
 		__game_difficulty = 3,
 	},
 }
@@ -216,7 +220,10 @@ newBirthDescriptor{
 		race = { ["Tutorial Human"] = "forbid", },
 		class = { ["Tutorial Adventurer"] = "forbid", },
 	},
-	copy = { __game_difficulty = 4, rank=2 },
+	copy = {
+		__game_difficulty = 4,
+		rank=2,
+	},
 }
 
 --------------- Permadeath
