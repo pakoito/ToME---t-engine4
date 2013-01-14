@@ -860,13 +860,8 @@ newTalent{
 	type = {"base/race", 1},
 	no_npc_use = true,
 	no_unlearn_last = true,
-	on_learn = function(self, t) self.auto_id = 2 end,
-	action = function(self, t)
-		local Chat = require("engine.Chat")
-		local chat = Chat.new("elisa-orb-scrying", {name="The Way"}, self, {version="yeek"})
-		chat:invoke()
-		return true
-	end,
+	mode = "passive",
+	on_learn = function(self, t) self.auto_id = 100 end,
 	info = function(self, t)
 		return ([[You merge your mind with the rest of the Way for a brief moment; the sum of all yeek knowledge gathers in your mind,
 		and allows you to identify any item you could not recognize yourself.]])

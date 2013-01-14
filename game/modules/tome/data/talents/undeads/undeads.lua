@@ -51,14 +51,9 @@ newTalent{
 	name = "Knowledge of the Past",
 	type = {"undead/base", 1},
 	no_npc_use = true,
+	mode = "passive",
 	no_unlearn_last = true,
-	on_learn = function(self, t) self.auto_id = 2 end,
-	action = function(self, t)
-		local Chat = require("engine.Chat")
-		local chat = Chat.new("elisa-orb-scrying", {name="Past memories"}, self, {version="undead"})
-		chat:invoke()
-		return true
-	end,
+	on_learn = function(self, t) self.auto_id = 100 end,
 	info = function(self)
 		return ([[You concentrate for a moment to recall some of your memories as a living being and look for knowledge to identify rare objects.]])
 	end,

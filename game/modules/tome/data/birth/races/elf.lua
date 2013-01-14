@@ -51,7 +51,6 @@ newBirthDescriptor{
 		starting_zone = "trollmire",
 		starting_quest = "start-allied",
 		resolvers.inventory{ id=true, {defined="ORB_SCRYING"} },
-		resolvers.generic(function(e) e.hotkey[10] = {"inventory", "Orb of Scrying"} end),
 	},
 
 	cosmetic_unlock = {

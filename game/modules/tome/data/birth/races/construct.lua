@@ -89,7 +89,6 @@ newBirthDescriptor
 		starting_quest = "start-allied",
 		blood_color = colors.GREY,
 		resolvers.inventory{ id=true, {defined="ORB_SCRYING"} },
-		resolvers.generic(function(e) e.hotkey[10] = {"inventory", "Orb of Scrying"} end),
 
 		mana_regen = 0.5,
 		mana_rating = 7,
