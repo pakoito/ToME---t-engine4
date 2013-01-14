@@ -186,6 +186,7 @@ newBirthDescriptor{
 		"Unfair game setting",
 		"All zone levels increased by 50% + 3",
 		"All creature talent levels increased by 50%",
+		"Player can earn Nightmare version of achievements if also playing in Roguelike permadeath mode.",
 	},
 	descriptor_choices =
 	{
