@@ -309,7 +309,7 @@ This one looks even nastier and looks toward you with what seems to be disdain. 
 
 	blind_immune = 1,
 	stun_immune = 1,
-	diseas_immune = 0.5,
+	disease_immune = 0.5,
 	poison_immune = 0.5,
 	instakill_immune = 1,
 }
