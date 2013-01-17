@@ -2700,8 +2700,8 @@ newEntity{ base = "BASE_SHIELD",
 			local DamageType = require "engine.DamageType"
 
 			self:specialWearAdd({"wielder","resists"}, {[DamageType.ARCANE] = 15, [DamageType.BLIGHT] = 5})
-			self:specialWearAdd({"wielder","disease_immune"}, 15)
-			self:specialWearAdd({"wielder","poison_immune"}, 50)
+			self:specialWearAdd({"wielder","disease_immune"}, 0.15)
+			self:specialWearAdd({"wielder","poison_immune"}, 0.5)
 			game.logPlayer(who, "#DARK_GREEN#You feel nature's power protecting you!")
 		end
 	end,
