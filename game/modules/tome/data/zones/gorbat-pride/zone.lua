@@ -29,7 +29,7 @@ return {
 --	all_remembered = true,
 	all_lited = true,
 	day_night = true,
-	ambient_music = {"Breaking the siege.ogg", "desert_base.ogg"},
+	ambient_music = {"Breaking the siege.ogg", "weather/desert_base.ogg"},
 	min_material_level = 4,
 	max_material_level = 5,
 	generator =  {
