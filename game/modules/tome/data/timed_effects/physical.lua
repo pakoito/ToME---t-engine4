@@ -1853,7 +1853,7 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("movement_speed", eff.speedid)
-		self:removeTemporaryValue("combat_atk", eff.atk)
+		self:removeTemporaryValue("combat_atk", eff.atkid)
 	end,
 }
 
