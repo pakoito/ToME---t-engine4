@@ -530,7 +530,7 @@ newEntity{
 	display = '!', color=colors.VIOLET, image="object/artifact/potion_blood_of_life.png",
 	encumber = 0.4,
 	rarity = 350,
-	desc = [[The Blood of Life! It can let a living being resurrect in case of an untimely demise. But only once!]],
+	desc = [[This vial of blood was drawn from an ancient race in the Age of Haze. Some of the power and vitality of those early days of the world still flows through it. "Drink me, mortal," the red liquid seems to whisper in your thoughts. "I will bring you light beyond darkness. Those who taste my essence fear not the death of flesh. Drink me, mortal, if you value your life..."]],
 	cost = 1000,
 	special = true,
 
