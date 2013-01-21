@@ -95,7 +95,7 @@ newTalent{
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
 			x, y, t.getDuration(self, t),
-			DamageType.CIRCLE_DEATH, {dam=t.getDamage(self, t), dur=4 + math.floor(self:getTalentLevel(t) / 2), ff=isFF(self)},
+			DamageType.CIRCLE_DEATH, {dam=self:spellCrit(t.getDamage(self, t)), dur=4 + math.floor(self:getTalentLevel(t) / 2), ff=isFF(self)},
 			self:getTalentRadius(t),
 			5, nil,
 			{type="circle_of_death"},
@@ -169,7 +169,7 @@ newTalent{
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:projectile(tg, x, y, DamageType.RIGOR_MORTIS, {dam=t.getDamage(self, t), minion=t.getMinion(self, t), speed=t.getSpeed(self, t), dur=t.getDur(self, t)}, {type="dark"})
+		self:projectile(tg, x, y, DamageType.RIGOR_MORTIS, {dam=self:spellCrit(t.getDamage(self, t)), minion=t.getMinion(self, t), speed=t.getSpeed(self, t), dur=t.getDur(self, t)}, {type="dark"})
 		game:playSoundNear(self, "talents/fireflash")
 		return true
 	end,
