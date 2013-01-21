@@ -75,7 +75,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Your target's doom draws near. It cannot regenerate or heal at all, and will take %d%% of its remaining life (or %0.2f, whichever is lower) over 10 turns as arcane damage.
+		return ([[Your target's doom draws near. Its healing factor is reduced by 100%%, and will take %d%% of its remaining life (or %0.2f, whichever is lower) over 10 turns as arcane damage.
 		The damage will increase with your Spellpower.]]):
 		format(t.getDamage(self, t), t.getMax(self, t))
 	end,

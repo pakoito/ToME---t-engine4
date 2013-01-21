@@ -3609,7 +3609,7 @@ function _M:preUseTalent(ab, silent, fake)
 	end
 
 	-- Cant heal
-	if ab.is_heal and self:attr("no_healing") then return false end
+	if ab.is_heal and (self:attr("no_healing") or ((self.healing_factor or 1) <= 0)) then return false end
 	if ab.is_teleport and self:attr("encased_in_ice") then return false end
 
 	if not silent then

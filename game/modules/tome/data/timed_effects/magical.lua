@@ -1372,7 +1372,7 @@ newEffect{
 newEffect{
 	name = "IMPENDING_DOOM", image = "talents/impending_doom.png",
 	desc = "Impending Doom",
-	long_desc = function(self, eff) return ("The target's final doom is drawing near, preventing all forms of healing and regeneration and dealing %0.2f arcane damage per turn. The effect will stop if the caster dies."):format(eff.dam) end,
+	long_desc = function(self, eff) return ("The target's final doom is drawing near, reducing healing factor by 100%% and dealing %0.2f arcane damage per turn. The effect will stop if the caster dies."):format(eff.dam) end,
 	type = "magical",
 	subtype = { arcane=true },
 	status = "detrimental",
@@ -1380,16 +1380,14 @@ newEffect{
 	on_gain = function(self, err) return "#Target# is doomed!", "+Doomed" end,
 	on_lose = function(self, err) return "#Target# is freed from the impending doom.", "-Doomed" end,
 	activate = function(self, eff)
-		eff.healid = self:addTemporaryValue("no_healing", 1)
-		eff.regenid = self:addTemporaryValue("no_life_regen", 1)
+		eff.healid = self:addTemporaryValue("healing_factor", -1)
 	end,
 	on_timeout = function(self, eff)
 		if eff.src.dead or not game.level:hasEntity(eff.src) then return true end
 		DamageType:get(DamageType.ARCANE).projector(eff.src, self.x, self.y, DamageType.ARCANE, eff.dam)
 	end,
 	deactivate = function(self, eff)
-		self:removeTemporaryValue("no_healing", eff.healid)
-		self:removeTemporaryValue("no_life_regen", eff.regenid)
+		self:removeTemporaryValue("healing_factor", eff.healid)
 	end,
 }
 
