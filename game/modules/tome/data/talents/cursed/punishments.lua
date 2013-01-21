@@ -53,7 +53,7 @@ newTalent{
 			damage = damage * math.pow(spreadFactor, #targets - 1)
 		end
 		for i, t in ipairs(targets) do
-			self:project({type="hit", x=t.x,y=t.y}, t.x, t.y, DamageType.MIND, { dam=damage, crossTierChance=25 })
+			self:project({type="hit", talent=t, x=t.x,y=t.y}, t.x, t.y, DamageType.MIND, { dam=damage, crossTierChance=25 })
 			game.level.map:particleEmitter(t.x, t.y, 1, "reproach", { dx = self.x - t.x, dy = self.y - t.y })
 		end
 

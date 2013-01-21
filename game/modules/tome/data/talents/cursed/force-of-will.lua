@@ -22,11 +22,11 @@
 -- knockback: distance to knockback
 -- knockbackDamage: when knockback strikes something, both parties take damage - percent of damage * remaining knockback
 -- power: used to determine the initial radius of particles
-local function forceHit(self, target, sourceX, sourceY, damage, knockback, knockbackDamage, power, max)
+local function forceHit(self, t, target, sourceX, sourceY, damage, knockback, knockbackDamage, power, max)
 	-- apply initial damage
 	if damage > 0 then
 		damage = self:mindCrit(damage)
-		self:project(target, target.x, target.y, DamageType.PHYSICAL, damage)
+		self:project({type="hit", range=10, talent=t}, target.x, target.y, DamageType.PHYSICAL, damage)
 		game.level.map:particleEmitter(target.x, target.y, 1, "force_hit", {power=power, dx=target.x - sourceX, dy=target.y - sourceY})
 	end
 
@@ -66,12 +66,12 @@ local function forceHit(self, target, sourceX, sourceY, damage, knockback, knock
 
 				-- take partial damage
 				local blockDamage = damage * util.bound(knockback * (knockbackDamage / 100), 0, 1.5)
-				self:project(target, target.x, target.y, DamageType.PHYSICAL, blockDamage)
+				self:project({type="hit", range=10, talent=t}, target.x, target.y, DamageType.PHYSICAL, blockDamage)
 
 				if nextTarget then
 					-- start a new force hit with the knockback damage and current knockback
 					if max > 0 then
-						forceHit(self, nextTarget, sourceX, sourceY, blockDamage, knockback, knockbackDamage, power / 2, max - 1)
+						forceHit(self, t, nextTarget, sourceX, sourceY, blockDamage, knockback, knockbackDamage, power / 2, max - 1)
 					end
 				end
 
@@ -128,7 +128,7 @@ newTalent{
 		local power = 1 --(1 - ((distance - 1) / range))
 		local damage = t.getDamage(self, t) * power
 		local knockback = t.getKnockback(self, t)
-		forceHit(self, target, self.x, self.y, damage, knockback, 7, power, 10)
+		forceHit(self, t, target, self.x, self.y, damage, knockback, 7, power, 10)
 		return true
 	end,
 	on_learn = function(self, t)
@@ -266,7 +266,7 @@ newTalent{
 					local localDamage = damage * power
 					local dazeDuration = t.getDazeDuration(self, t)
 
-					forceHit(self, target, blastX, blastY, damage, math.max(0, knockback - distance), 7, power, 10)
+					forceHit(self, t, target, blastX, blastY, damage, math.max(0, knockback - distance), 7, power, 10)
 					if target:canBe("stun") then
 						target:setEffect(target.EFF_DAZED, dazeDuration, {src=self})
 					end
@@ -351,7 +351,7 @@ newTalent{
 			-- Randomly take targets
 			for i = 1, hitCount do
 				local target, index = rng.table(targets)
-				forceHit(self, target, target.x, target.y, damage, knockback, 7, 0.6, 10)
+				forceHit(self, t, target, target.x, target.y, damage, knockback, 7, 0.6, 10)
 			end
 		end
 

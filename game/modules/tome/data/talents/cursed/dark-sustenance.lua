@@ -113,7 +113,7 @@ newTalent{
 
 		if target and not target.dead then
 			local lifeSteal = t.getLifeSteal(self, t)
-			self:project({type="hit", x=target.x,y=target.y}, target.x, target.y, DamageType.DEVOUR_LIFE, { dam=lifeSteal })
+			self:project({type="hit", talent=t, x=target.x,y=target.y}, target.x, target.y, DamageType.DEVOUR_LIFE, { dam=lifeSteal })
 
 			game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(target.x-self.x), math.abs(target.y-self.y)), "dark_torrent", {tx=target.x-self.x, ty=target.y-self.y})
 			--local dx, dy = target.x - self.x, target.y - self.y

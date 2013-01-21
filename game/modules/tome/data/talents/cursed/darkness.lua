@@ -223,7 +223,7 @@ newTalent{
 				local actor = game.level.map(self.x, self.y, Map.ACTOR)
 				if actor and actor ~= self.summoner and (not actor.summoner or actor.summoner ~= self.summoner) then
 					self.projecting = true -- simplest way to indicate that this damage should not be amplified by the in creeping dark bonus
-					self.summoner:project(actor, actor.x, actor.y, engine.DamageType.DARKNESS, self.damage)
+					self.summoner:project({type="hit", range=self:getTalentRange(t), talent=self:getTalentFromId(self.T_CREEPING_DARKNESS)}, actor.x, actor.y, engine.DamageType.DARKNESS, self.damage)
 					self.projecting = false
 				end
 
@@ -394,7 +394,7 @@ newTalent{
 				-- your will ignores friendly targets (except for knockback hits)
 				local target = game.level.map(x, y, Map.ACTOR)
 				if target then
-					self:project(target, target.x, target.y, DamageType.DARKNESS, damage)
+					self:project({type="hit", range=self:getTalentRange(t), talent=t}, target.x, target.y, DamageType.DARKNESS, damage)
 					if rng.percent(25) then
 						if not target.dead and target:canBe("blind") then
 							target:setEffect(target.EFF_BLINDED, 3, {apply_power=self:combatMindpower(), min_dur=1})
