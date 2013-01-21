@@ -114,7 +114,7 @@ newEntity{
 	level_range = {14, nil},
 	faction = "zigur",
 	sight = 1,
-	rarity = 4,
+	rarity = 6,
 	unit_power = 20,
 	hates_arcane = 1,
 	movement_speed = 0.75,
