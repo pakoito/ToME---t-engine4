@@ -198,7 +198,7 @@ newTalent{
 			dam = self:addTemporaryValue("inc_damage", {[DamageType.PHYSICAL] = t.getPhysicalDamageIncrease(self, t)}),
 			resist = self:addTemporaryValue("resists_pen", {[DamageType.PHYSICAL] = t.getResistPenalty(self, t)}),
 			psave = self:addTemporaryValue("combat_physresist", t.getSaves(self, t)),
-			msave = self:addTemporaryValue("combat_spellresist", t.getSaves(self, t)),
+			ssave = self:addTemporaryValue("combat_spellresist", t.getSaves(self, t)),
 			particle = particle,
 		}
 	end,
