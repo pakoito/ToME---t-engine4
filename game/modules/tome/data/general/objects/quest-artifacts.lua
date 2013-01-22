@@ -32,6 +32,7 @@ newEntity{ define_as = "STAFF_ABSORPTION",
 	level_range = {30, 30},
 	display = "\\", color=colors.VIOLET, image = "object/artifact/staff_absorption.png",
 	encumber = 7,
+	auto_pickup = 1,
 	plot = true, quest = true,
 	desc = [[Carved with runes of power, this staff seems to have been made long ago. Yet it bears no signs of tarnishment.
 Light around it seems to dim and you can feel its tremendous power simply by touching it.]],

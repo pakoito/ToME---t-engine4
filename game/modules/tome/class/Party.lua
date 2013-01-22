@@ -418,3 +418,11 @@ function _M:reward(title, action)
 	end
 	game:registerDialog(d)
 end
+
+function _M:findInAllPartyInventoriesBy(prop, value)
+	local o, item, inven_id
+	for i, mem in ipairs(game.party.m_list) do
+		o, item, inven_id = mem:findInAllInventoriesBy(prop, value)
+		if o then return mem, o, item, inven_id  end
+	end
+end
