@@ -52,7 +52,9 @@ newTalent{
 				return false
 			end,
 			triggered = function(self, x, y, who)
-				who:setEffect(who.EFF_DAZED, self.dam, {})
+				if who:canBe("stun") then
+					who:setEffect(who.EFF_DAZED, self.dam, {})
+				end
 				return true
 			end,
 			temporary = t.getDuration(self, t),
