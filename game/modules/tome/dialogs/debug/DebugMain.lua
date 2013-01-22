@@ -131,6 +131,8 @@ function _M:use(item)
 		for i, e in ipairs(l) do
 			game.level:removeEntity(e)
 		end
+	elseif act == "all-ingredients" then
+		game.party:giveAllIngredients(100)
 	else
 		self:triggerHook{"DebugMain:use", act=act}
 	end
@@ -152,6 +154,7 @@ function _M:generateList()
 	list[#list+1] = {name="Create Trap", dialog="CreateTrap"}
 	list[#list+1] = {name="Remove all creatures", action="remove-all"}
 	list[#list+1] = {name="Semi-Godmode", action="semigodmode"}
+	list[#list+1] = {name="Give all ingredients", action="all-ingredients"}
 	self:triggerHook{"DebugMain:generate", menu=list}
 
 	local chars = {}
