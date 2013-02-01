@@ -169,7 +169,13 @@ function _M:mouseEvent(button, x, y, xrel, yrel, bx, by, event)
 			if citem and citem.login then
 				local data = profile.chat:getUserInfo(citem.login)
 				if data then
-					local list = {{name="Show infos", ui="show"}, {name="Whisper", ui="whisper"}, {name="Open profile(in browser)", ui="profile"}, {name="Report for bad behavior", ui="report"}}
+					local list = {
+						{name="Show infos", ui="show"},
+						{name="Whisper", ui="whisper"},
+						{name="Ignore", ui="ignore"},
+						{name="Open profile(in browser)", ui="profile"},
+						{name="Report for bad behavior", ui="report"}
+					}
 					if data.char_link then table.insert(list, 3, {name="Open charsheet(in browser)", ui="charsheet"}) end
 					Dialog:listPopup("User: "..citem.login, "Action", list, 300, 200, function(sel)
 						if not sel or not sel.ui then return end
@@ -183,6 +189,8 @@ function _M:mouseEvent(button, x, y, xrel, yrel, bx, by, event)
 						elseif sel.ui == "whisper" then
 							profile.chat:setCurrentTarget(false, citem.login)
 							profile.chat:talkBox()
+						elseif sel.ui == "ignore" then
+							Dialog:yesnoPopup("Ignore user", "Really ignore all messages from: "..citem.login, function(ret) if ret then profile.chat:ignoreUser(citem.login) end end)
 						elseif sel.ui == "report" then
 							game:registerDialog(require('engine.dialogs.GetText').new("Reason to report: "..citem.login, "Reason", 4, 500, function(text)
 								profile.chat:reportUser(citem.login, text)
