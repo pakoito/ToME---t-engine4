@@ -61,6 +61,7 @@ gamma_correction = 120
 mouse_move = true
 censor_boot = true
 chat.filter = {}
+chat.ignores = {}
 addons = {}
 ]]
 for i, file in ipairs(fs.list("/settings/")) do

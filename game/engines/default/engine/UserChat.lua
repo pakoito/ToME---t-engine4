@@ -27,6 +27,10 @@ local Base = require "engine.ui.Base"
 --- Module that handles multiplayer chats
 module(..., package.seeall, class.inherit(Base))
 
+local channel_colors = {
+	
+}
+
 --- Creates the log zone
 function _M:init()
 	self.changed = true
@@ -36,6 +40,7 @@ function _M:init()
 	self.max = 500
 	self.do_display_chans = true
 	self.on_event = {}
+	self.full_log = {}
 end
 
 --- Hook up in the current running game
@@ -66,12 +71,28 @@ end
 --- Filter messages
 function _M:filterMessage(item)
 	if config.settings.chat.filter[item.kind] then return true end
+	if config.settings.chat.ignores[item.login] then return true end
+end
+
+function _M:ignoreUser(login)
+	config.settings.chat.ignores[login] = true
+	if game.log then game.log("Ignoring all new messages from %s.", login) end
+	self:saveIgnores()
+end
+
+function _M:saveIgnores()
+	local l = {}
+	for k, v in pairs(config.settings.chat.ignores) do
+		if v then l[#l+1] = "chat.ignores["..("%q"):format(k).."]=true" end
+	end
+	game:saveSettings("chat.ignores", table.concat(l, "\n"))
 end
 
 local urlfind = (lpeg.P"http://" + lpeg.P"https://") * (1-lpeg.P" ")^0
 local urlmatch = lpeg.anywhere(lpeg.C(urlfind))
 
 function _M:addMessage(kind, channel, login, name, msg, extra_data, no_change)
+
 	local color_name = colors.WHITE
 	if type(name) == "table" then name, color_name = name[1], name[2] end
 
@@ -80,7 +101,7 @@ function _M:addMessage(kind, channel, login, name, msg, extra_data, no_change)
 		msg = msg:lpegSub(urlfind, "#LIGHT_BLUE##{italic}#"..url.."#{normal}##LAST#")
 	end
 
-	local item = {kind=kind, login=login, name=name, color_name=color_name, msg=msg, url=url, extra_data=extra_data, timestamp=core.game.getTime()}
+	local item = {channel=channel, kind=kind, login=login, name=name, color_name=color_name, msg=msg, url=url, extra_data=extra_data, timestamp=core.game.getTime()}
 	if self:filterMessage(item) then return end
 	if self.uc_ext and self.uc_ext.filterMessage then
 		if self.uc_ext:filterMessage(item) then return end
@@ -90,6 +111,10 @@ function _M:addMessage(kind, channel, login, name, msg, extra_data, no_change)
 	while #log > self.max do table.remove(log) end
 	self.changed = true
 	if not no_change and channel ~= self.cur_channel then self.channels[channel].changed = true self.channels_changed = true end
+
+	local log = self.full_log
+	table.insert(log, 1, item)
+	while #log > self.max do table.remove(log) end
 end
 
 --- Register to receive events
@@ -523,11 +548,11 @@ function _M:display()
 	self.dlist = {}
 	local h = 0
 	local log = {}
-	if self.channels[self.cur_channel] then log = self.channels[self.cur_channel].log end
+	if self.full_log then log = self.full_log end
 	local old_style = self.font:getStyle()
 	for z = 1 + self.scroll, #log do
 		local stop = false
-		local tstr = tstring{"<", {"color",unpack(colors.simple(log[z].color_name))}, log[z].name, {"color", "LAST"}, "> "}
+		local tstr = tstring{"[", log[z].channel, "] <", {"color",unpack(colors.simple(log[z].color_name))}, log[z].name, {"color", "LAST"}, "> "}
 		tstr:merge(log[z].msg:toTString())
 		local gen = tstring.makeLineTextures(tstr, self.w, self.font_mono)
 		for i = #gen, 1, -1 do

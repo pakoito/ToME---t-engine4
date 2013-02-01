@@ -23,7 +23,7 @@ local UserChat = require "profile-thread.UserChat"
 
 module(..., package.seeall, class.make)
 
-local debug = false
+local debug = true
 
 local mport = debug and 2259 or 2257
 local pport = debug and 2260 or 2258

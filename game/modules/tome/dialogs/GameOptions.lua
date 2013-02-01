@@ -223,6 +223,11 @@ function _M:generateList()
 		}))
 	end,}
 
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Configure the chat ignore filter.#WHITE#"}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Chat ignore list#WHITE##{normal}#", status=function(item)
+		return "select to configure"
+	end, fct=function(item)	game:registerDialog(require("engine.dialogs.ChatIgnores").new()) end,}
+
 	if game.uiset:checkGameOption("icons_temp_effects") then
 		local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Uses the icons for status effects instead of text.#WHITE#"}
 		list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Icons status effects#WHITE##{normal}#", status=function(item)
