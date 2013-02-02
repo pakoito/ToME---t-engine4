@@ -114,7 +114,10 @@ add_foe = function(self, next_wave, first, foe_idx)
 				end
 			end
 			-- Tone down the corruptor
-			if foe_idx == 4 then m.inc_damage.all = -30 end
+			if foe_idx == 4 then
+				m.inc_damage.all = -30 
+				m.combat_spellcrit = -1000
+			end
 			m:setTarget(game.player)
 			game.zone:addEntity(game.level, m, "actor", x, y)
 			if first then game.logSeen(m, "#VIOLET#A foe is summoned to the arena!")
