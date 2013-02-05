@@ -66,9 +66,18 @@ function _M:init(chat, on_end)
 		EXIT = function() game:unregisterDialog(self) end,
 	}
 	self.key:addCommand("_ESCAPE", function() game:unregisterDialog(self) end)
---	self.key:addCommand("_TAB", function()
---		self:checkTarget(self.c_box.text)
---	end)
+	self.key:addCommand("_TAB", function()
+		local type, name = self.chat:getCurrentTarget()
+		if type == "whisper" then
+			local found = nil
+			for i, l in ipairs(self.chat.last_whispers) do if l == name then found = i break end end
+			if found then
+				found = util.boundWrap(found + 1, 1, #self.chat.last_whispers)
+				self.chat:setCurrentTarget(false, self.chat.last_whispers[found])
+				self:updateTitle(self:getTitle())
+			end
+		end
+	end)
 end
 
 function _M:getTargets()
@@ -109,12 +118,18 @@ function _M:checkTarget(text)
 		end
 	end
 	if text:sub(1, 1) == "/" then
-		local _, _, chancode = text:find("^/([0-9]+) ")
-		chancode = tonumber(chancode)
-		if chancode and self.chat.channel_codes_rev and self.chat.channel_codes_rev[chancode] then
-			self.chat:setCurrentTarget(true, self.chat.channel_codes_rev[chancode])
+		if text == "/r " and self.chat.last_whispers and self.chat.last_whispers[1] then
+			self.chat:setCurrentTarget(false, self.chat.last_whispers[1])
 			self:updateTitle(self:getTitle())
 			self.c_box:setText("")
+		else
+			local _, _, chancode = text:find("^/([0-9]+) ")
+			chancode = tonumber(chancode)
+			if chancode and self.chat.channel_codes_rev and self.chat.channel_codes_rev[chancode] then
+				self.chat:setCurrentTarget(true, self.chat.channel_codes_rev[chancode])
+				self:updateTitle(self:getTitle())
+				self.c_box:setText("")
+			end
 		end
 	end
 end

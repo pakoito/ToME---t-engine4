@@ -43,6 +43,7 @@ function _M:init()
 	self.do_display_chans = true
 	self.on_event = {}
 	self.full_log = {}
+	self.last_whispers = {}
 end
 
 --- Hook up in the current running game
@@ -136,6 +137,17 @@ function _M:addMessage(kind, channel, login, name, msg, extra_data, no_change)
 	local log = self.full_log
 	table.insert(log, 1, item)
 	while #log > self.max do table.remove(log) end
+
+	if kind == "whisper" then
+		local found = nil
+		for i, l in ipairs(self.last_whispers) do if l == login then found = i break end end
+		if not found then
+			table.insert(self.last_whispers, 1, login)
+		else
+			table.remove(self.last_whispers, found)
+			table.insert(self.last_whispers, 1, login)
+		end
+	end
 end
 
 --- Register to receive events
