@@ -114,7 +114,6 @@ local urlfind = (lpeg.P"http://" + lpeg.P"https://") * (1-lpeg.P" ")^0
 local urlmatch = lpeg.anywhere(lpeg.C(urlfind))
 
 function _M:addMessage(kind, channel, login, name, msg, extra_data, no_change)
-
 	local color_name = colors.WHITE
 	if type(name) == "table" then name, color_name = name[1], name[2] end
 
@@ -189,7 +188,7 @@ function _M:event(e)
 		elseif e.donator == "recurring" then color = colors.ROYAL_BLUE end
 
 		self.channels[self.cur_channel] = self.channels[self.cur_channel] or {users={}, log={}}
-		self:addMessage("whisper", self.cur_channel, e.login, {e.name, color}, "#GOLD#<whisper> #LAST#"..e.msg)
+		self:addMessage("whisper", self.cur_channel, e.login, e.name, e.msg)
 
 		if type(game) == "table" and game.logChat then
 			game.logChat("#GOLD#<Whisper from %s> %s", e.name, e.msg)
@@ -310,8 +309,8 @@ function _M:whisper(to, msg)
 	msg = msg:removeColorCodes()
 	core.profile.pushOrder(string.format("o='ChatWhisper' target=%q msg=%q", to, msg))
 
-	self:addMessage("whisper", self.cur_channel, to, to, "#GOLD#<whisper to "..to.."> #LAST#"..msg)
-	if type(game) == "table" and game.logChat then game.logChat("#GOLD#<Whisper to %s> %s", to, msg) end
+	self:addMessage("whisper", self.cur_channel, to, ":"..to, msg)
+	if type(game) == "table" and game.logChat then game.logChat("%s", msg) end
 	for fct, _ in pairs(self.on_event) do fct{channel=self.cur_channel, se="JustUpdate"} end
 end
 
@@ -427,7 +426,12 @@ function _M:getLog(channel, extra)
 	local log = {}
 	if self.channels[channel] then
 		for _, i in ipairs(self.channels[channel].log) do
-			local tstr = tstring{"<", {"color",unpack(colors.simple(i.color_name or colors.WHITE))}, i.name, {"color", "LAST"}, "> "}
+			local tstr 
+			if i.kind == "whisper" then
+				tstr = tstring{{"color", 0xcb,0x87,0xd2}, "<", i.name, "> "}
+			else
+				tstr = tstring{"<", {"color",unpack(colors.simple(i.color_name or colors.WHITE))}, i.name, {"color", "LAST"}, "> "}
+			end
 			tstr:merge(i.msg:toTString())
 			if extra then
 				log[#log+1] = {str=tstr:toString(), src=i}
@@ -585,7 +589,12 @@ function _M:display()
 	local old_style = self.font:getStyle()
 	for z = 1 + self.scroll, #log do
 		local stop = false
-		local tstr = tstring{"[", self:getChannelCode(log[z].channel), "-", log[z].channel, "] <", {"color",unpack(colors.simple(log[z].color_name))}, log[z].name, {"color", "LAST"}, "> "}
+		local tstr
+		if log[z].kind == "whisper" then
+			tstr = tstring{{"color", 0xcb,0x87,0xd2}, "<", log[z].name, ">" }
+		else
+			tstr = tstring{"[", self:getChannelCode(log[z].channel), "-", log[z].channel, "] <", {"color",unpack(colors.simple(log[z].color_name))}, log[z].name, {"color", "LAST"}, "> "}
+		end
 		tstr:merge(log[z].msg:toTString())
 		local gen = tstring.makeLineTextures(tstr, self.w, self.font_mono)
 		for i = #gen, 1, -1 do
