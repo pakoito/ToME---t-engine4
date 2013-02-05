@@ -57,7 +57,7 @@ local function newGem(name, image, cost, rarity, color, min_level, max_level, ti
 		name = "alchemist "..name:lower(), type='alchemist-gem', subtype = color,
 		slot = "QUIVER",
 		color = colors[color:upper()], image=image,
-		cost = 0,
+		cost = cost * 0.01,
 		material_level = tier,
 		alchemist_power = power,
 		alchemist_bomb = bomb,
