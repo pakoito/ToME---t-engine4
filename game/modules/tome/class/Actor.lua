@@ -4166,8 +4166,13 @@ function _M:suffocate(value, src, death_message)
 	self.air = self.air - value
 	local ae = game.level.map(self.x, self.y, Map.ACTOR)
 	if self.air <= 0 then
-		game.logSeen(self, "%s suffocates to death!", self.name:capitalize())
-		return self:die(src, {special_death_msg=death_message or "suffocated to death"}), true
+		self.air = 0
+		if not self:hasEffect(self.EFF_SUFFOCATING) then
+			game.logSeen(self, "#LIGHT_RED#%s starts suffocating to death!", self.name:capitalize())
+			self:setEffect(self.EFF_SUFFOCATING, 1, {dam=20})
+		end
+		return false, true
+--		return self:die(src, {special_death_msg=death_message or "suffocated to death"}), true
 	end
 	return false, true
 end

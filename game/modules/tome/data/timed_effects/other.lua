@@ -2193,3 +2193,29 @@ newEffect{
 		if self.player then engine.Map:setViewerFaction(self.faction) end
 	end,
 }
+
+newEffect{
+	name = "SUFFOCATING",
+	desc = "Suffocating",
+	long_desc = function(self, eff) return ("You are suffocating! Each turn you lose an ever increasing percent of your total life (currently %d%%)"):format(eff.dam) end,
+	type = "other",
+	subtype = { suffocating=true },
+	status = "detrimental",
+	decrease = 0, no_remove = true,
+	parameters = { dam=20 },
+	on_gain = function(self, err) return "#Target# is suffocating.", "+SUFFOCATING" end,
+	on_lose = function(self, err) return "#Target# can breathe again.", "-Suffocating" end,
+	on_timeout = function(self, eff)
+		if self.air > self.air_regen then -- We must be over our natural regen
+			self:removeEffect(self.EFF_SUFFOCATING, false, true)
+			return
+		end
+
+		-- Bypass all shields & such
+		local old = self.onTakeHit
+		self.onTakeHit = nil
+		mod.class.interface.ActorLife.takeHit(self, self.max_life * eff.dam / 100, self, {special_death_msg="suffocated to death"})
+		eff.dam = util.bound(eff.dam + 5, 20, 100)
+		self.onTakeHit = old
+	end,
+}
