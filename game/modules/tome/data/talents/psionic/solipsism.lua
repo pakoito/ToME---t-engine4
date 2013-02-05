@@ -24,7 +24,7 @@ newTalent{
 	require = psi_wil_req1,
 	mode = "passive",
 	no_unlearn_last = true,
-	getConversionRatio = function(self, t) return math.min(0.25 + self:getTalentLevel(t) * 0.1, 1) end,
+	getConversionRatio = function(self, t) return math.min(0.1 + self:getTalentLevel(t) * 0.1, 1) end,
 	on_learn = function(self, t)
 		if self:getTalentLevelRaw(t) == 1 then
 			self.inc_resource_multi.psi = (self.inc_resource_multi.psi or 0) + 0.5
@@ -66,7 +66,7 @@ newTalent{
 	points = 5, 
 	require = psi_wil_req2,
 	mode = "passive",
-	getBalanceRatio = function(self, t) return math.min(0.25 + self:getTalentLevel(t) * 0.1, 1) end,
+	getBalanceRatio = function(self, t) return math.min(0.1 + self:getTalentLevel(t) * 0.1, 1) end,
 	on_learn = function(self, t)
 		if self:getTalentLevelRaw(t) == 1 then
 			self.inc_resource_multi.psi = (self.inc_resource_multi.psi or 0) + 0.5
@@ -142,7 +142,7 @@ newTalent{
 	points = 5, 
 	require = psi_wil_req4,
 	mode = "passive",
-	getSavePercentage = function(self, t) return math.min(0.25 + self:getTalentLevel(t) * 0.1, 1) end,
+	getSavePercentage = function(self, t) return math.min(0.1 + self:getTalentLevel(t) * 0.1, 1) end,
 	on_learn = function(self, t)
 		if self:getTalentLevelRaw(t) == 1 then
 			self.inc_resource_multi.psi = (self.inc_resource_multi.psi or 0) + 0.5

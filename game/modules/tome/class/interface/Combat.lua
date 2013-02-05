@@ -881,6 +881,7 @@ _M.weapon_talents = {
 	sling =   Talents.T_SLING_MASTERY,
 	staff =   Talents.T_STAFF_MASTERY,
 	mindstar =Talents.T_PSIBLADES,
+	dream =   Talents.T_DREAM_CRUSHER,
 	unarmed = Talents.T_UNARMED_MASTERY,
 }
 

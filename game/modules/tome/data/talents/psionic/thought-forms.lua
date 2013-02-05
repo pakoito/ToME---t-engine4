@@ -620,7 +620,7 @@ newTalent{
 	mode = "passive",
 	getSpeedPower = function(self, t) return self:combatTalentMindDamage(t, 5, 15) end,
 	getOffensePower = function(self, t) return self:combatTalentMindDamage(t, 10, 30) end,
-	getDefensePower = function(self, t) return self:combatTalentMindDamage(t, 5, 15) end,
+	getDefensePower = function(self, t) return self:combatTalentMindDamage(t, 1, 10) end,
 	info = function(self, t)
 		local offense = t.getOffensePower(self, t)
 		local defense = t.getDefensePower(self, t)

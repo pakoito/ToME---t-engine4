@@ -25,10 +25,10 @@ newTalent{
 	points = 5, 
 	require = psi_wil_high1,
 	cooldown = 12,
-	sustain_psi = 25,
+	sustain_psi = 50,
 	mode = "sustained",
 	tactical = { DEFEND = 2, },
-	getPower = function(self, t) return self:combatTalentMindDamage(t, 5, 50) end,
+	getPower = function(self, t) return self:combatTalentMindDamage(t, 5, 30) end,
 	doForgeShield = function(type, dam, t, self, src)
 		-- Grab our damage threshold
 		local dam_threshold = self.max_life * 0.15
@@ -186,14 +186,14 @@ newTalent{
 	points = 5,
 	require = psi_wil_high3,
 	mode = "passive",
-	getArmor = function(self, t) return self:combatTalentMindDamage(t, 5, 50) end,
-	getDefense = function(self, t) return self:combatTalentMindDamage(t, 5, 25) end,
-	getPsiRegen = function(self, t) return self:combatTalentMindDamage(t, 1, 5) end,
+	getArmor = function(self, t) return self:combatTalentMindDamage(t, 1, 15) end,
+	getDefense = function(self, t) return self:combatTalentMindDamage(t, 1, 15) end,
+	getPsiRegen = function(self, t) return self:combatTalentMindDamage(t, 1, 10) end,
 	info = function(self, t)
 		local armor = t.getArmor(self, t)
 		local defense = t.getDefense(self, t)
 		local psi = t.getPsiRegen(self, t)
-		return([[Your Forge Shield talent now increses your Armour by %d, your Defense by %d, and gives you %0.2f psi when you're hit by a melee or ranged attack.
+		return([[Your Forge Shield talent now increases your Armour by %d, your Defense by %d, and gives you %0.2f psi when you're hit by a melee or ranged attack.
 		The bonuses will scale with your Mindpower.]]):format(armor, defense, psi)
 	end,
 }

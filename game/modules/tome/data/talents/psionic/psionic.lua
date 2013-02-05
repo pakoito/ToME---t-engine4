@@ -37,7 +37,7 @@ newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type=
 -- Solipsist Talent Trees
 newTalentType{ allow_random=true, is_mind=true, type="psionic/discharge", name = "discharge", description = "Project feedback on the world around you." }
 newTalentType{ allow_random=true, is_mind=true, type="psionic/distortion", name = "distortion", description = "Distort reality with your mental energy." }
-newTalentType{ allow_random=true, is_mind=true, type="psionic/dream-forge", name = "Dream Forge", description = "Master the dream forge to create powerful armor and effects." }
+newTalentType{ allow_random=true, is_mind=true, type="psionic/dream-forge", generic = true, name = "Dream Forge", description = "Master the dream forge to create powerful armor and effects." }
 newTalentType{ allow_random=true, is_mind=true, type="psionic/dream-smith", name = "Dream Smith", description = "Call the dream-forge hammer to smite your foes." }
 newTalentType{ allow_random=true, is_mind=true, type="psionic/nightmare", name = "nightmare", description = "Manifest your enemies nightmares." }
 newTalentType{ allow_random=true, is_mind=true, type="psionic/psychic-assault", name = "Psychic Assault", description = "Directly attack your opponents minds." }
