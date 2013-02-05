@@ -68,6 +68,7 @@ newEntity{ define_as = "THE_MASTER",
 	see_invisible = 20,
 	undead = 1,
 	self_resurrect = 1,
+	self_resurrect_chat = "the-master-resurrect",
 	open_door = 1,
 	necrotic_aura_base_souls = 10,
 

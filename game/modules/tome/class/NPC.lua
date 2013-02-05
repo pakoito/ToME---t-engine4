@@ -21,6 +21,7 @@ require "engine.class"
 local ActorAI = require "engine.interface.ActorAI"
 local Faction = require "engine.Faction"
 local Emote = require("engine.Emote")
+local Chat = require "engine.Chat"
 require "mod.class.Actor"
 
 module(..., package.seeall, class.inherit(mod.class.Actor, engine.interface.ActorAI))
@@ -329,6 +330,12 @@ function _M:die(src, death_note)
 		self:move(self.x, self.y, true)
 
 		self:check("on_resurrect", "basic_resurrect")
+
+		if self:attr("self_resurrect_chat") then
+			local chat = Chat.new(self.self_resurrect_chat, self, game.player)
+			chat:invoke()
+			self.self_resurrect_chat = nil
+		end
 
 		return
 	end
