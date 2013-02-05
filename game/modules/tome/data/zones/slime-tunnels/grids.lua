@@ -59,6 +59,12 @@ newEntity{
 	display='>', color=colors.VIOLET, image = "terrain/stair_up_wild.png",
 	notice = true,
 	change_level=1, change_zone="high-peak",
+	change_level_check = function()
+		require("engine.ui.Dialog"):yesnoLongPopup("High Peak", 'As you stand on the stairs you can feel this is a "do or die" one way trip. If you enter there will be no coming back.\nEnter?', 500, function(ret) if ret then
+			game:changeLevel(1, "high-peak")
+		end end)
+		return true
+	end,
 }
 
 newEntity{ base = "SLIME_UP",
