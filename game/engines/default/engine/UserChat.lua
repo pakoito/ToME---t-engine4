@@ -37,6 +37,8 @@ function _M:init()
 	self.channels_changed = true
 	self.cur_channel = "global"
 	self.channels = {}
+	self.channel_codes = {}
+	self.channel_codes_rev = {}
 	self.max = 500
 	self.do_display_chans = true
 	self.on_event = {}
@@ -66,6 +68,25 @@ function _M:setupOnGame()
 
 	local ok, UC = pcall(require, "mod.class.UserChatExtension")
 	if ok and UC then self.uc_ext = UC.new(self) end
+end
+
+function _M:getChannelCode(chan)
+	if not game then return "0" end
+
+	if not self.channel_codes[chan] then
+		local chans = table.keys(self.channels)
+		table.sort(chans, function(a, b)
+			if a == game.__mod_info.short_name then return 1
+			elseif b == game.__mod_info.short_name then return nil
+			elseif a == game.__mod_info.short_name.."-spoiler" then return 1
+			elseif b == game.__mod_info.short_name.."-spoiler" then return nil
+			else return a < b
+			end
+		end)
+		self.channel_codes_rev = chans
+		self.channel_codes = table.keys_to_values(chans)
+	end
+	return tostring(self.channel_codes[chan])
 end
 
 --- Filter messages
@@ -552,7 +573,7 @@ function _M:display()
 	local old_style = self.font:getStyle()
 	for z = 1 + self.scroll, #log do
 		local stop = false
-		local tstr = tstring{"[", log[z].channel, "] <", {"color",unpack(colors.simple(log[z].color_name))}, log[z].name, {"color", "LAST"}, "> "}
+		local tstr = tstring{"[", self:getChannelCode(log[z].channel), "-", log[z].channel, "] <", {"color",unpack(colors.simple(log[z].color_name))}, log[z].name, {"color", "LAST"}, "> "}
 		tstr:merge(log[z].msg:toTString())
 		local gen = tstring.makeLineTextures(tstr, self.w, self.font_mono)
 		for i = #gen, 1, -1 do

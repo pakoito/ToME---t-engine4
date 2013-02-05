@@ -108,6 +108,15 @@ function _M:checkTarget(text)
 			self.c_box:setText("")
 		end
 	end
+	if text:sub(1, 1) == "/" then
+		local _, _, chancode = text:find("^/([0-9]+) ")
+		chancode = tonumber(chancode)
+		if chancode and self.chat.channel_codes_rev and self.chat.channel_codes_rev[chancode] then
+			self.chat:setCurrentTarget(true, self.chat.channel_codes_rev[chancode])
+			self:updateTitle(self:getTitle())
+			self.c_box:setText("")
+		end
+	end
 end
 
 function _M:okclick()
