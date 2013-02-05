@@ -43,10 +43,8 @@ newEntity{
 	rarity = 12,
 	cost = 5,
 
-	charm_on_use = {
-		{100, function(self, who) return ("regenerate %d vim"):format(self:getCharmPower(true) / 6) end, function(self, who)
-			who:incVim(self:getCharmPower(true) / 6)
-		end},
+	wielder = {
+		max_vim = resolvers.mbonus_material(15, 5),
 	}
 }
 
