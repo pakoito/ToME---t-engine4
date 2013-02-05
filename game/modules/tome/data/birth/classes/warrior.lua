@@ -279,6 +279,7 @@ newBirthDescriptor{
 		["technique/unarmed-discipline"]={false, 0.3},
 		["technique/unarmed-training"]={true, 0.3},
 		["technique/conditioning"]={true, 0.3},
+		["technique/mobility"]={true, 0.2},
 	},
 	talents = {
 		[ActorTalents.T_UPPERCUT] = 1,
