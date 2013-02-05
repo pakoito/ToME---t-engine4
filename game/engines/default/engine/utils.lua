@@ -29,15 +29,8 @@ function lpeg.anywhere (p)
 end
 
 function table.concatNice(t, sep, endsep)
-	if not endsep then return table.concat(t, sep) end
-	local str = ""
-	for i, s in ipairs(t) do 
-		if i == #t and i > 1 then str = str..endsep..s
-		elseif i == 1 then str = s
-		else str = str..sep..s
-		end
-	end
-	return str
+	if not endsep or #t == 1 then return table.concat(t, sep) end
+	return table.concat(t, sep, 1, #t - 1)..endsep..t[#t]
 end
 
 function table.min(t)
@@ -273,60 +266,36 @@ function table.readonly(src)
    });
 end
 
--- Taken from http://lua-users.org/wiki/SortedIteration
+-- Taken from http://lua-users.org/wiki/SortedIteration and modified
 local function cmp_multitype(op1, op2)
 	local type1, type2 = type(op1), type(op2)
 	if type1 ~= type2 then --cmp by type
 		return type1 < type2
-	elseif type1 == "number" and type2 == "number"
-	  or type1 == "string" and type2 == "string" then
+	elseif type1 == "number" or type1 == "string" then
 		return op1 < op2 --comp by default
-	elseif type1 == "boolean" and type2 == "boolean" then
+	elseif type1 == "boolean" then
 		return op1 == true
 	else
 		return tostring(op1) < tostring(op2) --cmp by address
 	end
 end
 
-local __genOrderedIndex = function(t)
-	local orderedIndex = {}
-	for key in pairs(t) do
-		table.insert(orderedIndex, key)
+function table.orderedPairs(t)
+	local sorted_keys = {}
+	local n = 0		-- size of key table
+	for key, _ in pairs(t) do
+		n = n + 1
+		sorted_keys[n] = key
 	end
-	table.sort(orderedIndex, cmp_multitype) --### CANGE ###
-	return orderedIndex
-end
+	table.sort(sorted_keys, cmp_multitype)
 
-local orderedNext = function(t, state)
-	-- Equivalent of the next function, but returns the keys in the alphabetic
-	-- order. We use a temporary ordered key table that is stored in the
-	-- table being iterated.
-	if state == nil then
-		-- the first time, generate the index
-		t.__orderedIndex = __genOrderedIndex(t)
-		key = t.__orderedIndex[1]
-		return key, t[key]
-	end
-	-- fetch the next value
-	key = nil
-	for i = 1,table.getn(t.__orderedIndex) do
-		if t.__orderedIndex[i] == state then
-			key = t.__orderedIndex[i+1]
+	local i = 0		-- iterator index
+	return function ()
+		if i < n then
+			i = i + 1
+			return sorted_keys[i], t[sorted_keys[i]]
 		end
 	end
-
-	if key then
-		return key, t[key]
-	end
-
-	-- no more value to return, cleanup
-	t.__orderedIndex = nil
-	return
-end
-
---- An ordered iteration through a table
-function table.orderedPairs(t)
-	return orderedNext, t, nil
 end
 
 --- Shuffles the content of a table (list)
@@ -1916,11 +1885,11 @@ function util.lerp(a, b, x)
 end
 
 function util.factorial(n)
-	if n == 0 then
-		return 1
-	else
-		return n * util.factorial(n - 1)
+	local f = 1
+	for i = 2, n do
+		f = f * i
 	end
+	return f
 end
 
 function rng.poissonProcess(k, turn_scale, rate)
