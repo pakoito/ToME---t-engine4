@@ -579,43 +579,30 @@ newEffect{
 
 		-- health
 		if eff.constitutionGain and eff.constitutionGain > 0 then
-			eff.constitutionGainId = self:addTemporaryValue("inc_stats",
-			{
-				[Stats.STAT_CON] = eff.constitutionGain,
-			})
-			eff.constitutionLossId = eff.target:addTemporaryValue("inc_stats",
-			{
-				[Stats.STAT_CON] = -eff.constitutionGain,
-			})
+			eff.constitutionGainId = self:addTemporaryValue("inc_stats", { [Stats.STAT_CON] = eff.constitutionGain })
 		end
 		if eff.lifeRegenGain and eff.lifeRegenGain > 0 then
 			eff.lifeRegenGainId = self:addTemporaryValue("life_regen", eff.lifeRegenGain)
-			eff.lifeRegenLossId = eff.target:addTemporaryValue("life_regen", -eff.lifeRegenGain)
 		end
 
 		-- power
 		if eff.damageGain and eff.damageGain > 0 then
 			eff.damageGainId = self:addTemporaryValue("inc_damage", {all=eff.damageGain})
-			eff.damageLossId = eff.target:addTemporaryValue("inc_damage", {all=eff.damageLoss})
 		end
 
 		-- strengths
 		if eff.resistGain and eff.resistGain > 0 then
 			local gainList = {}
-			local lossList = {}
 			for id, resist in pairs(eff.target.resists) do
 				if resist > 0 and id ~= "all" then
-					local amount = eff.resistGain * 0.01 * resist
-					gainList[id] = amount
-					lossList[id] = -amount
+					gainList[id] = eff.resistGain * 0.01 * resist
 				end
 			end
 
 			eff.resistGainId = self:addTemporaryValue("resists", gainList)
-			eff.resistLossId = eff.target:addTemporaryValue("resists", lossList)
 		end
 
-		eff.target:setEffect(eff.target.EFF_FED_UPON, eff.dur, { src = eff.src, target = eff.target })
+		eff.target:setEffect(eff.target.EFF_FED_UPON, eff.dur, { src = eff.src, target = eff.target, constitutionLoss = -eff.constitutionGain, lifeRegenLoss = -eff.lifeRegenGain, damageLoss = -eff.damageGain, resistLoss = -eff.resistGain })
 	end,
 	deactivate = function(self, eff)
 		-- hate
@@ -623,17 +610,13 @@ newEffect{
 
 		-- health
 		if eff.constitutionGainId then self:removeTemporaryValue("inc_stats", eff.constitutionGainId) end
-		if eff.constitutionLossId then eff.target:removeTemporaryValue("inc_stats", eff.constitutionLossId) end
 		if eff.lifeRegenGainId then self:removeTemporaryValue("life_regen", eff.lifeRegenGainId) end
-		if eff.lifeRegenLossId then eff.target:removeTemporaryValue("life_regen", eff.lifeRegenLossId) end
 
 		-- power
 		if eff.damageGainId then self:removeTemporaryValue("inc_damage", eff.damageGainId) end
-		if eff.damageLossId then eff.target:removeTemporaryValue("inc_damage", eff.damageLossId) end
 
 		-- strengths
 		if eff.resistGainId then self:removeTemporaryValue("resists", eff.resistGainId) end
-		if eff.resistLossId then eff.target:removeTemporaryValue("resists", eff.resistLossId) end
 
 		if eff.particles then
 			-- remove old particle emitter
@@ -684,8 +667,42 @@ newEffect{
 	no_remove = true,
 	parameters = { },
 	activate = function(self, eff)
+		-- health
+		if eff.constitutionLoss and eff.constitutionLoss < 0 then
+			eff.constitutionLossId = self:addTemporaryValue("inc_stats", { [Stats.STAT_CON] = eff.constitutionLoss })
+		end
+		if eff.lifeRegenLoss and eff.lifeRegenLoss < 0 then
+			eff.lifeRegenLossId = self:addTemporaryValue("life_regen", eff.lifeRegenLoss)
+		end
+
+		-- power
+		if eff.damageLoss and eff.damageLoss < 0 then
+			eff.damageLossId = self:addTemporaryValue("inc_damage", {all=eff.damageLoss})
+		end
+
+		-- strengths
+		if eff.resistLoss and eff.resistLoss < 0 then
+			local lossList = {}
+			for id, resist in pairs(self.resists) do
+				if resist > 0 and id ~= "all" then
+					lossList[id] = eff.resistLoss * 0.01 * resist
+				end
+			end
+
+			eff.resistLossId = self:addTemporaryValue("resists", lossList)
+		end
 	end,
 	deactivate = function(self, eff)
+		-- health
+		if eff.constitutionLossId then self:removeTemporaryValue("inc_stats", eff.constitutionLossId) end
+		if eff.lifeRegenLossId then self:removeTemporaryValue("life_regen", eff.lifeRegenLossId) end
+
+		-- power
+		if eff.damageLossId then self:removeTemporaryValue("inc_damage", eff.damageLossId) end
+
+		-- strengths
+		if eff.resistLossId then self:removeTemporaryValue("resists", eff.resistLossId) end
+
 		if eff.target == self and eff.src:hasEffect(eff.src.EFF_FEED) then
 			eff.src:removeEffect(eff.src.EFF_FEED)
 		end

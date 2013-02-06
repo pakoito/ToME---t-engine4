@@ -676,6 +676,12 @@ function _M:act()
 		self.tempeffect_def[self.EFF_PANICKED].do_act(self, self:hasEffect(self.EFF_PANICKED))
 	end
 
+	if self.talents_on_act and next(self.talents_on_act) then
+		for tid, _ in pairs(self.talents_on_act) do
+			self:callTalent(tid, "callbackOnAct")
+		end
+	end
+
 	-- Still enough energy to act ?
 	if self.energy.value < game.energy_to_act then return false end
 
@@ -3723,6 +3729,10 @@ function _M:postUseTalent(ab, ret, silent)
 			if ab.sustain_feedback then
 				trigger = true; self:incMaxFeedback(-ab.sustain_feedback)
 			end
+			if ab.callbackOnAct then
+				self.talents_on_act = self.talents_on_act or {}
+				self.talents_on_act[ab.id] = true
+			end
 		else
 			if ab.sustain_mana then
 				self:incMaxMana(ab.sustain_mana)
@@ -3753,6 +3763,10 @@ function _M:postUseTalent(ab, ret, silent)
 			end
 			if ab.sustain_feedback then
 				self:incMaxFeedback(ab.sustain_feedback)
+			end
+			if ab.callbackOnAct then
+				self.talents_on_act[ab.id] = nil
+				if not next(self.talents_on_act) then self.talents_on_act = nil end
 			end
 		end
 	elseif not self:attr("force_talent_ignore_ressources") then
