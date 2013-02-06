@@ -1066,6 +1066,12 @@ function _M:move(x, y, force)
 		end
 	end
 
+	if self.talents_on_move and next(self.talents_on_move) then
+		for tid, _ in pairs(self.talents_on_move) do
+			self:callTalent(tid, "callbackOnMove", moved, force, ox, oy)
+		end
+	end
+
 	self:triggerHook{"Actor:move", moved=moved, force=force, ox=ox, oy=oy}
 
 	return moved
@@ -3733,6 +3739,10 @@ function _M:postUseTalent(ab, ret, silent)
 				self.talents_on_act = self.talents_on_act or {}
 				self.talents_on_act[ab.id] = true
 			end
+			if ab.callbackOnMove then
+				self.talents_on_move = self.talents_on_move or {}
+				self.talents_on_move[ab.id] = true
+			end
 		else
 			if ab.sustain_mana then
 				self:incMaxMana(ab.sustain_mana)
@@ -3767,6 +3777,10 @@ function _M:postUseTalent(ab, ret, silent)
 			if ab.callbackOnAct then
 				self.talents_on_act[ab.id] = nil
 				if not next(self.talents_on_act) then self.talents_on_act = nil end
+			end
+			if ab.callbackOnMove then
+				self.talents_on_move[ab.id] = nil
+				if not next(self.talents_on_move) then self.talents_on_move = nil end
 			end
 		end
 	elseif not self:attr("force_talent_ignore_ressources") then
@@ -3825,6 +3839,13 @@ function _M:postUseTalent(ab, ret, silent)
 	if not ab.no_reload_break then self:breakReloading() end
 	self:breakStepUp()
 	if not (ab.no_energy or ab.no_break_channel) and not (ab.mode == "sustained" and self:isTalentActive(ab.id)) then self:breakPsionicChannel(ab.id) end
+
+	for tid, _ in pairs(self.sustain_talents) do
+		local t = self:getTalentFromId(tid)
+		if t and t.callbackBreakOnTalent then
+			self:callTalent(tid, "callbackBreakOnTalent", ab)
+		end
+	end
 
 	if ab.id ~= self.T_REDUX and self:hasEffect(self.EFF_REDUX) and ab.type[1]:find("^chronomancy/") and ab.mode == "activated" and self:getTalentLevel(self.T_REDUX) >= self:getTalentLevel(ab.id) then
 		self:removeEffect(self.EFF_REDUX)
