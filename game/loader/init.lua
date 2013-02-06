@@ -133,6 +133,7 @@ load(...)
 
 fs.umount(homepath)
 
+__addons_superload_order = {}
 local te4_loader = function(name)
 	local bname = name
 
@@ -140,7 +141,8 @@ local te4_loader = function(name)
 	local prev = loadfile("/"..bname:gsub("%.", "/")..".lua")
 
 	name = name:gsub("%.", "/")
-	for i, addon in ipairs(fs.list("/mod/addons/")) do
+	for i = 1, #__addons_superload_order do
+		local addon = __addons_superload_order[i]
 		local fn = "/mod/addons/"..addon.."/superload/"..name..".lua"
 		if fs.exists(fn) then
 			local f = loadfile(fn)

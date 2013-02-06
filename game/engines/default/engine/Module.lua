@@ -344,6 +344,7 @@ function _M:loadAddons(mod, saveuse)
 	end
 
 	mod.addons = {}
+	_G.__addons_superload_order = {}
 	for i, add in ipairs(adds) do
 		add.version_name = ("%s-%s-%d.%d.%d"):format(mod.short_name, add.short_name, add.version[1], add.version[2], add.version[3])
 
@@ -360,7 +361,10 @@ function _M:loadAddons(mod, saveuse)
 		end
 
 		if add.data then fs.mount(base.."/data", "/data-"..add.short_name, true) print(" * with data") end
-		if add.superload then fs.mount(base.."/superload", "/mod/addons/"..add.short_name.."/superload", true) print(" * with superload") end
+		if add.superload then 
+			fs.mount(base.."/superload", "/mod/addons/"..add.short_name.."/superload", true) print(" * with superload") 
+			table.insert(_G.__addons_superload_order, add.short_name)
+		end
 		if add.overload then fs.mount(base.."/overload", "/", false) print(" * with overload") end
 		if add.hooks then
 			fs.mount(base.."/hooks", "/hooks/"..add.short_name, true)
