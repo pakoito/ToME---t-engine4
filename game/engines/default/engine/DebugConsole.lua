@@ -31,6 +31,7 @@ history = {
 	[[< You have access to the T-Engine global namespace.                                           >]],
 	[[< To execute commands, simply type them and hit Enter.                                        >]],
 	[[< To see the return values of a command, start the line off with a "=" character.             >]],
+	[[< For a table, this will not show keys inherited from a metatable (usually class functions).  >]],
 	[[<--------------------------------------------------------------------------------------------->]],
 	[[< Here are some useful keyboard shortcuts:                                                    >]],
 	[[<     Left/right arrows  :=: Move the cursor position left/right                              >]],
