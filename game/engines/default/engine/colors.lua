@@ -18,9 +18,11 @@
 -- darkgod@te4.org
 
 colors = {}
+colors_simple = {}
 
 function defineColor(name, r, g, b, br, bg, bb)
 	colors[name] = {r=r, g=g, b=b, br=br, bg=bg, bb=bb}
+	colors_simple[name] = {r, g, b}
 end
 
 function colors.simple(c) return {c.r, c.g, c.b} end

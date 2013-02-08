@@ -218,6 +218,15 @@ function _M:event(e)
 		if self.uc_ext then
 			self.uc_ext:event(e)
 		end
+	elseif e.se == "SelfJoin" then
+		self:addMessage("join", e.channel, profile.auth.login, e.channel, "#{italic}#Joined channel#{normal}#", nil, true)
+		self:updateChanList()
+		self:saveChannels()
+	elseif e.se == "SelfPart" then
+		self:addMessage("join", e.channel, profile.auth.login, e.channel, "#{italic}#Left channel#{normal}#", nil, true)
+		self.channels[e.channel] = nil
+		self:updateChanList()
+		self:saveChannels()
 	elseif e.se == "Join" then
 		local color = colors.WHITE
 		if e.status == 'dev' then color = colors.CRIMSON
@@ -283,6 +292,23 @@ function _M:join(channel)
 	self.channels_changed = true
 	self.changed = true
 	self:updateChanList(true)
+end
+
+function _M:part(channel)
+	if not profile.auth then return end
+	core.profile.pushOrder(string.format("o='ChatPart' channel=%q", channel))
+	self:setCurrentTarget(true, game.__mod_info.short_name)
+end
+
+function _M:saveChannels()
+	local l = {
+		"chat.channels = chat.channels or {}",
+		"chat.channels["..string.format("%q", game.__mod_info.short_name).."]={}"
+	}
+	for k, v in pairs(profile.chat.channels) do
+		if v then l[#l+1] = "chat.channels["..string.format("%q", game.__mod_info.short_name).."]["..string.format("%q", k).."]=true" end
+	end
+	game:saveSettings("chat.channels."..game.__mod_info.short_name, table.concat(l, "\n"))
 end
 
 function _M:selectChannel(channel, no_recurs)
@@ -429,6 +455,8 @@ function _M:getLog(channel, extra)
 			local tstr 
 			if i.kind == "whisper" then
 				tstr = tstring{{"color", 0xcb,0x87,0xd2}, "<", i.name, "> "}
+			elseif i.kind == "join" then
+				tstr = tstring{{"color", "FIREBRICK"}, "[", i.name, "]" }
 			else
 				tstr = tstring{"<", {"color",unpack(colors.simple(i.color_name or colors.WHITE))}, i.name, {"color", "LAST"}, "> "}
 			end
@@ -592,6 +620,8 @@ function _M:display()
 		local tstr
 		if log[z].kind == "whisper" then
 			tstr = tstring{{"color", 0xcb,0x87,0xd2}, "<", log[z].name, ">" }
+		elseif log[z].kind == "join" then
+			tstr = tstring{{"color", "FIREBRICK"}, "[", self:getChannelCode(log[z].channel), "-", log[z].name, "]" }
 		else
 			tstr = tstring{"[", self:getChannelCode(log[z].channel), "-", log[z].channel, "] <", {"color",unpack(colors.simple(log[z].color_name))}, log[z].name, {"color", "LAST"}, "> "}
 		end

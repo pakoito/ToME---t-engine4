@@ -28,6 +28,8 @@ local Textzone = require "engine.ui.Textzone"
 module(..., package.seeall, class.inherit(Dialog))
 
 function _M:init(chat, on_end)
+	chat:getChannelCode("----------------")
+
 	self.on_end = on_end
 	self.chat = chat
 	self.min = 2
@@ -136,6 +138,26 @@ end
 
 function _M:okclick()
 	local text = self.c_box.text
+
+	local _, _, command, params = text:find("^/([a-z]+) (.*)$")
+	if command then
+		if command == "join" and params:find("^[a-z_-]+$") then
+			self.chat:join(params)
+			self.c_box:setText("")
+			game:unregisterDialog(self)
+			self.chat:setCurrentTarget(true, params)
+			return
+		end
+		if command == "part" and params:find("^[a-z_-]+$") then
+			self.chat:part(params)
+			self.c_box:setText("")
+			game:unregisterDialog(self)
+			self.chat:setCurrentTarget(true, game.__mod_info.short_name)
+			return
+		end
+		self:triggerHook{"Chat:Talkbox:command", command=command, params=params, talkbox=self}
+	end
+
 	if text:len() >= self.min and text:len() <= self.max then
 		game:unregisterDialog(self)
 

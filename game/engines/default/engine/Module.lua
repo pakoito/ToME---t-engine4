@@ -741,10 +741,21 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 	-- Add user chat if needed
 	if mod.allow_userchat and _G.game.key then
 		profile.chat:setupOnGame()
-		profile.chat:join("global")
-		profile.chat:join(mod.short_name)
-		profile.chat:join(mod.short_name.."-spoiler")
-		profile.chat:selectChannel(mod.short_name)
+		if not config.settings.chat or not config.settings.chat.channels or not config.settings.chat.channels[mod.short_name] then
+			profile.chat:join("global")
+			profile.chat:join(mod.short_name)
+			profile.chat:join(mod.short_name.."-spoiler")
+			profile.chat:selectChannel(mod.short_name)
+			print("Joining default channels")
+		else
+			local def = false
+			for c, _ in pairs(config.settings.chat.channels[mod.short_name]) do
+				profile.chat:join(c)
+				if c == mod.short_name then def = true end
+			end
+			if def then profile.chat:selectChannel(mod.short_name) else profile.chat:selectChannel( (next(config.settings.chat.channels[mod.short_name])) ) end
+			print("Joining selected channels")
+		end
 	end
 
 	-- Disable the profile if ungood

@@ -61,11 +61,13 @@ end
 function _M:joined(channel)
 	self.cjoined[channel] = true
 	print("[ONLINE PROFILE] connected to channel", channel)
+	cprofile.pushEvent(string.format("e='Chat' se='SelfJoin' channel=%q", channel))
 end
 
 function _M:parted(channel)
 	self.cjoined[channel] = nil
 	print("[ONLINE PROFILE] parted from channel", channel)
+	cprofile.pushEvent(string.format("e='Chat' se='SelfPart' channel=%q", channel))
 end
 
 function _M:reconnect()
