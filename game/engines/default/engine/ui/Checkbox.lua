@@ -28,6 +28,7 @@ function _M:init(t)
 	self.title = assert(t.title, "no checkbox title")
 	self.text = t.text or ""
 	self.checked = t.default
+	self.check_first = not t.check_last
 	self.fct = t.fct or function() end
 	self.on_change = t.on_change
 
@@ -68,19 +69,27 @@ function _M:select()
 end
 
 function _M:display(x, y, nb_keyframes)
-	if self.text_shadow then self.tex[1]:toScreenFull(x+1, y+1 + (self.h - self.title_h) / 2, self.title_w, self.title_h, self.tex[2], self.tex[3], 0, 0, 0, self.text_shadow) end
-	self.tex[1]:toScreenFull(x, y + (self.h - self.title_h) / 2, self.title_w, self.title_h, self.tex[2], self.tex[3])
-	if self.focused then
-		self.check.t:toScreenFull(x + self.title_w, y, self.check.w, self.check.h, self.check.tw, self.check.th)
-	else
-		self.check.t:toScreenFull(x + self.title_w, y, self.check.w, self.check.h, self.check.tw, self.check.th)
-		if self.focus_decay then
---			self.check.t:toScreenFull(x + self.title_w, y, self.check.w, self.check.h, self.check.tw, self.check.th)
-			self.focus_decay = self.focus_decay - nb_keyframes
-			if self.focus_decay <= 0 then self.focus_decay = nil end
+	if self.check_first then
+		if self.text_shadow then self.tex[1]:toScreenFull(x+1 + self.check.w, y+1 + (self.h - self.title_h) / 2, self.title_w, self.title_h, self.tex[2], self.tex[3], 0, 0, 0, self.text_shadow) end
+		self.tex[1]:toScreenFull(x + self.check.w, y + (self.h - self.title_h) / 2, self.title_w, self.title_h, self.tex[2], self.tex[3])
+		if self.focused then
+			self.check.t:toScreenFull(x, y, self.check.w, self.check.h, self.check.tw, self.check.th)
+		else
+			self.check.t:toScreenFull(x, y, self.check.w, self.check.h, self.check.tw, self.check.th)
 		end
-	end
-	if self.checked then
-		self.tick.t:toScreenFull(x + self.title_w, y, self.tick.w, self.tick.h, self.tick.tw, self.tick.th)
+		if self.checked then
+			self.tick.t:toScreenFull(x, y, self.tick.w, self.tick.h, self.tick.tw, self.tick.th)
+		end
+	else
+		if self.text_shadow then self.tex[1]:toScreenFull(x+1, y+1 + (self.h - self.title_h) / 2, self.title_w, self.title_h, self.tex[2], self.tex[3], 0, 0, 0, self.text_shadow) end
+		self.tex[1]:toScreenFull(x, y + (self.h - self.title_h) / 2, self.title_w, self.title_h, self.tex[2], self.tex[3])
+		if self.focused then
+			self.check.t:toScreenFull(x + self.title_w, y, self.check.w, self.check.h, self.check.tw, self.check.th)
+		else
+			self.check.t:toScreenFull(x + self.title_w, y, self.check.w, self.check.h, self.check.tw, self.check.th)
+		end
+		if self.checked then
+			self.tick.t:toScreenFull(x + self.title_w, y, self.tick.w, self.tick.h, self.tick.tw, self.tick.th)
+		end
 	end
 end
