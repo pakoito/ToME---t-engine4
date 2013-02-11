@@ -484,13 +484,13 @@ newInscription{
 	tactical = { DEFEND = 3, ESCAPE = 2 },
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		self:setEffect(self.EFF_INVISIBILITY, data.dur, {power=data.power + data.inc_stat, penalty=0.4, regen=true})
+		self:setEffect(self.EFF_INVISIBILITY, data.dur, {power=data.power + data.inc_stat, penalty=0.4})
 		return true
 	end,
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		return ([[Activate the rune to become invisible (power %d) for %d turns.
-		As you become invisible you fade out of phase with reality, all your damage is reduced by 40%% and you cannot heal or regen life while invisible.
+		As you become invisible you fade out of phase with reality, all your damage is reduced by 40%%.
 		]]):format(data.power + data.inc_stat, data.dur)
 	end,
 	short_info = function(self, t)
