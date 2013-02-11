@@ -53,7 +53,7 @@ newTalent{
 	type = {"spell/fire-alchemy", 2},
 	require = spells_req2,
 	points = 5,
-	mana = 80,
+	mana = function(self, t) return util.bound(math.ceil(82 - self:getTalentLevel(t) * 10), 10, 100) end,
 	cooldown = 34,
 	range = 6,
 	direct_hit = true,
