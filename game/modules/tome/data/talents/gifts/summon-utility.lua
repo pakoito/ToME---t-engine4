@@ -276,7 +276,7 @@ newTalent{
 		}
 		if self:attr("wild_summon") and rng.percent(self:attr("wild_summon")) then
 			m.name = m.name.." (wild summon)"
-			m[#m+1] = resolvers.inscription("INFUSION:_INSIDIOUS_POISON", {cooldown=12, range=6, heal_factor=0.6, power=self:getTalentLevel(t) * 60})
+			m[#m+1] = resolvers.inscription("INFUSION:_INSIDIOUS_POISON", {cooldown=12, range=6, heal_factor=60, power=self:getTalentLevel(t) * 60})
 		end
 		if self:knowTalent(self.T_BLIGHTED_SUMMONING) then m:learnTalent(m.T_CORROSIVE_WORM, true, 3) end
 
