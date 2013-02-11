@@ -66,7 +66,7 @@ function _M:takeHit(value, src, death_note)
 	if self.onTakeHit then value = self:onTakeHit(value, src) end
 	self.life = self.life - value
 	self.changed = true
-	if self.life <= self.die_at then
+	if self.life <= self.die_at and not self.dead then
 		if src.on_kill and src:on_kill(self) then return false, value end
 		game.logSeen(self, "#{bold}#%s killed %s!#{normal}#", src.name:capitalize(), self.name)
 		return self:die(src, death_note), value

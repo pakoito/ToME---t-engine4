@@ -107,11 +107,10 @@ return {
 
 			local acts = {}
 			for act, _ in pairs(game.party.members) do
-				if not act.dead then
-					act:removeEffect(act.EFF_EIDOLON_PROTECT, true, true)
-					acts[#acts+1] = act
-					if oldlevel:hasEntity(act) then oldlevel:removeEntity(act) end
-				end
+				act:removeEffect(act.EFF_EIDOLON_PROTECT, true, true)
+				act.invulnerable_others = nil
+				acts[#acts+1] = act
+				if oldlevel:hasEntity(act) then oldlevel:removeEntity(act) end
 			end
 
 			game.zone = zone
