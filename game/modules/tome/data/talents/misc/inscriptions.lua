@@ -656,7 +656,8 @@ newInscription{
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		local tg = self:getTalentTarget(t)
-		self:project(tg, self.x, self.y, DamageType.ACID, data.power + data.inc_stat)
+		local pow = data.reduce or 15
+		self:project(tg, self.x, self.y, DamageType.ACID_CORRODE, {dam=data.power + data.inc_stat, dur=data.dur or 3, atk=pow, armor=pow, defense=pow})
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "ball_acid", {radius=tg.radius})
 		game:playSoundNear(self, "talents/slime")
 		attack_rune(self, t.id)
@@ -664,11 +665,15 @@ newInscription{
 	end,
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		return ([[Activate the rune to fire a self-centered acid wave of radius %d, doing %0.2f acid damage.]]):format(self:getTalentRadius(t), damDesc(self, DamageType.ACID, data.power + data.inc_stat))
+		local pow = data.reduce or 15
+		return ([[Activate the rune to fire a self-centered acid wave of radius %d, doing %0.2f acid damage.
+		The corrosive acid will also reduce accuracy, defense and armour by %d for %d turns.]]):
+		format(self:getTalentRadius(t), damDesc(self, DamageType.ACID, data.power + data.inc_stat), pow, data.dur or 3)
 	end,
 	short_info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		return ([[%d acid damage]]):format(damDesc(self, DamageType.ACID, data.power + data.inc_stat))
+		local pow = data.reduce or 15
+		return ([[%d acid damage; power %d; dur %d]]):format(damDesc(self, DamageType.ACID, data.power + data.inc_stat), data.dur or 3, pow)
 	end,
 }
 
@@ -698,6 +703,7 @@ newInscription{
 		self:project(tg, x, y, DamageType.LIGHTNING, rng.avg(dam / 3, dam, 3))
 		local _ _, x, y = self:canProject(tg, x, y)
 		game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(x-self.x), math.abs(y-self.y)), "lightning", {tx=x-self.x, ty=y-self.y})
+		self:setEffect(self.EFF_ELEMENTAL_SURGE_LIGHTNING, 2, {})
 		game:playSoundNear(self, "talents/lightning")
 		attack_rune(self, t.id)
 		return true
@@ -705,7 +711,9 @@ newInscription{
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		local dam = damDesc(self, DamageType.LIGHTNING, data.power + data.inc_stat)
-		return ([[Activate the rune to fire a beam of lightning, doing %0.2f to %0.2f lightning damage.]]):format(dam / 3, dam)
+		return ([[Activate the rune to fire a beam of lightning, doing %0.2f to %0.2f lightning damage.
+		Also transform you into pure lightning for %d turns; any damage will teleport you to an adjacent tile and ignore the damage (can only happen once per turn)]]):
+		format(dam / 3, dam, 2)
 	end,
 	short_info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
