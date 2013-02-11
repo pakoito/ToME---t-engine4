@@ -754,7 +754,7 @@ end
 function _M:automaticTalents()
 	for tid, c in pairs(self.talents_auto) do
 		local t = self.talents_def[tid]
-		if (t.mode ~= "sustained" or not self.sustain_talents[tid]) and not self.talents_cd[tid] and self:preUseTalent(t, true, true) and (not t.auto_use_check or t.auto_use_check(self, t)) then
+		if not t.np_npc_use and (t.mode ~= "sustained" or not self.sustain_talents[tid]) and not self.talents_cd[tid] and self:preUseTalent(t, true, true) and (not t.auto_use_check or t.auto_use_check(self, t)) then
 			self:useTalent(tid)
 		end
 	end
