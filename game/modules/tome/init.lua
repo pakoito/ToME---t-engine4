@@ -111,7 +111,7 @@ load_tips = {
 	{image="/data/gfx/shockbolt/terrain/worldmap.png", text=[[The effects of the Spellblaze were not all instant, and many centuries later the Cataclysm tore the continent apart once more, devastating coastal areas the destroying all of the Naloren lands.]]},
 	{image="/data/gfx/shockbolt/npc/humanoid_elf_elven_archer.png", text=[[Archers are fast and deadly, and with pinning shots can render their foe helpless as swiftly dispatch them.]]},
 	{image="/data/gfx/shockbolt/npc/humanoid_human_reaver.png", text=[[Reavers are powerful fighters with corrupted blood, and the strength to wield a one-handed weapon in each arm.]]},
-	{image="/data/gfx/shockbolt/npc/humanoid_shalore_elven_corruptor.png", text=[[Corrupters fed off the essence of others, and can use their own corrupted blood to launch deadly magical attacks.]]},
+	{image="/data/gfx/shockbolt/npc/humanoid_shalore_elven_corruptor.png", text=[[Corruptors fed off the essence of others, and can use their own corrupted blood to launch deadly magical attacks.]]},
 	{image="/data/gfx/shockbolt/trap/beartrap01.png", text=[[Clever rogues can lay traps to damage or debilitate their foes without having to go near them.]]},
 	{image="/data/gfx/talents/stealth.png", text=[[Rogues can move silently and stealthily, letting them approach foes unaware or avoid them entirely.]]},
 	{image="/data/gfx/shockbolt/object/rune_green.png", text=[[A movement infusion can let you quickly approach a ranged opponent, or quickly escape a melee one.]]},
@@ -120,7 +120,7 @@ load_tips = {
 	{image="/data/gfx/loadtiles/summoner.png", text=[[Summoners can call upon a variety of natural creatures to protect and support them, reducing the risk to their own flesh considerably.]]},
 	{image="/data/gfx/shockbolt/npc/humanoid_human_linaniil_supreme_archmage.png", img_y_off=-50, text=[[The highest sorcerers are known as archmages, and the masters amongst them are said to have the power to change the world. They are feared immensely.]]},
 	{image="/data/gfx/shockbolt/npc/humanoid_orc_orc_elite_fighter.png", text=[[Bulwarks are defensive fighters that can take hits more readily than other warriors whilst preparing for the most effective counter attacks.]]},
-	{image="/data/gfx/shockbolt/npc/humanoid_human_slave_combatant.png", text=[[Brawler are trained in the use of their fists and mastery of their bodies. They can be as dangerous in combat as any swordsman.]]},
+	{image="/data/gfx/shockbolt/npc/humanoid_human_slave_combatant.png", text=[[Brawlers are trained in the use of their fists and mastery of their bodies. They can be as dangerous in combat as any swordsman.]]},
 	{image="/data/gfx/shockbolt/npc/humanoid_human_urkis__the_high_tempest.png", img_y_off=-50, text=[[Lightning is a chaotic element that is hard to control. It is said that those most attuned to it are eventually driven insane.]]},
 }
 

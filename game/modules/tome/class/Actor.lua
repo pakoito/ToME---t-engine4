@@ -3680,7 +3680,7 @@ function _M:postUseTalent(ab, ret, silent)
 			self:useEnergy(game.energy_to_act * self:combatSummonSpeed())
 		elseif ab.type[1]:find("^technique/") then
 			self:useEnergy(game.energy_to_act * self:combatSpeed())
-		elseif ab.type[1]:find("^psionic/") then
+		elseif ab.is_mind then
 			self:useEnergy(game.energy_to_act * self:combatMindSpeed())
 		else
 			self:useEnergy()
