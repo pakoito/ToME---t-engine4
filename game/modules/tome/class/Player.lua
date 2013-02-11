@@ -969,6 +969,13 @@ end
 
 function _M:doDrop(inven, item, on_done, nb)
 	if self.no_inventory_access then return end
+
+	local o = self:getInven(inven) and self:getInven(inven)[item]
+	if o and o.plot then
+		game.logPlayer(self, "You can not drop %s.", o:getName{do_colour=true})
+		return
+	end
+
 	if game.zone.wilderness then
 		Dialog:yesnoLongPopup("Warning", "You cannot drop items on the world map.\nIf you drop it, it will be lost forever.", 300, function(ret)
 			-- The test is reversed because the buttons are reversed, to prevent mistakes
