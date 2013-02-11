@@ -1844,7 +1844,6 @@ newEntity{ base = "BASE_LEATHER_BELT",
 	},
 	max_power = 20, power_regen = 1,
 	use_power = { name = "generate a personal shield", power = 20,
-	use_power = { name = "generate a personal shield", power = 20,
 		use = function(self, who)
 			who:setEffect(who.EFF_DAMAGE_SHIELD, 10, {power=100 + who:getMag(250)})
 			game:playSoundNear(who, "talents/arcane")
