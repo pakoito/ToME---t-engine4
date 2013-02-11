@@ -919,12 +919,12 @@ newInscription{
 			range = rad,
 			actor = 1,
 		})
-		self:setEffect(self.EFF_WEAKENED_MIND, 10, {power=20})
+		self:setEffect(self.EFF_WEAKENED_MIND, 10, {save=10, power=35})
 		return true
 	end,
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		return ([[Strip the protective barriers from your mind for %d turns, allowing in the thoughts all creatures within %d squares but reducing mind save by %d for 10 turns.]]):format(data.dur, self:getTalentRange(t), 20)
+		return ([[Strip the protective barriers from your mind for %d turns, allowing in the thoughts all creatures within %d squares but reducing mind save by %d and increasing your mindpower by %d for 10 turns.]]):format(data.dur, self:getTalentRange(t), 10, 35)
 	end,
 	short_info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)

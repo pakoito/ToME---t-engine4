@@ -1453,17 +1453,19 @@ newEffect{
 
 newEffect{
 	name = "WEAKENED_MIND", image = "talents/taint__telepathy.png",
-	desc = "Weakened Mind",
-	long_desc = function(self, eff) return ("Decreases mind save by %d."):format(eff.power) end,
+	desc = "Receptive Mind",
+	long_desc = function(self, eff) return ("Decreases mind save by %d and increases mindpower by %d."):format(eff.save, eff.power) end,
 	type = "mental",
 	subtype = { morale=true },
 	status = "detrimental",
-	parameters = { power=10 },
+	parameters = { power=10, save=10 },
 	activate = function(self, eff)
-		eff.mindid = self:addTemporaryValue("combat_mentalresist", -eff.power)
+		eff.mindid = self:addTemporaryValue("combat_mentalresist", -eff.save)
+		eff.powdid = self:addTemporaryValue("combat_mindpower", eff.power)
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("combat_mentalresist", eff.mindid)
+		self:removeTemporaryValue("combat_mindpower", eff.powid)
 	end,
 }
 
