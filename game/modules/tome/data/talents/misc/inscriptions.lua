@@ -339,15 +339,24 @@ newInscription{
 		game.level.map:particleEmitter(self.x, self.y, 1, "teleport")
 		self:teleportRandom(self.x, self.y, data.range + data.inc_stat)
 		game.level.map:particleEmitter(self.x, self.y, 1, "teleport")
+		self:setEffect(self.EFF_OUT_OF_PHASE, data.dur or 3, {
+			defense=(data.power or data.range) + data.inc_stat * 3,
+			resists=(data.power or data.range) + data.inc_stat * 3,
+			effect_reduction=(data.power or data.range) + data.inc_stat * 3,
+		})
 		return true
 	end,
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		return ([[Activate the rune to teleport randomly in a range of %d.]]):format(data.range + data.inc_stat)
+		local power = (data.power or data.range) + data.inc_stat * 3
+		return ([[Activate the rune to teleport randomly in a range of %d.
+		Afterwards you stay out of phase for %d turns. In this state all new negative status effects duration is reduced by %d%%, your defense is increased by %d and all your resistances by %d%%.]]):
+		format(data.range + data.inc_stat, data.dur or 3, power, power, power)
 	end,
 	short_info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		return ([[range %d]]):format(data.range + data.inc_stat)
+		local power = (data.power or data.range) + data.inc_stat * 3
+		return ([[range %d; power %d; dur %d]]):format(data.range + data.inc_stat, power, data.dur or 3)
 	end,
 }
 

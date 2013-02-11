@@ -63,7 +63,7 @@ newBirthDescriptor{
 		forbid_nature = 1,
 		inscription_restrictions = { ["inscriptions/runes"] = true, ["inscriptions/taints"] = true, },
 		resolvers.inscription("RUNE:_SHIELDING", {cooldown=14, dur=5, power=100}),
-		resolvers.inscription("RUNE:_PHASE_DOOR", {cooldown=7, range=10}),
+		resolvers.inscription("RUNE:_PHASE_DOOR", {cooldown=7, range=10, dur=5, power=15}),
 	},
 	random_escort_possibilities = { {"tier1.1", 1, 2}, {"tier1.2", 1, 2}, {"daikara", 1, 2}, {"old-forest", 1, 4}, {"dreadfell", 1, 8}, {"reknor", 1, 2}, },
 }

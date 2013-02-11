@@ -266,6 +266,8 @@ newEntity{ base = "BASE_RUNE",
 	inscription_kind = "teleport",
 	inscription_data = {
 		cooldown = resolvers.rngrange(8, 10),
+		dur = resolvers.mbonus_level(5, 3),
+		power = resolvers.mbonus_level(30, 15, function(e, v) return v * 1 end),
 		range = resolvers.mbonus_level(10, 5, function(e, v) return v * 1 end),
 		use_stat_mod = 0.07,
 	},

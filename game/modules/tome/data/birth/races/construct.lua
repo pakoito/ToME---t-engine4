@@ -95,7 +95,7 @@ newBirthDescriptor
 		inscription_restrictions = { ["inscriptions/runes"] = true, },
 		resolvers.inscription("RUNE:_MANASURGE", {cooldown=25, dur=10, mana=620}),
 		resolvers.inscription("RUNE:_SHIELDING", {cooldown=14, dur=5, power=100}),
-		resolvers.inscription("RUNE:_PHASE_DOOR", {cooldown=7, range=10}),
+		resolvers.inscription("RUNE:_PHASE_DOOR", {cooldown=7, range=10, dur=5, power=15}),
 
 		type = "construct", subtype="golem", image = "npc/alchemist_golem.png",
 		starting_intro = "ghoul",
