@@ -155,10 +155,12 @@ newTalent{
 		self.has_used_lichform = true
 		self.descriptor.race = "Undead"
 		self.descriptor.subrace = "Lich"
-		self.moddable_tile = "skeleton"
-		self.moddable_tile_nude = true
-		self.moddable_tile_base = "base_lich_01.png"
-		self.moddable_tile_ornament = nil
+		if not self.has_custom_tile then
+			self.moddable_tile = "skeleton"
+			self.moddable_tile_nude = true
+			self.moddable_tile_base = "base_lich_01.png"
+			self.moddable_tile_ornament = nil
+		end
 		self.blood_color = colors.GREY
 		self:attr("poison_immune", 1)
 		self:attr("disease_immune", 0.5)
