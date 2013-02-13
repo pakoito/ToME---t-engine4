@@ -300,6 +300,7 @@ function _M:act()
 	self.shader_old_life = self.life
 	self.old_air = self.air
 	self.old_psi = self.psi
+	self.old_healwarn = (self:attr("no_healing") or ((self.healing_factor or 1) <= 0))
 
 	-- Clean log flasher
 --	game.flash:empty()
@@ -347,6 +348,13 @@ function _M:updateMainShader()
 			local solipsism_power = self:attr("solipsism_threshold") - self:getPsi()/self:getMaxPsi()
 			if solipsism_power > 0 then game.fbo_shader:setUniform("solipsism_warning", solipsism_power)
 			else game.fbo_shader:setUniform("solipsism_warning", 0) end
+		end
+		if (self:attr("no_healing") or ((self.healing_factor or 1) <= 0)) ~= self.old_healwarn then
+			if (self:attr("no_healing") or ((self.healing_factor or 1) <= 0)) then
+				game.fbo_shader:setUniform("intensify", {0.3,1.3,0.3,1})
+			else
+				game.fbo_shader:setUniform("intensify", {0,0,0,0}) 
+			end
 		end
 
 		-- Colorize shader

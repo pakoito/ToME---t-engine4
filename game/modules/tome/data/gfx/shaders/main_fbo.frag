@@ -1,5 +1,6 @@
 uniform float hp_warning;
 uniform float air_warning;
+uniform float death_warning;
 uniform float solipsism_warning;
 uniform float motionblur;
 uniform float blur;
@@ -104,9 +105,14 @@ void main(void)
 
 	if (intensify.r > 0.0 || intensify.g > 0.0 || intensify.b > 0.0)
 	{
+/*
 		float grey = gl_FragColor.r*0.3+gl_FragColor.g*0.59+gl_FragColor.b*0.11;
 		vec4 vgrey = vec4(grey, grey, grey, gl_FragColor.a);
 		gl_FragColor = max(gl_FragColor * intensify, vgrey);
+*/
+		float grey = gl_FragColor.r*0.3+gl_FragColor.g*0.59+gl_FragColor.b*0.11;
+		vec4 vgrey = vec4(grey, grey, grey, gl_FragColor.a);
+		gl_FragColor = gl_FragColor * intensify;
 	}
 
 	if (hp_warning > 0.0)
