@@ -167,8 +167,8 @@ uberTalent{
 		return q and not q:isCompleted("kill-slasul") and q:isCompleted("kill-drake")
 	end} },
 	on_learn = function(self, t)
-		self:learnTalent(self.T_SPIT_POISON, true, 5)
-		self:learnTalent(self.T_EXOTIC_WEAPONS_MASTERY, true, 5)
+		self:learnTalent(self.T_SPIT_POISON, true, 5, {no_unlearn=true})
+		self:learnTalent(self.T_EXOTIC_WEAPONS_MASTERY, true, 5, {no_unlearn=true})
 		self.__show_special_talents = self.__show_special_talents or {}
 		self.__show_special_talents[self.T_EXOTIC_WEAPONS_MASTERY] = true
 		self.can_breath = self.can_breath or {}

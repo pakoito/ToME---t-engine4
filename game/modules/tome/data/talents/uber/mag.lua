@@ -119,7 +119,7 @@ uberTalent{
 	mode = "passive",
 	on_learn = function(self, t)
 		if self.alchemy_golem then 
-			self.alchemy_golem:learnTalent(self.alchemy_golem.T_CORRUPTED_STRENGTH, true, 1)
+			self.alchemy_golem:learnTalent(self.alchemy_golem.T_CORRUPTED_STRENGTH, true, 1, {no_unlearn=true})
 			self.alchemy_golem:learnTalentType("corruption/reaving-combat", true)
 		end
 	end,

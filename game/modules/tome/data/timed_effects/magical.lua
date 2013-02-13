@@ -2155,7 +2155,7 @@ newEffect{
 
 		local ohk = self.hotkey
 		self.hotkey = nil -- Prevent assigning hotkey, we just did
-		self:learnTalent(self.T_ICE_STORM, true, eff.lvl)
+		self:learnTalent(self.T_ICE_STORM, true, eff.lvl, {no_unlearn=true})
 		self.hotkey = ohk
 
 		self.replace_display = mod.class.Actor.new{
@@ -2172,7 +2172,7 @@ newEffect{
 			end
 		end
 
-		self:unlearnTalent(self.T_ICE_STORM, eff.lvl)
+		self:unlearnTalent(self.T_ICE_STORM, eff.lvl, nil, {no_unlearn=true})
 		self.replace_display = nil
 		self:removeAllMOs()
 		game.level.map:updateMap(self.x, self.y)

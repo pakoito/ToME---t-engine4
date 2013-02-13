@@ -288,6 +288,7 @@ newTalent{
 	paradox = 25,
 	no_npc_use = true,
 	on_pre_use = function(self, t, silent) if not self:isTalentActive(self.T_DOOR_TO_THE_PAST) then if not silent then game.logPlayer(self, "Door to the Past must be active to use this talent.") end return false end return true end,
+	no_unlearn_last = true,
 	action = function(self, t)
 
 		-- Prevent Revision After Death

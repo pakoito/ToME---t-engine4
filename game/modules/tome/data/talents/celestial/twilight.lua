@@ -60,6 +60,7 @@ newTalent{
 	type_no_req = true,
 	tactical = { ESCAPE = 2 },
 	no_npc_use = true,
+	no_unlearn_last = true,
 	getRange = function(self, t) return math.floor(10 + 3 * self:getTalentLevel(t)) end,
 	-- Check distance in preUseTalent to grey out the talent
 	on_pre_use = function(self, t)
@@ -282,6 +283,7 @@ newTalent{
 	no_npc_use = true,
 	type_no_req = true,
 	tactical = { ESCAPE = 2 },
+	no_unlearn_last = true,
 	on_learn = function(self, t)
 		if not self:knowTalent(self.T_JUMPGATE_TELEPORT_TWO) then
 			self:learnTalent(self.T_JUMPGATE_TELEPORT_TWO, nil, nil, {no_unlearn=true})
@@ -335,6 +337,7 @@ newTalent{
 	getRange = function(self, t) return math.floor(10 + 3 * self:getTalentLevel(t)) end,
 	-- Check distance in preUseTalent to grey out the talent
 	is_teleport = true,
+	no_unlearn_last = true,
 	on_pre_use = function(self, t)
 		local eff = self.sustain_talents[self.T_JUMPGATE_TWO]
 		return eff and core.fov.distance(self.x, self.y, eff.jumpgate2_x, eff.jumpgate2_y) < t.getRange(self, t)

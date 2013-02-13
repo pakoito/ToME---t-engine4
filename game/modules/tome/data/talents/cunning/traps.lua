@@ -231,6 +231,7 @@ newTalent{
 	requires_target = true,
 	range = trap_range,
 	tactical = { ATTACKAREA = { FIRE = 2 } },
+	no_unlearn_last = true,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local x, y, target = self:getTarget(tg)
@@ -277,6 +278,7 @@ newTalent{
 	requires_target = true,
 	range = trap_range,
 	tactical = { DISABLE = { pin = 2 } },
+	no_unlearn_last = true,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local x, y, target = self:getTarget(tg)
@@ -327,6 +329,7 @@ newTalent{
 	requires_target = true,
 	tactical = { DISABLE = { stun = 2 } },
 	range = trap_range,
+	no_unlearn_last = true,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local x, y, target = self:getTarget(tg)
@@ -383,6 +386,7 @@ newTalent{
 	requires_target = true,
 	tactical = { DISABLE = { disarm = 2 } },
 	range = trap_range,
+	no_unlearn_last = true,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local x, y, target = self:getTarget(tg)
@@ -433,6 +437,7 @@ newTalent{
 	tactical = { DISABLE = { stun = 2 } },
 	requires_target = true,
 	range = trap_range,
+	no_unlearn_last = true,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local x, y, target = self:getTarget(tg)
@@ -481,6 +486,7 @@ newTalent{
 	tactical = { DISABLE = { blind = 1, stun = 1 } },
 	requires_target = true,
 	range = trap_range,
+	no_unlearn_last = true,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local x, y, target = self:getTarget(tg)
@@ -537,6 +543,7 @@ newTalent{
 	tactical = { ATTACKAREA = { poison = 2 } },
 	requires_target = true,
 	range = trap_range,
+	no_unlearn_last = true,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local x, y, target = self:getTarget(tg)
@@ -595,6 +602,7 @@ newTalent{
 	requires_target = true,
 	is_spell = true,
 	range = trap_range,
+	no_unlearn_last = true,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local x, y, target = self:getTarget(tg)

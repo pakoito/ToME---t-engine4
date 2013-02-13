@@ -95,7 +95,7 @@ function _M:init(t)
 	self.sustain_talents = self.sustain_talents or {}
 	self.talents_auto = self.talents_auto or {}
 	self.talents_confirm_use = self.talents_confirm_use or {}
-	self.talents_learn_vals = {}
+	self.talents_learn_vals = t.talents_learn_vals or {}
 end
 
 --- Resolve leveling talents
@@ -420,9 +420,13 @@ function _M:unlearnTalent(t_id, nb)
 		if p.__tmpvals then for i = 1, #p.__tmpvals do
 			self:removeTemporaryValue(p.__tmpvals[i][1], p.__tmpvals[i][2])
 		end end
-		self.talents_learn_vals[t.id] = {}
 
-		t.passives(self, t, self.talents_learn_vals[t.id])
+		if self:knowTalent(t_id) then
+			self.talents_learn_vals[t.id] = {}
+			t.passives(self, t, self.talents_learn_vals[t.id])
+		else
+			self.talents_learn_vals[t.id] = nil
+		end
 	end
 
 	if self.talents[t_id] == nil then self.talents_auto[t_id] = nil end

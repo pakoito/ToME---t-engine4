@@ -3100,7 +3100,7 @@ function _M:learnItemTalent(o, tid, level)
 		if self:getTalentLevelRaw(t) >= max then
 			self.item_talent_surplus_levels[tid] = self.item_talent_surplus_levels[tid] + 1
 		else
-			self:learnTalent(tid, true, 1)
+			self:learnTalent(tid, true, 1, {no_unlearn = true})
 		end
 	end
 
@@ -3123,7 +3123,7 @@ function _M:unlearnItemTalent(o, tid, level)
 		if self.item_talent_surplus_levels[tid] > 0 then
 			self.item_talent_surplus_levels[tid] = self.item_talent_surplus_levels[tid] - 1
 		else
-			self:unlearnTalent(tid)
+			self:unlearnTalent(tid, nil, nil, {no_unlearn = true})
 		end
 	end
 end
@@ -3192,12 +3192,14 @@ end
 --- Actor forgets a talent
 -- @param t_id the id of the talent to learn
 -- @return true if the talent was unlearnt, nil and an error message otherwise
-function _M:unlearnTalent(t_id, nb, no_unsustain)
+function _M:unlearnTalent(t_id, nb, no_unsustain, extra)
 	if not engine.interface.ActorTalents.unlearnTalent(self, t_id, nb) then return false end
 
 	local t = _M.talents_def[t_id]
 
-	if not t.no_unlearn_last and self.last_learnt_talents then
+	extra = extra or {}
+
+	if not t.no_unlearn_last and self.last_learnt_talents and not extra.no_unlearn then
 		local list = t.generic and self.last_learnt_talents.generic or self.last_learnt_talents.class
 		for i = #list, 1, -1 do
 			if list[i] == t_id then table.remove(list, i) break end

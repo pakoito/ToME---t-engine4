@@ -174,6 +174,7 @@ newTalent{
 	no_sustain_autoreset = true,
 	cooldown = 24,
 	range = 10,
+	no_unlearn_last = true,
 	getStatBonus = function(self, t) 
 		local t = self:getTalentFromId(self.T_THOUGHT_FORMS)
 		return t.getStatBonus(self, t)
@@ -285,6 +286,7 @@ newTalent{
 	no_sustain_autoreset = true,
 	cooldown = 24,
 	range = 10,
+	no_unlearn_last = true,
 	getStatBonus = function(self, t) 
 		local t = self:getTalentFromId(self.T_THOUGHT_FORMS)
 		return t.getStatBonus(self, t)
@@ -386,6 +388,7 @@ newTalent{
 	no_sustain_autoreset = true,
 	cooldown = 24,
 	range = 10,
+	no_unlearn_last = true,
 	getStatBonus = function(self, t) 
 		local t = self:getTalentFromId(self.T_THOUGHT_FORMS)
 		return t.getStatBonus(self, t)

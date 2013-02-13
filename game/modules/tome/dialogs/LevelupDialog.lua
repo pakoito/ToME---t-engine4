@@ -178,7 +178,7 @@ function _M:finish()
 
 	-- Prodigies
 	if self.on_finish_prodigies then
-		for tid, ok in pairs(self.on_finish_prodigies) do if ok then self.actor:learnTalent(tid, true) end end
+		for tid, ok in pairs(self.on_finish_prodigies) do if ok then self.actor:learnTalent(tid, true, nil, {no_unlearn=true}) end end
 	end
 
 	if not self.on_birth then
@@ -300,89 +300,48 @@ end
 function _M:learnTalent(t_id, v)
 	self.talents_learned[t_id] = self.talents_learned[t_id] or 0
 	local t = self.actor:getTalentFromId(t_id)
-	if not t.generic then
-		if v then
-			if self.actor.unused_talents < 1 then
-				self:simplePopup("Not enough class talent points", "You have no class talent points left!")
-				return
-			end
-			if not self.actor:canLearnTalent(t) then
-				self:simplePopup("Cannot learn talent", "Prerequisites not met!")
-				return
-			end
-			if self.actor:getTalentLevelRaw(t_id) >= self:getMaxTPoints(t) then
-				self:simplePopup("Already known", "You already fully know this talent!")
-				return
-			end
-			self.actor:learnTalent(t_id, true)
-			self.actor.unused_talents = self.actor.unused_talents - 1
-			self.talents_changed[t_id] = true
-			self.talents_learned[t_id] = self.talents_learned[t_id] + 1
-			self.new_talents_changed = true
-		else
-			if not self.actor:knowTalent(t_id) then
-				self:simplePopup("Impossible", "You do not know this talent!")
-				return
-			end
-			if not self:isUnlearnable(t, true) and self.actor_dup:getTalentLevelRaw(t_id) >= self.actor:getTalentLevelRaw(t_id) then
-				self:simplePopup("Impossible", "You cannot unlearn this talent!")
-				return
-			end
-			self.actor:unlearnTalent(t_id, nil, true)
-			self.talents_changed[t_id] = true
-			local _, reason = self.actor:canLearnTalent(t, 0)
-			local ok, dep_miss, stats_ok = self:checkDeps()
-			if ok or reason == "not enough stat" or not stats_ok then
-				self.actor.unused_talents = self.actor.unused_talents + 1
-				self.talents_learned[t_id] = self.talents_learned[t_id] - 1
-				self.new_talents_changed = true
-			else
-				self:simpleLongPopup("Impossible", "You cannot unlearn this talent because of talent(s): "..dep_miss, game.w * 0.4)
-				self.actor:learnTalent(t_id)
-				return
-			end
+	local t_type, t_index = "class", "unused_talents"
+	if t.generic then t_type, t_index = "generic", "unused_generics" end
+	if v then
+		if self.actor[t_index] < 1 then
+			self:simplePopup("Not enough "..t_type.." talent points", "You have no "..t_type.." talent points left!")
+			return
 		end
+		if not self.actor:canLearnTalent(t) then
+			self:simplePopup("Cannot learn talent", "Prerequisites not met!")
+			return
+		end
+		if self.actor:getTalentLevelRaw(t_id) >= self:getMaxTPoints(t) then
+			self:simplePopup("Already known", "You already fully know this talent!")
+			return
+		end
+		self.actor:learnTalent(t_id, true)
+		self.actor[t_index] = self.actor[t_index] - 1
+		self.talents_changed[t_id] = true
+		self.talents_learned[t_id] = self.talents_learned[t_id] + 1
+		self.new_talents_changed = true
 	else
-		if v then
-			if self.actor.unused_generics < 1 then
-				self:simplePopup("Not enough generic talent points", "You have no generic talent points left!")
-				return
-			end
-			if not self.actor:canLearnTalent(t) then
-				self:simplePopup("Cannot learn talent", "Prerequisites not met!")
-				return
-			end
-			if self.actor:getTalentLevelRaw(t_id) >= self:getMaxTPoints(t) then
-				self:simplePopup("Already known", "You already fully know this talent!")
-				return
-			end
-			self.actor:learnTalent(t_id)
-			self.actor.unused_generics = self.actor.unused_generics - 1
-			self.talents_changed[t_id] = true
-			self.talents_learned[t_id] = self.talents_learned[t_id] + 1
+		if not self.actor:knowTalent(t_id) then
+			self:simplePopup("Impossible", "You do not know this talent!")
+			return
+		end
+		if not self:isUnlearnable(t, true) and self.actor_dup:getTalentLevelRaw(t_id) >= self.actor:getTalentLevelRaw(t_id) then
+			self:simplePopup("Impossible", "You cannot unlearn this talent!")
+			return
+		end
+		self.actor:unlearnTalent(t_id, nil, true, {no_unlearn=true})
+		self.talents_changed[t_id] = true
+		local _, reason = self.actor:canLearnTalent(t, 0)
+		local ok, dep_miss, stats_ok = self:checkDeps()
+		self.actor:learnTalent(t_id, true, nil, {no_unlearn=true})
+		if ok or reason == "not enough stat" or not stats_ok then
+			self.actor:unlearnTalent(t_id)
+			self.actor[t_index] = self.actor[t_index] + 1
+			self.talents_learned[t_id] = self.talents_learned[t_id] - 1
 			self.new_talents_changed = true
 		else
-			if not self.actor:knowTalent(t_id) then
-				self:simplePopup("Impossible", "You do not know this talent!")
-				return
-			end
-			if not self:isUnlearnable(t, true) and self.actor_dup:getTalentLevelRaw(t_id) >= self.actor:getTalentLevelRaw(t_id) then
-				self:simplePopup("Impossible", "You cannot unlearn this talent!")
-				return
-			end
-			self.actor:unlearnTalent(t_id, nil, true)
-			self.talents_changed[t_id] = true
-			local _, reason = self.actor:canLearnTalent(t, 0)
-			local ok, dep_miss, stats_ok = self:checkDeps()
-			if ok or reason == "not enough stat" or not stats_ok then
-				self.actor.unused_generics = self.actor.unused_generics + 1
-				self.talents_learned[t_id] = self.talents_learned[t_id] - 1
-				self.new_talents_changed = true
-			else
-				self:simpleLongPopup("Impossible", "You can not unlearn this talent because of talent(s): "..dep_miss, game.w * 0.4)
-				self.actor:learnTalent(t_id)
-				return
-			end
+			self:simpleLongPopup("Impossible", "You cannot unlearn this talent because of talent(s): "..dep_miss, game.w * 0.4)
+			return
 		end
 	end
 	self:updateTooltip()

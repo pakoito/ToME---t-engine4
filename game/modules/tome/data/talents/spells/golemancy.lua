@@ -280,8 +280,8 @@ newTalent{
 		self.alchemy_golem:learnTalent(Talents.T_WEAPONS_MASTERY, true, nil, {no_unlearn=true})
 	end,
 	on_unlearn = function(self, t)
-		self.alchemy_golem:unlearnTalent(Talents.T_WEAPON_COMBAT)
-		self.alchemy_golem:unlearnTalent(Talents.T_WEAPONS_MASTERY)
+		self.alchemy_golem:unlearnTalent(Talents.T_WEAPON_COMBAT, nil, nil, {no_unlearn=true})
+		self.alchemy_golem:unlearnTalent(Talents.T_WEAPONS_MASTERY, nil, nil, {no_unlearn=true})
 
 		if self:getTalentLevelRaw(t) == 0 and not self.innate_alchemy_golem then
 			self:unlearnTalent(self.T_REFIT_GOLEM)
@@ -314,8 +314,8 @@ newTalent{
 		self.alchemy_golem.healing_factor = (self.alchemy_golem.healing_factor or 1) + 0.1
 	end,
 	on_unlearn = function(self, t)
-		self.alchemy_golem:unlearnTalent(Talents.T_THICK_SKIN)
-		self.alchemy_golem:unlearnTalent(Talents.T_GOLEM_ARMOUR)
+		self.alchemy_golem:unlearnTalent(Talents.T_THICK_SKIN, nil, nil, {no_unlearn=true})
+		self.alchemy_golem:unlearnTalent(Talents.T_GOLEM_ARMOUR, nil, nil, {no_unlearn=true})
 		self.alchemy_golem.healing_factor = (self.alchemy_golem.healing_factor or 1) - 0.1
 	end,
 	info = function(self, t)

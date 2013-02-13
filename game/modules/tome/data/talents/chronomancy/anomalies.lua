@@ -46,6 +46,7 @@ newTalent{
 	range = 10,
 	direct_hit = true,
 	type_no_req = true,
+	no_unlearn_last = true,
 	getTargetCount = function(self, t) return math.ceil(self:getParadox()/200) end,
 	getRange = function(self, t) return math.ceil(self:getParadox()/20) end,
 	message = "Reality has shifted.",
@@ -87,6 +88,7 @@ newTalent{
 	direct_hit = true,
 	type_no_req = true,
 	cooldown = 1,
+	no_unlearn_last = true,
 	getTargetCount = function(self, t) return math.ceil(self:getParadox()/50) end,
 	getRange = function(self, t) return math.ceil(self:getParadox()/100) end,
 	message = "@Source@ has caused a hiccup in the fabric of spacetime.",
@@ -127,6 +129,7 @@ newTalent{
 	range = 10,
 	direct_hit = true,
 	type_no_req = true,
+	no_unlearn_last = true,
 	getTargetCount = function(self, t) return 1 end,
 	getRadius = function(self, t) return getAnomalyRadius(self) end,
 	getStop = function(self, t) return math.ceil(self:getParadox()/100) end,
@@ -166,6 +169,7 @@ newTalent{
 	range = 6,
 	direct_hit = true,
 	type_no_req = true,
+	no_unlearn_last = true,
 	getTargetCount = function(self, t) return 1 end,
 	getRadius = function(self, t) return getAnomalyRadius(self) end,
 	getSlow = function(self, t) return 1 - 1 / (1 + (self:getParadox()/15) / 100) end,
@@ -205,6 +209,7 @@ newTalent{
 	range = 6,
 	direct_hit = true,
 	type_no_req = true,
+	no_unlearn_last = true,
 	getTargetCount = function(self, t) return math.ceil(self:getParadox()/300) end,
 	getPower = function(self, t) return ((self:getParadox()/15) / 100) end,
 	message = "@Source@ has sped up several threads of time.",
@@ -242,6 +247,7 @@ newTalent{
 	points = 1,
 	type_no_req = true,
 	cooldown = 1,
+	no_unlearn_last = true,
 	getDamage = function(self, t) return getAnomalyDamage(self)/4 end,
 	getDuration = function(self, t) return math.ceil (self:getParadox()/50) end,
 	message = "A temporal storm rages around @Source@.",
@@ -272,6 +278,7 @@ newTalent{
 	range = 10,
 	direct_hit = true,
 	type_no_req = true,
+	no_unlearn_last = true,
 	getTargetCount = function(self, t) return math.ceil(self:getParadox()/200) end,
 	getSummonTime = function(self, t) return math.ceil(self:getParadox()/50) end,
 	message = "Some Time Elementals have been attracted by @Source@'s meddling.",
@@ -359,6 +366,7 @@ newTalent{
 	points = 1,
 	range = 10,
 	type_no_req = true,
+	no_unlearn_last = true,
 	getTargetCount = function(self, t) return math.ceil(self:getParadox()/200) end,
 	getDuration = function(self, t) return math.ceil(self:getParadox()/100) end,
 	message = "@Source@ has paused a temporal thread.",
@@ -396,6 +404,7 @@ newTalent{
 	type = {"chronomancy/anomalies", 1},
 	points = 1,
 	type_no_req = true,
+	no_unlearn_last = true,
 	getRadius = function(self, t) return getAnomalyRadius(self) end,
 	message = "Matter turns to dust around @Source@.",
 	action = function(self, t)
@@ -416,6 +425,7 @@ newTalent{
 	points = 1,
 	direct_hit = true,
 	type_no_req = true,
+	no_unlearn_last = true,
 	getRange = function(self, t) return math.ceil(self:getParadox()/20) end,
 	getConfuseDuration = function(self, t) return math.floor(self:getParadox()/200)end,
 	getConfuseEfficency = function(self, t) return self:getParadox()/10 end,
@@ -475,6 +485,7 @@ newTalent{
 	range = 10,
 	direct_hit = true,
 	type_no_req = true,
+	no_unlearn_last = true,
 	getTargetCount = function(self, t) return 1 end,
 	getRadius = function(self, t) return getAnomalyRadius(self) end,
 	getDamage = function(self, t) return getAnomalyDamage(self) end,
@@ -525,6 +536,7 @@ newTalent{
 	range = 6,
 	direct_hit = true,
 	type_no_req = true,
+	no_unlearn_last = true,
 	getTargetCount = function(self, t) return math.ceil(self:getParadox()/100) end,
 	getPower = function(self, t) return math.ceil(self:getParadox()/100) end,
 	getTalentCount = function(self, t) return math.ceil(self:getParadox()/200) end,
@@ -579,6 +591,7 @@ newTalent{
 	range = 10,
 	direct_hit = true,
 	type_no_req = true,
+	no_unlearn_last = true,
 	getTargetCount = function(self, t) return math.ceil(self:getParadox()/200) end,
 	getSummonTime = function(self, t) return math.ceil(self:getParadox()/20) end,
 	message = "Some innocent bystanders have been pulled out of their timeline.",
@@ -691,6 +704,7 @@ newTalent{
 	points = 1,
 	direct_hit = true,
 	type_no_req = true,
+	no_unlearn_last = true,
 	getRange = function(self, t) return math.ceil(self:getParadox()/30) end,
 	getTargetCount = function(self, t) return math.ceil(self:getParadox()/200) end,
 	message = "Poof!!",
@@ -735,6 +749,7 @@ newTalent{
 	range = 6,
 	direct_hit = true,
 	type_no_req = true,
+	no_unlearn_last = true,
 	getTargetCount = function(self, t) return math.ceil(self:getParadox()/150) end,
 	getPower = function(self, t) return (self:getParadox()/30) end,
 	message = "@Source@ has inadvertently weakened several creatures.",
@@ -774,6 +789,7 @@ newTalent{
 	range = 6,
 	direct_hit = true,
 	type_no_req = true,
+	no_unlearn_last = true,
 	getTargetCount = function(self, t) return 1 end,
 	getHastePower = function(self, t) return ((self:getParadox()/15) / 100) end,
 	getRegenPower = function(self, t) return (self:getParadox()/15) end,
@@ -813,6 +829,7 @@ newTalent{
 	type = {"chronomancy/anomalies", 1},
 	points = 1,
 	type_no_req = true,
+	no_unlearn_last = true,
 	action = function(self, t)
 		return true
 	end,
@@ -826,6 +843,7 @@ newTalent{
 	type = {"chronomancy/anomalies", 1},
 	points = 1,
 	type_no_req = true,
+	no_unlearn_last = true,
 	action = function(self, t)
 		return true
 	end,
@@ -839,6 +857,7 @@ newTalent{
 	type = {"chronomancy/anomalies", 1},
 	points = 1,
 	type_no_req = true,
+	no_unlearn_last = true,
 	action = function(self, t)
 		return true
 	end,
@@ -852,6 +871,7 @@ newTalent{
 	type = {"chronomancy/anomalies", 1},
 	points = 1,
 	type_no_req = true,
+	no_unlearn_last = true,
 	action = function(self, t)
 		return true
 	end,
@@ -866,6 +886,7 @@ newTalent{
 	points = 1,
 	type_no_req = true,
 	no_npc_use = true,
+	no_unlearn_last = true,
 	action = function(self, t)
 		return true
 	end,
@@ -880,6 +901,7 @@ newTalent{
 	points = 1,
 	type_no_req = true,
 	no_npc_use = true,
+	no_unlearn_last = true,
 	action = function(self, t)
 		return true
 	end,
@@ -893,6 +915,7 @@ newTalent{
 	type = {"chronomancy/anomalies", 1},
 	points = 1,
 	type_no_req = true,
+	no_unlearn_last = true,
 	action = function(self, t)
 		return true
 	end,
@@ -907,6 +930,7 @@ newTalent{
 	points = 1,
 	type_no_req = true,
 	no_npc_use = true,
+	no_unlearn_last = true,
 	action = function(self, t)
 		return true
 	end,
@@ -921,6 +945,7 @@ newTalent{
 	points = 1,
 	type_no_req = true,
 	no_npc_use = true,
+	no_unlearn_last = true,
 	action = function(self, t)
 		return true
 	end,
@@ -935,6 +960,7 @@ newTalent{
 	points = 1,
 	type_no_req = true,
 	requires_target = true,
+	no_unlearn_last = true,
 	getSummonTime = function(self, t) return math.floor(self:getParadox()/50) end,
 	action = function(self, t)
 		return true

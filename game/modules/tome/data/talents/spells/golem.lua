@@ -486,6 +486,7 @@ newTalent{
 	points = 1,
 	range = 0,
 	radius = 4,
+	no_unlearn_last = true,
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), selffire=false, radius=self:getTalentRadius(t)}
 	end,
@@ -515,6 +516,7 @@ newTalent{
 	type = {"golem/golem", 1},
 	mode = "passive",
 	points = 6,
+	no_unlearn_last = true,
 	getArmorHardiness = function(self, t) return self:getTalentTypeMastery("technique/combat-training") * (self:getTalentLevelRaw(t) * 5 - 15) end,
 	getArmor = function(self, t) return self:getTalentTypeMastery("technique/combat-training") * (self:getTalentLevelRaw(t) * 1.4 - 4.2) end,
 	getCriticalChanceReduction = function(self, t) return self:getTalentTypeMastery("technique/combat-training") * (self:getTalentLevelRaw(t) * 1.9 - 5.7) end,
