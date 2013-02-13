@@ -259,8 +259,13 @@ end
 function _M:leaveLevel(level, lev, old_lev)
 end
 
---- Called by the engine when the user tries to close the window
+--- Called by the engine when the user tries to close the module
 function _M:onQuit()
+end
+
+--- Called by the engine when the user tries to close the window
+function _M:onExit()
+	os.exit()
 end
 
 --- Sets up a text flyers

@@ -1565,7 +1565,8 @@ do return end
 				"video",
 				"sound",
 				"save",
-				"quit"
+				"quit",
+				"exit",
 			}
 			local adds = self.uiset:getMainMenuItems()
 			for i = #adds, 1, -1 do table.insert(l, 10, adds[i]) end
@@ -1784,11 +1785,28 @@ function _M:onQuit()
 	self.player:restStop("quitting")
 
 	if not self.quit_dialog and not self.player.dead and not self:hasDialogUp() then
-		self.quit_dialog = Dialog:yesnoPopup("Save and exit?", "Save and exit?", function(ok)
+		self.quit_dialog = Dialog:yesnoPopup("Save and go back to main menu?", "Save and go back to main menu?", function(ok)
 			if ok then
 				-- savefile_pipe is created as a global by the engine
 				self:saveGame()
 				util.showMainMenu()
+			end
+			self.quit_dialog = nil
+		end)
+	end
+end
+
+function _M:onExit()
+	self.player:runStop("quitting")
+	self.player:restStop("quitting")
+
+	if not self.quit_dialog and not self.player.dead and not self:hasDialogUp() then
+		self.quit_dialog = Dialog:yesnoPopup("Save and exit game?", "Save and exit game?", function(ok)
+			if ok then
+				-- savefile_pipe is created as a global by the engine
+				self:saveGame()
+				savefile_pipe:forceWait()
+				os.exit()
 			end
 			self.quit_dialog = nil
 		end)

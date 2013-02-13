@@ -82,9 +82,10 @@ function _M:generateList(actions)
 			game:unregisterDialog(self)
 			local menu = require("engine.dialogs.ViewHighScores").new()
 			game:registerDialog(menu)
-	  end },
+		end },
 		save = { "Save Game", function() game:unregisterDialog(self) game:saveGame() end },
-		quit = { "Save and Exit", function() game:unregisterDialog(self) game:onQuit() end },
+		quit = { "Main Menu", function() game:unregisterDialog(self) game:onQuit() end },
+		exit = { "Exit Game", function() game:unregisterDialog(self) game:onExit() end },
 	}
 
 	-- Makes up the list
