@@ -150,7 +150,7 @@ newEntity{
 newEntity{
 	power_source = {arcane=true},
 	name = " of acid", suffix=true, instant_resolve=true,
-	keywords = {cunning=true},
+	keywords = {acid=true},
 	level_range = {1, 50},
 	rarity = 5,
 	cost = 6,
