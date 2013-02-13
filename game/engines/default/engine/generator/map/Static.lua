@@ -22,6 +22,8 @@ local Map = require "engine.Map"
 require "engine.Generator"
 module(..., package.seeall, class.inherit(engine.Generator))
 
+auto_handle_spot_offsets = true
+
 function _M:init(zone, map, level, data)
 	engine.Generator.init(self, zone, map, level)
 	self.grid_list = zone.grid_list
@@ -297,6 +299,13 @@ function _M:generate(lev, old_lev)
 			self.map:overlay(map, g.x, g.y)
 		else
 			self.map:import(map, g.x, g.y)
+		end
+
+		if not generator.auto_handle_spot_offsets then
+			for spot in ipairs(subspots) do
+				spot.x = spot.x + data.__import_offset_x
+				spot.y = spot.y + data.__import_offset_y
+			end
 		end
 
 		table.append(self.spots, subspots)
