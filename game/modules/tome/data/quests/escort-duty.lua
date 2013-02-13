@@ -355,6 +355,7 @@ on_grant = function(self, who)
 	self.kind.actor.faction = who.faction
 	self.kind.actor.summoner = who
 	self.kind.actor.quest_id = self.id
+	self.kind.actor.no_inventory_access = true
 	self.kind.actor.escort_quest = true
 	self.kind.actor.remove_from_party_on_death = true
 	self.kind.actor.on_die = function(self, who)
