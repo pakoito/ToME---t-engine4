@@ -266,7 +266,15 @@ newInscription{
 	name = "Infusion: Insidious Poison",
 	type = {"inscriptions/infusions", 1},
 	points = 1,
-	tactical = { ATTACK = { NATURE = 1 }, DISABLE=1 },
+	tactical = { ATTACK = { NATURE = 1 }, DISABLE=1, CURE = function(self, t, target)
+			local nb = 0
+			local data = self:getInscriptionData(t.short_name)
+			for eff_id, p in pairs(self.tmp) do
+				local e = self.tempeffect_def[eff_id]
+				if e.type == "magical" and e.status == "detrimental" then nb = nb + 1 end
+			end
+			return nb
+		end },
 	requires_target = true,
 	range = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
@@ -278,12 +286,14 @@ newInscription{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:projectile(tg, x, y, DamageType.INSIDIOUS_POISON, {dam=data.power + data.inc_stat, dur=7, heal_factor=data.heal_factor}, {type="slime"})
+		self:removeEffectsFilter({status="detrimental", type="magical"}, 1)
 		game:playSoundNear(self, "talents/slime")
 		return true
 	end,
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		return ([[Activate the infusion to spit a bolt of poison doing %0.2f nature damage per turns for 7 turns, and reducing the target's healing received by %d%%.]]):format(damDesc(self, DamageType.COLD, data.power + data.inc_stat) / 7, data.heal_factor)
+		return ([[Activate the infusion to spit a bolt of poison doing %0.2f nature damage per turns for 7 turns, and reducing the target's healing received by %d%%.
+		The sudden stream of natural forces also strips you of one random detrimental magical effect.]]):format(damDesc(self, DamageType.COLD, data.power + data.inc_stat) / 7, data.heal_factor)
 	end,
 	short_info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
@@ -569,7 +579,15 @@ newInscription{
 	is_attack_rune = true,
 	no_energy = true,
 	is_spell = true,
-	tactical = { ATTACK = { FIRE = 1 } },
+	tactical = { ATTACK = { FIRE = 1 }, CURE = function(self, t, target)
+			local nb = 0
+			local data = self:getInscriptionData(t.short_name)
+			for eff_id, p in pairs(self.tmp) do
+				local e = self.tempeffect_def[eff_id]
+				if e.type == "physical" and e.status == "detrimental" then nb = nb + 1 end
+			end
+			return nb
+		end },
 	requires_target = true,
 	direct_hit = true,
 	range = function(self, t)
@@ -610,7 +628,15 @@ newInscription{
 	is_attack_rune = true,
 	no_energy = true,
 	is_spell = true,
-	tactical = { ATTACK = { COLD = 1 }, DISABLE = { stun = 1 } },
+	tactical = { ATTACK = { COLD = 1 }, DISABLE = { stun = 1 }, CURE = function(self, t, target)
+			local nb = 0
+			local data = self:getInscriptionData(t.short_name)
+			for eff_id, p in pairs(self.tmp) do
+				local e = self.tempeffect_def[eff_id]
+				if e.type == "mental" and e.status == "detrimental" then nb = nb + 1 end
+			end
+			return nb
+		end },
 	requires_target = true,
 	range = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
