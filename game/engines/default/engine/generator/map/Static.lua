@@ -302,7 +302,7 @@ function _M:generate(lev, old_lev)
 		end
 
 		if not generator.auto_handle_spot_offsets then
-			for spot in ipairs(subspots) do
+			for _, spot in ipairs(subspots) do
 				spot.x = spot.x + data.__import_offset_x
 				spot.y = spot.y + data.__import_offset_y
 			end
