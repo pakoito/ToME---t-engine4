@@ -1055,7 +1055,7 @@ end
 function _M:combatCrit(weapon)
 	weapon = weapon or self.combat or {}
 	local addcrit = 0
-	if weapon.talented and weapon.talented == "knife" and self:knowTalent(Talents.T_LETHALITY) then
+	if weapon.talented and self:knowTalent(Talents.T_LETHALITY) then
 		addcrit = 1 + self:getTalentLevel(Talents.T_LETHALITY) * 1.3
 	end
 	local crit = self.combat_physcrit + (self:getCun() - 10) * 0.3 + (self:getLck() - 50) * 0.30 + (weapon.physcrit or 1) + addcrit

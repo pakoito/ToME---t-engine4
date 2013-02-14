@@ -32,7 +32,7 @@ newTalent{
 	getCriticalChance = function(self, t) return 1 + self:getTalentLevel(t) * 1.3 end,
 	info = function(self, t)
 		local critchance = t.getCriticalChance(self, t)
-		return ([[You have learned to find and hit weak spots. Your strikes have a %0.2f%% greater chance to be critical hits, and your critical hits do %d%% more damage.
+		return ([[You have learned to find and hit weak spots. All your strikes have a %0.2f%% greater chance to be critical hits, and your critical hits do %d%% more damage.
 		Also, when using knives, you now use your Cunning instead of your Strength for bonus damage.]]):
 		format(critchance, self:getTalentLevelRaw(t) * 5)
 	end,
