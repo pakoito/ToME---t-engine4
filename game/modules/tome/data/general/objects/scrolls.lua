@@ -422,7 +422,7 @@ newEntity{ base = "BASE_RUNE",
 	inscription_data = {
 		cooldown = resolvers.rngrange(15, 25),
 		range = resolvers.mbonus_level(5, 4),
-		power = resolvers.mbonus_level(280, 50, function(e, v) return v * 0.1 end),
+		power = resolvers.mbonus_level(400, 50, function(e, v) return v * 0.1 end),
 		use_stat_mod = 1.8,
 	},
 	inscription_talent = "RUNE:_LIGHTNING",
