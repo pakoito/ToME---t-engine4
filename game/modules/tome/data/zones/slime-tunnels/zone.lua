@@ -49,4 +49,23 @@ return {
 			nb_object = {4, 10},
 		},
 	},
+	post_process = function(level, zone)
+		-- Make sure we have all pedestals
+		local dragon, undead, elements, destruction = nil, nil, nil, nil
+		for x = 0, level.map.w - 1 do for y = 0, level.map.h - 1 do
+			local g = level.map(x, y, level.map.TERRAIN)
+			if g then
+				if g.define_as == "ORB_DRAGON" then dragon = g
+				elseif g.define_as == "ORB_DESTRUCTION" then destruction = g
+				elseif g.define_as == "ORB_ELEMENTS" then elements = g
+				elseif g.define_as == "ORB_UNDEATH" then undead = g
+				end
+			end
+		end end
+
+		if not dragon or not undead or not elements or not destruction then
+			print("Slime Tunnels generated with too few pedestals!", dragon, undead, elements, destruction)
+			level.force_recreate = true
+		end
+	end,
 }
