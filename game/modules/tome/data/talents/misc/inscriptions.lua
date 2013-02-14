@@ -539,16 +539,18 @@ newInscription{
 			end
 		end)
 		self:setEffect(self.EFF_SENSE_HIDDEN, data.dur, {power=data.power + data.inc_stat})
+		self:setEffect(self.EFF_RECEPTIVE_MIND, data.dur, {what=data.esp or "humanoid"})
 		return true
 	end,
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		return ([[Activate the rune to get a vision of the area surrounding you (%d radius) and to allow you to see invisible and stealthed creatures (power %d) for %d turns.]]):
-		format(data.range, data.power + data.inc_stat, data.dur)
+		return ([[Activate the rune to get a vision of the area surrounding you (%d radius) and to allow you to see invisible and stealthed creatures (power %d) for %d turns.
+		Your mind will become more receptive for %d turns, allowing you to sense any %s around.]]):
+		format(data.range, data.power + data.inc_stat, data.dur, data.dur, data.esp or "humanoid")
 	end,
 	short_info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		return ([[radius %d]]):format(data.range)
+		return ([[radius %d; dur %d; see %s]]):format(data.range, data.dur, data.esp or "humanoid")
 	end,
 }
 

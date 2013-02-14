@@ -2198,3 +2198,18 @@ newEffect{
 		self:heal(1)
 	end,
 }
+
+newEffect{
+	name = "RECEPTIVE_MIND", image = "talents/rune__vision.png",
+	desc = "Receptive Mind",
+	long_desc = function(self, eff) return ("You can sense the presence of all %s around you."):format(eff.what) end,
+	type = "magical",
+	subtype = { rune=true },
+	status = "beneficial",
+	parameters = { what="humanoid" },
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "esp", {[eff.what]=1})
+	end,
+	deactivate = function(self, eff)
+	end,
+}
