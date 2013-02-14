@@ -4182,7 +4182,7 @@ function _M:removeEffectsFilter(t, nb, silent, force)
 		local e = self.tempeffect_def[eff_id]
 		if type(t) == "function" then 
 			if t(e) then effs[#effs+1] = eff_id end
-		elseif (not t.type or e.type == e.type) and (not t.status or e.status == t.status) then
+		elseif (not t.type or t.type == e.type) and (not t.status or e.status == t.status) then
 			effs[#effs+1] = eff_id
 		end
 	end

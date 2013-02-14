@@ -585,13 +585,15 @@ newInscription{
 		self:project(tg, x, y, DamageType.FIREBURN, {dur=5, initial=0, dam=data.power + data.inc_stat})
 		local _ _, x, y = self:canProject(tg, x, y)
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "flamebeam", {tx=x-self.x, ty=y-self.y})
+		self:removeEffectsFilter({status="detrimental", type="physical"}, 1)
 		game:playSoundNear(self, "talents/fire")
 		attack_rune(self, t.id)
 		return true
 	end,
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		return ([[Activate the rune to fire a beam of heat, doing %0.2f fire damage over 5 turns.]]):format(damDesc(self, DamageType.FIRE, data.power + data.inc_stat))
+		return ([[Activate the rune to fire a beam of heat, doing %0.2f fire damage over 5 turns
+		The intensity of the heat will also remove one random detrimental physical effect from you.]]):format(damDesc(self, DamageType.FIRE, data.power + data.inc_stat))
 	end,
 	short_info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
@@ -621,13 +623,15 @@ newInscription{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.ICE, data.power + data.inc_stat, {type="freeze"})
+		self:removeEffectsFilter({status="detrimental", type="mental"}, 1)
 		game:playSoundNear(self, "talents/ice")
 		attack_rune(self, t.id)
 		return true
 	end,
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		return ([[Activate the rune to fire a bolt of ice, doing %0.2f cold damage with a chance to freeze the target.]]):format(damDesc(self, DamageType.COLD, data.power + data.inc_stat))
+		return ([[Activate the rune to fire a bolt of ice, doing %0.2f cold damage with a chance to freeze the target.
+		The deep cold also crystalizes your mind, removing one random detrimental mental effect from you.]]):format(damDesc(self, DamageType.COLD, data.power + data.inc_stat))
 	end,
 	short_info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
