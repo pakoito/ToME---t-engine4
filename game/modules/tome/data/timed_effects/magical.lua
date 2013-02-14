@@ -1352,7 +1352,7 @@ newEffect{
 newEffect{
 	name = "CEASE_TO_EXIST", image = "talents/cease_to_exist.png",
 	desc = "Cease to Exist",
-	long_desc = function(self, eff) return ("The target is being removed from the timeline and is suffering %d temporal damage per turn."):format(eff.dam) end,
+	long_desc = function(self, eff) return ("The target is being removed from the timeline, reducing all resistances by %d%%."):format(eff.power) end,
 	type = "magical",
 	subtype = { temporal=true },
 	status = "detrimental",
