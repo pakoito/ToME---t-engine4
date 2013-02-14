@@ -2186,10 +2186,14 @@ newEffect{
 	activate = function(self, eff)
 		self.old_faction_cloak = self.faction
 		self.faction = "allied-kingdoms"
+		if self.descriptor and self.descriptor.race and self:attr("undead") then self.descriptor.fake_race = "Human" end
+		if self.descriptor and self.descriptor.subrace and self:attr("undead") then self.descriptor.fake_subrace = "Cornac" end
 		if self.player then engine.Map:setViewerFaction(self.faction) end
 	end,
 	deactivate = function(self, eff)
 		self.faction = self.old_faction_cloak
+		if self.descriptor and self.descriptor.race and self:attr("undead") then self.descriptor.fake_race = nil end
+		if self.descriptor and self.descriptor.subrace and self:attr("undead") then self.descriptor.fake_subrace = nil end
 		if self.player then engine.Map:setViewerFaction(self.faction) end
 	end,
 }
