@@ -223,7 +223,7 @@ newTalent{
 				local actor = game.level.map(self.x, self.y, Map.ACTOR)
 				if actor and actor ~= self.summoner and (not actor.summoner or actor.summoner ~= self.summoner) then
 					self.projecting = true -- simplest way to indicate that this damage should not be amplified by the in creeping dark bonus
-					self.summoner:project({type="hit", range=self:getTalentRange(t), talent=self:getTalentFromId(self.T_CREEPING_DARKNESS)}, actor.x, actor.y, engine.DamageType.DARKNESS, self.damage)
+					self.summoner:project({type="hit", range=10, talent=self.summoner:getTalentFromId(self.summoner.T_CREEPING_DARKNESS)}, actor.x, actor.y, engine.DamageType.DARKNESS, self.damage)
 					self.projecting = false
 				end
 

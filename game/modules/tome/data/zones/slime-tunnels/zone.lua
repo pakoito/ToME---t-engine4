@@ -55,10 +55,10 @@ return {
 		for x = 0, level.map.w - 1 do for y = 0, level.map.h - 1 do
 			local g = level.map(x, y, level.map.TERRAIN)
 			if g then
-				if g.define_as == "ORB_DRAGON" then dragon = g
-				elseif g.define_as == "ORB_DESTRUCTION" then destruction = g
-				elseif g.define_as == "ORB_ELEMENTS" then elements = g
-				elseif g.define_as == "ORB_UNDEATH" then undead = g
+				if g.define_as == "ORB_DRAGON" then dragon = g g.x, g.y = x, y
+				elseif g.define_as == "ORB_DESTRUCTION" then destruction = g g.x, g.y = x, y
+				elseif g.define_as == "ORB_ELEMENTS" then elements = g g.x, g.y = x, y
+				elseif g.define_as == "ORB_UNDEATH" then undead = g g.x, g.y = x, y
 				end
 			end
 		end end
@@ -66,6 +66,30 @@ return {
 		if not dragon or not undead or not elements or not destruction then
 			print("Slime Tunnels generated with too few pedestals!", dragon, undead, elements, destruction)
 			level.force_recreate = true
+			return
+		end
+
+		local Astar = require "engine.Astar"
+		local a = Astar.new(level.map, game:getPlayer())
+		if not a:calc(level.default_up.x, level.default_up.y, dragon.x, dragon.y) then
+			print("Slime Tunnels generated with unreachable dragon pedestal!")
+			level.force_recreate = true
+			return
+		end
+		if not a:calc(level.default_up.x, level.default_up.y, undead.x, undead.y) then
+			print("Slime Tunnels generated with unreachable undead pedestal!")
+			level.force_recreate = true
+			return
+		end
+		if not a:calc(level.default_up.x, level.default_up.y, elements.x, elements.y) then
+			print("Slime Tunnels generated with unreachable elements pedestal!")
+			level.force_recreate = true
+			return
+		end
+		if not a:calc(level.default_up.x, level.default_up.y, destruction.x, destruction.y) then
+			print("Slime Tunnels generated with unreachable destruction pedestal!")
+			level.force_recreate = true
+			return
 		end
 	end,
 }

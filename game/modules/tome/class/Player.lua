@@ -1413,8 +1413,10 @@ function _M:useOrbPortal(portal)
 end
 
 --- Use the orbs of command
-function _M:useCommandOrb(o)
-	local g = game.level.map(self.x, self.y, Map.TERRAIN)
+function _M:useCommandOrb(o, x, y)
+	x = x or self.x
+	y = y or self.y
+	local g = game.level.map(x, y, Map.TERRAIN)
 	if not g then return end
 	if not g.define_as or not o.define_as or o.define_as ~= g.define_as then
 		game.logPlayer(self, "This does not seem to have any effect.")
@@ -1423,12 +1425,19 @@ function _M:useCommandOrb(o)
 
 	if g.orb_command then
 		g.orb_command:special(self)
-		return
+		if not g.orb_command.continue then return end
 	end
+	g.orbed = true
 
 	game.logPlayer(self, "You use the %s on the pedestal. There is a distant 'clonk' sound.", o:getName{do_colour=true})
 	self:grantQuest("orb-command")
 	self:setQuestStatus("orb-command", engine.Quest.COMPLETED, o.define_as)
+
+	if g.once_used_image and g.add_displays and g.add_displays[1] then
+		g.add_displays[1].image = g.once_used_image
+		g:removeAllMOs()
+		game.level.map:updateMap(x, y)
+	end
 end
 
 --- Notify of object pickup
