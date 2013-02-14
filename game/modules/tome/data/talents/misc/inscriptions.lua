@@ -312,21 +312,24 @@ newInscription{
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,
-	getDamage = function(self, t) return 10 + self:combatMindpower() * 0.4 end,
+	getDamage = function(self, t) return 10 + self:combatMindpower() * 3.6 end,
 	action = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
 		local dam = t.getDamage(self, t)
 		local tg = self:getTalentTarget(t)
 		self:project(tg, self.x, self.y, function(tx, ty)
 			DamageType:get(DamageType.ENTANGLE).projector(self, tx, ty, DamageType.ENTANGLE, dam)
 		end)
+		self:setEffect(self.EFF_THORNY_SKIN, data.dur, {hard=data.hard or 30, ac=data.armor or 50})
 		game:playSoundNear(self, "talents/earth")
 		return true
 	end,
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		local damage = t.getDamage(self, t)
-		return ([[Causes thick vines to spring from the ground and entangle all targets within %d squares for %d turns, pinning them in place and dealing %0.2f physical damage and %0.2f nature damage each turn.]]):
-		format(self:getTalentRadius(t), data.dur, damDesc(self, DamageType.PHYSICAL, damage)/3, damDesc(self, DamageType.NATURE, 2*damage)/3)
+		return ([[Causes thick vines to spring from the ground and entangle all targets within %d squares for %d turns, pinning them in place and dealing %0.2f physical damage and %0.2f nature damage.
+		The vines also grow all around you, increasing your armour by %d and armour hardiness by %d.]]):
+		format(self:getTalentRadius(t), data.dur, damDesc(self, DamageType.PHYSICAL, damage)/3, damDesc(self, DamageType.NATURE, 2*damage)/3, data.armor or 50, data.hard or 30)
 	end,
 	short_info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)

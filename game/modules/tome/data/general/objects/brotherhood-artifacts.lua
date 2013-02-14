@@ -278,7 +278,7 @@ newEntity{ base = "BASE_TAINT",
 
 	inscription_kind = "utility",
 	inscription_data = {
-		cooldown = 30,
+		cooldown = 15,
 		dur = 5,
 	},
 	inscription_talent = "TAINT:_TELEPATHY",
@@ -295,8 +295,10 @@ newEntity{ base = "BASE_INFUSION",
 
 	inscription_kind = "utility",
 	inscription_data = {
-		cooldown = 30,
+		cooldown = 15,
 		dur = 5,
+		armor = 50,
+		hard = 30,
 	},
 	inscription_talent = "INFUSION:_WILD_GROWTH",
 }
