@@ -416,6 +416,11 @@ function _M:addedToLevel(level, x, y)
 		end
 	end
 
+	-- Bosses that can pass through things should be smart about finding their target
+	if self.rank > 3 and self.can_pass and type(self.can_pass) == "table" and next(self.can_pass) and self.ai_state and not self.ai_state.boss_ghost_no_astar then
+		self.ai_state.ai_move = "move_astar"
+	end
+
 	return mod.class.Actor.addedToLevel(self, level, x, y)
 end
 
@@ -461,4 +466,21 @@ function _M:aiCanPass(x, y)
 		end
 	end
 	return engine.interface.ActorAI.aiCanPass(self, x, y)
+end
+
+--- Returns the seen coords of the target
+-- This will usually return the exact coords, but if the target is only partially visible (or not at all)
+-- it will return estimates, to throw the AI a bit off
+-- @param target the target we are tracking
+-- @return x, y coords to move/cast to
+function _M:aiSeeTargetPos(target)
+	if not target then return self.x, self.y end
+	local tx, ty = target.x, target.y
+
+	-- Special case, a boss that can pass walls can always home in on the target; otherwise it would get lost in the walls for a long while
+	-- We check wall walking not on self but rather as a check if the target could reach us
+	if self.rank > 3 and target.canMove and not target:canMove(self.x, self.y, true) then
+		return util.bound(tx, 0, game.level.map.w - 1), util.bound(ty, 0, game.level.map.h - 1)
+	end
+	return ActorAI.aiSeeTargetPos(target)
 end
