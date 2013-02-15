@@ -2146,7 +2146,7 @@ newEffect{
 		self:effectTemporaryValue(eff, "cut_immune", eff.power)
 		self:effectTemporaryValue(eff, "stun_immune", eff.power)
 
-		if self.hotkey then
+		if self.hotkey and self.isHotkeyBound then
 			local pos = self:isHotkeyBound("talent", self.T_SHIVGOROTH_FORM)
 			if pos then
 				self.hotkey[pos] = {"talent", self.T_ICE_STORM}
@@ -2165,7 +2165,7 @@ newEffect{
 		game.level.map:updateMap(self.x, self.y)
 	end,
 	deactivate = function(self, eff)
-		if self.hotkey then
+		if self.hotkey and self.isHotkeyBound then
 			local pos = self:isHotkeyBound("talent", self.T_ICE_STORM)
 			if pos then
 				self.hotkey[pos] = {"talent", self.T_SHIVGOROTH_FORM}
