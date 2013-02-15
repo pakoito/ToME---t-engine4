@@ -1280,6 +1280,8 @@ function _M:setupCommands()
 			print("===============")
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
+			game.level.map:particleEmitter(game.player.x, game.player.y, 10, "earth_beam", {tx=8, ty=0})
+do return end
 			local f, err = loadfile("/data/general/events/fearscape-portal.lua")
 			print(f, err)
 			setfenv(f, setmetatable({level=self.level, zone=self.zone}, {__index=_G}))

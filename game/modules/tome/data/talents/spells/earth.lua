@@ -49,11 +49,50 @@ newTalent{
 	end,
 }
 
+newTalent{
+	name = "Pulverizing Auger", short_name="DIG",
+	type = {"spell/earth",2},
+	require = spells_req2,
+	points = 5,
+	mana = 15,
+	cooldown = 5,
+	range = function(self, t) return math.ceil(2 + self:getTalentLevel(t)) end,
+	tactical = { ATTACK = {PHYSICAL = 2} },
+	direct_hit = true,
+	requires_target = true,
+	getDigs = function(self, t) return self:getTalentLevelRaw(t) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 30, 300) end,
+	target = function(self, t)
+		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
+		return tg
+	end,
+	action = function(self, t)
+		local tg = self:getTalentTarget(t)
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+
+		for i = 1, t.getDigs(self, t) do self:project(tg, x, y, DamageType.DIG, 1) end
+
+		self:project(tg, x, y, DamageType.PHYSICAL, self:spellCrit(t.getDamage(self, t)), nil)
+		local _ _, x, y = self:canProject(tg, x, y)
+		game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(x-self.x), math.abs(y-self.y)), "earth_beam", {tx=x-self.x, ty=y-self.y})
+		game:playSoundNear(self, "talents/earth")
+		return true
+	end,
+	info = function(self, t)
+		local damage = t.getDamage(self, t)
+		local nb = t.getDigs(self, t)
+		return ([[Fire a powerful beam of stone shaterring forces, digging out any walls in its path up to %d.
+		The beam also affect any creatures in its path, dealing %0.2f physical damage to all.
+		The damage will increase with your Spellpower.]]):
+		format(nb, damage)
+	end,
+}
 
 newTalent{
 	name = "Mudslide",
-        type = {"spell/earth",2},
-	require = spells_req2,
+        type = {"spell/earth",3},
+	require = spells_req3,
 	points = 5,
 	random_ego = "attack",
 	mana = 40,
@@ -84,41 +123,12 @@ newTalent{
 }
 
 newTalent{
-	name = "Dig",
-	type = {"spell/earth",3},
-	require = spells_req3,
-	points = 5,
-	random_ego = "utility",
-	mana = 40,
-	range = 10,
-	reflectable = true,
-	requires_target = true,
-	no_npc_use = true,
-	getRange = function(self, t) return self:getTalentLevelRaw(t) end,
-	action = function(self, t)
-		local tg = {type="bolt", range=self:getTalentRange(t), nolock=true, talent=t, display={particle="bolt_earth", trail="earthtrail"}}
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
-		for i = 1, t.getRange(self, t) do
-			self:project(tg, x, y, DamageType.DIG, 1)
-		end
-		game:playSoundNear(self, "talents/earth")
-		return true
-	end,
-	info = function(self, t)
-		local range = t.getRange(self, t)
-		return ([[Digs up to %d grids into walls, trees or other impassable terrain]]):
-		format(range)
-	end,
-}
-
-newTalent{
 	name = "Stone Wall",
 	type = {"spell/earth",4},
 	require = spells_req4,
 	points = 5,
-	cooldown = 50,
-	mana = 70,
+	cooldown = 40,
+	mana = 50,
 	range = 7,
 	tactical = { DISABLE = 4, DEFEND = 3, PROTECT = 3, ESCAPE = 1 },
 	reflectable = true,
