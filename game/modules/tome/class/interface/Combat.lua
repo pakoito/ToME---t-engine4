@@ -672,7 +672,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	end
 
 	-- Lacerating Strikes
-	if hitted and not target.dead and self:knowTalent(self.T_LACERATING_STRIKES) then
+	if hitted and not target.dead and self:isTalentActive(self.T_LACERATING_STRIKES) then
 		local t = self:getTalentFromId(self.T_LACERATING_STRIKES)
 		t.do_cut(self, t, target, dam)
 	end

@@ -25,12 +25,18 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	require = cuns_req1,
-	mode = "passive",
+	mode = "sustained",
 	do_cut = function(self, t, target, dam)
 		if target:canBe("cut") and rng.percent(10+(self:getTalentLevel(t)*10)) then
 			dam = dam * self:combatTalentWeaponDamage(t, 0.15, 0.35)
 			target:setEffect(target.EFF_CUT, 10, {src=self, power=(dam / 10)})
 		end
+	end,
+	activate = function(self, t)
+		return {}
+	end,
+	deactivate = function(self, t)
+		return true
 	end,
 	info = function(self, t)
 		return ([[Rend your foe with every attack you do. All attacks now have a %d%% chance of inflicting an additional %d%% of your attack's damage in Bleeding damage, divided over ten turns.]]):
