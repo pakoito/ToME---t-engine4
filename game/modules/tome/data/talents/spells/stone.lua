@@ -77,6 +77,7 @@ newTalent{
 	mode = "sustained",
 	sustain_mana = 70,
 	cooldown = 12,
+	no_energy = true,
 	no_npc_use = true,
 	tactical = { BUFF = 2 },
 	getFireRes = function(self, t) return self:combatTalentSpellDamage(t, 5, 80) end,
@@ -94,6 +95,7 @@ newTalent{
 			cdred = self:addTemporaryValue("talent_cd_reduction", {
 				[self.T_EARTHEN_MISSILES] = cdr,
 				[self.T_MUDSLIDE] = cdr,
+				[self.T_DIG] = cdr,
 				[self.T_EARTHQUAKE] = cdr,
 			}),
 			res = self:addTemporaryValue("resists", {
@@ -119,7 +121,7 @@ newTalent{
 		local stunres = t.getStunRes(self, t)
 		return ([[You root yourself into the earth, and transform your flesh into stone.  While this spell is sustained, you may not move, and any forced movement will end the effect.
 		Your stone form and your affinity with the earth while the spell is active has the following effects:
-		* Reduces the cooldown of Earthen Missiles, Earthquake, and Mudslide by %d.
+		* Reduces the cooldown of Earthen Missiles, Pulveziring Auger, Earthquake, and Mudslide by %d.
 		* Grants %d%% Fire Resistance, %d%% Lightning Resistance, %d%% Acid Resistance, and %d%% Stun Resistance.
 		Resistances scale with your Spellpower.]])
 		:format(cooldownred, fireres, lightningres, acidres, stunres*100)
