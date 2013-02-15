@@ -85,7 +85,7 @@ newTalent{
 		return ([[Fire a powerful beam of stone shaterring forces, digging out any walls in its path up to %d.
 		The beam also affect any creatures in its path, dealing %0.2f physical damage to all.
 		The damage will increase with your Spellpower.]]):
-		format(nb, damage)
+		format(nb, damDesc(self, DamageType.PHYSICAL, damage))
 	end,
 }
 
@@ -130,17 +130,21 @@ newTalent{
 	cooldown = 40,
 	mana = 50,
 	range = 7,
-	tactical = { DISABLE = 4, DEFEND = 3, PROTECT = 3, ESCAPE = 1 },
-	reflectable = true,
+	tactical = { ATTACKAREA = {PHYSICAL = 2}, DISABLE = 4, DEFEND = 3, PROTECT = 3, ESCAPE = 1 },
+	target = function(self, t) return {type="ball", nowarning=true, selffire=false, friendlyfire=false, range=self:getTalentRange(t), radius=1, talent=t} end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 250) end,
 	requires_target = function(self, t) return self:getTalentLevel(t) >= 4 end,
-	getDuration = function(self, t) return 2 + self:combatTalentSpellDamage(t, 5, 12) end,
+	getDuration = function(self, t) return util.bound(2 + self:combatTalentSpellDamage(t, 5, 12), 2, 25) end,
 	action = function(self, t)
 		local x, y = self.x, self.y
+		local tg = self:getTalentTarget(t)
 		if self:getTalentLevel(t) >= 4 then
-			local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 			x, y = self:getTarget(tg)
 			if not x or not y then return nil end
+			local _ _, _, _, x, y = self:canProject(tg, x, y)
 		end
+
+		self:project(tg, x, y, DamageType.PHYSICAL, self:spellCrit(t.getDamage(self, t)))
 
 		for i = -1, 1 do for j = -1, 1 do if game.level.map:isBound(x + i, y + j) then
 			local oe = game.level.map(x + i, y + j, Map.TERRAIN)
@@ -187,9 +191,11 @@ newTalent{
 	end,
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
+		local damage = t.getDamage(self, t)
 		return ([[Entomb yourself in a wall of stone for %d turns.
 		At level 4, it becomes targetable.
-		Duration will improve with your Spellpower.]]):
-		format(duration)
+		Any hostile creature caught in the radius will also suffer %0.2f physical dmage.
+		Duration and damage will improve with your Spellpower.]]):
+		format(duration, damDesc(self, DamageType.PHYSICAL, damage))
 	end,
 }
