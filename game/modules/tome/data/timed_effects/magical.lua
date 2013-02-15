@@ -2018,6 +2018,12 @@ newEffect{
 	parameters = {dam=100},
 	on_gain = function(self, err) return "#Target# starts to attract all creatures around!", "+Irresistible Sun" end,
 	on_lose = function(self, err) return "#Target# is no longer attracting creatures.", "-Irresistible Sun" end,
+	activate = function(self, eff)
+		eff.particle = self:addParticles(Particles.new("generic_vortex", 5, {rm=230, rM=230, gm=20, gM=250, bm=250, bM=80, am=80, aM=150, radius=5, density=50}))
+	end,
+	deactivate = function(self, eff)
+		self:removeParticles(eff.particle)
+	end,
 	on_timeout = function(self, eff)
 		local tgts = {}
 		self:project({type="ball", range=0, friendlyfire=false, radius=5}, self.x, self.y, function(px, py)
