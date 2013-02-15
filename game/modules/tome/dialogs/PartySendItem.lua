@@ -55,6 +55,7 @@ function _M:use(item)
 
 	self.source:removeObject(self.inven, self.item)
 	self.source:sortInven(self.inven)
+	self.o.__transmo = nil
 	item.actor:addObject(item.actor.INVEN_INVEN, self.o)
 	item.actor:sortInven(item.actor.INVEN_INVEN)
 	game.log("You give %s to %s.", self.o:getName{do_color=true}, item.actor.name)
