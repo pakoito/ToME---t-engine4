@@ -306,23 +306,30 @@ newTalent{
 			return nil
 		end
 
-		return {
-			max_life = self:addTemporaryValue("max_life", (10 + self:getCon() * 0.7) * self:getTalentLevel(t)),
+		local hp = self:combatTalentStatDamage(t, "con", 30, 500) + 100
+
+		local ret = {
+			max_life = self:addTemporaryValue("max_life", hp),
 			def = self:addTemporaryValue("combat_def", 5 + self:getDex(4, true) * self:getTalentLevel(t)),
 			nomove = self:addTemporaryValue("never_move", 1),
+			dieat = self:addTemporaryValue("die_at", -hp),
 		}
+		self:heal(hp)
+		return ret
 	end,
 	deactivate = function(self, t, p)
 		self:removeTemporaryValue("combat_def", p.def)
 		self:removeTemporaryValue("max_life", p.max_life)
 		self:removeTemporaryValue("never_move", p.nomove)
+		self:removeTemporaryValue("die_at", p.dieat)
 		return true
 	end,
 	info = function(self, t)
-		return ([[You brace yourself for the final stand, increasing Defense by %d and maximum life by %d, but making you unable to move.
+		local hp = self:combatTalentStatDamage(t, "con", 30, 500) + 100
+		return ([[You brace yourself for the final stand, increasing Defense by %d, maximum and current life by %d, but making you unable to move.
+		Your stand let you concentrate on every blow allowing you to not die from otherwise fatal wounds. You can only die when reaching -%d life; however below 0 life you can not see how much you have left.
 		The increase in Defense is based on your Dexterity, and the increase in life is based on your Constitution.]]):
-		format(5 + self:getDex(4, true) * self:getTalentLevel(t),
-		(10 + self:getCon() * 0.7) * self:getTalentLevel(t))
+		format(5 + self:getDex(4, true) * self:getTalentLevel(t), hp, hp)
 	end,
 }
 
