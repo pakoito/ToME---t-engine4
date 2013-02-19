@@ -84,6 +84,12 @@ g.block_move = function(self, x, y, who, act, couldpass)
 		self.block_move = nil
 		self.special = nil
 		self.autoexplore_ignore = true
+
+		if self.add_displays and self.add_displays[1] then 
+			self.add_displays[1].image = "object/chestopen3.png"
+			self:removeAllMOs()
+			game.level.map:updateMap(x, y)
+		end
 	end end, "Open", "Leave")
 
 	return false
