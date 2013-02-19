@@ -22,7 +22,7 @@ newEntity{
 	slot = "MAINHAND",
 	slot_forbid = "OFFHAND",
 	type = "weapon", subtype="battleaxe", image = resolvers.image_material("2haxe", "metal"),
-	moddable_tile = resolvers.moddable_tile("axe"),
+	moddable_tile = resolvers.moddable_tile("2haxe"),
 	add_name = " (#COMBAT#)",
 	display = "/", color=colors.SLATE,
 	encumber = 3,

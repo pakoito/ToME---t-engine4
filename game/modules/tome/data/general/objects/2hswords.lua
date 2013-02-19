@@ -24,7 +24,7 @@ newEntity{
 	type = "weapon", subtype="greatsword",
 	add_name = " (#COMBAT#)",
 	display = "/", color=colors.SLATE, image = resolvers.image_material("2hsword", "metal"),
-	moddable_tile = resolvers.moddable_tile("sword"),
+	moddable_tile = resolvers.moddable_tile("2hsword"),
 	encumber = 3,
 	rarity = 5,
 	combat = { talented = "sword", damrange = 1.6, physspeed = 1, sound = {"actions/melee", pitch=0.6, vol=1.2}, sound_miss = {"actions/melee", pitch=0.6, vol=1.2} },
