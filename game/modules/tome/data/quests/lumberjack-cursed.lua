@@ -60,13 +60,16 @@ on_status_change = function(self, who, status, sub)
 				game:addEntity(game.level, o, "object")
 				o:identify(true)
 				who:addObject(who.INVEN_INVEN, o)
-				require("engine.ui.Dialog"):simplePopup("Thanks", ("You saved most of us, please take this has a reward. (They give you %s)"):format(o:getName{do_color=true}))
+				require("engine.ui.Dialog"):simplePopup("Thanks", ("You saved %s of us, please take this has a reward. (They give you %s)"):format(self.lumberjacks_died == 0 and "all" or "most", o:getName{do_color=true}))
 			end
 		end
 		who:setQuestStatus(self.id, engine.Quest.DONE)
 		game:setAllowedBuild("afflicted")
 		game:setAllowedBuild("afflicted_cursed", true)
 		world:gainAchievement("CURSE_ERASER", game.player)
+		if self.lumberjacks_died == 0 then
+			world:gainAchievement("CURSE_ALL", game.player)
+		end
 	end
 end
 

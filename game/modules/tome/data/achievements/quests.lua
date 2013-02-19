@@ -169,6 +169,11 @@ newAchievement{
 	desc = [[Killed Ben Cruthdar the Cursed.]],
 }
 newAchievement{
+	name = "Fast Curse Dispel", id = "CURSE_ALL",
+	show = "name",
+	desc = [[Killed Ben Cruthdar the Cursed while saving all the lumberjacks.]],
+}
+newAchievement{
 	name = "Eye of the storm", id = "EYE_OF_THE_STORM",
 	show = "name",
 	desc = [[Freed Derth from the onslaught of the mad Tempest, Urkis.]],
