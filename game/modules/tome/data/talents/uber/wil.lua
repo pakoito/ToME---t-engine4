@@ -195,7 +195,7 @@ uberTalent{
 uberTalent{
 	name = "Spell Feedback",
 	mode = "passive",
-	cooldown = 3,
+	cooldown = 9,
 	require = { special={desc="Antimagic", fct=function(self) return self:knowTalentType("wild-gift/antimagic") end} },
 	trigger = function(self, t, target, source_t)
 		self:startTalentCooldown(t)
