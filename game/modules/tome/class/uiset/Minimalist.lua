@@ -1857,6 +1857,12 @@ function _M:displayToolbar(scale, bx, by)
 	end
 	x, y = self:toolbarOrientStep(orient, bx, by, scale, x, y, tb_bg[6], tb_bg[7])
 
+	-- Any hooks
+	local hd = {"UISet:Minimalist:Toolbar", x=x, y=y, bx=bx, by=by, orient=orient, scale=scale}
+	if self:triggerHook(hd) then 
+		x, y = hd.x, hd.y
+	end
+
 	local mhx, mhy = util.getval(self.mhandle_pos.mainicons.x, self), util.getval(self.mhandle_pos.mainicons.y, self)
 	if not self.locked then
 		move_handle[1]:toScreenFull(mhx, mhy, move_handle[6], move_handle[7], move_handle[2], move_handle[3])
