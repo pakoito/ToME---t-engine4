@@ -82,7 +82,7 @@ newTalent{
 		if not o then return end
 
 		local level = o.material_level or 1
-		local gem = game.zone:makeEntity(game.level, "object", {ingore_material_restriction=true, type="gem", special=function(e) return not e.unique and e.material_level == level end}, nil, true)
+		local gem = game.zone:makeEntity(game.level, "object", {ignore_material_restriction=true, type="gem", special=function(e) return not e.unique and e.material_level == level end}, nil, true)
 		if gem then return gem end
 	end,
 	extractGem = function(self, t, o, inven, item, d)

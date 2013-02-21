@@ -81,7 +81,7 @@ local maker_list = function()
 
 		local o, ok
 		repeat
-			o = game.zone:makeEntity(game.level, "object", {name=name, ingore_material_restriction=true, no_tome_drops=true, ego_filter={keep_egos=true, ego_chance=-1000}}, nil, true)
+			o = game.zone:makeEntity(game.level, "object", {name=name, ignore_material_restriction=true, no_tome_drops=true, ego_filter={keep_egos=true, ego_chance=-1000}}, nil, true)
 			if o then ok = true end
 			if o and o.power_source and player:attr("forbid_arcane") and o.power_source.arcane then ok = false end
 		until ok

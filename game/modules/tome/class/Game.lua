@@ -1280,7 +1280,7 @@ function _M:setupCommands()
 			print("===============")
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
-			game.level.map:particleEmitter(game.player.x, game.player.y, 10, "earth_beam", {tx=8, ty=0})
+			resolvers.calc.drop_randart({{}}, game.player)
 do return end
 			local f, err = loadfile("/data/general/events/fearscape-portal.lua")
 			print(f, err)

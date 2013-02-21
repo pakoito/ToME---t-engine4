@@ -294,6 +294,8 @@ function _M:saveSettings()
 		end end
 	end
 
+	self:triggerHook{"UISet:Minimalist:saveSettings", lines=lines}
+
 	game:saveSettings("tome.uiset_minimalist", table.concat(lines, "\n"))
 end
 

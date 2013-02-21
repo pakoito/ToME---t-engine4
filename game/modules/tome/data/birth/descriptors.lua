@@ -80,7 +80,7 @@ newBirthDescriptor{
 		max_level = 50,
 		money = 10,
 		resolvers.equip{ id=true,
-			{type="lite", subtype="lite", name="brass lantern", ingore_material_restriction=true, ego_chance=-1000},
+			{type="lite", subtype="lite", name="brass lantern", ignore_material_restriction=true, ego_chance=-1000},
 		},
 		make_tile = function(e)
 			if not e.image then e.image = "player/"..e.descriptor.subrace:lower():gsub("[^a-z0-9_]", "_").."_"..e.descriptor.sex:lower():gsub("[^a-z0-9_]", "_")..".png" end

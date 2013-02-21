@@ -169,6 +169,33 @@ function resolvers.calc.drops(t, e)
 	return nil
 end
 
+-- Resolves material level based on actor level
+-- @param base = base value at level = base_level (scales as sqrt)
+-- @param spread = number of std deviations (1 usually) in material level
+-- @param min, max = material level limits
+function resolvers.matlevel(base, base_level, spread, mn, mx)
+	return {__resolver="matlevel", base, base_level, spread, mn, mx}
+end
+function resolvers.calc.matlevel(t, e)
+	local mean = math.min(e.level/10+1,t[1] * (e.level/t[2])^.5) -- I5 material level scales up with sqrt of actor level or level/10
+	local spread = math.max(t[3],mean/5) -- spread out probabilities at high level
+	local mn = t[4] or 1
+	local mx = t[5] or 5
+	
+	local rand = math.floor(rng.normalFloat(mean,spread))
+	return util.bound(rand,mn,mx)
+end
+
+-- Estimate actor final level for drop calculations (.__resolve_last does not work)
+local function actor_final_level(e)
+	local finlevel = math.max(math.max(e.level,e.start_level),1)
+	if game.zone.actor_adjust_level and e.forceLevelup then
+		return math.max(finlevel, game.zone:actor_adjust_level(game.level, e) + e:getRankLevelAdjust())
+	else
+		return math.max(finlevel, game.zone.base_level + e:getRankLevelAdjust())
+	end
+end
+
 --- Resolves drops creation for an actor; drops a created on the fly randart
 function resolvers.drop_randart(t)
 	return {__resolver="drop_randart", __resolve_last=true, t}
@@ -177,6 +204,17 @@ end
 function resolvers.calc.drop_randart(t, e)
 	t = t[1]
 	local filter = t.filter
+
+ 	local matresolver = resolvers.matlevel(5,50,1,2) -- Min material level 2
+   
+--	game.log("#LIGHT_BLUE#Calculating randart drop for %s (uid %d, est level %d)",e.name,e.uid,actor_final_level(e))
+	if not filter then
+		filter = {ignore_material_restriction=true, no_tome_drops=true, ego_filter={keep_egos=true, ego_chance=-1000}, special=function(eq)
+			local matlevel = resolvers.calc.matlevel(matresolver,{level = actor_final_level(e)})
+--			game.log("Checking equipment %s against material level %d for %s (final level %d)",eq.name,matlevel,e.name, actor_final_level(e))
+			return (not eq.unique and eq.randart_able) and eq.material_level == matlevel and true or false
+		end}
+	end
 
 --	print("Randart Drops resolver")
 	local base = nil
