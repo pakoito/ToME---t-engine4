@@ -204,6 +204,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	combat = {damtype=DamageType.PHYSICAL},
 	no_auto_resists = true,
 	move_others=true,
+	is_headless_horror = true,
 
 	-- Should get resists based on eyes generated, 30% all per eye and 100% to the eyes element.  Should lose said resists when the eyes die.
 
@@ -280,7 +281,7 @@ newEntity{ base = "BASE_NPC_HORROR", define_as = "BASE_NPC_ELDRICTH_EYE",
 		for eye, _ in pairs(self.summoner.eyes or {}) do
 			if not eye.dead then nb = nb + 1 end
 		end
-		if nb == 0 then
+		if nb == 0 and self.summoner and self.summoner.is_headless_horror then
 			local sx, sy = game.level.map:getTileToScreen(self.summoner.x, self.summoner.y)
 			game.flyers:add(sx, sy, 20, (rng.range(0,2)-1) * 0.5, -3, "+Blind", {255,100,80})
 			self.summoner.blind = 1
