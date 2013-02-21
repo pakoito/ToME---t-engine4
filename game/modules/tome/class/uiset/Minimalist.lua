@@ -1858,7 +1858,7 @@ function _M:displayToolbar(scale, bx, by)
 	x, y = self:toolbarOrientStep(orient, bx, by, scale, x, y, tb_bg[6], tb_bg[7])
 
 	-- Any hooks
-	local hd = {"UISet:Minimalist:Toolbar", x=x, y=y, bx=bx, by=by, orient=orient, scale=scale}
+	local hd = {"UISet:Minimalist:Toolbar", x=x, y=y, bx=bx, by=by, orient=orient, scale=scale, tb_bg=tb_bg}
 	if self:triggerHook(hd) then 
 		x, y = hd.x, hd.y
 	end
