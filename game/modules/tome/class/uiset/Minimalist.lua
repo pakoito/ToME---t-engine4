@@ -225,7 +225,9 @@ end
 
 function _M:getMainMenuItems()
 	return {
-		{"Reset interface positions", function() self:resetPlaces() self:saveSettings() end},
+		{"Reset interface positions", function() Dialog:yesnoPopup("Reset UI", "Reset all the interface?", function(ret) if ret then
+			self:resetPlaces() self:saveSettings() 
+		end end) end},
 	}
 end
 
