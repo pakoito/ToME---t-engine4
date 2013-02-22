@@ -859,7 +859,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		end
 	end
 
-	local hd = {"Combat:attackTargetWith", hitted=hitted, target=target, weapon=weapon, damtype=damtype, mult=mult, dam=dam}
+	local hd = {"Combat:attackTargetWith", hitted=hitted, crit=crit, target=target, weapon=weapon, damtype=damtype, mult=mult, dam=dam}
 	if self:triggerHook(hd) then hitted = hd.hitted end
 
 	-- Visual feedback
