@@ -67,6 +67,7 @@ start_game = function(self)
 		orders = {target=true, leash=true, anchor=true, talents=true, behavior=true},
 	})
 	game.party:setPlayer(slave)
+	game.player.__no_save_json = true
 	game.player:hotkeyAutoTalents()
 	game.party.members[p].control = "no"
 	p.slaver_old_ai = p.ai

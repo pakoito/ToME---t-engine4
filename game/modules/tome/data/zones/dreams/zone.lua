@@ -213,6 +213,7 @@ return {
 				size_category = 1,
 				level_range = {1, 1}, exp_worth = 1,
 				max_life = 10,
+				__no_save_json = true,
 				mouse_turn = game.turn,
 				resolvers.talents{
 					T_STEALTH = 12,
@@ -282,6 +283,7 @@ You feel like running away!]], 600)
 				level_range = {1, 1}, exp_worth = 1,
 				max_life = 100, life_regen = 0,
 				no_inventory_access = true,
+				__no_save_json = true,
 				resolvers.talents{
 				},
 				on_die = function(self)
