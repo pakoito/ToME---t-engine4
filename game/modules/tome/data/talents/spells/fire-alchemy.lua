@@ -167,7 +167,7 @@ newTalent{
 	sustain_mana = 250,
 	points = 5,
 	proj_speed = 2.4,
-	range = 8,
+	range = 6,
 	tactical = { ATTACKAREA = { FIRE = 3 } },
 	getFireDamageOnHit = function(self, t) return self:combatTalentSpellDamage(t, 5, 25) end,
 	getResistance = function(self, t) return self:combatTalentSpellDamage(t, 5, 45) end,
@@ -180,7 +180,7 @@ newTalent{
 		end
 
 		local tgts = {}
-		local grids = core.fov.circle_grids(self.x, self.y, 5, true)
+		local grids = core.fov.circle_grids(self.x, self.y, self:getTalentRange(t), true)
 		for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
 			local a = game.level.map(x, y, Map.ACTOR)
 			if a and self:reactionToward(a) < 0 then
@@ -220,10 +220,10 @@ newTalent{
 		local insightdam = t.getFireDamageInSight(self, t)
 		local res = t.getResistance(self, t)
 		local manadrain = t.getManaDrain(self, t)
-		return ([[Turn your body into pure flame, increasing your fire resistance by %d%%, burning any creatures attacking you for %0.2f fire damage, and projecting random slow-moving fire bolts at targets in sight, doing %0.2f fire damage with each bolt.
+		return ([[Turn your body into pure flame, increasing your fire resistance by %d%%, burning any creatures attacking you for %0.2f fire damage, and projecting %d random slow-moving fire bolts per turns at targets in sight, doing %0.2f fire damage with each bolt.
 		The projectiles safely go through your friends without harming them.
 		This powerful spell drains %0.2f mana while active.
 		The damage and resistance will increase with your Spellpower.]]):
-		format(res,onhitdam,insightdam,-manadrain)
+		format(res,onhitdam, math.floor(self:getTalentLevel(t)), insightdam,-manadrain)
 	end,
 }
