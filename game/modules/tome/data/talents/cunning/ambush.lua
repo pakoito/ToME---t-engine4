@@ -152,12 +152,12 @@ newTalent{
 		m.exp_worth = 0
 		m.no_inventory_access = true
 		m.stealth = t.getStealthPower(self, t)
-		for i = 1, 10 do
-			m:unlearnTalent(m.T_AMBUSCADE)
-			m:unlearnTalent(m.T_PROJECTION) -- no recurssive projections
-			m:unlearnTalent(m.T_STEALTH)
-			m:unlearnTalent(m.T_HIDE_IN_PLAIN_SIGHT)
-		end
+		m:unlearnTalent(m.T_AMBUSCADE,m:getTalentLevelRaw(m.T_AMBUSCADE))
+		m:unlearnTalent(m.T_PROJECTION,m:getTalentLevelRaw(m.T_PROJECTION)) -- no recurssive projections
+		m:unlearnTalent(m.T_STEALTH,m:getTalentLevelRaw(m.T_STEALTH))
+		m:unlearnTalent(m.T_HIDE_IN_PLAIN_SIGHT,m:getTalentLevelRaw(m.T_HIDE_IN_PLAIN_SIGHT))
+
+		self:removeEffect(self.EFF_SHADOW_VEIL) -- Remove shadow veil from creator
 		m.remove_from_party_on_death = true
 		m.resists[DamageType.LIGHT] = -100
 		m.resists[DamageType.DARKNESS] = 130
@@ -213,8 +213,9 @@ newTalent{
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.9, 2) end,
 	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)) end,
 	getDamageRes = function(self, t) return 10 + self:getTalentLevel(t) * 5 end,
+	getBlinkRange = function(self, t) return math.ceil(3.3 + 1.7*self:getTalentLevel(t)^.5) end,
 	action = function(self, t)
-		self:setEffect(self.EFF_SHADOW_VEIL, t.getDuration(self, t), {res=t.getDamageRes(self, t), dam=t.getDamage(self, t)})
+	self:setEffect(self.EFF_SHADOW_VEIL, t.getDuration(self, t), {res=t.getDamageRes(self, t), dam=t.getDamage(self, t), range=t.getBlinkRange(self, t)})
 		return true
 	end,
 	info = function(self, t)
@@ -222,9 +223,9 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local res = t.getDamageRes(self, t)
 		return ([[You veil yourself in shadows for %d turns, and let them control you.
-		While in the veil, you become immune to status effects and gain %d%% all damage reduction. Each turn, you blink to a nearby foe, hitting it for %d%% darkness weapon damage.
+		While veiled, you become immune to status effects and gain %d%% all damage reduction. Each turn, you blink to a nearby foe (within range %d), hitting it for %d%% darkness weapon damage.
 		While this goes on, you cannot be stopped unless you are killed, and you cannot control your character.]]):
-		format(duration, res, 100 * damage)
+		format(duration, res, t.getBlinkRange(self, t) ,100 * damage)
 	end,
 }
 

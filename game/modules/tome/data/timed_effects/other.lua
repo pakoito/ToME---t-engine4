@@ -573,11 +573,11 @@ newEffect{
 newEffect{
 	name = "SHADOW_VEIL", image = "talents/shadow_veil.png",
 	desc = "Shadow Veil",
-	long_desc = function(self, eff) return ("You veil yourself in shadows and let them control you. While in the veil you become immune to status effects, and gain %d%% all damage reduction. Each turn you blink to a nearby foe, hitting it for %d%% darkness weapon damage. While this goes on you cannot be stopped unless you are killed, and you cannot control your character."):format(eff.res, eff.dam * 100) end,
+	long_desc = function(self, eff) return ("You veil yourself in shadows and let them control you. While in the veil you become immune to status effects, and gain %d%% all damage reduction. Each turn you blink to a nearby foe within range %d, hitting it for %d%% darkness weapon damage. While this goes on you cannot be stopped unless you are killed, and you cannot control your character."):format(eff.res, eff.range, eff.dam * 100) end,
 	type = "other",
 	subtype = { darkness=true },
 	status = "beneficial",
-	parameters = { res=10, dam=1.5 },
+	parameters = { res=10, dam=1.5, range=5},
 	on_gain = function(self, err) return "#Target# is covered in a veil of shadows!", "+Assail" end,
 	on_lose = function(self, err) return "#Target# is no longer covered by shadows.", "-Assail" end,
 	activate = function(self, eff)
@@ -585,26 +585,32 @@ newEffect{
 		eff.resid = self:addTemporaryValue("resists", {all=eff.res})
 	end,
 	on_timeout = function(self, eff)
-		-- Choose a target in FOV
-		local acts = {}
-		local act
-		for i = 1, #self.fov.actors_dist do
-			act = self.fov.actors_dist[i]
-			if act and self:reactionToward(act) < 0 and not act.dead then
-				local sx, sy = util.findFreeGrid(act.x, act.y, 1, true, {[engine.Map.ACTOR]=true})
-				if sx then acts[#acts+1] = {act, sx, sy} end
-			end
-		end
-		if #acts == 0 then return end
+		local maxdist = self:callTalent(self.T_SHADOW_VEIL,"getBlinkRange")
+		self.never_act = true
+		repeat
+			local acts = {}
+			local act
 
-		act = rng.table(acts)
-		self:move(act[2], act[3], true)
-		game.level.map:particleEmitter(act[2], act[3], 1, "dark")
-		self:attackTarget(act[1], DamageType.DARKNESS, eff.dam) -- Attack *and* use energy
+			self:doFOV() -- update actors seen
+			for i = 1, #self.fov.actors_dist do
+				act = self.fov.actors_dist[i]
+				if act and self:reactionToward(act) < 0 and not act.dead and self:isNear(act.x,act.y,maxdist) then
+					local sx, sy = util.findFreeGrid(act.x, act.y, 1, true, {[engine.Map.ACTOR]=true})
+					if sx then acts[#acts+1] = {act, sx, sy} end
+				end
+			end
+			if #acts == 0 then self.never_act = nil return end
+
+			act = rng.table(acts)
+			self:move(act[2], act[3], true)
+			game.level.map:particleEmitter(act[2], act[3], 1, "dark")
+			self:attackTarget(act[1], DamageType.DARKNESS, eff.dam) -- Attack *and* use energy
+		until self.energy.value < 0  -- keep blinking and attacking until out of energy (since on_timeout is only once per turn)
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("negative_status_effect_immune", eff.sefid)
 		self:removeTemporaryValue("resists", eff.resid)
+		self.never_act = nil
 	end,
 }
 
