@@ -51,6 +51,8 @@ typedef struct __PHYSFS_ERRMSGTYPE__
 
 
 /* The various i/o drivers...some of these may not be compiled in. */
+extern const PHYSFS_ArchiveInfo    __PHYSFS_ArchiveInfo_SUBZIP;
+extern const PHYSFS_Archiver       __PHYSFS_Archiver_SUBZIP;
 extern const PHYSFS_ArchiveInfo    __PHYSFS_ArchiveInfo_ZIP;
 extern const PHYSFS_Archiver       __PHYSFS_Archiver_ZIP;
 extern const PHYSFS_ArchiveInfo    __PHYSFS_ArchiveInfo_LZMA;
@@ -73,6 +75,7 @@ static const PHYSFS_ArchiveInfo *supported_types[] =
 {
     &__PHYSFS_Archiver_BIND_PHYSFS,
 #if (defined PHYSFS_SUPPORTS_ZIP)
+    &__PHYSFS_ArchiveInfo_SUBZIP,
     &__PHYSFS_ArchiveInfo_ZIP,
 #endif
 #if (defined PHYSFS_SUPPORTS_7Z)
@@ -101,6 +104,7 @@ static const PHYSFS_Archiver *archivers[] =
     &__PHYSFS_Archiver_BIND_PHYSFS,
     &__PHYSFS_Archiver_DIR,
 #if (defined PHYSFS_SUPPORTS_ZIP)
+    &__PHYSFS_Archiver_SUBZIP,
     &__PHYSFS_Archiver_ZIP,
 #endif
 #if (defined PHYSFS_SUPPORTS_7Z)

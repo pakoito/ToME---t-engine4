@@ -360,14 +360,31 @@ function _M:loadAddons(mod, saveuse)
 			vbase = "/loaded-addons/"..add.short_name
 		end
 
-		if add.data then fs.mount(base.."/data", "/data-"..add.short_name, true) print(" * with data") end
+		if add.data then
+			print(" * with data")
+			if add.teaa then fs.mount("subdir:/data/@"..fs.getRealPath(add.teaa), "/data-"..add.short_name, true)
+			else fs.mount(base.."/data", "/data-"..add.short_name, true)
+			end
+		end
 		if add.superload then 
-			fs.mount(base.."/superload", "/mod/addons/"..add.short_name.."/superload", true) print(" * with superload") 
+			print(" * with superload")
+			if add.teaa then fs.mount("subdir:/superload/@"..fs.getRealPath(add.teaa), "/mod/addons/"..add.short_name.."/superload", true)
+			else fs.mount(base.."/superload", "/mod/addons/"..add.short_name.."/superload", true)
+			end
+			
 			table.insert(_G.__addons_superload_order, add.short_name)
 		end
-		if add.overload then fs.mount(base.."/overload", "/", false) print(" * with overload") end
+		if add.overload then
+			print(" * with overload")
+			if add.teaa then fs.mount("subdir:/overload/@"..fs.getRealPath(add.teaa), "/", false)
+			else fs.mount(base.."/overload", "/", false)
+			end
+		end
 		if add.hooks then
-			fs.mount(base.."/hooks", "/hooks/"..add.short_name, true)
+			if add.teaa then fs.mount("subdir:/hooks/@"..fs.getRealPath(add.teaa), "/hooks/"..add.short_name, true)
+			else fs.mount(base.."/hooks", "/hooks/"..add.short_name, true)
+			end
+
 			self:setCurrentHookDir("/hooks/"..add.short_name.."/")
 			dofile("/hooks/"..add.short_name.."/load.lua")
 			self:setCurrentHookDir(nil)
