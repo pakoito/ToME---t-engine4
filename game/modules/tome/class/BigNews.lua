@@ -44,6 +44,9 @@ function _M:saySimple(time, txt, ...)
 
 	self.center_x = (game.w) / 2
 	self.center_y = (game.h) / 2
+
+	if game.player.stopRun then game.player:stopRun("important news") end
+	if game.player.stopRest then game.player:stopRest("important news") end
 end
 
 function _M:display(nb_keyframes)
