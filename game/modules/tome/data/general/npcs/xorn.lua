@@ -116,6 +116,7 @@ newEntity{ base = "BASE_NPC_XORN",
 			local x, y = util.findFreeGrid(self.x, self.y, 15, true, {[engine.Map.ACTOR]=true})
 			if x and y then
 				local m = self:clone()
+				m:removeAllMOs()
 				m.on_added_to_level = nil
 				m.x, m.y = nil, nil
 				game.zone:addEntity(game.level, m, "actor", x, y)
