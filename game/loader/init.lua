@@ -30,6 +30,7 @@ local load load = function(...)
 	__player_name = args[4] or "player"
 	__player_new = args[5] and true or false
 	if args[6] then
+		print('===', args[6])
 		local f = loadstring(args[6])
 		__module_extra_info = {}
 		setfenv(f, __module_extra_info)

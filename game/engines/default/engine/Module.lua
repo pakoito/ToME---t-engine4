@@ -676,7 +676,7 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 		end
 	end
 
-	self:loadAddons(mod, save_desc and save_desc.addons)
+	self:loadAddons(mod, (save_desc and save_desc.addons) or (__module_extra_info.set_addons))
 
 	-- Check addons
 	if hash_valid then

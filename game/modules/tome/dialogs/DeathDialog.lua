@@ -204,7 +204,9 @@ function _M:use(item)
 		if item.subaction == "none" then
 			util.showMainMenu()
 		elseif item.subaction == "restart" then
-			util.showMainMenu(false, engine.version[4], engine.version[1].."."..engine.version[2].."."..engine.version[3], game.__mod_info.short_name, game.save_name, true, ("auto_quickbirth=%q"):format(game:getPlayer(true).name))
+			local addons = {}
+			for add, _ in pairs(game.__mod_info.addons) do addons[#addons+1] = "'"..add.."'" end
+			util.showMainMenu(false, engine.version[4], engine.version[1].."."..engine.version[2].."."..engine.version[3], game.__mod_info.short_name, game.save_name, true, ("auto_quickbirth=%q set_addons={%s}"):format(game:getPlayer(true).name, table.concat(addons, ", ")))
 		elseif item.subaction == "restart-new" then
 			util.showMainMenu(false, engine.version[4], engine.version[1].."."..engine.version[2].."."..engine.version[3], game.__mod_info.short_name, game.save_name, true)
 		end
