@@ -58,6 +58,7 @@ return {
 			nb_trap = {0, 0},
 		},
 	},
+	special_level_faction = "fearscape",
 	post_process = function(level)
 		for uid, e in pairs(level.entities) do e.faction = e.hard_faction or "fearscape" end
 	end,

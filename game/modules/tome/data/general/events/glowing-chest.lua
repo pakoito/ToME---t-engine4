@@ -73,6 +73,9 @@ g.block_move = function(self, x, y, who, act, couldpass)
 			game.logSeen(who, "#GOLD#An object rolls from the chest!")
 			if self.chest_guards then
 				for _, m in ipairs(self.chest_guards) do
+					if game.level.data and game.level.data.special_level_faction then
+						m.faction = game.level.data.special_level_faction
+					end
 					local mx, my = util.findFreeGrid(x, y, 5, true, {[engine.Map.ACTOR]=true})
 					if mx then game.zone:addEntity(game.level, m, "actor", mx, my) end
 				end
