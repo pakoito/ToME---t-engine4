@@ -24,7 +24,7 @@ author = { "DarkGod", "darkgod@te4.org" }
 homepage = "http://te4.org/"
 is_boot = true
 version = {1,0,0}
-engine = {1,0,0,"te4"}
+engine = {1,0,1,"te4"}
 description = [[
 Bootmenu!
 ]]

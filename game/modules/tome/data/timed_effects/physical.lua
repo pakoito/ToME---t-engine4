@@ -1959,8 +1959,8 @@ newEffect{
 	subtype = { status=true },
 	status = "beneficial",
 	parameters = { },
-	on_gain = function(self, err) return "#Target# become imprevious to physical effects.", "+Spine of the World" end,
-	on_lose = function(self, err) return "#Target# is less imprevious to physical effects.", "-Spine of the World" end,
+	on_gain = function(self, err) return "#Target# become impervious to physical effects.", "+Spine of the World" end,
+	on_lose = function(self, err) return "#Target# is less impervious to physical effects.", "-Spine of the World" end,
 	activate = function(self, eff)
 		self:effectTemporaryValue(eff, "physical_negative_status_effect_immune", 1)
 	end,
