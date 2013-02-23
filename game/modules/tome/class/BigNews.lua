@@ -29,6 +29,11 @@ function _M:init(font, size)
 end
 
 function _M:say(time, txt, ...)
+	self:saySimple(time, txt, ...)
+	game.logPlayer(game.player, "%s", txt:toString())
+end
+
+function _M:saySimple(time, txt, ...)
 	txt = txt:format(...)
 	self.time = time or 60
 	self.max_time = self.time
