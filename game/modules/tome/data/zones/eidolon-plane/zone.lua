@@ -30,7 +30,7 @@ return {
 	no_anomalies = true,
 	zero_gravity = true,
 	no_autoexplore = true,
-	ambient_music = "Anne_van_Schothorst_-_Passed_Tense.ogg",
+	ambient_music = "Alchemist.ogg",
 	generator =  {
 		map = {
 			class = "engine.generator.map.Forest",

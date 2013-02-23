@@ -151,7 +151,7 @@ newTalent{
 		local talentcount = t.getTalentCount(self, t)
 		local cooldown = t.getCooldown(self, t)
 		return ([[You sap the target's energy and add it to your own, placing up to %d random talents on cooldown for %d turns and reducing the cooldown of one of your chronomancy talents currently on cooldown by %d turns per enemy talent effected.
-		The cooldown adjustment scales with your Paradox.]]):
+		The number of talents affected scales with your Paradox.]]):
 		format(talentcount, cooldown, cooldown)
 	end,
 }
