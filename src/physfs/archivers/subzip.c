@@ -86,7 +86,7 @@ static int SUBZIP_isArchive(const char *name, int forWriting)
 	int len = strlen(name);
 	if (len < 11) return 0;
 	if (name[0] != 's' || name[1] != 'u' || name[2] != 'b' || name[3] != 'd' || name[4] != 'i' || name[5] != 'r' || name[6] != ':' || name[7] != '/') return 0;
-	char *realfile = strrchr(name, '@');
+	char *realfile = strrchr(name, '|');
 	if (!realfile) return 0;
 
 	return __PHYSFS_Archiver_ZIP.isArchive(realfile+1, forWriting);
@@ -100,7 +100,7 @@ static void *SUBZIP_openArchive(const char *name, int forWriting)
 	int len = strlen(name);
 	if (len < 11) return NULL;
 	if (name[0] != 's' || name[1] != 'u' || name[2] != 'b' || name[3] != 'd' || name[4] != 'i' || name[5] != 'r' || name[6] != ':' || name[7] != '/') return NULL;
-	char *realfile = strrchr(name, '@');
+	char *realfile = strrchr(name, '|');
 	if (!realfile) return NULL;
 
 	dvoid *opaque = __PHYSFS_Archiver_ZIP.openArchive(realfile+1, forWriting);
