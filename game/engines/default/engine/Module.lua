@@ -385,14 +385,6 @@ function _M:loadAddons(mod, saveuse)
 			else fs.mount(base.."/hooks", "/hooks/"..add.short_name, true)
 			end
 
-			print("==== all path")
-			table.print(fs.getSearchPath(true))
-			print("==== hooks")
-			table.print(fs.list("/hooks"))
-			print("==== addon hooks")
-			table.print(fs.list("/hooks/"..add.short_name))
-			print("====")
-
 			self:setCurrentHookDir("/hooks/"..add.short_name.."/")
 			dofile("/hooks/"..add.short_name.."/load.lua")
 			self:setCurrentHookDir(nil)

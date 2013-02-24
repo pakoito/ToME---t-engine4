@@ -102,11 +102,11 @@ static const PHYSFS_ArchiveInfo *supported_types[] =
 static const PHYSFS_Archiver *archivers[] =
 {
     &__PHYSFS_Archiver_BIND_PHYSFS,
-    &__PHYSFS_Archiver_DIR,
 #if (defined PHYSFS_SUPPORTS_ZIP)
     &__PHYSFS_Archiver_SUBZIP,
     &__PHYSFS_Archiver_ZIP,
 #endif
+    &__PHYSFS_Archiver_DIR,
 #if (defined PHYSFS_SUPPORTS_7Z)
     &__PHYSFS_Archiver_LZMA,
 #endif
