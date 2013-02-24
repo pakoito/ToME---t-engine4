@@ -1308,7 +1308,9 @@ function _M:displayBuffs(scale, bx, by)
 
 		for tid, act in pairs(player.sustain_talents) do
 			if act then
-				if not self.pbuff[tid] then
+				if not self.pbuff[tid] or act.__update_display then
+					if act.__update_display then game.mouse:unregisterZone("pbuff"..tid) end
+					act.__update_display = false
 					local t = player:getTalentFromId(tid)
 					local displayName = t.name
 					if t.getDisplayName then displayName = t.getDisplayName(player, t, player:isTalentActive(tid)) end

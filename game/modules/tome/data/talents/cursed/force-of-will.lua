@@ -166,7 +166,8 @@ newTalent{
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/spell_generic2")
 		return {
-			value = 0
+			value = 0,
+			__update_display = true,
 		}
 	end,
 	deactivate = function(self, t, p)
@@ -180,6 +181,7 @@ newTalent{
 			self:incHate(-0.2)
 
 			p.value = math.min(p.value + maxDamage / 35, maxDamage)
+			p.__update_display = true
 
 			t.updateParticles(self, t, p)
 		end
@@ -191,6 +193,7 @@ newTalent{
 			if deflectDamage > 0 then
 				damage = damage - deflectDamage
 				p.value = math.max(0, p.value - deflectDamage)
+				p.__update_display = true
 				t.updateParticles(self, t, p)
 
 				game.logPlayer(self, "You have deflected %d incoming damage!", deflectDamage)
