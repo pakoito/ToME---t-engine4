@@ -1564,7 +1564,7 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is free from the hex.", "-Pacification Hex" end,
 	-- Damage each turn
 	on_timeout = function(self, eff)
-		if not self:hasEffect(self.EFF_DAZED) and rng.percent(eff.chance) then
+		if not self:hasEffect(self.EFF_DAZED) and rng.percent(eff.chance) and self:canBe("stun") then
 			self:setEffect(self.EFF_DAZED, 3, {})
 			if not self:checkHit(eff.power, self:combatSpellResist(), 0, 95, 15) then eff.dur = 0 end
 		end
