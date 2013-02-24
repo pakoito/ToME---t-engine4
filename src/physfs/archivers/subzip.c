@@ -109,10 +109,12 @@ static void *SUBZIP_openArchive(const char *name, int forWriting)
 	SUBZIPinfo *info = (SUBZIPinfo *) allocator.Malloc(sizeof (SUBZIPinfo));
 	info->subopaque = opaque;
 	info->subdir = allocator.Malloc(sizeof(char) * strlen(name));
+	char *base = name;
 	name += 8;
 	int i = 0;
 	while (name != realfile) info->subdir[i++] = *(name++);
 	info->subdir[i] = '\0';
+	printf("SUBZIP: openArchive: %s : %s : %lx\n", base, info->subdir, opaque);
 	return info;
 } /* SUBZIP_openArchive */
 
@@ -133,6 +135,7 @@ char *append_assets(const char *subdir, const char *name)
 	memcpy(patched_name, subdir, sub_len);
 	memcpy(patched_name + sub_len, name, name_len);
 	patched_name[sub_len + name_len + 1 - 1] = 0;
+	printf("SUBZIP: append_assets: %s : %s :=> %s\n", subdir, name, patched_name);
 
 	return patched_name;
 }
@@ -244,6 +247,7 @@ static fvoid *SUBZIP_openRead(dvoid *opaque, const char *fnm, int *fileExists)
 	char *patched_name = append_assets(((SUBZIPinfo*)opaque)->subdir, fnm);
 
 	retval = __PHYSFS_Archiver_ZIP.openRead(((SUBZIPinfo*)opaque)->subopaque, patched_name, fileExists);
+	printf("SUBZIP: openRead: %lx : %s : %d\n", ((SUBZIPinfo*)opaque)->subopaque, patched_name, retval);
 
 	allocator.Free(patched_name);
 
