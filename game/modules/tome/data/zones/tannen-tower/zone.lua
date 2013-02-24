@@ -27,6 +27,7 @@ return {
 	width = 25, height = 25,
 --	all_remembered = true,
 --	all_lited = true,
+	no_worldport = true,
 	persistent = "zone",
 	no_level_connectivity = true,
 	ambient_music = {"Remembrance.ogg","weather/dungeon_base.ogg"},
