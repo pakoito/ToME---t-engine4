@@ -338,6 +338,12 @@ function string.his_her(actor)
 	end
 end
 
+function string.his_her_self(actor)
+	if actor.female then return "herself"
+	else return "himself"
+	end
+end
+
 function string.capitalize(str)
 	if #str > 1 then
 		return string.upper(str:sub(1, 1))..str:sub(2)

@@ -48,7 +48,7 @@ The Way will never forget you. Now go and make history!
 	answers = {
 		{"#LIGHT_GREEN#[sacrifice yourself to bring the Way to every sentient creature.]", action=function(npc, player)
 			player.no_resurrect = true
-			player:die(player)
+			player:die(player, {special_death_msg="sacrificing "..string.his_her_self(player).." to bring the Way to all"})
 			player:setQuestStatus("high-peak", engine.Quest.COMPLETED, "yeek")
 			player:hasQuest("high-peak"):win("yeek-sacrifice")
 		end},
@@ -63,7 +63,7 @@ You will do as asked, for the good of all Yeeks! The Way is always right.
 	answers = {
 		{"#LIGHT_GREEN#[sacrifice yourself to bring the Way to every sentient creature.]", action=function(npc, player)
 			player.no_resurrect = true
-			player:die(player)
+			player:die(player, {special_death_msg="sacrificing "..string.his_her_self(player).." to bring the Way to all"})
 			player:setQuestStatus("high-peak", engine.Quest.COMPLETED, "yeek")
 			player:hasQuest("high-peak"):win("yeek-sacrifice")
 		end},
@@ -88,7 +88,7 @@ After searching the remains of the Sorcerers you find a note explaining that the
 		{"Aeryn, I am sorry but one of us needs to be sacrificed for the world to go on. #LIGHT_GREEN#[sacrifice Aeryn for the sake of the world]", jump="aeryn-sacrifice", cond=aeryn_alive},
 		{"I will close it. #LIGHT_GREEN#[sacrifice yourself for the sake of the world]", action=function(npc, player)
 			player.no_resurrect = true
-			player:die(player)
+			player:die(player, {special_death_msg="sacrificing "..string.his_her_self(player).." for the sake of the world"})
 			player:hasQuest("high-peak"):win("self-sacrifice")
 		end},
 	}
