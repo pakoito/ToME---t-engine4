@@ -25,6 +25,8 @@ defineTile('M', "WATER_FLOOR", nil, {random_filter={}})
 
 startx = 21
 starty = 14
+endx = 17
+endy = 26
 
 return [[
 ...................M..........
