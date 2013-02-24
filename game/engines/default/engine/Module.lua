@@ -349,15 +349,11 @@ function _M:loadAddons(mod, saveuse)
 		add.version_name = ("%s-%s-%d.%d.%d"):format(mod.short_name, add.short_name, add.version[1], add.version[2], add.version[3])
 
 		print("Binding addon", add.long_name, add.teaa, add.version_name)
-		local base, vbase
+		local base
 		if add.teaa then
-			fs.mount(fs.getRealPath(add.teaa), "/loaded-addons/"..add.short_name, true)
-			base = "bind::/loaded-addons/"..add.short_name
-			vbase = "/loaded-addons/"..add.short_name
+			base = nil
 		else
 			base = fs.getRealPath(add.dir)
-			fs.mount(base, "/loaded-addons/"..add.short_name, true)
-			vbase = "/loaded-addons/"..add.short_name
 		end
 
 		if add.data then
