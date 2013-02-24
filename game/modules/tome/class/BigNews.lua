@@ -43,7 +43,7 @@ function _M:saySimple(time, txt, ...)
 	self.list_y = (- self.list[1].h * #self.list) / 2
 
 	self.center_x = (game.w) / 2
-	self.center_y = (game.h) / 2
+	self.center_y = (game.h) / 5
 
 	if game.player.stopRun then game.player:stopRun("important news") end
 	if game.player.stopRest then game.player:stopRest("important news") end
