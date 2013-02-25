@@ -1570,7 +1570,9 @@ newEffect{
 		end
 	end,
 	activate = function(self, eff)
-		self:setEffect(self.EFF_DAZED, 3, {})
+		if self:canBe("stun") then
+			self:setEffect(self.EFF_DAZED, 3, {})
+		end
 	end,
 }
 
