@@ -21,6 +21,7 @@ newTalentType{ no_silence=true, is_spell=true, type="sher'tul/fortress", name = 
 newTalentType{ no_silence=true, is_spell=true, type="spell/objects", name = "object spells", description = "Spell abilities of the various objects of the world." }
 newTalentType{ type="technique/objects", name = "object techniques", description = "Techniques of the various objects of the world." }
 newTalentType{ type="wild-gift/objects", name = "object techniques", description = "Wild gifts of the various objects of the world." }
+newTalentType{ type="misc/objects", name = "object techniques", description = "Powers of the various objects of the world." }
 
 --local oldTalent = newTalent
 --local newTalent = function(t) if type(t.hide) == "nil" then t.hide = true end return oldTalent(t) end
@@ -131,7 +132,7 @@ newTalent{
 
 newTalent{
 	name = "Ward",
-	type = {"spell/objects", 1},
+	type = {"misc/objects", 1},
 	cooldown = function(self, t)
 		return math.max(10, 28 - 3 * self:getTalentLevel(t))
 	end,
