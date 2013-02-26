@@ -1615,7 +1615,7 @@ function core.fov.calc_wall(x, y, w, h, halflength, halfmax_spots, source_x, sou
 end
 
 function core.fov.wall_grids(x, y, halflength, halfmax_spots, source_x, source_y, delta_x, delta_y, block)
-	if not x or not y then return {} end
+	if not x or not y or not game.level or not game.level.map then return {} end
 	local grids = {}
 	core.fov.calc_wall(x, y, game.level.map.w, game.level.map.h, halflength, halfmax_spots, source_x, source_y, delta_x, delta_y,
 		function(_, lx, ly)
@@ -1637,7 +1637,7 @@ function core.fov.wall_grids(x, y, halflength, halfmax_spots, source_x, source_y
 end
 
 function core.fov.circle_grids(x, y, radius, block)
-	if not x or not y then return {} end
+	if not x or not y or not game.level or not game.level.map then return {} end
 	if radius == 0 then return {[x]={[y]=true}} end
 	local grids = {}
 	core.fov.calc_circle(x, y, game.level.map.w, game.level.map.h, radius,
@@ -1660,7 +1660,7 @@ function core.fov.circle_grids(x, y, radius, block)
 end
 
 function core.fov.beam_grids(x, y, radius, dir, angle, block)
-	if not x or not y then return {} end
+	if not x or not y or not game.level or not game.level.map then return {} end
 	if radius == 0 then return {[x]={[y]=true}} end
 	local grids = {}
 	core.fov.calc_beam(x, y, game.level.map.w, game.level.map.h, radius, dir, angle,
@@ -1683,7 +1683,7 @@ function core.fov.beam_grids(x, y, radius, dir, angle, block)
 end
 
 function core.fov.beam_any_angle_grids(x, y, radius, angle, source_x, source_y, delta_x, delta_y, block)
-	if not x or not y then return {} end
+	if not x or not y or not game.level or not game.level.map then return {} end
 	if radius == 0 then return {[x]={[y]=true}} end
 	local grids = {}
 	core.fov.calc_beam_any_angle(x, y, game.level.map.w, game.level.map.h, radius, angle, source_x, source_y, delta_x, delta_y,
