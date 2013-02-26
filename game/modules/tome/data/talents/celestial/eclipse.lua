@@ -157,10 +157,22 @@ newTalent{
 			pstop = self:addTemporaryValue("positive_at_rest_disable", 1),
 			nstop = self:addTemporaryValue("negative_at_rest_disable", 1),
 		}
+		if not self.shader then
+			ret.set_shader = true
+			self.shader = "invis_edge"
+			self.shader_args = {color1={1,1,0,1}, color2={0,0,0,1}}
+			self:removeAllMOs()
+			game.level.map:updateMap(self.x, self.y)
+		end
 		self:resetCanSeeCacheOf()
 		return ret
 	end,
 	deactivate = function(self, t, p)
+		if p.set_shader then
+			self.shader = nil
+			self:removeAllMOs()
+			game.level.map:updateMap(self.x, self.y)
+		end
 		self:removeTemporaryValue("invisible", p.invisible)
 		self:removeTemporaryValue("invisible_damage_penalty", p.invisible_damage_penalty)
 		self:removeTemporaryValue("positive_regen_ref", p.fill)

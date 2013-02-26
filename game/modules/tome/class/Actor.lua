@@ -4253,7 +4253,7 @@ function _M:canSeeNoCache(actor, def, def_pct)
 	end
 
 	-- Check for invisibility. This is a "simple" checkHit between invisible and see_invisible attrs
-	if actor:attr("invisible") then
+	if actor:attr("invisible") and actor ~= self then
 		-- Special case, 0 see invisible, can NEVER see invisible things
 		local def = self:combatSeeInvisible()
 		if def <= 0 then return false, 0 end

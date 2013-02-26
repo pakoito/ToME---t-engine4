@@ -206,8 +206,19 @@ newEffect{
 			eff.regenid = self:addTemporaryValue("no_life_regen", 1)
 			eff.healid = self:addTemporaryValue("no_healing", 1)
 		end
+		if not self.shader then
+			eff.set_shader = true
+			self.shader = "invis_edge"
+			self:removeAllMOs()
+			game.level.map:updateMap(self.x, self.y)
+		end
 	end,
 	deactivate = function(self, eff)
+		if eff.set_shader then
+			self.shader = nil
+			self:removeAllMOs()
+			game.level.map:updateMap(self.x, self.y)
+		end
 		self:removeTemporaryValue("invisible", eff.tmpid)
 		self:removeTemporaryValue("invisible_damage_penalty", eff.penaltyid)
 		if eff.regen then

@@ -145,10 +145,21 @@ newTalent{
 			invisible_damage_penalty = self:addTemporaryValue("invisible_damage_penalty", 0.7),
 			drain = self:addTemporaryValue("mana_regen", -2),
 		}
+		if not self.shader then
+			ret.set_shader = true
+			self.shader = "invis_edge"
+			self:removeAllMOs()
+			game.level.map:updateMap(self.x, self.y)
+		end
 		self:resetCanSeeCacheOf()
 		return ret
 	end,
 	deactivate = function(self, t, p)
+		if p.set_shader then
+			self.shader = nil
+			self:removeAllMOs()
+			game.level.map:updateMap(self.x, self.y)
+		end
 		self:removeTemporaryValue("invisible", p.invisible)
 		self:removeTemporaryValue("invisible_damage_penalty", p.invisible_damage_penalty)
 		self:removeTemporaryValue("mana_regen", p.drain)
