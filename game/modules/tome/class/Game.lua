@@ -954,7 +954,8 @@ end
 
 --- Says if this savefile is usable or not
 function _M:isLoadable()
-	return not self:getPlayer(true).dead
+	if not self:getPlayer(true).dead or not self.player.dead then return true end
+	return false
 end
 
 --- Clones the game world for chronomancy spells
