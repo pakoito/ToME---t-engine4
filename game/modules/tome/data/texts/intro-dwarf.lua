@@ -24,6 +24,6 @@ Hailing from the Dwarven Empire of the Iron Throne, you have been sent to invest
 Upon arriving most of your team got killed and now you must crawl back to the Iron Council and report what you saw there.
 Only you and Norgan, a fellow Dwarf berserker, have survived, but the orcs will not let you go easily.
 
-You have sworn that once you reach the Iron Council safely you will take on a life of adventurer, looking for fame and treasures of old.
+You have sworn that once you reach the Iron Council safely you will take on a life of adventure, looking for fame and treasures of old.
 Away from all those orcs....
 ]]

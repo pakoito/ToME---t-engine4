@@ -111,7 +111,7 @@ load_tips = {
 	{image="/data/gfx/shockbolt/terrain/worldmap.png", text=[[The effects of the Spellblaze were not all instant, and many centuries later the Cataclysm tore the continent apart once more, devastating coastal areas the destroying all of the Naloren lands.]]},
 	{image="/data/gfx/shockbolt/npc/humanoid_elf_elven_archer.png", text=[[Archers are fast and deadly, and with pinning shots can render their foe helpless as swiftly dispatch them.]]},
 	{image="/data/gfx/shockbolt/npc/humanoid_human_reaver.png", text=[[Reavers are powerful fighters with corrupted blood, and the strength to wield a one-handed weapon in each arm.]]},
-	{image="/data/gfx/shockbolt/npc/humanoid_shalore_elven_corruptor.png", text=[[Corruptors fed off the essence of others, and can use their own corrupted blood to launch deadly magical attacks.]]},
+	{image="/data/gfx/shockbolt/npc/humanoid_shalore_elven_corruptor.png", text=[[Corruptors feed off the essence of others, and can use their own corrupted blood to launch deadly magical attacks.]]},
 	{image="/data/gfx/shockbolt/trap/beartrap01.png", text=[[Clever rogues can lay traps to damage or debilitate their foes without having to go near them.]]},
 	{image="/data/gfx/talents/stealth.png", text=[[Rogues can move silently and stealthily, letting them approach foes unaware or avoid them entirely.]]},
 	{image="/data/gfx/shockbolt/object/rune_green.png", text=[[A movement infusion can let you quickly approach a ranged opponent, or quickly escape a melee one.]]},
