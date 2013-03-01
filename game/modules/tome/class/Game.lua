@@ -1666,6 +1666,8 @@ end
 function _M:setupMouse(reset)
 	if reset == nil or reset then self.mouse:reset() end
 	self.mouse:registerZone(Map.display_x, Map.display_y, Map.viewport.width, Map.viewport.height, function(button, mx, my, xrel, yrel, bx, by, event, extra)
+		if not self.uiset:isLocked() then return end
+
 		self.tooltip.add_map_str = extra and extra.log_str
 
 		if game.tooltip.locked then

@@ -370,6 +370,9 @@ function _M:getType(t)
 		elseif t.type:find("beam") then
 			target_type.line = true
 		end
+		if t.type:find("trap") then
+			target_type.stop_last = true
+		end
 	end
 	table.update(t, target_type)
 	return t

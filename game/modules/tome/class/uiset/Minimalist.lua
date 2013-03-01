@@ -223,6 +223,19 @@ function _M:init()
 	self.buffs_base = UI:makeFrame("ui/icon-frame/frame", 40, 40)
 end
 
+function _M:isLocked()
+	return self.locked
+end
+
+function _M:switchLocked()
+	self.locked = not self.locked
+	if self.locked then
+		game.bignews:say(60, "#CRIMSON#Interface locked, mouse enabled on the map")
+	else
+		game.bignews:say(60, "#CRIMSON#Interface unlocked, mouse disabled on the map")
+	end
+end
+
 function _M:getMainMenuItems()
 	return {
 		{"Reset interface positions", function() Dialog:yesnoPopup("Reset UI", "Reset all the interface?", function(ret) if ret then
@@ -1857,7 +1870,7 @@ function _M:displayToolbar(scale, bx, by)
 		local desc_fct = function(button, mx, my, xrel, yrel, bx, by, event)
 			if event == "out" then self.tbbuttons.padlock = 0.6 return else self.tbbuttons.padlock = 1 end
 			game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, self.locked and "Unlock all interface elements so they can be moved and resized." or "Lock all interface elements so they can not be moved nor resized.")
-			if button == "left" and not xrel and not yrel and event == "button" then self.locked = not self.locked end
+			if button == "left" and not xrel and not yrel and event == "button" then self:switchLocked() end
 		end
 		game.mouse:registerZone(bx + x * scale, by +y*scale, padlock[6], padlock[7], desc_fct, nil, "padlock", true, scale)
 	end

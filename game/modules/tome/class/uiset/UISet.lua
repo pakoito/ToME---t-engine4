@@ -58,3 +58,7 @@ end
 function _M:getMainMenuItems()
 	return {}
 end
+
+function _M:isLocked()
+	return true
+end
