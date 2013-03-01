@@ -115,6 +115,7 @@ This is the troll the notes spoke about, no doubt.]],
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	resolvers.equip{ {type="weapon", subtype="greatmaul", defined="GREATMAUL_BILL_TRUNK", random_art_replace={chance=75}, autoreq=true}, },
 	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
+	resolvers.drops{chance=100, nb=1, {defined="TRANSMO_CHEST"} },
 
 	resolvers.talents{
 		[Talents.T_RUSH]=4,

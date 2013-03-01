@@ -419,12 +419,13 @@ Items in the chest will not encumber you.]],
 	},
 
 	on_pickup = function(self, who)
-		require("engine.ui.Dialog"):simpleLongPopup("Transmogrification Chest", [[This chest is an extension of Yiilkgur, any items dropped inside is transported to the Fortress, processed by the core and destroyed to extract energy.
-The byproduct of this effect is the creation of gold, which is useless to the Fortress, so it is sent back to you.
+		require("engine.ui.Dialog"):simpleLongPopup("Transmogrification Chest", [[This chest is an extension of old Sher'Tul places of power, any items dropped inside is transported to an other palce, processed and destroyed to extract energy.
+The byproduct of this effect is the creation of gold, which is useless to process, so it is sent back to you.
 
 When you possess the chest all items you walk upon will automatically be put inside and transmogrified when you leave the level.
 To take an item out, simply go to your inventory to move them out of the chest.
 Items in the chest will not encumber you.]], 500)
+		game:setAllowedBuild("birth_transmo_chest", true)
 	end,
 	on_drop = function(self, who)
 		if who == game.player then
