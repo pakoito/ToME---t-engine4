@@ -77,7 +77,7 @@ newEntity{ base = "BASE_NPC_ELVEN_CASTER", define_as = "GRAND_CORRUPTOR",
 	end,
 
 	on_takehit = function(self, value, src)
-		if not self.chatted and (self.life - value) < self.max_life * 0.4 then
+		if not self.chatted and (self.life - value) < self.max_life * 0.4 and not game._chronoworlds then
 			self.chatted = true
 			-- Check for magical knowledge
 			local has_spells = 0
