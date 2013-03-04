@@ -351,7 +351,7 @@ function _M:loadAddons(mod, saveuse)
 		print("Binding addon", add.long_name, add.teaa, add.version_name)
 		local base
 		if add.teaa then
-			base = nil
+			base = fs.getRealPath(add.teaa)
 		else
 			base = fs.getRealPath(add.dir)
 		end
@@ -412,7 +412,10 @@ function _M:loadAddons(mod, saveuse)
 		if config.settings.cheat then
 			hash_valid, hash_err = false, "cheat mode skipping addon validation"
 		else
-			fp(vbase)
+			print("[MODULE LOADER] computing addon md5 from", base)
+			fs.mount(base, "/loaded-addons/"..add.short_name, true)
+			fp("/loaded-addons/"..add.short_name)
+			fs.umount(base)
 			table.sort(md5s)
 			table.print(md5s)
 			local fmd5 = md5.sumhexa(table.concat(md5s))
