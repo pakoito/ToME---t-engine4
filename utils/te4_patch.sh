@@ -19,7 +19,13 @@ touch $fm
 
 for file in `find . -type f`; do
 	file=`echo $file|sed s@^\./@@`
-	echo $file
+
+	echo "$file" | grep -q "^t-engine-launcher"
+	if test $? -eq 0; then 
+		echo "* IGNORING: $file"
+		continue
+	fi
+
 	if test -f "$oldd/$file"; then
 		cmp -s "$oldd/$file" "$file"
 		if test $? -ne 0; then
