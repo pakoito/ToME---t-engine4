@@ -189,7 +189,7 @@ newTalent{
 			self:attr("combat_spellresist", 10) self:attr("combat_mentalresist", 10)
 			self.life_rating = self.life_rating + 2
 			self:learnTalentType("celestial/star-fury", true)
-			self:setTalentTypeMastery("celestial/star-fury", 0.7)
+			self:setTalentTypeMastery("celestial/star-fury", self:getTalentTypeMastery("celestial/star-fury") - 0.3)
 			self.negative_regen = self.negative_regen + 0.2 + 0.1
 		elseif level < 6 then
 			self:incIncStat("mag", 5) self:incIncStat("wil", 5)
@@ -197,7 +197,7 @@ newTalent{
 			self.resists_cap.all = (self.resists_cap.all or 0) + 10
 			self.life_rating = self.life_rating + 2
 			self:learnTalentType("celestial/star-fury", true)
-			self:setTalentTypeMastery("celestial/star-fury", 0.9)
+			self:setTalentTypeMastery("celestial/star-fury", self:getTalentTypeMastery("celestial/star-fury") - 0.1)
 			self.negative_regen = self.negative_regen + 0.2 + 0.5
 		else
 			self:incIncStat("mag", 6) self:incIncStat("wil", 6) self:incIncStat("cun", 6)
@@ -205,7 +205,7 @@ newTalent{
 			self.resists_cap.all = (self.resists_cap.all or 0) + 15
 			self.life_rating = self.life_rating + 3
 			self:learnTalentType("celestial/star-fury", true)
-			self:setTalentTypeMastery("celestial/star-fury", 1.1)
+			self:setTalentTypeMastery("celestial/star-fury", self:getTalentTypeMastery("celestial/star-fury") + 0.1)
 			self.negative_regen = self.negative_regen + 0.2 + 1
 		end
 
