@@ -693,7 +693,7 @@ newTalent{
 ------------------------------------------------------------------
 -- Yeeks' powers
 ------------------------------------------------------------------
-newTalentType{ type="race/yeek", name = "yeek", generic = true, description = "The various racial bonuses a character can have." }
+newTalentType{ type="race/yeek", name = "yeek", is_mind=true, generic = true, description = "The various racial bonuses a character can have." }
 newTalent{
 	short_name = "YEEK_WILL",
 	name = "Dominant Will",
