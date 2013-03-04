@@ -289,7 +289,7 @@ newEntity{ define_as = "ORB_SCRYING",
 	display = "*", color=colors.VIOLET, image = "object/artifact/orb_scrying.png",
 	encumber = 1,
 	plot = true, quest = true,
-	desc = [[This orb will automatically items you find.]],
+	desc = [[This orb will automatically identify items you find.]],
 
 	on_drop = function(self, who)
 		if who == game.player then
