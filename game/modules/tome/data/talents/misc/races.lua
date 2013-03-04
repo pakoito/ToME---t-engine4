@@ -257,7 +257,7 @@ newTalent{
 ------------------------------------------------------------------
 -- Thaloren's powers
 ------------------------------------------------------------------
-newTalentType{ type="race/thalore", name = "thalore", generic = true, description = "The various racial bonuses a character can have." }
+newTalentType{ type="race/thalore", name = "thalore", generic = true, is_nature=true, description = "The various racial bonuses a character can have." }
 newTalent{
 	short_name = "THALOREN_WRATH",
 	name = "Wrath of the Woods",
