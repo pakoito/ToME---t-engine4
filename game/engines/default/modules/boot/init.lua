@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 name = "Boot"
-long_name = "T-Engine4 Main Menu"
+long_name = "Tales of Maj'Eyal Main Menu"
 short_name = "boot"
 author = { "DarkGod", "darkgod@te4.org" }
 homepage = "http://te4.org/"
