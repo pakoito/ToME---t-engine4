@@ -22,13 +22,14 @@ newTalent{
 	type = {"wild-gift/ooze", 1},
 	require = gifts_req1,
 	mode = "sustained",
+	points = 5,
 	cooldown = 10,
 	sustain_equilibrium = 10,
-	getDur = function(self, t) return math.max(5, math.floor(self:getTalentLevel(t) * 2)) end,
-	getMax = function(self, t) return math.floor(self:getCun() / 10) end,
-	getChance = function(self, t) return math.floor(self:getCun() / 10) end,
+	getMaxHP = function(self, t) return 50 + self:combatTalentMindDamage(t, 30, 250) end,
+	getMax = function(self, t) return math.max(1, math.floor(self:getCun() / 10 / 2)) end,
+	getChance = function(self, t) return 25 + math.floor(self:getCun() / 3) end,
 	spawn = function(self, t, life)
-		if checkMaxSummon(self, true) or not self:canBe("summon") then return end
+		if checkMaxSummon(self, true, 2) or not self:canBe("summon") then return end
 
 		-- Find space
 		local x, y = util.findFreeGrid(self.x, self.y, 5, true, {[Map.ACTOR]=true})
@@ -39,7 +40,7 @@ newTalent{
 
 		local m = mod.class.NPC.new{
 			type = "vermin", subtype = "oozes",
-			display = "j", color=colors.GREEN, image = "npc/vermin_oozes_green_ooze.png",
+			display = "j", color=colors.GREEN, image = "npc/vermin_oozes_bloated_ooze.png",
 			name = "bloated ooze",
 			desc = "It's made from your own flesh and it's oozing.",
 			sound_moam = {"creatures/jelly/jelly_%d", 1, 3},
@@ -57,8 +58,9 @@ newTalent{
 			infravision = 10,
 			cut_immune = 1,
 			blind_immune = 1,
+			bloated_ooze = 1,
 
-			resists = { [DamageType.LIGHT] = -50, [DamageType.COLD] = -50 },
+			resists = { all = 50 },
 			fear_immune = 1,
 
 			blood_color = colors.GREEN,
@@ -80,11 +82,20 @@ newTalent{
 
 		return true
 	end,
+	activate = function(self, t)
+		return {}
+	end,
+	deactivate = function(self, t, p)
+		return true
+	end,
 	info = function(self, t)
-		return ([[Your body is more like that of an ooze. When you get hit you have a %d%% chance to split and create a Bloated Ooze with as much health as you have taken damage (up to %d).
+		return ([[Your body is more like that of an ooze.
+		When you get hit you have a %d%% chance to split and create a Bloated Ooze with as much health as you have taken damage (up to %d).
 		All damage you take will be split equaly between you and your Bloated Oozes.
-		You may have up to %d Oozes active at any time (based on your Cunning).]]):
-		format(t.getChance(self, t), t.getMax(self, t))
+		You may have up to %d Oozes active at any time (based on your Cunning).
+		Bloated Oozes are very resilient (50%% all damage resistance) to damage not coming through your shared link.
+		The maximun life depends on Mindpower and the chance on Cunning.]]):
+		format(t.getChance(self, t), t.getMaxHP(self, t), t.getMax(self, t))
 	end,
 }
 

@@ -81,7 +81,8 @@ gifts_req_high5 = {
 	level = function(level) return 26 + (level-1)  end,
 }
 
-function checkMaxSummon(self, silent)
+function checkMaxSummon(self, silent, div)
+	div = div or 1
 	local nb = 0
 
 	-- Count party members
@@ -99,6 +100,7 @@ function checkMaxSummon(self, silent)
 	if self:attr("nature_summon_max") then
 		max = max + self:attr("nature_summon_max")
 	end
+	max = math.ceil(max / div)
 	if nb >= max then
 		if not silent then
 			game.logPlayer(self, "#PINK#You cannot summon any more; you have too many summons already (%d). You can increase the limit with higher Cunning (+1 for every 10).", nb)

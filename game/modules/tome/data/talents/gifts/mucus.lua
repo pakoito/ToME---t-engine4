@@ -157,10 +157,10 @@ newTalent{
 	require = gifts_req3,
 	points = 5,
 	mode = "passive",
-	getMax = function(self, t) return math.floor(self:getCun() / 10) end,
+	getMax = function(self, t) return math.max(1, math.floor(self:getCun() / 10 / 2)) end,
 	getChance = function(self, t) return 10 + self:combatTalentMindDamage(t, 5, 300) / 10 end,
 	spawn = function(self, t)
-		if checkMaxSummon(self, true) or not self:canBe("summon") then return end
+		if checkMaxSummon(self, true, 2) or not self:canBe("summon") then return end
 
 		local ps = {}
 		for i, e in ipairs(game.level.map.effects) do
@@ -258,6 +258,10 @@ newTalent{
 		elseif l <= 6 then return 0.3
 		elseif l <= 7 then return 0.2
 		elseif l <= 8 then return 0.1
+		elseif l <= 9 then return 0.05
+		elseif l <= 10 then return 0.03
+		elseif l <= 11 then return 0.02
+		elseif l <= 12 then return 0.01
 		end
 	end,
 	on_pre_use = function(self, t)

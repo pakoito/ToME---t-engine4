@@ -184,6 +184,8 @@ newBirthDescriptor{
 	},
 	talents = {
 		[ActorTalents.T_PSIBLADES] = 1,
+		[ActorTalents.T_MITOSIS] = 1,
+		[ActorTalents.T_SLIME_SPIT] = 1,
 	},
 	copy = {
 		forbid_arcane = 2,

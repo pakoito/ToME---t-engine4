@@ -116,6 +116,7 @@ newTalent{
 			combat_armor = 10, combat_def = 0, combat_def_ranged = self.level * 2.2,
 			-- Hard to kill with spells
 			resists = {[DamageType.PHYSICAL] = -90, all = 90},
+			poison_immune = 1,
 
 			talent_cd_reduction={[Talents.T_TAUNT]=2, },
 			resolvers.talents{
