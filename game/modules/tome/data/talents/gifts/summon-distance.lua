@@ -337,7 +337,7 @@ newTalent{
 			self:getTalentRadius(t),
 			5, nil,
 			{type="vapour"},
-			nil, false
+			nil, false, false
 		)
 	end,
 	action = function(self, t)
