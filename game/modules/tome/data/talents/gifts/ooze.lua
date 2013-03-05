@@ -26,6 +26,7 @@ newTalent{
 	sustain_equilibrium = 10,
 	getDur = function(self, t) return math.max(5, math.floor(self:getTalentLevel(t) * 2)) end,
 	getMax = function(self, t) return math.floor(self:getCun() / 10) end,
+	getChance = function(self, t) return math.floor(self:getCun() / 10) end,
 	spawn = function(self, t, life)
 		if checkMaxSummon(self, true) or not self:canBe("summon") then return end
 

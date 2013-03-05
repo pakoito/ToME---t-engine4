@@ -2968,7 +2968,11 @@ function _M:checkMindstar(o)
 		local nm = {}
 		for s, v in pairs(o.combat.dammod) do nm[s] = v * psb.getStatmult(self, psb) end --I5
 		o.combat.dammod = nm
-		o.combat.apr = o.combat.apr * psb.getAPRmult(self,psb) --I5		
+		o.combat.apr = o.combat.apr * psb.getAPRmult(self,psb) --I5
+
+		if o.wielder and o.wielder.combat_mindpower then o.wielder.combat_mindpower = o.wielder.combat_mindpower * psb.getPowermult(self, psb) end
+		if o.wielder and o.wielder.inc_stats and o.wielder.inc_stats[self.STAT_WIL] then o.wielder.inc_stats[self.STAT_WIL] = o.wielder.inc_stats[self.STAT_WIL] * psb.getPowermult(self, psb) end
+		if o.wielder and o.wielder.inc_stats and o.wielder.inc_stats[self.STAT_CUN] then o.wielder.inc_stats[self.STAT_CUN] = o.wielder.inc_stats[self.STAT_CUN] * psb.getPowermult(self, psb) end
 
 		print("Activating psiblade", o.name)
 	elseif not new and old then
@@ -2978,6 +2982,10 @@ function _M:checkMindstar(o)
 		for s, v in pairs(o.combat.dammod) do nm[s] = v / psb.getStatmult(self,psb,pv) end --I5		
 		o.combat.dammod = nm
 		o.combat.apr = o.combat.apr / psb.getAPRmult(self,psb,pv) --I5 		
+
+		if o.wielder and o.wielder.combat_mindpower then o.wielder.combat_mindpower = o.wielder.combat_mindpower / psb.getPowermult(self, psb, pv) end
+		if o.wielder and o.wielder.inc_stats and o.wielder.inc_stats[self.STAT_WIL] then o.wielder.inc_stats[self.STAT_WIL] = o.wielder.inc_stats[self.STAT_WIL] / psb.getPowermult(self, psb, pv) end
+		if o.wielder and o.wielder.inc_stats and o.wielder.inc_stats[self.STAT_CUN] then o.wielder.inc_stats[self.STAT_CUN] = o.wielder.inc_stats[self.STAT_CUN] / psb.getPowermult(self, psb, pv) end
 
 		o.moddable_tile_ornament = nil
 		o.psiblade_active = false
