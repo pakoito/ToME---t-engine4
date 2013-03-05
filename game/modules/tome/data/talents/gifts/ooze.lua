@@ -25,11 +25,12 @@ newTalent{
 	points = 5,
 	cooldown = 10,
 	sustain_equilibrium = 10,
+	tactical = { BUFF = 2 },
 	getMaxHP = function(self, t) return 50 + self:combatTalentMindDamage(t, 30, 250) end,
-	getMax = function(self, t) return math.max(1, math.floor(self:getCun() / 10 / 2)) end,
+	getMax = function(self, t) return math.max(1, math.floor(self:getCun() / 10)) end,
 	getChance = function(self, t) return 25 + math.floor(self:getCun() / 3) end,
 	spawn = function(self, t, life)
-		if checkMaxSummon(self, true, 2) or not self:canBe("summon") then return end
+		if checkMaxSummon(self, true) or not self:canBe("summon") then return end
 
 		-- Find space
 		local x, y = util.findFreeGrid(self.x, self.y, 5, true, {[Map.ACTOR]=true})
@@ -94,7 +95,7 @@ newTalent{
 		All damage you take will be split equaly between you and your Bloated Oozes.
 		You may have up to %d Oozes active at any time (based on your Cunning).
 		Bloated Oozes are very resilient (50%% all damage resistance) to damage not coming through your shared link.
-		The maximun life depends on Mindpower and the chance on Cunning.]]):
+		The maximum life depends on Mindpower and the chance on Cunning.]]):
 		format(t.getChance(self, t), t.getMaxHP(self, t), t.getMax(self, t))
 	end,
 }
@@ -104,56 +105,111 @@ newTalent{
 	type = {"wild-gift/ooze", 2},
 	require = gifts_req2,
 	points = 5,
-	mode = "passive",
-	getPower = function(self, t) return 20 + self:combatTalentMindDamage(t, 5, 500) / 10 end,
+	equilibrium = 1,
+	cooldown = 12,
+	tactical = { PROTECT = 2, ATTACKAREA = { ARCANE = 1 } },
+	getDam = function(self, t) return self:combatTalentMindDamage(t, 15, 200) end,
 	on_pre_use = function(self, t)
-		if not game.party:findMember{type="mitosis"} then return end
+		for _, coor in pairs(util.adjacentCoords(self.x, self.y)) do
+			local act = game.level.map(coor[1], coor[2], Map.ACTOR)
+			if act and act.summoner == self and act.bloated_ooze then
+				return true
+			end
+		end
+		return false
+	end,
+	action = function(self, t)
+		local possibles = {}
+		for _, coor in pairs(util.adjacentCoords(self.x, self.y)) do
+			local act = game.level.map(coor[1], coor[2], Map.ACTOR)
+			if act and act.summoner == self and act.bloated_ooze then
+				possibles[#possibles+1] = act
+			end
+		end
+		if #possibles == 0 then return end
+
+		local act = rng.table(possibles)
+		act:die(self)
+
+		self:setEffect(self.EFF_PAIN_SUPPRESSION, math.ceil(3 + self:getTalentLevel(t)), {power=50})
+
+		local tg = {type="ball", radius=3, range=0, talent=t, selffire=false}
+		self:project(tg, self.x, self.y, DamageType.MANABURN, self:mindCrit(t.getDam(self, t)))
+		game.level.map:particleEmitter(self.x, self.y, tg.radius, "acidflash", {radius=tg.radius})
+
 		return true
 	end,
 	info = function(self, t)
-		local p = t.getPower(self, t)
-		return ([[Improve your fungus to allow it to take a part of any healing you receive and improve it.
-		Each time you are healed you get a regeneration effect for 6 turns that heals you of %d%% of the direct heal you received.
+		return ([[You randomly merge with an adjacent bloated ooze, granting your a 50%% damage resistance for %d turns.
+		The merging also releases a burst of antimagic all around, dealing %0.2f manaburn damage in radius %d.
 		The effect will increase with your Mindpower.]]):
-		format(p)
+		format(
+			math.ceil(3 + self:getTalentLevel(t)),
+			damDesc(self, DamageType.ARCANE, t.getDam(self, t)),
+			3
+		)
 	end,
 }
 
 newTalent{
-	name = "Swap", short_name = "MITOSIS_SWAP",
+	name = "Call of the Ooze",
 	type = {"wild-gift/ooze", 3},
 	require = gifts_req3,
 	points = 5,
 	equilibrium = 5,
 	cooldown = 8,
-	on_pre_use = function(self, t)
-		if not game.party:findMember{type="mitosis"} then return end
-		return true
-	end,
 	action = function(self, t)
-		local target = game.party:findMember{type="mitosis"}
+		local ot = self:getTalentFromId(self.T_MITOSIS)
+		for i = 1, math.floor(self:getTalentLevel(t)) do
+			ot.spawn(self, ot, self:combatTalentMindDamage(t, 30, 300))
+		end
 
-		local dur = 1 + self:getTalentLevel(t)
-		self:setEffect(self.EFF_MITOSIS_SWAP, 6, {power=15 + self:combatTalentMindDamage(t, 5, 300) / 10})
-		target:setEffect(target.EFF_MITOSIS_SWAP, 6, {power=15 + self:combatTalentMindDamage(t, 5, 300) / 10})
+		local list = {}
+		if game.party:hasMember(self) then
+			for act, def in pairs(game.party.members) do
+				if act.summoner and act.summoner == self and act.bloated_ooze then list[#list+1] = act end
+			end
+		else
+			for _, act in pairs(game.level.entities) do
+				if act.summoner and act.summoner == self and act.is_mucus_ooze then list[#list+1] = act	end
+			end
+		end
 
-		self:heal(40 + self:combatTalentMindDamage(t, 5, 300))
+		local tg = {type="ball", radius=self.sight}
+		local grids = self:project(tg, self.x, self.y, function() end)
+		local tgts = {}
+		for x, ys in pairs(grids) do for y, _ in pairs(ys) do
+			local target = game.level.map(x, y, Map.ACTOR)
+			if target and self:reactionToward(target) < 0 then tgts[#tgts+1] = target end
+		end end
 
-		-- Displace
-		game.level.map:remove(self.x, self.y, Map.ACTOR)
-		game.level.map:remove(target.x, target.y, Map.ACTOR)
-		game.level.map(self.x, self.y, Map.ACTOR, target)
-		game.level.map(target.x, target.y, Map.ACTOR, self)
-		self.x, self.y, target.x, target.y = target.x, target.y, self.x, self.y
+		while #tgts > 0 and #list > 0 do
+			local ooze = rng.tableRemove(list)
+			local target = rng.tableRemove(tgts)
 
-		game:playSoundNear(self, "talents/teleport")
+			local tx, ty = util.findFreeGrid(target.x, target.y, 10, true, {[Map.ACTOR]=true})
+			if tx then
+				local ox, oy = ooze.x, ooze.y
+				ooze:move(tx, ty, true)
+				if config.settings.tome.smooth_move > 0 then
+					ooze:resetMoveAnim()
+					ooze:setMoveAnim(ox, oy, 8, 5)
+				end
+				if core.fov.distance(tx, ty, target.x, target.y) <= 1 then
+					target:setTarget(ooze)
+					self:attackTarget(target, DamageType.ACID, self:combatTalentWeaponDamage(t, 0.6, 2.2), true)
+				end
+			end
+		end
+
+		game:playSoundNear(self, "talents/slime")
 		return true
 	end,
 	info = function(self, t)
-		return ([[Both of you swap place in an instant, creatures attacking one will target the other.
-		While swaping you briefly merge together, boosting all your nature and acid damage by %d%% for 6 turns and healing you for %d.
-		Damage and healing increase with Mindpower.]]):
-		format(15 + self:combatTalentMindDamage(t, 5, 300) / 10, 40 + self:combatTalentMindDamage(t, 5, 300))
+		return ([[Instantly call all your bloated oozes to fight and if beyond the maximum number of oozes %d will be created (with %d life).
+		Each of them will be transported near a random foe in sight grab its attention.
+		Taking advantage of the situation you channel a melee attack though all of them to their foes dealing %d%% weapon damage as acid.]]):
+		format(self:getTalentLevel(t), self:combatTalentMindDamage(t, 30, 300), self:combatTalentWeaponDamage(t, 0.6, 2.2))
 	end,
 }
 

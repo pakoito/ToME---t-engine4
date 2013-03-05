@@ -62,7 +62,7 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 
-		local dam = self:combatTalentMindDamage(t, 40, 900)
+		local dam = self:mindCrit(self:combatTalentMindDamage(t, 40, 900))
 
 		self:project(tg, x, y, function(px, py)
 			local target = game.level.map(px, py, Map.ACTOR)

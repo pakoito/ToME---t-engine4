@@ -564,6 +564,7 @@ function _M:loaded()
 	if type(self.reload_lists) ~= "boolean" or self.reload_lists then
 		self:loadBaseLists()
 	end
+	if self.on_loaded then self:on_loaded() end
 end
 
 function _M:load(dynamic)
@@ -586,9 +587,11 @@ function _M:load(dynamic)
 		end
 
 		self:onLoadZoneFile("/data/zones/"..self.short_name.."/")
+		if self.on_loaded then self:on_loaded() end
 	elseif not data and dynamic then
 		data = dynamic
 		ret = false
+		if self.on_loaded then self:on_loaded() end
 	end
 	for k, e in pairs(data) do self[k] = e end
 	return ret
