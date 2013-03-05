@@ -52,7 +52,7 @@
 #define DEFAULT_IDLE_FPS (2)
 
 int start_xpos = -1, start_ypos = -1;
-
+char *override_home = NULL;
 int g_argc = 0;
 char **g_argv;
 SDL_Window *window = NULL;
@@ -1129,6 +1129,7 @@ int main(int argc, char *argv[])
 		if (!strncmp(arg, "--xpos", 6)) start_xpos = strtol(argv[++i], NULL, 10);
 		if (!strncmp(arg, "--ypos", 6)) start_ypos = strtol(argv[++i], NULL, 10);
 		if (!strncmp(arg, "--safe-mode", 11)) safe_mode = TRUE;
+		if (!strncmp(arg, "--home", 6)) override_home = strdup(argv[++i]);
 	}
 
 	// Initialize display lock for thread safety.

@@ -350,7 +350,10 @@ static int lua_fs_get_home_path(lua_State *L)
 
 static int lua_fs_get_user_path(lua_State *L)
 {
-	lua_pushstring(L, PHYSFS_getUserDir());
+	if (override_home)
+		lua_pushstring(L, override_home);
+	else
+		lua_pushstring(L, PHYSFS_getUserDir());
 	return 1;
 }
 

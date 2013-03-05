@@ -44,6 +44,7 @@ extern bool multitexture_active;
 extern long total_keyframes;
 extern int g_argc;
 extern char **g_argv;
+extern char *override_home;
 
 /* Error handling */
 struct lua_err_type_s {
