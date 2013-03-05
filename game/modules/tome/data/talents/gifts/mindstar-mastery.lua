@@ -180,7 +180,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[You hit a foe with your mainhand psiblade doing %d%% weapon damage, channeling all the damage done through your offhand psiblade with which you touch a friendly creature to heal it.
-		The maximum heal possible is %d. Equilibrium of the healed target will also decrease.
+		The maximum heal possible is %d. Equilibrium of the healed target will also decrease by 10%% of the heal power.
 		Max heal will increase with your Mindpower and Mindstar power (requires two mindstars, multiplier %2.f).]]):
 		format(self:combatTalentWeaponDamage(t, 2.5, 4) * 100, t.getMaxDamage(self, t), get_mindstar_power_mult(self))
 	end,

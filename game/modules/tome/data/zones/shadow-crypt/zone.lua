@@ -30,7 +30,7 @@ return {
 	persistent = "zone",
 	color_shown = {0.6, 0.6, 0.6, 1},
 	color_obscure = {0.6*0.6, 0.6*0.6, 0.6*0.6, 0.6},
-	ambient_music = {"Alchemist.ogg","weather/dungeon_base.ogg"},
+	ambient_music = {"Evening Falls.ogg","weather/dungeon_base.ogg"},
 	min_material_level = 4,
 	max_material_level = 5,
 	generator =  {
