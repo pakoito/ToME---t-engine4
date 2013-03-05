@@ -2229,3 +2229,19 @@ newEffect{
 		self.onTakeHit = old
 	end,
 }
+
+newEffect{
+	name = "ANTIMAGIC_DISRUPTION",
+	desc = "Antimagic Disruption",
+	long_desc = function(self, eff) return ("Your arcane powers are disrupted by your antimagic equipment."):format() end,
+	type = "other",
+	subtype = { antimagic=true },
+	status = "detrimental",
+	decrease = 0, no_remove = true,
+	parameters = { },
+	on_timeout = function(self, eff)
+		if not self:attr("has_arcane_knowledge") or not self:attr("spellpower_reduction") then
+			self:removeEffect(self.EFF_ANTIMAGIC_DISRUPTION, true, true)
+		end
+	end,
+}

@@ -2828,6 +2828,9 @@ function _M:onWear(o, bypass_set)
 	if o.power_source and o.power_source.antimagic then
 		self:attr("spellpower_reduction", 1)
 		self:attr("spell_failure", (o.material_level or 1) * 10)
+		if self:attr("has_arcane_knowledge") then
+			self:setEffect(self.EFF_ANTIMAGIC_DISRUPTION, 1, {})
+		end
 	end
 
 	-- Apply Psychometry
