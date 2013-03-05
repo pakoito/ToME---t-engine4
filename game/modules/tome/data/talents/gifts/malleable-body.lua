@@ -81,7 +81,7 @@ newTalent{
 }
 
 newTalent{
-	name = "Indiscernible Anatomy",
+	name = "Indiscernible Anatomyblabla",
 	type = {"wild-gift/malleable-body", 4},
 	require = gifts_req4,
 	points = 5,
