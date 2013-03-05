@@ -333,7 +333,7 @@ newTalent{
 		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t, x=m.x, y=m.y}
 		game.level.map:addEffect(self,
 			m.x, m.y, 6,
-			DamageType.POISON, {dam=self:combatTalentMindDamage(t, 10, 40), apply_power=self:combatMindpower()},
+			DamageType.POISON, {dam=self:combatTalentMindDamage(t, 10, 60), apply_power=self:combatMindpower()},
 			self:getTalentRadius(t),
 			5, nil,
 			{type="vapour"},
