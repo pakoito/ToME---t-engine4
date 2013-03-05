@@ -152,7 +152,7 @@ newTalent{
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 		local hit = self:attackTarget(target, nil, t.getDamage(self, t), true)
 
-		if target:canBe("cut") then
+		if hit and target:canBe("cut") then
 			target:setEffect(target.EFF_CUT, 5, {power=t.getBleedDamage(self, t), src=self, apply_power=self:combatPhysicalpower()})
 			t.do_devourer_frenzy(self, target, t)
 		else
