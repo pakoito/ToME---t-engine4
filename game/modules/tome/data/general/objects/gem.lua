@@ -70,7 +70,7 @@ newGem("Diamond",	"object/diamond.png",5,		18,	"white",	40,	50, 5, 70,
 )
 newGem("Pearl",	"object/pearl.png",	5,		18,	"white",	40,	50, 5, 70,
 	{ resists = {all=5}, combat_armor = 5 },
-	{ splash={type="LITE", dam=1} }
+	{ splash={type="LITE", dam=100} }
 )
 newGem("Moonstone",	"object/moonstone.png",5,	18,	"white",	40,	50, 5, 70,
 	{ combat_def=10, combat_mentalresist=10, combat_spellresist=10, combat_physresist=10, },
