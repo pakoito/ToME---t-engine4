@@ -1762,6 +1762,7 @@ newEntity{ base = "BASE_WARAXE",
 	rarity = 235,
 	require = { stat = { str=40, dex=24 }, },
 	cost = 330,
+	metallic = false,
 	material_level = 3,
 	wielder = {
 		combat_armor = 20,
@@ -2166,6 +2167,7 @@ newEntity{ base = "BASE_MACE",
 	level_range = {42, 50},
 	require = { stat = { str=45, dex=30 }, },
 	rarity = 400,
+	metallic = false,
 	cost = 300,
 	material_level = 5,
 	combat = {
@@ -3381,6 +3383,7 @@ newEntity{ base = "BASE_WHIP",
 	require = { stat = { dex=15 }, },
 	cost = 90,
 	rarity = 250,
+	metallic = false,
 	level_range = {18, 28},
 	material_level = 3,
 	combat = {
@@ -4180,6 +4183,7 @@ newEntity{ base = "BASE_WHIP", --Thanks Grayswandir!
 	cost = 150,
 	rarity = 325,
 	level_range = {4, 12},
+	metallic = false,
 	material_level = 1,
 	combat = {
 		dam = 19,
@@ -4494,6 +4498,7 @@ newEntity{ base = "BASE_KNIFE", -- Thanks Grayswandir!
 	rarity = 200,
 	require = { stat = { dex=17 }, },
 	cost = 250,
+	metallic = false,
 	material_level = 2,
 	combat = {
 		dam = 20,
@@ -4994,6 +4999,7 @@ newEntity{ base = "BASE_GREATSWORD", --Thanks Grayswandir!
 	desc = [[This sword appears weightless, and nearly invisible.]],
 	cost = 400,
 	require = { stat = { str=24, }, },
+	metallic = false,
 	material_level = 2,
 	combat = {
 		dam = 24,
