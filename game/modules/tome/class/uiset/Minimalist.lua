@@ -159,6 +159,7 @@ local mm_shadow = {core.display.loadImage("/data/gfx/ui/minimap/shadow.png"):glT
 local mm_transp = {core.display.loadImage("/data/gfx/ui/minimap/transp.png"):glTexture()}
 
 local tb_bg = {core.display.loadImage("/data/gfx/ui/hotkeys/icons_bg.png"):glTexture()}
+local tb_talents = {core.display.loadImage("/data/gfx/ui/hotkeys/talents.png"):glTexture()}
 local tb_inven = {core.display.loadImage("/data/gfx/ui/hotkeys/inventory.png"):glTexture()}
 local tb_lore = {core.display.loadImage("/data/gfx/ui/hotkeys/lore.png"):glTexture()}
 local tb_quest = {core.display.loadImage("/data/gfx/ui/hotkeys/quest.png"):glTexture()}
@@ -265,7 +266,7 @@ function _M:resetPlaces()
 		party = {x=pf_bg[6], y=0, scale=1, a=1},
 		gamelog = {x=0, y=hup - 210, w=math.floor(w/2), h=200, scale=1, a=1},
 		chatlog = {x=math.floor(w/2), y=hup - 210, w=math.floor(w/2), h=200, scale=1, a=1},
-		mainicons = {x=w - tb_bg[6] * 0.5, y=h - tb_bg[7] * 5 * 0.5 - 5, scale=1, a=1},
+		mainicons = {x=w - tb_bg[6] * 0.5, y=h - tb_bg[7] * 6 * 0.5 - 5, scale=1, a=1},
 		hotkeys = {x=10, y=h - th, w=w-60, h=th, scale=1, a=1},
 	}
 end
@@ -1819,6 +1820,19 @@ function _M:displayToolbar(scale, bx, by)
 			if button == "left" and not xrel and not yrel and event == "button" then game.key:triggerVirtual("SHOW_INVENTORY") end
 		end
 		game.mouse:registerZone(bx + x * scale, by +y*scale, tb_inven[6], tb_inven[7], desc_fct, nil, "tb_inven", true, scale)
+	end
+	x, y = self:toolbarOrientStep(orient, bx, by, scale, x, y, tb_bg[6], tb_bg[7])
+
+	tb_bg[1]:toScreenFull		(x, y, tb_bg[6], tb_bg[7], tb_bg[2], tb_bg[3], 1, 1, 1, 1)
+	tb_talents[1]:toScreenFull	(x, y, tb_talents[6], tb_talents[7], tb_talents[2], tb_talents[3], self.tbbuttons.inven, self.tbbuttons.inven, self.tbbuttons.inven, 1)
+	if not game.mouse:updateZone("tb_talents", bx + x * scale, by +y*scale, tb_talents[6], tb_talents[7], nil, scale) then
+		game.mouse:unregisterZone("tb_talents")
+		local desc_fct = function(button, mx, my, xrel, yrel, bx, by, event)
+			if event == "out" then self.tbbuttons.inven = 0.6 return else self.tbbuttons.inven = 1 end
+			game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, "Left mouse to show known talents")
+			if button == "left" and not xrel and not yrel and event == "button" then game.key:triggerVirtual("USE_TALENTS") end
+		end
+		game.mouse:registerZone(bx + x * scale, by +y*scale, tb_talents[6], tb_talents[7], desc_fct, nil, "tb_talents", true, scale)
 	end
 	x, y = self:toolbarOrientStep(orient, bx, by, scale, x, y, tb_bg[6], tb_bg[7])
 
