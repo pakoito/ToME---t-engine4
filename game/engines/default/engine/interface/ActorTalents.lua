@@ -229,7 +229,7 @@ function _M:useTalent(id, who, force_level, ignore_cd, force_target, silent, no_
 		end
 		if not success and err then print(debug.traceback(co)) error(err) end
 	else
-		error("Activating non activable or sustainable talent: "..id.." :: "..ab.name.." :: "..ab.mode)
+		print("Activating non activable or sustainable talent: "..id.." :: "..ab.name.." :: "..ab.mode)
 	end
 	self.changed = true
 	return true
