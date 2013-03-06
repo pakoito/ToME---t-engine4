@@ -42,4 +42,5 @@ newEntity{ base = "BASE_STORE", define_as = "STAVES",
 	name="Tools of the Art",
 	display='6', color=colors.UMBER,
 	resolvers.store("ANGOLWEN_STAFF_WAND", "angolwen", "store/shop_door.png", "store/shop_sign_staves_wands.png"),
+	resolvers.chatfeature("angolwen-staves-store", "angolwen"),
 }

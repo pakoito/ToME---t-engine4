@@ -59,6 +59,7 @@ newEntity{ base = "BASE_STORE", define_as = "MINDSTAR_WEAPON_STORE",
 	name="Purification Tools",
 	display='3', color=colors.UMBER,
 	resolvers.store("MINDSTAR", "zigur", "store/shop_door.png", "store/shop_sign_jewelry.png"),
+	resolvers.chatfeature("zigur-mindstar-store", "zigur"),
 }
 
 newEntity{ base = "BASE_STORE", define_as = "LIBRARY",

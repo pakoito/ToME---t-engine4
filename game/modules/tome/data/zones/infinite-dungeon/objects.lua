@@ -47,7 +47,17 @@ newEntity{
 			game.logPlayer(who, "#VIOLET#You seem to now know how to properly use a bow or a sling.")
 			done = done + 1
 		end
-
+		if not ( who:knowTalentType("spell/staff-combat") or who:knowTalentType("spell/staff-combat") == false ) then 
+			who:learnTalentType("spell/staff-combat", false)
+			game.logPlayer(who, "#VIOLET#Images of yourself beating people with a stick spring into your mind. (Staff Combat category can be bought)")
+			done = done + 1
+		end
+		if not ( who:knowTalentType("wild-gift/mindstar-mastery") or who:knowTalentType("wild-gift/mindstar-mastery") == false ) then 
+			who:learnTalentType("wild-gift/mindstar-mastery", false)
+			game.logPlayer(who, "#VIOLET#You suddenly understand how to channel your mental force through mindstars. (Mindstar Mastery category can be bought)")
+			done = done + 1
+		end
+		
 		if done == 0 then
 			game.logPlayer(who, "#VIOLET#It seems you already knew all the elixir could teach you.")
 		end
