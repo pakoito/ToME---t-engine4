@@ -136,11 +136,14 @@ uberTalent{
 	on_pre_use = function(self, t) return self:hasEffect(self.EFF_FUNGAL_BLOOD) and self:hasEffect(self.EFF_FUNGAL_BLOOD).power > 0 and not self:attr("undead") end,
 	trigger = function(self, t)
 		if self.inscription_restrictions and not self.inscription_restrictions['inscriptions/infusions'] then return end
-		self:setEffect(self.EFF_FUNGAL_BLOOD, 6, {power=self:getCon() * 1.5})
+		self:setEffect(self.EFF_FUNGAL_BLOOD, 6, {power=self:getCon() * 2})
 	end,
+	no_energy = true,
 	action = function(self, t)
 		local eff = self:hasEffect(self.EFF_FUNGAL_BLOOD)
+		self:attr("allow_on_heal", 1)
 		self:heal(math.min(eff.power, self:getCon() * self.max_life / 100))
+		self:attr("allow_on_heal", -1)
 		self:removeEffect(self.EFF_FUNGAL_BLOOD)
 		return true
 	end,
@@ -149,7 +152,7 @@ uberTalent{
 		You may use this prodigy to release the power as a heal (never more than than %d life).
 		Fungal power lasts for up to 6 turns, losing 10 potency each turn.
 		The amount of fungal power produced, and the maximum heal possible, increase with your Constitution.]])
-		:format(self:getCon() * 1.5, self:getCon() * self.max_life / 100)
+		:format(self:getCon() * 2, self:getCon() * self.max_life / 100)
 	end,
 }
 
