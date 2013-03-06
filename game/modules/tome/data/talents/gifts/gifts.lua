@@ -38,6 +38,8 @@ newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/
 newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/mucus", name = "mucus", description = "Cover the floor with natural mucus." }
 newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/ooze", name = "ooze", description = "Your body and internal organs are becoming more ooze-like in nature, allowing you to spawn more of you." }
 newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/malleable-body", name = "malleable body", description = "Your body's anatomy is starting to blur." }
+newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/oozing-blades", name = "oozing blades", description = "You channel ooze through your psiblades." }
+newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/corrosive-blades", name = "corrosive blades", description = "You channel acid through your psiblades." }
 
 -- Generic requires for gifts based on talent level
 gifts_req1 = {
@@ -200,6 +202,8 @@ load("/data/talents/gifts/fungus.lua")
 load("/data/talents/gifts/mucus.lua")
 load("/data/talents/gifts/ooze.lua")
 load("/data/talents/gifts/malleable-body.lua")
+load("/data/talents/gifts/oozing-blades.lua")
+load("/data/talents/gifts/corrosive-blades.lua")
 
 load("/data/talents/gifts/sand-drake.lua")
 load("/data/talents/gifts/fire-drake.lua")

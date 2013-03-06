@@ -176,10 +176,10 @@ newBirthDescriptor{
 		["wild-gift/mucus"]={true, 0.3},
 		["wild-gift/ooze"]={true, 0.3},
 		["wild-gift/fungus"]={true, 0.3},
-		["wild-gift/oozing-blades"]={true, 0.3},
-		["wild-gift/corrosive-blades"]={true, 0.3},
+		["wild-gift/oozing-blades"]={false, 0.3},
+		["wild-gift/corrosive-blades"]={false, 0.3},
 		["wild-gift/moss"]={true, 0.3},
-		["wild-gift/malleable-body"]={true, 0.3},
+--		["wild-gift/malleable-body"]={true, 0.3},
 		["wild-gift/slime"]={true, 0.3},
 	},
 	talents = {
