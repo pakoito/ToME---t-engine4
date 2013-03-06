@@ -41,13 +41,15 @@ uberTalent{
 	on_learn = function(self, t)
 		self:attr("quick_weapon_swap", 1)
 		self:attr("quick_equip_cooldown", 1)
+		self:attr("quick_wear_takeoff", 1)
 	end,
 	on_unlearn = function(self, t)
 		self:attr("quick_weapon_swap", -1)
 		self:attr("quick_equip_cooldown", -1)
+		self:attr("quick_wear_takeoff", -1)
 	end,
 	info = function(self, t)
-		return ([[You have very agile hands; swapping equipment sets (default q key) takes no time.
+		return ([[You have very agile hands; swapping equipment sets (default q key) takes no time, nor does wearing/taking off items.
 		Also the cooldown for equipping activatable equipment is removed.]])
 		:format()
 	end,

@@ -1020,7 +1020,7 @@ function _M:doWear(inven, item, o)
 	self:removeObject(inven, item, true)
 	local ro = self:wearObject(o, true, true)
 	if ro then
-		self:useEnergy()
+		if not self:attr("quick_wear_takeoff") then self:useEnergy() end
 		if type(ro) == "table" then self:addObject(inven, ro) end
 	elseif not ro then
 		self:addObject(inven, o)
@@ -1037,7 +1037,7 @@ function _M:doTakeoff(inven, item, o, simple)
 	end
 	if not simple then
 		self:sortInven()
-		self:useEnergy()
+		if not self:attr("quick_wear_takeoff") then self:useEnergy() end
 	end
 	self:playerCheckSustains()
 	self.changed = true
