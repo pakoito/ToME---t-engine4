@@ -53,7 +53,7 @@ function _M:use(item)
 	if not item then return end
 	game:unregisterDialog(self)
 
-	self.source:removeObject(self.inven, self.item)
+	self.source:removeObject(self.inven, self.item, true)
 	self.source:sortInven(self.inven)
 	self.o.__transmo = nil
 	item.actor:addObject(item.actor.INVEN_INVEN, self.o)
