@@ -175,7 +175,7 @@ newBirthDescriptor{
 		["wild-gift/mindstar-mastery"]={true, 0.3},
 		["wild-gift/mucus"]={true, 0.3},
 		["wild-gift/ooze"]={true, 0.3},
-		["wild-gift/fungus"]={true, 0.3},
+		["wild-gift/fungus"]={false, 0.3},
 		["wild-gift/oozing-blades"]={false, 0.3},
 		["wild-gift/corrosive-blades"]={false, 0.3},
 		["wild-gift/moss"]={true, 0.3},
