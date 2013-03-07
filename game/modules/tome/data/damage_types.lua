@@ -580,6 +580,11 @@ newDamageType{
 	antimagic_resolve = true,
 	projector = function(src, x, y, type, dam)
 		local realdam = DamageType.defaultProjector(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if realdam > 0 and target and src.knowTalent and src:knowTalent(src.T_NATURAL_ACID) then
+			local t = src:getTalentFromId(src.T_NATURAL_ACID)
+			target:setEffect(target.EFF_NATURAL_ACID, 2, {power=t.getResist(src, t)})
+		end
 		return realdam
 	end,
 	death_message = {"dissolved", "corroded", "scalded", "melted"},
@@ -589,6 +594,15 @@ newDamageType{
 newDamageType{
 	name = "nature", type = "NATURE", text_color = "#LIGHT_GREEN#",
 	antimagic_resolve = true,
+	projector = function(src, x, y, type, dam)
+		local realdam = DamageType.defaultProjector(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if realdam > 0 and target and src.knowTalent and src:knowTalent(src.T_CORROSIVE_NATURE) then
+			local t = src:getTalentFromId(src.T_CORROSIVE_NATURE)
+			target:setEffect(target.EFF_CORROSIVE_NATURE, 2, {power=t.getResist(src, t)})
+		end
+		return realdam
+	end,
 	death_message = {"slimed", "splurged", "treehugged", "naturalised"},
 }
 newDamageType{
@@ -1066,8 +1080,8 @@ newDamageType{
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
 			if target:checkHit(base.power or src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then
-				target:knockback(srcx, srcy, 1)
-				target:crossTierEffect(target.EFF_OFFBALANCE, src:combatSpellpower())
+				target:knockback(srcx, srcy, base.dist or 1)
+				target:crossTierEffect(target.EFF_OFFBALANCE, base.power or src:combatSpellpower())
 				game.logSeen(target, "%s is knocked back!", target.name:capitalize())
 			else
 				game.logSeen(target, "%s resists the wave!", target.name:capitalize())

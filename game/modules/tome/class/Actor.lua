@@ -3893,6 +3893,20 @@ function _M:postUseTalent(ab, ret, silent)
 		end)
 	end
 
+	if not ab.innate and self:attr("random_talent_cooldown_on_use") and rng.percent(self:attr("random_talent_cooldown_on_use")) then
+		local tids = {}
+		for tid, lev in pairs(self.talents) do
+			local t = self:getTalentFromId(tid)
+			if tid ~= ab.id and t and not self.talents_cd[tid] and t.mode == "activated" and not t.innate then tids[#tids+1] = t end
+		end
+		for i = 1, self:attr("random_talent_cooldown_on_use_nb") do
+			local t = rng.tableRemove(tids)
+			if not t then break end
+			self.talents_cd[t.id] = self:attr("random_talent_cooldown_on_use_turns")
+			game.log("%s talent '%s%s' is disrupted by the mind parasite.", self.name:capitalize(), (t.display_entity and t.display_entity:getDisplayString() or ""), t.name)
+		end
+	end
+
 	return true
 end
 

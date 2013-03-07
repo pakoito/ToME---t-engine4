@@ -2807,10 +2807,27 @@ newEffect{
 	type = "mental",
 	subtype = { nature=true },
 	status = "detrimental",
-	on_gain = function(self, err) return "#Target#'s is surrounded by antimagic forces.", "+Spell Feedback" end,
+	on_gain = function(self, err) return "#Target# is surrounded by antimagic forces.", "+Spell Feedback" end,
 	on_lose = function(self, err) return "#Target#'s antimagic forces vanishes.", "-Spell Feedback" end,
 	parameters = { power=40 },
 	activate = function(self, eff)
 		self:effectTemporaryValue(eff, "spell_failure", eff.power)
+	end,
+}
+
+newEffect{
+	name = "MIND_PARASITE", image = "talents/mind_parasite.png",
+	desc = "Mind Parasite",
+	long_desc = function(self, eff) return ("The target suffers from a mind parasite, giving %d%% chances on each talent use to place a random %d talents on cooldown for %d turns."):format(eff.chance, eff.nb, eff.turns) end,
+	type = "mental",
+	subtype = { nature=true, mind=true },
+	status = "detrimental",
+	on_gain = function(self, err) return "#Target# is infected with a mind parasite.", "+Mind Parasite" end,
+	on_lose = function(self, err) return "#Target# is free from the mind parasite.", "-Mind Parasite" end,
+	parameters = { chance=40, nb=1, turns=2 },
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "random_talent_cooldown_on_use", eff.chance)
+		self:effectTemporaryValue(eff, "random_talent_cooldown_on_use_nb", eff.nb)
+		self:effectTemporaryValue(eff, "random_talent_cooldown_on_use_turns", eff.turns)
 	end,
 }

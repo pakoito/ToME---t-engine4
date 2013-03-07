@@ -2001,30 +2001,32 @@ newEffect{
 }
 
 newEffect{
-	name = "MITOSIS", image = "talents/mitosis.png",
-	desc = "Mitosis",
-	long_desc = function(self, eff) return ("You are split, both of you share the same healthpool but you gain %d%% damage reduction."):format(eff.power) end,
+	name = "CORROSIVE_NATURE", image = "talents/corrosive_nature.png",
+	desc = "Corrosive Nature",
+	long_desc = function(self, eff) return ("Acid resistance decreased by %d%%."):format(eff.power) end,
 	type = "physical",
-	subtype = { status=true },
-	status = "beneficial",
+	subtype = { nature=true, acid=true },
+	status = "detrimental",
 	parameters = { power=10 },
-	on_gain = function(self, err) return "#Target# splits.", "+Mitosis" end,
+	on_gain = function(self, err) return "#Target# is vulnerable to acid.", "+Corrosive Nature" end,
+	on_lose = function(self, err) return "#Target# is less vulnerable to acid.", "-Corrosive Nature" end,
 	activate = function(self, eff)
-		self:effectTemporaryValue(eff, "resists", {all=eff.power})
+		self:effectTemporaryValue(eff, "resists", {[DamageType.ACID]=-eff.power})
 	end,
 }
 
 newEffect{
-	name = "MITOSIS_SWAP", image = "talents/mitosis_swap.png",
-	desc = "Swap",
-	long_desc = function(self, eff) return ("You recently swaped with your other self, boosting your damage by %d%%."):format(eff.power) end,
+	name = "NATURAL_ACID", image = "talents/natural_acid.png",
+	desc = "Natural Acid",
+	long_desc = function(self, eff) return ("Nature resistance decreased by %d%%."):format(eff.power) end,
 	type = "physical",
-	subtype = { status=true },
-	status = "beneficial",
+	subtype = { nature=true, acid=true },
+	status = "detrimental",
 	parameters = { power=10 },
-	on_gain = function(self, err) return "#Target# swaps places.", "+Swap" end,
+	on_gain = function(self, err) return "#Target# is vulnerable to nature.", "+Natural Acid" end,
+	on_lose = function(self, err) return "#Target# is less vulnerable to nature.", "-Nature Acid" end,
 	activate = function(self, eff)
-		self:effectTemporaryValue(eff, "inc_damage", {all=eff.power})
+		self:effectTemporaryValue(eff, "resists", {[DamageType.NATURE]=-eff.power})
 	end,
 }
 
