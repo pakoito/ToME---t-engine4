@@ -561,7 +561,7 @@ function _M:mouseEvent(button, x, y, xrel, yrel, bx, by, event)
 		if citem and citem.url and button == "left" and event == "button" then
 			util.browserOpenUrl(citem.url)
 		else
-			self.on_mouse(citem and citem.login and self.channels[self.cur_channel].users[citem.login], citem and citem.login and citem, button, event, x, y, xrel, yrel, bx, by)
+			self.on_mouse(citem and citem.login and self.channels[self.cur_channel] and self.channels[self.cur_channel].users and self.channels[self.cur_channel].users[citem.login], citem and citem.login and citem, button, event, x, y, xrel, yrel, bx, by)
 		end
 	end
 end

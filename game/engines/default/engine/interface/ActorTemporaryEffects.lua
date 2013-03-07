@@ -113,7 +113,7 @@ function _M:setEffect(eff_id, dur, p, silent)
 			self.changed = true
 			return
 		else
-			self:removeEffect(eff_id, true)
+			self:removeEffect(eff_id, true, true)
 		end
 	end
 
