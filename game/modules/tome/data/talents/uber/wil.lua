@@ -53,34 +53,40 @@ uberTalent{
 				game.level.map:particleEmitter(x, y, 10, "ball_fire", {radius=2})
 				game:playSoundNear(game.player, "talents/fireflash")
 
+				local grids = {}
 				for i = x-1, x+1 do for j = y-1, y+1 do
 					local oe = game.level.map(i, j, Map.TERRAIN)
 					if oe and not oe:attr("temporary") and
 					(core.fov.distance(x, y, i, j) < 1 or rng.percent(40)) and (game.level.map:checkEntity(i, j, engine.Map.TERRAIN, "dig") or game.level.map:checkEntity(i, j, engine.Map.TERRAIN, "grow")) then
 						local g = terrains.LAVA_FLOOR:clone()
 						g:resolve() g:resolve(nil, true)
-						g.temporary = 8
-						g.x = i g.y = j
-						g.canAct = false
-						g.energy = { value = 0, mod = 1 }
-						g.old_feat = game.level.map(i, j, engine.Map.TERRAIN)
-						g.useEnergy = mod.class.Trap.useEnergy
-						g.act = function(self)
-							self:useEnergy()
-							self.temporary = self.temporary - 1
-							if self.temporary <= 0 then
-								game.level.map(self.x, self.y, engine.Map.TERRAIN, self.old_feat)
-								game.level:removeEntity(self)
-								game.nicer_tiles:updateAround(game.level, self.x, self.y)
-							end
-						end
 						game.zone:addEntity(game.level, g, "terrain", i, j)
-						game.level:addEntity(g)
+						grids[#grids+1] = {x=i,y=j,oe=oe}
 					end
 				end end
 				for i = x-1, x+1 do for j = y-1, y+1 do
 					game.nicer_tiles:updateAround(game.level, i, j)
 				end end
+				for _, spot in ipairs(grids) do
+					local i, j = spot.x, spot.y
+					local g = game.level.map(i, j, Map.TERRAIN)
+					g.temporary = 8
+					g.x = i g.y = j
+					g.canAct = false
+					g.energy = { value = 0, mod = 1 }
+					g.old_feat = spot.oe
+					g.useEnergy = mod.class.Trap.useEnergy
+					g.act = function(self)
+						self:useEnergy()
+						self.temporary = self.temporary - 1
+						if self.temporary <= 0 then
+							game.level.map(self.x, self.y, engine.Map.TERRAIN, self.old_feat)
+							game.level:removeEntity(self)
+							game.nicer_tiles:updateAround(game.level, self.x, self.y)
+						end
+					end
+					game.level:addEntity(g)
+				end
 
 				src:project({type="ball", radius=2, selffire=false}, x, y, engine.DamageType.FIRE, dam/2)
 				src:project({type="ball", radius=2, selffire=false}, x, y, engine.DamageType.PHYSICAL, dam/2)
