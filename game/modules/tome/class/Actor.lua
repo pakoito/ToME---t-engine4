@@ -4140,8 +4140,6 @@ function _M:setTalentAuto(tid, v, opt)
 	if v then self.talents_auto[tid] = opt
 	else self.talents_auto[tid] = nil
 	end
-	print("===set tal auto", tid, v, opt)
-	util.show_backtrace()
 end
 
 --- Setups a talent automatic use
