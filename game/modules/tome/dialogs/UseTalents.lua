@@ -198,23 +198,17 @@ function _M:use(item, button)
 			elseif b.what == "unset-confirm" then
 				self.actor:setTalentConfirmable(item.talent, false)
 			elseif b.what == "auto-en-1" then
-				self.actor:setTalentAuto(item.talent, true, 1)
 				self.actor:checkSetTalentAuto(item.talent, true, 1)
-				--self.actor:setTalentAuto(item.talent, true, automode)
 			elseif b.what == "auto-en-2" then
-				self.actor:setTalentAuto(item.talent, true, 2)
 				self.actor:checkSetTalentAuto(item.talent, true, 2)
 			elseif b.what == "auto-en-3" then
-				self.actor:setTalentAuto(item.talent, true, 3)
 				self.actor:checkSetTalentAuto(item.talent, true, 3)
 			elseif b.what == "auto-en-4" then
-				self.actor:setTalentAuto(item.talent, true, 4)
 				self.actor:checkSetTalentAuto(item.talent, true, 4)
 			elseif b.what == "auto-dis" then
 				self.actor:checkSetTalentAuto(item.talent, false)
 			end
 			self.c_list:drawTree()
-			if b.what ~= "auto-dis" and automode then self.actor:setTalentAuto(item.talent, true, automode) else self.actor:setTalentAuto(item.talent, false) end
 			self.actor.changed = true
 		end)
 		self.c_list:drawTree()
