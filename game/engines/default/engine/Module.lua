@@ -628,7 +628,7 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 
 	-- FOV Shape
 	core.fov.set_algorithm("large_ass")
-	core.fov.set_permissiveness("square")
+	core.fov.set_permissiveness(0.01)
 	core.fov.set_actor_vision_size(1)
 	core.fov.set_vision_shape("circle")
 
