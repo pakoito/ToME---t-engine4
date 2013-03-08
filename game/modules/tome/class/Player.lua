@@ -688,7 +688,6 @@ function _M:automaticTalents()
 		local t = self.talents_def[tid]
 		local spotted = spotHostiles(self)
 		if (t.mode ~= "sustained" or not self.sustain_talents[tid]) and not self.talents_cd[tid] and self:preUseTalent(t, true, true) and (not t.auto_use_check or t.auto_use_check(self, t)) then
-			print("===auto", tid, c)
 			if (c == 1) or (c == 2 and #spotted <= 0) or (c == 3 and #spotted > 0) then
 				if c ~= 2 then
 					self:useTalent(tid)
