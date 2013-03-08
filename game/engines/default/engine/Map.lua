@@ -966,12 +966,12 @@ function _M:addEffect(src, x, y, duration, damtype, dam, radius, dir, angle, ove
 
 	local e = {
 		src=src, x=x, y=y, duration=duration, damtype=damtype, dam=dam, radius=radius, dir=dir, angle=angle,
-		overlay=overlay.__CLASSNAME and overlay,
+		overlay=overlay and overlay.__CLASSNAME and overlay,
 		grids = grids,
 		update_fct=update_fct, selffire=selffire, friendlyfire=friendlyfire,
 	}
 
-	if not overlay.__CLASSNAME then
+	if overlay and not overlay.__CLASSNAME then
 		e.particles = {}
 		if overlay.only_one then
 			e.particles[#e.particles+1] = self:particleEmitter(x, y, 1, overlay.type, overlay.args)

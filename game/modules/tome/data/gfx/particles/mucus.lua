@@ -17,30 +17,36 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-base_size = 32
+base_size = 64
+
+local nb = 0
 
 return { generator = function()
 	local ad = rng.range(0, 360)
 	local a = math.rad(ad)
 	local dir = math.rad(ad)
-	local r = rng.range(0, 16)
+	local r = rng.range(0, 32)
 
 	return {
-		life = 10,
-		size = 3, sizev = 0.5, sizea = -0.1,
+		life = 100,
+		size = rng.range(24, 48), sizev = -0.05, sizea = 0,
 
 		x = r * math.cos(a), xv = 0, xa = 0,
 		y = r * math.sin(a), yv = 0, ya = 0,
 		dir = 0, dirv = 0, dira = 0,
 		vel = 0, velv = 0, vela = 0,
 
-		r = 0,   rv = 0, ra = 0,
-		g = rng.range(170, 210)/255,   gv = 0, ga = 0,
-		b = rng.range(20, 50)/255,   gv = 0, ga = 0,
-		a = rng.range(230, 225)/255,   av = 0, aa = 0,
+		r = 1,   rv = 0, ra = 0,
+		g = 1,   gv = 0, ga = 0,
+		b = 1,   gv = 0, ga = 0,
+		a = rng.float(0.01, 0.05),   av = 0.0152, aa = -0.0005,
 	}
 end, },
 function(self)
-	self.ps:emit(2)
+	if nb == 0 then self.ps:emit(1) end
+	nb = nb + 1
+	if nb >= 10 then
+		nb = 0
+	end
 end,
-20
+10, "particles_images/slime"..rng.range(1, 5)

@@ -87,7 +87,7 @@ newTalent{
 	points = 5,
 	mode = "sustained",
 	message = "The skin of @Source@ starts dripping acid.",
-	sustain_equilibrium = 3
+	sustain_equilibrium = 3,
 	cooldown = 30,
 	range = 1,
 	requires_target = false,
