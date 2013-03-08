@@ -2446,7 +2446,7 @@ newDamageType{
 			elseif target:canBe("poison") then
 				target:setEffect(target.EFF_POISONED, 5, {src=src, power=dam.dam, apply_power=src:combatMindpower()})
 			end
-		elseif not target and not src.turn_procs.living_mucus and src:knowTalent(src.T_LIVING_MUCUS) then
+		elseif not target and not src.turn_procs.living_mucus and src:knowTalent(src.T_LIVING_MUCUS) and game.zone and not game.zone.wilderness then
 			src.turn_procs.living_mucus = true
 			local t = src:getTalentFromId(src.T_LIVING_MUCUS)
 			if rng.percent(t.getChance(src, t)) then
