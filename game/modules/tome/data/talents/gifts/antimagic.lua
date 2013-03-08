@@ -61,6 +61,7 @@ newTalent{
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		self:project(tg, self.x, self.y, DamageType.SILENCE, {dur=3 + math.floor(self:getTalentLevel(t) / 2), power_check=self:combatMindpower()})
+		game.level.map:particleEmitter(self.x, self.y, 1, "shout", {size=4, distorion_factor=0.3, radius=self:getTalentRadius(t), life=30, nb_circles=8, rm=0.8, rM=1, gm=0, gM=0, bm=0.5, bM=0.8, am=0.6, aM=0.8})
 		return true
 	end,
 	info = function(self, t)

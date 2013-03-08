@@ -26,7 +26,7 @@ local points = {}
 
 for fork_i = 1, nb_circles or 5 do
 	local size = 2
-	local r = 10
+	local r = baseradius
 	local a = 0
 	local firstspeed = rng.float(basespeed, basespeed * distortion_factor)
 	points[#points+1] = {size=size, dir = a + math.rad(90), vel = firstspeed, x=math.cos(a) * r, y=math.sin(a) * r, prev=-1}

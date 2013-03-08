@@ -138,7 +138,8 @@ newTalent{
 			dam=50+self:getTalentLevelRaw(t)*10,
 			power_check=function() return self:combatPhysicalpower() end,
 			resist_check=self.combatPhysicalResist,
-		}, {type="flame"})
+		})
+		game.level.map:particleEmitter(self.x, self.y, self:getTalentRadius(t), "directional_shout", {life=8, size=3, tx=x-self.x, ty=y-self.y, distorion_factor=0.1, radius=self:getTalentRadius(t), nb_circles=8, rm=0.8, rM=1, gm=0.4, gM=0.6, bm=0.1, bM=0.2, am=1, aM=1})
 		return true
 	end,
 	info = function(self, t)

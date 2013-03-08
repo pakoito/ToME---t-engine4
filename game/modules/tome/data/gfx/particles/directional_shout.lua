@@ -22,22 +22,26 @@ gm, gM = gm or 0.8, gM or 1
 bm, bM = bm or 0, bM or 0
 am, aM = am or 1, aM or 1
 
--- Make the 2 main forks
+local dir = math.deg(math.atan2(ty, tx)) - 90
+local spread = spread or 75/2
+dir = dir - spread
+
 local distortion_factor = 1 + (distortion_factor or 0.1)
 local life = life or 30
 local fullradius = (radius or 5) * engine.Map.tile_w
 local basespeed = fullradius / life
 local points = {}
+local nbone
 
-for fork_i = 1, nb_circles or 5 do
+for fork_i = 1, nb_circles or 7 do
 	local size = size or 2
 	local r = 10
-	local a = 0
+	local a = math.rad(dir)
 	local firstspeed = rng.float(basespeed, basespeed * distortion_factor)
 	points[#points+1] = {size=size, dir = a + math.rad(90), vel = firstspeed, x=math.cos(a) * r, y=math.sin(a) * r, prev=-1}
 
-	for i = 1, 35 do
-		local a = math.rad(i * 10)
+	for i = 1, spread * 2, 5 do
+		local a = math.rad(dir + i)
 		points[#points+1] = {
 			size=size,
 			dir = a + math.rad(90),
@@ -47,16 +51,12 @@ for fork_i = 1, nb_circles or 5 do
 			prev=#points-1
 		}
 	end
-
-	points[#points+1] = {size=size, dir = a + math.rad(90), vel = firstspeed, x=math.cos(a) * r, y=math.sin(a) * r, prev=#points-1}
+	if not nbone then nbone = #points end
 end
 local nbp = #points
 
 -- Populate the lightning based on the forks
-return { 
-blend_mode=additive and core.particles.BLEND_ADDITIVE or nil,
-engine=core.particles.ENGINE_LINES,
-generator = function()
+return { engine=core.particles.ENGINE_LINES, generator = function()
 	local p = table.remove(points, 1)
 
 	return {
@@ -76,8 +76,8 @@ generator = function()
 end, },
 function(self)
 	if nbp > 0 then
-		self.ps:emit(36)
-		nbp = nbp - 36
+		self.ps:emit(nbone)
+		nbp = nbp - nbone
 	end
 end,
 nbp, "particles_images/beam"

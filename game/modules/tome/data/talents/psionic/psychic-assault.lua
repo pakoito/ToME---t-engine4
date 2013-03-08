@@ -36,7 +36,14 @@ newTalent{
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.MIND, self:mindCrit(t.getDamage(self, t)), {type="mindsear"})
+		local dam = self:mindCrit(t.getDamage(self, t))
+		
+		local baseradius = math.ceil(core.fov.distance(self.x, self.y, x, y) * 2.5)
+		self:project(tg, x, y, function(px, py)
+			DamageType:get(DamageType.MIND).projector(self, px, py, DamageType.MIND, dam)
+			game.level.map:particleEmitter(px, py, 1, "mindsear", {baseradius=baseradius * 0.66})
+			baseradius = baseradius - 10
+		end)
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
