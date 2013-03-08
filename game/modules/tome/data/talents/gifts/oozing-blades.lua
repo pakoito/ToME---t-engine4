@@ -36,12 +36,12 @@ newTalent{
 	target = function(self, t)
 		return {type="beam", range=self:getTalentRange(t), talent=t}
 	end,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 290) end,
+	getDamage = function(self, t) return self:combatTalentMindDamage(t, 20, 290) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		local dam = self:spellCrit(t.getDamage(self, t))
+		local dam = self:mindCrit(t.getDamage(self, t))
 		self:project(tg, x, y, DamageType.SLIME, dam)
 		local _ _, x, y = self:canProject(tg, x, y)
 		game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(x-self.x), math.abs(y-self.y)), "ooze_beam", {tx=x-self.x, ty=y-self.y})

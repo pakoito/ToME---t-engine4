@@ -110,6 +110,7 @@ newTalent{
 	tactical = { PROTECT = 2, ATTACKAREA = { ARCANE = 1 } },
 	getDam = function(self, t) return self:combatTalentMindDamage(t, 15, 200) end,
 	on_pre_use = function(self, t)
+		if not game.level then return false end
 		for _, coor in pairs(util.adjacentCoords(self.x, self.y)) do
 			local act = game.level.map(coor[1], coor[2], Map.ACTOR)
 			if act and act.summoner == self and act.bloated_ooze then
@@ -209,7 +210,7 @@ newTalent{
 		return ([[Instantly call all your bloated oozes to fight and if beyond the maximum number of oozes %d will be created (with %d life).
 		Each of them will be transported near a random foe in sight grab its attention.
 		Taking advantage of the situation you channel a melee attack though all of them to their foes dealing %d%% weapon damage as acid.]]):
-		format(self:getTalentLevel(t), self:combatTalentMindDamage(t, 30, 300), self:combatTalentWeaponDamage(t, 0.6, 2.2))
+		format(self:getTalentLevel(t), self:combatTalentMindDamage(t, 30, 300), self:combatTalentWeaponDamage(t, 0.6, 2.2) * 100)
 	end,
 }
 

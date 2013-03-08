@@ -1241,6 +1241,9 @@ function _M:onRegisterDialog(d)
 	self.tooltip_x, self.tooltip_y = nil, nil
 	self.tooltip2_x, self.tooltip2_y = nil, nil
 	if self.player then self.player:updateMainShader() end
+
+	if self.player and self.player.runStop then self.player:runStop("dialog poping up") end
+	if self.player and self.player.restStop then self.player:restStop("dialog poping up") end
 end
 function _M:onUnregisterDialog(d)
 	-- Clean up tooltip

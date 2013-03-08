@@ -2507,7 +2507,7 @@ newDamageType{
 				end)
 				if #list > 0 then
 					local st = rng.table(list)
-					src:projectile({type="bolt", range=6, x=x, y=y, display={particle="bolt_slime"}}, st.x, st.y, DamageType.BOUNCE_SLIME, dam, {type="slime"})
+					src:projectile({type="bolt", range=6, x=x, y=y, selffire=false, display={particle="bolt_slime"}}, st.x, st.y, DamageType.BOUNCE_SLIME, dam, {type="slime"})
 				end
 			end
 			return realdam

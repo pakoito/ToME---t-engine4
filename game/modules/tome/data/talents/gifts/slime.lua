@@ -30,7 +30,7 @@ newTalent{
 	proj_speed = 8,
 	requires_target = true,
 	action = function(self, t)
-		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_slime"}}
+		local tg = {type="bolt", range=self:getTalentRange(t), selffire=false, talent=t, display={particle="bolt_slime"}}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:projectile(tg, x, y, DamageType.BOUNCE_SLIME, {nb=math.ceil(self:getTalentLevel(t)), dam=self:mindCrit(self:combatTalentMindDamage(t, 30, 290))}, {type="slime"})
@@ -87,7 +87,7 @@ newTalent{
 	points = 5,
 	mode = "sustained",
 	message = "The skin of @Source@ starts dripping acid.",
-	sustain_equilibrium = 30,
+	sustain_equilibrium = 3
 	cooldown = 30,
 	range = 1,
 	requires_target = false,

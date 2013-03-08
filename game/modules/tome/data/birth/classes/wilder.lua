@@ -157,10 +157,10 @@ newBirthDescriptor{
 	type = "subclass",
 	name = "Oozemancer",
 	locked = function() return profile.mod.allow_build.wilder_oozemancer and true or "hide"  end,
-	locked_desc = "TODO",
+	locked_desc = "Magic must fail, magic must lose, nothing arcane can face the ooze...",
 	desc = {
-		"Oozemancers are Nature's last resort. They stand behind the front line, throwing lobs of acid and lumps of slime at all Nature's foes.",
-		"",
+		"Oozemancers separate themselves from normal civilisation so that they be more in harmony with Nature. Arcane force are reviled by them, and their natural attunement to the wilds lets them do battle with abusive magic-users on an equal footing.",
+		"They can spawn oozes to protect and attack from a distance while also being adept at harnessing the power of mindstars and psiblades.",
 		"Their most important stats are: Willpower and Cunning",
 		"#GOLD#Stat modifiers:",
 		"#LIGHT_BLUE# * +0 Strength, +0 Dexterity, +0 Constitution",

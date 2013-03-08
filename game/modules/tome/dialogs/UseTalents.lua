@@ -167,12 +167,10 @@ function _M:use(item, button)
 		end
 		local automode = self.actor:isTalentAuto(t)
 		local ds = "#YELLOW#Disable "
-		if not t.no_npc_use then
-			table.insert(list, 2, {name=autoMark:getDisplayString()..(automode==1 and ds or "").."Auto-use when available", what=(automode==1 and "auto-dis" or "auto-en-1")})
-			table.insert(list, 2, {name=autoMark:getDisplayString()..(automode==2 and ds or "").."Auto-use when no enemies are visible", what=(automode==2 and "auto-dis" or "auto-en-2")})
-			table.insert(list, 2, {name=autoMark:getDisplayString()..(automode==3 and ds or "").."Auto-use when enemies are visible", what=(automode==3 and "auto-dis" or "auto-en-3")})
-			table.insert(list, 2, {name=autoMark:getDisplayString()..(automode==4 and ds or "").."Auto-use when enemies are visible and adjacent", what=(automode==4 and "auto-dis" or "auto-en-4")})
-		end
+		table.insert(list, 2, {name=autoMark:getDisplayString()..(automode==1 and ds or "").."Auto-use when available", what=(automode==1 and "auto-dis" or "auto-en-1")})
+		table.insert(list, 2, {name=autoMark:getDisplayString()..(automode==2 and ds or "").."Auto-use when no enemies are visible", what=(automode==2 and "auto-dis" or "auto-en-2")})
+		table.insert(list, 2, {name=autoMark:getDisplayString()..(automode==3 and ds or "").."Auto-use when enemies are visible", what=(automode==3 and "auto-dis" or "auto-en-3")})
+		table.insert(list, 2, {name=autoMark:getDisplayString()..(automode==4 and ds or "").."Auto-use when enemies are visible and adjacent", what=(automode==4 and "auto-dis" or "auto-en-4")})
 
 		for i = 1, 12 * self.actor.nb_hotkey_pages do list[#list+1] = {name="Hotkey "..i, what=i} end
 		Dialog:listPopup("Bind talent: "..item.name:toString(), "How do you want to bind this talent?", list, 400, 500, function(b)
