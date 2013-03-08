@@ -2123,6 +2123,13 @@ function _M:autoExplore()
 				end
 			end
 		end
+
+		-- metric to favor exploring (1) edges of map, (2) near recently explored, and (3) closest fov distance
+		local function distance_cost(lx, ly)
+			local val = self.running and self.running.ave_x and core.fov.distance(self.x, self.y, self.running.ave_x, self.running.ave_y, true) or 0
+			return val + 0.9*core.fov.distance(self.x, self.y, lx, ly, true) - 0.6*(math.abs(0.5*game.level.map.w - lx) + math.abs(0.5*game.level.map.h - ly))
+		end
+
 		-- go to closest special terrain first
 		if #choices == 0 and minval_special <= minval + special_greed then
 			for _, c in ipairs(unseen_special) do
@@ -2130,7 +2137,7 @@ function _M:autoExplore()
 					target_type = "special"
 					choices[#choices + 1] = c
 					local x, y = toDouble(c)
-					local dist = core.fov.distance(self.x, self.y, x, y, true)
+					local dist = distance_cost(x, y)
 					distances[c] = dist
 					if dist < mindist then
 						mindist = dist
@@ -2145,7 +2152,7 @@ function _M:autoExplore()
 					target_type = "object"
 					choices[#choices + 1] = c
 					local x, y = toDouble(c)
-					local dist = core.fov.distance(self.x, self.y, x, y, true)
+					local dist = distance_cost(x, y)
 					distances[c] = dist
 					if dist < mindist then
 						mindist = dist
@@ -2160,7 +2167,7 @@ function _M:autoExplore()
 					target_type = "unseen"
 					choices[#choices + 1] = c
 					local x, y = toDouble(c)
-					local dist = core.fov.distance(self.x, self.y, x, y, true)
+					local dist = distance_cost(x, y)
 					distances[c] = dist
 					if dist < mindist then
 						mindist = dist
@@ -2199,7 +2206,7 @@ function _M:autoExplore()
 					target_type = "unseen"
 					choices[#choices + 1] = c
 					local x, y = toDouble(c)
-					local dist = core.fov.distance(self.x, self.y, x, y, true)
+					local dist = distance_cost(x, y)
 					distances[c] = dist
 					if dist < mindist then
 						mindist = dist
@@ -2212,11 +2219,11 @@ function _M:autoExplore()
 		-- if no nearby items, go to nearest unseen tile
 		if #choices == 0 then
 			for _, c in ipairs(unseen_tiles) do
-				if values[c] == minval then
+				if values[c] <= minval + 2 then  -- have some flexibility to explore based on "distance_cost"
 					target_type = "unseen"
 					choices[#choices + 1] = c
 					local x, y = toDouble(c)
-					local dist = core.fov.distance(self.x, self.y, x, y, true)
+					local dist = distance_cost(x, y) + 0.3*values[c]
 					distances[c] = dist
 					if dist < mindist then
 						mindist = dist
@@ -2257,7 +2264,7 @@ function _M:autoExplore()
 						end
 					end
 
-					local dist = core.fov.distance(self.x, self.y, x, y, true) + 10*(door_values[c] + plus_one)
+					local dist = distance_cost(x, y) + 10*(door_values[c] + plus_one)
 					distances[c] = dist
 					if dist < mindist then
 						mindist = dist
@@ -2276,7 +2283,7 @@ function _M:autoExplore()
 				if terrain.door_player_check or terrain.door_player_stop then
 					target_type = "door"
 					choices[#choices + 1] = c
-					local dist = core.fov.distance(self.x, self.y, x, y, true) + 10*door_values[c]
+					local dist = distance_cost(x, y) + 10*door_values[c]
 					distances[c] = dist
 					if dist < mindist then
 						mindist = dist
@@ -2292,7 +2299,7 @@ function _M:autoExplore()
 				if terrain.change_level > 0 and not terrain.change_zone then
 					target_type = "exit"
 					choices[#choices + 1] = c
-					local dist = core.fov.distance(self.x, self.y, x, y, true) + 10*values[c]
+					local dist = distance_cost(x, y) + 10*values[c]
 					distances[c] = dist
 					if dist < mindist then
 						mindist = dist
@@ -2308,7 +2315,7 @@ function _M:autoExplore()
 				if terrain.change_zone then
 					target_type = "exit"
 					choices[#choices + 1] = c
-					local dist = core.fov.distance(self.x, self.y, x, y, true) + 10*values[c]
+					local dist = distance_cost(x, y) + 10*values[c]
 					distances[c] = dist
 					if dist < mindist then
 						mindist = dist
@@ -2324,7 +2331,7 @@ function _M:autoExplore()
 				if terrain.change_level < 0 then
 					target_type = "exit"
 					choices[#choices + 1] = c
-					local dist = core.fov.distance(self.x, self.y, x, y, true) + 10*values[c]
+					local dist = distance_cost(x, y) + 10*values[c]
 					distances[c] = dist
 					if dist < mindist then
 						mindist = dist
@@ -2339,7 +2346,7 @@ function _M:autoExplore()
 					target_type = "portal"
 					choices[#choices + 1] = c
 					local x, y = toDouble(c)
-					local dist = core.fov.distance(self.x, self.y, x, y, true)
+					local dist = distance_cost(x, y)
 					distances[c] = dist
 					if dist < mindist then
 						mindist = dist

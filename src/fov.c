@@ -652,10 +652,10 @@ static int lua_fov_line_step(lua_State *L)
 
 	fx = (float)line->t * line->step_x;
 	fy = (float)line->t * line->step_y;
+	fx2 = (float)(line->t + 1) * line->step_x + line->eps_x;
+	fy2 = (float)(line->t + 1) * line->step_y + line->eps_y;
 	x0 = line->start_x;
 	y0 = line->start_y;
-	fx2 = fx + line->step_x + line->eps_x;
-	fy2 = fy + line->step_y + line->eps_y;
 
 	// *sighs*
 	if (fx2 < 0.0f) {
@@ -826,7 +826,6 @@ static int lua_fov_line_step(lua_State *L)
 		} else {
 			y_prev = (int)(y0 + fy + line->eps_y);
 			y = (int)(y0 + fy2);
-
 			if (x != x_prev && y != y_prev && lua_line->fov.opaque_ref != LUA_NOREF) {
 				if (fy2 > fx2) {
 					dx = ((float)x - fx - x0) / line->step_x;
@@ -1320,8 +1319,8 @@ static int lua_hex_fov_line_last_open_xy(lua_State *L)
 		fy = line->source_y + (float)line->dest_t * line->step_y + line->eps_y - 0.5f*(x & 1);
 		y = (int)fy - (fy < 0.0f);
 	}
-	lua_pushnumber(L, line->source_x + x);
-	lua_pushnumber(L, line->source_y + y);
+	lua_pushnumber(L, x);
+	lua_pushnumber(L, y);
 	return 2;
 }
 
