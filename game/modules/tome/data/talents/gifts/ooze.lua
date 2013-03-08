@@ -207,7 +207,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Instantly call all your bloated oozes to fight and if beyond the maximum number of oozes %d will be created (with %d life).
+		return ([[Instantly call all your bloated oozes to fight and if below the maximum number of oozes allowed by the Mitosis talent, at most %d will be created (with %d life).
 		Each of them will be transported near a random foe in sight grab its attention.
 		Taking advantage of the situation you channel a melee attack though all of them to their foes dealing %d%% weapon damage as acid.]]):
 		format(self:getTalentLevel(t), self:combatTalentMindDamage(t, 30, 300), self:combatTalentWeaponDamage(t, 0.6, 2.2) * 100)

@@ -1242,8 +1242,8 @@ function _M:onRegisterDialog(d)
 	self.tooltip2_x, self.tooltip2_y = nil, nil
 	if self.player then self.player:updateMainShader() end
 
-	if self.player and self.player.runStop then self.player:runStop("dialog poping up") end
-	if self.player and self.player.restStop then self.player:restStop("dialog poping up") end
+--	if self.player and self.player.runStop then self.player:runStop("dialog poping up") end
+--	if self.player and self.player.restStop then self.player:restStop("dialog poping up") end
 end
 function _M:onUnregisterDialog(d)
 	-- Clean up tooltip
@@ -1284,6 +1284,9 @@ function _M:setupCommands()
 			print("===============")
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
+			game.level.map:particleEmitter(game.player.x, game.player.y, 1, "shout", {})
+
+do return end
 			resolvers.calc.drop_randart({{}}, game.player)
 do return end
 			local f, err = loadfile("/data/general/events/fearscape-portal.lua")

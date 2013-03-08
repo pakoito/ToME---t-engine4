@@ -687,7 +687,7 @@ function _M:automaticTalents()
 	for tid, c in pairs(self.talents_auto) do
 		local t = self.talents_def[tid]
 		local spotted = spotHostiles(self)
-		if not t.no_npc_use and (t.mode ~= "sustained" or not self.sustain_talents[tid]) and not self.talents_cd[tid] and self:preUseTalent(t, true, true) and (not t.auto_use_check or t.auto_use_check(self, t)) then
+		if (t.mode ~= "sustained" or not self.sustain_talents[tid]) and not self.talents_cd[tid] and self:preUseTalent(t, true, true) and (not t.auto_use_check or t.auto_use_check(self, t)) then
 			if (c == 1) or (c == 2 and #spotted <= 0) or (c == 3 and #spotted > 0) then
 				if c ~= 2 then
 					self:useTalent(tid)
