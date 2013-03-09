@@ -134,19 +134,21 @@ newTalent{ short_name = "MUCUS_OOZE_SPIT",
 	equilibrium = 2,
 	mesage = "@Source@ spits slime!",
 	range = 6,
-	reflectable = true,
+	direct_hit = true,
 	requires_target = true,
 	tactical = { ATTACK = { NATURE = 2 } },
 	action = function(self, t)
-		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
+		local tg = {type="beam", range=self:getTalentRange(t), talent=t, selffire=false, friendlyfire=false}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.SLIME, self:mindCrit(self:combatTalentMindDamage(t, 8, 80)), {type="slime"})
+		self:project(tg, x, y, DamageType.SLIME, self:mindCrit(self:combatTalentMindDamage(t, 8, 110)))
+		local _ _, x, y = self:canProject(tg, x, y)
+		game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(x-self.x), math.abs(y-self.y)), "ooze_beam", {tx=x-self.x, ty=y-self.y})
 		game:playSoundNear(self, "talents/slime")
 		return true
 	end,
 	info = function(self, t)
-		return ([[Spits a bolt of slime doing %0.2f slime damage.
+		return ([[Spits a beam of slime doing %0.2f slime damage.
 		The damage will increase with mindpower.]]):format(damDesc(self, DamageType.SLIME, self:combatTalentMindDamage(t, 8, 80)))
 	end,
 }

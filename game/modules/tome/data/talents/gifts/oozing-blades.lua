@@ -128,6 +128,24 @@ newTalent{
 	tactical = { BUFF = 2 },
 	getFireDamageIncrease = function(self, t) return self:getTalentLevelRaw(t) * 2 end,
 	getResistPenalty = function(self, t) return self:getTalentLevelRaw(t) * 10 end,
+	getChance = function(self, t) return self:getTalentLevel(t) * 14 end,
+	freespit = function(self, t, target)
+		if game.party:hasMember(self) then
+			for act, def in pairs(game.party.members) do
+				if act.summoner and act.summoner == self and act.is_mucus_ooze then
+					act:forceUseTalent(act.T_MUCUS_OOZE_SPIT, {force_target=target, ignore_energy=true})
+					break
+				end
+			end
+		else
+			for _, act in pairs(game.level.entities) do
+				if act.summoner and act.summoner == self and act.is_mucus_ooze then
+					act:forceUseTalent(act.T_MUCUS_OOZE_SPIT, {force_target=target, ignore_energy=true})
+					break
+				end
+			end
+		end
+	end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/slime")
 
@@ -152,7 +170,9 @@ newTalent{
 	info = function(self, t)
 		local damageinc = t.getFireDamageIncrease(self, t)
 		local ressistpen = t.getResistPenalty(self, t)
-		return ([[Surround yourself with nature forces, increasing all your nature damage by %d%% and ignoring %d%% nature resistance of your targets.]])
-		:format(damageinc, ressistpen)
+		local chance = t.getChance(self, t)
+		return ([[Surround yourself with nature forces, increasing all your nature damage by %d%% and ignoring %d%% nature resistance of your targets.
+		In addition any time you hit deal damage with a wild gift you have %d%% chances that one of you mucus ooze will spit at the target as a free action.]])
+		:format(damageinc, ressistpen, chance)
 	end,
 }

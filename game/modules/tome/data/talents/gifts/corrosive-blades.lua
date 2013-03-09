@@ -183,6 +183,7 @@ newTalent{
 	end,
 	getFireDamageIncrease = function(self, t) return self:getTalentLevelRaw(t) * 2 end,
 	getResistPenalty = function(self, t) return self:getTalentLevelRaw(t) * 10 end,
+	getRegen = function(self, t) return self:getTalentLevel(t) * 6.5 end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/slime")
 
@@ -207,7 +208,9 @@ newTalent{
 	info = function(self, t)
 		local damageinc = t.getFireDamageIncrease(self, t)
 		local ressistpen = t.getResistPenalty(self, t)
-		return ([[Surround yourself with nature forces, increasing all your acid damage by %d%% and ignoring %d%% acid resistance of your targets.]])
-		:format(damageinc, ressistpen)
+		local regen = t.getRegen(self, t)
+		return ([[Surround yourself with nature forces, increasing all your acid damage by %d%% and ignoring %d%% acid resistance of your targets.
+		In addition the acid will nurish your bloated oozes, giving them %d%% life regeneration per turn.]])
+		:format(damageinc, ressistpen, regen)
 	end,
 }

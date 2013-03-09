@@ -168,6 +168,18 @@ newBirthDescriptor{
 	},
 	power_source = {nature=true},
 	not_on_random_boss = true,
+	birth_example_particles = {
+		function(actor)
+			if core.shader.active(4) then actor:addParticles(Particles.new("shader_ring_rotating", 1, {additive=true, radius=1.1}, {type="flames", zoom=5, npow=2, time_factor=9000, color1={0.5,0.7,0,1}, color2={0.3,1,0.3,1}, hide_center=0, xy={0,0}}))
+			else actor:addParticles(Particles.new("master_summoner", 1))
+			end
+		end,
+		function(actor)
+			if core.shader.active(4) then actor:addParticles(Particles.new("shader_ring_rotating", 1, {additive=true, radius=1.1}, {type="flames", zoom=0.5, npow=4, time_factor=2000, color1={0.5,0.7,0,1}, color2={0.3,1,0.3,1}, hide_center=0, xy={0,0}}))
+			else actor:addParticles(Particles.new("master_summoner", 1))
+			end
+		end,
+	},
 	stats = { wil=5, cun=4, },
 	talents_types = {
 		["wild-gift/call"]={true, 0.3},

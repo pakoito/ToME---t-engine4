@@ -67,6 +67,7 @@ newTalent{
 			blood_color = colors.GREEN,
 			level_range = {self.level, self.level}, exp_worth = 0,
 			max_life = 30,
+			life_regen = 0,
 
 			combat = { dam=5, atk=0, apr=5, damtype=DamageType.POISON },
 
@@ -78,6 +79,10 @@ newTalent{
 		setupSummon(self, m, x, y)
 		m.max_life = life
 		m.life = life
+		if self:knowTalent(self.T_ACIDIC_SOIL) then
+			local st = self:getTalentFromId(self.T_ACIDIC_SOIL)
+			m.life_regen = st.getRegen(self, st) * life / 100
+		end
 
 		game:playSoundNear(self, "talents/spell_generic2")
 
