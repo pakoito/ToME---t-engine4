@@ -71,7 +71,7 @@ newTalent{
 
 			combat = { dam=5, atk=0, apr=5, damtype=DamageType.POISON },
 
-			summoner = self, summoner_gain_exp=true, wild_gift_summon=true, is_mucus_ooze = true,
+			summoner = self, summoner_gain_exp=true, wild_gift_summon=true,
 			summon_time = math.ceil(self:getTalentLevel(t)) + 5,
 			max_summon_time = math.ceil(self:getTalentLevel(t)) + 5,
 		}
