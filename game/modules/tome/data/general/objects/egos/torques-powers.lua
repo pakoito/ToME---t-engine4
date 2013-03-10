@@ -47,7 +47,7 @@ newEntity{
 	level_range = {1, 50},
 	rarity = 7,
 
-	charm_power_def = {add=3, max=100, floor=true},
+	charm_power_def = {add=3, max=200, floor=true},
 	resolvers.charm("setup a psionic shield, reducing all physical and acid damage by %d for 6 turns", 20, function(self, who)
 		who:setEffect(who.EFF_PSIONIC_SHIELD, 6, {kind="kinetic", power=self:getCharmPower()})
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
@@ -61,7 +61,7 @@ newEntity{
 	level_range = {1, 50},
 	rarity = 7,
 
-	charm_power_def = {add=3, max=100, floor=true},
+	charm_power_def = {add=3, max=200, floor=true},
 	resolvers.charm("setup a psionic shield, reducing all fire and cold damage by %d for 6 turns", 20, function(self, who)
 		who:setEffect(who.EFF_PSIONIC_SHIELD, 6, {kind="thermal", power=self:getCharmPower()})
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
@@ -75,7 +75,7 @@ newEntity{
 	level_range = {10, 50},
 	rarity = 8,
 
-	charm_power_def = {add=3, max=100, floor=true},
+	charm_power_def = {add=3, max=200, floor=true},
 	resolvers.charm("setup a psionic shield, reducing all lightning and blight damage by %d for 6 turns", 20, function(self, who)
 		who:setEffect(who.EFF_PSIONIC_SHIELD, 6, {kind="charged", power=self:getCharmPower()})
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
@@ -90,8 +90,8 @@ newEntity{
 	rarity = 12,
 
 	charm_power_def = {add=1, max=5, floor=true},
-	resolvers.charm("absorb and nullify at most %d detrimental mental status effects in the next 6 turns", 20, function(self, who)
-		who:setEffect(who.EFF_CLEAR_MIND, 6, {power=self:getCharmPower()})
+	resolvers.charm("absorb and nullify at most %d detrimental mental status effects in the next 10 turns", 20, function(self, who)
+		who:setEffect(who.EFF_CLEAR_MIND, 10, {power=self:getCharmPower()})
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
 		return {id=true, used=true}
 	end),
@@ -103,7 +103,7 @@ newEntity{
 	level_range = {15, 50},
 	rarity = 8,
 
-	charm_power_def = {add=45, max=300, floor=true},
+	charm_power_def = {add=45, max=400, floor=true},
 	resolvers.charm(function(self) return ("fire a blast of psionic energies in a beam (dam %d-%d)"):format(self:getCharmPower()/2, self:getCharmPower()) end, 6, function(self, who)
 		local tg = {type="beam", range=6 + who:getWil(4)}
 		local x, y = who:getTarget(tg)

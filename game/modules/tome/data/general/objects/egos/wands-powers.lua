@@ -114,7 +114,7 @@ newEntity{
 	level_range = {15, 50},
 	rarity = 10,
 
-	charm_power_def = {add=25, max=250, floor=true},
+	charm_power_def = {add=25, max=400, floor=true},
 	resolvers.charm("creates a wall of flames lasting for 4 turns (dam %d overall)", 6, function(self, who)
 		local tg = {type="wall", range=5, halflength=3, halfmax_spots=3+1}
 		local x, y = who:getTarget(tg)
@@ -135,7 +135,7 @@ newEntity{
 	level_range = {6, 50},
 	rarity = 6,
 
-	charm_power_def = {add=25, max=250, floor=true},
+	charm_power_def = {add=25, max=600, floor=true},
 	resolvers.charm(function(self) return ("fire a bolt of a random element (dam %d-%d)"):format(self:getCharmPower()/2, self:getCharmPower()) end, 6, function(self, who)
 		local tg = {type="bolt", range=10 + who:getMag(10)}
 		local x, y = who:getTarget(tg)

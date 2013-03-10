@@ -111,7 +111,7 @@ newEntity{
 	level_range = {1, 50},
 	rarity = 6,
 
-	charm_power_def = {add=5, max=50, floor=true},
+	charm_power_def = {add=5, max=100, floor=true},
 	resolvers.charm(function(self) return ("hardens the skin for 6 turns increasing armour by %d and armour hardiness by %d%%%%"):format(self:getCharmPower(), 20 + self.material_level * 10) end, 20, function(self, who)
 		who:setEffect(who.EFF_THORNY_SKIN, 6, {ac=self:getCharmPower(), hard=20 + self.material_level * 10})
 		game:playSoundNear(who, "talents/heal")
