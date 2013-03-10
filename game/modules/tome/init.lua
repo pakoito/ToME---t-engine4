@@ -52,6 +52,7 @@ teams = {
 	{ "#name#-#version#-gfx-shockbolt.team", "optional", {"/data/gfx/shockbolt/"} },
 }
 
+show_funfacts = true
 loading_wait_ticks = 260
 profile_stats_fields = {"artifacts", "characters", "deaths", "uniques", "scores", "lore", "escorts"}
 allow_userchat = true -- We can talk to the online community

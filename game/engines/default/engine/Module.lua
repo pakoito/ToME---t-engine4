@@ -522,7 +522,7 @@ function _M:loadScreen(mod)
 		end) end
 
 		local ffw = math.ceil(sw / 4)
-		if ffdata and not mod.no_funfacts then
+		if ffdata and mod.show_funfacts then
 			local str = self:selectFunFact(ffdata)
 			if str then pcall(function()
 				local text, _, tw = font:draw(str, ffw, 255, 255, 255)
