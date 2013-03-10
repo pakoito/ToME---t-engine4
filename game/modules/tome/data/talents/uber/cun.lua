@@ -186,7 +186,7 @@ uberTalent{
 		Arcane damage has a 30%% chance to increase your spellcasting speed by 20%% for 5 turns.
 		Fire damage has a 30%% chance to cleanse all physical or magical detrimental effects on you.
 		Cold damage has a 30%% chance to turn your skin into ice for 5 turns, reducing physical damage taken by 30%% and dealing 100 ice damage to attackers.
-		Lightning damage has a 30%% chance to transform you into pure lightning for 3 turns; any damage will teleport you to an adjacent tile and ignore the damage (can only happen once per turn).
+		Lightning damage has a 30%% chance to transform you into pure lightning for 5 turns; any damage will teleport you to an adjacent tile and ignore the damage (can only happen once per turn).
 		Light damage has a 30%% chance to create a barrier around you, absorbing 200 damage for 5 turns.
 		Nature damage has a 30%% chance to harden your skin, preventing the application of any magical detrimental effects for 5 turns.
 		This only triggers for hits over 200 damage.]])
