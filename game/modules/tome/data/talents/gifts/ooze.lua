@@ -79,7 +79,7 @@ newTalent{
 		setupSummon(self, m, x, y)
 		m.max_life = life
 		m.life = life
-		if self:knowTalent(self.T_ACIDIC_SOIL) then
+		if self:isTalentActive(self.T_ACIDIC_SOIL) then
 			local st = self:getTalentFromId(self.T_ACIDIC_SOIL)
 			m.life_regen = st.getRegen(self, st) * life / 100
 		end
