@@ -115,7 +115,7 @@ uberTalent{
 		Any mind damage you do has a 20%% chance to confuse (20%%) the target for 5 turns.
 		This only triggers for hits over 150 damage.
 		Values increase with your Cunning.]])
-		:format(self:getCun() / 2.5, self:getCun() / 2, self:getCun() / 2.5, self:getCun() / 2)
+		:format(self:getCun() / 2.5, self:getCun() / 2, self:getCun() / 2.5, self:getCun() / 3)
 	end,
 }
 

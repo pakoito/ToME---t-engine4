@@ -714,6 +714,16 @@ function _M:checkEntity(x, y, pos, what, ...)
 	end
 end
 
+--- See all grids
+function _M:seeAll(x, y, w, h, v)
+	if v == nil then v = true end
+	for i = x, x + w - 1 do for j = y, y + h - 1 do
+		self.seens[i + j * self.w] = v or 1
+		self.has_seens[i + j * self.w] = true
+		self._map:setSeen(i, j, 1)
+	end end
+end
+
 --- Lite all grids
 function _M:liteAll(x, y, w, h, v)
 	if v == nil then v = true end
