@@ -128,6 +128,7 @@ if not config.settings.shaders_active then core.shader.disable() print("Disablin
 -- Load profile configs
 core.profile.createThread()
 profile = engine.PlayerProfile.new()
+profile:start()
 
 -- Create a savefile pipe
 savefile_pipe = engine.SavefilePipe.new()

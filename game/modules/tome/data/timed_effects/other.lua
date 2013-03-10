@@ -1834,6 +1834,17 @@ newEffect{
 	status = "beneficial",
 	parameters = { },
 	activate = function(self, eff)
+		if self.hotkey and self.isHotkeyBound then
+			local pos = self:isHotkeyBound("talent", self.T_REVISIONIST_HISTORY)
+			if pos then
+				self.hotkey[pos] = {"talent", self.T_REVISIONIST_HISTORY_BACK}
+			end
+		end
+
+		local ohk = self.hotkey
+		self.hotkey = nil -- Prevent assigning hotkey, we just did
+		self:learnTalent(self.T_REVISIONIST_HISTORY_BACK, true, 1, {no_unlearn=true})
+		self.hotkey = ohk
 	end,
 	deactivate = function(self, eff)
 		if eff.back_in_time then game:onTickEnd(function()
@@ -1851,6 +1862,15 @@ newEffect{
 		end) else
 			game._chronoworlds = nil
 			self:startTalentCooldown(self.T_REVISIONIST_HISTORY)
+
+			if self.hotkey and self.isHotkeyBound then
+				local pos = self:isHotkeyBound("talent", self.T_REVISIONIST_HISTORY_BACK)
+				if pos then
+					self.hotkey[pos] = {"talent", self.T_REVISIONIST_HISTORY}
+				end
+			end
+
+			self:unlearnTalent(self.T_REVISIONIST_HISTORY_BACK, 1, nil, {no_unlearn=true})
 		end
 	end,
 }

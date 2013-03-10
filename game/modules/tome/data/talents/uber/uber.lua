@@ -23,6 +23,7 @@ newTalentType{ hide = true, type="uber/constitution", name = "constitution", des
 newTalentType{ hide = true, type="uber/magic", name = "magic", description = "Ultimate talents you may only know one." }
 newTalentType{ hide = true, type="uber/willpower", name = "willpower", description = "Ultimate talents you may only know one." }
 newTalentType{ hide = true, type="uber/cunning", name = "cunning", description = "Ultimate talents you may only know one." }
+newTalentType{ hide = true, type="uber/other", name = "other", description = "Ultimate talents you may only know one." }
 
 
 knowRessource = function(self, r, v)

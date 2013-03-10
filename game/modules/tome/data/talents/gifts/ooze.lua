@@ -74,6 +74,7 @@ newTalent{
 			summoner = self, summoner_gain_exp=true, wild_gift_summon=true,
 			summon_time = math.ceil(self:getTalentLevel(t)) + 5,
 			max_summon_time = math.ceil(self:getTalentLevel(t)) + 5,
+			resolvers.sustains_at_birth(),
 		}
 		if self:knowTalent(self.T_BLIGHTED_SUMMONING) then m:learnTalent(m.T_BONE_SHIELD, true, 2) end
 		setupSummon(self, m, x, y)

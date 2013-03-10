@@ -88,10 +88,11 @@ function _M:init()
 		["^achievements$"] = { invalid = { read={offline=true,online=true}, write="offline" }, valid = { read={online=true}, write="online" } },
 		["^donations$"] = { invalid = { read={offline=true}, write="offline" }, valid = { read={offline=true}, write="offline" } },
 	}
-
-	self:funFactsGrab()
-
 	self.auth = false
+end
+
+function _M:start()
+	self:funFactsGrab()
 	self:loadGenericProfile()
 
 	if self.generic.online and self.generic.online.login and self.generic.online.pass then

@@ -185,6 +185,26 @@ uberTalent{
 		:format()
 	end,
 }
+newTalent{
+	name = "Unfold History", short_name = "REVISIONIST_HISTORY_BACK",
+	type = {"uber/other",1},
+	cooldown = 30,
+	no_energy = true,
+	is_spell = true,
+	no_npc_use = true,
+	action = function(self, t)
+		if game._chronoworlds and game._chronoworlds.revisionist_history then
+			self:hasEffect(self.EFF_REVISIONIST_HISTORY).back_in_time = true
+			self:removeEffect(self.EFF_REVISIONIST_HISTORY)
+			return nil -- the effect removal starts the cooldown
+		end
+		return nil -- We do not start the cooldown!
+	end,
+	info = function(self, t)
+		return ([[Rewrite the near-past to go back to when you casted Revisionist History.]])
+		:format()
+	end,
+}
 
 uberTalent{
 	name = "Cauterize",
