@@ -491,3 +491,48 @@ newEntity{ base = "BASE_KNIFE", define_as = "KINETIC_SPIKE",
 		end
 	},
 }
+
+newEntity{ base = "BASE_STAFF",
+	power_source = {unknown=true},
+	unique = true,
+	name = "Rod of Sarrilon", image = "object/artifact/staff_lost_staff_archmage_tarelion.png",
+	unided_name = "ceremonial staff",
+	flavor_name = "starstaff",
+	level_range = {37, 50},
+	color=colors.VIOLET,
+	rarity = 250,
+	desc = [[ A plain looking ceremonial rod. It has connections with Time that even chronomancers do not yet understand.]],
+	cost = 400,
+	material_level = 5,
+
+	require = { stat = { mag=48 }, },
+	combat = {
+		is_greater = true,
+		dam = 30,
+		apr = 4,
+		dammod = {mag=1.5},
+		damtype = DamageType.TEMPORAL,
+	},
+	wielder = {
+		inc_stats = { [Stats.STAT_WIL] = 7, [Stats.STAT_MAG] = 8 },
+		paradox_reduce_fails = 50,
+		combat_spellpower = 40,
+		combat_spellcrit = 15,
+		inc_damage = { [DamageType.TEMPORAL] = 40,  },
+		resists_pen = { [DamageType.TEMPORAL] = 30,  },
+		teleport_immune = 1,
+		talent_cd_reduction = {
+			[Talents.T_PARADOX_CLONE] = 7,
+			[Talents.T_TEMPORAL_CLONE] = 5,
+			[Talents.T_TEMPORAL_REPRIEVE] = 10,
+			[Talents.T_GRAVITY_WELL] = 6,
+			[Talents.T_BODY_REVERSION] = 2,
+		},
+		talents_types_mastery = {
+			["chronomancy/timeline-threading"] = 0.2,
+			["chronomancy/timetravel"] = 0.2,
+			["chronomancy/paradox"] = 0.2,
+			["spell/temporal"] = 0.2,
+		},
+	},
+}
