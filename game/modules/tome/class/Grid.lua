@@ -43,6 +43,7 @@ function _M:block_move(x, y, e, act, couldpass)
 	-- Path strings
 	if not e then e = {}
 	elseif type(e) == "string" then
+		print("=====COMPUTING", x, y, e)
 		e = loadstring(e)()
 	end
 

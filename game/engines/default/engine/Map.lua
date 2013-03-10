@@ -188,6 +188,7 @@ function _M:init(w, h)
 	self.remembers = {}
 	self.effects = {}
 	self.path_strings = {}
+	self.path_strings_computed = {}
 	for i = 0, w * h - 1 do self.map[i] = {} end
 
 	self.particles = {}
@@ -203,6 +204,7 @@ function _M:save()
 		_check_entities_store = true,
 		_map = true,
 		_fovcache = true,
+		path_strings_computed = true,
 		surface = true,
 		finished = true,
 		_stackmo = true,
@@ -235,11 +237,17 @@ function _M:addPathString(ps)
 		if eps == ps then return end
 	end
 	self.path_strings[#self.path_strings+1] = ps
+	self.path_strings_computed[ps] = loadstring(ps)()
 	if self._fovcache then self._fovcache.path_caches[ps] = core.fov.newCache(self.w, self.h) end
 end
 
 function _M:loaded()
 	self:makeCMap()
+
+	self.path_strings_computed = {}
+	for i, ps in ipairs(self.path_strings) do
+		self.path_strings_computed[ps] = loadstring(ps)()
+	end
 
 	local mapseen = function(t, x, y, v)
 		if not x or not y or x < 0 or y < 0 or x >= self.w or y >= self.h then return end
@@ -397,7 +405,7 @@ function _M:updateMap(x, y)
 			-- Update path caches from path strings
 			for i = 1, #self.path_strings do
 				local ps = self.path_strings[i]
-				self._fovcache.path_caches[ps]:set(x, y, g:check("block_move", x, y, ps, false, true))
+				self._fovcache.path_caches[ps]:set(x, y, g:check("block_move", x, y, self.path_strings_computed[ps] or ps, false, true))
 			end
 
 			g:getMapObjects(self.tiles, mos, 1)
