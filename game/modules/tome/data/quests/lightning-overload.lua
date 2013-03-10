@@ -31,6 +31,9 @@ desc = function(self, who)
 	if self:isCompleted("tempest-entrance") then
 		desc[#desc+1] = " * You have learned the real threat comes from a rogue Archmage, a Tempest. You have been shown a secret entrance to his stronghold."
 	end
+	if self:isCompleted() then
+		desc[#desc+1] = " * Urkis has been dealt with. Permanently."
+	end
 
 	return table.concat(desc, "\n")
 end
