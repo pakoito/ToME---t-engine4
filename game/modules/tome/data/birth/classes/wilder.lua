@@ -156,7 +156,7 @@ newBirthDescriptor{
 newBirthDescriptor{
 	type = "subclass",
 	name = "Oozemancer",
-	locked = function() return profile.mod.allow_build.wilder_oozemancer and true or "hide"  end,
+	locked = function() return profile.mod.allow_build.wilder_oozemancer end,
 	locked_desc = "Magic must fail, magic must lose, nothing arcane can face the ooze...",
 	desc = {
 		"Oozemancers separate themselves from normal civilisation so that they be more in harmony with Nature. Arcane force are reviled by them, and their natural attunement to the wilds lets them do battle with abusive magic-users on an equal footing.",
@@ -167,7 +167,6 @@ newBirthDescriptor{
 		"#LIGHT_BLUE# * +0 Magic, +5 Willpower, +4 Cunning",
 	},
 	power_source = {nature=true},
-	not_on_random_boss = true,
 	birth_example_particles = {
 		function(actor)
 			if core.shader.active(4) then actor:addParticles(Particles.new("shader_ring_rotating", 1, {additive=true, radius=1.1}, {type="flames", zoom=5, npow=2, time_factor=9000, color1={0.5,0.7,0,1}, color2={0.3,1,0.3,1}, hide_center=0, xy={0,0}}))
