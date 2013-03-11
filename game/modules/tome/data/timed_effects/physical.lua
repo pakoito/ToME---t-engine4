@@ -2046,3 +2046,21 @@ newEffect{
 		self:effectTemporaryValue(eff, "combat_def", -eff.defense)
 	end,
 }
+
+newEffect{
+	name = "SLIPPERY_MOSS", image = "talents/slippery_moss.png",
+	desc = "Slippery Moss",
+	long_desc = function(self, eff) return ("The target is covered in slippery moss. Each time it tries to use a talent there is %d%% chance of failure."):format(eff.fail) end,
+	type = "physical",
+	subtype = { moss=true, nature=true },
+	status = "detrimental",
+	parameters = {fail=5},
+	on_gain = function(self, err) return "#Target# is covered in slippery moss!", "+Slippery Moss" end,
+	on_lose = function(self, err) return "#Target# is free from the slippery moss.", "-Slippery Moss" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("talent_fail_chance", eff.fail)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("talent_fail_chance", eff.tmpid)
+	end,
+}

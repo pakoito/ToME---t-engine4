@@ -1842,6 +1842,43 @@ newDamageType{
 	end,
 }
 
+newDamageType{
+	name = "nurishing moss", type = "NURISHING_MOSS",
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and src:reactionToward(target) < 0 then
+			local realdam = DamageType:get(DamageType.NATURE).projector(src, x, y, DamageType.NATURE, dam.dam)
+			if realdam > 0 then src:heal(realdam * dam.factor, target) end
+		end
+	end,
+}
+
+newDamageType{
+	name = "slippery moss", type = "SLIPPERY_MOSS",
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and src:reactionToward(target) < 0 then
+			DamageType:get(DamageType.NATURE).projector(src, x, y, DamageType.NATURE, dam.dam)
+			target:setEffect(target.EFF_SLIPPERY_MOSS, 2, {apply_power=src:combatMindpower(), fail=dam.fail}, true)
+		end
+	end,
+}
+
+newDamageType{
+	name = "hallucinogenic moss", type = "HALLUCINOGENIC_MOSS",
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and src:reactionToward(target) < 0 then
+			DamageType:get(DamageType.NATURE).projector(src, x, y, DamageType.NATURE, dam.dam)
+			if target:canBe("confusion") and rng.percent(dam.chance) then
+				target:setEffect(target.EFF_CONFUSED, 2, {apply_power=src:combatMindpower(), power=dam.power}, true)
+			else
+				game.logSeen(target, "%s resists!", target.name:capitalize())
+			end
+		end
+	end,
+}
+
 -- Circles
 newDamageType{
 	name = "sanctity", type = "SANCTITY",
