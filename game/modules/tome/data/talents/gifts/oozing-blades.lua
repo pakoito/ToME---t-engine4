@@ -34,7 +34,7 @@ newTalent{
 	reflectable = true,
 	requires_target = true,
 	target = function(self, t)
-		return {type="beam", range=self:getTalentRange(t), talent=t}
+		return {type="beam", range=self:getTalentRange(t), friendlyfire=false, talent=t}
 	end,
 	getDamage = function(self, t) return self:combatTalentMindDamage(t, 20, 290) end,
 	action = function(self, t)

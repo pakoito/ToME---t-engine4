@@ -140,7 +140,7 @@ newTalent{
 
 		self:setEffect(self.EFF_PAIN_SUPPRESSION, math.ceil(3 + self:getTalentLevel(t)), {power=50})
 
-		local tg = {type="ball", radius=3, range=0, talent=t, selffire=false}
+		local tg = {type="ball", radius=3, range=0, talent=t, selffire=false, friendlyfire=false}
 		self:project(tg, self.x, self.y, DamageType.MANABURN, self:mindCrit(t.getDam(self, t)))
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "acidflash", {radius=tg.radius})
 
