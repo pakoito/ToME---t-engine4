@@ -4510,6 +4510,14 @@ function _M:on_set_temporary_effect(eff_id, e, p)
 	end
 end
 
+--- Called when we are initiating a projection
+function _M:on_project_init(t, x, y, damtype, dam, particles)
+	if self:attr("nullify_all_friendlyfire") then
+		t.friendlyfire = false
+		t.selffire = false
+	end
+end
+
 --- Called when we are the target of a projection
 function _M:on_project_acquire(tx, ty, who, t, x, y, damtype, dam, particles, is_projectile, mods)
 	if is_projectile and self:attr("projectile_evasion") and rng.percent(self.projectile_evasion) then

@@ -19,18 +19,27 @@
 
 uberTalent{
 	name = "Through The Crowd",
-	mode = "passive",
+	require = { special={desc="Have had at least 6 party members at the same time", fct=function(self)
+		return self:attr("huge_party")
+	end} },
+	mode = "sustained",
 	on_learn = function(self, t)
 		self:attr("bump_swap_speed_divide", 10)
 	end,
 	on_unlearn = function(self, t)
 		self:attr("bump_swap_speed_divide", -10)
 	end,
-	require = { special={desc="Have had at least 6 party members at the same time", fct=function(self)
-		return self:attr("huge_party")
-	end} },
+	activate = function(self, t)
+		local ret = {}
+		self:talentTemporaryValue(ret, "nullify_all_friendlyfire", 1)
+		return ret
+	end,
+	deactivate = function(self, t, p)
+		return true
+	end,
 	info = function(self, t)
-		return ([[You are used to a crowded party; you can swap place with friendly creatures in only one tenth of a turn.]])
+		return ([[You are used to a crowded party; you can swap place with friendly creatures in only one tenth of a turn (this does not require the prodigy to be active, it is a passive effect).
+		You have also learnt to fight cleanly in a crowded area, you can never damage your friends of neutral creatures when this talent is active.]])
 		:format()
 	end,
 }
