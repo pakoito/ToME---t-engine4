@@ -1825,6 +1825,23 @@ newDamageType{
 	end,
 }
 
+-- Mosses
+newDamageType{
+	name = "grasping moss", type = "GRASPING_MOSS",
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and src:reactionToward(target) < 0 then
+			DamageType:get(DamageType.NATURE).projector(src, x, y, DamageType.NATURE, dam.dam)
+			target:setEffect(target.EFF_SLOW_MOVE, 4, {apply_power=src:combatMindpower(), power=dam.slow/100}, true)
+			if target:canBe("pin") and rng.percent(dam.pin) then
+				target:setEffect(target.EFF_PINNED, 4, {apply_power=src:combatMindpower()}, true)
+			else
+				game.logSeen(target, "%s resists!", target.name:capitalize())
+			end
+		end
+	end,
+}
+
 -- Circles
 newDamageType{
 	name = "sanctity", type = "SANCTITY",

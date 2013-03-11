@@ -37,6 +37,7 @@ newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/
 newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/mindstar-mastery", name = "mindstar mastery", generic = true, description = "Learn to channel your mental power through mindstars, forming powerful psionic blades." }
 newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/mucus", name = "mucus", description = "Cover the floor with natural mucus." }
 newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/ooze", name = "ooze", description = "Your body and internal organs are becoming more ooze-like in nature, allowing you to spawn more of you." }
+newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/moss", name = "moss", description = "You learn to control moss, making it grow at will to help you on the battlefield." }
 newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/malleable-body", name = "malleable body", description = "Your body's anatomy is starting to blur." }
 newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/oozing-blades", name = "oozing blades", description = "You channel ooze through your psiblades." }
 newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/corrosive-blades", name = "corrosive blades", description = "You channel acid through your psiblades." }
@@ -201,6 +202,7 @@ load("/data/talents/gifts/slime.lua")
 load("/data/talents/gifts/fungus.lua")
 load("/data/talents/gifts/mucus.lua")
 load("/data/talents/gifts/ooze.lua")
+load("/data/talents/gifts/moss.lua")
 load("/data/talents/gifts/malleable-body.lua")
 load("/data/talents/gifts/oozing-blades.lua")
 load("/data/talents/gifts/corrosive-blades.lua")
