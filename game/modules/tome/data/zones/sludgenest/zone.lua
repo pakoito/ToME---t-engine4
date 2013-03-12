@@ -47,6 +47,7 @@ return {
 		actor = {
 			class = "mod.class.generator.actor.Random",
 			nb_npc = {20, 30},
+			guardian = "CORRUPTED_OOZEMANCER",
 		},
 		trap = {
 			class = "engine.generator.trap.Random",
@@ -57,8 +58,44 @@ return {
 			nb_object = {4, 10},
 		},
 	},
+
+	levels = {
+		[1] = {
+			generator =  {
+				map = {
+					class = "mod.class.generator.map.Caldera",
+					mountain = "JUNGLE_TREE",
+					tree = "JUNGLE_TREE",
+					grass = "JUNGLE_GRASS",
+					water = {"SLIME_FLOOR","SLIME_FLOOR","SLIME_FLOOR","SLIME_FLOOR","SLIME_FLOOR","SLIME_FLOOR","SLIME_WALL",},
+					up = "JUNGLE_GRASS_UP_WILDERNESS",
+					down = "SLIME_DOWN", down_center = true,
+				},
+			},
+		},
+		[3] = {
+			width = 15, height = 15,
+			generator =  {
+				map = {
+					class = "mod.class.generator.map.Caldera",
+					mountain = "SLIME_WALL",
+					tree = "SLIME_WALL",
+					grass = "SLIME_FLOOR",
+					water = "SLIME_FLOOR",
+					up = "SLIME_UP",
+					down = "SLIME_FLOOR",
+				},
+				actor = {
+					class = "mod.class.generator.actor.Random",
+					nb_npc = {9, 9},
+				},
+			},
+		},
+	},
+
 	spawn_chance = 3,
 	on_turn = function()
+		if game.level.level == 1 then return end
 		if game.turn % 10 ~= 0 then return end
 		if not rng.percent(game.level.data.spawn_chance) then game.level.data.spawn_chance = game.level.data.spawn_chance + 1 return end
 
@@ -89,6 +126,7 @@ return {
 	end,
 
 	foreground = function(level, dx, dx, nb_keyframes)
+		if level.level == 1 then return end
 		local tick = core.game.getTime()
 		local sr, sg, sb
 		sr = 4 + math.sin(tick / 2000) / 2

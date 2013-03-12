@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 load("/data/general/grids/basic.lua")
-load("/data/general/grids/water.lua")
+load("/data/general/grids/jungle.lua")
 load("/data/general/grids/slime.lua")
 
 local orb_activate = function(self, x, y, who, act, couldpass)

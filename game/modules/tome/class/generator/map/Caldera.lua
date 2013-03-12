@@ -104,6 +104,8 @@ function _M:generate(lev, old_lev)
 		ex, ey = s.x, s.y
 	end
 
+	if self.data.down_center then ex, ey = cx, cy end
+
 	self.map(sx, sy, Map.TERRAIN, self:resolve("up"))
 	self.map(ex, ey, Map.TERRAIN, self:resolve("down"))
 

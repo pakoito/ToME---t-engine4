@@ -314,3 +314,8 @@ newAchievement{
 		game:setAllowedBuild("psionic_solipsist", true)
 	end,
 }
+newAchievement{
+	name = "Oozemancer", id = "OOZEMANCER",
+	show = "name",
+	desc = [[Destroyed the corrupted oozemancer.]],
+}
