@@ -76,7 +76,7 @@ newTalent{
 }
 
 newTalent{
-	name = "Nurishing Moss",
+	name = "Nourishing Moss",
 	type = {"wild-gift/moss", 2},
 	require = gifts_req2,
 	points = 5,
@@ -98,7 +98,7 @@ newTalent{
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
 			self.x, self.y, self:spellCrit(t.getDuration(self, t)),
-			DamageType.NURISHING_MOSS, {dam=self:mindCrit(t.getDamage(self, t)), factor=t.getHeal(self, t)/100},
+			DamageType.NOURISHING_MOSS, {dam=self:mindCrit(t.getDamage(self, t)), factor=t.getHeal(self, t)/100},
 			self:getTalentRadius(t),
 			5, nil,
 			{type="moss"},

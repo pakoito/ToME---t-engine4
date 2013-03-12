@@ -1843,7 +1843,7 @@ newDamageType{
 }
 
 newDamageType{
-	name = "nurishing moss", type = "NURISHING_MOSS",
+	name = "nourishing moss", type = "NOURISHING_MOSS",
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and src:reactionToward(target) < 0 then
