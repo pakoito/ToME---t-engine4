@@ -179,6 +179,7 @@ newEntity{ base = "BASE_HELM",
 		resists = {
 			[DamageType.FIRE] = 15,
 			[DamageType.COLD] = 15,
+			[DamageType.ACID] = 15,
 			[DamageType.LIGHTNING] = 15,
 		},
 		esp = {dragon=1},
