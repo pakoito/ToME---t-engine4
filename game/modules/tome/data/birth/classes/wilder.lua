@@ -165,6 +165,7 @@ newBirthDescriptor{
 		"#GOLD#Stat modifiers:",
 		"#LIGHT_BLUE# * +0 Strength, +0 Dexterity, +0 Constitution",
 		"#LIGHT_BLUE# * +0 Magic, +5 Willpower, +4 Cunning",
+		"#GOLD#Life per level:#LIGHT_BLUE# -3",
 	},
 	power_source = {nature=true},
 	birth_example_particles = {

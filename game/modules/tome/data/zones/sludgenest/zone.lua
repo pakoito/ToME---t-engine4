@@ -60,7 +60,7 @@ return {
 	spawn_chance = 3,
 	on_turn = function()
 		if game.turn % 10 ~= 0 then return end
-		if not rng.percent(game.level.data.spawn_chance) then game.level.data.spawn_chance = game.level.data.spawn_chance + 2 return end
+		if not rng.percent(game.level.data.spawn_chance) then game.level.data.spawn_chance = game.level.data.spawn_chance + 1 return end
 
 		local grids = core.fov.circle_grids(game.player.x, game.player.y, 10, true)
 		local gs = {}
@@ -73,13 +73,16 @@ return {
 
 		local spot = rng.table(gs)
 		local g = game.zone:makeEntityByName(game.level, "terrain", "SLIME_FLOOR")
-		local m = game.zone:makeEntity(game.level, "actor", {}, nil, true)
+		local filter = {}
+		if rng.chance(10) then filter = {random_elite = {power_source = {nature=true, psionic=true, technique=true}}} end
+		local m = game.zone:makeEntity(game.level, "actor", filter, nil, true)
 		if g and m then
 			m.exp_worth = 0
 			game.zone:addEntity(game.level, g, "terrain", spot.x, spot.y)
 			game.zone:addEntity(game.level, m, "actor", spot.x, spot.y)
 			game.nicer_tiles:updateAround(game.level, spot.x, spot.y)
 			m:setTarget(game.player)
+			game.logSeen(m, "#YELLOW_GREEN#One of the wall shakes for a moment and then turns into %s!", m.name:capitalize())
 		end
 
 		game.level.data.spawn_chance = 3
