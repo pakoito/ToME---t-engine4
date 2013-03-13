@@ -2621,9 +2621,8 @@ newEntity{ base = "BASE_ARROW",
 		physcrit = 2,
 		dammod = {dex=0.6, str=0.5, wil=0.2},
 		damtype = DamageType.MIND,
-		special_on_crit = {desc="40% chance to dominate the target", fct=function(combat, who, target)
+		special_on_crit = {desc="dominate the target", fct=function(combat, who, target)
 			if not target or target == self then return end
-			if not rng.percent(40)  then return end
 			if target:canBe("instakill") then
 				target:setEffect(target.EFF_DOMINATE_ENTHRALL, 3, {src=who, apply_power=who:combatMindpower()})
 			end
@@ -2722,7 +2721,7 @@ newEntity{ base = "BASE_SHOT",
 	material_level = 4,
 	require = { stat = { dex=28 }, },
 	combat = {
-		capacity = 4,
+		capacity = 7,
 		dam = 32,
 		apr = 15,
 		physcrit = 10,
@@ -2986,6 +2985,7 @@ newEntity{ base = "BASE_MINDSTAR",
 			[DamageType.BLIGHT] = 12,
 		},
 		inc_stats = { [Stats.STAT_WIL] = 7, [Stats.STAT_CUN] = 2, },
+		talents_types_mastery = { ["wild-gift/ooze"] = 0.1, ["wild-gift/slime"] = 0.1,},
 	},
 	max_power = 20, power_regen = 1,
 	use_talent = { id = Talents.T_OOZE_SPIT, level = 2, power = 20 },
@@ -3540,6 +3540,9 @@ newEntity{ base = "BASE_MINDSTAR",
 		combat_mindcrit = 5,
 		poison_immune = 0.5,
 		resists = {
+			[DamageType.NATURE] = 10,
+		},
+		inc_damage = {
 			[DamageType.NATURE] = 10,
 		}
 	},
@@ -4387,13 +4390,13 @@ newEntity{ base = "BASE_ARROW", --Thanks Grayswandir!
 	material_level = 2,
 	require = { stat = { dex=18 }, },
 	combat = {
-		capacity = 8,
+		capacity = 15,
 		dam = 20,
 		apr = 10,
 		physcrit = 5,
 		dammod = {dex=0.7, str=0.5},
 		ranged_project={
-			[DamageType.CRIPPLING_POISON] = 10,
+			[DamageType.CRIPPLING_POISON] = 15,
 		},
 	},
 }
@@ -4835,11 +4838,11 @@ newEntity{ base = "BASE_AMULET", --Thanks Grayswandir!
 	cost = 500,
 	material_level = 3,
 	wielder = {
-		combat_mindpower = 6,
+		combat_mindpower = 7,
 		combat_mentalresist = 32,
 		confusion_immune=-1,
 		inc_damage={
-			[DamageType.MIND] 	= 20,
+			[DamageType.MIND] 	= 24,
 		},
 		resists={
 			[DamageType.MIND] 	= -10,
@@ -4849,8 +4852,8 @@ newEntity{ base = "BASE_AMULET", --Thanks Grayswandir!
 		},
 		on_melee_hit={[DamageType.RANDOM_CONFUSION] = 5},
 	},
-	max_power = 40, power_regen = 1,
-	use_talent = { id = Talents.T_INNER_DEMONS, level = 2, power = 40 },
+	max_power = 32, power_regen = 1,
+	use_talent = { id = Talents.T_INNER_DEMONS, level = 3, power = 32 },
 }
 
 
@@ -4868,10 +4871,10 @@ newEntity{ base = "BASE_SHOT", --Thanks Grayswandir!
 	require = { stat = { dex=28 }, },
 	combat = {
 		capacity = 10,
-		dam = 36,
+		dam = 38,
 		apr = 15,
 		physcrit = 10,
-		dammod = {dex=0.7, cun=0.5},
+		dammod = {dex=0.7, cun=0.5, wil=0.1},
 		ranged_project={
 			[DamageType.MIND] = 20,
 		},
@@ -4916,13 +4919,13 @@ newEntity{ base = "BASE_GREATMAUL",
 	cost = 650,
 	material_level = 2,
 	combat = {
-		dam = 30,
+		dam = 32,
 		apr = 4,
 		physcrit = 4,
 		dammod = {str=1.2},
 		melee_project={[DamageType.NATURE] = 20},
-		special_on_hit = {desc="20% chance to shatter magical shields", fct=function(combat, who, target)
-			if not rng.percent(20) then return end
+		special_on_hit = {desc="25% chance to shatter magical shields", fct=function(combat, who, target)
+			if not rng.percent(25) then return end
 			if not target then return end
 
 			-- List all diseases, I mean, burns, I mean, shields.
@@ -4985,7 +4988,7 @@ newEntity{ base = "BASE_TOOL_MISC",
 		combat_dam=3,
 	},
 	max_power = 35, power_regen = 1,
-	use_talent = { id = Talents.T_PSIONIC_PULL, level = 2, power = 18 }, --Before you ask, DG, this is a blade horror talent.
+	use_talent = { id = Talents.T_PSIONIC_PULL, level = 3, power = 18 }, --Before you ask, DG, this is a blade horror talent.
 }
 
 newEntity{ base = "BASE_GREATSWORD", --Thanks Grayswandir!
@@ -5042,7 +5045,7 @@ newEntity{ base = "BASE_GLOVES", --Thanks SageAcrin /AND/ Edge2054!
 			talent_on_hit = { [Talents.T_SHADOW_SIMULACRUM] = {level=1, chance=8} },
 		},
 	},
-	talent_on_spell = { {chance=10, talent=Talents.T_DESTABILIZE, level=1} },
+	talent_on_spell = { {chance=10, talent=Talents.T_DUST_TO_DUST, level=2} },
 }
 
 newEntity{ base = "BASE_GEM", --Thanks SageAcrin and Graziel!
@@ -5133,6 +5136,7 @@ newEntity{ base = "BASE_TOOL_MISC", --Sorta Thanks Donkatsu!
 		talents_types_mastery = { ["wild-gift/call"] = 0.1, ["wild-gift/harmony"] = 0.1, },
 		inc_stats = {[Stats.STAT_WIL] = 7, [Stats.STAT_CON] = 6,},
 		combat_mindpower=7,
+		healing_factor=0.2,
 	},
 	on_takeoff = function(self, who)
 		self.worn_by=nil
@@ -5420,6 +5424,77 @@ His last known words were "Somehow this feels like an ending, yet I know there i
 	},
 	max_power = 35, power_regen = 1,
 	use_talent = { id = Talents.T_TRACK, level = 2, power = 18 },
+}
+
+newEntity{ base = "BASE_LEATHER_CAP",
+	power_source = {nature=true},
+	unique = true,
+	name = "Eye of the Forest",
+	unided_name = "overgrown leather cap", image = "object/artifact/eye_of_the_forest.png",
+	level_range = {24, 32},
+	color=colors.GREEN,
+	encumber = 2,
+	rarity = 200,
+	desc = [[This leather cap is overgrown with a thick moss, except for around the very front, where an eye, carved of wood, rests. A thick green slime slowly pours from the corners of the eye, like tears.]],
+	cost = 200,
+	material_level=3,
+	wielder = {
+		combat_def=4,
+		inc_stats = { [Stats.STAT_WIL] = 3, [Stats.STAT_CUN] = 6, },
+		blind_immune=1,
+		combat_mentalresist = 12,
+		resists = {[DamageType.BLIGHT] = 10,},
+		resists_cap = {[DamageType.BLIGHT] = 10,},
+		inc_damage={
+			[DamageType.NATURE] = 20,
+		},
+		resists_pen={
+			[DamageType.NATURE] = 15,
+		},
+		talents_types_mastery = { ["wild-gift/moss"] = 0.1,},
+	},
+	max_power = 50, power_regen = 1,
+	use_talent = { id = Talents.T_EARTH_S_EYES, level = 2, power = 50 },
+}
+
+
+newEntity{ base = "BASE_MINDSTAR",
+	power_source = {antimagic=true},
+	unique = true,
+	name = "Eyal's Will",
+	unided_name = "pale green mindstar",
+	level_range = {38, 50},
+	color=colors.AQUAMARINE, image = "object/artifact/eyal_will.png",
+	rarity = 380,
+	desc = [[This smooth green crystal flows with a light green slime in its core. Droplets occasionally form on its surface, tufts of grass growing quickly on the ground where they fall.]],
+	cost = 280,
+	require = { stat = { wil=48 }, },
+	material_level = 5,
+	combat = {
+		dam = 22,
+		apr = 40,
+		physcrit = 5,
+		dammod = {wil=0.6, cun=0.2},
+		damtype = DamageType.NATURE,
+	},
+	wielder = {
+		combat_mindpower = 20,
+		combat_mindcrit = 9,
+		disease_immune=0.3,
+		resists={[DamageType.BLIGHT] = 25, [DamageType.NATURE] = 15},
+		on_melee_hit={[DamageType.NATURE] = 20},
+		inc_damage={
+			[DamageType.NATURE] 	= 20,
+		},
+		resists_pen={
+			[DamageType.NATURE] 	= 20,
+		},
+		inc_stats = { [Stats.STAT_WIL] = 6, [Stats.STAT_CUN] = 3, },
+		learn_talent = {[Talents.T_OOZE_SPIT] = 3},
+		talents_types_mastery = { ["wild-gift/mindstar-mastery"] = 0.1, ["wild-gift/antimagic"] = 0.1,},
+	},
+	max_power = 60, power_regen = 1,
+	use_talent = { id = Talents.T_SLIME_WAVE, level = 3, power = 60 },
 }
 
 --[=[
