@@ -187,6 +187,7 @@ newBirthDescriptor{
 	},
 	stats = { wil=5, cun=4, },
 	talents_types = {
+		["cunning/survival"]={true, 0.1},
 		["wild-gift/call"]={true, 0.3},
 		["wild-gift/antimagic"]={true, 0.3},
 		["wild-gift/mindstar-mastery"]={true, 0.3},
