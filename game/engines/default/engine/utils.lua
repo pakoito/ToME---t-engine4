@@ -1775,6 +1775,7 @@ end
 function core.fov.set_algorithm(val)
 	if type(val) == "string" and (string.lower(val) == "hex" or string.lower(val) == "hexagon") then
 		core.fov.set_vision_shape("hex")
+		core.fov.set_algorithm_base(0) -- TEMPORARY: don't default to a half-implemented FoV/LoS algorithm
 		is_hex = 1
 		return
 	end
@@ -1806,6 +1807,7 @@ function core.fov.set_vision_shape(val)
 	if type(val) ~= "number" then return end
 	if val == 7 then  -- hex
 		is_hex = 1
+		core.fov.set_algorithm_base(0) -- TEMPORARY: don't default to a half-implemented FoV/LoS algorithm
 	else
 		is_hex = 0
 	end
