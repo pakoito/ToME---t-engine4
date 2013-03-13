@@ -449,9 +449,10 @@ addSpot({35, 25}, "world-encounter", "lost-merchant")
 addSpot({36, 25}, "world-encounter", "lost-merchant")
 addSpot({37, 25}, "world-encounter", "lost-merchant")
 addSpot({35, 35}, "world-encounter", "noxious-caldera")
+addSpot({53, 5}, "world-encounter", "sludgenest")
 
 -- addZone section
-addZone({5, 1, 82, 43}, "zonename", "Maj'Eyal")
+addZone({1, 1, 78, 43}, "zonename", "Maj'Eyal")
 addZone({6, 43, 19, 50}, "zonename", "Maj'Eyal")
 addZone({26, 45, 38, 53}, "zonename", "Island of Rel")
 addZone({52, 48, 61, 53}, "zonename", "Charred Scar")

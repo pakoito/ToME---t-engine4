@@ -630,7 +630,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup name="addZone#zonenames" width="170" height="100">
+ <objectgroup name="addZone#zonenames" width="170" height="100" visible="0">
   <object name="Maj'Eyal" x="39" y="44" width="2478" height="1344">
    <properties>
     <property name="subtype" value="&quot;Maj'Eyal&quot;"/>
@@ -742,7 +742,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup name="addSpot#world-encounters" width="170" height="100" visible="0">
+ <objectgroup name="addSpot#world-encounters" width="170" height="100">
   <object name="Random Zone" x="296" y="256" width="50" height="55">
    <properties>
     <property name="subtype" value="&quot;maj-eyal&quot;"/>
@@ -944,6 +944,12 @@
   <object name="Noxious Caldera" x="1125" y="1125" width="21" height="20">
    <properties>
     <property name="subtype" value="&quot;noxious-caldera&quot;"/>
+    <property name="type" value="&quot;world-encounter&quot;"/>
+   </properties>
+  </object>
+  <object name="Sludgenest" x="1703" y="166" width="21" height="20">
+   <properties>
+    <property name="subtype" value="&quot;sludgenest&quot;"/>
     <property name="type" value="&quot;world-encounter&quot;"/>
    </properties>
   </object>

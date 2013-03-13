@@ -19,4 +19,5 @@
 
 return {
 	{name="noxious-caldera", percent=30, special=function() if game:getPlayer(true) and game:getPlayer(true).descriptor and game:getPlayer(true).descriptor.race == "Yeek" then return true end end},
+	{name="sludgenest", percent=30, special=function() if game:getPlayer(true) and game:getPlayer(true).descriptor and game:getPlayer(true).descriptor.subrace == "Thalore" then return true end end},
 }
