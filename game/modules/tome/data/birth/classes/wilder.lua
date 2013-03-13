@@ -168,6 +168,11 @@ newBirthDescriptor{
 		"#GOLD#Life per level:#LIGHT_BLUE# -3",
 	},
 	power_source = {nature=true},
+	getStatDesc = function(stat, actor)
+		if stat == actor.STAT_CUN then
+			return "Max summons: "..math.floor(actor:getCun()/10)
+		end
+	end,
 	birth_example_particles = {
 		function(actor)
 			if core.shader.active(4) then actor:addParticles(Particles.new("shader_ring_rotating", 1, {additive=true, radius=1.1}, {type="flames", zoom=5, npow=2, time_factor=9000, color1={0.5,0.7,0,1}, color2={0.3,1,0.3,1}, hide_center=0, xy={0,0}}))
