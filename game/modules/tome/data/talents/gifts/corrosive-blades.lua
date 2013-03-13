@@ -128,10 +128,13 @@ newTalent{
 
 		local tg = {type="ball", radius=self:getTalentRadius(t), range=self:getTalentRange(t)}
 		local grids = {}
-		self:project(tg, x, y, function(px, py) grids[#grids+1] = {x=px, y=py} end)
+		self:project(tg, x, y, function(px, py) 
+			if not game.level.map:checkEntity(px, py, Map.TERRAIN, "block_move") then grids[#grids+1] = {x=px, y=py} end
+		end)
 
 		for i = 1, t.getNb(self, t) do
 			local spot = rng.tableRemove(grids)
+			if not spot then break end
 			local t = basetrap(self, t, spot.x, spot.y, 6, {
 				type = "seed", name = "corrosive seed", color=colors.VIOLET, image = "trap/corrosive_seeds.png",
 				disarm_power = self:combatMindpower(),
