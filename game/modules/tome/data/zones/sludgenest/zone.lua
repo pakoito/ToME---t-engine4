@@ -61,6 +61,7 @@ return {
 
 	levels = {
 		[1] = {
+			all_lited = true,
 			generator =  {
 				map = {
 					class = "mod.class.generator.map.Caldera",

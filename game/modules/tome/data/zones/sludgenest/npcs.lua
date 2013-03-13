@@ -46,6 +46,10 @@ newEntity{ define_as = "CORRUPTED_OOZEMANCER",
 	resolvers.equip{ {type="weapon", subtype="mindstar", forbid_power_source={antimagic=true}, autoreq=true}, },
 	resolvers.equip{ {type="armor", subtype="cloth", forbid_power_source={antimagic=true}, autoreq=true}, },
 	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
+	resolvers.drop_randart{},
+	resolvers.drop_randart{},
+	resolvers.drop_randart{},
+	resolvers.drop_randart{},
 
 	resolvers.talents{
 		[Talents.T_GRASPING_MOSS]={base=4, every=4, max=8},
@@ -82,4 +86,3 @@ newEntity{ define_as = "CORRUPTED_OOZEMANCER",
 		game:setAllowedBuild("wilder_oozemancer", true)
 	end,
 }
-
