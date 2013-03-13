@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 local p = game.party:findMember{main=true}
-if not p:isQuestStatus("antimagic", engine.Quest.DONE) then
+if not p:attr("forbid_arcane") or p:attr("forbid_arcane") < 2 then
 newChat{ id="welcome",
 	text = [[#LIGHT_GREEN#*A Halfling woman stands before you, clad in dark steel plate.*#WHITE#
 Take the test, and then we can talk.]],
