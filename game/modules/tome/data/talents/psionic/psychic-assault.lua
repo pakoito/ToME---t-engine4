@@ -80,7 +80,7 @@ newTalent{
 		local ai = target.ai or nil		
 		
 		local dam = self:mindCrit(t.getDamage(self, t))
-		if target:canBe("confused") then
+		if target:canBe("confusion") then
 			target:setEffect(target.EFF_LOBOTOMIZED, t.getDuration(self, t), {src=self, dam=dam, power=t.getPower(self, t), apply_power=self:combatMindpower()})
 		else
 			game.logSeen(target, "%s resists the lobotomy!", target.name:capitalize())
