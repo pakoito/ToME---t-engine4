@@ -108,7 +108,7 @@ newTalent{
 			vals.PHYSICAL = 1
 		end
 		if self:isTalentActive(self.T_THERMAL_AURA) then
-			val.FIRE = 1
+			vals.FIRE = 1
 		end
 		if self:isTalentActive(self.T_CHARGED_AURA) then
 			vals.LIGHTNING = 1

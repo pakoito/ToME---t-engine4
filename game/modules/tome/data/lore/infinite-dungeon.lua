@@ -55,7 +55,7 @@ The deceptive god Ralkur fled before the wrath of the godslayer Branzir and his 
 
 And so the chase continues. Over centuries beyond count Branzir has never stopped to rest or sleep as he pursues his prey through the ravages of infinity. And though death would be a welcome reprieve he thinks only of the hunt and of vanquishing the cowardly god. Ralkur continues to run, and he does not take a breath that it is not a gasp, and he does not take a step that it is not in flight, and every beat of his traitorous heart is a pounding of terror as he flees deeper and deeper till the ends of time.
 
-This passage seems to point to the passage there, it seems to indicate there is no possible exits.
+This passage seems to point to the passage there, it seems to indicate there are no possible exits.
 You should not enter it.]],
 }
 
