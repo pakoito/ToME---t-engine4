@@ -4695,3 +4695,6 @@ function _M:transmoGetName()
 	return "Transmogrification Chest"
 end
 
+function _M:transmoGetWord()
+	return "transmogrify"
+end
