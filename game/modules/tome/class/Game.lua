@@ -1284,6 +1284,7 @@ function _M:setupCommands()
 			print("===============")
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
+			error("ah fuck an error ... "..os.time())
 			game.level.map:particleEmitter(game.player.x, game.player.y, 1, "shout", {})
 
 do return end

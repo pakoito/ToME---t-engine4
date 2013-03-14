@@ -88,7 +88,7 @@ end
 
 spawn_transmo_chest = function(self, energy)
 	local spot = game.level:pickSpot{type="spawn", subtype="butler"}
-	local chest = game.zone:makeEntityByName(game.level, "object", "TRANSMO_CHEST")
+	local chest = game.zone:makeEntityByName(game.level, "object", "TRANSMO_CHEST", true)
 	game.zone:addEntity(game.level, chest, "object", spot.x + 1, spot.y)
 	game.level.map:particleEmitter(spot.x, spot.y, 1, "demon_teleport")
 	game.player:setQuestStatus(self.id, self.COMPLETED, "transmo-chest")
