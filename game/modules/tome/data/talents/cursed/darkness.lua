@@ -114,7 +114,7 @@ local function createDarkTendrils(summoner, x, y, target, damage, duration, pinD
 				-- remove dark tendrils
 				game.level.map:removeParticleEmitter(self.particles)
 				game.level.map:remove(self.x, self.y, Map.TERRAIN+4)
-				game.level:removeEntity(self)
+				game.level:removeEntity(self, true)
 			elseif self.particles.x ~= self.x or self.particles.y ~= self.y then
 				-- move dark tendrils
 				game.level.map:removeParticleEmitter(self.particles)
@@ -231,7 +231,7 @@ newTalent{
 					-- remove
 					if self.particles then game.level.map:removeParticleEmitter(self.particles) end
 					game.level.map:remove(self.x, self.y, Map.TERRAIN+3)
-					game.level:removeEntity(self)
+					game.level:removeEntity(self, true)
 					self.creepingDark = nil
 					--game.level.map:redisplay()
 				else
