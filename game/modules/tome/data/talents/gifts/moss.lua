@@ -48,7 +48,7 @@ newTalent{
 	action = function(self, t)
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
-			self.x, self.y, self:spellCrit(t.getDuration(self, t)),
+			self.x, self.y, self:mindCrit(t.getDuration(self, t)),
 			DamageType.GRASPING_MOSS, {dam=self:mindCrit(t.getDamage(self, t)), pin=t.getPin(self, t), slow=t.getSlow(self, t)},
 			self:getTalentRadius(t),
 			5, nil,
@@ -97,7 +97,7 @@ newTalent{
 	action = function(self, t)
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
-			self.x, self.y, self:spellCrit(t.getDuration(self, t)),
+			self.x, self.y, self:mindCrit(t.getDuration(self, t)),
 			DamageType.NOURISHING_MOSS, {dam=self:mindCrit(t.getDamage(self, t)), factor=t.getHeal(self, t)/100},
 			self:getTalentRadius(t),
 			5, nil,
@@ -145,7 +145,7 @@ newTalent{
 	action = function(self, t)
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
-			self.x, self.y, self:spellCrit(t.getDuration(self, t)),
+			self.x, self.y, self:mindCrit(t.getDuration(self, t)),
 			DamageType.SLIPPERY_MOSS, {dam=self:mindCrit(t.getDamage(self, t)), fail=t.getFail(self, t)},
 			self:getTalentRadius(t),
 			5, nil,
@@ -194,7 +194,7 @@ newTalent{
 	action = function(self, t)
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
-			self.x, self.y, self:spellCrit(t.getDuration(self, t)),
+			self.x, self.y, self:mindCrit(t.getDuration(self, t)),
 			DamageType.HALLUCINOGENIC_MOSS, {dam=self:mindCrit(t.getDamage(self, t)), chance=t.getChance(self, t), power=t.getPower(self, t)},
 			self:getTalentRadius(t),
 			5, nil,

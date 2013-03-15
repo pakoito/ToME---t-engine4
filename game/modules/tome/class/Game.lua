@@ -2016,6 +2016,7 @@ unlocks_list = {
 
 	wilder_wyrmic = "Class: Wyrmic",
 	wilder_summoner = "Class: Summoner",
+	wilder_oozemancer = "Class: Oozemancer",
 
 	corrupter_reaver = "Class: Reaver",
 	corrupter_corruptor = "Class: Corruptor",
