@@ -1437,30 +1437,27 @@ static int sdl_surface_toscreen(lua_State *L)
 	SDL_Surface **s = (SDL_Surface**)auxiliar_checkclass(L, "sdl{surface}", 1);
 	int x = luaL_checknumber(L, 2);
 	int y = luaL_checknumber(L, 3);
+	GLfloat colors[4*4] = {
+		1, 1, 1, 1,
+		1, 1, 1, 1,
+		1, 1, 1, 1,
+		1, 1, 1, 1,
+	};
 	if (lua_isnumber(L, 4))
 	{
 		float r = luaL_checknumber(L, 4);
 		float g = luaL_checknumber(L, 5);
 		float b = luaL_checknumber(L, 6);
 		float a = luaL_checknumber(L, 7);
-		GLfloat colors[4*4] = {
-			r, g, b, a,
-			r, g, b, a,
-			r, g, b, a,
-			r, g, b, a,
-		};
-		glColorPointer(4, GL_FLOAT, 0, colors);
+		int i;
+		for (i = 0; i < 4; i++) {
+			colors[(4*i)+0] = r;
+			colors[(4*i)+1] = g;
+			colors[(4*i)+2] = b;
+			colors[(4*i)+3] = a;
+		}
 	}
-	else
-	{
-		GLfloat colors[4*4] = {
-			1, 1, 1, 1,
-			1, 1, 1, 1,
-			1, 1, 1, 1,
-			1, 1, 1, 1,
-		};
-		glColorPointer(4, GL_FLOAT, 0, colors);
-	}
+	glColorPointer(4, GL_FLOAT, 0, colors);
 
 	GLuint t;
 	glGenTextures(1, &t);
@@ -1481,30 +1478,27 @@ static int sdl_surface_toscreen_with_texture(lua_State *L)
 	GLuint *t = (GLuint*)auxiliar_checkclass(L, "gl{texture}", 2);
 	int x = luaL_checknumber(L, 3);
 	int y = luaL_checknumber(L, 4);
+	GLfloat colors[4*4] = {
+		1, 1, 1, 1,
+		1, 1, 1, 1,
+		1, 1, 1, 1,
+		1, 1, 1, 1,
+	};
 	if (lua_isnumber(L, 5))
 	{
 		float r = luaL_checknumber(L, 5);
 		float g = luaL_checknumber(L, 6);
 		float b = luaL_checknumber(L, 7);
 		float a = luaL_checknumber(L, 8);
-		GLfloat colors[4*4] = {
-			r, g, b, a,
-			r, g, b, a,
-			r, g, b, a,
-			r, g, b, a,
-		};
-		glColorPointer(4, GL_FLOAT, 0, colors);
+		int i;
+		for (i = 0; i < 4; i++) {
+			colors[(4*i)+0] = r;
+			colors[(4*i)+1] = g;
+			colors[(4*i)+2] = b;
+			colors[(4*i)+3] = a;
+		}
 	}
-	else
-	{
-		GLfloat colors[4*4] = {
-			1, 1, 1, 1,
-			1, 1, 1, 1,
-			1, 1, 1, 1,
-			1, 1, 1, 1,
-		};
-		glColorPointer(4, GL_FLOAT, 0, colors);
-	}
+	glColorPointer(4, GL_FLOAT, 0, colors);
 
 	tglBindTexture(GL_TEXTURE_2D, *t);
 
@@ -1593,30 +1587,27 @@ static int sdl_texture_toscreen(lua_State *L)
 	int y = luaL_checknumber(L, 3);
 	int w = luaL_checknumber(L, 4);
 	int h = luaL_checknumber(L, 5);
+	GLfloat colors[4*4] = {
+		1, 1, 1, 1,
+		1, 1, 1, 1,
+		1, 1, 1, 1,
+		1, 1, 1, 1,
+	};
 	if (lua_isnumber(L, 6))
 	{
 		float r = luaL_checknumber(L, 6);
 		float g = luaL_checknumber(L, 7);
 		float b = luaL_checknumber(L, 8);
 		float a = luaL_checknumber(L, 9);
-		GLfloat colors[4*4] = {
-			r, g, b, a,
-			r, g, b, a,
-			r, g, b, a,
-			r, g, b, a,
-		};
-		glColorPointer(4, GL_FLOAT, 0, colors);
+		int i;
+		for (i = 0; i < 4; i++) {
+			colors[(4*i)+0] = r;
+			colors[(4*i)+1] = g;
+			colors[(4*i)+2] = b;
+			colors[(4*i)+3] = a;
+		}
 	}
-	else
-	{
-		GLfloat colors[4*4] = {
-			1, 1, 1, 1,
-			1, 1, 1, 1,
-			1, 1, 1, 1,
-			1, 1, 1, 1,
-		};
-		glColorPointer(4, GL_FLOAT, 0, colors);
-	}
+	glColorPointer(4, GL_FLOAT, 0, colors);
 
 	tglBindTexture(GL_TEXTURE_2D, *t);
 
@@ -1646,39 +1637,33 @@ static int sdl_texture_toscreen_highlight_hex(lua_State *L)
 	int y = luaL_checknumber(L, 3);
 	int w = luaL_checknumber(L, 4);
 	int h = luaL_checknumber(L, 5);
+
+	// A very slight gradient to give some definition to the texture
+	GLfloat colors[4*8] = {
+		0.9, 0.9, 0.9, 1,
+		0.9, 0.9, 0.9, 1,
+		1, 1, 1, 1,
+		1, 1, 1, 1,
+		0.9, 0.9, 0.9, 1,
+		0.8, 0.8, 0.8, 1,
+		0.8, 0.8, 0.8, 1,
+		0.9, 0.9, 0.9, 1,
+	};
 	if (lua_isnumber(L, 6))
 	{
 		float r = luaL_checknumber(L, 6);
 		float g = luaL_checknumber(L, 7);
 		float b = luaL_checknumber(L, 8);
 		float a = luaL_checknumber(L, 9);
-		GLfloat colors[4*8] = {
-			r, g, b, a,
-			r, g, b, a,
-			r, g, b, a,
-			r, g, b, a,
-			r, g, b, a,
-			r, g, b, a,
-			r, g, b, a,
-			r, g, b, a,
-		};
-		glColorPointer(4, GL_FLOAT, 0, colors);
+		int i;
+		for (i = 0; i < 8; i++) {
+			colors[(4*i)+0] = r;
+			colors[(4*i)+1] = g;
+			colors[(4*i)+2] = b;
+			colors[(4*i)+3] = a;
+		}
 	}
-	else
-	{
-		// A very slight gradient to give some definition to the texture
-		GLfloat colors[4*8] = {
-			0.9, 0.9, 0.9, 1,
-			0.9, 0.9, 0.9, 1,
-			1, 1, 1, 1,
-			1, 1, 1, 1,
-			0.9, 0.9, 0.9, 1,
-			0.8, 0.8, 0.8, 1,
-			0.8, 0.8, 0.8, 1,
-			0.9, 0.9, 0.9, 1,
-		};
-		glColorPointer(4, GL_FLOAT, 0, colors);
-	}
+	glColorPointer(4, GL_FLOAT, 0, colors);
 
 	tglBindTexture(GL_TEXTURE_2D, *t);
 
@@ -1720,30 +1705,27 @@ static int sdl_texture_toscreen_full(lua_State *L)
 	int h = luaL_checknumber(L, 5);
 	int rw = luaL_checknumber(L, 6);
 	int rh = luaL_checknumber(L, 7);
+	GLfloat colors[4*4] = {
+		1, 1, 1, 1,
+		1, 1, 1, 1,
+		1, 1, 1, 1,
+		1, 1, 1, 1,
+	};
 	if (lua_isnumber(L, 8))
 	{
 		float r = luaL_checknumber(L, 8);
 		float g = luaL_checknumber(L, 9);
 		float b = luaL_checknumber(L, 10);
 		float a = luaL_checknumber(L, 11);
-		GLfloat colors[4*4] = {
-			r, g, b, a,
-			r, g, b, a,
-			r, g, b, a,
-			r, g, b, a,
-		};
-		glColorPointer(4, GL_FLOAT, 0, colors);
+		int i;
+		for (i = 0; i < 4; i++) {
+			colors[(4*i)+0] = r;
+			colors[(4*i)+1] = g;
+			colors[(4*i)+2] = b;
+			colors[(4*i)+3] = a;
+		}
 	}
-	else
-	{
-		GLfloat colors[4*4] = {
-			1, 1, 1, 1,
-			1, 1, 1, 1,
-			1, 1, 1, 1,
-			1, 1, 1, 1,
-		};
-		glColorPointer(4, GL_FLOAT, 0, colors);
-	}
+	glColorPointer(4, GL_FLOAT, 0, colors);
 
 	tglBindTexture(GL_TEXTURE_2D, *t);
 	GLfloat texw = (GLfloat)w/rw;
@@ -1779,30 +1761,27 @@ static int sdl_texture_toscreen_precise(lua_State *L)
 	GLfloat x2 = luaL_checknumber(L, 7);
 	GLfloat y1 = luaL_checknumber(L, 8);
 	GLfloat y2 = luaL_checknumber(L, 9);
+	GLfloat colors[4*4] = {
+		1, 1, 1, 1,
+		1, 1, 1, 1,
+		1, 1, 1, 1,
+		1, 1, 1, 1,
+	};
 	if (lua_isnumber(L, 10))
 	{
 		float r = luaL_checknumber(L, 10);
 		float g = luaL_checknumber(L, 11);
 		float b = luaL_checknumber(L, 12);
 		float a = luaL_checknumber(L, 13);
-		GLfloat colors[4*4] = {
-			r, g, b, a,
-			r, g, b, a,
-			r, g, b, a,
-			r, g, b, a,
-		};
-		glColorPointer(4, GL_FLOAT, 0, colors);
+		int i;
+		for (i = 0; i < 4; i++) {
+			colors[(4*i)+0] = r;
+			colors[(4*i)+1] = g;
+			colors[(4*i)+2] = b;
+			colors[(4*i)+3] = a;
+		}
 	}
-	else
-	{
-		GLfloat colors[4*4] = {
-			1, 1, 1, 1,
-			1, 1, 1, 1,
-			1, 1, 1, 1,
-			1, 1, 1, 1,
-		};
-		glColorPointer(4, GL_FLOAT, 0, colors);
-	}
+	glColorPointer(4, GL_FLOAT, 0, colors);
 
 	tglBindTexture(GL_TEXTURE_2D, *t);
 

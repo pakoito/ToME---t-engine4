@@ -533,7 +533,7 @@ function resolvers.calc.inscriptions(t, e)
 	if not t[4] then
 		if t[3] then
 			kind = function(o)
-				if 	o.incription_kind == t[3] and
+				if 	o.inscription_kind == t[3] and
 					(e.__npc_inscription_kinds[o.inscription_kind] or 0) < (inscriptions_max[o.inscription_kind] or 0)
 					then return true
 				end return false
@@ -551,7 +551,7 @@ function resolvers.calc.inscriptions(t, e)
 	for i = 1, t[1] do
 		local o
 		if type(t[2]) == "table" then
-			if #t[2] then
+			if #t[2] > 0 then
 				local name = rng.tableRemove(t[2])
 				if not name then return nil end
 				o = game.zone:makeEntity(game.level, "object", {special=kind, name=name}, nil, true)
