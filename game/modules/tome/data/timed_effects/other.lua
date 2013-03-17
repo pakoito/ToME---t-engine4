@@ -2256,6 +2256,7 @@ newEffect{
 	long_desc = function(self, eff) return ("Your arcane powers are disrupted by your antimagic equipment."):format() end,
 	type = "other",
 	subtype = { antimagic=true },
+	no_stop_enter_worlmap = true,
 	status = "detrimental",
 	decrease = 0, no_remove = true,
 	parameters = { },
