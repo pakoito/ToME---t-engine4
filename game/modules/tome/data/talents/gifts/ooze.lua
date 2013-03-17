@@ -27,8 +27,8 @@ newTalent{
 	sustain_equilibrium = 10,
 	tactical = { BUFF = 2 },
 	getMaxHP = function(self, t) return 50 + self:combatTalentMindDamage(t, 30, 250) end,
-	getMax = function(self, t) return math.max(1, math.floor(self:getCun() / 10)) end,
-	getChance = function(self, t) return 25 + math.floor(self:getCun() / 3) end,
+	getMax = function(self, t) local _, _, max = checkMaxSummon(self, true) return math.min(max, math.max(1, math.floor(self:getTalentLevel(t) / 2))) end,
+	getChance = function(self, t) return 20 + self:combatTalentStatDamage(t, "cun", 10, 400) / 5.7 end,
 	spawn = function(self, t, life)
 		if checkMaxSummon(self, true) or not self:canBe("summon") then return end
 
@@ -99,7 +99,7 @@ newTalent{
 		return ([[Your body is more like that of an ooze.
 		When you get hit you have a %d%% chance to split and create a Bloated Ooze with as much health as you have taken damage (up to %d).
 		All damage you take will be split equaly between you and your Bloated Oozes.
-		You may have up to %d Oozes active at any time (based on your Cunning).
+		You may have up to %d Bloated Oozes active at any time (based on your Cunning and talent level).
 		Bloated Oozes are very resilient (50%% all damage resistance) to damage not coming through your shared link.
 		The maximum life depends on Mindpower and the chance on Cunning.]]):
 		format(t.getChance(self, t), t.getMaxHP(self, t), t.getMax(self, t))
@@ -111,8 +111,8 @@ newTalent{
 	type = {"wild-gift/ooze", 2},
 	require = gifts_req2,
 	points = 5,
-	equilibrium = 1,
-	cooldown = 12,
+	equilibrium = 10,
+	cooldown = 15,
 	tactical = { PROTECT = 2, ATTACKAREA = { ARCANE = 1 } },
 	getDam = function(self, t) return self:combatTalentMindDamage(t, 15, 200) end,
 	on_pre_use = function(self, t)
@@ -138,7 +138,7 @@ newTalent{
 		local act = rng.table(possibles)
 		act:die(self)
 
-		self:setEffect(self.EFF_PAIN_SUPPRESSION, math.ceil(3 + self:getTalentLevel(t)), {power=50})
+		self:setEffect(self.EFF_PAIN_SUPPRESSION, math.ceil(3 + self:getTalentLevel(t)), {power=40})
 
 		local tg = {type="ball", radius=3, range=0, talent=t, selffire=false, friendlyfire=false}
 		self:project(tg, self.x, self.y, DamageType.MANABURN, self:mindCrit(t.getDam(self, t)))
@@ -147,7 +147,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You randomly merge with an adjacent bloated ooze, granting your a 50%% damage resistance for %d turns.
+		return ([[You randomly merge with an adjacent bloated ooze, granting your a 40%% damage resistance for %d turns.
 		The merging also releases a burst of antimagic all around, dealing %0.2f manaburn damage in radius %d.
 		The effect will increase with your Mindpower.]]):
 		format(
@@ -165,10 +165,12 @@ newTalent{
 	points = 5,
 	equilibrium = 5,
 	cooldown = 8,
+	getMax = function(self, t) local _, _, max = checkMaxSummon(self, true) return math.min(max, math.max(1, math.floor(self:getTalentLevel(t) / 2))) end,
+	getModHP = function(self, t) return math.min(1, 0.4 + self:getTalentLevel(t) * 0.06) end,
 	action = function(self, t)
 		local ot = self:getTalentFromId(self.T_MITOSIS)
-		for i = 1, math.floor(self:getTalentLevel(t)) do
-			ot.spawn(self, ot, self:combatTalentMindDamage(t, 30, 300))
+		for i = 1, t.getMax(self, t) do
+			ot.spawn(self, ot, ot.getMaxHP(self, ot) * t.getModHP(self, t))
 		end
 
 		local list = {}
@@ -213,10 +215,10 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Instantly call all your bloated oozes to fight and if below the maximum number of oozes allowed by the Mitosis talent, at most %d will be created (with %d life).
+		return ([[Instantly call all your bloated oozes to fight and if below the maximum number of oozes allowed by the Mitosis talent, at most %d will be created with %d%% of the maximum life allowed by Mitosis.
 		Each of them will be transported near a random foe in sight grab its attention.
 		Taking advantage of the situation you channel a melee attack though all of them to their foes dealing %d%% weapon damage as acid.]]):
-		format(self:getTalentLevel(t), self:combatTalentMindDamage(t, 30, 300), self:combatTalentWeaponDamage(t, 0.6, 2.2) * 100)
+		format(t.getMax(self, t), t.getModHP(self, t)*100, self:combatTalentWeaponDamage(t, 0.6, 2.2) * 100)
 	end,
 }
 
