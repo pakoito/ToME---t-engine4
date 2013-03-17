@@ -134,7 +134,7 @@ newTalent{
 	tactical = { ATTACKAREA = {NATURE=1}, DISABLE = {pin = 1} },
 	getDamage = function(self, t) return self:combatTalentMindDamage(t, 6, 40) end,
 	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)) end,
-	getFail = function(self, t) return 20 + math.ceil(self:getTalentLevel(t) * 6) end,
+	getFail = function(self, t) return math.min(50, 15 + math.ceil(self:getTalentLevel(t) * 4)) end,
 	range = 0,
 	radius = function(self, t)
 		return 2 + math.floor(self:getTalentLevelRaw(t)/2)
