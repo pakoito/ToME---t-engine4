@@ -19,7 +19,7 @@
 
 local function activate_moss(self, btid)
 	for tid, lev in pairs(self.talents) do
-		if tid ~= btid and self.talents_def[tid].type[1] == "wild-gift/moss" and not self.talents_cd[tid] then
+		if tid ~= btid and self.talents_def[tid].type[1] == "wild-gift/moss" and (not self.talents_cd[tid] or self.talents_cd[tid] < 3) then
 			self.talents_cd[tid] = 3
 		end
 	end
