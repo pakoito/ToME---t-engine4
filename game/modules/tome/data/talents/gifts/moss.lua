@@ -48,7 +48,7 @@ newTalent{
 	action = function(self, t)
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
-			self.x, self.y, self:mindCrit(t.getDuration(self, t)),
+			self.x, self.y, t.getDuration(self, t),
 			DamageType.GRASPING_MOSS, {dam=self:mindCrit(t.getDamage(self, t)), pin=t.getPin(self, t), slow=t.getSlow(self, t)},
 			self:getTalentRadius(t),
 			5, nil,
@@ -86,7 +86,7 @@ newTalent{
 	tactical = { ATTACKAREA = {NATURE=1}, DISABLE = {pin = 1} },
 	getDamage = function(self, t) return self:combatTalentMindDamage(t, 6, 40) end,
 	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)) end,
-	getHeal = function(self, t) return 50 + math.ceil(self:getTalentLevel(t) * 15) end,
+	getHeal = function(self, t) return 50 + math.ceil(self:getTalentLevel(t) * 12) end,
 	range = 0,
 	radius = function(self, t)
 		return 2 + math.floor(self:getTalentLevelRaw(t)/2)
@@ -97,7 +97,7 @@ newTalent{
 	action = function(self, t)
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
-			self.x, self.y, self:mindCrit(t.getDuration(self, t)),
+			self.x, self.y, t.getDuration(self, t),
 			DamageType.NOURISHING_MOSS, {dam=self:mindCrit(t.getDamage(self, t)), factor=t.getHeal(self, t)/100},
 			self:getTalentRadius(t),
 			5, nil,
@@ -145,7 +145,7 @@ newTalent{
 	action = function(self, t)
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
-			self.x, self.y, self:mindCrit(t.getDuration(self, t)),
+			self.x, self.y, t.getDuration(self, t),
 			DamageType.SLIPPERY_MOSS, {dam=self:mindCrit(t.getDamage(self, t)), fail=t.getFail(self, t)},
 			self:getTalentRadius(t),
 			5, nil,
@@ -194,7 +194,7 @@ newTalent{
 	action = function(self, t)
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
-			self.x, self.y, self:mindCrit(t.getDuration(self, t)),
+			self.x, self.y, t.getDuration(self, t),
 			DamageType.HALLUCINOGENIC_MOSS, {dam=self:mindCrit(t.getDamage(self, t)), chance=t.getChance(self, t), power=t.getPower(self, t)},
 			self:getTalentRadius(t),
 			5, nil,

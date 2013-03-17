@@ -119,14 +119,14 @@ newTalent{
 	tactical = { CLOSEIN = 2 },
 	requires_target = true,
 	range = function(self, t)
-		return 5 + self:getTalentLevel(t)
+		return math.floor(4 + self:getTalentLevel(t) / 2)
 	end,
 	radius = function(self, t)
 		return util.bound(4 - self:getTalentLevel(t) / 2, 1, 4)
 	end,
 	getNbTalents = function(self, t)
-		if self:getTalentLevel(t) < 3 then return 1
-		elseif self:getTalentLevel(t) < 5 then return 2
+		if self:getTalentLevel(t) < 4 then return 1
+		elseif self:getTalentLevel(t) < 7 then return 2
 		else return 3
 		end
 	end,
