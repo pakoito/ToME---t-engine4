@@ -1,0 +1,151 @@
+commit b7c6e839b25f829e01349231830813be374056ed
+Author: Steven Noonan <steven@uplinklabs.net>
+Date:   Sat Mar 16 14:44:51 2013 -0700
+
+    ToME4 physfs support patch
+    
+    Signed-off-by: Steven Noonan <steven@uplinklabs.net>
+
+diff --git a/src/lib_package.c b/src/lib_package.c
+index f0e672d..26c094b 100644
+--- a/src/lib_package.c
++++ b/src/lib_package.c
+@@ -17,6 +17,8 @@
+ #include "lj_err.h"
+ #include "lj_lib.h"
+ 
++#include "physfs.h"
++
+ /* ------------------------------------------------------------------------ */
+ 
+ /* Error codes for ll_loadfunc. */
+@@ -265,10 +267,7 @@ static int lj_cf_package_unloadlib(lua_State *L)
+ 
+ static int readable(const char *filename)
+ {
+-  FILE *f = fopen(filename, "r");  /* try to open file */
+-  if (f == NULL) return 0;  /* open failed */
+-  fclose(f);
+-  return 1;
++  return PHYSFS_exists(filename);
+ }
+ 
+ static const char *pushnexttemplate(lua_State *L, const char *path)
+@@ -565,8 +564,6 @@ static const lua_CFunction package_loaders[] =
+ {
+   lj_cf_package_loader_preload,
+   lj_cf_package_loader_lua,
+-  lj_cf_package_loader_c,
+-  lj_cf_package_loader_croot,
+   NULL
+ };
+ 
+diff --git a/src/lib_table.c b/src/lib_table.c
+index 8d53a6c..ba132f7 100644
+--- a/src/lib_table.c
++++ b/src/lib_table.c
+@@ -178,7 +178,7 @@ static void set2(lua_State *L, int i, int j)
+ 
+ static int sort_comp(lua_State *L, int a, int b)
+ {
+-  if (!lua_isnil(L, 2)) {  /* function? */
++  if (lua_isfunction(L, 2)) {  /* function? */
+     int res;
+     lua_pushvalue(L, 2);
+     lua_pushvalue(L, a-1);  /* -1 to compensate function */
+@@ -187,9 +187,20 @@ static int sort_comp(lua_State *L, int a, int b)
+     res = lua_toboolean(L, -1);
+     lua_pop(L, 1);
+     return res;
+-  } else {  /* a < b? */
+-    return lua_lessthan(L, a, b);
+   }
++  else if (!lua_isnil(L, 2)) {  /* index? */
++    int res;
++    lua_pushvalue(L, 2);
++    lua_gettable(L, a-1);
++
++    lua_pushvalue(L, 2);
++    lua_gettable(L, b-2);
++    res = lua_lessthan(L, -2, -1);
++    lua_pop(L, 2);
++    return res;
++  }
++  else  /* a < b? */
++    return lua_lessthan(L, a, b);
+ }
+ 
+ static void auxsort(lua_State *L, int l, int u)
+@@ -260,8 +271,6 @@ LJLIB_CF(table_sort)
+   GCtab *t = lj_lib_checktab(L, 1);
+   int32_t n = (int32_t)lj_tab_len(t);
+   lua_settop(L, 2);
+-  if (!tvisnil(L->base+1))
+-    lj_lib_checkfunc(L, 2);
+   auxsort(L, 1, n);
+   return 0;
+ }
+diff --git a/src/lj_load.c b/src/lj_load.c
+index 9d89267..b9ba91c 100644
+--- a/src/lj_load.c
++++ b/src/lj_load.c
+@@ -9,6 +9,8 @@
+ #define lj_load_c
+ #define LUA_CORE
+ 
++#include "physfs.h"
++
+ #include "lua.h"
+ #include "lauxlib.h"
+ 
+@@ -68,7 +70,7 @@ LUA_API int lua_load(lua_State *L, lua_Reader reader, void *data,
+ }
+ 
+ typedef struct FileReaderCtx {
+-  FILE *fp;
++  PHYSFS_File *fp;
+   char buf[LUAL_BUFFERSIZE];
+ } FileReaderCtx;
+ 
+@@ -76,8 +78,8 @@ static const char *reader_file(lua_State *L, void *ud, size_t *size)
+ {
+   FileReaderCtx *ctx = (FileReaderCtx *)ud;
+   UNUSED(L);
+-  if (feof(ctx->fp)) return NULL;
+-  *size = fread(ctx->buf, 1, sizeof(ctx->buf), ctx->fp);
++  if (PHYSFS_eof(ctx->fp)) return NULL;
++  *size = PHYSFS_read(ctx->fp, ctx->buf, 1, sizeof(ctx->buf));
+   return *size > 0 ? ctx->buf : NULL;
+ }
+ 
+@@ -88,28 +90,18 @@ LUALIB_API int luaL_loadfilex(lua_State *L, const char *filename,
+   int status;
+   const char *chunkname;
+   if (filename) {
+-    ctx.fp = fopen(filename, "rb");
++    ctx.fp = PHYSFS_openRead(filename);
+     if (ctx.fp == NULL) {
+       lua_pushfstring(L, "cannot open %s: %s", filename, strerror(errno));
+       return LUA_ERRFILE;
+     }
+     chunkname = lua_pushfstring(L, "@%s", filename);
+-  } else {
+-    ctx.fp = stdin;
+-    chunkname = "=stdin";
+   }
+   status = lua_loadx(L, reader_file, &ctx, chunkname, mode);
+-  if (ferror(ctx.fp)) {
+-    L->top -= filename ? 2 : 1;
+-    lua_pushfstring(L, "cannot read %s: %s", chunkname+1, strerror(errno));
+-    if (filename)
+-      fclose(ctx.fp);
+-    return LUA_ERRFILE;
+-  }
+   if (filename) {
+     L->top--;
+     copyTV(L, L->top-1, L->top);
+-    fclose(ctx.fp);
++    PHYSFS_close(ctx.fp);
+   }
+   return status;
+ }

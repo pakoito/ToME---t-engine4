@@ -17,6 +17,18 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+-- capture the output of a command
+function os.capture(cmd, raw)
+	local f = assert(io.popen(cmd, 'r'))
+	local s = assert(f:read('*a'))
+	f:close()
+	if raw then return s end
+	s = string.gsub(s, '^%s+', '')
+	s = string.gsub(s, '%s+$', '')
+	s = string.gsub(s, '[\n\r]+', ' ')
+	return s
+end
+
 project "TEngine"
 	kind "WindowedApp"
 	language "C"
@@ -109,19 +121,147 @@ elseif _OPTIONS.lua == "jitx86" then
 		configuration "linux"
 			defines { "LUA_USE_POSIX" }
 elseif _OPTIONS.lua == "jit2" then
+	project "minilua"
+		kind "ConsoleApp"
+		language "C"
+		targetname "minilua"
+		links { "m" }
+
+		files { "../src/luajit2/src/host/minilua.c" }
+
+		local arch_test = os.capture("gcc -E ../src/luajit2/src/lj_arch.h -dM", true)
+
+		if string.find(arch_test, "LJ_TARGET_X64") then
+			target_arch = "x64"
+		elseif string.find(arch_test, "LJ_TARGET_X86") then
+			target_arch = "x86"
+		elseif string.find(arch_test, "LJ_TARGET_ARM") then
+			target_arch = "arm"
+		elseif string.find(arch_test, "LJ_TARGET_PPC") then
+			target_arch = "ppc"
+		elseif string.find(arch_test, "LJ_TARGET_PPCSPE") then
+			target_arch = "ppcspe"
+		elseif string.find(arch_test, "LJ_TARGET_MIPS") then
+			target_arch = "mips"
+		else
+			error("Unsupported target architecture, use architecture agnostic lua with --lua=default")
+		end
+		defines { "LUAJIT_TARGET=LUAJIT_ARCH_" .. target_arch }
+
+		if string.find(arch_test, "LJ_ARCH_HASFPU 1") then
+			defines { "LJ_ARCH_HASFPU=1" }
+		else
+			defines { "LJ_ARCH_HASFPU=0" }
+		end
+		if string.find(arch_test, "LJ_ABI_SOFTFP 1") then
+			defines { "LJ_ABI_SOFTFP=1" }
+		else
+			defines { "LJ_ABI_SOFTFP=0" }
+		end
+
+		configuration {"Debug"}
+			postbuildcommands { "cp ../bin/Debug/minilua ../src/luajit2/src/host/", }
+		configuration {"Release"}
+			postbuildcommands { "cp ../bin/Release/minilua ../src/luajit2/src/host/", }
+
+	project "buildvm"
+		kind "ConsoleApp"
+		language "C"
+		targetname "buildvm"
+		links { "minilua" }
+
+		local dasm_flags = ""
+		local arch_test = os.capture("gcc -E ../src/luajit2/src/lj_arch.h -dM", true)
+
+		if string.find(arch_test, "LJ_TARGET_X64") then
+			target_arch = "x64"
+		elseif string.find(arch_test, "LJ_TARGET_X86") then
+			target_arch = "x86"
+		elseif string.find(arch_test, "LJ_TARGET_ARM") then
+			target_arch = "arm"
+		elseif string.find(arch_test, "LJ_TARGET_PPC") then
+			target_arch = "ppc"
+		elseif string.find(arch_test, "LJ_TARGET_PPCSPE") then
+			target_arch = "ppcspe"
+		elseif string.find(arch_test, "LJ_TARGET_MIPS") then
+			target_arch = "mips"
+		else
+			error("Unsupported target architecture, use architecture agnostic lua with --lua=default")
+		end
+		defines { "LUAJIT_TARGET=LUAJIT_ARCH_" .. target_arch }
+
+		if string.find(arch_test, "LJ_ARCH_HASFPU 1") then
+			defines { "LJ_ARCH_HASFPU=1" }
+		else
+			defines { "LJ_ARCH_HASFPU=0" }
+		end
+		if string.find(arch_test, "LJ_ABI_SOFTFP 1") then
+			defines { "LJ_ABI_SOFTFP=1" }
+		else
+			defines { "LJ_ABI_SOFTFP=0" }
+		end
+
+		dasm_flags = dasm_flags .. " -D VER="
+
+		if string.find(arch_test, "LJ_ARCH_BITS 64") then
+			dasm_flags = dasm_flags .. " -D P64"
+		end
+		if string.find(arch_test, "LJ_HASJIT 1") then
+			dasm_flags = dasm_flags .. " -D JIT"
+		end
+		if string.find(arch_test, "LJ_HASFFI 1") then
+			dasm_flags = dasm_flags .. " -D FFI"
+		end
+		if string.find(arch_test, "LJ_DUALNUM 1") then
+			dasm_flags = dasm_flags .. " -D DUALNUM"
+		end
+		if string.find(arch_test, "LJ_ARCH_HASFPU 1") then
+			dasm_flags = dasm_flags .. " -D FPU"
+		end
+		if not string.find(arch_test, "LJ_ABI_SOFTFP 1") then
+			dasm_flags = dasm_flags .. " -D HFABI"
+		end
+		if target_arch == "x86" and string.find(arch_test, "__SSE2__") then
+			dasm_flags = dasm_flags .. " -D SSE"
+		end
+		if string.find(arch_test, "LJ_ARCH_SQRT 1") then
+			dasm_flags = dasm_flags .. " -D SQRT"
+		end
+		if string.find(arch_test, "LJ_ARCH_ROUND 1") then
+			dasm_flags = dasm_flags .. " -D ROUND"
+		end
+		if string.find(arch_test, "LJ_ARCH_PPC64 1") then
+			dasm_flags = dasm_flags .. " -D GPR64"
+		end
+
+		if target_arch == "x64" then
+			target_arch = "x86"
+		end
+
+		local dasc = "../src/luajit2/src/vm_" .. target_arch .. ".dasc"
+
+		prebuildcommands{ "../src/luajit2/src/host/minilua ../src/luajit2/dynasm/dynasm.lua" .. dasm_flags .. " -o ../src/luajit2/src/host/buildvm_arch.h " .. dasc }
+
+		files { "../src/luajit2/src/host/buildvm*.c" }
+
+		configuration {"Debug"}
+			postbuildcommands { "cp ../bin/Debug/buildvm ../src/luajit2/src/", }
+		configuration {"Release"}
+			postbuildcommands { "cp ../bin/Release/buildvm ../src/luajit2/src/", }
+
 	project "luajit2"
 		kind "StaticLib"
 		language "C"
 		targetname "lua"
+		links { "buildvm" }
 
 		files { "../src/luajit2/src/*.c", "../src/luajit2/src/*.s", "../src/luajit2/src/lj_vm.s", "../src/luajit2/src/lj_bcdef.h", "../src/luajit2/src/lj_ffdef.h", "../src/luajit2/src/lj_ffdef.h", "../src/luajit2/src/lj_libdef.h", "../src/luajit2/src/lj_recdef.h", "../src/luajit2/src/lj_folddef.h" }
-		excludes { "../src/luajit2/src/buildvm*.c", "../src/luajit2/src/luajit.c" }
+		excludes { "../src/luajit2/src/buildvm*.c", "../src/luajit2/src/luajit.c", "../src/luajit2/src/ljamalg.c" }
 
 		configuration "linux"
 			if not _OPTIONS["no-cleanup-jit2"] then
 			local list = "../src/luajit2/src/lib_base.c ../src/luajit2/src/lib_math.c ../src/luajit2/src/lib_bit.c ../src/luajit2/src/lib_string.c ../src/luajit2/src/lib_table.c ../src/luajit2/src/lib_io.c ../src/luajit2/src/lib_os.c ../src/luajit2/src/lib_package.c ../src/luajit2/src/lib_debug.c ../src/luajit2/src/lib_jit.c ../src/luajit2/src/lib_ffi.c"
 			prebuildcommands{
-				_OPTIONS.force32bits and "gcc -m32 -o ../src/luajit2/src/buildvm ../src/luajit2/src/buildvm*.c" or "gcc -o ../src/luajit2/src/buildvm ../src/luajit2/src/buildvm*.c",
 				"../src/luajit2/src/buildvm -m elfasm -o ../src/luajit2/src/lj_vm.s",
 				"../src/luajit2/src/buildvm -m bcdef -o ../src/luajit2/src/lj_bcdef.h "..list,
 				"../src/luajit2/src/buildvm -m ffdef -o ../src/luajit2/src/lj_ffdef.h "..list,
@@ -135,7 +275,6 @@ elseif _OPTIONS.lua == "jit2" then
 		configuration "macosx"
 			local list = "../src/luajit2/src/lib_base.c ../src/luajit2/src/lib_math.c ../src/luajit2/src/lib_bit.c ../src/luajit2/src/lib_string.c ../src/luajit2/src/lib_table.c ../src/luajit2/src/lib_io.c ../src/luajit2/src/lib_os.c ../src/luajit2/src/lib_package.c ../src/luajit2/src/lib_debug.c ../src/luajit2/src/lib_jit.c ../src/luajit2/src/lib_ffi.c"
 			prebuildcommands{
-				_OPTIONS.force32bits and "gcc -m32 -o ../src/luajit2/src/buildvm ../src/luajit2/src/buildvm*.c" or "gcc -o ../src/luajit2/src/buildvm ../src/luajit2/src/buildvm*.c",
 				"../src/luajit2/src/buildvm -m machasm -o ../src/luajit2/src/lj_vm.s",
 				"../src/luajit2/src/buildvm -m bcdef -o ../src/luajit2/src/lj_bcdef.h "..list,
 				"../src/luajit2/src/buildvm -m ffdef -o ../src/luajit2/src/lj_ffdef.h "..list,
@@ -149,7 +288,6 @@ elseif _OPTIONS.lua == "jit2" then
 			if not _OPTIONS["no-cleanup-jit2"] then
 			local list = "../src/luajit2/src/lib_base.c ../src/luajit2/src/lib_math.c ../src/luajit2/src/lib_bit.c ../src/luajit2/src/lib_string.c ../src/luajit2/src/lib_table.c ../src/luajit2/src/lib_io.c ../src/luajit2/src/lib_os.c ../src/luajit2/src/lib_package.c ../src/luajit2/src/lib_debug.c ../src/luajit2/src/lib_jit.c ../src/luajit2/src/lib_ffi.c"
 			prebuildcommands{
-				_OPTIONS.force32bits and "gcc -m32 -o ../src/luajit2/src/buildvm ../src/luajit2/src/buildvm*.c" or "gcc -o ../src/luajit2/src/buildvm ../src/luajit2/src/buildvm*.c",
 				"../src/luajit2/src/buildvm -m coffasm -o ../src/luajit2/src/lj_vm.s",
 				"../src/luajit2/src/buildvm -m bcdef -o ../src/luajit2/src/lj_bcdef.h "..list,
 				"../src/luajit2/src/buildvm -m ffdef -o ../src/luajit2/src/lj_ffdef.h "..list,
