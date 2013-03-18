@@ -164,7 +164,7 @@ newTalent{
 	require = gifts_req3,
 	points = 5,
 	equilibrium = 5,
-	cooldown = 8,
+	cooldown = 20,
 	getMax = function(self, t) local _, _, max = checkMaxSummon(self, true) return math.min(max, math.max(1, math.floor(self:getTalentLevel(t) / 2))) end,
 	getModHP = function(self, t) return math.min(1, 0.4 + self:getTalentLevel(t) * 0.06) end,
 	action = function(self, t)
