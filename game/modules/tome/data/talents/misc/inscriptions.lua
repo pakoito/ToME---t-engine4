@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-local newInscription = function(t)
+newInscription = function(t)
 	-- Warning, up that if more than 5 inscriptions are ever allowed
 	for i = 1, 6 do
 		local tt = table.clone(t)
