@@ -34,7 +34,7 @@ project "TEngine"
 	language "C"
 	targetname("t-engine")
 	files { "../src/*.c", }
-	links { "physfs", "lua".._OPTIONS.lua, "fov", "luasocket", "luaprofiler", "lualanes", "lpeg", "tcodimport", "lxp", "expatstatic", "luamd5", "luazlib", "luabitop", "te4-bzip" }
+	links { "physfs", "lua".._OPTIONS.lua, "fov", "luasocket", "luaprofiler", "lpeg", "tcodimport", "lxp", "expatstatic", "luamd5", "luazlib", "luabitop", "te4-bzip" }
 	defines { "_DEFAULT_VIDEOMODE_FLAGS_='SDL_HWSURFACE|SDL_DOUBLEBUF'" }
 	defines { [[TENGINE_HOME_PATH='".t-engine"']], "TE4CORE_VERSION="..TE4CORE_VERSION }
 
@@ -365,13 +365,6 @@ project "luaprofiler"
 	targetname "luaprofiler"
 
 	files { "../src/luaprofiler/*.c", }
-
-project "lualanes"
-	kind "StaticLib"
-	language "C"
-	targetname "lualanes"
-
-	files { "../src/lualanes/*.c", }
 
 project "tcodimport"
 	kind "StaticLib"

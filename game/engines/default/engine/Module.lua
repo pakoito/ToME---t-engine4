@@ -19,7 +19,6 @@
 -- darkgod@te4.org
 
 require "engine.class"
-local lanes = require "lanes"
 local Dialog = require "engine.ui.Dialog"
 local Savefile = require "engine.Savefile"
 require "engine.PlayerProfile"
@@ -825,14 +824,4 @@ function _M:loadSavefileDescription(dir)
 		print(" * save", ls.dir)
 		return ls
 	end
-end
-
---- Loads a list of modules from te4.org/modules.lualist
--- Calling this function starts a background thread, which can be waited on by the returned lina object
--- @param src the url to load the list from, if nil it will default to te4.org
--- @return a linda object (see lua lanes documentation) which should be waited upon like this <code>local mylist = l:receive("moduleslist")</code>. Also returns a thread handle
-function _M:loadRemoteList(src)
-	local DownloadDialog = require "engine.dialogs.DownloadDialog"
-	local d = DownloadDialog.new("Fetching updates", "http://te4.org/dl/t-engine/t-engine4-windows-1.0.0beta21.zip")
-	d:startDownload()
 end
