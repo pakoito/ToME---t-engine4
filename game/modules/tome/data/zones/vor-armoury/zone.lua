@@ -60,6 +60,9 @@ return {
 		for uid, e in pairs(level.entities) do e.faction="orc-pride" end
 		if level.level == 2 then
 			for uid, e in pairs(level.entities) do e:setEffect(e.EFF_VAULTED, 1, {}) end
+			for x = 21, 33 do for y = 1, 29 do
+				game.level.map.attrs(x, y, "no_teleport", true)
+			end end
 		end
 	end,
 	levels =

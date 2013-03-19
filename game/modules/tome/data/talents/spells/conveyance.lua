@@ -28,7 +28,7 @@ newTalent{
 	tactical = { ESCAPE = 2 },
 	requires_target = function(self, t) return self:getTalentLevel(t) >= 4 end,
 	getRange = function(self, t) return 4 + self:combatTalentSpellDamage(t, 10, 15) end,
-	getRadius = function(self, t) return 7 - self:getTalentLevelRaw(t) end,
+	getRadius = function(self, t) return math.max(0, 7 - self:getTalentLevelRaw(t)) end,
 	is_teleport = true,
 	action = function(self, t)
 		local target = self
