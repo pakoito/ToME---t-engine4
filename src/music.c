@@ -296,7 +296,7 @@ static int audio_enable(lua_State *L) {
 	return 0;
 }
 
-const luaL_reg soundlib[] = {
+const luaL_Reg soundlib[] = {
 	{"load", loadsoundLua},
 	{"enable", audio_enable},
 	{NULL, NULL}
@@ -513,14 +513,14 @@ static int soundPlayingLua(lua_State *L) {
 	return 1;
 }
 
-const luaL_reg soundFuncs[] = {
+const luaL_Reg soundFuncs[] = {
 	{"__tostring", soundTostringLua},
 	{"__gc", soundCollectLua},
 	{"use", soundNewSource},
 	{NULL, NULL}
 };
 
-const luaL_reg sourceFuncs[] = {
+const luaL_Reg sourceFuncs[] = {
 	{"__gc", sourceCollectLua},
 	{"play", soundPlayLua},
 	{"pause", soundPauseLua},

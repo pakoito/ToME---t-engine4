@@ -328,14 +328,14 @@ static int f_flush (lua_State *L) {
 
 
 LUALIB_API int luaopen_gzip (lua_State *L) {
-  const luaL_reg iolib[] = {
+  const luaL_Reg iolib[] = {
     {"lines", io_lines},
     {"close", io_close},
     {"open", io_open},
     {NULL, NULL}
   };
 
-  const luaL_reg flib[] = {
+  const luaL_Reg flib[] = {
     {"flush", f_flush},
     {"read", f_read},
     {"lines", f_lines},

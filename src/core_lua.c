@@ -291,7 +291,7 @@ static int lua_set_current_mousehandler(lua_State *L)
 
 	return 0;
 }
-static const struct luaL_reg mouselib[] =
+static const struct luaL_Reg mouselib[] =
 {
 	{"get", lua_get_mouse},
 	{"set", lua_set_mouse},
@@ -376,7 +376,7 @@ static int lua_key_get_clipboard(lua_State *L)
 	return 1;
 }
 
-static const struct luaL_reg keylib[] =
+static const struct luaL_Reg keylib[] =
 {
 	{"set_current_handler", lua_set_current_keyhandler},
 	{"modState", lua_get_mod_state},
@@ -474,7 +474,7 @@ static int lua_check_error(lua_State *L)
 	return 1;
 }
 
-static const struct luaL_reg gamelib[] =
+static const struct luaL_Reg gamelib[] =
 {
 	{"reboot", lua_reboot_lua},
 	{"set_current_game", lua_set_current_game},
@@ -2546,7 +2546,7 @@ static int sdl_get_png_screenshot(lua_State *L)
 	return 1;
 }
 
-static const struct luaL_reg displaylib[] =
+static const struct luaL_Reg displaylib[] =
 {
 	{"setTextBlended", set_text_aa},
 	{"getTextBlended", get_text_aa},
@@ -2587,7 +2587,7 @@ static const struct luaL_reg displaylib[] =
 	{NULL, NULL},
 };
 
-static const struct luaL_reg sdl_surface_reg[] =
+static const struct luaL_Reg sdl_surface_reg[] =
 {
 	{"__gc", sdl_free_surface},
 	{"close", sdl_free_surface},
@@ -2605,7 +2605,7 @@ static const struct luaL_reg sdl_surface_reg[] =
 	{NULL, NULL},
 };
 
-static const struct luaL_reg sdl_texture_reg[] =
+static const struct luaL_Reg sdl_texture_reg[] =
 {
 	{"__gc", sdl_free_texture},
 	{"close", sdl_free_texture},
@@ -2619,7 +2619,7 @@ static const struct luaL_reg sdl_texture_reg[] =
 	{NULL, NULL},
 };
 
-static const struct luaL_reg sdl_font_reg[] =
+static const struct luaL_Reg sdl_font_reg[] =
 {
 	{"__gc", sdl_free_font},
 	{"close", sdl_free_font},
@@ -2632,7 +2632,7 @@ static const struct luaL_reg sdl_font_reg[] =
 	{NULL, NULL},
 };
 
-static const struct luaL_reg gl_fbo_reg[] =
+static const struct luaL_Reg gl_fbo_reg[] =
 {
 	{"__gc", gl_free_fbo},
 	{"toScreen", gl_fbo_toscreen},
@@ -2640,7 +2640,7 @@ static const struct luaL_reg gl_fbo_reg[] =
 	{NULL, NULL},
 };
 
-static const struct luaL_reg gl_quadratic_reg[] =
+static const struct luaL_Reg gl_quadratic_reg[] =
 {
 	{"__gc", gl_free_quadratic},
 	{"sphere", gl_quadratic_sphere},
@@ -2917,7 +2917,7 @@ static int rng_normal_float(lua_State *L)
 	return 1;
 }
 
-static const struct luaL_reg rnglib[] =
+static const struct luaL_Reg rnglib[] =
 {
 	{"__call", rng_call},
 	{"range", rng_range},
@@ -3031,13 +3031,13 @@ static int lua_free_line(lua_State *L)
 	return 1;
 }
 
-static const struct luaL_reg linelib[] =
+static const struct luaL_Reg linelib[] =
 {
 	{"new", lua_line_init},
 	{NULL, NULL},
 };
 
-static const struct luaL_reg line_reg[] =
+static const struct luaL_Reg line_reg[] =
 {
 	{"__gc", lua_free_line},
 	{"__call", lua_line_step},
@@ -3112,7 +3112,7 @@ static int lua_zlib_compress(lua_State *L)
 }
 
 
-static const struct luaL_reg zliblib[] =
+static const struct luaL_Reg zliblib[] =
 {
 	{"compress", lua_zlib_compress},
 	{NULL, NULL},

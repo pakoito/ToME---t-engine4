@@ -1450,7 +1450,7 @@ static int lua_free_hex_fov_line(lua_State *L)
 	return 1;
 }
 
-static const struct luaL_reg fovlib[] =
+static const struct luaL_Reg fovlib[] =
 {
 	{"newCache", lua_new_fovcache},
 	{"distance", lua_distance},
@@ -1469,14 +1469,14 @@ static const struct luaL_reg fovlib[] =
 	{NULL, NULL},
 };
 
-static const struct luaL_reg fovcache_reg[] =
+static const struct luaL_Reg fovcache_reg[] =
 {
 	{"set", lua_fovcache_set},
 	{"get", lua_fovcache_get},
 	{NULL, NULL},
 };
 
-static const struct luaL_reg fovline_reg[] =
+static const struct luaL_Reg fovline_reg[] =
 {
 	{"__gc", lua_free_fov_line},
 	{"__call", lua_fov_line_step},
@@ -1491,7 +1491,7 @@ static const struct luaL_reg fovline_reg[] =
 	{NULL, NULL},
 };
 
-static const struct luaL_reg hexfovline_reg[] =
+static const struct luaL_Reg hexfovline_reg[] =
 {
 	{"__gc", lua_free_hex_fov_line},
 	{"__call", lua_hex_fov_line_step},

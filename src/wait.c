@@ -221,7 +221,7 @@ static int get_ticks(lua_State *L)
 	return 2;
 }
 
-static const struct luaL_reg mainlib[] =
+static const struct luaL_Reg mainlib[] =
 {
 	{"drawLastFrame", draw_last_frame},
 	{"enable", enable},

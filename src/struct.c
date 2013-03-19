@@ -315,7 +315,7 @@ static int b_unpack (lua_State *L) {
 
 
 
-static const struct luaL_reg thislib[] = {
+static const struct luaL_Reg thislib[] = {
   {"pack", b_pack},
   {"unpack", b_unpack},
   {NULL, NULL}

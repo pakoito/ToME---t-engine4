@@ -371,13 +371,13 @@ static int noise_texture2dstack(lua_State *L)
 	return 1;
 }
 
-static const struct luaL_reg noiselib[] =
+static const struct luaL_Reg noiselib[] =
 {
 	{"new", noise_new},
 	{NULL, NULL},
 };
 
-static const struct luaL_reg noise_reg[] =
+static const struct luaL_Reg noise_reg[] =
 {
 	{"__gc", noise_free},
 	{"simplex", noise_simplex},

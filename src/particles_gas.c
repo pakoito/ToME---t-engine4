@@ -409,13 +409,13 @@ static int gas_update(lua_State *L)
 	return 1;
 }
 
-static const struct luaL_reg gaslib[] =
+static const struct luaL_Reg gaslib[] =
 {
 	{"newEmitter", gas_new},
 	{NULL, NULL},
 };
 
-static const struct luaL_reg gas_reg[] =
+static const struct luaL_Reg gas_reg[] =
 {
 	{"__gc", gas_free},
 	{"close", gas_free},

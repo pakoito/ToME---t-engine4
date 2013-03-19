@@ -1172,7 +1172,7 @@ int main(int argc, char *argv[])
 	do_resize(WIDTH, HEIGHT, FALSE);
 	if (screen==NULL) {
 		printf("error opening screen: %s\n", SDL_GetError());
-		return;
+		return 3;
 	}
 	SDL_SetWindowIcon(window, IMG_Load_RW(PHYSFSRWOPS_openRead("/engines/default/data/gfx/te4-icon.png"), TRUE));
 	SDL_SetWindowTitle(window, "T4Engine");

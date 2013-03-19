@@ -423,14 +423,14 @@ static int serial_clonefull(lua_State *L)
 	return 2;
 }
 
-static const struct luaL_reg seriallib[] =
+static const struct luaL_Reg seriallib[] =
 {
 	{"new", serial_new},
 	{"cloneFull", serial_clonefull},
 	{NULL, NULL},
 };
 
-static const struct luaL_reg serial_reg[] =
+static const struct luaL_Reg serial_reg[] =
 {
 	{"__gc", serial_free},
 	{"toZip", serial_tozip},

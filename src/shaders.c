@@ -275,7 +275,7 @@ static int shader_disable(lua_State *L)
 	return 0;
 }
 
-static const struct luaL_reg shaderlib[] =
+static const struct luaL_Reg shaderlib[] =
 {
 	{"newShader", shader_new},
 	{"newProgram", program_new},
@@ -284,7 +284,7 @@ static const struct luaL_reg shaderlib[] =
 	{NULL, NULL},
 };
 
-static const struct luaL_reg program_reg[] =
+static const struct luaL_Reg program_reg[] =
 {
 	{"__gc", program_free},
 	{"compile", program_compile},
@@ -299,7 +299,7 @@ static const struct luaL_reg program_reg[] =
 	{NULL, NULL},
 };
 
-static const struct luaL_reg shader_reg[] =
+static const struct luaL_Reg shader_reg[] =
 {
 	{"__gc", shader_free},
 	{NULL, NULL},

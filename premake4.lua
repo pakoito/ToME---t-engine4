@@ -22,7 +22,6 @@ solution "TEngine"
 		"/usr/include/GL",
 	}
 	if _OPTIONS.lua == "default" then includedirs{"src/lua"}
-	elseif _OPTIONS.lua == "jitx86" then includedirs{"src/luajit", "src/dynasm",}
 	elseif _OPTIONS.lua == "jit2" then includedirs{"src/luajit2/src", "src/luajit2/dynasm",}
 	end
 

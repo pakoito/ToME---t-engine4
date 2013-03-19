@@ -533,7 +533,7 @@ static int dmnd_1d(lua_State *L)
 	return 1;
 }
 
-static const struct luaL_reg dmndlib[] =
+static const struct luaL_Reg dmndlib[] =
 {
 	{"get1D", dmnd_1d},
 	{"get2D", dmnd_2d},

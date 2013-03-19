@@ -45,19 +45,35 @@ project "TEngine"
 	configuration "macosx"
 		files { "../src/mac/SDL*" }
 		includedirs {
-  	      "/System/Library/Frameworks/OpenGL.framework/Headers",
-  	      "/System/Library/Frameworks/OpenAL.framework/Headers",
-		      "/Library/Frameworks/SDL.framework/Headers",
-		      "/Library/Frameworks/SDL.framework/Headers",
-  	      "/Library/Frameworks/SDL_net.framework/Headers",
-		      "/Library/Frameworks/SDL_image.framework/Headers",
-  	      "/Library/Frameworks/SDL_ttf.framework/Headers",
-		      "/Library/Frameworks/SDL_mixer.framework/Headers",
+			"/System/Library/Frameworks/OpenGL.framework/Headers",
+			"/System/Library/Frameworks/OpenAL.framework/Headers",
+
+			"/Library/Frameworks/SDL2.framework/Headers",
+			"/Library/Frameworks/SDL2_image.framework/Headers",
+			"/Library/Frameworks/SDL2_ttf.framework/Headers",
+
+			-- MacPorts paths
 			"/opt/local/include",
-			"/opt/local/include/Vorbis"
-  	}
-	  defines { "USE_TENGINE_MAIN", 'SELFEXE_MACOSX', [[TENGINE_HOME_PATH='"/Library/Application Support/T-Engine/"']]  }
-		linkoptions { "-framework SDL", "-framework SDL_image", "-framework SDL_ttf", "-framework SDL_mixer", "-framework Cocoa", "-framework OpenGL" , "-framework OpenAL", "-pagezero_size 10000","-image_base 100000000" }
+			"/opt/local/include/Vorbis",
+
+			-- Homebrew paths
+			"/usr/local/include",
+			"/usr/local/opt/libpng12/include",
+		}
+		defines { "USE_TENGINE_MAIN", 'SELFEXE_MACOSX', [[TENGINE_HOME_PATH='"/Library/Application Support/T-Engine/"']]  }
+		linkoptions {
+			"-framework Cocoa",
+			"-framework OpenGL",
+			"-framework OpenAL",
+
+			"-framework SDL2",
+			"-framework SDL2_image",
+			"-framework SDL2_ttf",
+
+			-- These two options are mandatory for LuaJIT to work
+			"-pagezero_size 10000",
+			"-image_base 100000000",
+		}
 		targetdir "."
 		links { "IOKit" }
 
@@ -111,15 +127,6 @@ if _OPTIONS.lua == "default" then
 		targetname "lua"
 
 		files { "../src/lua/*.c", }
-elseif _OPTIONS.lua == "jitx86" then
-	project "luajitx86"
-		kind "StaticLib"
-		language "C"
-		targetname "lua"
-
-		files { "../src/luajit/*.c", }
-		configuration "linux"
-			defines { "LUA_USE_POSIX" }
 elseif _OPTIONS.lua == "jit2" then
 	project "minilua"
 		kind "ConsoleApp"

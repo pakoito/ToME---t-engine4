@@ -186,7 +186,7 @@ static void set_info (lua_State *L) {
 }
 
 
-static struct luaL_reg md5lib[] = {
+static struct luaL_Reg md5lib[] = {
   {"sum", lmd5},
   {"exor", ex_or},
   {"crypt", crypt},

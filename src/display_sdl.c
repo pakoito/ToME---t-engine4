@@ -49,9 +49,6 @@ void display_put_string(SDL_Surface *surface, const char *s, int x, int y, int r
 	}
 }
 
-#ifndef __APPLE__
-inline
-#endif
 void sdlDrawImage(SDL_Surface *dest, SDL_Surface *image, int x, int y)
 {
 	SDL_Rect r;

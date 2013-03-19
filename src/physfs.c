@@ -20,6 +20,7 @@
 */
 #include <stdlib.h>
 #include <string.h>
+#include "bspatch.h"
 #include "lua.h"
 #include "lauxlib.h"
 #include "lualib.h"
@@ -436,7 +437,7 @@ static int lua_patch_file(lua_State *L)
 	}
 }
 
-static const struct luaL_reg fslib[] =
+static const struct luaL_Reg fslib[] =
 {
 	{"patchFile", lua_patch_file},
 	{"open", lua_fs_open},
@@ -459,7 +460,7 @@ static const struct luaL_reg fslib[] =
 	{NULL, NULL},
 };
 
-static const struct luaL_reg fsfile_reg[] =
+static const struct luaL_Reg fsfile_reg[] =
 {
 	{"__gc", lua_close_file},
 	{"close", lua_close_file},
@@ -469,7 +470,7 @@ static const struct luaL_reg fsfile_reg[] =
 	{NULL, NULL},
 };
 
-static const struct luaL_reg fszipfile_reg[] =
+static const struct luaL_Reg fszipfile_reg[] =
 {
 	{"__gc", lua_close_zip},
 	{"close", lua_close_zip},

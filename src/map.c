@@ -1742,7 +1742,7 @@ static int minimap_to_screen(lua_State *L)
 	return 0;
 }
 
-static const struct luaL_reg maplib[] =
+static const struct luaL_Reg maplib[] =
 {
 	{"newMap", map_new},
 	{"newObject", map_object_new},
@@ -1751,7 +1751,7 @@ static const struct luaL_reg maplib[] =
 	{NULL, NULL},
 };
 
-static const struct luaL_reg map_reg[] =
+static const struct luaL_Reg map_reg[] =
 {
 	{"__gc", map_free},
 	{"close", map_free},
@@ -1778,7 +1778,7 @@ static const struct luaL_reg map_reg[] =
 	{NULL, NULL},
 };
 
-static const struct luaL_reg map_object_reg[] =
+static const struct luaL_Reg map_object_reg[] =
 {
 	{"__gc", map_object_free},
 	{"texture", map_object_texture},

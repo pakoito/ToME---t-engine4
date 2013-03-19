@@ -125,7 +125,7 @@ int pop_event(lua_State *L)
 	return 1;
 }
 
-static const struct luaL_reg threadlib[] =
+static const struct luaL_Reg threadlib[] =
 {
 	{"popOrder", pop_order},
 	{"pushEvent", push_event},
@@ -218,7 +218,7 @@ int create_profile_thread(lua_State *L)
 	return 0;
 }
 
-static const struct luaL_reg mainlib[] =
+static const struct luaL_Reg mainlib[] =
 {
 	{"createThread", create_profile_thread},
 	{"pushOrder", push_order},

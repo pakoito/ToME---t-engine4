@@ -513,7 +513,7 @@ static int lzlib_decompress(lua_State *L)
 
 LUALIB_API int luaopen_zlib(lua_State *L)
 {
-    const luaL_reg zstreamm[] =
+    const luaL_Reg zstreamm[] =
     {
         {"reset",           lzstream_reset      },
 
@@ -529,7 +529,7 @@ LUALIB_API int luaopen_zlib(lua_State *L)
         {NULL, NULL}
     };
 
-    const luaL_reg zlib[] =
+    const luaL_Reg zlib[] =
     {
         {"version",         lzlib_version       },
         {"adler32",         lzlib_adler32       },

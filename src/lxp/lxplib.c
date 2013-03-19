@@ -493,7 +493,7 @@ static int lxp_setencoding (lua_State *L) {
 }
 
 
-static const struct luaL_reg lxp_meths[] = {
+static const struct luaL_Reg lxp_meths[] = {
   {"parse", lxp_parse},
   {"close", lxp_close},
   {"__gc", parser_gc},
@@ -505,7 +505,7 @@ static const struct luaL_reg lxp_meths[] = {
   {NULL, NULL}
 };
 
-static const struct luaL_reg lxp_funcs[] = {
+static const struct luaL_Reg lxp_funcs[] = {
   {"new", lxp_make_parser},
   {NULL, NULL}
 };

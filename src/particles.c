@@ -493,13 +493,13 @@ static int particles_emit(lua_State *L)
 	return 0;
 }
 
-static const struct luaL_reg particleslib[] =
+static const struct luaL_Reg particleslib[] =
 {
 	{"newEmitter", particles_new},
 	{NULL, NULL},
 };
 
-static const struct luaL_reg particles_reg[] =
+static const struct luaL_Reg particles_reg[] =
 {
 	{"__gc", particles_free},
 	{"toScreen", particles_to_screen},

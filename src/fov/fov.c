@@ -2209,7 +2209,7 @@ LARGE_ASS_LOS_DEFINE_OCTANT(-,-,x,y,m,m,n)
 LARGE_ASS_LOS_DEFINE_OCTANT(-,-,y,x,m,m,y)
 
 #define HEX_LOS_DEFINE_SEXTANT(signx, signy, nx, ny, one)                                         \
-    static float hex_los_sextant_##nx##ny(                                                        \
+    static void hex_los_sextant_##nx##ny(                                                         \
                                         fov_private_data_type *data,                              \
                                         hex_fov_line_data *line,                                  \
                                         float start_slope,                                        \
@@ -2290,7 +2290,7 @@ LARGE_ASS_LOS_DEFINE_OCTANT(-,-,y,x,m,m,y)
     }
 
 #define HEX_LOS_DEFINE_LR_SEXTANT(signx, nx)                                                      \
-    static float hex_los_sextant_##nx(                                                            \
+    static void hex_los_sextant_##nx(                                                             \
                                         fov_private_data_type *data,                              \
                                         hex_fov_line_data *line,                                  \
                                         float start_slope,                                        \
