@@ -119,6 +119,7 @@ reward = function(self, player, reward)
 	o:resolve()
 	o:resolve(nil, true)
 	if o then
+		o:identify(true)
 		player:addObject(player.INVEN_INVEN, o)
 		game.logPlayer(player, "You receive: %s", o:getName{do_color=true})
 	end

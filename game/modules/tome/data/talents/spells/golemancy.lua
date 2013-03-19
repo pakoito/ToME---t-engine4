@@ -57,7 +57,7 @@ local function makeGolem(self)
 			[Talents.T_GOLEM_DESTRUCT]=1,
 		},
 
-		resolvers.equip{
+		resolvers.equip{ id=true,
 			{type="weapon", subtype="battleaxe", autoreq=true, id=true, ego_chance=-1000},
 			{type="armor", subtype="heavy", autoreq=true, id=true, ego_chance=-1000}
 		},
