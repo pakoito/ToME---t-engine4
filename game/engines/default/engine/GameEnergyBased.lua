@@ -86,11 +86,6 @@ function _M:tick()
 
 	self.turn = self.turn + 1
 	self:onTurn()
-
-	-- Try to join threads if any, every hundred turns
-	if self.turn % 100 == 0 then
-		self:joinThreads(0)
-	end
 end
 
 --- Run tick on a level

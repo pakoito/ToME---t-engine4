@@ -46,8 +46,6 @@ function _M:init(keyhandler)
 
 	self.__savefile_version_tokens = {}
 
-	self.__threads = {}
-
 	self:defaultMouseCursor()
 end
 
@@ -86,7 +84,6 @@ function _M:loaded()
 	self.mouse = engine.Mouse.new()
 	self.mouse:setCurrent()
 
-	self.__threads = self.__threads or {}
 	self.__coroutines = self.__coroutines or {}
 
 	self:setGamma(config.settings.gamma_correction / 100)
@@ -550,32 +547,6 @@ function _M:cancelCoroutine(id)
 		self.__coroutines[id] = nil
 	else
 		error("Told coroutine "..id.." to cancel, but it is not dead!")
-	end
-end
-
---- Save a thread into the thread pool
--- Threads will be auto joined when the module exits or when it can
--- ALL THREADS registered *MUST* return true when they exit
-function _M:registerThread(th, linda)
-error("Threads unsuported yet")
-	print("[THREAD] registering", th, linda, #self.__threads+1)
-	self.__threads[#self.__threads+1] = {th=th, linda=linda}
-	return #self.__threads
-end
-
---- Try to join all registered threads
--- @param timeout the time in seconds to wait for each thread
-function _M:joinThreads(timeout)
-	for i = #self.__threads, 1, -1 do
-error("Threads unsuported yet")
-		local th = self.__threads[i].th
-		print("[THREAD] Thread join", i, th)
-		local v, err = th:join(timeout)
-		if err then print("[THREAD] error", th) error(err) end
-		if v then
-			print("[THREAD] Thread result", i, th, "=>", v)
-			table.remove(self.__threads, i)
-		end
 	end
 end
 

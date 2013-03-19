@@ -1873,9 +1873,6 @@ function util.showMainMenu(no_reboot, reboot_engine, reboot_engine_version, rebo
 		profile:saveGenericProfile("modules_played", {name=game.__mod_info.short_name, time_played={"inc", os.time() - game.__session_time_played_start}})
 	end
 
-	-- Join threads
-	if game and type(game) == "table" then game:joinThreads(30) end
-
 	if no_reboot then
 		local Module = require("engine.Module")
 		local ms = Module:listModules(true)
