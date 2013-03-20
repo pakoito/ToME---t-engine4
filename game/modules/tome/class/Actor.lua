@@ -2065,7 +2065,7 @@ function _M:onTakeHit(value, src)
 	end
 
 	-- Invisible on hit
-	if value >= self.max_life * 0.15 and self:attr("invis_on_hit") and rng.percent(self:attr("invis_on_hit")) then
+	if value >= self.max_life * 0.10 and self:attr("invis_on_hit") and rng.percent(self:attr("invis_on_hit")) then
 		self:setEffect(self.EFF_INVISIBILITY, 5, {power=self:attr("invis_on_hit_power")})
 		for tid, _ in pairs(self.invis_on_hit_disable) do self:forceUseTalent(tid, {ignore_energy=true}) end
 	end

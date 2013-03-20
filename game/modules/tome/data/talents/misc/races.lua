@@ -138,13 +138,13 @@ newTalent{
 	cooldown = function(self, t) return 50 - self:getTalentLevel(t) * 4 end,
 	tactical = { DEFEND = 1 },
 	action = function(self, t)
-		local power = 0.1 + self:getDex() / 210
+		local power = 0.1 + math.max(self:getDex(), self:getMag()) / 210
 		self:setEffect(self.EFF_SPEED, 8, {power=power})
 		return true
 	end,
 	info = function(self, t)
 		return ([[Call upon the grace of the Eternals to increase your general speed by %d%% for 8 turns.
-		The speed bonus will increase with your Dexterity.]]):format((0.1 + self:getDex() / 210) * 100)
+		The speed bonus will increase with your Dexterity or Magic (whichever is higher).]]):format((0.1 + math.max(self:getDex(), self:getMag()) / 210) * 100)
 	end,
 }
 
@@ -158,15 +158,17 @@ newTalent{
 		self.combat_physcrit = self.combat_physcrit + 2
 		self.combat_spellcrit = self.combat_spellcrit + 2
 		self.combat_mindcrit = self.combat_mindcrit + 2
+		self.combat_critical_power = (self.combat_critical_power or 0) + 5
 	end,
 	on_unlearn = function(self, t)
 		self.combat_physcrit = self.combat_physcrit - 2
 		self.combat_spellcrit = self.combat_spellcrit - 2
 		self.combat_mindcrit = self.combat_mindcrit - 2
+		self.combat_critical_power = (self.combat_critical_power or 0) + 5
 	end,
 	info = function(self, t)
 		return ([[Reality bends slightly in the presence of a Shaloren, due to their inherent magical nature.
-		Increases critical chance by %d%%.]]):format(self:getTalentLevelRaw(t) * 2)
+		Increases critical chance by %d%% and critical strike power by %d%%.]]):format(self:getTalentLevelRaw(t) * 2, self:getTalentLevelRaw(t) * 5)
 	end,
 }
 
@@ -182,7 +184,7 @@ newTalent{
 		self.invis_on_hit_disable = self.invis_on_hit_disable or {}
 		game:playSoundNear(self, "talents/spell_generic2")
 		local ret = {
-			invis = self:addTemporaryValue("invis_on_hit", self:getTalentLevelRaw(t) * 5),
+			invis = self:addTemporaryValue("invis_on_hit", 15 + self:getTalentLevelRaw(t) * 6),
 			power = self:addTemporaryValue("invis_on_hit_power", 5 + self:getMag(20, true)),
 			talent = self:addTemporaryValue("invis_on_hit_disable", {[t.id]=1}),
 		}
@@ -196,8 +198,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[As the only immortal race of Eyal, Shaloren have learnt, over the long years, to use their innate inner magic to protect themselves.
-		%d%% chance to become invisible (power %d) for 5 turns, when hit by a blow doing at least 15%% of their total life.]]):
-		format(self:getTalentLevelRaw(t) * 5, 5 + self:getMag(20, true))
+		%d%% chance to become invisible (power %d) for 5 turns, when hit by a blow doing at least 10%% of their total life.]]):
+		format(15 + self:getTalentLevelRaw(t) * 6, 5 + self:getMag(20, true))
 	end,
 }
 
@@ -244,13 +246,25 @@ newTalent{
 			target:removeEffect(table.remove(todel))
 		end
 
+		local tids = {}
+		for tid, lev in pairs(self.talents) do
+			local t = self:getTalentFromId(tid)
+			if t and self.talents_cd[tid] then tids[#tids+1] = t end
+		end
+		while #tids > 0 do
+			local tt = rng.tableRemove(tids)
+			if not tt then break end
+			self.talents_cd[tt.id] = self.talents_cd[tt.id] - self:getTalentLevelRaw(t)
+			if self.talents_cd[tt.id] <= 0 then self.talents_cd[tt.id] = nil end
+		end
+
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
 	info = function(self, t)
 		return ([[The world grows old as you stand through the ages. To you, time is different.
-		Reduces the time remaining on detrimental effects by %d, and increases the time remaining on beneficial effects by %d.]]):
-		format(self:getTalentLevelRaw(t) * 2, self:getTalentLevelRaw(t))
+		Reduces the time remaining on detrimental effects by %d, cooling down talents by %d, and increases the time remaining on beneficial effects by %d.]]):
+		format(self:getTalentLevelRaw(t) * 2, self:getTalentLevelRaw(t), self:getTalentLevelRaw(t))
 	end,
 }
 
