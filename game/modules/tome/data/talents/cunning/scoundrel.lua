@@ -22,7 +22,6 @@ local Map = require "engine.Map"
 newTalent{
 	name = "Lacerating Strikes",
 	type = {"cunning/scoundrel", 1},
-	mode = "passive",
 	points = 5,
 	require = cuns_req1,
 	mode = "sustained",
