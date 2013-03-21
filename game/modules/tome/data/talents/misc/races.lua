@@ -164,7 +164,7 @@ newTalent{
 		self.combat_physcrit = self.combat_physcrit - 2
 		self.combat_spellcrit = self.combat_spellcrit - 2
 		self.combat_mindcrit = self.combat_mindcrit - 2
-		self.combat_critical_power = (self.combat_critical_power or 0) + 5
+		self.combat_critical_power = (self.combat_critical_power or 0) - 5
 	end,
 	info = function(self, t)
 		return ([[Reality bends slightly in the presence of a Shaloren, due to their inherent magical nature.

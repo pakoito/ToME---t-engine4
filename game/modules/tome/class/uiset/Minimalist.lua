@@ -219,7 +219,7 @@ function _M:init()
 
 	self.sizes = {}
 
-	self.tbbuttons = {inven=0.6, mainmenu=0.6, lore=0.6, quest=0.6}
+	self.tbbuttons = {inven=0.6, talents=0.6, mainmenu=0.6, lore=0.6, quest=0.6}
 
 	self.buffs_base = UI:makeFrame("ui/icon-frame/frame", 40, 40)
 end
@@ -1824,11 +1824,11 @@ function _M:displayToolbar(scale, bx, by)
 	x, y = self:toolbarOrientStep(orient, bx, by, scale, x, y, tb_bg[6], tb_bg[7])
 
 	tb_bg[1]:toScreenFull		(x, y, tb_bg[6], tb_bg[7], tb_bg[2], tb_bg[3], 1, 1, 1, 1)
-	tb_talents[1]:toScreenFull	(x, y, tb_talents[6], tb_talents[7], tb_talents[2], tb_talents[3], self.tbbuttons.inven, self.tbbuttons.inven, self.tbbuttons.inven, 1)
+	tb_talents[1]:toScreenFull	(x, y, tb_talents[6], tb_talents[7], tb_talents[2], tb_talents[3], self.tbbuttons.talents, self.tbbuttons.talents, self.tbbuttons.talents, 1)
 	if not game.mouse:updateZone("tb_talents", bx + x * scale, by +y*scale, tb_talents[6], tb_talents[7], nil, scale) then
 		game.mouse:unregisterZone("tb_talents")
 		local desc_fct = function(button, mx, my, xrel, yrel, bx, by, event)
-			if event == "out" then self.tbbuttons.inven = 0.6 return else self.tbbuttons.inven = 1 end
+			if event == "out" then self.tbbuttons.talents = 0.6 return else self.tbbuttons.talents = 1 end
 			game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, "Left mouse to show known talents")
 			if button == "left" and not xrel and not yrel and event == "button" then game.key:triggerVirtual("USE_TALENTS") end
 		end
