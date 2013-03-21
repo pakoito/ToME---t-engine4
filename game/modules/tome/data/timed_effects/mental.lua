@@ -163,7 +163,7 @@ newEffect{
 newEffect{
 	name = "WILLFUL_COMBAT", image = "talents/willful_combat.png",
 	desc = "Willful Combat",
-	long_desc = function(self, eff) return ("The target puts all its willpower into its blows, improving damage by %d."):format(eff.power) end,
+	long_desc = function(self, eff) return ("The target puts all its willpower into its blows, improving physical power by %d."):format(eff.power) end,
 	type = "mental",
 	subtype = { focus=true },
 	status = "beneficial",

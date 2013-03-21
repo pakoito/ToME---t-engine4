@@ -94,7 +94,7 @@ newTalent{
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[For %d turns, you put all your will into your blows, adding %d damage to each strike.
+		return ([[For %d turns, you put all your will into your blows, adding %d physical power to each strike.
 		The effect will improve with your Cunning and Willpower stats.]]):
 		format(duration, damage)
 	end,
