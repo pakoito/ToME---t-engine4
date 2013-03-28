@@ -163,6 +163,12 @@ function _M:display(nb_keyframes)
 	end
 end
 
+--- Called when the game is focused/unfocused
+function _M:idling(focus)
+	self.has_os_focus = focus
+	print("Game got focus/unfocus", focus)
+end
+
 --- Receives a profile event
 -- Usualy this just transfers it to the PlayerProfile class but you can overload it to handle special stuff
 function _M:handleProfileEvent(evt)

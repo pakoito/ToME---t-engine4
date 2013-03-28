@@ -1086,8 +1086,17 @@ void handleIdleTransition(int goIdle)
 			setupDisplayTimer(requested_fps_idle_saved);
 		}
 
+		if (current_game != LUA_NOREF)
+		{
+			lua_rawgeti(L, LUA_REGISTRYINDEX, current_game);
+			lua_pushstring(L, "idling");
+			lua_gettable(L, -2);
+			lua_remove(L, -2);
+			lua_rawgeti(L, LUA_REGISTRYINDEX, current_game);
+			lua_pushboolean(L, !goIdle);
+			docall(L, 2, 0);
+		}
 	}
-
 }
 
 /**

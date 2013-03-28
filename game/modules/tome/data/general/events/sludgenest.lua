@@ -36,7 +36,7 @@ level.data.on_enter_list.sludgenest = function()
 	g:initGlow()
 	game.zone:addEntity(game.level, g, "terrain", spot.x, spot.y)
 	print("[WORLDMAP] sludgenest at", spot.x, spot.y)
-	require("engine.ui.Dialog"):simpleLongPopup("Lust forest", "Suddently it comes back to you. You remember long ago somebody told you about a strange lush forest in the cold icy wastes of the northland.", 400)
+	require("engine.ui.Dialog"):simpleLongPopup("Lush forest", "Suddently it comes back to you. You remember long ago somebody told you about a strange lush forest in the cold icy wastes of the northland.", 400)
 end
 
 return true
