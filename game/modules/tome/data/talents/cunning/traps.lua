@@ -288,6 +288,7 @@ newTalent{
 	requires_target = true,
 	range = trap_range,
 	tactical = { DISABLE = { pin = 2 } },
+	no_break_stealth = trap_stealth,
 	no_unlearn_last = true,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
@@ -339,6 +340,7 @@ newTalent{
 	requires_target = true,
 	tactical = { DISABLE = { stun = 2 } },
 	range = trap_range,
+	no_break_stealth = trap_stealth,
 	no_unlearn_last = true,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
@@ -396,6 +398,7 @@ newTalent{
 	requires_target = true,
 	tactical = { DISABLE = { disarm = 2 } },
 	range = trap_range,
+	no_break_stealth = trap_stealth,
 	no_unlearn_last = true,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
@@ -447,6 +450,7 @@ newTalent{
 	tactical = { DISABLE = { stun = 2 } },
 	requires_target = true,
 	range = trap_range,
+	no_break_stealth = trap_stealth,
 	no_unlearn_last = true,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
@@ -496,6 +500,7 @@ newTalent{
 	tactical = { DISABLE = { blind = 1, stun = 1 } },
 	requires_target = true,
 	range = trap_range,
+	no_break_stealth = trap_stealth,
 	no_unlearn_last = true,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
@@ -553,6 +558,7 @@ newTalent{
 	tactical = { ATTACKAREA = { poison = 2 } },
 	requires_target = true,
 	range = trap_range,
+	no_break_stealth = trap_stealth,
 	no_unlearn_last = true,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
@@ -612,6 +618,7 @@ newTalent{
 	requires_target = true,
 	is_spell = true,
 	range = trap_range,
+	no_break_stealth = trap_stealth,
 	no_unlearn_last = true,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
