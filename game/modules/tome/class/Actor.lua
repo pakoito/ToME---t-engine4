@@ -3858,7 +3858,7 @@ function _M:postUseTalent(ab, ret, silent)
 	end
 
 	-- Cancel stealth!
-	if ab.id ~= self.T_STEALTH and ab.id ~= self.T_HIDE_IN_PLAIN_SIGHT and not ab.no_break_stealth then self:breakStealth() end
+	if ab.id ~= self.T_STEALTH and ab.id ~= self.T_HIDE_IN_PLAIN_SIGHT and not util.getval(ab.no_break_stealth, self, ab) then self:breakStealth() end
 	if ab.id ~= self.T_LIGHTNING_SPEED then self:breakLightningSpeed() end
 	if ab.id ~= self.T_GATHER_THE_THREADS and ab.id ~= self.T_SPACETIME_TUNING and ab.is_spell then self:breakChronoSpells() end
 	if not ab.no_reload_break then self:breakReloading() end

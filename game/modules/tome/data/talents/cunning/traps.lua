@@ -77,7 +77,7 @@ newTalent{
 	name = "Lure",
 	type = {"cunning/trapping", 2},
 	points = 5,
-	cooldown = 20,
+	cooldown = 15,
 	stamina = 15,
 	no_break_stealth = true,
 	require = cuns_req2,
@@ -186,7 +186,8 @@ newTalent{
 	mode = "passive",
 	require = cuns_req4,
 	info = function(self, t)
-		return ([[Allows you to create self deploying traps that you can launch up to %d grids away.]]):format(trap_range(self, t))
+		return ([[Allows you to create self deploying traps that you can launch up to %d grids away.
+		At level 5 you learn to do that in total silence, letting you lay traps without breaking stealth.]]):format(trap_range(self, t))
 	end,
 }
 
@@ -223,6 +224,13 @@ local basetrap = function(self, t, x, y, dur, add)
 	return Trap.new(trap)
 end
 
+function trap_stealth(self, t)
+	if self:getTalentLevel(self.T_TRAP_LAUNCHER) >= 5 then
+		return true
+	end
+	return false
+end
+
 newTalent{
 	name = "Explosion Trap",
 	type = {"cunning/traps", 1},
@@ -231,6 +239,7 @@ newTalent{
 	stamina = 15,
 	requires_target = true,
 	range = trap_range,
+	no_break_stealth = trap_stealth,
 	tactical = { ATTACKAREA = { FIRE = 2 } },
 	no_unlearn_last = true,
 	action = function(self, t)

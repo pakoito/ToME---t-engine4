@@ -70,6 +70,7 @@ newBirthDescriptor{
 		["cunning/poisons"]={false, 0.3, "rogue_poisons"},
 	},
 	talents = {
+		[ActorTalents.T_SHOOT] = 1,
 		[ActorTalents.T_STEALTH] = 1,
 		[ActorTalents.T_TRAP_MASTERY] = 1,
 		[ActorTalents.T_LETHALITY] = 1,
@@ -80,6 +81,12 @@ newBirthDescriptor{
 			{type="weapon", subtype="dagger", name="iron dagger", autoreq=true, ego_chance=-1000},
 			{type="weapon", subtype="dagger", name="iron dagger", autoreq=true, ego_chance=-1000},
 			{type="armor", subtype="light", name="rough leather armour", autoreq=true, ego_chance=-1000}
+		},
+		resolvers.inventory{ id=true, inven="QS_MAINHAND",
+			{type="weapon", subtype="sling", name="rough leather sling", autoreq=true, ego_chance=-1000},
+		},
+		resolvers.inventory{ id=true, inven="QS_QUIVER",
+			{type="ammo", subtype="shot", name="pouch of iron shots", autoreq=true, ego_chance=-1000},
 		},
 	},
 }
