@@ -305,6 +305,15 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 		end
 	end
 
+	-- Poison coating
+	if hitted and not target.dead and self.vile_poisons and next(self.vile_poisons) and target:canBe("poison") and weapon and weapon.talented == "sling" then
+		local tid = rng.table(table.keys(self.vile_poisons))
+		if tid then
+			local t = self:getTalentFromId(tid)
+			t.proc(self, t, target, weapon)
+		end
+	end
+
 	-- Special effect
 	if hitted and weapon and weapon.special_on_hit and weapon.special_on_hit.fct and (not target.dead or weapon.special_on_hit.on_kill) then
 		weapon.special_on_hit.fct(weapon, self, target)

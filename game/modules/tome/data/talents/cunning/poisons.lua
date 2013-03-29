@@ -60,7 +60,7 @@ newTalent{
 		end
 	end,
 	info = function(self, t)
-		return ([[Learn how to coat your weapons with poison. Each level, you will learn a new kind of poison:
+		return ([[Learn how to coat your melee weapons or sling ammo with poison. Each level, you will learn a new kind of poison:
 		Level 1: Deadly Poison
 		Level 2: Numbing Poison
 		Level 3: Insidious Poison
