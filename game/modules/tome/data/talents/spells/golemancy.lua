@@ -212,13 +212,19 @@ newTalent{
 
 		local ammo = self:hasAlchemistWeapon()
 
+		local on_level = false
+		for x = 0, game.level.map.w - 1 do for y = 0, game.level.map.h - 1 do 
+			local act = game.level.map(x, y, Map.ACTOR)
+			if act and act == self.alchemy_golem then on_level = true break end
+		end end
+
 		-- talk to the golem
-		if game.level:hasEntity(self.alchemy_golem) and self.alchemy_golem.life >= self.alchemy_golem.max_life then
+		if game.level:hasEntity(self.alchemy_golem) and on_level and self.alchemy_golem.life >= self.alchemy_golem.max_life then
 			local chat = Chat.new("alchemist-golem", self.alchemy_golem, self, {golem=self.alchemy_golem, player=self})
 			chat:invoke()
 
 		-- heal the golem
-		elseif (game.level:hasEntity(self.alchemy_golem) or self:hasEffect(self.EFF_GOLEM_MOUNT)) and self.alchemy_golem.life < self.alchemy_golem.max_life then
+		elseif ((game.level:hasEntity(self.alchemy_golem) and on_level) or self:hasEffect(self.EFF_GOLEM_MOUNT)) and self.alchemy_golem.life < self.alchemy_golem.max_life then
 			if not ammo or ammo:getNumber() < 2 then
 				game.logPlayer(self, "You need to ready 2 alchemist gems in your quiver to heal your golem.")
 				return
