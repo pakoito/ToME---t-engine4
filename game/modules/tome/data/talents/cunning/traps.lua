@@ -164,7 +164,7 @@ newTalent{
 	radius = function(self, t) return math.floor(0.5 * self:getTalentLevel(t)) end,
 	tactical = { DISABLE = { blind = 2 } },
 	action = function(self, t)
-		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t, display={particle="bolt_dark"}}
+		local tg = {type="ball", range=self:getTalentRange(t), selffire=false, radius=self:getTalentRadius(t), talent=t, display={particle="bolt_dark"}}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:projectile(tg, x, y, DamageType.STICKY_SMOKE, math.ceil(self:getTalentLevel(t) * 1.2), {type="slime"})
