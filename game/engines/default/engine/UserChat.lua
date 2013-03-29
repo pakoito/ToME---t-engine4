@@ -160,6 +160,7 @@ function _M:unregisterTalkEvents(fct)
 end
 
 function _M:event(e)
+	if not profile.auth then return end
 	if e.se == "Talk" then
 		e.msg = e.msg:removeColorCodes()
 		local color = colors.WHITE
