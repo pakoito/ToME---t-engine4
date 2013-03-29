@@ -18,42 +18,42 @@
 -- darkgod@te4.org
 
 newEntity{
-	name = "warrior's ", prefix=true,
+	name = " of the warrior", suffix=true,
 	level_range = {1, 50},
 	rarity = 4,
 	cost = 10,
 	inscription_data = { use_stat = "str" },
 }
 newEntity{
-	name = "duelist's ", prefix=true,
+	name = " of the duelist", suffix=true,
 	level_range = {1, 50},
 	rarity = 4,
 	cost = 10,
 	inscription_data = { use_stat = "dex" },
 }
 newEntity{
-	name = "wizard's ", prefix=true,
+	name = " of the wizard", suffix=true,
 	level_range = {1, 50},
 	rarity = 4,
 	cost = 10,
 	inscription_data = { use_stat = "mag" },
 }
 newEntity{
-	name = "psychic's ", prefix=true,
+	name = " of the psychic", suffix=true,
 	level_range = {1, 50},
 	rarity = 4,
 	cost = 10,
 	inscription_data = { use_stat = "wil" },
 }
 newEntity{
-	name = "sneak's ", prefix=true,
+	name = " of the sneak", suffix=true,
 	level_range = {1, 50},
 	rarity = 4,
 	cost = 10,
 	inscription_data = { use_stat = "cun" },
 }
 newEntity{
-	name = "titan's ", prefix=true,
+	name = " of the titan", suffix=true,
 	level_range = {1, 50},
 	rarity = 4,
 	cost = 10,
