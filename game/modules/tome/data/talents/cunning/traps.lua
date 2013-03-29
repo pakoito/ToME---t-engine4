@@ -297,7 +297,7 @@ newTalent{
 		local _ _, x, y = self:canProject(tg, x, y)
 		if game.level.map(x, y, Map.TRAP) then game.logPlayer(self, "You somehow fail to set the trap.") return nil end
 
-		local dam = (40 + self:getCun() * 0.7 * self:getTalentLevel(self.T_TRAP_MASTERY)) / 5
+		local dam = (40 + self:getCun() * self:getTalentLevel(self.T_TRAP_MASTERY)) / 5
 
 		local Trap = require "mod.class.Trap"
 		local t = basetrap(self, t, x, y, 8 + self:getTalentLevel(self.T_TRAP_MASTERY), {
@@ -327,7 +327,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Lay a bear trap. The first creature passing by will be caught in the trap, pinned and bleeding for %0.2f physical damage each turn for 5 turns.]]):
-		format(damDesc(self, DamageType.PHYSICAL, (40 + self:getCun() * 0.7 * self:getTalentLevel(self.T_TRAP_MASTERY)) / 5))
+		format(damDesc(self, DamageType.PHYSICAL, (40 + self:getCun() * self:getTalentLevel(self.T_TRAP_MASTERY)) / 5))
 	end,
 }
 
@@ -459,7 +459,7 @@ newTalent{
 		local _ _, x, y = self:canProject(tg, x, y)
 		if game.level.map(x, y, Map.TRAP) then game.logPlayer(self, "You somehow fail to set the trap.") return nil end
 
-		local dam = 20 + self:getCun() * 0.7 * self:getTalentLevel(self.T_TRAP_MASTERY)
+		local dam = 20 + self:getCun() * self:getTalentLevel(self.T_TRAP_MASTERY)
 
 		local Trap = require "mod.class.Trap"
 		local t = basetrap(self, t, x, y, 5 + self:getTalentLevel(self.T_TRAP_MASTERY), {
@@ -487,7 +487,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Lay a trap cotted with a potent venom, doing %0.2f nature damage to a creature passing by and stunning it for 4 turns.]]):
-		format(damDesc(self, DamageType.COLD, 20 + self:getCun() * 0.7 * self:getTalentLevel(self.T_TRAP_MASTERY)))
+		format(damDesc(self, DamageType.COLD, 20 + self:getCun() * self:getTalentLevel(self.T_TRAP_MASTERY)))
 	end,
 }
 
