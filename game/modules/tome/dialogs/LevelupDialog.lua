@@ -809,6 +809,7 @@ function _M:getStatDesc(item)
 		text:add("Defense: ", color, ("%0.2f"):format(diff * 0.35), dc, true)
 		text:add("Ranged defense: ", color, ("%0.2f"):format(diff * 0.35), dc, true)
 		text:add("Accuracy: ", color, ("%0.2f"):format(diff), dc, true)
+		text:add("Shrug off criticals chance: ", color, ("%0.2f%%"):format(diff * 0.3), dc, true)
 	end
 
 	if self.actor.player and self.desc_def and self.desc_def.getStatDesc and self.desc_def.getStatDesc(stat_id, self.actor) then

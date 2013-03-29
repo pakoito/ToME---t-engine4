@@ -2640,6 +2640,8 @@ function _M:onStatChange(stat, v)
 		-- life
 		local multi_life = 4 + (self.inc_resource_multi.life or 0)
 		self.max_life = self.max_life + multi_life * v
+	elseif stat == self.STAT_DEX then
+		self.ignore_direct_crits = (self.ignore_direct_crits or 0) + 0.3 * v
 	elseif stat == self.STAT_WIL then
 		-- mana
 		local multi_mana = 5 + (self.inc_resource_multi.mana or 0)

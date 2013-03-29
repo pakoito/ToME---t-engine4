@@ -512,7 +512,7 @@ newTalent{
 		local Trap = require "mod.class.Trap"
 		local t = basetrap(self, t, x, y, 5 + self:getTalentLevel(self.T_TRAP_MASTERY), {
 			type = "elemental", name = "flash bang trap", color=colors.YELLOW, image = "trap/blast_acid01.png",
-			dur = math.floor(self:getTalentLevel(self.T_TRAP_MASTERY) + 4),
+			dur = math.floor(self:getTalentLevel(self.T_TRAP_MASTERY) / 2 + 2),
 			check_hit = self:combatAttack(),
 			lure_trigger = true,
 			stamina = t.stamina,
@@ -545,7 +545,7 @@ newTalent{
 		return ([[Lay a trap that explodes in a radius of 2, blinding or dazing anything caught inside for %d turns.
 		The duration increases with Trap Mastery.
 		High level lure can trigger this trap.]]):
-		format(math.floor(self:getTalentLevel(self.T_TRAP_MASTERY) + 4))
+		format(math.floor(self:getTalentLevel(self.T_TRAP_MASTERY) / 2 + 2))
 	end,
 }
 

@@ -188,7 +188,7 @@ TOOLTIP_STR = [[#GOLD#Strength#LAST#
 Strength defines your character's ability to apply physical force. It increases Physical Power, damage done with heavy weapons, Physical Save, and carrying capacity.
 ]]
 TOOLTIP_DEX = [[#GOLD#Dexterity#LAST#
-Dexterity defines your character's ability to be agile and alert. It increases Accuracy, Defense, and your damage with light weapons.
+Dexterity defines your character's ability to be agile and alert. It increases Accuracy, Defense, chance to shrug off critical hits and your damage with light weapons.
 ]]
 TOOLTIP_CON = [[#GOLD#Constitution#LAST#
 Constitution defines your character's ability to withstand and resist damage. It increases your maximum life and Physical Save.
@@ -262,6 +262,9 @@ Absorbs (hardiness)% of incoming physical damage, up to a maximum of (armour) da
 ]]
 TOOLTIP_CRIT_REDUCTION = [[#GOLD#Crit Reduction#LAST#
 Crit reduction reduces the chance an opponent has of landing a critical strike with a melee or ranged attack.
+]]
+TOOLTIP_CRIT_SHRUG = [[#GOLD#Crits Shrug Off#LAST#
+Gives a chance to ignore the bonus critical damage from any direct damage attacks (melee, spells, ranged, mind powers, ...).
 ]]
 TOOLTIP_DEFENSE = [[#GOLD#Defense#LAST#
 Defense represents your chance to avoid physical melee attacks and reduces the chance you'll be knocked off-balance by an enemy's attack. It is measured against the attacker's Accuracy.
