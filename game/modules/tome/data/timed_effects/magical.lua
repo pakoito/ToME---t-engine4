@@ -2088,10 +2088,10 @@ newEffect{
 		self:effectTemporaryValue(eff, "resists", {[DamageType.TEMPORAL] = 30})
 		self:effectTemporaryValue(eff, "resists_pen", {[DamageType.TEMPORAL] = 20})
 		self:effectTemporaryValue(eff, "talent_cd_reduction", {[self.T_ANOMALY_REARRANGE] = -4, [self.T_ANOMALY_TEMPORAL_STORM] = -4})
-		self:effectTemporaryValue(eff, "paradox_reduce_fails", 600)
+		self:effectTemporaryValue(eff, "paradox_reduce_fails", 400)
 		self:learnTalent(self.T_ANOMALY_REARRANGE, true)
 		self:learnTalent(self.T_ANOMALY_TEMPORAL_STORM, true)
-		self:incParadox(600)
+		self:incParadox(400)
 
 		self.replace_display = mod.class.Actor.new{
 			image = "npc/elemental_temporal_telugoroth.png",
@@ -2102,7 +2102,7 @@ newEffect{
 		game.level.map:updateMap(self.x, self.y)
 	end,
 	deactivate = function(self, eff)
-		self:incParadox(-600)
+		self:incParadox(-400)
 		self:unlearnTalent(self.T_ANOMALY_REARRANGE)
 		self:unlearnTalent(self.T_ANOMALY_TEMPORAL_STORM)
 		self.replace_display = nil
