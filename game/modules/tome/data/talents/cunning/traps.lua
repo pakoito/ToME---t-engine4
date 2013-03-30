@@ -437,7 +437,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Lay a tricky trap that maims the arms of creatures passing by with acid doing %0.2f damage and disarming them for %d turns.]]):
-		format(damDesc(self, DamageType.ACID, 30 + self:getCun() * 0.8 * self:getTalentLevel(self.T_TRAP_MASTERY)), 2 + math.ceil(self:getTalentLevel(self.T_TRAP_MASTERY) / 2))
+		format(damDesc(self, DamageType.ACID, 30 + self:getCun() * self:getTalentLevel(self.T_TRAP_MASTERY)), 2 + math.ceil(self:getTalentLevel(self.T_TRAP_MASTERY) / 2))
 	end,
 }
 
