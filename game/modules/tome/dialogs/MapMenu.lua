@@ -90,6 +90,13 @@ function _M:use(item)
 		else
 			game.player:useTalent(d.talent.id)
 		end
+	elseif act == "debug-inspect" then
+		local DebugConsole = require"engine.DebugConsole"
+		local d = DebugConsole.new()
+		game:registerDialog(d)
+		DebugConsole.line = "=__uids["..item.actor.uid.."]"
+		DebugConsole.line_pos = #DebugConsole.line
+		d.changed = true
 	end
 end
 
@@ -120,6 +127,7 @@ function _M:generateList()
 	if a and not self.on_player and game.party:canControl(a, false) then list[#list+1] = {name="Control", action="control", color=colors.simple(colors.TEAL), actor=a} end
 	if a and not self.on_player and game.party:canOrder(a, false) then list[#list+1] = {name="Give order", action="order", color=colors.simple(colors.TEAL), actor=a} end
 	if a and not self.on_player and config.settings.cheat then list[#list+1] = {name="Target player", action="target-player", color=colors.simple(colors.RED), actor=a} end
+	if a and config.settings.cheat then list[#list+1] = {name="Lua inspect", action="debug-inspect", color=colors.simple(colors.LIGHT_BLUE), actor=a} end
 	if self.on_player then list[#list+1] = {name="Rest a while", action="rest", color=colors.simple(colors.ANTIQUE_WHITE)} end
 	if self.on_player then list[#list+1] = {name="Auto-explore", action="autoexplore", color=colors.simple(colors.ANTIQUE_WHITE)} end
 	if self.on_player then list[#list+1] = {name="Inventory", action="inventory", color=colors.simple(colors.ANTIQUE_WHITE)} end

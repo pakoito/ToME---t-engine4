@@ -30,6 +30,12 @@ local function evil(npc, player)
 			p:setTalentTypeMastery("cunning/poisons", 1.3)
 		end
 	end
+
+	if p:knowTalent(p.T_TRAP_MASTERY) then
+		p:learnTalent(p.T_FLASH_BANG_TRAP, 1, nil, {no_unlearn=true})
+		game.log("#LIGHT_GREEN#Before you leave the Lord teaches you how to create flash bang traps!")
+	end
+
 	game:changeLevel(1, "wilderness")
 	game.log("As you depart the assassin lord says: 'And do not forget, I own you now.'")
 end

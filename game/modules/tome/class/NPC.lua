@@ -482,5 +482,5 @@ function _M:aiSeeTargetPos(target)
 	if self.rank > 3 and target.canMove and not target:canMove(self.x, self.y, true) then
 		return util.bound(tx, 0, game.level.map.w - 1), util.bound(ty, 0, game.level.map.h - 1)
 	end
-	return ActorAI.aiSeeTargetPos(target)
+	return ActorAI.aiSeeTargetPos(self, target)
 end

@@ -437,7 +437,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Lay a tricky trap that maims the arms of creatures passing by with acid doing %0.2f damage and disarming them for %d turns.]]):
-		format(damDesc(self, DamageType.ACID, 30 + self:getCun() * self:getTalentLevel(self.T_TRAP_MASTERY)), 2 + math.ceil(self:getTalentLevel(self.T_TRAP_MASTERY) / 2))
+		format(damDesc(self, DamageType.ACID, 60 + self:getCun() * 0.9 * self:getTalentLevel(self.T_TRAP_MASTERY)), 2 + math.ceil(self:getTalentLevel(self.T_TRAP_MASTERY) / 2))
 	end,
 }
 
@@ -519,6 +519,7 @@ newTalent{
 			triggered = function(self, x, y, who)
 				self:project({type="ball", x=x,y=y, radius=2}, x, y, function(px, py)
 					local who = game.level.map(px, py, engine.Map.ACTOR)
+					if who == self.summoner then return end
 					if who and who:canBe("blind") then
 						who:setEffect(who.EFF_BLINDED, self.dur, {apply_power=self.check_hit})
 					elseif who and who:canBe("stun") then
