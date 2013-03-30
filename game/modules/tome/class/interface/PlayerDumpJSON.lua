@@ -139,6 +139,8 @@ function _M:dumpToJSON(js, bypass, nosub)
 	-- Vision
 	-------------------------------------------------------------------
 	local esp = table.keys(self.esp)
+	local esp = {}
+	for k, e in pairs(self.esp) do if type(e) == "number" and e > 0 then esp[#esp+1] = k end end
 	js:newSection("vision", {
 		lite = self.lite,
 		range = self.sight,
