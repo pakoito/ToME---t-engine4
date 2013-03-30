@@ -19,17 +19,40 @@
 local q = game.player:hasQuest("lost-merchant")
 if q and q:isStatus(q.COMPLETED, "saved") then
 
+local p = game:getPlayer(true)
+
 newChat{ id="welcome",
 	text = [[Ah, my #{italic}#good#{normal}# friend @playername@!
 Thanks to you I made it safely to this great city! I am planning to open my most excellent boutique soon, but since I am in your debt, perhaps I could open early for you if you are in need of rare goods.]]
-..(game.state:isAdvanced() and "\nOh my friend, good news! As I told you I can now request a truly #{italic}#unique#{normal}# object to be crafted just for you. For a truly unique price..." or "\nI eventually plan to arrange a truly unique service for the most discerning of customers. If you come back later when I'm fully set up I shall be able to order for you something quite marvellous. For a perfectly #{italic}#suitable#{normal}# price, of course."),
+..((p:knowTalent(p.T_TRAP_MASTERY) and not p:knowTalent(p.T_FLASH_BANG_TRAP)) and "\nDuring our escape I found the plans for a #YELLOW#Flash Bang Trap#LAST#, you would not happen to be interrested by any chances?")
+..((game.state:isAdvanced() and "\nOh my friend, good news! As I told you I can now request a truly #{italic}#unique#{normal}# object to be crafted just for you. For a truly unique price..." or "\nI eventually plan to arrange a truly unique service for the most discerning of customers. If you come back later when I'm fully set up I shall be able to order for you something quite marvellous. For a perfectly #{italic}#suitable#{normal}# price, of course.")),
 	answers = {
 		{"Yes please, let me see your wares.", action=function(npc, player)
 			npc.store:loadup(game.level, game.zone)
 			npc.store:interact(player)
 		end},
 		{"What about the unique object?", cond=function(npc, player) return game.state:isAdvanced() end, jump="unique1"},
+		{"Flash Bang Trap ? Sounds useful.", cond=function(npc, player) return p:knowTalent(p.T_TRAP_MASTERY) and not p:knowTalent(p.T_FLASH_BANG_TRAP) end, jump="trap"},
 		{"Sorry, I have to go!"},
+	}
+}
+
+newChat{ id="trap",
+	text = [[You know, I have asked here and there and it happens to be a very rare thing this contraption...
+But since you have saved me, I'm willing to part from it for only 3000 gold pieces, a real bargain!]],
+	answers = {
+		{"Expensive, but I will take it.", cond=function(npc, player) return player.money >= 3000 end, jump="traplearn"},
+		{"..."},
+	}
+}
+
+newChat{ id="traplearn",
+	text = [[Nice doing business with you my friend. There you go!]],
+	answers = {
+		{"Thanks.", action=function(npc, player)
+			p:learnTalent(p.T_FLASH_BANG_TRAP, 1, nil, {no_unlearn=true})
+			game.log("#LIGHT_GREEN#You learn the schematic, you can now create flash bang traps!")
+		end},
 	}
 }
 
