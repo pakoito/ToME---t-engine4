@@ -172,8 +172,8 @@ newBirthDescriptor{
 		"#GOLD#Life per level:#LIGHT_BLUE# -4 (*special*)",
 	},
 	power_source = {psionic=true},
-	not_on_random_boss = true,
-	random_rarity = 2,
+--	not_on_random_boss = true,
+	random_rarity = 3,
 	stats = { str=0, wil=5, cun=4, },
 	birth_example_particles = {
 		function(actor)

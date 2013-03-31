@@ -168,6 +168,7 @@ newBirthDescriptor{
 		"#GOLD#Life per level:#LIGHT_BLUE# -3",
 	},
 	power_source = {nature=true},
+	random_rarity = 3,
 	getStatDesc = function(stat, actor)
 		if stat == actor.STAT_CUN then
 			return "Max summons: "..math.floor(actor:getCun()/10)
