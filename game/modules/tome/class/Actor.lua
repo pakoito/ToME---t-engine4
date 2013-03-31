@@ -2798,6 +2798,8 @@ function _M:onWear(o, bypass_set)
 		end
 	end
 
+	self:checkMindstar(o)
+
 	o:check("on_wear", self)
 	if o.wielder then
 		for k, e in pairs(o.wielder) do
@@ -2861,8 +2863,6 @@ function _M:onWear(o, bypass_set)
 	end
 
 	self:breakReloading()
-
-	self:checkMindstar(o)
 
 	self:updateModdableTile()
 	if self == game.player then game:playSound("actions/wear") end
