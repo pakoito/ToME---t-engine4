@@ -1442,7 +1442,7 @@ newEffect{
 newEffect{
 	name = "OFFBALANCE",
 	desc = "Off-balance",
-	long_desc = function(self, eff) return ("Badly off balance. Global speed is reduced by 15%.") end,
+	long_desc = function(self, eff) return ("Badly off balance. Global damage is reduced by 15%.") end,
 	type = "physical",
 	subtype = { ["cross tier"]=true },
 	status = "detrimental",
@@ -1450,10 +1450,10 @@ newEffect{
 	on_gain = function(self, err) return nil, "+Off-balance" end,
 	on_lose = function(self, err) return nil, "-Off-balance" end,
 	activate = function(self, eff)
-		eff.speedid = self:addTemporaryValue("global_speed_add", -0.15)
+		eff.speedid = self:addTemporaryValue("numbed", 15)
 	end,
 	deactivate = function(self, eff)
-		self:removeTemporaryValue("global_speed_add", eff.speedid)
+		self:removeTemporaryValue("numbed", eff.speedid)
 	end,
 }
 
