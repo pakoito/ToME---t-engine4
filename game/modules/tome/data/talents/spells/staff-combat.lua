@@ -151,7 +151,7 @@ newTalent{
 	action = function(self, t)
 		local weapon = self:hasStaffWeapon()
 		if not weapon then
-			game.logPlayer(self, "You cannot use Blunt Thrust without a two-handed weapon!")
+			game.logPlayer(self, "You cannot use Blunt Thrust without a staff weapon!")
 			return nil
 		end
 
@@ -178,7 +178,7 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local dazedur = t.getDazeDuration(self, t)
 		return ([[Hit a target for %d%% melee damage and stun it for %d turns.
-		Stun chance will improve with talent level.
+		Stun chance will improve with Spellpower.
 		At level 5, this attack cannot miss.]]):
 		format(100 * damage, dazedur)
 	end,
