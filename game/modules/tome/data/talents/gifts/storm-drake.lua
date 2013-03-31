@@ -202,7 +202,7 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		local dam = self:mindCrit(t.getDamage(self, t))
-		self:project(tg, x, y, DamageType.LIGHTNING_DAZE, rng.avg(dam / 3, dam, 3))
+		self:project(tg, x, y, DamageType.LIGHTNING_DAZE, {power_check=self:combatMindpower(), dam=rng.avg(dam / 3, dam, 3)})
 
 		if core.shader.active() then game.level.map:particleEmitter(self.x, self.y, tg.radius, "breath_lightning", {radius=tg.radius, tx=x-self.x, ty=y-self.y}, {type="lightning"})
 		else game.level.map:particleEmitter(self.x, self.y, tg.radius, "breath_lightning", {radius=tg.radius, tx=x-self.x, ty=y-self.y})

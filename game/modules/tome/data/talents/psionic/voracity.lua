@@ -151,7 +151,7 @@ newTalent{
 			if act then
 				self:incPsi(en)
 			end
-			DamageType:get(DamageType.LIGHTNING_DAZE).projector(self, tx, ty, DamageType.LIGHTNING_DAZE, rng.avg(dam/3, dam, 3))
+			DamageType:get(DamageType.LIGHTNING_DAZE).projector(self, tx, ty, DamageType.LIGHTNING_DAZE, {power_check=self:combatMindpower(), dam=rng.avg(dam/3, dam, 3)})
 		end)
 		-- Lightning ball gets a special treatment to make it look neat
 		local sradius = (tg.radius + 0.5) * (engine.Map.tile_w + engine.Map.tile_h) / 2

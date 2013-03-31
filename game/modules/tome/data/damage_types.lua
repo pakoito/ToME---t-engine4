@@ -973,7 +973,7 @@ newDamageType{
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
 			if target:canBe("pin") and target:canBe("stun") and not target:attr("fly") and not target:attr("levitation") then
-				target:setEffect(target.EFF_FROZEN_FEET, dam.dur, {apply_power=src:combatSpellpower()})
+				target:setEffect(target.EFF_FROZEN_FEET, dam.dur, {apply_power=math.max(src:combatSpellpower(), src:combatMindpower())})
 			end
 		end
 	end,
@@ -988,7 +988,7 @@ newDamageType{
 			-- Freeze it, if we pass the test
 			local sx, sy = game.level.map:getTileToScreen(x, y)
 			if target:canBe("stun") then
-				target:setEffect(target.EFF_FROZEN, dam.dur, {hp=dam.hp * 1.5, apply_power=src:combatSpellpower(), min_dur=1})
+				target:setEffect(target.EFF_FROZEN, dam.dur, {hp=dam.hp * 1.5, apply_power=math.max(src:combatSpellpower(), src:combatMindpower()), min_dur=1})
 				game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, -3, "Frozen!", {0,255,155})
 			else
 				game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, -3, "Resist!", {0,255,155})
@@ -1021,7 +1021,7 @@ newDamageType{
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and rng.percent(25) then
 			if target:canBe("blind") then
-				target:setEffect(target.EFF_BLINDED, 3, {src=src, apply_power=src:combatSpellpower()})
+				target:setEffect(target.EFF_BLINDED, 3, {src=src, apply_power=math.max(src:combatSpellpower(), src:combatMindpower())})
 			else
 				game.logSeen(target, "%s resists!", target.name:capitalize())
 			end
@@ -1056,7 +1056,7 @@ newDamageType{
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and dam.daze > 0 and rng.percent(dam.daze) then
 			if target:canBe("stun") then
-				game:onTickEnd(function() target:setEffect(target.EFF_DAZED, 3, {src=src, apply_power=src:combatSpellpower()}) end) -- Do it at the end so we don't break our own daze
+				game:onTickEnd(function() target:setEffect(target.EFF_DAZED, 3, {src=src, apply_power=dam.power_check or math.max(src:combatSpellpower(), src:combatMindpower())}) end) -- Do it at the end so we don't break our own daze
 				if src:isTalentActive(src.T_HURRICANE) then
 					local t = src:getTalentFromId(src.T_HURRICANE)
 					t.do_hurricane(src, t, target)
