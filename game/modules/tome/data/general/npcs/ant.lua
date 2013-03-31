@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009, 2010, 2011, 2012 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -47,6 +47,7 @@ newEntity{ base = "BASE_NPC_ANT",
 	desc = "It's a large white ant.",
 	level_range = {1, 15}, exp_worth = 1,
 	rarity = 1,
+	global_speed_base = 1.1,
 }
 
 newEntity{ base = "BASE_NPC_ANT",
@@ -54,6 +55,8 @@ newEntity{ base = "BASE_NPC_ANT",
 	desc = "It's a large brown ant.",
 	level_range = {1, 15}, exp_worth = 1,
 	rarity = 1,
+	global_speed_base = 0.9,
+	max_life = resolvers.rngavg(15,30),
 }
 
 newEntity{ base = "BASE_NPC_ANT",
@@ -62,6 +65,7 @@ newEntity{ base = "BASE_NPC_ANT",
 	level_range = {2, 25}, exp_worth = 1,
 	rarity = 1,
 	combat = { dam=6 },
+	movement_speed = 1.3,
 }
 
 newEntity{ base = "BASE_NPC_ANT",
@@ -70,6 +74,10 @@ newEntity{ base = "BASE_NPC_ANT",
 	level_range = {5, nil}, exp_worth = 1,
 	rarity = 1,
 	combat = { DamageType.POISON },
+	talent_cd_reduction = {[Talents.T_BITE_POISON]=-10},
+	resolvers.talents{
+		[Talents.T_BITE_POISON]={base=0, every=5, max=5},
+	},
 }
 
 newEntity{ base = "BASE_NPC_ANT",
@@ -78,6 +86,10 @@ newEntity{ base = "BASE_NPC_ANT",
 	level_range = {5, nil}, exp_worth = 1,
 	rarity = 1,
 	combat = { damtype=DamageType.FIRE },
+	talent_cd_reduction = {[Talents.T_FLAME_FURY]=-10},
+	resolvers.talents{
+		[Talents.T_FLAME_FURY]={base=0, every=10},
+	},
 }
 
 newEntity{ base = "BASE_NPC_ANT",
@@ -86,6 +98,10 @@ newEntity{ base = "BASE_NPC_ANT",
 	level_range = {5, nil}, exp_worth = 1,
 	rarity = 1,
 	combat = { damtype=DamageType.COLD },
+	talent_cd_reduction = {[Talents.T_WATER_BOLT]=-12},
+	resolvers.talents{
+		[Talents.T_WATER_BOLT]={base=0, every=5, max=5},
+	},
 }
 
 newEntity{ base = "BASE_NPC_ANT",
@@ -94,6 +110,10 @@ newEntity{ base = "BASE_NPC_ANT",
 	level_range = {5, nil}, exp_worth = 1,
 	rarity = 1,
 	combat = { damtype=DamageType.LIGHTNING },
+	talent_cd_reduction = {[Talents.T_LIGHTNING_SPEED] = -14},
+	resolvers.talents{
+		[Talents.T_LIGHTNING_SPEED]={base=0, every=5, max=5},
+	},
 }
 
 newEntity{ base = "BASE_NPC_ANT",
@@ -102,6 +122,10 @@ newEntity{ base = "BASE_NPC_ANT",
 	level_range = {5, nil}, exp_worth = 1,
 	rarity = 1,
 	combat = { damtype=DamageType.ACID },
+	talent_cd_reduction = {[Talents.T_CRAWL_ACID]=-13},
+	resolvers.talents{
+		[Talents.T_CRAWL_ACID]={base=0, every=5, max=5},
+	},
 }
 
 newEntity{ base = "BASE_NPC_ANT",
@@ -113,7 +137,12 @@ newEntity{ base = "BASE_NPC_ANT",
 	combat = { damtype=DamageType.FIRE },
 	combat_armor = 5, combat_def = 5,
 	on_melee_hit = {[DamageType.FIRE]=5},
-	}
+	talent_cd_reduction = {[Talents.T_FLAME_FURY]=-6},
+	resolvers.talents{
+		[Talents.T_RITCH_FLAMESPITTER_BOLT]={base=1, every=10},
+		[Talents.T_FLAME_FURY]={base=2, every=10},
+	},
+}
 
 newEntity{ base = "BASE_NPC_ANT",
 	name = "giant ice ant", color=colors.WHITE, image="npc/ice_ant.png",
@@ -124,6 +153,11 @@ newEntity{ base = "BASE_NPC_ANT",
 	combat = { damtype=DamageType.ICE },
 	combat_armor = 5, combat_def = 5,
 	on_melee_hit = {[DamageType.ICE]=5},
+	talent_cd_reduction = {[Talents.T_WATER_BOLT]=-7},
+	resolvers.talents{
+		[Talents.T_WATER_BOLT]={base=2, every=10},
+		[Talents.T_ICY_SKIN]={base=2, every=10},
+	},
 	ingredient_on_death = "FROST_ANT_STINGER",
 }
 
@@ -136,6 +170,11 @@ newEntity{ base = "BASE_NPC_ANT",
 	combat = { damtype=DamageType.LIGHTNING },
 	combat_armor = 5, combat_def = 5,
 	on_melee_hit = {[DamageType.LIGHTNING]=5},
+	talent_cd_reduction = {[Talents.T_CALL_LIGHTNING] = -7},
+	resolvers.talents{
+		[Talents.T_LIGHTNING_SPEED]={base=2, every=10},
+		[Talents.T_CALL_LIGHTNING]={base=2, every=10},
+	},
 }
 
 newEntity{ base = "BASE_NPC_ANT",
@@ -147,6 +186,11 @@ newEntity{ base = "BASE_NPC_ANT",
 	combat = { damtype=DamageType.ACID },
 	combat_armor = 5, combat_def = 5,
 	on_melee_hit = {[DamageType.ACID]=5},
+	talent_cd_reduction = {[Talents.T_ACIDIC_SPRAY]=-7},
+	resolvers.talents{
+		[Talents.T_CRAWL_ACID]={base=2, every=10},
+		[Talents.T_ACIDIC_SPRAY]={base=1, every=10},
+	},
 }
 
 newEntity{ base = "BASE_NPC_ANT",
@@ -156,6 +200,11 @@ newEntity{ base = "BASE_NPC_ANT",
 	rarity = 1,
 	max_life = resolvers.rngavg(50,60),
 	combat_armor = 15, combat_def = 7,
+	resolvers.inscriptions(1, "infusion"),
+	resolvers.talents{
+		[Talents.T_STUN]={base=2, every=8, max=5},
+		[Talents.T_DISARM]={base=1, every=8, max=5},
+	},
 }
 
 newEntity{ base = "BASE_NPC_ANT",
@@ -169,13 +218,22 @@ newEntity{ base = "BASE_NPC_ANT",
 	max_life = 230, life_rating=12,
 	combat_armor = 18, combat_def = 7,
 	resolvers.drops{chance=100, nb=12, {type="money"} },
+	resolvers.inscriptions(2, "infusion"),
 	make_escort = {
 		{type="insect", subtype="ant", number=resolvers.mbonus(5, 5)},
 	},
 	summon = {
 		{type="insect", subtype="ant", number=2, hasexp=false},
 	},
-	resolvers.talents{ [Talents.T_STUN]=3, [Talents.T_ACIDIC_SKIN]=5, [Talents.T_SUMMON]=1,},
+	resolvers.talents{
+		[Talents.T_SLIME_SPIT]={base=3, every=5},
+		[Talents.T_BITE_POISON]={base=3, every=5},
+		[Talents.T_GRAB]={base=3, every=5},
+		[Talents.T_STUN]={base=3, every=5},
+		[Talents.T_ACIDIC_SPRAY]={base=3, every=10},
+		[Talents.T_ACIDIC_SKIN]={base=5, every=10},
+		[Talents.T_SUMMON]=1,
+	},
 
 	ai = "tactical",
 	ai_tactic = resolvers.tactic"melee",

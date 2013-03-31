@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009, 2010, 2011, 2012 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -58,7 +58,14 @@ newEntity{ base = "BASE_NPC_JELLY",
 	level_range = {1, 25}, exp_worth = 1,
 	rarity = 1,
 	max_life = resolvers.rngavg(5,9),
-	combat = { dam=5, atk=0, apr=5, damtype=DamageType.POISON },
+	combat = { dam=8, atk=0, apr=5, damtype=DamageType.POISON },
+	all_damage_convert = DamageType.NATURE,
+	all_damage_convert_percent = 50,
+	talent_cd_reduction = {[Talents.T_SLIME_SPIT]=-10},
+	inc_damage = {all=-30},
+	resolvers.talents{
+		[Talents.T_SLIME_SPIT]={base=0, every=5, max=5},
+	},
 }
 
 newEntity{ base = "BASE_NPC_JELLY",
@@ -68,7 +75,14 @@ newEntity{ base = "BASE_NPC_JELLY",
 	level_range = {1, 25}, exp_worth = 1,
 	rarity = 1,
 	max_life = resolvers.rngavg(5,9),
-	combat = { dam=5, atk=0, apr=5, damtype=DamageType.FIRE },
+	combat = { dam=8, atk=0, apr=5, damtype=DamageType.FIRE },
+	all_damage_convert = DamageType.FIRE,
+	all_damage_convert_percent = 50,
+	talent_cd_reduction = {[Talents.T_SLIME_SPIT]=-10},
+	inc_damage = {all=-30},
+	resolvers.talents{
+		[Talents.T_SLIME_SPIT]={base=0, every=5, max=5},
+	},
 }
 
 newEntity{ base = "BASE_NPC_JELLY",
@@ -78,7 +92,14 @@ newEntity{ base = "BASE_NPC_JELLY",
 	level_range = {1, 25}, exp_worth = 1,
 	rarity = 1,
 	max_life = resolvers.rngavg(5,9),
-	combat = { dam=5, atk=0, apr=5, damtype=DamageType.COLD },
+	combat = { dam=8, atk=0, apr=5, damtype=DamageType.COLD },
+	all_damage_convert = DamageType.COLD,
+	all_damage_convert_percent = 50,
+	talent_cd_reduction = {[Talents.T_SLIME_SPIT]=-10},
+	inc_damage = {all=-30},
+	resolvers.talents{
+		[Talents.T_SLIME_SPIT]={base=0, every=5, max=5},
+	},
 }
 
 newEntity{ base = "BASE_NPC_JELLY",
@@ -88,7 +109,12 @@ newEntity{ base = "BASE_NPC_JELLY",
 	level_range = {1, 25}, exp_worth = 1,
 	rarity = 1,
 	max_life = resolvers.rngavg(5,9),
-	combat = { dam=5, atk=0, apr=5 },
+	combat = { dam=8, atk=0, apr=5 },
+	talent_cd_reduction = {[Talents.T_SLIME_SPIT]=-10},
+	inc_damage = {all=-30},
+	resolvers.talents{
+		[Talents.T_SLIME_SPIT]={base=0, every=5, max=5},
+	},
 }
 
 newEntity{ base = "BASE_NPC_JELLY",
@@ -98,7 +124,14 @@ newEntity{ base = "BASE_NPC_JELLY",
 	level_range = {1, 25}, exp_worth = 1,
 	rarity = 1,
 	max_life = resolvers.rngavg(5,9),
-	combat = { dam=5, atk=0, apr=5, damtype=DamageType.LIGHTNING },
+	combat = { dam=8, atk=0, apr=5, damtype=DamageType.LIGHTNING },
+	all_damage_convert = DamageType.LIGHTNING,
+	all_damage_convert_percent = 50,
+	talent_cd_reduction = {[Talents.T_SLIME_SPIT]=-10},
+	inc_damage = {all=-30},
+	resolvers.talents{
+		[Talents.T_SLIME_SPIT]={base=0, every=5, max=5},
+	},
 }
 
 newEntity{ base = "BASE_NPC_JELLY",
@@ -108,7 +141,14 @@ newEntity{ base = "BASE_NPC_JELLY",
 	level_range = {1, 25}, exp_worth = 1,
 	rarity = 1,
 	max_life = resolvers.rngavg(5,9),
-	combat = { dam=5, atk=0, apr=5, damtype=DamageType.ACID },
+	combat = { dam=8, atk=0, apr=5, damtype=DamageType.ACID },
+	all_damage_convert = DamageType.ACID,
+	all_damage_convert_percent = 50,
+	talent_cd_reduction = {[Talents.T_SLIME_SPIT]=-10},
+	inc_damage = {all=-30},
+	resolvers.talents{
+		[Talents.T_SLIME_SPIT]={base=0, every=5, max=5},
+	},
 }
 
 newEntity{ base = "BASE_NPC_JELLY",
@@ -120,10 +160,15 @@ newEntity{ base = "BASE_NPC_JELLY",
 	rarity = 50,
 	max_life = resolvers.rngavg(50,90), life_rating = 5,
 	combat = { dam=5, atk=15, apr=5, damtype=DamageType.DARKNESS },
+	all_damage_convert = DamageType.DARKNESS,
+	all_damage_convert_percent = 100,
 	summon = {
 		{number=1, hasexp=false},
 	},
 	-- Nullify their cooldowns
-	talent_cd_reduction={[Talents.T_SUMMON]=4,},
-	resolvers.talents{ [Talents.T_SUMMON]=1,},
+	talent_cd_reduction={[Talents.T_SUMMON]=4, [Talents.T_SLIME_SPIT]=4},
+	resolvers.talents{
+		[Talents.T_SLIME_SPIT]={base=5, every=5},
+		[Talents.T_SUMMON]=1,
+	},
 }

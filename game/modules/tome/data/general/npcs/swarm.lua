@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009, 2010, 2011, 2012 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -50,6 +50,9 @@ newEntity{ base = "BASE_NPC_INSECT",
 	rarity = 1,
 	max_life = resolvers.rngavg(1,2),
 	combat = { dam=1, atk=0, apr=20 },
+	resolvers.talents{
+		[Talents.T_HEIGHTENED_REFLEXES]={base=0, every=5, max=5},
+	},
 }
 
 newEntity{ base = "BASE_NPC_INSECT",
@@ -60,7 +63,10 @@ newEntity{ base = "BASE_NPC_INSECT",
 	max_life = resolvers.rngavg(1,3),
 	combat = { dam=2, atk=0, apr=20 },
 
-	resolvers.talents{ [Talents.T_BITE_POISON]=1 },
+	resolvers.talents{
+		[Talents.T_BITE_POISON]={base=1, every=5, max=8},
+		[Talents.T_HEIGHTENED_REFLEXES]={base=0, every=5, max=5},
+	},
 }
 
 newEntity{ base = "BASE_NPC_INSECT",
@@ -74,7 +80,10 @@ newEntity{ base = "BASE_NPC_INSECT",
 	max_life = resolvers.rngavg(3,5),
 	combat = { dam=5, atk=5, apr=20 },
 
-	resolvers.talents{ [Talents.T_BITE_POISON]=2 },
+	resolvers.talents{
+		[Talents.T_BITE_POISON]={base=2, every=5, max=8},
+		[Talents.T_HEIGHTENED_REFLEXES]={base=0, every=5, max=5},
+	},
 }
 
 newEntity{ base = "BASE_NPC_INSECT",
@@ -89,6 +98,10 @@ newEntity{ base = "BASE_NPC_INSECT",
 	combat = { dam=10, atk=15, apr=20 },
 	can_multiply = 4,
 
-	resolvers.talents{ [Talents.T_BITE_POISON]={base=3, every=10, max=8} },
+	resolvers.talents{
+		[Talents.T_BITE_POISON]={base=3, every=10, max=8},
+		[Talents.T_HEIGHTENED_REFLEXES]={base=0, every=5, max=5},
+		[Talents.T_POISONOUS_SPORES]={base=0, every=15, max=2},
+	},
 	ingredient_on_death = "HUMMERHORN_WING",
 }

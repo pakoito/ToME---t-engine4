@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009, 2010, 2011, 2012 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -52,6 +52,9 @@ newEntity{ base = "BASE_NPC_CANINE",
 	max_life = resolvers.rngavg(40,70),
 	combat_armor = 1, combat_def = 3,
 	combat = { dam=resolvers.levelup(5, 1, 0.7), atk=0, apr=3 },
+	resolvers.talents{
+		[Talents.T_RUSH]={base=0, every=10},
+	},
 }
 
 newEntity{ base = "BASE_NPC_CANINE",
@@ -62,7 +65,10 @@ newEntity{ base = "BASE_NPC_CANINE",
 	max_life = resolvers.rngavg(60,90),
 	combat_armor =2, combat_def = 4,
 	combat = { dam=resolvers.levelup(6, 1, 0.8), atk=0, apr=3 },
-	resolvers.talents{ [Talents.T_HOWL]=1, },
+	resolvers.talents{
+		[Talents.T_KNOCKBACK]={base=0, every=8},
+		[Talents.T_HOWL]=1,
+	},
 }
 
 newEntity{ base = "BASE_NPC_CANINE",
@@ -73,7 +79,11 @@ newEntity{ base = "BASE_NPC_CANINE",
 	max_life = resolvers.rngavg(80,110),
 	combat_armor = 3, combat_def = 5,
 	combat = { dam=resolvers.levelup(9, 1, 0.9), atk=5, apr=4 },
-	resolvers.talents{ [Talents.T_HOWL]=1, },
+	resolvers.talents{
+		[Talents.T_RUSH]={base=0, every=10},
+		[Talents.T_KNOCKBACK]={base=0, every=8},
+		[Talents.T_HOWL]=1,
+	},
 }
 
 newEntity{ base = "BASE_NPC_CANINE",
@@ -84,7 +94,12 @@ newEntity{ base = "BASE_NPC_CANINE",
 	max_life = resolvers.rngavg(70,100),
 	combat_armor = 3, combat_def = 4,
 	combat = { dam=resolvers.levelup(8, 1, 0.9), atk=5, apr=3 },
-	resolvers.talents{ [Talents.T_HOWL]=2, },
+	resolvers.talents{
+		[Talents.T_ICE_CLAW]={base=0, every=10},
+		[Talents.T_ICY_SKIN]={base=1, every=10},
+		[Talents.T_KNOCKBACK]={base=0, every=15},
+		[Talents.T_HOWL]=2,
+	},
 
 	resists = { [DamageType.FIRE] = -50, [DamageType.COLD] = 100 },
 }
@@ -97,7 +112,15 @@ newEntity{ base = "BASE_NPC_CANINE",
 	max_life = resolvers.rngavg(60,100),
 	combat_armor = 5, combat_def = 7,
 	combat = { dam=resolvers.levelup(10, 1, 1), atk=10, apr=5 },
-	resolvers.talents{ [Talents.T_HOWL]=3, },
+	resolvers.inscriptions(1, "infusion"),
+	resolvers.talents{
+		[Talents.T_RUSH]={base=0, every=10},
+		[Talents.T_HACK_N_BACK]={base=1, every=10},
+		[Talents.T_VITALITY]={base=3, every=8},
+		[Talents.T_UNFLINCHING_RESOLVE]={base=1, every=8},
+		[Talents.T_DAUNTING_PRESENCE]={base=0, every=8},
+		[Talents.T_HOWL]=3,
+	},
 	ingredient_on_death = "WARG_CLAW",
 }
 
@@ -112,6 +135,10 @@ newEntity{ base = "BASE_NPC_CANINE",
 	max_life = resolvers.rngavg(40,50),
 	combat_armor = 1, combat_def = 3,
 	combat = { dam=resolvers.levelup(4, 1, 0.7), atk=0, apr=3, sound="creatures/foxes/attack_1" },
+	resolvers.talents{
+		[Talents.T_RUSHING_CLAWS]={base=0, every=8},
+		[Talents.T_NIMBLE_MOVEMENTS]={base=0, every=10},
+	},
 }
 
 newEntity{ base = "BASE_NPC_CANINE",
@@ -130,9 +157,15 @@ newEntity{ base = "BASE_NPC_CANINE",
 	make_escort = {
 		{type="animal", subtype="canine", name="warg", number=6},
 	},
+	resolvers.inscriptions(2, "infusion"),
 	resolvers.talents{
+		[Talents.T_RUSH]={base=3, every=10},
+		[Talents.T_CRIPPLE]={base=3, every=10},
+		[Talents.T_HACK_N_BACK]={base=3, every=10},
+		[Talents.T_SET_UP]={base=3, every=10},
+		[Talents.T_VITALITY]={base=3, every=8},
+		[Talents.T_UNFLINCHING_RESOLVE]={base=3, every=8},
+		[Talents.T_DAUNTING_PRESENCE]={base=3, every=8},
 		[Talents.T_HOWL]=5,
-		[Talents.T_RUSH]=3,
-		[Talents.T_CRIPPLE]=3,
 	},
 }

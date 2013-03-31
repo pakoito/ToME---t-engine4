@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009, 2010, 2011, 2012 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -46,6 +46,11 @@ newEntity{ base = "BASE_NPC_RODENT",
 	rarity = 1,
 	max_life = resolvers.rngavg(5,9),
 	combat = { dam=5, atk=0, apr=10 },
+	resolvers.talents{
+		[Talents.T_STEALTH]={base=0, every=2, max=5},
+		[Talents.T_HIDE_IN_PLAIN_SIGHT]={base=0, every=2, max=5},
+		[Talents.T_SHADOWSTRIKE]={base=0, every=2, max=5},
+	},
 }
 
 newEntity{ base = "BASE_NPC_RODENT",
@@ -54,6 +59,11 @@ newEntity{ base = "BASE_NPC_RODENT",
 	rarity = 1,
 	max_life = resolvers.rngavg(5,9),
 	combat = { dam=5, atk=0, apr=10 },
+	resolvers.talents{
+		[Talents.T_STEALTH]={base=0, every=2, max=5},
+		[Talents.T_HIDE_IN_PLAIN_SIGHT]={base=0, every=2, max=5},
+		[Talents.T_SHADOWSTRIKE]={base=0, every=2, max=5},
+	},
 }
 
 newEntity{ base = "BASE_NPC_RODENT",
@@ -62,6 +72,10 @@ newEntity{ base = "BASE_NPC_RODENT",
 	rarity = 2,
 	max_life = resolvers.rngavg(15,20),
 	combat = { dam=7, atk=0, apr=10 },
+	resolvers.talents{
+		[Talents.T_NIMBLE_MOVEMENTS]={base=0, every=3, max=5},
+		[Talents.T_LACERATING_STRIKES]={base=0, every=3, max=5},
+	},
 }
 
 newEntity{ base = "BASE_NPC_RODENT",
@@ -70,6 +84,10 @@ newEntity{ base = "BASE_NPC_RODENT",
 	rarity = 2,
 	max_life = resolvers.rngavg(15,20),
 	combat = { dam=7, atk=0, apr=10 },
+	resolvers.talents{
+		[Talents.T_NIMBLE_MOVEMENTS]={base=0, every=3, max=5},
+		[Talents.T_LACERATING_STRIKES]={base=0, every=3, max=5},
+	},
 }
 
 newEntity{ base = "BASE_NPC_RODENT",
@@ -79,6 +97,10 @@ newEntity{ base = "BASE_NPC_RODENT",
 	rarity = 3,
 	max_life = resolvers.rngavg(20,30),
 	combat = { dam=8, atk=0, apr=10 },
+	resolvers.talents{
+		[Talents.T_EVASION]={base=1, every=3, max=5},
+		[Talents.T_DISENGAGE]={base=1, every=3, max=5},
+	},
 }
 
 newEntity{ base = "BASE_NPC_RODENT",
@@ -89,6 +111,10 @@ newEntity{ base = "BASE_NPC_RODENT",
 	max_life = resolvers.rngavg(35,50),
 	combat = { dam=7, atk=0, apr=10 },
 	combat_armor = 4, combat_def = 2,
+	resolvers.talents{
+		[Talents.T_STONE_SKIN]={base=1, every=4, max=5},
+		[Talents.T_STRIKE]={base=0, every=4, max=5},
+	},
 }
 
 newEntity{ base = "BASE_NPC_RODENT",
@@ -97,7 +123,9 @@ newEntity{ base = "BASE_NPC_RODENT",
 	rarity = 3,
 	max_life = resolvers.rngavg(5,9),
 	combat = { dam=5, atk=0, apr=10 },
-	resolvers.talents{ [Talents.T_CRAWL_POISON]=1 },
+	resolvers.talents{
+		[Talents.T_CRAWL_POISON]={base=1, every=3, max=5},
+	},
 }
 
 newEntity{ base = "BASE_NPC_RODENT",
@@ -106,5 +134,8 @@ newEntity{ base = "BASE_NPC_RODENT",
 	rarity = 4,
 	max_life = resolvers.rngavg(15,20),
 	combat = { dam=7, atk=0, apr=10 },
-	resolvers.talents{ [Talents.T_CRAWL_POISON]=1 },
+	resolvers.talents{
+		[Talents.T_CRAWL_POISON]={base=1, every=2, max=5},
+		[Talents.T_SPIT_POISON]={base=0, every=3, max=5},
+	},
 }

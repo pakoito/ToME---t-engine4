@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009, 2010, 2011, 2012 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -49,7 +49,11 @@ newEntity{ base = "BASE_NPC_MOLD",
 	level_range = {1, 25}, exp_worth = 1,
 	rarity = 1,
 	max_life = resolvers.rngavg(5,9),
-	combat = { dam=5, atk=0, apr=10 },
+	combat = { dam=8, atk=0, apr=10 },
+	resolvers.talents{
+		[Talents.T_SLIME_ROOTS]={base=0, every=3, max=5},
+		[Talents.T_NATURE_TOUCH]={base=0, every=5, max=5},
+	},
 }
 
 newEntity{ base = "BASE_NPC_MOLD",
@@ -57,8 +61,12 @@ newEntity{ base = "BASE_NPC_MOLD",
 	desc = "A strange brown growth on the dungeon floor.",
 	level_range = {2, 25}, exp_worth = 1,
 	rarity = 1,
-	max_life = resolvers.rngavg(5,9),
+	max_life = resolvers.rngavg(10,18),
 	combat = { dam=5, atk=0, apr=10 },
+	resolvers.talents{
+		[Talents.T_SLIME_ROOTS]={base=0, every=3, max=5},
+		[Talents.T_NATURE_TOUCH]={base=0, every=5, max=5},
+	},
 }
 
 newEntity{ base = "BASE_NPC_MOLD",
@@ -66,10 +74,14 @@ newEntity{ base = "BASE_NPC_MOLD",
 	desc = "A strange luminescent growth on the dungeon floor.",
 	level_range = {3, 25}, exp_worth = 1,
 	rarity = 7,
-	max_life = resolvers.rngavg(1,1),
-	combat = { dam=5, atk=5, apr=10 },
+	max_life = resolvers.rngavg(5,9),
+	combat = { dam=8, atk=5, apr=10 },
 
-	resolvers.talents{ [Talents.T_SPORE_BLIND]=1 },
+	resolvers.talents{
+		[Talents.T_SLIME_ROOTS]={base=0, every=3, max=5},
+		[Talents.T_NATURE_TOUCH]={base=0, every=5, max=5},
+		[Talents.T_SPORE_BLIND]={base=1, every=5, max=5},
+	},
 }
 
 newEntity{ base = "BASE_NPC_MOLD",
@@ -77,9 +89,13 @@ newEntity{ base = "BASE_NPC_MOLD",
 	desc = "A strange sickly green growth on the dungeon floor.",
 	level_range = {5, 25}, exp_worth = 1,
 	rarity = 1,
-	max_life = resolvers.rngavg(5,9),
+	max_life = resolvers.rngavg(10,18),
 	combat = { dam=5, atk=10, apr=10 },
-	resolvers.talents{ [Talents.T_SPORE_POISON]=1 },
+	resolvers.talents{
+		[Talents.T_SLIME_ROOTS]={base=1, every=3, max=5},
+		[Talents.T_NATURE_TOUCH]={base=1, every=5, max=5},
+		[Talents.T_SPORE_POISON]={base=1, every=5, max=5},
+	},
 }
 
 newEntity{ base = "BASE_NPC_MOLD",
@@ -103,10 +119,12 @@ newEntity{ base = "BASE_NPC_MOLD",
 
 	resolvers.talents{
 		[Talents.T_SUMMON]=1,
-		[Talents.T_BONE_SPEAR]=4,
-		[Talents.T_BONE_GRAB]=3,
-		[Talents.T_SPORE_BLIND]=5,
-		[Talents.T_SPORE_POISON]=5,
+		[Talents.T_BONE_SPEAR]={base=4, every=10},
+		[Talents.T_BONE_GRAB]={base=3, every=10},
+		[Talents.T_SPORE_BLIND]={base=5, every=10},
+		[Talents.T_SPORE_POISON]={base=5, every=10},
+		[Talents.T_SLIME_ROOTS]={base=3, every=8, max=8},
+		[Talents.T_NATURE_TOUCH]={base=3, every=10, max=8},
 		[Talents.T_ROTTING_DISEASE]=5,
 		[Talents.T_DECREPITUDE_DISEASE]=5,
 		[Talents.T_WEAKNESS_DISEASE]=5,
