@@ -339,8 +339,9 @@ function _M:unregisterDialog(d)
 end
 
 --- Do we have a dialog running
-function _M:hasDialogUp()
-	return #self.dialogs > 0
+function _M:hasDialogUp(nb)
+	nb = nb or 0
+	return #self.dialogs > nb
 end
 
 --- The C core gives us command line arguments

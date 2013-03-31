@@ -737,6 +737,8 @@ end
 --- Can we continue resting ?
 -- We can rest if no hostiles are in sight, and if we need life/mana/stamina/psi (and their regen rates allows them to fully regen)
 function _M:restCheck()
+	if game:hasDialogUp(1) then return false, "dialog is displayed" end
+
 	local spotted = spotHostiles(self)
 	if #spotted > 0 then
 		for _, node in ipairs(spotted) do
@@ -824,6 +826,8 @@ end
 -- Known traps aren't interesting.  We let the engine run around traps, or stop if it can't.
 -- 'ignore_memory' is only used when checking for paths around traps.  This ensures we don't remember items "obj_seen" that we aren't supposed to
 function _M:runCheck(ignore_memory)
+	if game:hasDialogUp(1) then return false, "dialog is displayed" end
+
 	local spotted = spotHostiles(self)
 	if #spotted > 0 then
 		local dir = game.level.map:compassDirection(spotted[1].x - self.x, spotted[1].y - self.y)
