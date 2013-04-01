@@ -354,7 +354,9 @@ function _M:dumpToJSON(js, bypass, nosub)
 	local achs = js:newSection("achievements")
 	for id, data in pairs(self.achievements or {}) do
 		local a = world:getAchievementFromId(id)
-		achs[#achs+1] = { name=a.name, when=game.calendar:getTimeDate(data.turn, "%s %s %s year of Ascendancy at %02d:%02d"), desc=a.desc.."\nBy "..(data.who or "???")}
+		if a then
+			achs[#achs+1] = { name=a.name, when=game.calendar:getTimeDate(data.turn, "%s %s %s year of Ascendancy at %02d:%02d"), desc=a.desc.."\nBy "..(data.who or "???")}
+		end
 	end
 	table.sort(achs, function(a, b) return a.name < b.name end)
 

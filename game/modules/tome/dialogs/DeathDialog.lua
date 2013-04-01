@@ -127,8 +127,8 @@ function _M:resurrectBasic(actor)
 
 	-- apply cursed equipment
 	if actor.hasTalent and actor.hasTalent(actor.T_DEFILING_TOUCH) then
-		local t = self:getTalentFromId(self.T_DEFILING_TOUCH)
-		t.updateCurses(self, t, true)
+		local t = actor:getTalentFromId(actor.T_DEFILING_TOUCH)
+		t.updateCurses(actor, t, true)
 	end
 
 	actor.changed = true
