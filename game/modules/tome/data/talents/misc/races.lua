@@ -63,6 +63,7 @@ newTalent{
 	points = 5,
 	mode = "passive",
 	on_learn = function(self, t)
+		self:attr("blind_immune", 0.08)
 		self.sight = self.sight + 1
 		self.heightened_senses = (self.heightened_senses or 0) + 1
 		self.infravision = (self.infravision or 0) + 1
@@ -71,12 +72,13 @@ newTalent{
 		self.sight = self.sight - 1
 		self.heightened_senses = (self.heightened_senses or 0) - 1
 		self.infravision = (self.infravision or 0) - 1
+		self:attr("blind_immune", -0.08)
 	end,
 	info = function(self, t)
 		return ([[While Highers are not meant to rule other humans - and show no particular will to do so - they are frequently called to higher duties.
 		Their nature grants them better senses than other humans.
-		Increase maximum sight range by %d, and increases existing infravision, and heightened senses range by %d.]]):
-		format(self:getTalentLevelRaw(t), math.ceil(self:getTalentLevelRaw(t)/2))
+		Increase blindness immunity by %d%%, maximum sight range by %d, and increases existing infravision, and heightened senses range by %d.]]):
+		format(self:getTalentLevelRaw(t) * 8, self:getTalentLevelRaw(t), math.ceil(self:getTalentLevelRaw(t)/2))
 	end,
 }
 
@@ -86,19 +88,23 @@ newTalent{
 	require = racial_req3,
 	points = 5,
 	mode = "passive",
+	cooldown = function(self, t) return 22 - 3 * self:getTalentLevelRaw(t) end,
+	trigger = function(self, t, damtype)
+		self:startTalentCooldown(t)
+		self:setEffect(self.EFF_BORN_INTO_MAGIC, 5, {damtype=damtype})
+	end,
 	on_learn = function(self, t)
 		self.combat_spellresist = self.combat_spellresist + 5
 		self.resists[DamageType.ARCANE] = (self.resists[DamageType.ARCANE] or 0) + 5
-		self.inc_damage[DamageType.ARCANE] = (self.inc_damage[DamageType.ARCANE] or 0) + 5
 	end,
 	on_unlearn = function(self, t)
 		self.combat_spellresist = self.combat_spellresist - 5
 		self.resists[DamageType.ARCANE] = (self.resists[DamageType.ARCANE] or 0) - 5
-		self.inc_damage[DamageType.ARCANE] = (self.inc_damage[DamageType.ARCANE] or 0) - 5
 	end,
 	info = function(self, t)
 		return ([[Highers were originally created during the Age of Allure by the human Conclave. They are imbued with magic at the very core of their being.
-		Increase spell save by +%d, arcane damage by %d%%, and arcane resistance by %d%%.]]):
+		Increase spell save by +%d and arcane resistance by %d%%.
+		Also when you cast a spell dealing damage, you gain a 15%% bonus to the damage type for 5 turns (this effect has a cooldown)]]):
 		format(self:getTalentLevelRaw(t) * 5, self:getTalentLevelRaw(t) * 5, self:getTalentLevelRaw(t) * 5)
 	end,
 }
@@ -111,7 +117,7 @@ newTalent{
 	no_energy = true,
 	cooldown = function(self, t) return 50 - self:getTalentLevel(t) * 3 end,
 	tactical = { MANA = 2, VIM = 2, EQUILIBRIUM = 2, STAMINA = 2, POSITIVE = 2, NEGATIVE = 2, PARADOX = 2, PSI = 2 },
-	getDuration = function(self, t) return 1 + math.ceil(self:getTalentLevelRaw(t)/2) end,
+	getDuration = function(self, t) return 1 + self:getTalentLevelRaw(t) end,
 	action = function(self, t)
 		self:setEffect(self.EFF_HIGHBORN_S_BLOOM, t.getDuration(self, t), {})
 		return true

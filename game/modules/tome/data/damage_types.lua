@@ -462,6 +462,10 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 					target:triggerTalent(target.T_SPELL_FEEDBACK, nil, src, t)
 				end
 
+				if t.is_spell and src.knowTalent and src:knowTalent(src.T_BORN_INTO_MAGIC) then
+					src:triggerTalent(target.T_BORN_INTO_MAGIC, nil, type)
+				end
+
 				if not target.dead and src.isTalentActive and src:isTalentActive(src.T_UNSTOPPABLE_NATURE) and t.is_nature and not src.turn_procs.unstoppable_nature then
 					src:callTalent(src.T_UNSTOPPABLE_NATURE, "freespit", target)
 					src.turn_procs.unstoppable_nature = true

@@ -2230,3 +2230,18 @@ newEffect{
 	deactivate = function(self, eff)
 	end,
 }
+
+newEffect{
+	name = "BORN_INTO_MAGIC", image = "talents/born_into_magic.png",
+	desc = "Born into Magic",
+	long_desc = function(self, eff) return ("%s damage increased by 15%%."):format(DamageType:get(eff.damtype).name:capitalize()) end,
+	type = "magical",
+	subtype = { race=true },
+	status = "beneficial",
+	parameters = { eff=DamageType.ARCANE },
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "inc_damage", {[eff.damtype]=15})
+	end,
+	deactivate = function(self, eff)
+	end,
+}
