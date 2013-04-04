@@ -50,7 +50,7 @@ uberTalent{
 
 		local hit = self:attackTarget(target, nil, 3.5 + 0.8 * (self.size_category - 4), true)
 
-		if target:attr("dead") or not hit then return end
+		if target:attr("dead") or not hit then return true end
 
 		local dx, dy = (target.x - self.x), (target.y - self.y)
 		local dir = util.coordToDir(dx, dy, 0)
