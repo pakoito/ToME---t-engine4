@@ -51,10 +51,10 @@ function _M:init(chat, id)
 		{left=5, top=self.c_desc.h - 10, ui=Separator.new{dir="vertical", size=self.iw - 10}},
 	}
 	if self.show_portraits then
-		uis[#uis+1] = {right=0, top=0, ui=ActorFrame.new{actor=self.npc, w=64, h=64}}
-		uis[#uis+1] = {left=0, bottom=0, ui=ActorFrame.new{actor=self.player, w=64, h=64}}
+		uis[#uis+1] = {right=0, top=0, ui=ActorFrame.new{actor=self.npc.chat_display_entity or self.npc, w=64, h=64}}
+		uis[#uis+1] = {left=0, bottom=0, ui=ActorFrame.new{actor=self.player.chat_display_entity or self.player, w=64, h=64}}
 		uis[2].left = nil uis[2].right = 0
-		uis[3].top = math.max(self.c_desc.h, uis[4].ui.h) - 10
+		uis[3].top = math.max(self.c_desc.h, uis[4].ui.h) + 5
 	end
 
 	self:loadUI(uis)

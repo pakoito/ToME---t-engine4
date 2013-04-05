@@ -70,7 +70,6 @@ function _M:loadup(level, zone)
 		zone.base_level = zone.store_levels_by_restock[game.state.stores_restock] or zone.base_level
 	end
 
-	print("STORE LEVEL ===================================================", zone.base_level)
 	if Store.loadup(self, level, zone, self.store.nb_fill) then
 		self.last_filled = game.state.stores_restock
 	end

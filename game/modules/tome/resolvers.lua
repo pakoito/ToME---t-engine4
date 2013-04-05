@@ -261,6 +261,7 @@ function resolvers.calc.store(t, e)
 		return true
 	end
 	e.store = game:getStore(t)
+	e.store.faction = e.store_faction
 --	print("[STORE] created for entity", t, e, e.name)
 
 	-- Delete the origin field
@@ -275,6 +276,10 @@ end
 function resolvers.calc.chatfeature(t, e)
 	e.chat_faction = t[2]
 	t = t[1]
+
+	if e.chat_faction then
+		e.chat_display_entity = engine.Entity.new{image="faction/"..e.chat_faction..".png"}
+	end
 
 	e.block_move = function(self, x, y, who, act, couldpass)
 		if who and who.player and act then

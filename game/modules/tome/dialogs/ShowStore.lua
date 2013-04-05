@@ -21,6 +21,7 @@ require "engine.class"
 local Dialog = require "engine.ui.Dialog"
 local Inventory = require "engine.ui.Inventory"
 local Separator = require "engine.ui.Separator"
+local Map = require "engine.Map"
 
 module(..., package.seeall, class.inherit(Dialog))
 
@@ -35,6 +36,11 @@ function _M:init(title, store_inven, actor_inven, store_filter, actor_filter, ac
 	self.store_filter = store_filter
 	self.actor_filter = actor_filter
 	Dialog.init(self, title or "Store", math.max(800, game.w * 0.8), math.max(600, game.h * 0.8))
+
+	if store_actor.faction then
+		local i = Map.tiles:loadImage("faction/"..store_actor.faction..".png")
+		if i then  self.faction_image = {i:glTexture()} end
+	end
 
 	self.c_inven = Inventory.new{actor=actor_actor, inven=actor_inven, filter=actor_filter, width=math.floor(self.iw / 2 - 10), height=self.ih - 10,
 		columns={
@@ -202,4 +208,13 @@ function _M:onDragTakeoff(what)
 
 		game.mouse:usedDrag()
 	end
+end
+
+function _M:innerDisplayBack(x, y, nb_keyframes)
+	if not self.faction_image then return end
+
+	print("====faction image")
+	local w, h = self.title_tex.h + 4, self.title_tex.h + 4
+	local x, y = x + (self.w - self.title_tex.w) / 2 + self.frame.title_x - 5 - w, y + self.frame.title_y
+	self.faction_image[1]:toScreenFull(x, y, w, h, self.faction_image[2] * w / self.faction_image[6], self.faction_image[3] * h / self.faction_image[7])
 end

@@ -50,6 +50,15 @@ function _M:tooltip()
 	if self:knownBy(game.player) then
 		local res = tstring{{"uid", self.uid}, self:getName()}
 		if self.is_store then res:add(true, {"font","italic"}, "<Store>", {"font","normal"}) end
+
+		if self.store_faction then
+			local factcolor, factstate, factlevel = "#ANTIQUE_WHITE#", "neutral", Faction:factionReaction(self.store_faction, game.player.faction)
+			if factlevel < 0 then factcolor, factstate = "#LIGHT_RED#", "hostile"
+			elseif factlevel > 0 then factcolor, factstate = "#LIGHT_GREEN#", "friendly"
+			end
+			if Faction.factions[self.store_faction] then res:add(true, "Faction: ") res:merge(factcolor:toTString()) res:add(("%s (%s, %d)"):format(Faction.factions[self.store_faction].name, factstate, factlevel), {"color", "WHITE"}, true) end
+		end		
+
 		if config.settings.cheat then
 			res:add(true, "UID: "..self.uid, true, "Detect: "..self.detect_power, true, "Disarm: "..self.disarm_power)
 		end

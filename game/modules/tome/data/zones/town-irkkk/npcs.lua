@@ -104,7 +104,7 @@ newEntity{ base = "BASE_NPC_IRKKK_TOWN", define_as = "YEEK_STORE_GEM",
 		[Talents.T_CHARGED_AURA]={base=1, every=7, max=5},
 		[Talents.T_KINETIC_SHIELD]={base=2, every=7, max=5},
 	},
-	resolvers.store("GEMSTORE"),
+	resolvers.store("GEMSTORE", "the-way"),
 }
 
 newEntity{ base = "BASE_NPC_IRKKK_TOWN", define_as = "YEEK_STORE_2HANDS",
@@ -123,7 +123,7 @@ newEntity{ base = "BASE_NPC_IRKKK_TOWN", define_as = "YEEK_STORE_2HANDS",
 		[Talents.T_CHARGED_AURA]={base=1, every=7, max=5},
 		[Talents.T_KINETIC_SHIELD]={base=2, every=7, max=5},
 	},
-	resolvers.store("TWO_HANDS_WEAPON"),
+	resolvers.store("TWO_HANDS_WEAPON", "the-way"),
 }
 
 newEntity{ base = "BASE_NPC_IRKKK_TOWN", define_as = "YEEK_STORE_1HAND",
@@ -142,7 +142,7 @@ newEntity{ base = "BASE_NPC_IRKKK_TOWN", define_as = "YEEK_STORE_1HAND",
 		[Talents.T_CHARGED_AURA]={base=1, every=7, max=5},
 		[Talents.T_KINETIC_SHIELD]={base=2, every=7, max=5},
 	},
-	resolvers.store("ONE_HAND_WEAPON"),
+	resolvers.store("ONE_HAND_WEAPON", "the-way"),
 }
 
 newEntity{ base = "BASE_NPC_IRKKK_TOWN", define_as = "YEEK_STORE_CLOTH",
@@ -161,7 +161,7 @@ newEntity{ base = "BASE_NPC_IRKKK_TOWN", define_as = "YEEK_STORE_CLOTH",
 		[Talents.T_CHARGED_AURA]={base=1, every=7, max=5},
 		[Talents.T_KINETIC_SHIELD]={base=2, every=7, max=5},
 	},
-	resolvers.store("CLOTH_ARMOR"),
+	resolvers.store("CLOTH_ARMOR", "the-way"),
 }
 
 newEntity{ base = "BASE_NPC_IRKKK_TOWN", define_as = "YEEK_STORE_LEATHER",
@@ -180,7 +180,7 @@ newEntity{ base = "BASE_NPC_IRKKK_TOWN", define_as = "YEEK_STORE_LEATHER",
 		[Talents.T_CHARGED_AURA]={base=1, every=7, max=5},
 		[Talents.T_KINETIC_SHIELD]={base=2, every=7, max=5},
 	},
-	resolvers.store("LIGHT_ARMOR"),
+	resolvers.store("LIGHT_ARMOR", "the-way"),
 }
 
 newEntity{ base = "BASE_NPC_IRKKK_TOWN", define_as = "YEEK_STORE_NATURE",
@@ -199,5 +199,5 @@ newEntity{ base = "BASE_NPC_IRKKK_TOWN", define_as = "YEEK_STORE_NATURE",
 		[Talents.T_CHARGED_AURA]={base=1, every=7, max=5},
 		[Talents.T_KINETIC_SHIELD]={base=2, every=7, max=5},
 	},
-	resolvers.store("POTION"),
+	resolvers.store("POTION", "the-way"),
 }
