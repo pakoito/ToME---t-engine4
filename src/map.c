@@ -48,6 +48,7 @@ static int lua_set_is_hex(lua_State *L)
 
 static int lua_is_hex(lua_State *L)
 {
+	lua_checkstack(L, 4);
 	lua_pushlightuserdata(L, (void *)&IS_HEX_KEY); // push address as guaranteed unique key
 	lua_gettable(L, LUA_REGISTRYINDEX);  /* retrieve value */
 	if (lua_isnil(L, -1)) {
@@ -66,6 +67,7 @@ static int map_object_new(lua_State *L)
 	int i;
 
 	map_object *obj = (map_object*)lua_newuserdata(L, sizeof(map_object));
+	memset(obj, 0, sizeof(map_object));
 	auxiliar_setclass(L, "core{mapobj}", -1);
 	obj->textures = calloc(nb_textures, sizeof(GLuint));
 	obj->tex_x = calloc(nb_textures, sizeof(GLfloat));
@@ -1247,60 +1249,71 @@ static int map_get_scroll(lua_State *L)
 	return 2;
 }
 
+void do_quad(lua_State *L, const map_object *m, const map_object *dm, const map_type *map,
+		float *vertices, float *texcoords, float *colors, int *vert_idx, int
+		*col_idx, float anim, float dx, float dy, float tldx, float tldy, float
+		dw, float dh, float r, float g, float b, float a, int force, int i, int j)
+{
+	int idx = 0, row;
 
-#define DO_QUAD(dm, anim, dx, dy, tldx, tldy, dw, dh, zoom, r, g, b, a, force) {\
-	vertices[(*vert_idx)] = (dx); vertices[(*vert_idx)+1] = (dy); \
-	vertices[(*vert_idx)+2] = map->tile_w * (dw) * (zoom) + (dx); vertices[(*vert_idx)+3] = (dy); \
-	vertices[(*vert_idx)+4] = map->tile_w * (dw) * (zoom) + (dx); vertices[(*vert_idx)+5] = map->tile_h * (dh) * (zoom) + (dy); \
-	vertices[(*vert_idx)+6] = (dx); vertices[(*vert_idx)+7] = map->tile_h * (dh) * (zoom) + (dy); \
-	\
-	texcoords[(*vert_idx)] = dm->tex_x[0]+anim; texcoords[(*vert_idx)+1] = dm->tex_y[0]; \
-	texcoords[(*vert_idx)+2] = dm->tex_x[0]+anim + dm->tex_factorx[0]; texcoords[(*vert_idx)+3] = dm->tex_y[0]; \
-	texcoords[(*vert_idx)+4] = dm->tex_x[0]+anim + dm->tex_factorx[0]; texcoords[(*vert_idx)+5] = dm->tex_y[0] + dm->tex_factory[0]; \
-	texcoords[(*vert_idx)+6] = dm->tex_x[0]+anim; texcoords[(*vert_idx)+7] = dm->tex_y[0] + dm->tex_factory[0]; \
-	\
-	colors[(*col_idx)] = r; colors[(*col_idx)+1] = g; colors[(*col_idx)+2] = b; colors[(*col_idx)+3] = (a); \
-	colors[(*col_idx)+4] = r; colors[(*col_idx)+5] = g; colors[(*col_idx)+6] = b; colors[(*col_idx)+7] = (a); \
-	colors[(*col_idx)+8] = r; colors[(*col_idx)+9] = g; colors[(*col_idx)+10] = b; colors[(*col_idx)+11] = (a); \
-	colors[(*col_idx)+12] = r; colors[(*col_idx)+13] = g; colors[(*col_idx)+14] = b; colors[(*col_idx)+15] = (a); \
-	\
-	(*vert_idx) += 8; \
-	(*col_idx) += 16; \
+	idx = *vert_idx;
+
+	vertices[idx + 0] = dx;                                vertices[idx + 1] = dy;
+	vertices[idx + 2] = map->tile_w * dw * dm->scale + dx; vertices[idx + 3] = dy;
+	vertices[idx + 4] = vertices[idx + 2];                 vertices[idx + 5] = map->tile_h * dh * dm->scale + dy;
+	vertices[idx + 6] = dx;                                vertices[idx + 7] = vertices[idx + 5];
+
+	texcoords[idx + 0] = dm->tex_x[0] + anim;                      texcoords[idx + 1] = dm->tex_y[0];
+	texcoords[idx + 2] = dm->tex_x[0] + anim + dm->tex_factorx[0]; texcoords[idx + 3] = dm->tex_y[0];
+	texcoords[idx + 4] = dm->tex_x[0] + anim + dm->tex_factorx[0]; texcoords[idx + 5] = dm->tex_y[0] + dm->tex_factory[0];
+	texcoords[idx + 6] = dm->tex_x[0] + anim;                      texcoords[idx + 7] = dm->tex_y[0] + dm->tex_factory[0];
+
+	idx = *col_idx;
+
+	for (row = 0; row < 4; row++) {
+		colors[idx + (4 * row + 0)] = r;
+		colors[idx + (4 * row + 1)] = g;
+		colors[idx + (4 * row + 2)] = b;
+		colors[idx + (4 * row + 3)] = a;
+	}
+
+	(*vert_idx) += 8;
+	(*col_idx) += 16;
 	if ((*vert_idx) >= 8*QUADS_PER_BATCH || force || dm->cb_ref != LUA_NOREF) {\
-		glDrawArrays(GL_QUADS, 0, (*vert_idx) / 2); \
-		(*vert_idx) = 0; \
-		(*col_idx) = 0; \
-	} \
-	\
-	if (dm->cb_ref != LUA_NOREF) \
-	{\
-		if (m->shader) glUseProgramObjectARB(0); \
-		lua_rawgeti(L, LUA_REGISTRYINDEX, dm->cb_ref); \
-		lua_pushnumber(L, dx); \
-		lua_pushnumber(L, dy); \
-		lua_pushnumber(L, map->tile_w * (dw) * (zoom)); \
-		lua_pushnumber(L, map->tile_h * (dh) * (zoom)); \
-		lua_pushnumber(L, (zoom)); \
-		lua_pushboolean(L, TRUE); \
-		lua_pushnumber(L, tldx); \
-		lua_pushnumber(L, tldy); \
-		if (lua_pcall(L, 8, 1, 0)) \
-		{ \
-			printf("Display callback error: UID %ld: %s\n", dm->uid, lua_tostring(L, -1)); \
-			lua_pop(L, 1); \
-		} \
-		if (lua_isboolean(L, -1)) { \
-			glTexCoordPointer(2, GL_FLOAT, 0, texcoords); \
-			glVertexPointer(2, GL_FLOAT, 0, vertices); \
-			glColorPointer(4, GL_FLOAT, 0, colors); \
-		} \
-		lua_pop(L, 1); \
-		if (m->shader) useShader(m->shader, i, j, map->tile_w, map->tile_h, r, g, b, a); \
-	} \
+		glDrawArrays(GL_QUADS, 0, (*vert_idx) / 2);
+		(*vert_idx) = 0;
+		(*col_idx) = 0;
+	}
+	if (dm->cb_ref != LUA_NOREF)
+	{
+		if (m->shader) glUseProgramObjectARB(0);
+		lua_rawgeti(L, LUA_REGISTRYINDEX, dm->cb_ref);
+		lua_checkstack(L, 8);
+		lua_pushnumber(L, dx);
+		lua_pushnumber(L, dy);
+		lua_pushnumber(L, map->tile_w * (dw) * (dm->scale));
+		lua_pushnumber(L, map->tile_h * (dh) * (dm->scale));
+		lua_pushnumber(L, (dm->scale));
+		lua_pushboolean(L, TRUE);
+		lua_pushnumber(L, tldx);
+		lua_pushnumber(L, tldy);
+		if (lua_pcall(L, 8, 1, 0))
+		{
+			printf("Display callback error: UID %ld: %s\n", dm->uid, lua_tostring(L, -1));
+			lua_pop(L, 1);
+		}
+		if (lua_isboolean(L, -1)) {
+			glTexCoordPointer(2, GL_FLOAT, 0, texcoords);
+			glVertexPointer(2, GL_FLOAT, 0, vertices);
+			glColorPointer(4, GL_FLOAT, 0, colors);
+		}
+		lua_pop(L, 1);
+		if (m->shader) useShader(m->shader, i, j, map->tile_w, map->tile_h, r, g, b, a);
+	}
 }
 
-inline void display_map_quad(GLuint *cur_tex, int *vert_idx, int *col_idx, map_type *map, int dx, int dy, float dz, map_object *m, int i, int j, float a, float seen, int nb_keyframes, bool always_show) ALWAYS_INLINE;
-void display_map_quad(GLuint *cur_tex, int *vert_idx, int *col_idx, map_type *map, int dx, int dy, float dz, map_object *m, int i, int j, float a, float seen, int nb_keyframes, bool always_show)
+inline void display_map_quad(lua_State *L, GLuint *cur_tex, int *vert_idx, int *col_idx, map_type *map, int dx, int dy, float dz, map_object *m, int i, int j, float a, float seen, int nb_keyframes, bool always_show) ALWAYS_INLINE;
+void display_map_quad(lua_State *L, GLuint *cur_tex, int *vert_idx, int *col_idx, map_type *map, int dx, int dy, float dz, map_object *m, int i, int j, float a, float seen, int nb_keyframes, bool always_show)
 {
 	map_object *dm;
 	float r, g, b;
@@ -1416,7 +1429,19 @@ void display_map_quad(GLuint *cur_tex, int *vert_idx, int *col_idx, map_type *ma
 						while (dm)
 						{
 							tglBindTexture(GL_TEXTURE_2D, dm->textures[0]);
-							DO_QUAD(dm, 0, dx + dm->dx * map->tile_w + animdx, dy + dm->dy * map->tile_h + animdy, dx + dm->dx * map->tile_w + tlanimdx, dy + dm->dy * map->tile_h + tlanimdy, dm->dw, dm->dh, dm->scale, r, g, b, a * 2 / (3 + z), m->next);
+							do_quad(L, m, dm, map, vertices, texcoords, colors,
+								vert_idx,
+								col_idx,
+								0,
+								dx + dm->dx * map->tile_w + animdx,
+								dy + dm->dy * map->tile_h + animdy,
+								dx + dm->dx * map->tile_w + tlanimdx,
+								dy + dm->dy * map->tile_h + tlanimdy,
+								dm->dw,
+								dm->dh,
+								r, g, b, a,
+								(m->next) ? 1 : 0,
+								i, j);
 							dm = dm->next;
 						}
 					}
@@ -1463,7 +1488,19 @@ void display_map_quad(GLuint *cur_tex, int *vert_idx, int *col_idx, map_type *ma
 			}
 			anim = (float)anim_step / dm->anim_max;
 		}
-		DO_QUAD(dm, anim, dx + (dm->dx + animdx) * map->tile_w, dy + (dm->dy + animdy) * map->tile_h, dx + (dm->dx + tlanimdx) * map->tile_w, dy + (dm->dy + tlanimdy) * map->tile_h, dm->dw, dm->dh, dm->scale, r, g, b, ((dm->dy < 0) && up_important) ? a / 3 : a, m->next);
+		do_quad(L, m, dm, map, vertices, texcoords, colors,
+			vert_idx,
+			col_idx,
+			anim,
+			dx + (dm->dx + animdx) * map->tile_w,
+			dy + (dm->dy + animdy) * map->tile_h,
+			dx + (dm->dx + tlanimdx) * map->tile_w,
+			dy + (dm->dy + tlanimdy) * map->tile_h,
+			dm->dw,
+			dm->dh,
+			r, g, b, ((dm->dy < 0) && up_important) ? a / 3 : a,
+			m->next ? 1 : 0,
+			i, j);
 		dm->animdx = animdx;
 		dm->animdy = animdy;
 		dm = dm->next;
@@ -1571,11 +1608,11 @@ static int map_to_screen(lua_State *L)
 				{
 					if (map->grids_seens[j*map->w+i])
 					{
-						display_map_quad(&cur_tex, &vert_idx, &col_idx, map, dx, dy, z, mo, i, j, 1, map->grids_seens[j*map->w+i], nb_keyframes, always_show);
+						display_map_quad(L, &cur_tex, &vert_idx, &col_idx, map, dx, dy, z, mo, i, j, 1, map->grids_seens[j*map->w+i], nb_keyframes, always_show);
 					}
 					else
 					{
-						display_map_quad(&cur_tex, &vert_idx, &col_idx, map, dx, dy, z, mo, i, j, 1, 0, nb_keyframes, always_show);
+						display_map_quad(L, &cur_tex, &vert_idx, &col_idx, map, dx, dy, z, mo, i, j, 1, 0, nb_keyframes, always_show);
 					}
 				}
 			}

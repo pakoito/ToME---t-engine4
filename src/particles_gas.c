@@ -268,7 +268,7 @@ void update_velocity(gaszone_type *gz, float * u, float * v, float * u0, float *
 	project (gz, u, v, u0, v0 );
 }
 
-void add_data (gaszone_type *gz, float * d, float * u, float * v, float elapsed)
+void add_data (lua_State *L, gaszone_type *gz, float * d, float * u, float * v, float elapsed)
 {
 	int i;
 	for ( i=0 ; i < gz->size; i++ )
@@ -313,8 +313,8 @@ void add_data (gaszone_type *gz, float * d, float * u, float * v, float elapsed)
 	}
 }
 
-void update(gaszone_type *gz, float elapsed) {
-	add_data(gz, gz->dens_prev, gz->u_prev, gz->v_prev, elapsed);
+void update(lua_State *L, gaszone_type *gz, float elapsed) {
+	add_data(L, gz, gz->dens_prev, gz->u_prev, gz->v_prev, elapsed);
 	update_velocity(gz, gz->u, gz->v, gz->u_prev, gz->v_prev, gz->visc, elapsed);
 	update_density(gz, gz->dens, gz->dens_prev, gz->u, gz->v, gz->diff, elapsed);
 }
@@ -402,7 +402,7 @@ static int gas_update(lua_State *L)
 	if (gz->last_tick == -1) gz->last_tick = ((float)SDL_GetTicks()) / 1000.0f - 1;
 
 	float now = ((float)SDL_GetTicks()) / 1000.0f;
-	update(gz, now - gz->last_tick);
+	update(L, gz, now - gz->last_tick);
 	gz->last_tick = now;
 
 	lua_pushboolean(L, 1);

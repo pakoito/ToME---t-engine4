@@ -145,5 +145,6 @@ void *auxiliar_getgroupudata(lua_State *L, const char *groupname, int objidx) {
 * otherwise
 \*-------------------------------------------------------------------------*/
 void *auxiliar_getclassudata(lua_State *L, const char *classname, int objidx) {
+    lua_checkstack(L, 2);
     return luaL_checkudata(L, objidx, classname);
 }

@@ -33,7 +33,6 @@
 #include "mzip.h"
 #include "zlib.h"
 #include "main.h"
-#include "utf8proc.h"
 #include "useshader.h"
 #include <math.h>
 #include <time.h>

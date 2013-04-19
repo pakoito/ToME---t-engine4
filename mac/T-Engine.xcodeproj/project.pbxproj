@@ -50,9 +50,6 @@
 		0473F84A134D1883009C7011 /* SDL_video.h in Sources */ = {isa = PBXBuildFile; fileRef = 0473F824134D187F009C7011 /* SDL_video.h */; };
 		0473F84B134D1883009C7011 /* SDL.h in Sources */ = {isa = PBXBuildFile; fileRef = 0473F825134D187F009C7011 /* SDL.h */; };
 		0473F84D134D197D009C7011 /* physfs.c in Sources */ = {isa = PBXBuildFile; fileRef = 0473F84C134D197D009C7011 /* physfs.c */; };
-		0485FE5D1383200400628C7A /* utf8proc in Resources */ = {isa = PBXBuildFile; fileRef = 0485FE5C1383200400628C7A /* utf8proc */; };
-		0485FE611383202B00628C7A /* utf8proc.c in Sources */ = {isa = PBXBuildFile; fileRef = 0485FE5F1383202B00628C7A /* utf8proc.c */; };
-		0485FE621383202B00628C7A /* utf8proc.h in Sources */ = {isa = PBXBuildFile; fileRef = 0485FE601383202B00628C7A /* utf8proc.h */; };
 		28133EF911C9094A00A7FDAC /* glew.c in Sources */ = {isa = PBXBuildFile; fileRef = 28133EF811C9094900A7FDAC /* glew.c */; };
 		28133EFD11C9096E00A7FDAC /* shaders.c in Sources */ = {isa = PBXBuildFile; fileRef = 28133EFC11C9096E00A7FDAC /* shaders.c */; };
 		28139877127C20F000AC3C20 /* particles_gas.c in Sources */ = {isa = PBXBuildFile; fileRef = 28139875127C20F000AC3C20 /* particles_gas.c */; };
@@ -273,9 +270,6 @@
 		0473F824134D187F009C7011 /* SDL_video.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SDL_video.h; path = ../../../../../Library/Frameworks/SDL.framework/Versions/A/Headers/SDL_video.h; sourceTree = "<group>"; };
 		0473F825134D187F009C7011 /* SDL.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SDL.h; path = ../../../../../Library/Frameworks/SDL.framework/Versions/A/Headers/SDL.h; sourceTree = "<group>"; };
 		0473F84C134D197D009C7011 /* physfs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = physfs.c; path = ../src/physfs.c; sourceTree = "<group>"; };
-		0485FE5C1383200400628C7A /* utf8proc */ = {isa = PBXFileReference; lastKnownFileType = folder; name = utf8proc; path = ../src/utf8proc; sourceTree = "<group>"; };
-		0485FE5F1383202B00628C7A /* utf8proc.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = utf8proc.c; path = ../src/utf8proc/utf8proc.c; sourceTree = "<group>"; };
-		0485FE601383202B00628C7A /* utf8proc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = utf8proc.h; path = ../src/utf8proc/utf8proc.h; sourceTree = "<group>"; };
 		089C165DFE840E0CC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		13E42FB307B3F0F600E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
@@ -919,8 +913,6 @@
 				0473F803134D187F009C7011 /* SDL_audio.h */,
 				0473F804134D187F009C7011 /* SDL_byteorder.h */,
 				0473F805134D187F009C7011 /* SDL_cdrom.h */,
-				0485FE5F1383202B00628C7A /* utf8proc.c */,
-				0485FE601383202B00628C7A /* utf8proc.h */,
 				0473F806134D187F009C7011 /* SDL_config_dreamcast.h */,
 				0473F807134D187F009C7011 /* SDL_config_macos.h */,
 				0473F808134D187F009C7011 /* SDL_config_macosx.h */,
@@ -966,7 +958,6 @@
 		29B97315FDCFA39411CA2CEA /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				0485FE5C1383200400628C7A /* utf8proc */,
 				0473F84C134D197D009C7011 /* physfs.c */,
 				0473F7FE134D1813009C7011 /* bit.c */,
 				0473F7FC134D1804009C7011 /* dmnd_square.c */,
@@ -1115,7 +1106,6 @@
 				2862D3FF1322A90D0034F6B7 /* test_gzip.lua in Resources */,
 				2862D4001322A90D0034F6B7 /* test_zlib.lua in Resources */,
 				0473F7FA134D17A2009C7011 /* te4-icon.png in Resources */,
-				0485FE5D1383200400628C7A /* utf8proc in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1154,8 +1144,6 @@
 				0473F829134D187F009C7011 /* SDL_audio.h in Sources */,
 				0473F82A134D187F009C7011 /* SDL_byteorder.h in Sources */,
 				0473F82B134D187F009C7011 /* SDL_cdrom.h in Sources */,
-				0485FE611383202B00628C7A /* utf8proc.c in Sources */,
-				0485FE621383202B00628C7A /* utf8proc.h in Sources */,
 				0473F82C134D1880009C7011 /* SDL_config_dreamcast.h in Sources */,
 				0473F82D134D1880009C7011 /* SDL_config_macos.h in Sources */,
 				0473F82E134D1880009C7011 /* SDL_config_macosx.h in Sources */,

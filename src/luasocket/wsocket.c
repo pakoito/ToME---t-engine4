@@ -7,6 +7,9 @@
 *
 * RCS ID: $Id: wsocket.c,v 1.36 2007/06/11 23:44:54 diego Exp $
 \*=========================================================================*/
+
+#ifdef _WIN32
+
 #include <string.h>
 
 #include "socket.h"
@@ -399,3 +402,5 @@ static const char *wstrerror(int err) {
         default: return "Unknown error";
     }
 }
+
+#endif

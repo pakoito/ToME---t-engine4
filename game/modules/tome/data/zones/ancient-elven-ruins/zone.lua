@@ -28,7 +28,7 @@ return {
 --	all_remembered = true,
 --	all_lited = true,
 	persistent = "zone",
-	ambient_music = {"Evening Falls.ogg", "weather/dungeon_base.ogg"},
+	ambient_music = {"Anne_van_Schothorst_-_Passed_Tense.ogg", "weather/dungeon_base.ogg"},
 	min_material_level = 3,
 	max_material_level = 4,
 	generator =  {

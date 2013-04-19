@@ -58,7 +58,7 @@ char **g_argv;
 SDL_Window *window = NULL;
 SDL_GLContext maincontext; /* Our opengl context handle */
 bool is_fullscreen = FALSE;
-lua_State *L = NULL;
+static lua_State *L = NULL;
 int nb_cpus;
 bool no_debug = FALSE;
 bool safe_mode = FALSE;

@@ -51,6 +51,9 @@ project "TEngine"
 			"/Library/Frameworks/SDL2.framework/Headers",
 			"/Library/Frameworks/SDL2_image.framework/Headers",
 			"/Library/Frameworks/SDL2_ttf.framework/Headers",
+			"/Library/Frameworks/libpng.framework/Headers",
+			"/Library/Frameworks/ogg.framework/Headers",
+			"/Library/Frameworks/vorbis.framework/Headers",
 
 			-- MacPorts paths
 			"/opt/local/include",
@@ -69,11 +72,17 @@ project "TEngine"
 			"-framework SDL2",
 			"-framework SDL2_image",
 			"-framework SDL2_ttf",
-
-			-- These two options are mandatory for LuaJIT to work
-			"-pagezero_size 10000",
-			"-image_base 100000000",
+			"-framework libpng",
+			"-framework ogg",
+			"-framework vorbis",
 		}
+		if _OPTIONS.lua == "jit2" then
+			linkoptions {
+				-- These two options are mandatory for LuaJIT to work
+				"-pagezero_size 10000",
+				"-image_base 100000000",
+			}
+		end
 		targetdir "."
 		links { "IOKit" }
 
@@ -408,13 +417,6 @@ project "luabitop"
 	targetname "luabitop"
 
 	files { "../src/luabitop/*.c", }
-
-project "utf8proc"
-	kind "StaticLib"
-	language "C"
-	targetname "utf8proc"
-
-	files { "../src/utf8proc/utf8proc.c", }
 
 project "te4-bzip"
 	kind "StaticLib"

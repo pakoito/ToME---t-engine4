@@ -14,7 +14,6 @@ solution "TEngine"
 		"src/expat",
 		"src/lxp",
 		"src/libtcod_import",
-		"src/utf8proc",
 		"src/physfs",
 		"src/physfs/zlib123",
 		"src/bzip2",
@@ -36,7 +35,7 @@ configuration "windows"
 	}
 
 configuration "macosx"
-	buildoptions { "-pagezero_size 10000", "-image_base 100000000", "-Wno-return-type", "-isysroot /Developer/SDKs/MacOSX10.5.sdk", "-mmacosx-version-min=10.5" }
+	buildoptions { "-isysroot /Developer/SDKs/MacOSX10.6.sdk", "-mmacosx-version-min=10.6" }
 
 configuration "Debug"
 	defines { }

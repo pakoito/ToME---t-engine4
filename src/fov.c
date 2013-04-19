@@ -127,6 +127,7 @@ static int lua_fov_get_distance(lua_State *L, double x1, double y1, double x2, d
 		if (ady > 0) {
 			dist += ady;
 		}
+		lua_checkstack(L, 1);
 		lua_pushnumber(L, dist);
 		return 1;
 	} else {
@@ -165,6 +166,7 @@ static int lua_fov_get_distance(lua_State *L, double x1, double y1, double x2, d
 			break;
 		}
 
+		lua_checkstack(L, 1);
 		if (ret_float)
 			lua_pushnumber(L, dist);
 		else
@@ -177,8 +179,9 @@ static void map_seen(void *m, int x, int y, int dx, int dy, int radius, void *sr
 {
 	struct lua_fov *fov = (struct lua_fov *)m;
 	if (x < 0 || y < 0 || x >= fov->w || y >= fov->h) return;
-	lua_fov_get_distance(L, (float)(x-dx), (float)(y-dy), (float)x, (float)y, false);
-	int sqdist = luaL_checknumber(L, -1);
+	lua_fov_get_distance(fov->L, (float)(x-dx), (float)(y-dy), (float)x, (float)y, false);
+	lua_checkstack(fov->L, 7);
+	int sqdist = luaL_checknumber(fov->L, -1);
 	sqdist = sqdist*sqdist;
 
 	// circular view - can be changed if you like
@@ -204,6 +207,7 @@ static bool map_opaque(void *m, int x, int y)
 	}
 	else
 	{
+		lua_checkstack(fov->L, 4);
 		lua_rawgeti(fov->L, LUA_REGISTRYINDEX, fov->opaque_ref);
 		if (fov->cache) lua_rawgeti(fov->L, LUA_REGISTRYINDEX, fov->cache_ref);
 		else lua_pushnil(fov->L);
@@ -443,13 +447,14 @@ static void map_default_seen(void *m, int x, int y, int dx, int dy, int radius, 
 	struct lua_fov *fov = (struct lua_fov *)m;
 	if (x < 0 || y < 0 || x >= fov->w || y >= fov->h) return;
 
-	lua_fov_get_distance(L, (float)(x-dx), (float)(y-dy), (float)x, (float)y, false);
-	int dist = luaL_checknumber(L, -1);
+	lua_fov_get_distance(fov->L, (float)(x-dx), (float)(y-dy), (float)x, (float)y, false);
+	int dist = luaL_checknumber(fov->L, -1);
 	int sqdist = dist*dist;
 
 	// Distance Map
 	if (def->do_dmap)
 	{
+		lua_checkstack(fov->L, 3);
 		lua_pushnumber(fov->L, x + y * def->w);
 		lua_pushnumber(fov->L, def->turn + radius - dist);
 		lua_rawset(fov->L, STACK_DMAP);
@@ -458,6 +463,7 @@ static void map_default_seen(void *m, int x, int y, int dx, int dy, int radius, 
 	// Apply
 	if (def->do_apply)
 	{
+		lua_checkstack(fov->L, 6);
 		lua_pushvalue(fov->L, STACK_APPLY);
 		lua_pushnumber(fov->L, x);
 		lua_pushnumber(fov->L, y);
@@ -466,6 +472,8 @@ static void map_default_seen(void *m, int x, int y, int dx, int dy, int radius, 
 		lua_pushnumber(fov->L, sqdist);
 		lua_call(fov->L, 5, 0);
 	}
+
+	lua_checkstack(fov->L, 26);
 
 	// Get entity
 	lua_pushnumber(fov->L, x + y * def->w);
