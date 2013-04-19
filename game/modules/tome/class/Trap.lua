@@ -36,7 +36,16 @@ function _M:init(t, no_default)
 	engine.Trap.init(self, t, no_default)
 	engine.interface.ObjectIdentify.init(self, t)
 	engine.interface.ActorProject.init(self, t)
+	self.str = self.str or 10
+	self.mag = self.mag or 10
+	self.dex = self.dex or 10
+	self.wil = self.wil or 10
 end
+
+function _M:combatPhysicalpower() return mod.class.interface.Combat:rescaleCombatStats(self.str) end
+function _M:combatSpellpower() return mod.class.interface.Combat:rescaleCombatStats(self.mag) end
+function _M:combatMindpower() return mod.class.interface.Combat:rescaleCombatStats(self.wil) end
+function _M:combatAttack() return mod.class.interface.Combat:rescaleCombatStats(self.dex) end
 
 --- Gets the full name of the object
 function _M:getName()

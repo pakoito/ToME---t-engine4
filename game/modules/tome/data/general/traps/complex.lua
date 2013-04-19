@@ -60,7 +60,6 @@ newEntity{ base = "TRAP_COMPLEX",
 	end,
 	str = resolvers.mbonus(200, 30),
 	dam = resolvers.mbonus_level(300, 5),
-	combatPhysicalpower = function(self) return mod.class.interface.Combat:rescaleCombatStats(self.str) end,
 	triggered = function(self, x, y, who)
 		if not self.spawn_x then return end
 		local tg = {name="huge boulder", type="bolt", range=core.fov.distance(x, y, self.spawn_x, self.spawn_y), x=self.spawn_x, y=self.spawn_y, speed=2, display={image="trap/trap_big_boulder_01.png"}, blur_move=4}
@@ -97,7 +96,6 @@ newEntity{ base = "TRAP_COMPLEX",
 	dammode = rng.table{engine.DamageType.ARCANE_SILENCE, engine.DamageType.DARKSTUN, engine.DamageType.COLDNEVERMOVE},
 	dam = resolvers.mbonus_level(300, 5),
 	mag = resolvers.mbonus(200, 30),
-	combatSpellpower = function(self) return mod.class.interface.Combat:rescaleCombatStats(self.mag) end,
 	triggered = function(self, x, y, who)
 		if self:reactionToward(who) < 0 then
 			local dammode = self.dammode

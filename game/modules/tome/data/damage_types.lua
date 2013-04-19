@@ -1073,6 +1073,7 @@ newDamageType{
 	name = "lightning daze", type = "LIGHTNING_DAZE", text_color = "#ROYAL_BLUE#",
 	projector = function(src, x, y, type, dam)
 		if _G.type(dam) == "number" then dam = {dam=dam, daze=25} end
+		dam.daze = dam.daze or 25
 		local realdam = DamageType:get(DamageType.LIGHTNING).projector(src, x, y, DamageType.LIGHTNING, dam.dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and dam.daze > 0 and rng.percent(dam.daze) then
