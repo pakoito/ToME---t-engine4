@@ -5497,6 +5497,280 @@ newEntity{ base = "BASE_MINDSTAR",
 	use_talent = { id = Talents.T_SLIME_WAVE, level = 3, power = 60 },
 }
 
+newEntity{ base = "BASE_CLOTH_ARMOR",
+	power_source = {nature=true},
+	unique = true,
+	name = "Evermoss Robe", color = colors.DARK_GREEN, image = "object/artifact/robe_spider_silk_robe_spydre.png",
+	unided_name = "fuzzy green robe",
+	desc = [[This thick robe is woven from a dark green moss, firmly bound and cool to the touch. It is said to have rejuvenating properties.]],
+	level_range = {30, 42},
+	rarity = 200,
+	cost = 350,
+	material_level = 4,
+	wielder = {
+		combat_def=12,
+		inc_stats = { [Stats.STAT_WIL] = 5, },
+		combat_mindpower = 12,
+		combat_mindcrit = 5,
+		combat_physresist = 15,
+		life_regen=0.2,
+		healing_factor=0.15,
+		inc_damage={[DamageType.NATURE] = 30,},
+		resists={[DamageType.NATURE] = 25},
+		resists_pen={[DamageType.NATURE] = 10},
+		on_melee_hit={[DamageType.SLIME] = 35},
+		talents_types_mastery = { ["wild-gift/moss"] = 0.1,},
+	},
+}
+
+newEntity{ base = "BASE_SLING",
+	power_source = {arcane=true},
+	unique = true,
+	name = "Nithan's Force", image = "object/artifact/sling_eldoral_last_resort.png",
+	unided_name = "massive sling",
+	desc = [[This powerful sling is said to have belonged to a warrior so strong his shots could knock down a brick wall. It appears he may have had some magical assistance...]],
+	level_range = {35, 50},
+	rarity = 220,
+	require = { stat = { dex=32 }, },
+	cost = 350,
+	material_level = 5,
+	combat = {
+		range = 10,
+		physspeed = 0.7,
+	},
+	wielder = {
+		pin_immune = 0.3,
+		knockback_immune = 0.3,
+		inc_stats = { [Stats.STAT_STR] = 10, [Stats.STAT_CON] = 5,},
+		inc_damage={ [DamageType.PHYSICAL] = 35},
+		resists_pen={[DamageType.PHYSICAL] = 15},
+		resists={[DamageType.PHYSICAL] = 10},
+	},
+	max_power = 25, power_regen = 1,
+	use_talent = { id = Talents.T_DIG, level = 3, power = 25 },
+}
+
+newEntity{ base = "BASE_ARROW",
+	power_source = {technique=true},
+	unique = true,
+	name = "The Titan's Quiver", image = "object/artifact/hornet_stingers.png",
+	unided_name = "gigantic ceramic arrows",
+	desc = [[These massive arrows are honed to a vicious sharpness, and appear to be nearly unbreakable. They seem more like spikes than any arrow you've ever seen.]],
+	color = colors.GREY,
+	level_range = {35, 50},
+	rarity = 300,
+	cost = 150,
+	material_level = 5,
+	require = { stat = { dex=20, str=30 }, },
+	combat = {
+		capacity = 16,
+		dam = 62,
+		apr = 20,
+		physcrit = 8,
+		dammod = {dex=0.5, str=0.7},
+		special_on_crit = {desc="pin the target to the nearest wall", fct=function(combat, who, target)
+			if not target or target == self then return end
+			if target:checkHit(who:combatPhysicalpower()*1.25, target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then
+				game.logSeen(target, "%s is knocked back and pinned!", target.name:capitalize())
+				target:knockback(who.x, who.y, 10)
+				target:setEffect(target.EFF_PINNED, 5, {}) --ignores pinning resistance, too strong!
+			end
+		end},
+	},
+}
+
+newEntity{ base = "BASE_RING",
+	power_source = {technique=true, psionic=true},
+	name = "Inertial Twine", unique=true,
+	desc = [[This double-helical ring seems resistant to attempts to move it. Wearing it seems to extend this property to your entire body.]],
+	unided_name = "entwined iron ring",
+	level_range = {17, 28},
+	rarity = 250,
+	cost = 300,
+	material_level = 3,
+	wielder = {
+		combat_physresist = 12,
+		inc_stats = {[Stats.STAT_WIL] = 8, [Stats.STAT_STR] = 4,},
+		inc_damage={ [DamageType.PHYSICAL] = 5,},
+		resists={[DamageType.PHYSICAL] = 5,},
+		knockback_immune=1,
+		combat_armor = 5,
+	},
+	max_power = 30, power_regen = 1,
+	use_talent = { id = Talents.T_BIND, level = 2, power = 30 },
+}
+
+newEntity{ base = "BASE_LONGSWORD",
+	power_source = {nature=true, technique=true},
+	unique = true,
+	name = "Everpyre Blade",
+	unided_name = "flaming wooden blade", image = "object/artifact/latafayn.png",
+	level_range = {28, 38},
+	color=colors.RED,
+	rarity = 300,
+	desc = [[This ornate blade is carved from the wood of a tree said to burn eternally. Its hilt is encrusted with gems, suggesting it once belonged to a figure of considerable status. The flames seem to bend to the will of the sword's holder.]],
+	cost = 400,
+	require = { stat = { str=40 }, },
+	material_level = 4,
+	combat = {
+		dam = 38,
+		apr = 4,
+		physcrit = 18,
+		dammod = {str=1},
+		convert_damage={[DamageType.FIRE] = 50,},
+	},
+	wielder = {
+		resists = {
+			[DamageType.FIRE] = 15,
+			[DamageType.NATURE] = 10,
+		},
+		inc_damage = {
+			[DamageType.FIRE] = 20,
+		},
+		resists_pen = {
+			[DamageType.FIRE] = 15,
+		},
+		inc_stats = { [Stats.STAT_STR] = 7, [Stats.STAT_WIL] = 7 },
+	},
+	max_power = 30, power_regen = 1,
+	use_talent = { id = Talents.T_FIRE_BREATH, level = 2, power = 30 },
+}
+
+newEntity{ base = "BASE_STAFF",
+	power_source = {arcane=true},
+	image = "object/artifact/staff_kors_fall.png",
+	unided_name = "dark, radiant staff",
+	flavor_name = "starstaff",
+	name = "Eclipse", unique=true,
+	desc = [[This tall staff is tipped with a pitch black sphere that yet seems to give off a strong light.]],
+	require = { stat = { mag=32 }, },
+	level_range = {10, 20},
+	rarity = 200,
+	cost = 60,
+	material_level = 2,
+	modes = {"darkness", "light", "physical", "temporal"},
+	combat = {
+		is_greater = true,
+		dam = 18,
+		apr = 4,
+		physcrit = 3.5,
+		dammod = {mag=1.1},
+		damtype = DamageType.DARKNESS,
+	},
+	wielder = {
+		combat_spellpower = 12,
+		combat_spellcrit = 8,
+		inc_damage={
+			[DamageType.LIGHT] = 15,
+			[DamageType.DARKNESS] = 15,
+			[DamageType.PHYSICAL] = 15,
+			[DamageType.TEMPORAL] = 15,
+		},
+		positive_regen_ref=0.1,
+		negative_regen_ref=0.1,
+		positive_regen=0.1,
+		negative_regen=0.1,
+		talent_cd_reduction = {
+			[Talents.T_TWILIGHT] = 1,
+			[Talents.T_FIREBEAM] = 1,
+		},
+		learn_talent = {[Talents.T_COMMAND_STAFF] = 1},
+	},
+}
+
+newEntity{ base = "BASE_BATTLEAXE",
+	power_source = {technique=true},
+	unique = true,
+	unided_name = "gore stained battleaxe",
+	name = "Eksatin's Ultimatum", color = colors.GREY, image = "object/artifact/crude_iron_battleaxe_of_kroll.png",
+	desc = [[This gore stained battleaxe was once used by an infamously sadistic king, who took the time to personally perform each and every execution he ordered. He kept a vault of every head he ever removed, each and every one of them carefully preserved. When he was overthrown, his own head was added as the centrepiece of the vault, which was maintained as a testament to his cruelty.]],
+	require = { stat = { str=50 }, },
+	level_range = {39, 46},
+	rarity = 300,
+	material_level = 4,
+	combat = {
+		dam = 68,
+		apr = 7,
+		physcrit = 5,
+		dammod = {str=1.3},
+		special_on_crit = {desc="decapitate a weakened target", fct=function(combat, who, target)
+			if not target or target == self then return end
+			if target:checkHit(who:combatPhysicalpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("instakill") and target.life > 0 and ((target.life < target.max_life * 0.25 and target.rank < 3.5) or target.life < target.max_life * 0.10) then
+				target:die(who)
+				game.logSeen(target, "#RED#%s#GOLD# has been decapitated!#LAST#", target.name:capitalize())
+			end
+		end},
+	},
+	wielder = {
+		inc_stats = { [Stats.STAT_CON] = 2, [Stats.STAT_DEX] = 2, },
+		combat_def = 6, combat_armor = 6,
+		inc_damage = { [DamageType.PHYSICAL]=10 },
+		combat_critical_power = 25,
+	},
+	max_power = 30, power_regen = 1,
+	use_talent = { id = Talents.T_PERFECT_STRIKE, level = 2, power = 30 },
+}
+
+newEntity{ base = "BASE_CLOAK",
+	power_source = {arcane=true},
+	unique = true,
+	name = "Radiance",
+	unided_name = "a sparkling, golden cloak",
+	desc = [[This pristine golden cloak flows with a wind that seems to be conjured from nowhere. Its inner surface is a completely plain white, but the outside shines with intense light.]],
+	level_range = {45, 50},
+	color = colors.GOLD,
+	rarity = 500,
+	cost = 300,
+	material_level = 5,
+	wielder = {
+		combat_def = 13,
+		combat_spellpower = 8,
+		inc_stats = { 
+			[Stats.STAT_MAG] = 8, 
+			[Stats.STAT_CUN] = 5, 
+			[Stats.STAT_DEX] = 10, 
+		},
+		inc_damage = { [DamageType.LIGHT]= 10 },
+		resists_cap = { [DamageType.LIGHT] = 10, },
+		resists = { [DamageType.LIGHT] = 20, },
+		talents_types_mastery = {
+			["celestial/light"] = 0.1,
+			["celestial/sun"] = 0.1,
+			["spell/phantasm"] = 0.1,
+		},
+		on_melee_hit={[DamageType.LIGHT_BLIND] = 30},
+	},
+	max_power = 50, power_regen = 1,
+	use_talent = { id = Talents.T_BARRIER, level = 3, power = 50 },
+}
+
+newEntity{ base = "BASE_HEAVY_BOOTS",
+	power_source = {technique=true},
+	unique = true,
+	name = "Unbreakable Greaves", image = "object/artifact/scorched_boots.png",
+	unided_name = "huge stony boots",
+	desc = [[These titanic boots appear to have been carved from stone. They appear weathered and cracked, but easily deflect all blows.]],
+	color = colors.DARK_GRAY,
+	level_range = {40, 50},
+	rarity = 250,
+	cost = 200,
+	material_level = 5,
+	wielder = {
+		combat_armor = 15,
+		combat_def = 8,
+		fatigue = 12,
+		combat_physicalpower = 10,
+		inc_stats = { 
+			[Stats.STAT_STR] = 15, 
+			[Stats.STAT_CON] = 10, 
+			[Stats.STAT_DEX] = -4, 
+		},
+		knockback_immune=1,
+		inc_damage = { [DamageType.PHYSICAL] = 10 },
+		resists = { [DamageType.PHYSICAL] = 10,  [DamageType.ACID] = 10,},
+	},
+}
+
 --[=[
 newEntity{
 	unique = true,
