@@ -314,7 +314,9 @@ newTalent{
 			nomove = self:addTemporaryValue("never_move", 1),
 			dieat = self:addTemporaryValue("die_at", -hp),
 		}
-		self:heal(hp)
+		if not self:attr("talent_reuse") then
+			self:heal(hp)
+		end
 		return ret
 	end,
 	deactivate = function(self, t, p)
