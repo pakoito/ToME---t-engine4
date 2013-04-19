@@ -119,7 +119,7 @@ project "physfs"
 	defines {"PHYSFS_SUPPORTS_ZIP"}
 	if _OPTIONS.no_rwops_size then defines{"NO_RWOPS_SIZE"} end
 
-	files { "../src/physfs/*.c", "../src/physfs/zlib123/*.c", "../src/physfs/archivers/*.c", }
+	files { "../src/physfs/*.c", "../src/zlib/*.c", "../src/physfs/archivers/*.c", }
 
 	configuration "linux"
 		files { "../src/physfs/platform/unix.c", "../src/physfs/platform/posix.c",  }

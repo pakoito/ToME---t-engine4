@@ -825,7 +825,7 @@
 				28B4257B119F51A700562F94 /* physfsrwops.c */,
 				28B4257C119F51A700562F94 /* physfsrwops.h */,
 				28B4257D119F51A700562F94 /* platform */,
-				28B42582119F51A700562F94 /* zlib123 */,
+				28B42582119F51A700562F94 /* zlib */,
 			);
 			name = physfs;
 			path = ../src/physfs;
@@ -849,7 +849,7 @@
 			path = platform;
 			sourceTree = "<group>";
 		};
-		28B42582119F51A700562F94 /* zlib123 */ = {
+		28B42582119F51A700562F94 /* zlib */ = {
 			isa = PBXGroup;
 			children = (
 				28B42583119F51A700562F94 /* adler32.c */,
@@ -880,7 +880,7 @@
 				28B4259D119F51A700562F94 /* zutil.c */,
 				28B4259E119F51A700562F94 /* zutil.h */,
 			);
-			path = zlib123;
+			path = ../zlib;
 			sourceTree = "<group>";
 		};
 		28F1A75C13006FD40082CA27 /* Game */ = {

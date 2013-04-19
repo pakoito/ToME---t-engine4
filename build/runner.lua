@@ -74,7 +74,7 @@ project "runner-physfs"
 
 	defines {"PHYSFS_SUPPORTS_ZIP"}
 
-	files { "../src/physfs/*.c", "../src/physfs/zlib123/*.c", "../src/physfs/archivers/*.c", }
+	files { "../src/physfs/*.c", "../src/zlib/*.c", "../src/physfs/archivers/*.c", }
 
 	configuration "linux"
 		files { "../src/physfs/platform/unix.c", "../src/physfs/platform/posix.c",  }

@@ -15,7 +15,7 @@ solution "TEngine"
 		"src/lxp",
 		"src/libtcod_import",
 		"src/physfs",
-		"src/physfs/zlib123",
+		"src/zlib",
 		"src/bzip2",
 		"/opt/SDL-2.0/include/SDL2",
 		"/usr/include/GL",
