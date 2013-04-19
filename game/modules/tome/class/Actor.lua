@@ -285,6 +285,9 @@ function _M:stripForExport()
 	end
 end
 
+-- Dummy
+function _M:runStop() end
+function _M:restStop() end
 
 function _M:useEnergy(val)
 	engine.Actor.useEnergy(self, val)
