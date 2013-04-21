@@ -121,8 +121,8 @@ g.change_level_check = function(self)
 	self.real_change = nil
 	return true
 end
-g.block_move = function(self, x, y, who, act, couldpass)
-	if not who or not who.player or not act then return false end
+g.on_move = function(self, x, y, who)
+	if not who or not who.player then return false end
 	if self.broken then
 		game.log("#VIOLET#The portal is already broken!")
 		return false
@@ -134,6 +134,7 @@ g.block_move = function(self, x, y, who, act, couldpass)
 			self:change_level_check()
 		end
 		self.broken = true
+		self.name = "broken "..self.name
 		self.change_level = nil
 		self.autoexplore_ignore = true
 	end, "Destroy", "Enter")
