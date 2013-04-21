@@ -212,7 +212,19 @@ function _M:generateList()
 			self.c_list:drawItem(item)
 		end, 0))
 	end,}
-
+	
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"How long will flying text messages be visible on screen.\nThe range is 1 (very short) to 100 (10x slower) than the normal duration, which varies with each individual message."}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Duration of flying text#WHITE##{normal}#", status=function(item)
+		return tostring((config.settings.tome.flyers_fade_time or 10) )
+	end, fct=function(item)
+		game:registerDialog(GetQuantity.new("Relative duration", "From 1 to 100", (config.settings.tome.flyers_fade_time or 10), 100, function(qty)
+			qty = util.bound(qty, 1, 100)
+			config.settings.tome.flyers_fade_time = qty
+			game:saveSettings("tome.flyers_fade_time", ("tome.flyers_fade_time = %d\n"):format(qty))
+			self.c_list:drawItem(item)
+		end, 1))
+	end,}
+	
 	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Configure the chat filters to select what kind of messages to see.#WHITE#"}
 	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Chat message filters#WHITE##{normal}#", status=function(item)
 		return "select to configure"

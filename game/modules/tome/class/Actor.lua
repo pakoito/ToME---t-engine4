@@ -2453,7 +2453,7 @@ function _M:die(src, death_note)
 		world:gainAchievement("PEST_CONTROL", p, self)
 		world:gainAchievement("REAVER", p, self)
 
-		if self.unique then
+		if self.unique and not self.randboss then
 			game.player:registerUniqueKilled(self)
 		end
 

@@ -475,6 +475,15 @@ function _M:setupMiniMap()
 	if self.level and self.level.map and self.level.map.finished then self.uiset:setupMinimap(self.level) end
 end
 
+--- Sets up a text flyers
+function _M:setFlyingText(fl)
+	self.flyers = fl
+	function self.flyers:add(x, y, duration, xvel, yvel, str, color, bigfont)
+		local slowness = (config.settings.tome.flyers_fade_time or 10)/10
+		return FlyingText.add(fl, x, y, duration*slowness, xvel/slowness, yvel/slowness, str, color, bigfont)
+	end
+end
+
 function _M:save()
 	self.total_playtime = (self.total_playtime or 0) + (os.time() - (self.last_update or self.real_starttime))
 	self.last_update = os.time()
