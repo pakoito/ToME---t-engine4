@@ -684,6 +684,7 @@ end
 --- Try to auto use listed talents
 -- This should be called in your actors "act()" method
 function _M:automaticTalents()
+	self:attr("_forbid_sounds", 1)
 	for tid, c in pairs(self.talents_auto) do
 		local t = self.talents_def[tid]
 		local spotted = spotHostiles(self)
@@ -707,7 +708,7 @@ function _M:automaticTalents()
 			end
 		end
 	end
-	return
+	self:attr("_forbid_sounds", -1)
 end
 
 --- We started resting
