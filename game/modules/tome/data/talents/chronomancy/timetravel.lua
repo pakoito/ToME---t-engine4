@@ -165,7 +165,7 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		return ([[Creates a temporal echo in a nova around you, in a radius of %d.  Affected targets will take %0.2f temporal damage, as well as %d%% of the difference between their current life and max life as additional temporal damage.
 		The percentage and damage scales with your Paradox and Spellpower.]]):
-		format(radius, damage, percent)
+		format(radius, damDesc(self, DamageType.TEMPORAL, damage), percent)
 	end,
 }
 
