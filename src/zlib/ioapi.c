@@ -14,19 +14,8 @@
         #define _CRT_SECURE_NO_WARNINGS
 #endif
 
-#if defined(__APPLE__) || defined(IOAPI_NO_64)
-// In darwin and perhaps other BSD variants off_t is a 64 bit value, hence no need for specific 64 bit functions
-#define FOPEN_FUNC(filename, mode) fopen(filename, mode)
-#define FTELLO_FUNC(stream) ftello(stream)
-#define FSEEKO_FUNC(stream, offset, origin) fseeko(stream, offset, origin)
-#else
-#define FOPEN_FUNC(filename, mode) fopen64(filename, mode)
-#define FTELLO_FUNC(stream) ftello64(stream)
-#define FSEEKO_FUNC(stream, offset, origin) fseeko64(stream, offset, origin)
-#endif
-
-
 #include "ioapi.h"
+#include "physfs.h"
 
 voidpf call_zopen64 (const zlib_filefunc64_32_def* pfilefunc,const void*filename,int mode)
 {
@@ -94,59 +83,49 @@ static int     ZCALLBACK ferror_file_func OF((voidpf opaque, voidpf stream));
 
 static voidpf ZCALLBACK fopen_file_func (voidpf opaque, const char* filename, int mode)
 {
-    FILE* file = NULL;
-    const char* mode_fopen = NULL;
+    PHYSFS_file* file = NULL;
     if ((mode & ZLIB_FILEFUNC_MODE_READWRITEFILTER)==ZLIB_FILEFUNC_MODE_READ)
-        mode_fopen = "rb";
+        file = PHYSFS_openRead(filename);
     else
     if (mode & ZLIB_FILEFUNC_MODE_EXISTING)
-        mode_fopen = "r+b";
+        file = PHYSFS_openAppend(filename);
     else
     if (mode & ZLIB_FILEFUNC_MODE_CREATE)
-        mode_fopen = "wb";
-
-    if ((filename!=NULL) && (mode_fopen != NULL))
-        file = fopen(filename, mode_fopen);
-    return file;
+        file = PHYSFS_openWrite(filename);
 }
 
 static voidpf ZCALLBACK fopen64_file_func (voidpf opaque, const void* filename, int mode)
 {
-    FILE* file = NULL;
-    const char* mode_fopen = NULL;
+    PHYSFS_file* file = NULL;
     if ((mode & ZLIB_FILEFUNC_MODE_READWRITEFILTER)==ZLIB_FILEFUNC_MODE_READ)
-        mode_fopen = "rb";
+        file = PHYSFS_openRead(filename);
     else
     if (mode & ZLIB_FILEFUNC_MODE_EXISTING)
-        mode_fopen = "r+b";
+        file = PHYSFS_openAppend(filename);
     else
     if (mode & ZLIB_FILEFUNC_MODE_CREATE)
-        mode_fopen = "wb";
-
-    if ((filename!=NULL) && (mode_fopen != NULL))
-        file = FOPEN_FUNC((const char*)filename, mode_fopen);
-    return file;
+        file = PHYSFS_openWrite(filename);
 }
 
 
 static uLong ZCALLBACK fread_file_func (voidpf opaque, voidpf stream, void* buf, uLong size)
 {
     uLong ret;
-    ret = (uLong)fread(buf, 1, (size_t)size, (FILE *)stream);
+    ret = (uLong)PHYSFS_read((PHYSFS_file *)stream, buf, 1, (size_t)size);
     return ret;
 }
 
 static uLong ZCALLBACK fwrite_file_func (voidpf opaque, voidpf stream, const void* buf, uLong size)
 {
     uLong ret;
-    ret = (uLong)fwrite(buf, 1, (size_t)size, (FILE *)stream);
+    ret = (uLong)PHYSFS_write((PHYSFS_file *)stream, buf, 1, (size_t)size);
     return ret;
 }
 
 static long ZCALLBACK ftell_file_func (voidpf opaque, voidpf stream)
 {
     long ret;
-    ret = ftell((FILE *)stream);
+    ret = PHYSFS_tell((PHYSFS_file *)stream);
     return ret;
 }
 
@@ -154,7 +133,7 @@ static long ZCALLBACK ftell_file_func (voidpf opaque, voidpf stream)
 static ZPOS64_T ZCALLBACK ftell64_file_func (voidpf opaque, voidpf stream)
 {
     ZPOS64_T ret;
-    ret = FTELLO_FUNC((FILE *)stream);
+    ret = PHYSFS_tell((PHYSFS_file *)stream);
     return ret;
 }
 
@@ -165,10 +144,10 @@ static long ZCALLBACK fseek_file_func (voidpf  opaque, voidpf stream, uLong offs
     switch (origin)
     {
     case ZLIB_FILEFUNC_SEEK_CUR :
-        fseek_origin = SEEK_CUR;
+        printf("Unimplemented seek cur in ioapi.c\n");
         break;
     case ZLIB_FILEFUNC_SEEK_END :
-        fseek_origin = SEEK_END;
+        printf("Unimplemented seek end in ioapi.c\n");
         break;
     case ZLIB_FILEFUNC_SEEK_SET :
         fseek_origin = SEEK_SET;
@@ -176,8 +155,7 @@ static long ZCALLBACK fseek_file_func (voidpf  opaque, voidpf stream, uLong offs
     default: return -1;
     }
     ret = 0;
-    if (fseek((FILE *)stream, offset, fseek_origin) != 0)
-        ret = -1;
+    PHYSFS_seek((PHYSFS_file *)stream, offset);
     return ret;
 }
 
@@ -188,10 +166,10 @@ static long ZCALLBACK fseek64_file_func (voidpf  opaque, voidpf stream, ZPOS64_T
     switch (origin)
     {
     case ZLIB_FILEFUNC_SEEK_CUR :
-        fseek_origin = SEEK_CUR;
+        printf("Unimplemented seek cur in ioapi.c\n");
         break;
     case ZLIB_FILEFUNC_SEEK_END :
-        fseek_origin = SEEK_END;
+        printf("Unimplemented seek end in ioapi.c\n");
         break;
     case ZLIB_FILEFUNC_SEEK_SET :
         fseek_origin = SEEK_SET;
@@ -199,26 +177,22 @@ static long ZCALLBACK fseek64_file_func (voidpf  opaque, voidpf stream, ZPOS64_T
     default: return -1;
     }
     ret = 0;
-
-    if(FSEEKO_FUNC((FILE *)stream, offset, fseek_origin) != 0)
-                        ret = -1;
-
-    return ret;
+    PHYSFS_seek((PHYSFS_file *)stream, offset);
 }
 
 
 static int ZCALLBACK fclose_file_func (voidpf opaque, voidpf stream)
 {
     int ret;
-    ret = fclose((FILE *)stream);
+    ret = PHYSFS_close((PHYSFS_file *)stream);
     return ret;
 }
 
 static int ZCALLBACK ferror_file_func (voidpf opaque, voidpf stream)
 {
-    int ret;
-    ret = ferror((FILE *)stream);
-    return ret;
+/*    int ret;
+    ret = ferror((FILE *)stream);*/
+    return 0;
 }
 
 void fill_fopen_filefunc (pzlib_filefunc_def)
