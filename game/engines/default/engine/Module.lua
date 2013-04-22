@@ -263,10 +263,10 @@ function _M:listAddons(mod, ignore_compat)
 			setfenv(add_def, add)
 			add_def()
 
-			if (ignore_compat or engine.version_string(add.version) == engine.version_string(mod.version)) and add.for_module == mod.short_name then
+			if (ignore_compat or engine.version_nearly_same(mod.version, add.version)) and add.for_module == mod.short_name then
 				add.dir = dir
 				add.teaa = teaa
-				add.natural_compatible = engine.version_string(add.version) == engine.version_string(mod.version)
+				add.natural_compatible = engine.version_nearly_same(mod.version, add.version)
 				add.version_txt = ("%d.%d.%d"):format(add.version[1], add.version[2], add.version[3])
 				if add.dlc and not profile:isDonator(add.dlc) then add.dlc = "no" end
 				adds[#adds+1] = add

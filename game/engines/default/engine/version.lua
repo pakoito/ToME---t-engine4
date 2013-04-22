@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 -- Engine Version
-engine.version = {1,0,1,"te4",17}
+engine.version = {1,0,2,"te4",17}
 engine.require_c_core = engine.version[5]
 engine.version_id = ("%s-%d_%d.%d.%d"):format(engine.version[4], engine.require_c_core, engine.version[1], engine.version[2], engine.version[3])
 
@@ -43,4 +43,9 @@ function engine.version_compare(v, ev)
 	if v[1] == ev[1] and v[2] == ev[2] and v[3] > ev[3] then return "newer" end
 	if v[1] == ev[1] and v[2] == ev[2] and v[3] == ev[3] then return "same" end
 	return "lower"
+end
+
+function engine.version_nearly_same(v, ev)
+	if v[1] == ev[1] and v[2] == ev[2] and v[3] >= ev[3] then return true end
+	return false
 end
