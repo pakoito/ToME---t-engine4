@@ -21,7 +21,7 @@ return {
 	name = "Orc breeding pits",
 	level_range = {30, 60},
 	level_scheme = "player",
-	max_level = 5,
+	max_level = 3,
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
 	width = 50, height = 50,
@@ -54,7 +54,13 @@ return {
 	},
 	post_process = function(level)
 		-- Place a lore note on each level
-		if level.level > 1 then game:placeRandomLoreObject("BREEDING_HISTORY"..level.level) end
+		if level.level == 2 then 
+			game:placeRandomLoreObject("BREEDING_HISTORY2")
+			game:placeRandomLoreObject("BREEDING_HISTORY3")
+			game:placeRandomLoreObject("BREEDING_HISTORY4")
+		elseif level.level == 3 then 
+			game:placeRandomLoreObject("BREEDING_HISTORY5")
+		end
 
 		for uid, e in pairs(level.entities) do e.faction="orc-pride" end
 	end,
@@ -74,8 +80,6 @@ return {
 				nb_npc = {0, 0},
 			}, },
 		},
-		[3] = { width = 25, height = 25, generator = {map = {min_floor=300}} },
-		[4] = { width = 20, height = 20, generator = {map = {min_floor=200}} },
-		[5] = { width = 15, height = 15, generator = {map = {min_floor=120}} },
+		[3] = { width = 15, height = 15, generator = {map = {min_floor=120}} },
 	},
 }
