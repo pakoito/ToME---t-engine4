@@ -69,3 +69,46 @@ function _M:roomMapAddEntity(i, j, type, e)
 	rm[#rm+1] = {type, e}
 	e:added() -- we do it here to make sure uniques are uniques
 end
+
+local Gridlist = class.make{}
+
+function _M:makeGridList()
+	return Gridlist.new()
+end
+
+function Gridlist:init()
+	self.list = {}
+end
+
+function Gridlist:add(x, y, data)
+	if data == nil then data = true end
+	if not self.list[x] then self.list[x] = {} end
+	self.list[x][y] = data
+end
+
+function Gridlist:remove(x, y)
+	if not self.list[x] then return end
+	self.list[x][y] = nil
+	if not next(self.list[x]) then self.list[x] = nil end
+end
+
+function Gridlist:has(x, y)
+	if not self.list[x] then return end
+	return self.list[x][y]
+end
+
+function Gridlist:toList()
+	local list = {}
+	for x, yy in pairs(self.list) do for y, data in pairs(yy) do
+		list[#list+1] = {x=x, y=y, data=data}
+	end end 
+	return list
+end
+
+function Gridlist:count()
+	local nb = 0
+	for x, yy in pairs(self.list) do for y, data in pairs(yy) do
+		nb = nb + 1
+	end end 
+	return nb
+end

@@ -185,13 +185,13 @@ end
 
 --- Make walls have a pseudo 3D effect
 function _M:niceTileWall3d(level, i, j, g, nt)
-	local s = level.map:checkEntity(i, j, Map.TERRAIN, "type") or "wall"
-	local gn = level.map:checkEntity(i, j-1, Map.TERRAIN, "type") or "wall"
+	local s = (level.map:checkEntity(i, j, Map.TERRAIN, "type") or "wall").."/"..level.map:checkEntity(i, j, Map.TERRAIN, "subtype") or "floor"
+	local gn = (level.map:checkEntity(i, j-1, Map.TERRAIN, "type") or "wall").."/"..level.map:checkEntity(i, j-1, Map.TERRAIN, "subtype") or "floor"
+	local gs = (level.map:checkEntity(i, j+1, Map.TERRAIN, "type") or "wall").."/"..level.map:checkEntity(i, j+1, Map.TERRAIN, "subtype") or "floor"
+	local gw = (level.map:checkEntity(i-1, j, Map.TERRAIN, "type") or "wall").."/"..level.map:checkEntity(i-1, j, Map.TERRAIN, "subtype") or "floor"
+	local ge = (level.map:checkEntity(i+1, j, Map.TERRAIN, "type") or "wall").."/"..level.map:checkEntity(i+1, j, Map.TERRAIN, "subtype") or "floor"
 	local dn = level.map:checkEntity(i, j-1, Map.TERRAIN, "is_door")
-	local gs = level.map:checkEntity(i, j+1, Map.TERRAIN, "type") or "wall"
 	local ds = level.map:checkEntity(i, j+1, Map.TERRAIN, "is_door")
-	local gw = level.map:checkEntity(i-1, j, Map.TERRAIN, "type") or "wall"
-	local ge = level.map:checkEntity(i+1, j, Map.TERRAIN, "type") or "wall"
 
 	if gs ~= s and gn ~= s and gw ~= s and ge ~= s then self:replace(i, j, self:getTile(nt.small_pillar))
 	elseif gs ~= s and gn ~= s and gw ~= s and ge == s then self:replace(i, j, self:getTile(nt.pillar_4))

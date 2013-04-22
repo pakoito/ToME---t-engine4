@@ -38,9 +38,9 @@ function _M:init(zone, map, level, data)
 	RoomsLoader.init(self, data)
 end
 
-function _M:Lshape(inner_grids, x1, x2, y1, y2, ix1, ix2, iy1, iy2)
+function _M:Lshape(bdoor_grids, inner_grids, x1, x2, y1, y2, ix1, ix2, iy1, iy2)
 	if #inner_grids == 0 then return end
-	local door_grids = {}
+	local door_grids = self:makeGridList()
 	local void = rng.percent(self.yard_chance)
 	local point = rng.tableRemove(inner_grids)
 	local dx1, dx2 = math.abs(point.x - ix1), math.abs(point.x - ix2)
@@ -50,26 +50,35 @@ function _M:Lshape(inner_grids, x1, x2, y1, y2, ix1, ix2, iy1, iy2)
 	print("room", dx1, dx2, "::", dy1, dy2)
 
 	if dx2 > dx1 and dy2 > dy1 then
-		for i = point.x, x2 do door_grids[#door_grids+1] = {x=i,y=point.y} self.map(i, point.y, Map.TERRAIN, self:resolve("wall")) end
-		for j = point.y, y2 do door_grids[#door_grids+1] = {x=point.x,y=j} self.map(point.x, j, Map.TERRAIN, self:resolve("wall")) end
+		for i = point.x, x2 do door_grids:add(i,point.y) self.map(i, point.y, Map.TERRAIN, self:resolve("wall")) end
+		for j = point.y, y2 do door_grids:add(point.x,j) self.map(point.x, j, Map.TERRAIN, self:resolve("wall")) end
 		for i = point.x+1, x2 do for j = point.y+1, y2 do if void then self.map(i, j, Map.TERRAIN, self:resolve("external_floor")) end end end
+		bdoor_grids:remove(x2+1, point.y)
+		bdoor_grids:remove(point.x, y2+1)
 	elseif dx1 > dx2 and dy2 > dy1 then
-		for i = x1, point.x do door_grids[#door_grids+1] = {x=i,y=point.y} self.map(i, point.y, Map.TERRAIN, self:resolve("wall")) end
-		for j = point.y, y2 do door_grids[#door_grids+1] = {x=point.x,y=j} self.map(point.x, j, Map.TERRAIN, self:resolve("wall")) end
+		for i = x1, point.x do door_grids:add(i,point.y) self.map(i, point.y, Map.TERRAIN, self:resolve("wall")) end
+		for j = point.y, y2 do door_grids:add(point.x,j) self.map(point.x, j, Map.TERRAIN, self:resolve("wall")) end
 		for i = x1, point.x-1 do for j = point.y+1, y2 do if void then self.map(i, j, Map.TERRAIN, self:resolve("external_floor")) end end end
+		bdoor_grids:remove(x1-1, point.y)
+		bdoor_grids:remove(point.x, y2+1)
 	elseif dx1 > dx2 and dy1 > dy2 then
-		for i = x1, point.x do door_grids[#door_grids+1] = {x=i,y=point.y} self.map(i, point.y, Map.TERRAIN, self:resolve("wall")) end
-		for j = y1, point.y do door_grids[#door_grids+1] = {x=point.x,y=j} self.map(point.x, j, Map.TERRAIN, self:resolve("wall")) end
+		for i = x1, point.x do door_grids:add(i,point.y) self.map(i, point.y, Map.TERRAIN, self:resolve("wall")) end
+		for j = y1, point.y do door_grids:add(point.x,j) self.map(point.x, j, Map.TERRAIN, self:resolve("wall")) end
 		for i = x1, point.x-1 do for j = y1, point.y-1 do if void then self.map(i, j, Map.TERRAIN, self:resolve("external_floor")) end end end
+		bdoor_grids:remove(x1-1, point.y)
+		bdoor_grids:remove(point.x, y1-1)
 	elseif dx2 > dx1 and dy1 > dy2 then
-		for i = point.x, x2 do door_grids[#door_grids+1] = {x=i,y=point.y} self.map(i, point.y, Map.TERRAIN, self:resolve("wall")) end
-		for j = y1, point.y do door_grids[#door_grids+1] = {x=point.x,y=j} self.map(point.x, j, Map.TERRAIN, self:resolve("wall")) end
+		for i = point.x, x2 do door_grids:add(i,point.y) self.map(i, point.y, Map.TERRAIN, self:resolve("wall")) end
+		for j = y1, point.y do door_grids:add(point.x,j) self.map(point.x, j, Map.TERRAIN, self:resolve("wall")) end
 		for i = point.x+1, x2 do for j = y1, point.y-1 do if void then self.map(i, j, Map.TERRAIN, self:resolve("external_floor")) end end end
+		bdoor_grids:remove(x2+1, point.y)
+		bdoor_grids:remove(point.x, y1-1)
 	end
+	door_grids:remove(point.x, point.y)
 
 	-- Door
-	if #door_grids > 0 then
-		local door = rng.table(door_grids)
+	if door_grids:count() > 0 then
+		local door = rng.table(door_grids:toList())
 		self.map(door.x, door.y, Map.TERRAIN, self:resolve("door"))
 	end
 end
@@ -79,7 +88,7 @@ function _M:building(leaf, spots)
 	local y1, y2 = leaf.ry + rng.range(2, math.max(2, math.floor(leaf.h / 2 - 3))), leaf.ry + leaf.h - rng.range(2, math.max(2, math.floor(leaf.h / 2 - 3)))
 	local ix1, ix2, iy1, iy2 = x1 + 2, x2 - 2, y1 + 2, y2 - 2
 	local inner_grids = {}
-	local door_grids = {}
+	local door_grids = self:makeGridList()
 
 	for i = leaf.rx, leaf.rx + leaf.w do for j = leaf.ry, leaf.ry + leaf.h do
 		-- Abort if there is something already
@@ -89,7 +98,9 @@ function _M:building(leaf, spots)
 	for i = x1, x2 do for j = y1, y2 do
 		if i == x1 or i == x2 or j == y1 or j == y2 then
 			self.map(i, j, Map.TERRAIN, self:resolve("wall"))
-			door_grids[#door_grids+1] = {x=i,y=j}
+			if not (i == x1 and j == y1) and not (i == x2 and j == y1) and not (i == x1 and j == y2) and not (i == x2 and j == y2) then
+				door_grids:add(i, j)
+			end
 		else
 			self.map(i, j, Map.TERRAIN, self:resolve("floor"))
 			if i >= ix1 and i <= ix2 and j >= iy1 and j <= iy2 then
@@ -98,22 +109,14 @@ function _M:building(leaf, spots)
 		end
 	end end
 
-	-- Door
-	local door = rng.table(door_grids)
-	self.map(door.x, door.y, Map.TERRAIN, self:resolve("door"))
-	-- Eliminate inner grids that face the door
-	for i = #inner_grids, 1, -1 do
-		local g = inner_grids[i]
-		if g.x == door.x or g.y == door.y then table.remove(inner_grids, i) end
-	end
-
 	-- L shape
 	if rng.percent(self.lshape_chance) then
-		self:Lshape(inner_grids, x1, x2, y1, y2, ix1, ix2, iy1, iy2)
+		self:Lshape(door_grids, inner_grids, x1, x2, y1, y2, ix1, ix2, iy1, iy2)
 	end
---	if rng.percent(self.lshape_chance) then
---		self:Lshape(inner_grids, x1, x2, y1, y2, ix1, ix2, iy1, iy2)
---	end
+
+	-- Door
+	local door = rng.table(door_grids:toList())
+	self.map(door.x, door.y, Map.TERRAIN, self:resolve("door"))
 
 	spots[#spots+1] = {x=math.floor((x1+x2)/2), y=math.floor((y1+y2)/2), type="building", subtype="building"}
 end

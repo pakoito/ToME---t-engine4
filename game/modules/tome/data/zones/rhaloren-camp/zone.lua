@@ -17,6 +17,10 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local p = rng.range(1, 2)
+if p == 1 then
+
+-- Underground
 return {
 	name = "Rhaloren Camp",
 	level_range = {1, 5},
@@ -83,3 +87,86 @@ return {
 		game:placeRandomLoreObject("NOTE"..level.level)
 	end,
 }
+
+else
+
+-- Overground
+return {
+	name = "Rhaloren Camp",
+	level_range = {1, 5},
+	level_scheme = "player",
+	max_level = 3,
+	decay = {300, 800},
+	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
+	width = 50, height = 50,
+	tier1 = true,
+--	all_remembered = true,
+	all_lited = true,
+	persistent = "zone",
+	-- Apply a greenish tint to all the map
+	color_shown = {0.8, 1, 0.8, 1},
+	color_obscure = {0.8*0.6, 1*0.6, 0.8*0.6, 0.6},
+	ambient_music = "Broken.ogg",
+	max_material_level = 2,
+	generator =  {
+		map = {
+			class = "engine.generator.map.Town",
+			building_chance = 80,
+			max_building_w = 10, max_building_h = 10,
+			edge_entrances = {4,6},
+			floor = "FLOOR",
+			external_floor = {"GRASS","GRASS","GRASS","GRASS","GRASS","GRASS","GRASS","GRASS","GRASS","GRASS","GRASS","GRASS","GRASS","GRASS","GRASS","TREE"},
+			wall = "WALL",
+			up = "GRASS_UP4",
+			down = "GRASS_DOWN6",
+			door = "DOOR",
+			['#'] = "WALL",
+			['.'] = "FLOOR",
+			['+'] = "DOOR",
+
+			nb_rooms = {0,1,1,2},
+			rooms = {"lesser_vault"},
+			lesser_vaults_list = {"circle","amon-sul-crypt","rat-nest","skeleton-mage-cabal"},
+			lite_room_chance = 100,
+		},
+		actor = {
+			class = "mod.class.generator.actor.Random",
+			nb_npc = {20, 30},
+			filters = { {max_ood=2}, },
+		},
+		object = {
+			class = "engine.generator.object.Random",
+			nb_object = {6, 9},
+		},
+		trap = {
+			class = "engine.generator.trap.Random",
+			nb_trap = {0, 0},
+		},
+	},
+	levels =
+	{
+		[1] = {
+			generator = { map = {
+				up = "GRASS_UP_WILDERNESS",
+			}, },
+		},
+		[3] = {
+			generator = {
+				map = {
+					class = "engine.generator.map.Static",
+					map = "zones/rhaloren-camp-last",
+				},
+				actor = {
+					area = {x1=0, x2=49, y1=0, y2=40},
+				},
+			},
+		},
+	},
+
+	post_process = function(level)
+		-- Place a lore note on each level
+		game:placeRandomLoreObject("NOTE"..level.level)
+	end,
+}
+
+end
