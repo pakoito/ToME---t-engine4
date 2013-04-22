@@ -69,7 +69,13 @@ newEntity{ define_as = "ASSASSIN_LORD",
 	can_talk = "assassin-lord",
 
 	on_die = function(self, who)
-		game.level.map(self.x, self.y, game.level.map.TERRAIN, game.zone.grid_list.UP_WILDERNESS)
+		local oe = game.level.map(self.x, self.y, game.level.map.TERRAIN)
+		local g = game.zone.grid_list.UP_WILDERNESS
+		if oe and oe:attr("temporary") and oe.old_feat then 
+			oe.old_feat = g
+		else
+			game.level.map(self.x, self.y, game.level.map.TERRAIN, g)
+		end
 		game.logSeen(who, "As the assassin dies the magical veil protecting the stairs out vanishes.")
 		for uid, e in pairs(game.level.entities) do
 			if e.is_merchant and not e.dead then

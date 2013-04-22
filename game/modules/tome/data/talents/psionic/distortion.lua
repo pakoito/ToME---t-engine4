@@ -223,7 +223,7 @@ newTalent{
 		e.particles = game.level.map:particleEmitter(x, y, e.radius, "generic_vortex", {radius=e.radius, rm=255, rM=255, gm=180, gM=255, bm=180, bM=255, am=35, aM=90})
 		game.level:addEntity(e)
 		game.level.map(x, y, Map.TERRAIN, e)
-		game.nicer_tiles:updateAround(game.level, x, y)
+		--game.nicer_tiles:updateAround(game.level, x, y)
 		game.level.map:updateMap(x, y)
 		game:playSoundNear(self, "talents/lightning_loud")
 		return true
