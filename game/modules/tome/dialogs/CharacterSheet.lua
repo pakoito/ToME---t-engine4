@@ -844,6 +844,40 @@ function _M:drawDialog(kind, actor_to_compare)
 			end
 		end
 
+		h = h + self.font_h
+		s:drawColorStringBlended(self.font, "#LIGHT_BLUE#Damage affinities:", w, h, 255, 255, 255, true) h = h + self.font_h
+
+		if player.damage_affinity.all then
+			text = compare_fields(player, actor_to_compare, function(actor, ...) return actor.damage_affinity and actor.damage_affinity.all or 0 end, "%3d%%", "%+.0f%%")
+			self:mouseTooltip(self.TOOLTIP_AFFINITY_ALL, s:drawColorStringBlended(self.font, ("All damage    : #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h
+		end
+
+		local damage_affinitys = {}
+		for i, t in ipairs(DamageType.dam_def) do
+			if player.damage_affinity[DamageType[t.type]] and player.damage_affinity[DamageType[t.type]] ~= 0 then
+				damage_affinitys[t] = damage_affinitys[t] or {}
+				damage_affinitys[t][1] = player.damage_affinity[DamageType[t.type]]
+			end
+			if actor_to_compare and actor_to_compare.damage_affinity[DamageType[t.type]] and actor_to_compare.damage_affinity[DamageType[t.type]] ~= 0 then
+				damage_affinitys[t] = damage_affinitys[t] or {}
+				damage_affinitys[t][2] = actor_to_compare.damage_affinity[DamageType[t.type]]
+			end
+		end
+
+		for i, ts in pairs(damage_affinitys) do
+			if ts[1] then
+				if ts[2] and ts[2] ~= ts[1] then
+					self:mouseTooltip(self.TOOLTIP_AFFINITY, s:drawColorStringBlended(self.font, ("%s%-20s: #00ff00#%+d%%%s(%+.0f%%)"):format((i.text_color or "#WHITE#"), i.name:capitalize().."#LAST# damage", ts[1] + (player.damage_affinity.all or 0), ts[2] > ts[1] and "#ff0000#" or "#00ff00#", ts[1] - ts[2] ), w, h, 255, 255, 255, true)) h = h + self.font_h
+				else
+					self:mouseTooltip(self.TOOLTIP_AFFINITY, s:drawColorStringBlended(self.font, ("%s%-20s: #00ff00#%+d%%"):format((i.text_color or "#WHITE#"), i.name:capitalize().."#LAST# damage", ts[1] + (player.damage_affinity.all or 0)), w, h, 255, 255, 255, true)) h = h + self.font_h
+				end
+			else
+				if ts[2] then
+					self:mouseTooltip(self.TOOLTIP_AFFINITY, s:drawColorStringBlended(self.font, ("%s%-20s: #00ff00#%+d%%(%+.0f%%)"):format((i.text_color or "#WHITE#"), i.name:capitalize().."#LAST# damage", (player.damage_affinity.all or 0),-ts[2] ), w, h, 255, 255, 255, true)) h = h + self.font_h
+				end
+			end
+		end
+
 		h = 0
 		w = self.w * 0.52
 

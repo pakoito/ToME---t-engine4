@@ -338,6 +338,15 @@ This stacks with individual damage type resistances.
 TOOLTIP_RESIST = [[#GOLD#Damage resistance: specific#LAST#
 All damage of this type that you receive, through any means, is reduced by this percentage.
 ]]
+TOOLTIP_AFFINITY_ALL = [[#GOLD#Damage affinity: all#LAST#
+All damage you receive, through any means, also heals you for this percentage of the damage.
+This stacks with individual damage type affinities.
+Important: Affinity healing happens after damage has been taken, it can not prevent death.
+]]
+TOOLTIP_AFFINITY = [[#GOLD#Damage affinity: specific#LAST#
+All damage of this type that you receive, through any means, also heals you for this percentage of the damage..
+Important: Affinity healing happens after damage has been taken, it can not prevent death.
+]]
 TOOLTIP_SPECIFIC_IMMUNE = [[#GOLD#Effect resistance chance#LAST#
 This represents your chance to completely avoid the effect in question.
 ]]
