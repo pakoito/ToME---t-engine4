@@ -121,7 +121,7 @@ newTalent{
 	require = psi_wil_req4,
 	cooldown = 24,
 	psi = 40,
-	random_boss_rarity = 10,
+	not_on_random_boss = true,
 	tactical = { DISABLE = function(self, t, target) if target and target.game_ender and target:attr("sleep") then return 4 else return 0 end end},
 	direct_hit = true,
 	requires_target = true,
