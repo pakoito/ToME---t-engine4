@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-local p = rng.range(1, 2)
+local p = game.state:tier1Killed(1) and rng.range(1, 2) or 1
 if p == 1 then
 
 -- Underground
