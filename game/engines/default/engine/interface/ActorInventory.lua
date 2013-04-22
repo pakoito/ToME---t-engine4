@@ -324,7 +324,7 @@ function _M:canWearObject(o, try_slot)
 
 	-- Check that we are not the forbidden slot of any other worn objects
 	for id, inven in pairs(self.inven) do
-		if self.inven_def[id].is_worn then
+		if self.inven_def[id].is_worn and (not self.inven_def[id].infos or not self.inven_def[id].infos.etheral) then
 			for i, wo in ipairs(inven) do
 				print("fight: ", o.name, wo.name, "::", wo.slot_forbid, try_slot or o.slot)
 				if wo.slot_forbid and wo.slot_forbid == (try_slot or o.slot) then
