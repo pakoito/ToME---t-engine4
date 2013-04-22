@@ -17,6 +17,9 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local p = rng.range(1, 3)
+local is_flooded = p == 3
+
 return {
 	name = "Lake of Nur",
 	level_range = {15, 25},
@@ -33,6 +36,7 @@ return {
 	ambient_music = "Woods of Eremae.ogg",
 	min_material_level = 2,
 	max_material_level = 3,
+	is_flooded = is_flooded,
 	generator =  {
 		map = {
 			class = "engine.generator.map.Roomer",
@@ -87,7 +91,16 @@ return {
 			},
 		},
 		[3] = {
-			generator = {
+			generator = is_flooded and {
+				map = {
+					down = "SHERTUL_FORTRESS",
+					force_last_stair = true,
+				},
+				actor = {
+					filters = {{special_rarity="water_rarity"}},
+					nb_npc = {30, 35},
+				},
+			} or {
 				map = {
 					['.'] = "FLOOR",
 					['#'] = "WALL",
@@ -116,8 +129,11 @@ return {
 		if lev == 2 and not game.level.shown_warning then
 			Dialog:simplePopup("Lake of Nur", "You descend into the submerged ruins. The walls look extremely ancient, yet you feel power within this place.")
 			game.level.shown_warning = true
-		elseif lev == 3 and not game.level.shown_warning then
+		elseif lev == 3 and not game.level.shown_warning and not game.level.data.is_flooded then
 			Dialog:simplePopup("Lake of Nur", "As you descend to the next level you traverse a kind of magical barrier keeping the water away. You hear terrible screams.")
+			game.level.shown_warning = true
+		elseif lev == 3 and not game.level.shown_warning and game.level.data.is_flooded then
+			Dialog:simpleLongPopup("Lake of Nur", "As you descend to the next level you traverse a kind of magical barrier keeping the water away. The barrier seems to be failing however and the next level is flooded too.", 400)
 			game.level.shown_warning = true
 		end
 	end,

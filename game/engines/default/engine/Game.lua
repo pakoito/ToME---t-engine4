@@ -166,7 +166,7 @@ end
 --- Called when the game is focused/unfocused
 function _M:idling(focus)
 	self.has_os_focus = focus
-	print("Game got focus/unfocus", focus)
+--	print("Game got focus/unfocus", focus)
 end
 
 --- Receives a profile event

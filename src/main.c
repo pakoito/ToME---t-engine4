@@ -1278,7 +1278,7 @@ int main(int argc, char *argv[])
 				case SDL_WINDOWEVENT_FOCUS_GAINED:
 					SDL_SetModState(KMOD_NONE);
 					/* break from idle */
-					printf("[EVENT HANDLER]: Got a SHOW/FOCUS_GAINED event, restoring full FPS.\n");
+					//printf("[EVENT HANDLER]: Got a SHOW/FOCUS_GAINED event, restoring full FPS.\n");
 					handleIdleTransition(0);
 					break;
 
@@ -1286,7 +1286,7 @@ int main(int argc, char *argv[])
 				case SDL_WINDOWEVENT_FOCUS_LOST:
 					/* go idle */
 					SDL_SetModState(KMOD_NONE);
-					printf("[EVENT HANDLER]: Got a HIDDEN/FOCUS_LOST event, going idle.\n");
+					//printf("[EVENT HANDLER]: Got a HIDDEN/FOCUS_LOST event, going idle.\n");
 					handleIdleTransition(1);
 					break;
 				default:

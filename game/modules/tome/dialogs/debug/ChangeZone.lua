@@ -67,7 +67,7 @@ function _M:generateList()
 	for i, dir in ipairs(fs.list("/data/zones/")) do
 		local f = loadfile("/data/zones/"..dir.."/zone.lua")
 		if f then
-			setfenv(f, {})
+			setfenv(f, setmetatable({}, {__index=_G}))
 			local ok, z = pcall(f)
 			if ok then
 				list[#list+1] = {name=z.name, zone=dir, min=1, max=z.max_level}
