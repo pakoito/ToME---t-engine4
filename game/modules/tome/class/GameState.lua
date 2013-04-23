@@ -1977,6 +1977,7 @@ function _M:startEvents()
 						while nb <= e.max_repeat do
 							if rng.percent(p) then
 								lev[#lev+1] = e.name
+								nb = nb + 1
 							else
 								break
 							end

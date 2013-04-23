@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-return { one_per_level=true,
+local events = { one_per_level=true,
 	{group="outdoor-majeyal-gloomy"},
 	{group="outdoor-majeyal-generic"},
 	{group="majeyal-generic"},
@@ -25,3 +25,9 @@ return { one_per_level=true,
 	{name="bligthed-soil", minor=true, percent=40},
 	{name="antimagic-bush", minor=true, percent=40},
 }
+
+if rng.percent(33) then
+	events[#events+1] = {name="crystaline-forest", minor=true, percent=200, max_repeat=3}
+end
+
+return events
