@@ -26,7 +26,7 @@ local events = { one_per_level=true,
 	{name="antimagic-bush", minor=true, percent=40},
 }
 
-if rng.percent(33) then
+if self.is_crystaline then
 	events[#events+1] = {name="crystaline-forest", minor=true, percent=200, max_repeat=3}
 end
 

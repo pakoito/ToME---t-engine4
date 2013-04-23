@@ -17,8 +17,8 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-local p = game.state:tier1Killed(1) and rng.range(1, 2) or 1
-if p == 1 then
+local layout = game.state:alternateZoneTier1(short_name, {"OVERGROUND", 1})
+if layout == "DEFAULT" then
 
 -- Underground
 return {
@@ -88,7 +88,7 @@ return {
 	end,
 }
 
-else
+elseif layout == "OVERGROUND" then
 
 -- Overground
 return {

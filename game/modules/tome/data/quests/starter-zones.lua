@@ -27,7 +27,11 @@ desc = function(self, who)
 	desc[#desc+1] = "The Sandworm Lair is to the far west of Derth, near the sea."
 	desc[#desc+1] = "The Daikara is on the eastern borders of the Thaloren forest."
 	if self:isCompleted("old-forest") then
-		desc[#desc+1] = "#LIGHT_GREEN#* You have explored the Old Forest and vanquished Wrathroot.#WHITE#"
+		if self:isCompleted("old-forest-crystal") then
+			desc[#desc+1] = "#LIGHT_GREEN#* You have explored the Old Forest and vanquished Shardskin.#WHITE#"
+		else
+			desc[#desc+1] = "#LIGHT_GREEN#* You have explored the Old Forest and vanquished Wrathroot.#WHITE#"
+		end
 	else
 		desc[#desc+1] = "#SLATE#* You must explore the Old Forest and find out what lurks there and what treasures are to be gained!#WHITE#"
 	end

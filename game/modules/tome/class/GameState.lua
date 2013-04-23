@@ -2005,3 +2005,26 @@ function _M:startEvents()
 		if game.zone.events_by_level then game.zone.assigned_events = nil end
 	end
 end
+
+function _M:alternateZone(short_name, ...)
+	if not world:hasSeenZone(short_name) and not config.settings.cheat then print("Alternate layout for "..short_name.." refused: never visited") return "DEFAULT" end
+
+	local list = {...}
+	table.insert(list, 1, {"DEFAULT", 1})
+
+	print("[ZONE] Alternate layout computing for")
+	table.print(list)
+
+	local probs = {}
+	for _, kind in ipairs(list) do
+		local p = math.ceil(100 / kind[2])
+		for i = 1, p do probs[#probs+1] = kind[1] end
+	end
+
+	return rng.table(probs)
+end
+
+function _M:alternateZoneTier1(short_name, ...)
+	if not game.state:tier1Killed(1) then return "DEFAULT" end
+	return self:alternateZone(short_name, ...)
+end

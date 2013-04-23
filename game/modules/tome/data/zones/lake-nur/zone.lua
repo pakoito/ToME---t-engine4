@@ -17,8 +17,8 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-local p = rng.range(1, 3)
-local is_flooded = p == 3
+local layout = game.state:alternateZone(short_name, {"FLOODED", 2})
+local is_flooded = layout == "FLOODED"
 
 return {
 	name = "Lake of Nur",

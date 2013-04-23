@@ -807,6 +807,8 @@ end
 -- @param loaded an optional table of already loaded files
 -- @usage MyEntityClass:loadList("/data/my_entities_def.lua")
 function _M:loadList(file, no_default, res, mod, loaded)
+	local Zone = require "engine.Zone"
+
 	if type(file) == "table" then
 		res = res or {}
 		for i, f in ipairs(file) do
@@ -839,6 +841,7 @@ function _M:loadList(file, no_default, res, mod, loaded)
 	loaded[file] = true
 
 	local newenv newenv = {
+		currentZone = Zone:getCurrentLoadingZone(),
 		class = self,
 		loaded = loaded,
 		resolvers = resolvers,

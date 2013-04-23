@@ -17,6 +17,10 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local layout = game.state:alternateZone(short_name, {"CRYSTALINE", 2})
+layout = "CRYSTALINE"
+local is_crystaline = layout == "CRYSTALINE"
+
 return {
 	name = "Old Forest",
 	level_range = {7, 16},
@@ -34,6 +38,7 @@ return {
 	ambient_music = {"Woods of Eremae.ogg", "weather/rain.ogg"},
 	min_material_level = function() return game.state:isAdvanced() and 3 or 1 end,
 	max_material_level = function() return game.state:isAdvanced() and 4 or 2 end,
+	is_crystaline = is_crystaline,
 	generator =  {
 		map = {
 			class = "engine.generator.map.Roomer",
@@ -51,7 +56,7 @@ return {
 		actor = {
 			class = "mod.class.generator.actor.Random",
 			nb_npc = {20, 30},
-			guardian = "WRATHROOT",
+			guardian = is_crystaline and "SHARDSKIN" or "WRATHROOT",
 		},
 		object = {
 			class = "engine.generator.object.Random",

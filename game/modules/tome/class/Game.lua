@@ -667,6 +667,7 @@ function _M:changeLevelReal(lev, zone, params)
 
 		self.zone:getLevel(self, lev, old_lev, true)
 		self.visited_zones[self.zone.short_name] = true
+		world:seenZone(self.zone.short_name)
 
 		self.level.temp_shift_zone = oz
 		self.level.temp_shift_level = ol
@@ -694,6 +695,7 @@ function _M:changeLevelReal(lev, zone, params)
 		self.level = old.temp_shift_level
 
 		self.visited_zones[self.zone.short_name] = true
+		world:seenZone(self.zone.short_name)
 --		if self.level.map.closed then
 			force_recreate = true
 --		else
@@ -732,6 +734,7 @@ function _M:changeLevelReal(lev, zone, params)
 		end
 		local _, new_level = self.zone:getLevel(self, lev, old_lev)
 		self.visited_zones[self.zone.short_name] = true
+		world:seenZone(self.zone.short_name)
 
 		if new_level then
 			afternicer = self.state:startEvents()

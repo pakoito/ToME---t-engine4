@@ -82,11 +82,19 @@ function _M:updateBaseLevel()
 end
 
 --- Loads basic entities lists
+local _load_zone = nil
 function _M:loadBaseLists()
+	_load_zone = self
 	self.npc_list = self.npc_class:loadList("/data/zones/"..self.short_name.."/npcs.lua")
 	self.grid_list = self.grid_class:loadList("/data/zones/"..self.short_name.."/grids.lua")
 	self.object_list = self.object_class:loadList("/data/zones/"..self.short_name.."/objects.lua")
 	self.trap_list = self.trap_class:loadList("/data/zones/"..self.short_name.."/traps.lua")
+	_load_zone = nil
+end
+
+--- Gets the currently loading zone
+function _M:getCurrentLoadingZone()
+	return _load_zone
 end
 
 --- Leaves a zone
@@ -575,6 +583,7 @@ function _M:load(dynamic)
 	if not data and not dynamic then
 		local f, err = loadfile("/data/zones/"..self.short_name.."/zone.lua")
 		if err then error(err) end
+		setfenv(f, setmetatable({self=self, short_name=self.short_name}, {__index=_G}))
 		data = f()
 		ret = false
 
@@ -586,14 +595,15 @@ function _M:load(dynamic)
 			self._no_save_fields.trap_list = true
 		end
 
+		for k, e in pairs(data) do self[k] = e end
 		self:onLoadZoneFile("/data/zones/"..self.short_name.."/")
 		if self.on_loaded then self:on_loaded() end
 	elseif not data and dynamic then
 		data = dynamic
 		ret = false
+		for k, e in pairs(data) do self[k] = e end
 		if self.on_loaded then self:on_loaded() end
 	end
-	for k, e in pairs(data) do self[k] = e end
 	return ret
 end
 

@@ -63,3 +63,13 @@ function _M:gainAchievement(id, src, ...)
 	mod.class.interface.WorldAchievements.gainAchievement(self, id, src, ...)
 	if not knew and self.achieved[id] then game.party.on_death_show_achieved[#game.party.on_death_show_achieved+1] = "Gained new achievement: "..a.name end
 end
+
+function _M:seenZone(short_name)
+	self.seen_zones = self.seen_zones or {}
+	self.seen_zones[short_name] = true
+end
+
+function _M:hasSeenZone(short_name)
+	self.seen_zones = self.seen_zones or {}
+	return self.seen_zones[short_name]
+end

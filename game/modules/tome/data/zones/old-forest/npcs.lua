@@ -17,17 +17,75 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/npcs/bear.lua", rarity(1))
-load("/data/general/npcs/vermin.lua", rarity(3))
-load("/data/general/npcs/canine.lua", rarity(0))
-load("/data/general/npcs/snake.lua", rarity(0))
-load("/data/general/npcs/swarm.lua", rarity(1))
-load("/data/general/npcs/plant.lua", rarity(0))
-load("/data/general/npcs/ant.lua", rarity(2))
+if not currentZone.is_crystaline then
+	load("/data/general/npcs/bear.lua", rarity(1))
+	load("/data/general/npcs/vermin.lua", rarity(3))
+	load("/data/general/npcs/canine.lua", rarity(0))
+	load("/data/general/npcs/snake.lua", rarity(0))
+	load("/data/general/npcs/swarm.lua", rarity(1))
+	load("/data/general/npcs/plant.lua", rarity(0))
+	load("/data/general/npcs/ant.lua", rarity(2))
 
-load("/data/general/npcs/all.lua", rarity(4, 35))
+	load("/data/general/npcs/all.lua", rarity(4, 35))
+else
+	load("/data/general/npcs/crystal.lua", rarity(0))
+	load("/data/general/npcs/bear.lua", rarity(1))
+	load("/data/general/npcs/vermin.lua", rarity(3))
+	load("/data/general/npcs/swarm.lua", rarity(1))
+	load("/data/general/npcs/plant.lua", rarity(0))
+	load("/data/general/npcs/ant.lua", rarity(2))
+
+	load("/data/general/npcs/all.lua", rarity(4, 35))
+end
 
 local Talents = require("engine.interface.ActorTalents")
+
+newEntity{ define_as = "SHARDSKIN",
+	allow_infinite_dungeon = true,
+	type = "giant", subtype = "crystal", unique = true,
+	name = "Shardskin",
+	display = "%", color=colors.VIOLET,
+	image = "npc/immovable_crystal_golden_crystal.png",
+	desc = [[This crystaline structure seems to be filled with a malovelant aura. Thourgh the crystal surface you can still see the remains of what once was a huge tree..]],
+	killer_message = "and integrated into the crystaline structure",
+	level_range = {12, nil}, exp_worth = 2,
+	max_life = 200, life_rating = 17, fixed_rating = true,
+	stats = { str=15, dex=10, cun=8, mag=20, wil=20, con=20 },
+	rank = 4,
+	size_category = 5,
+	infravision = 10,
+	instakill_immune = 1,
+	move_others=true,
+
+	combat = { dam=resolvers.levelup(27, 1, 0.8), atk=10, apr=0, dammod={mag=1.2}, sound="actions/melee_thud" },
+
+	resists = { [DamageType.NATURE] = -50 },
+
+	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
+	resolvers.equip{ {type="armor", subtype="shield", defined="WRATHROOT_SHIELD", random_art_replace={chance=75}, autoreq=true}, },
+	resolvers.drops{chance=100, nb=5, {tome_drops="boss"} },
+
+	resolvers.talents{
+		[Talents.T_ARMOUR_TRAINING]={base=4, every=5, max=15},
+		[Talents.T_STUN]={base=2, every=6, max=6},
+		[Talents.T_ICE_STORM]={base=1, every=6, max=6},
+		[Talents.T_TIDAL_WAVE]={base=1, every=6, max=6},
+		[Talents.T_FREEZE]={base=2, every=6, max=6},
+	},
+
+	autolevel = "caster",
+	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
+	ai_tactic = resolvers.tactic"ranged",
+	resolvers.inscriptions(1, "rune"),
+
+	on_die = function(self, who)
+		game.state:activateBackupGuardian("SNAPROOT", 3, 50, "Have you heard, the old forest seems to have been claimed by a new evil!")
+		game.player:resolveSource():grantQuest("starter-zones")
+		game.player:resolveSource():setQuestStatus("starter-zones", engine.Quest.COMPLETED, "old-forest")
+		game.player:resolveSource():setQuestStatus("starter-zones", engine.Quest.COMPLETED, "old-forest-crystal")
+	end,
+}
+
 
 newEntity{ define_as = "WRATHROOT",
 	allow_infinite_dungeon = true,
@@ -78,6 +136,7 @@ newEntity{ define_as = "WRATHROOT",
 		game.player:resolveSource():setQuestStatus("starter-zones", engine.Quest.COMPLETED, "old-forest")
 	end,
 }
+
 
 newEntity{ base = "BASE_NPC_RODENT",
 	allow_infinite_dungeon = true,
