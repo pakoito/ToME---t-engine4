@@ -19,6 +19,7 @@
 
 require "engine.class"
 local Zone = require "engine.Zone"
+local Map = require "engine.Map"
 
 module(..., package.seeall, class.inherit(Zone))
 
@@ -30,4 +31,46 @@ function _M:onLoadZoneFile(basedir)
 		setfenv(f, setmetatable({self=self}, {__index=_G}))
 		self.events = f()
 	end
+end
+
+--- Quake a zone
+-- Moves randomly each grid to an other grid
+function _M:doQuake(rad, x, y, check)
+	local w = game.level.map.w
+	local locs = {}
+	local ms = {}
+	
+	core.fov.calc_circle(x, y, game.level.map.w, game.level.map.h, rad,
+		function(_, lx, ly) if not game.level.map:isBound(lx, ly) then return true end end,
+		function(_, tx, ty)
+			if check(tx, ty) then
+				locs[#locs+1] = {x=tx,y=ty}
+				ms[#ms+1] = {map=game.level.map.map[tx + ty * w], attrs=game.level.map.attrs[tx + ty * w]}
+			end
+		end,
+	nil)
+
+	local savelocs = table.clone(locs)
+	while #locs > 0 do
+		local l = rng.tableRemove(locs)
+		local m = rng.tableRemove(ms)
+
+		game.level.map.map[l.x + l.y * w] = m.map
+		game.level.map.attrs[l.x + l.y * w] = m.attrs
+		for z, e in pairs(m.map or {}) do
+			if e.move then
+				e.x = nil e.y = nil e:move(l.x, l.y, true)
+			end
+		end
+	end
+
+	locs = savelocs
+	while #locs > 0 do
+		local l = rng.tableRemove(locs)
+		game.nicer_tiles:updateAround(game.level, l.x, l.y)
+	end
+
+	game.level.map:cleanFOV()
+	game.level.map.changed = true
+	game.level.map:redisplay()
 end

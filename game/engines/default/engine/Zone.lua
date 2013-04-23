@@ -795,6 +795,15 @@ function _M:newLevel(level_data, lev, old_lev, game)
 	level.default_down = {x=dx, y=dy}
 	level.spots = spots
 
+	-- Call a map finisher
+	if level_data.post_process_map then
+		level_data.post_process_map(level, self)
+		if level.force_recreate then
+			level:removed()
+			return self:newLevel(level_data, lev, old_lev, game)
+		end
+	end
+
 	-- Add the entities we are told to
 	for i = 0, map.w - 1 do for j = 0, map.h - 1 do
 		if map.room_map[i] and map.room_map[i][j] and map.room_map[i][j].add_entities then

@@ -1178,32 +1178,10 @@ end
 --- Quake a zone
 -- Moves randomly each grid to an other grid
 function _M:doQuake(tg, x, y)
-	local w = game.level.map.w
-	local locs = {}
-	local ms = {}
-	self:project(tg, x, y, function(tx, ty)
-		if not game.level.map.attrs(tx, ty, "no_teleport") and not game.level.map:checkAllEntities(tx, ty, "change_level") and game.level.map(tx, ty, Map.TERRAIN) and (game.level.map(tx, ty, Map.TERRAIN).dig or game.level.map(tx, ty, Map.TERRAIN).grow) then
-			locs[#locs+1] = {x=tx,y=ty}
-			ms[#ms+1] = {map=game.level.map.map[tx + ty * w], attrs=game.level.map.attrs[tx + ty * w]}
-		end
+	local typ = require("engine.Target"):getType(tg)
+	return game.zone:doQuake(typ.ball or 1, x, y, function(tx, ty)
+		return not game.level.map.attrs(tx, ty, "no_teleport") and not game.level.map:checkAllEntities(tx, ty, "change_level") and game.level.map(tx, ty, Map.TERRAIN) and (game.level.map(tx, ty, Map.TERRAIN).dig or game.level.map(tx, ty, Map.TERRAIN).grow)
 	end)
-
-	while #locs > 0 do
-		local l = rng.tableRemove(locs)
-		local m = rng.tableRemove(ms)
-
-		game.level.map.map[l.x + l.y * w] = m.map
-		game.level.map.attrs[l.x + l.y * w] = m.attrs
-		for z, e in pairs(m.map or {}) do
-			if e.move then
-				e.x = nil e.y = nil e:move(l.x, l.y, true)
-			end
-			game.nicer_tiles:updateAround(game.level, l.x, l.y)
-		end
-	end
-	game.level.map:cleanFOV()
-	game.level.map.changed = true
-	game.level.map:redisplay()
 end
 
 --- Reveals location surrounding the actor

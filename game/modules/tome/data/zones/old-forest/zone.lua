@@ -18,7 +18,6 @@
 -- darkgod@te4.org
 
 local layout = game.state:alternateZone(short_name, {"CRYSTALINE", 2})
-layout = "CRYSTALINE"
 local is_crystaline = layout == "CRYSTALINE"
 
 return {
