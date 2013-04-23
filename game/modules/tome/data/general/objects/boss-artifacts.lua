@@ -424,6 +424,77 @@ newEntity{ base = "BASE_GEM",
 	},
 }
 
+newEntity{ base = "BASE_STAFF",
+	power_source = {arcane=true},
+	unique = true, define_as = "CRYSTAL_SHARD",
+	name = "Crystal Shard",
+	unided_name = "crystalline tree branch",
+	flavor_name = "magestaff",
+	level_range = {10, 22},
+	color=colors.BLUE, image = "object/artifact/crystal_shard.png",
+	rarity = 300,
+	desc = [[This crystalline tree branch is remarkably rigid, and refracts light in myriad colors. Gazing at it entrances you, and you worry where its power may have come from.]],
+	cost = 200,
+	material_level = 2,
+	require = { stat = { mag=20 }, },
+	combat = {
+		dam = 16,
+		apr = 4,
+		dammod = {mag=1.3},
+		damtype = DamageType.ARCANE,
+		convert_damage = {
+			[DamageType.BLIGHT] = 50,
+		},
+	},
+	wielder = {
+		combat_spellpower = 14,
+		combat_spellcrit = 4,
+		inc_damage={
+			[DamageType.ARCANE] = 18,
+			[DamageType.BLIGHT] = 18,
+		},
+		resists={
+			[DamageType.ARCANE] = 10,
+			[DamageType.BLIGHT] = 10,
+		},
+		damage_affinity={
+			[DamageType.ARCANE] = 20,
+		},
+	},
+	max_power = 45, power_regen = 1,
+	use_power = { name = "create living shards of crystal", power = 45, use = function(self, who)
+		if not who:canBe("summon") then game.logPlayer(who, "You cannot summon; you are suppressed!") return end
+
+		local NPC = require "mod.class.NPC"
+		local list = NPC:loadList("/data/general/npcs/crystal.lua")
+		for i = 1, 2 do
+			-- Find space
+			local x, y = util.findFreeGrid(who.x, who.y, 5, true, {[engine.Map.ACTOR]=true})
+			if not x then break end
+				local e
+			repeat e = rng.tableRemove(list)
+
+			until not e.unique and e.rarity
+			local crystal = game.zone:finishEntity(game.level, "actor", e)
+			crystal.make_escort = nil
+			crystal.silent_levelup = true
+			crystal.faction = who.faction
+			crystal.ai = "summoned"
+			crystal.ai_real = "dumb_talented_simple"
+			crystal.summoner = who
+			crystal.summon_time = 10
+
+			local setupSummon = getfenv(who:getTalentFromId(who.T_SPIDER).action).setupSummon
+			setupSummon(who, crystal, x, y)
+			if who:knowTalent(who.T_BLIGHTED_SUMMONING) then 
+				crystal:learnTalent(crystal.T_BONE_SHIELD, true, 3) 
+				crystal:forceUseTalent(crystal.T_BONE_SHIELD, {ignore_energy=true})
+			end
+			game:playSoundNear(who, "talents/ice")
+		end
+		return {id=true, used=true}
+	end },
+}
 newEntity{ base = "BASE_CLOTH_ARMOR",
 	power_source = {arcane=true},
 	define_as = "BLACK_ROBE", rarity=false,
