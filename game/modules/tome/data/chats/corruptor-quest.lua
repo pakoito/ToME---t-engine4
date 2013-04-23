@@ -58,7 +58,7 @@ I will open a portal to Zigur and the massacre shall begin!]],
 	answers = {
 		{"I am ready!", action=function(npc, player)
 			if game.zone.short_name ~= "mark-spellblaze" then return "quest3" end
-			npc.invulnerable = 1
+			npc:disappear()
 			player:grantQuest("anti-antimagic")
 		end},
 	}

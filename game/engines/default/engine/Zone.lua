@@ -603,6 +603,8 @@ function _M:load(dynamic)
 		ret = false
 		for k, e in pairs(data) do self[k] = e end
 		if self.on_loaded then self:on_loaded() end
+	else
+		for k, e in pairs(data) do self[k] = e end
 	end
 	return ret
 end
