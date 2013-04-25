@@ -18,7 +18,6 @@
 -- darkgod@te4.org
 
 local layout = game.state:alternateZone(short_name, {"COLLAPSED", 2})
-layout = "COLLAPSED"
 if layout == "COLLAPSED" then
 
 return {
