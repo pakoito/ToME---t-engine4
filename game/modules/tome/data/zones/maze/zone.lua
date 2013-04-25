@@ -35,11 +35,12 @@ return {
 	ambient_music = {"The Ancients.ogg","weather/dungeon_base.ogg"},
 	min_material_level = function() return game.state:isAdvanced() and 2 or 1 end,
 	max_material_level = function() return game.state:isAdvanced() and 4 or 3 end,
+	is_collapsed = true,
 	generator =  {
 		map = {
 			class = "engine.generator.map.Maze",
-			up = "UP",
-			down = "DOWN",
+			up = "OLD_FLOOR",
+			down = "OLD_FLOOR",
 			wall = "OLD_WALL",
 			floor = "OLD_FLOOR",
 			widen_w = 2, widen_h = 2,
@@ -47,7 +48,7 @@ return {
 		actor = {
 			class = "mod.class.generator.actor.Random",
 			nb_npc = {50, 60},
-			guardian = "MINOTAUR_MAZE",
+			guardian = "HORNED_HORROR",
 			guardian_alert = true,
 		},
 		object = {
@@ -66,15 +67,44 @@ return {
 				up = "UP_WILDERNESS",
 			}, },
 		},
+		[4] = {
+			no_level_connectivity = true,
+		},
 	},
 
 	post_process_map = function(level, zone)
-		for i = 1, 5 do
+		local spots = {}
+		for i = 1, 3 + level.level * 2 do
 			local x = rng.range(6, level.map.w - 7)
 			local y = rng.range(6, level.map.w - 7)
-			game.zone:doQuake(rng.range(4, 6), x, y, function(tx, ty)
+			zone:doQuake(rng.range(4, 6), x, y, function(tx, ty)
 				return not level.map.attrs(tx, ty, "no_teleport") and not level.map:checkAllEntities(tx, ty, "change_level") and level.map(tx, ty, engine.Map.TERRAIN)
 			end)
+
+			if level.level < 4 then spots[#spots+1] = {x=x,y=y} end
+		end
+		for _, spot in ipairs(spots) do
+			local x, y = spot.x, spot.y
+			local gc = zone.grid_list.CRACKS
+			local gf = zone.grid_list.OLD_FLOOR
+			level.map(x, y, level.map.TERRAIN, gc)
+			level.map(x-1, y-1, level.map.TERRAIN, gf)
+			level.map(x-1, y, level.map.TERRAIN, gf)
+			level.map(x-1, y+1, level.map.TERRAIN, gf)
+			level.map(x+1, y-1, level.map.TERRAIN, gf)
+			level.map(x+1, y, level.map.TERRAIN, gf)
+			level.map(x+1, y+1, level.map.TERRAIN, gf)
+			level.map(x, y-1, level.map.TERRAIN, gf)
+			level.map(x, y+1, level.map.TERRAIN, gf)
+			game.nicer_tiles:updateAround(level, x, y)
+			game.nicer_tiles:updateAround(level, x-1, y-1)
+			game.nicer_tiles:updateAround(level, x-1, y)
+			game.nicer_tiles:updateAround(level, x-1, y+1)
+			game.nicer_tiles:updateAround(level, x+1, y-1)
+			game.nicer_tiles:updateAround(level, x+1, y)
+			game.nicer_tiles:updateAround(level, x+1, y+1)
+			game.nicer_tiles:updateAround(level, x, y-1)
+			game.nicer_tiles:updateAround(level, x, y+1)
 		end
 	end,
 

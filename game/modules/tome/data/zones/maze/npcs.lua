@@ -17,17 +17,29 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/npcs/vermin.lua", rarity(5))
-load("/data/general/npcs/rodent.lua", rarity(5))
-load("/data/general/npcs/canine.lua", rarity(6))
-load("/data/general/npcs/snake.lua", rarity(4))
-load("/data/general/npcs/ooze.lua", rarity(3))
-load("/data/general/npcs/jelly.lua", rarity(3))
-load("/data/general/npcs/ant.lua", rarity(4))
-load("/data/general/npcs/thieve.lua", rarity(0))
-load("/data/general/npcs/minotaur.lua", rarity(0))
+if not currentZone.is_collapsed then
+	load("/data/general/npcs/vermin.lua", rarity(5))
+	load("/data/general/npcs/rodent.lua", rarity(5))
+	load("/data/general/npcs/canine.lua", rarity(6))
+	load("/data/general/npcs/snake.lua", rarity(4))
+	load("/data/general/npcs/ooze.lua", rarity(3))
+	load("/data/general/npcs/jelly.lua", rarity(3))
+	load("/data/general/npcs/ant.lua", rarity(4))
+	load("/data/general/npcs/thieve.lua", rarity(0))
+	load("/data/general/npcs/minotaur.lua", rarity(0))
 
-load("/data/general/npcs/all.lua", rarity(4, 35))
+	load("/data/general/npcs/all.lua", rarity(4, 35))
+else
+	load("/data/general/npcs/canine.lua", rarity(6))
+	load("/data/general/npcs/snake.lua", rarity(4))
+	load("/data/general/npcs/ooze.lua", rarity(3))
+	load("/data/general/npcs/jelly.lua", rarity(3))
+	load("/data/general/npcs/thieve.lua", rarity(0))
+	load("/data/general/npcs/horror-corrupted.lua", rarity(0))
+	load("/data/general/npcs/horror.lua", rarity(0))
+
+	load("/data/general/npcs/all.lua", rarity(4, 35))
+end
 
 local Talents = require("engine.interface.ActorTalents")
 

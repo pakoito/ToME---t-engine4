@@ -26,3 +26,20 @@ newEntity{
 	notice = true, show_tooltip = true,
 	change_level = 1, change_zone = "wilderness",
 }
+
+local cracks_editer = {method="borders_def", def="blackcracks"}
+
+newEntity{
+	define_as = "CRACKS",
+	type = "wall", subtype = "cracks",
+	name = "huge crack in the floor", image = "terrain/cracks/ground_9_01.png",
+	display = '.', color=colors.BLACK, back_color=colors.BLACK,
+	nice_editer = cracks_editer,
+	block_move = function(self, x, y, who, act)
+		if not who or not act or not who.player then return true end
+		require("engine.ui.Dialog"):yesnoLongPopup("Crack in the floor", "This area seems to have been hit by a huge tremor, breaking the floor in a huge crack.\nYou think you can jump to the level bellow.", 400, function(ret) if ret then
+			game:changeLevel(game.level.level + 1)
+		end end, "Jump", "Stay")
+		return true
+	end,
+}
