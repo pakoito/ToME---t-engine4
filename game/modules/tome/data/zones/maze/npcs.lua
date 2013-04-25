@@ -44,6 +44,57 @@ end
 local Talents = require("engine.interface.ActorTalents")
 
 -- The boss of the maze, no "rarity" field means it will not be randomly generated
+newEntity{ define_as = "HORNED_HORROR",
+	allow_infinite_dungeon = true,
+	type = "horror", subtype = "corrupted", unique = true,
+	name = "Horned Horror",
+	display = "h", color=colors.VIOLET,
+	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/giant_minotaur_minotaur_of_the_labyrinth.png", display_h=2, display_y=-1}}},
+	desc = [[A fearsome bull-headed monster, he swings a mighty axe as he curses all that defy him.]],
+	killer_message = "and revived as a mindless horror",
+	level_range = {12, nil}, exp_worth = 2,
+	max_life = 250, life_rating = 17, fixed_rating = true,
+	stats = { str=20, dex=20, cun=20, mag=10, wil=10, con=20 },
+	rank = 4,
+	size_category = 4,
+	infravision = 10,
+	move_others=true,
+	instakill_immune = 1,
+	blind_immune = 1,
+	no_breath = 1,
+
+	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, HEAD=1, },
+	resolvers.equip{
+		{type="armor", subtype="hands", force_drop=true, tome_drops="boss", autoreq=true},
+	},
+	resolvers.drops{chance=100, nb=5, {tome_drops="boss"} },
+
+	combat_mindpower = 20,
+	resolvers.talents{
+		[Talents.T_ARMOUR_TRAINING]={base=3, every=9, max=4},
+		[Talents.T_UNARMED_MASTERY]={base=2, every=6, max=5},
+		[Talents.T_UPPERCUT]={base=2, every=6, max=5},
+		[Talents.T_DOUBLE_STRIKE]={base=2, every=6, max=5},
+		[Talents.T_SPINNING_BACKHAND]={base=1, every=6, max=5},
+		[Talents.T_FLURRY_OF_FISTS]={base=1, every=6, max=5},
+		[Talents.T_VITALITY]={base=2, every=6, max=5},
+		[Talents.T_TENTACLE_GRAB]={base=1, every=6, max=5},
+	},
+
+	autolevel = "warrior",
+	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
+	ai_tactic = resolvers.tactic"melee",
+	resolvers.inscriptions(2, {"invisibility rune", "lightning rune"}),
+
+	on_die = function(self, who)
+		game.state:activateBackupGuardian("NIMISIL", 2, 40, "Have you hard about the patrol that disappeared in the maze in the west?")
+		game.player:resolveSource():grantQuest("starter-zones")
+		game.player:resolveSource():setQuestStatus("starter-zones", engine.Quest.COMPLETED, "maze")
+		game.player:resolveSource():setQuestStatus("starter-zones", engine.Quest.COMPLETED, "maze-horror")
+	end,
+}
+
+-- The boss of the maze, no "rarity" field means it will not be randomly generated
 newEntity{ define_as = "MINOTAUR_MAZE",
 	allow_infinite_dungeon = true,
 	type = "giant", subtype = "minotaur", unique = true,

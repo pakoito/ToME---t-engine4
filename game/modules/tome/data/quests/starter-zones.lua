@@ -36,7 +36,11 @@ desc = function(self, who)
 		desc[#desc+1] = "#SLATE#* You must explore the Old Forest and find out what lurks there and what treasures are to be gained!#WHITE#"
 	end
 	if self:isCompleted("maze") then
-		desc[#desc+1] = "#LIGHT_GREEN#* You have explored the Maze and vanquished the Minotaur.#WHITE#"
+		if self:isCompleted("maze-horror") then
+			desc[#desc+1] = "#LIGHT_GREEN#* You have explored the Maze and vanquished the Horned Horror.#WHITE#"
+		else
+			desc[#desc+1] = "#LIGHT_GREEN#* You have explored the Maze and vanquished the Minotaur.#WHITE#"
+		end
 	else
 		desc[#desc+1] = "#SLATE#* You must explore the Maze and find out what lurks there and what treasures are to be gained!#WHITE#"
 	end

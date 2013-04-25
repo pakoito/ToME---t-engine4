@@ -82,6 +82,7 @@ return {
 			end)
 
 			if level.level < 4 then spots[#spots+1] = {x=x,y=y} end
+			level.default_down = {x=x,y=y}
 		end
 		for _, spot in ipairs(spots) do
 			local x, y = spot.x, spot.y
