@@ -1974,7 +1974,7 @@ function _M:placeRandomLoreObjectScale(base, nb, level)
 end
 
 --- Create a random lore object and place it
-function _M:placeRandomLoreObject(define, zone)
+function _M:placeRandomLoreObject(define)
 	if type(define) == "table" then define = rng.table(define) end
 	local o = self.zone:makeEntityByName(self.level, "object", define)
 	if not o then return end
