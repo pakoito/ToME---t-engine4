@@ -46,7 +46,7 @@ return {
 		},
 		actor = {
 			class = "mod.class.generator.actor.Random",
-			nb_npc = {50, 60},
+			nb_npc = {35, 40},
 			guardian = "HORNED_HORROR",
 			guardian_alert = true,
 		},
