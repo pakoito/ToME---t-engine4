@@ -259,7 +259,12 @@ function _M:generateRandart(data)
 
 	local powers_list = engine.Object:loadList(o.randart_able, nil, nil, function(e) if e.rarity then e.rarity = math.ceil(e.rarity / 5) end end)
 	o.randart_able = nil
-
+	
+	local nb_themes = data.nb_themes
+	if not nb_themes then -- Gradually increase number of themes at higher levels so there are enough powers to spend points on
+		nb_themes = math.max(2,5*lev/(lev+50)) -- Maximum 5 themes possible
+		nb_themes= math.floor(nb_themes) + (rng.percent((nb_themes-math.floor(nb_themes))*100) and 1 or 0)
+	end
 	local allthemes = {
 		'physical', 'mental', 'spell', 'defense', 'misc', 'fire',
 		'lightning', 'acid', 'mind', 'arcane', 'blight', 'nature',
@@ -274,7 +279,7 @@ function _M:generateRandart(data)
 			if v == 'spell' or v == 'arcane' or v == 'blight' or v == 'temporal' then table.removeFromList(allthemes, 'antimagic') end
 		end
 	end
-	for i = #themes + 1, (data.nb_themes or 2) do
+	for i = #themes + 1, (nb_themes or 2) do
 		if #allthemes == 0 then break end
 		local v = rng.tableRemove(allthemes)
 		themes[v] = true
@@ -289,18 +294,19 @@ function _M:generateRandart(data)
 	-----------------------------------------------------------
 	-- Determine power
 	-----------------------------------------------------------
-	local points = math.ceil(((lev * 0.7 + rng.range(5, 15)) / 2) * (data.power_points_factor or 1))
-	local nb_powers = 1 + rng.dice(math.max(1, lev / 17), 2) + (data.nb_powers_add or 0)
+	-- 	Note double diminishing returns when coupled with scaling factor in merger (below)
+	-- Maintains randomness throughout level range ~50% variability in points
+	local points = math.ceil(0.1*lev^0.75*(8 + rng.range(1, 7)) * (data.power_points_factor or 1))+(data.nb_points_add or 0)
+	local nb_powers = 1 + rng.dice(math.max(1, math.ceil(0.281*lev^0.6)), 2) + (data.nb_powers_add or 0)
 	local powers = {}
---	print("Powers:", points, nb_powers, lev)
-
+	print("Randart generation:", "level = ", lev, "points = ",points, "nb_powers = ",nb_powers)
 	o.cost = o.cost + points * 7
-
 	-- Select some powers
 	local power_themes = {}
+	local lst = game.zone:computeRarities("powers", powers_list, game.level, themes_fct) --Note: probabilities diminish as level exceeds 50 (limited to ~1000 by updated game.zone:computeRarities function)
+	
 	for i = 1, nb_powers do
-		local list = game.zone:computeRarities("powers", powers_list, game.level, themes_fct)
-		local p = game.zone:pickEntity(list)
+		local p = game.zone:pickEntity(lst)
 		if p then
 			for t, _ in pairs(p.theme) do if themes[t] and randart_name_rules[t] then power_themes[t] = (power_themes[t] or 0) + 1 end end
 			powers[p.name] = p:clone()
@@ -331,7 +337,8 @@ function _M:generateRandart(data)
 	end
 	o.define_as = name:upper():gsub("[^A-Z]", "_")
 
-	o.unided_name = rng.table{"glowing","scintillating","rune-covered","unblemished","jewel-encrusted"}.." "..(o.unided_name or o.name)
+	o.unided_name = rng.table{"glowing","scintillating","rune-covered","unblemished","jewel-encrusted","humming","gleaming","immaculate","flawless","crackling","glistening","plated","twisted","silvered","faceted","faded","sigiled","shadowy","laminated"}.." "..(o.unided_name or o.name)
+	
 	o.unique = name
 	o.randart = true
 	o.no_unique_lore = true
@@ -365,7 +372,7 @@ function _M:generateRandart(data)
 			if ego then
 --				print(" ** selected ego", ego.name)
 				ego = ego:clone()
-				if ego.instant_resolve then ego:resolve(nil, nil, o) end
+				if ego.instant_resolve then ego:resolve(nil, nil, o) end -- Don't allow resolvers.generic here (conflict)
 				ego.instant_resolve = nil
 				ego.uid = nil
 				ego.name = nil
@@ -391,17 +398,18 @@ function _M:generateRandart(data)
 	-----------------------------------------------------------
 	-- Imbue powers in the randart
 	-----------------------------------------------------------
-	local function merger(dst, src)
+	local function merger(dst, src, scale) --scale: factor to adjust power limits for levels higher than 50
+		scale = scale or 1
 		for k, e in pairs(src) do
 			if type(e) == "table" then
 				if e.__resolver and e.__resolver == "randartmax" then
 					dst[k] = (dst[k] or 0) + e.v
-					if dst[k] > e.max then
-						dst[k] = e.max
+					if dst[k] > e.max * scale then --Adjust maximum values for higher levels
+						dst[k] = math.floor(e.max * scale)
 					end
 				else
 					if not dst[k] then dst[k] = {} end
-					merger(dst[k], e)
+					merger(dst[k], e, scale)
 				end
 			elseif type(e) == "number" then
 				dst[k] = (dst[k] or 0) + e
@@ -414,50 +422,58 @@ function _M:generateRandart(data)
 	-- Distribute points
 	local hpoints = math.ceil(points / 2)
 	local i = 0
-	while hpoints > 0 and #powers >0 do
+	local fails = 0
+	while hpoints > 0 and #powers >0 and fails <= #powers do
 		i = util.boundWrap(i + 1, 1, #powers)
 		local p = powers[i]
-		if p.points <= hpoints then
+		if p and p.points <= hpoints*2 then -- Intentionally allow the budget to be exceeded slightly to guarantee powers at low levels
+			local scaleup = math.max(1,(lev/(p.level_range[2] or 50))^0.5) --Adjust scaleup factor for each power based on lev and level_range max
 --			print(" * adding power: "..p.name)
 			if p.wielder then
 				o.wielder = o.wielder or {}
-				merger(o.wielder, p.wielder)
+				merger(o.wielder, p.wielder, scaleup)
 			end
 			if p.combat then
 				o.combat = o.combat or {}
-				merger(o.combat, p.combat)
+				merger(o.combat, p.combat, scaleup)
 			end
 			if p.special_combat then
 				o.special_combat = o.special_combat or {}
-				merger(o.special_combat, p.special_combat)
+				merger(o.special_combat, p.special_combat, scaleup)
 			end
-			if p.copy then merger(o, p.copy) end
+			if p.copy then merger(o, p.copy, scaleup) end 
+			hpoints = hpoints - p.points 
+			p.points = p.points * 1.5 --increased cost (=diminishing returns) on extra applications of the same power
+		else
+			fails = fails + 1
 		end
-		hpoints = hpoints - p.points
-		p.points = p.points * 1.5
 	end
 	o:resolve() o:resolve(nil, true)
 
 	-- Bias toward some powers
 	local bias_powers = {}
-	local nb_bias = rng.range(1, lev / 5)
+	local nb_bias = math.max(1,rng.range(math.ceil(#powers/2), 20*lev /(lev+50))) --Limit bias powers to 20 (50/5 * 2) powers
 	for i = 1, nb_bias do bias_powers[#bias_powers+1] = rng.table(powers) end
 	local hpoints = math.ceil(points / 2)
 	local i = 0
-	while hpoints > 0 do
+	fails = 0 
+	while hpoints > 0 and fails <= #bias_powers do
 		i = util.boundWrap(i + 1, 1, #bias_powers)
 
 		local p = bias_powers[i] and bias_powers[i]
 		if p and p.points <= hpoints * 2 then
+			local scaleup = math.max(1,(lev/(p.level_range[2] or 50))^0.5) -- Adjust scaleup factor for each power based on lev and level_range max
 			if p.wielder then
 				o.wielder = o.wielder or {}
-				merger(o.wielder, p.wielder)
+				merger(o.wielder, p.wielder, scaleup)
 			end
-			if p.copy then merger(o, p.copy) end
+			if p.copy then merger(o, p.copy, scaleup) end
 --			print(" * adding bias power: "..p.name)
+			hpoints = hpoints - p.points
+			p.points = p.points * 1.5 --increased cost (=diminishing returns) on extra applications of the same power
+		else
+			fails = fails + 1
 		end
-		hpoints = hpoints - (p and p.points or 1) * 2
-		if p then p.points = p.points * 1.5 end
 	end
 
 	-- Power source if none
@@ -485,9 +501,6 @@ function _M:generateRandart(data)
 	resolvers.current_level = oldclev
 	return o
 end
-
-
-
 local wda_cache = {}
 
 --- Runs the worldmap directory AI
@@ -1236,13 +1249,12 @@ function _M:entityFilterPost(zone, level, type, e, filter)
 	elseif type == "object" then
 		if filter.random_object and not e.unique and e.randart_able then
 			local data = _G.type(filter.random_object) == "table" and filter.random_object or {}
-			local lev = math.max(4, game.zone:level_adjust_level(game.level, game.zone, "object"))
+			local lev = math.max(1, game.zone:level_adjust_level(game.level, game.zone, "object"))
 			e = game.state:generateRandart{
 				lev = lev,
 				egos = 0,
-				power_points_factor = data.power_points_factor or 7,
-				nb_powers_add = data.nb_powers_add or 1,
-				nb_themes = data.nb_themes or math.max(2, math.floor(lev / 20)),
+				nb_powers_add = data.nb_powers_add or 2, 
+				nb_points_add = data.nb_points_add or 4, -- ~1 ego Note: resolvers conflicts prevent specifying egos here
 				force_themes = data.force_themes or nil,
 				base = e,
 				post = function(o) o.rare = true o.unique = nil o.randart = nil end,
@@ -1250,7 +1262,6 @@ function _M:entityFilterPost(zone, level, type, e, filter)
 			}
 		end
 	end
-
 	return e
 end
 

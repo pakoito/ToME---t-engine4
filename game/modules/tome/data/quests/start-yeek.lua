@@ -23,7 +23,11 @@ desc = function(self, who)
 	desc[#desc+1] = "You have been tasked to remove two threats to the yeeks.\n"
 	desc[#desc+1] = "Protect the Way, and vanquish your foes.\n"
 	if self:isCompleted("murgol") then
-		desc[#desc+1] = "#LIGHT_GREEN#* You have explored the underwater zone and vanquished Murgol.#WHITE#"
+		if self:isCompleted("murgol-invaded") then
+			desc[#desc+1] = "#LIGHT_GREEN#* You have explored the underwater zone and vanquished the naga invader, Lady Nashva.#WHITE#"
+		else
+			desc[#desc+1] = "#LIGHT_GREEN#* You have explored the underwater zone and vanquished Murgol.#WHITE#"
+		end
 	else
 		desc[#desc+1] = "#SLATE#* You must explore the underwater lair of Murgol.#WHITE#"
 	end

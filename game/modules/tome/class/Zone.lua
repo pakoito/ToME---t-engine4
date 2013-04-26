@@ -33,6 +33,11 @@ function _M:onLoadZoneFile(basedir)
 	end
 end
 
+--- Make it work for high levels
+function _M:adjustComputeRaritiesLevel(level, type, lev)
+	return 500*lev/(lev+450) -- Prevent probabilities from vanishing at high levels
+end
+
 --- Quake a zone
 -- Moves randomly each grid to an other grid
 function _M:doQuake(rad, x, y, check)

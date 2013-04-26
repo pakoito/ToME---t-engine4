@@ -117,6 +117,10 @@ function _M:level_adjust_level(level, type)
 	return self.base_level + (self.specific_base_level[type] or 0) + (level.level - 1) + (add_level or 0)
 end
 
+function _M:adjustComputeRaritiesLevel(level, type, lev)
+	return lev
+end
+
 --- Parses the npc/objects list and compute rarities for random generation
 -- ONLY entities with a rarity properties will be considered.<br/>
 -- This means that to get a never-random entity you simply do not put a rarity property on it.
@@ -126,6 +130,7 @@ function _M:computeRarities(type, list, level, filter, add_level, rarity_field)
 	print("******************", level.level, type)
 
 	local lev = self:level_adjust_level(level, self, type) + (add_level or 0)
+	lev = self:adjustComputeRaritiesLevel(level, type, lev)
 
 	for i, e in ipairs(list) do
 		if e[rarity_field] and e.level_range and (not filter or filter(e)) then
@@ -367,7 +372,9 @@ end
 local pick_ego = function(self, level, e, eegos, egos_list, type, picked_etype, etype, ego_filter)
 	picked_etype[etype] = true
 	if _G.type(etype) == "number" then etype = "" end
-	local egos = level:getEntitiesList(type.."/"..e.egos..":"..etype)
+
+	local egos = e.egos and level:getEntitiesList(type.."/"..e.egos..":"..etype)
+	
 	if not egos then egos = self:generateEgoEntities(level, type, etype, eegos, e.__CLASSNAME) end
 
 	if self.ego_filter then ego_filter = self.ego_filter(self, level, type, etype, e, ego_filter, egos_list, picked_etype) end
@@ -388,7 +395,7 @@ function _M:finishEntity(level, type, e, ego_filter)
 	e = e:clone()
 	e:resolve()
 
-	-- Add "addon" properties, awlays
+	-- Add "addon" properties, always
 	if not e.unique and e.addons then
 		local egos_list = {}
 

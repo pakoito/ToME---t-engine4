@@ -17,6 +17,9 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local layout = game.state:alternateZone(short_name, {"INVASION", 2})
+local is_invaded = layout == "INVASION"
+
 return {
 	name = "Murgol Lair",
 	level_range = {1, 5},
@@ -32,6 +35,7 @@ return {
 	persistent = "zone",
 	max_material_level = 2,
 	no_random_lore = true,
+	is_invaded = is_invaded,
 	generator =  {
 		map = {
 			class = "engine.generator.map.Roomer",
@@ -48,7 +52,7 @@ return {
 			class = "mod.class.generator.actor.Random",
 			nb_npc = {20, 30},
 			filters = { {max_ood=2}, },
-			guardian = "MURGOL",
+			guardian = is_invaded and "NASHVA" or "MURGOL",
 		},
 		object = {
 			class = "engine.generator.object.Random",
@@ -67,4 +71,11 @@ return {
 			}, },
 		},
 	},
+
+	on_enter = function(lev)
+		if lev == 1 and not game.level.data.warned then
+			game.level.data.warned = true
+			require("engine.ui.Dialog"):simplePopup("Murgol Lair", "As you enter the lair you can hear the distorted sound of fighting. Somebody is already invading the lair.")
+		end
+	end,
 }
