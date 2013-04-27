@@ -148,11 +148,13 @@ newEntity{ base = "BASE_NPC_CANINE",
 	rank = 3.5,
 	size_category = 4,
 	rarity = 50,
-	max_life = 220,
+	max_life = 220, life_rating = 18,
 	combat_armor = 25, combat_def = 0,
 	combat = { dam=resolvers.levelup(20, 1, 1.3), atk=20, apr=16 },
 
 	ai = "tactical",
+
+	resolvers.drops{chance=100, nb=1, {defined="RUNGOF_FANG"} },
 
 	make_escort = {
 		{type="animal", subtype="canine", name="warg", number=6},

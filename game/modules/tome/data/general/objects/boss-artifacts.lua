@@ -1792,3 +1792,22 @@ newEntity{ base = "BASE_GAUNTLETS", define_as = "STORM_BRINGER_GAUNTLETS",
 	max_power = 16, power_regen = 1,
 	use_talent = { id = Talents.T_CHAIN_LIGHTNING, level = 3, power = 16 },
 }
+
+newEntity{ define_as = "RUNGOF_FANG",
+	power_source = {nature=true},
+	unique = true,
+	type = "misc", subtype="fang",
+	unided_name = "bloodied fang",
+	name = "Rungof's Fang", image = "object/artifact/rungof_fang.png",
+	level_range = {20, 35},
+	rarity = false,
+	display = "*", color=colors.DARK_RED,
+	encumber = 1,
+	not_in_stores = true,
+	desc = [[A fang from the great warg, Rungof, still covered in blood.]],
+
+	carrier = {
+		combat_apr = 7,
+		esp = {['animal/canine']=1},
+	},
+}
