@@ -1605,7 +1605,7 @@ function _M:onTakeHit(value, src)
 			local dam = self.retribution_strike
 
 			-- Deactivate without loosing energy
-			self:forceUseTalent(self.T_RETRIBUTION, {ignore_energy=true})
+			self:forceUseTalent(self.T_RETRIBUTION, {ignore_energy=true, ignore_cd=true})
 
 			-- Explode!
 			game.logSeen(self, "%s unleashes the stored damage in retribution!", self.name:capitalize())
