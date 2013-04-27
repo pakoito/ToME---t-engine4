@@ -424,8 +424,9 @@ function _M:functionHelp(func, verbose)
 	if type(func) ~= "function" then return nil, "Can only give help on functions." end
 	local info = debug.getinfo(func)
 	-- Check the path exists
-	if not fs.exists(info.short_src) then return nil, ([[%s does not exist.]]):format(info.short_src) end
-	local f = fs.open(info.short_src, "r")
+	local fpath = string.gsub(info.source,"@","")
+	if not fs.exists(fpath) then return nil, ([[%s does not exist.]]):format(fpath) end
+	local f = fs.open(fpath, "r")
 	local lines = {}
 	local line_num = 0
 	local line
