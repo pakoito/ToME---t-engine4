@@ -2036,6 +2036,6 @@ function _M:alternateZone(short_name, ...)
 end
 
 function _M:alternateZoneTier1(short_name, ...)
-	if not game.state:tier1Killed(1) then return "DEFAULT" end
+	if not game.state:tier1Killed(1) and not config.settings.cheat then return "DEFAULT" end
 	return self:alternateZone(short_name, ...)
 end

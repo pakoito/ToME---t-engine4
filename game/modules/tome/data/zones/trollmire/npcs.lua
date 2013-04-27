@@ -17,16 +17,29 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/npcs/rodent.lua", rarity(5))
-load("/data/general/npcs/vermin.lua", rarity(2))
-load("/data/general/npcs/canine.lua", rarity(0))
-load("/data/general/npcs/troll.lua", rarity(0))
-load("/data/general/npcs/snake.lua", rarity(3))
-load("/data/general/npcs/plant.lua", rarity(0))
-load("/data/general/npcs/swarm.lua", rarity(3))
-load("/data/general/npcs/bear.lua", rarity(2))
+if not currentZone.is_flooded then
+	load("/data/general/npcs/rodent.lua", rarity(5))
+	load("/data/general/npcs/vermin.lua", rarity(2))
+	load("/data/general/npcs/canine.lua", rarity(0))
+	load("/data/general/npcs/troll.lua", rarity(0))
+	load("/data/general/npcs/snake.lua", rarity(3))
+	load("/data/general/npcs/plant.lua", rarity(0))
+	load("/data/general/npcs/swarm.lua", rarity(3))
+	load("/data/general/npcs/bear.lua", rarity(2))
 
-load("/data/general/npcs/all.lua", rarity(4, 35))
+	load("/data/general/npcs/all.lua", rarity(4, 35))
+else
+	load("/data/general/npcs/vermin.lua", rarity(2))
+	load("/data/general/npcs/troll.lua", rarity(0))
+	load("/data/general/npcs/snake.lua", rarity(3))
+	load("/data/general/npcs/plant.lua", rarity(0))
+	load("/data/general/npcs/swarm.lua", rarity(3))
+	load("/data/general/npcs/bear.lua", rarity(5))
+	-- Aquatics but not squids
+	load("/data/general/npcs/aquatic_critter.lua", function(e) if e.rarity and e.name and e.name:find("squid") then e.rarity=nil end end)
+
+	load("/data/general/npcs/all.lua", rarity(4, 35))
+end
 
 local Talents = require("engine.interface.ActorTalents")
 
@@ -89,6 +102,69 @@ newEntity{ define_as = "TROLL_PROX",
 		end
 		game.state:activateBackupGuardian("ALUIN", 2, 35, "... and we thought the trollmire was safer now!")
 		game.player:resolveSource():setQuestStatus("start-allied", engine.Quest.COMPLETED, "trollmire")
+	end,
+}
+
+newEntity{ define_as = "TROLL_SHAX",
+	allow_infinite_dungeon = true,
+	type = "giant", subtype = "troll", unique = true,
+	name = "Shax the Slimy",
+	display = "T", color=colors.VIOLET, image="npc/giant_troll_prox_the_mighty.png",
+	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/giant_troll_shax_the_slimy.png", display_h=2, display_y=-1}}},
+	desc = [[A huge troll, he seems to be adapted to aquatic life.]],
+	killer_message = "and eaten raw",
+	level_range = {7, nil}, exp_worth = 2,
+	max_life = 150, life_rating = 15, fixed_rating = true,
+	max_stamina = 85,
+	stats = { str=20, dex=10, cun=8, mag=25, con=20 },
+	rank = 4,
+	size_category = 4,
+	infravision = 10,
+	instakill_immune = 1,
+	tier1 = true,
+	move_others=true,
+
+	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, TOOL=1 },
+	resolvers.equip{ {type="weapon", subtype="greatmaul", autoreq=true}, },
+	resolvers.equip{ {type="tool", subtype="misc", defined="LUCKY_FOOT", random_art_replace={chance=70}, autoreq=true}, },
+	resolvers.drops{chance=100, nb=1, {unique=true, not_properties={"lore"}} },
+	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
+
+	resolvers.talents{
+		[Talents.T_WATER_BOLT]=3,
+	},
+	resolvers.inscriptions(1, {"movement infusion"}),
+	inc_damage = { all = -40 },
+
+	autolevel = "warrior",
+	ai = "tactical", ai_state = { talent_in=3, ai_move="move_astar", },
+	ai_tactic = resolvers.tactic"melee",
+
+	-- Drop the note when near death (but before death, so that Kill bill achievement is possible)
+	on_takehit = function(self, val)
+		if self.life - val < self.max_life * 0.4 then
+			local n = game.zone:makeEntityByName(game.level, "object", "PROX_NOTE")
+			if n then
+				self.on_takehit = nil
+				game.zone:addEntity(game.level, n, "object", self.x, self.y)
+				game.logSeen(self, "Shax staggers for a moment. A note seems to drop at his feet.")
+			end
+		end
+		return val
+	end,
+
+	on_die = function(self, who)
+		--force the note to drop if it hasn't dropped already (such as if he died via drowning)
+		if self.on_takehit then
+			local n = game.zone:makeEntityByName(game.level, "object", "PROX_NOTE")
+			if n then
+				self.on_takehit = nil
+				game.zone:addEntity(game.level, n, "object", self.x, self.y)
+			end
+		end
+		game.state:activateBackupGuardian("ALUIN", 2, 35, "... and we thought the trollmire was safer now!")
+		game.player:resolveSource():setQuestStatus("start-allied", engine.Quest.COMPLETED, "trollmire")
+		game.player:resolveSource():setQuestStatus("start-allied", engine.Quest.COMPLETED, "trollmire-flooded")
 	end,
 }
 
