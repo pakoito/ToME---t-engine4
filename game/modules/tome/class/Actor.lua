@@ -4395,7 +4395,7 @@ function _M:canBe(what)
 	if what == "blind" and rng.percent(100 * (self:attr("blind_immune") or 0)) then return false end
 	if what == "silence" and rng.percent(100 * (self:attr("silence_immune") or 0)) then return false end
 	if what == "disarm" and rng.percent(100 * (self:attr("disarm_immune") or 0)) then return false end
-	if what == "pin" and rng.percent(100 * (self:attr("pin_immune") or 0)) and not self:attr("levitation") then return false end
+	if what == "pin" and rng.percent(100 * (self:attr("pin_immune") or 0)) or self:attr("levitation") or self:attr("fly") then return false end
 	if what == "stun" and rng.percent(100 * (self:attr("stun_immune") or 0)) then return false end
 	if what == "sleep" and rng.percent(100 * math.max((self:attr("sleep_immune") or 0), (self:attr("confusion_immune") or 0))) then return false end
 	if what == "fear" and rng.percent(100 * (self:attr("fear_immune") or 0)) then return false end
