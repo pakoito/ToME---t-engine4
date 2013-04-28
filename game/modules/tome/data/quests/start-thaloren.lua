@@ -23,7 +23,11 @@ desc = function(self, who)
 	desc[#desc+1] = "The Thaloren forest is disrupted. Corruption is spreading. Norgos the guardian bear is said to have gone mad.\n"
 	desc[#desc+1] = "On the western border of the forest a gloomy aura has been set up. Things inside are... twisted.\n"
 	if self:isCompleted("norgos") then
-		desc[#desc+1] = "#LIGHT_GREEN#* You have explored Norgos' Lair and put it to rest.#WHITE#"
+		if self:isCompleted("norgos-invaded") then
+			desc[#desc+1] = "#LIGHT_GREEN#* You have explored Norgos' Lair and stopped the shivgoroth invasion.#WHITE#"
+		else
+			desc[#desc+1] = "#LIGHT_GREEN#* You have explored Norgos' Lair and put it to rest.#WHITE#"
+		end
 	else
 		desc[#desc+1] = "#SLATE#* You must explore Norgos' Lair.#WHITE#"
 	end

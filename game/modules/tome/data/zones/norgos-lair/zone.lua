@@ -17,6 +17,10 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local layout = game.state:alternateZoneTier1(short_name, {"INVADED", 1})
+layout="INVADED"
+local is_invaded = layout == "INVADED"
+
 return {
 	name = "Norgos Lair",
 	level_range = {1, 5},
@@ -36,6 +40,7 @@ return {
 	ambient_music = "Woods of Eremae.ogg",
 	min_material_level = function() return game.state:isAdvanced() and 3 or 1 end,
 	max_material_level = function() return game.state:isAdvanced() and 4 or 2 end,
+	is_invaded = is_invaded,
 	generator =  {
 		map = {
 			class = "engine.generator.map.Roomer",
@@ -52,7 +57,7 @@ return {
 			class = "mod.class.generator.actor.Random",
 			nb_npc = {20, 30},
 			filters = { {max_ood=2}, },
-			guardian = "NORGOS",
+			guardian = is_invaded and "FROZEN_NORGOS" or "NORGOS",
 		},
 		object = {
 			class = "engine.generator.object.Random",
@@ -78,7 +83,7 @@ return {
 		if not config.settings.tome.weather_effects then return end
 
 		local Map = require "engine.Map"
-		level.foreground_particle = require("engine.Particles").new("snowing", 1, {width=Map.viewport.width, height=Map.viewport.height})
+		level.foreground_particle = require("engine.Particles").new("snowing", 1, {width=Map.viewport.width, height=Map.viewport.height, factor=game.zone.is_invaded and 6 or 1})
 	end,
 
 	foreground = function(level, x, y, nb_keyframes)
