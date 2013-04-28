@@ -17,6 +17,10 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local layout = game.state:alternateZone(short_name, {"HIDEOUT", 2})
+layout="HIDEOUT"
+local is_hideout = layout == "HIDEOUT"
+
 return {
 	name = "Ruins of Kor'Pul",
 	level_range = {1, 5},
@@ -33,6 +37,7 @@ return {
 	ambient_music = "Swashing the buck.ogg",
 	min_material_level = function() return game.state:isAdvanced() and 3 or 1 end,
 	max_material_level = function() return game.state:isAdvanced() and 4 or 2 end,
+	is_hideout = is_hideout,
 	generator =  {
 		map = {
 			class = "engine.generator.map.Roomer",
@@ -72,7 +77,7 @@ return {
 		[3] = {
 			generator = { map = {
 				class = "engine.generator.map.Static",
-				map = "zones/ruins-kor-pul-last",
+				map = is_hideout and "zones/ruins-kor-pul-invaded-last" or "zones/ruins-kor-pul-last",
 			}, },
 		},
 	},

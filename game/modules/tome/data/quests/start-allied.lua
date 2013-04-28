@@ -32,7 +32,11 @@ desc = function(self, who)
 		desc[#desc+1] = "#SLATE#* You must explore the Trollmire and find out what lurks there and what treasures are to be gained!#WHITE#"
 	end
 	if self:isCompleted("kor-pul") then
-		desc[#desc+1] = "#LIGHT_GREEN#* You have explored the ruins of Kor'Pul and vanquished the Shade.#WHITE#"
+		if self:isCompleted("kor-pul-invaded") then
+			desc[#desc+1] = "#LIGHT_GREEN#* You have explored the ruins of Kor'Pul and vanquished the Possessed.#WHITE#"
+		else
+			desc[#desc+1] = "#LIGHT_GREEN#* You have explored the ruins of Kor'Pul and vanquished the Shade.#WHITE#"
+		end
 	else
 		desc[#desc+1] = "#SLATE#* You must explore the ruins of Kor'Pul and find out what lurks there and what treasures are to be gained!#WHITE#"
 	end

@@ -168,12 +168,9 @@ newEntity{ base="BASE_NPC_NAGA", define_as = "NASHVA",
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	resolvers.equip{
-		{type="weapon", subtype="staff", autoreq=true},
-		{defined="ROBES_DEFLECTION", autoreq=true},
+		{type="weapon", subtype="trident", defined="TRIDENT_STREAM", random_art_replace={chance=65}, autoreq=true},
 	},
-	resolvers.drops{chance=100, nb=1, {unique=true, not_properties={"lore"}} },
 	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
-	resolvers.drops{chance=100, nb=1, {defined="SLAZISH_NOTE3"} },
 
 	resolvers.talents{
 		[Talents.T_SPIT_POISON]={base=2, every=10, max=5},

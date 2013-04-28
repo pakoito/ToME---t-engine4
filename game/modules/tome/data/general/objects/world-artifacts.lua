@@ -672,27 +672,6 @@ newEntity{ base = "BASE_GREATSWORD",
 	},
 }
 
-newEntity{ base = "BASE_KNIFE",
-	power_source = {arcane=true},
-	unique = true,
-	name = "Unerring Scalpel", image = "object/artifact/unerring_scalpel.png",
-	unided_name = "long sharp scalpel",
-	desc = [[This scalpel was used by the dread sorcerer Kor'Pul when he began learning the necromantic arts in the Age of Dusk.  Many were the bodies, living and dead, that became unwilling victims of his terrible experiments.]],
-	level_range = {1, 12},
-	rarity = 200,
-	require = { stat = { cun=16 }, },
-	cost = 80,
-	material_level = 1,
-	combat = {
-		dam = 15,
-		apr = 25,
-		physcrit = 0,
-		dammod = {dex=0.55, str=0.45},
-		phasing = 50,
-	},
-	wielder = {combat_atk=20},
-}
-
 newEntity{ base = "BASE_LEATHER_BOOT",
 	power_source = {technique=true},
 	unique = true,

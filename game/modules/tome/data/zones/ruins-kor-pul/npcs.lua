@@ -17,13 +17,23 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/npcs/rodent.lua", rarity(0))
-load("/data/general/npcs/vermin.lua", rarity(2))
-load("/data/general/npcs/molds.lua", rarity(1))
-load("/data/general/npcs/skeleton.lua", rarity(0))
-load("/data/general/npcs/snake.lua", rarity(2))
+if not currentZone.is_hideout then
+	load("/data/general/npcs/rodent.lua", rarity(0))
+	load("/data/general/npcs/vermin.lua", rarity(2))
+	load("/data/general/npcs/molds.lua", rarity(1))
+	load("/data/general/npcs/skeleton.lua", rarity(0))
+	load("/data/general/npcs/snake.lua", rarity(2))
 
-load("/data/general/npcs/all.lua", rarity(4, 35))
+	load("/data/general/npcs/all.lua", rarity(4, 35))
+else
+	load("/data/general/npcs/rodent.lua", rarity(0))
+	load("/data/general/npcs/vermin.lua", rarity(2))
+	load("/data/general/npcs/molds.lua", rarity(1))
+	load("/data/general/npcs/thieve.lua", rarity(0))
+	load("/data/general/npcs/snake.lua", rarity(2))
+
+	load("/data/general/npcs/all.lua", rarity(4, 35))
+end
 
 local Talents = require("engine.interface.ActorTalents")
 
@@ -72,6 +82,46 @@ newEntity{ define_as = "SHADE",
 	end,
 }
 
+newEntity{ base = "BASE_NPC_THIEF", define_as = "THE_POSSESSED",
+	allow_infinite_dungeon = true,
+	name = "The Possessed", color=colors.VIOLET,
+	desc = [[He is the leader of a gang of bandits that killed the Shade of Kor'Pul, however it is obvious the Shade was merely displaced. It is now possessing the corpse of his killer.]],
+	killer_message = "and used as a new host",
+	level_range = {7, nil}, exp_worth = 2,
+	unique = true,
+	rank = 4,
+	tier1 = true,
+	combat_armor = 5, combat_def = 7,
+	max_life = 150, life_rating = 15, fixed_rating = true,
+
+	equipment = resolvers.equip{
+		{type="weapon", subtype="dagger", defined="UNERRING_SCALPEL", random_art_replace={chance=75}, autoreq=true},
+		{type="weapon", subtype="dagger", forbid_power_source={antimagic=true}, autoreq=true},
+		{type="armor", subtype="light", forbid_power_source={antimagic=true}, autoreq=true},
+	},
+	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
+
+	instakill_immune = 1,
+
+	make_escort = {
+		{type="humanoid", subtype="human", name="thief", number=1},
+	},
+	resolvers.talents{
+		[Talents.T_DUAL_STRIKE]={base=2, every=6, max=7},
+		[Talents.T_LETHALITY]={base=3, every=6, max=6},
+		[Talents.T_ARCANE_COMBAT]={base=3, every=5, max=7},
+		[Talents.T_EARTHEN_MISSILES]={base=1, every=5, max=7},
+	},
+
+	autolevel = "rogue",
+	ai = "tactical", ai_state = { talent_in=2, ai_move="move_astar", },
+
+	on_die = function(self, who)
+		game.state:activateBackupGuardian("KOR_FURY", 3, 35, ".. yes I tell you! The old ruins of Kor'Pul are still haunted!")
+		game.player:resolveSource():setQuestStatus("start-allied", engine.Quest.COMPLETED, "kor-pul")
+		game.player:resolveSource():setQuestStatus("start-allied", engine.Quest.COMPLETED, "kor-pul-invaded")
+	end,
+}
 -- The boss of Amon Sul, no "rarity" field means it will not be randomly generated
 newEntity{ define_as = "KOR_FURY",
 	allow_infinite_dungeon = true,
