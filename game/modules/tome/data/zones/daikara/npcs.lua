@@ -110,7 +110,7 @@ newEntity{ define_as = "VARSHA_THE_WRITHING",
 	resists = { [DamageType.COLD] = -20, [DamageType.FIRE] = 100 },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
-	resolvers.drops{chance=100, nb=1, {defined="FROST_TREADS", random_art_replace={chance=75}}, },
+	resolvers.drops{chance=100, nb=1, {defined="VARSHA_CLAW", random_art_replace={chance=75}}, },
 	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
 	resolvers.drops{chance=100, nb=10, {type="money"} },
 
