@@ -17,12 +17,20 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-return { one_per_level=true,
+local events = { one_per_level=true,
 	{group="outdoor-majeyal-gloomy"},
 	{group="outdoor-majeyal-generic"},
 	{group="majeyal-generic"},
 	{name="cultists", percent=10},
-	{name="icy-ground", minor=true, percent=50},
 	{name="font-life", minor=true, percent=30},
 	{name="whistling-vortex", minor=true, percent=30},
 }
+
+if self.is_volcano then
+	events[#events+1] = {name="pyroclast", minor=true, percent=100}
+else
+	events[#events+1] = {name="icy-ground", minor=true, percent=50}
+
+end
+
+return events

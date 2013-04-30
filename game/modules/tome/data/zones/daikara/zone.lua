@@ -17,6 +17,10 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local layout = game.state:alternateZone(short_name, {"VOLCANO", 2})
+layout="VOLCANO"
+local is_volcano = layout == "VOLCANO"
+
 return {
 	name = "Daikara",
 	level_range = {7, 16},
@@ -32,6 +36,7 @@ return {
 	ambient_music = "World of Ice.ogg",
 	min_material_level = function() return game.state:isAdvanced() and 4 or 2 end,
 	max_material_level = function() return game.state:isAdvanced() and 5 or 3 end,
+	is_volcano = is_volcano,
 	generator =  {
 		map = {
 			class = "engine.generator.map.Roomer",
@@ -40,7 +45,7 @@ return {
 			rooms = {"forest_clearing", "rocky_snowy_trees", {"lesser_vault",7}},
 			rooms_config = {forest_clearing={pit_chance=5, filters={{}}}},
 			lesser_vaults_list = {"snow-giant-camp"},
-			['.'] = "ROCKY_GROUND",
+			['.'] = function() if rng.percent(5 + game.level.level * 6) then return "LAVA_FLOOR" else return "ROCKY_GROUND" end end,
 			['T'] = "ROCKY_SNOWY_TREE",
 			['#'] = "MOUNTAIN_WALL",
 			up = "ROCKY_UP2",
@@ -50,7 +55,9 @@ return {
 		actor = {
 			class = "mod.class.generator.actor.Random",
 			nb_npc = {20, 30},
-			guardian = "RANTHA_THE_WORM",
+			guardian = is_volcano and "VARSHA_THE_WRITHING" or "RANTHA_THE_WORM",
+intentionaly breakso I rememebr to finis this
+make the last level a caldera
 		},
 		object = {
 			class = "engine.generator.object.Random",
@@ -99,5 +106,12 @@ return {
 		end
 
 		game.state:makeWeather(level, 6, {max_nb=7, chance=1, dir=120, speed={0.1, 0.9}, alpha={0.2, 0.4}, particle_name="weather/grey_cloud_%02d"})
+	end,
+
+	on_enter = function(lev)
+		if lev == 1 and not game.level.data.warned and game.zone.is_volcano then
+			game.level.data.warned = true
+			require("engine.ui.Dialog"):simpleLongPopup("BOOM!", "As you walk toward the Daikara you can not fail to notice the huge volcano that erupts in the center of it, right where the path is taking you.", 400)
+		end
 	end,
 }

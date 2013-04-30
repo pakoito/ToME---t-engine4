@@ -18,9 +18,14 @@
 -- darkgod@te4.org
 
 load("/data/general/npcs/xorn.lua", rarity(4))
-load("/data/general/npcs/canine.lua", rarity(2))
 load("/data/general/npcs/snow-giant.lua", rarity(0))
-load("/data/general/npcs/cold-drake.lua", rarity(2))
+if not currentZone.is_volcano then
+	load("/data/general/npcs/canine.lua", rarity(2))
+	load("/data/general/npcs/cold-drake.lua", rarity(2))
+else
+	load("/data/general/npcs/fire-drake.lua", rarity(2))
+	load("/data/general/npcs/faeros.lua", rarity(0))
+end
 
 load("/data/general/npcs/all.lua", rarity(4, 35))
 
@@ -50,6 +55,59 @@ newEntity{ define_as = "RANTHA_THE_WORM",
 	combat = { dam=resolvers.levelup(resolvers.rngavg(25,110), 1, 2), atk=resolvers.rngavg(25,70), apr=25, dammod={str=1.1} },
 
 	resists = { [DamageType.FIRE] = -20, [DamageType.COLD] = 100 },
+
+	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
+	resolvers.drops{chance=100, nb=1, {defined="FROST_TREADS", random_art_replace={chance=75}}, },
+	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
+	resolvers.drops{chance=100, nb=10, {type="money"} },
+
+	resolvers.talents{
+		[Talents.T_KNOCKBACK]=3,
+
+		[Talents.T_ICE_STORM]=2,
+		[Talents.T_FREEZE]=3,
+
+		[Talents.T_ICE_CLAW]={base=4, every=6},
+		[Talents.T_ICY_SKIN]={base=3, every=7},
+		[Talents.T_ICE_BREATH]={base=4, every=5},
+	},
+	resolvers.sustains_at_birth(),
+
+	autolevel = "warriormage",
+	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
+	resolvers.inscriptions(1, "infusion"),
+
+	on_die = function(self, who)
+		game.state:activateBackupGuardian("MASSOK", 4, 43, "I have heard there is a dragon hunter in the Daikara that is unhappy about the wyrm being already dead.")
+		game.player:resolveSource():grantQuest("starter-zones")
+		game.player:resolveSource():setQuestStatus("starter-zones", engine.Quest.COMPLETED, "daikara")
+	end,
+}
+
+newEntity{ define_as = "VARSHA_THE_WRITHING",
+	allow_infinite_dungeon = true,
+	type = "dragon", subtype = "fire", unique = true,
+	name = "Varsha the Writhing",
+	display = "D", color=colors.VIOLET,
+	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/dragon_fire_varsha_the_writhing.png", display_h=2, display_y=-1}}},
+	desc = [[Claws and teeth. Fire and death. Dragons are not all extinct it seems...]],
+	killer_message = "and fed to the hatchlings",
+	level_range = {12, nil}, exp_worth = 2,
+	max_life = 230, life_rating = 17, fixed_rating = true,
+	max_stamina = 85,
+	max_mana = 200,
+	stats = { str=25, dex=10, cun=8, mag=20, wil=20, con=20 },
+	rank = 4,
+	size_category = 5,
+	combat_armor = 17, combat_def = 14,
+	infravision = 10,
+	instakill_immune = 1,
+	stun_immune = 1,
+	move_others=true,
+
+	combat = { dam=resolvers.levelup(resolvers.rngavg(25,110), 1, 2), atk=resolvers.rngavg(25,70), apr=25, dammod={str=1.1} },
+
+	resists = { [DamageType.COLD] = -20, [DamageType.FIRE] = 100 },
 
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1 },
 	resolvers.drops{chance=100, nb=1, {defined="FROST_TREADS", random_art_replace={chance=75}}, },
