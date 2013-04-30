@@ -37,7 +37,7 @@ newEntity{
 }
 
 newEntity{
-	name = "forcefull ", prefix=true,
+	name = "forceful ", prefix=true,
 	keywords = {force=true},
 	level_range = {10, 50},
 	rarity = 12,

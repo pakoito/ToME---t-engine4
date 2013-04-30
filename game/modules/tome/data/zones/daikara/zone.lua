@@ -44,7 +44,7 @@ return {
 			rooms = {"forest_clearing", "rocky_snowy_trees", {"lesser_vault",7}},
 			rooms_config = {forest_clearing={pit_chance=5, filters={{}}}},
 			lesser_vaults_list = {"snow-giant-camp"},
-			['.'] = function() if rng.percent(5 + game.level.level * 6) then return "LAVA_FLOOR" else return "ROCKY_GROUND" end end,
+			['.'] = is_volcano and function() if rng.percent(5 + game.level.level * 6) then return "LAVA_FLOOR" else return "ROCKY_GROUND" end end or "ROCKY_GROUND",
 			['T'] = "ROCKY_SNOWY_TREE",
 			['#'] = "MOUNTAIN_WALL",
 			up = "ROCKY_UP2",
