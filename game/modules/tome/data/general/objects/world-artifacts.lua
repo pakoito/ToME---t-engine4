@@ -3532,7 +3532,7 @@ You suspect the effects will require a moment to recover from.]],
 ]=]
 
 newEntity{ base = "BASE_LONGSWORD", define_as="CORPUS",
-	power_source = {arcane=true, technique=true},
+	power_source = {unknown=true, technique=true},
 	unique = true,
 	name = "Corpathus", image = "object/artifact/corpus.png",
 	unided_name = "bound sword",
@@ -3626,7 +3626,7 @@ newEntity{ base = "BASE_LONGSWORD", define_as="CORPUS",
 }
 
 newEntity{ base = "BASE_LONGSWORD",
-	power_source = {arcane=true, psionic=true},
+	power_source = {unknown=true, psionic=true},
 	unique = true,
 	name = "Anmalice", image = "object/artifact/anima.png", define_as = "ANIMA",
 	unided_name = "twisted blade",
@@ -3709,6 +3709,64 @@ newEntity{ base = "BASE_LONGSWORD",
 		self.particle = who:addParticles(engine.Particles.new("gloom", 1))
 		self.worn_by = who
 		game.logPlayer(who, "#CRIMSON#As you wield the sword, the tentacles on its hilt wrap around your arm. You feel the sword's will invading your mind!")
+	end,
+}
+
+newEntity{ base = "BASE_GREATSWORD", define_as="MORRIGOR",
+	power_source = {arcane=true, unknown=true},
+	unique = true, sentient = true,
+	name = "Morrigor", image = "object/artifact/corpus.png",
+	unided_name = "jagged, segmented, sword",
+	desc = [[This heavy, ridged blade emanates magical power, yet as you grasp the handle an icy chill runs its course through your spine. You feel the disembodied presence of all those slain by it. In unison, they demand company.]],
+	level_range = {20, 30},
+	rarity = 250,
+	require = { stat = { mag=40, }, },
+	cost = 300,
+	material_level = 4,
+	combat = {
+		dam = 58,
+		apr = 12,
+		physcrit = 7,
+		dammod = {str=0.7, mag=0.7},
+		melee_project={[DamageType.DRAINLIFE] = 25},
+		special_on_hit = {desc="deal magical damage", fct=function(combat, who, target)
+			local tg = {type="ball", range=0, radius=0, selffire=false}
+			who:project(tg, target.x, target.y, engine.DamageType.ARCANE, who:getMag()*0.5)
+			who:project(tg, target.x, target.y, engine.DamageType.DARKNESS, who:getMag()*0.5)
+		end},
+		special_on_kill = {desc="swallows the victim's soul, gaining a new power until unequipped", fct=function(combat, who, target)
+			local o, item, inven_id = who:findInAllInventoriesBy("define_as", "MORRIGOR")
+			if o.use_talent then return end
+			local got_talent = false
+			local tids = {}
+			for tid, _ in pairs(target.talents) do
+				local t = target:getTalentFromId(tid)
+				if t.mode == "activated" and and not t.uber not t.on_pre_use and not t.no_npc_use and not t.hide and not t.is_nature and not t.type[1]:find("/other") and not t.type[1]:find("horror") and not t.type[1]:find("race/") then
+					tids[#tids+1] = tid
+					got_talent = true
+				end
+			end
+			if got_talent == true then
+				local get_talent = rng.table(tids)
+				local t = target:getTalentFromId(get_talent)
+				o.use_talent = {}
+				o.use_talent.id = t.id
+				o.use_talent.power = (who:getTalentCooldown(t) or 5)
+				o.use_talent.level = 1
+				o.power = 1
+				o.max_power = (who:getTalentCooldown(t) or 5)
+				o.power_regen = 1
+			end
+	end},
+	},
+	wielder = {
+		combat_spellpower=24,
+		combat_spellcrit=12,
+	},
+	on_takeoff = function(self, who)
+		self.use_talent=nil
+		self.power_regen=nil
+		self.max_power=nil
 	end,
 }
 
@@ -5715,6 +5773,7 @@ newEntity{ base = "BASE_HEAVY_BOOTS",
 		resists = { [DamageType.PHYSICAL] = 10,  [DamageType.ACID] = 10,},
 	},
 }
+
 
 --[=[
 newEntity{
