@@ -18,7 +18,6 @@
 -- darkgod@te4.org
 
 local layout = game.state:alternateZone(short_name, {"VOLCANO", 2})
-layout="VOLCANO"
 local is_volcano = layout == "VOLCANO"
 
 return {
@@ -56,8 +55,6 @@ return {
 			class = "mod.class.generator.actor.Random",
 			nb_npc = {20, 30},
 			guardian = is_volcano and "VARSHA_THE_WRITHING" or "RANTHA_THE_WORM",
-intentionaly breakso I rememebr to finis this
-make the last level a caldera
 		},
 		object = {
 			class = "engine.generator.object.Random",
@@ -75,6 +72,30 @@ make the last level a caldera
 				up = "ROCKY_UP_WILDERNESS",
 			}, },
 		},
+		[4] = is_volcano and {
+			generator =  {
+				map = {
+					class = "mod.class.generator.map.Caldera",
+					trees_max_percent = 70,
+					trees_sqrt_percent = 20,
+					mountain = "MOUNTAIN_WALL",
+					tree = "ROCKY_SNOWY_TREE",
+					grass = function() return rng.percent(60) and "ROCKY_GROUND" or "LAVA_FLOOR" end,
+					water = "LAVA_FLOOR",
+					up = "ROCKY_UP4",
+					down = "LAVA_FLOOR", down_center = true,
+				},
+				actor = {
+					class = "mod.class.generator.actor.Random",
+					nb_npc = {40, 40},
+				},
+				object = {
+					class = "engine.generator.object.Random",
+					nb_object = {10, 12},
+					filters = { {type="gem"} }
+				},
+			},
+		} or nil,
 	},
 
 	post_process = function(level)
@@ -111,7 +132,7 @@ make the last level a caldera
 	on_enter = function(lev)
 		if lev == 1 and not game.level.data.warned and game.zone.is_volcano then
 			game.level.data.warned = true
-			require("engine.ui.Dialog"):simpleLongPopup("BOOM!", "As you walk toward the Daikara you can not fail to notice the huge volcano that erupts in the center of it, right where the path is taking you.", 400)
+			require("engine.ui.Dialog"):simpleLongPopup("BOOM!", "As you walk toward the Daikara you can not fail to notice the huge volcano that erupts in the center of it, right where the path is taking you.\nYou see pyroclasts ejected from the heart of the volcano, they look relatively harmless but very impressive.", 400)
 		end
 	end,
 }

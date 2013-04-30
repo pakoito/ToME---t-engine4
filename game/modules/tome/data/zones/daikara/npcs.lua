@@ -117,12 +117,11 @@ newEntity{ define_as = "VARSHA_THE_WRITHING",
 	resolvers.talents{
 		[Talents.T_KNOCKBACK]=3,
 
-		[Talents.T_ICE_STORM]=2,
-		[Talents.T_FREEZE]=3,
+		[Talents.T_FIRE_STORM]=3,
 
-		[Talents.T_ICE_CLAW]={base=4, every=6},
-		[Talents.T_ICY_SKIN]={base=3, every=7},
-		[Talents.T_ICE_BREATH]={base=4, every=5},
+		[Talents.T_WING_BUFFET]={base=4, every=6},
+		[Talents.T_BELLOWING_ROAR]={base=3, every=7},
+		[Talents.T_FIRE_BREATH]={base=4, every=5},
 	},
 	resolvers.sustains_at_birth(),
 
@@ -134,6 +133,7 @@ newEntity{ define_as = "VARSHA_THE_WRITHING",
 		game.state:activateBackupGuardian("MASSOK", 4, 43, "I have heard there is a dragon hunter in the Daikara that is unhappy about the wyrm being already dead.")
 		game.player:resolveSource():grantQuest("starter-zones")
 		game.player:resolveSource():setQuestStatus("starter-zones", engine.Quest.COMPLETED, "daikara")
+		game.player:resolveSource():setQuestStatus("starter-zones", engine.Quest.COMPLETED, "daikara-volcano")
 	end,
 }
 
