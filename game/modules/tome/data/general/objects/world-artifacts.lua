@@ -3741,7 +3741,7 @@ newEntity{ base = "BASE_GREATSWORD", define_as="MORRIGOR",
 			local tids = {}
 			for tid, _ in pairs(target.talents) do
 				local t = target:getTalentFromId(tid)
-				if t.mode == "activated" and and not t.uber not t.on_pre_use and not t.no_npc_use and not t.hide and not t.is_nature and not t.type[1]:find("/other") and not t.type[1]:find("horror") and not t.type[1]:find("race/") then
+				if t.mode == "activated" and not t.uber and not t.on_pre_use and not t.no_npc_use and not t.hide and not t.is_nature and not t.type[1]:find("/other") and not t.type[1]:find("horror") and not t.type[1]:find("race/") then
 					tids[#tids+1] = tid
 					got_talent = true
 				end
