@@ -3822,7 +3822,7 @@ function _M:postUseTalent(ab, ret, silent)
 			trigger = true; self:incPsi(-util.getval(ab.psi, self, ab) * (100 + 2 * self:combatFatigue()) / 100)
 		end
 		if ab.feedback and not self:attr("zero_resource_cost") then
-			trigger = true; self:incFeedback(-util.getval(ab.feeedback, self, ab) * (100 + 2 * self:combatFatigue()) / 100)
+			trigger = true; self:incFeedback(-util.getval(ab.feedback, self, ab) * (100 + 2 * self:combatFatigue()) / 100)
 		end
 		if ab.fortress_energy and game:getPlayer(true):hasQuest("shertul-fortress") and not self:attr("zero_resource_cost") then
 			trigger = true; game:getPlayer(true):hasQuest("shertul-fortress").shertul_energy = game:getPlayer(true):hasQuest("shertul-fortress").shertul_energy - ab.fortress_energy
