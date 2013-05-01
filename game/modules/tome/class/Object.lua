@@ -906,6 +906,7 @@ function _M:getTextualDesc(compare_with)
 		compare_fields(w, compare_with, field, "silence_immune", "%+d%%", "Silence immunity: ", 100)
 		compare_fields(w, compare_with, field, "disarm_immune", "%+d%%", "Disarm immunity: ", 100)
 		compare_fields(w, compare_with, field, "confusion_immune", "%+d%%", "Confusion immunity: ", 100)
+		compare_fields(w, compare_with, field, "sleep_immune", "%+d%%", "Sleep immunity: ", 100)
 		compare_fields(w, compare_with, field, "pin_immune", "%+d%%", "Pinning immunity: ", 100)
 
 		compare_fields(w, compare_with, field, "stun_immune", "%+d%%", "Stun/Freeze immunity: ", 100)

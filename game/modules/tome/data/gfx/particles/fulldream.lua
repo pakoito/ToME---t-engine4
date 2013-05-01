@@ -17,7 +17,34 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/grids/basic.lua")
-load("/data/general/grids/sand.lua")
-load("/data/general/grids/bone.lua")
-load("/data/general/grids/water.lua")
+base_size = 32
+
+local toggle = false
+
+return { generator = function()
+	local ad = rng.range(0, 360)
+	local a = math.rad(ad)
+	local dir = -math.rad(ad)
+	local r = rng.range(10, 32 * radius)
+	local dirchance = rng.chance(2)
+
+	return {
+		trail = 1,
+		life = 30,
+		size = 15, sizev = -0.3, sizea = 0,
+
+		x = r * math.cos(a), xv = 0, xa = 0,
+		y = r * math.sin(a), yv = 0, ya = 0,
+		dir = dir, dirv = 0, dira = 0,
+		vel = dirchance and 0.32 or -0.2, velv = 0, vela = dirchance and -0.01 or 0.01,
+
+		r = 0,  rv = 0, ra = 0,
+		g = rng.float(0.7, 1),  gv = 0, ga = 0,
+		b = rng.float(0.7, 1),  bv = 0, ba = 0,
+		a = rng.range(40, 80) / 255,  av = 0, aa = 0,
+	}
+end, },
+function(self)
+	self.ps:emit(1)
+end,
+400

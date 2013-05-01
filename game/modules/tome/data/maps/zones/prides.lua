@@ -29,9 +29,10 @@ subGenerator{
 }
 
 local floor = data.floor or data.sublevel.floor
+local wall = data.wall or data.sublevel.wall or "HARDWALL"
 
 -- defineTile section
-defineTile("#", "HARDWALL")
+defineTile("#", wall)
 defineTile("o", floor, nil, {entity_mod=function(e) e.make_escort = nil return e end, random_filter={type='humanoid', subtype='orc', special=function(e) return e.pride == data.sublevel.pride end}})
 quickEntity("g", 'o')
 defineTile(".", floor)

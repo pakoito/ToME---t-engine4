@@ -32,7 +32,11 @@ desc = function(self, who)
 		desc[#desc+1] = "#SLATE#* You must explore Norgos' Lair.#WHITE#"
 	end
 	if self:isCompleted("heart-gloom") then
-		desc[#desc+1] = "#LIGHT_GREEN#* You have explored the Heart of the Gloom and slain the Withering Thing.#WHITE#"
+		if self:isCompleted("heart-gloom-purified") then
+			desc[#desc+1] = "#LIGHT_GREEN#* You have explored the Heart of the Gloom and slain the Dreaming One.#WHITE#"
+		else
+			desc[#desc+1] = "#LIGHT_GREEN#* You have explored the Heart of the Gloom and slain the Withering Thing.#WHITE#"
+		end
 	else
 		desc[#desc+1] = "#SLATE#* You must explore the Heart of the Gloom.#WHITE#"
 	end

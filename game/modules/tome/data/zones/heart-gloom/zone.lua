@@ -17,6 +17,9 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local layout = game.state:alternateZone(short_name, {"PURIFIED", 2})
+local is_purified = layout == "PURIFIED"
+
 return {
 	name = "Heart of the Gloom",
 	level_range = {1, 5},
@@ -32,6 +35,7 @@ return {
 	persistent = "zone",
 	ambient_music = "Taking flight.ogg",
 	max_material_level = 2,
+	is_purified = is_purified,
 	generator =  {
 		map = {
 			class = "engine.generator.map.Octopus",
@@ -52,7 +56,7 @@ return {
 			class = "mod.class.generator.actor.Random",
 			nb_npc = {20, 30},
 			filters = { {max_ood=2}, },
-			guardian = "WITHERING_THING",
+			guardian = is_purified and "DREAMING_ONE" or "WITHERING_THING",
 		},
 		object = {
 			class = "engine.generator.object.Random",
@@ -74,7 +78,7 @@ return {
 
 	post_process = function(level)
 		local Map = require "engine.Map"
-		level.foreground_particle = require("engine.Particles").new("fullgloom", 1, {radius=(Map.viewport.mwidth + Map.viewport.mheight) / 2})
+		level.foreground_particle = require("engine.Particles").new(is_purified and "fulldream" or "fullgloom", 1, {radius=(Map.viewport.mwidth + Map.viewport.mheight) / 2})
 	end,
 
 	foreground = function(level, x, y, nb_keyframes)
