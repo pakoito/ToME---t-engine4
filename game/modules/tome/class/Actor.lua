@@ -4011,7 +4011,7 @@ function _M:getTalentFullDescription(t, addlevel, config, fake_mastery)
 		if t.hate then d:add({"color",0x6f,0xff,0x83}, "Hate cost:  ", {"color", 127, 127, 127}, ""..(util.getval(t.hate, self, t) * (100 + 2 * self:combatFatigue()) / 100), true) end
 		if t.paradox then d:add({"color",0x6f,0xff,0x83}, "Paradox cost: ", {"color",  176, 196, 222}, ("%0.2f"):format(util.getval(t.paradox, self, t) * (1 + (self.paradox / 300))), true) end
 		if t.psi then d:add({"color",0x6f,0xff,0x83}, "Psi cost: ", {"color",0x7f,0xff,0xd4}, ""..(util.getval(t.psi, self, t) * (100 + 2 * self:combatFatigue()) / 100), true) end
-		if t.feedback then d:add({"color",0x6f,0xff,0x83}, "Feedback cost: ", {"color",0xFF, 0xFF, 0x00}, ""..(util.getval(t.psi, self, t) * (100 + 2 * self:combatFatigue()) / 100), true) end
+		if t.feedback then d:add({"color",0x6f,0xff,0x83}, "Feedback cost: ", {"color",0xFF, 0xFF, 0x00}, ""..(util.getval(t.feedback, self, t) * (100 + 2 * self:combatFatigue()) / 100), true) end
 		if t.fortress_energy then d:add({"color",0x6f,0xff,0x83}, "Fortress Energy cost: ", {"color",0x00,0xff,0xa0}, ""..(t.fortress_energy), true) end
 
 		if t.sustain_mana then d:add({"color",0x6f,0xff,0x83}, "Sustain mana cost: ", {"color",0x7f,0xff,0xd4}, ""..(util.getval(t.sustain_mana, self, t)), true) end
