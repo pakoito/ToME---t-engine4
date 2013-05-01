@@ -36,10 +36,12 @@ return {
 		map = {
 			class = "engine.generator.map.Static",
 			map = "zones/prides",
-			up = "SAND_UP6",
-			down = "SAND_DOWN4",
+			up = "BONE_UP6",
+			down = "BONE_DOWN4",
 			floor = "BONEFLOOR",
 			wall = "HARDBONEWALL",
+			generic_leveler = "BONE_GENERIC_LEVER",
+			generic_leveler_door = "BONE_GENERIC_LEVER_DOOR",
 			sublevel = {
 				class = "engine.generator.map.Town",
 				pride = "rak-shor",
@@ -51,7 +53,7 @@ return {
 				wall = "BONEWALL",
 				up = "BONEFLOOR",
 				down = "BONEFLOOR",
-				door = "DOOR",
+				door = "BONE_DOOR",
 
 				nb_rooms = {0,0,0,1},
 				rooms = {"lesser_vault"},
@@ -82,12 +84,12 @@ return {
 	{
 		[1] = {
 			generator = { map = {
-				up = "SAND_UP_WILDERNESS",
+				up = "BONE_UP_WILDERNESS",
 			}, },
 		},
 		[3] = {
 			generator = { map = {
-				down = "SAND_UP_WILDERNESS",
+				down = "BONE_UP_WILDERNESS",
 			}, },
 		},
 	},

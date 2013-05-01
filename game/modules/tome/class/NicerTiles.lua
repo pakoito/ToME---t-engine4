@@ -637,7 +637,7 @@ cavewall = { method="walls", type="cavewall", forbid={}, use_type=true, extended
 	default4={add_displays={{image="terrain/cave/cave_ver_edge_left_01.png", display_x=-1}}, min=1, max=1},
 	default6={add_displays={{image="terrain/cave/cave_ver_edge_right_01.png", display_x=1}}, min=1, max=1},
 },
-bonewall = { method="walls", type="bonewall", forbid={}, use_type=true, extended=true,
+bonewall = { method="walls", type="bonewall", forbid={}, use_type=true, extended=true, consider_diagonal_doors=true,
 	default8={add_displays={{image="terrain/bone/bonewall_8_1.png", display_y=-1, z=16}}, min=1, max=1},
 	default8p={add_displays={{image="terrain/bone/bone_V3_pillar_top_0%d.png", display_y=-1, z=16}}, min=1, max=4},
 	default7={add_displays={{image="terrain/bone/bone_V3_inner_7_01.png", display_y=-1, z=16}}, min=1, max=1},
@@ -790,6 +790,21 @@ function _M:editTileGenericSandWalls(level, i, j, g, nt, type)
 	local g9 = level.map:checkEntity(i+1, j-1, Map.TERRAIN, kind) or type
 	local g1 = level.map:checkEntity(i-1, j+1, Map.TERRAIN, kind) or type
 	local g3 = level.map:checkEntity(i+1, j+1, Map.TERRAIN, kind) or type
+	local g7d = nil
+	local g1d = nil
+	local g3d = nil
+	local g9d = nil
+	if nt.consider_diagonal_doors then
+		g7d = level.map:checkEntity(i-1, j-1, Map.TERRAIN, "is_door")
+		g1d = level.map:checkEntity(i-1, j+1, Map.TERRAIN, "is_door")
+		g3d = level.map:checkEntity(i+1, j+1, Map.TERRAIN, "is_door")
+		g9d = level.map:checkEntity(i+1, j-1, Map.TERRAIN, "is_door")
+
+		if g7d then g7 = "floor" end
+		if g9d then g9 = "floor" end
+		if g3d then g3 = "floor" end
+		if g1d then g1 = "floor" end
+	end
 	if nt.forbid then
 		if nt.forbid[g5] then g5 = type end
 		if nt.forbid[g4] then g4 = type end

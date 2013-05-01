@@ -30,6 +30,8 @@ subGenerator{
 
 local floor = data.floor or data.sublevel.floor
 local wall = data.wall or data.sublevel.wall or "HARDWALL"
+local generic_leveler = data.generic_leveler or data.sublevel.generic_leveler or "GENERIC_LEVER"
+local generic_leveler_door = data.generic_leveler_door or data.sublevel.generic_leveler_door or "GENERIC_LEVER_DOOR"
 
 -- defineTile section
 defineTile("#", wall)
@@ -44,8 +46,8 @@ else quickEntity('O', 'o') end
 defineTile(";", floor, nil, nil, nil, {no_teleport=true})
 defineTile(" ", floor, nil, {entity_mod=function(e) e.make_escort = nil return e end, random_filter={type='humanoid', subtype='orc', special=function(e) return e.pride == data.sublevel.pride end, random_boss={nb_classes=1, loot_quality="store", loot_quantity=1, no_loot_randart=true, ai_move="move_complex", rank=3}}}, nil, {no_teleport=true})
 
-defineTile('&', "GENERIC_LEVER", nil, nil, nil, {lever=1, lever_kind="pride-doors", lever_spot={type="lever", subtype="door"}})
-defineTile('*', "GENERIC_LEVER_DOOR", nil, nil, nil, {lever_action=2, lever_action_value=0, lever_action_kind="pride-doors"}, {type="lever", subtype="door"})
+defineTile('&', generic_leveler, nil, nil, nil, {lever=1, lever_kind="pride-doors", lever_spot={type="lever", subtype="door"}})
+defineTile('*', generic_leveler_door, nil, nil, nil, {lever_action=2, lever_action_value=0, lever_action_kind="pride-doors"}, {type="lever", subtype="door"})
 
 -- addSpot section
 
