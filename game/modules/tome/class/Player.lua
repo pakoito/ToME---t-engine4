@@ -1457,9 +1457,9 @@ end
 function _M:on_targeted(act)
 	if self:attr("invisible") or self:attr("stealth") then
 		if self:canSee(act) and game.level.map.seens(act.x, act.y) then
-			game.logPlayer(self, "#LIGHT_RED#%s has seen you!", act.name:capitalize())
+			game.logPlayer(self, "#LIGHT_RED#%s briefly catches sight of you!", act.name:capitalize())
 		else
-			game.logPlayer(self, "#LIGHT_RED#Something has seen you!")
+			game.logPlayer(self, "#LIGHT_RED#Something briefly catches sight of you!")
 		end
 	end
 end

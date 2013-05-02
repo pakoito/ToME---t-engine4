@@ -186,9 +186,9 @@ techs_cun_req5 = {
 
 -- Archery range talents
 archery_range = function(self, t)
-	local weapon = self:hasArcheryWeapon()
+	local weapon, ammo, offweapon = self:hasArcheryWeapon()
 	if not weapon or not weapon.combat then return 1 end
-	return weapon.combat.range or 6
+	return math.min(weapon.combat.range or 6, offweapon and offweapon.combat and offweapon.combat.range or 40)
 end
 
 -- Unarmed stance changes and stance damage bonuses

@@ -30,7 +30,7 @@ module(..., package.seeall, class.make)
 --- Look for possible archery targets
 -- Take care of removing enough ammo
 function _M:archeryAcquireTargets(tg, params)
-	local weapon, ammo = self:hasArcheryWeapon()
+	local weapon, ammo, offweapon = self:hasArcheryWeapon()
 	if not weapon then
 		game.logPlayer(self, "You must wield a bow or a sling (%s)!", ammo)
 		return nil
@@ -45,60 +45,96 @@ function _M:archeryAcquireTargets(tg, params)
 	local realweapon = weapon
 	weapon = weapon.combat
 
+	if weapon.use_resource then
+		local val = self['get'..weapon.use_resource.kind:capitalize()](self)
+		if val < weapon.use_resource.value then
+			game.logPlayer(self, "You do not have enough %s left!", weapon.use_resource.kind)
+			return nil
+		end
+	end
+
 	local tg = tg or {}
 	tg.type = tg.type or weapon.tg_type or ammo.combat.tg_type or tg.type or "bolt"
 
-	if not tg.range then tg.range=weapon.range or 6 end
+	if not tg.range then tg.range=math.min(weapon.range or 6, offweapon and offweapon.range or 40) end
 	tg.display = tg.display or {display='/'}
-	tg.speed = (tg.speed or 10) + (ammo.combat.travel_speed or 0) + (weapon.travel_speed or 0) + (self.travel_speed or 0)
+	local wtravel_speed = weapon.travel_speed
+	if offweapon then wtravel_speed = math.ceil(((weapon.travel_speed or 0) + (offweapon.travel_speed or 0)) / 2) end
+	tg.speed = (tg.speed or 10) + (ammo.combat.travel_speed or 0) + (wtravel_speed or 0) + (self.travel_speed or 0)
 	print("[PROJECTILE SPEED] ::", tg.speed)
 	local x, y = self:getTarget(tg)
 	if not x or not y then return nil end
 
 	-- Find targets to know how many ammo we use
 	local targets = {}
-	if params.one_shot then
-		local a = ammo
-		if not ammo.infinite then
-			ammo.combat.shots_left = ammo.combat.shots_left - 1
-		end
-		if a then
-			local hd = {"Combat:archeryAcquire", tg=tg, params=params, weapon=weapon, ammo=a}
-			if self:triggerHook(hd) then hitted = hd.hitted end
 
-			targets = {{x=x, y=y, ammo=a.combat}}
-		end
-	else
-		local limit_shots = params.limit_shots
-
-		self:project(tg, x, y, function(tx, ty)
-			local target = game.level.map(tx, ty, game.level.map.ACTOR)
-			if not target then return end
-			if tx == self.x and ty == self.y then return end
-
-			if limit_shots then
-				if limit_shots <= 0 then return end
-				limit_shots = limit_shots - 1
+	local runfire = function(weapon, targets)
+		if params.one_shot then
+			local a = ammo
+			if not ammo.infinite then
+				ammo.combat.shots_left = ammo.combat.shots_left - 1
 			end
+			if a then
+				local hd = {"Combat:archeryAcquire", tg=tg, params=params, weapon=weapon, ammo=a}
+				if self:triggerHook(hd) then hitted = hd.hitted end
 
-			for i = 1, params.multishots or 1 do
-				local a = ammo
-				if not ammo.infinite then
-					if ammo.combat.shots_left > 0 then ammo.combat.shots_left = ammo.combat.shots_left - 1
-					else break
-					end
+				if weapon.use_resource then
+					self['inc'..weapon.use_resource.kind:capitalize()](self, -weapon.use_resource.value)
 				end
-				if a then 
-					local hd = {"Combat:archeryAcquire", tg=tg, params=params, weapon=weapon, ammo=a}
-					if self:triggerHook(hd) then hitted = hd.hitted end
-
-					targets[#targets+1] = {x=tx, y=ty, ammo=a.combat}
-				else break end
+				targets[#targets+1] = {x=x, y=y, ammo=a.combat}
 			end
-		end)
+		else
+			local limit_shots = params.limit_shots
+
+			self:project(tg, x, y, function(tx, ty)
+				local target = game.level.map(tx, ty, game.level.map.ACTOR)
+				if not target then return end
+				if tx == self.x and ty == self.y then return end
+
+				if limit_shots then
+					if limit_shots <= 0 then return end
+					limit_shots = limit_shots - 1
+				end
+
+				for i = 1, params.multishots or 1 do
+					local a = ammo
+					if not ammo.infinite then
+						if ammo.combat.shots_left > 0 then ammo.combat.shots_left = ammo.combat.shots_left - 1
+						else break
+						end
+					end
+					if a then 
+						local hd = {"Combat:archeryAcquire", tg=tg, params=params, weapon=weapon, ammo=a}
+						if self:triggerHook(hd) then hitted = hd.hitted end
+
+						targets[#targets+1] = {x=tx, y=ty, ammo=a.combat}
+
+						if weapon.use_resource then
+							self['inc'..weapon.use_resource.kind:capitalize()](self, -weapon.use_resource.value)
+							local val = self['get'..weapon.use_resource.kind:capitalize()](self)
+							if val < weapon.use_resource.value then
+								limit_shots = -1
+								break
+							end
+						end
+					else break end
+				end
+			end)
+		end
 	end
 
-	if #targets > 0 then
+	local any = false
+	if not offweapon then
+		runfire(weapon, targets)
+		any = #targets > 0
+	else
+		targets = {main={}, off={}, dual=true}
+		runfire(weapon, targets.main)
+		runfire(offweapon, targets.off)
+		any = #targets.main > 0 or #targets.off > 0
+	end
+
+	if any then
 		local sound = weapon.sound
 
 		local speed = self:combatSpeed(weapon)
@@ -421,7 +457,7 @@ end
 
 --- Shoot at one target
 function _M:archeryShoot(targets, talent, tg, params)
-	local weapon, ammo = self:hasArcheryWeapon()
+	local weapon, ammo, offweapon = self:hasArcheryWeapon()
 	if not weapon then
 		game.logPlayer(self, "You must wield a bow or a sling (%s)!", ammo)
 		return nil
@@ -438,15 +474,26 @@ function _M:archeryShoot(targets, talent, tg, params)
 	tg.type = tg.type or weapon.tg_type or ammo.combat.tg_type or tg.type or "bolt"
 	tg.talent = tg.talent or talent
 
-	if not tg.range then tg.range=weapon.range or 6 end
-	tg.display = tg.display or self:archeryDefaultProjectileVisual(realweapon, ammo)
-	tg.speed = (tg.speed or 10) + (ammo.combat.travel_speed or 0) + (weapon.travel_speed or 0) + (self.travel_speed or 0)
-	tg.archery = params or {}
-	tg.archery.weapon = weapon
-	for i = 1, #targets do
-		local tg = table.clone(tg)
-		tg.archery.ammo = targets[i].ammo
-		self:projectile(tg, targets[i].x, targets[i].y, archery_projectile)
+	local dofire = function(weapon, targets)
+		if not tg.range then tg.range=weapon.range or 6 end
+		tg.display = tg.display or self:archeryDefaultProjectileVisual(realweapon, ammo)
+		tg.speed = (tg.speed or 10) + (ammo.combat.travel_speed or 0) + (weapon.travel_speed or 0) + (self.travel_speed or 0)
+		tg.archery = params or {}
+		tg.archery.weapon = weapon
+		for i = 1, #targets do
+			local tg = table.clone(tg)
+			tg.archery.ammo = targets[i].ammo
+			self:projectile(tg, targets[i].x, targets[i].y, archery_projectile)
+		end
+	end
+
+	if not offweapon and not targets.dual then
+		dofire(weapon, targets)
+	elseif offweapon and targets.dual then
+		dofire(weapon, targets.main)
+		dofire(offweapon, targets.off)
+	else
+		print("[SHOOT] error, mismatch between dual weapon/dual targets")
 	end
 end
 
@@ -467,6 +514,7 @@ function _M:hasArcheryWeapon(type)
 	if not self:getInven("MAINHAND") then return nil, "no shooter" end
 	if not self:getInven("QUIVER") then return nil, "no ammo" end
 	local weapon = self:getInven("MAINHAND")[1]
+	local offweapon = self:getInven("OFFHAND") and self:getInven("OFFHAND")[1]
 	local ammo = self:getInven("QUIVER")[1]
 	if self.inven[self.INVEN_PSIONIC_FOCUS] then
 		local pf_weapon = self:getInven("PSIONIC_FOCUS")[1]
@@ -474,6 +522,7 @@ function _M:hasArcheryWeapon(type)
 			weapon = pf_weapon
 		end
 	end
+	if offweapon and not offweapon.archery then offweapon = nil end
 	if not weapon or not weapon.archery then
 		return nil, "no shooter"
 	end
@@ -483,9 +532,19 @@ function _M:hasArcheryWeapon(type)
 		if not ammo.archery_ammo or weapon.archery ~= ammo.archery_ammo then
 			return nil, "bad ammo"
 		end
+		if offweapon and (not ammo.archery_ammo or offweapon.archery ~= ammo.archery_ammo) then
+			return nil, "bad ammo"
+		end
 	end
 	if type and weapon.archery ~= type then return nil, "bad type" end
-	return weapon, ammo
+	if type and offweapon and offweapon.archery ~= type then return nil, "bad type" end
+	return weapon, ammo, offweapon
+end
+
+function _M:hasDualArcheryWeapon(type)
+	local w, a, o = self:hasArcheryWeapon(type)
+	if w and a and o then return w, a, o end
+	return nil
 end
 
 --- Check if the actor has a bow or sling and corresponding ammo
