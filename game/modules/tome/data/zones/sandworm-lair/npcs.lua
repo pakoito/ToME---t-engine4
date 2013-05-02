@@ -52,6 +52,34 @@ Maybe following it is the only way to move around here...]],
 	ai = "sandworm_tunneler", ai_state = {},
 }
 
+-- They make the tunnels, temporarily
+-- High life to not kill them by accident
+newEntity{ define_as = "SANDWORM_TUNNELER_HUGE",
+	type = "vermin", subtype = "sandworm",
+	name = "huge sandworm burrower",
+	display_w = 2, display_h = 2, display_x = -0.5, display_y = -0.5,
+	display = "w", color=colors.GREEN,
+	desc = [[This sandworm seems to not care about your presence at all and simply continues digging its way through the sand.
+	
+Maybe following it is the only way to move around here...]],
+	level_range = {12, 50}, exp_worth = 0,
+	max_life = 10000,
+	faction = "sandworm-burrowers",
+	never_anger = true,
+	movement_speed = 0.7,
+
+	invulnerable = 1,
+	move_body = 1,
+	rank = 5,
+	size_category = 5,
+	no_breath = 1,
+	instakill_immune = 1,
+	sand_dweller = 1,
+
+	autolevel = "warrior",
+	ai = "sandworm_tunneler_huge", ai_state = {next_spot=1},
+}
+
 -- The boss of the sandworm lair, no "rarity" field means it will not be randomly generated
 newEntity{ define_as = "SANDWORM_QUEEN",
 	allow_infinite_dungeon = true,

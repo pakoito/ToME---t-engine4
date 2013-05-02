@@ -110,3 +110,40 @@ newAI("sandworm_tunneler", function(self)
 		end
 	end
 end)
+
+-- Very special AI for sandworm tunnelers in the sandworm lair
+-- Does not care about a target, simple crawl toward a level spot and when there, go for the next
+newAI("sandworm_tunneler_huge", function(self)
+	-- Get a spot
+	if not self.ai_state.spot_x then
+		self.ai_state.next_spot = self.ai_state.next_spot + 1
+		local s = game.level.ordered_spots[self.ai_state.next_spot]
+		if not s then
+			game.logSeen(self, "#OLIVE_DRAB#The %s burrows into the ground and disappears.", self.name)
+			self:disappear()
+			return
+		end
+		self.ai_state.spot_x = s.x
+		self.ai_state.spot_y = s.y
+	end
+
+	-- Move toward it, digging your way to it
+	local lx, ly = tunnel(game.level, self.x, self.y, self.ai_state.spot_x, self.ai_state.spot_y)
+	if not lx then
+		self.ai_state.spot_x = nil
+		self.ai_state.spot_y = nil
+		self:useEnergy()
+	else
+		local feat = game.level.map(lx, ly, engine.Map.TERRAIN)
+		if feat:check("block_move") or feat:check("tunneler_dig") then
+			self:project({type="ball", radius=2}, lx, ly, DamageType.DIG, 1)
+		end
+		self:move(lx, ly)
+
+		-- if we could not move, find a new spot
+		if self.x ~= lx or self.y ~= ly then
+			self.ai_state.spot_x = nil
+			self.ai_state.spot_y = nil
+		end
+	end
+end)
