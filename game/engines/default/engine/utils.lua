@@ -1376,7 +1376,7 @@ function util.isHex()
 	return is_hex == 1
 end
 
-function util.dirToAngle(dir, sx, sy)
+function util.dirToAngle(dir)
 	return is_hex == 0 and dir_to_angle[dir] or hex_dir_to_angle[dir]
 end
 

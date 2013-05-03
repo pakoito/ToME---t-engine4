@@ -31,6 +31,7 @@ function _M:init(map, source_actor)
 	self.target_type = {}
 
 	self.cursor = engine.Tiles:loadImage("target_cursor.png"):glTexture()
+	self.arrow = engine.Tiles:loadImage("target_arrow.png"):glTexture()
 
 	--Use power of two (pot) width and height, rounded up
 	local pot_width = math.pow(2, math.ceil(math.log(map.tile_w-0.1) / math.log(2.0)))
@@ -59,6 +60,21 @@ function _M:init(map, source_actor)
 	-- the garbage collection
 	self.target = {x=self.source_actor.x, y=self.source_actor.y, entity=nil}
 --	setmetatable(self.target, {__mode='v'})
+end
+
+function _M:displayArrow(sx, sy, tx, ty, full)
+	local x, y = (tx*2.5 + sx) / 3.5, (ty*2.5 + sy) / 3.5
+
+	if full then x, y = (tx*3.5 + sx) / 4.5, (ty*3.5 + sy) / 4.5 end
+
+	core.display.glMatrix(true)
+	core.display.glTranslate(self.display_x + (x - game.level.map.mx) * self.tile_w * Map.zoom + self.tile_w * Map.zoom / 2, self.display_y + (y - game.level.map.my + util.hexOffset(x)) * self.tile_h * Map.zoom + self.tile_h * Map.zoom / 2, 0)
+	core.display.glRotate(180, 1, 0, 0)
+	core.display.glRotate(90+util.dirToAngle(util.getDir(tx, ty, sx, sy)), 0, 0, 1)
+
+	self.arrow:toScreenFull(- self.tile_w * Map.zoom / 2, - self.tile_h * Map.zoom / 2, self.tile_w * Map.zoom, self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom, 1, 1, 1, full and 1 or 0.85)
+
+	core.display.glMatrix(false)
 end
 
 function _M:display(dispx, dispy)
@@ -124,6 +140,8 @@ function _M:display(dispx, dispy)
 	local stopped = false
 	local block, hit, hit_radius
 
+	local firstx, firsty = lx, ly
+
 	-- Being completely blocked by the corner of an adjacent tile is annoying, so let's make it a special case and hit it instead
 	if blocked_corner_x then
 		block = true
@@ -187,7 +205,9 @@ function _M:display(dispx, dispy)
 		end
 
 	end
-	self.cursor:toScreen(self.display_x + (self.target.x - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (self.target.y - game.level.map.my + util.hexOffset(self.target.x)) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
+	if not self.target_type.immediate_keys or firstx then
+		self.cursor:toScreen(self.display_x + (self.target.x - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (self.target.y - game.level.map.my + util.hexOffset(self.target.x)) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
+	end
 
 	if self.target_type.ball and self.target_type.ball > 0 then
 		core.fov.calc_circle(
@@ -254,6 +274,12 @@ function _M:display(dispx, dispy)
 				end
 			end,
 		nil)
+	end
+
+	if self.target_type.immediate_keys then
+		for dir, spot in pairs(util.adjacentCoords(self.target_type.start_x, self.target_type.start_y)) do
+			self:displayArrow(self.target_type.start_x, self.target_type.start_y, spot[1], spot[2], firstx == spot[1] and firsty == spot[2])
+		end
 	end
 
 	self.display_x, self.display_y = ox, oy

@@ -65,7 +65,7 @@ newTalent{
 	info = function(self, t)
 		local defense = t.getDefense(self, t)
 		local saves = t.getMental(self, t)
-		return ([[Superior cunning and training allows you to outthink and outwit your opponents' physical and mental assualts.  Increases Defense by %d and Mental Save by %d.
+		return ([[Superior cunning and training allows you to outthink and outwit your opponents' physical and mental assaults.  Increases Defense by %d and Mental Save by %d.
 		The Defense bonus will scale with your Dexterity, and the save bonus with your Cunning.]]):
 		format(defense, saves)
 	end,

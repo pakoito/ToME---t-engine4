@@ -658,6 +658,12 @@ function _M:getTarget(typ)
 			return
 		end
 	else
+		if type(typ) == "table" and typ.range and typ.range == 1 and config.settings.tome.immediate_melee_keys then
+			typ = table.clone(typ)
+			typ.first_target = "friend"
+			typ.immediate_keys = true
+			typ.default_target = self
+		end
 		return game:targetGetForPlayer(typ)
 	end
 end

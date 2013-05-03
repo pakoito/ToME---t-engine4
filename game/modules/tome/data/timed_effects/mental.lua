@@ -2787,7 +2787,7 @@ newEffect{
 
 newEffect{
 	name = "HIDDEN_RESOURCES", image = "talents/hidden_resources.png",
-	desc = "Hidden Ressources",
+	desc = "Hidden Resources",
 	long_desc = function(self, eff) return "The target does not consume any resources." end,
 	type = "mental",
 	subtype = { willpower=true },

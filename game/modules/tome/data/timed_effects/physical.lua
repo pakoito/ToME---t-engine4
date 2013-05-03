@@ -560,7 +560,7 @@ newEffect{
 newEffect{
 	name = "FROZEN", image = "talents/freeze.png",
 	desc = "Frozen",
-	long_desc = function(self, eff) return ("The target is encased in ice. All damage done to it will be split, 40%% absorbed by the ice and 60%% by it. The target's defense is nullified while in the ice, and it may only attack the ice, but it is also immune to any new detrimental status effects. The target cannot teleport or heal while frozen. %d HP on the iceblock remaining."):format(eff.hp) end,
+	long_desc = function(self, eff) return ("The target is encased in ice. All damage done to it will be split, 40%% absorbed by the ice and 60%% by the target. The target's defense is nullified while in the ice, and it may only attack the ice, but it is also immune to any new detrimental status effects. The target cannot teleport or heal while frozen. %d HP on the iceblock remaining."):format(eff.hp) end,
 	type = "physical", -- Frozen has some serious effects beyond just being frozen, no healing, no teleport, etc.  But it can be applied by clearly non-magical sources i.e. Ice Breath
 	subtype = { cold=true, stun=true },
 	status = "detrimental",
