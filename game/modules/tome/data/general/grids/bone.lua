@@ -307,7 +307,7 @@ newEntity{
 newEntity{
 	define_as = "BONE_LADDER_DOWN",
 	type = "floor", subtype = "bone",
-	name = "ladder to the next level", image = "terrain/sand.png", add_displays = {class.new{image="terrain/ladder_down.png"}},
+	name = "ladder to the next level", image = "terrain/sandfloor.png", add_displays = {class.new{image="terrain/bone/bone_stairs_down_1_01.png"}},
 	display = '>', color_r=255, color_g=255, color_b=0,
 	notice = true,
 	always_remember = true,
@@ -317,7 +317,7 @@ newEntity{
 newEntity{
 	define_as = "BONE_LADDER_UP",
 	type = "floor", subtype = "bone",
-	name = "ladder to the previous level", image = "terrain/sand.png", add_displays = {class.new{image="terrain/ladder_up.png"}},
+	name = "ladder to the previous level", image = "terrain/sandfloor.png", add_displays = {class.new{image="terrain/bone/bone_stairs_up_1_01.png"}},
 	display = '<', color_r=255, color_g=255, color_b=0,
 	notice = true,
 	always_remember = true,
@@ -327,7 +327,7 @@ newEntity{
 newEntity{
 	define_as = "BONE_LADDER_UP_WILDERNESS",
 	type = "floor", subtype = "bone",
-	name = "ladder to worldmap", image = "terrain/sand.png", add_displays = {class.new{image="terrain/ladder_up_wild.png"}},
+	name = "ladder to worldmap", image = "terrain/sandfloor.png", add_displays = {class.new{image="terrain/bone/bone_stairs_exit_1_01.png"}},
 	display = '<', color_r=255, color_g=255, color_b=0,
 	notice = true,
 	change_level = 1,
