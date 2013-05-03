@@ -233,7 +233,6 @@ newTalent{
 		self:attr("poison_immune", 0.2)
 		self:attr("disease_immune", 0.2)
 		self:attr("cut_immune", 0.2)
-		self:attr("confusion_immune", 0.2)
 		self:attr("ignore_direct_crits", 15)
 	end,
 	on_unlearn = function(self, t)
@@ -241,13 +240,12 @@ newTalent{
 		self:attr("poison_immune", -0.2)
 		self:attr("disease_immune", -0.2)
 		self:attr("cut_immune", -0.2)
-		self:attr("confusion_immune", -0.2)
 		self:attr("ignore_direct_crits", -15)
 	end,
 	info = function(self, t)
 		return ([[Your body's internal organs are melted together, making it much harder to suffer critical hits.
 		All direct critical hits (physical, mental, spells) against you have a %d%% chance to instead do their normal damage.
-		In addition you gain %d%% disease, poison, cuts, confusion and blindness resistances.]]):
+		In addition you gain %d%% disease, poison, cuts and blindness resistances.]]):
 		format(self:getTalentLevelRaw(t) * 15, self:getTalentLevelRaw(t) * 20)
 	end,
 }
