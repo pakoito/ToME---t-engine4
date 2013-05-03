@@ -147,7 +147,10 @@ newTalent{
 		local nb = t.getNbTalents(self, t)
 
 		local list = {}
-		for tid, cd in pairs(self.talents_cd) do list[#list+1] = tid end
+		for tid, cd in pairs(self.talents_cd) do 
+			local tt = self:getTalentFromId(tid)
+			if tt.mode ~= "passive" and not tt.uber then list[#list+1] = tid end
+		end
 		while #list > 0 and nb > 0 do
 			self.talents_cd[rng.tableRemove(list)] = nil
 			nb = nb - 1

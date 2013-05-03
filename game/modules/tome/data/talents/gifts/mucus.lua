@@ -72,7 +72,7 @@ newTalent{
 	equilibrium = 10,
 	cooldown = 10,
 	range = 7,
-	radius = function(self, t) return 3 + (self:getTalentLevel(t) >= 5 and 1 or 0) end,
+	radius = function(self, t) return 2 + (self:getTalentLevel(t) >= 5 and 1 or 0) end,
 	target = function(self, t) return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), friendlyfire=false} end,
 	tactical = { ATTACKAREA = { ACID = 2, NATURE = 1 } },
 	requires_target = true,
