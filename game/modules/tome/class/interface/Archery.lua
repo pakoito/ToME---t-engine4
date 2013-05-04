@@ -62,7 +62,8 @@ function _M:archeryAcquireTargets(tg, params)
 	if offweapon then wtravel_speed = math.ceil(((weapon.travel_speed or 0) + (offweapon.travel_speed or 0)) / 2) end
 	tg.speed = (tg.speed or 10) + (ammo.combat.travel_speed or 0) + (wtravel_speed or 0) + (self.travel_speed or 0)
 	print("[PROJECTILE SPEED] ::", tg.speed)
-	local x, y = self:getTarget(tg)
+	local x, y = params.x, params.y
+	if not x or not y then x, y = self:getTarget(tg) end
 	if not x or not y then return nil end
 
 	-- Find targets to know how many ammo we use
@@ -139,7 +140,7 @@ function _M:archeryAcquireTargets(tg, params)
 
 		local speed = self:combatSpeed(weapon)
 		print("[SHOOT] speed", speed or 1, "=>", game.energy_to_act * (speed or 1))
-		self:useEnergy(game.energy_to_act * (speed or 1))
+		if not params.no_energy then self:useEnergy(game.energy_to_act * (speed or 1)) end
 
 		if sound then game:playSoundNear(self, sound) end
 
@@ -259,11 +260,15 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 		hitted = true
 
 		if talent.archery_onhit then talent.archery_onhit(self, talent, target, target.x, target.y) end
+
+		target:talentCallbackOn("callbackOnArcheryHit", self)
 	else
 		local srcname = game.level.map.seens(self.x, self.y) and self.name:capitalize() or "Something"
 		game.logSeen(target, "%s misses %s.", srcname, target.name)
 
 		if talent.archery_onmiss then talent.archery_onmiss(self, talent, target, target.x, target.y) end
+
+		target:talentCallbackOn("callbackOnArcheryMiss", self)
 	end
 
 	-- cross-tier effect for accuracy vs. defense

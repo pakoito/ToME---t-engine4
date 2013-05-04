@@ -806,3 +806,13 @@ function _M:callTalent(tid, name, ...)
 	name = name or "trigger"
 	if t[name] then return t[name](self, t, ...) end
 end
+
+--- Trigger all talents matching
+function _M:talentCallbackOn(on, ...)
+	for tid, _ in pairs(self.sustain_talents) do
+		local t = self:getTalentFromId(tid)
+		if t and t[on] then
+			self:callTalent(tid, on, ...)
+		end
+	end
+end
