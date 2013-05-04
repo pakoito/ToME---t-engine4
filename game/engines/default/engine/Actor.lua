@@ -208,7 +208,7 @@ function _M:move(x, y, force)
 end
 
 --- Moves into the given direction (calls actor:move() internally)
-function _M:moveDir(dir)
+function _M:moveDir(dir, force)
 	local dx, dy = util.dirToCoord(dir, self.x, self.y)
 	if dir ~= 5 then self.doPlayerSlide = config.settings.player_slide end
 
@@ -229,7 +229,7 @@ function _M:moveDir(dir)
 	local x, y = self.x + dx, self.y + dy
 	self.move_dir = dir
 
-	return self:move(x, y)
+	return self:move(x, y, force)
 end
 
 --- Can the actor go there

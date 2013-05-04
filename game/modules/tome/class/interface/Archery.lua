@@ -215,6 +215,12 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 		dam = dam * mult
 		print("[ATTACK ARCHERY] after mult", dam)
 
+		local hd = {"Combat:archeryDamage", hitted=hitted, target=target, weapon=weapon, ammo=ammo, damtype=damtype, mult=1, dam=dam}
+		if self:triggerHook(hd) then
+			dam = dam * hd.mult
+		end
+		print("[ATTACK ARCHERY] after hook", dam)
+
 		if crit then game.logSeen(self, "#{bold}#%s performs a critical strike!#{normal}#", self.name:capitalize()) end
 
 		-- Damage conversion?
@@ -256,6 +262,8 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 	else
 		local srcname = game.level.map.seens(self.x, self.y) and self.name:capitalize() or "Something"
 		game.logSeen(target, "%s misses %s.", srcname, target.name)
+
+		if talent.archery_onmiss then talent.archery_onmiss(self, talent, target, target.x, target.y) end
 	end
 
 	-- cross-tier effect for accuracy vs. defense
@@ -536,8 +544,8 @@ function _M:hasArcheryWeapon(type)
 			return nil, "bad ammo"
 		end
 	end
-	if type and weapon.archery ~= type then return nil, "bad type" end
-	if type and offweapon and offweapon.archery ~= type then return nil, "bad type" end
+	if type and weapon.subtype ~= type then return nil, "bad type" end
+	if type and offweapon and offweapon.subtype ~= type then return nil, "bad type" end
 	return weapon, ammo, offweapon
 end
 

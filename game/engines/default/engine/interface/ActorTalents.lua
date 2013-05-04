@@ -143,7 +143,7 @@ function _M:useTalent(id, who, force_level, ignore_cd, force_target, silent, no_
 			if force_level then old_level = who.talents[id]; who.talents[id] = force_level end
 			if force_target then old_target = rawget(who, "getTarget"); who.getTarget = function(a) return force_target.x, force_target.y, not force_target.__no_self and force_target end end
 			self.__talent_running = ab
-			local ok, ret = xpcall(function() return ab.action(who, ab) end, debug.traceback)
+			local ok, ret, special = xpcall(function() return ab.action(who, ab) end, debug.traceback)
 			self.__talent_running = nil
 			if force_target then who.getTarget = old_target end
 			if force_level then who.talents[id] = old_level end
@@ -153,7 +153,7 @@ function _M:useTalent(id, who, force_level, ignore_cd, force_target, silent, no_
 			if not self:postUseTalent(ab, ret, silent) then return end
 
 			-- Everything went ok? then start cooldown if any
-			if not ignore_cd then self:startTalentCooldown(ab) end
+			if not ignore_cd and (not special or not special.ignore_cd) then self:startTalentCooldown(ab) end
 		end)
 		local success, err
 		if not no_confirm and self:isTalentConfirmable(ab) then
