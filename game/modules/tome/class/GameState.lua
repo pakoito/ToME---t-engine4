@@ -2018,7 +2018,7 @@ function _M:startEvents()
 end
 
 function _M:alternateZone(short_name, ...)
-	if not world:hasSeenZone(short_name) and not config.settings.cheat then print("Alternate layout for "..short_name.." refused: never visited") return "DEFAULT" end
+	if not world:hasSeenZone(short_name) and not config.settings.cheat and not world:hasAchievement("VAMPIRE_CRUSHER") then print("Alternate layout for "..short_name.." refused: never visited") return "DEFAULT" end
 
 	local list = {...}
 	table.insert(list, 1, {"DEFAULT", 1})

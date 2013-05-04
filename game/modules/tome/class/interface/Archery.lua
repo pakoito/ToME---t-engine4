@@ -71,7 +71,7 @@ function _M:archeryAcquireTargets(tg, params)
 	local runfire = function(weapon, targets)
 		if params.one_shot then
 			local a = ammo
-			if not ammo.infinite then
+			if not ammo.infinite and ammo.combat.shots_left > 0 then
 				ammo.combat.shots_left = ammo.combat.shots_left - 1
 			end
 			if a then
