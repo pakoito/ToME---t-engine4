@@ -122,7 +122,7 @@ newTalent{
 		end
 
 		local tx, ty = util.findFreeGrid(x, y, 20, true, {[Map.ACTOR]=true})
-		if tx and ty then self:move(tx, ty, true) end
+		if tx and ty then self:teleportRandom(x, y, 0) end
 
 		game:playSoundNear(self, "talents/slime")
 		return true
