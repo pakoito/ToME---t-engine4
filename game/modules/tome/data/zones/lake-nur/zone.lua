@@ -94,10 +94,11 @@ return {
 			generator = is_flooded and {
 				map = {
 					down = "SHERTUL_FORTRESS",
+					['.'] = {"WATER_FLOOR","WATER_FLOOR","WATER_FLOOR","WATER_FLOOR","WATER_FLOOR","WATER_FLOOR","WATER_FLOOR","WATER_FLOOR_BUBBLE"},
 					force_last_stair = true,
 				},
 				actor = {
-					filters = {{special_rarity="water_rarity"}},
+					filters = {{special_rarity="water_rarity"},{special_rarity="horror_water_rarity"}},
 					nb_npc = {30, 35},
 				},
 			} or {
