@@ -23,6 +23,7 @@ local TreeList = require "engine.ui.TreeList"
 local Textzone = require "engine.ui.Textzone"
 local Separator = require "engine.ui.Separator"
 local GetQuantity = require "engine.dialogs.GetQuantity"
+local Tabs = require "engine.ui.Tabs"
 
 module(..., package.seeall, class.inherit(Dialog))
 
@@ -31,17 +32,18 @@ function _M:init()
 
 	self.c_desc = Textzone.new{width=math.floor(self.iw / 2 - 10), height=self.ih, text=""}
 
-	self:generateList()
-
-	self.c_list = TreeList.new{width=math.floor(self.iw / 2 - 10), height=self.ih - 10, scrollbar=true, columns={
-		{width=60, display_prop="name"},
-		{width=40, display_prop="status"},
-	}, tree=self.list, fct=function(item) end, select=function(item, sel) self:select(item) end}
+	self.c_tabs = Tabs.new{width=self.iw - 5, tabs={
+		{title="UI", kind="ui"},
+		{title="Gameplay", kind="gameplay"},
+		{title="Online", kind="online"},
+		{title="Misc", kind="misc"},
+	}, on_change=function(kind) self:switchTo(kind) end}
 
 	self:loadUI{
-		{left=0, top=0, ui=self.c_list},
-		{right=0, top=0, ui=self.c_desc},
-		{hcenter=0, top=5, ui=Separator.new{dir="horizontal", size=self.ih - 10}},
+		{left=0, top=0, ui=self.c_tabs},
+		{left=0, top=self.c_tabs.h, ui=self.c_list},
+		{right=0, top=self.c_tabs.h, ui=self.c_desc},
+		{hcenter=0, top=5+self.c_tabs.h, ui=Separator.new{dir="horizontal", size=self.ih - 10}},
 	}
 	self:setFocus(self.c_list)
 	self:setupUI()
@@ -52,45 +54,29 @@ function _M:init()
 end
 
 function _M:select(item)
-	if item and self.uis[2] then
-		self.uis[2].ui = item.zone
+	if item and self.uis[3] then
+		self.uis[3].ui = item.zone
 	end
 end
 
-function _M:generateList()
+function _M:switchTo(kind)
+	self['generateList'..kind:capitalize()](self)
+
+	self.c_list = TreeList.new{width=math.floor(self.iw / 2 - 10), height=self.ih - 10, scrollbar=true, columns={
+		{width=60, display_prop="name"},
+		{width=40, display_prop="status"},
+	}, tree=self.list, fct=function(item) end, select=function(item, sel) self:select(item) end}
+	if self.uis and self.uis[2] then
+		self.c_list.mouse.delegate_offset_x = self.uis[2].ui.mouse.delegate_offset_x
+		self.c_list.mouse.delegate_offset_y = self.uis[2].ui.mouse.delegate_offset_y
+		self.uis[2].ui = self.c_list
+	end
+end
+
+function _M:generateListUi()
 	-- Makes up the list
 	local list = {}
 	local i = 0
-
-	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Defines the distance from the screen edge at which scrolling will start. If set high enough the game will always center on the player.#WHITE#"}
-	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Scroll distance#WHITE##{normal}#", status=function(item)
-		return tostring(config.settings.tome.scroll_dist)
-	end, fct=function(item)
-		game:registerDialog(GetQuantity.new("Scroll distance", "From 1 to 30", config.settings.tome.scroll_dist, 30, function(qty)
-			qty = util.bound(qty, 1, 30)
-			game:saveSettings("tome.scroll_dist", ("tome.scroll_dist = %d\n"):format(qty))
-			config.settings.tome.scroll_dist = qty
-			self.c_list:drawItem(item)
-		end, 1))
-	end,}
-
-	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Saves in the background, allowing you to continue playing. If disabled you will have to wait until the saving is done, but it will be faster.#WHITE#"}
-	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Save in the background#WHITE##{normal}#", status=function(item)
-		return tostring(config.settings.background_saves and "enabled" or "disabled")
-	end, fct=function(item)
-		config.settings.background_saves = not config.settings.background_saves
-		game:saveSettings("background_saves", ("background_saves = %s\n"):format(tostring(config.settings.background_saves)))
-		self.c_list:drawItem(item)
-	end,}
-
-	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Forces the game to save each level instead of each zone.\nThis makes it save more often but the game will use less memory when deep in a dungeon.\n\n#LIGHT_RED#Changing this option will not affect already visited zones.\n*THIS DOES NOT MAKE A FULL SAVE EACH LEVEL*.#WHITE#"}
-	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Zone save per level#WHITE##{normal}#", status=function(item)
-		return tostring(config.settings.tome.save_zone_levels and "enabled" or "disabled")
-	end, fct=function(item)
-		config.settings.tome.save_zone_levels = not config.settings.tome.save_zone_levels
-		game:saveSettings("tome.save_zone_levels", ("tome.save_zone_levels = %s\n"):format(tostring(config.settings.tome.save_zone_levels)))
-		self.c_list:drawItem(item)
-	end,}
 
 	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Make the movement of creatures and projectiles 'smooth'. When set to 0 movement will be instantaneous.\nThe higher this value the slower the movements will appear.\n\nNote: This does not affect the turn-based idea of the game. You can move again while your character is still moving, and it will correctly update and compute a new animation."}
 	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Smooth creatures movement#WHITE##{normal}#", status=function(item)
@@ -110,24 +96,6 @@ function _M:generateList()
 	end, fct=function(item)
 		config.settings.tome.twitch_move = not config.settings.tome.twitch_move
 		game:saveSettings("tome.twitch_move", ("tome.twitch_move = %s\n"):format(tostring(config.settings.tome.twitch_move)))
-		self.c_list:drawItem(item)
-	end,}
-
-	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Enables or disables weather effects in some zones.\nDisabling it can gain some performance. It will not affect previously visited zones.#WHITE#"}
-	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Weather effects#WHITE##{normal}#", status=function(item)
-		return tostring(config.settings.tome.weather_effects and "enabled" or "disabled")
-	end, fct=function(item)
-		config.settings.tome.weather_effects = not config.settings.tome.weather_effects
-		game:saveSettings("tome.weather_effects", ("tome.weather_effects = %s\n"):format(tostring(config.settings.tome.weather_effects)))
-		self.c_list:drawItem(item)
-	end,}
-
-	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Enables or disables day/night light variations effects..#WHITE#"}
-	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Day/night light cycle#WHITE##{normal}#", status=function(item)
-		return tostring(config.settings.tome.daynight and "enabled" or "disabled")
-	end, fct=function(item)
-		config.settings.tome.daynight = not config.settings.tome.daynight
-		game:saveSettings("tome.daynight", ("tome.daynight = %s\n"):format(tostring(config.settings.tome.daynight)))
 		self.c_list:drawItem(item)
 	end,}
 
@@ -190,24 +158,6 @@ function _M:generateList()
 		end)
 	end,}
 
-	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Enables easy movement using the mouse by left-clicking on the map.#WHITE#"}
-	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Use mouse to move#WHITE##{normal}#", status=function(item)
-		return tostring(config.settings.mouse_move and "enabled" or "disabled")
-	end, fct=function(item)
-		config.settings.mouse_move = not config.settings.mouse_move
-		game:saveSettings("mouse_move", ("mouse_move = %s\n"):format(tostring(config.settings.mouse_move)))
-		self.c_list:drawItem(item)
-	end,}
-
-	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Enables quick melee targetting.\nTalents that require a melee target will automatically target when pressing a direction key instead of requiring a confirmation.#WHITE#"}
-	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Quick melee targetting#WHITE##{normal}#", status=function(item)
-		return tostring(config.settings.tome.immediate_melee_keys and "enabled" or "disabled")
-	end, fct=function(item)
-		config.settings.tome.immediate_melee_keys = not config.settings.tome.immediate_melee_keys
-		game:saveSettings("tome.immediate_melee_keys", ("tome.immediate_melee_keys = %s\n"):format(tostring(config.settings.tome.immediate_melee_keys)))
-		self.c_list:drawItem(item)
-	end,}
-
 	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"How many seconds before log and chat lines begin to fade away.\nIf set to 0 the logs will never fade away."}
 	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Log fade time#WHITE##{normal}#", status=function(item)
 		return tostring(config.settings.tome.log_fade)
@@ -221,7 +171,7 @@ function _M:generateList()
 			self.c_list:drawItem(item)
 		end, 0))
 	end,}
-	
+
 	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"How long will flying text messages be visible on screen.\nThe range is 1 (very short) to 100 (10x slower) than the normal duration, which varies with each individual message."}
 	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Duration of flying text#WHITE##{normal}#", status=function(item)
 		return tostring((config.settings.tome.flyers_fade_time or 10) )
@@ -233,26 +183,6 @@ function _M:generateList()
 			self.c_list:drawItem(item)
 		end, 1))
 	end,}
-	
-	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Configure the chat filters to select what kind of messages to see.#WHITE#"}
-	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Chat message filters#WHITE##{normal}#", status=function(item)
-		return "select to configure"
-	end, fct=function(item)
-		game:registerDialog(require("engine.dialogs.ChatFilter").new({
-			{name="Deaths", kind="death"},
-			{name="Object & Creatures links", kind="link"},
-		}))
-	end,}
-
-	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Configure the chat ignore filter.#WHITE#"}
-	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Chat ignore list#WHITE##{normal}#", status=function(item)
-		return "select to configure"
-	end, fct=function(item)	game:registerDialog(require("engine.dialogs.ChatIgnores").new()) end,}
-
-	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Configure the chat channels to listen to.#WHITE#"}
-	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Chat channels#WHITE##{normal}#", status=function(item)
-		return "select to configure"
-	end, fct=function(item)	game:registerDialog(require("engine.dialogs.ChatChannels").new()) end,}
 
 	if game.uiset:checkGameOption("icons_temp_effects") then
 		local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Uses the icons for status effects instead of text.#WHITE#"}
@@ -307,6 +237,71 @@ function _M:generateList()
 		end, 32))
 	end,}
 
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"If disabled lore popups will only appear the first time you see the lore on your profile.\nIf enabled it will appear the first time you see it with each character.#WHITE#"}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Always show lore popup.#WHITE##{normal}#", status=function(item)
+		return tostring(config.settings.tome.lore_popup and "enabled" or "disabled")
+	end, fct=function(item)
+		config.settings.tome.lore_popup = not config.settings.tome.lore_popup
+		game:saveSettings("tome.lore_popup", ("tome.lore_popup = %s\n"):format(tostring(config.settings.tome.lore_popup)))
+		self.c_list:drawItem(item)
+	end,}
+
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"If disabled items with activations will not be auto-added to your hotkeys, you will need to manualty drag them from the inventory screen.#WHITE#"}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Always add objects to hotkeys.#WHITE##{normal}#", status=function(item)
+		return tostring(config.settings.tome.auto_hotkey_object and "enabled" or "disabled")
+	end, fct=function(item)
+		config.settings.tome.auto_hotkey_object = not config.settings.tome.auto_hotkey_object
+		game:saveSettings("tome.auto_hotkey_object", ("tome.auto_hotkey_object = %s\n"):format(tostring(config.settings.tome.auto_hotkey_object)))
+		self.c_list:drawItem(item)
+	end,}
+
+	self.list = list
+end
+
+function _M:generateListGameplay()
+	-- Makes up the list
+	local list = {}
+	local i = 0
+
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Defines the distance from the screen edge at which scrolling will start. If set high enough the game will always center on the player.#WHITE#"}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Scroll distance#WHITE##{normal}#", status=function(item)
+		return tostring(config.settings.tome.scroll_dist)
+	end, fct=function(item)
+		game:registerDialog(GetQuantity.new("Scroll distance", "From 1 to 30", config.settings.tome.scroll_dist, 30, function(qty)
+			qty = util.bound(qty, 1, 30)
+			game:saveSettings("tome.scroll_dist", ("tome.scroll_dist = %d\n"):format(qty))
+			config.settings.tome.scroll_dist = qty
+			self.c_list:drawItem(item)
+		end, 1))
+	end,}
+
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Enables or disables weather effects in some zones.\nDisabling it can gain some performance. It will not affect previously visited zones.#WHITE#"}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Weather effects#WHITE##{normal}#", status=function(item)
+		return tostring(config.settings.tome.weather_effects and "enabled" or "disabled")
+	end, fct=function(item)
+		config.settings.tome.weather_effects = not config.settings.tome.weather_effects
+		game:saveSettings("tome.weather_effects", ("tome.weather_effects = %s\n"):format(tostring(config.settings.tome.weather_effects)))
+		self.c_list:drawItem(item)
+	end,}
+
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Enables or disables day/night light variations effects..#WHITE#"}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Day/night light cycle#WHITE##{normal}#", status=function(item)
+		return tostring(config.settings.tome.daynight and "enabled" or "disabled")
+	end, fct=function(item)
+		config.settings.tome.daynight = not config.settings.tome.daynight
+		game:saveSettings("tome.daynight", ("tome.daynight = %s\n"):format(tostring(config.settings.tome.daynight)))
+		self.c_list:drawItem(item)
+	end,}
+
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Enables easy movement using the mouse by left-clicking on the map.#WHITE#"}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Use mouse to move#WHITE##{normal}#", status=function(item)
+		return tostring(config.settings.mouse_move and "enabled" or "disabled")
+	end, fct=function(item)
+		config.settings.mouse_move = not config.settings.mouse_move
+		game:saveSettings("mouse_move", ("mouse_move = %s\n"):format(tostring(config.settings.mouse_move)))
+		self.c_list:drawItem(item)
+	end,}
+
 	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"New games begin with some talent points auto-assigned.#WHITE#"}
 	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Auto-assign talent points at birth#WHITE##{normal}#", status=function(item)
 		return tostring(config.settings.tome.autoassign_talents_on_birth and "enabled" or "disabled")
@@ -325,33 +320,59 @@ function _M:generateList()
 		self.c_list:drawItem(item)
 	end,}
 
-	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"If disabled lore popups will only appear the first time you see the lore on your profile.\nIf enabled it will appear the first time you see it with each character.#WHITE#"}
-	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Always show lore popup.#WHITE##{normal}#", status=function(item)
-		return tostring(config.settings.tome.lore_popup and "enabled" or "disabled")
+	self.list = list
+end
+
+function _M:generateListOnline()
+	-- Makes up the list
+	local list = {}
+	local i = 0
+
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Configure the chat filters to select what kind of messages to see.#WHITE#"}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Chat message filters#WHITE##{normal}#", status=function(item)
+		return "select to configure"
 	end, fct=function(item)
-		config.settings.tome.lore_popup = not config.settings.tome.lore_popup
-		game:saveSettings("tome.lore_popup", ("tome.lore_popup = %s\n"):format(tostring(config.settings.tome.lore_popup)))
+		game:registerDialog(require("engine.dialogs.ChatFilter").new({
+			{name="Deaths", kind="death"},
+			{name="Object & Creatures links", kind="link"},
+		}))
+	end,}
+
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Configure the chat ignore filter.#WHITE#"}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Chat ignore list#WHITE##{normal}#", status=function(item)
+		return "select to configure"
+	end, fct=function(item)	game:registerDialog(require("engine.dialogs.ChatIgnores").new()) end,}
+
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Configure the chat channels to listen to.#WHITE#"}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Chat channels#WHITE##{normal}#", status=function(item)
+		return "select to configure"
+	end, fct=function(item)	game:registerDialog(require("engine.dialogs.ChatChannels").new()) end,}
+
+	self.list = list
+end
+
+function _M:generateListMisc()
+	-- Makes up the list
+	local list = {}
+	local i = 0
+
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Saves in the background, allowing you to continue playing. If disabled you will have to wait until the saving is done, but it will be faster.#WHITE#"}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Save in the background#WHITE##{normal}#", status=function(item)
+		return tostring(config.settings.background_saves and "enabled" or "disabled")
+	end, fct=function(item)
+		config.settings.background_saves = not config.settings.background_saves
+		game:saveSettings("background_saves", ("background_saves = %s\n"):format(tostring(config.settings.background_saves)))
 		self.c_list:drawItem(item)
 	end,}
 
-	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"If disabled items with activations will not be auto-added to your hotkeys, you will need to manualty drag them from the inventory screen.#WHITE#"}
-	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Always add objects to hotkeys.#WHITE##{normal}#", status=function(item)
-		return tostring(config.settings.tome.auto_hotkey_object and "enabled" or "disabled")
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Forces the game to save each level instead of each zone.\nThis makes it save more often but the game will use less memory when deep in a dungeon.\n\n#LIGHT_RED#Changing this option will not affect already visited zones.\n*THIS DOES NOT MAKE A FULL SAVE EACH LEVEL*.#WHITE#"}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Zone save per level#WHITE##{normal}#", status=function(item)
+		return tostring(config.settings.tome.save_zone_levels and "enabled" or "disabled")
 	end, fct=function(item)
-		config.settings.tome.auto_hotkey_object = not config.settings.tome.auto_hotkey_object
-		game:saveSettings("tome.auto_hotkey_object", ("tome.auto_hotkey_object = %s\n"):format(tostring(config.settings.tome.auto_hotkey_object)))
+		config.settings.tome.save_zone_levels = not config.settings.tome.save_zone_levels
+		game:saveSettings("tome.save_zone_levels", ("tome.save_zone_levels = %s\n"):format(tostring(config.settings.tome.save_zone_levels)))
 		self.c_list:drawItem(item)
 	end,}
---[[
-	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Your movement mode depends on which character/creature you're currently controlling.#WHITE#"}
-	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Actor-based movement mode#WHITE##{normal}#", status=function(item)
-		return tostring(config.settings.tome.actor_based_movement_mode and "enabled" or "disabled")
-	end, fct=function(item)
-		config.settings.tome.actor_based_movement_mode = not config.settings.tome.actor_based_movement_mode
-		game:saveSettings("tome.actor_based_movement_mode", ("tome.actor_based_movement_mode = %s\n"):format(tostring(config.settings.tome.actor_based_movement_mode)))
-		self.c_list:drawItem(item)
-	end,}
-]]
 
 	self.list = list
 end

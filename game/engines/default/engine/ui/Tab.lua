@@ -33,7 +33,7 @@ function _M:init(t)
 	self.title = assert(t.title, "no tab title")
 	self.text = t.text or ""
 	self.selected = t.default
-	self.fct = assert(t.fct, "no tab fct")
+	self.fct = t.fct
 	self.on_change = t.on_change
 
 	Base.init(self, t)
