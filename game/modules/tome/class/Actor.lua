@@ -2642,6 +2642,7 @@ function _M:recomputeGlobalSpeed()
 	if self.global_speed_add > 0 then self.global_speed = self.global_speed_base + self.global_speed_add
 	else self.global_speed = self.global_speed_base * math.exp(self.global_speed_add)
 	end
+	self.global_speed = math.max(self.global_speed, 0.1)
 end
 
 --- Called when a temporary value changes (added or deleted)
