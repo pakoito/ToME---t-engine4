@@ -5774,7 +5774,71 @@ newEntity{ base = "BASE_HEAVY_BOOTS",
 	},
 }
 
+newEntity{ base = "BASE_LIGHT_ARMOR",
+	power_source = {arcane=true},
+	unique = true, sentient=true,
+	name = "The Untouchable", color = colors.BLUE, image = "object/artifact/the_untouchable.png",
+	unided_name = "tough leather coat",
+	desc = [[This rugged jacket is subject of many a rural legend. 
+Some say it was fashioned by an adventurous mage turned rogue, in times before the spellblaze, but was since lost.
+All manner of shady gamblers have since claimed to have worn it at one point or another. To fail, but live, is what it means to be untouchable, they said.]],
+	level_range = {20, 30},
+	rarity = 200,
+	cost = 350,
+	material_level = 3,
+	wearer_hp=100,
+	wielder = {
+		combat_def=12,
+		combat_armor=10,
+		combat_apr=10,
+		inc_stats = { [Stats.STAT_CUN] = 5, },
+	},
+	on_wear = function(self, who)
+		self.worn_by = who
+		self.wearer_hp = who.life / who.max_life
+	end,
+	on_takeoff = function(self)
+		self.worn_by = nil
+	end,
+	act = function(self)
+		self:useEnergy()	
+		if not self.worn_by then return end
+		if game.level and not game.level:hasEntity(self.worn_by) and not self.worn_by.player then self.worn_by = nil return end
+		if self.worn_by:attr("dead") then return end
+		local hp_diff = (self.wearer_hp - self.worn_by.life/self.worn_by.max_life)
+		
+		if hp_diff >= 0.2 then
+		self.worn_by:setEffect(self.worn_by.EFF_DAMAGE_SHIELD, 3, {power = (hp_diff * self.worn_by.max_life)/2})
+		end
+		
+		game.logPlayer(self.worn_by, "#LIGHT_BLUE#A barrier bursts from the leather jacket!")
+		
+		self.wearer_hp = self.worn_by.life/self.worn_by.max_life
+	end,
+}
 
+newEntity{ base = "BASE_TOOL_MISC",
+	power_source = {nature = true},
+	unique=true, rarity=240, image = "object/artifact/honeywood_chalice.png",
+	type = "charm", subtype="totem",
+	name = "Honeywood Chalice",
+	unided_name = "sap filled cup",
+	color = colors.BROWN,
+	level_range = {30, 40},
+	desc = [[This wooden cup seems perpetually filled with a thick sap-like substance. Tasting it is exhilarating, and you feel intensely aware when you do so.]],
+	cost = 320,
+	material_level = 4,
+	wielder = {
+		combat_physresist = 10,
+		inc_stats = {[Stats.STAT_STR] = 5,},
+		inc_damage={[DamageType.PHYSICAL] = 5,},
+		resists={[DamageType.NATURE] = 10,},
+		life_regen=0.15,
+		healing_factor=0.1,
+		
+		learn_talent = {[Talents.T_BATTLE_TRANCE] = 1},
+	},
+}
 --[=[
 newEntity{
 	unique = true,

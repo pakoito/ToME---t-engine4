@@ -349,3 +349,38 @@ newTalent{
 	end,
 }
 
+newTalent{
+	name = "Battle Trance", image = "talents/clarity.png",
+	type = {"wild-gift/objects",1},
+	points = 1,
+	mode = "sustained",
+	cooldown = 15,
+	no_energy = true,
+	activate = function(self, t)
+		t.trance_counter = 0
+		local ret = {}
+		self:talentTemporaryValue(ret, "resists", {all=15})
+		self:talentTemporaryValue(ret, "combat_mindpower", -15)
+		self:talentTemporaryValue(ret, "combat_mentalresist", 20)
+		return ret
+	end,
+	deactivate = function(self, t, p)
+		t.trance_counter = nil
+		return true
+	end,
+	callbackOnAct = function(self, t)
+		t.trance_counter = t.trance_counter + 1
+		if t.trance_counter <= 6 then return end
+		
+		if rng.percent((t.trance_counter - 5) * 2) then
+			self:forceUseTalent(self.T_BATTLE_TRANCE, {ignore_energy=true})
+			self:setEffect(self.EFF_CONFUSED, 4, {power=40})
+			game.logPlayer(self, "You overdose on the honeyroot sap!")
+		end
+		
+		return
+	end,
+	info = function(self, t)
+		return ([[You enter into a fighting trance, gaining 15%% resist all, losing 15 mindpower, but gaining 20 mental save. However, each turn after the fifth that this talent is active, there is a chance that you will be overcome and become confused.]])
+	end,
+}
