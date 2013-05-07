@@ -1052,7 +1052,7 @@ end
 --- Gets the weapon speed
 function _M:combatSpeed(weapon)
 	weapon = weapon or self.combat or {}
-	return (weapon.physspeed or 1) / self.combat_physspeed
+	return (weapon.physspeed or 1) / math.max(self.combat_physspeed, 0.1)
 end
 
 --- Gets the crit rate
@@ -1263,12 +1263,12 @@ end
 
 --- Gets spellspeed
 function _M:combatSpellSpeed()
-	return 1 / self.combat_spellspeed
+	return 1 / math.max(self.combat_spellspeed, 0.1)
 end
 
 -- Gets mental speed
 function _M:combatMindSpeed()
-	return 1 / self.combat_mindspeed
+	return 1 / math.max(self.combat_mindspeed, 0.1)
 end
 
 --- Gets summon speed
@@ -1610,6 +1610,7 @@ function _M:combatMovementSpeed(x, y)
 		local t = self:getTalentFromId(self.T_DARK_VISION)
 		movement_speed = movement_speed + t.getMovementSpeedChange(self, t)
 	end
+	movement_speed = math.max(movement_speed, 0.1)
 	return mult * (self.base_movement_speed or 1) / movement_speed
 end
 
