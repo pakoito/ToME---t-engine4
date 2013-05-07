@@ -384,3 +384,21 @@ newTalent{
 		return ([[You enter into a fighting trance, gaining 15%% resist all, losing 15 mindpower, but gaining 20 mental save. However, each turn after the fifth that this talent is active, there is a chance that you will be overcome and become confused.]])
 	end,
 }
+
+newTalent{
+	name = "Soul Purge", image = "talents/stoic.png",
+	type = {"misc/objects", 1},
+	cooldown = 3,
+	points = 1,
+	hard_cap = 1,
+	no_npc_use = true,
+	action = function(self, t)
+		local o = self:findInAllInventoriesBy("define_as", "MORRIGOR")
+		self:onTakeoff(o, true)
+		self:onWear(o, true)
+		return true
+	end,
+	info = function(self, t)
+		return ([[Remove any talent Morrigor has absorbed.]])
+	end,
+}

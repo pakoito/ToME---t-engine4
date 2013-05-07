@@ -3728,7 +3728,6 @@ newEntity{ base = "BASE_GREATSWORD", define_as="MORRIGOR",
 		apr = 12,
 		physcrit = 7,
 		dammod = {str=0.7, mag=0.7},
-		melee_project={[DamageType.DRAINLIFE] = 25},
 		special_on_hit = {desc="deal magical damage", fct=function(combat, who, target)
 			local tg = {type="ball", range=0, radius=0, selffire=false}
 			who:project(tg, target.x, target.y, engine.DamageType.ARCANE, who:getMag()*0.5)
@@ -3741,7 +3740,7 @@ newEntity{ base = "BASE_GREATSWORD", define_as="MORRIGOR",
 			local tids = {}
 			for tid, _ in pairs(target.talents) do
 				local t = target:getTalentFromId(tid)
-				if t.mode == "activated" and not t.uber and not t.on_pre_use and not t.no_npc_use and not t.hide and not t.is_nature and not t.type[1]:find("/other") and not t.type[1]:find("horror") and not t.type[1]:find("race/") then
+				if t.mode == "activated" and not t.uber and not t.on_pre_use and not t.no_npc_use and not t.hide and not t.is_nature and not t.type[1]:find("/other") and not t.type[1]:find("horror") and not t.type[1]:find("race/") and t.id ~= who.T_HIDE_IN_PLAIN_SIGHT then
 					tids[#tids+1] = tid
 					got_talent = true
 				end
@@ -3762,6 +3761,7 @@ newEntity{ base = "BASE_GREATSWORD", define_as="MORRIGOR",
 	wielder = {
 		combat_spellpower=24,
 		combat_spellcrit=12,
+		learn_talent = { [Talents.T_SOUL_PURGE] = 1, },
 	},
 	on_takeoff = function(self, who)
 		self.use_talent=nil
@@ -5785,8 +5785,9 @@ All manner of shady gamblers have since claimed to have worn it at one point or 
 	level_range = {20, 30},
 	rarity = 200,
 	cost = 350,
+	require = { stat = { str=16 }, },
 	material_level = 3,
-	wearer_hp=100,
+	wearer_hp = 100,
 	wielder = {
 		combat_def=12,
 		combat_armor=10,
@@ -5807,11 +5808,10 @@ All manner of shady gamblers have since claimed to have worn it at one point or 
 		if self.worn_by:attr("dead") then return end
 		local hp_diff = (self.wearer_hp - self.worn_by.life/self.worn_by.max_life)
 		
-		if hp_diff >= 0.2 then
-		self.worn_by:setEffect(self.worn_by.EFF_DAMAGE_SHIELD, 3, {power = (hp_diff * self.worn_by.max_life)/2})
-		end
-		
-		game.logPlayer(self.worn_by, "#LIGHT_BLUE#A barrier bursts from the leather jacket!")
+		if hp_diff >= 0.2 and not self.worn_by:hasEffect(self.worn_by.EFF_DAMAGE_SHIELD) then
+			self.worn_by:setEffect(self.worn_by.EFF_DAMAGE_SHIELD, 3, {power = (hp_diff * self.worn_by.life)*2})
+			game.logPlayer(self.worn_by, "#LIGHT_BLUE#A barrier bursts from the leather jacket!")
+		end		
 		
 		self.wearer_hp = self.worn_by.life/self.worn_by.max_life
 	end,
