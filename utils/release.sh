@@ -5,6 +5,9 @@ if test $# -lt 3 ; then
 	exit
 fi
 
+echo "*********** Make sure bunbled addons are updated! *********"
+read
+
 # Check validity
 find game/ bootstrap/ -name '*lua' | xargs -n1 luac -p
 if test $? -ne 0 ; then
@@ -22,6 +25,7 @@ cd tmp
 mkdir t-engine4-windows-"$ver"
 mkdir t-engine4-src-"$ver"
 mkdir t-engine4-linux32-"$ver"
+mkdir t-engine4-linux64-"$ver"
 mkdir t-engine4-osx-"$ver"
 
 # src
@@ -69,6 +73,14 @@ find . -name '*~' -or -name '.svn' | xargs rm -rf
 cd ..
 tar -cvjf t-engine4-linux32-"$ver".tar.bz2 t-engine4-linux32-"$ver"
 
+# linux 64
+echo "******************** linux64"
+cd t-engine4-linux64-"$ver"
+cp -a ../../bootstrap/  ../t-engine4-src-"$ver"/game/ ../../C* ../../linux-bin64/* .
+find . -name '*~' -or -name '.svn' | xargs rm -rf
+cd ..
+tar -cvjf t-engine4-linux64-"$ver".tar.bz2 t-engine4-linux64-"$ver"
+
 # OSX
 echo "******************** OSX"
 cd t-engine4-osx-"$ver"
@@ -78,10 +90,12 @@ cp -a ../../bootstrap/ T-Engine.app/Contents/MacOS/
 cp -a ../t-engine4-src-"$ver"/game/ T-Engine.app/Contents/Resources/
 cp -a ../../C* .
 find . -name '*~' -or -name '.svn' | xargs rm -rf
+#cd ..
+#size=`du -hsc t-engine4-osx-"$ver"|grep total|cut -dM -f1`
+#sudo makedmg t-engine4-osx-"$ver".dmg "Tales of Maj'Eyal" `expr $size + 10` t-engine4-osx-"$ver"
+#gzip t-engine4-osx-"$ver".dmg
+zip -r -9 ../t-engine4-osx-"$ver".zip *
 cd ..
-size=`du -hsc t-engine4-osx-"$ver"|grep total|cut -dM -f1`
-sudo makedmg t-engine4-osx-"$ver".dmg "Tales of Maj'Eyal" `expr $size + 10` t-engine4-osx-"$ver"
-gzip t-engine4-osx-"$ver".dmg
 
 #### Music less
 
@@ -127,6 +141,20 @@ cp /var/www/te4.org/htdocs/dl/engines/boot-te4-"$ever"-nomusic.team game/modules
 cd ..
 tar -cvjf t-engine4-linux32-"$ver"-nomusic.tar.bz2 t-engine4-linux32-"$ver"
 
+# linux 64
+echo "******************** linux64 n/m"
+cd t-engine4-linux64-"$ver"
+IFS=$'\n'; for i in `find game/ -name '*.ogg'`; do
+	echo "$i"|grep '/music/' -q
+	if test $? -eq 0; then rm "$i"; fi
+done
+rm game/modules/tome*team
+rm game/modules/boot*team
+cp /var/www/te4.org/htdocs/dl/modules/tome/tome-"$tver"-nomusic.team game/modules/
+cp /var/www/te4.org/htdocs/dl/engines/boot-te4-"$ever"-nomusic.team game/modules/
+cd ..
+tar -cvjf t-engine4-linux64-"$ver"-nomusic.tar.bz2 t-engine4-linux64-"$ver"
+
 cp *zip *bz2 *dmg.gz /var/www/te4.org/htdocs/dl/t-engine
 
 ########## Announce
@@ -134,7 +162,9 @@ cp *zip *bz2 *dmg.gz /var/www/te4.org/htdocs/dl/t-engine
 echo "http://te4.org/dl/t-engine/t-engine4-windows-$ver.zip"
 echo "http://te4.org/dl/t-engine/t-engine4-src-$ver.tar.bz2"
 echo "http://te4.org/dl/t-engine/t-engine4-linux32-$ver.tar.bz2"
+echo "http://te4.org/dl/t-engine/t-engine4-linux64-$ver.tar.bz2"
 echo "http://te4.org/dl/t-engine/t-engine4-windows-$ver-nomusic.zip"
 echo "http://te4.org/dl/t-engine/t-engine4-src-$ver-nomusic.tar.bz2"
 echo "http://te4.org/dl/t-engine/t-engine4-linux32-$ver-nomusic.tar.bz2"
-echo "http://te4.org/dl/t-engine/t-engine4-osx-$ver.dmg.gz"
+echo "http://te4.org/dl/t-engine/t-engine4-linux64-$ver-nomusic.tar.bz2"
+echo "http://te4.org/dl/t-engine/t-engine4-osx-$ver.zip"
