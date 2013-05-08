@@ -28,6 +28,7 @@ newEntity{
 	encumber = 4,
 	rarity = 7,
 	combat = { talented = "sling", sound = "actions/sling", sound_miss = "actions/sling", },
+	archery_kind = "sling",
 	archery = "sling",
 	require = { talent = { Talents.T_SHOOT }, },
 	proj_image = resolvers.image_material("shot_s", "metal"),

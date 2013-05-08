@@ -30,6 +30,7 @@ newEntity{
 	rarity = 7,
 	combat = { talented = "bow", sound = "actions/arrow", sound_miss = "actions/arrow",},
 	require = { talent = { Talents.T_SHOOT }, },
+	archery_kind = "bow",
 	archery = "bow",
 	proj_image = resolvers.image_material("arrow", "wood"),
 	desc = [[Longbows are used to shoot arrows at your foes.]],

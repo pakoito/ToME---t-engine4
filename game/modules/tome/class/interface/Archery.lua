@@ -549,8 +549,8 @@ function _M:hasArcheryWeapon(type)
 			return nil, "bad ammo"
 		end
 	end
-	if type and weapon.subtype ~= type then return nil, "bad type" end
-	if type and offweapon and offweapon.subtype ~= type then return nil, "bad type" end
+	if type and weapon.archery_kind ~= type then return nil, "bad type" end
+	if type and offweapon and offweapon.archery_kind ~= type then return nil, "bad type" end
 	return weapon, ammo, offweapon
 end
 
