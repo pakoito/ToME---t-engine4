@@ -64,16 +64,27 @@ end
 function _M:generateList()
 	local list = {}
 
-	for i, dir in ipairs(fs.list("/data/zones/")) do
-		local f = loadfile("/data/zones/"..dir.."/zone.lua")
-		if f then
-			setfenv(f, setmetatable({}, {__index=_G}))
-			local ok, z = pcall(f)
-			if ok then
-				list[#list+1] = {name=z.name, zone=dir, min=1, max=z.max_level}
+	local function parse(base, add)
+		for i, dir in ipairs(fs.list(base.."/zones/")) do
+			local f = loadfile(base.."/zones/"..dir.."/zone.lua")
+			if f then
+				setfenv(f, setmetatable({}, {__index=_G}))
+				local ok, z = pcall(f)
+				if ok then
+					list[#list+1] = {name=z.name, zone=add..dir, min=1, max=z.max_level}
+				end
 			end
 		end
 	end
+
+	parse("/data", "")
+	for i, dir in ipairs(fs.list("/")) do
+		local _, _, addon = dir:find("^data%-(.+)$")
+		if addon then
+			parse("/"..dir, addon)
+		end
+	end
+
 	table.sort(list, function(a,b) return a.name < b.name end)
 
 	local chars = {}
