@@ -62,6 +62,9 @@ function _M:archeryAcquireTargets(tg, params)
 	if offweapon then wtravel_speed = math.ceil(((weapon.travel_speed or 0) + (offweapon.travel_speed or 0)) / 2) end
 	tg.speed = (tg.speed or 10) + (ammo.combat.travel_speed or 0) + (wtravel_speed or 0) + (self.travel_speed or 0)
 	print("[PROJECTILE SPEED] ::", tg.speed)
+
+	self:triggerHook{"Combat:archeryTargetKind", tg=tg, params=params, mode="target"}
+
 	local x, y = params.x, params.y
 	if not x or not y then x, y = self:getTarget(tg) end
 	if not x or not y then return nil end
@@ -174,16 +177,16 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 	-- Does the blow connect? yes .. complex :/
 	if tg.archery.use_psi_archery then self.use_psi_combat = true end
 	local atk, def = self:combatAttackRanged(weapon, ammo), target:combatDefenseRanged()
-	local dam, apr, armor = self:combatDamage(ammo), self:combatAPR(ammo), target:combatArmor()
+	local dam, apr, armor = self:combatDamage(ammo), self:combatAPR(ammo) + (weapon and weapon.apr or 0), target:combatArmor()
 	atk = atk + (tg.archery.atk or 0)
 	dam = dam + (tg.archery.dam or 0)
+	apr = apr + (tg.archery.apr or 0)
 	print("[ATTACK ARCHERY] to ", target.name, " :: ", dam, apr, armor, "::", mult)
 
 	-- If hit is over 0 it connects, if it is 0 we still have 50% chance
 	local hitted = false
 	local crit = false
 	if self:checkHit(atk, def) and (self:canSee(target) or self:attr("blind_fight") or rng.chance(3)) then
-		apr = apr + (tg.archery.apr or 0)
 		print("[ATTACK ARCHERY] raw dam", dam, "versus", armor, "with APR", apr)
 
 		local pres = util.bound(target:combatArmorHardiness() / 100, 0, 1)
@@ -487,6 +490,9 @@ function _M:archeryShoot(targets, talent, tg, params)
 	tg.type = tg.type or weapon.tg_type or ammo.combat.tg_type or tg.type or "bolt"
 	tg.talent = tg.talent or talent
 
+	params = params or {}
+	self:triggerHook{"Combat:archeryTargetKind", tg=tg, params=params, mode="fire"}
+
 	local dofire = function(weapon, targets)
 		if not tg.range then tg.range=weapon.range or 6 end
 		tg.display = tg.display or self:archeryDefaultProjectileVisual(realweapon, ammo)
@@ -504,7 +510,7 @@ function _M:archeryShoot(targets, talent, tg, params)
 		dofire(weapon, targets)
 	elseif offweapon and targets.dual then
 		dofire(weapon, targets.main)
-		dofire(offweapon, targets.off)
+		dofire(offweapon.combat, targets.off)
 	else
 		print("[SHOOT] error, mismatch between dual weapon/dual targets")
 	end

@@ -81,14 +81,25 @@ function _M:updateBaseLevel()
 	end
 end
 
+function _M:getBaseName()
+	local name = self.short_name
+	local base = "/data"
+	local _, _, addon, rname = name:find("^([^+]+)%+(.+)$")
+	if addon and rname then
+		base = "/data-"..addon
+		name = rname
+	end
+	return base.."/zones/"..name.."/"
+end
+
 --- Loads basic entities lists
 local _load_zone = nil
 function _M:loadBaseLists()
 	_load_zone = self
-	self.npc_list = self.npc_class:loadList("/data/zones/"..self.short_name.."/npcs.lua")
-	self.grid_list = self.grid_class:loadList("/data/zones/"..self.short_name.."/grids.lua")
-	self.object_list = self.object_class:loadList("/data/zones/"..self.short_name.."/objects.lua")
-	self.trap_list = self.trap_class:loadList("/data/zones/"..self.short_name.."/traps.lua")
+	self.npc_list = self.npc_class:loadList(self:getBaseName().."npcs.lua")
+	self.grid_list = self.grid_class:loadList(self:getBaseName().."grids.lua")
+	self.object_list = self.object_class:loadList(self:getBaseName().."objects.lua")
+	self.trap_list = self.trap_class:loadList(self:getBaseName().."traps.lua")
 	_load_zone = nil
 end
 
@@ -588,7 +599,7 @@ function _M:load(dynamic)
 	local data = savefile_pipe:doLoad(game.save_name, "zone", nil, self.short_name)
 
 	if not data and not dynamic then
-		local f, err = loadfile("/data/zones/"..self.short_name.."/zone.lua")
+		local f, err = loadfile(self:getBaseName().."zone.lua")
 		if err then error(err) end
 		setfenv(f, setmetatable({self=self, short_name=self.short_name}, {__index=_G}))
 		data = f()
@@ -603,7 +614,7 @@ function _M:load(dynamic)
 		end
 
 		for k, e in pairs(data) do self[k] = e end
-		self:onLoadZoneFile("/data/zones/"..self.short_name.."/")
+		self:onLoadZoneFile(self:getBaseName())
 		if self.on_loaded then self:on_loaded() end
 	elseif not data and dynamic then
 		data = dynamic

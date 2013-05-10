@@ -37,7 +37,7 @@ newEntity{
 	nice_editer = cracks_editer,
 	block_move = function(self, x, y, who, act)
 		if not who or not act or not who.player then return true end
-		require("engine.ui.Dialog"):yesnoLongPopup("Crack in the floor", "This area seems to have been hit by a huge tremor, breaking the floor in a huge crack.\nYou think you can jump to the level bellow.", 400, function(ret) if ret then
+		require("engine.ui.Dialog"):yesnoLongPopup("Crack in the floor", "This area appears to have been hit by a huge tremor, breaking the floor in a huge crack.\nYou think you can jump to the level below.", 400, function(ret) if ret then
 			game:changeLevel(game.level.level + 1)
 		end end, "Jump", "Stay")
 		return true
