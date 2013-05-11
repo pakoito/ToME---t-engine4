@@ -81,6 +81,7 @@ function _M:updateBaseLevel()
 	end
 end
 
+--- Returns the base folder containing the zone
 function _M:getBaseName()
 	local name = self.short_name
 	local base = "/data"
