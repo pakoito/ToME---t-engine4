@@ -81,7 +81,7 @@ function _M:generateList()
 	for i, dir in ipairs(fs.list("/")) do
 		local _, _, addon = dir:find("^data%-(.+)$")
 		if addon then
-			parse("/"..dir, addon)
+			parse("/"..dir, addon.."+")
 		end
 	end
 
