@@ -1618,6 +1618,7 @@ end
 function _M:combatSeeStealth()
 	local bonus = 0
 	if self:knowTalent(self.T_PIERCING_SIGHT) then bonus = bonus + 5 + self:getTalentLevel(self.T_PIERCING_SIGHT) * self:getCun(15, true) end
+	if self:knowTalent(self.T_PRETERNATURAL_SENSES) then bonus = bonus + 5 + self:getTalentLevel(self.T_PRETERNATURAL_SENSES) * self:getWil(15, true) end
 	return self.level / 2 + self:getCun(25, true) + (self:attr("see_stealth") or 0) + bonus
 end
 
@@ -1625,6 +1626,7 @@ end
 function _M:combatSeeInvisible()
 	local bonus = 0
 	if self:knowTalent(self.T_PIERCING_SIGHT) then bonus = bonus + 5 + self:getTalentLevel(self.T_PIERCING_SIGHT) * self:getCun(15, true) end
+	if self:knowTalent(self.T_PRETERNATURAL_SENSES) then bonus = bonus + 5 + self:getTalentLevel(self.T_PRETERNATURAL_SENSES) * self:getWil(15, true) end
 	return (self:attr("see_invisible") or 0) + bonus
 end
 

@@ -86,7 +86,10 @@ newTalent{
 	end,
 	info = function(self, t)
 		local range = self:getTalentRange(t)
-		return ([[Your preternatural senses aid you in your hunt for the next victim. You sense foes in a radius of %0.1f. You will always sense a stalked victim in a radius of 10.]]):format(range)
+		return ([[Your preternatural senses aid you in your hunt for the next victim. You sense foes in a radius of %0.1f. You will always sense a stalked victim in a radius of 10.
+		Also increases stealth detection by %d and invisibility detection by %d.
+		Sealth and invisibility detection improves with your Willpower]]):
+		format(range, 5 + self:getTalentLevel(t) * self:getWil(15, true), 5 + self:getTalentLevel(t) * self:getWil(15, true))
 	end,
 }
 
