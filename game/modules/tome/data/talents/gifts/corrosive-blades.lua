@@ -112,7 +112,7 @@ newTalent{
 	end,
 	tactical = { ATTACKAREA = { ACID = 2 }, DISABLE = { knockback = 1 } },
 	target = function(self, t) return {type="ball", radius=self:getTalentRadius(t), range=self:getTalentRange(t), talent=t} end,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 290) end,
+	getDamage = function(self, t) return self:combatTalentMindDamage(t, 20, 290) end,
 	getNb = function(self, t) local l = self:getTalentLevel(t) 
 		if l < 3 then return 2
 		elseif l < 5 then return 3
