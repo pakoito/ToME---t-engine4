@@ -295,8 +295,8 @@ function _M:projectile(t, x, y, damtype, dam, particles)
 --	if type(dam) == "number" and dam < 0 then return end
 	local typ = Target:getType(t)
 	typ.source_actor = self
-	typ.start_x = typ.start_x or typ.x or typ.source_actor and typ.source_actor.x or self.x
-	typ.start_y = typ.start_y or typ.y or typ.source_actor and typ.source_actor.y or self.x
+	typ.start_x = typ.start_x or typ.x or (typ.source_actor and typ.source_actor.x or self.x)
+	typ.start_y = typ.start_y or typ.y or (typ.source_actor and typ.source_actor.y or self.y)
 	if self.lineFOV then
 		typ.line_function = self:lineFOV(x, y, nil, nil, typ.start_x, typ.start_y)
 	else
