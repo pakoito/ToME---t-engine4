@@ -708,7 +708,7 @@ newInscription{
 	short_info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		local pow = data.reduce or 15
-		return ([[%d acid damage; power %d; dur %d]]):format(damDesc(self, DamageType.ACID, data.power + data.inc_stat), data.dur or 3, pow)
+		return ([[%d acid damage; power %d; dur %d]]):format(damDesc(self, DamageType.ACID, data.power + data.inc_stat), pow, data.dur or 3)
 	end,
 }
 
