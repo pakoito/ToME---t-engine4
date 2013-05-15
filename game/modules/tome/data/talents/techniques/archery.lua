@@ -59,6 +59,7 @@ newTalent{
 	points = 1,
 	tactical = { AMMO = 2 },
 	no_reload_break = true,
+	no_break_stealth = true,
 	on_pre_use = function(self, t, silent) if not self:hasAmmo() then if not silent then game.logPlayer(self, "You must have a quiver or pouch equipped.") end return false end return true end,
 	no_unlearn_last = true,
 	shots_per_turn = function(self, t)
