@@ -97,6 +97,10 @@ newBirthDescriptor{
 			{type="armor", subtype="light", name="rough leather armour", ego_chance=-1000, ego_chance=-1000},
 			{type="armor", subtype="cloth", name="linen robe", autoreq=true, ego_chance=-1000},
 			{type="scroll", subtype="rune", name="manasurge rune", ego_chance=-1000, ego_chance=-1000},
+			{type="weapon", subtype="longbow", name="elm longbow", autoreq=true, ego_chance=-1000},
+			{type="ammo", subtype="arrow", name="quiver of elm arrows", autoreq=true, ego_chance=-1000},
+			{type="weapon", subtype="sling", name="rough leather sling", autoreq=true, ego_chance=-1000},
+			{type="ammo", subtype="shot", name="pouch of iron shots", autoreq=true, ego_chance=-1000},
 		},
 	},
 }
