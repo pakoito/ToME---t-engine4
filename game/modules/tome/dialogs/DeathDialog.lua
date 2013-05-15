@@ -137,7 +137,7 @@ end
 
 --- Send the party to the Eidolon Plane
 function _M:eidolonPlane()
-	self.actor:setEffect(self.actor.EFF_EIDOLON_PROTECT, 1, {})
+--	self.actor:setEffect(self.actor.EFF_EIDOLON_PROTECT, 1, {})
 	game:onTickEnd(function()
 		if not self.actor:attr("infinite_lifes") then
 			self.actor:attr("easy_mode_lifes", -1)
