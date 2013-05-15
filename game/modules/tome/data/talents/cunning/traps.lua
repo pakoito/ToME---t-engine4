@@ -212,11 +212,13 @@ local basetrap = function(self, t, x, y, dur, add)
 			self:useEnergy()
 			self.temporary = self.temporary - 1
 			if self.temporary <= 0 then
-				if game.level.map(self.x, self.y, engine.Map.TRAP) == self then game.level.map:remove(self.x, self.y, engine.Map.TRAP) end
-				game.level:removeEntity(self)
-				if self.summoner and self.stamina then -- Refund
-					self.summoner:incStamina(self.stamina * 0.8)
+				if game.level.map(self.x, self.y, engine.Map.TRAP) == self then
+					game.level.map:remove(self.x, self.y, engine.Map.TRAP)
+					if self.summoner and self.stamina then -- Refund
+						self.summoner:incStamina(self.stamina * 0.8)
+					end
 				end
+				game.level:removeEntity(self)
 			end
 		end,
 	}
