@@ -80,6 +80,7 @@ if type(config.settings.tome.rest_before_explore) == "nil" then config.settings.
 if type(config.settings.tome.lore_popup) == "nil" then config.settings.tome.lore_popup = true end
 if type(config.settings.tome.auto_hotkey_object) == "nil" then config.settings.tome.auto_hotkey_object = true end
 if type(config.settings.tome.immediate_melee_keys) == "nil" then config.settings.tome.immediate_melee_keys = true end
+if type(config.settings.tome.immediate_melee_keys_auto) == "nil" then config.settings.tome.immediate_melee_keys_auto = true end
 if not config.settings.tome.fonts then config.settings.tome.fonts = {type="fantasy", size="normal"} end
 if not config.settings.tome.ui_theme2 then config.settings.tome.ui_theme2 = "metal" end
 if not config.settings.tome.uiset_mode then config.settings.tome.uiset_mode = "Minimalist" end

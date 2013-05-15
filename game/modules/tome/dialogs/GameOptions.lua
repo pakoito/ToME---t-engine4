@@ -311,6 +311,15 @@ function _M:generateListGameplay()
 		self.c_list:drawItem(item)
 	end,}
 
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Enables quick melee targetting auto attacking.\nTalents that require a melee target will automatically target and confirm if there is only one hostile creatue around.#WHITE#"}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Quick melee targetting auto attack#WHITE##{normal}#", status=function(item)
+		return tostring(config.settings.tome.immediate_melee_keys_auto and "enabled" or "disabled")
+	end, fct=function(item)
+		config.settings.tome.immediate_melee_keys_auto = not config.settings.tome.immediate_melee_keys_auto
+		game:saveSettings("tome.immediate_melee_keys_auto", ("tome.immediate_melee_keys_auto = %s\n"):format(tostring(config.settings.tome.immediate_melee_keys_auto)))
+		self.c_list:drawItem(item)
+	end,}
+
 	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"New games begin with some talent points auto-assigned.#WHITE#"}
 	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Auto-assign talent points at birth#WHITE##{normal}#", status=function(item)
 		return tostring(config.settings.tome.autoassign_talents_on_birth and "enabled" or "disabled")

@@ -659,10 +659,25 @@ function _M:getTarget(typ)
 		end
 	else
 		if type(typ) == "table" and typ.range and typ.range == 1 and config.settings.tome.immediate_melee_keys then
+			local oldft = typ.first_target
 			typ = table.clone(typ)
 			typ.first_target = "friend"
 			typ.immediate_keys = true
 			typ.default_target = self
+
+			if config.settings.tome.immediate_melee_keys_auto and not oldft then
+				local foes = {}
+				for _, c in pairs(util.adjacentCoords(self.x, self.y)) do
+ 					local target = game.level.map(c[1], c[2], Map.ACTOR)
+ 					if target and self:reactionToward(target) < 0 then foes[#foes+1] = target end
+ 				end
+ 				if #foes == 1 then
+					game.target.target.entity = foes[1]
+					game.target.target.x = foes[1].x
+					game.target.target.y = foes[1].y
+					return game.target.target.x, game.target.target.y, game.target.target.entity
+				end
+			end
 		end
 		return game:targetGetForPlayer(typ)
 	end
