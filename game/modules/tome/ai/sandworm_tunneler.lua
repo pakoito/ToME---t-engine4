@@ -119,9 +119,15 @@ newAI("sandworm_tunneler_huge", function(self)
 		self.ai_state.next_spot = self.ai_state.next_spot + 1
 		local s = game.level.ordered_spots[self.ai_state.next_spot]
 		if not s then
-			game.logSeen(self, "#OLIVE_DRAB#The %s burrows into the ground and disappears.", self.name)
-			self:disappear()
-			return
+			local ls = game.level.ordered_spots[#game.level.ordered_spots]
+			if self.x == ls.x and self.y == ls.y then
+				game.logSeen(self, "#OLIVE_DRAB#The %s burrows into the ground and disappears.", self.name)
+				self:disappear()
+				return
+			else -- Relentlessly try to get to the end
+				self.ai_state.next_spot = #game.level.ordered_spots
+				s = ls
+			end
 		end
 		self.ai_state.spot_x = s.x
 		self.ai_state.spot_y = s.y
