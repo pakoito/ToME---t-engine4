@@ -73,6 +73,7 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.PHYSICAL, self:mindCrit(rng.avg(0.8*dam, dam)), {type="flame"})
+		local _ _, _, _, x, y = self:canProject(tg, x, y)
 		if gem_level > 0 and not tg.dead and self:knowTalent(self.T_CONDUIT) and self:isTalentActive(self.T_CONDUIT) then
 			local c =  self:getTalentFromId(self.T_CONDUIT)
 			--c.do_combat(self, c, tg)
