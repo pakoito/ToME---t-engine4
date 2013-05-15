@@ -67,7 +67,7 @@ newEntity{ base = "WATER_WALL", define_as = "WATER_WALL_PILLAR_2", image = "terr
 
 newEntity{
 	define_as = "WATER_DOOR",
-	type = "wall", subtype = "floor",
+	type = "wall", subtype = "underwater",
 	name = "door", image = "terrain/underwater/subsea_stone_wall_door_closed.png",
 	display = '+', color_r=238, color_g=154, color_b=77, back_color=colors.DARK_UMBER,
 	nice_tiler = { method="door3d", north_south="WATER_DOOR_VERT", west_east="WATER_DOOR_HORIZ" },
@@ -81,7 +81,7 @@ newEntity{
 }
 newEntity{
 	define_as = "WATER_DOOR_OPEN",
-	type = "wall", subtype = "floor",
+	type = "wall", subtype = "underwater",
 	name = "open door", image="terrain/underwater/subsea_granite_door1_open.png",
 	display = "'", color_r=238, color_g=154, color_b=77, back_color=colors.DARK_GREY,
 	always_remember = true,
