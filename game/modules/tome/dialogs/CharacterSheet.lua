@@ -978,6 +978,13 @@ function _M:dump()
 	nnl(("%-32s"):format(makelabel("Gold", ("%.2f"):format(player.money))))
 	nl(("CON:  %d"):format(player:getCon()))
 
+	if player.died_times then
+		nl(("Times died       : %d"):format(#player.died_times))
+	end
+	if player.easy_mode_lifes then
+		nl(("Lifes left       : %d"):format(player.easy_mode_lifes))
+	end
+
 	 -- All weapons in main hands
 	local strings = {}
 	for i = 1, 6 do strings[i]="" end
