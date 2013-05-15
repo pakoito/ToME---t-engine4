@@ -364,7 +364,7 @@ newEntity{ base="TOWN", define_as = "TOWN_IRON_COUNCIL",
 	name = "Iron Council (Town)",
 	add_displays = {class.new{image="terrain/cave_entrance_closed02.png", z=5}},
 	desc = "Heart of the dwarven Empire",
-	change_zone="town-iron-council",
+	change_zone="town-iron-council", change_zone_auto_stairs = true,
 }
 
 --------------------------------------------------------------------------------
