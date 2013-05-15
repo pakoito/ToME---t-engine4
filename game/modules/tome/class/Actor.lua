@@ -545,8 +545,13 @@ function _M:actBase()
 			t.doForgeStrike(self, t, p)
 		end
 
-
 		self:triggerHook{"Actor:actBase:Effects"}
+
+		if self.talents_on_act_base and next(self.talents_on_act_base) then
+			for tid, _ in pairs(self.talents_on_act_base) do
+				self:callTalent(tid, "callbackOnActBase")
+			end
+		end
 	end
 
 	-- Suffocate ?
@@ -1754,8 +1759,9 @@ function _M:onTakeHit(value, src)
 
 	if self:isTalentActive(self.T_BONE_SHIELD) then
 		local t = self:getTalentFromId(self.T_BONE_SHIELD)
-		t.absorb(self, t, self:isTalentActive(self.T_BONE_SHIELD))
-		value = 0
+		if t.absorb(self, t, self:isTalentActive(self.T_BONE_SHIELD)) then
+			value = 0
+		end
 	end
 
 	if self.knowTalent and (self:knowTalent(self.T_SEETHE) or self:knowTalent(self.T_GRIM_RESOLVE)) then
@@ -3747,6 +3753,10 @@ function _M:postUseTalent(ab, ret, silent)
 				self.talents_on_act = self.talents_on_act or {}
 				self.talents_on_act[ab.id] = true
 			end
+			if ab.callbackOnActBase then
+				self.talents_on_act_base = self.talents_on_act_base or {}
+				self.talents_on_act_base[ab.id] = true
+			end
 			if ab.callbackOnMove then
 				self.talents_on_move = self.talents_on_move or {}
 				self.talents_on_move[ab.id] = true
@@ -3785,6 +3795,10 @@ function _M:postUseTalent(ab, ret, silent)
 			if ab.callbackOnAct then
 				self.talents_on_act[ab.id] = nil
 				if not next(self.talents_on_act) then self.talents_on_act = nil end
+			end
+			if ab.callbackOnActBase then
+				self.talents_on_act_base[ab.id] = nil
+				if not next(self.talents_on_act_base) then self.talents_on_act_base = nil end
 			end
 			if ab.callbackOnMove then
 				self.talents_on_move[ab.id] = nil
