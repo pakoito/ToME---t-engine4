@@ -1611,6 +1611,7 @@ function _M:onTakeHit(value, src)
 
 			-- Deactivate without loosing energy
 			self:forceUseTalent(self.T_RETRIBUTION, {ignore_energy=true, ignore_cd=true})
+			self:startTalentCooldown(self.T_RETRIBUTION)
 
 			-- Explode!
 			game.logSeen(self, "%s unleashes the stored damage in retribution!", self.name:capitalize())
