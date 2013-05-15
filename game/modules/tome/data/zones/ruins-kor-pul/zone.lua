@@ -18,6 +18,7 @@
 -- darkgod@te4.org
 
 local layout = game.state:alternateZone(short_name, {"HIDEOUT", 2})
+layout="HIDEOUT"
 local is_hideout = layout == "HIDEOUT"
 
 return {

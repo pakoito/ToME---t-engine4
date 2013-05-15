@@ -97,7 +97,6 @@ newEntity{ base = "BASE_NPC_THIEF", define_as = "THE_POSSESSED",
 
 	equipment = resolvers.equip{
 		{type="weapon", subtype="dagger", defined="UNERRING_SCALPEL", random_art_replace={chance=75}, autoreq=true},
-		{type="weapon", subtype="dagger", forbid_power_source={antimagic=true}, autoreq=true},
 		{type="armor", subtype="light", forbid_power_source={antimagic=true}, autoreq=true},
 	},
 	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
