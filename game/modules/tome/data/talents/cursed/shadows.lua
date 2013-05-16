@@ -95,7 +95,7 @@ newTalent{
 
 		return false
 	end,info = function(self, t)
-		local multiplier = self:combatTalentWeaponDamage(t, 1.1, 1.9)
+		local multiplier = self:combatTalentWeaponDamage(t, 0.9, 1.9)
 		return ([[With blinding speed you suddenly appear next to a target up to %d spaces away and attack for %d%% damage.]]):format(self:getTalentRange(t), multiplier * 100)
 	end,
 }
