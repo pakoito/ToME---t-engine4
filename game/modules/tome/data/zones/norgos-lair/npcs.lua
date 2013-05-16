@@ -57,7 +57,7 @@ It seems to have fallen prey to the shivgoroth invading the area. Dead and froze
 		level_range = {7, nil}, exp_worth = 2,
 		max_life = 200, life_rating = 17, fixed_rating = true, life_regen = 0,
 		max_stamina = 85,
-		max_mana = 200,
+		max_mana = 1000, mana_regen = 10,
 		stats = { str=15, dex=15, cun=8, mag=20, wil=20, con=20 },
 		tier1 = true,
 		rank = 4,
@@ -76,13 +76,13 @@ It seems to have fallen prey to the shivgoroth invading the area. Dead and froze
 		resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
 
 		resolvers.talents{
+			[Talents.T_FROST_GRAB]={base=1, every=6, max=6},
 			[Talents.T_ICE_STORM]={base=1, every=6, max=6},
 			[Talents.T_FROZEN_GROUND]={base=1, every=6, max=6},
 		},
 
 		autolevel = "caster",
-		ai = "tactical", ai_state = { talent_in=2, ai_move="move_astar", },
-		ai_tactic = resolvers.tactic"melee",
+		ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
 
 		on_die = function(self, who)
 			game.player:resolveSource():setQuestStatus("start-thaloren", engine.Quest.COMPLETED, "norgos")

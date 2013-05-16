@@ -18,6 +18,7 @@
 -- darkgod@te4.org
 
 local layout = game.state:alternateZoneTier1(short_name, {"INVADED", 1})
+layout="INVADED"
 local is_invaded = layout == "INVADED"
 
 return {

@@ -1948,3 +1948,41 @@ newTalent{
 		return ([[The target will not react until attacked.]])
 	end,
 }
+
+
+newTalent{
+	name = "Frost Grab",
+	type = {"spell/other", 1},
+	points = 5,
+	mana = 19,
+	cooldown = 8,
+	range = 10,
+	tactical = { DISABLE = 1, CLOSEIN = 3 },
+	requires_target = true,
+	action = function(self, t)
+		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+
+		local dam = self:spellCrit(self:combatTalentSpellDamage(t, 5, 140))
+
+		self:project(tg, x, y, function(px, py)
+			local target = game.level.map(px, py, engine.Map.ACTOR)
+			if not target then return end
+
+			target:pull(self.x, self.y, tg.range)
+
+			DamageType:get(DamageType.COLD).projector(self, target.x, target.y, DamageType.COLD, dam)
+			target:setEffect(target.EFF_SLOW_MOVE, math.floor(3 + self:getTalentLevel(t)), {apply_power=self:combatSpellpower(), power=0.5})
+		end)
+		game:playSoundNear(self, "talents/arcane")
+
+		return true
+	end,
+	info = function(self, t)
+		return ([[Grab a target and teleport it to your side, covering it with frost, reducing its movement speed by 50%% for %d turns.
+		The bone will also deal %0.2f physical damage.
+		The damage will increase with your Spellpower.]]):
+		format(math.floor(3 + self:getTalentLevel(t)), damDesc(self, DamageType.COLD, self:combatTalentSpellDamage(t, 5, 140)))
+	end,
+}
