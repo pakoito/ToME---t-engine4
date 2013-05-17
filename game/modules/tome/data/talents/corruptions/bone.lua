@@ -138,12 +138,12 @@ newTalent{
 		end
 	end,
 	absorb = function(self, t, p)
-		game.logPlayer(self, "Your bone shield absorbs the damage!")
-		game:onTickEnd(function() -- Happens on tick end to avoid problems
-			local pid = table.remove(p.particles)
-			if pid then self:removeParticles(pid) end
-		end)
-		return #p.particles > 0
+		local pid = table.remove(p.particles)
+		if pid then
+			game.logPlayer(self, "Your bone shield absorbs the damage!")
+			self:removeParticles(pid)
+		end
+		return pid
 	end,
 	activate = function(self, t)
 		local nb = math.ceil(self:getTalentLevel(t))
