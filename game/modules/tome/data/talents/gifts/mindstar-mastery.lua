@@ -44,8 +44,8 @@ newTalent{
 			tmpid = self:addTemporaryValue("psiblades_active", self:getTalentLevel(t)),
 		}
 
-		for i, o in ipairs(self:getInven("MAINHAND") or {}) do self:onTakeoff(o, true) self:checkMindstar(o) self:onWear(o, true) end
-		for i, o in ipairs(self:getInven("OFFHAND") or {}) do self:onTakeoff(o, true) self:checkMindstar(o) self:onWear(o, true) end
+		for i, o in ipairs(self:getInven("MAINHAND") or {}) do self:onTakeoff(o, true) self:onWear(o, true) end
+		for i, o in ipairs(self:getInven("OFFHAND") or {}) do self:onTakeoff(o, true) self:onWear(o, true) end
 		self:updateModdableTile()
 
 		return r
