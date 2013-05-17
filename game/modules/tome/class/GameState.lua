@@ -428,7 +428,7 @@ function _M:generateRandart(data)
 		local p = powers[i]
 		if p and p.points <= hpoints*2 then -- Intentionally allow the budget to be exceeded slightly to guarantee powers at low levels
 			local scaleup = math.max(1,(lev/(p.level_range[2] or 50))^0.5) --Adjust scaleup factor for each power based on lev and level_range max
---			print(" * adding power: "..p.name)
+--			print(" * adding power: "..p.name.."("..p.points.." points)")
 			if p.wielder then
 				o.wielder = o.wielder or {}
 				merger(o.wielder, p.wielder, scaleup)
@@ -467,8 +467,16 @@ function _M:generateRandart(data)
 				o.wielder = o.wielder or {}
 				merger(o.wielder, p.wielder, scaleup)
 			end
+			if p.combat then
+				o.combat = o.combat or {}
+				merger(o.combat, p.combat, scaleup)
+			end
+			if p.special_combat then
+				o.special_combat = o.special_combat or {}
+				merger(o.special_combat, p.special_combat, scaleup)
+			end
 			if p.copy then merger(o, p.copy, scaleup) end
---			print(" * adding bias power: "..p.name)
+--			print(" * adding bias power: "..p.name.."("..p.points.." points)")
 			hpoints = hpoints - p.points
 			p.points = p.points * 1.5 --increased cost (=diminishing returns) on extra applications of the same power
 		else
