@@ -51,7 +51,7 @@ newAchievement{
 newAchievement{ id = "DRAGON_GREED",
 	name = "Dragon's Greed",
 	image = "object/money_large.png",
-	show = "name",
+	show = "name", huge=true,
 	desc = [[Amassed 8000 gold pieces.]],
 	can_gain = function(self, who)
 		return who.money >= 8000

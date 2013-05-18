@@ -32,7 +32,7 @@ newAchievement{
 newAchievement{
 	name = "Vampire crusher",
 	image = "npc/the_master.png",
-	show = "name",
+	show = "name", huge=true,
 	desc = [[Destroyed the Master in its lair of the Dreadfell.]],
 }
 newAchievement{
@@ -52,7 +52,7 @@ newAchievement{
 }
 newAchievement{
 	name = "Against all odds", id = "KILL_UKRUK",
-	show = "name",
+	show = "name", huge=true,
 	desc = [[Killed Ukruk in the ambush.]],
 }
 newAchievement{
@@ -88,47 +88,47 @@ newAchievement{
 --------------- Wins
 newAchievement{
 	name = "Evil denied", id = "WIN_FULL",
-	show = "name",
+	show = "name", huge=true,
 	desc = [[Won ToME by preventing the Void portal from opening.]],
 }
 newAchievement{
 	name = "The High Lady's destiny", id = "WIN_AERYN",
-	show = "name",
+	show = "name", huge=true,
 	desc = [[Won ToME by closing the Void portal using Aeryn as a sacrifice.]],
 }
 newAchievement{
 	name = "Selfless", id = "WIN_SACRIFICE",
-	show = "name",
+	show = "name", huge=true,
 	desc = [[Won ToME by closing the Void portal using yourself as a sacrifice.]],
 }
 newAchievement{
 	name = "Triumph of the Way", id = "YEEK_SACRIFICE",
-	show = "name",
+	show = "name", huge=true,
 	desc = [[Won ToME by sacrificing yourself to forcefully spread the Way to every other sentient being on Eyal.]],
 }
 newAchievement{
 	name = "Tactical master", id = "SORCERER_NO_PORTAL",
-	show = "name",
+	show = "name", huge=true,
 	desc = [[Fought the two Sorcerers without closing any invocation portals.]],
 }
 newAchievement{
 	name = "Portal destroyer", id = "SORCERER_ONE_PORTAL",
-	show = "name",
+	show = "name", huge=true,
 	desc = [[Fought the two Sorcerers and closed one invocation portal.]],
 }
 newAchievement{
 	name = "Portal reaver", id = "SORCERER_TWO_PORTAL",
-	show = "name",
+	show = "name", huge=true,
 	desc = [[Fought the two Sorcerers and closed two invocation portals.]],
 }
 newAchievement{
 	name = "Portal ender", id = "SORCERER_THREE_PORTAL",
-	show = "name",
+	show = "name", huge=true,
 	desc = [[Fought the two Sorcerers and closed three invocation portals.]],
 }
 newAchievement{
 	name = "Portal master", id = "SORCERER_FOUR_PORTAL",
-	show = "name",
+	show = "name", huge=true,
 	desc = [[Fought the two Sorcerers and closed four invocation portals.]],
 }
 
@@ -160,7 +160,7 @@ newAchievement{
 }
 newAchievement{
 	name = "Gem of the Moon", id = "MASTER_JEWELER",
-	show = "name",
+	show = "name", huge=true,
 	desc = [[Completed the Master Jeweler quest with Limmir.]],
 }
 newAchievement{
@@ -190,12 +190,12 @@ newAchievement{
 }
 newAchievement{
 	name = "There and back again", id = "WEST_PORTAL",
-	show = "name",
+	show = "name", huge=true,
 	desc = [[Opened a portal to Maj'Eyal from the Far East.]],
 }
 newAchievement{
 	name = "Back and there again", id = "EAST_PORTAL",
-	show = "name",
+	show = "name", huge=true,
 	desc = [[Opened a portal to the Far East from Maj'Eyal.]],
 }
 newAchievement{
@@ -220,7 +220,7 @@ newAchievement{
 }
 newAchievement{
 	name = "Genocide", id = "GREATMOTHER_DEAD",
-	show = "name",
+	show = "name", huge=true,
 	desc = [[Killed the Orc Greatmother in the breeding pits, thus dealing a terrible blow to the orc race.]],
 }
 newAchievement{
@@ -266,7 +266,7 @@ newAchievement{
 }
 newAchievement{
 	name = "Matrix style!", id = "ABASHED_EXPANSE_NO_BLAST",
-	show = "full",
+	show = "full", huge=true,
 	desc = [[Finished the whole Abashed Expanse zone without being hit by a single void blast or manaworm. Dodging's fun!]],
 	can_gain = function(self, who, zone)
 		if not who:isQuestStatus("start-archmage", engine.Quest.DONE) then return false end

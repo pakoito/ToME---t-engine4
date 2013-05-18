@@ -36,8 +36,8 @@ function _M:event(e)
 		cprofile.pushEvent(string.format("e='Chat' se='Whisper' login=%q name=%q donator=%q status=%q msg=%q", e.login, e.name, e.donator, e.status, e.msg))
 		print("[USERCHAT] whisper", e.login, e.msg)
 	elseif e.e == "ChatAchievement" then
-		cprofile.pushEvent(string.format("e='Chat' se='Achievement' channel=%q login=%q name=%q donator=%q status=%q msg=%q", e.channel, e.login, e.name, e.donator, e.status, e.msg))
-		print("[USERCHAT] channel achievement", e.login, e.channel, e.msg)
+		cprofile.pushEvent(string.format("e='Chat' se='Achievement' channel=%q login=%q name=%q donator=%q status=%q msg=%q huge=%s first=%s", e.channel, e.login, e.name, e.donator, e.status, e.msg, tostring(e.huge), tostring(e.first)))
+		print("[USERCHAT] channel achievement", e.login, e.channel, e.msg, e.huge, e.first)
 	elseif e.e == "ChatSerialData" then
 		local data = self.client.psock:receive(e.size)
 		if data then

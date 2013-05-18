@@ -23,7 +23,7 @@ local UserChat = require "profile-thread.UserChat"
 
 module(..., package.seeall, class.make)
 
-local debug = false
+local debug = true
 
 local mport = debug and 2259 or 2257
 local pport = debug and 2260 or 2258
@@ -406,7 +406,7 @@ function _M:orderReportUser(o)
 end
 
 function _M:orderChatAchievement(o)
-	self:command("ACHV", o.channel, o.msg)
+	self:command("ACH2", o.huge and "1" or "0", o.first and "1" or "0", o.channel, o.msg)
 	self:read("200")
 end
 

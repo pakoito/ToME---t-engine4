@@ -34,12 +34,12 @@ newAchievement{
 }
 newAchievement{
 	name = "Level 40",
-	show = "full",
+	show = "full", huge=true,
 	desc = [[Got a character to level 40.]],
 }
 newAchievement{
 	name = "Level 50",
-	show = "full",
+	show = "full", huge=true,
 	desc = [[Got a character to level 50.]],
 }
 
@@ -67,7 +67,7 @@ newAchievement{
 newAchievement{
 	name = "Emancipation", id = "EMANCIPATION",
 	image = "npc/alchemist_golem.png",
-	show = "name",
+	show = "name", huge=true,
 	desc = [[Had the golem kill a boss while its master was already dead.]],
 	mode = "player",
 	can_gain = function(self, who, target)
@@ -84,7 +84,7 @@ newAchievement{
 
 newAchievement{
 	name = "Take you with me", id = "BOSS_REVENGE",
-	show = "full",
+	show = "full", huge=true,
 	desc = [[Killed a boss while already dead.]],
 	mode = "player",
 	can_gain = function(self, who, target)

@@ -19,7 +19,7 @@
 
 newAchievement{
 	name = "That was close",
-	show = "full",
+	show = "full", huge=true,
 	desc = [[Killed your target while having only 1 life left.]],
 }
 newAchievement{
@@ -34,17 +34,17 @@ newAchievement{
 }
 newAchievement{
 	name = "Size is everything", id = "DAMAGE_1500",
-	show = "full",
+	show = "full", huge=true,
 	desc = [[Did over 1500 damage in one attack.]],
 }
 newAchievement{
 	name = "The bigger the better!", id = "DAMAGE_3000",
-	show = "full",
+	show = "full", huge=true,
 	desc = [[Did over 3000 damage in one attack.]],
 }
 newAchievement{
 	name = "Overpowered!", id = "DAMAGE_6000",
-	show = "full",
+	show = "full", huge=true,
 	desc = [[Did over 6000 damage in one attack.]],
 }
 newAchievement{
@@ -137,7 +137,7 @@ newAchievement{
 newAchievement{
 	name = "Kill Bill!", id = "KILL_BILL",
 	image = "object/artifact/bill_treestump.png",
-	show = "full",
+	show = "full", huge=true,
 	desc = [[Killed Bill in the Trollmire with a level one character.]],
 	mode = "player",
 }
@@ -145,7 +145,7 @@ newAchievement{
 newAchievement{
 	name = "Atamathoned!", id = "ATAMATHON",
 	image = "npc/atamathon.png",
-	show = "name",
+	show = "name", huge=true,
 	desc = [[Killed the giant golem Atamathon after foolishly reactivating it.]],
 	mode = "player",
 }
@@ -165,7 +165,7 @@ newAchievement{
 
 newAchievement{
 	name = "Headbanger", id = "HEADBANG",
-	show = "full",
+	show = "full", huge=true,
 	desc = [[Headbanged 20 bosses to death.]],
 	mode = "player",
 	can_gain = function(self, who, target)
@@ -179,7 +179,7 @@ newAchievement{
 newAchievement{
 	name = "Are you out of your mind?!", id = "UBER_WYRMS_OPEN",
 	image = "npc/dragon_multihued_multi_hued_drake.png",
-	show = "name",
+	show = "name", huge=true,
 	desc = [[Caught the attention of overpowered greater multi-hued wyrms in Vor Armoury. Perhaps fleeing is in order.]],
 	mode = "player",
 }
@@ -187,7 +187,7 @@ newAchievement{
 newAchievement{
 	name = "I cleared the room of death and all I got was this lousy achievement!", id = "UBER_WYRMS",
 	image = "npc/dragon_multihued_multi_hued_drake.png",
-	show = "name",
+	show = "name", huge=true,
 	desc = [[Killed the seven overpowered wyrms in the "Room of Death" in Vor Armoury.]],
 	mode = "player",
 	can_gain = function(self, who)
@@ -199,7 +199,7 @@ newAchievement{
 newAchievement{
 	name = "I'm a cool hero", id = "NO_DERTH_DEATH",
 	image = "npc/humanoid_human_human_farmer.png",
-	show = "name",
+	show = "name", huge=true,
 	desc = [[Saved Derth without a single inhabitant dying.]],
 	mode = "player",
 }
@@ -207,7 +207,7 @@ newAchievement{
 newAchievement{
 	name = "Kickin' it old-school", id = "FIRST_BOSS_URKIS",
 	image = "npc/humanoid_human_urkis__the_high_tempest.png",
-	show = "full",
+	show = "full", huge=true,
 	desc = [[Killed Urkis, the Tempest, causing him to drop the Rod of Recall.]],
 	mode = "player",
 }
@@ -215,7 +215,7 @@ newAchievement{
 newAchievement{
 	name = "Leave the big boys alone", id = "FIRST_BOSS_MASTER",
 	image = "npc/the_master.png",
-	show = "full",
+	show = "full", huge=true,
 	desc = [[Killed The Master, causing him to drop the Rod of Recall.]],
 	mode = "player",
 }
@@ -223,7 +223,7 @@ newAchievement{
 newAchievement{
 	name = "You know who's to blame", id = "FIRST_BOSS_GRAND_CORRUPTOR",
 	image = "npc/humanoid_shalore_grand_corruptor.png",
-	show = "full",
+	show = "full", huge=true,
 	desc = [[Killed the Grand Corruptor, causing him to drop the Rod of Recall.]],
 	mode = "player",
 }
@@ -231,7 +231,7 @@ newAchievement{
 newAchievement{
 	name = "You know who's to blame (reprise)", id = "FIRST_BOSS_MYSSIL",
 	image = "npc/humanoid_halfling_protector_myssil.png",
-	show = "full",
+	show = "full", huge=true,
 	desc = [[Killed Myssil, causing her to drop the Rod of Recall.]],
 	mode = "player",
 }

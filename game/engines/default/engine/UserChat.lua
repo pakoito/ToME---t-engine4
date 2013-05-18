@@ -114,6 +114,7 @@ local urlfind = (lpeg.P"http://" + lpeg.P"https://") * (1-lpeg.P" ")^0
 local urlmatch = lpeg.anywhere(lpeg.C(urlfind))
 
 function _M:addMessage(kind, channel, login, name, msg, extra_data, no_change)
+	if not self.channels[channel] then return end
 	local color_name = colors.WHITE
 	if type(name) == "table" then name, color_name = name[1], name[2] end
 
@@ -202,11 +203,22 @@ function _M:event(e)
 		elseif e.donator == "oneshot" then color = colors.LIGHT_GREEN
 		elseif e.donator == "recurring" then color = colors.ROYAL_BLUE end
 
+		local kind = "achievement_other"
+		if e.first then kind = "achievement_first"
+		elseif e.huge then kind = "achievement_huge"
+		end
+
+		local acolor = "LIGHT_BLUE"
+		if e.huge then acolor = "GOLD" end
+
+		local first = ""
+		if e.first then first = " for the #FIREBRICK#first time!" end
+
 		self.channels[e.channel] = self.channels[e.channel] or {users={}, log={}}
-		self:addMessage("achievement", e.channel, e.login, {e.name, color}, "#{italic}##LIGHT_BLUE#has earned the achievement <"..e.msg..">#{normal}#", nil, true)
+		self:addMessage(kind, e.channel, e.login, {e.name, color}, "#{italic}##"..acolor.."#has earned the achievement <"..e.msg..">"..first.."#{normal}#", nil, true)
 
 		if type(game) == "table" and game.logChat and self.cur_channel == e.channel then
-			game.logChat("#LIGHT_BLUE#%s has earned the achievement <%s>", e.name, e.msg)
+			game.logChat("#"..acolor.."#%s has earned the achievement <%s>%s", e.name, e.msg, first)
 		end
 	elseif e.se == "SerialData" then
 		local color = colors.WHITE
@@ -351,9 +363,9 @@ function _M:reportUser(to, msg)
 	if type(game) == "table" and game.logChat then game.logChat("#VIOLET#Report for %s sent.#LAST#", to) end
 end
 
-function _M:achievement(name)
+function _M:achievement(name, huge, first)
 	if not profile.auth then return end
-	core.profile.pushOrder(string.format("o='ChatAchievement' channel=%q msg=%q", self.cur_channel, name))
+	core.profile.pushOrder(string.format("o='ChatAchievement' channel=%q msg=%q huge=%s first=%s", self.cur_channel, name, tostring(huge), tostring(first)))
 end
 
 --- Request a line to send

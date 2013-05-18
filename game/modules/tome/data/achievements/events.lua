@@ -43,7 +43,7 @@ newAchievement{
 
 newAchievement{
 	name = "The Rat Lich", id = "EVENT_RATLICH",
-	show = "name",
+	show = "name", huge=true,
 	desc = [[Killed the terrible Rat Lich.]],
 }
 
@@ -61,6 +61,6 @@ newAchievement{
 
 newAchievement{
 	name = "A living one!", id = "CALDIZAR",
-	show = "name",
+	show = "name", huge=true,
 	desc = [[Was teleported into Caldizar's Fortress, far into the void between the stars.]],
 }

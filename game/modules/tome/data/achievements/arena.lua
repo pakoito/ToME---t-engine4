@@ -37,13 +37,13 @@ newAchievement{
 
 newAchievement{
 	name = "Almost Master of Arena",
-	show = "full",
+	show = "full", huge=true,
 	desc = [[Became the new master of the arena in 30-wave mode.]],
 }
 
 newAchievement{
 	name = "Master of Arena",
-	show = "full",
+	show = "full", huge=true,
 	desc = [[Became the new master of the arena in 60-wave mode.]],
 }
 
