@@ -1496,7 +1496,7 @@ newEffect{
 newEffect{
 	name = "WEAKENED",
 	desc = "Weakened", image = "talents/ruined_earth.png",
-	long_desc = function(self, eff) return ("The target has been weakened, reducing all damage inclicted by %d%%."):format(eff.power) end,
+	long_desc = function(self, eff) return ("The target has been weakened, reducing all damage inflicted by %d%%."):format(eff.power) end,
 	type = "physical",
 	subtype = { curse=true },
 	status = "detrimental",
