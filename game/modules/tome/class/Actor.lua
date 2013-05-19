@@ -3850,7 +3850,7 @@ function _M:postUseTalent(ab, ret, silent)
 		trigger = hd.trigger
 	end
 
-	if trigger and self:hasEffect(self.EFF_BURNING_HEX) then
+	if trigger and self:hasEffect(self.EFF_BURNING_HEX) and not self:attr("talent_reuse") then
 		local p = self:hasEffect(self.EFF_BURNING_HEX)
 		DamageType:get(DamageType.FIRE).projector(p.src, self.x, self.y, DamageType.FIRE, p.dam)
 	end
@@ -4110,7 +4110,7 @@ function _M:getTalentCooldown(t)
 	if self.talent_cd_reduction.all then cd = cd - self.talent_cd_reduction.all end
 
 	local eff = self:hasEffect(self.EFF_BURNING_HEX)
-	if eff then
+	if eff and not self:attr("talent_reuse") then
 		cd = 1 + cd * eff.power
 	end
 
