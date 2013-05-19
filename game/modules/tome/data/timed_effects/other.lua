@@ -1815,17 +1815,6 @@ newEffect{
 }
 
 newEffect{
-	name = "DISTORTION", image = "talents/maelstrom.png",
-	desc = "Distortion",
-	long_desc = function(self, eff) return "The target has recently taken distortion damage and is vulnerable to distortion effects." end,
-	type = "other",
-	subtype = { distortion=true },
-	status = "detrimental",
-	parameters = { },
-	no_stop_enter_worlmap = true, no_stop_resting = true,
-}
-
-newEffect{
 	name = "REVISIONIST_HISTORY", image = "talents/revisionist_history.png",
 	desc = "Revisionist History",
 	long_desc = function(self, eff) return "While this effect holds you can decide recent history did not happen the way it did." end,

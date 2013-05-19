@@ -219,7 +219,7 @@ newTalent{
 	info = function(self, t)
 		local drain = t.getDrain(self, t)
 		return ([[Imprisons all sleeping targets within range in their dream state, effectively extending sleeping effects for as long as Dream Prison is maintainted.
-		This powerful effect constantly drains %0.2f%% of your maximum Psi per turn, and is considered a psionic channel; as such it will break if you move, use a talent that consumes a turn, or activate an item.
+		This powerful effect constantly drains %0.2f%% of your maximum Psi per turn, and is considered a psionic channel; as such it will break if you move.
 		(Note that sleeping effects that happen each turn, such as Nightmare's damage and Sleep's contagion, will cease to function for the duration of the effect.)]]):format(drain)
 	end,
 }

@@ -19,6 +19,18 @@
 
 local Object = require "mod.class.Object"
 
+function DistortionCount(self)
+	local distortion_count = 0
+	for tid, lev in pairs(game.player.talents) do
+		local t = game.player:getTalentFromId(tid)
+		if t.type[1]:find("^psionic/") and t.type[1]:find("^psionic/distortion") then
+			distortion_count = distortion_count + lev
+		end
+	end
+	print("Distortion Count", distortion_count)
+	return distortion_count
+end
+
 newTalent{
 	name = "Distortion Bolt",
 	type = {"psionic/distortion", 1},
@@ -44,17 +56,19 @@ newTalent{
 		if not x or not y then return nil end
 		local damage = self:mindCrit(t.getDamage(self, t))
 		tg.type = "bolt" -- switch our targeting to a bolt for the initial projectile
-		self:projectile(tg, x, y, DamageType.DISTORTION, {dam=damage,  penetrate=true, explosion=damage*1.5, friendlyfire=tg.friendlyfire, radius=self:getTalentRadius(t)})
+		self:projectile(tg, x, y, DamageType.DISTORTION, {dam=damage,  penetrate=true, explosion=damage*1.5, friendlyfire=tg.friendlyfire, distort=DistortionCount(self), radius=self:getTalentRadius(t)})
 		game:playSoundNear(self, "talents/distortion")
 		return true
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local radius = self:getTalentRadius(t)
-		return ([[Fire a bolt of distortion that ignores resistance and inflicts %0.2f physical damage.  This damage will distort affected targets, rendering them vulnerable to distortion effects for two turns.
+		local distort = DistortionCount(self)
+		return ([[Fire a bolt of distortion that ignores resistance and inflicts %0.2f physical damage.  This damage will distort affected targets, decreasing physical resistance by %d%% and rendering them vulnerable to distortion effects for two turns.
 		If the bolt comes in contact with a target that's already distorted, a detonation will occur, inflicting 150%% of the base damage in a radius of %d.
+		Each talent point invested in Distortion Bolt will increase physical redistance reduction from distortion effects by 1%%.
 		At talent level 5, you learn to shape your distortion effects, preventing them from hitting you or your allies.
-		The damage will scale with your Mindpower.]]):format(damDesc(self, DamageType.PHYSICAL, damage), radius)
+		The damage will scale with your Mindpower.]]):format(damDesc(self, DamageType.PHYSICAL, damage), distort, radius)
 	end,
 }
 
@@ -85,7 +99,7 @@ newTalent{
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.DISTORTION, {dam=self:mindCrit(t.getDamage(self, t)), knockback=t.getPower(self, t), stun=t.getPower(self, t)})
+		self:project(tg, x, y, DamageType.DISTORTION, {dam=self:mindCrit(t.getDamage(self, t)), knockback=t.getPower(self, t), stun=t.getPower(self, t), distort=DistortionCount(self)})
 		game:playSoundNear(self, "talents/warp")
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "generic_wave", {radius=tg.radius, tx=x-self.x, ty=y-self.y, rm=255, rM=255, gm=180, gM=255, bm=180, bM=255, am=35, aM=90})
 		return true
@@ -94,10 +108,12 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local radius = self:getTalentRadius(t)
 		local power = t.getPower(self, t)
+		local distort = DistortionCount(self)
 		return ([[Creates a distortion wave in a radius %d cone that deals %0.2f physical damage and knocks back targets in the blast radius.
-		This damage will distort affected targets, rendering them vulnerable to distortion effects for two turns.
+		This damage will distort affected targets, decreasing physical resistance by %d%% and rendering them vulnerable to distortion effects for two turns.
+		Each talent point invested in Distortion Wave will increase physical redistance reduction from distortion effects by 1%%.
 		If the target is already distorted, they'll be stunned for %d turns as well.
-		The damage will scale with your Mindpower.]]):format(radius, damDesc(self, DamageType.PHYSICAL, damage), power)
+		The damage will scale with your Mindpower.]]):format(radius, damDesc(self, DamageType.PHYSICAL, damage), distort, power)
 	end,
 }
 
@@ -131,17 +147,19 @@ newTalent{
 		if target:hasEffect(target.EFF_DISTORTION) then
 			ravage = true
 		end
-		target:setEffect(target.EFF_RAVAGE, t.getDuration(self, t), {src=self, dam=self:mindCrit(t.getDamage(self, t)), ravage=ravage, apply_power=self:combatMindpower()})
+		target:setEffect(target.EFF_RAVAGE, t.getDuration(self, t), {src=self, dam=self:mindCrit(t.getDamage(self, t)), ravage=ravage, distort=DistortionCount(self), apply_power=self:combatMindpower()})
 		game:playSoundNear(self, "talents/echo")
 		return true
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local duration = t.getDuration(self, t)
+		local distort = DistortionCount(self)
 		return ([[Ravages the target with distortion, inflicting %0.2f physical damage each turn for %d turns.
-		This damage will distort affected targets, rendering them vulnerable to distortion effects for two turns.
+		This damage will distort affected targets, decreasing physical resistance by %d%% and rendering them vulnerable to distortion effects for two turns.
 		If the target is already distorted when Ravage is applied, the damage will be increased by 50%% and the target will lose one beneficial physical effect or sustain each turn.
-		The damage will scale with your Mindpower.]]):format(damDesc(self, DamageType.PHYSICAL, damage), duration)
+		Each talent point invested in Ravage will increase physical redistance reduction from distortion effects by 1%%.
+		The damage will scale with your Mindpower.]]):format(damDesc(self, DamageType.PHYSICAL, damage), duration, distort)
 	end,
 }
 
@@ -204,7 +222,7 @@ newTalent{
 						game.logSeen(target.actor, "%s is pulled in by the %s!", target.actor.name:capitalize(), self.name)
 					end
 					DamageType:get(DamageType.PHYSICAL).projector(self.summoner, target.actor.x, target.actor.y, DamageType.PHYSICAL, self.dam)
-					target.actor:setEffect(target.actor.EFF_DISTORTION, 2, {})
+					target.actor:setEffect(target.actor.EFF_DISTORTION, 2, {power=DistortionCount(self)})
 				end
 
 				self:useEnergy()
@@ -232,8 +250,10 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local damage = t.getDamage(self, t)
 		local radius = self:getTalentRadius(t)
+		local distort = DistortionCount(self)
 		return ([[Create a powerful maelstorm for %d turns.  Each turn, the maelstrom will pull in targets within a radius of %d, and inflict %0.2f physical damage.
-		This damage will distort affected targets, rendering them vulnerable to distortion effects for two turns.
-		The damage will scale with your Mindpower.]]):format(duration, radius, damDesc(self, DamageType.PHYSICAL, damage))
+		This damage will distort affected targets, decreasing physical resistance by %d%% and rendering them vulnerable to distortion effects for two turns.
+		Each talent point invested in Maelstrom will increase physical resistance reduction from distortion effects by 1%%.
+		The damage will scale with your Mindpower.]]):format(duration, radius, damDesc(self, DamageType.PHYSICAL, damage), distort)
 	end,
 }

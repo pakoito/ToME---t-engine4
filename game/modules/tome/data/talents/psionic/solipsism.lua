@@ -25,6 +25,7 @@ newTalent{
 	mode = "passive",
 	no_unlearn_last = true,
 	getConversionRatio = function(self, t) return math.min(0.1 + self:getTalentLevel(t) * 0.1, 1) end,
+	getPsiDamageResist = function(self, t) return math.min(self:getTalentLevel(t) * 2, 30) end,
 	on_learn = function(self, t)
 		if self:getTalentLevelRaw(t) == 1 then
 			self.inc_resource_multi.psi = (self.inc_resource_multi.psi or 0) + 0.5
@@ -53,10 +54,12 @@ newTalent{
 	end,
 	info = function(self, t)
 		local conversion_ratio = t.getConversionRatio(self, t)
+		local psi_damage_resist = t.getPsiDamageResist(self, t)
 		return ([[You believe that your mind is the center of everything.  Permanently increases the amount of psi you gain per level by 5 and reduces your life rating (affects life at level up) by 50%% (one time only adjustment).
-		You also have learned to overcome damage with your mind alone, and convert %d%% of all damage into Psi damage and %d%% of your healing and life regen now recovers Psi instead of life. 
+		You also have learned to overcome damage with your mind alone, and convert %d%% of all damage into Psi damage and %d%% of your healing and life regen now recovers Psi instead of life.  Converted Psi damage will be further reduced by %d%%.
 		The first talent point invested will also increase the amount of Psi you gain from Willpower by 0.5, but reduce the amount of life you gain from Constitution by 0.25.
-		The first talent point also increases your solipsism threshold by 20%% (currently %d%%), reducing your global speed by 1%% for each percentage your current Psi falls below this threshold.]]):format(conversion_ratio * 100, conversion_ratio * 100, (self.solipsism_threshold or 0) * 100)
+		The first talent point also increases your solipsism threshold by 20%% (currently %d%%), reducing your global speed by 1%% for each percentage your current Psi falls below this threshold.]])
+		:format(conversion_ratio * 100, conversion_ratio * 100, psi_damage_resist, (self.solipsism_threshold or 0) * 100)
 	end,
 }
 

@@ -49,7 +49,6 @@ newTalent{
 	info = function(self, t)
 		local shield_power = t.getShieldPower(self, t)
 		return ([[Activate to create a resonance field that will absorb 50%% of all damage you take (%d max absorption).  The field will not interfere with Feedback gain.
-		Using this talent will not break psionic channels (such as Mind Storm).
 		The max absorption value will scale with your Mindpower, and the effect lasts up to ten turns.]]):format(shield_power)
 	end,
 }
@@ -120,7 +119,6 @@ newTalent{
 	info = function(self, t)
 		local data = t.getData(self, t)
 		return ([[Use Feedback to replenish yourself.  This heals you for %d life, and restores %d stamina, %d mana, %d equilibrium, %d vim, %d positive and negative energies, %d psi energy, and %d hate.
-		Using this talent will not break psionic channels (such as Mind Storm).
 		The heal and resource gain will improve with your Mindpower.]]):format(data.heal, data.stamina, data.mana, -data.equilibrium, data.vim, data.positive, data.psi, data.hate)
 	end,
 }

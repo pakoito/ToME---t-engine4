@@ -110,8 +110,8 @@ newTalent{
 		return {type="cone", range=self:getTalentRange(t), friendlyfire=false, radius = self:getTalentRadius(t), talent=t}
 	end,
 	getDuration = function(self, t) return 2 + math.floor(self:getTalentLevel(t)/2) end,
-	getBlastDamage = function(self, t) return self:combatTalentMindDamage(t, 20, 200) end,
-	getForgeDamage = function(self, t) return self:combatTalentMindDamage(t, 0, 25) end,
+	getBlastDamage = function(self, t) return self:combatTalentMindDamage(t, 10, 100) end,
+	getForgeDamage = function(self, t) return self:combatTalentMindDamage(t, 0, 10) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
@@ -209,11 +209,11 @@ newTalent{
 	no_sustain_autoreset = true,
 	tactical = { ATTACKAREA = { FIRE = 2, MIND = 2}, DEBUFF = 2, },
 	range = 0,
-	radius = function(self, t) return math.min(5, 1 + math.ceil(self:getTalentLevel(t)/2)) end,
+	radius = function(self, t) return math.min(5, 1 + math.ceil(self:getTalentLevel(t)/3)) end,
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), friendlyfire=false, radius = self:getTalentRadius(t), talent=t}
 	end,
-	getDamage = function(self, t) return math.ceil(self:combatTalentMindDamage(t, 5, 50)) end,
+	getDamage = function(self, t) return math.ceil(self:combatTalentMindDamage(t, 5, 30)) end,
 	getPower = function(self, t) return math.floor(self:combatTalentMindDamage(t, 5, 25)) end,
 	getDuration = function(self, t) return 1 + math.floor(self:getTalentLevel(t)/2) end,
 	getChance = function(self, t) return 5 * self:getTalentLevel(t) end,

@@ -99,9 +99,9 @@ newTalent{
 		local targets = t.getTargetCount(self, t)
 		local damage = t.getDamage(self, t)
 		local charge_ratio = t.getOverchargeRatio(self, t)
-		return ([[Unleash your subconscious on the world around you.  While active, you fire up to %d bolts each turn (one per hostile target) that deal %0.2f mind damage.  Each bolt consumes 1 Feedback.
+		return ([[Unleash your subconscious on the world around you.  While active, you fire up to %d bolts each turn (one per hostile target) that deal %0.2f mind damage.  Each bolt consumes 5 Feedback.
 		Feedback gains beyond your maximum allowed amount may generate extra bolts (one bolt per %d excess Feedback per target), but no more then %d extra bolts per turn.
-		This effect is a psionic channel, and will break if you move, use a talent that consumes a turn, or activate an item.
+		This effect is a psionic channel, and will break if you move.
 		The damage will scale with your Mindpower.]]):format(targets, damDesc(self, DamageType.MIND, damage), charge_ratio, targets)
 	end,
 }
@@ -125,7 +125,7 @@ newTalent{
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		return ([[Activate to invert your Feedback decay for %d turns.  This effect can be a critical hit, increasing the duration even further.
-		Using this talent will not break psionic channels (such as Mind Storm).  You must have some Feedback in order to start the loop.
+		You must have some Feedback in order to start the loop.
 		The maximum Feedback gain will scale with your Mindpower.]]):format(duration)
 	end,
 }
@@ -208,7 +208,7 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local crit_bonus = t.getCritBonus(self, t)
 		return ([[Focus your mind on a single target, diverting all offensive Discharge talent effects to it for %d turns.  While this effect is active, all Discharge talents gain %d%% critical power.
-		Using this talent will not break psionic channels (such as Mind Storm).  If the target is killed, the effect will end early.
+		If the target is killed, the effect will end early.
 		The damage bonus will scale with your Mindpower.]]):format(duration, damDesc(self, DamageType.MIND, crit_bonus))
 	end,
 }

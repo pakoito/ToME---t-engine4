@@ -1790,7 +1790,7 @@ newEffect{
 	type = "physical",
 	subtype = { distortion=true },
 	status = "detrimental",
-	parameters = {dam=1},
+	parameters = {dam=1, distort=0},
 	on_gain = function(self, err) return  nil, "+Ravage" end,
 	on_lose = function(self, err) return "#Target# is no longer being ravaged." or nil, "-Ravage" end,
 	on_timeout = function(self, eff)
@@ -1821,11 +1821,11 @@ newEffect{
 				end
 			end
 		end
-		self:setEffect(self.EFF_DISTORTION, 2, {})
+		self:setEffect(self.EFF_DISTORTION, 2, {power=eff.distort})
 		DamageType:get(DamageType.PHYSICAL).projector(eff.src or self, self.x, self.y, DamageType.PHYSICAL, eff.dam)
 	end,
 	activate = function(self, eff)
-		self:setEffect(self.EFF_DISTORTION, 2, {})
+		self:setEffect(self.EFF_DISTORTION, 2, {power=eff.distort})
 		if eff.ravage then
 			game.logSeen(self, "#LIGHT_RED#%s is being ravaged by distortion!", self.name:capitalize())
 			eff.dam = eff.dam * 1.5
@@ -1835,6 +1835,25 @@ newEffect{
 	deactivate = function(self, eff)
 		self:removeParticles(eff.particle)
 	end,
+}
+
+newEffect{
+	name = "DISTORTION", image = "talents/maelstrom.png",
+	desc = "Distortion",
+	long_desc = function(self, eff) return ("The target has recently taken distortion damage, is vulnerable to distortion effects, and has it's physical resistance decreased by %d%%."):format(eff.power) end,
+	type = "physical",
+	subtype = { distortion=true },
+	status = "detrimental",
+	parameters = {power=0},
+	on_gain = function(self, err) return  nil, "+Distortion" end,
+	on_lose = function(self, err) return "#Target# is no longer distorted." or nil, "-Distortion" end,
+	activate = function(self, eff)
+		eff.id = self:effectTemporaryValue(eff, "resists", {[DamageType.PHYSICAL]=-eff.power})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("resists", eff.pid)
+	end,
+
 }
 
 newEffect{

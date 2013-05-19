@@ -1988,13 +1988,16 @@ function _M:onTakeHit(value, src)
 
 	-- Apply Solipsism hit
 	if damage_to_psi > 0 then
-		if self:getPsi() > damage_to_psi then
-			self:incPsi(-damage_to_psi)
+		local t = self:getTalentFromId(self.T_SOLIPSISM)
+		local psi_damage_resist = 1 - t.getPsiDamageResist(self, t)/100
+	--	print("Psi Damage Resist", psi_damage_resist, "Damage", damage_to_psi, "Final", damage_to_psi*psi_damage_resist)
+		if self:getPsi() > damage_to_psi*psi_damage_resist then
+			self:incPsi(-damage_to_psi*psi_damage_resist)
 		else
 			damage_to_psi = self:getPsi()
 			self:incPsi(-damage_to_psi)
 		end
-		game.logSeen(self, "%s's mind suffers #YELLOW#%d psi#LAST# damage from the attack.", self.name:capitalize(), damage_to_psi)
+		game.logSeen(self, "%s's mind suffers #YELLOW#%d psi#LAST# damage from the attack.", self.name:capitalize(), damage_to_psi*psi_damage_resist)
 		value = value - damage_to_psi
 	end
 
@@ -3861,7 +3864,7 @@ function _M:postUseTalent(ab, ret, silent)
 	if ab.id ~= self.T_GATHER_THE_THREADS and ab.id ~= self.T_SPACETIME_TUNING and ab.is_spell then self:breakChronoSpells() end
 	if not ab.no_reload_break then self:breakReloading() end
 	self:breakStepUp()
-	if not (ab.no_energy or ab.no_break_channel) and not (ab.mode == "sustained" and self:isTalentActive(ab.id)) then self:breakPsionicChannel(ab.id) end
+	--if not (ab.no_energy or ab.no_break_channel) and not (ab.mode == "sustained" and self:isTalentActive(ab.id)) then self:breakPsionicChannel(ab.id) end
 
 	for tid, _ in pairs(self.sustain_talents) do
 		local t = self:getTalentFromId(tid)
