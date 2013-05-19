@@ -105,8 +105,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Project a corrupted blast of power that deals %0.2f blight damage and removes %d magical or physical effects from any creatures caught in the radius 3 ball.
-		For each removed effect the create has a chance to resist based on its spell save.
+		return ([[Project a corrupted blast of power that deals %0.2f blight damage and removes up to %d magical or physical effects from any creatures caught in the radius 3 ball.
+		For each effect the creature has a chance to resist based on its spell save.
 		The damage will increase with your Spellpower.]]):format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 28, 120)), self:getTalentLevelRaw(t))
 	end,
 }
