@@ -51,6 +51,7 @@ newChat{ id="traplearn",
 	answers = {
 		{"Thanks.", action=function(npc, player)
 			p:learnTalent(p.T_FLASH_BANG_TRAP, 1, nil, {no_unlearn=true})
+			p:incMoney(-3000)
 			game.log("#LIGHT_GREEN#You learn the schematic, you can now create flash bang traps!")
 		end},
 	}
