@@ -23,7 +23,7 @@ newTalent{
 	require = spells_req1,
 	points = 5,
 	random_ego = "utility",
-	mana = 20,
+	mana = 10,
 	cooldown = 30,
 	tactical = { DISABLE = 2 },
 	reflectable = true,
@@ -57,31 +57,29 @@ newTalent{
 	type = {"spell/temporal", 2},
 	require = spells_req2,
 	points = 5,
-	mana = 50,
+	mana = 25,
 	cooldown = 18,
 	tactical = { DEFEND = 2 },
 	range = 10,
 	no_energy = true,
 	getMaxAbsorb = function(self, t) return 50 + self:combatTalentSpellDamage(t, 50, 450) end,
 	getDuration = function(self, t) return util.bound(5 + math.floor(self:getTalentLevel(t)), 5, 15) end,
-	getDotDuration = function(self, t) return util.bound(4 + math.floor(self:getTalentLevel(t)), 4, 12) end,
-	getTimeReduction = function(self, t) return util.bound(15 + math.floor(self:getTalentLevel(t) * 2), 15, 35) end,
+	getTimeReduction = function(self, t) return 25 + util.bound(15 + math.floor(self:getTalentLevel(t) * 2), 15, 35) end,
 	action = function(self, t)
-		self:setEffect(self.EFF_TIME_SHIELD, t.getDuration(self, t), {power=t.getMaxAbsorb(self, t), dot_dur=t.getDotDuration(self, t), time_reducer=t.getTimeReduction(self, t)})
+		self:setEffect(self.EFF_TIME_SHIELD, t.getDuration(self, t), {power=t.getMaxAbsorb(self, t), dot_dur=5, time_reducer=t.getTimeReduction(self, t)})
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
 	info = function(self, t)
 		local maxabsorb = t.getMaxAbsorb(self, t)
 		local duration = t.getDuration(self, t)
-		local dotdur = t.getDotDuration(self,t)
 		local time_reduc = t.getTimeReduction(self,t)
 		return ([[This intricate spell instantly erects a time shield around the caster, preventing any incoming damage and sending it forward in time.
-		Once either the maximum damage (%d) is absorbed, or the time runs out (%d turns), the stored damage will return as a temporal wake over time (%d turns).
-		Each turn the temporal wake is active, a temporal vortex will spawn at your feet, damaging any inside after one turn for three turns.
+		Once either the maximum damage (%d) is absorbed, or the time runs out (%d turns), the stored damage will return as a temporal restoration field over time (5 turns).
+		Each turn the restoration field is active, you get healed for 10%% of the absorbed damage (Aegis Shielding talent affects the percentage).
 		While under the effect of Time Shield, all newly applied magical, physical and mental effects will have their durations reduced by %d%%.
 		The shield's max absorption will increase with your Spellpower.]]):
-		format(maxabsorb, duration, dotdur, time_reduc)
+		format(maxabsorb, duration, time_reduc)
 	end,
 }
 
@@ -91,7 +89,7 @@ newTalent{
 	require = spells_req3,
 	points = 5,
 	random_ego = "utility",
-	mana = 120,
+	mana = 100,
 	cooldown = 40,
 	tactical = { DISABLE = 1, ESCAPE = 3, PROTECT = 3 },
 	range = 10,

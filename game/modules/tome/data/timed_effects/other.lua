@@ -139,10 +139,13 @@ newEffect{
 		self:removeTemporaryValue("reduce_status_effects_time", eff.durid)
 
 		self:removeParticles(eff.particle)
-		-- Time shield ends, setup a dot if needed
+
+		-- Time shield ends, setup a restoration field if needed
 		if eff.power - self.time_shield_absorb > 0 then
-			print("Time shield dot", eff.power - self.time_shield_absorb, (eff.power - self.time_shield_absorb) / eff.dot_dur)
-			self:setEffect(self.EFF_TIME_DOT, eff.dot_dur, {power=(eff.power - self.time_shield_absorb) / eff.dot_dur})
+			local val = (eff.power - self.time_shield_absorb) / eff.dot_dur / 2
+			if self:attr("shield_factor") then val = val * (100 + self:attr("shield_factor")) / 100 end
+			print("Time shield restoration field", eff.power - self.time_shield_absorb, val)
+			self:setEffect(self.EFF_TIME_DOT, eff.dot_dur, {power=val})
 		end
 
 		self:removeTemporaryValue("time_shield", eff.tmpid)
@@ -153,14 +156,14 @@ newEffect{
 
 newEffect{
 	name = "TIME_DOT",
-	desc = "Temporal Wake",
-	long_desc = function(self, eff) return ("The time distortion protecting the target has ended. All damage forwarded in time is now appearing as temporal vortexes each turn. Temporal Vortexes do %0.2f temporal damage per turn for 3 turn."):format(eff.power) end,
+	desc = "Temporal Restoration Field",
+	long_desc = function(self, eff) return ("The time distortion has created a restoration field, healing the target for %d each turn."):format(eff.power) end,
 	type = "other",
 	subtype = { time=true },
-	status = "detrimental",
+	status = "beneficial",
 	parameters = { power=10 },
-	on_gain = function(self, err) return "The powerful time-altering energies come crashing down on #target#.", "+Temporal Wake" end,
-	on_lose = function(self, err) return "The fabric of time around #target# returns to normal.", "-Temporal Wake" end,
+	on_gain = function(self, err) return "The powerful time-altering energies generate a restoration field on #target#.", "+Temporal Restoration Field" end,
+	on_lose = function(self, err) return "The fabric of time around #target# returns to normal.", "-Temporal Restoration Field" end,
 	activate = function(self, eff)
 		eff.particle = self:addParticles(Particles.new("time_shield", 1))
 	end,
@@ -168,15 +171,7 @@ newEffect{
 		self:removeParticles(eff.particle)
 	end,
 	on_timeout = function(self, eff)
-		-- Add a lasting map effect
-		game.level.map:addEffect(self,
-			self.x, self.y, 3,
-			DamageType.TEMPORAL, eff.power,
-			0,
-			5, nil,
-			{type="temporal_vortex"},
-			nil, true
-		)
+		self:heal(eff.power)
 	end,
 }
 
