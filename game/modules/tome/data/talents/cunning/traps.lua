@@ -645,7 +645,7 @@ newTalent{
 			realact = function(self)
 				local tgts = {}
 				self:project({type="ball", range=0, friendlyfire=false, radius=5, talent=t}, self.x, self.y, function(px, py)
-					local target = game.level.map(px, py, Map.ACTOR)
+					local target = game.level.map(px, py, engine.Map.ACTOR)
 					if not target then return end
 					if self:reactionToward(target) < 0 and not tgts[target] then
 						tgts[target] = true
@@ -653,7 +653,7 @@ newTalent{
 						target:pull(self.x, self.y, 1)
 						if target.x ~= ox or target.y ~= oy then
 							game.logSeen(target, "%s is pulled in!", target.name:capitalize())
-							DamageType:get(DamageType.TEMPORAL).projector(self.summoner, target.x, target.y, DamageType.TEMPORAL, self.dam)
+							engine.DamageType:get(engine.DamageType.TEMPORAL).projector(self.summoner, target.x, target.y, engine.DamageType.TEMPORAL, self.dam)
 						end
 					end
 				end)
