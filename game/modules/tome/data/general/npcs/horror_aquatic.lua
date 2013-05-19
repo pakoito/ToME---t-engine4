@@ -175,7 +175,7 @@ newEntity{ base = "BASE_NPC_HORROR_AQUATIC",
 newEntity{ base = "BASE_NPC_HORROR_AQUATIC",
 	name = "abyssal horror", color=colors.BLACK,
 	desc = "This deep black form is shrouded in darkness. All you can make out are a pair of deep red eyes, hidden behind a mass of tentacles.",
-	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/horror_eldritch_abyssal_horror.png", display_h=2, display_y=-1}}},
+	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/horror_aquatic_abyssal_horror.png", display_h=2, display_y=-1}}},
 	level_range = {16, nil}, exp_worth = 1,
 	rarity = 12, --Scary but rare
 	rank = 3,
