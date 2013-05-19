@@ -27,6 +27,7 @@ newTalent{
 	cooldown = 30,
 	tactical = { BUFF = 2 },
 	spellpower_increase = { 5, 9, 14, 17, 20 },
+	use_only_arcane = 1,
 	getSpellpowerIncrease = function(self, t)
 		local v = t.spellpower_increase[self:getTalentLevelRaw(t)]
 		if v then return v else return 20 + (self:getTalentLevelRaw(t) - 5) * 2 end
@@ -58,6 +59,7 @@ newTalent{
 	random_ego = "attack",
 	mana = 10,
 	cooldown = 3,
+	use_only_arcane = 1,
 	tactical = { ATTACK = { ARCANE = 2 } },
 	range = 10,
 	direct_hit = function(self, t) if self:getTalentLevel(t) >= 3 then return true else return false end end,
@@ -99,6 +101,7 @@ newTalent{
 	points = 5,
 	mana = 35,
 	cooldown = 12,
+	use_only_arcane = 1,
 	range = 10,
 	direct_hit = true,
 	reflectable = true,
@@ -135,6 +138,7 @@ newTalent{
 	mode = "sustained",
 	cooldown = 30,
 	sustain_mana = 10,
+	use_only_arcane = 1,
 	no_energy = true,
 	tactical = { MANA = 3, DEFEND = 2, },
 	getManaRatio = function(self, t) return math.max(3 - self:combatTalentSpellDamage(t, 10, 200) / 100, 0.5) * (100 - util.bound(self:attr("shield_factor") or 0, 0, 70)) / 100 end,

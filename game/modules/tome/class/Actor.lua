@@ -3634,9 +3634,8 @@ function _M:preUseTalent(ab, silent, fake)
 	if ab.on_pre_use and not (ab.mode == "sustained" and self:isTalentActive(ab.id)) and not ab.on_pre_use(self, ab, silent, fake) then return false end
 
 	if self:attr("use_only_arcane") then
-		if self:attr("use_only_arcane") >= 2 then if ab.type[1] ~= "spell/arcane" and ab.type[1] ~= "spell/aether" and ab.type[1] ~= "spell/aegis" then return false end
-		elseif self:attr("use_only_arcane") >= 1 then if ab.type[1] ~= "spell/arcane" and ab.type[1] ~= "spell/aether" then return false end
-		end
+		if not ab.use_only_arcane then return false end
+		if self:attr("use_only_arcane") < ab.use_only_arcane then return false end
 	end
 
 	-- Cant heal
