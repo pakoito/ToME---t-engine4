@@ -31,6 +31,7 @@ newTalent{
 	requires_target = true,
 	on_learn = function(self, t) self.resists[DamageType.LIGHTNING] = (self.resists[DamageType.LIGHTNING] or 0) + 1 end,
 	on_unlearn = function(self, t) self.resists[DamageType.LIGHTNING] = (self.resists[DamageType.LIGHTNING] or 0) - 1 end,
+	on_pre_use = function(self, t) return not self:attr("never_move") end,
 	action = function(self, t)
 		self:setEffect(self.EFF_LIGHTNING_SPEED, math.ceil(self:mindCrit(1 + self:getTalentLevel(t) * 0.3)), {power=400 + self:getTalentLevel(t) * 70})
 		return true

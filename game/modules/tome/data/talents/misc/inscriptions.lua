@@ -186,6 +186,7 @@ newInscription{
 	points = 1,
 	no_energy = true,
 	tactical = { DEFEND = 1 },
+	on_pre_use = function(self, t) return not self:attr("never_move") end,
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:setEffect(self.EFF_FREE_ACTION, data.dur, {power=1})
