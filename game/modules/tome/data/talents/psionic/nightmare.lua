@@ -327,7 +327,10 @@ newTalent{
 		m:resolve() m:resolve(nil, true)
 		m:forceLevelup(self.level)
 		
-		game:onTickEnd(function()game.zone:addEntity(game.level, m, "actor", x, y) end)
+		game:onTickEnd(function()
+			local x, y = util.findFreeGrid(x, y, 1, true, {[Map.ACTOR]=true})
+			if x then game.zone:addEntity(game.level, m, "actor", x, y) end
+		end)
 		game.level.map:particleEmitter(x, y, 1, "generic_teleport", {rm=60, rM=130, gm=20, gM=110, bm=90, bM=130, am=70, aM=180})
 		
 		if game.party:hasMember(self) then
