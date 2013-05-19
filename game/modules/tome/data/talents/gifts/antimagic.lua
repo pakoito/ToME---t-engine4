@@ -54,7 +54,7 @@ newTalent{
 	equilibrium = 20,
 	cooldown = 10,
 	tactical = { DISABLE = { silence = 4 } },
-	radius = function(self, t) return 4 + self:getTalentLevel(t) * 1.5 end,
+	radius = function(self, t) return math.floor(4 + self:getTalentLevel(t) * 1.5) end,
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,
