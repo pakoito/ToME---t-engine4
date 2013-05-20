@@ -125,13 +125,15 @@ newTalent{
 	sustain_vim = 50,
 	tactical = { DEFEND = 4 },
 	direct_hit = true,
+	getNb = function(self, t) return math.ceil(self:getTalentLevel(t)) end,
+	getRegen = function(self, t) return math.max(math.floor(30 / t.getNb(self, t)), 3) end,
 	callbackOnActBase = function(self, t)
 		local p = self.sustain_talents[t.id]
 		p.next_regen = (p.next_regen or 1) - 1
 		if p.next_regen <= 0 then
 			p.next_regen = p.between_regens or 10
 
-			if #p.particles < math.ceil(self:getTalentLevel(t)) then
+			if #p.particles < t.getNb(self, t) then
 				p.particles[#p.particles+1] = self:addParticles(Particles.new("bone_shield", 1))
 				game.logSeen(self, "A part of %s's bone shield regenerates.", self.name)
 			end
@@ -146,7 +148,7 @@ newTalent{
 		return pid
 	end,
 	activate = function(self, t)
-		local nb = math.ceil(self:getTalentLevel(t))
+		local nb = t.getNb(self, t)
 
 		local ps = {}
 		for i = 1, nb do ps[#ps+1] = self:addParticles(Particles.new("bone_shield", 1)) end
@@ -154,8 +156,8 @@ newTalent{
 		game:playSoundNear(self, "talents/spell_generic2")
 		return {
 			particles = ps,
-			next_regen = 30 / nb,
-			between_regens = 30 / nb,
+			next_regen = t.getRegen(self, t),
+			between_regens = t.getRegen(self, t),
 		}
 	end,
 	deactivate = function(self, t, p)
@@ -163,10 +165,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local nb = math.ceil(self:getTalentLevel(t))
 		return ([[Bone shields start circling around you. They will each fully absorb one attack.
 		%d shield(s) will be generated when first activated.
 		Then every %d turns a new one will be created if not full.]]):
-		format(nb, math.floor(30 / nb))
+		format(t.getNb(self, t), t.getRegen(self, t))
 	end,
 }
