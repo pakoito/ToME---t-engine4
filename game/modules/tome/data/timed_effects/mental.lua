@@ -1465,7 +1465,7 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("combat_mentalresist", eff.mindid)
-		self:removeTemporaryValue("combat_mindpower", eff.powid)
+		self:removeTemporaryValue("combat_mindpower", eff.powdid)
 	end,
 }
 
