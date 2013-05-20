@@ -1851,7 +1851,7 @@ newEffect{
 		eff.id = self:effectTemporaryValue(eff, "resists", {[DamageType.PHYSICAL]=-eff.power})
 	end,
 	deactivate = function(self, eff)
-		self:removeTemporaryValue("resists", eff.pid)
+		self:removeTemporaryValue("resists", eff.id)
 	end,
 
 }
