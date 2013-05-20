@@ -1296,6 +1296,8 @@ function _M:setupCommands()
 			print("===============")
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
+			game.level.map:particleEmitter(game.player.x, game.player.y, 1, "burning-steam", {})
+do return end
 			local f, err = loadfile("/data/general/events/crystaline-forest.lua")
 			print(f, err)
 			setfenv(f, setmetatable({level=self.level, zone=self.zone}, {__index=_G}))

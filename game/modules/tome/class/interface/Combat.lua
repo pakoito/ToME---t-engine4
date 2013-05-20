@@ -1818,6 +1818,16 @@ function _M:hasMassiveArmor()
 	return armor
 end
 
+--- Check if the actor has a cloak
+function _M:hasCloak()
+	if not self:getInven("CLOAK") then return end
+	local cloak = self:getInven("CLOAK")[1]
+	if not cloak then
+		return nil
+	end
+	return cloak
+end
+
 -- Unarmed Combat; this handles grapple checks and building combo points
 -- Builds Comob; reduces the cooldown on all unarmed abilities on cooldown by one
 function _M:buildCombo()

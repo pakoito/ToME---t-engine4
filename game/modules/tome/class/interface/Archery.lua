@@ -35,7 +35,10 @@ function _M:archeryAcquireTargets(tg, params)
 		game.logPlayer(self, "You must wield a bow or a sling (%s)!", ammo)
 		return nil
 	end
-	if not ammo or (ammo.combat.shots_left <= 0 and not ammo.infinite) then
+
+	local infinite = ammo.infinite or self:attr("infinite_ammo")
+
+	if not ammo or (ammo.combat.shots_left <= 0 and not infinite) then
 		game.logPlayer(self, "You do not have enough ammo left!")
 		return nil
 	end
@@ -75,7 +78,7 @@ function _M:archeryAcquireTargets(tg, params)
 	local runfire = function(weapon, targets)
 		if params.one_shot then
 			local a = ammo
-			if not ammo.infinite and ammo.combat.shots_left > 0 then
+			if not infinite and ammo.combat.shots_left > 0 then
 				ammo.combat.shots_left = ammo.combat.shots_left - 1
 			end
 			if a then
@@ -102,7 +105,7 @@ function _M:archeryAcquireTargets(tg, params)
 
 				for i = 1, params.multishots or 1 do
 					local a = ammo
-					if not ammo.infinite then
+					if not infinite then
 						if ammo.combat.shots_left > 0 then ammo.combat.shots_left = ammo.combat.shots_left - 1
 						else break
 						end
@@ -147,7 +150,7 @@ function _M:archeryAcquireTargets(tg, params)
 
 		if sound then game:playSoundNear(self, sound) end
 
---		if not ammo.infinite and (ammo.combat.shots_left < 10 or ammo:getNumber() == 50 or ammo:getNumber() == 40 or ammo:getNumber() == 25) then
+--		if not infinite and (ammo.combat.shots_left < 10 or ammo:getNumber() == 50 or ammo:getNumber() == 40 or ammo:getNumber() == 25) then
 --			game.logPlayer(self, "You only have %s left!", ammo:getName{do_color=true})
 --		end
 

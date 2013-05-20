@@ -247,6 +247,7 @@ function _M:useTalentMessage(ab)
 	str = str:gsub("@source@", self.name)
 	str = str:gsub("@target@", tname)
 	str = str:gsub("@Target@", tname:capitalize())
+	str = str:gsub("@hisher@", string.his_her(self))
 	return str
 end
 
