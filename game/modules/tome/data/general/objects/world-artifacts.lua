@@ -3712,7 +3712,7 @@ newEntity{ base = "BASE_LONGSWORD",
 	end,
 }
 
-newEntity{ base = "BASE_GREATSWORD", define_as="MORRIGOR",
+newEntity{ base = "BASE_LONGSWORD", define_as="MORRIGOR",
 	power_source = {arcane=true, unknown=true},
 	unique = true, sentient = true,
 	name = "Morrigor", image = "object/artifact/morrigor.png",
@@ -3724,7 +3724,7 @@ newEntity{ base = "BASE_GREATSWORD", define_as="MORRIGOR",
 	cost = 300,
 	material_level = 4,
 	combat = {
-		dam = 58,
+		dam = 50,
 		apr = 12,
 		physcrit = 7,
 		dammod = {str=0.7, mag=0.7},
