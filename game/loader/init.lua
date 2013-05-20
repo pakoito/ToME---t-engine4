@@ -146,7 +146,10 @@ local te4_loader = function(name)
 		local addon = __addons_superload_order[i]
 		local fn = "/mod/addons/"..addon.."/superload/"..name..".lua"
 		if fs.exists(fn) then
-			local f = loadfile(fn)
+			local f, err = loadfile(fn)
+			if not f and err then 
+				error("Error while superloading '"..fn.."':\n"..tostring(err))
+			end
 			local base = prev
 			setfenv(f, setmetatable({
 				loadPrevious = function()
