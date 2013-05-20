@@ -1848,10 +1848,7 @@ newEffect{
 	on_gain = function(self, err) return  nil, "+Distortion" end,
 	on_lose = function(self, err) return "#Target# is no longer distorted." or nil, "-Distortion" end,
 	activate = function(self, eff)
-		eff.id = self:effectTemporaryValue(eff, "resists", {[DamageType.PHYSICAL]=-eff.power})
-	end,
-	deactivate = function(self, eff)
-		self:removeTemporaryValue("resists", eff.id)
+		self:effectTemporaryValue(eff, "resists", {[DamageType.PHYSICAL]=-eff.power})
 	end,
 
 }
