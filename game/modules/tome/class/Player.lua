@@ -801,8 +801,9 @@ function _M:restCheck()
 		for act, def in pairs(game.party.members) do if game.level:hasEntity(act) and not act.dead then
 			if act.life < act.max_life and act.life_regen> 0 then return true end
 		end end
-
 		if ammo and ammo.combat.shots_left < ammo.combat.capacity and ((self:hasEffect(self.EFF_RELOADING)) or (ammo.combat.ammo_every and ammo.combat.ammo_every > 0)) then return true end
+
+		if self:fireTalentCheck("callbackOnRest") then return true end
 	else
 		return true
 	end

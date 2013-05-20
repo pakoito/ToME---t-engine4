@@ -127,6 +127,11 @@ newTalent{
 	direct_hit = true,
 	getNb = function(self, t) return math.ceil(self:getTalentLevel(t)) end,
 	getRegen = function(self, t) return math.max(math.floor(30 / t.getNb(self, t)), 3) end,
+	callbackOnRest = function(self, t)
+		local nb = t.getNb(self, t)
+		local p = self.sustain_talents[t.id]
+		if not p or #p.particles < nb then return true end
+	end,
 	callbackOnActBase = function(self, t)
 		local p = self.sustain_talents[t.id]
 		p.next_regen = (p.next_regen or 1) - 1

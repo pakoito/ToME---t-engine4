@@ -3661,6 +3661,26 @@ function _M:preUseTalent(ab, silent, fake)
 
 	return true
 end
+
+local sustainCallbackCheck = {
+	callbackOnAct = "talents_on_act",
+	callbackOnActBase = "talents_on_act_base",
+	callbackOnMove = "talents_on_move",
+	callbackOnRest = "talents_on_rest",
+}
+_M.sustainCallbackCheck = sustainCallbackCheck
+
+function _M:fireTalentCheck(event, ...)
+	local store = sustainCallbackCheck[event]
+	local ret = false
+	if self[store] and next(self[store]) then
+		for tid, _ in pairs(self[store]) do
+			ret = self:callTalent(tid, event, ...) or ret
+		end
+	end
+	return ret
+end
+
 --- Called after a talent is used
 -- Check if it must use a turn, mana, stamina, ...
 -- @param ab the talent (not the id, the table)
@@ -3752,17 +3772,11 @@ function _M:postUseTalent(ab, ret, silent)
 			if ab.sustain_feedback then
 				trigger = true; self:incMaxFeedback(-util.getval(ab.sustain_feedback, self, ab))
 			end
-			if ab.callbackOnAct then
-				self.talents_on_act = self.talents_on_act or {}
-				self.talents_on_act[ab.id] = true
-			end
-			if ab.callbackOnActBase then
-				self.talents_on_act_base = self.talents_on_act_base or {}
-				self.talents_on_act_base[ab.id] = true
-			end
-			if ab.callbackOnMove then
-				self.talents_on_move = self.talents_on_move or {}
-				self.talents_on_move[ab.id] = true
+			for event, store in pairs(sustainCallbackCheck) do
+				if ab[event] then
+					self[store] = self[store] or {}
+					self[store][ab.id] = true
+				end
 			end
 		else
 			if ab.sustain_mana then
@@ -3795,17 +3809,11 @@ function _M:postUseTalent(ab, ret, silent)
 			if ab.sustain_feedback then
 				self:incMaxFeedback(util.getval(ab.sustain_feedback, self, ab))
 			end
-			if ab.callbackOnAct then
-				self.talents_on_act[ab.id] = nil
-				if not next(self.talents_on_act) then self.talents_on_act = nil end
-			end
-			if ab.callbackOnActBase then
-				self.talents_on_act_base[ab.id] = nil
-				if not next(self.talents_on_act_base) then self.talents_on_act_base = nil end
-			end
-			if ab.callbackOnMove then
-				self.talents_on_move[ab.id] = nil
-				if not next(self.talents_on_move) then self.talents_on_move = nil end
+			for event, store in pairs(sustainCallbackCheck) do
+				if ab[event] then
+					self[store][ab.id] = nil
+					if not next(self[store]) then self[store] = nil end
+				end
 			end
 		end
 	elseif not self:attr("force_talent_ignore_ressources") then
