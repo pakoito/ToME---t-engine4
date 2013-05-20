@@ -143,7 +143,6 @@ newTalent{
 		self.projectile_evasion = (self.projectile_evasion or 0) - 3
 		self.projectile_evasion_spread = (self.projectile_evasion_spread or 0) - 1
 	end,
-	-- Talking with SageAcrin, this is definitely an accurate portrayal of the skill's effects. 
 	info = function(self, t)
 		return ([[Your abilities in sowing confusion and chaos have reached their peak. Now, even your most simple moves confuse your enemies, rendering their offense less effective.
 		Your Defense increases by %d%%, and enemies have a %d%% chance of targetting a random square within %d squares of you.
