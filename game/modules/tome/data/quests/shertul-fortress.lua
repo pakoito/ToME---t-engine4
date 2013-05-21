@@ -196,13 +196,11 @@ fly = function(self)
 
 		local f = require("mod.class.FortressPC").new{}
 		game:changeLevel(1, "wilderness", {direct_switch=true})
-		game.party:addMember(f, {temporary_level=1, control="full"})
 		f.x = game.player.x
 		f.y = game.player.y
-		game.party:setPlayer(f, true)
 		game.level:addEntity(f)
-		game.level.map:remove(f.x, f.y, engine.Map.ACTOR)
 		f:move(f.x, f.y, true)
+		f:takeControl(game.player)
 
 		game.player:setQuestStatus("shertul-fortress", self.COMPLETED, "flying")
 	end

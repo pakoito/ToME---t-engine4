@@ -233,10 +233,10 @@ end
 
 function _M:takeControl(from)
 	game:onTickEnd(function()
+		from:attr("dont_act", 1)
 		game.party:addMember(self, {temporary_level=1, control="full"})
 		game.party:setPlayer(self, true)
 		game.level.map:remove(from.x, from.y, engine.Map.ACTOR)
-		from:attr("dont_act", 1)
 	end)
 end
 
