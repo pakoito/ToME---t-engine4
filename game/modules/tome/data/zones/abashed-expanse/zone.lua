@@ -249,7 +249,7 @@ return {
 		core.display.glRotate(game.zone.world_sphere_rot, 0, 0, 1)
 		core.display.glColor(1, 1, 1, 1)
 
-		local tex = Map.tiles:get('', 0, 0, 0, 0, 0, 0, "shockbolt/terrain/eyal-world.png")
+		local tex = Map.tiles:get('', 0, 0, 0, 0, 0, 0, "stars/eyal.png")
 		tex:bind(0)
 		level.world_sphere.q:sphere(300)
 

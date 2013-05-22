@@ -25,7 +25,7 @@ local Quadratic = require "engine.Quadratic"
 module(..., package.seeall, class.inherit(mod.class.Grid))
 
 function _M:init(t, no_default)
-	t.sphere_map = t.sphere_map or "shockbolt/terrain/eyal-world.png"
+	t.sphere_map = t.sphere_map or "stars/eyal.png"
 	t.sphere_size = t.sphere_size or 1
 	t.x_rot = t.x_rot or 0
 	t.y_rot = t.y_rot or 0
