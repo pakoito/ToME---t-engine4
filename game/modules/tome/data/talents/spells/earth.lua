@@ -56,7 +56,7 @@ newTalent{
 	points = 5,
 	mana = 15,
 	cooldown = 6,
-	range = function(self, t) return math.ceil(2 + self:getTalentLevel(t)) end,
+	range = function(self, t) return math.min(10, math.ceil(2 + self:getTalentLevel(t))) end,
 	tactical = { ATTACK = {PHYSICAL = 2} },
 	direct_hit = true,
 	requires_target = true,
