@@ -111,11 +111,11 @@ gain_energy = function(self, energy)
 		Dialog:simpleLongPopup("Fortress Shadow", "Master, you have sent enough energy to activate the exploratory farportal.\nHowever, there seems to be a disturbance in that room. Please return as soon as possible.", 400)
 	end
 
-	if self.shertul_energy >= 250 and not self:isCompleted("flight") then
---		game.player:setQuestStatus(self.id, self.COMPLETED, "flight")
---		local Dialog = require "engine.ui.Dialog"
---		Dialog:simpleLongPopup("Fortress Shadow", "Master, you have sent enough energy to activate the flight systems.\nHowever, one control crystal is broken. You need to find an #GOLD#Ancient Storm Saphir#WHITE#.", 400)
-	end
+	-- if self.shertul_energy >= 250 and not self:isCompleted("flight") then
+	-- 	game.player:setQuestStatus(self.id, self.COMPLETED, "flight")
+	-- 	local Dialog = require "engine.ui.Dialog"
+	-- 	Dialog:simpleLongPopup("Fortress Shadow", "Master, you have sent enough energy to activate the flight systems.\nHowever, one control crystal is broken. You need to find an #GOLD#Ancient Storm Saphir#WHITE#.", 400)
+	-- end
 end
 
 exploratory_energy = function(self, check_only)

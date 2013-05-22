@@ -823,14 +823,14 @@ function _M:changeLevelReal(lev, zone, params)
 		end
 	end
 	self.player.changed = true
-	if self.to_re_add_actors and not self.zone.wilderness then for act, _ in pairs(self.to_re_add_actors) do
+	if self.to_re_add_actors and not self.zone.wilderness and not self.zone.stellar_map then for act, _ in pairs(self.to_re_add_actors) do
 		local x, y = util.findFreeGrid(self.player.x, self.player.y, 20, true, {[Map.ACTOR]=true})
 		if x then act:move(x, y, true) end
 	end end
 
 	-- Re add entities
 	self.level:addEntity(self.player)
-	if self.to_re_add_actors and not self.zone.wilderness then
+	if self.to_re_add_actors and not self.zone.wilderness and not self.zone.stellar_map then
 		for act, _ in pairs(self.to_re_add_actors) do
 			self.level:addEntity(act)
 			act:setTarget(nil)
@@ -1296,13 +1296,14 @@ function _M:setupCommands()
 			print("===============")
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
-			self:registerDialog(require("mod.dialogs.DownloadCharball").new())
+			game:changeLevel(1, "stellar-system-shandral")
 do return end
 			local f, err = loadfile("/data/general/events/crystaline-forest.lua")
 			print(f, err)
 			setfenv(f, setmetatable({level=self.level, zone=self.zone}, {__index=_G}))
 			print(pcall(f))
 do return end
+			self:registerDialog(require("mod.dialogs.DownloadCharball").new())
 		end end,
 		[{"_f","ctrl"}] = function() if config.settings.cheat then
 			self.player.quests["love-melinda"] = nil

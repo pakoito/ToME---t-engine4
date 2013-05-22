@@ -30,6 +30,9 @@ function _M:init(t, no_default)
 	mod.class.Player.init(self, t, no_default)
 
 	self.name = "Yiilkgur, the Sher'Tul Fortress"
+	self.type = "construct"
+	self.subtype = "fortress"
+	self.size_category = 10
 	self.is_fortress = true
 	self.no_worldmap_encounter = true
 	self.allow_talents_worldmap = true
@@ -57,6 +60,7 @@ function _M:init(t, no_default)
 
 	self:learnTalent(self.T_SHERTUL_FORTRESS_GETOUT, true)
 	self:learnTalent(self.T_SHERTUL_FORTRESS_BEAM, true)
+--	self:learnTalent(self.T_SHERTUL_FORTRESS_ORBIT, true)
 
 	self:addParticles(Particles.new("shertul_fortress_orbiters", 1, {}))
 end
@@ -234,7 +238,7 @@ end
 function _M:takeControl(from)
 	game:onTickEnd(function()
 		from:attr("dont_act", 1)
-		game.party:addMember(self, {temporary_level=1, control="full"})
+		game.party:addMember(self, {control="full", keep_between_levels=true})
 		game.party:setPlayer(self, true)
 		game.level.map:remove(from.x, from.y, engine.Map.ACTOR)
 	end)

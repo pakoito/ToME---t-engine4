@@ -38,6 +38,20 @@ newEntity{ base = "BASE_SCROLL", define_as = "JEWELER_TOME", subtype="tome", no_
 	end,
 }
 
+newEntity{ base = "BASE_GEM", define_as = "ANCIENT_STORM_SAPHIR",
+	power_source = {unknown=true},
+	unique = true,
+	unided_name = "strange saphir",
+	name = "Ancient Storm Saphir", subtype = "blue", image = "object/ancient_storm_saphir.png",
+	color = colors.ROYAL_BLUE,
+	level_range = {30, 50},
+	desc = [[This seemingly normal saphir seems to be charged with the destructive power of a raging storm.]],
+	rarity = 300,
+	cost = 0,
+	material_level = 4,
+	identified = false,
+}
+
 -- Not a random drop, used by the quest started above
 newEntity{ base = "BASE_SCROLL", define_as = "JEWELER_SUMMON", subtype="tome", no_unique_lore=true,
 	power_source = {unknown=true},

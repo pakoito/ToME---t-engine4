@@ -350,26 +350,29 @@ newTalent{
 	type = {"base/race", 1},
 	no_npc_use = true,
 	no_unlearn_last = true,
+	on_pre_use = function(self, t) return not game.zone.stellar_map end,
 	action = function(self, t)
 		if game.level.map:checkAllEntities(self.x, self.y, "block_move") then game.log("You cannot teleport there.") return true end
 		game:onTickEnd(function()
 			game.party:removeMember(self, true)
 			game.party:findSuitablePlayer()
+			game.player.dont_act = nil
 			game.player:move(self.x, self.y, true)
-			game.player:attr("dont_act", -1)
 		end)
 		return true
 	end,
-	info = [[Use the onboard short-range teleport of the Fortress to beam down to the surface.]]
+	info = [[Use the onboard short-range teleport of the Fortress to beam down to the surface.
+	Requires being in flight above the ground of a planet.]]
 }
 
 newTalent{
 	short_name = "SHERTUL_FORTRESS_BEAM",
-	name = "Fire a blast of energy", --FINISH ME
+	name = "Fire a blast of energy",
 	type = {"base/race", 1},
 	fortress_energy = 10,
 	no_npc_use = true,
 	no_unlearn_last = true,
+	on_pre_use = function(self, t) return not game.zone.stellar_map end,
 	action = function(self, t)
 		for i = 1, 5 do
 			local rad = rng.float(0.5, 1)
@@ -389,5 +392,25 @@ newTalent{
 		game:playSoundNear(self, "talents/arcane")
 		return true
 	end,
-	info = [[Use 10 Fortress energy to send a powerful blast to the ground, directly below the Fortress, heavily damaging any creatures caught inside.]]
+	info = [[Use 10 Fortress energy to send a powerful blast to the ground, directly below the Fortress, heavily damaging any creatures caught inside.
+	Requires being in flight above the ground of a planet.]]
+}
+
+newTalent{
+	short_name = "SHERTUL_FORTRESS_ORBIT",
+	name = "High Planetary Orbit",
+	type = {"base/race", 1},
+	fortress_energy = 100,
+	no_npc_use = true,
+	no_unlearn_last = true,
+	no_energy = true,
+	on_pre_use = function(self, t) return not game.zone.stellar_map end,
+	action = function(self, t)
+		game:changeLevelReal(1, "stellar-system-shandral", {})
+		game:playSoundNear(self, "talents/arcane")
+
+		return true
+	end,
+	info = [[Activate the powerful flight engines of the Fortress, propelling it fast into high planetary orbit.
+	Requires being in flight above the ground of a planet.]]
 }

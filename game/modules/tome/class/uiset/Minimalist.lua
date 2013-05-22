@@ -1771,7 +1771,7 @@ function _M:displayHotkeys(scale, bx, by)
 				return
 			end
 
-			if event == "button" and button == "left" and ((game.zone and game.zone.wilderness) or (game.key ~= game.normal_key)) then return end
+			if event == "button" and button == "left" and ((game.zone and game.zone.wilderness and not game.player.allow_talents_worldmap) or (game.key ~= game.normal_key)) then return end
 			self.hotkeys_display:onMouse(button, mx, my, event == "button",
 				function(text)
 					text = text:toTString()

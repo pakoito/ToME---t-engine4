@@ -116,7 +116,9 @@ function _M:leftLevel()
 		self:removeMember(todel[i])
 		todel[i]:disappear()
 	end
-	self:findSuitablePlayer()
+	if not game.player or not self.members[game.player].keep_between_levels then
+		self:findSuitablePlayer()
+	end
 end
 
 function _M:hasMember(actor)
