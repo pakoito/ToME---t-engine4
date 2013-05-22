@@ -25,6 +25,7 @@ defineTile('s', "SUMMERTIDE")
 defineTile('w', "WINTERTIDE")
 defineTile('K', "KOLAL")
 defineTile('L', "LUXAM")
+defineTile('P', "PONX")
 
 return {
 [[                                                  ]],
@@ -42,7 +43,7 @@ return {
 [[                                                  ]],
 [[                                                  ]],
 [[                                                  ]],
-[[                                                  ]],
+[[                  P                               ]],
 [[                                                  ]],
 [[                                              ====]],
 [[                                             =====]],
@@ -52,7 +53,7 @@ return {
 [[                                         =========]],
 [[                                         =========]],
 [[                                        ==========]],
-[[                       L                ==========]],
+[[                       K                ==========]],
 [[                                        =========S]],
 [[                                        ==========]],
 [[                                        ==========]],

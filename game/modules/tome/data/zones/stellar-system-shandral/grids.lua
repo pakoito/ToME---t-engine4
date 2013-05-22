@@ -104,5 +104,18 @@ newEntity{ base = "CELESTIAL_BODY",
 	desc = [[One of the main planet of the Shandral system.]],
 	sphere_map = "stars/luxam.png",
 	sphere_size = 1.3,
-	x_rot = -90, y_rot = -20, rot_speed = 1000,
+	x_rot = 0, y_rot = -20, rot_speed = 1000,
+}
+
+--------------------------------------------------------------------
+-- Planet
+--------------------------------------------------------------------
+newEntity{ base = "CELESTIAL_BODY",
+	define_as = "PONX",
+	name = "Ponx (Gaz Planet)",
+	display = 'O', color=colors.LIGHT_BLUE,
+	desc = [[One of the main planet of the Shandral system.]],
+	sphere_map = "stars/ponx.png",
+	sphere_size = 2,
+	x_rot = 20, y_rot = -40, rot_speed = 3000,
 }
