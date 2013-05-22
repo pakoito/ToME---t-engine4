@@ -57,7 +57,7 @@ newTalent{
 			lx, ly, is_corner_blocked = l:step()
 		end
 
-		if core.fov.distance(x, y, tx, ty) > 1 then return nil end
+		if not tx or not ty or core.fov.distance(x, y, tx, ty) > 1 then return nil end
 
 		local ox, oy = self.x, self.y
 		self:move(tx, ty, true)
