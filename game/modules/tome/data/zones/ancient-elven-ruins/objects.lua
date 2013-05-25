@@ -44,16 +44,18 @@ newEntity{ base = "BASE_MUMMY_WRAPPING", define_as = "BINDINGS_ETERNAL_NIGHT",
 	cost = 200,
 	material_level = 3,
 	wielder = {
-		combat_armor = 7,
+		combat_armor = 12,
+		combat_def = 12,
 		inc_stats = { [Stats.STAT_WIL] = 5, [Stats.STAT_MAG] = 5, },
 		resists = {
 			[DamageType.BLIGHT] = 30,
 			[DamageType.DARKNESS] = 30,
-			[DamageType.LIGHT] = -20,
-			[DamageType.FIRE] = -20,
+			[DamageType.LIGHT] = -10,
+			[DamageType.FIRE] = -10,
 		},
-		on_melee_hit={[DamageType.BLIGHT] = 10},
-		life_regen = 0.3,
+		inc_damage={[DamageType.DARKNESS] = 20},
+		on_melee_hit={[DamageType.DARKNESS] = 10},
+		life_regen = 1,
 		lite = -1,
 		poison_immune = 1,
 		disease_immune = 1,
@@ -87,6 +89,7 @@ newEntity{ base = "BASE_LEATHER_CAP", define_as = "CROWN_ETERNAL_NIGHT",
 		fatigue = 3,
 		inc_damage = {},
 		melee_project = {},
+		flat_damage_armor = {all=10},
 	},
 	max_power = 80, power_regen = 1,
 
@@ -97,9 +100,11 @@ newEntity{ base = "BASE_LEATHER_CAP", define_as = "CROWN_ETERNAL_NIGHT",
 		self:specialSetAdd({"wielder","knockback_immune"}, 0.3)
 		self:specialSetAdd({"wielder","combat_mentalresist"}, 15)
 		self:specialSetAdd({"wielder","combat_spellresist"}, 15)
+		self:specialSetAdd({"wielder","flat_damage_armor"}, {all=20})
 		self:specialSetAdd({"wielder","inc_stats"}, {[who.STAT_CUN]=10})
 		self:specialSetAdd({"wielder","melee_project"}, {[engine.DamageType.DARKNESS]=40})
 		self:specialSetAdd({"wielder","inc_damage"}, {[engine.DamageType.DARKNESS]=20})
+		self:specialSetAdd({"wielder","talents_types_mastery"}, {["cunning/stealth"] = 0.1,})
 		self.use_talent = { id = "T_RETCH", level = 2, power = 47 }
 		game.logSeen(who, "#ANTIQUE_WHITE#The Crown of Eternal Night seems to react with the Bindings, you feel tremounduous dark power.")
 	end,

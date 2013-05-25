@@ -681,6 +681,11 @@ function _M:getTextualDesc(compare_with)
 				return col[2], (" %s"):format(item == "all" and "all" or DamageType.dam_def[item].name), {"color","LAST"}
 			end)
 
+		compare_table_fields(w, compare_with, field, "flat_damage_armor", "%+d", "Reduce damage by fixed amount: ", function(item)
+				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
+				return col[2], (" %s"):format(item == "all" and "all" or DamageType.dam_def[item].name), {"color","LAST"}
+			end)
+
 		compare_table_fields(w, compare_with, field, "wards", "%+d", "Maximum wards: ", function(item)
 				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
 				return col[2], (" %s"):format(item == "all" and "all" or DamageType.dam_def[item].name), {"color","LAST"}
