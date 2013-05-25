@@ -124,7 +124,7 @@ newEffect{
 	activate = function(self, eff)
 		if self:attr("shield_factor") then eff.power = eff.power * (100 + self:attr("shield_factor")) / 100 end
 		if self:attr("shield_dur") then eff.dur = eff.dur + self:attr("shield_dur") end
-		eff.durid = self:addTemporaryValue("reduce_status_effects_time", eff.time_reducer)
+		eff.durid = self:addTemporaryValue("reduce_detrimental_status_effects_time", eff.time_reducer)
 		eff.tmpid = self:addTemporaryValue("time_shield", eff.power)
 		--- Warning there can be only one time shield active at once for an actor
 		self.time_shield_absorb = eff.power
@@ -136,7 +136,7 @@ newEffect{
 		end
 	end,
 	deactivate = function(self, eff)
-		self:removeTemporaryValue("reduce_status_effects_time", eff.durid)
+		self:removeTemporaryValue("reduce_detrimental_status_effects_time", eff.durid)
 
 		self:removeParticles(eff.particle)
 
@@ -539,11 +539,11 @@ newEffect{
 	on_merge = function(self, old_eff, new_eff)
 		self:removeTemporaryValue("inc_damage", old_eff.dmgid)
 		self:removeTemporaryValue("resists", old_eff.rstid)
-		self:removeTemporaryValue("reduce_status_effects_time", old_eff.durid)
+		self:removeTemporaryValue("reduce_detrimental_status_effects_time", old_eff.durid)
 		old_eff.cur_power = (new_eff.power)
 		old_eff.dmgid = self:addTemporaryValue("inc_damage", {all = - old_eff.dur * 2})
 		old_eff.rstid = self:addTemporaryValue("resists", {all = old_eff.cur_power})
-		old_eff.durid = self:addTemporaryValue("reduce_status_effects_time", old_eff.cur_power)
+		old_eff.durid = self:addTemporaryValue("reduce_detrimental_status_effects_time", old_eff.cur_power)
 
 		old_eff.dur = old_eff.dur
 		return old_eff
@@ -555,11 +555,11 @@ newEffect{
 	activate = function(self, eff)
 		eff.cur_power = eff.power
 		eff.rstid = self:addTemporaryValue("resists", { all = eff.power})
-		eff.durid = self:addTemporaryValue("reduce_status_effects_time", eff.power)
+		eff.durid = self:addTemporaryValue("reduce_detrimental_status_effects_time", eff.power)
 		eff.dmgid = self:addTemporaryValue("inc_damage", {all = -20})
 	end,
 	deactivate = function(self, eff)
-		self:removeTemporaryValue("reduce_status_effects_time", eff.durid)
+		self:removeTemporaryValue("reduce_detrimental_status_effects_time", eff.durid)
 		self:removeTemporaryValue("resists", eff.rstid)
 		self:removeTemporaryValue("inc_damage", eff.dmgid)
 	end,

@@ -1800,13 +1800,13 @@ newEffect{
 	activate = function(self, eff)
 		eff.defid = self:addTemporaryValue("combat_def", eff.defense)
 		eff.resid= self:addTemporaryValue("resists", {all=eff.resists})
-		eff.durid = self:addTemporaryValue("reduce_status_effects_time", eff.effect_reduction)
+		eff.durid = self:addTemporaryValue("reduce_detrimental_status_effects_time", eff.effect_reduction)
 		eff.particle = self:addParticles(Particles.new("phantasm_shield", 1))
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("combat_def", eff.defid)
 		self:removeTemporaryValue("resists", eff.resid)
-		self:removeTemporaryValue("reduce_status_effects_time", eff.durid)
+		self:removeTemporaryValue("reduce_detrimental_status_effects_time", eff.durid)
 		self:removeParticles(eff.particle)
 	end,
 }

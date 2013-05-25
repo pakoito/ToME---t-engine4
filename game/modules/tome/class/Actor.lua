@@ -4476,8 +4476,8 @@ function _M:on_set_temporary_effect(eff_id, e, p)
 	if e.status == "detrimental" and self:knowTalent(self.T_RESILIENT_BONES) then
 		p.dur = math.ceil(p.dur * (1 - util.bound(self:getTalentLevel(self.T_RESILIENT_BONES) / 12, 0, 1)))
 	end
-	if e.type ~= "other" and self:attr("reduce_status_effects_time") then
-		local power = util.bound(self.reduce_status_effects_time, 0, 100)
+	if e.status == "detrimental" and e.type ~= "other" and self:attr("reduce_detrimental_status_effects_time") then
+		local power = util.bound(self.reduce_detrimental_status_effects_time, 0, 100)
 		p.dur = math.ceil(p.dur * (1 - (power/100)))
 	end
 	if self:knowTalent(self.T_VITALITY) and e.status == "detrimental" and (e.subtype.wound or e.subtype.poison or e.subtype.disease) then
