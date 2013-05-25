@@ -1981,7 +1981,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Grab a target and teleport it to your side, covering it with frost, reducing its movement speed by 50%% for %d turns.
-		The bone will also deal %0.2f physical damage.
+		The ice will also deal %0.2f cold damage.
 		The damage will increase with your Spellpower.]]):
 		format(math.floor(3 + self:getTalentLevel(t)), damDesc(self, DamageType.COLD, self:combatTalentSpellDamage(t, 5, 140)))
 	end,
