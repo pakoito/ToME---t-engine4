@@ -164,14 +164,11 @@ newTalent{
 	require = techs_strdex_req1,
 	mode = "passive",
 	points = 5,
-	on_learn = function(self, t)
-		self.stamina_regen = self.stamina_regen + 0.5
-	end,
-	on_unlearn = function(self, t)
-		self.stamina_regen = self.stamina_regen - 0.5
+	passives = function(self, t, p)
+		self:talentTemporaryValue(p, "stamina_regen", self:getTalentLevel(t))
 	end,
 	info = function(self, t)
-		return ([[Your combat focus allows you to regenerate stamina faster (+%0.2f stamina/turn).]]):format(self:getTalentLevelRaw(t) / 2)
+		return ([[Your combat focus allows you to regenerate stamina faster (+%0.2f stamina/turn).]]):format(self:getTalentLevel(t))
 	end,
 }
 
@@ -181,14 +178,11 @@ newTalent{
 	require = techs_strdex_req2,
 	mode = "passive",
 	points = 5,
-	on_learn = function(self, t)
-		self.life_regen = self.life_regen + 1
-	end,
-	on_unlearn = function(self, t)
-		self.life_regen = self.life_regen - 1
+	passives = function(self, t, p)
+		self:talentTemporaryValue(p, "life_regen", self:getTalentLevel(t) * 2.5)
 	end,
 	info = function(self, t)
-		return ([[Your combat focus allows you to regenerate life faster (+%0.2f life/turn).]]):format(self:getTalentLevelRaw(t))
+		return ([[Your combat focus allows you to regenerate life faster (+%0.2f life/turn).]]):format(self:getTalentLevel(t) * 2.5)
 	end,
 }
 
@@ -198,14 +192,11 @@ newTalent{
 	require = techs_strdex_req3,
 	mode = "passive",
 	points = 5,
-	on_learn = function(self, t)
-		self.combat_spellresist = self.combat_spellresist + 8
-	end,
-	on_unlearn = function(self, t)
-		self.combat_spellresist = self.combat_spellresist - 8
+	passives = function(self, t, p)
+		self:talentTemporaryValue(p, "combat_spellresist", self:getTalentLevel(t) * 9)
 	end,
 	info = function(self, t)
-		return ([[Rigorous training allows you to be more resistant to some spell effects (+%d spell save).]]):format(self:getTalentLevelRaw(t) * 8)
+		return ([[Rigorous training allows you to be more resistant to some spell effects (+%d spell save).]]):format(self:getTalentLevel(t) * 9)
 	end,
 }
 
