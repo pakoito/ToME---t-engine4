@@ -700,6 +700,7 @@ newTalent{
 			m.exp_worth = 0
 			m:resolve()
 			m:resolve(nil, true)
+			m:forgetInven(m.INVEN_INVEN)
 
 			m.summoner = self
 			m.summon_time = 1000

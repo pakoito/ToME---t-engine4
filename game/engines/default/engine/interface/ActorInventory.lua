@@ -527,3 +527,16 @@ function _M:inventoryApplyAll(fct)
 		self:inventoryApply(inven, fct)
 	end
 end
+
+--- Empties given inventory and marks items inside as never generated
+function _M:forgetInven(inven)
+	inven = self:getInven(inven)
+	if not inven then return end
+
+	for i = #inven, 1, -1 do
+		local o = inven[i]
+
+		self:removeObject(inven, i, true)
+		o:removed()
+	end
+end

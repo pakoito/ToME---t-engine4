@@ -473,8 +473,8 @@ newEntity{ base = "BASE_STAFF",
 			if not x then break end
 				local e
 			repeat e = rng.tableRemove(list)
-
 			until not e.unique and e.rarity
+			e = e:clone()
 			local crystal = game.zone:finishEntity(game.level, "actor", e)
 			crystal.make_escort = nil
 			crystal.silent_levelup = true
@@ -483,6 +483,7 @@ newEntity{ base = "BASE_STAFF",
 			crystal.ai_real = "dumb_talented_simple"
 			crystal.summoner = who
 			crystal.summon_time = 10
+			crystal:forgetInven(crystal.INVEN_INVEN)
 
 			local setupSummon = getfenv(who:getTalentFromId(who.T_SPIDER).action).setupSummon
 			setupSummon(who, crystal, x, y)
