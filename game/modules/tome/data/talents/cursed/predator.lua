@@ -173,8 +173,10 @@ newTalent{
 		return math.min(35, math.pow(self:getTalentLevel(t), 0.7) * 7)
 	end,
 	on_learn = function(self, t)
+		self:removeEffect(self.EFF_MIMIC, true, true)
 	end,
 	on_unlearn = function(self, t)
+		self:removeEffect(self.EFF_MIMIC, true, true)
 	end,
 	info = function(self, t)
 		local maxIncrease = t.getMaxIncrease(self, t)
