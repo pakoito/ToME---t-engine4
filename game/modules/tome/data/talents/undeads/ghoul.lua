@@ -35,8 +35,14 @@ newTalent{
 		self.inc_stats[self.STAT_CON] = self.inc_stats[self.STAT_CON] - 2
 		self:onStatChange(self.STAT_CON, -2)
 	end,
+	getMaxDamage = function(self, t) return math.max(50, 100 - self:getTalentLevelRaw(t) * 10) end,
+	passives = function(self, t, p)
+		self:talentTemporaryValue(p, "flat_damage_cap", {all=t.getMaxDamage(self, t)})
+	end,
 	info = function(self, t)
-		return ([[Improves your ghoulish body, increasing Strength and Constitution by %d.]]):format(2 * self:getTalentLevelRaw(t))
+		return ([[Improves your ghoulish body, increasing Strength and Constitution by %d.
+		Your body also becomes incredibly resilient to damage, you can never take a blow that deals more than %d%% of your maximum life.]])
+		:format(2 * self:getTalentLevelRaw(t), t.getMaxDamage(self, t))
 	end,
 }
 
@@ -45,9 +51,9 @@ newTalent{
 	type = {"undead/ghoul", 2},
 	require = undeads_req2,
 	points = 5,
-	cooldown = 20,
 	tactical = { CLOSEIN = 3 },
 	direct_hit = true,
+	cooldown = function(self, t) return math.max(10, 22 - self:getTalentLevelRaw(t) * 2) end,
 	range = function(self, t) return math.floor(4 + self:getTalentLevel(t) * 1.2) end,
 	requires_target = true,
 	action = function(self, t)
@@ -110,7 +116,9 @@ newTalent{
 	info = function(self, t)
 		local dam = 10 + self:combatTalentStatDamage(t, "con", 10, 60)
 		return ([[Vomit on the ground around you, healing any undead in the area and damaging anyone else.
-		Lasts %d turns, and deals %d blight damage or heals %d life.]]):format(self:getTalentLevelRaw(t) * 2 + 5, damDesc(self, DamageType.BLIGHT, dam), dam * 1.5)
+		Lasts %d turns, and deals %d blight damage or heals %d life.
+		Creatures standing in the retch also have %d%% chance to loose a physical effect each turn.
+		Undeads will be stripped from a detrimental effect while others will be stripped from a beneficial effect.]]):format(self:getTalentLevelRaw(t) * 2 + 5, damDesc(self, DamageType.BLIGHT, dam), dam * 1.5, self:getTalentLevel(t) * 5)
 	end,
 }
 

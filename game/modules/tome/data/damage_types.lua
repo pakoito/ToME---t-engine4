@@ -1625,8 +1625,44 @@ newDamageType{
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and (target:attr("undead") or target.retch_heal) then
 			target:heal(dam * 1.5)
+
+			if src.getTalentLevel then
+				local tl = src:getTalentLevel(src.T_RETCH)
+				if rng.percent(tl * 5) then
+					local effs = {}
+					local status = "detrimental"
+					for eff_id, p in pairs(target.tmp) do
+						local e = target.tempeffect_def[eff_id]
+						if e.status == status and e.type == "physical" then
+							effs[#effs+1] = {"effect", eff_id}
+						end
+					end
+					if #effs > 0 then
+						local eff = rng.tableRemove(effs)
+						target:removeEffect(eff[2])
+					end
+				end
+			end
 		elseif target then
 			DamageType:get(DamageType.BLIGHT).projector(src, x, y, DamageType.BLIGHT, dam)
+
+			if src.getTalentLevel then
+				local tl = src:getTalentLevel(src.T_RETCH)
+				if rng.percent(tl * 5) then
+					local effs = {}
+					local status = "beneficial"
+					for eff_id, p in pairs(target.tmp) do
+						local e = target.tempeffect_def[eff_id]
+						if e.status == status and e.type == "physical" then
+							effs[#effs+1] = {"effect", eff_id}
+						end
+					end
+					if #effs > 0 then
+						local eff = rng.tableRemove(effs)
+						target:removeEffect(eff[2])
+					end
+				end
+			end
 		end
 	end,
 }
