@@ -689,10 +689,12 @@ newTalent{
 
 		-- Find an actor with that filter
 		local m = false
+		local no_inven = true
 		local list = mod.class.NPC:loadList("/data/general/npcs/horror.lua")
 		if self.is_akgishil and rng.percent(10) and not self.summoned_distort then
 			m = list.DISTORTED_BLADE:clone()
 			self.summoned_distort=1
+			no_inven = false
 		else
 			m = list.ANIMATED_BLADE:clone()
 		end
@@ -700,7 +702,7 @@ newTalent{
 			m.exp_worth = 0
 			m:resolve()
 			m:resolve(nil, true)
-			m:forgetInven(m.INVEN_INVEN)
+			if no_inven then m:forgetInven(m.INVEN_INVEN) end
 
 			m.summoner = self
 			m.summon_time = 1000
