@@ -1510,6 +1510,11 @@ do return end
 			self.player:playerLevelup(nil, false)
 		end,
 
+		TOGGLE_AUTOTALENT = function()
+			self.player.no_automatic_talents = not self.player.no_automatic_talents
+			game.log("#GOLD#Automatic talent usage: %s", not self.player.no_automatic_talents and "#LIGHT_GREEN#enabled" or "#LIGHT_RED#disabled")
+		end,
+
 		SAVE_GAME = function()
 			self:saveGame()
 		end,

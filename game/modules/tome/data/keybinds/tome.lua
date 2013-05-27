@@ -218,4 +218,11 @@ defineAction{
 	type = "LOCK_TOOLTIP_COMPARE",
 	group = "interface",
 	name = "Locks tooltip in place while comparing items",
-}
+}
+
+defineAction{
+	default = { "sym:_p:true:false:false:false" },
+	type = "TOGGLE_AUTOTALENT",
+	group = "action",
+	name = "Toggle automatic talent usage",
+}

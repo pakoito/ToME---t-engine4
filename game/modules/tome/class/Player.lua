@@ -705,6 +705,8 @@ end
 --- Try to auto use listed talents
 -- This should be called in your actors "act()" method
 function _M:automaticTalents()
+	if self.no_automatic_talents then return end
+
 	self:attr("_forbid_sounds", 1)
 	for tid, c in pairs(self.talents_auto) do
 		local t = self.talents_def[tid]
