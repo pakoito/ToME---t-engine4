@@ -151,6 +151,7 @@ newTalent{
 		m.clone_on_hit = nil
 		m.exp_worth = 0
 		m.no_inventory_access = true
+		m.cant_teleport = true
 		m.stealth = t.getStealthPower(self, t)
 		m:unlearnTalent(m.T_AMBUSCADE,m:getTalentLevelRaw(m.T_AMBUSCADE))
 		m:unlearnTalent(m.T_PROJECTION,m:getTalentLevelRaw(m.T_PROJECTION)) -- no recurssive projections
@@ -181,7 +182,7 @@ newTalent{
 				end,
 				on_uncontrol = function(self)
 					self.summoner.ai = self.summoner.ambuscade_ai
-					game:onTickEnd(function() game.party:removeMember(self) end)
+					game:onTickEnd(function() game.party:removeMember(self) self:disappear() end)
 				end,
 			})
 		end
@@ -224,6 +225,7 @@ newTalent{
 		local res = t.getDamageRes(self, t)
 		return ([[You veil yourself in shadows for %d turns, and let them control you.
 		While veiled, you become immune to status effects and gain %d%% all damage reduction. Each turn, you blink to a nearby foe (within range %d), hitting it for %d%% darkness weapon damage.
+		The shadow can not teleport.
 		While this goes on, you cannot be stopped unless you are killed, and you cannot control your character.]]):
 		format(duration, res, t.getBlinkRange(self, t) ,100 * damage)
 	end,

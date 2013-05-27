@@ -686,6 +686,7 @@ rift = { method="walls", type="riftwall", forbid={}, use_type=true, extended=tru
 	default6={add_displays={{image="terrain/rift/rift_ver_edge_right_01.png", display_x=1}}, min=1, max=1},
 },
 }
+_M.generic_borders_defs = defs
 
 
 --- Make water have nice transition to other stuff

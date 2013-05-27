@@ -424,6 +424,19 @@ function _M:addedToLevel(level, x, y)
 	return mod.class.Actor.addedToLevel(self, level, x, y)
 end
 
+--- Responsible for clearing ai target if needed
+-- Pass target to summoner if any
+function _M:clearAITarget()
+	if self.ai_target.actor and (self.ai_target.actor.dead or not game.level:hasEntity(self.ai_target.actor)) and self.ai_target.actor.summoner then
+		self.ai_target.actor = self.ai_target.actor.summoner
+		-- You think you can cheat with summons ? let's cheat back !
+		-- yeah it's logical because .. hum .. yeah because the npc saw were the summon came from!
+		self.ai_state.target_last_seen = {x=self.ai_target.actor.x, y=self.ai_target.actor.y, turn=game.turn}
+	end
+
+	if self.ai_target.actor and self.ai_target.actor.dead then self.ai_target.actor = nil end
+end
+
 local shove_algorithm = function(self)
 	return 3 * self.rank + self.size_category * self.size_category
 end

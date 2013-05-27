@@ -104,6 +104,11 @@ function _M:moveDirection(x, y, force)
 	end
 end
 
+--- Responsible for clearing ai target if needed
+function _M:clearAITarget()
+	if self.ai_target.actor and self.ai_target.actor.dead then self.ai_target.actor = nil end
+end
+
 --- Main entry point for AIs
 function _M:doAI()
 	if not self.ai then return end
@@ -112,7 +117,7 @@ function _M:doAI()
 
 	-- If we have a target but it is dead (it was not yet garbage collected but it'll come)
 	-- we forget it
-	if self.ai_target.actor and self.ai_target.actor.dead then self.ai_target.actor = nil end
+	self:clearAITarget()
 
 	-- Update the ai_target table
 	local target_pos = self.ai_target.actor and self.fov and self.fov.actors and self.fov.actors[self.ai_target.actor]

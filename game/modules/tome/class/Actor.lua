@@ -1164,6 +1164,7 @@ end
 -- @return true if the teleport worked
 function _M:teleportRandom(x, y, dist, min_dist)
 	if self:attr("encased_in_ice") then return end
+	if self:attr("cant_teleport") then return end
 	if game.level.data.no_teleport_south and y + dist > self.y then
 		y = self.y - dist
 	end

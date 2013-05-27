@@ -22,6 +22,11 @@
 -- This is ToME specific, overriding the engine default target_simple to account for lite, infravision, ...
 newAI("target_simple", function(self)
 	if not self.x then return end
+
+	if self.ai_target.actor and (self.ai_target.actor.dead or not game.level:hasEntity(self.ai_target.actor)) and self.ai_target.actor.summoner then
+		self.ai_target.actor = self.ai_target.actor.summoner
+	end
+
 	if self.ai_target.actor and not self.ai_target.actor.dead and game.level:hasEntity(self.ai_target.actor) and rng.percent(90) and not self.ai_target.actor:attr("invulnerable") then return true end
 
 	-- Find closer enemy and target it

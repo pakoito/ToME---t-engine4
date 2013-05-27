@@ -1149,6 +1149,8 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local tx, ty = self:getTarget(tg)
 		if not tx or not ty then return nil end
+		local _ _, _, _, tx, ty = self:canProject(tg, tx, ty)
+		if not tx or not ty then return nil end
 
 		-- Find space
 		local x, y = util.findFreeGrid(tx, ty, 3, true, {[Map.ACTOR]=true})
