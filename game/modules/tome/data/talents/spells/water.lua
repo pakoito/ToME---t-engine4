@@ -34,7 +34,7 @@ newTalent{
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
 	end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 4, 50) end,
-	getDuration = function(self, t) return self:getTalentLevel(t) + 2 end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 3, 7)) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
@@ -68,27 +68,28 @@ newTalent{
 	points = 5,
 	random_ego = "attack",
 	mana = 14,
-	cooldown = function(self, t) return 7 + self:getTalentLevelRaw(t) end,
+	cooldown = function(self, t) return math.floor(self:combatTalentLimit(t, 20, 8, 12, true)) end, -- Limit cooldown <20
 	tactical = { ATTACK = { COLD = 1 }, DISABLE = { stun = 3 } },
 	range = 10,
 	direct_hit = true,
 	reflectable = true,
 	requires_target = true,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 12, 180) * (5 + self:getTalentLevelRaw(t)) / 5 end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 12, 180) * t.cooldown(self,t) / 6 end, -- Gradually increase burst potential with c/d
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 3, 7)) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		local dam = self:spellCrit(t.getDamage(self, t))
 		self:project(tg, x, y, DamageType.COLD, dam, {type="freeze"})
-		self:project(tg, x, y, DamageType.FREEZE, {dur=2+math.ceil(self:getTalentLevelRaw(t)), hp=70 + dam * 1.5})
+		self:project(tg, x, y, DamageType.FREEZE, {dur=t.getDuration(self, t), hp=70 + dam * 1.5})
 		game:playSoundNear(self, "talents/water")
 		return true
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		return ([[Condenses ambient water on a target, freezing it for %d turns and damaging it for %0.2f.
-		The damage will increase with your Spellpower.]]):format(2+math.ceil(self:getTalentLevelRaw(t)), damDesc(self, DamageType.COLD, damage))
+		The damage will increase with your Spellpower.]]):format(t.getDuration(self, t), damDesc(self, DamageType.COLD, damage))
 	end,
 }
 

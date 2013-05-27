@@ -33,7 +33,7 @@ newTalent{
 	direct_hit = true,
 	requires_target = true,
 	range = 0,
-	radius = function(self, t) return 1 + self:getTalentLevelRaw(t) end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 2, 6)) end,
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,
@@ -117,8 +117,8 @@ newTalent{
 	cooldown = 30,
 	tactical = { BUFF = 2 },
 	getFireDamageIncrease = function(self, t) return self:getTalentLevelRaw(t) * 2 end,
-	getResistPenalty = function(self, t) return self:getTalentLevelRaw(t) * 10 end,
-	getResistSelf = function(self, t) return self:getTalentLevel(t) * 14 end,
+	getResistPenalty = function(self, t) return self:combatTalentLimit(t, 100, 17, 50) end, --Limit < 100%
+	getResistSelf = function(self, t) return math.min(100, self:getTalentLevel(t) * 14) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/fire")
 

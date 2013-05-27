@@ -142,7 +142,7 @@ newTalent{
 		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t}
 		return tg
 	end,
-	getNb = function(self, t) return 3 + math.floor(self:getTalentLevel(t) / 3) end,
+	getNb = function(self, t) return math.floor(self:combatTalentScale(t, 3.3, 4.7)) end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 180) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
@@ -171,14 +171,17 @@ newTalent{
 	require = spells_req_high3,
 	points = 5,
 	mana = 60,
-	cooldown = function(self, t) local rcd = math.floor(40 - self:getTalentLevel(t) * 3) return self:attr("arcane_cooldown_divide") and rcd * self.arcane_cooldown_divide or rcd end,
+	cooldown = function(self, t)
+		local rcd = math.ceil(self:combatTalentLimit(t, 15, 37, 25)) -- Limit > 15
+		return self:attr("arcane_cooldown_divide") and rcd * self.arcane_cooldown_divide or rcd 
+	end,
 	range = 10,
 	direct_hit = true,
 	use_only_arcane = 1,
 	requires_target = true,
 	no_energy = true,
 	tactical = { BUFF = 2 },
-	getNb = function(self, t) return 4 + math.floor(self:getTalentLevel(t)) end,
+	getNb = function(self, t) return math.floor(self:combatTalentLimit(t, 15, 5, 9)) end, -- Limit duration < 15	
 	action = function(self, t)
 		self:setEffect(self.EFF_AETHER_AVATAR, t.getNb(self, t), {})
 		game:playSoundNear(self, "talents/arcane")
@@ -202,7 +205,7 @@ newTalent{
 	use_only_arcane = 1,
 	tactical = { BUFF = 2 },
 	getDamageIncrease = function(self, t) return self:getTalentLevelRaw(t) * 2 end,
-	getResistPenalty = function(self, t) return self:getTalentLevelRaw(t) * 10 end,
+	getResistPenalty = function(self, t) return self:combatTalentLimit(t, 100, 17, 50, true) end, -- Limit < 100%	
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/arcane")
 

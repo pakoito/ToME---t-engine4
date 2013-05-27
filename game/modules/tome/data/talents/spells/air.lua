@@ -151,7 +151,7 @@ newTalent{
 	tactical = { BUFF = 2 },
 	getEncumberance = function(self, t) return math.floor(self:combatTalentSpellDamage(t, 10, 110)) end,
 	getRangedDefence = function(self, t) return self:combatTalentSpellDamage(t, 4, 30) end,
-	getSpeed = function(self, t) return 0.05 * self:getTalentLevel(t) end,
+	getSpeed = function(self, t) return self:combatTalentScale(t, 0.05, 0.25, 0.75) end,
 	getFatigue = function(self, t) return math.floor(2.5 * self:getTalentLevel(t)) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/spell_generic2")

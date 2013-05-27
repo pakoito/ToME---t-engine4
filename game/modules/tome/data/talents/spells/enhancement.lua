@@ -120,7 +120,7 @@ newTalent{
 	cooldown = 10,
 	sustain_mana = 75,
 	tactical = { BUFF = 2 },
-	getStatIncrease = function(self, t) return math.min(math.floor(self:combatTalentSpellDamage(t, 2, 10)), 11) end,
+	getStatIncrease = function(self, t) return math.floor(self:combatTalentSpellDamage(t, 2, 10)) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/spell_generic")
 		local power = t.getStatIncrease(self, t)
@@ -141,7 +141,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local statinc = t.getStatIncrease(self, t)
-		return ([[You concentrate on your inner self, increasing your stats each by %d up to +11.
+		return ([[You concentrate on your inner self, increasing your stats each by %d.
 		The stat increase will improve with your Spellpower.]]):
 		format(statinc)
 	end,

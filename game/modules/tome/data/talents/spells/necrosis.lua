@@ -26,6 +26,9 @@ newTalent{
 	sustain_mana = 30,
 	cooldown = 30,
 	tactical = { BUFF = 2 },
+	lifeBonus = function(self, t) -- Add fraction of max life
+		return 50 * self:getTalentLevelRaw(t) + self.max_life * self:combatTalentLimit(t, 1, .01, .05)
+	end,
 	activate = function(self, t)
 		if self.player and not self:hasQuest("lichform") and not self:attr("undead") then
 			self:grantQuest("lichform")
@@ -34,8 +37,8 @@ newTalent{
 		end
 
 		local ret = {
-			die_at = self:addTemporaryValue("die_at", -50 * self:getTalentLevelRaw(t)),
-		}
+			die_at = self:addTemporaryValue("die_at", -t.lifeBonus(self, t)),
+		} -- Add up to 100% max life
 		return ret
 	end,
 	deactivate = function(self, t, p)
@@ -45,7 +48,7 @@ newTalent{
 	info = function(self, t)
 		return ([[The line between life and death blurs for you; you can only die when you reach -%d life.
 		However, when below 0 HP, you cannot see how much life you have left.]]):
-		format(50 * self:getTalentLevelRaw(t))
+		format(t.lifeBonus(self, t))
 	end,
 }
 
@@ -60,7 +63,7 @@ newTalent{
 	range = 7,
 	requires_target = true,
 	getMax = function(self, t) return 200 + self:combatTalentSpellDamage(t, 28, 850) end,
-	getDamage = function(self, t) return 50 + self:combatTalentSpellDamage(t, 10, 100) end,
+	getDamage = function(self, t) return self:combatLimit(self:combatTalentSpellDamage(t, 10, 100), 150, 50, 0, 117, 67) end, -- Limit damage factor to < 150%
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -91,7 +94,7 @@ newTalent{
 	cooldown = 20,
 	tactical = { HEAL = 2 },
 	is_heal = true,
-	getHeal = function(self, t) return 20 + self:combatTalentSpellDamage(t, 10, 70) end,
+	getHeal = function(self, t) return self:combatLimit(self:combatTalentSpellDamage(t, 10, 70), 100, 20, 0,  66.7, 46.7) end, --Limit to <100%
 	on_pre_use = function(self, t)
 		if game.party and game.party:hasMember(self) then
 			for act, def in pairs(game.party.members) do
@@ -110,30 +113,36 @@ newTalent{
 	end,
 	action = function(self, t)
 		local heal = t.getHeal(self, t)
+		local maxdrain = 0 --Use biggest drain for healing purposes
+		local drain = 0
 		if game.party and game.party:hasMember(self) then
 			for act, def in pairs(game.party.members) do
 				if act.summoner and act.summoner == self and act.necrotic_minion then
-					act:takeHit(act.max_life * heal / 100, self)
+					drain = math.min(act.max_life * heal / 100, act.life-act.die_at)
+					act:takeHit(drain, self)
+					maxdrain = math.max(maxdrain, drain)
 				end
 			end
 		else
 			for uid, act in pairs(game.level.entities) do
 				if act.summoner and act.summoner == self and act.necrotic_minion then
-					act:takeHit(act.max_life * heal / 100, self)
+					drain = math.min(act.max_life * heal / 100, act.life-act.die_at)
+					act:takeHit(drain, self)
+					maxdrain = math.max(maxdrain, drain)
 				end
 			end
 		end
 		self:attr("allow_on_heal", 1)
-		self:heal(self.max_life * heal / 100)
+		self:heal(maxdrain)
 		self:attr("allow_on_heal", -1)
 		game:playSoundNear(self, "talents/ice")
 		return true
 	end,
 	info = function(self, t)
 		local heal = t.getHeal(self, t)
-		return ([[Absorb %d%% of all your minions' life (possibly destroying them) and use this energy to heal you for %d%% of your total life.
+		return ([[Absorb up to %d%% of the maximum life of each of your necrotic minions (even negative life, possibly destroying them). This will heal you for the greatest amount absorbed.
 		The healing will increase with your Spellpower.]]):
-		format(heal, heal)
+		format(heal)
 	end,
 }
 

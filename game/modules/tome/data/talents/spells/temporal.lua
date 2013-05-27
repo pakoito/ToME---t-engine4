@@ -96,7 +96,7 @@ newTalent{
 	direct_hit = true,
 	reflectable = true,
 	requires_target = true,
-	getDuration = function(self, t) return 4 + self:combatSpellpower(0.03) * self:getTalentLevel(t) end,
+	getDuration = function(self, t) return math.floor(self:combatScale(self:combatSpellpower(0.03) * self:getTalentLevel(t), 4, 0, 12, 8)) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -123,7 +123,7 @@ newTalent{
 	sustain_mana = 250,
 	cooldown = 30,
 	tactical = { BUFF = 2 },
-	getHaste = function(self, t) return self:getTalentLevel(t) * 0.09 end,
+	getHaste = function(self, t) return self:combatTalentScale(t, 0.09, 0.45, 0.75) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/spell_generic")
 		local power = t.getHaste(self, t)

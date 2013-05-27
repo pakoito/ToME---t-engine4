@@ -26,9 +26,7 @@ newTalent{
 	cooldown = 8,
 	tactical = { ATTACKAREA = { LIGHTNING = 2 }, DISABLE = { stun = 1 } },
 	range = 0,
-	radius = function(self, t)
-		return math.floor(2 + self:getTalentLevel(t) * 0.7)
-	end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 2.7, 5.5)) end,
 	direct_hit = true,
 	requires_target = true,
 	target = function(self, t)
@@ -146,7 +144,7 @@ newTalent{
 	sustain_mana = 50,
 	cooldown = 30,
 	getLightningDamageIncrease = function(self, t) return self:getTalentLevelRaw(t) * 2 end,
-	getResistPenalty = function(self, t) return self:getTalentLevelRaw(t) * 10 end,
+	getResistPenalty = function(self, t) return self:combatTalentLimit(t, 100, 17, 50) end,
 	getDaze = function(self, t) return self:getTalentLevel(t) * 9 end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/thunderstorm")

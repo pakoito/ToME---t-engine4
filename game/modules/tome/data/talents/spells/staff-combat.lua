@@ -147,7 +147,7 @@ newTalent{
 		return {type="hit", range=self:getTalentRange(t)}
 	end,
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 1, 1.5) end,
-	getDazeDuration = function(self, t) return 1 + self:getTalentLevel(t) end,
+	getDazeDuration = function(self, t) return math.floor(self:combatTalentScale(t, 2, 6)) end,
 	action = function(self, t)
 		local weapon = self:hasStaffWeapon()
 		if not weapon then

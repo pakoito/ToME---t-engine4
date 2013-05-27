@@ -28,7 +28,7 @@ newTalent{
 	no_npc_use = true,
 	requires_target = true,
 	getDuration = function(self, t) return math.floor(10 + self:getTalentLevel(t) * 3) end,
-	getRadius = function(self, t) return math.floor(4 + self:getTalentLevel(t)) end,
+	getRadius = function(self, t) return math.floor(self:combatTalentScale(t, 5, 9)) end,
 	action = function(self, t)
 		local tg = {type="hit", nolock=true, pass_terrain=true, nowarning=true, range=100, requires_knowledge=false}
 		x, y = self:getTarget(tg)

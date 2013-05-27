@@ -56,11 +56,11 @@ newTalent{
 	points = 5,
 	mana = 15,
 	cooldown = 6,
-	range = function(self, t) return math.min(10, math.ceil(2 + self:getTalentLevel(t))) end,
+	range = function(self, t) return math.min(10, math.floor(self:combatTalentScale(t, 3, 7))) end,
 	tactical = { ATTACK = {PHYSICAL = 2} },
 	direct_hit = true,
 	requires_target = true,
-	getDigs = function(self, t) return self:getTalentLevelRaw(t) end,
+	getDigs = function(self, t) return math.floor(self:combatTalentScale(t, 1, 5, "log")) end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 30, 300) end,
 	target = function(self, t)
 		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
@@ -100,7 +100,7 @@ newTalent{
 	direct_hit = true,
 	tactical = { ATTACKAREA = { PHYSICAL = 2 }, DISABLE = { knockback = 2 }, ESCAPE = { knockback = 1 } },
 	range = 0,
-	radius = function(self, t) return 3 + self:getTalentLevelRaw(t) end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 4, 8)) end,
 	requires_target = true,
 	target = function(self, t) return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t} end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 250) end,

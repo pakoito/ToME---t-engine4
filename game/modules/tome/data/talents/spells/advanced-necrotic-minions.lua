@@ -179,11 +179,11 @@ newTalent{
 	mana = 30,
 	cooldown = 10,
 	tactical = { ATTACKAREA = { BLIGHT = 2 } },
-	radius = function(self, t) return 1 + math.floor(self:getTalentLevel(t) / 3) end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 1.3, 2.7)) end,
 	range = 8,
 	requires_target = true,
 	no_npc_use = true,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t,  20, 70) end,
+	getDamage = function(self, t) return self:combatLimit(self:combatTalentSpellDamage(t, 20, 70), 90, 0, 0, 25, 25) end, -- Limit to 50% life
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t, first_target="friend"}
 		local tx, ty, target = self:getTarget(tg)
@@ -200,9 +200,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Minions are only tools. You may dispose of them... violently.
-		Makes the targeted minion explode for %d%% of its maximum life as blight damage.
+		Makes the targeted minion explode for %d%% of its maximum life in a radius of %d as blight damage.
 		Beware! Don't get caught in the blast!]]):
-		format(t.getDamage(self, t))
+		format(t.getDamage(self, t),t.radius(self,t))
 	end,
 }
 
@@ -235,12 +235,7 @@ newTalent{
 		if nb < 3 then return false end
 		return true
 	end,
-	getLevel = function(self, t)
-		local raw = self:getTalentLevelRaw(t)
-		if raw <= 0 then return -8 end
-		if raw > 8 then return 8 end
-		return ({-6, -4, -2, 0, 2, 4, 6, 8})[raw]
-	end,
+	getLevel = function(self, t) return math.floor(self:combatScale(self:getTalentLevel(t), -6, 0.9, 2, 5)) end, -- -6 @ 1, +2 @ 5, +5 @ 8
 	action = function(self, t)
 		local list = {}
 		if game.party and game.party:hasMember(self) then
@@ -311,7 +306,7 @@ newTalent{
 		return false
 	end,
 	getTurns = function(self, t) return math.floor(4 + self:combatTalentSpellDamage(t, 8, 20)) end,
-	getPower = function(self, t) return 25 - math.ceil(1 + self:getTalentLevel(t) * 1.5) end,
+	getPower = function(self, t) return math.floor(self:combatTalentLimit(t, 10, 22.5, 16.5)) end, -- Limit >10%
 	action = function(self, t)
 		local list = {}
 		if game.party and game.party:hasMember(self) then
@@ -347,14 +342,7 @@ newTalent{
 	points = 5,
 	mode = "passive",
 	info = function(self, t)
-		local c = getAdvancedMinionChances(self)
-		return ([[Each minion you summon has a chance to be a more advanced form of undead:
-		Vampire: %d%%
-		Master Vampire: %d%%
-		Grave Wight: %d%%
-		Barrow Wight: %d%%
-		Dread: %d%%
-		Lich: %d%%]]):
-		format(c.vampire, c.m_vampire, c.g_wight, c.b_wight, c.dread, c.lich)
+		return ([[Each minion you summon has a chance to be a more advanced form of undead. Your chance for each type of minion is as follows:%s]]):
+		format(self:callTalent(self.T_CREATE_MINIONS,"MinionChancesDesc"))
 	end,
 }

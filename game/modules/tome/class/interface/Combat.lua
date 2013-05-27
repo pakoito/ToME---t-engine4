@@ -1073,7 +1073,6 @@ function _M:combatDamageRange(weapon)
 	return (self.combat_damrange or 0) + (weapon.damrange or 1.1)
 end
 
-
 --- Scale damage values
 -- This currently beefs up high-end damage values to make up for the combat stat rescale nerf.
 function _M:rescaleDamage(dam)
@@ -1081,6 +1080,7 @@ function _M:rescaleDamage(dam)
 --	return dam * (1 - math.log10(dam * 2) / 7) --this is the old version, pre-combat-stat-rescale
 	return dam ^ 1.04
 end
+
 --Diminishing-returns method of scaling combat stats, observing this rule: the first twenty ranks cost 1 point each, the second twenty cost two each, and so on. This is much, much better for players than some logarithmic mess, since they always know exactly what's going on, and there are nice breakpoints to strive for.
 function _M:rescaleCombatStats(raw_combat_stat_value)
 	local x = raw_combat_stat_value
@@ -1092,6 +1092,158 @@ function _M:rescaleCombatStats(raw_combat_stat_value)
 		total = total + math.min(math.max(x-sub, 0)/i, 20)
 	end
 	return total
+end
+
+-- Scale a value up or down by a power
+-- x = a numeric value
+-- y_low = value to match at x_low
+-- y_high = value to match at x_high
+-- power = scaling factor (default 0.5)
+function _M:combatScale(x, y_low, x_low, y_high, x_high, power)
+	power = power or 0.5
+	local x_low_adj, x_high_adj = x_low^power, x_high^power
+	local m = (y_high - y_low)/(x_high_adj - x_low_adj)
+	local b = y_low - m*x_low_adj
+	return m * x^power + b
+--	return m * x^power + b, m, b
+end
+
+-- Scale a value up or down subject to a limit
+-- x = a numeric value
+-- limit = value approached as x increases
+-- y_high = value to match at when x = x_high
+-- y_low (optional) = value to match when x = x_low
+--	returns (limit - add)*x/(x + halfpoint) + add (= add when x = 0 and limit when x = infinity), halfpoint, add
+-- halfpoint and add are internally computed to match the desired high/low values
+-- note that the progression low->high->limit must be monotone, consistently increasing or decreasing
+function _M:combatLimit(x, limit, y_low, x_low, y_high, x_high)
+--	local x_low, x_high = 1,5 -- Implied talent levels for low and high values respectively
+--	local tl = type(t) == "table" and (raw and self:getTalentLevelRaw(t) or self:getTalentLevel(t)) or t
+	if y_low and x_low then
+		local p = limit*(x_high-x_low)
+		local m = x_high*y_high - x_low*y_low
+		local halfpoint = (p-m)/(y_high - y_low)
+		local add = (limit*(x_high*y_low-x_low*y_high) + y_high*y_low*(x_low-x_high))/(p-m)
+		return (limit-add)*x/(x + halfpoint) + add
+--		return (limit-add)*x/(x + halfpoint) + add, halfpoint, add
+	else
+		local add = 0
+		local halfpoint = limit*x_high/(y_high-add)-x_high
+		return (limit-add)*x/(x + halfpoint) + add
+--		return (limit-add)*x/(x + halfpoint) + add, halfpoint, add
+	end
+end
+
+-- Compute a diminishing returns value based on talent level that scales with a power
+-- t = talent def table or a numeric value
+-- low = value to match at talent level 1
+-- high = value to match at talent level 5
+-- power = scaling factor (default 0.5) or "log" for log10
+-- add = amount to add the result (default 0)
+-- shift = amount to add to the talent level before computation (default 0)
+-- raw if true specifies use of raw talent level
+function _M:combatTalentScale(t, low, high, power, add, shift, raw)
+	local tl = type(t) == "table" and (raw and self:getTalentLevelRaw(t) or self:getTalentLevel(t)) or t
+	power, add, shift = power or 0.5, add or 0, shift or 0
+	local x_low, x_high = 1, 5 -- Implied talent levels to fit
+	local x_low_adj, x_high_adj
+	if power == "log" then
+		x_low_adj, x_high_adj = math.log10(x_low+shift), math.log10(x_high+shift)
+		tl = math.max(1, tl)
+	else
+		x_low_adj, x_high_adj = (x_low+shift)^power, (x_high+shift)^power
+	end
+	local m = (high - low)/(x_high_adj - x_low_adj)
+	local b = low - m*x_low_adj
+	if power == "log" then -- always >= 0
+		return math.max(0, m * math.log10(tl + shift) + b + add)
+--		return math.max(0, m * math.log10(tl + shift) + b + add), m, b
+	else 
+		return math.max(0, m * (tl + shift)^power + b + add)
+--		return math.max(0, m * (tl + shift)^power + b + add), m, b
+	end
+end
+
+-- Compute a diminishing returns value based on a stat value that scales with a power
+-- stat == "str", "con",.... or a numeric value
+-- low = value to match when stat = 10
+-- high = value to match when stat = 100
+-- power = scaling factor (default 0.5) or "log" for log10
+-- add = amount to add the result (default 0)
+-- shift = amount to add to the stat value before computation (default 0)
+function _M:combatStatScale(stat, low, high, power, add, shift)
+	stat = type(stat) == "string" and self:getStat(stat,nil,true) or stat
+	power, add, shift = power or 0.5, add or 0, shift or 0
+	local x_low, x_high = 10, 100 -- Implied stat values to match
+	local x_low_adj, x_high_adj
+	if power == "log" then
+		x_low_adj, x_high_adj = math.log10(x_low+shift), math.log10(x_high+shift)
+		stat = math.max(1, stat)
+	else
+		x_low_adj, x_high_adj = (x_low+shift)^power, (x_high+shift)^power
+	end
+	local m = (high - low)/(x_high_adj - x_low_adj)
+	local b = low -m*x_low_adj
+	if power == "log" then -- always >= 0
+		return math.max(0, m * math.log10(stat + shift) + b + add)
+--		return math.max(0, m * math.log10(stat + shift) + b + add), m, b
+	else 
+		return math.max(0, m * (stat + shift)^power + b + add)
+--		return math.max(0, m * (stat + shift)^power + b + add), m, b
+	end
+end
+
+-- Compute a diminishing returns value based on talent level that cannot go beyond a limit
+-- t = talent def table or a numeric value
+-- limit = value approached as talent levels increase
+-- high = value at talent level 5
+-- low = value at talent level 1 (optional)
+-- raw if true specifies use of raw talent level
+--	returns (limit - add)*TL/(TL + halfpoint) + add == add when TL = 0 and limit when TL = infinity
+-- TL = talent level, halfpoint and add are internally computed to match the desired high/low values
+-- note that the progression low->high->limit must be monotone, consistently increasing or decreasing
+function _M:combatTalentLimit(t, limit, low, high, raw)
+	local x_low, x_high = 1,5 -- Implied talent levels for low and high values respectively
+	local tl = type(t) == "table" and (raw and self:getTalentLevelRaw(t) or self:getTalentLevel(t)) or t
+	if low then
+		local p = limit*(x_high-x_low)
+		local m = x_high*high - x_low*low
+		local halfpoint = (p-m)/(high - low)
+		local add = (limit*(x_high*low-x_low*high) + high*low*(x_low-x_high))/(p-m)
+		return (limit-add)*tl/(tl + halfpoint) + add
+--		return (limit-add)*tl/(tl + halfpoint) + add, halfpoint, add
+	else
+		local add = 0
+		local halfpoint = limit*x_high/(high-add)-x_high
+		return (limit-add)*tl/(tl + halfpoint) + add
+--		return (limit-add)*tl/(tl + halfpoint) + add, halfpoint, add
+	end
+end
+
+-- Compute a diminishing returns value based on a stat value that cannot go beyond a limit
+-- stat == "str", "con",.... or a numeric value
+-- limit = value approached as talent levels increase
+-- high = value to match when stat = 100
+-- low = value to match when stat = 10 (optional)
+--	returns (limit - add)*stat/(stat + halfpoint) + add == add when STAT = 0 and limit when stat = infinity
+-- halfpoint and add are internally computed to match the desired high/low values
+-- note that the progression low->high->limit must be monotone, consistently increasing or decreasing
+function _M:combatStatLimit(stat, limit, low, high)
+	local x_low, x_high = 10,100 -- Implied talent levels for low and high values respectively
+	stat = type(stat) == "string" and self:getStat(stat,nil,true) or stat
+	if low then
+		local p = limit*(x_high-x_low)
+		local m = x_high*high - x_low*low
+		local halfpoint = (p-m)/(high - low)
+		local add = (limit*(x_high*low-x_low*high) + high*low*(x_low-x_high))/(p-m)
+		return (limit-add)*stat/(stat + halfpoint) + add
+--		return (limit-add)*stat/(stat + halfpoint) + add, halfpoint, add
+	else
+		local add = 0
+		local halfpoint = limit*x_high/(high-add)-x_high
+		return (limit-add)*stat/(stat + halfpoint) + add
+--		return (limit-add)*stat/(stat + halfpoint) + add, halfpoint, add
+	end
 end
 
 --- Gets the damage

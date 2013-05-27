@@ -78,7 +78,7 @@ newTalent{
 
 		-- Try to knockback !
 		if hit then
-			if target:checkHit(self:combatPhysicalpower(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("knockback") then
+			if target:checkHit(self:combatPhysicalpower(), target:combatPhysicalResist(), 0, 95) and target:canBe("knockback") then -- Deprecated call to checkhitold
 				target:knockback(self.x, self.y, 3)
 				target:crossTierEffect(target.EFF_OFFBALANCE, self:combatPhysicalpower())
 			else
@@ -100,13 +100,9 @@ newTalent{
 	type = {"golem/fighting", 2},
 	require = techs_req2,
 	points = 5,
-	cooldown = function(self, t)
-		return 20 - self:getTalentLevelRaw(t) * 2
-	end,
+	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 0, 18, 10, true)) end, -- Limit to > 0
 	range = 10,
-	radius = function(self, t)
-		return self:getTalentLevelRaw(t) / 2
-	end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 0.5, 2.5)) end,
 	stamina = 5,
 	requires_target = true,
 	target = function(self, t)
@@ -134,7 +130,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Orders your golem to taunt targets in a radius of %d, forcing them to attack the golem.]]):format(self:getTalentLevelRaw(t) / 2 + 1)
+		return ([[The golem taunts targets in a radius of %d, forcing them to attack it.]]):format(self:getTalentRadius(t)) 
 	end,
 }
 
@@ -148,7 +144,7 @@ newTalent{
 	stamina = 5,
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.8, 1.6) end,
-	getPinDuration = function(self, t) return 2 + self:getTalentLevel(t) end,
+	getPinDuration = function(self, t) return math.floor(self:combatTalentScale(t, 3, 7)) end,
 	tactical = { ATTACK = { PHYSICAL = 0.5 }, DISABLE = { pin = 2 } },
 	action = function(self, t)
 		if self:attr("never_move") then game.logPlayer(self, "Your golem cannot do that currently.") return end
@@ -227,7 +223,7 @@ newTalent{
 	getGolemDamage = function(self, t)
 		return self:combatTalentWeaponDamage(t, 0.4, 1.1)
 	end,
-	getDazeDuration = function(self, t) return 2 + self:getTalentLevel(t) end,
+	getDazeDuration = function(self, t) return math.floor(self:combatTalentScale(t, 3, 7)) end,
 	tactical = { ATTACKAREA = { PHYSICAL = 0.5 }, DISABLE = { daze = 3 } },
 	action = function(self, t)
 		if self:attr("never_move") then game.logPlayer(self, "Your golem cannot do that currently.") return end
@@ -373,10 +369,11 @@ newTalent{
 	sustain_mana = 30,
 	requires_target = true,
 	tactical = { DEFEND = 1, SURROUNDED = 3, BUFF = 1 },
+	getReflect = function(self, t) return self:combatLimit(self:combatTalentSpellDamage(t, 12, 40), 100, 20, 0, 46.5, 26.5) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/spell_generic2")
 		local ret = {
-			tmpid = self:addTemporaryValue("reflect_damage", 20 + self:combatTalentSpellDamage(t, 12, 40))
+			tmpid = self:addTemporaryValue("reflect_damage", (t.getReflect(self, t)))
 		}
 		return ret
 	end,
@@ -389,7 +386,7 @@ newTalent{
 		Any damage it takes is partly reflected (%d%%) to the attacker.
 		The golem still takes full damage.
 		Damage returned will increase with your golem's Spellpower.]]):
-		format(20 + self:combatTalentSpellDamage(t, 12, 40))
+		format(t.getReflect(self, t))
 	end,
 }
 
@@ -400,9 +397,7 @@ newTalent{
 	points = 5,
 	cooldown = 15,
 	range = 0,
-	radius = function(self, t)
-		return 3 + self:getTalentLevel(t) / 2
-	end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 3.5, 5.5)) end,
 	mana = 20,
 	requires_target = true,
 	target = function(self, t)

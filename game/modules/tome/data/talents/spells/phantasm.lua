@@ -26,7 +26,7 @@ newTalent{
 	mana = 5,
 	cooldown = 14,
 	range = 0,
-	radius = function(self, t) return 5 + self:getTalentLevel(t) end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 6, 10)) end,
 	tactical = { DISABLE = function(self, t)
 			if self:getTalentLevel(t) >= 3 then
 				return 2
@@ -77,7 +77,7 @@ newTalent{
 	sustain_mana = 30,
 	cooldown = 10,
 	tactical = { BUFF = 2 },
-	getDefense = function(self, t) return self:combatTalentSpellDamage(t, 6, 45) end,
+	getDefense = function(self, t) return self:combatScale(self:getTalentLevel(t)*self:combatSpellpower(), 0, 0, 28.6, 267, 0.75) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/heal")
 		return {

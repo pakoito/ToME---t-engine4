@@ -84,7 +84,7 @@ newTalent{
 	getLightningRes = function(self, t) return self:combatTalentSpellDamage(t, 5, 50) end,
 	getAcidRes = function(self, t) return self:combatTalentSpellDamage(t, 5, 20) end,
 	getStunRes = function(self, t) return self:getTalentLevel(t)/10 end,
-	getCooldownReduction = function(self, t) return self:getTalentLevel(t)/2 end,
+	getCooldownReduction = function(self, t) return self:combatTalentLimit(t, 50, 16.7, 35.7) end,  -- Limit to < 50%
 	activate = function(self, t)
 		local cdr = t.getCooldownReduction(self, t)
 		game:playSoundNear(self, "talents/earth")
@@ -93,11 +93,12 @@ newTalent{
 			move = self:addTemporaryValue("never_move", 1),
 			stun = self:addTemporaryValue("stun_immune", t.getStunRes(self, t)),
 			cdred = self:addTemporaryValue("talent_cd_reduction", {
-				[self.T_EARTHEN_MISSILES] = cdr,
-				[self.T_MUDSLIDE] = cdr,
-				[self.T_DIG] = cdr,
-				[self.T_EARTHQUAKE] = cdr,
+				[self.T_EARTHEN_MISSILES] = math.floor(cdr*self:getTalentCooldown(self.talents_def.T_EARTHEN_MISSILES)/100),
+				[self.T_MUDSLIDE] = math.floor(cdr*self:getTalentCooldown(self.talents_def.T_MUDSLIDE)/100),
+				[self.T_DIG] = math.floor(cdr*self:getTalentCooldown(self.talents_def.T_DIG)/100),
+				[self.T_EARTHQUAKE] = math.floor(cdr*self:getTalentCooldown(self.talents_def.T_EARTHQUAKE)/100),
 			}),
+			
 			res = self:addTemporaryValue("resists", {
 				[DamageType.FIRE] = t.getFireRes(self, t),
 				[DamageType.LIGHTNING] = t.getLightningRes(self, t),
@@ -121,7 +122,7 @@ newTalent{
 		local stunres = t.getStunRes(self, t)
 		return ([[You root yourself into the earth, and transform your flesh into stone.  While this spell is sustained, you may not move, and any forced movement will end the effect.
 		Your stone form and your affinity with the earth while the spell is active has the following effects:
-		* Reduces the cooldown of Earthen Missiles, Pulveziring Auger, Earthquake, and Mudslide by %d.
+		* Reduces the cooldown of Earthen Missiles, Pulveziring Auger, Earthquake, and Mudslide by %d%%.
 		* Grants %d%% Fire Resistance, %d%% Lightning Resistance, %d%% Acid Resistance, and %d%% Stun Resistance.
 		Resistances scale with your Spellpower.]])
 		:format(cooldownred, fireres, lightningres, acidres, stunres*100)
@@ -138,16 +139,14 @@ newTalent{
 	cooldown = 30,
 	tactical = { ATTACKAREA = { PHYSICAL = 2 }, DISABLE = { stun = 3 } },
 	range = 10,
-	radius = function(self, t)
-		return 2 + (self:getTalentLevel(t)/2)
-	end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 2.5, 4.5)) end,
 	direct_hit = true,
 	requires_target = true,
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
 	end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 15, 80) end,
-	getDuration = function(self, t) return 3 + self:getTalentLevel(t) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 4, 8)) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
@@ -186,7 +185,7 @@ newTalent{
 	cooldown = 30,
 	tactical = { BUFF = 2 },
 	getPhysicalDamageIncrease = function(self, t) return self:getTalentLevelRaw(t) * 2 end,
-	getResistPenalty = function(self, t) return self:getTalentLevelRaw(t) * 10 end,
+	getResistPenalty = function(self, t) return self:combatTalentLimit(t, 100, 17, 50, true) end,  -- Limit to < 100%
 	getSaves = function(self, t) return self:getTalentLevel(t) * 5 end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/earth")

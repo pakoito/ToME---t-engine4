@@ -74,7 +74,7 @@ newTalent{
 	require = spells_req_high3,
 	points = 5,
 	mana = 20,
-	cooldown = function(self, t) return math.floor(25 - self:getTalentLevel(t)) end,
+	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 0, 24, 20)) end, -- Limit to > 0
 	tactical = { DEFEND = 1, ATTACK=1 },
 	getPower = function(self, t) return (60 + self:combatTalentSpellDamage(t, 15, 450)) / 7, 7, 20 + self:getTalentLevel(t) * 7 end,
 	action = function(self, t)

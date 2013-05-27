@@ -57,7 +57,7 @@ newTalent{
 		}, 40)
 	end,
 	getDecay = function(self, t) return math.max(3, 10 - self:getTalentLevelRaw(self.T_AURA_MASTERY)) end,
-	getRadius = function(self, t) return 2 + self:getTalentLevelRaw(self.T_AURA_MASTERY) end,
+	getRadius = function(self, t) return 2 + self:callTalent(self.T_AURA_MASTERY, "getbonusRadius") end,
 	activate = function(self, t)
 		local radius = t.getRadius(self, t)
 		local decay = t.getDecay(self, t)
@@ -600,7 +600,7 @@ local minions_list = {
 		},
 	},
 }
-
+--[[
 function getAdvancedMinionChances(self)
 	local cl = math.floor(self:getTalentLevel(self.T_MINION_MASTERY))
 	if cl <= 1 then
@@ -653,6 +653,75 @@ local function makeMinion(self, lev)
 	local m = require("mod.class.NPC").new(minions_list[rng.table(list)])
 	return m
 end
+--]]
+
+local minion_order = {"d_skel_warrior", "skel_warrior", "a_skel_warrior", "skel_archer", "skel_m_archer", "skel_mage", "ghoul", "ghast", "ghoulking","vampire", "m_vampire", "g_wight", "b_wight", "dread", "lich"} -- Sets listing order 
+
+-- Parameters are b, n, m, p where weight = b + n*tl + m*tl^p
+local MinionWeightParams = {
+	d_skel_warrior={92.944,	0.000,	-37.944, 0.500},
+	skel_warrior={	7.000,	0.000,	3.000,	1.000},
+	a_skel_warrior={-3.000,	0.000,	3.000,	1.000},
+	skel_archer={	0.000,	11.667,	-1.667,	2.000},
+	skel_m_archer={	-2.000,	0.000,	2.000,	1.000},
+	skel_mage={		1.471,	0.000,	3.529,	0.750},
+	ghoul={			23.000,	0.000,	-3.000,	1.000},
+	ghast={			-3.529,	0.000,	3.529,	0.750},
+	ghoulking={		-7.816,	0.000,	4.647,	0.750}
+}
+
+local AdvMinionWeightParams = {
+	vampire={	2.690,	3.139,	-0.448,	2.000},
+	m_vampire={	-1.076,	0.000,	1.076,	1.000},
+	g_wight={	-2.690,	0.000,	1.345,	1.000},
+	b_wight={	-5.381,	0.000,	1.794,	1.000},
+	dread={		-1.614,	0.000,	1.614,	1.000},
+	lich={		-5.381,	0.000,	1.794,	1.000}
+}
+
+-- tl = talent level, or {createminionsTL, minionmasteryTL}
+-- wtable = weight table or table of weight tables
+local function getMinionWeights(tl,wtable)
+	local tl = tl
+	if type(tl) == "number" then tl = {tl} end
+	local tables = #wtable > 0 and #wtable or 1
+	local chances, sum = {}, 0
+	
+	for i = 1, tables do
+		for utype, params in pairs(tables > 1 and wtable[i] or wtable) do
+			chances[utype] = math.max(0,params[1] + params[2]*tl[i] + params[3]*tl[i]^params[4])
+			sum = sum + chances[utype]
+		end
+	end
+	return chances, sum
+end
+
+local function getMinionChances(self)
+	local chances, sum
+	local tlcm, tlmm = self:getTalentLevel(self.T_CREATE_MINIONS),self:getTalentLevel(self.T_MINION_MASTERY)
+	if tlmm > 0 then
+		chances, sum = getMinionWeights({math.max(tlcm,tlmm), tlmm},{MinionWeightParams, AdvMinionWeightParams}) -- Balance talent levels to avoid too many powerful minions
+	else
+		chances, sum = getMinionWeights(tlcm,MinionWeightParams)
+	end
+	for i,k in pairs(chances) do
+		chances[i] = k*100/sum
+	end
+	return chances
+end
+
+local function makeMinion(self, lev)
+	local chances = getMinionChances(self)
+	local pick = rng.float(0,100)
+	local tot, m = 0
+	for k, e in pairs(chances) do
+		tot = tot + e
+		if tot > pick then m = k break end
+	end
+	m = require("mod.class.NPC").new(minions_list[m])
+	m.necrotic_minion = true
+	return m
+end
 
 newTalent{
 	name = "Create Minions",
@@ -686,12 +755,15 @@ newTalent{
 		if math.min(nb, p.souls) < 1 then return end
 		return true
 	end,
-	getMax = function(self, t) return math.floor(self:getTalentLevel(t)) - necroGetNbSummon(self) end,
-	getLevel = function(self, t)
-		local raw = self:getTalentLevelRaw(t)
-		if raw <= 0 then return -8 end
-		if raw > 8 then return 8 end
-		return ({-6, -4, -2, 0, 2, 4, 6, 8})[raw]
+	getMax = function(self, t) return math.max(1, math.floor(self:combatTalentScale(t, 1, 5, "log"))) - necroGetNbSummon(self) end, -- talent level 1-5 gives 1-5
+	getLevel = function(self, t) return math.floor(self:combatScale(self:getTalentLevel(t), -6, 0.9, 2, 5)) end, -- -6 @ 1, +2 @ 5, +5 @ 8
+	MinionChancesDesc = function(self)
+		local c = getMinionChances(self)
+		local chancelist = tstring({})
+		for i, k in ipairs(minion_order) do
+			 if c[k] then chancelist:add(true,minions_list[k].name:capitalize(),(": %d%%"):format(c[k])) end
+		end
+		return chancelist:toString()
 	end,
 	action = function(self, t)
 		local p = self:isTalentActive(self.T_NECROTIC_AURA)
@@ -732,21 +804,11 @@ newTalent{
 	info = function(self, t)
 		local nb = t.getMax(self, t)
 		local lev = t.getLevel(self, t)
-		local c = getMinionChances(self)
+		local mm = self:knowTalent(self.T_MINION_MASTERY) and " (Minion Mastery effects included)" or ""
 		return ([[Fires powerful undead energies through your necrotic aura. For each recent death that happened inside your aura, you will raise an undead minion (up to %d minions). These minions will be raised within a cone that extends to the edge of your necrotic aura.
 		The minions level is your level %+d.
-		Each minion has a chance to be:
-		Degenerated skeleton warrior: %d%%
-		Skeleton warrior: %d%%
-		Armoured skeleton warrior: %d%%
-		Skeleton archer: %d%%
-		Skeleton master archer: %d%%
-		Skeleton mage: %d%%
-		Ghoul: %d%%
-		Ghast: %d%%
-		Ghoulking: %d%%
-		]]):
-		format(nb, lev, c.d_skel_warrior, c.skel_warrior, c.a_skel_warrior, c.skel_archer, c.skel_m_archer, c.skel_mage, c.ghoul, c.ghast, c.ghoulking)
+		Each minion has a chance to be%s:%s]]):
+		format(nb, lev, mm, t.MinionChancesDesc(self, t))
 	end,
 }
 
@@ -756,6 +818,7 @@ newTalent{
 	require = spells_req2,
 	points = 5,
 	mode = "passive",
+	getbonusRadius = function(self, t) return math.floor(self:combatTalentScale(t, 1, 5)) end,
 	on_learn = function(self, t)
 		self:forceUseTalent(self.T_NECROTIC_AURA, {ignore_energy=true, ignore_cd=true, no_equilibrium_fail=true, no_paradox_fail=true})
 		self:forceUseTalent(self.T_NECROTIC_AURA, {ignore_energy=true, ignore_cd=true, no_equilibrium_fail=true, no_paradox_fail=true})
@@ -766,7 +829,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Your dark power radiates further as you grow stronger. Increases the radius of your necrotic aura by %d, and reduces the decay rate of your minions outside the aura by %d%%.]]):
-		format(self:getTalentLevelRaw(t), self:getTalentLevelRaw(t))
+		format(math.floor(t.getbonusRadius(self, t)), math.min(7, self:getTalentLevelRaw(t)))
 	end,
 }
 

@@ -26,12 +26,8 @@ newTalent{
 	points = 5,
 	cooldown = 30,
 	tactical = { BUFF = 2 },
-	spellpower_increase = { 5, 9, 14, 17, 20 },
 	use_only_arcane = 1,
-	getSpellpowerIncrease = function(self, t)
-		local v = t.spellpower_increase[self:getTalentLevelRaw(t)]
-		if v then return v else return 20 + (self:getTalentLevelRaw(t) - 5) * 2 end
-	end,
+	getSpellpowerIncrease = function(self, t) return self:combatTalentScale(t, 5, 20, 0.75) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/arcane")
 		return {
@@ -143,10 +139,18 @@ newTalent{
 	tactical = { MANA = 3, DEFEND = 2, },
 	getManaRatio = function(self, t) return math.max(3 - self:combatTalentSpellDamage(t, 10, 200) / 100, 0.5) * (100 - util.bound(self:attr("shield_factor") or 0, 0, 70)) / 100 end,
 	getArcaneResist = function(self, t) return 50 + self:combatTalentSpellDamage(t, 10, 500) / 10 end,
+	-- Note: effects handled in mod.class.Actor:onTakeHit function
+	getMaxDamage = function(self, t) -- Compute damage limit
+		local max_dam = self.max_mana
+		for i, k in pairs(self.sustain_talents) do -- Add up sustain costs to get total mana pool size
+			max_dam = max_dam + (tonumber(self.talents_def[i].sustain_mana) or 0)
+		end
+		return max_dam * 2 -- Maximum damage is 2x total mana pool
+	end,
 	on_pre_use = function(self, t) return (self:getMana() / self:getMaxMana() <= 0.25) or self:hasEffect(self.EFF_AETHER_AVATAR) or self:attr("disruption_shield") end,
 	explode = function(self, t, dam)
 		game.logSeen(self, "#VIOLET#%s's disruption shield collapses and then explodes in a powerful manastorm!", self.name:capitalize())
-
+		dam = math.min(dam, t.getMaxDamage(self, t)) -- Damage cap
 		-- Add a lasting map effect
 		self:setEffect(self.EFF_ARCANE_STORM, 10, {power=t.getArcaneResist(self, t)})
 		game.level.map:addEffect(self,
@@ -193,10 +197,10 @@ newTalent{
 	info = function(self, t)
 		return ([[Surround yourself with arcane forces, disrupting any attemps to harm you and instead generating mana.
 		Generates %0.2f mana per damage point taken (Aegis Shielding talent affects the ratio).
-		If your mana is brought too high by the shield, it will de-activate and the chain reaction will release a deadly arcane storm around you with radius 3 for 10 turns, dealing 10%% of the damage absorbed over the sustain's duration each turn.
+		If your mana is brought too high by the shield, it will de-activate and the chain reaction will release a deadly arcane storm around you with radius 3 for 10 turns, dealing 10%% of the damage absorbed over the sustain's duration each turn, up to a maximum of %d total damage.
 		While the arcane storm rages, you also get %d%% arcane resistance.
 		Only usable when below 25%% mana.
 		The damage to mana ratio increases with your Spellpower.]]):
-		format(t.getManaRatio(self, t), t.getArcaneResist(self, t))
+		format(t.getManaRatio(self, t), t.getMaxDamage(self, t), t.getArcaneResist(self, t))
 	end,
 }

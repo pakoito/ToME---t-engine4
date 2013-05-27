@@ -32,7 +32,7 @@ newTalent{
 	direct_hit = true,
 	tactical = { ATTACK = { FIRE = 2 } },
 	requires_target = true,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 25, 620) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 25, 930) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -59,7 +59,7 @@ newTalent{
 	direct_hit = true,
 	tactical = { DISABLE = 2 },
 	requires_target = true,
-	getDuration = function(self, t) return 2 + self:combatSpellpower(0.03) * self:getTalentLevel(t) end,
+	getDuration = function(self, t) return math.floor(self:combatScale(self:combatSpellpower(0.03) * self:getTalentLevel(t), 2, 0, 10, 8)) end,
 	action = function(self, t)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=2, talent=t}
 		local x, y = self:getTarget(tg)
@@ -127,7 +127,7 @@ newTalent{
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, friendlyfire=false}
 	end,
 	tactical = { ATTACKAREA = { FIRE = 2 } },
-	getDuration = function(self, t) return 5 + self:combatSpellpower(0.05) + self:getTalentLevel(t) end,
+	getDuration = function(self, t) return math.floor(self:combatScale(self:combatSpellpower(0.05) + self:getTalentLevel(t), 5, 0, 12.67, 7.66)) end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 5, 120) end,
 	action = function(self, t)
 		-- Add a lasting map effect

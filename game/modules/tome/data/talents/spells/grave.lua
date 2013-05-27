@@ -29,7 +29,7 @@ newTalent{
 	tactical = { ATTACKAREA = { COLD = 2 } },
 	range = 7,
 	radius = function(self, t)
-		return 1 + self:getTalentLevelRaw(t)
+		return math.floor(self:combatTalentScale(t, 2, 6, 0.5, 0, 0, true))
 	end,
 	proj_speed = 4,
 	direct_hit = true,
@@ -262,9 +262,7 @@ newTalent{
 		end
 	end,
 
-	getDarkCount = function(self, t)
-		return 5 + math.floor(self:getTalentLevel(t))
-	end,
+	getDarkCount = function(self, t) return math.floor(self:combatTalentScale(t, 6, 10)) end,
 	getDamage = function(self, t)
 		return self:combatTalentSpellDamage(t, 10, 90)
 	end,
@@ -330,7 +328,7 @@ newTalent{
 	sustain_mana = 250,
 	cooldown = 30,
 	tactical = { BUFF = 3 },
-	getParams = function(self, t) return 20 + self:getTalentLevel(t) * 5, 5 + self:combatTalentSpellDamage(t, 5, 30) end,
+	getParams = function(self, t) return self:combatTalentLimit(t, 100, 25, 45), self:combatLimit(self:combatTalentSpellDamage(t, 5, 30), 100, 0, 0, 18.65, 18.65) end, -- Limit chance and life leach to <100% each
 	activate = function(self, t)
 		local chance, val = t.getParams(self, t)
 		game:playSoundNear(self, "talents/spell_generic2")

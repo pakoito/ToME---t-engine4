@@ -92,7 +92,7 @@ newTalent{
 	use_only_arcane = 2,
 	cooldown = 30,
 	tactical = { BUFF = 2 },
-	getShield = function(self, t) return 20 + self:combatTalentSpellDamage(t, 5, 500) / 10 end,
+	getShield = function(self, t) return self:combatLimit(self:combatTalentSpellDamage(t, 5, 500), 100, 20, 0, 55.4, 354) end,	 -- Limit < 100%
 	activate = function(self, t)
 		local shield = t.getShield(self, t)
 		game:playSoundNear(self, "talents/arcane")
@@ -126,6 +126,7 @@ newTalent{
 	no_energy = true,
 	tactical = { HEAL = 2 },
 	getShield = function(self, t) return 40 + self:combatTalentSpellDamage(t, 5, 500) / 10 end,
+	getNumEffects = function(self, t) return math.max(1,math.floor(self:combatTalentScale(t, 3, 7, "log"))) end,
 	on_pre_use = function(self, t)
 		for eff_id, p in pairs(self.tmp) do
 			local e = self.tempeffect_def[eff_id]
@@ -146,15 +147,14 @@ newTalent{
 			end
 		end
 
-		for i = 1, self:getTalentLevelRaw(t) do
+		for i = 1, t.getNumEffects(self, t) do
 			if #effs == 0 then break end
 			local eff = rng.tableRemove(effs)
-
 			eff.e.on_aegis(self, eff.p, shield)
 		end
 
 		if self:isTalentActive(self.T_DISRUPTION_SHIELD) then
-			self:setEffect(self.EFF_MANA_OVERFLOW, math.ceil(2 + self:getTalentLevel(t)), {power=shield})
+			self:setEffect(self.EFF_MANA_OVERFLOW, math.ceil(self:combatTalentScale(t, 3, 7)), {power=shield})
 		end
 
 		game:playSoundNear(self, "talents/heal")
@@ -166,6 +166,6 @@ newTalent{
 		It will affect at most %d shield effects.
 		Affected shields are: Damage Shield, Time Shield, Displacement Shield, and Disruption Shield.
 		The charging will increase with your Spellpower.]]):
-		format(shield, self:getTalentLevelRaw(t))
+		format(shield, t.getNumEffects(self, t))
 	end,
 }

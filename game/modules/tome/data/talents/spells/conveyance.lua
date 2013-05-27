@@ -27,8 +27,8 @@ newTalent{
 	cooldown = function(self, t) return game.zone and game.zone.force_controlled_teleport and 3 or 8 end,
 	tactical = { ESCAPE = 2 },
 	requires_target = function(self, t) return self:getTalentLevel(t) >= 4 end,
-	getRange = function(self, t) return 4 + self:combatTalentSpellDamage(t, 10, 15) end,
-	getRadius = function(self, t) return math.max(0, 7 - self:getTalentLevelRaw(t)) end,
+	getRange = function(self, t) return self:combatLimit(self:combatTalentSpellDamage(t, 10, 15), 40, 4, 0, 13.4, 9.4) end, -- Limit to range 40
+	getRadius = function(self, t) return math.floor(self:combatTalentLimit(t, 0, 6, 2)) end, -- Limit to radius 0	
 	is_teleport = true,
 	action = function(self, t)
 		local target = self
@@ -107,7 +107,7 @@ newTalent{
 	tactical = { ESCAPE = 3 },
 	requires_target = function(self, t) return self:getTalentLevel(t) >= 4 end,
 	getRange = function(self, t) return 100 + self:combatSpellpower(1) end,
-	getRadius = function(self, t) return 20 - self:getTalentLevel(t) end,
+	getRadius = function(self, t) return math.ceil(self:combatTalentLimit(t, 0, 19, 15)) end, -- Limit > 0
 	is_teleport = true,
 	action = function(self, t)
 		local target = self
@@ -221,7 +221,7 @@ newTalent{
 	cooldown = 40,
 	sustain_mana = 200,
 	tactical = { ESCAPE = 1, CLOSEIN = 1 },
-	getRange = function(self, t) return math.floor(4 + self:combatSpellpower(0.06) * self:getTalentLevel(t)) end,
+	getRange = function(self, t) return math.floor(self:combatScale(self:combatSpellpower(0.06) * self:getTalentLevel(t), 4, 0, 20, 16)) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/teleport")
 		return {

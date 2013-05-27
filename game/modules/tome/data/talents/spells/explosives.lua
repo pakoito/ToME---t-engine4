@@ -24,12 +24,8 @@ newTalent{
 	points = 5,
 	mana = 5,
 	cooldown = 4,
-	range = function(self, t)
-		return math.ceil(4 + self:getTalentLevelRaw(t))
-	end,
-	radius = function(self, t)
-		return util.bound(1+self:getTalentLevelRaw(self.T_EXPLOSION_EXPERT), 1, 6)
-	end,
+	range = function(self, t) return math.floor(self:combatTalentScale(t, 5, 9, 0.5, 0, 0, true)) end,
+	radius = function(self, t) return self:callTalent(self.T_EXPLOSION_EXPERT, "getRadius") end,
 	direct_hit = true,
 	requires_target = true,
 	target = function(self, t)
@@ -93,15 +89,11 @@ newTalent{
 
 		-- Compare theorical AOE zone with actual zone and adjust damage accordingly
 		if self:knowTalent(self.T_EXPLOSION_EXPERT) then
-			local theorical_nb = ({ 9, 25, 45, 77, 109, 145 })[tg.radius] or 145
 			local nb = 0
 			local grids = self:project(tg, x, y, function(tx, ty) end)
 			if grids then for px, ys in pairs(grids or {}) do for py, _ in pairs(ys) do nb = nb + 1 end end end
-			nb = theorical_nb - nb
 			if nb > 0 then
-				local mult = math.log10(nb) / (6 - math.min(self:getTalentLevelRaw(self.T_EXPLOSION_EXPERT), 5))
-				print("Adjusting explosion damage to account for ", nb, " lost tiles => ", mult * 100)
-				dam = dam + dam * mult
+				dam = dam + dam * self:callTalent(self.T_EXPLOSION_EXPERT, "minmax", nb)
 			end
 		end
 
@@ -181,15 +173,27 @@ newTalent{
 	require = spells_req3,
 	mode = "passive",
 	points = 5,
+	getRadius = function(self, t) return math.floor(self:combatTalentScale(t, 2, 6, 0.5, 0, 0, true)) end,
+	minmax = function(self, t, grids)
+		local theoretical_nb = (2 * t.getRadius(self, t) + 1)^1.94 -- Maximum grids hit vs. talent level
+		if grids then
+			local lostgrids = math.max(theoretical_nb - grids, 0)
+			local mult = math.max(0,math.log10(lostgrids)) / (6 - math.min(self:getTalentLevelRaw(self.T_EXPLOSION_EXPERT), 5))
+			print("Adjusting explosion damage to account for ", lostgrids, " lost tiles => ", mult * 100)
+			return mult
+		else
+			local min = 1
+			local min = (math.log10(min) / (6 - math.min(self:getTalentLevelRaw(t), 5)))
+			local max = theoretical_nb
+			local max = (math.log10(max) / (6 - math.min(self:getTalentLevelRaw(t), 5)))
+			return min, max
+		end
+	end,
 	info = function(self, t)
-		local theorical_nb = ({ 9, 25, 45, 77, 109, 145 })[1 + self:getTalentLevelRaw(self.T_EXPLOSION_EXPERT)] or 145
-		local min = 1
-		local min = (math.log10(min) / (6 - self:getTalentLevelRaw(self.T_EXPLOSION_EXPERT)))
-		local max = theorical_nb
-		local max = (math.log10(max) / (6 - self:getTalentLevelRaw(self.T_EXPLOSION_EXPERT)))
-
+		local min, max = t.minmax(self, t)
 		return ([[Your alchemist bombs now affect a radius of %d around them.
-		Increases explosion damage by %d%% (one tile less than the full effect) to %d%% (explosion concentrated on only 1 tile)]]):format(self:getTalentLevelRaw(t), min*100, max*100)
+		Explosion damage may increase by %d%% (if the explosion is not contained) to %d%% if the area of effect is confined.]]):
+		format(t.getRadius(self, t), min*100, max*100) --I5
 	end,
 }
 
@@ -200,9 +204,7 @@ newTalent{
 	points = 5,
 	mana = 32,
 	cooldown = 10,
-	range = function(self, t)
-		return math.ceil(4 + self:getTalentLevelRaw(t))
-	end,
+	range = function(self, t) return math.floor(self:combatTalentScale(t, 5, 9, 0.5, 0, 0, true)) end,
 	radius = 2,
 	direct_hit = true,
 	requires_target = true,

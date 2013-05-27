@@ -32,7 +32,7 @@ newTalent{
 	mode = "passive",
 	require = spells_req1,
 	points = 5,
-	getIncrease = function(self, t) return self:getTalentLevel(t) * 0.07 end,
+	getIncrease = function(self, t) return self:combatTalentScale(t, 0.07, 0.35) end,
 	info = function(self, t)
 		local daminc = t.getIncrease(self, t)
 		return ([[When you throw your alchemist bombs, you infuse them with explosive fire, increasing damage by %d%%, and setting foes ablaze.]]):
@@ -49,8 +49,8 @@ newTalent{
 	points = 5,
 	cooldown = 30,
 	tactical = { BUFF = 2 },
-	getIncrease = function(self, t) return self:getTalentLevel(t) * 0.05 end,
-	getConvert = function(self, t) return self:getTalentLevelRaw(t) * 15 end,
+	getIncrease = function(self, t) return self:combatTalentScale(t, 0.05, 0.25) end,
+	getConvert = function(self, t) return self:combatTalentLimit(t, 125, 15, 75, true) end, -- limit to 125%
 	activate = function(self, t)
 		cancelInfusions(self)
 		game:playSoundNear(self, "talents/arcane")
@@ -80,8 +80,8 @@ newTalent{
 	points = 5,
 	cooldown = 30,
 	tactical = { BUFF = 2 },
-	getIncrease = function(self, t) return self:getTalentLevel(t) * 0.05 end,
-	getConvert = function(self, t) return self:getTalentLevelRaw(t) * 15 end,
+	getIncrease = function(self, t) return self:combatTalentScale(t, 0.05, 0.25) end,
+	getConvert = function(self, t) return self:combatTalentLimit(t, 125, 15, 75, true) end, -- limit to 125%
 	activate = function(self, t)
 		cancelInfusions(self)
 		game:playSoundNear(self, "talents/arcane")
@@ -111,8 +111,8 @@ newTalent{
 	points = 5,
 	cooldown = 30,
 	tactical = { BUFF = 2 },
-	getIncrease = function(self, t) return self:getTalentLevel(t) * 0.05 end,
-	getConvert = function(self, t) return self:getTalentLevelRaw(t) * 15 end,
+	getIncrease = function(self, t) return self:combatTalentScale(t, 0.05, 0.25) end,
+	getConvert = function(self, t) return self:combatTalentLimit(t, 125, 15, 75, true) end, -- limit to 125%
 	activate = function(self, t)
 		cancelInfusions(self)
 		game:playSoundNear(self, "talents/arcane")

@@ -87,6 +87,7 @@ newTalent{
 	end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 15, 40) end,
 	getDuration = function(self, t) return 5 end,
+	getBaneDur = function(self,t) return math.floor(self:combatTalentScale(t, 4.5, 6.5)) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
@@ -95,7 +96,7 @@ newTalent{
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
 			x, y, t.getDuration(self, t),
-			DamageType.CIRCLE_DEATH, {dam=self:spellCrit(t.getDamage(self, t)), dur=4 + math.floor(self:getTalentLevel(t) / 2), ff=isFF(self)},
+			DamageType.CIRCLE_DEATH, {dam=self:spellCrit(t.getDamage(self, t)), dur=t.getBaneDur(self,t), ff=isFF(self)},
 			self:getTalentRadius(t),
 			5, nil,
 			{type="circle_of_death"},
@@ -111,7 +112,7 @@ newTalent{
 		Only one bane can affect a creature.
 		Banes last for %d turns, and also deal %0.2f darkness damage.
 		The damage will increase with your Spellpower.]]):
-		format(4 + math.floor(self:getTalentLevel(t) / 2), damDesc(self, DamageType.DARKNESS, damage))
+		format(t.getBaneDur(self,t), damDesc(self, DamageType.DARKNESS, damage))
 	end,
 }
 
@@ -126,7 +127,7 @@ newTalent{
 	direct_hit = true,
 	tactical = { ATTACKAREA = { DARKNESS = 2 }, DISABLE = { knockback = 2 }, ESCAPE = { knockback = 1 } },
 	range = 0,
-	radius = function(self, t) return 3 + self:getTalentLevelRaw(t) end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 4, 8)) end,
 	requires_target = true,
 	target = function(self, t) return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), friendlyfire=isFF(self), talent=t} end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 230) end,
@@ -163,7 +164,7 @@ newTalent{
 	target = function(self, t) return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), friendlyfire=isFF(self), talent=t, display={particle="bolt_dark", trail="darktrail"}} end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 28, 280) end,
 	getMinion = function(self, t) return 10 + self:combatTalentSpellDamage(t, 10, 30) end,
-	getDur = function(self, t) return math.floor(3 + self:getTalentLevel(t) / 1.5) end,
+	getDur = function(self, t) return math.floor(self:combatTalentScale(t, 3.6, 6.3)) end,
 	getSpeed = function(self, t) return math.min(self:getTalentLevel(t) * 0.065, 0.5) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)

@@ -34,7 +34,8 @@ local function makeGolem(self)
 		moddable_tile = "runic_golem",
 		moddable_tile_nude = true,
 		moddable_tile_base = resolvers.generic(function() return "base_0"..rng.range(1, 5)..".png" end),
-		level_range = {1, 50}, exp_worth=0,
+--		level_range = {1, 50}, exp_worth=0,
+		level_range = {1, self.max_level}, exp_worth=0,
 		life_rating = 13,
 		never_anger = true,
 		save_hotkeys = true,
@@ -152,8 +153,12 @@ newTalent{
 	no_npc_use = true,
 	no_unlearn_last = true,
 	getHeal = function(self, t)
+		if not self.alchemy_golem then return 0 end
 		local ammo = self:hasAlchemistWeapon()
-		return 50 + self:combatTalentSpellDamage(self.T_GOLEM_POWER, 15, 550, ((ammo and ammo.alchemist_power or 0) + self:combatSpellpower()) / 2)
+
+		--	Heal fraction of max life for higher levels
+		local healbase = 44+self.alchemy_golem.max_life*self:combatTalentLimit(self:getTalentLevel(self.T_GOLEM_POWER),0.2, 0.008, 0.033) -- Add up to 20% of max life to heal
+		return healbase + self:combatTalentSpellDamage(self.T_GOLEM_POWER, 15, 550, ((ammo and ammo.alchemist_power or 0) + self:combatSpellpower()) / 2) --I5
 	end,
 	on_learn = function(self, t)
 		if self:getTalentLevelRaw(t) == 1 and not self.innate_alchemy_golem then
@@ -386,7 +391,7 @@ newTalent{
 	require = spells_req4,
 	points = 5,
 	mana = 40,
-	cooldown = function(self, t) return 15 - self:getTalentLevelRaw(t) end,
+	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 0, 14, 10, true)) end, -- Limit to > 0
 	action = function(self, t)
 		local mover, golem = getGolem(self)
 		if not golem then
@@ -394,7 +399,7 @@ newTalent{
 			return
 		end
 
-		local chance = self:getTalentLevelRaw(t) * 15 + 25
+		local chance = math.min(100, self:getTalentLevelRaw(t) * 15 + 25)
 		local px, py = self.x, self.y
 		local gx, gy = golem.x, golem.y
 
@@ -419,6 +424,6 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Teleport to your golem, while your golem teleports to your location. Your foes will be confused, and those that were attacking you will have a %d%% chance to target your golem instead.]]):
-		format(self:getTalentLevelRaw(t) * 15 + 25)
+		format(math.min(100, self:getTalentLevelRaw(t) * 15 + 25))
 	end,
 }

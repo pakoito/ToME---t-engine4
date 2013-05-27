@@ -168,9 +168,9 @@ newTalent{
 	range = 10,
 	tactical = { ATTACK = 2, },
 	requires_target = true,
-	getDuration = function(self, t) return math.floor(3 + self:getTalentLevel(t)) end,
-	getHealth = function(self, t) return 0.2 + self:combatTalentSpellDamage(t, 20, 500) / 1000 end,
-	getDam = function(self, t) return 0.4 + self:combatTalentSpellDamage(t, 10, 500) / 1000 end,
+	getDuration = function(self, t) return math.floor(self:combatTalentLimit(t, 30, 4, 8.1)) end, -- Limit <30
+	getHealth = function(self, t) return self:combatLimit(self:combatTalentSpellDamage(t, 20, 500), 1.0, 0.2, 0, 0.58, 384) end,  -- Limit health < 100%
+	getDam = function(self, t) return self:combatLimit(self:combatTalentSpellDamage(t, 10, 500), 1.40, 0.4, 0, 0.76, 361) end,  -- Limit damage < 140%
 	action = function(self, t)
 		-- Find space
 		local x, y = util.findFreeGrid(self.x, self.y, 1, true, {[Map.ACTOR]=true})
@@ -246,8 +246,8 @@ newTalent{
 	cooldown = 30,
 	tactical = { BUFF = 2 },
 	getDarknessDamageIncrease = function(self, t) return self:getTalentLevelRaw(t) * 2 end,
-	getResistPenalty = function(self, t) return self:getTalentLevelRaw(t) * 10 end,
-	getAffinity = function(self, t) return self:getTalentLevel(t) * 10 end,
+	getResistPenalty = function(self, t) return self:combatTalentLimit(t, 100, 17, 50, true) end,  -- Limit to < 100%
+	getAffinity = function(self, t) return self:combatTalentLimit(t, 100, 10, 50) end, -- Limit < 100%
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/spell_generic")
 		return {

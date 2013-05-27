@@ -162,7 +162,7 @@ newTalent{
 	points = 5,
 	range = 1,
 	no_npc_use = true,
-	getRange = function(self, t) return math.floor(4 + self:combatSpellpower(0.06) * self:getTalentLevel(t)) end,
+	getRange = function(self, t) return math.floor(self:combatScale(self:combatSpellpower(0.06) * self:getTalentLevel(t), 4, 0, 20, 16)) end,
 	action = function(self, t)
 		local ammo = self:hasAlchemistWeapon()
 		if not ammo or ammo:getNumber() < 5 then
@@ -205,7 +205,7 @@ newTalent{
 	tactical = { DISABLE = { stun = 1.5, instakill = 1.5 } },
 	range = function(self, t)
 		if self:getTalentLevel(t) < 3 then return 1
-		else return math.floor(self:getTalentLevel(t)) end
+		else return math.floor(self:combatTalentScale(t, 1, 5)) end
 	end,
 	requires_target = true,
 	target = function(self, t)
@@ -213,7 +213,7 @@ newTalent{
 		if self:getTalentLevel(t) >= 3 then tg.type = "beam" end
 		return tg
 	end,
-	getDuration = function(self, t) return math.floor((3 + self:getTalentLevel(t)) / 1.5) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 3.6, 6.3)) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
