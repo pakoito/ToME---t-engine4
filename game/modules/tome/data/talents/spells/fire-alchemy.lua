@@ -32,7 +32,7 @@ newTalent{
 	direct_hit = true,
 	tactical = { ATTACK = { FIRE = 2 } },
 	requires_target = true,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 25, 930) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 25, 620) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
