@@ -483,6 +483,7 @@ newEntity{ base = "BASE_STAFF",
 			crystal.ai_real = "dumb_talented_simple"
 			crystal.summoner = who
 			crystal.summon_time = 10
+			crystal.exp_worth = 0
 			crystal:forgetInven(crystal.INVEN_INVEN)
 
 			local setupSummon = getfenv(who:getTalentFromId(who.T_SPIDER).action).setupSummon

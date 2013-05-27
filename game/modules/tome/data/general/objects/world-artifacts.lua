@@ -864,6 +864,7 @@ newEntity{
 			spider.ai_real = "dumb_talented_simple"
 			spider.summoner = who
 			spider.summon_time = 10
+			spider.exp_worth = 0
 
 			local setupSummon = getfenv(who:getTalentFromId(who.T_SPIDER).action).setupSummon
 			setupSummon(who, spider, x, y)
