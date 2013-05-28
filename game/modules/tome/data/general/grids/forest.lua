@@ -25,10 +25,10 @@ newEntity{
 	name = "grass", image = "terrain/grass.png",
 	display = '.', color=colors.LIGHT_GREEN, back_color={r=44,g=95,b=43},
 	grow = "TREE",
-	nice_tiler = { method="replace", base={"GRASS_PATCH", 70, 1, 12}},
+	nice_tiler = { method="replace", base={"GRASS_PATCH", 100, 1, 14}},
 	nice_editer = grass_editer,
 }
-for i = 1, 12 do newEntity{ base = "GRASS", define_as = "GRASS_PATCH"..i, image = "terrain/grass"..(i<7 and "" or "2")..".png" } end
+for i = 1, 14 do newEntity{ base = "GRASS", define_as = "GRASS_PATCH"..i, image = ("terrain/grass/grass_main_%02d.png"):format(i) } end
 
 newEntity{
 	define_as = "TREE",
@@ -44,7 +44,7 @@ newEntity{
 	nice_tiler = { method="replace", base={"TREE", 100, 1, 30}},
 	nice_editer = grass_editer,
 }
-for i = 1, 30 do newEntity{ base="TREE", define_as = "TREE"..i, image = "terrain/grass.png", add_displays = class:makeTrees("terrain/tree_alpha", 13, 9)} end
+for i = 1, 30 do newEntity{ base="TREE", define_as = "TREE"..i, image = "terrain/grass.png", add_displays = class:makeTrees("terrain/tree_alpha", 14, 9)} end
 
 newEntity{
 	define_as = "HARDTREE",
@@ -60,7 +60,7 @@ newEntity{
 	nice_tiler = { method="replace", base={"HARDTREE", 100, 1, 30}},
 	nice_editer = grass_editer,
 }
-for i = 1, 30 do newEntity{ base="HARDTREE", define_as = "HARDTREE"..i, image = "terrain/grass.png", add_displays = class:makeTrees("terrain/tree_alpha", 13, 9) } end
+for i = 1, 30 do newEntity{ base="HARDTREE", define_as = "HARDTREE"..i, image = "terrain/grass.png", add_displays = class:makeTrees("terrain/tree_alpha", 14, 9) } end
 
 newEntity{
 	define_as = "FLOWER",

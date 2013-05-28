@@ -24,12 +24,13 @@ local Astar = require "engine.Astar"
 
 newAI("move_simple", function(self)
 	if self.ai_target.actor then
-		local tx, ty
-		-- Move towards the last seen position if we have one
-		if self.ai_state.target_last_seen and type(self.ai_state.target_last_seen) == "table" then
-			tx, ty = self.ai_state.target_last_seen.x, self.ai_state.target_last_seen.y
-		else
-			tx, ty = self:aiSeeTargetPos(self.ai_target.actor)
+		local tx, ty = self:aiSeeTargetPos(self.ai_target.actor)
+
+		if not self:hasLOS(self.ai_target.actor.x, self.ai_target.actor.y) then
+			-- Move towards the last seen position if we have one
+			if self.ai_state.target_last_seen and type(self.ai_state.target_last_seen) == "table" then
+				tx, ty = self.ai_state.target_last_seen.x, self.ai_state.target_last_seen.y
+			end
 		end
 		return self:moveDirection(tx, ty)
 	end
