@@ -19,7 +19,6 @@
 
 -- Defines a simple AI building blocks
 -- Target nearest and move/attack it
-
 local Astar = require "engine.Astar"
 
 newAI("move_simple", function(self)
