@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 local layout = game.state:alternateZoneTier1(short_name, {"FLOODED", 1})
-layout="DEFAULT"
+layout="FLOODED"
 if layout == "FLOODED" then
 
 return {
@@ -56,7 +56,7 @@ return {
 			up = "GRASS_UP4",
 			down = "GRASS_DOWN6",
 			door = "BOGWATER",
-			road = "GRASS",
+			road = "GRASS_ROAD_DIRT",
 			add_road = true,
 
 			nb_rooms = {0,0,0,1},
@@ -178,7 +178,7 @@ return {
 			up = "GRASS_UP4",
 			down = "GRASS_DOWN6",
 			door = "GRASS",
-			road = "GRASS_ROAD",
+			road = "GRASS_ROAD_DIRT",
 			add_road = true,
 			do_ponds = {
 				nb = {0, 2},

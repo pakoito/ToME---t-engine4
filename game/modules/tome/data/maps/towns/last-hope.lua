@@ -27,7 +27,8 @@ defineTile("<", "GRASS_UP_WILDERNESS")
 defineTile("#", "HARDWALL")
 defineTile("&", "HARDMOUNTAIN_WALL")
 defineTile("~", "DEEP_WATER")
-defineTile("_", "ROAD")
+defineTile("_", "FLOOR_ROAD_STONE")
+defineTile("-", "GRASS_ROAD_STONE")
 defineTile(".", "GRASS")
 defineTile("t", "TREE")
 defineTile(" ", "FLOOR")
@@ -67,10 +68,10 @@ addSpot({6, 19}, "pop-quest", "farportal-npc")
 -- ASCII map section
 return [[
 ttttttttttttttttttttttttt<tttttttttttttttttttttttt
-ttttttttttttttttttttt~~~X_X~~~tttttttttttttttttttt
-ttttttttttttttttt~~~~~~~._.~~~~~~~tttttttttttttttt
-ttttttttttttttt~~~~~~~~~._.~~~~~~~~~tttttttttttttt
-ttttttttttttt~~~~~~~~####_####~~~~~~~~tttttttttttt
+ttttttttttttttttttttt~~~X-X~~~tttttttttttttttttttt
+ttttttttttttttttt~~~~~~~.-.~~~~~~~tttttttttttttttt
+ttttttttttttttt~~~~~~~~~.-.~~~~~~~~~tttttttttttttt
+ttttttttttttt~~~~~~~~####.####~~~~~~~~tttttttttttt
 tttttttttttt~~~~~~####_______####~~~~~~ttttttttttt
 tttttttttt~~~~~~###   _     _   ###~~~~~~ttttttttt
 ttttttttt~~~~~###     _ ### _     ###~~~~~tttttttt
@@ -83,20 +84,20 @@ tttt~~~~##   ##A# _ #6#     ### _ ###    ##~~~~ttt
 tttt~~~##   ###   _ #         # _ M###    ##~~~ttt
 ttt~~~~#     1#   _  _________  _   ###    #~~~~tt
 ttt~~~##          ____~~~_~~~____   ##     ##~~~tt
-tt~~~~#  ###      __~~~##_##~~~__           #~~~~t
-tt~~~##  ###     __~~###@_t###~~__          ##~~~t
-tt~~~#   #T#    __~~##ttY_Ztt##~~__          #~~~t
-tt~~~#       ## _~~##tt_____tt##~~_ ##       #~~~t
-t~~~##      ## __~##t___&_&___t##~__ ##      ##~~~
-t~~~#      ### _~~#tt_&&&_&&&_tt#~~_ ###      #~~~
-t~~~#      ##  _~##t__&&___&&__t##~_  ##      #~~~
-t~~~#  ######  _~#tt_&&_###_&&_tt#~_  ######  #~~~
-t~~~#  #####   _~#tt_&&_#E#_&&_tt#~_   #####  #~~~
-t~~~#  #8####  _~#tt_&&_____&&_tt#~_  ##3#4#  #~~~
-t~~~#      ##  _~##t__&&___&&__t##~_  ##      #~~~
-t~~~#      ### _~~#tt_&&&&&&&_tt#~~_ ###      #~~~
-t~~~##      ## __~##t___&&&___t##~__ ##      ##~~~
-tt~~~#       2# _~~##tt_____tt##~~_ ##       #~~~t
+tt~~~~#  ###      __~~~##.##~~~__           #~~~~t
+tt~~~##  ###     __~~###@.t###~~__          ##~~~t
+tt~~~#   #T#    __~~##ttY-Ztt##~~__          #~~~t
+tt~~~#       ## _~~##tt-----tt##~~_ ##       #~~~t
+t~~~##      ## __~##t---&-&---t##~__ ##      ##~~~
+t~~~#      ### _~~#tt-&&&-&&&-tt#~~_ ###      #~~~
+t~~~#      ##  _~##t--&&---&&--t##~_  ##      #~~~
+t~~~#  ######  _~#tt-&&-###-&&-tt#~_  ######  #~~~
+t~~~#  #####   _~#tt-&&-#E#-&&-tt#~_   #####  #~~~
+t~~~#  #8####  _~#tt-&&-----&&-tt#~_  ##3#4#  #~~~
+t~~~#      ##  _~##t--&&---&&--t##~_  ##      #~~~
+t~~~#      ### _~~#tt-&&&&&&&-tt#~~_ ###      #~~~
+t~~~##      ## __~##t---&&&---t##~__ ##      ##~~~
+tt~~~#       2# _~~##tt-----tt##~~_ ##       #~~~t
 tt~~~#          __~~##ttttttt##~~__          #~~~t
 tt~~~##          __~~###ttt###~~__          ##~~~t
 tt~~~~#           __~~~#####~~~__           #~~~~t

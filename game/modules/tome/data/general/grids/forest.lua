@@ -92,16 +92,23 @@ newEntity{
 -----------------------------------------
 -- Forest road
 -----------------------------------------
-local road_editer = { method="roads_def", def="oldstone"}
-
 newEntity{
-	define_as = "GRASS_ROAD",
-	type = "floor", subtype = "grass", road="oldroad",
+	define_as = "GRASS_ROAD_STONE",
+	type = "floor", subtype = "grass", road="oldstone",
 	name = "old road", image = "terrain/grass.png",
 	display = '=', color=colors.DARK_GREY,
 	always_remember = true,
 	nice_editer = grass_editer,
-	nice_editer2 = road_editer,
+	nice_editer2 = { method="roads_def", def="oldstone" },
+}
+newEntity{
+	define_as = "GRASS_ROAD_DIRT",
+	type = "floor", subtype = "grass", road="dirt",
+	name = "old road", image = "terrain/grass.png",
+	display = '=', color=colors.DARK_GREY,
+	always_remember = true,
+	nice_editer = grass_editer,
+	nice_editer2 = { method="roads_def", def="dirt" },
 }
 
 -----------------------------------------

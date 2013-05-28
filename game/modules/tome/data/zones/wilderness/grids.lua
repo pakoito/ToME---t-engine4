@@ -34,11 +34,11 @@ newEntity{
 	type = "floor", subtype = "grass",
 	name = "plains", image = "terrain/grass_worldmap/grass_main_01.png",
 	display = '.', color=colors.LIGHT_GREEN, back_color={r=44,g=95,b=43},
---	nice_tiler = { method="replace", base={"PLAINS_PATCH", 70, 1, 15}},
+	nice_tiler = { method="replace", base={"PLAINS_PATCH", 70, 1, 14}},
 	can_encounter=true, equilibrium_level=-10,
 	nice_editer = grass_editer,
 }
-for i = 1, 12 do newEntity{ base = "PLAINS", define_as = "PLAINS_PATCH"..i, image = "terrain/grass"..(i<7 and "" or "2")..".png" } end
+for i = 1, 14 do newEntity{ base = "PLAINS", define_as = "PLAINS_PATCH"..i, image = ("terrain/grass/grass_main_%02d.png"):format(i) } end
 
 newEntity{ base="PLAINS", define_as="CULTIVATION",
 	name="cultivated fields",
