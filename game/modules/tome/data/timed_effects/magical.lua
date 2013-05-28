@@ -1910,11 +1910,7 @@ newEffect{
 		if not spot or not spot.x then return end
 
 		self:project({type="ball", x=spot.x, y=spot.y, radius=2, selffire=self:spellFriendlyFire()}, spot.x, spot.y, DamageType.ARCANE, eff.dam)
-		if core.shader.active(4) then
-			game.level.map:particleEmitter(spot.x, spot.y, 2, "shader_ring", {radius=4, life=12}, {type="sparks", zoom=1, time_factor=400, hide_center=0, color1={0.6, 0.3, 0.8, 1}, color2={0.8, 0, 0.8, 1}})
-		else
-			game.level.map:particleEmitter(spot.x, spot.y, 2, "generic_ball", {rm=150, rM=180, gm=20, gM=60, bm=180, bM=200, am=80, aM=150, radius=2})
-		end
+		game.level.map:particleEmitter(spot.x, spot.y, 2, "generic_sploom", {rm=150, rM=180, gm=20, gM=60, bm=180, bM=200, am=80, aM=150, radius=2, basenb=120})
 
 		game:playSoundNear(self, "talents/arcane")
 	end,
