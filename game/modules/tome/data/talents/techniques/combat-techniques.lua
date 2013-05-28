@@ -165,10 +165,10 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	passives = function(self, t, p)
-		self:talentTemporaryValue(p, "stamina_regen", self:getTalentLevel(t))
+		self:talentTemporaryValue(p, "stamina_regen", self:getTalentLevel(t) / 2)
 	end,
 	info = function(self, t)
-		return ([[Your combat focus allows you to regenerate stamina faster (+%0.2f stamina/turn).]]):format(self:getTalentLevel(t))
+		return ([[Your combat focus allows you to regenerate stamina faster (+%0.2f stamina/turn).]]):format(self:getTalentLevel(t) / 2)
 	end,
 }
 
