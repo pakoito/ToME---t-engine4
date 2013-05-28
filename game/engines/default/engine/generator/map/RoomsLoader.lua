@@ -358,7 +358,7 @@ function _M:tunnel(x1, y1, x2, y2, id, virtual)
 		local nx, ny = t[1], t[2]
 		if t[3] and self.data.door then self.possible_doors[#self.possible_doors+1] = t end
 		if not t[4] and not virtual then
-			self.map(nx, ny, Map.TERRAIN, self:resolve('.'))
+			self.map(nx, ny, Map.TERRAIN, self:resolve('=') or self:resolve('.'))
 		end
 	end
 end

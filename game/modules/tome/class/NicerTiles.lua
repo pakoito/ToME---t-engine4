@@ -381,35 +381,20 @@ grass = { method="borders", type="grass", forbid={lava=true, rock=true},
 	water9i={add_mos={{image="terrain/grass/grass_inner_9_%02d.png", display_x=1, display_y=-1}}, min=1, max=1},
 },
 grass_wm = { method="borders", type="grass", forbid={lava=true},
-	default8={add_mos={{image="terrain/grass/grass_2_%02d.png", display_y=-1}}, min=1, max=5},
-	default2={add_mos={{image="terrain/grass/grass_8_%02d.png", display_y=1}}, min=1, max=5},
-	default4={add_mos={{image="terrain/grass/grass_6_%02d.png", display_x=-1}}, min=1, max=5},
-	default6={add_mos={{image="terrain/grass/grass_4_%02d.png", display_x=1}}, min=1, max=4},
+	default8={add_mos={{image="terrain/grass_worldmap/grass_2_%02d.png", display_y=-1}}, min=1, max=2},
+	default2={add_mos={{image="terrain/grass_worldmap/grass_8_%02d.png", display_y=1}}, min=1, max=2},
+	default4={add_mos={{image="terrain/grass_worldmap/grass_6_%02d.png", display_x=-1}}, min=1, max=2},
+	default6={add_mos={{image="terrain/grass_worldmap/grass_4_%02d.png", display_x=1}}, min=1, max=2},
 
-	default1={add_mos={{image="terrain/grass/grass_9_%02d.png", display_x=-1, display_y=1}}, min=1, max=3},
-	default3={add_mos={{image="terrain/grass/grass_7_%02d.png", display_x=1, display_y=1}}, min=1, max=3},
-	default7={add_mos={{image="terrain/grass/grass_3_%02d.png", display_x=-1, display_y=-1}}, min=1, max=3},
-	default9={add_mos={{image="terrain/grass/grass_1_%02d.png", display_x=1, display_y=-1}}, min=1, max=3},
+	default1={add_mos={{image="terrain/grass_worldmap/grass_9_%02d.png", display_x=-1, display_y=1}}, min=1, max=1},
+	default3={add_mos={{image="terrain/grass_worldmap/grass_7_%02d.png", display_x=1, display_y=1}}, min=1, max=1},
+	default7={add_mos={{image="terrain/grass_worldmap/grass_3_%02d.png", display_x=-1, display_y=-1}}, min=1, max=1},
+	default9={add_mos={{image="terrain/grass_worldmap/grass_1_%02d.png", display_x=1, display_y=-1}}, min=1, max=1},
 
-	default1i={add_mos={{image="terrain/grass/grass_inner_1_%02d.png", display_x=-1, display_y=1}}, min=1, max=3},
-	default3i={add_mos={{image="terrain/grass/grass_inner_3_%02d.png", display_x=1, display_y=1}}, min=1, max=3},
-	default7i={add_mos={{image="terrain/grass/grass_inner_7_%02d.png", display_x=-1, display_y=-1}}, min=1, max=3},
-	default9i={add_mos={{image="terrain/grass/grass_inner_9_%02d.png", display_x=1, display_y=-1}}, min=1, max=3},
-
-	water8={add_mos={{image="terrain/grass/grass_2_%02d.png", display_y=-1}}, min=1, max=1},
-	water2={add_mos={{image="terrain/grass/grass_8_%02d.png", display_y=1}}, min=1, max=1},
-	water4={add_mos={{image="terrain/grass/grass_6_%02d.png", display_x=-1}}, min=1, max=1},
-	water6={add_mos={{image="terrain/grass/grass_4_%02d.png", display_x=1}}, min=1, max=1},
-
-	water1={add_mos={{image="terrain/grass/grass_9_%02d.png", display_x=-1, display_y=1}}, min=1, max=1},
-	water3={add_mos={{image="terrain/grass/grass_7_%02d.png", display_x=1, display_y=1}}, min=1, max=1},
-	water7={add_mos={{image="terrain/grass/grass_3_%02d.png", display_x=-1, display_y=-1}}, min=1, max=1},
-	water9={add_mos={{image="terrain/grass/grass_1_%02d.png", display_x=1, display_y=-1}}, min=1, max=1},
-
-	water1i={add_mos={{image="terrain/grass/grass_inner_1_%02d.png", display_x=-1, display_y=1}}, min=1, max=1},
-	water3i={add_mos={{image="terrain/grass/grass_inner_3_%02d.png", display_x=1, display_y=1}}, min=1, max=1},
-	water7i={add_mos={{image="terrain/grass/grass_inner_7_%02d.png", display_x=-1, display_y=-1}}, min=1, max=1},
-	water9i={add_mos={{image="terrain/grass/grass_inner_9_%02d.png", display_x=1, display_y=-1}}, min=1, max=1},
+	default1i={add_mos={{image="terrain/grass_worldmap/grass_inner_1_%02d.png", display_x=-1, display_y=1}}, min=1, max=2},
+	default3i={add_mos={{image="terrain/grass_worldmap/grass_inner_3_%02d.png", display_x=1, display_y=1}}, min=1, max=2},
+	default7i={add_mos={{image="terrain/grass_worldmap/grass_inner_7_%02d.png", display_x=-1, display_y=-1}}, min=1, max=2},
+	default9i={add_mos={{image="terrain/grass_worldmap/grass_inner_9_%02d.png", display_x=1, display_y=-1}}, min=1, max=2},
 },
 jungle_grass = { method="borders", type="jungle_grass", forbid={lava=true, rock=true, grass=true},
 	default8={add_mos={{image="terrain/jungle/jungle_grass_2_%02d.png", display_y=-1}}, min=1, max=5},
@@ -923,6 +908,77 @@ function _M:editTileSingleWall(level, i, j, g, nt, type)
 	elseif g5 == g4 and g5 == g6 and g5 ~= g8 and g5 ~= g2  then self:edit(i, j, id, nt["h_full"])
 	end
 end
+
+local defs = {
+oldstone = { method="road", marker="road",
+	default82={add_mos={{image="terrain/road_oldstone/road_vertical_a_%02d.png"}}, min=1, max=3},
+	default46={add_mos={{image="terrain/road_oldstone/road_horizontal_a_%02d.png"}}, min=1, max=3},
+
+	default8246={add_mos={{image="terrain/road_oldstone/road_cross_a_%02d.png"}}, min=1, max=1},
+
+	default846={add_mos={{image="terrain/road_oldstone/road_t_section_c_%02d.png"}}, min=1, max=1},
+	default246={add_mos={{image="terrain/road_oldstone/road_t_section_a_%02d.png"}}, min=1, max=1},
+	default824={add_mos={{image="terrain/road_oldstone/road_t_section_b_%02d.png"}}, min=1, max=1},
+	default826={add_mos={{image="terrain/road_oldstone/road_t_section_d_%02d.png"}}, min=1, max=1},
+
+	default84={add_mos={{image="terrain/road_oldstone/road_turn_c_%02d.png"}}, min=1, max=2},
+	default86={add_mos={{image="terrain/road_oldstone/road_turn_d_%02d.png"}}, min=1, max=2},
+	default26={add_mos={{image="terrain/road_oldstone/road_turn_a_%02d.png"}}, min=1, max=2},
+	default24={add_mos={{image="terrain/road_oldstone/road_turn_b_%02d.png"}}, min=1, max=2},
+
+	default4={add_mos={{image="terrain/road_oldstone/road_end_a_02.png"}}, min=1, max=1},
+	default6={add_mos={{image="terrain/road_oldstone/road_end_a_01.png"}}, min=1, max=1},
+	default2={add_mos={{image="terrain/road_oldstone/road_end_a_03.png"}}, min=1, max=1},
+	default8={add_mos={{image="terrain/road_oldstone/road_end_a_04.png"}}, min=1, max=1},
+},
+}
+_M.generic_roads_defs = defs
+
+--- Make water have nice transition to other stuff
+function _M:editTileGenericRoad(level, i, j, g, nt, type)
+	local kind = nt.marker
+	local g5 = level.map:checkEntity(i, j,   Map.TERRAIN, kind) or type
+	local g8 = level.map:checkEntity(i, j-1, Map.TERRAIN, kind) or type
+	local g2 = level.map:checkEntity(i, j+1, Map.TERRAIN, kind) or type
+	local g4 = level.map:checkEntity(i-1, j, Map.TERRAIN, kind) or type
+	local g6 = level.map:checkEntity(i+1, j, Map.TERRAIN, kind) or type
+	local g7 = level.map:checkEntity(i-1, j-1, Map.TERRAIN, kind) or type
+	local g9 = level.map:checkEntity(i+1, j-1, Map.TERRAIN, kind) or type
+	local g1 = level.map:checkEntity(i-1, j+1, Map.TERRAIN, kind) or type
+	local g3 = level.map:checkEntity(i+1, j+1, Map.TERRAIN, kind) or type
+
+	local id = "genroad:"..table.concat({g.define_as or "--",type,tostring(g1==g5),tostring(g2==g5),tostring(g3==g5),tostring(g4==g5),tostring(g5==g5),tostring(g6==g5),tostring(g7==g5),tostring(g8==g5),tostring(g9==g5)}, ",")
+
+	-- Cross & semi cross
+	if     g5 == g8 and g5 == g2 and g5 == g4 and g5 == g6 then self:edit(i, j, id, nt["default8246"])
+	elseif g5 ~= g8 and g5 == g2 and g5 == g4 and g5 == g6 then self:edit(i, j, id, nt["default246"])
+	elseif g5 == g8 and g5 ~= g2 and g5 == g4 and g5 == g6 then self:edit(i, j, id, nt["default846"])
+	elseif g5 == g8 and g5 == g2 and g5 ~= g4 and g5 == g6 then self:edit(i, j, id, nt["default826"])
+	elseif g5 == g8 and g5 == g2 and g5 == g4 and g5 ~= g6 then self:edit(i, j, id, nt["default824"])
+
+	-- Corners
+	elseif g5 == g8 and g5 ~= g2 and g5 ~= g4 and g5 == g6 then self:edit(i, j, id, nt["default86"])
+	elseif g5 == g8 and g5 ~= g2 and g5 == g4 and g5 ~= g6 then self:edit(i, j, id, nt["default84"])
+	elseif g5 ~= g8 and g5 == g2 and g5 == g4 and g5 ~= g6 then self:edit(i, j, id, nt["default24"])
+	elseif g5 ~= g8 and g5 == g2 and g5 ~= g4 and g5 == g6 then self:edit(i, j, id, nt["default26"])
+
+	-- Main
+	elseif g5 == g8 and g5 == g2 then self:edit(i, j, id, nt["default82"])
+	elseif g5 == g4 and g5 == g6 then self:edit(i, j, id, nt["default46"])
+
+	-- Ends
+	elseif g5 == g4 and g5 ~= g6 then self:edit(i, j, id, nt["default4"])
+	elseif g5 ~= g4 and g5 == g6 then self:edit(i, j, id, nt["default6"])
+	elseif g5 == g2 and g5 ~= g8 then self:edit(i, j, id, nt["default2"])
+	elseif g5 ~= g2 and g5 == g8 then self:edit(i, j, id, nt["default8"])
+
+	end
+end
+
+function _M:editTileRoads_def(level, i, j, g, nt)
+	self:editTileGenericRoad(level, i, j, g, defs[nt.def], defs[nt.def].type or "defaultroad")
+end
+
 
 -- This array is precomputed, it holds the possible combinations of walls and the nice tile they generate
 -- The data is bit-encoded

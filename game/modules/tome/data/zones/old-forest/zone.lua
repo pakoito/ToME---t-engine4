@@ -48,6 +48,7 @@ return {
 			lesser_vaults_list = {"honey_glade", "troll-hideout", "mage-hideout", "thief-hideout", "plantlife", "mold-path", "bandit-fortress","loot-vault"},
 			['.'] = "GRASS",
 			['#'] = "TREE",
+--			['='] = "GRASS_ROAD",
 			up = "GRASS_UP4",
 			down = "GRASS_DOWN6",
 			door = "GRASS",

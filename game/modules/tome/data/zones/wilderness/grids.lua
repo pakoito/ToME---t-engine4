@@ -32,9 +32,9 @@ local lava_editer = {method="borders_def", def="lava"}
 newEntity{
 	define_as = "PLAINS",
 	type = "floor", subtype = "grass",
-	name = "plains", image = "terrain/grass.png",
+	name = "plains", image = "terrain/grass_worldmap/grass_main_01.png",
 	display = '.', color=colors.LIGHT_GREEN, back_color={r=44,g=95,b=43},
-	nice_tiler = { method="replace", base={"PLAINS_PATCH", 70, 1, 15}},
+--	nice_tiler = { method="replace", base={"PLAINS_PATCH", 70, 1, 15}},
 	can_encounter=true, equilibrium_level=-10,
 	nice_editer = grass_editer,
 }
