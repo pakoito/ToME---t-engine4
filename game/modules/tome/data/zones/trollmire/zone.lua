@@ -42,6 +42,7 @@ return {
 	min_material_level = function() return game.state:isAdvanced() and 3 or 1 end,
 	max_material_level = function() return game.state:isAdvanced() and 4 or 2 end,
 	is_flooded = true,
+	nicer_tiler_overlay = "DungeonWallsGrass",
 	generator =  {
 		map = {
 			class = "engine.generator.map.Forest",

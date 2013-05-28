@@ -73,6 +73,11 @@ function _M:handle(level, i, j)
 end
 
 function _M:replaceAll(level)
+	local overlay = function(self, level, mode, i, j, g) return g end
+	if level.data.nicer_tiler_overlay then
+		overlay = self['overlay'..level.data.nicer_tiler_overlay]
+	end
+
 	for i = 1, #self.repl do
 		local r = self.repl[i]
 		-- Safety check
@@ -80,7 +85,7 @@ function _M:replaceAll(level)
 		if og and (og.change_zone or og.change_level) then
 			print("[NICE TILER] *warning* refusing to remove zone/level changer at ", r[1], r[2], og.change_zone, og.change_level)
 		else
-			level.map(r[1], r[2], Map.TERRAIN, r[3])
+			level.map(r[1], r[2], Map.TERRAIN, overlay(self, level, "replace", r[1], r[2], r[3]))
 		end
 	end
 	self.repl = {}
@@ -182,6 +187,13 @@ function _M:updateAround(level, x, y)
 
 	self:replaceAll(level)
 end
+
+----------------------------------------------------------
+-- Load overlays
+----------------------------------------------------------
+loadfile("/mod/class/NicerTilesOverlays.lua")(_M)
+----------------------------------------------------------
+----------------------------------------------------------
 
 --- Make walls have a pseudo 3D effect
 function _M:niceTileWall3d(level, i, j, g, nt)
@@ -1126,10 +1138,6 @@ function _M:niceTileMountain3d(level, i, j, g, nt)
 	local v = bit.bor(g1, g2, g3, g4, g6, g7, g8, g9)
 	if full_wall3d[v] then self:replace(i, j, self:getTile(nt[full_wall3d[v]])) end
 end
-
-
-
-
 
 
 --------------------------------------------------------------------------

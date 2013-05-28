@@ -30,6 +30,7 @@ return {
 	ambient_music = "a_lomos_del_dragon_blanco.ogg",
 	no_level_connectivity = true,
 	max_material_level = 2,
+	nicer_tiler_overlay = "DungeonWallsGrass",
 	generator =  {
 		map = {
 			class = "engine.generator.map.Static",

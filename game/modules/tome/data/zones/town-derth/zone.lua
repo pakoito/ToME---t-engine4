@@ -34,6 +34,7 @@ return {
 
 	max_material_level = 2,
 	store_levels_by_restock = { 8, 25, 40 },
+	nicer_tiler_overlay = "DungeonWallsGrass",
 
 	generator =  {
 		map = {

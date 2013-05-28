@@ -23,10 +23,13 @@ load("/data/general/grids/mountain.lua")
 load("/data/general/grids/water.lua")
 load("/data/general/grids/sand.lua")
 
-newEntity{ base = "FLOOR", define_as = "ROAD",
-	name="cobblestone road",
-	display='.', image="terrain/stone_road1.png",
-	special_minimap = colors.DARK_GREY,
+newEntity{
+	define_as = "FLOOR_ROAD_STONE",
+	type = "floor", subtype = "floor", road="oldstone",
+	name = "old road", image = "terrain/marble_floor.png",
+	display = '=', color=colors.DARK_GREY,
+	always_remember = true,
+	nice_editer2 = { method="roads_def", def="oldstone" },
 }
 
 newEntity{

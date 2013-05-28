@@ -36,6 +36,7 @@ return {
 	min_material_level = function() return game.state:isAdvanced() and 3 or 2 end,
 	max_material_level = function() return game.state:isAdvanced() and 4 or 3 end,
 	store_levels_by_restock = { 20, 35, 45 },
+	nicer_tiler_overlay = "DungeonWallsGrass",
 
 	generator =  {
 		map = {
