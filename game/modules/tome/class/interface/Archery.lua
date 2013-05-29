@@ -36,7 +36,7 @@ function _M:archeryAcquireTargets(tg, params)
 		return nil
 	end
 
-	local infinite = ammo.infinite or self:attr("infinite_ammo")
+	local infinite = ammo.infinite or self:attr("infinite_ammo") or params.infinite
 
 	if not ammo or (ammo.combat.shots_left <= 0 and not infinite) then
 		game.logPlayer(self, "You do not have enough ammo left!")
@@ -262,7 +262,7 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 
 		DamageType:get(damtype).projector(self, target.x, target.y, damtype, math.max(0, dam), tmp)
 
-		game.level.map:particleEmitter(target.x, target.y, 1, "archery")
+		if not tg.no_archery_particle then game.level.map:particleEmitter(target.x, target.y, 1, "archery") end
 		hitted = true
 
 		if talent.archery_onhit then talent.archery_onhit(self, talent, target, target.x, target.y) end
