@@ -1345,9 +1345,9 @@ It has been kept somewhat intact with layers of salt and clay, but in spite of t
 		if who.descriptor and who.descriptor.race == "Halfling" then
 			local Stats = require "engine.interface.ActorStats"
 			self:specialWearAdd({"wielder","inc_stats"}, { [Stats.STAT_LCK] = -10}) -- Overcomes the +5 Bonus and adds a -5 penalty
-			self:specialWearAdd({"wielder","combat_physicalsave"}, -5)
-			self:specialWearAdd({"wielder","combat_mentalsave"}, -5)
-			self:specialWearAdd({"wielder","combat_spellsave"}, -5)
+			self:specialWearAdd({"wielder","combat_physresist"}, -5)
+			self:specialWearAdd({"wielder","combat_mentalresist"}, -5)
+			self:specialWearAdd({"wielder","combat_spellresist"}, -5)
 			game.logPlayer(who, "#LIGHT_RED#You feel uneasy carrying %s.", self:getName())
 		end
 	end,
