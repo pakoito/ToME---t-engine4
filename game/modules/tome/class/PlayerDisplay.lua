@@ -380,6 +380,12 @@ function _M:display()
 		)) h = h + self.font_h
 	end
 
+	-- Any hooks
+	local hd = {"UISet:Classic:Resources", player=player, x=x, y=y}
+	if self:triggerHook(hd) then 
+		x, y = hd.x, hd.y
+	end
+
 	local quiver = player:getInven("QUIVER")
 	local ammo = quiver and quiver[1]
 	if ammo then
