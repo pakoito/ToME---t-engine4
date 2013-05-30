@@ -30,6 +30,7 @@ function _M:init(zone, map, level, data)
 	self.hurst = data.hurst or 0.2
 	self.lacunarity = data.lacunarity or 4
 	self.octave = data.octave or 1
+	self.door_chance = data.door_chance or nil
 	self.min_floor = data.min_floor or 900
 	self.noise = data.noise or "simplex"
 end
@@ -102,7 +103,44 @@ function _M:generate(lev, old_lev)
 		return self:generate(lev, old_lev)
 	end
 
+	if self.door_chance then
+		self:addDoors()
+	end
+
 	return self:makeStairsInside(lev, old_lev, {})
+end
+
+function _M:addDoors()
+	local possible = {}
+	for i = 1, self.map.w - 2 do
+		for j = 1, self.map.h - 2 do
+			local g4 = self.map:checkEntity(i-1, j, Map.TERRAIN, "block_move")
+			local g6 = self.map:checkEntity(i+1, j, Map.TERRAIN, "block_move")
+			local g2 = self.map:checkEntity(i, j+1, Map.TERRAIN, "block_move")
+			local g8 = self.map:checkEntity(i, j-1, Map.TERRAIN, "block_move")
+
+			if     g4 and g6 and not g2 and not g8 then possible[#possible+1] = {x=i, y=j, dir="46"}
+			elseif not g4 and not g6 and g2 and g8 then possible[#possible+1] = {x=i, y=j, dir="82"} end
+		end
+	end
+
+	table.shuffle(possible)
+
+	local delspot = function(x, y)
+		for i, d in ipairs(possible) do
+			if d.x == x and d.y == y then table.remove(possible, i) return end
+		end
+	end
+
+	while #possible > 0 do
+		local d = table.remove(possible)
+
+		if rng.percent(self.door_chance) then
+			self.map(d.x, d.y, Map.TERRAIN, self:resolve("door"))
+			delspot(d.x-1, d.y) delspot(d.x+1, d.y)
+			delspot(d.x, d.y-1) delspot(d.x, d.y+1)
+		end
+	end
 end
 
 --- Create the stairs inside the level
