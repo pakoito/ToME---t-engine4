@@ -665,7 +665,7 @@ function _M:getTarget(typ)
 			typ.immediate_keys = true
 			typ.default_target = self
 
-			if config.settings.tome.immediate_melee_keys_auto and not oldft then
+			if config.settings.tome.immediate_melee_keys_auto and not oldft and not typ.simple_dir_request then
 				local foes = {}
 				for _, c in pairs(util.adjacentCoords(self.x, self.y)) do
  					local target = game.level.map(c[1], c[2], Map.ACTOR)

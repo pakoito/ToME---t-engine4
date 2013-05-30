@@ -76,9 +76,9 @@ newEntity{
 	door_closed = "ICECAVE_DOOR",
 }
 newEntity{ base = "ICECAVE_DOOR", define_as = "ICECAVE_DOOR_HORIZ", z=3, image = "terrain/icecave/icecave_door1.png", add_displays = {class.new{image="terrain/icecave/icecavewall_8_2.png", z=18, display_y=-1}}, door_opened = "ICECAVE_DOOR_HORIZ_OPEN"}
-newEntity{ base = "ICECAVE_DOOR_OPEN", define_as = "ICECAVE_DOOR_HORIZ_OPEN", image = "terrain/icecave/icecave_door1.png", add_displays = {class.new{image="terrain/icecave/icecave_door1_open.png", z=17}, class.new{image="terrain/icecave/icecavewall_8_2.png", z=18, display_y=-1}}, door_closed = "ICECAVE_DOOR_HORIZ"}
-newEntity{ base = "ICECAVE_DOOR", define_as = "ICECAVE_DOOR_VERT", image = "terrain/icecave/icecave_door1.png", add_displays = {class.new{image="terrain/icecave/icecave_door1_vert.png", z=17}, class.new{image="terrain/icecave/icecave_door1_vert_north.png", z=18, display_y=-1}}, door_opened = "ICECAVE_DOOR_OPEN_VERT", dig = "ICECAVE_DOOR_OPEN_VERT"}
-newEntity{ base = "ICECAVE_DOOR_OPEN", define_as = "ICECAVE_DOOR_OPEN_VERT", image = "terrain/icecave/icecave_door1.png", add_displays = {class.new{image="terrain/icecave/icecave_door1_open_vert.png", z=17}, class.new{image="terrain/icecave/icecave_door1_open_vert_north.png", z=18, display_y=-1}}, door_closed = "ICECAVE_DOOR_VERT"}
+newEntity{ base = "ICECAVE_DOOR_OPEN", define_as = "ICECAVE_DOOR_HORIZ_OPEN", image = "terrain/icecave/icecave_floor_1_01.png", add_mos={{image="terrain/icecave/icecave_door1_open_backg.png"}}, add_displays = {class.new{image="terrain/icecave/icecave_door1_open.png", z=17}, class.new{image="terrain/icecave/icecavewall_8_2.png", z=18, display_y=-1}}, door_closed = "ICECAVE_DOOR_HORIZ"}
+newEntity{ base = "ICECAVE_DOOR", define_as = "ICECAVE_DOOR_VERT", image = "terrain/icecave/icecave_floor_1_01.png", add_displays = {class.new{image="terrain/icecave/icecave_door1_vert.png", z=17}, class.new{image="terrain/icecave/icecave_door1_vert_north.png", z=18, display_y=-1}}, door_opened = "ICECAVE_DOOR_OPEN_VERT", dig = "ICECAVE_DOOR_OPEN_VERT"}
+newEntity{ base = "ICECAVE_DOOR_OPEN", define_as = "ICECAVE_DOOR_OPEN_VERT", z=3, image = "terrain/icecave/icecave_floor_1_01.png", add_mos={{image="terrain/icecave/icecave_door1_open_vert_backg.png"}}, add_displays = {class.new{image="terrain/icecave/icecave_door1_open_vert.png", z=17}, class.new{image="terrain/icecave/icecave_door1_open_vert_north.png", z=18, display_y=-1}}, door_closed = "ICECAVE_DOOR_VERT"}
 
 -----------------------------------------
 -- Cavy exits

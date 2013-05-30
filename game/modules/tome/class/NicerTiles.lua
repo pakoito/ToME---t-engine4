@@ -814,10 +814,12 @@ function _M:editTileGenericSandWalls(level, i, j, g, nt, type)
 	local g9 = level.map:checkEntity(i+1, j-1, Map.TERRAIN, kind) or type
 	local g1 = level.map:checkEntity(i-1, j+1, Map.TERRAIN, kind) or type
 	local g3 = level.map:checkEntity(i+1, j+1, Map.TERRAIN, kind) or type
+	local g2d = level.map:checkEntity(i, j+1, Map.TERRAIN, "is_door")
 	local g7d = nil
 	local g1d = nil
 	local g3d = nil
 	local g9d = nil
+	if g2d then g2 = "floor" end
 	if nt.consider_diagonal_doors then
 		g7d = level.map:checkEntity(i-1, j-1, Map.TERRAIN, "is_door")
 		g1d = level.map:checkEntity(i-1, j+1, Map.TERRAIN, "is_door")

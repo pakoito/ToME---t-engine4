@@ -108,7 +108,7 @@ end
 -- @param target to whom is the exp rewarded
 -- @return the experience rewarded
 function _M:worthExp(target)
-	return self.level * self.exp_worth * (target.exp_gain_mult or 1)
+	return self.level * self.exp_worth
 end
 
 --- Method called when leveling up, module author rewrite it to do as you please

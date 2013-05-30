@@ -84,7 +84,7 @@ newTalent{
 	no_npc_use = true,
 	range = function(self, t) return math.ceil(self:getTalentLevel(t) + 5) end,
 	action = function(self, t)
-		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
+		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, simple_dir_request=true, talent=t}
 		local tx, ty, target = self:getTarget(tg)
 		if not tx or not ty then return nil end
 		local _ _, _, _, tx, ty = self:canProject(tg, tx, ty)
@@ -245,7 +245,7 @@ newTalent{
 	tactical = { ATTACKAREA = { FIRE = 2 } },
 	no_unlearn_last = true,
 	action = function(self, t)
-		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
+		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, simple_dir_request=true, talent=t}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y then return nil end
 		local _ _, x, y = self:canProject(tg, x, y)
@@ -293,7 +293,7 @@ newTalent{
 	no_break_stealth = trap_stealth,
 	no_unlearn_last = true,
 	action = function(self, t)
-		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
+		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, simple_dir_request=true, talent=t}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y then return nil end
 		local _ _, x, y = self:canProject(tg, x, y)
@@ -345,7 +345,7 @@ newTalent{
 	no_break_stealth = trap_stealth,
 	no_unlearn_last = true,
 	action = function(self, t)
-		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
+		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, simple_dir_request=true, talent=t}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y then return nil end
 		local _ _, x, y = self:canProject(tg, x, y)
@@ -403,7 +403,7 @@ newTalent{
 	no_break_stealth = trap_stealth,
 	no_unlearn_last = true,
 	action = function(self, t)
-		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
+		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, simple_dir_request=true, talent=t}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y then return nil end
 		local _ _, x, y = self:canProject(tg, x, y)
@@ -455,7 +455,7 @@ newTalent{
 	no_break_stealth = trap_stealth,
 	no_unlearn_last = true,
 	action = function(self, t)
-		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
+		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, simple_dir_request=true, talent=t}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y then return nil end
 		local _ _, x, y = self:canProject(tg, x, y)
@@ -505,7 +505,7 @@ newTalent{
 	no_break_stealth = trap_stealth,
 	no_unlearn_last = true,
 	action = function(self, t)
-		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
+		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, simple_dir_request=true, talent=t}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y then return nil end
 		local _ _, x, y = self:canProject(tg, x, y)
@@ -564,7 +564,7 @@ newTalent{
 	no_break_stealth = trap_stealth,
 	no_unlearn_last = true,
 	action = function(self, t)
-		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
+		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, simple_dir_request=true, talent=t}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y then return nil end
 		local _ _, x, y = self:canProject(tg, x, y)
@@ -624,7 +624,7 @@ newTalent{
 	no_break_stealth = trap_stealth,
 	no_unlearn_last = true,
 	action = function(self, t)
-		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
+		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, simple_dir_request=true, talent=t}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y then return nil end
 		local _ _, x, y = self:canProject(tg, x, y)
