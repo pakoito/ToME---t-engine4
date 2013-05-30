@@ -102,6 +102,7 @@ prepareEntitiesList("fareast_encounters", "mod.class.Encounter", "/data/general/
 prepareEntitiesList("fareast_encounters_npcs", "mod.class.WorldNPC", "/data/general/encounters/fareast-npcs.lua")
 addData{
 	wda = { script="eyal", zones={} },
+	auto_placelists = { "maj_eyal_encounters", "fareast_encounters" },
 }
 
 

@@ -110,6 +110,9 @@ function _M:loadMap(file)
 			self.level.custom_zones = self.level.custom_zones or {}
 			self.level.custom_zones[#self.level.custom_zones+1] = zone
 		end,
+		updateZones = function(type, subtype, update)
+			for i, z in ipairs(self.level.custom_zones or {}) do update(z) end
+		end,
 	}
 	setfenv(f, setmetatable(g, {__index=_G}))
 	local ret, err = f()

@@ -22,6 +22,8 @@ local Map = require "engine.Map"
 
 module(..., package.seeall, class.make)
 
+local NB_VARIATIONS = 1
+
 function _M:init()
 	self.repo = {}
 	self.repl = {}
@@ -634,7 +636,7 @@ cavewall = { method="walls", type="cavewall", forbid={}, use_type=true, extended
 	default4={add_displays={{image="terrain/cave/cave_ver_edge_left_01.png", display_x=-1}}, min=1, max=1},
 	default6={add_displays={{image="terrain/cave/cave_ver_edge_right_01.png", display_x=1}}, min=1, max=1},
 },
-icecavewall = { method="walls", type="icecavewall", forbid={}, use_type=true, extended=true,
+icecavewall = { method="walls", type="icecavewall", forbid={}, use_type=true, extended=true, consider_diagonal_doors=true,
 	default8={add_displays={{image="terrain/icecave/icecavewall_8_%d.png", display_y=-1, z=16}}, min=1, max=3},
 	default8p={add_displays={{image="terrain/icecave/icecave_V3_pillar_top_0%d.png", display_y=-1, z=16}}, min=1, max=1},
 	default7={add_displays={{image="terrain/icecave/icecave_V3_inner_7_01.png", display_y=-1, z=16}}, min=1, max=1},
@@ -734,7 +736,7 @@ function _M:editTileGenericBorders(level, i, j, g, nt, type)
 		if nt.forbid[g9] then g9 = type end
 	end
 
-	local id = rng.range(1,100).."genbord:"..table.concat({g.define_as or "--",type,tostring(g1==g5),tostring(g2==g5),tostring(g3==g5),tostring(g4==g5),tostring(g5==g5),tostring(g6==g5),tostring(g7==g5),tostring(g8==g5),tostring(g9==g5)}, ",")
+	local id = rng.range(1,NB_VARIATIONS).."genbord:"..table.concat({g.define_as or "--",type,tostring(g1==g5),tostring(g2==g5),tostring(g3==g5),tostring(g4==g5),tostring(g5==g5),tostring(g6==g5),tostring(g7==g5),tostring(g8==g5),tostring(g9==g5)}, ",")
 
 	-- Sides
 	if g5 ~= g8 then self:edit(i, j, id, nt[g8.."8"] or nt["default8"]) end
@@ -777,7 +779,7 @@ function _M:editTileGenericWalls(level, i, j, g, nt, type)
 		if nt.forbid[g9] then g9 = type end
 	end
 
-	local id = rng.range(1,100).."genwall:"..table.concat({g.define_as or "--",type,tostring(g1==g5),tostring(g2==g5),tostring(g3==g5),tostring(g4==g5),tostring(g5==g5),tostring(g6==g5),tostring(g7==g5),tostring(g8==g5),tostring(g9==g5)}, ",")
+	local id = rng.range(1,NB_VARIATIONS).."genwall:"..table.concat({g.define_as or "--",type,tostring(g1==g5),tostring(g2==g5),tostring(g3==g5),tostring(g4==g5),tostring(g5==g5),tostring(g6==g5),tostring(g7==g5),tostring(g8==g5),tostring(g9==g5)}, ",")
 
 	-- Sides
 	if     g5 ~= g8 then self:edit(i, j, id, nt[g8.."8"] or nt["default8"]) end
@@ -839,7 +841,7 @@ function _M:editTileGenericSandWalls(level, i, j, g, nt, type)
 		if nt.forbid[g9] then g9 = type end
 	end
 
-	local id = rng.range(1,100).."sandwall:"..table.concat({g.define_as or "--",type,tostring(g1==g5),tostring(g2==g5),tostring(g3==g5),tostring(g4==g5),tostring(g5==g5),tostring(g6==g5),tostring(g7==g5),tostring(g8==g5),tostring(g9==g5)}, ",")
+	local id = rng.range(1,NB_VARIATIONS).."sandwall:"..table.concat({g.define_as or "--",type,tostring(g1==g5),tostring(g2==g5),tostring(g3==g5),tostring(g4==g5),tostring(g5==g5),tostring(g6==g5),tostring(g7==g5),tostring(g8==g5),tostring(g9==g5)}, ",")
 
 	-- Sides
 	if     g5 ~= g8 and g5 ~= g7 and g5 ~= g9 then
@@ -902,7 +904,7 @@ function _M:editTileSingleWall(level, i, j, g, nt, type)
 	local g4 = level.map:checkEntity(i-1, j, Map.TERRAIN, kind) or type
 	local g6 = level.map:checkEntity(i+1, j, Map.TERRAIN, kind) or type
 
-	local id = rng.range(1,100).."swv:"..table.concat({g.define_as or "--",type,tostring(g1==g5),tostring(g2==g5),tostring(g8==g5),tostring(g4==g5),tostring(g6==g5)}, ",")
+	local id = rng.range(1,NB_VARIATIONS).."swv:"..table.concat({g.define_as or "--",type,tostring(g1==g5),tostring(g2==g5),tostring(g8==g5),tostring(g4==g5),tostring(g6==g5)}, ",")
 
 	if     g5 ~= g4 and g5 == g6 and g5 == g8 and g5 == g2 then self:edit(i, j, id, nt["e_cross"])
 	elseif g5 == g4 and g5 ~= g6 and g5 == g8 and g5 == g2 then self:edit(i, j, id, nt["w_cross"])

@@ -75,8 +75,9 @@ return {
 				end
 			end
 		end
-		place_list(game.level:getEntitiesList("maj_eyal_encounters"))
-		place_list(game.level:getEntitiesList("fareast_encounters"))
+		for i, name in ipairs(level.data.auto_placelists or {}) do
+			place_list(game.level:getEntitiesList(name))
+		end
 
 		-- Create the glow
 		level.entrance_glow = require("engine.Particles").new("starglow", 1, {})
