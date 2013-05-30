@@ -381,9 +381,9 @@ function _M:display()
 	end
 
 	-- Any hooks
-	local hd = {"UISet:Classic:Resources", player=player, x=x, y=y}
+	local hd = {"UISet:Classic:Resources", player=player, x=x, h=h}
 	if self:triggerHook(hd) then 
-		x, y = hd.x, hd.y
+		x, h = hd.x, hd.h
 	end
 
 	local quiver = player:getInven("QUIVER")
