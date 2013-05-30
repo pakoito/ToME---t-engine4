@@ -577,9 +577,14 @@ FOV_DEFINE_OCTANT(-,-,y,x,m,m,y)
 */
 #define GET_BUFFER(target, buffer_data, len)                                                      \
     /* hurray, no branching, modulus, or malloc! */                                               \
+    {                                                                                             \
+    int overrun = (buffer_data->index + buffer_data->prev_len + len) & (FOV_BUFFER_SIZE - 1);     \
     buffer_data->index = (buffer_data->index + buffer_data->prev_len) & (FOV_BUFFER_SIZE - 1);    \
+    if (overrun < buffer_data->index)                                                             \
+        buffer_data->index = 0;                                                                   \
     buffer_data->prev_len = len;                                                                  \
-    target = buffer_data->buffer + buffer_data->index;
+    target = buffer_data->buffer + buffer_data->index;                                            \
+    }
 
 /* Conveniences for code clarity */
 #define X 0
