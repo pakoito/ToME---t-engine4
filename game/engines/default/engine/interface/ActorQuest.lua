@@ -29,7 +29,6 @@ function _M:grantQuest(quest, args)
 	local function getBaseName(name)
 		local base = "/data"
 		local _, _, addon, rname = name:find("^([^+]+)%+(.+)$")
-		print("===", addon, rname)
 		if addon and rname then
 			base = "/data-"..addon
 			name = rname

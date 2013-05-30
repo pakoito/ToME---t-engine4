@@ -516,7 +516,17 @@ function _M:worldDirectorAI()
 	if not game.level.data.wda or not game.level.data.wda.script then return end
 	local script = wda_cache[game.level.data.wda.script]
 	if not script then
-		local f, err = loadfile("/data/wda/"..game.level.data.wda.script..".lua")
+		local function getBaseName(name)
+			local base = "/data"
+			local _, _, addon, rname = name:find("^([^+]+)%+(.+)$")
+			if addon and rname then
+				base = "/data-"..addon
+				name = rname
+			end
+			return base.."/wda/"..name..".lua"
+		end
+
+		local f, err = loadfile(getBaseName(game.level.data.wda.script))
 		if not f then error(err) end
 		wda_cache[game.level.data.wda.script] = f
 		script = f
