@@ -431,7 +431,8 @@ function _M:clearAITarget()
 		self.ai_target.actor = self.ai_target.actor.summoner
 		-- You think you can cheat with summons ? let's cheat back !
 		-- yeah it's logical because .. hum .. yeah because the npc saw were the summon came from!
-		self.ai_state.target_last_seen = {x=self.ai_target.actor.x, y=self.ai_target.actor.y, turn=game.turn}
+		local tx, ty = self:aiSeeTargetPos(self.ai_target.actor)
+		self.ai_state.target_last_seen = {x=tx, y=ty, turn=game.turn}
 	end
 
 	if self.ai_target.actor and self.ai_target.actor.dead then self.ai_target.actor = nil end

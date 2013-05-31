@@ -122,7 +122,8 @@ function _M:doAI()
 	-- Update the ai_target table
 	local target_pos = self.ai_target.actor and self.fov and self.fov.actors and self.fov.actors[self.ai_target.actor]
 	if target_pos then
-		self.ai_state.target_last_seen = {x=target_pos.x, y=target_pos.y, turn=self.fov_last_turn}
+		local tx, ty = self:aiSeeTargetPos(self.ai_target.actor)
+		self.ai_state.target_last_seen = {x=tx, y=ty, turn=self.fov_last_turn}
 	end
 
 	return self:runAI(self.ai)
