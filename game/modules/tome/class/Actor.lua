@@ -4517,6 +4517,10 @@ function _M:on_set_temporary_effect(eff_id, e, p)
 	if self.player then
 		p.__set_time = core.game.getTime()
 	end
+
+	if game.difficulty == game.DIFFICULTY_EASY and e.status == "detrimental" then
+		p.dur = math.ceil(p.dur / 2)
+	end
 end
 
 --- Called when we are initiating a projection

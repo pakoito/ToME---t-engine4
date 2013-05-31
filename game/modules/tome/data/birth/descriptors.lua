@@ -149,6 +149,7 @@ newBirthDescriptor{
 		"Use it if you feel uneasy tackling the harder modes.",
 		"All damage done to the player decreased by 30%",
 		"All healing for the player increased by 30%",
+		"All detrimental status effects durations reduced by 50%",
 		"Achievements are not granted.",
 	},
 	descriptor_choices =
