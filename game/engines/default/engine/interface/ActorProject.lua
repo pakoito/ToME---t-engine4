@@ -381,7 +381,7 @@ function _M:projectDoAct(typ, tg, damtype, dam, particles, px, py, tmp)
 	end
 end
 
-function _M:projectDoStop(typ, tg, damtype, dam, particles, lx, ly, tmp, rx, ry)
+function _M:projectDoStop(typ, tg, damtype, dam, particles, lx, ly, tmp, rx, ry, projectile)
 	local grids = {}
 	local function addGrid(x, y)
 		if not grids[x] then grids[x] = {} end
@@ -467,5 +467,15 @@ function _M:projectDoStop(typ, tg, damtype, dam, particles, lx, ly, tmp, rx, ry)
 		else
 			particles(self, tg, lx, ly, grids)
 		end
+	end
+
+	if typ.on_stop_check then
+		if typ.on_stop_check(self, typ, tg, damtype, dam, particles, lx, ly, tmp, rx, ry, projectile) then
+			game.level:removeEntity(projectile, true)
+			projectile.dead = true
+		end
+	else
+		game.level:removeEntity(projectile, true)
+		projectile.dead = true
 	end
 end

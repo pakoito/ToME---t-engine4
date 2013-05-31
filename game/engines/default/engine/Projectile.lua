@@ -217,9 +217,7 @@ function _M:act()
 				else
 					radius_x, radius_y = self.old_x, self.old_y
 				end
-				game.level:removeEntity(self, true)
-				self.dead = true
-				self.src:projectDoStop(self.project.def.typ, self.project.def.tg, self.project.def.damtype, self.project.def.dam, self.project.def.particles, self.x, self.y, self.tmp_proj, radius_x, radius_y)
+				self.src:projectDoStop(self.project.def.typ, self.project.def.tg, self.project.def.damtype, self.project.def.dam, self.project.def.particles, self.x, self.y, self.tmp_proj, radius_x, radius_y, self)
 			end
 		elseif self.homing then
 			self:moveDirection(self.homing.target.x, self.homing.target.y)
@@ -241,9 +239,7 @@ end
 function _M:on_move(x, y, target)
 	if self.project and self.project.def.typ.line then self.src:projectDoAct(self.project.def.typ, self.project.def.tg, self.project.def.damtype, self.project.def.dam, self.project.def.particles, self.x, self.y, self.tmp_proj) end
 	if self.project and self.project.def.typ.stop_block then
-		game.level:removeEntity(self, true)
-		self.dead = true
-		self.src:projectDoStop(self.project.def.typ, self.project.def.tg, self.project.def.damtype, self.project.def.dam, self.project.def.particles, self.x, self.y, self.tmp_proj, self.x, self.y)
+		self.src:projectDoStop(self.project.def.typ, self.project.def.tg, self.project.def.damtype, self.project.def.dam, self.project.def.particles, self.x, self.y, self.tmp_proj, self.x, self.y, self)
 	end
 end
 
