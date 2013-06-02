@@ -546,7 +546,11 @@ function _M:hasArcheryWeapon(type)
 	end
 	if offweapon and not offweapon.archery then offweapon = nil end
 	if not weapon or not weapon.archery then
-		return nil, "no shooter"
+		if self:attr("can_offshoot") and offweapon then
+			weapon, offweapon = offweapon, nil
+		else
+			return nil, "no shooter"
+		end
 	end
 	if not ammo then
 		return nil, "no ammo"
