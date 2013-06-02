@@ -207,6 +207,16 @@ function _M:applyingDescriptor(i, d)
 			end
 		end
 	end
+	if d.party_copy then
+		local copy = table.clone(d.party_copy, true)
+		-- Append array part
+		while #copy > 0 do
+			local f = table.remove(copy)
+			table.insert(game.party, f)
+		end
+		-- Copy normal data
+		table.merge(game.party, copy, true)
+	end
 	self:applyGameState(d)
 end
 
