@@ -81,11 +81,6 @@ loadIfNot("/data/general/objects/gauntlets.lua")
 loadIfNot("/data/general/objects/cloak.lua")
 loadIfNot("/data/general/objects/leather-belt.lua")
 
--- Lore
-loadIfNot("/data/general/objects/lore/spellhunt.lua")
-loadIfNot("/data/general/objects/lore/fun.lua")
-loadIfNot("/data/general/objects/lore/misc.lua")
-
 -- Artifacts
 loadIfNot("/data/general/objects/world-artifacts.lua")
 loadIfNot("/data/general/objects/quest-artifacts.lua")

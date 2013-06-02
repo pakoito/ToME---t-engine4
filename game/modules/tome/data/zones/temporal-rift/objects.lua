@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/objects/objects.lua")
+load("/data/general/objects/objects-maj-eyal.lua")
 
 newEntity{ base = "BASE_RUNE", define_as = "RUNE_RIFT",
 	power_source = {arcane=true},

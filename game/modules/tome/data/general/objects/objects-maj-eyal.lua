@@ -24,5 +24,8 @@ end
 
 loadIfNot("/data/general/objects/objects.lua")
 
--- Special lore
+-- Lore
+loadIfNot("/data/general/objects/lore/spellhunt.lua")
+loadIfNot("/data/general/objects/lore/fun.lua")
+loadIfNot("/data/general/objects/lore/misc.lua")
 loadIfNot("/data/general/objects/lore/maj-eyal.lua")
