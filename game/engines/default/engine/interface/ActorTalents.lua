@@ -678,6 +678,7 @@ function _M:startTalentCooldown(t)
 	if type(cd) == "function" then cd = cd(self, t) end
 	self.talents_cd[t.id] = cd
 	self.changed = true
+	if t.cooldownStart then t.cooldownStart(self, t) end
 end
 
 --- Is talent in cooldown?
@@ -736,6 +737,8 @@ function _M:cooldownTalents()
 		if self.talents_cd[tid] <= 0 then
 			self.talents_cd[tid] = nil
 			if self.onTalentCooledDown then self:onTalentCooledDown(tid) end
+			local t = _M.talents_def[tid]
+			if t and t.cooldownStop then t.cooldownStop(self, t) end
 		end
 	end
 end

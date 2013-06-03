@@ -172,7 +172,7 @@ function _M:descAttribute(attr)
 	elseif attr == "DIGSPEED" then
 		return ("dig speed %d turns"):format(self.digspeed)
 	elseif attr == "CHARM" then
-		return (" [power %d]"):format(self:getCharmPower())
+		return (" [power %d]"):format(self:getCharmPower(game.player))
 	elseif attr == "CHARGES" then
 		local reduce = 100 - util.bound(game.player:attr("use_object_cooldown_reduce") or 0, 0, 100)
 		if self.talent_cooldown and (self.use_power or self.use_talent) then
@@ -1235,7 +1235,7 @@ function _M:getUseDesc()
 		if self.show_charges then
 			ret = tstring{{"color","YELLOW"}, ("It can be used to %s, with %d charges out of %d."):format(util.getval(self.use_power.name, self), math.floor(self.power / usepower(self.use_power.power)), math.floor(self.max_power / usepower(self.use_power.power))), {"color","LAST"}}
 		elseif self.talent_cooldown then
-			ret = tstring{{"color","YELLOW"}, ("It can be used to %s, placing all other charms into a %d cooldown."):format(util.getval(self.use_power.name, self):format(self:getCharmPower()), usepower(self.use_power.power)), {"color","LAST"}}
+			ret = tstring{{"color","YELLOW"}, ("It can be used to %s, placing all other charms into a %d cooldown."):format(util.getval(self.use_power.name, self):format(self:getCharmPower(game.player)), usepower(self.use_power.power)), {"color","LAST"}}
 		else
 			ret = tstring{{"color","YELLOW"}, ("It can be used to %s, costing %d power out of %d/%d."):format(util.getval(self.use_power.name, self), usepower(self.use_power.power), self.power, self.max_power), {"color","LAST"}}
 		end
@@ -1539,10 +1539,14 @@ function _M:specialSetAdd(prop, value)
 	self._special_set[prop] = self:addTemporaryValue(prop, value)
 end
 
-function _M:getCharmPower(raw)
+function _M:getCharmPower(who, raw)
 	if raw then return self.charm_power or 1 end
 	local def = self.charm_power_def or {add=0, max=100}
-	local v = def.add + ((self.charm_power or 1) * def.max / 100)
-	if def.floor then v = math.floor(v) end
-	return v
+	if type(def) == "function" then
+		return def(self, who)
+	else
+		local v = def.add + ((self.charm_power or 1) * def.max / 100)
+		if def.floor then v = math.floor(v) end
+		return v
+	end
 end

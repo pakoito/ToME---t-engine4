@@ -102,6 +102,13 @@ function _M:use(item)
 		self.onuse(self.inven, self.item, self.object, false)
 	elseif act == "chat-link" then
 		profile.chat.uc_ext:sendObjectLink(self.object)
+	elseif act == "debug-inspect" then
+		local DebugConsole = require"engine.DebugConsole"
+		local d = DebugConsole.new()
+		game:registerDialog(d)
+		DebugConsole.line = "=__uids["..self.object.uid.."]"
+		DebugConsole.line_pos = #DebugConsole.line
+		d.changed = true
 	else
 		self:triggerHook{"UseItemMenu:use", actor=self.actor, object=self.object, inven=self.inven, item=self.item, act=act, onuse=self.onuse}
 	end
@@ -121,6 +128,7 @@ function _M:generateList()
 	if self.inven == self.actor.INVEN_INVEN and game.party:countInventoryAble() >= 2 then list[#list+1] = {name="Transfer to party", action="transfer"} end
 	if self.inven == self.actor.INVEN_INVEN and transmo_chest and self.actor:transmoFilter(self.object) then list[#list+1] = {name=self.actor:transmoGetWord():capitalize().." now", action="transmo"} end
 	if profile.auth and profile.hash_valid then list[#list+1] = {name="Link item in chat", action="chat-link"} end
+	if config.settings.cheat then list[#list+1] = {name="Lua inspect", action="debug-inspect", color=colors.simple(colors.LIGHT_BLUE)} end
 
 	self:triggerHook{"UseItemMenu:generate", actor=self.actor, object=self.object, inven=self.inven, item=self.item, menu=list}
 

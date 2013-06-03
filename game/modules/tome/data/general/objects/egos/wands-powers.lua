@@ -35,7 +35,7 @@ newEntity{
 
 	charm_power_def = {add=5, max=10, floor=true},
 	resolvers.charm("detect the presence of creatures around you (rad %d)", 15, function(self, who)
-		local rad = self:getCharmPower()
+		local rad = self:getCharmPower(who)
 		who:setEffect(who.EFF_SENSE, 2, {
 			range = rad,
 			actor = 1,
@@ -53,7 +53,7 @@ newEntity{
 
 	charm_power_def = {add=4, max=15, floor=true},
 	resolvers.charm("light the area (rad %d)", 5, function(self, who)
-		who:project({type="ball", range=0, selffire=true, radius=self:getCharmPower()}, who.x, who.y, engine.DamageType.LITE, 1)
+		who:project({type="ball", range=0, selffire=true, radius=self:getCharmPower(who)}, who.x, who.y, engine.DamageType.LITE, 1)
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
 		return {id=true, used=true}
 	end),
@@ -73,7 +73,7 @@ newEntity{
 		who:project(tg, x, y, function(px, py)
 			local trap = game.level.map(px, py, engine.Map.TRAP)
 			if not trap then return end
-			local inc = self:getCharmPower()
+			local inc = self:getCharmPower(who)
 			who:attr("can_disarm", 1)
 			who:attr("disarm_bonus", inc)
 
@@ -94,11 +94,11 @@ newEntity{
 	rarity = 10,
 
 	charm_power_def = {add=45, max=300, floor=true},
-	resolvers.charm(function(self) return ("fire a beam of lightning (dam %d-%d)"):format(self:getCharmPower()/3, self:getCharmPower()) end, 6, function(self, who)
+	resolvers.charm(function(self) return ("fire a beam of lightning (dam %d-%d)"):format(self:getCharmPower(who)/3, self:getCharmPower(who)) end, 6, function(self, who)
 		local tg = {type="beam", range=6 + who:getMag(4)}
 		local x, y = who:getTarget(tg)
 		if not x or not y then return nil end
-		local dam = self:getCharmPower()
+		local dam = self:getCharmPower(who)
 		who:project(tg, x, y, engine.DamageType.LIGHTNING, rng.avg(dam / 3, dam, 3))
 		local _ _, x, y = who:canProject(tg, x, y)
 		game.level.map:particleEmitter(who.x, who.y, math.max(math.abs(x-who.x), math.abs(y-who.y)), "lightning", {tx=x-who.x, ty=y-who.y})
@@ -119,7 +119,7 @@ newEntity{
 		local tg = {type="wall", range=5, halflength=3, halfmax_spots=3+1}
 		local x, y = who:getTarget(tg)
 		if not x or not y then return nil end
-		local dam = self:getCharmPower()
+		local dam = self:getCharmPower(who)
 		who:project(tg, x, y, function(px, py)
 			game.level.map:addEffect(who, px, py, 4, engine.DamageType.FIRE, dam / 4, 0, 5, nil, {type="inferno"}, nil, true)
 		end)
@@ -136,11 +136,11 @@ newEntity{
 	rarity = 6,
 
 	charm_power_def = {add=25, max=600, floor=true},
-	resolvers.charm(function(self) return ("fire a bolt of a random element (dam %d-%d)"):format(self:getCharmPower()/2, self:getCharmPower()) end, 6, function(self, who)
+	resolvers.charm(function(self) return ("fire a bolt of a random element (dam %d-%d)"):format(self:getCharmPower(who)/2, self:getCharmPower(who)) end, 6, function(self, who)
 		local tg = {type="bolt", range=10 + who:getMag(10)}
 		local x, y = who:getTarget(tg)
 		if not x or not y then return nil end
-		local dam = self:getCharmPower()
+		local dam = self:getCharmPower(who)
 		local elem = rng.table{
 			{engine.DamageType.FIRE, "flame"},
 			{engine.DamageType.COLD, "freeze"},

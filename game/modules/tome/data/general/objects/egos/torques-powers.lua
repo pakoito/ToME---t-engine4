@@ -34,7 +34,7 @@ newEntity{
 	charm_power_def = {add=15, max=60, floor=true},
 	resolvers.charm("teleport randomly (rad %d)", 30, function(self, who)
 		game.level.map:particleEmitter(who.x, who.y, 1, "teleport")
-		who:teleportRandom(who.x, who.y, self:getCharmPower())
+		who:teleportRandom(who.x, who.y, self:getCharmPower(who))
 		game.level.map:particleEmitter(who.x, who.y, 1, "teleport")
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
 		return {id=true, used=true}
@@ -49,7 +49,7 @@ newEntity{
 
 	charm_power_def = {add=3, max=200, floor=true},
 	resolvers.charm("setup a psionic shield, reducing all physical and acid damage by %d for 6 turns", 20, function(self, who)
-		who:setEffect(who.EFF_PSIONIC_SHIELD, 6, {kind="kinetic", power=self:getCharmPower()})
+		who:setEffect(who.EFF_PSIONIC_SHIELD, 6, {kind="kinetic", power=self:getCharmPower(who)})
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
 		return {id=true, used=true}
 	end),
@@ -63,7 +63,7 @@ newEntity{
 
 	charm_power_def = {add=3, max=200, floor=true},
 	resolvers.charm("setup a psionic shield, reducing all fire and cold damage by %d for 6 turns", 20, function(self, who)
-		who:setEffect(who.EFF_PSIONIC_SHIELD, 6, {kind="thermal", power=self:getCharmPower()})
+		who:setEffect(who.EFF_PSIONIC_SHIELD, 6, {kind="thermal", power=self:getCharmPower(who)})
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
 		return {id=true, used=true}
 	end),
@@ -77,7 +77,7 @@ newEntity{
 
 	charm_power_def = {add=3, max=200, floor=true},
 	resolvers.charm("setup a psionic shield, reducing all lightning and blight damage by %d for 6 turns", 20, function(self, who)
-		who:setEffect(who.EFF_PSIONIC_SHIELD, 6, {kind="charged", power=self:getCharmPower()})
+		who:setEffect(who.EFF_PSIONIC_SHIELD, 6, {kind="charged", power=self:getCharmPower(who)})
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
 		return {id=true, used=true}
 	end),
@@ -91,7 +91,7 @@ newEntity{
 
 	charm_power_def = {add=1, max=5, floor=true},
 	resolvers.charm("absorb and nullify at most %d detrimental mental status effects in the next 10 turns", 20, function(self, who)
-		who:setEffect(who.EFF_CLEAR_MIND, 10, {power=self:getCharmPower()})
+		who:setEffect(who.EFF_CLEAR_MIND, 10, {power=self:getCharmPower(who)})
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
 		return {id=true, used=true}
 	end),
@@ -104,11 +104,11 @@ newEntity{
 	rarity = 8,
 
 	charm_power_def = {add=45, max=400, floor=true},
-	resolvers.charm(function(self) return ("fire a blast of psionic energies in a beam (dam %d-%d)"):format(self:getCharmPower()/2, self:getCharmPower()) end, 6, function(self, who)
+	resolvers.charm(function(self) return ("fire a blast of psionic energies in a beam (dam %d-%d)"):format(self:getCharmPower(who)/2, self:getCharmPower(who)) end, 6, function(self, who)
 		local tg = {type="beam", range=6 + who:getWil(4)}
 		local x, y = who:getTarget(tg)
 		if not x or not y then return nil end
-		local dam = self:getCharmPower()
+		local dam = self:getCharmPower(who)
 		who:project(tg, x, y, engine.DamageType.MIND, rng.avg(dam / 2, dam, 3), {type="mind"})
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
 		return {id=true, used=true}

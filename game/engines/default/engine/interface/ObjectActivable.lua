@@ -76,6 +76,8 @@ function _M:useObject(who, ...)
 			if not no_power then 
 				if self.talent_cooldown then
 					who.talents_cd[self.talent_cooldown] = usepower(self.use_power.power)
+					local t = who:getTalentFromId(self.talent_cooldown)
+					if t.cooldownStart then t.cooldownStart(who, t, self) end
 				else
 					self.power = self.power - usepower(self.use_power.power)
 				end
@@ -103,6 +105,8 @@ function _M:useObject(who, ...)
 			if ret then 
 				if self.talent_cooldown then
 					who.talents_cd[self.talent_cooldown] = usepower(self.use_talent.power)
+					local t = who:getTalentFromId(self.talent_cooldown)
+					if t.cooldownStart then t.cooldownStart(who, t, self) end
 				else
 					self.power = self.power - usepower(self.use_talent.power)
 				end

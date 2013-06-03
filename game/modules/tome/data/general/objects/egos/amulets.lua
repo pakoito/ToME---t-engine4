@@ -239,7 +239,7 @@ newEntity{
 	charm_power_def = {add=15, max=50, floor=true},
 	resolvers.charm("teleports your randomly (rad %d)", 15, function(self, who)
 		game.level.map:particleEmitter(who.x, who.y, 1, "teleport")
-		who:teleportRandom(who.x, who.y, self:getCharmPower())
+		who:teleportRandom(who.x, who.y, self:getCharmPower(who))
 		game.level.map:particleEmitter(who.x, who.y, 1, "teleport")
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
 		return {id=true, used=true}
@@ -280,7 +280,7 @@ newEntity{
 	charm_power = resolvers.mbonus_material(80, 20),
 	charm_power_def = {add=5, max=10, floor=true},
 	resolvers.charm("forces nearby enemies to attack you (rad %d)", 15, function(self, who)
-		local rad = self:getCharmPower()
+		local rad = self:getCharmPower(who)
 		local tg = {type="ball", range=0, radius=rad, friendlyfire=false}
 		who:project(tg, who.x, who.y, function(tx, ty)
 			local a = game.level.map(tx, ty, engine.Map.ACTOR)

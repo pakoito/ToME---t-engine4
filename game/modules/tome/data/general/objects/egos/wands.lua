@@ -30,8 +30,8 @@ newEntity{
 	cost = 5,
 
 	charm_on_use = {
-		{100, function(self, who) return ("regenerate %d mana"):format(self:getCharmPower(true) / 5) end, function(self, who)
-			who:incMana(self:getCharmPower(true) / 5)
+		{100, function(self, who) return ("regenerate %d mana"):format(self:getCharmPower(who, true) / 5) end, function(self, who)
+			who:incMana(self:getCharmPower(who, true) / 5)
 		end},
 	}
 }
@@ -56,8 +56,8 @@ newEntity{
 	cost = 5,
 
 	charm_on_use = {
-		{100, function(self, who) return ("regenerate %d positive energy"):format(self:getCharmPower(true) / 8) end, function(self, who)
-			who:incPositive(self:getCharmPower(true) / 8)
+		{100, function(self, who) return ("regenerate %d positive energy"):format(self:getCharmPower(who, true) / 8) end, function(self, who)
+			who:incPositive(self:getCharmPower(who, true) / 8)
 		end},
 	}
 }
@@ -70,8 +70,8 @@ newEntity{
 	cost = 5,
 
 	charm_on_use = {
-		{100, function(self, who) return ("regenerate %d negative energy"):format(self:getCharmPower(true) / 8) end, function(self, who)
-			who:incNegative(self:getCharmPower(true) / 8)
+		{100, function(self, who) return ("regenerate %d negative energy"):format(self:getCharmPower(who, true) / 8) end, function(self, who)
+			who:incNegative(self:getCharmPower(who, true) / 8)
 		end},
 	}
 }

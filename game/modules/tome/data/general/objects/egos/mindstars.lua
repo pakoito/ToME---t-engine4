@@ -192,7 +192,7 @@ newEntity{
 			if not x or not y then return nil end
 			if target then
 				if target:checkHit(who:combatMindpower(), target:combatMentalResist(), 0, 95, 5) then
-					local damage = self:getCharmPower() + (who:combatMindpower() * (1 + self.material_level/5))
+					local damage = self:getCharmPower(who) + (who:combatMindpower() * (1 + self.material_level/5))
 					who:project(tg, x, y, engine.DamageType.MIND, {dam=damage, alwaysHit=true}, {type="mind"})
 					who:incPsi(damage/10)
 					who:incHate(damage/10)
