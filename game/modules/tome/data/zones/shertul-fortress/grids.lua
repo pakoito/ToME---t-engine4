@@ -88,6 +88,7 @@ It should automatically create a portal back, but it might not be near your arri
 			zone.no_worldport = true
 			zone.force_farportal_recall = true
 			zone.generator.actor.abord_no_guardian = true
+			zone.objects_cost_modifier = 0.1
 			zone.make_back_portal = function(self)
 				local p = game:getPlayer(true)
 				local x, y = p.x, p.y

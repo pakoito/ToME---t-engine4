@@ -566,6 +566,7 @@ function _M:spawnWorldAmbush(enc, dx, dy)
 		level_range = {game.player.level, game.player.level},
 		level_scheme = "player",
 		max_level = 1,
+		objects_cost_modifier = 0.1,
 		actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
 		width = enc.width or 20, height = enc.height or 20,
 --		no_worldport = true,

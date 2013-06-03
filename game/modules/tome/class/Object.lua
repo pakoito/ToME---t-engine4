@@ -1484,6 +1484,10 @@ function _M:getPrice()
 	if self.egoed then
 		base = base + self:getPriceFlags()
 	end
+	if game.level and game.level.data and game.level.data.objects_cost_modifier then
+		local v = util.getval(game.level.data.objects_cost_modifier, self)
+		base = base * v
+	end
 	return base
 end
 
