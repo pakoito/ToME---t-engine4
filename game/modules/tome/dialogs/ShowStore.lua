@@ -213,7 +213,6 @@ end
 function _M:innerDisplayBack(x, y, nb_keyframes)
 	if not self.faction_image then return end
 
-	print("====faction image")
 	local w, h = self.title_tex.h + 4, self.title_tex.h + 4
 	local x, y = x + (self.w - self.title_tex.w) / 2 + self.frame.title_x - 5 - w, y + self.frame.title_y
 	self.faction_image[1]:toScreenFull(x, y, w, h, self.faction_image[2] * w / self.faction_image[6], self.faction_image[3] * h / self.faction_image[7])
