@@ -3153,19 +3153,19 @@ function _M:learnPool(t)
 
 --	if tt.mana_regen and self.mana_regen == 0 then self.mana_regen = 0.5 end
 
-	if t.type[1]:find("^spell/") and not self:knowTalent(self.T_MANA_POOL) and t.mana or t.sustain_mana then
+	if t.type[1]:find("^spell/") and not self:knowTalent(self.T_MANA_POOL) and (t.mana or t.sustain_mana) then
 		self:learnTalent(self.T_MANA_POOL, true)
 		self.resource_pool_refs[self.T_MANA_POOL] = (self.resource_pool_refs[self.T_MANA_POOL] or 0) + 1
 	end
-	if t.type[1]:find("^wild%-gift/") and not self:knowTalent(self.T_EQUILIBRIUM_POOL) and t.equilibrium or t.sustain_equilibrium then
+	if t.type[1]:find("^wild%-gift/") and not self:knowTalent(self.T_EQUILIBRIUM_POOL) and (t.equilibrium or t.sustain_equilibrium) then
 		self:learnTalent(self.T_EQUILIBRIUM_POOL, true)
 		self.resource_pool_refs[self.T_EQUILIBRIUM_POOL] = (self.resource_pool_refs[self.T_EQUILIBRIUM_POOL] or 0) + 1
 	end
-	if (t.type[1]:find("^technique/") or t.type[1]:find("^cunning/")) and not self:knowTalent(self.T_STAMINA_POOL) and t.stamina or t.sustain_stamina then
+	if (t.type[1]:find("^technique/") or t.type[1]:find("^cunning/")) and not self:knowTalent(self.T_STAMINA_POOL) and (t.stamina or t.sustain_stamina) then
 		self:learnTalent(self.T_STAMINA_POOL, true)
 		self.resource_pool_refs[self.T_STAMINA_POOL] = (self.resource_pool_refs[self.T_STAMINA_POOL] or 0) + 1
 	end
-	if t.type[1]:find("^corruption/") and not self:knowTalent(self.T_VIM_POOL) and t.vim or t.sustain_vim then
+	if t.type[1]:find("^corruption/") and not self:knowTalent(self.T_VIM_POOL) and (t.vim or t.sustain_vim) then
 		self:learnTalent(self.T_VIM_POOL, true)
 		self.resource_pool_refs[self.T_VIM_POOL] = (self.resource_pool_refs[self.T_VIM_POOL] or 0) + 1
 	end
