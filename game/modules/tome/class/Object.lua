@@ -1550,3 +1550,11 @@ function _M:getCharmPower(who, raw)
 		return v
 	end
 end
+
+function _M:addedToLevel(level, x, y)
+	if self.material_level_min_only and level.data then
+		local min_mlvl = util.getval(level.data.min_material_level) or 1
+		local max_mlvl = util.getval(level.data.max_material_level) or 5
+		self.material_level_gen_range = {min=min_mlvl, max=max_mlvl}
+	end
+end
