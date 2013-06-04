@@ -35,17 +35,17 @@ function _M:init(t, no_default)
 end
 
 function _M:actBase()
-		-- Reduce shoving pressure every turn
-		if self.shove_pressure then
-			if self._last_shove_pressure and (self.shove_pressure < self._last_shove_pressure) then
-				self.shove_pressure = nil
-				self._last_shove_pressure = nil
-			else
-				self._last_shove_pressure = self.shove_pressure
-				self.shove_pressure = self.shove_pressure / 2
-			end
+	-- Reduce shoving pressure every turn
+	if self.shove_pressure then
+		if self._last_shove_pressure and (self.shove_pressure < self._last_shove_pressure) then
+			self.shove_pressure = nil
+			self._last_shove_pressure = nil
+		else
+			self._last_shove_pressure = self.shove_pressure
+			self.shove_pressure = self.shove_pressure / 2
 		end
-		return mod.class.Actor.actBase(self)
+	end
+	return mod.class.Actor.actBase(self)
 end
 
 function _M:act()
