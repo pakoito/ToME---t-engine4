@@ -101,6 +101,59 @@ function _M:sortHotkeys()
 	self.changed = true
 end
 
+-- Adds a new hotkey
+function _M:addNewHotkey(kind, name)
+	if kind == "inventory" then
+		if self.player then
+			if self == game:getPlayer(true) then
+				position = self:findQuickHotkey("Player: Specific", "inventory", name)
+				if not position then
+					local global_hotkeys = engine.interface.PlayerHotkeys.quickhotkeys["Player: Global"]
+					if global_hotkeys and global_hotkeys["inventory"] then position = global_hotkeys["inventory"][name] end
+				end
+			else
+				position = self:findQuickHotkey(self.name, "inventory", name)
+			end
+		end
+
+
+		if position and not self.hotkey[position] then
+			self.hotkey[position] = {"inventory", name}
+		else
+			for i = 1, 12 * (self.nb_hotkey_pages or 5) do
+				if not self.hotkey[i] then
+					self.hotkey[i] = {"inventory", name}
+					break
+				end
+			end
+		end
+	elseif kind == "talent" then
+		if self.player then
+			if self == game:getPlayer(true) then
+				position = self:findQuickHotkey("Player: Specific", "talent", name)
+				if not position then
+					local global_hotkeys = engine.interface.PlayerHotkeys.quickhotkeys["Player: Global"]
+					if global_hotkeys and global_hotkeys["talent"] then position = global_hotkeys["talent"][name] end
+				end
+			else
+				position = self:findQuickHotkey(self.name, "talent", name)
+			end
+		end
+
+
+		if position and not self.hotkey[position] then
+			self.hotkey[position] = {"talent", name}
+		else
+			for i = 1, 12 * (self.nb_hotkey_pages or 5) do
+				if not self.hotkey[i] then
+					self.hotkey[i] = {"talent", name}
+					break
+				end
+			end
+		end
+	end
+end
+
 --- Uses an hotkeyed talent
 -- This requires the ActorTalents interface to use talents and a method player:playerUseItem(o, item, inven) to use inventory objects
 function _M:activateHotkey(id)
