@@ -29,9 +29,7 @@ newTalent{
 	range = 0,
 	on_learn = function(self, t) self.resists[DamageType.FIRE] = (self.resists[DamageType.FIRE] or 0) + 1 end,
 	on_unlearn = function(self, t) self.resists[DamageType.FIRE] = (self.resists[DamageType.FIRE] or 0) - 1 end,
-	radius = function(self, t)
-		return 2 + self:getTalentLevelRaw(t)
-	end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 3, 7)) end,
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), friendlyfire=false, talent=t}
 	end,
@@ -68,9 +66,7 @@ newTalent{
 	range = 0,
 	on_learn = function(self, t) self.resists[DamageType.FIRE] = (self.resists[DamageType.FIRE] or 0) + 1 end,
 	on_unlearn = function(self, t) self.resists[DamageType.FIRE] = (self.resists[DamageType.FIRE] or 0) - 1 end,
-	radius = function(self, t)
-		return 4 + self:getTalentLevelRaw(t)
-	end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 5, 9)) end,
 	direct_hit = true,
 	tactical = { DEFEND = { knockback = 2 }, ESCAPE = { knockback = 2 } },
 	requires_target = true,
@@ -113,9 +109,7 @@ newTalent{
 	getDamage = function(self, t)
 		return self:combatTalentStatDamage(t, "wil", 15, 120)
 	end,
-	getDuration = function(self, t)
-		return 2 + self:getTalentLevelRaw(t)
-	end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 3, 7)) end,
 	action = function(self, t)
 		local duration = t.getDuration(self, t)
 		local radius = self:getTalentRadius(t)
@@ -157,7 +151,7 @@ newTalent{
 	message = "@Source@ breathes fire!",
 	tactical = { ATTACKAREA = { FIRE = 2 } },
 	range = 0,
-	radius = function(self, t) return 4 + self:getTalentLevelRaw(t) end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 5, 9)) end,
 	direct_hit = true,
 	requires_target = true,
 	on_learn = function(self, t) self.resists[DamageType.FIRE] = (self.resists[DamageType.FIRE] or 0) + 1 end,

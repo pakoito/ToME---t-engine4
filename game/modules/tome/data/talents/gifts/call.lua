@@ -111,12 +111,12 @@ newTalent{
 	random_ego = "utility",
 	equilibrium = 3,
 	cooldown = 10,
-	radius = function(self, t) return math.ceil(5 + self:getTalentLevel(t) * 1.3) end,
-	radius_esp = function(self, t) return math.floor(3 + self:getTalentLevel(t) / 2) end,
+	radius = function(self, t) return math.ceil(self:combatTalentScale(t, 6.1, 11.5)) end,
+	radius_esp = function(self, t) return math.floor(self:combatTalentScale(t, 3.5, 5.5)) end,
 	requires_target = true,
 	no_npc_use = true,
 	action = function(self, t)
-		self:magicMap(math.ceil(5 + self:getTalentLevel(t) * 1.3), self.x, self.y)
+		self:magicMap(self:getTalentRadius(t), self.x, self.y)
 		game:playSoundNear(self, "talents/spell_generic2")
 		return true
 	end,
@@ -138,12 +138,15 @@ newTalent{
 	cooldown = 50,
 	range = 10,
 	tactical = { BUFF = 2 },
+	nbTalents = function(self, t) return math.floor(self:combatTalentScale(t, 3, 7, "log")) end,
+	getMaxLevel = function(self, t) return self:getTalentLevel(t) end,
 	action = function(self, t)
-		local nb = math.ceil(self:getTalentLevel(t) + 2)
+		local nb = t.nbTalents(self, t)
+		local maxlev = t.getMaxLevel(self, t)
 		local tids = {}
 		for tid, _ in pairs(self.talents_cd) do
 			local tt = self:getTalentFromId(tid)
-			if tt.type[2] <= self:getTalentLevelRaw(t) and tt.type[1]:find("^wild%-gift/") then
+			if self:getTalentLevel(tt) <= maxlev and tt.type[1]:find("^wild%-gift/") then
 				tids[#tids+1] = tid
 			end
 		end
@@ -157,8 +160,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Your deep link with Nature allows you to reset the cooldown of %d of your wild gifts of level %d or less.]]):
-		format(math.ceil(self:getTalentLevel(t) + 2), self:getTalentLevelRaw(t))
+		return ([[Your deep link with Nature allows you to reset the cooldown of %d of your wild gifts of talent level %d or less.]]):
+		format(t.nbTalents(self, t), t.getMaxLevel(self, t))
 	end,
 }
 

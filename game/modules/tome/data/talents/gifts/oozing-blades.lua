@@ -106,9 +106,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[You use your psiblades to fire a small worm at a foe.
-		When it hit it will burrow into the target's brain and stay there for 6 turns, interfering with its ability to use talents.
-		Each time a talent is used there is %d%% chances that %d talent(s) are placed on a %d turn(s) cooldown.
-		Chance will increase with Mindpower.]]):
+		When it hits, it will burrow into the target's brain and stay there for 6 turns, interfering with its ability to use talents.
+		Each time a talent is used there is %d%% chance that %d talent(s) are placed on a %d turn(s) cooldown.
+		The chance will increase with your Mindpower.]]):
 		format(t.getChance(self, t), t.getNb(self, t), t.getTurns(self, t))
 	end,
 }
@@ -126,9 +126,9 @@ newTalent{
 		return main and off
 	end,
 	tactical = { BUFF = 2 },
-	getFireDamageIncrease = function(self, t) return self:getTalentLevelRaw(t) * 2 end,
-	getResistPenalty = function(self, t) return self:getTalentLevelRaw(t) * 10 end,
-	getChance = function(self, t) return self:getTalentLevel(t) * 14 end,
+	getNatureDamageIncrease = function(self, t) return self:getTalentLevelRaw(t) * 2 end,
+	getResistPenalty = function(self, t) return self:combatTalentLimit(t, 100, 10, 50, true) end, -- Limit < 100%
+	getChance = function(self, t) return math.max(0,self:combatTalentLimit(t, 100, 14, 70)) end, -- Limit < 100%
 	freespit = function(self, t, target)
 		if game.party:hasMember(self) then
 			for act, def in pairs(game.party.members) do
@@ -156,7 +156,7 @@ newTalent{
 			particle = self:addParticles(Particles.new("master_summoner", 1))
 		end
 		return {
-			dam = self:addTemporaryValue("inc_damage", {[DamageType.NATURE] = t.getFireDamageIncrease(self, t)}),
+			dam = self:addTemporaryValue("inc_damage", {[DamageType.NATURE] = t.getNatureDamageIncrease(self, t)}),
 			resist = self:addTemporaryValue("resists_pen", {[DamageType.NATURE] = t.getResistPenalty(self, t)}),
 			particle = particle,
 		}
@@ -168,11 +168,11 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local damageinc = t.getFireDamageIncrease(self, t)
+		local damageinc = t.getNatureDamageIncrease(self, t)
 		local ressistpen = t.getResistPenalty(self, t)
 		local chance = t.getChance(self, t)
 		return ([[Surround yourself with nature forces, increasing all your nature damage by %d%% and ignoring %d%% nature resistance of your targets.
-		In addition any time you hit deal damage with a wild gift you have %d%% chances that one of you mucus ooze will spit at the target as a free action.]])
+		In addition any time you deal damage with a wild gift there is a %d%% chance that one of you mucus ooze will spit at the target as a free action.]])
 		:format(damageinc, ressistpen, chance)
 	end,
 }

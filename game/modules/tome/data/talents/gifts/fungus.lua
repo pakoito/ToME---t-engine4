@@ -26,7 +26,7 @@ newTalent{
 	sustain_equilibrium = 15,
 	cooldown = 20,
 	tactical = { BUFF = 2 },
-	getDur = function(self, t) return math.max(1,  math.floor(self:getTalentLevel(t))) end,
+	getDur = function(self, t) return math.floor(self:combatTalentScale(t, 1, 5, "log")) end,
 	activate = function(self, t)
 		local dur = t.getDur(self, t)
 		game:playSoundNear(self, "talents/heal")
@@ -58,7 +58,7 @@ newTalent{
 	require = gifts_req2,
 	points = 5,
 	mode = "passive",
-	getPower = function(self, t) return 20 + self:combatTalentMindDamage(t, 5, 500) / 10 end,
+	getPower = function(self, t) return self:combatLimit(self:combatTalentMindDamage(t, 5, 500), 100, 20, 0, 56.8, 368.5) end, --limit <100%
 	info = function(self, t)
 		local p = t.getPower(self, t)
 		return ([[Improve your fungus to allow it to take a part of any healing you receive and improve it.

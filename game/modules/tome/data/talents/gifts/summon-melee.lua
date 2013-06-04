@@ -40,7 +40,17 @@ newTalent{
 	end,
 	on_arrival = function(self, t, m)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t, x=m.x, y=m.y}
-		self:project(tg, m.x, m.y, DamageType.TEMP_EFFECT, {foes=true, eff=self.EFF_LOWER_PHYSICAL_RESIST, dur=4+self:getTalentLevelRaw(t), p={power=self:combatTalentMindDamage(t, 15, 70)}}, {type="flame"})
+		local duration = self:callTalent(self.T_GRAND_ARRIVAL,"effectDuration")
+		self:project(tg, m.x, m.y, DamageType.TEMP_EFFECT, {foes=true, eff=self.EFF_LOWER_PHYSICAL_RESIST, dur=duration, p={power=self:combatTalentMindDamage(t, 15, 70)}}, {type="flame"})
+	end,
+	summonTime = function(self, t) return math.floor(self:combatScale(self:getTalentLevel(t) + self:getTalentLevel(self.T_RESILIENCE), 5, 0, 10, 5)) end,
+	incStats = function(self, t,fake)
+		local mp = self:combatMindpower()
+		return{ 
+			str=15 + (fake and mp or self:mindCrit(mp)) * 2 * self:combatTalentScale(t, 0.2, 1, 0.75) + self:combatTalentScale(t, 2, 10, 0.75),
+			dex=15 + (fake and mp or self:mindCrit(mp)) * 2 * self:combatTalentScale(t, 0.2, 1, 0.75) + self:combatTalentScale(t, 2, 10, 0.75),
+			con=15 + self:callTalent(self.T_RESILIENCE, "incCon")
+		}
 	end,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
@@ -66,11 +76,7 @@ newTalent{
 			autolevel = "none",
 			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=5, },
 			stats = {str=0, dex=0, con=0, cun=0, wil=0, mag=0},
-			inc_stats = {
-				str=15 + (self:mindCrit(self:combatMindpower(2)) * self:getTalentLevel(t) / 5) + (self:getTalentLevel(t) * 2),
-				dex=15 + (self:mindCrit(self:combatMindpower(2)) * self:getTalentLevel(t) / 5) + (self:getTalentLevel(t) * 2),
-				con=15 + self:getTalentLevelRaw(self.T_RESILIENCE)*2
-			},
+			inc_stats = t.incStats(self, t),
 			level_range = {self.level, self.level}, exp_worth = 0,
 			global_speed_base = 1.2,
 
@@ -84,7 +90,7 @@ newTalent{
 			wild_gift_detonate = t.id,
 
 			summoner = self, summoner_gain_exp=true, wild_gift_summon=true,
-			summon_time = math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
+			summon_time = t.summonTime(self, t),
 			ai_target = {actor=target}
 		}
 		if self:attr("wild_summon") and rng.percent(self:attr("wild_summon")) then
@@ -99,14 +105,12 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local incStats = t.incStats(self, t, true)
 		return ([[Summon a War Hound for %d turns to attack your foes. War hounds are good basic melee attackers.
 		It will get %d Strength, %d Dexterity and %d Constitution.
 		Your summons inherit some of your stats: increased damage%%, stun/pin/confusion/blindness resistance, armour penetration.
 		Their Strength and Dexterity will increase with your Mindpower.]])
-		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
-		15 + (self:combatMindpower(2) * self:getTalentLevel(t) / 5) + (self:getTalentLevel(t) * 2),
-		15 + (self:combatMindpower(2) * self:getTalentLevel(t) / 5) + (self:getTalentLevel(t) * 2),
-		15 + self:getTalentLevelRaw(self.T_RESILIENCE)*2)
+		:format(t.summonTime(self, t), incStats.str, incStats.dex, incStats.con)
 	end,
 }
 
@@ -133,7 +137,16 @@ newTalent{
 	end,
 	on_arrival = function(self, t, m)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t, x=m.x, y=m.y}
-		self:project(tg, m.x, m.y, DamageType.TEMP_EFFECT, {foes=true, eff=self.EFF_LOWER_NATURE_RESIST, dur=4+self:getTalentLevelRaw(t), p={power=self:combatTalentMindDamage(t, 15, 70)}}, {type="flame"})
+		local duration = self:callTalent(self.T_GRAND_ARRIVAL,"effectDuration")
+		self:project(tg, m.x, m.y, DamageType.TEMP_EFFECT, {foes=true, eff=self.EFF_LOWER_NATURE_RESIST, dur=duration, p={power=self:combatTalentMindDamage(t, 15, 70)}}, {type="flame"})
+	end,
+	summonTime = function(self, t) return math.floor(self:combatScale(self:getTalentLevel(t) + self:getTalentLevel(self.T_RESILIENCE), 5, 0, 10, 5)) end,
+	incStats = function(self, t, fake)
+		local mp = self:combatMindpower()
+		return{ 
+			con=10 + (fake and mp or self:mindCrit(mp)) * 1.8 * self:combatTalentScale(t, 0.2, 1, 0.75) + self:combatTalentScale(self:getTalentLevel(self.T_RESILIENCE), 3, 15, 0.75),
+			str=10 + self:combatTalentScale(t, 2, 10, 0.75)
+		}
 	end,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
@@ -158,10 +171,7 @@ newTalent{
 			name = "black jelly",
 			autolevel = "none", faction=self.faction,
 			stats = {str=0, dex=0, con=0, cun=0, wil=0, mag=0},
-			inc_stats = {
-				con=10 + (self:mindCrit(self:combatMindpower(1.8)) * self:getTalentLevel(t) / 5) + self:getTalentLevelRaw(self.T_RESILIENCE) * 3,
-				str=10 + self:getTalentLevel(t) * 2
-			},
+			inc_stats = t.incStats(self, t),
 			resists = { [DamageType.LIGHT] = -50 },
 			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=5, },
 			level_range = {self.level, self.level}, exp_worth = 0,
@@ -178,7 +188,7 @@ newTalent{
 			wild_gift_detonate = t.id,
 
 			summoner = self, summoner_gain_exp=true, wild_gift_summon=true,
-			summon_time = math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
+			summon_time = t.summonTime(self, t),
 			ai_target = {actor=target},
 
 			on_takehit = function(self, value, src)
@@ -202,13 +212,12 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local incStats = t.incStats(self, t, true)
 		return ([[Summon a Jelly for %d turns to attack your foes. Jellies do not move, but your equilibrium will be reduced by 10%% of all damage received by the jelly.
 		It will get %d Constitution and %d Strength.
 		Your summons inherit some of your stats: increased damage%%, stun/pin/confusion/blindness resistance, armour penetration.
 		Their Constitution stat will increase with your Mindpower.]])
-		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
-		10 + (self:combatMindpower(1.8) * self:getTalentLevel(t) / 5) + self:getTalentLevelRaw(self.T_RESILIENCE) * 3,
-		10 + self:getTalentLevel(t) * 2)
+		:format(t.summonTime(self, t), incStats.con, incStats.str)
        end,
 }
 
@@ -235,9 +244,18 @@ newTalent{
 	end,
 	on_arrival = function(self, t, m)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t, x=m.x, y=m.y}
-		local duration = 4 + math.ceil(2*self:getTalentLevel(t)^.5) 
-		local slowdown = self:combatTalentMindDamage(t, 5, 100)/(self:combatTalentMindDamage(t, 5, 100) + 85) -- Limit speed loss to 100%
-		self:project(tg, m.x, m.y, DamageType.TEMP_EFFECT, {foes=true, eff=self.EFF_SLOW_MOVE, dur=duration, p={power=slowdown}}, {type="flame"}) 
+		local duration = self:callTalent(self.T_GRAND_ARRIVAL,"effectDuration")
+		local slowdown = self:combatLimit(self:combatTalentMindDamage(t, 5, 500), 1, 0.1, 0, 0.47 , 369) -- Limit speed loss to <100%
+		self:project(tg, m.x, m.y, DamageType.TEMP_EFFECT, {foes=true, eff=self.EFF_SLOW_MOVE, dur=duration, p={power=slowdown}}, {type="flame"})
+	end,
+	summonTime = function(self, t) return math.floor(self:combatScale(self:getTalentLevel(t) + self:getTalentLevel(self.T_RESILIENCE), 2, 0, 7, 5)) end,
+	incStats = function(self, t,fake)
+		local mp = self:combatMindpower()
+		return{ 
+			str=25 + (fake and mp or self:mindCrit(mp)) * 2.1 * self:combatTalentScale(t, 0.2, 1, 0.75) + self:combatTalentScale(t, 2, 10, 0.75),
+			dex=10 + (fake and mp or self:mindCrit(mp)) * 1.8 * self:combatTalentScale(t, 0.2, 1, 0.75) + self:combatTalentScale(t, 2, 10, 0.75),
+			con=10 + self:combatTalentScale(t, 2, 10, 0.75) + self:callTalent(self.T_RESILIENCE, "incCon"),
+		}
 	end,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
@@ -271,12 +289,7 @@ newTalent{
 			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=2, },
 			global_speed_base=1.2,
 			stats = {str=0, dex=0, con=0, cun=0, wil=0, mag=0},
-			inc_stats = {
-				str=25 + (self:mindCrit(self:combatMindpower(2.1)) * self:getTalentLevel(t) / 5) + (self:getTalentLevel(t) * 2),
-				dex=10 + (self:mindCrit(self:combatMindpower(1.8)) * self:getTalentLevel(t) / 5) + (self:getTalentLevel(t) * 2),
-				con=10 + self:getTalentLevel(t) * 2 + self:getTalentLevelRaw(self.T_RESILIENCE)*2,
-			},
-
+			inc_stats = t.incStats(self, t),
 			desc = [[It is a cross between a human and a bull.]],
 			resolvers.equip{ {type="weapon", subtype="battleaxe", auto_req=true}, },
 			level_range = {self.level, self.level}, exp_worth = 0,
@@ -288,7 +301,7 @@ newTalent{
 
 			faction = self.faction,
 			summoner = self, summoner_gain_exp=true, wild_gift_summon=true,
-			summon_time = self:getTalentLevel(t) + 2 + self:getTalentLevelRaw(self.T_RESILIENCE),
+			summon_time = t.summonTime(self,t),
 			ai_target = {actor=target}
 		}
 		if self:attr("wild_summon") and rng.percent(self:attr("wild_summon")) then
@@ -303,14 +316,12 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local incStats = t.incStats(self, t, true)
 		return ([[Summon a Minotaur for %d turns to attack your foes. Minotaurs cannot stay summoned for long, but they deal a lot of damage.
 		It will get %d Strength, %d Constitution and %d Dexterity.
 		Your summons inherit some of your stats: increased damage%%, stun/pin/confusion/blindness resistance, armour penetration.
 		Their Strength and Dexterity will increase with your Mindpower.]])
-		:format(self:getTalentLevel(t) + 2 + self:getTalentLevelRaw(self.T_RESILIENCE),
-		25 + (self:combatMindpower(2.1) * self:getTalentLevel(t) / 5) + (self:getTalentLevel(t) * 2),
-		10 + self:getTalentLevel(t) * 2 + self:getTalentLevelRaw(self.T_RESILIENCE)*2,
-		10 + (self:combatMindpower(1.8) * self:getTalentLevel(t) / 5) + (self:getTalentLevel(t) * 2))
+		:format(t.summonTime(self,t), incStats.str, incStats.con, incStats.dex)
 	end,
 }
 
@@ -336,9 +347,19 @@ newTalent{
 	end,
 	on_arrival = function(self, t, m)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t, x=m.x, y=m.y}
-		self:project(tg, m.x, m.y, DamageType.TEMP_EFFECT, {foes=true, eff=self.EFF_DAZED, check_immune="stun", dur=1+self:getTalentLevelRaw(t)/2, p={}}, {type="flame"})
+		local duration = self:callTalent(self.T_GRAND_ARRIVAL,"effectDuration")
+		self:project(tg, m.x, m.y, DamageType.TEMP_EFFECT, {foes=true, eff=self.EFF_DAZED, check_immune="stun", dur=duration, p={}}, {type="flame"})
 	end,
 	requires_target = true,
+	summonTime = function(self, t) return math.floor(self:combatScale(self:getTalentLevel(t) + self:getTalentLevel(self.T_RESILIENCE), 5, 0, 10, 5)) end,
+	incStats = function(self, t,fake)
+		local mp = self:combatMindpower()
+		return{ 
+			str=15 + (fake and mp or self:mindCrit(mp)) * 2 * self:combatTalentScale(t, 0.2, 1, 0.75) + self:combatTalentScale(t, 2, 10, 0.75),
+			dex=15 + (fake and mp or self:mindCrit(mp)) * 1.9 * self:combatTalentScale(t, 0.2, 1, 0.75) + self:combatTalentScale(t, 2, 10, 0.75),
+			con=10 + self:combatTalentScale(t, 2, 10, 0.75) + self:callTalent(self.T_RESILIENCE, "incCon"),
+		}
+	end,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty, target = self:getTarget(tg)
@@ -370,12 +391,7 @@ newTalent{
 			autolevel = "none",
 			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=2, },
 			stats = {str=0, dex=0, con=0, cun=0, wil=0, mag=0},
-			inc_stats = {
-				str=15 + (self:mindCrit(self:combatMindpower(2)) * self:getTalentLevel(t) / 5) + (self:getTalentLevel(t) * 2),
-				dex=15 + (self:mindCrit(self:combatMindpower(1.9)) * self:getTalentLevel(t) / 5) + (self:getTalentLevel(t) * 2),
-				con=10 + self:getTalentLevel(t) * 2 + self:getTalentLevelRaw(self.T_RESILIENCE)*2,
-			},
-
+			inc_stats = t.incStats(self, t),
 			desc = [[It is a massive animated statue.]],
 			level_range = {self.level, self.level}, exp_worth = 0,
 
@@ -389,7 +405,7 @@ newTalent{
 
 			faction = self.faction,
 			summoner = self, summoner_gain_exp=true, wild_gift_summon=true,
-			summon_time = math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
+			summon_time = t.summonTime(self, t),
 			ai_target = {actor=target},
 			resolvers.sustains_at_birth(),
 		}
@@ -405,13 +421,11 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local incStats = t.incStats(self, t,true)
 		return ([[Summon a Stone Golem for %d turns to attack your foes. Stone golems are formidable foes that can become unstoppable.
 		It will get %d Strength, %d Constitution and %d Dexterity.
 		Your summons inherit some of your stats: increased damage%%, stun/pin/confusion/blindness resistance, armour penetration.
 		Their Strength and Dexterity will increase with your Mindpower.]])
-		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
-		15 + (self:combatMindpower(2) * self:getTalentLevel(t) / 5) + (self:getTalentLevel(t) * 2),
-		10 + self:getTalentLevel(t) * 2 + self:getTalentLevelRaw(self.T_RESILIENCE)*2,
-		15 + (self:combatMindpower(1.9) * self:getTalentLevel(t) / 5) + (self:getTalentLevel(t) * 2))
+		:format(t.summonTime(self, t), incStats.str, incStats.con, incStats.dex)
 	end,
 }

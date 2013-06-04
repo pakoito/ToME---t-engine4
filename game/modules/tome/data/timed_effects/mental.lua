@@ -2818,7 +2818,7 @@ newEffect{
 newEffect{
 	name = "MIND_PARASITE", image = "talents/mind_parasite.png",
 	desc = "Mind Parasite",
-	long_desc = function(self, eff) return ("The target suffers from a mind parasite, giving %d%% chances on each talent use to place a random %d talents on cooldown for %d turns."):format(eff.chance, eff.nb, eff.turns) end,
+	long_desc = function(self, eff) return ("The target is infected with a mind parasite. Each time it uses a talent it has a %d%% chance to have %d random talent(s) put on cooldown for %d turns."):format(eff.chance, eff.nb, eff.turns) end,
 	type = "mental",
 	subtype = { nature=true, mind=true },
 	status = "detrimental",

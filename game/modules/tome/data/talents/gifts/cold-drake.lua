@@ -32,18 +32,19 @@ newTalent{
 	requires_target = true,
 	on_learn = function(self, t) self.resists[DamageType.COLD] = (self.resists[DamageType.COLD] or 0) + 1 end,
 	on_unlearn = function(self, t) self.resists[DamageType.COLD] = (self.resists[DamageType.COLD] or 0) - 1 end,
+	damagemult = function(self, t) return self:combatTalentScale(t, 1.525, 2.025) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
-		self:attackTarget(target, (self:getTalentLevel(t) >= 4) and DamageType.ICE or DamageType.COLD, 1.4 + self:getTalentLevel(t) / 8, true)
+		self:attackTarget(target, (self:getTalentLevel(t) >= 4) and DamageType.ICE or DamageType.COLD, t.damagemult(self, t), true)
 		return true
 	end,
 	info = function(self, t)
 		return ([[You call upon the mighty claw of a cold drake, doing %d%% weapon damage as cold damage.
 		At level 4, the attack becomes pure ice, giving a chance to freeze the target.
-		Each point in cold drake talents also increases your cold resistance by 1%%.]]):format(100 * (1.4 + self:getTalentLevel(t) / 8))
+		Each point in cold drake talents also increases your cold resistance by 1%%.]]):format(100 * t.damagemult(self, t))
 	end,
 }
 
@@ -156,7 +157,7 @@ newTalent{
 	message = "@Source@ breathes ice!",
 	tactical = { ATTACKAREA = { COLD = 2 }, DISABLE = { stun = 1 } },
 	range = 0,
-	radius = function(self, t) return 4 + self:getTalentLevelRaw(t) end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 5, 9)) end,
 	direct_hit = true,
 	requires_target = true,
 	on_learn = function(self, t) self.resists[DamageType.COLD] = (self.resists[DamageType.COLD] or 0) + 1 end,

@@ -59,24 +59,24 @@ newTalent{
 	require = gifts_req_high2,
 	points = 5,
 	mode = "passive",
-	radius = function(self, t)
-		return 1 + math.floor(self:getTalentLevel(t) / 2)
-	end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 1.3, 3.7, "log")) end,
+	effectDuration = function(self, t) return math.floor(self:combatTalentScale(t, 5, 9)) end,
+	nbEscorts = function(self, t) return math.max(1,math.floor(self:combatTalentScale(t, 0.3, 2.7, "log"))) end,
 	info = function(self, t)
 		local radius = self:getTalentRadius(t)
 		return ([[While Master Summoner is active, when a creature you summon appears in the world, it will trigger a wild effect:
 		- Ritch Flamespitter: Reduce fire resistance of all foes in a radius
 		- Hydra: Generates a cloud of lingering poison
 		- Rimebark: Reduce cold resistance of all foes in a radius
-		- Fire Drake: Appears with one fire drake hatchling
+		- Fire Drake: Appears with %d fire drake hatchling(s)
 		- War Hound: Reduce physical resistance of all foes in a radius
 		- Jelly: Reduce nature resistance of all foes in a radius
 		- Minotaur: Reduces movement speed of all foes in a radius
 		- Stone Golem: Dazes all foes in a radius
 		- Turtle: Heals all friendly targets in a radius
 		- Spider: The spider is so hideous that foes around it are repelled
-		The effects improves with your Willpower.
-		Radius for effects is %d.]]):format(radius)
+		Radius for effects is %d, and the duration of each lasting effect is %d turns.
+		The effects improve with your Willpower.]]):format(t.nbEscorts(self, t), radius, t.effectDuration(self, t))
 	end,
 }
 
@@ -87,7 +87,7 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	getChance = function(self, t) return math.min(100, 30 + self:getTalentLevel(t) * 15) end,
-	getReduction = function(self, t) return math.ceil(self:getTalentLevel(t) / 2) end,
+	getReduction = function(self, t) return math.floor(self:combatTalentLimit(t, 5, 1, 3.1)) end, -- Limit < 5
 	info = function(self, t)
 		return ([[While Master Summoner is active, each new summon will reduce the remaining cooldown of Rage, Detonate and Wild Summon.
 		%d%% chance to reduce them by %d.]]):format(t.getChance(self, t), t.getReduction(self, t))
@@ -107,8 +107,9 @@ newTalent{
 	on_pre_use = function(self, t, silent)
 		return self:isTalentActive(self.T_MASTER_SUMMONER)
 	end,
+	duration = function(self, t) return  math.floor(self:combatTalentLimit(t, 25, 1, 5)) end, -- Limit <25
 	action = function(self, t)
-		self:setEffect(self.EFF_WILD_SUMMON, math.floor(self:getTalentLevel(t)), {chance=100})
+		self:setEffect(self.EFF_WILD_SUMMON, t.duration(self,t), {chance=100})
 		game:playSoundNear(self, "talents/teleport")
 		return true
 	end,
@@ -126,6 +127,6 @@ newTalent{
 		- Stone Golem: Melee blows can deal a small area of effect damage
 		- Turtle: Can force all foes in a radius into melee range
 		- Spider: Can project an insidious poison at its foes, reducing their healing
-		This talent requires Master Summoner to be active to be used.]]):format(math.floor(self:getTalentLevel(t)))
+		This talent requires Master Summoner to be active to be used.]]):format(t.duration(self,t))
 	end,
 }

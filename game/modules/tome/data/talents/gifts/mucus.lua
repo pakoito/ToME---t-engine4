@@ -32,7 +32,7 @@ newTalent{
 	cooldown = 20,
 	no_energy = true,
 	tactical = { BUFF = 2 },
-	getDur = function(self, t) return math.max(8,  math.floor(self:getTalentLevel(t) * 1.3)) end,
+	getDur = function(self, t) return math.min(8,  math.floor(self:getTalentLevel(t) * 1.3)) end,
 	getDamage = function(self, t) return self:combatTalentMindDamage(t, 5, 90) end,
 	getEqui = function(self, t) return self:combatTalentMindDamage(t, 5, 20) end,
 	trigger = function(self, t, x, y, rad) 
@@ -159,8 +159,9 @@ newTalent{
 	require = gifts_req3,
 	points = 5,
 	mode = "passive",
-	getMax = function(self, t) return math.max(1, math.floor(self:getCun() / 10)) end,
-	getChance = function(self, t) return 10 + self:combatTalentMindDamage(t, 5, 300) / 10 end,
+	getMax = function(self, t) return math.max(1, self:combatStatScale("cun", 0.5, 5)) end,
+	getChance = function(self, t) return self:combatLimit(self:combatTalentMindDamage(t, 5, 300), 50, 12.6, 26, 32, 220) end, -- Limit < 50% --> 12.6 @ 36, 32 @ 220
+
 	spawn = function(self, t)
 		if checkMaxSummon(self, true) or not self:canBe("summon") then return end
 
@@ -186,7 +187,7 @@ newTalent{
 			body = { INVEN = 10 },
 			autolevel = "wildcaster",
 			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=1, },
-			stats = { str=10, dex=10, mag=3, con=self:getTalentLevel(t) / 5 * 4, wil=self:getWil(), cun=self:getCun() },
+			stats = { str=10, dex=10, mag=3, con=self:combatTalentScale(t, 0.8, 4, 0.75), wil=self:combatStatScale("wil", 10, 100, 0.75), cun=self:combatStatScale("cun", 10, 100, 0.75) },
 			global_speed_base = 0.7,
 			combat = {sound="creatures/jelly/jelly_hit"},
 			combat_armor = 1, combat_def = 1,
@@ -206,8 +207,8 @@ newTalent{
 			combat = { dam=5, atk=0, apr=5, damtype=DamageType.POISON },
 
 			summoner = self, summoner_gain_exp=true, wild_gift_summon=true, is_mucus_ooze = true,
-			summon_time = math.ceil(self:getTalentLevel(t)) + 5,
-			max_summon_time = math.ceil(self:getTalentLevel(t)) + 5,
+			summon_time = math.floor(self:combatTalentScale(t, 6, 10)),
+			max_summon_time = math.floor(self:combatTalentScale(t, 6, 10)),
 		}
 		m:learnTalent(m.T_MUCUS_OOZE_SPIT, true, self:getTalentLevelRaw(t))
 		if self:knowTalent(self.T_BLIGHTED_SUMMONING) then m:learnTalent(m.T_VIRULENT_DISEASE, true, 3) end
@@ -250,22 +251,10 @@ newTalent{
 	equilibrium = 10,
 	range = 10,
 	tactical = { CLOSEIN = 2 },
-	getNb = function(self, t) return 1 + math.ceil(self:getTalentLevel(t) / 3, 0, 3) end,
-	getEnergy = function(self, t)
-		local l = self:getTalentLevel(t)
-		if l <= 1 then return 1
-		elseif l <= 2 then return 0.9
-		elseif l <= 3 then return 0.7
-		elseif l <= 4 then return 0.5
-		elseif l <= 5 then return 0.4
-		elseif l <= 6 then return 0.3
-		elseif l <= 7 then return 0.2
-		elseif l <= 8 then return 0.1
-		elseif l <= 9 then return 0.05
-		elseif l <= 10 then return 0.03
-		elseif l <= 11 then return 0.02
-		elseif l <= 12 then return 0.01
-		end
+	getNb = function(self, t) return math.ceil(self:combatTalentScale(t, 1.1, 2.9, "log")) end,
+	getEnergy = function(self,t)
+		local tl = math.max(0, self:getTalentLevel(t) - 1.8)
+		return 1-tl/(tl + 2.13)
 	end,
 	on_pre_use = function(self, t)
 		return game.level and game.level.map and isOnMucus(game.level.map, self.x, self.y)

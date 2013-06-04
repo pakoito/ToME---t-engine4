@@ -29,6 +29,9 @@ newTalent{
 	tactical = { ATTACK = { NATURE = 0.5 }, EQUILIBRIUM = 0.5},
 	requires_target = true,
 	no_npc_use = true,
+	maxSwallow = function(self, t, target) return -- Limit < 50%
+		self:combatLimit(self:getTalentLevel(t)*(self.size_category or 3)/(target.size_category or 3), 50, 13, 1, 25, 5)
+	end,
 	on_learn = function(self, t) self.resists[DamageType.PHYSICAL] = (self.resists[DamageType.PHYSICAL] or 0) + 0.5 end,
 	on_unlearn = function(self, t) self.resists[DamageType.PHYSICAL] = (self.resists[DamageType.PHYSICAL] or 0) - 0.5 end,
 	action = function(self, t)
@@ -42,7 +45,7 @@ newTalent{
 		local hit = self:attackTarget(target, DamageType.NATURE, self:combatTalentWeaponDamage(t, 1, 1.5), true)
 		if not hit then return true end
 
-		if (target.life * 100 / target.max_life > 10 + 3 * self:getTalentLevel(t)) and not target.dead then
+		if (target.life * 100 / target.max_life > t.maxSwallow(self, t, target)) and not target.dead then
 			return true
 		end
 
@@ -60,9 +63,10 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Attack the target for %d%% nature weapon damage.
-		If the attack brings your target below %d%% life (or kills it), you can try to swallow it, killing it automatically and regaining life and equilibrium depending on its level.
+		If the attack brings your target below %d%% life or kills it, you can try to swallow it, killing it automatically and regaining life and equilibrium depending on its level.
+		The chance to swallow depends on your talent level and the relative size of the target.
 		Each point in sand drake talents also increases your physical resistance by 0.5%%.]]):
-		format(100 * self:combatTalentWeaponDamage(t, 1, 1.5), 10 + 3 * self:getTalentLevel(t))
+		format(100 * self:combatTalentWeaponDamage(t, 1, 1.5), t.maxSwallow(self, t, self))
 	end,
 }
 
@@ -79,9 +83,7 @@ newTalent{
 	range = 10,
 	on_learn = function(self, t) self.resists[DamageType.PHYSICAL] = (self.resists[DamageType.PHYSICAL] or 0) + 0.5 end,
 	on_unlearn = function(self, t) self.resists[DamageType.PHYSICAL] = (self.resists[DamageType.PHYSICAL] or 0) - 0.5 end,
-	radius = function(self, t)
-		return 2 + self:getTalentLevel(t) / 2
-	end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 2.5, 4.5)) end,
 	no_npc_use = true,
 	getDamage = function(self, t)
 		return self:combatDamage() * 0.8
@@ -112,15 +114,16 @@ newTalent{
 	cooldown = 30,
 	range = 10,
 	tactical = { CLOSEIN = 0.5, ESCAPE = 0.5 },
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 8, 20, 0.5, 0, 2)) end,
 	on_learn = function(self, t) self.resists[DamageType.PHYSICAL] = (self.resists[DamageType.PHYSICAL] or 0) + 0.5 end,
 	on_unlearn = function(self, t) self.resists[DamageType.PHYSICAL] = (self.resists[DamageType.PHYSICAL] or 0) - 0.5 end,
 	action = function(self, t)
-		self:setEffect(self.EFF_BURROW, 5 + self:getTalentLevel(t) * 3, {})
+		self:setEffect(self.EFF_BURROW, t.getDuration(self, t), {})
 		return true
 	end,
 	info = function(self, t)
 		return ([[Allows you to burrow into walls for %d turns.
-		Each point in sand drake talents also increases your physical resistance by 0.5%%.]]):format(5 + self:getTalentLevel(t) * 3)
+		Each point in sand drake talents also increases your physical resistance by 0.5%%.]]):format(t.getDuration(self, t))
 	end,
 }
 
@@ -135,7 +138,7 @@ newTalent{
 	message = "@Source@ breathes sand!",
 	tactical = { ATTACKAREA = {PHYSICAL = 2}, DISABLE = { blind = 2 } },
 	range = 0,
-	radius = function(self, t) return 4 + self:getTalentLevelRaw(t) end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 5, 9)) end,
 	direct_hit = true,
 	requires_target = true,
 	on_learn = function(self, t) self.resists[DamageType.PHYSICAL] = (self.resists[DamageType.PHYSICAL] or 0) + 0.5 end,
@@ -146,9 +149,7 @@ newTalent{
 	getDamage = function(self, t)
 		return self:combatTalentStatDamage(t, "str", 30, 400)
 	end,
-	getDuration = function(self, t)
-		return 2+self:getTalentLevelRaw(t)
-	end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 3, 7)) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)

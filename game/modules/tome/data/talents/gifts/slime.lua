@@ -55,7 +55,7 @@ newTalent{
 	cooldown = 10,
 	range = 10,
 	tactical = { ATTACK = { NATURE = 3 } },
-	radius = function(self, t) if self:getTalentLevel(t) < 3 then return 1 else return 2 end end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 1, 2.7)) end, -- yields 2 at tl=3
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), friendlyfire=false}
@@ -68,7 +68,10 @@ newTalent{
 			local target = game.level.map(px, py, Map.ACTOR)
 			if target and self:reactionToward(target) < 0 and target:canBe("poison") then
 				local poison = rng.table{target.EFF_SPYDRIC_POISON, target.EFF_INSIDIOUS_POISON, target.EFF_CRIPPLING_POISON, target.EFF_NUMBING_POISON}
-				target:setEffect(poison, 10, {src=self, power=dam/10, reduce=10+self:getTalentLevel(t)*2, fail=math.ceil(5+self:getTalentLevel(t)), heal_factor=20+self:getTalentLevel(t)*4})
+				target:setEffect(poison, 10, {src=self, power=dam/10, 
+				reduce=self:combatTalentLimit(t, 100, 12, 20), 
+				fail=math.ceil(self:combatTalentLimit(t, 100, 6, 10)),
+				heal_factor=self:combatTalentLimit(t, 100, 24, 40)}) -- Limit effects <100%
 			end
 		end, 0, {type="slime"})
 
@@ -92,11 +95,12 @@ newTalent{
 	range = 1,
 	requires_target = false,
 	tactical = { DEFEND = 1 },
+	getChance = function(self, t) return self:combatTalentLimit(t, 100, 7, 15) end, -- Limit < 100%
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/slime")
 		local power = 10 + 5 * self:getTalentLevel(t)
 		return {
-			onhit = self:addTemporaryValue("on_melee_hit", {[DamageType.ACID_DISARM]={dam=power, chance=5 + self:getTalentLevel(t) * 2}}),
+			onhit = self:addTemporaryValue("on_melee_hit", {[DamageType.ACID_DISARM]={dam=power, chance=t.getChance(self, t)}}),
 		}
 	end,
 	deactivate = function(self, t, p)
@@ -104,7 +108,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Your skin drips with acid, damaging all that hit you for %0.2f acid damage and giving a %d%% chance to disarm them for 3 turns.]]):format(damDesc(self, DamageType.ACID, self:combatTalentMindDamage(t, 10, 50)), 5 + self:getTalentLevel(t) * 2)
+		return ([[Your skin drips with acid, damaging all that hit you for %0.2f acid damage and giving a %d%% chance to disarm them for 3 turns.]]):format(damDesc(self, DamageType.ACID, self:combatTalentMindDamage(t, 10, 50)), t.getChance(self, t))
 	end,
 }
 
@@ -119,7 +123,7 @@ newTalent{
 	tactical = { CLOSEIN = 2 },
 	requires_target = true,
 	range = function(self, t)
-		return math.floor(4 + self:getTalentLevel(t) / 2)
+		return math.floor(self:combatTalentScale(t,4.5,6.5))
 	end,
 	radius = function(self, t)
 		return util.bound(4 - self:getTalentLevel(t) / 2, 1, 4)

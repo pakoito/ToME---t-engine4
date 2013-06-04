@@ -51,7 +51,7 @@ newTalent{
 	direct_hit = true,
 	requires_target = true,
 	range = 0,
-	radius = function(self, t) return 1 + self:getTalentLevelRaw(t) end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 2, 6)) end,
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,
@@ -233,8 +233,18 @@ newTalent{
 	end,
 	on_arrival = function(self, t, m)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t, x=m.x, y=m.y}
-		self:project(tg, m.x, m.y, DamageType.TEMP_EFFECT, {foes=true, eff=self.EFF_LOWER_FIRE_RESIST, dur=4+self:getTalentLevelRaw(t), p={power=self:combatTalentMindDamage(t, 15, 70)}}, {type="flame"})
+		local duration = self:callTalent(self.T_GRAND_ARRIVAL, "effectDuration")
+		self:project(tg, m.x, m.y, DamageType.TEMP_EFFECT, {foes=true, eff=self.EFF_LOWER_FIRE_RESIST, dur=duration, p={power=self:combatTalentMindDamage(t, 15, 70)}}, {type="flame"})
 	end,
+	incStats = function(self, t, fake)
+		local mp = self:combatMindpower()
+		return{ 
+			wil=15 + (fake and mp or self:mindCrit(mp)) * 2 * self:combatTalentScale(t, 0.2, 1, 0.75),
+			cun=15 + (fake and mp or self:mindCrit(mp)) * 1.7 * self:combatTalentScale(t, 0.2, 1, 0.75),
+			con=10 + self:callTalent(self.T_RESILIENCE, "incCon")
+		}
+	end,
+	summonTime = function(self, t) return math.floor(self:combatScale(self:getTalentLevel(t) + self:getTalentLevel(self.T_RESILIENCE), 5, 0, 10, 5)) end,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty, target = self:getTarget(tg)
@@ -260,11 +270,7 @@ newTalent{
 			ai = "summoned", ai_real = "tactical", ai_state = { talent_in=1, ally_compassion=10},
 			ai_tactic = resolvers.tactic"ranged",
 			stats = {str=0, dex=0, con=0, cun=0, wil=0, mag=0},
-			inc_stats = {
-				wil=15 + (self:mindCrit(self:combatMindpower(2)) * self:getTalentLevel(t) / 5),
-				cun=15 + (self:mindCrit(self:combatMindpower(1.7)) * self:getTalentLevel(t) / 5),
-				con=10 + self:getTalentLevelRaw(self.T_RESILIENCE)*2,
-			},
+			inc_stats = t.incStats(self, t),
 			level_range = {self.level, self.level}, exp_worth = 0,
 
 			max_life = resolvers.rngavg(5,10),
@@ -282,7 +288,7 @@ newTalent{
 			resists = { [DamageType.FIRE] = self:getTalentLevel(t)*10 },
 
 			summoner = self, summoner_gain_exp=true, wild_gift_summon=true,
-			summon_time = math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
+			summon_time = t.summonTime(self, t),
 			ai_target = {actor=target}
 		}
 		if self:attr("wild_summon") and rng.percent(self:attr("wild_summon")) then
@@ -297,14 +303,12 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local incStats = t.incStats(self, t, true)
 		return ([[Summon a Ritch Flamespitter for %d turns to burn your foes to death. Flamespitters are really weak in melee and die easily, but they can burn your foes from afar.
 		It will get %d Willpower, %d Cunning and %d Constitution.
 		Your summons inherit some of your stats: increased damage%%, stun/pin/confusion/blindness resistance, armour penetration.
 		Their Willpower and Cunning will increase with your Mindpower.]])
-		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
-		15 + (self:combatMindpower(2) * self:getTalentLevel(t) / 5),
-		15 + (self:combatMindpower(1.7) * self:getTalentLevel(t) / 5),
-		10 + self:getTalentLevelRaw(self.T_RESILIENCE)*2)
+		:format(t.summonTime(self, t), incStats.wil, incStats.cun, incStats.con)
 	end,
 }
 
@@ -332,13 +336,22 @@ newTalent{
 	on_arrival = function(self, t, m)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t, x=m.x, y=m.y}
 		game.level.map:addEffect(self,
-			m.x, m.y, 6,
+			m.x, m.y, self:callTalent(self.T_GRAND_ARRIVAL,"effectDuration"),
 			DamageType.POISON, {dam=self:combatTalentMindDamage(t, 10, 60), apply_power=self:combatMindpower()},
 			self:getTalentRadius(t),
 			5, nil,
 			{type="vapour"},
 			nil, false, false
 		)
+	end,
+	summonTime = function(self, t) return math.floor(self:combatScale(self:getTalentLevel(t) + self:getTalentLevel(self.T_RESILIENCE), 5, 0, 10, 5)) end,
+	incStats = function(self, t,fake)
+		local mp = self:combatMindpower()
+		return{ 
+			wil=15 + (fake and mp or self:mindCrit(mp)) * 1.6 * self:combatTalentScale(t, 0.2, 1, 0.75),
+			str = 18,
+			con=10 + self:combatTalentScale(t, 2, 10, 0.75) + self:callTalent(self.T_RESILIENCE, "incCon")
+		}
 	end,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
@@ -365,11 +378,7 @@ newTalent{
 			ai = "summoned", ai_real = "tactical", ai_state = { talent_in=1, ally_compassion=10},
 
 			stats = {str=0, dex=0, con=0, cun=0, wil=0, mag=0},
-			inc_stats = {
-				wil=15 + (self:mindCrit(self:combatMindpower(1.6)) * self:getTalentLevel(t) / 5),
-				str=18,
-				con=10 + self:getTalentLevel(t) * 2 + self:getTalentLevelRaw(self.T_RESILIENCE)*2
-			},
+			inc_stats = t.incStats(self, t),
 			level_range = {self.level, self.level}, exp_worth = 0,
 
 			max_life = resolvers.rngavg(5,10),
@@ -388,7 +397,7 @@ newTalent{
 			wild_gift_detonate = t.id,
 
 			summoner = self, summoner_gain_exp=true, wild_gift_summon=true,
-			summon_time = math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
+			summon_time = t.summonTime(self, t),
 			ai_target = {actor=target}
 		}
 		if self:attr("wild_summon") and rng.percent(self:attr("wild_summon")) then
@@ -403,13 +412,12 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local incStats = t.incStats(self, t, true)
 		return ([[Summon a 3-headed Hydra for %d turns to destroy your foes. 3-headed hydras are able to breathe poison, acid and lightning.
 		It will get %d Willpower, %d Constitution and 18 Strength.
 		Your summons inherit some of your stats: increased damage%%, stun/pin/confusion/blindness resistance, armour penetration.
 		Their Willpower will increase with your Mindpower.]])
-		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
-		15 + (self:combatMindpower(1.6) * self:getTalentLevel(t) / 5),
-		10 + self:getTalentLevel(t) * 2 + self:getTalentLevelRaw(self.T_RESILIENCE)*2)
+		:format(t.summonTime(self, t), incStats.wil, incStats.con, incStats.str)
 	end,
 }
 
@@ -436,7 +444,17 @@ newTalent{
 	end,
 	on_arrival = function(self, t, m)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t, x=m.x, y=m.y}
-		self:project(tg, m.x, m.y, DamageType.TEMP_EFFECT, {foes=true, eff=self.EFF_LOWER_COLD_RESIST, dur=4+self:getTalentLevelRaw(t), p={power=self:combatTalentMindDamage(t, 15, 70)}}, {type="flame"})
+		local duration = self:callTalent(self.T_GRAND_ARRIVAL,"effectDuration")
+		self:project(tg, m.x, m.y, DamageType.TEMP_EFFECT, {foes=true, eff=self.EFF_LOWER_COLD_RESIST, dur=duration, p={power=self:combatTalentMindDamage(t, 15, 70)}}, {type="flame"})
+	end,
+	summonTime = function(self, t) return math.floor(self:combatScale(self:getTalentLevel(t) + self:getTalentLevel(self.T_RESILIENCE), 5, 0, 10, 5)) end,
+	incStats = function(self, t,fake)
+		local mp = self:combatMindpower()
+		return{ 
+			wil=15 + (fake and mp or self:mindCrit(mp)) * 2 * self:combatTalentScale(t, 0.2, 1, 0.75),
+			cun=15 + (fake and mp or self:mindCrit(mp)) * 1.6 * self:combatTalentScale(t, 0.2, 1, 0.75),
+			con=10 + self:callTalent(self.T_RESILIENCE, "incCon")
+		}
 	end,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
@@ -465,11 +483,7 @@ newTalent{
 			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=1, ally_compassion=10},
 			ai_tactic = resolvers.tactic"ranged",
 			stats = {str=0, dex=0, con=0, cun=0, wil=0, mag=0},
-			inc_stats = {
-				wil=15 + (self:mindCrit(self:combatMindpower(2)) * self:getTalentLevel(t) / 5),
-				cun=15 + (self:mindCrit(self:combatMindpower(1.6)) * self:getTalentLevel(t) / 5),
-				con=10+self:getTalentLevelRaw(self.T_RESILIENCE) * 2,
-			},
+			inc_stats = t.incStats(self, t),
 			level_range = {self.level, self.level}, exp_worth = 0,
 			never_move = 1,
 
@@ -487,7 +501,7 @@ newTalent{
 			},
 
 			summoner = self, summoner_gain_exp=true, wild_gift_summon=true,
-			summon_time = math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
+			summon_time = t.summonTime(self, t),
 			ai_target = {actor=target}
 		}
 		if self:attr("wild_summon") and rng.percent(self:attr("wild_summon")) then
@@ -502,14 +516,12 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local incStats = t.incStats(self, t, true)
 		return ([[Summon a Rimebark for %d turns to harass your foes. Rimebarks cannot move, but they have a permanent ice storm around them, damaging and freezing anything coming close in a radius of 3.
 		It will get %d Willpower, %d Cunning and %d Constitution.
 		Your summons inherit some of your stats: increased damage%%, stun/pin/confusion/blindness resistance, armour penetration.
 		Their Willpower and Cunning will increase with your Mindpower.]])
-		:format(math.ceil(self:getTalentLevel(t)) + 5 + self:getTalentLevelRaw(self.T_RESILIENCE),
-		15 + (self:combatMindpower(2) * self:getTalentLevel(t) / 5),
-		15 + (self:combatMindpower(1.6) * self:getTalentLevel(t) / 5),
-		10 + self:getTalentLevelRaw(self.T_RESILIENCE) * 2)
+		:format(t.summonTime(self, t), incStats.wil, incStats.cun, incStats.con)
 	end,
 }
 
@@ -541,7 +553,7 @@ newTalent{
 		)
 	end,
 	on_arrival = function(self, t, m)
-		for i = 1, math.max(1, math.floor(self:getTalentLevel(t) / 2)) do
+		for i = 1, self:callTalent(self.T_GRAND_ARRIVAL, "nbEscorts") do
 			-- Find space
 			local x, y = util.findFreeGrid(m.x, m.y, 5, true, {[Map.ACTOR]=true})
 			if not x then return end
@@ -555,7 +567,11 @@ newTalent{
 				autolevel = "none",
 				ai = "summoned", ai_real = "tactical", ai_state = { talent_in=1, ally_compassion=10},
 				stats = {str=0, dex=0, con=0, cun=0, wil=0, mag=0},
-				inc_stats = { str=15 + self:getWil() * self:getTalentLevel(t) / 6, wil=38, con=20 + self:getTalentLevel(t) * 3 + self:getTalentLevelRaw(self.T_RESILIENCE) * 2, },
+				inc_stats = { -- No crit chance for escorts
+					str=15 + self:combatMindpower(2) * self:combatTalentScale(t, 1/6, 5/6, 0.75),
+					wil=38,
+					con=20 + self:combatMindpower(1.5) * self:combatTalentScale(t, 1/6, 5/6, 0.75) + self:callTalent(self.T_RESILIENCE, "incCon"), 
+				},
 				level_range = {self.level, self.level}, exp_worth = 0,
 
 				max_life = resolvers.rngavg(40, 60),
@@ -574,6 +590,15 @@ newTalent{
 			}
 			setupSummon(self, mh, x, y)
 		end
+	end,
+	summonTime = function(self, t) return math.floor(self:combatScale(self:getTalentLevel(t) + self:getTalentLevel(self.T_RESILIENCE), 2, 0, 7, 5)) end,
+	incStats = function(self, t,fake)
+		local mp = self:combatMindpower()
+		return{ 
+			str=15 + (fake and mp or self:mindCrit(mp)) * 2 * self:combatTalentScale(t, 0.2, 1, 0.75),
+			wil = 38,
+			con=20 + (fake and mp or self:mindCrit(mp)) * 1.5 * self:combatTalentScale(t, 0.2, 1, 0.75) + self:callTalent(self.T_RESILIENCE, "incCon"),
+		}
 	end,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
@@ -599,11 +624,7 @@ newTalent{
 			autolevel = "none",
 			ai = "summoned", ai_real = "tactical", ai_state = { talent_in=1, ally_compassion=10},
 			stats = {str=0, dex=0, con=0, cun=0, wil=0, mag=0},
-			inc_stats = {
-				str=15 + (self:mindCrit(self:combatMindpower(2)) * self:getTalentLevel(t) / 5),
-				wil=38,
-				con=20 + (self:mindCrit(self:combatMindpower(1.5)) * self:getTalentLevel(t) / 5) + self:getTalentLevelRaw(self.T_RESILIENCE) * 2,
-			},
+			inc_stats = t.incStats(self, t),
 			level_range = {self.level, self.level}, exp_worth = 0,
 
 			max_life = resolvers.rngavg(100, 150),
@@ -625,7 +646,7 @@ newTalent{
 			},
 
 			summoner = self, summoner_gain_exp=true, wild_gift_summon=true,
-			summon_time = math.ceil(self:getTalentLevel(t)) + 2 + self:getTalentLevelRaw(self.T_RESILIENCE),
+			summon_time = t.summonTime(self, t),
 			ai_target = {actor=target}
 		}
 		if self:attr("wild_summon") and rng.percent(self:attr("wild_summon")) then
@@ -640,12 +661,11 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local incStats = t.incStats(self, t, true)
 		return ([[Summon a Fire Drake for %d turns to burn and crush your foes to death. Fire Drakes are behemoths that can burn your foes from afar with their fiery breath.
 		It will get %d Strength, %d Constitution and 38 Willpower.
 		Your summons inherit some of your stats: increased damage%%, stun/pin/confusion/blindness resistance, armour penetration.
 		Their Strength and Constitution will increase with your Mindpower.]])
-		:format(math.ceil(self:getTalentLevel(t)) + 2 + self:getTalentLevelRaw(self.T_RESILIENCE),
-		15 + (self:combatMindpower(2) * self:getTalentLevel(t) / 5),
-		20 + (self:combatMindpower(1.5) * self:getTalentLevel(t) / 5) + self:getTalentLevelRaw(self.T_RESILIENCE) * 2)
+		:format(t.summonTime(self, t), incStats.str, incStats.con)
 	end,
 }

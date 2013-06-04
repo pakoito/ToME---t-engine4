@@ -184,9 +184,9 @@ newTalent{
 		local main, off = self:hasPsiblades(true, true)
 		return main and off
 	end,
-	getFireDamageIncrease = function(self, t) return self:getTalentLevelRaw(t) * 2 end,
-	getResistPenalty = function(self, t) return self:getTalentLevelRaw(t) * 10 end,
-	getRegen = function(self, t) return self:getTalentLevel(t) * 6.5 end,
+	getAcidDamageIncrease = function(self, t) return self:getTalentLevelRaw(t) * 2 end,
+	getResistPenalty = function(self, t) return self:combatTalentLimit(t, 100, 17, 50) end, -- Limit < 100%
+	getRegen = function(self, t) return self:combatTalentLimit(t, 50, 6.5, 32.5) end, -- Limit < 50%
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/slime")
 
@@ -197,7 +197,7 @@ newTalent{
 			particle = self:addParticles(Particles.new("master_summoner", 1))
 		end
 		return {
-			dam = self:addTemporaryValue("inc_damage", {[DamageType.ACID] = t.getFireDamageIncrease(self, t)}),
+			dam = self:addTemporaryValue("inc_damage", {[DamageType.ACID] = t.getAcidDamageIncrease(self, t)}),
 			resist = self:addTemporaryValue("resists_pen", {[DamageType.ACID] = t.getResistPenalty(self, t)}),
 			particle = particle,
 		}
@@ -209,7 +209,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local damageinc = t.getFireDamageIncrease(self, t)
+		local damageinc = t.getAcidDamageIncrease(self, t)
 		local ressistpen = t.getResistPenalty(self, t)
 		local regen = t.getRegen(self, t)
 		return ([[Surround yourself with nature forces, increasing all your acid damage by %d%% and ignoring %d%% acid resistance of your targets.

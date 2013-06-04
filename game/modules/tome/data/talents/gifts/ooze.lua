@@ -27,8 +27,8 @@ newTalent{
 	sustain_equilibrium = 10,
 	tactical = { BUFF = 2 },
 	getMaxHP = function(self, t) return 50 + self:combatTalentMindDamage(t, 30, 250) end,
-	getMax = function(self, t) local _, _, max = checkMaxSummon(self, true) return math.min(max, math.max(1, math.floor(self:getTalentLevel(t) / 2))) end,
-	getChance = function(self, t) return 20 + self:combatTalentStatDamage(t, "cun", 10, 400) / 5.7 end,
+	getMax = function(self, t) local _, _, max = checkMaxSummon(self, true) return math.min(max, math.max(1, math.floor(self:combatTalentScale(t, 0.5, 2.5)))) end,
+	getChance = function(self, t) return self:combatLimit(self:combatTalentStatDamage(t, "cun", 10, 400), 100, 20, 0, 61, 234) end, -- Limit < 100%
 	spawn = function(self, t, life)
 		if checkMaxSummon(self, true) or not self:canBe("summon") then return end
 
@@ -50,10 +50,11 @@ newTalent{
 			body = { INVEN = 10 },
 			autolevel = "tank",
 			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=1, },
-			stats = { wil=10, dex=10, mag=3, str=self:getTalentLevel(t) / 5 * 4, con=self:getWil(), cun=self:getCun() },
+			stats = { wil=10, dex=10, mag=3, str=self:combatTalentScale(t, 0.8, 4, 0.75), con=self:combatStatScale("con", 10, 100, 0.75), cun=self:combatStatScale("cun", 10, 100, 0.75)},
 			global_speed_base = 0.5,
 			combat = {sound="creatures/jelly/jelly_hit"},
-			combat_armor = self:getTalentLevel(t) * 5, combat_def = self:getTalentLevel(t) * 5,
+			combat_armor = self:combatTalentScale(t, 5, 25),
+			combat_def = self:combatTalentScale(t, 5, 25, 0.75),
 			rank = 1,
 			size_category = 3,
 			infravision = 10,
@@ -72,8 +73,8 @@ newTalent{
 			combat = { dam=5, atk=0, apr=5, damtype=DamageType.POISON },
 
 			summoner = self, summoner_gain_exp=true, wild_gift_summon=true,
-			summon_time = math.ceil(self:getTalentLevel(t)) + 5,
-			max_summon_time = math.ceil(self:getTalentLevel(t)) + 5,
+			summon_time = math.floor(self:combatTalentScale(t, 6, 10)),
+			max_summon_time = math.floor(self:combatTalentScale(t, 6, 10)),
 			resolvers.sustains_at_birth(),
 		}
 		if self:knowTalent(self.T_BLIGHTED_SUMMONING) then m:learnTalent(m.T_BONE_SHIELD, true, 2) end
@@ -97,7 +98,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Your body is more like that of an ooze.
-		When you get hit you have a %d%% chance to split and create a Bloated Ooze with as much health as you have taken damage (up to %d).
+		When you get hit you have up to a %d%% chance to split and create a Bloated Ooze with as much health as you have taken damage (up to %d).
 		All damage you take will be split equaly between you and your Bloated Oozes.
 		You may have up to %d Bloated Oozes active at any time (based on your Cunning and talent level).
 		Bloated Oozes are very resilient (50%% all damage resistance) to damage not coming through your shared link.
@@ -115,6 +116,7 @@ newTalent{
 	cooldown = 15,
 	tactical = { PROTECT = 2, ATTACKAREA = { ARCANE = 1 } },
 	getDam = function(self, t) return self:combatTalentMindDamage(t, 15, 200) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 4, 8)) end,
 	on_pre_use = function(self, t)
 		if not game.level then return false end
 		for _, coor in pairs(util.adjacentCoords(self.x, self.y)) do
@@ -138,8 +140,7 @@ newTalent{
 		local act = rng.table(possibles)
 		act:die(self)
 
-		self:setEffect(self.EFF_PAIN_SUPPRESSION, math.ceil(3 + self:getTalentLevel(t)), {power=40})
-
+		self:setEffect(self.EFF_PAIN_SUPPRESSION, t.getDuration(self, t), {power=40})
 		local tg = {type="ball", radius=3, range=0, talent=t, selffire=false, friendlyfire=false}
 		self:project(tg, self.x, self.y, DamageType.MANABURN, self:mindCrit(t.getDam(self, t)))
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "acidflash", {radius=tg.radius})
@@ -147,14 +148,10 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You randomly merge with an adjacent bloated ooze, granting your a 40%% damage resistance for %d turns.
-		The merging also releases a burst of antimagic all around, dealing %0.2f manaburn damage in radius %d.
+		return ([[You randomly merge with an adjacent bloated ooze, granting you 40%% damage resistance for %d turns.
+		The merging also releases a burst of antimagic, dealing %0.2f manaburn damage in radius %d.
 		The effect will increase with your Mindpower.]]):
-		format(
-			math.ceil(3 + self:getTalentLevel(t)),
-			damDesc(self, DamageType.ARCANE, t.getDam(self, t)),
-			3
-		)
+		format(t.getDuration(self, t), damDesc(self, DamageType.ARCANE, t.getDam(self, t)),	3)
 	end,
 }
 
@@ -165,8 +162,8 @@ newTalent{
 	points = 5,
 	equilibrium = 5,
 	cooldown = 20,
-	getMax = function(self, t) local _, _, max = checkMaxSummon(self, true) return math.min(max, math.max(1, math.floor(self:getTalentLevel(t) / 2))) end,
-	getModHP = function(self, t) return math.min(1, 0.4 + self:getTalentLevel(t) * 0.06) end,
+	getMax = function(self, t) local _, _, max = checkMaxSummon(self, true) return math.min(max, math.max(1, math.floor(self:combatTalentScale(t, 0.5, 2.5)))) end,
+	getModHP = function(self, t) return self:combatTalentLimit(t, 1, 0.46, 0.7) end, --  Limit < 1
 	action = function(self, t)
 		local ot = self:getTalentFromId(self.T_MITOSIS)
 		for i = 1, t.getMax(self, t) do
@@ -228,24 +225,18 @@ newTalent{
 	require = gifts_req4,
 	points = 5,
 	mode = "passive",
-	on_learn = function(self, t)
-		self:attr("blind_immune", 0.2)
-		self:attr("poison_immune", 0.2)
-		self:attr("disease_immune", 0.2)
-		self:attr("cut_immune", 0.2)
-		self:attr("ignore_direct_crits", 15)
-	end,
-	on_unlearn = function(self, t)
-		self:attr("blind_immune", -0.2)
-		self:attr("poison_immune", -0.2)
-		self:attr("disease_immune", -0.2)
-		self:attr("cut_immune", -0.2)
-		self:attr("ignore_direct_crits", -15)
+	critResist = function(self, t) return self:combatTalentScale(t, 20, 75) end,
+	immunities = function(self, t) return self:combatTalentLimit(t, 1, 0.2, 0.5) end, -- Limit < 100% immunities
+	passives = function(self, t, p)
+		self:talentTemporaryValue(p, "blind_immune", t.immunities(self, t))
+		self:talentTemporaryValue(p, "poison_immune", t.immunities(self, t))
+		self:talentTemporaryValue(p, "disease_immune", t.immunities(self, t))
+		self:talentTemporaryValue(p, "ignore_direct_crits", t.critResist(self, t))
 	end,
 	info = function(self, t)
-		return ([[Your body's internal organs are melted together, making it much harder to suffer critical hits.
-		All direct critical hits (physical, mental, spells) against you have a %d%% chance to instead do their normal damage.
-		In addition you gain %d%% disease, poison, cuts and blindness resistances.]]):
-		format(self:getTalentLevelRaw(t) * 15, self:getTalentLevelRaw(t) * 20)
+		return ([[Your body's internal organs are melded together, disquising your critical areas.
+		All direct critical hits (physical, mental, spells) against you have a %d%% lower Critical multiplier (but always do at least normal damage).
+		In addition you gain %d%% disease, poison, cuts, confusion and blindness resistances.]]):
+		format(t.critResist(self, t), 100*t.immunities(self, t))
 	end,
 }

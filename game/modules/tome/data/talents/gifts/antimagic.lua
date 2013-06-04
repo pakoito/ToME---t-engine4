@@ -54,13 +54,14 @@ newTalent{
 	equilibrium = 20,
 	cooldown = 10,
 	tactical = { DISABLE = { silence = 4 } },
-	radius = function(self, t) return math.floor(4 + self:getTalentLevel(t) * 1.5) end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 5, 11.5)) end,
+	getduration = function(self, t) return math.floor(self:combatTalentLimit(t, 10, 3.5, 5.6)) end, -- Limit <10
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
-		self:project(tg, self.x, self.y, DamageType.SILENCE, {dur=3 + math.floor(self:getTalentLevel(t) / 2), power_check=self:combatMindpower()})
+		self:project(tg, self.x, self.y, DamageType.SILENCE, {dur=t.getduration(self,t), power_check=self:combatMindpower()})
 		game.level.map:particleEmitter(self.x, self.y, 1, "shout", {size=4, distorion_factor=0.3, radius=self:getTalentRadius(t), life=30, nb_circles=8, rm=0.8, rM=1, gm=0, gM=0, bm=0.5, bM=0.8, am=0.6, aM=0.8})
 		return true
 	end,
@@ -68,7 +69,7 @@ newTalent{
 		local rad = self:getTalentRadius(t)
 		return ([[Let out a burst of sound that silences for %d turns all those affected in a radius of %d, including the user.
 		The silence chance will increase with your Mindpower.]]):
-		format(3 + math.floor(self:getTalentLevel(t) / 2), rad)
+		format(t.getduration(self,t), rad)
 	end,
 }
 

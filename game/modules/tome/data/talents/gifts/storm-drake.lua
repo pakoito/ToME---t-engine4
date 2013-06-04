@@ -29,11 +29,13 @@ newTalent{
 	range = 10,
 	tactical = { CLOSEIN = 2, ESCAPE = 2 },
 	requires_target = true,
+	getSpeed = function(self, t) return self:combatTalentScale(t, 470, 750, 0.75) end,
+	getDuration = function(self, t) return math.ceil(self:combatTalentScale(t, 1.1, 2.6)) end,
 	on_learn = function(self, t) self.resists[DamageType.LIGHTNING] = (self.resists[DamageType.LIGHTNING] or 0) + 1 end,
 	on_unlearn = function(self, t) self.resists[DamageType.LIGHTNING] = (self.resists[DamageType.LIGHTNING] or 0) - 1 end,
 	on_pre_use = function(self, t) return not self:attr("never_move") end,
 	action = function(self, t)
-		self:setEffect(self.EFF_LIGHTNING_SPEED, math.ceil(self:mindCrit(1 + self:getTalentLevel(t) * 0.3)), {power=400 + self:getTalentLevel(t) * 70})
+		self:setEffect(self.EFF_LIGHTNING_SPEED, self:mindCrit(t.getDuration(self, t)), {power=t.getSpeed(self, t)})
 		return true
 	end,
 	info = function(self, t)
@@ -41,7 +43,7 @@ newTalent{
 		Also provides 30%% physical damage resistance and 100%% lightning resistance.
 		Any actions other than moving will stop this effect.
 		Note: since you will be moving very fast, game turns will pass very slowly.
-		Each point in storm drake talents also increases your lightning resistance by 1%%.]]):format(400 + self:getTalentLevel(t) * 70, math.ceil(1 + self:getTalentLevel(t) * 0.3))
+		Each point in storm drake talents also increases your lightning resistance by 1%%.]]):format(t.getSpeed(self, t), t.getDuration(self, t))
 	end,
 }
 
@@ -62,7 +64,7 @@ newTalent{
 		return {type="ball", radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,
 	getPercent = function(self, t)
-		return self:combatTalentMindDamage(t, 10, 45)
+		return self:combatLimit(self:combatTalentMindDamage(t, 10, 45), 90, 0, 0, 31, 31) -- Limit to <90%
 	end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
@@ -93,9 +95,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local percent = t.getPercent(self, t)
-		return ([[Generate an electrical field around you in a radius of 1. Any creature caught inside will lose %d%% of its current life (effect decreased for higher creature ranks).
-		This effect cannot kill creatures.
-		Life loss will increase with your Mindpower.
+		return ([[Generate an electrical field around you in a radius of 1. Any creature caught inside will lose up to %0.1f%% of its current life (effect decreased for higher creature ranks).
+		This effect cannot kill creatures.  Life loss will increase with your Mindpower.
 		Each point in storm drake talents also increases your lightning resistance by 1%%.]]):format(percent)
 	end,
 }
@@ -109,7 +110,7 @@ newTalent{
 	cooldown = 15,
 	proj_speed = 2, -- This is purely indicative
 	tactical = { ATTACK = { LIGHTNING = 2 }, DISABLE = { stun = 2 } },
-	range = function(self, t) return 4 + math.floor(self:getTalentLevel(t)) end,
+	range = function(self, t) return math.floor(self:combatTalentScale(t, 5, 9)) end,
 	requires_target = true,
 	on_learn = function(self, t) self.resists[DamageType.LIGHTNING] = (self.resists[DamageType.LIGHTNING] or 0) + 1 end,
 	on_unlearn = function(self, t) self.resists[DamageType.LIGHTNING] = (self.resists[DamageType.LIGHTNING] or 0) - 1 end,
@@ -171,7 +172,7 @@ newTalent{
 			damDesc(self, DamageType.LIGHTNING, self:combatTalentMindDamage(t, 10, 110)),
 			damDesc(self, DamageType.LIGHTNING, self:combatTalentMindDamage(t, 15, 190)),
 			damDesc(self, DamageType.PHYSICAL, self:combatTalentMindDamage(t, 15, 190)),
-			6 + math.ceil(self:getTalentLevel(t) * 2)
+			self:getTalentRange(t)
 		)
 	end,
 }
@@ -187,7 +188,7 @@ newTalent{
 	message = "@Source@ breathes lightning!",
 	tactical = { ATTACKAREA = {LIGHTNING = 2}, DISABLE = { stun = 1 } },
 	range = 0,
-	radius = function(self, t) return 4 + self:getTalentLevelRaw(t) end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 5, 9)) end,
 	direct_hit = true,
 	requires_target = true,
 	on_learn = function(self, t) self.resists[DamageType.LIGHTNING] = (self.resists[DamageType.LIGHTNING] or 0) + 1 end,

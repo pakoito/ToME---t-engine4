@@ -36,6 +36,7 @@ newTalent{
 		return false
 	end,
 	is_heal = true,
+	getdur = function(self,t) return math.floor(self:combatTalentLimit(t, 30, 6, 10)) end, -- limit to <30
 	action = function(self, t)
 		local nb = 0
 		for eff_id, p in pairs(self.tmp) do
@@ -45,9 +46,7 @@ newTalent{
 			end
 		end
 		self:heal(self:mindCrit(nb * self:combatTalentStatDamage(t, "wil", 20, 60)))
-
-		self:setEffect(self.EFF_WATERS_OF_LIFE, 5 + self:getTalentLevel(t), {})
-
+		self:setEffect(self.EFF_WATERS_OF_LIFE, t.getdur(self,t), {})
 		game:playSoundNear(self, "talents/spell_generic2")
 		return true
 	end,
@@ -56,7 +55,7 @@ newTalent{
 		For %d turns, all poisons and diseases will heal you instead of damaging you.
 		When activated, it also heals you for %d life per diseases or poisons on you.
 		The healing per disease/poison will increase with your Willpower.]]):
-		format(5 + self:getTalentLevel(t), self:combatTalentStatDamage(t, "wil", 20, 60))
+		format(t.getdur(self,t), self:combatTalentStatDamage(t, "wil", 20, 60))
 	end,
 }
 
@@ -69,6 +68,9 @@ newTalent{
 	sustain_equilibrium = 20,
 	cooldown = 30,
 	tactical = { BUFF = 3 },
+	-- The effect "ELEMENTAL_HARMONY" is defined in data\timed_effects\physical.lua and the duration applied in setDefaultProjector function in data\damagetypes.lua	
+	duration = function(self,t) return math.floor(self:combatTalentScale(t, 6, 10, "log"))  end,
+	fireSpeed = function(self, t) return self:combatTalentScale(t, 0.1 + 1/16, 0.1 + 5/16, 0.75) end,
 	activate = function(self, t)
 		return {
 			tmpid = self:addTemporaryValue("elemental_harmony", self:getTalentLevel(t)),
@@ -80,8 +82,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local power = self:getTalentLevel(t)
-		local turns = 5 + math.ceil(power)
-		local fire = 100 * (0.1 + power / 16)
+		local turns = t.duration(self, t)
+		local fire = 100 * t.fireSpeed(self, t)
 		local cold = 3 + power * 2
 		local lightning = math.floor(power)
 		local acid = 5 + power * 2

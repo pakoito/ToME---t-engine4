@@ -226,7 +226,7 @@ newEffect{
 newEffect{
 	name = "STONE_POISON", image = "talents/stoning_poison.png",
 	desc = "Stoning Poison",
-	long_desc = function(self, eff) return ("The target is poisoned and sick, doing %0.2f nature damage per turn. When the effect ends the target will turn to stone for %d turns."):format(eff.power, eff.stone) end,
+	long_desc = function(self, eff) return ("The target is poisoned and sick, taking %0.2f nature damage per turn. If the effect runs its full course, the target will turn to stone for %d turns."):format(eff.power, eff.stone) end,
 	type = "physical",
 	subtype = { poison=true, earth=true }, no_ct_effect = true,
 	status = "detrimental",
@@ -1281,7 +1281,7 @@ newEffect{
 	name = "ELEMENTAL_HARMONY", image = "effects/elemental_harmony.png",
 	desc = "Elemental Harmony",
 	long_desc = function(self, eff)
-		if eff.type == DamageType.FIRE then return ("Increases global speed by %d%%."):format(100 * (0.1 + eff.power / 16))
+		if eff.type == DamageType.FIRE then return ("Increases global speed by %d%%."):format(100 * self:callTalent(self.T_ELEMENTAL_HARMONY, "fireSpeed"))
 		elseif eff.type == DamageType.COLD then return ("Increases armour by %d."):format(3 + eff.power *2)
 		elseif eff.type == DamageType.LIGHTNING then return ("Increases all stats by %d."):format(math.floor(eff.power))
 		elseif eff.type == DamageType.ACID then return ("Increases life regen by %0.2f%%."):format(5 + eff.power * 2)
@@ -1294,7 +1294,7 @@ newEffect{
 	parameters = { },
 	activate = function(self, eff)
 		if eff.type == DamageType.FIRE then
-			eff.tmpid = self:addTemporaryValue("global_speed_add", 0.1 + eff.power / 16)
+			eff.tmpid = self:addTemporaryValue("global_speed_add", self:callTalent(self.T_ELEMENTAL_HARMONY, "fireSpeed"))
 		elseif eff.type == DamageType.COLD then
 			eff.tmpid = self:addTemporaryValue("combat_armor", 3 + eff.power * 2)
 		elseif eff.type == DamageType.LIGHTNING then

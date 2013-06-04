@@ -80,21 +80,20 @@ newTalent{
 	range = 1,
 	tactical = { ATTACK = 2, DISABLE = 2 },
 	on_pre_use = function(self, t, silent) if not self:hasPsiblades(true, false) then if not silent then game.logPlayer(self, "You require a psiblade in your mainhand to use this talent.") end return false end return true end,
+	speedPenalty = function(self, t) return self:combatTalentLimit(t, 1, 0.18, 0.23) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
-
-		target:setEffect(target.EFF_THORN_GRAB, 10, {src=self, speed=1 - 1 / (1 + (20 + self:getTalentLevel(t) * 2) / 100), dam=self:mindCrit(self:combatTalentMindDamage(t, 15, 250) / 10 * get_mindstar_power_mult(self))})
-
+		target:setEffect(target.EFF_THORN_GRAB, 10, {src=self, speed = t.speedPenalty(self, t), dam=self:mindCrit(self:combatTalentMindDamage(t, 15, 250) / 10 * get_mindstar_power_mult(self))})
 		return true
-	end,
+	end,		
 	info = function(self, t)
 		return ([[You touch the target with your psiblade, bringing the forces of nature to bear on your foe.
 		Thorny vines will grab the target, slowing it by %d%% and dealing %0.2f nature damage each turn for 10 turns.
 		Damage will increase with your Mindpower and Mindstar power (requires two mindstars, multiplier %2.f).]]):
-		format(20 + self:getTalentLevel(t) * 2, damDesc(self, DamageType.NATURE, self:combatTalentMindDamage(t, 15, 250) / 10 * get_mindstar_power_mult(self)), get_mindstar_power_mult(self))
+		format(100*t.speedPenalty(self,t), damDesc(self, DamageType.NATURE, self:combatTalentMindDamage(t, 15, 250) / 10 * get_mindstar_power_mult(self)), get_mindstar_power_mult(self))
 	end,
 }
 

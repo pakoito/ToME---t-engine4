@@ -30,9 +30,7 @@ newTalent{
 	requires_target = true,
 	getWeaponDamage = function(self, t) return self:combatTalentWeaponDamage(t, 1.2, 2.0) end,
 	getBurstDamage = function(self, t) return self:combatTalentMindDamage(t, 20, 230) end,
-	radius = function(self, t)
-		return 1 + self:getTalentLevel(t) / 2
-	end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 1.5, 3.5)) end,
 	on_learn = function(self, t) 
 		self.combat_physresist = self.combat_physresist + 1
 		self.combat_spellresist = self.combat_spellresist + 1
@@ -106,11 +104,11 @@ newTalent{
 	message = "@Source@ breathes venom!",
 	tactical = { ATTACKAREA = { poison = 2 } },
 	range = 0,
-	radius = function(self, t) return 4 + self:getTalentLevelRaw(t) end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 5, 9)) end,
 	direct_hit = true,
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentStatDamage(t, "str", 60, 650) end,
-	getEffect = function(self, t) return 10 + self:getTalentLevel(t) * 8 end,
+	getEffect = function(self, t) return self:combatTalentLimit(t, 100, 18, 50) end, -- Limit < 100%
 	on_learn = function(self, t) self.resists[DamageType.NATURE] = (self.resists[DamageType.NATURE] or 0) + 2 end,
 	on_unlearn = function(self, t) self.resists[DamageType.NATURE] = (self.resists[DamageType.NATURE] or 0) - 2 end,
 	target = function(self, t)
@@ -140,24 +138,23 @@ newTalent{
 	require = gifts_req_high3,
 	points = 5,
 	mode = "passive",
+	resistKnockback = function(self, t) return self:combatTalentLimit(t, 1, .17, .5) end, -- Limit < 100%
+	resistBlindStun = function(self, t) return self:combatTalentLimit(t, 1, .07, .25) end, -- Limit < 100%
 	on_learn = function(self, t)
 		self.inc_stats[self.STAT_CUN] = self.inc_stats[self.STAT_CUN] + 2
-		self:onStatChange(self.STAT_CUN, 2)
-		self.stun_immune = (self.stun_immune or 0) + .05
-		self.blind_immune = (self.blind_immune or 0) + .05
-		self.knockback_immune = (self.knockback_immune or 0) + .1
 	end,
 	on_unlearn = function(self, t)
 		self.inc_stats[self.STAT_CUN] = self.inc_stats[self.STAT_CUN] - 2
-		self:onStatChange(self.STAT_CUN, -2)
-		self.stun_immune = (self.stun_immune or 0) - .05
-		self.blind_immune = (self.blind_immune or 0) - .05
-		self.knockback_immune = (self.knockback_immune or 0) - .1
+	end,
+	passives = function(self, t, p)
+		self:talentTemporaryValue(p, "knockback_immune", t.resistKnockback(self, t))
+		self:talentTemporaryValue(p, "stun_immune", t.resistBlindStun(self, t))
+		self:talentTemporaryValue(p, "blind_immune", t.resistBlindStun(self, t))
 	end,
 	info = function(self, t)
 		return ([[You have the mental prowess of a Wyrm.
-		Increases Cunning by %d.
-		Each point in Wyrmic Guile also increases your knockback resistance by 10%%, and your blindness and stun resistances by 5%%.]]):format(2*self:getTalentLevelRaw(t))
+		Your Cunning is increased by %d.
+		You gain %d%% knockback resistance, and your blindness and stun resistances are increased by %d%%.]]):format(2*self:getTalentLevelRaw(t), 100*t.resistKnockback(self, t), 100*t.resistBlindStun(self, t))
 	end,
 }
 
@@ -167,6 +164,10 @@ newTalent{
 	require = gifts_req_high4,
 	points = 5,
 	mode = "passive",
+	resistPen = function(tl)
+		if tl <=0 then return 0 end
+		return math.floor(mod.class.interface.Combat.combatTalentLimit({}, tl, 100, 4, 20))
+	end, -- Limit < 100%
 	on_learn = function(self, t)
 		self.resists[DamageType.PHYSICAL] = (self.resists[DamageType.PHYSICAL] or 0) + 0.5
 		self.resists[DamageType.COLD] = (self.resists[DamageType.COLD] or 0) + 0.5
@@ -174,12 +175,13 @@ newTalent{
 		self.resists[DamageType.LIGHTNING] = (self.resists[DamageType.LIGHTNING] or 0) + 0.5
 		self.resists[DamageType.ACID] = (self.resists[DamageType.ACID] or 0) + 0.5
 
-		self.resists_pen[DamageType.PHYSICAL] = (self.resists_pen[DamageType.PHYSICAL] or 0) + 4
-		self.resists_pen[DamageType.COLD] = (self.resists_pen[DamageType.COLD] or 0) + 4
-		self.resists_pen[DamageType.FIRE] = (self.resists_pen[DamageType.FIRE] or 0) + 4
-		self.resists_pen[DamageType.LIGHTNING] = (self.resists_pen[DamageType.LIGHTNING] or 0) + 4
-		self.resists_pen[DamageType.ACID] = (self.resists_pen[DamageType.ACID] or 0) + 4
-		
+		local rpchange = t.resistPen(self:getTalentLevelRaw(t)) - t.resistPen(self:getTalentLevelRaw(t)-1)
+		self.resists_pen[DamageType.PHYSICAL] = (self.resists_pen[DamageType.PHYSICAL] or 0) + rpchange 
+		self.resists_pen[DamageType.COLD] = (self.resists_pen[DamageType.COLD] or 0) + rpchange 
+		self.resists_pen[DamageType.FIRE] = (self.resists_pen[DamageType.FIRE] or 0) + rpchange
+		self.resists_pen[DamageType.LIGHTNING] = (self.resists_pen[DamageType.LIGHTNING] or 0) + rpchange
+		self.resists_pen[DamageType.ACID] = (self.resists_pen[DamageType.ACID] or 0) + rpchange 
+
 		self.inc_damage[DamageType.PHYSICAL] = (self.inc_damage[DamageType.PHYSICAL] or 0) + 2
 		self.inc_damage[DamageType.COLD] = (self.inc_damage[DamageType.COLD] or 0) + 2
 		self.inc_damage[DamageType.FIRE] = (self.inc_damage[DamageType.FIRE] or 0) + 2
@@ -193,11 +195,12 @@ newTalent{
 		self.resists[DamageType.LIGHTNING] = (self.resists[DamageType.LIGHTNING] or 0) - 0.5
 		self.resists[DamageType.ACID] = (self.resists[DamageType.ACID] or 0) - 0.5
 
-		self.resists_pen[DamageType.PHYSICAL] = (self.resists_pen[DamageType.PHYSICAL] or 0) - 4
-		self.resists_pen[DamageType.COLD] = (self.resists_pen[DamageType.COLD] or 0) - 4
-		self.resists_pen[DamageType.FIRE] = (self.resists_pen[DamageType.FIRE] or 0) - 4
-		self.resists_pen[DamageType.LIGHTNING] = (self.resists_pen[DamageType.LIGHTNING] or 0) - 4
-		self.resists_pen[DamageType.ACID] = (self.resists_pen[DamageType.ACID] or 0) - 4
+		local rpchange = t.resistPen(self:getTalentLevelRaw(t)) - t.resistPen(self:getTalentLevelRaw(t)+1)
+		self.resists_pen[DamageType.PHYSICAL] = (self.resists_pen[DamageType.PHYSICAL] or 0) + rpchange
+		self.resists_pen[DamageType.COLD] = (self.resists_pen[DamageType.COLD] or 0) + rpchange
+		self.resists_pen[DamageType.FIRE] = (self.resists_pen[DamageType.FIRE] or 0) + rpchange
+		self.resists_pen[DamageType.LIGHTNING] = (self.resists_pen[DamageType.LIGHTNING] or 0) + rpchange
+		self.resists_pen[DamageType.ACID] = (self.resists_pen[DamageType.ACID] or 0) + rpchange
 
 		self.inc_damage[DamageType.PHYSICAL] = (self.inc_damage[DamageType.PHYSICAL] or 0) - 2
 		self.inc_damage[DamageType.COLD] = (self.inc_damage[DamageType.COLD] or 0) - 2
@@ -209,6 +212,6 @@ newTalent{
 		return ([[You have gained the full power of the multihued dragon, and your mastery over the elements is complete.
 		Increases physical, fire, cold, lightning and acid damage by %d%%, and your resistance penetration in those elements by %d%%.
 		Each point in Chromatic Fury also increases your resistances to physical, fire, cold, lightning and acid by 0.5%%.]])
-		:format(2*self:getTalentLevelRaw(t), 4*self:getTalentLevelRaw(t))
+		:format(2*self:getTalentLevelRaw(t), t.resistPen(self:getTalentLevelRaw(t)))
 	end,
 }

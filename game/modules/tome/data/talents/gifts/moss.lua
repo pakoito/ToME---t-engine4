@@ -35,12 +35,12 @@ newTalent{
 	no_energy = true,
 	tactical = { ATTACKAREA = {NATURE=1}, DISABLE = {pin = 1} },
 	getDamage = function(self, t) return self:combatTalentMindDamage(t, 6, 40) end,
-	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)) end,
-	getSlow = function(self, t) return 30 + math.ceil(self:getTalentLevel(t) * 6) end,
-	getPin = function(self, t) return 20 + math.ceil(self:getTalentLevel(t) * 5) end,
+	getDuration = function(self, t) return math.ceil(self:combatTalentScale(t, 4, 8)) end, 
+	getSlow = function(self, t) return math.ceil(self:combatTalentLimit(t, 100, 36, 60)) end, -- Limit < 100%
+	getPin = function(self, t) return math.ceil(self:combatTalentLimit(t, 100, 25, 45)) end, -- Limit < 100%
 	range = 0,
 	radius = function(self, t)
-		return 2 + math.floor(self:getTalentLevelRaw(t)/2)
+		return math.floor(self:combatTalentScale(t,2.5, 4.5, nil, 0, 0, true)) --uses raw talent level
 	end,
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
@@ -66,10 +66,10 @@ newTalent{
 		local pin = t.getPin(self, t)
 		local radius = self:getTalentRadius(t)
 		return ([[Instantly grow a moss circle of radius %d at your feet.
-		Each turn the moss deals %0.2f nature damage to any foes with in its radius.
-		This moss is very thick and sticky, all foes passing through it have their movement speed reduced by %d%% and have %d%% chances to be stuck on the ground for 4 turns.
+		Each turn the moss deals %0.2f nature damage to each foe within its radius.
+		This moss is very thick and sticky causing all foes passing through it have their movement speed reduced by %d%% and have a %d%% chance to be pinned to the ground for 4 turns.
 		The moss lasts %d turns.
-		Using a moss talent takes no turn but places all other moss talents on a 3 turns cooldown.
+		Moss talents are instant but place all other moss talents on cooldown for 3 turns.
 		The damage will increase with your Mindpower.]]):
 		format(radius, damDesc(self, DamageType.NATURE, damage), slow, pin, duration)
 	end,
@@ -85,11 +85,11 @@ newTalent{
 	no_energy = true,
 	tactical = { ATTACKAREA = {NATURE=1}, DISABLE = {pin = 1} },
 	getDamage = function(self, t) return self:combatTalentMindDamage(t, 6, 40) end,
-	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)) end,
-	getHeal = function(self, t) return 50 + math.ceil(self:getTalentLevel(t) * 12) end,
+	getDuration = function(self, t) return math.ceil(self:combatTalentScale(t,4,8)) end,
+	getHeal = function(self, t) return math.floor(self:combatTalentLimit(t, 200, 62, 110)) end, -- Limit < 200%	
 	range = 0,
 	radius = function(self, t)
-		return 2 + math.floor(self:getTalentLevelRaw(t)/2)
+		return math.floor(self:combatTalentScale(t,2.5, 4.5, nil, 0, 0, true))
 	end,
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
@@ -114,10 +114,10 @@ newTalent{
 		local heal = t.getHeal(self, t)
 		local radius = self:getTalentRadius(t)
 		return ([[Instantly grow a moss circle of radius %d at your feet.
-		Each turn the moss deals %0.2f nature damage to any foes with in its radius.
-		This moss has vampiric properties, all damage it deals also heals the user for %d%% of the damage done.
+		Each turn the moss deals %0.2f nature damage to each foe within its radius.
+		This moss has vampiric properties and heals the user for %d%% of the damage done.
 		The moss lasts %d turns.
-		Using a moss talent takes no turn but places all other moss talents on a 3 turns cooldown.
+		Moss talents are instant but place all other moss talents on cooldown for 3 turns.
 		The damage will increase with your Mindpower.]]):
 		format(radius, damDesc(self, DamageType.NATURE, damage), heal, duration)
 	end,
@@ -133,11 +133,11 @@ newTalent{
 	no_energy = true,
 	tactical = { ATTACKAREA = {NATURE=1}, DISABLE = {pin = 1} },
 	getDamage = function(self, t) return self:combatTalentMindDamage(t, 6, 40) end,
-	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)) end,
+	getDuration = function(self, t) return math.ceil(self:combatTalentScale(t, 4, 8)) end,
 	getFail = function(self, t) return math.min(50, 15 + math.ceil(self:getTalentLevel(t) * 4)) end,
 	range = 0,
 	radius = function(self, t)
-		return 2 + math.floor(self:getTalentLevelRaw(t)/2)
+		return math.floor(self:combatTalentScale(t,2.5, 4.5, nil, 0, 0, true)) 
 	end,
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
@@ -162,10 +162,10 @@ newTalent{
 		local fail = t.getFail(self, t)
 		local radius = self:getTalentRadius(t)
 		return ([[Instantly grow a moss circle of radius %d at your feet.
-		Each turn the moss deals %0.2f nature damage to any foes with in its radius.
-		This moss is very slippery, any foes trying to perform complex actions has %d%% chances of failing.
+		Each turn the moss deals %0.2f nature damage to each foe within its radius.
+		This moss is very slippery and causes affected foes to have a %d%% chance of failing to perform complex actions.
 		The moss lasts %d turns.
-		Using a moss talent takes no turn but places all other moss talents on a 3 turns cooldown.
+		Moss talents are instant but place all other moss talents on cooldown for 3 turns.
 		The damage will increase with your Mindpower.]]):
 		format(radius, damDesc(self, DamageType.NATURE, damage), fail, duration)
 	end,
@@ -181,12 +181,12 @@ newTalent{
 	no_energy = true,
 	tactical = { ATTACKAREA = {NATURE=1}, DISABLE = {pin = 1} },
 	getDamage = function(self, t) return self:combatTalentMindDamage(t, 6, 40) end,
-	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)) end,
-	getChance = function(self, t) return 20 + math.ceil(self:getTalentLevel(t) * 5.5) end,
-	getPower = function(self, t) return 15 + math.ceil(self:getTalentLevel(t) * 5) end,
+	getDuration = function(self, t) return math.ceil(self:combatTalentScale(t, 4, 8)) end,
+	getChance = function(self, t) return math.ceil(self:combatTalentLimit(t, 100, 25.5, 47.5)) end, -- Limit < 100%
+	getPower = function(self, t) return math.max(0,self:combatTalentLimit(t, 50, 20, 40)) end, -- Limit < 50%
 	range = 0,
 	radius = function(self, t)
-		return 2 + math.floor(self:getTalentLevelRaw(t)/2)
+		return math.floor(self:combatTalentScale(t,2.5, 4.5, nil, 0, 0, true))
 	end,
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
@@ -212,10 +212,10 @@ newTalent{
 		local power = t.getPower(self, t)
 		local radius = self:getTalentRadius(t)
 		return ([[Instantly grow a moss circle of radius %d at your feet.
-		Each turn the moss deals %0.2f nature damage to any foes with in its radius.
-		This moss is coated with strange fluids, any foes passing through it has %d%% chances to be confused (power %d%%) for 2 turns.
+		Each turn the moss deals %0.2f nature damage to each foe within its radius.
+		This moss is coated with strange fluids and has a %d%% chance to confuse (power %d%%) foes passing through it for 2 turns.
 		The moss lasts %d turns.
-		Using a moss talent takes no turn but places all other moss talents on a 3 turns cooldown.
+		Moss talents are instant but place all other moss talents on cooldown for 3 turns.
 		The damage will increase with your Mindpower.]]):
 		format(radius, damDesc(self, DamageType.NATURE, damage), chance, power, duration)
 	end,

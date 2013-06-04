@@ -25,9 +25,9 @@ newTalent{
 	random_ego = "attack",
 	message = "@Source@ spits acid!",
 	equilibrium = 3,
-	cooldown = function(self, t) return math.floor(8 - self:getTalentLevel(t)/3) end,
+	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 3, 6.9, 5.5)) end, -- Limit >=3
 	tactical = { ATTACK = { ACID = 2 } },
-	range = function(self, t) return math.floor(5 + self:getTalentLevel(t)/2) end,
+	range = function(self, t) return math.floor(self:combatTalentScale(t, 5.5, 7.5)) end,
 	on_learn = function(self, t) self.resists[DamageType.ACID] = (self.resists[DamageType.ACID] or 0) + 1 end,
 	on_unlearn = function(self, t) self.resists[DamageType.ACID] = (self.resists[DamageType.ACID] or 0) - 1 end,
 	direct_hit = function(self, t) if self:getTalentLevel(t) >= 5 then return true else return false end end,
@@ -74,11 +74,11 @@ newTalent{
 	range = 0,
 	on_learn = function(self, t) self.resists[DamageType.ACID] = (self.resists[DamageType.ACID] or 0) + 1 end,
 	on_unlearn = function(self, t) self.resists[DamageType.ACID] = (self.resists[DamageType.ACID] or 0) - 1 end,
-	radius = function(self, t) return 2 + self:getTalentLevel(t)/2 end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 2.5, 4.5)) end,
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentMindDamage(t, 10, 70) end,
-	getDuration = function(self, t) return 6 + self:combatMindpower(0.04) + (self:getTalentLevel(t)/2) end,
-	getCorrodeDur = function(self, t) return 2 + (self:getTalentLevel(t)/3) end,
+	getDuration = function(self, t) return math.floor(self:combatScale(self:combatMindpower(0.04) + self:getTalentLevel(t)/2, 6, 0, 7.67, 5.67)) end,
+	getCorrodeDur = function(self, t) return math.floor(self:combatTalentScale(t, 2.3, 3.8)) end,
 	getAtk = function(self, t) return self:combatTalentMindDamage(t, 2, 20) end,
 	getArmor = function(self, t) return self:combatTalentMindDamage(t, 2, 20) end,
 	getDefense = function(self, t) return self:combatTalentMindDamage(t, 2, 20) end,
@@ -93,7 +93,7 @@ newTalent{
 		local armor = t.getArmor(self, t)
 		local defense = t.getDefense(self, t)
 		local actor = self
-		local radius = 2 + self:getTalentLevel(t)/2
+		local radius = self:getTalentRadius(t)
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
 			self.x, self.y, duration,
@@ -116,7 +116,7 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local cordur = t.getCorrodeDur(self, t)
 		local atk = t.getAtk(self, t)
-		local radius = 2 + self:getTalentLevel(t)/2
+		local radius = self:getTalentRadius(t)
 		return ([[Exhale a mist of lingering acid, dealing %0.2f acid damage that can critical in a radius of %d each turn for %d turns.
 		Enemies in this mist will be corroded for %d turns, lowering their Accuracy, their Armour and their Defense by %d.
 		The damage and duration will increase with your Mindpower, and the radius will increase with talent level.
@@ -167,7 +167,7 @@ newTalent{
 	message = "@Source@ breathes acid!",
 	tactical = { ATTACKAREA = { ACID = 2 } },
 	range = 0,
-	radius = function(self, t) return 4 + self:getTalentLevelRaw(t) end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 5, 9)) end,
 	direct_hit = true,
 	requires_target = true,
 	on_learn = function(self, t) self.resists[DamageType.ACID] = (self.resists[DamageType.ACID] or 0) + 1 end,

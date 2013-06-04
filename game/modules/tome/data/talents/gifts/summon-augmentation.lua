@@ -47,9 +47,7 @@ newTalent{
 	equilibrium = 5,
 	cooldown = 25,
 	range = 10,
-	radius = function(self, t)
-		return 3 + self:getTalentLevelRaw(t)
-	end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 4, 8, 0.5, 0, 0, true)) end,
 	requires_target = true,
 	no_npc_use = true,
 	action = function(self, t)
@@ -104,8 +102,9 @@ newTalent{
 	require = gifts_req3,
 	mode = "passive",
 	points = 5,
+	incCon = function(self, t) return math.floor(self:combatTalentScale(t, 2, 10, 0.75)) end,
 	info = function(self, t)
-		return ([[Improves all your summons' lifetime and Constitution.]])
+		return ([[Improves all your summons' Constitution by %d, and adds %0.1f effective talent levels to your summon talents to determine your summons' lifetime.]]):format(t.incCon(self, t), self:getTalentLevel(t))
 	end,
 }
 
@@ -119,12 +118,13 @@ newTalent{
 	range = 10,
 	requires_target = true,
 	np_npc_use = true,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 2, 6)) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local tx, ty, target = self:getTarget(tg)
 		if not tx or not ty or not target or not target.summoner or not target.summoner == self or not target.wild_gift_summon then return nil end
 
-		local dur = 1 + self:getTalentLevel(t)
+		local dur = t.getDuration(self, t)
 		self:setEffect(self.EFF_EVASION, dur, {chance=50})
 		target:setEffect(target.EFF_EVASION, dur, {chance=50})
 
@@ -139,6 +139,6 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Switches places with one of your summons. This disorients your foes, granting both you and your summon 50%% evasion for %d turns.]]):format(1 + self:getTalentLevel(t))
+		return ([[Switches places with one of your summons. This disorients your foes, granting both you and your summon 50%% evasion for %d turns.]]):format(t.getDuration(self, t))
 	end,
 }

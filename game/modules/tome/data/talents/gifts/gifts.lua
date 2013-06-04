@@ -99,14 +99,14 @@ function checkMaxSummon(self, silent, div)
 		end
 	end
 
-	local max = math.max(1, math.floor(self:getCun() / 10))
+	local max = util.bound(math.floor(self:combatStatScale("cun", 10^.5, 10)),1,math.max(1,math.floor(self:getCun() / 10))) -- scaling slows at higher levels of cunning
 	if self:attr("nature_summon_max") then
 		max = max + self:attr("nature_summon_max")
 	end
 	max = math.ceil(max / div)
 	if nb >= max then
 		if not silent then
-			game.logPlayer(self, "#PINK#You cannot summon any more; you have too many summons already (%d). You can increase the limit with higher Cunning (+1 for every 10).", nb)
+			game.logPlayer(self, "#PINK#You can manage a maximum of %d summons at any time. You need %d Cunning to increase your limit.", nb, math.max((nb+1)*10, (nb+1)^2))
 		end
 		return true, nb, max
 	else
@@ -147,7 +147,7 @@ function setupSummon(self, m, x, y, no_control)
 			orders = {target=true, leash=true, anchor=true, talents=true},
 			on_control = function(self)
 				local summoner = self.summoner
-				self:setEffect(self.EFF_SUMMON_CONTROL, 1000, {incdur=2 + summoner:getTalentLevel(self.T_SUMMON_CONTROL) * 3, res=summoner:getCun(7, true) * summoner:getTalentLevelRaw(self.T_SUMMON_CONTROL)})
+				self:setEffect(self.EFF_SUMMON_CONTROL, 1000, {incdur=summoner:callTalent(summoner.T_SUMMON_CONTROL, "lifetime"), res=summoner:callTalent(summoner.T_SUMMON_CONTROL, "DamReduc")})
 				self:hotkeyAutoTalents()
 			end,
 			on_uncontrol = function(self)
