@@ -28,7 +28,7 @@ newEntity{
 	add_name = " (#DIGSPEED#)",
 
 	max_power = 1, power_regen = 1,
-	use_power = { name = "dig a wall, cut a tree, ...", power = 1, use = function(self, who)
+	use_power = { name = "dig a wall, cut a tree, ...", power = 0, use = function(self, who)
 		local tg = {type="bolt", range=1, nolock=true}
 		local x, y = who:getTarget(tg)
 		if not x or not y then return nil end
