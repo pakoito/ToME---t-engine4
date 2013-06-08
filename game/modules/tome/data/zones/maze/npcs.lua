@@ -143,6 +143,7 @@ newEntity{ define_as = "MINOTAUR_MAZE",
 }
 
 newEntity{ base = "BASE_NPC_SPIDER", define_as = "NIMISIL",
+	unique = true,
 	allow_infinite_dungeon = true,
 	name = "Nimisil", color=colors.VIOLET,
 	desc = [[Covered by eerie luminescent growths and protuberances, this spider now haunts the maze's silent passageways.]],

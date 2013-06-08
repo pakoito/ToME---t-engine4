@@ -27,6 +27,7 @@ local Talents = require("engine.interface.ActorTalents")
 
 newEntity{ define_as = "CELIA",
 	name = "Celia",
+	unique = true,
 	type = "humanoid", subtype = "human", image = "npc/humanoid_human_celia.png",
 	female = true,
 	display = "p", color=colors.GREY,

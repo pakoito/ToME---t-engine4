@@ -268,6 +268,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_NPC_FAEROS", define_as = "FYRK",
+	unique=true,
 	allow_infinite_dungeon = true,
 	name = "Fyrk, Faeros High Guard", color=colors.VIOLET,
 	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/elemental_fire_fyrk__faeros_high_guard.png", display_h=2, display_y=-1}}},
