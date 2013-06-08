@@ -54,6 +54,7 @@ newEntity{
 				end
 			end
 		end end
+		game.logSeen(self, "#LIGHT_BLUE#%s explodes into a huge bubble of air!", self.name:capitalize())
 	end,
 }
 
