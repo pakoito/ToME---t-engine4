@@ -40,6 +40,21 @@ newEntity{
 
 	no_breath = 1,
 	fear_immune = 1,
+
+	on_die = function(self)
+		local g = game.zone.grid_list.WATER_FLOOR_BUBBLE
+		if not g then return end
+		for i = self.x-1, self.x+1 do for j = self.y-1, self.y+1 do
+			if rng.percent(65) and game.level.map:isBound(i, j) then
+				local og = game.level.map(i, j, engine.Map.TERRAIN)
+				if og and not og.special and not og.change_level and og.type == "floor" and og.subtype == "underwater" then
+					local ng = g:clone()
+					ng:resolve() ng:resolve(nil, true)
+					game.zone:addEntity(game.level, ng, "terrain", i, j)
+				end
+			end
+		end end
+	end,
 }
 
 newEntity{ base = "BASE_NPC_HORROR_AQUATIC",

@@ -144,7 +144,7 @@ function _M:tooltip(x, y)
 	if game.level.map.lites(x, y) then tstr:add({"color", "YELLOW"}, "Lit", {"color", "LAST"}, true) end
 	if self:check("block_sight", x, y) then tstr:add({"color", "UMBER"}, "Blocks sight", {"color", "LAST"}, true) end
 	if self:check("block_move", x, y, game.player) then tstr:add({"color", "UMBER"}, "Blocks movement", {"color", "LAST"}, true) end
-	if self:attr("air_level") then tstr:add({"color", "LIGHT_BLUE"}, "Special breathing method required", {"color", "LAST"}, true) end
+	if self:attr("air_level") and self:attr("air_level") < 0 then tstr:add({"color", "LIGHT_BLUE"}, "Special breathing method required", {"color", "LAST"}, true) end
 	if self:attr("dig") then tstr:add({"color", "LIGHT_UMBER"}, "Diggable", {"color", "LAST"}, true) end
 	if game.level.map.attrs(x, y, "no_teleport") then tstr:add({"color", "VIOLET"}, "Cannot teleport to this place", {"color", "LAST"}, true) end
 
