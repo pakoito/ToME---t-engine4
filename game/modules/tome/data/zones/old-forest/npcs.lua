@@ -68,12 +68,12 @@ newEntity{ define_as = "SHARDSKIN",
 
 	resolvers.talents{
 		[Talents.T_ARMOUR_TRAINING]={base=4, every=5, max=15},
-		[Talents.T_GRAVITY_WELL]={base=2, every=6, max=6},
-		[Talents.T_BLOOD_GRASP]={base=2, every=6, max=6},
 		[Talents.T_FIRE_STORM]={base=1, every=6, max=6},
-		[Talents.T_SOUL_ROT]={base=1, every=6, max=6},
-		[Talents.T_FLAME]={base=2, every=6, max=6},
+		[Talents.T_BLOOD_SPRAY]={base=1, every=6, max=6},
+		[Talents.T_BONE_GRAB]={base=1, every=6, max=6},
+		[Talents.T_FLAME]={base=1, every=6, max=6},
 	},
+	inc_damage = { [DamageType.BLIGHT] = -40, [DamageType.FIRE] = -20 },
 
 	autolevel = "caster",
 	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
