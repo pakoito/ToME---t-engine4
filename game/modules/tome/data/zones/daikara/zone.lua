@@ -76,8 +76,8 @@ return {
 			generator =  {
 				map = {
 					class = "mod.class.generator.map.Caldera",
-					trees_max_percent = 70,
-					trees_sqrt_percent = 20,
+					trees_max_percent = 80,
+					trees_sqrt_percent = 30,
 					mountain = "MOUNTAIN_WALL",
 					tree = "ROCKY_SNOWY_TREE",
 					grass = function() return rng.percent(60) and "ROCKY_GROUND" or "LAVA_FLOOR" end,

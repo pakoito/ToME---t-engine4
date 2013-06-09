@@ -64,7 +64,7 @@ game.zone.on_turn = function()
 	local x, y, si = nil, nil, nil
 	for i = 1, #game.zone.pyroclast_event_levels[game.level.level] do
 		local fx, fy = game.zone.pyroclast_event_levels[game.level.level][i].x, game.zone.pyroclast_event_levels[game.level.level][i].y
-		if core.fov.distance(p.x, p.y, fx, fy) < 3 then x, y, si = fx, fy, i break end
+		if core.fov.distance(p.x, p.y, fx, fy) < 6 then x, y, si = fx, fy, i break end
 	end
 
 	if not x then return end
