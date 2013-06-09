@@ -37,7 +37,7 @@ else
 			e.level_range[1] = e.level_range[1] - 9
 			e.start_level = e.start_level - 9
 			e.inc_damage = e.inc_damage or {}
-			e.inc_damage.all = (e.inc_damage.all or 0) - 30
+			e.inc_damage.all = (e.inc_damage.all or 0) - 40
 			e.healing_factor = 0.4
 			e.combat_def = math.max(0, (e.combat_def or 0) - 12)
 		end
@@ -78,7 +78,6 @@ It seems to have fallen prey to the shivgoroth invading the area. Dead and froze
 		resolvers.talents{
 			[Talents.T_FROST_GRAB]={base=1, every=6, max=6},
 			[Talents.T_ICE_STORM]={base=1, every=6, max=6},
-			[Talents.T_FROZEN_GROUND]={base=1, every=6, max=6},
 		},
 
 		autolevel = "caster",
