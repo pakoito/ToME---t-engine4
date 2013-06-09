@@ -18,7 +18,6 @@
 -- darkgod@te4.org
 
 local layout = game.state:alternateZone(short_name, {"BIGWORM", 2})
-layout="BIGWORM"
 local is_bigworm = layout == "BIGWORM"
 
 if layout == "DEFAULT" then
