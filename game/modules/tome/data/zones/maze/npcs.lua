@@ -36,7 +36,7 @@ else
 	load("/data/general/npcs/jelly.lua", rarity(3))
 	load("/data/general/npcs/thieve.lua", rarity(0))
 	load("/data/general/npcs/horror-corrupted.lua", rarity(0))
-	load("/data/general/npcs/horror.lua", rarity(0))
+	load("/data/general/npcs/horror_temporal.lua", rarity(1))
 
 	load("/data/general/npcs/all.lua", rarity(4, 35))
 end
