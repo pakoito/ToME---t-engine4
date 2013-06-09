@@ -18,6 +18,7 @@
 -- darkgod@te4.org
 
 local layout = game.state:alternateZone(short_name, {"BIGWORM", 2})
+layout="BIGWORM"
 local is_bigworm = layout == "BIGWORM"
 
 if layout == "DEFAULT" then
@@ -188,10 +189,12 @@ return {
 		end
 	end,
 
+	last_worm_turn = 0,
 	on_turn = function(self)
 		if game.turn % 100 ~= 0 or game.level.level ~= 1 then return end
+		if game.level.data.last_worm_turn > game.turn - 800 then return end
 
-		for uid, e in pairs(game.level.entities) do if e.define_as == "SANDWORM_TUNNELER_HUGE" then return end end
+--		for uid, e in pairs(game.level.entities) do if e.define_as == "SANDWORM_TUNNELER_HUGE" then return end end
 
 		local tx, ty = util.findFreeGrid(game.level.default_up.x+2, game.level.default_up.y, 5, true, {[engine.Map.ACTOR]=true})
 		if not tx then return end
@@ -199,6 +202,7 @@ return {
 		if not m then return end
 		game.zone:addEntity(game.level, m, "actor", tx, ty)
 		game.log("#OLIVE_DRAB#You feel the ground shacking from the west.")
+		game.level.data.last_worm_turn = game.turn
 	end,
 }
 
