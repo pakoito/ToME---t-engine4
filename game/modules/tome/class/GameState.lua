@@ -1948,6 +1948,7 @@ function _M:startEvents()
 				local list = f()
 				for j, ee in ipairs(list) do
 					if e.percent_factor and ee.percent then ee.percent = math.floor(ee.percent * e.percent_factor) end
+					if e.forbid then ee.forbid = table.append(ee.forbid or {}, e.forbid) end
 					if ee.name then if ee.minor then mevts[#mevts+1] = ee else evts[#evts+1] = ee end end
 				end
 			end

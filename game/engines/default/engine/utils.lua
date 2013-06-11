@@ -185,6 +185,7 @@ end
 
 function table.append(dst, src)
 	for i = 1, #src do dst[#dst+1] = src[i] end
+	return dst
 end
 
 function table.reverse(t)

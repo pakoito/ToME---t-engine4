@@ -18,10 +18,10 @@
 -- darkgod@te4.org
 
 return { one_per_level=true,
-	{group="majeyal-generic", percent_factor=1.5},
-	{name="cultists", percent=10},
-	{name="glimmerstone", minor=true, percent=100, max_repeat=4},
+	{group="majeyal-generic", percent_factor=1.5, forbid={4}},
+	{name="cultists", percent=10, forbid={4}},
+	{name="glimmerstone", minor=true, percent=100, max_repeat=4, forbid={4}},
 	{name="whistling-vortex", minor=true, percent=50},
 	{name="fell-aura", minor=true, percent=50, max_repeat=3},
-	{name="glowing-chest", minor=true, percent=80, max_repeat=4},
+	{name="glowing-chest", minor=true, percent=80, max_repeat=4, forbid={4}},
 }
