@@ -643,6 +643,7 @@ function _M:getLevelData(lev)
 	if self.levels[lev] then
 		table.merge(res, self.levels[lev], true, self._no_save_fields)
 	end
+	if res.alter_level_data then res.alter_level_data(self, lev) end
 	-- Make sure it is not considered a class
 	res.__CLASSNAME = nil
 	return res
