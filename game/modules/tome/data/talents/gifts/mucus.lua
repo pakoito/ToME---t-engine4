@@ -32,7 +32,7 @@ newTalent{
 	cooldown = 20,
 	no_energy = true,
 	tactical = { BUFF = 2 },
-	getDur = function(self, t) return math.min(8,  math.floor(self:getTalentLevel(t) * 1.3)) end,
+	getDur = function(self, t) return math.floor(self:combatTalentLimit(t, 20, 4, 6.5)) end, -- Limit < 20
 	getDamage = function(self, t) return self:combatTalentMindDamage(t, 5, 90) end,
 	getEqui = function(self, t) return self:combatTalentMindDamage(t, 5, 20) end,
 	trigger = function(self, t, x, y, rad) 
