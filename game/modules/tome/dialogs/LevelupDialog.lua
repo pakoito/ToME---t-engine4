@@ -455,6 +455,7 @@ function _M:generateList()
 						rawname=t.name,
 						entity=t.display_entity,
 						talent=t.id,
+						break_line=t.levelup_screen_break_line,
 						isgeneric=isgeneric and 0 or 1,
 						_type=tt.type,
 						do_shadow = function(item) if not self.actor:canLearnTalent(t) then return true else return false end end,

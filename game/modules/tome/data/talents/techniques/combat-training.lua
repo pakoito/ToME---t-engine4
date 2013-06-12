@@ -84,6 +84,7 @@ newTalent{
 	name = "Combat Accuracy", short_name = "WEAPON_COMBAT",
 	type = {"technique/combat-training", 1},
 	points = 5,
+	levelup_screen_break_line = true,
 	require = { level=function(level) return (level - 1) * 4 end },
 	mode = "passive",
 	getAttack = function(self, t) return self:getTalentLevel(t) * 10 end,

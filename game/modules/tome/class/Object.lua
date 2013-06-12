@@ -465,6 +465,11 @@ function _M:getTextualDesc(compare_with)
 			desc:add("Damage type: ", col[2],DamageType:get(combat.damtype or DamageType.PHYSICAL).name:capitalize(),{"color","LAST"}, true)
 		end
 
+		if combat.talented then
+			local t = game.player:combatGetTraining(combat)
+			if t and t.name then desc:add("Mastery: ", {"color","GOLD"}, t.name, {"color","LAST"}, true) end
+		end
+
 		if combat.wil_attack then
 			desc:add("Accuracy is based on willpower for this weapon.", true)
 		end

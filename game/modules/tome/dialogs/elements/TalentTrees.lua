@@ -405,6 +405,7 @@ function _M:display(x, y, nb_keyframes, screen_x, screen_y)
 		end
 
 		local addh = 0
+		local startdx = dx
 		if tree.shown then for j = 1, #tree.nodes do
 			local tal = tree.nodes[j]
 
@@ -424,8 +425,13 @@ function _M:display(x, y, nb_keyframes, screen_x, screen_y)
 
 			mz[#mz+1] = {i=i, j=j, name=tal.name, item=tal, x1=dx-bdx, y1=dy-bdy, x2=dx+self.frame_size-bdx, y2=dy-bdy+self.frame_size+addh}
 
-			dx = dx + self.frame_size + self.frame_offset
-			addh = addh + self.frame_size
+			if tal.break_line then
+				dx = startdx
+				dy = dy + self.frame_size + addh + 8
+			else
+				dx = dx + self.frame_size + self.frame_offset
+				addh = addh + self.frame_size
+			end
 		end end
 		--self.max_display = i - self.scroll + 1
 		dx = 0

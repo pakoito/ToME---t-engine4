@@ -890,6 +890,14 @@ _M.weapon_talents = {
 }
 
 --- Checks weapon training
+function _M:combatGetTraining(weapon)
+	if not weapon then return nil end
+	if not weapon.talented then return nil end
+	if not weapon_talents[weapon.talented] then return nil end
+	return self:getTalentFromId(weapon_talents[weapon.talented])
+end
+
+--- Checks weapon training
 function _M:combatCheckTraining(weapon)
 	if not weapon then return 0 end
 	if not weapon.talented then return 0 end
