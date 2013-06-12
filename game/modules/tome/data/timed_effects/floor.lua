@@ -98,7 +98,7 @@ floorEffect{
 	activate = function(self, eff)
 		eff.power = 3 + game.zone:level_adjust_level(game.level, game.zone, "object") / 5
 		self:effectTemporaryValue(eff, "combat_armor", eff.power)
-		self:effectTemporaryValue(eff, "combat_physicalresist", eff.power * 3)
+		self:effectTemporaryValue(eff, "combat_physresist", eff.power * 3)
 	end,
 }
 
