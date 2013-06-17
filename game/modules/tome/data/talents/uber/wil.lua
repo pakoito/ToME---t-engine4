@@ -94,7 +94,7 @@ uberTalent{
 					local target = game.level.map(px, py, Map.ACTOR)
 					if target then
 						if target:canBe("stun") then
-							target:setEffect(target.EFF_STUNNED, 3, {apply_power=src:combatSpellpower()})
+							target:setEffect(target.EFF_STUNNED, 3, {apply_power=math.max(src:combatSpellpower(), src:combatMindpower())})
 						else
 							game.logSeen(target, "%s resists the stun!", target.name:capitalize())
 						end
