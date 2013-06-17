@@ -78,7 +78,7 @@ newTalent{
 		local radius = self:getTalentRadius(t)
 		local heal = t.getHeal(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[A magical zone of Sunlight appears around you, healing all within radius %d for %0.2f per turn and increasing healing effects on everyone within by %d%%. The effect lasts for %d turns.
+		return ([[A magical zone of Sunlight appears around you, healing and shielding all within radius %d for %0.2f per turn and increasing healing effects on everyone within by %d%%. The effect lasts for %d turns.
 		It also lights up the affected zone.
 		The amount healed will increase with the Magic stat]]):
 		format(radius, heal, heal, duration)
