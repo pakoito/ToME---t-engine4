@@ -270,7 +270,7 @@ newEntity{ base = "BASE_NPC_HORROR", define_as = "BASE_NPC_ELDRICTH_EYE",
 	talent_cd_reduction = {all=100},
 
 	on_die = function(self, src)
-		if not self.summoner then return end
+		if not self.summoner or not self.summoner.is_headless_horror then return end
 		game.logSeen(self, "#AQUAMARINE#As %s falls %s seems to weaken!", self.name, self.summoner.name)
 		local damtype = next(self.resists)
 		self.summoner.resists.all = (self.summoner.resists.all or 0) - 30
