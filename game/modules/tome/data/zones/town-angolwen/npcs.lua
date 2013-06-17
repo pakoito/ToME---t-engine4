@@ -97,6 +97,17 @@ newEntity{ define_as = "SUPREME_ARCHMAGE_LINANIIL",
 	resolvers.sustains_at_birth(),
 
 	can_talk = "angolwen-leader",
+
+	self_resurrect = 5,
+	on_resurrect = function(self)
+		game.bignews:saySimple(120, "#GOLD#Linaniil concentrate her formidable will to restore her body!")
+		self.inc_damage.all = self.inc_damage.all + 35
+		self.max_life = self.max_life * 1.3
+		self.life = self.life * 1.3
+	end,
+	on_die = function(self)
+		world:gainAchievement("LINANIIL_DEAD", game.player)
+	end,
 }
 
 newEntity{ define_as = "TARELION",

@@ -235,3 +235,11 @@ newAchievement{
 	desc = [[Killed Myssil, causing her to drop the Rod of Recall.]],
 	mode = "player",
 }
+
+newAchievement{
+	name = "Now, this is impressive!", id = "LINANIIL_DEAD",
+	image = "npc/humanoid_human_linaniil_supreme_archmage.png",
+	show = "full", huge=true,
+	desc = [[Killed Linaniil, the Supreme Archmage of Angolwen.]],
+	mode = "player",
+}
