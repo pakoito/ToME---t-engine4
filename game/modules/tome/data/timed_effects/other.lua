@@ -307,6 +307,10 @@ newEffect{
 	subtype = { time=true },
 	status = "beneficial",
 	parameters = { power=10 },
+	cancel_on_level_change = function(self, eff)
+		game.logPlayer(game.player, "#LIGHT_BLUE#Precognition fizzles and dissipates.")
+		game._chronoworlds = nil
+	end,
 	activate = function(self, eff)
 		game:onTickEnd(function()
 			game:chronoClone("precognition")
