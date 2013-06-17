@@ -68,7 +68,7 @@ uberTalent{
 	name = "Windblade",
 	mode = "activated",
 	require = { special={desc="Have dealt over 50000 damage with dual wielded weapons", fct=function(self) return self.damage_log and self.damage_log.weapon.dualwield and self.damage_log.weapon.dualwield >= 50000 end} },
-	cooldown = 20,
+	cooldown = 12,
 	radius = 2,
 	range = 1,
 	tactical = { ATTACK = { PHYSICAL=2 }, DISABLE = { disarm = 2 } },
@@ -80,7 +80,7 @@ uberTalent{
 		self:project(tg, self.x, self.y, function(px, py, tg, self)
 			local target = game.level.map(px, py, Map.ACTOR)
 			if target and target ~= self then
-				local hit = self:attackTarget(target, nil, 2.2, true)
+				local hit = self:attackTarget(target, nil, 3.2, true)
 				if hit and target:canBe("disarm") then
 					target:setEffect(target.EFF_DISARMED, 4, {})
 				end
@@ -90,7 +90,7 @@ uberTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You spin madly, generating a sharp gust of wind with your weapon, dealing 220%% weapon damage to all foes within radius 2 and disarming them for 4 turns.]])
+		return ([[You spin madly, generating a sharp gust of wind with your weapon, dealing 320%% weapon damage to all foes within radius 2 and disarming them for 4 turns.]])
 		:format()
 	end,
 }
