@@ -23,6 +23,8 @@ local Map = require "engine.Map"
 
 module(..., package.seeall, class.inherit(Zone))
 
+_M:enableLastPersistZones(3)
+
 --- Called when the zone file is loaded
 function _M:onLoadZoneFile(basedir)
 	-- Load events if they exist

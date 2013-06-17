@@ -48,9 +48,48 @@ function _M:setup(t)
 	self.ood_factor = t.ood_factor or 3
 end
 
+--- Set a cache of the last visited zones
+-- Static method
+-- Zones will be kept in memory (up to max last zones) and the cache will be used to reload, removing the need for disk load, thus speeding up loading
+function _M:enableLastPersistZones(max)
+	_M.persist_last_zones = { config = {max=max} }
+end
+
+function _M:addLastPersistZone(zone)
+	while #_M.persist_last_zones > _M.persist_last_zones.config.max do
+		local id = table.remove(_M.persist_last_zones)
+		forceprint("[ZONE] forgetting old zone", id)
+		local zone = _M.persist_last_zones[id]
+		_M.persist_last_zones[id] = nil
+	end
+
+	_M.persist_last_zones[zone.short_name] = zone
+	table.insert(_M.persist_last_zones, 1, zone.short_name)
+end
+
+function _M:removeLastPersistZone(id)
+	for i = 1, #_M.persist_last_zones do
+		if _M.persist_last_zones[i] == id then
+			table.remove(_M.persist_last_zones, i)
+			forceprint("[ZONE] using old zone", id)
+			_M.persist_last_zones[id] = nil
+			return
+		end
+	end
+end
+
 --- Loads a zone definition
 -- @param short_name the short name of the zone to load, if should correspond to a directory in your module data/zones/short_name/ with a zone.lua, npcs.lua, grids.lua and objects.lua files inside
 function _M:init(short_name, dynamic)
+	if _M.persist_last_zones and _M.persist_last_zones[short_name] then
+		local zone = _M.persist_last_zones[short_name]
+		forceprint("[ZONE] loading from last persistent", short_name, zone)
+		_M:removeLastPersistZone(short_name)
+		self:replaceWith(zone)
+		_M:addLastPersistZone(self)
+		return
+	end
+
 	self.short_name = short_name
 	self.specific_base_level = self.specific_base_level or {}
 	if not self:load(dynamic) then
@@ -68,6 +107,11 @@ function _M:init(short_name, dynamic)
 	else
 		if self.update_base_level_on_enter then self:updateBaseLevel() end
 		forceprint("Loaded zone", self.name, "with base_level", self.base_level)
+	end
+
+	if _M.persist_last_zones then
+		forceprint("[ZONE] persisting to persist_last_zones", self.short_name)
+		_M:addLastPersistZone(self)
 	end
 end
 
@@ -686,6 +730,7 @@ function _M:getLevel(game, lev, old_lev, no_close)
 
 	local level_data = self:getLevelData(lev)
 
+	local levelid = self.short_name.."-"..lev
 	local level
 	local new_level = false
 	-- Load persistent level?
@@ -724,7 +769,7 @@ function _M:getLevel(game, lev, old_lev, no_close)
 		core.display.forceRedraw()
 
 		game.memory_levels = game.memory_levels or {}
-		level = game.memory_levels[self.short_name.."-"..lev]
+		level = game.memory_levels[levelid]
 
 		if level then
 			-- Setup the level in the game

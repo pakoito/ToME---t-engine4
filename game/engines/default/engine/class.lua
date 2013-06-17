@@ -216,8 +216,8 @@ function _M:replaceWith(t)
 	if self.replacedWith then self:replacedWith(false, t) end
 
 	-- Delete fields
-	for k, e in pairs(self) do
-		self[k] = nil
+	while next(self) do
+		self[next(self)] = nil
 	end
 	for k, e in pairs(t) do
 		self[k] = e

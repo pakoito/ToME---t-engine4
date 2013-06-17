@@ -1705,7 +1705,7 @@ newDamageType{
 			if dam >= 100 then target:attr("allow_on_heal", -1) end
 		elseif target then
 			DamageType:get(DamageType.LIGHT).projector(src, x, y, DamageType.LIGHT, dam)
-			DamageType:get(DamageType.LIGHT).projector(src, x, y, DamageType.FIREBURN, {dam=dam, dur=2, initial=0})
+			DamageType:get(DamageType.FIREBURN).projector(src, x, y, DamageType.FIREBURN, {dam=dam, dur=2, initial=0})
 		end
 	end,
 }
