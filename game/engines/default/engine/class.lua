@@ -276,6 +276,7 @@ end
 -- ---------------------------------------------------------------------
 -- ---------------------------------------------------------------------
 
+__zipname_zf_store = {}
 function _M:save(filter, allow)
 	filter = filter or {}
 	if self._no_save_fields then table.merge(filter, self._no_save_fields) end

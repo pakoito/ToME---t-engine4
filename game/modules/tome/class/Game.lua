@@ -1890,7 +1890,7 @@ end
 
 --- Requests the game to save
 function _M:saveGame()
-	self:registerHighscore()
+	--self:registerHighscore()
 
 	if self.party then for actor, _ in pairs(self.party.members) do engine.interface.PlayerHotkeys:updateQuickHotkeys(actor) end end
 

@@ -26,6 +26,7 @@
 extern int luaopen_serial(lua_State *L);
 
 typedef struct {
+    zipFile *zf;
 	const char *zfname;
     char *buf;
     long bufpos;

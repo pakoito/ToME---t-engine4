@@ -34,6 +34,7 @@
  * This simply takes a list of buffers & zip files to save and do it
  ********************************************************************/
 struct s_save_queue_type {
+	zipFile *zf;
 	char *zfname;
 	char *filename;
 	char *payload;
@@ -54,11 +55,14 @@ typedef struct {
 	SDL_mutex *lock_oqueue;
 } save_type;
 
-save_type *main_save;
+static save_type *main_save = NULL;
+static char *last_zipname = NULL;
+static zipFile *last_zf = NULL;
 
-static void push_save(const char *zfname, const char *filename, char *payload, size_t payload_len)
+static void push_save(zipFile *zf, const char *zfname, const char *filename, char *payload, size_t payload_len)
 {
 	save_queue *q = malloc(sizeof(save_queue));
+	q->zf = zf;
 	q->zfname = strdup(zfname);
 	q->filename = strdup(filename);
 	q->payload = payload;
@@ -155,7 +159,11 @@ int thread_save(void *data)
 
 		while (1) {
 			save_queue *q = pop_save();
-			if (!q) break;
+			if (!q) {
+				if (last_zipname) free(last_zipname);
+				last_zipname = NULL; last_zf = NULL;
+				break;
+			}
 			
 			if (!zipname || strcmp(zipname, q->zfname)) {
 				if (zf) {
@@ -167,7 +175,7 @@ int thread_save(void *data)
 					printf("Saving zipname %s\n", q->zfname);
 				}
 				zipname = strdup(q->zfname);
-				zf = zipOpen(zipname, APPEND_STATUS_CREATE);
+				zf = q->zf;
 			}
 
 //			printf("* %s<%s> : %ld\n", q->zfname, q->filename, q->payload_len);
@@ -258,6 +266,17 @@ static int serial_new(lua_State *L)
 	serial_type *s = (serial_type*)lua_newuserdata(L, sizeof(serial_type));
 	auxiliar_setclass(L, "core{serial}", -1);
 
+	zipFile *zf = NULL;
+	if (!last_zipname || strcmp(last_zipname, zfname)) {
+		zf = zipOpen(zfname, APPEND_STATUS_CREATE);
+		last_zf = zf;
+		if (last_zipname) free(last_zipname);
+		last_zipname = strdup(zfname);
+	} else {
+		zf = last_zf;
+	}
+
+	s->zf = zf;
 	s->zfname = zfname;
 	s->fname = fname_ref;
 	s->fadd = fadd_ref;
@@ -476,7 +495,7 @@ static int serial_tozip(lua_State *L)
 	}
 	writeTblFixed(s, "\nreturn d", 9);
 
-	push_save(s->zfname, filename, s->buf, s->bufpos);
+	push_save(s->zf, s->zfname, filename, s->buf, s->bufpos);
 
 	lua_pushboolean(L, TRUE);
 	return 1;
