@@ -83,6 +83,53 @@ function _M:doFOV()
 	end
 end
 
+local function spotHostiles(self)
+	local seen = {}
+	if not self.x then return seen end
+
+	-- Check for visible monsters, only see LOS actors, so telepathy wont prevent resting
+	core.fov.calc_circle(self.x, self.y, game.level.map.w, game.level.map.h, self.sight or 10, function(_, x, y) return game.level.map:opaque(x, y) end, function(_, x, y)
+		local actor = game.level.map(x, y, game.level.map.ACTOR)
+		if actor and self:reactionToward(actor) < 0 and self:canSee(actor) and game.level.map.seens(x, y) then
+			seen[#seen + 1] = {x=x,y=y,actor=actor}
+		end
+	end, nil)
+	return seen
+end
+
+--- Try to auto use listed talents
+-- This should be called in your actors "act()" method
+function _M:automaticTalents()
+	if self.no_automatic_talents then return end
+
+	self:attr("_forbid_sounds", 1)
+	for tid, c in pairs(self.talents_auto) do
+		local t = self.talents_def[tid]
+		local spotted = spotHostiles(self)
+		if (t.mode ~= "sustained" or not self.sustain_talents[tid]) and not self.talents_cd[tid] and self:preUseTalent(t, true, true) and (not t.auto_use_check or t.auto_use_check(self, t)) then
+			if (c == 1) or (c == 2 and #spotted <= 0) or (c == 3 and #spotted > 0) then
+				if c ~= 2 then
+					-- Do not fire hostile talents
+					--self:useTalent(tid)
+				else
+					if not self:attr("blind") then
+						self:useTalent(tid,nil,nil,nil,self)
+					end
+				end
+			end
+			if c == 4 and #spotted > 0 then
+				for fid, foe in pairs(spotted) do
+					if foe.x >= self.x-1 and foe.x <= self.x+1 and foe.y >= self.y-1 and foe.y <= self.y+1 then
+						self:useTalent(tid)
+						break
+					end
+				end
+			end
+		end
+	end
+	self:attr("_forbid_sounds", -1)
+end
+
 --- Create a line to target based on field of vision
 function _M:lineFOV(tx, ty, extra_block, block, sx, sy)
 	sx = sx or self.x
