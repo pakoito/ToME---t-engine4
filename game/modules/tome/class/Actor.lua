@@ -1759,7 +1759,7 @@ function _M:onTakeHit(value, src)
 		end
 	end
 
-	if self:isTalentActive(self.T_BONE_SHIELD) then
+	if self:isTalentActive(self.T_BONE_SHIELD) and value > 0 then
 		local t = self:getTalentFromId(self.T_BONE_SHIELD)
 		if t.absorb(self, t, self:isTalentActive(self.T_BONE_SHIELD)) then
 			value = 0
