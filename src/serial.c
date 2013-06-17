@@ -49,6 +49,9 @@ typedef struct {
 	save_queue *iqueue_head, *iqueue_tail;
 	SDL_mutex *lock_iqueue;
 	SDL_sem *wait_iqueue;
+
+	save_queue *oqueue_head, *oqueue_tail;
+	SDL_mutex *lock_oqueue;
 } save_type;
 
 save_type *main_save;
@@ -86,6 +89,44 @@ static save_queue *pop_save()
 	return q;
 }
 
+static void push_save_return(const char *zipname)
+{
+	save_queue *q = malloc(sizeof(save_queue));
+	q->zfname = strdup(zipname);
+
+	SDL_mutexP(main_save->lock_oqueue);
+	if (!(main_save->oqueue_tail)) main_save->oqueue_head = q;
+	else main_save->oqueue_tail->next = q;
+	q->next = NULL;
+	main_save->oqueue_tail = q;
+	SDL_mutexV(main_save->lock_oqueue);
+}
+
+static int pop_save_return(lua_State *L)
+{
+	save_queue *q = NULL;
+	SDL_mutexP(main_save->lock_oqueue);
+	if (main_save->oqueue_head)
+	{
+		q = main_save->oqueue_head;
+		if (q) main_save->oqueue_head = q->next;
+		if (!main_save->oqueue_head) main_save->oqueue_tail = NULL;
+	}
+	SDL_mutexV(main_save->lock_oqueue);
+
+	if (q)
+	{
+		lua_pushstring(L, q->zfname);
+		free(q->zfname);
+		free(q);
+	}
+	else
+		lua_pushnil(L);
+
+	return 1;
+}
+
+
 void finish_zip(const char *zipname) 
 {
 	int len = strlen(zipname);
@@ -94,7 +135,12 @@ void finish_zip(const char *zipname)
 		newname[len - 4] = '\0';
 		PHYSFS_delete(newname);
 		PHYSFS_rename(zipname, newname);
+		push_save_return(newname);
 		free(newname);
+	}
+	else 
+	{
+		push_save_return(zipname);
 	}
 }
 
@@ -111,8 +157,6 @@ int thread_save(void *data)
 			save_queue *q = pop_save();
 			if (!q) break;
 			
-				if (zipname) printf("testing '%s' ?=? '%s' : %d \n", zipname, q->zfname ,strcmp(zipname, q->zfname));
-
 			if (!zipname || strcmp(zipname, q->zfname)) {
 				if (zf) {
 					zipClose(zf, NULL);
@@ -126,7 +170,7 @@ int thread_save(void *data)
 				zf = zipOpen(zipname, APPEND_STATUS_CREATE);
 			}
 
-			printf("* %s<%s> : %ld\n", q->zfname, q->filename, q->payload_len);
+//			printf("* %s<%s> : %ld\n", q->zfname, q->filename, q->payload_len);
 
 			/* Init the zip entry */
 			int err=0;
@@ -178,6 +222,7 @@ void create_save_thread()
 	save->iqueue_head = save->iqueue_tail = NULL;
 	save->lock_iqueue = SDL_CreateMutex();
 	save->wait_iqueue = SDL_CreateSemaphore(0);
+	save->lock_oqueue = SDL_CreateMutex();
 
 	thread = SDL_CreateThread(thread_save, "save", save);
 	if (thread == NULL) {
@@ -448,6 +493,7 @@ static const struct luaL_Reg seriallib[] =
 {
 	{"new", serial_new},
 	{"threadSave", serial_order_realsave},
+	{"popSaveReturn", pop_save_return},
 	{NULL, NULL},
 };
 
