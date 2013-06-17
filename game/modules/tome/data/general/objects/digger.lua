@@ -17,6 +17,9 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local Stats = require "engine.interface.ActorStats"
+local Talents = require "engine.interface.ActorTalents"
+
 newEntity{
 	define_as = "BASE_DIGGER",
 	slot = "TOOL",
@@ -27,31 +30,9 @@ newEntity{
 	desc = [[Allows you to dig a wall, remove a tree, create ways.]],
 	add_name = " (#DIGSPEED#)",
 
-	max_power = 1, power_regen = 1,
-	use_power = { name = "dig a wall, cut a tree, ...", power = 0, use = function(self, who)
-		local tg = {type="bolt", range=1, nolock=true}
-		local x, y = who:getTarget(tg)
-		if not x or not y then return nil end
-
-		local wait = function()
-			local co = coroutine.running()
-			local ok = false
-			who:restInit(self.digspeed, "digging", "dug", function(cnt, max)
-				if cnt > max then ok = true end
-				coroutine.resume(co)
-			end)
-			coroutine.yield()
-			if not ok then
-				game.logPlayer(who, "You have been interrupted!")
-				return false
-			end
-			return true
-		end
-		if wait() then
-			who:project(tg, x, y, engine.DamageType.DIG, 1)
-		end
-		return {id=true, used=true}
-	end},
+	carrier = {
+		learn_talent = { [Talents.T_DIG_OBJECT] = 1, },
+	},
 
 	egos = "/data/general/objects/egos/digger.lua", egos_chance = resolvers.mbonus(10, 5),
 }
@@ -62,6 +43,9 @@ newEntity{ base = "BASE_DIGGER",
 	cost = 3,
 	material_level = 1,
 	digspeed = resolvers.rngavg(35,40),
+	wielder = {
+		inc_stats = { [Stats.STAT_STR] = 1, },
+	},
 }
 
 newEntity{ base = "BASE_DIGGER",
@@ -70,6 +54,9 @@ newEntity{ base = "BASE_DIGGER",
 	cost = 3,
 	material_level = 3,
 	digspeed = resolvers.rngavg(27,33),
+	wielder = {
+		inc_stats = { [Stats.STAT_STR] = 2, },
+	},
 }
 
 newEntity{ base = "BASE_DIGGER",
@@ -78,4 +65,7 @@ newEntity{ base = "BASE_DIGGER",
 	cost = 3,
 	material_level = 5,
 	digspeed = resolvers.rngavg(20,25),
+	wielder = {
+		inc_stats = { [Stats.STAT_STR] = 3, },
+	},
 }

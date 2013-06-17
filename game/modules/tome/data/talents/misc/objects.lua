@@ -402,3 +402,54 @@ newTalent{
 		return ([[Remove any talent Morrigor has absorbed.]])
 	end,
 }
+
+newTalent{
+	name = "Dig", short_name = "DIG_OBJECT",
+	type = {"misc/objects", 1},
+	findBest = function(self, t)
+		local best = nil
+		local find = function(inven)
+			for item, o in ipairs(inven) do
+				if o.digspeed and (not best or o.digspeed < best.digspeed) then best = o end
+			end
+		end
+		for inven_id, inven in pairs(self.inven) do find(inven) end
+		return best
+	end,
+	points = 1,
+	hard_cap = 1,
+	no_npc_use = true,
+	action = function(self, t)
+		local best = t.findBest(self, t)
+		if not best then game.logPlayer(self, "You require a digger to dig.") return end
+
+		local tg = {type="bolt", range=1, nolock=true}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+
+		local wait = function()
+			local co = coroutine.running()
+			local ok = false
+			self:restInit(best.digspeed, "digging", "dug", function(cnt, max)
+				if cnt > max then ok = true end
+				coroutine.resume(co)
+			end)
+			coroutine.yield()
+			if not ok then
+				game.logPlayer(self, "You have been interrupted!")
+				return false
+			end
+			return true
+		end
+		if wait() then
+			self:project(tg, x, y, engine.DamageType.DIG, 1)
+		end
+
+		return true
+	end,
+	info = function(self, t)
+		local best = t.findBest(self, t) or {digspeed=100}
+		return ([[Dig/cut a tree/...
+		Digging takes %d turns (based on your currently best digger available).]]):format(best.digspeed)
+	end,
+}

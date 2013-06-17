@@ -3010,6 +3010,13 @@ function _M:onAddObject(o)
 
 	engine.interface.ActorInventory.onAddObject(self, o)
 
+	-- Learn Talent
+	if o.carrier and o.carrier.learn_talent then
+		for tid, level in pairs(o.carrier.learn_talent) do
+			self:learnItemTalent(o, tid, level)
+		end
+	end
+
 	self:checkEncumbrance()
 
 	-- Achievement checks
@@ -3024,6 +3031,12 @@ end
 --- Call when an object is removed
 function _M:onRemoveObject(o)
 	engine.interface.ActorInventory.onRemoveObject(self, o)
+
+	if o.carrier and o.carrier.learn_talent then
+		for tid, level in pairs(o.carrier.learn_talent) do
+			self:unlearnItemTalent(o, tid, level)
+		end
+	end
 
 	self:checkEncumbrance()
 end
