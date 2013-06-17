@@ -866,7 +866,7 @@ newEffect{
 	type = "mental",
 	subtype = { madness=true, stun=true },
 	status = "detrimental",
-	parameters = {},
+	parameters = {mindResistChange = -10},
 	on_gain = function(self, err) return "#F53CBE##Target# is stunned by madness!", "+Stunned" end,
 	on_lose = function(self, err) return "#Target# overcomes the madness", "-Stunned" end,
 	activate = function(self, eff)

@@ -3650,7 +3650,7 @@ newEntity{ base = "BASE_LONGSWORD",
 			local eff = rng.table{"stun", "malign", "agony", "confusion", "silence",}
 			if not target:canBe(eff) then return end
 			if not who:checkHit(who:combatMindpower(), target:combatMentalResist()) then return end
-			if eff == "stun" then target:setEffect(target.EFF_MADNESS_STUNNED, 3, {})
+			if eff == "stun" then target:setEffect(target.EFF_MADNESS_STUNNED, 3, {mindResistChange=-25})
 			elseif eff == "malign" then target:setEffect(target.EFF_MALIGNED, 3, {resistAllChange=10})
 			elseif eff == "agony" then target:setEffect(target.EFF_AGONY, 5, { source=who, damage=40, mindpower=40, range=10, minPercent=10, duration=5})
 			elseif eff == "confusion" then target:setEffect(target.EFF_CONFUSED, 3, {power=60})
