@@ -64,7 +64,8 @@ function _M:push(savename, type, object, class, on_end)
 
 	if #self.pipe == 0 then savefile_pipe.current_nb = 0 end
 
-	local clone, nb = object:cloneForSave()
+--	local clone, nb = object:cloneForSave()
+	local clone, nb = object, 1000
 	self.pipe[#self.pipe+1] = {id=id, savename = savename, type=type, object=clone, nb_objects=nb, baseobject=object, class=class, saveversion=game:saveVersion("new"), screenshot=screenshot, on_end=on_end}
 	local total_nb = 0
 	for i, p in ipairs(self.pipe) do total_nb = total_nb + p.nb_objects end
@@ -77,7 +78,8 @@ function _M:push(savename, type, object, class, on_end)
 	if game.onSavefilePushed then game:onSavefilePushed(savename, type, object, class) end
 
 	-- Refuse to continue, make the user wait
-	if #self.pipe >= self.max_before_wait or not config.settings.background_saves then
+	if true or #self.pipe >= self.max_before_wait or not config.settings.background_saves then
+		core.serial.threadSave()
 		self:forceWait()
 	end
 

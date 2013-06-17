@@ -29,9 +29,175 @@
 #include "physfs.h"
 #include "physfsrwops.h"
 
+/********************************************************************
+ ** Save thread
+ * This simply takes a list of buffers & zip files to save and do it
+ ********************************************************************/
+struct s_save_queue_type {
+	char *zfname;
+	char *filename;
+	char *payload;
+	size_t payload_len;
+	struct s_save_queue_type *next;
+};
+typedef struct s_save_queue_type save_queue;
+
+typedef struct {
+	SDL_Thread *thread;
+	bool running;
+
+	save_queue *iqueue_head, *iqueue_tail;
+	SDL_mutex *lock_iqueue;
+	SDL_sem *wait_iqueue;
+} save_type;
+
+save_type *main_save;
+
+static void push_save(const char *zfname, const char *filename, char *payload, size_t payload_len)
+{
+	save_queue *q = malloc(sizeof(save_queue));
+	q->zfname = strdup(zfname);
+	q->filename = strdup(filename);
+	q->payload = payload;
+	q->payload_len = payload_len;
+
+	SDL_mutexP(main_save->lock_iqueue);
+	if (!(main_save->iqueue_tail)) main_save->iqueue_head = q;
+	else main_save->iqueue_tail->next = q;
+	q->next = NULL;
+	main_save->iqueue_tail = q;
+	SDL_mutexV(main_save->lock_iqueue);
+
+	return;
+}
+
+static save_queue *pop_save()
+{
+	save_queue *q = NULL;
+	SDL_mutexP(main_save->lock_iqueue);
+	if (main_save->iqueue_head)
+	{
+		q = main_save->iqueue_head;
+		if (q) main_save->iqueue_head = q->next;
+		if (!main_save->iqueue_head) main_save->iqueue_tail = NULL;
+	}
+	SDL_mutexV(main_save->lock_iqueue);
+
+	return q;
+}
+
+void finish_zip(const char *zipname) 
+{
+	int len = strlen(zipname);
+	if (zipname[len-4] == '.' || zipname[len-3] == 't' || zipname[len-2] == 'm' || zipname[len-1] == 'p') {
+		char *newname = strdup(zipname);
+		newname[len - 4] = '\0';
+		PHYSFS_delete(newname);
+		PHYSFS_rename(zipname, newname);
+		free(newname);
+	}
+}
+
+int thread_save(void *data)
+{
+	while (1)
+	{
+		SDL_SemWait(main_save->wait_iqueue);
+
+		zipFile *zf = NULL;
+		const char *zipname = NULL;
+
+		while (1) {
+			save_queue *q = pop_save();
+			if (!q) break;
+			
+				if (zipname) printf("testing '%s' ?=? '%s' : %d \n", zipname, q->zfname ,strcmp(zipname, q->zfname));
+
+			if (!zipname || strcmp(zipname, q->zfname)) {
+				if (zf) {
+					zipClose(zf, NULL);
+					printf("Saved zipname %s\n", zipname);
+					finish_zip(zipname);
+					free((char*)zipname);
+				} else {
+					printf("Saving zipname %s\n", q->zfname);
+				}
+				zipname = strdup(q->zfname);
+				zf = zipOpen(zipname, APPEND_STATUS_CREATE);
+			}
+
+			printf("* %s<%s> : %ld\n", q->zfname, q->filename, q->payload_len);
+
+			/* Init the zip entry */
+			int err=0;
+			int opt_compress_level = 4;
+			zip_fileinfo zi;
+			unsigned long crcFile=0;
+			zi.tmz_date.tm_sec = zi.tmz_date.tm_min = zi.tmz_date.tm_hour =
+			zi.tmz_date.tm_mday = zi.tmz_date.tm_mon = zi.tmz_date.tm_year = 0;
+			zi.dosDate = 0;
+			zi.internal_fa = 0;
+			zi.external_fa = 0;
+			err = zipOpenNewFileInZip3(zf, q->filename, &zi,
+				NULL,0,NULL,0,NULL /* comment*/,
+				(opt_compress_level != 0) ? Z_DEFLATED : 0,
+				opt_compress_level,0,
+				-MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY,
+				NULL,crcFile);
+			if (err == ZIP_OK)
+			{
+				zipWriteInFileInZip(zf, q->payload, q->payload_len);
+				zipCloseFileInZip(zf);
+			}
+
+			free(q->payload);
+			free(q->zfname);
+			free(q->filename);
+		}
+
+		if (zf) {
+			zipClose(zf, NULL);
+			printf("Saved zipname %s\n", zipname);
+			finish_zip(zipname);
+			free((char*)zipname);
+		}
+	}
+	return(0);
+}
+
+// Runs on main thread
+void create_save_thread()
+{
+	if (main_save) return;
+
+	SDL_Thread *thread;
+	save_type *save = calloc(1, sizeof(save_type));
+	main_save = save;
+
+	save->running = TRUE;
+	save->iqueue_head = save->iqueue_tail = NULL;
+	save->lock_iqueue = SDL_CreateMutex();
+	save->wait_iqueue = SDL_CreateSemaphore(0);
+
+	thread = SDL_CreateThread(thread_save, "save", save);
+	if (thread == NULL) {
+		printf("Unable to create save thread: %s\n", SDL_GetError());
+		return;
+	}
+	save->thread = thread;
+
+	printf("Creating save thread\n");
+	return;
+}
+
+
+/********************************************************************
+ ** Main thread
+ * Takes a table, serialiaze it to memory and register it in the save thread
+ ********************************************************************/
 static int serial_new(lua_State *L)
 {
-	zipFile *zf = (zipFile*)auxiliar_checkclass(L, "physfs{zip}", 1);
+	const char *zfname = lua_tostring(L, 1);
 	luaL_checktype(L, 2, LUA_TFUNCTION);
 	luaL_checktype(L, 3, LUA_TFUNCTION);
 	if (!lua_isnil(L, 4) && !lua_istable(L, 4)) { lua_pushstring(L, "argument 4 is not nil or table"); lua_error(L); }
@@ -47,7 +213,7 @@ static int serial_new(lua_State *L)
 	serial_type *s = (serial_type*)lua_newuserdata(L, sizeof(serial_type));
 	auxiliar_setclass(L, "core{serial}", -1);
 
-	s->zf = *zf;
+	s->zfname = zfname;
 	s->fname = fname_ref;
 	s->fadd = fadd_ref;
 	s->allow = a_ref;
@@ -83,28 +249,38 @@ static void add_process(lua_State *L, serial_type *s, int idx)
 	lua_call(L, 1, 0);
 }
 
-#define writeZip(s, data) { /*printf("%s", data);*/ zipWriteInFileInZip(s->zf, data, strlen(data)); }
-#define writeZipFixed(s, data, len) { /*printf("%s", data);*/ zipWriteInFileInZip(s->zf, data, len); }
+static void writeTblFixed(serial_type *s, const char *data, long len) {
+	if (len + s->bufpos >= s->buflen) {
+		char *newbuf = malloc(s->buflen * 2);
+		memcpy(newbuf, s->buf, s->buflen);
+		free(s->buf);
+		s->buf = newbuf;
+		s->buflen = s->buflen * 2;
+	}
+	memcpy(s->buf + s->bufpos, data, len);
+	s->bufpos += len;
+}
+#define writeTbl(s, data) { writeTblFixed(s, data, strlen(data)); }
 
-static void dump_string(serial_type *s, const char *str, size_t l)
+static void tbl_dump_string(serial_type *s, const char *str, size_t l)
 {
 	while (l--) {
 		switch (*str) {
 		case '"': case '\\': case '\n': {
-			writeZipFixed(s, "\\", 1);
-			writeZipFixed(s, str, 1);
+			writeTblFixed(s, "\\", 1);
+			writeTblFixed(s, str, 1);
 			break;
 		}
 		case '\r': {
-			writeZipFixed(s, "\\r", 2);
+			writeTblFixed(s, "\\r", 2);
 			break;
 		}
 		case '\0': {
-			writeZipFixed(s, "\\000", 4);
+			writeTblFixed(s, "\\000", 4);
 			break;
 		}
 		default: {
-			writeZipFixed(s, str, 1);
+			writeTblFixed(s, str, 1);
 			break;
 		}
 		}
@@ -112,36 +288,36 @@ static void dump_string(serial_type *s, const char *str, size_t l)
 	}
 }
 
-static int dump_function(lua_State *L, const void* p, size_t sz, void* ud)
+static int tbl_dump_function(lua_State *L, const void* p, size_t sz, void* ud)
 {
 	serial_type *s = (serial_type*)ud;
 //	fwrite(p, sz, 1, stdout);
 //	zipWriteInFileInZip(s->zf, p, sz);
-	dump_string(s, p, sz);
+	tbl_dump_string(s, p, sz);
 	return 0;
 }
 
-static void basic_serialize(lua_State *L, serial_type *s, int type, int idx)
+static void tbl_basic_serialize(lua_State *L, serial_type *s, int type, int idx)
 {
 	if (type == LUA_TBOOLEAN) {
-		if (lua_toboolean(L, idx)) { writeZipFixed(s, "true", 4); }
-		else { writeZipFixed(s, "false", 5); }
+		if (lua_toboolean(L, idx)) { writeTblFixed(s, "true", 4); }
+		else { writeTblFixed(s, "false", 5); }
 	} else if (type == LUA_TNUMBER) {
 		lua_pushvalue(L, idx);
 		size_t len;
 		const char *n = lua_tolstring(L, -1, &len);
-		writeZipFixed(s, n, len);
+		writeTblFixed(s, n, len);
 		lua_pop(L, 1);
 	} else if (type == LUA_TSTRING) {
 		size_t len;
 		const char *str = lua_tolstring(L, idx, &len);
-		writeZipFixed(s, "\"", 1);
-		dump_string(s, str, len);
-		writeZipFixed(s, "\"", 1);
+		writeTblFixed(s, "\"", 1);
+		tbl_dump_string(s, str, len);
+		writeTblFixed(s, "\"", 1);
 	} else if (type == LUA_TFUNCTION) {
-		writeZipFixed(s, "loadstring(\"", 12);
-		lua_dump(L, dump_function, s);
-		writeZipFixed(s, "\")", 2);
+		writeTblFixed(s, "loadstring(\"", 12);
+		lua_dump(L, tbl_dump_function, s);
+		writeTblFixed(s, "\")", 2);
 	} else if (type == LUA_TTABLE) {
 		lua_pushstring(L, "__CLASSNAME");
 		lua_rawget(L, idx - 1);
@@ -149,9 +325,9 @@ static void basic_serialize(lua_State *L, serial_type *s, int type, int idx)
 		if (!lua_isnil(L, -1))
 		{
 			lua_pop(L, 1);
-			writeZipFixed(s, "loadObject('", 12);
-			writeZip(s, get_name(L, s, idx));
-			writeZipFixed(s, "')", 2);
+			writeTblFixed(s, "loadObject('", 12);
+			writeTbl(s, get_name(L, s, idx));
+			writeTblFixed(s, "')", 2);
 			add_process(L, s, idx);
 		}
 		// This is just a table, save it
@@ -160,7 +336,7 @@ static void basic_serialize(lua_State *L, serial_type *s, int type, int idx)
 			lua_pop(L, 1);
 			int ktype, etype;
 
-			writeZipFixed(s, "{", 1);
+			writeTblFixed(s, "{", 1);
 			/* table is in the stack at index 't' */
 			lua_pushnil(L);  /* first key */
 
@@ -175,17 +351,17 @@ static void basic_serialize(lua_State *L, serial_type *s, int type, int idx)
 					((etype == LUA_TBOOLEAN) || (etype == LUA_TNUMBER) || (etype == LUA_TSTRING) || (etype == LUA_TFUNCTION) || (etype == LUA_TTABLE))
 					)
 				{
-					writeZipFixed(s, "[", 1);
-					basic_serialize(L, s, ktype, -2);
-					writeZipFixed(s, "]=", 2);
-					basic_serialize(L, s, etype, -1);
-					writeZipFixed(s, ",\n", 2);
+					writeTblFixed(s, "[", 1);
+					tbl_basic_serialize(L, s, ktype, -2);
+					writeTblFixed(s, "]=", 2);
+					tbl_basic_serialize(L, s, etype, -1);
+					writeTblFixed(s, ",\n", 2);
 				}
 
 				/* removes 'value'; keeps 'key' for next iteration */
 				lua_pop(L, 1);
 			}
-			writeZipFixed(s, "}\n", 2);
+			writeTblFixed(s, "}\n", 2);
 		}
 	} else {
 		printf("*WARNING* can not save value of type %s\n", lua_typename(L, type));
@@ -208,33 +384,17 @@ static int serial_tozip(lua_State *L)
 	lua_pushvalue(L, 2);  /* table */
 	lua_pushnil(L);  /* first key */
 
-	/* Init the zip entry */
-	int err=0;
-	int opt_compress_level = 4;
-	zip_fileinfo zi;
-	unsigned long crcFile=0;
-	zi.tmz_date.tm_sec = zi.tmz_date.tm_min = zi.tmz_date.tm_hour =
-	zi.tmz_date.tm_mday = zi.tmz_date.tm_mon = zi.tmz_date.tm_year = 0;
-	zi.dosDate = 0;
-	zi.internal_fa = 0;
-	zi.external_fa = 0;
-	err = zipOpenNewFileInZip3(s->zf, get_name(L, s, -2), &zi,
-		NULL,0,NULL,0,NULL /* comment*/,
-		(opt_compress_level != 0) ? Z_DEFLATED : 0,
-		opt_compress_level,0,
-		-MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY,
-		NULL,crcFile);
-	if (err != ZIP_OK)
-	{
-		lua_pushnil(L);
-		lua_pushstring(L, "could not add file to zip");
-		return 2;
-	}
+	const char *filename = get_name(L, s, -2);
 
-	writeZipFixed(s, "d={}\n", 5);
-	writeZipFixed(s, "setLoaded('", 11);
-	writeZip(s, get_name(L, s, -2));
-	writeZipFixed(s, "', d)\n", 6);
+	/* Init the buffer */
+	s->buf = malloc(4 * 1024 * 1024);
+	s->buflen = 4 * 1024 * 1024;
+	s->bufpos = 0;
+
+	writeTblFixed(s, "d={}\n", 5);
+	writeTblFixed(s, "setLoaded('", 11);
+	writeTbl(s, get_name(L, s, -2));
+	writeTblFixed(s, "', d)\n", 6);
 	while (lua_next(L, -2) != 0)
 	{
 		skip = FALSE;
@@ -259,174 +419,35 @@ static int serial_tozip(lua_State *L)
 
 		if (!skip)
 		{
-			writeZipFixed(s, "d[", 2);
-			basic_serialize(L, s, ktype, -2);
-			writeZipFixed(s, "]=", 2);
-			basic_serialize(L, s, etype, -1);
-			writeZipFixed(s, "\n", 1);
+			writeTblFixed(s, "d[", 2);
+			tbl_basic_serialize(L, s, ktype, -2);
+			writeTblFixed(s, "]=", 2);
+			tbl_basic_serialize(L, s, etype, -1);
+			writeTblFixed(s, "\n", 1);
 		}
 
 		/* removes 'value'; keeps 'key' for next iteration */
 		lua_pop(L, 1);
 	}
-	writeZipFixed(s, "\nreturn d", 9);
+	writeTblFixed(s, "\nreturn d", 9);
 
-	zipCloseFileInZip(s->zf);
+	push_save(s->zfname, filename, s->buf, s->bufpos);
 
 	lua_pushboolean(L, TRUE);
 	return 1;
 }
 
-#define CLONETABLE 2
-#define CLONETABLE_LIST 3
-
-static int serial_clonefull_recurs(lua_State *L, int idx)
+static int serial_order_realsave(lua_State *L) 
 {
-	int ktype, etype;
-	int nb = 0;
-	// We are called with the newtable on top of the stack
-
-	lua_pushnil(L);  /* first key */
-	while (lua_next(L, idx - 2) != 0)
-	{
-		ktype = lua_type(L, -2);
-		etype = lua_type(L, -1);
-
-		// Forbid cloning of fields named __threads
-		if (ktype == LUA_TSTRING)
-		{
-			const char *s = lua_tostring(L, -2);
-			if (!strcmp(s, "__threads"))
-			{
-				lua_pop(L, 1);
-				continue;
-			}
-		}
-
-		if (ktype == LUA_TTABLE)
-		{
-			// Check clonetable first
-			lua_pushvalue(L, -2);
-			lua_rawget(L, CLONETABLE);
-			if (lua_isnil(L, -1))
-			{
-				// If not found, clone it
-				lua_pop(L, 1);
-				lua_newtable(L);
-
-				// Store in the clonetable
-				lua_pushvalue(L, -3);
-				lua_pushvalue(L, -2);
-				lua_rawset(L, CLONETABLE);
-				lua_pushvalue(L, -3);
-				lua_pushvalue(L, -2);
-				lua_rawset(L, CLONETABLE_LIST);
-			}
-		}
-		else
-		{
-			lua_pushvalue(L, -2);
-		}
-
-		if (etype == LUA_TTABLE)
-		{
-			// Check clonetable first
-			lua_pushvalue(L, -2);
-			lua_rawget(L, CLONETABLE);
-			if (lua_isnil(L, -1))
-			{
-				// If not found, clone it
-				lua_pop(L, 1);
-				lua_newtable(L);
-
-				// Store in the clonetable
-				lua_pushvalue(L, -3);
-				lua_pushvalue(L, -2);
-				lua_rawset(L, CLONETABLE);
-				lua_pushvalue(L, -3);
-				lua_pushvalue(L, -2);
-				lua_rawset(L, CLONETABLE_LIST);
-			}
-		}
-		else
-		{
-			lua_pushvalue(L, -2);
-		}
-
-		// Now set in the new table
-		lua_rawset(L, -5);
-
-		/* removes 'value'; keeps 'key' for next iteration */
-		lua_pop(L, 1);
-	}
-
-	// Setup metatable
-	if (lua_getmetatable(L, idx - 1))
-	{
-		lua_setmetatable(L, -2); // -2 because -1 was the newtable before we push the metatable
-	}
-
-	// Check for class
-	lua_pushstring(L, "__CLASSNAME");
-	lua_rawget(L, -2);
-	if (lua_isstring(L, -1))
-	{
-		lua_pop(L, 1);
-		nb++;
-
-		lua_getfield(L, -1, "cloned");
-		if (lua_isfunction(L, -1))
-		{
-			lua_pushvalue(L, -2);
-			lua_pushvalue(L, idx-2);
-			lua_call(L, 2, 0);
-		}
-		else lua_pop(L, 1);
-	}
-	else lua_pop(L, 1);
-
-	return nb;
+	SDL_SemPost(main_save->wait_iqueue);
+	return 0;	
 }
 
-static int serial_clonefull(lua_State *L)
-{
-	luaL_checktype(L, 1, LUA_TTABLE);
-	lua_newtable(L); // idx 2 == clonetable_all
-	lua_newtable(L); // idx 3 == clonetable
-
-	// Store in the clonetable
-	lua_pushvalue(L, 1);
-	lua_newtable(L);
-	lua_rawset(L, CLONETABLE);
-	lua_pushvalue(L, 1);
-	lua_newtable(L);
-	lua_rawset(L, CLONETABLE_LIST);
-
-	int nb = 0;
-	lua_pushnil(L);  /* first key */
-	while (lua_next(L, CLONETABLE_LIST) != 0)
-	{
-//		printf("<TOP %d\n", lua_gettop(L));
-		nb += serial_clonefull_recurs(L, -1);
-//		printf(">TOP %d // %d\n", lua_gettop(L), nb);
-
-		// Remove from list
-		lua_pop(L, 1); // remove value
-		lua_pushnil(L); // set to nil
-		lua_rawset(L, CLONETABLE_LIST);
-
-		// Reset the next()
-		lua_pushnil(L);
-	}
-
-	lua_pushnumber(L, nb);
-	return 2;
-}
 
 static const struct luaL_Reg seriallib[] =
 {
 	{"new", serial_new},
-	{"cloneFull", serial_clonefull},
+	{"threadSave", serial_order_realsave},
 	{NULL, NULL},
 };
 
@@ -442,5 +463,8 @@ int luaopen_serial(lua_State *L)
 	auxiliar_newclass(L, "core{serial}", serial_reg);
 	luaL_openlib(L, "core.serial", seriallib, 0);
 	lua_pop(L, 1);
+
+	create_save_thread();
+
 	return 1;
 }

@@ -141,12 +141,11 @@ function _M:saveWorld(world, no_dialog)
 	end
 	core.display.forceRedraw()
 
-	local zip = fs.zipOpen(self.save_dir..self:nameSaveWorld(world)..".tmp")
+	local zip = (self.save_dir..self:nameSaveWorld(world)..".tmp")
 	local nb = self:saveObject(world, zip)
-	zip:add("nb", tostring(nb))
-	zip:close()
-	fs.delete(self.save_dir..self:nameSaveWorld(world))
-	fs.rename(self.save_dir..self:nameSaveWorld(world)..".tmp", self.save_dir..self:nameSaveWorld(world))
+	--zip:add("nb", tostring(nb))
+	--fs.delete(self.save_dir..self:nameSaveWorld(world))
+	--fs.rename(self.save_dir..self:nameSaveWorld(world)..".tmp", self.save_dir..self:nameSaveWorld(world))
 
 	self:md5Upload("world", self:nameSaveWorld(world))
 
@@ -212,12 +211,11 @@ function _M:saveGame(game, no_dialog)
 	end
 	core.display.forceRedraw()
 
-	local zip = fs.zipOpen(self.save_dir..self:nameSaveGame(game)..".tmp")
+	local zip = (self.save_dir..self:nameSaveGame(game)..".tmp")
 	local nb = self:saveObject(game, zip)
-	zip:add("nb", tostring(nb))
-	zip:close()
-	fs.delete(self.save_dir..self:nameSaveGame(game))
-	fs.rename(self.save_dir..self:nameSaveGame(game)..".tmp", self.save_dir..self:nameSaveGame(game))
+	--zip:add("nb", tostring(nb))
+	--fs.delete(self.save_dir..self:nameSaveGame(game))
+	--fs.rename(self.save_dir..self:nameSaveGame(game)..".tmp", self.save_dir..self:nameSaveGame(game))
 
 	self:md5Upload("game", self:nameSaveGame(game))
 
@@ -285,12 +283,11 @@ function _M:saveZone(zone, no_dialog)
 	end
 	core.display.forceRedraw()
 
-	local zip = fs.zipOpen(self.save_dir..self:nameSaveZone(zone)..".tmp")
+	local zip = (self.save_dir..self:nameSaveZone(zone)..".tmp")
 	local nb = self:saveObject(zone, zip)
-	zip:add("nb", tostring(nb))
-	zip:close()
-	fs.delete(self.save_dir..self:nameSaveZone(zone))
-	fs.rename(self.save_dir..self:nameSaveZone(zone)..".tmp", self.save_dir..self:nameSaveZone(zone))
+	--zip:add("nb", tostring(nb))
+	--fs.delete(self.save_dir..self:nameSaveZone(zone))
+	--fs.rename(self.save_dir..self:nameSaveZone(zone)..".tmp", self.save_dir..self:nameSaveZone(zone))
 
 	self:md5Upload("zone", self:nameSaveZone(zone))
 
@@ -316,12 +313,11 @@ function _M:saveLevel(level, no_dialog)
 	end
 	core.display.forceRedraw()
 
-	local zip = fs.zipOpen(self.save_dir..self:nameSaveLevel(level)..".tmp")
+	local zip = (self.save_dir..self:nameSaveLevel(level)..".tmp")
 	local nb = self:saveObject(level, zip)
-	zip:add("nb", tostring(nb))
-	zip:close()
-	fs.delete(self.save_dir..self:nameSaveLevel(level))
-	fs.rename(self.save_dir..self:nameSaveLevel(level)..".tmp", self.save_dir..self:nameSaveLevel(level))
+	--zip:add("nb", tostring(nb))
+	--fs.delete(self.save_dir..self:nameSaveLevel(level))
+	--fs.rename(self.save_dir..self:nameSaveLevel(level)..".tmp", self.save_dir..self:nameSaveLevel(level))
 
 	self:md5Upload("level", self:nameSaveLevel(level))
 
@@ -347,12 +343,11 @@ function _M:saveEntity(e, no_dialog)
 	end
 	core.display.forceRedraw()
 
-	local zip = fs.zipOpen(self.save_dir..self:nameSaveEntity(e)..".tmp")
+	local zip = (self.save_dir..self:nameSaveEntity(e)..".tmp")
 	local nb = self:saveObject(e, zip)
-	zip:add("nb", tostring(nb))
-	zip:close()
-	fs.delete(self.save_dir..self:nameSaveEntity(e))
-	fs.rename(self.save_dir..self:nameSaveEntity(e)..".tmp", self.save_dir..self:nameSaveEntity(e))
+	--zip:add("nb", tostring(nb))
+	--fs.delete(self.save_dir..self:nameSaveEntity(e))
+	--fs.rename(self.save_dir..self:nameSaveEntity(e)..".tmp", self.save_dir..self:nameSaveEntity(e))
 
 	self:md5Upload("entity", self:nameSaveEntity(e))
 
@@ -376,7 +371,7 @@ end
 function _M:loadReal(load)
 	if self.loaded[load] then return self.loaded[load] end
 	local f = fs.open(self.load_dir..load, "r")
---	print("loading", load)
+
 	local lines = {}
 	while true do
 		local l = f:read()

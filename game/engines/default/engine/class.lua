@@ -292,6 +292,7 @@ function _M:save(filter, allow)
 	local mt = getmetatable(self)
 	setmetatable(self, {})
 	local savefile = engine.Savefile.current_save
+	
 	local s = core.serial.new(
 		-- Zip to write to
 		savefile.current_save_zip,
