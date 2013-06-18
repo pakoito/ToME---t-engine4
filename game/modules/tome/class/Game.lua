@@ -916,8 +916,8 @@ function _M:changeLevelReal(lev, zone, params)
 	if self.level.data.day_night then self.state:dayNightCycle() end
 
 	if not recreate_nothing then
---		self.level.map:redisplay() -- not needed, reopen doest it
-		self.level.map:reopen()
+		--self.level.map:redisplay() -- not needed, reopen doest it
+		self.level.map:reopen(true)
 		if force_recreate then self.level.map:recreate() end
 	end
 

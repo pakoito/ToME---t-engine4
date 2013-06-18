@@ -370,8 +370,8 @@ function _M:close()
 	self.changed = true
 end
 
-function _M:reopen()
-	if not self.closed then return end
+function _M:reopen(force)
+	if not force and not self.closed then return end
 	self:redisplay()
 	self.closed = nil
 	self.changed = true
