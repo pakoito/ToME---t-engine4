@@ -50,6 +50,9 @@ newEntity{
 		resists_pen = {
 			[DamageType.DARKNESS] = resolvers.mbonus_material(15, 5),
 		},
+		resists={
+			[DamageType.DARKNESS] = resolvers.mbonus_material(15, 10),
+		},
 		inc_stealth = resolvers.mbonus_material(20, 5),
 	},
 }
@@ -118,18 +121,6 @@ newEntity{
 }
 
 newEntity{
-	power_source = {technique=true},
-	name = " of stability", suffix=true, instant_resolve=true,
-	keywords = {stablity=true},
-	level_range = {1, 50},
-	rarity = 7,
-	cost = 6,
-	wielder = {
-		combat_physresist = resolvers.mbonus_material(10, 5),
-	},
-}
-
-newEntity{
 	power_source = {arcane=true},
 	name = " of protection", suffix=true, instant_resolve=true,
 	keywords = {protection=true},
@@ -138,17 +129,6 @@ newEntity{
 	cost = 6,
 	wielder = {
 		combat_spellresist = resolvers.mbonus_material(10, 5),
-	},
-}
-
-newEntity{
-	power_source = {psionic=true},
-	name = " of clarity", suffix=true, instant_resolve=true,
-	keywords = {clarity=true},
-	level_range = {1, 50},
-	rarity = 7,
-	cost = 6,
-	wielder = {
 		combat_mentalresist = resolvers.mbonus_material(10, 5),
 	},
 }
@@ -164,13 +144,14 @@ newEntity{
 	wielder = {
 		combat_physresist = resolvers.mbonus_material(10, 5),
 		combat_mentalresist = resolvers.mbonus_material(10, 5),
+		die_at = -50,
 	},
 }
 
 newEntity{
 	power_source = {nature=true},
-	name = " of resilience", suffix=true, instant_resolve=true,
-	keywords = {resilience=true},
+	name = "resilient ", prefix=true, instant_resolve=true,
+	keywords = {resilient=true},
 	level_range = {1, 50},
 	rarity = 7,
 	cost = 6,
@@ -187,19 +168,8 @@ newEntity{
 	rarity = 5,
 	cost = 6,
 	wielder = {
+		combat_physresist = resolvers.mbonus_material(10, 5),
 		combat_def = resolvers.mbonus_material(10, 5),
-	},
-}
-
-newEntity{
-	power_source = {technique=true},
-	name = "lightening ", prefix=true, instant_resolve=true,
-	keywords = {lightening=true},
-	level_range = {1, 50},
-	rarity = 10,
-	cost = 10,
-	wielder = {
-		fatigue = resolvers.mbonus_material(5, 2, function(e, v) return 0, -v end),
 	},
 }
 
@@ -207,8 +177,7 @@ newEntity{
 	power_source = {psionic=true},
 	name = "regal ", prefix=true, instant_resolve=true,
 	keywords = {regal=true},
-	level_range = {15, 50},
-	greater_ego = 1,
+	level_range = {1, 50},
 	rarity = 15,
 	cost = 20,
 	wielder = {
@@ -229,10 +198,10 @@ newEntity{
 	cost = 60,
 	wielder = {
 		healing_factor = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return 0, v end),
-		life_regen = resolvers.mbonus_material(10, 5, function(e, v) v=v/10 return 0, v end),
+		life_regen = resolvers.mbonus_material(20, 10, function(e, v) v=v/10 return 0, v end),
 		resists={
-			[DamageType.NATURE] = resolvers.mbonus_material(5, 5),
-			[DamageType.BLIGHT] = resolvers.mbonus_material(5, 5),
+			[DamageType.NATURE] = resolvers.mbonus_material(10, 10),
+			[DamageType.BLIGHT] = resolvers.mbonus_material(10, 10),
 		},
 	},
 }
@@ -288,10 +257,10 @@ newEntity{
 	cost = 50,
 	wielder = {
 		inc_stats = {
-			[Stats.STAT_MAG] = resolvers.mbonus_material(2, 2),
-			[Stats.STAT_WIL] = resolvers.mbonus_material(2, 2),
+			[Stats.STAT_MAG] = resolvers.mbonus_material(4, 2),
+			[Stats.STAT_WIL] = resolvers.mbonus_material(4, 2),
 		},
-		combat_spellcrit = resolvers.mbonus_material(3, 3),
+		combat_spellcrit = resolvers.mbonus_material(4, 4),
 	},
 }
 
@@ -305,10 +274,10 @@ newEntity{
 	cost = 50,
 	wielder = {
 		inc_stats = {
-			[Stats.STAT_WIL] = resolvers.mbonus_material(2, 2),
-			[Stats.STAT_CUN] = resolvers.mbonus_material(2, 2),
+			[Stats.STAT_WIL] = resolvers.mbonus_material(4, 2),
+			[Stats.STAT_CUN] = resolvers.mbonus_material(4, 2),
 		},
-		combat_mindcrit = resolvers.mbonus_material(3, 3),
+		combat_mindcrit = resolvers.mbonus_material(4, 4),
 	},
 }
 
@@ -375,9 +344,9 @@ newEntity{
 	rarity = 35,
 	cost = 40,
 	wielder = {
-		combat_mentalresist = resolvers.mbonus_material(10, 5),
-		combat_physresist = resolvers.mbonus_material(10, 5),
-		combat_spellresist = resolvers.mbonus_material(10, 5),
+		combat_mentalresist = resolvers.mbonus_material(15, 10),
+		combat_physresist = resolvers.mbonus_material(15, 10),
+		combat_spellresist = resolvers.mbonus_material(15, 10),
 		combat_armor = resolvers.mbonus_material(7, 3),
 		combat_def = resolvers.mbonus_material(10, 5),
 	},
@@ -392,22 +361,30 @@ newEntity{
 	rarity = 35,
 	cost = 70,
 	wielder = {
+		inc_damage = {
+			[DamageType.ARCANE] = resolvers.mbonus_material(10, 5),
+		},
+		resists_pen = {
+			[DamageType.ARCANE] = resolvers.mbonus_material(10, 5),
+		},
 		max_mana = resolvers.mbonus_material(80, 20),
 		combat_spellpower = resolvers.mbonus_material(7, 3),
 		combat_spellcrit = resolvers.mbonus_material(3, 3),
+		combat_critical_power = resolvers.mbonus_material(20, 10),
 	},
 }
 
 newEntity{
 	power_source = {technique=true},
-	name = " of warlust", suffix=true, instant_resolve=true,
-	keywords = {warlust=true},
+	name = " of battle", suffix=true, instant_resolve=true,
+	keywords = {battle=true},
 	level_range = {1, 50},
 	rarity = 15,
 	cost = 15,
 	wielder = {
 		combat_physcrit = resolvers.mbonus_material(4, 1),
 		combat_dam = resolvers.mbonus_material(4, 1),
+		fatigue = resolvers.mbonus_material(5, 2, function(e, v) return 0, -v end),
 	},
 }
 
@@ -421,6 +398,7 @@ newEntity{
 	cost = 60,
 	resolvers.charmt(Talents.T_BLINDING_SPEED, {2,3,4}, 45),
 	wielder = {
+		combat_atk = resolvers.mbonus_material(20, 15),
 		max_life = resolvers.mbonus_material(70, 40),
 		fatigue = resolvers.mbonus_material(6, 4, function(e, v) return 0, -v end),
 	},

@@ -23,28 +23,6 @@ local DamageType = require "engine.DamageType"
 
 newEntity{
 	power_source = {technique=true},
-	name = " of the badger", suffix=true,
-	keywords = {badger=true},
-	level_range = {1, 50},
-	rarity = 7,
-	cost = 20,
-	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 2) end),
-}
-
-newEntity{
-	power_source = {technique=true},
-	name = " of strength", suffix=true, instant_resolve=true,
-	keywords = {strength=true},
-	level_range = {10, 50},
-	rarity = 6,
-	cost = 10,
-	wielder = {
-		inc_stats = { [Stats.STAT_STR] = resolvers.mbonus_material(4, 1) },
-	},
-}
-
-newEntity{
-	power_source = {technique=true},
 	name = " of delving", suffix=true, instant_resolve=true,
 	keywords = {delving=true},
 	level_range = {30, 50},
@@ -68,6 +46,7 @@ newEntity{
 	rarity = 6,
 	cost = 5,
 	wielder = {
+		inc_stats = { [Stats.STAT_STR] = resolvers.mbonus_material(4, 1) },
 		fatigue = resolvers.mbonus_material(6, 4, function(e, v) return 0, -v end),
 	},
 }
@@ -79,6 +58,7 @@ newEntity{
 	level_range = {1, 50},
 	rarity = 6,
 	cost = 5,
+	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 2) end),
 	wielder = {
 		infravision = resolvers.mbonus_material(2, 1),
 	},
@@ -92,6 +72,9 @@ newEntity{
 	rarity = 6,
 	cost = 5,
 	wielder = {
+		inc_damage = {
+			[DamageType.NATURE] = resolvers.mbonus_material(5, 5),
+		},
 		resists = { [DamageType.NATURE] = resolvers.mbonus_material(5, 10), },
 	},
 }
@@ -139,7 +122,7 @@ newEntity{
 	wielder = {
 		combat_dam = resolvers.mbonus_material(5, 5),
 		combat_apr = resolvers.mbonus_material(4, 4),
-		combat_critical_power = resolvers.mbonus_material(10, 10),
+		combat_critical_power = resolvers.mbonus_material(15, 15),
 	},
 	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 3) end),
 }
@@ -153,10 +136,14 @@ newEntity{
 	rarity = 15,
 	cost = 15,
 	wielder = {
+		inc_damage = {
+			[DamageType.FIRE] = resolvers.mbonus_material(10, 5),
+			[DamageType.MIND] = resolvers.mbonus_material(10, 5),
+		},
 		melee_project={
 			[DamageType.DREAMFORGE] = resolvers.mbonus_material(10, 5),
 		},
-		combat_mentalresist = resolvers.mbonus_material(5, 5),
+		combat_mentalresist = resolvers.mbonus_material(10, 5),
 	},
 	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 3) end),
 }
@@ -172,6 +159,9 @@ newEntity{
 	wielder = {
 		combat_def = resolvers.mbonus_material(4, 4),
 		combat_armor = resolvers.mbonus_material(3, 2),
+		resists={
+			[DamageType.PHYSICAL] = resolvers.mbonus_material(5, 5),
+	},
 	},
 	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 3) end),
 }
@@ -188,8 +178,10 @@ newEntity{
 	wielder = {
 		inc_stats = {
 			[Stats.STAT_STR] = resolvers.mbonus_material(7, 3),
+			[Stats.STAT_WIL] = resolvers.mbonus_material(7, 3),
 		},
-		combat_physcrit = resolvers.mbonus_material(5, 1),
+		combat_physcrit = resolvers.mbonus_material(10, 5),
+		combat_mindcrit = resolvers.mbonus_material(10, 5),
 	},
 }
 
@@ -206,7 +198,7 @@ newEntity{
 			[Stats.STAT_MAG] = resolvers.mbonus_material(5, 1),
 		},
 		max_mana = resolvers.mbonus_material(40, 20),
-		combat_spellcrit = resolvers.mbonus_material(4, 1),
+		combat_spellcrit = resolvers.mbonus_material(6, 4),
 	},
 }
 
@@ -221,7 +213,7 @@ newEntity{
 	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 3) end),
 	wielder = {
 		resists_pen = {
-			[DamageType.PHYSICAL] = resolvers.mbonus_material(10, 5),
+			[DamageType.PHYSICAL] = resolvers.mbonus_material(15, 10),
 		},
 	},
 }
@@ -240,7 +232,7 @@ newEntity{
 			[Stats.STAT_CUN] = resolvers.mbonus_material(5, 1),
 		},
 		combat_atk = resolvers.mbonus_material(7, 3),
-		infravision = resolvers.mbonus_material(2, 1),
+		infravision = resolvers.mbonus_material(4, 2),
 	},
 }
 
@@ -254,9 +246,9 @@ newEntity{
 	cost = 60,
 	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 2) end),
 	wielder = {
-		combat_mentalresist = resolvers.mbonus_material(7, 3),
-		combat_physresist = resolvers.mbonus_material(7, 3),
-		combat_spellresist = resolvers.mbonus_material(7, 3),
+		combat_mentalresist = resolvers.mbonus_material(10, 5),
+		combat_physresist = resolvers.mbonus_material(10, 5),
+		combat_spellresist = resolvers.mbonus_material(10, 5),
 		max_life = resolvers.mbonus_material(70, 40),
 	},
 }
@@ -289,6 +281,7 @@ newEntity{
 			[Stats.STAT_DEX] = resolvers.mbonus_material(5, 1),
 		},
 		combat_dam = resolvers.mbonus_material(7, 3),
+		movement_speed = 0.1,
 	},
 }
 
@@ -305,7 +298,8 @@ newEntity{
 		resists={
 			[DamageType.DARKNESS] = resolvers.mbonus_material(10, 5),
 		},
-		infravision = resolvers.mbonus_material(2, 1),
+		damage_affinity = { [DamageType.DARKNESS] = 15 },
+		infravision = resolvers.mbonus_material(6, 3),
 	},
 }
 

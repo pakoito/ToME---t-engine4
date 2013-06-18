@@ -32,7 +32,7 @@ newEntity{
 	rarity = 12,
 	cost = 14,
 	wielder = {
-		life_regen = resolvers.mbonus_material(60, 15, function(e, v) v=v/10 return 0, v end),
+		life_regen = resolvers.mbonus_material(120, 30, function(e, v) v=v/10 return 0, v end),
 	},
 }
 
@@ -45,6 +45,7 @@ newEntity{
 	rarity = 22,
 	cost = 35,
 	wielder = {
+		combat_def = resolvers.mbonus_material(8, 2),
 		combat_def_ranged = resolvers.mbonus_material(8, 2),
 		movement_speed = 0.1,
 		inc_stats = { [Stats.STAT_DEX] = resolvers.mbonus_material(3, 2), },
@@ -120,6 +121,7 @@ newEntity{
 		combat_physcrit = resolvers.mbonus_material(7, 3),
 		combat_apr = resolvers.mbonus_material(15, 5),
 		combat_def = resolvers.mbonus_material(10, 5),
+		stamina_regen = resolvers.mbonus_material(10, 5, function(e, v) v=v/10 return 0, v end),
 	},
 }
 
@@ -159,6 +161,7 @@ newEntity{
 		resists={
 			[DamageType.FIRE] = resolvers.mbonus_material(8, 5),
 			[DamageType.COLD] = resolvers.mbonus_material(8, 5),
+			[DamageType.NATURE] = resolvers.mbonus_material(8, 5),
 			[DamageType.PHYSICAL] = resolvers.mbonus_material(8, 5),
 		},
 		comnbat_mindpower = resolvers.mbonus_material(10, 5),

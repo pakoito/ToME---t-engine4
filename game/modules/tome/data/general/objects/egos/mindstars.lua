@@ -490,17 +490,18 @@ newEntity{
 	cost = 40,
 	wielder = {
 		on_melee_hit={
-			[DamageType.FIRE] = resolvers.mbonus_material(8, 2),
+			[DamageType.FIRE] = resolvers.mbonus_material(16, 4),
 		},
 		inc_damage={
-			[DamageType.FIRE] = resolvers.mbonus_material(8, 2),
+			[DamageType.FIRE] = resolvers.mbonus_material(16, 4),
 		},
 		resists_pen={
-			[DamageType.FIRE] = resolvers.mbonus_material(8, 2),
+			[DamageType.FIRE] = resolvers.mbonus_material(16, 4),
 		},
 		resists={
-			[DamageType.FIRE] = resolvers.mbonus_material(8, 2),
+			[DamageType.FIRE] = resolvers.mbonus_material(16, 4),
 		},
+		global_speed_add = resolvers.mbonus_material(5, 1, function(e, v) v=v/100 return 0, v end),
 	},
 }
 
@@ -513,17 +514,18 @@ newEntity{
 	rarity = 40,
 	cost = 40,
 	wielder = {
+		combat_armor = resolvers.mbonus_material(5, 5),
 		on_melee_hit={
-			[DamageType.COLD] = resolvers.mbonus_material(8, 2),
+			[DamageType.ICE] = resolvers.mbonus_material(16, 4),
 		},
 		inc_damage={
-			[DamageType.COLD] = resolvers.mbonus_material(8, 2),
+			[DamageType.COLD] = resolvers.mbonus_material(16, 4),
 		},
 		resists_pen={
-			[DamageType.COLD] = resolvers.mbonus_material(8, 2),
+			[DamageType.COLD] = resolvers.mbonus_material(16, 4),
 		},
 		resists={
-			[DamageType.COLD] = resolvers.mbonus_material(8, 2),
+			[DamageType.COLD] = resolvers.mbonus_material(16, 4),
 		},
 	},
 }
@@ -562,17 +564,25 @@ newEntity{
 	cost = 40,
 	wielder = {
 		on_melee_hit={
-			[DamageType.LIGHTNING] = resolvers.mbonus_material(8, 2),
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(16, 4),
 		},
 		inc_damage={
-			[DamageType.LIGHTNING] = resolvers.mbonus_material(8, 2),
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(16, 4),
 		},
 		resists_pen={
-			[DamageType.LIGHTNING] = resolvers.mbonus_material(8, 2),
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(16, 4),
 		},
 		resists={
-			[DamageType.LIGHTNING] = resolvers.mbonus_material(8, 2),
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(16, 4),
 		},
+		inc_stats = {
+			[Stats.STAT_STR] = resolvers.mbonus_material(3, 1),
+			[Stats.STAT_DEX] = resolvers.mbonus_material(3, 1),
+			[Stats.STAT_MAG] = resolvers.mbonus_material(3, 1),
+			[Stats.STAT_WIL] = resolvers.mbonus_material(3, 1),
+			[Stats.STAT_CUN] = resolvers.mbonus_material(3, 1),
+			[Stats.STAT_CON] = resolvers.mbonus_material(3, 1),
+	},
 	},
 }
 

@@ -143,8 +143,12 @@ newEntity{ base = "BASE_HEAVY_BOOTS",
 		combat_def = 4,
 		fatigue = 8,
 		combat_spellpower = 13,
-		inc_damage = { [DamageType.BLIGHT] = 15 },
+		combat_spellcrit = 6,
+		inc_damage = { [DamageType.BLIGHT] = 15, [DamageType.FIRE] = 15, [DamageType.DARKNESS] = 15 },
 	},
+
+	max_power = 40, power_regen = 1,
+	use_talent = { id = Talents.T_POISON_STORM, level = 3, power = 30 },
 }
 
 newEntity{ base = "BASE_GEM",

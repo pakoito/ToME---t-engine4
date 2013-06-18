@@ -277,7 +277,7 @@ newEntity{
 	cost = 4,
 	wielder = {
 		max_stamina = resolvers.mbonus_material(30, 10),
-		life_regen = resolvers.mbonus_material(15, 5, function(e, v) v=v/10 return 0, v end),
+		life_regen = resolvers.mbonus_material(30, 10, function(e, v) v=v/10 return 0, v end),
 		stamina_regen = resolvers.mbonus_material(15, 5, function(e, v) v=v/10 return 0, v end),
 		combat = {
 			talent_on_hit = { [Talents.T_SLUMBER] = {level=resolvers.genericlast(function(e) return e.material_level end), chance=10} },
@@ -413,9 +413,9 @@ newEntity{
 		resists={
 			[DamageType.BLIGHT] = resolvers.mbonus_material(10, 5),
 		},
-		combat_spellresist = resolvers.mbonus_material(7, 3),
-		combat_atk = resolvers.mbonus_material(7, 3),
-		combat_dam = resolvers.mbonus_material(7, 3),
+		combat_spellresist = resolvers.mbonus_material(15, 8),
+		combat_atk = resolvers.mbonus_material(10, 4),
+		combat_dam = resolvers.mbonus_material(10, 4),
 		combat = {
 			apr = resolvers.mbonus_material(10, 5),
 			melee_project={
@@ -442,8 +442,8 @@ newEntity{
 		resists={
 			[DamageType.DARKNESS] = resolvers.mbonus_material(10, 5),
 		},
-		infravision = resolvers.mbonus_material(1, 1),
-		combat_atk = resolvers.mbonus_material(7, 3),
+		infravision = resolvers.mbonus_material(3, 1),
+		combat_atk = resolvers.mbonus_material(10, 5),
 		combat = {
 			talent_on_crit = { [Talents.T_DOMINATE] = {level=resolvers.genericlast(function(e) return e.material_level end), chance=10} },
 			physcrit = resolvers.mbonus_material(10, 3),
@@ -484,7 +484,7 @@ newEntity{
 	keywords = {starseeker=true},
 	level_range = {25, 50},
 	greater_ego = 1,
-	rarity = 45,
+	rarity = 25,
 	cost = 90,
 	resolvers.charmt(Talents.T_STARFALL, 1, 20),
 	wielder = {
@@ -522,6 +522,10 @@ newEntity{
 		},
 		inc_stats = {
 			[Stats.STAT_MAG] = resolvers.mbonus_material(7, 3),
+			[Stats.STAT_WIL] = resolvers.mbonus_material(7, 3),
+		},
+		melee_project = {
+			[DamageType.ARCANE] = resolvers.mbonus_material(15, 4),
 		},
 		combat = {
 			melee_project={  [DamageType.ARCANE] = resolvers.mbonus_material(15, 4), },
@@ -539,7 +543,7 @@ newEntity{
 	rarity = 18,
 	cost = 25,
 	wielder = {
-		life_regen = resolvers.mbonus_material(15, 5, function(e, v) v=v/10 return 0, v end),
+		life_regen = resolvers.mbonus_material(45, 15, function(e, v) v=v/10 return 0, v end),
 		psi_regen = resolvers.mbonus_material(30, 10, function(e, v) v=v/100 return 0, v end),
 		stamina_regen = resolvers.mbonus_material(10, 3, function(e, v) v=v/10 return 0, v end),
 		combat = {
@@ -585,7 +589,7 @@ newEntity{
 			[Stats.STAT_CON] = resolvers.mbonus_material(5, 1),
 		},
 		combat_mentalresist = resolvers.mbonus_material(7, 3),
-		combat_physresist = resolvers.mbonus_material(7, 3),
+		combat_physresist = resolvers.mbonus_material(20, 10),
 		combat_spellresist = resolvers.mbonus_material(7, 3),
 		combat = {
 			melee_project={ [DamageType.PHYSICAL] = resolvers.mbonus_material(25, 4), },
@@ -604,8 +608,8 @@ newEntity{
 	cost = 60,
 	wielder = {
 		mana_regen = resolvers.mbonus_material(30, 10, function(e, v) v=v/100 return 0, v end),
-		combat_spellpower = resolvers.mbonus_material(7, 1),
-		combat_spellcrit = resolvers.mbonus_material(4, 1),
+		combat_spellpower = resolvers.mbonus_material(12, 4),
+		combat_spellcrit = resolvers.mbonus_material(7, 3),
 		combat = {
 			melee_project={  [DamageType.ARCANE] = resolvers.mbonus_material(15, 4), },
 			talent_on_hit = { [Talents.T_ELEMENTAL_BOLT] = {level=resolvers.genericlast(function(e) return e.material_level end), chance=10} },

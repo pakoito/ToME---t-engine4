@@ -94,6 +94,9 @@ newEntity{
 	combat = {
 		physspeed = -0.1,
 		travel_speed = 2,
+		inc_stats = {
+			[Stats.STAT_CUN] = resolvers.mbonus_material(6, 1),
+	},
 	},
 }
 
@@ -136,7 +139,7 @@ newEntity{
 	power_source = {arcane=true},
 	name = " of cold", suffix=true, instant_resolve=true,
 	keywords = {cold=true},
-	level_range = {15, 50},
+	level_range = {1, 50},
 	rarity = 5,
 	cost = 6,
 	combat = {
@@ -212,6 +215,9 @@ newEntity{
 			[DamageType.ARCANE] = resolvers.mbonus_material(10, 5),
 		},
 	},
+	combat = {
+		talent_on_hit = { [Talents.T_ARCANE_VORTEX] = {level=3, chance=10} },
+}
 }
 
 newEntity{
@@ -231,6 +237,9 @@ newEntity{
 		},
 		inc_damage = {
 			[DamageType.TEMPORAL] = resolvers.mbonus_material(10, 5),
+		},
+		talents_types_mastery = {
+			["chronomancy/temporal-combat"] = resolvers.mbonus_material(1, 1, function(e, v) v=v/10 return 0, v end),
 		},
 		ammo_reload_speed = resolvers.mbonus_material(4, 1),
 		quick_weapon_swap = 1,
@@ -263,6 +272,9 @@ newEntity{
 	rarity = 10,
 	cost = 10,
 	wielder = {
+		inc_stats = {
+			[Stats.STAT_CON] = resolvers.mbonus_material(6, 1),
+		},
 		talents_types_mastery = {
 			["wild-gift/fungus"] = resolvers.mbonus_material(1, 1, function(e, v) v=v/10 return 0, v end),
 		},
@@ -400,10 +412,10 @@ newEntity{
 	cost = 22,
 	wielder = {
 		resists={
-			[DamageType.ACID] = resolvers.mbonus_material(8, 5),
-			[DamageType.LIGHTNING] = resolvers.mbonus_material(8, 5),
-			[DamageType.FIRE] = resolvers.mbonus_material(8, 5),
-			[DamageType.COLD] = resolvers.mbonus_material(8, 5),
+			[DamageType.ACID] = resolvers.mbonus_material(10, 7),
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(10, 7),
+			[DamageType.FIRE] = resolvers.mbonus_material(10, 7),
+			[DamageType.COLD] = resolvers.mbonus_material(10, 7),
 		},
 		combat_spellresist = resolvers.mbonus_material(10, 5),
 	},
@@ -418,9 +430,13 @@ newEntity{
 	cost = 22,
 	greater_ego = 1,
 	combat = {
-		talent_on_hit = { [Talents.T_MANA_CLASH] = {level=1, chance=10} },
+		talent_on_hit = { [Talents.T_MANA_CLASH] = {level=1, chance=20} },
 	},
 	wielder = {
+		inc_stats = {
+			[Stats.STAT_WIL] = resolvers.mbonus_material(6, 1),
+		},
+		combat_mindpower = resolvers.mbonus_material(10, 5),
 		talents_types_mastery = {
 			["wild-gift/antimagic"] = resolvers.mbonus_material(1, 1, function(e, v) v=v/10 return 0, v end),
 		},
@@ -476,5 +492,9 @@ newEntity{
 			[Stats.STAT_CUN] = resolvers.mbonus_material(6, 1),
 			[Stats.STAT_WIL] = resolvers.mbonus_material(6, 1),
 		},
+		inc_damage={ [DamageType.MIND] = resolvers.mbonus_material(14, 8), },
+	},
+	combat = {
+		ranged_project={[DamageType.MIND] = resolvers.mbonus_material(15, 5)},
 	},
 }

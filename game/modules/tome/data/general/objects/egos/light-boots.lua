@@ -33,5 +33,9 @@ newEntity{
 	cost = 6,
 	wielder = {
 		inc_stealth = resolvers.mbonus_material(10, 5),
+		inc_stats = {
+			[Stats.STAT_DEX] = resolvers.mbonus_material(5, 3),
+			[Stats.STAT_LCK] = resolvers.mbonus_material(10, 5),
+	},
 	},
 }

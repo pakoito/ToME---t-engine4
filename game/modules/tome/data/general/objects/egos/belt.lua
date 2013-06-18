@@ -122,71 +122,36 @@ newEntity{
 	rarity = 9,
 	cost = 10,
 	wielder = {
-		combat_def = resolvers.mbonus_material(10, 5),
+		combat_def = resolvers.mbonus_material(15, 8),
 		inc_stealth = resolvers.mbonus_material(10, 5),
 	},
 }
 
 newEntity{
-	power_source = {psionic=true},
-	name = "clarifying ", prefix=true, instant_resolve=true,
-	keywords = {clarifying=true},
-	level_range = {1, 50},
-	rarity = 6,
-	cost = 5,
-	wielder = {
-		combat_mentalresist = resolvers.mbonus_material(10, 5),
-	},
-}
-
-newEntity{
-	power_source = {arcane=true},
-	name = "protective ", prefix=true, instant_resolve=true,
-	keywords = {protective=true},
-	level_range = {1, 50},
-	rarity = 6,
-	cost = 5,
-	wielder = {
-		combat_spellresist = resolvers.mbonus_material(10, 5),
-	},
-}
-
-newEntity{
 	power_source = {technique=true},
-	name = "stabilizing ", prefix=true, instant_resolve=true,
-	keywords = {stabilizing=true},
-	level_range = {1, 50},
-	rarity = 6,
-	cost = 5,
-	wielder = {
-		combat_physresist = resolvers.mbonus_material(10, 5),
-	},
-}
-
-newEntity{
-	power_source = {technique=true},
-	name = "hardened ", prefix=true, instant_resolve=true,
-	keywords = {hardened=true},
-	level_range = {40, 50},
+	name = "reinforced ", prefix=true, instant_resolve=true,
+	keywords = {reinforced=true},
+	level_range = {30, 50},
 	greater_ego = 1,
 	rarity = 20,
 	cost = 60,
 	wielder = {
 		combat_armor = resolvers.mbonus_material(10, 5),
 		combat_def = resolvers.mbonus_material(10, 5),
-		combat_physresist = resolvers.mbonus_material(10, 5),
+		combat_physresist = resolvers.mbonus_material(15, 10),
 	},
 }
 
 newEntity{
 	power_source = {psionic=true},
-	name = " of the mind", suffix=true, instant_resolve=true,
-	keywords = {mind=true},
+	name = " of transcendance", suffix=true, instant_resolve=true,
+	keywords = {transcend=true},
 	level_range = {1, 50},
 	rarity = 5,
 	cost = 6,
 	wielder = {
 		combat_mindpower = resolvers.mbonus_material(10, 2),
+		combat_physresist = resolvers.mbonus_material(10, 5),
 	},
 }
 
@@ -199,18 +164,20 @@ newEntity{
 	cost = 6,
 	wielder = {
 		combat_spellpower = resolvers.mbonus_material(10, 2),
+		combat_mentalresist = resolvers.mbonus_material(10, 5),
 	},
 }
 
 newEntity{
 	power_source = {technique=true},
-	name = " of the titan", suffix=true, instant_resolve=true,
-	keywords = {titan=true},
+	name = " of the giants", suffix=true, instant_resolve=true,
+	keywords = {giant=true},
 	level_range = {1, 50},
 	rarity = 5,
 	cost = 6,
 	wielder = {
 		combat_dam = resolvers.mbonus_material(10, 2),
+		combat_spellresist = resolvers.mbonus_material(10, 5),
 	},
 }
 
@@ -218,7 +185,7 @@ newEntity{
 	power_source = {nature=true},
 	name = "monstrous ", prefix=true, instant_resolve=true,
 	keywords = {monstrous=true},
-	level_range = {40, 50},
+	level_range = {30, 50},
 	greater_ego = 1,
 	rarity = 20,
 	cost = 60,
@@ -228,7 +195,7 @@ newEntity{
 			[Stats.STAT_CON] = resolvers.mbonus_material(3, 3),
 		},
 		size_category = 1,
-		combat_dam = resolvers.mbonus_material(5, 5),
+		combat_dam = resolvers.mbonus_material(10, 5),
 		combat_physresist = resolvers.mbonus_material(10, 5),
 	},
 }
@@ -237,7 +204,7 @@ newEntity{
 	power_source = {technique=true},
 	name = "balancing ", prefix=true, instant_resolve=true,
 	keywords = {balancing=true},
-	level_range = {40, 50},
+	level_range = {30, 50},
 	greater_ego = 1,
 	rarity = 20,
 	cost = 60,
@@ -246,8 +213,8 @@ newEntity{
 			[Stats.STAT_DEX] = resolvers.mbonus_material(3, 3),
 			[Stats.STAT_CUN] = resolvers.mbonus_material(3, 3),
 		},
-		combat_atk = resolvers.mbonus_material(5, 5),
-		combat_physcrit = resolvers.mbonus_material(3, 3),
+		combat_physcrit = resolvers.mbonus_material(10, 5),
+		combat_mindcrit = resolvers.mbonus_material(10, 5),
 	},
 }
 
@@ -277,10 +244,12 @@ newEntity{
 	wielder = {
 		disarm_bonus = resolvers.mbonus_material(25, 5),
 		trap_detect_power = resolvers.mbonus_material(25, 5),
-		infravision = resolvers.mbonus_material(2, 2),
+		infravision = resolvers.mbonus_material(3, 3),
 		inc_stealth = resolvers.mbonus_material(10, 5),
 		inc_stats = {
-			[Stats.STAT_LCK] = resolvers.mbonus_material(3, 3),
+			[Stats.STAT_DEX] = resolvers.mbonus_material(3, 3),
+			[Stats.STAT_CUN] = resolvers.mbonus_material(3, 3),
+			[Stats.STAT_LCK] = resolvers.mbonus_material(5, 5),
 		},
 	},
 }
@@ -313,14 +282,14 @@ newEntity{
 	cost = 70,
 	wielder = {
 		inc_stats = {
-			[Stats.STAT_STR] = resolvers.mbonus_material(3, 1),
-			[Stats.STAT_DEX] = resolvers.mbonus_material(3, 1),
-			[Stats.STAT_WIL] = resolvers.mbonus_material(3, 1),
-			[Stats.STAT_CUN] = resolvers.mbonus_material(3, 1),
+			[Stats.STAT_STR] = resolvers.mbonus_material(5, 2),
+			[Stats.STAT_DEX] = resolvers.mbonus_material(5, 2),
+			[Stats.STAT_WIL] = resolvers.mbonus_material(5, 2),
+			[Stats.STAT_CUN] = resolvers.mbonus_material(5, 2),
 		},
-		combat_mentalresist = resolvers.mbonus_material(10, 5),
-		combat_physresist = resolvers.mbonus_material(10, 5),
-		combat_spellresist = resolvers.mbonus_material(10, 5),
+		combat_mentalresist = resolvers.mbonus_material(10, 10),
+		combat_physresist = resolvers.mbonus_material(10, 10),
+		combat_spellresist = resolvers.mbonus_material(10, 10),
 	},
 }
 
@@ -422,7 +391,7 @@ newEntity{
 	cost = 6,
 	wielder = {
 		healing_factor = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return 0, v end),
-		life_regen = resolvers.mbonus_material(10, 2, function(e, v) return 0, v/10 end),
+		life_regen = resolvers.mbonus_material(30, 6, function(e, v) return 0, v/10 end),
 	},
 }
 
@@ -456,7 +425,7 @@ newEntity{
 }
 
 newEntity{
-	power_source = {technique=true},
+	power_source = {arcane=true},
 	name = " of containment", suffix=true, instant_resolve=true,
 	keywords = {containment=true},
 	level_range = {40, 50},
@@ -464,10 +433,14 @@ newEntity{
 	rarity = 35,
 	cost = 70,
 	wielder = {
-		inc_stats = {
-			[Stats.STAT_CON] = resolvers.mbonus_material(6, 4),
+		max_life = resolvers.mbonus_material(80, 50),
+		max_stamina = resolvers.mbonus_material(40, 25),
+		max_mana = resolvers.mbonus_material(50, 30),
+		max_vim = resolvers.mbonus_material(20, 20),
+		max_positive = resolvers.mbonus_material(20, 20),
+		max_negative = resolvers.mbonus_material(20, 20),
+		max_hate = resolvers.mbonus_material(10, 10),
+		paradox_reduce_fails = resolvers.mbonus_material(20, 20),
+		max_psi = resolvers.mbonus_material(20, 20),
 		},
-		combat_physresist = resolvers.mbonus_material(10, 5),
-		max_stamina = resolvers.mbonus_material(30, 10),
-	},
 }

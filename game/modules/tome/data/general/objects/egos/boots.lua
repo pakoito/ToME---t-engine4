@@ -23,18 +23,6 @@ local DamageType = require "engine.DamageType"
 
 newEntity{
 	power_source = {technique=true},
-	name = " of stability", suffix=true, instant_resolve=true,
-	keywords = {stability=true},
-	level_range = {20, 50},
-	rarity = 12,
-	cost = 12,
-	wielder = {
-		combat_physresist = resolvers.mbonus_material(10, 5),
-	},
-}
-
-newEntity{
-	power_source = {technique=true},
 	name = " of tirelessness", suffix=true, instant_resolve=true,
 	keywords = {tireless=true},
 	level_range = {1, 50},
@@ -54,20 +42,9 @@ newEntity{
 	rarity = 5,
 	cost = 6,
 	wielder = {
+		combat_physresist = resolvers.mbonus_material(10, 5),
 		max_encumber = resolvers.mbonus_material(30, 20),
 		fatigue = resolvers.mbonus_material(6, 4, function(e, v) return 0, -v end),
-	},
-}
-
-newEntity{
-	power_source = {psionic=true},
-	name = "stalker's ", prefix=true, instant_resolve=true,
-	keywords = {stalker=true},
-	level_range = {1, 50},
-	rarity = 5,
-	cost = 6,
-	wielder = {
-		infravision = resolvers.mbonus_material(2, 1),
 	},
 }
 
@@ -92,6 +69,7 @@ newEntity{
 	cost = 6,
 	wielder = {
 		combat_armor = resolvers.mbonus_material(6, 4),
+		infravision = resolvers.mbonus_material(2, 1),
 	},
 }
 
@@ -172,9 +150,17 @@ newEntity{
 	rarity = 20,
 	cost = 60,
 	wielder = {
-		resist_all_on_teleport = resolvers.mbonus_material(5, 5),
-		defense_on_teleport = resolvers.mbonus_material(10, 5),
-		effect_reduction_on_teleport = resolvers.mbonus_material(10, 5),
+		resists={
+			[DamageType.DARKNESS] = resolvers.mbonus_material(20, 10),
+			[DamageType.TEMPORAL] = resolvers.mbonus_material(20, 10),
+	},
+		resists_pen = {
+			[DamageType.DARKNESS] = resolvers.mbonus_material(10, 10),
+			[DamageType.TEMPORAL] = resolvers.mbonus_material(10, 10),
+		},
+		resist_all_on_teleport = resolvers.mbonus_material(10, 10),
+		defense_on_teleport = resolvers.mbonus_material(20, 10),
+		effect_reduction_on_teleport = resolvers.mbonus_material(20, 10),
 	},
 }
 
@@ -186,7 +172,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 18,
 	cost = 40,
-	resolvers.charmt(Talents.T_DISENGAGE, {1,2,3}, 25),
+	resolvers.charmt(Talents.T_DISENGAGE, {1,2,3}, 15),
 	wielder = {
 		inc_stats = {
 			[Stats.STAT_DEX] = resolvers.mbonus_material(2, 2),
@@ -214,13 +200,13 @@ newEntity{
 	power_source = {nature=true},
 	name = "restorative ", prefix=true, instant_resolve=true,
 	keywords = {restorative=true},
-	level_range = {35, 50},
+	level_range = {20, 50},
 	greater_ego = 1,
 	rarity = 18,
 	cost = 60,
 	wielder = {
 		healing_factor = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return 0, v end),
-		life_regen = resolvers.mbonus_material(10, 5, function(e, v) v=v/10 return 0, v end),
+		life_regen = resolvers.mbonus_material(40, 15, function(e, v) v=v/10 return 0, v end),
 	},
 }
 
@@ -236,6 +222,7 @@ newEntity{
 		fatigue = resolvers.mbonus_material(6, 4, function(e, v) return 0, -v end),
 		max_life=resolvers.mbonus_material(30, 30),
 		movement_speed = 0.1,
+		stamina_regen = resolvers.mbonus_material(7, 2, function(e, v) v=v/10 return 0, v end),
 	},
 }
 
@@ -249,9 +236,14 @@ newEntity{
 	cost = 80,
 	wielder = {
 		inc_stats = {
-			[Stats.STAT_WIL] = resolvers.mbonus_material(7, 3),
+			[Stats.STAT_MAG] = resolvers.mbonus_material(7, 3),
+		},
+		inc_damage = {
+			[DamageType.ACID] = resolvers.mbonus_material(5, 5),
+			[DamageType.BLIGHT] = resolvers.mbonus_material(5, 5),
 		},
 		combat_spellpower = resolvers.mbonus_material(7, 3),
+		disease_immune = resolvers.mbonus_material(30, 20, function(e, v) return 0, v/100 end),
 	},
 }
 
@@ -265,10 +257,11 @@ newEntity{
 	cost = 30,
 	wielder = {
 		inc_stats = {
+			[Stats.STAT_CUN] = resolvers.mbonus_material(5, 1),
 			[Stats.STAT_CON] = resolvers.mbonus_material(5, 1),
 		},
-		combat_mentalresist = resolvers.mbonus_material(10, 5),
-		combat_physresist = resolvers.mbonus_material(10, 5),
+		combat_mentalresist = resolvers.mbonus_material(15, 10),
+		combat_physresist = resolvers.mbonus_material(15, 10),
 	},
 }
 
@@ -300,6 +293,10 @@ newEntity{
 	rarity = 30,
 	cost = 60,
 	wielder = {
+		inc_stats = {
+			[Stats.STAT_MAG] = resolvers.mbonus_material(5, 1),
+			[Stats.STAT_WIL] = resolvers.mbonus_material(5, 1),
+		},
 		max_mana = resolvers.mbonus_material(40, 20),
 		mana_regen = resolvers.mbonus_material(50, 10, function(e, v) v=v/100 return 0, v end),
 		combat_spellcrit = resolvers.mbonus_material(4, 1),
@@ -308,17 +305,22 @@ newEntity{
 
 newEntity{
 	power_source = {technique=true},
-	name = " of heaving", suffix=true, instant_resolve=true,
-	keywords = {heaving=true},
+	name = " of massiveness", suffix=true, instant_resolve=true,
+	keywords = {massive=true},
 	level_range = {40, 50},
 	greater_ego = 1,
 	rarity = 30,
 	cost = 60,
-	resolvers.charmt(Talents.T_HEAVE, {2,3,4}, 30),
+	resolvers.charmt(Talents.T_HEAVE, {2,3,4}, 15),
 	wielder = {
 		inc_stats = {
 			[Stats.STAT_STR] = resolvers.mbonus_material(7, 3),
+			[Stats.STAT_CON] = resolvers.mbonus_material(7, 3),
 		},
+		inc_damage = {
+			[DamageType.PHYSICAL] = resolvers.mbonus_material(5, 5),
+	},
+		size_category = 1,
 	},
 }
 
@@ -366,7 +368,7 @@ newEntity{
 	cost = 30,
 	resolvers.charmt(Talents.T_EVASION, {2,3,4}, 30),
 	wielder = {
-		combat_def = resolvers.mbonus_material(10, 5),
+		combat_def = resolvers.mbonus_material(15, 10),
 	},
 }
 
@@ -426,8 +428,12 @@ newEntity{
 	resolvers.charmt(Talents.T_BLINDSIDE, {1,2,3}, 25),
 	wielder = {
 		inc_stats = {
-			[Stats.STAT_WIL] = resolvers.mbonus_material(2, 2),
+			[Stats.STAT_CON] = resolvers.mbonus_material(4, 2),
+			[Stats.STAT_WIL] = resolvers.mbonus_material(4, 2),
 		},
-		combat_mindpower = resolvers.mbonus_material(3, 3),
+		resists_pen = {
+			[DamageType.PHYSICAL] = resolvers.mbonus_material(5, 5),
+	},
+		combat_mindpower = resolvers.mbonus_material(6, 3),
 	},
 }

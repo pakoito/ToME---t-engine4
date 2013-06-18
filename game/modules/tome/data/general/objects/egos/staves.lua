@@ -33,7 +33,8 @@ newEntity{
 	rarity = 3,
 	cost = 4,
 	wielder = {
-		combat_critical_power = resolvers.mbonus_material(10, 10),
+		combat_physcrit = resolvers.mbonus_material(10, 5),
+		combat_critical_power = resolvers.mbonus_material(20, 10),
 	},
 }
 
@@ -46,6 +47,7 @@ newEntity{
 	cost = 10,
 	wielder = {
 		combat_armor = resolvers.mbonus_material(10, 2),
+		combat_armor_hardiness = resolvers.mbonus_material(10, 2),
 		combat_physresist = resolvers.mbonus_material(10, 2),
 	},
 }
@@ -59,6 +61,9 @@ newEntity{
 	cost = 5,
 	combat = {
 		dam = resolvers.mbonus_material(10, 2),
+	},
+	wielder = {
+		combat_spellpower = resolvers.mbonus_material(3, 2),
 	},
 	resolvers.genericlast(function(e)
 		e.wielder.inc_damage[e.combat.damtype] = e.combat.dam
@@ -79,6 +84,7 @@ newEntity{
 	cost = 8,
 	wielder = {
 		max_mana = resolvers.mbonus_material(70, 30),
+		mana_regen = resolvers.mbonus_material(30, 10, function(e, v) v=v/100 return 0, v end),
 	},
 }
 
@@ -98,13 +104,16 @@ newEntity{
 	power_source = {arcane=true},
 	name = "blighted ", prefix=true, instant_resolve=true,
 	keywords = {blight=true},
-	level_range = {30, 50},
+	level_range = {15, 50},
 	greater_ego = 1,
 	rarity = 30,
 	cost = 40,
 	wielder = {
 		vim_on_crit = resolvers.mbonus_material(5, 1),
-		max_vim =  resolvers.mbonus_material(20, 10),
+		max_vim =  resolvers.mbonus_material(30, 10),
+		melee_project = {
+			[DamageType.CORRUPTED_BLOOD] = resolvers.mbonus_material(15, 5),
+	},
 	},
 }
 
@@ -117,8 +126,12 @@ newEntity{
 	rarity = 30,
 	cost = 40,
 	wielder = {
-		combat_def = resolvers.mbonus_material(10, 2),
+		combat_spellpower = resolvers.mbonus_material(5, 3),
+		combat_def = resolvers.mbonus_material(15, 10),
 		damage_shield_penetrate = resolvers.mbonus_material(40, 10),
+		melee_project = {
+			[DamageType.RANDOM_CONFUSION] = resolvers.mbonus_material(8, 4),
+	},
 	},
 }
 
@@ -131,6 +144,9 @@ newEntity{
 	rarity = 30,
 	cost = 45,
 	combat = {is_greater = true,},
+	wielder = {
+		combat_spellpower = resolvers.mbonus_material(4, 3),
+	},
 	resolvers.generic(function(e)
 		local dam_tables = {
 			magestaff = { engine.DamageType.FIRE, engine.DamageType.COLD, engine.DamageType.LIGHTNING, engine.DamageType.ARCANE },
@@ -153,9 +169,14 @@ newEntity{
 	rarity = 40,
 	cost = 30,
 	wielder = {
-		resist_all_on_teleport = resolvers.mbonus_material(10, 5),
-		defense_on_teleport = resolvers.mbonus_material(20, 5),
-		effect_reduction_on_teleport = resolvers.mbonus_material(25, 10),
+		resists = {
+			[DamageType.COLD] = resolvers.mbonus_material(10, 5),
+			[DamageType.TEMPORAL] = resolvers.mbonus_material(10, 5),
+	},
+		resist_all_on_teleport = resolvers.mbonus_material(20, 5),
+		defense_on_teleport = resolvers.mbonus_material(30, 5),
+		effect_reduction_on_teleport = resolvers.mbonus_material(35, 10),
+		paradox_reduce_fails = resolvers.mbonus_material(30, 20),
 	},
 }
 
@@ -167,9 +188,10 @@ newEntity{
 	rarity = 5,
 	cost = 10,
 	wielder = {
-		combat_physresist = resolvers.mbonus_material(8, 2),
-		combat_mentalresist = resolvers.mbonus_material(8, 2),
-		combat_spellresist = resolvers.mbonus_material(8, 2),
+		combat_physresist = resolvers.mbonus_material(10, 5),
+		combat_mentalresist = resolvers.mbonus_material(10, 5),
+		combat_spellresist = resolvers.mbonus_material(10, 5),
+		combat_spellcrit = resolvers.mbonus_material(5, 3),
 	},
 }
 
@@ -181,7 +203,11 @@ newEntity{
 	rarity = 3,
 	cost = 4,
 	wielder = {
-		lite = resolvers.mbonus_material(4, 1),
+		combat_def = resolvers.mbonus_material(10, 5),
+		lite = resolvers.mbonus_material(3, 2),
+		melee_project = {
+			[DamageType.LIGHT_BLIND] = resolvers.mbonus_material(15, 5),
+	},
 	},
 	resolvers.charmt(Talents.T_ILLUMINATE, {1,2}, 6),
 }
@@ -194,7 +220,7 @@ newEntity{
 	rarity = 3,
 	cost = 8,
 	wielder = {
-		combat_spellcrit = resolvers.mbonus_material(10, 2),
+		combat_spellcrit = resolvers.mbonus_material(10, 5),
 	},
 }
 
@@ -217,6 +243,10 @@ newEntity{
 	level_range = {1, 50},
 	rarity = 10,
 	cost = 15,
+	wielder = {
+		combat_spellpower = resolvers.mbonus_material(3, 2),
+		combat_spellcrit = resolvers.mbonus_material(2, 2),
+	},
 	resolvers.charm("projects a bolt from the staff", 5,
 		function(self, who)
 			local tg = {type="bolt", range= 5 + self.material_level, speed=20, display = {particle=particle, trail=trail},}
@@ -268,6 +298,8 @@ newEntity{
 	rarity = 10,
 	cost = 20,
 	wielder = {
+		combat_armor = resolvers.mbonus_material(4, 4),
+		combat_def = resolvers.mbonus_material(4, 4),
 		learn_talent = {
 			[Talents.T_WARD] = resolvers.mbonus_material(4, 1),
 		},
@@ -308,6 +340,10 @@ newEntity{
 	greater_ego = 1,
 	rarity = 30,
 	cost = 40,
+	wielder = {
+		combat_spellpower = resolvers.mbonus_material(5, 5),
+		combat_spellcrit = resolvers.mbonus_material(5, 5),
+	},
 	resolvers.charm("projects damage in a circle from the staff", 10,
 		function(self, who)
 			local tg = {type="ball", range=0, radius=self.material_level + 1, selffire=false}
@@ -353,7 +389,7 @@ newEntity{
 	rarity = 20,
 	cost = 45,
 	wielder = {
-		combat_spellpower = resolvers.mbonus_material(10, 2),
+		combat_spellpower = resolvers.mbonus_material(10, 8),
 		mana_regen = resolvers.mbonus_material(30, 10, function(e, v) v=v/100 return 0, v end),
 	},
 	resolvers.charm("channel mana (increasing mana regen by 500%% for ten turns)", 30,
@@ -384,6 +420,8 @@ newEntity{
 	rarity = 30,
 	cost = 40,
 	wielder = {
+		combat_armor = resolvers.mbonus_material(6, 6),
+		combat_def = resolvers.mbonus_material(6, 6),
 		learn_talent = {
 			[Talents.T_WARD] = resolvers.mbonus_material(4, 1),
 		},
@@ -405,6 +443,10 @@ newEntity{
 	greater_ego = 1,
 	rarity = 30,
 	cost = 40,
+	wielder = {
+		combat_spellpower = resolvers.mbonus_material(5, 5),
+		spellsurge_on_crit = resolvers.mbonus_material(5, 5),
+	},
 	resolvers.charm("projects damage in a cone from the staff", 8,
 		function(self, who)
 			local tg = {type="cone", range=0, radius=self.material_level * 2, selffire=false}
@@ -477,6 +519,133 @@ newEntity{
 		inc_stats = { [Stats.STAT_MAG] = resolvers.mbonus_material(5, 1), [Stats.STAT_WIL] = resolvers.mbonus_material(5, 1) },
 	},
 }
+
+newEntity{
+	power_source = {nature=true},
+	name = "lifebinding ", prefix=true, instant_resolve=true,
+	keywords = {lifebinding=true},
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 16,
+	cost = 35,
+	wielder = {
+		combat_spellpower = resolvers.mbonus_material(7, 3),
+		life_regen = resolvers.mbonus_material(15, 5, function(e, v) v=v/10 return 0, v end),
+		healing_factor = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return 0, v end),
+		inc_stats = {
+			[Stats.STAT_CON] = resolvers.mbonus_material(4, 3),
+			},
+	},
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = "infernal ", prefix=true, instant_resolve=true,
+	keywords = {infernal=true},
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 16,
+	cost = 35,
+	wielder = {
+		combat_spellpower = resolvers.mbonus_material(7, 3),
+		combat_critical_power = resolvers.mbonus_material(25, 15),
+		see_invisible = resolvers.mbonus_material(15, 5),
+		melee_project = {
+			[DamageType.SHADOWFLAME] = resolvers.mbonus_material(20, 15),
+		},
+	},
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = "bloodlich's ", prefix=true, instant_resolve=true,
+	keywords = {bloodlich=true},
+	level_range = {40, 50},
+	greater_ego = 1,
+	rarity = 40,
+	cost = 90,
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_CUN] = resolvers.mbonus_material(9, 1),
+			[Stats.STAT_CON] = resolvers.mbonus_material(9, 1),
+			[Stats.STAT_MAG] = resolvers.mbonus_material(9, 1),
+		},
+		combat_critical_power = resolvers.mbonus_material(20, 10),
+		vim_on_crit = resolvers.mbonus_material(5, 3),
+		max_vim =  resolvers.mbonus_material(30, 20),
+		max_negative =  resolvers.mbonus_material(30, 20),
+		negative_regen = 0.2
+	},
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = "magelord's ", prefix=true, instant_resolve=true,
+	keywords = {magelord=true},
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 30,
+	cost = 60,
+	combat = {
+		dam = resolvers.mbonus_material(10, 5),
+	},
+	wielder = {
+		combat_physcrit = resolvers.mbonus_material(8, 6),
+		max_mana = resolvers.mbonus_material(100, 20),
+		combat_spellpower = resolvers.mbonus_material(5, 5),
+		melee_project = {
+			[DamageType.ARCANE] = resolvers.mbonus_material(30, 15),
+		},
+	},
+	resolvers.genericlast(function(e)
+		e.wielder.inc_damage[e.combat.damtype] = e.combat.dam
+		if e.combat.of_breaching then
+			for d, v in pairs(e.wielder.inc_damage) do
+				e.wielder.resists_pen[d] = math.ceil(e.combat.dam/2)
+			end
+		end
+	end),
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = "short ", prefix=true, instant_resolve=true,
+	slot_forbid = false,
+	twohanded = false,
+	keywords = {short=true},
+	level_range = {1, 50},
+	rarity = 15,
+	cost = 25,
+	wielder = {
+	},
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = "magewarrior's short ", prefix=true, instant_resolve=true,
+	slot_forbid = false,
+	twohanded = false,
+	keywords = {magewarrior=true},
+	level_range = {40, 50},
+	greater_ego = 1,
+	rarity = 35,
+	cost = 60,
+	combat = {
+		dam = resolvers.mbonus_material(8, 4),
+	},
+	wielder = {
+		combat_atk = resolvers.mbonus_material(10, 5),
+		combat_dam = resolvers.mbonus_material(10, 5),
+		combat_spellpower = resolvers.mbonus_material(5, 5),
+		combat_physcrit = resolvers.mbonus_material(5, 5),
+		combat_spellcrit = resolvers.mbonus_material(5, 5),
+		combat_critical_power = resolvers.mbonus_material(10, 10),
+		melee_project = {
+			[DamageType.RANDOM_SILENCE] = resolvers.mbonus_material(10, 10),
+		},
+	},
+}
+
 
 --[[
 newEntity{

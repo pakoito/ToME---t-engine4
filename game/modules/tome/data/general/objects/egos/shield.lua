@@ -173,6 +173,9 @@ newEntity{
 	},
 	wielder = {
 		on_melee_hit={[DamageType.FIRE] = resolvers.mbonus_material(10, 10)},
+		melee_project={
+			[DamageType.FIRE] = resolvers.mbonus_material(5, 5),
+	},
 	},
 }
 newEntity{
@@ -187,6 +190,9 @@ newEntity{
 	},
 	wielder = {
 		on_melee_hit={[DamageType.COLD] = resolvers.mbonus_material(10, 10)},
+		melee_project={
+			[DamageType.COLD] = resolvers.mbonus_material(5, 5),
+	},
 	},
 }
 newEntity{
@@ -201,6 +207,9 @@ newEntity{
 	},
 	wielder = {
 		on_melee_hit={[DamageType.LIGHTNING] = resolvers.mbonus_material(10, 10)},
+		melee_project={
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(5, 5),
+	},
 	},
 }
 newEntity{
@@ -215,6 +224,9 @@ newEntity{
 	},
 	wielder = {
 		on_melee_hit={[DamageType.ACID] = resolvers.mbonus_material(10, 10)},
+		melee_project={
+			[DamageType.ACID] = resolvers.mbonus_material(5, 5),
+	},
 	},
 }
 
@@ -226,10 +238,13 @@ newEntity{
 	rarity = 14,
 	cost = 12,
 	special_combat = {
-		melee_project={[DamageType.RANDOM_GLOOM] = resolvers.mbonus_material(10, 10)},
+		melee_project={[DamageType.RANDOM_GLOOM] = resolvers.mbonus_material(7, 7)},
 	},
 	wielder = {
 		on_melee_hit={[DamageType.RANDOM_GLOOM] = resolvers.mbonus_material(10, 10)},
+		melee_project={
+			[DamageType.RANDOM_GLOOM] = resolvers.mbonus_material(5, 5),
+	},
 	},
 }
 
@@ -377,6 +392,10 @@ newEntity{
 		inc_stats = {
 			[Stats.STAT_WIL] = resolvers.mbonus_material(4, 3),
 		},
+		resists={
+			[DamageType.FIRE] = resolvers.mbonus_material(10, 10),
+			[DamageType.MIND] = resolvers.mbonus_material(10, 10),
+		},
 		on_melee_hit = {[DamageType.DREAMFORGE] = resolvers.mbonus_material(10, 10)},
 		psi_regen_when_hit = resolvers.mbonus_material(23, 7, function(e, v) v=v/10 return 0, v end),
 	},
@@ -491,7 +510,7 @@ newEntity{
 	rarity = 17,
 	cost = 30,
 	wielder = {
-		life_regen = resolvers.mbonus_material(15, 5, function(e, v) v=v/10 return 0, v end),
+		life_regen = resolvers.mbonus_material(30, 10, function(e, v) v=v/10 return 0, v end),
 		healing_factor = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return 0, v end),
 		inc_stats = {
 			[Stats.STAT_CON] = resolvers.mbonus_material(4, 3),
@@ -595,6 +614,7 @@ newEntity{
 		talents_types_mastery = {
 			["wild-gift/harmony"] = resolvers.mbonus_material(2, 2, function(e, v) v=v/10 return 0, v end),
 		},
+		healing_factor = resolvers.mbonus_material(10, 10, function(e, v) v=v/100 return 0, v end),
 	},
 }
 

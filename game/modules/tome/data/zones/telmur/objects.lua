@@ -40,5 +40,8 @@ newEntity{ base = "BASE_STAFF",
 			[DamageType.COLD] = 20,
 			[DamageType.ACID] = 20,
 		},
+		combat_spellcrit = 8,
+		combat_critical_power = 20,
+		confusion_immune = 0.2,
 	},
 }

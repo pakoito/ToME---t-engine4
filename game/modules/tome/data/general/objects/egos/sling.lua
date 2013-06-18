@@ -30,6 +30,7 @@ newEntity{
 	rarity = 7,
 	cost = 7,
 	wielder = {
+		resists_pen={ [DamageType.PHYSICAL] = resolvers.mbonus_material(15, 10), },
 		inc_stats = { [Stats.STAT_CUN] = resolvers.mbonus_material(6, 2) },
 	},
 }

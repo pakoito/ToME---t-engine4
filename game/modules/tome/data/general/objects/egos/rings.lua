@@ -61,6 +61,7 @@ newEntity{
 	rarity = 4,
 	cost = 5,
 	wielder = {
+		max_life=resolvers.mbonus_material(30, 20),
 		pin_immune = resolvers.mbonus_material(30, 20, function(e, v) v=v/100 return 0, v end),
 		knockback_immune = resolvers.mbonus_material(30, 20, function(e, v) v=v/100 return 0, v end),
 		disarm_immune = resolvers.mbonus_material(30, 20, function(e, v) v=v/100 return 0, v end),
@@ -75,7 +76,7 @@ newEntity{
 	rarity = 4,
 	cost = 5,
 	wielder = {
-		life_regen = resolvers.mbonus_material(30, 5, function(e, v) v=v/10 return 0, v end),
+		life_regen = resolvers.mbonus_material(40, 8, function(e, v) v=v/10 return 0, v end),
 		stun_immune = resolvers.mbonus_material(30, 20, function(e, v) v=v/100 return 0, v end),
 	},
 }
@@ -84,7 +85,7 @@ newEntity{
 	power_source = {arcane=true},
 	name = " of arcana(#REGEN#)", suffix=true, instant_resolve=true,
 	keywords = {arcana=true},
-	level_range = {1, 20},
+	level_range = {1, 50},
 	rarity = 6,
 	cost = 3,
 	wielder = {
@@ -211,7 +212,7 @@ newEntity{
 	name = " of blight (#RESIST#)", suffix=true, instant_resolve=true,
 	keywords = {blight=true},
 	level_range = {1, 50},
-	rarity = 24,
+	rarity = 12,
 	cost = 2,
 	wielder = {
 		inc_damage = { [DamageType.BLIGHT] = resolvers.mbonus_material(10, 10) },
@@ -239,7 +240,7 @@ newEntity{
 	name = " of the mind (#RESIST#)", suffix=true, instant_resolve=true,
 	keywords = {mind=true},
 	level_range = {1, 50},
-	rarity = 24,
+	rarity = 12,
 	cost = 2,
 	wielder = {
 		inc_damage = { [DamageType.MIND] = resolvers.mbonus_material(10, 10) },
@@ -265,34 +266,14 @@ newEntity{
 -- The rest
 newEntity{ 
 	power_source = {arcane=true},
-	name = " of arcane power", suffix=true, instant_resolve=true,
-	keywords = {arcane=true},
-	level_range = {6, 50},
+	name = " of power", suffix=true, instant_resolve=true,
+	keywords = {power=true},
+	level_range = {1, 50},
 	rarity = 4,
 	cost = 4,
 	wielder = {
 		combat_spellpower = resolvers.mbonus_material(10, 5),
-	},
-}
-newEntity{
-	power_source = {technique=true},
-	name = " of physical power ", suffix=true, instant_resolve=true,
-	keywords = {physical=true},
-	level_range = {6, 50},
-	rarity = 4,
-	cost = 4,
-	wielder = {
 		combat_dam = resolvers.mbonus_material(10, 5),
-	},
-}
-newEntity{ 
-	power_source = {psionic=true},
-	name = " of mental power", suffix=true, instant_resolve=true,
-	keywords = {mental=true},
-	level_range = {6, 50},
-	rarity = 4,
-	cost = 4,
-	wielder = {
 		combat_mindpower = resolvers.mbonus_material(10, 5),
 	},
 }
@@ -305,9 +286,9 @@ newEntity{
 	rarity = 10,
 	cost = 10,
 	wielder = {
-		combat_mentalresist = resolvers.mbonus_material(10, 5),
-		combat_physresist = resolvers.mbonus_material(10, 5),
-		combat_spellresist = resolvers.mbonus_material(10, 5),
+		combat_mentalresist = resolvers.mbonus_material(12, 6),
+		combat_physresist = resolvers.mbonus_material(12, 6),
+		combat_spellresist = resolvers.mbonus_material(12, 6),
 	},
 }
 
@@ -323,6 +304,7 @@ newEntity{
 	},
 	resolvers.genericlast(function(e) e.wielder.combat_armor = (e.wielder.combat_armor or 0) + (e.wielder.inc_stats[engine.interface.ActorStats.STAT_STR]*2) end),
 }
+
 newEntity{
 	power_source = {technique=true},
 	name = "rogue's ", prefix=true, instant_resolve=true,
@@ -335,6 +317,7 @@ newEntity{
 	},
 	resolvers.genericlast(function(e) e.wielder.combat_def = (e.wielder.combat_def or 0) + (e.wielder.inc_stats[engine.interface.ActorStats.STAT_CUN]*2) end),
 }
+
 newEntity{
 	power_source = {technique=true},
 	name = "marksman's ", prefix=true, instant_resolve=true,
@@ -347,6 +330,7 @@ newEntity{
 	},
 	resolvers.genericlast(function(e) e.wielder.combat_atk = (e.wielder.combat_atk or 0) + (e.wielder.inc_stats[engine.interface.ActorStats.STAT_DEX]*2) end),
 }
+
 newEntity{
 	power_source = {nature=true},
 	name = "titan's ", prefix=true, instant_resolve=true,
@@ -394,6 +378,7 @@ newEntity{
 	rarity = 12,
 	cost = 20,
 	wielder = {
+		combat_atk = resolvers.mbonus_material(10, 5),
 		inc_stats = {
 			[Stats.STAT_DEX] = resolvers.mbonus_material(6, 4),
 			[Stats.STAT_CUN] = resolvers.mbonus_material(6, 4),
@@ -488,6 +473,7 @@ newEntity{
 		combat_spellpower = resolvers.mbonus_material(15, 5),
 		combat_dam = resolvers.mbonus_material(15, 5),
 		combat_mindpower = resolvers.mbonus_material(15, 5),
+		inc_damage = { all = resolvers.mbonus_material(4, 4) },
 	},
 }
 
@@ -503,7 +489,7 @@ newEntity{
 		inc_stats = {
 			[Stats.STAT_CON] = resolvers.mbonus_material(5, 1),
 		},
-		combat_spellresist = resolvers.mbonus_material(10, 5),
+		combat_spellresist = resolvers.mbonus_material(10, 10),
 		max_stamina = resolvers.mbonus_material(30, 10),
 	},
 }
@@ -522,7 +508,7 @@ newEntity{
 		},
 		poison_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
 		disease_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
-		combat_physresist = resolvers.mbonus_material(10, 5),
+		combat_physresist = resolvers.mbonus_material(10, 10),
 	},
 }
 
@@ -536,10 +522,15 @@ newEntity{
 	cost = 40,
 	resolvers.charmt(Talents.T_BLEEDING_EDGE, {2,3,4}, 20),
 	wielder = {
+		melee_project = {
+			[DamageType.BLEED] = resolvers.mbonus_material(20, 20),
+			[DamageType.RANDOM_GLOOM] = resolvers.mbonus_material(10, 10),
+		},
 		inc_stats = {
 			[Stats.STAT_CUN] = resolvers.mbonus_material(9, 1),
 		},
 		hate_on_crit = resolvers.mbonus_material(2, 1),
+		max_hate = resolvers.mbonus_material(10, 5),
 	},
 }
 
@@ -567,7 +558,7 @@ newEntity{
 	keywords = {focus=true},
 	level_range = {40, 50},
 	greater_ego = 1,
-	rarity = 40,
+	rarity = 30,
 	cost = 100,
 	resolvers.charmt(Talents.T_GREATER_WEAPON_FOCUS, {2,3,4}, 20),
 	wielder = {
@@ -587,8 +578,9 @@ newEntity{
 	cost = 30,
 	resolvers.charmt(Talents.T_DISENGAGE, 2, 30),
 	wielder = {
-		combat_apr = resolvers.mbonus_material(7, 3),
-		combat_def = resolvers.mbonus_material(7, 3),
+		combat_atk = resolvers.mbonus_material(10, 7),
+		combat_apr = resolvers.mbonus_material(10, 7),
+		combat_def = resolvers.mbonus_material(10, 7),
 	},
 }
 
@@ -602,16 +594,16 @@ newEntity{
 	cost = 140,
 	resolvers.charmt(Talents.T_BLINDING_SPEED, {2,3,4}, 40),
 	wielder = {
-		movement_speed = resolvers.mbonus_material(12, 3, function(e, v) v=v/100 return 0, v end),
-		combat_atk = resolvers.mbonus_material(7, 3),
-		combat_def = resolvers.mbonus_material(7, 3),
+		movement_speed = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
+		combat_atk = resolvers.mbonus_material(10, 5),
+		combat_def = resolvers.mbonus_material(10, 5),
 	},
 }
 
 newEntity{
 	power_source = {arcane=true},
-	name = " of blasting", suffix=true, instant_resolve=true,
-	keywords = {blasting=true},
+	name = " of blinding strikes", suffix=true, instant_resolve=true,
+	keywords = {strikes=true},
 	level_range = {10, 50},
 	greater_ego = 1,
 	rarity = 30,
@@ -620,10 +612,12 @@ newEntity{
 		melee_project = {
 			[DamageType.LIGHTNING] = resolvers.mbonus_material(12, 3),
 			[DamageType.PHYSICAL] = resolvers.mbonus_material(12, 3),
+			[DamageType.RANDOM_BLIND] = resolvers.mbonus_material(12, 3),
 		},
 		on_melee_hit = {
 			[DamageType.LIGHTNING] = resolvers.mbonus_material(12, 3),
 			[DamageType.PHYSICAL] = resolvers.mbonus_material(12, 3),
+			[DamageType.RANDOM_BLIND] = resolvers.mbonus_material(12, 3),
 		},
 	},
 }

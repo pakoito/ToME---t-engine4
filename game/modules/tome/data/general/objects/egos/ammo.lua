@@ -298,6 +298,12 @@ newEntity{
 	rarity = 25,
 	cost = 35,
 	combat = {
+		ranged_project={
+			[DamageType.FIRE] = resolvers.mbonus_material(5, 2),
+			[DamageType.COLD] = resolvers.mbonus_material(5, 2),
+			[DamageType.ACID] = resolvers.mbonus_material(5, 2),
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(5, 2),
+		},
 		convert_damage ={
 			[DamageType.FIRE] = resolvers.mbonus_material(15, 10),
 			[DamageType.COLD] = resolvers.mbonus_material(15, 10),
@@ -408,7 +414,7 @@ newEntity{
 	cost = 20,
 	combat = {
 		ranged_project = {
-			[DamageType.FIRE] = resolvers.mbonus_material(15, 5),
+			[DamageType.FIRE] = resolvers.mbonus_material(25, 8),
 		},
 		convert_damage = { [DamageType.FIRE] = resolvers.mbonus_material(25, 25),}
 	},
@@ -450,7 +456,7 @@ newEntity{
 	cost = 20,
 	combat = {
 		ranged_project = {
-			[DamageType.LIGHTNING] = resolvers.mbonus_material(15, 5),
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(25, 8),
 		},
 		convert_damage = { [DamageType.LIGHTNING] = resolvers.mbonus_material(25, 25),}
 	},
@@ -465,7 +471,7 @@ newEntity{
 	cost = 20,
 	combat = {
 		ranged_project = {
-			[DamageType.COLD] = resolvers.mbonus_material(15, 5),
+			[DamageType.COLD] = resolvers.mbonus_material(25, 8),
 		},
 		convert_damage = { [DamageType.COLD] = resolvers.mbonus_material(25, 25),}
 	},
@@ -715,13 +721,17 @@ newEntity{
 	rarity = 15,
 	cost = 10,
 	combat = {
+		ammo_regen = resolvers.mbonus_material(3, 1),
 		ranged_project={
-			[DamageType.MIND] = resolvers.mbonus_material(15, 5),
+			[DamageType.MIND] = resolvers.mbonus_material(30, 10),
 		},
 		convert_damage = { 
 			[DamageType.MIND] = resolvers.mbonus_material(25, 25),
 		},
 	},
+	resolvers.genericlast(function(e)
+		e.combat.ammo_every = 6 - e.combat.ammo_regen
+	end),
 }
 
 newEntity{

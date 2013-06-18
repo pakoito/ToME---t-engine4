@@ -969,6 +969,7 @@ function _M:getTextualDesc(compare_with)
 		compare_fields(w, compare_with, field, "lite", "%+d", "Light radius: ")
 		compare_fields(w, compare_with, field, "infravision", "%+d", "Infravision radius: ")
 		compare_fields(w, compare_with, field, "heightened_senses", "%+d", "Heightened senses radius: ")
+		compare_fields(w, compare_with, field, "sight", "%+d", "Sight radius: ")
 		
 		compare_fields(w, compare_with, field, "see_stealth", "%+d", "See stealth: ")
 
@@ -1049,9 +1050,7 @@ function _M:getTextualDesc(compare_with)
 			desc:add("Allows you to speak and read the old Sher'Tul language.", true)
 		end
 
-print("<<<")
 		self:triggerHook{"Object:descWielder", compare_with=compare_with, compare_fields=compare_fields, compare_table_fields=compare_table_fields, desc=desc, w=w, field=field}
-print(">>>")
 
 		local can_combat_unarmed = false
 		local compare_unarmed = {}

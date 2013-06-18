@@ -70,8 +70,11 @@ newEntity{
 	rarity = 10,
 	cost = 10,
 	wielder = {
-		inc_stats = { [Stats.STAT_WIL] = resolvers.mbonus_material(2, 1) },
-		combat_mentalresist = resolvers.mbonus_material(5, 5),
+		inc_stats = { [Stats.STAT_WIL] = resolvers.mbonus_material(8, 2) },
+		combat_mentalresist = resolvers.mbonus_material(10, 5),
+		resists={
+			[DamageType.BLIGHT] = resolvers.mbonus_material(10, 5),
+	},
 	},
 }
 newEntity{
@@ -98,9 +101,9 @@ newEntity{
 	rarity = 18,
 	cost = 25,
 	wielder = {
-		combat_atk = resolvers.mbonus_material(4, 2),
-		combat_def = resolvers.mbonus_material(4, 2),
-		inc_stats = { [Stats.STAT_CUN] = 4, },
+		combat_atk = resolvers.mbonus_material(8, 4),
+		combat_def = resolvers.mbonus_material(8, 4),
+		inc_stats = { [Stats.STAT_CUN] = resolvers.mbonus_material(8, 2) },
 	},
 }
 
@@ -112,6 +115,9 @@ newEntity{
 	rarity = 10,
 	cost = 10,
 	wielder = {
+		resists={
+			[DamageType.COLD] = resolvers.mbonus_material(20, 5),
+		},
 		can_breath = {water=1},
 	},
 }
@@ -180,7 +186,7 @@ newEntity{
 	rarity = 6,
 	cost = 5,
 	wielder = {
-		combat_physresist = resolvers.mbonus_material(10, 5),
+		combat_physresist = resolvers.mbonus_material(15, 10),
 	},
 }
 
@@ -262,8 +268,12 @@ newEntity{
 		combat_dam = resolvers.mbonus_material(6, 6),
 		combat_physresist = resolvers.mbonus_material(10, 5),
 		inc_stats = {
+			[Stats.STAT_STR] = resolvers.mbonus_material(4, 3),
 			[Stats.STAT_WIL] = resolvers.mbonus_material(4, 3),
 		},
+		resists={
+			[DamageType.PHYSICAL] = resolvers.mbonus_material(10, 5),
+	},
 	},
 }
 
@@ -279,6 +289,9 @@ newEntity{
 		combat_armor = resolvers.mbonus_material(5, 4),
 		combat_def = resolvers.mbonus_material(4, 4),
 		combat_physresist = resolvers.mbonus_material(10, 5),
+		resists={
+			all = resolvers.mbonus_material(5, 2),
+	},
 	},
 }
 
@@ -286,7 +299,7 @@ newEntity{
 	power_source = {nature=true},
 	name = "dragonslayer's ", prefix=true, instant_resolve=true,
 	keywords = {dragonslayer=true},
-	level_range = {40, 50},
+	level_range = {30, 50},
 	greater_ego = 1,
 	rarity = 17,
 	cost = 50,
@@ -318,7 +331,7 @@ newEntity{
 			[Stats.STAT_CON] = resolvers.mbonus_material(4, 1),
 			[Stats.STAT_CUN] = resolvers.mbonus_material(4, 1),
 		},
-		life_regen = resolvers.mbonus_material(30, 5, function(e, v) v=v/10 return 0, v end),
+		life_regen = resolvers.mbonus_material(70, 10, function(e, v) v=v/10 return 0, v end),
 	},
 }
 
@@ -332,9 +345,9 @@ newEntity{
 	cost = 40,
 	wielder = {
 		resists={
-			[DamageType.MIND] = resolvers.mbonus_material(15, 5),
+			[DamageType.MIND] = resolvers.mbonus_material(15, 10),
 		},
-		combat_mentalresist = resolvers.mbonus_material(10, 5),
+		combat_mentalresist = resolvers.mbonus_material(20, 10),
 	},
 }
 
@@ -384,12 +397,12 @@ newEntity{
 	cost = 40,
 	wielder = {
 		resists={
-			[DamageType.DARKNESS] = resolvers.mbonus_material(10, 5),
+			[DamageType.DARKNESS] = resolvers.mbonus_material(15, 10),
 		},
 		inc_stats = {
 			[Stats.STAT_DEX] = resolvers.mbonus_material(7, 3),
 		},
-		infravision = resolvers.mbonus_material(3, 1),
+		infravision = resolvers.mbonus_material(6, 2),
 	},
 }
 
@@ -399,7 +412,7 @@ newEntity{
 	keywords = {blood=true},
 	level_range = {40, 50},
 	greater_ego = 1,
-	rarity = 40,
+	rarity = 30,
 	cost = 100,
 	wielder = {
 		inc_stats = {
@@ -424,11 +437,11 @@ newEntity{
 	cost = 40,
 	wielder = {
 		inc_stats = {
-			[Stats.STAT_LCK] = resolvers.mbonus_material(7, 3),
+			[Stats.STAT_LCK] = resolvers.mbonus_material(12, 5),
 		},
-		combat_physcrit = resolvers.mbonus_material(4, 1),
-		combat_spellcrit = resolvers.mbonus_material(4, 1),
-		combat_mindcrit = resolvers.mbonus_material(4, 1),
+		combat_physcrit = resolvers.mbonus_material(6, 2),
+		combat_spellcrit = resolvers.mbonus_material(6, 2),
+		combat_mindcrit = resolvers.mbonus_material(6, 2),
 	},
 }
 
@@ -446,6 +459,7 @@ newEntity{
 			[DamageType.BLIGHT] = resolvers.mbonus_material(10, 5),
 			[DamageType.DARKNESS] = resolvers.mbonus_material(10, 5),
 		},
+		combat_spellresist = resolvers.mbonus_material(10, 5),
 		combat_mentalresist = resolvers.mbonus_material(10, 5),
 	},
 }
@@ -462,6 +476,7 @@ newEntity{
 	wielder = {
 		inc_stats = {
 			[Stats.STAT_STR] = resolvers.mbonus_material(5, 1),
+			[Stats.STAT_CON] = resolvers.mbonus_material(5, 1),
 		},
 		combat_mentalresist = resolvers.mbonus_material(10, 5),
 		combat_physresist = resolvers.mbonus_material(10, 5),

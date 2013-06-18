@@ -118,6 +118,16 @@ newEntity{ base = "BASE_STAFF",
 			return {id=true, used=true}
 		end
 	},
+	on_wear = function(self, who)
+		if who.descriptor and who.descriptor.subrace == "Shalore" then
+			local Stats = require "engine.interface.ActorStats"
+			local DamageType = require "engine.DamageType"
+
+			self:specialWearAdd({"wielder","resists"}, { [DamageType.BLIGHT] = 10})
+			self:specialWearAdd({"wielder","disease_immune"}, 0.5)
+			game.logPlayer(who, "#DARK_GREEN#You feel the cleansing power of Penitence attune to you.")
+		end
+	end,
 }
 
 newEntity{ base = "BASE_STAFF",
@@ -566,6 +576,16 @@ newEntity{ base = "BASE_LONGBOW",
 		inc_stats = { [Stats.STAT_DEX] = 5, [Stats.STAT_WIL] = 4,  },
 		ranged_project={[DamageType.LIGHT] = 30},
 	},
+	on_wear = function(self, who)
+		if who.descriptor and who.descriptor.subrace == "Thalore" then
+			local Stats = require "engine.interface.ActorStats"
+			local DamageType = require "engine.DamageType"
+
+			self:specialWearAdd({"wielder","resists"}, { [DamageType.DARKNESS] = 20, [DamageType.NATURE] = 20,} )
+			self:specialWearAdd({"wielder","combat_def"}, 12)
+			game.logPlayer(who, "#DARK_GREEN#You understand this bow-and its connection to nature-in a way few can.")
+		end
+	end,
 }
 
 newEntity{ base = "BASE_LONGBOW",
@@ -589,6 +609,15 @@ newEntity{ base = "BASE_LONGBOW",
 			[Talents.T_CYST_BURST] = 2,
 		},
 	},
+	on_wear = function(self, who)
+		if who.descriptor and who.descriptor.race == "Undead" then
+			local Stats = require "engine.interface.ActorStats"
+			local DamageType = require "engine.DamageType"
+
+			self:specialWearAdd({"combat","ranged_project"}, {[DamageType.DRAINLIFE]=20})
+			game.logPlayer(who, "#DARK_BLUE#You feel a kindrid spirit in this bow...")
+		end
+	end,
 }
 
 newEntity{ base = "BASE_SLING",
@@ -899,6 +928,14 @@ newEntity{ base = "BASE_HELM",
 	},
 	max_power = 30, power_regen = 1,
 	use_talent = { id = Talents.T_SUN_FLARE, level = 3, power = 30 },
+	on_wear = function(self, who)
+		if who.descriptor and who.descriptor.race == "Dwarf" then
+			local Stats = require "engine.interface.ActorStats"
+
+			self:specialWearAdd({"wielder","inc_stats"}, { [Stats.STAT_CUN] = 5, [Stats.STAT_MAG] = 5, [Stats.STAT_WIL] = 5, })
+			game.logPlayer(who, "#LIGHT_BLUE#The legacy of Dwarven Emperors grants you their wisdom.")
+		end
+	end,
 }
 
 newEntity{ base = "BASE_KNIFE",
@@ -928,6 +965,14 @@ newEntity{ base = "BASE_KNIFE",
 		inc_stats = { [Stats.STAT_DEX] = 5, [Stats.STAT_CUN] = 4, },
 		esp = {["humanoid/orc"]=1},
 	},
+	on_wear = function(self, who)
+		if who.descriptor and who.descriptor.race == "Halfling" then
+			local Stats = require "engine.interface.ActorStats"
+
+			self:specialWearAdd({"wielder","inc_stats"}, {  [Stats.STAT_CUN] = 6, [Stats.STAT_LCK] = 25, })
+			game.logPlayer(who, "#LIGHT_BLUE#Herah's guile and luck is with you, her successor!")
+		end
+	end,
 }
 
 newEntity{ base = "BASE_KNIFE",
@@ -1149,6 +1194,16 @@ newEntity{ base = "BASE_MACE",
 
 	max_power = 25, power_regen = 1,
 	use_talent = { id = Talents.T_RUSH, level = 3, power = 15 },
+	on_wear = function(self, who)
+		if who:attr("forbid_arcane") then
+			local Stats = require "engine.interface.ActorStats"
+			local DamageType = require "engine.DamageType"
+
+			self:specialWearAdd({"wielder","resists"}, { all = 4 })
+
+			game.logPlayer(who, "#LIGHT_BLUE#You feel nature defending you.")
+		end
+	end,
 }
 
 newEntity{ base = "BASE_CLOTH_ARMOR",
@@ -1223,10 +1278,24 @@ newEntity{ base = "BASE_HELM",
 		inc_stats = { [Stats.STAT_CON] = 3, [Stats.STAT_WIL] = 10, },
 		combat_def = 3,
 		combat_armor = 6,
+		combat_mindpower = 5,
 		fatigue = 4,
 		resists = { [DamageType.PHYSICAL] = 8},
 		talents_types_mastery = { ["technique/superiority"] = 0.2, ["technique/field-control"] = 0.2 },
 	},
+	max_power = 60, power_regen = 1,
+	use_talent = { id = Talents.T_INDOMITABLE, level = 1, power = 60 },
+	on_wear = function(self, who)
+		self.worn_by = who
+		if who.descriptor and who.descriptor.race == "Halfling" then
+			local Stats = require "engine.interface.ActorStats"
+			self:specialWearAdd({"wielder","inc_stats"}, { [Stats.STAT_CUN] = 7, [Stats.STAT_STR] = 7, }) 
+			game.logPlayer(who, "#LIGHT_BLUE#You gain understanding of the might of your race.", self:getName())
+		end
+	end,
+	on_takeoff = function(self)
+		self.worn_by = nil
+	end,
 }
 
 newEntity{ base = "BASE_GLOVES",
@@ -1245,10 +1314,12 @@ newEntity{ base = "BASE_GLOVES",
 		combat_armor = 8,
 		disarm_immune=0.4,
 		knockback_immune=0.3,
+		stun_immune = 0.3,
 		combat = {
 			dam = 18,
 			apr = 1,
 			physcrit = 7,
+			talent_on_hit = { T_CLINCH = {level=3, chance=20}, T_MAIM = {level=3, chance=10}, T_TAKE_DOWN = {level=3, chance=10} },
 			dammod = {dex=0.4, str=-0.6, cun=0.4 },
 		},
 	},
@@ -1278,6 +1349,7 @@ newEntity{ base = "BASE_GAUNTLETS",
 			physspeed = 0.2,
 			dammod = {dex=0.4, str=-0.6, cun=0.4 },
 			melee_project={[DamageType.ARCANE] = 20},
+			talent_on_hit = { T_GREATER_WEAPON_FOCUS = {level=1, chance=10}, T_DISPLACEMENT_SHIELD = {level=1, chance=10} },
 			damrange = 0.3,
 		},
 	},
@@ -1311,7 +1383,7 @@ Finally The Scorpion was defeated by the alchemist Nessylia, who went to face th
 			physspeed = 0.15,
 			dammod = {dex=0.4, str=-0.6, cun=0.4,},
 			damrange = 0.3,
-			talent_on_hit = { [Talents.T_BITE_POISON] = {level=3, chance=20} },
+			talent_on_hit = { T_BITE_POISON = {level=3, chance=20}, T_PERFECT_CONTROL = {level=1, chance=5}, T_QUICK_AS_THOUGHT = {level=3, chance=5}, T_PERFECT_CONTROL = {level=1, chance=5} },
 		},
 	},
 	max_power = 24, power_regen = 1,
@@ -1339,6 +1411,7 @@ newEntity{ base = "BASE_GLOVES",
 			apr = 1,
 			physcrit = 4,
 			dammod = {dex=0.4, str=-0.6, cun=0.4 },
+			talent_on_hit = { T_CALL_LIGHTNING = {level=5, chance=25}},
 			melee_project={ [DamageType.COLD] = 10, [DamageType.LIGHTNING] = 10, },
 		},
 	},
@@ -1607,6 +1680,7 @@ newEntity{ base = "BASE_STAFF", define_as = "VOICE_TELOS",
 		inc_stats = { [Stats.STAT_MAG] = 6, [Stats.STAT_WIL] = 5, [Stats.STAT_CUN] = 4 },
 		lite = 1,
 		inc_damage = {},
+		damage_affinity = { [DamageType.ARCANE] = 5, [DamageType.BLIGHT] = 5, [DamageType.COLD] = 5, [DamageType.DARKNESS] = 5, [DamageType.ACID] = 5, [DamageType.LIGHT] = 5, [DamageType.LIGHTNING] = 5, [DamageType.FIRE] = 5, },
 		learn_talent = {[Talents.T_COMMAND_STAFF] = 1},
 	},
 }
@@ -1770,6 +1844,16 @@ newEntity{ base = "BASE_LEATHER_BELT",
 		combat_mindpower = 12,
 		talents_types_mastery = { ["wild-gift/harmony"] = 0.2 },
 	},
+	on_wear = function(self, who)
+		if who.descriptor and who.descriptor.subrace == "Thalore" then
+			local Stats = require "engine.interface.ActorStats"
+			local DamageType = require "engine.DamageType"
+
+			self:specialWearAdd({"wielder","resists"}, { [DamageType.MIND] = 20,} )
+			self:specialWearAdd({"wielder","combat_mentalresist"}, 15)
+			game.logPlayer(who, "#DARK_GREEN#Nessilla's belt seems to come alive as you put it on.")
+		end
+	end,
 }
 
 newEntity{ base = "BASE_LEATHER_BELT",
@@ -1906,6 +1990,17 @@ newEntity{ base = "BASE_LIGHT_ARMOR",
 		infravision = 3,
 		talents_types_mastery = { ["cunning/stealth"] = -0.2, },
 	},
+	on_wear = function(self, who)
+		if who.descriptor and who.descriptor.race == "Undead" then
+			local Stats = require "engine.interface.ActorStats"
+			local DamageType = require "engine.DamageType"
+
+			self:specialWearAdd({"wielder", "talents_types_mastery"}, { ["cunning/stealth"] = 0.2 })
+			self:specialWearAdd({"wielder","confusion_immune"}, 0.3)
+			self:specialWearAdd({"wielder","fear_immune"}, 0.3)
+			game.logPlayer(who, "#DARK_BLUE#The skin seems pleased to be worn by the unliving, and grows silent.")
+		end
+	end,
 }
 
 newEntity{ base = "BASE_LIGHT_ARMOR",
@@ -1940,6 +2035,14 @@ newEntity{ base = "BASE_LIGHT_ARMOR",
 
 		talents_types_mastery = { ["wild-gift/antimagic"] = 0.2},
 	},
+	on_wear = function(self, who)
+		if who:attr("forbid_arcane") then
+			local Stats = require "engine.interface.ActorStats"
+
+			self:specialWearAdd({"wielder","combat_spellresist"}, 20)
+			game.logPlayer(who, "#DARK_GREEN#You feel especially blessed.")
+		end
+	end,
 }
 
 newEntity{ base = "BASE_HEAVY_ARMOR",
@@ -2061,15 +2164,27 @@ newEntity{ base = "BASE_MASSIVE_ARMOR",
 		inc_stats = { [Stats.STAT_CON] = 6, },
 		resists = {
 			[DamageType.FIRE] = 25,
+			[DamageType.DARKNESS] = 25,
 		},
 		combat_def = 20,
 		combat_armor = 29,
+		combat_armor_hardiness = 10,
 		stun_immune = 0.4,
 		knockback_immune = 0.4,
 		combat_physresist = 40,
-		healing_factor = -0.4,
+		healing_factor = -0.3,
 		fatigue = 15,
 	},
+	on_wear = function(self, who)
+		if who.descriptor and who.descriptor.race == "Dwarf" then
+			local Talents = require "engine.interface.ActorStats"
+
+			self:specialWearAdd({"wielder","max_life"}, 100)
+			self:specialWearAdd({"wielder","fatigue"}, -15)
+
+			game.logPlayer(who, "#LIGHT_BLUE#You feel your dwarven power swelling to meet the challenge of this armor!")
+		end
+	end,
 }
 
 newEntity{ base = "BASE_GREATSWORD",
@@ -2214,13 +2329,19 @@ newEntity{ base = "BASE_LONGSWORD", define_as = "ART_PAIR_TWSWORD",
 		dam = 28,
 		apr = 10,
 		physcrit = 8,
+		physspeed = 0.9,
 		dammod = {str=0.8,mag=0.2},
 		melee_project={[DamageType.TEMPORAL] = 5},
+		convert_damage = {
+			[DamageType.TEMPORAL] = 30,
+	},
 	},
 	wielder = {
 		inc_damage={
-			[DamageType.TEMPORAL] = 5, [DamageType.PHYSICAL] = -5,
+			[DamageType.TEMPORAL] = 5,
 		},
+		combat_spellpower = 5,
+		combat_spellcrit = 5,
 		resist_all_on_teleport = 5,
 		defense_on_teleport = 10,
 		effect_reduction_on_teleport = 15,
@@ -2255,13 +2376,20 @@ newEntity{ base = "BASE_KNIFE", define_as = "ART_PAIR_TWDAG",
 		dam = 25,
 		apr = 20,
 		physcrit = 20,
+		physspeed = 0.9,
 		dammod = {dex=0.5,mag=0.5},
 		melee_project={[DamageType.TEMPORAL] = 5},
+		convert_damage = {
+			[DamageType.TEMPORAL] = 30,
+	},
 	},
 	wielder = {
 		inc_damage={
-			[DamageType.TEMPORAL] = 5, [DamageType.PHYSICAL] = -10,
+			[DamageType.TEMPORAL] = 5,
 		},
+		movement_speed = 0.20,
+		combat_def = 10,
+		combat_spellresist = 10,
 		resist_all_on_teleport = 5,
 		defense_on_teleport = 10,
 		effect_reduction_on_teleport = 15,
@@ -2295,7 +2423,7 @@ It seems somebody well versed in antimagic could use it to its fullest potential
 	combat = {
 		dam = 42,
 		apr = 4,
-		physcrit = 10,
+		physcrit = 20,
 		dammod = {str=1},
 		melee_project = { [DamageType.MANABURN] = 50 },
 	},
@@ -2351,6 +2479,7 @@ newEntity{ base = "BASE_GAUNTLETS",
 			physcrit = 5,
 			dammod = {dex=0.3, str=-0.4, cun=0.3 },
 			melee_project={[DamageType.ACID] = 10},
+			talent_on_hit = { T_EARTHEN_MISSILES = {level=3, chance=20}, T_CORROSIVE_MIST = {level=1, chance=10} },
 			damrange = 0.3,
 			physspeed = 0.2,
 		},
@@ -2887,7 +3016,7 @@ newEntity{ base = "BASE_STAFF",
 		}
 	},
 	on_wear = function(self, who)
-		if who.descriptor and who.descriptor.subrace == "Lich" then
+		if who.descriptor and who.descriptor.race == "Undead" then
 			local Talents = require "engine.interface.ActorStats"
 			self:specialWearAdd({"wielder", "talents_types_mastery"}, { ["spell/nightfall"] = 0.2 })
 			self:specialWearAdd({"wielder","combat_spellpower"}, 12)
@@ -2935,6 +3064,15 @@ newEntity{ base = "BASE_MINDSTAR",
 	},
 	max_power = 20, power_regen = 1,
 	use_talent = { id = Talents.T_OOZE_SPIT, level = 2, power = 20 },
+	on_wear = function(self, who)
+		if who:attr("forbid_arcane") then
+			local Stats = require "engine.interface.ActorStats"
+			local DamageType = require "engine.DamageType"
+
+			self:specialWearAdd({"combat","melee_project"}, {[DamageType.MANABURN]=30})
+			game.logPlayer(who, "#DARK_GREEN#The Heart pulses with antimagic forces as you grasp it.")
+		end
+	end,
 }
 
 newEntity{ base = "BASE_MINDSTAR",
@@ -3897,7 +4035,7 @@ newEntity{ base = "BASE_GAUNTLETS",
 				dammod = {dex=0.4, str=-0.6, cun=0.4,},
 				damrange = 0.3,
 				melee_project={[DamageType.RANDOM_SILENCE] = 15, [DamageType.MANABURN] = 20,},
-				talent_on_hit = { [Talents.T_DESTROY_MAGIC] = {level=3, chance=100} },
+				talent_on_hit = { [Talents.T_DESTROY_MAGIC] = {level=3, chance=100}, [Talents.T_MANA_CLASH] = {level=1, chance=5} },
 			},
 		}
 		elseif  level==4 then -- LEVEL 4
@@ -3916,7 +4054,7 @@ newEntity{ base = "BASE_GAUNTLETS",
 				dammod = {dex=0.4, str=-0.6, cun=0.4,},
 				damrange = 0.3,
 				melee_project={[DamageType.RANDOM_SILENCE] = 17, [DamageType.MANABURN] = 35,},
-				talent_on_hit = { [Talents.T_DESTROY_MAGIC] = {level=4, chance=100} },
+				talent_on_hit = { [Talents.T_DESTROY_MAGIC] = {level=4, chance=100}, [Talents.T_MANA_CLASH] = {level=2, chance=10} },
 			},
 		}
 		elseif  level==5 then -- LEVEL 5
@@ -3936,7 +4074,7 @@ newEntity{ base = "BASE_GAUNTLETS",
 				dammod = {dex=0.4, str=-0.6, cun=0.4,},
 				damrange = 0.3,
 				melee_project={[DamageType.RANDOM_SILENCE] = 20, [DamageType.MANABURN] = 50,},
-				talent_on_hit = { [Talents.T_DESTROY_MAGIC] = {level=5, chance=100} },
+				talent_on_hit = { [Talents.T_DESTROY_MAGIC] = {level=5, chance=100}, [Talents.T_MANA_CLASH] = {level=3, chance=15}, [Talents.T_AURA_OF_SILENCE] = {level=1, chance=10} },
 			},
 		}
 		self.use_power.name = "destroy magic in a radius 5 cone"
@@ -4785,6 +4923,14 @@ newEntity{ base = "BASE_MASSIVE_ARMOR", -- Thanks SageAcrin!
 		},
 		healing_factor = 0.25,
 	},
+	on_wear = function(self, who)
+		if who.descriptor and who.descriptor.subrace == "Thalore" then
+			local Stats = require "engine.interface.ActorStats"
+
+			self:specialWearAdd({"wielder","fatigue"}, -14)
+			game.logPlayer(who, "#DARK_GREEN#The armor molds comfortably to one of its caretakers.")
+		end
+	end,
 }
 
 newEntity{ base = "BASE_SHIELD", --Thanks SageAcrin!
@@ -5019,6 +5165,8 @@ newEntity{ base = "BASE_GREATSWORD", --Thanks Grayswandir!
 	wielder = {
 		blind_fight = 1,
 		see_invisible=10,
+		combat_spellpower = 5,
+		mana_regen = 0.5,
 	},
 }
 
@@ -5046,7 +5194,7 @@ newEntity{ base = "BASE_GLOVES", --Thanks SageAcrin /AND/ Edge2054!
 			physcrit = 6,
 			dammod = {dex=0.4, str=-0.6, cun=0.4, mag=0.2 },
 			convert_damage = {[DamageType.VOID] = 100,},
-			talent_on_hit = { [Talents.T_SHADOW_SIMULACRUM] = {level=1, chance=8} },
+			talent_on_hit = { [Talents.T_SHADOW_SIMULACRUM] = {level=1, chance=15}, [Talents.T_MIND_BLAST] = {level=1, chance=10}, [Talents.T_TURN_BACK_THE_CLOCK] = {level=1, chance=10} },
 		},
 	},
 	talent_on_spell = { {chance=10, talent=Talents.T_DUST_TO_DUST, level=2} },
@@ -5693,9 +5841,9 @@ newEntity{ base = "BASE_BATTLEAXE",
 	rarity = 300,
 	material_level = 4,
 	combat = {
-		dam = 68,
-		apr = 7,
-		physcrit = 5,
+		dam = 60,
+		apr = 25,
+		physcrit = 25,
 		dammod = {str=1.3},
 		special_on_crit = {desc="decapitate a weakened target", fct=function(combat, who, target)
 			if not target or target == self then return end
@@ -5706,9 +5854,6 @@ newEntity{ base = "BASE_BATTLEAXE",
 		end},
 	},
 	wielder = {
-		inc_stats = { [Stats.STAT_CON] = 2, [Stats.STAT_DEX] = 2, },
-		combat_def = 6, combat_armor = 6,
-		inc_damage = { [DamageType.PHYSICAL]=10 },
 		combat_critical_power = 25,
 	},
 	max_power = 30, power_regen = 1,
