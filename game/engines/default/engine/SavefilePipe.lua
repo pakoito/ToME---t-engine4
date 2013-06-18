@@ -154,10 +154,8 @@ end
 
 --- Force to wait for the saves
 function _M:forceWait()
-	do return end
-	if #self.pipe == 0 and (not self.waiton or not next(self.waiton)) then return end
-
 	print("[SAVEFILE PIPE] force waiting")
+	if #self.pipe == 0 and (not self.waiton or not next(self.waiton)) then return end
 
 	local popup = Dialog:simpleWaiter("Saving...", "Please wait while saving...", nil, 1000, self.total_nb)
 	core.display.forceRedraw()

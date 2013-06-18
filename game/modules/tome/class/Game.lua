@@ -1916,10 +1916,6 @@ function _M:saveGame()
 		self.party:setPlayer(oldplayer, true)
 	end
 	self.log("Saving game...")
-
-	local st = core.game.getTime()
-	savefile_pipe:forceWait()
-	print("Save time", core.game.getTime()-st)
 end
 
 --- Take a screenshot of the game
