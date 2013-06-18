@@ -451,8 +451,8 @@ static int serial_tozip(lua_State *L)
 	const char *filename = get_name(L, s, -2);
 
 	/* Init the buffer */
-	s->buf = malloc(4 * 1024 * 1024);
-	s->buflen = 4 * 1024 * 1024;
+	s->buf = malloc(2 * 1024);
+	s->buflen = 2 * 1024;
 	s->bufpos = 0;
 
 	writeTblFixed(s, "d={}\n", 5);
