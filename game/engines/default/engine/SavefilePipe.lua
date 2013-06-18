@@ -65,6 +65,7 @@ function _M:push(savename, type, object, class, on_end)
 	if #self.pipe == 0 then savefile_pipe.current_nb = 0 end
 
 	local clone, nb = object:cloneForSave()
+--	local clone, nb = object, 1000
 	self.pipe[#self.pipe+1] = {id=id, savename = savename, type=type, object=clone, nb_objects=nb, baseobject=object, class=class, saveversion=game:saveVersion("new"), screenshot=screenshot, on_end=on_end}
 	local total_nb = 0
 	for i, p in ipairs(self.pipe) do total_nb = total_nb + p.nb_objects end
@@ -75,6 +76,7 @@ function _M:push(savename, type, object, class, on_end)
 	end
 
 	if game.onSavefilePushed then game:onSavefilePushed(savename, type, object, class) end
+
 
 	-- Refuse to continue, make the user wait
 	if #self.pipe >= self.max_before_wait or not config.settings.background_saves then
@@ -97,6 +99,10 @@ function _M:doThread()
 	collectgarbage("collect")
 --	collectgarbage("stop")
 	if game:getPlayer() then game:getPlayer().changed = true end
+
+	local waiton = {}
+	self.waiton = waiton
+
 	while #self.pipe > 0 do
 		local p = self.pipe[1]
 		local Savefile = require(p.class)
@@ -108,14 +114,30 @@ function _M:doThread()
 		o.__saved_saveversion = p.saveversion
 		save["save"..p.type:lower():capitalize()](save, o, true)
 		if p.screenshot then save:saveScreenshot(p.screenshot) end
+		p.save = save
+		waiton[save.current_save_zip:gsub("%.tmp$", "")] = p
 		save:close()
-
-		if p.on_end then
-			p.on_end(save)
-		end
 
 		table.remove(self.pipe, 1)
 	end
+
+	-- Unleash the fury of the offthread saving
+	print("[SAVEFILE PIPE] unleashing save thread")
+	core.serial.threadSave()
+
+	-- Wait for feedback
+	while next(waiton) do
+		local pop = core.serial.popSaveReturn()
+		if not pop then coroutine.yield()
+		else
+			if waiton[pop] and waiton[pop].on_end then
+				waiton[pop].on_end(waiton[pop].save)
+			end
+			waiton[pop] = nil
+		end
+	end
+	self.waiton = nil
+
 	if game.log then game.log("Saving done.") end
 --	collectgarbage("restart")
 	self.saving = false
@@ -132,7 +154,10 @@ end
 
 --- Force to wait for the saves
 function _M:forceWait()
-	if #self.pipe == 0 then return end
+	do return end
+	if #self.pipe == 0 and (not self.waiton or not next(self.waiton)) then return end
+
+	print("[SAVEFILE PIPE] force waiting")
 
 	local popup = Dialog:simpleWaiter("Saving...", "Please wait while saving...", nil, 1000, self.total_nb)
 	core.display.forceRedraw()

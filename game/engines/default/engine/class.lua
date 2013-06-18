@@ -276,6 +276,7 @@ end
 -- ---------------------------------------------------------------------
 -- ---------------------------------------------------------------------
 
+__zipname_zf_store = {}
 function _M:save(filter, allow)
 	filter = filter or {}
 	if self._no_save_fields then table.merge(filter, self._no_save_fields) end
@@ -292,6 +293,7 @@ function _M:save(filter, allow)
 	local mt = getmetatable(self)
 	setmetatable(self, {})
 	local savefile = engine.Savefile.current_save
+	
 	local s = core.serial.new(
 		-- Zip to write to
 		savefile.current_save_zip,

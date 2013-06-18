@@ -1296,6 +1296,8 @@ function _M:setupCommands()
 			print("===============")
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
+			game:changeLevel(game.level.level+1)
+do return end
 			game:changeLevel(1, "stellar-system-shandral")
 do return end
 			local f, err = loadfile("/data/general/events/crystaline-forest.lua")
@@ -1888,7 +1890,7 @@ end
 
 --- Requests the game to save
 function _M:saveGame()
-	self:registerHighscore()
+	--self:registerHighscore()
 
 	if self.party then for actor, _ in pairs(self.party.members) do engine.interface.PlayerHotkeys:updateQuickHotkeys(actor) end end
 
@@ -1914,6 +1916,10 @@ function _M:saveGame()
 		self.party:setPlayer(oldplayer, true)
 	end
 	self.log("Saving game...")
+
+	local st = core.game.getTime()
+	savefile_pipe:forceWait()
+	print("Save time", core.game.getTime()-st)
 end
 
 --- Take a screenshot of the game
