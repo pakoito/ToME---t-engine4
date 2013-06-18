@@ -30,7 +30,7 @@ newTalent{
 	range = 1,
 	tactical = { DISABLE = {disarm = 2} },
 	requires_target = true,
-	getDuration = function(self, t) return 1 + math.ceil(self:getTalentLevel(t)) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 2, 6)) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -64,7 +64,7 @@ newTalent{
 	range = 7,
 	tactical = { DISABLE = {silence = 2}, CLOSEIN = 2 },
 	requires_target = true,
-	getDuration = function(self, t) return 1 + math.ceil(self:getTalentLevel(t)) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 2, 6)) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -109,10 +109,10 @@ newTalent{
 	require = cuns_req_high3,
 	requires_target = true,
 	tactical = { ATTACK = {DARKNESS = 3} },
-	getStealthPower = function(self, t) return 25 + self:getCun(15, true) * self:getTalentLevel(t) end,
-	getDuration = function(self, t) return math.floor(3 + self:getTalentLevel(t)) end,
-	getHealth = function(self, t) return 0.2 + self:combatTalentSpellDamage(t, 20, 500) / 1000 end,
-	getDam = function(self, t) return 0.4 + self:combatTalentSpellDamage(t, 10, 500) / 1000 end,
+	getStealthPower = function(self, t) return self:combatScale(self:getCun(15, true) * self:getTalentLevel(t), 25, 0, 100, 75) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 4, 8)) end,
+	getHealth = function(self, t) return self:combatLimit(self:combatTalentSpellDamage(t, 20, 500), 1, 0.2, 0, 0.584, 384) end, -- Limit to < 100% health of summoner
+	getDam = function(self, t) return self:combatLimit(self:combatTalentSpellDamage(t, 10, 500), 1.6, 0.4, 0, 0.761 , 361) end, -- Limit to <160% Nerf?
 	action = function(self, t)
 		-- Find space
 		local x, y = util.findFreeGrid(self.x, self.y, 1, true, {[Map.ACTOR]=true})
@@ -211,12 +211,12 @@ newTalent{
 	requires_target = true,
 	range = 5,
 	tactical = { ATTACK = {DARKNESS = 2}, DEFEND = 1 },
-	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.9, 2) end,
-	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)) end,
-	getDamageRes = function(self, t) return 10 + self:getTalentLevel(t) * 5 end,
-	getBlinkRange = function(self, t) return math.ceil(3.3 + 1.7*self:getTalentLevel(t)^.5) end,
+	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.9, 2.0) end, -- Nerf?
+	getDuration = function(self, t) return math.floor(self:combatTalentLimit(t, 18, 4, 8)) end, -- Limit to <18
+	getDamageRes = function(self, t) return self:combatTalentScale(t, 15, 35) end,
+	getBlinkRange = function(self, t) return math.floor(self:combatTalentScale(t, 5, 7)) end,
 	action = function(self, t)
-	self:setEffect(self.EFF_SHADOW_VEIL, t.getDuration(self, t), {res=t.getDamageRes(self, t), dam=t.getDamage(self, t), range=t.getBlinkRange(self, t)})
+		self:setEffect(self.EFF_SHADOW_VEIL, t.getDuration(self, t), {res=t.getDamageRes(self, t), dam=t.getDamage(self, t), range=t.getBlinkRange(self, t)})
 		return true
 	end,
 	info = function(self, t)

@@ -32,13 +32,14 @@ newTalent{
 	require = cuns_req1,
 	mode = "passive",
 	points = 5,
-	getDefense = function(self, t) return (4 + self:getCun(10)) end,
-	getMaximum = function(self, t) return t.getDefense(self, t) * math.ceil(self:getTalentLevel(t)) end,
+	getDefense = function(self, t) return self:combatStatScale("cun", 5, 15, 0.75) end,
+	getMaximum = function(self, t) return t.getDefense(self, t) * self:combatTalentLimit(t, 8, 1, 5) end, -- Limit to 8x defense bonus
 	do_tact_update = function (self, t)
 		local nb_foes = 0
 		local act
 		for i = 1, #self.fov.actors_dist do
 			act = self.fov.actors_dist[i]
+			-- Possible bug with this formula
 			if act and game.level:hasEntity(act) and self:reactionToward(act) < 0 and self:canSee(act) and act["__sqdist"] <= 2 then nb_foes = nb_foes + 1 end
 		end
 
@@ -60,6 +61,10 @@ newTalent{
 	end,
 }
 
+-- Limit counter attacks/turn for balance using a buff (warns attacking players of the talent)	
+-- Talent effect is implemented in _M:attackTargetWith function in mod\class\interface\Combat.lua (includes adjacency check)
+-- The Effect EFF_COUNTER_ATTACKING is defined in mod.data.timed_effects.physical.lua
+-- and is refreshed each turn in mod.class.Actor.lua _M:actBase
 newTalent{
 	name = "Counter Attack",
 	type = {"cunning/tactical", 2},
@@ -67,12 +72,25 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.5, 0.9) + getStrikingStyle(self, dam) end,
+	counterchance = function(self, t) return self:combatLimit(self:getTalentLevel(t) * (5 + self:getCun(5, true)), 100, 0, 0, 50, 50) end, --Limit < 100%
+	getCounterAttacks = function(self, t) return self:combatStatScale("cun", 1, 2.24) end,
+	checkCounterAttack = function(self, t)
+		local ef = self:hasEffect(self.EFF_COUNTER_ATTACKING)
+		if not ef then return end
+		local damage = rng.percent(self.tempeffect_def.EFF_COUNTER_ATTACKING.counterchance(self, ef)) and t.getDamage(self,t)
+		ef.counterattacks = ef.counterattacks - 1
+		if ef.counterattacks <=0 then self:removeEffect(self.EFF_COUNTER_ATTACKING) end
+		return damage
+	end,
+	on_unlearn = function(self, t)
+		self:removeEffect(self.EFF_COUNTER_ATTACKING)
+	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t) * 100
-		return ([[When you avoid a melee blow, you have a %d%% chance to get a free, automatic attack against your foe for %d%% damage.
+		return ([[When you avoid a melee blow from an adjacent foe, you have a %d%% chance to get a free, automatic attack against the attacker for %d%% damage, up to %0.1f times per turn.
 		Unarmed fighters using it do consider it a strike for the purpose of stance damage bonuses (if they have any), and will have a damage bonus as a result.
-		Armed fighters get a normal physical.
-		The chance of countering increases with your Cunning.]]):format(self:getTalentLevel(t) * (5 + self:getCun(5, true)), damage)
+		Armed fighters get a normal physical attack.
+		The chance of countering and number of counter attacks increase with your Cunning.]]):format(t.counterchance(self,t), damage,  t.getCounterAttacks(self, t))
 	end,
 }
 
@@ -86,7 +104,7 @@ newTalent{
 	stamina = 12,
 	tactical = { DISABLE = 1, DEFEND = 2 },
 	getPower = function(self, t) return 5 + self:combatTalentStatDamage(t, "cun", 1, 25) end,
-	getDuration = function(self, t) return 2 + math.ceil(self:getTalentLevel(t)) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 3, 7)) end,
 	getDefense = function(self, t) return 5 + self:combatTalentStatDamage(t, "cun", 1, 50) end,
 	action = function(self, t)
 		self:setEffect(self.EFF_DEFENSIVE_MANEUVER, t.getDuration(self, t), {power=t.getDefense(self, t)})
@@ -111,7 +129,7 @@ newTalent{
 	cooldown = 30,
 	sustain_stamina = 30,
 	tactical = { BUFF = 2 },
-	getReductionMax = function(self, t) return 7 * self:getTalentLevel(t) end,
+	getReductionMax = function(self, t) return 5 * math.floor(self:combatTalentLimit(t, 20, 1.4, 7.1)) end, -- Limit to 95%
 	do_weakness = function(self, t, target)
 		target:setEffect(target.EFF_WEAKENED_DEFENSES, 3, {inc = - 5, max = - t.getReductionMax(self, t)})
 	end,

@@ -230,7 +230,7 @@ newTalent{
 	no_energy = true,
 	tactical = { BUFF = 2 },
 	no_unlearn_last = true,
-	getDuration = function(self, t) return 5 + self:getTalentLevel(self.T_VILE_POISONS) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(self:getTalentLevel(self.T_VILE_POISONS), 6, 10)) end,
 	getDOT = function(self, t) return 8 + self:combatTalentStatDamage(self.T_VILE_POISONS, "cun", 10, 60) * 0.4 end,
 	proc = function(self, t, target)
 		if not checkChance(self, target) then return end
@@ -264,9 +264,9 @@ newTalent{
 	no_energy = true,
 	tactical = { BUFF = 2 },
 	no_unlearn_last = true,
-	getDuration = function(self, t) return 5 + self:getTalentLevel(self.T_VILE_POISONS) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(self:getTalentLevel(self.T_VILE_POISONS), 6, 10)) end,
 	getDOT = function(self, t) return 8 + self:combatTalentStatDamage(self.T_VILE_POISONS, "cun", 10, 50) * 0.4 end,
-	getEffect = function(self, t) return 10 + self:getTalentLevel(self.T_VILE_POISONS) * 3 end,
+	getEffect = function(self, t) return self:combatTalentLimit(self:getTalentLevel(self.T_VILE_POISONS), 100, 13, 25) end, -- Limit effect to <100%
 	proc = function(self, t, target)
 		if not checkChance(self, target) then return end
 		target:setEffect(target.EFF_NUMBING_POISON, t.getDuration(self, t), {src=self, power=t.getDOT(self, t), reduce=t.getEffect(self, t)})
@@ -299,9 +299,9 @@ newTalent{
 	no_energy = true,
 	tactical = { BUFF = 2 },
 	no_unlearn_last = true,
-	getDuration = function(self, t) return 5 + self:getTalentLevel(self.T_VILE_POISONS) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(self:getTalentLevel(self.T_VILE_POISONS), 6, 10)) end,
 	getDOT = function(self, t) return 8 + self:combatTalentStatDamage(self.T_VILE_POISONS, "cun", 10, 50) * 0.4 end,
-	getEffect = function(self, t) return 30 + self:getTalentLevel(self.T_VILE_POISONS) * 5.5 end,
+	getEffect = function(self, t) return self:combatTalentLimit(self:getTalentLevel(self.T_VILE_POISONS), 100, 35.5, 57.5) end, -- Limit -healing effect to <100%
 	proc = function(self, t, target)
 		if not checkChance(self, target) then return end
 		target:setEffect(target.EFF_INSIDIOUS_POISON, t.getDuration(self, t), {src=self, power=t.getDOT(self, t), heal_factor=t.getEffect(self, t)})
@@ -334,9 +334,9 @@ newTalent{
 	no_energy = true,
 	tactical = { BUFF = 2 },
 	no_unlearn_last = true,
-	getDuration = function(self, t) return 3 + self:getTalentLevel(self.T_VILE_POISONS) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(self:getTalentLevel(self.T_VILE_POISONS), 4, 8)) end,
 	getDOT = function(self, t) return 8 + self:combatTalentStatDamage(self.T_VILE_POISONS, "cun", 10, 50) * 0.4 end,
-	getEffect = function(self, t) return 10 + self:getTalentLevel(self.T_VILE_POISONS) * 3 end,
+	getEffect = function(self, t) return self:combatTalentLimit(self:getTalentLevel(self.T_VILE_POISONS), 50, 13, 25) end, --	Limit effect to < 50%
 	proc = function(self, t, target)
 		if not checkChance(self, target) then return end
 		target:setEffect(target.EFF_CRIPPLING_POISON, t.getDuration(self, t), {src=self, power=t.getDOT(self, t), fail=t.getEffect(self, t)})
@@ -369,9 +369,9 @@ newTalent{
 	no_energy = true,
 	tactical = { BUFF = 2 },
 	no_unlearn_last = true,
-	getDuration = function(self, t) return 12 - self:getTalentLevel(self.T_VILE_POISONS) end,
+	getDuration = function(self, t) return math.ceil(self:combatTalentLimit(self:getTalentLevel(self.T_VILE_POISONS), 0, 11, 7)) end, -- Make sure it takes at least 1 turn
 	getDOT = function(self, t) return 8 + self:combatTalentStatDamage(self.T_VILE_POISONS, "cun", 10, 30) * 0.4 end,
-	getEffect = function(self, t) return math.ceil(2 + self:getTalentLevel(t) / 2) end,
+	getEffect = function(self, t) return math.floor(self:combatTalentScale(self:getTalentLevel(self.T_VILE_POISONS), 3, 5)) end,
 	proc = function(self, t, target)
 		if not checkChance(self, target) then return end
 		if target:hasEffect(target.EFF_STONED) or target:hasEffect(target.EFF_STONE_POISON) then return end
@@ -407,9 +407,9 @@ newTalent{
 	is_spell = true,
 	tactical = { BUFF = 2 },
 	no_unlearn_last = true,
-	getDuration = function(self, t) return 12 - self:getTalentLevel(self.T_VILE_POISONS) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(self:getTalentLevel(self.T_VILE_POISONS), 3, 7)) end,
 	getDOT = function(self, t) return 8 + self:combatTalentStatDamage(self.T_VILE_POISONS, "cun", 10, 30) * 0.4 end,
-	getEffect = function(self, t) return self:combatTalentStatDamage(self.T_VILE_POISONS, "cun", 15, 35) end,
+	getEffect = function(self, t) return self:combatLimit(self:combatTalentStatDamage(self.T_VILE_POISONS, "cun", 15, 35), 100, 0, 0, 25.8, 25.8) end, -- Limit < 100%
 	proc = function(self, t, target)
 		if not checkChance(self, target) then return end
 		target:setEffect(target.EFF_VULNERABILITY_POISON, t.getDuration(self, t), {src=self, power=t.getDOT(self, t), res=t.getEffect(self, t)})

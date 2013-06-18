@@ -25,8 +25,9 @@ newTalent{
 	points = 5,
 	require = cuns_req1,
 	mode = "sustained",
+	cutChance = function(self,t) return self:combatTalentLimit(t, 100, 20, 60) end, --Limit < 100%
 	do_cut = function(self, t, target, dam)
-		if target:canBe("cut") and rng.percent(10+(self:getTalentLevel(t)*10)) then
+		if target:canBe("cut") and rng.percent(t.cutChance(self, t)) then
 			dam = dam * self:combatTalentWeaponDamage(t, 0.15, 0.35)
 			target:setEffect(target.EFF_CUT, 10, {src=self, power=(dam / 10)})
 		end
@@ -39,7 +40,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Rend your foe with every attack you do. All attacks now have a %d%% chance of inflicting an additional %d%% of your attack's damage in Bleeding damage, divided over ten turns.]]):
-		format(10+(self:getTalentLevel(t)*10),100 * self:combatTalentWeaponDamage(t, 0.15, 0.35))
+		format(t.cutChance(self, t), 100 * self:combatTalentWeaponDamage(t, 0.15, 0.35))
 	end,
 }
 
@@ -49,13 +50,16 @@ newTalent{
 	require = cuns_req2,
 	mode = "passive",
 	points = 5,
-	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)/2) end,
-	getMovePenalty = function(self, t) return (5 + self:combatTalentStatDamage(t, "cun", 10, 30)) / 100 end,
+	getDuration = function(self, t) return math.ceil(self:combatTalentScale(t, 3.3, 5.3)) end,
+	-- _M:physicalCrit function in mod\class\interface\Combat.lua handles crit penalty 
+	getCritPenalty = function(self,t) return self:combatTalentScale(t, 10, 30) end,
+	disableChance = function(self,t) return self:combatTalentLimit(t, 100, 8, 20) end, -- Limit <100%
+	getMovePenalty = function(self, t) return self:combatLimit(self:combatTalentStatDamage(t, "cun", 10, 30), 1, 0.05, 0, 0.274, 22.4) end, -- Limit <100%
 	getAttackPenalty = function(self, t) return 5 + self:combatTalentStatDamage(t, "cun", 5, 20) end,
 	getWillPenalty = function(self, t) return 5 + self:combatTalentStatDamage(t, "cun", 5, 20) end,
 	getCunPenalty = function(self, t) return 5 + self:combatTalentStatDamage(t, "cun", 5, 20) end,
 	do_scoundrel = function(self, t, target)
-		if not rng.percent(5+(self:getTalentLevel(t)*3)) then return end
+		if not rng.percent(t.disableChance(self, t)) then return end
 		if rng.percent(50) then
 			if target:hasEffect(target.EFF_DISABLE) then return end
 			target:setEffect(target.EFF_DISABLE, t.getDuration(self, t), {speed=t.getMovePenalty(self, t), atk=t.getAttackPenalty(self, t), apply_power=self:combatAttack()})
@@ -74,7 +78,7 @@ newTalent{
 		If your enemy is bleeding and attempts to attack you, their critical hit rate is reduced by %d%%, as their wounds make them more predictable.
 		If you attack a bleeding enemy, there is a %d%% chance that, for %d turns, they are disabled as you take advantage of openings (reducing their movement speed by %d%% and Accuracy by %d) or anguished as you strike their painful wounds (reducing their Willpower by %d and their Cunning by %d).
 		The statistical reductions will increase with your Cunning.
-		]]):format(5+(self:getTalentLevel(t)*5),5+(self:getTalentLevel(t)*3),duration,move * 100,attack,will,cun)
+		]]):format(t.getCritPenalty(self,t), t.disableChance(self, t), duration, move * 100, attack, will, cun)
 	end,
 }
 
@@ -86,10 +90,10 @@ newTalent{
 	require = cuns_req3,
 	points = 5,
 	random_ego = "attack",
-	cooldown = function(self, t) return math.floor(35 - self:getTalentLevel(t) * 3.5) end,
+	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 5, 31.9, 17)) end, -- Limit >= 5
 	tactical = { CLOSEIN = 3 },
 	requires_target = true,
-	range = function(self, t) return math.floor(6 + self:getTalentLevel(t) * 0.6) end,
+	range = function(self, t) return math.floor(self:combatTalentScale(t, 6.8, 8.6)) end,
 	action = function(self, t)
 		if self:attr("never_move") then game.logPlayer(self, "You can not do that currently.") return end
 
@@ -135,18 +139,18 @@ newTalent{
 	points = 5,
 	require = cuns_req4,
 	mode = "passive",
-	on_learn = function(self, t)
-		self.projectile_evasion = (self.projectile_evasion or 0) + 3
-		self.projectile_evasion_spread = (self.projectile_evasion_spread or 0) + 1
-	end,
-	on_unlearn = function(self, t)
-		self.projectile_evasion = (self.projectile_evasion or 0) - 3
-		self.projectile_evasion_spread = (self.projectile_evasion_spread or 0) - 1
+	-- Defense bonus implemented in _M:combatDefenseBase function in mod\class\interface\Combat.lua
+	getDefense = function(self,t) return self:combatScale(self:getTalentLevel(t) * 2 * (1 + self:getCun()/85), 0, 0, 21.8, 21.8) end,
+	getDeflect = function(self, t) return self:combatTalentLimit(t, 100, 3, 15) end, --limit < 100%
+	getDeflectRange = function(self, t) return math.floor(self:combatTalentScale(t, 1, 5, "log")) end,
+	passives = function(self, t, p)
+		self:talentTemporaryValue(p, "projectile_evasion", t.getDeflect(self, t))
+		self:talentTemporaryValue(p, "projectile_evasion_spread", t.getDeflectRange(self, t))
 	end,
 	info = function(self, t)
 		return ([[Your abilities in sowing confusion and chaos have reached their peak. Now, even your most simple moves confuse your enemies, rendering their offense less effective.
 		Your Defense increases by %d%%, and enemies have a %d%% chance of targetting a random square within %d squares of you.
 		The bonus to Defense will increase with Cunning.]]):
-		format(self:getTalentLevel(self.T_MISDIRECTION) * (0.02 * (1 + self:getCun() / 85) *100), self:getTalentLevelRaw(t) * 3, self:getTalentLevelRaw(t) * 1)
+		format(t.getDefense(self, t) ,t.getDeflect(self, t) ,t.getDeflectRange(self,t))
 	end,
 }

@@ -23,8 +23,10 @@ newTalent{
 	require = cuns_req1,
 	mode = "passive",
 	points = 5,
+	sense = function(self, t) return math.floor(self:combatTalentScale(t, 5, 9)) end,
+	trapPower = function(self, t) return self:combatScale(self:getTalentLevel(t) * self:getCun(25, true), 0, 0, 125, 125) end,
 	passives = function(self, t, p)
-		self:talentTemporaryValue(p, "heightened_senses", 4 + math.ceil(self:getTalentLevel(t)))
+		self:talentTemporaryValue(p, "heightened_senses", t.sense(self, t))
 	end,
 	info = function(self, t)
 		return ([[You notice the small things others do not notice, allowing you to "see" creatures in a %d radius even outside of light radius.
@@ -32,7 +34,7 @@ newTalent{
 		Also, your attention to detail allows you to detect traps around you (%d detection 'power').
 		At level 3, you learn to disarm known traps (%d disarm 'power').
 		The trap detection and disarming ability improves with your Cunning.]]):
-		format(4 + math.ceil(self:getTalentLevel(t)), self:getTalentLevel(t) * self:getCun(25, true), self:getTalentLevel(t) * self:getCun(25, true))
+		format(t.sense(self,t),t.trapPower(self,t),t.trapPower(self,t))
 	end,
 }
 
@@ -49,8 +51,8 @@ newTalent{
 	passives = function(self, t, p)
 		self:talentTemporaryValue(p, "use_object_cooldown_reduce", t.cdReduc(self:getTalentLevel(t))) --I5
 	end,
-	on_unlearn = function(self, t)
-	end,
+--	on_unlearn = function(self, t)
+--	end,
 	info = function(self, t)
 		return ([[Your cunning manipulations allows you to use charms (wands, totems and torques) more efficiently, reducing their cooldowns by %d%%.]]):
 		format(t.cdReduc(self:getTalentLevel(t))) --I5
@@ -63,11 +65,13 @@ newTalent{
 	require = cuns_req3,
 	mode = "passive",
 	points = 5,
+	--  called by functions _M:combatSeeStealth and _M:combatSeeInvisible functions mod\class\interface\Combat.lua	
+	seePower = function(self, t) return self:combatScale(self:getCun(15, true)*self:getTalentLevel(t), 5, 0, 80, 75) end, --I5 
 	info = function(self, t)
 		return ([[You look at your surroundings with more intensity than most people, allowing you to see stealthed or invisible creatures.
 		Increases stealth detection by %d and invisibility detection by %d.
 		The detection power increases with your Cunning.]]):
-		format(5 + self:getTalentLevel(t) * self:getCun(15, true), 5 + self:getTalentLevel(t) * self:getCun(15, true))
+		format(t.seePower(self,t), t.seePower(self,t))
 	end,
 }
 
@@ -79,14 +83,22 @@ newTalent{
 	random_ego = "defensive",
 	tactical = { ESCAPE = 2, DEFEND = 2 },
 	cooldown = 30,
+	getDur = function(self) return math.floor(self:combatStatLimit("wil", 30, 6, 15)) end, -- Limit < 30
+	getChanceDef = function(self, t)
+		return self:combatLimit(5*self:getTalentLevel(t) + self:getCun(25,true) + self:getDex(25,true), 50, 10, 10, 37.5, 75),
+		self:combatScale(self:getTalentLevel(t) * (self:getCun(25, true) + self:getDex(25, true)), 0, 0, 55, 250, 0.75)
+		-- Limit evasion chance < 50%, defense bonus ~= 55 at level 50
+	end,
 	action = function(self, t)
-		local dur = 5 + self:getWil(10)
-		local chance = 5 * self:getTalentLevel(t) + self:getCun(25, true) + self:getDex(25, true)
-		self:setEffect(self.EFF_EVASION, dur, {chance=chance})
+		local dur = t.getDur(self)
+		local chance, def = t.getChanceDef(self,t)
+		self:setEffect(self.EFF_EVASION, dur, {chance=chance, defense = def})
 		return true
 	end,
 	info = function(self, t)
-		return ([[Your quick wit allows you to see attacks before they land, granting you a %d%% chance to completely evade them for %d turns.
-		Duration increases with your Willpower, and the chance to evade improves with your Cunning and Dexterity.]]):format(5 * self:getTalentLevel(t) + self:getCun(25, true) + self:getDex(25, true), 5 + self:getWil(10))
+		local chance, def = t.getChanceDef(self,t)
+		return ([[Your quick wit allows you to see attacks before they land, granting you a %d%% chance to completely evade them and granting you %d defense for %d turns.
+		Duration increases with Willpower, and chance to evade and defense with Cunning and Dexterity.]]):
+		format(chance, def,t.getDur(self))
 	end,
 }

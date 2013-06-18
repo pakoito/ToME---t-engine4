@@ -459,6 +459,8 @@ function _M:actBase()
 		end
 	end
 
+	if self:knowTalent(self.T_COUNTER_ATTACK) then self:setEffect(self.EFF_COUNTER_ATTACKING,1,{}) end 
+	
 	-- Compute timed effects
 	self:timedEffects()
 
@@ -3957,9 +3959,8 @@ function _M:breakStealth()
 	if self:isTalentActive(self.T_STEALTH) then
 		local chance = 0
 		if self:knowTalent(self.T_UNSEEN_ACTIONS) then
-			chance = 10 + self:getTalentLevel(self.T_UNSEEN_ACTIONS) * 9 + (self:getLck() - 50) * 0.2
+			chance = self:callTalent(self.T_UNSEEN_ACTIONS,"getChance") + (self:getLck() - 50) * 0.2
 		end
-
 		-- Do not break stealth
 		if rng.percent(chance) then return end
 

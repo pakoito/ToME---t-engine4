@@ -315,7 +315,6 @@ function _M:checkEvasion(target)
 
 	local evasion = target:attr("evasion")
 	print("checkEvasion", evasion, target.level, self.level)
-	evasion = evasion * (target.level / self.level)
 	print("=> evasion chance", evasion)
 	return rng.percent(evasion)
 end
@@ -747,12 +746,14 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	end
 
 	-- Counter Attack!
-	if not hitted and not target.dead and not evaded and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:knowTalent(target.T_COUNTER_ATTACK) and rng.percent(target:getTalentLevel(target.T_COUNTER_ATTACK) * (5 + target:getCun(5, true))) then
-		game.logSeen(self, "%s counters the attack!", target.name:capitalize())
-		local t = target:getTalentFromId(target.T_COUNTER_ATTACK)
-		target:attackTarget(self, nil, t.getDamage(target, t), true)
-	end
-
+	if not hitted and not target.dead and not evaded and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:knowTalent(target.T_COUNTER_ATTACK) and self:isNear(target.x,target.y, 1) then --Adjacency check
+		local cadam = target:callTalent(target.T_COUNTER_ATTACK,"checkCounterAttack")
+		if cadam then
+			game.logSeen(self, "%s counters the attack!", target.name:capitalize())
+			target:attackTarget(self, nil, cadam, true)
+		end 
+	end 
+	
 	-- Gesture of Guarding counterattack
 	if hitted and not target.dead and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:knowTalent(target.T_GESTURE_OF_GUARDING) then
 		local t = target:getTalentFromId(target.T_GESTURE_OF_GUARDING)
@@ -930,17 +931,19 @@ function _M:combatDefenseBase(fake)
 		local t = self:getTalentFromId(self.T_SURGE)
 		add = add + t.getDefenseChange(self, t)
 	end
-	local d = math.max(0, self.combat_def + (self:getDex() - 10) * 0.35 + add + (self:getLck() - 50) * 0.4)
-
+--	local d = math.max(0, self.combat_def + (self:getDex() - 10) * 0.35 + add + (self:getLck() - 50) * 0.4)
+	local d = math.max(0, self.combat_def + (self:getDex() - 10) * 0.35 + (self:getLck() - 50) * 0.4)
+	
 	if self:hasLightArmor() and self:knowTalent(self.T_MOBILE_DEFENCE) then
 		d = d * (1 + self:getTalentLevel(self.T_MOBILE_DEFENCE) * 0.08)
 	end
 
 	if self:knowTalent(self.T_MISDIRECTION) then
-		d = d * (1 + self:getTalentLevel(self.T_MISDIRECTION) * (0.02 * (1 + self:getCun() / 85)))
+		d = d * (1 + self:callTalent(self.T_MISDIRECTION,"getDefense")/100)
 	end
 
-	return d
+--	return d
+	return math.max(0, d + add) -- Add bonuses last to avoid compounding defense multipliers from talents
 end
 
 --- Gets the defense ranged
@@ -1339,7 +1342,7 @@ function _M:combatSpellpower(mod, add)
 		add = add + (15 + self:getTalentLevel(self.T_ARCANE_CUNNING) * 5) * self:getCun() / 100
 	end
 	if self:knowTalent(self.T_SHADOW_CUNNING) then
-		add = add + (15 + self:getTalentLevel(self.T_SHADOW_CUNNING) * 5) * self:getCun() / 100
+		add = add + self:callTalent(self.T_SHADOW_CUNNING,"getSpellpower") * self:getCun() / 100
 	end
 	if self:hasEffect(self.EFF_BLOODLUST) then
 		add = add + self:hasEffect(self.EFF_BLOODLUST).dur
@@ -1483,7 +1486,7 @@ function _M:physicalCrit(dam, weapon, target, atk, def, add_chance, crit_power_a
 
 	-- Scoundrel's Strategies
 	if self:attr("cut") and target:knowTalent(self.T_SCOUNDREL) then
-		chance = chance - (5 + (target:getTalentLevel(self.T_SCOUNDREL)*5))
+		chance = chance - target:callTalent(target.T_SCOUNDREL,"getCritPenalty")
 	end
 
 	if self:isTalentActive(self.T_STEALTH) and self:knowTalent(self.T_SHADOWSTRIKE) then
@@ -1777,15 +1780,16 @@ end
 --- Computes see stealth
 function _M:combatSeeStealth()
 	local bonus = 0
-	if self:knowTalent(self.T_PIERCING_SIGHT) then bonus = bonus + 5 + self:getTalentLevel(self.T_PIERCING_SIGHT) * self:getCun(15, true) end
+	if self:knowTalent(self.T_PIERCING_SIGHT) then bonus = bonus + self:callTalent(self.T_PIERCING_SIGHT,"seePower") end
 	if self:knowTalent(self.T_PRETERNATURAL_SENSES) then bonus = bonus + 5 + self:getTalentLevel(self.T_PRETERNATURAL_SENSES) * self:getWil(15, true) end
-	return self.level / 2 + self:getCun(25, true) + (self:attr("see_stealth") or 0) + bonus
+	-- level 50 with 100 cun ==> 50
+	return self:combatScale(self.level/2 + self:getCun(25, true) + (self:attr("see_stealth") or 0), 0, 0, 50, 50) + bonus -- Note bonus scaled separately from talents
 end
 
 --- Computes see invisible
 function _M:combatSeeInvisible()
 	local bonus = 0
-	if self:knowTalent(self.T_PIERCING_SIGHT) then bonus = bonus + 5 + self:getTalentLevel(self.T_PIERCING_SIGHT) * self:getCun(15, true) end
+	if self:knowTalent(self.T_PIERCING_SIGHT) then bonus = bonus + self:callTalent(self.T_PIERCING_SIGHT,"seePower") end
 	if self:knowTalent(self.T_PRETERNATURAL_SENSES) then bonus = bonus + 5 + self:getTalentLevel(self.T_PRETERNATURAL_SENSES) * self:getWil(15, true) end
 	return (self:attr("see_invisible") or 0) + bonus
 end

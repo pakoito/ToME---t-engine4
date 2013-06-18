@@ -23,18 +23,17 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	require = cuns_req1,
-	on_learn = function(self, t)
-		self.combat_critical_power = (self.combat_critical_power or 0) + 5
+	critpower = function(self, t) return self:combatTalentScale(t, 7.5, 25, 0.75) end,
+	getCriticalChance = function(self, t) return self:combatTalentScale(t, 2.3, 7.5, 0.75) end,
+	passives = function(self, t, p)
+		self:talentTemporaryValue(p, "combat_critical_power", t.critpower(self, t))
 	end,
-	on_unlearn = function(self, t)
-		self.combat_critical_power = (self.combat_critical_power or 0) - 5
-	end,
-	getCriticalChance = function(self, t) return 1 + self:getTalentLevel(t) * 1.3 end,
 	info = function(self, t)
 		local critchance = t.getCriticalChance(self, t)
-		return ([[You have learned to find and hit weak spots. All your strikes have a %0.2f%% greater chance to be critical hits, and your critical hits do %d%% more damage.
+		local power = t.critpower(self, t)
+		return ([[You have learned to find and hit weak spots. All your strikes have a %0.2f%% greater chance to be critical hits, and your critical hits do %0.1f%% more damage.
 		Also, when using knives, you now use your Cunning instead of your Strength for bonus damage.]]):
-		format(critchance, self:getTalentLevelRaw(t) * 5)
+		format(critchance, power)
 	end,
 }
 
@@ -50,8 +49,8 @@ newTalent{
 	no_energy = true,
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.8, 1.4) end,
-	getArmorPierce = function(self, t) return self:combatTalentStatDamage(t, "cun", 5, 60) end,
-	getDuration = function(self, t) return 5 + math.ceil(self:getTalentLevel(t)) end,
+	getArmorPierce = function(self, t) return self:combatTalentStatDamage(t, "cun", 5, 45) end,  -- Adjust to scale like armor progression elsewhere
+	getDuration = function(self, t) return math.floor(self:combatTalentLimit(t, 12, 6, 10)) end, --Limit to <12
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -85,8 +84,8 @@ newTalent{
 	tactical = { BUFF = 3 },
 	require = cuns_req3,
 	no_energy = true,
-	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t) * 1.5) end,
-	getDamage = function(self, t) return self:getWil(40, true) + self:getCun(40, true) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentLimit(t, 60, 5, 11.1)) end, -- Limit <60
+	getDamage = function(self, t) return self:combatStatScale("wil", 4, 40, 0.75) + self:combatStatScale("cun", 4, 40, 0.75) end,
 	action = function(self, t)
 		self:setEffect(self.EFF_WILLFUL_COMBAT, t.getDuration(self, t), {power=t.getDamage(self, t)})
 		return true
@@ -108,14 +107,13 @@ newTalent{
 	stamina = 50,
 	cooldown = 50,
 	tactical = { BUFF = 1 },
-	getTalentCount = function(self, t) return math.ceil(self:getTalentLevel(t) + 2) end,
-	getMaxLevel = function(self, t) return self:getTalentLevelRaw(t) end,
+	getTalentCount = function(self, t) return math.floor(self:combatTalentScale(t, 2, 10.1, "log", 0, 2)) end,
+	getMaxLevel = function(self, t) return self:getTalentLevel(t) end,
 	action = function(self, t)
-		local nb = math.ceil(self:getTalentLevel(t) + 2)
 		local tids = {}
 		for tid, _ in pairs(self.talents_cd) do
 			local tt = self:getTalentFromId(tid)
-			if tt.type[2] <= t.getMaxLevel(self, t) and (tt.type[1]:find("^cunning/") or tt.type[1]:find("^technique/")) then
+			if self:getTalentLevel(tt) <= t.getMaxLevel(self, t) and (tt.type[1]:find("^cunning/") or tt.type[1]:find("^technique/")) then
 				tids[#tids+1] = tid
 			end
 		end
@@ -130,7 +128,7 @@ newTalent{
 	info = function(self, t)
 		local talentcount = t.getTalentCount(self, t)
 		local maxlevel = t.getMaxLevel(self, t)
-		return ([[Your quick wits allow you to reset the cooldown of %d of your combat talents (cunning or technique) of level %d or less.]]):
+		return ([[Your quick wits allow you to reset the cooldown of up to %d of your combat talents (cunning or technique) of talent level %0.1f or less.]]):
 		format(talentcount, maxlevel)
 	end,
 }

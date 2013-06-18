@@ -1994,7 +1994,7 @@ newEffect{
 newEffect{
 	name = "VULNERABILITY_POISON", image = "talents/vulnerability_poison.png",
 	desc = "Vulnerability Poison",
-	long_desc = function(self, eff) return ("The target is poisoned and sick, doing %0.2f arcane damage per turn. All resistances are reduced by %d%%."):format(eff.power, eff.res) end,
+	long_desc = function(self, eff) return ("The target is poisoned and sick, suffering %0.2f arcane damage per turn. All resistances are reduced by %d%%."):format(eff.power, eff.res) end,
 	type = "magical",
 	subtype = { poison=true, arcane=true },
 	status = "detrimental",

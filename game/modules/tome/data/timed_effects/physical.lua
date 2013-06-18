@@ -352,6 +352,7 @@ newEffect{
 	on_gain = function(self, err) return "#Target# is disarmed!", "+Disarmed" end,
 	on_lose = function(self, err) return "#Target# rearms.", "-Disarmed" end,
 	activate = function(self, eff)
+		self:removeEffect(self.EFF_COUNTER_ATTACKING)
 		eff.tmpid = self:addTemporaryValue("disarmed", 1)
 	end,
 	deactivate = function(self, eff)
@@ -404,11 +405,13 @@ newEffect{
 newEffect{
 	name = "EVASION", image = "talents/evasion.png",
 	desc = "Evasion",
-	long_desc = function(self, eff) return ("The target has %d%% chance to evade melee attacks."):format(eff.chance) end,
+	long_desc = function(self, eff)
+		return ("The target has %d%% chance to evade melee attacks"):format(eff.chance) .. ((eff.defense>0 and (" and gains %d defense"):format(eff.defense)) or "") .. "." 
+	end,
 	type = "physical",
 	subtype = { evade=true },
 	status = "beneficial",
-	parameters = { chance=10 },
+	parameters = { chance=10, defense=0 },
 	on_gain = function(self, err) return "#Target# tries to evade attacks.", "+Evasion" end,
 	on_lose = function(self, err) return "#Target# is no longer evading attacks.", "-Evasion" end,
 	activate = function(self, eff)
@@ -1739,7 +1742,7 @@ newEffect{
 		if shield then shield:check("on_block", self, src, type, dam, eff) end
 		if eff.properties.br then self:heal(blocked) end
 		if eff.properties.ref and src.life then DamageType.defaultProjector(src, src.x, src.y, type, blocked, tmp, true) end
-		if (self:knowTalent(self.T_RIPOSTE) or amt == 0) and src.life then src:setEffect(src.EFF_COUNTERSTRIKE, 1 + dur_inc, {power=eff.power, no_ct_effect=true, src=self, crit_inc=crit_inc, nb=nb}) end
+		if (self:knowTalent(self.T_RIPOSTE) or amt == 0) and src.life then src:setEffect(src.EFF_COUNTERSTRIKE, (1 + dur_inc) * (src.global_speed or 1), {power=eff.power, no_ct_effect=true, src=self, crit_inc=crit_inc, nb=nb}) end -- specify duration here to avoid stacking for high speed attackers
 		return amt
 	end,
 	activate = function(self, eff)
@@ -1757,6 +1760,32 @@ newEffect{
 }
 
 newEffect{
+	name = "COUNTER_ATTACKING", image = "talents/counter_attack.png",
+	desc = "Counter Attacking",
+	counterchance = function(self, eff) --The last partial counter attack has a reduced chance to happen
+		if self:hasEffect(self.EFF_DISARMED) then return 0 end
+		return util.bound(eff.counterattacks>=1 and eff.chance or eff.chance*math.mod(eff.counterattacks,1),0,100)
+	end,
+	long_desc = function(self, eff)
+		return ("Countering melee attacks: Has a %d%% chance to get an automatic counter attack when avoiding a melee attack. (%0.1f counters remaining)"):format(self.tempeffect_def.EFF_COUNTER_ATTACKING.counterchance(self, eff), math.max(eff.counterattacks,1))
+	end,
+	type = "physical",
+	subtype = {tactic=true},
+	status = "beneficial",
+	decrease = 0,
+	no_stop_enter_worlmap = true, no_stop_resting = true,
+	parameters = {chance=10, counterattacks = 1},
+	activate = function(self, eff)
+		if self:attr("disarmed") then eff.dur = 0 return end
+		eff.counterattacks = self:callTalent(self.T_COUNTER_ATTACK,"getCounterAttacks")
+		eff.chance = self:callTalent(self.T_COUNTER_ATTACK,"counterchance")
+		if eff.counterattacks <= 0 or eff.chance <= 0 then eff.dur = 0 end
+	end,
+	deactivate = function(self, eff)
+	end,
+}
+
+newEffect{
 	name = "COUNTERSTRIKE", image = "effects/counterstrike.png",
 	desc = "Counterstrike",
 	long_desc = function(self, eff) return "Vulnerable to deadly counterstrikes. Next melee attack will inflict double damage." end,
@@ -1770,7 +1799,6 @@ newEffect{
 		eff.tmpid = self:addTemporaryValue("counterstrike", 1)
 		eff.def = self:addTemporaryValue("combat_def", -eff.power)
 		eff.crit = self:addTemporaryValue("combat_crit_vulnerable", eff.crit_inc or 0)
-		eff.dur = math.ceil(eff.dur * (self.global_speed or 1))
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("counterstrike", eff.tmpid)

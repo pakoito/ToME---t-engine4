@@ -50,7 +50,8 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	require = cuns_req2,
-	getSpellpower = function(self, t) return 15 + self:getTalentLevel(t) * 5 end,
+	-- called in _M:combatSpellpower in mod\class\interface\Combat.lua
+	getSpellpower = function(self, t) return self:combatTalentScale(t, 20, 40, 0.75) end,
 	info = function(self, t)
 		local spellpower = t.getSpellpower(self, t)
 		return ([[Your preparations give you greater magical capabilities. You gain a bonus to Spellpower equal to %d%% of your Cunning.]]):
@@ -68,9 +69,10 @@ newTalent{
 	require = cuns_req3,
 	range = 10,
 	tactical = { BUFF = 2 },
-	getManaRegen = function(self, t) return self:getTalentLevel(t) / 14 end,
+	getManaRegen = function(self, t) return self:combatTalentScale(t, 1.5/5, 1, 0.75) / (1 - t.getAtkSpeed(self, t)/100) end, -- scale with atk speed bonus to allow enough mana for one shadow combat proc per turn at talent level 5 
+	getAtkSpeed = function(self, t) return self:combatTalentScale(t, 2.2, 11, 0.75) end,
 	activate = function(self, t)
-		local speed = self:getTalentLevel(t) * 2.2 / 100
+		local speed = t.getAtkSpeed(self, t)/100
 		return {
 			regen = self:addTemporaryValue("mana_regen", t.getManaRegen(self, t)),
 			ps = self:addTemporaryValue("combat_physspeed", speed),
@@ -86,8 +88,8 @@ newTalent{
 	info = function(self, t)
 		local manaregen = t.getManaRegen(self, t)
 		return ([[You draw energy from the depths of the shadows.
-		While sustained, you regenerate %0.2f mana per turn, and your physical and spell attack speed increases by %d%%.]]):
-		format(manaregen, 2.2 * self:getTalentLevel(t))
+		While sustained, you regenerate %0.2f mana per turn, and your physical and spell attack speed increases by %0.1f%%.]]):
+		format(manaregen, t.getAtkSpeed(self, t))
 	end,
 }
 
@@ -100,7 +102,7 @@ newTalent{
 	stamina = 30,
 	require = cuns_req4,
 	tactical = { CLOSEIN = 2, DISABLE = { stun = 1 } },
-	range = function(self, t) return math.floor(5 + self:getTalentLevel(t)) end,
+	range = function(self, t) return math.floor(self:combatTalentScale(t, 6, 10)) end,
 	direct_hit = true,
 	requires_target = true,
 	getDuration = function(self, t) return math.min(5, 2 + math.ceil(self:getTalentLevel(t) / 2)) end,
@@ -131,7 +133,7 @@ newTalent{
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		return ([[Step through the shadows to your target, dazing it for %d turns and hitting it with all your weapons for %d%% darkness weapon damage.
-		Dazed targets cannot act, but any damage will free them.
+		Dazed targets are significantly impaired, but any damage will free them.
 		To Shadowstep, you need to be able to see the target.]]):
 		format(duration, t.getDamage(self, t) * 100)
 	end,

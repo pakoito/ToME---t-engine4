@@ -58,6 +58,7 @@ end
 function _M:tooltip()
 	if self:knownBy(game.player) then
 		local res = tstring{{"uid", self.uid}, self:getName()}
+		if self.temporary then res:add(true, ("#LIGHT_GREEN#%d turns#WHITE#"):format(self.temporary)) end
 		if self.is_store then res:add(true, {"font","italic"}, "<Store>", {"font","normal"}) end
 
 		if self.store_faction then

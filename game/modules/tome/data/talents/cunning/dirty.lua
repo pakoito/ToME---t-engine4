@@ -30,7 +30,7 @@ newTalent{
 	require = cuns_req1,
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.2, 0.7) end,
-	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 4, 8)) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -84,7 +84,11 @@ newTalent{
 	require = cuns_req3,
 	requires_target = true,
 	tactical = { DISABLE = 2 },
-	getDuration = function(self, t) return 1 + self:getTalentLevel(t) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 2, 6)) end,
+	on_pre_use = function(self, t)
+		if self:attr("never_move") then return false end
+		return true
+	end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -94,8 +98,12 @@ newTalent{
 		local hitted = self:attackTarget(target, nil, 0, true)
 
 		if hitted and not self.dead and tx == target.x and ty == target.y then
+			if not self:canMove(tx,ty,true) or not target:canMove(sx,sy,true) then
+				game.logSeen(self, "%s and %s cannot switch places due to terrain.",self.name:capitalize(),target.name:capitalize())
+				return false
+			end
+						
 			self:setEffect(self.EFF_EVASION, t.getDuration(self, t), {chance=50})
-
 			-- Displace
 			if not target.dead then
 				self.x = nil self.y = nil
@@ -127,8 +135,8 @@ newTalent{
 	requires_target = true,
 	tactical = { DISABLE = 2, ATTACK = {weapon = 2} },
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 1, 1.9) end,
-	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)) end,
-	getSpeedPenalty = function(self, t) return 20 + self:combatTalentStatDamage(t, "cun", 5, 50) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 4, 8)) end,
+	getSpeedPenalty = function(self, t) return self:combatLimit(self:combatTalentStatDamage(t, "cun", 5, 50), 100, 20, 0, 55.7, 35.7) end, -- Limit < 100%
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
