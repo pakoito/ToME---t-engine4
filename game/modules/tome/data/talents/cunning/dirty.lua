@@ -101,8 +101,7 @@ newTalent{
 			if not self:canMove(tx,ty,true) or not target:canMove(sx,sy,true) then
 				game.logSeen(self, "%s and %s cannot switch places due to terrain.",self.name:capitalize(),target.name:capitalize())
 				return false
-			end
-						
+			end						
 			self:setEffect(self.EFF_EVASION, t.getDuration(self, t), {chance=50})
 			-- Displace
 			if not target.dead then
