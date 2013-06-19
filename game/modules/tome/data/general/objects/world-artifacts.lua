@@ -2804,7 +2804,7 @@ newEntity{ base = "BASE_SHOT",
 		damtype = DamageType.FIRE,
 		special_on_hit = {desc="sets off a powerful explosion", fct=function(combat, who, target)
 			local tg = {type="ball", range=0, radius=3, selffire=false}
-			local grids = who:project(tg, target.x, target.y, DamageType.FIREKNOCKBACK, {dist=3, dam=40 + who:getMag()*0.6 + who:getCun()*0.6})
+			local grids = who:project(tg, target.x, target.y, engine.DamageType.FIREKNOCKBACK, {dist=3, dam=40 + who:getMag()*0.6 + who:getCun()*0.6})
 			game.level.map:particleEmitter(target.x, target.y, tg.radius, "ball_fire", {radius=tg.radius})
 		end},
 	},
