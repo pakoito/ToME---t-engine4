@@ -1383,7 +1383,7 @@ Finally The Scorpion was defeated by the alchemist Nessylia, who went to face th
 			physspeed = 0.15,
 			dammod = {dex=0.4, str=-0.6, cun=0.4,},
 			damrange = 0.3,
-			talent_on_hit = { T_BITE_POISON = {level=3, chance=20}, T_PERFECT_CONTROL = {level=1, chance=5}, T_QUICK_AS_THOUGHT = {level=3, chance=5}, T_PERFECT_CONTROL = {level=1, chance=5} },
+			talent_on_hit = { T_BITE_POISON = {level=3, chance=20}, T_PERFECT_CONTROL = {level=1, chance=5}, T_QUICK_AS_THOUGHT = {level=3, chance=5}, T_IMPLODE = {level=1, chance=5} },
 		},
 	},
 	max_power = 24, power_regen = 1,
