@@ -31,6 +31,7 @@ return {
 	ambient_music = "Together We Are Strong.ogg",
 	no_level_connectivity = true,
 	max_material_level = 4,
+	objects_cost_modifier = 0.05,
 	generator =  {
 		map = {
 			class = "engine.generator.map.Octopus",
