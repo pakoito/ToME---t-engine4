@@ -166,8 +166,11 @@ static int lua_file_readline(lua_State *L)
 	bufsize--;  /* allow for null terminating char */
 	while ((total < bufsize) && (PHYSFS_read(*f, ptr, 1, 1) == 1))
 	{
-		if ((*ptr == '\r') || (*ptr == '\n'))
+		if (*ptr == '\n')
+		{
+			if ((total > 0) && (*(ptr-1) == '\r')) *(ptr-1) = '\0';
 			break;
+		}
 		ptr++;
 		total++;
 	}
