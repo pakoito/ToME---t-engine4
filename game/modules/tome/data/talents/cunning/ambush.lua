@@ -142,7 +142,7 @@ newTalent{
 		m.life = util.bound(m.life, 0, m.max_life)
 		m.forceLevelup = function() end
 		m.die = nil
-		m.on_die = nil
+		m.on_die = function(self) self:removeEffect(self.EFF_ARCANE_EYE,true) end
 		m.on_acquire_target = nil
 		m.seen_by = nil
 		m.puuid = nil
@@ -152,11 +152,11 @@ newTalent{
 		m.exp_worth = 0
 		m.no_inventory_access = true
 		m.cant_teleport = true
-		m.stealth = t.getStealthPower(self, t)
 		m:unlearnTalent(m.T_AMBUSCADE,m:getTalentLevelRaw(m.T_AMBUSCADE))
 		m:unlearnTalent(m.T_PROJECTION,m:getTalentLevelRaw(m.T_PROJECTION)) -- no recurssive projections
 		m:unlearnTalent(m.T_STEALTH,m:getTalentLevelRaw(m.T_STEALTH))
 		m:unlearnTalent(m.T_HIDE_IN_PLAIN_SIGHT,m:getTalentLevelRaw(m.T_HIDE_IN_PLAIN_SIGHT))
+		m.stealth = t.getStealthPower(self, t)
 
 		self:removeEffect(self.EFF_SHADOW_VEIL) -- Remove shadow veil from creator
 		m.remove_from_party_on_death = true
@@ -182,7 +182,7 @@ newTalent{
 				end,
 				on_uncontrol = function(self)
 					self.summoner.ai = self.summoner.ambuscade_ai
-					game:onTickEnd(function() game.party:removeMember(self) self:disappear() end)
+					game:onTickEnd(function() game.party:removeMember(self) self:removeEffect(self.EFF_ARCANE_EYE, true) self:disappear() end)
 				end,
 			})
 		end
