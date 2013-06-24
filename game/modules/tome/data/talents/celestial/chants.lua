@@ -178,7 +178,7 @@ newTalent{
 		game:playSoundNear(self, "talents/spell_generic2")
 		local ret = {
 			onhit = self:addTemporaryValue("on_melee_hit", {[DamageType.LIGHT]=t.getDamageOnMeleeHit(self, t)}),
-			phys = self:addTemporaryValue("inc_damage", {[DamageType.LIGHT] = t.getLightDamageIncrease(self, t)}),
+			phys = self:addTemporaryValue("inc_damage", {[DamageType.LIGHT] = t.getLightDamageIncrease(self, t), [DamageType.FIRE] = t.getLightDamageIncrease(self, t)}),
 			lite = self:addTemporaryValue("lite", t.getLite(self, t)),
 			particle = self:addParticles(Particles.new("golden_shield", 1))
 		}
@@ -195,7 +195,7 @@ newTalent{
 		local damageinc = t.getLightDamageIncrease(self, t)
 		local damage = t.getDamageOnMeleeHit(self, t)
 		local lite = t.getLite(self, t)
-		return ([[You chant the glory of the Sun, empowering your light elemental attacks so that they do %d%% additional light damage.
+		return ([[You chant the glory of the Sun, empowering your light and fire elemental attacks so that they do %d%% additional damage.
 		In addition, this talent surrounds you with a shield of light, dealing %0.2f light damage to anything that attacks you.
 		Your lite radius is also increased by %d.
 		You may only have one Chant active at once.
