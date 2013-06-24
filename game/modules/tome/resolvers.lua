@@ -367,6 +367,18 @@ function resolvers.calc.mbonus(t, e)
 	return v
 end
 
+-- bonus scaled up or down with current level (default 0.75 power) with minimum and random factor
+-- base = base value at level = base_level
+-- spread = random deviation from calculated value
+-- result is (base +/- spread)*(current_level/base_level)^power
+-- min = optional minimum value
+function resolvers.clscale(base, base_level, spread, power, min)
+	return {__resolver="clscale", base, base_level, spread, power or 0.75, min}
+end
+function resolvers.calc.clscale(t, e)
+	return math.max(math.ceil((t[1] + (t[3] and rng.range(-t[3],t[3]) or 0))*(resolvers.current_level/t[2])^t[4]),t[5] or t[1])
+end
+
 --- Generic resolver, takes a function, executes at the end
 function resolvers.genericlast(fct)
 	return {__resolver="genericlast", __resolve_last=true, fct}

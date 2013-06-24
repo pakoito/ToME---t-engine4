@@ -30,7 +30,8 @@ newEntity{ define_as = "TRAP_COMPLEX",
 newEntity{ base = "TRAP_COMPLEX",
 	subtype = "boulder",
 	name = "giant boulder trap", image = "trap/trap_pressure_plate_01.png",
-	detect_power = resolvers.mbonus(40, 5), disarm_power = resolvers.mbonus(50, 10),
+	detect_power = resolvers.clscale(40, 50, 8),
+	disarm_power = resolvers.clscale(50, 50, 8),
 	rarity = 3, level_range = {1, nil},
 	color = colors.UMBER,
 	message = "@Target@ walks on a trap, and there is a loud noise.",
@@ -59,7 +60,7 @@ newEntity{ base = "TRAP_COMPLEX",
 		self.on_added = nil
 	end,
 	str = resolvers.mbonus(200, 30),
-	dam = resolvers.mbonus_level(300, 5),
+	dam = resolvers.clscale(200, 50, 50, 0.75, 0),
 	triggered = function(self, x, y, who)
 		if not self.spawn_x then return end
 		local tg = {name="huge boulder", type="bolt", range=core.fov.distance(x, y, self.spawn_x, self.spawn_y), x=self.spawn_x, y=self.spawn_y, speed=2, display={image="trap/trap_big_boulder_01.png"}, blur_move=4}
@@ -71,7 +72,8 @@ newEntity{ base = "TRAP_COMPLEX",
 newEntity{ base = "TRAP_COMPLEX",
 	subtype = "arcane",
 	name = "spinning beam", image = "trap/trap_glyph_explosion_01_64.png",
-	detect_power = resolvers.mbonus(40, 5), disarm_power = resolvers.mbonus(50, 10),
+	detect_power = resolvers.clscale(40, 50, 8),
+	disarm_power = resolvers.clscale(50, 50, 8),
 	rarity = 3, level_range = {1, nil},
 	color=colors.PURPLE,
 	message = "@Target@ walks on a trap, and the beam changes.",
@@ -94,7 +96,7 @@ newEntity{ base = "TRAP_COMPLEX",
 		self.on_added = nil
 	end,
 	dammode = rng.table{engine.DamageType.ARCANE_SILENCE, engine.DamageType.DARKSTUN, engine.DamageType.COLDNEVERMOVE},
-	dam = resolvers.mbonus_level(300, 5),
+	dam = resolvers.clscale(200, 50, 50, 0.75, 0),
 	mag = resolvers.mbonus(200, 30),
 	triggered = function(self, x, y, who)
 		if self:reactionToward(who) < 0 then
@@ -135,7 +137,8 @@ newEntity{ base = "TRAP_COMPLEX",
 newEntity{ base = "TRAP_COMPLEX",
 	subtype = "nature",
 	name = "poison cloud", image = "trap/trap_acid_blast_01.png",
-	detect_power = resolvers.mbonus(40, 5), disarm_power = resolvers.mbonus(50, 10),
+	detect_power = resolvers.clscale(40, 50, 8),
+	disarm_power = resolvers.clscale(50, 50, 8),
 	rarity = 3, level_range = {1, nil},
 	color=colors.GREEN,
 	message = "@Target@ walks on a poison spore.",
@@ -144,7 +147,7 @@ newEntity{ base = "TRAP_COMPLEX",
 		self.rad = rng.range(2, 8)
 		self.on_added = nil
 	end,
-	dam = resolvers.mbonus_level(450, 30),
+	dam = resolvers.clscale(300, 50, 75, 0.75, 0),
 	triggered = function(self, x, y, who)
 		if self:reactionToward(who) < 0 then
 			if not self.added_to_level then game.level:addEntity(self) self.added_to_level = true end
@@ -192,12 +195,13 @@ newEntity{ base = "TRAP_COMPLEX",
 newEntity{ base = "TRAP_COMPLEX",
 	subtype = "arcane",
 	name = "delayed explosion trap", image = "trap/trap_fire_rune_01.png",
-	detect_power = resolvers.mbonus(40, 5), disarm_power = resolvers.mbonus(50, 10),
+	detect_power = resolvers.clscale(40, 50, 8),
+	disarm_power = resolvers.clscale(50, 50, 8),
 	rarity = 3, level_range = {1, nil},
 	color=colors.RED,
 	pressure_trap = true,
 	message = "Flames start to appear arround @target@.",
-	dam = resolvers.mbonus_level(300, 15),
+	dam = resolvers.clscale(200, 50, 50, 0.75, 0),
 	triggered = function(self, x, y, who)
 		if self:reactionToward(who) >= 0 then return end
 
@@ -237,12 +241,13 @@ newEntity{ base = "TRAP_COMPLEX",
 newEntity{ base = "TRAP_COMPLEX",
 	subtype = "arcane",
 	name = "cold flames trap", image = "trap/trap_frost_rune_01.png",
-	detect_power = resolvers.mbonus(40, 5), disarm_power = resolvers.mbonus(50, 10),
+	detect_power = resolvers.clscale(40, 50, 8),
+	disarm_power = resolvers.clscale(50, 50, 8),
 	rarity = 3, level_range = {1, nil},
 	color=colors.BLUE,
 	pressure_trap = true,
 	message = "Cold flames start to appear arround @target@.",
-	dam = resolvers.mbonus_level(150, 5),
+	dam = resolvers.clscale(100, 50, 25, 0.75, 0),
 	triggered = function(self, x, y, who)
 		local NPC = require "mod.class.NPC"
 		local m = NPC.new{
