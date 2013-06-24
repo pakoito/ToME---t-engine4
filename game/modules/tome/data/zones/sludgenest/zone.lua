@@ -96,6 +96,7 @@ return {
 	},
 
 	spawn_chance = 3,
+	dangerlevel = 1,
 	on_turn = function()
 		if game.level.level == 1 then return end
 		if game.turn % 10 ~= 0 then return end
@@ -113,7 +114,23 @@ return {
 		local spot = rng.table(gs)
 		local g = game.zone:makeEntityByName(game.level, "terrain", "SLIME_FLOOR")
 		local filter = {}
-		if rng.chance(10) then filter = {random_elite = {power_source = {nature=true, psionic=true, technique=true}}} end
+
+		local dl = game.level.data.dangerlevel
+		local add_level = 0
+		local randelite = 10 + (dl / 10) ^ 1.6
+		local randboss = (dl / 10) ^ 1.2 - 3
+
+		if dl == 20 then require("engine.ui.Dialog"):simplePopup("Sludgenest", "It seems the slimes coming from the walls become stronger with time.") end
+		if dl == 100 then world:gainAchievement("SLUDGENEST100", game.player) end
+		if dl == 200 then world:gainAchievement("SLUDGENEST200", game.player) end
+		if dl == 300 then world:gainAchievement("SLUDGENEST300", game.player) end
+		if dl == 400 then world:gainAchievement("SLUDGENEST400", game.player) end
+		if dl == 500 then world:gainAchievement("SLUDGENEST500", game.player) end
+
+		if randboss > 0 and rng.percent(randboss) then filter = {random_boss = {power_source = {nature=true, psionic=true, technique=true}}}
+		elseif randelite > 0 and rng.percent(randelite) then filter = {random_elite = {power_source = {nature=true, psionic=true, technique=true}}} end
+		filter.add_levels = (filter.add_levels or 0) + math.floor(dl / 10)
+
 		local m = game.zone:makeEntity(game.level, "actor", filter, nil, true)
 		if g and m then
 			m.exp_worth = 0
@@ -122,6 +139,8 @@ return {
 			game.nicer_tiles:updateAround(game.level, spot.x, spot.y)
 			m:setTarget(game.player)
 			game.logSeen(m, "#YELLOW_GREEN#One of the wall shakes for a moment and then turns into %s!", m.name:capitalize())
+
+			game.level.data.dangerlevel = game.level.data.dangerlevel + 1
 		end
 
 		game.level.data.spawn_chance = 3

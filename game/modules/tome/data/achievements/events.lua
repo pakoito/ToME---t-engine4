@@ -64,3 +64,33 @@ newAchievement{
 	show = "name", huge=true,
 	desc = [[Was teleported into Caldizar's Fortress, far into the void between the stars.]],
 }
+
+newAchievement{
+	name = "Slimefest", id = "SLUDGENEST100",
+	show = "full",
+	desc = [[Have 100 walls on the sludgenest turn into hostile creatures.]],
+}
+
+newAchievement{
+	name = "Slime killer party", id = "SLUDGENEST200",
+	show = "full", huge=true,
+	desc = [[Have 200 walls on the sludgenest turn into hostile creatures.]],
+}
+
+newAchievement{
+	name = "Mad slime dash", id = "SLUDGENEST300",
+	show = "full", huge=true,
+	desc = [[Have 300 walls on the sludgenest turn into hostile creatures.]],
+}
+
+newAchievement{
+	name = "Don't mind the slimy smell", id = "SLUDGENEST400",
+	show = "full", huge=true,
+	desc = [[Have 300 walls on the sludgenest turn into hostile creatures.]],
+}
+
+newAchievement{
+	name = "In the company of slimes", id = "SLUDGENEST500",
+	show = "full", huge=true,
+	desc = [[Have 300 walls on the sludgenest turn into hostile creatures.]],
+}
