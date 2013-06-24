@@ -119,6 +119,8 @@ newEntity{ base = "BASE_NPC_RITCH_REL", define_as = "HIVE_MOTHER",
 
 	body = { INVEN = 10, BODY=1 },
 
+	inc_damage = {all=-30},
+
 	resolvers.drops{chance=100, nb=1, {defined="FLAMEWROUGHT", random_art_replace={chance=75}}, },
 	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
 

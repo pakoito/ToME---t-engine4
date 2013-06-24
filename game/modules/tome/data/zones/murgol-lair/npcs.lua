@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/npcs/yaech.lua", rarity(0))
+load("/data/general/npcs/yaech.lua", function(e) if e.name then e.inc_damage.all = -35 end end)
 load("/data/general/npcs/aquatic_critter.lua", rarity(2))
 
 local Talents = require("engine.interface.ActorTalents")
@@ -88,6 +88,8 @@ newEntity{
 	life_rating = 11,
 	rank = 2,
 	size_category = 3,
+
+	inc_damage = {all = -35},
 
 	resolvers.racial(),
 
