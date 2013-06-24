@@ -30,19 +30,18 @@ module(..., package.seeall, class.make)
 --- Look for possible archery targets
 -- Take care of removing enough ammo
 function _M:archeryAcquireTargets(tg, params)
+	params = params or {}
 	local weapon, ammo, offweapon = self:hasArcheryWeapon()
 	if not weapon then
 		game.logPlayer(self, "You must wield a bow or a sling (%s)!", ammo)
 		return nil
 	end
-
 	local infinite = ammo.infinite or self:attr("infinite_ammo") or params.infinite
 
 	if not ammo or (ammo.combat.shots_left <= 0 and not infinite) then
 		game.logPlayer(self, "You do not have enough ammo left!")
 		return nil
 	end
-	params = params or {}
 
 	print("[ARCHERY ACQUIRE TARGETS WITH]", weapon.name, ammo.name)
 	local realweapon = weapon
