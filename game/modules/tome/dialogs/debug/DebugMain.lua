@@ -133,6 +133,15 @@ function _M:use(item)
 		end
 	elseif act == "all-ingredients" then
 		game.party:giveAllIngredients(100)
+		-- Gems count too
+		for def, od in pairs(game.zone.object_list) do
+			if type(def) == "string" and not od.unique and od.rarity and def:find("^GEM_") then
+				local o = game.zone:finishEntity(game.level, "object", od)
+				o:identify(true)
+				game.player:addObject("INVEN", o)
+				game.player:sortInven()
+			end
+		end
 	else
 		self:triggerHook{"DebugMain:use", act=act}
 	end

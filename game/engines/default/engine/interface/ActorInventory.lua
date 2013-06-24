@@ -92,12 +92,7 @@ end
 --- Adds an object to an inventory
 -- @return false if the object could not be added otherwise true and the inventory index where it is now
 function _M:addObject(inven_id, o)
-	local inven
-	if type(inven_id) == "number" then
-		inven = self.inven[inven_id]
-	else
-		inven = inven_id
-	end
+	local inven = self:getInven(inven_id)
 
 	-- No room ?
 	if #inven >= inven.max then return false end
@@ -168,7 +163,7 @@ end
 -- @param no_unstack if the item was a stack takes off the whole stack if true
 -- @return the object removed or nil if no item existed and a boolean saying if there is no more objects
 function _M:removeObject(inven, item, no_unstack)
-	if type(inven) == "number" then inven = self.inven[inven] end
+	local inven = self:getInven(inven)
 
 	if not inven[item] then return false, true end
 
