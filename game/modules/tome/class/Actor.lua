@@ -2174,6 +2174,16 @@ function _M:resolveSource()
 	end
 end
 
+function _M:emptyDrops()
+	local inven = self:getInven(self.INVEN_INVEN)
+	for i = #inven, 1, -1 do
+		local o = inven[i]
+		self:removeObject(inven, i, true)
+		o:removed()
+	end
+	self._empty_drops_escort = true
+end
+
 function _M:die(src, death_note)
 	if self.dead then self:disappear(src) self:deleteFromMap(game.level.map) return true end
 
@@ -4647,6 +4657,7 @@ function _M:addedToLevel(level, x, y)
 					local m = game.zone:makeEntity(game.level, "actor", filter, nil, true)
 					if m and m:canMove(x, y) then
 						if filter.no_subescort then m.make_escort = nil end
+						if self._empty_drops_escort then m:emptyDrops() end
 						game.zone:addEntity(game.level, m, "actor", x, y)
 						if filter.post then filter.post(self, m) end
 					elseif m then m:removed() end

@@ -94,8 +94,9 @@ return {
 					local m = game.zone:makeEntity(game.level, "actor")
 					if m then
 						m.exp_worth = 0
+						m:emptyDrops()
 						game.zone:addEntity(game.level, m, "actor", x, y)
-						game.logSeen(who, "%s appears out of the thin air!", m.name:capitalize())
+						game.logSeen(m, "%s appears out of the thin air!", m.name:capitalize())
 					end
 				end
 				return
