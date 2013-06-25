@@ -86,11 +86,11 @@ newAchievement{
 newAchievement{
 	name = "Don't mind the slimy smell", id = "SLUDGENEST400",
 	show = "full", huge=true,
-	desc = [[Have 300 walls on the sludgenest turn into hostile creatures.]],
+	desc = [[Have 400 walls on the sludgenest turn into hostile creatures.]],
 }
 
 newAchievement{
 	name = "In the company of slimes", id = "SLUDGENEST500",
 	show = "full", huge=true,
-	desc = [[Have 300 walls on the sludgenest turn into hostile creatures.]],
+	desc = [[Have 500 walls on the sludgenest turn into hostile creatures.]],
 }

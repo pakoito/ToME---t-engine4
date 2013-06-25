@@ -21,7 +21,34 @@ load("/data/general/npcs/orc.lua", rarity(40))
 
 local Talents = require("engine.interface.ActorTalents")
 
-newEntity{ base = "BASE_NPC_ORC",
+-- Same as normal orc, but without the loot
+newEntity{
+	define_as = "BASE_NPC_ORC_SUMMON",
+	type = "humanoid", subtype = "orc",
+	display = "o", color=colors.UMBER,
+	faction = "orc-pride",
+
+	combat = { dam=resolvers.rngavg(5,12), atk=2, apr=6, physspeed=2 },
+
+	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },
+	infravision = 10,
+	lite = 2,
+
+	life_rating = 11,
+	rank = 2,
+	size_category = 3,
+
+	open_door = true,
+
+	autolevel = "warrior",
+	ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=3, },
+	stats = { str=20, dex=8, mag=6, con=16 },
+	resolvers.talents{ [Talents.T_WEAPON_COMBAT]={base=1, every=10, max=5}, },
+	ingredient_on_death = "ORC_HEART",
+}
+
+
+newEntity{ base = "BASE_NPC_ORC_SUMMON",
 	name = "orc baby", color=colors.GREEN,
 	desc = [[Crawling on all fours, this green-skinned creature is far from cute, with vicious little sharp teeth and nails, and mucusy slime still sticking to its skin.]],
 	level_range = {25, nil}, exp_worth = 0,
