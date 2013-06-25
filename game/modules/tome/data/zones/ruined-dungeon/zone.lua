@@ -70,6 +70,25 @@ return {
 				end end
 			end
 		end
+
+		-- Pop guardians
+		local guardian_filter = {not_properties = {"unique"}, random_elite={name_scheme="#rng# the Guardian", on_die=function(self)
+			local spot = game.level:pickSpotRemove{type="portal", subtype="portal"}
+			if spot then
+				game.level.map(spot.x, spot.y, engine.Map.TERRAIN).orb_allowed = true
+				require("engine.ui.Dialog"):simplePopup("Guardian", "You can hear a magical trigger firing off.")
+			end
+		end}, add_levels=5}
+		local _, guardians = level:pickSpot{type="spawn", subtype="guardian"}
+		for i, spot in ipairs(guardians) do
+			while true do
+				local m = game.zone:makeEntity(level, "actor", guardian_filter, nil, true)
+				if m then
+					game.zone:addEntity(level, m, "actor", spot.x, spot.y)
+					break
+				end
+			end
+		end
 	end,
 	touch_orb = function(type, sx, sy)
 		if game.level.orbs_used then return end

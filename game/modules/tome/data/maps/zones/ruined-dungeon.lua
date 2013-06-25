@@ -35,13 +35,7 @@ defineTile(".", "OLD_FLOOR")
 defineTile("1", "LORE1")
 defineTile("!", "GENERIC_LEVER_DOOR")
 defineTile("2", "LORE2")
-defineTile(" ", "OLD_FLOOR", nil, {random_filter={not_properties = {"unique"}, random_elite={name_scheme="#rng# the Guardian", on_die=function(self)
-	local spot = game.level:pickSpotRemove{type="portal", subtype="portal"}
-	if spot then
-		game.level.map(spot.x, spot.y, engine.Map.TERRAIN).orb_allowed = true
-		require("engine.ui.Dialog"):simplePopup("Guardian", "You can hear a magical trigger firing off.")
-	end
-end}, add_levels=5}})
+defineTile(" ", "OLD_FLOOR", nil, nil, nil, nil, {type="spawn", subtype="guardian"})
 
 -- addSpot section
 addSpot({18, 11}, "portal", "portal")
