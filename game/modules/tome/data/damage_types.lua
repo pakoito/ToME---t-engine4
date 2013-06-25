@@ -61,7 +61,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			game.logSeen(target, "%s shrugs off the critical damage!", target.name:capitalize())
 		end
 
-		local hd = {"DamageProjector:base", src=src, x=x, y=y, type=type, dam=dam}
+		local hd = {"DamageProjector:base", src=src, x=x, y=y, type=type, dam=dam, tmp=tmp, no_martyr=no_martyr}
 		if src:triggerHook(hd) then dam = hd.dam end
 
 		-- Difficulty settings
@@ -339,7 +339,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 
 		print("[PROJECTOR] final dam", dam)
 
-		local hd = {"DamageProjector:final", src=src, x=x, y=y, type=type, dam=dam}
+		local hd = {"DamageProjector:final", src=src, x=x, y=y, type=type, dam=dam, tmp=tmp, no_martyr=no_martyr}
 		if src:triggerHook(hd) then dam = hd.dam end
 
 		local source_talent = src.__projecting_for and src.__projecting_for.project_type and (src.__projecting_for.project_type.talent_id or src.__projecting_for.project_type.talent) and src.getTalentFromId and src:getTalentFromId(src.__projecting_for.project_type.talent or src.__projecting_for.project_type.talent_id)
