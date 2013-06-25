@@ -127,6 +127,14 @@ newTalent{
 	tactical = { BUFF = 2 },
 	no_npc_use = true,
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow or sling for this talent.") end return false end return true end,
+	getCombatVals = function(self, t)
+		local vals = {speed = -self:combatTalentLimit(t, 0.5, 0.05, 0.25), -- Limit < 50% speed loss
+			crit =  self:combatScale(self:getTalentLevel(t) * self:getDex(10, true), 7, 0, 57, 50),
+			atk = self:combatScale(self:getTalentLevel(t) * self:getDex(10, true), 4, 0, 54, 50),
+			dam = self:combatScale(self:getTalentLevel(t) * self:getDex(10, true), 4, 0, 54, 50),
+			apr = self:combatScale(self:getTalentLevel(t) * self:getDex(10, true), 3, 0, 53, 50)}
+		return vals
+	end,
 	activate = function(self, t)
 		local weapon = self:hasArcheryWeapon()
 		if not weapon then
@@ -135,14 +143,14 @@ newTalent{
 		end
 
 		if self:isTalentActive(self.T_RAPID_SHOT) then self:forceUseTalent(self.T_RAPID_SHOT, {ignore_energy=true}) end
-
+		local vals = t.getCombatVals(self, t)
 		return {
 			move = self:addTemporaryValue("never_move", 1),
-			speed = self:addTemporaryValue("combat_physspeed", -self:getTalentLevelRaw(t) * 0.05),
-			crit = self:addTemporaryValue("combat_physcrit", 7 + self:getTalentLevel(t) * self:getDex(10, true)),
-			atk = self:addTemporaryValue("combat_dam", 4 + self:getTalentLevel(t) * self:getDex(10, true)),
-			dam = self:addTemporaryValue("combat_atk", 4 + self:getTalentLevel(t) * self:getDex(10, true)),
-			apr = self:addTemporaryValue("combat_apr", 3 + self:getTalentLevel(t) * self:getDex(10, true)),
+			speed = self:addTemporaryValue("combat_physspeed", vals.speed),
+			crit = self:addTemporaryValue("combat_physcrit", vals.crit),
+			atk = self:addTemporaryValue("combat_dam", vals.atk),
+			dam = self:addTemporaryValue("combat_atk", vals.dam),
+			apr = self:addTemporaryValue("combat_apr", vals.apr),
 		}
 	end,
 	deactivate = function(self, t, p)
@@ -155,11 +163,10 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
+		local vals = t.getCombatVals(self, t)
 		return ([[You enter a calm, focused stance, increasing your Physical Power (+%d), Accuracy (+%d), Armour penetration (+%d), and critical chance (+%d%%), but reducing your firing speed by %d%% and making you unable to move.
 		The effects will increase with your Dexterity.]]):
-		format(4 + self:getTalentLevel(t) * self:getDex(10, true), 4 + self:getTalentLevel(t) * self:getDex(10, true),
-		3 + self:getTalentLevel(t) * self:getDex(10, true), 7 + self:getTalentLevel(t) * self:getDex(10, true),
-		self:getTalentLevelRaw(t) * 5)
+		format(vals.dam, vals.atk, vals.apr, vals.crit, -vals.speed * 100)
 	end,
 }
 
@@ -174,20 +181,28 @@ newTalent{
 	no_energy = true,
 	tactical = { BUFF = 2 },
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow or sling for this talent.") end return false end return true end,
+	getCombatVals = function(self, t)
+		local vals = {speed = self:combatTalentScale(t, 0.1, 0.5, 0.75),
+			crit = -self:combatTalentScale(t, 10.4, 20),
+			atk = -self:combatTalentScale(t, 10.4, 20, 0.75),
+			dam = -self:combatTalentScale(t, 10.4, 20, 0.75)
+			}
+		return vals
+	end,
 	activate = function(self, t)
 		local weapon = self:hasArcheryWeapon()
 		if not weapon then
-			game.logPlayer(self, "You cannot use Aim without a bow or sling!")
+			game.logPlayer(self, "You cannot use Rapid Shot without a bow or sling!")
 			return nil
 		end
 
 		if self:isTalentActive(self.T_AIM) then self:forceUseTalent(self.T_AIM, {ignore_energy=true}) end
-
+		local vals = t.getCombatVals(self, t)
 		return {
-			speed = self:addTemporaryValue("combat_physspeed", self:getTalentLevel(t) * 0.1),
-			atk = self:addTemporaryValue("combat_dam", -8 - self:getTalentLevelRaw(t) * 2.4),
-			dam = self:addTemporaryValue("combat_atk", -8 - self:getTalentLevelRaw(t) * 2.4),
-			crit = self:addTemporaryValue("combat_physcrit", -8 - self:getTalentLevelRaw(t) * 2.4),
+			speed = self:addTemporaryValue("combat_physspeed", vals.speed),
+			atk = self:addTemporaryValue("combat_dam", vals.atk),
+			dam = self:addTemporaryValue("combat_atk", vals.dam),
+			crit = self:addTemporaryValue("combat_physcrit", vals.crit),
 		}
 	end,
 	deactivate = function(self, t, p)
@@ -198,8 +213,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You switch to a fluid and fast battle stance, increasing your firing speed by %d%% at the cost of your Accuracy (%d), Physical Power (%d), and critical chance (%d).]]):
-		format(self:getTalentLevel(t) * 10, -8 - self:getTalentLevelRaw(t) * 2.4, -8 - self:getTalentLevelRaw(t) * 2.4, -8 - self:getTalentLevelRaw(t) * 2.4)
+		local vals = t.getCombatVals(self, t)
+		return ([[You switch to a fluid and fast battle stance, increasing your firing speed by %d%% at the cost of your Accuracy (%d), Physical Power (%d), and critical chance (%d%%).]]):
+		format(vals.speed*100, vals.atk, vals.dam, vals.crit)
 	end,
 }
 
@@ -316,7 +332,7 @@ newTalent{
 	range = archery_range,
 	tactical = { ATTACK = { weapon = 1 }, DISABLE = { pin = 2 } },
 	requires_target = true,
-	getDur = function(self, t) return ({2, 3, 4, 4, 5})[util.bound(self:getTalentLevelRaw(t), 1, 5)] end,
+	getDur = function(self, t) return math.floor(self:combatTalentScale(t, 2.3, 5.5)) end,
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow or sling for this talent.") end return false end return true end,
 	archery_onhit = function(self, t, target, x, y)
 		if target:canBe("pin") then
@@ -349,9 +365,7 @@ newTalent{
 	stamina = 15,
 	require = techs_dex_req4,
 	range = archery_range,
-	radius = function(self, t)
-		return 1 + math.floor(self:getTalentLevel(t) / 3)
-	end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 1.3, 2.7)) end,
 	tactical = { ATTACKAREA = { weapon = 2 }, DISABLE = { stun = 3 } },
 	requires_target = true,
 	target = function(self, t)
@@ -359,11 +373,12 @@ newTalent{
 		return {type="ball", radius=self:getTalentRadius(t), range=self:getTalentRange(t), display=self:archeryDefaultProjectileVisual(weapon, ammo)}
 	end,
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow or sling for this talent.") end return false end return true end,
+	getStunDur = function(self, t) return math.floor(self:combatTalentScale(t, 3, 7)) end,
 	archery_onhit = function(self, t, target, x, y)
 		if target:canBe("stun") then
-			target:setEffect(target.EFF_STUNNED, 2 + self:getTalentLevelRaw(t), {apply_power=self:combatAttack()})
+			target:setEffect(target.EFF_STUNNED, t.getStunDur(self, t), {apply_power=self:combatAttack()})
 		else
-			game.logSeen(target, "%s resists!", target.name:capitalize())
+			game.logSeen(target, "%s resists the stunning shot!", target.name:capitalize())
 		end
 	end,
 	action = function(self, t)
@@ -375,7 +390,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[You fire multiple shots in a circular pattern with radius %d, doing %d%% damage and stunning everyone hit for %d turns.
-		The stun chance increases with your Dexterity.]])
-		:format(self:getTalentRadius(t), self:combatTalentWeaponDamage(t, 0.5, 1.5) * 100, 2 + self:getTalentLevelRaw(t))
+		The stun chance increases with your Accuracy.]])
+		:format(self:getTalentRadius(t), self:combatTalentWeaponDamage(t, 0.5, 1.5) * 100, t.getStunDur(self,t))
 	end,
 }

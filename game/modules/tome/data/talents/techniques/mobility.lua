@@ -29,7 +29,7 @@ newTalent{
 	require = techs_dex_req1,
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.4, 1) end,
-	getDist = function(self, t) return 1 + math.ceil(self:getTalentLevel(t) / 2) end,
+	getDist = function(self, t) return math.ceil(self:combatTalentScale(t, 1.2, 3.3)) end,
 	on_pre_use = function(self, t)
 		if self:attr("never_move") then return false end
 		return true
@@ -63,9 +63,13 @@ newTalent{
 	require = techs_dex_req2,
 	getDef = function(self, t) return self:getTalentLevel(t) * 0.08 end,
 	getHardiness = function(self, t) return self:getTalentLevel(t) * 0.06 end,
+	-- called by _M:combatDefenseBase function in mod\class\interface\Combat.lua
+	getDef = function(self, t) return self:combatTalentLimit(t, 1, 0.10, 0.40) end, -- Limit to <100% defense bonus
+	-- called by _M:combatArmorHardiness function in mod\class\interface\Combat.lua
+	getHardiness = function(self, t) return self:combatTalentLimit(t, 100, 6, 30) end, -- Limit < 100%
 	info = function(self, t)
 		return ([[Whilst wearing leather or lighter armour, you gain %d%% Defense and %d%% Armour hardiness.]]):
-		format(t.getDef(self, t) * 100, t.getHardiness(self, t) * 100)
+		format(t.getDef(self, t) * 100, t.getHardiness(self, t))
 	end,
 }
 
@@ -75,19 +79,16 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	require = techs_dex_req3,
-	on_learn = function(self, t)
-		self.fatigue = (self.fatigue or 0) - 1.5
-		if self:getTalentLevelRaw(t) == 3 then self:attr("avoid_pressure_traps", 1) end
-	end,
-	on_unlearn = function(self, t)
-		self.fatigue = (self.fatigue or 0) + 1.5
-		if self:getTalentLevelRaw(t) == 2 then self:attr("avoid_pressure_traps", -1) end
+	getFatigue = function(self, t) return self:combatTalentLimit(t, 100, 1.5, 7.5) end, -- Limit < 50%
+	passives = function(self, t, p)
+		self:talentTemporaryValue(p, "fatigue", -t.getFatigue(self, t))
 	end,
 	info = function(self, t)
-		return ([[You are light on foot, handling your armour better. Each step you take regenerates %0.2f stamina, and your fatigue is permanently reduced by %d%%.
+		return ([[You are light on your feet, handling your armour better. Each step you take regenerates %0.2f stamina, and your fatigue is permanently reduced by %0.1f%%.
 		At level 3 you are able to walk so lightly that you never trigger traps that require pressure.]]):
-		format(self:getTalentLevelRaw(t) * 0.2, self:getTalentLevelRaw(t) * 1.5)
+		format(self:getTalentLevelRaw(t) * 0.2, t.getFatigue(self, t))
 	end,
+
 }
 
 newTalent{
@@ -96,23 +97,17 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	require = techs_dex_req4,
-	on_learn = function(self, t)
-		self.movement_speed = self.movement_speed + 0.02
-		self.talent_cd_reduction[Talents.T_RUSH] = (self.talent_cd_reduction[Talents.T_RUSH] or 0) + 1
-		self.talent_cd_reduction[Talents.T_HACK_N_BACK] = (self.talent_cd_reduction[Talents.T_HACK_N_BACK] or 0) + 1
-		self.talent_cd_reduction[Talents.T_DISENGAGE] = (self.talent_cd_reduction[Talents.T_DISENGAGE] or 0) + 1
-		self.talent_cd_reduction[Talents.T_EVASION] = (self.talent_cd_reduction[Talents.T_EVASION] or 0) + 1
-	end,
-	on_unlearn = function(self, t)
-		self.movement_speed = self.movement_speed - 0.02
-		self.talent_cd_reduction[Talents.T_RUSH] = (self.talent_cd_reduction[Talents.T_RUSH] or 0) - 1
-		self.talent_cd_reduction[Talents.T_HACK_N_BACK] = (self.talent_cd_reduction[Talents.T_HACK_N_BACK] or 0) - 1
-		self.talent_cd_reduction[Talents.T_DISENGAGE] = (self.talent_cd_reduction[Talents.T_DISENGAGE] or 0) - 1
-		self.talent_cd_reduction[Talents.T_EVASION] = (self.talent_cd_reduction[Talents.T_EVASION] or 0) - 1
+	incspeed = function(self, t) return self:combatTalentScale(t, 0.02, 0.10, 0.75) end,
+	CDreduce = function(self, t) return math.floor(self:combatTalentLimit(t, 8, 1, 5)) end, -- Limit < 8
+	passives = function(self, t, p)
+		local cdr = t.CDreduce(self, t)
+		self:talentTemporaryValue(p, "movement_speed", t.incspeed(self, t))
+		self:talentTemporaryValue(p, "talent_cd_reduction",
+			{[Talents.T_RUSH]=cdr, [Talents.T_HACK_N_BACK]=cdr, [Talents.T_DISENGAGE]=cdr, [Talents.T_EVASION]=cdr})
 	end,
 	info = function(self, t)
 		return ([[You literally dance around your foes, increasing your movement speed by %d%% and reducing the cooldown of Hack'n'Back, Rush, Disengage and Evasion by %d turns.]]):
-		format(self:getTalentLevelRaw(t) * 2, self:getTalentLevelRaw(t))
+		format(t.incspeed(self, t)*100,t.CDreduce(self, t))
 	end,
 }
 

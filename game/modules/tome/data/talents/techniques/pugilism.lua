@@ -38,7 +38,7 @@ newTalent{
 	no_npc_use = true, -- They dont need it since it auto switches anyway
 	no_unlearn_last = true,
 	getAttack = function(self, t) return self:getDex(25, true) end,
-	getDamage = function(self, t) return self:getDex(50, true) end,
+	getDamage = function(self, t) return self:combatStatScale("dex", 5, 50) end,
 	activate = function(self, t)
 		cancelStances(self)
 		local ret = {
@@ -141,8 +141,8 @@ newTalent{
 	points = 5,
 	random_ego = "utility",
 	mode = "passive",
-	getStamina = function(self, t) return self:getTalentLevel(t)/4 end,
-	getCooldownReduction = function(self, t) return self:getTalentLevel(t)/15 end,
+	getStamina = function(self, t) return self:combatTalentScale(t, 1/4, 5/4, 0.75) end,
+	getCooldownReduction = function(self, t) return self:combatTalentLimit(t, 0.67, 0.09, 1/3) end,  -- Limit < 67%
 	info = function(self, t)
 		local stamina = t.getStamina(self, t)
 		local cooldown = t.getCooldownReduction(self, t)
@@ -160,7 +160,8 @@ newTalent{
 	random_ego = "attack",
 	cooldown = function(self, t) return math.ceil(12 * getRelentless(self, cd)) end,
 	stamina = 12,
-	range = function(self, t) return 2 + math.ceil(self:getTalentLevel(t)/2) end,
+	range = function(self, t) return math.ceil(self:combatTalentScale(t, 2.2, 4.3)) end,
+	chargeBonus = function(self, t, dist) return self:combatScale(dist, 0.15, 1, 0.50, 5) end,
 	message = "@Source@ lashes out with a spinning backhand.",
 	tactical = { ATTACKAREA = { weapon = 2 }, CLOSEIN = 1 },
 	requires_target = true,
@@ -172,7 +173,7 @@ newTalent{
 		if core.fov.distance(self.x, self.y, x, y) > self:getTalentRange(t) then return nil end
 
 		-- bonus damage for charging
-		local charge = (core.fov.distance(self.x, self.y, x, y) - 1) / 10
+		local charge = t.chargeBonus(self, t, (core.fov.distance(self.x, self.y, x, y) - 1))
 		local damage = t.getDamage(self, t) + charge
 
 		-- do the rush
@@ -246,9 +247,10 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t) * 100
-		return ([[Attack your foes in a frontal arc with a spinning backhand, doing %d%% damage.  If you're not adjacent to the target, you'll step forward as you spin, gaining 10%% bonus damage for each tile you move.
+		local charge =t.chargeBonus(self, t, t.range(self, t)-1)*100
+		return ([[Attack your foes in a frontal arc with a spinning backhand, doing %d%% damage.  If you're not adjacent to the target, you'll step forward as you spin, gaining up to %d%% bonus damage, which increases the farther you move.
 		This attack will remove any grapples you're maintaining, and earn one combo point (or one combo point per attack that connects, if the talent level is 4 or greater).]])
-		:format(damage)
+		:format(damage, charge)
 	end,
 }
 

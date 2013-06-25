@@ -27,10 +27,11 @@ newTalent{
 	no_energy = true,
 	cooldown = 5,
 	tactical = { BUFF = 2 },
+	getChance = function(self, t) return self:combatLimit(self:getTalentLevel(t) * (1 + self:getCun(9, true)), 100, 20, 0, 70, 50) end, -- Limit < 100%
 	do_trigger = function(self, t, target)
 		if self.x == target.x and self.y == target.y then return nil end
 
-		local chance = 20 + self:getTalentLevel(t) * (1 + self:getCun(9, true))
+		local chance = t.getChance(self, t)
 		if self:hasDualWeapon() then chance = chance / 2 end
 
 		if rng.percent(chance) then
@@ -80,7 +81,7 @@ newTalent{
 		When using two weapons, the chance is halved for each weapon.
 		Delivering the spell this way will not trigger a spell cooldown, but only works if the spell is not cooling down.
 		The chance increases with your Cunning.]]):
-		format(20 + self:getTalentLevel(t) * (1 + self:getCun(9, true)))
+		format(t.getChance(self, t))
 	end,
 }
 
@@ -90,9 +91,11 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	require = techs_req2,
+	-- called by _M:combatSpellpower in mod\class\interface\Combat.lua
+	getSpellpower = function(self, t) return self:combatTalentScale(t, 20, 40, 0.75) end,
 	info = function(self, t)
 		return ([[The user gains a bonus to Spellpower equal to %d%% of their Cunning.]]):
-		format(15 + self:getTalentLevel(t) * 5)
+		format(t.getSpellpower(self,t))
 	end,
 }
 
@@ -106,9 +109,11 @@ newTalent{
 	require = techs_req3,
 	range = 10,
 	tactical = { BUFF = 2 },
+	getManaRegen = function(self, t) return self:combatTalentScale(t, 1/7, 5/7, 0.75) end,
+	getCritChance = function(self, t) return self:combatTalentScale(t, 2.5, 11, 0.75) end,
 	activate = function(self, t)
-		local power = self:getTalentLevel(t) / 7
-		local crit = self:getTalentLevel(t) * 2.2
+		local power = t.getManaRegen(self, t)
+		local crit = t.getCritChance(self, t)
 		return {
 			regen = self:addTemporaryValue("mana_regen", power),
 			pc = self:addTemporaryValue("combat_physcrit", crit),
@@ -122,7 +127,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Regenerates %0.2f mana per turn, and increases physical and spell critical chance by %d%% while active.]]):format(self:getTalentLevel(t) / 7, self:getTalentLevel(t) * 2.2)
+		return ([[Regenerates %0.2f mana per turn, and increases physical and spell critical chance by %d%% while active.]]):format(t.getManaRegen(self, t), t.getCritChance(self, t))
 	end,
 }
 
@@ -132,11 +137,13 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	require = techs_req4,
+	-- called by _M:combatPhysicalpower in mod.class.interface.Combat.lua
+	getSPMult = function(self, t) return self:combatTalentScale(t, 1/7, 5/7) end,
 	info = function(self, t)
 		return ([[Raw magical damage channels through the caster's weapon, increasing Physical Power by %d.
 		Each time your crit with a melee blow, you will unleash a radius 2 ball of either fire, lightning or arcane damage, doing %0.2f.
 		The bonus scales with your Spellpower.]]):
-		format(self:combatSpellpower() * self:getTalentLevel(Talents.T_ARCANE_DESTRUCTION) / 7, self:combatSpellpower() * 2)
+		format(self:combatSpellpower() * t.getSPMult(self, t), self:combatSpellpower() * 2)
 	end,
 }
 

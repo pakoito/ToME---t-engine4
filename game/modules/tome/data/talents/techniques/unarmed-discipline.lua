@@ -27,15 +27,14 @@ newTalent{
 	tactical = { ATTACK = { PHYSICAL = 2 }, ESCAPE = { knockback = 2 } },
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentPhysicalDamage(t, 10, 100) * getUnarmedTrainingBonus(self) end,
-	getPush = function(self, t) return 1 + math.ceil(self:getTalentLevel(t)/4) end,
+	getPush = function(self, t) return math.ceil(self:combatTalentScale(t, 1.1, 2.1)) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 
-		local hit = target:checkHit(self:combatAttack(), target:combatDefense(), 0, 95, 5 - self:getTalentLevel(t) / 2)
-	--	local hit = self:attackTarget(target, nil, nil, true)
+		local hit = target:checkHit(self:combatAttack(), target:combatDefense(), 0, 95) -- Deprecated checkHit call
 
 		-- Try to knockback !
 		if hit then
@@ -79,10 +78,24 @@ newTalent{
 	require = techs_dex_req2,
 	mode = "passive",
 	points = 5,
+	-- Limit defensive throws/turn for balance using a buff (warns attacking players of the talent)	
+	-- EFF_DEFENSIVE_GRAPPLING effect is refreshed each turn in _M:actBase in mod.class.Actor.lua
 	getDamage = function(self, t) return self:combatTalentPhysicalDamage(t, 5, 50) * getUnarmedTrainingBonus(self) end,
 	getDamageTwo = function(self, t) return self:combatTalentPhysicalDamage(t, 10, 75) * getUnarmedTrainingBonus(self) end,
+	getchance = function(self, t)
+		return self:combatLimit(self:getTalentLevel(t) * (5 + self:getCun(5, true)), 100, 0, 0, 50, 50) -- Limit < 100%
+	end,
+	getThrows = function(self, t)
+		return self:combatScale(self:getStr() + self:getDex()-20, 0, 0, 2.24, 180)
+	end,
+	-- called by _M:attackTargetWith function in mod\class\interface\Combat.lua (includes adjacency check)
 	do_throw = function(self, target, t)
-		local hit = self:checkHit(self:combatAttack(), target:combatDefense(), 0, 95, 5 - self:getTalentLevel(t) / 2)
+		local ef = self:hasEffect(self.EFF_DEFENSIVE_GRAPPLING)
+		if not ef or not rng.percent(self.tempeffect_def.EFF_DEFENSIVE_GRAPPLING.throwchance(self, ef)) then return end
+		local hit = self:checkHit(self:combatAttack(), target:combatDefense(), 0, 95) -- Deprecated checkHit call removed
+		ef.throws = ef.throws - 1
+		if ef.throws <= 0 then self:removeEffect(self.EFF_DEFENSIVE_GRAPPLING) end
+		
 		if hit then
 			self:project(target, target.x, target.y, DamageType.PHYSICAL, self:physicalCrit(t.getDamageTwo(self, t), nil, target, self:combatAttack(), target:combatDefense()))
 			-- if grappled stun
@@ -97,14 +110,19 @@ newTalent{
 					target:setEffect(target.EFF_DAZED, 2, {apply_power=self:combatAttack(), min_dur=1})
 				end
 			end
+		else
+			game.logSeen(target, "%s misses a defensive throw against %s!", self.name:capitalize(),target.name:capitalize())
 		end
+	end,
+	on_unlearn = function(self, t)
+		self:removeEffect(self.EFF_DEFENSIVE_GRAPPLING)
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local damagetwo = t.getDamageTwo(self, t)
-		return ([[When you avoid a melee blow, you have a %d%% chance to throw the target to the ground.  If the throw lands, the target will take %0.2f damage and be dazed for 2 turns, or %0.2f damage and be stunned for 2 turns if the target is grappled.
-		The chance of throwing increases with your Accuracy, and the damage will scale with your Physical Power.]]):
-		format(self:getTalentLevel(t) * (5 + self:getCun(5, true)), damDesc(self, DamageType.PHYSICAL, (damage)), damDesc(self, DamageType.PHYSICAL, (damagetwo)))
+		return ([[When you avoid a melee blow while unarmed, you have a %d%% chance to throw the target to the ground.  If the throw lands, the target will take %0.2f damage and be dazed for 2 turns, or %0.2f damage and be stunned for 2 turns if the target is grappled.  You may attempt up to %0.1f throws per turn.
+		The chance of throwing increases with your Accuracy, the damage scales with your Physical Power, and the number of attempts with your Strength and Dexterity.]]):
+		format(t.getchance(self,t), damDesc(self, DamageType.PHYSICAL, (damage)), damDesc(self, DamageType.PHYSICAL, (damagetwo)), t.getThrows(self, t))
 	end,
 }
 
@@ -118,7 +136,7 @@ newTalent{
 	sustain_stamina = 15,
 	tactical = { BUFF = 1, STAMINA = 2 },
 	getSpeed = function(self, t) return 0.1 end,
-	getStamina = function(self, t) return self:getTalentLevel(t) * 1.5 end,
+	getStamina = function(self, t) return self:combatTalentScale(t, 2, 7.5, 0.75) end,
 	activate = function(self, t)
 		return {
 			speed = self:addTemporaryValue("global_speed_add", -t.getSpeed(self, t)),

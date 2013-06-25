@@ -66,6 +66,9 @@ newTalent{
 	sustain_stamina = 40,
 	tactical = { BUFF = 2 },
 	on_pre_use = function(self, t, silent) if not self:hasTwoHandedWeapon() then if not silent then game.logPlayer(self, "You require a two handed weapon to use this talent.") end return false end return true end,
+	getDam = function(self, t) return self:combatScale(self:getStr(7, true) * self:getTalentLevel(t), 5, 0, 40, 35)end,
+	getAtk = function(self, t) return self:combatScale(self:getDex(7, true) * self:getTalentLevel(t), 5, 0, 40, 35) end ,
+	getImmune = function(self, t) return self:combatTalentLimit(t, 1, 0.17, 0.5) end,
 	activate = function(self, t)
 		local weapon = self:hasTwoHandedWeapon()
 		if not weapon then
@@ -74,10 +77,11 @@ newTalent{
 		end
 
 		return {
-			stun = self:addTemporaryValue("stun_immune", 0.1 * self:getTalentLevel(t)),
-			pin = self:addTemporaryValue("pin_immune", 0.1 * self:getTalentLevel(t)),
-			dam = self:addTemporaryValue("combat_dam", 5 + self:getStr(7, true) * self:getTalentLevel(t)),
-			atk = self:addTemporaryValue("combat_atk", 5 + self:getDex(7, true) * self:getTalentLevel(t)),
+			armor = self:addTemporaryValue("combat_armor", -10),
+			stun = self:addTemporaryValue("stun_immune", t.getImmune(self, t)),
+			pin = self:addTemporaryValue("pin_immune", t.getImmune(self, t)),
+			dam = self:addTemporaryValue("combat_dam", t.getDam(self, t)),
+			atk = self:addTemporaryValue("combat_atk", t.getAtk(self, t)),
 			def = self:addTemporaryValue("combat_def", -10),
 			armor = self:addTemporaryValue("combat_armor", -10),
 		}
@@ -96,11 +100,7 @@ newTalent{
 		return ([[You enter an aggressive battle stance, increasing Accuracy by %d and Physical Power by %d, at the cost of -10 Defense and -10 Armour.
 		While berserking, you are nearly unstoppable, granting you %d%% stun and pinning resistance.
 		The Accuracy bonus increases with your Dexterity, and the Physical Power bonus with your Strength.]]):
-		format(
-			5 + self:getDex(7, true) * self:getTalentLevel(t),
-			5 + self:getStr(7, true) * self:getTalentLevel(t),
-			10 * self:getTalentLevel(t)
-		)
+		format( t.getAtk(self, t), t.getDam(self, t), t.getImmune(self, t)*100)
 	end,
 }
 
@@ -115,9 +115,8 @@ newTalent{
 	cooldown = 18,
 	tactical = { ATTACKAREA = { confusion = 1 }, DISABLE = { confusion = 3 } },
 	range = 0,
-	radius = function(self, t)
-		return 3 + self:getTalentLevelRaw(t)
-	end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 4, 8)) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 4, 8)) end,
 	requires_target = true,
 	target = function(self, t)
 		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false}
@@ -134,7 +133,7 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.CONFUSION, {
-			dur=3+self:getTalentLevelRaw(t),
+			dur=t.getDuration(self, t),
 			dam=50+self:getTalentLevelRaw(t)*10,
 			power_check=function() return self:combatPhysicalpower() end,
 			resist_check=self.combatPhysicalResist,
@@ -144,7 +143,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Shout your warcry in a frontal cone of radius %d. Any targets caught inside will be confused for %d turns.]]):
-		format(self:getTalentRadius(t), 3 + self:getTalentLevelRaw(t))
+		format(self:getTalentRadius(t), t.getDuration(self, t))
 	end,
 }
 
@@ -218,6 +217,7 @@ newTalent{
 	tactical = { ATTACK = { weapon = 2 }, DISABLE = { stun = 2 } },
 	requires_target = true,
 	on_pre_use = function(self, t, silent) if not self:hasTwoHandedWeapon() then if not silent then game.logPlayer(self, "You require a two handed weapon to use this talent.") end return false end return true end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 3, 7)) end,
 	action = function(self, t)
 		local weapon = self:hasTwoHandedWeapon()
 		if not weapon then
@@ -234,7 +234,7 @@ newTalent{
 		-- Try to stun !
 		if hit then
 			if target:canBe("stun") then
-				target:setEffect(target.EFF_STUNNED, 2 + self:getTalentLevel(t), {apply_power=self:combatPhysicalpower()})
+				target:setEffect(target.EFF_STUNNED, t.getDuration(self, t), {apply_power=self:combatPhysicalpower()})
 			else
 				game.logSeen(target, "%s resists the stunning blow!", target.name:capitalize())
 			end
@@ -245,8 +245,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Hits the target with your weapon, doing %d%% damage. If the attack hits, the target is stunned for %d turns.
 		The stun chance increases with your Physical Power.]])
-		:format(100 * self:combatTalentWeaponDamage(t, 1, 1.5),
-		2 + math.floor(self:getTalentLevel(t)))
+		:format(100 * self:combatTalentWeaponDamage(t, 1, 1.5), t.getDuration(self, t))
 	end,
 }
 
@@ -261,6 +260,8 @@ newTalent{
 	requires_target = true,
 	tactical = { ATTACK = { weapon = 2 }, DISABLE = { stun = 2 } },
 	on_pre_use = function(self, t, silent) if not self:hasTwoHandedWeapon() then if not silent then game.logPlayer(self, "You require a two handed weapon to use this talent.") end return false end return true end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 5, 9)) end,
+	getArmorReduc = function(self, t) return self:combatTalentScale(t, 5, 25, 0.75) end,
 	action = function(self, t)
 		local weapon = self:hasTwoHandedWeapon()
 		if not weapon then
@@ -274,9 +275,9 @@ newTalent{
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, self:combatTalentWeaponDamage(t, 1, 1.5))
 
-		-- Try to stun !
+		-- Try to Sunder !
 		if hit then
-			target:setEffect(target.EFF_SUNDER_ARMOUR, 4 + self:getTalentLevel(t), {power=5*self:getTalentLevel(t), apply_power=self:combatPhysicalpower()})
+			target:setEffect(target.EFF_SUNDER_ARMOUR, t.getDuration(self, t), {power=t.getArmorReduc(self,t), apply_power=self:combatPhysicalpower()})
 		end
 
 		return true
@@ -284,11 +285,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Hits the target with your weapon, doing %d%% damage. If the attack hits, the target's Armour is reduced by %d for %d turns.
 		Armor reduction chance increases with your Physical Power.]])
-		:format(
-			100 * self:combatTalentWeaponDamage(t, 1, 1.5),
-			5 * self:getTalentLevel(t),
-			4 + self:getTalentLevel(t)
-		)
+		:format( 100 * self:combatTalentWeaponDamage(t, 1, 1.5),t.getArmorReduc(self, t), t.getDuration(self, t))
 	end,
 }
 
@@ -303,6 +300,7 @@ newTalent{
 	tactical = { ATTACK = { weapon = 2 }, DISABLE = { stun = 2 } },
 	requires_target = true,
 	on_pre_use = function(self, t, silent) if not self:hasTwoHandedWeapon() then if not silent then game.logPlayer(self, "You require a two handed weapon to use this talent.") end return false end return true end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 5, 9)) end,
 	action = function(self, t)
 		local weapon = self:hasTwoHandedWeapon()
 		if not weapon then
@@ -316,9 +314,9 @@ newTalent{
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, self:combatTalentWeaponDamage(t, 1, 1.5))
 
-		-- Try to stun !
+		-- Try to Sunder !
 		if hit then
-			target:setEffect(target.EFF_SUNDER_ARMS, 4 + self:getTalentLevel(t), {power=3*self:getTalentLevel(t), apply_power=self:combatPhysicalpower()})
+			target:setEffect(target.EFF_SUNDER_ARMS, t.getDuration(self, t), {power=3*self:getTalentLevel(t), apply_power=self:combatPhysicalpower()})
 		end
 
 		return true
@@ -327,10 +325,7 @@ newTalent{
 		return ([[Hits the target with your weapon, doing %d%% damage. If the attack hits, the target's Accuracy is reduced by %d for %d turns.
 		Accuracy reduction chance increases with your Physical Power.]])
 		:format(
-			100 * self:combatTalentWeaponDamage(t, 1, 1.5),
-			3 * self:getTalentLevel(t),
-			4 + self:getTalentLevel(t)
-		)
+			100 * self:combatTalentWeaponDamage(t, 1, 1.5), 3 * self:getTalentLevel(t), t.getDuration(self, t))
 	end,
 }
 
@@ -346,10 +341,11 @@ newTalent{
 	tactical = { BUFF = 1 },
 	do_turn = function(self, t)
 		if self.blood_frenzy > 0 then
-			self.blood_frenzy = self.blood_frenzy - 2
+			self.blood_frenzy = math.max(self.blood_frenzy - 2, 0)
 		end
 	end,
 	on_pre_use = function(self, t, silent) if not self:hasTwoHandedWeapon() then if not silent then game.logPlayer(self, "You require a two handed weapon to use this talent.") end return false end return true end,
+	bonuspower = function(self,t) return self:combatTalentScale(t, 2, 10, 0.5, 0, 2) end, -- called by _M:die function in mod.class.Actor.lua
 	activate = function(self, t)
 		local weapon = self:hasTwoHandedWeapon()
 		if not weapon then
@@ -368,7 +364,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Enter a blood frenzy, draining stamina quickly (-2 stamina/turn). Each time you kill a foe while in the blood frenzy, you gain a cumulative bonus to Physical Power of %d.
-		Each turn, this bonus decreases by 2.]]):format(2 * self:getTalentLevel(t))
+		Each turn, this bonus decreases by 2.]]):
+		format(t.bonuspower(self,t))
 	end,
 }
 

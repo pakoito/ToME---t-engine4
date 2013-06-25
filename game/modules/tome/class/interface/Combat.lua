@@ -383,6 +383,14 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		game.logSeen(target, "%s evades %s.", target.name:capitalize(), self.name)
 	elseif self:checkHit(atk, def) and (self:canSee(target) or self:attr("blind_fight") or rng.chance(3)) then
 		local pres = util.bound(target:combatArmorHardiness() / 100, 0, 1)
+		if target.knowTalent and target:hasEffect(target.EFF_DUAL_WEAPON_DEFENSE) then
+			local deflect = target:callTalent(target.T_DUAL_WEAPON_DEFENSE, "doDeflect")
+			if deflect > 0 then
+				game.logSeen(target, "%s parries %d damage from %s's attack.", target.name:capitalize(), deflect, self.name:capitalize())
+				dam = math.max(dam - deflect,0)
+				print("[ATTACK] after DUAL_WEAPON_DEFENSE", dam)
+			end 
+		end
 		print("[ATTACK] raw dam", dam, "versus", armor, pres, "with APR", apr)
 		armor = math.max(0, armor - apr)
 		dam = math.max(dam * pres - armor, 0) + (dam * (1 - pres))
@@ -581,7 +589,11 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	-- Shattering Impact
 	if hitted and self:attr("shattering_impact") and (not self.shattering_impact_last_turn or self.shattering_impact_last_turn < game.turn) then
 		local dam = dam * self.shattering_impact
+		local invuln = target.invulnerable
+		game.logSeen(target, "The shattering blow creates a shockwave!")
+		target.invulnerable = 1 -- Target already hit, don't damage it twice
 		self:project({type="ball", radius=1, selffire=false}, target.x, target.y, DamageType.PHYSICAL, dam)
+		target.invulnerable = invuln
 		self:incStamina(-15)
 		self.shattering_impact_last_turn = game.turn
 	end
@@ -761,7 +773,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	end
 
 	-- Defensive Throw!
-	if not hitted and not target.dead and not evaded and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:knowTalent(target.T_DEFENSIVE_THROW) and rng.percent(target:getTalentLevel(target.T_DEFENSIVE_THROW) * (5 + target:getCun(5, true))) then
+	if not hitted and not target.dead and not evaded and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:knowTalent(target.T_DEFENSIVE_THROW) and target:isNear(self.x,self.y,1) then
 		local t = target:getTalentFromId(target.T_DEFENSIVE_THROW)
 		t.do_throw(target, self, t)
 	end
@@ -911,7 +923,7 @@ end
 function _M:combatDefenseBase(fake)
 	local add = 0
 	if self:hasDualWeapon() and self:knowTalent(self.T_DUAL_WEAPON_DEFENSE) then
-		add = add + 4 + (self:getTalentLevel(self.T_DUAL_WEAPON_DEFENSE) * self:getDex()) / 12
+		add = add + self:callTalent(self.T_DUAL_WEAPON_DEFENSE,"getDefense")
 	end
 	if not fake then
 		add = add + (self:checkOnDefenseCall("defense") or 0)
@@ -931,19 +943,18 @@ function _M:combatDefenseBase(fake)
 		local t = self:getTalentFromId(self.T_SURGE)
 		add = add + t.getDefenseChange(self, t)
 	end
---	local d = math.max(0, self.combat_def + (self:getDex() - 10) * 0.35 + add + (self:getLck() - 50) * 0.4)
 	local d = math.max(0, self.combat_def + (self:getDex() - 10) * 0.35 + (self:getLck() - 50) * 0.4)
+	local mult = 1
 	
 	if self:hasLightArmor() and self:knowTalent(self.T_MOBILE_DEFENCE) then
-		d = d * (1 + self:getTalentLevel(self.T_MOBILE_DEFENCE) * 0.08)
+		mult = mult + self:callTalent(self.T_MOBILE_DEFENCE,"getDef")
 	end
 
 	if self:knowTalent(self.T_MISDIRECTION) then
-		d = d * (1 + self:callTalent(self.T_MISDIRECTION,"getDefense")/100)
+		mult = mult + self:callTalent(self.T_MISDIRECTION,"getDefense")/100
 	end
 
---	return d
-	return math.max(0, d + add) -- Add bonuses last to avoid compounding defense multipliers from talents
+	return math.max(0, d * mult + add) -- Add bonuses last to avoid compounding defense multipliers from talents
 end
 
 --- Gets the defense ranged
@@ -997,7 +1008,7 @@ function _M:combatArmorHardiness()
 		end
 	end
 	if self:hasLightArmor() and self:knowTalent(self.T_MOBILE_DEFENCE) then
-		add = add + self:getTalentLevel(self.T_MOBILE_DEFENCE) * 6
+		add = add + self:callTalent(self.T_MOBILE_DEFENCE, "getHardiness")
 	end
 	if self:knowTalent(self.T_ARMOUR_OF_SHADOWS) and not game.level.map.lites(self.x, self.y) then
 		add = add + 50
@@ -1339,7 +1350,7 @@ function _M:combatSpellpower(mod, add)
 	mod = mod or 1
 	add = add or 0
 	if self:knowTalent(self.T_ARCANE_CUNNING) then
-		add = add + (15 + self:getTalentLevel(self.T_ARCANE_CUNNING) * 5) * self:getCun() / 100
+		add = add + self:callTalent(self.T_ARCANE_CUNNING,"getSpellpower") * self:getCun() / 100
 	end
 	if self:knowTalent(self.T_SHADOW_CUNNING) then
 		add = add + self:callTalent(self.T_SHADOW_CUNNING,"getSpellpower") * self:getCun() / 100
@@ -1375,13 +1386,15 @@ end
 
 --- Gets the off hand multiplier
 function _M:getOffHandMult(combat, mult)
-	local offmult = (mult or 1) / 2
+	local offmult = 1/2
+	-- Take the bigger multiplier from Dual weapon training and Corrupted Strength
 	if self:knowTalent(Talents.T_DUAL_WEAPON_TRAINING) then
-		offmult = math.max(offmult, (mult or 1) / (2 - (math.min(self:getTalentLevel(Talents.T_DUAL_WEAPON_TRAINING), 8) / 6)))
+		offmult = math.max(offmult,self:callTalent(Talents.T_DUAL_WEAPON_TRAINING,"getoffmult"))
 	end
 	if self:knowTalent(Talents.T_CORRUPTED_STRENGTH) then
 		offmult = math.max(offmult, (mult or 1) / (2 - (math.min(self:getTalentLevel(Talents.T_CORRUPTED_STRENGTH), 8) / 9)))
 	end
+	offmult = (mult or 1)*offmult
 	if self:hasEffect(self.EFF_CURSE_OF_MADNESS) then
 		local eff = self:hasEffect(self.EFF_CURSE_OF_MADNESS)
 		if eff.level >= 1 and eff.unlockLevel >= 1 then

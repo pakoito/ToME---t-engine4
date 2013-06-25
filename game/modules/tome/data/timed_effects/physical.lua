@@ -352,7 +352,8 @@ newEffect{
 	on_gain = function(self, err) return "#Target# is disarmed!", "+Disarmed" end,
 	on_lose = function(self, err) return "#Target# rearms.", "-Disarmed" end,
 	activate = function(self, eff)
-		self:removeEffect(self.EFF_COUNTER_ATTACKING)
+		self:removeEffect(self.EFF_COUNTER_ATTACKING) -- Cannot parry or counterattack while disarmed
+		self:removeEffect(self.EFF_DUAL_WEAPON_DEFENSE) 
 		eff.tmpid = self:addTemporaryValue("disarmed", 1)
 	end,
 	deactivate = function(self, eff)
@@ -1712,6 +1713,36 @@ newEffect{
 	end,
 }
 
+newEffect{ -- Note: This effect is cancelled by EFF_DISARMED
+	name = "DUAL_WEAPON_DEFENSE", image = "talents/dual_weapon_defense.png",
+	desc = "Parrying",
+	deflectchance = function(self, eff) -- The last partial deflect has a reduced chance to happen
+		if self:hasEffect(self.EFF_DISARMED) then return 0 end
+		return util.bound(eff.deflects>=1 and eff.chance or eff.chance*math.mod(eff.deflects,1),0,100)
+	end,
+	long_desc = function(self, eff)
+		return ("Parrying melee attacks: Has a %d%% chance to deflect up to %d damage from the next %0.1f attack(s)."):format(self.tempeffect_def.EFF_DUAL_WEAPON_DEFENSE.deflectchance(self, eff),eff.dam, math.max(eff.deflects,1))
+	end,
+	type = "physical",
+	subtype = {tactic=true},
+	status = "beneficial",
+	decrease = 0,
+	no_stop_enter_worlmap = true, no_stop_resting = true,
+	parameters = {chance=10,dam = 1, deflects = 1},
+	activate = function(self, eff)
+--		if self:attr("disarmed") or not self:hasDualWeapon() then eff.dur = 0 return end
+		if self:attr("disarmed") or not self:hasDualWeapon() then
+			eff.dur = 0 self:removeEffect(self.EFF_DUAL_WEAPON_DEFENSE) return
+			end
+		eff.dam = self:callTalent(self.T_DUAL_WEAPON_DEFENSE,"getDamageChange")
+		eff.deflects = self:callTalent(self.T_DUAL_WEAPON_DEFENSE,"getDeflects")
+		eff.chance = self:callTalent(self.T_DUAL_WEAPON_DEFENSE,"getDeflectChance")
+		if eff.dam <= 0 or eff.deflects <= 0 then eff.dur = 0 end
+	end,
+	deactivate = function(self, eff)
+	end,
+}
+
 newEffect{
 	name = "BLOCKING", image = "talents/block.png",
 	desc = "Blocking",
@@ -1780,6 +1811,33 @@ newEffect{
 		eff.counterattacks = self:callTalent(self.T_COUNTER_ATTACK,"getCounterAttacks")
 		eff.chance = self:callTalent(self.T_COUNTER_ATTACK,"counterchance")
 		if eff.counterattacks <= 0 or eff.chance <= 0 then eff.dur = 0 end
+	end,
+	deactivate = function(self, eff)
+	end,
+}
+
+newEffect{
+	name = "DEFENSIVE_GRAPPLING", image = "talents/defensive_throw.png",
+	desc = "Grappling Defensively",
+	throwchance = function(self, eff) -- the last partial defensive throw has a reduced chance to happen
+		if not self:isUnarmed() then return 0 end	-- Must be unarmed
+		return util.bound(eff.throws>=1 and eff.chance or eff.chance*math.mod(eff.throws,1),0,100)
+	end,
+	long_desc = function(self, eff)
+		return ("Has a %d%% chance to counter attack with a defensive throw when avoiding a melee attack, possibly throwing the target to the ground and stunning it. (%0.1f throws remaining)"):format(self.tempeffect_def.EFF_DEFENSIVE_GRAPPLING.throwchance(self, eff), math.max(eff.throws,1))
+	end,
+	type = "physical",
+	subtype = {tactic=true},
+	status = "beneficial",
+	decrease = 0,
+	no_stop_enter_worlmap = true, no_stop_resting = true,
+	parameters = {chance=10, throws = 1},
+	activate = function(self, eff)
+		if not self:isUnarmed() then eff.dur = 0 self:removeEffect(self.EFF_DEFENSIVE_GRAPPLING) return end
+--		if not self:isUnarmed() then eff.dur = 0 return end
+		eff.throws = self:callTalent(self.T_DEFENSIVE_THROW,"getThrows")
+		eff.chance = self:callTalent(self.T_DEFENSIVE_THROW,"getchance")
+		if eff.throws <= 0 or eff.chance <= 0 then eff.dur = 0 end
 	end,
 	deactivate = function(self, eff)
 	end,

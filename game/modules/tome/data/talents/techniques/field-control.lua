@@ -33,16 +33,17 @@ newTalent{
 		if self:attr("never_move") then return false end
 		return true
 	end,
+	getDist = function(self, t) return math.floor(self:combatTalentScale(t, 3, 7)) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 
-		self:knockback(target.x, target.y, math.floor(2 + self:getTalentLevel(t)))
+		self:knockback(target.x, target.y, t.getDist(self, t))
 		return true
 	end,
 	info = function(self, t)
-		return ([[Jump away %d grids from your target.]]):format(math.floor(2 + self:getTalentLevel(t)))
+		return ([[Jump away %d grids from your target.]]):format(t.getDist(self, t))
 	end,
 }
 
@@ -54,7 +55,7 @@ newTalent{
 	random_ego = "utility",
 	stamina = 20,
 	cooldown = 20,
-	radius = function(self, t) return math.floor(5 + self:getCun(10, true) * self:getTalentLevel(t)) end,
+	radius = function(self, t) return math.floor(self:combatScale(self:getCun(10, true) * self:getTalentLevel(t), 5, 0, 55, 50)) end,
 	no_npc_use = true,
 	action = function(self, t)
 		local rad = self:getTalentRadius(t)
@@ -81,6 +82,7 @@ newTalent{
 	stamina = 5,
 	tactical = { ESCAPE = { knockback = 1 }, DISABLE = { knockback = 3 } },
 	requires_target = true,
+	getDist = function(self, t) return math.floor(self:combatTalentScale(t, 3, 7)) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -89,7 +91,7 @@ newTalent{
 
 		-- Try to knockback !
 		local can = function(target)
-			if target:checkHit(math.max(self:combatAttack(), self:combatPhysicalpower()), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("knockback") then
+			if target:checkHit(math.max(self:combatAttack(), self:combatPhysicalpower()), target:combatPhysicalResist(), 0, 95) and target:canBe("knockback") then -- Deprecated Checkhit call
 				return true
 			else
 				game.logSeen(target, "%s resists the knockback!", target.name:capitalize())
@@ -97,7 +99,7 @@ newTalent{
 		end
 
 		if can(target) then 
-			target:knockback(self.x, self.y, math.floor(2 + self:getTalentLevel(t)), can) 
+			target:knockback(self.x, self.y, t.getDist(self, t), can)
 			target:crossTierEffect(target.EFF_OFFBALANCE, self:combatPhysicalpower())
 		end
 
@@ -106,7 +108,8 @@ newTalent{
 	info = function(self, t)
 		return ([[A mighty kick that pushes your target away %d grids.
 		If another creature is in the way, it will also be pushed away.
-		The knockback chance increases with your Accuracy or your Physical Power, whichever is greater.]]):format(math.floor(2 + self:getTalentLevel(t)))
+		The Knockback chance increase with your Accuracy or your Physical Power, whichever is greater.]])
+		:format(t.getDist(self, t))
 	end,
 }
 

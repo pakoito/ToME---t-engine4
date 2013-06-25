@@ -125,20 +125,27 @@ newEffect{
 newEffect{
 	name = "BATTLE_SHOUT", image = "talents/battle_shout.png",
 	desc = "Battle Shout",
-	long_desc = function(self, eff) return ("Increases maximum life and stamina by %d%%."):format(eff.power) end,
+	
+	long_desc = function(self, eff) return ("Increases maximum life and stamina by %d%%. When the effect ends, the extra life and stamina will be lost."):format(eff.power) end,
+	
 	type = "mental",
 	subtype = { morale=true },
 	status = "beneficial",
 	parameters = { power=10 },
 	activate = function(self, eff)
-		eff.life = self:addTemporaryValue("max_life", self.max_life * eff.power / 100)
-		eff.stamina = self:addTemporaryValue("max_stamina", self.max_stamina * eff.power / 100)
-		self:heal(self.max_life * eff.power / 100)
-		self:incStamina(self.max_stamina * eff.power / 100)
+		local lifeb = self.max_life * eff.power/100
+		local stamb = self.max_stamina * eff.power/100
+		eff.max_lifeID = self:addTemporaryValue("max_life", lifeb) --Avoid healing effects
+		eff.lifeID = self:addTemporaryValue("life",lifeb)
+		eff.max_stamina = self:addTemporaryValue("max_stamina", stamb)
+		self:incStamina(stamb)
+		eff.stamina = stamb
 	end,
 	deactivate = function(self, eff)
-		self:removeTemporaryValue("max_life", eff.life)
-		self:removeTemporaryValue("max_stamina", eff.stamina)
+		self:removeTemporaryValue("life", eff.lifeID)
+		self:removeTemporaryValue("max_life", eff.max_lifeID)
+		self:removeTemporaryValue("max_stamina", eff.max_stamina)
+		self:incStamina(-eff.stamina)
 	end,
 }
 

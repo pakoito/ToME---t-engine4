@@ -44,6 +44,24 @@ newTalent{
 	no_unlearn_last = true,
 	points = 5,
 	require = {stat = {str = function(level) return 16 + (level + 2) * (level - 1) end}},
+	ArmorEffect = function(self, t)  -- Becomes more effective with heavier armors
+		local am = self:getInven("BODY")[1] or {}
+		if am.subtype == "cloth" then return 0.75
+		elseif am.subtype == "light" then return 1.0
+		elseif am.subtype == "heavy" then return 1.5
+		elseif am.subtype == "massive" then	return 2.0
+		end
+		return 0
+	end,
+	-- Called by _M:combatArmor in mod.class.interface.Combat.lua
+	getArmor = function(self, t)  return self:getTalentLevel(t) * t.ArmorEffect(self, t) * 1.4 end,
+	-- Called by _M:combatArmorHardiness in mod.class.interface.Combat.lua
+	getArmorHardiness = function(self, t) -- Matches previous progression for "heavy" armor
+		return math.max(0, self:combatLimit(self:getTalentLevel(t) * 5 * t.ArmorEffect(self, t), 100, 5, 3.75, 50, 37.5))
+	end,
+	getCriticalChanceReduction = function(self, t) -- Matches previous progression for "heavy" armor
+		return math.max(0, self:combatScale(self:getTalentLevel(t) * 3.8 * (t.ArmorEffect(self, t)/2)^0.5, 3.8, 3.3, 19, 16.45, 0.75))
+	end,
 	on_unlearn = function(self, t)
 		for inven_id, inven in pairs(self.inven) do if inven.worn then
 			for i = #inven, 1, -1 do
@@ -58,9 +76,9 @@ newTalent{
 			end
 		end end
 	end,
-	getArmorHardiness = function(self, t) return self:getTalentLevel(t) * 10 end,
-	getArmor = function(self, t) return self:getTalentLevel(t) * 2.8 end,
-	getCriticalChanceReduction = function(self, t) return self:getTalentLevel(t) * 3.8 end,
+--	getArmorHardiness = function(self, t) return self:getTalentLevel(t) * 10 end,
+--	getArmor = function(self, t) return self:getTalentLevel(t) * 2.8 end,
+--	getCriticalChanceReduction = function(self, t) return self:getTalentLevel(t) * 3.8 end,
 	info = function(self, t)
 		local hardiness = t.getArmorHardiness(self, t)
 		local armor = t.getArmor(self, t)
@@ -72,7 +90,7 @@ newTalent{
 		if self:knowTalent(self.T_STEALTH) then
 			classrestriction = "(Note that wearing mail or plate armour will interfere with stealth.)"
 		end
-		return ([[Improves your usage of armours. Increases Armour value by %d, Armour hardiness by %d%%, and reduces chance to be critically hit by %d%% when wearing heavy mail or massive plate armour.
+		return ([[You become better at using your armour to deflect blows and protect your vital areas. Increases Armour value by %d, Armour hardiness by %d%%, and reduces chance to be critically hit by %d%% when wearing heavy mail or massive plate armour.
 		At level 1, it allows you to wear heavy mail armour, gauntlets, helms, and heavy boots.
 		At level 2, it allows you to wear shields.
 		At level 3, it allows you to wear massive plate armour.

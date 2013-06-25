@@ -28,7 +28,7 @@ newTalent{
 	tactical = { DISABLE = { confusion = 2 }, ATTACK = { PHYSICAL = 1 } },
 	require = techs_req1,
 	requires_target = true,
-	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t) / 2) end,
+	getDuration = function(self, t) return math.ceil(self:combatTalentScale(t, 3.2, 5.3)) end,
 	getDamage = function(self, t)
 		local o = self:getInven(self.INVEN_HEAD) and self:getInven(self.INVEN_HEAD)[1]
 
@@ -83,17 +83,15 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	require = techs_req2,
-	on_learn = function(self, t)
-		self.stun_immune = (self.stun_immune or 0) + 0.1
-		self.confusion_immune = (self.confusion_immune or 0) + 0.1
-	end,
-	on_unlearn = function(self, t)
-		self.stun_immune = (self.stun_immune or 0) - 0.1
-		self.confusion_immune = (self.confusion_immune or 0) - 0.1
+	getImmune = function(self, t) return self:combatTalentLimit(t, 1, 0.15, 0.5) end,
+	passives = function(self, t, p)
+		local immune = t.getImmune(self, t)
+		self:talentTemporaryValue(p, "stun_immune", immune)
+		self:talentTemporaryValue(p, "confusion_immune", immune)
 	end,
 	info = function(self, t)
 		return ([[Your attunement to violence has given you %d%% resistance to stuns and confusion arising in battle.]]):
-		format(self:getTalentLevelRaw(t) * 10)
+		format(t.getImmune(self, t)*100)
 	end,
 }
 newTalent{
@@ -102,17 +100,15 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	require = techs_req3,
-	on_learn = function(self, t)
-		self.combat_critical_power = (self.combat_critical_power or 0) + 5
-		self.combat_apr = self.combat_apr + 4
-	end,
-	on_unlearn = function(self, t)
-		self.combat_critical_power = (self.combat_critical_power or 0) - 5
-		self.combat_apr = self.combat_apr - 4
+	critpower = function(self, t) return self:combatTalentScale(t, 6, 25, 0.75) end,
+	getAPR = function(self, t) return self:combatTalentScale(t, 5, 20, 0.75) end,
+	passives = function(self, t, p)
+		self:talentTemporaryValue(p, "combat_critical_power", t.critpower(self, t))
+		self:talentTemporaryValue(p, "combat_apr", t.getAPR(self, t))
 	end,
 	info = function(self, t)
-		return ([[You know how to hit the right places, giving +%d%% critical damage modifier and %d Armour penetration.]]):
-		format(self:getTalentLevelRaw(t) * 5, self:getTalentLevelRaw(t) * 4)
+		return ([[You know how to hit the right places, gaining +%d%% critical damage modifier and %d armour penetration.]]):
+		format(t.critpower(self, t), t.getAPR(self, t))
 	end,
 }
 
@@ -129,8 +125,8 @@ newTalent{
 	range = 1,
 	tactical = { DISABLE = 2, ATTACK = 2 },
 	getCrit = function(self, t) return self:combatTalentStatDamage(t, "dex", 10, 50) / 1.5 end,
-	getPen = function(self, t) return self:combatTalentStatDamage(t, "str", 10, 50) / 2 end,
-	getDrain = function(self, t) return 12 - self:getTalentLevelRaw(t) end,
+	getPen = function(self, t) return self:combatLimit(self:combatTalentStatDamage(t, "str", 10, 50), 100, 0, 0, 35.7, 35.7) end, -- Limit to <100%
+	getDrain = function(self, t) return self:combatTalentLimit(t, 0, 11, 6) end, -- Limit to >0 stam
 	activate = function(self, t)
 		local ret = {
 			crit = self:addTemporaryValue("combat_physcrit", t.getCrit(self, t)),
@@ -147,7 +143,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[You go all out, trying to burn down your foes as fast as possible.
-		Every hit in battle has +%d%% critical chance and +%d%% physical resistance penetration, but each strike drains %d stamina.]]):
+		Every hit in battle has +%d%% critical chance and +%d%% physical resistance penetration, but each strike drains %0.1f stamina.]]):
 		format(t.getCrit(self, t), t.getPen(self, t), t.getDrain(self, t))
 	end,
 }

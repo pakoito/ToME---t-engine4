@@ -28,13 +28,14 @@ newTalent{
 	stamina = 60,
 	no_energy = true,
 	tactical = { DEFEND = 2 },
+	getResist = function(self, t) return self:combatTalentScale(t, 15, 35) end,
 	action = function(self, t)
-		self:setEffect(self.EFF_EARTHEN_BARRIER, 20, {power=10 + self:getTalentLevel(t) * 5})
+		self:setEffect(self.EFF_EARTHEN_BARRIER, 20, {power=t.getResist(self, t)})
 		return true
 	end,
 	info = function(self, t)
 		return ([[Concentrate on the battle, ignoring some of the damage you take.
-		Improves physical damage reduction by %d%% for 20 turns.]]):format(10 + self:getTalentLevelRaw(t) * 5)
+		Improves physical damage reduction by %d%% for 20 turns.]]):format(t.getResist(self,t))
 	end,
 }
 
@@ -47,9 +48,10 @@ newTalent{
 	cooldown = 20,
 	sustain_stamina = 50,
 	tactical = { BUFF = 2 },
+	range = function(self,t) return math.floor(self:combatTalentLimit(t, 10, 1, 5)) end, -- Limit KB range to <10
 	activate = function(self, t)
 		return {
-			onslaught = self:addTemporaryValue("onslaught", math.floor(self:getTalentLevel(t))),
+			onslaught = self:addTemporaryValue("onslaught", t.range(self,t)), 
 			stamina = self:addTemporaryValue("stamina_regen", -4),
 		}
 	end,
@@ -62,7 +64,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Take an offensive stance. As you walk through your foes, you knock them all back in an frontal arc (up to %d grids).
 		This consumes stamina rapidly (-4 stamina/turn).]]):
-		format(math.floor(self:getTalentLevel(t)))
+		format(t.range(self, t))
 	end,
 }
 
@@ -77,7 +79,7 @@ newTalent{
 	tactical = { CLOSEIN = 2 },
 	range = 0,
 	radius = function(self, t)
-		return 2 + self:getTalentLevel(t)
+		return math.floor(self:combatTalentScale(t, 3, 7))
 	end,
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), friendlyfire=false, radius=self:getTalentRadius(t), talent=t}
@@ -96,7 +98,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Call all foes in a radius of %d around you into battle, getting them into melee range in an instant.]]):format(2+self:getTalentLevel(t))
+		return ([[Call all foes in a radius of %d around you into battle, getting them into melee range in an instant.]]):format(t.radius(self,t))
 	end,
 }
 
@@ -109,9 +111,11 @@ newTalent{
 	cooldown = 30,
 	sustain_stamina = 40,
 	tactical = { BUFF = 2 },
+	weaponDam = function(self, t) return (self:combatTalentLimit(t, 1, 0.38, 0.6)) end, -- Limit < 100% weapon damage
+	--Note: Shattering impact effect handled in mod.class.interface.Combat.lua : _M:attackTargetWith
 	activate = function(self, t)
 		return {
-			dam = self:addTemporaryValue("shattering_impact", self:combatTalentWeaponDamage(t, 0.2, 0.6)),
+			dam = self:addTemporaryValue("shattering_impact", t.weaponDam(self, t)),
 		}
 	end,
 	deactivate = function(self, t, p)
@@ -119,8 +123,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Put all your strength into your weapon blows, creating shattering impacts that deal %d%% weapon damage to all nearby foes.
-		Each blow will drain 15 stamina.]]):
-		format(100 * self:combatTalentWeaponDamage(t, 0.2, 0.6))
+		return ([[Put all of your strength into your weapon blows, creating shockwaves that deal %d%% Physical weapon damage to all nearby targets.  Only one shockwave will be created per action, and the primary target does not take extra damage.
+		Each shattering impact will drain 15 stamina.]]):
+		format(100*t.weaponDam(self, t))
 	end,
 }

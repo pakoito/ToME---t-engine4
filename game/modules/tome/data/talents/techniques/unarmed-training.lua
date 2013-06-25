@@ -77,7 +77,7 @@ newTalent{
 	require = techs_cun_req3,
 	mode = "passive",
 	points = 5,
-	getPower = function(self, t) return self:getTalentLevel(t)/2 end,
+	getPower = function(self, t) return self:combatTalentScale(t, 0.6, 2.5, 0.75) end,
 	do_reflexes = function(self, t)
 		self:setEffect(self.EFF_REFLEXIVE_DODGING, 1, {power=t.getPower(self, t)})
 	end,
@@ -94,8 +94,8 @@ newTalent{
 	require = techs_cun_req4,
 	mode = "passive",
 	points = 5,
-	getDuration = function(self, t) return math.ceil(self:getTalentLevel(t)/2) end,
-	getChance = function(self, t) return self:getTalentLevel(t) * (5 + self:getCun(5, true)) end,
+	getDuration = function(self, t) return math.ceil(self:combatTalentScale(t, 0.3, 2.3)) end,
+	getChance = function(self, t) return self:combatLimit(self:getTalentLevel(t) * (5 + self:getCun(5, true)), 100, 0, 0, 50, 50) end, -- Limit < 100%
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		local chance = t.getChance(self, t)

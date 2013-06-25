@@ -32,6 +32,7 @@ newTalent{
 	requires_target = true,
 	tactical = { ATTACK = 1, DISABLE = { stun = 3 } },
 	on_pre_use = function(self, t, silent) if not self:hasShield() then if not silent then game.logPlayer(self, "You require a weapon and a shield to use this talent.") end return false end return true end,
+	getStunDuration = function(self, t) return math.floor(self:combatTalentScale(t, 2.5, 4.5)) end,
 	action = function(self, t)
 		local shield = self:hasShield()
 		if not shield then
@@ -49,7 +50,7 @@ newTalent{
 		-- Try to stun !
 		if hit then
 			if target:canBe("stun") then
-				target:setEffect(target.EFF_STUNNED, 2 + self:getTalentLevel(t) / 2, {apply_power=self:combatAttackStr()})
+				target:setEffect(target.EFF_STUNNED, t.getStunDuration(self, t), {apply_power=self:combatAttackStr()})
 			else
 				game.logSeen(target, "%s resists the shield bash!", target.name:capitalize())
 			end
@@ -62,7 +63,7 @@ newTalent{
 		The stun chance increases with your Accuracy and your Strength.]])
 		:format(100 * self:combatTalentWeaponDamage(t, 1, 1.7, self:getTalentLevel(self.T_SHIELD_EXPERTISE)),
 		100 * self:combatTalentWeaponDamage(t, 1.2, 2.1, self:getTalentLevel(self.T_SHIELD_EXPERTISE)),
-		2 + self:getTalentLevel(t) / 2)
+		t.getStunDuration(self, t))
 	end,
 }
 
@@ -72,8 +73,8 @@ newTalent{
 	require = techs_req2,
 	mode = "passive",
 	points = 5,
-	getDurInc = function(self, t)
-		return math.ceil(self:getTalentLevel(t)/4)
+	getDurInc = function(self, t)  -- called in effect "BLOCKING" in mod.data\timed_effects\physical.lua
+		return math.ceil(self:combatTalentScale(t, 0.15, 1.15))
 	end,
 	getCritInc = function(self, t)
 		return self:combatTalentIntervalDamage(t, "dex", 10, 50)
@@ -192,19 +193,23 @@ newTalent{
 	sustain_stamina = 30,
 	tactical = { DEFEND = 2 },
 	on_pre_use = function(self, t, silent) if not self:hasShield() then if not silent then game.logPlayer(self, "You require a weapon and a shield to use this talent.") end return false end return true end,
+	getarmor = function(self,t) return self:combatScale((1+self:getDex(4))*self:getTalentLevel(t), 5, 0, 30, 25, 0.375) + self:combatTalentScale(self:getTalentLevel(self.T_SHIELD_EXPERTISE), 1, 5, 0.75) end, -- Scale separately with talent level and talent level of Shield Expertise
+	getDefense = function(self, t)
+		return self:combatScale((1 + self:getDex(4, true)) * self:getTalentLevel(t), 6.4, 1.4, 30, 25) + self:combatTalentScale(self:getTalentLevel(self.T_SHIELD_EXPERTISE), 2, 10, 0.75)
+	end,
+	stunKBresist = function(self, t) return self:combatTalentLimit(t, 1, 0.15, 0.50) end, -- Limit <100%
 	activate = function(self, t)
 		local shield = self:hasShield()
 		if not shield then
 			game.logPlayer(self, "You cannot use Shield Wall without a shield!")
 			return nil
 		end
-
 		return {
-			stun = self:addTemporaryValue("stun_immune", 0.1 * self:getTalentLevel(t)),
-			knock = self:addTemporaryValue("knockback_immune", 0.1 * self:getTalentLevel(t)),
+			stun = self:addTemporaryValue("stun_immune", t.stunKBresist(self, t)),
+			knock = self:addTemporaryValue("knockback_immune", t.stunKBresist(self, t)),
 			dam = self:addTemporaryValue("inc_damage", {[DamageType.PHYSICAL]=-20}),
-			def = self:addTemporaryValue("combat_def", 5 + (1 + self:getDex(4, true)) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE) * 2),
-			armor = self:addTemporaryValue("combat_armor", 5 + (1 + self:getDex(4, true)) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE)),
+			def = self:addTemporaryValue("combat_def", t.getDefense(self, t)),
+			armor = self:addTemporaryValue("combat_armor", t.getarmor(self,t)),
 		}
 	end,
 	deactivate = function(self, t, p)
@@ -217,11 +222,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Enter a protective battle stance, increasing Defense by %d and Armour by %d at the cost of -20%% physical damage. The Defense and Armor increase is based on your Dexterity.
-		It also grants %d%% resistance to stunning and knockback.]]):format(
-		5 + (1 + self:getDex(4, true)) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE)* 2,
-		5 + (1 + self:getDex(4, true)) * self:getTalentLevel(t) + self:getTalentLevel(self.T_SHIELD_EXPERTISE),
-		10 * self:getTalentLevel(t), 10 * self:getTalentLevel(t)
-		)
+		It also grants %d%% resistance to stunning and knockback.]]):
+		format(t.getDefense(self, t), t.getarmor(self, t), 100*t.stunKBresist(self, t))
 	end,
 }
 
@@ -237,6 +239,8 @@ newTalent{
 	on_pre_use = function(self, t, silent) if not self:hasShield() then if not silent then game.logPlayer(self, "You require a weapon and a shield to use this talent.") end return false end return true end,
 	range = 0,
 	radius = 1,
+	getDist = function(self, t) return math.floor(self:combatTalentScale(t, 3, 7)) end,
+	getDuration = function(self, t) return math.floor(self:combatStatScale("str", 3.8, 11)) end,
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), selffire=false, radius=self:getTalentRadius(t)}
 	end,
@@ -251,9 +255,9 @@ newTalent{
 		self:project(tg, self.x, self.y, function(px, py, tg, self)
 			local target = game.level.map(px, py, Map.ACTOR)
 			if target then
-				if target:checkHit(self:combatAttack(shield.special_combat), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("knockback") then
-					target:knockback(self.x, self.y, 2 + self:getTalentLevel(t))
-					if target:canBe("stun") then target:setEffect(target.EFF_DAZED, 3 + self:getStr(8), {}) end
+				if target:checkHit(self:combatAttack(shield.special_combat), target:combatPhysicalResist(), 0, 95) and target:canBe("knockback") then --Deprecated checkHit call
+					target:knockback(self.x, self.y, t.getDist(self, t))
+					if target:canBe("stun") then target:setEffect(target.EFF_DAZED, t.getDuration(self, t), {}) end
 				else
 					game.logSeen(target, "%s resists the knockback!", target.name:capitalize())
 				end
@@ -264,8 +268,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Let all your foes pile up on your shield, then put all your strength in one mighty thrust and repel them all away %d grids.
-		In addition, all creature knocked back will also be dazed for %d turns.
-		The distance increases with your talent level, and the daze with your Strength.]]):format(math.floor(2 + self:getTalentLevel(t)), 3 + self:getStr(8))
+		In addition, all creatures knocked back will also be dazed for %d turns.
+		The distance increases with your talent level, and the Daze duration with your Strength.]]):format(t.getDist(self, t), t.getDuration(self, t))
 	end,
 }
 
@@ -299,24 +303,28 @@ newTalent{
 	tactical = { DEFEND = 3 },
 	no_npc_use = true,
 	on_pre_use = function(self, t, silent) if not self:hasShield() then if not silent then game.logPlayer(self, "You require a weapon and a shield to use this talent.") end return false end return true end,
+	lifebonus = function(self,t, base_life) -- Scale bonus with max life
+		return self:combatTalentStatDamage(t, "con", 30, 500) + (base_life or self.max_life) * self:combatTalentLimit(t, 1, 0.02, 0.10) -- Limit <100% of base life
+	end,
+	getDefense = function(self, t) return self:combatScale(self:getDex(4, true) * self:getTalentLevel(t), 5, 0, 25, 20) end,
 	activate = function(self, t)
 		local shield = self:hasShield()
 		if not shield then
 			game.logPlayer(self, "You cannot use Last Stand without a shield!")
 			return nil
 		end
-
-		local hp = self:combatTalentStatDamage(t, "con", 30, 500) + 100
-
+		local hp = t.lifebonus(self,t)
 		local ret = {
+			base_life = self.max_life,
 			max_life = self:addTemporaryValue("max_life", hp),
-			def = self:addTemporaryValue("combat_def", 5 + self:getDex(4, true) * self:getTalentLevel(t)),
+			def = self:addTemporaryValue("combat_def", t.getDefense(self, t)),
 			nomove = self:addTemporaryValue("never_move", 1),
 			dieat = self:addTemporaryValue("die_at", -hp),
+			extra_life = self:addTemporaryValue("life", hp), -- Avoid healing effects
 		}
-		if not self:attr("talent_reuse") then
-			self:heal(hp)
-		end
+--		if not self:attr("talent_reuse") then
+--			self:heal(hp)
+--		end
 		return ret
 	end,
 	deactivate = function(self, t, p)
@@ -324,14 +332,20 @@ newTalent{
 		self:removeTemporaryValue("max_life", p.max_life)
 		self:removeTemporaryValue("never_move", p.nomove)
 		self:removeTemporaryValue("die_at", p.dieat)
+		self:removeTemporaryValue("life", p.extra_life)
 		return true
 	end,
 	info = function(self, t)
-		local hp = self:combatTalentStatDamage(t, "con", 30, 500) + 100
+		local hp = self:isTalentActive(self.T_LAST_STAND)
+		if hp then
+			hp = t.lifebonus(self, t, hp.base_life)
+		else
+			hp = t.lifebonus(self,t)
+		end
 		return ([[You brace yourself for the final stand, increasing Defense by %d, maximum and current life by %d, but making you unable to move.
-		Your stand let you concentrate on every blow allowing you to not die from otherwise fatal wounds. You can only die when reaching -%d life; however below 0 life you can not see how much you have left.
-		The increase in Defense is based on your Dexterity, and the increase in life is based on your Constitution.]]):
-		format(5 + self:getDex(4, true) * self:getTalentLevel(t), hp, hp)
+		Your stand lets you concentrate on every blow, allowing you to avoid death from normally fatal wounds. You can only die when reaching -%d life; however below 0 life you can not see how much you have left.
+		The increase in Defense is based on your Dexterity, and the increase in life is based on your Constitution and normal maximum life.]]):
+		format(t.getDefense(self, t), hp, hp)
 	end,
 }
 

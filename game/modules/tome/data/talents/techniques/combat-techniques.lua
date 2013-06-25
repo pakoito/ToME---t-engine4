@@ -28,10 +28,10 @@ newTalent{
 	points = 5,
 	random_ego = "attack",
 	stamina = 22,
-	cooldown = function(self, t) return math.floor(40 - self:getTalentLevel(t) * 4) end,
+	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 0, 36, 20)) end, --Limit to >0
 	tactical = { ATTACK = { weapon = 1, stun = 1 }, CLOSEIN = 3 },
 	requires_target = true,
-	range = function(self, t) return math.floor(5 + self:getTalentLevelRaw(t)) end,
+	range = function(self, t) return math.floor(self:combatTalentScale(t, 6, 10)) end,
 	on_pre_use = function(self, t)
 		if self:attr("never_move") then return false end
 		return true
@@ -43,20 +43,17 @@ newTalent{
 		if core.fov.distance(self.x, self.y, x, y) > self:getTalentRange(t) then return nil end
 
 		local block_actor = function(_, bx, by) return game.level.map:checkEntity(bx, by, Map.TERRAIN, "block_move", self) end
-		local l = self:lineFOV(x, y, block_actor)
-		local lx, ly, is_corner_blocked = l:step()
-		if is_corner_blocked or game.level.map:checkAllEntities(lx, ly, "block_move", self) then
+		local linestep = self:lineFOV(x, y, block_actor)
+		
+		local tx, ty, lx, ly, is_corner_blocked 
+		repeat  -- make sure each tile is passable
+			tx, ty = lx, ly
+			lx, ly, is_corner_blocked = linestep:step()
+		until is_corner_blocked or not lx or not ly or game.level.map:checkAllEntities(lx, ly, "block_move", self)
+		if not tx or core.fov.distance(self.x, self.y, tx, ty) < 1 then
 			game.logPlayer(self, "You are too close to build up momentum!")
 			return
 		end
-		local tx, ty = lx, ly
-		lx, ly, is_corner_blocked = l:step()
-		while lx and ly do
-			if is_corner_blocked or game.level.map:checkAllEntities(lx, ly, "block_move", self) then break end
-			tx, ty = lx, ly
-			lx, ly, is_corner_blocked = l:step()
-		end
-
 		if not tx or not ty or core.fov.distance(x, y, tx, ty) > 1 then return nil end
 
 		local ox, oy = self.x, self.y
@@ -65,7 +62,6 @@ newTalent{
 			self:resetMoveAnim()
 			self:setMoveAnim(ox, oy, 8, 5)
 		end
-
 		-- Attack ?
 		if core.fov.distance(self.x, self.y, x, y) == 1 then
 			if self:knowTalent(self.T_STEAMROLLER) then
@@ -97,11 +93,16 @@ newTalent{
 	cooldown = 30,
 	sustain_stamina = 30,
 	tactical = { BUFF = 1 },
+	getAtk = function(self, t) return self:combatScale(self:getTalentLevel(t) * self:getDex(), 4, 0, 37, 500) end,
+	getCrit = function(self, t)
+		local dex = self:combatStatScale("dex", 10/25, 100/25, 0.75)
+		return (self:combatTalentScale(t, dex, dex*5, 0.5, 4))
+	end,
 	activate = function(self, t)
 		return {
 			speed = self:addTemporaryValue("combat_physspeed", -0.10),
-			atk = self:addTemporaryValue("combat_atk", 4 + (self:getTalentLevel(t) * self:getDex()) / 15),
-			crit = self:addTemporaryValue("combat_physcrit", 4 + (self:getTalentLevel(t) * self:getDex()) / 25),
+			atk = self:addTemporaryValue("combat_atk", t.getAtk(self, t)),
+			crit = self:addTemporaryValue("combat_physcrit", t.getCrit(self, t)),
 		}
 	end,
 	deactivate = function(self, t, p)
@@ -113,7 +114,7 @@ newTalent{
 	info = function(self, t)
 		return ([[You focus your strikes, reducing your attack speed by %d%% and increasing your Accuracy by %d and critical chance by %d%%.
 		The effects will increase with your Dexterity.]]):
-		format(10, 4 + (self:getTalentLevel(t) * self:getDex()) / 15, 4 + (self:getTalentLevel(t) * self:getDex()) / 25)
+		format(10, t.getAtk(self, t), t.getCrit(self, t))
 	end,
 }
 
@@ -127,12 +128,14 @@ newTalent{
 	require = techs_strdex_req3,
 	no_energy = true,
 	tactical = { ATTACK = 4 },
+	getDuration = function(self, t) return math.floor(self:combatTalentLimit(t, 25, 2, 6)) end, -- Limit < 25
+	getAtk = function(self, t) return self:combatTalentScale(t, 40, 100, 0.75) end,
 	action = function(self, t)
-		self:setEffect(self.EFF_ATTACK, 1 + self:getTalentLevel(t), {power=100})
+		self:setEffect(self.EFF_ATTACK, t.getDuration(self, t), {power = t.getAtk(self, t)})
 		return true
 	end,
 	info = function(self, t)
-		return ([[You have learned to focus your blows to hit your target, granting +100 accuracy and allowing you to attack creatures you cannot see without penalty for the next %d turns.]]):format(1 + self:getTalentLevel(t))
+		return ([[You have learned to focus your blows to hit your target, granting +%d accuracy and allowing you to attack creatures you cannot see without penalty for the next %d turns.]]):format(t.getAtk(self, t), t.getDuration(self, t))
 	end,
 }
 
@@ -146,12 +149,13 @@ newTalent{
 	no_energy = true,
 	require = techs_strdex_req4,
 	tactical = { BUFF = 2, CLOSEIN = 2, ESCAPE = 2 },
+	getSpeed = function(self, t) return self:combatTalentScale(t, 0.14, 0.45, 0.75) end,
 	action = function(self, t)
-		self:setEffect(self.EFF_SPEED, 5, {power=self:getTalentLevel(t) * 0.09})
+		self:setEffect(self.EFF_SPEED, 5, {power=t.getSpeed(self, t)})
 		return true
 	end,
 	info = function(self, t)
-		return ([[Through rigorous training, you have learned to focus your actions for a short while, increasing your speed by %d%% for 5 turns.]]):format(self:getTalentLevel(t) * 9)
+		return ([[Through rigorous training, you have learned to focus your actions for a short while, increasing your speed by %d%% for 5 turns.]]):format(100*t.getSpeed(self, t))
 	end,
 }
 

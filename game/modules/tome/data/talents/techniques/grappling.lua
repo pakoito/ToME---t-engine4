@@ -62,7 +62,7 @@ newTalent{
 	stamina = 5,
 	tactical = { ATTACK = 2, DISABLE = 2 },
 	requires_target = true,
-	getDuration = function(self, t) return 4 + math.floor(self:getTalentLevel(t)) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 5, 8)) end,
 	getPower = function(self, t) return self:combatTalentPhysicalDamage(t, 5, 25) end,
 	getDrain = function(self, t) return 6 - math.max(1, self:getTalentLevelRaw(t) or 0) end,
 	-- Learn the appropriate stance
@@ -141,7 +141,7 @@ newTalent{
 	stamina = 10,
 	tactical = { ATTACK = { PHYSICAL = 2 }, DISABLE = 2 },
 	requires_target = true,
-	getDuration = function(self, t) return 2 + math.floor(self:getTalentLevel(t)) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 3, 7)) end,
 	getDamage = function(self, t) return self:combatTalentPhysicalDamage(t, 10, 100) * getUnarmedTrainingBonus(self) end,
 	getMaim = function(self, t) return self:combatTalentPhysicalDamage(t, 5, 30) end,
 	-- Learn the appropriate stance
@@ -218,8 +218,8 @@ newTalent{
 	stamina = 12,
 	tactical = { ATTACK = { PHYSICAL = 1, stun = 1}, DISABLE = { stun = 2 }, CLOSEIN = 2 },
 	requires_target = true,
-	range = function(self, t) return 2 + math.floor(self:getTalentLevel(t)/3) end,
-	getDuration = function(self, t) return 2 + math.floor(self:getTalentLevel(t)) end,
+	range = function(self, t) return math.floor(self:combatTalentScale(t, 2.3, 3.7)) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 3, 7)) end,
 	getTakeDown = function(self, t) return self:combatTalentPhysicalDamage(t, 10, 100) * getUnarmedTrainingBonus(self) end,
 	getSlam = function(self, t) return self:combatTalentPhysicalDamage(t, 15, 150) * getUnarmedTrainingBonus(self) end,
 	-- Learn the appropriate stance

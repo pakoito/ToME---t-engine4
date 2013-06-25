@@ -49,10 +49,11 @@ newTalent{
 	range = archery_range,
 	requires_target = true,
 	tactical = { ATTACK = { weapon = 2 }, DISABLE = { blind = 2 } },
+	getBlindDur = function(self, t) return math.floor(self:combatTalentScale(t, 3, 7)) end,
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon("sling") then if not silent then game.logPlayer(self, "You require a sling for this talent.") end return false end return true end,
 	archery_onhit = function(self, t, target, x, y)
 		if target:canBe("blind") then
-			target:setEffect(target.EFF_BLINDED, 2 + self:getTalentLevelRaw(t), {apply_power=self:combatAttack()})
+			target:setEffect(target.EFF_BLINDED, t.getBlindDur(self, t), {apply_power=self:combatAttack()})
 		else
 			game.logSeen(target, "%s resists!", target.name:capitalize())
 		end
@@ -68,8 +69,7 @@ newTalent{
 	info = function(self, t)
 		return ([[You fire a shot into your target's eyes, blinding it for %d turns and doing %d%% damage.
 		The blind chance increases with your Accuracy.]])
-		:format(2 + self:getTalentLevelRaw(t),
-		100 * self:combatTalentWeaponDamage(t, 1, 1.5))
+		:format(t.getBlindDur(self, t),	100 * self:combatTalentWeaponDamage(t, 1, 1.5))
 	end,
 }
 
@@ -119,16 +119,20 @@ newTalent{
 	range = archery_range,
 	requires_target = true,
 	tactical = { ATTACK = { weapon = 3 } },
+	getShots = function(self, t, fake)
+		local count = self:combatTalentScale(t, 2.8, 4.3, "log")
+		if fake then return count end
+		return math.floor(count) + (rng.percent(100*(count - math.floor(count))) and 1 or 0)
+	end,
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon("sling") then if not silent then game.logPlayer(self, "You require a sling for this talent.") end return false end return true end,
 	action = function(self, t)
 		if not self:hasArcheryWeapon("sling") then game.logPlayer(self, "You must wield a sling!") return nil end
-
-		local targets = self:archeryAcquireTargets(nil, {multishots=2+self:getTalentLevelRaw(t)/2})
+		local targets = self:archeryAcquireTargets(nil, {multishots=t.getShots(self, t)})
 		if not targets then return end
 		self:archeryShoot(targets, t, nil, {mult=self:combatTalentWeaponDamage(t, 0.3, 0.7)})
 		return true
 	end,
 	info = function(self, t)
-		return ([[You fire %d shots at your target, doing %d%% damage with each shot.]]):format(2+self:getTalentLevelRaw(t)/2, 100 * self:combatTalentWeaponDamage(t, 0.3, 0.7))
+		return ([[You fire an average of %0.1f shots at your target, doing %d%% damage with each shot.]]):format(t.getShots(self, t, true), 100 * self:combatTalentWeaponDamage(t, 0.3, 0.7))
 	end,
 }

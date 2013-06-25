@@ -459,8 +459,10 @@ function _M:actBase()
 		end
 	end
 
+	if self:knowTalent(self.T_DUAL_WEAPON_DEFENSE) then self:setEffect(self.EFF_DUAL_WEAPON_DEFENSE,1,{}) end
 	if self:knowTalent(self.T_COUNTER_ATTACK) then self:setEffect(self.EFF_COUNTER_ATTACKING,1,{}) end 
-	
+	if self:knowTalent(self.T_DEFENSIVE_THROW) then self:setEffect(self.EFF_DEFENSIVE_GRAPPLING,1,{}) end
+
 	-- Compute timed effects
 	self:timedEffects()
 
@@ -2293,7 +2295,7 @@ function _M:die(src, death_note)
 
 	-- Increases blood frenzy
 	if src and src.knowTalent and src:knowTalent(src.T_BLOOD_FRENZY) and src:isTalentActive(src.T_BLOOD_FRENZY) then
-		src.blood_frenzy = src.blood_frenzy + src:getTalentLevel(src.T_BLOOD_FRENZY) * 2
+		src.blood_frenzy = src.blood_frenzy + src:callTalent(src.T_BLOOD_FRENZY,"bonuspower")
 	end
 
 	-- Increases necrotic aura count
@@ -4542,7 +4544,7 @@ function _M:on_set_temporary_effect(eff_id, e, p)
 		self:triggerTalent(self.T_SPINE_OF_THE_WORLD)
 	end
 
-	if self.player then
+	if self.player and not self.tmp[eff_id] then
 		p.__set_time = core.game.getTime()
 	end
 end
