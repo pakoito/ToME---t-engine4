@@ -1265,7 +1265,13 @@ function _M:handleEffect(player, eff_id, e, p, x, y, hs, bx, by, is_first, scale
 				-- Move handle
 				if not self.locked and bx >= self.mhandle_pos.buffs.x and bx <= self.mhandle_pos.buffs.x + move_handle[6] and by >= self.mhandle_pos.buffs.y and by <= self.mhandle_pos.buffs.y + move_handle[7] then self:uiMoveResize("buffs", button, mx, my, xrel, yrel, bx, by, event) end
 			end
-			if allow_remove and event == "button" and button == "right" then
+			if config.settings.cheat and event == "button" and core.key.modState("shift") then
+				if button == "left" then
+					p.dur = p.dur + 1
+				elseif button == "right" then
+					p.dur = p.dur - 1
+				end
+			elseif allow_remove and event == "button" and button == "right" then
 				Dialog:yesnoPopup(name, "Really cancel "..name.."?", function(ret)
 					if ret then
 						player:removeEffect(eff_id)
