@@ -42,6 +42,7 @@ local orb_summon = function(self, who)
 	local npc = game.zone:makeEntity(game.level, "actor", filter, nil, true)
 	local nx, ny = util.findFreeGrid(who.x, who.y, 10, true, {[engine.Map.ACTOR]=true})
 	if npc and nx then
+		npc.on_die = function(self) world:gainAchievement("SLIME_TUNNEL_BOSSES", game.player) end
 		game.zone:addEntity(game.level, npc, "actor", nx, ny)
 	end
 end

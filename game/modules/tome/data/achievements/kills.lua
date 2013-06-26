@@ -243,3 +243,15 @@ newAchievement{
 	desc = [[Killed Linaniil, the Supreme Archmage of Angolwen.]],
 	mode = "player",
 }
+
+newAchievement{
+	name = "Fear of Fours", id = "SLIME_TUNNEL_BOSSES",
+	show = "full", huge=true,
+	desc = [[Killed all four bosses of the Slime Tunnels.]],
+	mode = "player",
+	can_gain = function(self, who, target)
+		self.nb = (self.nb or 0) + 1
+		if self.nb >= 4 then return true end
+	end,
+	track = function(self) return tstring{tostring(self.nb or 0)," / 4"} end,
+}
