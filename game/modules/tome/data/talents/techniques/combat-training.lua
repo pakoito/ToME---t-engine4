@@ -46,8 +46,10 @@ newTalent{
 	require = {stat = {str = function(level) return 16 + (level + 2) * (level - 1) end}},
 	ArmorEffect = function(self, t)  -- Becomes more effective with heavier armors
 		local am = self:getInven("BODY")[1] or {}
-		if am.subtype == "cloth" then return 0.75
-		elseif am.subtype == "light" then return 1.0
+--		if am.subtype == "cloth" then return 0.75
+--		elseif am.subtype == "light" then return 1.0
+		if am.subtype == "cloth" then return 0
+		elseif am.subtype == "light" then return 0
 		elseif am.subtype == "heavy" then return 1.5
 		elseif am.subtype == "massive" then	return 2.0
 		end
@@ -90,7 +92,8 @@ newTalent{
 		if self:knowTalent(self.T_STEALTH) then
 			classrestriction = "(Note that wearing mail or plate armour will interfere with stealth.)"
 		end
-		return ([[You become better at using your armour to deflect blows and protect your vital areas. Increases Armour value by %d, Armour hardiness by %d%%, and reduces chance to be critically hit by %d%% when wearing heavy mail or massive plate armour.
+		return ([[You become better at using your armour to deflect blows and protect your vital areas. Increases Armour value by %d, Armour hardiness by %d%%, and reduces chance to be critically hit by %d%% with your current body armour.
+		(This talent only provides bonuses for heavy mail or massive plate armour.)
 		At level 1, it allows you to wear heavy mail armour, gauntlets, helms, and heavy boots.
 		At level 2, it allows you to wear shields.
 		At level 3, it allows you to wear massive plate armour.
