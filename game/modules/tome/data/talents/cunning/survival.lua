@@ -85,6 +85,7 @@ newTalent{
 	cooldown = 30,
 	getDur = function(self) return math.floor(self:combatStatLimit("wil", 30, 6, 15)) end, -- Limit < 30
 	getChanceDef = function(self, t)
+		if self.perfect_evasion then return 100, 0 end
 		return self:combatLimit(5*self:getTalentLevel(t) + self:getCun(25,true) + self:getDex(25,true), 50, 10, 10, 37.5, 75),
 		self:combatScale(self:getTalentLevel(t) * (self:getCun(25, true) + self:getDex(25, true)), 0, 0, 55, 250, 0.75)
 		-- Limit evasion chance < 50%, defense bonus ~= 55 at level 50

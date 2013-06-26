@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 --------------------------------------------------------------------------
--- The Infinite Dungeon
+-- The Ruined Dungeon
 --------------------------------------------------------------------------
 
 newLore{
@@ -47,6 +47,34 @@ newLore{
 }
 
 newLore{
+	id = "alt1-infinite-dungeon-1",
+	category = "ruined dungeon",
+	name = "clue (ruined dungeon)", always_pop = true,
+	lore = [[There is an inscription here:
+#{italic}#Darkness beyond twilight.
+Crimson from the blood that flows...#{normal}#]],
+}
+
+newLore{
+	id = "alt1-infinite-dungeon-2",
+	category = "ruined dungeon",
+	name = "clue (ruined dungeon)", always_pop = true,
+	lore = [[There is an inscription here:
+#{italic}#...Buried in the flow of time.
+Colder than the coldest ice...#{normal}#]],
+}
+
+newLore{
+	id = "alt1-infinite-dungeon-3",
+	category = "ruined dungeon",
+	name = "clue (ruined dungeon)", always_pop = true,
+	lore = [[There is an inscription here:
+#{italic}#...Unleash dark thoughts.
+Upon this blighted land!#{normal}#]],
+}
+
+
+newLore{
 	id = "infinite-dungeon-4",
 	category = "ruined dungeon",
 	name = "infinite dungeon (ruined dungeon)", always_pop = true,
@@ -58,6 +86,10 @@ And so the chase continues. Over centuries beyond count Branzir has never stoppe
 This passage seems to point to the passage there, it seems to indicate there are no possible exits.
 You should not enter it.]],
 }
+
+--------------------------------------------------------------------------
+-- The Infinite Dungeon
+--------------------------------------------------------------------------
 
 newLore{
 	id = "infinite-dungeon-history-1",

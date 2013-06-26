@@ -210,6 +210,7 @@ return {
 				rank = 1,
 				movement_speed = 1.4,
 				no_inventory_access = true,
+				perfect_evasion = 1,
 				size_category = 1,
 				level_range = {1, 1}, exp_worth = 1,
 				max_life = 10,

@@ -17,6 +17,8 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local layout = game.state:alternateZoneTier1(short_name, {"ALT1", 1})
+
 return {
 	name = "Ruined Dungeon",
 	level_range = {10, 30},
@@ -30,6 +32,7 @@ return {
 	ambient_music = "Far away.ogg",
 	min_material_level = 2,
 	max_material_level = 3,
+	clues_layout = layout,
 	generator =  {
 		map = {
 			class = "engine.generator.map.Static",
@@ -55,7 +58,10 @@ return {
 		level.orbs_touched = {}
 
 		-- Randomly assign portal types
-		local types = {"wind", "earth", "fire", "water", "arcane", "nature"}
+		local types = ({
+			DEFAULT = {"wind", "earth", "fire", "water", "arcane", "nature"},
+			ALT1    = {"darkness", "blood", "grave", "time", "mind", "blight"},
+		})[game.zone.clues_layout]
 		local _, portals = level:pickSpot{type="portal", subtype="portal"}
 		for i, spot in ipairs(portals) do
 			local g = level.map(spot.x, spot.y, engine.Map.TERRAIN)
@@ -94,7 +100,10 @@ return {
 		if game.level.orbs_used then return end
 
 		local Dialog = require("engine.ui.Dialog")
-		local order = {"water", "earth", "wind", "nature", "arcane", "fire"}
+		local order = ({
+			DEFAULT = {"wind", "earth", "fire", "water", "arcane", "nature"},
+			ALT1    = {"darkness", "blood", "grave", "time", "mind", "blight"},
+		})[game.zone.clues_layout]
 		local o = game.level.orbs_touched
 		o[#o+1] = type
 		for i = 1, #o do

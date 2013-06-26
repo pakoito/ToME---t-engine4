@@ -19,7 +19,10 @@
 
 load("/data/general/grids/basic.lua")
 
-for i = 1, 4 do
+local loreprefix = ""
+if currentZone.clues_layout == "ALT1" then loreprefix = "alt1-" end
+
+for i = 1, 3 do
 newEntity{
 	define_as = "LORE"..i,
 	name = "inscription", image = "terrain/maze_floor.png",
@@ -27,16 +30,28 @@ newEntity{
 	add_displays = {class.new{image="terrain/signpost.png"}},
 	always_remember = true,
 	notice = true,
-	lore = "infinite-dungeon-"..i,
+	lore = loreprefix.."infinite-dungeon-"..i,
 	on_move = function(self, x, y, who)
 		if not who.player then return end
-		if self.lore == "infinite-dungeon-4" then
-			game:setAllowedBuild("campaign_infinite_dungeon", true)
-		end
 		game.party:learnLore(self.lore)
 	end,
 }
 end
+
+newEntity{
+	define_as = "LORE4",
+	name = "inscription", image = "terrain/maze_floor.png",
+	display = '_', color=colors.GREEN, back_color=colors.DARK_GREY,
+	add_displays = {class.new{image="terrain/signpost.png"}},
+	always_remember = true,
+	notice = true,
+	lore = "infinite-dungeon-4",
+	on_move = function(self, x, y, who)
+		if not who.player then return end
+		game:setAllowedBuild("campaign_infinite_dungeon", true)
+		game.party:learnLore(self.lore)
+	end,
+}
 
 newEntity{
 	define_as = "INFINITE",
@@ -91,6 +106,13 @@ newEntity{
 		elseif self.portal_type == "nature" then text = "Small seeds seem to be growing inside the orb."
 		elseif self.portal_type == "arcane" then text = "The orb swirls with magical energies."
 		elseif self.portal_type == "fire" then text = "Flames burst out of the orb."
+
+		elseif self.portal_type == "darkness" then text = "The orb seems to absorb all light."
+		elseif self.portal_type == "blood" then text = "The orb is drips with thick blood."
+		elseif self.portal_type == "grave" then text = "The orb smells like a rotten corpse."
+		elseif self.portal_type == "time" then text = "Time seems to slow down around the orb."
+		elseif self.portal_type == "mind" then text = "Your mind is filled with strange thoughts as you approach the orb."
+		elseif self.portal_type == "blight" then text = "The orb seems to corrupt all it touches."
 		end
 		require("engine.ui.Dialog"):yesnoLongPopup("Strange Orb", text.."\nDo you touch it?", 400, function(ret)
 			if ret then
