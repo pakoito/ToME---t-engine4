@@ -1050,6 +1050,13 @@ function _M:getTextualDesc(compare_with)
 			desc:add("Allows you to speak and read the old Sher'Tul language.", true)
 		end
 
+		if w.special_desc then
+			local d = w.special_desc(self)
+			desc:add({"color", "ROYAL_BLUE"})
+			desc:merge(d:toTString())
+			desc:add({"color", "LAST"}, true)
+		end
+
 		self:triggerHook{"Object:descWielder", compare_with=compare_with, compare_fields=compare_fields, compare_table_fields=compare_table_fields, desc=desc, w=w, field=field}
 
 		local can_combat_unarmed = false

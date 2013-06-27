@@ -5939,6 +5939,7 @@ All manner of shady gamblers have since claimed to have worn it at one point or 
 		combat_armor=10,
 		combat_apr=10,
 		inc_stats = { [Stats.STAT_CUN] = 5, },
+		special_desc = function(self) return "When you take a hit of more than 20% of your max life a shield is created." end,
 	},
 	on_wear = function(self, who)
 		self.worn_by = who
