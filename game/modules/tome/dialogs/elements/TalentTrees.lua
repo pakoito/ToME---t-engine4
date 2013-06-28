@@ -237,11 +237,9 @@ function _M:moveSel(i, j)
 			-- we've reached selected row
 			if self.sel_i == i then
 				-- check if it was visible if not go scroll over there
-				print("<====", pos, tree.h, self.scrollbar.pos, self.scrollbar.max, self.h)
 				if pos - tree.h < self.scrollbar.pos then self.scrollbar.pos = util.minBound(pos - tree.h, 0, self.scrollbar.max)
 				elseif pos > self.scrollbar.pos + self.h then self.scrollbar.pos = util.minBound(pos - self.h, 0, self.scrollbar.max)
 				end
-				print("====>", pos, tree.h, self.scrollbar.pos, self.scrollbar.max, self.h)
 				break
 			end
 		end

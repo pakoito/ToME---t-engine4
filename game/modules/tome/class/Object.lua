@@ -1050,13 +1050,6 @@ function _M:getTextualDesc(compare_with)
 			desc:add("Allows you to speak and read the old Sher'Tul language.", true)
 		end
 
-		if w.special_desc then
-			local d = w.special_desc(self)
-			desc:add({"color", "ROYAL_BLUE"})
-			desc:merge(d:toTString())
-			desc:add({"color", "LAST"}, true)
-		end
-
 		self:triggerHook{"Object:descWielder", compare_with=compare_with, compare_fields=compare_fields, compare_table_fields=compare_table_fields, desc=desc, w=w, field=field}
 
 		local can_combat_unarmed = false
@@ -1131,6 +1124,13 @@ function _M:getTextualDesc(compare_with)
 	if self.carrier or can_carrier then
 		desc:add({"color","YELLOW"}, "When carried:", {"color", "LAST"}, true)
 		desc_wielder(self, compare_with, "carrier")
+	end
+
+	if self.special_desc then
+		local d = self:special_desc()
+		desc:add({"color", "ROYAL_BLUE"})
+		desc:merge(d:toTString())
+		desc:add({"color", "LAST"}, true)
 	end
 
 	if self.imbue_powers or can_imbue_powers then
