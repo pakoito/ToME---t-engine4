@@ -174,12 +174,12 @@ uberTalent{
 
 		game:onTickEnd(function()
 			game:chronoClone("revisionist_history")
-			self:setEffect(self.EFF_REVISIONIST_HISTORY, 9, {})
+			self:setEffect(self.EFF_REVISIONIST_HISTORY, 19, {})
 		end)
 		return nil -- We do not start the cooldown!
 	end,
 	info = function(self, t)
-		return ([[You can now control the near-past; upon using this prodigy, you gain a temporal effect for 10 turns.
+		return ([[You can now control the near-past; upon using this prodigy, you gain a temporal effect for 20 turns.
 		While this effect holds, you can use the prodigy again to rewrite history.
 		This prodigy splits the timeline. Attempting to use another spell that also splits the timeline while this effect is active will be unsuccessful.]])
 		:format()
