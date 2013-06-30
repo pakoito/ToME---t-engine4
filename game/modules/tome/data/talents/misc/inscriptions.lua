@@ -476,7 +476,7 @@ newInscription{
 	end,
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		self:setEffect(self.EFF_DAMAGE_SHIELD, 5, {power=100+1.5*self:getMag(), reflect=100})
+		self:setEffect(self.EFF_DAMAGE_SHIELD, 5, {power=100+3*self:getMag(), reflect=100})
 		return true
 	end,
 	info = function(self, t)
@@ -486,7 +486,7 @@ The effect will scale with your magic stat.]]):format(100+1.5*self:getMag(), 5)
 	end,
 	short_info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		return ([[absorb and reflect %d for %d turns]]):format(100+1.5*self:getMag(), 5)
+		return ([[absorb and reflect %d for %d turns]]):format(100+3*self:getMag(), 5)
 	end,
 }
 

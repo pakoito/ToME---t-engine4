@@ -60,6 +60,7 @@ newEntity{ base = "BASE_STAFF",
 		},
 		learn_talent = {[Talents.T_COMMAND_STAFF] = 1},
 	},
+	talent_on_spell = { {chance=10, talent=Talents.T_IMPENDING_DOOM, level=1}},
 }
 
 newEntity{ base = "BASE_STAFF",
@@ -89,9 +90,12 @@ newEntity{ base = "BASE_STAFF",
 		resists = {
 			[DamageType.BLIGHT] = 30,
 		},
+		damage_affinity={
+			[DamageType.NATURE] = 20,
+		},
 	},
 	max_power = 60, power_regen = 1,
-	use_power = { name = "cure diseases", power = 10,
+	use_power = { name = "cure diseases and poisons", power = 10,
 		use = function(self, who)
 			local target = who
 			local effs = {}
@@ -100,7 +104,7 @@ newEntity{ base = "BASE_STAFF",
 			-- Go through all spell effects
 			for eff_id, p in pairs(target.tmp) do
 				local e = target.tempeffect_def[eff_id]
-				if e.subtype.disease then
+				if e.subtype.disease or e.subtype.poison then
 					effs[#effs+1] = {"effect", eff_id}
 				end
 			end
@@ -114,7 +118,7 @@ newEntity{ base = "BASE_STAFF",
 					known = true
 				end
 			end
-			game.logSeen(who, "%s is cured of diseases!", who.name:capitalize())
+			game.logSeen(who, "%s is cured of diseases and poisons!", who.name:capitalize())
 			return {id=true, used=true}
 		end
 	},
@@ -276,14 +280,14 @@ newEntity{ base = "BASE_RING",
 	rarity = 200,
 	cost = 200,
 	material_level = 3,
-
+	special_desc = function(self) return "All your damage is converted and split into arcane, fire, cold and lightning." end,
 	wielder = {
+		elemental_mastery = 0.25,
 		inc_stats = { [Stats.STAT_MAG] = 3,[Stats.STAT_CUN] = 3, },
 		inc_damage = {
 			[DamageType.ARCANE]    = 12,
 			[DamageType.FIRE]      = 12,
 			[DamageType.COLD]      = 12,
-			[DamageType.ACID]      = 12,
 			[DamageType.LIGHTNING] = 12,
 		},
 	},
@@ -724,7 +728,7 @@ newEntity{ base = "BASE_LEATHER_BOOT",
 	max_power = 50, power_regen = 1,
 	use_power = { name = "boost speed", power = 50,
 		use = function(self, who)
-			who:setEffect(who.EFF_SPEED, 8, {power=0.20 + who:getCun() / 200})
+			who:setEffect(who.EFF_SPEED, 8, {power=math.min(0.20 + who:getCun() / 200, 0.7)})
 			return {id=true, used=true}
 		end
 	},
@@ -798,10 +802,11 @@ newEntity{ base = "BASE_SHIELD",
 	color = colors.BLACK,
 	level_range = {15, 30},
 	rarity = 270,
-	require = { stat = { str=20 }, }, --make str to 20
+	require = { stat = { str=20 }, },
 	cost = 400,
 	material_level = 3,
 	metallic = false,
+	special_desc = function(self) return "When you block an attack, there is a 30% of pulling in the attacker." end,
 	special_combat = {
 		dam = resolvers.rngavg(25,35),
 		block = resolvers.rngavg(90, 120),
@@ -816,7 +821,6 @@ newEntity{ base = "BASE_SHIELD",
 		learn_talent = { [Talents.T_BLOCK] = 3, },
 		resists = { [DamageType.BLIGHT] = 15, [DamageType.DARKNESS] = 30, },
 		stamina_regen = 2,
-
 	},
 	on_block = function(self, who, src, type, dam, eff)
 		if rng.percent(30) then
@@ -1789,6 +1793,7 @@ newEntity{ base = "BASE_WARAXE",
 		resists_pen = {
 			[DamageType.COLD] = 20,
 		},
+		talent_on_hit = { [Talents.T_ICE_BREATH] = {level=2, chance=15} },
 	},
 	combat = {
 		dam = 33,
@@ -1799,7 +1804,6 @@ newEntity{ base = "BASE_WARAXE",
 			[DamageType.ICE] = 50,
 		},
 	},
-	talent_on_hit = { [Talents.T_ICE_BREATH] = {level=2, chance=15} },
 }
 
 
@@ -3267,8 +3271,8 @@ newEntity{ base = "BASE_MINDSTAR",
 		nature_summon_max = 2,
 		inc_stats = { [Stats.STAT_WIL] = 5, [Stats.STAT_CUN] = 4 },
 	},
-	max_power = 24, power_regen = 1,
-	use_talent = { id = Talents.T_RAGE, level = 4, power = 20 },
+	max_power = 16, power_regen = 1,
+	use_talent = { id = Talents.T_RAGE, level = 4, power = 16 },
 }
 
 newEntity{ base = "BASE_HELM",
@@ -3283,16 +3287,16 @@ newEntity{ base = "BASE_HELM",
 	cost = 300,
 	material_level = 4,
 	wielder = {
-		inc_stats = { [Stats.STAT_MAG] = 4, [Stats.STAT_WIL] = 3, [Stats.STAT_CUN] = 4,},
-		combat_def = 2,
-		combat_armor = 5,
-		fatigue = 3,
+		inc_stats = { [Stats.STAT_MAG] = 5, [Stats.STAT_WIL] = 3, [Stats.STAT_CUN] = 4,},
+		combat_def = 4,
+		combat_armor = 8,
+		fatigue = 6,
 		resists = { [DamageType.BLIGHT] = 10},
-		inc_damage = { [DamageType.BLIGHT] = 10},
+		inc_damage = { [DamageType.BLIGHT] = 20},
 		resists_pen = { [DamageType.BLIGHT] = 10},
-		disease_immune=0.3,
+		disease_immune=0.4,
 		talents_types_mastery = { ["corruption/vim"] = 0.1, },
-		combat_atk = 8,
+		combat_atk = 10,
 		see_invisible = 12,
 		see_stealth = 12,
 	},
@@ -3312,9 +3316,9 @@ newEntity{ base = "BASE_KNIFE",
 	cost = 250,
 	material_level = 2,
 	combat = {
-		dam = 20,
+		dam = 25,
 		apr = 10,
-		physcrit = 8,
+		physcrit = 9,
 		dammod = {dex=0.45,str=0.35, mag=0.15},
 		convert_damage = {
 			[DamageType.DARKNESS] = 50,
@@ -3337,17 +3341,17 @@ newEntity{ base = "BASE_LEATHER_BELT",
 	name = "Emblem of Evasion", color = colors.GOLD,
 	unided_name = "gold coated emblem", image = "object/artifact/emblem_of_evasion.png",
 	desc = [[Said to have belonged to a master of avoiding attacks, this gilded steel emblem symbolizes his talent.]],
-	level_range = {8, 18},
+	level_range = {28, 38},
 	rarity = 200,
 	cost = 50,
-	material_level = 2,
+	material_level = 4,
 	wielder = {
-		inc_stats = { [Stats.STAT_LCK] = 2, [Stats.STAT_DEX] = 5, [Stats.STAT_CUN] = 3,},
-		slow_projectiles = 20,
-		combat_def_ranged = 8,
+		inc_stats = { [Stats.STAT_LCK] = 8, [Stats.STAT_DEX] = 12, [Stats.STAT_CUN] = 10,},
+		slow_projectiles = 30,
+		combat_def_ranged = 20,
 	},
-	max_power = 40, power_regen = 1,
-	use_talent = { id = Talents.T_EVASION, level = 2, power = 40 },
+	max_power = 30, power_regen = 1,
+	use_talent = { id = Talents.T_EVASION, level = 4, power = 30 },
 }
 
 newEntity{ base = "BASE_LONGBOW",
@@ -3431,7 +3435,7 @@ newEntity{ base = "BASE_WHIP",
 		apr = 7,
 		physcrit = 5,
 		dammod = {dex=1},
-		convert_damage = {[DamageType.LIGHTNING] = 50,},
+		convert_damage = {[DamageType.LIGHTNING_DAZE] = 50,},
 	},
 	wielder = {
 		combat_atk = 7,
@@ -3482,6 +3486,7 @@ newEntity{ base = "BASE_WHIP",
 	wielder = {
 		combat_mindpower = 8,
 		combat_mindcrit = 3,
+		talent_on_hit = { [Talents.T_MINDLASH] = {level=1, chance=10} },
 	},
 	max_power = 10, power_regen = 1,
 	use_power = { name = "strike all targets in a line", power = 10,
@@ -3902,11 +3907,6 @@ newEntity{ base = "BASE_LONGSWORD", define_as="MORRIGOR",
 		combat_spellcrit=12,
 		learn_talent = { [Talents.T_SOUL_PURGE] = 1, },
 	},
-	on_takeoff = function(self, who)
-		self.use_talent=nil
-		self.power_regen=nil
-		self.max_power=nil
-	end,
 }
 
 newEntity{ base = "BASE_WHIP", define_as = "HYDRA_BITE",
@@ -3929,6 +3929,7 @@ newEntity{ base = "BASE_WHIP", define_as = "HYDRA_BITE",
 		apr = 7,
 		physcrit = 14,
 		dammod = {str=1.1},
+		talent_on_hit = { [Talents.T_LIGHTNING_BREATH_HYDRA] = {level=1, chance=10}, [Talents.T_ACID_BREATH] = {level=1, chance=10}, [Talents.T_POISON_BREATH] = {level=1, chance=10} },
 		convert_damage = {[DamageType.NATURE]=25,[DamageType.ACID]=25,[DamageType.LIGHTNING]=25},
 		special_on_hit = {desc="hit up to two adjacent enemies",on_kill=1, fct=function(combat, who, target)
 				local o, item, inven_id = who:findInAllInventoriesBy("define_as", "HYDRA_BITE")
@@ -4188,7 +4189,7 @@ newEntity{ base = "BASE_AMULET", --Thanks Grayswandir!
 	max_power = 24, power_regen = 1,
 	use_power = { name = "create a reflective shield (50% reflection rate)", power = 24,
 		use = function(self, who)
-			who:setEffect(who.EFF_DAMAGE_SHIELD, 5, {power=50 + who:getMag(100), reflect=50})
+			who:setEffect(who.EFF_DAMAGE_SHIELD, 5, {power=150 + who:getMag(100)*2, reflect=50})
 			game:playSoundNear(who, "talents/arcane")
 			game.logSeen(who, "%s forges a reflective barrier!", who.name:capitalize())
 			return {id=true, used=true}
@@ -4283,7 +4284,7 @@ newEntity{ base = "BASE_LEATHER_BOOT",
 		fatigue = -10,
 		mindpower=4,
 		inc_stats = { [Stats.STAT_DEX] = 3, },
-		movement_speed=0.25,
+		movement_speed=0.10,
 		pin_immune=1,
 		resists={
 			[DamageType.PHYSICAL] = 5,
@@ -4339,10 +4340,11 @@ newEntity{ base = "BASE_WHIP", --Thanks Grayswandir!
 		burst_on_crit = {
 			[DamageType.BLEED] = 20,
 		},
+		talent_on_hit = { [Talents.T_BONE_GRAB] = {level=1, chance=20} },
 	},
 	max_power = 24, power_regen = 1,
-	use_talent = { id = Talents.T_BONE_GRAB, level = 2, power = 24 },
-	talent_on_spell = { {chance=10, talent=Talents.T_BONE_GRAB, level=1} },
+	use_talent = { id = Talents.T_BONE_NOVA, level = 2, power = 24 },
+	talent_on_spell = { {chance=10, talent=Talents.T_BONE_SPEAR, level=2} },
 }
 
 newEntity{ base = "BASE_MINDSTAR",
@@ -4457,19 +4459,20 @@ newEntity{ base = "BASE_GREATSWORD", -- Thanks Alex!
 	require = { stat = { str=10 }, },
 	sentient=true,
 	material_level = 3,
+	special_desc = function(self) return "Attack speed improves with strength and size category." end,
 	combat = {
-		dam = 45,
-		apr = 5,
-		physcrit = 10,
-		dammod = {str=1.2},
-		physspeed=2,
+		dam = 48,
+		apr = 12,
+		physcrit = 11,
+		dammod = {str=1.4},
+		physspeed=1.8,
 	},
 	wielder = {
 		resists = { [DamageType.LIGHTNING] = 7 },
 		inc_damage = { [DamageType.LIGHTNING] = 7, },
-		movement_speed = 0.07,
-		inc_stats = { [Stats.STAT_DEX] = 5 },
-		max_encumber = 40,
+		movement_speed = 0.1,
+		inc_stats = { [Stats.STAT_DEX] = 7 },
+		max_encumber = 50,
 		fatigue = -12,
 		avoid_pressure_traps = 1,
 	},
@@ -4481,14 +4484,14 @@ newEntity{ base = "BASE_GREATSWORD", -- Thanks Alex!
 		
 		local size = self.worn_by.size_category-3
 		local str = self.worn_by:getStr()
-		self.combat.physspeed=util.bound(2-(str-10)*0.02-size*0.1, 0.8, 2)
+		self.combat.physspeed=util.bound(1.8-(str-10)*0.02-size*0.1, 0.70, 1.8)
 	end,
 	on_wear = function(self, who)
 		self.worn_by = who
 		
 		local size = self.worn_by.size_category-3
 		local str = self.worn_by:getStr()
-		self.combat.physspeed=util.bound(2-(str-10)*0.02-size*0.1, 0.8, 2)
+		self.combat.physspeed=util.bound(1.8-(str-10)*0.02-size*0.1, 0.70, 1.8)
 	end,
 	on_takeoff = function(self, who)
 		self.worn_by = nil
@@ -4615,12 +4618,13 @@ newEntity{ base = "BASE_LITE", --Thanks Frumple!
 	use_power = { name = "release the absorbed darkness", power = 10,
 		use = function(self, who)
 			if self.max_charge then self.charge=300 end -- Power boost if you fully charged :)
-			local dam = (15 + who:combatMindpower()*0.8) * 0.5+math.floor(self.charge/50) -- Damage is based on charge
+			local dam = (15 + who:combatMindpower()) * 4+math.floor(self.charge/50) -- Damage is based on charge
 			local tg = {type="cone", range=0, radius=self.wielder.lite} -- Radius of Cone is based on lite radius of the artifact
 			local x, y = who:getTarget(tg)
 			if not x or not y then return nil end
 			
 			who:project(tg, x, y, engine.DamageType.DARKNESS, who:mindCrit(dam)) -- FIRE!
+			who:project(tg, x, y, engine.DamageType.RANDOM_BLIND, self.wielder.lite*10) -- FIRE!
 			game.level.map:particleEmitter(who.x, who.y, tg.radius, "breath_dark", {radius=tg.radius, tx=x-who.x, ty=y-who.y})
 			self.max_charge=nil -- Reset charge.
 			self.charge=0
@@ -4944,6 +4948,7 @@ newEntity{ base = "BASE_SHIELD", --Thanks SageAcrin!
 	cost = 60,
 	material_level = 1,
 	metallic = false,
+	special_desc = function(self) return "When you block an attack, there is a chance that a spray of icy cold water will spray at the target." end,
 	special_combat = {
 		dam = 18,
 		block = 48,
@@ -4969,7 +4974,7 @@ newEntity{ base = "BASE_SHIELD", --Thanks SageAcrin!
 
 			local burst = {type="cone", range=0, radius=4, force_target=target, selffire=false,}
 		
-			who:project(burst, target.x, target.y, engine.DamageType.COLD, 30)
+			who:project(burst, target.x, target.y, engine.DamageType.ICE, 30)
 			game.level.map:particleEmitter(who.x, who.y, burst.radius, "breath_cold", {radius=burst.radius, tx=target.x-who.x, ty=target.y-who.y})
 			game.logSeen(who, "A burst of chilling water launches from %s's shield to %s!", who.name:capitalize(), target.name:capitalize())
 		end
@@ -4988,11 +4993,11 @@ newEntity{ base = "BASE_AMULET", --Thanks Grayswandir!
 	cost = 500,
 	material_level = 3,
 	wielder = {
-		combat_mindpower = 7,
-		combat_mentalresist = 32,
+		combat_mindpower = 8,
+		combat_mentalresist = 35,
 		confusion_immune=-1,
 		inc_damage={
-			[DamageType.MIND] 	= 24,
+			[DamageType.MIND] 	= 25,
 		},
 		resists={
 			[DamageType.MIND] 	= -10,
@@ -5002,8 +5007,8 @@ newEntity{ base = "BASE_AMULET", --Thanks Grayswandir!
 		},
 		on_melee_hit={[DamageType.RANDOM_CONFUSION] = 5},
 	},
-	max_power = 32, power_regen = 1,
-	use_talent = { id = Talents.T_INNER_DEMONS, level = 3, power = 32 },
+	max_power = 30, power_regen = 1,
+	use_talent = { id = Talents.T_INNER_DEMONS, level = 4, power = 30 },
 }
 
 
@@ -5074,8 +5079,8 @@ newEntity{ base = "BASE_GREATMAUL",
 		physcrit = 4,
 		dammod = {str=1.2},
 		melee_project={[DamageType.NATURE] = 20},
-		special_on_hit = {desc="25% chance to shatter magical shields", fct=function(combat, who, target)
-			if not rng.percent(25) then return end
+		special_on_hit = {desc="50% chance to shatter magical shields", fct=function(combat, who, target)
+			if not rng.percent(50) then return end
 			if not target then return end
 
 			-- List all diseases, I mean, burns, I mean, shields.
@@ -5103,8 +5108,8 @@ newEntity{ base = "BASE_GREATMAUL",
 		end},
 	},
 	wielder = {
-		inc_damage= {[DamageType.NATURE] = 10},
-		combat_spellresist=10,
+		inc_damage= {[DamageType.NATURE] = 25},
+		combat_spellresist=15,
 	},
 	on_wear = function(self, who)
 		if who:attr("forbid_arcane") then
@@ -5326,7 +5331,7 @@ newEntity{ base = "BASE_RING",
 	wielder = {
 		combat_physresist = 8,
 		inc_stats = {[Stats.STAT_WIL] = 4, [Stats.STAT_STR] = 4,},
-		inc_damage={ [DamageType.PHYSICAL] = 4, [DamageType.NATURE] = 6,},
+		inc_damage={ [DamageType.PHYSICAL] = 8, [DamageType.NATURE] = 8,},
 		resists={[DamageType.NATURE] = 10,},
 		life_regen=0.15,
 		healing_factor=0.2,
@@ -5454,6 +5459,7 @@ newEntity{ base = "BASE_TOOL_MISC", --Thanks Alex!
 	finished=false,
 	sentient=true,
 	metallic = false,
+	special_desc = function(self) return "Offers either offensive or defensive benefits, depending on the position of the sands." end,
 	wielder = {
 		inc_damage = { [DamageType.TEMPORAL]= 15},
 		resists = { [DamageType.TEMPORAL] = 15, all = 0, },
@@ -5461,6 +5467,7 @@ newEntity{ base = "BASE_TOOL_MISC", --Thanks Alex!
 		combat_physspeed=0,
 		combat_spellspeed=0,
 		combat_mindspeed=0,
+		flat_damage_armor = {all=0},
 	},
 	max_power = 20, power_regen = 1,
 	use_power = { name = "flip the hourglass", power = 20,
@@ -5469,7 +5476,7 @@ newEntity{ base = "BASE_TOOL_MISC", --Thanks Alex!
 			self.finished = false
 			who:onTakeoff(self, true)
 			self.wielder.inc_damage.all = 0
-			self.wielder.combat_def = 0
+			self.wielder.flat_damage_armor.all = 0
 			who:onWear(self, true)
 			game.logPlayer(who, "#GOLD#The sands slowly begin falling in the other direction.")
 		end
@@ -5493,19 +5500,19 @@ newEntity{ base = "BASE_TOOL_MISC", --Thanks Alex!
 		if self.finished == true then return end
 		who:onTakeoff(self, true)
 		
-		self.wielder.resists.all = self.wielder.resists.all + direction
+		self.wielder.resists.all = self.wielder.resists.all + direction * 2
 		self.wielder.movement_speed = self.wielder.movement_speed + direction * 0.04
 		self.wielder.combat_physspeed = self.wielder.combat_physspeed - direction * 0.04
 		self.wielder.combat_spellspeed = self.wielder.combat_spellspeed - direction * 0.04
 		self.wielder.combat_mindspeed = self.wielder.combat_mindspeed - direction * 0.04
 		
-		if self.wielder.resists.all == -5 then 
-			self.wielder.inc_damage.all = 5
+		if self.wielder.resists.all == -10 then 
+			self.wielder.inc_damage.all = 10
 			game.logPlayer(who, "#GOLD#As the final sands drop into place, you feel a surge of power.")
 			self.finished=true
 		end
-		if self.wielder.resists.all == 5 then 
-			self.wielder.combat_def = 15
+		if self.wielder.resists.all == 10 then 
+			self.wielder.flat_damage_armor.all = 10
 			game.logPlayer(who, "#GOLD#As the final sands drop into place, you suddenly feel safer.")
 			self.finished=true
 		end
@@ -5515,7 +5522,7 @@ newEntity{ base = "BASE_TOOL_MISC", --Thanks Alex!
 }
 
 newEntity{ base = "BASE_WIZARD_HAT", --Thanks SageAcrin!
-	power_source = {arcane=true, psionic=true},
+	power_source = {psionic=true, arcane=true},
 	unique = true,
 	name = "Malslek the Accursed's Hat",
 	unided_name = "black charred hat",
@@ -5529,13 +5536,13 @@ newEntity{ base = "BASE_WIZARD_HAT", --Thanks SageAcrin!
 		combat_def = 2,
 		combat_mentalresist = -10,
 		healing_factor=-0.1,
-		combat_mindpower = 10,
+		combat_mindpower = 15,
 		combat_spellpower = 10,
 		combat_mindcrit=10,
 		hate_on_crit = 2,
 		hate_per_kill = 2,
 		max_hate = 20,
-		resists = { [DamageType.FIRE] = 15 },
+		resists = { [DamageType.FIRE] = 20 },
 		talents_types_mastery = {
 			["cursed/punishments"]=0.2,
 		},
@@ -5824,7 +5831,8 @@ newEntity{ base = "BASE_STAFF",
 		negative_regen=0.1,
 		talent_cd_reduction = {
 			[Talents.T_TWILIGHT] = 1,
-			[Talents.T_FIREBEAM] = 1,
+			[Talents.T_SEARING_LIGHT] = 1,
+			[Talents.T_MOONLIGHT_RAY] = 1,
 		},
 		learn_talent = {[Talents.T_COMMAND_STAFF] = 1},
 	},
@@ -5881,7 +5889,7 @@ newEntity{ base = "BASE_CLOAK",
 		},
 		inc_damage = { [DamageType.LIGHT]= 10 },
 		resists_cap = { [DamageType.LIGHT] = 10, },
-		resists = { [DamageType.LIGHT] = 20, },
+		resists = { [DamageType.LIGHT] = 20, [DamageType.DARKNESS] = 20, },
 		talents_types_mastery = {
 			["celestial/light"] = 0.1,
 			["celestial/sun"] = 0.1,
@@ -5889,8 +5897,8 @@ newEntity{ base = "BASE_CLOAK",
 		},
 		on_melee_hit={[DamageType.LIGHT_BLIND] = 30},
 	},
-	max_power = 50, power_regen = 1,
-	use_talent = { id = Talents.T_BARRIER, level = 3, power = 50 },
+	max_power = 40, power_regen = 1,
+	use_talent = { id = Talents.T_BARRIER, level = 3, power = 40 },
 }
 
 newEntity{ base = "BASE_HEAVY_BOOTS",
@@ -5935,10 +5943,10 @@ All manner of shady gamblers have since claimed to have worn it at one point or 
 	material_level = 3,
 	wearer_hp = 100,
 	wielder = {
-		combat_def=12,
-		combat_armor=10,
+		combat_def=14,
+		combat_armor=12,
 		combat_apr=10,
-		inc_stats = { [Stats.STAT_CUN] = 5, },
+		inc_stats = { [Stats.STAT_CUN] = 8, },
 	},
 	on_wear = function(self, who)
 		self.worn_by = who
@@ -5947,7 +5955,7 @@ All manner of shady gamblers have since claimed to have worn it at one point or 
 	on_takeoff = function(self)
 		self.worn_by = nil
 	end,
-	special_desc = function(self) return "When you take a hit of more than 20% of your max life a shield is created." end,
+	special_desc = function(self) return "When you take a hit of more than 20% of your max life a shield is created equal to double the damage taken." end,
 	act = function(self)
 		self:useEnergy()	
 		if not self.worn_by then return end
@@ -5956,7 +5964,7 @@ All manner of shady gamblers have since claimed to have worn it at one point or 
 		local hp_diff = (self.wearer_hp - self.worn_by.life/self.worn_by.max_life)
 		
 		if hp_diff >= 0.2 and not self.worn_by:hasEffect(self.worn_by.EFF_DAMAGE_SHIELD) then
-			self.worn_by:setEffect(self.worn_by.EFF_DAMAGE_SHIELD, 3, {power = (hp_diff * self.worn_by.life)*2})
+			self.worn_by:setEffect(self.worn_by.EFF_DAMAGE_SHIELD, 4, {power = (hp_diff * self.worn_by.life)*2})
 			game.logPlayer(self.worn_by, "#LIGHT_BLUE#A barrier bursts from the leather jacket!")
 		end		
 		

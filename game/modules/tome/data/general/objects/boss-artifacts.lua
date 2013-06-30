@@ -23,7 +23,7 @@ local Talents = require "engine.interface.ActorTalents"
 -- This file describes artifacts associated with a boss of the game, they have a high chance of dropping their respective ones, but they can still be found elsewhere
 
 newEntity{ base = "BASE_LONGSWORD",
-	power_source = {arcane=true}, --How is this nature based?
+	power_source = {arcane=true},
 	define_as = "LONGSWORD_WINTERTIDE", rarity=false, unided_name = "glittering longsword", image="object/artifact/wintertide.png",
 	name = "Wintertide", unique=true,
 	desc = [[The air seems to freeze around the blade of this sword, draining all heat from the area.
@@ -580,8 +580,11 @@ newEntity{ base = "BASE_STAFF",
 			[DamageType.FIRE] = 10,
 			[DamageType.BLIGHT] = 10,
 		},
+		talents_types_mastery = { ["corruption/bone"] = 0.1, },
 		learn_talent = {[Talents.T_COMMAND_STAFF] = 1},
 	},
+	max_power = 6, power_regen = 1,
+	use_talent = { id = Talents.T_BONE_SPEAR, level = 3, power = 6 },
 }
 
 newEntity{ base = "BASE_AMULET",
@@ -828,18 +831,18 @@ newEntity{ base = "BASE_GREATSWORD",
 	unided_name = "blood-etched greatsword", color=colors.CRIMSON,
 	desc = [[A blood-etched greatsword, it has seen many foes. From the inside.]],
 	require = { stat = { str=35 }, },
-	level_range = {35, 45},
+	level_range = {32, 45},
 	rarity = 230,
 	cost = 300,
-	material_level = 5,
+	material_level = 4,
 	combat = {
 		dam = 60,
 		apr = 19,
-		physcrit = 4.5,
+		physcrit = 10,
 		dammod = {str=1.2},
 		special_on_hit = {desc="10% chance to send the wielder into a killing frenzy", fct=function(combat, who)
 			if not rng.percent(10) then return end
-			who:setEffect(who.EFF_FRENZY, 3, {crit=10, power=0.3, dieat=0.2})
+			who:setEffect(who.EFF_FRENZY, 3, {crit=12, power=0.3, dieat=0.25})
 		end},
 	},
 	wielder = {
@@ -850,6 +853,8 @@ newEntity{ base = "BASE_GREATSWORD",
 			["technique/2hweapon-offense"] = 0.2,
 		},
 	},
+	max_power = 60, power_regen = 1,
+	use_talent = { id = Talents.T_UNSTOPPABLE, level = 1, power = 60 },
 }
 
 newEntity{ base = "BASE_LEATHER_CAP",
@@ -1328,6 +1333,8 @@ It has been kept somewhat intact with layers of salt and clay, but in spite of t
 	material_level = 1,
 	metallic = false,
 	sentient = true,
+	cooldown=0,
+	special_desc = function(self) return "Detects traps.\nGives a 25% to shrug off up to three stuns, pins, and dazes each turn, with a 10 turn cooldown." end,
 	wielder = {
 		inc_stats = { [Stats.STAT_LCK] = 5, },
 		combat_def = 5,
@@ -1357,6 +1364,43 @@ It has been kept somewhat intact with layers of salt and clay, but in spite of t
 				end
 			end
 		end
+		--Escape stuns/dazes/pins
+		if self.cooldown > 0 then
+			self.cooldown = self.cooldown - 1
+		end
+		
+		if not self.worn_by then return end
+		if game.level and not game.level:hasEntity(self.worn_by) and not self.worn_by.player then self.worn_by = nil return end
+		if self.worn_by:attr("dead") then return end
+		if not rng.percent(25) or self.cooldown > 0 then return end
+		local who = self.worn_by
+		local target = self.worn_by
+			local effs = {}
+			local known = false
+			local num = 0
+
+			-- Go through all spell effects
+			for eff_id, p in pairs(target.tmp) do
+				local e = target.tempeffect_def[eff_id]
+				if e.subtype.pin or e.subtype.stun then
+					effs[#effs+1] = {"effect", eff_id}
+					num = 1
+				end
+			end
+
+			for i = 1, 3 do
+				if #effs == 0 then break end
+				local eff = rng.tableRemove(effs)
+
+				if eff[1] == "effect" then
+					target:removeEffect(eff[2])
+					known = true
+				end
+			end
+			if num == 1 then
+				game.logSeen(who, "%s shrugs off some effects!", who.name:capitalize())
+				self.cooldown = 10
+			end
 	end,
 	on_wear = function(self, who)
 		self.worn_by = who
@@ -1387,6 +1431,7 @@ newEntity{ base = "BASE_LONGBOW",
 	cost = 300,
 	material_level = 5,
 	sentient = true,
+	special_desc = function(self) return "Automatically fires lightning bolts at nearby enemies, with a chance to inflict Daze." end,
 	combat = {
 		range=10,
 		physspeed = 0.7,

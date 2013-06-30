@@ -33,7 +33,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 	end
 
 	if src:attr("elemental_mastery") then
-		local ndam = dam * 0.3
+		local ndam = dam * src.elemental_mastery
 		local old = src.elemental_mastery
 		src.elemental_mastery = nil
 		dam = 0
