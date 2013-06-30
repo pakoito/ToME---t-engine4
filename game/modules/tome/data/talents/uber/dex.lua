@@ -70,7 +70,7 @@ uberTalent{
 	mode = "activated",
 	require = { special={desc="Have dealt over 50000 damage with dual wielded weapons", fct=function(self) return self.damage_log and self.damage_log.weapon.dualwield and self.damage_log.weapon.dualwield >= 50000 end} },
 	cooldown = 12,
-	radius = 2,
+	radius = 4,
 	range = 1,
 	tactical = { ATTACK = { PHYSICAL=2 }, DISABLE = { disarm = 2 } },
 	target = function(self, t)
@@ -91,7 +91,7 @@ uberTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You spin madly, generating a sharp gust of wind with your weapon, dealing 320%% weapon damage to all foes within radius 2 and disarming them for 4 turns.]])
+		return ([[You spin madly, generating a sharp gust of wind with your weapon, dealing 320%% weapon damage to all foes within radius 4 and disarming them for 4 turns.]])
 		:format()
 	end,
 }
