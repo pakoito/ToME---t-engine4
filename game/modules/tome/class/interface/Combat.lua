@@ -1619,7 +1619,7 @@ function _M:combatMindpower(mod, add)
 	add = add or 0
 
 	if self:knowTalent(self.T_SUPERPOWER) then
-		add = add + 25 * self:getStr() / 100
+		add = add + 50 * self:getStr() / 100
 	end
 
 	if self:knowTalent(self.T_GESTURE_OF_POWER) then

@@ -186,11 +186,12 @@ uberTalent{
 }
 
 uberTalent{
+uberTalent{
 	name = "Superpower",
 	mode = "passive",
 	info = function(self, t)
 		return ([[A strong body is key to a strong mind. And a strong mind is powerful enough to make a strong body.
-		Grants a Mindpower bonus equal to 25%% of your Strength.
+		Grants a Mindpower bonus equal to 50%% of your Strength.
 		Additionally, you treat all weapons as having an additional 30%% Willpower modifier.]])
 		:format()
 	end,
