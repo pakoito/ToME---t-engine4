@@ -144,12 +144,13 @@ uberTalent{
 		self:attr("allow_on_heal", 1)
 		self:heal(math.min(eff.power, self:getCon() * self.max_life / 100))
 		self:attr("allow_on_heal", -1)
+		self:removeEffectsFilter({status="detrimental", type="magical"}, 10)
 		self:removeEffect(self.EFF_FUNGAL_BLOOD)
 		return true
 	end,
 	info = function(self, t)
 		return ([[Fungal spores have colonized your blood, so that each time you use an infusion you store %d fungal power.
-		You may use this prodigy to release the power as a heal (never more than than %d life).
+		You may use this prodigy to release the power as a heal (never more than than %d life) and remove up to 10 detrimental magical effects.
 		Fungal power lasts for up to 6 turns, losing 10 potency each turn.
 		The amount of fungal power produced, and the maximum heal possible, increase with your Constitution.]])
 		:format(self:getCon() * 2, self:getCon() * self.max_life / 100)
