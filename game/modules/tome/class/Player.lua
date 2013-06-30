@@ -1049,7 +1049,8 @@ function _M:doWear(inven, item, o)
 	self:removeObject(inven, item, true)
 	local ro = self:wearObject(o, true, true)
 	if ro then
-		if not self:attr("quick_wear_takeoff") then self:useEnergy() end
+		if not self:attr("quick_wear_takeoff") or self:attr("quick_wear_takeoff_disable") then self:useEnergy() end
+		if self:attr("quick_wear_takeoff") then self:setEffect(self.EFF_SWIFT_HANDS_CD, 1, {}) self.tmp[self.EFF_SWIFT_HANDS_CD].dur = 0 end
 		if type(ro) == "table" then self:addObject(inven, ro) end
 	elseif not ro then
 		self:addObject(inven, o)
@@ -1066,7 +1067,8 @@ function _M:doTakeoff(inven, item, o, simple)
 	end
 	if not simple then
 		self:sortInven()
-		if not self:attr("quick_wear_takeoff") then self:useEnergy() end
+		if not self:attr("quick_wear_takeoff") or self:attr("quick_wear_takeoff_disable") then self:useEnergy() end
+		if self:attr("quick_wear_takeoff") then self:setEffect(self.EFF_SWIFT_HANDS_CD, 1, {}) self.tmp[self.EFF_SWIFT_HANDS_CD].dur = 0 end
 	end
 	self:playerCheckSustains()
 	self.changed = true

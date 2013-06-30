@@ -2254,3 +2254,16 @@ newEffect{
 		end
 	end,
 }
+
+newEffect{
+	name = "SWIFT_HANDS_CD", image = "talents/swift_hands.png",
+	desc = "Swift Hands",
+	long_desc = function(self, eff) return "You swaped an item without taking time this turn." end,
+	type = "other",
+	subtype = { prodigy=true },
+	status = "neutral",
+	parameters = { },
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "quick_wear_takeoff_disable", 1)
+	end,
+}

@@ -58,8 +58,9 @@ uberTalent{
 		self:attr("quick_wear_takeoff", -1)
 	end,
 	info = function(self, t)
-		return ([[You have very agile hands; swapping equipment sets (default q key) takes no time, nor does wearing/taking off items.
-		Also the cooldown for equipping activatable equipment is removed.]])
+		return ([[Youhave very agile hands; swapping equipment sets (default q key) takes no time, nor does wearing/taking off items.
+		Also the cooldown for equipping activatable equipment is removed.
+		Free item switch may only happen once per turn.]])
 		:format()
 	end,
 }
