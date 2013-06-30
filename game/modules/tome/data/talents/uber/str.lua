@@ -150,10 +150,12 @@ uberTalent{
 	require = { special={desc="Be able to use massive armours", fct=function(self) return self:getTalentLevelRaw(self.T_ARMOUR_TRAINING) >= 3 end} },
 	on_learn = function(self, t)
 		self:attr("max_encumber", 500)
+		self.inc_stats[self.STAT_STR] = (self.inc_stats[self.STAT_STR] or 0) + 20
+  		self:onStatChange(self.STAT_STR, 20)
 	end,
 	info = function(self, t)
 		return ([[You are strong; fatigue and physical exertion mean nothing to you.
-		Fatigue is permanently set to 0 and carrying capacity increased by 500.]])
+		Fatigue is permanently set to 0, carrying capacity increased by 500 and strength increased by 20.]])
 		:format()
 	end,
 }
