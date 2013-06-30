@@ -53,7 +53,7 @@ end
 damDesc = function(self, type, dam)
 	-- Increases damage
 	if self.inc_damage then
-		local inc = (self.inc_damage.all or 0) + (self.inc_damage[type] or 0)
+		local inc = self:combatGetDamageIncrease(type)
 		dam = dam + (dam * inc / 100)
 	end
 	return dam

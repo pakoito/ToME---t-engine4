@@ -1774,6 +1774,32 @@ function _M:combatGetResist(type)
 	return r * power / 100
 end
 
+--- Returns the damage increase
+function _M:combatHasDamageIncrease(type)
+	if self.inc_damage[type] and self.inc_damage[type] ~= 0 then return true else return false end
+end
+
+--- Returns the damage increase
+function _M:combatGetDamageIncrease(type, straight)
+	local a = self.inc_damage.all or 0
+	local b = self.inc_damage[type] or 0
+	local inc = a + b
+	if straight then return inc end
+
+	if self.auto_highest_inc_damage and self.auto_highest_inc_damage[type] then
+		local highest = self.inc_damage.all or 0
+		for kind, v in pairs(self.inc_damage) do
+			if kind ~= "all" then
+				local inc = self:combatGetDamageIncrease(kind, true)
+				highest = math.max(highest, inc)
+			end
+		end
+		return highest + self.auto_highest_inc_damage[type]
+	end
+
+	return inc
+end
+
 --- Computes movement speed
 function _M:combatMovementSpeed(x, y)
 	local mult = 1

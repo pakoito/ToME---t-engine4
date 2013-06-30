@@ -671,26 +671,26 @@ function _M:drawDialog(kind, actor_to_compare)
 
 		local inc_damages = {}
 		for i, t in ipairs(DamageType.dam_def) do
-			if player.inc_damage[DamageType[t.type]] and player.inc_damage[DamageType[t.type]] ~= 0 then
+			if player:combatHasDamageIncrease(DamageType[t.type]) then
 				inc_damages[t] = inc_damages[t] or {}
-				inc_damages[t][1] = player.inc_damage[DamageType[t.type]]
+				inc_damages[t][1] = player:combatGetDamageIncrease(DamageType[t.type])
 			end
-			if actor_to_compare and actor_to_compare.inc_damage[DamageType[t.type]] and actor_to_compare.inc_damage[DamageType[t.type]] ~= 0 then
+			if actor_to_compare and actor_to_compare:combatHasDamageIncrease(DamageType[t.type]) then
 				inc_damages[t] = inc_damages[t] or {}
-				inc_damages[t][2] = actor_to_compare.inc_damage[DamageType[t.type]]
+				inc_damages[t][2] = actor_to_compare:combatGetDamageIncrease(DamageType[t.type])
 			end
 		end
 
 		for i, ts in pairs(inc_damages) do
 			if ts[1] then
 				if ts[2] and ts[2] ~= ts[1] then
-					self:mouseTooltip(self.TOOLTIP_INC_DAMAGE, s:drawColorStringBlended(self.font, ("%s%-20s: #00ff00#%+d%%%s(%+.0f%%)"):format((i.text_color or "#WHITE#"), i.name:capitalize().."#LAST# damage", ts[1] + (player.inc_damage.all or 0), ts[2] > ts[1] and "#ff0000#" or "#00ff00#", ts[1] - ts[2] ), w, h, 255, 255, 255, true)) h = h + self.font_h
+					self:mouseTooltip(self.TOOLTIP_INC_DAMAGE, s:drawColorStringBlended(self.font, ("%s%-20s: #00ff00#%+d%%%s(%+.0f%%)"):format((i.text_color or "#WHITE#"), i.name:capitalize().."#LAST# damage", ts[1], ts[2] > ts[1] and "#ff0000#" or "#00ff00#", ts[1] - ts[2] ), w, h, 255, 255, 255, true)) h = h + self.font_h
 				else
-					self:mouseTooltip(self.TOOLTIP_INC_DAMAGE, s:drawColorStringBlended(self.font, ("%s%-20s: #00ff00#%+d%%"):format((i.text_color or "#WHITE#"), i.name:capitalize().."#LAST# damage", ts[1] + (player.inc_damage.all or 0)), w, h, 255, 255, 255, true)) h = h + self.font_h
+					self:mouseTooltip(self.TOOLTIP_INC_DAMAGE, s:drawColorStringBlended(self.font, ("%s%-20s: #00ff00#%+d%%"):format((i.text_color or "#WHITE#"), i.name:capitalize().."#LAST# damage", ts[1]), w, h, 255, 255, 255, true)) h = h + self.font_h
 				end
 			else
 				if ts[2] then
-					self:mouseTooltip(self.TOOLTIP_INC_DAMAGE, s:drawColorStringBlended(self.font, ("%s%-20s: #00ff00#%+d%%(%+.0f%%)"):format((i.text_color or "#WHITE#"), i.name:capitalize().."#LAST# damage", (player.inc_damage.all or 0),-ts[2] ), w, h, 255, 255, 255, true)) h = h + self.font_h
+					self:mouseTooltip(self.TOOLTIP_INC_DAMAGE, s:drawColorStringBlended(self.font, ("%s%-20s: #00ff00#%+d%%(%+.0f%%)"):format((i.text_color or "#WHITE#"), i.name:capitalize().."#LAST# damage", (player.inc_damage.all or 0),(player.inc_damage.all or 0)-ts[2] ), w, h, 255, 255, 255, true)) h = h + self.font_h
 				end
 			end
 		end

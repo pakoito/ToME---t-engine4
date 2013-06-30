@@ -2080,7 +2080,9 @@ newEffect{
 				highest = math.max(highest, inc)
 			end
 		end
-		self:effectTemporaryValue(eff, "inc_damage", {[DamageType.TEMPORAL] = 30 + highest - (self.inc_damage[DamageType.TEMPORAL] or 0) - (self.inc_damage.all or 0)})
+		self.auto_highest_inc_damage = self.auto_highest_inc_damage or {}
+		self:effectTemporaryValue(eff, "auto_highest_inc_damage", {[DamageType.TEMPORAL] = 30})
+		self:effectTemporaryValue(eff, "inc_damage", {[DamageType.TEMPORAL] = 0.00001}) -- 0 so that it shows up in the UI
 		self:effectTemporaryValue(eff, "resists", {[DamageType.TEMPORAL] = 30})
 		self:effectTemporaryValue(eff, "resists_pen", {[DamageType.TEMPORAL] = 20})
 		self:effectTemporaryValue(eff, "talent_cd_reduction", {[self.T_ANOMALY_REARRANGE] = -4, [self.T_ANOMALY_TEMPORAL_STORM] = -4})

@@ -100,7 +100,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 		-- Increases damage
 		local mind_linked = false
 		if src.inc_damage then
-			local inc = (src.inc_damage.all or 0) + (src.inc_damage[type] or 0)
+			local inc = src:combatGetDamageIncrease(type)
 
 			-- Increases damage for the entity type (Demon, Undead, etc)
 			if target.type and src.inc_damage_actor_type then

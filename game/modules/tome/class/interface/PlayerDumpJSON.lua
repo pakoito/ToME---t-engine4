@@ -241,8 +241,8 @@ function _M:dumpToJSON(js, bypass, nosub)
 
 	if self.inc_damage.all then c.damage.all = string.format("%d%%", self.inc_damage.all) end
 	for i, t in ipairs(DamageType.dam_def) do
-		if self.inc_damage[DamageType[t.type]] and self.inc_damage[DamageType[t.type]] ~= 0 then
-			c.damage[t.name] = string.format("%d%%", self.inc_damage[DamageType[t.type]] + (self.inc_damage.all or 0))
+		if self:combatHasDamageIncrease(DamageType[t.type]) then
+			c.damage[t.name] = string.format("%d%%", self:combatGetDamageIncrease(DamageType[t.type]))
 		end
 	end
 
