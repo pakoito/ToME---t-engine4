@@ -237,7 +237,7 @@ uberTalent{
 		game:playSoundNear(self, "talents/distortion")
 		return {
 			converttype = self:addTemporaryValue("all_damage_convert", DamageType.MIND),
-			convertamount = self:addTemporaryValue("all_damage_convert_percent", 100),
+			convertamount = self:addTemporaryValue("all_damage_convert_percent", 33),
 			dam = self:addTemporaryValue("inc_damage", {[DamageType.MIND] = 10}),
 			resist = self:addTemporaryValue("resists_pen", {[DamageType.MIND] = 30}),
 		}
@@ -251,7 +251,7 @@ uberTalent{
 	end,
 	info = function(self, t)
 		return ([[Transcend the physical and rule over all with an iron will.
-		While this sustain is active, all of your damage is converted into mind damage.
+		While this sustain is active, 33%% of your damage is converted into mind damage.
 		Additionally, you gain +30%% mind resistance penetration, and +10%% mind damage.]]):
 		format()
 	end,
