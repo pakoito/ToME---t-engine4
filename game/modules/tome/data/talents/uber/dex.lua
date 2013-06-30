@@ -101,18 +101,18 @@ uberTalent{
 	mode = "passive",
 	require = { special={desc="Know at least 20 talent levels of equilibrium-using talents", fct=function(self) return knowRessource(self, "equilibrium", 20) end} },
 	on_learn = function(self, t)
-		self:attr("global_speed_add", 0.15)
+		self:attr("global_speed_add", 0.2)
 		self:attr("avoid_pressure_traps", 1)
 		self:recomputeGlobalSpeed()
 	end,
 	on_unlearn = function(self, t)
-		self:attr("global_speed_add", -0.15)
+		self:attr("global_speed_add", -0.2)
 		self:attr("avoid_pressure_traps", -1)
 		self:recomputeGlobalSpeed()
 	end,
 	info = function(self, t)
 		return ([[You are attuned wih Nature, and she helps you in your fight against the arcane forces.
-		You gain 15%% permanent global speed, and do not trigger pressure traps.]])
+		You gain 20%% permanent global speed, and do not trigger pressure traps.]])
 		:format()
 	end,
 }

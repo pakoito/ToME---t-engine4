@@ -41,7 +41,7 @@ uberTalent{
 	requires_target = true,
 	tactical = { ATTACK = 4 },
 	on_pre_use = function(self, t) return self.size_category and self.size_category >= 4 end,
-	cooldown = 12,
+	cooldown = 10,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -83,7 +83,7 @@ uberTalent{
 	end} },
 	requires_target = true,
 	tactical = { ATTACK = 4 },
-	cooldown = 12,
+	cooldown = 10,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
