@@ -2055,7 +2055,7 @@ function _M:onTakeHit(value, src)
 	end
 
 	-- Bloodspring
-	if value >= self.max_life * 0.20 and self:knowTalent(self.T_BLOODSPRING) then
+	if value >= self.max_life * 0.15 and self:knowTalent(self.T_BLOODSPRING) then
 		self:triggerTalent(self.T_BLOODSPRING)
 	end
 

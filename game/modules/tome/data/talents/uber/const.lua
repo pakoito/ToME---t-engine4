@@ -58,7 +58,7 @@ uberTalent{
 		self:startTalentCooldown(t)
 	end,
 	info = function(self, t)
-		return ([[When a single blow deals more than 20%% of your total life, a torrent of blood gushes from your body, creating a bloody tidal wave for 4 turns that deals %0.2f blight damage, heals you for 50%% of the damage done, and knocks foes back.
+		return ([[When a single blow deals more than 15%% of your total life, a torrent of blood gushes from your body, creating a bloody tidal wave for 4 turns that deals %0.2f blight damage, heals you for 50%% of the damage done, and knocks foes back.
 		The damage increases with your Constitution.]])
 		:format(100 + self:getCon() * 3)
 	end,
