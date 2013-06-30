@@ -211,7 +211,7 @@ uberTalent{
 uberTalent{
 	name = "Vital Shot",
 	no_energy = "fake",
-	cooldown = 20,
+	cooldown = 10,
 	range = archery_range,
 	require = { special={desc="Have dealt over 50000 damage with ranged weapons", fct=function(self) return self.damage_log and self.damage_log.weapon.archery and self.damage_log.weapon.archery >= 50000 end} },
 	tactical = { ATTACK = { weapon = 3 }, DISABLE = 3 },
