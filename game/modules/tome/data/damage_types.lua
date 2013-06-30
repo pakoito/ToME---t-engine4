@@ -250,7 +250,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 
 		-- Reduce damage with resistance against self
 		if src == target and target.resists_self then
-			local res = target.resists_self[type] or 0
+			local res = (target.resists_self[type] or 0) + (target.resists_self.all or 0)
 			print("[PROJECTOR] res", res, (100 - res) / 100, " on dam", dam)
 			if res >= 100 then dam = 0
 			elseif res <= -100 then dam = dam * 2

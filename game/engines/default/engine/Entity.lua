@@ -770,6 +770,16 @@ function _M:removeTemporaryValue(prop, id, noupdate)
 	end
 end
 
+--- Helper function to add temporary values and not have to remove them manualy
+function _M:tableTemporaryValue(t, k, v)
+	t[#t+1] = {k, self:addTemporaryValue(k, v)}
+end
+function _M:tableTemporaryValuesRemove(t)
+	for i = 1, #t do
+		self:removeTemporaryValue(t[i][1], t[i][2])
+	end
+end
+
 --- Called when a temporary value changes (added or deleted)
 -- This does nothing by default, you can overload it to react to changes
 -- @param prop the property changing
