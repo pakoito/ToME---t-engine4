@@ -114,7 +114,8 @@ uberTalent{
 	require = { special={desc="Know the Rush talent", fct=function(self) return self:knowTalent(self.T_RUSH) end} },
 	info = function(self, t)
 		return ([[When you rush, the creature you rush to is marked. If you kill it in the next two turns, your rush cooldown is reset.
-		Each time this effect triggers, you gain a stacking +20%% damage buff, up to 100%%.]])
+		Each time this effect triggers, you gain a stacking +20%% damage buff, up to 100%%.
+		Also rush only costs 2 stamina.]])
 		:format()
 	end,
 }
@@ -185,7 +186,6 @@ uberTalent{
 	end,
 }
 
-uberTalent{
 uberTalent{
 	name = "Superpower",
 	mode = "passive",

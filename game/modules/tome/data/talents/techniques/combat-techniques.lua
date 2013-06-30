@@ -27,7 +27,7 @@ newTalent{
 	require = techs_strdex_req1,
 	points = 5,
 	random_ego = "attack",
-	stamina = 22,
+	stamina = function(self, t) return self:knowTalent(self.T_STEAMROLLER) and 2 or 22 end,
 	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 0, 36, 20)) end, --Limit to >0
 	tactical = { ATTACK = { weapon = 1, stun = 1 }, CLOSEIN = 3 },
 	requires_target = true,
