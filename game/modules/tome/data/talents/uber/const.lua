@@ -83,14 +83,14 @@ uberTalent{
 	require = { special={desc="Know at least 20 levels of stamina-using talents", fct=function(self) return knowRessource(self, "stamina", 20) end} },
 	activate = function(self, t)
 		local ret = {}
-		self:talentTemporaryValue(ret, "move_stamina_instead_of_energy", 20)
+		self:talentTemporaryValue(ret, "move_stamina_instead_of_energy", 12)
 		return ret
 	end,
 	deactivate = function(self, t, p)
 		return true
 	end,
 	info = function(self, t)
-		return ([[While this talent is active, you dig deep into your stamina reserves, allowing you to move without taking a turn but costing 20 stamina for each tile you cross.]])
+		return ([[While this talent is active, you dig deep into your stamina reserves, allowing you to move without taking a turn but costing 12 stamina for each tile you cross.]])
 		:format()
 	end,
 }
