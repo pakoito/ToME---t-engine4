@@ -464,14 +464,14 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 			dam = dam + total_conversion
 		end
 
-		target:talentCallbackOn("callbackOnMeleeHit", self)
+		target:fireTalentCheck("callbackOnMeleeHit", self)
 
 		hitted = true
 	else
 		local srcname = game.level.map.seens(self.x, self.y) and self.name:capitalize() or "Something"
 		game.logSeen(target, "%s misses %s.", srcname, target.name)
 
-		target:talentCallbackOn("callbackOnMeleeMiss", self)
+		target:fireTalentCheck("callbackOnMeleeMiss", self)
 	end
 
 	-- cross-tier effect for accuracy vs. defense

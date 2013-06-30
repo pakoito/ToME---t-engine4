@@ -266,14 +266,14 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 
 		if talent.archery_onhit then talent.archery_onhit(self, talent, target, target.x, target.y) end
 
-		target:talentCallbackOn("callbackOnArcheryHit", self)
+		target:fireTalentCheck("callbackOnArcheryHit", self)
 	else
 		local srcname = game.level.map.seens(self.x, self.y) and self.name:capitalize() or "Something"
 		game.logSeen(target, "%s misses %s.", srcname, target.name)
 
 		if talent.archery_onmiss then talent.archery_onmiss(self, talent, target, target.x, target.y) end
 
-		target:talentCallbackOn("callbackOnArcheryMiss", self)
+		target:fireTalentCheck("callbackOnArcheryMiss", self)
 	end
 
 	-- cross-tier effect for accuracy vs. defense

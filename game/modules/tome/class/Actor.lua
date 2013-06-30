@@ -551,11 +551,7 @@ function _M:actBase()
 
 		self:triggerHook{"Actor:actBase:Effects"}
 
-		if self.talents_on_act_base and next(self.talents_on_act_base) then
-			for tid, _ in pairs(self.talents_on_act_base) do
-				self:callTalent(tid, "callbackOnActBase")
-			end
-		end
+		self:fireTalentCheck("callbackOnActBase")
 	end
 
 	-- Suffocate ?
@@ -688,11 +684,7 @@ function _M:act()
 		self.tempeffect_def[self.EFF_PANICKED].do_act(self, self:hasEffect(self.EFF_PANICKED))
 	end
 
-	if self.talents_on_act and next(self.talents_on_act) then
-		for tid, _ in pairs(self.talents_on_act) do
-			self:callTalent(tid, "callbackOnAct")
-		end
-	end
+	self:fireTalentCheck("callbackOnAct")
 
 	-- Still enough energy to act ?
 	if self.energy.value < game.energy_to_act then return false end
@@ -1078,11 +1070,7 @@ function _M:move(x, y, force)
 		end
 	end
 
-	if self.talents_on_move and next(self.talents_on_move) then
-		for tid, _ in pairs(self.talents_on_move) do
-			self:callTalent(tid, "callbackOnMove", moved, force, ox, oy)
-		end
-	end
+	self:fireTalentCheck("callbackOnMove", moved, force, ox, oy)
 
 	self:triggerHook{"Actor:move", moved=moved, force=force, ox=ox, oy=oy}
 
@@ -3096,6 +3084,13 @@ function _M:learnTalent(t_id, force, nb, extra)
 	-- If we learned a spell, get mana, if you learned a technique get stamina, if we learned a wild gift, get power
 	local t = _M.talents_def[t_id]
 
+	for event, store in pairs(sustainCallbackCheck) do
+		if t[event] and t.mode ~= "sustained" then
+			self[store] = self[store] or {}
+			self[store][t_id] = true
+		end
+	end
+
 	extra = extra or {}
 
 	if not t.no_unlearn_last and self.last_learnt_talents and not extra.no_unlearn then
@@ -3241,6 +3236,13 @@ function _M:unlearnTalent(t_id, nb, no_unsustain, extra)
 	if not engine.interface.ActorTalents.unlearnTalent(self, t_id, nb) then return false end
 
 	local t = _M.talents_def[t_id]
+
+	for event, store in pairs(sustainCallbackCheck) do
+		if t[event] and t.mode ~= "sustained" then
+			self[store][t_id] = nil
+			if not next(self[store]) then self[store] = nil end
+		end
+	end
 
 	extra = extra or {}
 
@@ -3695,6 +3697,10 @@ local sustainCallbackCheck = {
 	callbackOnActBase = "talents_on_act_base",
 	callbackOnMove = "talents_on_move",
 	callbackOnRest = "talents_on_rest",
+	callbackOnMeleeHit = "talents_on_melee_hit",
+	callbackOnMeleeMiss = "talents_on_melee_miss",
+	callbackOnArcheryHit = "talents_on_archery_hit",
+	callbackOnArcheryMiss = "talents_on_archery_miss",
 }
 _M.sustainCallbackCheck = sustainCallbackCheck
 
