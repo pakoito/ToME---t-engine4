@@ -1296,7 +1296,7 @@ function _M:setupCommands()
 			print("===============")
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
-			game:changeLevel(game.level.level+1)
+			game.player:takeHit(100, game.player)
 do return end
 			game:changeLevel(1, "stellar-system-shandral")
 do return end
