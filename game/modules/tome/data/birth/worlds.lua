@@ -78,6 +78,14 @@ newBirthDescriptor{
 		campaign_name = "maj-eyal",
 		__allow_rod_recall = true,
 		__allow_transmo_chest = true,
+		grab_online_event_zone = function() return "wilderness-1" end,
+		grab_online_event_spot = function(zone, level)
+			local find = {type="world-encounter", subtype="maj-eyal"}
+			local where = game.level:pickSpotRemove(find)
+			while where and (game.level.map:checkAllEntities(where.x, where.y, "block_move") or not game.level.map:checkAllEntities(where.x, where.y, "can_encounter")) do where = game.level:pickSpotRemove(find) end
+			local x, y = mod.class.Encounter:findSpot(where)
+			return x, y
+		end,
 	},
 }
 
@@ -142,6 +150,11 @@ newBirthDescriptor{
 		__allow_transmo_chest = true,
 		is_infinite_dungeon = true,
 		ignore_prodigies_special_reqs = true,
+		grab_online_event_zone = function() return "infinite-dungeon-"..(game.level.level+rng.range(1,4)) end,
+		grab_online_event_spot = function(zone, level)
+			local x, y = game.state:findEventGrid(level)
+			return x, y
+		end,
 	},
 }
 

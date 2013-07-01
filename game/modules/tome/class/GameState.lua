@@ -2059,3 +2059,20 @@ function _M:alternateZoneTier1(short_name, ...)
 	if not game.state:tier1Killed(1) and not config.settings.cheat then return "DEFAULT" end
 	return self:alternateZone(short_name, ...)
 end
+
+function _M:grabOnlineEventZone()
+	if not config.settings.tome.allow_online_events then return end
+	if not self.birth.grab_online_event_zone or not self.birth.grab_online_event_spot then return nil end
+	return self.birth.grab_online_event_zone()
+end
+
+function _M:grabOnlineEventSpot(zone, level)
+	if not config.settings.tome.allow_online_events then return end
+	if not self.birth.grab_online_event_zone or not self.birth.grab_online_event_spot then return nil end
+	return self.birth.grab_online_event_spot(zone, level)
+end
+
+function _M:allowOnlineEvent()
+	if not config.settings.tome.allow_online_events then return end
+	return true
+end

@@ -28,6 +28,10 @@ local imbue_ring = function(npc, player)
 				player:removeObject(player:getInven("INVEN"), gem_item)
 				ring.wielder = ring.wielder or {}
 				table.mergeAdd(ring.wielder, gem.imbue_powers, true)
+				if gem.talent_on_spell then
+					ring.talent_on_spell = ring.talent_on_spell or {}
+					table.append(ring.talent_on_spell, gem.talent_on_spell)
+				end
 				ring.name = gem.name .. " ring"
 				ring.been_imbued = true
 				ring.egoed = true
@@ -62,6 +66,18 @@ local artifact_imbue_amulet = function(npc, player)
 					table.mergeAdd(amulet.wielder, gem1.imbue_powers, true)
 					table.mergeAdd(amulet.wielder, gem2.imbue_powers, true)
 					table.mergeAdd(amulet.wielder, gem3.imbue_powers, true)
+					if gem1.talent_on_spell then
+						amulet.talent_on_spell = amulet.talent_on_spell or {}
+						table.append(amulet.talent_on_spell, gem1.talent_on_spell)
+					end
+					if gem2.talent_on_spell then
+						amulet.talent_on_spell = amulet.talent_on_spell or {}
+						table.append(amulet.talent_on_spell, gem2.talent_on_spell)
+					end
+					if gem3.talent_on_spell then
+						amulet.talent_on_spell = amulet.talent_on_spell or {}
+						table.append(amulet.talent_on_spell, gem3.talent_on_spell)
+					end
 					amulet.name = "Limmir's Amulet of the Moon"
 					amulet.been_imbued = true
 					amulet.unique = util.uuid()
