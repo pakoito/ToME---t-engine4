@@ -84,18 +84,18 @@ gifts_req_high5 = {
 	level = function(level) return 26 + (level-1)  end,
 }
 
-function checkMaxSummon(self, silent, div)
+function checkMaxSummon(self, silent, div, check_attr)
 	div = div or 1
 	local nb = 0
 
 	-- Count party members
 	if game.party:hasMember(self) then
 		for act, def in pairs(game.party.members) do
-			if act.summoner and act.summoner == self and act.wild_gift_summon then nb = nb + 1 end
+			if act.summoner and act.summoner == self and act.wild_gift_summon and (not check_attr or act:attr(check_attr)) then nb = nb + 1 end
 		end
 	else
 		for _, act in pairs(game.level.entities) do
-			if act.summoner and act.summoner == self and act.wild_gift_summon then nb = nb + 1 end
+			if act.summoner and act.summoner == self and act.wild_gift_summon and (not check_attr or act:attr(check_attr)) then nb = nb + 1 end
 		end
 	end
 
