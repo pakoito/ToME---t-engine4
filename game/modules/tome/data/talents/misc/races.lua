@@ -734,7 +734,7 @@ newTalent{
 		self:project(tg, x, y, function(px, py)
 			local target = game.level.map(px, py, Map.ACTOR)
 			if not target or target.dead or target == self then return end
-			if not target:canBe("instakill") or target.rank > 2 or target:attr("undead") or not target:checkHit(self:getWil(20, true) + self.level * 1.5, target.level) then
+			if not target:canBe("instakill") or target.rank > 3 or target:attr("undead") or not target:checkHit(self:getWil(20, true) + self.level * 1.5, target.level) then
 				game.logSeen(target, "%s resists the mental assault!", target.name:capitalize())
 				return
 			end
@@ -748,7 +748,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Shatters the mind of your victim, giving you full control over its actions for %s turns.
 		When the effect ends, you pull out your mind and the victim's body collapses, dead.
-		This effect does not work on elites or undeads.
+		This effect does not work on rares, bosses or undeads.
 		The duration will increase with your Willpower.]]):format(4 + self:getWil(10))
 	end,
 }
