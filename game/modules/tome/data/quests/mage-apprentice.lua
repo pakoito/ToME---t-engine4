@@ -43,7 +43,7 @@ end
 
 collect_staff_unique = function(self, npc, who, dialog)
 	who:showInventory("Offer which item?", who:getInven("INVEN"),
-		function(o) return o.power_source and o.power_source.arcane and o.unique
+		function(o) return (o.power_source and o.power_source.arcane and o.unique) or (o.define_as == "STAFF_ABSORPTION")
 		end,
 		function(o, item)
 			-- Special handling for the staff of absorption
@@ -73,7 +73,7 @@ can_offer_unique = function(self, who)
 	if not who:getInven("INVEN") then return end
 
 	for item, o in ipairs(who:getInven("INVEN")) do
-		if o.power_source and o.power_source.arcane and o.unique then return true end
+		if (o.power_source and o.power_source.arcane and o.unique) or (o.define_as == "STAFF_ABSORPTION") then return true end
 	end
 end
 
