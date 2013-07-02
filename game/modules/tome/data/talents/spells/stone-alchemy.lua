@@ -133,6 +133,10 @@ newTalent{
 				self:removeObject(self:getInven("INVEN"), gem_item)
 				o.wielder = o.wielder or {}
 				table.mergeAdd(o.wielder, gem.imbue_powers, true)
+				if gem.talent_on_spell then
+					o.talent_on_spell = o.talent_on_spell or {}
+					table.append(o.talent_on_spell, gem.talent_on_spell)
+				end
 				o.been_imbued = true
 				game.logPlayer(self, "You imbue your %s with %s.", o:getName{do_colour=true, no_count=true}, gem:getName{do_colour=true, no_count=true})
 				o.name = o.name .. " ("..gem.name..")"

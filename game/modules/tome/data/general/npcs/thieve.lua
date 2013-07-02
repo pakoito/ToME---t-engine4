@@ -51,7 +51,11 @@ newEntity{
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=5, },
 	stats = { str=8, dex=15, mag=6, cun=15, con=7 },
 
-	resolvers.talents{ [Talents.T_LETHALITY]={base=1, every=6, max=5}, },
+	resolvers.talents{
+		[Talents.T_LETHALITY]={base=1, every=6, max=5},
+		[Talents.T_KNIFE_MASTERY]={base=1, every=6, max=6},
+		[Talents.T_WEAPON_COMBAT]={base=1, every=6, max=6},
+	},
 	power_source = {technique=true},
 }
 

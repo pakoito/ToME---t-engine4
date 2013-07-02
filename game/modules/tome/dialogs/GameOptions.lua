@@ -366,6 +366,15 @@ function _M:generateListOnline()
 		return "select to configure"
 	end, fct=function(item)	game:registerDialog(require("engine.dialogs.ChatChannels").new()) end,}
 
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Allow various events that are pushed by the server when playing online\nDisabling this will make you miss cool and fun zones.#WHITE#"}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Allow online events#WHITE##{normal}#", status=function(item)
+		return tostring(config.settings.tome.allow_online_events and "enabled" or "disabled")
+	end, fct=function(item)
+		config.settings.tome.allow_online_events = not config.settings.tome.allow_online_events
+		game:saveSettings("tome.allow_online_events", ("tome.allow_online_events = %s\n"):format(tostring(config.settings.tome.allow_online_events)))
+		self.c_list:drawItem(item)
+	end,}
+
 	self.list = list
 end
 

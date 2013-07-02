@@ -162,11 +162,12 @@ newTalent{
 	points = 5,
 	equilibrium = 5,
 	cooldown = 20,
-	getMax = function(self, t) local _, _, max = checkMaxSummon(self, true) return math.min(max, math.max(1, math.floor(self:combatTalentScale(t, 0.5, 2.5)))) end,
+	getMax = function(self, t) local _, _, max = checkMaxSummon(self, true) return math.min(max, self:callTalent(self.T_MITOSIS, "getMax"), math.max(1, math.floor(self:combatTalentScale(t, 0.5, 2.5)))) end,
 	getModHP = function(self, t) return self:combatTalentLimit(t, 1, 0.46, 0.7) end, --  Limit < 1
 	action = function(self, t)
 		local ot = self:getTalentFromId(self.T_MITOSIS)
-		for i = 1, t.getMax(self, t) do
+		local _, cur_nb, max = checkMaxSummon(self, true, nil, "bloated_ooze")
+		for i = cur_nb + 1, t.getMax(self, t) do
 			ot.spawn(self, ot, ot.getMaxHP(self, ot) * t.getModHP(self, t))
 		end
 
