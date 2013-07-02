@@ -69,6 +69,7 @@ function _M:checkFilter(filter)
 end
 
 function _M:findSpotGeneric(who, fct)
+	if not who then return end
 	local spots = {}
 	for _, coord in pairs(util.adjacentCoords(who.x, who.y)) do if game.level.map:isBound(coord[1], coord[2]) then
 		if fct(game.level.map, coord[1], coord[2]) then
@@ -82,6 +83,7 @@ function _M:findSpotGeneric(who, fct)
 end
 
 function _M:findSpot(who, what)
+	if not who then return end
 	what = what or "block_move"
 	local spots = {}
 	for _, coord in pairs(util.adjacentCoords(who.x, who.y)) do if game.level.map:isBound(coord[1], coord[2]) then

@@ -178,6 +178,7 @@ newTalent{
 	points = 5,
 	hard_cap = 5,
 	range = 1,
+	requires_target = true,
 	tactical = { ATTACK = 3, DEFEND = 3 },
 	on_pre_use = function(self, t, silent) if not self:hasShield() then if not silent then game.logPlayer(self, "You require a shield to use this talent.") end return false end return true end,
 	getProperties = function(self, t)
