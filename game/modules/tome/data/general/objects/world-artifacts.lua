@@ -2670,11 +2670,11 @@ newEntity{ base = "BASE_ARROW",
 	material_level = 4,
 	require = { stat = { dex=24 }, },
 	combat = {
-		capacity = 4,
+		capacity = 10,
 		tg_type = "beam",
 		travel_speed = 3,
 		dam = 34,
-		apr = 10,
+		apr = 15, --Piercing is piercing
 		physcrit = 2,
 		dammod = {dex=0.7, str=0.5},
 		damtype = DamageType.LITE_LIGHT,
@@ -2694,7 +2694,7 @@ newEntity{ base = "BASE_ARROW",
 	material_level = 4,
 	require = { stat = { dex=24 }, },
 	combat = {
-		capacity = 8,
+		capacity = 14,
 		dam = 24,
 		apr = 8,
 		physcrit = 2,
@@ -4515,10 +4515,11 @@ newEntity{ base = "BASE_ARROW", --Thanks Grayswandir!
 	combat = {
 		capacity = 0,
 		dam = 45,
-		apr = 10,
-		physcrit = 3,
+		apr = 30, --No armor can stop the void
+		physcrit = 6,
 		dammod = {dex=0.7, str=0.5},
 		damtype = DamageType.VOID,
+		talent_on_hit = { [Talents.T_QUANTUM_SPIKE] = {level=1, chance=10}, [Talents.T_TEMPORAL_CLONE] = {level=1, chance=5} },
 	},
 }
 
@@ -4535,7 +4536,7 @@ newEntity{ base = "BASE_ARROW", --Thanks Grayswandir!
 	material_level = 2,
 	require = { stat = { dex=18 }, },
 	combat = {
-		capacity = 15,
+		capacity = 20,
 		dam = 20,
 		apr = 10,
 		physcrit = 5,
@@ -4559,6 +4560,7 @@ newEntity{ base = "BASE_LITE", --Thanks Frumple!
 	material_level=3,
 	sentient=true,
 	charge = 0,
+	special_desc = function(self) return "Absorbs all darkness in its light radius." end,
 	on_wear = function(self, who)
 		self.worn_by = who
 	end,
@@ -5722,7 +5724,7 @@ newEntity{ base = "BASE_ARROW",
 	material_level = 5,
 	require = { stat = { dex=20, str=30 }, },
 	combat = {
-		capacity = 16,
+		capacity = 18,
 		dam = 62,
 		apr = 20,
 		physcrit = 8,

@@ -44,6 +44,17 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 		src.elemental_mastery = old
 		return dam
 	end
+	
+	if src:attr("twilight_mastery") then
+		local ndam = dam * src.twilight_mastery
+		local old = src.twilight_mastery
+		src.twilight_mastery = nil
+		dam = 0
+		dam = dam + DamageType:get(DamageType.LIGHT).projector(src, x, y, DamageType.LIGHT, ndam, tmp, no_martyr)
+		dam = dam + DamageType:get(DamageType.DARKNESS).projector(src, x, y, DamageType.DARKNESS, ndam, tmp, no_martyr)
+		src.twilight_mastery = old
+		return dam
+	end
 
 	local terrain = game.level.map(x, y, Map.TERRAIN)
 	if terrain then terrain:check("damage_project", src, x, y, type, dam) end
