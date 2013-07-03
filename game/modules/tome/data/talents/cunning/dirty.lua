@@ -66,7 +66,9 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	require = cuns_req2,
+	-- called by _M:physicalCrit in mod.class.interface.Combat.la
 	getCriticalChance = function(self, t) return self:combatTalentScale(t, 15, 50, 0.75) end,
+	-- called by _M:attackTargetWith in mod.class.interface.Combat.lua
 	getStunChance = function(self, t) return self:combatTalentLimit(t, 100, 3, 15) end, -- Limit < 100%
 	info = function(self, t)
 		return ([[Your quick wit gives you a big advantage against stunned targets; all your hits will have a %d%% greater chance of being critical.

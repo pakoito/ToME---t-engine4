@@ -711,7 +711,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		weapon.special_on_kill.fct(weapon, self, target)
 	end
 
-	if hitted and crit and not target.dead and self:knowTalent(self.T_BACKSTAB) and not target:attr("stunned") and rng.percent(self:getTalentLevel(self.T_BACKSTAB) * 3) then
+	if hitted and crit and not target.dead and self:knowTalent(self.T_BACKSTAB) and not target:attr("stunned") and rng.percent(self:callTalentLevel(self.T_BACKSTAB, "getStunChance")) then
 		if target:canBe("stun") then
 			target:setEffect(target.EFF_STUNNED, 3, {apply_power=self:combatAttack()})
 		end
@@ -1483,7 +1483,7 @@ function _M:physicalCrit(dam, weapon, target, atk, def, add_chance, crit_power_a
 	end
 
 	local crit = false
-	if self:knowTalent(self.T_BACKSTAB) and target:attr("stunned") then chance = chance + self:getTalentLevel(self.T_BACKSTAB) * 10 end
+	if self:knowTalent(self.T_BACKSTAB) and target:attr("stunned") then chance = chance + self:callTalent(self.T_BACKSTAB,"getCriticalChance") end
 
 	if target:attr("combat_crit_vulnerable") then
 		chance = chance + target:attr("combat_crit_vulnerable")
