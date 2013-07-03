@@ -2067,7 +2067,7 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is no longer embeded in time.", "-Temporal Form" end,
 	activate = function(self, eff)
 		self:effectTemporaryValue(eff, "all_damage_convert", DamageType.TEMPORAL)
-		self:effectTemporaryValue(eff, "all_damage_convert_percent", 100)
+		self:effectTemporaryValue(eff, "all_damage_convert_percent", 50)
 		self:effectTemporaryValue(eff, "stun_immune", 1)
 		self:effectTemporaryValue(eff, "pin_immune", 1)
 		self:effectTemporaryValue(eff, "cut_immune", 1)
