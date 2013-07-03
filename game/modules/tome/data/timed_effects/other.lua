@@ -2282,3 +2282,23 @@ newEffect{
 		self:setTarget(eff.src)
 	end,
 }
+
+newEffect{
+	name = "THROUGH_THE_CROWD", image = "talents/through_the_crowd.png",
+	desc = "Through The Crowd",
+	long_desc = function(self, eff) return ("Increases physical save, spell save, and mental save by %d."):format(eff.power) end,
+	type = "other",
+	subtype = { miscellaneous=true },
+	status = "beneficial",
+	parameters = { power=10 },
+	activate = function(self, eff)
+		eff.presid = self:addTemporaryValue("combat_physresist", eff.power)
+		eff.sresid = self:addTemporaryValue("combat_spellresist", eff.power)
+		eff.mresid = self:addTemporaryValue("combat_mentalresist", eff.power)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("combat_physresist", eff.presid)
+		self:removeTemporaryValue("combat_spellresist", eff.sresid)
+		self:removeTemporaryValue("combat_mentalresist", eff.mresid)
+	end,
+}

@@ -29,6 +29,18 @@ uberTalent{
 	on_unlearn = function(self, t)
 		self:attr("bump_swap_speed_divide", -10)
 	end,
+	callbackOnAct = function(self, t)
+		local nb_friends = 0
+		local act
+		for i = 1, #self.fov.actors_dist do
+			act = self.fov.actors_dist[i]
+			if act and self:reactionToward(act) > 0 and self:canSee(act) then nb_friends = nb_friends + 1 end
+		end
+		if nb_friends > 1 then
+			nb_friends = math.min(nb_friends, 5)
+			self:setEffect(self.EFF_THROUGH_THE_CROWD, 4, {power=nb_friends * 10})
+		end
+	end,
 	activate = function(self, t)
 		local ret = {}
 		self:talentTemporaryValue(ret, "nullify_all_friendlyfire", 1)
@@ -38,8 +50,10 @@ uberTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You are used to a crowded party; you can swap place with friendly creatures in only one tenth of a turn (this does not require the prodigy to be active, it is a passive effect).
-		You have also learnt to fight cleanly in a crowded area, you can never damage your friends of neutral creatures when this talent is active.]])
+		return ([[You are used to a crowded party:
+		- you can swap place with friendly creatures in only one tenth of a turn (this does not require the prodigy to be active, it is a passive effect).
+		- you can never damage your friends of neutral creatures when this talent is active.
+		- you love being surrounded by friends, for each friendly creature in sight you gain +10 to all saves]])
 		:format()
 	end,
 }
