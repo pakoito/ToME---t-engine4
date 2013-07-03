@@ -63,6 +63,7 @@ DIFFICULTY_EASY = 1
 DIFFICULTY_NORMAL = 2
 DIFFICULTY_NIGHTMARE = 3
 DIFFICULTY_INSANE = 4
+DIFFICULTY_MADNESS = 5
 PERMADEATH_INFINITE = 1
 PERMADEATH_MANY = 2
 PERMADEATH_ONE = 3
@@ -341,6 +342,11 @@ function _M:loaded()
 					zone.specific_base_level.object = -10 -zone.level_range[1]
 					zone.level_range[1] = zone.level_range[1] * 2.2 + 5
 					zone.level_range[2] = zone.level_range[2] * 2.2 + 5
+				elseif self.difficulty == self.DIFFICULTY_MADNESS then
+					zone.base_level_range = table.clone(zone.level_range, true)
+					zone.specific_base_level.object = -10 -zone.level_range[1]
+					zone.level_range[1] = zone.level_range[1] * 2.5 + 10
+					zone.level_range[2] = zone.level_range[2] * 2.5 + 10
 				end
 			end
 		end,
@@ -962,6 +968,10 @@ function _M:getPlayer(main)
 	else
 		return self.player
 	end
+end
+
+function _M:getCampaign()
+	return self:getPlayer(true).descriptor.world
 end
 
 --- Says if this savefile is usable or not
@@ -2008,6 +2018,7 @@ unlocks_list = {
 	cosmetic_race_human_redhead = "Cosmetic: Redheads",
 	
 	difficulty_insane = "Difficulty: Insane",
+	difficulty_madness = "Difficulty: Madness",
 
 	campaign_infinite_dungeon = "Campaign: Infinite Dungeon",
 	campaign_arena = "Campaign: The Arena",

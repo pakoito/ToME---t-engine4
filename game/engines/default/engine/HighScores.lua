@@ -55,14 +55,13 @@ end
 
 function createHighScoreTable(world,formatters)
 	local highscores = ""
+	print ("createHighScoreTable called with world : ",world)
 
 	if not (profile.mod.scores and profile.mod.scores.sc and 
 			profile.mod.scores.sc[world]) then
 		print ("No scores yet!")
 		return ""
 	end
-
-	print ("createHighScoreTable called with world : ",world)
 
 	local defaultformatter = formatters.dead
 

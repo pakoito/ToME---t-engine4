@@ -43,6 +43,8 @@ Someone foolish has tried to reconstruct it, but it seems like it misses an eye 
 						game.zone.base_level = 50 * 1.5 + 3
 					elseif game.difficulty == game.DIFFICULTY_INSANE then
 						game.zone.base_level = 50 * 2.2 + 5
+					elseif game.difficulty == game.DIFFICULTY_MADNESS then
+						game.zone.base_level = 50 * 2.5 + 10
 					else
 						game.zone.base_level = 50
 					end

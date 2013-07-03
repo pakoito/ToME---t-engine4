@@ -44,8 +44,8 @@ function _M:init()
 end
 
 function _M:generateScores()
-	local player = game.party:findMember{main=true}
-	local campaign = player.descriptor.world
+	local player = game:getPlayer(true)
+	local campaign = game:getCampaign()
 	local formatters = game.__mod_info.score_formatters[campaign]
 
 	return HighScores.createHighScoreTable(campaign,formatters)

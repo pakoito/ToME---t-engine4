@@ -183,6 +183,12 @@ function _M:getPlayer(main)
 	return nil
 end
 
+--- Returns current "campaign" name
+-- Defaults to "default"
+function _M:getCampaign()
+	return "default"
+end
+
 --- Says if this savefile is usable or not
 -- Reimplement it in your module, returning false when the player is dead
 function _M:isLoadable()

@@ -219,6 +219,29 @@ newTalent{
 	no_unlearn_last = true,
 }
 
+-- Madness difficulty
+newTalent{
+	name = "Hunted!", short_name = "HUNTED_PLAYER",
+	type = {"base/class", 1},
+	mode = "passive",
+	no_unlearn_last = true,
+	callbackOnActBase = function(self, t)
+		if not rng.percent(1 + self.level / 7) then return end
+
+		local rad = math.ceil(10 + self.level / 5)
+		for i = self.x - rad, self.x + rad do for j = self.y - rad, self.y + rad do if game.level.map:isBound(i, j) then
+			local actor = game.level.map(i, j, game.level.map.ACTOR)
+			if actor and self:reactionToward(actor) < 0 then
+				actor:setEffect(actor.EFF_HUNTER_PLAYER, 6, {src=self})
+			end
+		end end end
+	end,
+	info = function(self, t) return ([[You are hunted!.
+		There is %d%% chances each turn that all foes in a %d radius get a glimpse of your position for 6 turns.]]):
+		format(1 + self.level / 7, 10 + self.level / 5)
+	end,
+}
+
 -- Mages class talent, teleport to angolwen
 newTalent{
 	short_name = "TELEPORT_ANGOLWEN",

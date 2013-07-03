@@ -2267,3 +2267,18 @@ newEffect{
 		self:effectTemporaryValue(eff, "quick_wear_takeoff_disable", 1)
 	end,
 }
+
+newEffect{
+	name = "HUNTER_PLAYER", image = "talents/hunted_player.png",
+	desc = "Hunter!",
+	long_desc = function(self, eff) return "Knows where you are!" end,
+	type = "other",
+	subtype = { madness=true },
+	status = "beneficial",
+	parameters = { },
+	activate = function(self, eff)
+		if not self.ai_state then return end
+		self:effectTemporaryValue(eff, {"ai_state","ai_move"}, "move_astar")
+		self:setTarget(eff.src)
+	end,
+}

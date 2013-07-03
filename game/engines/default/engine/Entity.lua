@@ -670,6 +670,19 @@ function _M:addTemporaryValue(prop, v, noupdate)
 				base[prop] = base[prop] or {}
 				recursive(base[prop], k, e, method)
 			end
+		elseif type(v) == "string" then
+			-- Only last works on strings
+			if method == "last" then
+				base["__tlast_"..prop] = base["__tlast_"..prop] or {[-1] = base[prop]}
+				local b = base["__tlast_"..prop]
+				b[id] = v
+				b = table.listify(b)
+				table.sort(b, function(a, b) return a[1] > b[1] end)
+				base[prop] = b[1] and b[1][2]
+			else
+				base[prop] = (base[prop] or 0) + v
+			end
+--			print("addTmpVal", base, prop, v, " :=: ", #t, id, method)
 		else
 			error("unsupported temporary value type: "..type(v).." :=: "..tostring(v))
 		end
@@ -755,6 +768,22 @@ function _M:removeTemporaryValue(prop, id, noupdate)
 			for k, e in pairs(v) do
 				recursive(base[prop], k, e, method)
 			end
+		elseif type(v) == "string" then
+			-- Only last works on strings
+			if method == "last" then
+				base["__tlast_"..prop] = base["__tlast_"..prop] or {}
+				local b = base["__tlast_"..prop]
+				b[id] = nil
+				b = table.listify(b)
+				table.sort(b, function(a, b) return a[1] > b[1] end)
+				base[prop] = b[1] and b[1][2]
+				if b[1] and b[1][1] == -1 then base["__tlast_"..prop][-1] = nil end
+				if not next(base["__tlast_"..prop]) then base["__tlast_"..prop] = nil end
+			else
+				if not base[prop] then util.send_error_backtrace("Error removing property "..tostring(prop).." with value "..tostring(v).." : base[prop] is nil") return end
+				base[prop] = base[prop] - v
+			end
+--			print("delTmpVal", prop, v, method)
 		else
 			if type(v) == "nil" then
 				util.send_error_backtrace("ERROR!!! unsupported temporary value type: "..type(v).." :=: "..tostring(v))

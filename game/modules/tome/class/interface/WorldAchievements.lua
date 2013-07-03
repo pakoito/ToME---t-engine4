@@ -45,6 +45,11 @@ function _M:newAchievement(t)
 		t2.id = "INSANE_"..t2.id
 		t2.name = t2.name.." (Insane difficulty)"
 		WA.newAchievement(self, t2)
+
+		local t2 = table.clone(t)
+		t2.id = "MADNESS_"..t2.id
+		t2.name = t2.name.." (Madness difficulty)"
+		WA.newAchievement(self, t2)
 	end
 end
 

@@ -66,8 +66,8 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	require = cuns_req2,
-	getCriticalChance = function(self, t) return self:getTalentLevel(t) * 10 end,
-	getStunChance = function(self, t) return self:getTalentLevel(t) * 3 end,
+	getCriticalChance = function(self, t) return self:combatTalentScale(t, 15, 50, 0.75) end,
+	getStunChance = function(self, t) return self:combatTalentLimit(t, 100, 3, 15) end, -- Limit < 100%
 	info = function(self, t)
 		return ([[Your quick wit gives you a big advantage against stunned targets; all your hits will have a %d%% greater chance of being critical.
 		Also, your melee critical strikes have %d%% chance to stun the target for 3 turns.]]):

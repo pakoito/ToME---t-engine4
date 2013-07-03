@@ -152,6 +152,10 @@ function _M:zoneCheckBackupGuardian()
 			game.zone.base_level_range = table.clone(game.zone.level_range, true)
 			game.zone.specific_base_level.object = -10 -game.zone.base_level
 			game.zone.base_level = game.zone.base_level * 2.2 + 5
+		elseif game.difficulty == game.DIFFICULTY_MADNESS then
+			game.zone.base_level_range = table.clone(game.zone.level_range, true)
+			game.zone.specific_base_level.object = -10 -game.zone.base_level
+			game.zone.base_level = game.zone.base_level * 2.5 + 10
 		end
 		if data.action then data.action(false) end
 	end

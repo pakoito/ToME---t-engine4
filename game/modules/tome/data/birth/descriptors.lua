@@ -223,7 +223,40 @@ newBirthDescriptor{
 	},
 	copy = {
 		__game_difficulty = 4,
-		rank=2,
+		rank = 2,
+	},
+}
+newBirthDescriptor{
+	type = "difficulty",
+	name = "Madness",
+	locked = function() return profile.mod.allow_build.difficulty_madness end,
+	locked_desc = "Insane is for the weak! Bring on the true mind-shattering experience!",
+	desc =
+	{
+		"#GOLD##{bold}#Madness mode#WHITE##{normal}#",
+		"Absolutely unfair game setting.  You are really mentally ill and wish to get worse to play this mode!",
+		"All zone levels increased by 150% + 10",
+		"All creature talent levels increased by 170%",
+		"Rare creatures are far more frequent and random bosses start to appear",
+		"Player is being hunted! Randomly all foes in a radius will get a feeling of where she/he is",
+		"Player rank is normal instead of elite",
+		"Player can earn Madness version of achievements if also playing in Roguelike permadeath mode.",
+	},
+	descriptor_choices =
+	{
+		race = { ["Tutorial Human"] = "forbid", },
+		class = { ["Tutorial Adventurer"] = "forbid", },
+	},
+	talents = {
+		[ActorTalents.T_HUNTED_PLAYER] = 1,
+	},
+	copy = {
+		__game_difficulty = 5,
+		rank = 2,
+	},
+	game_state = {
+		default_random_rare_chance = 3,
+		default_random_boss_chance = 20,
 	},
 }
 

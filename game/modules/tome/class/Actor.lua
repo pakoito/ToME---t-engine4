@@ -87,6 +87,9 @@ _M.temporary_values_conf.force_use_resist_percent = "last"
 _M.temporary_values_conf.all_damage_convert = "last"
 _M.temporary_values_conf.all_damage_convert_percent = "last"
 
+-- AI
+_M.temporary_values_conf.ai_move = "last"
+
 _M.projectile_class = "mod.class.Projectile"
 
 function _M:init(t, no_default)

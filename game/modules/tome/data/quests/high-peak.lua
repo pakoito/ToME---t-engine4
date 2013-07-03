@@ -123,6 +123,7 @@ function win(self, how)
 
 	game:setAllowedBuild("adventurer", true)
 	if game.difficulty == game.DIFFICULTY_NIGHTMARE then game:setAllowedBuild("difficulty_insane", true) end
+	if game.difficulty == game.DIFFICULTY_INSANE then game:setAllowedBuild("difficulty_madness", true) end
 
 	local p = game:getPlayer(true)
 	p.winner = how

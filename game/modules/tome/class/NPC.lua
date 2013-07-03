@@ -460,6 +460,12 @@ function _M:addedToLevel(level, x, y)
 				self:learnTalent(tid, true, lev)
 			end
 			self:attr("difficulty_boosted", 1)
+		elseif game.difficulty == game.DIFFICULTY_MADNESS and not game.party:hasMember(self) then
+			-- Increase talent level
+			for tid, lev in pairs(self.talents) do
+				self:learnTalent(tid, true, math.ceil(lev * 1.7))
+			end
+			self:attr("difficulty_boosted", 1)
 		end
 	end
 
