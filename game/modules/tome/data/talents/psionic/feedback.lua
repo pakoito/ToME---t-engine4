@@ -23,11 +23,17 @@ newTalent{
 	points = 5, 
 	require = psi_wil_req1,
 	mode = "passive",
-	getHealRatio = function(self, t) return 0.5 + self:combatTalentMindDamage(t, 0.1, 1)end,
+	-- called by _M:actBase in mod.class.Actor.lua
+	getHealRatio = function(self, t) return self:combatScale(self:getWil()*self:getTalentLevel(t), 0, 0, 2.5, 500, 0.75) end, -- Follows buff to quick recovery, scales faster than getDecaySpeed to improve healing
+	-- called by _M:getFeedbackDecay in mod.class.Actor.lua
+	getDecaySpeed = function(self, t) return math.min(1, self:combatTalentLimit(t, 0.1, 0.9, 0.5)) end, -- Limit >10%
 	info = function(self, t)
 		local heal = t.getHealRatio(self, t)
-		return ([[Your Feedback decay now heals you for %d%% of the loss.
-		The healing effect will scale with your Mindpower.]]):format(heal*100)
+		local decaySpeed = t.getDecaySpeed(self, t)
+		local newDecay = decaySpeed*0.1
+		local netHeal = newDecay*heal
+		return ([[Your Feedback decay now heals you for %0.1f times the loss, and the decay rate is reduced to %d%% of the normal rate (up to %0.1f%% per turn).  As a result, you are healed for %0.2f%% of your feedback pool each turn.
+		The healing effect improves with your Willpower.]]):format(heal, decaySpeed*100, newDecay*100, netHeal*100)
 	end,
 }
 
@@ -59,7 +65,11 @@ newTalent{
 	points = 5,
 	require = psi_wil_req3,
 	mode = "passive",
-	getFeedbackGain = function(self, t) return 0.5 + self:combatTalentMindDamage(t, 0.1, 0.5) end,
+	-- 	called by _M:onTakeHit in mod.class.Actor.lua
+	getFeedbackGain = function(self, t)
+		if self:getTalentLevel(t) <= 0 then return 0 end
+		return self:combatTalentScale(t, 0.15, 0.5, 0.75)
+	end,
 	getMaxFeedback = function(self, t) return self:getTalentLevelRaw(t) * 10 end,
 	on_learn = function(self, t)
 		self:incMaxFeedback(10)
@@ -72,6 +82,13 @@ newTalent{
 		local gain = t.getFeedbackGain(self, t)
 		return ([[Increases your maximum Feedback by %d, and increases your base Feedback gain ratio to %d%%.
 		The Feedback gain will scale with your Mindpower.]]):format(max_feedback, gain * 100)
+	end,
+	info = function(self, t)
+		local max_feedback = t.getMaxFeedback(self, t)
+		local gain = t.getFeedbackGain(self, t)
+		local feedbackratio = self:callTalent(self.T_FEEDBACK_POOL, "getFeedbackRatio")
+		return ([[Increases your maximum Feedback by %d, and increases the Feedback you gain from damage by %0.1f%% (to %0.1f%% of damage received).
+		The Feedback gain will scale with your Mindpower.]]):format(max_feedback, gain*100, feedbackratio*100)
 	end,
 }
 

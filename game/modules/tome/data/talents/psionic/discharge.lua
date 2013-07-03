@@ -33,8 +33,8 @@ newTalent{
 		return {type="bolt", range=self:getTalentRange(t), talent=t, friendlyfire=false, friendlyblock=false, display={particle="discharge_bolt", trail="lighttrail"}}
 	end,
 	getDamage = function(self, t) return self:combatTalentMindDamage(t, 10, 100) end,
-	getTargetCount = function(self, t) return math.ceil(self:getTalentLevel(t)) end,
-	getOverchargeRatio = function(self, t) return 20 - math.ceil(self:getTalentLevel(t)) end,
+	getTargetCount = function(self, t) return math.floor(self:combatTalentScale(t, 1, 5, "log")) end,
+	getOverchargeRatio = function(self, t) return self:combatTalentLimit(t, 10, 19, 15) end, -- Limit >10
 	doMindStorm = function(self, t, p)
 		local tgts = {}
 		local tgts_oc = {}
@@ -114,16 +114,23 @@ newTalent{
 	cooldown = 24,
 	tactical = { FEEDBACK = 2 },
 	no_break_channel = true,
-	getDuration = function(self, t) return 2 + math.ceil(self:getTalentLevel(t) * 1.5) end,
+	getDuration = function(self, t, fake)
+		local tl = self:getTalentLevel(t)
+		if not fake then
+			local wrath = self:hasEffect(self.EFF_FOCUSED_WRATH)
+			tl = self:mindCrit(tl, nil, wrath and wrath.power or 0)
+		end
+		return math.floor(self:combatTalentLimit(tl, 24, 3.5, 9.5))  -- Limit <24
+	end,
 	on_pre_use = function(self, t, silent) if self:getFeedback() <= 0 then if not silent then game.logPlayer(self, "You have no feedback to start a feedback loop!") end return false end return true end,
 	action = function(self, t)
 		local wrath = self:hasEffect(self.EFF_FOCUSED_WRATH)
-		self:setEffect(self.EFF_FEEDBACK_LOOP, self:mindCrit(t.getDuration(self, t), nil, wrath and wrath.power or 0), {})
+		self:setEffect(self.EFF_FEEDBACK_LOOP, t.getDuration(self, t), {})
 		game:playSoundNear(self, "talents/heal")
 		return true
 	end,
 	info = function(self, t)
-		local duration = t.getDuration(self, t)
+		local duration = t.getDuration(self, t, true)
 		return ([[Activate to invert your Feedback decay for %d turns.  This effect can be a critical hit, increasing the duration even further.
 		You must have some Feedback in order to start the loop.
 		The maximum Feedback gain will scale with your Mindpower.]]):format(duration)
@@ -186,7 +193,7 @@ newTalent{
 	target = function(self, t)
 		return {type="hit", range=self:getTalentRange(t)}
 	end,
-	getDuration = function(self, t) return 2 + math.ceil(self:getTalentLevel(t)) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentLimit(t, 12, 3, 7)) end, -- Limit <12
 	direct_hit = true,
 	requires_target = true,
 	no_break_channel = true,

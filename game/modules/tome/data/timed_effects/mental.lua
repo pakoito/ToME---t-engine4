@@ -1334,7 +1334,11 @@ newEffect{
 newEffect{
 	name = "KINSPIKE_SHIELD", image = "talents/kinetic_shield.png",
 	desc = "Spiked Kinetic Shield",
-	long_desc = function(self, eff) return ("The target erects a powerful kinetic shield capable of absorbing %d/%d physical or acid damage before it crumbles."):format(self.kinspike_shield_absorb, eff.power) end,
+	long_desc = function(self, eff)
+		local tl = self:getTalentLevel(self.T_ABSORPTION_MASTERY)
+		local xs = (tl>=3 and ", nature" or "")..(tl>=6 and ", temporal" or "")
+		return ("The target erects a powerful kinetic shield capable of absorbing %d/%d physical%s or acid damage before it crumbles."):format(self.kinspike_shield_absorb, eff.power, xs)
+	end,
 	type = "mental",
 	subtype = { telekinesis=true, shield=true },
 	status = "beneficial",
@@ -1360,7 +1364,11 @@ newEffect{
 newEffect{
 	name = "THERMSPIKE_SHIELD", image = "talents/thermal_shield.png",
 	desc = "Spiked Thermal Shield",
-	long_desc = function(self, eff) return ("The target erects a powerful thermal shield capable of absorbing %d/%d thermal damage before it crumbles."):format(self.thermspike_shield_absorb, eff.power) end,
+	long_desc = function(self, eff)
+		local tl = self:getTalentLevel(self.T_ABSORPTION_MASTERY)
+		local xs = (tl>=3 and ", light" or "")..(tl>=6 and ", arcane" or "")
+		return ("The target erects a powerful thermal shield capable of absorbing %d/%d fire%s or cold damage before it crumbles."):format(self.thermspike_shield_absorb, eff.power, xs)
+	end,
 	type = "mental",
 	subtype = { telekinesis=true, shield=true },
 	status = "beneficial",
@@ -1386,7 +1394,11 @@ newEffect{
 newEffect{
 	name = "CHARGESPIKE_SHIELD", image = "talents/charged_shield.png",
 	desc = "Spiked Charged Shield",
-	long_desc = function(self, eff) return ("The target erects a powerful charged shield capable of absorbing %d/%d lightning or blight damage before it crumbles."):format(self.chargespike_shield_absorb, eff.power) end,
+	long_desc = function(self, eff)
+		local tl = self:getTalentLevel(self.T_ABSORPTION_MASTERY)
+		local xs = (tl>=3 and ", darkness" or "")..(tl>=6 and ", mind" or "")
+		return ("The target erects a powerful charged shield capable of absorbing %d/%d lightning%s or blight damage before it crumbles."):format(self.chargespike_shield_absorb, eff.power, xs)
+	end,
 	type = "mental",
 	subtype = { telekinesis=true, shield=true },
 	status = "beneficial",
@@ -1511,7 +1523,7 @@ newEffect{
 	on_timeout = function(self, eff)
 		DamageType:get(DamageType.DARKNESS).projector(eff.src or self, self.x, self.y, DamageType.DARKNESS, eff.dam)
 		local chance = eff.chance
-		if self:attr("sleep") then chance = chance * 2 end
+		if self:attr("sleep") then chance = 100-(100-chance)/2 end -- Half normal chance to avoid effect
 		if rng.percent(chance) then
 			-- Pull random effect
 			chance = rng.range(1, 3)
@@ -1548,7 +1560,7 @@ newEffect{
 		if eff.src.dead or not game.level:hasEntity(eff.src) then eff.dur = 0 return true end
 		local t = eff.src:getTalentFromId(eff.src.T_INNER_DEMONS)
 		local chance = eff.chance
-		if self:attr("sleep") then chance = chance * 2 end
+		if self:attr("sleep") then chance = 100-(100-chance)/2 end -- Half normal chance not to manifest
 		if rng.percent(chance) then
 			if self:attr("sleep") or self:checkHit(eff.src:combatMindpower(), self:combatMentalResist(), 0, 95, 5) then
 				t.summon_inner_demons(eff.src, self, t)
@@ -2296,19 +2308,19 @@ newEffect{
 
 newEffect{
 	name = "LOBOTOMIZED", image = "talents/psychic_lobotomy.png",
-	desc = "Lobotomized",
-	long_desc = function(self, eff) return ("The target's mental faculties have been impaired, confusing the target, making it act randomly (%d%% chance) and reducing its cunning by %d."):format(eff.power, eff.power/2) end,
+	desc = "Lobotomized (confused)",
+	long_desc = function(self, eff) return ("The target's mental faculties have been severely impaired, making it act randomly each turn (%d%% chance) and reducing its cunning by %d."):format(eff.confuse, eff.power/2) end,
 	type = "mental",
 	subtype = { confusion=true },
 	status = "detrimental",
 	on_gain = function(self, err) return "#Target# higher mental functions have been imparied.", "+Lobotomized" end,
 	on_lose = function(self, err) return "#Target#'s regains its senses.", "-Lobotomized" end,
-	parameters = { power=1, dam=1 },
+	parameters = { power=1, confuse=10, dam=1 },
 	activate = function(self, eff)
 		DamageType:get(DamageType.MIND).projector(eff.src or self, self.x, self.y, DamageType.MIND, {dam=eff.dam, alwaysHit=true})
-		eff.power = math.floor(math.max(eff.power - (self:attr("confusion_immune") or 0) * 100, 10))
-		eff.power = util.bound(eff.power, 0, 50)
-		eff.tmpid = self:addTemporaryValue("confused", eff.power)
+		eff.confuse = math.floor(math.max(eff.confuse - (self:attr("confusion_immune") or 0) * 100, 10))
+		eff.confuse = util.bound(eff.confuse, 0, 50) -- Confusion cap of 50%
+		eff.tmpid = self:addTemporaryValue("confused", eff.confuse)
 		eff.cid = self:addTemporaryValue("inc_stats", {[Stats.STAT_CUN]=-eff.power/2})
 		if eff.power <= 0 then eff.dur = 0 end
 		eff.particles = self:addParticles(engine.Particles.new("generic_power", 1, {rm=100, rM=125, gm=100, gM=125, bm=100, bM=125, am=200, aM=255}))
@@ -2320,7 +2332,6 @@ newEffect{
 		if self == game.player and self.updateMainShader then self:updateMainShader() end
 	end,
 }
-
 
 newEffect{
 	name = "PSIONIC_SHIELD", image = "talents/kinetic_shield.png",
@@ -2715,15 +2726,15 @@ newEffect{
 newEffect{
 	name = "BROKEN_DREAM", image = "effects/broken_dream.png",
 	desc = "Broken Dream",
-	long_desc = function(self, eff) return ("The target's dreams have been broken by the dreamforge, reducing its mental save by %d and reducing its chance of successfully casting a spell by %d%%."):format(eff.power, eff.power) end,
+	long_desc = function(self, eff) return ("The target's dreams have been broken by the dreamforge, reducing its mental save by %d and reducing its chance of successfully casting a spell by %d%%."):format(eff.power, eff.fail) end,
 	type = "mental",
 	subtype = { psionic=true, morale=true },
 	status = "detrimental",
 	on_gain = function(self, err) return "#Target#'s dreams have been broken.", "+Broken Dream" end,
 	on_lose = function(self, err) return "#Target# regains hope.", "-Broken Dream" end,
-	parameters = { power=10 },
+	parameters = { power=10, fail=10 },
 	activate = function(self, eff)
-		eff.silence = self:addTemporaryValue("spell_failure", eff.power)
+		eff.silence = self:addTemporaryValue("spell_failure", eff.fail)
 		eff.sunder = self:addTemporaryValue("combat_mentalresist", -eff.power)
 	end,
 	deactivate = function(self, eff)

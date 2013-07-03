@@ -19,7 +19,7 @@
 local function aura_strength(self, t)
 	local add = 0
 	if self:knowTalent(self.T_FOCUSED_CHANNELING) then
-		add = getGemLevel(self)*(1 + 0.1*(self:getTalentLevel(self.T_FOCUSED_CHANNELING) or 0))
+		add = getGemLevel(self)*self:callTalent(self.T_FOCUSED_CHANNELING, "impfocus")
 	end
 	return self:combatTalentMindDamage(t, 10, 50) + add
 end
@@ -29,7 +29,7 @@ local function aura_spike_strength(self, t)
 end
 
 local function aura_mastery(self, t)
-	return 10 + (self:getTalentLevel(self.T_AURA_DISCIPLINE) or 0) + getGemLevel(self)
+	return 9 + self:getTalentLevel(t) + self:callTalent(self.T_AURA_DISCIPLINE, "getMastery") + getGemLevel(self)
 end
 
 local function aura_range(self, t)
@@ -76,9 +76,7 @@ newTalent{
 	mode = "sustained",
 	sustain_psi = 30,
 	remove_on_zero = true,
-	cooldown = function(self, t)
-		return 10 - (self:getTalentLevelRaw(self.T_AURA_DISCIPLINE) or 0)
-	end,
+	cooldown = function(self, t) return 10 - self:callTalent(self.T_AURA_DISCIPLINE, "cooldownred")	end,
 	tactical = { ATTACKAREA = { PHYSICAL = 2 } },
 	on_pre_use = function(self, t, silent)
 		if self:isTalentActive(self.T_THERMAL_AURA) and self:isTalentActive(self.T_CHARGED_AURA) then
@@ -93,9 +91,8 @@ newTalent{
 	getSpikedRange = function(self, t)
 		local r = 6
 		local gem_level = getGemLevel(self)
-		local mult = (1 + 0.02*gem_level*(self:getTalentLevel(self.T_REACH)))
-		r = math.floor(r*mult)
-		return math.min(r, 10)
+		local mult = 1 + 0.01*gem_level*self:callTalent(self.T_REACH, "rangebonus")
+		return math.floor(r*mult)
 	end,
 	getNormalRange = function(self, t)
 		return 0
@@ -147,10 +144,6 @@ newTalent{
 		end)
 	end,
 	activate = function(self, t)
-		--if self:isTalentActive(self.T_THERMAL_AURA) and self:isTalentActive(self.T_CHARGED_AURA) then
-		--	game.logSeen(self, "You may only sustain two auras at once. Aura activation cancelled.")
-		--	return false
-		--end
 		return {}
 	end,
 	deactivate = function(self, t, p)
@@ -182,8 +175,10 @@ newTalent{
 		local mast = aura_mastery(self, t)
 		local spikecost = t.getSpikeCost(self, t)
 		return ([[Fills the air around you with reactive currents of force that do %d physical damage to all who approach. All damage done by the aura will drain one point of energy per %0.2f points of damage dealt.
-		When deactivated, if you have at least %d energy, a massive spike of kinetic energy is released as a beam, smashing targets for %d physical damage and sending them flying.  Telekinetically wielding a gem or mindstar will result in improved spike efficiency.
-		To turn off an aura without spiking it, deactivate it and target yourself. The damage will improve with your Mindpower.]]):format(dam, mast, spikecost, spikedam)
+		When deactivated, if you have at least %d energy, a massive spike of kinetic energy is released as a range %d beam, smashing targets for up to %d physical damage and sending them flying.  Telekinetically wielding a gem or mindstar will result in improved spike efficiency.
+		To turn off an aura without spiking it, deactivate it and target yourself.  The damage will improve with your Mindpower.]]):
+		format(damDesc(self, DamageType.PHYSICAL, dam), mast, spikecost, t.getSpikedRange(self, t),
+		damDesc(self, DamageType.PHYSICAL, spikedam))
 	end,
 }
 
@@ -196,9 +191,7 @@ newTalent{
 	mode = "sustained",
 	sustain_psi = 40,
 	remove_on_zero = true,
-	cooldown = function(self, t)
-		return 10 - (self:getTalentLevelRaw(self.T_AURA_DISCIPLINE) or 0)
-	end,
+	cooldown = function(self, t) return 10 - self:callTalent(self.T_AURA_DISCIPLINE, "cooldownred")	end,
 	tactical = { ATTACKAREA = { FIRE = 2 } },
 	on_pre_use = function(self, t, silent)
 		if self:isTalentActive(self.T_KINETIC_AURA) and self:isTalentActive(self.T_CHARGED_AURA) then
@@ -219,9 +212,9 @@ newTalent{
 	getSpikedRadius = function(self, t)
 		local r = 6
 		local gem_level = getGemLevel(self)
-		local mult = (1 + 0.02*gem_level*(self:getTalentLevel(self.T_REACH)))
-		r = math.floor(r*mult)
-		return math.min(r, 10)	end,
+		local mult = 1 + 0.01*gem_level*self:callTalent(self.T_REACH, "rangebonus")
+		return math.floor(r*mult)
+	end,
 	getNormalRadius = function(self, t)
 		return 1
 	end,
@@ -263,10 +256,6 @@ newTalent{
 		end)
 	end,
 	activate = function(self, t)
-		--if self:isTalentActive(self.T_KINETIC_AURA) and self:isTalentActive(self.T_CHARGED_AURA) then
-		--	game.logSeen(self, "You may only sustain two auras at once. Aura activation cancelled.")
-		--	return false
-		--end
 		return {}
 	end,
 	deactivate = function(self, t, p)
@@ -294,16 +283,17 @@ newTalent{
 
 	info = function(self, t)
 		local dam = t.getAuraStrength(self, t)
-		local rad = self:getTalentRadius(t)
+		local rad = t.getSpikedRadius(self,t)
 		local spikedam = t.getAuraSpikeStrength(self, t)
 		local mast = aura_mastery(self, t)
 		local spikecost = t.getSpikeCost(self, t)
 		return ([[Fills the air around you with reactive currents of furnace-like heat that do %d fire damage to all who approach. All damage done by the aura will drain one point of energy per %0.2f points of damage dealt.
-		When deactivated, if you have at least %d energy, a massive spike of thermal energy is released as a conical blast (radius %d) of superheated air. Anybody caught in it will suffer %d fire damage over several turns.  Telekinetically wielding a gem or mindstar will result in improved spike efficiency.
-		To turn off an aura without spiking it, deactivate it and target yourself. The damage will improve with your Mindpower.]]):format(dam, mast, spikecost, rad, spikedam)
+		When deactivated, if you have at least %d energy, a massive spike of thermal energy is released as a conical blast (radius %d) of superheated air. Anybody caught in it will suffer up to %d fire damage over several turns.  Telekinetically wielding a gem or mindstar will result in improved spike efficiency.
+		To turn off an aura without spiking it, deactivate it and target yourself.  The damage will improve with your Mindpower.]]):
+		format(damDesc(self, DamageType.FIREBURN, dam), mast, spikecost, rad,
+		damDesc(self, DamageType.FIREBURN, spikedam))
 	end,
 }
-
 
 newTalent{
 	name = "Charged Aura",
@@ -313,9 +303,7 @@ newTalent{
 	mode = "sustained",
 	sustain_psi = 50,
 	remove_on_zero = true,
-	cooldown = function(self, t)
-		return 10 - (self:getTalentLevelRaw(self.T_AURA_DISCIPLINE) or 0)
-	end,
+	cooldown = function(self, t) return 10 - self:callTalent(self.T_AURA_DISCIPLINE, "cooldownred") end,
 	tactical = { ATTACKAREA = { LIGHTNING = 2 } },
 	on_pre_use = function(self, t, silent)
 		if self:isTalentActive(self.T_KINETIC_AURA) and self:isTalentActive(self.T_THERMAL_AURA) then
@@ -330,9 +318,8 @@ newTalent{
 	getSpikedRange = function(self, t)
 		local r = 6
 		local gem_level = getGemLevel(self)
-		local mult = (1 + 0.02*gem_level*(self:getTalentLevel(self.T_REACH)))
-		r = math.floor(r*mult)
-		return math.min(r, 10)
+		local mult = 1 + 0.01*gem_level*self:callTalent(self.T_REACH, "rangebonus")
+		return math.floor(r*mult)
 	end,
 	getNormalRange = function(self, t)
 		return 0
@@ -384,10 +371,6 @@ newTalent{
 		end)
 	end,
 	activate = function(self, t)
-		--if self:isTalentActive(self.T_THERMAL_AURA) and self:isTalentActive(self.T_KINETIC_AURA) then
-		--	game.logSeen(self, "You may only sustain two auras at once. Aura activation cancelled.")
-		--	return false
-		--end
 		game:playSoundNear(self, "talents/thunderstorm")
 		return {}
 	end,
@@ -461,8 +444,9 @@ newTalent{
 		local spikecost = t.getSpikeCost(self, t)
 		local nb = t.getNumSpikeTargets(self, t)
 		return ([[Fills the air around you with crackling energy, doing %d lightning damage to all who stand nearby. All damage done by the aura will drain one point of energy per %0.2f points of damage dealt.
-		When deactivated, if you have at least %d energy, a massive spike of electrical energy jumps between up to %d nearby targets, doing %d lightning damage to each.  Telekinetically wielding a gem or mindstar will result in improved spike efficiency.
-		To turn off an aura without spiking it, deactivate it and target yourself.]]):format(dam, mast, spikecost, nb, spikedam)
+		When deactivated, if you have at least %d energy, a massive spike of electrical energy jumps between up to %d nearby targets, doing up to %d lightning damage to each.  Telekinetically wielding a gem or mindstar will result in improved spike efficiency.
+		To turn off an aura without spiking it, deactivate it and target yourself.]]):
+		format(damDesc(self, DamageType.LIGHTNING, dam), mast, spikecost, nb, damDesc(self, DamageType.LIGHTNING, spikedam))
 	end,
 }
 
@@ -470,9 +454,7 @@ newTalent{
 	name = "Projection Mastery",
 	type = {"psionic/projection", 4},
 	require = psi_wil_req4,
-	cooldown = function(self, t)
-		return math.floor(120 - self:getTalentLevel(t)*12)
-	end,
+	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 30, 100, 60)) end, -- Limit to >30
 	psi = 15,
 	points = 5,
 	no_energy = true,

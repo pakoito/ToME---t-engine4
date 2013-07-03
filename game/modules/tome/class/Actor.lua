@@ -365,11 +365,11 @@ function _M:actBase()
 	local current_psi_percentage = self:getPsi() / self:getMaxPsi()
 	local clarity
 	if self:knowTalent(self.T_CLARITY) then
-		local t = self:getTalentFromId(self.T_CLARITY)
-		clarity = t.getClarityThreshold(self, t)
+		clarity = self:callTalent(self.T_CLARITY,"getClarityThreshold")
 	end
-	if self:attr("solipsism_threshold") and current_psi_percentage < self:attr("solipsism_threshold") then
-		local solipsism_power = self:attr("solipsism_threshold") - current_psi_percentage
+	local eff_solipsis = math.min(self:attr("solipsism_threshold") or 0,clarity or 1) -- effective solipsism_threshold
+	if self:attr("solipsism_threshold") and current_psi_percentage < eff_solipsis then
+		local solipsism_power = eff_solipsis - current_psi_percentage
 		if self:hasEffect(self.EFF_CLARITY) then
 			self:removeEffect(self.EFF_CLARITY)
 		end
@@ -378,13 +378,13 @@ function _M:actBase()
 			self:setEffect(self.EFF_SOLIPSISM, 1, {power = solipsism_power})
 		end
 	elseif clarity and current_psi_percentage > clarity then
-		local clarity_power = math.min(0.5, current_psi_percentage - clarity)
+		local clarity_power = math.min(1, current_psi_percentage - clarity)
 		if self:hasEffect(self.EFF_SOLIPSISM) then
 			self:removeEffect(self.EFF_SOLIPSISM)
 		end
 		local p = self:hasEffect(self.EFF_CLARITY)
 		if (p and p.power ~= clarity_power) or not p then
-			self:setEffect(self.EFF_CLARITY, 1, {power = math.min(0.5, current_psi_percentage - clarity)})
+			self:setEffect(self.EFF_CLARITY, 1, {power = math.min(1, current_psi_percentage - clarity)})
 		end
 	elseif self:hasEffect(self.EFF_SOLIPSISM) then
 		self:removeEffect(self.EFF_SOLIPSISM)
@@ -1404,10 +1404,14 @@ function _M:tooltip(x, y, seen_by)
 	ts:add(self.type:capitalize(), " / ", self.subtype:capitalize(), true)
 	ts:add("Rank: ") ts:merge(rank_color:toTString()) ts:add(rank, {"color", "WHITE"}, true)
 	ts:add({"color", 0, 255, 255}, ("Level: %d"):format(self.level), {"color", "WHITE"}, true)
-	if self.life < 0 then ts:add({"color", 255, 0, 0}, "HP: unknown", {"color", "WHITE"}, true)
-	else ts:add({"color", 255, 0, 0}, ("HP: %d (%d%%)"):format(self.life, self.life * 100 / self.max_life), {"color", "WHITE"}, true)
+	if self.life < 0 then ts:add({"color", 255, 0, 0}, "HP: unknown", {"color", "WHITE"})
+	else ts:add({"color", 255, 0, 0}, ("HP: %d (%d%%)"):format(self.life, self.life * 100 / self.max_life), {"color", "WHITE"})
 	end
-
+	if self:knowTalent(self.T_SOLIPSISM) then
+		local psi_percent = 100*self.psi/self.max_psi
+		ts:add((("#7fffd4# / %d")):format(self.psi), (" (%d%%)"):format(psi_percent),{"color", "WHITE"})
+	end
+	ts:add(true)
 	if self:attr("encased_in_ice") then
 		local eff = self:hasEffect(self.EFF_FROZEN)
 		ts:add({"color", 0, 255, 128}, ("Iceblock: %d"):format(eff.hp), {"color", "WHITE"}, true)
@@ -1815,11 +1819,7 @@ function _M:onTakeHit(value, src)
 
 	-- Feedback pool: Stores damage as energy to use later
 	if self:getMaxFeedback() > 0 and src ~= self and src ~= self.summoner then
-		local ratio = 0.5
-		if self:knowTalent(self.T_AMPLIFICATION) then
-			local t = self:getTalentFromId(self.T_AMPLIFICATION)
-			ratio = t.getFeedbackGain(self, t)
-		end
+		local ratio = self:callTalent(self.T_FEEDBACK_POOL, "getFeedbackRatio")
 		local feedback_gain = value * ratio
 		self:incFeedback(feedback_gain)
 		-- Give feedback to summoner
@@ -3459,15 +3459,15 @@ function _M:incMaxFeedback(v, set)
 	end
 end
 
-function _M:getFeedbackDecay()
+function _M:getFeedbackDecay(mult)
+	local mult = self:callTalent(self.T_BIOFEEDBACK, "getDecaySpeed") or 1
 	if self.psionic_feedback and self.psionic_feedback > 0 then
-		local feedback_decay = math.max(1, self.psionic_feedback / 10)
+		local feedback_decay = math.max(1, self.psionic_feedback*mult / 10)
 		return feedback_decay
 	else
 		return 0
 	end
 end
-
 
 --- Called before a talent is used
 -- Check the actor can cast it

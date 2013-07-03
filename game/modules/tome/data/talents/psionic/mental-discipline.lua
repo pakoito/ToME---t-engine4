@@ -26,9 +26,11 @@ newTalent{
 	require = psi_wil_req1,
 	points = 5,
 	mode = "passive",
+	cooldownred = function(self,t) return math.max(0,math.floor(self:combatTalentLimit(t, 8, 1, 5))) end, -- Limit to <8 turns reduction
+	getMastery = function(self, t) return self:combatTalentScale(t, 2.5, 10, 0.75) end,
 	info = function(self, t)
-		local cooldown = self:getTalentLevelRaw(t)
-		local mast = (self:getTalentLevel(t) or 0)
+		local cooldown = t.cooldownred(self,t)
+		local mast = t.getMastery(self, t)
 		return ([[Your expertise in the art of energy projection grows.
 		Aura cooldowns are all reduced by %d turns. Aura damage drains energy more slowly (+%0.2f damage required to lose a point of energy).]]):format(cooldown, mast)
 	end,
@@ -40,16 +42,16 @@ newTalent{
 	require = psi_wil_req2,
 	points = 5,
 	mode = "passive",
+	mastery = function(self,t) return self:combatTalentLimit(t, 20, 3, 10) end, -- Adjustment to damage absorption, Limit to 20
+	cooldownred = function(self,t) return math.floor(self:combatTalentLimit(t, 16, 4, 10)) end,  -- Limit to <16 turns reduction
+	absorbLimit = function(self,t) return self:combatTalentScale(t, 0.5, 2) end, -- Limit of bonus psi on shield hit per turn
 	info = function(self, t)
-		local cooldown = 2*self:getTalentLevelRaw(t)
-		local mast = 2*self:getTalentLevel(t)
-		return ([[Your expertise in the art of energy absorption grows. Shield cooldowns are all reduced by %d turns, and the amount of damage absorption required to gain a point of energy is reduced by %0.2f.]]):
-		format(cooldown, mast)
+		local cooldown = t.cooldownred(self,t)
+		local mast = t.mastery(self,t)
+		return ([[Your expertise in the art of energy absorption grows. Shield cooldowns are all reduced by %d turns, the amount of damage absorption required to gain a point of energy is reduced by %0.1f, and the maximum energy you can gain from each shield is increased by %0.1f per turn.]]):
+		format(cooldown, mast, t.absorbLimit(self, t))
 	end,
-
 }
-
-
 
 newTalent{
 	name = "Iron Will",
@@ -57,18 +59,19 @@ newTalent{
 	require = psi_wil_req3,
 	points = 5,
 	mode = "passive",
+	stunImmune = function(self, t) return self:combatTalentLimit(t, 1, 0.17, 0.50) end,
 	on_learn = function(self, t)
 		self.combat_mentalresist = self.combat_mentalresist + 6
-		self.stun_immune = (self.stun_immune or 0) + .1
 	end,
-
 	on_unlearn = function(self, t)
 		self.combat_mentalresist = self.combat_mentalresist - 6
-		self.stun_immune = (self.stun_immune or 0) - .1
+	end,
+	passives = function(self, t, p)
+		self:talentTemporaryValue(p, "stun_immune", t.stunImmune(self, t))
 	end,
 	info = function(self, t)
 		return ([[Improves Mental Saves by %d, and stun immunity by %d%%.]]):
-		format(self:getTalentLevelRaw(t)*6, self:getTalentLevelRaw(t)*10)
+		format(self:getTalentLevelRaw(t)*6, t.stunImmune(self, t)*100)
 	end,
 }
 

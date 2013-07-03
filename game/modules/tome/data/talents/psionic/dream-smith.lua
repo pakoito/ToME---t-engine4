@@ -128,7 +128,7 @@ newTalent{
 	cooldown = 8,
 	psi = 10,
 	tactical = { ATTACKAREA = { weapon = 2 } },
-	range = function(self, t) return 5 + self:getTalentLevelRaw(t) end,
+	range = function(self, t) return math.floor(self:combatTalentScale(t, 6, 10)) end,
 	requires_target = true,
 	proj_speed = 10,
 	target = function(self, t)
@@ -195,7 +195,7 @@ newTalent{
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 1, 1.5) end,
 	getMasteryDamage = function(self, t) return self:getTalentLevel(t) * 10 end,
 	getPercentInc = function(self, t) return math.sqrt(self:getTalentLevel(t) / 5) / 2 end,
-	getStun = function(self, t) return 2 + math.floor(self:getTalentLevel(t)) end,
+	getStun = function(self, t) return math.floor(self:combatTalentScale(t, 3, 7)) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -239,7 +239,7 @@ newTalent{
 	cooldown = 24,
 	psi = 20,
 	tactical = { ATTACKAREA = { weapon = 3 } },
-	radius = function(self, t) return 1 + math.floor(self:getTalentLevel(t)/2) end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 1.5, 3.5)) end,
 	requires_target = true,
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), friendlyfire=false }

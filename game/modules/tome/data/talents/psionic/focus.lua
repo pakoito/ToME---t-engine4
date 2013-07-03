@@ -56,9 +56,8 @@ newTalent{
 	range = function(self, t)
 		local r = 5
 		local gem_level = getGemLevel(self)
-		local mult = (1 + 0.02*gem_level*(self:getTalentLevel(self.T_REACH)))
-		r = math.floor(r*mult)
-		return math.min(r, 10)
+		local mult = 1 + 0.01*gem_level*self:callTalent(self.T_REACH, "rangebonus")
+		return math.floor(r*mult)
 	end,
 	getDamage = function (self, t)
 		local gem_level = getGemLevel(self)
@@ -102,7 +101,7 @@ newTalent{
 		local dam = t.getDamage(self, t)
 		return ([[Focus energies on a distant target to lash it with physical force, doing %d damage in addition to any Conduit damage.
 		Mindslayers do not do this sort of ranged attack naturally. The use of a telekinetically-wielded gem or mindstar as a focus will improve the effects considerably.]]):
-		format(dam)
+		format(damDesc(self, DamageType.PHYSICAL, dam))
 	end,
 }
 
@@ -123,9 +122,8 @@ newTalent{
 	radius = function(self, t)
 		local r = 5
 		local gem_level = getGemLevel(self)
-		local mult = (1 + 0.02*gem_level*(self:getTalentLevel(self.T_REACH)))
-		r = math.floor(r*mult)
-		return math.min(r, 10)
+		local mult = 1 + 0.01*gem_level*self:callTalent(self.T_REACH, "rangebonus")
+		return math.floor(r*mult)
 	end,
 	getDamage = function (self, t)
 		local gem_level = getGemLevel(self)
@@ -145,7 +143,7 @@ newTalent{
 		local dam = t.getDamage(self, t)
 		return ([[Kinetically vibrate the essence of all foes within %d squares, setting them ablaze. Does %d damage over ten turns.
 		Mindslayers do not do this sort of ranged attack naturally. The use of a telekinetically-wielded gem or mindstar as a focus will improve the effects considerably.]]):
-		format(radius, dam)
+		format(radius, damDesc(self, DamageType.FIREBURN, dam))
 	end,
 }
 
@@ -155,10 +153,13 @@ newTalent{
 	require = psi_wil_req3,
 	mode = "passive",
 	points = 5,
+	rangebonus = function(self,t) return math.max(0, self:combatTalentScale(t, 3, 10)) end,
 	info = function(self, t)
-		local inc = 2*self:getTalentLevel(t)
-		return ([[You can extend your mental reach beyond your natural limits using a telekinetically-wielded gemstone or mindstar as a focus. Increases the range of various abilities by %d%% to %d%%, depending on the quality of the gem used as a focus.]]):
-		format(inc, 5*inc)
+		local inc = t.rangebonus(self,t)
+		local gtg = self:getTalentLevel(self.T_GREATER_TELEKINETIC_GRASP) >=5 and 1 or 0
+		local add = getGemLevel(self)*t.rangebonus(self, t)
+		return ([[You can extend your mental reach beyond your natural limits using a telekinetically-wielded gemstone or mindstar as a focus. Increases the range of various abilities by %0.1f%% to %0.1f%%, depending on the quality of the gem used as a focus (currently %0.1f%%).]]):
+		format(inc*(1+gtg), inc*(5+gtg), add)
 	end,
 }
 
@@ -168,9 +169,12 @@ newTalent{
 	require = psi_wil_req4,
 	mode = "passive",
 	points = 5,
+	impfocus = function(self,t) return math.max(1, self:combatTalentScale(t, 1.2, 1.75)) end,
 	info = function(self, t)
-		local inc = 1 + 0.15*self:getTalentLevel(t)
-		return ([[You can channel more energy with your auras and shields, using a telekinetically-wielded gemstone or mindstar as a focus. Increases the base strength of all auras and shields by %0.2f to %0.2f, depending on the quality of the gem or mindstar used as a focus.]]):
-		format(inc, 5*inc)
+		local inc = t.impfocus(self,t)
+		local gtg = self:getTalentLevel(self.T_GREATER_TELEKINETIC_GRASP) >=5 and 1 or 0
+		local add = getGemLevel(self)*t.impfocus(self, t)
+		return ([[You can channel more energy with your auras and shields, using a telekinetically-wielded gemstone or mindstar as a focus. Increases the base strength of all auras and shields by %0.2f to %0.2f, depending on the quality of the gem or mindstar used as a focus (currently %0.2f).]]):
+		format(inc*(1+gtg), inc*(5+gtg), add)
 	end,
 }

@@ -26,15 +26,16 @@ newTalent{
 	points = 5,
 	tactical = { BUFF = 2 },
 	getBoost = function(self, t)
-		return 15 + math.ceil(self:getTalentLevel(t)*self:combatStatTalentIntervalDamage(t, "combatMindpower", 1, 9))
+		return self:combatScale(self:getTalentLevel(t)*self:combatStatTalentIntervalDamage(t, "combatMindpower", 1, 9), 15, 0, 49, 34)
 	end,
+	getDuration = function(self, t) return math.floor(self:combatTalentLimit(t, 50, 6, 10)) end, -- Limit < 50
 	action = function(self, t)
-		self:setEffect(self.EFF_CONTROL, 5 + self:getTalentLevelRaw(t), {power= t.getBoost(self, t)})
+		self:setEffect(self.EFF_CONTROL, t.getDuration(self, t), {power= t.getBoost(self, t)})
 		return true
 	end,
 	info = function(self, t)
 		local boost = t.getBoost(self, t)
-		local dur = 5 + self:getTalentLevelRaw(t)
+		local dur = t.getDuration(self, t)
 		return ([[Encase your body in a sheath of thought-quick forces, allowing you to control your body's movements directly without the inefficiency of dealing with crude mechanisms like nerves and muscles.
 		Increases Accuracy by %d and critical strike chance by %0.2f%% for %d turns.]]):
 		format(boost, 0.5*boost, dur)
@@ -97,30 +98,15 @@ newTalent{
 	no_npc_use = true,
 	no_unlearn_last = true,
 	arm_boost = function(self, t)
-		local arm_values = {
-		0 + self:getWil(2),
-		1 + self:getWil(2),
-		1 + self:getWil(2),
-		2 + self:getWil(2),
-		2 + self:getWil(2)
-		}
-		local index = util.bound(self:getTalentLevelRaw(t), 1, 5)
-		return arm_values[index] * (self:getTalentLevel(t) / self:getTalentLevelRaw(t))
+		return math.max(0, math.floor(self:getWil(2,true) + self:combatTalentScale(t, 0.5, 2.5)))
 	end,
 	fat_red = function(self, t)
-		local fat_values = {
-		1 + self:getWil(3),
-		1 + self:getWil(3),
-		2 + self:getWil(3),
-		2 + self:getWil(3),
-		3 + self:getWil(3)
-		}
-		local index = util.bound(self:getTalentLevelRaw(t), 1, 5)
-		return fat_values[index] * (self:getTalentLevel(t) / self:getTalentLevelRaw(t))
+		local tl = self:combatTalentLimit(t, 12, 1, 3) -- Limit talent effect to <12%
+		return math.floor(tl + self:combatStatLimit("wil", 10, 0.4, 3)) -- Limit Wil effect < 10%
 	end,
 	action = function(self, t)
 		local d d = self:showInventory("Reshape which piece of armour?", self:getInven("INVEN"), function(o) return not o.quest and o.type == "armor" and not o.fully_reshaped end, function(o, item)
-			if (o.old_fat or 0) < t.fat_red(self, t) then
+			if (o.old_fat or 0) < t.fat_red(self, t) or o.wielder.combat_armor < o.orig_arm + t.arm_boost(self,t) then	-- Allow armor only improvements
 				o.wielder = o.wielder or {}
 				if not o.been_reshaped then
 					o.orig_arm = (o.wielder.combat_armor or 0)
@@ -136,12 +122,12 @@ newTalent{
 					o.wielder.fatigue = o.orig_fat
 				end
 				o.old_fat = t.fat_red(self, t)
-				o.special = true
 				game.logPlayer(self, "You reshape your %s.", o:getName{do_colour=true, no_count=true})
 				if not o.been_reshaped then
-					o.name = "reshaped" .. " "..o.name..""
+					o.orig_name = o.name
 					o.been_reshaped = true
 				end
+				o.name = "reshaped["..tostring(t.arm_boost(self,t))..","..tostring(o.wielder.fatigue-o.orig_fat).."%] "..o.orig_name..""
 				d.used_talent = true
 			else
 				game.logPlayer(self, "You cannot reshape your %s any further.", o:getName{do_colour=true, no_count=true})

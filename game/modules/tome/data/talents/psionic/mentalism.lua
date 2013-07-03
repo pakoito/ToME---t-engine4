@@ -26,6 +26,7 @@ newTalent{
 	require = psi_wil_req1,
 	mode = "passive",
 	getPsychometryCap = function(self, t) return self:getTalentLevelRaw(t)/2 end,
+	getMaterialMult = function(self,t) return math.max(.5,self:combatTalentLimit(t, 5, 0.15, 0.5)) end, -- Limit to <5 x material level
 	updatePsychometryCount = function(self, t)
 		-- Update psychometry power
 		local psychometry_count = 0
@@ -33,7 +34,7 @@ newTalent{
 			if inven.worn then
 				for item, o in ipairs(inven) do
 					if o and item and o.power_source and (o.power_source.psionic or o.power_source.nature or o.power_source.antimagic) then
-						psychometry_count = psychometry_count + math.min((o.material_level or 1) / 2, t.getPsychometryCap(self, t))
+						psychometry_count = psychometry_count + math.min((o.material_level or 1) * t.getMaterialMult(self,t), t.getPsychometryCap(self, t))
 					end
 				end
 			end
@@ -52,8 +53,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local max = t.getPsychometryCap(self, t)
-		return ([[Resonate with psionic, nature, and anti-magic powered objects, increasing your physical and mind power by %0.2f or half the objects' material level (whichever is lower).
-		This effect stacks and applies for each qualifying object worn.]]):format(max)
+		return ([[Resonate with psionic, nature, and anti-magic powered objects you wear, increasing your physical and mind power by %0.2f or %d%% of the object's material level (whichever is lower).
+		This effect stacks and applies for each qualifying object worn.]]):format(max, 100*t.getMaterialMult(self,t))
 	end,
 }
 
@@ -75,7 +76,7 @@ newTalent{
 		return nb
 	end,},
 	no_energy = true,
-	getRemoveCount = function(self, t) return math.ceil(self:getTalentLevel(t)) end,
+	getRemoveCount = function(self, t) return math.floor(self:combatTalentScale(t, 1, 5, "log")) end,
 	action = function(self, t)
 		local effs = {}
 		local count = t.getRemoveCount(self, t)
@@ -119,10 +120,10 @@ newTalent{
 	points = 5, 
 	require = psi_wil_req3,
 	psi = 20,
-	cooldown = function(self, t) return 20 - self:getTalentLevelRaw(t) * 2 end,
+	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 0, 17.5, 9.5)) end, -- Limit >0
 	no_npc_use = true, -- this can be changed if the AI is improved.  I don't trust it to be smart enough to leverage this effect.
 	getPower = function(self, t) return math.ceil(self:combatTalentMindDamage(t, 5, 40)) end,
-	getDuration = function(self, t) return 4 + math.ceil(self:getTalentLevel(t)*2) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 6, 14)) end,
 	action = function(self, t)
 		if self:attr("is_psychic_projection") then return true end
 		local x, y = util.findFreeGrid(self.x, self.y, 1, true, {[Map.ACTOR]=true})
@@ -244,7 +245,7 @@ newTalent{
 	sustain_psi = 50,
 	mode = "sustained",
 	no_sustain_autoreset = true,
-	cooldown = function(self, t) return 52 - self:getTalentLevelRaw(t) * 8 end,
+	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 0, 44, 12)) end, -- Limit >0
 	tactical = { BUFF = 2, ATTACK = {MIND = 2}},
 	range = 7,
 	direct_hit = true,

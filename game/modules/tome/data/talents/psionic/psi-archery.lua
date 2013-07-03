@@ -31,9 +31,7 @@ newTalent{
 	range = archery_range,
 	requires_target = true,
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon("bow") then if not silent then game.logPlayer(self, "You require a bow for this talent.") end return false end return true end,
-	shot_boost = function(self, t)
-		return 30 + 10*self:getTalentLevel(t)
-	end,
+	shot_boost = function(self, t) return self:combatTalentScale(t, 40, 80, 0.75) end,
 	use_psi_archery = function(self, t)
 		local pf_weapon = self:getInven("PSIONIC_FOCUS")[1]
 		if pf_weapon and pf_weapon.archery then
@@ -67,9 +65,7 @@ newTalent{
 	requires_target = true,
 	tactical = { ATTACK = { PHYSICAL = 2 } },
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon("bow") then if not silent then game.logPlayer(self, "You require a bow for this talent.") end return false end return true end,
-	apr_boost = function(self, t)
-		return 10 + 10*self:getTalentLevel(t)
-	end,
+	apr_boost = function(self, t) return math.floor(self:combatTalentScale(t, 20, 60)) end,
 	dam_mult = function(self, t)
 		return self:combatTalentWeaponDamage(t, 1.5, 2.5)
 	end,
@@ -138,14 +134,12 @@ newTalent{
 	range = archery_range,
 	direct_hit = true,
 	tactical = { BUFF = 3 },
-	duration = function(self, t)
-		return math.ceil(3 + self:getTalentLevel(t))
-	end,
+	duration = function(self, t) return math.floor(self:combatTalentScale(t, 4, 8)) end,
 	do_tkautoshoot = function(self, t)
 		if game.zone.wilderness then return end
 
 		local targnum = 1
-		if self:hasEffect(self.EFF_PSIFRENZY) then targnum = 1 + math.ceil(0.2*self:getTalentLevel(self.T_FRENZIED_PSIFIGHTING)) end
+		if self:hasEffect(self.EFF_PSIFRENZY) then targnum = self:callTalent(self.T_FRENZIED_PSIFIGHTING, "getTargNum")  end
 		local speed, hit = nil, false
 		local sound, sound_miss = nil, nil
 		--dam = self:getTalentLevel(t)
@@ -178,7 +172,9 @@ newTalent{
 			local targets = {}
 			local am
 			if not ammo.infinite then
-				am = self:removeObject(self:getInven("QUIVER"), 1)
+					if ammo.combat.shots_left <= 0 then return nil end -- Bug fix
+					ammo.combat.shots_left = ammo.combat.shots_left - 1
+					am = ammo
 			else
 				am = ammo
 			end

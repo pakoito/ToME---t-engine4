@@ -99,7 +99,7 @@ newTalent{
 		if game.zone.wilderness then return end
 
 		local targnum = 1
-		if self:hasEffect(self.EFF_PSIFRENZY) then targnum = 1 + math.ceil(0.2*self:getTalentLevel(self.T_FRENZIED_PSIFIGHTING)) end
+		if self:hasEffect(self.EFF_PSIFRENZY) then targnum = self:callTalent(self.T_FRENZIED_PSIFIGHTING, "getTargNum") end
 		local speed, hit = nil, false
 		local sound, sound_miss = nil, nil
 		--dam = self:getTalentLevel(t)

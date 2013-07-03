@@ -28,16 +28,16 @@ newTalent{
 	direct_hit = true,
 	requires_target = true,
 	range = 7,
-	radius = function(self, t) return 1 + math.floor(self:getTalentLevel(t)/4) end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 1.25, 2.25)) end,
 	target = function(self, t) return {type="ball", radius=self:getTalentRadius(t), range=self:getTalentRange(t), talent=t} end,
-	getDuration = function(self, t) return 2 + math.ceil(self:getTalentLevel(t)/3) end,
+	getDuration = function(self, t) return math.ceil(self:combatTalentScale(t, 2.1, 3.5)) end,
 	getInsomniaPower= function(self, t)
 		local t = self:getTalentFromId(self.T_SANDMAN)
 		local reduction = t.getInsomniaPower(self, t)
 		return 20 - reduction
 	end,
 	getSleepPower = function(self, t) 
-		local power = self:combatTalentMindDamage(t, 5, 25)
+		local power = self:combatTalentMindDamage(t, 5, 25) -- This probably needs a buff
 		if self:knowTalent(self.T_SANDMAN) then
 			local t = self:getTalentFromId(self.T_SANDMAN)
 			power = power * t.getSleepPowerBonus(self, t)
@@ -194,7 +194,7 @@ newTalent{
 	require = psi_wil_req4,
 	mode = "sustained",
 	sustain_psi = 40,
-	cooldown = function(self, t) return 50 - self:getTalentLevelRaw(t) * 5 end,
+	cooldown = function(self, t) return math.floor(self:combatTalentLimit(t, 0, 45, 25)) end, -- Limit > 0
 	tactical = { DISABLE = function(self, t, target) if target and target:attr("sleep") then return 4 else return 0 end end},
 	range = 7,
 	requires_target = true,

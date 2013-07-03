@@ -29,6 +29,7 @@ newTalent{
 	mode = "sustained",
 	tactical = { DEFEND = 2, },
 	getPower = function(self, t) return self:combatTalentMindDamage(t, 5, 30) end,
+	getDuration = function(self,t) return math.floor(self:combatTalentScale(t, 1, 2)) end,
 	doForgeShield = function(type, dam, t, self, src)
 		-- Grab our damage threshold
 		local dam_threshold = self.max_life * 0.15
@@ -39,7 +40,7 @@ newTalent{
 			dam_threshold = (self.max_life * (1 - ratio) + psi_percent) * 0.15
 		end
 
-		local dur = self:getTalentLevel(t) >= 5 and 2 or 1
+		local dur = t.getDuration(self,t)
 		local blocked
 		local amt = dam
 		local eff = self:hasEffect(self.EFF_FORGE_SHIELD)
@@ -87,11 +88,12 @@ newTalent{
 	end,
 	info = function(self, t)
 		local power = t.getPower(self, t)
-		return ([[When an attack would deal 15%% or more of your effective total health, you forge the Dream Shield to protect yourself, reducing the damage of all attacks of that type by %0.2f for the next turn.
+		local dur = t.getDuration(self, t)
+		return ([[When an attack would deal 15%% or more of your effective total health, you forge the Dream Shield to protect yourself, reducing the damage of all attacks of that type by %0.2f for the next %d turn(s).
 		You may block multiple damage types at one time, but the base damage threshold increases by 15%% per damage type the shield is already blocking.
 		If you block all of an attack's damage, the attacker will be vulnerable to a deadly counterstrike (a normal melee or ranged attack will instead deal 200%% damage) for one turn.
 		At talent level 5, the block effect will last two turns.
-		This talent scales with your Mindpower.]]):format(power)
+		This damage reduction scales with your Mindpower.]]):format(power, dur)
 	end,
 }
 
@@ -109,7 +111,7 @@ newTalent{
 	target = function(self, t)
 		return {type="cone", range=self:getTalentRange(t), friendlyfire=false, radius = self:getTalentRadius(t), talent=t}
 	end,
-	getDuration = function(self, t) return 2 + math.floor(self:getTalentLevel(t)/2) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 2.5, 4.5)) end,
 	getBlastDamage = function(self, t) return self:combatTalentMindDamage(t, 10, 100) end,
 	getForgeDamage = function(self, t) return self:combatTalentMindDamage(t, 0, 10) end,
 	action = function(self, t)
@@ -215,8 +217,10 @@ newTalent{
 	end,
 	getDamage = function(self, t) return math.ceil(self:combatTalentMindDamage(t, 5, 30)) end,
 	getPower = function(self, t) return math.floor(self:combatTalentMindDamage(t, 5, 25)) end,
-	getDuration = function(self, t) return 1 + math.floor(self:getTalentLevel(t)/2) end,
-	getChance = function(self, t) return 5 * self:getTalentLevel(t) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 1.5, 3.5)) end,
+	getChance = function(self, t) return self:combatTalentLimit(t, 100, 5, 25) end, --Limit < 100%
+	getFailChance = function(self, t) return self:combatLimit(self:combatTalentMindDamage(t, 5, 25), 67, 0, 0, 16.34, 16.34) end, -- Limit to <67%
+	
 	doForgeStrike = function(self, t, p)
 		-- If we moved reset the forge
 		if self.x ~= p.x or self.y ~= p.y or p.new then
@@ -238,7 +242,8 @@ newTalent{
 				game:playSoundNear(self, "talents/lightning_loud")
 			end
 			local tg = {type="ball", range=self:getTalentRange(t), friendlyfire=false, radius=p.radius, talent=t}
-			self:project(tg, self.x, self.y, engine.DamageType.DREAMFORGE, {dam=self:combatMindCrit(p.damage), power=p.power, dur=p.dur, chance=p.chance, do_particles=true })
+			-- Spell failure handled under "DREAMFORGE" damage type in data\damage_types.lua and transferred to "BROKEN_DREAM" effect in data\timed_effects\mental.lua
+			self:project(tg, self.x, self.y, engine.DamageType.DREAMFORGE, {dam=self:combatMindCrit(p.damage), power=p.power, fail=t.getFailChance(self,t), dur=p.dur, chance=p.chance, do_particles=true })
 		end
 	end,
 	activate = function(self, t)
@@ -257,11 +262,12 @@ newTalent{
 		local power = t.getPower(self, t)
 		local duration = t.getDuration(self, t)
 		local chance = t.getChance(self, t)
+		local fail = t.getFailChance(self,t)
 		return ([[The pounding forge of thought in your mind is released upon your surroundings.  Each turn that you remain stationary, you'll strike the dreamforge, inflicting mind and burning damage on enemies around you.
 		The effect will build over five turns, until it reaches a maximum radius of %d, maximum mind damage of %0.2f, and maximum burning damage of %0.2f.
-		At this point you'll begin breaking the dreams of enemies who hear the forge, reducing their Mental Save by %d and giving them a %d%% chance of spell failure for %d turns due to the tremendous echo in their minds.
+		At this point you'll begin breaking the dreams of enemies who hear the forge, reducing their Mental Save by %d and giving them a %d%% chance of spell failure due to the tremendous echo in their minds for %d turns.
 		Broken Dreams has a %d%% chance to brainlock your enemies.
 		The damage and dream breaking effect will scale with your Mindpower.]]):
-		format(radius, damDesc(self, DamageType.MIND, damage), damDesc(self, DamageType.FIRE, damage), power, power, duration, chance)
+		format(radius, damDesc(self, DamageType.MIND, damage), damDesc(self, DamageType.FIRE, damage), power, fail, duration, chance)
 	end,
 }

@@ -1368,7 +1368,7 @@ newEffect{
 
 newEffect{
 	name = "IMPLODING", image = "talents/implode.png",
-	desc = "Slow",
+	desc = "Imploding (slow)",
 	long_desc = function(self, eff) return ("Slowed by 50%% and taking %d crushing damage per turn."):format( eff.power) end,
 	type = "physical",
 	subtype = { telekinesis=true, slow=true },

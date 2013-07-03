@@ -21,12 +21,14 @@ local Object = require "mod.class.Object"
 
 function DistortionCount(self)
 	local distortion_count = 0
-	for tid, lev in pairs(game.player.talents) do
+	
+	for tid, lev in pairs(self.talents) do
 		local t = game.player:getTalentFromId(tid)
 		if t.type[1]:find("^psionic/") and t.type[1]:find("^psionic/distortion") then
 			distortion_count = distortion_count + lev
 		end
 	end
+	distortion_count = mod.class.interface.Combat.combatScale(distortion_count, 0, 0, 20, 20, 0.75)
 	print("Distortion Count", distortion_count)
 	return distortion_count
 end
@@ -40,7 +42,7 @@ newTalent{
 	psi = 5,
 	tactical = { ATTACKAREA = { PHYSICAL = 2} },
 	range = 10,
-	radius = function(self, t) return 1 + math.floor(self:getTalentLevel(t)/3) end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 1.3, 2.7)) end,
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentMindDamage(t, 10, 150) end,
 	target = function(self, t)
@@ -83,11 +85,11 @@ newTalent{
 		DISABLE = function(self, t, target) if target and target:hasEffect(target.EFF_DISTORTION) then return 2 else return 0 end end,
 	},
 	range = 0,
-	radius = function(self, t) return math.ceil(3 + self:getTalentLevel(t)) end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 4, 8)) end,
 	requires_target = true,
 	direct_hit = true,
 	getDamage = function(self, t) return self:combatTalentMindDamage(t, 10, 150) end,
-	getPower = function(self, t) return math.ceil(self:getTalentRadius(t)/2) end,
+	getPower = function(self, t) return math.floor(self:combatTalentScale(t, 2, 4)) end, -- stun duration
 	target = function(self, t)
 		local friendlyfire = true
 		if self:getTalentLevel(self.T_DISTORTION_BOLT) >=5 then
@@ -131,7 +133,7 @@ newTalent{
 	requires_target = true,
 	direct_hit = true,
 	getDamage = function(self, t) return self:combatTalentMindDamage(t, 10, 50) end,
-	getDuration = function(self, t) return 4 + math.floor(self:getTalentLevel(t)) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 5, 9)) end,
 	target = function(self, t)
 		return {type="hit", range=self:getTalentRange(t), talent=t}
 	end,
@@ -175,7 +177,7 @@ newTalent{
 	radius = function(self, t) return math.min(4, 1 + math.ceil(self:getTalentLevel(t)/3)) end,
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentMindDamage(t, 10, 50) end,
-	getDuration = function(self, t) return 4 + math.ceil(self:getTalentLevel(t)) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 5, 9)) end,
 	target = function(self, t)
 		return {type="ball", radius=self:getTalentRadius(t), range=self:getTalentRange(t), nolock=true, talent=t}
 	end,

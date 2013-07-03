@@ -32,7 +32,7 @@ newTalent{
 	radius = function(self, t)
 		local r = 2
 		local gem_level = getGemLevel(self)
-		local mult = (1 + 0.02*gem_level*(self:getTalentLevel(self.T_REACH)))
+		local mult = 1 + 0.01*gem_level*self:callTalent(self.T_REACH, "rangebonus")
 		return math.ceil(r*mult)
 	end,
 	target = function(self, t)
@@ -80,7 +80,7 @@ newTalent{
 	radius = function(self, t)
 		local r = 1
 		local gem_level = getGemLevel(self)
-		local mult = (1 + 0.02*gem_level*(self:getTalentLevel(self.T_REACH)))
+		local mult = 1 + 0.01*gem_level*self:callTalent(self.T_REACH, "rangebonus")
 		return math.ceil(r*mult)
 	end,
 	target = function(self, t)
@@ -89,9 +89,7 @@ newTalent{
 	getLeech = function(self, t)
 		return self:combatStatTalentIntervalDamage(t, "combatMindpower", 5, 25)
 	end,
-	getDam = function(self, t)
-		return math.ceil(1 + 0.5*self:getTalentLevel(t))
-	end,
+	getDam = function(self, t) return math.ceil(self:combatTalentScale(t, 1.3, 3.2)) end, -- Duration
 	action = function(self, t)
 		local en = t.getLeech(self, t)
 		local dam = t.getDam(self, t)
@@ -109,7 +107,6 @@ newTalent{
 		local range = self:getTalentRadius(t)
 		local dam = t.getDam(self, t)
 		local en = t.getLeech(self, t)
-		--local duration = self:getTalentLevel(t) + 2
 		return ([[You leech the heat out of all targets in a radius of %d, freezing them for up to %d turns. For each target drained, you gain %d Psi. The Psi gain will improve with your Mindpower.]]):
 		format(range, dam, en)
 	end,
@@ -130,7 +127,7 @@ newTalent{
 	radius = function(self, t)
 		local r = 2
 		local gem_level = getGemLevel(self)
-		local mult = (1 + 0.02*gem_level*(self:getTalentLevel(self.T_REACH)))
+		local mult = 1 + 0.01*gem_level*self:callTalent(self.T_REACH, "rangebonus")
 		return math.ceil(r*mult)
 	end,
 	target = function(self, t)

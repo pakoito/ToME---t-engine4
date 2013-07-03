@@ -66,8 +66,10 @@ newTalent{
 	requires_target = true,
 	tactical = { ATTACK = { MIND = 2 }, DISABLE = { confusion = 2 } },
 	getDamage = function(self, t) return self:combatTalentMindDamage(t, 20, 200) end,
-	getPower = function(self, t) return math.min(50, self:combatTalentMindDamage(t, 10, 50)) end,
-	getDuration = function(self, t) return 1 + math.floor(self:getTalentLevel(t)) end,
+	getPower = function(self, t) return self:combatTalentMindDamage(t, 10, 50) end, --2x cunning damage
+	-- confusion effect implemented in "LOBOTOMIZED" effect in data\timed_effects\mental.lua
+	getConfuse = function(self, t) return self:combatLimit(t.getPower(self,t), 50, 0, 0, 34.7, 34.7) end, -- Limit < 50%
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 2, 6)) end,
 	no_npc = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
@@ -81,7 +83,7 @@ newTalent{
 		
 		local dam = self:mindCrit(t.getDamage(self, t))
 		if target:canBe("confusion") then
-			target:setEffect(target.EFF_LOBOTOMIZED, t.getDuration(self, t), {src=self, dam=dam, power=t.getPower(self, t), apply_power=self:combatMindpower()})
+			target:setEffect(target.EFF_LOBOTOMIZED, t.getDuration(self, t), {src=self, dam=dam, power=t.getPower(self, t), confuse=t.getConfuse(self,t), apply_power=self:combatMindpower()})
 		else
 			game.logSeen(target, "%s resists the lobotomy!", target.name:capitalize())
 		end
@@ -92,7 +94,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local cunning_damage = t.getPower(self, t)/2
-		local power = t.getPower(self, t)
+		local power = t.getConfuse(self, t)
 		local duration = t.getDuration(self, t)
 		return ([[Inflicts %0.2f mind damage and cripples the target's higher mental functions, reducing cunning by %d and confusing (%d%% power) the target for %d turns.
 		The damage, cunning penalty, and confusion power will scale with your Mindpower.]]):

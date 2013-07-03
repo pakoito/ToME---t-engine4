@@ -546,7 +546,7 @@ newTalent{
 	cooldown = 24,
 	no_npc_use = true,
 	getControlBonus = function(self, t) return self:combatTalentMindDamage(t, 5, 50) end,
-	getRangeBonus = function(self, t) return self:getTalentLevelRaw(t) end,
+--	getRangeBonus = function(self, t) return math.floor(self:combatTalentScale(t, 1, 5)) end,
 	on_pre_use = function(self, t, silent) if not game.party:findMember{type="thought-form"} then if not silent then game.logPlayer(self, "You must have an active Thought-Form to use this talent!") end return false end return true end,
 	activate = function(self, t)
 		-- Find our thought-form
@@ -606,11 +606,11 @@ newTalent{
 	end,
 	info = function(self, t)
 		local bonus = t.getControlBonus(self, t)
-		local range = t.getRangeBonus(self, t)
+--		local range = t.getRangeBonus(self, t)
 		return ([[Take direct control of your active thought-form, improving its damage, attack speed, and maximum life by %d%%, but leaving your body a defenseless shell.
 		At talent level 1, any Feedback your Thought-Forms gain will be given to you as well. At level 3, your Thought-Forms gain a bonus to all saves equal to your Mental Save. At level 5, they gain a bonus to all damage equal to your bonus mind damage.
 		The secondary bonuses apply whether or not this talent is currently active.
-		The life, damage, and speed bonus will improve with your Mindpower.]]):format(bonus, range)
+		The life, damage, and speed bonus will improve with your Mindpower.]]):format(bonus)
 	end,
 }
 

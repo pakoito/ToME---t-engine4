@@ -69,9 +69,10 @@ newTalent{
 	sustain_psi = 10,
 	no_energy = true,
 	tactical = { BUFF = 2 },
+	getMult = function(self, t) return self:combatTalentScale(t, 0.07, 0.25) end,
 	activate = function(self, t)
-		local str_power = math.floor(0.05*self:getTalentLevel(t)*self:getWil())
-		local dex_power = math.floor(0.05*self:getTalentLevel(t)*self:getCun())
+		local str_power = t.getMult(self, t)*self:getWil()
+		local dex_power = t.getMult(self, t)*self:getCun()
 		return {
 			stats = self:addTemporaryValue("inc_stats", {
 				[self.STAT_STR] = str_power,
@@ -84,13 +85,13 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local inc = 5*self:getTalentLevel(t)
-		local str_power = math.floor(0.05*self:getTalentLevel(t)*self:getWil())
-		local dex_power = math.floor(0.05*self:getTalentLevel(t)*self:getCun())
-		return ([[While active, you give your flesh and blood body a little aid in the form of precisely applied mental forces. Increases Strength and Dexterity by %d%% of your Willpower and Cunning, respectively.
+		local inc = t.getMult(self, t)
+		local str_power = inc*self:getWil()
+		local dex_power = inc*self:getCun()
+		return ([[While active, you give your flesh and blood body a boost in the form of precisely applied mental forces. Increases Strength and Dexterity by %d%% of your Willpower and Cunning, respectively.
 		Strength increased by %d
 		Dexterity increased by %d]]):
-		format(inc, str_power, dex_power)
+		format(inc*100, str_power, dex_power)
 	end,
 }
 
@@ -115,6 +116,7 @@ newTalent{
 		end
 		return vals
 	end},
+	getMult = function(self, t) return self:combatTalentScale(t, 1.2, 2) end,
 	activate = function(self, t)
 		local ret = {
 		k_aura_on = self:isTalentActive(self.T_KINETIC_AURA),
@@ -122,14 +124,14 @@ newTalent{
 		c_aura_on = self:isTalentActive(self.T_CHARGED_AURA),
 		}
 		local cur_psi = self:getPsi()
-		self:incPsi(-5000)
+		self:incPsi(-math.huge)
 		--self.sustain_talents[t.id] = {}
 		cancelAuras(self)
 		self:incPsi(cur_psi)
 		return ret
 	end,
-	do_combat = function(self, t, target)
-		local mult = 1 + 0.2*(self:getTalentLevel(t))
+	do_combat = function(self, t, target) -- called by  _M:attackTargetWith in mod.class.interface.Combat.lua
+		local mult = t.getMult(self, t)
 		local auras = self:isTalentActive(t.id)
 		if auras.k_aura_on then
 			local k_aura = self:getTalentFromId(self.T_KINETIC_AURA)
@@ -152,7 +154,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local mult = 1 + 0.2*(self:getTalentLevel(t))
+		local mult = t.getMult(self, t)
 		return ([[When activated, turns off any active auras and uses your telekinetically wielded weapon as a conduit for the energies that were being channeled through those auras.
 		Any auras used by Conduit will not start to cool down until Conduit has been deactivated. The damage from each aura applied by Conduit is multiplied by %0.2f, and does not drain energy.]]):
 		format(mult)
@@ -167,15 +169,18 @@ newTalent{
 	psi = 30,
 	points = 5,
 	tactical = { ATTACK = { PHYSICAL = 3 } },
+	getTargNum = function(self,t) -- Called in talent definition for Masterful Telekinetic Archery in psi-archery.lua
+		return math.ceil(self:combatTalentScale(t, 1.2, 2.1, "log"))
+	end,
+	duration = function(self,t) return math.floor(self:combatTalentScale(t, 4, 8)) end,
 	action = function(self, t)
 		local targets = 1 + math.ceil(self:getTalentLevel(t)/5)
-		self:setEffect(self.EFF_PSIFRENZY, 3 * self:getTalentLevelRaw(t), {power=targets})
+		self:setEffect(self.EFF_PSIFRENZY, t.duration(self,t), {power=t.getTargNum(self,t)})
 		return true
 	end,
-	--getTargNum = function(self, t) return 1 + math.ceil(self:getTalentLevel(t)/5) end,
 	info = function(self, t)
-		local targets = 1 + math.ceil(self:getTalentLevel(t)/5)
-		local dur = 3 * self:getTalentLevelRaw(t)
+		local targets = t.getTargNum(self,t)
+		local dur = t.duration(self,t)
 		return ([[Your telekinetically wielded weapon enters a frenzy for %d turns, striking up to %d targets every turn.]]):
 		format(dur, targets)
 	end,

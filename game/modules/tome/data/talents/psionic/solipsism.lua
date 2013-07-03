@@ -24,8 +24,16 @@ newTalent{
 	require = psi_wil_req1,
 	mode = "passive",
 	no_unlearn_last = true,
-	getConversionRatio = function(self, t) return math.min(0.1 + self:getTalentLevel(t) * 0.1, 1) end,
-	getPsiDamageResist = function(self, t) return math.min(self:getTalentLevel(t) * 2, 30) end,
+	-- Speed effect calculations performed in _M:actBase function in mod\class\Actor.lua to handle suppressing the solipsim threshold
+	-- Damage conversion handled in mod.class.Actor.lua _M:onTakeHit
+	getConversionRatio = function(self, t) return self:combatTalentLimit(t, 1, 0.15, 0.5) end, -- Limit < 100% Keep some life dependency
+	getPsiDamageResist = function(self, t)
+		local lifemod = 1 + (1 + self.level)/2/40 -- Follows normal life progression with level see mod.class.Actor:getRankLifeAdjust (level_adjust = 1 + self.level / 40)
+		-- Note: This effectively magifies healing effects
+		local talentmod = self:combatTalentLimit(t, 50, 2.5, 10) -- Limit < 50%
+		return 100 - (100 - talentmod)/lifemod, 1-1/lifemod, talentmod
+	end,
+
 	on_learn = function(self, t)
 		if self:getTalentLevelRaw(t) == 1 then
 			self.inc_resource_multi.psi = (self.inc_resource_multi.psi or 0) + 0.5
@@ -54,12 +62,13 @@ newTalent{
 	end,
 	info = function(self, t)
 		local conversion_ratio = t.getConversionRatio(self, t)
-		local psi_damage_resist = t.getPsiDamageResist(self, t)
+		local psi_damage_resist, psi_damage_resist_base, psi_damage_resist_talent = t.getPsiDamageResist(self, t)
+		local threshold = math.min((self.solipsism_threshold or 0),self:callTalent(self.T_CLARITY, "getClarityThreshold") or 1)
 		return ([[You believe that your mind is the center of everything.  Permanently increases the amount of psi you gain per level by 5 and reduces your life rating (affects life at level up) by 50%% (one time only adjustment).
-		You also have learned to overcome damage with your mind alone, and convert %d%% of all damage into Psi damage and %d%% of your healing and life regen now recovers Psi instead of life.  Converted Psi damage will be further reduced by %d%%.
+		You also have learned to overcome damage with your mind alone, and convert %d%% of all damage you receive into Psi damage and %d%% of your healing and life regen now recovers Psi instead of life.
+		Converted Psi damage you take will be further reduced by %0.1f%% (%0.1f%% from character level with the remainder further reduced by %0.1f%% from talent level).
 		The first talent point invested will also increase the amount of Psi you gain from Willpower by 0.5, but reduce the amount of life you gain from Constitution by 0.25.
-		The first talent point also increases your solipsism threshold by 20%% (currently %d%%), reducing your global speed by 1%% for each percentage your current Psi falls below this threshold.]])
-		:format(conversion_ratio * 100, conversion_ratio * 100, psi_damage_resist, (self.solipsism_threshold or 0) * 100)
+		The first talent point also increases your solipsism threshold by 20%% (currently %d%%), reducing your global speed by 1%% for each percentage your current Psi falls below this threshold.]]):format(conversion_ratio * 100, conversion_ratio * 100, psi_damage_resist, psi_damage_resist_base * 100, psi_damage_resist_talent, (self.solipsism_threshold or 0) * 100)
 	end,
 }
 
@@ -97,7 +106,7 @@ newTalent{
 		local ratio = t.getBalanceRatio(self, t) * 100
 		return ([[You now substitute %d%% of your Mental Save for %d%% of your Physical and Spell Saves throws (so at 100%%, you would effectively use mental save for all saving throw rolls).
 		The first talent point invested will also increase the amount of Psi you gain from Willpower by 0.5, but reduce the amount of life you gain from Constitution by 0.25.
-		Learning this talent also increases your solipsism threshold by 10%% (currently %d%%).]]):format(ratio, ratio, (self.solipsism_threshold or 0) * 100)
+		Learning this talent also increases your solipsism threshold by 10%% (currently %d%%).]]):format(ratio, ratio, math.min((self.solipsism_threshold or 0),self.clarity_threshold or 1) * 100)
 	end,
 }
 
@@ -107,7 +116,8 @@ newTalent{
 	points = 5, 
 	require = psi_wil_req3,
 	mode = "passive",
-	getClarityThreshold = function(self, t) return math.max(0.95 - self:getTalentLevel(t) * 0.06, 0.5) end,
+	-- Speed effect calculations performed in _M:actBase function in mod\class\Actor.lua to handle suppressing the solipsim threshold
+	getClarityThreshold = function(self, t) return self:combatTalentLimit(t, 0, 0.89, 0.65)	end, -- Limit > 0%
 	on_learn = function(self, t)
 		if self:getTalentLevelRaw(t) == 1 then
 			self.inc_resource_multi.psi = (self.inc_resource_multi.psi or 0) + 0.5
@@ -133,9 +143,13 @@ newTalent{
 	end,
 	info = function(self, t)
 		local threshold = t.getClarityThreshold(self, t)
-		return ([[For every percent that your Psi pool exceeds %d%%, you gain 1%% global speed (up to a maximum of 50%%).
-		The first talent point invested will also increase the amount of Psi you gain from Willpower by 0.5, but reduce the amount of life you gain from Constitution by 0.25.
-		The first talent point also increases your solipsism threshold by 10%% (currently %d%%).]]):format(threshold * 100, (self.solipsism_threshold or 0) * 100)
+		local bonus = ""
+		if not self.max_level or self.max_level > 50 then
+			bonus = " Exceptional focus on this talent can suppress your solipsism threshold."
+		end
+		return ([[For every percent that your Psi pool exceeds %d%%, you gain 1%% global speed (up to a maximum of %+d%%).
+		The first talent point invested will also increase the amount of Psi you gain from Willpower by 0.5, but reduce the amount of life you gain from Constitution by 0.25 and will increase your solipsism threshold by 10%% (currently %d%%).]]):
+		format(threshold * 100, (1-threshold)*100, math.min(self.solipsism_threshold or 0,threshold) * 100)..bonus
 	end,
 }
 
@@ -145,7 +159,7 @@ newTalent{
 	points = 5, 
 	require = psi_wil_req4,
 	mode = "passive",
-	getSavePercentage = function(self, t) return math.min(0.1 + self:getTalentLevel(t) * 0.1, 1) end,
+	getSavePercentage = function(self, t) return self:combatTalentScale(t, 0.25, 0.6) end,
 	on_learn = function(self, t)
 		if self:getTalentLevelRaw(t) == 1 then
 			self.inc_resource_multi.psi = (self.inc_resource_multi.psi or 0) + 0.5
@@ -169,20 +183,22 @@ newTalent{
 			self.solipsism_threshold = self.solipsism_threshold - 0.1
 		end
 	end,
+	-- called by _M:onTakeHit in mod.class.Actor.lua
 	doDismissalOnHit = function(self, value, src, t)
 		local saving_throw = self:combatMentalResist() * t.getSavePercentage(self, t)
 		print("[Dismissal] ", self.name:capitalize(), " attempting to ignore ", value, "damage from ", src.name:capitalize(), "using", saving_throw,  "mental save.")
 		if self:checkHit(saving_throw, value) then
-			game.logSeen(self, "%s dismisses %s's damage!", self.name:capitalize(), src.name:capitalize())
-			return value * math.max(0, 1 - self:mindCrit(0.5))
+			local dismissed = value * 1/self:mindCrit(2) -- Diminishing returns on high crits
+			game.logSeen(self, "%s dismisses %d damage from %s!", self.name:capitalize(), dismissed, src.name:capitalize())
+			return value - dismissed
 		else
 			return value
 		end
 	end,
 	info = function(self, t)
 		local save_percentage = t.getSavePercentage(self, t)
-		return ([[Each time you take damage, you roll %d%% of your mental save against it.  If the saving throw succeeds, the damage will be reduced by 50%%.
+		return ([[Each time you take damage, you roll %d%% of your mental save against it.  A successful saving throw can crit and will reduce the damage by at least 50%%.
 		The first talent point invested will also increase the amount of Psi you gain from Willpower by 0.5, but reduce the amount of life you gain from Constitution by 0.25.
-		The first talent point also increases your solipsism threshold by 10%% (currently %d%%).]]):format(save_percentage * 100, (self.solipsism_threshold or 0) * 100)
+		The first talent point also increases your solipsism threshold by 10%% (currently %d%%).]]):format(save_percentage * 100, math.min(self.solipsism_threshold or 0,self.clarity_threshold or 1) * 100)		
 	end,
 }

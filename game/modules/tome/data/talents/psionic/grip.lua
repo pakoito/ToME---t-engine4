@@ -26,7 +26,7 @@ newTalent{
 	points = 5,
 	mode = "sustained",
 	sustain_psi = 35,
-	getEvasion = function(self, t) return 10 + self:getTalentLevel(t) * 7, self:getTalentLevel(t) >= 4 and 2 or 1 end,
+	getEvasion = function(self, t) return self:combatTalentLimit(t, 100, 17, 45), self:getTalentLevel(t) >= 4 and 2 or 1 end, -- Limit chance <100%
 	activate = function(self, t)
 		local chance, spread = t.getEvasion(self, t)
 		return {
@@ -42,7 +42,7 @@ newTalent{
 	info = function(self, t)
 		local chance, spread = t.getEvasion(self, t)
 		return ([[You learn to devote a portion of your attention to mentally swatting, grabbing, or otherwise deflecting incoming projectiles.
-		All projectiles targetting you have a %d%% chance to instead target a spot %d grids nearby.]]):
+		All projectiles targetting you have a %d%% chance to instead target a spot up to %d grids nearby.]]):
 		format(chance, spread)
 	end,
 
@@ -64,9 +64,8 @@ newTalent{
 	range = function(self, t)
 		local r = 5
 		local gem_level = getGemLevel(self)
-		local mult = (1 + 0.02*gem_level*(self:getTalentLevel(self.T_REACH)))
-		r = math.floor(r*mult)
-		return math.min(r, 10)
+		local mult = 1 + 0.01*gem_level*self:callTalent(self.T_REACH, "rangebonus")
+		return math.floor(r*mult)
 	end,
 	getDuration = function (self, t)
 		local gem_level = getGemLevel(self)
@@ -115,9 +114,8 @@ newTalent{
 	range = function(self, t)
 		local r = 3
 		local gem_level = getGemLevel(self)
-		local mult = (1 + 0.02*gem_level*(self:getTalentLevel(self.T_REACH)))
-		r = math.floor(r*mult)
-		return math.min(r, 10)
+		local mult = 1 + 0.01*gem_level*self:callTalent(self.T_REACH, "rangebonus")
+		return math.floor(r*mult)
 	end,
 	getDuration = function (self, t)
 		local gem_level = getGemLevel(self)
@@ -136,8 +134,6 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.IMPLOSION, {dur=dur, dam=dam})
---		target:crossTierEffect(target.EFF_OFFBALANCE, self:combatMindpower())
-
 		return true
 	end,
 	info = function(self, t)
@@ -146,7 +142,7 @@ newTalent{
 		return ([[Crush the target mercilessly with constant, bone-shattering pressure, slowing it by 50%% for %d turns and dealing %d damage each turn.
 		The duration and damage will improve with your Mindpower.
 		The use of a telekinetically-wielded gem or mindstar as a focus will improve the effects of this talent considerably.]]):
-		format(dur, dam)
+		format(dur, damDesc(self, DamageType.IMPLOSION, dam))
 	end,
 }
 
@@ -157,15 +153,11 @@ newTalent{
 	require = psi_cun_high4,
 	points = 5,
 	mode = "passive",
-	stat_sub = function(self, t)
-		return .6 + .04 * self:getTalentLevel(t)
+	stat_sub = function(self, t) -- called by _M:combatDamage in mod\class\interface\Combat.lua
+		return self:combatTalentScale(t, 0.64, 0.80)
 	end,
-	on_learn = function(self, t)
-		self.disarm_immune = (self.disarm_immune or 0) + .2
-	end,
-
-	on_unlearn = function(self, t)
-		self.disarm_immune = (self.disarm_immune or 0) - .2
+	passives = function(self, t, p)
+		self:talentTemporaryValue(p, "disarm_immune", t.getImmune(self, t))
 	end,
 	info = function(self, t)
 		local boost = 100 * t.stat_sub(self, t)
@@ -174,6 +166,6 @@ newTalent{
 		Allows %d%% of Willpower and Cunning (instead of the usual 60%%) to be substituted for Strength and Dexterity for the purposes of determining damage done by telekinetically-wielded weapons.
 		At talent level 5, telekinetically wielded gems and mindstars will be treated as one material level higher than they actually are.
 		]]):
-		format(self:getTalentLevelRaw(t)*20, boost)
+		format(t.getImmune(self, t)*100, boost)
 	end,
 }

@@ -2526,16 +2526,16 @@ newDamageType{
 	projector = function(src, x, y, type, dam, tmp)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if not target then return end
-		local power, dur, chance, dist, do_particles
+		local power, dur, chance, dist, fail, do_particles
 		tmp = tmp or {}
-		if _G.type(dam) == "table" then dam, power, dur, chance, dist, do_particles = dam.dam, dam.power, dam.dur, dam.chance, dam.dist, dam.do_particles end
+		if _G.type(dam) == "table" then dam, power, dur, chance, fail, dist, do_particles = dam.dam, dam.power, dam.dur, dam.chance, dam.fail, dam.dist, dam.do_particles end
 		if target and not tmp[target] then
 			if src:checkHit(src:combatMindpower(), target:combatMentalResist(), 0, 95) then
 				DamageType:get(DamageType.MIND).projector(src, x, y, DamageType.MIND, {dam=dam/2, alwaysHit=true})
 				DamageType:get(DamageType.FIREBURN).projector(src, x, y, DamageType.FIREBURN, dam/2)
 				if power and power > 0 then
 					local silent = true and target:hasEffect(target.EFF_BROKEN_DREAM) or false
-					target:setEffect(target.EFF_BROKEN_DREAM, dur, {power=power}, silent)
+					target:setEffect(target.EFF_BROKEN_DREAM, dur, {power=power, fail=fail}, silent)
 					if rng.percent(chance) then
 						target:crossTierEffect(target.EFF_BRAINLOCKED, src:combatMindpower())
 					end

@@ -21,18 +21,15 @@ newTalent{
 	name = "Mindhook",
 	type = {"psionic/augmented-mobility", 1},
 	require = psi_cun_high1,
-	cooldown = function(self, t)
-		return math.ceil(20 - self:getTalentLevel(t)*2)
-	end,
+	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 5, 18, 10)) end, -- Limit to >5
 	psi = 20,
 	points = 5,
 	tactical = { CLOSEIN = 2 },
 	range = function(self, t)
-		local r = 2+self:getTalentLevelRaw(t)
+		local r = self:combatTalentLimit(t, 10, 3, 7) -- Limit base range to 10
 		local gem_level = getGemLevel(self)
-		local mult = (1 + 0.02*gem_level*(self:getTalentLevel(self.T_REACH)))
-		r = math.floor(r*mult)
-		return math.min(r, 10)
+		local mult = 1 + 0.005*gem_level*self:callTalent(self.T_REACH, "rangebonus") -- reduced effect of reach
+		return math.floor(r*mult)
 	end,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t)}
@@ -53,12 +50,11 @@ newTalent{
 	info = function(self, t)
 		local range = self:getTalentRange(t)
 		return ([[Briefly extend your telekinetic reach to grab an enemy and haul them towards you.
-		Works on enemies up to %d squares away. The cooldown decreases, and the range increases, with additional talent points spent.]]):
+		Works on enemies up to %d squares away. The cooldown decreases, and the range increases, with additional talent points spent.
+		This talent receives a reduced benefit from the Reach talent.]]):
 		format(range)
 	end,
 }
-
-
 
 newTalent{
 	name = "Quick as Thought",
@@ -69,26 +65,22 @@ newTalent{
 	psi = 30,
 	no_energy = true,
 	require = psi_cun_high2,
-	getDuration = function(self, t)
-		return 10 + self:combatMindpower(0.1)
-	end,
+	getDuration = function(self, t) return math.floor(self:combatLimit(self:combatMindpower(0.1), 80, 10, 0, 15.7, 5.7)) end, -- Limit < 80
+	speed = function(self, t) return self:combatTalentScale(t, 0.2, 1.0, 0.75) end,
 	action = function(self, t)
-		self:setEffect(self.EFF_QUICKNESS, t.getDuration(self, t), {power=self:getTalentLevel(t) * 0.2})
+		self:setEffect(self.EFF_QUICKNESS, t.getDuration(self, t), {power=t.speed(self, t)})
 		return true
 	end,
 	info = function(self, t)
-		local inc = self:getTalentLevel(t)*0.2
+		local inc = t.speed(self, t)
 		local percentinc = 100 * inc
-		--local percentinc = ((1/(1-inc))-1)*100
 		return ([[You encase your legs in precise sheathes of force, increasing your movement speed by %d%% for %d turns.
 		The duration improves with your Mindpower.]]):
 		format(percentinc, t.getDuration(self, t))
 	end,
 }
 
-
 newTalent{
-	--name = "Super"..self.race.." Leap",
 	name = "Telekinetic Leap",
 	type = {"psionic/augmented-mobility", 3},
 	require = psi_cun_high3,
@@ -97,11 +89,10 @@ newTalent{
 	points = 5,
 	tactical = { CLOSEIN = 2 },
 	range = function(self, t)
-		local r = 2 + self:getTalentLevelRaw(t)
+		local r = self:combatTalentLimit(t, 10, 3, 7) -- Limit base range to 10
 		local gem_level = getGemLevel(self)
-		local mult = (1 + 0.02*gem_level*(self:getTalentLevel(self.T_REACH)))
-		r = math.floor(r*mult)
-		return math.min(r, 10)
+		local mult = 1 + 0.005*gem_level*self:callTalent(self.T_REACH, "rangebonus") -- reduced effect of reach
+		return math.floor(r*mult)
 	end,
 	action = function(self, t)
 		local tg = {default_target=self, type="ball", nolock=true, pass_terrain=false, nowarning=true, range=self:getTalentRange(t), radius=0, requires_knowledge=false}
@@ -120,7 +111,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local range = self:getTalentRange(t)
-		return ([[You perform a precise, telekinetically-enhanced leap, landing up to %d squares away.]]):
+		return ([[You perform a precise, telekinetically-enhanced leap, landing up to %d squares away.
+		This talent receives a reduced benefit from the Reach talent.]]):
 		format(range)
 	end,
 }
@@ -135,11 +127,10 @@ newTalent{
 	cooldown = 10,
 	tactical = { CLOSEIN = 2, ATTACK = { PHYSICAL = 1 } },
 	range = function(self, t)
-		local r = 2 + self:getTalentLevel(t)
+		local r = self:combatTalentLimit(t, 10, 3, 7) --Limit base range to 10
 		local gem_level = getGemLevel(self)
-		local mult = (1 + 0.02*gem_level*(self:getTalentLevel(self.T_REACH)))
-		r = math.floor(r*mult)
-		return math.min(r, 10)
+		local mult = 1 + 0.005*gem_level*self:callTalent(self.T_REACH, "rangebonus") -- reduced effect of reach
+		return math.floor(r*mult)
 	end,
 	--range = function(self, t) return 3+self:getTalentLevel(t)+self:getWil(4) end,
 	direct_hit = true,
@@ -217,7 +208,8 @@ newTalent{
 		local range = self:getTalentRange(t)
 		local dam = self:combatTalentMindDamage(t, 20, 600)
 		return ([[You expend massive amounts of energy to launch yourself across %d squares at incredible speed. All enemies in your path will be knocked flying and dealt between %d and %d damage. At talent level 5, you can batter through solid walls.
-		You must have a spiked Kinetic Shield erected in order to not get smashed to a pulp when using this ability. Shattering Charge automatically spikes your Kinetic Shield if available and not already spiked. If no such shield is available, you cannot use Shattering Charge.]]):
+		You must have a spiked Kinetic Shield erected in order to not get smashed to a pulp when using this ability. Shattering Charge automatically spikes your Kinetic Shield if available and not already spiked. If no such shield is available, you cannot use Shattering Charge.
+		This talent receives a reduced benefit from the Reach talent.]]):
 		format(range, 2*dam/3, dam)
 	end,
 }

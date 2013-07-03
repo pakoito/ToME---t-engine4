@@ -29,7 +29,7 @@ newTalent{
 	requires_target = true,
 	range = 7,
 	target = function(self, t) return {type="cone", radius=self:getTalentRange(t), range=0, talent=t, selffire=false} end,
-	getDuration = function(self, t) return 2 + math.ceil(self:getTalentLevel(t)/2) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 2.5, 4.5)) end,
 	getInsomniaPower= function(self, t)
 		local t = self:getTalentFromId(self.T_SANDMAN)
 		local reduction = t.getInsomniaPower(self, t)
@@ -97,8 +97,12 @@ newTalent{
 	direct_hit = true,
 	requires_target = true,
 	tactical = { ATTACK = function(self, t, target) if target and target:attr("sleep") then return 4 else return 2 end end },
-	getChance = function(self, t) return self:combatTalentMindDamage(t, 15, 30) end,
-	getDuration = function(self, t) return 2 + math.ceil(self:getTalentLevel(t) * 2) end,
+	getChance = function(self, t, crit)
+		local tl = self:combatTalentMindDamage(t, 15, 30)
+		if crit then tl = self:mindCrit(tl) end
+		return self:combatLimit(tl, 100, 0, 0, 21, 21) -- Limit < 100%
+	end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 4, 12)) end,
 	summon_inner_demons = function(self, target, t)
 		-- Find space
 		local x, y = util.findFreeGrid(target.x, target.y, 1, true, {[Map.ACTOR]=true})
@@ -197,6 +201,9 @@ newTalent{
 			return nil
 		end
 		
+		-- "INNER_DEMONS" effect in data\time_effects\mental.lua calculates sleeping target effect		
+		local chance = t.getChance(self, t, true)
+
 		local chance = self:mindCrit(t.getChance(self, t))
 		if target:canBe("fear") or target:attr("sleep") then
 			target:setEffect(target.EFF_INNER_DEMONS, t.getDuration(self, t), {src = self, chance=chance, apply_power=self:combatMindpower()})
@@ -211,7 +218,7 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local chance = t.getChance(self, t)
 		return ([[Brings the target's inner demons to the surface.  Each turn, for %d turns, there's a %d%% chance that the a demon will surface, requiring the target to make a Mental Save to keep it from manifesting.
-		If the target is sleeping, the chance will be doubled, and fear immunity will be ignored.  Otherwise, if the summoning is resisted, the effect will end early.
+		If the target is sleeping, the chance to save will be halved, and fear immunity will be ignored.  Otherwise, if the summoning is resisted, the effect will end early.
 		The summon chance will scale with your Mindpower and the demon's life will scale with the target's rank.]]):format(duration, chance)
 	end,
 }
@@ -227,9 +234,13 @@ newTalent{
 	direct_hit = true,
 	requires_target = true,
 	tactical = { ATTACK = { DARKNESS = 2 }, DISABLE = function(self, t, target) if target and target:attr("sleep") then return 4 else return 2 end end },
-	getChance = function(self, t) return self:combatTalentMindDamage(t, 15, 30) end,
+	getChance = function(self, t, crit)
+		local tl = self:combatTalentMindDamage(t, 15, 50)
+		if crit then tl = self:mindCrit(tl) end
+		return self:combatLimit(tl, 100, 0, 0, 35.75, 35.75) -- Limit < 100%
+	end,
 	getDamage = function(self, t) return self:combatTalentMindDamage(t, 5, 50) end,
-	getDuration = function(self, t) return 4 + math.ceil(self:getTalentLevel(t)) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 5, 9)) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -239,7 +250,8 @@ newTalent{
 		local target = game.level.map(x, y, Map.ACTOR)
 		if not target then return nil end
 
-		local chance = self:mindCrit(t.getChance(self, t))
+		-- "WAKING_NIGHTMARE" effect in data\time_effects\mental.lua calculates sleeping target effect
+		local chance = t.getChance(self, t, true)
 		if target:canBe("fear") or target:attr("sleep") then
 			target:setEffect(target.EFF_WAKING_NIGHTMARE, t.getDuration(self, t), {src = self, chance=t.getChance(self, t), dam=self:mindCrit(t.getDamage(self, t)), apply_power=self:combatMindpower()})
 			game.level.map:particleEmitter(target.x, target.y, 1, "generic_charge", {rm=60, rM=130, gm=20, gM=110, bm=90, bM=130, am=70, aM=180})
@@ -255,7 +267,7 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local chance = t.getChance(self, t)
 		return ([[Inflicts %0.2f darkness damage each turn for %d turns, and has a %d%% chance to randomly cause blindness, stun, or confusion (lasting 3 turns).
-		If the target is sleeping, the chance of suffering a negative effect will be doubled and fear immunity will be ignored.
+		If the target is sleeping, the chance of avoiding a negative effect will be halved and fear immunity will be ignored.
 		The damage will scale with your Mindpower.]]):
 		format(damDesc(self, DamageType.DARKNESS, (damage)), duration, chance)
 	end,
@@ -270,8 +282,8 @@ newTalent{
 	sustain_psi = 50,
 	cooldown = 24,
 	tactical = { BUFF=2 },
-	getDamageBonus = function(self, t) return self:combatTalentMindDamage(t, 10, 50) end,
-	getSummonTime = function(self, t) return math.floor(self:getTalentLevel(t)*2) end,
+	getDamageBonus = function(self, t) return self:combatLimit(self:combatTalentMindDamage(t, 10, 50), 100, 0, 0, 34.7, 34.7) end, -- Limit <100%
+	getSummonTime = function(self, t) return math.floor(self:combatTalentScale(t, 2, 10)) end,
 	summonNightTerror = function(self, target, t)
 		-- Only spawns from hostile targets
 		if self:reactionToward(target) >= 0 then
@@ -285,7 +297,7 @@ newTalent{
 			return
 		end
 		
-		local stats = 10 + t.getDamageBonus(self, t)
+		local stats = 10 + self:combatTalentMindDamage(t, 10, 50)
 		local NPC = require "mod.class.NPC"
 		local m = NPC.new{
 			name = "terror",

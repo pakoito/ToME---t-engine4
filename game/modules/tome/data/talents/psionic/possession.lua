@@ -33,7 +33,7 @@ newTalent{
 		if type == "giant" then return true end
 		return false
 	end,
-	getMaxTalents = function(self, t) return math.ceil(self:getTalentLevel(t)) end,
+	getMaxTalents = function(self, t) return math.floor(self:combatTalentScale(t, 1, 5)) end,
 	target = function(self, t) return {type="hit", range=self:getTalentRange(t), selffire=false, talent=t} end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)

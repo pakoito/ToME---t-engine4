@@ -98,15 +98,22 @@ newTalent{
 	info = "Allows you to have a Feedback pool. Feedback is used to power feedback and discharge talents.",
 	mode = "passive",
 	hide = "always",
+	-- Adjust feedback ratio with character level to reflect the degree of "pain" received
+	-- Called in function _M:onTakeHit in mod.class.Actor.lua
+	getFeedbackRatio = function(self, t, raw)
+		local ratio = self:combatLimit(self.level, 0, 0.5, 1, 0.2, 50)  -- Limit >0% damage taken, 50% @ level 1, 20% @ level 50
+		local mult = 1 + (not raw and self:callTalent(self.T_AMPLIFICATION, "getFeedbackGain") or 0)
+		return ratio*mult
+	end,
 	no_unlearn_last = true,
 	on_learn = function(self, t)
 		if self:getMaxFeedback() <= 0 then
-			self:incMaxFeedback(100)
+--			self:incMaxFeedback(100)
+			self:incMaxFeedback(100 - self:getMaxFeedback())
 		end
 		return true
 	end,
 }
-
 
 newTalent{
 	name = "Mana Pool",
