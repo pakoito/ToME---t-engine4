@@ -326,16 +326,16 @@ newTalent{
 	on_learn = function(self, t)
 		self:attr("disease_immune", 0.2)
 		self.resists[DamageType.BLIGHT] = (self.resists[DamageType.BLIGHT] or 0) + 2
-		self.resists.all = (self.resists.all or 0) + 2
+		self.resists.all = (self.resists.all or 0) + 1.3
 	end,
 	on_unlearn = function(self, t)
 		self:attr("disease_immune", -0.2)
 		self.resists[DamageType.BLIGHT] = (self.resists[DamageType.BLIGHT] or 0) - 2
-		self.resists.all = (self.resists.all or 0) - 2
+		self.resists.all = (self.resists.all or 0) - 1.3
 	end,
 	info = function(self, t)
 		return ([[You are part of the wood; it shields you from corruption.
-		Increase disease immunity by %d%%, blight resistance by %d%%, and all resistances by %d%%.]]):format(self:getTalentLevelRaw(t) * 20, self:getTalentLevelRaw(t) * 2, self:getTalentLevelRaw(t) * 2)
+		Increase disease immunity by %d%%, blight resistance by %d%%, and all resistances by %d%%.]]):format(self:getTalentLevelRaw(t) * 20, self:getTalentLevelRaw(t) * 2, self:getTalentLevelRaw(t) * 1.3)
 	end,
 }
 
