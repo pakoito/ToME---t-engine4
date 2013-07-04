@@ -29,7 +29,7 @@ uberTalent{
 		self:attr("show_gloves_combat", -1)
 	end,
 	info = function(self, t)
-		return ([[Each time you make a melee attack, you have a 60%% chance to do an additional unarmed strike.]])
+		return ([[Each time that you make a melee attack you have a 60%% chance to execute an additional unarmed strike.]])
 		:format()
 	end,
 }
@@ -37,7 +37,7 @@ uberTalent{
 uberTalent{
 	name = "You Shall Be My Weapon!", short_name="TITAN_S_SMASH", image = "talents/titan_s_smash.png",
 	mode = "activated",
-	require = { special={desc="Be of at least size category 'big' (also required to use it)", fct=function(self) return self.size_category and self.size_category >= 4 end} },
+	require = { special={desc="Be of size category 'big' or larger. This is also required to use it.", fct=function(self) return self.size_category and self.size_category >= 4 end} },
 	requires_target = true,
 	tactical = { ATTACK = 4 },
 	on_pre_use = function(self, t) return self.size_category and self.size_category >= 4 end,
@@ -67,9 +67,9 @@ uberTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You deal a massive blow to your foe, smashing it for 350%% weapon damage and knocking it back 6 tiles away.
-		For each size category over 'big' you gain an additional +80%% weapon damage.
-		All foes in its path will be knocked to the side and stunned for 3 turns.]])
+		return ([[You deal a massive blow to your foe, smashing it for 350%% weapon damage and knocking it back 6 tiles.
+		All foes in its path will be knocked to the side and stunned for 3 turns.
+		For each size category over 'big' you gain an additional +80%% weapon damage.]])
 		:format()
 	end,
 }
@@ -77,7 +77,7 @@ uberTalent{
 uberTalent{
 	name = "Massive Blow",
 	mode = "activated",
-	require = { special={desc="Have dug at least 30 walls/trees/... and dealt over 50000 damage with a two-handed weapon", fct=function(self) return 
+	require = { special={desc="Have dug at least 30 walls/trees/etc. and have dealt over 50000 damage with two-handed weapons", fct=function(self) return 
 		self.dug_times and self.dug_times >= 30 and 
 		self.damage_log and self.damage_log.weapon.twohanded and self.damage_log.weapon.twohanded >= 50000
 	end} },
@@ -102,7 +102,7 @@ uberTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You deal a massive blow to your foe, smashing it for 150%% weapon damage and knocking it back 4 tiles away.
+		return ([[You deal a massive blow to your foe, smashing it for 150%% weapon damage and knocking it back 4 tiles.
 		If the knockback makes it hit a wall, it will smash down the wall and deal an additional 350%% weapon damage.]])
 		:format()
 	end,
@@ -113,9 +113,9 @@ uberTalent{
 	mode = "passive",
 	require = { special={desc="Know the Rush talent", fct=function(self) return self:knowTalent(self.T_RUSH) end} },
 	info = function(self, t)
-		return ([[When you rush, the creature you rush to is marked. If you kill it in the next two turns, your rush cooldown is reset.
-		Each time this effect triggers, you gain a stacking +20%% damage buff, up to 100%%.
-		Also rush only costs 2 stamina.]])
+		return ([[When you rush, the creature you rush to is marked. If you kill it in the next two turns then your rush cooldown is reset.
+		Each time that this effect triggers you gain a stacking +20%% damage buff, up to 100%%.
+		Rush now only costs 2 stamina.]])
 		:format()
 	end,
 }
@@ -140,7 +140,7 @@ uberTalent{
 		local dam = (50 + self:getStr() * 1.7) / 3
 		return ([[For 6 turns you gain the mass and power of a star, drawing all creatures within radius 5 toward you and dealing %0.2f fire, %0.2f light and %0.2f physical damage to all foes.
 		Foes closer to you take up to 150%% more damage.
-		Damage will increase with your Strength.]])
+		The damage will increase with your Strength.]])
 		:format(damDesc(self, DamageType.FIRE, dam), damDesc(self, DamageType.LIGHT, dam), damDesc(self, DamageType.PHYSICAL, dam))
 	end,
 }
@@ -155,8 +155,8 @@ uberTalent{
   		self:onStatChange(self.STAT_STR, 40)
 	end,
 	info = function(self, t)
-		return ([[You are strong; fatigue and physical exertion mean nothing to you.
-		Fatigue is permanently set to 0, carrying capacity increased by 500 and strength increased by 40.]])
+		return ([[Your strength is legendary; fatigue and physical exertion mean nothing to you.
+		Your fatigue is permanently set to 0, carrying capacity increased by 500, and strength increased by 40.]])
 		:format()
 	end,
 }
@@ -181,7 +181,7 @@ uberTalent{
 	end,
 	info = function(self, t)
 		return ([[You have sided with Slasul and helped him vanquish Ukllmswwik. You are now able to breathe underwater with ease.
-		You have also learnt to use tridents and other exotic weapons easily (gaining 5 levels of Exotic Weapon Mastery), and can Spit Poison as nagas do. In addition, should Slasul still live, he may have a further reward for you as thanks...]])
+		You have also mastered the use of tridents and other exotic weapons(gaining 5 levels of Exotic Weapon Mastery), and you can Spit Poison as nagas do. In addition, should Slasul still live he may have a further reward for you as a sign of his gratitude...]])
 		:format()
 	end,
 }
@@ -190,8 +190,8 @@ uberTalent{
 	name = "Superpower",
 	mode = "passive",
 	info = function(self, t)
-		return ([[A strong body is key to a strong mind. And a strong mind is powerful enough to make a strong body.
-		Grants a Mindpower bonus equal to 50%% of your Strength.
+		return ([[A strong body is key to a strong mind, and a strong mind can be powerful enough to make a strong body.
+		This prodigy grants a Mindpower bonus equal to 50%% of your Strength.
 		Additionally, you treat all weapons as having an additional 30%% Willpower modifier.]])
 		:format()
 	end,

@@ -110,8 +110,8 @@ uberTalent{
 	end,
 	info = function(self, t)
 		local dam = t.getDamage(self, t)/2
-		return ([[With the release of your willpower when casting damaging spells or mind attacks, you can call forth a meteor to crash down near your foes.
-		The affected area is turned into lava for 8 turns, and the crash will deal %0.2f fire and %0.2f physical damage.
+		return ([[When casting damaging spells or mind attacks, the release of your willpower can call forth a meteor to crash down near your foes.
+		The affected area is turned into lava for 8 turns, and the crash itself will deal %0.2f fire and %0.2f physical damage.
 		The meteor also stuns affected creatures for 3 turns. The damage scales with your Spellpower or Mindpower.]])
 		:format(damDesc(self, DamageType.FIRE, dam), damDesc(self, DamageType.PHYSICAL, dam))
 	end,
@@ -141,7 +141,7 @@ uberTalent{
 			))
 	end} },
 	info = function(self, t)
-		return ([[Garkul's Spirit is with you; you now deal 1000%% more damage to constructs and 20%% more damage to humanoids.]])
+		return ([[Garkul's spirit is with you. You now deal 1000%% more damage to constructs and 20%% more damage to humanoids.]])
 		:format()
 	end,
 }
@@ -155,7 +155,7 @@ uberTalent{
 		self:setEffect(self.EFF_HIDDEN_RESOURCES, 5, {})
 		return true
 	end,
-	require = { special={desc="Have been close to death (killed a foe while below 1 HP)", fct=function(self) return self:attr("barely_survived") end} },
+	require = { special={desc="Have been close to death(killed a foe while below 1 HP)", fct=function(self) return self:attr("barely_survived") end} },
 	info = function(self, t)
 		return ([[You focus your mind on the task at hand, regardless of how dire the situation is.
 		For 5 turns, none of your talents use any resources.]])
@@ -192,7 +192,7 @@ uberTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Your will is so strong, you simply ignore mental effects used against you.
+		return ([[Your will is so strong that you simply ignore mental effects used against you.
 		Warning: this has a cooldown.]])
 		:format()
 	end,
@@ -215,8 +215,8 @@ uberTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Your will is a shield against the assault of crazy arcane users.
-		Each time you take damage from a spell, you punish the spellcaster with %0.2f mind damage.
+		return ([[Your will is a shield against the assault of crazed arcane users.
+		Each time that you take damage from a spell, you punish the spellcaster with %0.2f mind damage.
 		Also, they will suffer a 35%% spell failure chance for the cooldown duration of the spell they used on you.]])
 		:format(damDesc(self, DamageType.MIND, 20 + self:getWil() * 2))
 	end,
@@ -250,7 +250,7 @@ uberTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Transcend the physical and rule over all with an iron will.
+		return ([[Transcend the physical and rule over all with an iron will!
 		While this sustain is active, 33%% of your damage is converted into mind damage.
 		Additionally, you gain +30%% mind resistance penetration, and +10%% mind damage.]]):
 		format()

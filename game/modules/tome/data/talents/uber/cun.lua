@@ -108,8 +108,8 @@ uberTalent{
 	end,
 	info = function(self, t)
 		return ([[Surround yourself with a malevolent aura.
-		Any acid damage you do has a 20%% chance to apply a lasting acid, that deals %d%% of the initial damage for 5 turns and reduces accuracy by %d.
-		Any blight damage you do has a 20%% chance to cause a random disease, that deals %d%% of the initial damage for 5 turns and reduces a stat by %d.
+		Any acid damage you do has a 20%% chance to apply a lasting acid that deals %d%% of the initial damage for 5 turns and reduces accuracy by %d.
+		Any blight damage you do has a 20%% chance to cause a random disease that deals %d%% of the initial damage for 5 turns and reduces a stat by %d.
 		Any darkness damage you do has a 20%% chance to blind the target for 5 turns.
 		Any temporal damage you do has a 20%% chance to slow (30%%) the target for 5 turns.
 		Any mind damage you do has a 20%% chance to confuse (20%%) the target for 5 turns.
@@ -148,7 +148,7 @@ uberTalent{
 		end
 	end,
 	info = function(self, t)
-		return ([[You have obtained the three parts of the Staff of Telos and studied them carefully. You believe you can merge them back into a single, highly potent, staff.]])
+		return ([[You have obtained the three parts of the Staff of Telos and studied them carefully. You believe that you can merge them back into a single highly potent staff.]])
 		:format()
 	end,
 }
@@ -295,8 +295,8 @@ uberTalent{
 		self.invisible_damage_penalty_divisor = (self.invisible_damage_penalty_divisor or 0) + 2
 	end,
 	info = function(self, t)
-		return ([[You have friends in low places, and have learned some underhanded tricks.
-		Gain 0.2 Category Mastery to the Cunning/Stealth Category (or unlock it, if locked), and either gain +0.1 to the Cunning/Scoundrel category or learn and unlock the category at 0.9, if you lack it.
+		return ([[You have friends in low places and have learned some underhanded tricks.
+		Gain 0.2 Category Mastery to the Cunning/Stealth Category (or unlock it, if locked), and either gain +0.1 to the Cunning/Scoundrel category or learn and unlock the category at 0.9 if you lack it.
 		Additionally, all of your damage penalties from invisibility are permanently halved.]]):
 		format()
 	end,

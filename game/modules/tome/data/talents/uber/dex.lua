@@ -51,9 +51,9 @@ uberTalent{
 	end,
 	info = function(self, t)
 		return ([[You are used to a crowded party:
-		- you can swap place with friendly creatures in only one tenth of a turn (this does not require the prodigy to be active, it is a passive effect).
-		- you can never damage your friends of neutral creatures when this talent is active.
-		- you love being surrounded by friends, for each friendly creature in sight you gain +10 to all saves]])
+		- you can swap places with friendly creatures in just one tenth of a turn as a passive effect.
+		- you can never damage your friends or neutral creatures while this talent is active.
+		- you love being surrounded by friends; for each friendly creature in sight you gain +10 to all saves]])
 		:format()
 	end,
 }
@@ -72,9 +72,9 @@ uberTalent{
 		self:attr("quick_wear_takeoff", -1)
 	end,
 	info = function(self, t)
-		return ([[Youhave very agile hands; swapping equipment sets (default q key) takes no time, nor does wearing/taking off items.
-		Also the cooldown for equipping activatable equipment is removed.
-		Free item switch may only happen once per turn.]])
+		return ([[You have very agile hands; swapping equipment sets (default q key) takes no time, nor does equipping/unequipping items.
+		The free item switch may only happen once per turn.
+		The cooldown for equipping activatable equipment is removed.]])
 		:format()
 	end,
 }
@@ -105,7 +105,7 @@ uberTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You spin madly, generating a sharp gust of wind with your weapon, dealing 320%% weapon damage to all foes within radius 4 and disarming them for 4 turns.]])
+		return ([[You spin madly, generating a sharp gust of wind with your weapons that deals 320%% weapon damage to all foes within radius 4 and disarms them for 4 turns.]])
 		:format()
 	end,
 }
@@ -126,7 +126,7 @@ uberTalent{
 	end,
 	info = function(self, t)
 		return ([[You are attuned wih Nature, and she helps you in your fight against the arcane forces.
-		You gain 20%% permanent global speed, and do not trigger pressure traps.]])
+		You gain 20%% permanent global speed and do not trigger pressure traps.]])
 		:format()
 	end,
 }
@@ -182,7 +182,7 @@ uberTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You jump accurately to the target, dealing 200%% weapon damage to all foes within radius 1 on impact and dazing them for 3 turns.]])
+		return ([[You accurately jump to the target and deal 200%% weapon damage to all foes within radius 1 on impact as well as dazing them for 3 turns.]])
 		:format()
 	end,
 }
@@ -194,7 +194,7 @@ uberTalent{
 		return self:getTalentLevelRaw(self.T_IMBUE_ITEM) >= 5
 	end} },
 	info = function(self, t)
-		return ([[You are very crafty. You can now also embed gems into your helm and belt.]])
+		return ([[You are very crafty. You can now also embed gems into helms and belts.]])
 		:format()
 	end,
 }
@@ -216,8 +216,8 @@ uberTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You have learnt to take a few hits when needed and can flow with the tide of battle, reducing all physical damage by 10%%.
-		When you get hit by a melee or archery attack, you go back one tile (this can only happen once per turn) for free and gain 200%% movement speed for a turn.]])
+		return ([[You have learned to take a few hits when needed and can flow with the tide of battle, reducing all physical damage by 10%%.
+		Once per turn, when you get hit by a melee or archery attack you move back one tile for free and gain 200%% movement speed for a turn.]])
 		:format()
 	end,
 }
@@ -245,7 +245,7 @@ uberTalent{
 	end,
 	info = function(self, t)
 		return ([[You fire a shot straight at your enemy's vital areas, wounding them terribly.
-		Enemies hit by this shot will take 450%% weapon damage, and will be stunned and crippled (losing 50%% physical, magical and mental attack speeds) for five turns, due to the incredibly disabling impact of the shot.
+		Enemies hit by this shot will take 450%% weapon damage and will be stunned and crippled (losing 50%% physical, magical and mental attack speeds) for five turns due to the devastating impact of the shot.
 		The stun and cripple chances increase with your Accuracy.]]):format()
 	end,
 }

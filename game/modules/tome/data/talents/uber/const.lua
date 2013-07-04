@@ -69,7 +69,7 @@ uberTalent{
 	mode = "passive",
 	require = { special={desc="Know the Block talent", fct=function(self) return self:knowTalent(self.T_BLOCK) end} },
 	info = function(self, t)
-		return ([[Your block now lasts 1 more turn, and does not end when hit.]])
+		return ([[Your block now lasts 1 more turn and does not end when hit.]])
 		:format()
 	end,
 }
@@ -90,7 +90,7 @@ uberTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[While this talent is active, you dig deep into your stamina reserves, allowing you to move without taking a turn but costing 12 stamina for each tile you cross.]])
+		return ([[While this talent is active, you dig deep into your stamina reserves, allowing you to move without taking a turn. However, this costs 12 stamina for each tile that you cross.]])
 		:format()
 	end,
 }
@@ -124,7 +124,7 @@ uberTalent{
 		self:setEffect(self.EFF_SPINE_OF_THE_WORLD, 4, {})
 	end,
 	info = function(self, t)
-		return ([[Your back is as hard as stone. Each time you are affected by a physical effect, your body hardens, making you immune to all other physical effects for 5 turns.]])
+		return ([[Your back is as hard as stone. Each time that you are affected by a physical effect, your body hardens, making you immune to all other physical effects for 5 turns.]])
 		:format()
 	end,
 }
@@ -152,7 +152,7 @@ uberTalent{
 		return ([[Fungal spores have colonized your blood, so that each time you use an infusion you store %d fungal power.
 		You may use this prodigy to release the power as a heal (never more than than %d life) and remove up to 10 detrimental magical effects.
 		Fungal power lasts for up to 6 turns, losing 10 potency each turn.
-		The amount of fungal power produced, and the maximum heal possible, increase with your Constitution.]])
+		The amount of fungal power produced and the maximum heal possible increase with your Constitution.]])
 		:format(self:getCon() * 2, self:getCon() * self.max_life / 100)
 	end,
 }
@@ -173,7 +173,7 @@ uberTalent{
 	end,
 	info = function(self, t)
 		return ([[Thanks to your newfound knowledge of corruption, you've learned some tricks for toughening your body... but only if you are healthy enough to withstand the strain from the changes.
-		Improves your life by 250, your Defense by %d, and your saves by %d, as your natural toughness and reflexes are pushed beyond their normal limits.
+		Improves your life by 250, your Defense by %d, and your saves by %d as your natural toughness and reflexes are pushed beyond their normal limits.
 		Your saves and Defense will improve with your Constitution.]])
 		:format(self:getCon() / 3, self:getCon() / 3)
 	end,

@@ -20,7 +20,7 @@
 uberTalent{
 	name = "Spectral Shield",
 	mode = "passive",
-	require = { special={desc="Know the Block talent, and have cast 100 spells, and have a block value over 200", fct=function(self)
+	require = { special={desc="Know the Block talent, have cast 100 spells, and have a block value over 200", fct=function(self)
 		return self:knowTalent(self.T_BLOCK) and self:getTalentFromId(self.T_BLOCK).getBlockValue(self) >= 200 and self.talent_kind_log and self.talent_kind_log.spell and self.talent_kind_log.spell >= 100
 	end} },
 	on_learn = function(self, t)
@@ -30,7 +30,7 @@ uberTalent{
 		self:attr("spectral_shield", -1)
 	end,
 	info = function(self, t)
-		return ([[Infusing your shield with raw magic, your Block can now block any damage type.]])
+		return ([[By infusing your shield with raw magic, your block can now block any damage type.]])
 		:format()
 	end,
 }
@@ -38,7 +38,7 @@ uberTalent{
 uberTalent{
 	name = "Aether Permeation",
 	mode = "passive",
-	require = { special={desc="Have at least 25% arcane damage reduction, and have been exposed to the void of space", fct=function(self)
+	require = { special={desc="Have at least 25% arcane damage reduction and have been exposed to the void of space", fct=function(self)
 		return (game.state.birth.ignore_prodigies_special_reqs or self:attr("planetary_orbit")) and self:combatGetResist(DamageType.ARCANE) >= 25
 	end} },
 	on_learn = function(self, t)
@@ -50,8 +50,8 @@ uberTalent{
 	on_unlearn = function(self, t)
 	end,
 	info = function(self, t)
-		return ([[Create a thin layer of aether all around you. Any attack passing through will check arcane resistance instead of the incoming damage resistance.
-		In effect, all your resistances are equal to 66%% of your arcane resistance.]])
+		return ([[You manifest a thin layer of aether all around you. Any attack passing through it will check arcane resistance instead of the incoming damage resistance.
+		In effect, all of your resistances are equal to 66%% of your arcane resistance.]])
 		:format()
 	end,
 }
@@ -84,8 +84,8 @@ uberTalent{
 	name = "Arcane Might",
 	mode = "passive",
 	info = function(self, t)
-		return ([[You have learnt to harness your latent arcane powers, channeling them through your weapon.
-		Treats all weapons as having an additional 50%% Magic modifier.]])
+		return ([[You have learned to harness your latent arcane powers, channeling them through your weapon.
+		Equipped weapons are treated as having an additional 50%% Magic modifier.]])
 		:format()
 	end,
 }
@@ -93,7 +93,7 @@ uberTalent{
 uberTalent{
 	name = "Temporal Form",
 	cooldown = 30,
-	require = { special={desc="Have cast over 1000 spells and visited an out-of-time zone", fct=function(self) return
+	require = { special={desc="Have cast over 1000 spells and visited a zone outside of time", fct=function(self) return
 		self.talent_kind_log and self.talent_kind_log.spell and self.talent_kind_log.spell >= 1000 and (game.state.birth.ignore_prodigies_special_reqs or self:attr("temporal_touched"))
 	end} },
 	no_energy = true,
@@ -107,9 +107,9 @@ uberTalent{
 	end,
 	info = function(self, t)
 		return ([[You can wrap temporal threads around you, assuming the form of a telugoroth for 10 turns.
-		While in this form, you gain pinning, bleeding, blindness and stun immunity, 30%% temporal resistance, your temporal damage bonus is set to your current highest damage bonus + 30%%, 50%% of the damage you deal becomes temporal, and you gain 20%% temporal resistance penetration.
+		While in this form you gain pinning, bleeding, blindness and stun immunity, 30%% temporal resistance, your temporal damage bonus is set to your current highest damage bonus + 30%%, 50%% of the damage you deal becomes temporal, and you gain 20%% temporal resistance penetration.
 		You also are able to cast two anomalies: Anomaly Rearrange and Anomaly Temporal Storm.
-		Transforming to this form will increase your paradox by 400 but also grant an equivalent of +400 willpower to control paradoxes and failures, and revert it back at the end of the effect.]])
+		Transforming to this form will increase your paradox by 400 but also grant the equivalent of +400 willpower to control paradoxes and failures. This reverts back at the end of the effect.]])
 		:format()
 	end,
 }
@@ -123,11 +123,11 @@ uberTalent{
 			self.alchemy_golem:learnTalentType("corruption/reaving-combat", true)
 		end
 	end,
-	require = { special={desc="Have summoned at least 100 creatures affected by this talent (alchemist golem count as 100)", fct=function(self)
+	require = { special={desc="Have summoned at least 100 creatures affected by this talent. The alchemist golem counts as 100.", fct=function(self)
 		return self:attr("summoned_times") and self:attr("summoned_times") >= 100
 	end} },
 	info = function(self, t)
-		return ([[You infuse blighted energies into all your summons, giving them all a new talent:
+		return ([[You infuse blighted energies into all of your summons, granting them a new talent:
 		- War Hound: Curse of Defenselessness
 		- Jelly: Vimsense
 		- Minotaur: Life Tap
@@ -179,8 +179,8 @@ uberTalent{
 		return nil -- We do not start the cooldown!
 	end,
 	info = function(self, t)
-		return ([[You can now control the near-past; upon using this prodigy, you gain a temporal effect for 20 turns.
-		While this effect holds, you can use the prodigy again to rewrite history.
+		return ([[You can now control the recent past. Upon using this prodigy you gain a temporal effect for 20 turns.
+		While this effect holds you can use the prodigy again to rewrite history.
 		This prodigy splits the timeline. Attempting to use another spell that also splits the timeline while this effect is active will be unsuccessful.]])
 		:format()
 	end,
@@ -201,7 +201,7 @@ newTalent{
 		return nil -- We do not start the cooldown!
 	end,
 	info = function(self, t)
-		return ([[Rewrite the near-past to go back to when you casted Revisionist History.]])
+		return ([[Rewrite the recent past to go back to when you cast Revisionist History.]])
 		:format()
 	end,
 }
@@ -210,7 +210,7 @@ uberTalent{
 	name = "Cauterize",
 	mode = "passive",
 	cooldown = 12,
-	require = { special={desc="Have received at least 7500 fire damage, and have cast at least 1000 spells", fct=function(self) return
+	require = { special={desc="Have received at least 7500 fire damage and have cast at least 1000 spells", fct=function(self) return
 		self.talent_kind_log and self.talent_kind_log.spell and self.talent_kind_log.spell >= 1000 and self.damage_intake_log and self.damage_intake_log[DamageType.FIRE] and self.damage_intake_log[DamageType.FIRE] >= 7500
 	end} },
 	trigger = function(self, t, value)
@@ -220,9 +220,9 @@ uberTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Your inner flame is strong. Each time you receive a blow that would kill you, your body is wreathed in flames.
+		return ([[Your inner flame is strong. Each time that you receive a blow that would kill you, your body is wreathed in flames.
 		The flames will cauterize the wound, fully absorbing all damage done this turn, but they will continue to burn for 8 turns.
-		Each turn 10% of the damage absorbed will be dealt by the flames (this will bypass resistance and affinity).
+		Each turn 10% of the damage absorbed will be dealt by the flames. This will bypass resistance and affinity.
 		Warning: this has a cooldown.]])
 	end,
 }
