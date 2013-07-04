@@ -37,6 +37,8 @@ function _M:init(name, npc, player, data)
 		newChat = function(c) self:addChat(c) end,
 	}, {__index=data}))
 	self.default_id = f()
+
+	self:triggerHook{"Chat:load", data=data}
 end
 
 --- Switch the NPC talking
@@ -48,6 +50,8 @@ end
 
 --- Adds a chat to the list of possible chats
 function _M:addChat(c)
+	self:triggerHook{"Chat:add", c=c}
+
 	assert(c.id, "no chat id")
 	assert(c.text, "no chat text")
 	assert(c.answers, "no chat answers")
