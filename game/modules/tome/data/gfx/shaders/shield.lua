@@ -22,6 +22,7 @@ return {
 	vert = nil,
 	args = {
 		tex = { texture = 0 },
+		mainfbo = { texture = 1 },
 		color = color or {0.4, 0.7, 1.0},
 		time_factor = time_factor or 4000,
 		aadjust = aadjust or 10,

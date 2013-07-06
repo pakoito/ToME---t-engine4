@@ -446,7 +446,7 @@ end
 function _M:createFBOs()
 	-- Create the framebuffer
 	self.fbo = core.display.newFBO(Map.viewport.width, Map.viewport.height)
-	if self.fbo then self.fbo_shader = Shader.new("main_fbo") if not self.fbo_shader.shad then self.fbo = nil self.fbo_shader = nil end end
+	if self.fbo then self.fbo_shader = Shader.new("main_fbo") if not self.fbo_shader.shad then self.fbo = nil self.fbo_shader = nil else core.particles.defineFramebuffer(self.fbo) end end
 	if self.player then self.player:updateMainShader() end
 
 	self.full_fbo = core.display.newFBO(self.w, self.h)

@@ -25,11 +25,13 @@
 #include "core_lua.h"
 #include "auxiliar.h"
 #include "types.h"
+#include "core_lua.h"
 #include "particles.h"
 #include "script.h"
 #include <math.h>
 #include "SFMT.h"
 #include "tSDL.h"
+#include "main.h"
 #include "physfs.h"
 #include "physfsrwops.h"
 
@@ -48,6 +50,7 @@ static particle_thread *threads = NULL;
 static int textures_ref = LUA_NOREF;
 static int nb_threads = 0;
 static int cur_thread = 0;
+static lua_fbo *main_fbo = NULL;
 void thread_add(particles_type *ps);
 
 static void getinitfield(lua_State *L, const char *key, int *min, int *max)
@@ -77,6 +80,13 @@ static void getparticulefield(lua_State *L, const char *k, float *v)
 	*v = (float)lua_tonumber(L, -1);
 //	printf("emit %s :: %f\n", k, *v);
 	lua_pop(L, 1);
+}
+
+static int particles_main_fbo(lua_State *L)
+{
+	lua_fbo *fbo = (lua_fbo*)auxiliar_checkclass(L, "gl{fbo}", 1);
+	main_fbo = fbo;
+	return 0;
 }
 
 // Runs into main thread
@@ -181,7 +191,12 @@ static int particles_to_screen(lua_State *L)
 
 	if (ps->blend_mode == BLEND_ADDITIVE) glBlendFunc(GL_SRC_ALPHA,GL_ONE);
 
+	if (multitexture_active) tglActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, ps->texture);
+	if (multitexture_active && main_fbo) {
+		tglActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, main_fbo->texture);
+	}
 	glTexCoordPointer(2, GL_SHORT, 0, texcoords);
 	glColorPointer(4, GL_FLOAT, 0, colors);
 	glVertexPointer(2, GL_FLOAT, 0, vertices);
@@ -191,7 +206,7 @@ static int particles_to_screen(lua_State *L)
 	glScalef(ps->zoom * zoom, ps->zoom * zoom, ps->zoom * zoom);
 	glRotatef(ps->rotate, 0, 0, 1);
 
-	if (ps->shader) useShader(ps->shader, 1, 1, 1, 1, 1, 1, 1, 1);
+	if (ps->shader) useShader(ps->shader, x, y, main_fbo ? main_fbo->w : 1, main_fbo ? main_fbo->h : 1, 1, 1, 1, 1);
 
 	int remaining = ps->batch_nb;
 	while (remaining >= PARTICLES_PER_ARRAY)
@@ -208,6 +223,10 @@ static int particles_to_screen(lua_State *L)
 	glTranslatef(-x, -y, 0);
 
 	if (ps->blend_mode) glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+
+	if (multitexture_active && main_fbo) {
+		tglActiveTexture(GL_TEXTURE0);
+	}
 
 	SDL_mutexV(ps->lock);
 
@@ -496,6 +515,7 @@ static int particles_emit(lua_State *L)
 static const struct luaL_Reg particleslib[] =
 {
 	{"newEmitter", particles_new},
+	{"defineFramebuffer", particles_main_fbo},
 	{NULL, NULL},
 };
 

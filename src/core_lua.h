@@ -21,6 +21,15 @@
 #ifndef _CORELUA_H_
 #define _CORELUA_H_
 
+#include "tgl.h"
+
+typedef struct
+{
+    GLuint fbo;
+    GLuint texture;
+    int w, h;
+} lua_fbo;
+
 extern int luaopen_core(lua_State *L);
 extern int init_blank_surface();
 

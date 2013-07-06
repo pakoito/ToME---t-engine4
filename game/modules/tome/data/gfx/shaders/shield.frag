@@ -10,6 +10,10 @@ uniform float impact_tick;
 uniform float impact_time;
 uniform float llpow;
 
+uniform sampler2D mainfbo;
+uniform vec2 mapCoord;
+uniform vec2 texSize;
+
 void main(void)
 {
 	vec2 uv = vec2(0.5, 0.5) - gl_TexCoord[0].xy;
@@ -50,5 +54,6 @@ void main(void)
 	if (l <= 1.0) c.a = max(0.15, c.a);
 
 	c.rgb *= color;
-	gl_FragColor = c;
+//	gl_FragColor = c;
+	gl_FragColor = texture2D(mainfbo, vec2(gl_TexCoord[0].x * texSize.x / mapCoord.x, gl_TexCoord[0].y * texSize.y / mapCoord.y));
 }
