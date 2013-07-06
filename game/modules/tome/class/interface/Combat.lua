@@ -902,20 +902,54 @@ _M.weapon_talents = {
 	unarmed = Talents.T_UNARMED_MASTERY,
 }
 
+--- Static!
+function _M:addCombatTraining(kind, tid)
+	local wt = _M.weapon_talents
+	if not wt[kind] then wt[kind] = tid return end
+
+	if type(wt[kind]) == "table" then
+		wt[kind][#wt[kind]+1] = tid
+	else
+		wt[kind] = { wt[kind] }
+		wt[kind][#wt[kind]+1] = tid
+	end
+end
+
 --- Checks weapon training
 function _M:combatGetTraining(weapon)
 	if not weapon then return nil end
 	if not weapon.talented then return nil end
-	if not weapon_talents[weapon.talented] then return nil end
-	return self:getTalentFromId(weapon_talents[weapon.talented])
+	if not _M.weapon_talents[weapon.talented] then return nil end
+	if type(_M.weapon_talents[weapon.talented]) == "table" then
+		local ktid, max = _M.weapon_talents[weapon.talented][1], self:getTalentLevel(_M.weapon_talents[weapon.talented][1])
+		for i, tid in ipairs(_M.weapon_talents[weapon.talented]) do
+			if self:knowTalent(tid) then 
+				if self:getTalentLevel(tid) > max then
+					ktid = tid
+					max = self:getTalentLevel(tid)
+				end
+			end
+		end
+		return self:getTalentFromId(ktid)
+	else
+		return self:getTalentFromId(_M.weapon_talents[weapon.talented])
+	end
 end
 
 --- Checks weapon training
 function _M:combatCheckTraining(weapon)
 	if not weapon then return 0 end
 	if not weapon.talented then return 0 end
-	if not weapon_talents[weapon.talented] then return 0 end
-	return self:getTalentLevel(weapon_talents[weapon.talented])
+	if not _M.weapon_talents[weapon.talented] then return 0 end
+	if type(_M.weapon_talents[weapon.talented]) == "table" then
+		local max = 0
+		for i, tid in ipairs(_M.weapon_talents[weapon.talented]) do
+			max = math.max(max, self:getTalentLevel(tid))
+		end
+		return max
+	else
+		return self:getTalentLevel(_M.weapon_talents[weapon.talented])
+	end
 end
 
 --- Gets the defense
