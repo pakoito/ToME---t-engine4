@@ -206,7 +206,10 @@ static int particles_to_screen(lua_State *L)
 	glScalef(ps->zoom * zoom, ps->zoom * zoom, ps->zoom * zoom);
 	glRotatef(ps->rotate, 0, 0, 1);
 
-	if (ps->shader) useShader(ps->shader, x, y, main_fbo ? main_fbo->w : 1, main_fbo ? main_fbo->h : 1, 1, 1, 1, 1);
+	if (ps->shader) {
+		particle_type *p = &ps->particles[0];
+		useShader(ps->shader, x, y, main_fbo ? main_fbo->w : 1, main_fbo ? main_fbo->h : 1, p->size, p->size, 1, 1);
+	}
 
 	int remaining = ps->batch_nb;
 	while (remaining >= PARTICLES_PER_ARRAY)

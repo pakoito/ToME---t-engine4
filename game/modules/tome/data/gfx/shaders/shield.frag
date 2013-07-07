@@ -13,6 +13,7 @@ uniform float llpow;
 uniform sampler2D mainfbo;
 uniform vec2 mapCoord;
 uniform vec2 texSize;
+uniform vec4 displayColor;
 
 void main(void)
 {
@@ -55,5 +56,5 @@ void main(void)
 
 	c.rgb *= color;
 //	gl_FragColor = c;
-	gl_FragColor = texture2D(mainfbo, vec2(gl_TexCoord[0].x * texSize.x / mapCoord.x, gl_TexCoord[0].y * texSize.y / mapCoord.y));
+	gl_FragColor = texture2D(mainfbo, vec2(gl_TexCoord[0].x * displayColor.x / texSize.x + mapCoord.x / texSize.x, (1-gl_TexCoord[0].y) * displayColor.y / texSize.y + mapCoord.y / texSize.y));
 }
