@@ -92,6 +92,7 @@ static voidpf ZCALLBACK fopen_file_func (voidpf opaque, const char* filename, in
     else
     if (mode & ZLIB_FILEFUNC_MODE_CREATE)
         file = PHYSFS_openWrite(filename);
+    return file;
 }
 
 static voidpf ZCALLBACK fopen64_file_func (voidpf opaque, const void* filename, int mode)
@@ -105,6 +106,7 @@ static voidpf ZCALLBACK fopen64_file_func (voidpf opaque, const void* filename, 
     else
     if (mode & ZLIB_FILEFUNC_MODE_CREATE)
         file = PHYSFS_openWrite(filename);
+    return file;
 }
 
 
