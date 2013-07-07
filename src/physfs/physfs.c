@@ -1968,16 +1968,16 @@ int PHYSFS_close(PHYSFS_File *_handle)
 
     /* -1 == close failure. 0 == not found. 1 == success. */
     rc = closeHandleInOpenList(&openReadList, handle);
-    BAIL_IF_MACRO_MUTEX(rc == -1, NULL, stateLock, 0);
+    BAIL_IF_MACRO_MUTEX(rc == -1, NULL, stateLock, 1);
     if (!rc)
     {
         rc = closeHandleInOpenList(&openWriteList, handle);
-        BAIL_IF_MACRO_MUTEX(rc == -1, NULL, stateLock, 0);
+        BAIL_IF_MACRO_MUTEX(rc == -1, NULL, stateLock, 1);
     } /* if */
 
     __PHYSFS_platformReleaseMutex(stateLock);
-    BAIL_IF_MACRO(!rc, ERR_NOT_A_HANDLE, 0);
-    return(1);
+    BAIL_IF_MACRO(!rc, ERR_NOT_A_HANDLE, 1);
+    return(0);
 } /* PHYSFS_close */
 
 
