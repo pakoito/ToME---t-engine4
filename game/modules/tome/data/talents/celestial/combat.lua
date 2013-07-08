@@ -27,7 +27,7 @@ newTalent{
 	sustain_positive = 10,
 	tactical = { BUFF = 2 },
 	range = 10,
-	getDamage = function(self, t) return 7 + self:combatSpellpower(0.092) * self:getTalentLevel(t) end,
+	getDamage = function(self, t) return 7 + self:combatSpellpower(0.092) * self:combatTalentScale(t, 1, 5) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/spell_generic2")
 		local ret = {
@@ -58,7 +58,7 @@ newTalent{
 	range = 6,
 	reflectable = true,
 	requires_target = true,
-	getReturnDamage = function(self, t) return 8 * self:getTalentLevelRaw(t) end,
+	getReturnDamage = function(self, t) return self:combatLimit(self:getTalentLevel(t)^.5, 100, 15, 1, 40, 2.24) end, -- Limit <100%
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -90,7 +90,7 @@ newTalent{
 	positive = 10,
 	tactical = { ATTACK = 2 },
 	requires_target = true,
-	range = function(self, t) return 2 + self:getStr(8) end,
+	range = function(self, t) return 2 + math.max(0, self:combatStatScale("str", 0.8, 8)) end,
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 1.1, 1.9) end,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}

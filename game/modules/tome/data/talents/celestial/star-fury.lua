@@ -70,7 +70,7 @@ newTalent{
 	end,
 	getDamageOnSpot = function(self, t) return self:combatTalentSpellDamage(t, 4, 40) end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 5, 110) end,
-	getDuration = function(self, t) return math.floor(self:getTalentLevel(t) * 0.8) + 2 end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 2.8, 6)) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
@@ -118,8 +118,8 @@ newTalent{
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t, selffire=false}
 	end,
-	getLightDamage = function(self, t) return 10 + self:combatSpellpower(0.2) * self:getTalentLevel(t) end,
-	getDarknessDamage = function(self, t) return 10 + self:combatSpellpower(0.2) * self:getTalentLevel(t) end,
+	getLightDamage = function(self, t) return 10 + self:combatSpellpower(0.2) * self:combatTalentScale(t, 1, 5) end,
+	getDarknessDamage = function(self, t) return 10 + self:combatSpellpower(0.2) * self:combatTalentScale(t, 1, 5) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local grids = self:project(tg, self.x, self.y, DamageType.LIGHT, self:spellCrit(t.getLightDamage(self, t)))
@@ -134,7 +134,6 @@ newTalent{
 		local darknessdam = t.getDarknessDamage(self, t)
 		local radius = self:getTalentRadius(t)
 		return ([[A surge of twilight pulses from you, doing %0.2f light and %0.2f darkness damage to all others within radius %d.
-		This skill also increases both your positive and negative energy.
 		The damage dealt will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.LIGHT, lightdam),damDesc(self, DamageType.DARKNESS, darknessdam), radius)
 	end,
@@ -150,9 +149,7 @@ newTalent{
 	negative = 20,
 	tactical = { ATTACKAREA = {DARKNESS = 2}, DISABLE = 2 },
 	range = 6,
-	radius = function(self, t)
-		return 1 + math.floor(self:getTalentLevelRaw(t) / 3)
-	end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 1.3, 2.7)) end,
 	direct_hit = true,
 	requires_target = true,
 	target = function(self, t)

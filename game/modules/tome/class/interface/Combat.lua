@@ -1155,13 +1155,14 @@ end
 -- y_low = value to match at x_low
 -- y_high = value to match at x_high
 -- power = scaling factor (default 0.5)
-function _M:combatScale(x, y_low, x_low, y_high, x_high, power)
-	power = power or 0.5
-	local x_low_adj, x_high_adj = x_low^power, x_high^power
+-- add = amount to add the result (default 0)
+-- shift = amount to add to the input value before computation (default 0)
+function _M:combatScale(x, y_low, x_low, y_high, x_high, power, add, shift)
+	power, add, shift = power or 0.5, add or 0, shift or 0
+	local x_low_adj, x_high_adj = (x_low+shift)^power, (x_high+shift)^power
 	local m = (y_high - y_low)/(x_high_adj - x_low_adj)
 	local b = y_low - m*x_low_adj
-	return m * x^power + b
---	return m * x^power + b, m, b
+	return m * (x + shift)^power + b + add
 end
 
 -- Scale a value up or down subject to a limit

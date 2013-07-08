@@ -64,9 +64,7 @@ newTalent{
 	getWeaponDamage = function(self, t) return self:combatTalentWeaponDamage(t, 1, 1.5) end,
 	getShieldDamage = function(self, t) return self:combatTalentWeaponDamage(t, 1, 1.5, self:getTalentLevel(self.T_SHIELD_EXPERTISE)) end,
 	getLightDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 200) end,
-	radius = function(self, t)
-		return 2 + self:getTalentLevel(t) / 2
-	end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 2.5, 4.5)) end,
 	action = function(self, t)
 		local shield = self:hasShield()
 		if not shield then
@@ -115,7 +113,7 @@ newTalent{
 	mode = "sustained",
 	sustain_positive = 20,
 	cooldown = 10,
-	range = function(self, t) return 1 + self:getTalentLevelRaw(t) end,
+	range = function(self, t) return math.floor(self:combatTalentScale(t, 2, 6)) end,
 	tactical = { DEFEND = 2 },
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 40, 400) end,
 	activate = function(self, t)
@@ -155,7 +153,7 @@ newTalent{
 	sustain_positive = 60,
 	cooldown = 50,
 	tactical = { DEFEND = 2 },
-	getLife = function(self, t) return self.max_life * (0.05 + self:getTalentLevel(t)/25) end,
+	getLife = function(self, t) return self.max_life * self:combatTalentLimit(t, 1.5, 0.09, 0.25) end, -- Limit < 150% max life (to survive a large string of hits between turns)
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/heal")
 		local ret = {

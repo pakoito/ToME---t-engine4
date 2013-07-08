@@ -28,8 +28,8 @@ newTalent{
 	positive = 15,
 	tactical = { BUFF = 1 },
 	range = 10,
-	getRestValue = function(self, t) return 17 + math.floor(3.5 * self:getTalentLevel(t)) end,
-	getNegativeGain = function(self, t) return 20 + self:getTalentLevel(t) * self:getCun(40, true) end,
+	getRestValue = function(self, t) return self:combatTalentLimit(t, 50, 20.5, 34.5) end, -- Limit < 50%
+	getNegativeGain = function(self, t) return math.max(0, self:combatScale(self:getTalentLevel(t) * self:getCun(40, true), 24, 4, 220, 200, nil, nil, 40)) end,
 	passives = function(self, t, p)
 		self:talentTemporaryValue(p, "positive_at_rest", t.getRestValue(self, t))
 		self:talentTemporaryValue(p, "negative_at_rest", t.getRestValue(self, t))
@@ -45,8 +45,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[You stand between the darkness and the light, allowing you to convert 15 positive energy into %d negative energy.
-		In addition, this will change the default level of positive and negative energies to %d%% of their maximum. Each turn, the energies will slowly fall/rise to this value, instead of 0.
-		The effect will increase with your Cunning.]]):
+		Learning this talent will change the default level of positive and negative energies to %d%% of their maximum. Each turn, the energies will slowly fall/rise to this value, instead of 0.
+		The negative energy gain will increase with your Cunning.]]):
 		format(t.getNegativeGain(self, t), t.getRestValue(self, t))
 	end,
 }
@@ -61,7 +61,7 @@ newTalent{
 	tactical = { ESCAPE = 2 },
 	no_npc_use = true,
 	no_unlearn_last = true,
-	getRange = function(self, t) return math.floor(10 + 3 * self:getTalentLevel(t)) end,
+	getRange = function(self, t) return math.floor(self:combatTalentScale(t, 13, 18)) end,
 	-- Check distance in preUseTalent to grey out the talent
 	on_pre_use = function(self, t)
 		local eff = self.sustain_talents[self.T_JUMPGATE]
@@ -91,7 +91,14 @@ newTalent{
 	require = divi_req2,
 	mode = "sustained", no_sustain_autoreset = true,
 	points = 5,
-	cooldown = function(self, t) return 24 - 4 * self:getTalentLevelRaw(t) end,
+	cooldown = function(self, t)
+		local tl = self:getTalentLevelRaw(t)
+		if tl < 4 then
+			return math.ceil(self:combatLimit(tl, 0, 20, 1, 8, 4))
+		else
+			return math.ceil(self:combatLimit(tl, 0, 8, 4, 4, 5)) --I5 Limit >0
+		end
+	end,
 	sustain_negative = 20,
 	no_npc_use = true,
 	tactical = { ESCAPE = 2 },
@@ -156,8 +163,8 @@ newTalent{
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t, selffire=false}
 	end,
-	getConfuseDuration = function(self, t) return math.floor(self:getTalentLevel(t) + self:getCun(5)) + 2 end,
-	getConfuseEfficency = function(self, t) return 50 + self:getTalentLevelRaw(t)*10 end,
+	getConfuseDuration = function(self, t) return math.floor(self:combatScale(self:getTalentLevel(t) + self:getCun(5), 2, 0, 12, 10)) end,
+	getConfuseEfficency = function(self, t) return self:combatTalentLimit(t, 60, 15, 45) end, -- Limit < 60% (slightly better than most confusion effects)
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		self:project(tg, self.x, self.y, DamageType.CONFUSION, {
@@ -169,9 +176,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		local duration = t.getConfuseDuration(self, t)
-		return ([[Let out a mental cry that shatters the will of your targets within radius 3, confusing them for %d turns.
+		return ([[Let out a mental cry that shatters the will of your targets within radius 3, confusing (%d%% to act randomly) them for %d turns.
 		The duration will improve with your Cunning.]]):
-		format(duration)
+		format(t.getConfuseEfficency(self,t),duration)
 	end,
 }
 
@@ -187,7 +194,8 @@ newTalent{
 	requires_target = true,
 	range = 5,
 	no_npc_use = true,
-	getDuration = function(self, t) return math.ceil(self:getTalentLevel(t)+self:getCun(10)) + 3 end,
+	getDuration = function(self, t) return math.floor(self:combatScale(self:getTalentLevel(t)+self:getCun(10), 3, 0, 18, 15)) end,
+	getPercent = function(self, t) return self:combatScale(self:getCun(10, true) * self:getTalentLevel(t), 0, 0, 50, 50) end,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
 		local tx, ty, target = self:getTarget(tg)
@@ -218,7 +226,7 @@ newTalent{
 			return true
 		end
 
-		modifier = self:getCun(10, true) * self:getTalentLevel(t)
+		local modifier = t.getPercent(self, t)
 
 		local m = target:clone{
 			shader = "shadow_simulacrum",
@@ -236,7 +244,7 @@ newTalent{
 		m.on_added_to_level = nil
 
 		m.energy.value = 0
-		m.life = m.life / (2 - math.min(modifier / 50, 1.9))
+		m.life = m.life*modifier/100
 		m.forceLevelup = function() end
 		-- Handle special things
 		m.on_die = nil
@@ -258,16 +266,18 @@ newTalent{
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		local allowed = 2 + math.ceil(self:getTalentLevelRaw(t) / 2 )
+		local size = "gargantuan"
 		if allowed < 4 then
 			size = "medium"
 		elseif allowed < 5 then
 			size = "big"
-		else
+		elseif allowed < 6 then
 			size = "huge"
 		end
-		return ([[Creates a shadowy copy of a target of up to %s size. The copy will attack its progenitor immediately.
-		It stays for %d turns; its duration, life and resistances scale with your Cunning.]]):
-		format(size, duration)
+		return ([[Creates a shadowy copy of a hostile target of up to %s size. The copy will attack its progenitor immediately and lasts for %d turns.
+		The duplicate has %d%% of the target's life, %d%% all damage resistance, +50%% darkness resistance and -50%% light resistance.
+		The duration, life and all damage resistance scale with your Cunning and this ability will not work on bosses.]]):
+		format(size, duration, t.getPercent(self, t), t.getPercent(self, t))
 	end,
 }
 
@@ -334,7 +344,7 @@ newTalent{
 	type_no_req = true,
 	tactical = { ESCAPE = 2 },
 	no_npc_use = true,
-	getRange = function(self, t) return math.floor(10 + 3 * self:getTalentLevel(t)) end,
+	getRange = function(self, t) return self:callTalent(self.T_JUMPGATE_TELEPORT, "getRange") end,
 	-- Check distance in preUseTalent to grey out the talent
 	is_teleport = true,
 	no_unlearn_last = true,

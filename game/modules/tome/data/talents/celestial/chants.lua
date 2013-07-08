@@ -172,7 +172,7 @@ newTalent{
 	range = 10,
 	getLightDamageIncrease = function(self, t) return self:combatTalentSpellDamage(t, 10, 50) end,
 	getDamageOnMeleeHit = function(self, t) return self:combatTalentSpellDamage(t, 5, 25) end,
-	getLite = function(self, t) return 1 + math.floor(self:getTalentLevelRaw(t)) end,
+	getLite = function(self, t) return math.floor(self:combatTalentScale(t, 2, 6, "log")) end,
 	activate = function(self, t)
 		cancelChants(self)
 		game:playSoundNear(self, "talents/spell_generic2")

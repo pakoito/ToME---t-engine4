@@ -72,14 +72,12 @@ newTalent{
 	tactical = { ATTACKAREA = {LIGHT = 1}, DISABLE = 2 },
 	direct_hit = true,
 	range = 0,
-	radius = function(self, t)
-		return 2 + math.ceil(self:getTalentLevel(t) / 2)
-	end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 2.5, 4.5)) end,
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), selffire=false, radius=self:getTalentRadius(t), talent=t}
 	end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 4, 80) end,
-	getDuration = function(self, t) return 3 + self:getTalentLevel(t) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 4, 8)) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		-- Temporarily turn on "friendlyfire" to lite all tiles

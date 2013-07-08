@@ -58,7 +58,7 @@ newTalent{
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
 	end,
 	getHeal = function(self, t) return self:combatTalentSpellDamage(t, 4, 40) end,
-	getDuration = function(self, t) return self:getTalentLevel(t) + 2 end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 3, 7)) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		self:project(tg, self.x, self.y, DamageType.LITE, 1)
@@ -118,7 +118,7 @@ newTalent{
 	cooldown = 30,
 	tactical = { HEAL = 1, CURE = 2 },
 	getRegeneration = function(self, t) return self:combatTalentSpellDamage(t, 10, 50) end,
-	getDuration = function(self, t) return 2 + math.ceil(self:getTalentLevel(t)) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 3, 7)) end,
 	action = function(self, t)
 		self:setEffect(self.EFF_PROVIDENCE, t.getDuration(self, t), {power=t.getRegeneration(self, t)})
 		game:playSoundNear(self, "talents/heal")

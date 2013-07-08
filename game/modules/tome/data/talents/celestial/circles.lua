@@ -28,11 +28,9 @@ newTalent{
 	no_energy = true,
 	tactical = { DEFEND = 2, ATTACKAREA = {DARKNESS = 1} },
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 4, 30) end,
-	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 4, 8)) end,
 	range = 0,
-	radius = function(self, t)
-		return 2 + math.floor(self:getTalentLevelRaw(t)/2)
-	end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 2.5, 4.5)) end,
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
 	end,
@@ -69,11 +67,9 @@ newTalent{
 	no_energy = true,
 	tactical = { DEFEND = 2, ATTACKAREA = {FIRE = 0.5, LIGHT = 0.5} },
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 2, 15) end,
-	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 4, 8)) end,
 	range = 0,
-	radius = function(self, t)
-		return 2 + math.floor(self:getTalentLevelRaw(t)/2)
-	end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 2.5, 4.5)) end,
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
 	end,
@@ -113,11 +109,9 @@ newTalent{
 	negative = 10,
 	no_energy = true,
 	tactical = { DEFEND = 2, ATTACKAREA = 1 },
-	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 4, 8)) end,
 	range = 0,
-	radius = function(self, t)
-		return 2 + math.floor(self:getTalentLevelRaw(t)/2)
-	end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 2.5, 4.5)) end,
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
 	end,
@@ -152,11 +146,9 @@ newTalent{
 	negative = 10,
 	no_energy = true,
 	tactical = { DEFEND = 2, ATTACKAREA = {LIGHT = 0.5, DARKNESS = 0.5} },
-	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 4, 8)) end,
 	range = 0,
-	radius = function(self, t)
-		return 2 + math.floor(self:getTalentLevelRaw(t)/2)
-	end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 2.5, 4.5)) end,
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
 	end,

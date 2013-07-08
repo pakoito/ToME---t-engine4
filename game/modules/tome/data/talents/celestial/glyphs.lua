@@ -30,9 +30,10 @@ newTalent{
 	no_energy = true,
 	requires_target = true,
 	tactical = { DISABLE = 2 },
-	range = function(self, t) return math.floor (self:getTalentLevel(t)) end,
-	getDazeDuration = function(self, t) return 3 + self:getTalentLevelRaw(t) end,
-	getDuration = function(self, t) return 5 + self:getTalentLevel(t) end,
+	range = function(self, t) return math.floor(self:combatTalentScale(t, 1, 5, "log")) end,
+	getDazeDuration = function(self, t) return math.floor(self:combatTalentScale(t, 4, 8)) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 6, 10)) end, -- Duration of glyph
+	trapPower = function(self,t) return math.max(1,self:combatScale(self:getTalentLevel(t) * self:getMag(15, true), 0, 0, 75, 75)) end, -- Used to determine detection and disarm power, about 75 at level 50
 	action = function(self, t)
 		local tg = {type="hit", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty = self:getTarget(tg)
@@ -59,6 +60,8 @@ newTalent{
 			end,
 			temporary = t.getDuration(self, t),
 			x = tx, y = ty,
+			disarm_power = math.floor(t.trapPower(self,t)),
+			detect_power = math.floor(t.trapPower(self,t) * 0.8),
 			canAct = false,
 			energy = {value=0},
 			act = function(self)
@@ -82,8 +85,8 @@ newTalent{
 	info = function(self, t)
 		local dazeduration = t.getDazeDuration(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[You bind light in a glyph on the floor. All targets walking over the glyph will be dazed for %d turns.
-		The glyph lasts for %d turns.]]):format(dazeduration, duration)
+		return ([[You bind light in a glyph on the floor. All enemies walking over the glyph will be dazed for %d turns.
+		The glyph is a hidden trap (%d detection and %d disarm power based on your Magic) and lasts for %d turns.]]):format(dazeduration, t.trapPower(self,t)*0.8, t.trapPower(self,t), duration)
 	end,
 }
 
@@ -98,9 +101,10 @@ newTalent{
 	no_energy = true,
 	tactical = { DISABLE = 2 },
 	requires_target = true,
-	range = function(self, t) return math.floor (self:getTalentLevel(t)) end,
-	getDamage = function(self, t) return 15 + self:combatSpellpower(0.12) * self:getTalentLevel(t) end,
-	getDuration = function(self, t) return 5 + self:getTalentLevel(t) end,
+	range = function(self, t) return math.floor(self:combatTalentScale(t, 1, 5, "log")) end,
+	getDamage = function(self, t) return 15 + self:combatSpellpower(0.12) * self:combatTalentScale(t, 1.5, 5) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 6, 10)) end, -- Duration of glyph
+	trapPower = function(self,t) return math.max(1,self:combatScale(self:getTalentLevel(t) * self:getMag(15, true), 0, 0, 75, 75)) end, -- Used to determine detection and disarm power, about 75 at level 50
 	action = function(self, t)
 		local tg = {type="hit", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty = self:getTarget(tg)
@@ -130,6 +134,10 @@ newTalent{
 			end,
 			temporary = t.getDuration(self, t),
 			x = tx, y = ty,
+			disarm_power = math.floor(t.trapPower(self,t)),
+			detect_power = math.floor(t.trapPower(self,t) * 0.8),
+			inc_damage = table.clone(self.inc_damage or {}, true),
+			resists_pen = table.clone(self.resists_pen or {}, true),
 			canAct = false,
 			energy = {value=0},
 			combatSpellpower = function(self) return self.sp end, sp = sp,
@@ -154,10 +162,10 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[You bind light in a glyph on the floor. All targets walking over the glyph will be hit by a blast that knocks them back and does %0.2f damage.
-		The glyph lasts for %d turns.
+		return ([[You bind light in a glyph on the floor. All targets walking over the glyph will be hit by a blast that knocks them back and does %0.2f physical damage.
+		The glyph is a hidden trap (%d detection and %d disarm power based on your Magic) and lasts for %d turns.
 		The damage will increase with your Spellpower.]]):
-		format(damDesc(self, DamageType.LIGHT, damage), duration)
+		format(damDesc(self, DamageType.SPELLKNOCKBACK, damage), t.trapPower(self, t)*0.8, t.trapPower(self, t), duration)
 	end,
 }
 
@@ -172,9 +180,10 @@ newTalent{
 	no_energy = true,
 	tactical = { ATTACKAREA = {LIGHT = 2} },
 	requires_target = true,
-	range = function(self, t) return math.floor (self:getTalentLevel(t)) end,
-	getDamage = function(self, t) return 15 + self:combatSpellpower(0.12) * self:getTalentLevel(t) end,
-	getDuration = function(self, t) return 5 + self:getTalentLevel(t) end,
+	range = function(self, t) return math.floor(self:combatTalentScale(t, 1, 5, "log")) end,
+	getDamage = function(self, t) return 15 + self:combatSpellpower(0.12) * self:combatTalentScale(t, 1.5, 5) end,-- Should this be higher than glyph of repulsion?
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 6, 10)) end, -- Duration of glyph
+	trapPower = function(self,t) return math.max(1,self:combatScale(self:getTalentLevel(t) * self:getMag(15, true), 0, 0, 75, 75)) end, -- Used to determine detection and disarm power, about 75 at level 50
 	action = function(self, t)
 		local tg = {type="hit", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty = self:getTarget(tg)
@@ -200,6 +209,10 @@ newTalent{
 			end,
 			temporary = t.getDuration(self, t),
 			x = tx, y = ty,
+			disarm_power = math.floor(t.trapPower(self,t) * 0.8),
+			detect_power = math.floor(t.trapPower(self,t) * 0.8),
+			inc_damage = table.clone(self.inc_damage or {}, true),
+			resists_pen = table.clone(self.resists_pen or {}, true),
 			canAct = false,
 			energy = {value=0},
 			act = function(self)
@@ -224,9 +237,9 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local duration = t.getDuration(self, t)
 		return ([[You bind light in a glyph on the floor. All targets walking over the glyph will trigger an explosion of light that does %0.2f damage to everyone within 1 tile.
-		The glyph lasts for %d turns.
+		The glyph is a hidden trap (%d detection and %d disarm power based on your Magic) and lasts for %d turns.
 		The damage will increase with your Spellpower.]]):
-		format(damDesc(self, DamageType.LIGHT, damage), duration)
+		format(damDesc(self, DamageType.LIGHT, damage), t.trapPower(self, t)*0.8, t.trapPower(self, t)*0.8, duration)
 	end,
 }
 
@@ -241,9 +254,10 @@ newTalent{
 	no_energy = true,
 	tactical = { DISABLE = 2 },
 	requires_target = true,
-	range = function(self, t) return math.floor (self:getTalentLevel(t)) end,
-	getSlow = function(self, t) return math.min(self:getTalentLevel(t) * 0.07 + 0.2, 0.65) end,
-	getDuration = function(self, t) return 5 + self:getTalentLevel(t) end,
+	range = function(self, t) return math.floor(self:combatTalentScale(t, 1, 5, "log")) end,
+	getSlow = function(self, t) return self:combatTalentLimit(t, 100, 0.27, 0.55) end, -- Limit <100% slow
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 6, 10)) end, -- Duration of glyph
+	trapPower = function(self,t) return math.max(1,self:combatScale(self:getTalentLevel(t) * self:getMag(15, true), 0, 0, 75, 75)) end, -- Used to determine detection and disarm power, about 75 at level 50
 	action = function(self, t)
 		local tg = {type="hit", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty = self:getTarget(tg)
@@ -268,6 +282,8 @@ newTalent{
 			end,
 			temporary = t.getDuration(self, t),
 			x = tx, y = ty,
+			disarm_power = math.floor(t.trapPower(self,t)),
+			detect_power = math.floor(t.trapPower(self,t)),
 			canAct = false,
 			energy = {value=0},
 			act = function(self)
@@ -292,6 +308,7 @@ newTalent{
 		local slow = t.getSlow(self, t)
 		local duration = t.getDuration(self, t)
 		return ([[You bind light in a glyph on the floor. All targets walking over the glyph will be slowed by %d%% for 5 turns.
-		The glyph lasts for %d turns.]]):format(100 * slow, duration)
+		The glyph is a hidden trap (%d detection and %d disarm power based on your Magic) and lasts for %d turns.]]):
+		format(100 * slow, t.trapPower(self, t), t.trapPower(self, t), duration)
 	end,
 }

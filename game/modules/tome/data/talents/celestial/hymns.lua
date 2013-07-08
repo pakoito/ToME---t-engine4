@@ -82,7 +82,7 @@ newTalent{
 	getDamageOnMeleeHit = function(self, t) return self:combatTalentSpellDamage(t, 5, 25) end,
 	getSeeInvisible = function(self, t) return self:combatTalentSpellDamage(t, 2, 35) end,
 	getSeeStealth = function(self, t) return self:combatTalentSpellDamage(t, 2, 15) end,
-	getInfraVisionPower = function(self, t) return math.floor(5 + self:getTalentLevel(t)) end,
+	getInfraVisionPower = function(self, t) return math.floor(self:combatTalentScale(t, 6, 10)) end,
 	activate = function(self, t)
 		cancelHymns(self)
 		game:playSoundNear(self, "talents/spell_generic2")
@@ -129,7 +129,7 @@ newTalent{
 	tactical = { BUFF = 2 },
 	range = 10,
 	getDamageOnMeleeHit = function(self, t) return self:combatTalentSpellDamage(t, 10, 50) end,
-	getImmunities = function(self, t) return 0.15 + self:getTalentLevel(t) / 14 end,
+	getImmunities = function(self, t) return self:combatTalentLimit(t, 1, 0.22, 0.5) end, -- Limit < 100%
 	activate = function(self, t)
 		cancelHymns(self)
 		local dam = self:combatTalentSpellDamage(t, 5, 25)
@@ -175,8 +175,8 @@ newTalent{
 	tactical = { BUFF = 2 },
 	range = 5,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 7, 80) end,
-	getTargetCount = function(self, t) return math.floor(self:getTalentLevel(t)) end,
-	getNegativeDrain = function(self, t) return 9 - self:getTalentLevelRaw(t) end,
+	getTargetCount = function(self, t) return math.floor(self:combatTalentScale(t, 1, 5)) end,
+	getNegativeDrain = function(self, t) return self:combatTalentLimit(t, 0, 8, 3) end, -- Limit > 0, no regen at high levels
 	do_beams = function(self, t)
 		if self:getNegative() < t.getNegativeDrain(self, t) then return end
 
@@ -222,7 +222,7 @@ newTalent{
 		local drain = t.getNegativeDrain(self, t)
 		return ([[Chant the glory of the Moon, conjuring a shroud of dancing shadows that follows you as long as this spell is active.
 		Each turn, a shadowy beam will hit up to %d of your foes within radius 5 for 1 to %0.2f damage.
-		This powerful spell will drain %d negative energy for each beam; no beam will fire if your negative energy is too low.
+		This powerful spell will drain %0.1f negative energy for each beam; no beam will fire if your negative energy is too low.
 		The damage will increase with your Spellpower.]]):
 		format(targetcount, damDesc(self, DamageType.DARKNESS, damage), drain)
 	end,

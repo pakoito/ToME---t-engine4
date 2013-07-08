@@ -23,15 +23,13 @@ newTalent{
 	mode = "passive",
 	require = divi_req1,
 	points = 5,
-	on_learn = function(self, t)
-		self.combat_spellcrit = self.combat_spellcrit + 3
-	end,
-	on_unlearn = function(self, t)
-		self.combat_spellcrit = self.combat_spellcrit - 3
+	getCrit = function(self, t) return self:combatTalentScale(t, 3, 15, 0.75) end,
+	passives = function(self, t, p)
+		self:talentTemporaryValue(p, "combat_spellcrit", t.getCrit(self, t))
 	end,
 	info = function(self, t)
 		return ([[Increases your spell critical chance by %d%%.]]):
-		format(3 * self:getTalentLevelRaw(t))
+		format(t.getCrit(self, t))
 	end,
 }
 
@@ -44,9 +42,9 @@ newTalent{
 	tactical = { BUFF = 2 },
 	positive = 10,
 	negative = 10,
-	getDuration = function(self, t) return 4 + math.ceil(self:getTalentLevel(t)) end,
-	getResistancePenetration = function(self, t) return 5 + (self:getCun() / 10) * self:getTalentLevel(t) end,
-	getCooldownReduction = function(self, t) return 1 + math.ceil(self:getTalentLevel(t)) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 5, 9)) end,
+	getResistancePenetration = function(self, t) return self:combatLimit(self:getCun()*self:getTalentLevel(t), 100, 5, 0, 55, 500) end, -- Limit to <100%
+	getCooldownReduction = function(self, t) return math.floor(self:combatTalentScale(t, 2, 6)) end,
 	action = function(self, t)
 		self:setEffect(self.EFF_TOTALITY, t.getDuration(self, t), {power=t.getResistancePenetration(self, t)})
 		for tid, cd in pairs(self.talents_cd) do
@@ -79,7 +77,7 @@ newTalent{
 	tactical = { BUFF = 2 },
 	sustain_negative = 10,
 	sustain_positive = 10,
-	getTargetCount = function(self, t) return math.floor(self:getTalentLevel(t)) end,
+	getTargetCount = function(self, t) return math.floor(self:combatTalentScale(t, 1, 5)) end,
 	getLightDamage = function(self, t) return self:combatTalentSpellDamage(t, 15, 70) end,
 	getDarknessDamage = function(self, t) return self:combatTalentSpellDamage(t, 15, 70) end,
 	on_crit = function(self, t)
@@ -142,10 +140,10 @@ newTalent{
 	cooldown = 30,
 	sustain_negative = 10,
 	tactical = { DEFEND = 2, ESCAPE = 2 },
-	getInvisibilityPower = function(self, t) return 5 + (self:getCun() / 15) * self:getTalentLevel(t) end,
+	getInvisibilityPower = function(self, t) return self:combatScale(self:getCun() * self:getTalentLevel(t), 5, 0, 38.33, 500) end,
 	getEnergyConvert = function(self, t) return math.max(0, 6 - self:getTalentLevelRaw(t)) end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 100) end,
-	getRadius = function(self, t) return 2 + self:getTalentLevel(t) / 2 end,
+	getRadius = function(self, t) return math.floor(self:combatTalentScale(t, 2.5, 4.5)) end,
 	activate = function(self, t)
 		local timer = t.getEnergyConvert(self, t)
 		game:playSoundNear(self, "talents/heal")
