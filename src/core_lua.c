@@ -64,6 +64,53 @@ int SDL_SetAlpha(SDL_Surface * surface, Uint32 flag, Uint8 value)
     return 0;
 }
 
+SDL_Surface *SDL_DisplayFormatAlpha(SDL_Surface *surface)
+{
+	SDL_Surface *image;
+	SDL_Rect area;
+	Uint8  saved_alpha;
+	SDL_BlendMode saved_mode;
+
+	image = SDL_CreateRGBSurface(
+			SDL_SWSURFACE,
+			surface->w, surface->h,
+			32,
+#if SDL_BYTEORDER == SDL_LIL_ENDIAN /* OpenGL RGBA masks */
+			0x000000FF,
+			0x0000FF00,
+			0x00FF0000,
+			0xFF000000
+#else
+			0xFF000000,
+			0x00FF0000,
+			0x0000FF00,
+			0x000000FF
+#endif
+			);
+	if ( image == NULL ) {
+		return 0;
+	}
+
+	/* Save the alpha blending attributes */
+	SDL_GetSurfaceAlphaMod(surface, &saved_alpha);
+	SDL_SetSurfaceAlphaMod(surface, 0xFF);
+	SDL_GetSurfaceBlendMode(surface, &saved_mode);
+	SDL_SetSurfaceBlendMode(surface, SDL_BLENDMODE_NONE);
+
+	/* Copy the surface into the GL texture image */
+	area.x = 0;
+	area.y = 0;
+	area.w = surface->w;
+	area.h = surface->h;
+	SDL_BlitSurface(surface, &area, image, &area);
+
+	/* Restore the alpha blending attributes */
+	SDL_SetSurfaceAlphaMod(surface, saved_alpha);
+	SDL_SetSurfaceBlendMode(surface, saved_mode);
+
+	return image;
+}
+
 typedef struct SDL_VideoInfo
 {
     Uint32 hw_available:1;
@@ -185,15 +232,23 @@ static GLenum sdl_gl_texture_format(SDL_Surface *s) {
 	// get the number of channels in the SDL surface
 	GLint nOfColors = s->format->BytesPerPixel;
 	GLenum texture_format;
-	if (nOfColors == 4)     // contains an alpha channel
+	if (nOfColors == 4)	 // contains an alpha channel
 	{
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+		if (s->format->Rmask == 0xff000000)
+#else
 		if (s->format->Rmask == 0x000000ff)
+#endif
 			texture_format = GL_RGBA;
 		else
 			texture_format = GL_BGRA;
-	} else if (nOfColors == 3)     // no alpha channel
+	} else if (nOfColors == 3)	 // no alpha channel
 	{
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+		if (s->format->Rmask == 0x00ff0000)
+#else
 		if (s->format->Rmask == 0x000000ff)
+#endif
 			texture_format = GL_RGB;
 		else
 			texture_format = GL_BGR;
@@ -651,9 +706,8 @@ static int sdl_surface_drawstring_newsurface(lua_State *L)
 	{
 		SDL_Surface **s = (SDL_Surface**)lua_newuserdata(L, sizeof(SDL_Surface*));
 		auxiliar_setclass(L, "sdl{surface}", -1);
-//		*s = SDL_DisplayFormatAlpha(txt);
-//		SDL_FreeSurface(txt);
-		*s = txt;
+		*s = SDL_DisplayFormatAlpha(txt);
+		SDL_FreeSurface(txt);
 		return 1;
 	}
 
@@ -677,9 +731,8 @@ static int sdl_surface_drawstring_newsurface_aa(lua_State *L)
 	{
 		SDL_Surface **s = (SDL_Surface**)lua_newuserdata(L, sizeof(SDL_Surface*));
 		auxiliar_setclass(L, "sdl{surface}", -1);
-//		*s = SDL_DisplayFormatAlpha(txt);
-//		SDL_FreeSurface(txt);
-		*s = txt;
+		*s = SDL_DisplayFormatAlpha(txt);
+		SDL_FreeSurface(txt);
 		return 1;
 	}
 
