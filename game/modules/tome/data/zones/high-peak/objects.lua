@@ -37,7 +37,7 @@ The Sorcerers seem to have awakened its power.
 #{italic}#"And lo they came to Amakthel himself, and thousands were killed in the assault on his throne, and three of the Godslayers were broken beneath his feet. But Falion with his dying breath pierced the great god on his knee with the icy sword Arkil, and seeing his opportunity Caldizar, leader of the Godslayers, advanced with the Staff of Absorption and struck a terrifying blow against Amakthel. So fell the greatest of the gods by the hands of his own children, and his face was forced into the dust."#{normal}#]],
 
 	modes = {"fire", "cold", "lightning", "arcane"},
-	require = { stat = { mag=60 }, },
+	require = { stat = { mag=40 }, },
 	combat = {
 		dam = 60,
 		apr = 60,
