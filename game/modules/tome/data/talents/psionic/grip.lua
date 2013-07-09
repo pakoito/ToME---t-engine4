@@ -153,6 +153,7 @@ newTalent{
 	require = psi_cun_high4,
 	points = 5,
 	mode = "passive",
+	getImmune = function(self, t) return self:combatTalentLimit(t, 1, 0.15, 0.50) end, -- Limit < 100%
 	stat_sub = function(self, t) -- called by _M:combatDamage in mod\class\interface\Combat.lua
 		return self:combatTalentScale(t, 0.64, 0.80)
 	end,
