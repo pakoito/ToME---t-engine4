@@ -446,7 +446,12 @@ end
 function _M:createFBOs()
 	-- Create the framebuffer
 	self.fbo = core.display.newFBO(Map.viewport.width, Map.viewport.height)
-	if self.fbo then self.fbo_shader = Shader.new("main_fbo") if not self.fbo_shader.shad then self.fbo = nil self.fbo_shader = nil else core.particles.defineFramebuffer(self.fbo) end end
+	if self.fbo then
+		self.fbo_shader = Shader.new("main_fbo")
+		if not self.fbo_shader.shad then self.fbo = nil self.fbo_shader = nil else core.particles.defineFramebuffer(self.fbo) end 
+		self.fbo2 = core.display.newFBO(Map.viewport.width, Map.viewport.height)
+	end
+	
 	if self.player then self.player:updateMainShader() end
 
 	self.full_fbo = core.display.newFBO(self.w, self.h)
@@ -1169,11 +1174,17 @@ function _M:displayMap(nb_keyframes)
 				if self.level.data.foreground then self.level.data.foreground(self.level, 0, 0, nb_keyframes) end
 				if self.level.data.weather_particle then self.state:displayWeather(self.level, self.level.data.weather_particle, nb_keyframes) end
 				if self.level.data.weather_shader then self.state:displayWeatherShader(self.level, self.level.data.weather_shader, map.display_x, map.display_y, nb_keyframes) end
-				if config.settings.tome.smooth_fov then map._map:drawSeensTexture(0, 0, nb_keyframes) end
 			self.fbo:use(false, self.full_fbo)
 
+			-- 2nd pass to apply distorting particles
+			self.fbo2:use(true)
+				self.fbo:toScreen(0, 0, map.viewport.width, map.viewport.height)
+				core.particles.drawAlterings()
+				if config.settings.tome.smooth_fov then map._map:drawSeensTexture(0, 0, nb_keyframes) end
+			self.fbo2:use(false, self.full_fbo)
+
 			_2DNoise:bind(1, false)
-			self.fbo:toScreen(map.display_x, map.display_y, map.viewport.width, map.viewport.height, self.fbo_shader.shad)
+			self.fbo2:toScreen(map.display_x, map.display_y, map.viewport.width, map.viewport.height, self.fbo_shader.shad)
 			if self.target then self.target:display() end
 
 		-- Basic display; no FBOs
@@ -1184,6 +1195,7 @@ function _M:displayMap(nb_keyframes)
 			if self.level.data.foreground then self.level.data.foreground(self.level, map.display_x, map.display_y, nb_keyframes) end
 			if self.level.data.weather_particle then self.state:displayWeather(self.level, self.level.data.weather_particle, nb_keyframes) end
 			if self.level.data.weather_shader then self.state:displayWeatherShader(self.level, self.level.data.weather_shader, map.display_x, map.display_y, nb_keyframes) end
+			core.particles.drawAlterings()
 			if config.settings.tome.smooth_fov then map._map:drawSeensTexture(map.display_x, map.display_y, nb_keyframes) end
 		end
 

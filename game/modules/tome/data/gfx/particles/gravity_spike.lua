@@ -21,7 +21,7 @@
 -- Advanced shaders
 --------------------------------------------------------------------------------------
 if core.shader.active(4) then
-use_shader = {type="distort"}
+use_shader = {type="distort"} alterscreen = true
 base_size = 64
 local nb = 0
 
