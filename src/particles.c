@@ -84,6 +84,11 @@ static void getparticulefield(lua_State *L, const char *k, float *v)
 
 static int particles_main_fbo(lua_State *L)
 {
+	if (lua_isnil(L, 1)) {
+		main_fbo = NULL;
+		return 0;
+	}
+
 	lua_fbo *fbo = (lua_fbo*)auxiliar_checkclass(L, "gl{fbo}", 1);
 	main_fbo = fbo;
 	return 0;
@@ -206,10 +211,7 @@ static int particles_to_screen(lua_State *L)
 	glScalef(ps->zoom * zoom, ps->zoom * zoom, ps->zoom * zoom);
 	glRotatef(ps->rotate, 0, 0, 1);
 
-	if (ps->shader) {
-		particle_type *p = &ps->particles[0];
-		useShader(ps->shader, x, y, main_fbo ? main_fbo->w : 1, main_fbo ? main_fbo->h : 1, p->size, p->size, 1, 1);
-	}
+	if (ps->shader) useShader(ps->shader, 1, 1, main_fbo ? main_fbo->w : 1, main_fbo ? main_fbo->h : 1, 1, 1, 1, 1);
 
 	int remaining = ps->batch_nb;
 	while (remaining >= PARTICLES_PER_ARRAY)
@@ -871,6 +873,7 @@ int thread_particles(void *data)
 	luaL_openlibs(L);  /* open libraries */
 	luaopen_core(L);
 	luaopen_particles(L);
+	luaopen_shaders(L);
 	pt->L = L;
 	lua_newtable(L);
 	lua_setglobal(L, "__fcts");

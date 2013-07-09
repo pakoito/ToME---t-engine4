@@ -57,6 +57,8 @@ function _M:loaded()
 		local _
 		setfenv(f, setmetatable(t, {__index=_G}))
 		_, _ , _, gl, _ = f()
+
+		if t.use_shader then self.shader = t.use_shader end
 	else error("unsupported particle type: "..type(self.def))
 	end
 

@@ -17,10 +17,48 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+--------------------------------------------------------------------------------------
+-- Advanced shaders
+--------------------------------------------------------------------------------------
+if core.shader.active(4) then
+use_shader = {type="distort"}
+base_size = 64
+local nb = 0
+
+local size=2*radius*64
+local sizev=-radius*8
+local life=16
+local rotation=22
+
+return {
+	system_rotation = 0, system_rotationv = rotation or 0, 
+	generator = function()
+	return {
+		trail = 0,
+		life = life or 32,
+		size = size or 64, sizev = sizev or 0, sizea = 0,
+
+		x = 0, xv = 0, xa = 0,
+		y = 0, yv = 0, ya = 0,
+		dir = 0, dirv = dirv, dira = 0,
+		vel = 0, velv = 0, vela = 0,
+
+		r = 1, rv = 0, ra = 0,
+		g = 1, gv = 0, ga = 0,
+		b = 1, bv = 0, ba = 0,
+		a = 1, av = 0, aa = 0,
+	}
+end, },
+function(self)
+	if nb < 1 then self.ps:emit(1) nb = nb + 1 end
+end,
+1, "particles_images/distort_wave2"
 
 
-
-
+--------------------------------------------------------------------------------------
+-- Default
+--------------------------------------------------------------------------------------
+else
 local nb = 0
 return { generator = function()
 	local radius = radius
@@ -65,3 +103,4 @@ function(self)
 	end
 end,
 5*radius*266
+end

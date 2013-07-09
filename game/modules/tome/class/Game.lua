@@ -1306,7 +1306,10 @@ function _M:setupCommands()
 			print("===============")
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
-			game.player:takeHit(100, game.player)
+			local particle = engine.Particles.new("shader_square", 1, {life=600}, {type="fireball"})
+			particle.x, particle.y = game.player.x, game.player.y
+			game.level.map:addParticleEmitter(particle)
+
 do return end
 			game:changeLevel(1, "stellar-system-shandral")
 do return end
