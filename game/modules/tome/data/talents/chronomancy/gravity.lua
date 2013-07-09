@@ -88,8 +88,8 @@ newTalent{
 			end
 		end)
 		self:project (tg, x, y, DamageType.GRAVITY, self:spellCrit(t.getDamage(self, t)))
-		
-		game.level.map:particleEmitter(x, y, tg.radius, "gravity_spike", {radius=tg.radius, grids=grids, tx=x, ty=y})
+		game.level.map:particleEmitter(x, y, tg.radius, "gravity_spike", {radius=tg.radius})
+
 		game:playSoundNear(self, "talents/earth")
 		return true
 	end,

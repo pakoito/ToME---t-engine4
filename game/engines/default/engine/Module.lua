@@ -625,6 +625,9 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 	-- Turn based by default
 	core.game.setRealtime(0)
 
+	-- Disable particles FBO
+	core.particles.defineFramebuffer(nil)
+
 	-- FOV Shape
 	core.fov.set_algorithm("large_ass")
 	core.fov.set_permissiveness(0.01)

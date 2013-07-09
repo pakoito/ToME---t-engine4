@@ -34,6 +34,7 @@
 #include "zlib.h"
 #include "main.h"
 #include "useshader.h"
+#include "core_lua.h"
 #include <math.h>
 #include <time.h>
 
@@ -2234,13 +2235,6 @@ static int gl_quadratic_sphere(lua_State *L)
 /**************************************************************
  * Framebuffer Objects
  **************************************************************/
-typedef struct
-{
-	GLuint fbo;
-	GLuint texture;
-	int w, h;
-} lua_fbo;
-
 
 static int gl_new_fbo(lua_State *L)
 {

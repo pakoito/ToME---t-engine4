@@ -83,8 +83,20 @@ typedef struct {
 
 	float rotate, rotate_v;
 
+	bool fboalter;
+
 	struct s_plist *l;
 } particles_type;
+
+//To draw last linked list
+struct s_particle_draw_last {
+	particles_type *ps;
+	int x;
+	int y;
+	float zoom;
+	struct s_particle_draw_last *next;
+};
+typedef struct s_particle_draw_last particle_draw_last;
 
 // Particles thread-only structure
 struct s_particle_thread;

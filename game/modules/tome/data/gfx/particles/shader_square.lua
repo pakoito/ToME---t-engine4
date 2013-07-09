@@ -17,20 +17,30 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+base_size = 64
+
+local nb = 0
+
 return {
-	frag = "shield",
-	vert = nil,
-	args = {
-		tex = { texture = 0 },
-		mainfbo = { texture = 1 },
-		color = color or {0.4, 0.7, 1.0},
-		time_factor = time_factor or 4000,
-		aadjust = aadjust or 10,
-		impact = {0, 0},
-		impact_tick = -1000,
-		impact_color = {1.0, 0.3, 1.0},
-		impact_time = 400,
-		llpow = 2,
-	},
-	clone = false,
-}
+	system_rotation = 0, system_rotationv = rotation or 0, 
+	generator = function()
+	return {
+		trail = 0,
+		life = life or 32,
+		size = size or 64, sizev = sizev or 0, sizea = 0,
+
+		x = 0, xv = 0, xa = 0,
+		y = 0, yv = 0, ya = 0,
+		dir = 0, dirv = dirv, dira = 0,
+		vel = 0, velv = 0, vela = 0,
+
+		r = 1, rv = 0, ra = 0,
+		g = 1, gv = 0, ga = 0,
+		b = 1, bv = 0, ba = 0,
+		a = 1, av = 0, aa = 0,
+	}
+end, },
+function(self)
+	if nb < 1 then self.ps:emit(1) nb = nb + 1 end
+end,
+1, "particles_images/"..(image or "square")

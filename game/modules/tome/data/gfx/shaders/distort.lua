@@ -18,19 +18,14 @@
 -- darkgod@te4.org
 
 return {
-	frag = "shield",
+	frag = "distort",
 	vert = nil,
 	args = {
 		tex = { texture = 0 },
 		mainfbo = { texture = 1 },
-		color = color or {0.4, 0.7, 1.0},
-		time_factor = time_factor or 4000,
-		aadjust = aadjust or 10,
-		impact = {0, 0},
-		impact_tick = -1000,
-		impact_color = {1.0, 0.3, 1.0},
-		impact_time = 400,
-		llpow = 2,
+		power = power or 0.06,
+		power_time = power_time or 100,
+		blacken = blacken or 10,
 	},
 	clone = false,
 }

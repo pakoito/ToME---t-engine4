@@ -25,11 +25,13 @@
 #include "core_lua.h"
 #include "auxiliar.h"
 #include "types.h"
+#include "core_lua.h"
 #include "particles.h"
 #include "script.h"
 #include <math.h>
 #include "SFMT.h"
 #include "tSDL.h"
+#include "main.h"
 #include "physfs.h"
 #include "physfsrwops.h"
 
@@ -48,6 +50,8 @@ static particle_thread *threads = NULL;
 static int textures_ref = LUA_NOREF;
 static int nb_threads = 0;
 static int cur_thread = 0;
+static lua_fbo *main_fbo = NULL;
+static particle_draw_last *pdls_head = NULL;
 void thread_add(particles_type *ps);
 
 static void getinitfield(lua_State *L, const char *key, int *min, int *max)
@@ -79,6 +83,18 @@ static void getparticulefield(lua_State *L, const char *k, float *v)
 	lua_pop(L, 1);
 }
 
+static int particles_main_fbo(lua_State *L)
+{
+	if (lua_isnil(L, 1)) {
+		main_fbo = NULL;
+		return 0;
+	}
+
+	lua_fbo *fbo = (lua_fbo*)auxiliar_checkclass(L, "gl{fbo}", 1);
+	main_fbo = fbo;
+	return 0;
+}
+
 // Runs into main thread
 static int particles_new(lua_State *L)
 {
@@ -89,6 +105,7 @@ static int particles_new(lua_State *L)
 	GLuint *texture = (GLuint*)auxiliar_checkclass(L, "gl{texture}", 5);
 	shader_type *s = NULL;
 	if (lua_isuserdata(L, 6)) s = (shader_type*)auxiliar_checkclass(L, "gl{program}", 6);
+	bool fboalter = lua_toboolean(L, 7);
 
 	particles_type *ps = (particles_type*)lua_newuserdata(L, sizeof(particles_type));
 	auxiliar_setclass(L, "core{particles}", -1);
@@ -107,6 +124,7 @@ static int particles_new(lua_State *L)
 	ps->init = FALSE;
 	ps->texture = *texture;
 	ps->shader = s;
+	ps->fboalter = fboalter;
 
 	thread_add(ps);
 	return 1;
@@ -157,14 +175,8 @@ static int particles_die(lua_State *L)
 }
 
 // Runs into main thread
-static int particles_to_screen(lua_State *L)
+static void particles_draw(particles_type *ps, int x, int y, float zoom) 
 {
-	particles_type *ps = (particles_type*)auxiliar_checkclass(L, "core{particles}", 1);
-	int x = luaL_checknumber(L, 2);
-	int y = luaL_checknumber(L, 3);
-	bool show = lua_toboolean(L, 4);
-	float zoom = lua_isnumber(L, 5) ? lua_tonumber(L, 5) : 1;
-	if (!show || !ps->init) return 0;
 	GLfloat *vertices = ps->vertices;
 	GLfloat *colors = ps->colors;
 	GLshort *texcoords = ps->texcoords;
@@ -174,14 +186,16 @@ static int particles_to_screen(lua_State *L)
 	if (y < -10000) y = -10000;
 	if (y > 10000) y = 10000;
 
-	// No texture? abord
-	if (!ps->texture) return 0;
-
 	SDL_mutexP(ps->lock);
 
 	if (ps->blend_mode == BLEND_ADDITIVE) glBlendFunc(GL_SRC_ALPHA,GL_ONE);
 
+	if (multitexture_active) tglActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, ps->texture);
+	if (multitexture_active && main_fbo) {
+		tglActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, main_fbo->texture);
+	}
 	glTexCoordPointer(2, GL_SHORT, 0, texcoords);
 	glColorPointer(4, GL_FLOAT, 0, colors);
 	glVertexPointer(2, GL_FLOAT, 0, vertices);
@@ -191,7 +205,7 @@ static int particles_to_screen(lua_State *L)
 	glScalef(ps->zoom * zoom, ps->zoom * zoom, ps->zoom * zoom);
 	glRotatef(ps->rotate, 0, 0, 1);
 
-	if (ps->shader) useShader(ps->shader, 1, 1, 1, 1, 1, 1, 1, 1);
+	if (ps->shader) useShader(ps->shader, 1, 1, main_fbo ? main_fbo->w : 1, main_fbo ? main_fbo->h : 1, 1, 1, 1, 1);
 
 	int remaining = ps->batch_nb;
 	while (remaining >= PARTICLES_PER_ARRAY)
@@ -209,8 +223,49 @@ static int particles_to_screen(lua_State *L)
 
 	if (ps->blend_mode) glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 
-	SDL_mutexV(ps->lock);
+	if (multitexture_active && main_fbo) {
+		tglActiveTexture(GL_TEXTURE0);
+	}
 
+	SDL_mutexV(ps->lock);
+}
+
+// Runs into main thread
+static int particles_to_screen(lua_State *L)
+{
+	particles_type *ps = (particles_type*)auxiliar_checkclass(L, "core{particles}", 1);
+	int x = luaL_checknumber(L, 2);
+	int y = luaL_checknumber(L, 3);
+	bool show = lua_toboolean(L, 4);
+	float zoom = lua_isnumber(L, 5) ? lua_tonumber(L, 5) : 1;
+	if (!show || !ps->init) return 0;
+	if (!ps->texture) return 0;
+
+	if (ps->fboalter) {
+		particle_draw_last *pdl = malloc(sizeof(particle_draw_last));
+		pdl->ps = ps;
+		pdl->x = x;
+		pdl->y = y;
+		pdl->zoom = zoom;
+		pdl->next = pdls_head;
+		pdls_head = pdl;
+		return 0;
+	}
+
+	particles_draw(ps, x, y, zoom);
+	return 0;
+}
+
+// Runs into main thread
+static int particles_draw_last(lua_State *L)
+{
+	if (!pdls_head) return 0;
+	while (pdls_head) {
+		particle_draw_last *pdl = pdls_head;
+		particles_draw(pdl->ps, pdl->x, pdl->y, pdl->zoom);
+		pdls_head = pdls_head->next;
+		free(pdl);
+	}
 	return 0;
 }
 
@@ -496,6 +551,8 @@ static int particles_emit(lua_State *L)
 static const struct luaL_Reg particleslib[] =
 {
 	{"newEmitter", particles_new},
+	{"defineFramebuffer", particles_main_fbo},
+	{"drawAlterings", particles_draw_last},
 	{NULL, NULL},
 };
 
@@ -848,6 +905,7 @@ int thread_particles(void *data)
 	luaL_openlibs(L);  /* open libraries */
 	luaopen_core(L);
 	luaopen_particles(L);
+	luaopen_shaders(L);
 	pt->L = L;
 	lua_newtable(L);
 	lua_setglobal(L, "__fcts");
