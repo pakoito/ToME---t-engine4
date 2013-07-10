@@ -125,9 +125,19 @@ static int particles_new(lua_State *L)
 	ps->texture = *texture;
 	ps->shader = s;
 	ps->fboalter = fboalter;
+	ps->sub = NULL;
 
 	thread_add(ps);
 	return 1;
+}
+
+static int particles_set_sub(lua_State *L) 
+{
+	particles_type *ps = (particles_type*)auxiliar_checkclass(L, "core{particles}", 1);
+	particles_type *subps = (particles_type*)auxiliar_checkclass(L, "core{particles}", 2);
+
+	ps->sub = subps;
+	return 0;
 }
 
 // Runs into main thread
@@ -251,8 +261,21 @@ static int particles_to_screen(lua_State *L)
 		pdls_head = pdl;
 		return 0;
 	}
-
 	particles_draw(ps, x, y, zoom);
+
+	if (ps->sub) {
+		ps = ps->sub;
+		if (ps->fboalter) {
+			particle_draw_last *pdl = malloc(sizeof(particle_draw_last));
+			pdl->ps = ps;
+			pdl->x = x;
+			pdl->y = y;
+			pdl->zoom = zoom;
+			pdl->next = pdls_head;
+			pdls_head = pdl;
+		}
+		else particles_draw(ps, x, y, zoom);
+	}
 	return 0;
 }
 
@@ -561,6 +584,7 @@ static const struct luaL_Reg particles_reg[] =
 	{"__gc", particles_free},
 	{"toScreen", particles_to_screen},
 	{"isAlive", particles_is_alive},
+	{"setSub", particles_set_sub},
 	{"die", particles_die},
 	{NULL, NULL},
 };

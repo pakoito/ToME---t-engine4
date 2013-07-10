@@ -51,6 +51,7 @@ function _M:loaded()
 	local base_size = nil
 	local gl = nil
 	local islast = false
+	local sub_particle = nil
 	if type(self.def) == "string" then
 		local f, err = loadfile("/data/gfx/particles/"..self.def..".lua")
 		if not f and err then error(err) end
@@ -61,6 +62,7 @@ function _M:loaded()
 
 		if t.use_shader then self.shader = t.use_shader end
 		if t.alterscreen then islast = true end
+		if t.sub_particle then sub_particle = t.sub_particle end
 	else error("unsupported particle type: "..type(self.def))
 	end
 
@@ -89,6 +91,11 @@ function _M:loaded()
 	end
 
 	self.ps = core.particles.newEmitter("/data/gfx/particles/"..self.def..".lua", args, self.zoom, config.settings.particles_density or 100, gl, sha, islast)
+
+	if sub_particle then
+		self.subps = _M.new(sub_particle)
+		self.ps:setSub(self.subps.ps)
+	end
 end
 
 function _M:updateZoom()

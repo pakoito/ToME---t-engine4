@@ -36,7 +36,7 @@ typedef struct {
 
 struct s_plist;
 
-typedef struct {
+struct s_particles_type {
 	SDL_mutex *lock;
 
 	// Read only by main
@@ -85,8 +85,11 @@ typedef struct {
 
 	bool fboalter;
 
+	struct s_particles_type *sub;
+
 	struct s_plist *l;
-} particles_type;
+};
+typedef struct s_particles_type particles_type;
 
 //To draw last linked list
 struct s_particle_draw_last {

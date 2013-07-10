@@ -18,15 +18,16 @@
 -- darkgod@te4.org
 
 return {
-	frag = "distort",
+	frag = "fireball",
 	vert = nil,
 	args = {
-		tex = { texture = 0 },
-		mainfbo = { texture = 1 },
-		power = power or 0.06,
-		power_time = power_time or 100,
-		power_amp = power_amp or 1,
-		blacken = blacken or 10,
+		resolution = resolution or {128,128},
+		zoom = zoom or 1,
+		speed = 400,
+		color1 = {1.0, 1.0, 1.0, 0.85},
+		color2 = {1.0, 0.9, 0.1, 0.85},
+		color3 = {1.0, 0.4, 0.0, 0.85},
+		color4 = {0.6, 0.1, 0.0, 0.85},
 	},
 	clone = false,
 }

@@ -182,7 +182,7 @@ newTalent{
 			DamageType.GRAVITYPIN, dam,
 			radius,
 			5, nil,
-			{type="quake"},
+			{type="gravity_well"},
 			nil, self:spellFriendlyFire()
 		)
 		game:playSoundNear(self, "talents/earth")

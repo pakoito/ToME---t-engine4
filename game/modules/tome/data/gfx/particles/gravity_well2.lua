@@ -17,16 +17,29 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+use_shader = {type="distort", power=0.01, power_time=1000, blacken=0, power_amp=0.3} alterscreen = true
+base_size = 64
+
 return {
-	frag = "distort",
-	vert = nil,
-	args = {
-		tex = { texture = 0 },
-		mainfbo = { texture = 1 },
-		power = power or 0.06,
-		power_time = power_time or 100,
-		power_amp = power_amp or 1,
-		blacken = blacken or 10,
-	},
-	clone = false,
-}
+	system_rotation = rng.range(0,359), system_rotationv = 1,
+	generator = function()
+	return {
+		trail = 0,
+		life = 32,
+		size = 70, sizev = 0, sizea = 0,
+
+		x = 0, xv = 0, xa = 0,
+		y = 0, yv = 0, ya = 0,
+		dir = 0, dirv = dirv, dira = 0,
+		vel = 0, velv = 0, vela = 0,
+
+		r = 1, rv = 0, ra = 0,
+		g = 1, gv = 0, ga = 0,
+		b = 1, bv = 0, ba = 0,
+		a = 1, av = 0, aa = 0,
+	}
+end, },
+function(self)
+	self.ps:emit(1)
+end,
+1, "particles_images/distort_singularity"

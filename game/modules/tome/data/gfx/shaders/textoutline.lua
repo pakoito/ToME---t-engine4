@@ -18,15 +18,12 @@
 -- darkgod@te4.org
 
 return {
-	frag = "distort",
+	frag = "textoutline",
 	vert = nil,
 	args = {
 		tex = { texture = 0 },
-		mainfbo = { texture = 1 },
-		power = power or 0.06,
-		power_time = power_time or 100,
-		power_amp = power_amp or 1,
-		blacken = blacken or 10,
+		textSize = textSize or {1, 1},
+		outlineColor = outlineColor or {0,0,0,0.4},
 	},
 	clone = false,
 }

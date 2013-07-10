@@ -17,6 +17,41 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+--------------------------------------------------------------------------------------
+-- Advanced shaders
+--------------------------------------------------------------------------------------
+if core.shader.active(4) then
+use_shader = {type="fireball"}
+base_size = 64
+
+return {
+	system_rotation = rng.range(0,359), system_rotationv = 3,
+	generator = function()
+	return {
+		life = 1000,
+		size = 40, sizev = 0, sizea = 0,
+
+		x = 0, xv = 0, xa = 0,
+		y = 0, yv = 0, ya = 0,
+		dir = 0, dirv = dirv, dira = 0,
+		vel = 0, velv = 0, vela = 0,
+
+		r = 1, rv = 0, ra = 0,
+		g = 1, gv = 0, ga = 0,
+		b = 1, bv = 0, ba = 0,
+		a = 1, av = 0, aa = 0,
+	}
+end, },
+function(self)
+	self.ps:emit(1)
+end,
+1
+
+
+--------------------------------------------------------------------------------------
+-- Default
+--------------------------------------------------------------------------------------
+else
 return { generator = function()
 	local radius = 0
 	local sradius = (radius + 0.5) * (engine.Map.tile_w + engine.Map.tile_h) / 2
@@ -49,3 +84,5 @@ function(self)
 	self.ps:emit(30)
 end,
 30*6
+
+end
