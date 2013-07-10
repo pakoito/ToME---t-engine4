@@ -170,7 +170,7 @@ newAchievement{
 }
 newAchievement{
 	name = "Fast Curse Dispel", id = "CURSE_ALL",
-	show = "name",
+	show = "name", huge=true,
 	desc = [[Killed Ben Cruthdar the Cursed while saving all the lumberjacks.]],
 }
 newAchievement{
