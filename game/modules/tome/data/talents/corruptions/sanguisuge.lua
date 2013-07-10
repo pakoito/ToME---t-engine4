@@ -28,7 +28,7 @@ newTalent{
 	proj_speed = 15,
 	tactical = { ATTACK = {BLIGHT = 2}, VIM = 2 },
 	requires_target = true,
-	range = function(self, t) return 4 + self:getTalentLevelRaw(t) end,
+	range = function(self, t) return math.floor(self:combatTalentScale(t, 5, 9)) end,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_slime"}}
 		local x, y = self:getTarget(tg)
@@ -98,14 +98,15 @@ newTalent{
 	no_energy = true,
 	range = 10,
 	no_npc_use = true,
+	getDuration = function(self, t) return math.floor(self:combatTalentLimit(t, 18, 3, 7)) end, --Limit duration < 18
 	action = function(self, t)
-		self:setEffect(self.EFF_BLOODCASTING, 2 + math.floor(self:getTalentLevel(t)), {})
+		self:setEffect(self.EFF_BLOODCASTING, t.getDuration(self,t), {})
 		game:playSoundNear(self, "talents/spell_generic2")
 		return true
 	end,
 	info = function(self, t)
 		return ([[For %d turns, your corruption spells will consume health instead of vim if their cost is higher than your vim.]]):
-		format(2 + math.floor(self:getTalentLevel(t)))
+		format(t.getDuration(self,t))
 	end,
 }
 
@@ -119,11 +120,12 @@ newTalent{
 	cooldown = 30,
 	range = 10,
 	tactical = { BUFF = 2 },
+	VimOnDeath = function(self, t) return self:combatTalentScale(t, 6, 16) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/spell_generic2")
 		local ret = {
 			vim_regen = self:addTemporaryValue("vim_regen", -0.5),
-			vim_on_death = self:addTemporaryValue("vim_on_death", math.ceil(4+self:getTalentLevel(t)*2)),
+			vim_on_death = self:addTemporaryValue("vim_on_death", t.VimOnDeath(self, t)),
 		}
 		return ret
 	end,
@@ -134,8 +136,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Absorbs the life force of your foes as you kill them.
-		As long as this talent is active, vim will decrease by one per turn and increase by %d for each kill of a non-undead creature (in addition to natural increase based on Willpower).]]):
-		format(4+math.ceil(self:getTalentLevel(t)*2))
+		As long as this talent is active, vim will decrease by 0.5 per turn and increase by %0.1f for each kill of a non-undead creature (in addition to the usual increase based on Willpower).]]):
+		format(t.VimOnDeath(self, t))
 	end,
 }
 
@@ -149,13 +151,14 @@ newTalent{
 	range = 10,
 	no_energy = true,
 	tactical = { BUFF = 2 },
+	getMult = function(self,t) return self:combatTalentScale(t, 8, 16) end,
 	action = function(self, t)
-		self:setEffect(self.EFF_LIFE_TAP, 7, {power=math.ceil(6 + self:getTalentLevel(t) * 2)})
+		self:setEffect(self.EFF_LIFE_TAP, 7, {power=t.getMult(self,t)})
 		game:playSoundNear(self, "talents/spell_generic2")
 		return true
 	end,
 	info = function(self, t)
-		return ([[Tap your life force to provide a furious boost, increasing all damage you deal by %d%% for 7 turns.]]):
-		format(math.ceil(6 + self:getTalentLevel(t) * 2))
+		return ([[Tap your life force to provide a furious boost, increasing all damage you deal by %0.1f%% for 7 turns.]]):
+		format(t.getMult(self,t))
 	end,
 }

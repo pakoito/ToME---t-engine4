@@ -56,6 +56,7 @@ newTalent{
 	range = 7,
 	tactical = { DISABLE = 1, CLOSEIN = 3 },
 	requires_target = true,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 4, 8)) end,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -71,7 +72,7 @@ newTalent{
 
 			DamageType:get(DamageType.PHYSICAL).projector(self, target.x, target.y, DamageType.PHYSICAL, dam)
 			if target:canBe("pin") then
-				target:setEffect(target.EFF_PINNED, math.floor(3 + self:getTalentLevel(t)), {apply_power=self:combatSpellpower()})
+				target:setEffect(target.EFF_PINNED, t.getDuration(self, t), {apply_power=self:combatSpellpower()})
 			else
 				game.logSeen(target, "%s resists the bone!", target.name:capitalize())
 			end
@@ -84,7 +85,7 @@ newTalent{
 		return ([[Grab a target and teleport it to your side, pinning it there with a bone rising from the ground for %d turns.
 		The bone will also deal %0.2f physical damage.
 		The damage will increase with your Spellpower.]]):
-		format(math.floor(3 + self:getTalentLevel(t)), damDesc(self, DamageType.PHYSICAL, self:combatTalentSpellDamage(t, 5, 140)))
+		format(t.getDuration(self, t), damDesc(self, DamageType.PHYSICAL, self:combatTalentSpellDamage(t, 5, 140)))
 	end,
 }
 
@@ -97,9 +98,7 @@ newTalent{
 	cooldown = 12,
 	tactical = { ATTACKAREA = {PHYSICAL = 2} },
 	random_ego = "attack",
-	radius = function(self, t)
-		return self:getTalentLevelRaw(t)
-	end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 1, 5)) end,
 	target = function(self, t)
 		return {type="ball", radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,
@@ -125,7 +124,7 @@ newTalent{
 	sustain_vim = 50,
 	tactical = { DEFEND = 4 },
 	direct_hit = true,
-	getNb = function(self, t) return math.ceil(self:getTalentLevel(t)) end,
+	getNb = function(self, t) return math.floor(self:combatTalentScale(t, 1, 5)) end,
 	getRegen = function(self, t) return math.max(math.floor(30 / t.getNb(self, t)), 3) end,
 	callbackOnRest = function(self, t)
 		local nb = t.getNb(self, t)

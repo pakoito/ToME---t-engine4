@@ -24,6 +24,8 @@ newTalent{
 	points = 5,
 	vim = 8,
 	require = str_corrs_req1,
+	-- called by _M:getOffHandMult function in mod\class\interface\Combat.lua
+	getoffmult = function(self,t) return self:combatTalentLimit(t, 1, 0.53, 0.69) end, -- limit <100%
 	on_learn = function(self, t)
 		if self:getTalentLevelRaw(t) == 1 then
 			self:attr("allow_any_dual_weapons", 1)
@@ -37,7 +39,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Allows you to dual wield any type of one handed weapons, and increases the damage of the off-hand weapon to %d%%.
 		Also, casting a spell (which uses a turn) will give a free melee attack at a random target in melee range for %d%% blight damage.]]):
-		format(100 / (2 - (math.min(self:getTalentLevel(t), 8) / 9)), 100 * self:combatTalentWeaponDamage(t, 0.5, 1.1))
+		format(100*t.getoffmult(self,t), 100 * self:combatTalentWeaponDamage(t, 0.5, 1.1))
 	end,
 }
 
@@ -47,11 +49,17 @@ newTalent{
 	mode = "passive",
 	require = str_corrs_req2,
 	points = 5,
+	-- _M:combatSpellpower references effect in mod\class\interface\Combat.lua
+	-- Effect is refreshed in function _M:onTakeHit(value, src) in mod\class\Actor.lua
+	-- getParams called in definition of EFF_BLOODLUST in data\timed_effects\magical.lua
+	getParams = function(self, t) -- returns maxSP per turn, max duration
+		return self:combatTalentScale(t, 1, 5, 0.75), math.floor(self:combatTalentScale(t, 2, 6))
+	end,
 	info = function(self, t)
-		return ([[When you damage one of your foes, you enter a bloodlust, increasing your Spellpower by 1 for each target up to a maximum of %d per turn.
-		The maximum reachable is +%d Spellpower.
-		The bonus decreases by one point per turn.]]):
-		format(math.floor(self:getTalentLevel(t)), math.floor(6 * self:getTalentLevel(t)))
+		local SPbonus, maxDur = t.getParams(self, t)
+		return ([[Each time you deal damage to one of your foes, you enter a bloodlust-infused frenzy, increasing your Spellpower by 1 (maximum %d Spellpower per turn, %d Spellpower overall), and extending any current frenzy for an additional turn.
+		The frenzy lasts up to %d turns, and the bonus decreases by %0.1f%% of its current value each turn you don't deal damage.]]):
+		format(SPbonus, SPbonus*6, maxDur, 100/maxDur)
 	end,
 }
 
@@ -61,15 +69,16 @@ newTalent{
 	mode = "passive",
 	require = str_corrs_req3,
 	points = 5,
-	on_learn = function(self, t)
-		self:attr("disease_immune", 0.2)
-	end,
-	on_unlearn = function(self, t)
-		self:attr("disease_immune", -0.2)
+	getDiseaseImmune = function(self, t) return self:combatTalentLimit(t, 1, 0.20, 0.75) end, -- Limit < 100%
+	-- called by _M:attackTargetWith in mod.class.interface.Combat.lua
+	getDiseaseSpread = function(self, t) return self:combatTalentLimit(t, 100, 5, 20) end, --Limit < 100%
+	passives = function(self, t, p)
+		self:talentTemporaryValue(p, "disease_immune", t.getDiseaseImmune(self, t))
 	end,
 	info = function(self, t)
-		return ([[You gain a %d%% resistance to diseases, and have a %d%% chance on melee attacks to spread any existing diseases on your target.]]):
-		format(20 * self:getTalentLevelRaw(t), 4 * self:getTalentLevelRaw(t))
+		return ([[You gain a %d%% resistance to diseases, and each of your melee attacks have a %d%% chance to spread any diseases on your target.
+		(As the Epidemic talent with the melee attack treated like blight damage.)]]):
+		format(t.getDiseaseImmune(self, t)*100, t.getDiseaseSpread(self, t))
 	end,
 }
 

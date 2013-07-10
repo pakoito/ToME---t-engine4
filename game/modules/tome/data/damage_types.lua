@@ -627,6 +627,7 @@ newDamageType{
 	end,
 	death_message = {"slimed", "splurged", "treehugged", "naturalised"},
 }
+
 newDamageType{
 	name = "blight", type = "BLIGHT", text_color = "#DARK_GREEN#",
 	antimagic_resolve = true,
@@ -635,11 +636,7 @@ newDamageType{
 		local target = game.level.map(x, y, Map.ACTOR)
 		-- Spread diseases if possible
 		if realdam > 0 and target and target:attr("diseases_spread_on_blight") and (not extra or not extra.from_disease) then
-			game.logSeen(src, "The diseases of %s spread!", src.name)
-			if rng.percent(20 + math.sqrt(realdam) * 5) then
-				local t = src:getTalentFromId(src.T_EPIDEMIC)
-				t.do_spread(src, t, target)
-			end
+			src:callTalent(src.T_EPIDEMIC, "do_spread", target, realdam)
 		end
 		return realdam
 	end,

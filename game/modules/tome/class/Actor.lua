@@ -2045,9 +2045,10 @@ function _M:onTakeHit(value, src)
 
 	-- Vim leech
 	if self:knowTalent(self.T_LEECH) and src.hasEffect and src:hasEffect(src.EFF_VIMSENSE) then
-		self:incVim(3 + self:getTalentLevel(self.T_LEECH) * 0.7)
-		self:heal(5 + self:getTalentLevel(self.T_LEECH) * 3)
-		game.logPlayer(self, "#AQUAMARINE#You leech a part of %s vim.", src.name:capitalize())
+		local vt = self:getTalentFromId(self.T_LEECH)
+		self:incVim(vt.getVim(self, vt))
+		self:heal(vt.getHeal(self, vt))
+		game.logPlayer(self, "#AQUAMARINE#You leech a part of %s's vim.", src.name:capitalize())
 	end
 
 	-- Invisible on hit

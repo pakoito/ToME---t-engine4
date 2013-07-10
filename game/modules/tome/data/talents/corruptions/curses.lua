@@ -57,6 +57,7 @@ newTalent{
 	tactical = { DISABLE = 2 },
 	direct_hit = true,
 	requires_target = true,
+	imppower = function(self,t) return self:combatLimit(self:combatTalentSpellDamage(t, 10, 30),100, 0, 0, 19.36, 19.36) end, -- Limit to <100%
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -64,14 +65,14 @@ newTalent{
 		self:project(tg, x, y, function(tx, ty)
 			local target = game.level.map(tx, ty, Map.ACTOR)
 			if not target then return end
-			target:setEffect(target.EFF_CURSE_IMPOTENCE, 10, {power=self:combatTalentSpellDamage(t, 10, 30), apply_power=self:combatSpellpower()})
+			target:setEffect(target.EFF_CURSE_IMPOTENCE, 10, {power=t.imppower(self,t), apply_power=self:combatSpellpower()})
 		end)
 		game:playSoundNear(self, "talents/slime")
 		return true
 	end,
 	info = function(self, t)
 		return ([[Curses your target, decreasing all damage they do by %d%% for 10 turns.
-		The effects will improve with your Spellpower.]]):format(self:combatTalentSpellDamage(t, 10, 30))
+		The effects will improve with your Spellpower.]]):format(t.imppower(self,t))
 	end,
 }
 

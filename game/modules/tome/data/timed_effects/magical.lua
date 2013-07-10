@@ -653,26 +653,46 @@ newEffect{
 newEffect{
 	name = "BLOODLUST", image = "talents/bloodlust.png",
 	desc = "Bloodlust",
-	long_desc = function(self, eff) return ("The target is in a magical bloodlust, improving spellpower by %d."):format(eff.dur) end,
+	long_desc = function(self, eff) return ("The target is in a magical frenzy, improving spellpower by %d."):format(eff.power) end,
 	type = "magical",
 	subtype = { frenzy=true },
 	status = "beneficial",
 	parameters = { power=1 },
+	on_timeout = function(self, eff)
+		if eff.refresh_turn + 10 < game.turn then -- Decay only if it's not refreshed
+			eff.power = math.max(0, eff.power*(100-eff.decay)/100)
+		end
+	end,
 	on_merge = function(self, old_eff, new_eff)
 		local dur = new_eff.dur
-		local max = math.floor(6 * self:getTalentLevel(self.T_BLOODLUST))
-		local max_turn = math.floor(self:getTalentLevel(self.T_BLOODLUST))
+		local max_turn, maxDur = self:callTalent(self.T_BLOODLUST, "getParams")
+		local maxSP = max_turn * 6 -- max total sp
+		local power = new_eff.power
 
-		if old_eff.last_turn < game.turn then old_eff.used_this_turn = 0 end
-		if old_eff.used_this_turn > max_turn then dur = 0 end
+		if old_eff.last_turn + 10 <= game.turn then -- clear limits every game turn (10 ticks)
+			old_eff.used_this_turn = 0
+			old_eff.last_turn = game.turn
+		end
+		if old_eff.used_this_turn >= max_turn then
+			dur = 0
+			power = 0
+		else
+			power = math.min(max_turn-old_eff.used_this_turn, power)
+			old_eff.power = math.min(old_eff.power + power, maxSP)
+			old_eff.used_this_turn = old_eff.used_this_turn + power
+		end
 
-		old_eff.dur = math.min(old_eff.dur + dur, max)
-		old_eff.last_turn = game.turn
+		old_eff.decay = 100/maxDur
+		old_eff.dur = math.min(old_eff.dur + dur, maxDur)
+		old_eff.refresh_turn = game.turn
 		return old_eff
 	end,
 	activate = function(self, eff)
 		eff.last_turn = game.turn
-		eff.used_this_turn = 0
+		local SPbonus, maxDur = self:callTalent(self.T_BLOODLUST, "getParams")
+		eff.used_this_turn = eff.power
+		eff.decay = 100/maxDur
+		eff.refresh_turn = game.turn
 	end,
 	deactivate = function(self, eff)
 	end,

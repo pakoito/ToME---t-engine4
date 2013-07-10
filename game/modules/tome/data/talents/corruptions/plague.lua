@@ -28,7 +28,7 @@ newTalent{
 	tactical = { ATTACK = {BLIGHT = 2} },
 	requires_target = true,
 	no_energy = true,
-	range = function(self, t) return 4 + math.floor(self:getTalentLevel(t)) end,
+	range = function(self, t) return math.floor(self:combatTalentScale(t, 5, 9)) end,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t)}
 		local x, y = self:getTarget(tg)
@@ -78,9 +78,7 @@ newTalent{
 	vim = 18,
 	cooldown = 9,
 	range = 7,
-	radius = function(self, t)
-		return 1 + math.floor(self:getTalentLevelRaw(t) / 2)
-	end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 1.5, 3.5)) end,
 	tactical = { ATTACK = function(self, t, target)
 		-- Count the number of diseases on the target
 		local val = 0
@@ -170,8 +168,8 @@ newTalent{
 	direct_hit = true,
 	requires_target = true,
 	getDamage = function(self, t) return (100 + self:combatTalentSpellDamage(t, 0, 50)) / 100 end,
-	getDuration = function(self, t) return math.floor(2 + self:getTalentLevel(t) / 2) end,
-	getRadius = function(self, t) return 2 + math.floor(self:getTalentLevel(t)/3) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 2.5, 4.5)) end,
+	getRadius = function(self, t) return math.floor(self:combatTalentScale(t, 2.3, 3.7)) end,
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=t.getRadius(self, t)}
 	end,
@@ -230,7 +228,14 @@ newTalent{
 	radius = 2,
 	tactical = { ATTACK = {BLIGHT = 2} },
 	requires_target = true,
-	do_spread = function(self, t, carrier)
+	healloss = function(self,t) return self:combatTalentLimit(t, 100, 44, 60) end, -- Limit < 100%
+	disfact = function(self,t) return self:combatTalentLimit(t, 100, 36, 60) end, -- Limit < 100%
+	-- Desease spreading handled in mod.data.damage_types.lua for BLIGHT
+	spreadFactor = function(self, t) return self:combatTalentLimit(t, 0.05, 0.35, 0.17) end, -- Based on previous formula: 256 damage gave 100% chance (1500 hps assumed)
+	
+	do_spread = function(self, t, carrier, dam)
+		if not rng.percent(100*dam/(t.spreadFactor(self, t)*carrier.max_life)) then return end
+		game.logSeen(self, "The diseases of %s spread!", self.name)
 		-- List all diseases
 		local diseases = {}
 		for eff_id, p in pairs(carrier.tmp) do
@@ -269,7 +274,7 @@ newTalent{
 		self:project(tg, x, y, function(px, py)
 			local target = game.level.map(px, py, engine.Map.ACTOR)
 			if not target or (self:reactionToward(target) >= 0) then return end
-			target:setEffect(self.EFF_EPIDEMIC, 6, {src=self, dam=self:spellCrit(self:combatTalentSpellDamage(t, 15, 70)), heal_factor=40 + self:getTalentLevel(t) * 4, resist=30 + self:getTalentLevel(t) * 6, apply_power=self:combatSpellpower()})
+			target:setEffect(self.EFF_EPIDEMIC, 6, {src=self, dam=self:spellCrit(self:combatTalentSpellDamage(t, 15, 70)), heal_factor=t.healloss(self,t), resist=t.disfact(self,t), apply_power=self:combatSpellpower()})
 			game.level.map:particleEmitter(px, py, 1, "slime")
 		end)
 		game:playSoundNear(self, "talents/slime")
@@ -279,9 +284,10 @@ newTalent{
 	info = function(self, t)
 		return ([[Infects the target with a very contagious disease, doing %0.2f damage per turn for 6 turns.
 		If any blight damage from non-diseases hits the target, the epidemic may activate and spread a random disease to nearby targets within a radius 2 ball.
+		The chance to spread increases with the blight damage dealt and is 100%% if it is at least %d%% of the target's maximum life.
 		Creatures suffering from that disease will also suffer healing reduction (%d%%) and diseases immunity reduction (%d%%).
 		Epidemic is an extremely potent disease; as such, it fully ignores the target's diseases immunity.
 		The damage will increase with your Spellpower, and the spread chance increases with the amount of blight damage dealt.]]):
-		format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 15, 70)), 40 + self:getTalentLevel(t) * 4, 30 + self:getTalentLevel(t) * 6)
+		format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 15, 70)), t.spreadFactor(self, t)*100 ,t.healloss(self,t), t.disfact(self,t))
 	end,
 }

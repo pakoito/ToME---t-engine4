@@ -58,12 +58,13 @@ newTalent{
 	target = function(self, t)
 		return {type="ball", radius=self:getTalentRadius(t), range=self:getTalentRange(t), talent=t}
 	end,
+	getRemoveCount = function(self, t) return math.floor(self:combatTalentScale(t, 1, 5, "log")) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		local dam = self:spellCrit(self:combatTalentSpellDamage(t, 28, 120))
-		local nb = self:getTalentLevelRaw(t)
+		local nb = t.getRemoveCount(self,t)
 		self:project(tg, x, y, function(px, py)
 			local target = game.level.map(px, py, Map.ACTOR)
 			if not target then return end
@@ -105,9 +106,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Project a corrupted blast of power that deals %0.2f blight damage and removes up to %d magical or physical effects from any creatures caught in the radius 3 ball.
-		For each effect the creature has a chance to resist based on its spell save.
-		The damage will increase with your Spellpower.]]):format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 28, 120)), self:getTalentLevelRaw(t))
+		return ([[Project a corrupted blast of power that deals %0.2f blight damage and removes up to %d magical or physical effect(s) from any creatures caught in the radius 3 ball.
+		For each effect, the creature has a chance to resist based on its spell save.
+		The damage will increase with your Spellpower.]]):format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 28, 120)), t.getRemoveCount(self, t))
 	end,
 }
 
@@ -154,8 +155,9 @@ newTalent{
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
 	end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 6, 10)) end,
 	action = function(self, t)
-		local duration = 5 + self:getTalentLevel(t)
+		local duration = t.getDuration(self, t)
 		local radius = self:getTalentRadius(t)
 		local dam = self:spellCrit(self:combatTalentSpellDamage(t, 12, 130))
 		local actor = self
@@ -177,8 +179,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[A furious poison storm rages around the caster, poisoning all creatures inside for %0.2f nature damage over 6 turns in a radius of %d for %d turns.
+		return ([[A furious poison storm rages around the caster in a radius of %d for %d turns.  Each creature hit by the storm is poisoned for %0.2f nature damage over 6 turns.
 		Poisoning is cumulative; the longer they stay in the storm, the higher the poison damage they take.
-		The damage will increase with your Spellpower, and can critical.]]):format(damDesc(self, DamageType.NATURE, self:combatTalentSpellDamage(t, 12, 130)), self:getTalentRadius(t), 5 + self:getTalentLevel(t))
+		The damage will increase with your Spellpower, and can critical.]]):
+		format(self:getTalentRadius(t), t.getDuration(self, t), damDesc(self, DamageType.NATURE, self:combatTalentSpellDamage(t, 12, 130)))
 	end,
 }

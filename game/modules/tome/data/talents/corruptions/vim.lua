@@ -28,18 +28,20 @@ newTalent{
 	proj_speed = 10,
 	tactical = { ATTACK = {BLIGHT = 2} },
 	requires_target = true,
+	getCritChance = function(self, t) return self:combatTalentScale(t, 7, 25, 0.75) end,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_slime"}}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:projectile(tg, x, y, DamageType.BLIGHT, self:spellCrit(self:combatTalentSpellDamage(t, 20, 250), self:getTalentLevel(t) * 5), {type="slime"})
+		self:projectile(tg, x, y, DamageType.BLIGHT, self:spellCrit(self:combatTalentSpellDamage(t, 20, 250), t.getCritChance(self, t)), {type="slime"})
 		game:playSoundNear(self, "talents/slime")
 		return true
 	end,
 	info = function(self, t)
 		return ([[Projects a bolt of pure blight, doing %0.2f blight damage.
 		This spell has an improved critical strike chance of +%0.2f%%.
-		The damage will increase with your Spellpower.]]):format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 20, 250)), self:getTalentLevel(t) * 5)
+		The damage will increase with your Spellpower.]]):
+		format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 20, 250)), t.getCritChance(self, t))
 	end,
 }
 
@@ -52,16 +54,18 @@ newTalent{
 	vim = 25,
 	requires_target = true,
 	no_npc_use = true,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 4, 8)) end,
+	getResistPenalty = function(self, t) return self:combatTalentSpellDamage(t, 10, 45) end, -- Consider reducing this
 	action = function(self, t)
 		local rad = 10
-		self:setEffect(self.EFF_SENSE, 3 + self:getTalentLevel(t), {
+		self:setEffect(self.EFF_SENSE, t.getDuration(self,t), {
 			range = rad,
 			actor = 1,
 			on_detect = function(self, x, y)
 				local a = game.level.map(x, y, engine.Map.ACTOR)
 				if not a or self:reactionToward(a) >= 0 then return end
 				a:setTarget(game.player)
-				a:setEffect(a.EFF_VIMSENSE, 2, {power=self:combatTalentSpellDamage(self.T_VIMSENSE, 10, 45)})
+				a:setEffect(a.EFF_VIMSENSE, 2, {power=t.getResistPenalty(self,t)})
 			end,
 		})
 		game:playSoundNear(self, "talents/spell_generic")
@@ -70,7 +74,8 @@ newTalent{
 	info = function(self, t)
 		return ([[Feel the very existence of creatures around you for %d turns, in a radius of 10.
 		The evil touch will reduce their blight resistance by %d%%, but also make them aware of you.
-		The resistance reduction will improve with your Spellpower.]]):format(3 + self:getTalentLevel(t), self:combatTalentSpellDamage(t, 10, 45))
+		The resistance reduction will improve with your Spellpower.]]):
+		format(t.getDuration(self,t), t.getResistPenalty(self,t))
 	end,
 }
 
@@ -80,9 +85,12 @@ newTalent{
 	require = corrs_req3,
 	mode = "passive",
 	points = 5,
+	-- called by _M:onTakeHit function in mod\class\Actor.lua	
+	getVim = function(self, t) return self:combatTalentScale(t, 3.7, 6.5, 0.75) end,
+	getHeal = function(self, t) return self:combatTalentScale(t, 8, 20, 0.75) end,
 	info = function(self, t)
 		return ([[Each time a creature affected by vimsense hurts you, you regain %0.2f vim and %0.2f health.]]):
-		format(3 + self:getTalentLevel(t) * 0.7, 5 + self:getTalentLevel(t) * 3)
+		format(t.getVim(self,t),t.getHeal(self,t))
 	end,
 }
 

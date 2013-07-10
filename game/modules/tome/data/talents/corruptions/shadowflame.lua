@@ -25,15 +25,16 @@ newTalent{
 	vim = 20,
 	cooldown = 30,
 	tactical = { BUFF = 2, ESCAPE = 1, CLOSEIN = 1 },
+	getDuration = function(self, t) return math.floor(self:combatTalentLimit(t, 30, 5, 9)) end, -- Limit < 30 (make sure they can't hide forever)
 	action = function(self, t)
-		self:setEffect(self.EFF_WRAITHFORM, 4 + self:getTalentLevel(t), {def=self:combatTalentSpellDamage(t, 5, 19), armor=self:combatTalentSpellDamage(t, 5, 15)})
+		self:setEffect(self.EFF_WRAITHFORM, t.getDuration(self, t), {def=self:combatTalentSpellDamage(t, 5, 19), armor=self:combatTalentSpellDamage(t, 5, 15)})
 		return true
 	end,
 	info = function(self, t)
 		return ([[Turn into a wraith, allowing you to walk through walls (but not preventing suffocation) for %d turns.
 		Also increases your Defense and Armour by %d and %d, respectively.
 		The bonuses will increase with your Spellpower.]]):
-		format(4 + self:getTalentLevel(t), self:combatTalentSpellDamage(t, 5, 19), self:combatTalentSpellDamage(t, 5, 15))
+		format(t.getDuration(self, t), self:combatTalentSpellDamage(t, 5, 19), self:combatTalentSpellDamage(t, 5, 15))
 	end,
 }
 
@@ -46,9 +47,7 @@ newTalent{
 	vim = 15,
 	requires_target = true,
 	range = 6,
-	radius = function(self, t)
-		return 1 + self:getTalentLevelRaw(t)
-	end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 2, 6)) end,
 	proj_speed = 4,
 	tactical = { ATTACKAREA = {FIRE = 1, DARKNESS = 1} },
 	direct_hit = true,
@@ -86,11 +85,12 @@ newTalent{
 	sustain_vim = 90,
 	cooldown = 30,
 	tactical = { BUFF = 2 },
+	getSpeed = function(self, t) return self:combatTalentScale(t, 0.03, 0.15, 0.75) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/flame")
 		self.__old_type = {self.type, self.subtype}
 		self.type, self.subtype = "demon", "major"
-		local power = self:getTalentLevel(t) * 0.03
+		local power = t.getSpeed(self, t)
 		return {
 			demon = self:addTemporaryValue("demon", 1),
 			speed = self:addTemporaryValue("global_speed_add", power),
@@ -112,10 +112,7 @@ newTalent{
 		While in demon form, you gain %d%% fire resistance, %d%% darkness resistance, and your global speed is increased by %d%%.
 		The flames of the Fearscape will heal you while in demon form.
 		The resistances and heal will increase with your Spellpower.]]):
-		format(
-			self:combatTalentSpellDamage(t, 20, 30), self:combatTalentSpellDamage(t, 20, 35),
-			self:getTalentLevel(t) * 3
-		)
+		format(self:combatTalentSpellDamage(t, 20, 30), self:combatTalentSpellDamage(t, 20, 35), t.getSpeed(self, t)*100)
 	end,
 }
 

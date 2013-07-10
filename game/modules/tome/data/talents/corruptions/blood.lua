@@ -26,21 +26,20 @@ newTalent{
 	vim = 24,
 	tactical = { ATTACKAREA = {BLIGHT = 2} },
 	range = 0,
-	radius = function(self, t)
-		return math.ceil(3 + self:getTalentLevel(t))
-	end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 4, 8)) end,
 	direct_hit = true,
 	requires_target = true,
 	target = function(self, t)
 		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t}
 	end,
+	getChance = function(self, t) return self:combatTalentLimit(t, 100, 30, 70) end, -- Limit < 100%
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.CORRUPTED_BLOOD, {
 			dam = self:spellCrit(self:combatTalentSpellDamage(t, 10, 190)),
-			disease_chance = 20 + self:getTalentLevel(t) * 10,
+			disease_chance = t.getChance(self, t),
 			disease_dam = self:spellCrit(self:combatTalentSpellDamage(t, 10, 220)) / 6,
 			disease_power = self:combatTalentSpellDamage(t, 10, 20),
 			dur = 6,
@@ -52,7 +51,8 @@ newTalent{
 	info = function(self, t)
 		return ([[You extract corrupted blood from your own body, hitting everything in a frontal cone of radius %d for %0.2f blight damage.
 		Each creature hit has a %d%% chance of being infected by a random disease, doing %0.2f blight damage and weakening either Constitution, Strength or Dexterity for 6 turns.
-		The damage will increase with your Spellpower.]]):format(self:getTalentRadius(t), damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 10, 190)), 20 + self:getTalentLevel(t) * 10, damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 10, 220)))
+		The damage will increase with your Spellpower.]]):
+		format(self:getTalentRadius(t), damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 10, 190)), t.getChance(self, t), damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 10, 220)))
 	end,
 }
 
@@ -93,9 +93,7 @@ newTalent{
 	vim = 30,
 	tactical = { ATTACKAREA = {BLIGHT = 2}, DISABLE = 2 },
 	range = 0,
-	radius = function(self, t)
-		return 2 + self:getTalentLevelRaw(t)
-	end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 3, 7)) end,
 	requires_target = true,
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}

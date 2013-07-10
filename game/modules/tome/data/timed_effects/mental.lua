@@ -1598,11 +1598,14 @@ newEffect{
 newEffect{
 	name = "BURNING_HEX", image = "talents/burning_hex.png",
 	desc = "Burning Hex",
-	long_desc = function(self, eff) return ("The target is hexed. Each time it uses an ability it takes %0.2f fire damage."):format(eff.dam) end,
+	long_desc = function(self, eff) return ("The target is hexed.  Each time it uses an ability it takes %0.2f fire damage, and talent cooldowns are increased by %s plus 1 turn."):
+		format(eff.dam, eff.power and ("%d%%"):format((eff.power-1)*100) or "")
+	end,
 	type = "mental",
 	subtype = { hex=true, fire=true },
 	status = "detrimental",
-	parameters = {dam=10},
+	-- _M:getTalentCooldown(t) in mod.class.Actor.lua references this table to compute cooldowns
+	parameters = {dam=10, power = 1},
 	on_gain = function(self, err) return "#Target# is hexed!", "+Burning Hex" end,
 	on_lose = function(self, err) return "#Target# is free from the hex.", "-Burning Hex" end,
 }
@@ -1636,6 +1639,7 @@ newEffect{
 	on_gain = function(self, err) return "#Target# is hexed.", "+Domination Hex" end,
 	on_lose = function(self, err) return "#Target# is free from the hex.", "-Domination hex" end,
 	activate = function(self, eff)
+		self:setTarget() -- clear ai target
 		eff.olf_faction = self.faction
 		self.faction = eff.src.faction
 	end,

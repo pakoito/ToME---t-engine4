@@ -509,10 +509,9 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	end
 
 	-- Spread diseases
-	if hitted and self:knowTalent(self.T_CARRIER) and rng.percent(4 * self:getTalentLevelRaw(self.T_CARRIER)) then
+	if hitted and self:knowTalent(self.T_CARRIER) and rng.percent(self:callTalent(self.T_CARRIER, "getDiseaseSpread")) then
 		-- Use epidemic talent spreading
-		local t = self:getTalentFromId(self.T_EPIDEMIC)
-		t.do_spread(self, t, target)
+		self:callTalent(self.T_EPIDEMIC, "do_spread", target, dam)
 	end
 
 	-- Melee project
@@ -1427,7 +1426,7 @@ function _M:getOffHandMult(combat, mult)
 		offmult = math.max(offmult,self:callTalent(Talents.T_DUAL_WEAPON_TRAINING,"getoffmult"))
 	end
 	if self:knowTalent(Talents.T_CORRUPTED_STRENGTH) then
-		offmult = math.max(offmult, (mult or 1) / (2 - (math.min(self:getTalentLevel(Talents.T_CORRUPTED_STRENGTH), 8) / 9)))
+		offmult = math.max(offmult,self:callTalent(Talents.T_CORRUPTED_STRENGTH,"getoffmult"))
 	end
 	offmult = (mult or 1)*offmult
 	if self:hasEffect(self.EFF_CURSE_OF_MADNESS) then
