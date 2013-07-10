@@ -88,7 +88,8 @@ function _M:canDisarm(x, y, who)
 
 	-- do we know how to disarm?
 	if (who:getTalentLevel(who.T_HEIGHTENED_SENSES) >= 3) or who:attr("can_disarm") then
-		local power = who:getTalentLevel(who.T_HEIGHTENED_SENSES) * who:getCun(25, true) + (who:attr("disarm_bonus") or 0)
+		local th = who:getTalentFromId(who.T_HEIGHTENED_SENSES)
+		local power = th.trapPower(who, th) + (who:attr("disarm_bonus") or 0)
 		if who:checkHit(power, self.disarm_power) and (not self.faction or who:reactionToward(self) < 0) then
 			return true
 		end
