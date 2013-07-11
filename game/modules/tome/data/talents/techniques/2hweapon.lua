@@ -83,7 +83,6 @@ newTalent{
 			dam = self:addTemporaryValue("combat_dam", t.getDam(self, t)),
 			atk = self:addTemporaryValue("combat_atk", t.getAtk(self, t)),
 			def = self:addTemporaryValue("combat_def", -10),
-			armor = self:addTemporaryValue("combat_armor", -10),
 		}
 	end,
 
