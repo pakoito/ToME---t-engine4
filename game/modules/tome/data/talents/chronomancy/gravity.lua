@@ -26,9 +26,7 @@ newTalent{
 	cooldown = 4,
 	tactical = { ATTACKAREA = {PHYSICAL = 2}, ESCAPE = 2 },
 	range = 0,
-	radius = function(self, t)
-		return 4 + math.floor(self:getTalentLevelRaw (t)/2)
-	end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 4.5, 6.5)) end,
 	requires_target = true,
 	direct_hit = true,
 	target = function(self, t)
@@ -63,9 +61,7 @@ newTalent{
 	cooldown = 6,
 	tactical = { ATTACKAREA = {PHYSICAL = 2}, DISABLE = 2 },
 	range = 10,
-	radius = function(self, t)
-		return 2 + math.floor(self:getTalentLevel(t) / 3)
-	end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 2.3, 3.7)) end,
 	direct_hit = true,
 	requires_target = true,
 	target = function(self, t)
@@ -110,14 +106,12 @@ newTalent{
 	cooldown = 14,
 	tactical = { ATTACKAREA = {PHYSICAL = 2}, ESCAPE = 2 },
 	range = 0,
-	radius = function(self, t)
-		return 1 + math.floor(self:getTalentLevel(t)/2)
-	end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 1.5, 3.5)) end,
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false}
 	end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 8, 80)*getParadoxModifier(self, pm) end,
-	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 4, 8)) end,
 	direct_hit = true,
 	requires_target = true,
 	action = function(self, t)
@@ -157,16 +151,14 @@ newTalent{
 	cooldown = 24,
 	tactical = { ATTACKAREA = {PHYSICAL = 2}, DISABLE = 2 },
 	range = 10,
-	radius = function(self, t)
-		return 2 + math.floor(self:getTalentLevel(t) / 2)
-	end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 2.5, 4.5)) end,
 	direct_hit = true,
 	requires_target = true,
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
 	end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 80)*getParadoxModifier(self, pm) end,
-	getDuration = function (self, t) return 3 + math.ceil(self:getTalentLevel(t)) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 4, 8)) end,
 	action = function(self, t)
 		local duration = t.getDuration(self,t)
 		local radius = self:getTalentRadius(t)
@@ -182,7 +174,8 @@ newTalent{
 			DamageType.GRAVITYPIN, dam,
 			radius,
 			5, nil,
-			{type="gravity_well"},
+--			{type="gravity_well"}, -- Put this back when "gravity_well" is available
+			{type="quake"},
 			nil, self:spellFriendlyFire()
 		)
 		game:playSoundNear(self, "talents/earth")

@@ -19,19 +19,20 @@
 
 local Object = require "engine.Object"
 
+--I5 Assumed reference Actor for scaling: (level 50, wil = 100, Paradox mastery at level 5, 0% fatigue) at 25% failure chance = 1150 paradox
+
 -- A simple scaling damage formula
--- returns 45 damage at 400 paradox and 178 at 800 paradox.  Caps out at 400 damage.
+-- damage proportional to paradox, returns 127, 367 damage at 400, 1150 paradox
 getAnomalyDamage = function(self)
-	local base_damage = math.pow(self:getParadox()/60, 2)
-	local damage = math.min(base_damage, 400)
-	return damage
+	return self:getParadox()*367/1150 -- linear formula with no cap
 end
+
 -- Another scaling formula, used in place of apply_power for timed effects
--- Returns  25 power at 400 paradox and 100 at 800 paradox
+-- power proportional to paradox, returns 72, 207 at 400, 1150 paradox
 getAnomalyPower = function(self)
-	local damage = math.pow(self:getParadox()/80, 2)
-	return damage
+	return self:getParadox()*207/1150 -- linear formula
 end
+
 -- simple radius formula used for AoEs and targeting, caps at 10 mostly to prevent overloading the particle threads with a giant AoE
 getAnomalyRadius = function(self)
 	local base_radius = math.ceil(self:getParadox()/100)
@@ -47,8 +48,8 @@ newTalent{
 	direct_hit = true,
 	type_no_req = true,
 	no_unlearn_last = true,
-	getTargetCount = function(self, t) return math.ceil(self:getParadox()/200) end,
-	getRange = function(self, t) return math.ceil(self:getParadox()/20) end,
+	getTargetCount = function(self, t) return math.ceil(self:combatScale(self:getParadox(), 0, 0, 1150/200, 1150)) end,
+	getRange = function(self, t) return math.floor(self:combatScale(self:getParadox(), 0, 0, 1150/20, 1150)) end,
 	message = "Reality has shifted.",
 	action = function(self, t)
 		local tgts = {}
@@ -89,8 +90,8 @@ newTalent{
 	type_no_req = true,
 	cooldown = 1,
 	no_unlearn_last = true,
-	getTargetCount = function(self, t) return math.ceil(self:getParadox()/50) end,
-	getRange = function(self, t) return math.ceil(self:getParadox()/100) end,
+	getTargetCount = function(self, t) return math.ceil(self:combatScale(self:getParadox(), 0, 0, 1150/50, 1150)) end,
+	getRange = function(self, t) return math.floor(self:combatScale(self:getParadox(), 0, 0, 1150/100, 1150)) end,
 	message = "@Source@ has caused a hiccup in the fabric of spacetime.",
 	action = function(self, t)
 		local tgts = {}
@@ -132,7 +133,7 @@ newTalent{
 	no_unlearn_last = true,
 	getTargetCount = function(self, t) return 1 end,
 	getRadius = function(self, t) return getAnomalyRadius(self) end,
-	getStop = function(self, t) return math.ceil(self:getParadox()/100) end,
+	getStop = function(self, t) return math.ceil(self:combatScale(self:getParadox(), 0, 0, 1150/100, 1150)) end,
 	message = "@Source@ has created a bubble of nul time.",
 	action = function(self, t)
 		local tgts = {}
@@ -158,7 +159,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Stuns all targets in a ball.]])
+		return ([[Stuns all targets in radius %d a ball for %d turns.]]):format(t.getRadius(self, t), t.getStop(self, t))
 	end,
 }
 
@@ -198,7 +199,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Slows all targets in a ball.]])
+		return ([[Slows all targets in a radus %d ball by %d%%.]]):
+		format(t.getRadius(self, t), t.getSlow(self, t)*100)
 	end,
 }
 
@@ -210,8 +212,8 @@ newTalent{
 	direct_hit = true,
 	type_no_req = true,
 	no_unlearn_last = true,
-	getTargetCount = function(self, t) return math.ceil(self:getParadox()/300) end,
-	getPower = function(self, t) return ((self:getParadox()/15) / 100) end,
+	getTargetCount = function(self, t) return math.ceil(self:combatScale(self:getParadox(), 0, 0, 1150/300, 1150)) end,
+	getPower = function(self, t) return self:combatScale(self:getParadox(), 0, 0, 1150/15/100, 1150) end,
 	message = "@Source@ has sped up several threads of time.",
 	action = function(self, t)
 		local tgts = {}
@@ -237,7 +239,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Increases global speed in a ball on target.]])
+		return ([[Increases global speed of up to %d targets in a radius %d ball centered on target by %d%%.]]):
+		format(t.getTargetCount(self, t), 10, t.getPower(self, t)*100)
 	end,
 }
 
@@ -249,7 +252,7 @@ newTalent{
 	cooldown = 1,
 	no_unlearn_last = true,
 	getDamage = function(self, t) return getAnomalyDamage(self)/4 end,
-	getDuration = function(self, t) return math.ceil (self:getParadox()/50) end,
+	getDuration = function(self, t) return math.ceil(self:combatScale(self:getParadox(), 0, 0, 1150/50, 1150)) end,
 	message = "A temporal storm rages around @Source@.",
 	action = function(self, t)
 		-- Add a lasting map effect
@@ -279,8 +282,8 @@ newTalent{
 	direct_hit = true,
 	type_no_req = true,
 	no_unlearn_last = true,
-	getTargetCount = function(self, t) return math.ceil(self:getParadox()/200) end,
-	getSummonTime = function(self, t) return math.ceil(self:getParadox()/50) end,
+	getTargetCount = function(self, t) return math.ceil(self:combatScale(self:getParadox(), 0, 0, 1150/200, 1150)) end,
+	getSummonTime = function(self, t) return math.ceil(self:combatScale(self:getParadox(), 0, 0, 1150/50, 1150)) end,
 	message = "Some Time Elementals have been attracted by @Source@'s meddling.",
 	action = function(self, t)
 		local tgts = {}
@@ -356,7 +359,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Summons a time elemental that may or may not be friendly to the caster.]])
+		return ([[Summons %d time elementals for %d turns that may or may not be friendly to the caster.]]):
+		format(t.getTargetCount(self, t), t.getSummonTime(self, t))
 	end,
 }
 
@@ -367,8 +371,8 @@ newTalent{
 	range = 10,
 	type_no_req = true,
 	no_unlearn_last = true,
-	getTargetCount = function(self, t) return math.ceil(self:getParadox()/200) end,
-	getDuration = function(self, t) return math.ceil(self:getParadox()/100) end,
+	getTargetCount = function(self, t) return math.ceil(self:combatScale(self:getParadox(), 0, 0, 1150/200, 1150)) end,
+	getDuration = function(self, t) return math.floor(self:combatScale(self:getParadox(), 0, 0, 1150/100, 1150)) end,
 	message = "@Source@ has paused a temporal thread.",
 	action = function(self, t)
 		local tgts = {}
@@ -426,9 +430,9 @@ newTalent{
 	direct_hit = true,
 	type_no_req = true,
 	no_unlearn_last = true,
-	getRange = function(self, t) return math.ceil(self:getParadox()/20) end,
-	getConfuseDuration = function(self, t) return math.floor(self:getParadox()/200)end,
-	getConfuseEfficency = function(self, t) return self:getParadox()/10 end,
+	getRange = function(self, t) return math.ceil(self:combatScale(self:getParadox(), 0, 0, 1150/20, 1150)) end,
+	getConfuseDuration = function(self, t) return math.floor(self:combatScale(self:getParadox(), 0, 0, 1150/200, 1150)) end,
+	getConfuseEfficency = function(self, t) return self:combatLimit(self:getParadox(), 50, 0, 0, 35, 1150) end, -- Limit < 50%
 	message = "Reality has shifted.",
 	action = function(self, t)
 		local tgts = {}
@@ -442,7 +446,7 @@ newTalent{
 
 		if #tgts > 0 then
 			-- Randomly take a target
-			local tg = {type="hit", range=self:getTalentRange(t), talent=t}
+			local tg = {type="hit", range=t.getRange(self,t), talent=t} -- bug fix
 			local a, id = rng.table(tgts)
 			local target = a
 		
@@ -474,7 +478,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Caster swaps places with a random target.]])
+		return ([[Caster swaps places with a random target within range %d, confusing (%d%% chance to act randomly) both of them for %d turns.]]):
+		format(t.getRange(self, t), t.getConfuseEfficency(self, t), t.getConfuseDuration(self, t))
 	end,
 }
 
@@ -537,9 +542,9 @@ newTalent{
 	direct_hit = true,
 	type_no_req = true,
 	no_unlearn_last = true,
-	getTargetCount = function(self, t) return math.ceil(self:getParadox()/100) end,
-	getPower = function(self, t) return math.ceil(self:getParadox()/100) end,
-	getTalentCount = function(self, t) return math.ceil(self:getParadox()/200) end,
+	getTargetCount = function(self, t) return math.ceil(self:combatScale(self:getParadox(), 0, 0, 1150/100, 1150)) end,
+	getPower = function(self, t) return math.floor(self:combatScale(self:getParadox(), 0, 0, 1150/100, 1150)) end,
+	getTalentCount = function(self, t) return math.floor(self:combatScale(self:getParadox(), 0, 0, 1150/200, 1150)) end,
 	message = "@Source@ has increased local entropy.",
 	action = function(self, t)
 		local tgts = {}
@@ -580,7 +585,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Places target's talents on cooldown.]])
+		return ([[Places %d talents of up to %d targets in a radius 10 ball on cooldown for up to %d turns.]]):
+		format(t.getTalentCount(self, t), t.getTargetCount(self, t), t.getPower(self, t))
 	end,
 }
 
@@ -592,8 +598,8 @@ newTalent{
 	direct_hit = true,
 	type_no_req = true,
 	no_unlearn_last = true,
-	getTargetCount = function(self, t) return math.ceil(self:getParadox()/200) end,
-	getSummonTime = function(self, t) return math.ceil(self:getParadox()/20) end,
+	getTargetCount = function(self, t) return math.ceil(self:combatScale(self:getParadox(), 0, 0, 1150/200, 1150)) end,
+	getSummonTime = function(self, t) return math.ceil(self:combatScale(self:getParadox(), 0, 0, 1150/20, 1150)) end,
 	message = "Some innocent bystanders have been pulled out of their timeline.",
 	action = function(self, t)
 		local tgts = {}
@@ -705,8 +711,8 @@ newTalent{
 	direct_hit = true,
 	type_no_req = true,
 	no_unlearn_last = true,
-	getRange = function(self, t) return math.ceil(self:getParadox()/30) end,
-	getTargetCount = function(self, t) return math.ceil(self:getParadox()/200) end,
+	getRange = function(self, t) return math.ceil(self:combatScale(self:getParadox(), 0, 0, 1150/30, 1150)) end,
+	getTargetCount = function(self, t) return math.ceil(self:combatScale(self:getParadox(), 0, 0, 1150/200, 1150)) end,
 	message = "Poof!!",
 	action = function(self, t)
 		local tgts = {}
@@ -738,7 +744,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Poofs in some enemies from the level to the caster's location.]])
+		return ([[Pulls up to %d enemies within range %d to the caster's location.]]):
+		format(t.getTargetCount(self, t), t.getRange(self, t))
 	end,
 }
 
@@ -750,8 +757,8 @@ newTalent{
 	direct_hit = true,
 	type_no_req = true,
 	no_unlearn_last = true,
-	getTargetCount = function(self, t) return math.ceil(self:getParadox()/150) end,
-	getPower = function(self, t) return (self:getParadox()/30) end,
+	getTargetCount = function(self, t) return math.ceil(self:combatScale(self:getParadox(), 0, 0, 1150/150, 1150)) end,
+	getPower = function(self, t) return self:combatScale(self:getParadox(), 0, 0, 1150/30, 1150) end,
 	message = "@Source@ has inadvertently weakened several creatures.",
 	action = function(self, t)
 		local tgts = {}
@@ -778,7 +785,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Weakens several creatures.]])
+		return ([[Weakens several creatures within range 10.]])
 	end,
 }
 
@@ -791,8 +798,8 @@ newTalent{
 	type_no_req = true,
 	no_unlearn_last = true,
 	getTargetCount = function(self, t) return 1 end,
-	getHastePower = function(self, t) return ((self:getParadox()/15) / 100) end,
-	getRegenPower = function(self, t) return (self:getParadox()/15) end,
+	getHastePower = function(self, t) return self:combatScale(self:getParadox(), 0, 0, 1150/15/100, 1150) end,
+	getRegenPower = function(self, t) return self:combatScale(self:getParadox(), 0, 0, 1150/15, 1150) end,
 	message = "The odds have tilted.",
 	action = function(self, t)
 		local tgts = {}
@@ -820,7 +827,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Seriously buffs one target.]])
+		return ([[Substantially toughens and hastes one target for 8 turns.]])
 	end,
 }
 

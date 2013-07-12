@@ -110,7 +110,7 @@ newTalent{
 	require = temporal_req4,
 	points = 5,
 	paradox = 10,
-	cooldown = function(self, t) return 15 - 2 * self:getTalentLevelRaw(t) end,
+	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 0, 13, 5)) end, -- Limit >0
 	no_energy = true,
 	range = 10,
 	tactical = { ATTACK = {PHYSICAL = 2} },

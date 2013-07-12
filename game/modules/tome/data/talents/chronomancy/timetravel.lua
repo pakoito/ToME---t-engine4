@@ -26,12 +26,10 @@ newTalent{
 	cooldown = 24,
 	tactical = { PARADOX = 2 },
 	getDuration = function(self, t)
-		local duration = 1 + math.floor(self:getTalentLevel(t)/2)
-
+		local duration = math.floor(self:combatTalentScale(t, 1.5, 3.5))
 		if self:knowTalent(self.T_PARADOX_MASTERY) then
-			duration = 1 + math.floor((self:getTalentLevel(t)/2) + (self:getTalentLevel(self.T_PARADOX_MASTERY)/2))
+			duration = duration + self:callTalent(self.T_PARADOX_MASTERY, "stabilityDuration")
 		end
-
 		return duration
 	end,
 	getReduction = function(self, t) return self:combatTalentSpellDamage(t, 20, 200) end,
@@ -66,7 +64,7 @@ newTalent{
 		return {type="hit", range=self:getTalentRange(t), talent=t}
 	end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 25, 250) * getParadoxModifier(self, pm) end,
-	getDuration = function(self, t) return 2 + math.ceil(self:getTalentLevel(t) / 2 * getParadoxModifier(self, pm)) end,
+	getDuration = function(self, t) return 2 + math.ceil(self:combatTalentScale(self:getTalentLevel(t) * getParadoxModifier(self, pm), 0.3, 2.3)) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
@@ -80,9 +78,9 @@ newTalent{
 			return
 		end
 
-		local hit = self:checkHit(self:combatSpellpower(), target:combatSpellResist() + (target:attr("continuum_destabilization") or 0))
+		local power = self:combatSpellpower() * (1 + self:callTalent(self.T_SPACETIME_MASTERY, "getPower"))
+		local hit = self:checkHit(power, target:combatSpellResist() + (target:attr("continuum_destabilization") or 0))
 		if not hit then game.logSeen(target, "%s resists!", target.name:capitalize()) return true end
-		
 		self:project(tg, x, y, DamageType.TEMPORAL, self:spellCrit(t.getDamage(self, t)))
 		game.level.map:particleEmitter(x, y, 1, "temporal_thrust")
 		game:playSoundNear(self, "talents/arcane")
@@ -141,16 +139,14 @@ newTalent{
 	cooldown = 6,
 	tactical = { ATTACKAREA = {TEMPORAL = 2} },
 	range = 0,
-	radius = function(self, t)
-		return 1 + self:getTalentLevelRaw(t)
-	end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 2, 6)) end,
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,
 	direct_hit = true,
 	requires_target = true,
 	getDamage = function(self, t) return (self:combatTalentSpellDamage(t, 18, 160)*getParadoxModifier(self, pm)) end,
-	getPercent = function(self, t) return (10 + (self:combatTalentSpellDamage(t, 1, 10))) / 100 end,
+	getPercent = function(self, t) return self:combatLimit(self:combatTalentSpellDamage(t, 1, 10), 0.5, .1, 0, 0.1575, 5.75) end, -- Limit to <50%
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		self:project(tg, self.x, self.y, DamageType.TEMPORAL, self:spellCrit(t.getDamage(self, t)))
@@ -178,7 +174,7 @@ newTalent{
 	cooldown = 50,
 	tactical = { BUFF = 0.5, CURE = 0.5 },
 	message = "@Source@ manipulates the flow of time.",
-	getCooldownReduction = function(self, t) return 1 + math.floor(self:getTalentLevel(t) * getParadoxModifier(self, pm)) end,
+	getCooldownReduction = function(self, t) return math.floor(self:combatTalentScale(self:getTalentLevel(t) * getParadoxModifier(self, pm), 2, 6)) end,
 	action = function(self, t)
 		-- update cooldowns
 		for tid, cd in pairs(self.talents_cd) do

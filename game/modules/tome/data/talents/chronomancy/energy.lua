@@ -26,7 +26,7 @@ newTalent{
 	sustain_paradox = 75,
 	cooldown = 10,
 	tactical = { BUFF = 2 },
-	getAbsorption = function(self, t) return self:combatTalentSpellDamage(t, 5, 50) end,
+	getAbsorption = function(self, t) return self:combatTalentSpellDamage(t, 5, 150) end, -- Increase shield strength
 	on_damage = function(self, t, damtype, dam)
 		if not DamageType:get(damtype).antimagic_resolve then return dam end
 		local absorb = t.getAbsorption(self, t)
@@ -94,8 +94,10 @@ newTalent{
 	direct_hit = true,
 	requires_target = true,
 	range = 6,
-	getTalentCount = function(self, t) return 1 + math.floor(self:getTalentLevel(t) * getParadoxModifier(self, pm)/2) end,
-	getCooldown = function(self, t) return 1 + math.ceil(self:getTalentLevel(t)/3) end,
+	getTalentCount = function(self, t)
+		return 1 + math.floor(self:combatTalentScale(math.max(1, self:getTalentLevel(t) * getParadoxModifier(self, pm)), 0.5, 2.5, "log"))
+	end,
+	getCooldown = function(self, t) return math.ceil(self:combatTalentScale(t, 1, 2.6)) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local tx, ty = self:getTarget(tg)
@@ -150,7 +152,7 @@ newTalent{
 	info = function(self, t)
 		local talentcount = t.getTalentCount(self, t)
 		local cooldown = t.getCooldown(self, t)
-		return ([[You sap the target's energy and add it to your own, placing up to %d random talents on cooldown for %d turns and reducing the cooldown of one of your chronomancy talents currently on cooldown by %d turns per enemy talent effected.
+		return ([[You sap the target's energy and add it to your own, placing up to %d random talents on cooldown for %d turns.  For each talent put on cooldown, you reduce the cooldown of one of your chronomancy talents currently on cooldown by %d turns.
 		The number of talents affected scales with your Paradox.]]):
 		format(talentcount, cooldown, cooldown)
 	end,

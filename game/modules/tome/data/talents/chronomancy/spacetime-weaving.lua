@@ -25,9 +25,7 @@ newTalent{
 	paradox = 5,
 	cooldown = 10,
 	tactical = { CLOSEIN = 2, ESCAPE = 2 },
-	range = function(self, t)
-		return 2 + math.floor(self:getTalentLevel(t))
-	end,
+	range = function(self, t) return math.floor(self:combatTalentScale(t, 3, 7)) end,
 	requires_target = true,
 	target = function(self, t)
 		return {type="hit", range=self:getTalentRange(t), nolock=true, nowarning=true}
@@ -77,10 +75,8 @@ newTalent{
 	cooldown = 10,
 	tactical = { ESCAPE = 2 },
 	range = 0,
-	radius = function(self, t)
-		return 2 + math.floor(self:getTalentLevel(t)/2)
-	end,
-	getTeleport = function(self, t) return 6 + math.floor(self:getTalentLevel(t)/2 * getParadoxModifier(self, pm) * 4) end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 2.5, 4.5)) end,
+	getTeleport = function(self, t) return math.floor(self:combatTalentScale(self:getTalentLevel(t) * getParadoxModifier(self, pm), 8, 16)) end,
 	target = function(self, t)
 		return {type="ball", range=0, radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,
@@ -93,7 +89,7 @@ newTalent{
 		--checks for spacetime mastery hit bonus
 		local power = self:combatSpellpower()
 		if self:knowTalent(self.T_SPACETIME_MASTERY) then
-			power = self:combatSpellpower() * (1 + self:getTalentLevel(self.T_SPACETIME_MASTERY)/10)
+			power = self:combatSpellpower() * (1 + self:callTalent(self.T_SPACETIME_MASTERY, "getPower"))
 		end
 
 		self:project(tg, self.x, self.y, function(px, py)
@@ -141,14 +137,10 @@ newTalent{
 	paradox = 20,
 	cooldown = 20,
 	tactical = { ESCAPE = 2 },
-	range = function (self, t)
-		return 10 + math.floor(self:getTalentLevel(t)/2)
-	end,
-	radius = function(self, t)
-		return 8 - math.floor(self:getTalentLevel(t))
-	end,
+	range = function (self, t) return math.floor(self:combatTalentScale(t, 10.5, 12.5)) end,
+	radius = function(self, t) return math.floor(self:combatTalentLimit(t, 0, 7, 3)) end, -- Limit to radius 0
 	requires_target = true,
-	getDuration = function (self, t) return 5 + math.floor(self:getTalentLevel(t)*getParadoxModifier(self, pm)) end,
+	getDuration = function (self, t) return math.floor(self:combatTalentScale(self:getTalentLevel(t)*getParadoxModifier(self, pm), 6, 10)) end,
 	no_npc_use = true,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=1, nolock=true, talent=t}
@@ -199,7 +191,7 @@ newTalent{
 		--checks for spacetime mastery hit bonus
 		local power = self:combatSpellpower()
 		if self:knowTalent(self.T_SPACETIME_MASTERY) then
-			power = self:combatSpellpower() * (1 + self:getTalentLevel(self.T_SPACETIME_MASTERY)/10)
+			power = self:combatSpellpower() * (1 + self:callTalent(self.T_SPACETIME_MASTERY, "getPower"))
 		end
 
 		-- Adding the entrance wormhole
@@ -218,7 +210,7 @@ newTalent{
 			destabilization_power = self:combatSpellpower(0.3),
 			summoned_by = self, -- "summoner" is immune to it's own traps
 			triggered = function(self, x, y, who)
-				if who == self.summoned_by or who:checkHit(self.check_hit, who:combatSpellResist(), 0, 95, 15) and who:canBe("teleport") then
+				if who == self.summoned_by or who:checkHit(self.check_hit, who:combatSpellResist()+(who:attr("continuum_destabilization") or 0), 0, 95) and who:canBe("teleport") then -- Bug fix, Deprecrated checkhit call
 					-- since we're using a precise teleport we'll look for a free grid first
 					local tx, ty = util.findFreeGrid(self.dest.x, self.dest.y, 5, true, {[engine.Map.ACTOR]=true})
 					if tx and ty then
@@ -283,19 +275,14 @@ newTalent{
 	mode = "passive",
 	require = temporal_req4,
 	points = 5,
-	on_learn = function(self, t)
-		self.talent_cd_reduction[self.T_BANISH] = (self.talent_cd_reduction[self.T_BANISH] or 0) + 1
-		self.talent_cd_reduction[self.T_DIMENSIONAL_STEP] = (self.talent_cd_reduction[self.T_DIMENSIONAL_STEP] or 0) + 1
-		self.talent_cd_reduction[self.T_SWAP] = (self.talent_cd_reduction[self.T_SWAP] or 0) + 1
-		self.talent_cd_reduction[self.T_TEMPORAL_WAKE] = (self.talent_cd_reduction[self.T_TEMPORAL_WAKE] or 0) + 1
-		self.talent_cd_reduction[self.T_WORMHOLE] = (self.talent_cd_reduction[self.T_WORMHOLE] or 0) + 2
-	end,
-	on_unlearn = function(self, t)
-		self.talent_cd_reduction[self.T_BANISH] = self.talent_cd_reduction[self.T_BANISH] - 1
-		self.talent_cd_reduction[self.T_DIMENSIONAL_STEP] = self.talent_cd_reduction[self.T_DIMENSIONAL_STEP] - 1
-		self.talent_cd_reduction[self.T_SWAP] = self.talent_cd_reduction[self.T_SWAP] - 1
-		self.talent_cd_reduction[self.T_TEMPORAL_WAKE] = self.talent_cd_reduction[self.T_TEMPORAL_WAKE] - 1
-		self.talent_cd_reduction[self.T_WORMHOLE] = self.talent_cd_reduction[self.T_WORMHOLE] - 2
+	getPower = function(self, t) return math.max(0, self:combatTalentLimit(t, 1, 0.15, 0.5)) end, -- Limit < 100%
+	cdred = function(self, t, scale) return math.floor(scale*self:combatTalentLimit(t, 0.8, 0.1, 0.5)) end, -- Limit < 80% of cooldown
+	passives = function(self, t, p)
+		self:talentTemporaryValue(p, "talent_cd_reduction", {[self.T_BANISH] = t.cdred(self, t, 10)})
+		self:talentTemporaryValue(p, "talent_cd_reduction", {[self.T_DIMENSIONAL_STEP] = t.cdred(self, t, 10)})
+		self:talentTemporaryValue(p, "talent_cd_reduction", {[self.T_SWAP] = t.cdred(self, t, 10)})
+		self:talentTemporaryValue(p, "talent_cd_reduction", {[self.T_TEMPORAL_WAKE] = t.cdred(self, t, 10)})
+		self:talentTemporaryValue(p, "talent_cd_reduction", {[self.T_WORMHOLE] = t.cdred(self, t, 20)})
 	end,
 	info = function(self, t)
 		local cooldown = self:getTalentLevelRaw(t)
@@ -303,5 +290,12 @@ newTalent{
 		local power = self:getTalentLevel(t) * 10
 		return ([[Your mastery of spacetime reduces the cooldown of Banish, Dimensional Step, Swap, and Temporal Wake by %d, and the cooldown of Wormhole by %d.  Also improves your chances of hitting targets with chronomancy effects that may cause continuum destablization (Banish, Time Skip, etc.), as well as your chance of overcoming continuum destabilization, by %d%%.]]):
 		format(cooldown, wormhole, power)
+	end,
+		info = function(self, t)
+		local cooldown = t.cdred(self, t, 10)
+		local wormhole = t.cdred(self, t, 20)
+		return ([[Your mastery of spacetime reduces the cooldown of Banish, Dimensional Step, Swap, and Temporal Wake by %d, and the cooldown of Wormhole by %d.  Also improves your Spellpower for purposes of hitting targets with chronomancy effects that may cause continuum destablization (Banish, Time Skip, etc.), as well as your chance of overcoming continuum destabilization, by %d%%.]]):
+		format(cooldown, wormhole, t.getPower(self, t)*100)
+		
 	end,
 }

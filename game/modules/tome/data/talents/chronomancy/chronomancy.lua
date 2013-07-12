@@ -61,7 +61,7 @@ newTalent{
 	paradox = 5,
 	cooldown = 10,
 	no_npc_use = true,
-	getDuration = function(self, t) return 4 + math.ceil((self:getTalentLevel(t) * 2)) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 6, 14)) end,
 	action = function(self, t)
 		if checkTimeline(self) == true then
 			return
@@ -83,7 +83,7 @@ newTalent{
 	mode = "passive",
 	require = temporal_req2,
 	points = 5,
-	getRadius = function(self, t) return 3 + math.floor(self:getTalentLevel(t) * 2) end,
+	getRadius = function(self, t) return math.floor(self:combatTalentScale(t, 5, 13)) end,
 	do_precog_foresight = function(self, t)
 		self:magicMap(t.getRadius(self, t))
 		self:setEffect(self.EFF_SENSE, 1, {
@@ -107,8 +107,8 @@ newTalent{
 	points = 5,
 	paradox = 10,
 	cooldown = 18,
-	getDuration = function(self, t) return math.ceil(self:getTalentLevel(t) * 2) end,
-	getPower = function(self, t) return math.ceil(self:getTalentLevel(t) * 3) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentLimit(t, 18, 3, 10.5)) end, -- Limit < 18
+	getPower = function(self, t) return self:combatTalentScale(t, 4, 15) end, -- Might need a buff
 	tactical = { BUFF = 4 },
 	no_energy = true,
 	no_npc_use = true,
@@ -140,8 +140,8 @@ newTalent{
 	require = temporal_req4,
 	mode = "passive",
 	points = 5,
-	getDuration = function(self, t) return 1 + math.ceil(self:getTalentLevel(t)) end,
-	getSaveBonus = function(self, t) return math.ceil(self:getTalentLevel(t)) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 2, 6, "log")) end,
+	getSaveBonus = function(self, t) return self:combatTalentScale(t, 1, 5, 0.75) end,
 	do_spin_fate = function(self, t, type)
 		local save_bonus = t.getSaveBonus(self, t)
 	

@@ -72,15 +72,13 @@ newTalent{
 	cooldown = 14,
 	tactical = { ATTACKAREA = 2, DISABLE= 2 },
 	range = 0,
-	radius = function(self, t)
-		return 4 + math.floor(self:getTalentLevelRaw (t)/2)
-	end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 4.5, 6.5)) end,
 	requires_target = true,
 	direct_hit = true,
 	target = function(self, t)
 		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,
-	getConfuseDuration = function(self, t) return math.floor((self:getTalentLevel(t) + 2) * getParadoxModifier(self, pm)) end,
+	getConfuseDuration = function(self, t) return math.floor(self:combatScale((self:getTalentLevel(t) + 2) * getParadoxModifier(self, pm), 2, 2, 7, 7)) end,
 	getConfuseEfficency = function(self, t) return math.min(50, self:getTalentLevelRaw(t) * 10) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
@@ -98,9 +96,9 @@ newTalent{
 	info = function(self, t)
 		local duration = t.getConfuseDuration(self, t)
 		local radius = self:getTalentRadius(t)
-		return ([[Reverts the minds of all creatures in a radius %d cone to an infantile state, in effect confusing them for %d turns.
+		return ([[Reverts the minds of all creatures in a radius %d cone to an infantile state, in effect confusing them (%d%% to act randomly) for %d turns.
 		The duration will scale with your Paradox.]]):
-		format(radius, duration)
+		format(radius, t.getConfuseEfficency(self, t), duration)
 	end,
 }
 
@@ -113,9 +111,7 @@ newTalent{
 	cooldown = 14,
 	tactical = { ATTACKAREA = {TEMPORAL = 2} },
 	range = 0,
-	radius = function(self, t)
-		return 3 + math.floor(self:getTalentLevel(t)/4)
-	end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 3.25, 4.25)) end,
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false}
 	end,
@@ -169,7 +165,7 @@ newTalent{
 	end },
 	is_heal = true,
 	getHeal = function(self, t) return self:combatTalentSpellDamage(t, 40, 440)*getParadoxModifier(self, pm) end,
-	getRemoveCount = function(self, t) return math.floor(self:getTalentLevel(t)) end,
+	getRemoveCount = function(self, t) return math.floor(self:combatTalentScale(t, 1, 5, "log")) end,
 	action = function(self, t)
 		self:attr("allow_on_heal", 1)
 		self:heal(self:spellCrit(t.getHeal(self, t)), self)

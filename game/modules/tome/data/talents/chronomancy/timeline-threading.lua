@@ -25,8 +25,8 @@ newTalent{
 	paradox = 5,
 	cooldown = 12,
 	tactical = { BUFF = 2 },
-	getThread = function(self, t) return  6 * self:getTalentLevel(t) end,
-	getReduction = function(self, t) return 3 * self:getTalentLevel(t) end,
+	getThread = function(self, t) return self:combatTalentScale(t, 7, 30, 0.75) end,
+	getReduction = function(self, t) return self:combatTalentScale(t, 3.6, 15, 0.75) end,
 	action = function(self, t)
 		self:setEffect(self.EFF_GATHER_THE_THREADS, 5, {power=t.getThread(self, t), reduction=t.getReduction(self, t)})
 		game:playSoundNear(self, "talents/spell_generic2")
@@ -55,7 +55,7 @@ newTalent{
 	reflectable = true,
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 200)*getParadoxModifier(self, pm) end,
-	getReduction = function(self, t) return math.ceil(self:getTalentLevel(t)) end,
+	getReduction = function(self, t) return self:combatTalentScale(t, 1.2, 5, 0.75) end,
 	action = function(self, t)
 		local tg = {type="beam", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -71,7 +71,7 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local reduction = t.getReduction(self, t)
 		return ([[Creates a wake of temporal energy that deals %0.2f damage in a beam, as you attempt to rethread the timeline.  Affected targets may be stunned, blinded, pinned, or confused for 3 turns.
-		Each target you hit with Rethread will reduce your Paradox by %d.
+		Each target you hit with Rethread will reduce your Paradox by %0.1f.
 		The damage will increase with your Paradox and Spellpower.]]):
 		format(damDesc(self, DamageType.TEMPORAL, damage), reduction)
 	end,
@@ -88,7 +88,9 @@ newTalent{
 	requires_target = true,
 	range = 6,
 	no_npc_use = true,
-	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)* getParadoxModifier(self, pm)) end,
+	getDuration = function(self, t) -- limit < cooldown (30)
+		return math.floor(self:combatTalentLimit(self:getTalentLevel(t)* getParadoxModifier(self, pm), t.cooldown, 4, 8))
+	end,
 	getSize = function(self, t) return 2 + math.ceil(self:getTalentLevelRaw(t) / 2 ) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
@@ -117,6 +119,7 @@ newTalent{
 			no_drops = true,
 			faction = self.faction,
 			summoner = self, summoner_gain_exp=true,
+			exp_worth = 0, -- bug fix
 			summon_time = t.getDuration(self, t),
 			ai_target = {actor=target},
 			ai = "summoned", ai_real = target.ai,
@@ -152,11 +155,12 @@ newTalent{
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		local allowed = t.getSize(self, t)
+		local size = "gargantuan"
 		if allowed < 4 then
 			size = "medium"
 		elseif allowed < 5 then
 			size = "big"
-		else
+		elseif allowed < 6 then
 			size = "huge"
 		end
 		return ([[Pulls a %s size or smaller copy of the target from another timeline; the copy stays for %d turns. The copy and the target will be compelled to attack each other immediately.
@@ -174,7 +178,7 @@ newTalent{
 	cooldown = 50,
 	no_npc_use = true,
 	no_energy = true,
-	getDuration = function(self, t) return 4 + math.floor(self:getTalentLevel(t) * getParadoxModifier(self, pm)) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(self:getTalentLevel(t) * getParadoxModifier(self, pm), 5, 9)) end,
 	action = function(self, t)
 		if checkTimeline(self) == true then
 			return

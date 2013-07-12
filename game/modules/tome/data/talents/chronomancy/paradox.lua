@@ -23,17 +23,16 @@ newTalent{
 	mode = "passive",
 	require = chrono_req_high1,
 	points = 5,
-	on_learn = function(self, t)
-		self.resists[DamageType.TEMPORAL] = (self.resists[DamageType.TEMPORAL] or 0) + 7
-	end,
-	on_unlearn = function(self, t)
-		self.resists[DamageType.TEMPORAL] = self.resists[DamageType.TEMPORAL] - 7
+	-- Static history bonus handled in timetravel.lua, backfire calcs performed by _M:getModifiedParadox function in mod\class\Actor.lua	
+	WilMult = function(self, t) return self:combatTalentScale(t, 0.15, 0.5) end,
+	stabilityDuration = function(self, t) return math.floor(self:combatTalentScale(t, 0.4, 2.7, "log")) end,
+	getResist = function(self, t) return self:combatTalentScale(t, 10, 35) end,
+	passives = function(self, t, p)
+		self:talentTemporaryValue(p, "resists", {[DamageType.TEMPORAL] = t.getResist(self, t)})
 	end,
 	info = function(self, t)
-		local resist = self:getTalentLevelRaw(t) * 7
-		local stability = math.floor(self:getTalentLevel(t)/2)
 		return ([[You've learned to focus your control over the spacetime continuum, and quell anomalous effects.  Increases your Temporal resistance by %d%%, extends the duration of the Static History stability effect by %d turns, and increases your effective willpower for failure, anomaly, and backfire calculations by %d%%.]]):
-		format(resist, stability, self:getTalentLevel(t) * 10)
+		format(t.getResist(self, t), t.stabilityDuration(self, t), t.WilMult(self, t) * 100)
 	end,
 }
 
@@ -49,8 +48,12 @@ newTalent{
 	requires_target = true,
 	direct_hit = true,
 	no_npc_use = true,
-	getDuration = function(self, t) return 4 + math.floor(self:getTalentLevel(t) * getParadoxModifier(self, pm)) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(self:getTalentLevel(t)*getParadoxModifier(self, pm), 5, 9)) end,
 	getPower = function(self, t) return self:combatTalentSpellDamage(t, 10, 50) * getParadoxModifier(self, pm) end,
+	-- Resistance reduction handled under CEASE_TO_EXIST in data\timed_effects\magical.lua
+	getPower = function(self, t)
+		return self:combatLimit(self:combatTalentSpellDamage(t, 10, 50) * getParadoxModifier(self, pm), 100, 0, 0, 32.9, 32.9) -- Limit < 100%
+	end,
 	do_instakill = function(self, t)
 		-- search for target because it's ID will change when the chrono restore takes place
 		local tg = false
@@ -129,17 +132,21 @@ newTalent{
 	cooldown = 24,
 	tactical = { DEFEND = 2, CURE = 2 },
 	getResist = function(self, t) return self:combatTalentSpellDamage(t, 10, 50) * getParadoxModifier(self, pm) end,
+	getdurred = function(self, t) return self:combatLimit(self:combatTalentSpellDamage(t, 10, 50) * getParadoxModifier(self, pm), 100, 0, 0, 32.9, 32.9) end, -- Limit < 100%
 	action = function(self, t)
-		self:setEffect(self.EFF_FADE_FROM_TIME, 10, {power=t.getResist(self, t)})
+		-- fading managed by FADE_FROM_TIME effect in mod.data.timed_effects.other.lua
+		self:setEffect(self.EFF_FADE_FROM_TIME, 10, {power=t.getResist(self, t), durred=t.getdurred(self,t)})
 		game:playSoundNear(self, "talents/heal")
 		return true
 	end,
 	info = function(self, t)
 		local resist = t.getResist(self, t)
-		return ([[You partially remove yourself from the timeline for 10 turns, increasing your resistance to all damage by %d%%, reducing the duration of all effects by %d%%, and reducing all damage you deal by 20%%.
+		local dur = t.getdurred(self,t)
+		return ([[You partially remove yourself from the timeline for 10 turns.
+		This increases your resistance to all damage by %d%%, reduces the duration of all detrimental effects on you by %d%%, and reduces all damage you deal by 20%%.
 		The resistance bonus, effect reduction, and damage penalty will gradually lose power over the duration of the spell.
-		The effect will scale with your Paradox and Spellpower.]]):
-		format(resist, resist, resist/10)
+		The effects scale with your Paradox and Spellpower.]]):
+		format(resist, dur)
 	end,
 }
 
@@ -154,7 +161,7 @@ newTalent{
 	range = 2,
 	requires_target = true,
 	no_npc_use = true,
-	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)*getParadoxModifier(self, pm)) end,
+	getDuration = function(self, t)	return math.floor(self:combatTalentLimit(self:getTalentLevel(t)*getParadoxModifier(self, pm), 50, 4, 8)) end, -- Limit <50
 	getModifier = function(self, t) return rng.range(t.getDuration(self,t)*2, t.getDuration(self, t)*4) end,
 	action = function (self, t)
 		if checkTimeline(self) == true then
@@ -178,6 +185,7 @@ newTalent{
 			no_drops = true,
 			faction = self.faction,
 			summoner = self, summoner_gain_exp=true,
+			exp_worth = 0,
 			summon_time = t.getDuration(self, t),
 			ai_target = {actor=nil},
 			ai = "summoned", ai_real = "tactical",

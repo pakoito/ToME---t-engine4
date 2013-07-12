@@ -27,7 +27,7 @@ newTalent{
 	sustain_paradox = 100,
 	cooldown = 18,
 	tactical = { BUFF = 2 },
-	getPower = function(self, t) return math.ceil((self:getTalentLevel(t) * 1.5) + self:combatTalentStatDamage(t, "wil", 5, 20)) end,
+	getPower = function(self, t) return math.ceil(self:combatTalentScale(t, 1.5, 7.5, 0.75) + self:combatTalentStatDamage(t, "wil", 5, 20)) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/arcane")
 		return {
@@ -57,8 +57,8 @@ newTalent{
 	paradox = 10,
 	cooldown = 24,
 	tactical = { STAMINA = 2 },
-	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t) * getParadoxModifier(self, pm)) end,
-	getPower = function(self, t) return self:getTalentLevel(t) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentLimit(self:getTalentLevel(t)*getParadoxModifier(self, pm), 14, 4, 8)) end, -- Limit < 14
+	getPower = function(self, t) return self:combatTalentScale(t, 1.5, 5) end,
 	action = function(self, t)
 		self:setEffect(self.EFF_INVIGORATE, t.getDuration(self,t), {power=t.getPower(self, t)})
 		return true
@@ -66,7 +66,7 @@ newTalent{
 	info = function(self, t)
 		local power = t.getPower(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[For the next %d turns, you recover %d stamina each turn and all other talents on cooldown will refresh twice as fast as usual.
+		return ([[For the next %d turns, you recover %0.1f stamina each turn and all other talents on cooldown will refresh twice as fast as usual.
 		The duration will scale with your Paradox.]]):format(duration, power)
 	end,
 }
@@ -81,7 +81,7 @@ newTalent{
 	sustain_paradox = 100,
 	cooldown = 18,
 	tactical = { BUFF = 2 },
-	getPower = function(self, t) return math.ceil((self:getTalentLevel(t) * 1.5) + self:combatTalentStatDamage(t, "wil", 5, 20)) end,
+	getPower = function(self, t) return self:combatTalentScale(t, 1.5, 7.5, 0.75) + self:combatTalentStatDamage(t, "wil", 5, 20) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/arcane")
 		return {
@@ -112,7 +112,7 @@ newTalent{
 	cooldown = 25,
 	tactical = { DEFEND = 2 },
 	no_energy = true,
-	getDuration = function(self, t) return 2 + math.ceil(self:getTalentLevel(t) * getParadoxModifier(self, pm)) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentLimit(self:getTalentLevel(t) * getParadoxModifier(self, pm), 25, 3, 7)) end, -- Limit < 25
 	action = function(self, t)
 		self:setEffect(self.EFF_DAMAGE_SMEARING, t.getDuration(self,t), {})
 		game:playSoundNear(self, "talents/spell_generic")

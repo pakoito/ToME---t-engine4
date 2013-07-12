@@ -533,33 +533,34 @@ newEffect{
 	name = "FADE_FROM_TIME", image = "talents/fade_from_time.png",
 	desc = "Fade From Time",
 	long_desc = function(self, eff) return ("The target is partially removed from the timeline, reducing all damage dealt by %d%%, all damage received by %d%%, and the duration of all detrimental effects by %d%%."):
-	format(eff.dur * 2 + 2, eff.cur_power or eff.power, eff.cur_power or eff.power) end,
+	format(math.min(20,eff.dur * 2 + 2), eff.cur_power or eff.power, eff.cur_dur or eff.durred) end,
 	type = "other",
 	subtype = { time=true },
 	status = "beneficial",
-	parameters = { power=10 },
+	parameters = { power=10 ,durred = 15 },
 	on_gain = function(self, err) return "#Target# has partially removed itself from the timeline.", "+Fade From Time" end,
 	on_lose = function(self, err) return "#Target# has returned fully to the timeline.", "-Fade From Time" end,
 	on_merge = function(self, old_eff, new_eff)
 		self:removeTemporaryValue("inc_damage", old_eff.dmgid)
 		self:removeTemporaryValue("resists", old_eff.rstid)
-		self:removeTemporaryValue("reduce_detrimental_status_effects_time", old_eff.durid)
+		self:removeTemporaryValue("reduce_detrimental_status_effects_time", old_eff.durid)		
 		old_eff.cur_power = (new_eff.power)
+		old_eff.cur_dur = new_eff.durred
 		old_eff.dmgid = self:addTemporaryValue("inc_damage", {all = - old_eff.dur * 2})
 		old_eff.rstid = self:addTemporaryValue("resists", {all = old_eff.cur_power})
-		old_eff.durid = self:addTemporaryValue("reduce_detrimental_status_effects_time", old_eff.cur_power)
-
+		old_eff.durid = self:addTemporaryValue("reduce_detrimental_status_effects_time", old_eff.cur_dur)
 		old_eff.dur = old_eff.dur
 		return old_eff
 	end,
 	on_timeout = function(self, eff)
 		local current = eff.power * eff.dur/10
-		self:setEffect(self.EFF_FADE_FROM_TIME, 1, {power = current})
+		local currentdur = eff.durred * eff.dur/10
+		self:setEffect(self.EFF_FADE_FROM_TIME, 1, {power = current, durred=currentdur})
 	end,
 	activate = function(self, eff)
 		eff.cur_power = eff.power
 		eff.rstid = self:addTemporaryValue("resists", { all = eff.power})
-		eff.durid = self:addTemporaryValue("reduce_detrimental_status_effects_time", eff.power)
+		eff.durid = self:addTemporaryValue("reduce_detrimental_status_effects_time", eff.durred)
 		eff.dmgid = self:addTemporaryValue("inc_damage", {all = -20})
 	end,
 	deactivate = function(self, eff)

@@ -23,16 +23,13 @@ newTalent{
 	require = chrono_req1,
 	points = 5,
 	mode = "passive",
-	on_learn = function(self, t)
-		self.movement_speed = self.movement_speed + 0.10
-	end,
-	on_unlearn = function(self, t)
-		self.movement_speed = self.movement_speed - 0.10
+	getSpeed = function(self, t) return self:combatTalentScale(t, 0.15, 0.5, 0.75) end,
+	passives = function(self, t, p)
+		self:talentTemporaryValue(p, "movement_speed", t.getSpeed(self, t))
 	end,
 	info = function(self, t)
-		local power = self:getTalentLevelRaw(t) * 10
 		return ([[Increases your movement speed by %d%%, and switching between already equipped weapon sets (default hotkey q) no longer takes a turn.]]):
-		format(power)
+		format(t.getSpeed(self, t)*100)
 	end,
 }
 
@@ -45,15 +42,13 @@ newTalent{
 	cooldown = 12,
 	tactical = { ATTACKAREA = 1, DISABLE = 3 },
 	range = 6,
-	radius = function(self, t)
-		return 1 + math.floor(self:getTalentLevel(t) / 3)
-	end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 1.3, 2.7)) end,
 	direct_hit = true,
 	requires_target = true,
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=self:spellFriendlyFire(), talent=t}
 	end,
-	getDuration = function(self, t) return 2 + math.ceil(((self:getTalentLevel(t) / 2)) * getParadoxModifier(self, pm)) end,
+	getDuration = function(self, t) return math.ceil(self:combatTalentScale(self:getTalentLevel(t) * getParadoxModifier(self, pm), 2.3, 4.3)) end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 170)  * getParadoxModifier(self, pm) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
@@ -87,9 +82,7 @@ newTalent{
 	cooldown = 24,
 	tactical = { ATTACKAREA = {TEMPORAL = 2}, DISABLE = 2 },
 	range = 6,
-	radius = function(self, t)
-		return 2 + math.floor(self:getTalentLevel(t)/4)
-	end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 2.25, 3.25))	end,
 	direct_hit = true,
 	requires_target = true,
 	target = function(self, t)
@@ -97,7 +90,7 @@ newTalent{
 	end,
 	getSlow = function(self, t) return math.min((10 + (self:combatTalentSpellDamage(t, 10, 50) * getParadoxModifier(self, pm))) / 100, 0.6) end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 60) * getParadoxModifier(self, pm) end,
-	getDuration = function(self, t) return 5 + math.ceil(self:getTalentLevel(t)) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 6, 10)) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
@@ -136,7 +129,7 @@ newTalent{
 	cooldown = 24,
 	tactical = { BUFF = 2, CLOSEIN = 2, ESCAPE = 2 },
 	no_energy = true,
-	getPower = function(self, t) return (self:combatTalentSpellDamage(t, 20, 80) * getParadoxModifier(self, pm)) / 100 end,
+	getPower = function(self, t) return self:combatScale(self:combatTalentSpellDamage(t, 20, 80) * getParadoxModifier(self, pm), 0, 0, 0.57, 57, 0.75) end,
 	do_haste_double = function(self, t, x, y)
 		-- Find space
 		local tx, ty = util.findFreeGrid(x, y, 0, true, {[Map.ACTOR]=true})

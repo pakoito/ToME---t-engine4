@@ -1621,10 +1621,10 @@ function _M:onTakeHit(value, src)
 		end
 	end
 
-	if self:knowTalent(self.T_DISPLACE_DAMAGE) and self:isTalentActive(self.T_DISPLACE_DAMAGE) and rng.percent(5 + (self:getTalentLevel(self.T_DISPLACE_DAMAGE) * 5)) then
+	if self:isTalentActive(self.T_DISPLACE_DAMAGE) and rng.percent(self:callTalent(self.T_DISPLACE_DAMAGE, "getchance")) then
 		-- find available targets
 		local tgts = {}
-		local grids = core.fov.circle_grids(self.x, self.y, self:getTalentLevelRaw(self.T_DISPLACE_DAMAGE) * 2, true)
+		local grids = core.fov.circle_grids(self.x, self.y, self:callTalent(self.T_DISPLACE_DAMAGE,"getrange"), true)
 		for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
 			local a = game.level.map(x, y, Map.ACTOR)
 			if a and self:reactionToward(a) < 0 then
@@ -3308,7 +3308,7 @@ end
 
 --- Paradox checks
 function _M:getModifiedParadox()
-	local will_modifier = 1 + (self:getTalentLevel(self.T_PARADOX_MASTERY)/10) or 0
+	local will_modifier = 1 + self:callTalent(self.T_PARADOX_MASTERY,"WilMult")
 	local modified_paradox = math.max(0, self:getParadox() - ((self:getWil() + (self:attr("paradox_reduce_fails") or 0)) * will_modifier))
 	return modified_paradox
 end

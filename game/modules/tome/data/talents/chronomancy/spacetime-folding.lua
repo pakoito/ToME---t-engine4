@@ -27,7 +27,7 @@ newTalent{
 	tactical = { BUFF = 2 },
 	points = 5,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 15, 25) end,
-	getParadoxReduction = function(self, t) return self:getTalentLevel(t) / 2 end,
+	getParadoxReduction = function(self, t) return self:combatTalentScale(t, 0.6, 2.5, 0.75) end,
 	activate = function(self, t)
 		return {}
 	end,
@@ -52,10 +52,8 @@ newTalent{
 	tactical = { DISABLE = 2, },
 	requires_target = true,
 	direct_hit = true,
-	range = function(self, t)
-		return 2 + math.floor(self:getTalentLevel(t))
-	end,
-	getConfuseDuration = function(self, t) return math.floor((self:getTalentLevel(t) + 2) * getParadoxModifier(self, pm)) end,
+	range = function(self, t) return math.floor(self:combatTalentScale(t, 3, 7)) end,
+	getConfuseDuration = function(self, t) return math.floor(self:combatTalentScale(self:getTalentLevel(t) * getParadoxModifier(self, pm), 3, 7)) end,
 	getConfuseEfficency = function(self, t) return math.min(50, self:getTalentLevelRaw(t) * 10) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
@@ -73,7 +71,7 @@ newTalent{
 		-- checks for spacetime mastery hit bonus
 		local power = self:combatSpellpower()
 		if self:knowTalent(self.T_SPACETIME_MASTERY) then
-			power = self:combatSpellpower() * (1 + self:getTalentLevel(self.T_SPACETIME_MASTERY)/10)
+			power = self:combatSpellpower() * (1 + self:callTalent(self.T_SPACETIME_MASTERY, "getPower"))
 		end
 		
 		if target:canBe("teleport") and self:checkHit(power, target:combatSpellResist() + (target:attr("continuum_destabilization") or 0)) then
@@ -122,6 +120,9 @@ newTalent{
 	tactical = { BUFF = 2 },
 	points = 5,
 	no_energy = true,
+	-- called by _M:onTakeHit function in mod\class\Actor.lua to perform the damage displacment
+	getchance = function(self, t) return self:combatTalentLimit(t, 50, 10, 30) end, -- Limit < 50%
+	getrange = function(self, t) return math.max(2, math.floor(self:combatTalentScale(t, 2, 10.1, "log", 0, 2))) end,
 	activate = function(self, t)
 		return {}
 	end,
@@ -129,8 +130,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Space bends around you, giving you a %d%% chance to displace half of any damage you receive onto a random enemy within radius %d.
-		]]):format(5 + self:getTalentLevel(t) * 5, self:getTalentLevelRaw(t) * 2)
+		return ([[Space bends around you, giving you a %d%% chance to displace half of any damage you receive onto a random enemy within a radius of %d.
+		]]):format(t.getchance(self, t), t.getrange(self, t))
 	end,
 }
 
@@ -150,9 +151,7 @@ newTalent{
 		return {type="beam", range=self:getTalentRange(t), friendlyfire=false, talent=t}
 	end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 230) * getParadoxModifier(self, pm) end,
-	range = function(self, t)
-		return 2 + math.ceil(self:getTalentLevel(t)/2)
-	end,
+	range = function(self, t) return math.ceil(self:combatTalentScale(t, 2.3, 4.3)) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
