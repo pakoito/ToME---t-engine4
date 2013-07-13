@@ -21,10 +21,10 @@ return "New Talent Category: #LIGHT_GREEN#Poisons",
 [[Extracted from plants, wildlife or more exotic locations, poisons have always existed.
 Many creatures use them, along with some shady people.
 
-You have made a deal with such a person and can now create new Rogue characters that can learn the #LIGHT_GREEN#Poisons talents#WHITE#.
+You have made a deal with such a person and can now create new Rogue or Archer characters that can learn the #LIGHT_GREEN#Poisons talents#WHITE#.
 
 Talents:
-- #YELLOW#Vile Poisons: #WHITE#Learn new dangerous and terrible poisons to coat your weapons with, infecting your foes
+- #YELLOW#Vile Poisons: #WHITE#Learn new dangerous and terrible poisons to coat your weapons or ammo with, infecting your foes
 - #YELLOW#Venomous Strike: #WHITE#A terrible strike that deals increased nature damage based on the number of poison effects
 - #YELLOW#Empower Poisons: #WHITE#Learn to make your poisons even more lethal and fast
 - #YELLOW#Toxic Death: #WHITE#Spread the toxic joy to your foe's friends!

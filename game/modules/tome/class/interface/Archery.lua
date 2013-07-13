@@ -167,7 +167,7 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 
 	local target = game.level.map(tx, ty, game.level.map.ACTOR)
 	if talent.archery_onreach then
-		talent.archery_onreach(self, talent, tx, ty)
+		talent.archery_onreach(self, talent, tx, ty, tg, target)
 	end
 	if not target then return end
 
@@ -220,6 +220,8 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 
 		dam = dam * mult
 		print("[ATTACK ARCHERY] after mult", dam)
+
+
 
 		local hd = {"Combat:archeryDamage", hitted=hitted, target=target, weapon=weapon, ammo=ammo, damtype=damtype, mult=1, dam=dam}
 		if self:triggerHook(hd) then
@@ -360,7 +362,7 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 	end
 
 	-- Poison coating
-	if hitted and not target.dead and self.vile_poisons and next(self.vile_poisons) and target:canBe("poison") and weapon and weapon.talented == "sling" then
+	if hitted and not target.dead and self.vile_poisons and next(self.vile_poisons) and target:canBe("poison") and weapon and (weapon.talented == "sling" or weapon.talented == "bow") then
 		local tid = rng.table(table.keys(self.vile_poisons))
 		if tid then
 			local t = self:getTalentFromId(tid)

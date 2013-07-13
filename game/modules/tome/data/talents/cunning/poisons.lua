@@ -60,7 +60,7 @@ newTalent{
 		end
 	end,
 	info = function(self, t)
-		return ([[Learn how to coat your melee weapons or sling ammo with poison. Each level, you will learn a new kind of poison:
+		return ([[Learn how to coat your melee weapons, sling and bow ammo with poison. Each level, you will learn a new kind of poison:
 		Level 1: Deadly Poison
 		Level 2: Numbing Poison
 		Level 3: Insidious Poison
@@ -92,20 +92,35 @@ newTalent{
 		end
 		return { NATURE = nb}
 	end },
-	action = function(self, t)
-		local tg = {type="hit", range=self:getTalentRange(t)}
-		local x, y, target = self:getTarget(tg)
-		if not x or not y or not target then return nil end
-		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
-
+	archery_onreach = function(self, t, x, y, tg, target)
+		if not target then return end
 		local nb = 0
 		for eff_id, p in pairs(target.tmp) do
 			local e = target.tempeffect_def[eff_id]
 			if e.subtype.poison then nb = nb + 1 end
 		end
-		local dam = self:combatTalentWeaponDamage(t, 0.5 + nb * 0.6, 0.9 + nb * 1)
+		tg.archery.mult = self:combatTalentWeaponDamage(t, 0.5 + nb * 0.6, 0.9 + nb * 1)
+	end,
+	action = function(self, t)
+		if not self:hasArcheryWeapon() then
+			local tg = {type="hit", range=self:getTalentRange(t)}
+			local x, y, target = self:getTarget(tg)
+			if not x or not y or not target then return nil end
+			if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 
-		self:attackTarget(target, DamageType.NATURE, dam, true)
+			local nb = 0
+			for eff_id, p in pairs(target.tmp) do
+				local e = target.tempeffect_def[eff_id]
+				if e.subtype.poison then nb = nb + 1 end
+			end
+			local dam = self:combatTalentWeaponDamage(t, 0.5 + nb * 0.6, 0.9 + nb * 1)
+
+			self:attackTarget(target, DamageType.NATURE, dam, true)
+		else
+			local targets = self:archeryAcquireTargets(nil, {one_shot=true})
+			if not targets then return end
+			self:archeryShoot(targets, t, nil, {mult=1})
+		end
 
 		return true
 	end,
@@ -119,6 +134,7 @@ newTalent{
 		- 1 poisons: %d%%
 		- 2 poisons: %d%%
 		- 3 poisons: %d%%
+		If you wield a bow or sling you shoot instead.
 		]]):
 		format(dam0, dam1, dam2, dam3)
 	end,

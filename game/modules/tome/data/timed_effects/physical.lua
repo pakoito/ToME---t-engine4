@@ -1377,9 +1377,11 @@ newEffect{
 	on_gain = function(self, err) return "#Target# is being crushed.", "+Imploding" end,
 	on_lose = function(self, err) return "#Target# shakes off the crushing forces.", "-Imploding" end,
 	activate = function(self, eff)
+		if core.shader.allow("distort") then eff.particle = self:addParticles(Particles.new("gravity_well2", 1, {radius=1})) end
 		eff.tmpid = self:addTemporaryValue("global_speed_add", -0.5)
 	end,
 	deactivate = function(self, eff)
+		if eff.particle then self:removeParticles(eff.particle) end
 		self:removeTemporaryValue("global_speed_add", eff.tmpid)
 	end,
 	on_timeout = function(self, eff)

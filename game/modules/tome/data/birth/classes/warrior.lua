@@ -159,8 +159,12 @@ newBirthDescriptor{
 		["technique/combat-techniques-passive"]={true, -0.1},
 		["technique/combat-training"]={true, 0.3},
 		["technique/field-control"]={true, 0},
+		["cunning/trapping"]={false, 0.2},
 		["cunning/survival"]={true, 0},
 		["cunning/dirty"]={false, 0},
+	},
+	unlockable_talents_types = {
+		["cunning/poisons"]={false, 0.2, "rogue_poisons"},
 	},
 	talents = {
 		[ActorTalents.T_FLARE] = 1,
