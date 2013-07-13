@@ -1916,7 +1916,9 @@ newEffect{
 			game.logSeen(self, "#LIGHT_RED#%s is being ravaged by distortion!", self.name:capitalize())
 			eff.dam = eff.dam * 1.5
 		end
-		eff.particle = self:addParticles(Particles.new("ultrashield", 1, {rm=255, rM=255, gm=180, gM=255, bm=220, bM=255, am=35, aM=90, radius=0.2, density=15, life=28, instop=40}))
+		local particle = Particles.new("ultrashield", 1, {rm=255, rM=255, gm=180, gM=255, bm=220, bM=255, am=35, aM=90, radius=0.2, density=15, life=28, instop=40})
+		if core.shader.allow("distort") then particle:setSub("gravity_well2", 1, {radius=1}) end
+		eff.particle = self:addParticles(particle)
 	end,
 	deactivate = function(self, eff)
 		self:removeParticles(eff.particle)

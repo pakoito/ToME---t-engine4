@@ -2468,6 +2468,9 @@ newDamageType{
 		if target and not tmp[target] then
 			tmp[target] = true
 			local old_pen = 0
+
+			game.level.map:particleEmitter(x, y, 1, "distortion")
+
 			-- Spike resists pen
 			if dam.penetrate then
 				old_pen = src.resists_pen and src.resists_pen[engine.DamageType.PHYSICAL] or 0

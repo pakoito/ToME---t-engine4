@@ -93,9 +93,13 @@ function _M:loaded()
 	self.ps = core.particles.newEmitter("/data/gfx/particles/"..self.def..".lua", args, self.zoom, config.settings.particles_density or 100, gl, sha, islast)
 
 	if sub_particle then
-		self.subps = _M.new(sub_particle)
-		self.ps:setSub(self.subps.ps)
+		self:setSub(sub_particle)
 	end
+end
+
+function _M:setSub(def, radius, args, shader)
+	self.subps = _M.new(def, radius, args, shader)
+	self.ps:setSub(self.subps.ps)
 end
 
 function _M:updateZoom()

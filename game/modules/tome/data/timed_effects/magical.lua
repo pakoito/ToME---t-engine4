@@ -2046,7 +2046,9 @@ newEffect{
 	on_gain = function(self, err) return "#Target# starts to attract all creatures around!", "+Irresistible Sun" end,
 	on_lose = function(self, err) return "#Target# is no longer attracting creatures.", "-Irresistible Sun" end,
 	activate = function(self, eff)
-		eff.particle = self:addParticles(Particles.new("generic_vortex", 5, {rm=230, rM=230, gm=20, gM=250, bm=250, bM=80, am=80, aM=150, radius=5, density=50}))
+		local particle = Particles.new("generic_vortex", 5, {rm=230, rM=230, gm=20, gM=250, bm=250, bM=80, am=80, aM=150, radius=5, density=50})
+		if core.shader.allow("distort") then particle:setSub("vortex_distort", 5, {radius=5}) end
+		eff.particle = self:addParticles(particle)
 	end,
 	deactivate = function(self, eff)
 		self:removeParticles(eff.particle)

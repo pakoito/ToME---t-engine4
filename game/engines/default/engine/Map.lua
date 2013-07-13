@@ -1141,8 +1141,9 @@ function _M:particleEmitter(x, y, radius, def, args, shader)
 end
 
 --- Adds an existing particle emitter to the map
-function _M:addParticleEmitter(e)
+function _M:addParticleEmitter(e, x, y)
 	if self.particles[e] then return false end
+	if x and y then e.x, e.y = x, y end
 	self.particles[#self.particles+1] = e
 	return e
 end
