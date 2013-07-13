@@ -122,6 +122,24 @@ function _M:generateList()
 		self.c_list:drawItem(item)
 	end,}
 
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Activates advanced shaders.\nThis option allows for advanced effects (like water surfaces, ...). Disabling it can improve performance.\n\n#LIGHT_RED#You must restart the game for it to take effect.#WHITE#"}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#OpenGL Shaders: Advanced#WHITE##{normal}#", status=function(item)
+		return tostring(config.settings.shaders_kind_adv and "enabled" or "disabled")
+	end, fct=function(item)
+		config.settings.shaders_kind_adv = not config.settings.shaders_kind_adv
+		game:saveSettings("shaders_kind_adv", ("shaders_kind_adv = %s\n"):format(tostring(config.settings.shaders_kind_adv)))
+		self.c_list:drawItem(item)
+	end,}
+
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Activates distorting shaders.\nThis option allows for distortion effects (like spell effects doing a visual distortion, ...). Disabling it can improve performance.\n\n#LIGHT_RED#You must restart the game for it to take effect.#WHITE#"}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#OpenGL Shaders: Distortions#WHITE##{normal}#", status=function(item)
+		return tostring(config.settings.shaders_kind_distort and "enabled" or "disabled")
+	end, fct=function(item)
+		config.settings.shaders_kind_distort = not config.settings.shaders_kind_distort
+		game:saveSettings("shaders_kind_distort", ("shaders_kind_distort = %s\n"):format(tostring(config.settings.shaders_kind_distort)))
+		self.c_list:drawItem(item)
+	end,}
+
 	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Use the custom cursor.\nDisabling it will use your normal operating system cursor.#WHITE#"}
 	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Mouse cursor#WHITE##{normal}#", status=function(item)
 		return tostring(config.settings.mouse_cursor and "enabled" or "disabled")

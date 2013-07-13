@@ -18,6 +18,7 @@
 -- darkgod@te4.org
 
 return {
+	require_kind = "adv",
 	frag = "water",
 	vert = nil,
 	args = {

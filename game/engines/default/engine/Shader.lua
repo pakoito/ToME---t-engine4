@@ -29,10 +29,8 @@ _M.progs = {}
 
 loadNoDelay = true
 
-local allows = {
-	
-}
 function core.shader.allow(kind)
+	return config.settings['shaders_kind_'..kind]
 end
 
 --- Make a shader
@@ -44,6 +42,9 @@ function _M:init(name, args)
 
 	if args and args.require_shader then
 		if not core.shader.active(args.require_shader) then return end
+	end
+	if args and args.require_kind then
+		if not core.shader.allow(args.require_kind) then return end
 	end
 
 	if not core.shader.active() then return end
@@ -143,6 +144,14 @@ function _M:loaded()
 		if not f and err then error(err) end
 		setfenv(f, setmetatable(self.args or {}, {__index=_G}))
 		local def = f()
+
+		if def.require_shader then
+			if not core.shader.active(def.require_shader) then return end
+		end
+		if def.require_kind then
+			if not core.shader.allow(def.require_kind) then return end
+		end
+
 		_M.progs[self.totalname] = self:createProgram(def)
 
 		self.shad = _M.progs[self.totalname]
