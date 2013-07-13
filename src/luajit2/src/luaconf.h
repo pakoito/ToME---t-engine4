@@ -51,11 +51,7 @@
 #define LUA_INIT	"LUA_INIT"
 
 /* Special file system characters. */
-#if defined(_WIN32)
-#define LUA_DIRSEP	"\\"
-#else
 #define LUA_DIRSEP	"/"
-#endif
 #define LUA_PATHSEP	";"
 #define LUA_PATH_MARK	"?"
 #define LUA_EXECDIR	"!"
