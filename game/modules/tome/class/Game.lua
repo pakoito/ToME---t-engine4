@@ -448,7 +448,7 @@ function _M:createFBOs()
 	self.fbo = core.display.newFBO(Map.viewport.width, Map.viewport.height)
 	if self.fbo then
 		self.fbo_shader = Shader.new("main_fbo")
-		if not self.fbo_shader.shad then self.fbo = nil self.fbo_shader = nil else core.particles.defineFramebuffer(self.fbo) end 
+		if not self.fbo_shader.shad then self.fbo = nil self.fbo_shader = nil end 
 		self.fbo2 = core.display.newFBO(Map.viewport.width, Map.viewport.height)
 	end
 	
@@ -456,6 +456,9 @@ function _M:createFBOs()
 
 	self.full_fbo = core.display.newFBO(self.w, self.h)
 	if self.full_fbo then self.full_fbo_shader = Shader.new("full_fbo") if not self.full_fbo_shader.shad then self.full_fbo = nil self.full_fbo_shader = nil end end
+
+	if self.fbo and self.fbo2 then core.particles.defineFramebuffer(self.fbo)
+	else core.particles.defineFramebuffer(nil) end
 
 --	self.mm_fbo = core.display.newFBO(200, 200)
 --	if self.mm_fbo then self.mm_fbo_shader = Shader.new("mm_fbo") if not self.mm_fbo_shader.shad then self.mm_fbo = nil self.mm_fbo_shader = nil end end
@@ -638,6 +641,9 @@ function _M:changeLevelReal(lev, zone, params)
 
 	local st = core.game.getTime()
 	local sti = 1
+
+	-- Flush particles remaining to draw
+	core.particles.flushLast()
 
 	-- Finish stuff registered for the previous level
 	self:onTickEndExecute()
@@ -1318,14 +1324,7 @@ function _M:setupCommands()
 			print("===============")
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
-			local particle = engine.Particles.new("shader_square", 1, {life=600}, {type="fireball"})
-			particle.x, particle.y = game.player.x, game.player.y
-			game.level.map:addParticleEmitter(particle)
-
-do return end
-			game:changeLevel(1, "stellar-system-shandral")
-do return end
-			local f, err = loadfile("/data/general/events/crystaline-forest.lua")
+			local f, err = loadfile("/data/general/events/fearscape-portal.lua")
 			print(f, err)
 			setfenv(f, setmetatable({level=self.level, zone=self.zone}, {__index=_G}))
 			print(pcall(f))

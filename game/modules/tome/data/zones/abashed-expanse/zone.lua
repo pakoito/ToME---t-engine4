@@ -228,8 +228,12 @@ return {
 	post_process = function(level)
 		local Map = require "engine.Map"
 		local Quadratic = require "engine.Quadratic"
-		level.background_particle1 = require("engine.Particles").new("starfield_static", 1, {width=Map.viewport.width, height=Map.viewport.height, nb=300, a_min=0.5, a_max = 0.8, size_min = 1, size_max = 3})
-		level.background_particle2 = require("engine.Particles").new("starfield_static", 1, {width=Map.viewport.width, height=Map.viewport.height, nb=300, a_min=0.5, a_max = 0.9, size_min = 4, size_max = 8})
+		if core.shader.allow("adv") then
+			level.starfield_shader = require("engine.Shader").new("starfield", {size={Map.viewport.width, Map.viewport.height}})
+		else
+			level.background_particle1 = require("engine.Particles").new("starfield_static", 1, {width=Map.viewport.width, height=Map.viewport.height, nb=300, a_min=0.5, a_max = 0.8, size_min = 1, size_max = 3})
+			level.background_particle2 = require("engine.Particles").new("starfield_static", 1, {width=Map.viewport.width, height=Map.viewport.height, nb=300, a_min=0.5, a_max = 0.9, size_min = 4, size_max = 8})
+		end
 		level.world_sphere = Quadratic.new()
 		game.zone.world_sphere_rot = (game.zone.world_sphere_rot or 0)
 		game.zone.cloud_sphere_rot = (game.zone.world_cloud_rot or 0)
@@ -237,9 +241,15 @@ return {
 
 	background = function(level, x, y, nb_keyframes)
 		local Map = require "engine.Map"
-		level.background_particle1.ps:toScreen(x, y, true, 1)
 		local parx, pary = level.map.mx / (level.map.w - Map.viewport.mwidth), level.map.my / (level.map.h - Map.viewport.mheight)
-		level.background_particle2.ps:toScreen(x - parx * 40, y - pary * 40, true, 1)
+		if level.starfield_shader and level.starfield_shader.shad then
+			level.starfield_shader.shad:use(true)
+			core.display.drawQuad(x, y, Map.viewport.width, Map.viewport.height, 1, 1, 1, 1)
+			level.starfield_shader.shad:use(false)
+		elseif level.background_particle1 then
+			level.background_particle1.ps:toScreen(x, y, true, 1)
+			level.background_particle2.ps:toScreen(x - parx * 40, y - pary * 40, true, 1)
+		end
 
 		core.display.glDepthTest(true)
 		core.display.glMatrix(true)

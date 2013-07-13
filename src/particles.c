@@ -83,8 +83,24 @@ static void getparticulefield(lua_State *L, const char *k, float *v)
 	lua_pop(L, 1);
 }
 
+static int particles_flush_last(lua_State *L)
+{
+	while (pdls_head) {
+		particle_draw_last *pdl = pdls_head;
+		pdls_head = pdls_head->next;
+		free(pdl);
+	}
+	return 0;
+}
+
 static int particles_main_fbo(lua_State *L)
 {
+	while (pdls_head) {
+		particle_draw_last *pdl = pdls_head;
+		pdls_head = pdls_head->next;
+		free(pdl);
+	}
+
 	if (lua_isnil(L, 1)) {
 		main_fbo = NULL;
 		return 0;
@@ -137,6 +153,7 @@ static int particles_set_sub(lua_State *L)
 	particles_type *subps = (particles_type*)auxiliar_checkclass(L, "core{particles}", 2);
 
 	ps->sub = subps;
+
 	return 0;
 }
 
@@ -575,6 +592,7 @@ static const struct luaL_Reg particleslib[] =
 {
 	{"newEmitter", particles_new},
 	{"defineFramebuffer", particles_main_fbo},
+	{"flushLast", particles_flush_last},
 	{"drawAlterings", particles_draw_last},
 	{NULL, NULL},
 };

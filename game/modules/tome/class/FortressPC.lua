@@ -63,6 +63,7 @@ function _M:init(t, no_default)
 	self:learnTalent(self.T_SHERTUL_FORTRESS_ORBIT, true)
 
 	self:addParticles(Particles.new("shertul_fortress_orbiters", 1, {}))
+	if core.shader.allow("distort") then self:addParticles(Particles.new("shertul_fortress_engine", 1, {})) end
 end
 
 function _M:tooltip(x, y, seen_by)
