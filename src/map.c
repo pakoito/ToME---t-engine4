@@ -1308,7 +1308,7 @@ void do_quad(lua_State *L, const map_object *m, const map_object *dm, const map_
 			glColorPointer(4, GL_FLOAT, 0, colors);
 		}
 		lua_pop(L, 1);
-		if (m->shader) useShader(m->shader, i, j, map->tile_w, map->tile_h, r, g, b, a);
+		if (m->shader) useShader(m->shader, dx, dy, map->tile_w, map->tile_h, r, g, b, a);
 	}
 }
 
@@ -1387,7 +1387,7 @@ void display_map_quad(lua_State *L, GLuint *cur_tex, int *vert_idx, int *col_idx
 	 ********************************************************/
 	a = (a > 1) ? 1 : ((a < 0) ? 0 : a);
 	int z;
-	if (m->shader) useShader(m->shader, i, j, map->tile_w, map->tile_h, r, g, b, a);
+	if (m->shader) useShader(m->shader, dx, dy, map->tile_w, map->tile_h, r, g, b, a);
 	for (z = (!shaders_active) ? 0 : (m->nb_textures - 1); z > 0; z--)
 	{
 		if (multitexture_active && shaders_active) tglActiveTexture(GL_TEXTURE0+z);

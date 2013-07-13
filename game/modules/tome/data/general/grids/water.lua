@@ -125,6 +125,7 @@ newEntity{
 	display = '~', color=colors.AQUAMARINE, back_color=colors.DARK_BLUE,
 	always_remember = true,
 	special_minimap = colors.BLUE,
+	shader = "water",
 }
 
 -----------------------------------------
@@ -169,6 +170,7 @@ newEntity{
 	end,
 	combatAttack = function(self) return rng.range(self.mindam, self.maxdam) end,
 	nice_tiler = { method="replace", base={"POISON_DEEP_WATER", 100, 1, 6}},
+	shader = "water",
 }
 for i = 1, 6 do newEntity{ base="POISON_DEEP_WATER", define_as = "POISON_DEEP_WATER"..i, image = "terrain/poisoned_water_0"..i..".png" } end
 

@@ -29,6 +29,12 @@ _M.progs = {}
 
 loadNoDelay = true
 
+local allows = {
+	
+}
+function core.shader.allow(kind)
+end
+
 --- Make a shader
 function _M:init(name, args)
 	self.args = args or {}
