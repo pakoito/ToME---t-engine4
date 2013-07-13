@@ -94,6 +94,7 @@ newTalent{
 	end },
 	archery_onreach = function(self, t, x, y, tg, target)
 		if not target then return end
+
 		local nb = 0
 		for eff_id, p in pairs(target.tmp) do
 			local e = target.tempeffect_def[eff_id]
