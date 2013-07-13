@@ -59,6 +59,7 @@ game.zone.on_turn = function()
 	game.level.map:particleEmitter(game.level.data.meteor_x, game.level.data.meteor_y, 10, "meteor").on_remove = function()
 		local x, y = game.level.data.meteor_x, game.level.data.meteor_y
 		game.level.map:particleEmitter(x, y, 10, "ball_fire", {radius=5})
+		if core.shader.allow("distort") then game.level.map:particleEmitter(x, y, 5, "shockwave", {radius=5}) end
 		game:playSoundNear(game.player, "talents/fireflash")
 
 		local terrains = mod.class.Grid:loadList("/data/general/grids/lava.lua")

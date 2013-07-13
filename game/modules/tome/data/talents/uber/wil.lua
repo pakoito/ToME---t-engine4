@@ -100,6 +100,7 @@ uberTalent{
 						end
 					end
 				end)
+				if core.shader.allow("distort") then game.level.map:particleEmitter(x, y, 2, "shockwave", {radius=2}) end
 				game:getPlayer(true):attr("meteoric_crash", 1)
 			end
 		end

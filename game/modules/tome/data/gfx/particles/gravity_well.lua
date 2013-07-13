@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-if core.shader.active(4) then
+if core.shader.allow("distort") then
 	sub_particle = "gravity_well2"
 end
 

@@ -174,8 +174,7 @@ newTalent{
 			DamageType.GRAVITYPIN, dam,
 			radius,
 			5, nil,
---			{type="gravity_well"}, -- Put this back when "gravity_well" is available
-			{type="quake"},
+			{type="gravity_well"},
 			nil, self:spellFriendlyFire()
 		)
 		game:playSoundNear(self, "talents/earth")

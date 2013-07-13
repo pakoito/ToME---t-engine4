@@ -933,6 +933,7 @@ int thread_particles(void *data)
 	pt->L = L;
 	lua_newtable(L);
 	lua_setglobal(L, "__fcts");
+	luaL_dostring(L, "function core.shader.allow() return true end");
 
 	// Override "print" if requested
 	if (no_debug)
