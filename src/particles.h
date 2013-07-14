@@ -94,8 +94,8 @@ typedef struct s_particles_type particles_type;
 //To draw last linked list
 struct s_particle_draw_last {
 	particles_type *ps;
-	int x;
-	int y;
+	float x;
+	float y;
 	float zoom;
 	struct s_particle_draw_last *next;
 };

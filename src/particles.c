@@ -202,7 +202,7 @@ static int particles_die(lua_State *L)
 }
 
 // Runs into main thread
-static void particles_draw(particles_type *ps, int x, int y, float zoom) 
+static void particles_draw(particles_type *ps, float x, float y, float zoom) 
 {
 	GLfloat *vertices = ps->vertices;
 	GLfloat *colors = ps->colors;
@@ -261,8 +261,8 @@ static void particles_draw(particles_type *ps, int x, int y, float zoom)
 static int particles_to_screen(lua_State *L)
 {
 	particles_type *ps = (particles_type*)auxiliar_checkclass(L, "core{particles}", 1);
-	int x = luaL_checknumber(L, 2);
-	int y = luaL_checknumber(L, 3);
+	float x = luaL_checknumber(L, 2);
+	float y = luaL_checknumber(L, 3);
 	bool show = lua_toboolean(L, 4);
 	float zoom = lua_isnumber(L, 5) ? lua_tonumber(L, 5) : 1;
 	if (!show || !ps->init) return 0;
