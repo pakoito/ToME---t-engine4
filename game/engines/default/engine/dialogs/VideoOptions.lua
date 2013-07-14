@@ -140,6 +140,15 @@ function _M:generateList()
 		self.c_list:drawItem(item)
 	end,}
 
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Activates volumetric shaders.\nThis option allows for volumetricion effects (like deep starfields). Enabling it will severely reduce performance when shaders are displayed.\n\n#LIGHT_RED#You must restart the game for it to take effect.#WHITE#"}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#OpenGL Shaders: Volumetricions#WHITE##{normal}#", status=function(item)
+		return tostring(config.settings.shaders_kind_volumetric and "enabled" or "disabled")
+	end, fct=function(item)
+		config.settings.shaders_kind_volumetric = not config.settings.shaders_kind_volumetric
+		game:saveSettings("shaders_kind_volumetric", ("shaders_kind_volumetric = %s\n"):format(tostring(config.settings.shaders_kind_volumetric)))
+		self.c_list:drawItem(item)
+	end,}
+
 	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Use the custom cursor.\nDisabling it will use your normal operating system cursor.#WHITE#"}
 	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Mouse cursor#WHITE##{normal}#", status=function(item)
 		return tostring(config.settings.mouse_cursor and "enabled" or "disabled")

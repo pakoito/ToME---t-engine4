@@ -173,7 +173,7 @@ function _M:eidolonPlane()
 		game.zone_name_s = nil
 
 		for _, act in ipairs(acts) do
-			local x, y = util.findFreeGrid(5, 5, 20, true, {[Map.ACTOR]=true})
+			local x, y = util.findFreeGrid(23, 25, 20, true, {[Map.ACTOR]=true})
 			if x then
 				level:addEntity(act)
 				act:move(x, y, true)

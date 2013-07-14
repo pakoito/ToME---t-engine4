@@ -62,7 +62,11 @@ return {
 
 	post_process = function(level)
 		local Map = require "engine.Map"
-		level.background_particle = require("engine.Particles").new("starfield", 1, {width=Map.viewport.width, height=Map.viewport.height})
+		if core.shader.allow("volumetric") then
+			level.starfield_shader = require("engine.Shader").new("starfield", {size={Map.viewport.width, Map.viewport.height}})
+		else
+			level.background_particle = require("engine.Particles").new("starfield", 1, {width=Map.viewport.width, height=Map.viewport.height})
+		end
 
 		game.state:makeWeather(level, 6, {max_nb=12, chance=1, dir=120, speed={1.5, 5.9}, r=0.2, g=0.4, b=1, alpha={0.2, 0.4}, particle_name="weather/grey_cloud_%02d"})
 
@@ -74,7 +78,13 @@ return {
 
 	background = function(level, x, y, nb_keyframes)
 		local Map = require "engine.Map"
-		level.background_particle.ps:toScreen(x, y, true, 1)
+		if level.starfield_shader and level.starfield_shader.shad then
+			level.starfield_shader.shad:use(true)
+			core.display.drawQuad(x, y, Map.viewport.width, Map.viewport.height, 1, 1, 1, 1)
+			level.starfield_shader.shad:use(false)
+		elseif level.background_particle then
+			level.background_particle.ps:toScreen(x, y, true, 1)
+		end
 	end,
 
 	foreground = function(level, x, y, nb_keyframes)

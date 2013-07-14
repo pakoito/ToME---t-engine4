@@ -55,6 +55,7 @@ fbo_active = true
 shaders_active = true
 shaders_kind_distort = true
 shaders_kind_adv = true
+shaders_kind_volumetric = false
 particles_density = 100
 background_saves = false
 mouse_cursor = true

@@ -55,11 +55,21 @@ return {
 
 	post_process = function(level)
 		local Map = require "engine.Map"
-		level.background_particle = require("engine.Particles").new("starfield", 1, {width=Map.viewport.width, height=Map.viewport.height})
+		if core.shader.allow("volumetric") then
+			level.starfield_shader = require("engine.Shader").new("starfield", {size={Map.viewport.width, Map.viewport.height}})
+		else
+			level.background_particle = require("engine.Particles").new("starfield", 1, {width=Map.viewport.width, height=Map.viewport.height})
+		end
 	end,
 
 	background = function(level, x, y, nb_keyframes)
 		local Map = require "engine.Map"
-		level.background_particle.ps:toScreen(x, y, true, 1)
+		if level.starfield_shader and level.starfield_shader.shad then
+			level.starfield_shader.shad:use(true)
+			core.display.drawQuad(x, y, Map.viewport.width, Map.viewport.height, 1, 1, 1, 1)
+			level.starfield_shader.shad:use(false)
+		elseif level.background_particle then
+			level.background_particle.ps:toScreen(x, y, true, 1)
+		end
 	end,
 }

@@ -22,7 +22,7 @@ return {
 	level_range = {1, 1},
 	level_scheme = "player",
 	max_level = 1,
-	width = 10, height = 10,
+	width = 50, height = 50,
 	all_remembered = true,
 	all_lited = true,
 	no_worldport = true,
@@ -33,26 +33,29 @@ return {
 	ambient_music = "Alchemist.ogg",
 	generator =  {
 		map = {
-			class = "engine.generator.map.Forest",
+			class = "engine.generator.map.Empty",
 			noise = "fbm_perlin",
 			floor = "VOID",
-			wall = "VOID",
 			up = "VOID",
-			down = "VOID",
 		},
 		actor = {
 			class = "mod.class.generator.actor.Random",
 			nb_npc = {0, 0},
-			guardian = "EIDOLON",
 		},
 	},
 
 	effects = {"EFF_EIDOLON_PROTECT"},
 
-	post_process = function(level)
+	post_process = function(level, zone)
+		local eidolon = zone:makeEntityByName(level, "actor", "EIDOLON", true)
+		if eidolon then zone:addEntity(level, eidolon, "actor", 25, 25) end
+
+		level.default_up = {x=22, y=25}
+		level.default_down = {x=22, y=25}
+
 		if level.level == 1 then
 			local Map = require "engine.Map"
-			if core.shader.allow("adv") then
+			if core.shader.allow("volumetric") then
 				level.starfield_shader = require("engine.Shader").new("starfield", {size={Map.viewport.width, Map.viewport.height}, speed=200})
 			else
 				level.background_particle = require("engine.Particles").new("starfield", 1, {width=Map.viewport.width, height=Map.viewport.height})
