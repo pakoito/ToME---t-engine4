@@ -352,6 +352,7 @@ function _M:activate()
 	self.init_font_mono_h = font_mono_h
 
 	self.buff_font = core.display.newFont(font_mono, size_mono * 2, true)
+	self.buff_font_small = core.display.newFont(font_mono, size_mono * 1.4, true)
 
 	self.hotkeys_display_text = HotkeysDisplay.new(nil, self.places.hotkeys.x, self.places.hotkeys.y, self.places.hotkeys.w, self.places.hotkeys.h, nil, font_mono, size_mono)
 	self.hotkeys_display_text:enableShadow(0.6)
@@ -1236,8 +1237,9 @@ end
 
 function _M:handleEffect(player, eff_id, e, p, x, y, hs, bx, by, is_first, scale, allow_remove)
 	local dur = p.dur + 1
+	local charges = e.charges and tostring(e.charges(player, p)) or "0"
 
-	if not self.tbuff[eff_id..":"..dur] then
+	if not self.tbuff[eff_id..":"..dur..":"..charges] then
 		local name = e.desc
 		local desc = nil
 		local eff_subtype = table.concat(table.keys(e.subtype), "/")
@@ -1250,10 +1252,18 @@ function _M:handleEffect(player, eff_id, e, p, x, y, hs, bx, by, is_first, scale
 		if allow_remove then desc = desc.."\n---\nRight click to cancel early." end
 
 		local txt = nil
+		local txt2 = nil
 		if e.decrease > 0 then
+			local font = e.charges and self.buff_font_small or self.buff_font
 			dur = tostring(dur)
-			txt = self.buff_font:draw(dur, 40, colors.WHITE.r, colors.WHITE.g, colors.WHITE.b, true)[1]
-			txt.fw, txt.fh = self.buff_font:size(dur)
+			txt = font:draw(dur, 40, colors.WHITE.r, colors.WHITE.g, colors.WHITE.b, true)[1]
+			txt.fw, txt.fh = font:size(dur)
+		end
+		if e.charges then
+			local font = e.decrease > 0 and self.buff_font_small or self.buff_font
+			txt2 = font:draw(charges, 40, colors.WHITE.r, colors.WHITE.g, colors.WHITE.b, true)[1]
+			txt2.fw, txt2.fh = font:size(charges)
+			dur = dur..":"..charges
 		end
 		local icon = e.status ~= "detrimental" and frames_colors.ok or frames_colors.cooldown
 
@@ -1287,13 +1297,22 @@ function _M:handleEffect(player, eff_id, e, p, x, y, hs, bx, by, is_first, scale
 			flash = 5
 		end
 
-		self.tbuff[eff_id..":"..dur] = {eff_id, "tbuff"..eff_id, function(x, y)
+		self.tbuff[eff_id..":"..dur..":"..charges] = {eff_id, "tbuff"..eff_id, function(x, y)
 			core.display.drawQuad(x+4, y+4, 32, 32, 0, 0, 0, 255)
 			e.display_entity:toScreen(self.hotkeys_display_icons.tiles, x+4, y+4, 32, 32)
 			UI:drawFrame(self.buffs_base, x, y, icon[1], icon[2], icon[3], 1)
-			if txt then
+			if txt and not txt2 then
 				txt._tex:toScreenFull(x+4+2 + (32 - txt.fw)/2, y+4+2 + (32 - txt.fh)/2, txt.w, txt.h, txt._tex_w, txt._tex_h, 0, 0, 0, 0.7)
 				txt._tex:toScreenFull(x+4 + (32 - txt.fw)/2, y+4 + (32 - txt.fh)/2, txt.w, txt.h, txt._tex_w, txt._tex_h)
+			elseif not txt and txt2 then
+				txt2._tex:toScreenFull(x+4+2 + (32 - txt2.fw)/2, y+4+2 + (32 - txt2.fh)/2, txt2.w, txt2.h, txt2._tex_w, txt2._tex_h, 0, 0, 0, 0.7)
+				txt2._tex:toScreenFull(x+4 + (32 - txt2.fw)/2, y+4 + (32 - txt2.fh)/2, txt2.w, txt2.h, txt2._tex_w, txt2._tex_h)
+			elseif txt and txt2 then
+				txt._tex:toScreenFull(x+4+2 + (32 - txt.fw), y+4+2 + (32 - txt.fh)/2-5, txt.w, txt.h, txt._tex_w, txt._tex_h, 0, 0, 0, 0.7)
+				txt._tex:toScreenFull(x+4 + (32 - txt.fw), y+4 + (32 - txt.fh)/2-5, txt.w, txt.h, txt._tex_w, txt._tex_h)
+
+				txt2._tex:toScreenFull(x+4+2, y+4+2 + (32 - txt2.fh)/2+5, txt2.w, txt2.h, txt2._tex_w, txt2._tex_h, 0, 0, 0, 0.7)
+				txt2._tex:toScreenFull(x+4, y+4 + (32 - txt2.fh)/2+5, txt2.w, txt2.h, txt2._tex_w, txt2._tex_h, 0, 1, 0, 1)
 			end
 			if flash > 0 then
 				if e.status ~= "detrimental" then core.display.drawQuad(x+4, y+4, 32, 32, 0, 255, 0, 170 - flash * 30)
@@ -1304,12 +1323,12 @@ function _M:handleEffect(player, eff_id, e, p, x, y, hs, bx, by, is_first, scale
 		end, desc_fct}
 	end
 
-	if not game.mouse:updateZone("tbuff"..eff_id, bx+x*scale, by+y*scale, hs, hs, self.tbuff[eff_id..":"..dur][4], scale) then
+	if not game.mouse:updateZone("tbuff"..eff_id, bx+x*scale, by+y*scale, hs, hs, self.tbuff[eff_id..":"..dur..":"..charges][4], scale) then
 		game.mouse:unregisterZone("tbuff"..eff_id)
-		game.mouse:registerZone(bx+x*scale, by+y*scale, hs, hs, self.tbuff[eff_id..":"..dur][4], nil, "tbuff"..eff_id, true, scale)
+		game.mouse:registerZone(bx+x*scale, by+y*scale, hs, hs, self.tbuff[eff_id..":"..dur..":"..charges][4], nil, "tbuff"..eff_id, true, scale)
 	end
 
-	self.tbuff[eff_id..":"..dur][3](x, y)
+	self.tbuff[eff_id..":"..dur..":"..charges][3](x, y)
 end
 
 function _M:displayBuffs(scale, bx, by)
