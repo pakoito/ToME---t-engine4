@@ -23,7 +23,7 @@ return {
 	args = {
 		tex = { texture = 0 },
 		textSize = textSize or {1, 1},
-		outlineColor = outlineColor or {0,0,0,0.4},
+		outlineColor = outlineColor or {1,0,0,0.8},
 	},
 	clone = false,
 }
