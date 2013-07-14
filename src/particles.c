@@ -244,7 +244,6 @@ static void particles_draw(particles_type *ps, float x, float y, float zoom)
 
 	if (ps->shader) glUseProgramObjectARB(0);
 
-	glRotatef(-ps->rotate, 0, 0, 1);
 	glPopMatrix();
 	glTranslatef(-x, -y, 0);
 
