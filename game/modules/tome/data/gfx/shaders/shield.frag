@@ -9,9 +9,10 @@ uniform vec2 impact;
 uniform float impact_tick;
 uniform float impact_time;
 uniform float llpow;
-uniform float ellipsoidalFactor; //1 is perfect circle, >1 is ellipsoidal
-uniform float oscillationSpeed; //oscillation between ellipsoidal and spherical form
+uniform float ellipsoidalFactor = 1.1; //1 is perfect circle, >1 is ellipsoidal
+uniform float oscillationSpeed = 10.0; //oscillation between ellipsoidal and spherical form
 float antialiasingRadius = 0.98; //1.0 is no antialiasing, 0.0 - fully smoothed(looks worse)
+float shieldIntensity = 0.13;
 
 void main(void)
 {
@@ -42,7 +43,7 @@ void main(void)
 	vec4 c2 = texture2D(tex, (sphericalProjectedCoord + vec2(0.0, tick / time_factor)));
 	vec4 c = c1 * c2;
 
-	float transperency = 1.0 - exp(-0.07f / cos(hordeLen));
+	float transperency = 1.0 - exp(-shieldIntensity / cos(hordeLen));
 	
 	c.a = c.a * transperency;
 
