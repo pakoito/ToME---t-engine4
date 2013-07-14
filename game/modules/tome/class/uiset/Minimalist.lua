@@ -1238,6 +1238,8 @@ function _M:buffOrientStep(orient, bx, by, scale, x, y, w, h, next)
 end
 
 function _M:handleEffect(player, eff_id, e, p, x, y, hs, bx, by, is_first, scale, allow_remove)
+	local shader = Shader.default.textoutline and Shader.default.textoutline.shad
+
 	local dur = p.dur + 1
 	local charges = e.charges and tostring(e.charges(player, p)) or "0"
 
@@ -1303,19 +1305,48 @@ function _M:handleEffect(player, eff_id, e, p, x, y, hs, bx, by, is_first, scale
 			core.display.drawQuad(x+4, y+4, 32, 32, 0, 0, 0, 255)
 			e.display_entity:toScreen(self.hotkeys_display_icons.tiles, x+4, y+4, 32, 32)
 			UI:drawFrame(self.buffs_base, x, y, icon[1], icon[2], icon[3], 1)
+
 			if txt and not txt2 then
-				txt._tex:toScreenFull(x+4+2 + (32 - txt.fw)/2, y+4+2 + (32 - txt.fh)/2, txt.w, txt.h, txt._tex_w, txt._tex_h, 0, 0, 0, 0.7)
+				if shader then
+					shader:paramNumber2("outlineSize", 1, 1)
+					shader:paramNumber2("textSize", txt._tex_w, txt._tex_h)
+					shader:use(true)
+				else
+					txt._tex:toScreenFull(x+4+2 + (32 - txt.fw)/2, y+4+2 + (32 - txt.fh)/2, txt.w, txt.h, txt._tex_w, txt._tex_h, 0, 0, 0, 0.7)
+				end
 				txt._tex:toScreenFull(x+4 + (32 - txt.fw)/2, y+4 + (32 - txt.fh)/2, txt.w, txt.h, txt._tex_w, txt._tex_h)
 			elseif not txt and txt2 then
-				txt2._tex:toScreenFull(x+4+2 + (32 - txt2.fw)/2, y+4+2 + (32 - txt2.fh)/2, txt2.w, txt2.h, txt2._tex_w, txt2._tex_h, 0, 0, 0, 0.7)
+				if shader then
+					shader:paramNumber2("outlineSize", 1, 1)
+					shader:paramNumber2("textSize", txt2._tex_w, txt2._tex_h)
+					shader:use(true)
+				else
+					txt2._tex:toScreenFull(x+4+2 + (32 - txt2.fw)/2, y+4+2 + (32 - txt2.fh)/2, txt2.w, txt2.h, txt2._tex_w, txt2._tex_h, 0, 0, 0, 0.7)
+				end
 				txt2._tex:toScreenFull(x+4 + (32 - txt2.fw)/2, y+4 + (32 - txt2.fh)/2, txt2.w, txt2.h, txt2._tex_w, txt2._tex_h)
 			elseif txt and txt2 then
-				txt._tex:toScreenFull(x+4+2 + (32 - txt.fw), y+4+2 + (32 - txt.fh)/2-5, txt.w, txt.h, txt._tex_w, txt._tex_h, 0, 0, 0, 0.7)
+				if shader then
+					shader:paramNumber2("outlineSize", 1, 1)
+					shader:paramNumber2("textSize", txt._tex_w, txt._tex_h)
+					shader:use(true)
+				else
+					txt._tex:toScreenFull(x+4+2 + (32 - txt.fw), y+4+2 + (32 - txt.fh)/2-5, txt.w, txt.h, txt._tex_w, txt._tex_h, 0, 0, 0, 0.7)
+				end
 				txt._tex:toScreenFull(x+4 + (32 - txt.fw), y+4 + (32 - txt.fh)/2-5, txt.w, txt.h, txt._tex_w, txt._tex_h)
 
-				txt2._tex:toScreenFull(x+4+2, y+4+2 + (32 - txt2.fh)/2+5, txt2.w, txt2.h, txt2._tex_w, txt2._tex_h, 0, 0, 0, 0.7)
+				if shader then
+					shader:use(false)
+					shader:paramNumber2("outlineSize", 1, 1)
+					shader:paramNumber2("textSize", txt2._tex_w, txt2._tex_h)
+					shader:use(true)
+				else
+					txt2._tex:toScreenFull(x+4+2, y+4+2 + (32 - txt2.fh)/2+5, txt2.w, txt2.h, txt2._tex_w, txt2._tex_h, 0, 0, 0, 0.7)
+				end
 				txt2._tex:toScreenFull(x+4, y+4 + (32 - txt2.fh)/2+5, txt2.w, txt2.h, txt2._tex_w, txt2._tex_h, 0, 1, 0, 1)
 			end
+
+			if shader and (txt or txt2) then shader:use(false) end
+
 			if flash > 0 then
 				if e.status ~= "detrimental" then core.display.drawQuad(x+4, y+4, 32, 32, 0, 255, 0, 170 - flash * 30)
 				else core.display.drawQuad(x+4, y+4, 32, 32, 255, 0, 0, 170 - flash * 30)

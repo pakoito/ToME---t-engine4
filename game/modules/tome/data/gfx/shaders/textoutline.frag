@@ -30,6 +30,5 @@ void main(void)
 	
 	//outlineColor = vec4(0, 0, 0, 1);
 	//blending character glyph over its outline
-	gl_FragColor = gl_FragColor * gl_FragColor.a + outlineColor * alpha * (1.0 - gl_FragColor.a);
-	gl_FragColor.a *= gl_Color.a;
+	gl_FragColor = (gl_FragColor * gl_FragColor.a + outlineColor * alpha * (1.0 - gl_FragColor.a)) * gl_Color;
 }
