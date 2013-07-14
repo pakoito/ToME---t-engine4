@@ -29,8 +29,10 @@ return {
 		impact = {0, 0},
 		impact_tick = -1000,
 		impact_color = {1.0, 0.3, 1.0},
-		impact_time = 400,
+		impact_time = 800,
 		llpow = 2,
+		ellipsoidalFactor = ellipsoidalFactor or 1.2,
+		oscillationSpeed = oscillationSpeed or 0,
 	},
 	clone = false,
 }
