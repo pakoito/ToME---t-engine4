@@ -62,7 +62,13 @@ function _M:edit(i, j, id, e)
 	self.edits[i] = self.edits[i] or {}
 	self.edits[i][j] = self.edits[i][j] or {}
 	local ee = self.edits[i][j]
-	ee[#ee+1] = {use_id=id, add_displays=e.add_displays, add_mos=e.add_mos, add_mos_shader=e.add_mos_shader, image=e.image, min=e.min, max=e.max, z=e.z, copy_base=e.copy_base}
+	ee[#ee+1] = {use_id=id, alterbase=e.alterbase, add_displays=e.add_displays, add_mos=e.add_mos, add_mos_shader=e.add_mos_shader, image=e.image, min=e.min, max=e.max, z=e.z, copy_base=e.copy_base}
+
+	if e.alternear then
+		i = i + (e.alternear.x or 0)
+		j = j + (e.alternear.y or 0)
+		self:edit(i, j, id, e.alternear)
+	end
 end
 
 function _M:handle(level, i, j)
@@ -132,6 +138,9 @@ function _M:replaceAll(level)
 			local gd = g.add_displays[g.__edit_d]
 
 			for __, e in ipairs(ee) do
+				local oldgd = gd
+				if e.alterbase then gd = g end
+
 				if e.z then gd.z = e.z end
 				if e.copy_base then gd.image = g.image end
 				if e.add_mos then
@@ -154,6 +163,8 @@ function _M:replaceAll(level)
 					end
 				end
 				if e.image then g.image = e.image:format(rng.range(e.min, e.max)) end
+
+				gd = oldgd
 			end
 
 			level.map(i, j, Map.TERRAIN, g)
@@ -398,7 +409,7 @@ grass_wm = { method="borders", type="grass", forbid={lava=true},
 	default8={add_mos={{image="terrain/grass_worldmap/grass_2_%02d.png", display_y=-1}}, min=1, max=2},
 	default2={add_mos={{image="terrain/grass_worldmap/grass_8_%02d.png", display_y=1}}, min=1, max=2},
 	default4={add_mos={{image="terrain/grass_worldmap/grass_6_%02d.png", display_x=-1}}, min=1, max=2},
-	default6={add_mos={{image="terrain/grass_worldmap/grass_4_%02d.png", display_x=1}}, min=1, max=2},
+	default6={alternear={x=1,alterbase=true,add_mos={{image="terrain/grass_worldmap/sand_under_grass_4_%02d.png"}}, min=1, max=1}, add_mos={{image="terrain/grass_worldmap/grass_4_%02d.png", display_x=1}}, min=1, max=2},
 
 	default1={z=3,add_mos={{image="terrain/grass_worldmap/grass_9_%02d.png", display_x=-1, display_y=1}}, min=1, max=1},
 	default3={z=3,add_mos={{image="terrain/grass_worldmap/grass_7_%02d.png", display_x=1, display_y=1}}, min=1, max=1},

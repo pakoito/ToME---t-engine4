@@ -125,7 +125,7 @@ newEntity{
 	display = '~', color=colors.AQUAMARINE, back_color=colors.DARK_BLUE,
 	always_remember = true,
 	special_minimap = colors.BLUE,
-	shader = "water",
+	shader = "water", add_mos={{image="terrain/grass_worldmap/sand_under_grass_4_01.png"}}
 }
 
 -----------------------------------------
