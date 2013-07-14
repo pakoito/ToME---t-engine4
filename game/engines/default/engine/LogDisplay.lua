@@ -249,6 +249,7 @@ function _M:toScreen()
 		if self.shadow then
 			if shader.shad then
 				shader.shad:use(true)
+				shader.shad:paramNumber2(item._tex_w, item._tex_h)
 			else
 				item._tex:toScreenFull(self.display_x+2, h+2, item.w, item.h, item._tex_w, item._tex_h, 0,0,0, self.shadow * fade)
 			end
