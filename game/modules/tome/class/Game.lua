@@ -1711,10 +1711,26 @@ end
 
 function _M:setupMouse(reset)
 	if reset == nil or reset then self.mouse:reset() end
+
+	local cur_obj = nil
+	local outline = Shader.new("objectsoutline").shad
+
 	self.mouse:registerZone(Map.display_x, Map.display_y, Map.viewport.width, Map.viewport.height, function(button, mx, my, xrel, yrel, bx, by, event, extra)
 		if not self.uiset:isLocked() then return end
 
+		if core.shader.allow("adv") and outline then
+			local tmx, tmy = game.level.map:getMouseTile(mx, my)
+			local o = self.level.map(tmx, tmy, Map.OBJECT)
+			if cur_obj and cur_obj._mo then cur_obj._mo:shader(nil) end
+			if o and o._mo and not o.shader then
+				outline:paramNumber2("textSize", Map.tile_w, Map.tile_h)
+				o._mo:shader(outline)
+				cur_obj = o
+			end
+		end
+
 		self.tooltip.add_map_str = extra and extra.log_str
+
 
 		if game.tooltip.locked then
 			if button == "wheelup" and event == "button" then
@@ -1742,7 +1758,6 @@ function _M:setupMouse(reset)
 
 		-- Cheat kill
 		if config.settings.cheat and button == "right" and core.key.modState("ctrl") and core.key.modState("shift") and not xrel and not yrel and event == "button" and self.zone and not self.zone.wilderness then
-			local tmx, tmy = game.level.map:getMouseTile(mx, my)
 			local target = game.level.map(tmx, tmy, Map.ACTOR)
 			if target then
 				target:die(game.player)
