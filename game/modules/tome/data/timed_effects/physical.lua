@@ -1141,6 +1141,7 @@ newEffect{
 	subtype = { tactic=true },
 	status = "beneficial",
 	parameters = { power=1, max=5 },
+	charges = function(self, eff) return eff.cur_power end,
 	on_merge = function(self, old_eff, new_eff)
 		self:removeTemporaryValue("combo", old_eff.tmpid)
 		old_eff.cur_power = math.min(old_eff.cur_power + new_eff.power, new_eff.max)

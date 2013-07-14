@@ -664,6 +664,7 @@ end
 local tmps = core.display.newFont("/data/font/Vera.ttf", 12)
 local word_size_cache = {}
 local fontoldsize = getmetatable(tmps).__index.size
+getmetatable(tmps).__index.simplesize = fontoldsize
 getmetatable(tmps).__index.size = function(font, str)
 	local list = str:split("#" * (Puid + Pcolorcodefull + Pcolorname + Pfontstyle + Pextra) * "#", true)
 	local mw, mh = 0, 0
