@@ -553,7 +553,7 @@ function _M:drawDialog(kind, actor_to_compare)
 		w = 0
 
 		local mainhand = player:getInven(player.INVEN_MAINHAND)
-		if mainhand and (#mainhand > 0) then
+		if mainhand and (#mainhand > 0) and not player:attr("disarmed") then
 			local WeaponTxt = "#LIGHT_BLUE#Main Hand"
 			if player:hasTwoHandedWeapon() then
 				WeaponTxt = WeaponTxt.."(2-handed)"
@@ -616,7 +616,7 @@ function _M:drawDialog(kind, actor_to_compare)
 					dam = (player:getInven("QUIVER") and player:getInven("QUIVER")[1] and player:getInven("QUIVER")[1].combat)
 				end
 				if mean and dam then
-					s:drawColorStringBlended(self.font, "#LIGHT_BLUE#Off Hand:", w, h, 255, 255, 255, true) h = h + self.font_h
+					s:drawColorStringBlended(self.font, "#LIGHT_BLUE#Off Hand:"..(player:attr("disarmed") and " (disabled)" or ""), w, h, 255, 255, 255, true) h = h + self.font_h
 					text = compare_fields(player, actor_to_compare, function(actor, ...) return math.floor(actor:combatAttack(...)) end, "%3d", "%+.0f", 1, false, false, mean)
 					dur_text = ("%d"):format(math.floor(player:combatAttack(o.combat)/5))
 					self:mouseTooltip(self.TOOLTIP_COMBAT_ATTACK, s:drawColorStringBlended(self.font, ("Accuracy    : #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h

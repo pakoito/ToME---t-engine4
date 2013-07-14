@@ -470,7 +470,7 @@ function _M:actBase()
 	self:timedEffects()
 
 	-- Handle thunderstorm, even if the actor is stunned or incapacitated it still works
-	if not game.zone.wilderness then
+	if not game.zone.wilderness and not self.dead then
 		if self:isTalentActive(self.T_THUNDERSTORM) then
 			local t = self:getTalentFromId(self.T_THUNDERSTORM)
 			t.do_storm(self, t)
@@ -2673,6 +2673,8 @@ function _M:onTemporaryValueChange(prop, v, base)
 		self:recomputeGlobalSpeed()
 	elseif base == self.talents_types_mastery then
 		self:updateTalentTypeMastery(prop)
+	elseif prop == "disarmed" then
+		self:updateModdableTile()
 	end
 end
 
@@ -2751,17 +2753,19 @@ function _M:updateModdableTile()
 	i = self.inven[self.INVEN_HEAD]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile)..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1} end
 	i = self.inven[self.INVEN_HANDS]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile)..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1} end
 	i = self.inven[self.INVEN_CLOAK]; if i and i[1] and i[1].moddable_tile_hood then add[#add+1] = {image = base..(i[1].moddable_tile):format("hood")..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1} end
-	i = self.inven[self.INVEN_MAINHAND]; if i and i[1] and i[1].moddable_tile then
-		add[#add+1] = {image = base..(i[1].moddable_tile):format("right")..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1}
-		if i[1].moddable_tile_particle then
-			add[#add].particle = i[1].moddable_tile_particle[1]
-			add[#add].particle_args = i[1].moddable_tile_particle[2]
+	if not self:attr("disarmed") then
+		i = self.inven[self.INVEN_MAINHAND]; if i and i[1] and i[1].moddable_tile then
+			add[#add+1] = {image = base..(i[1].moddable_tile):format("right")..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1}
+			if i[1].moddable_tile_particle then
+				add[#add].particle = i[1].moddable_tile_particle[1]
+				add[#add].particle_args = i[1].moddable_tile_particle[2]
+			end
+			if i[1].moddable_tile_ornament then add[#add+1] = {image = base..(i[1].moddable_tile_ornament):format("right")..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1} end
 		end
-		if i[1].moddable_tile_ornament then add[#add+1] = {image = base..(i[1].moddable_tile_ornament):format("right")..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1} end
-	end
-	i = self.inven[self.INVEN_OFFHAND]; if i and i[1] and i[1].moddable_tile then
-		add[#add+1] = {image = base..(i[1].moddable_tile):format("left")..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1}
-		if i[1].moddable_tile_ornament then add[#add+1] = {image = base..(i[1].moddable_tile_ornament):format("left")..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1} end
+		i = self.inven[self.INVEN_OFFHAND]; if i and i[1] and i[1].moddable_tile then
+			add[#add+1] = {image = base..(i[1].moddable_tile):format("left")..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1}
+			if i[1].moddable_tile_ornament then add[#add+1] = {image = base..(i[1].moddable_tile_ornament):format("left")..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1} end
+		end
 	end
 
 	if self.moddable_tile_ornament and self.moddable_tile_ornament[self.female and "female" or "male"] then add[#add+1] = {image = base..self.moddable_tile_ornament[self.female and "female" or "male"]..".png"} end
