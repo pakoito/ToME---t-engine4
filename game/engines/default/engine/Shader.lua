@@ -41,10 +41,10 @@ function _M:init(name, args)
 --	print("[SHADER] making shader from", name, " into ", self.totalname)
 
 	if args and args.require_shader then
-		if not core.shader.active(args.require_shader) then return end
+		if not core.shader.active(4) or not core.shader.active(args.require_shader) then return end
 	end
 	if args and args.require_kind then
-		if not core.shader.allow(args.require_kind) then return end
+		if not core.shader.active(4) or not core.shader.allow(args.require_kind) then return end
 	end
 
 	if not core.shader.active() then return end
