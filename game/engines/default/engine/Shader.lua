@@ -183,3 +183,12 @@ function _M:setUniform(k, v)
 		end
 	end
 end
+
+----------------------------------------------------------------------------
+-- Default shaders
+----------------------------------------------------------------------------
+default = {}
+
+function _M:setDefault(kind, name, args)
+	default[kind] = _M.new(name, args)
+end

@@ -19,6 +19,7 @@
 
 require "engine.class"
 require "engine.ui.Base"
+local Shader = require "engine.Shader"
 local Mouse = require "engine.Mouse"
 local Slider = require "engine.ui.Slider"
 
@@ -222,12 +223,14 @@ function _M:display()
 	return
 end
 
+local shader = Shader.new("textoutline")
 function _M:toScreen()
 	self:display()
 
 	if self.bg_texture then self.bg_texture:toScreenFull(self.display_x, self.display_y, self.w, self.h, self.bg_texture_w, self.bg_texture_h) end
 
 	local now = core.game.getTime()
+	local shader = Shader.default.textoutline and Shader.default.textoutline.shad
 
 	local h = self.display_y + self.h -  self.fh
 	for i = 1, #self.dlist do
@@ -243,8 +246,17 @@ function _M:toScreen()
 		end
 
 		self.dlist[i].dh = h
-		if self.shadow then item._tex:toScreenFull(self.display_x+2, h+2, item.w, item.h, item._tex_w, item._tex_h, 0,0,0, self.shadow * fade) end
+		if self.shadow then
+			if shader then
+				shader:paramNumber2("outlineSize", 0.7, 0.7)
+				shader:paramNumber2("textSize", item._tex_w, item._tex_h)
+				shader:use(true)
+			else
+				item._tex:toScreenFull(self.display_x+2, h+2, item.w, item.h, item._tex_w, item._tex_h, 0,0,0, self.shadow * fade)
+			end
+		end
 		item._tex:toScreenFull(self.display_x, h, item.w, item.h, item._tex_w, item._tex_h, 1, 1, 1, fade)
+		if self.shadow and shader then shader:use(false) end
 		for di = 1, #item._dduids do item._dduids[di].e:toScreen(nil, self.display_x + item._dduids[di].x, h, item._dduids[di].w, item._dduids[di].w, fade, false, false) end
 		h = h - self.fh
 	end

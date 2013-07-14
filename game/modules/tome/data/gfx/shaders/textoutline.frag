@@ -1,32 +1,35 @@
 uniform sampler2D tex;
 uniform vec2 textSize;
+uniform float intensity; 
+uniform vec2 outlineSize;
 uniform vec4 outlineColor;
 
 void main(void)
 {
-	vec2 off = 1.0 / textSize;
-	vec2 tc = gl_TexCoord[0].st;
+	float xOffset = outlineSize.x / textSize.x;
+	float yOffset = outlineSize.y / textSize.y;
 
-	vec4 c = texture2D(tex, tc);
-	vec4 n = texture2D(tex, vec2(tc.x, max(0.0, tc.y - off.y)));
-	vec4 e = texture2D(tex, vec2(min(1.0, tc.x + off.x), tc.y));
-	vec4 s = texture2D(tex, vec2(tc.x, min(1.0, tc.y + off.y)));
-	vec4 w = texture2D(tex, vec2(min(0.0, tc.x - off.x), tc.y));
+	gl_FragColor = texture2D(tex, gl_TexCoord[0].xy); //default text color
+
+	//sobel distance to glyph base line approximation
+	vec4 col02 = texture2D(tex, gl_TexCoord[0].xy + vec2(xOffset,  -yOffset));
+	vec4 col12 = texture2D(tex, gl_TexCoord[0].xy + vec2(xOffset,   0.0     ));
+	vec4 col22 = texture2D(tex, gl_TexCoord[0].xy + vec2(xOffset,   yOffset));
+	vec4 col01 = texture2D(tex, gl_TexCoord[0].xy + vec2(0.0,        -yOffset));
+	vec4 col21 = texture2D(tex, gl_TexCoord[0].xy + vec2(0.0,         yOffset));
+	vec4 col00 = texture2D(tex, gl_TexCoord[0].xy + vec2(-xOffset, -yOffset));
+	vec4 col10 = texture2D(tex, gl_TexCoord[0].xy + vec2(-xOffset,  0.0     ));
+	vec4 col20 = texture2D(tex, gl_TexCoord[0].xy + vec2(-xOffset,  yOffset));
 	
-	vec4 origColor = c * gl_Color;
-
-	float ua = 0.0;
-	ua = mix(ua, 1.0, c.a);
-	ua = mix(ua, 1.0, n.a);
-	ua = mix(ua, 1.0, e.a);
-	ua = mix(ua, 1.0, s.a);
-	ua = mix(ua, 1.0, w.a);
-
-	vec4 underColor = outlineColor * vec4(ua);
-
-	gl_FragColor = underColor;
-	gl_FragColor = mix(gl_FragColor, origColor, origColor.a);
-
-	gl_FragColor.a = max(sqrt(gl_FragColor.a / 2.0), c.a);
-//	if (gl_FragColor.r + gl_FragColor.g + gl_FragColor.b <= 0.0) gl_FragColor.a = 0.0;
+	
+	float xDist = 0.0 - col00.a - col01.a * 2.0 - col02.a + col20.a + col21.a * 2.0 + col22.a;
+	float yDist = 0.0 - col00.a + col02.a - col10.a * 2.0 + col12.a * 2.0 - col20.a + col22.a;
+	
+	//transperency of current outline pixel
+	float alpha = min(1.0, sqrt(xDist * xDist + yDist * yDist) * intensity); 
+	
+	//outlineColor = vec4(0, 0, 0, 1);
+	//blending character glyph over its outline
+	gl_FragColor = gl_FragColor * gl_FragColor.a + outlineColor * alpha * (1.0 - gl_FragColor.a);
+	gl_FragColor.a *= gl_Color.a;
 }

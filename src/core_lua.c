@@ -264,10 +264,12 @@ static GLenum sdl_gl_texture_format(SDL_Surface *s) {
 
 // allocate memory for a texture without copying pixels in
 // caller binds texture
-void make_texture_for_surface(SDL_Surface *s, int *fw, int *fh) {
+static char *largest_black = NULL;
+static int largest_size = 0;
+void make_texture_for_surface(SDL_Surface *s, int *fw, int *fh, bool clamp) {
 	// Paramétrage de la texture.
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, clamp ? GL_CLAMP_TO_BORDER : GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, clamp ? GL_CLAMP_TO_BORDER : GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
 	// get the number of channels in the SDL surface
@@ -285,7 +287,13 @@ void make_texture_for_surface(SDL_Surface *s, int *fw, int *fh) {
 	if (fh) *fh = realh;
 	//printf("request size (%d,%d), producing size (%d,%d)\n",s->w,s->h,realw,realh);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, nOfColors, realw, realh, 0, texture_format, GL_UNSIGNED_BYTE, NULL);
+	if (!largest_black || largest_size < realw * realh * 4) {
+		if (largest_black) free(largest_black);
+		largest_black = calloc(realh*realw*4, sizeof(char));
+		largest_size = realh*realw*4;
+		printf("Upgrading black texture to size %d\n", largest_size);
+	}
+	glTexImage2D(GL_TEXTURE_2D, 0, nOfColors, realw, realh, 0, texture_format, GL_UNSIGNED_BYTE, largest_black);
 
 #ifdef _DEBUG
 	GLenum err = glGetError();
@@ -764,7 +772,7 @@ static font_make_texture_line(lua_State *L, SDL_Surface *s, int id, bool is_sepa
 	glGenTextures(1, t);
 	tfglBindTexture(GL_TEXTURE_2D, *t);
 	int fw, fh;
-	make_texture_for_surface(s, &fw, &fh);
+	make_texture_for_surface(s, &fw, &fh, true);
 	copy_surface_to_texture(s);
 
 	lua_pushliteral(L, "_tex_w");
@@ -1209,7 +1217,7 @@ int init_blank_surface()
 	glGenTextures(1, &gl_tex_white);
 	tfglBindTexture(GL_TEXTURE_2D, gl_tex_white);
 	int fw, fh;
-	make_texture_for_surface(s, &fw, &fh);
+	make_texture_for_surface(s, &fw, &fh, false);
 	copy_surface_to_texture(s);
 	return gl_tex_white;
 }
@@ -1516,7 +1524,7 @@ static int sdl_surface_toscreen(lua_State *L)
 	glGenTextures(1, &t);
 	tfglBindTexture(GL_TEXTURE_2D, t);
 
-	make_texture_for_surface(*s, NULL, NULL);
+	make_texture_for_surface(*s, NULL, NULL, false);
 	copy_surface_to_texture(*s);
 	draw_textured_quad(x,y,(*s)->w,(*s)->h);
 
@@ -1583,7 +1591,7 @@ static int sdl_surface_to_texture(lua_State *L)
 	tfglBindTexture(GL_TEXTURE_2D, *t);
 
 	int fw, fh;
-	make_texture_for_surface(*s, &fw, &fh);
+	make_texture_for_surface(*s, &fw, &fh, false);
 	copy_surface_to_texture(*s);
 
 	lua_pushnumber(L, fw);

@@ -328,6 +328,8 @@ function _M:toggleUI()
 end
 
 function _M:activate()
+	Shader:setDefault("textoutline", "textoutline")
+
 	local size, size_mono, font, font_mono, font_mono_h, font_h
 	if config.settings.tome.fonts.type == "fantasy" then
 		size = ({normal=16, small=14, big=18})[config.settings.tome.fonts.size]
