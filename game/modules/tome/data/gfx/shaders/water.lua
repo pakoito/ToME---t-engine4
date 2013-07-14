@@ -23,6 +23,7 @@ return {
 	vert = nil,
 	args = {
 		tex = { texture = 0 },
+		iResolution = size or {64.0, 64.0},
 	},
 	clone = false,
 }

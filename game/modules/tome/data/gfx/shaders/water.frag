@@ -6,7 +6,7 @@
 precision highp float;
 #endif
 
-vec3 iResolution = vec3(64.0,64.0,0.0);// viewport resolution (in pixels)
+uniform vec2 texSize;
 uniform float tick;
 uniform sampler2D tex;
 uniform vec2 mapCoord;
@@ -60,14 +60,14 @@ float col(vec2 coord)
 
 void main(void)
 {
-	vec2 p = (gl_FragCoord.xy + mapCoord) / iResolution.xy, c1 = p, c2 = p;
+	vec2 p = (vec2(gl_FragCoord.x, texSize.y - gl_FragCoord.y) + mapCoord) / texSize.xy, c1 = p, c2 = p;
 	float cc1 = col(c1);
 
-	c2.x += iResolution.x/delta;
+	c2.x += texSize.x/delta;
 	float dx = emboss*(cc1-col(c2))/delta;
 
 	c2.x = p.x;
-	c2.y += iResolution.y/delta;
+	c2.y += texSize.y/delta;
 	float dy = emboss*(cc1-col(c2))/delta;
 
 	c1.x += dx*2.;
