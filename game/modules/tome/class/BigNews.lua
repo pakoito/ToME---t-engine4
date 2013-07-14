@@ -19,6 +19,7 @@
 
 require "engine.class"
 local Map = require "engine.Map"
+local Shader = require "engine.Shader"
 
 module(..., package.seeall, class.make)
 
@@ -52,6 +53,8 @@ end
 function _M:display(nb_keyframes)
 	if not self.list then return end
 
+	local shader = Shader.default.textoutline and Shader.default.textoutline.shad
+
 	core.display.glTranslate(self.center_x, self.center_y, 0)
 	local scale = util.bound(1-math.log10(self.time / self.max_time)^2, 0, 1)
 	core.display.glScale(scale, scale, scale)
@@ -63,8 +66,17 @@ function _M:display(nb_keyframes)
 		local item = self.list[i]
 		if not item then break end
 
-		if self.text_shadow then item._tex:toScreenFull(x+4, y+4, item.w, item.h, item._tex_w, item._tex_h, 0, 0, 0, self.text_shadow) end
+		if self.text_shadow then
+			if shader then
+				shader:paramNumber2("outlineSize", 2, 2)
+				shader:paramNumber2("textSize", item._tex_w, item._tex_h)
+				shader:use(true)
+			else
+				item._tex:toScreenFull(x+4, y+4, item.w, item.h, item._tex_w, item._tex_h, 0, 0, 0, self.text_shadow)
+			end
+		end
 		item._tex:toScreenFull(x, y, item.w, item.h, item._tex_w, item._tex_h)
+		if self.text_shadow and shader then shader:use(false) end
 		y = y + item.h
 	end
 
