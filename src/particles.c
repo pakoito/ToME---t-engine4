@@ -315,7 +315,7 @@ static void particles_update(lua_State *L, particles_type *ps, bool last)
 	bool alive = FALSE;
 	float zoom = 1;
 	int vert_idx = 0, col_idx = 0;
-	int i, j;
+	float i, j;
 	float a;
 	float lx, ly, lsize;
 
