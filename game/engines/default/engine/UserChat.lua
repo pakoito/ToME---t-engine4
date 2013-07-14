@@ -18,6 +18,7 @@
 -- darkgod@te4.org
 
 require "engine.class"
+local Shader = require "engine.Shader"
 local KeyBind = require "engine.KeyBind"
 local Mouse = require "engine.Mouse"
 local Dialog = require "engine.ui.Dialog"
@@ -655,6 +656,9 @@ end
 
 function _M:toScreen()
 	self:display()
+
+	local shader = Shader.default.textoutline and Shader.default.textoutline.shad
+
 	if self.bg_texture then self.bg_texture:toScreenFull(self.display_x, self.display_y, self.w, self.h, self.bg_texture_w, self.bg_texture_h) end
 	local h = self.display_y + self.h -  self.fh
 	local now = core.game.getTime()
@@ -671,8 +675,17 @@ function _M:toScreen()
 		end
 
 		self.dlist[i].dh = h
-		if self.shadow then item._tex:toScreenFull(self.display_x+2, h+2, item.w, item.h, item._tex_w, item._tex_h, 0,0,0, self.shadow * fade) end
+		if self.shadow then
+			if shader then
+				shader:paramNumber2("outlineSize", 0.7, 0.7)
+				shader:paramNumber2("textSize", item._tex_w, item._tex_h)
+				shader:use(true)
+			else
+				item._tex:toScreenFull(self.display_x+2, h+2, item.w, item.h, item._tex_w, item._tex_h, 0,0,0, self.shadow * fade)
+			end
+		end
 		item._tex:toScreenFull(self.display_x, h, item.w, item.h, item._tex_w, item._tex_h, 1, 1, 1, fade)
+		if self.shadow and shader then shader:use(false) end
 		h = h - self.fh
 	end
 

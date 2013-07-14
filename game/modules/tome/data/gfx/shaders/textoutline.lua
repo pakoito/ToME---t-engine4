@@ -24,7 +24,7 @@ return {
 		tex = { texture = 0 },
 		textSize = textSize or {1, 1},
 		intensity = intensity or 0.5,
-		outlineSize = outlineSize or {1.5, 1.5},
+		outlineSize = outlineSize or {1, 1},
 		outlineColor = outlineColor or {0, 0, 0, 1},
 	},
 	clone = false,
