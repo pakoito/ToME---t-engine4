@@ -41,7 +41,7 @@ return {
 		r = 1, rv = 0, ra = 0,
 		g = 1, gv = 0, ga = 0,
 		b = 1, bv = 0, ba = 0,
-		a = 0.4, av = 0.03, aa = 0,
+		a = 1, av = -1 / 16, aa = 0,
 	}
 end, },
 function(self)
