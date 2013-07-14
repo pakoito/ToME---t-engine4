@@ -264,10 +264,10 @@ static GLenum sdl_gl_texture_format(SDL_Surface *s) {
 
 // allocate memory for a texture without copying pixels in
 // caller binds texture
-void make_texture_for_surface(SDL_Surface *s, int *fw, int *fh) {
+void make_texture_for_surface(SDL_Surface *s, int *fw, int *fh, bool clamp) {
 	// Paramétrage de la texture.
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, clamp ? GL_CLAMP_TO_EDGE : GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, clamp ? GL_CLAMP_TO_EDGE : GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
 	// get the number of channels in the SDL surface
@@ -764,7 +764,7 @@ static font_make_texture_line(lua_State *L, SDL_Surface *s, int id, bool is_sepa
 	glGenTextures(1, t);
 	tfglBindTexture(GL_TEXTURE_2D, *t);
 	int fw, fh;
-	make_texture_for_surface(s, &fw, &fh);
+	make_texture_for_surface(s, &fw, &fh, true);
 	copy_surface_to_texture(s);
 
 	lua_pushliteral(L, "_tex_w");
@@ -1209,7 +1209,7 @@ int init_blank_surface()
 	glGenTextures(1, &gl_tex_white);
 	tfglBindTexture(GL_TEXTURE_2D, gl_tex_white);
 	int fw, fh;
-	make_texture_for_surface(s, &fw, &fh);
+	make_texture_for_surface(s, &fw, &fh, false);
 	copy_surface_to_texture(s);
 	return gl_tex_white;
 }
@@ -1516,7 +1516,7 @@ static int sdl_surface_toscreen(lua_State *L)
 	glGenTextures(1, &t);
 	tfglBindTexture(GL_TEXTURE_2D, t);
 
-	make_texture_for_surface(*s, NULL, NULL);
+	make_texture_for_surface(*s, NULL, NULL, false);
 	copy_surface_to_texture(*s);
 	draw_textured_quad(x,y,(*s)->w,(*s)->h);
 
@@ -1583,7 +1583,7 @@ static int sdl_surface_to_texture(lua_State *L)
 	tfglBindTexture(GL_TEXTURE_2D, *t);
 
 	int fw, fh;
-	make_texture_for_surface(*s, &fw, &fh);
+	make_texture_for_surface(*s, &fw, &fh, false);
 	copy_surface_to_texture(*s);
 
 	lua_pushnumber(L, fw);

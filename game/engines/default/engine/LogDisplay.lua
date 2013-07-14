@@ -26,8 +26,6 @@ local Slider = require "engine.ui.Slider"
 --- Module that handles message history in a mouse wheel scrollable zone
 module(..., package.seeall, class.inherit(engine.ui.Base))
 
-local shader = Shader.new("textoutline")
-
 --- Creates the log zone
 function _M:init(x, y, w, h, max, fontname, fontsize, color, bgcolor)
 	self.color = color or {255,255,255}
@@ -57,7 +55,7 @@ function _M:enableShadow(v)
 end
 
 function _M:enableFading(v)
---	self.fading = v
+	self.fading = v
 end
 
 --- Resize the display area
@@ -225,6 +223,7 @@ function _M:display()
 	return
 end
 
+local shader = Shader.new("textoutline")
 function _M:toScreen()
 	self:display()
 
@@ -248,8 +247,8 @@ function _M:toScreen()
 		self.dlist[i].dh = h
 		if self.shadow then
 			if shader.shad then
-				shader.shad:use(true)
 				shader.shad:paramNumber2("textSize", item._tex_w, item._tex_h)
+				shader.shad:use(true)
 			else
 				item._tex:toScreenFull(self.display_x+2, h+2, item.w, item.h, item._tex_w, item._tex_h, 0,0,0, self.shadow * fade)
 			end
