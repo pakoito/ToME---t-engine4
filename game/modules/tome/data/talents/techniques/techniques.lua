@@ -29,6 +29,7 @@ newTalentType{ allow_random=true, type="technique/archery-bow", name = "archery 
 newTalentType{ allow_random=true, type="technique/archery-sling", name = "archery - slings", description = "Specialized sling techniques." }
 newTalentType{ allow_random=true, type="technique/archery-training", name = "archery training", description = "Generic archery techniques." }
 newTalentType{ allow_random=true, type="technique/archery-utility", name = "archery prowess", description = "Specialized archery techniques to maim your targets." }
+newTalentType{ allow_random=true, type="technique/archery-excellence", name = "archery excellence", min_lev = 10, description = "Specialized archery techniques that result from honed training." }
 newTalentType{ allow_random=true, type="technique/superiority", name = "superiority", min_lev = 10, description = "Advanced combat techniques." }
 newTalentType{ allow_random=true, type="technique/battle-tactics", name = "battle tactics", min_lev = 10, description = "Advanced combat tactics." }
 newTalentType{ allow_random=true, type="technique/warcries", name = "warcries", no_silence = true, min_lev = 10, description = "Master the warcries to improve yourself and weaken others." }
@@ -117,6 +118,27 @@ techs_dex_req5 = {
 	stat = { dex=function(level) return 44 + (level-1) * 2 end },
 	level = function(level) return 16 + (level-1)  end,
 }
+techs_dex_req_high1 = {
+	stat = { dex=function(level) return 22 + (level-1) * 2 end },
+	level = function(level) return 10 + (level-1)  end,
+}
+techs_dex_req_high2 = {
+	stat = { dex=function(level) return 30 + (level-1) * 2 end },
+	level = function(level) return 14 + (level-1)  end,
+}
+techs_dex_req_high3 = {
+	stat = { dex=function(level) return 38 + (level-1) * 2 end },
+	level = function(level) return 18 + (level-1)  end,
+}
+techs_dex_req_high4 = {
+	stat = { dex=function(level) return 46 + (level-1) * 2 end },
+	level = function(level) return 22 + (level-1)  end,
+}
+techs_dex_req_high5 = {
+	stat = { dex=function(level) return 54 + (level-1) * 2 end },
+	level = function(level) return 26 + (level-1)  end,
+}
+
 
 -- Generic rquires based either on str or dex
 techs_strdex_req1 = function(self, t) local stat = self:getStr() >= self:getDex() and "str" or "dex"; return {
@@ -233,6 +255,7 @@ load("/data/talents/techniques/combat-training.lua")
 load("/data/talents/techniques/bow.lua")
 load("/data/talents/techniques/sling.lua")
 load("/data/talents/techniques/archery.lua")
+load("/data/talents/techniques/excellence.lua")
 load("/data/talents/techniques/magical-combat.lua")
 load("/data/talents/techniques/mobility.lua")
 load("/data/talents/techniques/thuggery.lua")

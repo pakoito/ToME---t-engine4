@@ -115,6 +115,11 @@ function _M:attackTarget(target, damtype, mult, noenergy, force_unharmed)
 		game.logPlayer(self, "%s notices you at the last moment!", target.name:capitalize())
 	end
 
+	if target:isTalentActive(target.T_INTUITIVE_SHOTS) and rng.percent(target:callTalent(target.T_INTUITIVE_SHOTS, "getChance")) then
+		local ret = target:callTalent(target.T_INTUITIVE_SHOTS, "proc", self)
+		if ret then return false end
+	end
+
 	-- Change attack type if using gems
 	if not damtype and self:getInven(self.INVEN_GEM) then
 		local gems = self:getInven(self.INVEN_GEM)

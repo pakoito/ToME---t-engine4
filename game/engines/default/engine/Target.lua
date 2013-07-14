@@ -442,17 +442,18 @@ function _M:setSpotInMotion(x, y, how)
 	if self.on_set_target then self:on_set_target(how) end
 end
 
-function _M:scan(dir, radius, sx, sy, filter)
+function _M:scan(dir, radius, sx, sy, filter, kind)
 	sx = sx or self.target.x
 	sy = sy or self.target.y
 	if not sx or not sy then return end
 	
+	kind = kind or engine.Map.ACTOR
 	radius = radius or 20
 	local actors = {}
 	local checker = function(_, x, y)
 		if sx == x and sy == y then return false end
-		if game.level.map.seens(x, y) and game.level.map(x, y, engine.Map.ACTOR) then
-			local a = game.level.map(x, y, engine.Map.ACTOR)
+		if game.level.map.seens(x, y) and game.level.map(x, y, kind) then
+			local a = game.level.map(x, y, kind)
 
 			if (not self.source_actor or self.source_actor:canSee(a)) and (not filter or filter(a)) then
 				table.insert(actors, {

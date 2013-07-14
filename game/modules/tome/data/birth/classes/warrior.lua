@@ -155,6 +155,7 @@ newBirthDescriptor{
 		["technique/archery-utility"]={true, 0.3},
 		["technique/archery-bow"]={true, 0.3},
 		["technique/archery-sling"]={true, 0.3},
+		["technique/archery-excellence"]={false, 0.3},
 		["technique/combat-techniques-active"]={false, -0.1},
 		["technique/combat-techniques-passive"]={true, -0.1},
 		["technique/combat-training"]={true, 0.3},

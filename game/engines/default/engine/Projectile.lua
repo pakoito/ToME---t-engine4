@@ -243,6 +243,11 @@ function _M:on_move(x, y, target)
 	end
 end
 
+--- Premature end
+function _M:terminate(x, y)
+	self.src:projectDoStop(self.project.def.typ, self.project.def.tg, self.project.def.damtype, self.project.def.dam, self.project.def.particles, self.x, self.y, self.tmp_proj, self.x, self.y, self)
+end
+
 --- Generate a projectile for a project() call
 function _M:makeProject(src, display, def, do_move, do_act, do_stop)
 	display = display or {display='*'}
