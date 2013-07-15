@@ -2874,6 +2874,31 @@ end
 function _M:onTakeoff(o, bypass_set)
 	engine.interface.ActorInventory.onTakeoff(self, o)
 
+	if o.talent_on_spell then
+		self.talent_on_spell = self.talent_on_spell or {}
+		for i = 1, #o.talent_on_spell do
+			local id = o.talent_on_spell[i]._id
+			self.talent_on_spell[id] = nil
+		end
+	end
+
+	if o.talent_on_wild_gift then
+		self.talent_on_wild_gift = self.talent_on_wild_gift or {}
+		for i = 1, #o.talent_on_wild_gift do
+			local id = o.talent_on_wild_gift[i]._id
+			self.talent_on_wild_gift[id] = nil
+		end
+	end
+
+
+	if o.talent_on_mind then
+		self.talent_on_mind = self.talent_on_mind or {}
+		for i = 1, #o.talent_on_mind do
+			local id = o.talent_on_mind[i]._id
+			self.talent_on_mind[id] = nil
+		end
+	end
+	
 	if o.set_list and o.set_complete and not bypass_set then
 		local list = {}
 		for i, d in ipairs(o.set_list) do
@@ -2904,30 +2929,6 @@ function _M:onTakeoff(o, bypass_set)
 		o._special_wear = nil
 	end
 
-	if o.talent_on_spell then
-		self.talent_on_spell = self.talent_on_spell or {}
-		for i = 1, #o.talent_on_spell do
-			local id = o.talent_on_spell[i]._id
-			self.talent_on_spell[id] = nil
-		end
-	end
-
-	if o.talent_on_wild_gift then
-		self.talent_on_wild_gift = self.talent_on_wild_gift or {}
-		for i = 1, #o.talent_on_wild_gift do
-			local id = o.talent_on_wild_gift[i]._id
-			self.talent_on_wild_gift[id] = nil
-		end
-	end
-
-
-	if o.talent_on_mind then
-		self.talent_on_mind = self.talent_on_mind or {}
-		for i = 1, #o.talent_on_mind do
-			local id = o.talent_on_mind[i]._id
-			self.talent_on_mind[id] = nil
-		end
-	end
 
 	-- apply any special cursed logic
 	if self:knowTalent(self.T_DEFILING_TOUCH) then

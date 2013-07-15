@@ -140,7 +140,7 @@ newEntity{ base = "FARPORTAL", define_as = "CFARPORTAL",
 	},
 	on_added = function(self, level, x, y)
 		if core.shader.active(4) then
-			level.map:particleEmitter(x, y, 3, "shader_shield", {}, {type="shield", time_factor=8000, color={0.3, 0.4, 0.7}})
+			level.map:particleEmitter(x, y, 3, "shader_shield", {size_factor=4}, {type="shield", shieldIntensity=0.1, ellipsoidalFactor=1, time_factor=8000, color={0.3, 0.4, 0.7}})
 		end
 		level.map:particleEmitter(x, y, 3, "farportal_lightning")
 		level.map:particleEmitter(x, y, 3, "farportal_lightning")

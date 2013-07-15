@@ -31,8 +31,14 @@ return {
 		impact_color = {1.0, 0.3, 1.0},
 		impact_time = 800,
 		llpow = 2,
-		ellipsoidalFactor = ellipsoidalFactor or 1.2,
-		oscillationSpeed = oscillationSpeed or 0,
+		ellipsoidalFactor = ellipsoidalFactor or 1.2, --1 is perfect circle, >1 is ellipsoidal
+		oscillationSpeed = oscillationSpeed or 0.0, --oscillation between ellipsoidal and spherical form
+		antialiasingRadius = antialiasingRadius or 0.98, --1.0 is no antialiasing, 0.0 - fully smoothed(looks worse)
+		shieldIntensity = shieldIntensity or 0.15, --physically affects shield layer thickness
+		wobblingPower = wobblingPower or 0.2,
+		wobblingSpeed = wobblingSpeed or 0.02,
+		horizontalScrollingSpeed = horizontalScrollingSpeed or 1.0,
+		verticalScrollingSpeed = verticalScrollingSpeed or 0.3,
 	},
 	clone = false,
 }

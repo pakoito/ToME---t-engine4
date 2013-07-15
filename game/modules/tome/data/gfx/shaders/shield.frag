@@ -9,66 +9,82 @@ uniform vec2 impact;
 uniform float impact_tick;
 uniform float impact_time;
 uniform float llpow;
-uniform float ellipsoidalFactor = 1.1; //1 is perfect circle, >1 is ellipsoidal
-uniform float oscillationSpeed = 10.0; //oscillation between ellipsoidal and spherical form
-float antialiasingRadius = 0.98; //1.0 is no antialiasing, 0.0 - fully smoothed(looks worse)
-float shieldIntensity = 0.13;
+
+uniform float ellipsoidalFactor = 1.2; //1 is perfect circle, >1 is ellipsoidal
+uniform float oscillationSpeed = 0.0; //oscillation between ellipsoidal and spherical form
+uniform float antialiasingRadius = 0.98; //1.0 is no antialiasing, 0.0 - fully smoothed(looks worse)
+uniform float shieldIntensity = 0.15; //physically affects shield layer thickness
+
+uniform float wobblingPower = 0.2;
+uniform float wobblingSpeed = 0.02;
+
+uniform float horizontalScrollingSpeed = 1.0;
+uniform float verticalScrollingSpeed = 0.3;
 
 void main(void)
 {
-	vec2 uv = vec2(0.5, 0.5) - gl_TexCoord[0].xy;
-	//uv.x *= ellispoidalFactor; //for simple ellipsoid
+	vec2 radius = vec2(0.5, 0.5) - gl_TexCoord[0].xy;
+	//radius.x *= ellispoidalFactor; //for simple ellipsoid
 	//comment next line for regular spherical shield
-	uv.x *= (1.0 + ellipsoidalFactor) * 0.5 + (ellipsoidalFactor - 1.0) * 0.5 * pow(cos(tick / time_factor * oscillationSpeed), 2.0);
-	float uvLen = length(uv);
+	radius.x *= (1.0 + ellipsoidalFactor) * 0.5 + (ellipsoidalFactor - 1.0) * 0.5 * pow(cos(tick / time_factor * oscillationSpeed), 2.0);
+	
+	//on-hit wobbling effect
+	float impactColorAffection = 0;
+	float impactDuration = tick - impact_tick;
+	if (impactDuration < impact_time * 5.0) //after impact_time * 5.0 the wobble will reduce exp(5.0) times
+	{
+		float impactCosine = dot(impact / length(impact), radius / length(radius));
+		if(impactCosine > 0.0)
+		{
+			radius *= 1.0 + 
+				(1.0 + sin(impactDuration * wobblingSpeed)) * 0.5 * 
+				exp(-impactDuration / impact_time) * 
+				wobblingPower * pow(impactCosine, 5.0);
+
+			impactColorAffection = pow(impactCosine, 2.0);
+			impactColorAffection *= exp(-(1.0 - length(radius) * 2.0) * 2.0);
+			impactColorAffection *= exp(-impactDuration / impact_time);
+		}
+	}	
+	
+	float radiusLen = length(radius);
 	
 	float antialiasingCoef = 1.0;
 	
-	float hordeLen = uvLen * 2.0;
-	if(hordeLen > 1.0)
+	float sinAlpha = radiusLen * 2.0;
+	float alpha = 0.0;
+	if(sinAlpha > 1.0)
 	{
 		gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);
 		return;
 	}else
 	{
-		if(hordeLen > antialiasingRadius)
+		if(sinAlpha > antialiasingRadius)
 		{
-			antialiasingCoef = (1.0 - hordeLen) / (1.0 - antialiasingRadius);
+			antialiasingCoef = (1.0 - sinAlpha) / (1.0 - antialiasingRadius);
 		}
-		hordeLen = asin(length(uv) * 2.0);
+		alpha = asin(sinAlpha);
 	}
-	vec2 sphericalProjectedCoord = vec2(0.5, 0.5) + uv * (hordeLen / (3.141592 / 2.0)) / uvLen;
+	vec2 sphericalProjectedCoord = vec2(0.5, 0.5) + radius * (alpha / (3.141592 / 2.0)) / radiusLen;
 	
-	vec4 c1 = texture2D(tex, (sphericalProjectedCoord + vec2(tick / time_factor, 0.0)));
-	vec4 c2 = texture2D(tex, (sphericalProjectedCoord + vec2(0.0, tick / time_factor)));
+	//two scrolling textures
+	vec4 c1 = texture2D(tex, (sphericalProjectedCoord + vec2(horizontalScrollingSpeed * tick / time_factor, 0.0)));
+	vec4 c2 = texture2D(tex, (sphericalProjectedCoord + vec2(0.0, verticalScrollingSpeed * tick / time_factor)));
 	vec4 c = c1 * c2;
 
-	float transperency = 1.0 - exp(-shieldIntensity / cos(hordeLen));
+	//exponential thin layer absorbtion under angle alpha
+	//layer thickness is c.a * shieldIntensity
+	c.a = 1.0 - exp(-c.a * shieldIntensity / cos(alpha));
+
+	//impact adjusts resulting transperency
+	c.a *= aadjust;
 	
-	c.a = c.a * transperency;
+	//applying shield color
+	c.rgb *= color * (1.0 - impactColorAffection) + impact_color * impactColorAffection;
+	
+	//c.rgb += impact_color * impactColorAffection;
 
-
-
-	// Impact
-	float it = tick - impact_tick;
-	float vaadjust = aadjust;
-	if (it < impact_time) {
-		float l = uvLen * 2.0;
-		float ll = pow(l, llpow);
-
-		float v = (impact_time - it) / impact_time;
-		float il = distance(impact / ll, (vec2(0.5) - gl_TexCoord[0].xy) / ll);
-		if (il < 0.5 * (1.0 - v)) {
-			v *= v * v;
-			float ic = (1.0 - length(uv - impact)) * v * 3.0;
-			c.rgb = mix(c.rgb, impact_color, ic);
-			vaadjust *= 1.0 + v * 3.0;
-		}
-	}
-
-	c.a *= vaadjust;
-	c.rgb *= color;
-
+	//thin layer of gradient transperency to make antialiasing
 	c.a *= min(1.0, c.a) * antialiasingCoef;
 
 	gl_FragColor = c;
