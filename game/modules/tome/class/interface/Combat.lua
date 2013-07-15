@@ -1996,7 +1996,7 @@ function _M:getFreeHands()
 end
 
 --- Check if the actor dual wields
-function _M:hasDualWeapon()
+function _M:hasDualWeapon(type)
 	if self:attr("disarmed") then
 		return nil, "disarmed"
 	end
@@ -2007,6 +2007,8 @@ function _M:hasDualWeapon()
 	if not weapon or not offweapon or not weapon.combat or not offweapon.combat then
 		return nil
 	end
+	if type and weapon.combat.talented ~= type then return nil end
+	if type and offweapon.combat.talented ~= type then return nil end
 	return weapon, offweapon
 end
 
