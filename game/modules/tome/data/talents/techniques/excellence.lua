@@ -29,7 +29,7 @@ newTalent{
 	no_npc_use = true,
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow or sling for this talent.") end return false end return true end,
 	requires_target = true,
-	getNb = function(self, t) return math.floor(self:getTalentLevel(t)) end,
+	getNb = function(self, t) return math.floor(self:combatTalentScale(t, 1, 5, "log")) end,
 	target = function(self, t)
 		return {type="bolt", range=self:getTalentRange(t), scan_on=engine.Map.PROJECTILE, no_first_target_filter=true}
 	end,
@@ -74,7 +74,7 @@ newTalent{
 		if self:attr("never_move") then return false end
 		return true
 	end,
-	getDist = function(self, t) return math.floor(self:combatTalentScale(t, 4, 8)) end,
+	getDist = function(self, t) return math.floor(self:combatTalentLimit(t, 11, 4, 8)) end,
 	archery_onhit = function(self, t, target, x, y)
 		if not target or not target:canBe("knockback") then return end
 		target:knockback(self.x, self.y, t.getDist(self, t))
@@ -115,7 +115,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You rush toward your fow, readying your shot. If you reach it you release the shot, imbuing it with great power.
+		return ([[You rush toward your fow, readying your shot. If you reach the enemy, you release the shot, imbuing it with great power.
 		The shot does %d%% weapon damage and knocks back your target by %d.]]):
 		format(self:combatTalentWeaponDamage(t, 1.5, 2.8) * 100, t.getDist(self, t))
 	end,
@@ -131,7 +131,7 @@ newTalent{
 	require = techs_dex_req_high3,
 	tactical = { BUFF = 2 },
 	getDist = function(self, t) return math.floor(self:combatTalentScale(t, 1, 3)) end,
-	getChance = function(self, t) return math.floor(self:combatTalentScale(t, 20, 50)) end,
+	getChance = function(self, t) return math.floor(self:combatTalentLimit(t, 100, 20, 50)) end,
 	archery_onhit = function(self, t, target, x, y)
 		if not target or not target:canBe("knockback") then return end
 		target:knockback(self.x, self.y, t.getDist(self, t))
@@ -153,8 +153,8 @@ newTalent{
 	deactivate = function(self, t, p)
 	end,
 	info = function(self, t)
-		return ([[You highten your reflexes to amazing levels. Each time a creature tries to hit you in melee you have %d%% chances to be fast enough to fire a shot at the attack, fully deflecting it and all others for this turn for this creature.
-		In addition the shot deals %d%% damage and knocks back the creature by %d.]])
+		return ([[Activating this talent enhances your reflexes to incredible levels.  Each time you are attacked in melee, you have a %d%% chance get a defensive shot off in time to intercept the attack, fully disrupting it and all other attacks from the attacker for the turn.
+		In addition, the shot deals %d%% damage and causes %d knockback.]])
 		:format(t.getChance(self, t), self:combatTalentWeaponDamage(t, 0.4, 0.9) * 100, t.getDist(self, t))
 	end,
 }
@@ -191,7 +191,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You fire a shot at your target's mouth (ot similar organ), doing %d%% damage and silencing it for %d turns.
+		return ([[You fire a shot at your target's throat, mouth, or equivalent body part, doing %d%% damage and silencing it for %d turns.
 		The silence chance increases with your Accuracy.]])
 		:format(self:combatTalentWeaponDamage(t, 0.9, 1.7) * 100, t.getDur(self,t))
 	end,
