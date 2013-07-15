@@ -2073,7 +2073,7 @@ end
 -- Unarmed Combat; this handles grapple checks and building combo points
 -- Builds Comob; reduces the cooldown on all unarmed abilities on cooldown by one
 function _M:buildCombo()
-	local duration = 3
+	local duration = 5
 	local power = 1
 	-- Combo String bonuses
 	if self:knowTalent(self.T_COMBO_STRING) then
@@ -2081,7 +2081,7 @@ function _M:buildCombo()
 		if rng.percent(t.getChance(self, t)) then
 			power = 2
 		end
-		duration = 3 + t.getDuration(self, t)
+		duration = 5 + t.getDuration(self, t)
 	end
 
 	if self:knowTalent(self.T_RELENTLESS_STRIKES) then

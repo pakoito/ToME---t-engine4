@@ -1321,9 +1321,9 @@ function _M:handleEffect(player, eff_id, e, p, x, y, hs, bx, by, is_first, scale
 					shader:paramNumber2("textSize", txt2._tex_w, txt2._tex_h)
 					shader:use(true)
 				else
-					txt2._tex:toScreenFull(x+4+2 + (32 - txt2.fw)/2, y+4+2 + (32 - txt2.fh)/2, txt2.w, txt2.h, txt2._tex_w, txt2._tex_h, 0, 0, 0, 0.7)
+					txt2._tex:toScreenFull(x+4+2, y+4+2 + (32 - txt2.fh)/2+5, txt2.w, txt2.h, txt2._tex_w, txt2._tex_h, 0, 0, 0, 0.7)
 				end
-				txt2._tex:toScreenFull(x+4 + (32 - txt2.fw)/2, y+4 + (32 - txt2.fh)/2, txt2.w, txt2.h, txt2._tex_w, txt2._tex_h)
+				txt2._tex:toScreenFull(x+4, y+4 + (32 - txt2.fh)/2+5, txt2.w, txt2.h, txt2._tex_w, txt2._tex_h, 0, 1, 0, 1)
 			elseif txt and txt2 then
 				if shader then
 					shader:paramNumber2("outlineSize", 1, 1)
