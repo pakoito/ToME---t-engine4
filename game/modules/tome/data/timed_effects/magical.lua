@@ -2068,17 +2068,19 @@ newEffect{
 			if not target then return end
 			if not tgts[target] then
 				tgts[target] = true
-				local ox, oy = target.x, target.y
-				target:pull(self.x, self.y, 1)
-				if target.x ~= ox or target.y ~= oy then 
-					game.logSeen(target, "%s is pulled in!", target.name:capitalize()) 
-				end
+				if not target:attr("ignore_irresistible_sun") then
+					local ox, oy = target.x, target.y
+					target:pull(self.x, self.y, 1)
+					if target.x ~= ox or target.y ~= oy then 
+						game.logSeen(target, "%s is pulled in!", target.name:capitalize()) 
+					end
 
-				if self:reactionToward(target) < 0 then
-					local dam = eff.dam * (1 + (5 - core.fov.distance(self.x, self.y, target.x, target.y)) / 8)
-					DamageType:get(DamageType.FIRE).projector(self, target.x, target.y, DamageType.FIRE, dam/3)
-					DamageType:get(DamageType.LIGHT).projector(self, target.x, target.y, DamageType.LIGHT, dam/3)
-					DamageType:get(DamageType.PHYSICAL).projector(self, target.x, target.y, DamageType.PHYSICAL, dam/3)
+					if self:reactionToward(target) < 0 then
+						local dam = eff.dam * (1 + (5 - core.fov.distance(self.x, self.y, target.x, target.y)) / 8)
+						DamageType:get(DamageType.FIRE).projector(self, target.x, target.y, DamageType.FIRE, dam/3)
+						DamageType:get(DamageType.LIGHT).projector(self, target.x, target.y, DamageType.LIGHT, dam/3)
+						DamageType:get(DamageType.PHYSICAL).projector(self, target.x, target.y, DamageType.PHYSICAL, dam/3)
+					end
 				end
 			end
 		end)

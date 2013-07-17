@@ -1718,8 +1718,8 @@ function _M:setupMouse(reset)
 	self.mouse:registerZone(Map.display_x, Map.display_y, Map.viewport.width, Map.viewport.height, function(button, mx, my, xrel, yrel, bx, by, event, extra)
 		if not self.uiset:isLocked() then return end
 
+		local tmx, tmy = game.level.map:getMouseTile(mx, my)
 		if core.shader.allow("adv") and outline then
-			local tmx, tmy = game.level.map:getMouseTile(mx, my)
 			local o = self.level.map(tmx, tmy, Map.OBJECT)
 			if cur_obj and cur_obj._mo then cur_obj._mo:shader(nil) end
 			if o and o._mo and not o.shader then

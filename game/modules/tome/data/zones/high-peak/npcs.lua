@@ -73,6 +73,7 @@ newEntity{
 	stun_immune = 0.5,
 	confusion_immune = 0.5,
 	blind_immune = 1,
+	ignore_irresistible_sun = 1, -- Do not let Argoniel annoy Elandar
 
 	combat_armor = 20,
 	combat_def = 20,
@@ -196,6 +197,7 @@ newEntity{
 
 		[Talents.T_LUCKY_DAY]=1,
 		[Talents.T_EYE_OF_THE_TIGER]=1,
+		[Talents.T_IRRESISTIBLE_SUN]=1,
 	},
 	resolvers.sustains_at_birth(),
 
