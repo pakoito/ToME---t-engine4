@@ -16,6 +16,7 @@
 --
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
+local Particles = require "engine.Particles"
 
 newBirthDescriptor{
 	type = "class",
@@ -103,6 +104,9 @@ newBirthDescriptor{
 	},
 	power_source = {arcane=true},
 	stats = { mag=4, wil=3, con=2, },
+	birth_example_particles = {
+		function(actor)	actor:addParticles(Particles.new("shadowfire", 1)) end,
+	},
 	talents_types = {
 		["cunning/survival"]={false, 0},
 		["corruption/sanguisuge"]={true, 0.3},
