@@ -1726,6 +1726,7 @@ newEffect{ -- Note: This effect is cancelled by EFF_DISARMED
 	long_desc = function(self, eff)
 		return ("Parrying melee attacks: Has a %d%% chance to deflect up to %d damage from the next %0.1f attack(s)."):format(self.tempeffect_def.EFF_DUAL_WEAPON_DEFENSE.deflectchance(self, eff),eff.dam, math.max(eff.deflects,1))
 	end,
+	charges = function(self, eff) return math.ceil(eff.deflects) end,
 	type = "physical",
 	subtype = {tactic=true},
 	status = "beneficial",
@@ -1803,6 +1804,7 @@ newEffect{
 	long_desc = function(self, eff)
 		return ("Countering melee attacks: Has a %d%% chance to get an automatic counter attack when avoiding a melee attack. (%0.1f counters remaining)"):format(self.tempeffect_def.EFF_COUNTER_ATTACKING.counterchance(self, eff), math.max(eff.counterattacks,1))
 	end,
+	charges = function(self, eff) return math.ceil(eff.counterattacks) end,
 	type = "physical",
 	subtype = {tactic=true},
 	status = "beneficial",
@@ -1829,6 +1831,7 @@ newEffect{
 	long_desc = function(self, eff)
 		return ("Has a %d%% chance to counter attack with a defensive throw when avoiding a melee attack, possibly throwing the target to the ground and stunning it. (%0.1f throws remaining)"):format(self.tempeffect_def.EFF_DEFENSIVE_GRAPPLING.throwchance(self, eff), math.max(eff.throws,1))
 	end,
+	charges = function(self, eff) return math.ceil(eff.throws) end,
 	type = "physical",
 	subtype = {tactic=true},
 	status = "beneficial",

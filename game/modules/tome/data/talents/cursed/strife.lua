@@ -41,9 +41,7 @@ newTalent{
 	getDefenseChange = function(self, t)
 		return -self:combatTalentStatDamage(t, "wil", 6, 45)
 	end,
-	getResistPenetration = function(self, t)
-		return self:combatTalentStatDamage(t, "wil", 30, 80)
-	end,
+	getResistPenetration = function(self, t) return self:combatLimit(self:combatTalentStatDamage(t, "wil", 30, 80), 100, 0, 0, 55, 55) end, -- Limit < 100%
 	action = function(self, t)
 		local range = self:getTalentRange(t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
@@ -81,15 +79,16 @@ newTalent{
 	mode = "passive",
 	require = cursed_str_req2,
 	points = 5,
-	range = function(self, t)
-		return math.floor(2 + 6 * (self:getTalentLevel(t) / 6.5))
-	end,
+	range = function(self, t) return math.floor(self:combatTalentScale(t, 2.5, 6.6)) end,
+	-- _M:combatSeeStealth and _M:combatSeeInvisible functions updated in mod.class.interface.Combat.lua
+	sensePower = function(self, t) return self:combatScale(self:getTalentLevel(t) * self:getWil(15, true), 5, 0, 80, 75) end,
 	info = function(self, t)
 		local range = self:getTalentRange(t)
+		local sense = t.sensePower(self, t)
 		return ([[Your preternatural senses aid you in your hunt for the next victim. You sense foes in a radius of %0.1f. You will always sense a stalked victim in a radius of 10.
 		Also increases stealth detection by %d and invisibility detection by %d.
 		Sealth and invisibility detection improves with your Willpower]]):
-		format(range, 5 + self:getTalentLevel(t) * self:getWil(15, true), 5 + self:getTalentLevel(t) * self:getWil(15, true))
+		format(range, sense, sense)
 	end,
 }
 
@@ -368,7 +367,7 @@ newTalent{
 	cooldown = 10,
 	no_energy = true,
 	getChance = function(self, t)
-		local chance = self:combatTalentStatDamage(t, "str", 12, 36)
+		local chance = self:combatLimit(self:combatTalentStatDamage(t, "str", 12, 36), 50, 0, 0, 26.45, 26.45) -- Limit <50% (56% with shield)
 		if self:hasShield() then
 			chance = chance + 6
 		end

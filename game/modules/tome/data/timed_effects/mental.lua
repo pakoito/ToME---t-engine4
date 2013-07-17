@@ -1873,6 +1873,35 @@ newEffect{
 }
 
 newEffect{
+	name = "GESTURE_OF_GUARDING", image = "talents/gesture_of_guarding.png",
+	desc = "Guarded",
+	long_desc = function(self, eff)
+		local xs = ""
+		local dam, deflects = eff.dam, eff.deflects
+		if deflects < 1 then -- Partial deflect has reduced effectiveness
+			dam = dam*math.max(0,deflects)
+			deflects = 1
+		end
+		if self:isTalentActive(self.T_GESTURE_OF_PAIN) then xs = (" with a %d%% chance to counterattack"):format(self:callTalent(self.T_GESTURE_OF_GUARDING,"getCounterAttackChance")) end
+		return ("Guarding against melee damage:  Will dismiss up to %d damage from the next %0.1f attack(s)%s."):format(dam, deflects, xs)
+	end,
+	charges = function(self, eff) return "#LIGHT_GREEN#"..math.ceil(eff.deflects) end,
+	type = "mental",
+	subtype = { curse=true },
+	status = "beneficial",
+	decrease = 0,
+	no_stop_enter_worlmap = true, no_stop_resting = true,
+	parameters = {dam = 1, deflects = 1},
+	activate = function(self, eff)
+		eff.dam = self:callTalent(self.T_GESTURE_OF_GUARDING,"getDamageChange")
+		eff.deflects = self:callTalent(self.T_GESTURE_OF_GUARDING,"getDeflects")
+		if eff.dam <= 0 or eff.deflects <= 0 then eff.dur = 0 end
+	end,
+	deactivate = function(self, eff)
+	end,
+}
+
+newEffect{
 	name = "RAMPAGE", image = "talents/rampage.png",
 	desc = "Rampaging",
 	long_desc = function(self, eff)

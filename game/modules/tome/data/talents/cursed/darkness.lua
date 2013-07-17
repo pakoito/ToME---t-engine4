@@ -146,7 +146,8 @@ local function getDamageIncrease(self)
 	t = self:getTalentFromId(self.T_DARK_TENDRILS)
 	if t then total = total + self:getTalentLevelRaw(t) end
 	
-	return total * 2
+	return self:combatScale(total, 5, 1, 40, 20) --I5
+--I5	return total * 2
 end
 
 newTalent{
@@ -287,7 +288,8 @@ newTalent{
 	end,
 
 	getDarkCount = function(self, t)
-		return 1 + math.floor(self:getTalentLevel(t))
+--I5		return 1 + math.floor(self:getTalentLevel(t))
+		return math.floor(self:combatTalentScale(t, 2, 6, "log")) --I5
 	end,
 	getDamage = function(self, t)
 		return self:combatTalentMindDamage(t, 0, 60)
@@ -351,10 +353,12 @@ newTalent{
 	mode = "passive",
 	random_ego = "attack",
 	range = function(self, t)
-		return 1 + self:getTalentLevelRaw(t)
+--I5		return 1 + self:getTalentLevelRaw(t)
+		return math.floor(self:combatTalentScale(t, 2, 6)) --I5
 	end,
 	getMovementSpeedChange = function(self, t)
-		return self:getTalentLevel(t) * 0.5
+--I5		return self:getTalentLevel(t) * 0.5
+		return self:combatTalentScale(t, 0.75, 2.5, 0.75) --I5
 	end,
 	info = function(self, t)
 		local range = self:getTalentRange(t)
@@ -436,7 +440,8 @@ newTalent{
 	direct_hit = true,
 	requires_target = true,
 	getPinDuration = function(self, t)
-		return 2 + math.floor(self:getTalentLevel(t) / 2)
+--I5		return 2 + math.floor(self:getTalentLevel(t) / 2)
+		return math.floor(self:combatTalentScale(t, 2.5, 4.5)) --I5
 	end,
 	getDamage = function(self, t)
 		return self:combatTalentMindDamage(t, 0, 80)

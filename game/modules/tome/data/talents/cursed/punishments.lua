@@ -311,12 +311,8 @@ newTalent{
 	mode = "passive",
 	require = cursed_cun_req4,
 	points = 5,
-	getChance = function(self, t)
-		return math.sqrt(self:getTalentLevel(t)) * 8
-	end,
-	getMindResistChange = function(self, t)
-		return -math.min(5, self:getTalentLevelRaw(t)) * 10
-	end,
+	getChance = function(self, t) return self:combatLimit(self:getTalentLevel(t)^0.5, 100, 8, 1, 17.9, 2.23) end, -- Limit < 100%
+	getMindResistChange = function(self, t) return -self:combatTalentLimit(t, 50, 15, 35) end, -- Limit < 50%
 	doMadness = function(target, t, src)
 		local chance = t.getChance(src, t)
 		if target and src and target:reactionToward(src) < 0 and src:checkHit(src:combatMindpower(), target:combatMentalResist(), 0, chance, 5) then
@@ -325,7 +321,7 @@ newTalent{
 			if effect == 1 then
 				-- confusion
 				if target:canBe("confusion") and not target:hasEffect(target.EFF_MADNESS_CONFUSED) then
-					target:setEffect(target.EFF_MADNESS_CONFUSED, 3, {power=70, mindResistChange=mindResistChange})
+					target:setEffect(target.EFF_MADNESS_CONFUSED, 3, {power=50, mindResistChange=mindResistChange}) -- Consistent with other confusion
 					hit = true
 				end
 			elseif effect == 2 then

@@ -29,12 +29,13 @@ newTalent{
 	hate = 2,
 	tactical = { ATTACK = { PHYSICAL = 2 } },
 	requires_target = true,
+	-- note that EFF_CURSED_WOUND in mod.data.timed_effects.physical.lua has a cap of -75% healing per application
 	getDamageMultiplier = function(self, t, hate)
 		return 1 + self:combatTalentIntervalDamage(t, "str", 0.3, 1.5, 0.4) * getHateMultiplier(self, 0.3, 1, false, hate)
 	end,
 	getHealFactorChange = function(self, t)
 		local level = math.max(3 * self:getTalentTypeMastery(t.type[1]), self:getTalentLevel(t))
-		return -math.sqrt(level - 2) * 0.15
+		return -self:combatLimit(math.max(0,(level-2)^0.5), 1, 0, 0, 0.26, 1.73)  -- Limit < -100%
 	end,
 	getWoundDuration = function(self, t)
 		return 15
@@ -82,7 +83,7 @@ newTalent{
 	end,
 	getAttackChange = function(self, t)
 		local level = math.max(3 * self:getTalentTypeMastery(t.type[1]) - 2, self:getTalentLevel(t) - 2)
-		return -self:rescaleDamage((math.sqrt(level) - 0.5) * 15 * ((100 + self:getStat("str")) / 200))
+		return -self:combatScale(math.max(0,level^0.5 - 0.5) * 15 * (100 + self:getStr()), 0, 0, 20.77, 3696, 0.67)
 	end,
 	range = 0,
 	radius = 1,
@@ -138,16 +139,14 @@ newTalent{
 	random_ego = "attack",
 	cooldown = 15,
 	hate = 5,
-	range = function(self, t) return 3 + self:getTalentLevelRaw(t) end,
+	range = function(self, t) return math.floor(self:combatTalentScale(t, 4, 8)) end,
 	tactical = { CLOSEIN = 2 },
 	requires_target = true,
 	getDamageMultiplier = function(self, t, hate)
 		return 0.7 * getHateMultiplier(self, 0.5, 1, false, hate)
 		--return self:combatTalentIntervalDamage(t, "str", 0.8, 1.7, 0.4) * getHateMultiplier(self, 0.5, 1, false, hate)
 	end,
-	getMaxAttackCount = function(self, t)
-		return 1 + self:getTalentLevelRaw(t)
-	end,
+	getMaxAttackCount = function(self, t) return math.floor(self:combatTalentScale(t, 2, 6, "log")) end,
 	action = function(self, t)
 		local targeting = {type="bolt", range=self:getTalentRange(t), nolock=true}
 		local targetX, targetY, actualTarget = self:getTarget(targeting)
@@ -286,15 +285,14 @@ newTalent{
 	points = 5,
 	cooldown = 10,
 	no_energy = true,
-	getChance = function(self, t)
+	getChance = function(self, t, has2h)
 		local chance = self:combatTalentIntervalDamage(t, "str", 10, 38, 0.4)
-		if self:hasTwoHandedWeapon() then
-			chance = chance + 15
-		end
+		if (not has2h and self:hasTwoHandedWeapon()) or (has2h and has2h > 0) then chance = chance + 15 end
+		chance = self:combatLimit(chance, 100, 0, 0, 25.18, 25.18) -- Limit < 100%
 		return chance
 	end,
 	getDamageMultiplier = function(self, t, hate)
-		local damageMultiplier = self:combatTalentIntervalDamage(t, "str", 0.3, 0.9, 0.4) * getHateMultiplier(self, 0.5, 1.0, false, hate)
+		local damageMultiplier = self:combatLimit(self:getTalentLevel(t) * self:getStr()*getHateMultiplier(self, 0.5, 1.0, false, hate), 1, 0, 0, 0.79, 500) -- Limit < 100%
 		if self:hasTwoHandedWeapon() then
 			damageMultiplier = damageMultiplier + 0.25
 		end
@@ -353,10 +351,12 @@ newTalent{
 		inCleave = false
 	end,
 	info = function(self, t)
-		local chance = t.getChance(self, t)
-		return ([[While active, every swing of your weapon has a %d%% chance of striking a second nearby target for %d%% (at 0 Hate) to %d%% (at 100+ Hate) damage. The recklessness of your attacks brings you bad luck (luck -3). 
+		local chance = t.getChance(self, t, 0)
+		local chance2h = t.getChance(self, t, 1)
+		return ([[While active, every swing of your weapon has a %d%% (if one-handed) or %d%% (if two-handed) chance of striking a second nearby target for %d%% (at 0 Hate) to %d%% (at 100+ Hate) damage (+25%% for two-handed weapons). The recklessness of your attacks brings you bad luck (luck -3). 
 		Cleave, Repel and Surge cannot be active simultaneously, and activating one will place the others in cooldown.
-		The Cleave chance and damage increase with your Strength, and when wielding a two-handed weapon (+15%% chance, +25%% damage).]]):format(chance, t.getDamageMultiplier(self, t, 0) * 100, t.getDamageMultiplier(self, t, 100) * 100)
+		The Cleave chance and damage increase with your Strength.]]):
+		format(chance, chance2h, t.getDamageMultiplier(self, t, 0) * 100, t.getDamageMultiplier(self, t, 100) * 100)
 	end,
 }
 

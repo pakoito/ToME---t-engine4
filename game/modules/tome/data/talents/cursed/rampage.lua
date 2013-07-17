@@ -32,12 +32,8 @@ newTalent{
 	getMaxDuration = function(self, t)
 		return 8
 	end,
-	getMovementSpeedChange = function(self, t)
-		return math.pow(self:getTalentLevel(t), 0.5) * 1.4
-	end,
-	getCombatPhysSpeedChange = function(self, t)
-		return math.pow(self:getTalentLevel(t), 0.5) * 0.224
-	end,
+	getMovementSpeedChange = function(self, t) return self:combatTalentScale(t, 1.4, 3.13, 0.75) end, --Nerf this?
+	getCombatPhysSpeedChange = function(self, t) return self:combatTalentScale(t, 0.224, 0.5, 0.75) end,
 	on_pre_use = function(self, t, silent)
 		if self:hasEffect(self.EFF_RAMPAGE) then 
 			if not silent then game.logPlayer(self, "You are already rampaging!") end
@@ -106,15 +102,9 @@ newTalent{
 	end,
 	on_unlearn = function(self, t)
 	end,
-	getPhysicalDamageChange = function(self, t)
-		return math.pow(self:getTalentLevel(t), 0.7) * 12
-	end,
-	getCombatPhysResistChange = function(self, t)
-		return math.pow(self:getTalentLevel(t), 0.7) * 6
-	end,
-	getCombatMentalResistChange = function(self, t)
-		return math.pow(self:getTalentLevel(t), 0.7) * 6
-	end,
+	getPhysicalDamageChange = function(self, t) return self:combatTalentScale(t, 12, 37) end,
+	getCombatPhysResistChange = function(self, t) return self:combatTalentScale(t, 6, 18.5, 0.75) end,
+	getCombatMentalResistChange = function(self, t) return self:combatTalentScale(t, 6, 18.5, 0.75) end,
 	info = function(self, t)
 		local physicalDamageChange = t.getPhysicalDamageChange(self, t)
 		local combatPhysResistChange = t.getCombatPhysResistChange(self, t)

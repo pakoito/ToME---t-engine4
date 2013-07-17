@@ -23,6 +23,7 @@ local Entity = require "engine.Entity"
 local Chat = require "engine.Chat"
 local Map = require "engine.Map"
 local Level = require "engine.Level"
+local Combat = require "mod.class.interface.Combat"
 
 newEffect{
 	name = "INFUSION_COOLDOWN", image = "effects/infusion_cooldown.png",
@@ -650,8 +651,8 @@ newEffect{
 	decrease = 0,
 	no_remove = true,
 	cancel_on_level_change = true,
-	parameters = {},
-	getResistsUndead = function(level) return -2 * level end,
+	parameters = {Penalty = 1},
+	getResistsUndead = function(eff, level) return -2 * level * (eff.Penalty or 1) end,
 	getIncDamageUndead = function(level) return 2 + level * 2 end,
 	getLckChange = function(eff, level)
 		if eff.unlockLevel >= 5 or level <= 2 then return -1 end
@@ -659,22 +660,18 @@ newEffect{
 	end,
 	getStrChange = function(level) return level end,
 	getMagChange = function(level) return level end,
-	getCorpselightRadius = function(level) return level + 1 end,
-	getReprieveChance = function(level) return 35 + (level - 4) * 15 end,
-	display_desc = function(self, eff)
-		return ([[Curse of Corpses %d]]):format(eff.level)
-	end,
+	getCorpselightRadius = function(level) return math.floor(level + 1) end,
+	getReprieveChance = function(level) return Combat:combatLimit(level-4, 100, 35, 0, 50, 5)  end, -- Limit < 100%
+	display_desc = function(self, eff) return ([[Curse of Corpses (power %0.1f)]]):format(eff.level) end,
 	long_desc = function(self, eff)
 		local def, level, bonusLevel = self.tempeffect_def[self.EFF_CURSE_OF_CORPSES], eff.level, math.min(eff.unlockLevel, eff.level)
-
-		return ([[An aura of death surrounds you. #LIGHT_BLUE#Level %d%s#WHITE#
-#CRIMSON#Penalty: #WHITE#Fear of Death: %+d%% resistance against damage from the undead.
-#CRIMSON#Level 1: %sPower over Death: %+d%% damage against the undead.
-#CRIMSON#Level 2: %s%+d Luck, %+d Strength, %+d Magic
-#CRIMSON#Level 3: %sCorpselight: Each death you cause leaves behind a trace of itself, an eerie light of radius %d.
-#CRIMSON#Level 4: %sReprieve from Death: Humanoids you slay have a %d%% chance to rise to fight beside you as ghouls for 6 turns.]]):format(
-		level, self.cursed_aura == self.EFF_CURSE_OF_CORPSES and ", Cursed Aura" or "",
-		def.getResistsUndead(level),
+		return ([[An aura of death surrounds you.
+#CRIMSON#Penalty : #WHITE#Fear of Death: %+d%% resistance against damage from the undead.
+#CRIMSON#Power 1+: %sPower over Death: %+d%% damage against the undead.
+#CRIMSON#Power 2+: %s%+d Luck, %+d Strength, %+d Magic
+#CRIMSON#Power 3+: %sCorpselight: Each death you cause leaves behind a trace of itself, an eerie light of radius %d.
+#CRIMSON#Power 4+: %sReprieve from Death: Humanoids you slay have a %d%% chance to rise to fight beside you as ghouls for 6 turns.]]):format(
+		def.getResistsUndead(eff, level),
 		bonusLevel >= 1 and "#WHITE#" or "#GREY#", def.getIncDamageUndead(math.max(level, 1)),
 		bonusLevel >= 2 and "#WHITE#" or "#GREY#", def.getLckChange(eff, math.max(level, 2)), def.getStrChange(math.max(level, 2)), def.getMagChange(math.max(level, 2)),
 		bonusLevel >= 3 and "#WHITE#" or "#GREY#", def.getCorpselightRadius(math.max(level, 3)),
@@ -684,7 +681,7 @@ newEffect{
 		local def, level, bonusLevel = self.tempeffect_def[self.EFF_CURSE_OF_CORPSES], eff.level, math.min(eff.unlockLevel, eff.level)
 
 		-- penalty: Fear of Death
-		eff.resistsUndeadId = self:addTemporaryValue("resists_actor_type", { ["undead"] = def.getResistsUndead(level) })
+		eff.resistsUndeadId = self:addTemporaryValue("resists_actor_type", { ["undead"] = def.getResistsUndead(eff,level) })
 
 		-- level 1: Power over Death
 		if bonusLevel < 1 then return end
@@ -788,31 +785,30 @@ newEffect{
 	decrease = 0,
 	no_remove = true,
 	cancel_on_level_change = true,
-	parameters = {},
-	getMindResistChange = function(level) return -level * 3 end,
-	getConfusionImmuneChange = function(level) return -level * 0.04 end,
+	parameters = {Penalty = 1},
+	getMindResistChange = function(eff, level) return -level * 3 * (eff.Penalty or 1) end,
+	getConfusionImmuneChange = function(eff, level) return -level * 0.04 * (eff.Penalty or 1) end,
 	getCombatCriticalPowerChange = function(level) return level * 3 end,
-	getOffHandMultChange = function(level) return level * 4 end,
+	-- called by _M:getOffHandMult in mod.class.interface.Combat.lua
+	getOffHandMultChange = function(level) return Combat:combatTalentLimit(level, 50, 4, 20) end, -- Limit < 50%
 	getLckChange = function(eff, level)
 		if eff.unlockLevel >= 5 or level <= 2 then return -1 end
 		if level <= 3 then return -2 else return -3 end
 	end,
 	getDexChange = function(level) return -1 + level * 2 end,
-	getManiaDamagePercent = function(level) return 16 - (level - 4) * 3 end,
-	display_desc = function(self, eff)
-		return ([[Curse of Madness %d]]):format(eff.level)
+	getManiaDamagePercent = function(level) 
+		return Combat:combatLimit(level - 4, 5, 13, 1, 8, 5) -- Limit > 5%
 	end,
+	display_desc = function(self, eff) return ([[Curse of Madness (power %0.1f)]]):format(eff.level) end,
 	long_desc = function(self, eff)
 		local def, level, bonusLevel = self.tempeffect_def[self.EFF_CURSE_OF_MADNESS], eff.level, math.min(eff.unlockLevel, eff.level)
-
-		return ([[You feel your grip on reality slipping. #LIGHT_BLUE#Level %d%s#WHITE#
-#CRIMSON#Penalty: #WHITE#Fractured Sanity: %+d%% Mind Resistance, %+d%% Confusion Immunity
-#CRIMSON#Level 1: %sUnleashed: %+d%% critical damage, %+d%% off-hand weapon damage
-#CRIMSON#Level 2: %s%+d Luck, %+d Dexterity
-#CRIMSON#Level 3: %sConspirator: When you are confused, any foe that hits you or that you hit in melee becomes confused.
-#CRIMSON#Level 4: %sMania: Any time you take more than %d%% damage during a single turn, the remaining cooldown of one of your talents is reduced by 1.]]):format(
-		level, self.cursed_aura == self.EFF_CURSE_OF_MADNESS and ", Cursed Aura" or "",
-		def.getMindResistChange(level), def.getConfusionImmuneChange(level) * 100,
+		return ([[You feel your grip on reality slipping.
+#CRIMSON#Penalty : #WHITE#Fractured Sanity: %+d%% Mind Resistance, %+d%% Confusion Immunity
+#CRIMSON#Power 1+: %sUnleashed: %+d%% critical damage, %+d%% off-hand weapon damage
+#CRIMSON#Power 2+: %s%+d Luck, %+d Dexterity
+#CRIMSON#Power 3+: %sConspirator: When you are confused, any foe that hits you or that you hit in melee becomes confused.
+#CRIMSON#Power 4+: %sMania: Any time you lose more than %0.1f%% of your life over a single turn, the remaining cooldown of one of your talents is reduced by 1.]]):format(
+		def.getMindResistChange(eff, level), def.getConfusionImmuneChange(eff, level) * 100,
 		bonusLevel >= 1 and "#WHITE#" or "#GREY#", def.getCombatCriticalPowerChange(math.max(level, 1)), def.getOffHandMultChange(math.max(level, 1)),
 		bonusLevel >= 2 and "#WHITE#" or "#GREY#", def.getLckChange(eff, math.max(level, 2)), def.getDexChange(math.max(level, 2)),
 		bonusLevel >= 3 and "#WHITE#" or "#GREY#",
@@ -825,8 +821,8 @@ newEffect{
 		eff.last_life = self.life
 
 		-- penalty: Fractured Sanity
-		eff.mindResistId = self:addTemporaryValue("resists", { [DamageType.MIND] = def.getMindResistChange(level) })
-		eff.confusionImmuneId = self:addTemporaryValue("confusion_immune", def.getConfusionImmuneChange(level) )
+		eff.mindResistId = self:addTemporaryValue("resists", { [DamageType.MIND] = def.getMindResistChange(eff, level) })
+		eff.confusionImmuneId = self:addTemporaryValue("confusion_immune", def.getConfusionImmuneChange(eff, level) )
 
 		-- level 1: Twisted Mind
 		if bonusLevel < 1 then return end
@@ -880,11 +876,12 @@ newEffect{
 	on_merge = function(self, old_eff, new_eff) return old_eff end,
 	doConspirator = function(self, eff, target)
 		if math.min(eff.unlockLevel, eff.level) >= 3 and self:attr("confused") and target:canBe("confusion") then
-			target:setEffect(target.EFF_CONFUSED, 3, {power=60})
+			target:setEffect(target.EFF_CONFUSED, 3, {power=50}) -- Make consistent
 			game.logSeen(self, "#F53CBE#%s spreads confusion to %s.", self.name:capitalize(), target.name)
 		end
 	end,
 }
+
 
 newEffect{
 	name = "CURSE_OF_SHROUDS",
@@ -897,10 +894,10 @@ newEffect{
 	decrease = 0,
 	no_remove = true,
 	cancel_on_level_change = true,
-	parameters = {},
-	getShroudIncDamageChange = function(level) return -(4 + level * 2) end,
+	parameters = {Penalty = 1},
+	getShroudIncDamageChange = function(eff, level) return -(4 + level * 2) * (eff.Penalty or 1) end,
 	getResistsDarknessChange = function(level) return level * 4 end,
-	getResistsCapDarknessChange = function(level) return level * 4 end,
+	getResistsCapDarknessChange = function(level) return Combat:combatTalentLimit(level, 30, 4, 12) end, -- Limit < 30%
 	getSeeInvisible = function(level) return 2 + level * 2 end,
 	getLckChange = function(eff, level)
 		if eff.unlockLevel >= 5 or level <= 2 then return -1 end
@@ -908,20 +905,16 @@ newEffect{
 	end,
 	getConChange = function(level) return -1 + level * 2 end,
 	getShroudResistsAllChange = function(level) return (level - 1) * 5 end,
-	display_desc = function(self, eff)
-		return ([[Curse of Shrouds %d]]):format(eff.level)
-	end,
+	display_desc = function(self, eff) return ([[Curse of Shrouds (power %0.1f)]]):format(eff.level) end,
 	long_desc = function(self, eff)
 		local def, level, bonusLevel = self.tempeffect_def[self.EFF_CURSE_OF_SHROUDS], eff.level, math.min(eff.unlockLevel, eff.level)
-
-		return ([[A shroud of darkness seems to fall across your path. #LIGHT_BLUE#Level %d%s#WHITE#
-#CRIMSON#Penalty: #WHITE#Shroud of Weakness: Small chance of becoming enveloped in a Shroud of Weakness (reduces damage dealt by %d%%) for 4 turns.
-#CRIMSON#Level 1: %sNightwalker: %+d Darkness Resistance, %+d%% Max Darkness Resistance, %+d See Invisible
-#CRIMSON#Level 2: %s%+d Luck, %+d Constitution
-#CRIMSON#Level 3: %sShroud of Passing: Your form seems to fade as you move, reducing all damage taken by %d%% for 1 turn after movement.
-#CRIMSON#Level 4: %sShroud of Death: The power of every kill seems to envelop you like a shroud, reducing all damage taken by %d%% for 3 turns.]]):format(
-		level, self.cursed_aura == self.EFF_CURSE_OF_SHROUDS and ", Cursed Aura" or "",
-		-def.getShroudIncDamageChange(level),
+		return ([[A shroud of darkness seems to fall across your path.
+#CRIMSON#Penalty : #WHITE#Shroud of Weakness: Small chance of becoming enveloped in a Shroud of Weakness (reduces damage dealt by %d%%) for 4 turns.
+#CRIMSON#Power 1+: %sNightwalker: %+d Darkness Resistance, %+d%% Max Darkness Resistance, %+d See Invisible
+#CRIMSON#Power 2+: %s%+d Luck, %+d Constitution
+#CRIMSON#Power 3+: %sShroud of Passing: Your form seems to fade as you move, reducing all damage taken by %d%% for 1 turn after movement.
+#CRIMSON#Power 4+: %sShroud of Death: The power of every kill seems to envelop you like a shroud, reducing all damage taken by %d%% for 3 turns.]]):format(
+		-def.getShroudIncDamageChange(eff, level),
 		bonusLevel >= 1 and "#WHITE#" or "#GREY#", def.getResistsDarknessChange(math.max(level, 1)), def.getResistsCapDarknessChange(math.max(level, 1)), def.getSeeInvisible(math.max(level, 1)),
 		bonusLevel >= 2 and "#WHITE#" or "#GREY#", def.getLckChange(eff, math.max(level, 2)), def.getConChange(math.max(level, 2)),
 		bonusLevel >= 3 and "#WHITE#" or "#GREY#", def.getShroudResistsAllChange(math.max(level, 3)),
@@ -963,7 +956,7 @@ newEffect{
 		-- Shroud of Weakness
 		if rng.chance(100) then
 			local def = self.tempeffect_def[self.EFF_CURSE_OF_SHROUDS]
-			self:setEffect(self.EFF_SHROUD_OF_WEAKNESS, 4, { power=def.getShroudIncDamageChange(eff.level) })
+			self:setEffect(self.EFF_SHROUD_OF_WEAKNESS, 4, { power=def.getShroudIncDamageChange(eff, eff.level) })
 		end
 	end,
 	doShroudOfPassing = function(self, eff)
@@ -1046,37 +1039,39 @@ newEffect{
 	decrease = 0,
 	no_remove = true,
 	cancel_on_level_change = true,
-	parameters = {},
-	getVisionsReduction = function(level) return 5 + level * 4 end,
+	parameters = {Penalty = 1},
+	-- called by _M:combatMentalResist in mod.class.interface.Combat.lua
+	getVisionsReduction = function(eff, level)
+		return Combat:combatTalentLimit(level, 100, 9, 25) * (eff.Penalty or 1) -- Limit < 100%
+	end,
 	getResistsPhysicalChange = function(level) return 1 + level end,
-	getResistsCapPhysicalChange = function(level) return 1 + level end,
+	getResistsCapPhysicalChange = function(level) return Combat:combatTalentLimit(level, 30, 1, 5) end, -- Limit < 30%
 	getLckChange = function(eff, level)
 		if eff.unlockLevel >= 5 or level <= 2 then return -1 end
 		if level <= 3 then return -2 else return -3 end
 	end,
 	getWilChange = function(level) return -1 + level * 2 end,
-	getBaseSuffocateAirChange = function(level) return 10 + (level - 3) * 3 end,
-	getSuffocateAirChange = function(level) return 3 + (level - 3) * 2 end,
-	getNightmareChance = function(level) return 0.1 + (level -4) * 0.05 end,
+	getBaseSuffocateAirChange = function(level) return Combat:combatTalentLimit(level, 50, 4, 16) end, -- Limit < 50 to take >2 hits to kill most monsters
+	getSuffocateAirChange = function(level) return Combat:combatTalentLimit(level, 10, 0, 7) end, -- Limit < 10
+	getNightmareChance = function(level) return Combat:combatTalentLimit(math.max(0, level-4), 25, 3, 10) end, -- Limit < 25%
 	getNightmareRadius = function(level) return 5 + (level - 4) * 2 end,
 	display_desc = function(self, eff)
 		if math.min(eff.unlockLevel, eff.level) >= 4 then
-			return ([[Curse of Nightmares %d: %d%%]]):format(eff.level, eff.nightmareChance or 0)
+			return ([[Curse of Nightmares (power %0.1f): %d%%]]):format(eff.level, eff.nightmareChance or 0)
 		else
-			return ([[Curse of Nightmares %d]]):format(eff.level)
+			return ([[Curse of Nightmares (power %0.1f)]]):format(eff.level)
 		end
 	end,
 	long_desc = function(self, eff)
 		local def, level, bonusLevel = self.tempeffect_def[self.EFF_CURSE_OF_NIGHTMARES], eff.level, math.min(eff.unlockLevel, eff.level)
 
-		return ([[Horrible visions fill your mind. #LIGHT_BLUE#Level %d%s#WHITE#
-#CRIMSON#Penalty: #WHITE#Plagued by Visions: Your mental save has a 20%% chance to be reduced by %d%% when tested.
-#CRIMSON#Level 1: %sRemoved from Reality: %+d Physical Resistance, %+d Maximum Physical Resistance
-#CRIMSON#Level 2: %s%+d Luck, %+d Willpower
-#CRIMSON#Level 3: %sSuffocate: Your touch instills a horror that suffocates any weak, non-elite foe that hits you or that you hit in melee. At 3 levels below yours they lose %d air and an additional %d air for each level below that.
-#CRIMSON#Level 4: %sNightmare: Each time you are damaged by a foe there is %d%% chance of triggering a radius %d nightmare (slow effects, hateful whispers, and summoned Terrors) for 8 turns. This chance grows each time you are struck.]]):format(
-		level, self.cursed_aura == self.EFF_CURSE_OF_NIGHTMARES and ", Cursed Aura" or "",
-		def.getVisionsReduction(level),
+		return ([[Horrible visions fill your mind.
+#CRIMSON#Penalty : #WHITE#Plagued by Visions: Your mental save has a 20%% chance to be reduced by %d%% when tested.
+#CRIMSON#Power 1+: %sRemoved from Reality: %+d Physical Resistance, %+d Maximum Physical Resistance
+#CRIMSON#Power 2+: %s%+d Luck, %+d Willpower
+#CRIMSON#Power 3+: %sSuffocate: Your touch instills a horror that suffocates any weak, non-elite foe that hits you or that you hit in melee. At 3 levels below yours they lose %d air and an additional %d air for each level below that.
+#CRIMSON#Power 4+: %sNightmare: Each time you are damaged by a foe there is a chance (currently %d%%) of triggering a radius %d nightmare (slow effects, hateful whispers, and summoned Terrors) for 8 turns. This chance grows each time you are struck but fades over time.]]):format(
+		def.getVisionsReduction(eff, level),
 		bonusLevel >= 1 and "#WHITE#" or "#GREY#", def.getResistsPhysicalChange(math.max(level, 1)), def.getResistsCapPhysicalChange(math.max(level, 1)),
 		bonusLevel >= 2 and "#WHITE#" or "#GREY#", def.getLckChange(eff, math.max(level, 2)), def.getWilChange(math.max(level, 2)),
 		bonusLevel >= 3 and "#WHITE#" or "#GREY#", def.getBaseSuffocateAirChange(math.max(level, 3)), def.getSuffocateAirChange(math.max(level, 3)),
@@ -1112,7 +1107,7 @@ newEffect{
 		if math.min(eff.unlockLevel, eff.level) >= 3 then
 			if target and target.rank <= 2 and target.level <= self.level - 3 and not target:attr("no_breath") and not target:attr("invulnerable") then
 				local def = self.tempeffect_def[self.EFF_CURSE_OF_NIGHTMARES]
-				local airLoss = def.getBaseSuffocateAirChange(eff.level) + (self.level - target.level - 3) * def.getSuffocateAirChange(eff.level)
+				local airLoss = def.getBaseSuffocateAirChange(eff.level) + Combat:combatTalentScale(self.level - target.level - 3, 1, 5) * def.getSuffocateAirChange(eff.level)
 				game.logSeen(self, "#F53CBE#%s begins to choke from a suffocating curse. (-%d air)", target.name, airLoss)
 				target:suffocate(airLoss, self, "suffocated from a curse")
 			end
@@ -1147,6 +1142,10 @@ newEffect{
 		resolvers.talents{
 		},
 	},
+	on_timeout = function(self, eff) -- Chance for nightmare fades over time
+		if eff.nightmareChance then eff.nightmareChance = math.max(0, eff.nightmareChance-1) end
+	end,
+	-- called by _M:onTakeHit function in in mod.class.Actor.lua
 	doNightmare = function(self, eff)
 		if math.min(eff.unlockLevel, eff.level) >= 4 then
 			-- build chance for a nightmare
@@ -1219,6 +1218,7 @@ newEffect{
 	end,
 }
 
+
 newEffect{
 	name = "CURSE_OF_MISFORTUNE",
 	desc = "Curse of Misfortune",
@@ -1230,7 +1230,9 @@ newEffect{
 	decrease = 0,
 	no_remove = true,
 	cancel_on_level_change = true,
-	parameters = {},
+	parameters = {Penalty = 1},
+	getMoneyMult = function(eff, level) return Combat:combatTalentLimit(level, 1, 0.15, 0.35) * (eff.Penalty or 1)end, -- Limit < 1 bug fix
+	
 	getCombatDefChange = function(level) return level * 2 end,
 	getCombatDefRangedChange = function(level) return level end,
 	getLckChange = function(eff, level)
@@ -1238,22 +1240,19 @@ newEffect{
 		if level <= 3 then return -2 else return -3 end
 	end,
 	getCunChange = function(level) return -1 + level * 2 end,
-	getDeviousMindChange = function(level) return 20 + 15 * (level - 3) end,
-	getUnfortunateEndChance = function(level) return 30 + (level - 4) * 10 end,
-	getUnfortunateEndIncrease = function(level) return 40 + (level - 4) * 20 end,
-	display_desc = function(self, eff)
-		return ([[Curse of Misfortune %d]]):format(eff.level)
-	end,
+	getDeviousMindChange = function(level) return Combat:combatTalentLimit(math.max(1,level-3), 100, 35, 55) end, -- Limit < 100%
+	getUnfortunateEndChance = function(level) return Combat:combatTalentLimit(math.max(1, level-3), 100, 30, 40) end, -- Limit < 50%
+	getUnfortunateEndIncrease = function(level) return Combat:combatTalentLimit(math.max(1, level-3), 50, 30, 40) end, -- Limit < 50%
+	display_desc = function(self, eff) return ([[Curse of Misfortune (power %0.1f)]]):format(eff.level) end,
 	long_desc = function(self, eff)
 		local def, level, bonusLevel = self.tempeffect_def[self.EFF_CURSE_OF_MISFORTUNE], eff.level, math.min(eff.unlockLevel, eff.level)
 
-		return ([[Mayhem and destruction seem to follow you. #LIGHT_BLUE#Level %d%s#WHITE#
-#CRIMSON#Penalty: #WHITE#Lost Fortune: You seem to find less gold in your journeys.
-#CRIMSON#Level 1: %sMissed Opportunities: %+d Defense, +%d Ranged Defense
-#CRIMSON#Level 2: %s%+d Luck, %+d Cunning
-#CRIMSON#Level 3: %sDevious Mind: You have an affinity for seeing the devious plans of others (+%d%% chance to avoid traps).
-#CRIMSON#Level 4: %sUnfortunate End: There is a %d%% chance that the damage you deal will increase by %d%% if it is enough to kill your opponent.]]):format(
-		level, self.cursed_aura == self.EFF_CURSE_OF_MISFORTUNE and ", Cursed Aura" or "",
+		return ([[Mayhem and destruction seem to follow you.
+#CRIMSON#Penalty : #WHITE#Lost Fortune: You seem to find less gold in your journeys.
+#CRIMSON#Power 1+: %sMissed Opportunities: %+d Defense, +%d Ranged Defense
+#CRIMSON#Power 2+: %s%+d Luck, %+d Cunning
+#CRIMSON#Power 3+: %sDevious Mind: You have an affinity for seeing the devious plans of others (+%d%% chance to avoid traps).
+#CRIMSON#Power 4+: %sUnfortunate End: There is a %d%% chance that the damage you deal will increase by %d%% if the increase would be enough to kill your opponent.]]):format(
 		bonusLevel >= 1 and "#WHITE#" or "#GREY#", def.getCombatDefChange(math.max(level, 1)), def.getCombatDefRangedChange(math.max(level, 1)),
 		bonusLevel >= 2 and "#WHITE#" or "#GREY#", def.getLckChange(eff, math.max(level, 2)), def.getCunChange(math.max(level, 2)),
 		bonusLevel >= 3 and "#WHITE#" or "#GREY#", def.getDeviousMindChange(math.max(level, 3)),
@@ -1263,7 +1262,7 @@ newEffect{
 		local def, level, bonusLevel = self.tempeffect_def[self.EFF_CURSE_OF_MISFORTUNE], eff.level, math.min(eff.unlockLevel, eff.level)
 
 		-- penalty: Lost Fortune
-		eff.moneyValueMultiplierId = self:addTemporaryValue("money_value_multiplier", 0.5 - level * 0.05)
+		eff.moneyValueMultiplierId = self:addTemporaryValue("money_value_multiplier", -def.getMoneyMult(eff, level))
 
 		-- level 1: Missed Shot
 		if bonusLevel < 1 then return end
@@ -1279,7 +1278,7 @@ newEffect{
 
 		-- level 3: Devious Mind
 		if bonusLevel < 3 then return end
-		eff.trapAvoidanceId = self:addTemporaryValue("trap_avoidance", 50)
+		eff.trapAvoidanceId = self:addTemporaryValue("trap_avoidance", def.getDeviousMindChange(level))
 
 		-- level 4: Unfortunate End
 	end,
@@ -1291,6 +1290,8 @@ newEffect{
 		if eff.trapAvoidanceId then self:removeTemporaryValue("trap_avoidance", eff.trapAvoidanceId) end
 	end,
 	on_merge = function(self, old_eff, new_eff) return old_eff end,
+	
+	-- called by default projector in mod.data.damage_types.lua
 	doUnfortunateEnd = function(self, eff, target, dam)
 		if math.min(eff.unlockLevel, eff.level) >=4 then
 			local def = self.tempeffect_def[self.EFF_CURSE_OF_MISFORTUNE]

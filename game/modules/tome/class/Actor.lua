@@ -462,6 +462,7 @@ function _M:actBase()
 		end
 	end
 
+	if self:knowTalent(self.T_GESTURE_OF_GUARDING) then self:setEffect(self.EFF_GESTURE_OF_GUARDING,1,{}) end
 	if self:knowTalent(self.T_DUAL_WEAPON_DEFENSE) then self:setEffect(self.EFF_DUAL_WEAPON_DEFENSE,1,{}) end
 	if self:knowTalent(self.T_COUNTER_ATTACK) then self:setEffect(self.EFF_COUNTER_ATTACKING,1,{}) end 
 	if self:knowTalent(self.T_DEFENSIVE_THROW) then self:setEffect(self.EFF_DEFENSIVE_GRAPPLING,1,{}) end

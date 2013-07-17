@@ -146,14 +146,12 @@ newTalent{
 	cooldown = 6,
 	hate = 5,
 	tactical = { ATTACK = { PHYSICAL = 3 } },
-	getCooldownDuration = function(self, t)
-		return 3 + math.floor(self:getTalentLevel(t) * 0.75)
-	end,
+	getCooldownDuration = function(self, t) return math.floor(self:combatTalentScale(t, 3.75, 6.75, "log", 0, 1)) end,
 	getDamageMultiplier = function(self, t, hate)
 		return getHateMultiplier(self, 0.35, 0.67, false, hate)
 	end,
 	getTargetDamageChange = function(self, t)
-		return -self:combatTalentStatDamage(t, "wil", 0.7, 0.9)
+		return -self:combatLimit(self:combatTalentStatDamage(t, "wil", 0.7, 0.9), 1, 0, 0, 0.75, 0.87) -- Limit < 100%
 	end,
 	getDuration = function(self, t)
 		return 2

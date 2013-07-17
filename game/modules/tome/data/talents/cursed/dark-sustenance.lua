@@ -167,7 +167,7 @@ newTalent{
 	require = cursed_wil_req3,
 	points = 5,
 	getDamageGain = function(self, t)
-		return math.sqrt(self:getTalentLevel(t)) * 5 + self:combatMindpower() * 0.05
+		return self:combatLimit(self:getTalentLevel(t)^0.5 * 5 + self:combatMindpower() * 0.05, 100, 0, 0, 14, 14) -- Limit < 100%
 	end,
 	info = function(self, t)
 		local damageGain = t.getDamageGain(self, t)
@@ -183,10 +183,7 @@ newTalent{
 	require = cursed_wil_req4,
 	points = 5,
 	getResistGain = function(self, t)
-		return math.sqrt(self:getTalentLevel(t)) * 14 + self:combatMindpower() * 0.15
-	end,
-	getExtension = function(self, t)
-		return math.floor(self:getTalentLevel(t) - 1)
+		return self:combatLimit(self:getTalentLevel(t)^0.5 * 14 + self:combatMindpower() * 0.15, 100, 0, 0, 40, 40) -- Limit < 100%
 	end,
 	info = function(self, t)
 		local resistGain = t.getResistGain(self, t)

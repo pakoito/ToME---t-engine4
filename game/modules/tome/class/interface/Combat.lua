@@ -359,11 +359,6 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		end
 	end
 
-	if target.knowTalent and target:knowTalent(target.T_GESTURE_OF_GUARDING) then
-		local t = target:getTalentFromId(target.T_GESTURE_OF_GUARDING)
-		mult = mult * (100 + t.getDamageChange(target, t)) / 100
-	end
-
 	-- track weakness for hate bonus before the target removes it
 	local effGloomWeakness = target:hasEffect(target.EFF_GLOOM_WEAKNESS)
 
@@ -395,6 +390,12 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 				dam = math.max(dam - deflect,0)
 				print("[ATTACK] after DUAL_WEAPON_DEFENSE", dam)
 			end 
+		end
+		if target.knowTalent and target:hasEffect(target.EFF_GESTURE_OF_GUARDING) then
+			local deflected = math.min(dam, target:callTalent(target.T_GESTURE_OF_GUARDING, "doGuard"))
+			game.logSeen(target, "%s dismisses %d damage from %s's attack with a sweeping gesture.", target.name:capitalize(), deflected, self.name:capitalize())
+			dam = dam - deflected
+			print("[ATTACK] after GESTURE_OF_GUARDING", dam)
 		end
 		print("[ATTACK] raw dam", dam, "versus", armor, pres, "with APR", apr)
 		armor = math.max(0, armor - apr)
@@ -771,7 +772,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	end 
 	
 	-- Gesture of Guarding counterattack
-	if hitted and not target.dead and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:knowTalent(target.T_GESTURE_OF_GUARDING) then
+	if hitted and not target.dead and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:hasEffect(target.EFF_GESTURE_OF_GUARDING) then
 		local t = target:getTalentFromId(target.T_GESTURE_OF_GUARDING)
 		t.on_hit(target, t, self)
 	end
@@ -1859,7 +1860,7 @@ end
 function _M:combatSeeStealth()
 	local bonus = 0
 	if self:knowTalent(self.T_PIERCING_SIGHT) then bonus = bonus + self:callTalent(self.T_PIERCING_SIGHT,"seePower") end
-	if self:knowTalent(self.T_PRETERNATURAL_SENSES) then bonus = bonus + 5 + self:getTalentLevel(self.T_PRETERNATURAL_SENSES) * self:getWil(15, true) end
+	if self:knowTalent(self.T_PRETERNATURAL_SENSES) then bonus = bonus + self:callTalent(self.T_PRETERNATURAL_SENSES, "sensePower") end
 	-- level 50 with 100 cun ==> 50
 	return self:combatScale(self.level/2 + self:getCun(25, true) + (self:attr("see_stealth") or 0), 0, 0, 50, 50) + bonus -- Note bonus scaled separately from talents
 end
@@ -1868,7 +1869,7 @@ end
 function _M:combatSeeInvisible()
 	local bonus = 0
 	if self:knowTalent(self.T_PIERCING_SIGHT) then bonus = bonus + self:callTalent(self.T_PIERCING_SIGHT,"seePower") end
-	if self:knowTalent(self.T_PRETERNATURAL_SENSES) then bonus = bonus + 5 + self:getTalentLevel(self.T_PRETERNATURAL_SENSES) * self:getWil(15, true) end
+	if self:knowTalent(self.T_PRETERNATURAL_SENSES) then bonus = bonus + self:callTalent(self.T_PRETERNATURAL_SENSES, "sensePower") end
 	return (self:attr("see_invisible") or 0) + bonus
 end
 

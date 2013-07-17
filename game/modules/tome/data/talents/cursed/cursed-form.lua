@@ -31,18 +31,16 @@ newTalent{
 	getHealPerKill = function(self, t)
 		return combatTalentDamage(self, t, 15, 50)
 	end,
-	getMaxUnnaturalBodyHeal = function(self, t)
-		return t.getHealPerKill(self, t) * 2
+	getMaxUnnaturalBodyHeal = function(self, t) -- Add up to 50% max life to pool
+		return t.getHealPerKill(self, t) * 2 + self:combatTalentLimit(t, .5, 0.01, 0.03) * self.max_life
 	end,
-	getRegenRate = function(self, t)
-		return 3 + math.sqrt(self:getTalentLevel(t) * 2) * math.min(1000, self.max_life) * 0.006
-	end,
+	getRegenRate = function(self, t) return 3 + combatTalentDamage(self, t, 15, 25) end,
 	updateHealingFactor = function(self, t)
 		local change = -0.5 + math.min(100, self:getHate()) * .005
 		self.healing_factor = (self.healing_factor or 1) - (self.unnatural_body_healing_factor or 0) + change
 		self.unnatural_body_healing_factor = change
 	end,
-	do_regenLife  = function(self, t)
+	do_regenLife  = function(self, t) -- called by _M:actBase in mod.class.Actor.lua
 		-- update healing factor
 		t.updateHealingFactor(self, t)
 
@@ -58,9 +56,9 @@ newTalent{
 			self.unnatural_body_heal = math.max(0, (self.unnatural_body_heal or 0) - heal)
 		end
 	end,
-	on_kill = function(self, t, target)
+	on_kill = function(self, t, target) -- called by _M:die in mod.class.Actor.lua
 		if target and target.max_life then
-			heal = math.min(t.getHealPerKill(self, t), target.max_life)
+			local heal = math.min(t.getHealPerKill(self, t), target.max_life)
 			if heal > 0 then
 				self.unnatural_body_heal = math.min(self.life, (self.unnatural_body_heal or 0) + heal)
 				self.unnatural_body_heal = math.min(self.unnatural_body_heal, t.getMaxUnnaturalBodyHeal(self, t))
@@ -72,7 +70,7 @@ newTalent{
 		local maxUnnaturalBodyHeal = t.getMaxUnnaturalBodyHeal(self, t)
 		local regenRate = t.getRegenRate(self, t)
 
-		return ([[Your body's strength is fed by your hatred. This causes most forms of healing to be between 50%% effective (at 0 Hate) to 100%% effective (at 100+ Hate). In addition, after each kill, you regenerate %d life (up to a maximum of %d) at a rate of %0.1f life per turn. This healing cannot be reduced by your hatred levels.
+		return ([[Your body's strength is fed by your hatred. This causes most forms of healing to be between 50%% effective (at 0 Hate) to 100%% effective (at 100+ Hate). In addition, after each kill, you store the waning life force to invigorate yourself, restoring %d life (limited by the foe's maximum life, up to a maximum of %d at any time).  You can heal no more than %0.1f life per turn this way, and it is not affected by your hatred level or other effects.
 		Healing from kills improves with your Willpower.]]):format(healPerKill, maxUnnaturalBodyHeal, regenRate)
 	end,
 }
@@ -83,22 +81,15 @@ newTalent{
 	mode = "passive",
 	require = cursed_wil_req2,
 	points = 5,
-	on_learn = function(self, t)
-		self:attr("fear_immune", 0.15)
-		self:attr("confusion_immune", 0.15)
-		self:attr("knockback_immune", 0.15)
-		self:attr("stun_immune", 0.15)
-		return true
-	end,
-	on_unlearn = function(self, t)
-		self:attr("fear_immune", -0.15)
-		self:attr("confusion_immune", -0.15)
-		self:attr("knockback_immune", -0.15)
-		self:attr("stun_immune", -0.15)
-		return true
+	getImmune = function(self, t) return self:combatTalentLimit(t, 1, 0.15, 0.5) end, -- Limit < 100%
+	passives = function(self, t, p)
+		self:talentTemporaryValue(p, "fear_immune", t.getImmune(self, t))
+		self:talentTemporaryValue(p, "confusion_immune", t.getImmune(self, t))
+		self:talentTemporaryValue(p, "knockback_immune", t.getImmune(self, t))
+		self:talentTemporaryValue(p, "stun_immune", t.getImmune(self, t))
 	end,
 	info = function(self, t)
-		return ([[Your thirst for blood drives your movements. (+%d%% confusion, fear, knockback and stun immunity)]]):format(self:getTalentLevelRaw(t) * 15)
+		return ([[Your thirst for blood drives your movements. You gain +%d%% confusion, fear, knockback and stun immunity.]]):format(t.getImmune(self, t)*100)
 	end,
 }
 
@@ -109,7 +100,7 @@ newTalent{
 	require = cursed_wil_req3,
 	points = 5,
 	getIncDamageChange = function(self, t, increase)
-		return math.min(30, math.floor(math.sqrt(self:getTalentLevel(t)) * 2 * increase))
+		return self:combatTalentLimit(t, 60, 2, 2*2.24) * increase --I5 Limit < 60%
 	end,
 	info = function(self, t)
 		local incDamageChangeMax = t.getIncDamageChange(self, t, 5)
@@ -123,12 +114,8 @@ newTalent{
 	require = cursed_wil_req4,
 	mode = "passive",
 	points = 5,
-	getStatChange = function(self, t, increase)
-		return math.min(18, math.floor(math.sqrt(self:getTalentLevel(t) * 1) * increase))
-	end,
-	getNeutralizeChance = function(self, t)
-		return math.min(30, math.floor(math.sqrt(self:getTalentLevel(t)) * 10))
-	end,
+	getStatChange = function(self, t, increase) return math.floor(self:combatTalentScale(t, 1, 2.24) * increase) end,
+	getNeutralizeChance = function(self, t) return self:combatTalentLimit(t, 60, 10, 23.4) end, -- Limit < 60%
 	info = function(self, t)
 		local statChangeMax = t.getStatChange(self, t, 5)
 		local neutralizeChance = t.getNeutralizeChance(self, t)

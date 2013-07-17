@@ -196,17 +196,17 @@ local function createShadow(self, level, tCallShadows, tShadowWarriors, tShadowM
 		avoid_traps = 1,
 
 		max_life = resolvers.rngavg(3,12), life_rating = 5,
-		stats = {
-			str=5 + math.floor(level),
-			dex=10 + math.floor(level * 1.5),
-			mag=10 + math.floor(level * 1.5),
-			wil=5 + math.floor(level),
-			cun=5 + math.floor(level * 0.7),
-			con=5 + math.floor(level * 0.7),
+		stats = { -- affected by stat limits
+			str=math.floor(self:combatScale(level, 5, 0, 55, 50, 0.75)),
+			dex=math.floor(self:combatScale(level, 10, 0, 85, 50, 0.75)),
+			mag=math.floor(self:combatScale(level, 10, 0, 85, 50, 0.75)),
+			wil=math.floor(self:combatScale(level, 5, 0, 55, 50, 0.75)),
+			cun=math.floor(self:combatScale(level, 5, 0, 40, 50, 0.75)),
+			con=math.floor(self:combatScale(level, 5, 0, 40, 50, 0.75)),
 		},
 		combat_armor = 0, combat_def = 3,
 		combat = {
-			dam=math.floor(level * 1.5),
+			dam=math.floor(self:combatScale(level, 1.5, 1, 75, 50, 0.75)),
 			atk=10 + level,
 			apr=8,
 			dammod={str=0.5, dex=0.5}
@@ -331,9 +331,7 @@ newTalent{
 	cooldown = 10,
 	hate = 0,
 	tactical = { BUFF = 5 },
-	getLevel = function(self, t)
-		return math.min(self.level, 50)
-	end,
+	getLevel = function(self, t) return self.level end,
 	getMaxShadows = function(self, t)
 		return math.min(4, math.max(1, math.floor(self:getTalentLevel(t) * 0.55)))
 	end,
@@ -390,7 +388,7 @@ newTalent{
 		-- use hate
 		if self.hate < 6 then
 			-- not enough hate..just wait for another try
-			game.logPlayer(self, "You hate is too low to call another shadow!", deflectDamage)
+			game.logPlayer(self, "Your hate is too low to call another shadow!", deflectDamage)
 			return false
 		end
 		self:incHate(-6)
@@ -451,7 +449,7 @@ newTalent{
 	end,
 	getDominateChance = function(self, t)
 		if self:getTalentLevelRaw(t) > 0 then
-			return math.min(100, math.sqrt(self:getTalentLevel(t)) * 7)
+			return self:combatLimit(self:getTalentLevel(t)^.5, 100, 7, 1, 15.65, 2.23) -- Limit < 100%
 		else
 			return 0
 		end
@@ -496,14 +494,14 @@ newTalent{
 	points = 5,
 	getCloseAttackSpellChance = function(self, t)
 		if math.floor(self:getTalentLevel(t)) > 0 then
-			return math.min(100, math.sqrt(self:getTalentLevel(t)) * 7)
+			return self:combatLimit(self:getTalentLevel(t)^.5, 100, 7, 1, 15.65, 2.23) -- Limit < 100%
 		else
 			return 0
 		end
 	end,
 	getFarAttackSpellChance = function(self, t)
 		if math.floor(self:getTalentLevel(t)) >= 3 then
-			return math.min(100, math.sqrt(self:getTalentLevel(t)) * 7)
+			return self:combatLimit(self:getTalentLevel(t)^.5, 100, 7, 1, 15.65, 2.23) -- Limit < 100%
 		else
 			return 0
 		end
@@ -528,9 +526,7 @@ newTalent{
 	canReform = function(self, t)
 		return t.getReformLevel(self, t) > 0
 	end,
-	getSpellpowerChange = function(self, t)
-		return math.floor(self:getTalentLevel(t) * 3)
-	end,
+	getSpellpowerChange = function(self, t) return math.floor(self:combatTalentScale(t, 3, 15, 0.75)) end,
 	on_learn = function(self, t)
 		if game and game.level and game.level.entities then
 			for _, e in pairs(game.level.entities) do
@@ -577,12 +573,8 @@ newTalent{
 	range = 6,
 	requires_target = true,
 	tactical = { ATTACK = 2 },
-	getDefenseDuration = function(self, t)
-		return 3 + math.floor(self:getTalentLevel(t) * 1.5)
-	end,
-	getBlindsideChance = function(self, t)
-		return math.min(100, 30 + self:getTalentLevel(t) * 10)
-	end,
+	getDefenseDuration = function(self, t) return math.floor(self:combatTalentScale(t, 4.4, 10.1)) end,
+	getBlindsideChance = function(self, t) return self:combatTalentLimit(t, 100, 40, 80) end, -- Limit < 100%
 	action = function(self, t)
 		local range = self:getTalentRange(t)
 		local target = { type="hit", range=range, nowarning=true }

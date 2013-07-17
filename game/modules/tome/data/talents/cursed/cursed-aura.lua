@@ -37,6 +37,9 @@ newTalent{
 	getCurses = function(self, t)
 		return { self.EFF_CURSE_OF_CORPSES, self.EFF_CURSE_OF_MADNESS, self.EFF_CURSE_OF_MISFORTUNE, self.EFF_CURSE_OF_NIGHTMARES, self.EFF_CURSE_OF_SHROUDS }
 	end,
+	cursePenalty = function(self, t)
+		return self:combatTalentLimit(math.max(1, self:getTalentLevel(t)-9), 0, 1, 0.50)
+	end,
 	-- tests whether or not an item can be cursed (takes into account current talent level unless ignoreLevel = true)
 	canCurseItem = function(self, t, item, level)
 		if not item:wornInven() then return false end
@@ -55,6 +58,11 @@ newTalent{
 		if level >= 2 and item.type == "armor" and (item.slot == "BODY" or item.slot == "CLOAK")  then return true end
 		if level >= 3 and item.type == "armor" and (item.slot == "HEAD" or item.slot == "OFFHAND")  then return true end
 		if level >= 4 and item.type == "armor" and (item.slot == "HANDS" or item.slot == "FEET" or item.slot == "BELT")  then return true end
+		if level >=6 and item.type == "jewelry" and item.slot == "FINGER" then return true end
+		if level >=7 and item.type == "jewelry" and item.slot == "NECK" then return true end
+		if level >=8 and item.type == "lite" and item.slot == "LITE" then return true end
+		if level >=9 and (item.type == "charm" or item.type == "tool") and item.slot == "TOOL" then return true end
+		if level >=10 and item.slot == "QUIVER" and (item.type == "alchemist-gem" or item.type == "ammo")  then return true end
 
 		return false
 	end,
@@ -198,11 +206,12 @@ newTalent{
 		local tDarkGifts = self:getTalentFromId(self.T_DARK_GIFTS)
 		for i, curse in ipairs(curses) do
 			local eff = self:hasEffect(curse)
-			local level = itemCounts[curse] or 0
+			local level = itemCounts[curse] and (itemCounts[curse] + self:callTalent(self.T_DARK_GIFTS, "curseBonusLevel")) or 0
+			local penalty = t.cursePenalty(self, t)
 			local currentLevel = eff and eff.level or 0
-
+			local currentPenalty = eff and eff.Penalty or 1
 			--print("* curse:", self.tempeffect_def[curse].desc, currentLevel, "->", level, eff)
-			if currentLevel ~= level or forceUpdateEffects then
+			if currentLevel ~= level or currentPenalty ~= penalty or forceUpdateEffects then
 				if eff then
 					self:removeEffect(curse, false, true)
 				end
@@ -212,9 +221,10 @@ newTalent{
 					if not eff then
 						eff = { def = self.tempeffect_def[curse] }
 					end
-					eff.level = math.min(5, level)
+					eff.level = level
+					eff.Penalty = penalty
+					eff.BonusPower = BonusPower
 					eff.unlockLevel = math.min(5, tDarkGifts and self:getTalentLevelRaw(tDarkGifts) or 0)
-
 					self:setEffect(curse, 1, eff)
 				end
 
@@ -240,12 +250,21 @@ newTalent{
 		game:registerDialog(cursedAuraSelect)
 	end,
 	info = function(self, t)
-		return ([[Your defiling touch permeates everything around you, imparting a random curse on each item you find. When you equip a cursed item, you gain the effects of that curse. Multiple items with the same curse increase the power of those effects up to a maximum level of 5. Initially curses are harmful, but powerful benefits can be unlocked with multiple items and the Dark Gifts.
-		At level 1 you gain the ability to curse weapons.
-		At level 2 you gain the ability to curse body armor and cloaks.
-		At level 3 you gain the ability to curse shields and helmets.
-		At level 4 you gain the ability to curse gloves, boots and belts.
-		At level 5 you can activate this talent to surround yourself with an aura that adds 2 levels to a curse of your choosing. (Currently %s)]]):format(t.getCursedAuraName(self, t))
+		return ([[Your defiling touch permeates everything around you, permanently imparting a random curse on each item you find. When you equip a cursed item, you gain the effects of that curse (shown as a beneficial effect). Each item with the same curse that is equipped increases the curse's power.  Initially curses are harmful, but powerful benefits accumulate as the power of the curse increases.
+		The Dark Gifts talent unlocks higher level curse effects and increases their power.
+		Your aura permeates your equipment more thoroughly with talent level and can affect items as follows:
+		Level 1  -- weapons
+		Level 2  -- body armor and cloaks
+		Level 3  -- shields and helmets
+		Level 4  -- gloves, boots and belts
+		Level 6  -- rings
+		Level 7  -- amulets/necklaces
+		Level 8  -- lites
+		Level 9  -- tools/totems/torques/wands
+		level 10 -- ammunition
+		At level 5, you can activate this talent to surround yourself with an aura that adds 2 levels to a curse of your choosing. (%s chosen)
+		Talent levels higher than 10 reduce the negative effects of your curses (currently %d%% reduction).]]):
+		format(t.getCursedAuraName(self, t), (1-t.cursePenalty(self, t))*100)
 	end,
 }
 
@@ -256,6 +275,9 @@ newTalent{
 	require = cursed_lev_req2,
 	no_unlearn_last = true,
 	points = 5,
+	curseBonusLevel = function(self, t)
+		return self:combatTalentScale(math.max(0,self:getTalentLevel(t)-5), 1, 2.5) 
+	end,
 	on_learn = function(self, t)
 		local tDefilingTouch = self:getTalentFromId(self.T_DEFILING_TOUCH)
 		tDefilingTouch.updateCurses(self, tDefilingTouch, true)
@@ -266,7 +288,10 @@ newTalent{
 	end,
 	info = function(self, t)
 		local level = math.min(4, self:getTalentLevelRaw(t))
-		return ([[Your curses bring you dark gifts. Unlocks bonus level %d effects on all of your curses, allowing you to gain that effect when the power level of your curse reaches that level. At talent level 5, the luck penalty of cursed effects is reduced to 1.]]):format(level)
+		local xs = t.curseBonusLevel(self,t)
+		return ([[Your curses bring you dark gifts. Unlocks bonus level %d effects on all of your curses, allowing you to gain that effect when the power level of your curse reaches that level. At talent level 5, the luck penalty of cursed effects is reduced to 1.
+		Talent levels above 5 add bonus power levels to your curses, increasing their effects (currently %0.1f).]]):
+		format(level, xs)
 	end,
 }
 
@@ -325,12 +350,8 @@ newTalent{
 	cooldown = 40,
 	range = 5,
 	no_npc_use = true,
-	getDuration = function(self, t)
-		return math.floor(6 + self:getTalentLevel(t) * 2)
-	end,
-	getAttackSpeed = function(self, t)
-		return math.min(1.6, 0.4 + self:getTalentLevel(t)/5)
-	end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 8, 16))	end,
+	getAttackSpeed = function(self, t) return self:combatTalentScale(t, 0.6, 1.4) end,
 	action = function(self, t)
 		local inven = self:getInven("INVEN")
 		local found = false
@@ -377,24 +398,31 @@ newTalent{
 		local sentry = NPC.new {
 			type = "construct", subtype = "weapon",
 			display = o.display, color=o.color, image = o.image, blood_color = colors.GREY,
-			name = "animated "..o.name, faction = self.faction,
+			name = "animated "..o:getName(), -- bug fix
+			faction = self.faction,
 			desc = "A weapon imbued with a living curse. It seems to be searching for its next victim.",
 			faction = self.faction,
 			body = { INVEN = 10, MAINHAND=1, QUIVER=1 },
 			rank = 2,
 			size_category = 1,
 
-			autolevel = "warrior",
+			autolevel = o.combat.wil_attack and "summoner" or "warrior",
 			ai = "summoned", ai_real = "tactical", ai_state = { talent_in=1, },
 
-			max_life = 50, life_rating = 3,
-			stats = { str=20, dex=20, mag=10, con=10 },
+			max_life = 50 + self.max_life*self:combatTalentLimit(t, 1, 0.04, 0.17),  -- Add % of summoner's life < 100%
+			life_rating = 3,
+			stats = o.combat.wil_attack and {wil= 20, cun = 20, mag=10, con=10} or {str=20, dex=20, mag=10, con=10},
 			combat = { dam=1, atk=1, apr=1 },
-			combat_armor = 100, combat_def = 50,
+			combat_armor = math.max(100,50 + self.level),
+			combat_armor_hardiness = math.min(70,5*self:getTalentLevel(t)),
+			combat_def = math.max(50,self.level),
+			inc_damage = table.clone(self.inc_damage or {}, true),
+			resists_pen = table.clone(self.resists_pen or {}, true),
+			
 			combat_physspeed = t.getAttackSpeed(self, t),
 			infravision = 10,
 
-			resists = { all = 75, },
+			resists = { all = self:combatTalentLimit(t, 100, 71, 75), },
 			cut_immune = 1,
 			blind_immune = 1,
 			fear_immune = 1,
@@ -408,16 +436,17 @@ newTalent{
 			no_drops = true, -- remove to drop the weapon
 
 			resolvers.talents{
-				[Talents.T_WEAPON_COMBAT]={base=1, every=10, max=5},
-				[Talents.T_WEAPONS_MASTERY]={base=1, every=10, max=5},
-				[Talents.T_KNIFE_MASTERY]={base=1, every=10, max=5},
-				[Talents.T_EXOTIC_WEAPONS_MASTERY]={base=1, every=10, max=5},
-				[Talents.T_STAFF_MASTERY]={base=1, every=10, max=5},
-				[Talents.T_BOW_MASTERY]={base=1, every=10, max=5},
-				[Talents.T_SLING_MASTERY]={base=1, every=10, max=5},
+				[Talents.T_WEAPON_COMBAT]={base=1, every=10},
+				[Talents.T_WEAPONS_MASTERY]={base=1, every=10},
+				[Talents.T_KNIFE_MASTERY]={base=1, every=10},
+				[Talents.T_EXOTIC_WEAPONS_MASTERY]={base=1, every=10},
+				[Talents.T_STAFF_MASTERY]={base=1, every=10},
+				[Talents.T_BOW_MASTERY]={base=1, every=10},
+				[Talents.T_SLING_MASTERY]={base=1, every=10},
+				[Talents.T_PSIBLADES]=o.combat.wil_attack and {base=1, every=10},
 				[Talents.T_SHOOT]=1,
 			},
-
+			o.combat.wil_attack and resolvers.sustains_at_birth(),
 			summoner = self,
 			summoner_gain_exp=true,
 			summon_time = t.getDuration(self, t),

@@ -37,7 +37,7 @@ newTalent{
 		local t = self:getTalentFromId(self.T_MIMIC)
 		if t then total = total + self:getTalentLevelRaw(t) end
 		
-		return 20 - (total * 0.5)
+		return self:combatLimit(total, 0, 19.5, 1, 10, 20) --  Limit > 0
 	end,
 	getSubtypeDamageChange = function(self, t)
 		return math.pow(self:getTalentLevel(t), 0.5) * 0.15
@@ -45,9 +45,7 @@ newTalent{
 	getTypeDamageChange = function(self, t)
 		return math.pow(self:getTalentLevel(t), 0.5) * 0.065
 	end,
-	getHateBonus = function(self, t)
-		return self:getTalentLevelRaw(t) * 2
-	end,
+	getHateBonus = function(self, t) return self:combatTalentScale(t, 3, 10, "log")	end,
 	target = function(self, t) return {type="hit", range=self:getTalentRange(t), talent=t} end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
@@ -64,7 +62,14 @@ newTalent{
 		
 		return true
 	end,
-	
+	on_unlearn = function(self, t)
+		if not self:knowTalent(t) then
+			local ef = self.tempeffect_def.EFF_PREDATOR
+			ef.no_remove = false
+			self:removeEffect(self.EFF_PREDATOR)
+			ef.no_remove = true
+		end
+	end,
 	info = function(self, t)
 		local maxKillExperience = t.getMaxKillExperience(self, t)
 		local subtypeDamageChange = t.getSubtypeDamageChange(self, t)
@@ -85,15 +90,9 @@ newTalent{
 	mode = "passive",
 	require = cursed_lev_req2,
 	points = 5,
-	getSubtypeAttackChange = function(self, t)
-		return math.pow(self:getTalentLevel(t), 0.7) * 5
-	end,
-	getTypeAttackChange = function(self, t)
-		return math.pow(self:getTalentLevel(t), 0.7) * 2
-	end,
-	getSubtypeStunChance = function(self, t)
-		return math.pow(self:getTalentLevel(t), 0.5) * 3.1
-	end,
+	getSubtypeAttackChange = function(self, t) return self:combatTalentScale(t, 5, 15.4, 0.75) end,
+	getTypeAttackChange = function(self, t) return self:combatTalentScale(t, 2, 6.2, 0.75) end,
+	getSubtypeStunChance = function(self, t) return self:combatLimit(self:getTalentLevel(t)^0.5, 100, 3.1, 1, 6.93, 2.23) end, -- Limit < 100%
 	on_learn = function(self, t)
 		local eff = self:hasEffect(self.EFF_PREDATOR)
 		if eff then
@@ -128,15 +127,9 @@ newTalent{
 	end,
 	on_unlearn = function(self, t)
 	end,
-	getSubtypeChance = function(self, t)
-		return math.sqrt(self:getTalentLevel(t)) * 10
-	end,
-	getTypeChance = function(self, t)
-		return math.sqrt(self:getTalentLevel(t)) * 4
-	end,
-	getPhysicalResistChange = function(self, t)
-		return -math.sqrt(self:getTalentLevel(t)) * 8
-	end,
+	getSubtypeChance = function(self, t) return self:combatLimit(self:getTalentLevel(t)^0.5, 100, 10, 1, 22.3, 2.23) end, -- Limit <100%
+	getTypeChance = function(self, t) return self:combatLimit(self:getTalentLevel(t)^0.5, 100, 4, 1, 8.94, 2.23) end, -- Limit <100%
+	getPhysicalResistChange = function(self, t) return -self:combatLimit(self:getTalentLevel(t)^0.5, 100, 8, 1, 17.9, 2.23) end, -- Limit <100%
 	getStatReduction = function(self, t)
 		return math.floor(math.sqrt(self:getTalentLevel(t)) * 4.3)
 	end,
@@ -169,9 +162,7 @@ newTalent{
 	mode = "passive",
 	require = cursed_lev_req4,
 	points = 5,
-	getMaxIncrease = function(self, t)
-		return math.min(35, math.pow(self:getTalentLevel(t), 0.7) * 7)
-	end,
+	getMaxIncrease = function(self, t) return self:combatTalentScale(t, 7, 21.6, 0.75) end,
 	on_learn = function(self, t)
 		self:removeEffect(self.EFF_MIMIC, true, true)
 	end,

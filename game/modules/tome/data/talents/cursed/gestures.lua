@@ -18,18 +18,25 @@
 -- darkgod@te4.org
 
 local function canUseGestures(self)
-	local nb = 0
-	if self:getInven("MAINHAND") then
-		local weapon = self:getInven("MAINHAND")[1]
-		if not weapon or weapon.subtype == "mindstar" then nb = nb + 1 end
-	end
-		
+	local dam, nb = 0, 0
+	local weapon
+
 	if self:getInven("OFFHAND") then
-		local weapon = self:getInven("OFFHAND")[1]
-		if not weapon or weapon.subtype == "mindstar" then nb = nb + 1 end
+		weapon = self:getInven("OFFHAND")[1]
+		if not weapon or weapon.subtype == "mindstar" then
+			nb = nb + 1
+			dam = self:combatDamage(weapon and weapon.combat)
+		end
 	end
 	
-	return nb == 2 and true or false
+	if self:getInven("MAINHAND") then
+		weapon = self:getInven("MAINHAND")[1]
+		if not weapon or weapon.subtype == "mindstar" then
+			nb = nb + 1
+			dam = math.max(dam,self:combatDamage(weapon and weapon.combat))
+		end
+	end
+	return nb >= 2 and true or false, dam -- return damage for use with Gesture of Guarding
 end
 
 newTalent{
@@ -69,9 +76,7 @@ newTalent{
 	
 		return bonus
 	end,
-	getStunChance = function(self, t)
-		return math.max(10, self:getTalentLevelRaw(t) * 2)
-	end,
+	getStunChance = function(self, t) return self:combatTalentLimit(t, 50, 12, 20) end, -- Limit < 50%
 	preAttack = function(self, t, target)
 		if not canUseGestures(self) then
 			game.logPlayer(self, "You do not have a free or mindstar-equipped hand to use Gesture of Pain.")
@@ -125,9 +130,9 @@ newTalent{
 		local stunChance = t.getStunChance(self, t)
 		local bonusDamage = t.getBonusDamage(self, t)
 		local bonusCritical = t.getBonusCritical(self, t)
-		return ([[Use a gesture of pain in place of an normal attack to strike into the minds of your enemies, inflicting between %0.1f and %0.1f mind damage. If you strike your target, there is a %d%% chance to stun your opponent for 3 turns.
-		This strike replaces your melee physical and checks Mindpower versus Mental Save, and is thus not affected by your Accuracy or the enemy's Defense. It also does not trigger any physical on-hit effects. However, the base damage and the critical chance of Mindstars equipped is added in when this attack is performed.
-		25%% chance of cross tier effects. Requires two free or mindstar-equipped hands. Can cause critical hits with cross tier effects. The damage will increase with your Mindpower. Mindstars bonuses from damage and physical criticals: (+%d damage, +%d critical chance)]]):format(damDesc(self, DamageType.MIND, baseDamage * 0.5), damDesc(self, DamageType.MIND, baseDamage), stunChance, bonusDamage, bonusCritical)
+		return ([[Use a gesture of pain in place of a normal attack to assault the minds of your enemies, inflicting between %0.1f and %0.1f mind damage. If the attack succeeds, there is a %d%% chance to stun your opponent for 3 turns.
+		This strike replaces your melee physical and checks your Mindpower against your opponent's Mental Save, and is thus not affected by your Accuracy or the enemy's Defense. It also does not trigger any physical on-hit effects. However, the base damage and the critical chance of any Mindstars equipped are added in when this attack is performed.
+		This talent requires two free or mindstar-equipped hands and has a 25%% chance to inflict cross tier effects which can be critical hits. The damage will increase with your Mindpower. Mindstars bonuses from damage and physical criticals: (+%d damage, +%d critical chance)]]):format(damDesc(self, DamageType.MIND, baseDamage * 0.5), damDesc(self, DamageType.MIND, baseDamage), stunChance, bonusDamage, bonusCritical)
 	end,
 }
 
@@ -182,15 +187,33 @@ newTalent{
 	mode = "passive",
 	cooldown = 10,
 	points = 5,
-	getDamageChange = function(self, t)
-		if not canUseGestures(self) then return 0 end
-		
-		return -math.pow(self:getTalentLevel(t), 0.5) * 14
+	getGuardPercent = function(self, t) return self:combatTalentLimit(t, 100, 14, 31) end, --Limit < 100%
+	-- Damage reduction handled in _M:attackTargetWith function in mod.class.interface.Combat.lua
+	getDamageChange = function(self, t, fake)
+		local test, dam = canUseGestures(self)
+		if not test and not fake then return 0 end
+		return t.getGuardPercent(self, t) * dam/100
 	end,
-	getCounterAttackChance = function(self, t)
-		if not canUseGestures(self) then return 0 end
-		return math.sqrt(self:getTalentLevel(t)) * 4
+	getCounterAttackChance = function(self, t, fake)
+		if (not canUseGestures(self) or not self:isTalentActive(self.T_GESTURE_OF_PAIN)) and not fake then return 0 end 
+		return self:combatTalentLimit(t, 50, 4, 8.9) -- Limit < 50%
 	end,
+	-- Mental effect "GESTURE_OF_GUARDING" handles the deflect count, refreshed in mod.class.Actor.lua _M:actBase
+	getDeflects = function(self, t, fake)
+		if not canUseGestures(self) and not fake then return 0 end
+		return self:combatStatScale("cun", 0, 2.25)
+	end,
+	doGuard = function(self, t)
+		local deflected, ef = 0, self:hasEffect(self.EFF_GESTURE_OF_GUARDING)
+		if ef and ef.deflects > 0 then
+			deflected = t.getDamageChange(self, t)
+			if ef.deflects < 1 then deflected = deflected * ef.deflects end -- Partial deflection
+			ef.deflects = ef.deflects -1
+			if ef.deflects <=0 then self:removeEffect(self.EFF_GESTURE_OF_GUARDING) end
+		end
+		return deflected
+	end,
+	-- Counterattack handled in _M:attackTargetWith function in mod.class.interface.Combat.lua (requires EFF_GESTURE_OF_GUARDING)
 	on_hit = function(self, t, who)
 		if rng.percent(t.getCounterAttackChance(self, t)) and self:isTalentActive(self.T_GESTURE_OF_PAIN) and canUseGestures(self) then
 			game.logSeen(self, "#F53CBE#%s lashes back at %s!", self.name:capitalize(), who.name)
@@ -198,10 +221,14 @@ newTalent{
 			tGestureOfPain.attack(self, tGestureOfPain, who)
 		end
 	end,
+	on_unlearn = function(self, t)
+		self:removeEffect(self.EFF_GESTURE_OF_GUARDING)
+	end,
 	info = function(self, t)
-		local damageChange = t.getDamageChange(self, t)
-		local counterAttackChance = t.getCounterAttackChance(self, t)
-		return ([[You guard against melee damage with a sweep of you hand. All damage from melee attacks is reduced by %d%%. There is also a %d%% chance of counterattacking while Gesture of Pain is active.
-		Requires two free or mindstar-equipped hands; does not require Gesture of Pain to be sustained.]]):format(-damageChange, counterAttackChance)
+		local damageChange = t.getDamageChange(self, t, true)
+		local counterAttackChance = t.getCounterAttackChance(self, t, true)
+		return ([[You guard against melee damage with a sweep of your hand. So long as you can use Gestures (Requires two free or mindstar-equipped hands), you deflect up to %d damage (%0.1f%% of your best free hand melee damage) from up to %0.1f melee attack(s) each turn (based on your cunning).
+		If Gesture of Pain is active, you also have a %0.1f%% chance to counterattack.]]):
+		format(damageChange, t.getGuardPercent(self, t), t.getDeflects(self, t, true), counterAttackChance)
 	end,
 }
