@@ -128,33 +128,44 @@ newTalent{
 	points = 5,
 	cooldown = 10,
 	sustain_stamina = 30,
+	no_reload_break = true,
+	no_energy = true,
 	require = techs_dex_req_high3,
 	tactical = { BUFF = 2 },
-	getDist = function(self, t) return math.floor(self:combatTalentScale(t, 1, 3)) end,
+	getDist = function(self, t) return math.floor(self:combatTalentLimit(t, 11, 1, 3)) end, -- Limit <=10
 	getChance = function(self, t) return math.floor(self:combatTalentLimit(t, 100, 20, 50)) end,
 	archery_onhit = function(self, t, target, x, y)
 		if not target or not target:canBe("knockback") then return end
 		target:knockback(self.x, self.y, t.getDist(self, t))
 	end,
+	-- called by _M:attackTarget in mod.class.interface.Combat.lua
 	proc = function(self, t, target)
-		if not self:hasArcheryWeapon() then return end
+		local weapon, ammo = self:hasArcheryWeapon()
+		if not weapon then return end
 		if self.turn_procs.intuitive_shots and self.turn_procs.intuitive_shots ~= target then return end
 		if self.turn_procs.intuitive_shots == target then return true end
-
-		local targets = self:archeryAcquireTargets(nil, {one_shot=true, x=target.x, y=target.y})
-		if targets then	self:archeryShoot(targets, t, nil, {mult=self:combatTalentWeaponDamage(t, 0.4, 0.9)}) end
+		local targets = self:archeryAcquireTargets(nil, {one_shot=true, x=target.x, y=target.y}) --Ammo check done here
+		if not targets then return end 
 		self.turn_procs.intuitive_shots = target
-		return true
+		local xatk, ret = 1e6, true
+		--Precheck hit chance so a miss doesn't stop the melee attack
+		if not self:checkHit(self:combatAttackRanged(weapon, ammo), target:combatDefenseRanged()) or target:checkEvasion(self) then 
+			xatk, ret = -1e6, false
+		end
+		game.logSeen(self, "%s %s the attack!", self.name:capitalize(), ret and "intercepts" or "fails to intercept")
+		self:archeryShoot(targets, t, nil, {atk = xatk, mult=self:combatTalentWeaponDamage(t, 0.4, 0.9)})
+		return ret
 	end,
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow or sling for this talent.") end return false end return true end,
 	activate = function(self, t)
 		return {}
 	end,
 	deactivate = function(self, t, p)
+		return true
 	end,
 	info = function(self, t)
-		return ([[Activating this talent enhances your reflexes to incredible levels.  Each time you are attacked in melee, you have a %d%% chance get a defensive shot off in time to intercept the attack, fully disrupting it and all other attacks from the attacker for the turn.
-		In addition, the shot deals %d%% damage and causes %d knockback.]])
+		return ([[Activating this talent enhances your reflexes to incredible levels.  Each time you are attacked in melee, you have a %d%% chance get a defensive shot off in time to intercept the attack, fully disrupting it (including extra blows from certain talents), dealing %d%% archery damage, and knocking the attacker back %d tiles.
+		Activating this talent will not interrupt reloading.]])
 		:format(t.getChance(self, t), self:combatTalentWeaponDamage(t, 0.4, 0.9) * 100, t.getDist(self, t))
 	end,
 }
