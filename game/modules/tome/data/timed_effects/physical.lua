@@ -2171,3 +2171,23 @@ newEffect{
 		self:removeTemporaryValue("talent_fail_chance", eff.tmpid)
 	end,
 }
+
+newEffect{
+	name = "JUGGERNAUT", image = "talents/juggernaut.png",
+	desc = "Juggernaut",
+	long_desc = function(self, eff) return ("Reduces physical damage received by %d%%."):format(eff.power) end,
+	type = "physical",
+	subtype = { superiority=true },
+	status = "beneficial",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target# hardens its skin.", "+Juggernaut" end,
+	on_lose = function(self, err) return "#Target#'s skin returns to normal.", "-Juggernaut" end,
+	activate = function(self, eff)
+		eff.particle = self:addParticles(Particles.new("stone_skin", 1, {density=4}))
+		eff.tmpid = self:addTemporaryValue("resists", {[DamageType.PHYSICAL]=eff.power})
+	end,
+	deactivate = function(self, eff)
+		self:removeParticles(eff.particle)
+		self:removeTemporaryValue("resists", eff.tmpid)
+	end,
+}
