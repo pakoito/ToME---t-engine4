@@ -30,7 +30,7 @@ newTalent{
 	tactical = { DEFEND = 2 },
 	getResist = function(self, t) return self:combatTalentScale(t, 15, 35) end,
 	action = function(self, t)
-		self:setEffect(self.EFF_EARTHEN_BARRIER, 20, {power=t.getResist(self, t)})
+		self:setEffect(self.EFF_JUGGERNAUT, 20, {power=t.getResist(self, t)})
 		return true
 	end,
 	info = function(self, t)
