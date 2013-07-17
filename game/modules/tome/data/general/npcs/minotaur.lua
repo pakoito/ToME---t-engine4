@@ -42,6 +42,10 @@ newEntity{
 
 	resolvers.inscriptions(1, "rune"),
 	resolvers.inscriptions(1, "infusion"),
+	resolvers.talents{
+		[Talents.T_WEAPON_COMBAT]={base=1, every=10, max=6},
+		[Talents.T_WEAPONS_MASTERY]={base=1, every=10, max=6}
+	},
 
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=5, },

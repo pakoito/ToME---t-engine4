@@ -1144,7 +1144,7 @@ end
 --Diminishing-returns method of scaling combat stats, observing this rule: the first twenty ranks cost 1 point each, the second twenty cost two each, and so on. This is much, much better for players than some logarithmic mess, since they always know exactly what's going on, and there are nice breakpoints to strive for.
 function _M:rescaleCombatStats(raw_combat_stat_value)
 	local x = raw_combat_stat_value
-	local tiers = 5 -- Just increase this if you want to add high-level content that allows for combat stat scores over 100.
+	local tiers = 50 -- Just increase this if you want to add high-level content that allows for combat stat scores over 100.
 	--return math.floor(math.min(x, 20) + math.min(math.max((x-20), 0)/2, 20) + math.min(math.max((x-60), 0)/3, 20) + math.min(math.max((x-120), 0)/4, 20) + math.min(math.max((x-200), 0)/5, 20)) --Five terms of the summation below.
 	local total = 0
 	for i = 1, tiers do

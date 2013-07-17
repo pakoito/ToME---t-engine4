@@ -2499,9 +2499,28 @@ function _M:resetToFull()
 	self.hate = self.max_hate
 end
 
+-- Level up talents to match actor level
+function _M:resolveLevelTalents()
+	if not self.start_level or not self._levelup_talents then return end
+
+	local maxfact = 1  -- Balancing parameter for levels > 50: maxtalent level = actorlevel/50*maxfact * normal max talent level
+	--I5 remove the following statement once all talent scaling is in:
+	--if game.zone.short_name == "infinite-dungeon" then maxfact=math.max(maxfact,self.level/50) end
+
+	for tid, info in pairs(self._levelup_talents) do
+		if not info.max or (self.talents[tid] or 0) < math.floor(info.max*maxfact) then
+			local last = info.last or self.start_level
+			if self.level - last >= info.every then
+				self:learnTalent(tid, true)
+				info.last = self.level
+			end
+		end
+	end
+end
+
 function _M:levelup()
 	engine.interface.ActorLevel.levelup(self)
-	engine.interface.ActorTalents.resolveLevelTalents(self)
+	self:resolveLevelTalents()
 
 	if not self.no_points_on_levelup then
 		self.unused_stats = self.unused_stats + (self.stats_per_level or 3) + self:getRankStatAdjust()

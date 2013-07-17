@@ -66,6 +66,7 @@ newEntity{ base = "BASE_NPC_ZIGURANTH",
 	},
 	combat_armor = 10, combat_def = 6,
 	resolvers.talents{
+		[Talents.T_ARMOUR_TRAINING]={start = 20, base=1, every=10, max=5},
 		[Talents.T_RESOLVE]={base=4, every=5, max=8},
 		[Talents.T_AURA_OF_SILENCE]={base=4, every=5, max=8},
 		[Talents.T_WEAPON_COMBAT]={base=2, every=10, max=4},

@@ -1754,7 +1754,7 @@ function _M:createRandomBoss(base, data)
 			elseif k == "birth_create_alchemist_golem" then
 				b.birth_create_alchemist_golem = resolver
 			elseif k == "necrotic_aura_base_souls" then
-				b.necrotic_aura_base_souls = util.bound(1 + math.ceil(data.level / 10), 1, 10)
+				b.necrotic_aura_base_souls = util.bound(1 + math.ceil(data.level / 10), 1, 10) -- Does this need to scale?
 			end
 		end
 		for k, resolver in pairs(mclass.copy or {}) do apply_resolvers(k, resolver) end
@@ -1791,7 +1791,7 @@ function _M:createRandomBoss(base, data)
 			end
 		end
 
-		local nb = 4 + (data.level / 7)
+		local nb = 4 + 0.38*data.level^.75 -- = 11 at level 50
 		nb = math.max(rng.range(math.floor(nb * 0.7), math.ceil(nb * 1.3)), 1)
 		print("Adding "..nb.." random class talents to boss")
 

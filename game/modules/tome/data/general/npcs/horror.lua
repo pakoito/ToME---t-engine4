@@ -686,7 +686,7 @@ With each slow breath it takes reality distorts around it.  Blue twirls into red
 		
 		[Talents.T_MENTAL_SHIELDING]={base=4, every=6, max=8},
 
-		[Talents.T_SOLIPSISM]=7, -- Seven gives some damage to health though it's very small
+		[Talents.T_SOLIPSISM]={base=7, every=15, max=5}, -- High solipsism is a lot like resist all
 		[Talents.T_BALANCE]={base=4, every=6, max=8},
 		[Talents.T_CLARITY]={base=4, every=6, max=8},
 		[Talents.T_DISMISSAL]={base=4, every=6, max=8},
@@ -789,9 +789,7 @@ newEntity{ base = "BASE_NPC_HORROR", define_as = "DREAM_SEED",
 	resolvers.talents{
 		[Talents.T_BACKLASH]={base=2, every=6, max=8},
 		[Talents.T_DISTORTION_BOLT]={base=2, every=6, max=8},
-
-		[Talents.T_SOLIPSISM]=8,
-
+		[Talents.T_SOLIPSISM]={base=7, every=15, max=5},
 		[Talents.T_SLEEP]={base=2, every=6, max=8},
 		[Talents.T_LUCID_DREAMER]={base=2, every=6, max=8},
 		[Talents.T_DREAM_WALK]=5,
@@ -986,6 +984,7 @@ newEntity{ base="BASE_NPC_HORROR", define_as = "ANIMATED_BLADE",
 	
 	resolvers.talents{
 		[Talents.T_SWAP]={base=1, every=4, max=4},
+		[Talents.T_WEAPON_COMBAT]={base=1, every=8, max=5},
 		[Talents.T_WEAPONS_MASTERY]={base=4, every=4, max=6},
 		[Talents.T_DIMENSIONAL_STEP]={base=1, every=4, max=4},
 	},
@@ -1045,6 +1044,7 @@ newEntity{ base="BASE_NPC_HORROR", define_as = "DISTORTED_BLADE",
 	
 	resolvers.talents{
 		[Talents.T_SWAP]={base=1, every=4, max=4},
+		[Talents.T_WEAPON_COMBAT]={base=1, every=8, max=5},
 		[Talents.T_WEAPONS_MASTERY]={base=4, every=4, max=6},
 		[Talents.T_DIMENSIONAL_STEP]={base=2, every=4, max=5},
 	},
