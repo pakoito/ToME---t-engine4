@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 require "engine.class"
-require "engine.Actor"
+local Actor = require "engine.Actor"
 require "engine.Autolevel"
 require "engine.interface.ActorInventory"
 require "engine.interface.ActorTemporaryEffects"
@@ -836,11 +836,30 @@ function _M:setupMinimapInfo(mo, map)
 	end
 end
 
+function _M:makeMapObject(tiles, idx)
+	local mo, z, lastmo = Actor.makeMapObject(self, tiles, idx)
+
+	if idx == 1 and mo then
+		if mo and mo:isValid() then return mo, z, lasmo end
+
+		local submo = core.map.newObject(self.uid, 1, self:check("display_on_seen"), self:check("display_on_remember"), self:check("display_on_unknown"), self:check("display_x") or 0, self:check("display_y") or 0, self:check("display_w") or 1, self:check("display_h") or 1, self:check("display_scale") or 1)
+		local tex, texx, texy, pos_x, pos_y = tiles:get("", 0, 0, 0, 0, 0, 0, "invis.png", false, false, true)
+		submo:texture(0, tex, false, texx, texy, pos_x, pos_y)
+		submo:chain(mo)
+		if lastmo == mo then lastmo = submo end
+		mo = submo
+		self._mo = mo
+	end
+
+	return mo, z, lastmo
+end
+
 --- Attach or remove a display callback
 -- Defines particles to display
 function _M:defineDisplayCallback()
 	if not self._mo then return end
 
+	local backps = self:getParticlesList(true)
 	local ps = self:getParticlesList()
 
 	local f_self = nil
@@ -942,15 +961,30 @@ function _M:defineDisplayCallback()
 		end
 	end
 
+	local function backparticles(x, y, w, h, zoom, on_map)
+		local e
+		local dy = 0
+		if h > w then dy = (h - w) / 2 end
+		for i = 1, #backps do
+			e = backps[i]
+			e:checkDisplay()
+			if e.ps:isAlive() then e.ps:toScreen(x + w / 2, y + dy + h / 2, true, w / (game.level and game.level.map.tile_w or w))
+			else self:removeParticles(e)
+			end
+		end
+	end
+
 	if self._mo == self._last_mo or not self._last_mo then
 		self._mo:displayCallback(function(x, y, w, h, zoom, on_map, tlx, tly)
 			tactical(tlx or x, tly or y, w, h, zoom, on_map)
+			backparticles(x, y, w, h, zoom, on_map)
 			particles(x, y, w, h, zoom, on_map)
 			return true
 		end)
 	else
 		self._mo:displayCallback(function(x, y, w, h, zoom, on_map, tlx, tly)
 			tactical(tlx or x, tly or y, w, h, zoom, on_map)
+			backparticles(x, y, w, h, zoom, on_map)
 			return true
 		end)
 		self._last_mo:displayCallback(function(x, y, w, h, zoom, on_map)

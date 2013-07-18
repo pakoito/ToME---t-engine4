@@ -201,11 +201,13 @@ function _M:removeParticles(ps)
 end
 
 --- Get the particle emitters of this entity
-function _M:getParticlesList()
+function _M:getParticlesList(back)
 	local ps = {}
 	for e, _ in pairs(self.__particles) do
-		e:checkDisplay()
-		ps[#ps+1] = e
+		if (not back and not e.toback) or (back and e.toback) then
+			e:checkDisplay()
+			ps[#ps+1] = e
+		end
 	end
 	return ps
 end
