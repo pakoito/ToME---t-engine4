@@ -101,41 +101,45 @@ vec2 snoise2(vec3 pos)
 	return vec2(snoise(pos), snoise(pos + vec3(0.0, 0.0, 1.0)));
 }
 
-vec2 GetFireDelta(float currTime, vec2 pos, float freqMult, float stretchMult)
+float GetFireDelta(float currTime, vec2 pos, float freqMult, float stretchMult, float scrollSpeed, float evolutionSpeed)
 {
 	//firewall
-	vec2 delta = vec2(0.0, 0.0);
+	float delta = 0.0;
 //	pos.y += (1.0 - pos.y) * 0.5;
 	//pos.y += 0.5;
 	pos.y /= stretchMult;
 	pos *= freqMult;
-	pos.y += currTime * 3.0;
+	pos.y += currTime * scrollSpeed;
+
 //	pos.y -= currTime * 3.0;
-	delta += vec2(0.0, snoise(vec3(pos * 1.0, currTime * 0.5)) * 1.5);
-	delta += vec2(0.0, snoise(vec3(pos * 2.0, currTime * 1.0)) * 1.5);
-	delta += vec2(0.0, snoise(vec3(pos * 4.0, currTime * 2.0)) * 1.5);
-	delta += vec2(0.0, snoise(vec3(pos * 8.0, currTime * 4.0)) * 1.5);
-	delta += vec2(0.0, snoise(vec3(pos * 16.0, currTime * 8.0)) * 0.5);
-	/*delta += vec2(0.0, snoise(vec3(pos * 2.0, 1*currTime * 4.0)) * 0.4);
-	delta += vec2(0.0, snoise(vec3(pos * 8.0, 1*currTime * 16.0)) * 0.8);
-	delta += vec2(0.0, snoise(vec3(pos * 16.0, 1*currTime * 32.0)) * 0.4);*/
+	delta += snoise(vec3(pos * 1.0, currTime * 1.0 * evolutionSpeed)) * 1.5;
+	delta += snoise(vec3(pos * 2.0, currTime * 2.0 * evolutionSpeed)) * 1.5;
+	delta += snoise(vec3(pos * 4.0, currTime * 4.0 * evolutionSpeed)) * 1.5;	
+	delta += snoise(vec3(pos * 8.0, currTime * 8.0 * evolutionSpeed)) * 1.5;
+	delta += snoise(vec3(pos * 16.0, currTime * 16.0 * evolutionSpeed)) * 0.5;
+
 	return delta;
 }
 
 vec4 GetFireColor(float currTime, vec2 pos, float freqMult, float stretchMult, float ampMult)
 {
-	if(pos.x < 0.0 || pos.x > 1.0 || pos.y < 0.0 || pos.y > 1.0) return vec4(0.0, 0.0, 0.0, 0.0);
-	/*if(mod(pos.x, 0.1) < 0.05 ^ mod(pos.y, 0.1) < 0.05)
-		return vec4(pos.x, pos.y, 0, 1);
-	else
-		return vec4(0, 0, 0, 1);*/
-	vec2 delta = GetFireDelta(currTime, pos, freqMult, stretchMult);
-	delta *= min(1.0, max(0.0, 1.0 * (1.0 - pos.y)));
-	delta *= min(1.0, max(0.0, 1.0 * (0.0 + pos.y)));
-	vec2 displacedPoint = pos + delta * ampMult;
-	displacedPoint.y = min(0.99, displacedPoint.y);
-	displacedPoint.y = max(0.01, displacedPoint.y);
-	return texture2D(tex, displacedPoint);
+	vec4 fireColor = vec4(0.0, 0.0, 0.0, 0.0);
+	if(pos.x > 0.0 && pos.x < 1.0 && pos.y > 0.0 && pos.y < 1.0)
+	{
+		/*if(mod(pos.x, 0.1) < 0.05 ^ mod(pos.y, 0.1) < 0.05)
+			return vec4(pos.x, pos.y, 0, 1);
+		else
+			return vec4(0, 0, 0, 1);*/
+		float delta = GetFireDelta(currTime, pos, freqMult, stretchMult, 3.0, 0.1);
+		delta *= min(1.0, max(0.0, 1.0 * (1.0 - pos.y)));
+		delta *= min(1.0, max(0.0, 1.0 * (0.0 + pos.y)));
+		vec2 displacedPoint = pos + vec2(0, delta * ampMult);
+		displacedPoint.y = min(0.99, displacedPoint.y);
+		displacedPoint.y = max(0.01, displacedPoint.y);
+		
+		fireColor = texture2D(tex, displacedPoint);
+	}
+	return fireColor;
 }
 
 void main(void)
@@ -144,16 +148,15 @@ void main(void)
 	pos.x = 0.5 + (pos.x - 0.5) * ellipsoidalFactor;
 	pos = vec2(0.5, 0.5) + (pos - vec2(0.5, 0.5)) * 1.1;
 	
-	float foldRatio = 1.0;
-//	float foldRatio = max(0.0, min(1.0, (tick - tick_start) / time_factor * 0.5));
-//	foldRatio = (1.0 + sin(tick / time_factor * 20.0)) * 0.5;
+	float foldRatio = max(0.0, min(1.0, (tick - tick_start) / time_factor * 5.0));
+	//foldRatio = (1.0 + sin(tick / time_factor * 20.0)) * 0.5;
 	foldRatio *= 0.95 + 0.05 * sin(tick / time_factor * 15.0);
 	
 	float radius = 0.25 * (foldRatio * 0.5 + 0.5);
 	vec2 center = vec2(0.5, 0.85 - radius);
 	float timeShift = 0.0;
 	if(pos.x > 0.5)
-		timeShift = 100;
+		timeShift = 100.0;
 		
 	
 	if(length(pos - center) < radius)

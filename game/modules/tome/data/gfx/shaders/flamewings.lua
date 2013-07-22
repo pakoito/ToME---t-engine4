@@ -22,11 +22,13 @@ return {
 	vert = nil,
 	args = {
 		tex = { texture = 0 },
-		tick_start = core.game.getTime(),
 		time_factor = 6000,
 		ellipsoidalFactor = 1.7, --1 is perfect circle, >1 is ellipsoidal
 		oscillationSpeed = 0.0, --oscillation between ellipsoidal and spherical form
 		growRatio = 1.0,
+	},
+	resetargs = {
+		tick_start = function() return core.game.getTime() end,
 	},
 	clone = false,
 }

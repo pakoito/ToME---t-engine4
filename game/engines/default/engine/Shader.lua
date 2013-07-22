@@ -26,6 +26,7 @@ module(..., package.seeall, class.make)
 _M.verts = {}
 _M.frags = {}
 _M.progs = {}
+_M.progsreset = {}
 
 loadNoDelay = true
 
@@ -153,12 +154,19 @@ function _M:loaded()
 		end
 
 		_M.progs[self.totalname] = self:createProgram(def)
+		_M.progsreset[self.totalname] = def.resetargs
 
 		self.shad = _M.progs[self.totalname]
 		if self.shad then
 			for k, v in pairs(def.args) do
 				self:setUniform(k, v)
 			end
+		end
+	end
+
+	if self.shad and _M.progsreset[self.totalname] then
+		for k, v in pairs(_M.progsreset[self.totalname]) do
+			self:setUniform(k, v(self))
 		end
 	end
 end

@@ -1,19 +1,17 @@
 uniform sampler2D tex;
 uniform float tick;
 uniform float aadjust;
-uniform float time_factor = 25000.0;
+uniform vec3 color;
+uniform float time_factor;
 
-uniform float ellipsoidalFactor = 1.5; //1 is perfect circle, >1 is ellipsoidal
-uniform float oscillationSpeed = 20.0; //oscillation between ellipsoidal and spherical form
+uniform float ellipsoidalFactor = 1.4; //1 is perfect circle, >1 is ellipsoidal
+uniform float oscillationSpeed = 10.0; //oscillation between ellipsoidal and spherical form
 
 uniform float antialiasingRadius = 0.6; //1.0 is no antialiasing, 0.0 - fully smoothed(looks worse)
-uniform float shieldIntensity = 0.15; //physically affects shield layer thickness
+uniform float shieldIntensity = 0.2; //physically affects shield layer thickness
 
-uniform vec4 leftColor1 = vec4(11.0  / 255.0, 8.0 / 255.0, 10.0 / 255.0, 1.0);
-uniform vec4 leftColor2 = vec4(171.0 / 255.0, 4.0 / 255.0, 10.0 / 255.0, 1.0);
-
-uniform vec4 rightColor1 = vec4(171.0 / 255.0, 4.0 / 255.0, 10.0 / 255.0, 1.0);
-uniform vec4 rightColor2 = vec4(11.0  / 255.0, 8.0 / 255.0, 10.0 / 255.0, 1.0);
+uniform vec4 color1 = vec4(11.0  / 255.0, 8.0 / 255.0, 10.0 / 255.0, 1.0);
+uniform vec4 color2 = vec4(171.0 / 255.0, 4.0 / 255.0, 10.0 / 255.0, 1.0);
 	
 vec4 permute( vec4 x ) {
 
@@ -112,37 +110,40 @@ vec2 snoise2(vec3 pos)
 
 
 
-vec2 GetFireDelta(float currTime, vec2 pos, float freqMult, float stretchMult)
+float GetFireDelta(float currTime, vec2 pos, float freqMult, float stretchMult, float scrollSpeed, float evolutionSpeed)
 {
 	//firewall
-	vec2 delta = vec2(0.0, 0.0);
+	float delta = 0;
 //	pos.y += (1.0 - pos.y) * 0.5;
 	//pos.y += 0.5;
 	pos.y /= stretchMult;
 	pos *= freqMult;
-	pos.y -= currTime * 3.0;
-//	pos.y -= currTime * 3.0;
-	delta += vec2(0.0, snoise(vec3(pos * 1.0, currTime * 2.0)) * 0.8);
-	delta += vec2(0.0, snoise(vec3(pos * 2.0, currTime * 4.0)) * 0.4);
-	delta += vec2(0.0, snoise(vec3(pos * 8.0, currTime * 16.0)) * 0.8);
-	delta += vec2(0.0, snoise(vec3(pos * 16.0, currTime * 32.0)) * 0.4);
+	pos.y += currTime * scrollSpeed;
+
+	delta += snoise(vec3(pos * 1.0, currTime * 1.0 * evolutionSpeed)) * 1.5;
+	delta += snoise(vec3(pos * 2.0, currTime * 2.0 * evolutionSpeed)) * 1.5;
+	delta += snoise(vec3(pos * 4.0, currTime * 4.0 * evolutionSpeed)) * 1.5;	
+	delta += snoise(vec3(pos * 8.0, currTime * 8.0 * evolutionSpeed)) * 1.5;
+	delta += snoise(vec3(pos * 16.0, currTime * 16.0 * evolutionSpeed)) * 0.5;
+
 	return delta;
 }
 
-vec4 GetFireColor(float currTime, vec2 pos, float freqMult, float stretchMult, float ampMult)
+vec4 GetFireColor(float currTime, vec2 pos, float freqMult, float stretchMult, float ampMult, float textureCoord)
 {
-	vec2 delta = GetFireDelta(currTime, pos, freqMult, stretchMult);
+	float delta = GetFireDelta(currTime, pos, freqMult, stretchMult, 3.0, 0.5);
 	delta *= min(1.0, max(0.0, 1.0 * (1.0 - pos.y)));
 	delta *= min(1.0, max(0.0, 1.0 * (0.0 + pos.y)));
-	vec2 displacedPoint = pos + delta * ampMult;
+	vec2 displacedPoint = pos + vec2(0, delta * ampMult);
 	displacedPoint.y = min(0.99, displacedPoint.y);
 	displacedPoint.y = max(0.01, displacedPoint.y);
+	displacedPoint.x = textureCoord;
+	
 	return texture2D(tex, displacedPoint);
 }
 
 void main(void)
 {
-	shieldIntensity = 0.2;
 	vec2 radius = vec2(0.5, 0.5) - gl_TexCoord[0].xy;
 	//radius.x *= ellispoidalFactor; //for simple ellipsoid
 	//comment next line for regular spherical shield
@@ -169,18 +170,9 @@ void main(void)
 	}
 	
 	vec2 sphericalProjectedCoord = vec2(0.5, 0.5) + radius * (alpha / (3.141592 / 2.0)) / radiusLen;
-
-	float verticalRatio = gl_TexCoord[0].y;
-	if(verticalRatio < 0.5)
-		verticalRatio = pow(verticalRatio * 2.0, 1.0) / 2.0;
-	else
-		verticalRatio = 1.0 - pow((1.0 - verticalRatio) * 2.0, 1.0) / 2.0;
 	
-	vec4 leftColor = leftColor1 * verticalRatio + leftColor2 * (1.0 - verticalRatio);
-	vec4 rightColor = rightColor1 * verticalRatio + rightColor2 * (1.0 - verticalRatio);
-	
-	vec4 c1 = GetFireColor(tick / time_factor + 0.0 , vec2(sphericalProjectedCoord.y, (-0.3 + 0.0 + sphericalProjectedCoord.x) * 0.7), 1.0, 2.0, 1.0) * leftColor;
-	vec4 c2 = GetFireColor(tick / time_factor + 10.0, vec2(sphericalProjectedCoord.y, (-0.3 + 1.0 - sphericalProjectedCoord.x) * 0.7), 1.0, 2.0, 1.0) * rightColor;
+	vec4 c1 = GetFireColor(tick / time_factor + 0.0 , vec2(sphericalProjectedCoord.y, (-0.2 + 0.0 + sphericalProjectedCoord.x) * 0.8), 1.0, 2.0, 1.0, 0.25);
+	vec4 c2 = GetFireColor(tick / time_factor + 10.0, vec2(sphericalProjectedCoord.y, (-0.2 + 1.0 - sphericalProjectedCoord.x) * 0.8), 1.0, 2.0, 1.0, 0.75);
 	vec4 c = c1 * c1.a + c2 * (1.0 - c1.a);
 	
 	c.a = 1.0 - exp(-c.a * shieldIntensity / cos(alpha));
