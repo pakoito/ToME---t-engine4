@@ -25,6 +25,7 @@ return {
 		time_factor = time_factor or 4000,
 		ellipsoidalFactor = ellipsoidalFactor or {1,1}, --1 is perfect circle, >1 is ellipsoidal
 		noup = noup or 0,
+		verticalIntensityAdjust = verticalIntensityAdjust or 0,
 	},
 	clone = false,
 }

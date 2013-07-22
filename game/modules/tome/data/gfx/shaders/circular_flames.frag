@@ -6,6 +6,8 @@ uniform float noup = 0.0;
 
 uniform vec2 ellipsoidalFactor = vec2(1.0, 1.0); //(1.0, 1.0) is perfect circle, (2.0, 1.0) is vertical ellipse, (1.0, 2.0) is horizontal ellipse
 
+uniform float verticalIntensityAdjust = 0.0; //negative number negates bottom flame, positive number negates top flame, 0.0 leaves it regular
+
 	
 vec4 permute( vec4 x ) {
 
@@ -105,7 +107,7 @@ vec2 snoise2(vec3 pos)
 float GetFireDelta(float currTime, vec2 pos, float freqMult, float stretchMult, float scrollSpeed, float evolutionSpeed)
 {
 	//firewall
-	float delta = 0;
+	float delta = 0.0;
 //	pos.y += (1.0 - pos.y) * 0.5;
 	//pos.y += 0.5;
 	pos.y /= stretchMult;
@@ -167,14 +169,25 @@ void main(void)
 	float ringRadius = 0.3;
 	float ringWidth = 0.2;
 	
+	vec2 dir = radius / radiusLen;
+	float intensityAdjust = 0.0;
+	if(verticalIntensityAdjust > 0.0)
+	{
+		intensityAdjust = (1.0 + dir.y) * abs(verticalIntensityAdjust);
+	}else
+	{
+		intensityAdjust = (1.0 - dir.y) * abs(verticalIntensityAdjust);
+	}
+	
+	
 	vec4 c;
 	if(radiusLen > ringRadius - ringWidth && radiusLen < ringRadius)
 	{
-		c = GetFireRingColor(tick / time_factor +  0.0 , radius, 6, 15.0, 1, 2, ringRadius, ringRadius - ringWidth, 0.0, 0.5);
+		c = GetFireRingColor(tick / time_factor +  0.0 , radius, 6.0, 15.0, 1.0, 2.0 + intensityAdjust, ringRadius, ringRadius - ringWidth, 0.0, 0.5);
 	}else
 	if(radiusLen < ringRadius + ringWidth && radiusLen >= ringRadius)
 	{
-		c = GetFireRingColor(tick / time_factor + 10.0 , radius, 6, 15.0, 1, 2, ringRadius, ringRadius + ringWidth, 0.0, 0.5);
+		c = GetFireRingColor(tick / time_factor + 10.0 , radius, 6.0, 15.0, 1.0, 2.0 + intensityAdjust, ringRadius, ringRadius + ringWidth, 0.0, 0.5);
 	}else
 	{
 		c = vec4(0.0, 0.0, 0.0, 0.0);
@@ -182,6 +195,7 @@ void main(void)
 	c.a *= gl_Color.a;
 	if (noup == 1.0) { if (gl_TexCoord[0].y < 0.5) c.a = 0.0; }
 	else if (noup == 2.0) { if (gl_TexCoord[0].y >= 0.5) c.a = 0.0; }
+	
 		
 	gl_FragColor = c;
 }
