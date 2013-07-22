@@ -46,4 +46,4 @@ end, },
 function(self)
 	self.ps:emit(1)
 end,
-1, "particles_images/square", true
+1, "particles_images/"..(img or "square"), true

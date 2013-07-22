@@ -137,7 +137,10 @@ newBirthDescriptor{
 			end
 		end,
 		function(actor)
-			if core.shader.active(4) then actor:addParticles(Particles.new("shader_ring_rotating", 1, {rotation=-0.2, radius=1.1}, {type="sparks", hide_center=0, time_factor=40000, color1={0, 0, 1, 1}, color2={0, 1, 1, 1}, zoom=0.5, xy={0, 0}}))
+			if core.shader.active(4) then 
+				local p1 = actor:addParticles(Particles.new("shader_ring_rotating", 1, {rotation=0, radius=1.1, img="coldgeneric"}, {type="circular_flames", ellipsoidalFactor={1,2}, time_factor=22000, noup=2.0}))
+				p1.toback = true
+				actor:addParticles(Particles.new("shader_ring_rotating", 1, {rotation=0, radius=1.1, img="coldgeneric"}, {type="circular_flames", ellipsoidalFactor={1,2}, time_factor=22000, noup=1.0}))
 			else actor:addParticles(Particles.new("uttercold", 1))
 			end
 		end,

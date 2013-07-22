@@ -159,22 +159,24 @@ newTalent{
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/ice")
 
-		local particle
-		if core.shader.active(4) then
-			particle = self:addParticles(Particles.new("shader_ring_rotating", 1, {rotation=-0.2, radius=1.1}, {type="sparks", hide_center=0, time_factor=40000, color1={0, 0, 1, 1}, color2={0, 1, 1, 1}, zoom=0.5, xy={self.x, self.y}}))
-		else
-			particle = self:addParticles(Particles.new("uttercold", 1))
-		end
-
-		return {
+		local ret = {
 			dam = self:addTemporaryValue("inc_damage", {[DamageType.COLD] = t.getColdDamageIncrease(self, t)}),
 			resist = self:addTemporaryValue("resists_pen", {[DamageType.COLD] = t.getResistPenalty(self, t)}),
 			pierce = self:addTemporaryValue("iceblock_pierce", t.getPierce(self, t)),
-			particle = particle,
 		}
+		local particle
+		if core.shader.active(4) then
+			ret.particle1 = self:addParticles(Particles.new("shader_ring_rotating", 1, {rotation=0, radius=1.1, img="coldgeneric"}, {type="circular_flames", ellipsoidalFactor={1,2}, time_factor=22000, noup=2.0}))
+			ret.particle1.toback = true
+			ret.particle2 = self:addParticles(Particles.new("shader_ring_rotating", 1, {rotation=0, radius=1.1, img="coldgeneric"}, {type="circular_flames", ellipsoidalFactor={1,2}, time_factor=22000, noup=1.0}))
+		else
+			ret.particle1 = self:addParticles(Particles.new("uttercold", 1))
+		end
+		return ret
 	end,
 	deactivate = function(self, t, p)
-		self:removeParticles(p.particle)
+		if p.particle1 then self:removeParticles(p.particle1) end
+		if p.particle2 then self:removeParticles(p.particle2) end
 		self:removeTemporaryValue("inc_damage", p.dam)
 		self:removeTemporaryValue("resists_pen", p.resist)
 		self:removeTemporaryValue("iceblock_pierce", p.pierce)

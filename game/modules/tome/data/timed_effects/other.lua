@@ -89,7 +89,13 @@ newEffect{
 		eff.sid = self:addTemporaryValue("time_prison", 1)
 		eff.tid = self:addTemporaryValue("no_timeflow", 1)
 		eff.imid = self:addTemporaryValue("status_effect_immune", 1)
-		eff.particle = self:addParticles(Particles.new("time_prison", 1))
+		if core.shader.active(4) then
+			eff.particle1 = self:addParticles(Particles.new("shader_ring_rotating", 1, {rotation=0, radius=1.1, img="arcanegeneric"}, {type="circular_flames", ellipsoidalFactor={1,2}, time_factor=3000, noup=2.0}))
+			eff.particle1.toback = true
+			eff.particle2 = self:addParticles(Particles.new("shader_ring_rotating", 1, {rotation=0, radius=1.1, img="arcanegeneric"}, {type="circular_flames", ellipsoidalFactor={1,2}, time_factor=3000, noup=1.0}))
+		else
+			eff.particle1 = self:addParticles(Particles.new("time_prison", 1))
+		end
 		self.energy.value = 0
 	end,
 	deactivate = function(self, eff)
@@ -97,7 +103,8 @@ newEffect{
 		self:removeTemporaryValue("time_prison", eff.sid)
 		self:removeTemporaryValue("no_timeflow", eff.tid)
 		self:removeTemporaryValue("status_effect_immune", eff.imid)
-		self:removeParticles(eff.particle)
+		if eff.particle1 then self:removeParticles(eff.particle1) end
+		if eff.particle2 then self:removeParticles(eff.particle2) end
 	end,
 }
 
