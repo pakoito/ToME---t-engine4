@@ -114,6 +114,14 @@ newBirthDescriptor{
 		"#LIGHT_BLUE# * +0 Magic, +3 Willpower, +0 Cunning",
 		"#GOLD#Life per level:#LIGHT_BLUE# +2",
 	},
+	birth_example_particles = {
+		function(actor) if core.shader.active(4) then actor:addParticles(Particles.new("shader_wings", 1, {life=18, fade=-0.006, deploy_speed=14})) end end,
+		function(actor) if core.shader.active(4) then actor:addParticles(Particles.new("shader_wings", 1, {img="lightningwings", life=18, fade=-0.006, deploy_speed=14})) end end,
+		function(actor) if core.shader.active(4) then actor:addParticles(Particles.new("shader_wings", 1, {life=18, fade=-0.006, deploy_speed=14})) end end,
+		function(actor) if core.shader.active(4) then actor:addParticles(Particles.new("shader_wings", 1, {life=18, fade=-0.006, deploy_speed=14})) end end,
+		function(actor) if core.shader.active(4) then actor:addParticles(Particles.new("shader_wings", 1, {life=18, fade=-0.006, deploy_speed=14})) end end,
+		function(actor) if core.shader.active(4) then actor:addParticles(Particles.new("shader_wings", 1, {life=18, fade=-0.006, deploy_speed=14})) end end,
+	},
 	power_source = {nature=true, technique=true},
 	stats = { str=5, wil=3, con=1, },
 	talents_types = {

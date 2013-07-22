@@ -212,7 +212,7 @@ newTalent{
 
 		
 		if core.shader.active(4) then
-			self:addParticles(Particles.new("shader_wings", 1, {img="lightningwings", life=18, fade=-0.003, deploy_speed=14}))
+			self:addParticles(Particles.new("shader_wings", 1, {img="lightningwings", life=18, fade=-0.006, deploy_speed=14}))
 		end
 		game:playSoundNear(self, "talents/breath")
 		return true
