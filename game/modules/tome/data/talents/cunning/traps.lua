@@ -668,6 +668,7 @@ newTalent{
 					if self:reactionToward(target) < 0 and not tgts[target] then
 						tgts[target] = true
 						local ox, oy = target.x, target.y
+						engine.DamageType:get(engine.DamageType.TEMPORAL).projector(self.summoner, target.x, target.y, engine.DamageType.TEMPORAL, self.dam)
 						if target:canBe("knockback") then 
 							target:pull(self.x, self.y, 1)
 							if target.x ~= ox or target.y ~= oy then
