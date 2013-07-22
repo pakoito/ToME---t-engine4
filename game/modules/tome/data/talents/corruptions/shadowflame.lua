@@ -225,9 +225,7 @@ newTalent{
 
 		local particle
 		if core.shader.active(4) then
-			local p = Particles.new("shader_wings", 1, {infinite=1, img="bloodwings", flap=28, a=0.6})
-			p.toback = true
-			particle = self:addParticles(p)
+			particle = self:addParticles(Particles.new("shader_wings", 1, {infinite=1, img="bloodwings", flap=28, a=0.6}))
 		end
 		local ret = {
 			vim = self:addTemporaryValue("vim_regen", -5),

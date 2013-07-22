@@ -105,7 +105,9 @@ newBirthDescriptor{
 	power_source = {arcane=true},
 	stats = { mag=4, wil=3, con=2, },
 	birth_example_particles = {
-		function(actor)	actor:addParticles(Particles.new("shadowfire", 1)) end,
+		function(actor)	if core.shader.active(4) then actor:addParticles(Particles.new("shadowfire", 1)) end end,
+		function(actor) if core.shader.active(4) then actor:addParticles(Particles.new("shader_wings", 1, {infinite=1, img="bloodwings", flap=28, a=0.6})) end
+		end,
 	},
 	talents_types = {
 		["cunning/survival"]={false, 0},

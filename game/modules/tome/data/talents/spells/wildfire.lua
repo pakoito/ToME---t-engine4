@@ -124,9 +124,7 @@ newTalent{
 
 		local particle
 		if core.shader.active(4) then
-			local p = Particles.new("shader_wings", 1, {infinite=1})
-			p.toback = true
-			particle = self:addParticles(p)
+			particle = self:addParticles(Particles.new("shader_wings", 1, {infinite=1}))
 		else
 			particle = self:addParticles(Particles.new("wildfire", 1))
 		end

@@ -127,7 +127,7 @@ newBirthDescriptor{
 	stats = { mag=5, wil=3, cun=1, },
 	birth_example_particles = {
 		function(actor)
-			if core.shader.active(4) then actor:addParticles(Particles.new("shader_ring_rotating", 1, {radius=1.1}, {type="flames", hide_center=0, xy={0, 0}}))
+			if core.shader.active(4) then actor:addParticles(Particles.new("shader_wings", 1, {infinite=1}))
 			else actor:addParticles(Particles.new("wildfire", 1))
 			end
 		end,
@@ -236,6 +236,10 @@ newBirthDescriptor{
 	},
 	birth_example_particles = {
 		"necrotic-aura",
+		function(actor)
+			if core.shader.active(4) then actor:addParticles(Particles.new("shader_wings", 1, {infinite=1, img="darkwings"}))
+			end
+		end,
 		function(actor)
 			actor:addParticles(Particles.new("ultrashield", 1, {rm=0, rM=0, gm=0, gM=0, bm=10, bM=100, am=70, aM=180, radius=0.4, density=60, life=14, instop=20}))
 		end,

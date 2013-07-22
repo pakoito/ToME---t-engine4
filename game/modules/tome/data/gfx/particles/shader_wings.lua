@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-use_shader = {type="flamewings", deploy_factor=deploy_speed, flap=flap}
+use_shader = {type="flamewings", deploy_factor=deploy_speed, flap=flap} toback=true
 base_size = 32
 
 local r = 1

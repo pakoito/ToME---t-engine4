@@ -62,6 +62,7 @@ function _M:loaded()
 
 		if t.use_shader then self.shader = t.use_shader end
 		if t.alterscreen then islast = true end
+		if t.toback then self.toback = true end
 		if t.sub_particle then sub_particle = t.sub_particle end
 	else error("unsupported particle type: "..type(self.def))
 	end

@@ -204,7 +204,7 @@ end
 function _M:getParticlesList(back)
 	local ps = {}
 	for e, _ in pairs(self.__particles) do
-		if (not back and not e.toback) or (back and e.toback) then
+		if (not back and not e.toback) or (back and e.toback) or (back == "all") then
 			e:checkDisplay()
 			ps[#ps+1] = e
 		end

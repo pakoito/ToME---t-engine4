@@ -1066,7 +1066,7 @@ function _M:setTile(f, w, h, last)
 		self:fakeEquip(false)
 
 		-- Add an example particles if any
-		local ps = self.actor:getParticlesList()
+		local ps = self.actor:getParticlesList("all")
 		for i, p in ipairs(ps) do self.actor:removeParticles(p) end
 		if self.descriptors_by_type.subclass then
 			local d = self.birth_descriptor_def.subclass[self.descriptors_by_type.subclass]
