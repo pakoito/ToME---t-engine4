@@ -329,7 +329,15 @@ function _M:makeMapObject(tiles, idx)
 		if shad.shad then self._mo:shader(shad.shad) end
 	end
 
+	self._mo, self.z, last_mo = self:alterMakeMapObject(tiles, self._mo, self.z, last_mo)
+
 	return self._mo, self.z, last_mo
+end
+
+--- Allows to alter the generated map objects
+-- Does nothing by default
+function _M:alterMakeMapObject(tiles, mo, z, last_mo)
+	return mo, z, last_mo
 end
 
 --- Get all "map objects" representing this entity

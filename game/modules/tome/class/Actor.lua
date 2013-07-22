@@ -836,19 +836,14 @@ function _M:setupMinimapInfo(mo, map)
 	end
 end
 
-function _M:makeMapObject(tiles, idx)
-	local mo, z, lastmo = Actor.makeMapObject(self, tiles, idx)
-	if mo and mo:isValid() then return mo, z, lasmo end
-
-	if idx == 1 and mo then
-		local submo = core.map.newObject(self.uid, 1, self:check("display_on_seen"), self:check("display_on_remember"), self:check("display_on_unknown"), self:check("display_x") or 0, self:check("display_y") or 0, self:check("display_w") or 1, self:check("display_h") or 1, self:check("display_scale") or 1)
-		local tex, texx, texy, pos_x, pos_y = tiles:get("", 0, 0, 0, 0, 0, 0, "invis.png", false, false, true)
-		submo:texture(0, tex, false, texx, texy, pos_x, pos_y)
-		submo:chain(mo)
-		if lastmo == mo then lastmo = submo end
-		mo = submo
-		self._mo = mo
-	end
+function _M:alterMakeMapObject(tiles, mo, z, lastmo)
+	local submo = core.map.newObject(self.uid, 1, self:check("display_on_seen"), self:check("display_on_remember"), self:check("display_on_unknown"), self:check("display_x") or 0, self:check("display_y") or 0, self:check("display_w") or 1, self:check("display_h") or 1, self:check("display_scale") or 1)
+	local tex, texx, texy, pos_x, pos_y = tiles:get("", 0, 0, 0, 0, 0, 0, "invis.png", false, false, true)
+	submo:texture(0, tex, false, texx, texy, pos_x, pos_y)
+	submo:chain(mo)
+	if lastmo == mo then lastmo = submo end
+	mo = submo
+	self._mo = mo
 
 	return mo, z, lastmo
 end

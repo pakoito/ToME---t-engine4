@@ -4,6 +4,8 @@ uniform float aadjust;
 uniform vec3 color;
 uniform float time_factor;
 uniform float tick_start;
+uniform float deploy_factor;
+uniform float flap;
 
 uniform float ellipsoidalFactor = 1.7; //1 is perfect circle, >1 is ellipsoidal
 uniform float oscillationSpeed = 0.0; //oscillation between ellipsoidal and spherical form
@@ -148,8 +150,8 @@ void main(void)
 	pos.x = 0.5 + (pos.x - 0.5) * ellipsoidalFactor;
 	pos = vec2(0.5, 0.5) + (pos - vec2(0.5, 0.5)) * 1.1;
 	
-	float foldRatio = max(0.0, min(1.0, (tick - tick_start) / time_factor * 5.0));
-	//foldRatio = (1.0 + sin(tick / time_factor * 20.0)) * 0.5;
+	float foldRatio = max(0.0, min(1.0, (tick - tick_start) / time_factor * deploy_factor));
+	if (flap > 0.0) foldRatio = (1.0 + sin(tick / time_factor * flap)) * 0.5;
 	foldRatio *= 0.95 + 0.05 * sin(tick / time_factor * 15.0);
 	
 	float radius = 0.25 * (foldRatio * 0.5 + 0.5);
@@ -199,5 +201,5 @@ void main(void)
 		gl_FragColor.a *= min(1.0, max(0.0, (1.0 - planarPoint.x) * antialiasingCoef));
 		//gl_FragColor.a *= min(1.0, max(0.0, (1.0 - planarPoint.y) * antialiasingCoef));
 	}
-	gl_FragColor.a *= 1.0 - pow(1.0 - foldRatio, 3.0);
+	gl_FragColor.a *= (1.0 - pow(1.0 - foldRatio, 3.0)) * gl_Color.a;
 }

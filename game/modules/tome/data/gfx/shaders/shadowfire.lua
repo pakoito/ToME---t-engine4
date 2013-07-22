@@ -25,7 +25,7 @@ return {
 		mainfbo = { texture = 1 },
 		color = color or {0.4, 0.7, 1.0},
 		time_factor = time_factor or 25000,
-		aadjust = aadjust or 10,
+		aadjust = aadjust or 5,
 		ellipsoidalFactor = 1.5,
 		oscillationSpeed = 20.0,
 		antialiasingRadius = 0.6,

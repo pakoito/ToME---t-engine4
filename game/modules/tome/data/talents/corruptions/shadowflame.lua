@@ -223,10 +223,17 @@ newTalent{
 			level.allow_demon_plane_damage = true
 		end)
 
+		local particle
+		if core.shader.active(4) then
+			local p = Particles.new("shader_wings", 1, {infinite=1, img="bloodwings", flap=28, a=0.6})
+			p.toback = true
+			particle = self:addParticles(p)
+		end
 		local ret = {
 			vim = self:addTemporaryValue("vim_regen", -5),
 			target = target,
 			x = self.x, y = self.y,
+			particle = particle,
 		}
 		return ret
 	end,
@@ -234,6 +241,7 @@ newTalent{
 		-- If we're a clone of the original fearscapper, just deactivate
 		if not self.on_die then return true end
 		
+		if p.particle then self:removeParticles(p.particle) end
 		self:removeTemporaryValue("vim_regen", p.vim)
 
 		game:onTickEnd(function()

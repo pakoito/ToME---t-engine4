@@ -172,6 +172,12 @@ newTalent{
 		self:project(tg, x, y, DamageType.ICE, self:mindCrit(self:combatTalentStatDamage(t, "str", 30, 430)))
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "breath_cold", {radius=tg.radius, tx=x-self.x, ty=y-self.y})
 		game:playSoundNear(self, "talents/breath")
+		
+		if core.shader.active(4) then
+			local p = Particles.new("shader_wings", 1, {life=18, fade=-0.003, deploy_speed=14})
+			p.toback = true
+			self:addParticles(p)
+		end
 		return true
 	end,
 	info = function(self, t)

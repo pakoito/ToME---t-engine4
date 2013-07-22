@@ -210,6 +210,12 @@ newTalent{
 		else game.level.map:particleEmitter(self.x, self.y, tg.radius, "breath_lightning", {radius=tg.radius, tx=x-self.x, ty=y-self.y})
 		end
 
+		
+		if core.shader.active(4) then
+			local p = Particles.new("shader_wings", 1, {img="lightningwings",infinite=1, life=18, fade=0*-0.003, deploy_speed=14})
+			p.toback = true
+			self:addParticles(p)
+		end
 		game:playSoundNear(self, "talents/breath")
 		return true
 	end,
