@@ -21,13 +21,12 @@
 -- Advanced shaders
 --------------------------------------------------------------------------------------
 if core.shader.active(4) then
-use_shader = {type="fireball"}
+use_shader = {type="fireboom"}
 base_size = 64
 
 local nb = 0
 
 return {
-	system_rotation = rng.range(0,359), system_rotationv = 5,
 	generator = function()
 	return {
 		life = 16,
@@ -50,7 +49,7 @@ function(self)
 	end
 	nb = nb + 1
 end,
-1
+1, "particles_images/fireboom"
 
 
 --------------------------------------------------------------------------------------

@@ -50,6 +50,20 @@ newBirthDescriptor{
 	},
 	random_escort_possibilities = { {"tier1.1", 1, 2}, {"tier1.2", 1, 2}, {"daikara", 1, 2}, {"old-forest", 1, 4}, {"dreadfell", 1, 8}, {"reknor", 1, 2}, },
 
+	moddable_attachement_spots = { base=128,
+		female = {
+			head = {x=66, y=19},
+			back = {x=66, y=51},
+			hand1 = {x=19, y=78},
+			hand2 = {x=110, y=78},
+		},
+		male = {
+			head = {x=65, y=20},
+			back = {x=65, y=51},
+			hand1 = {x=20, y=78},
+			hand2 = {x=110, y=78},
+		},
+	},
 	cosmetic_unlock = {
 		cosmetic_race_human_redhead = {
 			{name="Redhead [donator only]", donator=true, on_actor=function(actor) if actor.moddable_tile then actor.moddable_tile_base = "base_redhead_01.png" actor.moddable_tile_ornament={male="beard_redhead_02"} end end, check=function(birth) return birth.descriptors_by_type.sex == "Male" end},

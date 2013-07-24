@@ -44,9 +44,11 @@ use_shader = {type="fireball"}
 base_size = 64
 
 local nb = 0
+local basedir = math.atan2(ty or 1, tx or 0)
+local dir = math.deg(basedir)
 
 return {
-	system_rotation = rng.range(0,359), system_rotationv = 3,
+	system_rotation = 0 or dir, system_rotationv = 0,
 	generator = function()
 	return {
 		life = 10,
@@ -69,7 +71,7 @@ function(self)
 	end
 	nb = nb + 1
 end,
-1
+1, "particles_images/fireball"
 
 
 --------------------------------------------------------------------------------------

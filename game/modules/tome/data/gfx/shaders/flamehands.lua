@@ -18,14 +18,11 @@
 -- darkgod@te4.org
 
 return {
-	frag = "fireball",
+	frag = "flamehands",
 	vert = nil,
 	args = {
 		tex = { texture = 0 },
-		color = color or {0.4, 0.7, 1.0},
-		time_factor = time_factor or 4000,
-		ellipsoidalFactor = ellipsoidalFactor or 1.0, --1 is perfect circle, >1 is ellipsoidal
-		oscillationSpeed = oscillationSpeed or 0.0, --oscillation between ellipsoidal and spherical form
+		time_factor = time_factor or 700,
 	},
 	clone = false,
 }

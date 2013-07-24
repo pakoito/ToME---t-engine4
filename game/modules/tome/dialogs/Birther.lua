@@ -1035,6 +1035,7 @@ function _M:setTile(f, w, h, last)
 	self.actor:removeAllMOs()
 	if not f then
 		if not self.has_custom_tile then
+			local dbr = self.birth_descriptor_def.race[self.descriptors_by_type.race or "Human"]
 			local dr = self.birth_descriptor_def.subrace[self.descriptors_by_type.subrace or "Cornac"]
 			local ds = self.birth_descriptor_def.sex[self.descriptors_by_type.sex or "Female"]
 			self.actor.image = "player/"..(self.descriptors_by_type.subrace or "Cornac"):lower():gsub("[^a-z0-9_]", "_").."_"..(self.descriptors_by_type.sex or "Female"):lower():gsub("[^a-z0-9_]", "_")..".png"
@@ -1044,10 +1045,24 @@ function _M:setTile(f, w, h, last)
 			self.actor.moddable_tile = dr.copy.moddable_tile
 			self.actor.moddable_tile_base = dr.copy.moddable_tile_base
 			self.actor.moddable_tile_ornament = dr.copy.moddable_tile_ornament
+			self.actor.attachement_spots = nil
+			local moddable_attachement_spots = dr.moddable_attachement_spots or dbr.moddable_attachement_spots
+			if moddable_attachement_spots then
+				local base = moddable_attachement_spots.base
+				local b = moddable_attachement_spots.all
+				if not b then b = self.actor.female and moddable_attachement_spots.female or moddable_attachement_spots.male end
+				local t = {}
+				self.actor.attachement_spots = t
+				for kind, d in pairs(b) do
+					t[kind] = {}
+					for o, p in pairs(d) do t[kind][o] = p / base end
+				end
+			end
 		end
 	else
 		self.actor.make_tile = nil
 		self.actor.moddable_tile = nil
+		self.actor.attachement_spots = nil
 		if h > w then
 			self.actor.image = "invis.png"
 			self.actor.add_mos = {{image=f, display_h=2, display_y=-1}}

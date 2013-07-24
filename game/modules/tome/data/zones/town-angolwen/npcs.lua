@@ -94,7 +94,7 @@ newEntity{ define_as = "SUPREME_ARCHMAGE_LINANIIL",
 		[Talents.T_KEEN_SENSES]=5,
 		[Talents.T_PREMONITION]=5,
 	},
-	wings_x = 2, wings_y = -33,
+	attachement_spots = { back={x=35/64, y=1/64} },
 	resolvers.sustains_at_birth(),
 
 	can_talk = "angolwen-leader",

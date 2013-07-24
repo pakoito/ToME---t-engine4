@@ -17,6 +17,8 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local Particles = require "engine.Particles"
+
 newBirthDescriptor{
 	type = "class",
 	name = "Warrior",
@@ -230,6 +232,18 @@ newBirthDescriptor{
 	},
 	unlockable_talents_types = {
 		["spell/stone"]={false, 0.1, "mage_geomancer"},
+	},
+	birth_example_particles = {
+		function(actor) if core.shader.active(4) then
+			local slow = rng.percent(50)
+			local h1x, h1y = actor:attachementSpot("hand1", true) if h1x then actor:addParticles(Particles.new("shader_shield", 1, {img="fireball", a=0.7, size_factor=0.4, x=h1x, y=h1y-0.1}, {type="flamehands", time_factor=slow and 700 or 1000})) end
+			local h2x, h2y = actor:attachementSpot("hand2", true) if h2x then actor:addParticles(Particles.new("shader_shield", 1, {img="fireball", a=0.7, size_factor=0.4, x=h2x, y=h2y-0.1}, {type="flamehands", time_factor=not slow and 700 or 1000})) end
+		end end,
+		function(actor) if core.shader.active(4) then
+			local slow = rng.percent(50)
+			local h1x, h1y = actor:attachementSpot("hand1", true) if h1x then actor:addParticles(Particles.new("shader_shield", 1, {img="lightningwings", a=0.7, size_factor=0.4, x=h1x, y=h1y-0.1}, {type="flamehands", time_factor=slow and 700 or 1000})) end
+			local h2x, h2y = actor:attachementSpot("hand2", true) if h2x then actor:addParticles(Particles.new("shader_shield", 1, {img="lightningwings", a=0.7, size_factor=0.4, x=h2x, y=h2y-0.1}, {type="flamehands", time_factor=not slow and 700 or 1000})) end
+		end end,
 	},
 	talents = {
 		[ActorTalents.T_FLAME] = 1,

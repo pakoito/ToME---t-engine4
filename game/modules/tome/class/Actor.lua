@@ -2778,6 +2778,14 @@ function _M:checkEncumbrance()
 	end
 end
 
+--- Return attachement coords
+function _M:attachementSpot(kind, particle)
+	if not self.attachement_spots or not self.attachement_spots[kind] then return end
+	local x, y = 0, 0
+	if particle then x, y = -0.5, -0.5 end
+	return self.attachement_spots[kind].x + x, self.attachement_spots[kind].y + y
+end
+
 --- Update tile for races that can handle it
 function _M:updateModdableTile()
 	if not self.moddable_tile or Map.tiles.no_moddable_tiles then return end

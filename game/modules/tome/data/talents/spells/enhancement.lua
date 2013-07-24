@@ -30,13 +30,22 @@ newTalent{
 	getFireDamageIncrease = function(self, t) return self:combatTalentSpellDamage(t, 5, 14) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/fire")
-		return {
+		local ret = {
+			particle = particle,
 			dam = self:addTemporaryValue("melee_project", {[DamageType.FIRE] = t.getFireDamage(self, t)}),
 			per = self:addTemporaryValue("inc_damage", {[DamageType.FIRE] = t.getFireDamageIncrease(self, t)}),
 			sta = self:addTemporaryValue("stamina_regen_on_hit", self:getTalentLevel(t) / 3),
 		}
+		if core.shader.active(4) then
+			local slow = rng.percent(50)
+			local h1x, h1y = self:attachementSpot("hand1", true) if h1x then ret.particle1 = self:addParticles(Particles.new("shader_shield", 1, {img="fireball", a=0.7, size_factor=0.4, x=h1x, y=h1y-0.1}, {type="flamehands", time_factor=slow and 700 or 1000})) end
+			local h2x, h2y = self:attachementSpot("hand2", true) if h2x then ret.particle2 = self:addParticles(Particles.new("shader_shield", 1, {img="fireball", a=0.7, size_factor=0.4, x=h2x, y=h2y-0.1}, {type="flamehands", time_factor=not slow and 700 or 1000})) end
+		end
+		return ret
 	end,
 	deactivate = function(self, t, p)
+		if p.particle1 then self:removeParticles(p.particle1) end
+		if p.particle2 then self:removeParticles(p.particle2) end
 		self:removeTemporaryValue("melee_project", p.dam)
 		self:removeTemporaryValue("inc_damage", p.per)
 		self:removeTemporaryValue("stamina_regen_on_hit", p.sta)
@@ -89,13 +98,21 @@ newTalent{
 	getIceDamageIncrease = function(self, t) return self:combatTalentSpellDamage(t, 5, 14) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/lightning")
-		return {
+		local ret = {
 			dam = self:addTemporaryValue("melee_project", {[DamageType.LIGHTNING_DAZE] = t.getIceDamage(self, t)}),
 			per = self:addTemporaryValue("inc_damage", {[DamageType.LIGHTNING] = t.getIceDamageIncrease(self, t)}),
 			man = self:addTemporaryValue("mana_regen_on_hit", self:getTalentLevel(t) / 3),
 		}
+		if core.shader.active(4) then
+			local slow = rng.percent(50)
+			local h1x, h1y = self:attachementSpot("hand1", true) if h1x then ret.particle1 = self:addParticles(Particles.new("shader_shield", 1, {img="lightningwings", a=0.7, size_factor=0.4, x=h1x, y=h1y-0.1}, {type="flamehands", time_factor=slow and 700 or 1000})) end
+			local h2x, h2y = self:attachementSpot("hand2", true) if h2x then ret.particle2 = self:addParticles(Particles.new("shader_shield", 1, {img="lightningwings", a=0.7, size_factor=0.4, x=h2x, y=h2y-0.1}, {type="flamehands", time_factor=not slow and 700 or 1000})) end
+		end
+		return ret
 	end,
 	deactivate = function(self, t, p)
+		if p.particle1 then self:removeParticles(p.particle1) end
+		if p.particle2 then self:removeParticles(p.particle2) end
 		self:removeTemporaryValue("melee_project", p.dam)
 		self:removeTemporaryValue("inc_damage", p.per)
 		self:removeTemporaryValue("mana_regen_on_hit", p.man)

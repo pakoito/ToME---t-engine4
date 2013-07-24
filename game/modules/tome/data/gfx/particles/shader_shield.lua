@@ -22,7 +22,7 @@ base_size = 64
 local r = 1
 local g = 1
 local b = 1
-local a = 1
+local a = a or 1
 
 return { generator = function()
 	return {
@@ -30,8 +30,8 @@ return { generator = function()
 		life = 10,
 		size = 2*38 * (size_factor or 1), sizev = 0, sizea = 0,
 
-		x = (x or 0) * engine.Map.tile_w, xv = 0, xa = 0,
-		y = (y or 0) * engine.Map.tile_h, yv = 0, ya = 0,
+		x = (x or 0) * 64, xv = 0, xa = 0,
+		y = (y or 0) * 64, yv = 0, ya = 0,
 		dir = 0, dirv = dirv, dira = 0,
 		vel = 0, velv = 0, vela = 0,
 

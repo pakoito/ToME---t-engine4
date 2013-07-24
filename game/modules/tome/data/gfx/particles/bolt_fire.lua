@@ -24,12 +24,15 @@ if core.shader.active(4) then
 use_shader = {type="fireball"}
 base_size = 64
 
+local basedir = math.atan2(ty or 1, tx or 0)
+local dir = math.deg(basedir)
+
 return {
-	system_rotation = rng.range(0,359), system_rotationv = 3,
+	system_rotation = 0 or dir, system_rotationv = 0,
 	generator = function()
 	return {
 		life = 1000,
-		size = 40, sizev = 0, sizea = 0,
+		size = 80, sizev = 0, sizea = 0,
 
 		x = 0, xv = 0, xa = 0,
 		y = 0, yv = 0, ya = 0,
@@ -45,7 +48,7 @@ end, },
 function(self)
 	self.ps:emit(1)
 end,
-1
+1, "particles_images/fireball"
 
 
 --------------------------------------------------------------------------------------

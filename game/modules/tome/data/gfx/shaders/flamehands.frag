@@ -143,25 +143,22 @@ vec4 GetCheckboardColor(vec2 pos)
 	return col;
 }
 
-vec4 GetFireBallColor(float currTime, vec2 pos, float freqMult, float stretchMult, float ampMult, float power, float radius1, float radius2, vec2 velocity, float paletteCoord)
+vec4 GetFireCandleColor(float currTime, vec2 pos, float freqMult, float stretchMult, float ampMult, float power, float radius, float flameHeight, float paletteCoord)
 {
 	float pi = 3.141593;
-	vec2 velocityDir = vec2(1, 0);
-	if(length(velocity) > 0)
-		velocityDir = velocity / length(velocity);
-	vec2 velocityPerp = vec2(-velocityDir.y, velocityDir.x);
-	
-	float ang = atan(dot(pos, velocityPerp), dot(pos, velocityDir));
+		
 	vec4 fireballColor = vec4(0.0, 0.0, 0.0, 0.0);
-	if(length(pos) < radius1)
+	if(length(pos) < radius)
 	{		
-		float sinAlpha = length(pos) / radius1;
+		float ang = atan(pos.x, pos.y);
+		
+		float sinAlpha = length(pos) / radius;
 		float alpha = 0.0;
 		alpha = asin(sinAlpha);
 		
 		vec2 sphericalProjectedCoord = vec2(0.5, 0.5) + pos * (alpha / (3.141592 / 2.0)) / length(pos);
 		//fireballColor = GetCheckboardColor(sphericalProjectedCoord);
-		float delta = GetFireDelta(currTime, sphericalProjectedCoord, freqMult * 0.1, 1.0, 0.0, 1.5) * (1.0 - pow(length(pos) / radius1, 3.0)) * 0.5;
+		float delta = GetFireDelta(currTime, sphericalProjectedCoord, freqMult * 0.3, 1.0, 0.0, 1.5) * (1.0 - pow(length(pos) / radius, 3.0)) * 0.5;
 		
 		float verticalPos = 0.99 - delta * delta;	
 		verticalPos = min(0.99, verticalPos);
@@ -171,41 +168,32 @@ vec4 GetFireBallColor(float currTime, vec2 pos, float freqMult, float stretchMul
 		fireballColor.a = 1.0;
 	}else
 	{
-		float dist = (length(pos) - radius1) / (radius2 - radius1);
+		float bottomPos = 0;
 		
-
-		vec2 polarPos = vec2(ang, dist);
-			
-		float dstAng = (1.0 - pow(1.0 - abs(polarPos.x / pi), 4.0)) * pi;
-		if(polarPos.x < 0.0) dstAng = -dstAng;
-		
-		polarPos.x = dstAng + (polarPos.x - dstAng) * exp(-polarPos.y * 2.0);
-		polarPos.y *= 0.15 + 1.4 * pow(abs(polarPos.x) / pi, 2.0);
-		//polarPos.y *= exp(-(1.0 - pow(abs(polarPos.x) / pi, 2.0)) * 2.0);
-		
-		//polarPos.x = (1.0 - pow(1.0 - abs(polarPos.x / pi), 1.0)) * pi;
-		//polarPos.x *= 2.0 - 1.0 * exp(-(1.0 - pow(1.0 - abs(polarPos.x) / pi, 3.0)) * 5.0 * polarPos.y);
-		//polarPos.x *= 1.0 + 1.0 * exp(-abs(polarPos.x));//0.1 + 0.9 * (1.0 - pow(1.0 - abs(polarPos.x) / pi, 0.5));
-		
-		
-		vec2 planarPos = vec2((polarPos.x + pi) / (2.0 * pi), 1.0 - polarPos.y * 1.0);
-		
-		if(planarPos.y > 0.0)
+		pos.x += cos(pos.y * 20.0 + currTime * 20.0) * 0.05 * (1.0 - pow(1.0 - max(0.0, min((-radius - pos.y) * 2.0, 1.0)), 2.0));
+		if(abs(pos.x) < radius)
 		{
-			//return GetCheckboardColor(planarPos);
+			bottomPos = -sqrt(radius * radius - pos.x * pos.x);
+//			float ratio = (pos.y - bottomPos) / (bottomPos * (flameHeight / radius) - bottomPos);
+			float ratio = (pos.y - bottomPos) / (bottomPos - flameHeight - radius - bottomPos) * (1.0 + 0.5 * pow(abs(pos.x) / radius, 4.0));
 			
-			float delta =  
-				GetFireDelta(currTime, planarPos, freqMult, stretchMult, 2.5, 0.5) * (1.0 - planarPos.x)	+ 
-				GetFireDelta(currTime, vec2(planarPos.x - 1.0, planarPos.y), freqMult, stretchMult, 2.5, 0.5) * planarPos.x;
-				
-			delta *= min(1.0, max(0.0, 1.0 * (1.0 - planarPos.y)));
-			delta *= min(1.0, max(0.0, 1.0 * (0.0 + planarPos.y)));
+			vec2 planarPos = vec2(pos.x / radius, 1.0 - ratio);
+			planarPos.x *= 1.0 + (1.0 - planarPos.y) * 2.5;
+			planarPos.x = planarPos.x / 2.0 + 0.5;
 
-			float verticalPos = planarPos.y + delta * ampMult;	
-			verticalPos = min(0.99, verticalPos);
-			verticalPos = max(0.01, verticalPos);
-			
-			fireballColor = texture2D(tex, vec2(0.25, verticalPos));
+			if(planarPos.x > 0.0 && planarPos.x < 1.0 && planarPos.y > 0.0 && planarPos.y < 1.0)
+			{
+				float delta = GetFireDelta(currTime, planarPos, freqMult * 0.2, 0.6, 1.0, 0.2);
+				delta *= min(1.0, max(0.0, 1.0 * (1.0 - planarPos.y)));
+				delta *= min(1.0, max(0.0, 1.0 * (0.0 + planarPos.y)));	
+				
+				float verticalPos = pow(planarPos.y, 0.7) + delta * 1.0;	
+				verticalPos = min(0.99, verticalPos);
+				verticalPos = max(0.01, verticalPos);
+				
+				//fireballColor = GetCheckboardColor(planarPos);
+				fireballColor = texture2D(tex, vec2(0.25, verticalPos));
+			}
 		}
 	}
 	return fireballColor;
@@ -213,18 +201,19 @@ vec4 GetFireBallColor(float currTime, vec2 pos, float freqMult, float stretchMul
 
 void main(void)
 {
-	vec2 radius = gl_TexCoord[0].xy - vec2(0.5, 0.5);
+	vec2 radius = gl_TexCoord[0].xy - vec2(0.5, 0.8);
 	
 	//on-hit wobbling effect
 	float radiusLen = length(radius);
 		
 	
 	float ballRadius = 0.1;
-	float coronaWidth = 0.05;
+	float flameHeight = 0.6;
 	
 	vec4 c;
-	c = GetFireBallColor(tick / time_factor +  0.0 , radius, 6, 15.0, 1, 2, ballRadius, ballRadius + coronaWidth, vec2(1, 0), 0.75);
+	c = GetFireCandleColor(tick / time_factor +  0.0 , radius, 2, 3.0, 1, 2, ballRadius, flameHeight, 0.75);
 	c.a *= gl_Color.a;
+	//c.a += 0.5;
 	
 	gl_FragColor = c;
 }
