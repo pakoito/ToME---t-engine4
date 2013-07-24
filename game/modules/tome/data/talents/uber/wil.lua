@@ -105,7 +105,11 @@ uberTalent{
 			end
 		end
 
-		meteor(self, target.x, target.y, t.getDamage(self, t))
+		local dam = t.getDamage(self, t)
+		if self:combatMindCrit() > self:combatSpellCrit() then dam = self:mindCrit(dam)
+		else dam = self:spellCrit(dam)
+		end
+		meteor(self, target.x, target.y, dam)
 
 		return true
 	end,
