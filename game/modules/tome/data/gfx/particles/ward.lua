@@ -34,7 +34,7 @@ return { generator = function()
 	local da = math.rad(rng.range(0, 360))
 	return {
 		life = core.particles.ETERNAL,
-		size = rng.range(3,8), sizev = 0, sizea = 0,
+		size = rng.range(9,12), sizev = 0, sizea = 0,
 
 		x = r * math.cos(a) + dr * math.cos(da), xv = 0, xa = 0,
 		y = r * math.sin(a) + dr * math.cos(da), yv = 0, ya = 0,
@@ -44,10 +44,10 @@ return { generator = function()
 		r = color.r/255,   rv = 0, ra = 0,
 		g = color.g/255,   gv = 0, ga = 0,
 		b = color.b/255,   gv = 0, ga = 0,
-		a = rng.range(230, 225)/255,   av = 0, aa = 0,
+		a = rng.range(130, 165)/255,   av = 0, aa = 0,
 	}
 end, },
 function(self)
 	if first then self.ps:emit(10) first = false end
 end,
-10
+10, "particles_images/shieldimg"

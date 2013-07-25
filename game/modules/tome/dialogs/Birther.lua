@@ -247,6 +247,7 @@ function _M:atEnd(v)
 				self:setTile(self.has_custom_tile.f, self.has_custom_tile.w, self.has_custom_tile.h, true)
 				self.actor.has_custom_tile = self.has_custom_tile.f
 			end
+			self:resetAttachementSpots()
 			-- Prevent the game from auto-assigning talents if necessary.
 			if (not config.settings.tome.autoassign_talents_on_birth) and not game.state.birth.always_learn_birth_talents then
 				for _, d in pairs(self.descriptors) do
@@ -1031,6 +1032,28 @@ function _M:fakeEquip(v)
 	end
 end
 
+function _M:resetAttachementSpots()
+	self.actor.attachement_spots = nil
+	if self.has_custom_tile then return end
+
+	local dbr = self.birth_descriptor_def.race[self.descriptors_by_type.race or "Human"]
+	local dr = self.birth_descriptor_def.subrace[self.descriptors_by_type.subrace or "Cornac"]
+	local ds = self.birth_descriptor_def.sex[self.descriptors_by_type.sex or "Female"]
+
+	local moddable_attachement_spots = dr.moddable_attachement_spots or dbr.moddable_attachement_spots
+	if moddable_attachement_spots then
+		local base = moddable_attachement_spots.base
+		local b = moddable_attachement_spots.all
+		if not b then b = self.actor.female and moddable_attachement_spots.female or moddable_attachement_spots.male end
+		local t = {}
+		self.actor.attachement_spots = t
+		for kind, d in pairs(b) do
+			t[kind] = {}
+			for o, p in pairs(d) do t[kind][o] = p / base end
+		end
+	end
+end
+
 function _M:setTile(f, w, h, last)
 	self.actor:removeAllMOs()
 	if not f then
@@ -1045,24 +1068,10 @@ function _M:setTile(f, w, h, last)
 			self.actor.moddable_tile = dr.copy.moddable_tile
 			self.actor.moddable_tile_base = dr.copy.moddable_tile_base
 			self.actor.moddable_tile_ornament = dr.copy.moddable_tile_ornament
-			self.actor.attachement_spots = nil
-			local moddable_attachement_spots = dr.moddable_attachement_spots or dbr.moddable_attachement_spots
-			if moddable_attachement_spots then
-				local base = moddable_attachement_spots.base
-				local b = moddable_attachement_spots.all
-				if not b then b = self.actor.female and moddable_attachement_spots.female or moddable_attachement_spots.male end
-				local t = {}
-				self.actor.attachement_spots = t
-				for kind, d in pairs(b) do
-					t[kind] = {}
-					for o, p in pairs(d) do t[kind][o] = p / base end
-				end
-			end
 		end
 	else
 		self.actor.make_tile = nil
 		self.actor.moddable_tile = nil
-		self.actor.attachement_spots = nil
 		if h > w then
 			self.actor.image = "invis.png"
 			self.actor.add_mos = {{image=f, display_h=2, display_y=-1}}
@@ -1072,6 +1081,7 @@ function _M:setTile(f, w, h, last)
 		end
 		self.has_custom_tile = {f=f,w=w,h=h}
 	end
+	self:resetAttachementSpots()
 
 	self:applyCosmeticActor()
 
