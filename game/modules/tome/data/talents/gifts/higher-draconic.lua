@@ -123,7 +123,8 @@ newTalent{
 		game:playSoundNear(self, "talents/breath")
 		
 		if core.shader.active(4) then
-			self:addParticles(Particles.new("shader_wings", 1, {img="poisonwings", life=18, fade=-0.006, deploy_speed=14}))
+			local bx, by = self:attachementSpot("back", true)
+			self:addParticles(Particles.new("shader_wings", 1, {img="poisonwings", x=bx, y=by, life=18, fade=-0.006, deploy_speed=14}))
 		end
 		return true
 	end,

@@ -331,7 +331,8 @@ newTalent{
 		game:playSoundNear(self, "talents/spell_generic2")
 		local particle
 		if core.shader.active(4) then
-			particle = self:addParticles(Particles.new("shader_wings", 1, {infinite=1, img="darkwings"}))
+			local bx, by = self:attachementSpot("back", true)
+			particle = self:addParticles(Particles.new("shader_wings", 1, {infinite=1, x=bx, y=by, img="darkwings"}))
 		end
 		local ret = {
 			chance = self:addTemporaryValue("life_leech_chance", chance),

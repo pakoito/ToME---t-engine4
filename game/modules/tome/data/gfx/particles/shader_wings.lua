@@ -26,15 +26,16 @@ local b = 1
 local a = a or 1
 local infinite = infinite
 local nb = 0
+local size_factor = size_factor or 1.5
 
 return { generator = function()
 	return {
 		trail = 0,
 		life = life or 10,
-		size = 64 * (size_factor or 1), sizev = 0, sizea = 0,
+		size = 32 * size_factor, sizev = 0, sizea = 0,
 
 		x = (x or 0) * 32, xv = 0, xa = 0,
-		y = (y or -0.781) * 32, yv = 0, ya = 0,
+		y = ((y or 0) - 0.4) * 32, yv = 0, ya = 0,
 		dir = 0, dirv = dirv, dira = 0,
 		vel = 0, velv = 0, vela = 0,
 

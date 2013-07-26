@@ -81,7 +81,8 @@ newTalent{
 		game:playSoundNear(self, "talents/breath")
 
 		if core.shader.active(4) then
-			self:addParticles(Particles.new("shader_wings", 1, {life=18, fade=-0.006, deploy_speed=14}))
+			local bx, by = self:attachementSpot("back", true)
+			self:addParticles(Particles.new("shader_wings", 1, {life=18, x=bx, y=by, fade=-0.006, deploy_speed=14}))
 		end
 		return true
 	end,
@@ -171,7 +172,8 @@ newTalent{
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "breath_fire", {radius=tg.radius, tx=x-self.x, ty=y-self.y})
 
 		if core.shader.active(4) then
-			self:addParticles(Particles.new("shader_wings", 1, {life=18, fade=-0.006, deploy_speed=14}))
+			local bx, by = self:attachementSpot("back", true)
+			self:addParticles(Particles.new("shader_wings", 1, {life=18, x=bx, y=by, fade=-0.006, deploy_speed=14}))
 		end
 		game:playSoundNear(self, "talents/breath")
 		return true
