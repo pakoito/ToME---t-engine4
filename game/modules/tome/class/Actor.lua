@@ -3613,11 +3613,11 @@ function _M:preUseTalent(ab, silent, fake)
 			if not silent then game.logPlayer(self, "You do not have enough mana to cast %s.", ab.name) end
 			return false
 		end
-		if ab.stamina and self:getStamina() < util.getval(ab.stamina, self, ab) * (100 + self:combatFatigue()) / 100 and (not self:hasEffect(self.EFF_ADRENALINE_SURGE) or self.life < ab.stamina * (100 + self:combatFatigue()) / 100) then
+		if ab.stamina and self:getStamina() < util.getval(ab.stamina, self, ab) * (100 + self:combatFatigue()) / 100 and (not self:hasEffect(self.EFF_ADRENALINE_SURGE) or self.life < util.getval(ab.stamina, self, ab) * (100 + self:combatFatigue()) / 100) then
 			if not silent then game.logPlayer(self, "You do not have enough stamina to use %s.", ab.name) end
 			return false
 		end
-		if ab.vim and self:getVim() < util.getval(ab.vim, self, ab) and (not self:attr("bloodcasting") or self.life < ab.vim) then
+		if ab.vim and self:getVim() < util.getval(ab.vim, self, ab) and (not self:attr("bloodcasting") or self.life < util.getval(ab.vim, self, ab)) then
 			if not silent then game.logPlayer(self, "You do not have enough vim to use %s.", ab.name) end
 			return false
 		end

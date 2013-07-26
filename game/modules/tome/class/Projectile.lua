@@ -39,7 +39,29 @@ function _M:move(x, y, force)
 	return moved
 end
 function _M:tooltip(x, y)
-	local tstr = tstring("Projectile: ", self.name)
+	local tstr = tstring{"Projectile: ", self.name}
+
+	if self.src and self.src.name then 
+		local hostile = self.src.faction and game.player:reactionToward(self.src) or 0
+		local color = {"color", "LIGHT_GREEN"}
+		if hostile < 0 then color = {"color", "LIGHT_RED"}
+		elseif hostile == 0 then color = {"color", "LIGHT_BLUE"}
+		end
+		tstr:add(true, "Origin: ", color, self.src.name, {"color", "LAST"})
+	end
+
+	if self.project and self.project.def and self.project.def.typ then
+		if self.project.def.typ.selffire then
+			local x = self.project.def.typ.selffire
+			if x == true then x = 100 end
+			tstr:add(true, "Affect origin chance: ", tostring(x), "%")
+		end
+		if self.project.def.typ.friendlyfire then
+			local x = self.project.def.typ.friendlyfire
+			if x == true then x = 100 end
+			tstr:add(true, "Affect origin's friends chance: ", tostring(x), "%")
+		end
+	end
 
 	if config.settings.cheat then
 		tstr:add(true, "UID: ", tostring(self.uid), true, "Coords: ", tostring(x), "x", tostring(y))

@@ -260,7 +260,7 @@ function _M:makeProject(src, display, def, do_move, do_act, do_stop)
 		def.tg.talent = nil
 	end
 	speed = def.tg.speed or speed or 10
-	local p = _M.new{
+	local p = self.new{
 		name = name,
 		display = display.display or ' ', color = display.color or colors.WHITE, image = display.image or nil,
 		travel_particle = display.particle,
@@ -289,7 +289,7 @@ function _M:makeHoming(src, display, def, target, count, on_move, on_hit)
 	local speed = def.speed
 	local name = def.name
 	speed = speed or 10
-	local p =_M.new{
+	local p =self.new{
 		name = name,
 		display = display.display or ' ', color = display.color or colors.WHITE, image = display.image or nil,
 		travel_particle = display.particle,
