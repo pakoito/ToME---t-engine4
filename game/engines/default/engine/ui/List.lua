@@ -69,12 +69,7 @@ function _M:generate()
 
 	-- Draw the list items
 	for i, item in ipairs(self.list) do
-		local color = item.color or {255,255,255}
-		local text = item[self.display_prop]
-
-		s:erase(0, 0, 0, 0)
-		s:drawColorStringBlended(self.font, text, 0, (self.fh - self.font_h) / 2, color[1], color[2], color[3], true, fw)
-		item._tex = {s:glTexture()}
+		self:drawItem(item)
 	end
 
 	-- Add UI controls
@@ -130,6 +125,16 @@ function _M:generate()
 		end,
 	}
 	self:onSelect()
+end
+
+function _M:drawItem(item)
+	local s = self.surf
+	local color = item.color or {255,255,255}
+	local text = item[self.display_prop]
+
+	s:erase(0, 0, 0, 0)
+	s:drawColorStringBlended(self.font, text, 0, (self.fh - self.font_h) / 2, color[1], color[2], color[3], true, fw)
+	item._tex = {s:glTexture()}
 end
 
 function _M:select(i)

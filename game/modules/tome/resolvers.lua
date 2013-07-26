@@ -697,6 +697,7 @@ function resolvers.calc.nice_tile(t, e)
 	if engine.Map.tiles.nicer_tiles then
 		if t[1].tall then t[1] = {image="invis.png", add_mos = {{image="=BASE=TILE=", display_h=2, display_y=-1}}} end
 		if t[1].add_mos and t[1].add_mos[1] and t[1].add_mos[1].image == "=BASE=TILE=" then t[1].add_mos[1].image = e.image end
+		if t[1].add_mos and t[1].add_mos[1] and t[1].add_mos[1].image then t[1].attachement_spots = t[1].add_mos[1].image end
 		table.merge(e, t[1])
 	end
 	return nil

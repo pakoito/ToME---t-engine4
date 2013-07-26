@@ -53,6 +53,7 @@ newBirthDescriptor{
 		resolvers.inventory{ id=true, {defined="ORB_SCRYING"} },
 	},
 
+	moddable_attachement_spots = "race_elf",
 	cosmetic_unlock = {
 		cosmetic_race_human_redhead = {
 			{name="Redhead [donator only]", donator=true, on_actor=function(actor) if actor.moddable_tile then actor.moddable_tile_base = "base_redhead_01.png" end end, check=function(birth) return birth.descriptors_by_type.sex == "Male" end},

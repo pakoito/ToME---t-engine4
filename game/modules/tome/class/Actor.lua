@@ -2780,10 +2780,13 @@ end
 
 --- Return attachement coords
 function _M:attachementSpot(kind, particle)
-	if not self.attachement_spots or not self.attachement_spots[kind] then return end
+	local as = self.attachement_spots or self.image
+	if not as then return end
+	if not game.tiles_attachements or not game.tiles_attachements[as] or not game.tiles_attachements[as][kind] then return end
 	local x, y = 0, 0
 	if particle then x, y = -0.5, -0.5 end
-	return self.attachement_spots[kind].x + x, self.attachement_spots[kind].y + y
+	print(kind,"=========", game.tiles_attachements[as][kind].x, game.tiles_attachements[as][kind].y)
+	return game.tiles_attachements[as][kind].x + x, game.tiles_attachements[as][kind].y + y
 end
 
 --- Update tile for races that can handle it

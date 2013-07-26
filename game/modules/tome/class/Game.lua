@@ -83,6 +83,7 @@ function _M:init()
 	self:loaded()
 
 	self.visited_zones = {}
+	self.tiles_attachements = {}
 end
 
 function _M:run()
@@ -371,6 +372,50 @@ function _M:loaded()
 	self:updateCurrentChar()
 end
 
+function _M:computeAttachementSpotsFromTable(ta)
+	local base = ta.default_base or 64
+	local res = { }
+
+	for tile, data in pairs(ta.tiles or {}) do
+		local base = data.base or base
+		local yoff = data.yoff or 0
+		local t = {}
+		res[tile] = t
+		for kind, d in pairs(data) do if kind ~= "base" and kind ~= "yoff" then
+			t[kind] = { x=d.x / base, y=(d.y + yoff) / base }
+		end end
+	end
+
+	for race, data in pairs(ta.dolls or {}) do
+		local base = data.base or base
+		for sex, d in pairs(data) do if sex ~= "base" then
+			local t = {}
+			res["dolls_"..race.."_"..sex] = t
+			local yoff = d.yoff or 0
+			local base = d.base or base
+			for kind, d in pairs(d) do if kind ~= "yoff" and kind ~= "base" then
+				t[kind] = { x=d.x / base, y=(d.y + yoff) / base }
+			end end
+		end end
+	end
+
+	self.tiles_attachements = res
+end
+
+function _M:computeAttachementSpots()
+	if fs.exists(Tiles.prefix.."attachements.lua") then
+		local f, err = loadfile(Tiles.prefix.."attachements.lua")
+		if not f then print("Loading tileset attachements error", err)
+		else
+			local t = {}
+			setfenv(f, t)
+			local ok, err = pcall(f)
+			if not ok then print("Loading tileset attachements error", err) end
+			self:computeAttachementSpotsFromTable(t)
+		end
+	end
+end
+
 function _M:setupDisplayMode(reboot, mode)
 	if not mode or mode == "init" then
 		local gfx = config.settings.tome.gfx
@@ -395,6 +440,9 @@ function _M:setupDisplayMode(reboot, mode)
 		end
 		print("[DISPLAY MODE] Tileset: "..gfx.tiles)
 		print("[DISPLAY MODE] Size: "..gfx.size)
+
+		-- Load attachement spots for this tileset
+		self:computeAttachementSpots()
 
 		local do_bg = gfx.tiles == "ascii_full"
 		local _, _, tw, th = gfx.size:find("^([0-9]+)x([0-9]+)$")

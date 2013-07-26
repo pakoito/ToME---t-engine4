@@ -1034,22 +1034,21 @@ end
 
 function _M:resetAttachementSpots()
 	self.actor.attachement_spots = nil
-	if self.has_custom_tile then return end
+	if self.has_custom_tile then 
+		self.actor.attachement_spots = self.has_custom_tile.f
+		return
+	end
 
 	local dbr = self.birth_descriptor_def.race[self.descriptors_by_type.race or "Human"]
 	local dr = self.birth_descriptor_def.subrace[self.descriptors_by_type.subrace or "Cornac"]
 	local ds = self.birth_descriptor_def.sex[self.descriptors_by_type.sex or "Female"]
 
 	local moddable_attachement_spots = dr.moddable_attachement_spots or dbr.moddable_attachement_spots
+	local moddable_attachement_spots_sexless = dr.moddable_attachement_spots_sexless or dbr.moddable_attachement_spots_sexless
 	if moddable_attachement_spots then
-		local base = moddable_attachement_spots.base
-		local b = moddable_attachement_spots.all
-		if not b then b = self.actor.female and moddable_attachement_spots.female or moddable_attachement_spots.male end
-		local t = {}
-		self.actor.attachement_spots = t
-		for kind, d in pairs(b) do
-			t[kind] = {}
-			for o, p in pairs(d) do t[kind][o] = p / base end
+		if moddable_attachement_spots_sexless then self.actor.attachement_spots = "dolls_"..moddable_attachement_spots.."_all"
+		elseif self.descriptors_by_type.sex == "Female" then self.actor.attachement_spots = "dolls_"..moddable_attachement_spots.."_female"
+		else self.actor.attachement_spots = "dolls_"..moddable_attachement_spots.."_male"
 		end
 	end
 end

@@ -36,8 +36,9 @@ function _M:init(t)
 		if t.auto_width then t.width = iw end
 		if t.auto_height then t.height = ih end
 	end
-	self.w = assert(t.width, "no image width")
-	self.h = assert(t.height, "no image height")
+	self.w = assert(t.width, "no image width") * (t.zoom or 1)
+	self.h = assert(t.height, "no image height") * (t.zoom or 1)
+	self.back_color = t.back_color
 
 	self.shadow = t.shadow
 
@@ -53,6 +54,11 @@ end
 
 function _M:display(x, y)
 	if not self.item then return end
+
+	if self.back_color then
+		core.display.drawQuad(x, y, self.w, self.h, unpack(self.back_color))
+	end
+
 	if self.shadow then
 		self.item[1]:toScreenFull(x + 5, y + 5, self.w, self.h, self.item[2], self.item[3], 0, 0, 0, 0.5)
 	end
