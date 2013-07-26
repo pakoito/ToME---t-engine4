@@ -2785,7 +2785,6 @@ function _M:attachementSpot(kind, particle)
 	if not game.tiles_attachements or not game.tiles_attachements[as] or not game.tiles_attachements[as][kind] then return end
 	local x, y = 0, 0
 	if particle then x, y = -0.5, -0.5 end
-	print(kind,"=========", game.tiles_attachements[as][kind].x, game.tiles_attachements[as][kind].y)
 	return game.tiles_attachements[as][kind].x + x, game.tiles_attachements[as][kind].y + y
 end
 

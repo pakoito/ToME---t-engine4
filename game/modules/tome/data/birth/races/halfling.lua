@@ -55,6 +55,7 @@ newBirthDescriptor{
 	},
 	random_escort_possibilities = { {"tier1.1", 1, 2}, {"tier1.2", 1, 2}, {"daikara", 1, 2}, {"old-forest", 1, 4}, {"dreadfell", 1, 8}, {"reknor", 1, 2}, },
 
+	moddable_attachement_spots = "race_halfling",
 	cosmetic_unlock = {
 		cosmetic_race_human_redhead = {
 			{name="Redhead [donator only]", donator=true, on_actor=function(actor) if actor.moddable_tile then actor.moddable_tile_base = "base_redhead_01.png" end end},

@@ -55,6 +55,7 @@ newBirthDescriptor{
 		start_tier1_skip = 4,
 	},
 	random_escort_possibilities = { {"tier1.1", 1, 2}, {"tier1.2", 1, 2}, {"daikara", 1, 2}, {"old-forest", 1, 4}, {"dreadfell", 1, 8}, {"reknor", 1, 2}, },
+	moddable_attachement_spots = "race_yeek",
 }
 
 ---------------------------------------------------------

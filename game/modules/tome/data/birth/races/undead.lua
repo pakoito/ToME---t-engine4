@@ -90,6 +90,7 @@ newBirthDescriptor
 		"#GOLD#Experience penalty:#LIGHT_BLUE# 25%",
 		"#GOLD#Speed penalty:#LIGHT_BLUE# -20%",
 	},
+	moddable_attachement_spots = "race_ghoul",
 	descriptor_choices =
 	{
 		sex =
@@ -141,6 +142,7 @@ newBirthDescriptor
 		"#GOLD#Life per level:#LIGHT_BLUE# 12",
 		"#GOLD#Experience penalty:#LIGHT_BLUE# 40%",
 	},
+	moddable_attachement_spots = "race_skeleton",
 	descriptor_choices =
 	{
 		sex =
