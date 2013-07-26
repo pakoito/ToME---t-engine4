@@ -223,7 +223,6 @@ function _M:display()
 	return
 end
 
-local shader = Shader.new("textoutline")
 function _M:toScreen()
 	self:display()
 
