@@ -169,7 +169,7 @@ newTalent{
 			self.moddable_tile_nude = true
 			self.moddable_tile_base = "base_lich_01.png"
 			self.moddable_tile_ornament = nil
-			self.attachement_spots = "race_skeleton",
+			self.attachement_spots = "race_skeleton"
 		end
 		self.blood_color = colors.GREY
 		self:attr("poison_immune", 1)
