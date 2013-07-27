@@ -24,11 +24,13 @@ if core.shader.active(4) then
 use_shader = {type="fireball"}
 base_size = 64
 
-local basedir = math.atan2(ty or 1, tx or 0)
-local dir = math.deg(basedir)
+local dir = 0
+if proj_x and src_x then
+	dir = 180 + math.deg(math.atan2(proj_y-src_y, proj_x-src_x))
+end
 
 return {
-	system_rotation = 0 or dir, system_rotationv = 0,
+	system_rotation = dir, system_rotationv = 0,
 	generator = function()
 	return {
 		life = 1000,

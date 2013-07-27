@@ -156,9 +156,12 @@ newTalent{
 	getLife = function(self, t) return self.max_life * self:combatTalentLimit(t, 1.5, 0.09, 0.25) end, -- Limit < 150% max life (to survive a large string of hits between turns)
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/heal")
-		local ret = {
+		local ret = {}
+		if core.shader.active(4) then
+			ret.particle = self:addParticles(Particles.new("shader_ring_rotating", 1, {toback=true, rotation=0, radius=2, img="flamesgeneric"}, {type="sunaura", time_factor=6000}))
+		else
 			particle = self:addParticles(Particles.new("golden_shield", 1))
-		}
+		end
 		return ret
 	end,
 	deactivate = function(self, t, p)

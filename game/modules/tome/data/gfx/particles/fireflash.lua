@@ -20,7 +20,7 @@
 --------------------------------------------------------------------------------------
 -- Advanced shaders
 --------------------------------------------------------------------------------------
-if core.shader.active(4) then
+if core.shader.active(4) and false then
 use_shader = {type="fireboom"}
 base_size = 64
 
