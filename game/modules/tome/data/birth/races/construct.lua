@@ -55,7 +55,7 @@ newBirthDescriptor
 		"#GOLD#Life per level:#LIGHT_BLUE# 13",
 		"#GOLD#Experience penalty:#LIGHT_BLUE# 50%",
 	},
-	moddable_attachement_spots = "race_runic_golem",
+	moddable_attachement_spots = "race_runic_golem", moddable_attachement_spots_sexless=true,
 	descriptor_choices =
 	{
 		sex =
