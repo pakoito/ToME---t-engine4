@@ -20,7 +20,7 @@
 --------------------------------------------------------------------------------------
 -- Advanced shaders
 --------------------------------------------------------------------------------------
-if core.shader.active(4) and false then
+if core.shader.active(4) then
 use_shader = {type="fireboom"}
 base_size = 64
 
@@ -30,7 +30,8 @@ return {
 	generator = function()
 	return {
 		life = 16,
-		size = 30, sizev = 2.1*64*radius/16, sizea = 0,
+		--size = 30, sizev = 2.1*64*radius/16, sizea = 0,
+		size = 2.1*64*radius, sizev = 0, sizea = 0,
 
 		x = 0, xv = 0, xa = 0,
 		y = 0, yv = 0, ya = 0,

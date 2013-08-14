@@ -404,6 +404,7 @@ end
 
 function _M:computeAttachementSpots()
 	if fs.exists(Tiles.prefix.."attachements.lua") then
+		print("Loading tileset attachements from ", Tiles.prefix.."attachements.lua")
 		local f, err = loadfile(Tiles.prefix.."attachements.lua")
 		if not f then print("Loading tileset attachements error", err)
 		else
@@ -412,7 +413,7 @@ function _M:computeAttachementSpots()
 			local ok, err = pcall(f)
 			if not ok then print("Loading tileset attachements error", err) end
 			self:computeAttachementSpotsFromTable(t)
-		end
+		end		
 	end
 end
 
