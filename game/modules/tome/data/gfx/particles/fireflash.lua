@@ -21,7 +21,7 @@
 -- Advanced shaders
 --------------------------------------------------------------------------------------
 if core.shader.active(4) then
-use_shader = {type="fireboom"}
+use_shader = {type="shockwave"}
 base_size = 64
 
 local nb = 0
@@ -41,7 +41,7 @@ return {
 		r = 1, rv = 0, ra = 0,
 		g = 1, gv = 0, ga = 0,
 		b = 1, bv = 0, ba = 0,
-		a = 1, av = -1 / 16, aa = 0,
+		a = 0.7, av = 0, aa = 0,
 	}
 end, },
 function(self)
@@ -50,7 +50,7 @@ function(self)
 	end
 	nb = nb + 1
 end,
-1, "particles_images/fireboom"
+1, "particles_images/flamesshockwave"
 
 
 --------------------------------------------------------------------------------------

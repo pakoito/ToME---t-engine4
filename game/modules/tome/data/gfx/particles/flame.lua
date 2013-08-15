@@ -21,7 +21,7 @@
 -- Advanced shaders
 --------------------------------------------------------------------------------------
 if core.shader.active(4) then
-use_shader = {type="fireball"}
+use_shader = {type="fireboom"}
 base_size = 64
 
 local nb = 0
@@ -50,7 +50,7 @@ function(self)
 	end
 	nb = nb + 1
 end,
-1
+1, "particles_images/fireball"
 
 --------------------------------------------------------------------------------------
 -- Default
