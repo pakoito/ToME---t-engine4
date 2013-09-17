@@ -250,15 +250,24 @@ newTalent{
 	getAffinity = function(self, t) return self:combatTalentLimit(t, 100, 10, 50) end, -- Limit < 100%
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/spell_generic")
-		return {
+		local ret = {
 			dam = self:addTemporaryValue("inc_damage", {[DamageType.DARKNESS] = t.getDarknessDamageIncrease(self, t), [DamageType.COLD] = t.getDarknessDamageIncrease(self, t)}),
 			resist = self:addTemporaryValue("resists_pen", {[DamageType.DARKNESS] = t.getResistPenalty(self, t)}),
 			affinity = self:addTemporaryValue("damage_affinity", {[DamageType.DARKNESS] = t.getAffinity(self, t)}),
-			particle = self:addParticles(Particles.new("ultrashield", 1, {rm=0, rM=0, gm=0, gM=0, bm=10, bM=100, am=70, aM=180, radius=0.4, density=60, life=14, instop=20})),
 		}
+		local particle
+		if core.shader.active(4) then
+			ret.particle1 = self:addParticles(Particles.new("shader_ring_rotating", 1, {rotation=0, radius=1.1, img="spinningwinds_black"}, {type="spinningwinds", ellipsoidalFactor={1,1}, time_factor=6000, noup=2.0, verticalIntensityAdjust=-3.0}))
+			ret.particle1.toback = true
+			ret.particle2 = self:addParticles(Particles.new("shader_ring_rotating", 1, {rotation=0, radius=1.1, img="spinningwinds_black"}, {type="spinningwinds", ellipsoidalFactor={1,1}, time_factor=6000, noup=1.0, verticalIntensityAdjust=-3.0}))
+		else
+			ret.particle1 = self:addParticles(Particles.new("ultrashield", 1, {rm=0, rM=0, gm=0, gM=0, bm=10, bM=100, am=70, aM=180, radius=0.4, density=60, life=14, instop=20}))
+		end
+		return ret
 	end,
 	deactivate = function(self, t, p)
-		self:removeParticles(p.particle)
+		if p.particle1 then self:removeParticles(p.particle1) end
+		if p.particle2 then self:removeParticles(p.particle2) end
 		self:removeTemporaryValue("inc_damage", p.dam)
 		self:removeTemporaryValue("resists_pen", p.resist)
 		self:removeTemporaryValue("damage_affinity", p.affinity)
