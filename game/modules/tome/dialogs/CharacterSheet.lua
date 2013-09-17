@@ -419,7 +419,7 @@ function _M:drawDialog(kind, actor_to_compare)
 		end
 		text = compare_fields(player, actor_to_compare, function(actor) return (actor:attr("infravision") or actor:attr("heightened_senses")) and math.max((actor.heightened_senses or 0), (actor.infravision or 0)) end, "%d", "%+.0f")
 		if text then
-			self:mouseTooltip(self.TOOLTIP_VISION_INFRA,  s:drawColorStringBlended(self.font, ("Infravision    : #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h
+			self:mouseTooltip(self.TOOLTIP_VISION_INFRA,  s:drawColorStringBlended(self.font, ("Heighten Senses: #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h
 		end
 		text = compare_fields(player, actor_to_compare, function(who) return who:attr("stealth") and who.stealth + (who:attr("inc_stealth") or 0) end, "%.1f", "%+.1f")
 		if text then

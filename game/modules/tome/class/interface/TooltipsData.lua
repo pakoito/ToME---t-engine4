@@ -381,8 +381,8 @@ The maximum distance your lite can light up. Anything further cannot be seen by 
 TOOLTIP_VISION_SIGHT = [[#GOLD#Sight range#LAST#
 How far you can see. This only works within your lite radius, or in lit areas.
 ]]
-TOOLTIP_VISION_INFRA = [[#GOLD#Infravision#LAST#
-A secondary sight that allows you to see even in the dark, but only creatures can be seen this way.
+TOOLTIP_VISION_INFRA = [[#GOLD#Heightened Senses#LAST#
+Special vision (including infravision) that works even in the dark, but only creatures can be seen this way.  Only the best ability is used.
 ]]
 TOOLTIP_VISION_STEALTH = [[#GOLD#Stealth#LAST#
 To use stealth one must possess the 'Stealth' talent.
