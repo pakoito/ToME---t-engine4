@@ -98,11 +98,24 @@ local maker_list = function()
 		"dragonbone staff",
 		"living mindstar",
 	}
-	local l = {}
+	local l = {{"I've changed my mind.", jump = "welcome"}}
 	for i, name in ipairs(bases) do
-		local not_ps = player:attr("forbid_arcane") and {arcane=true} or {antimagic=true}
-		local force_themes = player:attr("forbid_arcane") and {'antimagic'} or nil
+		
+		local not_ps, force_themes
+		if player:attr("forbid_arcane") then -- no magic gear for antimatic characters
+			not_ps = {arcane=true}
+			force_themes = {'antimagic'}
+		else -- no antimagic gear for characters with arcane-powered classes
+			if player:attr("has_arcane_knowledge") then not_ps = {antimagic=true} end
+		end
+		
+--game.log("Force_themes = %s, not_ps = %s", tostring(force_themes), tostring(not_ps and (not_ps.antimagic and "antimagic" or not_ps.arcane and "arcane")))
 
+--	not_ps = table.merge(not_ps or {}, {
+--		'physical', 'mental', 'spell', 'defense', 'misc', 'fire', 'technique', 'psionic',
+--		'lightning', 'acid', 'mind', 'arcane', 'blight', 'nature',
+--		'temporal', 'light', 'dark', 'antimagic'
+--	})
 		local o, ok
 		repeat
 			o = game.zone:makeEntity(game.level, "object", {name=name, ignore_material_restriction=true, no_tome_drops=true, ego_filter={keep_egos=true, ego_chance=-1000}}, nil, true)
