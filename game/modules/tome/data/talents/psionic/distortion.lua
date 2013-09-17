@@ -68,7 +68,7 @@ newTalent{
 		local distort = DistortionCount(self)
 		return ([[Fire a bolt of distortion that ignores resistance and inflicts %0.2f physical damage.  This damage will distort affected targets, decreasing physical resistance by %d%% and rendering them vulnerable to distortion effects for two turns.
 		If the bolt comes in contact with a target that's already distorted, a detonation will occur, inflicting 150%% of the base damage in a radius of %d.
-		Each talent point invested in Distortion Bolt will increase physical redistance reduction from distortion effects by 1%%.
+		Investing in this talent will increase the physical resistance reduction from all of your distortion effects.
 		At talent level 5, you learn to shape your distortion effects, preventing them from hitting you or your allies.
 		The damage will scale with your Mindpower.]]):format(damDesc(self, DamageType.PHYSICAL, damage), distort, radius)
 	end,
@@ -117,7 +117,7 @@ newTalent{
 		local distort = DistortionCount(self)
 		return ([[Creates a distortion wave in a radius %d cone that deals %0.2f physical damage and knocks back targets in the blast radius.
 		This damage will distort affected targets, decreasing physical resistance by %d%% and rendering them vulnerable to distortion effects for two turns.
-		Each talent point invested in Distortion Wave will increase physical redistance reduction from distortion effects by 1%%.
+		Investing in this talent will increase the physical resistance reduction from all of your distortion effects.
 		If the target is already distorted, they'll be stunned for %d turns as well.
 		The damage will scale with your Mindpower.]]):format(radius, damDesc(self, DamageType.PHYSICAL, damage), distort, power)
 	end,
@@ -164,7 +164,7 @@ newTalent{
 		return ([[Ravages the target with distortion, inflicting %0.2f physical damage each turn for %d turns.
 		This damage will distort affected targets, decreasing physical resistance by %d%% and rendering them vulnerable to distortion effects for two turns.
 		If the target is already distorted when Ravage is applied, the damage will be increased by 50%% and the target will lose one beneficial physical effect or sustain each turn.
-		Each talent point invested in Ravage will increase physical redistance reduction from distortion effects by 1%%.
+		Investing in this talent will increase the physical resistance reduction from all of your distortion effects.
 		The damage will scale with your Mindpower.]]):format(damDesc(self, DamageType.PHYSICAL, damage), duration, distort)
 	end,
 }
@@ -205,6 +205,7 @@ newTalent{
 			canAct = false,
 			dam = self:mindCrit(t.getDamage(self, t)),
 			radius = self:getTalentRadius(t),
+			distortionPower = DistortionCount(self),
 			act = function(self)
 				local tgts = {}
 				local Map = require "engine.Map"
@@ -228,7 +229,7 @@ newTalent{
 						game.logSeen(target.actor, "%s is pulled in by the %s!", target.actor.name:capitalize(), self.name)
 					end
 					DamageType:get(DamageType.PHYSICAL).projector(self.summoner, target.actor.x, target.actor.y, DamageType.PHYSICAL, self.dam)
-					target.actor:setEffect(target.actor.EFF_DISTORTION, 2, {power=DistortionCount(self)})
+					target.actor:setEffect(target.actor.EFF_DISTORTION, 2, {power=self.distortionPower})
 				end
 
 				self:useEnergy()
@@ -261,7 +262,7 @@ newTalent{
 		local distort = DistortionCount(self)
 		return ([[Create a powerful maelstorm for %d turns.  Each turn, the maelstrom will pull in targets within a radius of %d, and inflict %0.2f physical damage.
 		This damage will distort affected targets, decreasing physical resistance by %d%% and rendering them vulnerable to distortion effects for two turns.
-		Each talent point invested in Maelstrom will increase physical resistance reduction from distortion effects by 1%%.
+		Investing in this talent will increase the physical resistance reduction from all of your distortion effects.
 		The damage will scale with your Mindpower.]]):format(duration, radius, damDesc(self, DamageType.PHYSICAL, damage), distort)
 	end,
 }

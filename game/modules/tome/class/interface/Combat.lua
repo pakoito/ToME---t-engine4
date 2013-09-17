@@ -1572,7 +1572,8 @@ function _M:spellCrit(dam, add_chance, crit_power_add)
 	local chance = self:combatSpellCrit() + (add_chance or 0)
 	local crit = false
 
-	if self:attr("stealth") and self:knowTalent(self.T_SHADOWSTRIKE) and not target:canSee(self) then -- bug fix
+--	if self:attr("stealth") and self:knowTalent(self.T_SHADOWSTRIKE) and not target:canSee(self) then -- bug fix
+	if self:attr("stealth") and self:knowTalent(self.T_SHADOWSTRIKE) then -- bug fix
 		chance = 100
 		crit_power_add = crit_power_add + self:callTalent(self.T_SHADOWSTRIKE,"getMultiplier")
 	end
@@ -1619,7 +1620,8 @@ function _M:mindCrit(dam, add_chance, crit_power_add)
 	local chance = self:combatMindCrit() + (add_chance or 0)
 	local crit = false
 
-	if self:attr("stealth") and self:knowTalent(self.T_SHADOWSTRIKE) and not target:canSee(self) then -- bug fix
+--	if self:attr("stealth") and self:knowTalent(self.T_SHADOWSTRIKE) and not target:canSee(self) then -- bug fix
+	if self:attr("stealth") and self:knowTalent(self.T_SHADOWSTRIKE) then -- bug fix
 		chance = 100
 		crit_power_add = crit_power_add + self:callTalent(self.T_SHADOWSTRIKE,"getMultiplier")
 	end

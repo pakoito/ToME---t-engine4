@@ -3543,6 +3543,7 @@ end
 -- @param ab the talent (not the id, the table)
 -- @return true to continue, false to stop
 function _M:preUseTalent(ab, silent, fake)
+	if not self:attr("no_talent_fail") then 
 	if self:attr("feared") and (ab.mode ~= "sustained" or not self:isTalentActive(ab.id)) then
 		if not silent then game.logSeen(self, "%s is too afraid to use %s.", self.name:capitalize(), ab.name) end
 		return false
@@ -3743,6 +3744,7 @@ function _M:preUseTalent(ab, silent, fake)
 	if ab.is_heal and (self:attr("no_healing") or ((self.healing_factor or 1) <= 0)) then return false end
 	if ab.is_teleport and self:attr("encased_in_ice") then return false end
 
+	end
 	if not silent then
 		-- Allow for silent talents
 		if ab.message ~= nil then
@@ -4025,11 +4027,13 @@ end
 
 --- Force a talent to activate without using energy or such
 function _M:forceUseTalent(t, def)
+	if def.no_talent_fail then self:attr("no_talent_fail", 1) end
 	if def.no_equilibrium_fail then self:attr("no_equilibrium_fail", 1) end
 	if def.no_paradox_fail then self:attr("no_paradox_fail", 1) end
 	if def.talent_reuse then self:attr("talent_reuse", 1) end
 	if def.save_cleanup then self:attr("save_cleanup", 1) end
 	local ret = {engine.interface.ActorTalents.forceUseTalent(self, t, def)}
+	if def.no_talent_fail then self:attr("no_talent_fail", -1) end
 	if def.no_equilibrium_fail then self:attr("no_equilibrium_fail", -1) end
 	if def.no_paradox_fail then self:attr("no_paradox_fail", -1) end
 	if def.talent_reuse then self:attr("talent_reuse", -1) end

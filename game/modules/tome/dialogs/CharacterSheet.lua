@@ -440,12 +440,12 @@ function _M:drawDialog(kind, actor_to_compare)
 
 		local any_esp = false
 		local esps_compare = {}
-		if actor_to_compare and actor_to_compare.esp_all then
+		if actor_to_compare and actor_to_compare.esp_all and actor_to_compare.esp_all ~= 0 then
 			esps_compare["All"] = {}
 			esps_compare["All"][1] = v
 			any_esp = true
 		end
-		if player.esp_all then
+		if player.esp_all and player.esp_all ~= 0 then
 			esps_compare["All"] = esps_compare["All"] or {}
 			esps_compare["All"][2] = v
 			any_esp = true
@@ -520,12 +520,14 @@ function _M:drawDialog(kind, actor_to_compare)
 		if any_esp then
 			h = h + self.font_h
 			self:mouseTooltip(self.TOOLTIP_ESP,  s:drawColorStringBlended(self.font, ("Telepathy of: "), w, h, 255, 255, 255, true)) h = h + self.font_h
-			if not esps_compare["All"] then
+--			if not esps_compare["All"] then
+			if not esps_compare["All"] or not esps_compare["All"][2] or esps_compare["All"][2] == 0 then
 				for type, v in pairs(esps_compare) do
 					self:mouseTooltip(self.TOOLTIP_ESP,  s:drawColorStringBlended(self.font, ("%s%s "):format(v[2] and (v[1] and "#GOLD#" or "#00ff00#") or "#ff0000#", type:capitalize()), w, h, 255, 255, 255, true)) h = h + self.font_h
 				end
 			else
-				self:mouseTooltip(self.TOOLTIP_ESP_ALL,  s:drawColorStringBlended(self.font, ("%sAll "):format(esps_compare["All"][1] and "#GOLD#" or "#00ff00#"), w, h, 255, 255, 255, true)) h = h + self.font_h
+--				self:mouseTooltip(self.TOOLTIP_ESP_ALL,  s:drawColorStringBlended(self.font, ("%sAll "):format(esps_compare["All"][1] and "#GOLD#" or "#00ff00#"), w, h, 255, 255, 255, true)) h = h + self.font_h
+				self:mouseTooltip(self.TOOLTIP_ESP_ALL,  s:drawColorStringBlended(self.font, ("%sAll "):format(esps_compare["All"][2] and (esps_compare["All"][1] and "#GOLD#" or "#00ff00#") or "#ff0000#"), w, h, 255, 255, 255, true)) h = h + self.font_h
 			end
 		end
 
