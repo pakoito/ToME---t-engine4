@@ -266,6 +266,8 @@ end
 
 function _M:unload()
 end
+function _M:cleanup()
+end
 
 function _M:drawWBorder(s, x, y, w)
 	for i = x, x + w do

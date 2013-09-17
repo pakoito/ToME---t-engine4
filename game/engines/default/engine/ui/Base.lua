@@ -45,47 +45,15 @@ sounds = {
 	button = "ui/subtle_button_sound",
 }
 
-_M.ui_conf = {
-	metal = {
-		frame_shadow = {x=15, y=15, a=0.5},
-		frame_alpha = 0.9,
-		frame_ox1 = -42,
-		frame_ox2 =  42,
-		frame_oy1 = -42,
-		frame_oy2 =  42,
-		title_bar = {x=0, y=-21, w=4, h=25},
-	},
-	stone = {
-		frame_shadow = {x=15, y=15, a=0.5},
-		frame_alpha = 1,
-		frame_ox1 = -42,
-		frame_ox2 =  42,
-		frame_oy1 = -42,
-		frame_oy2 =  42,
-	},
-	simple = {
-		frame_shadow = nil,
-		frame_alpha = 0.9,
-		frame_ox1 = -2,
-		frame_ox2 =  2,
-		frame_oy1 = -2,
-		frame_oy2 =  2,
-	},
-	parchment = {
-		frame_shadow = {x = 10, y = 10, a = 0.5},
-		frame_ox1 = -16,
-		frame_ox2 = 16,
-		frame_oy1 = -16,
-		frame_oy2 = 16,
-	},
-	tombstone = {
-		frame_shadow = {x = 10, y = 10, a = 0.5},
-		frame_ox1 = -16,
-		frame_ox2 = 16,
-		frame_oy1 = -16,
-		frame_oy2 = 16,
-	},
-}
+_M.ui_conf = {}
+
+function _M:loadUIDefinitions(file)
+	local f, err = loadfile(file)
+	if not f then print("Error while loading UI definition from", file, ":", err) return end
+	setfenv(f, self.ui_conf)
+	local ok, err = pcall(f)
+	if not f then print("Error while loading UI definition from", file, ":", err) return end
+end
 
 function _M:inherited(base)
 	if base._NAME == "engine.ui.Base" then
@@ -116,6 +84,8 @@ function _M:init(t, no_gen)
 	end
 	
 	if t.ui then self.ui = t.ui end
+
+	if not self.ui_conf[self.ui] then self.ui = "metal" end
 
 	if not no_gen then self:generate() end
 end

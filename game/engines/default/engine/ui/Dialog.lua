@@ -20,6 +20,7 @@
 require "engine.class"
 local KeyBind = require "engine.KeyBind"
 local Base = require "engine.ui.Base"
+local Particles = require "engine.Particles"
 
 --- A generic UI button
 module(..., package.seeall, class.inherit(Base))
@@ -200,6 +201,7 @@ function _M:init(title, w, h, x, y, alpha, font, showup, skin)
 	end
 	self.color = self.color or {r=255, g=255, b=255}
 	if skin then self.ui = skin end
+	if not self.ui_conf[self.ui] then self.ui = "metal" end
 
 	local conf = self.ui_conf[self.ui]
 	self.frame = self.frame or {
@@ -214,11 +216,14 @@ function _M:init(title, w, h, x, y, alpha, font, showup, skin)
 		b5 = "ui/dialogframe_5.png",
 		shadow = conf.frame_shadow,
 		a = conf.frame_alpha or 1,
+		particles = table.clone(conf.particles, true),
 	}
 	self.frame.ox1 = self.frame.ox1 or conf.frame_ox1
 	self.frame.ox2 = self.frame.ox2 or conf.frame_ox2
 	self.frame.oy1 = self.frame.oy1 or conf.frame_oy1
 	self.frame.oy2 = self.frame.oy2 or conf.frame_oy2
+
+	self.particles = {}
 
 	self.frame.title_x = 0
 	self.frame.title_y = 0
@@ -537,7 +542,13 @@ end
 
 function _M:display() end
 
+--- This does nothing and can be changed by other classes
 function _M:unload()
+end
+
+--- This provides required cleanups, do not touch
+function _M:cleanup()
+	for p, _ in pairs(self.particles) do p:dieDisplay() end
 end
 
 function _M:drawFrame(x, y, r, g, b, a)
@@ -557,12 +568,45 @@ function _M:drawFrame(x, y, r, g, b, a)
 	self.b6.t:toScreenFull(x + self.frame.w - self.b9.w, y + self.b7.h, self.b6.w, self.frame.h - self.b7.h - self.b1.h, self.b6.tw, self.b6.th, r, g, b, a)
 
 	-- Body
-	self.b5.t:toScreenFull(x + self.b7.w, y + self.b7.h, self.frame.w - self.b7.w - self.b3.w , self.frame.h - self.b7.h - self.b3.h, self.b6.tw, self.b6.th, r, g, b, a)
+	self.b5.t:toScreenFull(x + self.b7.w, y + self.b7.h, self.frame.w - self.b7.w - self.b3.w , self.frame.h - self.b7.h - self.b3.h, self.b5.tw, self.b5.th, r, g, b, a)
 
 	-- Overlays
 	for i = 1, #self.overs do
 		local ov = self.overs[i]
 		ov.t:toScreenFull(x + ov.x, y + ov.y, ov.w , ov.h, ov.tw, ov.th, r, g, b, a * ov.a)
+	end
+
+	if self.frame.particles then
+		for i, pdef in ipairs(self.frame.particles) do
+			if rng.chance(pdef.chance) then
+				local p = Particles.new(pdef.name, 1, pdef.args)
+				local pos = {x=0, y=0}
+				if pdef.position.base == 7 then
+					pos.x = pdef.position.ox
+					pos.y = pdef.position.oy
+				elseif pdef.position.base == 9 then
+					pos.x = self.w + pdef.position.ox + self.b9.w
+					pos.y = pdef.position.oy
+				elseif pdef.position.base == 1 then
+					pos.x = pdef.position.ox
+					pos.y = self.h + pdef.position.oy + self.b1.h
+				elseif pdef.position.base == 3 then
+					pos.x = self.w + pdef.position.ox + self.b3.w
+					pos.y = self.h + pdef.position.oy + self.b3.h
+				end
+				self.particles[p] = pos
+			end
+		end
+	end
+
+	if next(self.particles) then
+		for p, pos in pairs(self.particles) do
+			if p.ps:isAlive() then
+				p.ps:toScreen(x + pos.x, y + pos.y, true, 1)
+			else
+				self.particles[p] = nil
+			end
+		end
 	end
 end
 

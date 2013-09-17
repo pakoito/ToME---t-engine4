@@ -21,6 +21,7 @@
 require "engine.class"
 local Dialog = require "engine.ui.Dialog"
 local Savefile = require "engine.Savefile"
+local UIBase = require "engine.ui.Base"
 require "engine.PlayerProfile"
 
 --- Handles dialog windows
@@ -695,6 +696,11 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 	end
 
 	self:loadAddons(mod, (save_desc and save_desc.addons) or (__module_extra_info.set_addons))
+
+	-- Now that addons are loaded we can load UI definitions
+	for _, file in ipairs(fs.list("/data/gfx/ui/definitions")) do
+		if file:find("%.lua$") then UIBase:loadUIDefinitions("/data/gfx/ui/definitions/"..file) end
+	end
 
 	-- Check addons
 	if hash_valid then

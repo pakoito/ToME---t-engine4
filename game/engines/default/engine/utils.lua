@@ -103,6 +103,7 @@ end
 -- @param k_skip A table containing key values set to true if you want to skip them.
 -- @return The cloned table.
 function table.clone(tbl, deep, k_skip)
+	if not tbl then return nil end
 	local n = {}
 	k_skip = k_skip or {}
 	for k, e in pairs(tbl) do

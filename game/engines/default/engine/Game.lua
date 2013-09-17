@@ -333,6 +333,7 @@ function _M:unregisterDialog(d)
 	if not self.dialogs[d] then return end
 	table.remove(self.dialogs, self.dialogs[d])
 	self.dialogs[d] = nil
+	d:cleanup()
 	d:unload()
 	-- Update positions
 	for i, id in ipairs(self.dialogs) do id.__stack_id = i self.dialogs[id] = i end
