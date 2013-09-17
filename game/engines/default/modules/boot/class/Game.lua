@@ -86,6 +86,8 @@ function _M:loaded()
 end
 
 function _M:run()
+	self:triggerHook{"Boot:run"}
+
 	self.flyers = FlyingText.new()
 	self:setFlyingText(self.flyers)
 	self.log = function(style, ...) end

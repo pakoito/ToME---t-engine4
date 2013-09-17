@@ -51,7 +51,12 @@ end
 
 --- Default mouse cursor
 function _M:defaultMouseCursor()
-	self:setMouseCursor("/data/gfx/ui/mouse.png", "/data/gfx/ui/mouse-down.png", -4, -4)
+	local UIBase = require "engine.ui.Base"
+	if fs.exists("/data/gfx/"..UIBase.ui.."-ui/mouse.png") and fs.exists("/data/gfx/"..UIBase.ui.."-ui/mouse-down.png") then
+		self:setMouseCursor("/data/gfx/"..UIBase.ui.."-ui/mouse.png", "/data/gfx/"..UIBase.ui.."-ui/mouse-down.png", -4, -4)
+	else
+		self:setMouseCursor("/data/gfx/ui/mouse.png", "/data/gfx/ui/mouse-down.png", -4, -4)
+	end
 end
 
 function _M:setMouseCursor(mouse, mouse_down, offsetx, offsety)

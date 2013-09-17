@@ -64,4 +64,6 @@ Birther:loadDefinition("/data/birth/descriptors.lua")
 -- Switch to realtime, with 8 ticks per second
 core.game.setRealtime(8)
 
+class:triggerHook{"Boot:load"}
+
 return {require "mod.class.Game" }
