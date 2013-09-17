@@ -31,6 +31,8 @@ module(..., package.seeall, class.inherit(Dialog))
 function _M:init()
 	Dialog.init(self, "Configure Addons", game.w * 0.8, game.h * 0.8)
 
+	local url = Textzone.new{text="You can get new addons at #LIGHT_BLUE##{underline}#http://te4.org/addons/tome", auto_height=true, auto_width=true, fct=function() util.browserOpenUrl("http://te4.org/addons/tome") end}
+
 	self.c_compat = Checkbox.new{default=false, width=math.floor(self.iw / 3 - 40), title="Show incompatible", on_change=function() self:switch() end}
 
 	self:generateList()
@@ -55,10 +57,11 @@ function _M:init()
 	}, list={}, fct=function(item) self:switchAddon(item) end, select=function(item, sel) self:select(item) end}
 
 	self:loadUI{
-		{left=0, top=0, ui=self.c_list},
-		{right=0, top=0, ui=self.c_adds},
+		{left=0, top=0, ui=url},
+		{left=0, top=url.h, ui=self.c_list},
+		{right=0, top=url.h, ui=self.c_adds},
 		{left=0, bottom=0, ui=self.c_compat},
-		{left=self.c_list.w + 5, top=5, ui=Separator.new{dir="horizontal", size=self.ih - 10}},
+		{left=self.c_list.w + 5, top=5+url.h, ui=Separator.new{dir="horizontal", size=self.ih - 10}},
 	}
 	self:setFocus(self.c_list)
 	self:setupUI()
