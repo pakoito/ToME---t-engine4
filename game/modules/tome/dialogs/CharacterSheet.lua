@@ -564,12 +564,17 @@ function _M:drawDialog(kind, actor_to_compare)
 
 			for i, o in ipairs(player:getInven(player.INVEN_MAINHAND)) do
 				local mean, dam = player:getObjectCombat(o, "mainhand"), player:getObjectCombat(o, "mainhand")
+				local range
 				if o.archery and mean then
-					dam = (player:getInven("QUIVER") and player:getInven("QUIVER")[1] and player:getInven("QUIVER")[1].combat)
+					local ammo = player:getInven("QUIVER") and player:getInven("QUIVER")[1]
+					if ammo and ammo.archery_ammo == o.archery then -- make sure ammo matches launcher
+						dam = player:getObjectCombat(ammo, "mainhand")
+						range = mean.range
+					end
 				end
 				if mean and dam then
 					s:drawColorStringBlended(self.font, WeaponTxt, w, h, 255, 255, 255, true) h = h + self.font_h
-					text = compare_fields(player, actor_to_compare, function(actor, ...) return math.floor(actor:combatAttack(...)) end, "%3d", "%+.0f", 1, false, false, mean)
+					text = compare_fields(player, actor_to_compare, function(actor, ...) return math.floor(actor:combatAttack(...)) end, "%3d", "%+.0f", 1, false, false, mean, dam)
 					dur_text = ("%d"):format(math.floor(player:combatAttack(o.combat)/5))
 					self:mouseTooltip(self.TOOLTIP_COMBAT_ATTACK, s:drawColorStringBlended(self.font, ("Accuracy    : #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h
 					text = compare_fields(player, actor_to_compare, function(actor, ...) return actor:combatDamage(...) end, "%3d", "%+.0f", 1, false, false, dam)
@@ -581,8 +586,8 @@ function _M:drawDialog(kind, actor_to_compare)
 					text = compare_fields(player, actor_to_compare, function(actor, ...) return actor:combatSpeed(...) end, "%.2f%%", "%+.2f%%", 100, true, false, mean)
 					self:mouseTooltip(self.TOOLTIP_COMBAT_SPEED,  s:drawColorStringBlended(self.font, ("Speed       : #00ff00#%s"):format(text), w, h, 255, 255, 255, true)) h = h + self.font_h
 				end
-				if mean and mean.range then
-					self:mouseTooltip(self.TOOLTIP_COMBAT_RANGE, s:drawColorStringBlended(self.font, ("Range (Main Hand): #00ff00#%3d"):format(mean.range), w, h, 255, 255, 255, true)) h = h + self.font_h
+				if range then
+					self:mouseTooltip(self.TOOLTIP_COMBAT_RANGE, s:drawColorStringBlended(self.font, ("Range (Main Hand): #00ff00#%3d"):format(range), w, h, 255, 255, 255, true)) h = h + self.font_h
 				end
 			end
 		-- Handle bare-handed combat

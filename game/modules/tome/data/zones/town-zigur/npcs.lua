@@ -31,7 +31,7 @@ newEntity{ base = "BASE_NPC_ELVEN_CASTER", define_as = "GRAND_CORRUPTOR",
 	level_range = {30, nil}, exp_worth = 1,
 	rank = 3.5,
 	max_vim = 800,
-	never_angry = 1,
+	never_anger = 1,
 	max_life = resolvers.rngavg(300, 310), life_rating = 18,
 	resolvers.equip{
 		{type="weapon", subtype="staff", forbid_power_source={antimagic=true}, autoreq=true},

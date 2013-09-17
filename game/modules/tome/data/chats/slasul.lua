@@ -97,7 +97,7 @@ In return let me offer you this powerful trident.]],
 				game.level.map:particleEmitter(npc.x, npc.y, 1, "demon_teleport")
 				game.level.map:particleEmitter(player.x, player.y, 1, "demon_teleport")
 				npc.invulnerable = 1
-				npc.never_angry = 1
+				npc.never_anger = 1
 				player:setQuestStatus("temple-of-creation", engine.Quest.COMPLETED, "legacy-naloren")
 			end
 		end},

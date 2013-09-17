@@ -49,9 +49,8 @@ newTalent{
 			if auras.c_aura_on then
 				val.LIGHTNING = 1
 			end
-			return val
 		end
-		return 0
+		return val
 	end },
 	range = function(self, t)
 		local r = 5

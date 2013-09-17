@@ -925,7 +925,7 @@ newTalent{
 	equilibrium = 4,
 	cooldown = 6,
 	range = 0,
-	radius = function(self, t) return math.floor(self:combatTalentScale(t, 2.7, 5,3)) end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 2.7, 5.3)) end,
 	direct_hit = true,
 	tactical = { DISABLE = 3 },
 	requires_target = true,

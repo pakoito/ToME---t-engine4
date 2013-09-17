@@ -195,7 +195,7 @@ newTalent{
 
 		if target.level - 2 > self.level then
 			-- level bonus
-			hateGain = hateGain + (target.level - 2 - self.level) * 2
+			hateGain = hateGain + math.ceil(self:combatTalentScale(target.level - 2 - self.level, 2, 10, "log", 0, 1))
 			hateMessage = "#F53CBE#You have taken the life of an experienced foe!"
 		end
 

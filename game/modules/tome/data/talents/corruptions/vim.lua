@@ -61,11 +61,12 @@ newTalent{
 		self:setEffect(self.EFF_SENSE, t.getDuration(self,t), {
 			range = rad,
 			actor = 1,
+			VimsensePenalty = t.getResistPenalty(self,t), -- Compute resist penalty at time of activation
 			on_detect = function(self, x, y)
 				local a = game.level.map(x, y, engine.Map.ACTOR)
 				if not a or self:reactionToward(a) >= 0 then return end
 				a:setTarget(game.player)
-				a:setEffect(a.EFF_VIMSENSE, 2, {power=t.getResistPenalty(self,t)})
+				a:setEffect(a.EFF_VIMSENSE, 2, {power=self:hasEffect(self.EFF_SENSE).VimsensePenalty or 0})
 			end,
 		})
 		game:playSoundNear(self, "talents/spell_generic")

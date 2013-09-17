@@ -362,22 +362,22 @@ newTalent{
 	cooldown = 15,
 	no_energy = true,
 	activate = function(self, t)
-		t.trance_counter = 0
 		local ret = {}
 		self:talentTemporaryValue(ret, "resists", {all=15})
 		self:talentTemporaryValue(ret, "combat_mindpower", -15)
 		self:talentTemporaryValue(ret, "combat_mentalresist", 20)
+		ret.trance_counter = 0
 		return ret
 	end,
 	deactivate = function(self, t, p)
-		t.trance_counter = nil
 		return true
 	end,
 	callbackOnAct = function(self, t)
-		t.trance_counter = t.trance_counter + 1
-		if t.trance_counter <= 6 then return end
-		
-		if rng.percent((t.trance_counter - 5) * 2) then
+		local tt = self:isTalentActive(t.id)
+		if not tt then return end
+		tt.trance_counter = tt.trance_counter + 1
+		if tt.trance_counter <= 5 then return end
+		if rng.percent((tt.trance_counter - 5) * 2) then
 			self:forceUseTalent(self.T_BATTLE_TRANCE, {ignore_energy=true})
 			self:setEffect(self.EFF_CONFUSED, 4, {power=40})
 			game.logPlayer(self, "You overdose on the honeyroot sap!")

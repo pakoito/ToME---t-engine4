@@ -1493,6 +1493,15 @@ newEffect{
 				self.tempeffect_def[self.EFF_CURSED_FORM].updateEffect(self, eff)
 			end
 		end
+		if (eff.statChange or 0)>0 and eff.neutralizeChance then -- Remove poisons/disease (w/Grim Resolve)
+			local efdef
+			for efid, ef in pairs(self.tmp) do
+				efdef = self.tempeffect_def[efid]
+				if efdef.subtype and (efdef.subtype.poison or efdef.subtype.disease) and rng.percent(eff.neutralizeChance) then
+					self:removeEffect(efid)
+				end
+			end
+		end
 	end,
 }
 

@@ -2802,8 +2802,20 @@ function _M:updateModdableTile()
 	local add = self.add_mos
 	local i
 
+	self:triggerHook{"Actor:updateModdableTile:back", base=base, add=add}
+
 	i = self.inven[self.INVEN_CLOAK]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile):format("behind")..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1} end
 	add[#add+1] = {image = base..(self.moddable_tile_base or "base_01.png")}
+
+	if not self:attr("disarmed") then
+		i = self.inven[self.INVEN_MAINHAND]; if i and i[1] and i[1].moddable_tile_back then
+			add[#add+1] = {image = base..(i[1].moddable_tile_back):format("right")..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1}
+		end
+		i = self.inven[self.INVEN_OFFHAND]; if i and i[1] and i[1].moddable_tile_back then
+			add[#add+1] = {image = base..(i[1].moddable_tile_back):format("left")..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1}
+		end
+	end
+
 	i = self.inven[self.INVEN_CLOAK]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile):format("shoulder")..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1} end
 	i = self.inven[self.INVEN_FEET]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile)..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1} end
 	i = self.inven[self.INVEN_BODY]; if i and i[1] and i[1].moddable_tile2 then add[#add+1] = {image = base..(i[1].moddable_tile2)..".png"}
@@ -2827,6 +2839,8 @@ function _M:updateModdableTile()
 			if i[1].moddable_tile_ornament then add[#add+1] = {image = base..(i[1].moddable_tile_ornament):format("left")..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1} end
 		end
 	end
+
+	self:triggerHook{"Actor:updateModdableTile:front", base=base, add=add}
 
 	if self.moddable_tile_ornament and self.moddable_tile_ornament[self.female and "female" or "male"] then add[#add+1] = {image = base..self.moddable_tile_ornament[self.female and "female" or "male"]..".png"} end
 
