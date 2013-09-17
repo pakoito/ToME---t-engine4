@@ -417,9 +417,11 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is no longer evading attacks.", "-Evasion" end,
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("evasion", eff.chance)
+		eff.defid = self:addTemporaryValue("combat_def", eff.defense)
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("evasion", eff.tmpid)
+		self:removeTemporaryValue("combat_def", eff.defid)
 	end,
 }
 

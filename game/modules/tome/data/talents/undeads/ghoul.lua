@@ -23,26 +23,17 @@ newTalent{
 	mode = "passive",
 	require = undeads_req1,
 	points = 5,
-	on_learn = function(self, t)
-		self.inc_stats[self.STAT_STR] = self.inc_stats[self.STAT_STR] + 2
-		self:onStatChange(self.STAT_STR, 2)
-		self.inc_stats[self.STAT_CON] = self.inc_stats[self.STAT_CON] + 2
-		self:onStatChange(self.STAT_CON, 2)
-	end,
-	on_unlearn = function(self, t)
-		self.inc_stats[self.STAT_STR] = self.inc_stats[self.STAT_STR] - 2
-		self:onStatChange(self.STAT_STR, -2)
-		self.inc_stats[self.STAT_CON] = self.inc_stats[self.STAT_CON] - 2
-		self:onStatChange(self.STAT_CON, -2)
-	end,
+	statBonus = function(self, t) return self:combatTalentScale(t, 2, 10, 0.75) end,
 	getMaxDamage = function(self, t) return math.max(50, 100 - self:getTalentLevelRaw(t) * 10) end,
 	passives = function(self, t, p)
+		self:talentTemporaryValue(p, "inc_stats", {[self.STAT_STR]=t.statBonus(self, t)})
+		self:talentTemporaryValue(p, "inc_stats", {[self.STAT_CON]=t.statBonus(self, t)})
 		self:talentTemporaryValue(p, "flat_damage_cap", {all=t.getMaxDamage(self, t)})
 	end,
 	info = function(self, t)
 		return ([[Improves your ghoulish body, increasing Strength and Constitution by %d.
 		Your body also becomes incredibly resilient to damage, you can never take a blow that deals more than %d%% of your maximum life.]])
-		:format(2 * self:getTalentLevelRaw(t), t.getMaxDamage(self, t))
+		:format(t.statBonus(self, t), t.getMaxDamage(self, t))
 	end,
 }
 
@@ -54,7 +45,7 @@ newTalent{
 	tactical = { CLOSEIN = 3 },
 	direct_hit = true,
 	cooldown = function(self, t) return math.max(10, 22 - self:getTalentLevelRaw(t) * 2) end,
-	range = function(self, t) return math.floor(4 + self:getTalentLevel(t) * 1.2) end,
+	range = function(self, t) return math.floor(self:combatTalentScale(t, 5, 10, 0.5, 0, 1)) end,
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
@@ -96,8 +87,11 @@ newTalent{
 	tactical = { ATTACK = { BLIGHT = 1 }, HEAL = 1 },
 	range=1,
 	requires_target = true,
+	getduration = function(self, t) return self:combatTalentScale(t, 7, 15, 0.5) end,
+	getPurgeChance = function(self, t) return self:combatTalentLimit(t, 100, 5, 25) end, -- Limit < 100%
+	-- status effect removal handled in mod.data.damage_types (type = "RETCH")
 	action = function(self, t)
-		local duration = self:getTalentLevelRaw(t) * 2 + 5
+		local duration = t.getduration(self, t)
 		local radius = 3
 		local dam = 10 + self:combatTalentStatDamage(t, "con", 10, 60)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=radius}
@@ -118,7 +112,7 @@ newTalent{
 		return ([[Vomit on the ground around you, healing any undead in the area and damaging anyone else.
 		Lasts %d turns, and deals %d blight damage or heals %d life.
 		Creatures standing in the retch also have %d%% chance to loose a physical effect each turn.
-		Undeads will be stripped from a detrimental effect while others will be stripped from a beneficial effect.]]):format(self:getTalentLevelRaw(t) * 2 + 5, damDesc(self, DamageType.BLIGHT, dam), dam * 1.5, self:getTalentLevel(t) * 5)
+		Undeads will be stripped from a detrimental effect while others will be stripped from a beneficial effect.]]):format(t.getduration(self, t), damDesc(self, DamageType.BLIGHT, dam), dam * 1.5, t.getPurgeChance(self, t))
 	end,
 }
 
@@ -131,8 +125,8 @@ newTalent{
 	tactical = { ATTACK = {BLIGHT = 2} },
 	range = 1,
 	requires_target = true,
-	getDamage = function(self, t) return 0.2 + self:getTalentLevel(t) / 12 end,
-	getDuration = function(self, t) return 3 + math.ceil(self:getTalentLevel(t)) end,
+	getDamage = function(self, t) return self:combatTalentScale(t, 0.28, 0.62) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 4, 8)) end,
 	getDiseaseDamage = function(self, t) return self:combatTalentStatDamage(t, "con", 5, 50) end,
 	getStatDamage = function(self, t) return self:combatTalentStatDamage(t, "con", 5, 20) end,
 	spawn_ghoul = function (self, target, t)
@@ -185,7 +179,7 @@ newTalent{
 				if target.dead and ghoulify > 0 then
 					t.spawn_ghoul(self, target, t)
 				end
-				target:setEffect(target.EFF_GHOUL_ROT, 3 + math.ceil(self:getTalentLevel(t)), {src=self, apply_power=self:combatPhysicalpower(), dam=t.getDiseaseDamage(self, t), str=str_damage, con=con_damage, dex=dex_damage, make_ghoul=ghoulify})
+				target:setEffect(target.EFF_GHOUL_ROT, t.getDuration(self,t), {src=self, apply_power=self:combatPhysicalpower(), dam=t.getDiseaseDamage(self, t), str=str_damage, con=con_damage, dex=dex_damage, make_ghoul=ghoulify})
 			else
 				game.logSeen(target, "%s resists the disease!", target.name:capitalize())
 			end

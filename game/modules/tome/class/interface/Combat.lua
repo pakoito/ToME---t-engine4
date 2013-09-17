@@ -384,7 +384,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	elseif self:checkHit(atk, def) and (self:canSee(target) or self:attr("blind_fight") or rng.chance(3)) then
 		local pres = util.bound(target:combatArmorHardiness() / 100, 0, 1)
 		if target.knowTalent and target:hasEffect(target.EFF_DUAL_WEAPON_DEFENSE) then
-			local deflect = target:callTalent(target.T_DUAL_WEAPON_DEFENSE, "doDeflect")
+			local deflect = math.max(dam, target:callTalent(target.T_DUAL_WEAPON_DEFENSE, "doDeflect"))
 			if deflect > 0 then
 				game.logSeen(target, "%s parries %d damage from %s's attack.", target.name:capitalize(), deflect, self.name:capitalize())
 				dam = math.max(dam - deflect,0)
@@ -1121,11 +1121,11 @@ function _M:combatCrit(weapon)
 	weapon = weapon or self.combat or {}
 	local addcrit = 0
 	if weapon.talented and self:knowTalent(Talents.T_LETHALITY) then
-		addcrit = 1 + self:getTalentLevel(Talents.T_LETHALITY) * 1.3
+		addcrit = 1 + self:callTalent(Talents.T_LETHALITY, "getCriticalChance")
 	end
 	local crit = self.combat_physcrit + (self:getCun() - 10) * 0.3 + (self:getLck() - 50) * 0.30 + (weapon.physcrit or 1) + addcrit
 
-	return util.bound(crit, 0, 100)
+	return math.max(crit, 0) -- note: crit > 100% may be offset by crit reduction elsewhere
 end
 
 --- Gets the damage range
@@ -1352,7 +1352,7 @@ function _M:combatPhysicalpower(mod, weapon, add)
 	mod = mod or 1
 	add = add or 0
 	if self:knowTalent(Talents.T_ARCANE_DESTRUCTION) then
-		add = add + self:combatSpellpower() * self:getTalentLevel(Talents.T_ARCANE_DESTRUCTION) / 7
+		add = add + self:combatSpellpower() * self:callTalent(Talents.T_ARCANE_DESTRUCTION, "getSPMult")
 	end
 	if self:isTalentActive(Talents.T_BLOOD_FRENZY) then
 		add = add + self.blood_frenzy
@@ -1372,7 +1372,7 @@ function _M:combatPhysicalpower(mod, weapon, add)
 
 	add = add + 10 * self:combatCheckTraining(weapon)
 
-	local d = (self.combat_dam > 0 and self.combat_dam or 0) + add + self:getStr()
+	local d = math.max(0, self.combat_dam + add) + self:getStr() -- allows strong debuffs to offset strength
 	if self:attr("dazed") then d = d / 2 end
 	return self:rescaleCombatStats(d) * mod
 end
@@ -1396,7 +1396,7 @@ function _M:combatSpellpower(mod, add)
 		add = add + self:callTalent(self.T_SHADOW_CUNNING,"getSpellpower") * self:getCun() / 100
 	end
 	if self:hasEffect(self.EFF_BLOODLUST) then
-		add = add + self:hasEffect(self.EFF_BLOODLUST).dur
+		add = add + self:hasEffect(self.EFF_BLOODLUST).power
 	end
 
 	local am = 1
@@ -1542,9 +1542,9 @@ function _M:physicalCrit(dam, weapon, target, atk, def, add_chance, crit_power_a
 		chance = chance - target:callTalent(target.T_SCOUNDREL,"getCritPenalty")
 	end
 
-	if self:isTalentActive(self.T_STEALTH) and self:knowTalent(self.T_SHADOWSTRIKE) then
+	if self:attr("stealth") and self:knowTalent(self.T_SHADOWSTRIKE) and not target:canSee(self) then -- bug fix
 		chance = 100
-		crit_power_add = crit_power_add + self:getTalentLevel(self.T_SHADOWSTRIKE) / 7
+		crit_power_add = crit_power_add + self:callTalent(self.T_SHADOWSTRIKE,"getMultiplier")
 	end
 
 	chance = util.bound(chance, 0, 100)
@@ -1572,9 +1572,9 @@ function _M:spellCrit(dam, add_chance, crit_power_add)
 	local chance = self:combatSpellCrit() + (add_chance or 0)
 	local crit = false
 
-	if self:isTalentActive(self.T_STEALTH) and self:knowTalent(self.T_SHADOWSTRIKE) then
+	if self:attr("stealth") and self:knowTalent(self.T_SHADOWSTRIKE) and not target:canSee(self) then -- bug fix
 		chance = 100
-		crit_power_add = crit_power_add + self:getTalentLevel(self.T_SHADOWSTRIKE) / 7
+		crit_power_add = crit_power_add + self:callTalent(self.T_SHADOWSTRIKE,"getMultiplier")
 	end
 
 	print("[SPELL CRIT %]", chance)
@@ -1619,9 +1619,9 @@ function _M:mindCrit(dam, add_chance, crit_power_add)
 	local chance = self:combatMindCrit() + (add_chance or 0)
 	local crit = false
 
-	if self:isTalentActive(self.T_STEALTH) and self:knowTalent(self.T_SHADOWSTRIKE) then
+	if self:attr("stealth") and self:knowTalent(self.T_SHADOWSTRIKE) and not target:canSee(self) then -- bug fix
 		chance = 100
-		crit_power_add = crit_power_add + self:getTalentLevel(self.T_SHADOWSTRIKE) / 7
+		crit_power_add = crit_power_add + self:callTalent(self.T_SHADOWSTRIKE,"getMultiplier")
 	end
 
 	print("[MIND CRIT %]", chance)
@@ -1721,7 +1721,7 @@ function _M:combatPhysicalResist(fake)
 		add = add + self:getCon() / 3
 	end
 	if self:knowTalent(self.T_POWER_IS_MONEY) then
-		add = add + util.bound(self.money / (90 - self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 5), 0, self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 7)
+		add = add + self:callTalent(self.T_POWER_IS_MONEY, "getSaves")
 	end
 
 	-- To return later
@@ -1749,7 +1749,7 @@ function _M:combatSpellResist(fake)
 		add = add + self:getCon() / 3
 	end
 	if self:knowTalent(self.T_POWER_IS_MONEY) then
-		add = add + util.bound(self.money / (90 - self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 5), 0, self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 7)
+		add = add + self:callTalent(self.T_POWER_IS_MONEY, "getSaves")
 	end
 
 	-- To return later
@@ -1781,11 +1781,16 @@ function _M:combatMentalResist(fake)
 		add = add + t.getMental(self, t)
 	end
 	if self:knowTalent(self.T_POWER_IS_MONEY) then
-		add = add + util.bound(self.money / (90 - self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 5), 0, self:getTalentLevelRaw(self.T_POWER_IS_MONEY) * 7)
+		add = add + self:callTalent(self.T_POWER_IS_MONEY, "getSaves")
 	end
 
 	local d = self.combat_mentalresist + (self:getCun() + self:getWil() + (self:getLck() - 50) * 0.5) * 0.35 + add
 	if self:attr("dazed") then d = d / 2 end
+	
+	local nm = self:hasEffect(self.EFF_CURSE_OF_NIGHTMARES)
+	if nm and rng.percent(20) then
+		d = d * (1-self.tempeffect_def.EFF_CURSE_OF_NIGHTMARES.getVisionsReduction(nm, nm.level)/100)
+	end	
 	return self:rescaleCombatStats(d)
 end
 
@@ -1808,8 +1813,8 @@ function _M:combatGetResist(type)
 		power = self.force_use_resist_percent or 100
 	end
 
-	local a = (self.resists.all or 0) / 100
-	local b = (self.resists[type] or 0) / 100
+	local a = math.min((self.resists.all or 0) / 100,1) -- Prevent large numbers from inverting the resist formulas
+	local b = math.min((self.resists[type] or 0) / 100,1)
 	local r = math.min(100 * (1 - (1 - a) * (1 - b)), (self.resists_cap.all or 0) + (self.resists_cap[type] or 0))
 	return r * power / 100
 end
@@ -1862,7 +1867,7 @@ function _M:combatSeeStealth()
 	if self:knowTalent(self.T_PIERCING_SIGHT) then bonus = bonus + self:callTalent(self.T_PIERCING_SIGHT,"seePower") end
 	if self:knowTalent(self.T_PRETERNATURAL_SENSES) then bonus = bonus + self:callTalent(self.T_PRETERNATURAL_SENSES, "sensePower") end
 	-- level 50 with 100 cun ==> 50
-	return self:combatScale(self.level/2 + self:getCun(25, true) + (self:attr("see_stealth") or 0), 0, 0, 50, 50) + bonus -- Note bonus scaled separately from talents
+	return self:combatScale(self.level/2 + self:getCun()/4 + (self:attr("see_stealth") or 0), 0, 0, 50, 50) + bonus -- Note bonus scaled separately from talents
 end
 
 --- Computes see invisible

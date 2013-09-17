@@ -299,13 +299,17 @@ newTalent{
 	target = function(self, t)
 		return {type="hit", range=1, talent=t}
 	end,
+	getpower = function(self, t) return 8 end,
+	maxpower = function(self, t) return self:combatTalentLimit(t, 100, 45, 70) end, -- Limit spell failure < 100%
 	action = function(self, t)
 	self:getTalentLevel(t)
 		local tg = self:getTalentTarget(t)
 		local x, y, target = self:getTarget(tg)
 		if not x or not y then return nil end
+		dispower = t.getpower(self,t)
+		dismax = t.maxpower(self, t)
 		self:project(tg, x, y, function(px, py)
-			target:setEffect(target.EFF_SPELL_DISRUPTION, 8, {src=self, power = 8, max = 45+self:getTalentLevel(t)*5, apply_power=self:combatMindpower()})
+			target:setEffect(target.EFF_SPELL_DISRUPTION, 8, {src=self, power = dispower, max = dismax, apply_power=self:combatMindpower()})
 			if rng.percent(30) and self:getTalentLevel(t)>2 then
 
 			local effs = {}
@@ -335,18 +339,18 @@ newTalent{
 					end
 				end
 			end
-				if self:getTalentLevel(t)>4 then
-					if target.undead or target.construct then
-						self:project({type="hit"}, target.x, target.y, engine.DamageType.ARCANE, 40+self:combatMindpower())
-						if target:canBe("stun") then target:setEffect(target.EFF_STUNNED, 5, {apply_power=self:combatMindpower()}) end
-						game.logSeen(self, "%s's animating magic is disrupted!", target.name:capitalize())
-					end
+			if self:getTalentLevel(t)>=5 then
+				if target.undead or target.construct then
+					self:project({type="hit"}, target.x, target.y, engine.DamageType.ARCANE, 40+self:combatMindpower())
+					if target:canBe("stun") then target:setEffect(target.EFF_STUNNED, 5, {apply_power=self:combatMindpower()}) end
+					game.logSeen(self, "%s's animating magic is disrupted!", target.name:capitalize())
 				end
+			end
 		end, nil, {type="slime"})
 		return true
 	end,
 	info = function(self, t)
-		return ([[Inflict various status effects on the target, depending on the level.]]):format(7 + self:getWil() * 0.5)
+		return ([[The target has a %d%% chance (stacking to a maximum of %d%%) to fail to cast any spell.  At level 2 magical effects may be disrupted, at level 3 magical sustains may be disrupted, and at level 5 magical constructs and undead may be stunned.]]):format(t.getpower(self, t),t.maxpower(self,t))
 	end,
 }
 

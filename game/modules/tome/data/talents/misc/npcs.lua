@@ -82,18 +82,20 @@ newTalent{
 	range = 1,
 	requires_target = true,
 	tactical = { ATTACK = { NATURE = 1, poison = 1} },
+	getMult = function(self, t) return self:combatTalentScale(t, 3, 7, "log") end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 		self.combat_apr = self.combat_apr + 1000
-		self:attackTarget(target, DamageType.POISON, 2 + self:getTalentLevel(t), true)
+		self:attackTarget(target, DamageType.POISON, t.getMult(self, t), true)
 		self.combat_apr = self.combat_apr - 1000
 		return true
 	end,
 	info = function(self, t)
-		return ([[Crawl onto the target, covering it in poison.]])
+		return ([[Crawl onto the target, doing %d%% damage and covering it in poison.]]):
+		format(100*t.getMult(self, t))
 	end,
 }
 
@@ -132,6 +134,7 @@ newTalent{
 	range = 1,
 	tactical = { DISABLE = { blind = 2 } },
 	requires_target = true,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 6, 10)) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -139,10 +142,10 @@ newTalent{
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 		local hit = self:attackTarget(target, DamageType.LIGHT, self:combatTalentWeaponDamage(t, 1, 1.8), true)
 
-		-- Try to stun !
+		-- Try to blind !
 		if hit then
 			if target:canBe("blind") then
-				target:setEffect(target.EFF_BLINDED, math.ceil(5 + self:getTalentLevel(t)), {apply_power=self:combatPhysicalpower()})
+				target:setEffect(target.EFF_BLINDED, t.getDuration(self, t), {apply_power=self:combatPhysicalpower()})
 			else
 				game.logSeen(target, "%s resists the blindness blow!", target.name:capitalize())
 			end
@@ -151,7 +154,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Releases blinding spores at the target.]])
+		return ([[Releases stinging spores at the target, blinding it for %d turns.]]):
+		format(t.getDuration(self, t))
 	end,
 }
 
@@ -165,18 +169,20 @@ newTalent{
 	range = 1,
 	tactical = { ATTACK = { NATURE = 1, poison = 1} },
 	requires_target = true,
+	getMult = function(self, t) return self:combatTalentScale(t, 3, 7, "log") end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 		self.combat_apr = self.combat_apr + 1000
-		self:attackTarget(target, DamageType.POISON, 2 + self:getTalentLevel(t), true)
+		self:attackTarget(target, DamageType.POISON, t.getMult(self, t), true)
 		self.combat_apr = self.combat_apr - 1000
 		return true
 	end,
 	info = function(self, t)
-		return ([[Releases poisonous spores at the target.]])
+		return ([[Releases poisonous spores at the target, doing %d%% damage and poisoning it.]]):
+		format(100 * t.getMult(self, t))
 	end,
 }
 
@@ -189,6 +195,7 @@ newTalent{
 	require = { stat = { str=12 }, },
 	tactical = { ATTACK = { PHYSICAL = 1 }, DISABLE = { stun = 2 } },
 	requires_target = true,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 3, 7)) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -199,7 +206,7 @@ newTalent{
 		-- Try to stun !
 		if hit then
 			if target:canBe("stun") then
-				target:setEffect(target.EFF_STUNNED, 2 + self:getTalentLevel(t), {apply_power=self:combatPhysicalpower()})
+				target:setEffect(target.EFF_STUNNED, t.getDuration(self, t), {apply_power=self:combatPhysicalpower()})
 			else
 				game.logSeen(target, "%s resists the stunning blow!", target.name:capitalize())
 			end
@@ -208,7 +215,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target doing %d%% damage. If the attack hits, the target is stunned. The chance to stun improves with your Physical Power.]]):format(100 * self:combatTalentWeaponDamage(t, 0.5, 1))
+		return ([[Hits the target doing %d%% damage. If the attack hits, the target is stunned for %d turns.
+		The chance to stun improves with your Physical Power.]]):
+		format(100 * self:combatTalentWeaponDamage(t, 0.5, 1), t.getDuration(self, t))
 	end,
 }
 
@@ -221,6 +230,7 @@ newTalent{
 	require = { stat = { str=12 }, },
 	requires_target = true,
 	tactical = { ATTACK = { PHYSICAL = 1 }, DISABLE = { disarm = 2 } },
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 3, 7)) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -229,7 +239,7 @@ newTalent{
 		local hit = self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 0.5, 1), true)
 
 		if hit and target:canBe("disarm") then
-			target:setEffect(target.EFF_DISARMED, 2 + self:getTalentLevel(t), {apply_power=self:combatPhysicalpower()})
+			target:setEffect(target.EFF_DISARMED, t.getDuration(self, t), {apply_power=self:combatPhysicalpower()})
 			target:crossTierEffect(target.EFF_DISARMED, self:combatPhysicalpower())
 		else
 			game.logSeen(target, "%s resists the blow!", target.name:capitalize())
@@ -238,7 +248,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target doing %d%% damage and trying to disarm the target. The chance improves with your Physical Power.]]):format(100 * self:combatTalentWeaponDamage(t, 0.5, 1))
+		return ([[Hits the target doing %d%% damage and trying to disarm the target for %d turns. The chance improves with your Physical Power.]]):
+		format(100 * self:combatTalentWeaponDamage(t, 0.5, 1), t.getDuration(self, t))
 	end,
 }
 
@@ -251,6 +262,7 @@ newTalent{
 	require = { stat = { str=12 }, },
 	requires_target = true,
 	tactical = { ATTACK = { PHYSICAL = 2 }, DISABLE = { stun = 1 } },
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 15, 52)) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -258,10 +270,10 @@ newTalent{
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 		local hit = self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 0.5, 1), true)
 
-		-- Try to stun !
+		-- Try to constrict !
 		if hit then
 			if target:canBe("pin") then
-				target:setEffect(target.EFF_CONSTRICTED, (2 + self:getTalentLevel(t)) * 10, {src=self, power=1.5 * self:getTalentLevel(t), apply_power=self:combatPhysicalpower()})
+				target:setEffect(target.EFF_CONSTRICTED, t.getDuration(self, t), {src=self, power=1.5 * self:getTalentLevel(t), apply_power=self:combatPhysicalpower()})
 			else
 				game.logSeen(target, "%s resists the constriction!", target.name:capitalize())
 			end
@@ -270,7 +282,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target doing %d%% damage. If the attack hits, the target is constricted. The constriction power improves with your Physical Power.]]):format(100 * self:combatTalentWeaponDamage(t, 0.5, 1))
+		return ([[Hits the target doing %d%% damage. If the attack hits, the target is constricted for %d turns.
+		The constriction power improves with your Physical Power.]]):
+		format(100 * self:combatTalentWeaponDamage(t, 0.5, 1), t.getDuration(self, t))
 	end,
 }
 
@@ -317,16 +331,17 @@ newTalent{
 	range = 1,
 	tactical = { ATTACK = { NATURE = 1, poison = 1} },
 	requires_target = true,
+	getMult = function(self, t) return self:combatTalentScale(t, 3, 7, "log") end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not target then return nil end
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
-		self:attackTarget(target, DamageType.POISON, 2 + self:getTalentLevel(t), true)
+		self:attackTarget(target, DamageType.POISON, t.getMult(self, t), true)
 		return true
 	end,
 	info = function(self, t)
-		return ([[Bites the target, infecting it with poison.]])
+		return ([[Bites the target, doing %d%% damage and injecting it with poison.]]):format(100 * t.getMult(self, t))
 	end,
 }
 
@@ -401,6 +416,7 @@ newTalent{
 	message = "@Source@ diseases @target@.",
 	requires_target = true,
 	tactical = { ATTACK = { BLIGHT = 2 }, DISABLE = { disease = 1 } },
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 13, 25)) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -411,7 +427,7 @@ newTalent{
 		-- Try to rot !
 		if hit then
 			if target:canBe("disease") then
-				target:setEffect(target.EFF_ROTTING_DISEASE, 10 + self:getTalentLevel(t) * 3, {src=self, dam=self:getStr() / 3 + self:getTalentLevel(t) * 2, con=math.floor(4 + target:getCon() * 0.1), apply_power=self:combatPhysicalpower()})
+				target:setEffect(target.EFF_ROTTING_DISEASE, t.getDuration(self, t), {src=self, dam=self:getStr() / 3 + self:getTalentLevel(t) * 2, con=math.floor(4 + target:getCon() * 0.1), apply_power=self:combatPhysicalpower()})
 			else
 				game.logSeen(target, "%s resists the disease!", target.name:capitalize())
 			end
@@ -420,7 +436,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target doing %d%% damage. If the attack hits, the target is diseased.]]):format(100 * self:combatTalentWeaponDamage(t, 0.5, 1))
+		return ([[Hits the target doing %d%% damage. If the attack hits, the target is afflicted with a disease, inflicting %d blight damage per turn for %d turns and reducing constitution.]]):
+		format(100 * self:combatTalentWeaponDamage(t, 0.5, 1),damDesc(self, DamageType.BLIGHT,self:getStr() / 3 + self:getTalentLevel(t) * 2),t.getDuration(self, t))
 	end,
 }
 
@@ -432,6 +449,7 @@ newTalent{
 	message = "@Source@ diseases @target@.",
 	tactical = { ATTACK = { BLIGHT = 2 }, DISABLE = { disease = 1 } },
 	requires_target = true,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 13, 25)) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -442,7 +460,7 @@ newTalent{
 		-- Try to rot !
 		if hit then
 			if target:canBe("disease") then
-				target:setEffect(target.EFF_DECREPITUDE_DISEASE, 10 + self:getTalentLevel(t) * 3, {src=self, dam=self:getStr() / 3 + self:getTalentLevel(t) * 2, dex=math.floor(4 + target:getDex() * 0.1), apply_power=self:combatPhysicalpower()})
+				target:setEffect(target.EFF_DECREPITUDE_DISEASE, t.getDuration(self, t), {src=self, dam=self:getStr() / 3 + self:getTalentLevel(t) * 2, dex=math.floor(4 + target:getDex() * 0.1), apply_power=self:combatPhysicalpower()})
 			else
 				game.logSeen(target, "%s resists the disease!", target.name:capitalize())
 			end
@@ -451,7 +469,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target doing %d%% damage. If the attack hits, the target is diseased.]]):format(100 * self:combatTalentWeaponDamage(t, 0.5, 1))
+		return ([[Hits the target doing %d%% damage. If the attack hits, the target is afflicted with a disease, inflicting %d blight damage per turn for %d turns and reducing dexterity.]]):
+		format(100 * self:combatTalentWeaponDamage(t, 0.5, 1),damDesc(self, DamageType.BLIGHT,self:getStr() / 3 + self:getTalentLevel(t) * 2),t.getDuration(self, t))
 	end,
 }
 
@@ -463,6 +482,7 @@ newTalent{
 	message = "@Source@ diseases @target@.",
 	requires_target = true,
 	tactical = { ATTACK = { BLIGHT = 2 }, DISABLE = { disease = 1 } },
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 13, 25)) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -473,7 +493,7 @@ newTalent{
 		-- Try to rot !
 		if hit then
 			if target:canBe("disease") then
-				target:setEffect(target.EFF_WEAKNESS_DISEASE, 10 + self:getTalentLevel(t) * 3, {src=self, dam=self:getStr() / 3 + self:getTalentLevel(t) * 2, str=math.floor(4 + target:getStr() * 0.1), apply_power=self:combatPhysicalpower()})
+				target:setEffect(target.EFF_WEAKNESS_DISEASE, t.getDuration(self, t), {src=self, dam=self:getStr() / 3 + self:getTalentLevel(t) * 2, str=math.floor(4 + target:getStr() * 0.1), apply_power=self:combatPhysicalpower()})
 			else
 				game.logSeen(target, "%s resists the disease!", target.name:capitalize())
 			end
@@ -482,7 +502,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target doing %d%% damage. If the attack hits, the target is diseased.]]):format(100 * self:combatTalentWeaponDamage(t, 0.5, 1))
+		return ([[Hits the target doing %d%% damage. If the attack hits, the target is afflicted with a disease, inflicting %d blight damage per turn for %d turns and reducing strength.]]):
+		format(100 * self:combatTalentWeaponDamage(t, 0.5, 1),damDesc(self, DamageType.BLIGHT,self:getStr() / 3 + self:getTalentLevel(t) * 2),t.getDuration(self, t))
 	end,
 }
 
@@ -496,15 +517,16 @@ newTalent{
 	direct_hit = true,
 	requires_target = true,
 	tactical = { DISABLE = { confusion = 3 } },
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 3, 7)) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.CONFUSION, {dur=2+self:getTalentLevel(t), dam=50+self:getTalentLevelRaw(t)*10}, {type="manathrust"})
+		self:project(tg, x, y, DamageType.CONFUSION, {dur=t.getDuration(self, t), dam=50+self:getTalentLevelRaw(t)*10}, {type="manathrust"})
 		return true
 	end,
 	info = function(self, t)
-		return ([[Try to confuse the target's mind for a while.]])
+		return ([[Try to confuse the target's mind for %d turns.]]):format(t.getDuration(self, t))
 	end,
 }
 
@@ -518,17 +540,19 @@ newTalent{
 	reflectable = true,
 	tactical = { ATTACK = { COLD = 1 } },
 	requires_target = true,
+	getDamage = function(self, t) return self:combatScale(self:combatSpellpower() * self:getTalentLevel(t), 12, 0, 78.25, 265, 0.67) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.COLD, self:spellCrit(12 + self:combatSpellpower(0.25) * self:getTalentLevel(t)), {type="freeze"})
+		self:project(tg, x, y, DamageType.COLD, self:spellCrit(t.getDamage(self, t)), {type="freeze"})
 		game:playSoundNear(self, "talents/ice")
 		return true
 	end,
 	info = function(self, t)
-		return ([[Condenses ambient water on a target, damaging it for %0.2f.
-		The damage will increase with your Spellpower.]]):format(12 + self:combatSpellpower(0.25) * self:getTalentLevel(t))
+		return ([[Condenses ambient water on a target, inflicting %0.1f cold damage.
+		The damage will increase with your Spellpower.]]):
+		format(damDesc(self, DamageType.COLD,t.getDamage(self, t)))
 	end,
 }
 
@@ -543,17 +567,19 @@ newTalent{
 	reflectable = true,
 	requires_target = true,
 	tactical = { DISABLE = { stun = 2 }, ATTACK = { COLD = 1 } },
+	getDamage = function(self, t) return self:combatScale(self:combatSpellpower() * self:getTalentLevel(t), 12, 0, 65, 265, 0.67) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.COLDSTUN, self:spellCrit(12 + self:combatSpellpower(0.20) * self:getTalentLevel(t)), {type="freeze"})
+		self:project(tg, x, y, DamageType.COLDSTUN, self:spellCrit(t.getDamage(self, t)), {type="freeze"})
 		game:playSoundNear(self, "talents/ice")
 		return true
 	end,
 	info = function(self, t)
-		return ([[Condenses ambient water on a target, damaging it for %0.2f and stunning it for 4 turns.
-		The damage will increase with your Spellpower]]):format(12 + self:combatSpellpower(0.20) * self:getTalentLevel(t))
+		return ([[Condenses ambient water on a target, inflicting %0.1f cold damage and stunning it for 4 turns.
+		The damage will increase with your Spellpower]]):
+		format(damDesc(self, DamageType.COLD,t.getDamage(self, t)))
 	end,
 }
 
@@ -597,7 +623,7 @@ newTalent{
 		end
 		return nb
 	end },
-	getCureCount = function(self, t) return math.floor(self:getTalentLevel(t)) end,
+	getCureCount = function(self, t) return math.floor(self:combatTalentScale(t, 1, 5, "log")) end,
 	action = function(self, t)
 		local target = self
 		local effs = {}
@@ -660,6 +686,7 @@ newTalent{
 	require = { stat = { str=12 }, },
 	requires_target = true,
 	tactical = { DISABLE = { pin = 2 }, ATTACK = { PHYSICAL = 1 } },
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 2, 6)) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -667,10 +694,10 @@ newTalent{
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 		local hit = self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 0.8, 1.4), true)
 
-		-- Try to stun !
+		-- Try to pin !
 		if hit then
 			if target:canBe("pin") then
-				target:setEffect(target.EFF_PINNED, 1 + self:getTalentLevel(t), {apply_power=self:combatPhysicalpower()})
+				target:setEffect(target.EFF_PINNED, t.getDuration(self, t), {apply_power=self:combatPhysicalpower()})
 			else
 				game.logSeen(target, "%s resists the grab!", target.name:capitalize())
 			end
@@ -679,7 +706,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target doing %d%% damage; if the attack hits, the target is pinned to the ground.]]):format(100 * self:combatTalentWeaponDamage(t, 0.8, 1.4))
+		return ([[Hits the target doing %d%% damage; if the attack hits, the target is pinned to the ground for %d turns.]]):format(100 * self:combatTalentWeaponDamage(t, 0.8, 1.4), t.getDuration(self, t))
 	end,
 }
 
@@ -691,17 +718,13 @@ newTalent{
 	cooldown = 12,
 	message = "@Source@ projects ink!",
 	range = 0,
-	radius = function(self, t)
-		return 4 + self:getTalentLevelRaw(t)
-	end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 5, 9)) end,
 	direct_hit = true,
 	requires_target = true,
 	target = function(self, t)
 		return {type="cone", range=self:getTalentRadius(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,
-	getDuration = function(self, t)
-		return 2 + self:getTalentLevelRaw(t)
-	end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 3, 7)) end,
 	tactical = { DISABLE = { blind = 2 } },
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
@@ -727,19 +750,22 @@ newTalent{
 	range = 10,
 	requires_target = true,
 	tactical = { ATTACK = { NATURE = 1, poison = 1} },
+	getDamage = function(self, t)
+		return self:combatScale(math.max(self:getStr(), self:getDex())*self:getTalentLevel(t), 20, 0, 420, 500)
+	end,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t)}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		local s = math.max(self:getDex(), self:getStr())
-		self:project(tg, x, y, DamageType.POISON, 20 + (s * self:getTalentLevel(t)) * 0.8, {type="slime"})
+		self:project(tg, x, y, DamageType.POISON, t.getDamage(self,t), {type="slime"})
 		game:playSoundNear(self, "talents/slime")
 		return true
 	end,
 	info = function(self, t)
-		local s = math.max(self:getDex(), self:getStr())
 		return ([[Spit poison at your target, doing %0.2f poison damage over six turns.
-		The damage will increase with your Strength or Dexterity (whichever is higher).]]):format(20 + (s * self:getTalentLevel(t)) * 0.8)
+		The damage will increase with your Strength or Dexterity (whichever is higher).]]):
+		format(damDesc(self, DamageType.POISON, t.getDamage(self,t)))
 	end,
 }
 
@@ -752,17 +778,20 @@ newTalent{
 	range = 10,
 	requires_target = true,
 	tactical = { ATTACK = { BLIGHT = 2 } },
+	getDamage = function(self, t)
+		return self:combatScale(self:getMag()*self:getTalentLevel(t), 20, 0, 420, 500)
+	end,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t)}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.BLIGHT, 20 + (self:getMag() * self:getTalentLevel(t)) * 0.8, {type="slime"})
+		self:project(tg, x, y, DamageType.BLIGHT, t.getDamage(self,t), {type="slime"})
 		game:playSoundNear(self, "talents/slime")
 		return true
 	end,
 	info = function(self, t)
 		return ([[Spit blight at your target doing %0.2f blight damage.
-		The damage will increase with your Magic.]]):format(20 + (self:getMag() * self:getTalentLevel(t)) * 0.8)
+		The damage will increase with your Magic.]]):format(t.getDamage(self,t))
 	end,
 }
 
@@ -775,7 +804,7 @@ newTalent{
 	cooldown = 15,
 	tactical = { DISABLE = 2, CLOSEIN = 3 },
 	requires_target = true,
-	range = function(self, t) return math.floor(5 + self:getTalentLevelRaw(t)) end,
+	range = function(self, t) return math.floor(self:combatTalentScale(t, 6, 10)) end,
 	action = function(self, t)
 		if self:attr("never_move") then game.logPlayer(self, "You cannot do that currently.") return end
 
@@ -827,17 +856,19 @@ newTalent{
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
 	end,
 	tactical = { ATTACK = { PHYSICAL = 2 } },
+	getDamage = function(self, t) return self:combatScale(self:getStr()*self:getTalentLevel(t), 20, 0, 420, 500) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.BLEED, 20 + (self:getStr() * self:getTalentLevel(t)) * 0.8, {type="archery"})
+		self:project(tg, x, y, DamageType.BLEED, t.getDamage(self, t), {type="archery"})
 		game:playSoundNear(self, "talents/earth")
 		return true
 	end,
 	info = function(self, t)
 		return ([[Throws a pack of bones at your target doing %0.2f physical damage as bleeding.
-		The damage will increase with the Strength stat]]):format(20 + (self:getStr() * self:getTalentLevel(t)) * 0.8)
+		The damage will increase with the Strength stat]]):
+		format(damDesc(self, DamageType.PHYSICAL, t.getDamage(self, t)))
 	end,
 }
 
@@ -851,16 +882,19 @@ newTalent{
 	range = 10,
 	requires_target = true,
 	tactical = { DISABLE = { stun = 1, pin = 1 } },
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 3, 7)) end,
 	action = function(self, t)
 		local dur = 2 + self:getTalentLevel(t)
 		local trap = mod.class.Trap.new{
 			type = "web", subtype="web", id_by_type=true, unided_name = "sticky web",
 			display = '^', color=colors.YELLOW, image = "trap/trap_spiderweb_01_64.png",
 			name = "sticky web", auto_id = true,
-			detect_power = 6 * self:getTalentLevel(t), disarm_power = 10 * self:getTalentLevel(t),
+			detect_power = 6 * self:getTalentLevel(t), disarm_power = 10 * self:getTalentLevel(t), --Trap Params
 			level_range = {self.level, self.level},
 			message = "@Target@ is caught in a web!",
 			pin_dur = dur,
+			temporary = dur * 5,
+			summoner = self,
 			faction = false,
 			canTrigger = function(self, x, y, who)
 				if who.type == "spiderkin" then return false end
@@ -879,7 +913,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Lay an invisible web under you, trapping all non-spiderkin that pass.]]):format()
+		return ([[Lay an invisible web under you, pinning all non-spiderkin that pass for %d turns.]]):
+		format(t.getDuration(self, t))
 	end,
 }
 
@@ -890,21 +925,20 @@ newTalent{
 	equilibrium = 4,
 	cooldown = 6,
 	range = 0,
-	radius = function(self, t)
-		return 2 + self:getTalentLevelRaw(t) / 1.5
-	end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 2.7, 5,3)) end,
 	direct_hit = true,
 	tactical = { DISABLE = 3 },
 	requires_target = true,
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t}
 	end,
+	darkPower = function(self, t) return self:combatTalentScale(t, 10, 50) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, function(px, py)
-			local g = engine.Entity.new{name="darkness", show_tooltip=true, block_sight=true, always_remember=false, unlit=self:getTalentLevel(t) * 10}
+			local g = engine.Entity.new{name="darkness", show_tooltip=true, block_sight=true, always_remember=false, unlit=t.darkPower(self, t)}
 			game.level.map(px, py, Map.TERRAIN+1, g)
 			game.level.map.remembers(px, py, false)
 			game.level.map.lites(px, py, false)
@@ -914,8 +948,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Weave darkness, blocking all light but the most powerful and teleporting you a short range.
-		The damage will increase with the Dexterity stat]]):format(20 + (self:getDex() * self:getTalentLevel(t)) * 0.3)
+		return ([[Weave darkness (power %d) in a radius of %d, blocking all light but the most powerful and teleporting you a short range.]]):
+		format(t.darkPower(self, t), self:getTalentRadius(t))
 	end,
 }
 
@@ -933,17 +967,19 @@ newTalent{
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t}
 	end,
+	getDam = function(self, t) return self:combatScale(self:getStr() * self:getTalentLevel(t), 12, 0, 262, 500) end,
+	getDist = function(self, t) return math.floor(self:combatTalentScale(t, 4, 8)) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.PHYSKNOCKBACK, {dist=3+self:getTalentLevelRaw(t), dam=self:mindCrit(12 + self:getStr(50, true) * self:getTalentLevel(t))}, {type="archery"})
+		self:project(tg, x, y, DamageType.PHYSKNOCKBACK, {dist=t.getDist(self, t), dam=self:mindCrit(t.getDam(self, t))}, {type="archery"})
 		game:playSoundNear(self, "talents/ice")
 		return true
 	end,
 	info = function(self, t)
-		return ([[Throws a huge boulder at a target, damaging it for %0.2f and knocking it back.
-		The damage will increase with your Strength.]]):format(12 + self:getStr(50, true) * self:getTalentLevel(t))
+		return ([[Throws a huge boulder at a target, damaging it for %0.2f and knocking it back %d tiles.
+		The damage will increase with your Strength.]]):format(damDesc(self, DamageType.PHYSICAL, t.getDam(self, t)), t.getDist(self, t))
 	end,
 }
 
@@ -957,8 +993,9 @@ newTalent{
 	range = 10,
 	tactical = { ATTACK = 3 },
 	direct_hit = true,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 6, 10)) end,
 	action = function(self, t)
-		local rad = self:getTalentLevel(t) + 5
+		local rad = self:getTalentRadius(t)
 		for i = self.x - rad, self.x + rad do for j = self.y - rad, self.y + rad do if game.level.map:isBound(i, j) then
 			local actor = game.level.map(i, j, game.level.map.ACTOR)
 			if actor and not actor.player then
@@ -975,7 +1012,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Howl to call your hunting pack.]])
+		return ([[Howl (radius %d) to call your hunting pack.]]):
+		format(self:getTalentRadius(t))
 	end,
 }
 
@@ -989,8 +1027,9 @@ newTalent{
 	range = 10,
 	direct_hit = true,
 	tactical = { ATTACK = 3 },
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 6, 10)) end,
 	action = function(self, t)
-		local rad = self:getTalentLevel(t) + 5
+		local rad = self:getTalentRadius(t)
 		for i = self.x - rad, self.x + rad do for j = self.y - rad, self.y + rad do if game.level.map:isBound(i, j) then
 			local actor = game.level.map(i, j, game.level.map.ACTOR)
 			if actor and not actor.player then
@@ -1007,7 +1046,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Shriek to call your allies.]])
+		return ([[Shriek (radius %d) to call your allies.]]):
+		format(self:getTalentRadius(t))
 	end,
 }
 
@@ -1020,6 +1060,7 @@ newTalent{
 	stamina = 12,
 	requires_target = true,
 	tactical = { ATTACK = { PHYSICAL = 1 }, DISABLE = { stun = 2 } },
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 3, 7)) end,
 	action = function(self, t)
 		local weapon = self:hasTwoHandedWeapon()
 		if not weapon then
@@ -1033,10 +1074,10 @@ newTalent{
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, self:combatTalentWeaponDamage(t, 1, 1.4))
 
-		-- Try to stun !
+		-- Try to pin !
 		if hit then
 			if target:canBe("pin") then
-				target:setEffect(target.EFF_PINNED, 2 + self:getTalentLevel(t), {apply_power=self:combatPhysicalpower()})
+				target:setEffect(target.EFF_PINNED, t.getDuration(self, t), {apply_power=self:combatPhysicalpower()})
 			else
 				game.logSeen(target, "%s resists the crushing!", target.name:capitalize())
 			end
@@ -1045,7 +1086,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target with a mighty blow to the legs doing %d%% weapon damage. If the attack hits, the target is unable to move for %d turns.]]):format(100 * self:combatTalentWeaponDamage(t, 1, 1.4), 2+self:getTalentLevel(t))
+		return ([[Hits the target with a mighty blow to the legs doing %d%% weapon damage. If the attack hits, the target is unable to move for %d turns.]]):
+		format(100 * self:combatTalentWeaponDamage(t, 1, 1.4), t.getDuration(self, t))
 	end,
 }
 
@@ -1059,16 +1101,17 @@ newTalent{
 	direct_hit = true,
 	requires_target = true,
 	tactical = { DISABLE = { silence = 3 } },
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 5, 9)) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.SILENCE, {dur=math.floor(4 + self:getTalentLevel(t))}, {type="mind"})
-		game:playSoundNear(self, "talents/spell_generic")
+		self:project(tg, x, y, DamageType.SILENCE, {dur=t.getDuration(self, t)}, {type="mind"})
 		return true
 	end,
 	info = function(self, t)
-		return ([[Sends a telepathic attack, silencing the target for %d turns.]]):format(math.floor(4 + self:getTalentLevel(t)))
+		return ([[Sends a telepathic attack, silencing the target for %d turns.]]):
+		format(t.getDuration(self, t))
 	end,
 }
 
@@ -1113,8 +1156,9 @@ newTalent{
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
 	end,
 	tactical = { ATTACKAREA = { BLIGHT = 2 } },
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 3, 7)) end,
 	action = function(self, t)
-		local duration = self:getTalentLevel(t) + 2
+		local duration = t.getDuration(self, t)
 		local dam = self:combatTalentSpellDamage(t, 4, 65)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
@@ -1133,8 +1177,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Corrupted vapour rises at the target location doing %0.2f blight damage every turn for %d turns.
-		The damage will increase with Magic stat.]]):format(self:combatTalentSpellDamage(t, 5, 65), self:getTalentLevel(t) + 2)
+		return ([[Corrupted vapour rises at the target location (radius 4) doing %0.2f blight damage every turn for %d turns.
+		The damage will increase with Magic stat.]]):
+		format(damDesc(self, engine.DamageType.BLIGHT, self:combatTalentSpellDamage(t, 5, 65)), t.getDuration(self, t))
 	end,
 }
 
@@ -1195,19 +1240,21 @@ newTalent{
 	range = 1,
 	requires_target = true,
 	tactical = { ATTACK = { LIGHT = 1 } },
+	getDamage = function(self, t) return self:combatScale(self:combatSpellpower() * self:getTalentLevel(t), 0, 0, 66.25 , 265, 0.67) end,
 	action = function(self, t)
 		local tg = {type="bolt", range=1}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y then return nil end
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
-		self:project(tg, x, y, DamageType.LIGHT, math.floor(self:combatSpellpower(0.25) * self:getTalentLevel(t)), {type="light"})
+		self:project(tg, x, y, DamageType.LIGHT, t.getDamage(self, t), {type="light"})
 		game.level.map:particleEmitter(self.x, self.y, 1, "ball_fire", {radius = 1, r = 1, g = 0, b = 0})
 		self:die(self)
 		game:playSoundNear(self, "talents/arcane")
 		return true
 	end,
 	info = function(self, t)
-		return ([[Explodes in a blinding light.]])
+		return ([[Causes the user to explode (killing it) in a blinding light burst for %d damage.]]):
+		format(damDesc(self, DamageType.LIGHT, t.getDamage(self, t)))
 	end,
 }
 
@@ -1247,6 +1294,7 @@ newTalent{
 	proj_speed = 2,
 	requires_target = true,
 	tactical = { ATTACK = 2 },
+	getDamage = function(self, t) return self:combatScale(self:getMag() * self:getTalentLevel(t), 0, 0, 450, 500) end,
 	action = function(self, t)
 		local tg = {type = "bolt", range = 20, talent = t}
 		local x, y = self:getTarget(tg)
@@ -1262,13 +1310,14 @@ newTalent{
 				{DamageType.ARCANE, "manathrust"},
 				{DamageType.DARKNESS, "dark"},
 			}
-			tg.display={particle="bolt_elemental", trail="generictrail"}
-		self:projectile(tg, x, y, elem[1], math.floor(self:getMag(90, true) * self:getTalentLevel(t)), {type=elem[2]})
+		tg.display={particle="bolt_elemental", trail="generictrail"}
+		self:projectile(tg, x, y, elem[1], t.getDamage(self, t), {type=elem[2]})
 		game:playSoundNear(self, "talents/arcane")
 		return true
 	end,
 	info = function(self, t)
-		return ([[Fire a slow bolt of a random element. Damage raises with magic stat.]])
+		return ([[Fire a slow bolt of a random element for %d damage. Damage increases with the magic stat.]]):
+		format(t.getDamage(self, t))
 	end,
 }
 
@@ -1283,6 +1332,9 @@ newTalent{
 	proj_speed = 2,
 	requires_target = true,
 	tactical = { ATTACK = { FIRE = 1, PHYSICAL = 1 } },
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 5, 9)) end,
+	nbProj = function(self, t) return math.floor(self:combatTalentScale(t, 1, 5, "log")) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 15, 80) end,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), nolock=true, talent=t}
 		local x, y = self:getTarget(tg)
@@ -1299,11 +1351,11 @@ newTalent{
 			name = "raging volcano", image = oe.image, add_mos = {{image = "terrain/lava/volcano_01.png"}},
 			display = '&', color=colors.LIGHT_RED, back_color=colors.RED,
 			always_remember = true,
-			temporary = 4 + self:getTalentLevel(t),
+			temporary = t.getDuration(self, t),
 			x = x, y = y,
 			canAct = false,
-			nb_projs = math.floor(self:getTalentLevel(self.T_VOLCANO)),
-			dam = self:combatTalentSpellDamage(self.T_VOLCANO, 15, 80),
+			nb_projs = t.nbProj(self, t),
+			dam = t.getDamage(self, t),
 			act = function(self)
 				local tgts = {}
 				local grids = core.fov.circle_grids(self.x, self.y, 5, true)
@@ -1342,9 +1394,10 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Summons a small raging volcano for %d turns. Every turn, it will fire %d molten boulders toward your foes, dealing %0.2f fire and %0.2f physical damage.
+		local dam = t.getDamage(self, t)
+		return ([[Summons a small raging volcano for %d turns. Every turn, it will fire a molten boulder towards up to %d of your foes, dealing %0.2f fire and %0.2f physical damage.
 		The damage will scale with your Spellpower.]]):
-		format(4 + self:getTalentLevel(t), math.floor(self:getTalentLevel(self.T_VOLCANO)), damDesc(self, DamageType.FIRE, self:combatTalentSpellDamage(self.T_VOLCANO, 15, 80) / 2), damDesc(self, DamageType.PHYSICAL, self:combatTalentSpellDamage(self.T_VOLCANO, 15, 80) / 2))
+		format(t.getDuration(self, t), t.nbProj(self, t), damDesc(self, DamageType.FIRE, dam/2), damDesc(self, DamageType.PHYSICAL, dam/2))
 	end,
 }
 
@@ -1395,11 +1448,12 @@ newTalent{
 	},
 	direct_hit = true,
 	range = 0,
-	radius = function(self, t) return 1 + self:getTalentLevelRaw(t) end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 2, 6)) end,
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=true, talent=t}
 	end,
-	getPower = function(self, t) return self:combatTalentSpellDamage(t, 10, 50) end,
+	getPower = function(self, t) return self:combatLimit(self:combatTalentSpellDamage(t, 10, 50), 1, 0, 0, 0.329, 32.9) end, -- Limit < 100
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 1, 5)) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		self:project(tg, self.x, self.y, function(px, py)
@@ -1418,7 +1472,7 @@ newTalent{
 							reapplied = true
 						end
 					end
-					target:setEffect(target.EFF_FRENZY, self:getTalentLevel(t), {crit = t.getPower(self, t)/10, power=t.getPower(self, t)/100, dieat=t.getPower(self, t)/100}, reapplied)
+					target:setEffect(target.EFF_FRENZY, t.getDuration(self, t), {crit = t.getPower(self, t)*100, power=t.getPower(self, t), dieat=t.getPower(self, t)}, reapplied)
 				end
 			end
 		end)
@@ -1429,8 +1483,11 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Speeds up nearby Dredges.
-		]]):format()
+		local range = t.radius(self,t)
+		local power = t.getPower(self,t) * 100
+		return ([[Sends Dredges in a radius of %d into a frenzy for %d turns.
+		The frenzy will increase global speed by %d%%, physical crit chance by %d%%, and prevent death until -%d%% life.]]):		
+		format(range, t.getDuration(self, t), power, power, power)
 	end,
 }
 
@@ -1590,7 +1647,7 @@ newTalent{
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
 	end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 4, 50) end,
-	getDuration = function(self, t) return self:getTalentLevel(t) + 2 end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 3, 7)) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
@@ -1645,9 +1702,7 @@ newTalent{
 	cooldown = 20,
 	tactical = { ATTACK = { FIRE = 1 }, HEAL = 1, },
 	range = 0,
-	radius = function(self, t)
-		return 3 + self:getTalentLevelRaw(t)
-	end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 4, 8)) end,
 	requires_target = true,
 	target = function(self, t)
 		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
@@ -1717,7 +1772,7 @@ newTalent{
 	mana = 70,
 	tactical = { ATTACKAREA = { FIRE=2, PHYSICAL=2 } },
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 15, 250) end,
-	getNb = function(self, t) return 3 + math.floor(self:getTalentLevel(t) / 3) end,
+	getNb = function(self, t) return math.floor(self:combatTalentScale(t, 3.3, 4.8, "log")) end,
 	radius = 2,
 	range = 5,
 	target = function(self, t) return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t} end,
@@ -1962,6 +2017,7 @@ newTalent{
 	range = 10,
 	tactical = { DISABLE = 1, CLOSEIN = 3 },
 	requires_target = true,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 4, 8)) end,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -1976,16 +2032,16 @@ newTalent{
 			target:pull(self.x, self.y, tg.range)
 
 			DamageType:get(DamageType.COLD).projector(self, target.x, target.y, DamageType.COLD, dam)
-			target:setEffect(target.EFF_SLOW_MOVE, math.floor(3 + self:getTalentLevel(t)), {apply_power=self:combatSpellpower(), power=0.5})
+			target:setEffect(target.EFF_SLOW_MOVE, t.getDuration(self, t), {apply_power=self:combatSpellpower(), power=0.5})
 		end)
 		game:playSoundNear(self, "talents/arcane")
 
 		return true
 	end,
 	info = function(self, t)
-		return ([[Grab a target and teleport it to your side, covering it with frost, reducing its movement speed by 50%% for %d turns.
+		return ([[Grab a target and transport it next to you, covering it with frost, reducing its movement speed by 50%% for %d turns.
 		The ice will also deal %0.2f cold damage.
 		The damage will increase with your Spellpower.]]):
-		format(math.floor(3 + self:getTalentLevel(t)), damDesc(self, DamageType.COLD, self:combatTalentSpellDamage(t, 5, 140)))
+		format(t.getDuration(self, t), damDesc(self, DamageType.COLD, self:combatTalentSpellDamage(t, 5, 140)))
 	end,
 }

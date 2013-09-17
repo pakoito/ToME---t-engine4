@@ -73,10 +73,10 @@ _M.stats_per_level = 3
 
 -- Speeds are multiplicative, not additive
 _M.temporary_values_conf.global_speed_add = "newest"
-_M.temporary_values_conf.movement_speed = "mult0"
-_M.temporary_values_conf.combat_physspeed = "mult0"
-_M.temporary_values_conf.combat_spellspeed = "mult0"
-_M.temporary_values_conf.combat_mindspeed = "mult0"
+_M.temporary_values_conf.movement_speed = "add" -- Prevent excessive movement speed compounding
+_M.temporary_values_conf.combat_physspeed = "add" -- Prevent excessive attack speed compounding
+_M.temporary_values_conf.combat_spellspeed = "add" -- Prevent excessive spell speed compounding
+_M.temporary_values_conf.combat_mindspeed = "add" -- Prevent excessive mind speed compounding
 
 -- Damage cap takes the lowest
 _M.temporary_values_conf.flat_damage_cap = "lowest"
@@ -1042,7 +1042,7 @@ function _M:move(x, y, force)
 
 	-- Try to detect traps
 	if self:knowTalent(self.T_HEIGHTENED_SENSES) then
-		local power = self:getTalentLevel(self.T_HEIGHTENED_SENSES) * self:getCun(25, true)
+		local power = self:callTalent(self.T_HEIGHTENED_SENSES,"trapPower")
 		local grids = core.fov.circle_grids(self.x, self.y, 1, true)
 		for x, yy in pairs(grids) do for y, _ in pairs(yy) do
 			local trap = game.level.map(x, y, Map.TRAP)
@@ -1388,8 +1388,8 @@ function _M:colorStats(stat)
 		return "#0080FF#"..score
 	elseif score <= 99 then
 		return "#8d55ff#"..score
-	elseif score == 100 then
-		return "#8d55ff#**"
+	elseif score >= 100 then
+		return "#8d55ff#"..score  -- Enable longer numbers
 	end
 end
 
@@ -2052,7 +2052,7 @@ function _M:onTakeHit(value, src)
 
 	-- Second Life
 	if self:isTalentActive(self.T_SECOND_LIFE) and value >= self.life then
-		local sl = self.max_life * (0.05 + self:getTalentLevelRaw(self.T_SECOND_LIFE)/25)
+		local sl = self:callTalent(self.T_SECOND_LIFE,"getLife")
 		value = 0
 		self.life = sl
 		game.logSeen(self, "%s has been saved by a blast of positive energy!", self.name:capitalize())
@@ -2094,7 +2094,7 @@ function _M:onTakeHit(value, src)
 	if self:knowTalent(self.T_DUCK_AND_DODGE) then
 		local t = self:getTalentFromId(self.T_DUCK_AND_DODGE)
 		if value >= self.max_life * t.getThreshold(self, t) then
-			self:setEffect(self.EFF_EVASION, t.getDuration(self, t), {chance=t.getEvasionChance(self, t)})
+			self:setEffect(self.EFF_EVASION, t.getDuration(self, t), {chance=t.getEvasionChance(self, t), defense = t.getDefense(self)})
 		end
 	end
 
@@ -2533,8 +2533,7 @@ function _M:resolveLevelTalents()
 	if not self.start_level or not self._levelup_talents then return end
 
 	local maxfact = 1  -- Balancing parameter for levels > 50: maxtalent level = actorlevel/50*maxfact * normal max talent level
-	--I5 remove the following statement once all talent scaling is in:
-	--if game.zone.short_name == "infinite-dungeon" then maxfact=math.max(maxfact,self.level/50) end
+	maxfact=math.max(maxfact,self.level/50) 
 
 	for tid, info in pairs(self._levelup_talents) do
 		if not info.max or (self.talents[tid] or 0) < math.floor(info.max*maxfact) then
@@ -2557,8 +2556,8 @@ function _M:levelup()
 		self.unused_generics = self.unused_generics + 1
 		if self.level % 5 == 0 then self.unused_talents = self.unused_talents + 1 end
 		if self.level % 5 == 0 then self.unused_generics = self.unused_generics - 1 end
-		-- At levels 10, 20 and 36 we gain a new talent type
-		if self.level == 10 or self.level == 20 or self.level == 36 then
+		-- At levels 10, 20 and 36 and then every 30 levels, we gain a new talent type
+		if self.level == 10 or self.level == 20 or self.level == 36 or (self.level > 50 and (self.level - 6) % 30 == 0) then
 			self.unused_talents_types = self.unused_talents_types + 1
 		end
 		if self.level == 30 or self.level == 42 then
@@ -2638,7 +2637,10 @@ function _M:levelup()
 	end
 
 	-- Force levelup of the golem
-	if self.alchemy_golem then self.alchemy_golem:forceLevelup(self.level) end
+	if self.alchemy_golem then
+		self.alchemy_golem.max_level = self.max_level  -- make sure golem can level up with master
+		self.alchemy_golem:forceLevelup(self.level)
+	end
 
 	-- Notify party levelups
 	if self.x and self.y and game.party:hasMember(self) and not self.silent_levelup then
@@ -2703,8 +2705,8 @@ function _M:onStatChange(stat, v)
 end
 
 function _M:recomputeGlobalSpeed()
-	if self.global_speed_add > 0 then self.global_speed = self.global_speed_base + self.global_speed_add
-	else self.global_speed = self.global_speed_base * math.exp(self.global_speed_add)
+	if self.global_speed_add >= 0 then self.global_speed = self.global_speed_base + self.global_speed_add
+	else self.global_speed = self.global_speed_base / (1 + math.abs(self.global_speed_add)) -- Symmetric scaling
 	end
 	self.global_speed = math.max(self.global_speed, 0.1)
 end
@@ -4576,7 +4578,7 @@ function _M:on_set_temporary_effect(eff_id, e, p)
 	end
 
 	if e.status == "detrimental" and self:knowTalent(self.T_RESILIENT_BONES) then
-		p.dur = math.ceil(p.dur * (1 - util.bound(self:getTalentLevel(self.T_RESILIENT_BONES) / 12, 0, 1)))
+		p.dur = math.ceil(p.dur * (1 - self:callTalent(self.T_RESILIENT_BONES,"durresist")))
 	end
 	if e.status == "detrimental" and e.type ~= "other" and self:attr("reduce_detrimental_status_effects_time") then
 		local power = util.bound(self.reduce_detrimental_status_effects_time, 0, 100)

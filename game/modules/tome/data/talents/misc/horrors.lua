@@ -41,7 +41,7 @@ newTalent{
 	on_pre_use = function(self, t, silent) if not self:hasEffect(self.EFF_FRENZY) then return false end return true end,
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 1, 1.7) end,
 	getBleedDamage = function(self, t) return self:combatTalentWeaponDamage(t, 1.5, 3) end,
-	getHealingPenalty = function(self, t) return self:getTalentLevel(t) * 10 end,
+	getHealingPenalty = function(self, t) return self:combatTalentLimit(t, 100, 15, 50) end, -- Limit to <100%
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -73,7 +73,7 @@ newTalent{
 	tactical = { CLOSEIN = 3 },
 	direct_hit = true,
 	message = "@Source@ leaps forward in a frenzy!",
-	range = function(self, t) return math.floor(2 + self:getTalentLevel(t)) end,
+	range = function(self, t) return math.floor(self:combatTalentScale(t, 2.4, 10)) end,
 	requires_target = true,
 	on_pre_use = function(self, t, silent) if not self:hasEffect(self.EFF_FRENZY) or self:attr("encased_in_ice") or self:attr("never_move") then return false end return true end,
 	action = function(self, t)
@@ -119,7 +119,9 @@ newTalent{
 	tactical = { ATTACK = { PHYSICAL = 2 } },
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.5, 1) end,
 	getBleedDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.8, 1.5) end,
-	getPower = function(self, t) return self:combatTalentStatDamage(t, "con", 10, 50) end,
+	-- Limit crit, speed increase, -health to <100%
+	getPower = function(self, t) return self:combatLimit(self:combatTalentStatDamage(t, "con", 10, 50), 1, 0, 0, 0.357, 35.7) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 3, 7)) end,
 	do_devourer_frenzy = function(self, target, t)
 		game.logSeen(self, "The scent of blood sends the %ss into a frenzy!", self.name:capitalize())
 		-- frenzy devourerers
@@ -140,7 +142,7 @@ newTalent{
 							reapplied = true
 						end
 					end
-					target:setEffect(target.EFF_FRENZY, math.floor(2 + self:getTalentLevel(t)), {crit = t.getPower(self, t), power=t.getPower(self, t)/50, dieat=t.getPower(self, t)/50}, reapplied)
+					target:setEffect(target.EFF_FRENZY, t.getDuration(self, t), {crit = t.getPower(self, t)*100, power=t.getPower(self, t), dieat=t.getPower(self, t)}, reapplied)
 				end
 			end
 		end)
@@ -164,8 +166,11 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t) * 100
 		local bleed = t.getBleedDamage(self, t) * 100
+		local power = t.getPower(self, t) *100
 		return ([[Bites the target for %d%% weapon damage, potentially causing it to bleed for %d%% weapon damage over five turns.
-		If the target is affected by the bleed it will send the devourer into a frenzy (which in turn will frenzy nearby devourers).]]):format(damage, bleed)
+		If the target is affected by the bleed it will send the devourer into a frenzy for %d turns (which in turn will frenzy other nearby devourers).
+		The frenzy will increase global speed by %d%%, physical crit chance by %d%%, and prevent death until -%d%% life.]]):
+		format(damage, bleed, t.getDuration(self, t), power, power, power)
 	end,
 }
 
@@ -187,8 +192,8 @@ newTalent{
 	end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 15, 40) end,
 	getDarknessPower = function(self, t) return self:combatTalentSpellDamage(t, 15, 40) end,
-	getLiteReduction = function(self, t) return self:getTalentLevelRaw(t) end,
-	getDuration = function(self, t) return 4 + math.ceil(self:getTalentLevel(t)) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 5, 9)) end,
+	getLiteReduction = function(self, t) return math.floor(self:combatTalentScale(t, 1, 5)) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
@@ -270,7 +275,7 @@ newTalent{
 	is_summon = true,
 	getDamage = function(self, t) return self:combatTalentMindDamage(t, 5, 50) end,
 	getExplosion = function(self, t) return self:combatTalentMindDamage(t, 20, 200) end,
-	getSummonTime = function(self, t) return 6 + math.ceil(self:getTalentLevel(t)) end,
+	getSummonTime = function(self, t) return math.floor(self:combatTalentScale(t, 7, 11)) end,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}
 		local tx, ty, target = self:getTarget(tg)
@@ -356,7 +361,7 @@ newTalent{
 	tactical = { ATTACK = { ACID = 1, BLIGHT = 1 }, DISABLE = 4 },
 	getBurstDamage = function(self, t) return self:combatTalentSpellDamage(t, 30, 300) end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 5, 50) end,
-	getDuration = function(self, t) return 4 + math.ceil(self:getTalentLevel(t)) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 5, 9)) end,
 	proj_speed = 6,
 	spawn_carrion_worm = function (self, target, t)
 		local x, y = util.findFreeGrid(target.x, target.y, 10, true, {[Map.ACTOR]=true})
@@ -419,7 +424,9 @@ newTalent{
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false}
 	end,
 	getDamage = function(self, t) return self:combatTalentMindDamage(t, 5, 85) end,
-	getDuration = function(self, t) return 3 + self:combatMindpower(0.05) + self:getTalentLevel(t)/2 end,
+	getDuration = function(self, t) return
+		math.floor(self:combatScale(self:combatMindpower(0.05) + self:getTalentLevel(t)/2, 3, 0, 8.33, 5.33))
+	end,
 	action = function(self, t)
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
@@ -441,7 +448,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[Summon a storm of swirling blades to slice your foes, inflicting physical damage and bleeding to anyone who approaches.
+		return ([[Summon a storm of swirling blades to slice your foes, inflicting %d physical damage and bleeding to anyone who approaches for %d turns.
 		The damage and duration will increase with your Mindpower.]]):format(damDesc(self, DamageType.PHYSICAL, damage), duration)
 	end,
 }
@@ -567,7 +574,7 @@ newTalent{
 	tactical = { DISABLE = 1, CLOSEIN = 3 },
 	requires_target = true,
 	getDamage = function(self, t) return self:mindCrit(self:combatTalentMindDamage(t, 5, 50)) end,
-	getDuration = function(self, t) return 2 + math.ceil(self:getTalentLevel(t)) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 3, 7)) end,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -640,9 +647,7 @@ newTalent{
 	cooldown = 20,
 	tactical = { CLOSEIN = 2 },
 	requires_target = true,
-	range = function(self, t)
-		return 5 + self:getTalentLevel(t)
-	end,
+	range = function(self, t) return math.floor(self:combatTalentScale(t, 6, 10)) end,
 	radius = function(self, t)
 		return 1-- util.bound(4 - self:getTalentLevel(t) / 2, 1, 4)
 	end,

@@ -79,7 +79,7 @@ newTalent{
 	getStunChance = function(self, t) return self:combatTalentLimit(t, 50, 12, 20) end, -- Limit < 50%
 	preAttack = function(self, t, target)
 		if not canUseGestures(self) then
-			game.logPlayer(self, "You do not have a free or mindstar-equipped hand to use Gesture of Pain.")
+			game.logPlayer(self, "You require two free or mindstar-equipped hands to use Gesture of Pain.")
 			return false
 		end
 
@@ -87,7 +87,6 @@ newTalent{
 	end,
 	attack = function(self, t, target)
 		local hit = false
-
 		local mindpower = self:combatMindpower()
 		local baseDamage = t.getBaseDamage(self, t)
 		local bonusDamage = t.getBonusDamage(self, t)

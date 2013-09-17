@@ -43,7 +43,7 @@ newTalent{
 	require = racial_req1,
 	points = 5,
 	no_energy = true,
-	cooldown = function(self, t) return 50 - self:getTalentLevel(t) * 5 end,
+	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 10, 45, 25)) end, -- Limit >10
 	tactical = { HEAL = 2 },
 	on_pre_use = function(self, t) return not self:hasEffect(self.EFF_REGENERATION) end,
 	action = function(self, t)
@@ -62,23 +62,20 @@ newTalent{
 	require = racial_req2,
 	points = 5,
 	mode = "passive",
-	on_learn = function(self, t)
-		self:attr("blind_immune", 0.08)
-		self.sight = self.sight + 1
-		self.heightened_senses = (self.heightened_senses or 0) + 1
-		self.infravision = (self.infravision or 0) + 1
-	end,
-	on_unlearn = function(self, t)
-		self.sight = self.sight - 1
-		self.heightened_senses = (self.heightened_senses or 0) - 1
-		self.infravision = (self.infravision or 0) - 1
-		self:attr("blind_immune", -0.08)
+	getSight = function(self, t) return math.floor(self:combatTalentScale(t, 1, 5, "log")) end,
+	getESight = function(self, t) return math.ceil(self:combatTalentScale(t, 0.3, 2.3, "log", 0, 2)) end,
+	getImmune = function(self, t) return self:combatTalentLimit(t, 1, 0.1, 0.4) end,
+	passives = function(self, t, p)
+		self:talentTemporaryValue(p, "blind_immune", t.getImmune(self, t))
+		self:talentTemporaryValue(p, "sight", t.getSight(self, t))
+		self:talentTemporaryValue(p, "infravision", t.getESight(self, t))
+		self:talentTemporaryValue(p, "heightened_senses", t.getESight(self, t))
 	end,
 	info = function(self, t)
 		return ([[While Highers are not meant to rule other humans - and show no particular will to do so - they are frequently called to higher duties.
 		Their nature grants them better senses than other humans.
 		Increase blindness immunity by %d%%, maximum sight range by %d, and increases existing infravision, and heightened senses range by %d.]]):
-		format(self:getTalentLevelRaw(t) * 8, self:getTalentLevelRaw(t), math.ceil(self:getTalentLevelRaw(t)/2))
+		format(t.getImmune(self, t) * 100, t.getSight(self, t), t.getESight(self, t))
 	end,
 }
 
@@ -88,24 +85,23 @@ newTalent{
 	require = racial_req3,
 	points = 5,
 	mode = "passive",
-	cooldown = function(self, t) return 22 - 3 * self:getTalentLevelRaw(t) end,
+	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 0, 19, 7)) end, -- Limit > 0
+	getSave = function(self, t) return self:combatTalentScale(t, 5, 25, 0.75) end,
+	power = function(self, t) return self:combatTalentScale(t, 7, 25) end,
 	trigger = function(self, t, damtype)
 		self:startTalentCooldown(t)
 		self:setEffect(self.EFF_BORN_INTO_MAGIC, 5, {damtype=damtype})
 	end,
-	on_learn = function(self, t)
-		self.combat_spellresist = self.combat_spellresist + 5
-		self.resists[DamageType.ARCANE] = (self.resists[DamageType.ARCANE] or 0) + 5
-	end,
-	on_unlearn = function(self, t)
-		self.combat_spellresist = self.combat_spellresist - 5
-		self.resists[DamageType.ARCANE] = (self.resists[DamageType.ARCANE] or 0) - 5
+	passives = function(self, t, p)
+		self:talentTemporaryValue(p, "combat_spellresist", t.getSave(self, t))
+		self:talentTemporaryValue(p, "resists",{[DamageType.ARCANE]=t.power(self, t)})
 	end,
 	info = function(self, t)
+		local netpower = t.power(self, t)
 		return ([[Highers were originally created during the Age of Allure by the human Conclave. They are imbued with magic at the very core of their being.
 		Increase spell save by +%d and arcane resistance by %d%%.
-		Also when you cast a spell dealing damage, you gain a 15%% bonus to the damage type for 5 turns (this effect has a cooldown)]]):
-		format(self:getTalentLevelRaw(t) * 5, self:getTalentLevelRaw(t) * 5, self:getTalentLevelRaw(t) * 5)
+		Also when you cast a spell dealing damage, you gain a 15%% bonus to the damage type for 5 turns. (This effect has a cooldown.)]]):
+		format(t.getSave(self, t), netpower)
 	end,
 }
 
@@ -115,9 +111,9 @@ newTalent{
 	require = racial_req4,
 	points = 5,
 	no_energy = true,
-	cooldown = function(self, t) return 50 - self:getTalentLevel(t) * 3 end,
+	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 20, 47, 35)) end, -- Limit >20
 	tactical = { MANA = 2, VIM = 2, EQUILIBRIUM = 2, STAMINA = 2, POSITIVE = 2, NEGATIVE = 2, PARADOX = 2, PSI = 2 },
-	getDuration = function(self, t) return 1 + self:getTalentLevelRaw(t) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentLimit(t, 10, 2, 6.1)) end,  --  Limit to < 10
 	action = function(self, t)
 		self:setEffect(self.EFF_HIGHBORN_S_BLOOM, t.getDuration(self, t), {})
 		return true
@@ -141,16 +137,17 @@ newTalent{
 	require = racial_req1,
 	points = 5,
 	no_energy = true,
-	cooldown = function(self, t) return 50 - self:getTalentLevel(t) * 4 end,
+	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 10, 46, 30)) end,  -- Limit to >10 turns
+	getSpeed = function(self, t) return self:combatStatScale(math.max(self:getDex(), self:getMag()), 0.1, 0.476, 0.75) end,
 	tactical = { DEFEND = 1 },
 	action = function(self, t)
-		local power = 0.1 + math.max(self:getDex(), self:getMag()) / 210
-		self:setEffect(self.EFF_SPEED, 8, {power=power})
+		self:setEffect(self.EFF_SPEED, 8, {power=t.getSpeed(self, t)})
 		return true
 	end,
 	info = function(self, t)
 		return ([[Call upon the grace of the Eternals to increase your general speed by %d%% for 8 turns.
-		The speed bonus will increase with your Dexterity or Magic (whichever is higher).]]):format((0.1 + math.max(self:getDex(), self:getMag()) / 210) * 100)
+		The speed bonus will increase with your Dexterity or Magic (whichever is higher).]]):
+		format(t.getSpeed(self, t) * 100)
 	end,
 }
 
@@ -160,21 +157,18 @@ newTalent{
 	require = racial_req2,
 	points = 5,
 	mode = "passive",
-	on_learn = function(self, t)
-		self.combat_physcrit = self.combat_physcrit + 2
-		self.combat_spellcrit = self.combat_spellcrit + 2
-		self.combat_mindcrit = self.combat_mindcrit + 2
-		self.combat_critical_power = (self.combat_critical_power or 0) + 5
-	end,
-	on_unlearn = function(self, t)
-		self.combat_physcrit = self.combat_physcrit - 2
-		self.combat_spellcrit = self.combat_spellcrit - 2
-		self.combat_mindcrit = self.combat_mindcrit - 2
-		self.combat_critical_power = (self.combat_critical_power or 0) - 5
+	critChance = function(self, t) return self:combatTalentScale(t, 3, 10, 0.75) end,
+	critPower = function(self, t) return self:combatTalentScale(t, 6, 25, 0.75) end,
+	passives = function(self, t, p)
+		self:talentTemporaryValue(p, "combat_physcrit", t.critChance(self, t))
+		self:talentTemporaryValue(p, "combat_spellcrit", t.critChance(self, t))
+		self:talentTemporaryValue(p, "combat_mindcrit", t.critChance(self, t))
+		self:talentTemporaryValue(p, "combat_critical_power", t.critPower(self, t))
 	end,
 	info = function(self, t)
 		return ([[Reality bends slightly in the presence of a Shaloren, due to their inherent magical nature.
-		Increases critical chance by %d%% and critical strike power by %d%%.]]):format(self:getTalentLevelRaw(t) * 2, self:getTalentLevelRaw(t) * 5)
+		Increases critical chance by %d%% and critical strike power by %d%%.]]):
+		format(t.critChance(self, t), t.critPower(self, t))
 	end,
 }
 
@@ -183,15 +177,17 @@ newTalent{
 	type = {"race/shalore", 3},
 	require = racial_req3,
 	points = 5,
-	cooldown = function(self, t) return 50 - self:getTalentLevel(t) * 3 end,
+	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 5, 47, 35)) end, -- Limit > 5
+	getChance = function(self, t) return self:combatTalentLimit(t, 100, 21, 45) end, -- Limit < 100%
+	getInvis = function(self, t) return self:combatStatScale("mag" , 7, 25) end,
 	mode = "sustained",
 	no_energy = true,
 	activate = function(self, t)
 		self.invis_on_hit_disable = self.invis_on_hit_disable or {}
 		game:playSoundNear(self, "talents/spell_generic2")
 		local ret = {
-			invis = self:addTemporaryValue("invis_on_hit", 15 + self:getTalentLevelRaw(t) * 6),
-			power = self:addTemporaryValue("invis_on_hit_power", 5 + self:getMag(20, true)),
+			invis = self:addTemporaryValue("invis_on_hit", t.getChance(self, t)),
+			power = self:addTemporaryValue("invis_on_hit_power", t.getInvis(self, t)),
 			talent = self:addTemporaryValue("invis_on_hit_disable", {[t.id]=1}),
 		}
 		return ret
@@ -205,7 +201,7 @@ newTalent{
 	info = function(self, t)
 		return ([[As the only immortal race of Eyal, Shaloren have learnt, over the long years, to use their innate inner magic to protect themselves.
 		%d%% chance to become invisible (power %d) for 5 turns, when hit by a blow doing at least 10%% of their total life.]]):
-		format(15 + self:getTalentLevelRaw(t) * 6, 5 + self:getMag(20, true))
+		format(t.getChance(self, t), t.getInvis(self, t))
 	end,
 }
 
@@ -215,7 +211,9 @@ newTalent{
 	require = racial_req4,
 	points = 5,
 	no_energy = true,
-	cooldown = function(self, t) return 50 - self:getTalentLevel(t) * 3 end,
+	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 20, 47, 35)) end, -- Limit to >20
+	getEffectGood = function(self, t) return math.floor(self:combatTalentScale(t, 1, 5, "log")) end,
+	getEffectBad = function(self, t) return math.floor(self:combatTalentScale(t, 2.9, 10.01, "log")) end,
 	tactical = {
 		BUFF = function(self, t, target)
 			local nb = 0
@@ -241,9 +239,9 @@ newTalent{
 			local e = target.tempeffect_def[eff_id]
 			if e.type ~= "other" then
 				if e.status == "beneficial" then
-					p.dur = p.dur + self:getTalentLevelRaw(t)
+					p.dur = math.min(p.dur*2, p.dur + t.getEffectGood(self, t))
 				elseif e.status == "detrimental" then
-					p.dur = p.dur - self:getTalentLevelRaw(t) * 2
+					p.dur = p.dur - t.getEffectBad(self, t)
 					if p.dur <= 0 then todel[#todel+1] = eff_id end
 				end
 			end
@@ -260,7 +258,7 @@ newTalent{
 		while #tids > 0 do
 			local tt = rng.tableRemove(tids)
 			if not tt then break end
-			self.talents_cd[tt.id] = self.talents_cd[tt.id] - self:getTalentLevelRaw(t)
+			self.talents_cd[tt.id] = self.talents_cd[tt.id] - t.getEffectGood(self, t)
 			if self.talents_cd[tt.id] <= 0 then self.talents_cd[tt.id] = nil end
 		end
 
@@ -269,8 +267,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[The world grows old as you stand through the ages. To you, time is different.
-		Reduces the time remaining on detrimental effects by %d, cooling down talents by %d, and increases the time remaining on beneficial effects by %d.]]):
-		format(self:getTalentLevelRaw(t) * 2, self:getTalentLevelRaw(t), self:getTalentLevelRaw(t))
+		Reduces the time remaining on detrimental effects by %d, cooling down talents by %d, and increases the time remaining on beneficial effects by %d (up to 2 times the current duration).]]):
+		format(t.getEffectBad(self, t), t.getEffectGood(self, t), t.getEffectGood(self, t))
 	end,
 }
 
@@ -285,15 +283,17 @@ newTalent{
 	require = racial_req1,
 	points = 5,
 	no_energy = true,
-	cooldown = function(self, t) return 50 - self:getTalentLevel(t) * 5 end,
+	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 5, 45, 25)) end, -- Limit > 5
+	getPower = function(self, t) return self:combatStatScale("wil", 11, 20) end,
 	tactical = { ATTACK = 1, DEFEND = 1 },
 	action = function(self, t)
-		self:setEffect(self.EFF_ETERNAL_WRATH, 5, {power=10 + self:getWil(10, true)})
+		self:setEffect(self.EFF_ETERNAL_WRATH, 5, {power=t.getPower(self, t)})
 		return true
 	end,
 	info = function(self, t)
 		return ([[Call upon the power of the Eternals, increasing all damage by %d%% and reducing all damage taken by %d%% for 5 turns.
-		The bonus will increase with your Willpower.]]):format(10 + self:getWil(10, true), 10 + self:getWil(10, true))
+		The bonus will increase with your Willpower.]]):
+		format(t.getPower(self, t), t.getPower(self, t))
 	end,
 }
 
@@ -303,17 +303,15 @@ newTalent{
 	require = racial_req2,
 	points = 5,
 	mode = "passive",
-	on_learn = function(self, t)
-		self.combat_physresist = self.combat_physresist + 5
-		self.combat_mentalresist = self.combat_mentalresist + 5
-	end,
-	on_unlearn = function(self, t)
-		self.combat_physresist = self.combat_physresist - 5
-		self.combat_mentalresist = self.combat_mentalresist - 5
+	getSave = function(self, t) return self:combatTalentScale(t, 6, 25, 0.75) end,
+	passives = function(self, t, p)
+		self:talentTemporaryValue(p, "combat_physresist", t.getSave(self, t))
+		self:talentTemporaryValue(p, "combat_mentalresist", t.getSave(self, t))
 	end,
 	info = function(self, t)
 		return ([[Thaloren have always been a free people, living in their beloved forest and never caring much about the world outside.
-		Increase Physical and Mental Save by +%d.]]):format(self:getTalentLevelRaw(t) * 5)
+		Increase Physical and Mental Save by +%d.]]):
+		format(t.getSave(self, t))
 	end,
 }
 
@@ -323,19 +321,18 @@ newTalent{
 	require = racial_req3,
 	points = 5,
 	mode = "passive",
-	on_learn = function(self, t)
-		self:attr("disease_immune", 0.2)
-		self.resists[DamageType.BLIGHT] = (self.resists[DamageType.BLIGHT] or 0) + 2
-		self.resists.all = (self.resists.all or 0) + 1.3
-	end,
-	on_unlearn = function(self, t)
-		self:attr("disease_immune", -0.2)
-		self.resists[DamageType.BLIGHT] = (self.resists[DamageType.BLIGHT] or 0) - 2
-		self.resists.all = (self.resists.all or 0) - 1.3
+	getDiseaseImmune = function(self, t) return self:combatTalentLimit(t, 1, 0.2, 0.75) end, -- Limit < 100%
+	getBResist = function(self, t) return self:combatTalentScale(t, 3, 10) end,
+	getAllResist = function(self, t) return self:combatTalentScale(t, 2, 6.5) end,
+	passives = function(self, t, p)
+		self:talentTemporaryValue(p, "disease_immune", t.getDiseaseImmune(self, t))
+		self:talentTemporaryValue(p, "resists",{[DamageType.BLIGHT]=t.getBResist(self, t)})
+		self:talentTemporaryValue(p, "resists",{all=t.getAllResist(self, t)})
 	end,
 	info = function(self, t)
 		return ([[You are part of the wood; it shields you from corruption.
-		Increase disease immunity by %d%%, blight resistance by %d%%, and all resistances by %d%%.]]):format(self:getTalentLevelRaw(t) * 20, self:getTalentLevelRaw(t) * 2, self:getTalentLevelRaw(t) * 1.3)
+		Increase disease immunity by %d%%, blight resistance by %0.1f%%, and all resistances by %0.1f%%.]]):
+		format(t.getDiseaseImmune(self, t)*100, t.getBResist(self, t), t.getAllResist(self, t))
 	end,
 }
 
@@ -345,7 +342,7 @@ newTalent{
 	require = racial_req4,
 	points = 5,
 	no_energy = true,
-	cooldown = function(self, t) return 50 - self:getTalentLevel(t) * 4 end,
+	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 8, 46, 34)) end, -- limit >8
 	tactical = { ATTACK = { PHYSICAL = 2 }, DISABLE = { stun = 1, knockback = 1 } },
 	range = 4,
 	action = function(self, t)
@@ -383,8 +380,11 @@ newTalent{
 				ai = "summoned", ai_real = "tactical", ai_state = { talent_in=2, },
 				stats = {str=0, dex=0, con=0, cun=0, wil=0, mag=0},
 				combat = { dam=resolvers.levelup(resolvers.rngavg(15,25), 1, 1.3), atk=resolvers.levelup(resolvers.rngavg(15,25), 1, 1.6), dammod={str=1.1} },
-				inc_stats = { str=25 + self:getWil() * self:getTalentLevel(t) / 5, dex=18, con=10 + self:getTalentLevel(t) * 2, },
-
+				inc_stats = {
+					str=25 + self:combatScale(self:getWil() * self:getTalentLevel(t), 0, 0, 100, 500, 0.75),
+					dex=18,
+					con=10 + self:combatTalentScale(t, 3, 10, 0.75),
+				},
 				level_range = {1, nil}, exp_worth = 0,
 				silent_levelup = true,
 
@@ -424,19 +424,24 @@ newTalent{
 	require = racial_req1,
 	points = 5,
 	no_energy = true,
-	cooldown = function(self, t) return 50 - self:getTalentLevel(t) * 5 end,
+	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 8, 45, 25)) end, -- Limit >8
+	getParams = function(self, t)
+		return {
+			armor = self:combatStatScale("con", 7, 25),
+			physical = self:combatStatScale("con", 12, 30, 0.75),
+			spell = self:combatStatScale("con", 12, 30, 0.75),
+		}
+	end,
 	tactical = { DEFEND = 2 },
 	action = function(self, t)
-		self:setEffect(self.EFF_DWARVEN_RESILIENCE, 8, {
-			armor=5 + self:getCon() / 5,
-			physical=10 + self:getCon() / 5,
-			spell=10 + self:getCon() / 5,
-		})
+		self:setEffect(self.EFF_DWARVEN_RESILIENCE, 8, t.getParams(self, t))
 		return true
 	end,
 	info = function(self, t)
+		local params = t.getParams(self, t)
 		return ([[Call upon the legendary resilience of the Dwarven race to increase your Armor (+%d), Spell (+%d) and Physical (+%d) saves for 8 turns.
-		The bonus will increase with your Constitution.]]):format(5 + self:getCon() / 5, 10 + self:getCon() / 5, 10 + self:getCon() / 5)
+		The bonus will increase with your Constitution.]]):
+		format(params.armor, params.physical, params.spell)
 	end,
 }
 
@@ -446,15 +451,14 @@ newTalent{
 	require = racial_req2,
 	points = 5,
 	mode = "passive",
-	on_learn = function(self, t)
-		self:attr("auto_stoneskin", 6)
-	end,
-	on_unlearn = function(self, t)
-		self:attr("auto_stoneskin", -6)
+	armor = function(self, t) return self:combatTalentScale(t, 6, 30) end,
+	passives = function(self, t, p)
+		self:talentTemporaryValue(p, "auto_stoneskin", t.armor(self, t))
 	end,
 	info = function(self, t)
 		return ([[Dwarf skin is a complex structure, it can automatically react to physical blows to harden itself.
-		15%% chance when hit in melee to increase Armour total by %d for 5 turns.]]):format(self:getTalentLevelRaw(t) * 6)
+		When you are hit in melee, you have a 15%% chance to increase your Armour total by %d for 5 turns.]]):
+		format(t.armor(self, t))
 	end,
 }
 
@@ -464,10 +468,17 @@ newTalent{
 	require = racial_req3,
 	points = 5,
 	mode = "passive",
+	getMaxSaves = function(self, t) return self:combatTalentScale(t, 8, 35) end,
+	getGold = function(self, t) return self:combatTalentLimit(t, 40, 85, 65) end, -- Limit > 40
+	-- called by _M:combatPhysicalResist, _M:combatSpellResist, _M:combatMentalResist in mod.class.interface.Combat.lua
+	getSaves = function(self, t)
+		return util.bound(self.money / t.getGold(self, t), 0, t.getMaxSaves(self, t))
+	end,
 	info = function(self, t)
 		return ([[Money is the heart of the Dwarven Empire; it rules over all other considerations.
 		Increases Physical, Mental and Spell Saves based on the amount of gold you possess.
-		+1 save every %d gold, up to +%d.]]):format(90 - self:getTalentLevelRaw(t) * 5, self:getTalentLevelRaw(t) * 7)
+		+1 save every %d gold, up to +%d. (currently +%d)]]):
+		format(t.getGold(self, t), t.getMaxSaves(self, t), t.getSaves(self, t))
 	end,
 }
 
@@ -476,10 +487,12 @@ newTalent{
 	type = {"race/dwarf", 4},
 	require = racial_req4,
 	points = 5,
-	cooldown = function(self, t) return 50 - self:getTalentLevel(t) * 5 end,
+	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 5, 45, 25)) end, -- Limit >5
 	range = 1,
 	no_npc_use = true,
-	getRange = function(self, t) return math.floor(1 + self:getCon(4, true) + self:getTalentLevel(t)) end,
+	getRange = function(self, t)
+		return math.max(1, math.floor(self:combatScale(0.04*self:getCon() + self:getTalentLevel(t), 2.4, 1.4, 10, 9)))
+	end,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), nolock=true, talent=t}
 		local x, y = self:getTarget(tg)
@@ -509,19 +522,24 @@ newTalent{
 	require = racial_req1,
 	points = 5,
 	no_energy = true,
-	cooldown = function(self, t) return 50 - self:getTalentLevel(t) * 5 end,
+	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 5, 45, 25)) end, -- Limit >5
+	getParams = function(self, t)
+		return {
+			physical = self:combatStatScale("cun", 15, 60, 0.75),
+			spell = self:combatStatScale("cun", 15, 60, 0.75),
+			mind = self:combatStatScale("cun", 15, 60, 0.75),
+			}
+	end,
 	tactical = { ATTACK = 2 },
 	action = function(self, t)
-		self:setEffect(self.EFF_HALFLING_LUCK, 5, {
-			physical=10 + self:getCun() / 2,
-			spell=10 + self:getCun() / 2,
-			mind=10 + self:getCun() / 2,
-		})
+		self:setEffect(self.EFF_HALFLING_LUCK, 5, t.getParams(self, t))
 		return true
 	end,
 	info = function(self, t)
-		return ([[Call upon the luck and cunning of the Little Folk to increase your physical, mental, and spell critical strike chance by %d%% and saves by %d for 5 turns.
-		The bonus will increase with your Cunning.]]):format(10 + self:getCun() / 2, 10 + self:getCun() / 2)
+		local params = t.getParams(self, t)
+		return ([[Call upon the luck and cunning of the Little Folk to increase your physical, mental, and spell critical strike chance by %d%% and your saves by %d for 5 turns.
+		The bonus will increase with your Cunning.]]):
+		format(params.mind, params.mind)
 	end,
 }
 
@@ -532,15 +550,20 @@ newTalent{
 	points = 5,
 	mode = "passive",
 	getThreshold = function(self, t) return math.max(10, (15 - self:getTalentLevelRaw(t))) / 100 end,
-	getEvasionChance = function(self, t) return self:getStat("lck") end,
-	getDuration = function(self, t) return 1 + math.ceil(self:getTalentLevel(t)/2) end,
+	getEvasionChance = function(self, t) return 50 end,
+	getDuration = function(self, t) return math.ceil(self:combatTalentScale(t, 1.3, 3.3)) end,
+	-- called by _M:onTakeHit function in mod.class.Actor.lua for trigger 
+	getDefense = function(self) 
+		local oldevasion = self:hasEffect(self.EFF_EVASION)
+		return self:getStat("lck")/200*(self:combatDefenseBase() - (oldevasion and oldevasion.defense or 0)) -- Prevent stacking
+	end,
 	info = function(self, t)
 		local threshold = t.getThreshold(self, t)
 		local evasion = t.getEvasionChance(self, t)
 		local duration = t.getDuration(self, t)
 		return ([[Your incredible luck kicks in at just the right moment to save your skin.
-		Whenever you take %d%% or more of your life from a single attack, you gain Evasion equal to your luck stat (currently %d%%) for the next %d turns.]]):
-		format(threshold * 100, evasion, duration)
+		Whenever you take %d%% or more of your life from a single attack, you gain Evasion (%d%%) and %d additional defense (based on your luck and other defensive stats) for the next %d turns.]]):
+		format(threshold * 100, evasion, t.getDefense(self), duration)
 	end,
 }
 
@@ -563,10 +586,10 @@ newTalent{
 	require = racial_req4,
 	points = 5,
 	no_energy = true,
-	cooldown = function(self, t) return 50 - self:getTalentLevel(t) * 5 end,
+	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 10, 45, 25)) end, -- limit >10
 	tactical = { DEFEND = 1,  CURE = 1 },
-	getRemoveCount = function(self, t) return 1 + self:getTalentLevel(t) end,
-	getDuration = function(self, t) return 1 + self:getTalentLevel(t) end,
+	getRemoveCount = function(self, t) return math.floor(self:combatTalentScale(t, 2, 6, "log")) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 2, 6)) end,
 	action = function(self, t)
 		local effs = {}
 
@@ -593,7 +616,7 @@ newTalent{
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		local count = t.getRemoveCount(self, t)
-		return ([[Halflings are one of the more powerful military force of the known world; they have been at war with most other races for thousand of years.
+		return ([[Halflings have one of the most powerful military forces in the known world and they have been at war with most other races for thousand of years.
 		Removes %d stun, daze, or pin effects, and makes you immune to stuns, dazes and pins for %d turns.
 		This talent takes no time to use.]]):format(duration, count)
 	end,
@@ -610,15 +633,17 @@ newTalent{
 	require = racial_req1,
 	points = 5,
 	no_energy = true,
-	cooldown = function(self, t) return 50 - self:getTalentLevel(t) * 4 end,
+	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 5, 46, 30)) end, -- Limit to >5 turns
+	getPower = function(self, t) return self:combatStatScale("wil", 12, 30) end,
 	tactical = { ATTACK = 2 },
 	action = function(self, t)
-		self:setEffect(self.EFF_ORC_FURY, 5, {power=10 + self:getWil(20, true)})
+		self:setEffect(self.EFF_ORC_FURY, 5, {power=t.getPower(self, t)})
 		return true
 	end,
 	info = function(self, t)
-		return ([[Summons your lust for blood and destruction, increasing all damage dealt by %d%% for 5 turns.
-		The bonus will increase with your Willpower.]]):format(10 + self:getWil(20, true))
+		return ([[Summons your lust for blood and destruction, increasing all damage you deal by %d%% for 5 turns.
+		The bonus will increase with your Willpower.]]):
+		format(t.getPower(self, t))
 	end,
 }
 
@@ -628,17 +653,15 @@ newTalent{
 	require = racial_req2,
 	points = 5,
 	mode = "passive",
-	on_learn = function(self, t)
-		self.combat_physresist = self.combat_physresist + 5
-		self.combat_mentalresist = self.combat_mentalresist + 5
-	end,
-	on_unlearn = function(self, t)
-		self.combat_physresist = self.combat_physresist - 5
-		self.combat_mentalresist = self.combat_mentalresist - 5
+	getSaves = function(self, t) return self:combatTalentScale(t, 6, 25, 0.75) end,
+	passives = function(self, t, p)
+		self:talentTemporaryValue(p, "combat_physresist", t.getSaves(self, t))
+		self:talentTemporaryValue(p, "combat_mentalresist", t.getSaves(self, t))
 	end,
 	info = function(self, t)
-		return ([[Orcs have been the prey of the other races for thousands of years, with or without reasons. They have learnt to withstand things that would break weaker races.
-		Increase physical and mental save by +%d.]]):format(self:getTalentLevelRaw(t) * 5)
+		return ([[Orcs have been the prey of the other races for thousands of years, with or without justification. They have learnt to withstand things that would break weaker races.
+		Increase physical and mental save by +%d.]]):
+		format(t.getSaves(self, t))
 	end,
 }
 
@@ -648,15 +671,14 @@ newTalent{
 	require = racial_req3,
 	points = 5,
 	mode = "passive",
-	on_learn = function(self, t)
-		self.resists_pen.all = (self.resists_pen.all or 0) + 5
-	end,
-	on_unlearn = function(self, t)
-		self.resists_pen.all = (self.resists_pen.all or 0) - 5
+	getPen = function(self, t) return self:combatTalentLimit(t, 50, 7, 25) end,
+	passives = function(self, t, p)
+		self:talentTemporaryValue(p, "resists_pen", {all = t.getPen(self, t)})
 	end,
 	info = function(self, t)
 		return ([[Orcs have seen countless battles, and won many of them.
-		Increase all damage penetration by %d%%.]]):format(self:getTalentLevelRaw(t) * 5)
+		Increase all damage penetration by %d%%.]]):
+		format(t.getPen(self, t))
 	end,
 }
 
@@ -666,7 +688,9 @@ newTalent{
 	require = racial_req4,
 	points = 5,
 	no_energy = true,
-	cooldown = function(self, t) return 50 - self:getTalentLevel(t) * 4 end,
+	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 10, 46, 30)) end, -- Limit to >10
+	remcount  = function(self,t) return math.ceil(self:combatTalentScale(t, 0.5, 3, "log", 0, 3)) end,
+	heal = function(self, t) return 25 + 2.3* self:getCon() + self:combatTalentLimit(t, 0.1, 0.01, 0.05)*self.max_life end,
 	is_heal = true,
 	tactical = { DEFEND = 1, HEAL = 2, CURE = function(self, t, target)
 		local nb = 0
@@ -690,7 +714,7 @@ newTalent{
 			end
 		end
 
-		for i = 1, math.ceil(self:getTalentLevel(t) * 3 / 5) do
+		for i = 1, t.remcount(self,t) do
 			if #effs == 0 then break end
 			local eff = rng.tableRemove(effs)
 
@@ -699,14 +723,15 @@ newTalent{
 			end
 		end
 		self:attr("allow_on_heal", 1)
-		self:heal(25 + self:getCon() * 2.3)
+		self:heal(t.heal(self, t))
 		self:attr("allow_on_heal", -1)
 		return true
 	end,
 	info = function(self, t)
-		return ([[Call upon the will of all the Orc Prides to survive this battle.
-		Heals you for %d life, and removes up to %d detrimental effects.
-		The bonus will increase with your Constitution.]]):format(25 + self:getCon() * 2.3, math.ceil(self:getTalentLevel(t) * 3 / 5))
+		return ([[Call upon the will of all of the Orc Prides to survive this battle.
+		You heal for %d life, and remove up to %d detrimental effects.
+		The healing will increase with your Constitution.]]):
+		format(t.heal(self, t), t.remcount(self,t))
 	end,
 }
 
@@ -721,7 +746,8 @@ newTalent{
 	require = racial_req1,
 	points = 5,
 	no_energy = true,
-	cooldown = function(self, t) return 50 - self:getTalentLevel(t) * 3 end,
+	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 10, 47, 35)) end, -- Limit >10
+	getduration = function(self) return math.floor(self:combatStatScale("wil", 5, 14)) end,
 	range = 4,
 	no_npc_use = true,
 	requires_target = true,
@@ -741,15 +767,15 @@ newTalent{
 			target:takeHit(1, self)
 			target:takeHit(1, self)
 			target:takeHit(1, self)
-			target:setEffect(target.EFF_DOMINANT_WILL, 4 + self:getWil(10), {src=self})
+			target:setEffect(target.EFF_DOMINANT_WILL, t.getduration(self), {src=self})
 		end)
 		return true
 	end,
 	info = function(self, t)
 		return ([[Shatters the mind of your victim, giving you full control over its actions for %s turns.
 		When the effect ends, you pull out your mind and the victim's body collapses, dead.
-		This effect does not work on rares, bosses or undeads.
-		The duration will increase with your Willpower.]]):format(4 + self:getWil(10))
+		This effect does not work on rares, bosses, or undeads.
+		The duration will increase with your Willpower.]]):format(t.getduration(self))
 	end,
 }
 
@@ -759,19 +785,17 @@ newTalent{
 	require = racial_req2,
 	points = 5,
 	mode = "passive",
-	on_learn = function(self, t)
-		self:attr("confusion_immune", 0.12)
-		self:attr("silence_immune", 0.12)
-		self.combat_mentalresist = self.combat_mentalresist + 4
-	end,
-	on_unlearn = function(self, t)
-		self:attr("confusion_immune", -0.12)
-		self:attr("silence_immune", -0.12)
-		self.combat_mentalresist = self.combat_mentalresist - 4
+	getImmune = function(self, t) return self:combatTalentLimit(t, 1, 0.17, 0.6) end, -- Limit < 100%
+	getSave = function(self, t) return self:combatTalentScale(t, 5, 20, 0.75) end,
+	passives = function(self, t, p)
+		self:talentTemporaryValue(p, "confusion_immune", t.getImmune(self, t))
+		self:talentTemporaryValue(p, "silence_immune", t.getImmune(self, t))
+		self:talentTemporaryValue(p, "combat_mentalresist", t.getSave(self, t))
 	end,
 	info = function(self, t)
 		return ([[Your mind becomes more attuned to the Way, and is shielded from outside effects.
-		Increase confusion and silence immunities by %d%%, and your Mental Save by +%d.]]):format(self:getTalentLevelRaw(t) * 12, self:getTalentLevelRaw(t) * 4)
+		Increase confusion and silence immunities by %d%%, and your Mental Save by +%d.]]):
+		format(100*t.getImmune(self, t), t.getSave(self, t))
 	end,
 }
 
@@ -781,17 +805,14 @@ newTalent{
 	require = racial_req3,
 	points = 5,
 	mode = "passive",
-	on_learn = function(self, t)
-		self.global_speed_base = self.global_speed_base + 0.03
-		self:recomputeGlobalSpeed()
-	end,
-	on_unlearn = function(self, t)
-		self.global_speed_base = self.global_speed_base - 0.03
+	speedup = function(self, t) return self:combatTalentScale(t, 0.04, 0.15, 0.75) end,
+	passives = function(self, t, p)
+		self:talentTemporaryValue(p, "global_speed_base", t.speedup(self, t))
 		self:recomputeGlobalSpeed()
 	end,
 	info = function(self, t)
 		return ([[Yeeks live fast, think fast, and sacrifice fast for the Way.
-		Increase global speed by %d%%.]]):format(self:getTalentLevelRaw(t) * 3)
+		Increase global speed by %0.1f%%.]]):format(100*t.speedup(self, t))
 	end,
 }
 
@@ -801,7 +822,7 @@ newTalent{
 	require = racial_req4,
 	points = 5,
 	no_energy = true,
-	cooldown = function(self, t) return 50 - self:getTalentLevel(t) * 3 end,
+	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 6, 47, 35)) end, -- Limit >6
 	range = 4,
 	no_npc_use = true,
 	action = function(self, t)
@@ -838,8 +859,14 @@ newTalent{
 				autolevel = "none",
 				ai = "summoned", ai_real = "tactical", ai_state = { talent_in=2, },
 				stats = {str=0, dex=0, con=0, cun=0, wil=0, mag=0},
-				inc_stats = { str=25 + self:getWil() * self:getTalentLevel(t) / 5, mag=10, cun=25 + self:getWil() * self:getTalentLevel(t) / 5, wil=25 + self:getWil() * self:getTalentLevel(t) / 5, dex=18, con=10 + self:getTalentLevel(t) * 2, },
-
+				inc_stats = {
+					str=self:combatScale(self:getWil() * self:getTalentLevel(t), 25, 0, 125, 500, 0.75),
+					mag=10,
+					cun=self:combatScale(self:getWil() * self:getTalentLevel(t), 25, 0, 125, 500, 0.75),
+					wil=self:combatScale(self:getWil() * self:getTalentLevel(t), 25, 0, 125, 500, 0.75),
+					dex=18,
+					con=10 + self:combatTalentScale(t, 2, 10, 0.75),
+				},
 				resolvers.equip{
 					{type="weapon", subtype="longsword", autoreq=true},
 					{type="weapon", subtype="dagger", autoreq=true},
@@ -869,7 +896,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Reach through the collective psionic gestalt of the yeeks, the Way, to call for immediate help.
-		Summons up to 3 yeek mindslayers to your side.]])
+		Summons up to 3 yeek mindslayers to your side for 6 turns.]])
 	end,
 }
 

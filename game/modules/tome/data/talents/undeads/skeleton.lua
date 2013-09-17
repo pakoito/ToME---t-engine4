@@ -23,20 +23,14 @@ newTalent{
 	mode = "passive",
 	require = undeads_req1,
 	points = 5,
-	on_learn = function(self, t)
-		self.inc_stats[self.STAT_STR] = self.inc_stats[self.STAT_STR] + 2
-		self:onStatChange(self.STAT_STR, 2)
-		self.inc_stats[self.STAT_DEX] = self.inc_stats[self.STAT_DEX] + 2
-		self:onStatChange(self.STAT_DEX, 2)
-	end,
-	on_unlearn = function(self, t)
-		self.inc_stats[self.STAT_STR] = self.inc_stats[self.STAT_STR] - 2
-		self:onStatChange(self.STAT_STR, -2)
-		self.inc_stats[self.STAT_DEX] = self.inc_stats[self.STAT_DEX] - 2
-		self:onStatChange(self.STAT_DEX, -2)
+	statBonus = function(self, t) return self:combatTalentScale(t, 2, 10, 0.75) end,
+	passives = function(self, t, p)
+		self:talentTemporaryValue(p, "inc_stats", {[self.STAT_STR]=t.statBonus(self, t)})
+		self:talentTemporaryValue(p, "inc_stats", {[self.STAT_DEX]=t.statBonus(self, t)})
 	end,
 	info = function(self, t)
-		return ([[Improves your skeletal condition, increasing Strength and Dexterity by %d.]]):format(2 * self:getTalentLevelRaw(t))
+		return ([[Improves your skeletal condition, increasing Strength and Dexterity by %d.]]):
+		format(t.statBonus(self, t))
 	end,
 }
 
@@ -47,14 +41,18 @@ newTalent{
 	points = 5,
 	cooldown = 30,
 	tactical = { DEFEND = 2 },
+	getShield = function(self, t)
+		return 3.5*self:getDex()+self:combatTalentScale(t, 120, 400) + self:combatTalentLimit(t, 0.1, 0.01, 0.05)*self.max_life
+	end,
+
 	action = function(self, t)
-		self:setEffect(self.EFF_DAMAGE_SHIELD, 10, {power=50 + 70 * self:getTalentLevel(t) + self:getDex(350, true)})
+		self:setEffect(self.EFF_DAMAGE_SHIELD, 10, {power=t.getShield(self, t)})
 		return true
 	end,
 	info = function(self, t)
 		return ([[Creates a shield of bones, absorbing %d damage. Lasts for 10 turns.
 		The total damage the shield can absorb increases with your Dexterity.]]):
-		format(50 + 70 * self:getTalentLevel(t) + self:getDex(350, true))
+		format(t.getShield(self, t))
 	end,
 }
 
@@ -65,9 +63,11 @@ newTalent{
 	points = 5,
 	mode = "passive",
 	range = 1,
+	-- called by _M:on_set_temporary_effect function in mod.class.Actor.lua
+	durresist = function(self, t) return self:combatTalentLimit(t, 1, 0.1, 5/12) end, -- Limit < 100%
 	info = function(self, t)
-		return ([[Your undead bones are very resilient, reducing the duration of all detrimental effects on you by %d%%.]]):
-		format(100 * (self:getTalentLevel(self.T_RESILIENT_BONES) / 12))
+		return ([[Your undead bones are very resilient, reducing the duration of all detrimental effects on you by up to %d%%.]]):
+		format(100 * t.durresist(self, t))
 	end,
 }
 
@@ -76,7 +76,10 @@ newTalent{ short_name = "SKELETON_REASSEMBLE",
 	type = {"undead/skeleton",4},
 	require = undeads_req4,
 	points = 5,
-	cooldown = function(self, t) return 45 - self:getTalentLevelRaw(t) * 4 end,
+	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 10, 41, 25)) end, -- Limit cooldown >10
+	getHeal = function(self, t)
+		return self:combatTalentScale(t, 100, 500) + self:combatTalentLimit(t, 0.1, 0.01, 0.05)*self.max_life
+	end,
 	tactical = { HEAL = 2 },
 	is_heal = true,
 	on_learn = function(self, t)
@@ -91,7 +94,7 @@ newTalent{ short_name = "SKELETON_REASSEMBLE",
 	end,
 	action = function(self, t)
 		self:attr("allow_on_heal", 1)
-		self:heal(100 * self:getTalentLevel(t), self)
+		self:heal(t.getHeal(self, t), self)
 		self:attr("allow_on_heal", -1)
 		game:playSoundNear(self, "talents/heal")
 		return true
@@ -99,6 +102,6 @@ newTalent{ short_name = "SKELETON_REASSEMBLE",
 	info = function(self, t)
 		return ([[Re-position some of your bones, healing yourself for %d.
 		At level 5, you will gain the ability to completely re-assemble your body should it be destroyed (can only be used once)]]):
-		format(100 * self:getTalentLevel(t))
+		format(t.getHeal(self, t))
 	end,
 }

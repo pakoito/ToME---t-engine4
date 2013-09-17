@@ -992,6 +992,7 @@ newEffect{
 	type = "other",
 	subtype = { time=true },
 	status = "detrimental",
+	no_stop_enter_worlmap = true,
 	no_stop_resting = true,
 	parameters = { power=10 },
 	activate = function(self, eff)

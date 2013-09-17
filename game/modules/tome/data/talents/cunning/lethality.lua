@@ -24,6 +24,7 @@ newTalent{
 	points = 5,
 	require = cuns_req1,
 	critpower = function(self, t) return self:combatTalentScale(t, 7.5, 25, 0.75) end,
+	-- called by _M:combatCrit in mod.class.interface.Combat.lua
 	getCriticalChance = function(self, t) return self:combatTalentScale(t, 2.3, 7.5, 0.75) end,
 	passives = function(self, t, p)
 		self:talentTemporaryValue(p, "combat_critical_power", t.critpower(self, t))

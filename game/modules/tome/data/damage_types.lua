@@ -1639,9 +1639,8 @@ newDamageType{
 		if target and (target:attr("undead") or target.retch_heal) then
 			target:heal(dam * 1.5)
 
-			if src.getTalentLevel then
-				local tl = src:getTalentLevel(src.T_RETCH)
-				if rng.percent(tl * 5) then
+			if src.callTalent then
+				if rng.percent(src:callTalent(src.T_RETCH, "getPurgeChance")) then
 					local effs = {}
 					local status = "detrimental"
 					for eff_id, p in pairs(target.tmp) do
@@ -1659,9 +1658,8 @@ newDamageType{
 		elseif target then
 			DamageType:get(DamageType.BLIGHT).projector(src, x, y, DamageType.BLIGHT, dam)
 
-			if src.getTalentLevel then
-				local tl = src:getTalentLevel(src.T_RETCH)
-				if rng.percent(tl * 5) then
+			if src.callTalent then
+				if rng.percent(src:callTalent(src.T_RETCH, "getPurgeChance")) then
 					local effs = {}
 					local status = "beneficial"
 					for eff_id, p in pairs(target.tmp) do

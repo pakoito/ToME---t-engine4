@@ -1773,6 +1773,9 @@ newEffect{
 	on_gain = function(self, err) return nil, "+Bloodbath" end,
 	on_lose = function(self, err) return nil, "-Bloodbath" end,
 	on_merge = function(self, old_eff, new_eff)
+		
+		if old_eff.cur_regen + new_eff.regen < new_eff.max then	game.logSeen(self, "%s's blood frenzy intensifies!", self.name:capitalize()) end
+		new_eff.templife_id = old_eff.templife_id
 		self:removeTemporaryValue("max_life", old_eff.life_id)
 		self:removeTemporaryValue("life_regen", old_eff.life_regen_id)
 		self:removeTemporaryValue("stamina_regen", old_eff.stamina_regen_id)
@@ -1788,15 +1791,19 @@ newEffect{
 	activate = function(self, eff)
 		local v = eff.hp * self.max_life / 100
 		eff.life_id = self:addTemporaryValue("max_life", v)
-		self:heal(v)
+		eff.templife_id = self:addTemporaryValue("life",v) -- Prevent healing_factor affecting activation
 		eff.cur_regen = eff.regen
 		eff.life_regen_id = self:addTemporaryValue("life_regen", eff.regen)
 		eff.stamina_regen_id = self:addTemporaryValue("stamina_regen", eff.regen /5)
+		game.logSeen(self, "%s revels in the spilt blood and grows stronger!",self.name:capitalize())
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("max_life", eff.life_id)
 		self:removeTemporaryValue("life_regen", eff.life_regen_id)
 		self:removeTemporaryValue("stamina_regen", eff.stamina_regen_id)
+		
+		self:removeTemporaryValue("life",eff.templife_id) -- remove extra hps to prevent excessive heals at high level
+		game.logSeen(self, "%s no longer revels in blood quite so much.",self.name:capitalize())
 	end,
 }
 
