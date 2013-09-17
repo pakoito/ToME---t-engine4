@@ -97,7 +97,7 @@ for i = 1, 3 do
 							game.logSeen(self, "%s's soul is absorbed by the pedestal. A glowing orb appears.", self.name:capitalize())
 
 							if game.level.pedestal_events >= 3 then
-								game.level.pedestal_events = 0
+								game.level.pedestal_events = 0							
 
 								local m = game.zone:makeEntity(game.level, "actor", {
 									base_list=mod.class.NPC:loadList{"/data/general/npcs/major-demon.lua", "/data/general/npcs/minor-demon.lua"},
@@ -110,12 +110,15 @@ for i = 1, 3 do
 										name_scheme = "#rng# the Bringer of Doom",
 										on_die = function(self) world:gainAchievement("EVENT_PEDESTALS", game:getPlayer(true)) end,
 								}}, nil, true)
+
 								local i, j = util.findFreeGrid(x, y, 5, true, {[engine.Map.ACTOR]=true})
 								if i then
 									game.level.map:particleEmitter(i, j, 1, "teleport")
 									game.zone:addEntity(game.level, m, "actor", i, j)
-
 									local o = game.zone:makeEntity(game.level, "object", {unique=true, not_properties={"lore"}}, nil, true)
+									if not o then -- create artifact or randart
+										o = game.state:generateRandart{lev=resolvers.current_level+10}
+									end
 									if o then
 										game.zone:addEntity(game.level, o, "object")
 										m:addObject(m.INVEN_INVEN, o)
