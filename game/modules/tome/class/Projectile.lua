@@ -33,7 +33,7 @@ function _M:move(x, y, force)
 
 	local moved = engine.Projectile.move(self, x, y, force)
 	if moved and not force and ox and oy and (ox ~= self.x or oy ~= self.y) and config.settings.tome.smooth_move > 0 then
-		self:setMoveAnim(ox, oy, config.settings.tome.smooth_move, self.project and self.project.def and self.project.def.typ.blur_move)
+--		self:setMoveAnim(ox, oy, config.settings.tome.smooth_move, 3 or self.project and self.project.def and self.project.def.typ.blur_move)
 	end
 
 	return moved
