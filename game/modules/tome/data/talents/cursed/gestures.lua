@@ -91,17 +91,33 @@ newTalent{
 		local baseDamage = t.getBaseDamage(self, t)
 		local bonusDamage = t.getBonusDamage(self, t)
 		local bonusCritical = t.getBonusCritical(self, t)
+
+		if target:hasEffect(target.EFF_DISMAYED) then
+		   bonusCritical = 100
+		end
+
 		if self:checkHit(mindpower, target:combatMentalResist()) then
 			local damage = self:mindCrit(baseDamage * rng.float(0.5, 1) + bonusDamage, bonusCritical)
 			self:project({type="hit", x=target.x,y=target.y}, target.x, target.y, DamageType.MIND, { dam=damage,alwaysHit=true,crossTierChance=25 })
 			game:playSoundNear(self, "actions/melee_hit_squish")
 			hit = true
+
+			if target:hasEffect(target.EFF_DISMAYED) then
+			   target:removeEffect(target.EFF_DISMAYED)
+			end
 		else
 			game.logSeen(self, "%s resists the Gesture of Pain.", target.name:capitalize())
 			game:playSoundNear(self, "actions/melee_miss")
 		end
 
 		if hit then
+			local effGloomWeakness = target:hasEffect(target.EFF_GLOOM_WEAKNESS)
+			if effGloomWeakness and effGloomWeakness.hateBonus or 0 > 0 then
+			   self:incHate(effGloomWeakness.hateBonus)
+			   game.logPlayer(self, "#F53CBE#You revel in attacking a weakened foe! (+%d hate)", effGloomWeakness.hateBonus)
+			   effGloomWeakness.hateBonus = nil
+			end
+
 			local stunChance = t.getStunChance(self, t)
 			if rng.percent(stunChance) and target:canBe("stun") then
 				target:setEffect(target.EFF_STUNNED, 3, {apply_power=self:combatMindpower()})
