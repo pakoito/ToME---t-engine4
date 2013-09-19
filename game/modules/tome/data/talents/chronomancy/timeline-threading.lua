@@ -96,6 +96,9 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local tx, ty, target = self:getTarget(tg)
 		if not tx or not ty then return nil end
+		local _ _, _, _, tx, ty = self:canProject(tg, tx, ty)
+		if not tx or not ty then return nil end
+		local target = game.level.map(tx, ty, Map.ACTOR)
 		if not target or self:reactionToward(target) >= 0 then return end
 
 		-- Find space
