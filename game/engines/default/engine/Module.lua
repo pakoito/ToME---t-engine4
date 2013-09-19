@@ -19,7 +19,6 @@
 -- darkgod@te4.org
 
 require "engine.class"
-local Dialog = require "engine.ui.Dialog"
 local Savefile = require "engine.Savefile"
 local UIBase = require "engine.ui.Base"
 require "engine.PlayerProfile"
@@ -724,6 +723,8 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 	profile:setConfigsBatch(true)
 	profile:loadModuleProfile(mod.short_name, mod)
 	profile:currentCharacter(mod.full_version_string, "game did not tell us")
+
+	UIBase:clearCache()
 
 	-- Init the module code
 	local M, W = mod.load("init")

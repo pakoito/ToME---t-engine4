@@ -90,6 +90,11 @@ function _M:init(t, no_gen)
 	if not no_gen then self:generate() end
 end
 
+function _M:clearCache()
+	cache = {}
+	tcache = {}
+end
+
 function _M:getImage(file, noerror)
 	if cache[file] then return unpack(cache[file]) end
 	local s = core.display.loadImage(gfx_prefix..file)
