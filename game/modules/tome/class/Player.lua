@@ -154,6 +154,14 @@ function _M:onEnterLevel(zone, level)
 		end
 	end
 	for i, eff_id in ipairs(effs) do self:removeEffect(eff_id) end
+
+	-- Clear existing player created effects on the map
+	for i, eff in ipairs(level.map.effects) do
+		if eff.src and eff.src == game.player then
+			eff.duration = 0
+			eff.grids = {}
+		end
+	end
 end
 
 function _M:onEnterLevelEnd(zone, level)
