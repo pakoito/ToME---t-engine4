@@ -358,7 +358,7 @@ newTalent{
 			local x, y = util.findFreeGrid(tx, ty, 5, true, {[Map.ACTOR]=true})
 			if not x then
 				game.logPlayer(self, "Not enough space to summon!")
-				return
+				if i == 1 then return else break end
 			end
 
 			local NPC = require "mod.class.NPC"
