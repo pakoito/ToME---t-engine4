@@ -62,6 +62,7 @@ newTalent{
 		if not x or not y then return nil end
 		local _ _, x, y = self:canProject(tg, x, y)
 		if game.level.map(x, y, Map.TRAP) then game.logPlayer(self, "You somehow fail to set the aether beam.") return nil end
+		if game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move") then game.logPlayer(self, "You somehow fail to set the aether beam.") return nil end
 
 		local t = basetrap(self, t, x, y, 44, {
 			type = "aether", name = "aether beam", color=colors.VIOLET, image = "trap/trap_glyph_explosion_01_64.png",

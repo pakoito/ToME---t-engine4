@@ -648,6 +648,7 @@ newTalent{
 		if not x or not y then return nil end
 		local _ _, x, y = self:canProject(tg, x, y)
 		if game.level.map(x, y, Map.TRAP) then game.logPlayer(self, "You somehow fail to set the trap.") return nil end
+		if game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move") then game.logPlayer(self, "You somehow fail to set the trap.") return nil end
 
 		local dam = t.getDamage(self, t)
 		-- Need to pass the actor in to the triggered function for the apply_power to work correctly

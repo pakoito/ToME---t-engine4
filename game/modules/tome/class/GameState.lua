@@ -355,6 +355,7 @@ function _M:generateRandart(data)
 	-- Add ego properties
 	-----------------------------------------------------------
 	local nb_egos = data.egos or 3
+	local gr_egos = data.greater_egos_bias or math.floor(nb_egos*2/3) -- 2/3 greater egos by default
 	if o.egos and nb_egos > 0 then
 		local legos = {}
 		local been_greater = 0
@@ -365,7 +366,7 @@ function _M:generateRandart(data)
 			local egos = rng.table(legos)
 			local list = {}
 			local filter = nil
-			if rng.percent(lev) and been_greater < 2 then been_greater = been_greater + 1 filter = function(e) return e.greater_ego end end
+			if rng.percent(100*lev/(lev+50)) and been_greater < gr_egos then been_greater = been_greater + 1 filter = function(e) return e.greater_ego end end --RE Phase out (but don't eliminate) lesser egos with level
 			for z = 1, #egos do list[#list+1] = egos[z].e end
 
 			local ef = self:egoFilter(game.zone, game.level, "object", "randartego", o, {special=filter, forbid_power_source=data.forbid_power_source, power_source=data.power_source}, list, {})
@@ -1266,6 +1267,32 @@ function _M:entityFilterPost(zone, level, type, e, filter)
 					end
 					if data.user_post then data.user_post(b, data) end
 				end,
+				post = function(b, data)
+					if data.level <= 20 then
+						b.inc_damage = b.inc_damage or {}
+						b.inc_damage.all = (b.inc_damage.all or 0) - 40 * (20 - data.level + 1) / 20
+					end
+
+					-- Drop
+					for i = 1, data.nb_rares do -- generate rares as weak (1 ego) randarts
+						local fil = {lev=lev, egos=1, greater_egos_bias = 0, forbid_power_source=b.not_power_source,
+							base_filter = {no_tome_drops=true, ego_filter={keep_egos=true, ego_chance=-1000}, 
+							special=function(e)
+								return (not e.unique and e.randart_able) and (not e.material_level or e.material_level >= 1) and true or false
+							end}
+						}
+						local o = game.state:generateRandart(fil,nil, true)
+						if o then
+--							print("[entityFilterPost]: Generated random object for", tostring(b.name)) --RE
+							o.unique, o.randart, o.rare = nil, nil, true
+							b:addObject(b.INVEN_INVEN, o)
+							game.zone:addEntity(game.level, o, "object")
+						else
+							print("[entityFilterPost]: Failed to generate random object for", tostring(b.name))
+						end
+					end
+					if data.user_post then data.user_post(b, data) end
+				end,
 			}
 			e = self:createRandomBoss(e, table.merge(base, filter.random_elite, true))
 		end
@@ -1273,6 +1300,8 @@ function _M:entityFilterPost(zone, level, type, e, filter)
 		if filter.random_object and not e.unique and e.randart_able then
 			local data = _G.type(filter.random_object) == "table" and filter.random_object or {}
 			local lev = math.max(1, game.zone:level_adjust_level(game.level, game.zone, "object"))
+			print("[entityFilterPost]: Generating obsolete random_object")
+			print(debug.traceback())
 			e = game.state:generateRandart{
 				lev = lev,
 				egos = 0,

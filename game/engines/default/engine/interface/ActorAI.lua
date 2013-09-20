@@ -123,7 +123,7 @@ function _M:doAI()
 	local target_pos = self.ai_target.actor and self.fov and self.fov.actors and self.fov.actors[self.ai_target.actor]
 	if target_pos then
 		local tx, ty = self:aiSeeTargetPos(self.ai_target.actor)
-		self.ai_state.target_last_seen = {x=tx, y=ty, turn=self.fov_last_turn}
+		self.ai_state.target_last_seen=table.merge(self.ai_state.target_last_seen or {}, {x=tx, y=ty, turn=self.fov_last_turn}) -- Merge to keep obfuscation data
 	end
 
 	return self:runAI(self.ai)
@@ -148,39 +148,43 @@ function _M:setTarget(target, last_seen)
 		self.ai_state.target_last_seen = last_seen
 	else
 		local target_pos = target and self.fov and self.fov.actors and self.fov.actors[self.ai_target.actor] or {x=self.x, y=self.y}
-		self.ai_state.target_last_seen = {x=target_pos.x, y=target_pos.y, turn=game.turn}
+		self.ai_state.target_last_seen=table.merge(self.ai_state.target_last_seen or {}, {x=target_pos.x, y=target_pos.y, turn=game.turn}) -- Merge to keep obfuscation data
 	end
 end
 
 --- Returns the seen coords of the target
 -- This will usually return the exact coords, but if the target is only partially visible (or not at all)
--- it will return estimates, to throw the AI a bit off
+-- it will return estimates, to throw the AI a bit off (up to 10 tiles error)
 -- @param target the target we are tracking
 -- @return x, y coords to move/cast to
 function _M:aiSeeTargetPos(target)
 	if not target then return self.x, self.y end
 	local tx, ty = target.x, target.y
+	local LSeen = self.ai_state.target_last_seen
+	if type(LSeen) ~= "table" then return tx, ty end
 	local spread = 0
+	LSeen.GCache_turn = LSeen.GCache_turn or game.turn -- Guess Cache turn to update position guess (so it's consistent during a turn)
+	LSeen.GCknown_turn = LSeen.GCknown_turn or game.turn -- Guess Cache known turn for spread calculation (self.ai_state.target_last_seen.turn can't be used because it's needed by FOV code)
 
-	-- Adding some type-safety checks, but this isn't fixing the source of the errors
-	if target == self.ai_target.actor and self.ai_state.target_last_seen and type(self.ai_state.target_last_seen) == "table" and self.ai_state.target_last_seen.x and not self:hasLOS(self.ai_state.target_last_seen.x, self.ai_state.target_last_seen.y) then
-		tx, ty = self.ai_state.target_last_seen.x, self.ai_state.target_last_seen.y
-		spread = spread + math.floor((game.turn - (self.ai_state.target_last_seen.turn or game.turn)) / (game.energy_to_act / game.energy_per_tick))
-	end
-	
+	-- Check if target is currently seen
 	local see, chance = self:canSee(target)
-
-	-- Compute the maximum spread if we need to obfuscate 
-	local spread = see and 0 or math.floor((100 - chance) / 10)
-	
-
-	-- We don't know the exact position, so we obfuscate
-	if spread > 0 then
-		tx = tx + rng.range(0, spread * 2) - spread
-		ty = ty + rng.range(0, spread * 2) - spread
-		return util.bound(tx, 0, game.level.map.w - 1), util.bound(ty, 0, game.level.map.h - 1)
-	-- Directly seeing it, no spread at all
+	if see and self:hasLOS(target.x, target.y) then -- canSee doesn't check LOS
+		LSeen.GCache_x, LSeen.GCache_y = nil, nil
+		LSeen.GCknown_turn = game.turn
+		LSeen.GCache_turn = game.turn
 	else
-		return util.bound(tx, 0, game.level.map.w - 1), util.bound(ty, 0, game.level.map.h - 1)
+		if target == self.ai_target.actor and (LSeen.GCache_turn or 0) + 10 <= game.turn and LSeen.x then
+			spread = spread + math.min(10, math.floor((game.turn - (LSeen.GCknown_turn or game.turn)) / (game.energy_to_act / game.energy_per_tick))) -- Limit spread to 10 tiles
+			tx, ty = util.bound(tx + rng.range(-spread, spread), 0, game.level.map.w - 1), util.bound(ty + rng.range(-spread, spread), 0, game.level.map.h - 1)
+			-- Inertial average with last guess: can specify another method here to make the targeting position less random
+			if LSeen.GCache_x then -- update guess with new random position. Could use util.findFreeGrid here at cost of speed
+				tx = math.floor(LSeen.GCache_x + (tx-LSeen.GCache_x)/2)
+				ty = math.floor(LSeen.GCache_y + (ty-LSeen.GCache_y)/2)
+			end
+			LSeen.GCache_x, LSeen.GCache_y = tx, ty
+			LSeen.GCache_turn = game.turn
+		end
+		if LSeen.GCache_x then return LSeen.GCache_x, LSeen.GCache_y end
 	end
+	return tx, ty -- Fall through to correct coords
 end
