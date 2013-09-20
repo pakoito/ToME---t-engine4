@@ -200,6 +200,7 @@ end
 -- Possible values are 0 (normal, lore), 1 (ego), 2 (greater ego), 3 (artifact)
 function _M:getPowerRank()
 	if self.godslayer then return 10 end
+	if self.legendary then return 5 end
 	if self.unique then return 3 end
 	if self.egoed and self.greater_ego then return 2 end
 	if self.egoed or self.rare then return 1 end
@@ -213,6 +214,8 @@ function _M:getDisplayColor()
 	elseif self.unique then
 		if self.randart then
 			return {255, 0x77, 0}, "#FF7700#"
+		elseif self.legendary then
+			return {0xFF, 0x40, 0x00}, "#FF4000#"
 		elseif self.godslayer then
 			return {0xAA, 0xD5, 0x00}, "#AAD500#"
 		else
@@ -300,7 +303,13 @@ function _M:getTextualDesc(compare_with)
 	compare_with = compare_with or {}
 	local desc = tstring{}
 
-	if self.quest then desc:add({"color", "VIOLET"},"[Plot Item]", {"color", "LAST"}, true) end
+	if self.quest then desc:add({"color", "VIOLET"},"[Plot Item]", {"color", "LAST"}, true)
+	elseif self.unique then
+		if self.legendary then desc:add({"color", "FF4000"},"[Legendary]", {"color", "LAST"}, true)
+		elseif self.godslayer then desc:add({"color", "AAD500"},"[Godslayer]", {"color", "LAST"}, true)
+		else desc:add({"color", "FFD700"},"[Unique]", {"color", "LAST"}, true)
+		end
+	end
 
 	desc:add(("Type: %s / %s"):format(tostring(rawget(self, 'type') or "unknown"), tostring(rawget(self, 'subtype') or "unknown")))
 	if self.material_level then desc:add(" ; tier ", tostring(self.material_level)) end
