@@ -86,7 +86,7 @@ newTalent{
 	getMax = function(self, t)
 		local v = self:combatTalentMindDamage(t, 20, 80)
 		if self:knowTalent(self.T_TRICKY_DEFENSES) then
-			v = v * (100 + self:getCun() / 2) / 100
+			v = v * (1 + self:callTalent(self.T_TRICKY_DEFENSES,"shieldmult"))
 		end
 		return v
 	end,

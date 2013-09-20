@@ -2575,6 +2575,8 @@ function _M:levelup()
 		self:no_points_on_levelup()
 	end
 
+	if self:knowTalent(self.T_LEGACY_OF_THE_NALOREN) then self:callTalent(self.T_LEGACY_OF_THE_NALOREN,"updateTalent") end-- Update Bonus Talent levels
+	
 	-- Gain some basic resistances
 	if not self.no_auto_resists then
 		-- Make up a random list of resists the first time
@@ -2640,6 +2642,7 @@ function _M:levelup()
 	if self.alchemy_golem then
 		self.alchemy_golem.max_level = self.max_level  -- make sure golem can level up with master
 		self.alchemy_golem:forceLevelup(self.level)
+		if self:knowTalent(self.T_BLIGHTED_SUMMONING) then self:callTalent(self.T_BLIGHTED_SUMMONING,"doBlightedSummon",self.alchemy_golem)	end -- update golem talent levels
 	end
 
 	-- Notify party levelups
@@ -4740,6 +4743,11 @@ end
 -- Used to make escorts and such
 function _M:addedToLevel(level, x, y)
 	if not self._rst_full then self:resetToFull() self._rst_full = true end -- Only do it once, the first time we come into being
+	local summoner = self.summoner
+	if summoner and summoner:knowTalent(summoner.T_BLIGHTED_SUMMONING) then -- apply blighted summoning
+		summoner:callTalent(summoner.T_BLIGHTED_SUMMONING, "doBlightedSummon", self)
+	end
+
 	self:updateModdableTile()
 	self:recomputeGlobalSpeed()
 	if self.make_escort then

@@ -1995,14 +1995,15 @@ newEffect{
 newEffect{
 	name = "ELEMENTAL_SURGE_COLD", image = "talents/elemental_surge.png",
 	desc = "Elemental Surge: Cold",
-	long_desc = function(self, eff) return ("Physical damage reduced by 30% and deals 100 ice damage when hit in melee.") end,
+	long_desc = function(self, eff) return ("Icy Skin: Physical damage reduced by 30%%, armor increased by %d, and deals %d ice damage when hit in melee."):format(eff.armor, eff.dam) end,
 	type = "magical",
 	subtype = { arcane=true },
 	status = "beneficial",
-	parameters = { },
+	parameters = {physresist=30, armor=0, dam=100 },
 	activate = function(self, eff)
-		self:effectTemporaryValue(eff, "resists", {[DamageType.PHYSICAL]=30})
-		self:effectTemporaryValue(eff, "on_melee_hit", {[DamageType.ICE]=100})
+		self:effectTemporaryValue(eff, "resists", {[DamageType.PHYSICAL]=eff.physresist})
+		self:effectTemporaryValue(eff, "combat_armor", eff.armor)
+		self:effectTemporaryValue(eff, "on_melee_hit", {[DamageType.ICE]=eff.dam})
 	end,
 }
 

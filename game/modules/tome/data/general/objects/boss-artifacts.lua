@@ -488,11 +488,12 @@ newEntity{ base = "BASE_STAFF",
 			crystal:forgetInven(crystal.INVEN_INVEN)
 
 			local setupSummon = getfenv(who:getTalentFromId(who.T_SPIDER).action).setupSummon
-			setupSummon(who, crystal, x, y)
-			if who:knowTalent(who.T_BLIGHTED_SUMMONING) then 
-				crystal:learnTalent(crystal.T_BONE_SHIELD, true, 3) 
-				crystal:forceUseTalent(crystal.T_BONE_SHIELD, {ignore_energy=true})
+			if who:knowTalent(who.T_BLIGHTED_SUMMONING) then
+				crystal.blighted_summon_talent = who.T_BONE_SHIELD
+				crystal:incIncStat("mag", who:getMag())
+				crystal.summon_time=15
 			end
+			setupSummon(who, crystal, x, y)
 			game:playSoundNear(who, "talents/ice")
 		end
 		return {id=true, used=true}
@@ -707,8 +708,6 @@ newEntity{ base = "BASE_AMULET",
 		vampire:resolve()
 		game.zone:addEntity(game.level, vampire, "actor", x, y)
 		vampire:forceUseTalent(vampire.T_TAUNT, {})
-		if who:knowTalent(who.T_BLIGHTED_SUMMONING) then vampire:learnTalent(vampire.T_DARKFIRE, true, 3) end
-
 		game:playSoundNear(who, "talents/spell_generic")
 		return {id=true, used=true}
 	end },

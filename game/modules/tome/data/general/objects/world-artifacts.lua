@@ -901,8 +901,6 @@ newEntity{
 
 			local setupSummon = getfenv(who:getTalentFromId(who.T_SPIDER).action).setupSummon
 			setupSummon(who, spider, x, y)
-			if who:knowTalent(who.T_BLIGHTED_SUMMONING) then spider:learnTalent(spider.T_CORROSIVE_WORM, true, 3) end
-
 			game:playSoundNear(who, "talents/slime")
 		end
 		return {id=true, used=true}

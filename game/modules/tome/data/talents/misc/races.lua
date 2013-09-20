@@ -398,7 +398,6 @@ newTalent{
 				summon_time = 8,
 				ai_target = {actor=target}
 			}
-			if self:knowTalent(self.T_BLIGHTED_SUMMONING) then m:learnTalent(m.T_CORROSIVE_WORM, true, 3) end
 			setupSummon(self, m, x, y)
 		end
 
@@ -887,7 +886,6 @@ newTalent{
 				summon_time = 6,
 				ai_target = {actor=target}
 			}
-			if self:knowTalent(self.T_BLIGHTED_SUMMONING) then m:learnTalent(m.T_DARK_PORTAL, true, 3) end
 			setupSummon(self, m, x, y)
 		end
 

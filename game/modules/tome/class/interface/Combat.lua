@@ -1029,7 +1029,7 @@ function _M:combatArmor()
 		add = add + self.carbon_armor
 	end
 	if self:knowTalent(self.T_ARMOUR_OF_SHADOWS) and not game.level.map.lites(self.x, self.y) then
-		add = add + 30
+		add = add + self:callTalent(self.T_ARMOUR_OF_SHADOWS,"ArmourBonus")
 	end
 	return self.combat_armor + add
 end

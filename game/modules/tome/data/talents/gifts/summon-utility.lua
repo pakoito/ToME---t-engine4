@@ -180,10 +180,7 @@ newTalent{
 			m.name = m.name.." (wild summon)"
 			m[#m+1] = resolvers.talents{ [self.T_BATTLE_CALL]=self:getTalentLevelRaw(t) }
 		end
-		if self:knowTalent(self.T_BLIGHTED_SUMMONING) then m:learnTalent(m.T_CURSE_OF_IMPOTENCE, true, 3) end
-
 		setupSummon(self, m, x, y)
-
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
@@ -288,10 +285,7 @@ newTalent{
 			m.name = m.name.." (wild summon)"
 			m[#m+1] = resolvers.inscription("INFUSION:_INSIDIOUS_POISON", {cooldown=12, range=6, heal_factor=60, power=self:getTalentLevel(t) * 60})
 		end
-		if self:knowTalent(self.T_BLIGHTED_SUMMONING) then m:learnTalent(m.T_CORROSIVE_WORM, true, 3) end
-
 		setupSummon(self, m, x, y)
-
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,

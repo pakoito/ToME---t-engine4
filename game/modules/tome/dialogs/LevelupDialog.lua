@@ -145,7 +145,7 @@ end
 
 function _M:getMaxTPoints(t)
 	if t.points == 1 then return 1 end
-	return t.points + math.max(0, math.floor((self.actor.level - 50) / 10))
+	return t.points + math.max(0, math.floor((self.actor.level - 50) / 10)) + (self.actor.talents_inc_cap and self.actor.talents_inc_cap[t.id] or 0)
 end
 
 function _M:finish()

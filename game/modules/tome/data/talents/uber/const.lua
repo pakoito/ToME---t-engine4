@@ -103,6 +103,8 @@ uberTalent{
 			(self.damage_log[DamageType.DARKNESS] and self.damage_log[DamageType.DARKNESS] >= 50000)
 		)
 	end} },
+	-- called by _M:combatArmor in mod\class\interface\Combat.lua
+	ArmourBonus = function(self, t) return math.max(30, 0.5*self:getCon()) end,
 	on_learn = function(self, t)
 		self:attr("darkness_darkens", 1)
 	end,
@@ -110,9 +112,10 @@ uberTalent{
 		self:attr("darkness_darkens", -1)
 	end,
 	info = function(self, t)
-		return ([[You know how to protect yourself with the deepest shadows. As long as you stand on an unlit tile, you gain 30 Armour and 50%% Armour hardiness.
-		Any time you deal darkness damage, you will unlight both the target terrain and your tile.]])
-		:format()
+		return ([[You know how to protect yourself with the deepest shadows. As long as you stand on an unlit tile you gain %d armour and 50%% armour hardiness.
+		Any time you deal darkness damage, you will unlight both the target tile and yours.
+		The armor bonus scales with your Constitution.]])
+		:format(t.ArmourBonus(self,t))
 	end,
 }
 
@@ -121,7 +124,7 @@ uberTalent{
 	mode = "passive",
 	trigger = function(self, t)
 		if self:hasEffect(self.EFF_SPINE_OF_THE_WORLD) then return end
-		self:setEffect(self.EFF_SPINE_OF_THE_WORLD, 4, {})
+		self:setEffect(self.EFF_SPINE_OF_THE_WORLD, 5, {})
 	end,
 	info = function(self, t)
 		return ([[Your back is as hard as stone. Each time that you are affected by a physical effect, your body hardens, making you immune to all other physical effects for 5 turns.]])
@@ -133,16 +136,19 @@ uberTalent{
 	name = "Fungal Blood",
 	require = { special={desc="Be able to use infusions", fct=function(self) return not self.inscription_restrictions or self.inscription_restrictions['inscriptions/infusions'] end} },
 	tactical = { HEAL = function(self) return not self:hasEffect(self.EFF_FUNGAL_BLOOD) and 0 or math.ceil(self:hasEffect(self.EFF_FUNGAL_BLOOD).power / 150) end },
+	healmax = function(self, t) return self.max_life * self:combatStatLimit("con", 0.5, 0.1, 0.25) end, -- Limit < 50% max life
+	fungalPower = function(self, t) return self:getCon()*2 + self.max_life * self:combatStatLimit("con", 0.05, 0.005, 0.01) end,
 	on_pre_use = function(self, t) return self:hasEffect(self.EFF_FUNGAL_BLOOD) and self:hasEffect(self.EFF_FUNGAL_BLOOD).power > 0 and not self:attr("undead") end,
 	trigger = function(self, t)
 		if self.inscription_restrictions and not self.inscription_restrictions['inscriptions/infusions'] then return end
-		self:setEffect(self.EFF_FUNGAL_BLOOD, 6, {power=self:getCon() * 2})
+		self:setEffect(self.EFF_FUNGAL_BLOOD, 6, {power=t.fungalPower(self, t)})
 	end,
 	no_energy = true,
+	-- decay handed by "FUNGAL_BLOOD" effect in mod.data.timed_effects.physical.lua
 	action = function(self, t)
 		local eff = self:hasEffect(self.EFF_FUNGAL_BLOOD)
 		self:attr("allow_on_heal", 1)
-		self:heal(math.min(eff.power, self:getCon() * self.max_life / 100))
+		self:heal(math.min(eff.power, t.healmax(self,t)))
 		self:attr("allow_on_heal", -1)
 		self:removeEffectsFilter({status="detrimental", type="magical"}, 10)
 		self:removeEffect(self.EFF_FUNGAL_BLOOD)
@@ -151,9 +157,9 @@ uberTalent{
 	info = function(self, t)
 		return ([[Fungal spores have colonized your blood, so that each time you use an infusion you store %d fungal power.
 		You may use this prodigy to release the power as a heal (never more than than %d life) and remove up to 10 detrimental magical effects.
-		Fungal power lasts for up to 6 turns, losing 10 potency each turn.
-		The amount of fungal power produced and the maximum heal possible increase with your Constitution.]])
-		:format(self:getCon() * 2, self:getCon() * self.max_life / 100)
+		Fungal power lasts for up to 6 turns, losing the greater of 10 potency or 10%% of its power each turn.
+		The amount of fungal power produced and the maximum heal possible increase with your Constitution and maximum life.]])
+		:format(t.fungalPower(self, t), t.healmax(self,t))
 	end,
 }
 
