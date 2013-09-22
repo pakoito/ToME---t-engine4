@@ -205,20 +205,23 @@ uberTalent{
 	cooldown = 10,
 	tactical = { ESCAPE = 1 },
 	require = { special={desc="Have been knocked around at least 50 times", fct=function(self) return self:attr("knockback_times") and self:attr("knockback_times") >= 50 end} },
+	-- Called by default projector in mod.data.damage_types.lua
+	getMult = function(self, t) return self:combatLimit(self:getDex(), 0.7, 0.9, 50, 0.85, 100) end, -- Limit > 70% damage taken
 	activate = function(self, t)
 		local ret = {}
 		self:talentTemporaryValue(ret, "knockback_on_hit", 1)
 		self:talentTemporaryValue(ret, "movespeed_on_hit", {speed=3, dur=1})
-		self:talentTemporaryValue(ret, "resists", {[DamageType.PHYSICAL] = 10})
 		return ret
 	end,
 	deactivate = function(self, t, p)
 		return true
 	end,
 	info = function(self, t)
-		return ([[You have learned to take a few hits when needed and can flow with the tide of battle, reducing all physical damage by 10%%.
-		Once per turn, when you get hit by a melee or archery attack you move back one tile for free and gain 200%% movement speed for a turn.]])
-		:format()
+		return ([[You have learned to take a few hits when needed and can flow with the tide of battle.
+		So long as you can move, you find a way to dodge, evade, deflect or otherwise reduce physical damage against you by %d%%.
+		Once per turn, when you get hit by a melee or archery attack you move back one tile for free and gain 200%% movement speed for a turn.
+		The damage avoidance scales with your Dexterity and applies after resistances.]])
+		:format(100*(1-t.getMult(self, t)))
 	end,
 }
 

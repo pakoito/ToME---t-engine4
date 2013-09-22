@@ -717,14 +717,12 @@ newTalent{
 				m.ai = "summoned"
 			end
 
-			game.zone:addEntity(game.level, m, "actor", x, y)
-			
-			if self:knowTalent(self.T_BLIGHTED_SUMMONING) then 
-				m:learnTalent(m.T_RUIN, true, 3) 
+			if self:knowTalent(self.T_BLIGHTED_SUMMONING) then
+				m.blighted_summon_talent = self.T_RUIN
 				m:incIncStat("mag", self:getMag())
 				m.summon_time=15
-				m:forceUseTalent(m.T_RUIN, {ignore_cd=true})
 			end
+			game.zone:addEntity(game.level, m, "actor", x, y)
 		end
 
 		return true

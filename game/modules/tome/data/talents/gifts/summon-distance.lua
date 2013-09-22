@@ -295,10 +295,7 @@ newTalent{
 			m.name = m.name.." (wild summon)"
 			m[#m+1] = resolvers.talents{ [self.T_FLAME_FURY]=self:getTalentLevelRaw(t) }
 		end
-		if self:knowTalent(self.T_BLIGHTED_SUMMONING) then m:learnTalent(m.T_DRAIN, true, 3) end
-
 		setupSummon(self, m, x, y)
-
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
@@ -404,10 +401,7 @@ newTalent{
 			m.name = m.name.." (wild summon)"
 			m[#m+1] = resolvers.talents{ [self.T_DISENGAGE]=self:getTalentLevelRaw(t) }
 		end
-		if self:knowTalent(self.T_BLIGHTED_SUMMONING) then m:learnTalent(m.T_BLOOD_SPRAY, true, 3) end
-
 		setupSummon(self, m, x, y)
-
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
@@ -508,10 +502,7 @@ newTalent{
 			m.name = m.name.." (wild summon)"
 			m[#m+1] = resolvers.talents{ [self.T_RESOLVE]=self:getTalentLevelRaw(t) }
 		end
-		if self:knowTalent(self.T_BLIGHTED_SUMMONING) then m:learnTalent(m.T_POISON_STORM, true, 3) end
-
 		setupSummon(self, m, x, y)
-
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
@@ -653,8 +644,6 @@ newTalent{
 			m.name = m.name.." (wild summon)"
 			m[#m+1] = resolvers.talents{ [self.T_AURA_OF_SILENCE]=self:getTalentLevelRaw(t) }
 		end
-		if self:knowTalent(self.T_BLIGHTED_SUMMONING) then m:learnTalent(m.T_DARKFIRE, true, 3) end
-
 		setupSummon(self, m, x, y)
 
 		game:playSoundNear(self, "talents/spell_generic")

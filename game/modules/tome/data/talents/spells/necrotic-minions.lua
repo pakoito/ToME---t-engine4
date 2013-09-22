@@ -215,10 +215,10 @@ local minions_list = {
 		see_invisible = 2,
 		undead = 1,
 		rarity = 1,
-
 		max_life = resolvers.rngavg(70,80),
 		combat_armor = 5, combat_def = 1,
 		resolvers.talents{ T_BOW_MASTERY={base=1, every=7, max=10}, T_WEAPON_COMBAT={base=1, every=7, max=10}, T_SHOOT=1, },
+		blighted_summon_talent = "T_BONE_SPEAR",
 		ai_state = { talent_in=1, },
 		autolevel = "archer",
 		resolvers.equip{ {type="weapon", subtype="longbow", autoreq=true}, {type="ammo", subtype="arrow", autoreq=true} },
@@ -251,6 +251,7 @@ local minions_list = {
 		max_life = resolvers.rngavg(70,80),
 		combat_armor = 5, combat_def = 1,
 		resolvers.talents{ T_BOW_MASTERY={base=1, every=7, max=10}, T_WEAPON_COMBAT={base=1, every=7, max=10}, T_SHOOT=1, T_PINNING_SHOT=3, T_CRIPPLING_SHOT=3, },
+		blighted_summon_talent = "T_BONE_SPEAR",
 		ai_state = { talent_in=1, },
 		rank = 3,
 		autolevel = "archer",
@@ -286,6 +287,7 @@ local minions_list = {
 		combat_armor = 3, combat_def = 1,
 		stats = { str=10, dex=12, cun=14, mag=14, con=10 },
 		resolvers.talents{ T_FLAME={base=1, every=7, max=5}, T_MANATHRUST={base=2, every=7, max=5} },
+		blighted_summon_talent = "T_BONE_SPEAR",
 		resolvers.equip{ {type="weapon", subtype="staff", autoreq=true} },
 		autolevel = "caster",
 		ai_state = { talent_in=1, },
@@ -787,14 +789,6 @@ newTalent{
 			if minion and pos then
 				p.souls = p.souls - 1
 				necroSetupSummon(self, minion, pos.x, pos.y, lev, true)
-				if self:knowTalent(self.T_BLIGHTED_SUMMONING) then 
-					minion:incIncStat("mag", self:getMag())
-					if minion.subtype == "skeleton" then minion:learnTalent(minion.T_BONE_GRAB, true, 3) end
-					if minion.subtype == "giant" then minion:learnTalent(minion.T_BONE_SHIELD, true, 3) end
-					if minion.subtype == "ghoul" then minion:learnTalent(minion.T_BLOOD_LOCK, true, 3) end
-					if minion.subtype == "vampire" or minion.subtype == "lich" then minion:learnTalent(minion.T_DARKFIRE, true, 3) end
-					if minion.subtype == "ghost" or minion.subtype == "wight" then minion:learnTalent(minion.T_BLOOD_BOIL, true, 3) end
-				end
 			end
 		end
 

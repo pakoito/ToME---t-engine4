@@ -2093,7 +2093,7 @@ newEffect{
 		return new_eff
 	end,
 	on_timeout = function(self, eff)
-		eff.power = math.max(0, eff.power - 10)
+		eff.power = util.bound(eff.power * 0.9, 0, eff.power - 10)
 	end,
 }
 

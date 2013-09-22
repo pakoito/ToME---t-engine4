@@ -97,10 +97,7 @@ newTalent{
 			m.name = m.name.." (wild summon)"
 			m[#m+1] = resolvers.talents{ [self.T_TOTAL_THUGGERY]=self:getTalentLevelRaw(t) }
 		end
-		if self:knowTalent(self.T_BLIGHTED_SUMMONING) then m:learnTalent(m.T_CURSE_OF_DEFENSELESSNESS, true, 3) end
-
 		setupSummon(self, m, x, y)
-
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
@@ -204,10 +201,7 @@ newTalent{
 			m.name = m.name.." (wild summon)"
 			m[#m+1] = resolvers.talents{ [self.T_SWALLOW]=self:getTalentLevelRaw(t) }
 		end
-		if self:knowTalent(self.T_BLIGHTED_SUMMONING) then m:learnTalent(m.T_VIMSENSE, true, 3) end
-
 		setupSummon(self, m, x, y)
-
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
@@ -308,10 +302,7 @@ newTalent{
 			m.name = m.name.." (wild summon)"
 			m[#m+1] = resolvers.talents{ [self.T_RUSH]=self:getTalentLevelRaw(t) }
 		end
-		if self:knowTalent(self.T_BLIGHTED_SUMMONING) then m:learnTalent(m.T_LIFE_TAP, true, 3) end
-
 		setupSummon(self, m, x, y)
-
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
@@ -413,10 +404,7 @@ newTalent{
 			m.name = m.name.." (wild summon)"
 			m[#m+1] = resolvers.talents{ [self.T_SHATTERING_IMPACT]=self:getTalentLevelRaw(t) }
 		end
-		if self:knowTalent(self.T_BLIGHTED_SUMMONING) then m:learnTalent(m.T_BONE_SPEAR, true, 3) end
-
 		setupSummon(self, m, x, y)
-
 		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,

@@ -62,7 +62,7 @@ function _M:init(fontname, fontsize, color, bgcolor, max, lockstatus_icon)
 end
 
 function _M:generate()
-	self.frame = self:makeFrame("ui/tooltip/", self.w + 6, self.h + 6)
+	self.frame = Base:makeFrame("ui/tooltip/", self.w + 6, self.h + 6)
 end
 
 --- Set the tooltip text	
@@ -323,4 +323,4 @@ function _M:getTooltipAtMap(tmx, tmy, mx, my)
 		return tt
 	end
 	return nil
-end
+end

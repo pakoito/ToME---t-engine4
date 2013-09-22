@@ -314,9 +314,6 @@ local function createShadow(self, level, tCallShadows, tShadowWarriors, tShadowM
 			return mod.class.Actor.onTakeHit(self, value, src)
 		end,
 	}
-
-	if self:knowTalent(self.T_BLIGHTED_SUMMONING) then npc:learnTalent(npc.T_EMPATHIC_HEX, true, 3) end
-
 	self:attr("summoned_times", 1)
 	return npc
 end

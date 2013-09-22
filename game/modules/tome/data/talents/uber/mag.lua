@@ -117,43 +117,126 @@ uberTalent{
 uberTalent{
 	name = "Blighted Summoning",
 	mode = "passive",
-	on_learn = function(self, t)
-		if self.alchemy_golem then 
-			self.alchemy_golem:learnTalent(self.alchemy_golem.T_CORRUPTED_STRENGTH, true, 1, {no_unlearn=true})
-			self.alchemy_golem:learnTalentType("corruption/reaving-combat", true)
+	updateGolem = function(self, t, tl)
+		local gol = self.alchemy_golem
+		if not gol then return end
+		gol:learnTalentType("corruption/reaving-combat", true)
+		local p = self.talents_learn_vals[t.id] or {}
+		if p.__tmpvals then
+			for i = 1, #p.__tmpvals do
+				self:removeTemporaryValue(p.__tmpvals[i][1], p.__tmpvals[i][2])
+			end
+			p.__tmpvals = nil
 		end
+		self.talents_learn_vals[t.id] = p
+		self:talentTemporaryValue(p, "alchemy_golem", {talents_inc_cap = {T_CORRUPTED_STRENGTH=tl}})
+		self:talentTemporaryValue(p, "alchemy_golem", {talents = {T_CORRUPTED_STRENGTH=tl}})
+	end,
+	
+	on_learn = function(self, t)
+		t.updateGolem(self, t, t.bonusTalentLevel(self, t))
 	end,
 	require = { special={desc="Have summoned at least 100 creatures affected by this talent. The alchemist golem counts as 100.", fct=function(self)
 		return self:attr("summoned_times") and self:attr("summoned_times") >= 100
 	end} },
+	bonusTalentLevel = function(self, t) return math.ceil(3*self.level/50) end, -- Talent level for summons
+	-- called by _M:addedToLevel and by _M:levelup in mod.class.Actor.lua
+	doBlightedSummon = function(self, t, who)
+		if not self:knowTalent(self.T_BLIGHTED_SUMMONING) then return false end
+		if who.necrotic_minion then who:incIncStat("mag", self:getMag()) end
+		local tlevel = self:callTalent(self.T_BLIGHTED_SUMMONING, "bonusTalentLevel")
+		-- learn specified talent if present
+		if who.blighted_summon_talent then 
+			who:learnTalent(who.blighted_summon_talent, true, tlevel)
+			if who.talents_def[who.blighted_summon_talent].mode == "sustained" then -- Activate sustained talents by default
+				who:forceUseTalent(who.blighted_summon_talent, {ignore_energy=true})
+			end 
+		elseif who.name == "war hound" then
+			who:learnTalent(who.T_CURSE_OF_DEFENSELESSNESS,true,tlevel)
+		elseif who.subtype == "jelly" then
+			who:learnTalent(who.T_VIMSENSE,true,tlevel)
+		elseif who.subtype == "minotaur" then
+			who:learnTalent(who.T_LIFE_TAP,true,tlevel)
+		elseif who == self.alchemy_golem then
+			-- Recheck talent level of golem any time it is refit in golemancy.lua
+			-- or on the master levelup in mod.class.Actor.lua _M:levelup
+			t.updateGolem(self, t, tlevel)
+		elseif who.name == "stone golem" then
+			who:learnTalent(who.T_BONE_SPEAR,true,tlevel)
+		elseif who.subtype == "ritch" then
+			who:learnTalent(who.T_DRAIN,true,tlevel)
+		elseif who.type =="hydra" then
+			who:learnTalent(who.T_BLOOD_SPRAY,true,tlevel)
+		elseif who.name == "rimebark" then
+			who:learnTalent(who.T_POISON_STORM,true,tlevel)	
+		elseif who.name == "treant" then
+			who:learnTalent(who.T_CORROSIVE_WORM,true,tlevel)
+		elseif who.name == "fire drake" then
+			who:learnTalent(who.T_DARKFIRE,true,tlevel)
+		elseif who.name == "turtle" then
+			who:learnTalent(who.T_CURSE_OF_IMPOTENCE,true,tlevel)
+		elseif who.subtype == "spider" then
+			who:learnTalent(who.T_CORROSIVE_WORM,true,tlevel)
+		elseif who.subtype == "skeleton" then
+			who:learnTalent(who.T_BONE_GRAB,true,tlevel)
+		elseif who.subtype == "giant" and who.undead then
+			who:learnTalent(who.T_BONE_SHIELD,true,tlevel)
+		elseif who.subtype == "ghoul" then
+				who:learnTalent(who.T_BLOOD_LOCK,true,tlevel)
+		elseif who.subtype == "vampire" or who.subtype == "lich" then
+			who:learnTalent(who.T_DARKFIRE,true,tlevel)
+		elseif who.subtype == "ghost" or who.subtype == "wight" then
+			who:learnTalent(who.T_BLOOD_BOIL,true,tlevel)
+		elseif who.subtype == "shadow" then
+			local tl = who:getTalentLevelRaw(who.T_EMPATHIC_HEX)
+			tl = tlevel-tl
+			if tl > 0 then who:learnTalent(who.T_EMPATHIC_HEX, true, tl) end		
+		elseif who.type == "thought-form" then
+			who:learnTalent(who.T_FLAME_OF_URH_ROK,true,tlevel)
+		elseif who.subtype == "yeek" then
+			who:learnTalent(who.T_DARK_PORTAL, true, tlevel)
+		elseif who.name == "bloated ooze" then
+			who:learnTalent(who.T_BONE_SHIELD,true,math.ceil(tlevel*2/3))
+		elseif who.name == "mucus ooze" then
+			who:learnTalent(who.T_VIRULENT_DISEASE,true,tlevel)
+		else
+--			print("Error: attempting to apply talent Blighted Summoning to incorrect creature type")
+			return false
+		end
+		return true
+	end,
 	info = function(self, t)
-		return ([[You infuse blighted energies into all of your summons, granting them a new talent:
+		local tl = t.bonusTalentLevel(self, t)
+		return ([[You infuse blighted energies into all of your summons, granting them a new talent (at talent level %d):
 		- War Hound: Curse of Defenselessness
 		- Jelly: Vimsense
 		- Minotaur: Life Tap
 		- Golem: Bone Spear
+		- Alchemy Golems: Corrupted Strength and the Reaving Combat tree
 		- Ritch: Drain
 		- Hydra: Blood Spray
 		- Rimebark: Poison Storm
 		- Fire Drake: Darkfire
 		- Turtle: Curse of Impotence
 		- Spider: Corrosive Worm
-		- Skeletons: Bone Grab
+		- Skeletons: Bone Grab or Bone Spear
 		- Bone Giants: Bone Shield
 		- Ghouls: Blood Lock
+		- Ghoul Rot ghoul: Rend
 		- Vampires / Liches: Darkfire
 		- Ghosts / Wights: Blood Boil
-		- Alchemy Golems: Corrupted Strength and the Reaving Combat tree
 		- Shadows: Empathic Hex
 		- Thought-Forms: Flame of Urh'Rok
 		- Treants: Corrosive Worm
 		- Yeek Wayists: Dark Portal
-		- Ghoul Rot ghoul: Rend
-		- Bloated Oozes: Bone Shield
+		- Bloated Oozes: Bone Shield (level %d)
 		- Mucus Oozes: Virulent Disease
-		- Other race- or object-based summons might be affected, too.
-		]]):format()
+		Your necrotic minions and wild-summons get a bonus to Magic equal to yours.
+		The talent levels increase with your level, and other race- or object-based summons may also be affected.
+		]]):format(tl,math.ceil(tl*2/3))
 	end,
+-- Note: Choker of Dread Vampire, and Mummified Egg-sac of Ungolë spiders handled by default
+-- Crystal Shard summons use specified talent
 }
 
 uberTalent{

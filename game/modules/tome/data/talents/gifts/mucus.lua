@@ -211,8 +211,6 @@ newTalent{
 			max_summon_time = math.floor(self:combatTalentScale(t, 6, 10)),
 		}
 		m:learnTalent(m.T_MUCUS_OOZE_SPIT, true, self:getTalentLevelRaw(t))
-		if self:knowTalent(self.T_BLIGHTED_SUMMONING) then m:learnTalent(m.T_VIRULENT_DISEASE, true, 3) end
-
 		setupSummon(self, m, p.x, p.y)
 		return true
 	end,

@@ -148,7 +148,7 @@ newTalent{
 		m.no_drops = true
 		if self:knowTalent(self.T_BLIGHTED_SUMMONING) then 
 			m:incIncStat("mag", self:getMag()) 
-			m:learnTalent(m.T_REND, true, 3)
+			m.blighted_summon_talent = self.T_REND
 		end
 		self:attr("summoned_times", 1)
 		

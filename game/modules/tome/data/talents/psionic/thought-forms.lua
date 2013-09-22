@@ -152,8 +152,6 @@ function setupThoughtForm(self, m, x, y, t)
 	game.zone:addEntity(game.level, m, "actor", x, y)
 	game.level.map:particleEmitter(x, y, 1, "generic_teleport", {rm=225, rM=255, gm=225, gM=255, bm=225, bM=255, am=35, aM=90})
 
-	if self:knowTalent(self.T_BLIGHTED_SUMMONING) then m:learnTalent(m.T_FLAME_OF_URH_ROK, true, 3) end
-
 	-- Summons never flee
 	m.ai_tactic = m.ai_tactic or {}
 	m.ai_tactic.escape = 0

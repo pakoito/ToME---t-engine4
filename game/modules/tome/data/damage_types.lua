@@ -301,6 +301,12 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			end
 		end
 
+		-- roll with it damage reduction
+		if type == DamageType.PHYSICAL and target:knowTalent(target.T_ROLL_WITH_IT) and not target:attr("never_move") then
+			dam = dam * target:callTalent(target.T_ROLL_WITH_IT, "getMult")
+			print("[PROJECTOR] after Roll With It dam", dam)
+		end
+
 		if src:attr("stunned") then
 			dam = dam * 0.3
 			print("[PROJECTOR] stunned dam", dam)

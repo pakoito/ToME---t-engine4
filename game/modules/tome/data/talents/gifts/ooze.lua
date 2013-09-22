@@ -77,7 +77,6 @@ newTalent{
 			max_summon_time = math.floor(self:combatTalentScale(t, 6, 10)),
 			resolvers.sustains_at_birth(),
 		}
-		if self:knowTalent(self.T_BLIGHTED_SUMMONING) then m:learnTalent(m.T_BONE_SHIELD, true, 2) end
 		setupSummon(self, m, x, y)
 		m.max_life = life
 		m.life = life

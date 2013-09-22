@@ -261,9 +261,6 @@ newTalent{
 		if minion and x and y then
 			local lev = t.getLevel(self, t)
 			necroSetupSummon(self, minion, x, y, lev, true)
-			if self:knowTalent(self.T_BLIGHTED_SUMMONING) then 
-				if minion.subtype == "giant" then minion:learnTalent(minion.T_BONE_SHIELD, true, 3) minion:forceUseTalent(minion.T_BONE_SHIELD, {ignore_energy=true}) end
-			end
 		end
 
 		game:playSoundNear(self, "talents/spell_generic2")

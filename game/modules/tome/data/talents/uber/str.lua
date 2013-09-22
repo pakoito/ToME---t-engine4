@@ -169,20 +169,36 @@ uberTalent{
 		local q = self:hasQuest("temple-of-creation")
 		return q and not q:isCompleted("kill-slasul") and q:isCompleted("kill-drake")
 	end} },
+	-- _M:levelup function in mod.class.Actor.lua updates the talent levels with character level
+	bonusLevel = function(self, t) return math.ceil(self.level/10) end,
+	updateTalent = function(self, t)
+		local p = self.talents_learn_vals[t.id] or {}
+		if p.__tmpvals then
+			for i = 1, #p.__tmpvals do
+				self:removeTemporaryValue(p.__tmpvals[i][1], p.__tmpvals[i][2])
+			end
+			p.__tmpvals = nil
+		end
+		self:talentTemporaryValue(p, "can_breath", {water = 1})
+		self:talentTemporaryValue(p, "__show_special_talents", {[self.T_EXOTIC_WEAPONS_MASTERY] = 1})
+		self:talentTemporaryValue(p, "talents_inc_cap", {T_EXOTIC_WEAPONS_MASTERY=t.bonusLevel(self,t)})
+		self:talentTemporaryValue(p, "talents", {T_EXOTIC_WEAPONS_MASTERY=t.bonusLevel(self,t)})
+		self:talentTemporaryValue(p, "talents_inc_cap", {T_SPIT_POISON=t.bonusLevel(self,t)})
+		self:talentTemporaryValue(p, "talents", {T_SPIT_POISON=t.bonusLevel(self,t)})
+	end,
+	passives = function(self, t, p)
+		-- talents_inc_cap field referenced by _M:getMaxTPoints in mod.dialogs.LevelupDialog.lua
+		self.talents_inc_cap = self.talents_inc_cap or {}
+		t.updateTalent(self, t)
+	end,
 	on_learn = function(self, t)
-		self:learnTalent(self.T_SPIT_POISON, true, 5, {no_unlearn=true})
-		self:learnTalent(self.T_EXOTIC_WEAPONS_MASTERY, true, 5, {no_unlearn=true})
-		self.__show_special_talents = self.__show_special_talents or {}
-		self.__show_special_talents[self.T_EXOTIC_WEAPONS_MASTERY] = true
-		self.can_breath = self.can_breath or {}
-		self.can_breath.water = (self.can_breath.water or 0) + 1
-
 		require("engine.ui.Dialog"):simplePopup("Legacy of the Naloren", "Slasul will be happy to know your faith in his cause. You should return to speak to him.")
 	end,
 	info = function(self, t)
+		local level = t.bonusLevel(self,t)
 		return ([[You have sided with Slasul and helped him vanquish Ukllmswwik. You are now able to breathe underwater with ease.
-		You have also mastered the use of tridents and other exotic weapons(gaining 5 levels of Exotic Weapon Mastery), and you can Spit Poison as nagas do. In addition, should Slasul still live he may have a further reward for you as a sign of his gratitude...]])
-		:format()
+		You have also learned to use tridents and other exotic weapons easily (talent level %d of Exotic Weapon Mastery), and can Spit Poison (talent level %d) as nagas do. These are bonus talent levels that increase with your character level. In addition, should Slasul still live, he may have a further reward for you as thanks...]])
+		:format(level, level)
 	end,
 }
 

@@ -63,7 +63,7 @@ function _M:init()
 		self.background, self.background_tw, self.background_th = self.background:glTexture()
 	end
 
-	self.tooltip = Tooltip.new(nil, 14, nil, colors.DARK_GREY, 400)
+	self.tooltip = Tooltip.new(nil, 14, nil, colors.DARK_GREY, 380)
 
 --	self.refuse_threads = true
 	self.normal_key = self.key
@@ -141,6 +141,7 @@ Now go and have some fun!]]
 
 	-- Setup FPS
 	core.game.setFPS(config.settings.display_fps)
+	self:triggerHook{"Boot:runEnd"}
 end
 
 function _M:newGame()

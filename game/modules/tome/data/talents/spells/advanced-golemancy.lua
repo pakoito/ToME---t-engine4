@@ -61,6 +61,7 @@ newTalent{
 	require = spells_req_high2,
 	mode = "passive",
 	points = 5,
+	no_unlearn_last = true,
 	info = function(self, t)
 		return ([[Insert a pair of gems into your golem, providing it with the gem bonuses and changing its melee attack damage type. You may remove the gems and insert different ones; this does not destroy the gems you remove.
 		Gem level usable: %d

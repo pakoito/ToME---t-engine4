@@ -71,10 +71,12 @@ uberTalent{
 	name = "Tricky Defenses",
 	mode = "passive",
 	require = { special={desc="Antimagic", fct=function(self) return self:knowTalentType("wild-gift/antimagic") end} },
+	-- called by getMax function in Antimagic shield talent definition mod.data.talents.gifts.antimagic.lua
+	shieldmult = function(self) return self:combatStatScale("cun", 0.1, 0.5) end,
 	info = function(self, t)
 		return ([[You are full of tricks and surprises; your Antimagic Shield can absorb %d%% more damage.
 		The increase scales with your Cunning.]])
-		:format(self:getCun() / 2)
+		:format(t.shieldmult(self)*100)
 	end,
 }
 
@@ -90,14 +92,15 @@ uberTalent{
 			(self.damage_log[DamageType.TEMPORAL] and self.damage_log[DamageType.TEMPORAL] >= 50000)
 		)
 	end} },
+	cunmult = function(self) return self:combatStatScale("cun", 0.15, 1) end,
 	trigger = function(self, t, target, damtype, dam)
 		if dam < 150 then return end
 		if damtype == DamageType.ACID and rng.percent(20) then
-			target:setEffect(target.EFF_ACID_SPLASH, 5, {src=self, dam=(dam * self:getCun() / 2.5) / 100 / 5, atk=self:getCun() / 2, apply_power=math.max(self:combatSpellpower(), self:combatMindpower())})
+			target:setEffect(target.EFF_ACID_SPLASH, 5, {src=self, dam=(dam * t.cunmult(self) / 2.5) / 5, atk=self:getCun() / 2, apply_power=math.max(self:combatSpellpower(), self:combatMindpower())})
 		elseif damtype == DamageType.BLIGHT and target:canBe("disease") and rng.percent(20) then
 			local diseases = {{self.EFF_WEAKNESS_DISEASE, "str"}, {self.EFF_ROTTING_DISEASE, "con"}, {self.EFF_DECREPITUDE_DISEASE, "dex"}}
 			local disease = rng.table(diseases)
-			target:setEffect(disease[1], 5, {src=self, dam=(dam * self:getCun() / 2.5) / 100 / 5, [disease[2]]=self:getCun() / 3, apply_power=math.max(self:combatSpellpower(), self:combatMindpower())})
+			target:setEffect(disease[1], 5, {src=self, dam=(dam * t.cunmult(self)/ 2.5) / 5, [disease[2]]=self:getCun() / 3, apply_power=math.max(self:combatSpellpower(), self:combatMindpower())})
 		elseif damtype == DamageType.DARKNESS and target:canBe("blind") and rng.percent(20) then
 			target:setEffect(target.EFF_BLINDED, 5, {apply_power=math.max(self:combatSpellpower(), self:combatMindpower())})
 		elseif damtype == DamageType.TEMPORAL and target:canBe("slow") and rng.percent(20) then
@@ -114,8 +117,8 @@ uberTalent{
 		Any temporal damage you do has a 20%% chance to slow (30%%) the target for 5 turns.
 		Any mind damage you do has a 20%% chance to confuse (20%%) the target for 5 turns.
 		This only triggers for hits over 150 damage.
-		Values increase with your Cunning.]])
-		:format(self:getCun() / 2.5, self:getCun() / 2, self:getCun() / 2.5, self:getCun() / 3)
+		The damage values increase with your Cunning.]])
+		:format(100*t.cunmult(self) / 2.5, self:getCun() / 2, 100*t.cunmult(self) / 2.5, self:getCun() / 3)
 	end,
 }
 
@@ -167,30 +170,45 @@ uberTalent{
 			(self.damage_log[DamageType.NATURE] and self.damage_log[DamageType.NATURE] >= 50000)
 		)
 	end} },
+	getThreshold = function(self, t) return 4*self.level end,
+	getColdEffects = function(self, t)
+		return {physresist = 30,
+		armor = self:combatStatScale("cun", 20, 50, 0.75),
+		dam = math.max(100, self:getCun()),
+		}
+	end,
+	getShield = function(self, t) return 100 + 2*self:getCun() end,
+	-- triggered in default projector in mod.data.damage_types.lua
 	trigger = function(self, t, target, damtype, dam)
-		if dam < 200 then return end
-
+		if dam < t.getThreshold(self, t) then return end
+		
 		local ok = false
 		if damtype == DamageType.ARCANE and rng.percent(30) then ok=true self:setEffect(self.EFF_ELEMENTAL_SURGE_ARCANE, 5, {})
 		elseif damtype == DamageType.FIRE and rng.percent(30) then ok=true self:removeEffectsFilter{type="magical", status="detrimental"} self:removeEffectsFilter{type="physical", status="detrimental"} game.logSeen(self, "#CRIMSON#%s fiery attack invokes a cleansing flame!", self.name:capitalize())
-		elseif damtype == DamageType.COLD and rng.percent(30) then ok=true self:setEffect(self.EFF_ELEMENTAL_SURGE_COLD, 5, {})
+		elseif damtype == DamageType.COLD and rng.percent(30) then
+			-- EFF_ELEMENTAL_SURGE_COLD in mod.data.timed_effect.magical.lua holds the parameters
+			ok=true self:setEffect(self.EFF_ELEMENTAL_SURGE_COLD, 5, t.getColdEffects(self, t))
 		elseif damtype == DamageType.LIGHTNING and rng.percent(30) then ok=true self:setEffect(self.EFF_ELEMENTAL_SURGE_LIGHTNING, 5, {})
-		elseif damtype == DamageType.LIGHT and rng.percent(30) then if not self:hasEffect(self.EFF_DAMAGE_SHIELD) then ok=true self:setEffect(self.EFF_DAMAGE_SHIELD, 5, {power=200}) end
+		elseif damtype == DamageType.LIGHT and rng.percent(30) and not self:hasEffect(self.EFF_DAMAGE_SHIELD) then
+			ok=true
+			self:setEffect(self.EFF_DAMAGE_SHIELD, 5, {power=t.getShield(self, t)})
 		elseif damtype == DamageType.NATURE and rng.percent(30) then ok=true self:setEffect(self.EFF_ELEMENTAL_SURGE_NATURE, 5, {})
 		end
 
 		if ok then self:startTalentCooldown(t) end
 	end,
 	info = function(self, t)
+		local cold = t.getColdEffects(self, t)
 		return ([[Surround yourself with an elemental aura. When you deal a critical hit with an element, you have a chance to trigger a special effect.
 		Arcane damage has a 30%% chance to increase your spellcasting speed by 20%% for 5 turns.
 		Fire damage has a 30%% chance to cleanse all physical or magical detrimental effects on you.
-		Cold damage has a 30%% chance to turn your skin into ice for 5 turns, reducing physical damage taken by 30%% and dealing 100 ice damage to attackers.
+		Cold damage has a 30%% chance to turn your skin into ice for 5 turns, reducing physical damage taken by %d%%, increasing armor by %d, and dealing %d ice damage to attackers.
 		Lightning damage has a 30%% chance to transform you into pure lightning for 5 turns; any damage will teleport you to an adjacent tile and ignore the damage (can only happen once per turn).
-		Light damage has a 30%% chance to create a barrier around you, absorbing 200 damage for 5 turns.
+		Light damage has a 30%% chance to create a barrier around you, absorbing %d damage for 5 turns.
 		Nature damage has a 30%% chance to harden your skin, preventing the application of any magical detrimental effects for 5 turns.
-		This only triggers for hits over 200 damage.]])
-		:format()
+		The Cold and Light effects scale with your Cunning.
+		These effects only trigger for hits over %d damage (based on your level).]])
+		:format(cold.physresist, cold.armor, cold.dam, t.getShield(self, t), t.getThreshold(self, t))
 	end,
 }
 
