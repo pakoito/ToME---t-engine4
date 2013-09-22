@@ -204,6 +204,7 @@ static int particles_die(lua_State *L)
 // Runs into main thread
 static void particles_draw(particles_type *ps, float x, float y, float zoom) 
 {
+	if (!ps->alive || !ps->vertices || !ps->colors || !ps->texcoords) return;
 	GLfloat *vertices = ps->vertices;
 	GLfloat *colors = ps->colors;
 	GLshort *texcoords = ps->texcoords;

@@ -33,6 +33,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Turn into a wraith, allowing you to walk through walls (but not preventing suffocation) for %d turns.
 		Also increases your Defense and Armour by %d and %d, respectively.
+		If you are still in a wall when the effect ends you will randomly teleport.
 		The bonuses will increase with your Spellpower.]]):
 		format(t.getDuration(self, t), self:combatTalentSpellDamage(t, 5, 19), self:combatTalentSpellDamage(t, 5, 15))
 	end,

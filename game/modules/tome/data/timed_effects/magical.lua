@@ -954,6 +954,9 @@ newEffect{
 		self:removeTemporaryValue("can_pass", eff.tmpid)
 		self:removeTemporaryValue("combat_def", eff.defid)
 		self:removeTemporaryValue("combat_armor", eff.armid)
+		if not self:canMove(self.x, self.y) then
+			self:teleportRandom(self.x, self.y, 50)
+		end
 	end,
 }
 
