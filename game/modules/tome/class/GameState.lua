@@ -1089,8 +1089,9 @@ function _M:entityFilterAlter(zone, level, type, filter)
 			end
 		end
 
-		-- If we request a specific type/subtype, we dont waht categories that could make that not happen
-		if filter.type or filter.subtype or filter.name then t.money = 0 end
+		-- If we request a specific type/subtype, we don't want categories that could make that not happen
+--		if filter.type or filter.subtype or filter.name then t.money = 0 end
+		if filter.type or filter.subtype or filter.name then t.money = 0 t.lore = 0	end
 
 		local u = t.uniques or 0
 		local dg = u + (t.double_greater or 0)
@@ -1144,7 +1145,8 @@ function _M:entityFilterAlter(zone, level, type, filter)
 			filter.special = function(e) return e.type == "money" or e.type == "gem" end
 
 		elseif r < l then
-			print("[TOME ENTITY FILTER] selected Lore", r, m)
+--			print("[TOME ENTITY FILTER] selected Lore", r, m)
+			print("[TOME ENTITY FILTER] selected Lore", r, l)
 			filter.special = function(e) return e.lore and true or false end
 
 		else
