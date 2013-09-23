@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-local Object = require "engine.Object"
+local Object = require "mod.class.Object"
 
 newTalent{
 	name = "Stone Skin",
@@ -155,10 +155,14 @@ newTalent{
 
 				local e = Object.new{
 					old_feat = oe,
-					name = "summoned wall", image = "terrain/granite_wall1.png",
+					name = "stone wall", image = "terrain/granite_wall1.png",
 					display = '#', color_r=255, color_g=255, color_b=255, back_color=colors.GREY,
+					desc = "a summoned wall of stone",
+					type = "wall", --subtype = "floor",
 					always_remember = true,
 					can_pass = {pass_wall=1},
+					does_block_move = true,
+					show_tooltip = true,
 					block_move = true,
 					block_sight = true,
 					temporary = t.getDuration(self, t),
@@ -181,6 +185,7 @@ newTalent{
 					summoner_gain_exp = true,
 					summoner = self,
 				}
+				e.tooltip = mod.class.Grid.tooltip
 				game.level:addEntity(e)
 				game.level.map(x + i, y + j, Map.TERRAIN, e)
 			end

@@ -138,7 +138,11 @@ newTalent{
 				shader = "shadow_simulacrum",
 				shader_args = { color = {0.6, 0.0, 0.0}, base = 0.9, time_factor = 1500 },
 				always_remember = true,
+				desc = "a summoned wall of mental energy",
+				type = "wall",
 				can_pass = {pass_wall=1},
+				does_block_move = true,
+				show_tooltip = true,
 				block_move = true,
 				block_sight = true,
 				temporary = t.getDuration(self, t),
@@ -158,10 +162,14 @@ newTalent{
 						game.level.map:updateMap(self.x, self.y)
 					end
 				end,
+				dig = function(src, x, y, old)
+					game.level:removeEntity(old)
+					return nil, old.old_feat
+				end,
 				summoner_gain_exp = true,
 				summoner = self,
 			}
-		
+			e.tooltip = mod.class.Grid.tooltip
 			game.level:addEntity(e)
 			game.level.map(px, py, Map.TERRAIN, e)
 			game.nicer_tiles:updateAround(game.level, px, py)

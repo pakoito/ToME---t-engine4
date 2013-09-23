@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-local Object = require "engine.Object"
+local Object = require "mod.class.Object"
 
 newTalent{
 	name = "Ice Claw",
@@ -93,8 +93,10 @@ newTalent{
 	requires_target = true,
 	on_learn = function(self, t) self.resists[DamageType.COLD] = (self.resists[DamageType.COLD] or 0) + 1 end,
 	on_unlearn = function(self, t) self.resists[DamageType.COLD] = (self.resists[DamageType.COLD] or 0) - 1 end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 5, 9)) end,
+	getLength = function(self, t) return 1 + math.floor(self:combatTalentScale(t, 3, 7)/2)*2 end,
 	action = function(self, t)
-		local halflength = 1 + math.floor(self:getTalentLevel(t) / 2)
+		local halflength = math.floor(t.getLength(self,t)/2)
 		local block = function(_, lx, ly)
 			return game.level.map:checkAllEntities(lx, ly, "block_move")
 		end
@@ -111,10 +113,13 @@ newTalent{
 			local e = Object.new{
 				old_feat = oe,
 				name = "ice wall", image = "npc/iceblock.png",
-				type = "wall", subtype = "ice",
+				desc = "a summoned, transparent wall of ice",
+				type = "wall",
 				display = '#', color=colors.LIGHT_BLUE, back_color=colors.BLUE,
 				always_remember = true,
 				can_pass = {pass_wall=1},
+				does_block_move = true,
+				show_tooltip = true,
 				block_move = true,
 				block_sight = false,
 				temporary = 4 + self:getTalentLevel(t),
@@ -129,10 +134,14 @@ newTalent{
 						game.level.map:updateMap(self.x, self.y)
 					end
 				end,
+				dig = function(src, x, y, old)
+					game.level:removeEntity(old)
+					return nil, old.old_feat
+				end,
 				summoner_gain_exp = true,
 				summoner = self,
 			}
-			
+			e.tooltip = mod.class.Grid.tooltip
 			game.level:addEntity(e)
 			game.level.map(px, py, Map.TERRAIN, e)
 		--	game.nicer_tiles:updateAround(game.level, px, py)
@@ -142,7 +151,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Summons an icy wall of %d length for %d turns. Ice walls are transparent.
-		Each point in cold drake talents also increases your cold resistance by 1%%.]]):format(3 + math.floor(self:getTalentLevel(t) / 2) * 2, 4 + self:getTalentLevel(t))
+		Each point in cold drake talents also increases your cold resistance by 1%%.]]):format(3 + math.floor(self:getTalentLevel(t) / 2) * 2, t.getDuration(self, t))
 	end,
 }
 

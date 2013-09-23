@@ -157,10 +157,28 @@ function _M:onEnterLevel(zone, level)
 
 	-- Clear existing player created effects on the map
 	for i, eff in ipairs(level.map.effects) do
-		if eff.src and eff.src == game.player then
+		if eff.src and eff.src.player then
 			eff.duration = 0
 			eff.grids = {}
+			print("[onEnterLevel] Cancelling player created effect ", tostring(eff.name))
 		end
+	end
+	-- Clear existing player created entities from the map
+	local todel = {}
+	for uid, ent in pairs(level.entities) do
+		if ((ent.summoner and ent.summoner.player) or (ent.src and ent.src.player)) and not game.party:hasMember(ent) then
+			print("[onEnterLevel] Terminating player created entity ", uid, ent.name, ent:getEntityKind())
+			if ent.temporary then ent.temporary = 0 end
+			if ent.summon_time then ent.summon_time = 0 end
+			if ent.duration then ent.duration = 0 end
+			if ent:getEntityKind() == "projectile" then
+				todel[#todel+1] = ent
+			end
+		end
+	end
+	for _, ent in ipairs(todel) do
+		level:removeEntity(ent, true)
+		ent.dead = true
 	end
 end
 
