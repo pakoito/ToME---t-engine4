@@ -97,6 +97,17 @@ function _M:use(item)
 		DebugConsole.line = "=__uids["..item.actor.uid.."]"
 		DebugConsole.line_pos = #DebugConsole.line
 		d.changed = true
+	elseif act == "debug-inventory" then
+		local d
+		d = item.actor:showEquipInven(item.actor.name..": Inventory", nil, function(o, inven, item, button, event)
+			if not o then return end
+			local ud = require("mod.dialogs.UseItemDialog").new(event == "button", item.actor, o, item, inven, function(_, _, _, stop)
+				d:generate()
+				d:generateList()
+				if stop then self:unregisterDialog(d) end
+			end)
+			self:registerDialog(ud)
+		end)
 	end
 end
 
@@ -128,6 +139,7 @@ function _M:generateList()
 	if a and not self.on_player and game.party:canOrder(a, false) then list[#list+1] = {name="Give order", action="order", color=colors.simple(colors.TEAL), actor=a} end
 	if a and not self.on_player and config.settings.cheat then list[#list+1] = {name="Target player", action="target-player", color=colors.simple(colors.RED), actor=a} end
 	if a and config.settings.cheat then list[#list+1] = {name="Lua inspect", action="debug-inspect", color=colors.simple(colors.LIGHT_BLUE), actor=a} end
+	if a and config.settings.cheat then list[#list+1] = {name="Show inventory", action="debug-inventory", color=colors.simple(colors.YELLOW), actor=a} end
 	if self.on_player then list[#list+1] = {name="Rest a while", action="rest", color=colors.simple(colors.ANTIQUE_WHITE)} end
 	if self.on_player then list[#list+1] = {name="Auto-explore", action="autoexplore", color=colors.simple(colors.ANTIQUE_WHITE)} end
 	if self.on_player then list[#list+1] = {name="Inventory", action="inventory", color=colors.simple(colors.ANTIQUE_WHITE)} end
