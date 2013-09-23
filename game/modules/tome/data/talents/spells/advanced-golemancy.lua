@@ -126,7 +126,7 @@ newTalent{
 	require = spells_req_high4,
 	mode = "passive",
 	points = 5,
-	no_npc_use = true,
+	no_unlearn_last = true,
 	on_learn = function(self, t)
 		self.alchemy_golem.life_regen = self.alchemy_golem.life_regen + 1
 		self.alchemy_golem.mana_regen = self.alchemy_golem.mana_regen + 1
