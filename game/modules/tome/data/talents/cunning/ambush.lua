@@ -225,7 +225,7 @@ newTalent{
 		local res = t.getDamageRes(self, t)
 		return ([[You veil yourself in shadows for %d turns, and let them control you.
 		While veiled, you become immune to status effects and gain %d%% all damage reduction. Each turn, you blink to a nearby foe (within range %d), hitting it for %d%% darkness weapon damage.
-		The shadow can not teleport.
+		The shadow cannot teleport.
 		While this goes on, you cannot be stopped unless you are killed, and you cannot control your character.]]):
 		format(duration, res, t.getBlinkRange(self, t) ,100 * damage)
 	end,

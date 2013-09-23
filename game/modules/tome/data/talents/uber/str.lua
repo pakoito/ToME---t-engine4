@@ -164,7 +164,7 @@ uberTalent{
 uberTalent{
 	name = "Legacy of the Naloren",
 	mode = "passive",
-	require = { special={desc="Have sided wih Slasul and killed Ukllmswwik", fct=function(self)
+	require = { special={desc="Have sided with Slasul and killed Ukllmswwik", fct=function(self)
 		if game.state.birth.ignore_prodigies_special_reqs then return true end
 		local q = self:hasQuest("temple-of-creation")
 		return q and not q:isCompleted("kill-slasul") and q:isCompleted("kill-drake")

@@ -33,7 +33,7 @@ newEntity{ base = "BASE_STAFF", define_as = "TELOS_SPIRE",
 	level_range = {37, 50},
 	color=colors.VIOLET,
 	rarity = false,
-	desc = [[Telos was an extremely powerful mage during the Age of Dusk, hated by his peers, feared by the common folk he was hunted for a long while. He finaly fell in his place of power, Telmur, but his spirit still lingered on.]],
+	desc = [[Telos was an extremely powerful mage during the Age of Dusk, hated by his peers, feared by the common folk he was hunted for a long while. He finally fell in his place of power, Telmur, but his spirit still lingered on.]],
 	cost = 400,
 	material_level = 5,
 	plot = true,
@@ -65,7 +65,7 @@ newEntity{ base = "BASE_STAFF", define_as = "TELOS_SPIRE",
 		vim_on_crit = 6,
 	},
 	max_power = 30, power_regen = 1,
-	use_power = { name = "turn into a corrupted losgoroth (poison, disease, cut and confusion immune; converts half damage into life drain; does not requrie breath", power = 30,
+	use_power = { name = "turn into a corrupted losgoroth (poison, disease, cut and confusion immune; converts half damage into life drain; does not require breath", power = 30,
 		use = function(self, who)
 			game.logSeen(who, "%s brandishes %s, turning into a corrupted losgoroth!", who.name:capitalize(), self:getName())
 			who:setEffect(who.EFF_CORRUPT_LOSGOROTH_FORM, 8, {})

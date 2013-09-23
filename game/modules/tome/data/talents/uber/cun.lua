@@ -269,7 +269,7 @@ uberTalent{
 	mode = "passive",
 	on_learn = function(self, t, kind)
 		local Chat = require "engine.Chat"
-		local chat = Chat.new("worldly-knowledge", {name="Wordly Knowledge"}, self)
+		local chat = Chat.new("worldly-knowledge", {name="Worldly Knowledge"}, self)
 		chat:invoke()
 	end,
 	info = function(self, t)

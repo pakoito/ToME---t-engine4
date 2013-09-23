@@ -42,7 +42,7 @@ newTalent{
 	info = function(self, t)
 		local chance, spread = t.getEvasion(self, t)
 		return ([[You learn to devote a portion of your attention to mentally swatting, grabbing, or otherwise deflecting incoming projectiles.
-		All projectiles targetting you have a %d%% chance to instead target a spot up to %d grids nearby.]]):
+		All projectiles targeting you have a %d%% chance to instead target a spot up to %d grids nearby.]]):
 		format(chance, spread)
 	end,
 

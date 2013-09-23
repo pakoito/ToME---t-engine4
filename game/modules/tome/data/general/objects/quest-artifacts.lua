@@ -419,7 +419,7 @@ Items in the chest will not encumber you.]],
 	},
 
 	on_pickup = function(self, who)
-		require("engine.ui.Dialog"):simpleLongPopup("Transmogrification Chest", [[This chest is an extension of old Sher'Tul places of power, any items dropped inside is transported to an other palce, processed and destroyed to extract energy.
+		require("engine.ui.Dialog"):simpleLongPopup("Transmogrification Chest", [[This chest is an extension of old Sher'Tul places of power, any items dropped inside is transported to an other place, processed and destroyed to extract energy.
 The byproduct of this effect is the creation of gold, which is useless to process, so it is sent back to you.
 
 When you possess the chest all items you walk upon will automatically be put inside and transmogrified when you leave the level.

@@ -143,7 +143,7 @@ newEntity{ base = "BASE_STAFF",
 	level_range = {37, 50},
 	color=colors.VIOLET,
 	rarity = 250,
-	desc = [[Archmage Tarelion traveled the world in his youth. But the world is not a nice place and it seems he had to run fast.]],
+	desc = [[Archmage Tarelion travelled the world in his youth. But the world is not a nice place and it seems he had to run fast.]],
 	cost = 400,
 	material_level = 5,
 
@@ -480,7 +480,7 @@ newEntity{ base = "BASE_LITE",
 	encumber = 1,
 	rarity = 300,
 	material_level = 4,
-	desc = [[This dark red heart still beats despite being seperated from its owner.  It also snuffs out any light source that comes near it.]],
+	desc = [[This dark red heart still beats despite being separated from its owner.  It also snuffs out any light source that comes near it.]],
 	cost = 100,
 
 	wielder = {
@@ -619,7 +619,7 @@ newEntity{ base = "BASE_LONGBOW",
 			local DamageType = require "engine.DamageType"
 
 			self:specialWearAdd({"combat","ranged_project"}, {[DamageType.DRAINLIFE]=20})
-			game.logPlayer(who, "#DARK_BLUE#You feel a kindrid spirit in this bow...")
+			game.logPlayer(who, "#DARK_BLUE#You feel a kindred spirit in this bow...")
 		end
 	end,
 }
@@ -2651,7 +2651,7 @@ Touching the cloth you feel a sense of knowledge and power from bygone ages, yet
 	end,
 	on_set_broken = function(self, who)
 		self.use_talent = nil
-		game.logPlayer(who, "#STEEL_BLUE#The arcane energies surrounding you dissapate.")
+		game.logPlayer(who, "#STEEL_BLUE#The arcane energies surrounding you dissipate.")
 	end,
 }
 
@@ -4430,7 +4430,7 @@ newEntity{ base = "BASE_LEATHER_BOOT", --Thanks Grayswandir!
 			-- Check LOS
 			local rad = 2
 			if not who:hasLOS(x, y) and rng.percent(35 + (game.level.map.attrs(who.x, who.y, "control_teleport_fizzle") or 0)) then
-				game.logPlayer(who, "The targetted phase door fizzles and works randomly!")
+				game.logPlayer(who, "The targeted phase door fizzles and works randomly!")
 				x, y = who.x, who.y
 				rad = tg.range
 			end
@@ -4778,7 +4778,7 @@ newEntity{ base = "BASE_TOOL_MISC",
 				resolvers.nice_tile{image="invis.png", add_mos = {{image="terrain/darkgreen_moonstone_01.png", display_h=2, display_y=-1}}},
 				name = "Stone Guardian",
 				type = "totem", subtype = "antimagic",
-				desc = "This massive stone pillar drips with a viscious slime. Nature's power flows through it, obliterating magic all around it..",
+				desc = "This massive stone pillar drips with a vicious slime. Nature's power flows through it, obliterating magic all around it..",
 				rank = 3,
 				blood_color = colors.GREEN,
 				display = "T", color=colors.GREEN,
@@ -5450,7 +5450,7 @@ newEntity{ base = "BASE_TOOL_MISC", --Thanks Alex!
 	unique = true,
 	name = "Eternity's Counter", color = colors.WHITE,
 	unided_name = "crystalline hourglass", image="object/artifact/eternities_counter.png",
-	desc = [[This hourglass of otherwordly crystal appears to be filled with countless tiny gemstones in place of sand. As they fall, you feel the flow of time change around you.]],
+	desc = [[This hourglass of otherworldly crystal appears to be filled with countless tiny gemstones in place of sand. As they fall, you feel the flow of time change around you.]],
 	level_range = {35, 40},
 	rarity = 300,
 	cost = 200,

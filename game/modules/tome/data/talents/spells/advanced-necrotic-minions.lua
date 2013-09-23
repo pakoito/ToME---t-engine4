@@ -199,7 +199,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Minions are only tools. You may dispose of them... violently.
+		return ([[Minions are only tools. You may dispose of them... Violently.
 		Makes the targeted minion explode for %d%% of its maximum life in a radius of %d as blight damage.
 		Beware! Don't get caught in the blast!]]):
 		format(t.getDamage(self, t),t.radius(self,t))

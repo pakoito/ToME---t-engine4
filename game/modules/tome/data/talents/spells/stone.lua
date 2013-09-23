@@ -122,7 +122,7 @@ newTalent{
 		local stunres = t.getStunRes(self, t)
 		return ([[You root yourself into the earth, and transform your flesh into stone.  While this spell is sustained, you may not move, and any forced movement will end the effect.
 		Your stone form and your affinity with the earth while the spell is active has the following effects:
-		* Reduces the cooldown of Earthen Missiles, Pulveziring Auger, Earthquake, and Mudslide by %d%%.
+		* Reduces the cooldown of Earthen Missiles, Pulverizing Auger, Earthquake, and Mudslide by %d%%.
 		* Grants %d%% Fire Resistance, %d%% Lightning Resistance, %d%% Acid Resistance, and %d%% Stun Resistance.
 		Resistances scale with your Spellpower.]])
 		:format(cooldownred, fireres, lightningres, acidres, stunres*100)

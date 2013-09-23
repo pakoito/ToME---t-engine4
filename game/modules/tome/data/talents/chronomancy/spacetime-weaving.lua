@@ -285,16 +285,9 @@ newTalent{
 		self:talentTemporaryValue(p, "talent_cd_reduction", {[self.T_WORMHOLE] = t.cdred(self, t, 20)})
 	end,
 	info = function(self, t)
-		local cooldown = self:getTalentLevelRaw(t)
-		local wormhole = self:getTalentLevelRaw(t) * 2
-		local power = self:getTalentLevel(t) * 10
-		return ([[Your mastery of spacetime reduces the cooldown of Banish, Dimensional Step, Swap, and Temporal Wake by %d, and the cooldown of Wormhole by %d.  Also improves your chances of hitting targets with chronomancy effects that may cause continuum destablization (Banish, Time Skip, etc.), as well as your chance of overcoming continuum destabilization, by %d%%.]]):
-		format(cooldown, wormhole, power)
-	end,
-		info = function(self, t)
 		local cooldown = t.cdred(self, t, 10)
 		local wormhole = t.cdred(self, t, 20)
-		return ([[Your mastery of spacetime reduces the cooldown of Banish, Dimensional Step, Swap, and Temporal Wake by %d, and the cooldown of Wormhole by %d.  Also improves your Spellpower for purposes of hitting targets with chronomancy effects that may cause continuum destablization (Banish, Time Skip, etc.), as well as your chance of overcoming continuum destabilization, by %d%%.]]):
+		return ([[Your mastery of spacetime reduces the cooldown of Banish, Dimensional Step, Swap, and Temporal Wake by %d, and the cooldown of Wormhole by %d.  Also improves your Spellpower for purposes of hitting targets with chronomancy effects that may cause continuum destabilization (Banish, Time Skip, etc.), as well as your chance of overcoming continuum destabilization, by %d%%.]]):
 		format(cooldown, wormhole, t.getPower(self, t)*100)
 		
 	end,

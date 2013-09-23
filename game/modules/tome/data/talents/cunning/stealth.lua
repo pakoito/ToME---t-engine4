@@ -151,7 +151,7 @@ newTalent{
 		return ([[You have learned how to be stealthy even when in plain sight of your foes.  You may attempt to enter stealth regardless of how close you are to your enemies, but success is more likely against fewer opponents that are farther away.
 		Your chance to succeed is determined by comparing %0.2f times your stealth power (currently %d) to the stealth detection of all enemies (reduced by 10%% per tile distance) that have a clear line of sight to you.
 		You always succeed if you are not directly observed.
-		If successul, all creatures currently following you will lose track of your position.
+		If successful, all creatures currently following you will lose track of your position.
 		This also resets the cooldown of your Stealth talent.]]):
 		format(t.stealthMult(self, t), t.getChance(self, t, true))
 	end,

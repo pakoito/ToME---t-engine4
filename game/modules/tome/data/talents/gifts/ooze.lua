@@ -98,7 +98,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Your body is more like that of an ooze.
 		When you get hit you have up to a %d%% chance to split and create a Bloated Ooze with as much health as you have taken damage (up to %d).
-		All damage you take will be split equaly between you and your Bloated Oozes.
+		All damage you take will be split equally between you and your Bloated Oozes.
 		You may have up to %d Bloated Oozes active at any time (based on your Cunning and talent level).
 		Bloated Oozes are very resilient (50%% all damage resistance) to damage not coming through your shared link.
 		The maximum life depends on Mindpower and the chance on Cunning.]]):
@@ -234,7 +234,7 @@ newTalent{
 		self:talentTemporaryValue(p, "ignore_direct_crits", t.critResist(self, t))
 	end,
 	info = function(self, t)
-		return ([[Your body's internal organs are melded together, disquising your critical areas.
+		return ([[Your body's internal organs are melded together, disguising your vital areas.
 		All direct critical hits (physical, mental, spells) against you have a %d%% lower Critical multiplier (but always do at least normal damage).
 		In addition you gain %d%% disease, poison, cuts, confusion and blindness resistances.]]):
 		format(t.critResist(self, t), 100*t.immunities(self, t))

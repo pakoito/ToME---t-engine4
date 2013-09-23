@@ -217,7 +217,7 @@ newTalent{
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		local chance = t.getChance(self, t)
-		return ([[Brings the target's inner demons to the surface.  Each turn, for %d turns, there's a %d%% chance that the a demon will surface, requiring the target to make a Mental Save to keep it from manifesting.
+		return ([[Brings the target's inner demons to the surface.  Each turn, for %d turns, there's a %d%% chance that a demon will surface, requiring the target to make a Mental Save to keep it from manifesting.
 		If the target is sleeping, the chance to save will be halved, and fear immunity will be ignored.  Otherwise, if the summoning is resisted, the effect will end early.
 		The summon chance will scale with your Mindpower and the demon's life will scale with the target's rank.]]):format(duration, chance)
 	end,

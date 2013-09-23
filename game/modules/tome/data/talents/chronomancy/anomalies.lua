@@ -159,7 +159,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Stuns all targets in radius %d a ball for %d turns.]]):format(t.getRadius(self, t), t.getStop(self, t))
+		return ([[Stuns all targets in radius %d ball for %d turns.]]):format(t.getRadius(self, t), t.getStop(self, t))
 	end,
 }
 
@@ -199,7 +199,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Slows all targets in a radus %d ball by %d%%.]]):
+		return ([[Slows all targets in a radius %d ball by %d%%.]]):
 		format(t.getRadius(self, t), t.getSlow(self, t)*100)
 	end,
 }

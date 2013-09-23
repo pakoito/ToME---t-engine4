@@ -195,7 +195,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Surround yourself with arcane forces, disrupting any attemps to harm you and instead generating mana.
+		return ([[Surround yourself with arcane forces, disrupting any attempts to harm you and instead generating mana.
 		Generates %0.2f mana per damage point taken (Aegis Shielding talent affects the ratio).
 		If your mana is brought too high by the shield, it will de-activate and the chain reaction will release a deadly arcane storm around you with radius 3 for 10 turns, dealing 10%% of the damage absorbed over the sustain's duration each turn, up to a maximum of %d total damage.
 		While the arcane storm rages, you also get %d%% arcane resistance.

@@ -46,7 +46,7 @@ It is increased by Constitution.
 
 TOOLTIP_DAMAGE_SHIELD = [[#GOLD#Damage shields#LAST#
 Various talents, items and powers can grant you a temporary damage shield.
-They all work in slightly different maners, but usualy will absorb some damage before crumbling down.
+They all work in slightly different manners, but usually will absorb some damage before crumbling down.
 ]]
 
 TOOLTIP_UNNATURAL_BODY = [[#GOLD#Unnatrual Body Regeneration#LAST#

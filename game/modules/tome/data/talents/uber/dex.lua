@@ -125,7 +125,7 @@ uberTalent{
 		self:recomputeGlobalSpeed()
 	end,
 	info = function(self, t)
-		return ([[You are attuned wih Nature, and she helps you in your fight against the arcane forces.
+		return ([[You are attuned with Nature, and she helps you in your fight against the arcane forces.
 		You gain 20%% permanent global speed and do not trigger pressure traps.]])
 		:format()
 	end,

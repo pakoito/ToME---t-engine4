@@ -115,7 +115,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You rush toward your fow, readying your shot. If you reach the enemy, you release the shot, imbuing it with great power.
+		return ([[You rush toward your foe, readying your shot. If you reach the enemy, you release the shot, imbuing it with great power.
 		The shot does %d%% weapon damage and knocks back your target by %d.]]):
 		format(self:combatTalentWeaponDamage(t, 1.5, 2.8) * 100, t.getDist(self, t))
 	end,
