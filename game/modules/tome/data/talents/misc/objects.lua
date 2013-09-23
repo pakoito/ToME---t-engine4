@@ -152,7 +152,12 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Bring a damage-type-specific ward into being. The ward will fully negate as many attacks of its element as it has charges.]])
+		local xs = ""
+		for w, nb in pairs(self.wards) do
+			xs = xs .. (xs ~= "" and ", " or "") .. engine.DamageType.dam_def[w].name:capitalize() .. "(" .. tostring(nb) .. ")"
+		end
+		return ([[Bring a damage-type-specific ward into being. The ward will fully negate as many attacks of its element as it has charges.
+		You can activate the following wards: %s]]):format(xs)
 	end,
 }
 
