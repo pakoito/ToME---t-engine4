@@ -32,12 +32,19 @@ function _M:init()
 
 	self.c_desc = Textzone.new{width=math.floor(self.iw / 2 - 10), height=self.ih, text=""}
 
-	self.c_tabs = Tabs.new{width=self.iw - 5, tabs={
+	local tabs = {
 		{title="UI", kind="ui"},
 		{title="Gameplay", kind="gameplay"},
 		{title="Online", kind="online"},
-		{title="Misc", kind="misc"},
-	}, on_change=function(kind) self:switchTo(kind) end}
+		{title="Misc", kind="misc"}
+	}
+	self:triggerHook{"GameOptions:tabs", tab=function(title, fct)
+		local id = #tabs+1
+		tabs[id] = {title=title, kind="hooktab"..id}
+		self['generateListHooktab'..id] = fct
+	end}
+
+	self.c_tabs = Tabs.new{width=self.iw - 5, tabs=tabs, on_change=function(kind) self:switchTo(kind) end}
 
 	self:loadUI{
 		{left=0, top=0, ui=self.c_tabs},
