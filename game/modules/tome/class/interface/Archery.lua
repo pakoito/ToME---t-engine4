@@ -58,7 +58,7 @@ function _M:archeryAcquireTargets(tg, params)
 	local tg = tg or {}
 	tg.type = tg.type or weapon.tg_type or ammo.combat.tg_type or tg.type or "bolt"
 
-	if not tg.range then tg.range=math.min(weapon.range or 6, offweapon and offweapon.range or 40) end
+	if not tg.range then tg.range=math.max(math.min(weapon.range or 6, offweapon and offweapon.range or 40), self:attr("archery_range_override") or 1) end
 	tg.display = tg.display or {display='/'}
 	local wtravel_speed = weapon.travel_speed
 	if offweapon then wtravel_speed = math.ceil(((weapon.travel_speed or 0) + (offweapon.travel_speed or 0)) / 2) end
