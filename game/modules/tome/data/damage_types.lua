@@ -575,7 +575,8 @@ newDamageType{
 		end
 		local realdam = DamageType.defaultProjector(src, x, y, type, dam)
 		if realdam > 0 then
-			if src.player then world:gainAchievement("PYROMANCER", src, realdam) end
+			local a = game.level.map(x, y, Map.ACTOR)
+			if src.player and a and not a.training_dummy then world:gainAchievement("PYROMANCER", src, realdam) end
 		end
 		return realdam
 	end,
@@ -587,7 +588,8 @@ newDamageType{
 	projector = function(src, x, y, type, dam)
 		local realdam = DamageType.defaultProjector(src, x, y, type, dam)
 		if realdam > 0 then
-			if src.player then world:gainAchievement("CRYOMANCER", src, realdam) end
+			local a = game.level.map(x, y, Map.ACTOR)
+			if src.player and a and not a.training_dummy then world:gainAchievement("CRYOMANCER", src, realdam) end
 		end
 		return realdam
 	end,

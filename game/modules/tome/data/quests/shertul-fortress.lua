@@ -37,6 +37,9 @@ desc = function(self, who)
 	if self:isCompleted("transmo-chest-extract-gems") then
 		desc[#desc+1] = "#LIGHT_GREEN#* You have upgraded the transmogrification chest to automatically transmute metallic items into gems before transmogrifying them.#WHITE#"
 	end
+	if self:isCompleted("training") then
+		desc[#desc+1] = "#LIGHT_GREEN#* You have unlocked the training room.#WHITE#"
+	end
 	if self:isCompleted("recall") then
 		if self:isCompleted("recall-done") then
 			desc[#desc+1] = "#LIGHT_GREEN#* You have upgraded your rod of recall to transport you to the fortress.#WHITE#"
@@ -146,6 +149,16 @@ spawn_farportal_guardian = function(self)
 	local g = game.zone:makeEntityByName(game.level, "terrain", "OLD_FLOOR")
 	local spot = game.level:pickSpot{type="door", subtype="farportal"}
 	game.zone:addEntity(game.level, g, "terrain", spot.x, spot.y)
+end
+
+open_training = function(self)
+	game.player:setQuestStatus("shertul-fortress", self.COMPLETED, "training")
+
+	-- Open the door, destroy the stairs
+	local g = game.zone:makeEntityByName(game.level, "terrain", "OLD_FLOOR")
+	local spot = game.level:pickSpot{type="door", subtype="trainingroom"}
+	game.zone:addEntity(game.level, g, "terrain", spot.x, spot.y)
+	self.shertul_energy = self.shertul_energy - 50
 end
 
 upgrade_rod = function(self)

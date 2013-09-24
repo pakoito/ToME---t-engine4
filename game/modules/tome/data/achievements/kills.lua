@@ -255,3 +255,10 @@ newAchievement{
 	end,
 	track = function(self) return tstring{tostring(self.nb or 0)," / 4"} end,
 }
+
+newAchievement{
+	name = "Well trained", id = "TRAINING_DUMMY_1000000",
+	show = "full", huge=true,
+	desc = [[Deal one million damage to training dummies in a single training session.]],
+	mode = "player",
+}

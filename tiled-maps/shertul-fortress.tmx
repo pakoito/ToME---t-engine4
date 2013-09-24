@@ -65,15 +65,30 @@
     <property name="value" value="&quot;PURPLE_DRAPPING&quot;"/>
    </properties>
   </tile>
+  <tile id="85">
+   <properties>
+    <property name="display" value="T"/>
+   </properties>
+  </tile>
   <tile id="86">
    <properties>
     <property name="display" value="L"/>
+   </properties>
+  </tile>
+  <tile id="87">
+   <properties>
+    <property name="display" value="M"/>
    </properties>
   </tile>
   <tile id="130">
    <properties>
     <property name="display" value="*"/>
     <property name="value" value="&quot;COMMAND_ORB&quot;"/>
+   </properties>
+  </tile>
+  <tile id="136">
+   <properties>
+    <property name="display" value="N"/>
    </properties>
   </tile>
  </tileset>
@@ -127,7 +142,7 @@
  </tileset>
  <layer name="Terrain" width="60" height="60">
   <data encoding="base64" compression="zlib">
-   eJzt1skNwjAQBVDfuFJMJJpICRyhQAqiApawNIAiJZJlHDN2vH3zD18RCRLzMpMJvVKqF2bfQKRWejFDL7304oZeeunFDb300oubFN6hAldOb1eBK5e3M1Lal9p7sphr8ufsb4tel6tVr+99oBfLaz6/V+PcbeF7NXjnekK90pT2mvWU8D6m43M6vhJ5bfUseV3vnjXWVLPgml/JPI/XdkYdF0/vPbNXUtPSzrLVEWOe9WsHLePn90rvVljTJtAy5xz4G6PzqHnX9NhnnvX+duq7D7n6W2Jf6V7z+UXaV9L3kau/iN5f+9n1uzHmOVVC/0/Sa/f6nkP0uu5DLldMb+ic0tuet9ReqqG/NYRe2X5GDb300osbeumlFzf00ksvbuill17c/Jv3A4oHtJ8=
+   eJzt1k0OgjAQBWB2bD0MiZfwCC71fup9XLn0Xy9gSCBpalva0naY6Vu8EMHE+ZhhcNM0zcYzWwHxtcLLM/Cm93aGSPSanNRueOGN9Z4mrBdh3tr6C29d3oNw71SPS1tLeHU7hTG391mZ1+aS6HU9o61A79Fgpt5RVP2V6HW5pHpD7wO8vLz683vTzt0t31uCd6wn1usbaq9eD4X3NRzfw/GTyWuqx+Z1vXvmWHPNgmt+fea5v7bW6rgGeh+FvT412XaWqY4U86xe2ynpP39neleeNbWRljHnyN/onXvFO6fHIfOs9rdr/vtQqr8U+0r16s8vp33l+z5y9Zejd2o/u343xTznSuz/SXjN3tBzHL2u+1DKldIbO6fwyvNS7aUl9HcJgddvP3MNvPDCyzfwwgsv38ALL7x8Ay+88PJNbd4fJsyoWw==
   </data>
  </layer>
  <objectgroup color="#ff0000" name="Actor" width="60" height="60">
@@ -187,6 +202,24 @@
     <property name="type" value="&quot;spawn&quot;"/>
    </properties>
   </object>
+  <object x="872" y="548" width="19" height="23">
+   <properties>
+    <property name="subtype" value="&quot;trainingroom&quot;"/>
+    <property name="type" value="&quot;door&quot;"/>
+   </properties>
+  </object>
+  <object x="783" y="183" width="203" height="155">
+   <properties>
+    <property name="subtype" value="&quot;training&quot;"/>
+    <property name="type" value="&quot;training&quot;"/>
+   </properties>
+  </object>
+  <object x="872" y="261" width="19" height="20">
+   <properties>
+    <property name="subtype" value="&quot;trainingroom&quot;"/>
+    <property name="type" value="&quot;camera&quot;"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="addZone#rooms" width="60" height="60" visible="0">
   <object name="control room" x="673" y="738" width="412" height="408">
@@ -217,6 +250,12 @@
   <object name="Library" x="644" y="515" width="118" height="151">
    <properties>
     <property name="subtype" value="&quot;Library of Lost Mysteries&quot;"/>
+    <property name="type" value="&quot;zonename&quot;"/>
+   </properties>
+  </object>
+  <object name="Training Room" x="739" y="134" width="277" height="395">
+   <properties>
+    <property name="subtype" value="&quot;Experimentation Room&quot;"/>
     <property name="type" value="&quot;zonename&quot;"/>
    </properties>
   </object>

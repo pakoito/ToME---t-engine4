@@ -190,3 +190,102 @@ newEntity{ define_as = "MURAL_PAINTING"..i,
 	block_move=function(self, x, y, e, act, couldpass) if e and e.player and act then game.party:learnLore(self.lore) end return true end
 }
 end
+
+newEntity{
+	define_as = "TRAINING_ORB",
+	name = "Training Control Orb", image = "terrain/solidwall/solid_floor1.png", add_displays = {class.new{image="terrain/pedestal_orb_02.png", display_h=2, display_y=-1}},
+	display = '*', color=colors.PURPLE,
+	notice = true,
+	always_remember = true,
+	block_move = function(self, x, y, e, act, couldpass)
+		if e and e.player and act then
+			local chat = require("engine.Chat").new("shertul-fortress-training-orb", self, e, {player=e})
+			chat:invoke()
+		end
+		return true
+	end,
+}
+
+local dcb = function(self)
+	if not self._mo then return end
+	local tex, nblines, wline = nil
+	local DamageType = require "engine.DamageType"
+	local shader = require("engine.Shader").default.textoutline and require("engine.Shader").default.textoutline.shad
+	local font = core.display.newFont("/data/font/DroidSansMono.ttf", 16)
+	local UIBase = require "engine.ui.Base"
+	local MyUI = require("engine.class").inherit(UIBase){}
+	MyUI.ui = "metal"
+	local frame = MyUI:makeFrame("ui/tooltip/", 50, 50)
+	self._mo:displayCallback(function(x, y, w, h)
+		if not game.zone.training_dummies or not game.zone.training_dummies.start_turn then return end
+		local data = game.zone.training_dummies
+		if not tex or data.changed or data.damtypes.changed or data.last_turn ~= game.turn then 
+			data.last_turn = game.turn
+			local turns = (game.turn - data.start_turn) / 10
+			local text
+			if self.monitor_mode == "global" then
+				text = ("Turns: %d\nTotal Damage: %d\nDamage/turns: %d"):format(turns, data.total, data.total / turns)
+				data.changed = false
+			else
+				text = {}
+				for damtype, value in pairs(data.damtypes) do if damtype ~= "changed" then
+					local dt = DamageType:get(damtype)
+					if dt then
+						text[#text+1] = ("%s%s#WHITE#: %d (%d%%)"):format(dt.text_color, dt.name, value, value / data.total * 100)
+					end
+				end end
+				text = table.concat(text, "\n")
+				data.damtypes.changed = false
+			end
+			tex, nblines, wline = font:draw(text, text:toTString():maxWidth(font), 255, 255, 255)
+		end
+
+		y = y - tex[1].h * nblines
+		x = x - (wline - w) / 2
+		frame.w = wline + 16 frame.h = tex[1].h * nblines + 16
+		MyUI:drawFrame(frame, x - 4, y - 4, 0, 0, 0, 0.3)
+		MyUI:drawFrame(frame, x - 8, y - 8, 1, 1, 1, 0.6)
+		for i = 1, #tex do
+			local item = tex[i]
+			if shader then
+				shader:paramNumber2("outlineSize", 2, 2)
+				shader:paramNumber2("textSize", item._tex_w, item._tex_h)
+				shader:use(true)
+			else
+				item._tex:toScreenFull(x+2, y+2, item.w, item.h, item._tex_w, item._tex_h)
+			end
+			item._tex:toScreenFull(x, y, item.w, item.h, item._tex_w, item._tex_h)
+			if shader then shader:use(false) end
+			y = y + item.h
+		end
+		return true
+	end)
+end
+
+newEntity{
+	define_as = "MONITOR_ORB1",
+	name = "Training Monitor Orb", image = "terrain/solidwall/solid_floor1.png",
+	add_displays = {class.new{
+		image="terrain/shertul_control_orb_greenish.png", z=17,
+		monitor_mode = "global",
+		defineDisplayCallback = dcb,
+	}},
+	display = '*', color=colors.PURPLE,
+	notice = true,
+	always_remember = true,
+	block_move = true,
+}
+
+newEntity{
+	define_as = "MONITOR_ORB2",
+	name = "Training Monitor Orb", image = "terrain/solidwall/solid_floor1.png",
+	add_displays = {class.new{
+		image="terrain/shertul_control_orb_greenish.png", z=17,
+		monitor_mode = "specific",
+		defineDisplayCallback = dcb,
+	}},
+	display = '*', color=colors.PURPLE,
+	notice = true,
+	always_remember = true,
+	block_move = true,
+}

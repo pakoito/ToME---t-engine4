@@ -34,6 +34,9 @@ defineTile("*", "TELEPORT_OUT")
 defineTile("<", "LAKE_NUR")
 defineTile("+", "SOLID_DOOR_SEALED")
 defineTile("=", "OLD_WALL")
+defineTile("T", "TRAINING_ORB")
+defineTile("M", "MONITOR_ORB1")
+defineTile("N", "MONITOR_ORB2")
 defineTile(".", "SOLID_FLOOR")
 defineTile("P", "PURPLE_DRAPPING")
 defineTile(" ", "COMMAND_ORB")
@@ -57,6 +60,50 @@ addSpot({23, 25}, "spawn", "butler")
 addSpot({36, 29}, "door", "farportal")
 addSpot({40, 29}, "spawn", "farportal")
 addSpot({23, 32}, "spawn", "melinda")
+addSpot({27, 17}, "door", "trainingroom")
+addSpot({24, 5}, "training", "training")
+addSpot({25, 5}, "training", "training")
+addSpot({26, 5}, "training", "training")
+addSpot({27, 5}, "training", "training")
+addSpot({28, 5}, "training", "training")
+addSpot({29, 5}, "training", "training")
+addSpot({30, 5}, "training", "training")
+addSpot({24, 6}, "training", "training")
+addSpot({25, 6}, "training", "training")
+addSpot({26, 6}, "training", "training")
+addSpot({27, 6}, "training", "training")
+addSpot({28, 6}, "training", "training")
+addSpot({29, 6}, "training", "training")
+addSpot({30, 6}, "training", "training")
+addSpot({24, 7}, "training", "training")
+addSpot({25, 7}, "training", "training")
+addSpot({26, 7}, "training", "training")
+addSpot({27, 7}, "training", "training")
+addSpot({28, 7}, "training", "training")
+addSpot({29, 7}, "training", "training")
+addSpot({30, 7}, "training", "training")
+addSpot({24, 8}, "training", "training")
+addSpot({25, 8}, "training", "training")
+addSpot({26, 8}, "training", "training")
+addSpot({27, 8}, "training", "training")
+addSpot({28, 8}, "training", "training")
+addSpot({29, 8}, "training", "training")
+addSpot({30, 8}, "training", "training")
+addSpot({24, 9}, "training", "training")
+addSpot({25, 9}, "training", "training")
+addSpot({26, 9}, "training", "training")
+addSpot({27, 9}, "training", "training")
+addSpot({28, 9}, "training", "training")
+addSpot({29, 9}, "training", "training")
+addSpot({30, 9}, "training", "training")
+addSpot({24, 10}, "training", "training")
+addSpot({25, 10}, "training", "training")
+addSpot({26, 10}, "training", "training")
+addSpot({27, 10}, "training", "training")
+addSpot({28, 10}, "training", "training")
+addSpot({29, 10}, "training", "training")
+addSpot({30, 10}, "training", "training")
+addSpot({27, 8}, "camera", "trainingroom")
 
 -- addZone section
 addZone({21, 23, 33, 35}, "zonename", "Control Room")
@@ -64,6 +111,7 @@ addZone({16, 26, 18, 32}, "zonename", "Portal Room")
 addZone({13, 37, 23, 41}, "zonename", "Storage Room", {sort_drops=true,})
 addZone({38, 26, 45, 32}, "zonename", "Exploratory Farportal")
 addZone({20, 16, 23, 20}, "zonename", "Library of Lost Mysteries")
+addZone({23, 4, 31, 16}, "zonename", "Experimentation Room")
 addZone({15, 28, 19, 28}, "particle", "house_flamebeam")
 addZone({15, 30, 19, 30}, "particle", "house_flamebeam", {reverse=true,})
 addZone({27, 29, 28, 30}, "particle", "house_orbcontrol")
@@ -74,20 +122,20 @@ return [[
 ===========#################################################
 ===========#################################################
 ===========#################################################
-===========#################################################
-===========#################################################
-===========#################################################
-===========#################################################
-===========#################################################
-===========#################################################
-===========#################################################
-===========#################################################
-===========#################################################
-===========#################################################
-===========#################################################
-===========##########5######################################
-===========##########.######################################
-===========#########....####################################
+===========##############.....##############################
+===========############.........############################
+===========############.........############################
+===========############.........############################
+===========############M.......N############################
+===========############.........############################
+===========############.........############################
+===========############.........############################
+===========############....T....############################
+===========#############.......#############################
+===========################.################################
+===========##########5#####.################################
+===========##########.#####.################################
+===========#########....###+################################
 ===========#########L.......################################
 ===========#########....###.################################
 ===========##########.#####.################################

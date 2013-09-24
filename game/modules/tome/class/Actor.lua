@@ -1577,7 +1577,7 @@ function _M:onHeal(value, src)
 end
 
 --- Called before taking a hit, it's the chance to check for shields
-function _M:onTakeHit(value, src)
+function _M:onTakeHit(value, src, death_note)
 	-- update hate_baseline
 	if self.knowTalent and self:knowTalent(self.T_HATE_POOL) then
 		local t = self:getTalentFromId(self.T_HATE_POOL)
@@ -2008,7 +2008,7 @@ function _M:onTakeHit(value, src)
 		end
 	end
 
-	if self.on_takehit then value = self:check("on_takehit", value, src) end
+	if self.on_takehit then value = self:check("on_takehit", value, src, death_note) end
 
 	-- Apply Solipsism hit
 	if damage_to_psi > 0 then
@@ -2125,7 +2125,7 @@ function _M:onTakeHit(value, src)
 		end
 	end
 
-	local hd = {"Actor:takeHit", value=value, src=src}
+	local hd = {"Actor:takeHit", value=value, src=src, death_note=death_note}
 	if self:triggerHook(hd) then value = hd.value end
 
 	-- Resource leech

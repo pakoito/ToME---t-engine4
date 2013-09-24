@@ -29,6 +29,7 @@ Welcome, master.]],
 		{"You asked me to come, about a farportal?", jump="farportal", cond=function() return q:isCompleted("farportal") and not q:isCompleted("farportal-spawn") end},
 		{"You asked me to come, about the rod of recall?", jump="recall", cond=function() return q:isCompleted("recall") and not q:isCompleted("recall-done") end},
 		{"Would it be possible for my Transmogrification Chest to automatically extract gems?", jump="transmo-gems", cond=function(npc, player) return not q:isCompleted("transmo-chest-extract-gems") and q:isCompleted("transmo-chest") and player:knowTalent(player.T_EXTRACT_GEMS) end},
+		{"Is there any training facilities?", jump="training", cond=function() return not q:isCompleted("training") end},
 		{"I find your appearance unsettling. Any way you can change it?", jump="changetile", cond=function() return q:isCompleted("recall-done") end},
 		{"What are you, and what is this place?", jump="what", cond=isNotSet"what", action=set"what"},
 		{"Master? I am not your mas...", jump="master", cond=isNotSet"master", action=set"master"},
@@ -135,6 +136,15 @@ The Fortress now has enough energy to upgrade it. It can be changed to recall yo
 	answers = {
 		{"I like it the way it is now. Thanks anyway."},
 		{"That could be quite useful. Yes, please do it.", action=function() q:upgrade_rod() end},
+	}
+}
+
+newChat{ id="training",
+	text = [[Yes master, a training facility is available to the north, but it is not yet powered on.
+I will need to use 50 energy to do this.]],
+	answers = {
+		{"Maybe later."},
+		{"That could be quite useful. Yes, please do it.", cond=function() return q.shertul_energy >= 50 end, action=function() q:open_training() end},
 	}
 }
 
