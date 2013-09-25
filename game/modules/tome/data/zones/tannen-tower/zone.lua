@@ -55,6 +55,19 @@ return {
 			require("engine.ui.Dialog"):simplePopup("Tannen's Tower", "The portal brought you to what seems to be a cell in the basement of the tower. You must escape!")
 			game.level.shown_warning = true
 		end
+		if lev == 4 then
+			core.fov.set_actor_vision_size(0)
+		end
+	end,
+	on_leave = function()
+		if game.level.level == 4 then
+			core.fov.set_actor_vision_size(1)
+		end
+	end,
+	on_loaded = function() -- When the game is loaded from a savefile
+		game:onTickEnd(function() if game.level.level == 4 then
+			core.fov.set_actor_vision_size(0)
+		end end)
 	end,
 	levels =
 	{

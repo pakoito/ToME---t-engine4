@@ -370,6 +370,8 @@ function _M:loaded()
 	if self.always_target == true then Map:setViewerFaction(self.player.faction) end
 	if self.player and config.settings.cheat then self.player.__cheated = true end
 	self:updateCurrentChar()
+
+	if self.zone and self.zone.on_loaded then self.zone.on_loaded(self.level.level) end
 end
 
 function _M:computeAttachementSpotsFromTable(ta)
