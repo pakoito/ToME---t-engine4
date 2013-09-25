@@ -2846,6 +2846,7 @@ function _M:updateModdableTile()
 	self:triggerHook{"Actor:updateModdableTile:front", base=base, add=add}
 
 	if self.moddable_tile_ornament and self.moddable_tile_ornament[self.female and "female" or "male"] then add[#add+1] = {image = base..self.moddable_tile_ornament[self.female and "female" or "male"]..".png"} end
+	if self.moddable_tile_ornament2 and self.moddable_tile_ornament2[self.female and "female" or "male"] then add[#add+1] = {image = base..self.moddable_tile_ornament2[self.female and "female" or "male"]..".png"} end
 
 	if self.x and game.level then game.level.map:updateMap(self.x, self.y) end
 end

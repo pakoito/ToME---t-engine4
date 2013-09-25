@@ -175,11 +175,14 @@ function _M:formatKeyString(ks)
 			end
 			sym = core.key.symName(sym)
 		end
+		sym = sym:gsub("Keypad ", "k")
 
-		if ctrl then sym = "[C]+"..sym end
-		if shift then sym = "[S]+"..sym end
-		if alt then sym = "[A]+"..sym end
-		if meta then sym = "[M]+"..sym end
+		local st = ""
+		if ctrl then st = "C"..st end
+		if shift then st = "S"..st end
+		if alt then st = "A"..st end
+		if meta then st = "M"..st end
+		if st ~= "" then sym = st..""..sym end
 
 		return sym
 	elseif ks:find("^mouse:") then
@@ -190,12 +193,14 @@ function _M:formatKeyString(ks)
 		shift = shift == "true" and true or false
 		alt = alt == "true" and true or false
 		meta = meta == "true" and true or false
-		sym = "mouse["..sym.."]"
+		sym = sym:gsub("button", "b")
 
-		if ctrl then sym = "[C]+"..sym end
-		if shift then sym = "[S]+"..sym end
-		if alt then sym = "[A]+"..sym end
-		if meta then sym = "[M]+"..sym end
+		local st = ""
+		if ctrl then st = "C"..st end
+		if shift then st = "S"..st end
+		if alt then st = "A"..st end
+		if meta then st = "M"..st end
+		if st ~= "" then sym = st..""..sym end
 
 		return sym
 	elseif ks:find("^gest:") then

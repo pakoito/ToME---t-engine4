@@ -1067,6 +1067,7 @@ function _M:setTile(f, w, h, last)
 			self.actor.moddable_tile = dr.copy.moddable_tile
 			self.actor.moddable_tile_base = dr.copy.moddable_tile_base
 			self.actor.moddable_tile_ornament = dr.copy.moddable_tile_ornament
+			self.actor.moddable_tile_ornament2 = dr.copy.moddable_tile_ornament2
 		end
 	else
 		self.actor.make_tile = nil
@@ -1105,8 +1106,15 @@ function _M:setTile(f, w, h, last)
 end
 
 function _M:applyCosmeticActor()
+	self.actor.is_redhaed = nil -- Booh this is ugly
+
+	local list = {}
 	for i, d in ipairs(self.cosmetic_unlocks) do
-		if self.selected_cosmetic_unlocks[d.name] and d.on_actor then d.on_actor(self.actor) end
+		if self.selected_cosmetic_unlocks[d.name] and d.on_actor then list[#list+1] = d if not d.priority then d.priority = 1 end end
+	end
+	table.sort(list, function(a,b) return a.priority < b.priority end)
+	for i, d in ipairs(list) do
+		d.on_actor(self.actor)
 	end
 end
 

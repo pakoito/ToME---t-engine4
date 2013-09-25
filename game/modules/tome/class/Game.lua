@@ -2097,6 +2097,7 @@ unlocks_list = {
 	birth_transmo_chest = "Birth option: Transmogrification Chest",
 	birth_zigur_sacrifice = "Birth option: Zigur sacrifice",
 	cosmetic_race_human_redhead = "Cosmetic: Redheads",
+	cosmetic_race_dwarf_female_beard = "Cosmetic: Female dwarves facial pilosity",
 	
 	difficulty_insane = "Difficulty: Insane",
 	difficulty_madness = "Difficulty: Madness",
