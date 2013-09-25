@@ -184,7 +184,7 @@ function _M:listSavefiles(moddir_filter)
 				local def = self:loadSavefileDescription(dir)
 				if def then
 					if fs.exists(dir.."/cur.png") then
-						def.screenshot = core.display.loadImage(dir.."/cur.png")
+						def.screenshot_src = true
 					end
 
 					table.insert(lss, def)

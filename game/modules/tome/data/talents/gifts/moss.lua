@@ -83,7 +83,7 @@ newTalent{
 	cooldown = 16,
 	equilibrium = 5,
 	no_energy = true,
-	tactical = { ATTACKAREA = {NATURE=1}, DISABLE = {pin = 1} },
+	tactical = { ATTACKAREA = {NATURE=1}, HEAL = 1 },
 	getDamage = function(self, t) return self:combatTalentMindDamage(t, 6, 40) end,
 	getDuration = function(self, t) return math.ceil(self:combatTalentScale(t,4,8)) end,
 	getHeal = function(self, t) return math.floor(self:combatTalentLimit(t, 200, 62, 110)) end, -- Limit < 200%	
