@@ -238,7 +238,7 @@ newTalent{
 		local rad = math.ceil(10 + self.level / 5)
 		for i = self.x - rad, self.x + rad do for j = self.y - rad, self.y + rad do if game.level.map:isBound(i, j) then
 			local actor = game.level.map(i, j, game.level.map.ACTOR)
-			if actor and self:reactionToward(actor) < 0 then
+			if actor and self:reactionToward(actor) < 0 and not actor:attr("hunted_difficulty_immune") then
 				actor:setEffect(actor.EFF_HUNTER_PLAYER, 6, {src=self})
 			end
 		end end end

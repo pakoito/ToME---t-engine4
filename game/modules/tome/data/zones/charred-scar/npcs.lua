@@ -207,6 +207,7 @@ newEntity{
 	autolevel = "caster",
 	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar" },
 
+	hunted_difficulty_immune = 1,
 	on_acquire_target = function(self, who)
 		self:doEmote("Damn you, you only postpone your death! Fyrk!", 60)
 		game.player:hasQuest("charred-scar"):setStatus(engine.Quest.COMPLETED, "stopped")
@@ -265,6 +266,7 @@ newEntity{
 
 	autolevel = "caster",
 	ai = "dumb_talented_simple", ai_state = { talent_in=1, ai_move="move_astar" },
+	hunted_difficulty_immune = 1,
 }
 
 newEntity{ base = "BASE_NPC_FAEROS", define_as = "FYRK",
