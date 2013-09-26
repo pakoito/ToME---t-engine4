@@ -105,6 +105,11 @@ newBirthDescriptor{
 	copy_add = {
 		life_rating = -1,
 	},
+	cosmetic_unlock = {
+		cosmetic_class_alchemist_drolem = {
+			{name="Golem becomes a Drolem [donator only]", on_actor=function(actor) actor.alchemist_golem_is_drolem = true end},
+		},
+	},
 }
 
 newBirthDescriptor{

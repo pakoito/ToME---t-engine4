@@ -53,6 +53,7 @@ newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/st
 newTalentType{ type="golem/fighting", name = "fighting", description = "Golem melee capacity." }
 newTalentType{ type="golem/arcane", no_silence=true, is_spell=true, name = "arcane", description = "Golem arcane capacity." }
 newTalentType{ type="golem/golem", name = "golem", description = "Golem basic capacity." }
+newTalentType{ type="golem/drolem", name = "drolem", description = "Drolem basic capacity." }
 
 -- Necromancer spells
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, mana_regen=true, type="spell/necrotic-minions", name = "necrotic minions", description = "Create and empower dumb undead minions." }

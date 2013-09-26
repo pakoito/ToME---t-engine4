@@ -135,6 +135,13 @@ local function makeGolem(self)
 		can_change_level = true,
 	}
 
+	if self.alchemist_golem_is_drolem then
+		g.image="invis.png"
+		g.add_mos = {{image="npc/construct_golem_drolem.png", display_h=2, display_y=-1}}
+		g.moddable_tile = nil
+		g:learnTalentType("golem/drolem", true)
+	end
+
 	if self.no_points_on_levelup then
 		g.max_level = nil
 		g.no_points_on_levelup = self.no_points_on_levelup

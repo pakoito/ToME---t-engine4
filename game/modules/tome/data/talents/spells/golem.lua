@@ -525,3 +525,33 @@ newTalent{
 		format(dir, armor, hardiness, critreduce)
 	end,
 }
+
+newTalent{
+	name = "Poison Breath", short_name = "DROLEM_POISON_BREATH", image = "talents/poison_breath.png",
+	type = {"golem/drolem",1},
+	require = spells_req_high1,
+	points = 5,
+	mana = 25,
+	cooldown = 8,
+	message = "@Source@ breathes poison!",
+	tactical = { ATTACKAREA = { NATURE = 1, poison = 1 } },
+	range = 0,
+	radius = 5,
+	requires_target = true,
+	target = function(self, t)
+		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t}
+	end,
+	action = function(self, t)
+		local tg = self:getTalentTarget(t)
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:project(tg, x, y, DamageType.POISON, {dam=self:mindCrit(self:combatTalentStatDamage(t, "mag", 30, 460)), apply_power=self:combatMindpower()})
+		game.level.map:particleEmitter(self.x, self.y, tg.radius, "breath_slime", {radius=tg.radius, tx=x-self.x, ty=y-self.y})
+		game:playSoundNear(self, "talents/breath")
+		return true
+	end,
+	info = function(self, t)
+		return ([[Breathe poison on your foes, doing %d damage over a few turns.
+		The damage will increase with your Magic.]]):format(damDesc(self, DamageType.NATURE, self:combatTalentStatDamage(t, "mag", 30, 460)))
+	end,
+}
