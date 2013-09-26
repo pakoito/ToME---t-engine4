@@ -2117,6 +2117,7 @@ unlocks_list = {
 	mage_pyromancer = "Class tree: Wildfire",
 	mage_cryomancer = "Class tree: Uttercold",
 	mage_necromancer = "Class: Necromancer",
+	cosmetic_class_alchemist_drolem = "Class feature: Alchemist's Drolem",
 
 	rogue_marauder = "Class: Marauder",
 	rogue_poisons = "Class tree: Poisons",
