@@ -474,6 +474,8 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 	self.turn_procs.weapon_type = nil
 	self.use_psi_combat = false
 end
+-- Store it for addons
+_M.archery_projectile = archery_projectile
 
 --- Shoot at one target
 function _M:archeryShoot(targets, talent, tg, params)
