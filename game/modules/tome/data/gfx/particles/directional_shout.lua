@@ -22,9 +22,13 @@ gm, gM = gm or 0.8, gM or 1
 bm, bM = bm or 0, bM or 0
 am, aM = am or 1, aM or 1
 
-local dir = math.deg(math.atan2(ty, tx)) - 90
-local spread = spread or 75/2
-dir = dir - spread
+local dir = math.deg(math.atan2(ty, tx))
+
+-- engine.Target uses a default cone_angle of 55, but from what I can tell, it
+-- rounds up rather aggressively (if part of a grid square is affected, the whole
+-- grid square is), so for the purposes of particle effects, 75 works well.
+local spread = spread or 75
+dir = dir - spread / 2
 
 local distortion_factor = 1 + (distortion_factor or 0.1)
 local life = life or 30
@@ -33,29 +37,26 @@ local basespeed = fullradius / life
 local points = {}
 local nbone
 
-for fork_i = 1, nb_circles or 7 do
+for circle_i = 1, nb_circles or 7 do
 	local size = size or 2
 	local r = 10
-	local a = math.rad(dir)
-	local firstspeed = rng.float(basespeed, basespeed * distortion_factor)
-	points[#points+1] = {size=size, dir = a + math.rad(90), vel = firstspeed, x=math.cos(a) * r, y=math.sin(a) * r, prev=-1}
 
-	for i = 1, spread * 2, 5 do
+	for i = 0, spread, 5 do
 		local a = math.rad(dir + i)
 		points[#points+1] = {
 			size=size,
-			dir = a + math.rad(90),
+			dir = a,
 			vel = rng.float(basespeed, basespeed * distortion_factor),
 			x=math.cos(a) * r,
 			y=math.sin(a) * r,
-			prev=#points-1
+			prev=i == 0 and -1 or #points-1
 		}
 	end
 	if not nbone then nbone = #points end
 end
 local nbp = #points
 
--- Populate the lightning based on the forks
+-- Populate the sound waves based on the number of circles
 return { engine=core.particles.ENGINE_LINES, generator = function()
 	local p = table.remove(points, 1)
 
