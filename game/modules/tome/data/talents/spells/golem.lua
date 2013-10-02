@@ -545,7 +545,7 @@ newTalent{
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.POISON, {dam=self:mindCrit(self:combatTalentStatDamage(t, "mag", 30, 460)), apply_power=self:combatMindpower()})
+		self:project(tg, x, y, DamageType.POISON, {dam=self:spellCrit(self:combatTalentStatDamage(t, "mag", 30, 460)), apply_power=self:combatSpellpower()})
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "breath_slime", {radius=tg.radius, tx=x-self.x, ty=y-self.y})
 		game:playSoundNear(self, "talents/breath")
 		return true
