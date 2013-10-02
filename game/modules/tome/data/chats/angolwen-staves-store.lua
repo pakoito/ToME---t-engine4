@@ -30,28 +30,49 @@ newChat{ id="welcome",
 }
 
 newChat{ id="training",
-	text = [[I can briefly go over the basics (talent category Spell/Staff-combat, locked) for a fee of 100 gold pieces.  Alternatively, I can provide a more in-depth study for 750.]],
+	text = [[I can teach you staff combat (talent category Spell/Staff combat).  Learning the basics costs 100 gold, while more intensive tutelage to gain proficiency costs 500 gold.  Once you're proficient, I can teach you more refined techniques for an additional 750 gold.]],
 	answers = {
-		{"Just give me the basics.", action=function(npc, player)
+		{"Just give me the basics (reveals locked talent category) - 100 gold.", action=function(npc, player) -- Normal basic training
 			game.logPlayer(player, "The staff carver spends some time with you, teaching you the basics of staff combat.")
 			player:incMoney(-100)
 			player:learnTalentType("spell/staff-combat", false)
+			if player:getTalentTypeMastery("spell/staff-combat") < 1 then
+				player:setTalentTypeMastery("spell/staff-combat", math.min(1.1, player:getTalentTypeMastery("spell/staff-combat") + 0.3))
+				game.logPlayer(player, "He is surprised at how quickly you are able to follow his tutelage.")
+			end
 			player.changed = true
 		end, cond=function(npc, player)
 			if player.money < 100 then return end
-			--if player:knowTalentType("spell/staff-combat") then return end
 			if player:knowTalentType("spell/staff-combat") or player:knowTalentType("spell/staff-combat") == false then return end
 			return true
 		end},
-		{"Please teach me all there is to know.", action=function(npc, player)
-			game.logPlayer(player, "The staff carver spends a great deal of time going over the finer details of staff combat with you.")
+		{("Please teach me what I need to know (unlocks talent category) - %d gold."):format(500),
+		action=function(npc, player) --Normal intensive training
+			game.logPlayer(player, "The staff carver spends a substantial amount of time teaching you all of the techniques of staff combat.")
+			player:incMoney(-500)
+			player:learnTalentType("spell/staff-combat", true)
+			if player:getTalentTypeMastery("spell/staff-combat") < 1 then -- Special case for previously locked category (escort)
+				player:setTalentTypeMastery("spell/staff-combat", math.max(1.0, player:getTalentTypeMastery("spell/staff-combat") + 0.3))
+			end
+			if player:getTalentTypeMastery("spell/staff-combat") > 1 then
+				game.logPlayer(player, "He is impressed with your mastery and shows you a few extra techniques.")
+			end
+			player.changed = true
+		end,
+		cond=function(npc, player)
+			if player.money < 500 then return end
+			if player:knowTalentType("spell/staff-combat") then return end
+			return true
+		end},
+		{"I'm already proficient, but I want to be an expert (improves talent mastery by 0.2) - 750 gold.", action=function(npc, player) --Enhanced intensive training
 			player:incMoney(-750)
 			player:learnTalentType("spell/staff-combat", true)
+			player:setTalentTypeMastery("spell/staff-combat", player:getTalentTypeMastery("spell/staff-combat") + 0.2)
+			game.logPlayer(player, ("The staff carver spends a great deal of time going over the finer details of staff combat with you%s."):format(player:getTalentTypeMastery("spell/staff-combat")>1 and ", including some esoteric techniques" or ""))
 			player.changed = true
 		end, cond=function(npc, player)
 			if player.money < 750 then return end
-			if player:knowTalentType("spell/staff-combat") then return end
-			return true
+			if player:knowTalentType("spell/staff-combat") and player:getTalentTypeMastery("spell/staff-combat") < 1.2 then return true end
 		end},
 		{"No thanks."},
 	}
