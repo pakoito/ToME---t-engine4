@@ -95,11 +95,21 @@ newEffect{
 	status = "detrimental",
 	parameters = { },
 	on_gain = function(self, err) return "#Target#'s mind is shattered." end,
-	on_lose = function(self, err) return "#Target# collapses." end,
 	activate = function(self, eff)
 		eff.pid = self:addTemporaryValue("inc_damage", {all=-15})
-		self.faction = eff.src.faction
 		self.ai_state = self.ai_state or {}
+		eff.oldstate = {
+			faction = self.faction,
+			ai_state = table.clone(self.ai_state, true),
+			remove_from_party_on_death = self.remove_from_party_on_death,
+			no_inventory_access = self.no_inventory_access,
+			move_others = self.move_others,
+			summoner = self.summoner,
+			summoner_gain_exp = self.summoner_gain_exp,
+			ai = self.ai,
+		}
+		self.faction = eff.src.faction
+		
 		self.ai_state.tactic_leash = 100
 		self.remove_from_party_on_death = true
 		self.no_inventory_access = true
@@ -115,10 +125,34 @@ newEffect{
 			on_control = function(self)
 				self:hotkeyAutoTalents()
 			end,
+			leave_level = function(self, party_def) -- Cancel control and restore previous actor status.
+				local eff = self:hasEffect(self.EFF_DOMINANT_WILL)
+				local uid = self.uid
+				eff.survive_domination = true
+				self:removeTemporaryValue("inc_damage", eff.pid)
+				game.party:removeMember(self)
+				self:replaceWith(require("mod.class.NPC").new(self))
+				self.uid = uid
+				__uids[uid] = self
+				self.faction = eff.oldstate.faction
+				self.ai_state = eff.oldstate.ai_state
+				self.ai = eff.oldstate.ai
+				self.remove_from_party_on_death = eff.oldstate.remove_from_party_on_death
+				self.no_inventory_access = eff.oldstate.no_inventory_access
+				self.move_others = eff.oldstate.move_others
+				self.summoner = eff.oldstate.summoner
+				self.summoner_gain_exp = eff.oldstate.summoner_gain_exp
+				self:removeEffect(self.EFF_DOMINANT_WILL)
+			end,
 		})
 	end,
 	deactivate = function(self, eff)
-		self:die(eff.src)
+		if eff.survive_domination then
+			game.logSeen(self, "%s's mind recovers from the domination.",self.name:capitalize())
+		else
+			game.logSeen(self, "%s collapses.",self.name:capitalize())
+			self:die(eff.src)
+		end
 	end,
 }
 

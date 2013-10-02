@@ -111,6 +111,9 @@ function _M:leftLevel()
 			todel[#todel+1] = actor
 			if actor == game.player then newplayer = true end
 		end
+		if def.leave_level then -- Special function on leaving the level.
+			def.leave_level(actor, def)
+		end
 	end
 	for i = 1, #todel do
 		self:removeMember(todel[i])
