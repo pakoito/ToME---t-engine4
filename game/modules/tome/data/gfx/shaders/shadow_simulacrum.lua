@@ -24,6 +24,7 @@ return {
 		color = color or {0.7, 0.7, 0.7},
 		base = base or 0.3,
 		time_factor = time_factor or 3000,
+		p2 = p2 or {1,1},
 	},
 	clone = false,
 }

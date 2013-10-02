@@ -8,9 +8,9 @@ uniform float shockwaveSpeed;
 uniform float shockwaveWidth;
 uniform float flameIntensity;
 
-uniform float noup = 0;
+uniform float noup;
 
-uniform vec2 ellipsoidalFactor = vec2(1.0, 1.0); //(1.0, 1.0) is perfect circle, (2.0, 1.0) is vertical ellipse, (1.0, 2.0) is horizontal ellipse
+uniform vec2 ellipsoidalFactor; //(1.0, 1.0) is perfect circle, (2.0, 1.0) is vertical ellipse, (1.0, 2.0) is horizontal ellipse
 
 vec4 permute( vec4 x ) {
 

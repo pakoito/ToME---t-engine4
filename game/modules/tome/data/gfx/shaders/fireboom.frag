@@ -2,8 +2,8 @@ uniform sampler2D tex;
 uniform float tick;
 uniform float tick_start;
 uniform float time_factor;
-uniform float ellipsoidalFactor = 1.0; //1 is perfect circle, >1 is ellipsoidal
-uniform float oscillationSpeed = 0.0; //oscillation between ellipsoidal and spherical form
+uniform float ellipsoidalFactor; //1 is perfect circle, >1 is ellipsoidal
+uniform float oscillationSpeed; //oscillation between ellipsoidal and spherical form
 	
 vec4 permute( vec4 x ) {
 

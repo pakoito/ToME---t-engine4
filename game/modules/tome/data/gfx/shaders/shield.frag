@@ -10,16 +10,16 @@ uniform float impact_tick;
 uniform float impact_time;
 uniform float llpow;
 
-uniform float ellipsoidalFactor = 1.2; //1 is perfect circle, >1 is ellipsoidal
-uniform float oscillationSpeed = 0.0; //oscillation between ellipsoidal and spherical form
-uniform float antialiasingRadius = 0.98; //1.0 is no antialiasing, 0.0 - fully smoothed(looks worse)
-uniform float shieldIntensity = 0.15; //physically affects shield layer thickness
+uniform float ellipsoidalFactor; //1 is perfect circle, >1 is ellipsoidal
+uniform float oscillationSpeed; //oscillation between ellipsoidal and spherical form
+uniform float antialiasingRadius; //1.0 is no antialiasing, 0.0 - fully smoothed(looks worse)
+uniform float shieldIntensity; //physically affects shield layer thickness
 
-uniform float wobblingPower = 0.2;
-uniform float wobblingSpeed = 0.02;
+uniform float wobblingPower;
+uniform float wobblingSpeed;
 
-uniform float horizontalScrollingSpeed = 1.0;
-uniform float verticalScrollingSpeed = 0.3;
+uniform float horizontalScrollingSpeed;
+uniform float verticalScrollingSpeed;
 
 void main(void)
 {

@@ -4,14 +4,11 @@ uniform float aadjust;
 uniform vec3 color;
 uniform float time_factor;
 
-uniform float ellipsoidalFactor = 1.4; //1 is perfect circle, >1 is ellipsoidal
-uniform float oscillationSpeed = 10.0; //oscillation between ellipsoidal and spherical form
+uniform float ellipsoidalFactor; //1 is perfect circle, >1 is ellipsoidal
+uniform float oscillationSpeed; //oscillation between ellipsoidal and spherical form
 
-uniform float antialiasingRadius = 0.6; //1.0 is no antialiasing, 0.0 - fully smoothed(looks worse)
-uniform float shieldIntensity = 0.2; //physically affects shield layer thickness
-
-uniform vec4 color1 = vec4(11.0  / 255.0, 8.0 / 255.0, 10.0 / 255.0, 1.0);
-uniform vec4 color2 = vec4(171.0 / 255.0, 4.0 / 255.0, 10.0 / 255.0, 1.0);
+uniform float antialiasingRadius; //1.0 is no antialiasing, 0.0 - fully smoothed(looks worse)
+uniform float shieldIntensity; //physically affects shield layer thickness
 	
 vec4 permute( vec4 x ) {
 
