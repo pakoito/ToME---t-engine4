@@ -4462,7 +4462,7 @@ newEntity{ base = "BASE_GREATSWORD", -- Thanks Alex!
 		dam = 48,
 		apr = 12,
 		physcrit = 11,
-		dammod = {str=1.4},
+		dammod = {str=1.3},
 		physspeed=1.8,
 	},
 	wielder = {
@@ -4482,14 +4482,14 @@ newEntity{ base = "BASE_GREATSWORD", -- Thanks Alex!
 		
 		local size = self.worn_by.size_category-3
 		local str = self.worn_by:getStr()
-		self.combat.physspeed=util.bound(1.8-(str-10)*0.02-size*0.1, 0.70, 1.8)
+		self.combat.physspeed=util.bound(1.8-(str-10)*0.02-size*0.1, 0.80, 1.8)
 	end,
 	on_wear = function(self, who)
 		self.worn_by = who
 		
 		local size = self.worn_by.size_category-3
 		local str = self.worn_by:getStr()
-		self.combat.physspeed=util.bound(1.8-(str-10)*0.02-size*0.1, 0.70, 1.8)
+		self.combat.physspeed=util.bound(1.8-(str-10)*0.02-size*0.1, 0.80, 1.8)
 	end,
 	on_takeoff = function(self, who)
 		self.worn_by = nil
