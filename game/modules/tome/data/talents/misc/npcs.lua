@@ -385,6 +385,8 @@ newTalent{
 				m.summon_time = filter.lastfor
 				m.faction = self.faction
 
+				if not filter.hasloot then m:forgetInven(m.INVEN_INVEN) end
+
 				game.zone:addEntity(game.level, m, "actor", x, y)
 
 				game.logSeen(self, "%s summons %s!", self.name:capitalize(), m.name)
