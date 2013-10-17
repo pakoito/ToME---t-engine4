@@ -1595,7 +1595,7 @@ newEntity{ base = "BASE_CLOTH_ARMOR",
 		on_melee_hit={[DamageType.TEMPORAL] = 10},
 	},
 	max_power = 25, power_regen = 1,
-	use_talent = { id = Talents.T_DAMAGE_SMEARING, level = 3, power = 25 },
+	use_talent = { id = Talents.T_DAMAGE_SMEARING, level = 1, power = 25 },
 }
 
 newEntity{ base = "BASE_GEM", define_as = "GEM_TELOS",
