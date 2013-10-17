@@ -1656,7 +1656,7 @@ do return end
 			local menu
 			local l = {
 				"resume",
-				"achievements",
+				{ "Show Achievements", function() self:unregisterDialog(menu) self:registerDialog(require("mod.dialogs.ShowAchievements").new("Tales of Maj'Eyal Achievements", self.player)) end },
 				{ "Show known Lore", function() self:unregisterDialog(menu) self:registerDialog(require("mod.dialogs.ShowLore").new("Tales of Maj'Eyal Lore", self.party)) end },
 				{ "Show ingredients", function() self:unregisterDialog(menu) self:registerDialog(require("mod.dialogs.ShowIngredients").new(self.party)) end },
 				"highscores",
