@@ -3871,7 +3871,7 @@ newEntity{ base = "BASE_LONGSWORD", define_as="MORRIGOR",
 		physcrit = 7,
 		dammod = {str=0.6, mag=0.6},
 		special_on_hit = {desc="deal magical damage", fct=function(combat, who, target)
-			local tg = {type="ball", range=0, radius=0, selffire=false}
+			local tg = {type="ball", range=1, radius=0, selffire=false}
 			who:project(tg, target.x, target.y, engine.DamageType.ARCANE, who:getMag()*0.5)
 			who:project(tg, target.x, target.y, engine.DamageType.DARKNESS, who:getMag()*0.5)
 		end},

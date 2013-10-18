@@ -404,8 +404,9 @@ newTalent{
 	no_npc_use = true,
 	action = function(self, t)
 		local o = self:findInAllInventoriesBy("define_as", "MORRIGOR")
-		self:onTakeoff(o, true)
-		self:onWear(o, true)
+		o.use_talent=nil
+        o.power_regen=nil
+        o.max_power=nil
 		return true
 	end,
 	info = function(self, t)
