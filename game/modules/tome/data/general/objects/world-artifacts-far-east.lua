@@ -38,6 +38,7 @@ newEntity{ base = "BASE_SCROLL", define_as = "JEWELER_TOME", subtype="tome", no_
 	end,
 }
 
+--[=[
 newEntity{ base = "BASE_GEM", define_as = "ANCIENT_STORM_SAPHIR",
 	power_source = {unknown=true},
 	unique = true,
@@ -51,6 +52,7 @@ newEntity{ base = "BASE_GEM", define_as = "ANCIENT_STORM_SAPHIR",
 	material_level = 4,
 	identified = false,
 }
+]=]
 
 -- Not a random drop, used by the quest started above
 newEntity{ base = "BASE_SCROLL", define_as = "JEWELER_SUMMON", subtype="tome", no_unique_lore=true,
