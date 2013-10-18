@@ -24,13 +24,13 @@ void main(void)
 			sample += texture2D(tex, vec2(gl_TexCoord[0].xy+vec2(float(i)*offset.x, float(j)*offset.y)));
 		}
 	}
-	sample /= float((blursize*2) * (blursize*2));
+	sample /= float((blursize*2.0) * (blursize*2.0));
 
 	float a = 1.0-center.a;
 
 	float delta = sample.a;
 	// float delta = max(max(sample.r,sample.g),sample.b)/factor;
-	float noise = texture3D(noisevol, vec3(gl_TexCoord[0].xy,fTime0_1)).r*2;
+	float noise = texture3D(noisevol, vec3(gl_TexCoord[0].xy,fTime0_1)).r*2.0;
 	gl_FragColor = mix(center,delta*color*noise,a);
 
 	/*

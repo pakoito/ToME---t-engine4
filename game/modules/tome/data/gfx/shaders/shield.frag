@@ -29,7 +29,7 @@ void main(void)
 	radius.x *= (1.0 + ellipsoidalFactor) * 0.5 + (ellipsoidalFactor - 1.0) * 0.5 * pow(cos(tick / time_factor * oscillationSpeed), 2.0);
 	
 	//on-hit wobbling effect
-	float impactColorAffection = 0;
+	float impactColorAffection = 0.0;
 	float impactDuration = tick - impact_tick;
 	if (impactDuration < impact_time * 5.0) //after impact_time * 5.0 the wobble will reduce exp(5.0) times
 	{
