@@ -1,4 +1,4 @@
--- ToME - Tales of Maj'Eyal
+-- TE4 - T-Engine 4
 -- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -17,16 +17,31 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/grids/basic.lua")
-load("/data/general/grids/lava.lua", function(e) if e.define_as == "LAVA_FLOOR" then
-	e.on_stand = function(self, x, y, who)
-		if not game.level.allow_demon_plane_damage then return end
-		local DT = engine.DamageType
-		local dam = DT:get(DT.DEMONFIRE).projector(game.level.plane_owner, x, y, DT.DEMONFIRE, game.level.demonfire_dam or 1)
-		if dam then
-			self.x, self.y = x, y
-			if dam > 0 then self:logCombat(who, "#Source# burns #Target#!")
-			elseif dam < 0 then self:logCombat(who, "#Source# heals #Target#!") end
-		end
+local Map = require "engine.Map"
+
+local function getEffectName(self)
+	local name = self.name or self.damtype and engine.DamageType.dam_def[self.damtype].name.." area effect" or "area effect"
+	if self.src then
+		return self.src.name.."'s "..name
+	else
+		return name
 	end
-end end)
+end
+
+local function resolveSource(self)
+	if self.src and self.src.resolveSource then
+		return self.src:resolveSource()
+	else
+		return self
+	end
+end
+
+local addEffect = Map.addEffect
+Map.addEffect = function (...)
+	local e = addEffect(...)
+	if e then
+		e.getName = getEffectName
+		e.resolveSource = resolveSource
+	end
+	return e
+end

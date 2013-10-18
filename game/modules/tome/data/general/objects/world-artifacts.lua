@@ -1258,10 +1258,10 @@ newEntity{ base = "BASE_HELM", define_as = "HELM_KROLTAR",
 		self:specialSetAdd({"wielder","combat_spellresist"}, 15)
 		self:specialSetAdd({"wielder","combat_mentalresist"}, 15)
 		self:specialSetAdd({"wielder","combat_physresist"}, 15)
-		game.logPlayer(who, "#GOLD#As the Kroltar helm approches the scale mail, they begin to emit fumes and fires.")
+		game.logPlayer(who, "#GOLD#As the helm of Kroltar approaches the your scale armour, they begin to fume and emit fire.")
 	end,
 	on_set_broken = function(self, who)
-		game.logPlayer(who, "#GOLD#The funes and fires disappear.")
+		game.logPlayer(who, "#GOLD#The fumes and fire fade away.")
 	end,
 }
 
@@ -3455,7 +3455,7 @@ newEntity{ base = "BASE_WHIP",
 			who:project(blast, x, y, engine.DamageType.LIGHTNING, rng.avg(dam / 3, dam, 3))
 			game.level.map:particleEmitter(x, y, radius, "ball_lightning", {radius=blast.radius})
 			game:playSoundNear(self, "talents/lightning")
-			game.logSeen(who, "%s strikes %s, sending out an arc of lightning!", who.name:capitalize(), target.name)
+			who:logCombat(target, "#Source# strikes #Target#, sending out an arc of lightning!")
 			return {id=true, used=true}
 		end
 	},
@@ -3830,7 +3830,7 @@ newEntity{ base = "BASE_LONGSWORD",
 				if not rng.percent(20) then return end
 				if not who:checkHit(who:combatMindpower(), target:combatMentalResist()) then return end
 				target:setEffect(target.EFF_WEAKENED_MIND, 2, {power=5})
-				game.logSeen(who, "Anima's eye glares at %s, piercing their mind!", target.name:capitalize())
+				who:logCombat(target, "Anmalice focuses its mind-piercing eye on #Target#!")
 			end)
 	end,
 	on_takeoff = function(self, who)
@@ -3950,9 +3950,9 @@ newEntity{ base = "BASE_WHIP", define_as = "HYDRA_BITE",
 				o.running = 1
 				if tries >= 100 or #tgts==1 then twohits=nil end
 				if twohits then
-					game.logSeen(who, "%s's three headed flail lashes at %s and %s!",who.name:capitalize(), target1.name:capitalize(),target2.name:capitalize())
+					who:logCombat(target1, "#Source#'s three headed flail lashes at #Target#%s!",who:canSee(target2) and (" and %s"):format(target2.name:capitalize()) or "")
 				else
-					game.logSeen(who, "%s's three headed flail lashes at %s!",who.name:capitalize(), target1.name:capitalize())
+					who:logCombat(target1, "#Source#'s three headed flail lashes at #Target#!")
 				end
 				who:attackTarget(target1, engine.DamageType.PHYSICAL, 0.4,  true)
 				if twohits then who:attackTarget(target2, engine.DamageType.PHYSICAL, 0.4,  true) end
@@ -4976,7 +4976,7 @@ newEntity{ base = "BASE_SHIELD", --Thanks SageAcrin!
 		
 			who:project(burst, target.x, target.y, engine.DamageType.ICE, 30)
 			game.level.map:particleEmitter(who.x, who.y, burst.radius, "breath_cold", {radius=burst.radius, tx=target.x-who.x, ty=target.y-who.y})
-			game.logSeen(who, "A burst of chilling water launches from %s's shield to %s!", who.name:capitalize(), target.name:capitalize())
+			who:logCombat(target, "A wave of icy water bursts out from #Source#'s shield towards #Target#!")
 		end
 	end,
 }

@@ -359,10 +359,10 @@ newEffect{
 	status = "beneficial",
 	parameters = {},
 	activate = function(self, eff)
-		game.logSeen(self, "#F53CBE#%s is being stalked by %s!", eff.target.name:capitalize(), self.name)
+		self:logCombat(eff.target, "#F53CBE##Target# is being stalked by #Source#!")
 	end,
 	deactivate = function(self, eff)
-		game.logSeen(self, "#F53CBE#%s is no longer being stalked by %s.", eff.target.name:capitalize(), self.name)
+		self:logCombat(eff.target, "#F53CBE##Target# is no longer being stalked by #Source#.")
 	end,
 	on_timeout = function(self, eff)
 		if not eff.target or eff.target.dead or not eff.target:hasEffect(eff.target.EFF_STALKED) then
@@ -1047,7 +1047,7 @@ newEffect{
 				if (self.x ~= x or self.y ~= y) then
 					local target = game.level.map(x, y, Map.ACTOR)
 					if target then
-						game.logSeen(self, "#F53CBE#%s attacks %s in a fit of paranoia.", self.name:capitalize(), target.name)
+						self:logCombat(target, "#F53CBE##Source# attacks #Target# in a fit of paranoia.")
 						if self:attackTarget(target, nil, 1, false) and target ~= eff.source then
 							if not target:canBe("fear") then
 								game.logSeen(target, "#F53CBE#%s ignores the fear!", target.name:capitalize())
@@ -1327,7 +1327,7 @@ newEffect{
 						self:move(bestX, bestY, false)
 						game.logPlayer(self, "#F53CBE#You panic and flee from %s.", eff.source.name)
 					else
-						game.logSeen(self, "#F53CBE#%s panics and tries to flee from %s.", self.name:capitalize(), eff.source.name)
+						self:logCombat(eff.source, "#F53CBE##Source# panics but fails to flee from #Target#.")
 						self:useEnergy(game.energy_to_act * self:combatMovementSpeed(bestX, bestY))
 					end
 				end
@@ -1908,7 +1908,7 @@ newEffect{
 		if self.life <= 0 then
 			self.life = 1
 			self:setEffect(self.EFF_STUNNED, 3, {})
-			game.logSeen(self, "%s's increased life wears off and is stunned by the change.", self.name:capitalize())
+			game.logSeen(self, "%s's increased life fades, leaving it stunned by the loss.", self.name:capitalize())
 		end
 	end,
 }
@@ -2228,9 +2228,9 @@ newEffect{
 		end
 
 		if not eff.incStatsId then
-			game.logSeen(self, ("%s is mimicking %s. (no gains)."):format(self.name:capitalize(), eff.target.name))
+			self:logCombat(eff.target, "#Source# is mimicking #Target#. (no gains).")
 		else
-			local desc = ("%s is mimicking %s. ("):format(self.name:capitalize(), eff.target.name)
+			local desc = "#Source# is mimicking #Target#. ("
 			local first = true
 			for id, value in pairs(eff.incStats) do
 				if not first then desc = desc..", " end
@@ -2238,7 +2238,7 @@ newEffect{
 				desc = desc..("%+d %s"):format(value, Stats.stats_def[id].name:capitalize())
 			end
 			desc = desc..")"
-			game.logSeen(self, desc)
+			self:logCombat(eff.target, desc)
 		end
 	end,
 	deactivate = function(self, eff)

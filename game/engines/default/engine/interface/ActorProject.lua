@@ -311,6 +311,7 @@ function _M:projectile(t, x, y, damtype, dam, particles)
 	game.zone:addEntity(game.level, proj, "projectile", typ.start_x, typ.start_y)
 
 	self:check("on_projectile_fired", proj, typ, x, y, damtype, dam, particles)
+	return proj
 end
 
 -- @param typ a target type table

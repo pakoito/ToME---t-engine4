@@ -19,8 +19,11 @@
 
 require "engine.class"
 require "engine.Projectile"
+local Combat = require "mod.class.interface.Combat"
 
 module(..., package.seeall, class.inherit(engine.Projectile))
+
+_M.logCombat = Combat.logCombat
 
 function _M:init(t, no_default)
 	engine.Projectile.init(self, t, no_default)
@@ -67,4 +70,22 @@ function _M:tooltip(x, y)
 		tstr:add(true, "UID: ", tostring(self.uid), true, "Coords: ", tostring(x), "x", tostring(y))
 	end
 	return tstr
+end
+
+function _M:resolveSource()
+	if self.src then
+		return self.src:resolveSource()
+	else
+		return self
+	end
+end
+
+--gets the full name of the projectile
+function _M:getName()
+	local name = self.name or "projectile"
+	if self.src and self.src.name then
+		return self.src.name:capitalize().."'s "..name
+	else
+		return name
+	end
 end

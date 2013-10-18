@@ -229,7 +229,7 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 		end
 		print("[ATTACK ARCHERY] after hook", dam)
 
-		if crit then game.logSeen(self, "#{bold}#%s performs a critical strike!#{normal}#", self.name:capitalize()) end
+		if crit then self:logCombat(target, "#{bold}##Source# performs a ranged critical strike against #Target#!#{normal}#") end
 
 		-- Damage conversion?
 		-- Reduces base damage but converts it into another damage type

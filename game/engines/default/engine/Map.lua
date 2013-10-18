@@ -1007,6 +1007,7 @@ function _M:addEffect(src, x, y, duration, damtype, dam, radius, dir, angle, ove
 	table.insert(self.effects, e)
 
 	self.changed = true
+	return e
 end
 
 --- Display the overlay effects, called by self:display()
@@ -1041,7 +1042,9 @@ function _M:processEffects()
 				elseif act and e.src and e.src.reactionToward and (e.src:reactionToward(act) >= 0) and not ((type(e.friendlyfire) == "number" and rng.percent(e.friendlyfire)) or (type(e.friendlyfire) ~= "number" and e.friendlyfire)) then
 				-- Otherwise hit
 				else
+					e.src.__project_source = e -- intermediate projector source
 					DamageType:get(e.damtype).projector(e.src, lx, ly, e.damtype, e.dam)
+					e.src.__project_source = nil
 				end
 			end
 		end

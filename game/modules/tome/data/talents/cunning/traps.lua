@@ -673,7 +673,7 @@ newTalent{
 						if target:canBe("knockback") then 
 							target:pull(self.x, self.y, 1)
 							if target.x ~= ox or target.y ~= oy then
-								game.logSeen(target, "%s is pulled toward %s's gravity trap!", target.name:capitalize(), self.summoner.name:capitalize())
+								self.summoner:logCombat(target, "#Target# is pulled towards #Source#'s gravity trap!")
 							end
 						end
 					end

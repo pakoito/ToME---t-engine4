@@ -125,7 +125,7 @@ newTalent{
 		local movedam = self:mindCrit(self:combatTalentMindDamage(t, 10, 110))
 		local dam = self:mindCrit(self:combatTalentMindDamage(t, 15, 190))
 
-		local proj = require("engine.Projectile"):makeHoming(
+		local proj = require("mod.class.Projectile"):makeHoming(
 			self,
 			{particle="bolt_lightning", trail="lightningtrail"},
 			{speed=2, name="Tornado", dam=dam, movedam=movedam},

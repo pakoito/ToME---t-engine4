@@ -883,8 +883,8 @@ newEffect{
 	on_merge = function(self, old_eff, new_eff) return old_eff end,
 	doConspirator = function(self, eff, target)
 		if math.min(eff.unlockLevel, eff.level) >= 3 and self:attr("confused") and target:canBe("confusion") then
-			target:setEffect(target.EFF_CONFUSED, 3, {power=50}) -- Make consistent
-			game.logSeen(self, "#F53CBE#%s spreads confusion to %s.", self.name:capitalize(), target.name)
+			target:setEffect(target.EFF_CONFUSED, 3, {power=50})
+			self:logCombat(target, "#F53CBE##Source# spreads confusion to #Target#.")
 		end
 	end,
 }
@@ -1330,7 +1330,7 @@ newEffect{
 	subtype = { miscellaneous=true },
 	status = "beneficial",
 	parameters = {},
-	activate = function(self, eff) game.logPlayer(self, "#LIGHT_BLUE#You begin reloading.") end,
+	activate = function(self, eff) game.logSeen(self, "#LIGHT_BLUE#%s begins reloading.", self.name:capitalize()) end,
 	deactivate = function(self, eff)
 	end,
 	on_timeout = function(self, eff)

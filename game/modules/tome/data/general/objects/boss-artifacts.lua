@@ -1482,7 +1482,7 @@ newEntity{ base = "BASE_LONGBOW",
 			who:project(tg, a.x, a.y, engine.DamageType.LIGHTNING_DAZE, {daze=40, dam = rng.avg(1,3) * (40+ who:getMag() * 1.5)} )
 			game.level.map:particleEmitter(who.x, who.y, math.max(math.abs(a.x-who.x), math.abs(a.y-who.y)), "lightning", {tx=a.x-who.x, ty=a.y-who.y})
 			game:playSoundNear(self, "talents/lightning")
-			game.logSeen(who, "#GOLD#A bolt of lightning fires from %s's bow, striking %s!", who.name:capitalize(), a.name:capitalize())
+			who:logCombat(a, "#GOLD#A bolt of lightning fires from #Source#'s bow, striking #Target#!")
 		end
 	end,
 	on_wear = function(self, who)

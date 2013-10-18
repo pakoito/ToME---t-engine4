@@ -1046,7 +1046,7 @@ function _M:move(x, y, force)
 		local grids = core.fov.circle_grids(self.x, self.y, 1, true)
 		for x, yy in pairs(grids) do for y, _ in pairs(yy) do
 			local trap = game.level.map(x, y, Map.TRAP)
-			if trap and not trap:knownBy(self) and self:checkHit(power, trap.detect_power) then
+			if trap and not trap:knownBy(self) and self:canSee(trap) and self:checkHit(power, trap.detect_power) then
 				trap:setKnown(self, true)
 				game.level.map:updateMap(x, y)
 				game.logPlayer(self, "You have found a trap (%s)!", trap:getName())
@@ -1539,7 +1539,7 @@ function _M:onHeal(value, src)
 		if eff.src == self then
 			game.logSeen(self, "%s heal is doubled!", self.name)
 		else
-			game.logSeen(self, "%s steals %s heal!", eff.src.name:capitalize(), self.name)
+			self:logCombat(eff.src, "#Target# steals #Source#'s heal!")
 			return 0
 		end
 	end
@@ -1663,7 +1663,7 @@ function _M:onTakeHit(value, src, death_note)
 
 		local a = rng.table(tgts)
 		if a then
-			game.logSeen(self, "Some of the damage has been displaced onto %s!", a.name:capitalize())
+			self:logCombat(a, "Some of the damage has been displaced onto #Target#!")
 			a:takeHit(value / 2, self)
 			value = value / 2
 		end
@@ -1741,7 +1741,7 @@ function _M:onTakeHit(value, src, death_note)
 			local a = game.level.map(src.x, src.y, Map.ACTOR)
 			if a and self:reactionToward(a) < 0 then
 				a:takeHit(math.ceil(reflect_damage * reflection), self)
-				game.logSeen(self, "The damage shield reflects %d damage back to %s!", math.ceil(reflect_damage * reflection), a.name:capitalize())
+				self:logCombat(a, "The damage shield reflects %d damage back to #Target#!", math.ceil(reflect_damage * reflection))
 			end
 		end
 		-- If we are at the end of the capacity, release the time shield damage
@@ -1755,7 +1755,7 @@ function _M:onTakeHit(value, src, death_note)
 		-- Absorb damage into the displacement shield
 		if rng.percent(self.displacement_shield_chance) then
 			if value <= self.displacement_shield then
-				game.logSeen(self, "The displacement shield teleports the damage to %s!", self.displacement_shield_target.name)
+				game:delayedLogMessage(self, src,  "displacement_shield", "#CRIMSON##Source# teleports some damage to #Target#!")
 				self.displacement_shield = self.displacement_shield - value
 				self.displacement_shield_target:takeHit(value, src)
 				value = 0
@@ -2003,7 +2003,7 @@ function _M:onTakeHit(value, src, death_note)
 			a:removeAllMOs()
 			a.x, a.y = nil, nil
 			game.zone:addEntity(game.level, a, "actor", x, y)
-			game.logSeen(self, "%s is split in two!", self.name:capitalize())
+			game.logSeen(self, "%s splits in two!", self.name:capitalize())
 			value = value / 2
 		end
 	end
@@ -2021,7 +2021,10 @@ function _M:onTakeHit(value, src, death_note)
 			damage_to_psi = self:getPsi()
 			self:incPsi(-damage_to_psi)
 		end
-		game.logSeen(self, "%s's mind suffers #YELLOW#%d psi#LAST# damage from the attack.", self.name:capitalize(), damage_to_psi*psi_damage_resist)
+		local mindcolor = DamageType:get(DamageType.MIND).text_color or "#aaaaaa#"
+		game:delayedLogMessage(self, nil, "Solipsism hit", mindcolor.."#Source# converts some damage to Psi!")
+		game:delayedLogDamage(src, self, damage_to_psi*psi_damage_resist, ("%s%d %s#LAST#"):format(mindcolor, damage_to_psi*psi_damage_resist, "to psi"), false)
+
 		value = value - damage_to_psi
 	end
 
@@ -2077,7 +2080,7 @@ function _M:onTakeHit(value, src, death_note)
 		local vt = self:getTalentFromId(self.T_LEECH)
 		self:incVim(vt.getVim(self, vt))
 		self:heal(vt.getHeal(self, vt))
-		game.logPlayer(self, "#AQUAMARINE#You leech a part of %s's vim.", src.name:capitalize())
+		if self.player then src:logCombat(src, "#AQUAMARINE#You leech a part of #Target#'s vim.") end
 	end
 
 	-- Invisible on hit
@@ -2121,7 +2124,7 @@ function _M:onTakeHit(value, src, death_note)
 		local leech = math.min(value, self.life) * src.life_leech_value / 100
 		if leech > 0 then
 			src:heal(leech)
-			game.logSeen(src, "#CRIMSON#%s leeches life from its victim!", src.name:capitalize())
+			game:delayedLogMessage(src, self, "life_leech"..self.uid, "#CRIMSON##Source# leeches life from #Target#!")
 		end
 	end
 
@@ -2139,7 +2142,7 @@ function _M:onTakeHit(value, src, death_note)
 		src:incStamina(leech * 0.65)
 		src:incHate(leech * 0.2)
 		src:incPsi(leech * 0.2)
-		game.logSeen(src, "#CRIMSON#%s leeches energies from its victim!", src.name:capitalize())
+		game:delayedLogMessage(src, self, "resource_leech", "#CRIMSON##Source# leeches energies from #Target#!")
 	end
 
 	if self:knowTalent(self.T_DRACONIC_BODY) then
@@ -4036,7 +4039,7 @@ function _M:postUseTalent(ab, ret, silent)
 			local t = rng.tableRemove(tids)
 			if not t then break end
 			self.talents_cd[t.id] = self:attr("random_talent_cooldown_on_use_turns")
-			game.log("%s talent '%s%s' is disrupted by the mind parasite.", self.name:capitalize(), (t.display_entity and t.display_entity:getDisplayString() or ""), t.name)
+			game.logSeen(self, "%s talent '%s%s' is disrupted by the mind parasite.", self.name:capitalize(), (t.display_entity and t.display_entity:getDisplayString() or ""), t.name)
 		end
 	end
 
@@ -4385,7 +4388,7 @@ function _M:suffocate(value, src, death_message)
 	return false, true
 end
 
---- Can the actor see the target actor
+-- Can the actor see the target actor (or other entity)
 -- This does not check LOS or such, only the actual ability to see it.<br/>
 -- Check for telepathy, invisibility, stealth, ...
 function _M:canSeeNoCache(actor, def, def_pct)
@@ -4415,7 +4418,7 @@ function _M:canSeeNoCache(actor, def, def_pct)
 	end
 
 	-- Check for stealth. Checks against the target cunning and level
-	if actor:attr("stealth") and actor ~= self then
+	if actor ~= self and actor.attr and actor:attr("stealth") then
 		local def = self:combatSeeStealth()
 		local hit, chance = self:checkHitOld(def, actor:attr("stealth") + (actor:attr("inc_stealth") or 0), 0, 100)
 		if not hit then
@@ -4424,7 +4427,7 @@ function _M:canSeeNoCache(actor, def, def_pct)
 	end
 
 	-- Check for invisibility. This is a "simple" checkHit between invisible and see_invisible attrs
-	if actor:attr("invisible") and actor ~= self then
+	if actor ~= self and actor.attr and actor:attr("invisible") then
 		-- Special case, 0 see invisible, can NEVER see invisible things
 		local def = self:combatSeeInvisible()
 		if def <= 0 then return false, 0 end
@@ -4569,6 +4572,8 @@ local save_for_effects = {
 
 --- Adjust temporary effects
 function _M:on_set_temporary_effect(eff_id, e, p)
+	p.getName = self.tempeffect_def[eff_id].getName
+	p.resolveSource = self.tempeffect_def[eff_id].resolveSource
 	if p.apply_power and (save_for_effects[e.type] or p.apply_save) then
 		local save = 0
 		p.maximum = p.dur
@@ -4669,7 +4674,7 @@ function _M:on_project_acquire(tx, ty, who, t, x, y, damtype, dam, particles, is
 		else
 			dir = "to the "..dir.."!"
 		end
-		game.logSeen(self, "%s deflects the projectile from %s %s", self.name:capitalize(), who.name, dir)
+		self:logCombat(who, "#Source# deflects the projectile from #Target# %s", dir)
 		return true
 	end
 end

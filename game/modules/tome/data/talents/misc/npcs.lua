@@ -389,7 +389,7 @@ newTalent{
 
 				game.zone:addEntity(game.level, m, "actor", x, y)
 
-				game.logSeen(self, "%s summons %s!", self.name:capitalize(), m.name)
+				self:logCombat(m, "#Source# summons #Target#!")
 
 				-- Apply summon destabilization
 				if self:hasEffect(self.EFF_SUMMON_DESTABILIZATION) then
@@ -1223,7 +1223,7 @@ newTalent{
 
 			game.zone:addEntity(game.level, m, "actor", x, y)
 
-			game.logSeen(self, "%s spawns one of its tentacle!", self.name:capitalize())
+			game.logSeen(self, "%s spawns one of its tentacles!", self.name:capitalize())
 		end
 
 		return true

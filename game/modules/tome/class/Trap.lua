@@ -21,12 +21,14 @@ require "engine.class"
 require "engine.Trap"
 require "engine.interface.ActorProject"
 require "engine.interface.ObjectIdentify"
+require "mod.class.interface.Combat"
 local Faction = require "engine.Faction"
 
 module(..., package.seeall, class.inherit(
 	engine.Trap,
 	engine.interface.ObjectIdentify,
-	engine.interface.ActorProject
+	engine.interface.ActorProject,
+	mod.class.interface.Combat
 ))
 
 _M.projectile_class = "mod.class.Projectile"
@@ -47,14 +49,26 @@ function _M:combatSpellpower() return mod.class.interface.Combat:rescaleCombatSt
 function _M:combatMindpower() return mod.class.interface.Combat:rescaleCombatStats(self.wil) end
 function _M:combatAttack() return mod.class.interface.Combat:rescaleCombatStats(self.dex) end
 
---- Gets the full name of the object
-function _M:getName()
-	local name = self.name
-	if not self:isIdentified() and self:getUnidentifiedName() then name = self:getUnidentifiedName() end
-	return name
+function _M:resolveSource()
+	if self.summoner_gain_exp and self.summoner then
+		return self.summoner:resolveSource()
+	else
+		return self
+	end
 end
 
---- Returns a tooltip for the trap
+-- Gets the full name of the trap
+function _M:getName()
+	local name = self.name or "trap"
+	if not self:isIdentified() and self:getUnidentifiedName() then name = self:getUnidentifiedName() end
+	if self.summoner and self.summoner.name then
+		return self.summoner.name:capitalize().."'s "..name
+	else
+		return name
+	end
+end
+
+-- Returns a tooltip for the trap
 function _M:tooltip()
 	if self:knownBy(game.player) then
 		local res = tstring{{"uid", self.uid}, self:getName()}
@@ -121,16 +135,7 @@ end
 --- Trigger the trap
 function _M:trigger(x, y, who)
 	engine.Trap.trigger(self, x, y, who)
-
 	if who.runStop then who:runStop("trap") end
-end
-
-function _M:resolveSource()
-	if self.summoner_gain_exp and self.summoner then
-		return self.summoner:resolveSource()
-	else
-		return self
-	end
 end
 
 --- Identify the trap

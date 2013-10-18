@@ -192,7 +192,7 @@ newTalent{
 				local p = value * 0.10
 				if self.summoner and not self.summoner.dead then
 					self.summoner:incEquilibrium(-p)
-					game.logSeen(self, "#GREEN#%s absorbs part of the blow. %s is closer to nature.", self.name:capitalize(), self.summoner.name:capitalize())
+					self:logCombat(self.summoner, "#GREEN##Source# absorbs part of the blow. #Target# is closer to nature.")
 				end
 				return value - p
 			end,

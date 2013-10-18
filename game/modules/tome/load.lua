@@ -30,6 +30,7 @@ local KeyBind = require "engine.KeyBind"
 local DamageType = require "engine.DamageType"
 local Faction = require "engine.Faction"
 local Map = require "engine.Map"
+local MapEffects = require "mod.class.MapEffects" -- This alters Map
 local Level = require "engine.Level"
 local Tiles = require "engine.Tiles"
 local InventoryUI = require "engine.ui.Inventory"

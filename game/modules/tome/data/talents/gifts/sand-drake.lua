@@ -39,9 +39,7 @@ newTalent{
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
-
-		game.logSeen(self, "%s tries to swallow %s!", self.name:capitalize(), target.name)
-
+		self:logCombat(target, "#Source# tries to swallow #Target#!")
 		local hit = self:attackTarget(target, DamageType.NATURE, self:combatTalentWeaponDamage(t, 1, 1.5), true)
 		if not hit then return true end
 

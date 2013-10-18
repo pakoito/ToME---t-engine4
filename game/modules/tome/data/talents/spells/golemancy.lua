@@ -431,7 +431,7 @@ newTalent{
 				local _, _, tgt = e:getTarget()
 				if e:reactionToward(self) < 0 and tgt == self and rng.percent(chance) then
 					e:setTarget(golem)
-					game.logSeen(e, "%s focuses on %s.", e.name:capitalize(), golem.name)
+					golem:logCombat(e, "#Target# focuses on #Source#.")
 				end
 			end
 		end

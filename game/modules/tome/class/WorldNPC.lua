@@ -152,7 +152,7 @@ end
 function _M:takePowerHit(val, src)
 	self.unit_power = (self.unit_power or 0) - val
 	if self.unit_power <= 0 then
-		game.logSeen(self, "%s kills %s.", src.name:capitalize(), self.name)
+		self.logCombat(src, self, "#Source# kills #Target#.")
 		self:die(src)
 	end
 end
@@ -174,11 +174,11 @@ function _M:encounterAttack(target, x, y)
 	end
 
 	if self.unit_power <= 0 then
-		game.logSeen(self, "%s kills %s.", target.name:capitalize(), self.name)
+		self:logCombat(target, "#Target# kills #Source#.")
 		self:die(target)
 	end
 	if target.unit_power <= 0 then
-		game.logSeen(target, "%s kills %s.", self.name:capitalize(), target.name)
+		self:logCombat(target, "#Source# kills #Target#.")
 		target:die(src)
 	end
 end

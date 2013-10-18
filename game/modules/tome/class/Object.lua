@@ -27,6 +27,7 @@ require "engine.interface.ObjectIdentify"
 local Stats = require("engine.interface.ActorStats")
 local Talents = require("engine.interface.ActorTalents")
 local DamageType = require("engine.DamageType")
+local Combat = require("mod.class.interface.Combat")
 
 module(..., package.seeall, class.inherit(
 	engine.Object,
@@ -36,6 +37,8 @@ module(..., package.seeall, class.inherit(
 ))
 
 _M.projectile_class = "mod.class.Projectile"
+
+_M.logCombat = Combat.logCombat
 
 function _M:init(t, no_default)
 	t.encumber = t.encumber or 0
@@ -234,6 +237,16 @@ function _M:getDisplayColor()
 			return {0, 255, 128}, "#00FF80#"
 		end
 	else return {255, 255, 255}, "#FFFFFF#"
+	end
+end
+
+function _M:resolveSource()
+	if self.summoner_gain_exp and self.summoner then
+		return self.summoner:resolveSource()
+	elseif self.summoner_gain_exp and self.src then
+		return self.src:resolveSource()
+	else
+		return self
 	end
 end
 

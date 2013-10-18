@@ -112,7 +112,7 @@ function _M:attackTarget(target, damtype, mult, noenergy, force_unharmed)
 	if self:isTalentActive(self.T_STEALTH) and target:canSee(self) then
 		self:useTalent(self.T_STEALTH)
 		self.changed = true
-		game.logPlayer(self, "%s notices you at the last moment!", target.name:capitalize())
+		if self.player then self:logCombat(target, "#Target# notices you at the last moment!") end
 	end
 
 	if target:isTalentActive(target.T_INTUITIVE_SHOTS) and rng.percent(target:callTalent(target.T_INTUITIVE_SHOTS, "getChance")) then
@@ -377,23 +377,23 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	local crit = false
 	local evaded = false
 	if repelled then
-		game.logSeen(target, "%s repels an attack from %s.", target.name:capitalize(), self.name)
+		self:logCombat(target, "#Target# repels an attack from #Source#.")
 	elseif self:checkEvasion(target) then
 		evaded = true
-		game.logSeen(target, "%s evades %s.", target.name:capitalize(), self.name)
+		self:logCombat(target, "#Target# evades #Source#.")
 	elseif self:checkHit(atk, def) and (self:canSee(target) or self:attr("blind_fight") or rng.chance(3)) then
 		local pres = util.bound(target:combatArmorHardiness() / 100, 0, 1)
 		if target.knowTalent and target:hasEffect(target.EFF_DUAL_WEAPON_DEFENSE) then
-			local deflect = math.max(dam, target:callTalent(target.T_DUAL_WEAPON_DEFENSE, "doDeflect"))
+			local deflect = math.min(dam, target:callTalent(target.T_DUAL_WEAPON_DEFENSE, "doDeflect"))
 			if deflect > 0 then
-				game.logSeen(target, "%s parries %d damage from %s's attack.", target.name:capitalize(), deflect, self.name:capitalize())
+				self:logCombat(target, "#Target# parries %d damage from #Source#'s attack.", deflect)
 				dam = math.max(dam - deflect,0)
 				print("[ATTACK] after DUAL_WEAPON_DEFENSE", dam)
 			end 
 		end
 		if target.knowTalent and target:hasEffect(target.EFF_GESTURE_OF_GUARDING) then
 			local deflected = math.min(dam, target:callTalent(target.T_GESTURE_OF_GUARDING, "doGuard"))
-			game.logSeen(target, "%s dismisses %d damage from %s's attack with a sweeping gesture.", target.name:capitalize(), deflected, self.name:capitalize())
+			self:logCombat(target, "#Target# dismisses %d damage from #Source#'s attack with a sweeping gesture.", deflected)
 			dam = dam - deflected
 			print("[ATTACK] after GESTURE_OF_GUARDING", dam)
 		end
@@ -424,7 +424,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 			print("[ATTACK] after inc by type", dam)
 		end
 
-		if crit then game.logSeen(self, "#{bold}#%s performs a critical strike!#{normal}#", self.name:capitalize()) end
+		if crit then self:logCombat(target, "#{bold}##Source# performs a melee critical strike against #Target#!#{normal}#") end
 
 		-- Phasing, percent of weapon damage bypasses shields
 		-- It's done like this because onTakeHit has no knowledge of the weapon
@@ -474,9 +474,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 
 		hitted = true
 	else
-		local srcname = game.level.map.seens(self.x, self.y) and self.name:capitalize() or "Something"
-		game.logSeen(target, "%s misses %s.", srcname, target.name)
-
+		self:logCombat(target, "#Source# misses #Target#.")
 		target:fireTalentCheck("callbackOnMeleeMiss", self)
 	end
 
@@ -2142,7 +2140,7 @@ end
 function _M:grappleSizeCheck(target)
 	size = target.size_category - self.size_category
 	if size > 1 then
-		game.logSeen(target, "%s fails because %s is too big!", self.name:capitalize(), target.name:capitalize())
+		self:logCombat(target, "#Source#'s grapple fails because #Target# is too big!")
 		return true
 	else
 		return false
@@ -2179,3 +2177,11 @@ function _M:startGrapple(target)
 	end
 end
 
+-- Display Combat log messages, highlighting the player and taking LOS and visibility into account
+-- #source#|#Source# -> <displayString> self.name|self.name:capitalize()
+-- #target#|#Target# -> target.name|target.name:capitalize()
+function _M:logCombat(target, style, ...)
+	if not game.uiset or not game.uiset.logdisplay then return end
+	local visible, srcSeen, tgtSeen = game:logVisible(self, target)  -- should a message be displayed?
+	if visible then game.uiset.logdisplay(game:logMessage(self, srcSeen, target, tgtSeen, style, ...)) end 
+end

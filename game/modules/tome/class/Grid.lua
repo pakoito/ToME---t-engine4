@@ -22,8 +22,11 @@ require "engine.Grid"
 local Map = require "engine.Map"
 local Dialog = require "engine.ui.Dialog"
 local DamageType = require "engine.DamageType"
+local Combat = require "mod.class.interface.Combat"
 
 module(..., package.seeall, class.inherit(engine.Grid))
+
+_M.logCombat = Combat.logCombat
 
 function _M:init(t, no_default)
 	engine.Grid.init(self, t, no_default)
@@ -120,6 +123,24 @@ function _M:on_move(x, y, who, forced)
 		for typ, dam in pairs(who.move_project) do
 			DamageType:get(typ).projector(who, x, y, typ, dam)
 		end
+	end
+end
+
+function _M:resolveSource()
+	if self.summoner_gain_exp and self.summoner then
+		return self.summoner:resolveSource()
+	else
+		return self
+	end
+end
+
+-- Gets the full name of the grid
+function _M:getName()
+	local name = self.name or "spot"
+	if self.summoner and self.summoner.name then
+		return self.summoner.name:capitalize().."'s "..name
+	else
+		return name
 	end
 end
 

@@ -553,7 +553,7 @@ It's strange what death can do to people, how it can take over their minds. Some
 				game.nicer_tiles:updateAround(game.level, spot.x, spot.y)
 				game.state:locationRevealAround(spot.x, spot.y)
 			end)
-			game.log("He points the location of the graveyard on your map.")
+			game.log("He points out the location of the graveyard on your map.")
 			player:grantQuest("grave-necromancer")
 		end},
 	}

@@ -114,7 +114,7 @@ newTalent{
 			target:reactionToward(self) >= 0 or -- No friends
 			target.size_category > allowed
 			then
-			game.logPlayer(self, "%s resists!", target.name:capitalize())
+			game.logSeen(target, "%s resists!", target.name:capitalize())
 			return true
 		end
 

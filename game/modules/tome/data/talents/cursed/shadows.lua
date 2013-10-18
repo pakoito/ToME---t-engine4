@@ -596,7 +596,7 @@ newTalent{
 			end
 
 			if shadowCount > 0 then
-				game.logPlayer(self, "#PINK#The shadows converge on %s!", target.name)
+				self:logCombat(target, "#PINK#The shadows converge on #Target#!")
 				return true
 			else
 				game.logPlayer(self, "Their are no shadows to heed the call!")
@@ -617,7 +617,7 @@ newTalent{
 			end
 
 			if shadowCount > 0 then
-				game.logPlayer(self, "#PINK#The shadows form around %s!", target.name)
+				self:logCombat(target, "#PINK#The shadows form around #Target#!")
 				return true
 			else
 				game.logPlayer(self, "Their are no shadows to heed the call!")

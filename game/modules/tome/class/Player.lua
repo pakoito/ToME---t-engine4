@@ -1409,7 +1409,7 @@ function _M:useOrbPortal(portal)
 	local spotted = spotHostiles(self)
 	if #spotted > 0 then
 		local dir = game.level.map:compassDirection(spotted[1].x - self.x, spotted[1].y - self.y)
-		game.logPlayer(self, "You can not use the Orb with foes in sight (%s to the %s%s)", spotted[1].actor.name, dir, game.level.map:isOnScreen(spotted[1].x, spotted[1].y) and "" or " - offscreen")
+		self:logCombat(spotted[1].actor, "You can not use the Orb with foes watching (#Target# to the %s%s)",dir, game.level.map:isOnScreen(spotted[1].x, spotted[1].y) and "" or " - offscreen")
 		return
 	end
 	if portal.on_preuse then portal:on_preuse(self) end
