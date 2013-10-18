@@ -111,7 +111,7 @@ It seems to come from the digestive system of the mouth.]],
 		for i, actor in ipairs(game.party.m_list) do
 			if not actor.dead then tgts[#tgts+1] = actor end
 		end
-		self:setTarget(rng.table(tgts))
+		self:setTarget((rng.table(tgts)))
 
 		if self.summoner.dead then
 			self:die()

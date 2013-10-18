@@ -123,6 +123,7 @@ function _M:doAI()
 	local target_pos = self.ai_target.actor and self.fov and self.fov.actors and self.fov.actors[self.ai_target.actor]
 	if target_pos then
 		local tx, ty = self:aiSeeTargetPos(self.ai_target.actor)
+		print("======")table.print(self.ai_state.target_last_seen or {})print("======")
 		self.ai_state.target_last_seen=table.merge(self.ai_state.target_last_seen or {}, {x=tx, y=ty, turn=self.fov_last_turn}) -- Merge to keep obfuscation data
 	end
 
@@ -145,6 +146,8 @@ end
 function _M:setTarget(target, last_seen)
 	self.ai_target.actor = target
 	if last_seen then
+		print("===============+SETTING LAST SEEN ON", self.name, self.uid, " to last seen ", last_seen)
+		util.show_traceback()
 		self.ai_state.target_last_seen = last_seen
 	else
 		local target_pos = target and self.fov and self.fov.actors and self.fov.actors[self.ai_target.actor] or {x=self.x, y=self.y}
