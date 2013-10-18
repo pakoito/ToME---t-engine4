@@ -160,7 +160,7 @@ newTalent{
 		if core.shader.active(4) then
 			ret.particle = self:addParticles(Particles.new("shader_ring_rotating", 1, {toback=true, rotation=0, radius=2, img="flamesgeneric"}, {type="sunaura", time_factor=6000}))
 		else
-			particle = self:addParticles(Particles.new("golden_shield", 1))
+			ret.particle = self:addParticles(Particles.new("golden_shield", 1))
 		end
 		return ret
 	end,
