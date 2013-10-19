@@ -206,7 +206,7 @@ newTalent{
 	-- Damage reduction handled in _M:attackTargetWith function in mod.class.interface.Combat.lua
 	getDamageChange = function(self, t, fake)
 		local test, dam = canUseGestures(self)
-		if not test and not fake then return 0 end
+		if (not test or self:attr("encased_in_ice")) and not fake then return 0 end
 		return t.getGuardPercent(self, t) * dam/100
 	end,
 	getCounterAttackChance = function(self, t, fake)

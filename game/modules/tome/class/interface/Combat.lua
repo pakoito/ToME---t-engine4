@@ -391,9 +391,9 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 				print("[ATTACK] after DUAL_WEAPON_DEFENSE", dam)
 			end 
 		end
-		if target.knowTalent and target:hasEffect(target.EFF_GESTURE_OF_GUARDING) then
-			local deflected = math.min(dam, target:callTalent(target.T_GESTURE_OF_GUARDING, "doGuard"))
-			self:logCombat(target, "#Target# dismisses %d damage from #Source#'s attack with a sweeping gesture.", deflected)
+		if target.knowTalent and target:hasEffect(target.EFF_GESTURE_OF_GUARDING) and not target:attr("encased_in_ice") then
+			local deflected = math.min(dam, target:callTalent(target.T_GESTURE_OF_GUARDING, "doGuard")) or 0
+			if deflected > 0 then self:logCombat(target, "#Target# dismisses %d damage from #Source#'s attack with a sweeping gesture.", deflected) end
 			dam = dam - deflected
 			print("[ATTACK] after GESTURE_OF_GUARDING", dam)
 		end
@@ -959,26 +959,28 @@ end
 --- Fake denotes a check not actually being made, used by character sheets etc.
 function _M:combatDefenseBase(fake)
 	local add = 0
-	if self:hasDualWeapon() and self:knowTalent(self.T_DUAL_WEAPON_DEFENSE) then
-		add = add + self:callTalent(self.T_DUAL_WEAPON_DEFENSE,"getDefense")
-	end
-	if not fake then
-		add = add + (self:checkOnDefenseCall("defense") or 0)
-	end
-	if self:knowTalent(self.T_TACTICAL_EXPERT) then
-		local t = self:getTalentFromId(self.T_TACTICAL_EXPERT)
-		add = add + t.do_tact_update(self, t)
-	end
-	if self:knowTalent(self.T_CORRUPTED_SHELL) then
-		add = add + self:getCon() / 3
-	end
-	if self:knowTalent(self.T_STEADY_MIND) then
-		local t = self:getTalentFromId(self.T_STEADY_MIND)
-		add = add + t.getDefense(self, t)
-	end
-	if self:isTalentActive(Talents.T_SURGE) then
-		local t = self:getTalentFromId(self.T_SURGE)
-		add = add + t.getDefenseChange(self, t)
+	if not self:attr("encased_in_ice") then
+		if self:hasDualWeapon() and self:knowTalent(self.T_DUAL_WEAPON_DEFENSE) then
+			add = add + self:callTalent(self.T_DUAL_WEAPON_DEFENSE,"getDefense")
+		end
+		if not fake then
+			add = add + (self:checkOnDefenseCall("defense") or 0)
+		end
+		if self:knowTalent(self.T_TACTICAL_EXPERT) then
+			local t = self:getTalentFromId(self.T_TACTICAL_EXPERT)
+			add = add + t.do_tact_update(self, t)
+		end
+		if self:knowTalent(self.T_CORRUPTED_SHELL) then
+			add = add + self:getCon() / 3
+		end
+		if self:knowTalent(self.T_STEADY_MIND) then
+			local t = self:getTalentFromId(self.T_STEADY_MIND)
+			add = add + t.getDefense(self, t)
+		end
+		if self:isTalentActive(Talents.T_SURGE) then
+			local t = self:getTalentFromId(self.T_SURGE)
+			add = add + t.getDefenseChange(self, t)
+		end
 	end
 	local d = math.max(0, self.combat_def + (self:getDex() - 10) * 0.35 + (self:getLck() - 50) * 0.4)
 	local mult = 1

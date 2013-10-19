@@ -594,8 +594,8 @@ newEffect{
 		eff.healid = self:addTemporaryValue("no_healing", 1)
 		eff.moveid = self:addTemporaryValue("never_move", 1)
 		eff.frozid = self:addTemporaryValue("frozen", 1)
-		eff.defid = self:addTemporaryValue("combat_def", -1000)
-		eff.rdefid = self:addTemporaryValue("combat_def_ranged", -1000)
+		eff.defid = self:addTemporaryValue("combat_def", -self:combatDefenseBase()-10)
+		eff.rdefid = self:addTemporaryValue("combat_def_ranged", -self:combatDefenseBase()-10)
 		eff.sefid = self:addTemporaryValue("negative_status_effect_immune", 1)
 
 		self:setTarget(self)
@@ -1723,7 +1723,7 @@ newEffect{ -- Note: This effect is cancelled by EFF_DISARMED
 	name = "DUAL_WEAPON_DEFENSE", image = "talents/dual_weapon_defense.png",
 	desc = "Parrying",
 	deflectchance = function(self, eff) -- The last partial deflect has a reduced chance to happen
-		if self:hasEffect(self.EFF_DISARMED) then return 0 end
+		if self:attr("encased_in_ice") or self:hasEffect(self.EFF_DISARMED) then return 0 end
 		return util.bound(eff.deflects>=1 and eff.chance or eff.chance*math.mod(eff.deflects,1),0,100)
 	end,
 	long_desc = function(self, eff)
@@ -1801,7 +1801,7 @@ newEffect{
 	name = "COUNTER_ATTACKING", image = "talents/counter_attack.png",
 	desc = "Counter Attacking",
 	counterchance = function(self, eff) --The last partial counter attack has a reduced chance to happen
-		if self:hasEffect(self.EFF_DISARMED) then return 0 end
+		if self:attr("encased_in_ice") or self:hasEffect(self.EFF_DISARMED) then return 0 end
 		return util.bound(eff.counterattacks>=1 and eff.chance or eff.chance*math.mod(eff.counterattacks,1),0,100)
 	end,
 	long_desc = function(self, eff)
@@ -1828,7 +1828,7 @@ newEffect{
 	name = "DEFENSIVE_GRAPPLING", image = "talents/defensive_throw.png",
 	desc = "Grappling Defensively",
 	throwchance = function(self, eff) -- the last partial defensive throw has a reduced chance to happen
-		if not self:isUnarmed() then return 0 end	-- Must be unarmed
+		if not self:isUnarmed() or self:attr("encased_in_ice") then return 0 end	-- Must be unarmed
 		return util.bound(eff.throws>=1 and eff.chance or eff.chance*math.mod(eff.throws,1),0,100)
 	end,
 	long_desc = function(self, eff)
