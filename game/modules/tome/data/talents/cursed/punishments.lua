@@ -117,7 +117,7 @@ newTalent{
 		local jumpDuration = t.getJumpDuration(self, t)
 		local hateGain = t.getHateGain(self, t)
 		target:setEffect(target.EFF_HATEFUL_WHISPER, duration, {
-			source = self,
+			src = self,
 			damage = damage,
 			duration = duration,
 			mindpower = mindpower,
@@ -288,7 +288,7 @@ newTalent{
 		local mindpower = self:combatMindpower()
 		local duration = t.getDuration(self, t)
 		target:setEffect(target.EFF_AGONY, duration, {
-			source = self,
+			src = self,
 			mindpower = mindpower,
 			damage = damage,
 			duration = duration,

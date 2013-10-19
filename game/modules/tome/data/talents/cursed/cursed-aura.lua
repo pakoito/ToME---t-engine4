@@ -38,7 +38,7 @@ newTalent{
 		return { self.EFF_CURSE_OF_CORPSES, self.EFF_CURSE_OF_MADNESS, self.EFF_CURSE_OF_MISFORTUNE, self.EFF_CURSE_OF_NIGHTMARES, self.EFF_CURSE_OF_SHROUDS }
 	end,
 	cursePenalty = function(self, t)
-		return self:combatTalentLimit(math.max(1, self:getTalentLevel(t)-9), 0, 1, 0.50)
+		return self:combatTalentLimit(math.max(1, self:getTalentLevel(t)-4), 0, 1, 0.64)
 	end,
 	-- tests whether or not an item can be cursed (takes into account current talent level unless ignoreLevel = true)
 	canCurseItem = function(self, t, item, level)
@@ -263,7 +263,7 @@ newTalent{
 		Level 9  -- tools/totems/torques/wands
 		level 10 -- ammunition
 		At level 5, you can activate this talent to surround yourself with an aura that adds 2 levels to a curse of your choosing. (%s chosen)
-		Talent levels higher than 10 reduce the negative effects of your curses (currently %d%% reduction).]]):
+		Also, talent levels above 5 reduce the negative effects of your curses (currently %d%% reduction).]]):
 		format(t.getCursedAuraName(self, t), (1-t.cursePenalty(self, t))*100)
 	end,
 }

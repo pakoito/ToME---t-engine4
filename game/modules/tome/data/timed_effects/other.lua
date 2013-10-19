@@ -753,27 +753,28 @@ newEffect{
 		if math.min(eff.unlockLevel, eff.level) >= 4 and target.type == "humanoid" and rng.percent(def.getReprieveChance(eff.level)) then
 			if not self:canBe("summon") then return end
 
-			local x, y = target.x, target.y
-			local m = require("mod.class.NPC").new(def.npcWalkingCorpse)
-			m.faction = self.faction
-			m.summoner = self
-			m.summoner_gain_exp = true
-			m.summon_time = 6
-			m:resolve() m:resolve(nil, true)
-			m:forceLevelup(math.max(1, self.level - 2))
-			game.zone:addEntity(game.level, m, "actor", x, y)
+			game:onTickEnd(function()
+				local x, y = util.findFreeGrid(target.x, target.y,1)
+				if not x then return end
+				local m = require("mod.class.NPC").new(def.npcWalkingCorpse)
+				m.faction = self.faction
+				m.summoner = self
+				m.summoner_gain_exp = true
+				m.summon_time = 6
+				m:resolve() m:resolve(nil, true)
+				m:forceLevelup(math.max(1, self.level - 2))
+				game.zone:addEntity(game.level, m, "actor", x, y)
+				-- Add to the party
+				if self.player then
+					m.remove_from_party_on_death = true
+					game.party:addMember(m, {control="no", type="summon", title="Summon"})
+				end
 
-			-- Add to the party
-			if self.player then
-				m.remove_from_party_on_death = true
-				game.party:addMember(m, {control="no", type="summon", title="Summon"})
-			end
+				game.level.map:particleEmitter(x, y, 1, "slime")
 
-			game.level.map:particleEmitter(x, y, 1, "slime")
-
-			game.logSeen(target, "#F53CBE#The corpse of the %s pulls itself up to fight for you.", target.name)
-			game:playSoundNear(who, "talents/slime")
-
+				game.logSeen(m, "#F53CBE#The corpse of the %s pulls itself up to fight for you.", target.name)
+				game:playSoundNear(who, "talents/slime")
+			end)
 			return true
 		else
 			return false

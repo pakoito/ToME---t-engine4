@@ -777,7 +777,7 @@ newEffect{
 
 		local damage = math.floor(eff.damage * (eff.turn / eff.duration))
 		if damage > 0 then
-			DamageType:get(DamageType.MIND).projector(eff.source, self.x, self.y, DamageType.MIND, { dam=damage, crossTierChance=25 })
+			DamageType:get(DamageType.MIND).projector(eff.src, self.x, self.y, DamageType.MIND, { dam=damage, crossTierChance=25 })
 			game:playSoundNear(self, "talents/fire")
 		end
 
@@ -803,10 +803,10 @@ newEffect{
 	on_gain = function(self, err) return "#Target# has heard the hateful whisper!", "+Hateful Whisper" end,
 	on_lose = function(self, err) return "#Target# no longer hears the hateful whisper.", "-Hateful Whisper" end,
 	activate = function(self, eff)
-		if not eff.source.dead and eff.source:knowTalent(eff.source.T_HATE_POOL) then
-			eff.source:incHate(eff.hateGain)
+		if not eff.src.dead and eff.src:knowTalent(eff.src.T_HATE_POOL) then
+			eff.src:incHate(eff.hateGain)
 		end
-		DamageType:get(DamageType.MIND).projector(eff.source, self.x, self.y, DamageType.MIND, { dam=eff.damage, crossTierChance=25 })
+		DamageType:get(DamageType.MIND).projector(eff.src, self.x, self.y, DamageType.MIND, { dam=eff.damage, crossTierChance=25 })
 
 		if self.dead then
 			-- only spread on activate if the target is dead
@@ -851,7 +851,7 @@ newEffect{
 		for x, yy in pairs(grids) do
 			for y, _ in pairs(grids[x]) do
 				local a = game.level.map(x, y, game.level.map.ACTOR)
-				if a and eff.source:reactionToward(a) < 0 and self:hasLOS(a.x, a.y) then
+				if a and eff.src:reactionToward(a) < 0 and self:hasLOS(a.x, a.y) then
 					if not a:hasEffect(a.EFF_HATEFUL_WHISPER) then
 						targets[#targets+1] = a
 					end
@@ -862,7 +862,7 @@ newEffect{
 		if #targets > 0 then
 			local target = rng.table(targets)
 			target:setEffect(target.EFF_HATEFUL_WHISPER, eff.duration, {
-				source = eff.source,
+				src = eff.src,
 				duration = eff.duration,
 				damage = eff.damage,
 				mindpower = eff.mindpower,
