@@ -28,7 +28,7 @@ newEntity{
 	moddable_tile = resolvers.moddable_tile("bow"),
 	encumber = 4,
 	rarity = 7,
-	combat = { talented = "bow", sound = "actions/arrow", sound_miss = "actions/arrow",},
+	combat = { talented = "bow", accuracy_effect = "axe", sound = "actions/arrow", sound_miss = "actions/arrow",},
 	require = { talent = { Talents.T_SHOOT }, },
 	archery_kind = "bow",
 	archery = "bow",

@@ -315,6 +315,28 @@ function _M:getShortName(t)
 	end
 end
 
+function _M:descAccuracyBonus(desc, weapon)
+	local _, kind = game.player:isAccuracyEffect(weapon)
+	if not kind then return end
+
+	local showpct = function(v, mult)
+		return ("+%0.1f%%"):format(v * mult)
+	end
+
+	local m = weapon.accuracy_effect_scale or 1
+	if kind == "sword" then
+		desc:add("Accuracy bonus: ", {"color","LIGHT_GREEN"}, showpct(0.4, m), {"color","LAST"}, " crit.pwr / acc", true)
+	elseif kind == "axe" then
+		desc:add("Accuracy bonus: ", {"color","LIGHT_GREEN"}, showpct(0.2, m), {"color","LAST"}, " crit / acc", true)
+	elseif kind == "mace" then
+		desc:add("Accuracy bonus: ", {"color","LIGHT_GREEN"}, showpct(0.1, m), {"color","LAST"}, " dam / acc", true)
+	elseif kind == "staff" then
+		desc:add("Accuracy bonus: ", {"color","LIGHT_GREEN"}, showpct(4, m), {"color","LAST"}, " procs dam / acc", true)
+	elseif kind == "knife" then
+		desc:add("Accuracy bonus: ", {"color","LIGHT_GREEN"}, showpct(0.5, m), {"color","LAST"}, " APR / acc", true)
+	end
+end
+
 --- Gets the full textual desc of the object without the name and requirements
 function _M:getTextualDesc(compare_with)
 	compare_with = compare_with or {}
@@ -495,6 +517,8 @@ function _M:getTextualDesc(compare_with)
 			local t = game.player:combatGetTraining(combat)
 			if t and t.name then desc:add("Mastery: ", {"color","GOLD"}, t.name, {"color","LAST"}, true) end
 		end
+
+		self:descAccuracyBonus(desc, combat)
 
 		if combat.wil_attack then
 			desc:add("Accuracy is based on willpower for this weapon.", true)

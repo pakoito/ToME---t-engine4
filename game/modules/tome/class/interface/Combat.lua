@@ -324,6 +324,17 @@ function _M:checkEvasion(target)
 	return rng.percent(evasion)
 end
 
+function _M:getAccuracyEffect(weapon, atk, def, scale, max)
+	max = max or 10000000
+	scale = scale or 1
+	return math.min(max, math.max(0, atk - def) * scale * (weapon.accuracy_effect_scale or 1))
+end
+
+function _M:isAccuracyEffect(weapon, kind)
+	local eff = weapon.accuracy_effect or weapon.talented
+	return eff == kind, eff
+end
+
 --- Attacks with one weapon
 function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	damtype = damtype or (weapon and weapon.damtype) or DamageType.PHYSICAL
@@ -397,6 +408,13 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 			dam = dam - deflected
 			print("[ATTACK] after GESTURE_OF_GUARDING", dam)
 		end
+
+		if self:isAccuracyEffect(weapon, "knife") then
+			local bonus = 1 + self:getAccuracyEffect(weapon, atk, def, 0.005, 0.25)
+			print("[ATTACJ] dagger accuracy bonus", atk, def, "=", bonus, "previous", apr)
+			apr = apr * bonus
+		end
+
 		print("[ATTACK] raw dam", dam, "versus", armor, pres, "with APR", apr)
 		armor = math.max(0, armor - apr)
 		dam = math.max(dam * pres - armor, 0) + (dam * (1 - pres))
@@ -408,6 +426,12 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		print("[ATTACK] after crit", dam)
 		dam = dam * mult
 		print("[ATTACK] after mult", dam)
+
+		if self:isAccuracyEffect(weapon, "mace") then
+			local bonus = 1 + self:getAccuracyEffect(weapon, atk, def, 0.001, 0.1)
+			print("[ATTACK] mace accuracy bonus", atk, def, "=", bonus)
+			dam = dam * bonus
+		end
 
 		if target:hasEffect(target.EFF_COUNTERSTRIKE) then
 			dam = dam * 2
@@ -493,6 +517,13 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		target:setEffect(target.EFF_OFFGUARD, tier_diff, {}, reapplied)
 	end
 ]]
+
+	if self:isAccuracyEffect(weapon, "staff") then
+		local bonus = 1 + self:getAccuracyEffect(weapon, atk, def, 0.04, 2)
+		print("[ATTACK] staff accuracy bonus", atk, def, "=", bonus)
+		self.__global_accuracy_damage_bonus = bonus
+	end
+
 	-- handle stalk targeting for hits (also handled in Actor for turn end effects)
 	if hitted and target ~= self then
 		if effStalker then
@@ -886,6 +917,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	if hitted then game.level.map:particleEmitter(target.x, target.y, 1, "melee_attack", {color=target.blood_color}) end
 
 	self.turn_procs.weapon_type = nil
+	self.__global_accuracy_damage_bonus = nil
 
 	return self:combatSpeed(weapon), hitted
 end
@@ -1547,6 +1579,12 @@ function _M:physicalCrit(dam, weapon, target, atk, def, add_chance, crit_power_a
 		crit_power_add = crit_power_add + self:callTalent(self.T_SHADOWSTRIKE,"getMultiplier")
 	end
 
+	if self:isAccuracyEffect(weapon, "axe") then
+		local bonus = self:getAccuracyEffect(weapon, atk, def, 0.2, 10)
+		print("[PHYS CRIT %] axe accuracy bonus", atk, def, "=", bonus)
+		chance = chance + bonus
+	end
+
 	chance = util.bound(chance, 0, 100)
 
 	print("[PHYS CRIT %]", chance)
@@ -1554,6 +1592,13 @@ function _M:physicalCrit(dam, weapon, target, atk, def, add_chance, crit_power_a
 		if target:hasEffect(target.EFF_OFFGUARD) then
 			crit_power_add = crit_power_add + 0.1
 		end
+
+		if self:isAccuracyEffect(weapon, "sword") then
+			local bonus = self:getAccuracyEffect(weapon, atk, def, 0.004, 0.25)
+			print("[PHYS CRIT %] sword accuracy bonus", atk, def, "=", bonus)
+			crit_power_add = crit_power_add + bonus
+		end
+
 		self.turn_procs.is_crit = "physical"
 		self.turn_procs.crit_power = (1.5 + crit_power_add + (self.combat_critical_power or 0) / 100)
 		dam = dam * (1.5 + crit_power_add + (self.combat_critical_power or 0) / 100)

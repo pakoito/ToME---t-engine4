@@ -81,6 +81,11 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 		end
 		print("[PROJECTOR] after difficulty dam", dam)
 
+		if src.__global_accuracy_damage_bonus then
+			dam = dam * src.__global_accuracy_damage_bonus
+			print("[PROJECTOR] after staff accuracy damage bonus", dam)
+		end
+
 		-- Daze
 		if src:attr("dazed") then
 			dam = dam * 0.5
