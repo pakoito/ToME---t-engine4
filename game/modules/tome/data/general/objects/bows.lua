@@ -109,7 +109,7 @@ newEntity{
 	encumber = 3,
 	rarity = 7,
 	combat = {
-		talented = "bow",
+		talented = "bow", accuracy_effect = "axe",
 		damrange = 1.4,
 	},
 	proj_image = resolvers.image_material("arrow", "wood"),
