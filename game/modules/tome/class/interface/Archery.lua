@@ -221,7 +221,11 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 		dam = dam * mult
 		print("[ATTACK ARCHERY] after mult", dam)
 
-
+		if self:isAccuracyEffect(ammo, "mace") then
+			local bonus = 1 + self:getAccuracyEffect(ammo, atk, def, 0.001, 0.1)
+			print("[ATTACK] mace accuracy bonus", atk, def, "=", bonus)
+			dam = dam * bonus
+		end
 
 		local hd = {"Combat:archeryDamage", hitted=hitted, target=target, weapon=weapon, ammo=ammo, damtype=damtype, mult=1, dam=dam}
 		if self:triggerHook(hd) then
