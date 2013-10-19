@@ -50,7 +50,7 @@ newEntity{ base = "BASE_NPC_PLANT",
 	combat = { dam=5, atk=15, apr=10 },
 	resolvers.talents{
 		[Talents.T_CONSTRICT]={base=1, every=5},
-		[Talents.T_SPIT_POISON]={base=2, every=5, max=2},
+		[Talents.T_SPIT_POISON]={base=1, every=5, max=3},
 	},
 }
 
