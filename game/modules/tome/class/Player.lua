@@ -1049,7 +1049,12 @@ function _M:doDrop(inven, item, on_done, nb)
 
 	local o = self:getInven(inven) and self:getInven(inven)[item]
 	if o and o.plot then
-		game.logPlayer(self, "You can not drop %s.", o:getName{do_colour=true})
+		game.logPlayer(self, "You can not drop %s (plot item).", o:getName{do_colour=true})
+		return
+	end
+
+	if o and o.__tagged then
+		game.logPlayer(self, "You can not drop %s (tagged).", o:getName{do_colour=true})
 		return
 	end
 
@@ -1069,7 +1074,7 @@ function _M:doDrop(inven, item, on_done, nb)
 					game.logPlayer(self, "You can not destroy %s.", o:getName{do_colour=true})
 				end
 			end
-		end, "Cancel", "Destroy")
+		end, "Cancel", "Destroy", true)
 		return
 	end
 	if nb == nil or nb >= self:getInven(inven)[item]:getNumber() then

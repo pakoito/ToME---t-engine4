@@ -269,6 +269,10 @@ function _M:getName(t)
 		end)
 	end
 
+	if not t.no_add_name and self.__tagged then
+		name = name .. " #ORANGE#="..self.__tagged.."=#LAST#"
+	end
+
 	if not t.do_color then
 		if qty == 1 or t.no_count then return name
 		else return qty.." "..name
