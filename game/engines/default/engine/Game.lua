@@ -32,8 +32,6 @@ module(..., package.seeall, class.make)
 function _M:init(keyhandler)
 	self.key = keyhandler
 	self.level = nil
-	self.log = function() end
-	self.logSeen = function() end
 	self.w, self.h, self.fullscreen = core.display.size()
 	self.dialogs = {}
 	self.save_name = ""
@@ -48,6 +46,9 @@ function _M:init(keyhandler)
 
 	self:defaultMouseCursor()
 end
+
+function _M:log() end
+function _M:logSeen() end
 
 --- Default mouse cursor
 function _M:defaultMouseCursor()
