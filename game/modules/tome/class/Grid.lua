@@ -196,6 +196,7 @@ function _M:makeTrees(base, max, bigheight_limit, tint)
 			display_scale = rng.float(0.5 + inb / 6, 1),
 			display_x = rng.float(-1 / 3 * nb / 3, 1 / 3 * nb / 3),
 			display_y = rng.float(-1 / 5 * nb / 3, 1 / 4 * nb / 3) - (treeid < (bigheight_limit or 9) and 0 or 1),
+			display_z = 81 + z / 20,
 			display_on_seen = true,
 			display_on_remember = true,
 			display_h = treeid < (bigheight_limit or 9) and 1 or 2,

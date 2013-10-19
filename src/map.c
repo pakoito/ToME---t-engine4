@@ -95,9 +95,10 @@ static int map_object_new(lua_State *L)
 	obj->valid = TRUE;
 	obj->dx = luaL_checknumber(L, 6);
 	obj->dy = luaL_checknumber(L, 7);
-	obj->dw = luaL_checknumber(L, 8);
-	obj->dh = luaL_checknumber(L, 9);
-	obj->scale = luaL_checknumber(L, 10);
+	obj->dz = luaL_checknumber(L, 8);
+	obj->dw = luaL_checknumber(L, 9);
+	obj->dh = luaL_checknumber(L, 10);
+	obj->scale = luaL_checknumber(L, 11);
 	obj->shader = NULL;
 	obj->tint_r = obj->tint_g = obj->tint_b = 1;
 	for (i = 0; i < nb_textures; i++)
@@ -694,6 +695,7 @@ static int map_new(lua_State *L)
 	map->vertices = calloc(2*4*QUADS_PER_BATCH, sizeof(GLfloat)); // 2 coords, 4 vertices per particles
 	map->colors = calloc(4*4*QUADS_PER_BATCH, sizeof(GLfloat)); // 4 color data, 4 vertices per particles
 	map->texcoords = calloc(2*4*QUADS_PER_BATCH, sizeof(GLfloat));
+	map->sort_mos = calloc(w * h * zdepth, sizeof(map_object_sort));
 
 	map->w = w;
 	map->h = h;
@@ -784,6 +786,8 @@ static int map_free(lua_State *L)
 	free(map->colors);
 	free(map->texcoords);
 	free(map->vertices);
+
+	free(map->sort_mos);
 
 	luaL_unref(L, LUA_REGISTRYINDEX, map->mo_list_ref);
 
@@ -1528,6 +1532,20 @@ void display_map_quad(lua_State *L, GLuint *cur_tex, int *vert_idx, int *col_idx
 
 #define MIN(a,b) ((a < b) ? a : b)
 
+static int mo_sorter(const void *vp1, const void *vp2) {
+	map_object_sort *mo1 = (map_object_sort*)vp1;
+	map_object_sort *mo2 = (map_object_sort*)vp2;
+	float j1 = mo1->j;
+	float j2 = mo2->j;
+	if (j1 < j2) return -1;
+	else if (j1 > j2) return 1;
+	else if (j1 == j2) {
+		if (mo1->mo->dz < mo2->mo->dz) return -1;
+		else if (mo1->mo->dz > mo2->mo->dz) return 1;
+		else return 0;
+	}
+}
+
 static int map_to_screen(lua_State *L)
 {
 	map_type *map = (map_type*)auxiliar_checkclass(L, "core{map}", 1);
@@ -1537,6 +1555,7 @@ static int map_to_screen(lua_State *L)
 	bool always_show = lua_toboolean(L, 5);
 	bool changed = lua_toboolean(L, 6);
 	int i = 0, j = 0, z = 0;
+	map_object *mo;
 	int vert_idx = 0;
 	int col_idx = 0;
 	GLuint cur_tex = 0;
@@ -1597,28 +1616,42 @@ static int map_to_screen(lua_State *L)
 		maxj = map->h;
 
 	// Always display some more of the map to make sure we always see it all
+	int spos, smax = 0;
 	for (z = 0; z < map->zdepth; z++)
 	{
 		for (j = minj; j < maxj; j++)
 		{
 			for (i = mini; i < maxi; i++)
 			{
-				int dx = x + i * map->tile_w;
-				int dy = y + j * map->tile_h + (i & map->is_hex) * map->tile_h / 2;
 				map_object *mo = map->grids[i][j][z];
-				if (!mo) continue;
-
-				if ((mo->on_seen && map->grids_seens[j*map->w+i]) || (mo->on_remember && (always_show || map->grids_remembers[i][j])) || mo->on_unknown)
-				{
-					if (map->grids_seens[j*map->w+i])
-					{
-						display_map_quad(L, &cur_tex, &vert_idx, &col_idx, map, dx, dy, z, mo, i, j, 1, map->grids_seens[j*map->w+i], nb_keyframes, always_show);
-					}
-					else
-					{
-						display_map_quad(L, &cur_tex, &vert_idx, &col_idx, map, dx, dy, z, mo, i, j, 1, 0, nb_keyframes, always_show);
-					}
+				if (mo) {
+					map->sort_mos[smax  ].mo = mo;
+					map->sort_mos[smax  ].i = i;
+					map->sort_mos[smax  ].j = j;
+					map->sort_mos[smax++].z = z;
 				}
+			}
+		}
+	}
+	qsort(map->sort_mos, smax, sizeof(map_object_sort), mo_sorter);
+
+	for (spos = 0; spos < smax; spos++) {
+		mo = map->sort_mos[spos].mo;
+		i = map->sort_mos[spos].i;
+		j = map->sort_mos[spos].j;
+		z = map->sort_mos[spos].z;
+		int dx = x + i * map->tile_w;
+		int dy = y + j * map->tile_h + (i & map->is_hex) * map->tile_h / 2;
+
+		if ((mo->on_seen && map->grids_seens[j*map->w+i]) || (mo->on_remember && (always_show || map->grids_remembers[i][j])) || mo->on_unknown)
+		{
+			if (map->grids_seens[j*map->w+i])
+			{
+				display_map_quad(L, &cur_tex, &vert_idx, &col_idx, map, dx, dy, z, mo, i, j, 1, map->grids_seens[j*map->w+i], nb_keyframes, always_show);
+			}
+			else
+			{
+				display_map_quad(L, &cur_tex, &vert_idx, &col_idx, map, dx, dy, z, mo, i, j, 1, 0, nb_keyframes, always_show);
 			}
 		}
 	}

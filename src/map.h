@@ -32,7 +32,7 @@ struct s_map_object {
 	bool *textures_is3d;
 	shader_type *shader;
 	int cur_x, cur_y;
-	float dx, dy, scale;
+	float dx, dy, dz, scale;
 	float animdx, animdy;
 	float dw, dh;
 	float tint_r;
@@ -61,6 +61,12 @@ struct s_map_object {
 typedef struct s_map_object map_object;
 
 typedef struct {
+	map_object *mo;
+	float i, j, z;
+} map_object_sort;
+
+typedef struct {
+	map_object_sort* sort_mos;
 	map_object* ***grids;
 	int ***grids_ref;
 	float *grids_seens;

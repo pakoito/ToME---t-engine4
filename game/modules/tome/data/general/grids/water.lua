@@ -126,6 +126,7 @@ newEntity{
 	always_remember = true,
 	special_minimap = colors.BLUE,
 	shader = "water",
+	display_z = -5,
 }
 
 -----------------------------------------

@@ -30,6 +30,8 @@ _M.display_on_unknown = false
 -- Allow actors to act as object carriers, if the interface is loaded
 _M.__allow_carrier = true
 
+_M.display_z = 40
+
 function _M:init(t, no_default)
 	t = t or {}
 

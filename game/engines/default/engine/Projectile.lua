@@ -28,6 +28,8 @@ _M.display_on_seen = true
 _M.display_on_remember = false
 _M.display_on_unknown = false
 
+_M.display_z = 50
+
 function _M:init(t, no_default)
 	t = t or {}
 	self.name = t.name or "projectile"

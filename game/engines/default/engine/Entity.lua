@@ -248,14 +248,16 @@ end
 -- Do not touch unless you *KNOW* what you are doing.<br/>
 -- You do *NOT* need this, this is used by the engine.Map class automatically.<br/>
 -- *DO NOT TOUCH!!!*
-function _M:makeMapObject(tiles, idx)
+function _M:makeMapObject(tiles, idx, parent)
 	if idx > 1 and not tiles.use_images then return nil end
 	if idx > 1 then
 		if not self.add_displays or not self.add_displays[idx-1] then return nil end
-		return self.add_displays[idx-1]:makeMapObject(tiles, 1)
+		return self.add_displays[idx-1]:makeMapObject(tiles, 1, self)
 	else
 		if self._mo and self._mo:isValid() then return self._mo, self.z, self._last_mo end
 	end
+
+	local dz = self:check("display_z") or parent:check("display_z") or 0
 
 	-- Create the map object with 1 + additional textures
 	self._mo = core.map.newObject(self.uid,
@@ -265,6 +267,7 @@ function _M:makeMapObject(tiles, idx)
 		self:check("display_on_unknown"),
 		self:check("display_x") or 0,
 		self:check("display_y") or 0,
+		dz,
 		self:check("display_w") or 1,
 		self:check("display_h") or 1,
 		self:check("display_scale") or 1
@@ -293,7 +296,7 @@ function _M:makeMapObject(tiles, idx)
 		for i = 1, #self.add_mos do
 			local amo = self.add_mos[i]
 			-- Create a simple additional chained MO
-			local mo = core.map.newObject(self.uid, 1, false, false, false, amo.display_x or 0, amo.display_y or 0, amo.display_w or 1, amo.display_h or 1, amo.display_scale or 1)
+			local mo = core.map.newObject(self.uid, 1, false, false, false, amo.display_x or 0, amo.display_y or 0, dz, amo.display_w or 1, amo.display_h or 1, amo.display_scale or 1)
 			tex, texx, texy, pos_x, pos_y = tiles:get("", 0, 0, 0, 0, 0, 0, amo.image, false, false, true)
 			mo:texture(0, tex, false, texx, texy, pos_x, pos_y)
 			if amo.particle then
@@ -354,7 +357,7 @@ function _M:getMapObjects(tiles, mos, z)
 	local last_mo
 	repeat
 		i = i + 1
-		mo, dz, lm = tgt:makeMapObject(tiles, 1+i)
+		mo, dz, lm = tgt:makeMapObject(tiles, 1+i, tgt)
 		if mo then
 			if i == 0 then self._mo = mo end
 			if dz then mos[dz] = mo

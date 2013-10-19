@@ -27,6 +27,8 @@ _M.display_on_seen = true
 _M.display_on_remember = true
 _M.display_on_unknown = false
 
+_M.display_z = 30
+
 function _M:init(t, no_default)
 	t = t or {}
 
@@ -233,7 +235,7 @@ function _M:getMapStackMO(map, x, y)
 	local tex = s:glTexture()
 
 	-- Create the map object with 1 + additional textures
-	local _mo = core.map.newObject(0, 1, self:check("display_on_seen"), self:check("display_on_remember"), self:check("display_on_unknown"), 0, 0, 1, 1, 1)
+	local _mo = core.map.newObject(0, 1, self:check("display_on_seen"), self:check("display_on_remember"), self:check("display_on_unknown"), 0, 0, 0, 1, 1, 1)
 	_mo:texture(0, tex, false, 1, 1, 0, 0)
 	stackmo[nb] = _mo
 
