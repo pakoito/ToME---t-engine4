@@ -431,3 +431,4 @@ function _M:findInAllPartyInventoriesBy(prop, value)
 		if o then return mem, o, item, inven_id  end
 	end
 end
+_M.findInAllInventoriesBy = _M.findInAllPartyInventoriesBy 
