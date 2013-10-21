@@ -305,9 +305,6 @@ newBirthDescriptor{
 		[ActorTalents.T_DOUBLE_STRIKE] = 1,
 		[ActorTalents.T_WEAPON_COMBAT] = 1,
 		[ActorTalents.T_ARMOUR_TRAINING] = 1,
-
-		-- base monk attack
-		[ActorTalents.T_EMPTY_HAND] = 1,
 	},
 	copy = {
 		combat = { physspeed = 0.6, sound = "actions/melee", sound_miss="actions/melee_miss" },

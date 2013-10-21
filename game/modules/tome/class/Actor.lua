@@ -3260,6 +3260,13 @@ function _M:unlearnItemTalent(o, tid, level)
 	end
 end
 
+function _M:checkPool(tid, pid)
+	if tid == pid then return end
+	if not self:knowTalent(pid) then self:learnTalent(pid, true) end
+	self.resource_pool_refs[pid] = self.resource_pool_refs[pid] or {}
+	self.resource_pool_refs[pid][tid] = (self.resource_pool_refs[pid][tid] or 0) + 1
+end
+
 --- Actor learns a resource pool
 -- @param talent a talent definition table
 function _M:learnPool(t)
@@ -3267,53 +3274,44 @@ function _M:learnPool(t)
 
 --	if tt.mana_regen and self.mana_regen == 0 then self.mana_regen = 0.5 end
 
-	if t.type[1]:find("^spell/") and not self:knowTalent(self.T_MANA_POOL) and (t.mana or t.sustain_mana) then
-		self:learnTalent(self.T_MANA_POOL, true)
-		self.resource_pool_refs[self.T_MANA_POOL] = (self.resource_pool_refs[self.T_MANA_POOL] or 0) + 1
+	if t.type[1]:find("^spell/") and (t.mana or t.sustain_mana) then
+		self:checkPool(t.id, self.T_MANA_POOL)
 	end
-	if t.type[1]:find("^wild%-gift/") and not self:knowTalent(self.T_EQUILIBRIUM_POOL) and (t.equilibrium or t.sustain_equilibrium) then
-		self:learnTalent(self.T_EQUILIBRIUM_POOL, true)
-		self.resource_pool_refs[self.T_EQUILIBRIUM_POOL] = (self.resource_pool_refs[self.T_EQUILIBRIUM_POOL] or 0) + 1
+	if t.type[1]:find("^wild%-gift/") and (t.equilibrium or t.sustain_equilibrium) then
+		self:checkPool(t.id, self.T_EQUILIBRIUM_POOL)
 	end
-	if (t.type[1]:find("^technique/") or t.type[1]:find("^cunning/")) and not self:knowTalent(self.T_STAMINA_POOL) and (t.stamina or t.sustain_stamina) then
-		self:learnTalent(self.T_STAMINA_POOL, true)
-		self.resource_pool_refs[self.T_STAMINA_POOL] = (self.resource_pool_refs[self.T_STAMINA_POOL] or 0) + 1
+	if (t.type[1]:find("^technique/") or t.type[1]:find("^cunning/")) and (t.stamina or t.sustain_stamina) then
+		self:checkPool(t.id, self.T_STAMINA_POOL)
 	end
-	if t.type[1]:find("^corruption/") and not self:knowTalent(self.T_VIM_POOL) and (t.vim or t.sustain_vim) then
-		self:learnTalent(self.T_VIM_POOL, true)
-		self.resource_pool_refs[self.T_VIM_POOL] = (self.resource_pool_refs[self.T_VIM_POOL] or 0) + 1
+	if t.type[1]:find("^corruption/") and (t.vim or t.sustain_vim) then
+		self:checkPool(t.id, self.T_VIM_POOL)
 	end
-	if t.type[1]:find("^celestial/") and (t.positive or t.sustain_positive) and not self:knowTalent(self.T_POSITIVE_POOL) then
-		self:learnTalent(self.T_POSITIVE_POOL, true)
-		self.resource_pool_refs[self.T_POSITIVE_POOL] = (self.resource_pool_refs[self.T_POSITIVE_POOL] or 0) + 1
+	if t.type[1]:find("^celestial/") and (t.positive or t.sustain_positive) then
+		self:checkPool(t.id, self.T_POSITIVE_POOL)
 	end
-	if t.type[1]:find("^celestial/") and (t.negative or t.sustain_negative) and not self:knowTalent(self.T_NEGATIVE_POOL) then
-		self:learnTalent(self.T_NEGATIVE_POOL, true)
-		self.resource_pool_refs[self.T_NEGATIVE_POOL] = (self.resource_pool_refs[self.T_NEGATIVE_POOL] or 0) + 1
+	if t.type[1]:find("^celestial/") and (t.negative or t.sustain_negative) then
+		self:checkPool(t.id, self.T_NEGATIVE_POOL)
 	end
-	if t.type[1]:find("^cursed/") and not self:knowTalent(self.T_HATE_POOL) and t.hate then
-		self:learnTalent(self.T_HATE_POOL, true)
-		self.resource_pool_refs[self.T_HATE_POOL] = (self.resource_pool_refs[self.T_HATE_POOL] or 0) + 1
+	if t.type[1]:find("^cursed/") and t.hate then
+		self:checkPool(t.id, self.T_HATE_POOL)
 	end
-	if t.type[1]:find("^chronomancy/") and not self:knowTalent(self.T_PARADOX_POOL) then
-		self:learnTalent(self.T_PARADOX_POOL, true)
-		self.resource_pool_refs[self.T_PARADOX_POOL] = (self.resource_pool_refs[self.T_PARADOX_POOL] or 0) + 1
+	if t.type[1]:find("^chronomancy/") then
+		self:checkPool(t.id, self.T_PARADOX_POOL)
 	end
-	if t.type[1]:find("^psionic/") and not (t.type[1]:find("^psionic/feedback") or t.type[1]:find("^psionic/discharge")) and not self:knowTalent(self.T_PSI_POOL) then
-		self:learnTalent(self.T_PSI_POOL, true)
-		self.resource_pool_refs[self.T_PSI_POOL] = (self.resource_pool_refs[self.T_PSI_POOL] or 0) + 1
+	if t.type[1]:find("^psionic/") and not (t.type[1]:find("^psionic/feedback") or t.type[1]:find("^psionic/discharge")) then
+		self:checkPool(t.id, self.T_PSI_POOL)
 	end
-	if t.type[1]:find("^psionic/feedback") or t.type[1]:find("^psionic/discharge") and not self:knowTalent(self.T_FEEDBACK_POOL) then
-		self:learnTalent(self.T_FEEDBACK_POOL, true)
+	if t.type[1]:find("^psionic/feedback") or t.type[1]:find("^psionic/discharge") then
+		self:checkPool(t.id, self.T_FEEDBACK_POOL)
 	end
 	-- If we learn an archery talent, also learn to shoot
-	if t.type[1]:find("^technique/archery") and not self:knowTalent(self.T_SHOOT) then
-		self:learnTalent(self.T_SHOOT, true)
-		self.resource_pool_refs[self.T_SHOOT] = (self.resource_pool_refs[self.T_SHOOT] or 0) + 1
+	if t.type[1]:find("^technique/archery") then
+		self:checkPool(t.id, self.T_SHOOT)
+		self:checkPool(t.id, self.T_RELOAD)
 	end
-	if t.type[1]:find("^technique/archery") and not self:knowTalent(self.T_RELOAD) then
-		self:learnTalent(self.T_RELOAD, true)
-		self.resource_pool_refs[self.T_RELOAD] = (self.resource_pool_refs[self.T_RELOAD] or 0) + 1
+	-- If we learn an unharmed talent, learn to use it too
+	if tt.is_unarmed then
+		self:checkPool(t.id, self.T_EMPTY_HAND)
 	end
 
 	self:recomputeRegenResources()
@@ -3326,6 +3324,8 @@ end
 -- @return true if the talent was unlearnt, nil and an error message otherwise
 function _M:unlearnTalent(t_id, nb, no_unsustain, extra)
 	if not engine.interface.ActorTalents.unlearnTalent(self, t_id, nb) then return false end
+
+	nb = nb or 1
 
 	local t = _M.talents_def[t_id]
 
@@ -3346,9 +3346,12 @@ function _M:unlearnTalent(t_id, nb, no_unsustain, extra)
 	end
 
 	-- Check the various pools
-	for key, num_refs in pairs(self.resource_pool_refs) do
-		if num_refs == 0 then
-			self:unlearnTalent(key)
+	for pid, refs in pairs(self.resource_pool_refs) do
+		if refs[t_id] then
+			refs[t_id] = refs[t_id] - nb
+			if refs[t_id] <= 0 then refs[t_id] = nil end
+
+			if not next(refs) then self:unlearnTalent(pid, 1) end
 		end
 	end
 
@@ -3357,7 +3360,7 @@ function _M:unlearnTalent(t_id, nb, no_unsustain, extra)
 
 	self:recomputeRegenResources()
 
-	if t.is_spell then self:attr("has_arcane_knowledge", -(nb or 1)) end
+	if t.is_spell then self:attr("has_arcane_knowledge", -nb) end
 
 	-- If we learn mindslayer things we learn telekinetic grasp & beyond the flesh
 	if t.autolearn_mindslayer then
