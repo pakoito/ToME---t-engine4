@@ -682,7 +682,7 @@ function _M:addTemporaryValue(prop, v, noupdate)
 			end
 		elseif type(v) == "string" then
 			-- Only last works on strings
-			if method == "last" then
+			if true or method == "last" then
 				base["__tlast_"..prop] = base["__tlast_"..prop] or {[-1] = base[prop]}
 				local b = base["__tlast_"..prop]
 				b[id] = v
@@ -780,7 +780,7 @@ function _M:removeTemporaryValue(prop, id, noupdate)
 			end
 		elseif type(v) == "string" then
 			-- Only last works on strings
-			if method == "last" then
+			if true or method == "last" then
 				base["__tlast_"..prop] = base["__tlast_"..prop] or {}
 				local b = base["__tlast_"..prop]
 				b[id] = nil
