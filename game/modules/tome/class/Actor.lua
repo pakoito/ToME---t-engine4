@@ -3769,6 +3769,10 @@ function _M:preUseTalent(ab, silent, fake)
 	if ab.is_teleport and self:attr("encased_in_ice") then return false end
 
 	end
+
+	-- Special checks -- AI
+	if not self.player and ab.on_pre_use_ai and not (ab.mode == "sustained" and self:isTalentActive(ab.id)) and not ab.on_pre_use_ai(self, ab, silent, fake) then return false end
+
 	if not silent then
 		-- Allow for silent talents
 		if ab.message ~= nil then

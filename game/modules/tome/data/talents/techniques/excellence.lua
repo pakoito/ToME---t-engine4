@@ -26,13 +26,23 @@ newTalent{
 	stamina = 20,
 	range = archery_range,
 	require = techs_dex_req_high1,
-	no_npc_use = true,
+	onAIGetTarget = function(self, t)
+		local tgts = {}
+		self:project({type="ball", radius=self:getTalentRange(t)}, self.x, self.y, function(px, py)
+			local tgt = game.level.map(px, py, Map.PROJECTILE)
+			if tgt and (not tgt.src or self:reactionToward(tgt.src) < 0) then tgts[#tgts+1] = {x=px, y=py, tgt=tgt, dist=core.fov.distance(self.x, self.y, px, py)} end
+		end)
+		table.sort(tgts, function(a, b) return a.dist < b.dist end)
+		if #tgts > 0 then return tgts[1].x, tgts[1].y, tgts[1].tgt end
+	end,
+	on_pre_use_ai = function(self, t, silent) return t.onAIGetTarget(self, t) and true or false end,
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow or sling for this talent.") end return false end return true end,
 	requires_target = true,
 	getNb = function(self, t) return math.floor(self:combatTalentScale(t, 1, 5, "log")) end,
 	target = function(self, t)
 		return {type="bolt", range=self:getTalentRange(t), scan_on=engine.Map.PROJECTILE, no_first_target_filter=true}
 	end,
+	tactical = {SPECIAL=10},
 	action = function(self, t)
 		for i = 1, t.getNb(self, t) do
 			local targets = self:archeryAcquireTargets(self:getTalentTarget(t), {one_shot=true, no_energy=true})
