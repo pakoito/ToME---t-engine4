@@ -3262,9 +3262,25 @@ end
 
 function _M:checkPool(tid, pid)
 	if tid == pid then return end
-	if not self:knowTalent(pid) then self:learnTalent(pid, true) end
+	if not self:knowTalent(pid) then
+		self:learnTalent(pid, true)
+	else
+		if not self.resource_pool_refs[pid] or not next(self.resource_pool_refs[pid]) then
+			self.resource_pool_refs[pid] = self.resource_pool_refs[pid] or {}
+			self.resource_pool_refs[pid][pid] = 1 -- Make it never unlearnable
+		end
+	end
 	self.resource_pool_refs[pid] = self.resource_pool_refs[pid] or {}
 	self.resource_pool_refs[pid][tid] = (self.resource_pool_refs[pid][tid] or 0) + 1
+	game.log("#CRIMSON#DG MADE THIS BUT CANT TEST, MAKE SURE PREXISTING POOLS ARE NOT REMOVED !!!")
+	game.log("#CRIMSON#DG MADE THIS BUT CANT TEST, MAKE SURE PREXISTING POOLS ARE NOT REMOVED !!!")
+	game.log("#CRIMSON#DG MADE THIS BUT CANT TEST, MAKE SURE PREXISTING POOLS ARE NOT REMOVED !!!")
+	game.log("#CRIMSON#DG MADE THIS BUT CANT TEST, MAKE SURE PREXISTING POOLS ARE NOT REMOVED !!!")
+	game.log("#CRIMSON#DG MADE THIS BUT CANT TEST, MAKE SURE PREXISTING POOLS ARE NOT REMOVED !!!")
+	game.log("#CRIMSON#DG MADE THIS BUT CANT TEST, MAKE SURE PREXISTING POOLS ARE NOT REMOVED !!!")
+	game.log("#CRIMSON#DG MADE THIS BUT CANT TEST, MAKE SURE PREXISTING POOLS ARE NOT REMOVED !!!")
+	game.log("#CRIMSON#DG MADE THIS BUT CANT TEST, MAKE SURE PREXISTING POOLS ARE NOT REMOVED !!!")
+	game.log("#CRIMSON#DG MADE THIS BUT CANT TEST, MAKE SURE PREXISTING POOLS ARE NOT REMOVED !!!")
 end
 
 --- Actor learns a resource pool
