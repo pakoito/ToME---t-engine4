@@ -2,8 +2,8 @@ uniform sampler2D tex;
 uniform float tick;
 uniform float tick_start;
 uniform float time_factor;
-uniform float ellipsoidalFactor = 1.0; //1 is perfect circle, >1 is ellipsoidal
-uniform float oscillationSpeed = 0.0; //oscillation between ellipsoidal and spherical form
+uniform float ellipsoidalFactor; //1 is perfect circle, >1 is ellipsoidal
+uniform float oscillationSpeed; //oscillation between ellipsoidal and spherical form
 	
 vec4 permute( vec4 x ) {
 
@@ -123,7 +123,7 @@ vec2 snoise2(vec3 pos)
 
 float GetLavaDelta(float currTime, vec2 pos, float freqMult, float evolutionSpeed)
 {
-	float delta = 0;
+	float delta = 0.0;
 	pos *= freqMult;
 	
 	delta += snoise(vec3(pos * 1.0, currTime * 1.0 * evolutionSpeed)) * 1.5;
@@ -169,8 +169,8 @@ vec4 GetExplosionColor(float currTime, vec2 pos, float radius1, float radius2, f
 	vec2 sphericalProjectedCoord = vec2(0.0, 0.0);
 	float currRadius = radius2;
 	float delta;
-	float alpha = 0;
-	float ratio = 0;
+	float alpha = 0.0;
+	float ratio = 0.0;
 	
 	int i = 0;
 	for(i = 0; i < 10; i++)
@@ -208,7 +208,7 @@ vec4 GetExplosionColor(float currTime, vec2 pos, float radius1, float radius2, f
 
 	vec3 lightVector = normalize(vec3(-1, 1, 1));	
 	float light = 0.2; //ambient
-	light += max(0, -0.8 * dot(normalVector, lightVector));
+	light += max(0.0, -0.8 * dot(normalVector, lightVector));
 	//light += max(0, reflect(lightVector, normalVector) * vec3(0, 0, 1));	
 
 				

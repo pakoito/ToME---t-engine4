@@ -83,38 +83,71 @@ end
 --- This is a really naive algorithm, it will not handle objects and such.
 -- Use only for small tables
 function table.serialize(src, sub, no_G, base)
-	local str = ""
-	if sub then str = "{" end
+	local chunks = {}
+	if sub then
+		chunks[1] = "{"
+	end
 	for k, e in pairs(src) do
-		local nk, ne = k, e
+		local nk = nil
+		local nkC = {}
 		local tk, te = type(k), type(e)
-
 		if no_G then
-			if tk == "table" then nk = "["..table.serialize(nk, true).."]"
-			elseif tk == "string" then -- nothing
-			else nk = "["..nk.."]"
+			if tk == "table" then
+				nkC[#nkC+1] = "["
+				nkC[#nkC+1] = table.serialize(k, true)
+				nkC[#nkC+1] = "]"
+			elseif tk == "string" then
+				nkC[#nkC+1] = k
+			else
+				nkC[#nkC+1] = "["
+				nkC[#nkC+1] = tostring(k)
+				nkC[#nkC+1] = "]"
 			end
 		else
-			if tk == "table" then nk = "["..table.serialize(nk, true).."]"
-			elseif tk == "string" then nk = string.format("[%q]", nk)
-			else nk = "["..nk.."]"
+			if not sub then
+				nkC[#nkC+1] = (base and tostring(base) or "_G")
 			end
-			if not sub then nk = (base or "_G")..nk end
+			nkC[#nkC+1] = "["
+			if tk == "table" then
+				nkC[#nkC+1] = table.serialize(k, true)
+			elseif tk == "string" then
+				-- escaped quotes matter
+				nkC[#nkC+1] = string.format("%q", k)
+			else
+				nkC[#nkC+1] = tostring(k)
+			end
+			nkC[#nkC+1] = "]"
 		end
 
-		if te == "table" then
-			str = str..string.format("%s=%s ", nk, table.serialize(ne, true))
-		elseif te == "number" then
-			str = str..string.format("%s=%f ", nk, ne)
-		elseif te == "string" then
-			str = str..string.format("%s=%q ", nk, ne)
-		elseif te == "boolean" then
-			str = str..string.format("%s=%s ", nk, tostring(ne))
+		nk = table.concat(nkC)
+
+		-- These are the types of data we are willing to serialize
+		if te == "table" or te == "string" or te == "number" or te == "boolean" then
+			chunks[#chunks+1] = nk
+			chunks[#chunks+1] = "="
+			if te == "table" then
+				chunks[#chunks+1] = table.serialize(e, true)
+			elseif te == "number" then
+				-- float output matters
+				chunks[#chunks+1] = string.format("%f", e)
+			elseif te == "string" then
+				-- escaped quotes matter
+				chunks[#chunks+1] = string.format("%q", e)
+			else -- te == "boolean"
+				chunks[#chunks+1] = tostring(e)
+			end
+			chunks[#chunks+1] = " "
 		end
-		if sub then str = str..", " end
+		
+		if sub then
+			chunks[#chunks+1] = ", "
+		end
 	end
-	if sub then str = str.."}" end
-	return str
+	if sub then
+		chunks[#chunks+1] = "}"
+	end
+			
+	return table.concat(chunks)
 end
 
 function string.unserialize(str)

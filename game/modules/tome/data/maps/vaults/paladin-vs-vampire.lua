@@ -33,10 +33,12 @@ defineTile('~', mod.class.Grid.new{
 	on_stand = function(self, x, y, who)
 		local DT = engine.DamageType
 		local dam = DT:get(DT.RETCH).projector(self, x, y, DT.RETCH, rng.range(self.mindam, self.maxdam))
-		if not who:attr("undead") then game.logPlayer(who, "Dark energies course upwards through the lava.") end
+		self.x, self.y = x, y
+		if who.player and not who:attr("undead") then self:logCombat(who, "#Source# emits dark energies at your feet.") end
 		if who.dead and not who:attr("undead") then
 			--add undead
 			local m = game.zone:makeEntityByName(game.level, "actor", "RISEN_CORPSE")
+			game.logSeen(who, "The corrupted lava reanimates %s's corpse!", who.name:capitalize())
 			game.zone:addEntity(game.level, m, "actor", x, y)
 		end
 	end,

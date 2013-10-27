@@ -46,7 +46,6 @@ local function forceHit(self, t, target, sourceX, sourceY, damage, knockback, kn
 		local knockbackCount = 0
 		local blocked = false
 		while knockback > 0 do
-			blocked = true
 			local x, y, is_corner_blocked = lineFunction:step(true)
 
 			if not game.level.map:isBound(x, y) or is_corner_blocked or game.level.map:checkAllEntities(x, y, "block_move", target) then
@@ -54,14 +53,14 @@ local function forceHit(self, t, target, sourceX, sourceY, damage, knockback, kn
 				local nextTarget = game.level.map(x, y, Map.ACTOR)
 				if nextTarget then
 					if knockbackCount > 0 then
-						game.logPlayer(self, "%s was blasted %d spaces into %s!", target.name:capitalize(), knockbackCount, nextTarget.name)
+						target:logCombat(nextTarget, "#Source# was blasted %d spaces into #Target#!", knockbackCount)
 					else
-						game.logPlayer(self, "%s was blasted into %s!", target.name:capitalize(), nextTarget.name)
+						target:logCombat(nextTarget, "#Source# was blasted into #Target#!")
 					end
 				elseif knockbackCount > 0 then
-					game.logPlayer(self, "%s was smashed back %d spaces!", target.name:capitalize(), knockbackCount)
+					game.logSeen(target, "%s was smashed back %d spaces!", target.name:capitalize(), knockbackCount)
 				else
-					game.logPlayer(self, "%s was smashed!", target.name:capitalize())
+					game.logSeen(target, "%s was smashed!", target.name:capitalize())
 				end
 
 				-- take partial damage
@@ -76,6 +75,7 @@ local function forceHit(self, t, target, sourceX, sourceY, damage, knockback, kn
 				end
 
 				knockback = 0
+				blocked = true
 			else
 				-- allow move
 				finalX, finalY = x, y
@@ -85,7 +85,7 @@ local function forceHit(self, t, target, sourceX, sourceY, damage, knockback, kn
 		end
 
 		if not blocked and knockbackCount > 0 then
-			game.logPlayer(self, "%s was blasted back %d spaces!", target.name:capitalize())
+			game.logSeen(target, "%s was blasted back %d spaces!", target.name:capitalize(), knockbackCount)
 		end
 
 		if not target.dead and (finalX ~= target.x or finalY ~= target.y) then
@@ -310,7 +310,7 @@ newTalent{
 	end,
 	getSecondHitChance = function(self, t) return self:combatTalentScale(self:getTalentLevel(t)-4, 15, 35) end,
 	action = function(self, t)
-		game.logSeen(self, "An unseen force begin to swirl around %s!", self.name)
+		game.logSeen(self, "An unseen force begins to swirl around %s!", self.name)
 		local duration = t.getDuration(self, t)
 		local particles = self:addParticles(Particles.new("force_area", 1, { radius = self:getTalentRange(t) }))
 

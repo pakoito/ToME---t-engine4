@@ -70,7 +70,7 @@ newTalent{
 	reflectable = true,
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 250) end,
-	getTargetCount = function(self, t) return 3 + self:getTalentLevelRaw(t) end,
+	getTargetCount = function(self, t) return math.floor(self:combatTalentScale(t, 4, 8, "log")) end,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
 		local fx, fy = self:getTarget(tg)

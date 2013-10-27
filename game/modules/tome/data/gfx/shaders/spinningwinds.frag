@@ -8,9 +8,9 @@ uniform float shockwaveSpeed;
 uniform float shockwaveWidth;
 uniform float flameIntensity;
 
-uniform float noup = 0;
+uniform float noup;
 
-uniform vec2 ellipsoidalFactor = vec2(1.0, 1.0); //(1.0, 1.0) is perfect circle, (2.0, 1.0) is vertical ellipse, (1.0, 2.0) is horizontal ellipse
+uniform vec2 ellipsoidalFactor; //(1.0, 1.0) is perfect circle, (2.0, 1.0) is vertical ellipse, (1.0, 2.0) is horizontal ellipse
 
 vec4 permute( vec4 x ) {
 
@@ -110,7 +110,7 @@ vec2 snoise2(vec3 pos)
 float GetFireDelta(float currTime, vec2 pos, float freqMult, float stretchMult, float scrollSpeed, float evolutionSpeed)
 {
 	//firewall
-	float delta = 0;
+	float delta = 0.0;
 //	pos.y += (1.0 - pos.y) * 0.5;
 	//pos.y += 0.5;
 	pos.y /= stretchMult;
@@ -162,10 +162,10 @@ RingIntersection GetBladeRingColor(float currTime, vec2 pos, vec3 axis)
 
 	
 	float someDelta = GetFireDelta(currTime, vec2(0.5, 0.5), 1.0, 1.0, 0.0, 0.23);
-	if(!(someDelta < 10 && someDelta > -10))
+	if(!(someDelta < 10.0 && someDelta > -10.0))
 	{
-		result.depth = -10;
-		result.color = vec4(1, 0, 0, 1);
+		result.depth = -10.0;
+		result.color = vec4(1.0, 0.0, 0.0, 1.0);
 		return result;
 	}
 
@@ -174,8 +174,8 @@ RingIntersection GetBladeRingColor(float currTime, vec2 pos, vec3 axis)
 	for(int i = 0; i < 10; i++)
 	{
 		vec3 localAxis = axis;
-		localAxis.x += sin(someDelta * 1.5 + 100.0 * i) * 0.15;
-		localAxis.y += sin(someDelta * 1.7 + 130.0 * i) * 0.15;
+		localAxis.x += sin(someDelta * 1.5 + 100.0 * float(i)) * 0.15;
+		localAxis.y += sin(someDelta * 1.7 + 130.0 * float(i)) * 0.15;
 	/*	localAxis.x += GetFireDelta(currTime, vec2(0.2 * i, 0.5), 1.0, 1.0, 0.0, 0.23) * 0.1;
 		localAxis.y += GetFireDelta(currTime, vec2(0.2 * i, 0.5), 1.0, 1.0, 0.0, 0.27) * 0.1;*/
 		localAxis /= length(localAxis);
@@ -205,10 +205,10 @@ RingIntersection GetBladeRingColor(float currTime, vec2 pos, vec3 axis)
 			result.depth = intersection.z;
 		}*/
 
-		float fogPhase = currTime * 5.0 + sin(someDelta * 1.5 + 9.0 * i) * 0.5;// + GetFireDelta(currTime, vec2(0.1 * i, 0.5), 1.0, 1.0, 0.0, 0.2) * 0.5;
+		float fogPhase = currTime * 5.0 + sin(someDelta * 1.5 + 9.0 * float(i)) * 0.5;// + GetFireDelta(currTime, vec2(0.1 * i, 0.5), 1.0, 1.0, 0.0, 0.2) * 0.5;
 		fogPhase = clamp(fogPhase - floor(fogPhase), 0.0, 1.0);
 		
-		float ang = -currTime * 30.0 + (3.14 * 2.0) / 10.0 * i + sin(someDelta * 1.5 + 5.0 * i) * 0.5;// + GetFireDelta(currTime, vec2(0.1 * i, 0.5), 1.0, 1.0, 0.0, 0.2) * 0.5;
+		float ang = -currTime * 30.0 + (3.14 * 2.0) / 10.0 * float(i) + sin(someDelta * 1.5 + 5.0 * float(i)) * 0.5;// + GetFireDelta(currTime, vec2(0.1 * i, 0.5), 1.0, 1.0, 0.0, 0.2) * 0.5;
 		rotatedPoint.x = planarPoint.x * cos(ang) - planarPoint.y * sin(ang);
 		rotatedPoint.y = planarPoint.x * sin(ang) + planarPoint.y * cos(ang);
 		//rotatedPoint *= 2.0 - fogPhase;

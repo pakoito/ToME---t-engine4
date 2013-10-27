@@ -168,7 +168,8 @@ newEntity{
 
 		local DT = engine.DamageType
 		local dam = DT:get(DT.POISON).projector(self, x, y, DT.POISON, rng.range(self.mindam, self.maxdam))
-		if dam > 0 then game.logPlayer(who, "The water poisons you!") end
+		self.x, self.y = x, y
+		if dam > 0 and who.player then self:logCombat(who, "#Source# poisons #Target#!") end
 	end,
 	combatAttack = function(self) return rng.range(self.mindam, self.maxdam) end,
 	nice_tiler = { method="replace", base={"POISON_DEEP_WATER", 100, 1, 6}},

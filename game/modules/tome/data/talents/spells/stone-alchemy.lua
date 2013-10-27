@@ -174,7 +174,7 @@ newTalent{
 			return
 		end
 
-		local tg = {type="bolt", range=self:getTalentRange(t), nolock=true, talent=t}
+		local tg = {type="bolt", range=self:getTalentRange(t), nolock=true, talent=t, simple_dir_request=true}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		local _ _, x, y = self:canProject(tg, x, y)

@@ -22,8 +22,11 @@ require "engine.Grid"
 local Map = require "engine.Map"
 local Dialog = require "engine.ui.Dialog"
 local DamageType = require "engine.DamageType"
+local Combat = require "mod.class.interface.Combat"
 
 module(..., package.seeall, class.inherit(engine.Grid))
+
+_M.logCombat = Combat.logCombat
 
 function _M:init(t, no_default)
 	engine.Grid.init(self, t, no_default)
@@ -123,17 +126,43 @@ function _M:on_move(x, y, who, forced)
 	end
 end
 
+function _M:resolveSource()
+	if self.summoner_gain_exp and self.summoner then
+		return self.summoner:resolveSource()
+	else
+		return self
+	end
+end
+
+-- Gets the full name of the grid
+function _M:getName()
+	local name = self.name or "spot"
+	if self.summoner and self.summoner.name then
+		return self.summoner.name:capitalize().."'s "..name
+	else
+		return name
+	end
+end
+
 function _M:tooltip(x, y)
 	local tstr
+	local dist = nil
+	if game.player.x and game.player.y then dist = tstring{" (range: ", {"font", "italic"}, {"color", "LIGHT_GREEN"}, tostring(core.fov.distance(game.player.x, game.player.y, x, y)), {"color", "LAST"}, {"font", "normal"}, ")"} end
 	if self.show_tooltip then
 		local name = ((self.show_tooltip == true) and self.name or self.show_tooltip)
 		if self.desc then
-			tstr = tstring{{"uid", self.uid}, name, true, self.desc, true}
+			tstr = tstring{{"uid", self.uid}, name}
+			if dist then tstr:merge(dist) end
+			tstr:add(true, self.desc, true)
 		else
-			tstr = tstring{{"uid", self.uid}, name, true}
+			tstr = tstring{{"uid", self.uid}, name}
+			if dist then tstr:merge(dist) end
+			tstr:add(true)
 		end
 	else
-		tstr = tstring{{"uid", self.uid}, self.name, true}
+		tstr = tstring{{"uid", self.uid}, self.name}
+		if dist then tstr:merge(dist) end
+		tstr:add(true)
 	end
 
 	if game.level.entrance_glow and self.change_zone and not game.visited_zones[self.change_zone] then
@@ -147,6 +176,7 @@ function _M:tooltip(x, y)
 	if self:attr("air_level") and self:attr("air_level") < 0 then tstr:add({"color", "LIGHT_BLUE"}, "Special breathing method required", {"color", "LAST"}, true) end
 	if self:attr("dig") then tstr:add({"color", "LIGHT_UMBER"}, "Diggable", {"color", "LAST"}, true) end
 	if game.level.map.attrs(x, y, "no_teleport") then tstr:add({"color", "VIOLET"}, "Cannot teleport to this place", {"color", "LAST"}, true) end
+	
 
 	if config.settings.cheat then
 		tstr:add(true, tostring(rawget(self, "type")), " / ", tostring(rawget(self, "subtype")))

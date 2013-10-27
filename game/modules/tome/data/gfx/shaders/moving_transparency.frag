@@ -9,7 +9,7 @@ uniform float a_max;
 uniform float base;
 uniform float time_factor;
 uniform float tick;
-uniform vec2 p2 = vec2(1.0, 1.0);
+uniform vec2 p2;
 
 int LFSR_Rand_Gen(in int n)
 {

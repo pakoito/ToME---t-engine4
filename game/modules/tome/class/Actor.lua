@@ -1046,7 +1046,7 @@ function _M:move(x, y, force)
 		local grids = core.fov.circle_grids(self.x, self.y, 1, true)
 		for x, yy in pairs(grids) do for y, _ in pairs(yy) do
 			local trap = game.level.map(x, y, Map.TRAP)
-			if trap and not trap:knownBy(self) and self:checkHit(power, trap.detect_power) then
+			if trap and not trap:knownBy(self) and self:canSee(trap) and self:checkHit(power, trap.detect_power) then
 				trap:setKnown(self, true)
 				game.level.map:updateMap(x, y)
 				game.logPlayer(self, "You have found a trap (%s)!", trap:getName())
@@ -1539,7 +1539,7 @@ function _M:onHeal(value, src)
 		if eff.src == self then
 			game.logSeen(self, "%s heal is doubled!", self.name)
 		else
-			game.logSeen(self, "%s steals %s heal!", eff.src.name:capitalize(), self.name)
+			self:logCombat(eff.src, "#Target# steals #Source#'s heal!")
 			return 0
 		end
 	end
@@ -1663,7 +1663,7 @@ function _M:onTakeHit(value, src, death_note)
 
 		local a = rng.table(tgts)
 		if a then
-			game.logSeen(self, "Some of the damage has been displaced onto %s!", a.name:capitalize())
+			self:logCombat(a, "Some of the damage has been displaced onto #Target#!")
 			a:takeHit(value / 2, self)
 			value = value / 2
 		end
@@ -1741,7 +1741,7 @@ function _M:onTakeHit(value, src, death_note)
 			local a = game.level.map(src.x, src.y, Map.ACTOR)
 			if a and self:reactionToward(a) < 0 then
 				a:takeHit(math.ceil(reflect_damage * reflection), self)
-				game.logSeen(self, "The damage shield reflects %d damage back to %s!", math.ceil(reflect_damage * reflection), a.name:capitalize())
+				self:logCombat(a, "The damage shield reflects %d damage back to #Target#!", math.ceil(reflect_damage * reflection))
 			end
 		end
 		-- If we are at the end of the capacity, release the time shield damage
@@ -1755,7 +1755,7 @@ function _M:onTakeHit(value, src, death_note)
 		-- Absorb damage into the displacement shield
 		if rng.percent(self.displacement_shield_chance) then
 			if value <= self.displacement_shield then
-				game.logSeen(self, "The displacement shield teleports the damage to %s!", self.displacement_shield_target.name)
+				game:delayedLogMessage(self, src,  "displacement_shield", "#CRIMSON##Source# teleports some damage to #Target#!")
 				self.displacement_shield = self.displacement_shield - value
 				self.displacement_shield_target:takeHit(value, src)
 				value = 0
@@ -2003,7 +2003,7 @@ function _M:onTakeHit(value, src, death_note)
 			a:removeAllMOs()
 			a.x, a.y = nil, nil
 			game.zone:addEntity(game.level, a, "actor", x, y)
-			game.logSeen(self, "%s is split in two!", self.name:capitalize())
+			game.logSeen(self, "%s splits in two!", self.name:capitalize())
 			value = value / 2
 		end
 	end
@@ -2021,7 +2021,10 @@ function _M:onTakeHit(value, src, death_note)
 			damage_to_psi = self:getPsi()
 			self:incPsi(-damage_to_psi)
 		end
-		game.logSeen(self, "%s's mind suffers #YELLOW#%d psi#LAST# damage from the attack.", self.name:capitalize(), damage_to_psi*psi_damage_resist)
+		local mindcolor = DamageType:get(DamageType.MIND).text_color or "#aaaaaa#"
+		game:delayedLogMessage(self, nil, "Solipsism hit", mindcolor.."#Source# converts some damage to Psi!")
+		game:delayedLogDamage(src, self, damage_to_psi*psi_damage_resist, ("%s%d %s#LAST#"):format(mindcolor, damage_to_psi*psi_damage_resist, "to psi"), false)
+
 		value = value - damage_to_psi
 	end
 
@@ -2077,7 +2080,7 @@ function _M:onTakeHit(value, src, death_note)
 		local vt = self:getTalentFromId(self.T_LEECH)
 		self:incVim(vt.getVim(self, vt))
 		self:heal(vt.getHeal(self, vt))
-		game.logPlayer(self, "#AQUAMARINE#You leech a part of %s's vim.", src.name:capitalize())
+		if self.player then src:logCombat(src, "#AQUAMARINE#You leech a part of #Target#'s vim.") end
 	end
 
 	-- Invisible on hit
@@ -2121,7 +2124,7 @@ function _M:onTakeHit(value, src, death_note)
 		local leech = math.min(value, self.life) * src.life_leech_value / 100
 		if leech > 0 then
 			src:heal(leech)
-			game.logSeen(src, "#CRIMSON#%s leeches life from its victim!", src.name:capitalize())
+			game:delayedLogMessage(src, self, "life_leech"..self.uid, "#CRIMSON##Source# leeches life from #Target#!")
 		end
 	end
 
@@ -2139,7 +2142,7 @@ function _M:onTakeHit(value, src, death_note)
 		src:incStamina(leech * 0.65)
 		src:incHate(leech * 0.2)
 		src:incPsi(leech * 0.2)
-		game.logSeen(src, "#CRIMSON#%s leeches energies from its victim!", src.name:capitalize())
+		game:delayedLogMessage(src, self, "resource_leech", "#CRIMSON##Source# leeches energies from #Target#!")
 	end
 
 	if self:knowTalent(self.T_DRACONIC_BODY) then
@@ -3257,6 +3260,29 @@ function _M:unlearnItemTalent(o, tid, level)
 	end
 end
 
+function _M:checkPool(tid, pid)
+	if tid == pid then return end
+	if not self:knowTalent(pid) then
+		self:learnTalent(pid, true)
+	else
+		if not self.resource_pool_refs[pid] or not next(self.resource_pool_refs[pid]) then
+			self.resource_pool_refs[pid] = self.resource_pool_refs[pid] or {}
+			self.resource_pool_refs[pid][pid] = 1 -- Make it never unlearnable
+		end
+	end
+	self.resource_pool_refs[pid] = self.resource_pool_refs[pid] or {}
+	self.resource_pool_refs[pid][tid] = (self.resource_pool_refs[pid][tid] or 0) + 1
+	game.log("#CRIMSON#DG MADE THIS BUT CANT TEST, MAKE SURE PREXISTING POOLS ARE NOT REMOVED !!!")
+	game.log("#CRIMSON#DG MADE THIS BUT CANT TEST, MAKE SURE PREXISTING POOLS ARE NOT REMOVED !!!")
+	game.log("#CRIMSON#DG MADE THIS BUT CANT TEST, MAKE SURE PREXISTING POOLS ARE NOT REMOVED !!!")
+	game.log("#CRIMSON#DG MADE THIS BUT CANT TEST, MAKE SURE PREXISTING POOLS ARE NOT REMOVED !!!")
+	game.log("#CRIMSON#DG MADE THIS BUT CANT TEST, MAKE SURE PREXISTING POOLS ARE NOT REMOVED !!!")
+	game.log("#CRIMSON#DG MADE THIS BUT CANT TEST, MAKE SURE PREXISTING POOLS ARE NOT REMOVED !!!")
+	game.log("#CRIMSON#DG MADE THIS BUT CANT TEST, MAKE SURE PREXISTING POOLS ARE NOT REMOVED !!!")
+	game.log("#CRIMSON#DG MADE THIS BUT CANT TEST, MAKE SURE PREXISTING POOLS ARE NOT REMOVED !!!")
+	game.log("#CRIMSON#DG MADE THIS BUT CANT TEST, MAKE SURE PREXISTING POOLS ARE NOT REMOVED !!!")
+end
+
 --- Actor learns a resource pool
 -- @param talent a talent definition table
 function _M:learnPool(t)
@@ -3264,53 +3290,44 @@ function _M:learnPool(t)
 
 --	if tt.mana_regen and self.mana_regen == 0 then self.mana_regen = 0.5 end
 
-	if t.type[1]:find("^spell/") and not self:knowTalent(self.T_MANA_POOL) and (t.mana or t.sustain_mana) then
-		self:learnTalent(self.T_MANA_POOL, true)
-		self.resource_pool_refs[self.T_MANA_POOL] = (self.resource_pool_refs[self.T_MANA_POOL] or 0) + 1
+	if t.type[1]:find("^spell/") and (t.mana or t.sustain_mana) then
+		self:checkPool(t.id, self.T_MANA_POOL)
 	end
-	if t.type[1]:find("^wild%-gift/") and not self:knowTalent(self.T_EQUILIBRIUM_POOL) and (t.equilibrium or t.sustain_equilibrium) then
-		self:learnTalent(self.T_EQUILIBRIUM_POOL, true)
-		self.resource_pool_refs[self.T_EQUILIBRIUM_POOL] = (self.resource_pool_refs[self.T_EQUILIBRIUM_POOL] or 0) + 1
+	if t.type[1]:find("^wild%-gift/") and (t.equilibrium or t.sustain_equilibrium) then
+		self:checkPool(t.id, self.T_EQUILIBRIUM_POOL)
 	end
-	if (t.type[1]:find("^technique/") or t.type[1]:find("^cunning/")) and not self:knowTalent(self.T_STAMINA_POOL) and (t.stamina or t.sustain_stamina) then
-		self:learnTalent(self.T_STAMINA_POOL, true)
-		self.resource_pool_refs[self.T_STAMINA_POOL] = (self.resource_pool_refs[self.T_STAMINA_POOL] or 0) + 1
+	if (t.type[1]:find("^technique/") or t.type[1]:find("^cunning/")) and (t.stamina or t.sustain_stamina) then
+		self:checkPool(t.id, self.T_STAMINA_POOL)
 	end
-	if t.type[1]:find("^corruption/") and not self:knowTalent(self.T_VIM_POOL) and (t.vim or t.sustain_vim) then
-		self:learnTalent(self.T_VIM_POOL, true)
-		self.resource_pool_refs[self.T_VIM_POOL] = (self.resource_pool_refs[self.T_VIM_POOL] or 0) + 1
+	if t.type[1]:find("^corruption/") and (t.vim or t.sustain_vim) then
+		self:checkPool(t.id, self.T_VIM_POOL)
 	end
-	if t.type[1]:find("^celestial/") and (t.positive or t.sustain_positive) and not self:knowTalent(self.T_POSITIVE_POOL) then
-		self:learnTalent(self.T_POSITIVE_POOL, true)
-		self.resource_pool_refs[self.T_POSITIVE_POOL] = (self.resource_pool_refs[self.T_POSITIVE_POOL] or 0) + 1
+	if t.type[1]:find("^celestial/") and (t.positive or t.sustain_positive) then
+		self:checkPool(t.id, self.T_POSITIVE_POOL)
 	end
-	if t.type[1]:find("^celestial/") and (t.negative or t.sustain_negative) and not self:knowTalent(self.T_NEGATIVE_POOL) then
-		self:learnTalent(self.T_NEGATIVE_POOL, true)
-		self.resource_pool_refs[self.T_NEGATIVE_POOL] = (self.resource_pool_refs[self.T_NEGATIVE_POOL] or 0) + 1
+	if t.type[1]:find("^celestial/") and (t.negative or t.sustain_negative) then
+		self:checkPool(t.id, self.T_NEGATIVE_POOL)
 	end
-	if t.type[1]:find("^cursed/") and not self:knowTalent(self.T_HATE_POOL) and t.hate then
-		self:learnTalent(self.T_HATE_POOL, true)
-		self.resource_pool_refs[self.T_HATE_POOL] = (self.resource_pool_refs[self.T_HATE_POOL] or 0) + 1
+	if t.type[1]:find("^cursed/") and t.hate then
+		self:checkPool(t.id, self.T_HATE_POOL)
 	end
-	if t.type[1]:find("^chronomancy/") and not self:knowTalent(self.T_PARADOX_POOL) then
-		self:learnTalent(self.T_PARADOX_POOL, true)
-		self.resource_pool_refs[self.T_PARADOX_POOL] = (self.resource_pool_refs[self.T_PARADOX_POOL] or 0) + 1
+	if t.type[1]:find("^chronomancy/") then
+		self:checkPool(t.id, self.T_PARADOX_POOL)
 	end
-	if t.type[1]:find("^psionic/") and not (t.type[1]:find("^psionic/feedback") or t.type[1]:find("^psionic/discharge")) and not self:knowTalent(self.T_PSI_POOL) then
-		self:learnTalent(self.T_PSI_POOL, true)
-		self.resource_pool_refs[self.T_PSI_POOL] = (self.resource_pool_refs[self.T_PSI_POOL] or 0) + 1
+	if t.type[1]:find("^psionic/") and not (t.type[1]:find("^psionic/feedback") or t.type[1]:find("^psionic/discharge")) then
+		self:checkPool(t.id, self.T_PSI_POOL)
 	end
-	if t.type[1]:find("^psionic/feedback") or t.type[1]:find("^psionic/discharge") and not self:knowTalent(self.T_FEEDBACK_POOL) then
-		self:learnTalent(self.T_FEEDBACK_POOL, true)
+	if t.type[1]:find("^psionic/feedback") or t.type[1]:find("^psionic/discharge") then
+		self:checkPool(t.id, self.T_FEEDBACK_POOL)
 	end
 	-- If we learn an archery talent, also learn to shoot
-	if t.type[1]:find("^technique/archery") and not self:knowTalent(self.T_SHOOT) then
-		self:learnTalent(self.T_SHOOT, true)
-		self.resource_pool_refs[self.T_SHOOT] = (self.resource_pool_refs[self.T_SHOOT] or 0) + 1
+	if t.type[1]:find("^technique/archery") then
+		self:checkPool(t.id, self.T_SHOOT)
+		self:checkPool(t.id, self.T_RELOAD)
 	end
-	if t.type[1]:find("^technique/archery") and not self:knowTalent(self.T_RELOAD) then
-		self:learnTalent(self.T_RELOAD, true)
-		self.resource_pool_refs[self.T_RELOAD] = (self.resource_pool_refs[self.T_RELOAD] or 0) + 1
+	-- If we learn an unharmed talent, learn to use it too
+	if tt.is_unarmed then
+		self:checkPool(t.id, self.T_EMPTY_HAND)
 	end
 
 	self:recomputeRegenResources()
@@ -3323,6 +3340,8 @@ end
 -- @return true if the talent was unlearnt, nil and an error message otherwise
 function _M:unlearnTalent(t_id, nb, no_unsustain, extra)
 	if not engine.interface.ActorTalents.unlearnTalent(self, t_id, nb) then return false end
+
+	nb = nb or 1
 
 	local t = _M.talents_def[t_id]
 
@@ -3343,9 +3362,12 @@ function _M:unlearnTalent(t_id, nb, no_unsustain, extra)
 	end
 
 	-- Check the various pools
-	for key, num_refs in pairs(self.resource_pool_refs) do
-		if num_refs == 0 then
-			self:unlearnTalent(key)
+	for pid, refs in pairs(self.resource_pool_refs) do
+		if refs[t_id] then
+			refs[t_id] = refs[t_id] - nb
+			if refs[t_id] <= 0 then refs[t_id] = nil end
+
+			if not next(refs) then self:unlearnTalent(pid, 1) end
 		end
 	end
 
@@ -3354,7 +3376,7 @@ function _M:unlearnTalent(t_id, nb, no_unsustain, extra)
 
 	self:recomputeRegenResources()
 
-	if t.is_spell then self:attr("has_arcane_knowledge", -(nb or 1)) end
+	if t.is_spell then self:attr("has_arcane_knowledge", -nb) end
 
 	-- If we learn mindslayer things we learn telekinetic grasp & beyond the flesh
 	if t.autolearn_mindslayer then
@@ -3763,6 +3785,10 @@ function _M:preUseTalent(ab, silent, fake)
 	if ab.is_teleport and self:attr("encased_in_ice") then return false end
 
 	end
+
+	-- Special checks -- AI
+	if not self.player and ab.on_pre_use_ai and not (ab.mode == "sustained" and self:isTalentActive(ab.id)) and not ab.on_pre_use_ai(self, ab, silent, fake) then return false end
+
 	if not silent then
 		-- Allow for silent talents
 		if ab.message ~= nil then
@@ -4036,7 +4062,7 @@ function _M:postUseTalent(ab, ret, silent)
 			local t = rng.tableRemove(tids)
 			if not t then break end
 			self.talents_cd[t.id] = self:attr("random_talent_cooldown_on_use_turns")
-			game.log("%s talent '%s%s' is disrupted by the mind parasite.", self.name:capitalize(), (t.display_entity and t.display_entity:getDisplayString() or ""), t.name)
+			game.logSeen(self, "%s talent '%s%s' is disrupted by the mind parasite.", self.name:capitalize(), (t.display_entity and t.display_entity:getDisplayString() or ""), t.name)
 		end
 	end
 
@@ -4154,17 +4180,17 @@ function _M:getTalentFullDescription(t, addlevel, config, fake_mastery)
 		d:add(true)
 	end
 	if not config.ignore_ressources then
-		if t.mana then d:add({"color",0x6f,0xff,0x83}, "Mana cost: ", {"color",0x7f,0xff,0xd4}, ""..(util.getval(t.mana, self, t) * (100 + 2 * self:combatFatigue()) / 100), true) end
-		if t.stamina then d:add({"color",0x6f,0xff,0x83}, "Stamina cost: ", {"color",0xff,0xcc,0x80}, ""..(util.getval(t.stamina, self, t) * (100 + self:combatFatigue()) / 100), true) end
-		if t.equilibrium then d:add({"color",0x6f,0xff,0x83}, "Equilibrium cost: ", {"color",0x00,0xff,0x74}, ""..(util.getval(t.equilibrium, self, t)), true) end
-		if t.vim then d:add({"color",0x6f,0xff,0x83}, "Vim cost: ", {"color",0x88,0x88,0x88}, ""..(util.getval(t.vim, self, t)), true) end
-		if t.positive then d:add({"color",0x6f,0xff,0x83}, "Positive energy cost: ", {"color",255, 215, 0}, ""..(util.getval(t.positive, self, t) * (100 + self:combatFatigue()) / 100), true) end
-		if t.negative then d:add({"color",0x6f,0xff,0x83}, "Negative energy cost: ", {"color", 127, 127, 127}, ""..(util.getval(t.negative, self, t) * (100 + self:combatFatigue()) / 100), true) end
-		if t.hate then d:add({"color",0x6f,0xff,0x83}, "Hate cost:  ", {"color", 127, 127, 127}, ""..(util.getval(t.hate, self, t) * (100 + 2 * self:combatFatigue()) / 100), true) end
-		if t.paradox then d:add({"color",0x6f,0xff,0x83}, "Paradox cost: ", {"color",  176, 196, 222}, ("%0.2f"):format(util.getval(t.paradox, self, t) * (1 + (self.paradox / 300))), true) end
-		if t.psi then d:add({"color",0x6f,0xff,0x83}, "Psi cost: ", {"color",0x7f,0xff,0xd4}, ""..(util.getval(t.psi, self, t) * (100 + 2 * self:combatFatigue()) / 100), true) end
-		if t.feedback then d:add({"color",0x6f,0xff,0x83}, "Feedback cost: ", {"color",0xFF, 0xFF, 0x00}, ""..(util.getval(t.feedback, self, t) * (100 + 2 * self:combatFatigue()) / 100), true) end
-		if t.fortress_energy then d:add({"color",0x6f,0xff,0x83}, "Fortress Energy cost: ", {"color",0x00,0xff,0xa0}, ""..(t.fortress_energy), true) end
+		if t.mana then d:add({"color",0x6f,0xff,0x83}, "Mana cost: ", {"color",0x7f,0xff,0xd4}, ""..math.round(util.getval(t.mana, self, t) * (100 + 2 * self:combatFatigue()) / 100, 0.1), true) end
+		if t.stamina then d:add({"color",0x6f,0xff,0x83}, "Stamina cost: ", {"color",0xff,0xcc,0x80}, ""..math.round(util.getval(t.stamina, self, t) * (100 + self:combatFatigue()) / 100, 0.1), true) end
+		if t.equilibrium then d:add({"color",0x6f,0xff,0x83}, "Equilibrium cost: ", {"color",0x00,0xff,0x74}, ""..math.round(util.getval(t.equilibrium, self, t), 0.1), true) end
+		if t.vim then d:add({"color",0x6f,0xff,0x83}, "Vim cost: ", {"color",0x88,0x88,0x88}, ""..math.round(util.getval(t.vim, self, t), 0.1), true) end
+		if t.positive then d:add({"color",0x6f,0xff,0x83}, "Positive energy cost: ", {"color",255, 215, 0}, ""..math.round(util.getval(t.positive, self, t) * (100 + self:combatFatigue()) / 100, 0.1), true) end
+		if t.negative then d:add({"color",0x6f,0xff,0x83}, "Negative energy cost: ", {"color", 127, 127, 127}, ""..math.round(util.getval(t.negative, self, t) * (100 + self:combatFatigue()) / 100, 0.1), true) end
+		if t.hate then d:add({"color",0x6f,0xff,0x83}, "Hate cost:  ", {"color", 127, 127, 127}, ""..math.round(util.getval(t.hate, self, t) * (100 + 2 * self:combatFatigue()) / 100, 0.1), true) end
+		if t.paradox then d:add({"color",0x6f,0xff,0x83}, "Paradox cost: ", {"color",  176, 196, 222}, ("%0.1f"):format(util.getval(t.paradox, self, t) * (1 + (self.paradox / 300))), true) end
+		if t.psi then d:add({"color",0x6f,0xff,0x83}, "Psi cost: ", {"color",0x7f,0xff,0xd4}, ""..math.round(util.getval(t.psi, self, t) * (100 + 2 * self:combatFatigue()) / 100, 0.1), true) end
+		if t.feedback then d:add({"color",0x6f,0xff,0x83}, "Feedback cost: ", {"color",0xFF, 0xFF, 0x00}, ""..math.round(util.getval(t.feedback, self, t) * (100 + 2 * self:combatFatigue()) / 100, 0.1), true) end
+		if t.fortress_energy then d:add({"color",0x6f,0xff,0x83}, "Fortress Energy cost: ", {"color",0x00,0xff,0xa0}, ""..math.round(t.fortress_energy, 0.1), true) end
 
 		if t.sustain_mana then d:add({"color",0x6f,0xff,0x83}, "Sustain mana cost: ", {"color",0x7f,0xff,0xd4}, ""..(util.getval(t.sustain_mana, self, t)), true) end
 		if t.sustain_stamina then d:add({"color",0x6f,0xff,0x83}, "Sustain stamina cost: ", {"color",0xff,0xcc,0x80}, ""..(util.getval(t.sustain_stamina, self, t)), true) end
@@ -4173,14 +4199,14 @@ function _M:getTalentFullDescription(t, addlevel, config, fake_mastery)
 		if t.sustain_positive then d:add({"color",0x6f,0xff,0x83}, "Sustain positive energy cost: ", {"color",255, 215, 0}, ""..(util.getval(t.sustain_positive, self, t)), true) end
 		if t.sustain_negative then d:add({"color",0x6f,0xff,0x83}, "Sustain negative energy cost: ", {"color", 127, 127, 127}, ""..(util.getval(t.sustain_negative, self, t)), true) end
 		if t.sustain_hate then d:add({"color",0x6f,0xff,0x83}, "Sustain hate cost:  ", {"color", 127, 127, 127}, ""..(util.getval(t.sustain_hate, self, t)), true) end
-		if t.sustain_paradox then d:add({"color",0x6f,0xff,0x83}, "Sustain paradox cost: ", {"color",  176, 196, 222}, ("%0.2f"):format(util.getval(t.sustain_paradox, self, t)), true) end
+		if t.sustain_paradox then d:add({"color",0x6f,0xff,0x83}, "Sustain paradox cost: ", {"color",  176, 196, 222}, ("%0.1f"):format(util.getval(t.sustain_paradox, self, t)), true) end
 		if t.sustain_psi then d:add({"color",0x6f,0xff,0x83}, "Sustain psi cost: ", {"color",0x7f,0xff,0xd4}, ""..(util.getval(t.sustain_psi, self, t)), true) end
 		if t.sustain_feedback then d:add({"color",0x6f,0xff,0x83}, "Sustain feedback cost: ", {"color",0xFF, 0xFF, 0x00}, ""..(util.getval(t.sustain_feedback, self, t)), true) end
 
 		self:triggerHook{"Actor:getTalentFullDescription:ressources", str=d, t=t, addlevel=addlevel, config=config, fake_mastery=fake_mastery}
 	end
 	if t.mode ~= "passive" then
-		if self:getTalentRange(t) > 1 then d:add({"color",0x6f,0xff,0x83}, "Range: ", {"color",0xFF,0xFF,0xFF}, ("%0.2f"):format(self:getTalentRange(t)), true)
+		if self:getTalentRange(t) > 1 then d:add({"color",0x6f,0xff,0x83}, "Range: ", {"color",0xFF,0xFF,0xFF}, ("%0.1f"):format(self:getTalentRange(t)), true)
 		else d:add({"color",0x6f,0xff,0x83}, "Range: ", {"color",0xFF,0xFF,0xFF}, "melee/personal", true)
 		end
 		if not config.ignore_ressources then
@@ -4385,7 +4411,7 @@ function _M:suffocate(value, src, death_message)
 	return false, true
 end
 
---- Can the actor see the target actor
+-- Can the actor see the target actor (or other entity)
 -- This does not check LOS or such, only the actual ability to see it.<br/>
 -- Check for telepathy, invisibility, stealth, ...
 function _M:canSeeNoCache(actor, def, def_pct)
@@ -4415,7 +4441,7 @@ function _M:canSeeNoCache(actor, def, def_pct)
 	end
 
 	-- Check for stealth. Checks against the target cunning and level
-	if actor:attr("stealth") and actor ~= self then
+	if actor ~= self and actor.attr and actor:attr("stealth") then
 		local def = self:combatSeeStealth()
 		local hit, chance = self:checkHitOld(def, actor:attr("stealth") + (actor:attr("inc_stealth") or 0), 0, 100)
 		if not hit then
@@ -4424,7 +4450,7 @@ function _M:canSeeNoCache(actor, def, def_pct)
 	end
 
 	-- Check for invisibility. This is a "simple" checkHit between invisible and see_invisible attrs
-	if actor:attr("invisible") and actor ~= self then
+	if actor ~= self and actor.attr and actor:attr("invisible") then
 		-- Special case, 0 see invisible, can NEVER see invisible things
 		local def = self:combatSeeInvisible()
 		if def <= 0 then return false, 0 end
@@ -4569,6 +4595,8 @@ local save_for_effects = {
 
 --- Adjust temporary effects
 function _M:on_set_temporary_effect(eff_id, e, p)
+	p.getName = self.tempeffect_def[eff_id].getName
+	p.resolveSource = self.tempeffect_def[eff_id].resolveSource
 	if p.apply_power and (save_for_effects[e.type] or p.apply_save) then
 		local save = 0
 		p.maximum = p.dur
@@ -4669,7 +4697,7 @@ function _M:on_project_acquire(tx, ty, who, t, x, y, damtype, dam, particles, is
 		else
 			dir = "to the "..dir.."!"
 		end
-		game.logSeen(self, "%s deflects the projectile from %s %s", self.name:capitalize(), who.name, dir)
+		self:logCombat(who, "#Source# deflects the projectile from #Target# %s", dir)
 		return true
 	end
 end

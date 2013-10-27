@@ -22,6 +22,7 @@ return {
 	vert = nil,
 	args = {
 		time_factor = time_factor or 6000,
+		ellipsoidalFactor = ellipsoidalFactor or {1, 1},
 	},
 	clone = false,
 }

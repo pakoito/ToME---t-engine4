@@ -27,6 +27,7 @@ require "engine.interface.ObjectIdentify"
 local Stats = require("engine.interface.ActorStats")
 local Talents = require("engine.interface.ActorTalents")
 local DamageType = require("engine.DamageType")
+local Combat = require("mod.class.interface.Combat")
 
 module(..., package.seeall, class.inherit(
 	engine.Object,
@@ -36,6 +37,8 @@ module(..., package.seeall, class.inherit(
 ))
 
 _M.projectile_class = "mod.class.Projectile"
+
+_M.logCombat = Combat.logCombat
 
 function _M:init(t, no_default)
 	t.encumber = t.encumber or 0
@@ -237,6 +240,16 @@ function _M:getDisplayColor()
 	end
 end
 
+function _M:resolveSource()
+	if self.summoner_gain_exp and self.summoner then
+		return self.summoner:resolveSource()
+	elseif self.summoner_gain_exp and self.src then
+		return self.src:resolveSource()
+	else
+		return self
+	end
+end
+
 --- Gets the full name of the object
 function _M:getName(t)
 	t = t or {}
@@ -254,6 +267,10 @@ function _M:getName(t)
 		name = name .. self.add_name:gsub("#([^#]+)#", function(attr)
 			return self:descAttribute(attr)
 		end)
+	end
+
+	if not t.no_add_name and self.__tagged then
+		name = name .. " #ORANGE#="..self.__tagged.."=#LAST#"
 	end
 
 	if not t.do_color then
@@ -295,6 +312,28 @@ function _M:getShortName(t)
 		if qty == 1 or t.no_count then return c..ds..name.."#LAST#"
 		else return c..qty.." "..ds..name.."#LAST#"
 		end
+	end
+end
+
+function _M:descAccuracyBonus(desc, weapon)
+	local _, kind = game.player:isAccuracyEffect(weapon)
+	if not kind then return end
+
+	local showpct = function(v, mult)
+		return ("+%0.1f%%"):format(v * mult)
+	end
+
+	local m = weapon.accuracy_effect_scale or 1
+	if kind == "sword" then
+		desc:add("Accuracy bonus: ", {"color","LIGHT_GREEN"}, showpct(0.4, m), {"color","LAST"}, " crit.pwr / acc", true)
+	elseif kind == "axe" then
+		desc:add("Accuracy bonus: ", {"color","LIGHT_GREEN"}, showpct(0.2, m), {"color","LAST"}, " crit / acc", true)
+	elseif kind == "mace" then
+		desc:add("Accuracy bonus: ", {"color","LIGHT_GREEN"}, showpct(0.1, m), {"color","LAST"}, " dam / acc", true)
+	elseif kind == "staff" then
+		desc:add("Accuracy bonus: ", {"color","LIGHT_GREEN"}, showpct(4, m), {"color","LAST"}, " procs dam / acc", true)
+	elseif kind == "knife" then
+		desc:add("Accuracy bonus: ", {"color","LIGHT_GREEN"}, showpct(0.5, m), {"color","LAST"}, " APR / acc", true)
 	end
 end
 
@@ -478,6 +517,8 @@ function _M:getTextualDesc(compare_with)
 			local t = game.player:combatGetTraining(combat)
 			if t and t.name then desc:add("Mastery: ", {"color","GOLD"}, t.name, {"color","LAST"}, true) end
 		end
+
+		self:descAccuracyBonus(desc, combat)
 
 		if combat.wil_attack then
 			desc:add("Accuracy is based on willpower for this weapon.", true)

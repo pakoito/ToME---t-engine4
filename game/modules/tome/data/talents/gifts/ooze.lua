@@ -117,7 +117,7 @@ newTalent{
 	getDam = function(self, t) return self:combatTalentMindDamage(t, 15, 200) end,
 	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 4, 8)) end,
 	on_pre_use = function(self, t)
-		if not game.level then return false end
+		if not game.level or not self.x or not self.y then return false end
 		for _, coor in pairs(util.adjacentCoords(self.x, self.y)) do
 			local act = game.level.map(coor[1], coor[2], Map.ACTOR)
 			if act and act.summoner == self and act.bloated_ooze then

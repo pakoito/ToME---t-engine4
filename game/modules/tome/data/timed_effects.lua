@@ -33,6 +33,24 @@ local Chat = require "engine.Chat"
 local Map = require "engine.Map"
 local Level = require "engine.Level"
 
+local resolveSource = function(self)
+	if self.src then
+		return self.src:resolveSource()
+	else
+		return self
+	end
+end
+
+--gets the full name of the effect
+local getName = function(self)
+	local name = self.effect_id and mod.class.Actor.tempeffect_def[self.effect_id].desc or "effect"
+	if self.src and self.src.name then
+		return name .." from "..self.src.name:capitalize()
+	else
+		return name
+	end
+end
+
 local oldNewEffect = TemporaryEffects.newEffect
 TemporaryEffects.newEffect = function(self, t)
 	if not t.image then
@@ -41,7 +59,8 @@ TemporaryEffects.newEffect = function(self, t)
 	if fs.exists("/data/gfx/"..t.image) then t.display_entity = Entity.new{image=t.image, is_effect=true}
 	else t.display_entity = Entity.new{image="effects/default.png", is_effect=true} print("===", t.type, t.name)
 	end
-
+	t.getName = getName
+	t.resolveSource = resolveSource
 	return oldNewEffect(self, t)
 end
 

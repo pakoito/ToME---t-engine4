@@ -60,7 +60,7 @@ float col(vec2 coord)
 
 void main(void)
 {
-	vec2 p = (vec2(gl_FragCoord.x, texSize.y - gl_FragCoord.y) + mapCoord) / texSize.xy, c1 = p, c2 = p;
+	vec2 p = (vec2(gl_FragCoord.x - mapCoord.x, texSize.y - gl_FragCoord.y - mapCoord.y)) / texSize.xy, c1 = p, c2 = p;
 	float cc1 = col(c1);
 
 	c2.x += texSize.x/delta;

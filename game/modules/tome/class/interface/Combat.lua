@@ -112,7 +112,7 @@ function _M:attackTarget(target, damtype, mult, noenergy, force_unharmed)
 	if self:isTalentActive(self.T_STEALTH) and target:canSee(self) then
 		self:useTalent(self.T_STEALTH)
 		self.changed = true
-		game.logPlayer(self, "%s notices you at the last moment!", target.name:capitalize())
+		if self.player then self:logCombat(target, "#Target# notices you at the last moment!") end
 	end
 
 	if target:isTalentActive(target.T_INTUITIVE_SHOTS) and rng.percent(target:callTalent(target.T_INTUITIVE_SHOTS, "getChance")) then
@@ -324,6 +324,17 @@ function _M:checkEvasion(target)
 	return rng.percent(evasion)
 end
 
+function _M:getAccuracyEffect(weapon, atk, def, scale, max)
+	max = max or 10000000
+	scale = scale or 1
+	return math.min(max, math.max(0, atk - def) * scale * (weapon.accuracy_effect_scale or 1))
+end
+
+function _M:isAccuracyEffect(weapon, kind)
+	local eff = weapon.accuracy_effect or weapon.talented
+	return eff == kind, eff
+end
+
 --- Attacks with one weapon
 function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	damtype = damtype or (weapon and weapon.damtype) or DamageType.PHYSICAL
@@ -377,26 +388,33 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	local crit = false
 	local evaded = false
 	if repelled then
-		game.logSeen(target, "%s repels an attack from %s.", target.name:capitalize(), self.name)
+		self:logCombat(target, "#Target# repels an attack from #Source#.")
 	elseif self:checkEvasion(target) then
 		evaded = true
-		game.logSeen(target, "%s evades %s.", target.name:capitalize(), self.name)
+		self:logCombat(target, "#Target# evades #Source#.")
 	elseif self:checkHit(atk, def) and (self:canSee(target) or self:attr("blind_fight") or rng.chance(3)) then
 		local pres = util.bound(target:combatArmorHardiness() / 100, 0, 1)
 		if target.knowTalent and target:hasEffect(target.EFF_DUAL_WEAPON_DEFENSE) then
-			local deflect = math.max(dam, target:callTalent(target.T_DUAL_WEAPON_DEFENSE, "doDeflect"))
+			local deflect = math.min(dam, target:callTalent(target.T_DUAL_WEAPON_DEFENSE, "doDeflect"))
 			if deflect > 0 then
-				game.logSeen(target, "%s parries %d damage from %s's attack.", target.name:capitalize(), deflect, self.name:capitalize())
+				self:logCombat(target, "#Target# parries %d damage from #Source#'s attack.", deflect)
 				dam = math.max(dam - deflect,0)
 				print("[ATTACK] after DUAL_WEAPON_DEFENSE", dam)
 			end 
 		end
-		if target.knowTalent and target:hasEffect(target.EFF_GESTURE_OF_GUARDING) then
-			local deflected = math.min(dam, target:callTalent(target.T_GESTURE_OF_GUARDING, "doGuard"))
-			game.logSeen(target, "%s dismisses %d damage from %s's attack with a sweeping gesture.", target.name:capitalize(), deflected, self.name:capitalize())
+		if target.knowTalent and target:hasEffect(target.EFF_GESTURE_OF_GUARDING) and not target:attr("encased_in_ice") then
+			local deflected = math.min(dam, target:callTalent(target.T_GESTURE_OF_GUARDING, "doGuard")) or 0
+			if deflected > 0 then self:logCombat(target, "#Target# dismisses %d damage from #Source#'s attack with a sweeping gesture.", deflected) end
 			dam = dam - deflected
 			print("[ATTACK] after GESTURE_OF_GUARDING", dam)
 		end
+
+		if self:isAccuracyEffect(weapon, "knife") then
+			local bonus = 1 + self:getAccuracyEffect(weapon, atk, def, 0.005, 0.25)
+			print("[ATTACJ] dagger accuracy bonus", atk, def, "=", bonus, "previous", apr)
+			apr = apr * bonus
+		end
+
 		print("[ATTACK] raw dam", dam, "versus", armor, pres, "with APR", apr)
 		armor = math.max(0, armor - apr)
 		dam = math.max(dam * pres - armor, 0) + (dam * (1 - pres))
@@ -408,6 +426,12 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		print("[ATTACK] after crit", dam)
 		dam = dam * mult
 		print("[ATTACK] after mult", dam)
+
+		if self:isAccuracyEffect(weapon, "mace") then
+			local bonus = 1 + self:getAccuracyEffect(weapon, atk, def, 0.001, 0.1)
+			print("[ATTACK] mace accuracy bonus", atk, def, "=", bonus)
+			dam = dam * bonus
+		end
 
 		if target:hasEffect(target.EFF_COUNTERSTRIKE) then
 			dam = dam * 2
@@ -424,7 +448,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 			print("[ATTACK] after inc by type", dam)
 		end
 
-		if crit then game.logSeen(self, "#{bold}#%s performs a critical strike!#{normal}#", self.name:capitalize()) end
+		if crit then self:logCombat(target, "#{bold}##Source# performs a melee critical strike against #Target#!#{normal}#") end
 
 		-- Phasing, percent of weapon damage bypasses shields
 		-- It's done like this because onTakeHit has no knowledge of the weapon
@@ -474,9 +498,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 
 		hitted = true
 	else
-		local srcname = game.level.map.seens(self.x, self.y) and self.name:capitalize() or "Something"
-		game.logSeen(target, "%s misses %s.", srcname, target.name)
-
+		self:logCombat(target, "#Source# misses #Target#.")
 		target:fireTalentCheck("callbackOnMeleeMiss", self)
 	end
 
@@ -495,6 +517,13 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		target:setEffect(target.EFF_OFFGUARD, tier_diff, {}, reapplied)
 	end
 ]]
+
+	if self:isAccuracyEffect(weapon, "staff") then
+		local bonus = 1 + self:getAccuracyEffect(weapon, atk, def, 0.04, 2)
+		print("[ATTACK] staff accuracy bonus", atk, def, "=", bonus)
+		self.__global_accuracy_damage_bonus = bonus
+	end
+
 	-- handle stalk targeting for hits (also handled in Actor for turn end effects)
 	if hitted and target ~= self then
 		if effStalker then
@@ -888,6 +917,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	if hitted then game.level.map:particleEmitter(target.x, target.y, 1, "melee_attack", {color=target.blood_color}) end
 
 	self.turn_procs.weapon_type = nil
+	self.__global_accuracy_damage_bonus = nil
 
 	return self:combatSpeed(weapon), hitted
 end
@@ -961,26 +991,28 @@ end
 --- Fake denotes a check not actually being made, used by character sheets etc.
 function _M:combatDefenseBase(fake)
 	local add = 0
-	if self:hasDualWeapon() and self:knowTalent(self.T_DUAL_WEAPON_DEFENSE) then
-		add = add + self:callTalent(self.T_DUAL_WEAPON_DEFENSE,"getDefense")
-	end
-	if not fake then
-		add = add + (self:checkOnDefenseCall("defense") or 0)
-	end
-	if self:knowTalent(self.T_TACTICAL_EXPERT) then
-		local t = self:getTalentFromId(self.T_TACTICAL_EXPERT)
-		add = add + t.do_tact_update(self, t)
-	end
-	if self:knowTalent(self.T_CORRUPTED_SHELL) then
-		add = add + self:getCon() / 3
-	end
-	if self:knowTalent(self.T_STEADY_MIND) then
-		local t = self:getTalentFromId(self.T_STEADY_MIND)
-		add = add + t.getDefense(self, t)
-	end
-	if self:isTalentActive(Talents.T_SURGE) then
-		local t = self:getTalentFromId(self.T_SURGE)
-		add = add + t.getDefenseChange(self, t)
+	if not self:attr("encased_in_ice") then
+		if self:hasDualWeapon() and self:knowTalent(self.T_DUAL_WEAPON_DEFENSE) then
+			add = add + self:callTalent(self.T_DUAL_WEAPON_DEFENSE,"getDefense")
+		end
+		if not fake then
+			add = add + (self:checkOnDefenseCall("defense") or 0)
+		end
+		if self:knowTalent(self.T_TACTICAL_EXPERT) then
+			local t = self:getTalentFromId(self.T_TACTICAL_EXPERT)
+			add = add + t.do_tact_update(self, t)
+		end
+		if self:knowTalent(self.T_CORRUPTED_SHELL) then
+			add = add + self:getCon() / 3
+		end
+		if self:knowTalent(self.T_STEADY_MIND) then
+			local t = self:getTalentFromId(self.T_STEADY_MIND)
+			add = add + t.getDefense(self, t)
+		end
+		if self:isTalentActive(Talents.T_SURGE) then
+			local t = self:getTalentFromId(self.T_SURGE)
+			add = add + t.getDefenseChange(self, t)
+		end
 	end
 	local d = math.max(0, self.combat_def + (self:getDex() - 10) * 0.35 + (self:getLck() - 50) * 0.4)
 	local mult = 1
@@ -1547,6 +1579,12 @@ function _M:physicalCrit(dam, weapon, target, atk, def, add_chance, crit_power_a
 		crit_power_add = crit_power_add + self:callTalent(self.T_SHADOWSTRIKE,"getMultiplier")
 	end
 
+	if self:isAccuracyEffect(weapon, "axe") then
+		local bonus = self:getAccuracyEffect(weapon, atk, def, 0.2, 10)
+		print("[PHYS CRIT %] axe accuracy bonus", atk, def, "=", bonus)
+		chance = chance + bonus
+	end
+
 	chance = util.bound(chance, 0, 100)
 
 	print("[PHYS CRIT %]", chance)
@@ -1554,6 +1592,13 @@ function _M:physicalCrit(dam, weapon, target, atk, def, add_chance, crit_power_a
 		if target:hasEffect(target.EFF_OFFGUARD) then
 			crit_power_add = crit_power_add + 0.1
 		end
+
+		if self:isAccuracyEffect(weapon, "sword") then
+			local bonus = self:getAccuracyEffect(weapon, atk, def, 0.004, 0.25)
+			print("[PHYS CRIT %] sword accuracy bonus", atk, def, "=", bonus)
+			crit_power_add = crit_power_add + bonus
+		end
+
 		self.turn_procs.is_crit = "physical"
 		self.turn_procs.crit_power = (1.5 + crit_power_add + (self.combat_critical_power or 0) / 100)
 		dam = dam * (1.5 + crit_power_add + (self.combat_critical_power or 0) / 100)
@@ -2142,7 +2187,7 @@ end
 function _M:grappleSizeCheck(target)
 	size = target.size_category - self.size_category
 	if size > 1 then
-		game.logSeen(target, "%s fails because %s is too big!", self.name:capitalize(), target.name:capitalize())
+		self:logCombat(target, "#Source#'s grapple fails because #Target# is too big!")
 		return true
 	else
 		return false
@@ -2179,3 +2224,11 @@ function _M:startGrapple(target)
 	end
 end
 
+-- Display Combat log messages, highlighting the player and taking LOS and visibility into account
+-- #source#|#Source# -> <displayString> self.name|self.name:capitalize()
+-- #target#|#Target# -> target.name|target.name:capitalize()
+function _M:logCombat(target, style, ...)
+	if not game.uiset or not game.uiset.logdisplay then return end
+	local visible, srcSeen, tgtSeen = game:logVisible(self, target)  -- should a message be displayed?
+	if visible then game.uiset.logdisplay(game:logMessage(self, srcSeen, target, tgtSeen, style, ...)) end 
+end

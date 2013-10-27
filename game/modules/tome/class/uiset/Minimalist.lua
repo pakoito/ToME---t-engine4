@@ -144,6 +144,7 @@ local portrait_unsel = {core.display.loadImage("/data/gfx/ui/party-portrait-unse
 local portrait_lev = {core.display.loadImage("/data/gfx/ui/party-portrait-lev.png"):glTexture()}
 local portrait_unsel_lev = {core.display.loadImage("/data/gfx/ui/party-portrait-unselect-lev.png"):glTexture()}
 
+local pf_bg_x, pf_bg_y = 0, 0
 local pf_bg = {core.display.loadImage("/data/gfx/ui/playerframe/back.png"):glTexture()}
 local pf_shadow = {core.display.loadImage("/data/gfx/ui/playerframe/shadow.png"):glTexture()}
 local pf_defend = {core.display.loadImage("/data/gfx/ui/playerframe/defend.png"):glTexture()}
@@ -176,6 +177,16 @@ local hk6 = {core.display.loadImage("/data/gfx/ui/hotkeys/hotkey_6.png"):glTextu
 local hk7 = {core.display.loadImage("/data/gfx/ui/hotkeys/hotkey_7.png"):glTexture()}
 local hk8 = {core.display.loadImage("/data/gfx/ui/hotkeys/hotkey_8.png"):glTexture()}
 local hk9 = {core.display.loadImage("/data/gfx/ui/hotkeys/hotkey_9.png"):glTexture()}
+
+_M:triggerHook{"UISet:Minimalist:Load", alterlocal=function(k, v)
+	local i = 1
+	while true do
+		local kk, _ = debug.getlocal(4, i)
+		if not kk then break end
+		if kk == k then debug.setlocal(4, i, v) break end
+		i = i + 1
+	end
+end }
 
 function _M:init()
 	UISet.init(self)
@@ -383,7 +394,7 @@ function _M:activate()
 		game.uiset.logdisplay(...) else game.uiset.logdisplay(style, ...) end
 		if game.uiset.show_userchat then game.uiset.logdisplay.changed = old end
 	end
-	game.logSeen = function(e, style, ...) if e and e.x and e.y and game.level and game.level.map.seens(e.x, e.y) then game.log(style, ...) end end
+--	game.logSeen = function(e, style, ...) if e and e.player or (not e.dead and e.x and e.y and game.level and game.level.map.seens(e.x, e.y) and game.player:canSee(e)) then game.log(style, ...) end end
 	game.logPlayer = function(e, style, ...) if e == game.player or e == game.party then game.log(style, ...) end end
 
 	self:boundPlaces()
@@ -1546,7 +1557,7 @@ function _M:displayPlayer(scale, bx, by)
 	if not game.player then return end
 
 	pf_shadow[1]:toScreenFull(0, 0, pf_shadow[6], pf_shadow[7], pf_shadow[2], pf_shadow[3])
-	pf_bg[1]:toScreenFull(0, 0, pf_bg[6], pf_bg[7], pf_bg[2], pf_bg[3])
+	pf_bg[1]:toScreenFull(pf_bg_x, pf_bg_y, pf_bg[6], pf_bg[7], pf_bg[2], pf_bg[3])
 	player:toScreen(nil, 22, 22, 40, 40)
 
 	if (not config.settings.tome.actor_based_movement_mode and self or player).bump_attack_disabled then

@@ -24,6 +24,16 @@ function math.decimals(v, nb)
 	return math.floor(v * nb) / nb
 end
 
+-- Rounds to nearest multiple
+-- (round away from zero): math.round(4.65, 0.1)=4.7, math.round(-4.475, 0.01) = -4.48
+-- num = rouding multiplier to compensate for numerical rounding (default 1000000 for 6 digits accuracy)
+function math.round(v, mult, num)
+	mult = mult or 1
+	num = num or 1000000
+	v, mult = v*num, mult*num
+	return v >= 0 and math.floor((v + mult/2)/mult) * mult/num or math.ceil((v - mult/2)/mult) * mult/num
+end
+
 function lpeg.anywhere (p)
 	return lpeg.P{ p + 1 * lpeg.V(1) }
 end

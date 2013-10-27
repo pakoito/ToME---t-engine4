@@ -795,13 +795,15 @@ newEntity{
 	greater_ego = 1,
 	rarity = 30,
 	cost = 30,
-	wielder = {
-		resists_pen = {
-			[DamageType.MIND] = resolvers.mbonus_material(10, 5),
-			[DamageType.DARKNESS] = resolvers.mbonus_material(10, 5),
-		},
-	},
 	combat = {
+		ranged_project={
+			[DamageType.MIND] = resolvers.mbonus_material(15, 5),
+			[DamageType.DARKNESS] = resolvers.mbonus_material(15, 5),
+		},
+		convert_damage ={
+			[DamageType.MIND] = resolvers.mbonus_material(20, 10),
+			[DamageType.DARKNESS] = resolvers.mbonus_material(15, 10),
+		},
 		special_on_hit = {desc="20% chance to torment the target", fct=function(combat, who, target)
 			if not rng.percent(20) then return end
 			local eff = rng.table{"stun", "blind", "pin", "confusion", "silence",}

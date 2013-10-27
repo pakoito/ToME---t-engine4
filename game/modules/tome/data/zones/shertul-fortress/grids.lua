@@ -231,7 +231,7 @@ local dcb = function(self)
 				for damtype, value in pairs(data.damtypes) do if damtype ~= "changed" then
 					local dt = DamageType:get(damtype)
 					if dt then
-						text[#text+1] = ("%s%s#WHITE#: %d (%d%%)"):format(dt.text_color, dt.name, value, value / data.total * 100)
+						text[#text+1] = ("%s%s#WHITE#: %d (%d%%)"):format(dt.text_color or "#WHITE#", dt.name, value, value / data.total * 100)
 					end
 				end end
 				text = table.concat(text, "\n")
@@ -252,7 +252,7 @@ local dcb = function(self)
 				shader:paramNumber2("textSize", item._tex_w, item._tex_h)
 				shader:use(true)
 			else
-				item._tex:toScreenFull(x+2, y+2, item.w, item.h, item._tex_w, item._tex_h)
+				item._tex:toScreenFull(x+2, y+2, item.w, item.h, item._tex_w, item._tex_h, 0, 0, 0, 0.7)
 			end
 			item._tex:toScreenFull(x, y, item.w, item.h, item._tex_w, item._tex_h)
 			if shader then shader:use(false) end

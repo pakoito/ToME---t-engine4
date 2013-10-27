@@ -30,10 +30,6 @@ return {
 		oscillationSpeed = 20.0,
 		antialiasingRadius = 0.6,
 		shieldIntensity = 0.15,
-		leftColor1 = {11.0  / 255.0, 8.0 / 255.0, 10.0 / 255},
-		leftColor2 = {171.0 / 255.0, 4.0 / 255.0, 10.0 / 255},
-		rightColor1 = {171.0 / 255.0, 4.0 / 255.0, 10.0 / 255},
-		rightColor2 = {11.0  / 255.0, 8.0 / 255.0, 10.0 / 255},
 	},
 	clone = false,
 }

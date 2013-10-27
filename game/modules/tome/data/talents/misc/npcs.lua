@@ -385,9 +385,11 @@ newTalent{
 				m.summon_time = filter.lastfor
 				m.faction = self.faction
 
+				if not filter.hasloot then m:forgetInven(m.INVEN_INVEN) end
+
 				game.zone:addEntity(game.level, m, "actor", x, y)
 
-				game.logSeen(self, "%s summons %s!", self.name:capitalize(), m.name)
+				self:logCombat(m, "#Source# summons #Target#!")
 
 				-- Apply summon destabilization
 				if self:hasEffect(self.EFF_SUMMON_DESTABILIZATION) then
@@ -884,7 +886,7 @@ newTalent{
 	tactical = { DISABLE = { stun = 1, pin = 1 } },
 	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 3, 7)) end,
 	action = function(self, t)
-		local dur = 2 + self:getTalentLevel(t)
+		local dur = t.getDuration(self,t)
 		local trap = mod.class.Trap.new{
 			type = "web", subtype="web", id_by_type=true, unided_name = "sticky web",
 			display = '^', color=colors.YELLOW, image = "trap/trap_spiderweb_01_64.png",
@@ -896,9 +898,21 @@ newTalent{
 			temporary = dur * 5,
 			summoner = self,
 			faction = false,
+			canAct = false,
+			energy = {value=0},
 			canTrigger = function(self, x, y, who)
 				if who.type == "spiderkin" then return false end
 				return mod.class.Trap.canTrigger(self, x, y, who)
+			end,
+			act = function(self)
+				self:useEnergy()
+				self.temporary = self.temporary - 1
+				if self.temporary <= 0 then
+					if game.level.map(self.x, self.y, engine.Map.TRAP) == self then
+						game.level.map:remove(self.x, self.y, engine.Map.TRAP)
+					end
+					game.level:removeEntity(self)
+				end
 			end,
 			triggered = function(self, x, y, who)
 				if who:canBe("stun") and who:canBe("pin") then
@@ -908,12 +922,14 @@ newTalent{
 				end
 				return true, true
 			end
-		}
-		game.level.map(self.x, self.y, Map.TRAP, trap)
+			}
+		game.level:addEntity(trap)
+		game.zone:addEntity(game.level, trap, "trap", self.x, self.y)
+		trap:setKnown(self, true)
 		return true
 	end,
 	info = function(self, t)
-		return ([[Lay an invisible web under you, pinning all non-spiderkin that pass for %d turns.]]):
+		return ([[Lay a concealed web under yourself, pinning all non-spiderkin that pass through it for %d turns.]]):
 		format(t.getDuration(self, t))
 	end,
 }
@@ -1221,7 +1237,7 @@ newTalent{
 
 			game.zone:addEntity(game.level, m, "actor", x, y)
 
-			game.logSeen(self, "%s spawns one of its tentacle!", self.name:capitalize())
+			game.logSeen(self, "%s spawns one of its tentacles!", self.name:capitalize())
 		end
 
 		return true

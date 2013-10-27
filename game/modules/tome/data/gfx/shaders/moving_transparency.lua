@@ -25,6 +25,7 @@ return {
 		a_max = 1.5,
 		base = base or 0.3,
 		time_factor = time_factor or 3000,
+		p2 = p2 or {1,1},
 	},
 	clone = false,
 }

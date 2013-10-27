@@ -135,7 +135,9 @@ function _M:trigger(x, y, who)
 		game.logSeen(who, "%s", str)
 	end
 	local known, del = false, false
+	if self.summoner then self.summoner.__project_source = self end -- intermediate projector source
 	if self.triggered then known, del = self:triggered(x, y, who) end
+	if self.summoner then self.summoner.__project_source = nil end
 	if known then
 		self:setKnown(who, true)
 		game.level.map:updateMap(x, y)

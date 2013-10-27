@@ -133,7 +133,8 @@ newTalent{
 			local e = Object.new{
 				old_feat = oe,
 				type = oe.type, subtype = oe.subtype,
-				name = "forge barrier", image = "terrain/lava/lava_mountain5.png",
+				name = self.name:capitalize().."'s forge barrier",
+				image = "terrain/lava/lava_mountain5.png",
 				display = '#', color=colors.RED, back_color=colors.DARK_GREY,
 				shader = "shadow_simulacrum",
 				shader_args = { color = {0.6, 0.0, 0.0}, base = 0.9, time_factor = 1500 },
@@ -152,8 +153,9 @@ newTalent{
 				radius = self:getTalentRadius(t),
 				act = function(self)
 					local tg = {type="ball", range=0, friendlyfire=false, radius = 1, talent=t, x=self.x, y=self.y,}
+					self.summoner.__project_source = self
 					self.summoner:project(tg, self.x, self.y, engine.DamageType.DREAMFORGE, self.dam)
-									
+					self.summoner.__project_source = nil
 					self:useEnergy()
 					self.temporary = self.temporary - 1
 					if self.temporary <= 0 then

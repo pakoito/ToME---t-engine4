@@ -155,7 +155,7 @@ newTalent{
 		game.zone:addEntity(game.level, m, "actor", target.x, target.y)
 		game.level.map:particleEmitter(target.x, target.y, 1, "slime")
 		game:playSoundNear(target, "talents/slime")
-		game.logPlayer(game.player, "A #DARK_GREEN#ghoul#LAST# rises from the corpse of %s.", target.name)
+		m:logCombat(target, "A #GREY##Source##LAST# rises from the corpse of #Target#.")
 	end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}

@@ -753,27 +753,28 @@ newEffect{
 		if math.min(eff.unlockLevel, eff.level) >= 4 and target.type == "humanoid" and rng.percent(def.getReprieveChance(eff.level)) then
 			if not self:canBe("summon") then return end
 
-			local x, y = target.x, target.y
-			local m = require("mod.class.NPC").new(def.npcWalkingCorpse)
-			m.faction = self.faction
-			m.summoner = self
-			m.summoner_gain_exp = true
-			m.summon_time = 6
-			m:resolve() m:resolve(nil, true)
-			m:forceLevelup(math.max(1, self.level - 2))
-			game.zone:addEntity(game.level, m, "actor", x, y)
+			game:onTickEnd(function()
+				local x, y = util.findFreeGrid(target.x, target.y,1)
+				if not x then return end
+				local m = require("mod.class.NPC").new(def.npcWalkingCorpse)
+				m.faction = self.faction
+				m.summoner = self
+				m.summoner_gain_exp = true
+				m.summon_time = 6
+				m:resolve() m:resolve(nil, true)
+				m:forceLevelup(math.max(1, self.level - 2))
+				game.zone:addEntity(game.level, m, "actor", x, y)
+				-- Add to the party
+				if self.player then
+					m.remove_from_party_on_death = true
+					game.party:addMember(m, {control="no", type="summon", title="Summon"})
+				end
 
-			-- Add to the party
-			if self.player then
-				m.remove_from_party_on_death = true
-				game.party:addMember(m, {control="no", type="summon", title="Summon"})
-			end
+				game.level.map:particleEmitter(x, y, 1, "slime")
 
-			game.level.map:particleEmitter(x, y, 1, "slime")
-
-			game.logSeen(target, "#F53CBE#The corpse of the %s pulls itself up to fight for you.", target.name)
-			game:playSoundNear(who, "talents/slime")
-
+				game.logSeen(m, "#F53CBE#The corpse of the %s pulls itself up to fight for you.", target.name)
+				game:playSoundNear(who, "talents/slime")
+			end)
 			return true
 		else
 			return false
@@ -883,8 +884,8 @@ newEffect{
 	on_merge = function(self, old_eff, new_eff) return old_eff end,
 	doConspirator = function(self, eff, target)
 		if math.min(eff.unlockLevel, eff.level) >= 3 and self:attr("confused") and target:canBe("confusion") then
-			target:setEffect(target.EFF_CONFUSED, 3, {power=50}) -- Make consistent
-			game.logSeen(self, "#F53CBE#%s spreads confusion to %s.", self.name:capitalize(), target.name)
+			target:setEffect(target.EFF_CONFUSED, 3, {power=50})
+			self:logCombat(target, "#F53CBE##Source# spreads confusion to #Target#.")
 		end
 	end,
 }
@@ -1330,7 +1331,7 @@ newEffect{
 	subtype = { miscellaneous=true },
 	status = "beneficial",
 	parameters = {},
-	activate = function(self, eff) game.logPlayer(self, "#LIGHT_BLUE#You begin reloading.") end,
+	activate = function(self, eff) game.logSeen(self, "#LIGHT_BLUE#%s begins reloading.", self.name:capitalize()) end,
 	deactivate = function(self, eff)
 	end,
 	on_timeout = function(self, eff)

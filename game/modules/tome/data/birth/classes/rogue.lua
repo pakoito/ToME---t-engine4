@@ -165,6 +165,7 @@ newBirthDescriptor{
 		["technique/mobility"]={true, 0.3},
 		["technique/thuggery"]={true, 0.3},
 		["technique/conditioning"]={true, 0.3},
+		["technique/bloodthirst"]={false, 0.1},
 		["cunning/dirty"]={true, 0.3},
 		["cunning/tactical"]={false, 0.2},
 		["cunning/survival"]={true, 0.3},

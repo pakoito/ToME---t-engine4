@@ -259,9 +259,9 @@ on_berethh_death = function(self, who, berethh)
 	
 	who:setQuestStatus("keepsake", engine.Quest.DONE)
 	
-	local o, item, inven_id = who:findInAllInventoriesBy("define_as", "IRON_ACORN_BASIC")
-	if o then
-		who:removeObject(inven_id, item, true)
+	local carry, o, item, inven_id = game.party:findInAllInventoriesBy("define_as", "IRON_ACORN_BASIC")
+	if carry and o then
+		carry:removeObject(inven_id, item, true)
 		o:removed()
 		
 		local o
@@ -272,9 +272,9 @@ on_berethh_death = function(self, who, berethh)
 		end
 		if o then
 			game.zone:addEntity(game.level, o, "object")
-			who:addObject(who.INVEN_INVEN, o)
+			carry:addObject(carry.INVEN_INVEN, o)
 			o:added()
-			who:sortInven()
+			carry:sortInven()
 		end
 	end
 end

@@ -43,7 +43,8 @@ newAI("escort_quest", function(self)
 				if not self.ai_state.fleeing_msg then
 					self.ai_state.fleeing_msg = true
 					local enemy = self.ai_target.actor
-					self:doEmote(("Help! %s to the %s!"):format(string.capitalize(enemy.name), game.level.map:compassDirection(enemy.x-self.x, enemy.y-self.y) or "???"))
+					local dir = game.level.map:compassDirection(enemy.x-self.x, enemy.y-self.y)
+					self:doEmote("Help!"..(dir and (" %s to the %s!"):format(self:canSee(enemy) and string.capitalize(enemy.name) or "Something", dir) or ""))
 				end
 			else
 				self:runAI("move_escort")

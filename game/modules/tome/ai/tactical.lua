@@ -54,18 +54,32 @@ newAI("use_tactical", function(self)
 	-- Find available talents
 	print("============================== TACTICAL AI", self.name)
 	local avail = {}
+	local _
 	local ok = false
-	local ax, ay = self:aiSeeTargetPos(self.ai_target.actor)
-	local target_dist = self.ai_target.actor and core.fov.distance(self.x, self.y, ax, ay)
-	local hate = self.ai_target.actor and (self:reactionToward(self.ai_target.actor) < 0)
-	local has_los = self.ai_target.actor and self:hasLOS(ax, ay)
+	local aitarget = self.ai_target.actor
+	local ax, ay = self:aiSeeTargetPos(aitarget)
+	local target_dist = aitarget and core.fov.distance(self.x, self.y, ax, ay)
+	local hate = aitarget and (self:reactionToward(aitarget) < 0)
+	local has_los = aitarget and self:hasLOS(ax, ay)
 	local self_compassion = (self.ai_state.self_compassion == false and 0) or self.ai_state.self_compassion or 5
 	local ally_compassion = (self.ai_state.ally_compassion == false and 0) or self.ai_state.ally_compassion or 1
 	for tid, lvl in pairs(self.talents) do
+		local aitarget = aitarget
+		local ax, ay = ax, ay
+		local target_dist = target_dist
 		local t = self:getTalentFromId(tid)
+
+		if t.onAIGetTarget then
+			_, _, aitarget = t.onAIGetTarget(self, t)
+			if aitarget then
+				ax, ay = self:aiSeeTargetPos(aitarget)
+				target_dist = aitarget and core.fov.distance(self.x, self.y, ax, ay)
+			end
+		end
+
 		local t_avail = false
-		print(self.name, self.uid, "tactical ai talents testing", t.name, tid)
-		if t.tactical then
+		print(self.name, self.uid, "tactical ai talents testing", t.name, tid, "on target", aitarget and aitarget.name)
+		if t.tactical and aitarget then
 			local tg = self:getTalentTarget(t)
 			local default_tg = {type=util.getval(t.direct_hit, self, t) and "hit" or "bolt"}
 			-- Only assume range... some talents may no require LOS, etc
@@ -88,7 +102,7 @@ newAI("use_tactical", function(self)
 				local self_hit = {}
 				local typ = engine.Target:getType(tg or default_tg)
 				if tg or self:getTalentRequiresTarget(t) then
-					local target_actor = self.ai_target.actor or self
+					local target_actor = aitarget or self
 					self:project(typ, ax, ay, function(px, py)
 						local act = game.level.map(px, py, engine.Map.ACTOR)
 						if act and not act.dead then
@@ -107,7 +121,7 @@ newAI("use_tactical", function(self)
 				end
 				-- Evaluate the tactical weights and weight functions
 				for tact, val in pairs(t.tactical) do
-					if type(val) == "function" then val = val(self, t, self.ai_target.actor) or 0 end
+					if type(val) == "function" then val = val(self, t, aitarget) or 0 end
 					-- Handle damage_types and resistances
 					local nb_foes_hit, nb_allies_hit, nb_self_hit = 0, 0, 0
 					if type(val) == "table" then
@@ -151,7 +165,7 @@ newAI("use_tactical", function(self)
 					val = val * (self.ai_talents and self.ai_talents[t.id] or 1) * (1 + lvl / 5)
 					-- Update the weight by the dummy projection data
 					-- Also force scaling if the talent requires a target (stand-in for canProject)
-					if self:getTalentRequiresTarget(t) or nb_foes_hit > 0 or nb_allies_hit > 0 or nb_self_hit > 0 then
+					if tact ~= "special" and (self:getTalentRequiresTarget(t) or nb_foes_hit > 0 or nb_allies_hit > 0 or nb_self_hit > 0) then
 						val = val * (nb_foes_hit - ally_compassion * nb_allies_hit - self_compassion * nb_self_hit)
 					end
 					-- Only take values greater than 0... allows the ai_talents to turn talents off
@@ -323,17 +337,17 @@ newAI("use_tactical", function(self)
 		end
 
 		-- Attacks
-		if avail.attack and self.ai_target.actor then
+		if avail.attack and aitarget then
 			-- Use the foe/ally ratio from the best attack talent
 			table.sort(avail.attack, function(a,b) return a.val > b.val end)
 			want.attack = avail.attack[1].val
 		end
-		if avail.disable and self.ai_target.actor then
+		if avail.disable and aitarget then
 			-- Use the foe/ally ratio from the best disable talent
 			table.sort(avail.disable, function(a,b) return a.val > b.val end)
 			want.disable = (want.attack or 0) + avail.disable[1].val
 		end
-		if avail.attackarea and self.ai_target.actor then
+		if avail.attackarea and aitarget then
 			-- Use the foe/ally ratio from the best attackarea talent
 			table.sort(avail.attackarea, function(a,b) return a.val > b.val end)
 			want.attackarea = avail.attackarea[1].val
@@ -343,6 +357,8 @@ newAI("use_tactical", function(self)
 		if avail.buff and want.attack and want.attack > 0 then
 			want.buff = math.max(0.01, want.attack + 0.5)
 		end
+
+		if avail.special then want.special = avail.special[1].val end
 
 		print("Tactical ai report for", self.name)
 		local res = {}

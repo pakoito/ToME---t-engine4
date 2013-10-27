@@ -285,7 +285,7 @@ newTalent{
 				psigain = 2 + 2*dam/mast
 				dam = 0
 			else
-				psigain = 2 + 2*self.kinspike_shield_absorb/mast
+				psigain = 2 + 2*self.thermspike_shield_absorb/mast
 				dam = dam - self.thermspike_shield_absorb
 				self.thermspike_shield_absorb = 0
 			end

@@ -31,7 +31,7 @@ _M.progsreset = {}
 loadNoDelay = true
 
 function core.shader.allow(kind)
-	return config.settings['shaders_kind_'..kind]
+	return config.settings['shaders_kind_'..kind] and core.shader.active(4)
 end
 
 --- Make a shader

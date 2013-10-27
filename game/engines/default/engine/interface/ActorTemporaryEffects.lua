@@ -73,9 +73,11 @@ function _M:timedEffects(filter)
 				todel[#todel+1] = eff
 			else
 				if def.on_timeout then
+					if p.src then p.src.__project_source = p end -- intermediate projector source
 					if def.on_timeout(self, p) then
 						todel[#todel+1] = eff
 					end
+					if p.src then p.src.__project_source = nil end
 				end
 			end
 			p.dur = p.dur - def.decrease
@@ -103,6 +105,7 @@ function _M:setEffect(eff_id, dur, p, silent)
 		if not p[k] then p[k] = e end
 	end
 	p.dur = dur
+	p.effect_id = eff_id
 	self:check("on_set_temporary_effect", eff_id, _M.tempeffect_def[eff_id], p)
 	if p.dur <= 0 then return self:removeEffect(eff_id) end
 

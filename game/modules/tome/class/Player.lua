@@ -734,28 +734,42 @@ function _M:automaticTalents()
 	if self.no_automatic_talents then return end
 
 	self:attr("_forbid_sounds", 1)
+	local uses = {}
 	for tid, c in pairs(self.talents_auto) do
 		local t = self.talents_def[tid]
 		local spotted = spotHostiles(self)
 		if (t.mode ~= "sustained" or not self.sustain_talents[tid]) and not self.talents_cd[tid] and self:preUseTalent(t, true, true) and (not t.auto_use_check or t.auto_use_check(self, t)) then
 			if (c == 1) or (c == 2 and #spotted <= 0) or (c == 3 and #spotted > 0) then
 				if c ~= 2 then
-					self:useTalent(tid)
+					uses[#uses+1] = {name=t.name, no_energy=t.no_energy == true and 0 or 1, cd=self:getTalentCooldown(t) or 0, fct=function() self:useTalent(tid) end}
 				else
 					if not self:attr("blind") then
-						self:useTalent(tid,nil,nil,nil,self)
+						uses[#uses+1] = {name=t.name, no_energy=t.no_energy == true and 0 or 1, cd=self:getTalentCooldown(t) or 0, fct=function() self:useTalent(tid,nil,nil,nil,self) end}
 					end
 				end
 			end
 			if c == 4 and #spotted > 0 then
 				for fid, foe in pairs(spotted) do
 					if foe.x >= self.x-1 and foe.x <= self.x+1 and foe.y >= self.y-1 and foe.y <= self.y+1 then
-						self:useTalent(tid)
-						break
+						uses[#uses+1] = {name=t.name, no_energy=t.no_energy == true and 0 or 1, cd=self:getTalentCooldown(t) or 0, fct=function() self:useTalent(tid) end}
 					end
 				end
 			end
 		end
+	end
+	table.sort(uses, function(a, b)
+		if a.no_energy < b.no_energy then return true
+		elseif a.no_energy > b.no_energy then return false
+		else
+			if a.cd > b.cd then return true
+			else return false
+			end
+		end
+	end)
+	table.print(uses)
+	for _, use in ipairs(uses) do
+		use.fct()
+		if use.no_energy == 1 then break end
 	end
 	self:attr("_forbid_sounds", -1)
 end
@@ -1035,7 +1049,12 @@ function _M:doDrop(inven, item, on_done, nb)
 
 	local o = self:getInven(inven) and self:getInven(inven)[item]
 	if o and o.plot then
-		game.logPlayer(self, "You can not drop %s.", o:getName{do_colour=true})
+		game.logPlayer(self, "You can not drop %s (plot item).", o:getName{do_colour=true})
+		return
+	end
+
+	if o and o.__tagged then
+		game.logPlayer(self, "You can not drop %s (tagged).", o:getName{do_colour=true})
 		return
 	end
 
@@ -1055,7 +1074,7 @@ function _M:doDrop(inven, item, on_done, nb)
 					game.logPlayer(self, "You can not destroy %s.", o:getName{do_colour=true})
 				end
 			end
-		end, "Cancel", "Destroy")
+		end, "Cancel", "Destroy", true)
 		return
 	end
 	if nb == nil or nb >= self:getInven(inven)[item]:getNumber() then
@@ -1409,7 +1428,7 @@ function _M:useOrbPortal(portal)
 	local spotted = spotHostiles(self)
 	if #spotted > 0 then
 		local dir = game.level.map:compassDirection(spotted[1].x - self.x, spotted[1].y - self.y)
-		game.logPlayer(self, "You can not use the Orb with foes in sight (%s to the %s%s)", spotted[1].actor.name, dir, game.level.map:isOnScreen(spotted[1].x, spotted[1].y) and "" or " - offscreen")
+		self:logCombat(spotted[1].actor, "You can not use the Orb with foes watching (#Target# to the %s%s)",dir, game.level.map:isOnScreen(spotted[1].x, spotted[1].y) and "" or " - offscreen")
 		return
 	end
 	if portal.on_preuse then portal:on_preuse(self) end

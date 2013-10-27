@@ -189,7 +189,8 @@ newTalent{
 		print("[Dismissal] ", self.name:capitalize(), " attempting to ignore ", value, "damage from ", src.name:capitalize(), "using", saving_throw,  "mental save.")
 		if self:checkHit(saving_throw, value) then
 			local dismissed = value * 1/self:mindCrit(2) -- Diminishing returns on high crits
-			game.logSeen(self, "%s dismisses %d damage from %s!", self.name:capitalize(), dismissed, src.name:capitalize())
+			game:delayedLogMessage(self, nil, "Dismissal", "#TAN##Source# mentally dismisses some damage!")
+			game:delayedLogDamage(src, self, 0, ("#TAN#(%d dismissed)#LAST#"):format(dismissed))
 			return value - dismissed
 		else
 			return value

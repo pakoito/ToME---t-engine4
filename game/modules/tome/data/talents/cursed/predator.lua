@@ -57,7 +57,7 @@ newTalent{
 		if eff and eff.type == target.type and eff.subtype == target.subtype then
 			return false
 		end
-		if eff then self:removeEffect(self.EFF_PREDATOR) end
+		if eff then self:removeEffect(self.EFF_PREDATOR, true, true) end
 		self:setEffect(self.EFF_PREDATOR, 1, { type=target.type, subtype=target.subtype, killExperience = 0, subtypeKills = 0, typeKills = 0 })
 		
 		return true

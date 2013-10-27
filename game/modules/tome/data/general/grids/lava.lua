@@ -32,7 +32,8 @@ newEntity{
 	on_stand = function(self, x, y, who)
 		local DT = engine.DamageType
 		local dam = DT:get(DT.FIRE).projector(self, x, y, DT.FIRE, rng.range(self.mindam, self.maxdam))
-		if dam > 0 then game.logPlayer(who, "The lava burns you!") end
+		self.x, self.y = x, y
+		if dam > 0 and who.player then self:logCombat(who, "#Source# burns #Target#!") end
 	end,
 	nice_tiler = { method="replace", base={"LAVA_FLOOR", 100, 1, 16}},
 	nice_editer = lava_editer,

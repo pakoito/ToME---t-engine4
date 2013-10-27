@@ -95,7 +95,7 @@ newTalent{
 	cooldown = 10,
 	sustain_stamina = 20,
 	tactical = { BUFF = 2 },
-	on_pre_use = function(self, t, silent) if not self:hasDualWeapon() then if not silent then game.logPlayer(self, "You require a two weapons to use this talent.") end return false end return true end,
+	on_pre_use = function(self, t, silent) if not self:hasDualWeapon() then if not silent then game.logPlayer(self, "You require two weapons to use this talent.") end return false end return true end,
 	getApr = function(self, t) return self:combatScale(self:getTalentLevel(t) * self:getDex(), 4, 0, 25, 500, 0.75) end,
 	activate = function(self, t)
 		local weapon, offweapon = self:hasDualWeapon()
@@ -164,7 +164,7 @@ newTalent{
 	require = techs_dex_req1,
 	requires_target = true,
 	tactical = { ATTACK = { weapon = 1 }, DISABLE = { stun = 2 } },
-	on_pre_use = function(self, t, silent) if not self:hasDualWeapon() then if not silent then game.logPlayer(self, "You require a two weapons to use this talent.") end return false end return true end,
+	on_pre_use = function(self, t, silent) if not self:hasDualWeapon() then if not silent then game.logPlayer(self, "You require two weapons to use this talent.") end return false end return true end,
 	getStunDuration = function(self, t) return math.floor(self:combatTalentScale(t, 3, 7)) end,
 	action = function(self, t)
 		local weapon, offweapon = self:hasDualWeapon()
@@ -212,7 +212,7 @@ newTalent{
 	require = techs_dex_req2,
 	requires_target = true,
 	tactical = { ATTACK = { weapon = 4 } },
-	on_pre_use = function(self, t, silent) if not self:hasDualWeapon() then if not silent then game.logPlayer(self, "You require a two weapons to use this talent.") end return false end return true end,
+	on_pre_use = function(self, t, silent) if not self:hasDualWeapon() then if not silent then game.logPlayer(self, "You require two weapons to use this talent.") end return false end return true end,
 	action = function(self, t)
 		local weapon, offweapon = self:hasDualWeapon()
 		if not weapon then
@@ -245,7 +245,7 @@ newTalent{
 	require = techs_dex_req3,
 	requires_target = true,
 	tactical = { ATTACKAREA = { weapon = 1, cut = 1 } },
-	on_pre_use = function(self, t, silent) if not self:hasDualWeapon() then if not silent then game.logPlayer(self, "You require a two weapons to use this talent.") end return false end return true end,
+	on_pre_use = function(self, t, silent) if not self:hasDualWeapon() then if not silent then game.logPlayer(self, "You require two weapons to use this talent.") end return false end return true end,
 	cutdur = function(self,t) return math.floor(self:combatTalentScale(t, 4, 8)) end,
 	cutPower = function(self, t)
 		local main, off = self:hasDualWeapon()
@@ -314,7 +314,7 @@ newTalent{
 	target = function(self, t)
 		return {type="ball", radius=self:getTalentRadius(t), range=self:getTalentRange(t)}
 	end,
-	on_pre_use = function(self, t, silent) if not self:hasDualWeapon() then if not silent then game.logPlayer(self, "You require a two weapons to use this talent.") end return false end return true end,
+	on_pre_use = function(self, t, silent) if not self:hasDualWeapon() then if not silent then game.logPlayer(self, "You require two weapons to use this talent.") end return false end return true end,
 	action = function(self, t)
 		local weapon, offweapon = self:hasDualWeapon()
 		if not weapon then

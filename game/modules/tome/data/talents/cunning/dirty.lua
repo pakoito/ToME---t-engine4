@@ -43,7 +43,7 @@ newTalent{
 				target:setEffect(target.EFF_STUNNED, t.getDuration(self, t), {apply_power=self:combatAttack()})
 			end
 			if not target:hasEffect(target.EFF_STUNNED) then
-				game.logSeen(target, "%s resists the stun and %s quickly gets back on feet!", target.name:capitalize(), self.name:capitalize())
+				self:logCombat(target, "#Target# resists the stun and #Source# quickly regains its footing!")
 				self.energy.value = self.energy.value + game.energy_to_act * self:combatSpeed()
 			end
 		end
@@ -101,7 +101,7 @@ newTalent{
 
 		if hitted and not self.dead and tx == target.x and ty == target.y then
 			if not self:canMove(tx,ty,true) or not target:canMove(sx,sy,true) then
-				game.logSeen(self, "%s and %s cannot switch places due to terrain.",self.name:capitalize(),target.name:capitalize())
+				self:logCombat(target, "Terrain prevents #Source# from switching places with #Target#.")
 				return false
 			end						
 			self:setEffect(self.EFF_EVASION, t.getDuration(self, t), {chance=50})

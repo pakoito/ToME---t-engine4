@@ -124,7 +124,7 @@ newTalent{
 			if self:reactionToward(target) < 0 then
 				if self.ai_target then self.ai_target.target = target end
 				target:setTarget(self)
-				game.logSeen(self, "%s provokes %s to attack it.", self.name:capitalize(), target.name)
+				self:logCombat(target, "#Source# provokes #Target# to attack it.")
 			end
 		end)
 		return true
@@ -419,7 +419,7 @@ newTalent{
 		table.sort(tgts, "sqdist")
 		for i, target in ipairs(tgts) do
 			target.actor:pull(self.x, self.y, tg.radius)
-			game.logSeen(target.actor, "%s is pulled by %s!", target.actor.name:capitalize(), self.name)
+			self:logCombat(target.actor, "#Target# is pulled toward #Source#!")
 			DamageType:get(DamageType.ARCANE).projector(self, target.actor.x, target.actor.y, DamageType.ARCANE, t.getDamage(self, t))
 		end
 		return true
@@ -545,7 +545,7 @@ newTalent{
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.POISON, {dam=self:mindCrit(self:combatTalentStatDamage(t, "mag", 30, 460)), apply_power=self:combatMindpower()})
+		self:project(tg, x, y, DamageType.POISON, {dam=self:spellCrit(self:combatTalentStatDamage(t, "mag", 30, 460)), apply_power=self:combatSpellpower()})
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "breath_slime", {radius=tg.radius, tx=x-self.x, ty=y-self.y})
 		game:playSoundNear(self, "talents/breath")
 		return true

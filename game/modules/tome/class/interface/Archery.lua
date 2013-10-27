@@ -221,7 +221,11 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 		dam = dam * mult
 		print("[ATTACK ARCHERY] after mult", dam)
 
-
+		if self:isAccuracyEffect(ammo, "mace") then
+			local bonus = 1 + self:getAccuracyEffect(ammo, atk, def, 0.001, 0.1)
+			print("[ATTACK] mace accuracy bonus", atk, def, "=", bonus)
+			dam = dam * bonus
+		end
 
 		local hd = {"Combat:archeryDamage", hitted=hitted, target=target, weapon=weapon, ammo=ammo, damtype=damtype, mult=1, dam=dam}
 		if self:triggerHook(hd) then
@@ -229,7 +233,7 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 		end
 		print("[ATTACK ARCHERY] after hook", dam)
 
-		if crit then game.logSeen(self, "#{bold}#%s performs a critical strike!#{normal}#", self.name:capitalize()) end
+		if crit then self:logCombat(target, "#{bold}##Source# performs a ranged critical strike against #Target#!#{normal}#") end
 
 		-- Damage conversion?
 		-- Reduces base damage but converts it into another damage type
@@ -474,6 +478,8 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 	self.turn_procs.weapon_type = nil
 	self.use_psi_combat = false
 end
+-- Store it for addons
+_M.archery_projectile = archery_projectile
 
 --- Shoot at one target
 function _M:archeryShoot(targets, talent, tg, params)

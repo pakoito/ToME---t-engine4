@@ -95,11 +95,21 @@ newEffect{
 	status = "detrimental",
 	parameters = { },
 	on_gain = function(self, err) return "#Target#'s mind is shattered." end,
-	on_lose = function(self, err) return "#Target# collapses." end,
 	activate = function(self, eff)
 		eff.pid = self:addTemporaryValue("inc_damage", {all=-15})
-		self.faction = eff.src.faction
 		self.ai_state = self.ai_state or {}
+		eff.oldstate = {
+			faction = self.faction,
+			ai_state = table.clone(self.ai_state, true),
+			remove_from_party_on_death = self.remove_from_party_on_death,
+			no_inventory_access = self.no_inventory_access,
+			move_others = self.move_others,
+			summoner = self.summoner,
+			summoner_gain_exp = self.summoner_gain_exp,
+			ai = self.ai,
+		}
+		self.faction = eff.src.faction
+		
 		self.ai_state.tactic_leash = 100
 		self.remove_from_party_on_death = true
 		self.no_inventory_access = true
@@ -115,10 +125,34 @@ newEffect{
 			on_control = function(self)
 				self:hotkeyAutoTalents()
 			end,
+			leave_level = function(self, party_def) -- Cancel control and restore previous actor status.
+				local eff = self:hasEffect(self.EFF_DOMINANT_WILL)
+				local uid = self.uid
+				eff.survive_domination = true
+				self:removeTemporaryValue("inc_damage", eff.pid)
+				game.party:removeMember(self)
+				self:replaceWith(require("mod.class.NPC").new(self))
+				self.uid = uid
+				__uids[uid] = self
+				self.faction = eff.oldstate.faction
+				self.ai_state = eff.oldstate.ai_state
+				self.ai = eff.oldstate.ai
+				self.remove_from_party_on_death = eff.oldstate.remove_from_party_on_death
+				self.no_inventory_access = eff.oldstate.no_inventory_access
+				self.move_others = eff.oldstate.move_others
+				self.summoner = eff.oldstate.summoner
+				self.summoner_gain_exp = eff.oldstate.summoner_gain_exp
+				self:removeEffect(self.EFF_DOMINANT_WILL)
+			end,
 		})
 	end,
 	deactivate = function(self, eff)
-		self:die(eff.src)
+		if eff.survive_domination then
+			game.logSeen(self, "%s's mind recovers from the domination.",self.name:capitalize())
+		else
+			game.logSeen(self, "%s collapses.",self.name:capitalize())
+			self:die(eff.src)
+		end
 	end,
 }
 
@@ -325,10 +359,10 @@ newEffect{
 	status = "beneficial",
 	parameters = {},
 	activate = function(self, eff)
-		game.logSeen(self, "#F53CBE#%s is being stalked by %s!", eff.target.name:capitalize(), self.name)
+		self:logCombat(eff.target, "#F53CBE##Target# is being stalked by #Source#!")
 	end,
 	deactivate = function(self, eff)
-		game.logSeen(self, "#F53CBE#%s is no longer being stalked by %s.", eff.target.name:capitalize(), self.name)
+		self:logCombat(eff.target, "#F53CBE##Target# is no longer being stalked by #Source#.")
 	end,
 	on_timeout = function(self, eff)
 		if not eff.target or eff.target.dead or not eff.target:hasEffect(eff.target.EFF_STALKED) then
@@ -743,7 +777,7 @@ newEffect{
 
 		local damage = math.floor(eff.damage * (eff.turn / eff.duration))
 		if damage > 0 then
-			DamageType:get(DamageType.MIND).projector(eff.source, self.x, self.y, DamageType.MIND, { dam=damage, crossTierChance=25 })
+			DamageType:get(DamageType.MIND).projector(eff.src, self.x, self.y, DamageType.MIND, { dam=damage, crossTierChance=25 })
 			game:playSoundNear(self, "talents/fire")
 		end
 
@@ -769,10 +803,10 @@ newEffect{
 	on_gain = function(self, err) return "#Target# has heard the hateful whisper!", "+Hateful Whisper" end,
 	on_lose = function(self, err) return "#Target# no longer hears the hateful whisper.", "-Hateful Whisper" end,
 	activate = function(self, eff)
-		if not eff.source.dead and eff.source:knowTalent(eff.source.T_HATE_POOL) then
-			eff.source:incHate(eff.hateGain)
+		if not eff.src.dead and eff.src:knowTalent(eff.src.T_HATE_POOL) then
+			eff.src:incHate(eff.hateGain)
 		end
-		DamageType:get(DamageType.MIND).projector(eff.source, self.x, self.y, DamageType.MIND, { dam=eff.damage, crossTierChance=25 })
+		DamageType:get(DamageType.MIND).projector(eff.src, self.x, self.y, DamageType.MIND, { dam=eff.damage, crossTierChance=25 })
 
 		if self.dead then
 			-- only spread on activate if the target is dead
@@ -817,7 +851,7 @@ newEffect{
 		for x, yy in pairs(grids) do
 			for y, _ in pairs(grids[x]) do
 				local a = game.level.map(x, y, game.level.map.ACTOR)
-				if a and eff.source:reactionToward(a) < 0 and self:hasLOS(a.x, a.y) then
+				if a and eff.src:reactionToward(a) < 0 and self:hasLOS(a.x, a.y) then
 					if not a:hasEffect(a.EFF_HATEFUL_WHISPER) then
 						targets[#targets+1] = a
 					end
@@ -828,7 +862,7 @@ newEffect{
 		if #targets > 0 then
 			local target = rng.table(targets)
 			target:setEffect(target.EFF_HATEFUL_WHISPER, eff.duration, {
-				source = eff.source,
+				src = eff.src,
 				duration = eff.duration,
 				damage = eff.damage,
 				mindpower = eff.mindpower,
@@ -1013,7 +1047,7 @@ newEffect{
 				if (self.x ~= x or self.y ~= y) then
 					local target = game.level.map(x, y, Map.ACTOR)
 					if target then
-						game.logSeen(self, "#F53CBE#%s attacks %s in a fit of paranoia.", self.name:capitalize(), target.name)
+						self:logCombat(target, "#F53CBE##Source# attacks #Target# in a fit of paranoia.")
 						if self:attackTarget(target, nil, 1, false) and target ~= eff.source then
 							if not target:canBe("fear") then
 								game.logSeen(target, "#F53CBE#%s ignores the fear!", target.name:capitalize())
@@ -1293,7 +1327,7 @@ newEffect{
 						self:move(bestX, bestY, false)
 						game.logPlayer(self, "#F53CBE#You panic and flee from %s.", eff.source.name)
 					else
-						game.logSeen(self, "#F53CBE#%s panics and tries to flee from %s.", self.name:capitalize(), eff.source.name)
+						self:logCombat(eff.source, "#F53CBE##Source# panics but fails to flee from #Target#.")
 						self:useEnergy(game.energy_to_act * self:combatMovementSpeed(bestX, bestY))
 					end
 				end
@@ -1874,7 +1908,7 @@ newEffect{
 		if self.life <= 0 then
 			self.life = 1
 			self:setEffect(self.EFF_STUNNED, 3, {})
-			game.logSeen(self, "%s's increased life wears off and is stunned by the change.", self.name:capitalize())
+			game.logSeen(self, "%s's increased life fades, leaving it stunned by the loss.", self.name:capitalize())
 		end
 	end,
 }
@@ -2194,9 +2228,9 @@ newEffect{
 		end
 
 		if not eff.incStatsId then
-			game.logSeen(self, ("%s is mimicking %s. (no gains)."):format(self.name:capitalize(), eff.target.name))
+			self:logCombat(eff.target, "#Source# is mimicking #Target#. (no gains).")
 		else
-			local desc = ("%s is mimicking %s. ("):format(self.name:capitalize(), eff.target.name)
+			local desc = "#Source# is mimicking #Target#. ("
 			local first = true
 			for id, value in pairs(eff.incStats) do
 				if not first then desc = desc..", " end
@@ -2204,7 +2238,7 @@ newEffect{
 				desc = desc..("%+d %s"):format(value, Stats.stats_def[id].name:capitalize())
 			end
 			desc = desc..")"
-			game.logSeen(self, desc)
+			self:logCombat(eff.target, desc)
 		end
 	end,
 	deactivate = function(self, eff)

@@ -7,8 +7,8 @@ uniform float tick_start;
 uniform float deploy_factor;
 uniform float flap;
 
-uniform float ellipsoidalFactor = 1.7; //1 is perfect circle, >1 is ellipsoidal
-uniform float oscillationSpeed = 0.0; //oscillation between ellipsoidal and spherical form
+uniform float ellipsoidalFactor; //1 is perfect circle, >1 is ellipsoidal
+uniform float oscillationSpeed; //oscillation between ellipsoidal and spherical form
 
 vec4 permute( vec4 x ) {
 	return mod( ( ( x * 34.0 ) + 1.0 ) * x, 289.0 );
