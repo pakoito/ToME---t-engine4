@@ -924,18 +924,18 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 end
 
 _M.weapon_talents = {
-	sword =   Talents.T_WEAPONS_MASTERY,
-	axe =     Talents.T_WEAPONS_MASTERY,
-	mace =    Talents.T_WEAPONS_MASTERY,
-	knife =   Talents.T_KNIFE_MASTERY,
-	whip  =   Talents.T_EXOTIC_WEAPONS_MASTERY,
-	trident = Talents.T_EXOTIC_WEAPONS_MASTERY,
-	bow =     Talents.T_BOW_MASTERY,
-	sling =   Talents.T_SLING_MASTERY,
-	staff =   Talents.T_STAFF_MASTERY,
-	mindstar =Talents.T_PSIBLADES,
-	dream =   Talents.T_DREAM_CRUSHER,
-	unarmed = Talents.T_UNARMED_MASTERY,
+	sword =   "T_WEAPONS_MASTERY",
+	axe =     "T_WEAPONS_MASTERY",
+	mace =    "T_WEAPONS_MASTERY",
+	knife =   "T_KNIFE_MASTERY",
+	whip  =   "T_EXOTIC_WEAPONS_MASTERY",
+	trident = "T_EXOTIC_WEAPONS_MASTERY",
+	bow =     "T_BOW_MASTERY",
+	sling =   "T_SLING_MASTERY",
+	staff =   "T_STAFF_MASTERY",
+	mindstar ="T_PSIBLADES",
+	dream =   "T_DREAM_CRUSHER",
+	unarmed = "T_UNARMED_MASTERY",
 }
 
 --- Static!
