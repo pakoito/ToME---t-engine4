@@ -32,6 +32,7 @@ newEntity{
 	sound_moam = {"creatures/swarm/mswarm_%d", 1, 4},
 	sound_die = "creatures/swarm/mswarm_die",
 	sound_random = {"creatures/swarm/mswarm_%d", 1, 4},
+	combat = {sound={"creatures/swarm/mswarm_%d", 1, 4}, sound_miss={"creatures/swarm/mswarm_%d", 1, 4}},
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=1, },
 	stats = { str=1, dex=20, mag=3, con=1 },
 	global_speed_base = 2,

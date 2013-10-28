@@ -192,7 +192,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Fill yourself with aether forces, completely surrounding your body for %d turns.
-		While active, you can only cast arcane or aether spells, your cooldown for them is divived by 3, your arcane damage is increased by 25%%, your Disruption Shield can be used at any time, and your maximum mana is increased by 33%%.]]):
+		While active, you can only cast arcane or aether spells, your cooldown for them is divided by 3, your arcane damage is increased by 25%%, your Disruption Shield can be used at any time, and your maximum mana is increased by 33%%.]]):
 		format(t.getNb(self, t))
 	end,
 }
