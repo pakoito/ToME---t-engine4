@@ -1775,6 +1775,10 @@ function _M:onTakeHit(value, src, death_note)
 			return 0
 		-- Or the shield collapses in a deadly arcane explosion
 		else
+			self:incMana(mana)
+			self.disruption_shield_absorb = self.disruption_shield_absorb + mana / self:attr("disruption_shield")
+			value = value - mana / self:attr("disruption_shield")
+
 			local dam = self.disruption_shield_absorb
 
 			-- Deactivate without loosing energy
