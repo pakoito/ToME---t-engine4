@@ -170,6 +170,10 @@ newTalent{
 		self:attr("allow_on_heal", 1)
 		self:heal(self:spellCrit(t.getHeal(self, t)), self)
 		self:attr("allow_on_heal", -1)
+		if core.shader.active(4) then
+			self:addParticles(Particles.new("shader_shield_temp", 1, {size_factor=1.1, sizev=1.5, sizea=0.2, img="runicshield_teal"}, {type="runicshield", color={0x35/255, 0x88/255, 0x8e/255}, shieldIntensity=0.15, horizontalScrollingSpeed=-0.8}))
+		end
+
 		local target = self
 
 		local effs = {}

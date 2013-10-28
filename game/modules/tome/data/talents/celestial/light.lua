@@ -32,6 +32,9 @@ newTalent{
 		self:attr("allow_on_heal", 1)
 		self:heal(self:spellCrit(t.getHeal(self, t)), self)
 		self:attr("allow_on_heal", -1)
+		if core.shader.active(4) then
+			self:addParticles(Particles.new("shader_shield_temp", 1, {size_factor=1.1, sizev=1.5, sizea=0.2, img="runicshield_yellow"}, {type="runicshield", color={0xe1/255, 0xcb/255, 0x3f/255}, shieldIntensity=0.1, horizontalScrollingSpeed=-0.8}))
+		end
 		game:playSoundNear(self, "talents/heal")
 		return true
 	end,
