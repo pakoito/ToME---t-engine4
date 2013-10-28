@@ -2132,6 +2132,17 @@ function _M:onTakeHit(value, src, death_note)
 		end
 	end
 
+	-- Flat damage cap
+	if self.flat_damage_cap and self.max_life and death_note and death_note.damtype then
+		local cap = nil
+		if self.flat_damage_cap.all then cap = self.flat_damage_cap.all end
+		if self.flat_damage_cap[death_note.damtype] then cap = self.flat_damage_cap[death_note.damtype] end
+		if cap and cap > 0 then
+			value = math.max(math.min(value, cap * self.max_life / 100), 0)
+			print("[TAKE HIT] after flat damage cap", value)
+		end
+	end
+
 	local hd = {"Actor:takeHit", value=value, src=src, death_note=death_note}
 	if self:triggerHook(hd) then value = hd.value end
 

@@ -296,17 +296,6 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			print("[PROJECTOR] after flat damage armor", dam)
 		end
 
-		-- Flat damage cap
-		if target.flat_damage_cap and target.max_life then
-			local cap = nil
-			if target.flat_damage_cap.all then cap = target.flat_damage_cap.all end
-			if target.flat_damage_cap[type] then cap = target.flat_damage_cap[type] end
-			if cap and cap > 0 then
-				dam = math.max(math.min(dam, cap * target.max_life / 100), 0)
-				print("[PROJECTOR] after flat damage cap", dam)
-			end
-		end
-
 		-- roll with it damage reduction
 		if type == DamageType.PHYSICAL and target:knowTalent(target.T_ROLL_WITH_IT) and not target:attr("never_move") then
 			dam = dam * target:callTalent(target.T_ROLL_WITH_IT, "getMult")
