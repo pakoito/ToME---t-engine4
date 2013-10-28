@@ -67,7 +67,7 @@ function _M:setInscription(id, name, data, cooldown, vocal, src, bypass_max_same
 	end
 	if not id then
 		if vocal then
-			game.logPlayer(self, "You are have no more inscription slots.")
+			game.logPlayer(self, "You have no more inscription slots.")
 		end
 		-- Replace chat
 		if self.player and src then

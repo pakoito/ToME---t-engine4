@@ -24,6 +24,7 @@ load("/data/general/npcs/vermin.lua", rarity(3))
 load("/data/general/npcs/canine.lua", rarity(1))
 load("/data/general/npcs/snake.lua", rarity(0))
 load("/data/general/npcs/plant.lua", rarity(0))
+load("/data/general/npcs/venom-drake.lua", rarity(0))
 load("/data/general/npcs/faeros.lua", rarity(0))
 
 load("/data/general/npcs/all.lua", rarity(4, 35))

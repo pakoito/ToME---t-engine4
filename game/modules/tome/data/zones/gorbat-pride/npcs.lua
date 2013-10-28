@@ -22,6 +22,7 @@ load("/data/general/npcs/orc-gorbat.lua", rarity(0))
 load("/data/general/npcs/cold-drake.lua", rarity(0))
 load("/data/general/npcs/storm-drake.lua", rarity(0))
 load("/data/general/npcs/fire-drake.lua", rarity(0))
+load("/data/general/npcs/venom-drake.lua", rarity(0))
 load("/data/general/npcs/multihued-drake.lua", rarity(3))
 
 load("/data/general/npcs/all.lua", rarity(4, 35))
