@@ -33,7 +33,7 @@ on_status_change = function(self, who, status, sub)
 		who:setQuestStatus(self.id, engine.Quest.DONE)
 		local p = game.party:findMember{main=true}
 		p:attr("forbid_arcane", 1)
-		if p:knowTalentType("wild-gift/antimagic") ~= nil then
+		if p:knowTalentType("wild-gift/antimagic") == true then
 			p:setTalentTypeMastery("wild-gift/antimagic", p:getTalentTypeMastery("wild-gift/antimagic") + 0.1)
 		else
 			p:learnTalentType("wild-gift/antimagic", true)
