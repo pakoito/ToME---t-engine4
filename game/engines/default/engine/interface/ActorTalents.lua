@@ -187,7 +187,8 @@ function _M:useTalent(id, who, force_level, ignore_cd, force_target, silent, no_
 				local old_level
 				if force_level then old_level = who.talents[id]; who.talents[id] = force_level end
 				local ret = ab.activate(who, ab)
-				if ret == true then ret = {} end -- fix for badly coded talents
+				if not ret or ret == true then ret = {} end -- fix for badly coded talents
+				ret.name = ret.name or ab.name
 				if force_level then who.talents[id] = old_level end
 
 				if not self:postUseTalent(ab, ret) then return end

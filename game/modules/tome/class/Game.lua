@@ -1247,10 +1247,17 @@ local newmessage = false --debugging
 	for src, tgts in pairs(self.delayed_log_damage) do
 newmessage = true -- debugging
 		for target, dams in pairs(tgts) do
+			local healmsg
 			if #dams.descs > 1 then
-				game.uiset.logdisplay(self:logMessage(src, dams.srcSeen, target, dams.tgtSeen, "#Source# hits #Target# for %s damage (total %0.1f).", table.concat(dams.descs, ", "), dams.total))
+				game.uiset.logdisplay(self:logMessage(src, dams.srcSeen, target, dams.tgtSeen, "#Source# hits #Target# for %s (%0.0f total damage)%s.", table.concat(dams.descs, ", "), dams.total, dams.healing<0 and (" #LIGHT_GREEN#[%0.0f healing]#LAST#"):format(-dams.healing) or ""))
 			else
-				game.uiset.logdisplay(self:logMessage(src, dams.srcSeen, target, dams.tgtSeen, "#Source# hits #Target# for %s damage.", table.concat(dams.descs, ", ")))
+				if dams.healing >= 0 then
+					game.uiset.logdisplay(self:logMessage(src, dams.srcSeen, target, dams.tgtSeen, "#Source# hits #Target# for %s damage.", table.concat(dams.descs, ", ")))
+				elseif src == target then
+					game.uiset.logdisplay(self:logMessage(src, dams.srcSeen, target, dams.tgtSeen, "#Source# receives %s.", table.concat(dams.descs, ", ")))
+				else
+					game.uiset.logdisplay(self:logMessage(src, dams.srcSeen, target, dams.tgtSeen, "#Target# receives %s from #Source#.", table.concat(dams.descs, ", ")))
+				end
 			end
 			local rsrc = src.resolveSource and src:resolveSource() or src
 			local rtarget = target.resolveSource and target:resolveSource() or target
@@ -1281,10 +1288,14 @@ function _M:delayedLogDamage(src, target, dam, desc, crit)
 	local visible, srcSeen, tgtSeen = self:logVisible(src, target)
 	if visible then -- only log damage the player is aware of
 		self.delayed_log_damage[src] = self.delayed_log_damage[src] or {}
-		self.delayed_log_damage[src][target] = self.delayed_log_damage[src][target] or {total=0, descs={}}
+		self.delayed_log_damage[src][target] = self.delayed_log_damage[src][target] or {total=0, healing=0, descs={}}
 		local t = self.delayed_log_damage[src][target]
 		t.descs[#t.descs+1] = desc
-		t.total = t.total + dam
+		if dam>=0 then
+			t.total = t.total + dam
+		else
+			t.healing = t.healing + dam
+		end
 		t.is_crit = t.is_crit or crit
 		t.srcSeen = srcSeen
 		t.tgtSeen = tgtSeen

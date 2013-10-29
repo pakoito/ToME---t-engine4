@@ -173,7 +173,7 @@ newTalent{
 	require = spells_req3,
 	mode = "passive",
 	points = 5,
-	getRadius = function(self, t) return math.floor(self:combatTalentScale(t, 2, 6, 0.5, 0, 0, true)) end,
+	getRadius = function(self, t) return math.max(1, math.floor(self:combatTalentScale(t, 2, 6, 0.5, 0, 0, true))) end,
 	minmax = function(self, t, grids)
 		local theoretical_nb = (2 * t.getRadius(self, t) + 1)^1.94 -- Maximum grids hit vs. talent level
 		if grids then

@@ -126,7 +126,7 @@ newTalent{
 			local target = game.level.map(px, py, Map.ACTOR)
 			if not target or self:reactionToward(target) < 0 then return end
 			target:attr("allow_on_heal", 1)
-			target:heal(30 + self:combatTalentMindDamage(t, 10, 350))
+			target:heal(30 + self:combatTalentMindDamage(t, 10, 350), m)
 			target:attr("allow_on_heal", -1)
 		end, nil, {type="acid"})
 	end,

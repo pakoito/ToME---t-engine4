@@ -254,7 +254,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			local pen = 0
 			if src.resists_pen then pen = (src.resists_pen.all or 0) + (src.resists_pen[type] or 0) end
 			local dominated = target:hasEffect(target.EFF_DOMINATED)
-			if dominated and dominated.source == src then pen = pen + (dominated.resistPenetration or 0) end
+			if dominated and dominated.src == src then pen = pen + (dominated.resistPenetration or 0) end
 			if target:attr("sleep") and src.attr and src:attr("night_terror") then pen = pen + src:attr("night_terror") end
 			local res = target:combatGetResist(type)
 			pen = util.bound(pen, 0, 100)
@@ -409,8 +409,8 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 
 		-- damage affinity healing
 		if not target.dead and affinity_heal > 0 then
-			target:heal(affinity_heal)
-			game:delayedLogMessage(target, nil, "Affinity"..type, "#Source# heals from "..(DamageType:get(type).text_color or "#aaaaaa#")..DamageType:get(type).name.."#LAST# damage!")
+			target:heal(affinity_heal, src)
+			game:delayedLogMessage(target, nil, "Affinity"..type, "#Source##LIGHT_GREEN# HEALS#LAST# from "..(DamageType:get(type).text_color or "#aaaaaa#")..DamageType:get(type).name.."#LAST# damage!")
 		end
 
 		if dam > 0 and src.damage_log and src.damage_log.weapon then
@@ -1628,7 +1628,7 @@ newDamageType{
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and target:attr("demon") then
-			target:heal(dam)
+			target:heal(dam, src)
 			return -dam
 		elseif target then
 			DamageType:get(DamageType.FIRE).projector(src, x, y, DamageType.FIRE, dam)
@@ -1643,7 +1643,7 @@ newDamageType{
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and (target:attr("undead") or target:attr(retch_heal)) then
-			target:heal(dam * 1.5)
+			target:heal(dam * 1.5, src)
 
 			if src.callTalent then
 				if rng.percent(src:callTalent(src.T_RETCH, "getPurgeChance")) then
@@ -1690,7 +1690,7 @@ newDamageType{
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and not target:attr("undead") and not target:attr("demon") then
-			target:heal(dam / 2)
+			target:heal(dam / 2, src)
 		elseif target then
 			DamageType:get(DamageType.LIGHT).projector(src, x, y, DamageType.LIGHT, dam)
 		end
@@ -2179,7 +2179,7 @@ newDamageType{
 			-- cannot be reduced
 			local temp = src.healing_factor
 			src.healing_factor = 1
-			src:heal(heal)
+			src:heal(heal, target)
 			src.healing_factor = temp
 			src:logCombat(target, "#Source# consumes %d life from #Target#!", heal)
 		end

@@ -148,7 +148,7 @@ uberTalent{
 	action = function(self, t)
 		local eff = self:hasEffect(self.EFF_FUNGAL_BLOOD)
 		self:attr("allow_on_heal", 1)
-		self:heal(math.min(eff.power, t.healmax(self,t)))
+		self:heal(math.min(eff.power, t.healmax(self,t)), eff)
 		self:attr("allow_on_heal", -1)
 		self:removeEffectsFilter({status="detrimental", type="magical"}, 10)
 		self:removeEffect(self.EFF_FUNGAL_BLOOD)

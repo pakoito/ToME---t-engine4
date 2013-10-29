@@ -59,7 +59,7 @@ newTalent{
 
 		local duration = t.getDuration(self, t)
 		self:setEffect(self.EFF_STALKER, duration, { target=target, bonus = 1 })
-		target:setEffect(self.EFF_STALKED, duration, { source=self })
+		target:setEffect(self.EFF_STALKED, duration, {src=self })
 
 		game.level.map:particleEmitter(target.x, target.y, 1, "stalked_start")
 
@@ -123,7 +123,7 @@ newTalent{
 		local chance = t.getChance(self, t)
 		local spellpowerChange = t.getSpellpowerChange(self, t)
 		local mindpowerChange = t.getMindpowerChange(self, t)
-		target:setEffect(target.EFF_BECKONED, duration, { source=self, range=range, chance=chance, spellpowerChange=spellpowerChange, mindpowerChange=mindpowerChange })
+		target:setEffect(target.EFF_BECKONED, duration, {src=self, range=range, chance=chance, spellpowerChange=spellpowerChange, mindpowerChange=mindpowerChange })
 
 		return true
 	end,
@@ -169,7 +169,7 @@ newTalent{
 		local target = effStalker.target
 		if not target or target.dead then return nil end
 
-		target:setEffect(target.EFF_HARASSED, duration, { source=self, damageChange=targetDamageChange })
+		target:setEffect(target.EFF_HARASSED, duration, {src=self, damageChange=targetDamageChange })
 
 		for i = 1, 2 do
 			if not target.dead and self:attackTarget(target, nil, damageMultipler, true) then

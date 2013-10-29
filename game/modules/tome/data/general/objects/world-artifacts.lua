@@ -3793,7 +3793,7 @@ newEntity{ base = "BASE_LONGSWORD",
 			if not who:checkHit(who:combatMindpower(), target:combatMentalResist()) then return end
 			if eff == "stun" then target:setEffect(target.EFF_MADNESS_STUNNED, 3, {mindResistChange=-25})
 			elseif eff == "malign" then target:setEffect(target.EFF_MALIGNED, 3, {resistAllChange=10})
-			elseif eff == "agony" then target:setEffect(target.EFF_AGONY, 5, { source=who, damage=40, mindpower=40, range=10, minPercent=10, duration=5})
+			elseif eff == "agony" then target:setEffect(target.EFF_AGONY, 5, { src=who, damage=40, mindpower=40, range=10, minPercent=10, duration=5})
 			elseif eff == "confusion" then target:setEffect(target.EFF_CONFUSED, 3, {power=60})
 			elseif eff == "silence" then target:setEffect(target.EFF_SILENCED, 3, {})
 			end
@@ -3842,7 +3842,7 @@ newEntity{ base = "BASE_LONGSWORD",
 		else
 			game.logPlayer(who, "#CRIMSON#As you tear the tentacles from your arm, horrible images enter your mind!")
 			who:setEffect(who.EFF_WEAKENED_MIND, 15, {power=25})
-			who:setEffect(who.EFF_AGONY, 5, { source=who, damage=15, mindpower=40, range=10, minPercent=10, duration=5})
+			who:setEffect(who.EFF_AGONY, 5, { src=who, damage=15, mindpower=40, range=10, minPercent=10, duration=5})
 		end
 		self.wielder.combat_mentalresist = -30
 	end,

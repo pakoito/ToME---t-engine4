@@ -77,7 +77,7 @@ newTalent{
 		local effectId = rng.table(effects)
 		
 		local duration = t.getDuration(self, t)
-		local eff = { source=self, duration=duration }
+		local eff = {src=self, duration=duration }
 		if effectId == target.EFF_PARANOID then
 			eff.attackChance = t.getParanoidAttackChance(self, t)
 			eff.mindpower = mindpower
@@ -105,7 +105,7 @@ newTalent{
 		-- heightened fear
 		if tHeightenFear and not target:hasEffect(target.EFF_HEIGHTEN_FEAR) then
 			local turnsUntilTrigger = tHeightenFear.getTurnsUntilTrigger(self, tHeightenFear)
-			target:setEffect(target.EFF_HEIGHTEN_FEAR, 1, { source=self, range=self:getTalentRange(tHeightenFear), turns=turnsUntilTrigger, turns_left=turnsUntilTrigger })
+			target:setEffect(target.EFF_HEIGHTEN_FEAR, 1, {src=self, range=self:getTalentRange(tHeightenFear), turns=turnsUntilTrigger, turns_left=turnsUntilTrigger })
 		end
 		
 		return effectId
@@ -175,7 +175,7 @@ newTalent{
 		local range = self:getTalentRange(t)
 		local turnsUntilTrigger = t.getTurnsUntilTrigger(self, t)
 		local duration = tInstillFear.getDuration(self, tInstillFear)
-		return ([[Heighten the fears of everyone around you. Any foe experiencing at least one fear, who remains in a radius of %d and in sight of you for %d (non-consecutive) turns, will gain a new fear that lasts for %d turns. The target can save versus Mindpower to resist the effect, and each heightened fear reduces the chances of another by 10%%. 
+		return ([[Heighten the fears of everyone around you. Any foe you inflict at least one fear upon and who remains in a radius of %d and in sight of you for %d (non-consecutive) turns, will gain a new fear that lasts for %d turns. The target can save versus Mindpower to resist the effect, and each added fear reduces the chances of another by 10%%. 
 		You gain 2 new fears: The Terrified effect causes talents and attacks to fail %d%% of the time. The Distressed effect reduces all saves by %d.
 		Fear effects improve with your Mindpower.]]):format(range, turnsUntilTrigger, duration,
 		t.getTerrifiedActionFailureChance(self, t),
@@ -242,7 +242,7 @@ newTalent{
 					if not actor:canBe("fear") then
 						game.logSeen(actor, "#F53CBE#%s ignores the panic!", actor.name:capitalize())
 					elseif actor:checkHit(self:combatMindpower(), actor:combatMentalResist(), 0, 95) then
-						actor:setEffect(actor.EFF_PANICKED, duration, {source=self,range=10,chance=chance})
+						actor:setEffect(actor.EFF_PANICKED, duration, {src=self,range=10,chance=chance})
 					else
 						game.logSeen(actor, "#F53CBE#%s resists the panic!", actor.name:capitalize())
 					end

@@ -88,8 +88,8 @@ newEffect{
 
 newEffect{
 	name = "DOMINANT_WILL", image = "talents/yeek_will.png",
-	desc = "Dominated",
-	long_desc = function(self, eff) return ("The target's mind has been shattered. Its body remains as a thrall to your mind.") end,
+	desc = "Mental Domination",
+	long_desc = function(self, eff) return ("The target's mind has been shattered. Its body remains as a thrall to %s."):format(eff.src.name:capitalize()) end,
 	type = "mental",
 	subtype = { dominate=true },
 	status = "detrimental",
@@ -375,11 +375,11 @@ newEffect{
 	name = "STALKED", image = "effects/stalked.png",
 	desc = "Stalked",
 	long_desc = function(self, eff)
-		local effStalker = eff.source:hasEffect(eff.source.EFF_STALKER)
+		local effStalker = eff.src:hasEffect(eff.src.EFF_STALKER)
 		if not effStalker then return "Being stalked." end
-		local t = self:getTalentFromId(eff.source.T_STALK)
+		local t = self:getTalentFromId(eff.src.T_STALK)
 		local desc = ([[Being stalked by %s. Stalker bonus level %d: +%d attack, +%d%% melee damage, +%0.2f hate/turn prey was hit.]]):format(
-			eff.source.name, effStalker.bonus, t.getAttackChange(eff.source, t, effStalker.bonus), t.getStalkedDamageMultiplier(eff.source, t, effStalker.bonus) * 100 - 100, t.getHitHateChange(eff.source, t, effStalker.bonus))
+			eff.src.name, effStalker.bonus, t.getAttackChange(eff.src, t, effStalker.bonus), t.getStalkedDamageMultiplier(eff.src, t, effStalker.bonus) * 100 - 100, t.getHitHateChange(eff.src, t, effStalker.bonus))
 		if eff.damageChange and eff.damageChange > 0 then
 			desc = desc..(" Prey damage modifier: %d%%."):format(eff.damageChange)
 		end
@@ -390,7 +390,7 @@ newEffect{
 	status = "detrimental",
 	parameters = {},
 	activate = function(self, eff)
-		local effStalker = eff.source:hasEffect(eff.source.EFF_STALKER)
+		local effStalker = eff.src:hasEffect(eff.src.EFF_STALKER)
 		eff.particleBonus = effStalker.bonus
 		eff.particle = self:addParticles(Particles.new("stalked", 1, { bonus = eff.particleBonus }))
 	end,
@@ -399,10 +399,10 @@ newEffect{
 		if eff.damageChangeId then self:removeTemporaryValue("inc_damage", eff.damageChangeId) end
 	end,
 	on_timeout = function(self, eff)
-		if not eff.source or eff.source.dead or not eff.source:hasEffect(eff.source.EFF_STALKER) then
+		if not eff.src or eff.src.dead or not eff.src:hasEffect(eff.src.EFF_STALKER) then
 			self:removeEffect(self.EFF_STALKED)
 		else
-			local effStalker = eff.source:hasEffect(eff.source.EFF_STALKER)
+			local effStalker = eff.src:hasEffect(eff.src.EFF_STALKER)
 			if eff.particleBonus ~= effStalker.bonus then
 				eff.particleBonus = effStalker.bonus
 				self:removeParticles(eff.particle)
@@ -425,7 +425,7 @@ newEffect{
 	name = "BECKONED", image = "talents/beckon.png",
 	desc = "Beckoned",
 	long_desc = function(self, eff)
-		local message = ("The target has been beckoned by %s and is heeding the call. There is a %d%% chance of moving towards the beckoner each turn."):format(eff.source.name, eff.chance)
+		local message = ("The target has been beckoned by %s and is heeding the call. There is a %d%% chance of moving towards the beckoner each turn."):format(eff.src.name, eff.chance)
 		if eff.spellpowerChangeId and eff.mindpowerChangeId then
 			message = message..(" (spellpower: %d, mindpower: %d"):format(eff.spellpowerChange, eff.mindpowerChange)
 		end
@@ -458,7 +458,7 @@ newEffect{
 	on_timeout = function(self, eff)
 	end,
 	do_act = function(self, eff)
-		if eff.source.dead then
+		if eff.src.dead then
 			self:removeEffect(self.EFF_BECKONED)
 			return
 		end
@@ -468,7 +468,7 @@ newEffect{
 		if not eff.timer then
 			eff.timer = rng.float(0, 100)
 		end
-		if not self:checkHit(eff.source:combatMindpower(), self:combatMentalResist(), 0, 95, 5) then
+		if not self:checkHit(eff.src:combatMindpower(), self:combatMentalResist(), 0, 95, 5) then
 			eff.timer = eff.timer + eff.chance * 0.5
 			game.logSeen(self, "#F53CBE#%s struggles against the beckoning.", self.name:capitalize())
 		else
@@ -478,7 +478,7 @@ newEffect{
 		if eff.timer > 100 then
 			eff.timer = eff.timer - 100
 
-			local distance = core.fov.distance(self.x, self.y, eff.source.x, eff.source.y)
+			local distance = core.fov.distance(self.x, self.y, eff.src.x, eff.src.y)
 			if math.floor(distance) > 1 and distance <= eff.range then
 				-- in range but not adjacent
 
@@ -489,7 +489,7 @@ newEffect{
 				-- custom pull logic (adapted from move_dmap; forces movement, pushes others aside, custom particles)
 
 				if not self:attr("never_move") then
-					local source = eff.source
+					local source = eff.src
 					local moveX, moveY = source.x, source.y -- move in general direction by default
 					if not self:hasLOS(source.x, source.y) then
 						local a = Astar.new(game.level.map, self)
@@ -579,7 +579,7 @@ newEffect{
 newEffect{
 	name = "DOMINATED", image = "talents/dominate.png",
 	desc = "Dominated",
-	long_desc = function(self, eff) return ("The target is dominated, unable to move and losing %d armor, %d defense and suffering %d%% penetration for damage from its master."):format(-eff.armorChange, -eff.defenseChange, eff.resistPenetration) end,
+	long_desc = function(self, eff) return ("The target has been dominated.  It is unable to move and has lost %d armor and %d defense. Attacks from %s gain %d%% damage penetration."):format(-eff.armorChange, -eff.defenseChange, eff.src.name:capitalize(), eff.resistPenetration) end,
 	type = "mental",
 	subtype = { dominate=true },
 	status = "detrimental",
@@ -1031,7 +1031,7 @@ newEffect{
 		if not eff.timer then
 			eff.timer = rng.float(0, 100)
 		end
-		if not self:checkHit(eff.source:combatMindpower(), self:combatMentalResist(), 0, 95, 5) then
+		if not self:checkHit(eff.src:combatMindpower(), self:combatMentalResist(), 0, 95, 5) then
 			eff.timer = eff.timer + eff.attackChance * 0.5
 			game.logSeen(self, "#F53CBE#%s struggles against the paranoia.", self.name:capitalize())
 		else
@@ -1048,13 +1048,13 @@ newEffect{
 					local target = game.level.map(x, y, Map.ACTOR)
 					if target then
 						self:logCombat(target, "#F53CBE##Source# attacks #Target# in a fit of paranoia.")
-						if self:attackTarget(target, nil, 1, false) and target ~= eff.source then
+						if self:attackTarget(target, nil, 1, false) and target ~= eff.src then
 							if not target:canBe("fear") then
 								game.logSeen(target, "#F53CBE#%s ignores the fear!", target.name:capitalize())
 							elseif not target:checkHit(eff.mindpower, target:combatMentalResist()) then
-								game:logSeen(target, "%s resists the fear!", target.name:capitalize())
+								game.logSeen(target, "%s resists the fear!", target.name:capitalize())
 							else
-								target:setEffect(target.EFF_PARANOID, eff.duration, { source=eff.source, attackChance=eff.attackChance, mindpower=eff.mindpower, duration=eff.duration })
+								target:setEffect(target.EFF_PARANOID, eff.duration, {src=eff.src, attackChance=eff.attackChance, mindpower=eff.mindpower, duration=eff.duration })
 							end
 						end
 						return
@@ -1154,7 +1154,7 @@ newEffect{
 			if def.subtype and def.subtype.fear then
 				if not self.dead then
 					game.logSeen(self, "#F53CBE#%s is struck by fear of the %s effect.", self.name:capitalize(), def.desc)
-					eff.source:project({type="hit", x=self.x,y=self.y}, self.x, self.y, DamageType.MIND, { dam=eff.damage,alwaysHit=true,criticals=false,crossTierChance=0 })
+					eff.src:project({type="hit", x=self.x,y=self.y}, self.x, self.y, DamageType.MIND, { dam=eff.damage,alwaysHit=true,criticals=false,crossTierChance=0 })
 				end
 			end
 		end
@@ -1169,7 +1169,7 @@ newEffect{
 	on_setFearEffect = function(self, e)
 		local eff = self:hasEffect(self.EFF_HAUNTED)
 		game.logSeen(self, "#F53CBE#%s is struck by fear of the %s effect.", self.name:capitalize(), util.getval(e.desc, self, e))
-		eff.source:project({type="hit", x=self.x,y=self.y}, self.x, self.y, DamageType.MIND, { dam=eff.damage,alwaysHit=true,criticals=false,crossTierChance=0 })
+		eff.src:project({type="hit", x=self.x,y=self.y}, self.x, self.y, DamageType.MIND, { dam=eff.damage,alwaysHit=true,criticals=false,crossTierChance=0 })
 	end,
 }
 
@@ -1231,7 +1231,7 @@ newEffect{
 		end,
 	},
 	on_timeout = function(self, eff)
-		if eff.source.dead then return true end
+		if eff.src.dead then return true end
 
 		-- tormentors per turn are pre-calculated in a table, but ordered, so take a random one
 		local count = rng.tableRemove(eff.counts)
@@ -1243,8 +1243,8 @@ newEffect{
 				if game.level.map:isBound(x, y) and not game.level.map(x, y, Map.ACTOR) then
 					local def = self.tempeffect_def[self.EFF_TORMENTED]
 					local m = require("mod.class.NPC").new(def.npcTormentor)
-					m.faction = eff.source.faction
-					m.summoner = eff.source
+					m.faction = eff.src.faction
+					m.summoner = eff.src
 					m.summoner_gain_exp = true
 					m.summon_time = 3
 					m.tormentedDamage = eff.damage
@@ -1264,7 +1264,7 @@ newEffect{
 newEffect{
 	name = "PANICKED", image = "talents/panic.png",
 	desc = "Panicked",
-	long_desc = function(self, eff) return ("The target has been panicked by %s, causing them to have a %d%% chance of fleeing in terror instead of acting."):format(eff.source.name, eff.chance) end,
+	long_desc = function(self, eff) return ("The target has been panicked by %s, causing them to have a %d%% chance of fleeing in terror instead of acting."):format(eff.src.name, eff.chance) end,
 	type = "mental",
 	subtype = { fear=true },
 	status = "detrimental",
@@ -1282,13 +1282,13 @@ newEffect{
 	end,
 	do_act = function(self, eff)
 		if not self:enoughEnergy() then return nil end
-		if eff.source.dead then return true end
+		if eff.src.dead then return true end
 
 		-- apply periodic timer instead of random chance
 		if not eff.timer then
 			eff.timer = rng.float(0, 100)
 		end
-		if not self:checkHit(eff.source:combatMindpower(), self:combatMentalResist(), 0, 95, 5) then
+		if not self:checkHit(eff.src:combatMindpower(), self:combatMentalResist(), 0, 95, 5) then
 			eff.timer = eff.timer + eff.chance * 0.5
 			game.logSeen(self, "#F53CBE#%s struggles against the panic.", self.name:capitalize())
 		else
@@ -1297,11 +1297,11 @@ newEffect{
 		if eff.timer > 100 then
 			eff.timer = eff.timer - 100
 
-			local distance = core.fov.distance(self.x, self.y, eff.source.x, eff.source.y)
+			local distance = core.fov.distance(self.x, self.y, eff.src.x, eff.src.y)
 			if distance <= eff.range then
 				-- in range
 				if not self:attr("never_move") then
-					local sourceX, sourceY = eff.source.x, eff.source.y
+					local sourceX, sourceY = eff.src.x, eff.src.y
 
 					local bestX, bestY
 					local bestDistance = 0
@@ -1325,9 +1325,9 @@ newEffect{
 
 					if bestX then
 						self:move(bestX, bestY, false)
-						game.logPlayer(self, "#F53CBE#You panic and flee from %s.", eff.source.name)
+						game.logPlayer(self, "#F53CBE#You panic and flee from %s.", eff.src.name)
 					else
-						self:logCombat(eff.source, "#F53CBE##Source# panics but fails to flee from #Target#.")
+						self:logCombat(eff.src, "#F53CBE##Source# panics but fails to flee from #Target#.")
 						self:useEnergy(game.energy_to_act * self:combatMovementSpeed(bestX, bestY))
 					end
 				end

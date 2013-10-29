@@ -1542,12 +1542,12 @@ newEffect{
 	type = "magical",
 	subtype = {disease=true, blight=true},
 	status = "detrimental",
-	parameters = {},
+	parameters = {con = 1, dam = 1},
 	on_gain = function(self, err) return "#Target# is afflicted by a rotting disease!" end,
 	on_lose = function(self, err) return "#Target# is free from the rotting disease." end,
 	-- Damage each turn
 	on_timeout = function(self, eff)
-		if self:attr("purify_disease") then self:heal(eff.dam)
+		if self:attr("purify_disease") then self:heal(eff.dam, eff.src)
 		else DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.dam, {from_disease=true})
 		end
 	end,
@@ -1567,12 +1567,12 @@ newEffect{
 	type = "magical",
 	subtype = {disease=true, blight=true},
 	status = "detrimental",
-	parameters = {},
+	parameters = {dex = 1, dam = 1},
 	on_gain = function(self, err) return "#Target# is afflicted by a decrepitude disease!" end,
 	on_lose = function(self, err) return "#Target# is free from the decrepitude disease." end,
 	-- Damage each turn
 	on_timeout = function(self, eff)
-		if self:attr("purify_disease") then self:heal(eff.dam)
+		if self:attr("purify_disease") then self:heal(eff.dam, eff.src)
 		else DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.dam, {from_disease=true})
 		end
 	end,
@@ -1592,12 +1592,12 @@ newEffect{
 	type = "magical",
 	subtype = {disease=true, blight=true},
 	status = "detrimental",
-	parameters = {},
+	parameters = {str = 1, dam  = 1},
 	on_gain = function(self, err) return "#Target# is afflicted by a weakness disease!" end,
 	on_lose = function(self, err) return "#Target# is free from the weakness disease." end,
 	-- Damage each turn
 	on_timeout = function(self, eff)
-		if self:attr("purify_disease") then self:heal(eff.dam)
+		if self:attr("purify_disease") then self:heal(eff.dam, eff.src)
 		else DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.dam, {from_disease=true})
 		end
 	end,
@@ -1622,7 +1622,7 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is free from the epidemic." end,
 	-- Damage each turn
 	on_timeout = function(self, eff)
-		if self:attr("purify_disease") then self:heal(eff.dam)
+		if self:attr("purify_disease") then self:heal(eff.dam, eff.src)
 		else DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.dam, {from_disease=true})
 		end
 	end,
@@ -1654,7 +1654,7 @@ newEffect{
 
 		-- disease damage
 		if self:attr("purify_disease") then
-			self:heal(eff.dam)
+			self:heal(eff.dam, eff.src)
 		else
 			DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.dam, {from_disease=true})
 		end
@@ -1704,7 +1704,7 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is free from the ghoul rot." end,
 	-- Damage each turn
 	on_timeout = function(self, eff)
-		if self:attr("purify_disease") then self:heal(eff.dam)
+		if self:attr("purify_disease") then self:heal(eff.dam, eff.src)
 		else DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.dam, {from_disease=true})
 		end
 	end,
@@ -2034,7 +2034,7 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is no longer poisoned.", "-Vulnerability Poison" end,
 	-- Damage each turn
 	on_timeout = function(self, eff)
-		if self:attr("purify_poison") then self:heal(eff.power)
+		if self:attr("purify_poison") then self:heal(eff.power, eff.src)
 		else DamageType:get(DamageType.ARCANE).projector(eff.src, self.x, self.y, DamageType.ARCANE, eff.power)
 		end
 	end,

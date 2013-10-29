@@ -246,7 +246,7 @@ newTalent{
 			end
 			for i = 1, 2 do self:removeObject(self:getInven("QUIVER"), 1) end
 			self.alchemy_golem:attr("allow_on_heal", 1)
-			self.alchemy_golem:heal(t.getHeal(self, t))
+			self.alchemy_golem:heal(t.getHeal(self, t), self)
 			self.alchemy_golem:attr("allow_on_heal", -1)
 			if core.shader.active(4) then self.alchemy_golem:addParticles(Particles.new("shader_shield_temp", 1, {size_factor=1.1, sizev=1.5, sizea=0.2}, {type="runicshield", color={0.34, 0.1, 0.5}})) end
 

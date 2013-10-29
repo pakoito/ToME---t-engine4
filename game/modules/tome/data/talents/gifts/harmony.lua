@@ -45,7 +45,7 @@ newTalent{
 				nb = nb + 1
 			end
 		end
-		self:heal(self:mindCrit(nb * self:combatTalentStatDamage(t, "wil", 20, 60)))
+		self:heal(self:mindCrit(nb * self:combatTalentStatDamage(t, "wil", 20, 60)), self)
 		self:setEffect(self.EFF_WATERS_OF_LIFE, t.getdur(self,t), {})
 		game:playSoundNear(self, "talents/spell_generic2")
 		return true
@@ -53,7 +53,7 @@ newTalent{
 	info = function(self, t)
 		return ([[The waters of life flow through you, purifying any poisons or diseases currently affecting you.
 		For %d turns, all poisons and diseases will heal you instead of damaging you.
-		When activated, it also heals you for %d life per diseases or poisons on you.
+		When activated, it also heals you for %d life for each disease or poison you have.
 		The healing per disease/poison will increase with your Willpower.]]):
 		format(t.getdur(self,t), self:combatTalentStatDamage(t, "wil", 20, 60))
 	end,

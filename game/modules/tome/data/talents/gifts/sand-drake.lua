@@ -52,7 +52,7 @@ newTalent{
 			world:gainAchievement("EAT_BOSSES", self, target)
 			self:incEquilibrium(-target.level - 5)
 			self:attr("allow_on_heal", 1)
-			self:heal(target.level * 2 + 5)
+			self:heal(target.level * 2 + 5, target)
 			self:attr("allow_on_heal", -1)
 		else
 			game.logSeen(target, "%s resists!", target.name:capitalize())

@@ -104,7 +104,7 @@ newEffect{
 
 newEffect{
 	name = "POISONED", image = "effects/poisoned.png",
-	desc = "Poisoned",
+	desc = "Poison",
 	long_desc = function(self, eff) return ("The target is poisoned, taking %0.2f nature damage per turn."):format(eff.power) end,
 	type = "physical",
 	subtype = { poison=true, nature=true }, no_ct_effect = true,
@@ -123,7 +123,7 @@ newEffect{
 		return old_eff
 	end,
 	on_timeout = function(self, eff)
-		if self:attr("purify_poison") then self:heal(eff.power)
+		if self:attr("purify_poison") then self:heal(eff.power, eff.src)
 		else DamageType:get(DamageType.NATURE).projector(eff.src, self.x, self.y, DamageType.NATURE, eff.power)
 		end
 	end,
@@ -143,7 +143,7 @@ newEffect{
 		eff.tmpid = self:addTemporaryValue("never_move", 1)
 	end,
 	on_timeout = function(self, eff)
-		if self:attr("purify_poison") then self:heal(eff.power)
+		if self:attr("purify_poison") then self:heal(eff.power, eff.src)
 		else DamageType:get(DamageType.NATURE).projector(eff.src, self.x, self.y, DamageType.NATURE, eff.power)
 		end
 	end,
@@ -166,7 +166,7 @@ newEffect{
 		eff.healid = self:addTemporaryValue("healing_factor", -eff.heal_factor / 100)
 	end,
 	on_timeout = function(self, eff)
-		if self:attr("purify_poison") then self:heal(eff.power)
+		if self:attr("purify_poison") then self:heal(eff.power, eff.src)
 		else DamageType:get(DamageType.NATURE).projector(eff.src, self.x, self.y, DamageType.NATURE, eff.power)
 		end
 	end,
@@ -187,7 +187,7 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is no longer poisoned.", "-Crippling Poison" end,
 	-- Damage each turn
 	on_timeout = function(self, eff)
-		if self:attr("purify_poison") then self:heal(eff.power)
+		if self:attr("purify_poison") then self:heal(eff.power, eff.src)
 		else DamageType:get(DamageType.NATURE).projector(eff.src, self.x, self.y, DamageType.NATURE, eff.power)
 		end
 	end,
@@ -211,7 +211,7 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is no longer poisoned.", "-Numbing Poison" end,
 	-- Damage each turn
 	on_timeout = function(self, eff)
-		if self:attr("purify_poison") then self:heal(eff.power)
+		if self:attr("purify_poison") then self:heal(eff.power, eff.src)
 		else DamageType:get(DamageType.NATURE).projector(eff.src, self.x, self.y, DamageType.NATURE, eff.power)
 		end
 	end,
@@ -235,7 +235,7 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is no longer poisoned.", "-Stoning Poison" end,
 	-- Damage each turn
 	on_timeout = function(self, eff)
-		if self:attr("purify_poison") then self:heal(eff.power)
+		if self:attr("purify_poison") then self:heal(eff.power, eff.src)
 		else DamageType:get(DamageType.NATURE).projector(eff.src, self.x, self.y, DamageType.NATURE, eff.power)
 		end
 	end,
