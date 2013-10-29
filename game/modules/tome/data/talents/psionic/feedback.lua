@@ -123,7 +123,7 @@ newTalent{
 			local inc = "inc"..name:capitalize()
 			if name == "heal" then
 				self:attr("allow_on_heal", 1)
-				self:heal(self:mindCrit(v), self)
+				self:heal(self:mindCrit(v), t)
 				self:attr("allow_on_heal", -1)
 			elseif
 				self[inc] then self[inc](self, v) 

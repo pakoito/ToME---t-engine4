@@ -93,7 +93,7 @@ newInscription{
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:attr("allow_on_heal", 1)
-		self:heal(data.heal + data.inc_stat)
+		self:heal(data.heal + data.inc_stat, t)
 		self:attr("allow_on_heal", -1)
 		return true
 	end,
@@ -932,7 +932,7 @@ newInscription{
 				else
 					target:forceUseTalent(eff[2], {ignore_energy=true})
 				end
-				self:heal(data.heal + data.inc_stat)
+				self:heal(data.heal + data.inc_stat, t)
 			end
 
 			game.level.map:particleEmitter(px, py, 1, "shadow_zone")
@@ -942,7 +942,7 @@ newInscription{
 	end,
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		return ([[Activate the taint on a foe, removing %d effects from it and healing you for %d per effects.]]):format(data.effects, data.heal + data.inc_stat)
+		return ([[Activate the taint on a foe, removing %d effects from it and healing you for %d for each effect.]]):format(data.effects, data.heal + data.inc_stat)
 	end,
 	short_info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)

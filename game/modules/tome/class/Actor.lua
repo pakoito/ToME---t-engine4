@@ -1718,7 +1718,7 @@ function _M:onTakeHit(value, src, death_note)
 	if value > 0 and self:attr("time_shield") then
 		-- Absorb damage into the time shield
 		self.time_shield_absorb = self.time_shield_absorb or 0
-		game:delayedLogDamage(src, self, 0, ("#STEEL_BLUE#(%d absorbed)#LAST#"):format(math.min(value, self.time_shield_absorb)), false)
+		game:delayedLogDamage(src, self, 0, ("#STEEL_BLUE#(%d to time)#LAST#"):format(math.min(value, self.time_shield_absorb)), false)
 		if value < self.time_shield_absorb then
 			self.time_shield_absorb = self.time_shield_absorb - value
 			value = 0
@@ -1824,6 +1824,7 @@ function _M:onTakeHit(value, src, death_note)
 	if value > 0 and self:isTalentActive(self.T_BONE_SHIELD) then
 		local t = self:getTalentFromId(self.T_BONE_SHIELD)
 		if t.absorb(self, t, self:isTalentActive(self.T_BONE_SHIELD)) then
+			game:delayedLogDamage(src, self, 0, ("#SLATE#(%d to bones)#LAST#"):format(value), false)
 			value = 0
 		end
 	end
@@ -1837,11 +1838,17 @@ function _M:onTakeHit(value, src, death_note)
 		self.tempeffect_def[self.EFF_CURSED_FORM].do_onTakeHit(self, eff, value)
 	end
 
-	if value > 0 and self:isTalentActive(self.T_DEFLECTION) then
-		local t = self:getTalentFromId(self.T_DEFLECTION)
-		value = t.do_onTakeHit(self, t, self:isTalentActive(self.T_DEFLECTION), value)
+	if value > 0 then
+		tal = self:isTalentActive(self.T_DEFLECTION)
+		if tal then
+			local oldval = value
+			value = self:callTalent(self.T_DEFLECTION, "do_onTakeHit", tal, value)
+			if value ~= oldval then
+				game:delayedLogDamage(src, self, 0, ("#SLATE#(%d deflected)#LAST#"):format(oldval - value), false)
+			end
+		end
 	end
-
+	
 	if value > 0 and self:hasEffect(self.EFF_RAMPAGE) then
 		local eff = self:hasEffect(self.EFF_RAMPAGE)
 		value = self.tempeffect_def[self.EFF_RAMPAGE].do_onTakeHit(self, eff, value)
@@ -2022,8 +2029,9 @@ function _M:onTakeHit(value, src, death_note)
 
 	if self:attr("unstoppable") then
 		if value > self.life then
+			game:delayedLogDamage(src, self, 0, ("#RED#(%d refused)#LAST#"):format(value - self.life - 1), false)
 			value = self.life - 1
-			game:delayedLogMessage(self, nil, "unstoppable", "#VIOLET##Source# is unstoppable!")
+			game:delayedLogMessage(self, nil, "unstoppable", "#RED##Source# is unstoppable!")
 		end
 	end
 
@@ -2181,7 +2189,9 @@ function _M:onTakeHit(value, src, death_note)
 		if self.flat_damage_cap.all then cap = self.flat_damage_cap.all end
 		if self.flat_damage_cap[death_note.damtype] then cap = self.flat_damage_cap[death_note.damtype] end
 		if cap and cap > 0 then
-			value = math.max(math.min(value, cap * self.max_life / 100), 0)
+			local ignored = math.max(0, value - cap * self.max_life / 100)
+			if ignored > 0 then game:delayedLogDamage(src, self, 0, ("#LIGHT_GREY#(%d resilience)#LAST#"):format(ignored), false) end
+			value = value - ignored
 			print("[TAKE HIT] after flat damage cap", value)
 		end
 	end

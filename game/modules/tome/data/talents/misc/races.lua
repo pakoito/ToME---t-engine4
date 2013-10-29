@@ -722,7 +722,7 @@ newTalent{
 			end
 		end
 		self:attr("allow_on_heal", 1)
-		self:heal(t.heal(self, t))
+		self:heal(t.heal(self, t), t)
 		self:attr("allow_on_heal", -1)
 		return true
 	end,

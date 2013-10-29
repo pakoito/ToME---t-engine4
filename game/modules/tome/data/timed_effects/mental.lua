@@ -1880,9 +1880,9 @@ newEffect{
 		eff.healid = self:addTemporaryValue("no_life_regen", 1)
 	end,
 	deactivate = function(self, eff)
-		self:heal(eff.kills * eff.hp_per_kill * self.max_life / 100)
 		self:removeTemporaryValue("unstoppable", eff.tmpid)
 		self:removeTemporaryValue("no_life_regen", eff.healid)
+		self:heal(eff.kills * eff.hp_per_kill * self.max_life / 100, eff)
 	end,
 }
 

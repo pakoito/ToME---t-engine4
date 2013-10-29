@@ -149,8 +149,8 @@ on_caravan_destroyed_chat_over = function(self, who)
 	game.level.default_down.y = spot.y
 	
 	-- make yourself mortal again
-	game.player:heal(10000)
-	game.player:incHate(10000)
+	game.player:heal(game.player.max_life)
+	game.player:incHate(game.player.max_hate)
 	who.die = who.old_die
 	who.old_die = nil
 	

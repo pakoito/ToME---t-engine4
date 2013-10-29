@@ -67,7 +67,7 @@ newTalent{
 		game:playSoundNear(self, "talents/spell_generic")
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
-			target:setEffect(self.EFF_MARTYRDOM, 10, {power=t.getReturnDamage(self, t), apply_power=self:combatSpellpower()})
+			target:setEffect(self.EFF_MARTYRDOM, 10, {src = self, power=t.getReturnDamage(self, t), apply_power=self:combatSpellpower()})
 		else
 			return
 		end
