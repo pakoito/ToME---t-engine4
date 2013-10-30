@@ -346,12 +346,14 @@ end
 
 function string.his_her(actor)
 	if actor.female then return "her"
+	elseif actor.neuter then return "it"
 	else return "his"
 	end
 end
 
 function string.his_her_self(actor)
 	if actor.female then return "herself"
+	elseif actor.neuter then return "itself"
 	else return "himself"
 	end
 end

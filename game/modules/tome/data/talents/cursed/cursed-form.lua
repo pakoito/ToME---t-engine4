@@ -50,7 +50,7 @@ newTalent{
 			local heal = math.min(t.getRegenRate(self, t), maxHeal)
 			local temp = self.healing_factor
 			self.healing_factor = 1
-			self:heal(heal)
+			self:heal(heal, t)
 			self.healing_factor = temp
 
 			self.unnatural_body_heal = math.max(0, (self.unnatural_body_heal or 0) - heal)

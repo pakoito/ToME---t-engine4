@@ -398,15 +398,19 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		if target.knowTalent and target:hasEffect(target.EFF_DUAL_WEAPON_DEFENSE) then
 			local deflect = math.min(dam, target:callTalent(target.T_DUAL_WEAPON_DEFENSE, "doDeflect"))
 			if deflect > 0 then
-				self:logCombat(target, "#Target# parries %d damage from #Source#'s attack.", deflect)
+--				self:logCombat(target, "#Target# parries %d damage from #Source#'s attack.", deflect)
+				game:delayedLogDamage(self, target, 0, ("%s(%d parried#LAST#)"):format(DamageType:get(damtype).text_color or "#aaaaaa#", deflect), false)
 				dam = math.max(dam - deflect,0)
 				print("[ATTACK] after DUAL_WEAPON_DEFENSE", dam)
 			end 
 		end
 		if target.knowTalent and target:hasEffect(target.EFF_GESTURE_OF_GUARDING) and not target:attr("encased_in_ice") then
 			local deflected = math.min(dam, target:callTalent(target.T_GESTURE_OF_GUARDING, "doGuard")) or 0
-			if deflected > 0 then self:logCombat(target, "#Target# dismisses %d damage from #Source#'s attack with a sweeping gesture.", deflected) end
-			dam = dam - deflected
+--			if deflected > 0 then self:logCombat(target, "#Target# dismisses %d damage from #Source#'s attack with a sweeping gesture.", deflected) end
+			if deflected > 0 then
+				game:delayedLogDamage(self, target, 0, ("%s(%d gestured#LAST#)"):format(DamageType:get(damtype).text_color or "#aaaaaa#", deflected), false)
+				dam = dam - deflected
+			end
 			print("[ATTACK] after GESTURE_OF_GUARDING", dam)
 		end
 

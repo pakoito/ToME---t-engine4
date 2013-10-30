@@ -97,20 +97,26 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			t.on_damage(target, t, type)
 		end
 
+		local lastdam = dam
 		-- Item-granted damage ward talent
 		if target:hasEffect(target.EFF_WARD) then
 			local e = target.tempeffect_def[target.EFF_WARD]
 			dam = e.absorb(type, dam, target.tmp[target.EFF_WARD], target, src)
+			game:delayedLogDamage(src, target, 0, ("%s(%d warded)#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", lastdam-dam), false)
 		end
 
 		-- Block talent from shields
-		if target:attr("block") then
+		if dam > 0 and target:attr("block") then
 			local e = target.tempeffect_def[target.EFF_BLOCKING]
+			lastdam = dam
 			dam = e.do_block(type, dam, target.tmp[target.EFF_BLOCKING], target, src)
+			if lastdam - dam > 0 then game:delayedLogDamage(src, target, 0, ("%s(%d blocked)#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", lastdam-dam), false) end
 		end
-		if target.isTalentActive and target:isTalentActive(target.T_FORGE_SHIELD) then
+		if dam > 0 and target.isTalentActive and target:isTalentActive(target.T_FORGE_SHIELD) then
 			local t = target:getTalentFromId(target.T_FORGE_SHIELD)
+			lastdam = dam
 			dam = t.doForgeShield(type, dam, t, target, src)
+			if lastdam - dam > 0 then game:delayedLogDamage(src, target, 0, ("%s(%d blocked)#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", lastdam-dam), false) end
 		end
 
 		-- Increases damage
@@ -187,7 +193,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 				game:delayedLogMessage(source, target, "dark_strike"..(source.uid or ""), "#Source# strikes #Target# in the darkness (%+d%%%%%%%% damage).", dark.damageIncrease) -- resolve %% 3 levels deep
 			end
 		end
-
+		lastdam = dam
 		-- Static reduce damage for psionic kinetic shield
 		if target.isTalentActive and target:isTalentActive(target.T_KINETIC_SHIELD) then
 			local t = target:getTalentFromId(target.T_KINETIC_SHIELD)
@@ -218,15 +224,23 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			local t = target:getTalentFromId(target.T_CHARGED_SHIELD)
 			dam = t.css_on_damage(target, t, type, dam)
 		end
-
+		if dam ~= lastdam then
+			game:delayedLogDamage(src, target, 0, ("%s(%d to psi shield)#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", lastdam-dam), false)
+		end
+		lastdam = dam
 		if type ~= DamageType.PHYSICAL and target.knowTalent and target:knowTalent(target.T_STONE_FORTRESS) and target:hasEffect(target.EFF_DWARVEN_RESILIENCE) then
 			dam = math.max(0, dam - target:combatArmor() * (50 + target:getTalentLevel(target.T_STONE_FORTRESS) * 10) / 100)
 		end
+		if dam ~= lastdam then
+			game:delayedLogDamage(src, target, 0, ("%s(%d to armor)#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", lastdam-dam), false)
+		end
 
 		-- Damage Smearing
-		if type ~= DamageType.TEMPORAL and target:hasEffect(target.EFF_DAMAGE_SMEARING) then
+		if dam > 0 and type ~= DamageType.TEMPORAL and target:hasEffect(target.EFF_DAMAGE_SMEARING) then
 			local smear = dam
+			local type = DamageType.TEMPORAL
 			target:setEffect(target.EFF_SMEARED, 6, {src=src, power=smear/6, no_ct_effect=true})
+			game:delayedLogDamage(src, target, 0, ("%s(%d smeared)#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", dam), false)
 			dam = 0
 		end
 
@@ -279,19 +293,24 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 		end
 
 		-- Static reduce damage
-		if target.isTalentActive and target:isTalentActive(target.T_ANTIMAGIC_SHIELD) then
+		if dam > 0 and target.isTalentActive and target:isTalentActive(target.T_ANTIMAGIC_SHIELD) then
 			local t = target:getTalentFromId(target.T_ANTIMAGIC_SHIELD)
+			lastdam = dam
 			dam = t.on_damage(target, t, type, dam)
+			if lastdam - dam  > 0 then game:delayedLogDamage(src, target, 0, ("%s(%d antimagic)#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", lastdam - dam), false) end
 		end
 
-		if target.isTalentActive and target:isTalentActive(target.T_ENERGY_DECOMPOSITION) then
+		if dam > 0 and target.isTalentActive and target:isTalentActive(target.T_ENERGY_DECOMPOSITION) then
 			local t = target:getTalentFromId(target.T_ENERGY_DECOMPOSITION)
+			lastdam = dam
 			dam = t.on_damage(target, t, type, dam)
+			if lastdam - dam  > 0 then game:delayedLogDamage(src, target, 0, ("%s(%d dissipated)#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", lastdam - dam), false) end
 		end
 
 		-- Flat damage reduction ("armour")
-		if target.flat_damage_armor then
+		if dam > 0 and target.flat_damage_armor then
 			local dec = (target.flat_damage_armor.all or 0) + (target.flat_damage_armor[type] or 0)
+			if dec > 0 then game:delayedLogDamage(src, target, 0, ("%s(%d reduction)#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", dec), false) end
 			dam = math.max(0, dam - dec)
 			print("[PROJECTOR] after flat damage armor", dam)
 		end
@@ -373,10 +392,12 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			end
 		end
 
-		if src.attr and src:attr("martyrdom") and not no_martyr then
+		if dam > 0 and src.attr and src:attr("martyrdom") and not no_martyr then
+			game:delayedLogMessage(src, target, "martyrdom", "#CRIMSON##Source# damages %s through Martyrdom!", string.his_her_self(src))
 			DamageType.defaultProjector(target, src.x, src.y, type, dam * src.martyrdom / 100, tmp, true)
 		end
 		if target.attr and target:attr("reflect_damage") and not no_martyr and src.x and src.y then
+			game:delayedLogMessage(target, src, "reflect_damage"..(src.uid or ""), "#CRIMSON##Source# reflects damage back to #Target#!")
 			DamageType.defaultProjector(target, src.x, src.y, type, dam * target.reflect_damage / 100, tmp, true)
 		end
 

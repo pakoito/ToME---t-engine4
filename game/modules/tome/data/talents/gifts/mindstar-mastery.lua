@@ -169,7 +169,7 @@ newTalent{
 			if core.fov.distance(self.x, self.y, x, y) > 1 then break end
 
 			target:attr("allow_on_heal", 1)
-			target:heal(dam, self)
+			target:heal(dam, t)
 			target:attr("allow_on_heal", -1)
 			target:incEquilibrium(-dam / 10)
 			break
