@@ -5506,12 +5506,12 @@ newEntity{ base = "BASE_TOOL_MISC", --Thanks Alex!
 		self.wielder.combat_spellspeed = self.wielder.combat_spellspeed - direction * 0.04
 		self.wielder.combat_mindspeed = self.wielder.combat_mindspeed - direction * 0.04
 		
-		if self.wielder.resists.all == -10 then 
+		if self.wielder.resists.all <= -10 then 
 			self.wielder.inc_damage.all = 10
 			game.logPlayer(who, "#GOLD#As the final sands drop into place, you feel a surge of power.")
 			self.finished=true
 		end
-		if self.wielder.resists.all == 10 then 
+		if self.wielder.resists.all >= 10 then 
 			self.wielder.flat_damage_armor.all = 10
 			game.logPlayer(who, "#GOLD#As the final sands drop into place, you suddenly feel safer.")
 			self.finished=true
