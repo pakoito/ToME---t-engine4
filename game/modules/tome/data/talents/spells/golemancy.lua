@@ -248,7 +248,7 @@ newTalent{
 			self.alchemy_golem:attr("allow_on_heal", 1)
 			self.alchemy_golem:heal(t.getHeal(self, t), self)
 			self.alchemy_golem:attr("allow_on_heal", -1)
-			if core.shader.active(4) then self.alchemy_golem:addParticles(Particles.new("shader_shield_temp", 1, {size_factor=1.1, sizev=1.5, sizea=0.2}, {type="runicshield", color={0.34, 0.1, 0.5}})) end
+			if core.shader.active(4) then self.alchemy_golem:addParticles(Particles.new("shader_shield_temp", 1, {size_factor=1.1, sizev=1.5, sizea=0.2}, {type="runicshield", color={0.34, 0.1, 0.5, 1}})) end
 
 		-- resurrect the golem
 		elseif not self:hasEffect(self.EFF_GOLEM_MOUNT) then

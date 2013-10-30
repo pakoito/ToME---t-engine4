@@ -96,7 +96,7 @@ newTalent{ short_name = "SKELETON_REASSEMBLE",
 		self:attr("allow_on_heal", 1)
 		self:heal(t.getHeal(self, t), self)
 		self:attr("allow_on_heal", -1)
-		if core.shader.active(4) then self:addParticles(Particles.new("shader_shield_temp", 1, {size_factor=1.1, sizev=1.5, sizea=0.2, img="runicshield_dark"}, {type="runicshield", color={0.34, 0.1, 0.5}})) end
+		if core.shader.active(4) then self:addParticles(Particles.new("shader_shield_temp", 1, {size_factor=1.1, sizev=1.5, sizea=0.2, img="runicshield_dark"}, {type="runicshield", color={0.34, 0.1, 0.5, 1}})) end
 		game:playSoundNear(self, "talents/heal")
 		return true
 	end,

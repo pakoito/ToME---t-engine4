@@ -22,10 +22,10 @@ return {
 	vert = nil,
 	args = {
 		tex = { texture = 0 },
-		color = color or {1.0, 1.0, 1.0},
+		color = color or {1.0, 1.0, 1.0, 1.0},
 		time_factor = time_factor or 2000,
 		aadjust = aadjust or 10,
-		ellipsoidalFactor = 1.8, --1 is perfect circle, >1 is ellipsoidal
+		ellipsoidalFactor = ellipsoidalFactor or 1.8, --1 is perfect circle, >1 is ellipsoidal
 		oscillationSpeed = oscillationSpeed or 10.0, --oscillation between ellipsoidal and spherical form
 		antialiasingRadius = antialiasingRadius or 0.98, --1.0 is no antialiasing, 0.0 - fully smoothed(looks worse)
 		shieldIntensity = shieldIntensity or 0.2, --physically affects shield layer thickness

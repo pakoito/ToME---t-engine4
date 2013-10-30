@@ -2,7 +2,7 @@ uniform sampler2D tex;
 uniform float tick;
 uniform float tick_start;
 uniform float aadjust;
-uniform vec3 color;
+uniform vec4 color;
 uniform float time_factor;
 
 uniform float ellipsoidalFactor; //1 is perfect circle, >1 is ellipsoidal
@@ -169,7 +169,7 @@ vec4 GetFireRingColor(float currTime, vec2 pos, float freqMult, float stretchMul
 	
 	vec4 result;
 	result.rgb = color;
-	result.a = verticalPos;
+	result.a = verticalPos * color.a;
 	return result;
 }
 
