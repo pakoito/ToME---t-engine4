@@ -101,7 +101,7 @@ vec2 snoise2(vec3 pos)
 float GetFireDelta(float currTime, vec2 pos, float freqMult, float stretchMult, float scrollSpeed, float evolutionSpeed)
 {
 	//firewall
-	float delta = 0;
+	float delta = 0.0;
 //	pos.y += (1.0 - pos.y) * 0.5;
 	//pos.y += 0.5;
 	pos.y /= stretchMult;
@@ -146,8 +146,8 @@ vec4 GetCheckboardColor(vec2 pos)
 vec4 GetFireBallColor(float currTime, vec2 pos, float freqMult, float stretchMult, float ampMult, float power, float radius1, float radius2, vec2 velocity, float paletteCoord)
 {
 	float pi = 3.141593;
-	vec2 velocityDir = vec2(1, 0);
-	if(length(velocity) > 0)
+	vec2 velocityDir = vec2(1.0, 0.0);
+	if(length(velocity) > 0.0)
 		velocityDir = velocity / length(velocity);
 	vec2 velocityPerp = vec2(-velocityDir.y, velocityDir.x);
 	
@@ -223,7 +223,7 @@ void main(void)
 	float coronaWidth = 0.05;
 	
 	vec4 c;
-	c = GetFireBallColor(tick / time_factor +  0.0 , radius, 6, 15.0, 1, 2, ballRadius, ballRadius + coronaWidth, vec2(1, 0), 0.75);
+	c = GetFireBallColor(tick / time_factor +  0.0 , radius, 6.0, 15.0, 1.0, 2.9, ballRadius, ballRadius + coronaWidth, vec2(1.0, 0.0), 0.75);
 	c.a *= gl_Color.a;
 	
 	gl_FragColor = c;

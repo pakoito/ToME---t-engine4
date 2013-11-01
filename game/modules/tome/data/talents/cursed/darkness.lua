@@ -202,7 +202,7 @@ newTalent{
 	end,
 	createDark = function(summoner, x, y, damage, duration, creep, creepChance, initialCreep)
 		local e = Object.new{
-			name = "creeping dark",
+			name = summoner.name:capitalize() .. "'s creeping dark",
 			block_sight=true,
 			canAct = false,
 			canCreep = true,
@@ -224,7 +224,9 @@ newTalent{
 				local actor = game.level.map(self.x, self.y, Map.ACTOR)
 				if actor and actor ~= self.summoner and (not actor.summoner or actor.summoner ~= self.summoner) then
 					self.projecting = true -- simplest way to indicate that this damage should not be amplified by the in creeping dark bonus
+					self.summoner.__project_source = self -- intermediate projector source
 					self.summoner:project({type="hit", range=10, talent=self.summoner:getTalentFromId(self.summoner.T_CREEPING_DARKNESS)}, actor.x, actor.y, engine.DamageType.DARKNESS, self.damage)
+					self.summoner.__project_source = nil
 					self.projecting = false
 				end
 

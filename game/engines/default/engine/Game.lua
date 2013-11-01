@@ -21,6 +21,7 @@ require "engine.class"
 require "engine.Mouse"
 require "engine.DebugConsole"
 require "engine.dialogs.ShowErrorStack"
+local Shader = require "engine.Shader"
 
 --- Represent a game
 -- A module should subclass it and initialize anything it needs to play inside
@@ -32,8 +33,6 @@ module(..., package.seeall, class.make)
 function _M:init(keyhandler)
 	self.key = keyhandler
 	self.level = nil
-	self.log = function() end
-	self.logSeen = function() end
 	self.w, self.h, self.fullscreen = core.display.size()
 	self.dialogs = {}
 	self.save_name = ""
@@ -48,6 +47,9 @@ function _M:init(keyhandler)
 
 	self:defaultMouseCursor()
 end
+
+function _M:log() end
+function _M:logSeen() end
 
 --- Default mouse cursor
 function _M:defaultMouseCursor()
@@ -238,6 +240,8 @@ function _M:tick()
 			print("[COROUTINE] dead", stop[i])
 		end
 	end
+
+	Shader:cleanup()
 
 	if self.cleanSounds then self:cleanSounds() end
 

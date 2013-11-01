@@ -152,9 +152,9 @@ end
 
 function string.unserialize(str)
 	local f, err = loadstring(str)
-	if not f then print("[UNSERIALIZE] error", err, str) return nil end
+	if not f then print("[UNSERIALIZE] error", err) return nil end
 	local t = {}
 	setfenv(f, setmetatable(t, {__index={_G=t}}))
 	local ok, err = pcall(f)
-	if ok then return setmetatable(t, nil) else print("[UNSERIALIZE] error", err, str) return nil end
+	if ok then return setmetatable(t, nil) else print("[UNSERIALIZE] error", err) return nil end
 end

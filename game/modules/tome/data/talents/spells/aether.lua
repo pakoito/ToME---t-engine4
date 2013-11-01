@@ -98,8 +98,10 @@ newTalent{
 				self.list.i = util.boundWrap(self.list.i + 1, 1, #self.list)
 
 				local tg = {type="beam", x=self.x, y=self.y, range=self.rad, selffire=self.summoner:spellFriendlyFire()}
+				self.summoner.__project_source = self
 				self.summoner:project(tg, x, y, engine.DamageType.ARCANE_SILENCE, {dam=self.dam, chance=25}, nil)
 				self.summoner:project(tg, self.x, self.y, engine.DamageType.ARCANE, self.dam/10, nil)
+				self.summoner.__project_source = nil
 				local _ _, x, y = self:canProject(tg, x, y)
 				game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(x-self.x), math.abs(y-self.y)), "mana_beam", {tx=x-self.x, ty=y-self.y})
 			end,
@@ -152,7 +154,7 @@ newTalent{
 		local list = {}
 		self:project(tg, x, y, function(px, py) list[#list+1] = {x=px, y=py} end)
 
-		self:setEffect(self.EFF_AETHER_BREACH, t.getNb(self, t), {list=list, level=game.zone.short_name.."-"..game.level.level, dam=self:spellCrit(t.getDamage(self, t))})
+		self:setEffect(self.EFF_AETHER_BREACH, t.getNb(self, t), {src = self, list=list, level=game.zone.short_name.."-"..game.level.level, dam=self:spellCrit(t.getDamage(self, t))})
 
 		game:playSoundNear(self, "talents/arcane")
 		return true
@@ -190,7 +192,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Fill yourself with aether forces, completely surrounding your body for %d turns.
-		While active, you can only cast arcane or aether spells, your cooldown for them is divived by 3, your arcane damage is increased by 25%%, your Disruption Shield can be used at any time, and your maximum mana is increased by 33%%.]]):
+		While active, you can only cast arcane or aether spells, your cooldown for them is divided by 3, your arcane damage is increased by 25%%, your Disruption Shield can be used at any time, and your maximum mana is increased by 33%%.]]):
 		format(t.getNb(self, t))
 	end,
 }
@@ -216,7 +218,7 @@ newTalent{
 			resist = self:addTemporaryValue("resists_pen", {[DamageType.ARCANE] = t.getResistPenalty(self, t)}),
 		}
 		if core.shader.active(4) then
-			ret.particle = self:addParticles(Particles.new("shader_ring_rotating", 1, {toback=true, rotation=0, radius=2, img="arcanegeneric"}, {type="sunaura", time_factor=5000}))
+			ret.particle = self:addParticles(Particles.new("shader_ring_rotating", 1, {toback=true, rotation=0, radius=2, img="arcanegeneric", a=0.7}, {type="sunaura", time_factor=5000}))
 --			particle = self:addParticles(Particles.new("shader_ring_rotating", 1, {radius=1.1}, {type="flames", hide_center=0, time_factor=1700, zoom=0.3, npow=1, color1={0.6, 0.3, 0.8, 1}, color2={0.8, 0, 0.8, 1}, xy={self.x, self.y}}))
 		else
 			ret.particle = self:addParticles(Particles.new("ultrashield", 1, {rm=180, rM=220, gm=10, gM=50, bm=190, bM=220, am=120, aM=200, radius=0.4, density=100, life=8, instop=20}))

@@ -101,7 +101,7 @@ return {
 
 		local Dialog = require("engine.ui.Dialog")
 		local order = ({
-			DEFAULT = {"wind", "earth", "fire", "water", "arcane", "nature"},
+			DEFAULT = {"water", "earth", "wind", "nature", "arcane", "fire"},
 			ALT1    = {"darkness", "blood", "grave", "time", "mind", "blight"},
 		})[game.zone.clues_layout]
 		local o = game.level.orbs_touched

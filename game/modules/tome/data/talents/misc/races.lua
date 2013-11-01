@@ -493,7 +493,7 @@ newTalent{
 		return math.max(1, math.floor(self:combatScale(0.04*self:getCon() + self:getTalentLevel(t), 2.4, 1.4, 10, 9)))
 	end,
 	action = function(self, t)
-		local tg = {type="bolt", range=self:getTalentRange(t), nolock=true, talent=t}
+		local tg = {type="bolt", range=self:getTalentRange(t), nolock=true, simple_dir_request=true, talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		local _ _, x, y = self:canProject(tg, x, y)
@@ -722,7 +722,11 @@ newTalent{
 			end
 		end
 		self:attr("allow_on_heal", 1)
-		self:heal(t.heal(self, t))
+		self:heal(t.heal(self, t), t)
+		if core.shader.active(4) then
+			self:addParticles(Particles.new("shader_shield_temp", 1, {toback=true , size_factor=1.5, y=-0.3, img="healgreen", life=25}, {type="healing", time_factor=2000, beamsCount=20, noup=2.0}))
+			self:addParticles(Particles.new("shader_shield_temp", 1, {toback=false, size_factor=1.5, y=-0.3, img="healgreen", life=25}, {type="healing", time_factor=2000, beamsCount=20, noup=1.0}))
+		end
 		self:attr("allow_on_heal", -1)
 		return true
 	end,

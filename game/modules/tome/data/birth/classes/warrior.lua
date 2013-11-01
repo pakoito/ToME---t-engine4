@@ -305,12 +305,8 @@ newBirthDescriptor{
 		[ActorTalents.T_DOUBLE_STRIKE] = 1,
 		[ActorTalents.T_WEAPON_COMBAT] = 1,
 		[ActorTalents.T_ARMOUR_TRAINING] = 1,
-
-		-- base monk attack
-		[ActorTalents.T_EMPTY_HAND] = 1,
 	},
 	copy = {
-		combat = { physspeed = 0.6, sound = "actions/melee", sound_miss="actions/melee_miss" },
 		resolvers.equip{ id=true,
 			{type="armor", subtype="hands", name="iron gauntlets", autoreq=true, ego_chance=-1000, ego_chance=-1000},
 			{type="armor", subtype="light", name="rough leather armour", autoreq=true, ego_chance=-1000, ego_chance=-1000},

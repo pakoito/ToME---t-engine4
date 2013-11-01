@@ -90,8 +90,12 @@ newTalent{ short_name = "NATURE_TOUCH",
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 		if not target:attr("undead") then
 			target:attr("allow_on_heal", 1)
-			target:heal(self:mindCrit(20 + self:combatTalentMindDamage(t, 20, 500)))
+			target:heal(self:mindCrit(20 + self:combatTalentMindDamage(t, 20, 500)), self)
 			target:attr("allow_on_heal", -1)
+			if core.shader.active(4) then
+				self:addParticles(Particles.new("shader_shield_temp", 1, {toback=true ,size_factor=1.5, y=-0.3, img="healgreen", life=25}, {type="healing", time_factor=2000, beamsCount=20, noup=2.0}))
+				self:addParticles(Particles.new("shader_shield_temp", 1, {toback=false,size_factor=1.5, y=-0.3, img="healgreen", life=25}, {type="healing", time_factor=2000, beamsCount=20, noup=1.0}))
+			end
 		end
 		game:playSoundNear(self, "talents/heal")
 		return true

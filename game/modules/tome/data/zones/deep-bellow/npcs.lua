@@ -111,17 +111,17 @@ It seems to come from the digestive system of the mouth.]],
 		for i, actor in ipairs(game.party.m_list) do
 			if not actor.dead then tgts[#tgts+1] = actor end
 		end
-		self:setTarget(rng.table(tgts))
+		self:setTarget((rng.table(tgts)))
 
 		if self.summoner.dead then
 			self:die()
-			game.logSeen(self, "#AQUAMARINE#With the Mouth death its crawler also falls lifeless on the ground!")
+			game.logSeen(self, "#AQUAMARINE#With the Mouth's death its crawler also falls lifeless on the ground!")
 		end
 	end,
 
 	on_die = function(self, who)
 		if self.summoner and not self.summoner.dead then
-			game.logSeen(self, "#AQUAMARINE#As %s falls you notice that %s seems to shudder in pain!", self.name, self.summoner.name)
+			self:logCombat(self.summoner, "#AQUAMARINE#As #Source# falls you notice that #Target# seems to shudder in pain!")
 			self.summoner.no_take_hit_achievements = true
 			self.summoner:takeHit(1000, who)
 			self.summoner.no_take_hit_achievements = nil

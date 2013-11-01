@@ -93,8 +93,12 @@ newInscription{
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:attr("allow_on_heal", 1)
-		self:heal(data.heal + data.inc_stat)
+		self:heal(data.heal + data.inc_stat, t)
 		self:attr("allow_on_heal", -1)
+		if core.shader.active(4) then
+			self:addParticles(Particles.new("shader_shield_temp", 1, {toback=true , size_factor=1.5, y=-0.3, img="healgreen", life=25}, {type="healing", time_factor=2000, beamsCount=20, noup=2.0}))
+			self:addParticles(Particles.new("shader_shield_temp", 1, {toback=false, size_factor=1.5, y=-0.3, img="healgreen", life=25}, {type="healing", time_factor=2000, beamsCount=20, noup=1.0}))
+		end
 		return true
 	end,
 	info = function(self, t)
@@ -932,7 +936,13 @@ newInscription{
 				else
 					target:forceUseTalent(eff[2], {ignore_energy=true})
 				end
-				self:heal(data.heal + data.inc_stat)
+				self:attr("allow_on_heal", 1)
+				self:heal(data.heal + data.inc_stat, t)
+				self:attr("allow_on_heal", -1)
+				if core.shader.active(4) then
+					self:addParticles(Particles.new("shader_shield_temp", 1, {size_factor=1.5, y=-0.3, img="healdark", life=25}, {type="healing", time_factor=6000, beamsCount=15, noup=2.0, beamColor1={0xcb/255, 0xcb/255, 0xcb/255, 1}, beamColor2={0x35/255, 0x35/255, 0x35/255, 1}}))
+					self:addParticles(Particles.new("shader_shield_temp", 1, {size_factor=1.5, y=-0.3, img="healdark", life=25}, {type="healing", time_factor=6000, beamsCount=15, noup=1.0, beamColor1={0xcb/255, 0xcb/255, 0xcb/255, 1}, beamColor2={0x35/255, 0x35/255, 0x35/255, 1}}))
+				end
 			end
 
 			game.level.map:particleEmitter(px, py, 1, "shadow_zone")
@@ -942,7 +952,7 @@ newInscription{
 	end,
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		return ([[Activate the taint on a foe, removing %d effects from it and healing you for %d per effects.]]):format(data.effects, data.heal + data.inc_stat)
+		return ([[Activate the taint on a foe, removing %d effects from it and healing you for %d for each effect.]]):format(data.effects, data.heal + data.inc_stat)
 	end,
 	short_info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)

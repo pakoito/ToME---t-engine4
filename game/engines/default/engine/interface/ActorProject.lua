@@ -194,7 +194,7 @@ function _M:project(t, x, y, damtype, dam, particles)
 				elseif act and self.reactionToward and (self:reactionToward(act) >= 0) and not ((type(typ.friendlyfire) == "number" and rng.percent(typ.friendlyfire)) or (type(typ.friendlyfire) ~= "number" and typ.friendlyfire)) then
 				-- Otherwise hit
 				else
-					if type(damtype) == "function" then if damtype(px, py, tg, self) then stop=true break end
+					if type(damtype) == "function" then if damtype(px, py, t, self) then stop=true break end
 					else DamageType:get(damtype).projector(self, px, py, damtype, dam, tmp, nil) end
 					if particles then
 						game.level.map:particleEmitter(px, py, 1, particles.type, particles.args)
@@ -311,6 +311,7 @@ function _M:projectile(t, x, y, damtype, dam, particles)
 	game.zone:addEntity(game.level, proj, "projectile", typ.start_x, typ.start_y)
 
 	self:check("on_projectile_fired", proj, typ, x, y, damtype, dam, particles)
+	return proj
 end
 
 -- @param typ a target type table

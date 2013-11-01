@@ -100,6 +100,16 @@ function _M:use(item)
 	elseif act == "toinven" then
 		self.object.__transmo = false
 		self.onuse(self.inven, self.item, self.object, false)
+	elseif act == "untag" then
+		self.object.__tagged = nil
+		self.onuse(self.inven, self.item, self.object, false)
+	elseif act == "tag" then
+		local d = require("engine.dialogs.GetText").new("Tag object (tagged objects can not be destroyed or dropped)", "Tag:", 2, 25, function(tag) if tag then
+			self.object.__tagged = tag
+			self.object.__transmo = false
+			self.onuse(self.inven, self.item, self.object, false)
+		end end)
+		game:registerDialog(d)
 	elseif act == "chat-link" then
 		profile.chat.uc_ext:sendObjectLink(self.object)
 	elseif act == "debug-inspect" then
@@ -124,11 +134,13 @@ function _M:generateList()
 	if not self.object.__transmo and not self.no_use_allowed then if self.object:canUseObject() then list[#list+1] = {name="Use", action="use"} end end
 	if self.inven == self.actor.INVEN_INVEN and self.object:wornInven() and self.actor:getInven(self.object:wornInven()) then list[#list+1] = {name="Wield/Wear", action="wear"} end
 	if not self.object.__transmo then if self.inven ~= self.actor.INVEN_INVEN and self.object:wornInven() then list[#list+1] = {name="Take off", action="takeoff"} end end
-	if self.inven == self.actor.INVEN_INVEN then list[#list+1] = {name="Drop", action="drop"} end
+	if not self.object.__tagged and self.inven == self.actor.INVEN_INVEN then list[#list+1] = {name="Drop", action="drop"} end
 	if self.inven == self.actor.INVEN_INVEN and game.party:countInventoryAble() >= 2 then list[#list+1] = {name="Transfer to party", action="transfer"} end
-	if self.inven == self.actor.INVEN_INVEN and transmo_chest and self.actor:transmoFilter(self.object) then list[#list+1] = {name=self.actor:transmoGetWord():capitalize().." now", action="transmo"} end
+	if not self.object.__tagged and self.inven == self.actor.INVEN_INVEN and transmo_chest and self.actor:transmoFilter(self.object) then list[#list+1] = {name=self.actor:transmoGetWord():capitalize().." now", action="transmo"} end
 	if profile.auth and profile.hash_valid then list[#list+1] = {name="Link item in chat", action="chat-link"} end
 	if config.settings.cheat then list[#list+1] = {name="Lua inspect", action="debug-inspect", color=colors.simple(colors.LIGHT_BLUE)} end
+	if not self.object.__tagged then list[#list+1] = {name="Tag", action="tag"} end
+	if self.object.__tagged then list[#list+1] = {name="Untag", action="untag"} end
 
 	self:triggerHook{"UseItemMenu:generate", actor=self.actor, object=self.object, inven=self.inven, item=self.item, menu=list}
 

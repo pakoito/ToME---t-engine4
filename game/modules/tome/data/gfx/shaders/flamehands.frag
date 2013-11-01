@@ -101,7 +101,7 @@ vec2 snoise2(vec3 pos)
 float GetFireDelta(float currTime, vec2 pos, float freqMult, float stretchMult, float scrollSpeed, float evolutionSpeed)
 {
 	//firewall
-	float delta = 0;
+	float delta = 0.0;
 //	pos.y += (1.0 - pos.y) * 0.5;
 	//pos.y += 0.5;
 	pos.y /= stretchMult;
@@ -168,7 +168,7 @@ vec4 GetFireCandleColor(float currTime, vec2 pos, float freqMult, float stretchM
 		fireballColor.a = 1.0;
 	}else
 	{
-		float bottomPos = 0;
+		float bottomPos = 0.0;
 		
 		pos.x += cos(pos.y * 20.0 + currTime * 20.0) * 0.05 * (1.0 - pow(1.0 - max(0.0, min((-radius - pos.y) * 2.0, 1.0)), 2.0));
 		if(abs(pos.x) < radius)
@@ -211,7 +211,7 @@ void main(void)
 	float flameHeight = 0.6;
 	
 	vec4 c;
-	c = GetFireCandleColor(tick / time_factor +  0.0 , radius, 2, 3.0, 1, 2, ballRadius, flameHeight, 0.75);
+	c = GetFireCandleColor(tick / time_factor +  0.0 , radius, 2.0, 3.0, 1.0, 2.0, ballRadius, flameHeight, 0.75);
 	c.a *= gl_Color.a;
 	//c.a += 0.5;
 	

@@ -34,8 +34,7 @@ newTalent{
 		if not x or not y or not target then return nil end
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 
-		local hit = target:checkHit(self:combatAttack(), target:combatDefense(), 0, 95) -- Deprecated checkHit call
-
+		local hit = target:checkHit(self:combatAttack(), target:combatDefense(), 0, 95) and self:checkEvasion(target)
 		-- Try to knockback !
 		if hit then
 			local can = function(target)
@@ -57,7 +56,7 @@ newTalent{
 			self:buildCombo()
 
 		else
-			game.logSeen(target, "%s misses %s.", self.name:capitalize(), target.name:capitalize())
+			self:logCombat(target, "#Source# misses #Target#.")
 		end
 
 		return true
@@ -92,26 +91,27 @@ newTalent{
 	do_throw = function(self, target, t)
 		local ef = self:hasEffect(self.EFF_DEFENSIVE_GRAPPLING)
 		if not ef or not rng.percent(self.tempeffect_def.EFF_DEFENSIVE_GRAPPLING.throwchance(self, ef)) then return end
-		local hit = self:checkHit(self:combatAttack(), target:combatDefense(), 0, 95) -- Deprecated checkHit call removed
+		local grappled = target:isGrappled(self)
+		local hit = self:checkHit(self:combatAttack(), target:combatDefense(), 0, 95) and (grappled or not self:checkEvasion(target)) -- grappled target can't evade
 		ef.throws = ef.throws - 1
 		if ef.throws <= 0 then self:removeEffect(self.EFF_DEFENSIVE_GRAPPLING) end
 		
 		if hit then
 			self:project(target, target.x, target.y, DamageType.PHYSICAL, self:physicalCrit(t.getDamageTwo(self, t), nil, target, self:combatAttack(), target:combatDefense()))
 			-- if grappled stun
-			if target:isGrappled(self) and target:canBe("stun") then
+			if grappled and target:canBe("stun") then
 				target:setEffect(target.EFF_STUNNED, 2, {apply_power=self:combatAttack(), min_dur=1})
-				game.logSeen(target, "%s has been slammed into the ground!", target.name:capitalize())
+				self:logCombat(target, "#Source# slams #Target# into the ground!")
 			-- if not grappled daze
 			else
-				game.logSeen(target, "%s has been thrown to the ground!", target.name:capitalize())
+				self:logCombat(target, "#Source# throws #Target# to the ground!")
 				-- see if the throw dazes the enemy
 				if target:canBe("stun") then
 					target:setEffect(target.EFF_DAZED, 2, {apply_power=self:combatAttack(), min_dur=1})
 				end
 			end
 		else
-			game.logSeen(target, "%s misses a defensive throw against %s!", self.name:capitalize(),target.name:capitalize())
+			self:logCombat(target, "#Source# misses a defensive throw against #Target#!", self.name:capitalize(),target.name:capitalize())
 		end
 	end,
 	on_unlearn = function(self, t)

@@ -412,7 +412,7 @@ function _M:actBase()
 	-- Break mind links
 	if self:isTalentActive(self.T_MIND_LINK) then
 		local p = self:isTalentActive(self.T_MIND_LINK)
-		if p.target.dead or not p.target:hasEffect(p.target.EFF_MIND_LINK_TARGET) or not game.level:hasEntity(p.target) then
+		if not p.target or p.target.dead or not p.target:hasEffect(p.target.EFF_MIND_LINK_TARGET) or not game.level:hasEntity(p.target) then
 			self:forceUseTalent(self.T_MIND_LINK, {ignore_energy=true})
 		end
 	end
@@ -453,7 +453,7 @@ function _M:actBase()
 		local decay = self:getFeedbackDecay()
 		if self:knowTalent(self.T_BIOFEEDBACK) then
 			local t = self:getTalentFromId(self.T_BIOFEEDBACK)
-			self:heal(decay * t.getHealRatio(self, t))
+			self:heal(decay * t.getHealRatio(self, t), self)
 		end
 		if self:hasEffect(self.EFF_FEEDBACK_LOOP) then
 			self:incFeedback(decay)
@@ -1046,7 +1046,7 @@ function _M:move(x, y, force)
 		local grids = core.fov.circle_grids(self.x, self.y, 1, true)
 		for x, yy in pairs(grids) do for y, _ in pairs(yy) do
 			local trap = game.level.map(x, y, Map.TRAP)
-			if trap and not trap:knownBy(self) and self:checkHit(power, trap.detect_power) then
+			if trap and not trap:knownBy(self) and self:canSee(trap) and self:checkHit(power, trap.detect_power) then
 				trap:setKnown(self, true)
 				game.level.map:updateMap(x, y)
 				game.logPlayer(self, "You have found a trap (%s)!", trap:getName())
@@ -1536,11 +1536,13 @@ function _M:onHeal(value, src)
 		eff.src:heal(value * eff.pct, src)
 		eff.src.heal_leech_active = nil
 		eff.src:incEquilibrium(-eff.eq)
-		if eff.src == self then
-			game.logSeen(self, "%s heal is doubled!", self.name)
-		else
-			game.logSeen(self, "%s steals %s heal!", eff.src.name:capitalize(), self.name)
-			return 0
+		if not self.resting then
+			if eff.src == self then
+				game:delayedLogMessage(self, self, "healing_nexus"..(self.uid or ""), "#YELLOW_GREEN##Source#'s healing is amplified!")
+			else
+				game:delayedLogMessage(eff.src, self, "healing_nexus"..(eff.src.uid or ""), "#YELLOW_GREEN##Source# steals healing from #Target#!")
+				return 0
+			end
 		end
 	end
 
@@ -1553,12 +1555,13 @@ function _M:onHeal(value, src)
 	end
 
 	-- Solipsism healing
+	local psi_heal = 0
 	if self:knowTalent(self.T_SOLIPSISM) then
 		local t = self:getTalentFromId(self.T_SOLIPSISM)
 		local ratio = t.getConversionRatio(self, t)
-		local psi_increase = value * ratio
-		self:incPsi(psi_increase)
-		value = value - psi_increase
+		psi_heal = value * ratio
+		self:incPsi(psi_heal)
+		value = value - psi_heal
 	end
 
 	-- Must be last!
@@ -1569,15 +1572,25 @@ function _M:onHeal(value, src)
 	end
 
 --	print("[HEALING]", self.uid, self.name, "for", value)
-	if not self.resting and value >= 1 and game.level.map.seens(self.x, self.y) then
-		local sx, sy = game.level.map:getTileToScreen(self.x, self.y)
-		game.flyers:add(sx, sy, 30, rng.float(-3, -2), (rng.range(0,2)-1) * 0.5, tostring(math.ceil(value)), {255,255,0})
+	if not self.resting and value + psi_heal >= 1 then
+		if game.level.map.seens(self.x, self.y) then
+			local sx, sy = game.level.map:getTileToScreen(self.x, self.y)
+			game.flyers:add(sx, sy, 30, rng.float(-3, -2), (rng.range(0,2)-1) * 0.5, tostring(math.ceil(value)), {255,255,0})
+		end
+		if psi_heal > 0 then
+			game:delayedLogDamage(src or self, self, -value-psi_heal, ("#LIGHT_GREEN#%d healing #LAST##AQUAMARINE#(%d psi heal)#LAST#"):format(value, psi_heal), false)
+		else
+			game:delayedLogDamage(src or self, self, -value, ("#LIGHT_GREEN#%d healing#LAST#"):format(value), false)
+		end
 	end
 	return value
 end
 
 --- Called before taking a hit, it's the chance to check for shields
 function _M:onTakeHit(value, src, death_note)
+	src = src or {}
+	if value <=0 then return 0 end
+	local tal
 	-- update hate_baseline
 	if self.knowTalent and self:knowTalent(self.T_HATE_POOL) then
 		local t = self:getTalentFromId(self.T_HATE_POOL)
@@ -1630,9 +1643,11 @@ function _M:onTakeHit(value, src, death_note)
 
 	if self:attr("retribution") then
 	-- Absorb damage into the retribution
-		if value / 2 <= self.retribution_absorb then
-			self.retribution_absorb = self.retribution_absorb - (value / 2)
-			value = value / 2
+		local absorb = math.min(value/2, self.retribution_absorb)
+		game:delayedLogDamage(src, self, 0, ("#SLATE#(%d absorbed)#LAST#"):format(absorb), false)
+		if absorb < self.retribution_absorb then
+			self.retribution_absorb = self.retribution_absorb - absorb
+			value = value - absorb
 		else
 			value = value - self.retribution_absorb
 			self.retribution_absorb = 0
@@ -1650,7 +1665,7 @@ function _M:onTakeHit(value, src, death_note)
 		end
 	end
 
-	if self:isTalentActive(self.T_DISPLACE_DAMAGE) and rng.percent(self:callTalent(self.T_DISPLACE_DAMAGE, "getchance")) then
+	if value > 0 and self:isTalentActive(self.T_DISPLACE_DAMAGE) and rng.percent(self:callTalent(self.T_DISPLACE_DAMAGE, "getchance")) then
 		-- find available targets
 		local tgts = {}
 		local grids = core.fov.circle_grids(self.x, self.y, self:callTalent(self.T_DISPLACE_DAMAGE,"getrange"), true)
@@ -1663,13 +1678,15 @@ function _M:onTakeHit(value, src, death_note)
 
 		local a = rng.table(tgts)
 		if a then
-			game.logSeen(self, "Some of the damage has been displaced onto %s!", a.name:capitalize())
+			local displace = value/2
+			game:delayedLogMessage(self, a, "displace_damage"..(a.uid or ""), "#PINK##Source# displaces some damage onto #Target#!")
+			game:delayedLogDamage(self, a, displace, ("#PINK#%d displaced#LAST#"):format(displace), false)
 			a:takeHit(value / 2, self)
 			value = value / 2
 		end
 	end
 
-	if self:knowTalent(self.T_MITOSIS) and self:isTalentActive(self.T_MITOSIS) then
+	if value > 0 and self:knowTalent(self.T_MITOSIS) and self:isTalentActive(self.T_MITOSIS) then
 		local t = self:getTalentFromId(self.T_MITOSIS)
 		local chance = t.getChance(self, t)
 		local perc = math.min(1, 3 * value / self.life)
@@ -1688,6 +1705,7 @@ function _M:onTakeHit(value, src, death_note)
 			end
 		end
 		if #acts > 0 then
+			game:delayedLogMessage(self, nil, "mitosis_damage", "#DARK_GREEN##Source# shares damage with %s oozes!", string.his_her(self))
 			value = value / (#acts+1)
 			for _, act in ipairs(acts) do 
 				act.resists.all = act.resists.all - 50
@@ -1697,10 +1715,11 @@ function _M:onTakeHit(value, src, death_note)
 		end
 	end
 
-	if self:attr("time_shield") then
+	if value > 0 and self:attr("time_shield") then
 		-- Absorb damage into the time shield
 		self.time_shield_absorb = self.time_shield_absorb or 0
-		if value <= self.time_shield_absorb then
+		game:delayedLogDamage(src, self, 0, ("#STEEL_BLUE#(%d to time)#LAST#"):format(math.min(value, self.time_shield_absorb)), false)
+		if value < self.time_shield_absorb then
 			self.time_shield_absorb = self.time_shield_absorb - value
 			value = 0
 		else
@@ -1715,7 +1734,7 @@ function _M:onTakeHit(value, src, death_note)
 		end
 	end
 
-	if self:attr("damage_shield") then
+	if value > 0 and self:attr("damage_shield") then
 		-- Phased attack?
 		local adjusted_value = value
 		if src and src.attr and src:attr("damage_shield_penetrate") then
@@ -1735,13 +1754,17 @@ function _M:onTakeHit(value, src, death_note)
 		else
 			if reflection > 0 then reflect_damage = self.damage_shield_absorb end
 			value = adjusted_value - self.damage_shield_absorb
+			adjusted_value = self.damage_shield_absorb
 			self.damage_shield_absorb = 0
 		end
+		game:delayedLogDamage(src, self, 0, ("#SLATE#(%d absorbed)#LAST#"):format(adjusted_value), false)
 		if reflection and reflect_damage and reflection > 0 and reflect_damage > 0 and src.y and src.x and not src.dead then
 			local a = game.level.map(src.x, src.y, Map.ACTOR)
 			if a and self:reactionToward(a) < 0 then
-				a:takeHit(math.ceil(reflect_damage * reflection), self)
-				game.logSeen(self, "The damage shield reflects %d damage back to %s!", math.ceil(reflect_damage * reflection), a.name:capitalize())
+				local reflected = reflect_damage * reflection
+				a:takeHit(reflected, self)
+				game:delayedLogDamage(self, src, reflected, ("#SLATE#%d reflected#LAST#"):format(reflected), false)
+				game:delayedLogMessage(self, src, "reflection" ,"#CRIMSON##Source# reflects damage back to #Target#!#LAST#")
 			end
 		end
 		-- If we are at the end of the capacity, release the time shield damage
@@ -1751,23 +1774,31 @@ function _M:onTakeHit(value, src, death_note)
 		end
 	end
 
-	if self:attr("displacement_shield") then
+	if value > 0 and self:attr("displacement_shield") then
 		-- Absorb damage into the displacement shield
 		if rng.percent(self.displacement_shield_chance) then
-			if value <= self.displacement_shield then
-				game.logSeen(self, "The displacement shield teleports the damage to %s!", self.displacement_shield_target.name)
-				self.displacement_shield = self.displacement_shield - value
-				self.displacement_shield_target:takeHit(value, src)
+			game:delayedLogMessage(self, src,  "displacement_shield"..(self.displacement_shield_target.uid or ""), "#CRIMSON##Source# teleports some damage to #Target#!")
+			local displaced = math.min(value, self.displacement_shield)
+			self.displacement_shield_target:takeHit(displaced, src)
+			game:delayedLogDamage(src, self, 0, ("#CRIMSON#(%d teleported)#LAST#"):format(displaced), false)
+			game:delayedLogDamage(src, self.displacement_shield_target, displaced, ("#CRIMSON#%d teleported#LAST#"):format(displaced), false)
+			if displaced < self.displacement_shield then
+				self.displacement_shield = self.displacement_shield - displaced
 				value = 0
 			else
 				self:removeEffect(self.EFF_DISPLACEMENT_SHIELD)
+				value = value - displaced
 			end
 		end
 	end
 
-	if self:attr("disruption_shield") then
+	if value > 0 and self:attr("disruption_shield") then
 		local mana = self:getMaxMana() - self:getMana()
 		local mana_val = value * self:attr("disruption_shield")
+		local converted = math.min(value, mana / self:attr("disruption_shield"))
+		game:delayedLogMessage(self, nil,  "disruption_shield", "#LIGHT_BLUE##Source# converts damage to mana!")
+		game:delayedLogDamage(src, self, 0, ("#LIGHT_BLUE#(%d converted)#LAST#"):format(converted), false)
+
 		-- We have enough to absorb the full hit
 		if mana_val <= mana then
 			self:incMana(mana_val)
@@ -1775,6 +1806,10 @@ function _M:onTakeHit(value, src, death_note)
 			return 0
 		-- Or the shield collapses in a deadly arcane explosion
 		else
+			self:incMana(mana)
+			self.disruption_shield_absorb = self.disruption_shield_absorb + mana / self:attr("disruption_shield")
+			value = value - mana / self:attr("disruption_shield")
+
 			local dam = self.disruption_shield_absorb
 
 			-- Deactivate without loosing energy
@@ -1786,13 +1821,15 @@ function _M:onTakeHit(value, src, death_note)
 		end
 	end
 
-	if self:isTalentActive(self.T_BONE_SHIELD) and value > 0 then
+	if value > 0 and self:isTalentActive(self.T_BONE_SHIELD) then
 		local t = self:getTalentFromId(self.T_BONE_SHIELD)
 		if t.absorb(self, t, self:isTalentActive(self.T_BONE_SHIELD)) then
+			game:delayedLogDamage(src, self, 0, ("#SLATE#(%d to bones)#LAST#"):format(value), false)
 			value = 0
 		end
 	end
 
+	if value <=0 then return 0 end
 	if self.knowTalent and (self:knowTalent(self.T_SEETHE) or self:knowTalent(self.T_GRIM_RESOLVE)) then
 		if not self:hasEffect(self.EFF_CURSED_FORM) then
 			self:setEffect(self.EFF_CURSED_FORM, 1, { increase=0 })
@@ -1801,17 +1838,23 @@ function _M:onTakeHit(value, src, death_note)
 		self.tempeffect_def[self.EFF_CURSED_FORM].do_onTakeHit(self, eff, value)
 	end
 
-	if self:isTalentActive(self.T_DEFLECTION) then
-		local t = self:getTalentFromId(self.T_DEFLECTION)
-		value = t.do_onTakeHit(self, t, self:isTalentActive(self.T_DEFLECTION), value)
+	if value > 0 then
+		tal = self:isTalentActive(self.T_DEFLECTION)
+		if tal then
+			local oldval = value
+			value = self:callTalent(self.T_DEFLECTION, "do_onTakeHit", tal, value)
+			if value ~= oldval then
+				game:delayedLogDamage(src, self, 0, ("#SLATE#(%d deflected)#LAST#"):format(oldval - value), false)
+			end
+		end
 	end
-
-	if self:hasEffect(self.EFF_RAMPAGE) then
+	
+	if value > 0 and self:hasEffect(self.EFF_RAMPAGE) then
 		local eff = self:hasEffect(self.EFF_RAMPAGE)
 		value = self.tempeffect_def[self.EFF_RAMPAGE].do_onTakeHit(self, eff, value)
 	end
 
-	if self:hasEffect(self.EFF_BECKONED) then
+	if value > 0 and self:hasEffect(self.EFF_BECKONED) then
 		local eff = self:hasEffect(self.EFF_BECKONED)
 		value = self.tempeffect_def[self.EFF_BECKONED].do_onTakeHit(self, eff, value)
 	end
@@ -1826,13 +1869,14 @@ function _M:onTakeHit(value, src, death_note)
 	end
 
 	-- Frozen: absorb some damage into the iceblock
-	if self:attr("encased_in_ice") then
+	if value > 0 and self:attr("encased_in_ice") then
 		local eff = self:hasEffect(self.EFF_FROZEN)
 		local absorb = 0.4
 		if src and src.attr then
 			absorb = absorb - absorb * (util.bound(src:attr("iceblock_pierce") or 0, 0, 100)) / 100
 		end
 		eff.hp = eff.hp - value * absorb
+		game:delayedLogDamage(src or {}, self, 0, ("#STEEL_BLUE#(%d to ice)#LAST#"):format(value*absorb), nil)
 		value = value * (1 - absorb)
 		if eff.hp < 0 and not eff.begone then
 			game:onTickEnd(function() self:removeEffect(self.EFF_FROZEN) end)
@@ -1846,6 +1890,7 @@ function _M:onTakeHit(value, src, death_note)
 		value = t.doDismissalOnHit(self, value, src, t)
 	end
 
+	if value <= 0 then return 0 end
 	-- Feedback pool: Stores damage as energy to use later
 	if self:getMaxFeedback() > 0 and src ~= self and src ~= self.summoner then
 		local ratio = self:callTalent(self.T_FEEDBACK_POOL, "getFeedbackRatio")
@@ -1867,17 +1912,15 @@ function _M:onTakeHit(value, src, death_note)
 
 	-- Resonance Field, must be called after Feedback gains
 	if self:attr("resonance_field") then
-		if value / 2 <= self.resonance_field_absorb then
-			self.resonance_field_absorb = self.resonance_field_absorb - (value / 2)
-			value = value / 2
+		local absorb = math.min(value/2, self.resonance_field_absorb)
+		game:delayedLogDamage(src, self, 0, ("#SLATE#(%d resonance)#LAST#"):format(absorb), false)
+		if absorb < self.resonance_field_absorb then
+			self.resonance_field_absorb = self.resonance_field_absorb - absorb
 		else
-			value = value - self.resonance_field_absorb
-			self.resonance_field_absorb = 0
-		end
-		if self.resonance_field_absorb <= 0 then
 			game.logPlayer(self, "Your resonance field crumbles under the damage!")
 			self:removeEffect(self.EFF_RESONANCE_FIELD)
 		end
+		value = value - absorb
 	end
 
 	if self:hasEffect(self.EFF_CAUTERIZE) then
@@ -1889,7 +1932,7 @@ function _M:onTakeHit(value, src, death_note)
 	end
 
 	-- Reduce sleep durations
-	if self:attr("sleep") then
+	if value > 0 and self:attr("sleep") then
 		local effs = {}
 		for eff_id, p in pairs(self.tmp) do
 			local e = self.tempeffect_def[eff_id]
@@ -1932,7 +1975,7 @@ function _M:onTakeHit(value, src, death_note)
 	end
 
 	-- Adds hate
-	if self:knowTalent(self.T_HATE_POOL) then
+	if value > 0 and self:knowTalent(self.T_HATE_POOL) then
 		local hateGain = 0
 		local hateMessage
 
@@ -1955,7 +1998,8 @@ function _M:onTakeHit(value, src, death_note)
 			end
 		end
 	end
-	if src and (src.hate_per_powerful_hit or 0) > 0 and src.knowTalent and src:knowTalent(src.T_HATE_POOL) then
+
+	if value > 0 and src and (src.hate_per_powerful_hit or 0) > 0 and src.knowTalent and src:knowTalent(src.T_HATE_POOL) then
 		local hateGain = 0
 		local hateMessage
 
@@ -1974,17 +2018,21 @@ function _M:onTakeHit(value, src, death_note)
 	end
 
 	-- Bloodlust!
-	if src and src.knowTalent and src:knowTalent(src.T_BLOODLUST) then
+	if value > 0 and src and src.knowTalent and src:knowTalent(src.T_BLOODLUST) then
 		src:setEffect(src.EFF_BLOODLUST, 1, {})
 	end
 
-	if self:knowTalent(self.T_RAMPAGE) then
+	if value > 0 and self:knowTalent(self.T_RAMPAGE) then
 		local t = self:getTalentFromId(self.T_RAMPAGE)
 		t:onTakeHit(self, value / self.max_life)
 	end
 
 	if self:attr("unstoppable") then
-		if value > self.life then value = self.life - 1 end
+		if value > self.life then
+			game:delayedLogDamage(src, self, 0, ("#RED#(%d refused)#LAST#"):format(value - self.life - 1), false)
+			value = self.life - 1
+			game:delayedLogMessage(self, nil, "unstoppable", "#RED##Source# is unstoppable!")
+		end
 	end
 
 	-- Split ?
@@ -2003,7 +2051,7 @@ function _M:onTakeHit(value, src, death_note)
 			a:removeAllMOs()
 			a.x, a.y = nil, nil
 			game.zone:addEntity(game.level, a, "actor", x, y)
-			game.logSeen(self, "%s is split in two!", self.name:capitalize())
+			game.logSeen(self, "%s splits in two!", self.name:capitalize())
 			value = value / 2
 		end
 	end
@@ -2021,10 +2069,14 @@ function _M:onTakeHit(value, src, death_note)
 			damage_to_psi = self:getPsi()
 			self:incPsi(-damage_to_psi)
 		end
-		game.logSeen(self, "%s's mind suffers #YELLOW#%d psi#LAST# damage from the attack.", self.name:capitalize(), damage_to_psi*psi_damage_resist)
+		local mindcolor = DamageType:get(DamageType.MIND).text_color or "#aaaaaa#"
+		game:delayedLogMessage(self, nil, "Solipsism hit", mindcolor.."#Source# converts some damage to Psi!")
+		game:delayedLogDamage(src, self, damage_to_psi*psi_damage_resist, ("%s%d %s#LAST#"):format(mindcolor, damage_to_psi*psi_damage_resist, "to psi"), false)
+
 		value = value - damage_to_psi
 	end
 
+	if value <= 0 then return 0 end
 	-- VITALITY?
 	if self:knowTalent(self.T_VITALITY) and self.life > self.max_life /2 and self.life - value <= self.max_life/2 then
 		local t = self:getTalentFromId(self.T_VITALITY)
@@ -2032,13 +2084,14 @@ function _M:onTakeHit(value, src, death_note)
 	end
 
 	-- Daunting Presence?
-	if self:isTalentActive(self.T_DAUNTING_PRESENCE) and value > (self.max_life / 20) then
+	if value > (self.max_life / 20) and self:isTalentActive(self.T_DAUNTING_PRESENCE) then
 		local t = self:getTalentFromId(self.T_DAUNTING_PRESENCE)
 		t.do_daunting_presence(self, t)
 	end
 
 	-- Shield of Light
-	if value > 0 and self:isTalentActive(self.T_SHIELD_OF_LIGHT) then
+	tal = self:isTalentActive(self.T_SHIELD_OF_LIGHT)
+	if tal then
 		if value <= 2 then
 			drain = value
 		else
@@ -2046,19 +2099,23 @@ function _M:onTakeHit(value, src, death_note)
 		end
 		if self:getPositive() >= drain then
 			self:incPositive(- drain)
-			self:heal(self:combatTalentSpellDamage(self.T_SHIELD_OF_LIGHT, 5, 25), self)
+			self:heal(self:combatTalentSpellDamage(self.T_SHIELD_OF_LIGHT, 5, 25), tal)
 		end
 	end
 
 	-- Second Life
-	if self:isTalentActive(self.T_SECOND_LIFE) and value >= self.life then
-		local sl = self:callTalent(self.T_SECOND_LIFE,"getLife")
-		value = 0
-		self.life = sl
-		game.logSeen(self, "%s has been saved by a blast of positive energy!", self.name:capitalize())
-		self:forceUseTalent(self.T_SECOND_LIFE, {ignore_energy=true})
+	if value >= self.life then
+		tal = self:isTalentActive(self.T_SECOND_LIFE)
+		if tal then
+			local sl = self:callTalent(self.T_SECOND_LIFE,"getLife")
+			value = 0
+			self.life = sl
+			game.logSeen(self, "#YELLOW#%s has been saved by a blast of positive energy!#LAST#", self.name:capitalize())
+			game:delayedLogDamage(tal, self, -sl, ("#LIGHT_GREEN#%d healing#LAST#"):format(sl), false)
+			self:forceUseTalent(self.T_SECOND_LIFE, {ignore_energy=true})
+		end
 	end
-
+	
 	-- Shade's reform
 	if value >= self.life and self.ai_state and self.ai_state.can_reform then
 		local t = self:getTalentFromId(self.T_SHADOW_REFORM)
@@ -2072,12 +2129,13 @@ function _M:onTakeHit(value, src, death_note)
 		end
 	end
 
+	if value <= 0 then return 0 end
 	-- Vim leech
 	if self:knowTalent(self.T_LEECH) and src.hasEffect and src:hasEffect(src.EFF_VIMSENSE) then
 		local vt = self:getTalentFromId(self.T_LEECH)
 		self:incVim(vt.getVim(self, vt))
-		self:heal(vt.getHeal(self, vt))
-		game.logPlayer(self, "#AQUAMARINE#You leech a part of %s's vim.", src.name:capitalize())
+		self:heal(vt.getHeal(self, vt), src)
+		if self.player then src:logCombat(src, "#AQUAMARINE#You leech a part of #Target#'s vim.") end
 	end
 
 	-- Invisible on hit
@@ -2117,11 +2175,24 @@ function _M:onTakeHit(value, src, death_note)
 	end
 
 	-- Life leech
-	if value > 0 and src and not src.dead and src:attr("life_leech_chance") and rng.percent(src.life_leech_chance) then
+	if value > 0 and src and not src.dead and src.attr and src:attr("life_leech_chance") and rng.percent(src.life_leech_chance) then
 		local leech = math.min(value, self.life) * src.life_leech_value / 100
 		if leech > 0 then
-			src:heal(leech)
-			game.logSeen(src, "#CRIMSON#%s leeches life from its victim!", src.name:capitalize())
+			src:heal(leech, self)
+			game:delayedLogMessage(src, self, "life_leech"..self.uid, "#CRIMSON##Source# leeches life from #Target#!")
+		end
+	end
+
+	-- Flat damage cap
+	if self.flat_damage_cap and self.max_life and death_note and death_note.damtype then
+		local cap = nil
+		if self.flat_damage_cap.all then cap = self.flat_damage_cap.all end
+		if self.flat_damage_cap[death_note.damtype] then cap = self.flat_damage_cap[death_note.damtype] end
+		if cap and cap > 0 then
+			local ignored = math.max(0, value - cap * self.max_life / 100)
+			if ignored > 0 then game:delayedLogDamage(src, self, 0, ("#LIGHT_GREY#(%d resilience)#LAST#"):format(ignored), false) end
+			value = value - ignored
+			print("[TAKE HIT] after flat damage cap", value)
 		end
 	end
 
@@ -2129,7 +2200,7 @@ function _M:onTakeHit(value, src, death_note)
 	if self:triggerHook(hd) then value = hd.value end
 
 	-- Resource leech
-	if value > 0 and src and src:attr("resource_leech_chance") and rng.percent(src.resource_leech_chance) then
+	if value > 0 and src and src.attr and src:attr("resource_leech_chance") and rng.percent(src.resource_leech_chance) then
 		local leech = src.resource_leech_value
 		src:incMana(leech)
 		src:incVim(leech * 0.5)
@@ -2139,7 +2210,7 @@ function _M:onTakeHit(value, src, death_note)
 		src:incStamina(leech * 0.65)
 		src:incHate(leech * 0.2)
 		src:incPsi(leech * 0.2)
-		game.logSeen(src, "#CRIMSON#%s leeches energies from its victim!", src.name:capitalize())
+		game:delayedLogMessage(src, self, "resource_leech", "#CRIMSON##Source# leeches energies from #Target#!")
 	end
 
 	if self:knowTalent(self.T_DRACONIC_BODY) then
@@ -2348,9 +2419,9 @@ function _M:die(src, death_note)
 	end
 
 	local effStalked = self:hasEffect(self.EFF_STALKED)
-	if effStalked and not effStalked.source.dead and effStalked.source:hasEffect(self.EFF_STALKER) then
-		local t = effStalked.source:getTalentFromId(effStalked.source.T_STALK)
-		t.on_targetDied(effStalked.source, t, self)
+	if effStalked and not effStalked.src.dead and effStalked.src:hasEffect(self.EFF_STALKER) then
+		local t = effStalked.src:getTalentFromId(effStalked.src.T_STALK)
+		t.on_targetDied(effStalked.src, t, self)
 	end
 
 	if src and src.hasEffect and src:hasEffect(self.EFF_PREDATOR) then
@@ -3257,6 +3328,20 @@ function _M:unlearnItemTalent(o, tid, level)
 	end
 end
 
+function _M:checkPool(tid, pid)
+	if tid == pid then return end
+	if not self:knowTalent(pid) then
+		self:learnTalent(pid, true)
+	else
+		if not self.resource_pool_refs[pid] or not next(self.resource_pool_refs[pid]) then
+			self.resource_pool_refs[pid] = self.resource_pool_refs[pid] or {}
+			self.resource_pool_refs[pid][pid] = 1 -- Make it never unlearnable
+		end
+	end
+	self.resource_pool_refs[pid] = self.resource_pool_refs[pid] or {}
+	self.resource_pool_refs[pid][tid] = (self.resource_pool_refs[pid][tid] or 0) + 1
+end
+
 --- Actor learns a resource pool
 -- @param talent a talent definition table
 function _M:learnPool(t)
@@ -3264,53 +3349,44 @@ function _M:learnPool(t)
 
 --	if tt.mana_regen and self.mana_regen == 0 then self.mana_regen = 0.5 end
 
-	if t.type[1]:find("^spell/") and not self:knowTalent(self.T_MANA_POOL) and (t.mana or t.sustain_mana) then
-		self:learnTalent(self.T_MANA_POOL, true)
-		self.resource_pool_refs[self.T_MANA_POOL] = (self.resource_pool_refs[self.T_MANA_POOL] or 0) + 1
+	if t.type[1]:find("^spell/") and (t.mana or t.sustain_mana) then
+		self:checkPool(t.id, self.T_MANA_POOL)
 	end
-	if t.type[1]:find("^wild%-gift/") and not self:knowTalent(self.T_EQUILIBRIUM_POOL) and (t.equilibrium or t.sustain_equilibrium) then
-		self:learnTalent(self.T_EQUILIBRIUM_POOL, true)
-		self.resource_pool_refs[self.T_EQUILIBRIUM_POOL] = (self.resource_pool_refs[self.T_EQUILIBRIUM_POOL] or 0) + 1
+	if t.type[1]:find("^wild%-gift/") and (t.equilibrium or t.sustain_equilibrium) then
+		self:checkPool(t.id, self.T_EQUILIBRIUM_POOL)
 	end
-	if (t.type[1]:find("^technique/") or t.type[1]:find("^cunning/")) and not self:knowTalent(self.T_STAMINA_POOL) and (t.stamina or t.sustain_stamina) then
-		self:learnTalent(self.T_STAMINA_POOL, true)
-		self.resource_pool_refs[self.T_STAMINA_POOL] = (self.resource_pool_refs[self.T_STAMINA_POOL] or 0) + 1
+	if (t.type[1]:find("^technique/") or t.type[1]:find("^cunning/")) and (t.stamina or t.sustain_stamina) then
+		self:checkPool(t.id, self.T_STAMINA_POOL)
 	end
-	if t.type[1]:find("^corruption/") and not self:knowTalent(self.T_VIM_POOL) and (t.vim or t.sustain_vim) then
-		self:learnTalent(self.T_VIM_POOL, true)
-		self.resource_pool_refs[self.T_VIM_POOL] = (self.resource_pool_refs[self.T_VIM_POOL] or 0) + 1
+	if t.type[1]:find("^corruption/") and (t.vim or t.sustain_vim) then
+		self:checkPool(t.id, self.T_VIM_POOL)
 	end
-	if t.type[1]:find("^celestial/") and (t.positive or t.sustain_positive) and not self:knowTalent(self.T_POSITIVE_POOL) then
-		self:learnTalent(self.T_POSITIVE_POOL, true)
-		self.resource_pool_refs[self.T_POSITIVE_POOL] = (self.resource_pool_refs[self.T_POSITIVE_POOL] or 0) + 1
+	if t.type[1]:find("^celestial/") and (t.positive or t.sustain_positive) then
+		self:checkPool(t.id, self.T_POSITIVE_POOL)
 	end
-	if t.type[1]:find("^celestial/") and (t.negative or t.sustain_negative) and not self:knowTalent(self.T_NEGATIVE_POOL) then
-		self:learnTalent(self.T_NEGATIVE_POOL, true)
-		self.resource_pool_refs[self.T_NEGATIVE_POOL] = (self.resource_pool_refs[self.T_NEGATIVE_POOL] or 0) + 1
+	if t.type[1]:find("^celestial/") and (t.negative or t.sustain_negative) then
+		self:checkPool(t.id, self.T_NEGATIVE_POOL)
 	end
-	if t.type[1]:find("^cursed/") and not self:knowTalent(self.T_HATE_POOL) and t.hate then
-		self:learnTalent(self.T_HATE_POOL, true)
-		self.resource_pool_refs[self.T_HATE_POOL] = (self.resource_pool_refs[self.T_HATE_POOL] or 0) + 1
+	if t.type[1]:find("^cursed/") and t.hate then
+		self:checkPool(t.id, self.T_HATE_POOL)
 	end
-	if t.type[1]:find("^chronomancy/") and not self:knowTalent(self.T_PARADOX_POOL) then
-		self:learnTalent(self.T_PARADOX_POOL, true)
-		self.resource_pool_refs[self.T_PARADOX_POOL] = (self.resource_pool_refs[self.T_PARADOX_POOL] or 0) + 1
+	if t.type[1]:find("^chronomancy/") then
+		self:checkPool(t.id, self.T_PARADOX_POOL)
 	end
-	if t.type[1]:find("^psionic/") and not (t.type[1]:find("^psionic/feedback") or t.type[1]:find("^psionic/discharge")) and not self:knowTalent(self.T_PSI_POOL) then
-		self:learnTalent(self.T_PSI_POOL, true)
-		self.resource_pool_refs[self.T_PSI_POOL] = (self.resource_pool_refs[self.T_PSI_POOL] or 0) + 1
+	if t.type[1]:find("^psionic/") and not (t.type[1]:find("^psionic/feedback") or t.type[1]:find("^psionic/discharge")) then
+		self:checkPool(t.id, self.T_PSI_POOL)
 	end
-	if t.type[1]:find("^psionic/feedback") or t.type[1]:find("^psionic/discharge") and not self:knowTalent(self.T_FEEDBACK_POOL) then
-		self:learnTalent(self.T_FEEDBACK_POOL, true)
+	if t.type[1]:find("^psionic/feedback") or t.type[1]:find("^psionic/discharge") then
+		self:checkPool(t.id, self.T_FEEDBACK_POOL)
 	end
 	-- If we learn an archery talent, also learn to shoot
-	if t.type[1]:find("^technique/archery") and not self:knowTalent(self.T_SHOOT) then
-		self:learnTalent(self.T_SHOOT, true)
-		self.resource_pool_refs[self.T_SHOOT] = (self.resource_pool_refs[self.T_SHOOT] or 0) + 1
+	if t.type[1]:find("^technique/archery") then
+		self:checkPool(t.id, self.T_SHOOT)
+		self:checkPool(t.id, self.T_RELOAD)
 	end
-	if t.type[1]:find("^technique/archery") and not self:knowTalent(self.T_RELOAD) then
-		self:learnTalent(self.T_RELOAD, true)
-		self.resource_pool_refs[self.T_RELOAD] = (self.resource_pool_refs[self.T_RELOAD] or 0) + 1
+	-- If we learn an unharmed talent, learn to use it too
+	if tt.is_unarmed then
+		self:checkPool(t.id, self.T_EMPTY_HAND)
 	end
 
 	self:recomputeRegenResources()
@@ -3323,6 +3399,8 @@ end
 -- @return true if the talent was unlearnt, nil and an error message otherwise
 function _M:unlearnTalent(t_id, nb, no_unsustain, extra)
 	if not engine.interface.ActorTalents.unlearnTalent(self, t_id, nb) then return false end
+
+	nb = nb or 1
 
 	local t = _M.talents_def[t_id]
 
@@ -3343,9 +3421,12 @@ function _M:unlearnTalent(t_id, nb, no_unsustain, extra)
 	end
 
 	-- Check the various pools
-	for key, num_refs in pairs(self.resource_pool_refs) do
-		if num_refs == 0 then
-			self:unlearnTalent(key)
+	for pid, refs in pairs(self.resource_pool_refs) do
+		if refs[t_id] then
+			refs[t_id] = refs[t_id] - nb
+			if refs[t_id] <= 0 then refs[t_id] = nil end
+
+			if not next(refs) then self:unlearnTalent(pid, 1) end
 		end
 	end
 
@@ -3354,7 +3435,7 @@ function _M:unlearnTalent(t_id, nb, no_unsustain, extra)
 
 	self:recomputeRegenResources()
 
-	if t.is_spell then self:attr("has_arcane_knowledge", -(nb or 1)) end
+	if t.is_spell then self:attr("has_arcane_knowledge", -nb) end
 
 	-- If we learn mindslayer things we learn telekinetic grasp & beyond the flesh
 	if t.autolearn_mindslayer then
@@ -3763,6 +3844,10 @@ function _M:preUseTalent(ab, silent, fake)
 	if ab.is_teleport and self:attr("encased_in_ice") then return false end
 
 	end
+
+	-- Special checks -- AI
+	if not self.player and ab.on_pre_use_ai and not (ab.mode == "sustained" and self:isTalentActive(ab.id)) and not ab.on_pre_use_ai(self, ab, silent, fake) then return false end
+
 	if not silent then
 		-- Allow for silent talents
 		if ab.message ~= nil then
@@ -4021,7 +4106,7 @@ function _M:postUseTalent(ab, ret, silent)
 		self:project(tg, self.x, self.y, function(px, py)
 			local target = game.level.map(px, py, Map.ACTOR)
 			if target and self:reactionToward(target) >= 0 then
-				target:heal(self:attr("heal_on_nature_summon"))
+				target:heal(self:attr("heal_on_nature_summon"), self)
 			end
 		end)
 	end
@@ -4036,7 +4121,7 @@ function _M:postUseTalent(ab, ret, silent)
 			local t = rng.tableRemove(tids)
 			if not t then break end
 			self.talents_cd[t.id] = self:attr("random_talent_cooldown_on_use_turns")
-			game.log("%s talent '%s%s' is disrupted by the mind parasite.", self.name:capitalize(), (t.display_entity and t.display_entity:getDisplayString() or ""), t.name)
+			game.logSeen(self, "%s talent '%s%s' is disrupted by the mind parasite.", self.name:capitalize(), (t.display_entity and t.display_entity:getDisplayString() or ""), t.name)
 		end
 	end
 
@@ -4154,17 +4239,17 @@ function _M:getTalentFullDescription(t, addlevel, config, fake_mastery)
 		d:add(true)
 	end
 	if not config.ignore_ressources then
-		if t.mana then d:add({"color",0x6f,0xff,0x83}, "Mana cost: ", {"color",0x7f,0xff,0xd4}, ""..(util.getval(t.mana, self, t) * (100 + 2 * self:combatFatigue()) / 100), true) end
-		if t.stamina then d:add({"color",0x6f,0xff,0x83}, "Stamina cost: ", {"color",0xff,0xcc,0x80}, ""..(util.getval(t.stamina, self, t) * (100 + self:combatFatigue()) / 100), true) end
-		if t.equilibrium then d:add({"color",0x6f,0xff,0x83}, "Equilibrium cost: ", {"color",0x00,0xff,0x74}, ""..(util.getval(t.equilibrium, self, t)), true) end
-		if t.vim then d:add({"color",0x6f,0xff,0x83}, "Vim cost: ", {"color",0x88,0x88,0x88}, ""..(util.getval(t.vim, self, t)), true) end
-		if t.positive then d:add({"color",0x6f,0xff,0x83}, "Positive energy cost: ", {"color",255, 215, 0}, ""..(util.getval(t.positive, self, t) * (100 + self:combatFatigue()) / 100), true) end
-		if t.negative then d:add({"color",0x6f,0xff,0x83}, "Negative energy cost: ", {"color", 127, 127, 127}, ""..(util.getval(t.negative, self, t) * (100 + self:combatFatigue()) / 100), true) end
-		if t.hate then d:add({"color",0x6f,0xff,0x83}, "Hate cost:  ", {"color", 127, 127, 127}, ""..(util.getval(t.hate, self, t) * (100 + 2 * self:combatFatigue()) / 100), true) end
-		if t.paradox then d:add({"color",0x6f,0xff,0x83}, "Paradox cost: ", {"color",  176, 196, 222}, ("%0.2f"):format(util.getval(t.paradox, self, t) * (1 + (self.paradox / 300))), true) end
-		if t.psi then d:add({"color",0x6f,0xff,0x83}, "Psi cost: ", {"color",0x7f,0xff,0xd4}, ""..(util.getval(t.psi, self, t) * (100 + 2 * self:combatFatigue()) / 100), true) end
-		if t.feedback then d:add({"color",0x6f,0xff,0x83}, "Feedback cost: ", {"color",0xFF, 0xFF, 0x00}, ""..(util.getval(t.feedback, self, t) * (100 + 2 * self:combatFatigue()) / 100), true) end
-		if t.fortress_energy then d:add({"color",0x6f,0xff,0x83}, "Fortress Energy cost: ", {"color",0x00,0xff,0xa0}, ""..(t.fortress_energy), true) end
+		if t.mana then d:add({"color",0x6f,0xff,0x83}, "Mana cost: ", {"color",0x7f,0xff,0xd4}, ""..math.round(util.getval(t.mana, self, t) * (100 + 2 * self:combatFatigue()) / 100, 0.1), true) end
+		if t.stamina then d:add({"color",0x6f,0xff,0x83}, "Stamina cost: ", {"color",0xff,0xcc,0x80}, ""..math.round(util.getval(t.stamina, self, t) * (100 + self:combatFatigue()) / 100, 0.1), true) end
+		if t.equilibrium then d:add({"color",0x6f,0xff,0x83}, "Equilibrium cost: ", {"color",0x00,0xff,0x74}, ""..math.round(util.getval(t.equilibrium, self, t), 0.1), true) end
+		if t.vim then d:add({"color",0x6f,0xff,0x83}, "Vim cost: ", {"color",0x88,0x88,0x88}, ""..math.round(util.getval(t.vim, self, t), 0.1), true) end
+		if t.positive then d:add({"color",0x6f,0xff,0x83}, "Positive energy cost: ", {"color",255, 215, 0}, ""..math.round(util.getval(t.positive, self, t) * (100 + self:combatFatigue()) / 100, 0.1), true) end
+		if t.negative then d:add({"color",0x6f,0xff,0x83}, "Negative energy cost: ", {"color", 127, 127, 127}, ""..math.round(util.getval(t.negative, self, t) * (100 + self:combatFatigue()) / 100, 0.1), true) end
+		if t.hate then d:add({"color",0x6f,0xff,0x83}, "Hate cost:  ", {"color", 127, 127, 127}, ""..math.round(util.getval(t.hate, self, t) * (100 + 2 * self:combatFatigue()) / 100, 0.1), true) end
+		if t.paradox then d:add({"color",0x6f,0xff,0x83}, "Paradox cost: ", {"color",  176, 196, 222}, ("%0.1f"):format(util.getval(t.paradox, self, t) * (1 + (self.paradox / 300))), true) end
+		if t.psi then d:add({"color",0x6f,0xff,0x83}, "Psi cost: ", {"color",0x7f,0xff,0xd4}, ""..math.round(util.getval(t.psi, self, t) * (100 + 2 * self:combatFatigue()) / 100, 0.1), true) end
+		if t.feedback then d:add({"color",0x6f,0xff,0x83}, "Feedback cost: ", {"color",0xFF, 0xFF, 0x00}, ""..math.round(util.getval(t.feedback, self, t) * (100 + 2 * self:combatFatigue()) / 100, 0.1), true) end
+		if t.fortress_energy then d:add({"color",0x6f,0xff,0x83}, "Fortress Energy cost: ", {"color",0x00,0xff,0xa0}, ""..math.round(t.fortress_energy, 0.1), true) end
 
 		if t.sustain_mana then d:add({"color",0x6f,0xff,0x83}, "Sustain mana cost: ", {"color",0x7f,0xff,0xd4}, ""..(util.getval(t.sustain_mana, self, t)), true) end
 		if t.sustain_stamina then d:add({"color",0x6f,0xff,0x83}, "Sustain stamina cost: ", {"color",0xff,0xcc,0x80}, ""..(util.getval(t.sustain_stamina, self, t)), true) end
@@ -4173,14 +4258,14 @@ function _M:getTalentFullDescription(t, addlevel, config, fake_mastery)
 		if t.sustain_positive then d:add({"color",0x6f,0xff,0x83}, "Sustain positive energy cost: ", {"color",255, 215, 0}, ""..(util.getval(t.sustain_positive, self, t)), true) end
 		if t.sustain_negative then d:add({"color",0x6f,0xff,0x83}, "Sustain negative energy cost: ", {"color", 127, 127, 127}, ""..(util.getval(t.sustain_negative, self, t)), true) end
 		if t.sustain_hate then d:add({"color",0x6f,0xff,0x83}, "Sustain hate cost:  ", {"color", 127, 127, 127}, ""..(util.getval(t.sustain_hate, self, t)), true) end
-		if t.sustain_paradox then d:add({"color",0x6f,0xff,0x83}, "Sustain paradox cost: ", {"color",  176, 196, 222}, ("%0.2f"):format(util.getval(t.sustain_paradox, self, t)), true) end
+		if t.sustain_paradox then d:add({"color",0x6f,0xff,0x83}, "Sustain paradox cost: ", {"color",  176, 196, 222}, ("%0.1f"):format(util.getval(t.sustain_paradox, self, t)), true) end
 		if t.sustain_psi then d:add({"color",0x6f,0xff,0x83}, "Sustain psi cost: ", {"color",0x7f,0xff,0xd4}, ""..(util.getval(t.sustain_psi, self, t)), true) end
 		if t.sustain_feedback then d:add({"color",0x6f,0xff,0x83}, "Sustain feedback cost: ", {"color",0xFF, 0xFF, 0x00}, ""..(util.getval(t.sustain_feedback, self, t)), true) end
 
 		self:triggerHook{"Actor:getTalentFullDescription:ressources", str=d, t=t, addlevel=addlevel, config=config, fake_mastery=fake_mastery}
 	end
 	if t.mode ~= "passive" then
-		if self:getTalentRange(t) > 1 then d:add({"color",0x6f,0xff,0x83}, "Range: ", {"color",0xFF,0xFF,0xFF}, ("%0.2f"):format(self:getTalentRange(t)), true)
+		if self:getTalentRange(t) > 1 then d:add({"color",0x6f,0xff,0x83}, "Range: ", {"color",0xFF,0xFF,0xFF}, ("%0.1f"):format(self:getTalentRange(t)), true)
 		else d:add({"color",0x6f,0xff,0x83}, "Range: ", {"color",0xFF,0xFF,0xFF}, "melee/personal", true)
 		end
 		if not config.ignore_ressources then
@@ -4385,7 +4470,7 @@ function _M:suffocate(value, src, death_message)
 	return false, true
 end
 
---- Can the actor see the target actor
+-- Can the actor see the target actor (or other entity)
 -- This does not check LOS or such, only the actual ability to see it.<br/>
 -- Check for telepathy, invisibility, stealth, ...
 function _M:canSeeNoCache(actor, def, def_pct)
@@ -4415,7 +4500,7 @@ function _M:canSeeNoCache(actor, def, def_pct)
 	end
 
 	-- Check for stealth. Checks against the target cunning and level
-	if actor:attr("stealth") and actor ~= self then
+	if actor ~= self and actor.attr and actor:attr("stealth") then
 		local def = self:combatSeeStealth()
 		local hit, chance = self:checkHitOld(def, actor:attr("stealth") + (actor:attr("inc_stealth") or 0), 0, 100)
 		if not hit then
@@ -4424,7 +4509,7 @@ function _M:canSeeNoCache(actor, def, def_pct)
 	end
 
 	-- Check for invisibility. This is a "simple" checkHit between invisible and see_invisible attrs
-	if actor:attr("invisible") and actor ~= self then
+	if actor ~= self and actor.attr and actor:attr("invisible") then
 		-- Special case, 0 see invisible, can NEVER see invisible things
 		local def = self:combatSeeInvisible()
 		if def <= 0 then return false, 0 end
@@ -4569,6 +4654,8 @@ local save_for_effects = {
 
 --- Adjust temporary effects
 function _M:on_set_temporary_effect(eff_id, e, p)
+	p.getName = self.tempeffect_def[eff_id].getName
+	p.resolveSource = self.tempeffect_def[eff_id].resolveSource
 	if p.apply_power and (save_for_effects[e.type] or p.apply_save) then
 		local save = 0
 		p.maximum = p.dur
@@ -4669,7 +4756,7 @@ function _M:on_project_acquire(tx, ty, who, t, x, y, damtype, dam, particles, is
 		else
 			dir = "to the "..dir.."!"
 		end
-		game.logSeen(self, "%s deflects the projectile from %s %s", self.name:capitalize(), who.name, dir)
+		self:logCombat(who, "#Source# deflects the projectile from #Target# %s", dir)
 		return true
 	end
 end

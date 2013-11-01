@@ -27,6 +27,23 @@ newTalent{
 	mode = "passive",
 	points = 1,
 	no_unlearn_last = true,
+	on_learn = function(self, t)
+		local fct = function()
+			self.before_empty_hands_combat = self.combat
+			self.combat = table.clone(self.combat, true)
+			self.combat.physspeed = math.min(0.6, self.combat.physspeed or 1000)
+			if not self.combat.sound then self.combat.sound = {"actions/punch%d", 1, 4} end
+			if not self.combat.sound_miss then self.combat.sound_miss = "actions/melee_miss" end
+		end
+		if type(self.combat.dam) == "table" then
+			game:onTickEnd(fct)
+		else
+			fct()
+		end
+	end,
+	on_unlearn = function(self, t)
+		self.combat = self.before_empty_hands_combat
+	end,
 	getDamage = function(self, t) return self.level * 0.5 end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)

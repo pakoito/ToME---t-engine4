@@ -161,6 +161,7 @@ newTalent{
 			if x == px and y == py and self and self.x and self.y then
 				print("[Dream Hammer Return] Projection from", x, y, "to", self.x, self.y)
 				local tgr = tg
+				tgr.name = "Hammer Toss"
 				tgr.x, tgr.y = px, py
 				self:projectile(tgr, self.x, self.y, function(px, py, tgr, self)
 					local tmp_target = game.level.map(px, py, engine.Map.ACTOR)

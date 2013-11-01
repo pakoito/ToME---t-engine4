@@ -246,8 +246,12 @@ newTalent{
 			end
 			for i = 1, 2 do self:removeObject(self:getInven("QUIVER"), 1) end
 			self.alchemy_golem:attr("allow_on_heal", 1)
-			self.alchemy_golem:heal(t.getHeal(self, t))
+			self.alchemy_golem:heal(t.getHeal(self, t), self)
 			self.alchemy_golem:attr("allow_on_heal", -1)
+			if core.shader.active(4) then
+				self.alchemy_golem:addParticles(Particles.new("shader_shield_temp", 1, {toback=true , size_factor=1.5, y=-0.3, img="healarcane", life=25}, {type="healing", time_factor=2000, beamsCount=20, noup=2.0, beamColor1={0x8e/255, 0x2f/255, 0xbb/255, 1}, beamColor2={0xe7/255, 0x39/255, 0xde/255, 1}, circleDescendSpeed=4}))
+				self.alchemy_golem:addParticles(Particles.new("shader_shield_temp", 1, {toback=false, ize_factor=1.5, y=-0.3, img="healarcane", life=25}, {type="healing", time_factor=2000, beamsCount=20, noup=1.0, beamColor1={0x8e/255, 0x2f/255, 0xbb/255, 1}, beamColor2={0xe7/255, 0x39/255, 0xde/255, 1}, circleDescendSpeed=4}))
+			end
 
 		-- resurrect the golem
 		elseif not self:hasEffect(self.EFF_GOLEM_MOUNT) then
@@ -431,7 +435,7 @@ newTalent{
 				local _, _, tgt = e:getTarget()
 				if e:reactionToward(self) < 0 and tgt == self and rng.percent(chance) then
 					e:setTarget(golem)
-					game.logSeen(e, "%s focuses on %s.", e.name:capitalize(), golem.name)
+					golem:logCombat(e, "#Target# focuses on #Source#.")
 				end
 			end
 		end

@@ -80,7 +80,7 @@ defineTile('1', mod.class.Grid.new{
 		end
 		actor:move(fx, fy, true)
 
-		game.logPlayer(actor, "Something in the floor clicks ominously, and suddenly the world spins around you!")
+		game.logPlayer(actor, "Something in the floor clicks ominously%s", actor.lite > 0 and not actor:attr("blind") and ", and suddenly the world spins around you!" or ".")
 		local g = game.zone:makeEntityByName(game.level, "terrain", "FLOOR")
 		if not g then return end
 		game.zone:addEntity(game.level, g, "terrain", x, y)
@@ -111,8 +111,7 @@ defineTile('2', mod.class.Grid.new{
 		game.zone:addEntity(game.level, f, "terrain", x, y)
 		game.nicer_tiles:updateAround(game.level, x, y)
 
-
-		game.logPlayer(actor, "Something in the floor clicks ominously, and the crypt rearranges itself around you!")
+		game.logPlayer(actor, "Something in the floor clicks ominously%s", actor.lite > 0 and not actor:attr("blind") and ", and the crypt rearranges itself around you!" or ".")
 
 	end,
 }
@@ -164,8 +163,7 @@ defineTile('4', mod.class.Grid.new{
 		game.zone:addEntity(game.level, f, "terrain", x, y)
 		game.nicer_tiles:updateAround(game.level, x, y)
 
-		game.logPlayer(actor, "Something underfoot clicks ominously, and the crypt rearranges itself around you!")
-
+		game.logPlayer(actor, "Something in the floor clicks ominously%s", actor.lite > 0 and not actor:attr("blind") and ", and the crypt rearranges itself around you!" or ".")
 	end,
 }
 )

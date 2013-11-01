@@ -90,7 +90,7 @@ function _M:activate()
 		game.uiset.logdisplay(...) else game.uiset.logdisplay(style, ...) end
 		if game.uiset.show_userchat then game.uiset.logdisplay.changed = old end
 	end
-	game.logSeen = function(e, style, ...) if e and e.x and e.y and game.level.map.seens(e.x, e.y) then game.log(style, ...) end end
+--	game.logSeen = function(e, style, ...) if e and e.player or (not e.dead and e.x and e.y and game.level and game.level.map.seens(e.x, e.y) and game.player:canSee(e)) then game.log(style, ...) end end
 	game.logPlayer = function(e, style, ...) if e == game.player or e == game.party then game.log(style, ...) end end
 end
 

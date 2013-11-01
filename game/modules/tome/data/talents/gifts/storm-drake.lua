@@ -88,7 +88,7 @@ newTalent{
 			if target.life - dam < 0 then dam = target.life end
 			target:takeHit(dam, self)
 
-			game:delayedLogDamage(self, target, dam, ("#PURPLE#%d pure damage#LAST#"):format(math.ceil(dam)))
+			game:delayedLogDamage(self, target, dam, ("#PURPLE#%d STATIC#LAST#"):format(math.ceil(dam)))
 		end, nil, {type="lightning_explosion"})
 		game:playSoundNear(self, "talents/lightning")
 		return true
@@ -125,7 +125,7 @@ newTalent{
 		local movedam = self:mindCrit(self:combatTalentMindDamage(t, 10, 110))
 		local dam = self:mindCrit(self:combatTalentMindDamage(t, 15, 190))
 
-		local proj = require("engine.Projectile"):makeHoming(
+		local proj = require("mod.class.Projectile"):makeHoming(
 			self,
 			{particle="bolt_lightning", trail="lightningtrail"},
 			{speed=2, name="Tornado", dam=dam, movedam=movedam},

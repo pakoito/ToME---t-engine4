@@ -99,7 +99,7 @@ function _M:generate()
 
 		self.sel_j = util.bound(self.scroll + math.floor(by / (self.tile_h + self.padding)), 1, self.max)
 		self.sel_i = util.bound(1 + math.floor(bx / (self.tile_w + self.padding)), 1, self.nb_w)
-		if button == "left" and event == "button" then self:onUse(button) end
+		if (button == "left" or button == "right") and event == "button" then self:onUse(button) end
 		self:onSelect()
 	end)
 	self.key:addBinds{
@@ -176,7 +176,7 @@ function _M:onUse(button, forcectrl)
 			if not (forcectrl == true or (forcectrl == nil and core.key.modState("ctrl"))) then self:clearSelection() end
 			item.selected = not item.selected
 		end
-		self.fct(item)
+		self.fct(item, button)
 	end
 end
 

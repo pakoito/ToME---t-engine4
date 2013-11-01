@@ -50,10 +50,9 @@ newTalent{
 
 		if not t.allowedTypes(self, t, target.type) then game.logPlayer(self, "You may not possess this kind of creature.") return nil end
 --		if target.life > target.max_life * 0.25 then game.logPlayer(self, "You may not possess this creature yet its life is too high.") return nil end
-		if target.dead then game.logPlayer(self, "This creature is dead!") return nil end
-
+		if target.dead then game.logPlayer(self, "Your target is dead!") return nil end
 		if not self:checkHit(self:combatMindpower(), target:combatMentalResist(), 0, 95, 5) then -- or not target:canBe("instakill") then
-			game.logPlayer(self, "You fail to shatter %s mind, leaving you unable to possess its body.", target.name)
+			self:logCombat(target, "#Source# fails to shatter #Target#'s mind, preventing its possession.")
 			return true
 		end
 

@@ -31,7 +31,7 @@ return {
 		ellipsoidalFactor = {1.0, 1.0}, --1 is perfect circle, >1 is ellipsoidal
 	},
 	resetargs = {
-		tick_start = function() return core.game.getTime() end,
+		tick_start = function() return core.game.getFrameTime() end,
 	},	
 	clone = false,
 }

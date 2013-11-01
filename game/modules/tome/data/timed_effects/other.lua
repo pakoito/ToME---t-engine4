@@ -120,6 +120,10 @@ newEffect{
 	on_lose = function(self, err) return "The fabric of time around #target# stabilizes to normal.", "-Time Shield" end,
 	on_aegis = function(self, eff, aegis)
 		self.time_shield_absorb = self.time_shield_absorb + eff.power * aegis / 100
+		if core.shader.active(4) then
+			self:removeParticles(eff.particle)
+			eff.particle = self:addParticles(Particles.new("shader_shield", 1, {size_factor=1.3, img="runicshield"}, {type="runicshield", shieldIntensity=0.14, ellipsoidalFactor=1.2, scrollingSpeed=-2, time_factor=4000, bubbleColor={1, 1, 0.3, 1.0}, auraColor={1, 0.8, 0.2, 1}}))
+		end		
 	end,
 	damage_feedback = function(self, eff, src, value)
 		if eff.particle and eff.particle._shader and eff.particle._shader.shad and src and src.x and src.y then
@@ -179,7 +183,7 @@ newEffect{
 		self:removeParticles(eff.particle)
 	end,
 	on_timeout = function(self, eff)
-		self:heal(eff.power)
+		self:heal(eff.power, eff)
 	end,
 }
 
@@ -753,27 +757,28 @@ newEffect{
 		if math.min(eff.unlockLevel, eff.level) >= 4 and target.type == "humanoid" and rng.percent(def.getReprieveChance(eff.level)) then
 			if not self:canBe("summon") then return end
 
-			local x, y = target.x, target.y
-			local m = require("mod.class.NPC").new(def.npcWalkingCorpse)
-			m.faction = self.faction
-			m.summoner = self
-			m.summoner_gain_exp = true
-			m.summon_time = 6
-			m:resolve() m:resolve(nil, true)
-			m:forceLevelup(math.max(1, self.level - 2))
-			game.zone:addEntity(game.level, m, "actor", x, y)
+			game:onTickEnd(function()
+				local x, y = util.findFreeGrid(target.x, target.y,1)
+				if not x then return end
+				local m = require("mod.class.NPC").new(def.npcWalkingCorpse)
+				m.faction = self.faction
+				m.summoner = self
+				m.summoner_gain_exp = true
+				m.summon_time = 6
+				m:resolve() m:resolve(nil, true)
+				m:forceLevelup(math.max(1, self.level - 2))
+				game.zone:addEntity(game.level, m, "actor", x, y)
+				-- Add to the party
+				if self.player then
+					m.remove_from_party_on_death = true
+					game.party:addMember(m, {control="no", type="summon", title="Summon"})
+				end
 
-			-- Add to the party
-			if self.player then
-				m.remove_from_party_on_death = true
-				game.party:addMember(m, {control="no", type="summon", title="Summon"})
-			end
+				game.level.map:particleEmitter(x, y, 1, "slime")
 
-			game.level.map:particleEmitter(x, y, 1, "slime")
-
-			game.logSeen(target, "#F53CBE#The corpse of the %s pulls itself up to fight for you.", target.name)
-			game:playSoundNear(who, "talents/slime")
-
+				game.logSeen(m, "#F53CBE#The corpse of the %s pulls itself up to fight for you.", target.name)
+				game:playSoundNear(who, "talents/slime")
+			end)
 			return true
 		else
 			return false
@@ -883,8 +888,8 @@ newEffect{
 	on_merge = function(self, old_eff, new_eff) return old_eff end,
 	doConspirator = function(self, eff, target)
 		if math.min(eff.unlockLevel, eff.level) >= 3 and self:attr("confused") and target:canBe("confusion") then
-			target:setEffect(target.EFF_CONFUSED, 3, {power=50}) -- Make consistent
-			game.logSeen(self, "#F53CBE#%s spreads confusion to %s.", self.name:capitalize(), target.name)
+			target:setEffect(target.EFF_CONFUSED, 3, {power=50})
+			self:logCombat(target, "#F53CBE##Source# spreads confusion to #Target#.")
 		end
 	end,
 }
@@ -1330,7 +1335,7 @@ newEffect{
 	subtype = { miscellaneous=true },
 	status = "beneficial",
 	parameters = {},
-	activate = function(self, eff) game.logPlayer(self, "#LIGHT_BLUE#You begin reloading.") end,
+	activate = function(self, eff) game.logSeen(self, "#LIGHT_BLUE#%s begins reloading.", self.name:capitalize()) end,
 	deactivate = function(self, eff)
 	end,
 	on_timeout = function(self, eff)
@@ -1364,8 +1369,8 @@ newEffect{
 newEffect{
 	name = "HEIGHTEN_FEAR", image = "talents/heighten_fear.png",
 	desc = "Heighten Fear",
-	long_desc = function(self, eff) return ("The target is in a state of growing fear. If they spend %d more turns in a range or %d and in sight of the source of this fear (%s), they will be subjected to a new fear."):
-	format(eff.turns_left, eff.range, eff.source.name) end,
+	long_desc = function(self, eff) return ("The target is in a state of growing fear. If they spend %d more turns within range %d and in sight of the source of this fear (%s), they will be subjected to a new fear."):
+	format(eff.turns_left, eff.range, eff.src.name) end,
 	type = "other",
 	subtype = { fear=true },
 	status = "detrimental",
@@ -1374,15 +1379,15 @@ newEffect{
 	cancel_on_level_change = true,
 	parameters = { },
 	on_merge = function(self, old_eff, new_eff)
-		old_eff.source = new_eff.source
+		old_eff.src = new_eff.src
 		old_eff.range = new_eff.range
 
 		return old_eff
 	end,
 	on_timeout = function(self, eff)
 		local tInstillFear = self:getTalentFromId(self.T_INSTILL_FEAR)
-		if tInstillFear.hasEffect(eff.source, tInstillFear, self) then
-			if core.fov.distance(self.x, self.y, eff.source.x, eff.source.y) <= eff.range and self:hasLOS(eff.source.x, eff.source.y) then
+		if tInstillFear.hasEffect(eff.src, tInstillFear, self) then
+			if core.fov.distance(self.x, self.y, eff.src.x, eff.src.y) <= eff.range and self:hasLOS(eff.src.x, eff.src.y) then
 				eff.turns_left = eff.turns_left - 1
 			end
 			if eff.turns_left <= 0 then
@@ -1390,7 +1395,7 @@ newEffect{
 				if rng.percent(eff.chance or 100) then
 					eff.chance = (eff.chance or 100) - 10
 					game.logSeen(self, "%s succumbs to heightening fears!", self.name:capitalize())
-					tInstillFear.applyEffect(eff.source, tInstillFear, self)
+					tInstillFear.applyEffect(eff.src, tInstillFear, self)
 				else
 					game.logSeen(self, "%s feels a little less afraid!", self.name:capitalize())
 				end
@@ -2186,7 +2191,7 @@ newEffect{
 		local dead, val = self:takeHit(eff.dam, self, {special_death_msg="burnt to death by cauterize"})
 
 		local srcname = self.x and self.y and game.level.map.seens(self.x, self.y) and self.name:capitalize() or "Something"
-		game:delayedLogDamage(self, self, val, ("%s%d %s#LAST#"):format(DamageType:get(DamageType.FIRE).text_color or "#aaaaaa#", math.ceil(val), DamageType:get(DamageType.FIRE).name), false)
+		game:delayedLogDamage(eff, self, val, ("%s%d %s#LAST#"):format(DamageType:get(DamageType.FIRE).text_color or "#aaaaaa#", math.ceil(val), DamageType:get(DamageType.FIRE).name), false)
 	end,
 }
 

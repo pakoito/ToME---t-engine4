@@ -41,7 +41,8 @@ newTalent{
 	on_arrival = function(self, t, m)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t, x=m.x, y=m.y}
 		local duration = self:callTalent(self.T_GRAND_ARRIVAL,"effectDuration")
-		self:project(tg, m.x, m.y, DamageType.TEMP_EFFECT, {foes=true, eff=self.EFF_LOWER_PHYSICAL_RESIST, dur=duration, p={power=self:combatTalentMindDamage(t, 15, 70)}}, {type="flame"})
+		self:project(tg, m.x, m.y, DamageType.TEMP_EFFECT, {foes=true, eff=self.EFF_LOWER_PHYSICAL_RESIST, dur=duration, p={power=self:combatTalentMindDamage(t, 15, 70)}})
+		game.level.map:particleEmitter(m.x, m.y, tg.radius, "shout", {size=4, distorion_factor=0.3, radius=tg.radius, life=30, nb_circles=8, rm=0.8, rM=1, gm=0.8, gM=1, bm=0.1, bM=0.2, am=0.6, aM=0.8})
 	end,
 	summonTime = function(self, t) return math.floor(self:combatScale(self:getTalentLevel(t) + self:getTalentLevel(self.T_RESILIENCE), 5, 0, 10, 5)) end,
 	incStats = function(self, t,fake)
@@ -192,7 +193,7 @@ newTalent{
 				local p = value * 0.10
 				if self.summoner and not self.summoner.dead then
 					self.summoner:incEquilibrium(-p)
-					game.logSeen(self, "#GREEN#%s absorbs part of the blow. %s is closer to nature.", self.name:capitalize(), self.summoner.name:capitalize())
+					self:logCombat(self.summoner, "#GREEN##Source# absorbs part of the blow. #Target# is closer to nature.")
 				end
 				return value - p
 			end,

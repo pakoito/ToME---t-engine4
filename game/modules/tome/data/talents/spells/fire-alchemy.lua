@@ -131,7 +131,7 @@ newTalent{
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 5, 120) end,
 	action = function(self, t)
 		-- Add a lasting map effect
-		game.level.map:addEffect(self,
+		local ef = game.level.map:addEffect(self,
 			self.x, self.y, t.getDuration(self, t),
 			DamageType.FIRE_FRIENDS, t.getDamage(self, t),
 			3,
@@ -144,6 +144,7 @@ newTalent{
 			end,
 			false
 		)
+		ef.name = "firestorm"
 		game:playSoundNear(self, "talents/fire")
 		return true
 	end,
@@ -195,7 +196,7 @@ newTalent{
 			local a, id = rng.table(tgts)
 			table.remove(tgts, id)
 
-			self:projectile(tg, a.x, a.y, DamageType.FIRE, self:spellCrit(t.getFireDamageInSight(self, t)), {type="flame"})
+			self:projectile(table.clone(tg), a.x, a.y, DamageType.FIRE, self:spellCrit(t.getFireDamageInSight(self, t)), {type="flame"})
 			game:playSoundNear(self, "talents/fire")
 		end
 	end,

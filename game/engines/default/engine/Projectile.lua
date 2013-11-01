@@ -205,6 +205,7 @@ function _M:act()
 		if self.project then
 			local x, y, act, stop = self.src:projectDoMove(self.project.def.typ, self.project.def.x, self.project.def.y, self.x, self.y, self.project.def.start_x, self.project.def.start_y)
 			if x and y then self:move(x, y) end
+			if self.src then self.src.__project_source = self end -- intermediate projector source
 			if act then self.src:projectDoAct(self.project.def.typ, self.project.def.tg, self.project.def.damtype, self.project.def.dam, self.project.def.particles, self.x, self.y, self.tmp_proj) end
 			if stop then
 				local block, hit, hit_radius = false, true, true
@@ -219,9 +220,11 @@ function _M:act()
 				end
 				self.src:projectDoStop(self.project.def.typ, self.project.def.tg, self.project.def.damtype, self.project.def.dam, self.project.def.particles, self.x, self.y, self.tmp_proj, radius_x, radius_y, self)
 			end
+			if self.src then self.src.__project_source = nil end -- intermediate projector source
 		elseif self.homing then
 			self:moveDirection(self.homing.target.x, self.homing.target.y)
 			self.homing.count = self.homing.count - 1
+			if self.src then self.src.__project_source = self end -- intermediate projector source
 			if (self.x == self.homing.target.x and self.y == self.homing.target.y) or self.homing.count <= 0 then
 				game.level:removeEntity(self, true)
 				self.dead = true
@@ -229,18 +232,21 @@ function _M:act()
 			else
 				self.homing.on_move(self, self.src)
 			end
+			if self.src then self.src.__project_source = nil end -- intermediate projector source
 		end
 	end
-
 	return true
 end
 
 --- Something moved in the same spot as us, hit ?
 function _M:on_move(x, y, target)
+	self.src.__project_source = self -- intermediate projector source
 	if self.project and self.project.def.typ.line then self.src:projectDoAct(self.project.def.typ, self.project.def.tg, self.project.def.damtype, self.project.def.dam, self.project.def.particles, self.x, self.y, self.tmp_proj) end
 	if self.project and self.project.def.typ.stop_block then
+
 		self.src:projectDoStop(self.project.def.typ, self.project.def.tg, self.project.def.damtype, self.project.def.dam, self.project.def.particles, self.x, self.y, self.tmp_proj, self.x, self.y, self)
 	end
+	self.src.__project_source = nil
 end
 
 --- Premature end
@@ -255,7 +261,7 @@ function _M:makeProject(src, display, def, do_move, do_act, do_stop)
 	local name = def.tg.name
 	if def.tg.talent then
 		speed = src:getTalentProjectileSpeed(def.tg.talent) or speed
-		name = def.tg.talent.name
+		name = name or def.tg.talent.name
 		def.tg.talent_id = def.tg.talent.id
 		def.tg.talent = nil
 	end

@@ -54,7 +54,7 @@ newTalent{
 		local armorChange = t.getArmorChange(self, t)
 		local defenseChange = t.getDefenseChange(self, t)
 		local resistPenetration = t.getResistPenetration(self, t)
-		target:setEffect(target.EFF_DOMINATED, duration, { source = self, armorChange = armorChange, defenseChange = defenseChange, resistPenetration = resistPenetration, apply_power=self:combatMindpower() })
+		target:setEffect(target.EFF_DOMINATED, duration, {src = self, armorChange = armorChange, defenseChange = defenseChange, resistPenetration = resistPenetration, apply_power=self:combatMindpower() })
 
 		-- attack if adjacent
 		if core.fov.distance(self.x, self.y, x, y) <= 1 then

@@ -26,6 +26,7 @@
 #include "types.h"
 #include "script.h"
 #include "useshader.h"
+#include "main.h"
 #include "shaders.h"
 #include "libtcod.h"
 
@@ -34,7 +35,7 @@ bool shaders_active = TRUE;
 void useShader(shader_type *p, int x, int y, int w, int h, float r, float g, float b, float a)
 {
 	glUseProgramObjectARB(p->shader);
-	GLfloat t = SDL_GetTicks();
+	GLfloat t = cur_frame_tick;
 	glUniform1fvARB(p->p_tick, 1, &t);
 	GLfloat d[4];
 	d[0] = r;

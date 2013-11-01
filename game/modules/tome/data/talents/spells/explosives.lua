@@ -120,7 +120,7 @@ newTalent{
 			end
 		end)
 
-		if ammo.alchemist_bomb and ammo.alchemist_bomb.leech then self:heal(math.min(self.max_life * ammo.alchemist_bomb.leech / 100, dam_done)) end
+		if ammo.alchemist_bomb and ammo.alchemist_bomb.leech then self:heal(math.min(self.max_life * ammo.alchemist_bomb.leech / 100, dam_done), ammo) end
 
 		local _ _, x, y = self:canProject(tg, x, y)
 		game.level.map:particleEmitter(x, y, tg.radius, particle, {radius=tg.radius, grids=grids, tx=x, ty=y})
@@ -173,7 +173,7 @@ newTalent{
 	require = spells_req3,
 	mode = "passive",
 	points = 5,
-	getRadius = function(self, t) return math.floor(self:combatTalentScale(t, 2, 6, 0.5, 0, 0, true)) end,
+	getRadius = function(self, t) return math.max(1, math.floor(self:combatTalentScale(t, 2, 6, 0.5, 0, 0, true))) end,
 	minmax = function(self, t, grids)
 		local theoretical_nb = (2 * t.getRadius(self, t) + 1)^1.94 -- Maximum grids hit vs. talent level
 		if grids then

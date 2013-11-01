@@ -55,8 +55,12 @@ function _M:gainAchievement(id, src, ...)
 	if game.difficulty == game.DIFFICULTY_EASY and not a.tutorial then return end
 
 	if game.permadeath == game.PERMADEATH_INFINITE then id = "EXPLORATION_"..id end
+	if game.difficulty == game.DIFFICULTY_NORMAL and game.permadeath == game.PERMADEATH_ONE then id = "NORMAL_ROGUELIKE_"..id end
+	if game.difficulty == game.DIFFICULTY_NIGHTMARE and game.permadeath == game.PERMADEATH_MANY then id = "NIGHTMARE_ADVENTURE_".. id end
 	if game.difficulty == game.DIFFICULTY_NIGHTMARE and game.permadeath == game.PERMADEATH_ONE then id = "NIGHTMARE_"..id end
+	if game.difficulty == game.DIFFICULTY_INSANE and game.permadeath == game.PERMADEATH_MANY then id = "INSANE_ADVENTURE_"..id end
 	if game.difficulty == game.DIFFICULTY_INSANE and game.permadeath == game.PERMADEATH_ONE then id = "INSANE_"..id end
+	if game.difficulty == game.DIFFICULTY_MADNESS and game.permadeath == game.PERMADEATH_MANY then id = "MADNESS_ADVENTURE_"..id end
 	if game.difficulty == game.DIFFICULTY_MADNESS and game.permadeath == game.PERMADEATH_ONE then id = "MADNESS_"..id end
 
 	local knew = self.achieved[id]

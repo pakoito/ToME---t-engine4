@@ -24,9 +24,9 @@ uberTalent{
 	require = { special={desc="Be close to the draconic world", fct=function(self) return game.state.birth.ignore_prodigies_special_reqs or (self:attr("drake_touched") and self:attr("drake_touched") >= 2) end} },
 	trigger = function(self, t, value)
 		if self.life - value < self.max_life * 0.3 and not self:isTalentCoolingDown(t) then
-			self:heal(self.max_life * 0.4)
+			self:heal(self.max_life * 0.4, t)
 			self:startTalentCooldown(t)
-			game.logSeen(self,"%s's draconic body hardens and heals!",self.name) --I5 
+			game.logSeen(self,"%s's draconic body hardens and heals!",self.name)
 		end
 	end,
 	info = function(self, t)
@@ -148,8 +148,12 @@ uberTalent{
 	action = function(self, t)
 		local eff = self:hasEffect(self.EFF_FUNGAL_BLOOD)
 		self:attr("allow_on_heal", 1)
-		self:heal(math.min(eff.power, t.healmax(self,t)))
+		self:heal(math.min(eff.power, t.healmax(self,t)), eff)
 		self:attr("allow_on_heal", -1)
+		if core.shader.active(4) then
+			self:addParticles(Particles.new("shader_shield_temp", 1, {toback=true , size_factor=1.5, y=-0.3, img="healgreen", life=25}, {type="healing", time_factor=2000, beamsCount=20, noup=2.0, circleDescendSpeed=3.5}))
+			self:addParticles(Particles.new("shader_shield_temp", 1, {toback=false, size_factor=1.5, y=-0.3, img="healgreen", life=25}, {type="healing", time_factor=2000, beamsCount=20, noup=1.0, circleDescendSpeed=3.5}))
+		end
 		self:removeEffectsFilter({status="detrimental", type="magical"}, 10)
 		self:removeEffect(self.EFF_FUNGAL_BLOOD)
 		return true

@@ -354,7 +354,7 @@ function _M:giveOrder(actor, order)
 			local x, y, act = game.player:getTarget({type="hit", range=10})
 			if act then
 				actor:setTarget(act)
-				game.logPlayer(game.player, "%s targets %s.", actor.name:capitalize(), act.name)
+				game.player:logCombat(act, "%s targets #Target#.", actor.name:capitalize())
 			end
 		end)
 		local ok, err = coroutine.resume(co)
@@ -431,3 +431,4 @@ function _M:findInAllPartyInventoriesBy(prop, value)
 		if o then return mem, o, item, inven_id  end
 	end
 end
+_M.findInAllInventoriesBy = _M.findInAllPartyInventoriesBy 

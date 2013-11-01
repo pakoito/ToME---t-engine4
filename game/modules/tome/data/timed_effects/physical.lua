@@ -86,6 +86,11 @@ newEffect{
 		end
 		eff.tmpid = self:addTemporaryValue("life_regen", eff.power)
 
+		if core.shader.active(4) then
+			eff.particle1 = self:addParticles(Particles.new("shader_shield", 1, {toback=true,  size_factor=1.5, y=-0.3, img="healarcane"}, {type="healing", time_factor=4000, noup=2.0, circleColor={0,0,0,0}, beamsCount=9}))
+			eff.particle2 = self:addParticles(Particles.new("shader_shield", 1, {toback=false, size_factor=1.5, y=-0.3, img="healarcane"}, {type="healing", time_factor=4000, noup=1.0, circleColor={0,0,0,0}, beamsCount=9}))
+		end
+
 		if self:knowTalent(self.T_ANCESTRAL_LIFE) then
 			local t = self:getTalentFromId(self.T_ANCESTRAL_LIFE)
 			self.energy.value = self.energy.value + (t.getTurn(self, t) * game.energy_to_act / 100)
@@ -98,13 +103,15 @@ newEffect{
 		end
 	end,
 	deactivate = function(self, eff)
+		self:removeParticles(eff.particle1)
+		self:removeParticles(eff.particle2)
 		self:removeTemporaryValue("life_regen", eff.tmpid)
 	end,
 }
 
 newEffect{
 	name = "POISONED", image = "effects/poisoned.png",
-	desc = "Poisoned",
+	desc = "Poison",
 	long_desc = function(self, eff) return ("The target is poisoned, taking %0.2f nature damage per turn."):format(eff.power) end,
 	type = "physical",
 	subtype = { poison=true, nature=true }, no_ct_effect = true,
@@ -123,7 +130,7 @@ newEffect{
 		return old_eff
 	end,
 	on_timeout = function(self, eff)
-		if self:attr("purify_poison") then self:heal(eff.power)
+		if self:attr("purify_poison") then self:heal(eff.power, eff.src)
 		else DamageType:get(DamageType.NATURE).projector(eff.src, self.x, self.y, DamageType.NATURE, eff.power)
 		end
 	end,
@@ -143,7 +150,7 @@ newEffect{
 		eff.tmpid = self:addTemporaryValue("never_move", 1)
 	end,
 	on_timeout = function(self, eff)
-		if self:attr("purify_poison") then self:heal(eff.power)
+		if self:attr("purify_poison") then self:heal(eff.power, eff.src)
 		else DamageType:get(DamageType.NATURE).projector(eff.src, self.x, self.y, DamageType.NATURE, eff.power)
 		end
 	end,
@@ -166,7 +173,7 @@ newEffect{
 		eff.healid = self:addTemporaryValue("healing_factor", -eff.heal_factor / 100)
 	end,
 	on_timeout = function(self, eff)
-		if self:attr("purify_poison") then self:heal(eff.power)
+		if self:attr("purify_poison") then self:heal(eff.power, eff.src)
 		else DamageType:get(DamageType.NATURE).projector(eff.src, self.x, self.y, DamageType.NATURE, eff.power)
 		end
 	end,
@@ -187,7 +194,7 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is no longer poisoned.", "-Crippling Poison" end,
 	-- Damage each turn
 	on_timeout = function(self, eff)
-		if self:attr("purify_poison") then self:heal(eff.power)
+		if self:attr("purify_poison") then self:heal(eff.power, eff.src)
 		else DamageType:get(DamageType.NATURE).projector(eff.src, self.x, self.y, DamageType.NATURE, eff.power)
 		end
 	end,
@@ -211,7 +218,7 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is no longer poisoned.", "-Numbing Poison" end,
 	-- Damage each turn
 	on_timeout = function(self, eff)
-		if self:attr("purify_poison") then self:heal(eff.power)
+		if self:attr("purify_poison") then self:heal(eff.power, eff.src)
 		else DamageType:get(DamageType.NATURE).projector(eff.src, self.x, self.y, DamageType.NATURE, eff.power)
 		end
 	end,
@@ -235,7 +242,7 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is no longer poisoned.", "-Stoning Poison" end,
 	-- Damage each turn
 	on_timeout = function(self, eff)
-		if self:attr("purify_poison") then self:heal(eff.power)
+		if self:attr("purify_poison") then self:heal(eff.power, eff.src)
 		else DamageType:get(DamageType.NATURE).projector(eff.src, self.x, self.y, DamageType.NATURE, eff.power)
 		end
 	end,
@@ -585,6 +592,7 @@ newEffect{
 			self.add_displays = { Entity.new{image='npc/iceblock.png', display=' ', display_on_seen=true } }
 			eff.added_display = true
 		end
+		eff.ice = mod.class.Object.new{name = "Iceblock", type = "wall", image='npc/iceblock.png', display = ' '} -- use type Object to facilitate the combat log
 		self:removeAllMOs()
 		game.level.map:updateMap(self.x, self.y)
 
@@ -593,8 +601,8 @@ newEffect{
 		eff.healid = self:addTemporaryValue("no_healing", 1)
 		eff.moveid = self:addTemporaryValue("never_move", 1)
 		eff.frozid = self:addTemporaryValue("frozen", 1)
-		eff.defid = self:addTemporaryValue("combat_def", -1000)
-		eff.rdefid = self:addTemporaryValue("combat_def_ranged", -1000)
+		eff.defid = self:addTemporaryValue("combat_def", -self:combatDefenseBase()-10)
+		eff.rdefid = self:addTemporaryValue("combat_def_ranged", -self:combatDefenseBase()-10)
 		eff.sefid = self:addTemporaryValue("negative_status_effect_immune", 1)
 
 		self:setTarget(self)
@@ -1214,8 +1222,14 @@ newEffect{
 	activate = function(self, eff)
 		eff.regenid = self:addTemporaryValue("life_regen", eff.regen)
 		eff.healid = self:addTemporaryValue("healing_factor", eff.heal_mod / 100)
+		if core.shader.active(4) then
+			eff.particle1 = self:addParticles(Particles.new("shader_shield", 1, {toback=true,  size_factor=1.5, y=-0.3, img="healarcane"}, {type="healing", time_factor=4000, noup=2.0, beamColor1={0xff/255, 0x22/255, 0x22/255, 1}, beamColor2={0xff/255, 0x60/255, 0x60/255, 1}, circleColor={0,0,0,0}, beamsCount=8}))
+			eff.particle2 = self:addParticles(Particles.new("shader_shield", 1, {toback=false, size_factor=1.5, y=-0.3, img="healarcane"}, {type="healing", time_factor=4000, noup=1.0, beamColor1={0xff/255, 0x22/255, 0x22/255, 1}, beamColor2={0xff/255, 0x60/255, 0x60/255, 1}, circleColor={0,0,0,0}, beamsCount=8}))
+		end
 	end,
 	deactivate = function(self, eff)
+		self:removeParticles(eff.particle1)
+		self:removeParticles(eff.particle2)
 		self:removeTemporaryValue("life_regen", eff.regenid)
 		self:removeTemporaryValue("healing_factor", eff.healid)
 	end,
@@ -1722,7 +1736,7 @@ newEffect{ -- Note: This effect is cancelled by EFF_DISARMED
 	name = "DUAL_WEAPON_DEFENSE", image = "talents/dual_weapon_defense.png",
 	desc = "Parrying",
 	deflectchance = function(self, eff) -- The last partial deflect has a reduced chance to happen
-		if self:hasEffect(self.EFF_DISARMED) then return 0 end
+		if self:attr("encased_in_ice") or self:hasEffect(self.EFF_DISARMED) then return 0 end
 		return util.bound(eff.deflects>=1 and eff.chance or eff.chance*math.mod(eff.deflects,1),0,100)
 	end,
 	long_desc = function(self, eff)
@@ -1777,7 +1791,10 @@ newEffect{
 		local blocked = dam - amt
 		local shield = self:hasShield()
 		if shield then shield:check("on_block", self, src, type, dam, eff) end
-		if eff.properties.br then self:heal(blocked) end
+		if eff.properties.br then
+			self:heal(blocked, src)
+			game:delayedLogMessage(self, src, "block_heal", "#CRIMSON##Source# heals from blocking with %s shield!", string.his_her(self))
+		end
 		if eff.properties.ref and src.life then DamageType.defaultProjector(src, src.x, src.y, type, blocked, tmp, true) end
 		if (self:knowTalent(self.T_RIPOSTE) or amt == 0) and src.life then src:setEffect(src.EFF_COUNTERSTRIKE, (1 + dur_inc) * (src.global_speed or 1), {power=eff.power, no_ct_effect=true, src=self, crit_inc=crit_inc, nb=nb}) end -- specify duration here to avoid stacking for high speed attackers
 		return amt
@@ -1800,7 +1817,7 @@ newEffect{
 	name = "COUNTER_ATTACKING", image = "talents/counter_attack.png",
 	desc = "Counter Attacking",
 	counterchance = function(self, eff) --The last partial counter attack has a reduced chance to happen
-		if self:hasEffect(self.EFF_DISARMED) then return 0 end
+		if self:attr("encased_in_ice") or self:hasEffect(self.EFF_DISARMED) then return 0 end
 		return util.bound(eff.counterattacks>=1 and eff.chance or eff.chance*math.mod(eff.counterattacks,1),0,100)
 	end,
 	long_desc = function(self, eff)
@@ -1827,7 +1844,7 @@ newEffect{
 	name = "DEFENSIVE_GRAPPLING", image = "talents/defensive_throw.png",
 	desc = "Grappling Defensively",
 	throwchance = function(self, eff) -- the last partial defensive throw has a reduced chance to happen
-		if not self:isUnarmed() then return 0 end	-- Must be unarmed
+		if not self:isUnarmed() or self:attr("encased_in_ice") then return 0 end	-- Must be unarmed
 		return util.bound(eff.throws>=1 and eff.chance or eff.chance*math.mod(eff.throws,1),0,100)
 	end,
 	long_desc = function(self, eff)

@@ -60,6 +60,7 @@ function _M:loaded()
 		local _
 		setfenv(f, setmetatable(t, {__index=_G}))
 		_, _ , _, gl, _ = f()
+		setmetatable(t, nil)
 
 		if t.use_shader then self.shader = t.use_shader end
 		if t.alterscreen then islast = true end

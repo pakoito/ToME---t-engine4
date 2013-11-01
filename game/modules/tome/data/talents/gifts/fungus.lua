@@ -99,7 +99,7 @@ newTalent{
 	action = function(self, t)
 		local amt = self.life_regen * t.getMult(self, t)
 
-		self:heal(amt)
+		self:heal(amt, t)
 
 		game:playSoundNear(self, "talents/heal")
 		return true

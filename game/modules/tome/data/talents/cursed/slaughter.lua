@@ -186,7 +186,7 @@ newTalent{
 									and game.level.map:isBound(x, y)
 									and not game.level.map:checkAllEntities(x, y, "block_move", self) then
 								blockingTarget:move(x, y, true)
-								game.logSeen(self, "%s knocks back %s!", self.name:capitalize(), blockingTarget.name)
+								self:logCombat(blockingTarget, "#Source# knocks back #Target#!")
 								blocked = false
 								break
 							end
@@ -195,7 +195,7 @@ newTalent{
 				end
 
 				if blocked then
-					game.logSeen(self, "%s blocks %s!", blockingTarget.name:capitalize(), self.name)
+					self:logCombat(blockingTarget, "#Target# blocks #Source#!")
 				end
 			end
 
@@ -341,7 +341,7 @@ newTalent{
 				local secondTarget = game.level.map(x, y, Map.ACTOR)
 				if secondTarget and secondTarget ~= target and self:reactionToward(secondTarget) < 0 then
 					local damageMultiplier = t.getDamageMultiplier(self, t)
-					game.logSeen(self, "%s cleaves through %s!", self.name:capitalize(), secondTarget.name)
+					self:logCombat(secondTarget, "#Source# cleaves through #Target#!")
 					self:attackTarget(secondTarget, nil, damageMultiplier, true)
 					inCleave = false
 					return

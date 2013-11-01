@@ -75,6 +75,7 @@ int mouse_drag_w = 32, mouse_drag_h = 32;
 int mouse_drag_tex = 0, mouse_drag_tex_ref = LUA_NOREF;
 int mousex = 0, mousey = 0;
 float gamma_correction = 1;
+int cur_frame_tick = 0;
 /* The currently requested fps for the program */
 int requested_fps = 30;
 /* The requested fps for when the program is idle (i.e., doesn't have focus) */
@@ -556,7 +557,7 @@ void on_redraw()
 	/* Gather our frames per second */
 	Frames++;
 	if (!is_waiting()) {
-		int t = SDL_GetTicks();
+		int t = cur_frame_tick = SDL_GetTicks();
 		if (t - T0 >= 1000) {
 			float seconds = (t - T0) / 1000.0;
 			float fps = Frames / seconds;

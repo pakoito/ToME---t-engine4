@@ -94,8 +94,12 @@ newTalent{ short_name = "SKELETON_REASSEMBLE",
 	end,
 	action = function(self, t)
 		self:attr("allow_on_heal", 1)
-		self:heal(t.getHeal(self, t), self)
+		self:heal(t.getHeal(self, t), t)
 		self:attr("allow_on_heal", -1)
+		if core.shader.active(4) then
+			self:addParticles(Particles.new("shader_shield_temp", 1, {toback=true , size_factor=1.5, y=-0.3, img="healdark", life=25}, {type="healing", time_factor=6000, beamsCount=15, noup=2.0, beamColor1={0xcb/255, 0xcb/255, 0xcb/255, 1}, beamColor2={0x35/255, 0x35/255, 0x35/255, 1}}))
+			self:addParticles(Particles.new("shader_shield_temp", 1, {toback=false, size_factor=1.5, y=-0.3, img="healdark", life=25}, {type="healing", time_factor=6000, beamsCount=15, noup=1.0, beamColor1={0xcb/255, 0xcb/255, 0xcb/255, 1}, beamColor2={0x35/255, 0x35/255, 0x35/255, 1}}))
+		end
 		game:playSoundNear(self, "talents/heal")
 		return true
 	end,

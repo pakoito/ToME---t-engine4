@@ -47,7 +47,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local absorption = t.getAbsorption(self, t)
-		return ([[Reduces all incoming energy damage (all except mind and physical damage) by 30%%, up to a maximum of %d.
+		return ([[Partially dissipates all incoming energy damage (all except mind and physical damage), reducing it by 30%%, up to a maximum of %d.
 		The maximum damage reduction will scale with your Spellpower.]]):format(absorption)
 	end,
 }

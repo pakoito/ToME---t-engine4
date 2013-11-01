@@ -90,6 +90,9 @@ function _M:generate()
 end
 
 function _M:setupInput()
+	self.prev_sel = 0
+	self.mouse_pos = { x = 0, y = 0 }
+
 	self.mouse:reset()
 	self.key:reset()
 	local colx = 0

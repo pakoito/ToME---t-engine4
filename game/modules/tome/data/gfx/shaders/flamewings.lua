@@ -29,7 +29,7 @@ return {
 		flap = flap or 0.0,
 	},
 	resetargs = {
-		tick_start = function() return core.game.getTime() end,
+		tick_start = function() return core.game.getFrameTime() end,
 	},
 	clone = false,
 }

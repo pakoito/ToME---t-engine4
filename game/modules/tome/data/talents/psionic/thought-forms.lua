@@ -585,7 +585,7 @@ newTalent{
 			life = target:addTemporaryValue("max_life", life_bonus),
 			speed = target:addTemporaryValue("combat_physspeed", t.getControlBonus(self, t)/100),
 			damage = target:addTemporaryValue("inc_damage", {all=t.getControlBonus(self, t)}),
-			target:heal(life_bonus),
+			target:heal(life_bonus, self),
 		}
 		
 		return ret

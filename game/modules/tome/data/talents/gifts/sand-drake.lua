@@ -39,9 +39,7 @@ newTalent{
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
-
-		game.logSeen(self, "%s tries to swallow %s!", self.name:capitalize(), target.name)
-
+		self:logCombat(target, "#Source# tries to swallow #Target#!")
 		local hit = self:attackTarget(target, DamageType.NATURE, self:combatTalentWeaponDamage(t, 1, 1.5), true)
 		if not hit then return true end
 
@@ -54,7 +52,11 @@ newTalent{
 			world:gainAchievement("EAT_BOSSES", self, target)
 			self:incEquilibrium(-target.level - 5)
 			self:attr("allow_on_heal", 1)
-			self:heal(target.level * 2 + 5)
+			self:heal(target.level * 2 + 5, target)
+			if core.shader.active(4) then
+				self:addParticles(Particles.new("shader_shield_temp", 1, {toback=true ,size_factor=1.5, y=-0.3, img="healgreen", life=25}, {type="healing", time_factor=2000, beamsCount=20, noup=2.0}))
+				self:addParticles(Particles.new("shader_shield_temp", 1, {toback=false,size_factor=1.5, y=-0.3, img="healgreen", life=25}, {type="healing", time_factor=2000, beamsCount=20, noup=1.0}))
+			end
 			self:attr("allow_on_heal", -1)
 		else
 			game.logSeen(target, "%s resists!", target.name:capitalize())

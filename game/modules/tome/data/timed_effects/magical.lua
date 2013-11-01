@@ -315,8 +315,14 @@ newEffect{
 	activate = function(self, eff)
 		eff.pid = self:addTemporaryValue("inc_damage", {all=25})
 		eff.lid = self:addTemporaryValue("life_regen", eff.regen)
+		if core.shader.active(4) then
+			eff.particle1 = self:addParticles(Particles.new("shader_shield", 1, {toback=true,  size_factor=1.5, y=-0.3, img="healarcane"}, {type="healing", time_factor=4000, noup=2.0, beamColor1={0x8e/255, 0x2f/255, 0xbb/255, 1}, beamColor2={0xe7/255, 0x39/255, 0xde/255, 1}, circleColor={0,0,0,0}, beamsCount=5}))
+			eff.particle2 = self:addParticles(Particles.new("shader_shield", 1, {toback=false, size_factor=1.5, y=-0.3, img="healarcane"}, {type="healing", time_factor=4000, noup=1.0, beamColor1={0x8e/255, 0x2f/255, 0xbb/255, 1}, beamColor2={0xe7/255, 0x39/255, 0xde/255, 1}, circleColor={0,0,0,0}, beamsCount=5}))
+		end
 	end,
 	deactivate = function(self, eff)
+		self:removeParticles(eff.particle1)
+		self:removeParticles(eff.particle2)
 		self:removeTemporaryValue("inc_damage", eff.pid)
 		self:removeTemporaryValue("life_regen", eff.lid)
 	end,
@@ -446,6 +452,13 @@ newEffect{
 	parameters = { power=10, target=nil, chance=25 },
 	on_gain = function(self, err) return "The very fabric of space alters around #target#.", "+Displacement Shield" end,
 	on_lose = function(self, err) return "The fabric of space around #target# stabilizes to normal.", "-Displacement Shield" end,
+	on_aegis = function(self, eff, aegis)
+		self.displacement_shield = self.displacement_shield + eff.power * aegis / 100
+		if core.shader.active(4) then
+			self:removeParticles(eff.particle)
+			eff.particle = self:addParticles(Particles.new("shader_shield", 1, {size_factor=1.3, img="runicshield"}, {type="runicshield", shieldIntensity=0.14, ellipsoidalFactor=1.2, time_factor=4000, bubbleColor={0.5, 1, 0.2, 1.0}, auraColor={0.4, 1, 0.2, 1}}))
+		end		
+	end,
 	damage_feedback = function(self, eff, src, value)
 		if eff.particle and eff.particle._shader and eff.particle._shader.shad and src and src.x and src.y then
 			local r = -rng.float(0.2, 0.4)
@@ -467,9 +480,6 @@ newEffect{
 		else
 			eff.particle = self:addParticles(Particles.new("displacement_shield", 1))
 		end
-	end,
-	on_aegis = function(self, eff, aegis)
-		self.displacement_shield = self.displacement_shield + eff.power * aegis / 100
 	end,
 	on_timeout = function(self, eff)
 		if not eff.target or eff.target.dead then
@@ -498,6 +508,10 @@ newEffect{
 	on_lose = function(self, err) return "The shield around #target# crumbles.", "-Shield" end,
 	on_aegis = function(self, eff, aegis)
 		self.damage_shield_absorb = self.damage_shield_absorb + eff.power * aegis / 100
+		if core.shader.active(4) then
+			self:removeParticles(eff.particle)
+			eff.particle = self:addParticles(Particles.new("shader_shield", 1, {size_factor=1.3, img="runicshield"}, {type="runicshield", shieldIntensity=0.14, ellipsoidalFactor=1.2, time_factor=5000, bubbleColor={0.4, 0.7, 1.0, 1.0}, auraColor={0x21/255, 0x9f/255, 0xff/255, 1}}))
+		end		
 	end,
 	damage_feedback = function(self, eff, src, value)
 		if eff.particle and eff.particle._shader and eff.particle._shader.shad and src and src.x and src.y then
@@ -767,8 +781,14 @@ newEffect{
 		eff.silence = self:addTemporaryValue("silence", 1)		          -- egg should not cast spells
 		eff.combat = self.combat
 		self.combat = nil						               -- egg shouldn't melee
+		if core.shader.active(4) then
+			eff.particle1 = self:addParticles(Particles.new("shader_shield", 1, {toback=true,  size_factor=1.5, y=-0.3, img="healarcane"}, {type="healing", time_factor=2000, noup=2.0, beamColor1={0xff/255, 0xd1/255, 0x22/255, 1}, beamColor2={0xfd/255, 0x94/255, 0x3f/255, 1}, circleColor={0,0,0,0}, beamsCount=12}))
+			eff.particle2 = self:addParticles(Particles.new("shader_shield", 1, {toback=false, size_factor=1.5, y=-0.3, img="healarcane"}, {type="healing", time_factor=2000, noup=1.0, beamColor1={0xff/255, 0xd1/255, 0x22/255, 1}, beamColor2={0xfd/255, 0x94/255, 0x3f/255, 1}, circleColor={0,0,0,0}, beamsCount=12}))
+		end
 	end,
 	deactivate = function(self, eff)
+		self:removeParticles(eff.particle1)
+		self:removeParticles(eff.particle2)
 		self.display = "B"
 		self.image = eff.old_image
 		self:removeAllMOs()
@@ -1003,8 +1023,15 @@ newEffect{
 	end,
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("life_regen", eff.power)
+		eff.tmpid = self:addTemporaryValue("life_regen", eff.power)
+		if core.shader.active(4) then
+			eff.particle1 = self:addParticles(Particles.new("shader_shield", 1, {toback=true,  size_factor=1.5, y=-0.3, img="healcelestial"}, {type="healing", time_factor=4000, noup=2.0, beamColor1={0xd8/255, 0xff/255, 0x21/255, 1}, beamColor2={0xf7/255, 0xff/255, 0x9e/255, 1}, circleColor={0,0,0,0}, beamsCount=5}))
+			eff.particle2 = self:addParticles(Particles.new("shader_shield", 1, {toback=false, size_factor=1.5, y=-0.3, img="healcelestial"}, {type="healing", time_factor=4000, noup=1.0, beamColor1={0xd8/255, 0xff/255, 0x21/255, 1}, beamColor2={0xf7/255, 0xff/255, 0x9e/255, 1}, circleColor={0,0,0,0}, beamsCount=5}))
+		end
 	end,
 	deactivate = function(self, eff)
+		self:removeParticles(eff.particle1)
+		self:removeParticles(eff.particle2)
 		self:removeTemporaryValue("life_regen", eff.tmpid)
 	end,
 }
@@ -1542,12 +1569,12 @@ newEffect{
 	type = "magical",
 	subtype = {disease=true, blight=true},
 	status = "detrimental",
-	parameters = {},
+	parameters = {con = 1, dam = 1},
 	on_gain = function(self, err) return "#Target# is afflicted by a rotting disease!" end,
 	on_lose = function(self, err) return "#Target# is free from the rotting disease." end,
 	-- Damage each turn
 	on_timeout = function(self, eff)
-		if self:attr("purify_disease") then self:heal(eff.dam)
+		if self:attr("purify_disease") then self:heal(eff.dam, eff.src)
 		else DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.dam, {from_disease=true})
 		end
 	end,
@@ -1567,12 +1594,12 @@ newEffect{
 	type = "magical",
 	subtype = {disease=true, blight=true},
 	status = "detrimental",
-	parameters = {},
+	parameters = {dex = 1, dam = 1},
 	on_gain = function(self, err) return "#Target# is afflicted by a decrepitude disease!" end,
 	on_lose = function(self, err) return "#Target# is free from the decrepitude disease." end,
 	-- Damage each turn
 	on_timeout = function(self, eff)
-		if self:attr("purify_disease") then self:heal(eff.dam)
+		if self:attr("purify_disease") then self:heal(eff.dam, eff.src)
 		else DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.dam, {from_disease=true})
 		end
 	end,
@@ -1592,12 +1619,12 @@ newEffect{
 	type = "magical",
 	subtype = {disease=true, blight=true},
 	status = "detrimental",
-	parameters = {},
+	parameters = {str = 1, dam  = 1},
 	on_gain = function(self, err) return "#Target# is afflicted by a weakness disease!" end,
 	on_lose = function(self, err) return "#Target# is free from the weakness disease." end,
 	-- Damage each turn
 	on_timeout = function(self, eff)
-		if self:attr("purify_disease") then self:heal(eff.dam)
+		if self:attr("purify_disease") then self:heal(eff.dam, eff.src)
 		else DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.dam, {from_disease=true})
 		end
 	end,
@@ -1622,7 +1649,7 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is free from the epidemic." end,
 	-- Damage each turn
 	on_timeout = function(self, eff)
-		if self:attr("purify_disease") then self:heal(eff.dam)
+		if self:attr("purify_disease") then self:heal(eff.dam, eff.src)
 		else DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.dam, {from_disease=true})
 		end
 	end,
@@ -1654,7 +1681,7 @@ newEffect{
 
 		-- disease damage
 		if self:attr("purify_disease") then
-			self:heal(eff.dam)
+			self:heal(eff.dam, eff.src)
 		else
 			DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.dam, {from_disease=true})
 		end
@@ -1704,7 +1731,7 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is free from the ghoul rot." end,
 	-- Damage each turn
 	on_timeout = function(self, eff)
-		if self:attr("purify_disease") then self:heal(eff.dam)
+		if self:attr("purify_disease") then self:heal(eff.dam, eff.src)
 		else DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.dam, {from_disease=true})
 		end
 	end,
@@ -1939,7 +1966,6 @@ newEffect{
 
 		local spot = rng.table(eff.list)
 		if not spot or not spot.x then return end
-
 		self:project({type="ball", x=spot.x, y=spot.y, radius=2, selffire=self:spellFriendlyFire()}, spot.x, spot.y, DamageType.ARCANE, eff.dam)
 		game.level.map:particleEmitter(spot.x, spot.y, 2, "generic_sploom", {rm=150, rM=180, gm=20, gM=60, bm=180, bM=200, am=80, aM=150, radius=2, basenb=120})
 
@@ -2035,7 +2061,7 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is no longer poisoned.", "-Vulnerability Poison" end,
 	-- Damage each turn
 	on_timeout = function(self, eff)
-		if self:attr("purify_poison") then self:heal(eff.power)
+		if self:attr("purify_poison") then self:heal(eff.power, eff.src)
 		else DamageType:get(DamageType.ARCANE).projector(eff.src, self.x, self.y, DamageType.ARCANE, eff.power)
 		end
 	end,

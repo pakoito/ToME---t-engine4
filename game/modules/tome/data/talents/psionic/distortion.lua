@@ -196,8 +196,9 @@ newTalent{
 		local e = Object.new{
 			old_feat = oe,
 			type = oe.type, subtype = oe.subtype,
-			name = "maelstrom", image = oe.image,
+			name = self.name:capitalize().. "'s maelstrom", image = oe.image,
 			display = oe.display, color=oe.color, back_color=oe.back_color,
+			tooltip = mod.class.Grid.tooltip,
 			always_remember = true,
 			temporary = t.getDuration(self, t),
 			is_maelstrom = true,
@@ -224,11 +225,13 @@ newTalent{
 				end end
 				table.sort(tgts, "sqdist")
 				for i, target in ipairs(tgts) do
+					self.summoner.__project_source = self
 					if target.actor:canBe("knockback") then
 						target.actor:pull(self.x, self.y, 1)
-						game.logSeen(target.actor, "%s is pulled in by the %s!", target.actor.name:capitalize(), self.name)
+						target.actor.logCombat(self, target.actor, "#Source# pulls #Target# in!")
 					end
 					DamageType:get(DamageType.PHYSICAL).projector(self.summoner, target.actor.x, target.actor.y, DamageType.PHYSICAL, self.dam)
+					self.summoner.__project_source = nil
 					target.actor:setEffect(target.actor.EFF_DISTORTION, 2, {power=self.distortionPower})
 				end
 

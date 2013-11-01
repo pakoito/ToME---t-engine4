@@ -23,6 +23,17 @@ local WA = require "engine.interface.WorldAchievements"
 --- Handles achievements in a world
 module(..., package.seeall, class.inherit(class.make{}, WA))
 
+-- Duplicate from Game.lua because Game.lua is not loaded yet
+local DIFFICULTY_EASY = 1
+local DIFFICULTY_NORMAL = 2
+local DIFFICULTY_NIGHTMARE = 3
+local DIFFICULTY_INSANE = 4
+local DIFFICULTY_MADNESS = 5
+local PERMADEATH_INFINITE = 1
+local PERMADEATH_MANY = 2
+local PERMADEATH_ONE = 3
+
+
 --- Make a new achievement with a name and desc
 function _M:newAchievement(t)
 	t.id = t.id or t.name
@@ -31,24 +42,64 @@ function _M:newAchievement(t)
 	WA.newAchievement(self, t)
 
 	if not t.no_difficulty_duplicate then
+		-- Normal
+		local t2 = table.clone(t)
+		t2.id = "NORMAL_ROGUELIKE_"..t2.id
+		t2.name = t2.name.." (Roguelike)"
+		t2.difficulty = DIFFICULTY_NORMAL
+		t2.permadeath = PERMADEATH_ONE
+		WA.newAchievement(self, t2)
+		
+		-- Exploration
 		local t2 = table.clone(t)
 		t2.id = "EXPLORATION_"..t2.id
 		t2.name = t2.name.." (Exploration mode)"
+		t2.permadeath = PERMADEATH_INFINITE
+		WA.newAchievement(self, t2)
+
+		-- Nightmare
+		local t2 = table.clone(t)
+		t2.id = "NIGHTMARE_ADVENTURE_"..t2.id
+		t2.name = t2.name.." (Nightmare (Adventure) difficulty)"
+		t2.difficulty = DIFFICULTY_NIGHTMARE
+		t2.permadeath = PERMADEATH_MANY
 		WA.newAchievement(self, t2)
 
 		local t2 = table.clone(t)
 		t2.id = "NIGHTMARE_"..t2.id
-		t2.name = t2.name.." (Nightmare difficulty)"
+		t2.name = t2.name.." (Nightmare (Roguelike) difficulty)"
+		t2.difficulty = DIFFICULTY_NIGHTMARE
+		t2.permadeath = PERMADEATH_ONE
+		WA.newAchievement(self, t2)
+
+		-- Insane
+		local t2 = table.clone(t)
+		t2.id = "INSANE_ADVENTURE_"..t2.id
+		t2.name = t2.name.." (Insane (Adventure) difficulty)"
+		t2.difficulty = DIFFICULTY_INSANE
+		t2.permadeath = PERMADEATH_MANY
 		WA.newAchievement(self, t2)
 
 		local t2 = table.clone(t)
 		t2.id = "INSANE_"..t2.id
-		t2.name = t2.name.." (Insane difficulty)"
+		t2.name = t2.name.." (Insane (Roguelike) difficulty)"
+		t2.difficulty = DIFFICULTY_INSANE
+		t2.permadeath = PERMADEATH_ONE
+		WA.newAchievement(self, t2)
+		
+		-- Madness
+		local t2 = table.clone(t)
+		t2.id = "MADNESS_ADVENTURE_"..t2.id
+		t2.name = t2.name.." (Madness (Adventure) difficulty)"
+		t2.difficulty = DIFFICULTY_MADNESS
+		t2.permadeath = PERMADEATH_MANY
 		WA.newAchievement(self, t2)
 
 		local t2 = table.clone(t)
 		t2.id = "MADNESS_"..t2.id
-		t2.name = t2.name.." (Madness difficulty)"
+		t2.name = t2.name.." (Madness (Roguelike) difficulty)"
+		t2.difficulty = DIFFICULTY_MADNESS
+		t2.permadeath = PERMADEATH_ONE
 		WA.newAchievement(self, t2)
 	end
 end

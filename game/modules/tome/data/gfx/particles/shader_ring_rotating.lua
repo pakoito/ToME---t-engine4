@@ -40,7 +40,7 @@ return {
 		r = 1, rv = 0, ra = 0,
 		g = 1, gv = 0, ga = 0,
 		b = 1, bv = 0, ba = 0,
-		a = 1, av = 0, aa = 0,
+		a = a or 1, av = 0, aa = 0,
 	}
 end, },
 function(self)

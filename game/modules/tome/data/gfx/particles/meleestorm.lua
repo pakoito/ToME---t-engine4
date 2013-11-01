@@ -31,7 +31,7 @@ return {
 	return {
 		trail = 0,
 		life = 8,
-		size = 80, sizev = 8 * radius, sizea = 0,
+		size = 90, sizev = 12 * radius, sizea = 0,
 
 		x = 0, xv = 0, xa = 0,
 		y = 0, yv = 0, ya = 0,

@@ -90,7 +90,7 @@ end
 
 --- Run tick on a level
 function _M:tickLevel(level)
-	local i, e
+	local i, e = 1, nil
 	local arr = level.e_array
 
 	if level.last_iteration then
@@ -105,7 +105,7 @@ function _M:tickLevel(level)
 --		print("=====LEVEL", level.level, level.sublevel_id, "resuming tick loop at ", i, arr[i].name)
 	end
 
-	for i = 1, #arr do
+	for i = i, #arr do
 		e = arr[i]
 		if e and e.act and e.energy then
 			if e.actBase and e.energyBase then

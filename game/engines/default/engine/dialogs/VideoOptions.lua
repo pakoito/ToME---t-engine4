@@ -141,7 +141,7 @@ function _M:generateList()
 	end,}
 
 	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Activates volumetric shaders.\nThis option allows for volumetricion effects (like deep starfields). Enabling it will severely reduce performance when shaders are displayed.\n\n#LIGHT_RED#You must restart the game for it to take effect.#WHITE#"}
-	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#OpenGL Shaders: Volumetricions#WHITE##{normal}#", status=function(item)
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#OpenGL Shaders: Volumetric#WHITE##{normal}#", status=function(item)
 		return tostring(config.settings.shaders_kind_volumetric and "enabled" or "disabled")
 	end, fct=function(item)
 		config.settings.shaders_kind_volumetric = not config.settings.shaders_kind_volumetric

@@ -206,7 +206,7 @@ newTalent{
 	-- Damage reduction handled in _M:attackTargetWith function in mod.class.interface.Combat.lua
 	getDamageChange = function(self, t, fake)
 		local test, dam = canUseGestures(self)
-		if not test and not fake then return 0 end
+		if (not test or self:attr("encased_in_ice")) and not fake then return 0 end
 		return t.getGuardPercent(self, t) * dam/100
 	end,
 	getCounterAttackChance = function(self, t, fake)
@@ -231,7 +231,7 @@ newTalent{
 	-- Counterattack handled in _M:attackTargetWith function in mod.class.interface.Combat.lua (requires EFF_GESTURE_OF_GUARDING)
 	on_hit = function(self, t, who)
 		if rng.percent(t.getCounterAttackChance(self, t)) and self:isTalentActive(self.T_GESTURE_OF_PAIN) and canUseGestures(self) then
-			game.logSeen(self, "#F53CBE#%s lashes back at %s!", self.name:capitalize(), who.name)
+			self:logCombat(who, "#F53CBE##Source# lashes back at #Target#!")
 			local tGestureOfPain = self:getTalentFromId(self.T_GESTURE_OF_PAIN)
 			tGestureOfPain.attack(self, tGestureOfPain, who)
 		end

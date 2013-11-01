@@ -271,7 +271,7 @@ newEntity{ base = "BASE_NPC_HORROR", define_as = "BASE_NPC_ELDRICTH_EYE",
 
 	on_die = function(self, src)
 		if not self.summoner or not self.summoner.is_headless_horror then return end
-		game.logSeen(self, "#AQUAMARINE#As %s falls %s seems to weaken!", self.name, self.summoner.name)
+		self:logCombat(self.summoner, "#AQUAMARINE#As #Source# falls #Target# seems to weaken!")
 		local damtype = next(self.resists)
 		self.summoner.resists.all = (self.summoner.resists.all or 0) - 30
 		self.summoner.resists[damtype] = nil
@@ -891,7 +891,7 @@ newEntity{ base="BASE_NPC_HORROR", define_as = "GRGGLCK_TENTACLE",
 
 	on_die = function(self, who)
 		if self.summoner and not self.summoner.dead and who then
-			game.logSeen(self, "#AQUAMARINE#As %s falls you notice that %s seems to shudder in pain!", self.name, self.summoner.name)
+			self:logCombat(self.summoner, "#AQUAMARINE#As #Source# falls you notice that #Target# seems to shudder in pain!")
 			if self.summoner.is_grgglck then
 				self.summoner:takeHit(self.max_life, who)
 			else

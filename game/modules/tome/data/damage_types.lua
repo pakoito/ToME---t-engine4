@@ -81,6 +81,11 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 		end
 		print("[PROJECTOR] after difficulty dam", dam)
 
+		if src.__global_accuracy_damage_bonus then
+			dam = dam * src.__global_accuracy_damage_bonus
+			print("[PROJECTOR] after staff accuracy damage bonus", dam)
+		end
+
 		-- Daze
 		if src:attr("dazed") then
 			dam = dam * 0.5
@@ -92,20 +97,26 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			t.on_damage(target, t, type)
 		end
 
+		local lastdam = dam
 		-- Item-granted damage ward talent
 		if target:hasEffect(target.EFF_WARD) then
 			local e = target.tempeffect_def[target.EFF_WARD]
 			dam = e.absorb(type, dam, target.tmp[target.EFF_WARD], target, src)
+			game:delayedLogDamage(src, target, 0, ("%s(%d warded)#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", lastdam-dam), false)
 		end
 
 		-- Block talent from shields
-		if target:attr("block") then
+		if dam > 0 and target:attr("block") then
 			local e = target.tempeffect_def[target.EFF_BLOCKING]
+			lastdam = dam
 			dam = e.do_block(type, dam, target.tmp[target.EFF_BLOCKING], target, src)
+			if lastdam - dam > 0 then game:delayedLogDamage(src, target, 0, ("%s(%d blocked)#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", lastdam-dam), false) end
 		end
-		if target.isTalentActive and target:isTalentActive(target.T_FORGE_SHIELD) then
+		if dam > 0 and target.isTalentActive and target:isTalentActive(target.T_FORGE_SHIELD) then
 			local t = target:getTalentFromId(target.T_FORGE_SHIELD)
+			lastdam = dam
 			dam = t.doForgeShield(type, dam, t, target, src)
+			if lastdam - dam > 0 then game:delayedLogDamage(src, target, 0, ("%s(%d blocked)#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", lastdam-dam), false) end
 		end
 
 		-- Increases damage
@@ -164,7 +175,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 				game:onTickEnd(function() src:removeEffect(src.EFF_FROZEN) end)
 				eff.begone = game.turn
 			else
-				game:delayedLogDamage(src, {name="Iceblock", x=src.x, y=src.y}, dam, ("%s%d %s#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", math.ceil(dam), DamageType:get(type).name))
+				game:delayedLogDamage(src, eff.ice, dam, ("%s%d %s#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", math.ceil(dam), DamageType:get(type).name))
 				if eff.begone and eff.begone < game.turn and eff.hp < 0 then
 					game.logSeen(src, "%s forces the iceblock to shatter.", src.name:capitalize())
 					src:removeEffect(src.EFF_FROZEN)
@@ -174,14 +185,15 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 		end
 
 		-- dark vision increases damage done in creeping dark
-		if src and game.level.map:checkAllEntities(x, y, "creepingDark") then
+		if src and src ~= target and game.level.map:checkAllEntities(x, y, "creepingDark") then
 			local dark = game.level.map:checkAllEntities(x, y, "creepingDark")
 			if dark.summoner == src and dark.damageIncrease > 0 and not dark.projecting then
-				game.logPlayer(src, "You strike in the darkness. (+%d damage)", (dam * dark.damageIncrease / 100))
+				local source = src.__project_source or src
 				dam = dam + (dam * dark.damageIncrease / 100)
+				game:delayedLogMessage(source, target, "dark_strike"..(source.uid or ""), "#Source# strikes #Target# in the darkness (%+d%%%%%%%% damage).", dark.damageIncrease) -- resolve %% 3 levels deep
 			end
 		end
-
+		lastdam = dam
 		-- Static reduce damage for psionic kinetic shield
 		if target.isTalentActive and target:isTalentActive(target.T_KINETIC_SHIELD) then
 			local t = target:getTalentFromId(target.T_KINETIC_SHIELD)
@@ -212,15 +224,23 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			local t = target:getTalentFromId(target.T_CHARGED_SHIELD)
 			dam = t.css_on_damage(target, t, type, dam)
 		end
-
+		if dam ~= lastdam then
+			game:delayedLogDamage(src, target, 0, ("%s(%d to psi shield)#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", lastdam-dam), false)
+		end
+		lastdam = dam
 		if type ~= DamageType.PHYSICAL and target.knowTalent and target:knowTalent(target.T_STONE_FORTRESS) and target:hasEffect(target.EFF_DWARVEN_RESILIENCE) then
 			dam = math.max(0, dam - target:combatArmor() * (50 + target:getTalentLevel(target.T_STONE_FORTRESS) * 10) / 100)
 		end
+		if dam ~= lastdam then
+			game:delayedLogDamage(src, target, 0, ("%s(%d to armor)#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", lastdam-dam), false)
+		end
 
 		-- Damage Smearing
-		if type ~= DamageType.TEMPORAL and target:hasEffect(target.EFF_DAMAGE_SMEARING) then
+		if dam > 0 and type ~= DamageType.TEMPORAL and target:hasEffect(target.EFF_DAMAGE_SMEARING) then
 			local smear = dam
+			local type = DamageType.TEMPORAL
 			target:setEffect(target.EFF_SMEARED, 6, {src=src, power=smear/6, no_ct_effect=true})
+			game:delayedLogDamage(src, target, 0, ("%s(%d smeared)#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", dam), false)
 			dam = 0
 		end
 
@@ -248,7 +268,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			local pen = 0
 			if src.resists_pen then pen = (src.resists_pen.all or 0) + (src.resists_pen[type] or 0) end
 			local dominated = target:hasEffect(target.EFF_DOMINATED)
-			if dominated and dominated.source == src then pen = pen + (dominated.resistPenetration or 0) end
+			if dominated and dominated.src == src then pen = pen + (dominated.resistPenetration or 0) end
 			if target:attr("sleep") and src.attr and src:attr("night_terror") then pen = pen + src:attr("night_terror") end
 			local res = target:combatGetResist(type)
 			pen = util.bound(pen, 0, 100)
@@ -273,32 +293,26 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 		end
 
 		-- Static reduce damage
-		if target.isTalentActive and target:isTalentActive(target.T_ANTIMAGIC_SHIELD) then
+		if dam > 0 and target.isTalentActive and target:isTalentActive(target.T_ANTIMAGIC_SHIELD) then
 			local t = target:getTalentFromId(target.T_ANTIMAGIC_SHIELD)
+			lastdam = dam
 			dam = t.on_damage(target, t, type, dam)
+			if lastdam - dam  > 0 then game:delayedLogDamage(src, target, 0, ("%s(%d antimagic)#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", lastdam - dam), false) end
 		end
 
-		if target.isTalentActive and target:isTalentActive(target.T_ENERGY_DECOMPOSITION) then
+		if dam > 0 and target.isTalentActive and target:isTalentActive(target.T_ENERGY_DECOMPOSITION) then
 			local t = target:getTalentFromId(target.T_ENERGY_DECOMPOSITION)
+			lastdam = dam
 			dam = t.on_damage(target, t, type, dam)
+			if lastdam - dam  > 0 then game:delayedLogDamage(src, target, 0, ("%s(%d dissipated)#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", lastdam - dam), false) end
 		end
 
 		-- Flat damage reduction ("armour")
-		if target.flat_damage_armor then
+		if dam > 0 and target.flat_damage_armor then
 			local dec = (target.flat_damage_armor.all or 0) + (target.flat_damage_armor[type] or 0)
+			if dec > 0 then game:delayedLogDamage(src, target, 0, ("%s(%d reduction)#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", dec), false) end
 			dam = math.max(0, dam - dec)
 			print("[PROJECTOR] after flat damage armor", dam)
-		end
-
-		-- Flat damage cap
-		if target.flat_damage_cap and target.max_life then
-			local cap = nil
-			if target.flat_damage_cap.all then cap = target.flat_damage_cap.all end
-			if target.flat_damage_cap[type] then cap = target.flat_damage_cap[type] end
-			if cap and cap > 0 then
-				dam = math.max(math.min(dam, cap * target.max_life / 100), 0)
-				print("[PROJECTOR] after flat damage cap", dam)
-			end
 		end
 
 		-- roll with it damage reduction
@@ -367,18 +381,23 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 
 		-- Log damage for later
 		if not DamageType:get(type).hideMessage then
-			local srcname = src.x and src.y and game.level.map.seens(src.x, src.y) and src.name:capitalize() or "Something"
-			if src.turn_procs and src.turn_procs.is_crit then
-				game:delayedLogDamage(src, target, dam, ("#{bold}#%s%d %s#{normal}##LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", math.ceil(dam), DamageType:get(type).name), true)
-			else
-				game:delayedLogDamage(src, target, dam, ("%s%d %s#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", math.ceil(dam), DamageType:get(type).name), false)
+			local visible, srcSeen, tgtSeen = game:logVisible(src, target)
+			if visible then -- don't log damage that the player doesn't know about
+				local source = src.__project_source or src
+				if src.turn_procs and src.turn_procs.is_crit then
+					game:delayedLogDamage(source, target, dam, ("#{bold}#%s%d %s#{normal}##LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", math.ceil(dam), DamageType:get(type).name), true)
+				else
+					game:delayedLogDamage(source, target, dam, ("%s%d %s#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", math.ceil(dam), DamageType:get(type).name), false)
+				end
 			end
 		end
 
-		if src.attr and src:attr("martyrdom") and not no_martyr then
+		if dam > 0 and src.attr and src:attr("martyrdom") and not no_martyr then
+			game:delayedLogMessage(src, target, "martyrdom", "#CRIMSON##Source# damages %s through Martyrdom!", string.his_her_self(src))
 			DamageType.defaultProjector(target, src.x, src.y, type, dam * src.martyrdom / 100, tmp, true)
 		end
 		if target.attr and target:attr("reflect_damage") and not no_martyr and src.x and src.y then
+			game:delayedLogMessage(target, src, "reflect_damage"..(src.uid or ""), "#CRIMSON##Source# reflects damage back to #Target#!")
 			DamageType.defaultProjector(target, src.x, src.y, type, dam * target.reflect_damage / 100, tmp, true)
 		end
 
@@ -411,8 +430,8 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 
 		-- damage affinity healing
 		if not target.dead and affinity_heal > 0 then
-			target:heal(affinity_heal)
-			game.logSeen(target, "%s is healed by the %s%s#LAST# damage!", target.name:capitalize(), DamageType:get(type).text_color or "#aaaaaa#", DamageType:get(type).name)
+			target:heal(affinity_heal, src)
+			game:delayedLogMessage(target, nil, "Affinity"..type, "#Source##LIGHT_GREEN# HEALS#LAST# from "..(DamageType:get(type).text_color or "#aaaaaa#")..DamageType:get(type).name.."#LAST# damage!")
 		end
 
 		if dam > 0 and src.damage_log and src.damage_log.weapon then
@@ -710,7 +729,7 @@ newDamageType{
 
 -- Temporal + Stun
 newDamageType{
-	name = "temporalstun", type = "TEMPORALSTUN",
+	name = "temporal stun", type = "TEMPORALSTUN",
 	projector = function(src, x, y, type, dam)
 		DamageType:get(DamageType.TEMPORAL).projector(src, x, y, DamageType.TEMPORAL, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
@@ -741,7 +760,7 @@ newDamageType{
 
 -- Break stealth
 newDamageType{
-	name = "break stealth", type = "BREAK_STEALTH",
+	name = "illumination", type = "BREAK_STEALTH",
 	projector = function(src, x, y, type, dam)
 		-- Dont lit magically unlit grids
 		local a = game.level.map(x, y, Map.ACTOR)
@@ -753,7 +772,7 @@ newDamageType{
 
 -- Silence
 newDamageType{
-	name = "SILENCE", type = "SILENCE",
+	name = "silence", type = "SILENCE",
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
@@ -788,7 +807,7 @@ newDamageType{
 
 -- Silence
 newDamageType{
-	name = "% chance to silence target", type = "RANDOM_SILENCE",
+	name = "silence", type = "RANDOM_SILENCE",
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and rng.percent(dam) then
@@ -883,7 +902,7 @@ newDamageType{
 	end,
 }
 newDamageType{
-	name = "fireburn", type = "GOLEM_FIREBURN",
+	name = "fire burn", type = "GOLEM_FIREBURN",
 	projector = function(src, x, y, type, dam)
 		local realdam = 0
 		local target = game.level.map(x, y, Map.ACTOR)
@@ -905,12 +924,12 @@ newDamageType{
 
 -- Darkness + Stun
 newDamageType{
-	name = "darkstun", type = "DARKSTUN",
+	name = "darkness", type = "DARKSTUN",
 	projector = function(src, x, y, type, dam)
 		DamageType:get(DamageType.DARKNESS).projector(src, x, y, DamageType.DARKNESS, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
-			-- Set on fire!
+			-- try to stun
 			if target:canBe("stun") then
 				target:setEffect(target.EFF_STUNNED, 4, {apply_power=src:combatSpellpower()})
 			else
@@ -922,7 +941,7 @@ newDamageType{
 
 -- Darkness but not over minions
 newDamageType{
-	name = "minions darkness", type = "MINION_DARKNESS",
+	name = "darkness", type = "MINION_DARKNESS",
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and (not target.necrotic_minion or target.summoner ~= src) then
@@ -933,7 +952,7 @@ newDamageType{
 
 -- Fore but not over minions
 newDamageType{
-	name = "firey no friends", type = "FIRE_FRIENDS",
+	name = "fire", type = "FIRE_FRIENDS",
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and target.summoner ~= src then
@@ -944,7 +963,7 @@ newDamageType{
 
 -- Cold + Stun
 newDamageType{
-	name = "coldstun", type = "COLDSTUN",
+	name = "cold", type = "COLDSTUN",
 	projector = function(src, x, y, type, dam)
 		DamageType:get(DamageType.COLD).projector(src, x, y, DamageType.COLD, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
@@ -988,7 +1007,7 @@ newDamageType{
 
 -- Cold damage + freeze ground
 newDamageType{
-	name = "coldnevermove", type = "COLDNEVERMOVE",
+	name = "cold ground", type = "COLDNEVERMOVE",
 	projector = function(src, x, y, type, dam)
 		if _G.type(dam) == "number" then dam = {dam=dam, dur=4} end
 		DamageType:get(DamageType.COLD).projector(src, x, y, DamageType.COLD, dam.dam)
@@ -1088,7 +1107,7 @@ newDamageType{
 
 -- Lightning damage + daze chance
 newDamageType{
-	name = "lightning daze", type = "LIGHTNING_DAZE", text_color = "#ROYAL_BLUE#",
+	name = "lightning", type = "LIGHTNING_DAZE", text_color = "#ROYAL_BLUE#",
 	projector = function(src, x, y, type, dam)
 		if _G.type(dam) == "number" then dam = {dam=dam, daze=25} end
 		dam.daze = dam.daze or 25
@@ -1111,7 +1130,7 @@ newDamageType{
 
 -- Cold/physical damage + repulsion; checks for spell power against physical resistance
 newDamageType{
-	name = "wave", type = "WAVE",
+	name = "cold repulsion", type = "WAVE",
 	projector = function(src, x, y, type, dam)
 		local srcx, srcy = dam.x, dam.y
 		local base = dam
@@ -1137,7 +1156,7 @@ newDamageType{
 
 -- Fireburn damage + repulsion; checks for spell power against physical resistance
 newDamageType{
-	name = "fire knockback", type = "FIREKNOCKBACK",
+	name = "fire repulsion", type = "FIREKNOCKBACK",
 	projector = function(src, x, y, type, dam, tmp)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if _G.type(dam) ~= "table" then dam = {dam=dam, dist=3} end
@@ -1158,7 +1177,7 @@ newDamageType{
 
 -- Fireburn damage + repulsion; checks for mind power against physical resistance
 newDamageType{
-	name = "fire knockback mind", type = "FIREKNOCKBACK_MIND",
+	name = "burning repulsion", type = "FIREKNOCKBACK_MIND",
 	projector = function(src, x, y, type, dam, tmp)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if _G.type(dam) ~= "table" then dam = {dam=dam, dist=3} end
@@ -1179,7 +1198,7 @@ newDamageType{
 
 -- Darkness damage + repulsion; checks for spell power against mental resistance
 newDamageType{
-	name = "darkness knockback", type = "DARKKNOCKBACK",
+	name = "darkness repulsion", type = "DARKKNOCKBACK",
 	projector = function(src, x, y, type, dam, tmp)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if _G.type(dam) ~= "table" then dam = {dam=dam, dist=3} end
@@ -1200,7 +1219,7 @@ newDamageType{
 
 -- Physical damage + repulsion; checks for spell power against physical resistance
 newDamageType{
-	name = "spell knockback", type = "SPELLKNOCKBACK",
+	name = "physical repulsion", type = "SPELLKNOCKBACK",
 	projector = function(src, x, y, type, dam, tmp)
 		local target = game.level.map(x, y, Map.ACTOR)
 		local realdam = 0
@@ -1223,7 +1242,7 @@ newDamageType{
 
 -- Physical damage + repulsion; checks for mind power against physical resistance
 newDamageType{
-	name = "mind knockback", type = "MINDKNOCKBACK",
+	name = "physical repulsion", type = "MINDKNOCKBACK",
 	projector = function(src, x, y, type, dam, tmp)
 		local target = game.level.map(x, y, Map.ACTOR)
 		tmp = tmp or {}
@@ -1243,7 +1262,7 @@ newDamageType{
 
 -- Physical damage + repulsion; checks for attack power against physical resistance
 newDamageType{
-	name = "physknockback", type = "PHYSKNOCKBACK",
+	name = "physical repulsion", type = "PHYSKNOCKBACK",
 	projector = function(src, x, y, type, dam, tmp)
 		local target = game.level.map(x, y, Map.ACTOR)
 		tmp = tmp or {}
@@ -1264,7 +1283,7 @@ newDamageType{
 
 -- Fear check + repulsion; checks for mind power against physical resistance
 newDamageType{
-	name = "fear knockback", type = "FEARKNOCKBACK",
+	name = "fear repulsion", type = "FEARKNOCKBACK",
 	projector = function(src, x, y, type, dam, tmp)
 		local target = game.level.map(x, y, Map.ACTOR)
 		tmp = tmp or {}
@@ -1299,9 +1318,9 @@ newDamageType{
 	end,
 }
 
--- Inferno: fire and maybe remove suff
+-- Inferno: fire and maybe remove stuff
 newDamageType{
-	name = "inferno", type = "INFERNO",
+	name = "cleansing fire", type = "INFERNO",
 	projector = function(src, x, y, type, dam)
 		local realdam = DamageType:get(DamageType.FIRE).projector(src, x, y, DamageType.FIRE, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
@@ -1378,7 +1397,7 @@ newDamageType{
 
 -- Physical damage + bleeding % of it
 newDamageType{
-	name = "physical + bleeding", type = "PHYSICALBLEED",
+	name = "physical bleed", type = "PHYSICALBLEED",
 	projector = function(src, x, y, type, dam)
 		local realdam = DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
@@ -1390,7 +1409,7 @@ newDamageType{
 
 -- Slime damage
 newDamageType{
-	name = "slime", type = "SLIME", text_color = "#LIGHT_GREEN#",
+	name = "nature slow", type = "SLIME", text_color = "#LIGHT_GREEN#",
 	projector = function(src, x, y, type, dam)
 		if _G.type(dam) == "number" then dam = {dam=dam, power=0.15} end
 		DamageType:get(DamageType.NATURE).projector(src, x, y, DamageType.NATURE, dam.dam)
@@ -1487,7 +1506,7 @@ newDamageType{
 
 -- Confusion
 newDamageType{
-	name = "% chance to confuse", type = "RANDOM_CONFUSION",
+	name = "confusion", type = "RANDOM_CONFUSION",
 	projector = function(src, x, y, type, dam)
 		if _G.type(dam) == "number" then dam = {dam=dam} end
 		local target = game.level.map(x, y, Map.ACTOR)
@@ -1502,7 +1521,7 @@ newDamageType{
 }
 
 newDamageType{
-	name = "% chance to cause a gloom effect", type = "RANDOM_GLOOM",
+	name = "gloom", type = "RANDOM_GLOOM",
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and rng.percent(dam) then
@@ -1530,7 +1549,7 @@ newDamageType{
 
 -- gBlind
 newDamageType{
-	name = "% chance to blind", type = "RANDOM_BLIND",
+	name = "blinding", type = "RANDOM_BLIND",
 	projector = function(src, x, y, type, dam)
 		if _G.type(dam) == "number" then dam = {dam=dam} end
 		local target = game.level.map(x, y, Map.ACTOR)
@@ -1546,7 +1565,7 @@ newDamageType{
 
 -- Physical + Blind
 newDamageType{
-	name = "sand", type = "SAND",
+	name = "blinding physical", type = "SAND",
 	projector = function(src, x, y, type, dam)
 		DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam.dam)
 		local target = game.level.map(x, y, Map.ACTOR)
@@ -1562,7 +1581,7 @@ newDamageType{
 
 -- Physical + Pinned
 newDamageType{
-	name = "pinning", type = "PINNING",
+	name = "physical pinning", type = "PINNING",
 	projector = function(src, x, y, type, dam)
 		DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam.dam)
 		local target = game.level.map(x, y, Map.ACTOR)
@@ -1578,7 +1597,7 @@ newDamageType{
 
 -- Drain Exp
 newDamageType{
-	name = "drain experience", type = "DRAINEXP",
+	name = "regressive blight", type = "DRAINEXP",
 	projector = function(src, x, y, type, dam)
 		if _G.type(dam) == "number" then dam = {dam=dam} end
 		local realdam = DamageType:get(DamageType.BLIGHT).projector(src, x, y, DamageType.BLIGHT, dam.dam)
@@ -1586,7 +1605,7 @@ newDamageType{
 		if target then
 			if target:checkHit((dam.power_check or src.combatSpellpower)(src), (dam.resist_check or target.combatMentalResist)(target), 0, 95, 15) then
 				target:gainExp(-dam.dam*2)
-				game.logSeen(target, "%s drains experience from %s!", src.name:capitalize(), target.name)
+				src:logCombat(target, "#Source# drains experience from #Target#!")
 			else
 				game.logSeen(target, "%s resists!", target.name:capitalize())
 			end
@@ -1597,14 +1616,14 @@ newDamageType{
 
 -- Drain Life
 newDamageType{
-	name = "drain life", type = "DRAINLIFE", text_color = "#DARK_GREEN#",
+	name = "draining blight", type = "DRAINLIFE", text_color = "#DARK_GREEN#",
 	projector = function(src, x, y, type, dam)
 		if _G.type(dam) == "number" then dam = {dam=dam, healfactor=0.4} end
 		local target = game.level.map(x, y, Map.ACTOR) -- Get the target first to make sure we heal even on kill
 		local realdam = DamageType:get(DamageType.BLIGHT).projector(src, x, y, DamageType.BLIGHT, dam.dam)
 		if target and realdam > 0 then
 			src:heal(realdam * dam.healfactor)
-			game.logSeen(target, "%s drains life from %s!", src.name:capitalize(), target.name)
+			src:logCombat(target, "#Source# drains life from #Target#!")
 		end
 		return realdam
 	end,
@@ -1612,7 +1631,7 @@ newDamageType{
 
 -- Drain Vim
 newDamageType{
-	name = "drain vim", type = "DRAIN_VIM",
+	name = "enervating blight", type = "DRAIN_VIM",
 	projector = function(src, x, y, type, dam)
 		if _G.type(dam) == "number" then dam = {dam=dam, vim=0.2} end
 		local target = game.level.map(x, y, Map.ACTOR)
@@ -1630,7 +1649,7 @@ newDamageType{
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and target:attr("demon") then
-			target:heal(dam)
+			target:heal(dam, src)
 			return -dam
 		elseif target then
 			DamageType:get(DamageType.FIRE).projector(src, x, y, DamageType.FIRE, dam)
@@ -1641,11 +1660,11 @@ newDamageType{
 
 -- Retch: heal undead; damage living
 newDamageType{
-	name = "retch", type = "RETCH",
+	name = "purging blight", type = "RETCH",
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
-		if target and (target:attr("undead") or target.retch_heal) then
-			target:heal(dam * 1.5)
+		if target and (target:attr("undead") or target:attr(retch_heal)) then
+			target:heal(dam * 1.5, src)
 
 			if src.callTalent then
 				if rng.percent(src:callTalent(src.T_RETCH, "getPurgeChance")) then
@@ -1692,7 +1711,7 @@ newDamageType{
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and not target:attr("undead") and not target:attr("demon") then
-			target:heal(dam / 2)
+			target:heal(dam / 2, src)
 		elseif target then
 			DamageType:get(DamageType.LIGHT).projector(src, x, y, DamageType.LIGHT, dam)
 		end
@@ -1713,7 +1732,7 @@ newDamageType{
 }
 
 newDamageType{
-	name = "healing power", type = "HEALING_POWER",
+	name = "healing light", type = "HEALING_POWER",
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and not target:attr("undead") then
@@ -1745,7 +1764,7 @@ newDamageType{
 
 -- Corrupted blood, blight damage + potential diseases
 newDamageType{
-	name = "corrupted blood", type = "CORRUPTED_BLOOD", text_color = "#DARK_GREEN#",
+	name = "infective blight", type = "CORRUPTED_BLOOD", text_color = "#DARK_GREEN#",
 	projector = function(src, x, y, type, dam)
 		if _G.type(dam) == "number" then dam = {dam=dam} end
 		DamageType:get(DamageType.BLIGHT).projector(src, x, y, DamageType.BLIGHT, dam.dam)
@@ -1759,7 +1778,7 @@ newDamageType{
 
 -- blood boiled, blight damage + slow
 newDamageType{
-	name = "blood boil", type = "BLOOD_BOIL",
+	name = "hindering_blight", type = "BLOOD_BOIL",
 	projector = function(src, x, y, type, dam)
 		DamageType:get(DamageType.BLIGHT).projector(src, x, y, DamageType.BLIGHT, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
@@ -1796,7 +1815,7 @@ newDamageType{
 
 -- Physical Damage/Cut Split
 newDamageType{
-	name = "split bleed", type = "SPLIT_BLEED",
+	name = "physical bleed", type = "SPLIT_BLEED",
 	projector = function(src, x, y, type, dam)
 		DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam / 2)
 		DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam / 12)
@@ -1811,7 +1830,7 @@ newDamageType{
 
 -- Temporal/Physical damage
 newDamageType{
-	name = "matter", type = "MATTER",
+	name = "temporal shear", type = "MATTER",
 	projector = function(src, x, y, type, dam)
 		DamageType:get(DamageType.TEMPORAL).projector(src, x, y, DamageType.TEMPORAL, dam / 2)
 		DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam / 2)
@@ -1820,7 +1839,7 @@ newDamageType{
 
 -- Temporal/Darkness damage
 newDamageType{
-	name = "void", type = "VOID", text_color = "#GREY#",
+	name = "temporal darkness", type = "VOID", text_color = "#GREY#",
 	projector = function(src, x, y, type, dam)
 		DamageType:get(DamageType.TEMPORAL).projector(src, x, y, DamageType.TEMPORAL, dam / 2)
 		DamageType:get(DamageType.DARKNESS).projector(src, x, y, DamageType.DARKNESS, dam / 2)
@@ -1864,7 +1883,7 @@ newDamageType{
 }
 
 newDamageType{
-	name = "repulsion", type = "REPULSION",
+	name = "physical repulsion", type = "REPULSION",
 	projector = function(src, x, y, type, dam, tmp)
 		local target = game.level.map(x, y, Map.ACTOR)
 		tmp = tmp or {}
@@ -1909,7 +1928,7 @@ newDamageType{
 
 -- Mosses
 newDamageType{
-	name = "grasping moss", type = "GRASPING_MOSS",
+	name = "pinning nature", type = "GRASPING_MOSS",
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and src:reactionToward(target) < 0 then
@@ -1925,7 +1944,7 @@ newDamageType{
 }
 
 newDamageType{
-	name = "nourishing moss", type = "NOURISHING_MOSS",
+	name = "healing nature", type = "NOURISHING_MOSS",
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and src:reactionToward(target) < 0 then
@@ -1936,7 +1955,7 @@ newDamageType{
 }
 
 newDamageType{
-	name = "slippery moss", type = "SLIPPERY_MOSS",
+	name = "impeding nature", type = "SLIPPERY_MOSS",
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and src:reactionToward(target) < 0 then
@@ -1947,7 +1966,7 @@ newDamageType{
 }
 
 newDamageType{
-	name = "hallucinogenic moss", type = "HALLUCINOGENIC_MOSS",
+	name = "confounding nature", type = "HALLUCINOGENIC_MOSS",
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and src:reactionToward(target) < 0 then
@@ -1979,7 +1998,7 @@ newDamageType{
 }
 
 newDamageType{
-	name = "shiftingshadows", type = "SHIFTINGSHADOWS",
+	name = "defensive darkness", type = "SHIFTINGSHADOWS",
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
@@ -1993,7 +2012,7 @@ newDamageType{
 }
 
 newDamageType{
-	name = "blazinglight", type = "BLAZINGLIGHT",
+	name = "blazing light", type = "BLAZINGLIGHT",
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
@@ -2008,7 +2027,7 @@ newDamageType{
 }
 
 newDamageType{
-	name = "warding", type = "WARDING",
+	name = "prismatic repulsion", type = "WARDING",
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
@@ -2030,7 +2049,7 @@ newDamageType{
 }
 
 newDamageType{
-	name = "mindslow", type = "MINDSLOW",
+	name = "mind slow", type = "MINDSLOW",
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
@@ -2042,7 +2061,7 @@ newDamageType{
 
 -- Freezes target, checks for physresistance
 newDamageType{
-	name = "mindfreeze", type = "MINDFREEZE",
+	name = "mind freeze", type = "MINDFREEZE",
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
@@ -2074,7 +2093,7 @@ newDamageType{
 
 -- Temporal + Stat damage
 newDamageType{
-	name = "reverse aging", type = "CLOCK",
+	name = "regressive temporal", type = "CLOCK",
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
@@ -2088,7 +2107,7 @@ newDamageType{
 
 -- Temporal Over Time
 newDamageType{
-	name = "wasting", type = "WASTING", text_color = "#LIGHT_STEEL_BLUE#",
+	name = "wasting temporal", type = "WASTING", text_color = "#LIGHT_STEEL_BLUE#",
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		local dur = 3
@@ -2097,7 +2116,7 @@ newDamageType{
 		local init_dam = dam * perc / 100
 		if init_dam > 0 then DamageType:get(DamageType.TEMPORAL).projector(src, x, y, DamageType.TEMPORAL, init_dam) end
 		if target then
-			-- Set on fire!
+			-- Set wasting effect
 			dam = dam - init_dam
 			target:setEffect(target.EFF_WASTING, dur, {src=src, power=dam / dur, no_ct_effect=true})
 		end
@@ -2120,7 +2139,7 @@ newDamageType{
 }
 
 newDamageType{
-	name = "rethread", type = "RETHREAD",
+	name = "debilitating temporal", type = "RETHREAD",
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		local chance = rng.range(1, 4)
@@ -2170,7 +2189,7 @@ newDamageType{
 }
 
 newDamageType{
-	name = "devour life", type = "DEVOUR_LIFE",
+	name = "draining physical", type = "DEVOUR_LIFE",
 	projector = function(src, x, y, type, dam)
 		if _G.type(dam) == "number" then dam = {dam=dam} end
 		local target = game.level.map(x, y, Map.ACTOR) -- Get the target first to make sure we heal even on kill
@@ -2181,16 +2200,16 @@ newDamageType{
 			-- cannot be reduced
 			local temp = src.healing_factor
 			src.healing_factor = 1
-			src:heal(heal)
+			src:heal(heal, target)
 			src.healing_factor = temp
-			game.logSeen(target, "%s consumes %d life from %s!", src.name:capitalize(), heal, target.name)
+			src:logCombat(target, "#Source# consumes %d life from #Target#!", heal)
 		end
 	end,
 	hideMessage=true,
 }
 
 newDamageType{
-	name = "chronoslow", type = "CHRONOSLOW",
+	name = "temporal slow", type = "CHRONOSLOW",
 	projector = function(src, x, y, type, dam)
 		DamageType:get(DamageType.TEMPORAL).projector(src, x, y, DamageType.TEMPORAL, dam.dam)
 		local target = game.level.map(x, y, Map.ACTOR)
@@ -2233,7 +2252,7 @@ newDamageType{
 }
 
 newDamageType{
-	name = "manaworm", type = "MANAWORM",
+	name = "manaworm arcane", type = "MANAWORM",
 	projector = function(src, x, y, type, dam)
 		local realdam = DamageType:get(DamageType.ARCANE).projector(src, x, y, DamageType.ARCANE, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
@@ -2252,7 +2271,7 @@ newDamageType{
 }
 
 newDamageType{
-	name = "void blast", type = "VOID_BLAST",
+	name = "arcane blast", type = "VOID_BLAST",
 	projector = function(src, x, y, type, dam)
 		local realdam = DamageType:get(DamageType.ARCANE).projector(src, x, y, DamageType.ARCANE, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
@@ -2285,7 +2304,7 @@ newDamageType{
 
 -- Darkness damage + speed reduction + minion damage inc
 newDamageType{
-	name = "rigor mortis", type = "RIGOR_MORTIS",
+	name = "decaying darkness", type = "RIGOR_MORTIS",
 	projector = function(src, x, y, type, dam, tmp)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
@@ -2297,7 +2316,7 @@ newDamageType{
 }
 
 newDamageType{
-	name = "abyssal shroud", type = "ABYSSAL_SHROUD",
+	name = "abyssal darkness", type = "ABYSSAL_SHROUD",
 	projector = function(src, x, y, type, dam)
 		--make it dark
 		game.level.map.remembers(x, y, false)
@@ -2320,7 +2339,7 @@ newDamageType{
 }
 
 newDamageType{
-	name = "% chance to summon an orc spirit", type = "GARKUL_INVOKE",
+	name = "Garkul spirit", type = "GARKUL_INVOKE",
 	projector = function(src, x, y, type, dam)
 		if not rng.percent(dam) then return end
 		local target = game.level.map(x, y, engine.Map.ACTOR)
@@ -2413,7 +2432,7 @@ newDamageType{
 
 -- Generic apply temporary effect
 newDamageType{
-	name = "temp effect", type = "TEMP_EFFECT",
+	name = "special effect", type = "TEMP_EFFECT",
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
@@ -2428,7 +2447,7 @@ newDamageType{
 }
 
 newDamageType{
-	name = "manaburn", type = "MANABURN", text_color = "#PURPLE#",
+	name = "manaburn arcane", type = "MANABURN", text_color = "#PURPLE#",
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
@@ -2472,7 +2491,7 @@ newDamageType{
 
 -- Distortion; Includes knockback, penetrate, stun, and explosion paramters
 newDamageType{
-	name = "distortion", type = "DISTORTION",
+	name = "distorting physical", type = "DISTORTION",
 	projector = function(src, x, y, type, dam, tmp)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if not target then return end
@@ -2580,7 +2599,7 @@ newDamageType{
 
 
 newDamageType{
-	name = "mucus", type = "MUCUS",
+	name = "natural mucus", type = "MUCUS",
 	projector = function(src, x, y, type, dam, tmp)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and not target.turn_procs.mucus then
@@ -2601,7 +2620,7 @@ newDamageType{
 }
 
 newDamageType{
-	name = "acid disarm", type = "ACID_DISARM", text_color = "#GREEN#",
+	name = "disarming acid", type = "ACID_DISARM", text_color = "#GREEN#",
 	projector = function(src, x, y, type, dam)
 		if _G.type(dam) == "number" then dam = {chance=25, dam=dam} end
 		local realdam = DamageType:get(DamageType.ACID).projector(src, x, y, DamageType.ACID, dam.dam)
