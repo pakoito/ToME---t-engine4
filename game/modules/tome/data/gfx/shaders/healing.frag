@@ -79,7 +79,7 @@ void main(void)
   float beamTime;
 
   int i;
-  int ibeamsCount = (int)beamsCount;
+  int ibeamsCount = int(beamsCount);
   for(i = 0; i < ibeamsCount; i++)
   {
     float beamIndex = floor(scaledTime) - float(i);
