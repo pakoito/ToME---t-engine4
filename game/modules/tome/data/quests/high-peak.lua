@@ -121,6 +121,8 @@ function win(self, how)
 	elseif how == "yeek-sacrifice" then world:gainAchievement("YEEK_SACRIFICE", game.player)
 	end
 
+	if not game.state.gone_west then world:gainAchievement("WIN_NEVER_WEST", game.player) end
+
 	game:setAllowedBuild("adventurer", true)
 	if game.difficulty == game.DIFFICULTY_NIGHTMARE then game:setAllowedBuild("difficulty_insane", true) end
 	if game.difficulty == game.DIFFICULTY_INSANE then game:setAllowedBuild("difficulty_madness", true) end

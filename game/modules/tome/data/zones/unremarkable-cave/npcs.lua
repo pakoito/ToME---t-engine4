@@ -114,6 +114,7 @@ newEntity{ define_as = "CORRUPTOR",
 		{type="armor", subtype="heavy", force_drop=true, tome_drops="boss", forbid_power_source={antimagic=true}, autoreq=true},
 	},
 	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
+	resolvers.drops{chance=100, nb=1, {type="jewelry", subtype="orb", defined="ORB_MANY_WAYS"} },
 
 	resolvers.talents{
 		[Talents.T_ARMOUR_TRAINING]=2,

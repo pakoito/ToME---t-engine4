@@ -131,6 +131,11 @@ newAchievement{
 	show = "name", huge=true,
 	desc = [[Fought the two Sorcerers and closed four invocation portals.]],
 }
+newAchievement{
+	name = "Never Look Back And There Again", id = "WIN_NEVER_WEST",
+	show = "full", huge=true,
+	desc = [[Win the game without ever setting foot on Maj'Eyal.]],
+}
 
 -------------- Other quests
 newAchievement{
