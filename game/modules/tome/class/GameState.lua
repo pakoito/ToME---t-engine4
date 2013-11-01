@@ -543,7 +543,7 @@ function _M:worldDirectorAI()
 	if not ok and err then error(err) end
 end
 
-function _M:spawnWorldAmbush(enc, dx, dy)
+function _M:spawnWorldAmbush(enc, dx, dy, kind)
 	game:onTickEnd(function()
 
 	local gen = { class = "engine.generator.map.Forest",
@@ -566,12 +566,12 @@ function _M:spawnWorldAmbush(enc, dx, dy)
 	local terrains = mod.class.Grid:loadList{"/data/general/grids/basic.lua", "/data/general/grids/forest.lua", "/data/general/grids/sand.lua"}
 	terrains[gen.up].change_level_shift_back = true
 
+	self.farm_factor = self.farm_factor or {}
 	local zone = mod.class.Zone.new("ambush", {
 		name = "Ambush!",
 		level_range = {game.player.level, game.player.level},
 		level_scheme = "player",
 		max_level = 1,
-		objects_cost_modifier = 0.1,
 		actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
 		width = enc.width or 20, height = enc.height or 20,
 --		no_worldport = true,
@@ -600,6 +600,11 @@ function _M:spawnWorldAmbush(enc, dx, dy)
 			level.default_up = {x=sx, y=sy}
 		end,
 	})
+	zone.objects_cost_modifier = self.farm_factor[kind]
+	zone.exp_worth_mult = self.farm_factor[kind]
+
+	self.farm_factor[kind] = self.farm_factor[kind] * 0.9
+
 	game.player:runStop()
 	game.player.energy.value = game.energy_to_act
 	game.paused = true
@@ -616,7 +621,7 @@ function _M:handleWorldEncounter(target)
 		if enc.type == "ambush" then
 			local x, y = target.x, target.y
 			target:die()
-			self:spawnWorldAmbush(enc, x, y)
+			self:spawnWorldAmbush(enc, x, y, target.name or "generic")
 		end
 	end
 end

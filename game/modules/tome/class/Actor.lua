@@ -4400,6 +4400,8 @@ end
 function _M:worthExp(target)
 	if not target.level or self.level < target.level - 7 then return 0 end
 
+	local level_mult = game.level.data.exp_worth_mult or 1
+
 	-- HHHHAACKKK ! Use a normal scheme for the game except in the infinite dungeon
 	if not game.zone.infinite_dungeon then
 		local mult = 0.6
@@ -4412,7 +4414,7 @@ function _M:worthExp(target)
 		elseif self.rank >= 5 then mult = 60
 		end
 
-		return self.level * mult * self.exp_worth * (target.exp_kill_multiplier or 1)
+		return self.level * mult * self.exp_worth * (target.exp_kill_multiplier or 1) * level_mult
 	else
 		local mult = 2 + (self.exp_kill_multiplier or 0)
 		if self.rank == 1 then mult = 2
@@ -4424,7 +4426,7 @@ function _M:worthExp(target)
 		elseif self.rank >= 5 then mult = 6.5
 		end
 
-		return self.level * mult * self.exp_worth * (target.exp_kill_multiplier or 1)
+		return self.level * mult * self.exp_worth * (target.exp_kill_multiplier or 1) * level_mult
 	end
 end
 
