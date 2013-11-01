@@ -94,3 +94,11 @@ If any come after, I bid you turn ... horrors ... too much. If you are foolish e
 		game.player:grantQuest("shertul-fortress")
 	end,
 }
+
+newLore{
+	id = "lake-nur-not-flooded",
+	category = "lake of nur",
+	name = "magical barrier", always_pop = true,
+	image = "nur-barrier.png",
+	lore = [[As you descend to the next level you traverse a kind of magical barrier keeping the water away. You hear terrible screams.]],
+}

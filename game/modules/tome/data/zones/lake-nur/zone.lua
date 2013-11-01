@@ -131,8 +131,8 @@ return {
 			Dialog:simplePopup("Lake of Nur", "You descend into the submerged ruins. The walls look extremely ancient, yet you feel power within this place.")
 			game.level.shown_warning = true
 		elseif lev == 3 and not game.level.shown_warning and not game.level.data.is_flooded then
-			Dialog:simplePopup("Lake of Nur", "As you descend to the next level you traverse a kind of magical barrier keeping the water away. You hear terrible screams.")
 			game.level.shown_warning = true
+			game.party:learnLore("lake-nur-not-flooded")
 		elseif lev == 3 and not game.level.shown_warning and game.level.data.is_flooded then
 			Dialog:simpleLongPopup("Lake of Nur", "As you descend to the next level you traverse a kind of magical barrier keeping the water away. The barrier seems to be failing however and the next level is flooded too.", 400)
 			game.level.shown_warning = true
