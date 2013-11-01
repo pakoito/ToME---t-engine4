@@ -21,6 +21,7 @@ require "engine.class"
 require "engine.Mouse"
 require "engine.DebugConsole"
 require "engine.dialogs.ShowErrorStack"
+local Shader = require "engine.Shader"
 
 --- Represent a game
 -- A module should subclass it and initialize anything it needs to play inside
@@ -239,6 +240,8 @@ function _M:tick()
 			print("[COROUTINE] dead", stop[i])
 		end
 	end
+
+	Shader:cleanup()
 
 	if self.cleanSounds then self:cleanSounds() end
 

@@ -53,6 +53,10 @@ newTalent{
 			self:incEquilibrium(-target.level - 5)
 			self:attr("allow_on_heal", 1)
 			self:heal(target.level * 2 + 5, target)
+			if core.shader.active(4) then
+				self:addParticles(Particles.new("shader_shield_temp", 1, {size_factor=1.5, y=-0.3, img="healgreen", life=25}, {type="healing", time_factor=2000, beamsCount=20, noup=2.0}))
+				self:addParticles(Particles.new("shader_shield_temp", 1, {size_factor=1.5, y=-0.3, img="healgreen", life=25}, {type="healing", time_factor=2000, beamsCount=20, noup=1.0}))
+			end
 			self:attr("allow_on_heal", -1)
 		else
 			game.logSeen(target, "%s resists!", target.name:capitalize())

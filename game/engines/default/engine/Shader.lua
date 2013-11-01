@@ -34,6 +34,15 @@ function core.shader.allow(kind)
 	return config.settings['shaders_kind_'..kind] and core.shader.active(4)
 end
 
+function _M:cleanup()
+	local time = os.time()
+	local todel = {}
+	for name, s in pairs(self.progs) do
+		if s.dieat < time then todel[name] = true end
+	end
+	for name, _ in pairs(todel) do self.progs[name] = nil end
+end
+
 --- Make a shader
 function _M:init(name, args)
 	self.args = args or {}
@@ -65,11 +74,14 @@ function _M:init(name, args)
 	end
 end
 
-function _M:makeTotalName()
+function _M:makeTotalName(add)
 	local str = {}
-	for k, v in pairs(self.args) do
+	local args = self.args
+	if add then args = table.clone(add) table.merge(args, self.args) end
+	for k, v in pairs(args) do
+		if type(v) == "function" then v = v(self) end
 		if type(v) == "number" then
-			str[#str+1] = v
+			str[#str+1] = k.."="..tostring(v)
 		elseif type(v) == "table" then
 			if v.texture then
 				if v.is3d then str[#str+1] = k.."=tex3d("..v.texture..")"
@@ -83,6 +95,7 @@ function _M:makeTotalName()
 			end
 		end
 	end
+	table.sort(str)
 	return self.name.."["..table.concat(str,",").."]"
 end
 
@@ -135,12 +148,12 @@ function _M:createProgram(def)
 end
 
 function _M:loaded()
-	if _M.progs[self.totalname] then
-		self.shad = _M.progs[self.totalname]
+	if _M.progs[self.totalname] and not _M.progsreset[self.totalname] then
 --		print("[SHADER] using cached shader "..self.totalname)
-		self.shad = _M.progs[self.totalname]
+		self.shad = _M.progs[self.totalname].shad
+		_M.progs[self.totalname].dieat = os.time() + 120
 	else
-		print("[SHADER] Loading from /data/gfx/shaders/"..self.name..".lua")
+--		print("[SHADER] Loading from /data/gfx/shaders/"..self.name..".lua")
 		local f, err = loadfile("/data/gfx/shaders/"..self.name..".lua")
 		if not f and err then error(err) end
 		setfenv(f, setmetatable(self.args or {}, {__index=_G}))
@@ -153,10 +166,19 @@ function _M:loaded()
 			if not core.shader.allow(def.require_kind) then return end
 		end
 
-		_M.progs[self.totalname] = self:createProgram(def)
-		_M.progsreset[self.totalname] = def.resetargs
+		if def.resetargs then
+			self.totalname = self:makeTotalName(def.resetargs)
+		end
+--		print("[SHADER] Loaded shader with totalname", self.totalname)
 
-		self.shad = _M.progs[self.totalname]
+		if not _M.progs[self.totalname] then
+			_M.progs[self.totalname] = {shad=self:createProgram(def), dieat=def.resetargs and (os.time() + 3) or (os.time() + 120)}
+			_M.progsreset[self.totalname] = def.resetargs
+		else
+			_M.progs[self.totalname].dieat = def.resetargs and (os.time() + 3) or (os.time() + 120)
+		end
+
+		self.shad = _M.progs[self.totalname].shad
 		if self.shad then
 			for k, v in pairs(def.args) do
 				self:setUniform(k, v)

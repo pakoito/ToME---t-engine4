@@ -28,7 +28,7 @@ local first = false
 return { generator = function()
 	return {
 		trail = 0,
-		life = 15,
+		life = life or 15,
 		size = 2*38 * (size_factor or 1), sizev = sizev or 0, sizea = sizea or 0,
 
 		x = (x or 0) * 64, xv = 0, xa = 0,
@@ -39,7 +39,7 @@ return { generator = function()
 		r = r, rv = 0, ra = 0,
 		g = g, gv = 0, ga = 0,
 		b = b, bv = 0, ba = 0,
-		a = a, av = -0.04, aa = 0.005,
+		a = a, av = -0.2 / life, aa = -0.002,
 	}
 end, },
 function(self)

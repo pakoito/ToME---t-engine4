@@ -191,6 +191,7 @@ end
 
 --- Removes a particles emitter following the entity
 function _M:removeParticles(ps)
+	if not ps then return end
 	self.__particles[ps] = nil
 	ps:dieDisplay()
 	if self.x and self.y and game.level and game.level.map then

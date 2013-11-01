@@ -128,7 +128,11 @@ newTalent{
 			target:attr("allow_on_heal", 1)
 			target:heal(30 + self:combatTalentMindDamage(t, 10, 350), m)
 			target:attr("allow_on_heal", -1)
-		end, nil, {type="acid"})
+			if core.shader.active(4) then
+				target:addParticles(Particles.new("shader_shield_temp", 1, {size_factor=1.5, y=-0.3, img="healgreen", life=25}, {type="healing", time_factor=2000, beamsCount=20, noup=2.0}))
+				target:addParticles(Particles.new("shader_shield_temp", 1, {size_factor=1.5, y=-0.3, img="healgreen", life=25}, {type="healing", time_factor=2000, beamsCount=20, noup=1.0}))
+			end
+		end)
 	end,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, talent=t}

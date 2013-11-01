@@ -1243,11 +1243,8 @@ end
 -- Note: There can be up to a 1 tick delay in displaying log information
 function _M:displayDelayedLogDamage()
 	if not self.uiset or not self.uiset.logdisplay then return end
-local newmessage = false --debugging
 	for src, tgts in pairs(self.delayed_log_damage) do
-newmessage = true -- debugging
 		for target, dams in pairs(tgts) do
-			local healmsg
 			if #dams.descs > 1 then
 				game.uiset.logdisplay(self:logMessage(src, dams.srcSeen, target, dams.tgtSeen, "#Source# hits #Target# for %s (%0.0f total damage)%s.", table.concat(dams.descs, ", "), dams.total, dams.healing<0 and (" #LIGHT_GREEN#[%0.0f healing]#LAST#"):format(-dams.healing) or ""))
 			else
@@ -1268,7 +1265,7 @@ newmessage = true -- debugging
 					self.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, rng.float(-2.5, -1.5), ("Kill (%d)!"):format(dams.total), {255,0,255}, true)
 					self:delayedLogMessage(target, nil,  "death", self:logMessage(src, dams.srcSeen, target, dams.tgtSeen, "#{bold}##Source# killed #Target#!#{normal}#"))
 				end
-			else
+			elseif dams.total > 0 or dams.healing == 0 then
 				if dams.tgtSeen and (rsrc == self.player or self.party:hasMember(rsrc)) then
 					self.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, rng.float(-3, -2), tostring(-math.ceil(dams.total)), {0,255,dams.is_crit and 200 or 0}, dams.is_crit)
 				elseif dams.tgtSeen and (rtarget == self.player or self.party:hasMember(rtarget)) then

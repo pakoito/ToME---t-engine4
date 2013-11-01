@@ -42,6 +42,7 @@ extern bool safe_mode;
 extern bool fbo_active;
 extern bool multitexture_active;
 extern long total_keyframes;
+extern int cur_frame_tick;
 extern int g_argc;
 extern char **g_argv;
 extern char *override_home;

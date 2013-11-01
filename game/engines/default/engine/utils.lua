@@ -734,6 +734,8 @@ function core.display.virtualImage(path, data)
 	virtualimages[path] = data
 end
 
+if not core.game.getFrameTime then core.game.getFrameTime = core.game.getTime end
+
 local oldloadimage = core.display.loadImage
 function core.display.loadImage(path)
 	if virtualimages[path] then return core.display.loadImageMemory(virtualimages[path]) end

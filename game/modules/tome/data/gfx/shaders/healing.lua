@@ -18,20 +18,21 @@
 -- darkgod@te4.org
 
 return {
-	frag = "shockwave",
+	frag = "healing",
 	vert = nil,
 	args = {
 		tex = { texture = 0 },
-		time_factor = time_factor or 4000,
-		
-		shockwaveWidth = shockwaveWidth or 0.5, --0.1 is very thin wave, 0.9 is thick
-		shockwaveSpeed = shockwaveSpeed or 7.0,
-		flameIntensity = flameIntensity or 0.4, 
-
-		ellipsoidalFactor = {1.0, 1.0}, --1 is perfect circle, >1 is ellipsoidal
+		time_factor = time_factor or 1000,
+		beamColor1 = beamColor1 or {0x50/255, 0x9e/255, 0x01/255, 1.0},
+		beamColor2 = beamColor2 or {0xa7/255, 0xe8/255, 0x01/255, 1.0},
+		circleColor = circleColor or {1.0, 1.0, 1.0, 1.0},
+		circleRotationSpeed = circleRotationSpeed or 1,
+		circleDescendSpeed = circleDescendSpeed or 0,
+		beamsCount = beamsCount or 20,
+		noup = noup or 0,
 	},
-	resetargs = {
+	resetargs = circleDescendSpeed and {
 		tick_start = function() return core.game.getFrameTime() end,
-	},	
+	},
 	clone = false,
 }

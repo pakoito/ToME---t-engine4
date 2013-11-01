@@ -27,7 +27,6 @@ return {
 		oscillationSpeed = oscillationSpeed or 1.0, --oscillation between ellipsoidal and spherical form
 	},
 	resetargs = {
-		tick_start = function() return core.game.getTime() end,
+		tick_start = function() return core.game.getFrameTime() end,
 	},
-	clone = false,
 }
