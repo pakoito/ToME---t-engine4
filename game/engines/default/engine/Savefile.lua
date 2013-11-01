@@ -371,6 +371,7 @@ end
 function _M:loadReal(load)
 	if self.loaded[load] then return self.loaded[load] end
 	local f = fs.open(self.load_dir..load, "r")
+	if not f then return nil end
 
 	local lines = {}
 	while true do
@@ -402,6 +403,7 @@ function _M:loadWorld()
 	core.display.forceRedraw()
 
 	local loadedWorld = self:loadReal("main")
+	if not loadedWorld then return nil, "no savefile" end
 
 	-- Delay loaded must run
 	for i, o in ipairs(self.delayLoad) do
@@ -448,6 +450,7 @@ function _M:loadGame()
 	core.display.forceRedraw()
 
 	local loadedGame = self:loadReal("main")
+	if not loadedGame then return nil, "no savefile" end
 
 	local checker = self:md5Check("game", self:nameLoadGame(), loadedGame)
 
@@ -509,6 +512,7 @@ function _M:loadZone(zone)
 	core.display.forceRedraw()
 
 	local loadedZone = self:loadReal("main")
+	if not loadedZone then return nil, "no savefile" end
 
 	-- Delay loaded must run
 	for i, o in ipairs(self.delayLoad) do
@@ -546,6 +550,7 @@ function _M:loadLevel(zone, level)
 	core.display.forceRedraw()
 
 	local loadedLevel = self:loadReal("main")
+	if not loadedLevel then return nil, "no savefile" end
 
 	-- Delay loaded must run
 	for i, o in ipairs(self.delayLoad) do
@@ -582,6 +587,7 @@ function _M:loadEntity(name)
 	core.display.forceRedraw()
 
 	local loadedEntity = self:loadReal("main")
+	if not loadedEntity then return nil, "no savefile" end
 
 	-- Delay loaded must run
 	for i, o in ipairs(self.delayLoad) do
