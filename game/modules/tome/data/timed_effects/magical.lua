@@ -1919,6 +1919,7 @@ newEffect{
 	on_gain = function(self, err) return "#Target# is focused by an arcane vortex!.", "+Arcane Vortex" end,
 	on_lose = function(self, err) return "#Target# is free from the arcane vortex.", "-Arcane Vortex" end,
 	on_timeout = function(self, eff)
+		if not self.x then return end
 		local l = {}
 		self:project({type="ball", x=self.x, y=self.y, radius=7, selffire=false}, self.x, self.y, function(px, py)
 			local target = game.level.map(px, py, Map.ACTOR)
