@@ -330,8 +330,7 @@ newTalent{
 			end
 		end)
 
-		self:addParticles(Particles.new("meleestorm", 1, {}))
-		self:addParticles(Particles.new("meleestorm", 1, {}))
+		self:addParticles(Particles.new("meleestorm2", 1, {}))
 
 		return true
 	end,

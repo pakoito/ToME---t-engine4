@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 return {
-	frag = "spinningwinds",
+	frag = "spinningwinds2",
 	vert = nil,
 	args = {
 		tex = { texture = 0 },

@@ -21,7 +21,7 @@ local rot = rng.range(0,359)
 local img = img or "spinningwinds_black"
 local radius = radius or 1
 
-use_shader = {type="spinningwinds", ellipsoidalFactor={1,1}, time_factor=2000, noup=0.0, verticalIntensityAdjust=-3.0}
+use_shader = {type="spinningwinds2", ellipsoidalFactor={1,1}, time_factor=2000, noup=0.0, verticalIntensityAdjust=-3.0}
 base_size = 64
 
 local first = true
