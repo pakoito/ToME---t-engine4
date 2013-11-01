@@ -68,6 +68,7 @@ end
 
 function _M:switchTo(kind)
 	self['generateList'..kind:capitalize()](self)
+	self:triggerHook{"GameOptions:generateList", list=self.list, kind=kind}
 
 	self.c_list = TreeList.new{width=math.floor(self.iw / 2 - 10), height=self.ih - 10, scrollbar=true, columns={
 		{width=60, display_prop="name"},
