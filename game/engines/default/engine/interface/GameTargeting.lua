@@ -95,6 +95,7 @@ function _M:targetMode(v, msg, co, typ)
 		Map:setViewerFaction(self.always_target == true and self.player.faction or nil)
 		if msg then self.log(type(msg) == "string" and msg or "Tactical display disabled. Press shift+'t' to enable.") end
 		self.level.map.changed = true
+		self.targetmode_trigger_hotkey = nil
 		self.target:setActive(false)
 
 		if tostring(old) == "exclusive" then
@@ -171,20 +172,27 @@ function _M:targetMode(v, msg, co, typ)
 	end
 end
 
+function _M:targetTriggerHotkey(i)
+	self.targetmode_trigger_hotkey = i
+end
+
 --- This setups the default keybindings for targeting
 function _M:targetSetupKey()
+	local accept = function() self:targetMode(false, false) self.tooltip_x, self.tooltip_y = nil, nil end
+
 	self.targetmode_key = engine.KeyBind.new()
-	self.targetmode_key:addCommands{ _SPACE=function() self:targetMode(false, false) self.tooltip_x, self.tooltip_y = nil, nil end, }
+	self.targetmode_key:addCommands{ _SPACE=accept, }
+
+	if engine.interface and engine.interface.PlayerHotkeys then
+		engine.interface.PlayerHotkeys:bindAllHotkeys(self.targetmode_key, function(i)
+			if self.targetmode_trigger_hotkey == i then accept() end
+		end)
+	end
+
 	self.targetmode_key:addBinds
 	{
-		TACTICAL_DISPLAY = function()
-			self:targetMode(false, false)
-			self.tooltip_x, self.tooltip_y = nil, nil
-		end,
-		ACCEPT = function()
-			self:targetMode(false, false)
-			self.tooltip_x, self.tooltip_y = nil, nil
-		end,
+		TACTICAL_DISPLAY = accept,
+		ACCEPT = accept,
 		EXIT = function()
 			self.target.target.entity = nil
 			self.target.target.x = nil

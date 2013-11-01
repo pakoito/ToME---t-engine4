@@ -1488,8 +1488,6 @@ function _M:setupCommands()
 			print("===============")
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
-			self.player:addParticles(engine.Particles.new("meleestorm", 1, {}))
-
 do return end
 			local f, err = loadfile("/data/general/events/fearscape-portal.lua")
 			print(f, err)
@@ -1871,7 +1869,10 @@ do return end
 			end
 		end
 	}
-	engine.interface.PlayerHotkeys:bindAllHotkeys(self.key, not_wild(function(i) self.player:activateHotkey(i) end, function() return self.player.allow_talents_worldmap end))
+	engine.interface.PlayerHotkeys:bindAllHotkeys(self.key, not_wild(function(i)
+		self:targetTriggerHotkey(i)
+		self.player:activateHotkey(i)
+	end, function() return self.player.allow_talents_worldmap end))
 
 	self.key:setCurrent()
 end
