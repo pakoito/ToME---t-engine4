@@ -1,17 +1,27 @@
 uniform sampler2D tex;
 uniform float tick;
-uniform float tick_start;
 uniform float aadjust;
-uniform vec4 color;
+uniform vec4 bubbleColor;
+uniform vec4 auraColor;
 uniform float time_factor;
+
+uniform vec3 impact_color;
+uniform vec2 impact;
+uniform float impact_tick;
+uniform float impact_time;
+uniform float llpow;
 
 uniform float ellipsoidalFactor; //1 is perfect circle, >1 is ellipsoidal
 uniform float oscillationSpeed; //oscillation between ellipsoidal and spherical form
 uniform float antialiasingRadius; //1.0 is no antialiasing, 0.0 - fully smoothed(looks worse)
 uniform float shieldIntensity; //physically affects shield layer thickness
 
-uniform float horizontalScrollingSpeed;
-uniform float verticalScrollingSpeed;
+uniform float wobblingPower;
+uniform float wobblingSpeed;
+
+uniform float auraWidth;
+
+uniform float scrollingSpeed;
 
 vec4 permute( vec4 x ) {
 
@@ -168,8 +178,8 @@ vec4 GetFireRingColor(float currTime, vec2 pos, float freqMult, float stretchMul
 	verticalPos = max(0.01, verticalPos);
 	
 	vec4 result;
-	result.rgb = color;
-	result.a = verticalPos * color.a;
+	result.rgb = vec3(1.0, 1.0, 1.0);
+	result.a = verticalPos;
 	return result;
 }
 
@@ -178,19 +188,38 @@ void main(void)
 	vec2 radius = vec2(0.5, 0.5) - gl_TexCoord[0].xy;
 	//radius.x *= ellispoidalFactor; //for simple ellipsoid
 	//comment next line for regular spherical shield
-	radius.x *= (1.0 + ellipsoidalFactor) * 0.5 + (ellipsoidalFactor - 1.0) * 0.5 * pow(cos((tick - tick_start) / time_factor * oscillationSpeed), 2.0);
+	radius.x *= (1.0 + ellipsoidalFactor) * 0.5 + (ellipsoidalFactor - 1.0) * 0.5 * pow(cos(tick / time_factor * oscillationSpeed), 2.0);
+	
+	//on-hit wobbling effect
+	float impactColorAffection = 0.0;
+	float impactDuration = tick - impact_tick;
+	if (impactDuration < impact_time * 5.0) //after impact_time * 5.0 the wobble will reduce exp(5.0) times
+	{
+		float impactCosine = dot(impact / length(impact), radius / length(radius));
+		if(impactCosine > 0.0)
+		{
+			radius *= 1.0 + 
+				(1.0 + sin(impactDuration * wobblingSpeed)) * 0.5 * 
+				exp(-impactDuration / impact_time) * 
+				wobblingPower * pow(impactCosine, 5.0);
+
+			impactColorAffection = pow(impactCosine, 2.0);
+			impactColorAffection *= exp(-(1.0 - length(radius) * 2.0) * 2.0);
+			impactColorAffection *= exp(-impactDuration / impact_time);
+		}
+	}	
 	
 	float radiusLen = length(radius);
 	
 	float antialiasingCoef = 1.0;
 
-	float shieldRadius = 0.4;	
-	float innerRadius = 0.35;
+	float shieldRadius = 0.5 - auraWidth;
+	float innerRadius = 0.5 - auraWidth - 0.05;
 	float outerRadius = 0.5;
 
 	float sinAlpha = radiusLen / (shieldRadius);
 	float alpha = 0.0;
-	vec4 shieldColor = vec4(0.0, 0.0, 0.0, 0.0);
+	vec4 shieldColorSample = vec4(0.0, 0.0, 0.0, 0.0);
 	if(sinAlpha < 1.0)
 	{
 		if(sinAlpha > antialiasingRadius)
@@ -201,23 +230,27 @@ void main(void)
 
 		vec2 sphericalProjectedCoord = vec2(0.5, 0.5) + radius * (alpha / (3.141592 / 2.0)) / radiusLen;
 
-		shieldColor = texture2D(tex, (sphericalProjectedCoord * 0.3 + vec2(horizontalScrollingSpeed * tick / time_factor, 0.0)));
-		shieldColor.a = 1.0 - exp(-shieldColor.a * shieldIntensity / cos(alpha));
+		shieldColorSample = texture2D(tex, (sphericalProjectedCoord * 0.3 + vec2(scrollingSpeed * tick / time_factor, 0.0)));
+		shieldColorSample.a = 1.0 - exp(-shieldColorSample.a * shieldIntensity / cos(alpha));
 		//impact adjusts resulting transperency
-		shieldColor.a *= aadjust;
+		shieldColorSample.a *= aadjust;
+		shieldColorSample *= bubbleColor;
 	}
 
 
-	vec4 auraColor = vec4(0.0, 0.0, 0.0, 0.0);
+	vec4 auraColorSample = vec4(0.0, 0.0, 0.0, 0.0);
 	if(length(radius) > innerRadius && length(radius) < outerRadius)
 	{
-		auraColor = GetFireRingColor(tick / time_factor, radius, 5.0, 50.0, 1.0, 2.0, innerRadius, outerRadius, 0.1, 0.25);
+		auraColorSample = GetFireRingColor(tick / time_factor, radius, 5.0, 50.0, 1.0, 2.0, innerRadius, outerRadius, 0.1, 0.25) * auraColor;
 	}
 
 	float ratio = (radiusLen - innerRadius) / (shieldRadius - innerRadius);
 	ratio = clamp(ratio, 0.0, 1.0);
 
-	vec4 resultColor = shieldColor * (1.0 - ratio) + auraColor * ratio;
-	resultColor.a *= gl_Color.a;
+	vec4 resultColor = shieldColorSample * (1.0 - ratio) + auraColorSample * ratio;
+	//applying shield color
+	resultColor.rgb *= vec3(1.0, 1.0, 1.0) * (1.0 - impactColorAffection) + impact_color * impactColorAffection;
+	
+
 	gl_FragColor = resultColor;
 }

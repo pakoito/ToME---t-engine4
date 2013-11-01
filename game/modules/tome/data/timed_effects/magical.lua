@@ -446,6 +446,13 @@ newEffect{
 	parameters = { power=10, target=nil, chance=25 },
 	on_gain = function(self, err) return "The very fabric of space alters around #target#.", "+Displacement Shield" end,
 	on_lose = function(self, err) return "The fabric of space around #target# stabilizes to normal.", "-Displacement Shield" end,
+	on_aegis = function(self, eff, aegis)
+		self.displacement_shield = self.displacement_shield + eff.power * aegis / 100
+		if core.shader.active(4) then
+			self:removeParticles(eff.particle)
+			eff.particle = self:addParticles(Particles.new("shader_shield", 1, {size_factor=1.3, img="runicshield"}, {type="runicshield", shieldIntensity=0.14, ellipsoidalFactor=1.2, time_factor=4000, bubbleColor={0.5, 1, 0.2, 1.0}, auraColor={0.4, 1, 0.2, 1}}))
+		end		
+	end,
 	damage_feedback = function(self, eff, src, value)
 		if eff.particle and eff.particle._shader and eff.particle._shader.shad and src and src.x and src.y then
 			local r = -rng.float(0.2, 0.4)
@@ -467,9 +474,6 @@ newEffect{
 		else
 			eff.particle = self:addParticles(Particles.new("displacement_shield", 1))
 		end
-	end,
-	on_aegis = function(self, eff, aegis)
-		self.displacement_shield = self.displacement_shield + eff.power * aegis / 100
 	end,
 	on_timeout = function(self, eff)
 		if not eff.target or eff.target.dead then
@@ -498,6 +502,10 @@ newEffect{
 	on_lose = function(self, err) return "The shield around #target# crumbles.", "-Shield" end,
 	on_aegis = function(self, eff, aegis)
 		self.damage_shield_absorb = self.damage_shield_absorb + eff.power * aegis / 100
+		if core.shader.active(4) then
+			self:removeParticles(eff.particle)
+			eff.particle = self:addParticles(Particles.new("shader_shield", 1, {size_factor=1.3, img="runicshield"}, {type="runicshield", shieldIntensity=0.14, ellipsoidalFactor=1.2, time_factor=5000, bubbleColor={0.4, 0.7, 1.0, 1.0}, auraColor={0x21/255, 0x9f/255, 0xff/255, 1}}))
+		end		
 	end,
 	damage_feedback = function(self, eff, src, value)
 		if eff.particle and eff.particle._shader and eff.particle._shader.shad and src and src.x and src.y then

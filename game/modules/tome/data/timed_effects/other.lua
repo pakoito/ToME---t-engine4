@@ -120,6 +120,10 @@ newEffect{
 	on_lose = function(self, err) return "The fabric of time around #target# stabilizes to normal.", "-Time Shield" end,
 	on_aegis = function(self, eff, aegis)
 		self.time_shield_absorb = self.time_shield_absorb + eff.power * aegis / 100
+		if core.shader.active(4) then
+			self:removeParticles(eff.particle)
+			eff.particle = self:addParticles(Particles.new("shader_shield", 1, {size_factor=1.3, img="runicshield"}, {type="runicshield", shieldIntensity=0.14, ellipsoidalFactor=1.2, scrollingSpeed=-2, time_factor=4000, bubbleColor={1, 1, 0.3, 1.0}, auraColor={1, 0.8, 0.2, 1}}))
+		end		
 	end,
 	damage_feedback = function(self, eff, src, value)
 		if eff.particle and eff.particle._shader and eff.particle._shader.shad and src and src.x and src.y then

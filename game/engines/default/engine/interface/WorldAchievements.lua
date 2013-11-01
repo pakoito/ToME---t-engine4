@@ -68,6 +68,25 @@ function _M:loadAchievements()
 	end
 end
 
+--[[
+function _M:achievementsDumpCSV()
+	local f = fs.open("/achvs.csv", "w")
+	f:write('"id","name","desc","earned","unearned"\n')
+	for i, a in ipairs(self.achiev_defs) do
+		f:write(('"%s","%s","%s","earned_%s.jpg","unearned_%s.jpg"\n'):
+			format(
+				"TOME_"..a.id,
+				a.name:gsub('\\', '\\\\'):gsub('"', '\\"'),
+				a.desc:gsub('\\', '\\\\'):gsub('"', '\\"'),
+				a.id:lower(),
+				a.id:lower()
+			)
+		)
+	end
+	f:close()
+end
+]]
+
 function _M:getAchievementFromId(id)
 	return self.achiev_defs[id]
 end

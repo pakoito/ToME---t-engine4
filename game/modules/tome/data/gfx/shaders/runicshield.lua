@@ -22,18 +22,23 @@ return {
 	vert = nil,
 	args = {
 		tex = { texture = 0 },
-		color = color or {1.0, 1.0, 1.0, 1.0},
-		time_factor = time_factor or 2000,
+		bubbleColor = bubbleColor or {1.0, 1.0, 1.0, 1.0},
+		auraColor = auraColor or {1.0, 1.0, 1.0, 1.0},
+		time_factor = time_factor or 4000,
 		aadjust = aadjust or 10,
-		ellipsoidalFactor = ellipsoidalFactor or 1.8, --1 is perfect circle, >1 is ellipsoidal
-		oscillationSpeed = oscillationSpeed or 10.0, --oscillation between ellipsoidal and spherical form
+		impact = {0, 0},
+		impact_tick = -1000,
+		impact_color = {1.0, 0.3, 1.0},
+		impact_time = 800,
+		llpow = llpow or 2,
+		ellipsoidalFactor = ellipsoidalFactor or 1.0, --1 is perfect circle, >1 is ellipsoidal
+		oscillationSpeed = oscillationSpeed or 0.0, --oscillation between ellipsoidal and spherical form
 		antialiasingRadius = antialiasingRadius or 0.98, --1.0 is no antialiasing, 0.0 - fully smoothed(looks worse)
-		shieldIntensity = shieldIntensity or 0.2, --physically affects shield layer thickness
-		horizontalScrollingSpeed = 0.5,
-		verticalScrollingSpeed = 0.5,
-	},
-	resetargs = {
-		tick_start = function() return core.game.getTime() end,
+		shieldIntensity = shieldIntensity or 0.15, --physically affects shield layer thickness
+		wobblingPower = wobblingPower or 0.2,
+		wobblingSpeed = wobblingSpeed or 0.02,
+		scrollingSpeed = scrollingSpeed or 1.0,
+		auraWidth = auraWidth or 0.1,
 	},
 	clone = false,
 }
