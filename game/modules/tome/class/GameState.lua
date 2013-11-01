@@ -764,6 +764,12 @@ function _M:checkDonation(back_insert)
 	-- This is only called when something nice happens (like an achievement)
 	-- We then check multiple conditions to make sure the player is in a good state of mind
 
+	-- Steam users have paid
+	if core.steam then
+		print("Donation check: steam user")
+		return
+	end
+
 	-- If this is a reccuring donator, do not bother her/him
 	if profile.auth and tonumber(profile.auth.donated) and profile.auth.sub == "yes" then
 		print("Donation check: already a reccuring donator")

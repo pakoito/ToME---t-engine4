@@ -21,8 +21,10 @@
 #ifndef TYPES_H
 #define TYPES_H
 
+#ifndef __cplusplus
 #ifndef bool
 typedef char bool;
+#endif
 #endif
 
 #define FALSE 0

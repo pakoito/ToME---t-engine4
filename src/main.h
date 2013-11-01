@@ -59,5 +59,9 @@ extern lua_err_type *last_lua_error_head, *last_lua_error_tail;
 extern void del_lua_error();
 extern core_boot_type *core_def;
 
+#ifdef STEAM_TE4
+#include "steam-te4.h"
+#endif
+
 #endif
 

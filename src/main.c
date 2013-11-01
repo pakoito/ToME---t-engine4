@@ -595,6 +595,10 @@ void on_redraw()
 	SDL_GL_SwapWindow(window);
 
 	last_keyframe = nb;
+
+#ifdef STEAM_TE4
+	te4_steam_callbacks();
+#endif
 }
 
 void pass_command_args(int argc, char *argv[])
@@ -944,6 +948,9 @@ void boot_lua(int state, bool rebooting, int argc, char *argv[])
 		luaopen_zlib(L);
 		luaopen_bit(L);
 		luaopen_wait(L);
+#ifdef STEAM_TE4
+		te4_steam_lua_init(L);
+#endif
 		printf("===top %d\n", lua_gettop(L));
 //		exit(0);
 
@@ -1151,6 +1158,10 @@ int main(int argc, char *argv[])
 	// Get cpu cores
 	nb_cpus = get_number_cpus();
 	printf("[CPU] Detected %d CPUs\n", nb_cpus);
+
+#ifdef STEAM_TE4
+	te4_steam_init();
+#endif
 
 	init_openal();
 
