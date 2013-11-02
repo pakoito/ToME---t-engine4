@@ -178,10 +178,6 @@ function _M:moveModActor(x, y, force)
 		end end
 	end
 
-	if moved and self:isTalentActive(self.T_BODY_OF_STONE) then
-		self:forceUseTalent(self.T_BODY_OF_STONE, {ignore_energy=true})
-	end
-
 	if moved and not force and ox and oy and (ox ~= self.x or oy ~= self.y) and config.settings.tome.smooth_move > 0 then
 		local blur = 0
 		self:setMoveAnim(ox, oy, config.settings.tome.smooth_move, blur)

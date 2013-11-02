@@ -1068,7 +1068,7 @@ function _M:move(x, y, force)
 		t.curseFloor(self, t, x, y)
 	end
 
-	if moved and self:isTalentActive(self.T_BODY_OF_STONE) then
+	if moved and self:isTalentActive(self.T_BODY_OF_STONE) and not self:attr("preserve_body_of_stone") then
 		self:forceUseTalent(self.T_BODY_OF_STONE, {ignore_energy=true})
 	end
 
