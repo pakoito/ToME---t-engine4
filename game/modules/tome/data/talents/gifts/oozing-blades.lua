@@ -62,12 +62,14 @@ newTalent{
 	require = gifts_req_high2,
 	points = 5,
 	mode = "passive",
+	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 8, 30, 14)) end,
 	getResist = function(self, t) return 10 + self:combatTalentMindDamage(t, 10, 70) end,
 	info = function(self, t)
 		local res = t.getResist(self, t)
 		return ([[Each time you deal acid damage to a creature its nature resistance is decreased by %d%% for 2 turns.
-		Resistance will decrease with Mindpower.]]):
-		format(res)
+		Resistance will decrease with Mindpower.
+		This effect can only happen at most once every %d turns.]]):
+		format(res, self:getTalentCooldown(t))
 	end,
 }
 

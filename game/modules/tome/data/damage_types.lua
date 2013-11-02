@@ -630,7 +630,8 @@ newDamageType{
 	projector = function(src, x, y, type, dam)
 		local realdam = DamageType.defaultProjector(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
-		if realdam > 0 and target and src.knowTalent and src:knowTalent(src.T_NATURAL_ACID) then
+		if realdam > 0 and target and src.knowTalent and src:knowTalent(src.T_NATURAL_ACID) and not src:isTalentCoolingDown(src.T_NATURAL_ACID) then
+			src:startTalentCooldown(src.T_NATURAL_ACID)
 			local t = src:getTalentFromId(src.T_NATURAL_ACID)
 			target:setEffect(target.EFF_NATURAL_ACID, 2, {power=t.getResist(src, t)})
 		end
@@ -646,7 +647,8 @@ newDamageType{
 	projector = function(src, x, y, type, dam)
 		local realdam = DamageType.defaultProjector(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
-		if realdam > 0 and target and src.knowTalent and src:knowTalent(src.T_CORROSIVE_NATURE) then
+		if realdam > 0 and target and src.knowTalent and src:knowTalent(src.T_CORROSIVE_NATURE) and not src:isTalentCoolingDown(src.T_CORROSIVE_NATURE) then
+			src:startTalentCooldown(src.T_CORROSIVE_NATURE)
 			local t = src:getTalentFromId(src.T_CORROSIVE_NATURE)
 			target:setEffect(target.EFF_CORROSIVE_NATURE, 2, {power=t.getResist(src, t)})
 		end
