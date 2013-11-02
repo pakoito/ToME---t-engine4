@@ -84,6 +84,7 @@ return {
 			},
 		},
 		[2] = {
+			underwater = true,
 			generator = {
 				actor = {
 					filters = {{special_rarity="water_rarity"}},
@@ -91,6 +92,7 @@ return {
 			},
 		},
 		[3] = {
+			underwater = is_flooded,
 			generator = is_flooded and {
 				map = {
 					down = "SHERTUL_FORTRESS",

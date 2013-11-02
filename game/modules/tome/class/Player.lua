@@ -405,6 +405,11 @@ function _M:updateMainShader()
 		elseif game.level and game.level.data and game.level.data.motionblur then game.fbo_shader:setUniform("motionblur", game.level.data.motionblur)
 		else game.fbo_shader:setUniform("motionblur", 0) -- Disable
 		end
+
+		-- Underwater shader
+		if game.level and game.level.data and game.level.data.underwater then game.fbo_shader:setUniform("underwater", 1)
+		else game.fbo_shader:setUniform("underwater", 0) -- Disable
+		end
 	end
 end
 

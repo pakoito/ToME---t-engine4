@@ -26,6 +26,7 @@ return {
 	width = 70, height = 70,
 --	all_remembered = true,
 --	all_lited = true,
+	underwater = true,
 	persistent = "zone",
 	ambient_music = "Inside a dream.ogg",
 	-- Apply a bluish tint to all the map
