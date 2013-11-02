@@ -88,9 +88,9 @@ newTalent{
 	target = function(self, t) return {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_slime", trail="slimetrail"}} end,
 	tactical = { DISABLE = 2 },
 	requires_target = true,
-	getChance = function(self, t) return math.min(100, 20 + self:combatTalentMindDamage(t, 10, 70)) end,
-	getNb = function(self, t) if self:getTalentLevel(t) <= 4 then return 1 else return 2 end end,
-	getTurns = function(self, t) if self:getTalentLevel(t) <= 3 then return 2 else return 3 end end,
+	getChance = function(self, t) return math.min(100, 30 + self:combatTalentMindDamage(t, 10, 70)) end,
+	getNb = function(self, t) return math.ceil(self:combatTalentLimit(t, 4, 1, 2)) end,
+	getTurns = function(self, t) return math.ceil(self:combatTalentLimit(t, 20, 2, 12)) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
