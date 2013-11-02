@@ -42,7 +42,7 @@ newTalent{
 		if not x or not y then return nil end
 		local grids = nil
 		if self:getTalentLevel(t) < 5 then
-			grids = self:projectile(tg, x, y, DamageType.FIREBURN, self:spellCrit(t.getDamage(self, t)), function(self, tg, x, y, grids)
+			self:projectile(tg, x, y, DamageType.FIREBURN, self:spellCrit(t.getDamage(self, t)), function(self, tg, x, y, grids)
 				game.level.map:particleEmitter(x, y, 1, "flame")
 				if self:attr("burning_wake") then
 					game.level.map:addEffect(self, x, y, 4, engine.DamageType.INFERNO, self:attr("burning_wake"), 0, 5, nil, {type="inferno"}, nil, self:spellFriendlyFire())
