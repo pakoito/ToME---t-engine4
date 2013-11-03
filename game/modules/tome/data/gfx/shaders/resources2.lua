@@ -30,4 +30,5 @@ return {
 		amp = amp or 0.2,
 	},
 	clone = false,
+	permanent = true,
 }
