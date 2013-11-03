@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 return "New Class Option: #LIGHT_GREEN#Drolem",
-[[You have defeated Tannen with your Alchemist and took soem time to figure how he built a mighty Drolem.
+[[You have defeated Tannen with your Alchemist and took some time to figure how he built a mighty Drolem.
 Drolems are dragon-shaped golems able to breath powerful poison at their foes.
 
 You may now create alchemist characters with a drolem instead of a golem.
