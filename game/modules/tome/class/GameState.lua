@@ -1951,10 +1951,11 @@ function _M:canEventGridRadius(level, x, y, radius, min)
 	else return list end
 end
 
-function _M:findEventGrid(level)
+function _M:findEventGrid(level, checker)
 	local x, y = rng.range(1, level.map.w - 2), rng.range(1, level.map.h - 2)
 	local tries = 0
-	while not self:canEventGrid(level, x, y) and tries < 100 do
+	local can = checker or self.canEventGrid
+	while not can(self, level, x, y) and tries < 100 do
 		x, y = rng.range(1, level.map.w - 2), rng.range(1, level.map.h - 2)
 		tries = tries + 1
 	end
