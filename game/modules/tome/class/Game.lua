@@ -1197,7 +1197,7 @@ function _M:logMessage(source, srcSeen, target, tgtSeen, style, ...)
 	local srcname = "something"
 	local Dstring
 		if source.player then
-			srcname = source.name.."(YOU)"
+			srcname = "#fbd578#"..source.name.."#LAST#"
 		elseif srcSeen then
 			srcname = engine.Entity.check(source, "getName") or source.name or "unknown"
 		end
@@ -1207,7 +1207,7 @@ function _M:logMessage(source, srcSeen, target, tgtSeen, style, ...)
 	if target then
 		local tgtname = "something"
 			if target.player then
-				tgtname = target.name.."(YOU)"
+				tgtname = "#fbd578#"..target.name.."#LAST#"
 			elseif tgtSeen then
 				tgtname = engine.Entity.check(target, "getName") or target.name or "unknown"
 			end

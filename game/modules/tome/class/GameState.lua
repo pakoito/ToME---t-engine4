@@ -1973,6 +1973,16 @@ function _M:findEventGridRadius(level, radius, min)
 	return self:canEventGridRadius(level, x, y, radius, min)
 end
 
+function _M:eventBaseName(sub, name)
+	local base = "/data"
+	local _, _, addon, rname = name:find("^([^+]+)%+(.+)$")
+	if addon and rname then
+		base = "/data-"..addon
+		name = rname
+	end
+	return base.."/general/events/"..sub..name..".lua"
+end
+
 function _M:startEvents()
 	if not game.zone.events then print("No zone events loaded") return end
 
@@ -1989,7 +1999,7 @@ function _M:startEvents()
 		for i, e in ipairs(game.zone.events) do
 			if e.name then if e.minor then mevts[#mevts+1] = e else evts[#evts+1] = e end
 			elseif e.group then
-				local f, err = loadfile("/data/general/events/groups/"..e.group..".lua")
+				local f, err = loadfile(self:eventBaseName("groups/", e.group))
 				if not f then error(err) end
 				setfenv(f, setmetatable({level=game.level, zone=game.zone}, {__index=_G}))
 				local list = f()
@@ -2074,7 +2084,7 @@ function _M:startEvents()
 		table.print(game.zone.assigned_events)
 
 		for i, e in ipairs(game.zone.assigned_events[game.level.level] or {}) do
-			local f, err = loadfile("/data/general/events/"..e..".lua")
+			local f, err = loadfile(self:eventBaseName("", e))
 			if not f then error(err) end
 			setfenv(f, setmetatable({level=game.level, zone=game.zone, event_id=e.name, Map=Map}, {__index=_G}))
 			f()
