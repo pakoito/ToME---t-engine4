@@ -566,7 +566,6 @@ function _M:spawnWorldAmbush(enc, dx, dy, kind)
 	local terrains = mod.class.Grid:loadList{"/data/general/grids/basic.lua", "/data/general/grids/forest.lua", "/data/general/grids/sand.lua"}
 	terrains[gen.up].change_level_shift_back = true
 
-	self.farm_factor = self.farm_factor or {}
 	local zone = mod.class.Zone.new("ambush", {
 		name = "Ambush!",
 		level_range = {game.player.level, game.player.level},
@@ -600,6 +599,8 @@ function _M:spawnWorldAmbush(enc, dx, dy, kind)
 			level.default_up = {x=sx, y=sy}
 		end,
 	})
+	self.farm_factor = self.farm_factor or {}
+	self.farm_factor[kind] = self.farm_factor[kind] or 1
 	zone.objects_cost_modifier = self.farm_factor[kind]
 	zone.exp_worth_mult = self.farm_factor[kind]
 
