@@ -1467,7 +1467,7 @@ function _M:tooltip(x, y, seen_by)
 	if game.player ~= self then ts:add("Personal reaction: ") ts:merge(pfactcolor:toTString()) ts:add(("%s, %d"):format(pfactstate, pfactlevel), {"color", "WHITE"} ) end
 
 	for tid, act in pairs(self.sustain_talents) do
-		if act then ts:add(true, "- ", {"color", "LIGHT_GREEN"}, self:getTalentFromId(tid).name, {"color", "WHITE"} ) end
+		if act then ts:add(true, "- ", {"color", "LIGHT_GREEN"}, self:getTalentFromId(tid) and self:getTalentFromId(tid).name or "???", {"color", "WHITE"} ) end
 	end
 	for eff_id, p in pairs(self.tmp) do
 		local e = self.tempeffect_def[eff_id]

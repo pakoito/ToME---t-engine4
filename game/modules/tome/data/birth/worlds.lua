@@ -152,6 +152,7 @@ newBirthDescriptor{
 		ignore_prodigies_special_reqs = true,
 		grab_online_event_zone = function() return "infinite-dungeon-"..(game.level.level+rng.range(1,4)) end,
 		grab_online_event_spot = function(zone, level)
+			if not level then return end
 			local x, y = game.state:findEventGrid(level)
 			return x, y
 		end,

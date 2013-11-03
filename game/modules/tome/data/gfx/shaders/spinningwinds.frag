@@ -6,7 +6,7 @@ uniform float time_factor;
  
 uniform float noup;
  
-uniform vec2 ellipsoidalFactor = vec2(1.0, 1.0); //(1.0, 1.0) is perfect circle, (2.0, 1.0) is vertical ellipse, (1.0, 2.0) is horizontal ellipse
+uniform vec2 ellipsoidalFactor; //(1.0, 1.0) is perfect circle, (2.0, 1.0) is vertical ellipse, (1.0, 2.0) is horizontal ellipse
  
  
 struct RingIntersection
