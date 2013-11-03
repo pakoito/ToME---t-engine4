@@ -149,12 +149,15 @@ function _M:createProgram(def)
 end
 
 function _M:loaded()
-	if _M.progs[self.totalname] and not _M.progsreset[self.totalname] then
---		print("[SHADER] using cached shader "..self.totalname)
+	if _M.progsperm[self.totalname] then
+		print("[SHADER] using permcached shader "..self.totalname)
+		self.shad = _M.progsperm[self.totalname]
+	elseif _M.progs[self.totalname] and not _M.progsreset[self.totalname] then
+		print("[SHADER] using cached shader "..self.totalname)
 		self.shad = _M.progs[self.totalname].shad
 		_M.progs[self.totalname].dieat = os.time() + 2
 	else
---		print("[SHADER] Loading from /data/gfx/shaders/"..self.name..".lua")
+		print("[SHADER] Loading from /data/gfx/shaders/"..self.name..".lua")
 		local f, err = loadfile("/data/gfx/shaders/"..self.name..".lua")
 		if not f and err then error(err) end
 		setfenv(f, setmetatable(self.args or {}, {__index=_G}))
@@ -170,7 +173,7 @@ function _M:loaded()
 		if def.resetargs then
 			self.totalname = self:makeTotalName(def.resetargs)
 		end
---		print("[SHADER] Loaded shader with totalname", self.totalname)
+		print("[SHADER] Loaded shader with totalname", self.totalname)
 
 		if not _M.progs[self.totalname] then
 			_M.progs[self.totalname] = {shad=self:createProgram(def), dieat=def.resetargs and (os.time() + 3) or (os.time() + 2)}

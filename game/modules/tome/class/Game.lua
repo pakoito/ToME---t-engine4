@@ -497,6 +497,8 @@ function _M:setupDisplayMode(reboot, mode)
 end
 
 function _M:createFBOs()
+	print("[GAME] Creating FBOs")
+
 	-- Create the framebuffer
 	self.fbo = core.display.newFBO(Map.viewport.width, Map.viewport.height)
 	if self.fbo then

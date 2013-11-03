@@ -24,18 +24,15 @@ return {
 	max_level = 4,
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
-	width = 50, height = 50,
+	width = 15, height = 15,
 --	all_remembered = true,
 	all_lited = true,
 	no_level_connectivity = true,
 	generator =  {
 		map = {
 -- [[
-			class = "mod.class.generator.map.Caldera",
-			mountain = "MOUNTAIN_WALL",
-			tree = "JUNGLE_TREE",
-			grass = "JUNGLE_GRASS",
-			water = "POISON_DEEP_WATER",
+			class = "engine.generator.map.Static",
+			map = "zones/test",
 --]]
 --[[
 			class = "engine.generator.map.Building",
