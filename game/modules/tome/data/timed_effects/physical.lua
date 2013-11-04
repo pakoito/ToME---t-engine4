@@ -86,6 +86,11 @@ newEffect{
 		end
 		eff.tmpid = self:addTemporaryValue("life_regen", eff.power)
 
+		if core.shader.active(4) then
+			eff.particle1 = self:addParticles(Particles.new("shader_shield", 1, {toback=true,  size_factor=1.5, y=-0.3, img="healarcane"}, {type="healing", time_factor=4000, noup=2.0, circleColor={0,0,0,0}, beamsCount=9}))
+			eff.particle2 = self:addParticles(Particles.new("shader_shield", 1, {toback=false, size_factor=1.5, y=-0.3, img="healarcane"}, {type="healing", time_factor=4000, noup=1.0, circleColor={0,0,0,0}, beamsCount=9}))
+		end
+
 		if self:knowTalent(self.T_ANCESTRAL_LIFE) then
 			local t = self:getTalentFromId(self.T_ANCESTRAL_LIFE)
 			self.energy.value = self.energy.value + (t.getTurn(self, t) * game.energy_to_act / 100)
@@ -98,6 +103,8 @@ newEffect{
 		end
 	end,
 	deactivate = function(self, eff)
+		self:removeParticles(eff.particle1)
+		self:removeParticles(eff.particle2)
 		self:removeTemporaryValue("life_regen", eff.tmpid)
 	end,
 }
@@ -1215,8 +1222,14 @@ newEffect{
 	activate = function(self, eff)
 		eff.regenid = self:addTemporaryValue("life_regen", eff.regen)
 		eff.healid = self:addTemporaryValue("healing_factor", eff.heal_mod / 100)
+		if core.shader.active(4) then
+			eff.particle1 = self:addParticles(Particles.new("shader_shield", 1, {toback=true,  size_factor=1.5, y=-0.3, img="healarcane"}, {type="healing", time_factor=4000, noup=2.0, beamColor1={0xff/255, 0x22/255, 0x22/255, 1}, beamColor2={0xff/255, 0x60/255, 0x60/255, 1}, circleColor={0,0,0,0}, beamsCount=8}))
+			eff.particle2 = self:addParticles(Particles.new("shader_shield", 1, {toback=false, size_factor=1.5, y=-0.3, img="healarcane"}, {type="healing", time_factor=4000, noup=1.0, beamColor1={0xff/255, 0x22/255, 0x22/255, 1}, beamColor2={0xff/255, 0x60/255, 0x60/255, 1}, circleColor={0,0,0,0}, beamsCount=8}))
+		end
 	end,
 	deactivate = function(self, eff)
+		self:removeParticles(eff.particle1)
+		self:removeParticles(eff.particle2)
 		self:removeTemporaryValue("life_regen", eff.regenid)
 		self:removeTemporaryValue("healing_factor", eff.healid)
 	end,

@@ -251,7 +251,12 @@ end
 
 --- Premature end
 function _M:terminate(x, y)
-	self.src:projectDoStop(self.project.def.typ, self.project.def.tg, self.project.def.damtype, self.project.def.dam, self.project.def.particles, self.x, self.y, self.tmp_proj, self.x, self.y, self)
+	if self.project then
+		self.src:projectDoStop(self.project.def.typ, self.project.def.tg, self.project.def.damtype, self.project.def.dam, self.project.def.particles, self.x, self.y, self.tmp_proj, self.x, self.y, self)
+	else
+		game.level:removeEntity(self, true)
+		self.dead = true
+	end
 end
 
 --- Generate a projectile for a project() call

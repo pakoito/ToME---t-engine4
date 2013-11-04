@@ -293,8 +293,10 @@ function _M:saveGenericProfile(name, data, nosync, nowrite)
 	if not nowrite then
 		local pop = self:mountProfile(true)
 		local f = fs.open("/generic/"..name..".profile", "w")
-		f:write(serialize(dataenv))
-		f:close()
+		if f then
+			f:write(serialize(dataenv))
+			f:close()
+		end
 		self:umountProfile(true, pop)
 	end
 
@@ -340,8 +342,10 @@ function _M:saveModuleProfile(name, data, nosync, nowrite)
 		local online = self:filterSaveData(name)
 		local pop = self:mountProfile(online, module)
 		local f = fs.open("/modules/"..module.."/"..name..".profile", "w")
-		f:write(serialize(dataenv))
-		f:close()
+		if f then
+			f:write(serialize(dataenv))
+			f:close()
+		end
 		self:umountProfile(online, pop)
 	end
 
@@ -820,5 +824,6 @@ end
 
 function _M:isDonator(s)
 	s = s or 1
+	if core.steam then return true end
 	if not self.auth or not tonumber(self.auth.donated) or tonumber(self.auth.donated) < s then return false else return true end
 end

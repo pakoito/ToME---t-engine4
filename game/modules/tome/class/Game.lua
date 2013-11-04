@@ -88,11 +88,12 @@ end
 
 function _M:run()
 	class:triggerHook{"ToME:run"}
-	return self:runReal()
+	local ret = self:runReal()
+	class:triggerHook{"ToME:runDone"}
+	return ret
 end
 
 function _M:runReal()
-
 	self.delayed_log_damage = {}
 	self.delayed_log_messages = {}
 	self.calendar = Calendar.new("/data/calendar_allied.lua", "Today is the %s %s of the %s year of the Age of Ascendancy of Maj'Eyal.\nThe time is %02d:%02d.", 122, 167, 11)
@@ -496,6 +497,8 @@ function _M:setupDisplayMode(reboot, mode)
 end
 
 function _M:createFBOs()
+	print("[GAME] Creating FBOs")
+
 	-- Create the framebuffer
 	self.fbo = core.display.newFBO(Map.viewport.width, Map.viewport.height)
 	if self.fbo then
@@ -1196,7 +1199,7 @@ function _M:logMessage(source, srcSeen, target, tgtSeen, style, ...)
 	local srcname = "something"
 	local Dstring
 		if source.player then
-			srcname = source.name.."(YOU)"
+			srcname = "#fbd578#"..source.name.."#LAST#"
 		elseif srcSeen then
 			srcname = engine.Entity.check(source, "getName") or source.name or "unknown"
 		end
@@ -1206,7 +1209,7 @@ function _M:logMessage(source, srcSeen, target, tgtSeen, style, ...)
 	if target then
 		local tgtname = "something"
 			if target.player then
-				tgtname = target.name.."(YOU)"
+				tgtname = "#fbd578#"..target.name.."#LAST#"
 			elseif tgtSeen then
 				tgtname = engine.Entity.check(target, "getName") or target.name or "unknown"
 			end
@@ -1243,11 +1246,8 @@ end
 -- Note: There can be up to a 1 tick delay in displaying log information
 function _M:displayDelayedLogDamage()
 	if not self.uiset or not self.uiset.logdisplay then return end
-local newmessage = false --debugging
 	for src, tgts in pairs(self.delayed_log_damage) do
-newmessage = true -- debugging
 		for target, dams in pairs(tgts) do
-			local healmsg
 			if #dams.descs > 1 then
 				game.uiset.logdisplay(self:logMessage(src, dams.srcSeen, target, dams.tgtSeen, "#Source# hits #Target# for %s (%0.0f total damage)%s.", table.concat(dams.descs, ", "), dams.total, dams.healing<0 and (" #LIGHT_GREEN#[%0.0f healing]#LAST#"):format(-dams.healing) or ""))
 			else
@@ -1268,7 +1268,7 @@ newmessage = true -- debugging
 					self.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, rng.float(-2.5, -1.5), ("Kill (%d)!"):format(dams.total), {255,0,255}, true)
 					self:delayedLogMessage(target, nil,  "death", self:logMessage(src, dams.srcSeen, target, dams.tgtSeen, "#{bold}##Source# killed #Target#!#{normal}#"))
 				end
-			else
+			elseif dams.total > 0 or dams.healing == 0 then
 				if dams.tgtSeen and (rsrc == self.player or self.party:hasMember(rsrc)) then
 					self.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, rng.float(-3, -2), tostring(-math.ceil(dams.total)), {0,255,dams.is_crit and 200 or 0}, dams.is_crit)
 				elseif dams.tgtSeen and (rtarget == self.player or self.party:hasMember(rtarget)) then
@@ -1491,8 +1491,6 @@ function _M:setupCommands()
 			print("===============")
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
-			self.player:addParticles(engine.Particles.new("meleestorm", 1, {}))
-
 do return end
 			local f, err = loadfile("/data/general/events/fearscape-portal.lua")
 			print(f, err)
@@ -1874,7 +1872,10 @@ do return end
 			end
 		end
 	}
-	engine.interface.PlayerHotkeys:bindAllHotkeys(self.key, not_wild(function(i) self.player:activateHotkey(i) end, function() return self.player.allow_talents_worldmap end))
+	engine.interface.PlayerHotkeys:bindAllHotkeys(self.key, not_wild(function(i)
+		self:targetTriggerHotkey(i)
+		self.player:activateHotkey(i)
+	end, function() return self.player.allow_talents_worldmap end))
 
 	self.key:setCurrent()
 end

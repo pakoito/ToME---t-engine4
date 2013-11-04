@@ -499,6 +499,11 @@ static int lua_get_time(lua_State *L)
 	lua_pushnumber(L, SDL_GetTicks());
 	return 1;
 }
+static int lua_get_frame_time(lua_State *L)
+{
+	lua_pushnumber(L, cur_frame_tick);
+	return 1;
+}
 static int lua_set_realtime(lua_State *L)
 {
 	float freq = luaL_checknumber(L, 1);
@@ -543,6 +548,7 @@ static const struct luaL_Reg gamelib[] =
 	{"set_current_game", lua_set_current_game},
 	{"exit_engine", lua_exit_engine},
 	{"getTime", lua_get_time},
+	{"getFrameTime", lua_get_frame_time},
 	{"sleep", lua_sleep},
 	{"setRealtime", lua_set_realtime},
 	{"setFPS", lua_set_fps},

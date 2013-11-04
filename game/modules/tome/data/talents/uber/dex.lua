@@ -102,7 +102,6 @@ uberTalent{
 			end
 		end)
 		self:addParticles(Particles.new("meleestorm", 1, {radius=4, img="spinningwinds_blue"}))
-		self:addParticles(Particles.new("meleestorm", 1, {radius=4, img="spinningwinds_blue"}))
 
 		return true
 	end,

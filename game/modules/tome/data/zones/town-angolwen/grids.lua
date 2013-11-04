@@ -37,7 +37,7 @@ newEntity{ base = "FLOOR", define_as = "COBBLESTONE",
 
 newEntity{ base = "FLOOR", define_as = "ROCK",
 	name="magical rock",
-	image="terrain/grass.png", add_displays = {class.new{image="terrain/maze_rock.png"}},
+	image="terrain/grass.png", add_displays = {class.new{image="terrain/maze_rock.png", z=4}},
 	does_block_move = true
 }
 

@@ -75,6 +75,7 @@ int mouse_drag_w = 32, mouse_drag_h = 32;
 int mouse_drag_tex = 0, mouse_drag_tex_ref = LUA_NOREF;
 int mousex = 0, mousey = 0;
 float gamma_correction = 1;
+int cur_frame_tick = 0;
 /* The currently requested fps for the program */
 int requested_fps = 30;
 /* The requested fps for when the program is idle (i.e., doesn't have focus) */
@@ -556,7 +557,7 @@ void on_redraw()
 	/* Gather our frames per second */
 	Frames++;
 	if (!is_waiting()) {
-		int t = SDL_GetTicks();
+		int t = cur_frame_tick = SDL_GetTicks();
 		if (t - T0 >= 1000) {
 			float seconds = (t - T0) / 1000.0;
 			float fps = Frames / seconds;
@@ -595,6 +596,10 @@ void on_redraw()
 	SDL_GL_SwapWindow(window);
 
 	last_keyframe = nb;
+
+#ifdef STEAM_TE4
+	te4_steam_callbacks();
+#endif
 }
 
 void pass_command_args(int argc, char *argv[])
@@ -944,6 +949,9 @@ void boot_lua(int state, bool rebooting, int argc, char *argv[])
 		luaopen_zlib(L);
 		luaopen_bit(L);
 		luaopen_wait(L);
+#ifdef STEAM_TE4
+		te4_steam_lua_init(L);
+#endif
 		printf("===top %d\n", lua_gettop(L));
 //		exit(0);
 
@@ -1151,6 +1159,10 @@ int main(int argc, char *argv[])
 	// Get cpu cores
 	nb_cpus = get_number_cpus();
 	printf("[CPU] Detected %d CPUs\n", nb_cpus);
+
+#ifdef STEAM_TE4
+	te4_steam_init();
+#endif
 
 	init_openal();
 

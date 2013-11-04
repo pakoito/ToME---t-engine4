@@ -41,6 +41,7 @@ end
 if zone == "Maj'Eyal" then
 	wda.cur_patrols = wda.cur_patrols or 0
 	wda.cur_hostiles = wda.cur_hostiles or 0
+	game.state.gone_west = true
 
 	-- Spawn random encounters
 	local g = game.level.map(game.player.x, game.player.y, Map.TERRAIN)

@@ -28,4 +28,5 @@ return {
 		outlineColor = outlineColor or {0, 0, 0, 1},
 	},
 	clone = false,
+	permanent = true,
 }

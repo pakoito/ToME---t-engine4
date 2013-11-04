@@ -535,6 +535,7 @@ function _M:getTextualDesc(compare_with)
 
 		compare_fields(combat, compare_with, field, "block", "%+d", "Block value: ", 1, false, false, add_table)
 
+		compare_fields(combat, compare_with, field, "dam_mult", "%d%%", "Dam. multiplier: ", 100, false, false, add_table)
 		compare_fields(combat, compare_with, field, "range", "%+d", "Firing range: ", 1, false, false, add_table)
 		compare_fields(combat, compare_with, field, "capacity", "%d", "Capacity: ", 1, false, false, add_table)
 		compare_fields(combat, compare_with, field, "shots_reloaded_per_turn", "%+d", "Reload speed: ", 1, false, false, add_table)
@@ -1557,10 +1558,7 @@ function _M:getPrice()
 	if self.egoed then
 		base = base + self:getPriceFlags()
 	end
-	if game.level and game.level.data and game.level.data.objects_cost_modifier then
-		local v = util.getval(game.level.data.objects_cost_modifier, self)
-		base = base * v
-	end
+	if self.__price_level_mod then base = base * self.__price_level_mod end
 	return base
 end
 
@@ -1629,5 +1627,9 @@ function _M:addedToLevel(level, x, y)
 		local min_mlvl = util.getval(level.data.min_material_level) or 1
 		local max_mlvl = util.getval(level.data.max_material_level) or 5
 		self.material_level_gen_range = {min=min_mlvl, max=max_mlvl}
+	end
+
+	if level and level.data and level.data.objects_cost_modifier then
+		self.__price_level_mod = util.getval(level.data.objects_cost_modifier, self)
 	end
 end

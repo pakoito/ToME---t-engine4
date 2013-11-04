@@ -218,7 +218,7 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 		dam, crit = self:physicalCrit(dam, ammo, target, atk, def, tg.archery.crit_chance or 0, tg.archery.crit_power or 0)
 		print("[ATTACK ARCHERY] after crit", dam)
 
-		dam = dam * mult
+		dam = dam * mult * (weapon.dam_mult or 1)
 		print("[ATTACK ARCHERY] after mult", dam)
 
 		if self:isAccuracyEffect(ammo, "mace") then
@@ -512,6 +512,7 @@ function _M:archeryShoot(targets, talent, tg, params)
 		for i = 1, #targets do
 			local tg = table.clone(tg)
 			tg.archery.ammo = targets[i].ammo
+			if realweapon.on_archery_trigger then realweapon.on_archery_trigger(realweapon, self, tg, params, targets[i], talent) end
 			self:projectile(tg, targets[i].x, targets[i].y, archery_projectile)
 		end
 	end

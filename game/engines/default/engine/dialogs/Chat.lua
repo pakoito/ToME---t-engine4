@@ -43,7 +43,7 @@ function _M:init(chat, id)
 	self:generateList()
 
 	self.c_desc = Textzone.new{width=self.iw - 10 - xoff, height=1, auto_height=true, text=self.text.."\n"}
-	self.c_list = VariableList.new{width=self.iw - 10 - xoff, list=self.list, fct=function(item) self:use(item) end, select=function(item) self:select(item) end}
+	self.c_list = VariableList.new{width=self.iw - 10 - xoff, max_height=game.h * 0.70 - self.c_desc.h, list=self.list, fct=function(item) self:use(item) end, select=function(item) self:select(item) end}
 
 	local uis = {
 		{left=0, top=0, ui=self.c_desc},

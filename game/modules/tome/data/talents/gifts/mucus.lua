@@ -34,7 +34,7 @@ newTalent{
 	tactical = { BUFF = 2 },
 	getDur = function(self, t) return math.floor(self:combatTalentLimit(t, 20, 4, 6.5)) end, -- Limit < 20
 	getDamage = function(self, t) return self:combatTalentMindDamage(t, 5, 90) end,
-	getEqui = function(self, t) return self:combatTalentMindDamage(t, 5, 20) end,
+	getEqui = function(self, t) return self:combatTalentMindDamage(t, 2, 10) end,
 	trigger = function(self, t, x, y, rad) 
 		game.level.map:addEffect(self,
 			x, y, t.getDur(self, t),

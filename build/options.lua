@@ -56,4 +56,9 @@ newoption {
 	description = "Compat for old SDL2 dev verions"
 }
 
+newoption {
+	trigger	    = "steam",
+	description = "Steam integration"
+}
+
 _OPTIONS.lua = _OPTIONS.lua or "jit2"

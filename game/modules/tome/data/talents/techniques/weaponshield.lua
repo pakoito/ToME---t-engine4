@@ -264,8 +264,7 @@ newTalent{
 			end
 		end)
 
-		self:addParticles(Particles.new("meleestorm", 1, {radius=2}))
-		self:addParticles(Particles.new("meleestorm", 1, {radius=2}))
+		self:addParticles(Particles.new("meleestorm2", 1, {radius=2}))
 
 		return true
 	end,

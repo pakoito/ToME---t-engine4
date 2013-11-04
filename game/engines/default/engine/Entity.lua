@@ -29,7 +29,7 @@ local next_uid = 1
 local entities_load_functions = {}
 
 _M.__mo_final_repo = {}
-_M._no_save_fields = {}
+_M._no_save_fields = { _shader = true }
 _M.__position_aware = false -- Subclasses can change it to know where they are on the map
 
 -- Setup the uids & MO repository as a weak value table, when the entities are no more used anywhere else they disappear from there too
@@ -191,6 +191,7 @@ end
 
 --- Removes a particles emitter following the entity
 function _M:removeParticles(ps)
+	if not ps then return end
 	self.__particles[ps] = nil
 	ps:dieDisplay()
 	if self.x and self.y and game.level and game.level.map then
@@ -326,7 +327,10 @@ function _M:makeMapObject(tiles, idx)
 	-- Setup shader
 	if tiles.use_images and core.shader.active() and self.shader then
 		local shad = Shader.new(self.shader, self.shader_args)
-		if shad.shad then self._mo:shader(shad.shad) end
+		if shad.shad then
+			self._mo:shader(shad.shad)
+			self._shader = shad
+		end
 	end
 
 	self._mo, self.z, last_mo = self:alterMakeMapObject(tiles, self._mo, self.z, last_mo)

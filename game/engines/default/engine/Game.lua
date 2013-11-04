@@ -21,6 +21,7 @@ require "engine.class"
 require "engine.Mouse"
 require "engine.DebugConsole"
 require "engine.dialogs.ShowErrorStack"
+local Shader = require "engine.Shader"
 
 --- Represent a game
 -- A module should subclass it and initialize anything it needs to play inside
@@ -240,6 +241,8 @@ function _M:tick()
 		end
 	end
 
+	Shader:cleanup()
+
 	if self.cleanSounds then self:cleanSounds() end
 
 	self:onTickEndExecute()
@@ -280,6 +283,7 @@ end
 
 --- Called by the engine when the user tries to close the window
 function _M:onExit()
+	if core.steam then core.steam.exit() end
 	os.exit()
 end
 
@@ -598,7 +602,14 @@ function _M:saveScreenshot()
 	f:close()
 
 	local Dialog = require "engine.ui.Dialog"
-	Dialog:simplePopup("Screenshot taken!", "File: "..fs.getRealPath(file))
+
+	if core.steam then
+		local desc = self:getSaveDescription()
+		core.steam.screenshot(file, self.w, self.h, desc.description)
+		Dialog:simpleLongPopup("Screenshot taken!", "Screenshot should appear in your Steam client's #LIGHT_GREEN#Screenshots Library#LAST#.\nAlso available on disk: "..fs.getRealPath(file), 600)
+	else
+		Dialog:simplePopup("Screenshot taken!", "File: "..fs.getRealPath(file))
+	end
 end
 
 --- Register a hook that will be saved in the savefile

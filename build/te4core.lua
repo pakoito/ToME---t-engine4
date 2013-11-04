@@ -42,6 +42,10 @@ project "TEngine"
 
 	if _OPTIONS.no_rwops_size then defines{"NO_RWOPS_SIZE"} end
 
+	if _OPTIONS.steam then
+		dofile("../steamworks/build/steam-build.lua")
+	end
+
 	configuration "macosx"
 		files { "../src/mac/SDL*" }
 		includedirs {
@@ -424,3 +428,7 @@ project "te4-bzip"
 	targetname "te4-bzip"
 
 	files { "../src/bzip2/*.c", }
+
+if _OPTIONS.steam then
+	dofile("../steamworks/build/steam-code.lua")
+end

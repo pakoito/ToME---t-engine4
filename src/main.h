@@ -42,6 +42,7 @@ extern bool safe_mode;
 extern bool fbo_active;
 extern bool multitexture_active;
 extern long total_keyframes;
+extern int cur_frame_tick;
 extern int g_argc;
 extern char **g_argv;
 extern char *override_home;
@@ -58,6 +59,10 @@ typedef struct lua_err_type_s lua_err_type;
 extern lua_err_type *last_lua_error_head, *last_lua_error_tail;
 extern void del_lua_error();
 extern core_boot_type *core_def;
+
+#ifdef STEAM_TE4
+#include "steam-te4.h"
+#endif
 
 #endif
 

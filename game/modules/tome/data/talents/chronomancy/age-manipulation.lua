@@ -169,10 +169,11 @@ newTalent{
 	action = function(self, t)
 		self:attr("allow_on_heal", 1)
 		self:heal(self:spellCrit(t.getHeal(self, t)), self)
-		self:attr("allow_on_heal", -1)
 		if core.shader.active(4) then
-			self:addParticles(Particles.new("shader_shield_temp", 1, {size_factor=1.1, sizev=1.5, sizea=0.2, img="runicshield_teal"}, {type="runicshield", color={0x35/255, 0x88/255, 0x8e/255, 1}, shieldIntensity=0.15, horizontalScrollingSpeed=-0.8}))
+			self:addParticles(Particles.new("shader_shield_temp", 1, {toback=true ,size_factor=1.5, y=-0.3, img="healparadox", life=25}, {type="healing", time_factor=3000, beamsCount=15, noup=2.0, beamColor1={0xb6/255, 0xde/255, 0xf3/255, 1}, beamColor2={0x5c/255, 0xb2/255, 0xc2/255, 1}}))
+			self:addParticles(Particles.new("shader_shield_temp", 1, {toback=false,size_factor=1.5, y=-0.3, img="healparadox", life=25}, {type="healing", time_factor=3000, beamsCount=15, noup=1.0, beamColor1={0xb6/255, 0xde/255, 0xf3/255, 1}, beamColor2={0x5c/255, 0xb2/255, 0xc2/255, 1}}))
 		end
+		self:attr("allow_on_heal", -1)
 
 		local target = self
 

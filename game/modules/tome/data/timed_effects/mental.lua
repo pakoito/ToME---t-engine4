@@ -1384,7 +1384,7 @@ newEffect{
 		self.kinspike_shield_absorb = eff.power
 
 		if core.shader.active(4) then
-			eff.particle = self:addParticles(Particles.new("shader_shield", 1, {size_factor=1.1, img="shield5"}, {type="shield", ellipsoidalFactor=1, time_factor=-10000, llpow=1, aadjust=7, color={1, 0, 0.3}}))
+			eff.particle = self:addParticles(Particles.new("shader_shield", 1, {size_factor=1.4, img="shield5"}, {type="runicshield", ellipsoidalFactor=1, time_factor=-10000, llpow=1, aadjust=7, bubbleColor={1, 0, 0.3, 0.6}, auraColor={1, 0, 0.3, 1}}))
 		else
 			eff.particle = self:addParticles(Particles.new("generic_shield", 1, {r=1, g=0, b=0.3, a=1}))
 		end
@@ -1414,7 +1414,7 @@ newEffect{
 		self.thermspike_shield_absorb = eff.power
 
 		if core.shader.active(4) then
-			eff.particle = self:addParticles(Particles.new("shader_shield", 1, {size_factor=1.1, img="shield5"}, {type="shield", ellipsoidalFactor=1, time_factor=-10000, llpow=1, aadjust=7, color={0.3, 1, 1}}))
+			eff.particle = self:addParticles(Particles.new("shader_shield", 1, {size_factor=1.4, img="shield5"}, {type="runicshield", ellipsoidalFactor=1, time_factor=-10000, llpow=1, aadjust=7, bubbleColor={0.3, 1, 1, 0.6}, auraColor={0.3, 1, 1, 1}}))
 		else
 			eff.particle = self:addParticles(Particles.new("generic_shield", 1, {r=0.3, g=1, b=1, a=1}))
 		end
@@ -1444,7 +1444,7 @@ newEffect{
 		self.chargespike_shield_absorb = eff.power
 
 		if core.shader.active(4) then
-			eff.particle = self:addParticles(Particles.new("shader_shield", 1, {size_factor=1.1, img="shield5"}, {type="shield", ellipsoidalFactor=1, time_factor=-10000, llpow=1, aadjust=7, color={0.8, 1, 0.2}}))
+			eff.particle = self:addParticles(Particles.new("shader_shield", 1, {size_factor=1.4, img="shield5"}, {type="runicshield", ellipsoidalFactor=1, time_factor=-10000, llpow=1, aadjust=7, bubbleColor={0.8, 1, 0.2, 0.6}, auraColor={0.8, 1, 0.2, 1}}))
 		else
 			eff.particle = self:addParticles(Particles.new("generic_shield", 1, {r=0.8, g=1, b=0.2, a=1}))
 		end
@@ -1830,8 +1830,16 @@ newEffect{
 		eff.life_regen_id = self:addTemporaryValue("life_regen", eff.regen)
 		eff.stamina_regen_id = self:addTemporaryValue("stamina_regen", eff.regen /5)
 		game.logSeen(self, "%s revels in the spilt blood and grows stronger!",self.name:capitalize())
+
+		if core.shader.active(4) then
+			eff.particle1 = self:addParticles(Particles.new("shader_shield", 1, {toback=true,  size_factor=1.5, y=-0.3, img="healarcane"}, {type="healing", time_factor=4000, noup=2.0, beamColor1={0xff/255, 0x22/255, 0x22/255, 1}, beamColor2={0xff/255, 0x60/255, 0x60/255, 1}, circleColor={0,0,0,0}, beamsCount=8}))
+			eff.particle2 = self:addParticles(Particles.new("shader_shield", 1, {toback=false, size_factor=1.5, y=-0.3, img="healarcane"}, {type="healing", time_factor=4000, noup=1.0, beamColor1={0xff/255, 0x22/255, 0x22/255, 1}, beamColor2={0xff/255, 0x60/255, 0x60/255, 1}, circleColor={0,0,0,0}, beamsCount=8}))
+		end
 	end,
 	deactivate = function(self, eff)
+		self:removeParticles(eff.particle1)
+		self:removeParticles(eff.particle2)
+
 		self:removeTemporaryValue("max_life", eff.life_id)
 		self:removeTemporaryValue("life_regen", eff.life_regen_id)
 		self:removeTemporaryValue("stamina_regen", eff.stamina_regen_id)

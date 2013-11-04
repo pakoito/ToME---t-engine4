@@ -61,7 +61,7 @@ on_status_change = function(self, who, status, sub)
 		if self:isCompleted("orb-back") and self:isCompleted("diamon-back") and self:isCompleted("athame-back") then
 			self:tannen_exit(who)
 
-			if game:getPlayer(true).alchemist_golem then
+			if game:getPlayer(true).alchemy_golem then
 				game:setAllowedBuild("cosmetic_class_alchemist_drolem", true)
 			end
 		end
