@@ -23,16 +23,16 @@
 local Talents = require("engine.interface.ActorTalents")
 
 newEntity{ define_as = "GOD_GERLYK",
-	type = "god", subtype = "god", unique = true,
+	type = "god", subtype = "eyal", unique = true,
 	name = "Gerlyk, the Creator",
 	display = "P", color=colors.VIOLET,
-	desc = [[During the Age of Haze nearly all gods were destroyed by the Sher'tuls Godslayers. yet a few escaped.
+	desc = [[During the Age of Haze nearly all gods were destroyed by the Sher'tuls Godslayers. Yet a few escaped.
 Gerlyk, the creator of the human race, prefered to flee into the void between the stars than to face death. He has been trapped ever since.
 The sorcerers tried to bring him back and nearly succeeded.
 Now you have come to finish what the Sher'tul began. Become a Godslayer yourself.]],
 	level_range = {100, nil}, exp_worth = 3,
-	max_life = 900, life_rating = 80, fixed_rating = true,
-	life_regen = 25,
+	max_life = 900, life_rating = 100, fixed_rating = true,
+	life_regen = 70,
 	max_stamina = 10000,
 	max_mana = 10000,
 	max_positive = 10000,
@@ -40,7 +40,7 @@ Now you have come to finish what the Sher'tul began. Become a Godslayer yourself
 	max_vim = 10000,
 	stats = { str=100, dex=100, con=100, mag=100, wil=100, cun=100 },
 	inc_stats = { str=80, dex=80, con=80, mag=80, wil=80, cun=80 },
-	rank = 5,
+	rank = 10,
 	size_category = 5,
 	infravision = 10,
 

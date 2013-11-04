@@ -30,7 +30,7 @@ desc = function(self, who)
 		desc[#desc+1] = "They asked about the staff and stole it from you."
 		desc[#desc+1] = "#LIGHT_GREEN#Go at once to Last Hope to report those events!"
 	elseif self:isCompleted("ambush-finished") and self:isCompleted("survived-ukruk") then
-		desc[#desc+1] = "On your way out of Last Hope you were ambushed by a band of orcs."
+		desc[#desc+1] = "On your way out of the Dreadfell you were ambushed by a band of orcs."
 		desc[#desc+1] = "They asked about the staff and stole it from you."
 		desc[#desc+1] = "You told them nothing and vanquished them."
 		desc[#desc+1] = "#LIGHT_GREEN#Go at once to Last Hope to report those events!"
