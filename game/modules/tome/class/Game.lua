@@ -2043,7 +2043,7 @@ function _M:onExit()
 				-- savefile_pipe is created as a global by the engine
 				self:saveGame()
 				savefile_pipe:forceWait()
-				os.exit()
+				engine.GameTurnBased.onExit(self)
 			end
 			self.quit_dialog = nil
 		end)
