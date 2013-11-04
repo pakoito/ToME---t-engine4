@@ -510,7 +510,13 @@ newEffect{
 		self.damage_shield_absorb = self.damage_shield_absorb + eff.power * aegis / 100
 		if core.shader.active(4) then
 			self:removeParticles(eff.particle)
-			eff.particle = self:addParticles(Particles.new("shader_shield", 1, {size_factor=1.3, img="runicshield"}, {type="runicshield", shieldIntensity=0.14, ellipsoidalFactor=1.2, time_factor=5000, bubbleColor={0.4, 0.7, 1.0, 1.0}, auraColor={0x21/255, 0x9f/255, 0xff/255, 1}}))
+			local bc = {0.4, 0.7, 1.0, 1.0}
+			local ac = {0x21/255, 0x9f/255, 0xff/255, 1}
+			if eff.color then
+				bc = table.clone(eff.color) bc[4] = 1
+				ac = table.clone(eff.color) ac[4] = 1
+			end
+			eff.particle = self:addParticles(Particles.new("shader_shield", 1, {size_factor=1.3, img="runicshield"}, {type="runicshield", shieldIntensity=0.14, ellipsoidalFactor=1.2, time_factor=5000, bubbleColor=bc, auraColor=ac}))
 		end		
 	end,
 	damage_feedback = function(self, eff, src, value)
@@ -530,7 +536,7 @@ newEffect{
 		self.damage_shield_absorb = eff.power
 		self.damage_shield_absorb_max = eff.power
 		if core.shader.active(4) then
-			eff.particle = self:addParticles(Particles.new("shader_shield", 1, nil, {type="shield", shieldIntensity=0.2, color={0.4, 0.7, 1.0}}))
+			eff.particle = self:addParticles(Particles.new("shader_shield", 1, nil, {type="shield", shieldIntensity=0.2, color=eff.color or {0.4, 0.7, 1.0}}))
 		else
 			eff.particle = self:addParticles(Particles.new("damage_shield", 1))
 		end

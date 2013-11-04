@@ -100,7 +100,7 @@ newTalent{
 	tactical = { DEFEND = 2 },
 	getAbsorb = function(self, t) return self:combatTalentSpellDamage(t, 30, 470) end,
 	action = function(self, t)
-		self:setEffect(self.EFF_DAMAGE_SHIELD, 10, {power=t.getAbsorb(self, t)})
+		self:setEffect(self.EFF_DAMAGE_SHIELD, 10, {color={0xe1/255, 0xcb/255, 0x3f/255}, power=t.getAbsorb(self, t)})
 		game:playSoundNear(self, "talents/heal")
 		return true
 	end,
