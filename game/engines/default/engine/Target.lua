@@ -19,6 +19,7 @@
 
 require "engine.class"
 local Map = require "engine.Map"
+local Shader = require "engine.Shader"
 
 --- handles targetting
 module(..., package.seeall, class.make)
@@ -37,19 +38,19 @@ function _M:init(map, source_actor)
 	local pot_width = math.pow(2, math.ceil(math.log(map.tile_w-0.1) / math.log(2.0)))
 	local pot_height = math.pow(2, math.ceil(math.log(map.tile_h-0.1) / math.log(2.0)))
 	self.sr = core.display.newSurface(pot_width, pot_height)
-	self.sr:erase(255, 0, 0, 90)
+	self.sr:erase(255, 0, 0, 150)
 	self.sr = self.sr:glTexture()
 	self.sb = core.display.newSurface(pot_width, pot_height)
-	self.sb:erase(0, 0, 255, 90)
+	self.sb:erase(0, 0, 255, 150)
 	self.sb = self.sb:glTexture()
 	self.sg = core.display.newSurface(pot_width, pot_height)
-	self.sg:erase(0, 255, 0, 90)
+	self.sg:erase(0, 255, 0, 150)
 	self.sg = self.sg:glTexture()
 	self.sy = core.display.newSurface(pot_width, pot_height)
-	self.sy:erase(255, 255, 0, 90)
+	self.sy:erase(255, 255, 0, 150)
 	self.sy = self.sy:glTexture()
 	self.syg = core.display.newSurface(pot_width, pot_height)
-	self.syg:erase(153, 204, 50, 90)
+	self.syg:erase(153, 204, 50, 150)
 	self.syg = self.syg:glTexture()
 
 	self.source_actor = source_actor
@@ -60,6 +61,14 @@ function _M:init(map, source_actor)
 	-- the garbage collection
 	self.target = {x=self.source_actor.x, y=self.source_actor.y, entity=nil}
 --	setmetatable(self.target, {__mode='v'})
+end
+
+function _M:enableFBORenderer(shader)
+	self.fbo = core.display.newFBO(Map.viewport.width, Map.viewport.height)
+	if not self.fbo then return end
+	if shader then
+		self.fbo_shader = Shader.new(shader)
+	end
 end
 
 function _M:displayArrow(sx, sy, tx, ty, full)
@@ -77,7 +86,27 @@ function _M:displayArrow(sx, sy, tx, ty, full)
 	core.display.glMatrix(false)
 end
 
-function _M:display(dispx, dispy)
+function _M:display(dispx, dispy, prevfbo)
+	local ox, oy = self.display_x, self.display_y
+	local sx, sy = game.level.map._map:getScroll()
+	sx = sx + game.level.map.display_x
+	sy = sy + game.level.map.display_y
+	self.display_x, self.display_y = dispx or sx or self.display_x, dispy or sy or self.display_y
+	
+	if not self.fbo then
+		self:realDisplay(self.display_x, self.display_y)
+	else
+		self.fbo:use(true, 0, 0, 0, 0)
+		self:realDisplay(0, 0)
+		self.fbo:use(false, prevfbo)
+		self.fbo:toScreen(self.display_x, self.display_y, Map.viewport.width, Map.viewport.height, nil, 1, 1, 1, 1, true)
+		self.fbo:toScreen(self.display_x, self.display_y, Map.viewport.width, Map.viewport.height, self.fbo_shader.shad, 1, 1, 1, 1, true)
+	end
+
+	self.display_x, self.display_y = ox, oy
+end
+
+function _M:realDisplay(dispx, dispy)
 	-- Make sure we have a source
 	if not self.target_type.source_actor then
 		self.target_type.source_actor = self.source_actor
@@ -92,13 +121,8 @@ function _M:display(dispx, dispy)
 	self.target_type.start_x = self.target_type.start_x or self.target_type.x or self.target_type.source_actor and self.target_type.source_actor.x or self.x
 	self.target_type.start_y = self.target_type.start_y or self.target_type.y or self.target_type.source_actor and self.target_type.source_actor.y or self.y
 
-	local ox, oy = self.display_x, self.display_y
-	local sx, sy = game.level.map._map:getScroll()
-	sx = sx + game.level.map.display_x
-	sy = sy + game.level.map.display_y
-	self.display_x, self.display_y = dispx or sx or self.display_x, dispy or sy or self.display_y
 
---	self.cursor:toScreen(self.display_x + (self.target.x - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (self.target.y - game.level.map.my) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
+--	self.cursor:toScreen(dispx + (self.target.x - game.level.map.mx) * self.tile_w * Map.zoom, dispy + (self.target.y - game.level.map.my) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
 
 	-- Do not display if not requested
 	if not self.active then return end
@@ -107,16 +131,16 @@ function _M:display(dispx, dispy)
 	if util.isHex() then
 		display_highlight = function(texture, tx, ty)
 			texture:toScreenHighlightHex(
-				self.display_x + (tx - game.level.map.mx) * self.tile_w * Map.zoom,
-				self.display_y + (ty - game.level.map.my + util.hexOffset(tx)) * self.tile_h * Map.zoom,
+				dispx + (tx - game.level.map.mx) * self.tile_w * Map.zoom,
+				dispy + (ty - game.level.map.my + util.hexOffset(tx)) * self.tile_h * Map.zoom,
 				self.tile_w * Map.zoom,
 				self.tile_h * Map.zoom)
 			end
 	else
 		display_highlight = function(texture, tx, ty)
 			texture:toScreen(
-				self.display_x + (tx - game.level.map.mx) * self.tile_w * Map.zoom,
-				self.display_y + (ty - game.level.map.my) * self.tile_h * Map.zoom,
+				dispx + (tx - game.level.map.mx) * self.tile_w * Map.zoom,
+				dispy + (ty - game.level.map.my) * self.tile_h * Map.zoom,
 				self.tile_w * Map.zoom,
 				self.tile_h * Map.zoom)
 			end
@@ -206,7 +230,7 @@ function _M:display(dispx, dispy)
 
 	end
 	if not self.target_type.immediate_keys or firstx then
-		self.cursor:toScreen(self.display_x + (self.target.x - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (self.target.y - game.level.map.my + util.hexOffset(self.target.x)) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
+		self.cursor:toScreen(dispx + (self.target.x - game.level.map.mx) * self.tile_w * Map.zoom, dispy + (self.target.y - game.level.map.my + util.hexOffset(self.target.x)) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
 	end
 
 	if self.target_type.ball and self.target_type.ball > 0 then
@@ -281,8 +305,6 @@ function _M:display(dispx, dispy)
 			self:displayArrow(self.target_type.start_x, self.target_type.start_y, spot[1], spot[2], firstx == spot[1] and firsty == spot[2])
 		end
 	end
-
-	self.display_x, self.display_y = ox, oy
 end
 
 -- @return t The target table used by ActorProject, Projectile, GameTargeting, etc.
