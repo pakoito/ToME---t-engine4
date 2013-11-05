@@ -291,7 +291,7 @@ newInscription{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:projectile(tg, x, y, DamageType.INSIDIOUS_POISON, {dam=data.power + data.inc_stat, dur=7, heal_factor=data.heal_factor}, {type="slime"})
-		self:removeEffectsFilter({status="detrimental", type="magical"}, 1)
+		self:removeEffectsFilter({status="detrimental", type="magical", ignore_crosstier=true}, 1)
 		game:playSoundNear(self, "talents/slime")
 		return true
 	end,
@@ -613,7 +613,7 @@ newInscription{
 		self:project(tg, x, y, DamageType.FIREBURN, {dur=5, initial=0, dam=data.power + data.inc_stat})
 		local _ _, x, y = self:canProject(tg, x, y)
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "flamebeam", {tx=x-self.x, ty=y-self.y})
-		self:removeEffectsFilter({status="detrimental", type="physical"}, 1)
+		self:removeEffectsFilter({status="detrimental", type="physical", ignore_crosstier=true}, 1)
 		game:playSoundNear(self, "talents/fire")
 		attack_rune(self, t.id)
 		return true
@@ -659,7 +659,7 @@ newInscription{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.ICE, data.power + data.inc_stat, {type="freeze"})
-		self:removeEffectsFilter({status="detrimental", type="mental"}, 1)
+		self:removeEffectsFilter({status="detrimental", type="mental", ignore_crosstier=true}, 1)
 		game:playSoundNear(self, "talents/ice")
 		attack_rune(self, t.id)
 		return true
