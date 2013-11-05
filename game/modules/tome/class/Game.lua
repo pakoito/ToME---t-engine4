@@ -134,7 +134,7 @@ function _M:runReal()
 	if not self.player then self:newGame() end
 
 	engine.interface.GameTargeting.init(self)
-	if self.target then self.target:enableFBORenderer("invis_edge") end
+	if self.target then self.target:enableFBORenderer("mm_fbo") end
 
 	self.uiset.hotkeys_display.actor = self.player
 	self.uiset.npcs_display.actor = self.player

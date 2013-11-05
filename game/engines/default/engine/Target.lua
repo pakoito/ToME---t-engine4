@@ -99,7 +99,7 @@ function _M:display(dispx, dispy, prevfbo)
 		self.fbo:use(true, 0, 0, 0, 0)
 		self:realDisplay(0, 0)
 		self.fbo:use(false, prevfbo)
-		self.fbo:toScreen(self.display_x, self.display_y, Map.viewport.width, Map.viewport.height, nil, 1, 1, 1, 1, true)
+--		self.fbo:toScreen(self.display_x, self.display_y, Map.viewport.width, Map.viewport.height, nil, 1, 1, 1, 1, true)
 		self.fbo:toScreen(self.display_x, self.display_y, Map.viewport.width, Map.viewport.height, self.fbo_shader.shad, 1, 1, 1, 1, true)
 	end
 
