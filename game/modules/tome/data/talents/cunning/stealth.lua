@@ -27,7 +27,7 @@ local function stealthDetection(self, radius)
 	for i, act in ipairs(self.fov.actors_dist) do
 		dist = core.fov.distance(self.x, self.y, act.x, act.y)
 		if dist > radius then break end
-		if act ~= self and act:reactionToward(self) < 0 and not act:attr("blind") then
+		if act ~= self and act:reactionToward(self) < 0 and not act:attr("blind") and (not act.fov or not act.fov.actors or act.fov.actors[self]) then
 			detect = detect + act:combatSeeStealth() * (1.1 - dist/10) -- detection strength reduced 10% per tile
 			if dist < closest then closest = dist end
 		end

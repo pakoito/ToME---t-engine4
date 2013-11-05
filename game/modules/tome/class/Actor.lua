@@ -1277,7 +1277,8 @@ function _M:getRankStatAdjust()
 	elseif self.rank == 3.2 then return 0.5
 	elseif self.rank == 3.5 then return 1
 	elseif self.rank == 4 then return 1
-	elseif self.rank >= 5 then return 1
+	elseif self.rank == 5 then return 1
+	elseif self.rank >= 10 then return 2.5
 	else return 0
 	end
 end
@@ -1289,7 +1290,8 @@ function _M:getRankLevelAdjust()
 	elseif self.rank == 3.2 then return 1
 	elseif self.rank == 3.5 then return 2
 	elseif self.rank == 4 then return 3
-	elseif self.rank >= 5 then return 4
+	elseif self.rank == 5 then return 4
+	elseif self.rank >= 10 then return 8
 	else return 0
 	end
 end
@@ -1301,7 +1303,8 @@ function _M:getRankVimAdjust()
 	elseif self.rank == 3.2 then return 1.2
 	elseif self.rank == 3.5 then return 2.2
 	elseif self.rank == 4 then return 2.6
-	elseif self.rank >= 5 then return 2.8
+	elseif self.rank == 5 then return 2.8
+	elseif self.rank >= 10 then return 6
 	else return 0
 	end
 end
@@ -1314,7 +1317,8 @@ function _M:getRankLifeAdjust(value)
 	elseif self.rank == 3.2 then return value * (level_adjust + 0.15)
 	elseif self.rank == 3.5 then return value * (level_adjust + 1)
 	elseif self.rank == 4 then return value * (level_adjust + 2)
-	elseif self.rank >= 5 then return value * (level_adjust + 3)
+	elseif self.rank == 5 then return value * (level_adjust + 3)
+	elseif self.rank >= 10 then return value * (level_adjust + 6)
 	else return 0
 	end
 end
@@ -1326,7 +1330,8 @@ function _M:getRankResistAdjust()
 	elseif self.rank == 3.2 then return 0.8, 1.5
 	elseif self.rank == 3.5 then return 0.9, 1.5
 	elseif self.rank == 4 then return 0.9, 1.5
-	elseif self.rank >= 5 then return 0.9, 1.5
+	elseif self.rank == 5 then return 0.9, 1.5
+	elseif self.rank >= 10 then return 2.5, 3.5
 	else return 0
 	end
 end
@@ -1338,7 +1343,8 @@ function _M:getRankSaveAdjust()
 	elseif self.rank == 3.2 then return 1.3, 1.8
 	elseif self.rank == 3.5 then return 1.5, 2
 	elseif self.rank == 4 then return 1.7, 2.1
-	elseif self.rank >= 5 then return 1.9, 2.3
+	elseif self.rank == 5 then return 1.9, 2.3
+	elseif self.rank >= 10 then return 2.8, 3.5
 	else return 0
 	end
 end
@@ -1351,7 +1357,8 @@ function _M:TextRank()
 	elseif self.rank == 3.2 then rank, color = "rare", "#SALMON#"
 	elseif self.rank == 3.5 then rank, color = "unique", "#SANDY_BROWN#"
 	elseif self.rank == 4 then rank, color = "boss", "#ORANGE#"
-	elseif self.rank >= 5 then rank, color = "elite boss", "#GOLD#"
+	elseif self.rank == 5 then rank, color = "elite boss", "#GOLD#"
+	elseif self.rank >= 10 then rank, color = "god", "#FF4000#"
 	end
 	return rank, color
 end
