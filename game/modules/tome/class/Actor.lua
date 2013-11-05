@@ -3356,34 +3356,34 @@ function _M:learnPool(t)
 
 --	if tt.mana_regen and self.mana_regen == 0 then self.mana_regen = 0.5 end
 
-	if t.type[1]:find("^spell/") and (t.mana or t.sustain_mana) then
+	if t.mana or t.sustain_mana then
 		self:checkPool(t.id, self.T_MANA_POOL)
 	end
-	if t.type[1]:find("^wild%-gift/") and (t.equilibrium or t.sustain_equilibrium) then
+	if t.equilibrium or t.sustain_equilibrium then
 		self:checkPool(t.id, self.T_EQUILIBRIUM_POOL)
 	end
-	if (t.type[1]:find("^technique/") or t.type[1]:find("^cunning/")) and (t.stamina or t.sustain_stamina) then
+	if t.stamina or t.sustain_stamina then
 		self:checkPool(t.id, self.T_STAMINA_POOL)
 	end
-	if t.type[1]:find("^corruption/") and (t.vim or t.sustain_vim) then
+	if t.vim or t.sustain_vim then
 		self:checkPool(t.id, self.T_VIM_POOL)
 	end
-	if t.type[1]:find("^celestial/") and (t.positive or t.sustain_positive) then
+	if t.positive or t.sustain_positive then
 		self:checkPool(t.id, self.T_POSITIVE_POOL)
 	end
-	if t.type[1]:find("^celestial/") and (t.negative or t.sustain_negative) then
+	if t.negative or t.sustain_negative then
 		self:checkPool(t.id, self.T_NEGATIVE_POOL)
 	end
-	if t.type[1]:find("^cursed/") and t.hate then
+	if t.hate then
 		self:checkPool(t.id, self.T_HATE_POOL)
 	end
-	if t.type[1]:find("^chronomancy/") then
+	if t.paradox or t.sustain_paradox then
 		self:checkPool(t.id, self.T_PARADOX_POOL)
 	end
-	if t.type[1]:find("^psionic/") and not (t.type[1]:find("^psionic/feedback") or t.type[1]:find("^psionic/discharge")) then
+	if t.psi or t.sustain_psi then
 		self:checkPool(t.id, self.T_PSI_POOL)
 	end
-	if t.type[1]:find("^psionic/feedback") or t.type[1]:find("^psionic/discharge") then
+	if t.type[1]:find("^psionic/feedback") or t.type[1]:find("^psionic/discharge") or t.feedback or t.sustain_feedback then
 		self:checkPool(t.id, self.T_FEEDBACK_POOL)
 	end
 	-- If we learn an archery talent, also learn to shoot
