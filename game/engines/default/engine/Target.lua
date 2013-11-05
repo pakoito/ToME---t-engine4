@@ -93,14 +93,15 @@ function _M:display(dispx, dispy, prevfbo)
 	sy = sy + game.level.map.display_y
 	self.display_x, self.display_y = dispx or sx or self.display_x, dispy or sy or self.display_y
 	
-	if not self.fbo then
-		self:realDisplay(self.display_x, self.display_y)
-	else
-		self.fbo:use(true, 0, 0, 0, 0)
-		self:realDisplay(0, 0)
-		self.fbo:use(false, prevfbo)
---		self.fbo:toScreen(self.display_x, self.display_y, Map.viewport.width, Map.viewport.height, nil, 1, 1, 1, 1, true)
-		self.fbo:toScreen(self.display_x, self.display_y, Map.viewport.width, Map.viewport.height, self.fbo_shader.shad, 1, 1, 1, 1, true)
+	if self.active then
+		if not self.fbo then
+			self:realDisplay(self.display_x, self.display_y)
+		else
+			self.fbo:use(true, 0, 0, 0, 0)
+			self:realDisplay(0, 0)
+			self.fbo:use(false, prevfbo)
+			self.fbo:toScreen(self.display_x, self.display_y, Map.viewport.width, Map.viewport.height, self.fbo_shader.shad, 1, 1, 1, 1, true)
+		end
 	end
 
 	self.display_x, self.display_y = ox, oy
