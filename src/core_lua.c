@@ -2301,6 +2301,15 @@ static int gl_fbo_use(lua_State *L)
 {
 	lua_fbo *fbo = (lua_fbo*)auxiliar_checkclass(L, "gl{fbo}", 1);
 	bool active = lua_toboolean(L, 2);
+	float r = 0, g = 0, b = 0, a = 1;
+
+	if (lua_isnumber(L, 3))
+	{
+		r = luaL_checknumber(L, 3);
+		g = luaL_checknumber(L, 4);
+		b = luaL_checknumber(L, 5);
+		a = luaL_checknumber(L, 6);
+	}
 
 	if (active)
 	{
@@ -2319,7 +2328,7 @@ static int gl_fbo_use(lua_State *L)
 		// Reset The View
 		glLoadIdentity();
 
-		tglClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		tglClearColor(r, g, b, a);
 		glClear(GL_COLOR_BUFFER_BIT);
 	}
 	else
@@ -2351,6 +2360,7 @@ static int gl_fbo_toscreen(lua_State *L)
 	int y = luaL_checknumber(L, 3);
 	int w = luaL_checknumber(L, 4);
 	int h = luaL_checknumber(L, 5);
+	bool allowblend = lua_toboolean(L, 11);
 	float r = 1, g = 1, b = 1, a = 1;
 	if (lua_isnumber(L, 7))
 	{
@@ -2382,7 +2392,7 @@ static int gl_fbo_toscreen(lua_State *L)
 		useShader(s, fbo->w, fbo->h, w, h, r, g, b, a);
 	}
 
-	glDisable(GL_BLEND);
+	if (!allowblend) glDisable(GL_BLEND);
 	tglBindTexture(GL_TEXTURE_2D, fbo->texture);
 
 
@@ -2404,7 +2414,7 @@ static int gl_fbo_toscreen(lua_State *L)
 	glDrawArrays(GL_QUADS, 0, 4);
 
 	if (lua_isuserdata(L, 6)) glUseProgramObjectARB(0);
-	glEnable(GL_BLEND);
+	if (!allowblend) glEnable(GL_BLEND);
 	return 0;
 }
 
