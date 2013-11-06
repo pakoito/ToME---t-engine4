@@ -348,7 +348,9 @@ newEntity{
 		function(self, who)
 			local tg = {type="ball", range=0, radius=self.material_level + 1, selffire=false}
 			local weapon = who:hasStaffWeapon()
+			if not weapon then return end
 			local combat = weapon.combat
+			if not combat then return end
 
 			local DamageType = require "engine.DamageType"
 			local damtype = combat.damtype
