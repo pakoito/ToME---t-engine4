@@ -1145,8 +1145,9 @@ function _M:tick()
 	end
 
 	if savefile_pipe.saving then self.player.changed = true end
+	if self.on_tick_end and #self.on_tick_end > 0 then return false end -- Force a new tick
+	if self.creating_player then return true end
 	if self.paused and not savefile_pipe.saving then return true end
---	if self.on_tick_end and #self.on_tick_end > 0 then return true end
 end
 
 -- Game Log management functions:
