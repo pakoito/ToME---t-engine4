@@ -29,6 +29,15 @@ local ActorTemporaryEffects = require "engine.interface.ActorTemporaryEffects"
 local Birther = require "engine.Birther"
 local UIBase = require "engine.ui.Base"
 
+UIBase.font = core.display.newFont("/data/font/DroidSans.ttf", 16)
+UIBase.font_bold = core.display.newFont("/data/font/DroidSans.ttf", 16)
+UIBase.font_mono = core.display.newFont("/data/font/DroidSansMono.ttf", 16)
+UIBase.font_bold:setStyle("bold")
+UIBase.font_h = UIBase.font:lineSkip()
+UIBase.font_bold_h = UIBase.font_bold:lineSkip()
+UIBase.font_mono_w = UIBase.font_mono:size(" ")
+UIBase.font_mono_h = UIBase.font_mono:lineSkip()+2
+
 local n = core.noise.new(2)
 _2DNoise = n:makeTexture2D(64, 64)
 

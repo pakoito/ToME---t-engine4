@@ -142,6 +142,22 @@ Now go and have some fun!]]
 	-- Setup FPS
 	core.game.setFPS(config.settings.display_fps)
 	self:triggerHook{"Boot:runEnd"}
+
+	if not config.settings.upgrades or not config.settings.upgrades.v1_0_5 then
+		if not config.settings.background_saves or config.settings.tome.save_zone_levels then
+			Dialog:simpleLongPopup("Upgrade to 1.0.5", [[The way the engine manages saving has been reworked for v1.0.5.
+
+The background saves should no longer lag horribly and as such it is highly recommended that you use the option. The upgrade turned it on for you.
+
+For the same reason the save per level option should not be used unless you have severe memory problems. The upgrade turned it off for you.
+]], 400)
+		end
+		self:saveSettings("upgrades", "upgrades.v1_0_5 = true\n")
+		self:saveSettings("background_saves", "background_saves = true\n")
+		self:saveSettings("tome.save_zone_levels", "tome.save_zone_levels = false\n")
+		config.settings.background_saves = true
+		config.settings.tome.save_zone_levels = false
+	end
 end
 
 function _M:newGame()

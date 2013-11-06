@@ -121,7 +121,7 @@ vec2 snoise2(vec3 pos)
 float GetFireDelta(float currTime, vec2 pos, float freqMult, float stretchMult, float scrollSpeed, float evolutionSpeed)
 {
 	//firewall
-	float delta = 0;
+	float delta = 0.0;
 //	pos.y += (1.0 - pos.y) * 0.5;
 	//pos.y += 0.5;
 	pos.y /= stretchMult;
