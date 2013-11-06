@@ -64,7 +64,7 @@ function _M:init(t, no_default)
 
 	self:addParticles(Particles.new("shertul_fortress_orbiters", 1, {}))
 	if core.shader.active(4) then
-		self:addParticles(Particles.new("shader_shield", 1, {size_factor=1.8, img="shield4"}, {type="shield", ellipsoidalFactor=1.5, shieldIntensity=0.18, color={0xbe/255, 0x3e/255, 0xf9/255}}))
+		self:addParticles(Particles.new("shader_shield", 1, {size_factor=1.8, img="shield5"}, {type="shield", ellipsoidalFactor=1.5, shieldIntensity=0.18, color={0xbe/255, 0x3e/255, 0xf9/255}}))
 	end
 	if core.shader.allow("distort") then self:addParticles(Particles.new("shertul_fortress_engine", 1, {})) end
 end

@@ -324,6 +324,8 @@ function _M:makeMapObject(tiles, idx)
 		end
 	end
 
+	self._mo, self.z, last_mo = self:alterMakeMapObject(tiles, self._mo, self.z, last_mo)
+
 	-- Setup shader
 	if tiles.use_images and core.shader.active() and self.shader then
 		local shad = Shader.new(self.shader, self.shader_args)
@@ -332,8 +334,6 @@ function _M:makeMapObject(tiles, idx)
 			self._shader = shad
 		end
 	end
-
-	self._mo, self.z, last_mo = self:alterMakeMapObject(tiles, self._mo, self.z, last_mo)
 
 	return self._mo, self.z, last_mo
 end

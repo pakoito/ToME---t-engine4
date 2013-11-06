@@ -975,12 +975,24 @@ newEffect{
 		eff.tmpid = self:addTemporaryValue("can_pass", {pass_wall=20})
 		eff.defid = self:addTemporaryValue("combat_def", eff.def)
 		eff.armid = self:addTemporaryValue("combat_armor", eff.armor)
+		if not self.shader then
+			eff.set_shader = true
+			self.shader = "moving_transparency"
+			self.shader_args = { a_min=0.3, a_max=0.8, time_factor = 3000 }
+			self:removeAllMOs()
+			game.level.map:updateMap(self.x, self.y)
+		end
 	end,
 	deactivate = function(self, eff)
+		if eff.set_shader then
+			self.shader = nil
+			self:removeAllMOs()
+			game.level.map:updateMap(self.x, self.y)
+		end
 		self:removeTemporaryValue("can_pass", eff.tmpid)
 		self:removeTemporaryValue("combat_def", eff.defid)
 		self:removeTemporaryValue("combat_armor", eff.armid)
-		if not self:canMove(self.x, self.y) then
+		if not self:canMove(self.x, self.y, true) then
 			self:teleportRandom(self.x, self.y, 50)
 		end
 	end,
