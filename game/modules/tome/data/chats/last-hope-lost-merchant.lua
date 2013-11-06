@@ -68,110 +68,129 @@ newChat{ id="unique1",
 }
 
 local maker_list = function()
-	local bases = {
-		"elven-silk robe",
-		"drakeskin leather armour",
-		"voratun mail armour",
-		"voratun plate armour",
-		"elven-silk cloak",
-		"drakeskin leather gloves",
-		"voratun gauntlets",
-		"elven-silk wizard hat",
-		"drakeskin leather cap",
-		"voratun helm",
-		"pair of drakeskin leather boots",
-		"pair of voratun boots",
-		"drakeskin leather belt",
-		"voratun ring",
-		"voratun amulet",
-		"dwarven lantern",
-		"voratun battleaxe",
-		"voratun greatmaul",
-		"voratun greatsword",
-		"voratun waraxe",
-		"voratun mace",
-		"voratun longsword",
-		"voratun dagger",
-		"dragonbone longbow",
-		"drakeskin leather sling",
-		"voratun shield",
-		"dragonbone staff",
-		"living mindstar",
+	local mainbases = {
+		armours = {
+			"elven-silk robe",
+			"drakeskin leather armour",
+			"voratun mail armour",
+			"voratun plate armour",
+			"elven-silk cloak",
+			"drakeskin leather gloves",
+			"voratun gauntlets",
+			"elven-silk wizard hat",
+			"drakeskin leather cap",
+			"voratun helm",
+			"pair of drakeskin leather boots",
+			"pair of voratun boots",
+			"drakeskin leather belt",
+			"voratun shield",
+		},
+		weapons = {
+			"voratun battleaxe",
+			"voratun greatmaul",
+			"voratun greatsword",
+			"voratun waraxe",
+			"voratun mace",
+			"voratun longsword",
+			"voratun dagger",
+			"living mindstar",
+			"quiver of dragonbone arrows",
+			"dragonbone longbow",
+			"drakeskin leather sling",
+			"dragonbone staff",
+			"pouch of voratun shots",
+		},
+		misc = {
+			"voratun ring",
+			"voratun amulet",
+			"dwarven lantern",
+			"voratun pickaxe",
+			{"dragonbone wand", "dragonbone wand"},
+			{"dragonbone totem", "dragonbone totem"},
+			{"voratun torque", "voratun torque"},
+		},
 	}
 	local l = {{"I've changed my mind.", jump = "welcome"}}
-	for i, name in ipairs(bases) do
-		
-		local not_ps, force_themes
-		if player:attr("forbid_arcane") then -- no magic gear for antimatic characters
-			not_ps = {arcane=true}
-			force_themes = {'antimagic'}
-		else -- no antimagic gear for characters with arcane-powered classes
-			if player:attr("has_arcane_knowledge") then not_ps = {antimagic=true} end
-		end
-		
---game.log("Force_themes = %s, not_ps = %s", tostring(force_themes), tostring(not_ps and (not_ps.antimagic and "antimagic" or not_ps.arcane and "arcane")))
+	for kind, bases in pairs(mainbases) do
+		l[#l+1] = {kind:capitalize(), action=function(npc, player)
+			local l = {{"I've changed my mind.", jump = "welcome"}}
+			newChat{ id="makereal",
+				text = [[Which kind of item would you like ?]],
+				answers = l,
+			}
 
---	not_ps = table.merge(not_ps or {}, {
---		'physical', 'mental', 'spell', 'defense', 'misc', 'fire', 'technique', 'psionic',
---		'lightning', 'acid', 'mind', 'arcane', 'blight', 'nature',
---		'temporal', 'light', 'dark', 'antimagic'
---	})
-		local o, ok
-		repeat
-			o = game.zone:makeEntity(game.level, "object", {name=name, ignore_material_restriction=true, no_tome_drops=true, ego_filter={keep_egos=true, ego_chance=-1000}}, nil, true)
-			if o then ok = true end
-			if o and o.power_source and player:attr("forbid_arcane") and o.power_source.arcane then ok = false end
-		until ok
-		if o then
-			l[#l+1] = {o:getName{force_id=true, do_color=true, no_count=true}, action=function(npc, player)
-				local art, ok
-				local nb = 0
-				repeat
-					art = game.state:generateRandart{base=o, lev=70, egos=4, force_themes=force_themes, forbid_power_source=not_ps}
-					if art then ok = true end
-					if art and art.power_source and player:attr("forbid_arcane") and art.power_source.arcane then ok = false end
-					nb = nb + 1
-					if nb == 40 then break end
-				until ok
-				if art and nb < 40 then
-					art:identify(true)
-					player:addObject(player.INVEN_INVEN, art)
-					player:incMoney(-4000)
-					-- clear chrono worlds and their various effects
-					if game._chronoworlds then
-						game.log("#CRIMSON#Your timetravel has no effect on pre-determined outcomes such as this.")
-						game._chronoworlds = nil
-					end
-					game:saveGame()
-
-					newChat{ id="naming",
-						text = "Do you want to name your item?\n"..tostring(art:getTextualDesc()),
-						answers = {
-							{"Yes, please.", action=function(npc, player)
-								local d = require("engine.dialogs.GetText").new("Name your item", "Name", 2, 40, function(txt)
-									art.name = txt:removeColorCodes():gsub("#", " ")
-									game.log("#LIGHT_BLUE#The merchant carefully hands you: %s", art:getName{do_color=true})
-								end, function() game.log("#LIGHT_BLUE#The merchant carefully hands you: %s", art:getName{do_color=true}) end)
-								game:registerDialog(d)
-							end},
-							{"No thanks.", action=function() game.log("#LIGHT_BLUE#The merchant carefully hands you: %s", art:getName{do_color=true}) end},
-						},
-					}
-					return "naming"
-				else
-					newChat{ id="oups",
-						text = "Oh I am sorry, it seems we could not make the item your require.",
-						answers = {
-							{"Oh, let's try something else then.", jump="make"},
-							{"Oh well, maybe later then."},
-						},
-					}
-					return "oups"
+			for i, name in ipairs(bases) do
+				local dname = nil
+				if type(name) == "table" then name, dname = name[1], name[2] end
+				local not_ps, force_themes
+				if player:attr("forbid_arcane") then -- no magic gear for antimatic characters
+					not_ps = {arcane=true}
+					force_themes = {'antimagic'}
+				else -- no antimagic gear for characters with arcane-powered classes
+					if player:attr("has_arcane_knowledge") then not_ps = {antimagic=true} end
 				end
-			end}
-		end
-	end
+				
+				local o, ok
+				repeat
+					o = game.zone:makeEntity(game.level, "object", {name=name, ignore_material_restriction=true, no_tome_drops=true, ego_filter={keep_egos=true, ego_chance=-1000}}, nil, true)
+					if o then ok = true end
+					if o and o.power_source and player:attr("forbid_arcane") and o.power_source.arcane then ok = false end
+				until ok
+				if o then
+					if not dname then dname = o:getName{force_id=true, do_color=true, no_count=true}
+					else dname = "#B4B4B4#"..o:getDisplayString()..dname.."#LAST#" end
+					l[#l+1] = {dname, action=function(npc, player)
+						local art, ok
+						local nb = 0
+						repeat
+							art = game.state:generateRandart{base=o, lev=70, egos=4, force_themes=force_themes, forbid_power_source=not_ps}
+							if art then ok = true end
+							if art and art.power_source and player:attr("forbid_arcane") and art.power_source.arcane then ok = false end
+							nb = nb + 1
+							if nb == 40 then break end
+						until ok
+						if art and nb < 40 then
+							art:identify(true)
+							player:addObject(player.INVEN_INVEN, art)
+							player:incMoney(-4000)
+							-- clear chrono worlds and their various effects
+							if game._chronoworlds then
+								game.log("#CRIMSON#Your timetravel has no effect on pre-determined outcomes such as this.")
+								game._chronoworlds = nil
+							end
+							game:saveGame()
 
+							newChat{ id="naming",
+								text = "Do you want to name your item?\n"..tostring(art:getTextualDesc()),
+								answers = {
+									{"Yes, please.", action=function(npc, player)
+										local d = require("engine.dialogs.GetText").new("Name your item", "Name", 2, 40, function(txt)
+											art.name = txt:removeColorCodes():gsub("#", " ")
+											game.log("#LIGHT_BLUE#The merchant carefully hands you: %s", art:getName{do_color=true})
+										end, function() game.log("#LIGHT_BLUE#The merchant carefully hands you: %s", art:getName{do_color=true}) end)
+										game:registerDialog(d)
+									end},
+									{"No thanks.", action=function() game.log("#LIGHT_BLUE#The merchant carefully hands you: %s", art:getName{do_color=true}) end},
+								},
+							}
+							return "naming"
+						else
+							newChat{ id="oups",
+								text = "Oh I am sorry, it seems we could not make the item your require.",
+								answers = {
+									{"Oh, let's try something else then.", jump="make"},
+									{"Oh well, maybe later then."},
+								},
+							}
+							return "oups"
+						end
+					end}
+				end
+			end
+
+			return "makereal"
+		end}
+	end
 	return l
 end
 
