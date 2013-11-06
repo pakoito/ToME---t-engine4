@@ -33,6 +33,7 @@ function _M:init(map, source_actor)
 
 	self.cursor = engine.Tiles:loadImage("target_cursor.png"):glTexture()
 	self.arrow = engine.Tiles:loadImage("target_arrow.png"):glTexture()
+	self.targetshader = engine.Tiles:loadImage("ui/targetshader.png"):glTexture()
 
 	--Use power of two (pot) width and height, rounded up
 	local pot_width = math.pow(2, math.ceil(math.log(map.tile_w-0.1) / math.log(2.0)))
@@ -100,6 +101,9 @@ function _M:display(dispx, dispy, prevfbo)
 			self.fbo:use(true, 0, 0, 0, 0)
 			self:realDisplay(0, 0)
 			self.fbo:use(false, prevfbo)
+			self.targetshader:bind(1, false)
+			self.fbo_shader.shad:paramNumber2("tileSize", self.tile_w, self.tile_h)
+			self.fbo_shader.shad:paramNumber2("scrollOffset", 0, 0)
 			self.fbo:toScreen(self.display_x, self.display_y, Map.viewport.width, Map.viewport.height, self.fbo_shader.shad, 1, 1, 1, 1, true)
 		end
 	end
