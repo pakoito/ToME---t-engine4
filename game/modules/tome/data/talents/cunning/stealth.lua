@@ -45,7 +45,7 @@ newTalent{
 	allow_autocast = true,
 	no_energy = true,
 	tactical = { BUFF = 3 },
-	getStealthPower = function(self, t) return self:combatScale(math.max(1,self:getCun(10, true) * self:getTalentLevel(t)), 5, 1, 54, 50) end, --TL 5, cun 100 = 54
+	getStealthPower = function(self, t) return 10 + self:combatScale(math.max(1,self:getCun(10, true) * self:getTalentLevel(t)), 5, 1, 54, 50) end, --TL 5, cun 100 = 54
 	getRadius = function(self, t) return math.ceil(self:combatTalentLimit(t, 0, 8.9, 4.6)) end, -- Limit to range >= 1
 	on_pre_use = function(self, t, silent)
 		if self:isTalentActive(t.id) then return true end
