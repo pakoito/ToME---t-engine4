@@ -40,5 +40,8 @@ return {
 		horizontalScrollingSpeed = horizontalScrollingSpeed or 1.0,
 		verticalScrollingSpeed = verticalScrollingSpeed or 0.3,
 	},
+	resetargs = {
+		tick_start = function() return core.game.getFrameTime() end,
+	},
 	clone = false,
 }
