@@ -87,6 +87,8 @@ function _M:updateUI()
 end
 
 function _M:uiLogin(uis)
+	if core.steam then return self:uiLoginSteam(uis) end
+
 	local str = Textzone.new{auto_width=true, auto_height=true, text="#GOLD#Online Profile"}
 	local bt = Button.new{text="Login", width=50, fct=function() self:login() end}
 	self.c_login = Textbox.new{title="Username: ", text="", chars=20, max_len=20, fct=function(text) self:login() end}
@@ -96,6 +98,15 @@ function _M:uiLogin(uis)
 	uis[#uis+1] = {hcenter=0, bottom=bt.h + self.c_login.h + self.c_pass.h, ui=str}
 	uis[#uis+1] = {left=0, bottom=bt.h + self.c_pass.h, ui=self.c_login}
 	uis[#uis+1] = {left=0, bottom=bt.h, ui=self.c_pass}
+	uis[#uis+1] = {hcenter=0, bottom=0, ui=bt}
+end
+
+function _M:uiLoginSteam(uis)
+	local str = Textzone.new{auto_width=true, auto_height=true, text="#GOLD#Online Profile"}
+	local bt = Button.new{text="Login with Steam", fct=function() self:loginSteam() end}
+
+	uis[#uis+1] = {left=10, bottom=bt.h + str.h, ui=Separator.new{dir="vertical", size=self.iw - 20}}
+	uis[#uis+1] = {hcenter=0, bottom=bt.h, ui=str}
 	uis[#uis+1] = {hcenter=0, bottom=0, ui=bt}
 end
 
@@ -122,6 +133,10 @@ function _M:login()
 		return
 	end
 	game:createProfile({create=false, login=self.c_login.text, pass=self.c_pass.text})
+end
+
+function _M:loginSteam()
+	print("<<<", core.steam.sessionTicket():toHex())
 end
 
 function _M:logout()

@@ -497,6 +497,10 @@ function string.parseHex(str)
 	return res
 end
 
+function string.toHex(str,spacer)
+	return string.gsub(str, ".", function(c) return string.format("%02X%s",string.byte(c), spacer or "") end)
+end
+
 function __get_uid_surface(uid, w, h)
 	uid = tonumber(uid)
 	local e = uid and __uids[uid]
