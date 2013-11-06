@@ -18,9 +18,13 @@
 -- darkgod@te4.org
 
 return {
-	frag = "mm_fbo",
+	frag = "target_fbo",
 	vert = nil,
 	args = {
+		fboTex = { texture = 0 },
+		targetSkin = { texture = 1 },
+		scrollOffset = {0, 0},
 	},
 	clone = false,
+	permanent = true,
 }

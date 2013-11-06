@@ -134,6 +134,7 @@ function _M:runReal()
 	if not self.player then self:newGame() end
 
 	engine.interface.GameTargeting.init(self)
+	if self.target then self.target:enableFBORenderer("ui/targetshader.png", "target_fbo") end
 
 	self.uiset.hotkeys_display.actor = self.player
 	self.uiset.npcs_display.actor = self.player
@@ -514,6 +515,8 @@ function _M:createFBOs()
 
 	if self.fbo and self.fbo2 then core.particles.defineFramebuffer(self.fbo)
 	else core.particles.defineFramebuffer(nil) end
+
+	if self.target then self.target:enableFBORenderer("ui/targetshader.png", "target_fbo") end
 
 --	self.mm_fbo = core.display.newFBO(200, 200)
 --	if self.mm_fbo then self.mm_fbo_shader = Shader.new("mm_fbo") if not self.mm_fbo_shader.shad then self.mm_fbo = nil self.mm_fbo_shader = nil end end
@@ -1359,13 +1362,13 @@ function _M:displayMap(nb_keyframes)
 
 			_2DNoise:bind(1, false)
 			self.fbo2:toScreen(map.display_x, map.display_y, map.viewport.width, map.viewport.height, self.fbo_shader.shad)
-			if self.target then self.target:display() end
+			if self.target then self.target:display(nil, nil, self.full_fbo) end
 
 		-- Basic display; no FBOs
 		else
 			if self.level.data.background then self.level.data.background(self.level, map.display_x, map.display_y, nb_keyframes) end
 			map:display(nil, nil, nb_keyframes, config.settings.tome.smooth_fov)
-			if self.target then self.target:display() end
+			if self.target then self.target:display(nil, nil, self.full_fbo) end
 			if self.level.data.foreground then self.level.data.foreground(self.level, map.display_x, map.display_y, nb_keyframes) end
 			if self.level.data.weather_particle then self.state:displayWeather(self.level, self.level.data.weather_particle, nb_keyframes) end
 			if self.level.data.weather_shader then self.state:displayWeatherShader(self.level, self.level.data.weather_shader, map.display_x, map.display_y, nb_keyframes) end
