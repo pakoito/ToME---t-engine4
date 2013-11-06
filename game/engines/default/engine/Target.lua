@@ -125,6 +125,16 @@ function _M:display(dispx, dispy, prevfbo)
 			self.fbo_shader.shad:paramNumber2("scrollOffset", 0, 0)
 			self.fbo:toScreen(self.display_x, self.display_y, Map.viewport.width, Map.viewport.height, self.fbo_shader.shad, 1, 1, 1, 1, true)
 		end
+
+		if not self.target_type.immediate_keys or firstx then
+			self.cursor:toScreen(self.display_x + (self.target.x - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (self.target.y - game.level.map.my + util.hexOffset(self.target.x)) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
+		end
+
+		if self.target_type.immediate_keys then
+			for dir, spot in pairs(util.adjacentCoords(self.target_type.start_x, self.target_type.start_y)) do
+				self:displayArrow(self.target_type.start_x, self.target_type.start_y, spot[1], spot[2], firstx == spot[1] and firsty == spot[2])
+			end
+		end
 	end
 
 	self.display_x, self.display_y = ox, oy
@@ -253,9 +263,6 @@ function _M:realDisplay(dispx, dispy)
 		end
 
 	end
-	if not self.target_type.immediate_keys or firstx then
-		self.cursor:toScreen(dispx + (self.target.x - game.level.map.mx) * self.tile_w * Map.zoom, dispy + (self.target.y - game.level.map.my + util.hexOffset(self.target.x)) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
-	end
 
 	if self.target_type.ball and self.target_type.ball > 0 then
 		core.fov.calc_circle(
@@ -322,12 +329,6 @@ function _M:realDisplay(dispx, dispy)
 				end
 			end,
 		nil)
-	end
-
-	if self.target_type.immediate_keys then
-		for dir, spot in pairs(util.adjacentCoords(self.target_type.start_x, self.target_type.start_y)) do
-			self:displayArrow(self.target_type.start_x, self.target_type.start_y, spot[1], spot[2], firstx == spot[1] and firsty == spot[2])
-		end
 	end
 end
 
