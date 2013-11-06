@@ -35,6 +35,7 @@ newEntity{
 	},
 
 	egos = "/data/general/objects/egos/digger.lua", egos_chance = resolvers.mbonus(10, 5),
+	randart_able = "/data/general/objects/random-artifacts/generic.lua",
 }
 
 newEntity{ base = "BASE_DIGGER",
