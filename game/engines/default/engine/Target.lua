@@ -35,24 +35,7 @@ function _M:init(map, source_actor)
 	self.arrow = engine.Tiles:loadImage("target_arrow.png"):glTexture()
 	self.targetshader = engine.Tiles:loadImage("ui/targetshader.png"):glTexture()
 
-	--Use power of two (pot) width and height, rounded up
-	local pot_width = math.pow(2, math.ceil(math.log(map.tile_w-0.1) / math.log(2.0)))
-	local pot_height = math.pow(2, math.ceil(math.log(map.tile_h-0.1) / math.log(2.0)))
-	self.sr = core.display.newSurface(pot_width, pot_height)
-	self.sr:erase(255, 0, 0, 150)
-	self.sr = self.sr:glTexture()
-	self.sb = core.display.newSurface(pot_width, pot_height)
-	self.sb:erase(0, 0, 255, 150)
-	self.sb = self.sb:glTexture()
-	self.sg = core.display.newSurface(pot_width, pot_height)
-	self.sg:erase(0, 255, 0, 150)
-	self.sg = self.sg:glTexture()
-	self.sy = core.display.newSurface(pot_width, pot_height)
-	self.sy:erase(255, 255, 0, 150)
-	self.sy = self.sy:glTexture()
-	self.syg = core.display.newSurface(pot_width, pot_height)
-	self.syg:erase(153, 204, 50, 150)
-	self.syg = self.syg:glTexture()
+	self:createTextures()
 
 	self.source_actor = source_actor
 
@@ -64,12 +47,48 @@ function _M:init(map, source_actor)
 --	setmetatable(self.target, {__mode='v'})
 end
 
-function _M:enableFBORenderer(shader)
-	self.fbo = core.display.newFBO(Map.viewport.width, Map.viewport.height)
-	if not self.fbo then return end
-	if shader then
-		self.fbo_shader = Shader.new(shader)
+function _M:createTextures()
+	--Use power of two (pot) width and height, rounded up
+	local pot_width = math.pow(2, math.ceil(math.log(self.tile_w-0.1) / math.log(2.0)))
+	local pot_height = math.pow(2, math.ceil(math.log(self.tile_h-0.1) / math.log(2.0)))
+	self.sr = core.display.newSurface(pot_width, pot_height)
+	self.sr:erase(255, 0, 0, self.fbo and 150 or 90)
+	self.sr = self.sr:glTexture()
+	self.sb = core.display.newSurface(pot_width, pot_height)
+	self.sb:erase(0, 0, 255, self.fbo and 150 or 90)
+	self.sb = self.sb:glTexture()
+	self.sg = core.display.newSurface(pot_width, pot_height)
+	self.sg:erase(0, 255, 0, self.fbo and 150 or 90)
+	self.sg = self.sg:glTexture()
+	self.sy = core.display.newSurface(pot_width, pot_height)
+	self.sy:erase(255, 255, 0, self.fbo and 150 or 90)
+	self.sy = self.sy:glTexture()
+	self.syg = core.display.newSurface(pot_width, pot_height)
+	self.syg:erase(153, 204, 50, self.fbo and 150 or 90)
+	self.syg = self.syg:glTexture()
+end
+
+function _M:enableFBORenderer(texture, shader)
+	if not shader then 
+		self.fbo = nil
+		return
+		self:createTextures()
 	end
+	self.fbo = core.display.newFBO(Map.viewport.width, Map.viewport.height)
+	if not self.fbo then
+		self:createTextures()
+		return
+	end
+
+	self.fbo_shader = Shader.new(shader)
+	if not self.fbo_shader.shad then
+		self.fbo = nil
+		self:createTextures()
+		return
+	end
+
+	self.targetshader = engine.Tiles:loadImage(texture):glTexture()
+	self:createTextures()
 end
 
 function _M:displayArrow(sx, sy, tx, ty, full)
