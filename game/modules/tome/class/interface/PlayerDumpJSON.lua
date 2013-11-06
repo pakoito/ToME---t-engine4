@@ -421,7 +421,7 @@ function _M:dumpToJSON(js, bypass, nosub)
 		addons[#addons+1] = add.short_name
 	end
 	if #addons > 0 then
-		tags.addons = table.concat(addons, ',')
+		tags.addons = addons
 	end
 
 	if self.has_custom_tile then
