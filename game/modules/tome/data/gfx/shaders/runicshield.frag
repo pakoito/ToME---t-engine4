@@ -1,5 +1,6 @@
 uniform sampler2D tex;
 uniform float tick;
+uniform float tick_start;
 uniform float aadjust;
 uniform vec4 bubbleColor;
 uniform vec4 auraColor;
@@ -230,7 +231,7 @@ void main(void)
 
 		vec2 sphericalProjectedCoord = vec2(0.5, 0.5) + radius * (alpha / (3.141592 / 2.0)) / radiusLen;
 
-		shieldColorSample = texture2D(tex, (sphericalProjectedCoord * 0.3 + vec2(scrollingSpeed * tick / time_factor, 0.0)));
+		shieldColorSample = texture2D(tex, (sphericalProjectedCoord * 0.3 + vec2(scrollingSpeed * (tick - tick_start) / time_factor, 0.0)));
 		shieldColorSample.a = 1.0 - exp(-shieldColorSample.a * shieldIntensity / cos(alpha));
 		//impact adjusts resulting transperency
 		shieldColorSample.a *= aadjust;
@@ -241,7 +242,7 @@ void main(void)
 	vec4 auraColorSample = vec4(0.0, 0.0, 0.0, 0.0);
 	if(length(radius) > innerRadius && length(radius) < outerRadius)
 	{
-		auraColorSample = GetFireRingColor(tick / time_factor, radius, 5.0, 50.0, 1.0, 2.0, innerRadius, outerRadius, 0.1, 0.25) * auraColor;
+		auraColorSample = GetFireRingColor((tick - tick_start) / time_factor, radius, 5.0, 50.0, 1.0, 2.0, innerRadius, outerRadius, 0.1, 0.25) * auraColor;
 	}
 
 	float ratio = (radiusLen - innerRadius) / (shieldRadius - innerRadius);
