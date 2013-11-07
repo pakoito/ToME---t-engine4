@@ -155,17 +155,17 @@ newTalent{
 	name = "Metaflow",
 	type = {"spell/meta",4},
 	require = spells_req4,
-	points = 5,
+	points = 50,
 	mana = 70,
 	cooldown = 50,
 	tactical = { BUFF = 2 },
-	getTalentCount = function(self, t) return math.floor(self:combatTalentScale(t, 3, 7)) end,
+	getTalentCount = function(self, t) return math.floor(self:combatTalentScale(t, 2, 7, "log")) end,
 	getMaxLevel = function(self, t) return self:getTalentLevel(t) end,
 	action = function(self, t)
 		local tids = {}
 		for tid, _ in pairs(self.talents_cd) do
 			local tt = self:getTalentFromId(tid)
-			if self:getTalentLevel(tt) <= t.getMaxLevel(self, t) and tt.is_spell then
+			if tt.type[2] <= t.getMaxLevel(self, t) and tt.is_spell then
 				tids[#tids+1] = tid
 			end
 		end
@@ -181,7 +181,7 @@ newTalent{
 	info = function(self, t)
 		local talentcount = t.getTalentCount(self, t)
 		local maxlevel = t.getMaxLevel(self, t)
-		return ([[Your mastery of the arcane flows allow you to reset the cooldown of %d of your spells of talent level %0.1f or less.]]):
+		return ([[Your mastery of the arcane flows allow you to reset the cooldown of %d of your spells of tier %d or less.]]):
 		format(talentcount, maxlevel)
 	end,
 }

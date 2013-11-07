@@ -108,13 +108,13 @@ newTalent{
 	stamina = 50,
 	cooldown = 50,
 	tactical = { BUFF = 1 },
-	getTalentCount = function(self, t) return math.floor(self:combatTalentScale(t, 2, 10.1, "log", 0, 2)) end,
+	getTalentCount = function(self, t) return math.floor(self:combatTalentScale(t, 2, 7, "log")) end,
 	getMaxLevel = function(self, t) return self:getTalentLevel(t) end,
 	action = function(self, t)
 		local tids = {}
 		for tid, _ in pairs(self.talents_cd) do
 			local tt = self:getTalentFromId(tid)
-			if self:getTalentLevel(tt) <= t.getMaxLevel(self, t) and (tt.type[1]:find("^cunning/") or tt.type[1]:find("^technique/")) then
+			if tt.type[2] <= t.getMaxLevel(self, t) and (tt.type[1]:find("^cunning/") or tt.type[1]:find("^technique/")) then
 				tids[#tids+1] = tid
 			end
 		end
@@ -129,7 +129,7 @@ newTalent{
 	info = function(self, t)
 		local talentcount = t.getTalentCount(self, t)
 		local maxlevel = t.getMaxLevel(self, t)
-		return ([[Your quick wits allow you to reset the cooldown of up to %d of your combat talents (cunning or technique) of talent level %0.1f or less.]]):
+		return ([[Your quick wits allow you to reset the cooldown of up to %d of your combat talents (cunning or technique) of tier %d or less.]]):
 		format(talentcount, maxlevel)
 	end,
 }

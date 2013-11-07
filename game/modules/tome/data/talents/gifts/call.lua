@@ -142,7 +142,7 @@ newTalent{
 	cooldown = 50,
 	range = 10,
 	tactical = { BUFF = 2 },
-	nbTalents = function(self, t) return math.floor(self:combatTalentScale(t, 3, 7, "log")) end,
+	getTalentCount = function(self, t) return math.floor(self:combatTalentScale(t, 2, 7, "log")) end,
 	getMaxLevel = function(self, t) return self:getTalentLevel(t) end,
 	action = function(self, t)
 		local nb = t.nbTalents(self, t)
@@ -150,7 +150,7 @@ newTalent{
 		local tids = {}
 		for tid, _ in pairs(self.talents_cd) do
 			local tt = self:getTalentFromId(tid)
-			if self:getTalentLevel(tt) <= maxlev and tt.type[1]:find("^wild%-gift/") then
+			if tt.type[2] <= maxlev and tt.type[1]:find("^wild%-gift/") then
 				tids[#tids+1] = tid
 			end
 		end
@@ -164,7 +164,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Your deep link with Nature allows you to reset the cooldown of %d of your wild gifts of talent level %d or less.]]):
+		return ([[Your deep link with Nature allows you to reset the cooldown of %d of your wild gifts of tier %d or less.]]):
 		format(t.nbTalents(self, t), t.getMaxLevel(self, t))
 	end,
 }

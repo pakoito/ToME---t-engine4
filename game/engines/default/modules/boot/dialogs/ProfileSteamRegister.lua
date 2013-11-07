@@ -70,8 +70,14 @@ function _M:okclick()
 		return
 	end
 
+	local ticket = core.steam.sessionTicket()
+	if not ticket then
+		Dialog:simplePopup("Steam", "Steam client not found.")
+		return
+	end
+
 	local d = self:simpleWaiter("Registering...", "Registering on http://te4.org/, please wait...") core.display.forceRedraw()
-	profile:performloginSteam(core.steam.sessionTicket():toHex(), self.c_login.text, self.c_email.text ~= "" and self.c_email.text)
+	profile:performloginSteam(ticket:toHex(), self.c_login.text, self.c_email.text ~= "" and self.c_email.text)
 	profile:waitFirstAuth()
 	d:done()
 	if not profile.auth and profile.auth_last_error then

@@ -138,8 +138,13 @@ function _M:login()
 end
 
 function _M:loginSteam()
+	local ticket = core.steam.sessionTicket()
+	if not ticket then
+		Dialog:simplePopup("Steam", "Steam client not found.")
+		return
+	end
 	local d = self:simpleWaiter("Login...", "Login in your account, please wait...") core.display.forceRedraw()
-	profile:performloginSteam((core.steam.sessionTicket():toHex()))
+	profile:performloginSteam((ticket:toHex()))
 	profile:waitFirstAuth()
 	d:done()
 	if not profile.auth and profile.auth_last_error then
