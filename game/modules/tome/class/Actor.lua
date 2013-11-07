@@ -4451,7 +4451,6 @@ function _M:removeEffectsFilter(t, nb, silent, force)
 			effs[#effs+1] = eff_id
 		end
 	end
-	table.print(effs)
 
 	while #effs > 0 and nb > 0 do
 		local eff = rng.tableRemove(effs)
