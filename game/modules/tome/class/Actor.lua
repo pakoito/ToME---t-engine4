@@ -2886,6 +2886,13 @@ function _M:updateModdableTile()
 	self:triggerHook{"Actor:updateModdableTile:back", base=base, add=add}
 
 	i = self.inven[self.INVEN_CLOAK]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile):format("behind")..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1} end
+
+	if self.shader_auras and next(self.shader_auras) then
+		for _, def in pairs(self.shader_auras) do
+			add[#add+1] = {image = base.."base_distancemap_01.png", shader=def.shader, textures=def.textures, display_h=2, display_y=-1}
+		end
+	end
+
 	add[#add+1] = {image = base..(self.moddable_tile_base or "base_01.png")}
 
 	if not self:attr("disarmed") then

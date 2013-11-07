@@ -1480,6 +1480,21 @@ void display_map_quad(lua_State *L, GLuint *cur_tex, int *vert_idx, int *col_idx
 	dm = m;
 	while (dm)
 	{
+	 	if (dm->shader) {
+			glDrawArrays(GL_QUADS, 0, (*vert_idx) / 2);
+			(*vert_idx) = 0;
+			(*col_idx) = 0;
+
+			for (z = dm->nb_textures - 1; z > 0; z--)
+			{
+				if (multitexture_active) tglActiveTexture(GL_TEXTURE0+z);
+				tglBindTexture(dm->textures_is3d[z] ? GL_TEXTURE_3D : GL_TEXTURE_2D, dm->textures[z]);
+			}
+			if (dm->nb_textures && multitexture_active) tglActiveTexture(GL_TEXTURE0); // Switch back to default texture unit
+
+	 		useShader(dm->shader, dx, dy, map->tile_w, map->tile_h, r, g, b, a);
+	 	}
+
 		tglBindTexture(GL_TEXTURE_2D, dm->textures[0]);
 		if (!dm->anim_max) anim = 0;
 		else {
@@ -1503,8 +1518,10 @@ void display_map_quad(lua_State *L, GLuint *cur_tex, int *vert_idx, int *col_idx
 			dm->dw,
 			dm->dh,
 			r, g, b, ((dm->dy < 0) && up_important) ? a / 3 : a,
-			m->next ? 1 : 0,
+			(m->next || dm->shader) ? 1 : 0,
 			i, j);
+	 	if (m->shader) useShader(m->shader, dx, dy, map->tile_w, map->tile_h, r, g, b, a);
+	 	else glUseProgramObjectARB(0);
 		dm->animdx = animdx;
 		dm->animdy = animdy;
 		dm = dm->next;
