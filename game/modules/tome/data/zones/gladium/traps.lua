@@ -17,10 +17,5 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-return {
-	frag = "mm_fbo",
-	vert = nil,
-	args = {
-	},
-	clone = false,
-}
+load("/data/general/traps/elemental.lua")
+load("/data/general/traps/alarm.lua")

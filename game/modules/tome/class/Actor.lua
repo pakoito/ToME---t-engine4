@@ -1277,7 +1277,8 @@ function _M:getRankStatAdjust()
 	elseif self.rank == 3.2 then return 0.5
 	elseif self.rank == 3.5 then return 1
 	elseif self.rank == 4 then return 1
-	elseif self.rank >= 5 then return 1
+	elseif self.rank == 5 then return 1
+	elseif self.rank >= 10 then return 2.5
 	else return 0
 	end
 end
@@ -1289,7 +1290,8 @@ function _M:getRankLevelAdjust()
 	elseif self.rank == 3.2 then return 1
 	elseif self.rank == 3.5 then return 2
 	elseif self.rank == 4 then return 3
-	elseif self.rank >= 5 then return 4
+	elseif self.rank == 5 then return 4
+	elseif self.rank >= 10 then return 8
 	else return 0
 	end
 end
@@ -1301,7 +1303,8 @@ function _M:getRankVimAdjust()
 	elseif self.rank == 3.2 then return 1.2
 	elseif self.rank == 3.5 then return 2.2
 	elseif self.rank == 4 then return 2.6
-	elseif self.rank >= 5 then return 2.8
+	elseif self.rank == 5 then return 2.8
+	elseif self.rank >= 10 then return 6
 	else return 0
 	end
 end
@@ -1314,7 +1317,8 @@ function _M:getRankLifeAdjust(value)
 	elseif self.rank == 3.2 then return value * (level_adjust + 0.15)
 	elseif self.rank == 3.5 then return value * (level_adjust + 1)
 	elseif self.rank == 4 then return value * (level_adjust + 2)
-	elseif self.rank >= 5 then return value * (level_adjust + 3)
+	elseif self.rank == 5 then return value * (level_adjust + 3)
+	elseif self.rank >= 10 then return value * (level_adjust + 6)
 	else return 0
 	end
 end
@@ -1326,7 +1330,8 @@ function _M:getRankResistAdjust()
 	elseif self.rank == 3.2 then return 0.8, 1.5
 	elseif self.rank == 3.5 then return 0.9, 1.5
 	elseif self.rank == 4 then return 0.9, 1.5
-	elseif self.rank >= 5 then return 0.9, 1.5
+	elseif self.rank == 5 then return 0.9, 1.5
+	elseif self.rank >= 10 then return 2.5, 3.5
 	else return 0
 	end
 end
@@ -1338,7 +1343,8 @@ function _M:getRankSaveAdjust()
 	elseif self.rank == 3.2 then return 1.3, 1.8
 	elseif self.rank == 3.5 then return 1.5, 2
 	elseif self.rank == 4 then return 1.7, 2.1
-	elseif self.rank >= 5 then return 1.9, 2.3
+	elseif self.rank == 5 then return 1.9, 2.3
+	elseif self.rank >= 10 then return 2.8, 3.5
 	else return 0
 	end
 end
@@ -1351,7 +1357,8 @@ function _M:TextRank()
 	elseif self.rank == 3.2 then rank, color = "rare", "#SALMON#"
 	elseif self.rank == 3.5 then rank, color = "unique", "#SANDY_BROWN#"
 	elseif self.rank == 4 then rank, color = "boss", "#ORANGE#"
-	elseif self.rank >= 5 then rank, color = "elite boss", "#GOLD#"
+	elseif self.rank == 5 then rank, color = "elite boss", "#GOLD#"
+	elseif self.rank >= 10 then rank, color = "god", "#FF4000#"
 	end
 	return rank, color
 end
@@ -3349,34 +3356,34 @@ function _M:learnPool(t)
 
 --	if tt.mana_regen and self.mana_regen == 0 then self.mana_regen = 0.5 end
 
-	if t.type[1]:find("^spell/") and (t.mana or t.sustain_mana) then
+	if t.mana or t.sustain_mana then
 		self:checkPool(t.id, self.T_MANA_POOL)
 	end
-	if t.type[1]:find("^wild%-gift/") and (t.equilibrium or t.sustain_equilibrium) then
+	if t.equilibrium or t.sustain_equilibrium then
 		self:checkPool(t.id, self.T_EQUILIBRIUM_POOL)
 	end
-	if (t.type[1]:find("^technique/") or t.type[1]:find("^cunning/")) and (t.stamina or t.sustain_stamina) then
+	if t.stamina or t.sustain_stamina then
 		self:checkPool(t.id, self.T_STAMINA_POOL)
 	end
-	if t.type[1]:find("^corruption/") and (t.vim or t.sustain_vim) then
+	if t.vim or t.sustain_vim then
 		self:checkPool(t.id, self.T_VIM_POOL)
 	end
-	if t.type[1]:find("^celestial/") and (t.positive or t.sustain_positive) then
+	if t.positive or t.sustain_positive then
 		self:checkPool(t.id, self.T_POSITIVE_POOL)
 	end
-	if t.type[1]:find("^celestial/") and (t.negative or t.sustain_negative) then
+	if t.negative or t.sustain_negative then
 		self:checkPool(t.id, self.T_NEGATIVE_POOL)
 	end
-	if t.type[1]:find("^cursed/") and t.hate then
+	if t.hate then
 		self:checkPool(t.id, self.T_HATE_POOL)
 	end
-	if t.type[1]:find("^chronomancy/") then
+	if t.paradox or t.sustain_paradox then
 		self:checkPool(t.id, self.T_PARADOX_POOL)
 	end
-	if t.type[1]:find("^psionic/") and not (t.type[1]:find("^psionic/feedback") or t.type[1]:find("^psionic/discharge")) then
+	if t.psi or t.sustain_psi then
 		self:checkPool(t.id, self.T_PSI_POOL)
 	end
-	if t.type[1]:find("^psionic/feedback") or t.type[1]:find("^psionic/discharge") then
+	if t.type[1]:find("^psionic/feedback") or t.type[1]:find("^psionic/discharge") or t.feedback or t.sustain_feedback then
 		self:checkPool(t.id, self.T_FEEDBACK_POOL)
 	end
 	-- If we learn an archery talent, also learn to shoot
@@ -4440,10 +4447,11 @@ function _M:removeEffectsFilter(t, nb, silent, force)
 		local e = self.tempeffect_def[eff_id]
 		if type(t) == "function" then 
 			if t(e) then effs[#effs+1] = eff_id end
-		elseif (not t.type or t.type == e.type) and (not t.status or e.status == t.status) then
+		elseif (not t.type or t.type == e.type) and (not t.status or e.status == t.status) and (not t.ignore_crosstier or not e.subtype["cross tier"]) then
 			effs[#effs+1] = eff_id
 		end
 	end
+	table.print(effs)
 
 	while #effs > 0 and nb > 0 do
 		local eff = rng.tableRemove(effs)

@@ -158,7 +158,7 @@ newTalent{
 		game:playSoundNear(self, "talents/heal")
 		local ret = {}
 		if core.shader.active(4) then
-			ret.particle = self:addParticles(Particles.new("shader_ring_rotating", 1, {toback=true, rotation=0, radius=2, img="flamesgeneric"}, {type="sunaura", time_factor=6000}))
+			ret.particle = self:addParticles(Particles.new("shader_ring_rotating", 1, {toback=true, a=0.6, rotation=0, radius=2, img="flamesgeneric"}, {type="sunaura", time_factor=6000}))
 		else
 			ret.particle = self:addParticles(Particles.new("golden_shield", 1))
 		end

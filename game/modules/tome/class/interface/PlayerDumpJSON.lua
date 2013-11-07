@@ -48,7 +48,7 @@ function _M:dumpToJSON(js, bypass, nosub)
 
 	local addons = {}
 	for name, add in pairs(game.__mod_info.addons) do
-		addons[#addons+1] = ("%s %d.%d.%d"):format(add.long_name, add.version[1], add.version[2], add.version[3])
+		addons[add.short_name] = ("%s %d.%d.%d"):format(add.long_name, add.version[1], add.version[2], add.version[3])
 	end
 
 	js:newSection("character", {
@@ -421,7 +421,7 @@ function _M:dumpToJSON(js, bypass, nosub)
 		addons[#addons+1] = add.short_name
 	end
 	if #addons > 0 then
-		tags.addons = table.concat(addons, ',')
+		tags.addon = addons
 	end
 
 	if self.has_custom_tile then

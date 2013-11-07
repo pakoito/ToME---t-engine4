@@ -18,14 +18,19 @@
 -- darkgod@te4.org
 
 return {
-	frag = "moving_transparency",
-	vert = nil,
-	args = {
-		a_min = a_min or 0.4,
-		a_max = a_max or 1.5,
-		base = base or 0.3,
-		time_factor = time_factor or 3000,
-		p2 = p2 or {1,1},
+	name = "Fortress Gladium",
+	level_range = {1, 1},
+	level_scheme = "player",
+	max_level = 1,
+	actor_adjust_level = function(zone, level, e) return zone.base_level end,
+	width = 15, height = 15,
+	all_remembered = true,
+	all_lited = true,
+	no_level_connectivity = true,
+	generator =  {
+		map = {
+			class = "engine.generator.map.Static",
+			map = "zones/gladium",
+		},
 	},
-	clone = false,
 }

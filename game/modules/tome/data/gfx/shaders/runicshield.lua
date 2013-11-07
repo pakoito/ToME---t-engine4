@@ -40,5 +40,8 @@ return {
 		scrollingSpeed = scrollingSpeed or 1.0,
 		auraWidth = auraWidth or 0.1,
 	},
+	resetargs = {
+		tick_start = function() return core.game.getFrameTime() end,
+	},
 	clone = false,
 }

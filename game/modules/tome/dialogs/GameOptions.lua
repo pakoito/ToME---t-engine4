@@ -393,7 +393,7 @@ function _M:generateListMisc()
 	local list = {}
 	local i = 0
 
-	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Saves in the background, allowing you to continue playing. If disabled you will have to wait until the saving is done, but it will be faster.#WHITE#"}
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Saves in the background, allowing you to continue playing.\n#LIGHT_RED#Disabling it is not recommended.#WHITE#"}
 	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Save in the background#WHITE##{normal}#", status=function(item)
 		return tostring(config.settings.background_saves and "enabled" or "disabled")
 	end, fct=function(item)
@@ -402,7 +402,7 @@ function _M:generateListMisc()
 		self.c_list:drawItem(item)
 	end,}
 
-	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Forces the game to save each level instead of each zone.\nThis makes it save more often but the game will use less memory when deep in a dungeon.\n\n#LIGHT_RED#Changing this option will not affect already visited zones.\n*THIS DOES NOT MAKE A FULL SAVE EACH LEVEL*.#WHITE#"}
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Forces the game to save each level instead of each zone.\nThis makes it save more often but the game will use less memory when deep in a dungeon.\n\n#LIGHT_RED#Changing this option will not affect already visited zones.\n*THIS DOES NOT MAKE A FULL SAVE EACH LEVEL*.\n#LIGHT_RED#Disabling it is not recommended#WHITE#"}
 	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Zone save per level#WHITE##{normal}#", status=function(item)
 		return tostring(config.settings.tome.save_zone_levels and "enabled" or "disabled")
 	end, fct=function(item)

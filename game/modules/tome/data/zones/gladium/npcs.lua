@@ -17,15 +17,5 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-return {
-	frag = "moving_transparency",
-	vert = nil,
-	args = {
-		a_min = a_min or 0.4,
-		a_max = a_max or 1.5,
-		base = base or 0.3,
-		time_factor = time_factor or 3000,
-		p2 = p2 or {1,1},
-	},
-	clone = false,
-}
+load("/data/zones/town-angolwen/npcs.lua", rarity(0))
+load("/data/zones/golem-graveyard/npcs.lua", rarity(0))

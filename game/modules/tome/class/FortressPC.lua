@@ -63,6 +63,9 @@ function _M:init(t, no_default)
 	self:learnTalent(self.T_SHERTUL_FORTRESS_ORBIT, true)
 
 	self:addParticles(Particles.new("shertul_fortress_orbiters", 1, {}))
+	if core.shader.active(4) then
+		self:addParticles(Particles.new("shader_shield", 1, {size_factor=1.8, img="shield5"}, {type="shield", ellipsoidalFactor=1.5, shieldIntensity=0.18, color={0xbe/255, 0x3e/255, 0xf9/255}}))
+	end
 	if core.shader.allow("distort") then self:addParticles(Particles.new("shertul_fortress_engine", 1, {})) end
 end
 
@@ -81,14 +84,7 @@ function _M:defineDisplayCallback()
 
 	local ps = self:getParticlesList()
 
-	local f_self = nil
-	local f_danger = nil
-	local f_powerful = nil
-	local f_friend = nil
-	local f_enemy = nil
-	local f_neutral = nil
-
-	self._mo:displayCallback(function(x, y, w, h, zoom, on_map)
+	local fct = function(x, y, w, h, zoom, on_map)
 		local e
 		for i = 1, #ps do
 			e = ps[i]
@@ -99,7 +95,13 @@ function _M:defineDisplayCallback()
 		end
 
 		return true
-	end)
+	end
+
+	if self._mo == self._last_mo or not self._last_mo then
+		self._mo:displayCallback(fct)
+	else
+		self._last_mo:displayCallback(fct)
+	end
 end
 
 function _M:move(x, y, force)

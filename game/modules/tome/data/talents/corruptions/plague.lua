@@ -234,6 +234,7 @@ newTalent{
 	spreadFactor = function(self, t) return self:combatTalentLimit(t, 0.05, 0.35, 0.17) end, -- Based on previous formula: 256 damage gave 100% chance (1500 hps assumed)
 	
 	do_spread = function(self, t, carrier, dam)
+		if not dam or type(dam) ~= "number" then return end
 		if not rng.percent(100*dam/(t.spreadFactor(self, t)*carrier.max_life)) then return end
 		game.logSeen(self, "The diseases of %s spread!", self.name)
 		-- List all diseases

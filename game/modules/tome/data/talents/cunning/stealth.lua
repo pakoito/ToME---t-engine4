@@ -27,7 +27,7 @@ local function stealthDetection(self, radius)
 	for i, act in ipairs(self.fov.actors_dist) do
 		dist = core.fov.distance(self.x, self.y, act.x, act.y)
 		if dist > radius then break end
-		if act ~= self and act:reactionToward(self) < 0 and not act:attr("blind") then
+		if act ~= self and act:reactionToward(self) < 0 and not act:attr("blind") and (not act.fov or not act.fov.actors or act.fov.actors[self]) then
 			detect = detect + act:combatSeeStealth() * (1.1 - dist/10) -- detection strength reduced 10% per tile
 			if dist < closest then closest = dist end
 		end
@@ -45,7 +45,7 @@ newTalent{
 	allow_autocast = true,
 	no_energy = true,
 	tactical = { BUFF = 3 },
-	getStealthPower = function(self, t) return self:combatScale(math.max(1,self:getCun(10, true) * self:getTalentLevel(t)), 5, 1, 54, 50) end, --TL 5, cun 100 = 54
+	getStealthPower = function(self, t) return 10 + self:combatScale(math.max(1,self:getCun(10, true) * self:getTalentLevel(t)), 5, 1, 54, 50) end, --TL 5, cun 100 = 54
 	getRadius = function(self, t) return math.ceil(self:combatTalentLimit(t, 0, 8.9, 4.6)) end, -- Limit to range >= 1
 	on_pre_use = function(self, t, silent)
 		if self:isTalentActive(t.id) then return true end

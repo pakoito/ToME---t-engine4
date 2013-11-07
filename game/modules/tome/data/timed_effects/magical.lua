@@ -510,7 +510,13 @@ newEffect{
 		self.damage_shield_absorb = self.damage_shield_absorb + eff.power * aegis / 100
 		if core.shader.active(4) then
 			self:removeParticles(eff.particle)
-			eff.particle = self:addParticles(Particles.new("shader_shield", 1, {size_factor=1.3, img="runicshield"}, {type="runicshield", shieldIntensity=0.14, ellipsoidalFactor=1.2, time_factor=5000, bubbleColor={0.4, 0.7, 1.0, 1.0}, auraColor={0x21/255, 0x9f/255, 0xff/255, 1}}))
+			local bc = {0.4, 0.7, 1.0, 1.0}
+			local ac = {0x21/255, 0x9f/255, 0xff/255, 1}
+			if eff.color then
+				bc = table.clone(eff.color) bc[4] = 1
+				ac = table.clone(eff.color) ac[4] = 1
+			end
+			eff.particle = self:addParticles(Particles.new("shader_shield", 1, {size_factor=1.3, img="runicshield"}, {type="runicshield", shieldIntensity=0.14, ellipsoidalFactor=1.2, time_factor=5000, bubbleColor=bc, auraColor=ac}))
 		end		
 	end,
 	damage_feedback = function(self, eff, src, value)
@@ -530,7 +536,7 @@ newEffect{
 		self.damage_shield_absorb = eff.power
 		self.damage_shield_absorb_max = eff.power
 		if core.shader.active(4) then
-			eff.particle = self:addParticles(Particles.new("shader_shield", 1, nil, {type="shield", shieldIntensity=0.2, color={0.4, 0.7, 1.0}}))
+			eff.particle = self:addParticles(Particles.new("shader_shield", 1, nil, {type="shield", shieldIntensity=0.2, color=eff.color or {0.4, 0.7, 1.0}}))
 		else
 			eff.particle = self:addParticles(Particles.new("damage_shield", 1))
 		end
@@ -969,12 +975,24 @@ newEffect{
 		eff.tmpid = self:addTemporaryValue("can_pass", {pass_wall=20})
 		eff.defid = self:addTemporaryValue("combat_def", eff.def)
 		eff.armid = self:addTemporaryValue("combat_armor", eff.armor)
+		if not self.shader then
+			eff.set_shader = true
+			self.shader = "moving_transparency"
+			self.shader_args = { a_min=0.3, a_max=0.8, time_factor = 3000 }
+			self:removeAllMOs()
+			game.level.map:updateMap(self.x, self.y)
+		end
 	end,
 	deactivate = function(self, eff)
+		if eff.set_shader then
+			self.shader = nil
+			self:removeAllMOs()
+			game.level.map:updateMap(self.x, self.y)
+		end
 		self:removeTemporaryValue("can_pass", eff.tmpid)
 		self:removeTemporaryValue("combat_def", eff.defid)
 		self:removeTemporaryValue("combat_armor", eff.armid)
-		if not self:canMove(self.x, self.y) then
+		if not self:canMove(self.x, self.y, true) then
 			self:teleportRandom(self.x, self.y, 50)
 		end
 	end,
@@ -1022,7 +1040,6 @@ newEffect{
 		end
 	end,
 	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("life_regen", eff.power)
 		eff.tmpid = self:addTemporaryValue("life_regen", eff.power)
 		if core.shader.active(4) then
 			eff.particle1 = self:addParticles(Particles.new("shader_shield", 1, {toback=true,  size_factor=1.5, y=-0.3, img="healcelestial"}, {type="healing", time_factor=4000, noup=2.0, beamColor1={0xd8/255, 0xff/255, 0x21/255, 1}, beamColor2={0xf7/255, 0xff/255, 0x9e/255, 1}, circleColor={0,0,0,0}, beamsCount=5}))

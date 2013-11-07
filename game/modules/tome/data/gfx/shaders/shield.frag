@@ -1,5 +1,6 @@
 uniform sampler2D tex;
 uniform float tick;
+uniform float tick_start;
 uniform float aadjust;
 uniform vec3 color;
 uniform float time_factor;
@@ -68,8 +69,8 @@ void main(void)
 	vec2 sphericalProjectedCoord = vec2(0.5, 0.5) + radius * (alpha / (3.141592 / 2.0)) / radiusLen;
 	
 	//two scrolling textures
-	vec4 c1 = texture2D(tex, (sphericalProjectedCoord + vec2(horizontalScrollingSpeed * tick / time_factor, 0.0)));
-	vec4 c2 = texture2D(tex, (sphericalProjectedCoord + vec2(0.0, verticalScrollingSpeed * tick / time_factor)));
+	vec4 c1 = texture2D(tex, (sphericalProjectedCoord + vec2(horizontalScrollingSpeed * (tick - tick_start) / time_factor, 0.0)));
+	vec4 c2 = texture2D(tex, (sphericalProjectedCoord + vec2(0.0, verticalScrollingSpeed * (tick - tick_start) / time_factor)));
 	vec4 c = c1 * c2;
 
 	//exponential thin layer absorbtion under angle alpha

@@ -87,8 +87,10 @@ return {
 						local x, y = e.x, e.y
 						e:die()
 						local m = game.zone:makeEntityByName(game.level, "actor", "KRYL_FEIJAN")
-						game.zone:addEntity(game.level, m, "actor", x, y)
-						game.level.map:particleEmitter(x, y, 1, "blood")
+						if m then
+							game.zone:addEntity(game.level, m, "actor", x, y)
+							game.level.map:particleEmitter(x, y, 1, "blood")
+						end
 						game.player:setQuestStatus("kryl-feijan-escape", engine.Quest.FAILED)
 
 						local spot = game.level:pickSpot{type="locked-door", subtype="locked-door"}
