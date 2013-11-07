@@ -2931,3 +2931,20 @@ newEffect{
 		self:effectTemporaryValue(eff, "random_talent_cooldown_on_use_turns", eff.turns)
 	end,
 }
+
+newEffect{
+	name = "MINDLASH", image = "talents/mindlash.png",
+	desc = "Mindlash",
+	long_desc = function(self, eff) return ("Repeated mindlash usage is very taxing increasing the psi cost each time (currently %d%%)"):format(eff.power * 100) end,
+	type = "mental",
+	subtype = { mind=true },
+	status = "detrimental",
+	parameters = {  },
+	on_merge = function(self, old_eff, new_eff)
+		new_eff.power = old_eff.power + 1
+		return new_eff
+	end,
+	activate = function(self, eff)
+		eff.power = 2
+	end,
+}

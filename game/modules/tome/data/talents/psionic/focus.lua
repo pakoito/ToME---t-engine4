@@ -33,7 +33,11 @@ newTalent{
 		local gem_level = getGemLevel(self)
 		return math.max(c - gem_level, 0)
 	end,
-	psi = 10,
+	psi = function(self, t)
+		local eff = self:hasEffect(self.EFF_MINDLASH)
+		local power = eff and eff.power or 1
+		return 10 * power
+	end,
 	tactical = { ATTACK = function(self, t, target)
 		local val = { PHYSICAL = 2}
 		local gem_level = getGemLevel(self)
@@ -94,6 +98,7 @@ newTalent{
 			end
 
 		end
+		self:setEffect(self.EFF_MINDLASH, 4, {})
 		return true
 	end,
 	info = function(self, t)
