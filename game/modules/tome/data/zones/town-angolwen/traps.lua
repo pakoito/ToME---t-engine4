@@ -21,26 +21,26 @@ load("/data/general/traps/store.lua")
 
 newEntity{ base = "BASE_STORE", define_as = "JEWELRY",
 	name="Shining Jewel",
-	display='2', color=colors.BLUE,
+	display='2', color=colors.BLUE, z=17,
 	resolvers.store("ANGOLWEN_JEWELRY", "angolwen", "store/shop_door.png", "store/shop_sign_rings.png"),
 	resolvers.chatfeature("jewelry-store", "angolwen"),
 }
 
 newEntity{ base = "BASE_STORE", define_as = "ALCHEMIST",
 	name="Alchemist",
-	display='4', color=colors.GREEN,
+	display='4', color=colors.GREEN, z=17,
 	resolvers.store("POTION", "angolwen", "store/shop_door.png", "store/shop_sign_alchemist.png"),
 }
 
 newEntity{ base = "BASE_STORE", define_as = "LIBRARY",
 	name="Library",
-	display='5', color=colors.RED,
+	display='5', color=colors.RED, z=17,
 	resolvers.store("ANGOLWEN_SCROLL", "angolwen", "store/shop_door.png", "store/shop_sign_library.png"),
 }
 
 newEntity{ base = "BASE_STORE", define_as = "STAVES",
 	name="Tools of the Art",
-	display='6', color=colors.UMBER,
+	display='6', color=colors.UMBER, z=17,
 	resolvers.store("ANGOLWEN_STAFF_WAND", "angolwen", "store/shop_door.png", "store/shop_sign_staves_wands.png"),
 	resolvers.chatfeature("angolwen-staves-store", "angolwen"),
 }
