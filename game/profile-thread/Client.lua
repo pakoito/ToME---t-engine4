@@ -23,7 +23,7 @@ local UserChat = require "profile-thread.UserChat"
 
 module(..., package.seeall, class.make)
 
-local debug = false
+local debug = true
 
 local mport = debug and 2259 or 2257
 local pport = debug and 2260 or 2258
@@ -105,6 +105,7 @@ function _M:read(ncode)
 		return nil
 	end
 	if ncode and l:sub(1, 3) ~= ncode then
+		self.last_error = l:sub(5)
 		return nil, "bad code"
 	end
 	self.last_line = l:sub(5)
@@ -133,7 +134,40 @@ function _M:pread(ncode)
 end
 
 function _M:login()
-	if self.sock and not self.auth and self.user_login and self.user_pass then
+	if self.sock and not self.auth and self.steam_token then
+		if self.steam_token_name then
+			self:command("STM_ NAME", self.steam_token_name)
+			self:read("200")
+		end
+		if self.steam_token_email then
+			self:command("STM_ EMAIL", self.steam_token_email)
+			self:read("200")
+		end
+		self:command("STM_ AUTH", self.steam_token)
+		if not self:read("200") then
+			local err = "unknown"
+			if self.last_error:find('^auth refused') then err = "auth error"
+			elseif self.last_error:find('^already exists') then err = "already exists"
+			end
+			cprofile.pushEvent(string.format("e='Auth' ok=false reason=%q", err))
+			return false
+		end
+		self:command("PASS")
+		if self:read("200") then
+			self.auth = self.last_line:unserialize()
+			print("[PROFILE] logged in with steam!", self.auth.login)
+			cprofile.pushEvent(string.format("e='Auth' ok=%q", self.last_line))
+			self:connectedPull()
+			if self.cur_char then self:orderCurrentCharacter(self.cur_char) end
+			return true
+		else
+			print("[PROFILE] could not log in with steam")
+			self.user_login = nil
+			self.user_pass = nil
+			cprofile.pushEvent("e='Auth' ok=false")
+			return false
+		end
+	elseif self.sock and not self.auth and self.user_login and self.user_pass then
 		self:command("AUTH", self.user_login)
 		self:read("200")
 		self:command("PASS", self.user_pass)
@@ -234,6 +268,20 @@ function _M:orderLogin(o)
 
 	-- Already logged?
 	if self.auth and self.auth.login == o.l then
+		print("[PROFILE] reusing login", self.auth.name)
+		cprofile.pushEvent(string.format("e='Auth' ok=%q", table.serialize(self.auth)))
+	else
+		self:login()
+	end
+end
+
+function _M:orderSteamLogin(o)
+	self.steam_token = o.token
+	self.steam_token_name = o.name
+	if o.email and #o.email > 1 then self.steam_token_email = o.email end
+
+	-- Already logged?
+	if self.auth then
 		print("[PROFILE] reusing login", self.auth.name)
 		cprofile.pushEvent(string.format("e='Auth' ok=%q", table.serialize(self.auth)))
 	else

@@ -136,7 +136,13 @@ function _M:login()
 end
 
 function _M:loginSteam()
-	print("<<<", core.steam.sessionTicket():toHex())
+	profile:performloginSteam((core.steam.sessionTicket():toHex()))
+	profile:waitFirstAuth()
+	if not profile.auth and profile.auth_last_error then
+		if profile.auth_last_error == "auth error" then
+			game:newSteamAccount()
+		end
+	end
 end
 
 function _M:logout()

@@ -99,6 +99,10 @@ function _M:start()
 		self.pass = self.generic.online.pass
 		self:tryAuth()
 		self:waitFirstAuth()
+	elseif core.steam and self.generic.onlinesteam and self.generic.onlinesteam.autolog then
+		self.steam_token = core.steam.sessionTicket():toHex()
+		self:tryAuth()
+		self:waitFirstAuth()
 	end
 end
 
@@ -140,6 +144,7 @@ end
 local generic_profile_defs = {
 	firstrun = {nosync=true, {firstrun="number"}, receive=function(data, save) save.firstrun = data.firstrun end },
 	online = {nosync=true, {login="string:40", pass="string:40"}, receive=function(data, save) save.login = data.login save.pass = data.pass end },
+	onlinesteam = {nosync=true, {autolog="boolean"}, receive=function(data, save) save.autolog = data.autolog end },
 	modules_played = { {name="index:string:30"}, {time_played="number"}, receive=function(data, save) max_set(save, data.name, data, "time_played") end, export=function(env) for k, v in pairs(env) do add{name=k, time_played=v} end end },
 	modules_loaded = { {name="index:string:30"}, {nb="number"}, receive=function(data, save) max_set(save, data.name, data, "nb") end, export=function(env) for k, v in pairs(env) do add{name=k, nb=v} end end },
 }
@@ -374,6 +379,21 @@ function _M:performlogin(login, pass)
 	end
 end
 
+function _M:performloginSteam(token, name, email)
+	self.steam_token = token
+	self.steam_token_name = name
+	if email then self.steam_token_email = email end
+	print("[ONLINE PROFILE] attempting log in steam", token)
+	self.auth_tried = nil
+	self:tryAuth()
+	self:waitFirstAuth()
+	if (profile.auth) then
+		self:saveGenericProfile("onlinesteam", {autolog=true})
+		self:getConfigs("generic")
+		self:syncOnline("generic")
+	end
+end
+
 -----------------------------------------------------------------------
 -- Events from the profile thread
 -----------------------------------------------------------------------
@@ -434,7 +454,7 @@ function _M:waitFirstAuth(timeout)
 	if not self.waiting_auth then return end
 	print("[PROFILE] waiting for first auth")
 	local first = true
-	timeout = timeout or 40
+	timeout = timeout or 60
 	while self.waiting_auth and timeout > 0 do
 		if not first then
 			if not self.waiting_auth_no_redraw then core.display.forceRedraw() end
@@ -459,6 +479,8 @@ function _M:eventAuth(e)
 		self.auth = e.ok:unserialize()
 		print("[PROFILE] Main thread got authed", self.auth.name)
 		self:getConfigs("generic", function(e) self:syncOnline(e.module) end)
+	else
+		self.auth_last_error = e.reason or "unknown"
 	end
 end
 
@@ -535,7 +557,12 @@ end
 
 function _M:tryAuth()
 	print("[ONLINE PROFILE] auth")
-	core.profile.pushOrder(table.serialize{o="Login", l=self.login, p=self.pass})
+	self.auth_last_error = nil
+	if self.steam_token then
+		core.profile.pushOrder(table.serialize{o="SteamLogin", token=self.steam_token, name=self.steam_token_name, email=self.steam_token_email})
+	else
+		core.profile.pushOrder(table.serialize{o="Login", l=self.login, p=self.pass})
+	end
 	self.waiting_auth = true
 end
 
@@ -546,6 +573,7 @@ function _M:logOut()
 
 	local pop = self:mountProfile(true)
 	fs.delete("/generic/online.profile")
+	fs.delete("/generic/onlinesteam.profile")
 	self:umountProfile(true, pop)
 end
 

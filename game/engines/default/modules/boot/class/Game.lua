@@ -401,6 +401,10 @@ function _M:checkFirstTime()
 	end
 end
 
+function _M:newSteamAccount()
+	self:registerDialog(require("mod.dialogs.ProfileSteamRegister").new())
+end
+
 function _M:createProfile(loginItem)
 	if not loginItem.create then
 		self.auth_tried = nil
