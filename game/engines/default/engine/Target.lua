@@ -30,10 +30,10 @@ function _M:init(map, source_actor)
 	self.tile_w, self.tile_h = map.tile_w, map.tile_h
 	self.active = false
 	self.target_type = {}
+	self.cursor_rotate = 0
 
 	self.cursor = engine.Tiles:loadImage("target_cursor.png"):glTexture()
 	self.arrow = engine.Tiles:loadImage("target_arrow.png"):glTexture()
-	self.targetshader = engine.Tiles:loadImage("ui/targetshader.png"):glTexture()
 
 	self:createTextures()
 
@@ -106,7 +106,7 @@ function _M:displayArrow(sx, sy, tx, ty, full)
 	core.display.glMatrix(false)
 end
 
-function _M:display(dispx, dispy, prevfbo)
+function _M:display(dispx, dispy, prevfbo, rotate_keyframes)
 	local ox, oy = self.display_x, self.display_y
 	local sx, sy = game.level.map._map:getScroll()
 	sx = sx + game.level.map.display_x
@@ -127,7 +127,14 @@ function _M:display(dispx, dispy, prevfbo)
 		end
 
 		if not self.target_type.immediate_keys or firstx then
-			self.cursor:toScreen(self.display_x + (self.target.x - game.level.map.mx) * self.tile_w * Map.zoom, self.display_y + (self.target.y - game.level.map.my + util.hexOffset(self.target.x)) * self.tile_h * Map.zoom, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
+			core.display.glMatrix(true)
+			core.display.glTranslate(self.display_x + (self.target.x - game.level.map.mx) * self.tile_w * Map.zoom + self.tile_w * Map.zoom / 2, self.display_y + (self.target.y - game.level.map.my + util.hexOffset(self.target.x)) * self.tile_h * Map.zoom + self.tile_h * Map.zoom / 2, 0)
+			if rotate_keyframes then
+				self.cursor_rotate = self.cursor_rotate - rotate_keyframes / 2
+				core.display.glRotate(self.cursor_rotate, 0, 0, 1)
+			end
+			self.cursor:toScreen(-self.tile_w * Map.zoom / 2, -self.tile_h * Map.zoom / 2, self.tile_w * Map.zoom, self.tile_h * Map.zoom)
+			core.display.glMatrix(false)
 		end
 
 		if self.target_type.immediate_keys then

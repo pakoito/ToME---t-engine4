@@ -1362,13 +1362,13 @@ function _M:displayMap(nb_keyframes)
 
 			_2DNoise:bind(1, false)
 			self.fbo2:toScreen(map.display_x, map.display_y, map.viewport.width, map.viewport.height, self.fbo_shader.shad)
-			if self.target then self.target:display(nil, nil, self.full_fbo) end
+			if self.target then self.target:display(nil, nil, self.full_fbo, nb_keyframes) end
 
 		-- Basic display; no FBOs
 		else
 			if self.level.data.background then self.level.data.background(self.level, map.display_x, map.display_y, nb_keyframes) end
 			map:display(nil, nil, nb_keyframes, config.settings.tome.smooth_fov)
-			if self.target then self.target:display(nil, nil, self.full_fbo) end
+			if self.target then self.target:display(nil, nil, self.full_fbo, nb_keyframes) end
 			if self.level.data.foreground then self.level.data.foreground(self.level, map.display_x, map.display_y, nb_keyframes) end
 			if self.level.data.weather_particle then self.state:displayWeather(self.level, self.level.data.weather_particle, nb_keyframes) end
 			if self.level.data.weather_shader then self.state:displayWeatherShader(self.level, self.level.data.weather_shader, map.display_x, map.display_y, nb_keyframes) end
