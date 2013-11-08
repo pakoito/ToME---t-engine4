@@ -2250,6 +2250,11 @@ static int gl_quadratic_sphere(lua_State *L)
  * Framebuffer Objects
  **************************************************************/
 
+static int gl_fbo_supports_transparency(lua_State *L) {
+	lua_pushboolean(L, TRUE);
+	return 1;
+}
+
 static int gl_new_fbo(lua_State *L)
 {
 	if (!fbo_active) return 0;
@@ -2626,6 +2631,7 @@ static const struct luaL_Reg displaylib[] =
 	{"newSurface", sdl_new_surface},
 	{"newTile", sdl_new_tile},
 	{"newFBO", gl_new_fbo},
+	{"fboSupportsTransparency", gl_fbo_supports_transparency},
 	{"newQuadratic", gl_new_quadratic},
 	{"drawQuad", gl_draw_quad},
 	{"drawQuadPart", gl_draw_quad_part},
