@@ -523,7 +523,7 @@ newTalent{
 			end)
 
 			self:project (tg, a.x, a.y, DamageType.PHYSICAL, t.getDamage(self, t))
-			game.level.map:particleEmitter(a.x, a.y, tg.radius, "gravity_spike", {radius=t.getRadius(self, t), grids=grids, tx=a.x, ty=a.y})
+			game.level.map:particleEmitter(a.x, a.y, tg.radius, "gravity_spike", {radius=t.getRadius(self, t), grids=grids, tx=a.x, ty=a.y, allow=core.shader.allow("distort")})
 			game:playSoundNear(self, "talents/earth")
 
 		end

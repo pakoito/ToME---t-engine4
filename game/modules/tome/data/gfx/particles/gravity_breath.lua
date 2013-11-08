@@ -27,7 +27,7 @@ dir = math.deg(math.atan2(ty, tx))
 --------------------------------------------------------------------------------------
 -- Advanced shaders
 --------------------------------------------------------------------------------------
-if core.shader.allow("distort") then
+if core.shader.allow("distort") and allow then
 use_shader = {type="distort", power=0.06, power_time=1000000, blacken=30} alterscreen = true
 base_size = 64
 local nb = 0

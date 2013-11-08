@@ -38,7 +38,7 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.REPULSION, self:spellCrit(t.getDamage(self, t)))
-		game.level.map:particleEmitter(self.x, self.y, tg.radius, "gravity_breath", {radius=tg.radius, tx=x-self.x, ty=y-self.y})
+		game.level.map:particleEmitter(self.x, self.y, tg.radius, "gravity_breath", {radius=tg.radius, tx=x-self.x, ty=y-self.y, allow=core.shader.allow("distort")})
 		game:playSoundNear(self, "talents/earth")
 		return true
 	end,
@@ -84,7 +84,7 @@ newTalent{
 			end
 		end)
 		self:project (tg, x, y, DamageType.GRAVITY, self:spellCrit(t.getDamage(self, t)))
-		game.level.map:particleEmitter(x, y, tg.radius, "gravity_spike", {radius=tg.radius})
+		game.level.map:particleEmitter(x, y, tg.radius, "gravity_spike", {radius=tg.radius, allow=core.shader.allow("distort")})
 
 		game:playSoundNear(self, "talents/earth")
 		return true
