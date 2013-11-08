@@ -95,7 +95,7 @@ return {
 			underwater = is_flooded,
 			generator = is_flooded and {
 				map = {
-					down = "SHERTUL_FORTRESS",
+					down = "SHERTUL_FORTRESS_FLOOD",
 					['.'] = {"WATER_FLOOR","WATER_FLOOR","WATER_FLOOR","WATER_FLOOR","WATER_FLOOR","WATER_FLOOR","WATER_FLOOR","WATER_FLOOR_BUBBLE"},
 					force_last_stair = true,
 				},
@@ -109,7 +109,7 @@ return {
 					['#'] = "WALL",
 					up = "UP",
 					door = "DOOR",
-					down = "SHERTUL_FORTRESS",
+					down = "SHERTUL_FORTRESS_DRY",
 					force_last_stair = true,
 				},
 			},

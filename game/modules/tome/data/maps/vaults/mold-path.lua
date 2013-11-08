@@ -21,16 +21,16 @@ setStatusAll{no_teleport=true}
 
 rotates = {"default", "90", "180", "270", "flipx", "flipy"}
 
-defineTile('.', "GRASS")
+defineTile('.', "GRASS_SHORT")
 defineTile('#', "TREE")
 defineTile('X', "HARDTREE")
 defineTile('~', "POISON_DEEP_WATER")
 defineTile('!', "ROCK_VAULT")
 
-defineTile('m', "GRASS", nil, {random_filter={subtype="molds", add_levels=2}})
-defineTile('j', "GRASS", nil, {random_filter={subtype="oozes", add_levels=2}})
+defineTile('m', "GRASS_SHORT", nil, {random_filter={subtype="molds", add_levels=2}})
+defineTile('j', "GRASS_SHORT", nil, {random_filter={subtype="oozes", add_levels=2}})
 
-defineTile('$', "GRASS", {random_filter={add_levels=5, tome_mod="vault"}})
+defineTile('$', "GRASS_SHORT", {random_filter={add_levels=5, tome_mod="vault"}})
 
 startx = 19
 starty = 7
