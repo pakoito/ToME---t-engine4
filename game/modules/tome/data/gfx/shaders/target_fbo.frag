@@ -47,26 +47,26 @@ void main(void)
 		
 	if(gl_TexCoord[0].x + offset.x > 1.0)
 	{
-		loc9 = 0; 
-		loc3 = 0;
+		loc9 = false; 
+		loc3 = false;
 	}
 
 	if(gl_TexCoord[0].x - offset.x < 0.0)
 	{
-		loc1 = 0; 
-		loc7 = 0;
+		loc1 = false; 
+		loc7 = false;
 	}
 
 	if(gl_TexCoord[0].y + offset.y > 1.0)
 	{
-		loc7 = 0; 
-		loc9 = 0;
+		loc7 = false; 
+		loc9 = false;
 	}
 
 	if(gl_TexCoord[0].y - offset.y < 0.0)
 	{
-		loc1 = 0; 
-		loc3 = 0;
+		loc1 = false; 
+		loc3 = false;
 	}
 			
 
