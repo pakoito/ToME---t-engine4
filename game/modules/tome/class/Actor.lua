@@ -2889,7 +2889,7 @@ function _M:updateModdableTile()
 
 	if self.shader_auras and next(self.shader_auras) then
 		for _, def in pairs(self.shader_auras) do
-			add[#add+1] = {image = base.."base_distancemap_01.png", shader=def.shader, textures=def.textures, display_h=2, display_y=-1}
+			add[#add+1] = {image_alter="sdm", shader=def.shader, textures=def.textures, display_h=2, display_y=-1}
 		end
 	end
 

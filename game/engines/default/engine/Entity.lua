@@ -278,24 +278,30 @@ function _M:makeMapObject(tiles, idx)
 
 	-- Texture 0 is always the normal image/ascii tile
 	-- we pcall it because some weird cases can not find a tile
-	local ok, tex, texx, texy, pos_x, pos_y = pcall(tiles.get, tiles, self.display, self.color_r, self.color_g, self.color_b, self.color_br, self.color_bg, self.color_bb, self.image, self._noalpha and 255, self.ascii_outline, true)
+	local ok, btex, btexx, btexy, bpos_x, bpos_y = pcall(tiles.get, tiles, self.display, self.color_r, self.color_g, self.color_b, self.color_br, self.color_bg, self.color_bb, self.image, self._noalpha and 255, self.ascii_outline, true)
 	if ok then
 		if self.anim then
-			self._mo:texture(0, tex, false, texx / self.anim.max, texy, pos_x, pos_y)
+			self._mo:texture(0, btex, false, btexx / self.anim.max, btexy, bpos_x, bpos_y)
 			self._mo:setAnim(0, self.anim.max, self.anim.speed or 1, self.anim.loop or -1)
 		else
-			self._mo:texture(0, tex, false, texx, texy, pos_x, pos_y)
+			self._mo:texture(0, btex, false, btexx, btexy, bpos_x, bpos_y)
 		end
 	end
 
 	-- Additional MO chained to the same Z order
 	if tiles.use_images and self.add_mos then
+		local tex, texx, texy, pos_x, pos_y
 		local cmo = self._mo
 		for i = 1, #self.add_mos do
 			local amo = self.add_mos[i]
 			-- Create a simple additional chained MO
 			local mo = core.map.newObject(self.uid, 1 + (tiles.use_images and amo.textures and #amo.textures or 0), false, false, false, amo.display_x or 0, amo.display_y or 0, amo.display_w or 1, amo.display_h or 1, amo.display_scale or 1)
-			tex, texx, texy, pos_x, pos_y = tiles:get("", 0, 0, 0, 0, 0, 0, amo.image, false, false, true)
+			if amo.image then
+				tex, texx, texy, pos_x, pos_y = tiles:get("", 0, 0, 0, 0, 0, 0, amo.image, false, false, true)
+			elseif amo.image_alter == "sdm" then
+				tex, texx, texy, pos_x, pos_y = btex:generateSDM()
+				texx, texy, pos_x, pos_y = btexx, btexy * 2, bpos_x, bpos_y
+			end
 			mo:texture(0, tex, false, texx, texy, pos_x, pos_y)
 			if amo.particle then
 				local args = amo.particle_args or {}

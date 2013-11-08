@@ -1196,6 +1196,198 @@ static int gl_texture_to_sdl(lua_State *L)
 	return 1;
 }
 
+typedef struct
+{
+	int x, y;
+} Vector;
+static inline float clamp(float val, float min, float max) { return val < min ? min : (val > max ? max : val); }
+static void build_sdm_ex(const unsigned char *texData, int srcWidth, int srcHeight, unsigned char *sdmTexData, int dstWidth, int dstHeight, int dstx, int dsty)
+{
+
+	int maxSize = dstWidth > dstHeight ? dstWidth : dstHeight;
+	int minSize = dstWidth < dstHeight ? dstWidth : dstHeight;
+
+	Vector *pixelStack = (Vector *)malloc(dstWidth * dstHeight * sizeof(Vector));
+	Vector *vectorMap = (Vector *)malloc(dstWidth * dstHeight * sizeof(Vector));
+	int *pixelStackIndex = (int *) malloc(dstWidth * dstHeight * sizeof(int));
+	
+	int currSize = 0;
+	int prevSize = 0;
+	int newSize = 0;
+
+	int x, y;
+	for(y = 0; y < dstHeight; y++)
+	{
+		for(x = 0; x < dstWidth; x++)
+		{
+			pixelStackIndex[x + y * dstWidth] = -1;
+			vectorMap[x + y * dstWidth].x = 0;
+			vectorMap[x + y * dstWidth].y = 0;
+
+			int srcx = dstx + x;
+			int srcy = dsty + y;
+			if(srcx < 0 || srcx >= srcWidth || srcy < 0 || srcy >= srcHeight) continue;
+
+			if(texData[(x + y * srcWidth) * 4 + 3] > 128)
+			{
+				pixelStackIndex[x + y * dstWidth] = currSize;
+				pixelStack[currSize].x = x;
+				pixelStack[currSize].y = y;
+				currSize++;
+			}
+		}
+	}
+	int dist = 0;
+	bool done = 0;
+	while(!done)
+	{
+		dist++;
+		int newSize = currSize;
+		int pixelIndex;
+		int neighbourNumber;
+		for(pixelIndex = prevSize; pixelIndex < currSize; pixelIndex++)
+		{
+			for(neighbourNumber = 0; neighbourNumber < 8; neighbourNumber++)
+			{
+				int xoffset = 0;
+				int yoffset = 0;
+				switch(neighbourNumber)
+				{
+					case 0: xoffset =  1; yoffset =  0; break;
+					case 1: xoffset =  0; yoffset =  1; break;
+					case 2: xoffset = -1; yoffset =  0; break;
+					case 3: xoffset =  0; yoffset = -1; break;
+					case 4: xoffset =  1; yoffset =  1; break;
+					case 5: xoffset = -1; yoffset =  1; break;
+					case 6: xoffset = -1; yoffset = -1; break;
+					case 7: xoffset =  1; yoffset = -1; break;
+				}
+				if(pixelStack[pixelIndex].x + xoffset >= dstWidth  || pixelStack[pixelIndex].x + xoffset < 0 ||
+					 pixelStack[pixelIndex].y + yoffset >= dstHeight || pixelStack[pixelIndex].y + yoffset < 0) continue;
+
+				int currIndex = pixelStack[pixelIndex].x + pixelStack[pixelIndex].y * dstWidth;
+				int neighbourIndex = (pixelStack[pixelIndex].x + xoffset) + (pixelStack[pixelIndex].y + yoffset) * dstWidth;
+				
+				Vector currOffset;
+				currOffset.x = vectorMap[currIndex].x + xoffset;
+				currOffset.y = vectorMap[currIndex].y + yoffset;
+				if(pixelStackIndex[neighbourIndex] == -1)
+				{
+					vectorMap[neighbourIndex] = currOffset;
+
+					pixelStackIndex[neighbourIndex] = newSize;
+
+					pixelStack[newSize].x = pixelStack[pixelIndex].x + xoffset;
+					pixelStack[newSize].y = pixelStack[pixelIndex].y + yoffset;
+					newSize++;
+				}else
+				{
+					if(vectorMap[neighbourIndex].x * vectorMap[neighbourIndex].x + vectorMap[neighbourIndex].y * vectorMap[neighbourIndex].y >
+						 currOffset.x * currOffset.x + currOffset.y * currOffset.y)
+					{
+						vectorMap[neighbourIndex] = currOffset;
+						/*float weight0 = sqrtf(vectorMap[neighbourIndex].x * vectorMap[neighbourIndex].x + vectorMap[neighbourIndex].y * vectorMap[neighbourIndex].y);
+						float weight1 = sqrtf(currOffset.x * currOffset.x + currOffset.y * currOffset.y);
+						vectorMap[neighbourIndex].x = vectorMap[neighbourIndex].x * weight1 / (weight0 + weight1) + currOffset.x * weight0 / (weight0 + weight1);
+						vectorMap[neighbourIndex].y = vectorMap[neighbourIndex].y * weight1 / (weight0 + weight1) + currOffset.y * weight0 / (weight0 + weight1);*/
+					}
+				}        
+			}
+		}
+		if(currSize == newSize)
+		{
+			done = 1;
+		}
+		prevSize = currSize;
+		currSize = newSize;
+	}
+
+	for(y = 0; y < dstHeight; y++)
+	{
+		for(x = 0; x < dstWidth; x++)
+		{
+			Vector offset = vectorMap[x + y * dstWidth];
+			float offsetLen = sqrtf((float)(offset.x * offset.x + offset.y * offset.y));
+
+			Vector currPoint;
+			currPoint.x = x;
+			currPoint.y = y;
+
+
+			Vector basePoint;
+			basePoint.x = currPoint.x - offset.x*0;
+			basePoint.y = currPoint.y - offset.y*0;
+
+			Vector centerPoint;
+			centerPoint.x = dstx + srcWidth  / 2;
+			centerPoint.y = dsty + srcHeight / 2;
+			float ang = atan2((float)(basePoint.x - centerPoint.x), -(float)(basePoint.y - centerPoint.y)); //0 is at up
+			//float ang = atan2((float)(offset.x), -(float)(offset.y));
+			sdmTexData[(x + y * dstWidth) * 4 + 0] = 127 + (float)(-vectorMap[x + y * dstWidth].x) / maxSize * 127;
+			sdmTexData[(x + y * dstWidth) * 4 + 1] = 127 + (float)(-vectorMap[x + y * dstWidth].y) / maxSize * 127;
+			sdmTexData[(x + y * dstWidth) * 4 + 2] = (unsigned char)(clamp(ang / 3.141592f * 0.5f + 0.5f, 0.0f, 1.0f) * 255);
+			sdmTexData[(x + y * dstWidth) * 4 + 3] = (unsigned char)(offsetLen / sqrtf(dstWidth * dstWidth + dstHeight * dstHeight) * 255);
+		}
+	}
+
+	/*for(y = 0; y < dstHeight; y++)
+	{
+		for(x = 0; x < dstWidth; x++)
+		{
+			int dstPointx = x + (sdmTexData[(x + y * dstWidth) * 4 + 0] / 255.0 - 0.5) * maxSize;
+			int dstPointy = y + (sdmTexData[(x + y * dstWidth) * 4 + 1] / 255.0 - 0.5) * maxSize;
+
+			float planarx = sdmTexData[(x + y * dstWidth) * 4 + 2] / 255.0;
+			float planary = sdmTexData[(x + y * dstWidth) * 4 + 3] / 255.0;
+			
+			char resultColor[4];
+			GetBackgroundColor(Vector2f(planarx, planary), 0.1f, resultColor);
+
+
+			for(int componentIndex = 0; componentIndex < 4; componentIndex++)
+			{
+				sdmTexData[(x + y * dstWidth) * 4 + componentIndex] = resultColor[componentIndex];
+			}
+		}
+	}*/
+	free(pixelStack);
+	free(vectorMap);
+	free(pixelStackIndex);
+}
+
+
+static int gl_texture_alter_sdm(lua_State *L) {
+	GLuint *t = (GLuint*)auxiliar_checkclass(L, "gl{texture}", 1);
+
+	// Bind the texture to read
+	tglBindTexture(GL_TEXTURE_2D, *t);
+
+	// Get texture size
+	GLint w, h;
+	glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &w);
+	glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &h);
+	GLubyte *tmp = calloc(w*h*4, sizeof(GLubyte));
+	glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, tmp);
+
+	GLubyte *sdm = calloc(w*h*2*4, sizeof(GLubyte));
+	build_sdm_ex(tmp, w, h, sdm, w, h * 2, 0, 0);
+
+	GLuint *st = (GLuint*)lua_newuserdata(L, sizeof(GLuint));
+	auxiliar_setclass(L, "gl{texture}", -1);
+
+	glGenTextures(1, st);
+	tfglBindTexture(GL_TEXTURE_2D, *st);
+	glTexImage2D(GL_TEXTURE_2D, 0, 4, w, h * 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, sdm);
+
+	free(tmp);
+	free(sdm);
+
+	lua_pushnumber(L, w);
+	lua_pushnumber(L, h * 2);
+
+	return 3;
+}
+
 static int gl_tex_white = 0;
 int init_blank_surface()
 {
@@ -2685,6 +2877,7 @@ static const struct luaL_Reg sdl_texture_reg[] =
 	{"toScreenHighlightHex", sdl_texture_toscreen_highlight_hex},
 	{"makeOutline", sdl_texture_outline},
 	{"toSurface", gl_texture_to_sdl},
+	{"generateSDM", gl_texture_alter_sdm},
 	{"bind", sdl_texture_bind},
 	{NULL, NULL},
 };

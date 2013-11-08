@@ -77,7 +77,7 @@ newTalent{
 		game:playSoundNear(self, "talents/fire")
 		local cft = self:getTalentFromId(self.T_CLEANSING_FLAMES)
 		self.shader_auras = self.shader_auras or {}
-		self.shader_auras.burning_wake = {shader="awesomeaura", textures={{"image", "particles_images/flamesgeneric.png"}}}
+		self.shader_auras.burning_wake = {shader="awesomeaura", textures={{"image", "particles_images/flamesshockwave.png"}}}
 		self:updateModdableTile()
 		return {
 			bw = self:addTemporaryValue("burning_wake", t.getDamage(self, t)),
