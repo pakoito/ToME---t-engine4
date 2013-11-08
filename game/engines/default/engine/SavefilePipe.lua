@@ -130,10 +130,39 @@ function _M:doThread()
 		local pop = core.serial.popSaveReturn()
 		if not pop then coroutine.yield()
 		else
-			if waiton[pop] and waiton[pop].on_end then
-				waiton[pop].on_end(waiton[pop].save)
+			local dontremove = false
+			local p = waiton[pop]
+			if p then
+				local Savefile = require(p.class)
+
+				print("[SAVEFILE PIPE] Checking save", p.savename, p.type, p.save.current_save_zip)
+				local save = Savefile.new(p.savename, config.settings.background_saves)
+				local okmain = save:checkValidity(p.type)
+				save:close()
+
+				if not okmain then
+					print("[SAVEFILE PIPE] *RE*new save running in the pipe:", p.savename, p.type, "::", p.id, "::", p.baseobject, "=>", p.object, "("..p.nb_objects..")")
+
+					local o = p.object
+					local save = Savefile.new(p.savename, config.settings.background_saves)
+					o.__saved_saveversion = p.saveversion
+					save["save"..p.type:lower():capitalize()](save, o, true)
+					if p.screenshot then save:saveScreenshot(p.screenshot) end
+					p.save = save
+					waiton[save.current_save_zip:gsub("%.tmp$", "")] = p
+					save:close()
+					core.serial.threadSave()
+					print("[SAVEFILE PIPE] Resaving sent", p.savename, p.type, p.save.current_save_zip)
+					dontremove = true
+				end
 			end
-			waiton[pop] = nil
+
+			if not dontremove then
+				if p and p.on_end then
+					p.on_end(p.save)
+				end
+				waiton[pop] = nil
+			end
 		end
 	end
 	self.waiton = nil
