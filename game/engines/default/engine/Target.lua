@@ -69,10 +69,10 @@ function _M:createTextures()
 end
 
 function _M:enableFBORenderer(texture, shader)
-	if not shader then 
+	if not shader or not core.display.fboSupportsTransparency() then 
 		self.fbo = nil
-		return
 		self:createTextures()
+		return
 	end
 	self.fbo = core.display.newFBO(Map.viewport.width, Map.viewport.height)
 	if not self.fbo then

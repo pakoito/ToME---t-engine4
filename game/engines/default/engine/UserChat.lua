@@ -121,7 +121,7 @@ function _M:addMessage(kind, channel, login, name, msg, extra_data, no_change)
 
 	local url = urlmatch:match(msg)
 	if url then
-		msg = msg:lpegSub(urlfind, "#LIGHT_BLUE##{italic}#"..url.."#{normal}##LAST#")
+		pcall(function() msg = msg:lpegSub(urlfind, "#LIGHT_BLUE##{italic}#"..url.."#{normal}##LAST#") end)
 	end
 
 	local item = {channel=channel, kind=kind, login=login, name=name, color_name=color_name, msg=msg, url=url, extra_data=extra_data, timestamp=core.game.getTime()}
