@@ -74,7 +74,7 @@ newEntity{ name = "wisp",
 }
 
 newEntity{ base = "BASE_NPC_CRYSTAL",
-	name = "red crystal", color=colors.RED, tint=colors.RED,
+	name = "red crystal", color=colors.RED, tint=colors.RED, image = "npc/crystal_red.png",
 	desc = "A formation of red crystal. It emits bright red, scorching light.",
 	level_range = {1, nil}, exp_worth = 1,
 	rarity = 1,
@@ -97,7 +97,7 @@ newEntity{ base = "BASE_NPC_CRYSTAL",
 }
 
 newEntity{ base = "BASE_NPC_CRYSTAL",
-	name = "black crystal", color=colors.BLACK, tint=colors.BLACK,
+	name = "black crystal", color=colors.BLACK, tint=colors.BLACK, image = "npc/crystal_black.png",
 	desc = "A formation of black crystal. It absorbs all light around it.",
 	level_range = {3, nil}, exp_worth = 1,
 	rarity = 2,
@@ -108,7 +108,7 @@ newEntity{ base = "BASE_NPC_CRYSTAL",
 }
 
 newEntity{ base = "BASE_NPC_CRYSTAL",
-	name = "crimson crystal", color=colors.DARK_RED, tint=colors.DARK_RED,
+	name = "crimson crystal", color=colors.DARK_RED, tint=colors.DARK_RED, image = "npc/crystal_darkred.png",
 	desc = "A formation of crimson crystal. It emits a crimson light reminiscent of blood.",
 	level_range = {3, nil}, exp_worth = 1,
 	rarity = 3,
@@ -119,7 +119,7 @@ newEntity{ base = "BASE_NPC_CRYSTAL",
 }
 
 newEntity{ base = "BASE_NPC_CRYSTAL",
-	name = "blue crystal", color=colors.BLUE, tint=colors.BLUE,
+	name = "blue crystal", color=colors.BLUE, tint=colors.BLUE, image = "npc/crystal_blue.png",
 	desc = "A formation of blue crystal. Its light shines like the ocean's waves.",
 	level_range = {3, nil}, exp_worth = 1,
 	rarity = 4,
@@ -130,7 +130,7 @@ newEntity{ base = "BASE_NPC_CRYSTAL",
 }
 
 newEntity{ base = "BASE_NPC_CRYSTAL",
-	name = "multi-hued crystal", color=colors.VIOLET, tint=colors.VIOLET,
+	name = "multi-hued crystal", color=colors.VIOLET, tint=colors.VIOLET, image = "npc/crystal_violet.png",
 	shader = "quad_hue",
 	desc = "A formation of multi-hued crystal. It shines with all the colors of the rainbow.",
 	level_range = {10, nil}, exp_worth = 1,
