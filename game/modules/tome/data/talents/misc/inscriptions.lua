@@ -856,7 +856,7 @@ newInscription{
 				-- return the rifted actor
 				if self.temporary <= 0 then
 					game.level.map(self.target.x, self.target.y, engine.Map.TERRAIN, self.old_feat)
-					game.level:removeEntity(self)
+					game.level:removeEntity(self, true)
 					local mx, my = util.findFreeGrid(self.target.x, self.target.y, 20, true, {[engine.Map.ACTOR]=true})
 					local old_levelup = self.target.forceLevelup
 					self.target.forceLevelup = function() end
@@ -868,7 +868,7 @@ newInscription{
 		}
 		
 		game.logSeen(target, "%s has moved forward in time!", target.name:capitalize())
-		game.level:removeEntity(target)
+		game.level:removeEntity(target, true)
 		game.level:addEntity(e)
 		game.level.map(x, y, Map.TERRAIN, e)
 		game.nicer_tiles:updateAround(game.level, x, y)
