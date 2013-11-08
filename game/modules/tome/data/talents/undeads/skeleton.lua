@@ -46,7 +46,7 @@ newTalent{
 	end,
 
 	action = function(self, t)
-		self:setEffect(self.EFF_DAMAGE_SHIELD, 10, {power=t.getShield(self, t)})
+		self:setEffect(self.EFF_DAMAGE_SHIELD, 10, {color={0xcb/255, 0xcb/255, 0xcb/255}, power=t.getShield(self, t)})
 		return true
 	end,
 	info = function(self, t)
