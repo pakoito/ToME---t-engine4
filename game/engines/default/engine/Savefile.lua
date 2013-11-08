@@ -604,6 +604,22 @@ function _M:loadEntity(name)
 	return loadedEntity
 end
 
+--- Checks validity of a kind
+function _M:checkValidity(type)
+	local path = fs.getRealPath(self.save_dir..self['nameLoad'..type:lower():capitalize()](self))
+	if not path or path == "" then
+		print("[SAVEFILE] checked validity of type", type, " => path not found")
+		return false
+	end
+	fs.mount(path, self.load_dir)
+	local ok = false
+	local f = fs.open(self.load_dir.."main", "r")
+	if f then ok = true f:close() end
+	fs.umount(path)
+	print("[SAVEFILE] checked validity of type", type, " => ", ok and "all fine" or "main not found")
+	return ok
+end
+
 --- Checks for existence
 function _M:check()
 	return fs.exists(self.save_dir..self:nameLoadGame())
