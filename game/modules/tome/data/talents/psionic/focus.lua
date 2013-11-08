@@ -98,7 +98,7 @@ newTalent{
 			end
 
 		end
-		self:setEffect(self.EFF_MINDLASH, 4, {})
+		game:onTickEnd(function() self:setEffect(self.EFF_MINDLASH, 4, {}) end)
 		return true
 	end,
 	info = function(self, t)
