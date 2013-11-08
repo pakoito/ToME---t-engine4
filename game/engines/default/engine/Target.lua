@@ -69,7 +69,7 @@ function _M:createTextures()
 end
 
 function _M:enableFBORenderer(texture, shader)
-	if not shader or not core.display.fboSupportsTransparency() then 
+	if not shader or not core.display.fboSupportsTransparency then 
 		self.fbo = nil
 		self:createTextures()
 		return
