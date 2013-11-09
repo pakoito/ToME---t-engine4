@@ -2885,13 +2885,14 @@ function _M:updateModdableTile()
 
 	self:triggerHook{"Actor:updateModdableTile:back", base=base, add=add}
 
-	i = self.inven[self.INVEN_CLOAK]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile):format("behind")..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1} end
+--	i = self.inven[self.INVEN_CLOAK]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile):format("behind")..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1} end
 
 	if self.shader_auras and next(self.shader_auras) then
 		for _, def in pairs(self.shader_auras) do
-			add[#add+1] = {image_alter="sdm", shader=def.shader, textures=def.textures, display_h=2, display_y=-1}
+			add[#add+1] = {image_alter="sdm", image=base..(self.moddable_tile_base or "base_01.png"), shader=def.shader, textures=def.textures, display_h=2, display_y=-1}
 		end
 	end
+--[[
 
 	add[#add+1] = {image = base..(self.moddable_tile_base or "base_01.png")}
 
@@ -2932,7 +2933,7 @@ function _M:updateModdableTile()
 
 	if self.moddable_tile_ornament and self.moddable_tile_ornament[self.female and "female" or "male"] then add[#add+1] = {image = base..self.moddable_tile_ornament[self.female and "female" or "male"]..".png"} end
 	if self.moddable_tile_ornament2 and self.moddable_tile_ornament2[self.female and "female" or "male"] then add[#add+1] = {image = base..self.moddable_tile_ornament2[self.female and "female" or "male"]..".png"} end
-
+]]
 	if self.x and game.level then game.level.map:updateMap(self.x, self.y) end
 end
 

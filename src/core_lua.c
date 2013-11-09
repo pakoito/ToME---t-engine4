@@ -1377,13 +1377,15 @@ static int gl_texture_alter_sdm(lua_State *L) {
 
 	glGenTextures(1, st);
 	tfglBindTexture(GL_TEXTURE_2D, *st);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 	glTexImage2D(GL_TEXTURE_2D, 0, 4, w, h * 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, sdm);
 
 	free(tmp);
 	free(sdm);
 
-	lua_pushnumber(L, w);
-	lua_pushnumber(L, h * 2);
+	lua_pushnumber(L, 1);
+	lua_pushnumber(L, 1);
 
 	return 3;
 }

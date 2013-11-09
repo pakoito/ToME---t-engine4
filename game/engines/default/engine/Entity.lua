@@ -296,11 +296,12 @@ function _M:makeMapObject(tiles, idx)
 			local amo = self.add_mos[i]
 			-- Create a simple additional chained MO
 			local mo = core.map.newObject(self.uid, 1 + (tiles.use_images and amo.textures and #amo.textures or 0), false, false, false, amo.display_x or 0, amo.display_y or 0, amo.display_w or 1, amo.display_h or 1, amo.display_scale or 1)
-			if amo.image then
+			if amo.image_alter == "sdm" then
+				tex = tiles:get("", 0, 0, 0, 0, 0, 0, amo.image, false, false, true)
+				tex = tex:generateSDM()
+				texx, texy, pos_x, pos_y = 1,1,nil,nil
+			elseif amo.image then
 				tex, texx, texy, pos_x, pos_y = tiles:get("", 0, 0, 0, 0, 0, 0, amo.image, false, false, true)
-			elseif amo.image_alter == "sdm" then
-				tex, texx, texy, pos_x, pos_y = btex:generateSDM()
-				texx, texy, pos_x, pos_y = btexx, btexy * 2, bpos_x, bpos_y
 			end
 			mo:texture(0, tex, false, texx, texy, pos_x, pos_y)
 			if amo.particle then
