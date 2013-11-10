@@ -1321,7 +1321,8 @@ static void build_sdm_ex(const unsigned char *texData, int srcWidth, int srcHeig
 			Vector centerPoint;
 			centerPoint.x = dstx + srcWidth  / 2;
 			centerPoint.y = dsty + srcHeight / 2;
-			float ang = atan2((float)(basePoint.x - centerPoint.x), -(float)(basePoint.y - centerPoint.y)); //0 is at up
+			//float ang = atan2((float)(basePoint.x - centerPoint.x), -(float)(basePoint.y - centerPoint.y)); //0 is at up
+			float ang = atan2((float)(basePoint.x - centerPoint.x), (float)(basePoint.y - centerPoint.y));
 			//float ang = atan2((float)(offset.x), -(float)(offset.y));
 			sdmTexData[(x + y * dstWidth) * 4 + 0] = 127 + (float)(-vectorMap[x + y * dstWidth].x) / maxSize * 127;
 			sdmTexData[(x + y * dstWidth) * 4 + 1] = 127 + (float)(-vectorMap[x + y * dstWidth].y) / maxSize * 127;
@@ -1370,7 +1371,7 @@ static int gl_texture_alter_sdm(lua_State *L) {
 	glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, tmp);
 
 	GLubyte *sdm = calloc(w*h*2*4, sizeof(GLubyte));
-	build_sdm_ex(tmp, w, h, sdm, w, h * 2, 0, 0);
+	build_sdm_ex(tmp, w, h, sdm, w, h * 2, 0, h);
 
 	GLuint *st = (GLuint*)lua_newuserdata(L, sizeof(GLuint));
 	auxiliar_setclass(L, "gl{texture}", -1);
