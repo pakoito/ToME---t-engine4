@@ -104,27 +104,27 @@ newTalent{
 		local max = t.getTargetCount(self, t)
 		for i, act in ipairs(self.fov.actors_dist) do
 			if self:reactionToward(act) < 0 then
-				if not act:attr("frozen") then break end
-
-				-- Instakill critters
-				if act.rank <= 1 then
-					if act:canBe("instakill") then
-						game.logSeen(act, "%s shatters!", act.name:capitalize())
-						act:die(self)
+				if act:attr("frozen") then
+					-- Instakill critters
+					if act.rank <= 1 then
+						if act:canBe("instakill") then
+							game.logSeen(act, "%s shatters!", act.name:capitalize())
+							act:die(self)
+						end
 					end
-				end
 
-				if not act.dead then
-					local add_crit = 0
-					if act.rank == 2 then add_crit = 50
-					elseif act.rank >= 3 then add_crit = 25 end
-					local tg = {type="hit", friendlyfire=false, talent=t}
-					local grids = self:project(tg, act.x, act.y, DamageType.COLD, self:spellCrit(t.getDamage(self, t), add_crit))
-					game.level.map:particleEmitter(act.x, act.y, tg.radius, "ball_ice", {radius=1})
-				end
+					if not act.dead then
+						local add_crit = 0
+						if act.rank == 2 then add_crit = 50
+						elseif act.rank >= 3 then add_crit = 25 end
+						local tg = {type="hit", friendlyfire=false, talent=t}
+						local grids = self:project(tg, act.x, act.y, DamageType.COLD, self:spellCrit(t.getDamage(self, t), add_crit))
+						game.level.map:particleEmitter(act.x, act.y, tg.radius, "ball_ice", {radius=1})
+					end
 
-				max = max - 1
-				if max <= 0 then break end
+					max = max - 1
+					if max <= 0 then break end
+				end
 			end
 		end
 		game:playSoundNear(self, "talents/ice")
