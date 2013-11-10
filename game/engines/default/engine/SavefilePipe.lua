@@ -137,7 +137,7 @@ function _M:doThread()
 
 				print("[SAVEFILE PIPE] Checking save", p.savename, p.type, p.save.current_save_zip)
 				local save = Savefile.new(p.savename, config.settings.background_saves)
-				local okmain = save:checkValidity(p.type)
+				local okmain = save:checkValidity(p.type, p.object)
 				save:close()
 
 				if not okmain then
