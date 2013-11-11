@@ -32,7 +32,7 @@ newTalent{
 	radius = function(self, t)
 		local r = 2
 		local gem_level = getGemLevel(self) or 1
-		local mult = 1 + 0.01*gem_level*self:callTalent(self.T_REACH, "rangebonus")
+		local mult = 1 + 0.01*gem_level*(self:callTalent(self.T_REACH, "rangebonus") or 0)
 		return math.ceil(r*mult)
 	end,
 	target = function(self, t)
@@ -80,7 +80,7 @@ newTalent{
 	radius = function(self, t)
 		local r = 1
 		local gem_level = getGemLevel(self) or 1
-		local mult = 1 + 0.01*gem_level*self:callTalent(self.T_REACH, "rangebonus")
+		local mult = 1 + 0.01*gem_level*(self:callTalent(self.T_REACH, "rangebonus") or 0)
 		return math.ceil(r*mult)
 	end,
 	target = function(self, t)
@@ -127,7 +127,7 @@ newTalent{
 	radius = function(self, t)
 		local r = 2
 		local gem_level = getGemLevel(self) or 1
-		local mult = 1 + 0.01*gem_level*self:callTalent(self.T_REACH, "rangebonus")
+		local mult = 1 + 0.01*gem_level*(self:callTalent(self.T_REACH, "rangebonus") or 0)
 		return math.ceil(r*mult)
 	end,
 	target = function(self, t)
