@@ -147,7 +147,7 @@ function _M:saveWorld(world, no_dialog)
 	--fs.delete(self.save_dir..self:nameSaveWorld(world))
 	--fs.rename(self.save_dir..self:nameSaveWorld(world)..".tmp", self.save_dir..self:nameSaveWorld(world))
 
-	self:md5Upload("world", self:nameSaveWorld(world))
+	savefile_pipe:pushGeneric("saveWorld_md5", function() self:md5Upload("world", self:nameSaveWorld(world)) end)
 
 	if not no_dialog then popup:done() end
 end
@@ -217,7 +217,7 @@ function _M:saveGame(game, no_dialog)
 	--fs.delete(self.save_dir..self:nameSaveGame(game))
 	--fs.rename(self.save_dir..self:nameSaveGame(game)..".tmp", self.save_dir..self:nameSaveGame(game))
 
-	self:md5Upload("game", self:nameSaveGame(game))
+	savefile_pipe:pushGeneric("saveGame_md5", function() self:md5Upload("game", self:nameSaveGame(game)) end)
 
 	local desc = game:getSaveDescription()
 	local f = fs.open(self.save_dir.."desc.lua", "w")
@@ -289,7 +289,7 @@ function _M:saveZone(zone, no_dialog)
 	--fs.delete(self.save_dir..self:nameSaveZone(zone))
 	--fs.rename(self.save_dir..self:nameSaveZone(zone)..".tmp", self.save_dir..self:nameSaveZone(zone))
 
-	self:md5Upload("zone", self:nameSaveZone(zone))
+	savefile_pipe:pushGeneric("saveZone_md5", function() self:md5Upload("zone", self:nameSaveZone(zone)) end)
 
 	if not no_dialog then popup:done() end
 end
@@ -319,7 +319,7 @@ function _M:saveLevel(level, no_dialog)
 	--fs.delete(self.save_dir..self:nameSaveLevel(level))
 	--fs.rename(self.save_dir..self:nameSaveLevel(level)..".tmp", self.save_dir..self:nameSaveLevel(level))
 
-	self:md5Upload("level", self:nameSaveLevel(level))
+	savefile_pipe:pushGeneric("saveLevel_md5", function() self:md5Upload("level", self:nameSaveLevel(level)) end)
 
 	if not no_dialog then popup:done() end
 end
@@ -349,7 +349,7 @@ function _M:saveEntity(e, no_dialog)
 	--fs.delete(self.save_dir..self:nameSaveEntity(e))
 	--fs.rename(self.save_dir..self:nameSaveEntity(e)..".tmp", self.save_dir..self:nameSaveEntity(e))
 
-	self:md5Upload("entity", self:nameSaveEntity(e))
+	savefile_pipe:pushGeneric("saveEntity_md5", function() self:md5Upload("entity", self:nameSaveEntity(e)) end)
 
 	if not no_dialog then popup:done() end
 end
@@ -638,7 +638,7 @@ function _M:md5Upload(type, f)
 		end
 		fff:close()
 	end
-	print("Save MD5", uuid, m, type, f)
+	print("Save MD5", uuid, m, type, self.save_dir..f)
 	profile:setSaveID(game.__mod_info.short_name, uuid, f, m)
 end
 
