@@ -23,6 +23,6 @@ You are an archmage in a world that still fears magic. The people of Angolwen ha
 You have lived and trained most of your life in Angolwen, calling many people there your friends, but you have grown restless as of late.
 You want to see the world, maybe even help in what ways you can.
 
-But for now Angolwen still needs you. The Abashed Expanse, a part of Eyal that was torn appart and thrown into the void during the Spellblaze, is quickly becoming unstable.
+But for now Angolwen still needs you. The Abashed Expanse, a part of Eyal that was torn apart and thrown into the void during the Spellblaze, is quickly becoming unstable.
 You have been tasked to investigate and fix the problem.
 ]]

@@ -730,7 +730,7 @@ With each slow breath it takes reality distorts around it.  Blue twirls into red
 					return
 				end
 				
-				local seed = {type="horror", subtype="eldrtich", name="dream seed"}
+				local seed = {type="horror", subtype="eldritch", name="dream seed"}
 				local list = mod.class.NPC:loadList("/data/general/npcs/horror.lua")
 				local m = list.DREAM_SEED:clone()
 				if not m then return nil end
