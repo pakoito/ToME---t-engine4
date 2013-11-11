@@ -738,11 +738,9 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 		local save = Savefile.new("")
 		_G.world = save:loadWorld()
 		save:close()
-		print("======+++WORLD", _G.world)
 		if not _G.world then
 			_G.world = W.new()
 		end
-		print("======+++WORLD", _G.world)
 		_G.world:run()
 	end
 
