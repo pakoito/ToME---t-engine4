@@ -37,6 +37,7 @@ function _M:init(class, max_before_wait)
 
 	self.saveclass = class or "engine.Savefile"
 	self.pipe = {}
+	self.pipe_types = {}
 	self.on_done = {}
 	self.max_before_wait = max_before_wait or 6
 	self.co = nil
@@ -53,6 +54,13 @@ end
 function _M:push(savename, type, object, class, on_end)
 	if game.onSavefilePush then game:onSavefilePush(savename, type, object, class) end
 
+	-- Cant save twice the same thing before it finishes
+	if self.pipe_types[type] and self.pipe_types[type][savename] then
+		print("[SAVEFILE PIPE] Already saving data", type, savename, "waiting for finish before piping...")
+		self:forceWait()
+		print("[SAVEFILE PIPE] All pipe saving emptied, resuming next save")
+	end
+
 	local screenshot = nil
 	if type == "game" then
 		screenshot = game:takeScreenshot(true)
@@ -65,7 +73,9 @@ function _M:push(savename, type, object, class, on_end)
 	if #self.pipe == 0 then savefile_pipe.current_nb = 0 end
 
 	local clone, nb = object:cloneForSave()
---	local clone, nb = object, 1000
+	self.pipe_types[type] = self.pipe_types[type] or {}
+	self.pipe_types[type][savename] = true
+
 	self.pipe[#self.pipe+1] = {id=id, savename = savename, type=type, object=clone, nb_objects=nb, baseobject=object, class=class, saveversion=game:saveVersion("new"), screenshot=screenshot, on_end=on_end}
 	local total_nb = 0
 	for i, p in ipairs(self.pipe) do total_nb = total_nb + p.nb_objects end
@@ -161,6 +171,7 @@ function _M:doThread()
 				if p and p.on_end then
 					p.on_end(p.save)
 				end
+				self.pipe_types[p.type][p.savename] = nil
 				waiton[pop] = nil
 			end
 		end
