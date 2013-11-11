@@ -83,7 +83,7 @@ load_tips = {
 	{image="/data/gfx/shockbolt/npc/dragon_fire_fire_drake.png", text=[[Drakes and wyrms are the strongest natural creatures in the world, capable of powers far beyond most other beings.]]},
 	{image="/data/gfx/shockbolt/npc/vermin_sandworm_sandworm_burrower.png", text=[[Giant worms tear open huge passageways through the deserts in the west. It is said great riches lie buried beneath the sand, still decorating the corpses of those who went there seeking great riches.]]},
 	{image="/data/gfx/shockbolt/npc/humanoid_human_arcane_blade.png", text=[[Arcane Blades employ a fusion of melee and magical combat. Their training is harsh but the most dedicated rise to great powers.]]},
-	{image="/data/gfx/shockbolt/object/rune_green.png", text=[[Wild infusions call upon the powers of nature to protect the flesh and rid oneself of inflictions.]]},
+	{image="/data/gfx/shockbolt/object/rune_green.png", text=[[Wild infusions call upon the powers of nature to protect the flesh and rid oneself of afflictions.]]},
 	{image="/data/gfx/shockbolt/object/rune_red.png", text=[[Shield runes act instantly, letting one protect oneself quickly whilst also preparing to flee or launch a counter attack.]]},
 	{image="/data/gfx/shockbolt/object/plate_voratun.png", text=[[Greater training in the use of armour lets it be used more effectively, blocking more damage and reducing the chance of an enemy hitting a critical spot.]]},
 	{image="/data/gfx/talents/thick_skin.png", text=[[The Thick Skin talent reduces all incoming damage, letting you survive for longer before needing to heal.]]},

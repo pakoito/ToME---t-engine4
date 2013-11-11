@@ -22,7 +22,7 @@ return "New Class Option: #LIGHT_GREEN#Drolem",
 Drolems are dragon-shaped golems able to breath powerful poison at their foes.
 
 You may now create alchemist characters with a drolem instead of a golem.
-Drolems look awesome and can eventually learn to breath poison.
+Drolems look awesome and can eventually learn to breathe poison.
 
 #LIGHT_GREEN#This is only available to donators. Thanks for your support!
 ]]
