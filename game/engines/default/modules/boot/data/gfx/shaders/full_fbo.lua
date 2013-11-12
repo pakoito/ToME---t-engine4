@@ -23,4 +23,5 @@ return {
 	args = {
 	},
 	clone = false,
+	permanent = true,
 }

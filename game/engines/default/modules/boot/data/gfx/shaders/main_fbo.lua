@@ -25,4 +25,5 @@ return {
 		noisevol = { texture = 1 },
 	},
 	clone = false,
+	permanent = true,
 }
