@@ -32,9 +32,27 @@ newEntity{
 }
 
 newEntity{
-	define_as = "SHERTUL_FORTRESS",
+	define_as = "SHERTUL_FORTRESS_DRY",
 	name = "entrance to the Sher'Tul ruins",
-	display = '>', color=colors.PURPLE, image = "terrain/stair_down.png",
+	display = '>', color=colors.PURPLE, image = "terrain/marble_floor.png", add_mos = {{image = "terrain/stair_down.png"}},
+	notice = true,
+	always_remember = true,
+	change_level = 1, change_zone = "shertul-fortress",
+	change_level_check = function(self, who)
+		if who.player and game.party:knownLore("old-forest-note-5") then
+			game.logPlayer(who, "#ANTIQUE_WHITE#You notice a hole that could fit the gem key you found earlier, inserting it reveals the passage to the next level.")
+			who:setQuestStatus("shertul-fortress", engine.Quest.COMPLETED, "entered")
+		else
+			game.logPlayer(who, "#ANTIQUE_WHITE#The way seems closed, maybe you need a key.")
+			return true
+		end
+	end,
+}
+
+newEntity{
+	define_as = "SHERTUL_FORTRESS_FLOOD",
+	name = "entrance to the Sher'Tul ruins",
+	display = '>', color=colors.PURPLE, image = "terrain/underwater/subsea_floor_02.png", add_mos = {{image = "terrain/stair_down.png"}},
 	notice = true,
 	always_remember = true,
 	change_level = 1, change_zone = "shertul-fortress",

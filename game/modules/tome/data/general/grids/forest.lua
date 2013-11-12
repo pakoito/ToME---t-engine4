@@ -18,6 +18,7 @@
 -- darkgod@te4.org
 
 local grass_editer = { method="borders_def", def="grass"}
+local grasswm_editer = { method="borders_def", def="grass_wm"}
 
 newEntity{
 	define_as = "GRASS",
@@ -29,6 +30,17 @@ newEntity{
 	nice_editer = grass_editer,
 }
 for i = 1, 14 do newEntity{ base = "GRASS", define_as = "GRASS_PATCH"..i, image = ("terrain/grass/grass_main_%02d.png"):format(i) } end
+
+newEntity{
+	define_as = "GRASS_SHORT",
+	type = "floor", subtype = "grass",
+	name = "grass", image = "terrain/grass.png",
+	display = '.', color=colors.LIGHT_GREEN, back_color={r=44,g=95,b=43},
+	grow = "TREE",
+--	nice_tiler = { method="replace", base={"GRASS_PATCH", 100, 1, 14}},
+	nice_editer = grasswm_editer,
+}
+
 
 newEntity{
 	define_as = "TREE",

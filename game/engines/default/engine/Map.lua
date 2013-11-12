@@ -845,6 +845,7 @@ end
 
 --- Get the screen position corresponding to a tile
 function _M:getTileToScreen(tx, ty)
+	if not tx or not ty then return nil, nil end
 	local x = (tx - self.mx) * self.tile_w * self.zoom + self.display_x
 	local y = (ty - self.my + util.hexOffset(tx)) * self.tile_h * self.zoom + self.display_y
 	return x, y

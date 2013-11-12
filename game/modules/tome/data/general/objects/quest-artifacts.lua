@@ -365,8 +365,8 @@ newEntity{ base = "BASE_ROD",
 	add_name = false,
 	identified=true, force_lore_artifact=true,
 	name = "Transmogrification Chest", display = '~', color=colors.GOLD, unique=true, image = "object/chest4.png",
-	desc = [[This chest is an extension of Yiilkgur, any items dropped inside is transported to the Fortress, processed by the core and destroyed to extract energy.
-The byproduct of this effect is the creation of gold, which is useless to the Fortress, so it is sent back to you.
+	desc = [[This chest is an extension of old Sher'tul places of power, any items dropped inside is transported to an other place, processed and destroyed to extract energy.
+The byproduct of this effect is the creation of gold, which is useless to process, so it is sent back to you.
 
 When you possess the chest all items you walk upon will automatically be put inside and transmogrified when you leave the level.
 Simply go to your inventory to move them out of the chest if you wish to keep them.

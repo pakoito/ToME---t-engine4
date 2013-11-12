@@ -20,7 +20,7 @@
 return "New Cosmetic Race Option: #LIGHT_GREEN#Facial Pilosity for Female Dwarves",
 [[You have saved the Iron Council from untold horrors from the deep.
 
-You may now create female dwarf characters sporting proudnly facial pilosity as is the norm in the upper classes of dwarven society.
+You may now create female dwarf characters sporting proudly facial pilosity as is the norm in the upper classes of dwarven society.
 This has no effect on gameplay at all but it is fun!
 
 #LIGHT_GREEN#This is only available to donators. Thanks for your support!

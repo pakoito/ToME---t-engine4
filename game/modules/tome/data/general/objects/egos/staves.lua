@@ -247,7 +247,7 @@ newEntity{
 		combat_spellpower = resolvers.mbonus_material(3, 2),
 		combat_spellcrit = resolvers.mbonus_material(2, 2),
 	},
-	resolvers.charm("projects a bolt from the staff", 5,
+	resolvers.charm("project a bolt from the staff", 5,
 		function(self, who)
 			local tg = {type="bolt", range= 5 + self.material_level, speed=20, display = {particle=particle, trail=trail},}
 			local weapon = who:hasStaffWeapon()
@@ -344,7 +344,7 @@ newEntity{
 		combat_spellpower = resolvers.mbonus_material(5, 5),
 		combat_spellcrit = resolvers.mbonus_material(5, 5),
 	},
-	resolvers.charm("projects damage in a circle from the staff", 10,
+	resolvers.charm("project damage in a circle from the staff", 10,
 		function(self, who)
 			local tg = {type="ball", range=0, radius=self.material_level + 1, selffire=false}
 			local weapon = who:hasStaffWeapon()
@@ -449,7 +449,7 @@ newEntity{
 		combat_spellpower = resolvers.mbonus_material(5, 5),
 		spellsurge_on_crit = resolvers.mbonus_material(5, 5),
 	},
-	resolvers.charm("projects damage in a cone from the staff", 8,
+	resolvers.charm("project damage in a cone from the staff", 8,
 		function(self, who)
 			local tg = {type="cone", range=0, radius=self.material_level * 2, selffire=false}
 			local weapon = who:hasStaffWeapon()

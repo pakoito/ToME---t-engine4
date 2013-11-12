@@ -37,6 +37,7 @@ function _M:init(class, max_before_wait)
 
 	self.saveclass = class or "engine.Savefile"
 	self.pipe = {}
+	self.pipe_types = {}
 	self.on_done = {}
 	self.max_before_wait = max_before_wait or 6
 	self.co = nil
@@ -53,6 +54,13 @@ end
 function _M:push(savename, type, object, class, on_end)
 	if game.onSavefilePush then game:onSavefilePush(savename, type, object, class) end
 
+	-- Cant save twice the same thing before it finishes
+	if self.pipe_types[type] and self.pipe_types[type][savename] then
+		print("[SAVEFILE PIPE] Already saving data", type, savename, "waiting for finish before piping...")
+		self:forceWait()
+		print("[SAVEFILE PIPE] All pipe saving emptied, resuming next save")
+	end
+
 	local screenshot = nil
 	if type == "game" then
 		screenshot = game:takeScreenshot(true)
@@ -65,7 +73,9 @@ function _M:push(savename, type, object, class, on_end)
 	if #self.pipe == 0 then savefile_pipe.current_nb = 0 end
 
 	local clone, nb = object:cloneForSave()
---	local clone, nb = object, 1000
+	self.pipe_types[type] = self.pipe_types[type] or {}
+	self.pipe_types[type][savename] = true
+
 	self.pipe[#self.pipe+1] = {id=id, savename = savename, type=type, object=clone, nb_objects=nb, baseobject=object, class=class, saveversion=game:saveVersion("new"), screenshot=screenshot, on_end=on_end}
 	local total_nb = 0
 	for i, p in ipairs(self.pipe) do total_nb = total_nb + p.nb_objects end
@@ -130,10 +140,40 @@ function _M:doThread()
 		local pop = core.serial.popSaveReturn()
 		if not pop then coroutine.yield()
 		else
-			if waiton[pop] and waiton[pop].on_end then
-				waiton[pop].on_end(waiton[pop].save)
+			local dontremove = false
+			local p = waiton[pop]
+			if p then
+				local Savefile = require(p.class)
+
+				print("[SAVEFILE PIPE] Checking save", p.savename, p.type, p.save.current_save_zip)
+				local save = Savefile.new(p.savename, config.settings.background_saves)
+				local okmain = save:checkValidity(p.type, p.object)
+				save:close()
+
+				if not okmain then
+					print("[SAVEFILE PIPE] *RE*new save running in the pipe:", p.savename, p.type, "::", p.id, "::", p.baseobject, "=>", p.object, "("..p.nb_objects..")")
+
+					local o = p.object
+					local save = Savefile.new(p.savename, config.settings.background_saves)
+					o.__saved_saveversion = p.saveversion
+					save["save"..p.type:lower():capitalize()](save, o, true)
+					if p.screenshot then save:saveScreenshot(p.screenshot) end
+					p.save = save
+					waiton[save.current_save_zip:gsub("%.tmp$", "")] = p
+					save:close()
+					core.serial.threadSave()
+					print("[SAVEFILE PIPE] Resaving sent", p.savename, p.type, p.save.current_save_zip)
+					dontremove = true
+				end
 			end
-			waiton[pop] = nil
+
+			if not dontremove then
+				if p and p.on_end then
+					p.on_end(p.save)
+				end
+				self.pipe_types[p.type][p.savename] = nil
+				waiton[pop] = nil
+			end
 		end
 	end
 	self.waiton = nil

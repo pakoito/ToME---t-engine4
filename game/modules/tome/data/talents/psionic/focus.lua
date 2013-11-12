@@ -98,7 +98,7 @@ newTalent{
 			end
 
 		end
-		self:setEffect(self.EFF_MINDLASH, 4, {})
+		game:onTickEnd(function() self:setEffect(self.EFF_MINDLASH, 4, {}) end)
 		return true
 	end,
 	info = function(self, t)
@@ -139,7 +139,9 @@ newTalent{
 	action = function(self, t)
 		local dam = t.getDamage(self, t)
 		local tg = self:getTalentTarget(t)
-		self:project(tg, self.x, self.y, DamageType.FIREBURN, {dur=10, initial=0, dam=dam}, {type="ball_fire", args={radius=1}})
+--		self:project(tg, self.x, self.y, DamageType.FIREBURN, {dur=10, initial=0, dam=dam}, {type="ball_fire", args={radius=1}})
+		self:project(tg, self.x, self.y, DamageType.FIREBURN, {dur=10, initial=0, dam=dam})
+		game.level.map:particleEmitter(self.x, self.y, tg.radius, "ball_fire", {radius=tg.radius})
 		return true
 	end,
 	info = function(self, t)

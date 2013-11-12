@@ -227,13 +227,8 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 		if dam ~= lastdam then
 			game:delayedLogDamage(src, target, 0, ("%s(%d to psi shield)#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", lastdam-dam), false)
 		end
-		lastdam = dam
-		if type ~= DamageType.PHYSICAL and target.knowTalent and target:knowTalent(target.T_STONE_FORTRESS) and target:hasEffect(target.EFF_DWARVEN_RESILIENCE) then
-			dam = math.max(0, dam - target:combatArmor() * (50 + target:getTalentLevel(target.T_STONE_FORTRESS) * 10) / 100)
-		end
-		if dam ~= lastdam then
-			game:delayedLogDamage(src, target, 0, ("%s(%d to armor)#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", lastdam-dam), false)
-		end
+		
+		--target.T_STONE_FORTRESS could be checked/applied here (ReduceDamage function in Dwarven Fortress talent)
 
 		-- Damage Smearing
 		if dam > 0 and type ~= DamageType.TEMPORAL and target:hasEffect(target.EFF_DAMAGE_SMEARING) then
@@ -309,8 +304,8 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 
 		-- Flat damage reduction ("armour")
 		if dam > 0 and target.flat_damage_armor then
-			local dec = (target.flat_damage_armor.all or 0) + (target.flat_damage_armor[type] or 0)
-			if dec > 0 then game:delayedLogDamage(src, target, 0, ("%s(%d reduction)#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", dec), false) end
+			local dec = math.min(dam, (target.flat_damage_armor.all or 0) + (target.flat_damage_armor[type] or 0))
+			if dec > 0 then game:delayedLogDamage(src, target, 0, ("%s(%d resist armor)#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", dec), false) end
 			dam = math.max(0, dam - dec)
 			print("[PROJECTOR] after flat damage armor", dam)
 		end
@@ -385,9 +380,9 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			if visible then -- don't log damage that the player doesn't know about
 				local source = src.__project_source or src
 				if src.turn_procs and src.turn_procs.is_crit then
-					game:delayedLogDamage(source, target, dam, ("#{bold}#%s%d %s#{normal}##LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", math.ceil(dam), DamageType:get(type).name), true)
+					game:delayedLogDamage(source, target, dam, ("#{bold}#%s%d %s#{normal}##LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", dam, DamageType:get(type).name), true)
 				else
-					game:delayedLogDamage(source, target, dam, ("%s%d %s#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", math.ceil(dam), DamageType:get(type).name), false)
+					game:delayedLogDamage(source, target, dam, ("%s%d %s#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", dam, DamageType:get(type).name), false)
 				end
 			end
 		end
@@ -1624,7 +1619,7 @@ newDamageType{
 		local target = game.level.map(x, y, Map.ACTOR) -- Get the target first to make sure we heal even on kill
 		local realdam = DamageType:get(DamageType.BLIGHT).projector(src, x, y, DamageType.BLIGHT, dam.dam)
 		if target and realdam > 0 then
-			src:heal(realdam * dam.healfactor)
+			src:heal(realdam * dam.healfactor, target)
 			src:logCombat(target, "#Source# drains life from #Target#!")
 		end
 		return realdam

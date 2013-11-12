@@ -91,6 +91,7 @@ function _M:uiLogin(uis)
 
 	local str = Textzone.new{auto_width=true, auto_height=true, text="#GOLD#Online Profile"}
 	local bt = Button.new{text="Login", width=50, fct=function() self:login() end}
+	local btr = Button.new{text="Register", fct=function() self:register() end}
 	self.c_login = Textbox.new{title="Username: ", text="", chars=16, max_len=20, fct=function(text) self:login() end}
 	self.c_pass = Textbox.new{title="Password: ", size_title=self.c_login.title, text="", chars=16, max_len=20, hide=true, fct=function(text) self:login() end}
 
@@ -98,7 +99,8 @@ function _M:uiLogin(uis)
 	uis[#uis+1] = {hcenter=0, bottom=bt.h + self.c_login.h + self.c_pass.h, ui=str}
 	uis[#uis+1] = {left=0, bottom=bt.h + self.c_pass.h, ui=self.c_login}
 	uis[#uis+1] = {left=0, bottom=bt.h, ui=self.c_pass}
-	uis[#uis+1] = {hcenter=0, bottom=0, ui=bt}
+	uis[#uis+1] = {left=0, bottom=0, ui=bt}
+	uis[#uis+1] = {right=0, bottom=0, ui=btr}
 end
 
 function _M:uiLoginSteam(uis)
@@ -136,8 +138,13 @@ function _M:login()
 end
 
 function _M:loginSteam()
+	local ticket = core.steam.sessionTicket()
+	if not ticket then
+		Dialog:simplePopup("Steam", "Steam client not found.")
+		return
+	end
 	local d = self:simpleWaiter("Login...", "Login in your account, please wait...") core.display.forceRedraw()
-	profile:performloginSteam((core.steam.sessionTicket():toHex()))
+	profile:performloginSteam((ticket:toHex()))
 	profile:waitFirstAuth()
 	d:done()
 	if not profile.auth and profile.auth_last_error then
@@ -145,6 +152,14 @@ function _M:loginSteam()
 			game:newSteamAccount()
 		end
 	end
+end
+
+function _M:register()
+	local dialogdef = {}
+	dialogdef.fct = function(login) game:setPlayerLogin(login) end
+	dialogdef.name = "creation"
+	dialogdef.justlogin = false
+	game:registerDialog(require('mod.dialogs.ProfileLogin').new(dialogdef, game.profile_help_text))
 end
 
 function _M:logout()

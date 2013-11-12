@@ -20,7 +20,7 @@
 --------------------------------------------------------------------------------------
 -- Advanced shaders
 --------------------------------------------------------------------------------------
-if core.shader.allow("distort") then
+if core.shader.allow("distort") and allow then
 use_shader = {type="distort"} alterscreen = true
 base_size = 64
 local nb = 0
