@@ -23,6 +23,7 @@ return {
 	args = {
 		tex = { texture = 0 },
 		flames = { texture = 1 },
+		alpha = alpha or 1,
 		time_factor = time_factor or 4000,
 	},
 	clone = false,

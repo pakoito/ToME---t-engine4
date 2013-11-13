@@ -1,6 +1,7 @@
 uniform sampler2D tex;
 uniform sampler2D flames;
 
+uniform float alpha;
 uniform float tick;
 uniform float time_factor;
 
@@ -166,4 +167,5 @@ void main(void)
 	resultColor = GetFireAuraColor(tick / time_factor, planarPos, 6.0, 15.0, 1.0, 1.0, 1.0, 0.75);//texture2D(tex, gl_TexCoord[0].xy) * texture2D(flames, gl_TexCoord[0].xy) + 0.2;
 	
 	gl_FragColor = resultColor;
+	gl_FragColor.a *= alpha;
 }

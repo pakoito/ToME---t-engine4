@@ -2871,6 +2871,26 @@ function _M:attachementSpot(kind, particle)
 	return game.tiles_attachements[as][kind].x + x, game.tiles_attachements[as][kind].y + y
 end
 
+function _M:addShaderAura(kind, shader, shader_args, ...)
+	if not core.shader.active(4) then return false end
+
+	self.shader_auras = self.shader_auras or {}
+	local textures = {...}
+	for i = 1, #textures do
+		if type(textures[i]) == "string" then textures[i] = {"image", textures[i]} end
+	end
+	self.shader_auras[kind] = {shader=shader, shader_args=shader_args, textures=textures}
+	self:updateModdableTile()
+	return true
+end
+
+function _M:removeShaderAura(kind)
+	self.shader_auras = self.shader_auras or {}
+	if not self.shader_auras[kind] then return end
+	self.shader_auras[kind] = nil
+	self:updateModdableTile()
+end
+
 --- Update tile for races that can handle it
 function _M:updateModdableTile()
 	if not self.moddable_tile or Map.tiles.no_moddable_tiles then
@@ -2890,7 +2910,7 @@ function _M:updateModdableTile()
 			if base then
 				self.add_mos = add
 				for _, def in pairs(self.shader_auras) do
-					table.insert(add, 1, {_isshaderaura=true, image_alter="sdm", sdm_double=not baseh or baseh < 2, image=base, shader=def.shader, textures=def.textures, display_h=2, display_y=-1})
+					table.insert(add, 1, {_isshaderaura=true, image_alter="sdm", sdm_double=not baseh or baseh < 2, image=base, shader=def.shader, shader_args=def.shader_args, textures=def.textures, display_h=2, display_y=-1})
 				end
 				if not base1 then add[#add+1] = {_isshaderaura=true, image=base, display_y=basey, display_h=baseh} end
 			
@@ -2923,7 +2943,7 @@ function _M:updateModdableTile()
 
 	if self.shader_auras and next(self.shader_auras) then
 		for _, def in pairs(self.shader_auras) do
-			add[#add+1] = {image_alter="sdm", sdm_double=true, image=base..(self.moddable_tile_base or "base_01.png"), shader=def.shader, textures=def.textures, display_h=2, display_y=-1}
+			add[#add+1] = {image_alter="sdm", sdm_double=true, image=base..(self.moddable_tile_base or "base_01.png"), shader=def.shader, shader_args=def.shader_args, textures=def.textures, display_h=2, display_y=-1}
 		end
 	end
 

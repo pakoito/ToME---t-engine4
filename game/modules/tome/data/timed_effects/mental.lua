@@ -1977,21 +1977,18 @@ newEffect{
 		if eff.combatPhysResistChange or 0 > 0 then eff.combatPhysResistId = self:addTemporaryValue("combat_physresist", eff.combatPhysResistChange) end
 		if eff.combatMentalResistChange or 0 > 0 then eff.combatMentalResistId = self:addTemporaryValue("combat_mentalresist", eff.combatMentalResistChange) end
 
-		self.shader_auras = self.shader_auras or {}
-		self.shader_auras.rampage = {shader="awesomeaura", textures={{"image", "particles_images/shadowfire.png"}}}
-		self:updateModdableTile()
---		eff.particle = self:addParticles(Particles.new("rampage", 1))
+		if not self:addShaderAura("rampage", "awesomeaura", {time_factor=5000, alpha=0.7}, "particles_images/bloodwings.png") then
+			eff.particle = self:addParticles(Particles.new("rampage", 1))
+		end
 	end,
 	deactivate = function(self, eff)
-		self.shader_auras.rampage = nil
-		self:updateModdableTile()
-
 		if eff.movementSpeedId then self:removeTemporaryValue("movement_speed", eff.movementSpeedId) end
 		if eff.combatPhysSpeedId then self:removeTemporaryValue("combat_physspeed", eff.combatPhysSpeedId) end
 		if eff.physicalDamageId then self:removeTemporaryValue("inc_damage", eff.physicalDamageId) end
 		if eff.combatPhysResistId then self:removeTemporaryValue("combat_physresist", eff.combatPhysResistId) end
 		if eff.combatMentalResistId then self:removeTemporaryValue("combat_mentalresist", eff.combatMentalResistId) end
 
+		self:removeShaderAura("rampage")
 		self:removeParticles(eff.particle)
 	end,
 	on_timeout = function(self, eff)

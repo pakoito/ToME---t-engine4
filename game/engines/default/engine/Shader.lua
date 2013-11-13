@@ -155,7 +155,7 @@ function _M:loaded()
 	elseif _M.progs[self.totalname] and not _M.progsreset[self.totalname] then
 		print("[SHADER] using cached shader "..self.totalname)
 		self.shad = _M.progs[self.totalname].shad
-		_M.progs[self.totalname].dieat = os.time() + 2
+		_M.progs[self.totalname].dieat = os.time() + 60
 	else
 		print("[SHADER] Loading from /data/gfx/shaders/"..self.name..".lua")
 		local f, err = loadfile("/data/gfx/shaders/"..self.name..".lua")
@@ -176,10 +176,10 @@ function _M:loaded()
 		print("[SHADER] Loaded shader with totalname", self.totalname)
 
 		if not _M.progs[self.totalname] then
-			_M.progs[self.totalname] = {shad=self:createProgram(def), dieat=def.resetargs and (os.time() + 3) or (os.time() + 2)}
+			_M.progs[self.totalname] = {shad=self:createProgram(def), dieat=def.resetargs and (os.time() + 3) or (os.time() + 60)}
 			_M.progsreset[self.totalname] = def.resetargs
 		else
-			_M.progs[self.totalname].dieat = def.resetargs and (os.time() + 3) or (os.time() + 2)
+			_M.progs[self.totalname].dieat = def.resetargs and (os.time() + 3) or (os.time() + 60)
 		end
 
 
