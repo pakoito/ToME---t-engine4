@@ -331,7 +331,6 @@ newTalent{
 	end,
 }
 
-
 newTalent{
 	name = "Minion Mastery",
 	type = {"spell/advanced-necrotic-minions",4},
