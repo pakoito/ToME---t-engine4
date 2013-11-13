@@ -155,7 +155,7 @@ newTalent{
 	name = "Metaflow",
 	type = {"spell/meta",4},
 	require = spells_req4,
-	points = 50,
+	points = 5,
 	mana = 70,
 	cooldown = 50,
 	tactical = { BUFF = 2 },
