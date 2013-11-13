@@ -1796,8 +1796,8 @@ function _M:createRandomBoss(base, data)
 				b.innate_alchemy_golem = true
 			elseif k == "birth_create_alchemist_golem" then
 				b.birth_create_alchemist_golem = resolver
-			elseif k == "necrotic_aura_base_souls" then
-				b.necrotic_aura_base_souls = util.bound(1 + math.ceil(data.level / 10), 1, 10) -- Does this need to scale?
+			elseif k == "soul" then
+				b.soul = util.bound(1 + math.ceil(data.level / 10), 1, 10) -- Does this need to scale?
 			end
 		end
 		for k, resolver in pairs(mclass.copy or {}) do apply_resolvers(k, resolver) end

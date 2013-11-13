@@ -60,7 +60,7 @@ newEntity{ base = "BASE_NPC_ORC_RAK_SHOR",
 	},
 	combat_armor = 0, combat_def = 5,
 
-	necrotic_aura_base_souls = resolvers.rngavg(5, 10),
+	soul = resolvers.rngavg(5, 10),
 
 	resolvers.talents{
 		[Talents.T_NECROTIC_AURA] = 1,

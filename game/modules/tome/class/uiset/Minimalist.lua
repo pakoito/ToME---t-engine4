@@ -552,7 +552,7 @@ function _M:showResourceTooltip(x, y, w, h, id, desc, is_first)
 						local list = {}
 						if player:knowTalent(player.T_STAMINA_POOL) then list[#list+1] = {name="Stamina", id="stamina"} end
 						if player:knowTalent(player.T_MANA_POOL) then list[#list+1] = {name="Mana", id="mana"} end
-						if player:isTalentActive(player.T_NECROTIC_AURA) then list[#list+1] = {name="Necrotic", id="soul"} end
+						if player:knowTalent(player.T_SOUL_POOL) then list[#list+1] = {name="Necrotic", id="soul"} end
 						if player:knowTalent(player.T_EQUILIBRIUM_POOL) then list[#list+1] = {name="Equilibrium", id="equilibrium"} end
 						if player:knowTalent(player.T_POSITIVE_POOL) then list[#list+1] = {name="Positive", id="positive"} end
 						if player:knowTalent(player.T_NEGATIVE_POOL) then list[#list+1] = {name="Negative", id="negative"} end
@@ -756,21 +756,19 @@ function _M:displayResources(scale, bx, by, a)
 
 		-----------------------------------------------------------------------------------
 		-- Souls
-		if player:isTalentActive(player.T_NECROTIC_AURA) and not player._hide_resource_soul then
-			local pt = player:isTalentActive(player.T_NECROTIC_AURA)
-
+		if player:knowTalent(player.T_SOUL_POOL) and not player._hide_resource_soul then
 			sshat[1]:toScreenFull(x-6, y+8, sshat[6], sshat[7], sshat[2], sshat[3], 1, 1, 1, a)
 			bshat[1]:toScreenFull(x, y, bshat[6], bshat[7], bshat[2], bshat[3], 1, 1, 1, a)
 			if soul_sha.shad then soul_sha:setUniform("a", a) soul_sha.shad:use(true) end
-			local p = pt.souls / pt.souls_max
+			local p = player:getSoul() / player.max_soul
 			shat[1]:toScreenPrecise(x+49, y+10, shat[6] * p, shat[7], 0, p * 1/shat[4], 0, 1/shat[5], soul_c[1], soul_c[2], soul_c[3], a)
 			if soul_sha.shad then soul_sha.shad:use(false) end
 
-			if not self.res.soul or self.res.soul.vc ~= pt.souls or self.res.soul.vm ~= pt.souls_max then
+			if not self.res.soul or self.res.soul.vc ~= player.soul or self.res.soul.vm ~= player.max_soul then
 				self.res.soul = {
 					hidable = "Souls",
-					vc = pt.souls, vm = player.souls_max,
-					cur = {core.display.drawStringBlendedNewSurface(font_sha, ("%d/%d"):format(pt.souls, pt.souls_max), 255, 255, 255):glTexture()},
+					vc = player.soul, vm = player.max_soul,
+					cur = {core.display.drawStringBlendedNewSurface(font_sha, ("%d/%d"):format(player.soul, player.max_soul), 255, 255, 255):glTexture()},
 				}
 			end
 			local dt = self.res.soul.cur
@@ -778,7 +776,7 @@ function _M:displayResources(scale, bx, by, a)
 			dt[1]:toScreenFull(x+64, y+10 + (shat[7]-dt[7])/2, dt[6], dt[7], dt[2], dt[3], 1, 1, 1, a)
 
 			local front = fshat_soul_dark
-			if pt.souls >= pt.souls_max then front = fshat_soul end
+			if player.soul >= player.max_soul then front = fshat_soul end
 			front[1]:toScreenFull(x, y, front[6], front[7], front[2], front[3], 1, 1, 1, a)
 			self:showResourceTooltip(bx+x*scale, by+y*scale, fshat[6], fshat[7], "res:necrotic", self.TOOLTIP_NECROTIC_AURA)
 			x, y = self:resourceOrientStep(orient, bx, by, scale, x, y, fshat[6], fshat[7])

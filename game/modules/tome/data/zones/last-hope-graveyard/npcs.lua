@@ -55,7 +55,7 @@ newEntity{ define_as = "CELIA",
 	mana_regen = 10,
 	life_rating = 20,
 
-	necrotic_aura_base_souls = 6,
+	soul = 6,
 	resolvers.talents{
 		[Talents.T_INVOKE_DARKNESS]={base=5, every=5, max=10},
 		[Talents.T_NECROTIC_AURA]=1,

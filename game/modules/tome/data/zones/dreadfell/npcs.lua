@@ -67,10 +67,11 @@ newEntity{ define_as = "THE_MASTER",
 	stun_immune = 0.7,
 	see_invisible = 20,
 	undead = 1,
+	soul_regen = 1,
 	self_resurrect = 1,
 	self_resurrect_chat = "the-master-resurrect",
 	open_door = 1,
-	necrotic_aura_base_souls = 10,
+	soul = 10,
 
 	resolvers.talents{
 		[Talents.T_HIDDEN_RESOURCES] = 1,
@@ -103,13 +104,6 @@ newEntity{ define_as = "THE_MASTER",
 	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
 	resolvers.inscriptions(3, {"shielding rune", "shielding rune", "invisibility rune", "speed rune"}),
 	resolvers.inscriptions(1, {"manasurge rune"}),
-
-	on_act = function(self)
-		if rng.percent(10) and self:isTalentActive(self.T_NECROTIC_AURA) then
-			local p = self:isTalentActive(self.T_NECROTIC_AURA)
-			p.souls = util.bound(p.souls + 1, 0, p.souls_max)
-		end
-	end,
 
 	on_die = function(self, who)
 		game.state:activateBackupGuardian("PALE_DRAKE", 1, 40, "It has been months since the hero cleansed the Dreadfell, yet rumours are growing: evil is back.")

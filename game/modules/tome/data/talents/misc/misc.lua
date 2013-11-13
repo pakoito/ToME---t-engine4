@@ -124,6 +124,14 @@ newTalent{
 	no_unlearn_last = true,
 }
 newTalent{
+	name = "Soul Pool",
+	type = {"base/class", 1},
+	info = "Allows you to have a mana soul. Souls are used to cast necrotic spells.",
+	mode = "passive",
+	hide = "always",
+	no_unlearn_last = true,
+}
+newTalent{
 	name = "Vim Pool",
 	type = {"base/class", 1},
 	info = "Allows you to have a vim pool. Vim is used by corruptions.",

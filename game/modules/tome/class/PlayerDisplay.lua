@@ -316,9 +316,8 @@ function _M:display()
 			{r=0x7f / 5, g=0xff / 5, b=0xd4 / 5}
 		)) h = h + self.font_h
 	end
-	if player:isTalentActive(player.T_NECROTIC_AURA) then
-		local p = player:isTalentActive(player.T_NECROTIC_AURA)
-		self:mouseTooltip(self.TOOLTIP_NECROTIC_AURA, self:makeTextureBar("#7fffd4#Necrotic", "%d", p.souls, p.souls_max, nil, x, h, 255, 255, 255,
+	if player:knowTalent(player.T_SOUL_POOL) then
+		self:mouseTooltip(self.TOOLTIP_NECROTIC_AURA, self:makeTextureBar("#7fffd4#Necrotic", "%d", player:getSoul(), player.max_soul, nil, x, h, 255, 255, 255,
 			{r=colors.GREY.r / 2, g=colors.GREY.g / 2, b=colors.GREY.b / 2},
 			{r=colors.GREY.r / 5, g=colors.GREY.g / 5, b=colors.GREY.b / 5}
 		)) h = h + self.font_h

@@ -1355,7 +1355,11 @@ newEffect{
 	on_lose = function(self, err) return "#Target# flying bones crumble.", "-Bone Shield" end,
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("flat_damage_cap", {all=eff.power})
-		eff.particle = self:addParticles(Particles.new("time_shield_bubble", 1))
+		if core.shader.active(4) then
+			eff.particle = self:addParticles(Particles.new("shader_shield", 1, {size_factor=1.4, img="runicshield"}, {type="runicshield", shieldIntensity=0.2, ellipsoidalFactor=1, scrollingSpeed=1, time_factor=10000, bubbleColor={0.3, 0.3, 0.3, 1.0}, auraColor={0.1, 0.1, 0.1, 1}}))
+		else
+			eff.particle = self:addParticles(Particles.new("time_shield_bubble", 1))
+		end
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("flat_damage_cap", eff.tmpid)

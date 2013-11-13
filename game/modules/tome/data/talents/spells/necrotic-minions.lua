@@ -22,6 +22,7 @@ newTalent{
 	type = {"spell/other", 1},
 	points = 1,
 	mode = "sustained",
+	autolearn_talent = "T_SOUL_POOL",
 	cooldown = 10,
 	sustain_mana = 10,
 	no_unlearn_last = true,
@@ -63,18 +64,14 @@ newTalent{
 		local decay = t.getDecay(self, t)
 		game:playSoundNear(self, "talents/spell_generic2")
 		local ret = {
-			souls = self:attr("necrotic_aura_base_souls") or 0,
-			souls_max = 10,
 			rad = self:addTemporaryValue("necrotic_aura_radius", radius),
 			decay = self:addTemporaryValue("necrotic_aura_decay", decay),
 			retch = self:addTemporaryValue("retch_heal", 1),
 			particle = self:addParticles(Particles.new("necrotic-aura", 1, {radius=radius})),
 		}
-		self.necrotic_aura_base_souls = nil
 		return ret
 	end,
 	deactivate = function(self, t, p)
-		self.necrotic_aura_base_souls = p.souls
 		self:removeParticles(p.particle)
 		self:removeTemporaryValue("retch_heal", p.retch)
 		self:removeTemporaryValue("necrotic_aura_radius", p.rad)
@@ -730,17 +727,14 @@ newTalent{
 	type = {"spell/necrotic-minions",1},
 	require = spells_req1,
 	points = 5,
+	fake_ressource = true,
 	mana = 5,
+	soul = function(self, t) return math.max(1, math.min(t.getMax(self, t), self:getSoul())) end,
 	cooldown = 14,
 	tactical = { ATTACK = 10 },
 	requires_target = true,
 	range = 0,
-	on_learn = function(self, t)
-		self:learnTalent(self.T_NECROTIC_AURA, true, 1)
-	end,
-	on_unlearn = function(self, t)
-		self:unlearnTalent(self.T_NECROTIC_AURA, 1)
-	end,
+	autolearn_talent = "T_NECROTIC_AURA",
 	radius = function(self, t)
 		local aura = self:getTalentFromId(self.T_NECROTIC_AURA)
 		return aura.getRadius(self, aura)
@@ -751,10 +745,6 @@ newTalent{
 	on_pre_use = function(self, t)
 		local p = self:isTalentActive(self.T_NECROTIC_AURA)
 		if not p then return end
-		if p.souls < 1 then return end
-
-		local nb = t.getMax(self, t)
-		if math.min(nb, p.souls) < 1 then return end
 		return true
 	end,
 	getMax = function(self, t) return math.max(1, math.floor(self:combatTalentScale(t, 1, 5, "log"))) - necroGetNbSummon(self) end, -- talent level 1-5 gives 1-5
@@ -770,7 +760,7 @@ newTalent{
 	action = function(self, t)
 		local p = self:isTalentActive(self.T_NECROTIC_AURA)
 		local nb = t.getMax(self, t)
-		nb = math.min(nb, p.souls)
+		nb = math.min(nb, self:getSoul())
 		local lev = t.getLevel(self, t)
 
 		-- Summon minions in a cone
@@ -783,15 +773,17 @@ newTalent{
 				possible_spots[#possible_spots+1] = {x=px, y=py}
 			end
 		end)
+		local use_ressource = not self:attr("zero_resource_cost") and not self:attr("force_talent_ignore_ressources")
 		for i = 1, nb do
 			local minion = makeMinion(self, self:getTalentLevel(t))
 			local pos = rng.tableRemove(possible_spots)
 			if minion and pos then
-				p.souls = p.souls - 1
+				if use_ressource then self:incSoul(-1) end
 				necroSetupSummon(self, minion, pos.x, pos.y, lev, true)
 			end
 		end
 
+		if use_ressource then self:incMana(-util.getval(t.mana, self, t) * (100 + 2 * self:combatFatigue()) / 100) end
 		game:playSoundNear(self, "talents/spell_generic2")
 		return true
 	end,

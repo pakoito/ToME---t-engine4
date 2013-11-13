@@ -265,7 +265,7 @@ newBirthDescriptor{
 		[ActorTalents.T_BLURRED_MORTALITY] = 1,
 	},
 	copy = {
-		necrotic_aura_base_souls = 1,
+		soul = 1,
 		max_life = 90,
 		resolvers.equip{ id=true,
 			{type="weapon", subtype="staff", name="elm staff", autoreq=true, ego_chance=-1000},

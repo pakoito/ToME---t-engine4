@@ -189,7 +189,7 @@ newTalent{
 		local tx, ty, target = self:getTarget(tg)
 		if not tx or not ty or not target or not target.summoner or not target.summoner == self or not target.necrotic_minion then return nil end
 
-		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t}
+		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t, friendlyfire=not rng.percent(self:getTalentLevelRaw(self.T_DARK_EMPATHY) * 0.2)}
 		local dam = target.max_life * t.getDamage(self, t) / 100
 		target:die()
 		target:project(tg, target.x, target.y, DamageType.BLIGHT, dam)
@@ -201,8 +201,8 @@ newTalent{
 	info = function(self, t)
 		return ([[Minions are only tools. You may dispose of them... Violently.
 		Makes the targeted minion explode for %d%% of its maximum life in a radius of %d as blight damage.
-		Beware! Don't get caught in the blast!]]):
-		format(t.getDamage(self, t),t.radius(self,t))
+		Beware! Don't get caught in the blast! (unless you know Dark Empthy: %d%% chances to ignore damage)]]):
+		format(t.getDamage(self, t),t.radius(self,t), self:getTalentLevelRaw(self.T_DARK_EMPATHY) * 20)
 	end,
 }
 
@@ -212,7 +212,7 @@ newTalent{
 	require = spells_req_high2,
 	points = 5,
 	mana = 90,
-	cooldown = 50,
+	cooldown = 25,
 	tactical = { ATTACK = 10 },
 	requires_target = true,
 	on_pre_use = function(self, t)
@@ -220,15 +220,15 @@ newTalent{
 		if game.party and game.party:hasMember(self) then
 			for act, def in pairs(game.party.members) do
 				if act.summoner and act.summoner == self and act.necrotic_minion then
-					if act.subtype == "skeleton" then nb = nb + 1
-					elseif act.subtype == "giant" then return end
+					if act.subtype ~= "giant" then nb = nb + 1
+					else return false end
 				end
 			end
 		else
 			for uid, act in pairs(game.level.entities) do
 				if act.summoner and act.summoner == self and act.necrotic_minion then
-					if act.subtype == "skeleton" then nb = nb + 1
-					elseif act.subtype == "giant" then return end
+					if act.subtype ~= "giant" then nb = nb + 1
+					else return false end
 				end
 			end
 		end
@@ -240,11 +240,11 @@ newTalent{
 		local list = {}
 		if game.party and game.party:hasMember(self) then
 			for act, def in pairs(game.party.members) do
-				if act.summoner and act.summoner == self and act.necrotic_minion and act.subtype == "skeleton" then list[#list+1] = act end
+				if act.summoner and act.summoner == self and act.necrotic_minion and act.subtype ~= "giant" then list[#list+1] = act end
 			end
 		else
 			for uid, act in pairs(game.level.entities) do
-				if act.summoner and act.summoner == self and act.necrotic_minion and act.subtype == "skeleton" then list[#list+1] = act end
+				if act.summoner and act.summoner == self and act.necrotic_minion and act.subtype ~= "giant" then list[#list+1] = act end
 			end
 		end
 		if #list < 3 then return end
@@ -267,7 +267,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Combines 3 of your skeletons into a bone giant.
+		return ([[Combines 3 of your minions into a bone giant.
 		At level 1, it makes a bone giant.
 		At level 3, it makes a heavy bone giant.
 		At level 5, it makes an eternal bone giant.

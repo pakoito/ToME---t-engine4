@@ -196,11 +196,14 @@ function _M:init(t, no_default)
 	t.paradox_regen = t.paradox_regen or 0 -- Paradox does not regen
 	t.psi_regen = t.psi_regen or 0.2 -- Energy regens slowly
 	t.hate_regen = t.hate_regen or 0 -- Hate does not regen
+	t.soul_regen = t.soul_regen or 0 -- Souls does not regen
 
 	t.max_positive = t.max_positive or 50
 	t.max_negative = t.max_negative or 50
 	t.positive = t.positive or 0
 	t.negative = t.negative or 0
+	
+	t.soul = t.soul or 1
 
 	t.max_hate = t.max_hate or 100
 	t.hate = t.hate or 100
@@ -2401,7 +2404,7 @@ function _M:die(src, death_note)
 		local rsrc = src:resolveSource()
 		local p = rsrc:isTalentActive(src.T_NECROTIC_AURA)
 		if self.x and self.y and src.x and src.y and core.fov.distance(self.x, self.y, rsrc.x, rsrc.y) <= rsrc.necrotic_aura_radius then
-			p.souls = math.min(p.souls + 1, p.souls_max)
+			rsrc:incSoul(1)
 			rsrc.changed = true
 		end
 	end
@@ -3396,6 +3399,9 @@ function _M:learnPool(t)
 		self:checkPool(t.id, self.T_EMPTY_HAND)
 	end
 
+	-- Generic
+	if t.autolearn_talent then self:checkPool(t.id, t.autolearn_talent) end
+
 	self:recomputeRegenResources()
 
 	return true
@@ -3724,6 +3730,10 @@ function _M:preUseTalent(ab, silent, fake)
 			if not silent then game.logPlayer(self, "You do not have enough mana to cast %s.", ab.name) end
 			return false
 		end
+		if ab.soul and self:getSoul() < util.getval(ab.soul, self, ab) then
+			if not silent then game.logPlayer(self, "You do not have enough souls to cast %s.", ab.name) end
+			return false
+		end
 		if ab.stamina and self:getStamina() < util.getval(ab.stamina, self, ab) * (100 + self:combatFatigue()) / 100 and (not self:hasEffect(self.EFF_ADRENALINE_SURGE) or self.life < util.getval(ab.stamina, self, ab) * (100 + self:combatFatigue()) / 100) then
 			if not silent then game.logPlayer(self, "You do not have enough stamina to use %s.", ab.name) end
 			return false
@@ -4033,9 +4043,12 @@ function _M:postUseTalent(ab, ret, silent)
 				end
 			end
 		end
-	elseif not self:attr("force_talent_ignore_ressources") then
+	elseif not self:attr("force_talent_ignore_ressources") and not ab.fake_ressource then
 		if ab.mana and not self:attr("zero_resource_cost") then
 			trigger = true; self:incMana(-util.getval(ab.mana, self, ab) * (100 + 2 * self:combatFatigue()) / 100)
+		end
+		if ab.soul and not self:attr("zero_resource_cost") then
+			trigger = true; self:incSoul(-util.getval(ab.soul, self, ab))
 		end
 		if ab.stamina and not self:attr("zero_resource_cost") then
 			trigger = true; self:incStamina(-util.getval(ab.stamina, self, ab) * (100 + self:combatFatigue()) / 100)
@@ -4247,6 +4260,7 @@ function _M:getTalentFullDescription(t, addlevel, config, fake_mastery)
 	end
 	if not config.ignore_ressources then
 		if t.mana then d:add({"color",0x6f,0xff,0x83}, "Mana cost: ", {"color",0x7f,0xff,0xd4}, ""..math.round(util.getval(t.mana, self, t) * (100 + 2 * self:combatFatigue()) / 100, 0.1), true) end
+		if t.soul then d:add({"color",0x6f,0xff,0x83}, "Soul cost: ", {"color",190,190,190}, ""..math.round(util.getval(t.soul, self, t), 0.1), true) end
 		if t.stamina then d:add({"color",0x6f,0xff,0x83}, "Stamina cost: ", {"color",0xff,0xcc,0x80}, ""..math.round(util.getval(t.stamina, self, t) * (100 + self:combatFatigue()) / 100, 0.1), true) end
 		if t.equilibrium then d:add({"color",0x6f,0xff,0x83}, "Equilibrium cost: ", {"color",0x00,0xff,0x74}, ""..math.round(util.getval(t.equilibrium, self, t), 0.1), true) end
 		if t.vim then d:add({"color",0x6f,0xff,0x83}, "Vim cost: ", {"color",0x88,0x88,0x88}, ""..math.round(util.getval(t.vim, self, t), 0.1), true) end

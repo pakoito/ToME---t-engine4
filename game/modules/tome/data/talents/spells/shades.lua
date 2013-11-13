@@ -141,7 +141,7 @@ newTalent{
 				m.on_die = function(self, src)
 					local p = self.summoner:isTalentActive(self.summoner.T_NECROTIC_AURA)
 					if p and src and src.reactionToward and src:reactionToward(self) < 0 and rng.percent(70) then
-						p.souls = math.min(p.souls + 1, p.souls_max)
+						self:incSoul(1)
 						self.summoner.changed = true
 					end
 				end

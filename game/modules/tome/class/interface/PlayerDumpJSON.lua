@@ -89,10 +89,7 @@ function _M:dumpToJSON(js, bypass, nosub)
 	r.life = string.format("%d/%d", self.life, self.max_life)
 	if self:knowTalent(self.T_STAMINA_POOL) then r.stamina=string.format("%d/%d", self.stamina, self.max_stamina) end
 	if self:knowTalent(self.T_MANA_POOL) then r.mana=string.format("%d/%d", self.mana, self.max_mana) end
-	if self:isTalentActive(self.T_NECROTIC_AURA) then
-		local pt = self:isTalentActive(self.T_NECROTIC_AURA)
-		r.souls=string.format("%d/%d", pt.souls, pt.souls_max)
-	end
+	if self:knowTalent(self.T_SOUL_POOL) then r.souls=string.format("%d/%d", self.soul, self.max_soul) end
 	if self:knowTalent(self.T_POSITIVE_POOL) then r.positive=string.format("%d/%d", self.positive, self.max_positive) end
 	if self:knowTalent(self.T_NEGATIVE_POOL) then r.negative=string.format("%d/%d", self.negative, self.max_negative) end
 	if self:knowTalent(self.T_VIM_POOL) then r.vim=string.format("%d/%d", self.vim, self.max_vim) end
