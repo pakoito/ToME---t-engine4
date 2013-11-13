@@ -1224,11 +1224,17 @@ static void build_sdm_ex(const unsigned char *texData, int srcWidth, int srcHeig
 			vectorMap[x + y * dstWidth].x = 0;
 			vectorMap[x + y * dstWidth].y = 0;
 
-			int srcx = dstx + x;
-			int srcy = dsty + y;
+			int srcx = x - dstx;
+			int srcy = y - dsty;
 			if(srcx < 0 || srcx >= srcWidth || srcy < 0 || srcy >= srcHeight) continue;
+			
+			/*sdmTexData[(x + y * dstWidth) * 4 + 0] = texData[(srcx + srcy * srcWidth) * 4 + 0];
+			sdmTexData[(x + y * dstWidth) * 4 + 1] = texData[(srcx + srcy * srcWidth) * 4 + 1];
+			sdmTexData[(x + y * dstWidth) * 4 + 2] = texData[(srcx + srcy * srcWidth) * 4 + 2];
+			sdmTexData[(x + y * dstWidth) * 4 + 3] = texData[(srcx + srcy * srcWidth) * 4 + 3];*/			
+			
 
-			if(texData[(x + y * srcWidth) * 4 + 3] > 128)
+			if(texData[(srcx + srcy * srcWidth) * 4 + 3] > 128)
 			{
 				pixelStackIndex[x + y * dstWidth] = currSize;
 				pixelStack[currSize].x = x;
@@ -1237,6 +1243,7 @@ static void build_sdm_ex(const unsigned char *texData, int srcWidth, int srcHeig
 			}
 		}
 	}
+	
 	int dist = 0;
 	bool done = 0;
 	while(!done)
@@ -1356,23 +1363,24 @@ static void build_sdm_ex(const unsigned char *texData, int srcWidth, int srcHeig
 	free(pixelStackIndex);
 }
 
-
 static int gl_texture_alter_sdm(lua_State *L) {
 	GLuint *t = (GLuint*)auxiliar_checkclass(L, "gl{texture}", 1);
+	bool doubleheight = lua_toboolean(L, 2);
 
 	// Bind the texture to read
 	tglBindTexture(GL_TEXTURE_2D, *t);
 
 	// Get texture size
-	GLint w, h;
+	GLint w, h, dh;
 	glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &w);
 	glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &h);
+	dh = doubleheight ? h * 2 : h;
 	GLubyte *tmp = calloc(w*h*4, sizeof(GLubyte));
 	glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, tmp);
 
-	GLubyte *sdm = calloc(w*h*2*4, sizeof(GLubyte));
-	build_sdm_ex(tmp, w, h, sdm, w, h * 2, 0, h);
-
+	GLubyte *sdm = calloc(w*dh*4, sizeof(GLubyte));
+	build_sdm_ex(tmp, w, h, sdm, w, dh, 0, doubleheight ? h : 0);
+printf("==SDM %dx%d :: %dx%d\n", w,h,w,dh);
 	GLuint *st = (GLuint*)lua_newuserdata(L, sizeof(GLuint));
 	auxiliar_setclass(L, "gl{texture}", -1);
 
@@ -1380,7 +1388,7 @@ static int gl_texture_alter_sdm(lua_State *L) {
 	tfglBindTexture(GL_TEXTURE_2D, *st);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-	glTexImage2D(GL_TEXTURE_2D, 0, 4, w, h * 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, sdm);
+	glTexImage2D(GL_TEXTURE_2D, 0, 4, w, dh, 0, GL_RGBA, GL_UNSIGNED_BYTE, sdm);
 
 	free(tmp);
 	free(sdm);
