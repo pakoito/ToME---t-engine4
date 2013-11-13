@@ -2874,9 +2874,63 @@ function _M:attachementSpot(kind, particle)
 	return game.tiles_attachements[as][kind].x + x, game.tiles_attachements[as][kind].y + y
 end
 
+function _M:addShaderAura(kind, shader, shader_args, ...)
+	if not core.shader.active(4) then return false end
+
+	self.shader_auras = self.shader_auras or {}
+	local textures = {...}
+	for i = 1, #textures do
+		if type(textures[i]) == "string" then textures[i] = {"image", textures[i]} end
+	end
+	self.shader_auras[kind] = {shader=shader, shader_args=shader_args, textures=textures}
+	self:updateModdableTile()
+	return true
+end
+
+function _M:removeShaderAura(kind)
+	self.shader_auras = self.shader_auras or {}
+	if not self.shader_auras[kind] then return end
+	self.shader_auras[kind] = nil
+	self:updateModdableTile()
+end
+
 --- Update tile for races that can handle it
 function _M:updateModdableTile()
-	if not self.moddable_tile or Map.tiles.no_moddable_tiles then return end
+	if not self.moddable_tile or Map.tiles.no_moddable_tiles then
+		local add = self.add_mos or {}
+		if self.shader_auras and next(self.shader_auras) then
+			local base, baseh, basey, base1 = nil
+			if self.image == "invis.png" and add[1] and add[1].image then
+				base = add[1].image
+				base1 = true
+				baseh, basey = add[1].display_h, add[1].display_y
+			elseif not self.add_mos then
+				base = self.image
+				base1 = false
+				baseh, basey = self.display_h, self.display_y
+			end
+
+			if base then
+				self.add_mos = add
+				for _, def in pairs(self.shader_auras) do
+					table.insert(add, 1, {_isshaderaura=true, image_alter="sdm", sdm_double=not baseh or baseh < 2, image=base, shader=def.shader, shader_args=def.shader_args, textures=def.textures, display_h=2, display_y=-1})
+				end
+				if not base1 then add[#add+1] = {_isshaderaura=true, image=base, display_y=basey, display_h=baseh} end
+			
+				self:removeAllMOs()
+				if self.x and game.level then game.level.map:updateMap(self.x, self.y) end
+			end
+		elseif self.add_mos then
+			for i = #add, 1, -1 do
+				if add[i]._isshaderaura then table.remove(add, i) end
+			end
+			if not next(self.add_mos) then self.add_mos = nil end
+
+			self:removeAllMOs()
+			if self.x and game.level then game.level.map:updateMap(self.x, self.y) end
+		end
+		return
+	end
 	self:removeAllMOs()
 
 	local base = "player/"..self.moddable_tile:gsub("#sex#", self.female and "female" or "male").."/"
@@ -2889,6 +2943,13 @@ function _M:updateModdableTile()
 	self:triggerHook{"Actor:updateModdableTile:back", base=base, add=add}
 
 	i = self.inven[self.INVEN_CLOAK]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile):format("behind")..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1} end
+
+	if self.shader_auras and next(self.shader_auras) then
+		for _, def in pairs(self.shader_auras) do
+			add[#add+1] = {image_alter="sdm", sdm_double=true, image=base..(self.moddable_tile_base or "base_01.png"), shader=def.shader, shader_args=def.shader_args, textures=def.textures, display_h=2, display_y=-1}
+		end
+	end
+
 	add[#add+1] = {image = base..(self.moddable_tile_base or "base_01.png")}
 
 	if not self:attr("disarmed") then
