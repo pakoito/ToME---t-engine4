@@ -37,23 +37,31 @@ newTalent{
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
+		local empower = necroEssenceDead(self)
 		local grids = self:project(tg, x, y, function(px, py)
 			local actor = game.level.map(px, py, Map.ACTOR)
 			if actor and actor ~= self then
-				local tg2 = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="ice_shards"}}
-				self:projectile(tg2, px, py, DamageType.ICE, self:spellCrit(t.getDamage(self, t)), {type="freeze"})
+				if empower then
+					local tg2 = {type="beam", range=self:getTalentRange(t), talent=t}
+					self:project(tg2, px, py, DamageType.ICE, self:spellCrit(t.getDamage(self, t)))
+					game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(px-self.x), math.abs(py-self.y)), "ice_beam", {tx=px-self.x, ty=py-self.y})
+				else
+					local tg2 = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="ice_shards"}}
+					self:projectile(tg2, px, py, DamageType.ICE, self:spellCrit(t.getDamage(self, t)), {type="freeze"})
+				end
 			end
 		end)
+		if empower then empower() end
 
 		game:playSoundNear(self, "talents/ice")
 		return true
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Hurl ice shards at the targets in the selected area. Each shard travels slowly and does %0.2f ice damage, hitting all adjacent targets on impact.
+		return ([[Hurl ice shards at the targets in the selected area. Each shard %s and does %0.2f ice damage, hitting all adjacent targets on impact.
 		This spell will never hit the caster.
 		The damage will increase with your Spellpower.]]):
-		format(damDesc(self, DamageType.COLD, damage))
+		format(necroEssenceDead(self, true) and "affects all foes on its path" or "travels slowly", damDesc(self, DamageType.COLD, damage))
 	end,
 }
 

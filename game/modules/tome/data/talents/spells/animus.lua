@@ -20,46 +20,39 @@
 local Object = require "mod.class.Object"
 
 newTalent{
-	name = "Chill of the Tomb",
-	type = {"spell/grave",1},
+	name = "Consume Soul",
+	type = {"spell/animus",1},
 	require = spells_req1,
 	points = 5,
-	mana = 30,
-	cooldown = 8,
-	tactical = { ATTACKAREA = { COLD = 2 } },
-	range = 7,
-	radius = function(self, t)
-		return math.floor(self:combatTalentScale(t, 2, 6, 0.5, 0, 0, true))
-	end,
-	proj_speed = 4,
-	direct_hit = true,
-	requires_target = true,
-	target = function(self, t)
-		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=self:spellFriendlyFire(), talent=t, display={particle="bolt_ice", trail="icetrail"}}
-	end,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 28, 280) end,
+	soul = 1,
+	cooldown = 10,
+	tactical = { HEAL = 1, MANA = 1 },
+	getHeal = function(self, t) return (40 + self:combatTalentSpellDamage(t, 10, 520)) * (necroEssenceDead(self, true) and 1.5 or 1) end,
+	is_heal = true,
 	action = function(self, t)
-		local tg = self:getTalentTarget(t)
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
-		self:projectile(tg, x, y, DamageType.COLD, self:spellCrit(t.getDamage(self, t)), function(self, tg, x, y, grids)
-			game.level.map:particleEmitter(x, y, tg.radius, "iceflash", {radius=tg.radius, tx=x, ty=y})
-		end)
-		game:playSoundNear(self, "talents/ice")
+		self:attr("allow_on_heal", 1)
+		self:heal(self:spellCrit(t.getHeal(self, t)), self)
+		self:attr("allow_on_heal", -1)
+		self:incMana(self:spellCrit(t.getHeal(self, t)) / 3, self)
+		if core.shader.active(4) then
+			self:addParticles(Particles.new("shader_shield_temp", 1, {toback=true , size_factor=1.5, y=-0.3, img="healdark", life=25}, {type="healing", time_factor=6000, beamsCount=15, noup=2.0, beamColor1={0xcb/255, 0xcb/255, 0xcb/255, 1}, beamColor2={0x35/255, 0x35/255, 0x35/255, 1}}))
+			self:addParticles(Particles.new("shader_shield_temp", 1, {toback=false, size_factor=1.5, y=-0.3, img="healdark", life=25}, {type="healing", time_factor=6000, beamsCount=15, noup=1.0, beamColor1={0xcb/255, 0xcb/255, 0xcb/255, 1}, beamColor2={0x35/255, 0x35/255, 0x35/255, 1}}))
+		end
+		game:playSoundNear(self, "talents/heal")
+		if necroEssenceDead(self, true) then necroEssenceDead(self)() end
 		return true
 	end,
 	info = function(self, t)
-		local damage = t.getDamage(self, t)
-		local radius = self:getTalentRadius(t)
-		return ([[Conjures up a bolt of cold that moves toward the target and explodes into a chilly circle of death, doing %0.2f cold damage in a radius of %d.
-		The damage will increase with your Spellpower.]]):
-		format(damDesc(self, DamageType.COLD, damage), radius)
+		local heal = t.getHeal(self, t)
+		return ([[Crush and consume one of your captured souls, healing your for %d life and restoring %d mana.
+		The life and mana healed will increase with your Spellpower.]]):
+		format(heal, heal / 3)
 	end,
 }
 
 newTalent{
-	name = "Will o' the Wisp",
-	type = {"spell/grave",2},
+	name = "adazd",
+	type = {"spell/animus",2},
 	require = spells_req2,
 	mode = "sustained",
 	points = 5,
@@ -131,8 +124,8 @@ newTalent{
 
 -- Kinda copied from Creeping Darkness
 newTalent{
-	name = "Cold Flames",
-	type = {"spell/grave",3},
+	name = "Cold Flameazdazdazds",
+	type = {"spell/animus",3},
 	require = spells_req3,
 	points = 5,
 	mana = 40,
@@ -269,7 +262,7 @@ newTalent{
 	action = function(self, t)
 		local range = self:getTalentRange(t)
 		local radius = self:getTalentRadius(t)
-		local damage = {dam=t.getDamage(self, t), chance=25}
+		local damage = t.getDamage(self, t)
 		local darkCount = t.getDarkCount(self, t)
 
 		local tg = {type="ball", nolock=true, pass_terrain=false, nowarning=true, friendly_fire=true, default_target=self, range=range, radius=radius, talent=t}
@@ -298,11 +291,6 @@ newTalent{
 		darkCount = math.min(darkCount, #locations)
 		if darkCount == 0 then return false end
 
-		local empower = necroEssenceDead(self)
-		if empower then
-			damage.chance = 100
-			empower()
-		end
 		for i = 1, darkCount do
 			local location, id = rng.table(locations)
 			table.remove(locations, id)
@@ -322,40 +310,31 @@ newTalent{
 }
 
 newTalent{
-	name = "Vampiric Gift",
-	type = {"spell/grave",4},
+	name = "Essence of the Dead",
+	type = {"spell/animus",4},
 	require = spells_req4,
 	points = 5,
-	mode = "sustained",
-	sustain_mana = 250,
-	cooldown = 30,
+	mana = 20,
+	soul = 2,
+	cooldown = 20,
 	tactical = { BUFF = 3 },
-	getParams = function(self, t) return self:combatTalentLimit(t, 100, 25, 45), self:combatLimit(self:combatTalentSpellDamage(t, 5, 30), 100, 0, 0, 18.65, 18.65) end, -- Limit chance and life leach to <100% each
-	activate = function(self, t)
-		local chance, val = t.getParams(self, t)
-		game:playSoundNear(self, "talents/spell_generic2")
-		local particle
-		if core.shader.active(4) then
-			local bx, by = self:attachementSpot("back", true)
-			particle = self:addParticles(Particles.new("shader_wings", 1, {infinite=1, x=bx, y=by, img="darkwings"}))
-		end
-		local ret = {
-			chance = self:addTemporaryValue("life_leech_chance", chance),
-			val = self:addTemporaryValue("life_leech_value", val),
-			particle = particle,
-		}
-		return ret
-	end,
-	deactivate = function(self, t, p)
-		if p.particle then self:removeParticles(p.particle) end
-		self:removeTemporaryValue("life_leech_chance", p.chance)
-		self:removeTemporaryValue("life_leech_value", p.val)
+	getnb = function(self, t) return math.floor(self:combatTalentScale(t, 1, 5)) end,
+	action = function(self, t)
+		self:setEffect(self.EFF_ESSENCE_OF_THE_DEAD, 1, {nb=t.getnb(self, t)})
 		return true
 	end,
 	info = function(self, t)
-		local chance, val = t.getParams(self, t)
-		return ([[Vampiric energies fill you; each time you deal damage, you have %d%% chance to heal for %d%% of the damage done.
-		The absorption percent will increase with your Spellpower.]]):
-		format(chance, val)
+		local nb = t.getnb(self, t)
+		return ([[Crush and consume two souls to empower your next %d spells, granting them a special effect.
+		Affected spells are:
+		- Undeath Link: in addition to the heal a shield is created for half the heal life_leech_value
+		- Create Minions: allows you to summon 2 more minions
+		- Assemble: allows you to summon a second bone golem
+		- Invoke Darkness: becomes a cone of darkness
+		- Shadow Tunnel: teleported minions will also be healed for 30%% of their max life
+		- Cold Flames: freeze chance increased to 100%%
+		- Ice Shards: each shard becomes a beam
+		- Consume Soul: effect increased by 50%%]]):
+		format(nb)
 	end,
 }

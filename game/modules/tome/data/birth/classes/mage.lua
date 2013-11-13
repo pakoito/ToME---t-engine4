@@ -237,6 +237,7 @@ newBirthDescriptor{
 		["spell/necrosis"]={true, 0.3},
 		["spell/nightfall"]={true, 0.3},
 		["spell/grave"]={true, 0.3},
+		["spell/animus"]={true, 0.3},
 		["cunning/survival"]={true, -0.1},
 	},
 	unlockable_talents_types = {

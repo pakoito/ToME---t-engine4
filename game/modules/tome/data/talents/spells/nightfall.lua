@@ -40,6 +40,7 @@ newTalent{
 	target = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), friendlyfire=isFF(self), talent=t, display={particle="bolt_dark", trail="darktrail"}}
 		if self:getTalentLevel(t) >= 3 then tg.type = "beam" end
+		if necroEssenceDead(self, true) then tg.radius, tg.range = tg.range, 0 tg.type = "cone" tg.cone_angle = 25 end
 		return tg
 	end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 25, 230) end,
@@ -47,7 +48,12 @@ newTalent{
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		if self:getTalentLevel(t) < 3 then
+		local empower = necroEssenceDead(self)
+		if empower then
+			self:project(tg, x, y, DamageType.DARKNESS, self:spellCrit(t.getDamage(self, t)))
+			game.level.map:particleEmitter(self.x, self.y, tg.radius, "breath_shadow", {radius=tg.radius, tx=x-self.x, ty=y-self.y, spread=20})
+			empower()
+		elseif self:getTalentLevel(t) < 3 then
 			self:projectile(tg, x, y, DamageType.DARKNESS, self:spellCrit(t.getDamage(self, t)), function(self, tg, x, y, grids)
 				game.level.map:particleEmitter(x, y, 1, "dark")
 			end)

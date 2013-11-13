@@ -217,34 +217,45 @@ newTalent{
 	requires_target = true,
 	on_pre_use = function(self, t)
 		local nb = 0
+		local nbgolem = 0
 		if game.party and game.party:hasMember(self) then
 			for act, def in pairs(game.party.members) do
 				if act.summoner and act.summoner == self and act.necrotic_minion then
 					if act.subtype ~= "giant" then nb = nb + 1
-					else return false end
+					else nbgolem = nbgolem + 1 end
 				end
 			end
 		else
 			for uid, act in pairs(game.level.entities) do
 				if act.summoner and act.summoner == self and act.necrotic_minion then
 					if act.subtype ~= "giant" then nb = nb + 1
-					else return false end
+					else nbgolem = nbgolem + 1 end
 				end
 			end
 		end
 		if nb < 3 then return false end
+		local maxgolem = 1
+		if necroEssenceDead(self, true) then maxgolem = 2 end
+		if nbgolem >= maxgolem then return false end
 		return true
 	end,
 	getLevel = function(self, t) return math.floor(self:combatScale(self:getTalentLevel(t), -6, 0.9, 2, 5)) end, -- -6 @ 1, +2 @ 5, +5 @ 8
 	action = function(self, t)
 		local list = {}
+		local nbgolem = 0
 		if game.party and game.party:hasMember(self) then
 			for act, def in pairs(game.party.members) do
-				if act.summoner and act.summoner == self and act.necrotic_minion and act.subtype ~= "giant" then list[#list+1] = act end
+				if act.summoner and act.summoner == self and act.necrotic_minion then
+					if act.subtype ~= "giant" then list[#list+1] = act
+					else nbgolem = nbgolem + 1 end
+				end
 			end
 		else
 			for uid, act in pairs(game.level.entities) do
-				if act.summoner and act.summoner == self and act.necrotic_minion and act.subtype ~= "giant" then list[#list+1] = act end
+				if act.summoner and act.summoner == self and act.necrotic_minion then
+					if act.subtype ~= "giant" then list[#list+1] = act
+					else nbgolem = nbgolem + 1 end
+				end
 			end
 		end
 		if #list < 3 then return end
@@ -263,6 +274,11 @@ newTalent{
 			necroSetupSummon(self, minion, x, y, lev, true)
 		end
 
+		if nbgolem >= 1 then
+			local empower = necroEssenceDead(self)
+			if empower then empower() end
+		end
+
 		game:playSoundNear(self, "talents/spell_generic2")
 		return true
 	end,
@@ -272,8 +288,8 @@ newTalent{
 		At level 3, it makes a heavy bone giant.
 		At level 5, it makes an eternal bone giant.
 		At level 6, it has a 20%% chance to produce a runed bone giant.
-		Only one bone giant can be active at any time.]]):
-		format()
+		Only %s can be active at any time.]]):
+		format(necroEssenceDead(self, true) and "two bone giants" or "one bone giant")
 	end,
 }
 

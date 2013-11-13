@@ -747,7 +747,11 @@ newTalent{
 		if not p then return end
 		return true
 	end,
-	getMax = function(self, t) return math.max(1, math.floor(self:combatTalentScale(t, 1, 5, "log"))) - necroGetNbSummon(self) end, -- talent level 1-5 gives 1-5
+	getMax = function(self, t)
+		local max = math.max(1, math.floor(self:combatTalentScale(t, 1, 5, "log")))
+		if necroEssenceDead(self, true) then max = max + 2 end
+		return max - necroGetNbSummon(self)
+	end, -- talent level 1-5 gives 1-5
 	getLevel = function(self, t) return math.floor(self:combatScale(self:getTalentLevel(t), -6, 0.9, 2, 5)) end, -- -6 @ 1, +2 @ 5, +5 @ 8
 	MinionChancesDesc = function(self)
 		local c = getMinionChances(self)
@@ -782,6 +786,9 @@ newTalent{
 				necroSetupSummon(self, minion, pos.x, pos.y, lev, true)
 			end
 		end
+
+		local empower = necroEssenceDead(self)
+		if empower then empower() end
 
 		if use_ressource then self:incMana(-util.getval(t.mana, self, t) * (100 + 2 * self:combatFatigue()) / 100) end
 		game:playSoundNear(self, "talents/spell_generic2")

@@ -62,6 +62,7 @@ newTalentType{ allow_random=true, no_silence=true, is_spell=true, mana_regen=tru
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, mana_regen=true, type="spell/shades", name = "shades", min_lev = 10, description = "Invoke and control shades." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, mana_regen=true, type="spell/necrosis", name = "necrosis", description = "Gain control over death, eventually turning into a lich." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, mana_regen=true, type="spell/grave", name = "grave", description = "Use the rotting cold doom of the tomb to fell your foes." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, mana_regen=true, type="spell/animus", name = "animus", description = "Crush the souls of your foes to improve yourself." }
 
 -- Generic requires for spells based on talent level
 spells_req1 = {
@@ -216,6 +217,16 @@ function necroSetupSummon(self, m, x, y, level, no_control, no_decay)
 
 	self:attr("summoned_times", 1)
 end
+
+function necroEssenceDead(self, checkonly)
+	local eff = self:hasEffect(self.EFF_ESSENCE_OF_THE_DEAD)
+	if not eff then return false end
+	if checkonly then return true end
+	return function()
+		eff.nb = eff.nb - 1
+		if eff.nb <= 0 then self:removeEffect(self.EFF_ESSENCE_OF_THE_DEAD, true) end
+	end
+end
 -------------------------------------------
 
 
@@ -252,3 +263,4 @@ load("/data/talents/spells/nightfall.lua")
 load("/data/talents/spells/shades.lua")
 load("/data/talents/spells/necrosis.lua")
 load("/data/talents/spells/grave.lua")
+load("/data/talents/spells/animus.lua")

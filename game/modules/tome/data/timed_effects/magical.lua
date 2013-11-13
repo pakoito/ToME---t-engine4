@@ -2327,3 +2327,19 @@ newEffect{
 	deactivate = function(self, eff)
 	end,
 }
+
+newEffect{
+	name = "ESSENCE_OF_THE_DEAD", image = "talents/essence_of_the_dead.png",
+	desc = "Essence of the Dead",
+	long_desc = function(self, eff) return ("The target consumed souls to gain new powers. %d spells affected."):format(eff.nb) end,
+	type = "magical",
+	decrease = 0,
+	subtype = { necrotic=true },
+	status = "beneficial",
+	parameters = { nb=1 },
+	charges = function(self, eff) return eff.nb end,
+	activate = function(self, eff)
+	end,
+	deactivate = function(self, eff)
+	end,
+}

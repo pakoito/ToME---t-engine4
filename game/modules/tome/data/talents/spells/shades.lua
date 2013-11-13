@@ -41,6 +41,7 @@ newTalent{
 			end
 		end
 
+		local empower = necroEssenceDead(self)
 		for i, m in ipairs(list) do
 			local x, y = util.findFreeGrid(self.x, self.y, 5, true, {[Map.ACTOR]=true})
 			if x and y then
@@ -48,7 +49,15 @@ newTalent{
 				game.level.map:particleEmitter(x, y, 1, "summon")
 			end
 			m:setEffect(m.EFF_EVASION, 5, {chance=t.getChance(self, t)})
+			if empower then
+				m:heal(m.max_life * 0.3)
+				if core.shader.active(4) then
+					m:addParticles(Particles.new("shader_shield_temp", 1, {toback=true , size_factor=1.5, y=-0.3, img="healdark", life=25}, {type="healing", time_factor=6000, beamsCount=15, noup=2.0, beamColor1={0xcb/255, 0xcb/255, 0xcb/255, 1}, beamColor2={0x35/255, 0x35/255, 0x35/255, 1}}))
+					m:addParticles(Particles.new("shader_shield_temp", 1, {toback=false, size_factor=1.5, y=-0.3, img="healdark", life=25}, {type="healing", time_factor=6000, beamsCount=15, noup=1.0, beamColor1={0xcb/255, 0xcb/255, 0xcb/255, 1}, beamColor2={0x35/255, 0x35/255, 0x35/255, 1}}))
+				end
+			end
 		end
+		if empower then empower() end
 
 		game:playSoundNear(self, "talents/spell_generic")
 		return true

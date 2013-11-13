@@ -994,8 +994,10 @@ newDamageType{
 newDamageType{
 	name = "ice", type = "ICE", text_color = "#1133F3#",
 	projector = function(src, x, y, type, dam)
+		local chance = 25
+		if _G.type(dam) == "table" then chance, dam = dam.chance, dam.dam end
 		local realdam = DamageType:get(DamageType.COLD).projector(src, x, y, DamageType.COLD, dam)
-		if rng.percent(25) then
+		if rng.percent(chance) then
 			DamageType:get(DamageType.FREEZE).projector(src, x, y, DamageType.FREEZE, {dur=2, hp=70+dam*1.5})
 		end
 		return realdam
