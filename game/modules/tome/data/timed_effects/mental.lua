@@ -1980,7 +1980,6 @@ newEffect{
 		self.shader_auras = self.shader_auras or {}
 		self.shader_auras.rampage = {shader="awesomeaura", textures={{"image", "particles_images/shadowfire.png"}}}
 		self:updateModdableTile()
-MAKE A FUNCTION TO DEFINE AURAS !
 --		eff.particle = self:addParticles(Particles.new("rampage", 1))
 	end,
 	deactivate = function(self, eff)
