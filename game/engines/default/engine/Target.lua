@@ -121,9 +121,11 @@ function _M:display(dispx, dispy, prevfbo, rotate_keyframes)
 			self:realDisplay(0, 0)
 			self.fbo:use(false, prevfbo)
 			self.targetshader:bind(1, false)
+			self.fbo_shader.shad:use(true)
 			self.fbo_shader.shad:paramNumber2("tileSize", self.tile_w, self.tile_h)
 			self.fbo_shader.shad:paramNumber2("scrollOffset", 0, 0)
 			self.fbo:toScreen(self.display_x, self.display_y, Map.viewport.width, Map.viewport.height, self.fbo_shader.shad, 1, 1, 1, 1, true)
+			self.fbo_shader.shad:use(false)
 		end
 
 		if not self.target_type.immediate_keys or firstx then

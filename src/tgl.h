@@ -55,3 +55,9 @@ extern GLuint gl_c_fbo;
 	{ \
 	glBindFramebufferEXT((w), (t)); gl_c_fbo=(t); \
 	}
+
+extern GLuint gl_c_shader;
+#define tglUseProgramObject(shad) \
+	{ \
+	if ((shad) != gl_c_shader) { glUseProgramObjectARB((shad)); gl_c_shader=(shad); } \
+	}

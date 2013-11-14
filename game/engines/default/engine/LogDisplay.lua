@@ -247,9 +247,9 @@ function _M:toScreen()
 		self.dlist[i].dh = h
 		if self.shadow then
 			if shader then
+				shader:use(true)
 				shader:paramNumber2("outlineSize", 0.7, 0.7)
 				shader:paramNumber2("textSize", item._tex_w, item._tex_h)
-				shader:use(true)
 			else
 				item._tex:toScreenFull(self.display_x+2, h+2, item.w, item.h, item._tex_w, item._tex_h, 0,0,0, self.shadow * fade)
 			end

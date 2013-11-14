@@ -2621,7 +2621,7 @@ static int gl_fbo_toscreen(lua_State *L)
 	glVertexPointer(2, GL_FLOAT, 0, vertices);
 	glDrawArrays(GL_QUADS, 0, 4);
 
-	if (lua_isuserdata(L, 6)) glUseProgramObjectARB(0);
+	if (lua_isuserdata(L, 6)) tglUseProgramObject(0);
 	if (!allowblend) glEnable(GL_BLEND);
 	return 0;
 }

@@ -457,12 +457,12 @@ static int map_objects_toscreen(lua_State *L)
 
 			if (m != dm) {
 		 		if (m->shader) useShader(m->shader, 0, 0, w, h, 1, 1, 1, a);
-		 		else glUseProgramObjectARB(0);
+		 		else tglUseProgramObject(0);
 		 	}
 
 			if (allow_cb && (dm->cb_ref != LUA_NOREF))
 			{
-				if (allow_shader && m->shader) glUseProgramObjectARB(0);
+				if (allow_shader && m->shader) tglUseProgramObject(0);
 				int dx = x + dm->dx * w, dy = y + dm->dy * h;
 				float dw = w * dm->dw;
 				float dh = h * dm->dh;
@@ -492,7 +492,7 @@ static int map_objects_toscreen(lua_State *L)
 			nb++;
 		}
 
-		if (allow_shader && m->shader) glUseProgramObjectARB(0);
+		if (allow_shader && m->shader) tglUseProgramObject(0);
 
 		moid++;
 	}
@@ -605,7 +605,7 @@ static int map_objects_display(lua_State *L)
 			dz++;
 		}
 
-		if (m->shader) glUseProgramObjectARB(0);
+		if (m->shader) tglUseProgramObject(0);
 
 		moid++;
 	}
@@ -1306,7 +1306,7 @@ void do_quad(lua_State *L, const map_object *m, const map_object *dm, const map_
 	}
 	if (dm->cb_ref != LUA_NOREF)
 	{
-		if (m->shader) glUseProgramObjectARB(0);
+		if (m->shader) tglUseProgramObject(0);
 		lua_rawgeti(L, LUA_REGISTRYINDEX, dm->cb_ref);
 		lua_checkstack(L, 8);
 		lua_pushnumber(L, dx);
@@ -1538,7 +1538,7 @@ void display_map_quad(lua_State *L, GLuint *cur_tex, int *vert_idx, int *col_idx
 			i, j);
 		if (m != dm) {
 	 		if (m->shader) useShader(m->shader, dx, dy, map->tile_w, map->tile_h, r, g, b, a);
-	 		else glUseProgramObjectARB(0);
+	 		else tglUseProgramObject(0);
 	 	}
 		dm->animdx = animdx;
 		dm->animdy = animdy;
@@ -1557,7 +1557,7 @@ void display_map_quad(lua_State *L, GLuint *cur_tex, int *vert_idx, int *col_idx
 		(*col_idx) = 0;
 		*cur_tex = 0;
 	}
-	if (m->shader) glUseProgramObjectARB(0);
+	if (m->shader) tglUseProgramObject(0);
 	m->display_last = DL_TRUE;
 }
 
