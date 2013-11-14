@@ -611,7 +611,7 @@ newEntity{
 
 newEntity{
 	power_source = {technique=true},
-	name = "short ", prefix=true, instant_resolve=true,
+	name = "short ", prefix=true, instant_resolve=true, dual_wieldable = true,
 	slot_forbid = false,
 	twohanded = false,
 	keywords = {short=true},
@@ -624,7 +624,7 @@ newEntity{
 
 newEntity{
 	power_source = {technique=true},
-	name = "magewarrior's short ", prefix=true, instant_resolve=true,
+	name = "magewarrior's short ", prefix=true, instant_resolve=true, dual_wieldable = true,
 	slot_forbid = false,
 	twohanded = false,
 	keywords = {magewarrior=true},
