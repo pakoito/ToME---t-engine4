@@ -45,7 +45,9 @@ function _M:init()
 	self.c_adds = ListColumns.new{width=math.floor(self.iw * 2 / 3 - 10), height=self.ih - 10 - self.c_compat.h, scrollbar=true, columns={
 		{name="Addon", width=60, display_prop="long_name"},
 		{name="Active", width=20, display_prop=function(item)
-			if item.dlc == "no" then
+			if item.cheat_only and not config.settings.cheat then
+				return "#GREY#Developer tool"
+			elseif item.dlc == "no" then
 				return "#LIGHT_RED#Donator Status: Disabled"
 			elseif config.settings.addons[item.for_module] and config.settings.addons[item.for_module][item.short_name] ~= nil then
 				return (config.settings.addons[item.for_module][item.short_name] and "#LIGHT_GREEN#Manual: Active" or "#LIGHT_RED#Manual: Disabled"):toTString()

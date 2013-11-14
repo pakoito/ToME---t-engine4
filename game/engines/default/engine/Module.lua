@@ -308,7 +308,10 @@ function _M:loadAddons(mod, saveuse)
 				table.remove(adds, i) removed = true
 			end
 		else
-			if add.dlc == "no" then
+			if add.cheat_only and not config.settings.cheat then
+				print("Removing addon "..add.short_name..": cheat mode required")
+				table.remove(adds, i) removed = true
+			elseif add.dlc == "no" then
 				print("Removing addon "..add.short_name..": DLC required")
 				table.remove(adds, i) removed = true
 			elseif config.settings.addons[add.for_module] and config.settings.addons[add.for_module][add.short_name] ~= nil then

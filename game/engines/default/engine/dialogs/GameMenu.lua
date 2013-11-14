@@ -83,6 +83,30 @@ function _M:generateList(actions)
 			local menu = require("engine.dialogs.ViewHighScores").new()
 			game:registerDialog(menu)
 		end },
+		cheatmode = { "#GREY#Developer Mode", function()
+			game:unregisterDialog(self)
+			if config.settings.cheat then
+				Dialog:yesnoPopup("Developer Mode", "Disable developer mode?", function(ret) if ret then
+					config.settings.cheat = false
+					game:saveSettings("cheat", "cheat = nil\n")
+					util.showMainMenu()
+				end end, nil, nil, true)
+			else
+				Dialog:yesnoLongPopup("Developer Mode", [[Enable developer mode?
+Developer Mode is a special game mode used to debug and create addons.
+Using it will #CRIMSON#invalidate#LAST# any savefiles loaded.
+When activated you will have access to special commands:
+- CTRL+L: bring up a lua console that lets you explore and alter all the game objects, enter arbitrary lua commands, ...
+- CTRL+A: bring up a menu to easily do many tasks (create NPCs, teleport to zones, ...)
+- CTRL+left click: teleport to the clicked location
+]], 500, function(ret) if not ret then
+					config.settings.cheat = true
+					game:saveSettings("cheat", "cheat = true\n")
+					util.showMainMenu()
+				end end, "No", "Yes", true)
+		
+			end
+		end },
 		save = { "Save Game", function() game:unregisterDialog(self) game:saveGame() end },
 		quit = { "Main Menu", function() game:unregisterDialog(self) game:onQuit() end },
 		exit = { "Exit Game", function() game:unregisterDialog(self) game:onExit() end },

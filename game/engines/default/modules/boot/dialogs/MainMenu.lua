@@ -47,13 +47,14 @@ function _M:init()
 			"keybinds_all",
 			"video",
 			"sound",
+			"cheatmode",
 		}
 		game:registerDialog(menu)
 	end}
 	l[#l+1] = {name="Exit", fct=function() game:onQuit() end}
 	if config.settings.cheat then l[#l+1] = {name="Reboot", fct=function() util.showMainMenu() end} end
 
-	self.c_background = Button.new{text=game.stopped and "Enable background" or "Disable background", width=150, fct=function() self:switchBackground() end}
+	self.c_background = Button.new{text=game.stopped and "Enable background" or "Disable background", fct=function() self:switchBackground() end}
 	self.c_version = Textzone.new{auto_width=true, auto_height=true, text=("#{bold}##B9E100#T-Engine4 version: %d.%d.%d"):format(engine.version[1], engine.version[2], engine.version[3])}
 
 	self.c_list = List.new{width=self.iw, nb_items=#self.list, list=self.list, fct=function(item) end, font={"/data/font/DroidSans-Bold.ttf", 16}}
