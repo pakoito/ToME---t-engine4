@@ -2339,7 +2339,9 @@ newEffect{
 	parameters = { nb=1 },
 	charges = function(self, eff) return eff.nb end,
 	activate = function(self, eff)
+		self:addShaderAura("essence_of_the_dead", "awesomeaura", {time_factor=4000, alpha=0.6}, "particles_images/darkwings.png")
 	end,
 	deactivate = function(self, eff)
+		self:removeShaderAura("essence_of_the_dead")
 	end,
 }
