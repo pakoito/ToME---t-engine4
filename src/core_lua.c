@@ -2596,7 +2596,7 @@ static int gl_fbo_toscreen(lua_State *L)
 	}
 	if (lua_isuserdata(L, 6))
 	{
-		shader_type *s = (shader_type*)auxiliar_checkclass(L, "gl{program}", 6);
+		shader_type *s = (shader_type*)lua_touserdata(L, 6);
 		useShader(s, fbo->w, fbo->h, w, h, r, g, b, a);
 	}
 

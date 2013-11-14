@@ -69,8 +69,8 @@ function _M:display(nb_keyframes)
 		if self.text_shadow then
 			if shader then
 				shader:use(true)
-				shader:paramNumber2("outlineSize", 2, 2)
-				shader:paramNumber2("textSize", item._tex_w, item._tex_h)
+				shader:uniOutlineSize(2, 2)
+				shader:uniTextSize(item._tex_w, item._tex_h)
 			else
 				item._tex:toScreenFull(x+4, y+4, item.w, item.h, item._tex_w, item._tex_h, 0, 0, 0, self.text_shadow)
 			end

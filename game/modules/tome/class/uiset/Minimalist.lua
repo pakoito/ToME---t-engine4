@@ -1318,8 +1318,8 @@ function _M:handleEffect(player, eff_id, e, p, x, y, hs, bx, by, is_first, scale
 			if txt and not txt2 then
 				if shader then
 					shader:use(true)
-					shader:paramNumber2("outlineSize", 1, 1)
-					shader:paramNumber2("textSize", txt._tex_w, txt._tex_h)
+					shader:uniOutlineSize(1, 1)
+					shader:uniTextSize(txt._tex_w, txt._tex_h)
 				else
 					txt._tex:toScreenFull(x+4+2 + (32 - txt.fw)/2, y+4+2 + (32 - txt.fh)/2, txt.w, txt.h, txt._tex_w, txt._tex_h, 0, 0, 0, 0.7)
 				end
@@ -1327,8 +1327,8 @@ function _M:handleEffect(player, eff_id, e, p, x, y, hs, bx, by, is_first, scale
 			elseif not txt and txt2 then
 				if shader then
 					shader:use(true)
-					shader:paramNumber2("outlineSize", 1, 1)
-					shader:paramNumber2("textSize", txt2._tex_w, txt2._tex_h)
+					shader:uniOutlineSize(1, 1)
+					shader:uniTextSize(txt2._tex_w, txt2._tex_h)
 				else
 					txt2._tex:toScreenFull(x+4+2, y+4+2 + (32 - txt2.fh)/2+5, txt2.w, txt2.h, txt2._tex_w, txt2._tex_h, 0, 0, 0, 0.7)
 				end
@@ -1336,16 +1336,16 @@ function _M:handleEffect(player, eff_id, e, p, x, y, hs, bx, by, is_first, scale
 			elseif txt and txt2 then
 				if shader then
 					shader:use(true)
-					shader:paramNumber2("outlineSize", 1, 1)
-					shader:paramNumber2("textSize", txt._tex_w, txt._tex_h)
+					shader:uniOutlineSize(1, 1)
+					shader:uniTextSize(txt._tex_w, txt._tex_h)
 				else
 					txt._tex:toScreenFull(x+4+2 + (32 - txt.fw), y+4+2 + (32 - txt.fh)/2-5, txt.w, txt.h, txt._tex_w, txt._tex_h, 0, 0, 0, 0.7)
 				end
 				txt._tex:toScreenFull(x+4 + (32 - txt.fw), y+4 + (32 - txt.fh)/2-5, txt.w, txt.h, txt._tex_w, txt._tex_h)
 
 				if shader then
-					shader:paramNumber2("outlineSize", 1, 1)
-					shader:paramNumber2("textSize", txt2._tex_w, txt2._tex_h)
+					shader:uniOutlineSize(1, 1)
+					shader:uniTextSize(txt2._tex_w, txt2._tex_h)
 				else
 					txt2._tex:toScreenFull(x+4+2, y+4+2 + (32 - txt2.fh)/2+5, txt2.w, txt2.h, txt2._tex_w, txt2._tex_h, 0, 0, 0, 0.7)
 				end

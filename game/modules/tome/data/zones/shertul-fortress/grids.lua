@@ -249,8 +249,8 @@ local dcb = function(self)
 			local item = tex[i]
 			if shader then
 				shader:use(true)
-				shader:paramNumber2("outlineSize", 2, 2)
-				shader:paramNumber2("textSize", item._tex_w, item._tex_h)
+				shader:uniOutlineSize(2, 2)
+				shader:uniTextSize(item._tex_w, item._tex_h)
 			else
 				item._tex:toScreenFull(x+2, y+2, item.w, item.h, item._tex_w, item._tex_h, 0, 0, 0, 0.7)
 			end

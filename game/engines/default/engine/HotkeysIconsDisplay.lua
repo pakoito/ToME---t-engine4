@@ -265,8 +265,8 @@ function _M:toScreen()
 		if self.shadow then
 			if shader then
 				shader:use(true)
-				shader:paramNumber2("outlineSize", 0.7, 0.7)
-				shader:paramNumber2("textSize", key._tex_w, key._tex_h)
+				shader:uniOutlineSize(0.7, 0.7)
+				shader:uniTextSize(key._tex_w, key._tex_h)
 			else
 				key._tex:toScreenFull(self.display_x + item.x + 1 + self.frames.fx + self.icon_w - key.w, self.display_y + item.y + 1 + self.icon_h - key.h, key.w, key.h, key._tex_w, key._tex_h, 0, 0, 0, self.shadow)
 				if gtxt then gtxt._tex:toScreenFull(self.display_x + item.x + self.frames.fy + 2 + (self.icon_w - gtxt.fw) / 2, self.display_y + item.y + self.frames.fy + 2 + (self.icon_h - gtxt.fh) / 2, gtxt.w, gtxt.h, gtxt._tex_w, gtxt._tex_h, 0, 0, 0, self.shadow) end

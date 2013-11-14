@@ -1410,14 +1410,12 @@ function _M:checkResolutionChange(w, h, ow, oh)
 	return self.uiset:handleResolutionChange(w, h, ow, oh)
 end
 
-local last_gamma_reset = 0
 function _M:display(nb_keyframes)
 	-- If switching resolution, blank everything but the dialog
 	if self.change_res_dialog then engine.GameTurnBased.display(self, nb_keyframes) return end
 
-	-- Reset gamma setting every half second, something somewhere is disrupting it, this is a stop gap solution
-	last_gamma_reset = last_gamma_reset + nb_keyframes
-	if self.support_shader_gamma and self.full_fbo_shader and self.full_fbo_shader.shad and last_gamma_reset >= 15 then self.full_fbo_shader.shad:paramNumber("gamma", config.settings.gamma_correction / 100) last_gamma_reset = 0 end
+	-- Reset gamma setting, something somewhere is disrupting it, this is a stop gap solution
+	if self.support_shader_gamma and self.full_fbo_shader and self.full_fbo_shader.shad then self.full_fbo_shader.shad:uniGamma(config.settings.gamma_correction / 100) end
 
 	if self.full_fbo then self.full_fbo:use(true) end
 
@@ -1903,7 +1901,7 @@ function _M:setupMouse(reset)
 			local o = self.level.map(tmx, tmy, Map.OBJECT)
 			if cur_obj and cur_obj._mo then cur_obj._mo:shader(nil) end
 			if o and o._mo and not o.shader then
-				outline:paramNumber2("textSize", Map.tile_w, Map.tile_h)
+				outline:uniTextSize(Map.tile_w, Map.tile_h)
 				o._mo:shader(outline)
 				cur_obj = o
 			end

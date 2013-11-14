@@ -210,7 +210,7 @@ static int map_object_shader(lua_State *L)
 {
 	map_object *obj = (map_object*)auxiliar_checkclass(L, "core{mapobj}", 1);
 	if (!lua_isnil(L, 2)) {
-		shader_type *s = (shader_type*)auxiliar_checkclass(L, "gl{program}", 2);
+		shader_type *s = (shader_type*)lua_touserdata(L, 2);
 		obj->shader = s;
 	} else {
 		obj->shader = NULL;
