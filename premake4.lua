@@ -20,12 +20,13 @@ solution "TEngine"
 		"/opt/SDL-2.0/include/SDL2",
 		"/usr/include/GL",
 	}
-	if _OPTIONS.steam then
-		dofile("steamworks/build/steam-def.lua")
-	end
 	if _OPTIONS.lua == "default" then includedirs{"src/lua"}
 	elseif _OPTIONS.lua == "jit2" then includedirs{"src/luajit2/src", "src/luajit2/dynasm",}
 	end
+
+if _OPTIONS.steam then
+	dofile("steamworks/build/steam-def.lua")
+end
 
 configuration "windows"
 	libdirs {
@@ -39,6 +40,7 @@ configuration "windows"
 
 configuration "macosx"
 	buildoptions { "-isysroot /Developer/SDKs/MacOSX10.6.sdk", "-mmacosx-version-min=10.6" }
+
 
 configuration "Debug"
 	defines { }

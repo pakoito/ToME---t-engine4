@@ -101,16 +101,18 @@ project "TEngine"
 		linkoptions { "-mwindows" }
 		defines { [[TENGINE_HOME_PATH='"T-Engine"']], 'SELFEXE_WINDOWS' }
 
-
 	configuration "linux"
 		libdirs {"/opt/SDL-2.0/lib/"}
 		links { "dl", "SDL2", "SDL2_ttf", "SDL2_image", "png", "openal", "vorbisfile", "GL", "GLU", "m", "pthread" }
 		defines { [[TENGINE_HOME_PATH='".t-engine"']], 'SELFEXE_LINUX' }
+		if steamlin64 then steamlin64() end
 
 	configuration {"Debug"}
 		postbuildcommands { "cp ../bin/Debug/t-engine ../", }
+		if _OPTIONS.steam then postbuildcommands { "cp ../bin/Debug/*te4-steam* ../", } end
 	configuration {"Release"}
 		postbuildcommands { "cp ../bin/Release/t-engine ../", }
+		if _OPTIONS.steam then postbuildcommands { "cp ../bin/Debug/*te4-steam* ../", } end
 
 
 ----------------------------------------------------------------
