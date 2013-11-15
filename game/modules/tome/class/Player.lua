@@ -357,6 +357,14 @@ function _M:tooltip(x, y, seen_by)
 	return str
 end
 
+function _M:resetMainShader()
+	self.shader_old_life = nil
+	self.old_air = nil
+	self.old_psi = nil
+	self.old_healwarn = nil
+	self:updateMainShader()
+end
+
 --- Funky shader stuff
 function _M:updateMainShader()
 	if game.fbo_shader then

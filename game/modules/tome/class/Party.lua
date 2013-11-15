@@ -265,6 +265,8 @@ function _M:setPlayer(actor, bypass)
 
 	game.logPlayer(actor, "#MOCCASIN#Character control switched to %s.", actor.name)
 
+	if game.player.resetMainShader then game.player:resetMainShader() end
+
 	return true
 end
 

@@ -118,26 +118,7 @@ function necroGetNbSummon(self)
 	return nb
 end
 
-function necroSetupSummon(self, m, x, y, level, no_control, no_decay)
-	m.faction = self.faction
-	m.summoner = self
-	m.summoner_gain_exp = true
-	m.necrotic_minion = true
-	m.exp_worth = 0
-	m.life_regen = 0
-	m.unused_stats = 0
-	m.unused_talents = 0
-	m.unused_generics = 0
-	m.unused_talents_types = 0
-	m.silent_levelup = true
-	m.no_points_on_levelup = true
-	m.ai_state = m.ai_state or {}
-	m.ai_state.tactic_leash = 100
-	-- Try to use stored AI talents to preserve tweaking over multiple summons
-	m.ai_talents = self.stored_ai_talents and self.stored_ai_talents[m.name] or {}
-	m.inc_damage = table.clone(self.inc_damage, true)
-	m.no_breath = 1
-
+function applyDarkEmpathy(self, m)
 	if self:knowTalent(self.T_DARK_EMPATHY) then
 		local t = self:getTalentFromId(self.T_DARK_EMPATHY)
 		local perc = t.getPerc(self, t)
@@ -164,6 +145,29 @@ function necroSetupSummon(self, m, x, y, level, no_control, no_decay)
 
 		m.necrotic_minion_be_nice = self:getTalentLevelRaw(self.T_DARK_EMPATHY) * 0.2
 	end
+end
+
+function necroSetupSummon(self, m, x, y, level, no_control, no_decay)
+	m.faction = self.faction
+	m.summoner = self
+	m.summoner_gain_exp = true
+	m.necrotic_minion = true
+	m.exp_worth = 0
+	m.life_regen = 0
+	m.unused_stats = 0
+	m.unused_talents = 0
+	m.unused_generics = 0
+	m.unused_talents_types = 0
+	m.silent_levelup = true
+	m.no_points_on_levelup = true
+	m.ai_state = m.ai_state or {}
+	m.ai_state.tactic_leash = 100
+	-- Try to use stored AI talents to preserve tweaking over multiple summons
+	m.ai_talents = self.stored_ai_talents and self.stored_ai_talents[m.name] or {}
+	m.inc_damage = table.clone(self.inc_damage, true)
+	m.no_breath = 1
+
+	applyDarkEmpathy(self, m)
 
 	if game.party:hasMember(self) then
 		local can_control = not no_control

@@ -78,27 +78,101 @@ newTalent{
 	end,
 }
 
--- Kinda copied from Creeping Darkness
 newTalent{
-	name = "Cold Flameazdazdazds",
+	name = "Animus Purge",
 	type = {"spell/animus",3},
 	require = spells_req3,
 	points = 5,
-	mana = 40,
-	cooldown = 22,
-	range = 5,
-	radius = 3,
-	tactical = { ATTACK = { COLD = 2 }, DISABLE = { stun = 1 } },
+	mana = 50,
+	soul = 4,
+	cooldown = 15,
+	range = 6,
+	proj_speed = 20,
 	requires_target = true,
+	no_npc_use = true,
+	direct_hit = function(self, t) if self:getTalentLevel(t) >= 3 then return true else return false end end,
+	target = function(self, t)
+		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
+		return tg
+	end,
+	getMaxLife = function(self, t) return self:combatTalentLimit(t, 50, 10, 25) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 35, 330) end,
+	on_pre_use = function(self, t)
+		if game.party and game.party:hasMember(self) then
+			for act, def in pairs(game.party.members) do
+				if act.summoner and act.summoner == self and act.necrotic_minion then
+					if act.type == "undead" and act.subtype == "husk" then return false end
+				end
+			end
+			return true
+		else return false end
+	end,
 	action = function(self, t)
+		local tg = self:getTalentTarget(t)
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:project(tg, x, y, function(px, py)
+			local m = game.level.map(px, py, Map.ACTOR)
+			if not m or not m.max_life or not m.life then return end
+			local dam = self:spellCrit(t.getDamage(self, t))
+			local olddie = rawget(m, "die")
+			m.die = function() end
+			DamageType:get(DamageType.DARKNESS).projector(self, px, py, DamageType.DARKNESS, dam)
+			m.die = olddie
+			game.level.map:particleEmitter(px, py, 1, "dark")
+			if 100 * m.life / m.max_life <= t.getMaxLife(self, t) and self:checkHit(self:combatSpellpower(), m:combatSpellResist()) and m:canBe("instakill") and m.rank < 3.5 then
+				m.type = "undead"
+				m.subtype = "husk"
+				m:attr("no_life_regen", 1)
+				m:attr("no_healing", 1)
+				m.ai_state.tactic_leash = 100
+				m.remove_from_party_on_death = true
+				m.no_inventory_access = true
+				m.life = m.max_life
+				m.move_others = true
+				m.summoner = self.src
+				m.summoner_gain_exp = true
+				m.unused_stats = 0
+				m.dead = nil
+				m.no_breath = 1
+				m.unused_talents = 0
+				m.unused_generics = 0
+				m.unused_talents_types = 0
+				m.silent_levelup = true
+				m.no_points_on_levelup = true
+				m.faction = self.faction
+				game.level.map:particleEmitter(px, py, 1, "demon_teleport")
+
+				applyDarkEmpathy(self, m)
+
+				game.party:addMember(m, {
+					control="full",
+					type="husk",
+					title="Lifeless Husk",
+					orders = {leash=true, follow=true},
+					on_control = function(self)
+						self:hotkeyAutoTalents()
+					end,
+				})
+				game:onTickEnd(function() self:incSoul(2) end)
+
+				self:logCombat(m, "#GREY##Source# rips appart the animus of #target# and creates an undead husk.")
+			end
+		end)
+
+		game:playSoundNear(self, "talents/spell_generic")
 		return true
 	end,
 	info = function(self, t)
-		local radius = self:getTalentRadius(t)
 		local damage = t.getDamage(self, t)
-		local darkCount = t.getDarkCount(self, t)
-		return ([[Cold Flames slowly spread from %d spots in a radius of %d around the targeted location. The flames deal %0.2f cold damage, and have a chance of freezing.
-		Damage improves with your Spellpower.]]):format(darkCount, radius, damDesc(self, DamageType.COLD, damage))
+		return ([[Try to blast crush the soul of your foe, doing %0.2f darkness damage (that can never kill the target).
+		If the target is left with less than %d%% life you try to take control of its body.
+		Should this succeed the target becomes your permanent minion (unaffected by your aura) and you regain 2 souls.
+		Husks prossess the same abilities as they had in life (affected by Dark Empathy), are healed to full when created but can never heal or be healed by any means.
+		Only one husk can be controlled at any time.
+		Bosses can not be turned into husks.
+		The damage and chance will increase with your Spellpower.]]):
+		format(damDesc(self, DamageType.DARKNESS, damage), t.getMaxLife(self, t))
 	end,
 }
 
