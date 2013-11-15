@@ -20,6 +20,48 @@
 load("/data/general/grids/basic.lua")
 load("/data/general/grids/fortress.lua")
 
+local energycount = function(self)
+	if not self._mo then return end
+	local tex, nblines, wline = nil
+	local lastenergy = nil
+	local shader = require("engine.Shader").default.textoutline and require("engine.Shader").default.textoutline.shad
+	local font = core.display.newFont("/data/font/DroidSansMono.ttf", 16)
+	local UIBase = require "engine.ui.Base"
+	local MyUI = require("engine.class").inherit(UIBase){}
+	MyUI.ui = "metal"
+	local frame = MyUI:makeFrame("ui/tooltip/", 50, 50)
+	self._mo:displayCallback(function(x, y, w, h)
+		local q = game.player:hasQuest("shertul-fortress")
+		if not q then return end
+		if not q:isCompleted("chat-energy") and q.shertul_energy <= 0 then return end
+		if not tex or lastenergy ~= q.shertul_energy then 
+			lastenergy = q.shertul_energy
+			local text = ("%0.2f Energy Stored"):format(q.shertul_energy)
+			tex, nblines, wline = font:draw(text, text:toTString():maxWidth(font), 0, 255, 128)
+		end
+
+		y = y - tex[1].h * nblines
+		x = x - (wline - w) / 2
+		frame.w = wline + 16 frame.h = tex[1].h * nblines + 16
+		MyUI:drawFrame(frame, x - 4, y - 4, 0, 0, 0, 0.3)
+		MyUI:drawFrame(frame, x - 8, y - 8, 1, 1, 1, 0.6)
+		for i = 1, #tex do
+			local item = tex[i]
+			if shader then
+				shader:use(true)
+				shader:uniOutlineSize(2, 2)
+				shader:uniTextSize(item._tex_w, item._tex_h)
+			else
+				item._tex:toScreenFull(x+2, y+2, item.w, item.h, item._tex_w, item._tex_h, 0, 0, 0, 0.7)
+			end
+			item._tex:toScreenFull(x, y, item.w, item.h, item._tex_w, item._tex_h)
+			if shader then shader:use(false) end
+			y = y + item.h
+		end
+		return true
+	end)
+end
+
 newEntity{ base = "UP",
 	define_as = "LAKE_NUR",
 	name = "stair back to the lake of Nur",
@@ -37,7 +79,11 @@ newEntity{
 
 newEntity{
 	define_as = "COMMAND_ORB",
-	name = "Sher'Tul Control Orb", image = "terrain/solidwall/solid_floor1.png", add_displays = {class.new{image="terrain/shertul_control_orb_blue.png"}},
+	name = "Sher'Tul Control Orb", image = "terrain/solidwall/solid_floor1.png",
+	add_displays = {class.new{image="terrain/shertul_control_orb_blue.png",
+		defineDisplayCallback = energycount,
+		z = 17,
+	}},
 	display = '*', color=colors.PURPLE,
 	notice = true,
 	always_remember = true,

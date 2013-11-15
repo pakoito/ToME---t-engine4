@@ -848,6 +848,12 @@ function _M:entityVaultInfos(module, kind)
 	print("[ONLINE PROFILE] list entity vault", module, kind)
 end
 
+function _M:addonEnableUpload()
+	if not self.auth then return end
+	core.profile.pushOrder(table.serialize{o="AddonEnableUpload"})
+	print("[ONLINE PROFILE] enabling addon upload grants")
+end
+
 function _M:funFactsGrab(module)
 	core.profile.pushOrder(table.serialize{o="FunFactsGrab", module=module})
 	print("[ONLINE PROFILE] fun facts", module)

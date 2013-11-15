@@ -584,6 +584,10 @@ function _M:orderFunFactsGrab(o)
 	end
 end
 
+function _M:orderAddonEnableUpload(o)
+	self:command("ADDN MODULEMAKER ON")
+	self:read("200")
+end
 --------------------------------------------------------------------
 -- Pushes comming from the push socket
 --------------------------------------------------------------------

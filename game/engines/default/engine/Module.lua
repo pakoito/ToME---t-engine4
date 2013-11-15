@@ -293,6 +293,45 @@ function _M:listAddons(mod, ignore_compat)
 	return adds
 end
 
+function _M:addonMD5(add, base)
+	local t = core.game.getTime()
+
+	if not base then
+		if add.teaa then base = fs.getRealPath(add.teaa)
+		else base = fs.getRealPath(add.dir) end
+	end
+
+	local md5 = require "md5"
+	local md5s = {}
+	local function fp(dir)
+		for i, file in ipairs(fs.list(dir)) do
+			local f = dir.."/"..file
+			if fs.isdir(f) then
+				fp(f)
+			elseif f:find("%.lua$") then
+				local fff = fs.open(f, "r")
+				if fff then
+					local data = fff:read(10485760)
+					if data and data ~= "" then
+						md5s[#md5s+1] = f..":"..md5.sumhexa(data)
+					end
+					fff:close()
+				end
+			end
+		end
+	end
+
+	print("[MODULE LOADER] computing addon md5 from", base)
+	fs.mount(base, "/loaded-addons/"..add.short_name, true)
+	fp("/loaded-addons/"..add.short_name)
+	fs.umount(base)
+	table.sort(md5s)
+	table.print(md5s)
+	local fmd5 = md5.sumhexa(table.concat(md5s))
+	print("[MODULE LOADER] addon ", add.short_name, " MD5", fmd5, "computed in ", core.game.getTime() - t, vbase)
+	return fmd5
+end
+
 function _M:loadAddons(mod, saveuse)
 	local adds = self:listAddons(mod, true)
 
@@ -390,38 +429,11 @@ function _M:loadAddons(mod, saveuse)
 		end
 
 		-- Compute addon md5
-		local md5 = require "md5"
-		local md5s = {}
-		local function fp(dir)
-			for i, file in ipairs(fs.list(dir)) do
-				local f = dir.."/"..file
-				if fs.isdir(f) then
-					fp(f)
-				elseif f:find("%.lua$") then
-					local fff = fs.open(f, "r")
-					if fff then
-						local data = fff:read(10485760)
-						if data and data ~= "" then
-							md5s[#md5s+1] = f..":"..md5.sumhexa(data)
-						end
-						fff:close()
-					end
-				end
-			end
-		end
 		local hash_valid, hash_err
-		local t = core.game.getTime()
 		if config.settings.cheat then
 			hash_valid, hash_err = false, "cheat mode skipping addon validation"
 		else
-			print("[MODULE LOADER] computing addon md5 from", base)
-			fs.mount(base, "/loaded-addons/"..add.short_name, true)
-			fp("/loaded-addons/"..add.short_name)
-			fs.umount(base)
-			table.sort(md5s)
-			table.print(md5s)
-			local fmd5 = md5.sumhexa(table.concat(md5s))
-			print("[MODULE LOADER] addon ", add.short_name, " MD5", fmd5, "computed in ", core.game.getTime() - t, vbase)
+			local fmd5 = self:addonMD5(add)
 			hash_valid, hash_err = profile:checkAddonHash(mod.short_name, add.version_name, fmd5)
 		end
 
