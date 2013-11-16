@@ -174,16 +174,33 @@ function _M:listSavefiles(moddir_filter)
 	local allmounts = fs.getSearchPath(true)
 	fs.mount(engine.homepath..fs.getPathSeparator(), "/tmp/listsaves")
 
+	local steamsaves = {}
+	if core.steam then
+		local list = core.steam.listFilesEndingWith("game.teag")
+		for _, file in ipairs(list) do
+			local _, _, modname, char = file:find("^([^/]+)/save/([^/]+)/game%.teag$")
+			if modname then
+				steamsaves[modname] = steamsaves[modname] or {}
+				steamsaves[modname][char] = true
+			end
+		end
+	end
+
 	local mods = self:listModules(nil, moddir_filter)
 	for _, mod in ipairs(mods) do
 		local lss = {}
 		print("Listing saves for module", mod.short_name)
+		local oldwrite = fs.getWritePath()
+		self:setupWrite(mod, true)
 		for i, short_name in ipairs(fs.list("/tmp/listsaves/"..mod.short_name.."/save/")) do
-			local dir = "/tmp/listsaves/"..mod.short_name.."/save/"..short_name
-			if fs.exists(dir.."/game.teag") then
+			local sdir = "/save/"..short_name
+			local dir = "/tmp/listsaves/"..mod.short_name..sdir
+			if fs.exists(dir.."/game.teag") or (core.steam and core.steam.checkFile(sdir.."/game.teag")) then
+				if steamsaves[mod.short_name] then steamsaves[mod.short_name][short_name] = nil end
+				if core.steam then core.steam.readFile(sdir.."/desc.lua") end
 				local def = self:loadSavefileDescription(dir)
 				if def then
-					if fs.exists(dir.."/cur.png") then
+					if def.loadable and fs.exists(dir.."/cur.png") then
 						def.screenshot = core.display.loadImage(dir.."/cur.png")
 					end
 
@@ -191,6 +208,22 @@ function _M:listSavefiles(moddir_filter)
 				end
 			end
 		end
+		if steamsaves[mod.short_name] then for short_name, _ in pairs(steamsaves[mod.short_name]) do
+			local sdir = "/save/"..short_name
+			local dir = "/tmp/listsaves/"..mod.short_name..sdir
+			if core.steam.checkFile(sdir.."/game.teag") then
+				core.steam.readFile(sdir.."/desc.lua")
+				local def = self:loadSavefileDescription(dir)
+				if def then
+					if def.loadable and fs.exists(dir.."/cur.png") then
+						def.screenshot = core.display.loadImage(dir.."/cur.png")
+					end
+
+					table.insert(lss, def)
+				end
+			end
+		end end
+		fs.setWritePath(oldwrite)
 		mod.savefiles = lss
 
 		table.sort(lss, function(a, b)
@@ -826,16 +859,17 @@ end
 
 --- Setup write dir for a module
 -- Static
-function _M:setupWrite(mod)
+function _M:setupWrite(mod, nomount)
 	-- Create module directory
 	fs.setWritePath(engine.homepath)
 	fs.mkdir(mod.short_name)
 	fs.mkdir(mod.short_name.."/save")
+	if core.steam then core.steam.setFileNamespace(mod.short_name) end
 
 	-- Enter module directory
 	local base = engine.homepath .. fs.getPathSeparator() .. mod.short_name
 	fs.setWritePath(base)
-	fs.mount(base, "/", false)
+	if not nomount then fs.mount(base, "/", false) end
 	return base
 end
 

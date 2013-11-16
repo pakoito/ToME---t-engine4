@@ -113,7 +113,7 @@ function _M:gainAchievement(id, src, ...)
 		game:onTickEnd(function() game:playSound("actions/achievement") end, "achievementsound")
 		game.state:checkDonation(true) -- They gained someting nice, they could be more receptive
 
-		if core.steam then core.steam.forwardAchievement("TOME_"..id) end
+		if core.steam and not config.settings.cheat then core.steam.forwardAchievement("TOME_"..id) end
 	end
 	return ret
 end

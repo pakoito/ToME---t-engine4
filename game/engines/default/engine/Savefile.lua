@@ -77,8 +77,18 @@ end
 function _M:delete()
 	for i, f in ipairs(fs.list(self.save_dir)) do
 		fs.delete(self.save_dir..f)
+		if core.steam then core.steam.deleteFile(self.save_dir..f) end
 	end
 	fs.delete(self.save_dir)
+	if core.steam then
+		local namespace = core.steam.getFileNamespace()
+		local list = core.steam.listFilesStartingWith(namespace..self.save_dir)
+		core.steam.setFileNamespace("")
+		for i, file in ipairs(list) do
+			core.steam.deleteFile(file)
+		end
+		core.steam.setFileNamespace(namespace)
+	end
 end
 
 function _M:addToProcess(o)
@@ -232,6 +242,7 @@ function _M:saveGame(game, no_dialog)
 	f:write(("loadable = %s\n"):format(game:isLoadable() and "true" or "false"))
 	f:write(("description = %q\n"):format(desc.description))
 	f:close()
+	if core.steam then core.steam.writeFile(self.save_dir.."desc.lua") end
 
 	-- TODO: Replace this with saving quickhotkeys to the profile.
 	-- Add print_doable_table to utils.lua as table.print_doable?
@@ -392,6 +403,7 @@ end
 
 --- Loads a world
 function _M:loadWorld()
+	if core.steam then core.steam.readFile(self.save_dir..self:nameLoadWorld()) end
 	local path = fs.getRealPath(self.save_dir..self:nameLoadWorld())
 	if not path or path == "" then return nil, "no savefile" end
 
@@ -422,6 +434,7 @@ end
 
 --- Loads a world
 function _M:loadWorldSize()
+	if core.steam then core.steam.readFile(self.save_dir..self:nameLoadWorld()) end
 	local path = fs.getRealPath(self.save_dir..self:nameLoadWorld())
 	if not path or path == "" then return nil, "no savefile" end
 
@@ -440,6 +453,7 @@ end
 
 --- Loads a game
 function _M:loadGame()
+	if core.steam then core.steam.readFile(self.save_dir..self:nameLoadGame()) end
 	local path = fs.getRealPath(self.save_dir..self:nameLoadGame())
 	if not path or path == "" then return nil, "no savefile" end
 
@@ -473,6 +487,7 @@ end
 
 --- Loads a game
 function _M:loadGameSize()
+	if core.steam then core.steam.readFile(self.save_dir..self:nameLoadGame()) end
 	local path = fs.getRealPath(self.save_dir..self:nameLoadGame())
 	if not path or path == "" then return nil, "no savefile" end
 
@@ -491,6 +506,7 @@ end
 
 --- Loads a zone
 function _M:loadZone(zone)
+	if core.steam then core.steam.readFile(self.save_dir..self:nameLoadZone(zone)) end
 	local path = fs.getRealPath(self.save_dir..self:nameLoadZone(zone))
 	if not path or path == "" then return false end
 
@@ -529,6 +545,7 @@ end
 
 --- Loads a level
 function _M:loadLevel(zone, level)
+	if core.steam then core.steam.readFile(self.save_dir..self:nameLoadLevel(zone, level)) end
 	local path = fs.getRealPath(self.save_dir..self:nameLoadLevel(zone, level))
 	if not path or path == "" then return false end
 
@@ -565,6 +582,7 @@ end
 
 --- Loads an entity
 function _M:loadEntity(name)
+	if core.steam then core.steam.readFile(self.save_dir..self:nameLoadEntity(name)) end
 	local path = fs.getRealPath(self.save_dir..self:nameLoadEntity(name))
 	if not path or path == "" then return false end
 
@@ -618,6 +636,7 @@ end
 
 --- Checks for existence
 function _M:check()
+	if core.steam then core.steam.readFile(self.save_dir..self:nameLoadGame()) end
 	return fs.exists(self.save_dir..self:nameLoadGame())
 end
 

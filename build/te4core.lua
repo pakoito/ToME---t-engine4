@@ -109,10 +109,8 @@ project "TEngine"
 
 	configuration {"Debug"}
 		postbuildcommands { "cp ../bin/Debug/t-engine ../", }
-		if _OPTIONS.steam then postbuildcommands { "cp ../bin/Debug/*te4-steam* ../", } end
 	configuration {"Release"}
 		postbuildcommands { "cp ../bin/Release/t-engine ../", }
-		if _OPTIONS.steam then postbuildcommands { "cp ../bin/Debug/*te4-steam* ../", } end
 
 
 ----------------------------------------------------------------
