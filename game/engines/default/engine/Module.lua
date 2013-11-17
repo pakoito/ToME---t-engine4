@@ -196,7 +196,7 @@ function _M:listSavefiles(moddir_filter)
 			local sdir = "/save/"..short_name
 			local dir = "/tmp/listsaves/"..mod.short_name..sdir
 			if fs.exists(dir.."/game.teag") or (core.steam and core.steam.checkFile(sdir.."/game.teag")) then
-				if steamsaves[mod.short_name] then steamsaves[mod.short_name][short_name] = nil end
+				if steamsaves[mod.short_name] then steamsaves[mod.short_name][short_name:lower()] = nil end
 				if core.steam then core.steam.readFile(sdir.."/desc.lua") end
 				local def = self:loadSavefileDescription(dir)
 				if def then

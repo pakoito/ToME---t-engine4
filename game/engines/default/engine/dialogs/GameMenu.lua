@@ -83,6 +83,11 @@ function _M:generateList(actions)
 			local menu = require("engine.dialogs.ViewHighScores").new()
 			game:registerDialog(menu)
 		end },
+		steam = { "Steam", function()
+			game:unregisterDialog(self)
+			local menu = require("engine.dialogs.SteamOptions").new()
+			game:registerDialog(menu)
+		end },
 		cheatmode = { "#GREY#Developer Mode", function()
 			game:unregisterDialog(self)
 			if config.settings.cheat then
@@ -117,9 +122,11 @@ When activated you will have access to special commands:
 	local i = 0
 	for _, act in ipairs(actions) do
 		if type(act) == "string" then
-			local a = default_actions[act]
-			list[#list+1] = { name=a[1], fct=a[2] }
-			i = i + 1
+			if act ~= "steam" or core.steam then
+				local a = default_actions[act]
+				list[#list+1] = { name=a[1], fct=a[2] }
+				i = i + 1
+			end
 		else
 			local a = act
 			list[#list+1] = { name=a[1], fct=a[2] }

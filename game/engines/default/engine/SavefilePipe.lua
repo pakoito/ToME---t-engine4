@@ -45,6 +45,48 @@ function _M:init(class, max_before_wait)
 	self.total_nb = 1
 end
 
+--- Cleanup old saves in steam cloud if needed
+function _M:steamCleanup()
+	if not core.steam then return end
+	local oldns = core.steam.getFileNamespace()
+	core.steam.setFileNamespace("")
+
+	print("[SAVEFILE PIPE] Cleaning up steam cloud")
+	local avail = core.steam.getCloudSize() / 1024 / 1024
+	print("[SAVEFILE PIPE] Cloud has "..avail.."MB available")
+
+	-- Still have room left
+	local MAX_ALLOWED = 953
+	if avail >= MAX_ALLOWED then core.steam.setFileNamespace(oldns) return end
+	print("[SAVEFILE PIPE] Steam cloud missing space, cleaning up old saves")
+
+	local saves = {}
+	local list = core.steam.listFilesEndingWith("game.teag")
+	for _, file in ipairs(list) do
+		local _, _, modname, char = file:find("^([^/]+)/save/([^/]+)/game%.teag$")
+		if modname then
+			local ts = core.steam.timestampFile(file)
+			saves[#saves+1] = {file=file, ts=ts, name=char, mod=modname}
+		end
+	end
+	table.sort(saves, function(a, b) return a.ts < b.ts end)
+
+	-- Forget until we have space
+	while avail < MAX_ALLOWED and #saves > 0 do
+		local save = table.remove(saves, 1)
+		print("[SAVEFILE PIPE] Cloud Forgetting save", save.mod, save.name)
+		for _, file in ipairs(core.steam.listFilesStartingWith(save.mod.."/save/"..save.name.."/")) do
+			print("\t* "..file)
+			core.steam.forgetFile(file)
+		end
+		avail = core.steam.getCloudSize() / 1024 / 1024
+		print("\t => Cloud has "..avail.."MB available")
+	end
+
+
+	core.steam.setFileNamespace(oldns)
+end
+
 --- Push a savefile request
 -- @param savename the name of the savefile to handle
 -- @param type the Savefile method to use. I.e: "game", "level", "zone". This will cann the Savefile:saveGame, Savefile:saveLevel, Savefile:saveZone methods
@@ -70,7 +112,7 @@ function _M:push(savename, type, object, class, on_end)
 	local Savefile = require(class)
 	local id = Savefile["nameSave"..type:lower():capitalize()](Savefile, object)
 
-	if #self.pipe == 0 then savefile_pipe.current_nb = 0 end
+	if #self.pipe == 0 then savefile_pipe.current_nb = 0 self:steamCleanup() end
 
 	local clone, nb = object:cloneForSave()
 	self.pipe_types[type] = self.pipe_types[type] or {}

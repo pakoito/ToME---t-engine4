@@ -38,7 +38,7 @@ _M.md5_types = {}
 -- @param savefile the name of the savefile, usually the player's name. It will be sanitized so dont bother doing it
 -- @param coroutine if true the saving will yield sometimes to let other code run
 function _M:init(savefile, coroutine)
-	self.short_name = savefile:gsub("[^a-zA-Z0-9_-.]", "_")
+	self.short_name = savefile:gsub("[^a-zA-Z0-9_-.]", "_"):lower()
 	self.save_dir = "/save/"..self.short_name.."/"
 	self.quickbirth_file = "/save/"..self.short_name..".quickbirth"
 	self.load_dir = "/tmp/loadsave/"

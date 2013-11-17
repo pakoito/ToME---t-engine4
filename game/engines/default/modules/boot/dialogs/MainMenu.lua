@@ -42,13 +42,15 @@ function _M:init()
 --	if config.settings.install_remote then l[#l+1] = {name="Install Module", fct=function() end} end
 --	l[#l+1] = {name="Update", fct=function() game:registerDialog(require("mod.dialogs.UpdateAll").new()) end}
 	l[#l+1] = {name="Options", fct=function()
-		local menu menu = require("engine.dialogs.GameMenu").new{
+		local list = {
 			"resume",
 			"keybinds_all",
 			"video",
 			"sound",
+			"steam",
 			"cheatmode",
 		}
+		local menu = require("engine.dialogs.GameMenu").new(list)
 		game:registerDialog(menu)
 	end}
 	l[#l+1] = {name="Exit", fct=function() game:onQuit() end}

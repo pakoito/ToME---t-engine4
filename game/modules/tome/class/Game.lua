@@ -1098,6 +1098,7 @@ function _M:chronoRestore(name, remove)
 	profile.chat:setupOnGame()
 
 	core.wait.disable() -- "game" changed, we cant just unload the dialog, it doesnt exist anymore
+	if game.player.resetMainShader then game.player:resetMainShader() end
 	return true
 end
 
