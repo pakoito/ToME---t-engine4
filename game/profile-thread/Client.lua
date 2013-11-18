@@ -23,7 +23,7 @@ local UserChat = require "profile-thread.UserChat"
 
 module(..., package.seeall, class.make)
 
-local debug = false
+local debug = true
 
 local mport = debug and 2259 or 2257
 local pport = debug and 2260 or 2258
@@ -587,6 +587,48 @@ end
 function _M:orderAddonEnableUpload(o)
 	self:command("ADDN MODULEMAKER ON")
 	self:read("200")
+end
+
+function _M:orderAddonAuthoring(o)
+	if o.suborder == "create" then
+		local metadata = table.serialize(o.metadata)
+		self:command("ADDN CREATE_ADDON ", #metadata)
+		if self:read("200") then
+			self.sock:send(metadata)
+			if not self:read("200") then return cprofile.pushEvent(string.format("e='AddonAuthoring' suborder='create' ok=false reason=%q", self.last_error)) end
+			return cprofile.pushEvent("e='AddonAuthoring' suborder='create' ok=true")
+		else
+			return cprofile.pushEvent("e='AddonAuthoring' suborder='create' ok=false reason='metadata invalid'")
+		end
+	elseif o.suborder == "version" then
+		local f = fs.open(o.file, "r")
+		local data = {}
+		local size = 0
+		while true do
+			local l = f:read(1024)
+			if not l then break end
+			data[#data+1] = l
+			size = size + #l
+		end
+		f:close()
+
+		o.metadata.teaa_size = size
+		local metadata = table.serialize(o.metadata)
+		self:command("ADDN VERSION_ADDON ", #metadata)
+		if self:read("200") then
+			self.sock:send(metadata)
+			if not self:read("200") then return cprofile.pushEvent(string.format("e='AddonAuthoring' suborder='version' ok=false reason=%q", self.last_error)) end
+			cprofile.pushEvent("e='AddonAuthoring' suborder='version_upload_start' total="..size)
+			for i, d in ipairs(data) do
+				self.sock:send(d)
+				cprofile.pushEvent("e='AddonAuthoring' suborder='version_upload_progress' sent="..#d)
+			end
+			if not self:read("200") then return cprofile.pushEvent(string.format("e='AddonAuthoring' suborder='version' ok=false reason=%q", self.last_error)) end
+			return cprofile.pushEvent("e='AddonAuthoring' suborder='version' ok=true")
+		else
+			return cprofile.pushEvent("e='AddonAuthoring' suborder='version' ok=false reason='metadata invalid'")
+		end
+	end
 end
 --------------------------------------------------------------------
 -- Pushes comming from the push socket

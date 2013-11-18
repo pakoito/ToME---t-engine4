@@ -30,6 +30,15 @@ function _M:init(t)
 	Base.init(self, t)
 end
 
+function _M:manual()
+	core.wait.enableManualTick(true)
+	core.display.forceRedraw()
+end
+
+function _M:manualStep(nb)
+	core.wait.manualTick(nb or 1)
+end
+
 function _M:generate()
 	local left = core.display.loadImage("/data/gfx/waiter/left_basic.png")
 	local right = core.display.loadImage("/data/gfx/waiter/right_basic.png")

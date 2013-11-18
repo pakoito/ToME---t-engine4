@@ -38,6 +38,8 @@ function _M:simpleWaiter(title, text, width, count, max)
 	d:setupUI(true, true)
 
 	d.done = function(self) game:unregisterDialog(self) end
+	d.manual = function(self, ...) wait:manual(...) end
+	d.manualStep = function(self, ...) wait:manualStep(...) end
 
 	game:registerDialog(d)
 

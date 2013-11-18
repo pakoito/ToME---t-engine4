@@ -141,6 +141,7 @@ int thread_profile(void *data)
 	luaopen_socket_core(L);
 	luaopen_mime_core(L);
 	luaopen_zlib(L);
+	luaopen_physfs(L);
 	luaL_openlib(L, "cprofile", threadlib, 0); lua_pop(L, 1);
 
 	// Override "print" if requested
