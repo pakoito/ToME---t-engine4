@@ -628,6 +628,26 @@ function _M:orderAddonAuthoring(o)
 		else
 			return cprofile.pushEvent("e='AddonAuthoring' suborder='version' ok=false reason='metadata invalid'")
 		end
+	elseif o.suborder == "steam_pubid" then
+		local metadata = table.serialize{for_module=o.for_module, short_name=o.short_name, pubid=o.pubid}
+		self:command("ADDN STEAM_PUBID ", #metadata)
+		if self:read("200") then
+			self.sock:send(metadata)
+			self:read("200")
+		end
+	elseif o.suborder == "check_steam_pubid" then
+		local metadata = table.serialize{for_module=o.for_module, short_name=o.short_name, md5=o.md5, version=o.version}
+		self:command("ADDN CHECK_STEAM_PUBID ", #metadata)
+		if self:read("200") then
+			self.sock:send(metadata)
+			if self:read("200") then
+				return cprofile.pushEvent(string.format("e='AddonAuthoring' suborder='check_steam_pubid' pubid=%q", self.last_line))
+			else
+				return cprofile.pushEvent(string.format("e='AddonAuthoring' suborder='check_steam_pubid' err=%q", self.last_error))				
+			end
+		else
+			return cprofile.pushEvent(string.format("e='AddonAuthoring' suborder='check_steam_pubid' err=%q", self.last_error))				
+		end
 	end
 end
 --------------------------------------------------------------------

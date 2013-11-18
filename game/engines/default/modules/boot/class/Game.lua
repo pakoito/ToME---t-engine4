@@ -33,6 +33,7 @@ local Shader = require "engine.Shader"
 local Zone = require "engine.Zone"
 local Map = require "engine.Map"
 local Level = require "engine.Level"
+local LogDisplay = require "engine.LogDisplay"
 local FlyingText = require "engine.FlyingText"
 
 local NicerTiles = require "mod.class.NicerTiles"
@@ -101,6 +102,11 @@ function _M:run()
 	-- Ok everything is good to go, activate the game in the engine!
 	self:setCurrent()
 
+	self.logdisplay = LogDisplay.new(self.w / 2, self.h - 200, self.w / 2, 200, 90, nil, 16, nil, nil)
+	self.logdisplay.resizeToLines = function() end
+	self.logdisplay:enableShadow(1)
+	self.logdisplay:enableFading(5)
+
 	-- Setup display
 	self:registerDialog(MainMenu.new())
 
@@ -158,6 +164,27 @@ For the same reason the save per level option should not be used unless you have
 		config.settings.background_saves = true
 		config.settings.tome = {}
 		config.settings.tome.save_zone_levels = false
+	end
+
+	if core.steam then
+		self.updating_addons = {}
+		self.logdisplay("#{italic}##ROYAL_BLUe#Retrieving addons to update/download from Steam...#{normal}#")
+		core.steam.grabSubscribedAddons(function(mode, teaa, title)
+			if mode == "end" then
+				self.updating_addons = nil
+				self.logdisplay("#{italic}##ROYAL_BLUe#Addons update finished.#{normal}#")
+				return
+			end
+
+			if title then
+				self.updating_addons[teaa] = title
+				self.logdisplay("#{italic}#Starting download of #LIGHT_GREEN#%s#LAST# (%s)...#{normal}#", title, mode)
+			elseif mode == "success" then
+				self.logdisplay("#{italic}#Download of #LIGHT_GREEN#%s#LAST# finished.#{normal}#", self.updating_addons[teaa] or "???")
+			else
+				self.logdisplay("#{italic}#Download of #LIGHT_RED#%s#LAST# failed.#{normal}#", self.updating_addons[teaa] or "???")
+			end
+		end)
 	end
 end
 
@@ -327,6 +354,7 @@ function _M:display(nb_keyframes)
 		end
 		self.tooltip:display()
 		self.tooltip:toScreen(5, 5)
+		self.logdisplay:toScreen()
 		engine.GameEnergyBased.display(self, nb_keyframes)
 		if self.full_fbo then self.full_fbo:use(false) self.full_fbo:toScreen(0, 0, self.w, self.h, self.full_fbo_shader.shad) end
 		return
@@ -364,6 +392,8 @@ function _M:display(nb_keyframes)
 
 	self.tooltip:display()
 	self.tooltip:toScreen(5, 5)
+
+	self.logdisplay:toScreen()
 
 	local old = self.flyers
 	self.flyers = nil
