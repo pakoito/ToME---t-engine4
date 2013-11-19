@@ -69,7 +69,7 @@ function _M:generateList(kind)
 		end
 	elseif kind == "all" then
 		for _, a in ipairs(world.achiev_defs) do
-			if a.no_difficulty_duplicate or ((a.difficulty or a.permadeath) and (not a.difficulty or a.difficulty == game.difficulty) and (not a.permadeath or a.permadeath == game.permadeath)) then
+			if a.no_difficulty_duplicate or not (a.difficulty or a.permadeath) or ((not a.difficulty or a.difficulty == game.difficulty) and (not a.permadeath or a.permadeath == game.permadeath)) then
 				handle(a.id, world.achieved[a.id] or {notdone=true, when="--", who="--"})
 			end
 		end
