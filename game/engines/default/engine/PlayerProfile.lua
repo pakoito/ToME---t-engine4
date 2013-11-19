@@ -552,10 +552,12 @@ end
 -- Orders for the profile thread
 -----------------------------------------------------------------------
 
-function _M:getNews(callback)
+function _M:getNews(callback, steam)
 	print("[ONLINE PROFILE] get news")
 	self.evt_cbs.GetNews = callback
-	core.profile.pushOrder("o='GetNews'")
+	if not steam then core.profile.pushOrder("o='GetNews'")
+	else core.profile.pushOrder("o='GetNews' steam=true")
+	end
 end
 
 function _M:tryAuth()

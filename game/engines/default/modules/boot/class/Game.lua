@@ -487,7 +487,7 @@ function _M:serverNews()
 				self.news = news
 				self:updateNews()
 			end
-		end)
+		end, core.steam and true or false)
 
 		while not stop do coroutine.yield() end
 	end)

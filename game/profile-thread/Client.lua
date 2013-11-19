@@ -299,7 +299,9 @@ function _M:orderLogoff(o)
 end
 
 function _M:orderGetNews(o)
-	self:command("NEWS")
+	if o.steam then self:command("NEWS", "STEAM")
+	else self:command("NEWS")
+	end
 	if self:read("200") then
 		local _, _, size, title = self.last_line:find("^([0-9]+) (.*)")
 		size = tonumber(size)

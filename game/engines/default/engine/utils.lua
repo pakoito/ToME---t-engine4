@@ -1958,6 +1958,8 @@ function util.uuid()
 end
 
 function util.browserOpenUrl(url)
+	if core.steam and core.steam.openOverlayUrl(url) then return true end
+
 	local tries = {
 		"rundll32 url.dll,FileProtocolHandler %s",	-- Windows
 		"open %s",	-- OSX
