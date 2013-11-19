@@ -755,7 +755,7 @@ static int sdl_surface_drawstring_newsurface_aa(lua_State *L)
 	return 1;
 }
 
-static font_make_texture_line(lua_State *L, SDL_Surface *s, int id, bool is_separator, int id_real_line, char *line_data, int line_data_size, bool direct_uid_draw)
+static font_make_texture_line(lua_State *L, SDL_Surface *s, int id, bool is_separator, int id_real_line, char *line_data, int line_data_size, bool direct_uid_draw, int realsize)
 {
 	lua_createtable(L, 0, 9);
 
@@ -797,6 +797,10 @@ static font_make_texture_line(lua_State *L, SDL_Surface *s, int id, bool is_sepa
 
 	lua_pushliteral(L, "line");
 	lua_pushnumber(L, id_real_line);
+	lua_rawset(L, -3);
+
+	lua_pushliteral(L, "realw");
+	lua_pushnumber(L, realsize);
 	lua_rawset(L, -3);
 
 	if (line_data)
@@ -886,7 +890,7 @@ static int sdl_font_draw(lua_State *L)
 			if (!no_linefeed && (force_nl || (txt && (size + txt->w > max_width))))
 			{
 				// Push it & reset the surface
-				font_make_texture_line(L, s, nb_lines, is_separator, id_real_line, line_data, line_data_size, direct_uid_draw);
+				font_make_texture_line(L, s, nb_lines, is_separator, id_real_line, line_data, line_data_size, direct_uid_draw, size);
 				id_dduid = 1;
 				is_separator = FALSE;
 				SDL_FillRect(s, NULL, SDL_MapRGBA(s->format, 0, 0, 0, 0));
@@ -1065,7 +1069,7 @@ static int sdl_font_draw(lua_State *L)
 		next++;
 	}
 
-	font_make_texture_line(L, s, nb_lines, is_separator, id_real_line, line_data, line_data_size, direct_uid_draw);
+	font_make_texture_line(L, s, nb_lines, is_separator, id_real_line, line_data, line_data_size, direct_uid_draw, size);
 	id_dduid = 1;
 	if (size > max_size) max_size = size;
 
@@ -2824,6 +2828,90 @@ static int sdl_get_png_screenshot(lua_State *L)
 	return 1;
 }
 
+static int gl_fbo_to_png(lua_State *L)
+{
+	lua_fbo *fbo = (lua_fbo*)auxiliar_checkclass(L, "gl{fbo}", 1);
+	unsigned int x = 0;
+	unsigned int y = 0;
+	unsigned long width = fbo->w;
+	unsigned long height = fbo->h;
+	unsigned long i;
+	png_structp png_ptr;
+	png_infop info_ptr;
+	png_colorp palette;
+	png_byte *image;
+	png_bytep *row_pointers;
+
+	png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+
+	if (png_ptr == NULL)
+	{
+		return 0;
+	}
+
+	info_ptr = png_create_info_struct(png_ptr);
+	if (info_ptr == NULL)
+	{
+		png_destroy_write_struct(&png_ptr, png_infopp_NULL);
+		return 0;
+	}
+
+	if (setjmp(png_jmpbuf(png_ptr)))
+	{
+		png_destroy_write_struct(&png_ptr, &info_ptr);
+		return 0;
+	}
+
+	luaL_Buffer B;
+	luaL_buffinit(L, &B);
+	png_set_write_fn(png_ptr, &B, png_write_data_fn, png_output_flush_fn);
+
+	png_set_IHDR(png_ptr, info_ptr, width, height, 8, PNG_COLOR_TYPE_RGB,
+		PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
+
+	image = (png_byte *)malloc(width * height * 3 * sizeof(png_byte));
+	if(image == NULL)
+	{
+		png_destroy_write_struct(&png_ptr, &info_ptr);
+		luaL_pushresult(&B); lua_pop(L, 1);
+		return 0;
+	}
+
+	row_pointers = (png_bytep *)malloc(height * sizeof(png_bytep));
+	if(row_pointers == NULL)
+	{
+		png_destroy_write_struct(&png_ptr, &info_ptr);
+		free(image);
+		image = NULL;
+		luaL_pushresult(&B); lua_pop(L, 1);
+		return 0;
+	}
+
+	tglBindTexture(GL_TEXTURE_2D, fbo->texture);
+	glPixelStorei(GL_PACK_ALIGNMENT, 1);
+	glGetTexImage(GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE, (GLvoid *)image);
+
+	for (i = 0; i < height; i++)
+	{
+		row_pointers[i] = (png_bytep)image + (height - 1 - i) * width * 3;
+	}
+
+	png_set_rows(png_ptr, info_ptr, row_pointers);
+	png_write_png(png_ptr, info_ptr, PNG_TRANSFORM_IDENTITY, NULL);
+
+	png_destroy_write_struct(&png_ptr, &info_ptr);
+
+	free(row_pointers);
+	row_pointers = NULL;
+
+	free(image);
+	image = NULL;
+
+	luaL_pushresult(&B);
+
+	return 1;
+}
+
 static const struct luaL_Reg displaylib[] =
 {
 	{"setTextBlended", set_text_aa},
@@ -2917,6 +3005,7 @@ static const struct luaL_Reg gl_fbo_reg[] =
 	{"__gc", gl_free_fbo},
 	{"toScreen", gl_fbo_toscreen},
 	{"use", gl_fbo_use},
+	{"png", gl_fbo_to_png},
 	{NULL, NULL},
 };
 
