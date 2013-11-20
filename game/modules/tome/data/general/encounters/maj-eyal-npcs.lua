@@ -124,7 +124,7 @@ newEntity{
 		type="ambush",
 		width=18,
 		height=18,
-		nb={20, 30},
+		nb={2, 3},
 		filters={{special_rarity="humanoid_random_boss", random_boss={
 			nb_classes=1,
 			rank=3, ai = "tactical",
@@ -132,7 +132,6 @@ newEntity{
 			loot_quality = "store",
 			loot_quantity = 1,
 			class_filter = function(c)
-				print("=============RANDBOSS TEST", c.power_source and c.power_source.arcane, c.name)
 				if c.power_source and c.power_source.arcane then return false end
 				return true
 			end,
