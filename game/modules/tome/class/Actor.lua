@@ -1028,8 +1028,8 @@ function _M:move(x, y, force)
 			local eff = self:hasEffect(self.EFF_CURSE_OF_SHROUDS)
 			if eff then eff.moved = true end
 
-			if self:attr("move_stamina_instead_of_energy") and self:getStamina() > 20 then
-				self:incStamina(-20)
+			if self:attr("move_stamina_instead_of_energy") and self:getStamina() > self:attr("move_stamina_instead_of_energy") then
+				self:incStamina(-self:attr("move_stamina_instead_of_energy"))
 			else
 				local speed = self:combatMovementSpeed(x, y)
 				self:useEnergy(game.energy_to_act * speed)

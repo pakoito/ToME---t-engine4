@@ -68,6 +68,7 @@ int current_game = LUA_NOREF;
 core_boot_type *core_def = NULL;
 bool exit_engine = FALSE;
 bool no_sound = FALSE;
+bool no_steam = FALSE;
 bool isActive = TRUE;
 bool tickPaused = FALSE;
 int mouse_cursor_ox, mouse_cursor_oy;
@@ -598,7 +599,7 @@ void on_redraw()
 	last_keyframe = nb;
 
 #ifdef STEAM_TE4
-	te4_steam_callbacks();
+	if (!no_steam) te4_steam_callbacks();
 #endif
 }
 
@@ -950,7 +951,7 @@ void boot_lua(int state, bool rebooting, int argc, char *argv[])
 		luaopen_bit(L);
 		luaopen_wait(L);
 #ifdef STEAM_TE4
-		te4_steam_lua_init(L);
+		if (!no_steam) te4_steam_lua_init(L);
 #endif
 		printf("===top %d\n", lua_gettop(L));
 //		exit(0);
@@ -1150,6 +1151,7 @@ int main(int argc, char *argv[])
 		if (!strncmp(arg, "--ypos", 6)) start_ypos = strtol(argv[++i], NULL, 10);
 		if (!strncmp(arg, "--safe-mode", 11)) safe_mode = TRUE;
 		if (!strncmp(arg, "--home", 6)) override_home = strdup(argv[++i]);
+		if (!strncmp(arg, "--no-steam", 10)) no_steam = TRUE;
 	}
 
 	// Initialize display lock for thread safety.
@@ -1161,7 +1163,7 @@ int main(int argc, char *argv[])
 	printf("[CPU] Detected %d CPUs\n", nb_cpus);
 
 #ifdef STEAM_TE4
-	te4_steam_init();
+	if (!no_steam) te4_steam_init();
 #endif
 
 	init_openal();

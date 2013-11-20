@@ -31,7 +31,12 @@ module(..., package.seeall, class.inherit(Dialog))
 function _M:init()
 	Dialog.init(self, "Configure Addons", game.w * 0.8, game.h * 0.8)
 
-	local url = Textzone.new{text="You can get new addons at #LIGHT_BLUE##{underline}#http://te4.org/addons/tome", auto_height=true, auto_width=true, fct=function() util.browserOpenUrl("http://te4.org/addons/tome") end}
+	local url1 = Textzone.new{text="You can get new addons at #LIGHT_BLUE##{underline}#http://te4.org/addons/tome#{normal}#", auto_height=true, auto_width=true, fct=function() util.browserOpenUrl("http://te4.org/addons/tome") end}
+	local url2 = Textzone.new{text=" ", auto_height=true, auto_width=true, fct=function()end}
+	if core.steam then
+		url1 = Textzone.new{text="You can get new addons at #LIGHT_BLUE##{underline}#Steam Workshop#{normal}#", auto_height=true, auto_width=true, fct=function() util.browserOpenUrl("http://steamcommunity.com/app/"..core.steam.appid().."/workshop/ ") end}
+		url2 = Textzone.new{text=" or at #LIGHT_BLUE##{underline}#http://te4.org/addons/tome#{normal}#", auto_height=true, auto_width=true, fct=function() util.browserOpenUrl("http://te4.org/addons/tome") end}
+	end
 
 	self.c_compat = Checkbox.new{default=false, width=math.floor(self.iw / 3 - 40), title="Show incompatible", on_change=function() self:switch() end}
 
@@ -59,11 +64,12 @@ function _M:init()
 	}, list={}, fct=function(item) self:switchAddon(item) end, select=function(item, sel) self:select(item) end}
 
 	self:loadUI{
-		{left=0, top=0, ui=url},
-		{left=0, top=url.h, ui=self.c_list},
-		{right=0, top=url.h, ui=self.c_adds},
+		{left=0, top=0, ui=url1},
+		{left=url1, top=0, ui=url2},
+		{left=0, top=url1.h, ui=self.c_list},
+		{right=0, top=url1.h, ui=self.c_adds},
 		{left=0, bottom=0, ui=self.c_compat},
-		{left=self.c_list.w + 5, top=5+url.h, ui=Separator.new{dir="horizontal", size=self.ih - 10}},
+		{left=self.c_list.w + 5, top=5+url1.h, ui=Separator.new{dir="horizontal", size=self.ih - 10}},
 	}
 	self:setFocus(self.c_list)
 	self:setupUI()
@@ -122,4 +128,8 @@ end
 function _M:switch()
 	self:generateList()
 	self.c_list:setList(self.list)
+end
+
+function _M:unload()
+	game:grabAddons()
 end

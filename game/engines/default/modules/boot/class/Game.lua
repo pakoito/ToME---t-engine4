@@ -167,6 +167,10 @@ For the same reason the save per level option should not be used unless you have
 		config.settings.tome.save_zone_levels = false
 	end
 
+	self:grabAddons()
+end
+
+function _M:grabAddons()
 	if core.steam then
 		self.updating_addons = {}
 		self.logdisplay("#{italic}##ROYAL_BLUe#Retrieving addons to update/download from Steam...#{normal}#")

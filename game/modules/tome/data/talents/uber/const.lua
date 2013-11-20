@@ -80,6 +80,7 @@ uberTalent{
 	cooldown = 20,
 	sustain_stamina = 10,
 	tactical = { CLOSEIN = 2, ESCAPE = 2 },
+	no_energy = true,
 	require = { special={desc="Know at least 20 levels of stamina-using talents", fct=function(self) return knowRessource(self, "stamina", 20) end} },
 	activate = function(self, t)
 		local ret = {}

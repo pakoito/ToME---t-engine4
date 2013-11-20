@@ -26,6 +26,7 @@
 #include "types.h"
 #include "serial.h"
 #include "script.h"
+#include "main.h"
 #include "physfs.h"
 #include "physfsrwops.h"
 
@@ -96,7 +97,7 @@ static save_queue *pop_save()
 static void push_save_return(const char *zipname)
 {
 #ifdef STEAM_TE4
-	steam_write_save(zipname);
+	if (!no_steam) steam_write_save(zipname);
 #endif
 
 	save_queue *q = malloc(sizeof(save_queue));
