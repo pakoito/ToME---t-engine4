@@ -100,7 +100,8 @@ newTalent{
 	on_pre_use = function(self, t)
 		if game.party and game.party:hasMember(self) then
 			for act, def in pairs(game.party.members) do
-				if act.summoner and act.summoner == self and act.necrotic_minion then
+				if act.summoner and act.summoner == self then
+					print("=======", act.type, act.subtype, act.name)
 					if act.type == "undead" and act.subtype == "husk" then return false end
 				end
 			end
@@ -120,7 +121,7 @@ newTalent{
 			DamageType:get(DamageType.DARKNESS).projector(self, px, py, DamageType.DARKNESS, dam)
 			m.die = olddie
 			game.level.map:particleEmitter(px, py, 1, "dark")
-			if 100 * m.life / m.max_life <= t.getMaxLife(self, t) and self:checkHit(self:combatSpellpower(), m:combatSpellResist()) and m:canBe("instakill") and m.rank < 3.5 then
+			if 100 * m.life / m.max_life <= t.getMaxLife(self, t) and self:checkHit(self:combatSpellpower(), m:combatSpellResist()) and m:canBe("instakill") and m.rank < 3.5 and not m:attr("undead") and not m.summoner and not m.summon_time then
 				m.type = "undead"
 				m.subtype = "husk"
 				m:attr("no_life_regen", 1)
@@ -130,7 +131,7 @@ newTalent{
 				m.no_inventory_access = true
 				m.life = m.max_life
 				m.move_others = true
-				m.summoner = self.src
+				m.summoner = self
 				m.summoner_gain_exp = true
 				m.unused_stats = 0
 				m.dead = nil
@@ -170,7 +171,7 @@ newTalent{
 		Should this succeed the target becomes your permanent minion (unaffected by your aura) and you regain 2 souls.
 		Husks prossess the same abilities as they had in life (affected by Dark Empathy), are healed to full when created but can never heal or be healed by any means.
 		Only one husk can be controlled at any time.
-		Bosses can not be turned into husks.
+		Bosses, other undeads and summoned creatures can not be turned into husks.
 		The damage and chance will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.DARKNESS, damage), t.getMaxLife(self, t))
 	end,
