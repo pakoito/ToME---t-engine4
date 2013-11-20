@@ -151,6 +151,7 @@ newTalent{
 		m.clone_on_hit = nil
 		m.exp_worth = 0
 		m.no_inventory_access = true
+		m.no_levelup_access = true
 		m.cant_teleport = true
 		m:unlearnTalent(m.T_AMBUSCADE,m:getTalentLevelRaw(m.T_AMBUSCADE))
 		m:unlearnTalent(m.T_PROJECTION,m:getTalentLevelRaw(m.T_PROJECTION)) -- no recurssive projections
@@ -165,6 +166,18 @@ newTalent{
 		m.resists.all = -30
 		m.inc_damage.all = ((100 + (m.inc_damage.all or 0)) * t.getDam(self, t)) - 100
 		m.force_melee_damage_type = DamageType.DARKNESS
+
+		m.on_act = function(self)
+			if self.summoner.dead or not self:hasLOS(self.summoner.x, self.summoner.y) then
+				if not self:hasEffect(self.EFF_AMBUSCADE_OFS) then
+					self:setEffect(self.EFF_AMBUSCADE_OFS, 2, {})
+				end
+			else
+				if self:hasEffect(self.EFF_AMBUSCADE_OFS) then
+					self:removeEffect(self.EFF_AMBUSCADE_OFS)
+				end
+			end
+		end,
 
 		game.zone:addEntity(game.level, m, "actor", x, y)
 		game.level.map:particleEmitter(x, y, 1, "shadow")
@@ -195,7 +208,7 @@ newTalent{
 		return ([[You take full control of your own shadow for %d turns.
 		Your shadow possesses your talents and stats, has %d%% life and deals %d%% damage, -30%% all resistances, -100%% light resistance and 100%% darkness resistance.
 		Your shadow is permanently stealthed (%d power), and all melee damage it deals is converted to darkness damage.
-		If you release control early, your shadow will dissipate.]]):
+		If you release control early or if it leaves your sight for too long, your shadow will dissipate.]]):
 		format(t.getDuration(self, t), t.getHealth(self, t) * 100, t.getDam(self, t) * 100, t.getStealthPower(self, t))
 	end,
 }

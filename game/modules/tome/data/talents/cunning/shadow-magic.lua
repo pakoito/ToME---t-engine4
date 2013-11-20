@@ -112,15 +112,16 @@ newTalent{
 
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
-		if not x or not y or not target then return nil end
-		if core.fov.distance(self.x, self.y, x, y) > self:getTalentRange(t) then return nil end
+		if not x or not y then return nil end
+		local _ _, _, _, x, y = self:canProject(tg, x, y)
+		local target = game.level.map(x, y, Map.ACTOR)
 		if not game.level.map.seens(x, y) then return nil end
 
 		local tx, ty = util.findFreeGrid(x, y, 20, true, {[engine.Map.ACTOR]=true})
 		self:move(tx, ty, true)
 
 		-- Attack ?
-		if core.fov.distance(self.x, self.y, x, y) == 1 then
+		if target and target.x and core.fov.distance(self.x, self.y, target.x, target.y) == 1 then
 			self:attackTarget(target, DamageType.DARKNESS, t.getDamage(self, t), true)
 			if target:canBe("stun") then
 				target:setEffect(target.EFF_DAZED, t.getDuration(self, t), {})
