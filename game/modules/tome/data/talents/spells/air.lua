@@ -155,16 +155,17 @@ newTalent{
 	getFatigue = function(self, t) return math.floor(2.5 * self:getTalentLevel(t)) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/spell_generic2")
-		local ret = {
-			encumb = self:addTemporaryValue("max_encumber", t.getEncumberance(self, t)),
-			def = self:addTemporaryValue("combat_def_ranged", t.getRangedDefence(self, t)),
-		}
+		local ret = {}
+
+		self:talentTemporaryValue(ret, "max_encumber", t.getEncumberance(self, t))
+		self:talentTemporaryValue(ret, "combat_def_ranged", t.getRangedDefence(self, t))
+		
 		if self:getTalentLevel(t) >= 4 then
-			ret.lev = self:addTemporaryValue("levitation", 1)
-			ret.traps = self:addTemporaryValue("avoid_pressure_traps", 1)
+			self:talentTemporaryValue(ret, "levitation", 1)
+			self:talentTemporaryValue(ret, "avoid_pressure_traps", 1)
 		end
 		if self:getTalentLevel(t) >= 5 then
-			ret.ms = self:addTemporaryValue("movement_speed", t.getSpeed(self, t))
+			self:talentTemporaryValue(ret, "movement_speed", t.getSpeed(self, t))
 			self:talentTemporaryValue(ret, "fatigue", -t.getFatigue(self, t))
 		end
 
@@ -172,11 +173,6 @@ newTalent{
 		return ret
 	end,
 	deactivate = function(self, t, p)
-		self:removeTemporaryValue("max_encumber", p.encumb)
-		self:removeTemporaryValue("combat_def_ranged", p.def)
-		if p.lev then self:removeTemporaryValue("levitation", p.lev) end
-		if p.traps then self:removeTemporaryValue("avoid_pressure_traps", p.traps) end
-		if p.ms then self:removeTemporaryValue("movement_speed", p.ms) end
 		self:checkEncumbrance()
 		return true
 	end,

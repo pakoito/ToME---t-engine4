@@ -114,7 +114,7 @@ newEntity{
 	level_range = {14, nil},
 	faction = "zigur",
 	sight = 1,
-	rarity = 6,
+	rarity = 1,
 	unit_power = 20,
 	hates_arcane = 1,
 	movement_speed = 0.75,
@@ -124,7 +124,7 @@ newEntity{
 		type="ambush",
 		width=18,
 		height=18,
-		nb={2, 3},
+		nb={20, 30},
 		filters={{special_rarity="humanoid_random_boss", random_boss={
 			nb_classes=1,
 			rank=3, ai = "tactical",
@@ -132,6 +132,7 @@ newEntity{
 			loot_quality = "store",
 			loot_quantity = 1,
 			class_filter = function(c)
+				print("=============RANDBOSS TEST", c.power_source and c.power_source.arcane, c.name)
 				if c.power_source and c.power_source.arcane then return false end
 				return true
 			end,
