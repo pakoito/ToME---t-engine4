@@ -56,7 +56,7 @@ function _M:steamCleanup()
 	print("[SAVEFILE PIPE] Cloud has "..avail.."MB available")
 
 	-- Still have room left
-	local MAX_ALLOWED = 953
+	local MAX_ALLOWED = 200
 	if avail >= MAX_ALLOWED then core.steam.setFileNamespace(oldns) return end
 	print("[SAVEFILE PIPE] Steam cloud missing space, cleaning up old saves")
 
