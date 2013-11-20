@@ -1953,7 +1953,7 @@ newEffect{
 newEffect{
 	name = "DISTORTION", image = "talents/maelstrom.png",
 	desc = "Distortion",
-	long_desc = function(self, eff) return ("The target has recently taken distortion damage, is vulnerable to distortion effects, and has it's physical resistance decreased by %d%%."):format(eff.power) end,
+	long_desc = function(self, eff) return ("The target has recently taken distortion damage, is vulnerable to distortion effects, and has its physical resistance decreased by %d%%."):format(eff.power) end,
 	type = "physical",
 	subtype = { distortion=true },
 	status = "detrimental",

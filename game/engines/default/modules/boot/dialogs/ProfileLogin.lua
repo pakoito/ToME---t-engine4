@@ -26,13 +26,13 @@ local Textzone = require "engine.ui.Textzone"
 module(..., package.seeall, class.inherit(Dialog))
 
 function _M:init(dialogdef, profile_help_text)
-	Dialog.init(self, "Online profile "..dialogdef.name, 500, 400)
+	Dialog.init(self, "Online profile "..dialogdef.name, 600, 400)
 	self.profile_help_text = profile_help_text
 	self.dialogdef = dialogdef
 	self.alpha = 230
 	self.justlogin = dialogdef.justlogin
 
-	self.c_desc = Textzone.new{width=math.floor(self.iw - 10), auto_height=true, text=self.profile_help_text}
+	self.c_desc = Textzone.new{width=math.floor(self.iw), auto_height=true, text=self.profile_help_text}
 
 	local login_filter = function(c)
 		if c:find("^[a-z0-9]$") then return c end
@@ -78,7 +78,7 @@ function _M:init(dialogdef, profile_help_text)
 		}
 		self:setFocus(self.c_login)
 	end
-	self:setupUI(true, true)
+	self:setupUI(false, true)
 
 	self.key:addBinds{
 		EXIT = function() game:unregisterDialog(self) end,

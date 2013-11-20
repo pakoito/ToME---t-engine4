@@ -422,12 +422,12 @@ profile_help_text = [[#LIGHT_GREEN#T-Engine4#LAST# allows you to sync your playe
 This allows you to:
 * Play from several computers without having to copy unlocks and achievements.
 * Keep track of your modules progression, kill count, ...
+* Talk ingame to other fellow players
 * Cool statistics for each module to help sharpen your gameplay style
 * Help the game developers balance and refine the game
 
 You will also have a user page on http://te4.org/ where you can show off your achievements to your friends.
-This is all optional, you are not forced to use this feature at all, but the developers would thank you if you did as it will
-make balancing easier.
+This is all optional, you are not forced to use this feature at all, but the developers would thank you if you did as it will make balancing easier.
 Online profile requires an internet connection, if not available it will wait and sync when it finds one.]]
 
 function _M:checkFirstTime()
@@ -460,22 +460,29 @@ end
 function _M:createProfile(loginItem)
 	if not loginItem.create then
 		self.auth_tried = nil
+		local d = Dialog:simpleWaiter("Login in...", "Please wait...") core.display.forceRedraw()
 		profile:performlogin(loginItem.login, loginItem.pass)
 		profile:waitFirstAuth()
+		d:done()
 		if profile.auth then
-			Dialog:simplePopup("Profile logged in!", "Your online profile is active now...", function() end )
+			Dialog:simplePopup("Profile logged in!", "Your online profile is now active. Have fun!", function() end )
 		else
 			Dialog:simplePopup("Login failed!", "Check your login and password or try again in in a few moments.", function() end )
 		end
-		return
 	else
 		self.auth_tried = nil
-		profile:newProfile(loginItem.login, loginItem.name, loginItem.pass, loginItem.email)
+		local d = Dialog:simpleWaiter("Registering...", "Registering on http://te4.org/, please wait...") core.display.forceRedraw()
+		local ok, err = profile:newProfile(loginItem.login, loginItem.name, loginItem.pass, loginItem.email)
 		profile:waitFirstAuth()
+		d:done()
 		if profile.auth then
-			Dialog:simplePopup(self.justlogin and "Logged in!" or "Profile created!", "Your online profile is active now...", function() end )
+			Dialog:simplePopup(self.justlogin and "Logged in!" or "Profile created!", "Your online profile is now active. Have fun!", function() end )
 		else
-			Dialog:simplePopup("Profile creation failed!", "Try again in in a few moments, or try online at http://te4.org/", function() end )
+			if err ~= "unknown" and err then
+				Dialog:simplePopup("Profile creation failed!", "Creation failed: "..err.." (you may also register on http://te4.org/)", function() end )
+			else
+				Dialog:simplePopup("Profile creation failed!", "Try again in in a few moments, or try online at http://te4.org/", function() end )
+			end
 		end
 	end
 end

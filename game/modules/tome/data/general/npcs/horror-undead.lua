@@ -94,7 +94,7 @@ newEntity{ base = "BASE_NPC_HORROR_UNDEAD",
 	},
 	
 	on_die = function(self, who)
-		game.logSeen(self, "#VIOLET#As the necrotic abomination is destroyed you see the remaining bones reassembling in the form of new foes!")
+		game.logSeen(self, "#VIOLET#As the necrotic abomination is destroyed you see the remaining bones and flesh reassembling in the form of new foes!")
 		self:forceUseTalent(self.T_SUMMON, {ignore_energy=true, ignore_cd=true, no_equilibrium_fail=true, no_paradox_fail=true, force_level=1})
 	end,
 	
@@ -189,7 +189,7 @@ newEntity{ base = "BASE_NPC_HORROR_UNDEAD",
 
 newEntity{ base = "BASE_NPC_HORROR_UNDEAD",
 	name = "animated blood", color=colors.RED, subtype = "blood",
-	desc ="This crimson shape moves drips ceaselessly, spattering the nearby ground. The droplets seem to continue moving of their own volition.",
+	desc ="This crimson shape drips ceaselessly, spattering the nearby ground. The droplets seem to continue moving of their own volition.",
 	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/undead_horror_animated_blood.png", display_h=2, display_y=-1}}},
 	level_range = {15, nil}, exp_worth = 1,
 	rarity = 20, -- Appear alone but rarely.

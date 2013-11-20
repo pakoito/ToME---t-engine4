@@ -1027,7 +1027,7 @@ newEntity{ base = "BASE_KNIFE", define_as = "ART_PAIR_MOON",
 	on_set_complete = function(self, who)
 		self:specialSetAdd({"wielder","lite"}, 1)
 		self:specialSetAdd({"combat","melee_project"}, {[engine.DamageType.RANDOM_CONFUSION]=10})
-		self:specialSetAdd({"wielder","inc_damage"}, {[engine.DamageType.DARKNESS]=10})
+		self:specialSetAdd({"wielder","inc_damage"}, {[engine.DamageType.DARKNESS]=15})
 		game.logSeen(who, "#ANTIQUE_WHITE#The two blades glow brightly as they are brought close together.")
 	end,
 	on_set_broken = function(self, who)
@@ -1063,7 +1063,7 @@ newEntity{ base = "BASE_KNIFE", define_as = "ART_PAIR_STAR",
 	on_set_complete = function(self, who)
 		self:specialSetAdd({"wielder","lite"}, 1)
 		self:specialSetAdd({"combat","melee_project"}, {[engine.DamageType.RANDOM_BLIND]=10})
-		self:specialSetAdd({"wielder","inc_damage"}, {[engine.DamageType.LIGHT]=10})
+		self:specialSetAdd({"wielder","inc_damage"}, {[engine.DamageType.LIGHT]=15})
 	end,
 
 }
@@ -3317,15 +3317,16 @@ newEntity{ base = "BASE_KNIFE",
 		dam = 25,
 		apr = 10,
 		physcrit = 9,
-		dammod = {dex=0.45,str=0.35, mag=0.15},
+		dammod = {dex=0.45,str=0.45, mag=0.1},
 		convert_damage = {
 			[DamageType.DARKNESS] = 50,
 		},
 	},
 	wielder = {
-		inc_stealth=8,
-		inc_stats = {[Stats.STAT_MAG] = 3,},
+		inc_stealth=10,
+		inc_stats = {[Stats.STAT_MAG] = 4, [Stats.STAT_CUN] = 4,},
 		resists = {[DamageType.DARKNESS] = 10,},
+		resists_pen = {[DamageType.DARKNESS] = 10,},
 		inc_damage = {[DamageType.DARKNESS] = 5,},
 	},
 	max_power = 10, power_regen = 1,
@@ -4529,7 +4530,7 @@ newEntity{ base = "BASE_ARROW", --Thanks Grayswandir!
 	desc = [[A vile poison drips from the tips of these arrows.]],
 	color = colors.BLUE,
 	level_range = {10, 20},
-	rarity = 200,
+	rarity = 240,
 	cost = 100,
 	material_level = 2,
 	require = { stat = { dex=18 }, },
@@ -5154,6 +5155,7 @@ newEntity{ base = "BASE_GREATSWORD", --Thanks Grayswandir!
 	level_range = {10, 20},
 	color=colors.GRAY,
 	rarity = 300,
+	encumber = 0.1,
 	desc = [[This sword appears weightless, and nearly invisible.]],
 	cost = 400,
 	require = { stat = { str=24, }, },
@@ -5162,7 +5164,7 @@ newEntity{ base = "BASE_GREATSWORD", --Thanks Grayswandir!
 	combat = {
 		dam = 24,
 		physspeed=0.9,
-		apr = 4,
+		apr = 25,
 		physcrit = 3,
 		dammod = {str=1.2},
 		melee_project={[DamageType.ARCANE] = 10,},
@@ -5192,9 +5194,10 @@ newEntity{ base = "BASE_GLOVES", --Thanks SageAcrin /AND/ Edge2054!
 		spellsurge_on_crit = 4,
 		resists={[DamageType.DARKNESS] = 8, [DamageType.TEMPORAL] = 8},
 		inc_damage={[DamageType.DARKNESS] = 8, [DamageType.TEMPORAL] = 8},
+		resists_pen={[DamageType.DARKNESS] = 10, [DamageType.TEMPORAL] = 10},
 		negative_regen=0.2,
 		combat = {
-			dam = 12,
+			dam = 13,
 			apr = 3,
 			physcrit = 6,
 			dammod = {dex=0.4, str=-0.6, cun=0.4, mag=0.2 },

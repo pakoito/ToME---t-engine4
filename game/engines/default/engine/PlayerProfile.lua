@@ -799,11 +799,13 @@ function _M:newProfile(Login, Name, Password, Email)
 
 	core.profile.pushOrder(table.serialize{o="NewProfile2", login=Login, email=Email, name=Name, pass=Password})
 	local id = nil
-	self:waitEvent("NewProfile2", function(e) id = e.uid end)
+	local reason = nil
+	self:waitEvent("NewProfile2", function(e) id = e.uid reason = e.reason end)
 
-	if not id then print("[ONLINE PROFILE] could not create") return end
+	if not id then print("[ONLINE PROFILE] could not create") return nil, reason or "unknown" end
 	print("[ONLINE PROFILE] profile id ", id)
 	self:performlogin(Login, Password)
+	return id
 end
 
 function _M:entityVaultPoke(module, kind, name, desc, data)

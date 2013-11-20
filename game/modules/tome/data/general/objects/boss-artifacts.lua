@@ -1929,7 +1929,10 @@ newEntity{ base = "BASE_KNIFE",
 		dammod = {dex=0.55, str=0.45},
 		phasing = 50,
 	},
-	wielder = {combat_atk=20},
+	wielder = {
+		combat_atk=20,
+		blind_fight = 1,
+	},
 }
 
 newEntity{ base = "BASE_GLOVES", define_as = "VARSHA_CLAW",

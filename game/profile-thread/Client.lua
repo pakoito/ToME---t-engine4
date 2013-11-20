@@ -258,7 +258,7 @@ function _M:orderNewProfile2(o)
 	if self:read("200") then
 		cprofile.pushEvent(string.format("e='NewProfile2' uid=%d", tonumber(self.last_line) or -1))
 	else
-		cprofile.pushEvent("e='NewProfile2' uid=nil")
+		cprofile.pushEvent(string.format("e='NewProfile2' uid=nil reason=%q", self.last_error))
 	end
 end
 
