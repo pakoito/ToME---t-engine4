@@ -91,8 +91,7 @@ uberTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[While this talent is active, you dig deep into your stamina reserves, allowing you to move without taking a turn. However, this costs 12 stamina for each tile that you cross.]])
-		:format()
+		return ([[While this talent is active, you dig deep into your stamina reserves, allowing you to move without taking a turn. However, this costs 12 stamina for each tile that you cross.]]):format()
 	end,
 }
 
