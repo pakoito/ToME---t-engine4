@@ -1236,10 +1236,6 @@ int main(int argc, char *argv[])
 	{
 		if (!isActive || tickPaused) SDL_WaitEvent(NULL);
 
-#ifdef STEAM_TE4
-		if (!no_steam) lua_steam_check_callbacks();
-#endif
-
 #ifdef SELFEXE_WINDOWS
 		if (windows_autoflush) _commit(_fileno(stdout));
 #endif

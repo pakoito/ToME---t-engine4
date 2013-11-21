@@ -2338,7 +2338,7 @@ newDamageType{
 }
 
 newDamageType{
-	name = "Garkul spirit", type = "GARKUL_INVOKE",
+	name = "% chance to summon an orc spirit", type = "GARKUL_INVOKE",
 	projector = function(src, x, y, type, dam)
 		if not rng.percent(dam) then return end
 		local target = game.level.map(x, y, engine.Map.ACTOR)
