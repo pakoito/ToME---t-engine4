@@ -106,7 +106,6 @@ function _M:run()
 	self.logdisplay.resizeToLines = function() end
 	self.logdisplay:enableShadow(1)
 	self.logdisplay:enableFading(5)
-	self.log = function(...) self.logdisplay(...) end
 
 	-- Setup display
 	self:registerDialog(MainMenu.new())

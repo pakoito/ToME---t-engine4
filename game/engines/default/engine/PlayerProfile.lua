@@ -100,12 +100,11 @@ function _M:start()
 		self:tryAuth()
 		self:waitFirstAuth()
 	elseif core.steam and self.generic.onlinesteam and self.generic.onlinesteam.autolog then
-		local ticket = core.steam.sessionTicket()
-		if ticket then
+		core.steam.sessionTicket(function(ticket) if ticket then
 			self.steam_token = ticket:toHex()
 			self:tryAuth()
 			self:waitFirstAuth()
-		end
+		end end)
 	end
 end
 
