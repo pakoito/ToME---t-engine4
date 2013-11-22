@@ -430,7 +430,7 @@ This is all optional, you are not forced to use this feature at all, but the dev
 Online profile requires an internet connection, if not available it will wait and sync when it finds one.]]
 
 function _M:checkFirstTime()
-	if not profile.generic.firstrun then
+	if not profile.generic.firstrun and not core.steam then
 		profile:checkFirstRun()
 		local text = "Thanks for downloading T-Engine/ToME.\n\n"..profile_help_text
 		Dialog:yesnocancelLongPopup("Welcome to T-Engine", text, 600, function(ret, cancel)

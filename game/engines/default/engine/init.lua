@@ -57,7 +57,7 @@ shaders_kind_distort = true
 shaders_kind_adv = true
 shaders_kind_volumetric = false
 particles_density = 100
-background_saves = false
+background_saves = true
 mouse_cursor = true
 display_fps = 30
 gamma_correction = 120
@@ -66,6 +66,7 @@ censor_boot = true
 chat.filter = {}
 chat.ignores = {}
 addons = {}
+upgrades { v1_0_5=true }
 ]]
 for i, file in ipairs(fs.list("/settings/")) do
 	if file:find(".cfg$") then
