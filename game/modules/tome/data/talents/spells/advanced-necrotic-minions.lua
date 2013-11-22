@@ -241,43 +241,50 @@ newTalent{
 	end,
 	getLevel = function(self, t) return math.floor(self:combatScale(self:getTalentLevel(t), -6, 0.9, 2, 5)) end, -- -6 @ 1, +2 @ 5, +5 @ 8
 	action = function(self, t)
-		local list = {}
 		local nbgolem = 0
-		if game.party and game.party:hasMember(self) then
-			for act, def in pairs(game.party.members) do
-				if act.summoner and act.summoner == self and act.necrotic_minion then
-					if act.subtype ~= "giant" then list[#list+1] = act
-					else nbgolem = nbgolem + 1 end
+		local make_golem = function()
+			local list = {}
+			nbgolem = 0
+			if game.party and game.party:hasMember(self) then
+				for act, def in pairs(game.party.members) do
+					if act.summoner and act.summoner == self and act.necrotic_minion then
+						if act.subtype ~= "giant" then list[#list+1] = act
+						else nbgolem = nbgolem + 1 end
+					end
+				end
+			else
+				for uid, act in pairs(game.level.entities) do
+					if act.summoner and act.summoner == self and act.necrotic_minion then
+						if act.subtype ~= "giant" then list[#list+1] = act
+						else nbgolem = nbgolem + 1 end
+					end
 				end
 			end
-		else
-			for uid, act in pairs(game.level.entities) do
-				if act.summoner and act.summoner == self and act.necrotic_minion then
-					if act.subtype ~= "giant" then list[#list+1] = act
-					else nbgolem = nbgolem + 1 end
-				end
+			if #list < 3 then return end
+
+			rng.tableRemove(list):die(self)
+			rng.tableRemove(list):die(self)
+			rng.tableRemove(list):die(self)
+
+			local kind = ({"bone_giant","bone_giant","h_bone_giant","h_bone_giant","e_bone_giant"})[util.bound(math.floor(self:getTalentLevel(t)), 1, 5)]
+			if self:getTalentLevel(t) >= 6 and rng.percent(20) then kind = "r_bone_giant" end
+
+			local minion = require("mod.class.NPC").new(minions_list[kind])
+			local x, y = util.findFreeGrid(self.x, self.y, 5, true, {[Map.ACTOR]=true})
+			if minion and x and y then
+				local lev = t.getLevel(self, t)
+				necroSetupSummon(self, minion, x, y, lev, true)
+				nbgolem = nbgolem + 1
 			end
 		end
-		if #list < 3 then return end
 
-		rng.tableRemove(list):die(self)
-		rng.tableRemove(list):die(self)
-		rng.tableRemove(list):die(self)
-
-		local kind = ({"bone_giant","bone_giant","h_bone_giant","h_bone_giant","e_bone_giant"})[util.bound(math.floor(self:getTalentLevel(t)), 1, 5)]
-		if self:getTalentLevel(t) >= 6 and rng.percent(20) then kind = "r_bone_giant" end
-
-		local minion = require("mod.class.NPC").new(minions_list[kind])
-		local x, y = util.findFreeGrid(self.x, self.y, 5, true, {[Map.ACTOR]=true})
-		if minion and x and y then
-			local lev = t.getLevel(self, t)
-			necroSetupSummon(self, minion, x, y, lev, true)
+		local empower = necroEssenceDead(self)
+		for i = 1, empower and 2 or 1 do
+			make_golem()
+			if nbgolem >= (empower and 2 or 1) then break end
 		end
 
-		if nbgolem >= 1 then
-			local empower = necroEssenceDead(self)
-			if empower then empower() end
-		end
+		if nbgolem >= 2 and empower then empower() end
 
 		game:playSoundNear(self, "talents/spell_generic2")
 		return true

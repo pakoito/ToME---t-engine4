@@ -135,6 +135,7 @@ newTalent{
 				m.summoner_gain_exp = true
 				m.unused_stats = 0
 				m.dead = nil
+				m.undead = 1
 				m.no_breath = 1
 				m.unused_talents = 0
 				m.unused_generics = 0
@@ -167,7 +168,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Try to blast crush the soul of your foe, doing %0.2f darkness damage (that can never kill the target).
+		return ([[Try to crush the soul of your foe, doing %0.2f darkness damage (that can never kill the target).
 		If the target is left with less than %d%% life you try to take control of its body.
 		Should this succeed the target becomes your permanent minion (unaffected by your aura) and you regain 2 souls.
 		Husks prossess the same abilities as they had in life (affected by Dark Empathy), are healed to full when created but can never heal or be healed by any means.
@@ -196,7 +197,7 @@ newTalent{
 		local nb = t.getnb(self, t)
 		return ([[Crush and consume two souls to empower your next %d spells, granting them a special effect.
 		Affected spells are:
-		- Undeath Link: in addition to the heal a shield is created for half the heal life_leech_value
+		- Undeath Link: in addition to the heal a shield is created for half the heal power
 		- Create Minions: allows you to summon 2 more minions
 		- Assemble: allows you to summon a second bone golem
 		- Invoke Darkness: becomes a cone of darkness
