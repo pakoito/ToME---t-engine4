@@ -142,6 +142,7 @@ newTalent{
 				m.silent_levelup = true
 				m.no_points_on_levelup = true
 				m.faction = self.faction
+				m:removeEffectsFilter({status="detrimental"}, nil, true)
 				game.level.map:particleEmitter(px, py, 1, "demon_teleport")
 
 				applyDarkEmpathy(self, m)
