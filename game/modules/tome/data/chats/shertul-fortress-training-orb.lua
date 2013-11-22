@@ -63,7 +63,7 @@ local function armor_dummies()
 	game:registerDialog(GetQuantity.new("Armour Hardiness", "From 0 to 100", 0, 100, function(qty)
 		qty = util.bound(qty, 0, 100)
 		for uid, e in pairs(game.level.entities) do
-			if e.define_as == "TRAINING_DUMMY" then e.combat_armor_hardiness = qty end
+			if e.define_as == "TRAINING_DUMMY" then e.combat_armor_hardiness = qty - 30 end
 		end
 
 		game:registerDialog(GetQuantity.new("Armour", "From 0 to 1000", 0, 1000, function(qty)
