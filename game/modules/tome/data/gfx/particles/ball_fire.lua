@@ -21,7 +21,8 @@
 -- Advanced shaders
 --------------------------------------------------------------------------------------
 if core.shader.active(4) then
-use_shader = {type="shockwave", shockwaveSpeed=7*16/10}
+local life = 20
+use_shader = {type="shockwave2", shockwaveSpeed=7*16/life}
 base_size = 64
 
 local nb = 0
@@ -30,7 +31,7 @@ local radius = radius or 6
 return {
 	generator = function()
 	return {
-		life = 10,
+		life = life,
 		size = 2.1*64*radius, sizev = 0, sizea = 0,
 
 		x = 0, xv = 0, xa = 0,
@@ -41,7 +42,7 @@ return {
 		r = 1, rv = 0, ra = 0,
 		g = 1, gv = 0, ga = 0,
 		b = 1, bv = 0, ba = 0,
-		a = 0.8, av = -0.02, aa = 0,
+		a = 0.8, av = -0.01, aa = 0,
 	}
 end, },
 function(self)
