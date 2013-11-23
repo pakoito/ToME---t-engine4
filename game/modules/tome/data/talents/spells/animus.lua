@@ -159,7 +159,7 @@ newTalent{
 				})
 				game:onTickEnd(function() self:incSoul(2) end)
 
-				self:logCombat(m, "#GREY##Source# rips appart the animus of #target# and creates an undead husk.")
+				self:logCombat(m, "#GREY##Source# rips apart the animus of #target# and creates an undead husk.")
 			end
 		end)
 
