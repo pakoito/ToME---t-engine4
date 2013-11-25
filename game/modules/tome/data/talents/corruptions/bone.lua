@@ -53,7 +53,7 @@ newTalent{
 	points = 5,
 	vim = 28,
 	cooldown = 15,
-	range = 7,
+	range = function(self, t) return math.floor(self:combatTalentLimit(t, 10, 4, 9)) end,
 	tactical = { DISABLE = 1, CLOSEIN = 3 },
 	requires_target = true,
 	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 4, 8)) end,
