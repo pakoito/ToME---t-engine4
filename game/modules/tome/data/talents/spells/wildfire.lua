@@ -76,7 +76,7 @@ newTalent{
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/fire")
 		local cft = self:getTalentFromId(self.T_CLEANSING_FLAMES)
---		self:addShaderAura("burning_wake", "awesomeaura", {time_factor=3500, alpha=0.6}, "particles_images/wings.png")
+		self:addShaderAura("burning_wake", "awesomeaura", {time_factor=3500, alpha=0.6, flame_scale=0.6}, "particles_images/wings.png")
 		return {
 			bw = self:addTemporaryValue("burning_wake", t.getDamage(self, t)),
 			cf = self:addTemporaryValue("cleansing_flames", cft.getChance(self, cft)),
