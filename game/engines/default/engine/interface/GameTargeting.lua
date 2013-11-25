@@ -99,11 +99,13 @@ function _M:targetMode(v, msg, co, typ)
 		self.target:setActive(false)
 
 		if tostring(old) == "exclusive" then
+			local x, y, e = self.target.target.x, self.target.target.y, self.target.target.entity
 			local fct = function(notok)
 				if notok then
 					self.target.target.entity = nil
 					self.target.target.x = nil
 					self.target.target.y = nil
+					x, y, e = nil, nil, nil
 				end
 
 				self.key = self.normal_key
@@ -111,6 +113,7 @@ function _M:targetMode(v, msg, co, typ)
 				if self.target_co then
 					local co = self.target_co
 					self.target_co = nil
+					self.target.target.x, self.target.target.y, self.target.target.entity = x, y, e
 					local ok, err = coroutine.resume(co, self.target.target.x, self.target.target.y, self.target.target.entity)
 					if not ok and err then print(debug.traceback(co)) error(err) end
 				end
