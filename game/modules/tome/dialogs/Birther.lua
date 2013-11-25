@@ -1086,13 +1086,10 @@ function _M:setTile(f, w, h, last)
 	self:applyCosmeticActor()
 
 	if not last then
-		self:fakeEquip(true)
-		self.actor:updateModdableTile()
-		self:fakeEquip(false)
-
 		-- Add an example particles if any
 		local ps = self.actor:getParticlesList("all")
 		for i, p in ipairs(ps) do self.actor:removeParticles(p) end
+		if self.actor.shader_auras then self.actor.shader_auras = {} end
 		if self.descriptors_by_type.subclass then
 			local d = self.birth_descriptor_def.subclass[self.descriptors_by_type.subclass]
 			if d and d.birth_example_particles then
@@ -1102,6 +1099,10 @@ function _M:setTile(f, w, h, last)
 				if type(p) == "string" then self.actor:addParticles(Particles.new(p, 1)) end
 			end
 		end
+
+		self:fakeEquip(true)
+		self.actor:updateModdableTile()
+		self:fakeEquip(false)
 	end
 end
 

@@ -372,12 +372,14 @@ newTalent{
 	getReflect = function(self, t) return self:combatLimit(self:combatTalentSpellDamage(t, 12, 40), 100, 20, 0, 46.5, 26.5) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/spell_generic2")
+		self:addShaderAura("reflective_skin", "awesomeaura", {time_factor=5500, alpha=0.6, flame_scale=0.6}, "particles_images/arcaneshockwave.png")
 		local ret = {
 			tmpid = self:addTemporaryValue("reflect_damage", (t.getReflect(self, t)))
 		}
 		return ret
 	end,
 	deactivate = function(self, t, p)
+		self:removeShaderAura("reflective_skin")
 		self:removeTemporaryValue("reflect_damage", p.tmpid)
 		return true
 	end,

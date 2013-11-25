@@ -58,6 +58,11 @@ newBirthDescriptor{
 	},
 	power_source = {arcane=true},
 	stats = { mag=5, con=3, wil=1, },
+	birth_example_particles = {
+		function(actor)
+			actor:addShaderAura("body_of_fire", "awesomeaura", {time_factor=3500, alpha=1, flame_scale=1.1}, "particles_images/wings.png")
+		end,
+	},
 	talents_types = {
 		["spell/explosives"]={true, 0.3},
 		["spell/infusion"]={true, 0.3},

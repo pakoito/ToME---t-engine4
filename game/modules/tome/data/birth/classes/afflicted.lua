@@ -57,6 +57,13 @@ newBirthDescriptor{
 	},
 	power_source = {psionic=true, technique=true},
 	stats = { wil=4, str=5, },
+	birth_example_particles = {
+		function(actor)
+			if not actor:addShaderAura("rampage", "awesomeaura", {time_factor=5000, alpha=0.7}, "particles_images/bloodwings.png") then
+				actor:addParticles(Particles.new("rampage", 1))
+			end
+		end,
+	},
 	talents_types = {
 		["cursed/gloom"]={true, 0.3},
 		["cursed/slaughter"]={true, 0.3},
