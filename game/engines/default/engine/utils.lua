@@ -1970,6 +1970,8 @@ function util.browserOpenUrl(url)
 		"kde-open %s",	-- Linux - Kde
 		"firefox %s",  -- Linux - try to find something
 		"mozilla-firefox %s",  -- Linux - try to find something
+		"google-chrome-stable %s",  -- Linux - try to find something
+		"google-chrome %s",  -- Linux - try to find something
 	}
 	while #tries > 0 do
 		local urlbase = table.remove(tries, 1)
