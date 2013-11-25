@@ -31,7 +31,9 @@ newTalent{
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/heal")
 		local particle
-		if core.shader.active(4) then
+		if self:addShaderAura("master_summoner", "awesomeaura", {time_factor=6200, alpha=0.7, flame_scale=0.8}, "particles_images/naturewings.png") then
+			--
+		elseif core.shader.active(4) then
 			particle = self:addParticles(Particles.new("shader_ring_rotating", 1, {radius=1.1}, {type="flames", zoom=2, npow=4, time_factor=4000, color1={0.2,0.7,0,1}, color2={0,1,0.3,1}, hide_center=0, xy={self.x, self.y}}))
 		else
 			particle = self:addParticles(Particles.new("master_summoner", 1))
@@ -42,6 +44,7 @@ newTalent{
 		}
 	end,
 	deactivate = function(self, t, p)
+		self:removeShaderAura("master_summoner")
 		self:removeParticles(p.particle)
 		self:removeTemporaryValue("summon_cooldown_reduction", p.cd)
 		return true

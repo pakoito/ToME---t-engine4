@@ -61,7 +61,7 @@ newEntity{ base="BASE_NPC_ORC_GORBAT", define_as = "GORBAT",
 	resolvers.drops{chance=100, nb=1, {defined="NOTE_LORE"} },
 
 	talent_cd_reduction={[Talents.T_ICE_BREATH]=3, [Talents.T_FIRE_BREATH]=3, [Talents.T_SAND_BREATH]=3, },
-	equilibrium_regen = -8,
+	equilibrium_regen = -10,
 
 	resolvers.talents{
 		[Talents.T_NATURE_TOUCH]={base=5, every=6, max=7},
@@ -80,6 +80,8 @@ newEntity{ base="BASE_NPC_ORC_GORBAT", define_as = "GORBAT",
 		[Talents.T_RIMEBARK]={base=7, every=6, max=10},
 		[Talents.T_RITCH_FLAMESPITTER]={base=10, every=6, max=12},
 		[Talents.T_RESILIENCE]={base=5, every=6, max=7},
+		[Talents.T_MASTER_SUMMONER]={base=5, every=6, max=7},
+		[Talents.T_WILD_SUMMON]={base=5, every=6, max=7},
 
 		[Talents.T_HOWL]={base=5, every=6, max=7},
 
