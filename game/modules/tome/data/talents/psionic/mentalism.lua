@@ -132,7 +132,7 @@ newTalent{
 			return
 		end
 		
-		local m = self:clone{
+		local m = self:cloneFull{
 			no_drops = true,
 			faction = self.faction,
 			summoner = self, summoner_gain_exp=true,

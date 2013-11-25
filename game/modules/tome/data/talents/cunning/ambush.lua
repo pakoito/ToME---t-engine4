@@ -121,7 +121,7 @@ newTalent{
 			return
 		end
 
-		local m = self:clone{
+		local m = self:cloneFull{
 			shader = "shadow_simulacrum",
 			no_drops = true,
 			faction = self.faction,

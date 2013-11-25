@@ -181,7 +181,7 @@ newTalent{
 		end
 
 		local sex = game.player.female and "she" or "he"
-		local m = require("mod.class.NPC").new(self:clone{
+		local m = require("mod.class.NPC").new(self:cloneFull{
 			no_drops = true,
 			faction = self.faction,
 			summoner = self, summoner_gain_exp=true,

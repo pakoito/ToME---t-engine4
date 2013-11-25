@@ -188,7 +188,7 @@ newTalent{
 			return
 		end
 
-		local m = require("mod.class.NPC").new(self:clone{
+		local m = require("mod.class.NPC").new(self:cloneFull{
 			shader = "shadow_simulacrum",
 			no_drops = true,
 			faction = self.faction,

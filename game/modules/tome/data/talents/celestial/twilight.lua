@@ -228,7 +228,7 @@ newTalent{
 
 		local modifier = t.getPercent(self, t)
 
-		local m = target:clone{
+		local m = target:cloneFull{
 			shader = "shadow_simulacrum",
 			no_drops = true,
 			faction = self.faction,

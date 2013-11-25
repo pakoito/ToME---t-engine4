@@ -196,9 +196,13 @@ end
 
 --- Clones the object, all subobjects without cloning twice a subobject
 -- @return the clone and the number of cloned objects
-function _M:cloneFull()
+function _M:cloneFull(t)
 	local clonetable = {}
-	return clonerecursfull(clonetable, self)
+	local n = clonerecursfull(clonetable, self)
+	if t then
+		for k, e in pairs(t) do n[k] = e end
+	end
+	return n
 --	return core.serial.cloneFull(self)
 end
 

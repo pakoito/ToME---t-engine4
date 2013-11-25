@@ -1668,7 +1668,7 @@ newEffect{
 				return
 			end
 			-- Create a clone for later spawning
-			local m = require("mod.class.NPC").new(eff.target:clone{
+			local m = require("mod.class.NPC").new(eff.target:cloneFull{
 				shader = "shadow_simulacrum",
 				shader_args = { color = {0.0, 1, 1}, base = 0.6 },
 				no_drops = true,
