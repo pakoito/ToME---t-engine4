@@ -58,7 +58,7 @@ newEntity{
 	level_range = {1, 50},
 	rarity = 6,
 	cost = 5,
-	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 2) end),
+	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 1.3) end),
 	wielder = {
 		infravision = resolvers.mbonus_material(2, 1),
 	},
@@ -91,7 +91,7 @@ newEntity{
 		max_life = resolvers.mbonus_material(20, 20),
 		max_stamina = resolvers.mbonus_material(15, 15),
 	},
-	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 3) end),
+	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 2) end),
 }
 
 newEntity{
@@ -108,7 +108,7 @@ newEntity{
 			[DamageType.DARKNESS] = resolvers.mbonus_material(5, 5),
 		},
 	},
-	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 3) end),
+	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 2) end),
 }
 
 newEntity{
@@ -124,7 +124,7 @@ newEntity{
 		combat_apr = resolvers.mbonus_material(4, 4),
 		combat_critical_power = resolvers.mbonus_material(15, 15),
 	},
-	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 3) end),
+	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 2) end),
 }
 
 newEntity{
@@ -145,7 +145,7 @@ newEntity{
 		},
 		combat_mentalresist = resolvers.mbonus_material(10, 5),
 	},
-	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 3) end),
+	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 2) end),
 }
 
 newEntity{
@@ -163,7 +163,7 @@ newEntity{
 			[DamageType.PHYSICAL] = resolvers.mbonus_material(5, 5),
 	},
 	},
-	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 3) end),
+	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 2) end),
 }
 
 newEntity{
@@ -174,7 +174,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 15,
 	cost = 30,
-	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 2) end),
+	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 1.3) end),
 	wielder = {
 		inc_stats = {
 			[Stats.STAT_STR] = resolvers.mbonus_material(7, 3),
@@ -210,7 +210,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 30,
 	cost = 60,
-	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 3) end),
+	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 2) end),
 	wielder = {
 		resists_pen = {
 			[DamageType.PHYSICAL] = resolvers.mbonus_material(15, 10),
@@ -226,7 +226,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 15,
 	cost = 30,
-	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 2) end),
+	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 1.3) end),
 	wielder = {
 		inc_stats = {
 			[Stats.STAT_CUN] = resolvers.mbonus_material(5, 1),
@@ -244,7 +244,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 30,
 	cost = 60,
-	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 2) end),
+	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 1.3) end),
 	wielder = {
 		combat_mentalresist = resolvers.mbonus_material(10, 5),
 		combat_physresist = resolvers.mbonus_material(10, 5),
@@ -261,7 +261,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 20,
 	cost = 40,
-	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 2) end),
+	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 1.3) end),
 	wielder = {
 		spell_cooldown_reduction = 0.1,
 	},
@@ -275,7 +275,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 20,
 	cost = 40,
-	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 2) end),
+	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 1.3) end),
 	wielder = {
 		inc_stats = {
 			[Stats.STAT_DEX] = resolvers.mbonus_material(5, 1),
@@ -293,7 +293,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 30,
 	cost = 60,
-	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 2) end),
+	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 1.3) end),
 	wielder = {
 		resists={
 			[DamageType.DARKNESS] = resolvers.mbonus_material(10, 5),
@@ -312,7 +312,7 @@ newEntity{
 	rarity = 20,
 	cost = 40,
 	resolvers.charmt(Talents.T_PERFECT_STRIKE, {2,3,4}, 26),
-	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 2) end),
+	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 1.3) end),
 	wielder = {
 		inc_stats = {
 			[Stats.STAT_STR] = resolvers.mbonus_material(5, 1),
