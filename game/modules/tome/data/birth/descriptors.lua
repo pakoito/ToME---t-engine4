@@ -190,7 +190,7 @@ newBirthDescriptor{
 		"Unfair game setting",
 		"All zone levels increased by 50% + 3",
 		"All creature talent levels increased by 50%",
-		"Player can earn Nightmare version of achievements if also playing in Roguelike permadeath mode.",
+		"Player can earn Nightmare version of achievements if also playing in Roguelike or Adventure permadeath mode.",
 	},
 	descriptor_choices =
 	{
@@ -214,7 +214,7 @@ newBirthDescriptor{
 		"All zone levels increased by 120% + 5",
 		"All creature talent levels increased by 100%",
 		"Player rank is normal instead of elite",
-		"Player can earn Insane version of achievements if also playing in Roguelike permadeath mode.",
+		"Player can earn Insane version of achievements if also playing in Roguelike or Adventure permadeath mode.",
 	},
 	descriptor_choices =
 	{
@@ -240,7 +240,7 @@ newBirthDescriptor{
 		"Rare creatures are far more frequent and random bosses start to appear",
 		"Player is being hunted! Randomly all foes in a radius will get a feeling of where she/he is",
 		"Player rank is normal instead of elite",
-		"Player can earn Madness version of achievements if also playing in Roguelike permadeath mode.",
+		"Player can earn Madness version of achievements if also playing in Roguelike or Adventure permadeath mode.",
 	},
 	descriptor_choices =
 	{
