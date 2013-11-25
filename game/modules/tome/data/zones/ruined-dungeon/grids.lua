@@ -109,7 +109,7 @@ newEntity{
 
 		elseif self.portal_type == "darkness" then text = "The orb seems to absorb all light."
 		elseif self.portal_type == "blood" then text = "The orb is drips with thick blood."
-		elseif self.portal_type == "grave" then text = "The orb smells like a rotten corpse."
+		elseif self.portal_type == "ice" then text = "The orb is icy to the touch."
 		elseif self.portal_type == "time" then text = "Time seems to slow down around the orb."
 		elseif self.portal_type == "mind" then text = "Your mind is filled with strange thoughts as you approach the orb."
 		elseif self.portal_type == "blight" then text = "The orb seems to corrupt all it touches."

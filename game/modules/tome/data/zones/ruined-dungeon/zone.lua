@@ -60,7 +60,7 @@ return {
 		-- Randomly assign portal types
 		local types = ({
 			DEFAULT = {"wind", "earth", "fire", "water", "arcane", "nature"},
-			ALT1    = {"darkness", "blood", "grave", "time", "mind", "blight"},
+			ALT1    = {"darkness", "blood", "time", "ice", "mind", "blight"},
 		})[game.zone.clues_layout]
 		local _, portals = level:pickSpot{type="portal", subtype="portal"}
 		for i, spot in ipairs(portals) do
@@ -89,7 +89,7 @@ return {
 		for i, spot in ipairs(guardians) do
 			while true do
 				local m = game.zone:makeEntity(level, "actor", guardian_filter, nil, true)
-				if m then
+				if m and not m.can_pass.pass_wall then
 					game.zone:addEntity(level, m, "actor", spot.x, spot.y)
 					break
 				end
@@ -102,7 +102,7 @@ return {
 		local Dialog = require("engine.ui.Dialog")
 		local order = ({
 			DEFAULT = {"water", "earth", "wind", "nature", "arcane", "fire"},
-			ALT1    = {"darkness", "blood", "grave", "time", "mind", "blight"},
+			ALT1    = {"darkness", "blood", "time", "ice", "mind", "blight"},
 		})[game.zone.clues_layout]
 		local o = game.level.orbs_touched
 		o[#o+1] = type
