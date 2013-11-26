@@ -307,20 +307,24 @@ function _M:listAddons(mod, ignore_compat)
 		end
 	end
 
-	for i, short_name in ipairs(fs.list("/addons/")) do if short_name:find("^"..mod.short_name.."%-") then
-		local dir = "/addons/"..short_name
-		print("Checking addon", short_name, ":: (as dir)", fs.exists(dir.."/init.lua"), ":: (as teaa)", short_name:find(".teaa$"), "")
-		if fs.exists(dir.."/init.lua") then
-			load(dir, nil)
-		elseif short_name:find(".teaa$") then
-			fs.mount(fs.getRealPath(dir), "/testload", false)
-			local mod
-			if fs.exists("/testload/init.lua") then
-				load("/testload", dir)
+	local parse = function(basedir)
+		for i, short_name in ipairs(fs.list(basedir)) do if short_name:find("^"..mod.short_name.."%-") then
+			local dir = basedir..short_name
+			print("Checking addon", short_name, ":: (as dir)", fs.exists(dir.."/init.lua"), ":: (as teaa)", short_name:find(".teaa$"), "")
+			if fs.exists(dir.."/init.lua") then
+				load(dir, nil)
+			elseif short_name:find(".teaa$") then
+				fs.mount(fs.getRealPath(dir), "/testload", false)
+				local mod
+				if fs.exists("/testload/init.lua") then
+					load("/testload", dir)
+				end
+				fs.umount(fs.getRealPath(dir))
 			end
-			fs.umount(fs.getRealPath(dir))
-		end
-	end end
+		end end
+	end
+	parse("/addons/")
+	parse("/dlcs/")
 
 	table.sort(adds, function(a, b) return a.weight < b.weight end)
 	return adds
