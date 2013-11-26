@@ -52,11 +52,12 @@ function _M:init()
 		columns = {{name="World",width=100,display_prop="world"}},
 		list={}, select=function(item,sel) self:changeworlds(item) end, fct=function(item) end}
 
+	local sep = Separator.new{dir="horizontal", size=self.ih - 10}
 	self:loadUI{
 		{left=0, top=0, ui=self.c_list},
-		{right=0, top=0, ui=self.c_desc},
+		{left=self.c_list.w+sep.w, top=0, ui=self.c_desc},
 		{left=0, bottom=0, ui=self.c_sublist},
-		{left=self.c_list.w + 5, top=5, ui=Separator.new{dir="horizontal", size=self.ih - 10}},
+		{left=self.c_list.w + 5, top=5, ui=sep},
 	}
 	self:setFocus(self.c_list)
 	self:setupUI()

@@ -55,12 +55,13 @@ function _M:init()
 		select=function(item, sel) self:select(item) end,
 	}
 
+	local sep = Separator.new{dir="horizontal", size=self.ih - 10}
 	self:loadUI{
 		{left=0, top=0, ui=self.c_tree},
-		{right=0, top=0, ui=self.c_desc},
+		{left=self.c_tree.w+sep.w, top=0, ui=self.c_desc},
 		{right=0, bottom=0, ui=self.c_delete, hidden=true},
 		{left=0, bottom=0, ui=self.c_play, hidden=true},
-		{left=self.c_tree.w + 5, top=5, ui=Separator.new{dir="horizontal", size=self.ih - 10}},
+		{left=self.c_tree.w + 5, top=5, ui=sep},
 		{left=self.c_tree.w - self.c_compat.w, bottom=0, ui=self.c_compat},
 	}
 	self:setFocus(self.c_tree)
@@ -156,7 +157,7 @@ function _M:innerDisplay(x, y, nb_keyframes)
 	local h = w / r
 	h = math.min(h, self.ih / 1.7)
 	w = h * r
-	s[1]:toScreenFull(x + self.ix + self.iw - self.c_desc.w, y + self.ih - h - 20, w, h, s[2] * w / s.w, s[3] * h / s.h)
+	s[1]:toScreenFull(x + self.ix + self.iw - self.c_desc.w + 10, y + self.ih - h - 20, w, h, s[2] * w / s.w, s[3] * h / s.h)
 end
 
 function _M:playSave()

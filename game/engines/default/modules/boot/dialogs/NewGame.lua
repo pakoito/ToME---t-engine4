@@ -43,12 +43,13 @@ function _M:init()
 		{name="Version", width=20, display_prop="version_txt"},
 	}, list=self.list, fct=function(item) end, select=function(item, sel) self:select(item) end}
 
+	local sep = Separator.new{dir="horizontal", size=self.ih - 10}
 	self:loadUI{
 		{left=0, top=0, ui=self.c_list},
-		{right=0, top=0, ui=self.c_desc},
+		{left=self.c_list.w+sep.w, top=0, ui=self.c_desc},
 		{left=0, bottom=self.c_compat.h, ui=self.c_switch},
 		{left=0, bottom=0, ui=self.c_compat},
-		{left=self.c_list.w + 5, top=5, ui=Separator.new{dir="horizontal", size=self.ih - 10}},
+		{left=self.c_list.w + 5, top=5, ui=sep},
 	}
 	self:setFocus(self.c_list)
 	self:setupUI()

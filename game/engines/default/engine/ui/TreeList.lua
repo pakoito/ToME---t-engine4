@@ -48,8 +48,13 @@ function _M:init(t)
 	self.plus = _M:getUITexture("ui/plus.png")
 	self.minus = _M:getUITexture("ui/minus.png")
 
+	-- Draw the scrollbar
+	if self.scrollbar then
+		self.scrollbar = Slider.new{size=self.h, max=1}
+	end
+
 	local w = self.w
-	if self.scrollbar then w = w - 10 end
+	if self.scrollbar then w = w - self.scrollbar.w end
 	local colw = 0
 	for j, col in ipairs(self.columns) do
 		if type(col.width) == "table" then
@@ -175,11 +180,6 @@ function _M:generate()
 	if not self.h then self.h = self.nb_items * fh end
 
 	self.max_display = math.floor(self.h / fh)
-
-	-- Draw the scrollbar
-	if self.scrollbar then
-		self.scrollbar = Slider.new{size=self.h - fh, max=1}
-	end
 
 	-- Draw the tree items
 	self:drawTree()

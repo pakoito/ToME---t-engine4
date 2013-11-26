@@ -72,6 +72,7 @@ function _M:init(title, player)
 		{name="Who", width=20, display_prop="who", sort="who"},
 	}, list=self.list, fct=function(item) end, select=function(item, sel) self:select(item) end}
 
+	local sep = Separator.new{dir="horizontal", size=self.ih - 10 - self.c_self.h}
 	self:loadUI{
 		{left=0, top=0, ui=self.c_self},
 		{left=self.c_self.w, top=0, ui=self.c_main},
@@ -79,8 +80,8 @@ function _M:init(title, player)
 
 		{left=0, top=self.c_self.h, ui=self.c_list},
 		{left=self.iw * 0.6 + 10, top=self.c_self.h, ui= self.c_image},
-		{right=0, top=self.c_image.h + self.c_self.h, ui=self.c_desc},
-		{left=self.iw * 0.6 - 5, top=self.c_self.h + 5, ui=Separator.new{dir="horizontal", size=self.ih - 10 - self.c_self.h}},
+		{left=self.c_list.w+sep.w, top=self.c_image.h + self.c_self.h, ui=self.c_desc},
+		{left=self.iw * 0.6 - 5, top=self.c_self.h + 5, ui=sep},
 	}
 	self:setFocus(self.c_list)
 	self:setupUI()

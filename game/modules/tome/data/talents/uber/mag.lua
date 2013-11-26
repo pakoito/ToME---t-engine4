@@ -64,8 +64,8 @@ uberTalent{
 	end} },
 	on_learn = function(self, t)
 		self:attr("combat_spellresist", 20)
-		self:learnTalent(self.T_VULNERABILITY_POISON, true, nil, {no_unlearn=true})
-		self:learnTalent(self.T_GRAVITIC_TRAP, true, nil, {no_unlearn=true})
+		if self:knowTalent(self.T_VILE_POISONS) then self:learnTalent(self.T_VULNERABILITY_POISON, true, nil, {no_unlearn=true}) end
+		if self:knowTalent(self.T_TRAP_MASTERY) then self:learnTalent(self.T_GRAVITIC_TRAP, true, nil, {no_unlearn=true}) end
 	end,
 	on_unlearn = function(self, t)
 		self:attr("combat_spellresist", -20)
