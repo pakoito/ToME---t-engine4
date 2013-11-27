@@ -1752,9 +1752,9 @@ newDamageType{
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and not target:attr("undead") then
-			if dam >= 100 then target:attr("allow_on_heal", 1) end
+			if dam >= 100 then target:attr("allow_on_heal", 1) else target:attr("silent_heal", 1) end
 			target:heal(dam, src)
-			if dam >= 100 then target:attr("allow_on_heal", -1) end
+			if dam >= 100 then target:attr("allow_on_heal", -1) else target:attr("silent_heal", -1) end
 		elseif target then
 			DamageType:get(DamageType.NATURE).projector(src, x, y, DamageType.NATURE, dam)
 		end

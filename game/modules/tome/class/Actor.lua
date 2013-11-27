@@ -1582,7 +1582,7 @@ function _M:onHeal(value, src)
 	end
 
 --	print("[HEALING]", self.uid, self.name, "for", value)
-	if (not self.resting and (not game.party:hasMember(self) or not game:getPlayer(true).resting)) and value + psi_heal >= 1 then
+	if (not self.resting and (not game.party:hasMember(self) or not game:getPlayer(true).resting)) and value + psi_heal >= 1 and not self:attr("silent_heal") then
 		if game.level.map.seens(self.x, self.y) then
 			local sx, sy = game.level.map:getTileToScreen(self.x, self.y)
 			game.flyers:add(sx, sy, 30, rng.float(-3, -2), (rng.range(0,2)-1) * 0.5, tostring(math.ceil(value)), {255,255,0})
