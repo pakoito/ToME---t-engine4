@@ -53,7 +53,7 @@ newTalent{
 		-- mainhand (weapon), offhand (weapon/armor;shield), psionic (weapon)
 		-- finger (X2), neck (jewelry)
 		-- lite (lite), tool (tool), quiver (ammo), gem (alchemist-gem)
-		level = level or self:getTalentLevelRaw(t)
+		level = level or self:getTalentLevel(t)
 		if level >= 1 and item.type == "weapon" then return true end
 		if level >= 2 and item.type == "armor" and (item.slot == "BODY" or item.slot == "CLOAK")  then return true end
 		if level >= 3 and item.type == "armor" and (item.slot == "HEAD" or item.slot == "OFFHAND")  then return true end
@@ -231,6 +231,8 @@ newTalent{
 				self.changed = true
 			end
 		end
+	end,
+	passives = function(self, t, p) -- force update on talent mastery changes
 	end,
 	on_learn = function(self, t)
 		t.curseInventory(self, t)
