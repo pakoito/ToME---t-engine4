@@ -144,7 +144,7 @@ function _M:loadDefinition(dir, team, incompatible)
 						if fs.exists(file) then
 							print("Mounting additional team file:", file)
 							local src = fs.getRealPath(file)
-							fs.mount(src, "/", false)
+							fs.mount(src, t[3], false)
 						end
 					end
 				end

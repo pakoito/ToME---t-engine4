@@ -48,8 +48,8 @@ starter = "mod.load"
 
 -- List of additional team files required
 teams = {
-	{ "#name#-#version#-music.team", "optional", {"/data/music/"} },
-	{ "#name#-#version#-gfx-shockbolt.team", "optional", {"/data/gfx/shockbolt/"} },
+	{ "#name#-#version#-music.team", "optional", "/" },
+	{ "#name#-#version#-gfx.team", "optional", "/" },
 }
 
 show_funfacts = true
