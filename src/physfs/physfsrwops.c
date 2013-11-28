@@ -126,7 +126,7 @@ static size_t physfsrwops_write(SDL_RWops *rw, const void *ptr, size_t size, siz
 static int physfsrwops_close(SDL_RWops *rw)
 {
     PHYSFS_File *handle = (PHYSFS_File *) rw->hidden.unknown.data1;
-    if (!PHYSFS_close(handle))
+    if (PHYSFS_close(handle))
     {
         SDL_SetError("PhysicsFS error: %s", PHYSFS_getLastError());
         return(-1);
