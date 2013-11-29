@@ -142,6 +142,7 @@ end
 
 function _M:loginSteam()
 	local d = self:simpleWaiter("Login...", "Login in your account, please wait...") core.display.forceRedraw()
+	d:timeout(10, function() Dialog:simplePopup("Steam", "Steam client not found.")	end)
 	core.steam.sessionTicket(function(ticket)
 		if not ticket then
 			Dialog:simplePopup("Steam", "Steam client not found.")

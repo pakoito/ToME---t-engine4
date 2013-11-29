@@ -38,6 +38,7 @@ function _M:simpleWaiter(title, text, width, count, max)
 	d:setupUI(true, true)
 
 	d.done = function(self) game:unregisterDialog(self) end
+	d.timeout = function(self, secs, cb) wait:setTimeout(secs, function() cb() local done = self.done self.done = function()end done(self) end) end
 	d.manual = function(self, ...) wait:manual(...) end
 	d.manualStep = function(self, ...) wait:manualStep(...) end
 

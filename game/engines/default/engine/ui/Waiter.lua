@@ -51,10 +51,20 @@ end
 function _M:display(x, y)
 end
 
+function _M:setTimeout(secs, cb)
+	self.timeout_cb = cb
+	self.timeout = secs * 1000
+	self.timeout_start = core.game.getTime()
+end
+
 function _M:getWaitDisplay(d)
 	d.__showup = false
 	d.unload_wait = rawget(d, "unload")
-	d.unload = function(self) core.wait.disable() if self.unload_wait then self:unload_wait() end end
+	d.unload = function(self)
+		core.wait.disable()
+		if self.unload_wait then self:unload_wait() end
+		self.unload = rawget(self, "unload_wait")
+	end
 
 	core.display.forceRedraw()
 
@@ -103,6 +113,11 @@ function _M:getWaitDisplay(d)
 				self.font:setStyle("normal")
 				txt[1]:toScreenFull(dx + (dw - txt[6]) / 2 + 2, dy + (bar[7] - txt[7]) / 2 + 2, txt[6], txt[7], txt[2], txt[3], 0, 0, 0, 0.6)
 				txt[1]:toScreenFull(dx + (dw - txt[6]) / 2, dy + (bar[7] - txt[7]) / 2, txt[6], txt[7], txt[2], txt[3])
+			end
+
+			-- Timeout?
+			if self.timeout and core.game.getTime() - self.timeout_start >= self.timeout then
+				self.timeout_cb()
 			end
 		end
 	end

@@ -168,6 +168,25 @@ function _M:display(nb_keyframes)
 		self:handleProfileEvent(evt)
 		evt = profile:popEvent()
 	end
+
+	-- Check timers
+	if self._timers_cb and nb_keyframes > 0 then
+		local new = {}
+		for cb, frames in pairs(self._timers_cb) do
+			frames = frames - nb_keyframes
+			if frames <= 0 then cb()
+			else new[cb] = frames end
+		end
+		if next(new) then self._timers_cb = new
+		else self._timers_cb = nil end
+	end
+end
+
+--- Register a timer
+-- The callback function will be called in the given number of seconds
+function _M:registerTimer(seconds, cb)
+	self._timers_cb = self._timers_cb or {}
+	self._timers_cb[cb] = seconds * 30
 end
 
 --- Called when the game is focused/unfocused
