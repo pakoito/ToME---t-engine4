@@ -40,7 +40,7 @@ newTalent{
 		return gem
 	end,
 	action = function(self, t)
-		local d d = self:showEquipInven("Use which gem?", function(o) return not o.unique and o.type == "gem" end, function(o, inven, item)
+		local d d = self:showEquipInven("Use which gem?", function(o) return not o.unique and o.type == "gem" and not o.__tagged end, function(o, inven, item)
 			if not o then return end
 			local gem = t.make_gem(self, t, o.define_as)
 			if not gem then return end
@@ -77,7 +77,7 @@ newTalent{
 	on_unlearn = function(self, t)
 		self:unlearnTalent(self.T_CREATE_ALCHEMIST_GEMS)
 	end,
-	filterGem = function(self, t, o) return o.metallic and (o.material_level or 1) <= self:getTalentLevelRaw(t) end,
+	filterGem = function(self, t, o) return o.metallic and (o.material_level or 1) <= self:getTalentLevelRaw(t) and not o.__tagged end,
 	getGem = function(self, t, o)
 		if not o then return end
 
