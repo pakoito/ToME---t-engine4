@@ -193,7 +193,8 @@ newTalent{
 	tactical = { ATTACK = { weapon = 1 }, DISABLE = { silence = 3 } },
 	requires_target = true,
 	target = function(self, t)
-		return {type="bolt", range=self:getTalentRange(t)}
+		local weapon, ammo = self:hasArcheryWeapon()
+		return {type="bolt", range=self:getTalentRange(t), display=self:archeryDefaultProjectileVisual(weapon, ammo)}
 	end,
 	on_pre_use = function(self, t, silent) if not self:hasArcheryWeapon() then if not silent then game.logPlayer(self, "You require a bow or sling for this talent.") end return false end return true end,
 	getDur = function(self, t) return math.floor(self:combatTalentScale(t, 2, 6)) end,
