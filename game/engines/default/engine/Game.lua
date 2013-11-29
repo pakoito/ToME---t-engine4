@@ -172,13 +172,15 @@ function _M:display(nb_keyframes)
 	-- Check timers
 	if self._timers_cb and nb_keyframes > 0 then
 		local new = {}
+		local exec = {}
 		for cb, frames in pairs(self._timers_cb) do
 			frames = frames - nb_keyframes
-			if frames <= 0 then cb()
+			if frames <= 0 then exec[#exec+1] = cb
 			else new[cb] = frames end
 		end
 		if next(new) then self._timers_cb = new
 		else self._timers_cb = nil end
+		for _, cb in ipairs(exec) do cb() end
 	end
 end
 
