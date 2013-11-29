@@ -2120,7 +2120,7 @@ function _M:saveGame()
 		self.party:setPlayer(self:getPlayer(true), true)
 
 		_G.game = clone
-		print("Saving JSON", pcall(function() if not game:getPlayer(true).__no_save_json then
+		print("Saving JSON", pcall(function() if not game.player.__no_save_json then
 			local party = game.party:cloneFull()
 			party.__te4_uuid = game:getPlayer(true).__te4_uuid
 			for m, _ in pairs(party.members) do

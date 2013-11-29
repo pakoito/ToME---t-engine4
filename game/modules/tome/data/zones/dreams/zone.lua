@@ -216,6 +216,12 @@ return {
 				max_life = 10,
 				__no_save_json = true,
 				mouse_turn = game.turn,
+				talent_cd_reduction={
+					T_EVASION=17,
+					T_NIMBLE_MOVEMENTS=15,
+					T_HIDE_IN_PLAIN_SIGHT=30,
+					T_STEALTH=5,
+				},
 				resolvers.talents{
 					T_STEALTH = 12,
 					T_SHADOWSTRIKE = 5,
