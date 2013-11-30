@@ -38,6 +38,11 @@ local PERMADEATH_ONE = 3
 function _M:newAchievement(t)
 	t.id = t.id or t.name
 	t.id = t.id:upper():gsub("[ ]", "_")
+	if not fs.exists("/data/gfx/achievements/"..t.id:lower()..".png") then
+		t.image = "trophy_gold.png"
+		print("Achievement with default image not found", t.id, "/data/gfx/achievements/"..t.id:lower()..".png")
+	else t.image = "achievements/"..t.id:lower()..".png"
+	end
 
 	WA.newAchievement(self, t)
 

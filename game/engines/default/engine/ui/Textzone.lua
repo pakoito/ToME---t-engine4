@@ -105,12 +105,19 @@ function _M:generate()
 	}
 end
 
+function _M:setShadowShader(shader, power)
+	self.shadow_shader = shader
+	self.shadow_power = power
+end
+
 function _M:display(x, y, nb_keyframes, screen_x, screen_y, offset_x, offset_y, local_x, local_y)
 	if not self.list then return end
 	offset_x = offset_x and offset_x or 0
 	offset_y = (offset_y and offset_y) or (self.scrollbar and self.scrollbar.pos or 0)
 	local_x = local_x and local_x or 0
 	local_y = local_y and local_y or 0
+
+	local shader = self.shadow_shader
 	
 	local loffset_y = offset_y - local_y
 	local current_y = 0
@@ -152,8 +159,17 @@ function _M:display(x, y, nb_keyframes, screen_x, screen_y, offset_x, offset_y, 
 			end
 
 			local one_by_tex_h = 1 / item._tex_h
-			if self.text_shadow then item._tex:toScreenPrecise(x + current_x + 1, y + current_y + 1, item.w, item.h - (clip_y_start + clip_y_end), 0, item.w / item._tex_w, clip_y_start * one_by_tex_h, (item.h - clip_y_end) * one_by_tex_h, 0, 0, 0, self.text_shadow) end
+			if self.text_shadow then
+				if shader then
+					shader:use(true)
+					shader:uniOutlineSize(self.shadow_power, self.shadow_power)
+					shader:uniTextSize(item._tex_w, item._tex_h)
+				else
+					item._tex:toScreenPrecise(x + current_x + 1, y + current_y + 1, item.w, item.h - (clip_y_start + clip_y_end), 0, item.w / item._tex_w, clip_y_start * one_by_tex_h, (item.h - clip_y_end) * one_by_tex_h, 0, 0, 0, self.text_shadow)
+				end
+			end
 			item._tex:toScreenPrecise(x + current_x, y + current_y, item.w, item.h - (clip_y_start + clip_y_end), 0, item.w / item._tex_w, clip_y_start * one_by_tex_h, (item.h - clip_y_end) * one_by_tex_h )
+			if self.text_shadow and shader then shader:use(false) end
 			-- add only visible part of item
 			current_y = current_y + item.h - clip_y_start
 		end

@@ -60,7 +60,7 @@ function _M:display(x, y)
 	end
 
 	if self.shadow then
-		self.item[1]:toScreenFull(x + 5, y + 5, self.w, self.h, self.item[2], self.item[3], 0, 0, 0, 0.5)
+		self.item[1]:toScreenFull(x + 5, y + 5, self.w, self.h, self.item[2] * self.w / self.iw, self.item[3] * self.h / self.ih, 0, 0, 0, 0.5)
 	end
 
 	self.item[1]:toScreenFull(x, y, self.w, self.h, self.item[2] * self.w / self.iw, self.item[3] * self.h / self.ih)

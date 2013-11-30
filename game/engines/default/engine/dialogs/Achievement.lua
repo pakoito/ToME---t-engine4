@@ -18,6 +18,7 @@
 -- darkgod@te4.org
 
 require "engine.class"
+local Shader = require "engine.Shader"
 local Dialog = require "engine.ui.Dialog"
 local Image = require "engine.ui.Image"
 local Textzone = require "engine.ui.Textzone"
@@ -25,14 +26,16 @@ local Textzone = require "engine.ui.Textzone"
 module(..., package.seeall, class.inherit(Dialog))
 
 function _M:init(title, a)
-	local c_image = Image.new{file=a.image or "trophy_gold.png", shadow=true, width=64, height=64}
-	local c_desc = Textzone.new{width=500, auto_height=true, text=a.desc}
+	local c_image = Image.new{file=a.image or "trophy_gold.png", shadow=true, width=128, height=128}
+	local c_desc = Textzone.new{width=500, auto_height=true, text=a.desc, font={"/data/font/DroidSans-Bold.ttf", 26}}
+	c_desc:setTextShadow(1)
+	c_desc:setShadowShader(Shader.default.textoutline and Shader.default.textoutline.shad, 1.2)
 
 	Dialog.init(self, title, 10, 10)
 
 	self:loadUI{
-		{left=0, vcenter=0, ui=c_image},
-		{right=0, vcenter=0, ui=c_desc},
+		{left=4, vcenter=0, ui=c_image},
+		{left=c_image.w+14, vcenter=0, ui=c_desc},
 	}
 	self:setupUI(true, true, nil, nil, math.max(c_image.h, c_desc.h))
 

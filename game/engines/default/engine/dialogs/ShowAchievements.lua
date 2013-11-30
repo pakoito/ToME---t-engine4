@@ -40,7 +40,7 @@ function _M:init(title, player)
 	self.c_main = Checkbox.new{title="All achieved", default=true, fct=function() end, on_change=function(s) if s then self:switchTo("main") end end}
 	self.c_all = Checkbox.new{title="Everything", default=false, fct=function() end, on_change=function(s) if s then self:switchTo("all") end end}
 
-	self.c_image = Image.new{file="trophy_gold.png", width=64, height=64, shadow=true}
+	self.c_image = Image.new{file="trophy_gold.png", width=128, height=128, shadow=true}
 	self.c_desc = TextzoneList.new{scrollbar=true, width=math.floor(self.iw * 0.4 - 10), height=self.ih - self.c_self.h}
 
 	self:generateList("main")
@@ -79,7 +79,7 @@ function _M:init(title, player)
 		{left=self.c_self.w+self.c_main.w, top=0, ui=self.c_all},
 
 		{left=0, top=self.c_self.h, ui=self.c_list},
-		{left=self.iw * 0.6 + 10, top=self.c_self.h, ui= self.c_image},
+		{left=self.c_list.w+sep.w, top=self.c_self.h, ui= self.c_image},
 		{left=self.c_list.w+sep.w, top=self.c_image.h + self.c_self.h, ui=self.c_desc},
 		{left=self.iw * 0.6 - 5, top=self.c_self.h + 5, ui=sep},
 	}
@@ -110,6 +110,8 @@ function _M:select(item)
 			also = "#GOLD#Also achieved by your current character#LAST#\n"
 		end
 		self.c_image.item = item.tex
+		self.c_image.iw = item.tex[6]
+		self.c_image.ih = item.tex[7]
 		local track = self:getTrack(item.a)
 		local desc = ("#GOLD#Achieved on:#LAST# %s\n#GOLD#Achieved by:#LAST# %s\n%s\n#GOLD#Description:#LAST# %s"):format(item.when, item.who, also, item.desc):toTString()
 		if track then
