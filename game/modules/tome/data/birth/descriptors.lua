@@ -128,7 +128,7 @@ newBirthDescriptor{
 	copy = {
 		auto_id = 2,
 		no_birth_levelup = true,
-		easy_mode_lifes = 99999,
+		infinite_lifes = 1,
 		__game_difficulty = 1,
 		__allow_rod_recall = false,
 		__allow_transmo_chest = false,
