@@ -135,6 +135,7 @@ newBirthDescriptor{
 		instakill_immune = 1,
 	},
 	game_state = {
+		grab_online_event_forbid = true,
 		always_learn_birth_talents = true,
 	},
 }

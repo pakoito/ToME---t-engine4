@@ -118,7 +118,7 @@ newTalent{
 		local power = t.getPower(self, t)
 		return ([[Over the next %d turns, you attempt to remove the target from the timeline.  Its resistances will be reduced by %d%%, and if you manage to kill it while the spell is in effect, you'll be returned to the point in time you cast this spell and the target will be slain.
 		This spell splits the timeline.  Attempting to use another spell that also splits the timeline while this effect is active will be unsuccessful.
-		The duration will scale with your Paradox and the resistance penalty will scale with your Paradox and S	pellpower.]])
+		The duration will scale with your Paradox and the resistance penalty will scale with your Paradox and Spellpower.]])
 		:format(duration, power)
 	end,
 }

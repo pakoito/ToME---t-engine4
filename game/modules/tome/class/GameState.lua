@@ -2120,17 +2120,20 @@ end
 
 function _M:grabOnlineEventZone()
 	if not config.settings.tome.allow_online_events then return end
+	if self.birth.grab_online_event_forbid then return end
 	if not self.birth.grab_online_event_zone or not self.birth.grab_online_event_spot then return nil end
 	return self.birth.grab_online_event_zone()
 end
 
 function _M:grabOnlineEventSpot(zone, level)
 	if not config.settings.tome.allow_online_events then return end
+	if self.birth.grab_online_event_forbid then return end
 	if not self.birth.grab_online_event_zone or not self.birth.grab_online_event_spot then return nil end
 	return self.birth.grab_online_event_spot(zone, level)
 end
 
 function _M:allowOnlineEvent()
 	if not config.settings.tome.allow_online_events then return end
+	if self.birth.grab_online_event_forbid then return end
 	return true
 end
