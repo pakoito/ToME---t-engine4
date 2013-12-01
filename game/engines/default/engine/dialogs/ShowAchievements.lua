@@ -79,7 +79,7 @@ function _M:init(title, player)
 		{left=self.c_self.w+self.c_main.w, top=0, ui=self.c_all},
 
 		{left=0, top=self.c_self.h, ui=self.c_list},
-		{left=self.c_list.w+sep.w, top=self.c_self.h, ui= self.c_image},
+		{left=self.c_list.w+sep.w+(self.c_desc.w-self.c_image.w)/2, top=self.c_self.h, ui= self.c_image},
 		{left=self.c_list.w+sep.w, top=self.c_image.h + self.c_self.h, ui=self.c_desc},
 		{left=self.iw * 0.6 - 5, top=self.c_self.h + 5, ui=sep},
 	}

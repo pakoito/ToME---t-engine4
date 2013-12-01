@@ -53,6 +53,14 @@ parchment = {
 	frame_oy2 = 16,
 }
 
+achievement = {
+	frame_shadow = {x = 10, y = 10, a = 0.5},
+	frame_ox1 = -16,
+	frame_ox2 = 16,
+	frame_oy1 = -16,
+	frame_oy2 = 16,
+}
+
 tombstone = {
 	frame_shadow = {x = 10, y = 10, a = 0.5},
 	frame_ox1 = -16,
