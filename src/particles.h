@@ -121,6 +121,7 @@ struct s_particle_thread {
 	SDL_mutex *lock;
 	SDL_sem *keyframes;
 	plist *list;
+	jmp_buf panicjump;
 };
 typedef struct s_particle_thread particle_thread;
 

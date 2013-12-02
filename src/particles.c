@@ -26,6 +26,7 @@
 #include "auxiliar.h"
 #include "types.h"
 #include "core_lua.h"
+#include <setjmp.h>
 #include "particles.h"
 #include "script.h"
 #include <math.h>
@@ -53,6 +54,21 @@ static int cur_thread = 0;
 static lua_fbo *main_fbo = NULL;
 static particle_draw_last *pdls_head = NULL;
 void thread_add(particles_type *ps);
+
+/********************************************
+ ** Panic handling
+ ********************************************/
+static int particles_lua_panic_handler(lua_State *L)
+{
+	lua_getglobal(L, "__threaddata");
+	particle_thread *pt = (particle_thread*)lua_touserdata(L, -1);
+	lua_pop(L, 1);
+	printf("Particle thread %d got a panic error, recovering: %s\n", pt->id, lua_tostring(L, -1));
+	lua_pop(L, lua_gettop(L));
+	longjmp(pt->panicjump, 1);
+	return 0;
+}
+/********************************************/
 
 static void getinitfield(lua_State *L, const char *key, int *min, int *max)
 {
@@ -651,36 +667,41 @@ void thread_particle_run(particle_thread *pt, plist *l)
 	particles_type *ps = l->ps;
 	if (!ps || !ps->l || !ps->init || !ps->alive || ps->i_want_to_die) return;
 
-	// Update
-	lua_getglobal(L, "__fcts");
-	lua_pushnumber(L, l->updator_ref);
-	lua_rawget(L, -2);
-	lua_pushnumber(L, l->emit_ref);
-	lua_rawget(L, -3);
-
-	if (!lua_isfunction(L, -2) || !lua_istable(L, -1)) {
-//		printf("L(%x) Particle updater error %x (%d, %d) is nil: %s / %s\n", (int)L, (int)l, l->updator_ref, l->emit_ref, lua_tostring(L, -1), lua_tostring(L, -2));
-		lua_pop(L, 2);
-	}
-	else {
-		bool run = FALSE;
-		lua_pushstring(L, "ps");
+	if (setjmp(pt->panicjump) == 0) {
+		// Update
+		lua_getglobal(L, "__fcts");
+		lua_pushnumber(L, l->updator_ref);
 		lua_rawget(L, -2);
-		if (!lua_isnil(L, -1)) run = TRUE;
-		lua_pop(L, 1);
+		lua_pushnumber(L, l->emit_ref);
+		lua_rawget(L, -3);
 
-		if (run) {
-			if (lua_pcall(L, 1, 0, 0))
-			{
-//				printf("L(%x) Particle updater error %x (%d, %d): %s\n", (int)L, (int)l, l->updator_ref, l->emit_ref, lua_tostring(L, -1));
-//				ps->i_want_to_die = TRUE;
-				lua_pop(L, 1);
+		if (!lua_isfunction(L, -2) || !lua_istable(L, -1)) {
+	//		printf("L(%x) Particle updater error %x (%d, %d) is nil: %s / %s\n", (int)L, (int)l, l->updator_ref, l->emit_ref, lua_tostring(L, -1), lua_tostring(L, -2));
+			lua_pop(L, 2);
+		}
+		else {
+			bool run = FALSE;
+			lua_pushstring(L, "ps");
+			lua_rawget(L, -2);
+			if (!lua_isnil(L, -1)) run = TRUE;
+			lua_pop(L, 1);
+
+			if (run) {
+				if (lua_pcall(L, 1, 0, 0))
+				{
+	//				printf("L(%x) Particle updater error %x (%d, %d): %s\n", (int)L, (int)l, l->updator_ref, l->emit_ref, lua_tostring(L, -1));
+	//				ps->i_want_to_die = TRUE;
+					lua_pop(L, 1);
+				}
 			}
 		}
-	}
-	lua_pop(L, 1); // global table
+		lua_pop(L, 1); // global table
 
-	particles_update(L, ps, TRUE);
+		particles_update(L, ps, TRUE);
+	} else {
+		// We panic'ed! This particule is borked and needs to die
+		ps->i_want_to_die = TRUE;
+	}
 }
 
 // Runs on particles thread
@@ -944,6 +965,9 @@ int thread_particles(void *data)
 	particle_thread *pt = (particle_thread*)data;
 
 	lua_State *L = lua_open();  /* create state */
+	lua_pushlightuserdata(L, pt);
+	lua_setglobal(L, "__threaddata");
+	lua_atpanic(L, particles_lua_panic_handler);
 	luaL_openlibs(L);  /* open libraries */
 	luaopen_core(L);
 	luaopen_particles(L);
