@@ -159,11 +159,12 @@ newTalent{
 	require = gifts_req3,
 	points = 5,
 	mode = "passive",
-	getMax = function(self, t) return math.max(1, self:combatStatScale("cun", 0.5, 5)) end,
+	getMax = function(self, t) return math.floor(math.max(1, self:combatStatScale("cun", 0.5, 5))) end,
 	getChance = function(self, t) return self:combatLimit(self:combatTalentMindDamage(t, 5, 300), 50, 12.6, 26, 32, 220) end, -- Limit < 50% --> 12.6 @ 36, 32 @ 220
 
 	spawn = function(self, t)
-		if checkMaxSummon(self, true) or not self:canBe("summon") then return end
+		local notok, nb, sumlim = checkMaxSummon(self, true, 1, "is_mucus_ooze")
+		if notok or nb > t.getMax(self, t) or not self:canBe("summon") then return end
 
 		local ps = {}
 		for i, e in ipairs(game.level.map.effects) do
