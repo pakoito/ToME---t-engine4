@@ -31,7 +31,7 @@ function _M:takeHit(value, src, death_note)
 	if self.onTakeHit then value = self:onTakeHit(value, src, death_note) end
 	self.life = self.life - value
 	self.changed = true
-	if self.life <= self.die_at then
+	if self.life <= self.die_at and not self.dead then
 		if self:hasEffect(self.EFF_PRECOGNITION) then
 			game.log("%s dies during precognition, ending the effect!", self.name:capitalize())
 			self:removeEffect(self.EFF_PRECOGNITION)
