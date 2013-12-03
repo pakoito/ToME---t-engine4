@@ -4630,9 +4630,11 @@ newEntity{ base = "BASE_LITE", --Thanks Frumple!
 			self.max_charge=nil -- Reset charge.
 			self.charge=0
 			
+			local p = self.power
 			who:onTakeoff(self, true)
 			self.wielder.lite = 5
 			who:onWear(self, true)
+			self.power = p
 			return {id=true, used=true}
 		end
 	},
