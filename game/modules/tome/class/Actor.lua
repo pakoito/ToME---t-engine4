@@ -2569,6 +2569,13 @@ function _M:die(src, death_note)
 		p.all_kills = p.all_kills or {}
 		p.all_kills[self.name] = p.all_kills[self.name] or 0
 		p.all_kills[self.name] = p.all_kills[self.name] + 1
+		p.all_kills_kind = p.all_kills_kind or {}
+		p.all_kills_kind.creature = (p.all_kills_kind.creature or 0) + 1
+
+		if self.rank == 3 then p.all_kills_kind.elite = (p.all_kills_kind.elite or 0) + 1
+		elseif self.rank >= 3.2 and self.rank < 4 then p.all_kills_kind.rare = (p.all_kills_kind.rare or 0) + 1
+		elseif self.rank >= 4 then p.all_kills_kind.boss = (p.all_kills_kind.boss or 0) + 1
+		end
 	end
 
 	-- Ingredients

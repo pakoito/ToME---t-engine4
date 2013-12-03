@@ -75,7 +75,24 @@ Mouse: Hover over stat for info
 		playtime = ("%s second%s"):format(seconds, seconds > 1 and "s" or "")
 	end
 
-	self.c_playtime = Textzone.new{width=self.iw * 0.4, auto_height=true, no_color_bleed=true, font = self.font, text=("#GOLD#Days adventuring / current month:#LAST# %d / %s\n#GOLD#Time playing:#LAST# %s"):format(game.turn / game.calendar.DAY, game.calendar:getMonthName(game.calendar:getDayOfYear(game.turn)), playtime)}
+	local all_kills_kind = self.actor.all_kills_kind or {}
+	local playtimetext = ([[#GOLD#Days adventuring / current month:#LAST# %d / %s
+#GOLD#Time playing:#LAST# %s
+#GOLD#Creatures killed:     #ANTIQUE_WHITE#%d
+#GOLD#Elites killed:        #YELLOW#%d
+#GOLD#Rares/uniques killed: #SALMON#%d
+#GOLD#Bosses killed:        #ORANGE#%d
+]]):format(
+		game.turn / game.calendar.DAY,
+		game.calendar:getMonthName(game.calendar:getDayOfYear(game.turn)),
+		playtime,
+		all_kills_kind.creature or 0,
+		all_kills_kind.elite or 0,
+		all_kills_kind.rare or 0,
+		all_kills_kind.boss or 0
+	)
+
+	self.c_playtime = Textzone.new{width=self.iw * 0.4, auto_height=true, no_color_bleed=true, font = self.font, text=playtimetext}
 
 	self.c_desc = SurfaceZone.new{width=self.iw, height=self.ih - self.c_general.h - self.vs.h - self.c_tut.h,alpha=0}
 
