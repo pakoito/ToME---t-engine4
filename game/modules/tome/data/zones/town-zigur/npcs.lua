@@ -104,6 +104,8 @@ newEntity{ base = "BASE_NPC_ZIGURANTH", define_as = "PROTECTOR_MYSSIL",
 		[Talents.T_SPIDER]=5,
 		[Talents.T_DRACONIC_WILL]=1,
 		[Talents.T_SPELL_FEEDBACK]=1,
+		[Talents.T_UNBREAKABLE_WILL]=1,
+		[Talents.T_TRICKY_DEFENSES]=1,
 	},
 	resolvers.sustains_at_birth(),
 
