@@ -43,6 +43,7 @@ function _M:init(t)
 	self.on_drag_end = t.on_drag_end
 	self.on_focus_change = t.on_focus_change
 	self.special_bg = t.special_bg
+	self.default_last_tabs = t.default_last_tabs
 
 	self._last_x, _last_y, self._last_ox, self._last_oy = 0, 0, 0, 0
 
@@ -67,9 +68,15 @@ function _M:generate()
 			on_select=function(item, how) self:selectTab(item, how) end
 		}
 
+		if self.default_last_tabs and not _M._last_tabs then
+			self:updateTabFilterList({{data={filter=self.default_last_tabs}}})
+			for i = 1, #self.tabslist do if self.tabslist[i].kind == self.default_last_tabs then _M._last_tabs_i = i end end
+		end
+
 		self.c_tabs.no_keyboard_focus = true
 		if _M._last_tabs then
 			for _, l in ipairs(_M._last_tabs) do self.c_tabs.dlist[l[1]][l[2]].selected = true end
+			if _M._last_tabs_i then self.c_tabs.sel_i = _M._last_tabs_i end
 		else
 			self.c_tabs.dlist[1][1].selected = true
 		end
@@ -196,11 +203,17 @@ function _M:updateTabFilter()
 	if not self.c_tabs then return end
 
 	local list = self.c_tabs:getAllSelected()
+	self:updateTabFilterList(list)
+end
+
+function _M:updateTabFilterList(list)
 	local checks = {}
+	local is_all = false
 
 	-- Check if we selected all tabs
 	for i, item in ipairs(list) do
 		if item.data.filter == "all" then
+			is_all = true
 			for i, row in ipairs(self.c_tabs.dlist) do for j, item in ipairs(row) do item.selected = item.data.filter ~= "all" end end
 			list = self.c_tabs:getAllSelected()
 		end
@@ -230,6 +243,13 @@ function _M:updateTabFilter()
 	-- Save for next dialogs
 	if not self.dont_update_last_tabs then
 		_M._last_tabs = self.c_tabs:getAllSelectedKeys()
+		if not is_all then
+			local i = 1
+			for _, d in ipairs(_M._last_tabs) do i = math.max(i, d[2]) end
+			_M._last_tabs_i = i
+		else
+			_M._last_tabs_i = #self.tabslist
+		end
 	end
 end
 

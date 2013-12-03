@@ -68,6 +68,7 @@ function _M:init(title, actor, filter, action, on_select)
 	}
 
 	self.c_inven = Inventory.new{actor=actor, inven=actor:getInven("INVEN"), width=self.iw - 20 - self.c_doll.w, height=self.ih - 10, filter=filter,
+		default_last_tabs = "all",
 		fct=function(item, sel, button, event) self:use(item, button, event) end,
 		select=function(item, sel) self:select(item) end,
 		select_tab=function(item) self:select(item) end,

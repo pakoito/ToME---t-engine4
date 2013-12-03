@@ -22,7 +22,7 @@ name = "A mysterious staff"
 desc = function(self, who)
 	local desc = {}
 	desc[#desc+1] = "Deep in the Dreadfell you fought and destroyed the Master, a powerful vampire."
-	if self:isCompleted("ambush") then
+	if self:isCompleted("ambush") and not self:isCompleted("ambush-finished") then
 		desc[#desc+1] = "On your way out of the Dreadfell you were ambushed by a band of orcs."
 		desc[#desc+1] = "They asked about the staff."
 	elseif self:isCompleted("ambush-finished") and not self:isCompleted("survived-ukruk") then

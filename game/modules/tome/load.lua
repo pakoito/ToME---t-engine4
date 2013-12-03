@@ -301,6 +301,7 @@ InventoryUI.default_tabslist = function(self)
 		{image="metal-ui/inven_tabs/quests.png", 	kind="quests",		desc="Quest and plot related items",	filter=function(o) return not o.__transmo and (o.plot or o.quest) end},
 	}
 	if self.actor:attr("has_transmo") then tabslist[#tabslist+1] = {image="metal-ui/inven_tabs/chest.png", kind="transmo", desc="Transmogrification Chest", filter=function(o) return o.__transmo end} end
+	self:triggerHook{"Inventory:makeTabs", tabslist=tabslist}
 	tabslist[#tabslist+1] = {image="metal-ui/inven_tabs/all.png", kind="all", desc="All", filter="all"}
 	return tabslist
 end

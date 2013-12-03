@@ -112,6 +112,7 @@ function resolvers.calc.inventory(t, e)
 			game.zone:addEntity(game.level, o, "object")
 
 			if t[1].id then o:identify(t[1].id) end
+			if t[1].transmo then o.__transmo = true end
 		end
 	end
 	e:sortInven()
