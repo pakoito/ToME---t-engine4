@@ -73,7 +73,8 @@ newTalent{
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		return ([[You peer into the future, allowing you to explore your surroundings for %d turns.  When Precognition expires, you'll return to the point in time you first cast the spell.  Dying with precognition active will end the spell prematurely.
-		This spell splits the timeline.  Attempting to use another spell that also splits the timeline while this effect is active will be unsuccessful.]]):format(duration)
+		This spell splits the timeline.  Attempting to use another spell that also splits the timeline while this effect is active will be unsuccessful.
+		Splitting the timeline is difficult, you will only be protected after the current turn ends.]]):format(duration)
 	end,
 }
 
