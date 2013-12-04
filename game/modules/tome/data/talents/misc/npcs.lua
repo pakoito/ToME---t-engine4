@@ -900,6 +900,8 @@ newTalent{
 			faction = false,
 			canAct = false,
 			energy = {value=0},
+			x=self.x,
+			y=self.y,
 			canTrigger = function(self, x, y, who)
 				if who.type == "spiderkin" then return false end
 				return mod.class.Trap.canTrigger(self, x, y, who)
