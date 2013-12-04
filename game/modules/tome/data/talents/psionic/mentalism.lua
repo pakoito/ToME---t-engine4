@@ -168,6 +168,7 @@ newTalent{
 		for i = 1, 10 do
 			m:unlearnTalent(m.T_AMBUSCADE)	-- no recurssive projections
 			m:unlearnTalent(m.T_PROJECTION)		
+			m:unlearnTalent(m.T_THOUGHT_FORMS)
 		end
 				
 		m.can_pass = {pass_wall=70}
