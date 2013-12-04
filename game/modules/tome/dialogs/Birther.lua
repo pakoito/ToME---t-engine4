@@ -350,13 +350,13 @@ function _M:tutorial()
 
 	local d = Dialog.new("Tutorials", 280, 100)
 	local basic = Button.new{text="Basic Gameplay (recommended)", fct=function() run("Basic") d.key:triggerVirtual("EXIT") end}
-	local stats = Button.new{text="Stats and effects (advanced players)", fct=function() run("Stats") d.key:triggerVirtual("EXIT") end}
+--	local stats = Button.new{text="Stats and effects (advanced players)", fct=function() run("Stats") d.key:triggerVirtual("EXIT") end}
 	local cancel = Button.new{text="Cancel", fct=function() d.key:triggerVirtual("EXIT") end}
 	local sep = Separator.new{dir="vertical", size=230}
 
 	d:loadUI{
 		{hcenter=0, top=0, ui=basic},
-		{hcenter=0, top=basic.h, ui=stats},
+--		{hcenter=0, top=basic.h, ui=stats},
 		{hcenter=0, bottom=cancel.h, ui=sep},
 		{hcenter=0, bottom=0, ui=cancel},
 	}
