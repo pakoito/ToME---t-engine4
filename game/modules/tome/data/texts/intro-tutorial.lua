@@ -28,5 +28,5 @@ A normal character has limited lives, and once you run out, you stay dead (unles
 During this tutorial you will be guided by dialog boxes such as this one, explaining how things work.
 Dialog boxes can be dismissed by pressing Escape or clicking outside of their zone (or on the title bar).
 
-Now close this dialog to proceed.
+Now press #LIGHT_BLUE#escape#LAST# or #LIGHT_BLUE#click outside#LAST# this dialog to close it and proceed.
 ]]

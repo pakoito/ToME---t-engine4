@@ -29,8 +29,7 @@ To fire an arrow, use the shoot talent. The target interface will pop-up, just l
 
 To equip your bow and arrows:
 * Open your inventory.
-* Select your sword, take it off.
-* Select your shield, take it off.
+* Click on the Off Set button to switch weapons.
 * Select your bow and arrows, wield them.
 
 There are trolls to the west. Go use your bow and arrows to kill them!
