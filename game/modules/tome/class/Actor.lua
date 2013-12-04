@@ -2734,7 +2734,6 @@ function _M:levelup()
 	if self.alchemy_golem then
 		self.alchemy_golem.max_level = self.max_level  -- make sure golem can level up with master
 		self.alchemy_golem:forceLevelup(self.level)
-		if self:knowTalent(self.T_BLIGHTED_SUMMONING) then self:callTalent(self.T_BLIGHTED_SUMMONING,"doBlightedSummon",self.alchemy_golem)	end -- update golem talent levels
 	end
 
 	-- Notify party levelups

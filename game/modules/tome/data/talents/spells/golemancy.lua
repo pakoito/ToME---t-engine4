@@ -207,9 +207,6 @@ newTalent{
 			return
 		end
 
-		-- Update Blighted Summoning effect if needed
-		if self:knowTalent(self.T_BLIGHTED_SUMMONING) then self:callTalent(self.T_BLIGHTED_SUMMONING,"doBlightedSummon",self.alchemy_golem)	end
-
 		local wait = function()
 			local co = coroutine.running()
 			local ok = false

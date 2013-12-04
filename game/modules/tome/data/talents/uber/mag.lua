@@ -117,28 +117,15 @@ uberTalent{
 uberTalent{
 	name = "Blighted Summoning",
 	mode = "passive",
-	updateGolem = function(self, t, tl)
-		local gol = self.alchemy_golem
-		if not gol then return end
-		gol:learnTalentType("corruption/reaving-combat", true)
-		local p = self.talents_learn_vals[t.id] or {}
-		if p.__tmpvals then
-			for i = 1, #p.__tmpvals do
-				self:removeTemporaryValue(p.__tmpvals[i][1], p.__tmpvals[i][2])
-			end
-			p.__tmpvals = nil
-		end
-		self.talents_learn_vals[t.id] = p
-		self:talentTemporaryValue(p, "alchemy_golem", {talents_inc_cap = {T_CORRUPTED_STRENGTH=tl}})
-		self:talentTemporaryValue(p, "alchemy_golem", {talents = {T_CORRUPTED_STRENGTH=tl}})
-	end,
-	
-	on_learn = function(self, t)
-		t.updateGolem(self, t, t.bonusTalentLevel(self, t))
-	end,
 	require = { special={desc="Have summoned at least 100 creatures affected by this talent. The alchemist golem counts as 100.", fct=function(self)
 		return self:attr("summoned_times") and self:attr("summoned_times") >= 100
 	end} },
+	on_learn = function(self, t)
+		local golem = self.alchemy_golem
+		if not golem then return end
+		golem:learnTalentType("corruption/reaving-combat", true)
+		golem:learnTalent(golem.T_CORRUPTED_STRENGTH, true, 3)
+	end,
 	bonusTalentLevel = function(self, t) return math.ceil(3*self.level/50) end, -- Talent level for summons
 	-- called by _M:addedToLevel and by _M:levelup in mod.class.Actor.lua
 	doBlightedSummon = function(self, t, who)
@@ -157,10 +144,6 @@ uberTalent{
 			who:learnTalent(who.T_VIMSENSE,true,tlevel)
 		elseif who.subtype == "minotaur" then
 			who:learnTalent(who.T_LIFE_TAP,true,tlevel)
-		elseif who == self.alchemy_golem then
-			-- Recheck talent level of golem any time it is refit in golemancy.lua
-			-- or on the master levelup in mod.class.Actor.lua _M:levelup
-			t.updateGolem(self, t, tlevel)
 		elseif who.name == "stone golem" then
 			who:learnTalent(who.T_BONE_SPEAR,true,tlevel)
 		elseif who.subtype == "ritch" then
