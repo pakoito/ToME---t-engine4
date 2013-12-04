@@ -35,7 +35,9 @@ function _M:init(title, store_inven, actor_inven, store_filter, actor_filter, ac
 	self.actor_inven = actor_inven
 	self.store_filter = store_filter
 	self.actor_filter = actor_filter
-	Dialog.init(self, title or "Store", math.max(800, game.w * 0.8), math.max(600, game.h * 0.8))
+	self.actor_actor = actor_actor
+	self.base_title = title or "Store"
+	Dialog.init(self, self:getStoreTitle(), math.max(800, game.w * 0.8), math.max(600, game.h * 0.8))
 
 	if store_actor.faction then
 		local i = Map.tiles:loadImage("faction/"..store_actor.faction..".png")
@@ -151,8 +153,13 @@ function _M:on_register()
 	game:onTickEnd(function() self.key:unicodeInput(true) end)
 end
 
+function _M:getStoreTitle()
+	return self.base_title..(" (Gold available: %0.2f)"):format(self.actor_actor.money)
+end
+
 function _M:updateStore()
 	self:generateList()
+	self:updateTitle(self:getStoreTitle())
 end
 
 function _M:select(item, force)
