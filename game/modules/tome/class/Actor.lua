@@ -439,13 +439,13 @@ function _M:actBase()
 	if self:attr("positive_at_rest") then
 		local v = self.positive_at_rest * self.max_positive / 100
 		if self:getPositive() > v or self:attr("positive_at_rest_disable") then self.positive_regen = -self.positive_regen_ref
-		elseif self:getPositive() < v then self.positive_regen = self.positive_regen_ref
+		elseif self:getPositive() < v then self.positive_regen = self.positive_regen_ref + (self.positive_regen_ref_mod or 0)
 		end
 	end
 	if self:attr("negative_at_rest") then
 		local v = self.negative_at_rest * self.max_negative / 100
 		if self:getNegative() > v or self:attr("negative_at_rest_disable")  then self.negative_regen = -self.negative_regen_ref
-		elseif self:getNegative() < v then self.negative_regen = self.negative_regen_ref
+		elseif self:getNegative() < v then self.negative_regen = self.negative_regen_ref + (self.negative_regen_ref_mod or 0)
 		end
 	end
 

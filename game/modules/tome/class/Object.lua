@@ -146,7 +146,7 @@ function _M:descAttribute(attr)
 		local stat, i = next(self.wielder.resists)
 		return (i and i > 0 and "+"..i or tostring(i)).."%"
 	elseif attr == "REGEN" then
-		local i = self.wielder.mana_regen or self.wielder.stamina_regen or self.wielder.life_regen or self.wielder.hate_regen or self.wielder.positive_regen_ref or self.wielder.negative_regen_ref
+		local i = self.wielder.mana_regen or self.wielder.stamina_regen or self.wielder.life_regen or self.wielder.hate_regen or self.wielder.positive_regen_ref_mod or self.wielder.negative_regen_ref_mod
 		return ("%s%0.2f/turn"):format(i > 0 and "+" or "-", math.abs(i))
 	elseif attr == "COMBAT" then
 		local c = self.combat
@@ -991,8 +991,8 @@ function _M:getTextualDesc(compare_with)
 		compare_fields(w, compare_with, field, "mana_regen", "%+.2f", "Mana each turn: ")
 		compare_fields(w, compare_with, field, "hate_regen", "%+.2f", "Hate each turn: ")
 		compare_fields(w, compare_with, field, "psi_regen", "%+.2f", "Psi each turn: ")
-		compare_fields(w, compare_with, field, "positive_regen_ref", "%+.2f", "P.Energy each turn: ")
-		compare_fields(w, compare_with, field, "negative_regen_ref", "%+.2f", "N.Energy each turn: ")
+		compare_fields(w, compare_with, field, "positive_regen_ref_mod", "%+.2f", "P.Energy each turn: ")
+		compare_fields(w, compare_with, field, "negative_regen_ref_mod", "%+.2f", "N.Energy each turn: ")
 
 		compare_fields(w, compare_with, field, "stamina_regen_when_hit", "%+.2f", "Stamina when hit: ")
 		compare_fields(w, compare_with, field, "mana_regen_when_hit", "%+.2f", "Mana when hit: ")
