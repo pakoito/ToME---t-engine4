@@ -43,6 +43,10 @@ local change_tactics = function(npc, player)
 	game.party:giveOrders(npc)
 end
 
+local change_control = function(npc, player)
+	game.party:select(npc)
+end
+
 local change_name = function(npc, player)
 	local d = require("engine.dialogs.GetText").new("Change your golem's name", "Name", 2, 25, function(name)
 		if name then
@@ -57,6 +61,7 @@ local ans = {
 	{"I want to change your equipment.", action=change_inven},
 	{"I want to change your talents.", action=change_talents},
 	{"I want to change your tactics.", action=change_tactics},
+	{"I want to take direct control.", action=change_control},
 	{"I want to change your name.", action=change_name},
 	{"Nothing, let's go."},
 }
