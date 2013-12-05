@@ -1807,12 +1807,13 @@ newEffect{
 	on_gain = function(self, err) return nil, "+Bloodbath" end,
 	on_lose = function(self, err) return nil, "-Bloodbath" end,
 	on_merge = function(self, old_eff, new_eff)
-		
 		if old_eff.cur_regen + new_eff.regen < new_eff.max then	game.logSeen(self, "%s's blood frenzy intensifies!", self.name:capitalize()) end
 		new_eff.templife_id = old_eff.templife_id
 		self:removeTemporaryValue("max_life", old_eff.life_id)
 		self:removeTemporaryValue("life_regen", old_eff.life_regen_id)
 		self:removeTemporaryValue("stamina_regen", old_eff.stamina_regen_id)
+		new_eff.particle1 = old_eff.particle1
+		new_eff.particle2 = old_eff.particle2
 
 		-- Take the new values, dont heal, otherwise you get a free heal each crit .. which is totaly broken
 		local v = new_eff.hp * self.max_life / 100

@@ -77,7 +77,7 @@ return {
 		if not config.settings.tome.weather_effects then return end
 
 		local Map = require "engine.Map"
-		level.foreground_particle = require("engine.Particles").new("snowing", 1, {width=Map.viewport.width, height=Map.viewport.height, r=0.65, g=0.25, b=1, rv=-0.001, gv=0, bv=-0.001, factor=2, dir=math.rad(110+180)})
+		level.foreground_particle = require("engine.Particles").new(core.shader.allow("distort") and "temporalsnow" or "snowing", 1, {width=Map.viewport.width, height=Map.viewport.height, r=0.65, g=0.25, b=1, rv=-0.001, gv=0, bv=-0.001, factor=2, dir=math.rad(110+180)})
 	end,
 
 	on_enter = function()

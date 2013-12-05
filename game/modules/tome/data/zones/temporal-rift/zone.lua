@@ -118,6 +118,9 @@ return {
 			else
 				level.background_particle = require("engine.Particles").new("starfield", 1, {width=Map.viewport.width, height=Map.viewport.height})
 			end
+			if config.settings.tome.weather_effects and core.shader.allow("distort") then
+				level.foreground_particle = require("engine.Particles").new("temporalsnow", 1, {width=Map.viewport.width, height=Map.viewport.height, r=0.65, g=0.25, b=1, rv=-0.001, gv=0, bv=-0.001, factor=2, dir=math.rad(110+180)})
+			end
 		end
 
 		if level.level <= 2 then
@@ -163,6 +166,11 @@ return {
 		else
 			game.zone:addEntity(game.level, g, "terrain", npc.x, npc.y)
 		end
+	end,
+
+	foreground = function(level, x, y, nb_keyframes)
+		if not config.settings.tome.weather_effects or not level.foreground_particle then return end
+		level.foreground_particle.ps:toScreen(x, y, true, 1)
 	end,
 
 	background = function(level, x, y, nb_keyframes)
