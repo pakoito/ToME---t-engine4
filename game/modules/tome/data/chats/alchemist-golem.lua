@@ -17,61 +17,31 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-local change_weapon = function(npc, player)
-	local inven = player:getInven("INVEN")
-	player:showInventory("Select a two-handed weapon for your golem.", inven, function(o) return o.type == "weapon" and o.twohanded end, function(o, item)
-		player:removeObject(inven, item, true)
-		local ro = npc:wearObject(o, true, true)
-		if ro then
-			if type(ro) == "table" then player:addObject(inven, ro) end
-		elseif not ro then
-			player:addObject(inven, o)
-		else
-			game.logPlayer(player, "Your golem equips: %s.", o:getName{do_color=true, no_count=true})
-		end
-		player:sortInven()
-		player:useEnergy()
-		return true
-	end)
+local change_inven = function(npc, player)
+	local d
+	local titleupdator = player:getEncumberTitleUpdator(("Equipment(%s) <=> Inventory(%s)"):format(npc.name:capitalize(), player.name:capitalize()))
+	d = require("mod.dialogs.ShowEquipInven").new(titleupdator(), npc, nil, function(o, inven, item, button, event)
+		if not o then return end
+		local ud = require("mod.dialogs.UseItemDialog").new(event == "button", npc, o, item, inven, function(_, _, _, stop)
+			d:generate()
+			d:generateList()
+			d:updateTitle(titleupdator())
+			if stop then game:unregisterDialog(d) end
+		end, true, player)
+		game:registerDialog(ud)
+	end, nil, player)
+	game:registerDialog(d)
 end
 
-local change_armour = function(npc, player)
-	local inven = player:getInven("INVEN")
-	player:showInventory("Select an armour (of any kind) for your golem.", inven, function(o) return o.type == "armor" and o.slot == "BODY" end, function(o, item)
-		player:removeObject(inven, item, true)
-		local ro = npc:wearObject(o, true, true)
-		if ro then
-			if type(ro) == "table" then player:addObject(inven, ro) end
-		elseif not ro then
-			player:addObject(inven, o)
-		else
-			game.logPlayer(player, "Your golem equips: %s.", o:getName{do_color=true, no_count=true})
-		end
-		player:sortInven()
-		player:useEnergy()
-		return true
-	end)
+local change_talents = function(npc, player)
+	local LevelupDialog = require "mod.dialogs.LevelupDialog"
+	local ds = LevelupDialog.new(npc, nil, nil)
+	game:registerDialog(ds)
 end
 
-local change_gem = function(npc, player, gemid)
-	local inven = player:getInven("INVEN")
-	player:showInventory("Select a gem for your golem.", inven, function(o) return o.type == "gem" and o.material_level and o.material_level <= player:getTalentLevelRaw(player.T_GEM_GOLEM) end, function(o, item)
-		o = player:removeObject(inven, item)
-		local gems = golem:getInven("GEM")
-		local old = golem:removeObject(gems, gemid)
-		if old then player:addObject(inven, old) end
-
-		-- Force "wield"
-		golem:addObject(gems, o)
-		game.logSeen(player, "%s sockets %s with %s.", player.name:capitalize(), golem.name, o:getName{do_color=true}:a_an())
-
-		player:sortInven()
-		player:useEnergy()
-		return true
-	end)
+local change_tactics = function(npc, player)
+	game.party:giveOrders(npc)
 end
-local change_gem1 = function(npc, player) return change_gem(npc, player, 1) end
-local change_gem2 = function(npc, player) return change_gem(npc, player, 2) end
 
 local change_name = function(npc, player)
 	local d = require("engine.dialogs.GetText").new("Change your golem's name", "Name", 2, 25, function(name)
@@ -84,18 +54,12 @@ local change_name = function(npc, player)
 end
 
 local ans = {
-	{"I want to change your weapon.", action=change_weapon},
-	{"I want to change your armour.", action=change_armour},
+	{"I want to change your equipment.", action=change_inven},
+	{"I want to change your talents.", action=change_talents},
+	{"I want to change your tactics.", action=change_tactics},
 	{"I want to change your name.", action=change_name},
 	{"Nothing, let's go."},
 }
-
-if player:knowTalent(player.T_GEM_GOLEM) then
-	local gem1 = golem:getInven("GEM")[1]
-	local gem2 = golem:getInven("GEM")[2]
-	table.insert(ans, 3, {("I want to change your first gem%s."):format(gem1 and "(currently: "..gem1:getName{}..")" or ""), action=change_gem1})
-	table.insert(ans, 4, {("I want to change your second gem%s."):format(gem2 and "(currently: "..gem2:getName{}..")" or ""), action=change_gem2})
-end
 
 newChat{ id="welcome",
 	text = [[#LIGHT_GREEN#*The golem talks in a monotonous voice*#WHITE#

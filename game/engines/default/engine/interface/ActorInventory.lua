@@ -330,6 +330,10 @@ function _M:canWearObject(o, try_slot)
 		end
 	end
 
+	-- Any custom checks
+	local err = self:check("canWearObjectCustom", o, try_slot)
+	if err then return nil, err end
+
 	return true
 end
 

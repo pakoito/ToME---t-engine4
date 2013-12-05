@@ -71,11 +71,14 @@ function _M:init(actor, on_finish, on_birth)
 	self.actor.__hidden_talent_types = self.actor.__hidden_talent_types or {}
 	self.actor.__increased_talent_types = self.actor.__increased_talent_types or {}
 
+	actor.last_learnt_talents = actor.last_learnt_talents or { class={}, generic={} }
 	self.actor_dup = backup(actor)
 	if actor.alchemy_golem then self.golem_dup = backup(actor.alchemy_golem) end
 
-	for _, v in pairs(game.engine.Birther.birth_descriptor_def) do
-		if v.type == "subclass" and v.name == actor.descriptor.subclass then self.desc_def = v break end
+	if actor.descriptor then
+		for _, v in pairs(game.engine.Birther.birth_descriptor_def) do
+			if v.type == "subclass" and v.name == actor.descriptor.subclass then self.desc_def = v break end
+		end
 	end
 
 	Dialog.init(self, "Levelup: "..actor.name, game.w * 0.9, game.h * 0.9, game.w * 0.05, game.h * 0.05)

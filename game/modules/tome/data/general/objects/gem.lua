@@ -43,7 +43,7 @@ local colors_attacks = {
 local function newGem(name, image, cost, rarity, color, min_level, max_level, tier, power, imbue, bomb)
 	-- Gems, randomly lootable
 	newEntity{ base = "BASE_GEM", define_as = "GEM_"..name:gsub(" ", "_"):upper(),
-		name = name:lower(), subtype = color,
+		name = name:lower(), subtype = color, slot = "GEM",
 		color = colors[color:upper()], image=image,
 		level_range = {min_level, max_level},
 		rarity = rarity, cost = cost * 10,

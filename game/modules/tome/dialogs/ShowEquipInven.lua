@@ -27,47 +27,49 @@ local Tab = require "engine.ui.Tab"
 
 module(..., package.seeall, class.inherit(Dialog))
 
-function _M:init(title, actor, filter, action, on_select)
+function _M:init(title, equip_actor, filter, action, on_select, inven_actor)
 	self.action = action
 	self.filter = filter
-	self.actor = actor
-	
+	inven_actor = inven_actor or equip_actor
+	self.equip_actor = equip_actor
+	self.inven_actor = inven_actor
+
 	game.tooltip.add_map_str = nil
 
 	Dialog.init(self, title or "Inventory", math.max(800, game.w * 0.8), math.max(600, game.h * 0.8))
 
-	self.c_main_set = Tab.new{title="Main Set", default=not actor.off_weapon_slots, fct=function() end, on_change=function(s) if s then self:switchSets("main") end end}
-	self.c_off_set = Tab.new{title="Off Set", default=actor.off_weapon_slots, fct=function() end, on_change=function(s) if s then self:switchSets("off") end end}
+	self.c_main_set = Tab.new{title="Main Set", default=not equip_actor.off_weapon_slots, fct=function() end, on_change=function(s) if s then self:switchSets("main") end end}
+	self.c_off_set = Tab.new{title="Off Set", default=equip_actor.off_weapon_slots, fct=function() end, on_change=function(s) if s then self:switchSets("off") end end}
 
 	-- Add tooltips
 	self.on_select = function(item)
 		if item.last_display_x and item.object then
 			local x
 			if self.focus_ui and self.focus_ui.ui == self.c_inven then x = self.c_inven._last_ox - game.tooltip.w end
-			game:tooltipDisplayAtMap(x or item.last_display_x, item.last_display_y, item.object:getDesc({do_color=true}, self.actor:getInven(item.object:wornInven())))
+			game:tooltipDisplayAtMap(x or item.last_display_x, item.last_display_y, item.object:getDesc({do_color=true}, self.equip_actor:getInven(item.object:wornInven())))
 		elseif item.last_display_x and item.data and item.data.desc then
 			game:tooltipDisplayAtMap(item.last_display_x, item.last_display_y, item.data.desc, {up=true})
 		end
 	end
 
-	self.c_doll = EquipDoll.new{actor=actor, drag_enable=true, filter=filter,
+	self.c_doll = EquipDoll.new{actor=equip_actor, drag_enable=true, filter=filter,
 		fct = function(item, button, event) self:use(item, button, event) end,
 		on_select = function(ui, inven, item, o) if ui.ui.last_display_x then self:select{last_display_x=ui.ui.last_display_x+ui.ui.w, last_display_y=ui.ui.last_display_y, object=o} end end,
 		actorWear = function(ui, wear_inven, wear_item, wear_o)
 			if ui:getItem() then 
-				local bi = self.actor:getInven(ui.inven)
-				local ws = self.actor:getInven(wear_o:wornInven())
-				local os = self.actor:getObjectOffslot(wear_o)
-				if bi and ((ws and ws.id == bi.id) or (os and self.actor:getInven(os).id == bi.id)) then
-					self.actor:doTakeoff(ui.inven, ui.item, ui:getItem(), true) 
+				local bi = self.equip_actor:getInven(ui.inven)
+				local ws = self.equip_actor:getInven(wear_o:wornInven())
+				local os = self.equip_actor:getObjectOffslot(wear_o)
+				if bi and ((ws and ws.id == bi.id) or (os and self.equip_actor:getInven(os).id == bi.id)) then
+					self.equip_actor:doTakeoff(ui.inven, ui.item, ui:getItem(), true, self.inven_actor)
 				end
 			end
-			self.actor:doWear(wear_inven, wear_item, wear_o)
+			self.equip_actor:doWear(wear_inven, wear_item, wear_o, self.inven_actor)
 			self.c_inven:generateList()
 		end
 	}
 
-	self.c_inven = Inventory.new{actor=actor, inven=actor:getInven("INVEN"), width=self.iw - 20 - self.c_doll.w, height=self.ih - 10, filter=filter,
+	self.c_inven = Inventory.new{actor=inven_actor, inven=inven_actor:getInven("INVEN"), width=self.iw - 20 - self.c_doll.w, height=self.ih - 10, filter=filter,
 		default_last_tabs = "all",
 		fct=function(item, sel, button, event) self:use(item, button, event) end,
 		select=function(item, sel) self:select(item) end,
@@ -92,6 +94,11 @@ function _M:init(title, actor, filter, action, on_select)
 	self:loadUI(uis)
 	self:setFocus(self.c_inven)
 	self:setupUI()
+
+	if not self.equip_actor.quickSwitchWeapons then
+		self:toggleDisplay(self.c_main_set, false)
+		self:toggleDisplay(self.c_off_set, false)
+	end
 	
 	local lock_tooltip = function()
 		if not game.tooltip.empty then
@@ -155,13 +162,14 @@ function _M:init(title, actor, filter, action, on_select)
 end
 
 function _M:switchSets(which)
-	if which == "main" and not self.actor.off_weapon_slots then return end
-	if which == "off" and self.actor.off_weapon_slots then return end
+	if not self.equip_actor.quickSwitchWeapons then return end
+	if which == "main" and not self.equip_actor.off_weapon_slots then return end
+	if which == "off" and self.equip_actor.off_weapon_slots then return end
 
-	self.actor:quickSwitchWeapons()
+	self.equip_actor:quickSwitchWeapons()
 
-	self.c_main_set.selected = not self.actor.off_weapon_slots
-	self.c_off_set.selected = self.actor.off_weapon_slots
+	self.c_main_set.selected = not self.equip_actor.off_weapon_slots
+	self.c_off_set.selected = self.equip_actor.off_weapon_slots
 end
 
 function _M:firstDisplay()
@@ -174,7 +182,8 @@ function _M:on_register()
 end
 
 function _M:defineHotkey(id)
-	if not self.actor or not self.actor.hotkey then return end
+	if self.equip_actor ~= self.inven_actor then return end
+	if not self.equip_actor or not self.equip_actor.hotkey then return end
 
 	local item = nil
 	if self.focus_ui and self.focus_ui.ui == self.c_inven then item = self.c_inven.c_inven.list[self.c_inven.c_inven.sel]
@@ -182,9 +191,9 @@ function _M:defineHotkey(id)
 	end
 	if not item or not item.object then return end
 
-	self.actor.hotkey[id] = {"inventory", item.object:getName{no_add_name=true, no_count=true}}
+	self.equip_actor.hotkey[id] = {"inventory", item.object:getName{no_add_name=true, no_count=true}}
 	self:simplePopup("Hotkey "..id.." assigned", item.object:getName{no_add_name=true, no_count=true}:capitalize().." assigned to hotkey "..id)
-	self.actor.changed = true
+	self.equip_actor.changed = true
 end
 
 function _M:select(item, force)
@@ -202,7 +211,7 @@ function _M:use(item, button, event)
 end
 
 function _M:unload()
-	for inven_id = 1, #self.actor.inven_def do if self.actor.inven[inven_id] then for item, o in ipairs(self.actor.inven[inven_id]) do o.__new_pickup = nil end end end
+	for inven_id = 1, #self.inven_actor.inven_def do if self.inven_actor.inven[inven_id] then for item, o in ipairs(self.inven_actor.inven[inven_id]) do o.__new_pickup = nil end end end
 end
 
 function _M:updateTitle(title)
@@ -211,7 +220,7 @@ function _M:updateTitle(title)
 	local green = colors.LIGHT_GREEN
 	local red = colors.LIGHT_RED
 
-	local enc, max = self.actor:getEncumbrance(), self.actor:getMaxEncumbrance()
+	local enc, max = self.equip_actor:getEncumbrance(), self.equip_actor:getMaxEncumbrance()
 	local v = math.min(enc, max) / max
 	self.title_fill = self.iw * v
 	self.title_fill_color = {
@@ -236,8 +245,8 @@ end
 
 function _M:onDragTakeoff()
 	local drag = game.mouse.dragged.payload
-	if drag.kind == "inventory" and drag.inven and self.actor:getInven(drag.inven) and self.actor:getInven(drag.inven).worn then
-		self.actor:doTakeoff(drag.inven, drag.item_idx, drag.object)
+	if drag.kind == "inventory" and drag.inven and self.equip_actor:getInven(drag.inven) and self.equip_actor:getInven(drag.inven).worn then
+		self.equip_actor:doTakeoff(drag.inven, drag.item_idx, drag.object, nil, self.inven_actor)
 		self.c_inven:generateList()
 		game.mouse:usedDrag()
 	end

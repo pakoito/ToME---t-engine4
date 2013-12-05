@@ -43,6 +43,13 @@ local function makeGolem(self)
 		combat = { dam=10, atk=10, apr=0, dammod={str=1} },
 
 		body = { INVEN = 1000, QS_MAINHAND = 1, QS_OFFHAND = 1, MAINHAND = 1, OFFHAND = 1, BODY=1, GEM=2 },
+		canWearObjectCustom = function(self, o)
+			if o.type ~= "gem" then return end
+			if not self.summoner then return "Golem has no master" end
+			if not self.summoner:knowTalent(self.summoner.T_GEM_GOLEM) then return "Runic Golem talent required" end
+			if not o.material_level then return "impossible to use this gem" end
+			if o.material_level > self.summoner:getTalentLevelRaw(self.summoner.T_GEM_GOLEM) then return "Runic Golem talent too low for this gem" end
+		end,
 		equipdoll = "alchemist_golem",
 		infravision = 10,
 		rank = 3,
@@ -151,8 +158,41 @@ local function makeGolem(self)
 end
 
 newTalent{
+	name = "Interact with the Golem", short_name = "INTERACT_GOLEM",
+	type = {"spell/golemancy-base", 1},
+	require = spells_req1,
+	points = 1,
+	mana = 10,
+	no_energy = true,
+	no_npc_use = true,
+	no_unlearn_last = true,
+	action = function(self, t)
+		if not self.alchemy_golem then return end
+
+		local on_level = false
+		for x = 0, game.level.map.w - 1 do for y = 0, game.level.map.h - 1 do 
+			local act = game.level.map(x, y, Map.ACTOR)
+			if act and act == self.alchemy_golem then on_level = true break end
+		end end
+
+		-- talk to the golem
+		if game.level:hasEntity(self.alchemy_golem) and on_level then
+			local chat = Chat.new("alchemist-golem", self.alchemy_golem, self, {golem=self.alchemy_golem, player=self})
+			chat:invoke()
+		end
+		return true
+	end,
+	info = function(self, t)
+		return ([[Interact with your golem to check its inventory, talents, ...
+		Note: You can also do that while taking direct control of the golem.]]):
+		format()
+	end,
+}
+
+newTalent{
 	name = "Refit Golem",
 	type = {"spell/golemancy-base", 1},
+	autolearn_talent = "T_INTERACT_GOLEM",
 	require = spells_req1,
 	points = 1,
 	cooldown = 20,
@@ -230,11 +270,9 @@ newTalent{
 			if act and act == self.alchemy_golem then on_level = true break end
 		end end
 
-		-- talk to the golem
 		if game.level:hasEntity(self.alchemy_golem) and on_level and self.alchemy_golem.life >= self.alchemy_golem.max_life then
-			local chat = Chat.new("alchemist-golem", self.alchemy_golem, self, {golem=self.alchemy_golem, player=self})
-			chat:invoke()
-
+			-- nothing
+			return nil
 		-- heal the golem
 		elseif ((game.level:hasEntity(self.alchemy_golem) and on_level) or self:hasEffect(self.EFF_GOLEM_MOUNT)) and self.alchemy_golem.life < self.alchemy_golem.max_life then
 			if not ammo or ammo:getNumber() < 2 then
@@ -279,10 +317,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		local heal = t.getHeal(self, t)
-		return ([[Interact with your golem!
-		- If it is destroyed, you will take some time to reconstruct it (this takes 15 alchemist gems).
-		- If it is alive but hurt, you will be able to repair it for %d (takes 2 alchemist gems). Spellpower, alchemist gem and Golem Power talent all influence the healing done.
-		- If it is alive and unhurt, you can rename it, or adjust its equipment or gems.]]):
+		return ([[Take care of your golem:
+		- If it is destroyed, you will take some time to reconstruct it (this takes 15 alchemist gems and 20 turns).
+		- If it is alive but hurt, you will be able to repair it for %d (takes 2 alchemist gems). Spellpower, alchemist gem and Golem Power talent all influence the healing done.]]):
 		format(heal)
 	end,
 }

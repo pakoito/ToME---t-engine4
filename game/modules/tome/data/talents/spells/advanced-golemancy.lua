@@ -69,7 +69,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Insert a pair of gems into your golem, providing it with the gem bonuses and changing its melee attack damage type. You may remove the gems and insert different ones; this does not destroy the gems you remove.
 		Gem level usable: %d
-		Gem changing is done when refitting your golem (use Refit Golem at full life).]]):format(self:getTalentLevelRaw(t))
+		Gem changing is done in the golem's inventory.]]):format(self:getTalentLevelRaw(t))
 	end,
 }
 

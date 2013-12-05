@@ -1057,93 +1057,6 @@ function _M:hotkeyInventory(name)
 	end
 end
 
-function _M:doDrop(inven, item, on_done, nb)
-	if self.no_inventory_access then return end
-
-	local o = self:getInven(inven) and self:getInven(inven)[item]
-	if o and o.plot then
-		game.logPlayer(self, "You can not drop %s (plot item).", o:getName{do_colour=true})
-		return
-	end
-
-	if o and o.__tagged then
-		game.logPlayer(self, "You can not drop %s (tagged).", o:getName{do_colour=true})
-		return
-	end
-
-	if game.zone.wilderness then
-		Dialog:yesnoLongPopup("Warning", "You cannot drop items on the world map.\nIf you drop it, it will be lost forever.", 300, function(ret)
-			-- The test is reversed because the buttons are reversed, to prevent mistakes
-			if not ret then
-				local o = self:getInven(inven) and self:getInven(inven)[item]
-				if o and not o.plot then
-					if o:check("on_drop", self) then return end
-					local o = self:removeObject(inven, item, true)
-					game.logPlayer(self, "You destroy %s.", o:getName{do_colour=true, do_count=true})
-					self:sortInven()
-					self:useEnergy()
-					if on_done then on_done() end
-				elseif o then
-					game.logPlayer(self, "You can not destroy %s.", o:getName{do_colour=true})
-				end
-			end
-		end, "Cancel", "Destroy", true)
-		return
-	end
-	if nb == nil or nb >= self:getInven(inven)[item]:getNumber() then
-		self:dropFloor(inven, item, true, true)
-	else
-		for i = 1, nb do self:dropFloor(inven, item, true) end
-	end
-	self:sortInven(inven)
-	self:useEnergy()
-	self.changed = true
-	game:playSound("actions/drop")
-	if on_done then on_done() end
-end
-
-function _M:doWear(inven, item, o)
-	if self.no_inventory_access then return end
-	self:removeObject(inven, item, true)
-	local ro = self:wearObject(o, true, true)
-	if ro then
-		if not self:attr("quick_wear_takeoff") or self:attr("quick_wear_takeoff_disable") then self:useEnergy() end
-		if self:attr("quick_wear_takeoff") then self:setEffect(self.EFF_SWIFT_HANDS_CD, 1, {}) self.tmp[self.EFF_SWIFT_HANDS_CD].dur = 0 end
-		if type(ro) == "table" then self:addObject(inven, ro) end
-	elseif not ro then
-		self:addObject(inven, o)
-	end
-	self:sortInven()
-	self:playerCheckSustains()
-	self.changed = true
-end
-
-function _M:doTakeoff(inven, item, o, simple)
-	if self.no_inventory_access then return end
-	if self:takeoffObject(inven, item) then
-		self:addObject(self.INVEN_INVEN, o)
-	end
-	if not simple then
-		self:sortInven()
-		if not self:attr("quick_wear_takeoff") or self:attr("quick_wear_takeoff_disable") then self:useEnergy() end
-		if self:attr("quick_wear_takeoff") then self:setEffect(self.EFF_SWIFT_HANDS_CD, 1, {}) self.tmp[self.EFF_SWIFT_HANDS_CD].dur = 0 end
-	end
-	self:playerCheckSustains()
-	self.changed = true
-end
-
-function _M:getEncumberTitleUpdator(title)
-	return function()
-		local enc, max = self:getEncumbrance(), self:getMaxEncumbrance()
-		local color = "#00ff00#"
-		if enc > max then color = "#ff0000#"
-		elseif enc > max * 0.9 then color = "#ff8a00#"
-		elseif enc > max * 0.75 then color = "#fcff00#"
-		end
-		return ("%s - %sEncumbrance %d/%d"):format(title, color, enc, max)
-	end
-end
-
 function _M:playerPickup()
 	-- If 2 or more objects, display a pickup dialog, otherwise just picks up
 	if game.level.map:getObject(self.x, self.y, 2) then
@@ -1427,8 +1340,6 @@ function _M:playerCheckSustains()
 end
 
 function _M:playerLevelup(on_finish, on_birth)
-	package.loaded["mod.dialogs.LevelupDialog"] = nil
-	package.loaded["mod.dialogs.elements.TalentTrees"] = nil
 	local LevelupDialog = require "mod.dialogs.LevelupDialog"
 	local ds = LevelupDialog.new(self, on_finish, on_birth)
 	game:registerDialog(ds)

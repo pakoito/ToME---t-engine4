@@ -27,8 +27,9 @@ local PartySendItem = require "mod.dialogs.PartySendItem"
 
 module(..., package.seeall, class.inherit(engine.ui.Dialog))
 
-function _M:init(center_mouse, actor, object, item, inven, onuse, no_use)
+function _M:init(center_mouse, actor, object, item, inven, onuse, no_use, dst_actor)
 	self.actor = actor
+	self.dst_actor = dst_actor
 	self.object = object
 	self.inven = inven
 	self.item = item
@@ -82,10 +83,10 @@ function _M:use(item)
 			self.actor:doDrop(self.inven, self.item, function() self.onuse(self.inven, self.item, self.object, false) end)
 		end
 	elseif act == "wear" then
-		self.actor:doWear(self.inven, self.item, self.object)
+		self.actor:doWear(self.inven, self.item, self.object, self.dst_actor)
 		self.onuse(self.inven, self.item, self.object, false)
 	elseif act == "takeoff" then
-		self.actor:doTakeoff(self.inven, self.item, self.object)
+		self.actor:doTakeoff(self.inven, self.item, self.object, nil, self.dst_actor)
 		self.onuse(self.inven, self.item, self.object, false)
 	elseif act == "transfer" then
 		game:registerDialog(PartySendItem.new(self.actor, self.object, self.inven, self.item, function()
@@ -130,13 +131,13 @@ function _M:generateList()
 	local transmo_chest = self.actor:attr("has_transmo")
 
 	if not self.object:isIdentified() and self.actor:attr("auto_id") and self.actor:attr("auto_id") >= 2 then list[#list+1] = {name="Identify", action="identify"} end
-	if self.object.__transmo then list[#list+1] = {name="Move to normal inventory", action="toinven"} end
-	if not self.object.__transmo and not self.no_use_allowed then if self.object:canUseObject() then list[#list+1] = {name="Use", action="use"} end end
+	if not self.dst_actor and self.object.__transmo then list[#list+1] = {name="Move to normal inventory", action="toinven"} end
+	if not self.dst_actor and not self.object.__transmo and not self.no_use_allowed then if self.object:canUseObject() then list[#list+1] = {name="Use", action="use"} end end
 	if self.inven == self.actor.INVEN_INVEN and self.object:wornInven() and self.actor:getInven(self.object:wornInven()) then list[#list+1] = {name="Wield/Wear", action="wear"} end
 	if not self.object.__transmo then if self.inven ~= self.actor.INVEN_INVEN and self.object:wornInven() then list[#list+1] = {name="Take off", action="takeoff"} end end
-	if not self.object.__tagged and self.inven == self.actor.INVEN_INVEN then list[#list+1] = {name="Drop", action="drop"} end
-	if self.inven == self.actor.INVEN_INVEN and game.party:countInventoryAble() >= 2 then list[#list+1] = {name="Transfer to party", action="transfer"} end
-	if not self.object.__tagged and self.inven == self.actor.INVEN_INVEN and transmo_chest and self.actor:transmoFilter(self.object) then list[#list+1] = {name=self.actor:transmoGetWord():capitalize().." now", action="transmo"} end
+	if not self.dst_actor and not self.object.__tagged and self.inven == self.actor.INVEN_INVEN then list[#list+1] = {name="Drop", action="drop"} end
+	if not self.dst_actor and self.inven == self.actor.INVEN_INVEN and game.party:countInventoryAble() >= 2 then list[#list+1] = {name="Transfer to party", action="transfer"} end
+	if not self.dst_actor and not self.object.__tagged and self.inven == self.actor.INVEN_INVEN and transmo_chest and self.actor:transmoFilter(self.object) then list[#list+1] = {name=self.actor:transmoGetWord():capitalize().." now", action="transmo"} end
 	if profile.auth and profile.hash_valid then list[#list+1] = {name="Link item in chat", action="chat-link"} end
 	if config.settings.cheat then list[#list+1] = {name="Lua inspect", action="debug-inspect", color=colors.simple(colors.LIGHT_BLUE)} end
 	if not self.object.__tagged then list[#list+1] = {name="Tag", action="tag"} end
