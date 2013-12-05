@@ -17,6 +17,8 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local Particles = require "engine.Particles"
+
 newBirthDescriptor{
 	type = "class",
 	name = "Afflicted",
