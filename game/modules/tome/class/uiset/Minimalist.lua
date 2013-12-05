@@ -148,12 +148,14 @@ local pf_bg_x, pf_bg_y = 0, 0
 local pf_bg = {core.display.loadImage("/data/gfx/ui/playerframe/back.png"):glTexture()}
 local pf_shadow = {core.display.loadImage("/data/gfx/ui/playerframe/shadow.png"):glTexture()}
 local pf_defend = {core.display.loadImage("/data/gfx/ui/playerframe/defend.png"):glTexture()}
+local pf_attackdefend_x, pf_attackdefend_y = 0, 0
 local pf_attack = {core.display.loadImage("/data/gfx/ui/playerframe/attack.png"):glTexture()}
 local pf_levelup = {core.display.loadImage("/data/gfx/ui/playerframe/levelup.png"):glTexture()}
 local pf_encumber = {core.display.loadImage("/data/gfx/ui/playerframe/encumber.png"):glTexture()}
 local pf_exp = {core.display.loadImage("/data/gfx/ui/playerframe/exp.png"):glTexture()}
 local pf_exp_levelup = {core.display.loadImage("/data/gfx/ui/playerframe/exp_levelup.png"):glTexture()}
 
+local mm_bg_x, mm_bg_y = 0, 0
 local mm_bg = {core.display.loadImage("/data/gfx/ui/minimap/back.png"):glTexture()}
 local mm_comp = {core.display.loadImage("/data/gfx/ui/minimap/compass.png"):glTexture()}
 local mm_shadow = {core.display.loadImage("/data/gfx/ui/minimap/shadow.png"):glTexture()}
@@ -1557,9 +1559,9 @@ function _M:displayPlayer(scale, bx, by)
 	player:toScreen(nil, 22, 22, 40, 40)
 
 	if (not config.settings.tome.actor_based_movement_mode and self or player).bump_attack_disabled then
-		pf_defend[1]:toScreenFull(22, 67, pf_defend[6], pf_defend[7], pf_defend[2], pf_defend[3])
+		pf_defend[1]:toScreenFull(22 + pf_attackdefend_x, 67 + pf_attackdefend_y, pf_defend[6], pf_defend[7], pf_defend[2], pf_defend[3])
 	else
-		pf_attack[1]:toScreenFull(22, 67, pf_attack[6], pf_attack[7], pf_attack[2], pf_attack[3])
+		pf_attack[1]:toScreenFull(22 + pf_attackdefend_x, 67 + pf_attackdefend_y, pf_attack[6], pf_attack[7], pf_attack[2], pf_attack[3])
 	end
 
 	if player.unused_stats > 0 or player.unused_talents > 0 or player.unused_generics > 0 or player.unused_talents_types > 0 then
@@ -1660,14 +1662,14 @@ function _M:displayMinimap(scale, bx, by)
 	local map = game.level.map
 
 	mm_shadow[1]:toScreenFull(0, 2, mm_shadow[6], mm_shadow[7], mm_shadow[2], mm_shadow[3])
-	mm_bg[1]:toScreenFull(0, 0, mm_bg[6], mm_bg[7], mm_bg[2], mm_bg[3])
+	mm_bg[1]:toScreenFull(mm_bg_x, mm_bg_y, mm_bg[6], mm_bg[7], mm_bg[2], mm_bg[3])
 	if game.player.x then game.minimap_scroll_x, game.minimap_scroll_y = util.bound(game.player.x - 25, 0, map.w - 50), util.bound(game.player.y - 25, 0, map.h - 50)
 	else game.minimap_scroll_x, game.minimap_scroll_y = 0, 0 end
 
-	mm_comp[1]:toScreenFull(169, 178, mm_comp[6], mm_comp[7], mm_comp[2], mm_comp[3])
+	map:minimapDisplay(50 - mm_bg_x, 30 - mm_bg_y, game.minimap_scroll_x, game.minimap_scroll_y, 50, 50, 0.85)
+	mm_transp[1]:toScreenFull(50 - mm_bg_x, 30 - mm_bg_y, mm_transp[6], mm_transp[7], mm_transp[2], mm_transp[3])
 
-	map:minimapDisplay(50, 30, game.minimap_scroll_x, game.minimap_scroll_y, 50, 50, 0.85)
-	mm_transp[1]:toScreenFull(50, 30, mm_transp[6], mm_transp[7], mm_transp[2], mm_transp[3])
+	mm_comp[1]:toScreenFull(169, 178, mm_comp[6], mm_comp[7], mm_comp[2], mm_comp[3])
 
 	if not self.locked then
 		move_handle[1]:toScreenFull(self.mhandle_pos.minimap.x, self.mhandle_pos.minimap.y, move_handle[6], move_handle[7], move_handle[2], move_handle[3])
