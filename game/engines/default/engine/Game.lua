@@ -20,7 +20,6 @@
 require "engine.class"
 require "engine.Mouse"
 require "engine.DebugConsole"
-require "engine.dialogs.ShowErrorStack"
 local Shader = require "engine.Shader"
 
 --- Represent a game
@@ -239,7 +238,7 @@ function _M:tick()
 	-- Check out any possible errors
 	local errs = core.game.checkError()
 	if errs then
-		self:registerDialog(engine.dialogs.ShowErrorStack.new(errs))
+		self:registerDialog(require("engine.dialogs.ShowErrorStack").new(errs))
 	end
 
 	local stop = {}

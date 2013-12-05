@@ -23,7 +23,7 @@ local Focusable = require "engine.ui.Focusable"
 
 --- A generic UI button
 module(..., package.seeall, class.inherit(Base, Focusable))
-
+util.show_backtrace()
 frame_ox1 = -5
 frame_ox2 = 5
 frame_oy1 = -5

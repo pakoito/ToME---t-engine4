@@ -25,34 +25,9 @@ local Entity = require "engine.Entity"
 Entity.ascii_outline = {x=2, y=2, r=0, g=0, b=0, a=0.8}
 
 -- This file loads the game module, and loads data
-local Savefile = require "engine.Savefile"
-local KeyBind = require "engine.KeyBind"
-local DamageType = require "engine.DamageType"
-local Faction = require "engine.Faction"
-local Map = require "engine.Map"
-local MapEffects = require "mod.class.MapEffects" -- This alters Map
-local Level = require "engine.Level"
-local Tiles = require "engine.Tiles"
-local InventoryUI = require "engine.ui.Inventory"
-local ActorStats = require "engine.interface.ActorStats"
-local ActorResource = require "engine.interface.ActorResource"
-local ActorTalents = require "engine.interface.ActorTalents"
-local ActorTemporaryEffects = require "engine.interface.ActorTemporaryEffects"
-local ActorAI = require "engine.interface.ActorAI"
-local ActorInventory = require "engine.interface.ActorInventory"
-local ActorLevel = require "engine.interface.ActorLevel"
-local Birther = require "engine.Birther"
-local Store = require "mod.class.Store"
-local WorldAchievements = require "mod.class.interface.WorldAchievements"
-local PartyLore = require "mod.class.interface.PartyLore"
-local PartyIngredients = require "mod.class.interface.PartyIngredients"
-local PlayerHotkeys = require "engine.interface.PlayerHotkeys"
-local Quest = require "engine.Quest"
 local UIBase = require "engine.ui.Base"
-
-Savefile:setSaveMD5Type("game")
-Savefile:setSaveMD5Type("level")
-Savefile:setSaveMD5Type("zone")
+local Map = require "engine.Map"
+local Level = require "engine.Level"
 
 -- Init settings
 config.settings.tome = config.settings.tome or {}
@@ -122,6 +97,31 @@ else
 	UIBase.font_mono_h = 	UIBase.font_mono:lineSkip()
 	UIBase.font_bold_h = 	UIBase.font_bold:lineSkip()
 end
+
+local Savefile = require "engine.Savefile"
+local KeyBind = require "engine.KeyBind"
+local DamageType = require "engine.DamageType"
+local Faction = require "engine.Faction"
+local MapEffects = require "mod.class.MapEffects" -- This alters Map
+local Tiles = require "engine.Tiles"
+local InventoryUI = require "engine.ui.Inventory"
+local ActorStats = require "engine.interface.ActorStats"
+local ActorResource = require "engine.interface.ActorResource"
+local ActorTalents = require "engine.interface.ActorTalents"
+local ActorTemporaryEffects = require "engine.interface.ActorTemporaryEffects"
+local ActorAI = require "engine.interface.ActorAI"
+local ActorInventory = require "engine.interface.ActorInventory"
+local ActorLevel = require "engine.interface.ActorLevel"
+local Birther = require "engine.Birther"
+local Store = require "mod.class.Store"
+local WorldAchievements = require "mod.class.interface.WorldAchievements"
+local PartyLore = require "mod.class.interface.PartyLore"
+local PartyIngredients = require "mod.class.interface.PartyIngredients"
+local PlayerHotkeys = require "engine.interface.PlayerHotkeys"
+local Quest = require "engine.Quest"
+Savefile:setSaveMD5Type("game")
+Savefile:setSaveMD5Type("level")
+Savefile:setSaveMD5Type("zone")
 
 -- Define how quick hotkeys are saved
 PlayerHotkeys.quickhotkeys_specifics = {
