@@ -23,6 +23,7 @@ local life = life or 10
 local fullradius = (radius or 0.5) * engine.Map.tile_w
 local basespeed = fullradius / life
 local points = {}
+baseradius = baseradius or 14
 
 for fork_i = 1, nb_circles or 5 do
 	local size = 2
