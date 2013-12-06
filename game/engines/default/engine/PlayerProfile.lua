@@ -514,10 +514,15 @@ end
 function _M:eventPushCode(e)
 	local f, err = loadstring(e.code)
 	if not f then
---		core.profile.pushOrder("o='GetNews'")
+		if e.return_uuid then
+			core.profile.pushOrder(string.format("o='CodeReturn' uuid=%q data=%q", e.return_uuid, table.serialize{error=err}))
+		end
 	else
 		local ok, err = pcall(f)
 		if config.settings.cheat then print(ok, err) end
+		if e.return_uuid then
+			core.profile.pushOrder(string.format("o='CodeReturn' uuid=%q data=%q", e.return_uuid, table.serialize{result=ok and err, error=not ok and err}))
+		end
 	end
 end
 

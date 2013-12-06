@@ -23,7 +23,7 @@ local UserChat = require "profile-thread.UserChat"
 
 module(..., package.seeall, class.make)
 
-local debug = false
+local debug = true
 
 local mport = debug and 2259 or 2257
 local pport = debug and 2260 or 2258
@@ -656,11 +656,20 @@ end
 -- Pushes comming from the push socket
 --------------------------------------------------------------------
 
+function _M:orderCodeReturn(o)
+	self:command("ARET", "RETURN", o.uuid, #o.data)
+	if self:read("200") then self.sock:send(o.data) end
+end
+
 function _M:pushCode(e)
 	if e.profile then
 		local f = loadstring(e.code)
 		if f then pcall(f) end
 	else
-		cprofile.pushEvent(string.format("e='PushCode' code=%q", e.code))
+		if e.return_uuid then
+			cprofile.pushEvent(string.format("e='PushCode' return_uuid=%q code=%q", e.return_uuid, e.code))
+		else
+			cprofile.pushEvent(string.format("e='PushCode' code=%q", e.code))
+		end
 	end
 end
