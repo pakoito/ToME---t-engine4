@@ -1379,7 +1379,7 @@ newEffect{
 
 newEffect{
 	name = "PROB_TRAVEL_UNSTABLE", image = "talents/probability_travel.png",
-	desc = "Time Prison",
+	desc = "Unstable Probabilites",
 	long_desc = function(self, eff) return "The target has recently blinked through a wall using probability travel." end,
 	type = "other",
 	subtype = { time=true, space=true },
