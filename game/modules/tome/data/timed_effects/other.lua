@@ -1884,6 +1884,7 @@ newEffect{
 		self.hotkey = nil -- Prevent assigning hotkey, we just did
 		self:learnTalent(self.T_REVISIONIST_HISTORY_BACK, true, 1, {no_unlearn=true})
 		self.hotkey = ohk
+		self:startTalentCooldown(self.T_REVISIONIST_HISTORY)
 	end,
 	deactivate = function(self, eff)
 		if eff.back_in_time then game:onTickEnd(function()
@@ -1897,9 +1898,11 @@ newEffect{
 			game.logPlayer(game.player, "#LIGHT_BLUE#You go back in time to rewrite history!")
 			game:chronoRestore("revisionist_history", true)
 			game._chronoworlds = nil
+			game.player.talents_cd[self.T_REVISIONIST_HISTORY] = nil
 			game.player:startTalentCooldown(self.T_REVISIONIST_HISTORY)
 		end) else
 			game._chronoworlds = nil
+			game.player.talents_cd[self.T_REVISIONIST_HISTORY] = nil
 			self:startTalentCooldown(self.T_REVISIONIST_HISTORY)
 
 			if self.hotkey and self.isHotkeyBound then
