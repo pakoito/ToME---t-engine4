@@ -101,7 +101,6 @@ newTalent{
 		if game.party and game.party:hasMember(self) then
 			for act, def in pairs(game.party.members) do
 				if act.summoner and act.summoner == self then
-					print("=======", act.type, act.subtype, act.name)
 					if act.type == "undead" and act.subtype == "husk" then return false end
 				end
 			end
@@ -121,7 +120,7 @@ newTalent{
 			DamageType:get(DamageType.DARKNESS).projector(self, px, py, DamageType.DARKNESS, dam)
 			m.die = olddie
 			game.level.map:particleEmitter(px, py, 1, "dark")
-			if 100 * m.life / m.max_life <= t.getMaxLife(self, t) and self:checkHit(self:combatSpellpower(), m:combatSpellResist()) and m:canBe("instakill") and m.rank < 3.5 and not m:attr("undead") and not m.summoner and not m.summon_time then
+			if 100 * m.life / m.max_life <= t.getMaxLife(self, t) and self:checkHit(self:combatSpellpower(), m:combatSpellResist()) and m:canBe("instakill") and m.rank <= 3 and not m:attr("undead") and not m.summoner and not m.summon_time then
 				m.type = "undead"
 				m.subtype = "husk"
 				m:attr("no_life_regen", 1)
@@ -129,6 +128,7 @@ newTalent{
 				m.ai_state.tactic_leash = 100
 				m.remove_from_party_on_death = true
 				m.no_inventory_access = true
+				m.no_party_reward = true
 				m.life = m.max_life
 				m.move_others = true
 				m.summoner = self
@@ -141,6 +141,9 @@ newTalent{
 				m.unused_generics = 0
 				m.unused_talents_types = 0
 				m.silent_levelup = true
+				m.clone_on_hit = nil
+				if m:knowTalent(m.T_BONE_SHIELD) then m:unlearnTalent(m.T_BONE_SHIELD, m:getTalentLevelRaw(m.T_BONE_SHIELD)) end
+				if m:knowTalent(m.T_MULTIPLY) then m:unlearnTalent(m.T_MULTIPLY, m:getTalentLevelRaw(m.T_MULTIPLY)) end
 				m.no_points_on_levelup = true
 				m.faction = self.faction
 				m:removeEffectsFilter({status="detrimental"}, nil, true)

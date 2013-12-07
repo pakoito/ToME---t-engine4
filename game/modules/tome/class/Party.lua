@@ -414,6 +414,9 @@ function _M:canReward(actor)
 	if actor.summon_time then
 		return false
 	end
+	if actor.no_party_reward then
+		return false
+	end
 	return true
 end
 

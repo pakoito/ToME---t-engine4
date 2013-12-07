@@ -137,6 +137,7 @@ newEntity{ base = "BASE_NPC_MAJOR_DEMON",
 	autolevel = "caster",
 	life_rating = 6,
 	combat_armor = 0, combat_def = 10,
+	equilibrium_regen = -100, -- Because they have vim spells
 
 	ai = "tactical",
 
