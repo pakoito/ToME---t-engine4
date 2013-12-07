@@ -94,8 +94,6 @@ Mouse: Hover over stat for info
 
 	self.c_desc = SurfaceZone.new{width=self.iw, height=self.ih - self.c_general.h - self.vs.h - self.c_tut.h,alpha=0}
 
-	self.hoffset = 17 + math.max(self.c_tut.h, self.c_playtime.h) + self.vs.h + self.c_general.h
-
 	self:loadUI{
 		{left=0, top=0, ui=self.c_tut},
 		{left=self.iw * 0.5, top=0, ui=self.c_playtime},
@@ -157,29 +155,19 @@ function _M:tabTabs()
 end
 
 function _M:mouseZones(t, no_new)
-	-- Offset the x and y with the window position and window title
-	if not t.norestrict then
-		for i, z in ipairs(t) do
-			if not z.norestrict then
-				z.x = z.x + self.display_x + 5
-				z.y = z.y + self.display_y + 20 + 3
-			end
-		end
-	end
-
-	if not no_new then self.mouse = engine.Mouse.new() end
-	self.mouse:registerZones(t)
+	self.c_desc.mouse:registerZones(t)
+	self.c_desc.can_focus = true
 end
 
 function _M:mouseTooltip(text, _, _, _, w, h, x, y)
 	self:mouseZones({
-		{ x=x, y=y+self.hoffset, w=w, h=h, fct=function(button) game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, text) end},
+		{ x=x, y=y, w=w, h=h, fct=function(button) game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, text) end},
 	}, true)
 end
 
 function _M:mouseLink(link, text, _, _, _, w, h, x, y)
 	self:mouseZones({
-		{ x=x, y=y + self.hoffset, w=w, h=h, fct=function(button)
+		{ x=x, y=y, w=w, h=h, fct=function(button)
 			game.tooltip_x, game.tooltip_y = 1, 1; game:tooltipDisplayAtMap(game.w, game.h, text)
 			if button == "left" then
 				util.browserOpenUrl(link)
@@ -190,9 +178,10 @@ end
 
 function _M:drawDialog(kind, actor_to_compare)
 	--actor_to_compare = actor_to_compare or {}
-	self.mouse:reset()
+	self.c_desc.mouse:reset()
+	self.c_desc.key:reset()
 
-	self:setupUI()
+--	self:setupUI()
 
 	local player = self.actor
 	local s = self.c_desc.s
@@ -964,7 +953,7 @@ function _M:drawDialog(kind, actor_to_compare)
 		end
 	end
 
-	self.c_desc:generate()
+	self.c_desc:update()
 	self.changed = false
 end
 
