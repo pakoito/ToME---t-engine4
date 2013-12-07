@@ -26,8 +26,8 @@ newChat{ id="welcome",
 You also notice he does not wield his greatsword. It seems to float in the air, bound to his will.*#WHITE#
 Why did you save me, stranger? You are not of the Way.]],
 	answers = {
-		{"So I could rip your throat myself!", action=function(npc, player) npc:checkAngered(player, false, -200) end},
 		{"Well, you seemed to need help.", jump="kindness"},
+		{"So I could rip your throat myself!", action=function(npc, player) npc:checkAngered(player, false, -200) end},
 	}
 }
 
