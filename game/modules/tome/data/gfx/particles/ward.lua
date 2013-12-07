@@ -44,10 +44,10 @@ return { generator = function()
 		r = color.r/255,   rv = 0, ra = 0,
 		g = color.g/255,   gv = 0, ga = 0,
 		b = color.b/255,   gv = 0, ga = 0,
-		a = rng.range(130, 165)/255,   av = 0, aa = 0,
+		a = rng.range(180, 240)/255,   av = 0, aa = 0,
 	}
 end, },
 function(self)
-	if first then self.ps:emit(10) first = false end
+	if first then self.ps:emit(1) first = false end
 end,
-10, "particles_images/shieldimg"
+1, "particles_images/shieldimg"

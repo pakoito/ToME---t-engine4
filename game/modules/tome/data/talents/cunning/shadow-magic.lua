@@ -113,9 +113,9 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y then return nil end
-		local _ _, _, _, x, y = self:canProject(tg, x, y)
+		local nop, _, _, x, y = self:canProject(tg, x, y)
 		local target = game.level.map(x, y, Map.ACTOR)
-		if not game.level.map.seens(x, y) then return nil end
+		if not (nop and game.level.map.seens(x, y)) then return nil end
 
 		local tx, ty = util.findFreeGrid(x, y, 20, true, {[engine.Map.ACTOR]=true})
 		self:move(tx, ty, true)

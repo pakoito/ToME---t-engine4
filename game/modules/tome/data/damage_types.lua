@@ -102,7 +102,9 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 		if target:hasEffect(target.EFF_WARD) then
 			local e = target.tempeffect_def[target.EFF_WARD]
 			dam = e.absorb(type, dam, target.tmp[target.EFF_WARD], target, src)
-			game:delayedLogDamage(src, target, 0, ("%s(%d warded)#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", lastdam-dam), false)
+			if dam ~= lastdam then
+				game:delayedLogDamage(src, target, 0, ("%s(%d warded)#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", lastdam-dam), false)
+			end
 		end
 
 		-- Block talent from shields
