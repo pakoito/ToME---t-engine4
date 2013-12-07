@@ -52,7 +52,7 @@ newEntity{
 	rarity = 8,
 
 	charm_power_def = {add=4, max=15, floor=true},
-	resolvers.charm("light the area (rad %d)", 5, function(self, who)
+	resolvers.charm("light the area around you (rad %d)", 5, function(self, who)
 		who:project({type="ball", range=0, selffire=true, radius=self:getCharmPower(who)}, who.x, who.y, engine.DamageType.LITE, 1)
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
 		return {id=true, used=true}
@@ -66,7 +66,7 @@ newEntity{
 	rarity = 14,
 
 	charm_power_def = {add=resolvers.genericlast(function(e) return e.material_level * 8 end), max=100, floor=true},
-	resolvers.charm("try to disarm any known traps in a line (disarm power %d)", 15, function(self, who)
+	resolvers.charm("try to disarm traps in a line (disarm power %d)", 15, function(self, who)
 		local tg = {type="beam", range=2 + who:getMag(2)}
 		local x, y = who:getTarget(tg)
 		if not x or not y then return nil end

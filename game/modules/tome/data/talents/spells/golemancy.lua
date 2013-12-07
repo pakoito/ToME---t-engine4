@@ -210,6 +210,11 @@ newTalent{
 	on_learn = function(self, t)
 		if self:getTalentLevelRaw(t) == 1 and not self.innate_alchemy_golem then
 			t.invoke_golem(self, t)
+			if self:knowTalent(self.T_BLIGHTED_SUMMONING) then
+				local golem = self.alchemy_golem
+				golem:learnTalentType("corruption/reaving-combat", true)
+				golem:learnTalent(golem.T_CORRUPTED_STRENGTH, true, 3)
+			end
 		end
 	end,
 	on_unlearn = function(self, t)

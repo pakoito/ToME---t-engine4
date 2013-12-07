@@ -195,7 +195,7 @@ uberTalent{
 		- Jelly: Vimsense
 		- Minotaur: Life Tap
 		- Golem: Bone Spear
-		- Alchemy Golems: Corrupted Strength and the Reaving Combat tree
+		- Alchemy Golems: Corrupted Strength (level 3) and the Reaving Combat tree
 		- Ritch: Drain
 		- Hydra: Blood Spray
 		- Rimebark: Poison Storm
