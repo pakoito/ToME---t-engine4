@@ -3459,6 +3459,7 @@ function _M:learnPool(t)
 	end
 	if t.paradox or t.sustain_paradox then
 		self:checkPool(t.id, self.T_PARADOX_POOL)
+		self:checkPool(t.id, self.T_SPACETIME_TUNING)
 	end
 	if t.psi or t.sustain_psi then
 		self:checkPool(t.id, self.T_PSI_POOL)

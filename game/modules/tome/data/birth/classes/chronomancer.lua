@@ -83,7 +83,6 @@ newBirthDescriptor{
 		["cunning/survival"]={false, 0},
 	},
 	talents = {
-		[ActorTalents.T_SPACETIME_TUNING] = 1,
 		[ActorTalents.T_STATIC_HISTORY] = 1,
 		[ActorTalents.T_DIMENSIONAL_STEP] = 1,
 		[ActorTalents.T_DUST_TO_DUST] = 1,
@@ -137,7 +136,6 @@ newBirthDescriptor{
 	birth_example_particles = "temporal_focus",
 	talents = {
 		[ActorTalents.T_SHOOT] = 1,
-		[ActorTalents.T_SPACETIME_TUNING] = 1,
 		[ActorTalents.T_WEAPON_COMBAT] = 1,
 		[ActorTalents.T_DUAL_STRIKE] = 1,
 		[ActorTalents.T_CELERITY] = 1,
