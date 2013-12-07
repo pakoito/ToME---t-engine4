@@ -78,10 +78,8 @@ Mouse: Hover over stat for info
 	local all_kills_kind = self.actor.all_kills_kind or {}
 	local playtimetext = ([[#GOLD#Days adventuring / current month:#LAST# %d / %s
 #GOLD#Time playing:#LAST# %s
-#GOLD#Creatures killed:     #ANTIQUE_WHITE#%d
-#GOLD#Elites killed:        #YELLOW#%d
-#GOLD#Rares/uniques killed: #SALMON#%d
-#GOLD#Bosses killed:        #ORANGE#%d
+#GOLD#Creatures killed:           #ANTIQUE_WHITE#%d
+#GOLD#Elites/Rares/Bosses killed: #YELLOW#%d/#SALMON#%d/#ORANGE#%d
 ]]):format(
 		game.turn / game.calendar.DAY,
 		game.calendar:getMonthName(game.calendar:getDayOfYear(game.turn)),
@@ -100,7 +98,7 @@ Mouse: Hover over stat for info
 
 	self:loadUI{
 		{left=0, top=0, ui=self.c_tut},
-		{left=self.iw * 0.6, top=0, ui=self.c_playtime},
+		{left=self.iw * 0.5, top=0, ui=self.c_playtime},
 		{left=15, top=self.c_tut.h, ui=self.c_general},
 		{left=15+self.c_general.w, top=self.c_tut.h, ui=self.c_attack},
 		{left=15+self.c_general.w+self.c_attack.w, top=self.c_tut.h, ui=self.c_defence},
