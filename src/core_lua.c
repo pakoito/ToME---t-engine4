@@ -1796,6 +1796,7 @@ static int sdl_surface_update_texture(lua_State *L)
 static int sdl_surface_to_texture(lua_State *L)
 {
 	SDL_Surface **s = (SDL_Surface**)auxiliar_checkclass(L, "sdl{surface}", 1);
+	bool nearest = lua_toboolean(L, 2);
 
 	GLuint *t = (GLuint*)lua_newuserdata(L, sizeof(GLuint));
 	auxiliar_setclass(L, "gl{texture}", -1);
@@ -1805,6 +1806,7 @@ static int sdl_surface_to_texture(lua_State *L)
 
 	int fw, fh;
 	make_texture_for_surface(*s, &fw, &fh, false);
+	if (nearest) glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	copy_surface_to_texture(*s);
 
 	lua_pushnumber(L, fw);
