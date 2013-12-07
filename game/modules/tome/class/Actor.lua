@@ -698,6 +698,12 @@ function _M:act()
 
 	if self.sound_random and rng.chance(self.sound_random_chance or 15) then game:playSoundNear(self, self.sound_random) end
 
+	-- Cauterize ?
+	if self:hasEffect(self.EFF_CAUTERIZE) then
+		local eff = self:hasEffect(self.EFF_CAUTERIZE)
+		if eff.invulnerable then eff.invulnerable = nil end
+	end
+
 	return true
 end
 

@@ -2213,7 +2213,8 @@ newEffect{
 	end,
 	on_timeout = function(self, eff)
 		if eff.invulnerable then
-			eff.invulnerable = nil
+			eff.dur = eff.dur + 1
+			return
 		end
 		local dead, val = self:takeHit(eff.dam, self, {special_death_msg="burnt to death by cauterize"})
 
