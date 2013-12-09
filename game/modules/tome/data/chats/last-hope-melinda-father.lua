@@ -80,7 +80,7 @@ newChat{ id="scars",
 	text = [[Yes it has mostly healed, though I still do nightmares. I feel like something is still lurking.
 Ah well, the bad dreams are still better than the fate you saved me from!]],
 	answers = {
-		{"Shall I come across a way to help you during my travels I will try to help.", quick_reply="Thank you, you are most welcome."},
+		{"Should I come across a way to help you during my travels, I will try to help.", quick_reply="Thank you, you are most welcome."},
 		{"Most certainly, so what are your plans now?", jump="plans"},
 	}
 }
@@ -88,12 +88,12 @@ newChat{ id="rewelcome",
 	text = [[Hi @playername@! I am feeling better now, even starting to grow restless...]],
 	answers = {
 		{"So what are your plans now?", jump="plans"},
-		{"About that, I was thinking that maybe you'd like to hang out sometime?", jump="hiton", cond=function() return not ql.inlove and not ql.nolove end},
+		{"About that, I was thinking that maybe you'd like to go out with me sometime ...", jump="hiton", cond=function() return not ql.inlove and not ql.nolove end},
 	}
 }
 newChat{ id="rewelcome-love",
 	text = [[#LIGHT_GREEN#*Melinda appears at the door and kisses you*#WHITE#
-Hi my dear, so happy to see you!]],
+Hi my dear, I'm so happy to see you!]],
 	answers = {
 		{"I am still looking out for an explanation of what happened at the beach."},
 		{"About what happened on the beach, I think I have found something.", jump="home1", cond=function() return ql:isStatus(engine.Quest.COMPLETED, "can_come_fortress") end},
@@ -106,7 +106,7 @@ local is_mage = (p.faction == "angolwen") or p:isQuestStatus("mage-apprentice", 
 newChat{ id="plans",
 	text = [[I do not know yet, my father won't let me out until I'm fully healed. I've always wanted to do so many things.
 That is why I got stuck in that crypt, I want to see the world.
-My father gave me some funds to take my future in hands. I have some friends in Derth, maybe open my own little shop there. ]]..(
+My father gave me some funds so that I can take my future into my own hands. I have some friends in Derth, maybe I will open my own little shop there. ]]..(
 is_am and
 	[[I have seen how you fought those corruptors, the way you destroyed their magic. I want to learn to do the same, so that such horrors never happen again. To anyone.]]
 or (is_mage and
@@ -117,16 +117,16 @@ or [[]])),
 		{"Derth has its up and downs but I think they could do with a smart girl yes.", action=function() ql.wants_to = "derth" end, quick_reply="Thanks!"},
 	} or {
 		{"Derth has its up and downs but I think they could do with a smart girl yes.", action=function() ql.wants_to = "derth" end, quick_reply="Thanks!"},
-		{"You wish to join our noble crusade against magic, wonderful! I will talk to them for you.", action=function() ql.wants_to = "antimagic" end, cond=function() return is_am end, quick_reply="That would be very nice!"},
+		{"You wish to join our noble crusade against magic? Wonderful! I will talk to them for you.", action=function() ql.wants_to = "antimagic" end, cond=function() return is_am end, quick_reply="That would be very nice!"},
 		{"I happen to be welcome among the people of Angolwen, I could say a word for you.", action=function() ql.wants_to = "magic" end, cond=function() return is_mage end, quick_reply="That would be very nice!"},
 	}
 }
 
 newChat{ id="hiton",
-	text = [[Wait, so you think that the fact you rescued me from moderately-to-extremely certain death means you're entitled to sleep with me?!]],
+	text = [[What?!?  Just because you rescued me from a moderately-to-extremely gruesome death, you think that entitles you to take liberties?!]],
 	answers = {
 		{"WHY AREN'T WOMEN ATTRACTED TO ME I'M A NICE "..(p.female and "GIRL" or "GUY")..".", quick_reply="Uhh, sorry I hear my father calling, see you.", action=function() ql.nolove = true end},
-		{"Wait, I just meant -", jump="reassurance"},
+		{"Just a minute, I was just ...", jump="reassurance"},
 	}
 }
 
@@ -164,14 +164,14 @@ newChat{ id="home2",
 	text = [[An ancient fortress of a mythical race?! How #{bold}#exciting#{normal}#!
 And you say it could cure me?]],
 	answers = {
-		{"The Fortress seems to think so. I know this might sound highly inappropriate but you would need to come live there, at least for a while.", jump="home3"},
+		{"The Fortress seems to think so. I know this might sound a bit .. inappropriate .. but you would need to come live there, at least for a while.", jump="home3"},
 	}
 }
 
 newChat{ id="home3",
 	text = [[#LIGHT_GREEN#*She looks at you cheerfully*#WHITE#
-Ah the plan to sleep with me finally unfolds!
-Shhh you dummy, I thought we were past such silliness, I will come, both for my health and my own pleasure.
+Ah the plan to sleep with me is finally revealed!
+Shhh you dummy, I thought we were past such silliness, I will come, both for my health and because I want to be with you.
 #LIGHT_GREEN#*She kisses you tenderly*#WHITE#]],
 	answers = {
 		{"Then my lady, if you will follow me. #LIGHT_GREEN#[take her to the Fortress]", action=function(npc, player)
@@ -180,7 +180,6 @@ Shhh you dummy, I thought we were past such silliness, I will come, both for my 
 		end},
 	}
 }
-
 
 end
 

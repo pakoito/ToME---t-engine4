@@ -18,10 +18,24 @@
 -- darkgod@te4.org
 
 newChat{ id="welcome",
-	text = [[This was such a lovely idea!
-I've had a great time.]],
+
+	text = [[#LIGHT_GREEN#*The two of you spend some time relaxing on the beach.
+The air is fresh, the sand shimmers, and the surf roars softly.*#WHITE#
+
+This was such a lovely idea!
+I have had a wonderful time with you today.
+
+#LIGHT_GREEN#*She looks longingly into your eyes.*#WHITE#]],
 	answers = {
-		{"Me too, now let's head back to Last Hope.", action=function() game.zone.start_yaech() end},
+		{"#LIGHT_GREEN#[Lean closer and kiss her]#WHITE#", action=function() game.zone.start_yaech() end, jump="firstbase"},
+	}
+}
+
+newChat{ id="firstbase",
+	text = [[Just before your lips touch, you sense that something is very wrong.
+]],
+	answers = {
+		{"#LIGHT_GREEN#[Continue...]#WHITE#"},
 	}
 }
 

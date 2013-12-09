@@ -101,7 +101,7 @@ return {
 	end,
 
 	start_yaech = function()
-		game.level.data.yaech_start_in = 20
+		game.level.data.yaech_start_in = 10
 	end,
 
 	more_spawn = function()
@@ -116,6 +116,7 @@ return {
 				m:setTarget(melinda)
 			end
 		end
+		game.level.data.blight_start_in = 30
 	end,
 
 	on_turn = function(self)
@@ -137,14 +138,25 @@ return {
 							if game.level.data.nb_yaech_killed >= 4 then
 								local melinda = game.party:findMember{type="Girlfriend"}
 								if melinda then
-									game.bignews:saySimple(120, "#DARK_GREEN#Melinda seems to glow with uneerie forces!")
+									game.bignews:say(120, "#DARK_GREEN#Melinda begins to glow with an eerie aura!")
 									melinda.self_resurrect = 1
+									melinda.resists = {}									
 									game.zone.more_spawn()
 								end
 								game.level.data.nb_yaech_killed = nil
 							end
 						end end
 					end
+				end
+			end
+		end
+		if game.level.data.blight_start_in then
+			game.level.data.blight_start_in = game.level.data.blight_start_in - 1
+			if game.level.data.blight_start_in < 0 then
+				game.level.data.blight_start_in = nil
+				local melinda = game.party:findMember{type="Girlfriend"}
+				if melinda then
+					melinda:die(melinda)
 				end
 			end
 		end

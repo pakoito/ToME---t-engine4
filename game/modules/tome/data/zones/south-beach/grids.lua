@@ -56,6 +56,7 @@ newEntity{
 			local chat = require("engine.Chat").new("melinda-beach-end", melinda, game.player)
 			chat:invoke()
 		else
+-- chat if you successfully defend her?
 			game.log("You have not finished your romantic time at the beach.")
 		end
 		return true

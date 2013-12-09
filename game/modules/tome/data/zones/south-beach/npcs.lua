@@ -53,7 +53,6 @@ newEntity{
 	combat_armor = 3, combat_def = 3,
 
 	on_resurrect = function(self)
-		game.bignews:saySimple(120, "#DARK_GREEN#As Melinda is about to die a powerful wave of blight emantes from her!")
 		game.level.map:particleEmitter(self.x, self.y, 10, "ball_blight", {radius=10})
 		local list = {}
 		for uid, e in pairs(game.level.entities) do
@@ -65,6 +64,7 @@ newEntity{
 		end
 		self:doEmote("What..! Please lets run!", 120)
 		game.player:setQuestStatus("love-melinda", engine.Quest.COMPLETED, "saved-beach")
+		game.bignews:say(120, "#DARK_GREEN#As Melinda is about to die a powerful wave of blight emanates from her!")
 	end,
 
 	on_die = function(self)
