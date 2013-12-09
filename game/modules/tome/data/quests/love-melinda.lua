@@ -105,6 +105,7 @@ function melindaCompanion(self, who, c, sc)
 	birth:apply()
 	melinda.image = "player/cornac_female_redhair.png"
 	melinda.moddable_tile_base = "base_redhead_01.png"
+	melinda.moddable_tile_ornament = {female="braid_redhead_01"}
 
 	melinda:resolve() melinda:resolve(nil, true)
 	melinda:removeAllMOs()

@@ -55,9 +55,9 @@ start_ambush = function(self, who)
 	who.die = function(self)
 		self.dead = false
 		self.die = nil
-		self.life = 1
+		self.life = self.max_life
 		for _, e in pairs(game.level.entities) do
-			if e ~= self and self:reactionToward(e) < 0 then
+			if not game.party:hasMember(e) then
 				game.level:removeEntity(e)
 				e.dead = true
 			end
