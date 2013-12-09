@@ -78,6 +78,13 @@ newEntity{
 }
 
 newEntity{
+	define_as = "TELEPORT_OUT_MELINDA",
+	name = "teleportation circle for Melinda", image = "terrain/solidwall/solid_floor1.png", add_displays = {class.new{image="terrain/maze_teleport.png"}},
+	display = '>', color_r=255, color_g=0, color_b=255,
+	notice = true, show_tooltip = true,
+}
+
+newEntity{
 	define_as = "COMMAND_ORB",
 	name = "Sher'Tul Control Orb", image = "terrain/solidwall/solid_floor1.png",
 	add_displays = {class.new{image="terrain/shertul_control_orb_blue.png",

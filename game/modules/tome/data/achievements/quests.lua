@@ -324,3 +324,8 @@ newAchievement{
 	show = "name",
 	desc = [[Destroyed the corrupted oozemancer.]],
 }
+newAchievement{
+	name = "Lucky Girl", id = "MELINDA_LUCKY",
+	show = "name",
+	desc = [[Saved Melinda again and invited her to the Fortress to cure her.]],
+}

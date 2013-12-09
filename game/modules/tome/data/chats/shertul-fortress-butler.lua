@@ -19,6 +19,7 @@
 
 local has_rod = function(npc, player) return player:findInAllInventoriesBy("define_as", "ROD_OF_RECALL") end
 local q = game.player:hasQuest("shertul-fortress")
+local ql = game.player:hasQuest("love-melinda")
 local set = function(what) return function(npc, player) q:setStatus(q.COMPLETED, "chat-"..what) end end
 local isNotSet = function(what) return function(npc, player) return not q:isCompleted("chat-"..what) end end
 
@@ -26,11 +27,6 @@ newChat{ id="welcome",
 	text = [[*#LIGHT_GREEN#The creature slowly turns to you. You hear its terrible voice directly in your head.#WHITE#*
 Welcome, master.]],
 	answers = {
-		{"You asked me to come, about a farportal?", jump="farportal", cond=function() return q:isCompleted("farportal") and not q:isCompleted("farportal-spawn") end},
-		{"You asked me to come, about the rod of recall?", jump="recall", cond=function() return q:isCompleted("recall") and not q:isCompleted("recall-done") end},
-		{"Would it be possible for my Transmogrification Chest to automatically extract gems?", jump="transmo-gems", cond=function(npc, player) return not q:isCompleted("transmo-chest-extract-gems") and q:isCompleted("transmo-chest") and player:knowTalent(player.T_EXTRACT_GEMS) end},
-		{"Are there any training facilities?", jump="training", cond=function() return not q:isCompleted("training") end},
-		{"I find your appearance unsettling. Any way you can change it?", jump="changetile", cond=function() return q:isCompleted("recall-done") end},
 		{"What are you, and what is this place?", jump="what", cond=isNotSet"what", action=set"what"},
 		{"Master? I am not your mas...", jump="master", cond=isNotSet"master", action=set"master"},
 		{"Why do I understand you? The texts are unreadable to me.", jump="understand", cond=isNotSet"understand", action=set"understand"},
@@ -41,6 +37,12 @@ Welcome, master.]],
 				local cloak = player:findInAllInventoriesBy("define_as", "CLOAK_DECEPTION")
 				return not q:isCompleted("permanent-cloak") and q:isCompleted("transmo-chest") and cloak
 		end},
+		{"You asked me to come, about a farportal?", jump="farportal", cond=function() return q:isCompleted("farportal") and not q:isCompleted("farportal-spawn") end},
+		{"You asked me to come, about the rod of recall?", jump="recall", cond=function() return q:isCompleted("recall") and not q:isCompleted("recall-done") end},
+		{"Would it be possible for my Transmogrification Chest to automatically extract gems?", jump="transmo-gems", cond=function(npc, player) return not q:isCompleted("transmo-chest-extract-gems") and q:isCompleted("transmo-chest") and player:knowTalent(player.T_EXTRACT_GEMS) end},
+		{"Are there any training facilities?", jump="training", cond=function() return not q:isCompleted("training") end},
+		{"I find your appearance unsettling. Any way you can change it?", jump="changetile", cond=function() return q:isCompleted("recall-done") end},
+		{"I have come upon a strange thing indeed. #LIGHT_GREEN#[tell him about Melinda]", jump="cure-melinda", cond=function() return ql and ql:isStatus(engine.Quest.COMPLETED, "saved-beach") and not ql:isStatus(engine.Quest.FAILED) and not ql:isStatus(engine.Quest.COMPLETED, "can_come_fortress") end},
 		{"[leave]"},
 	}
 }
@@ -204,6 +206,16 @@ However, I suggest you still carry it with you in case something manages to remo
 			cloak.upgraded_cloak = true
 			q.shertul_energy = q.shertul_energy - 10
 			q:setStatus(engine.Quest.COMPLETED, "permanent-cloak")
+		end},
+	}
+}
+
+newChat{ id="cure-melinda",
+	text = [[Demonic taint. Yes I have a way to help in the archives. However this is a long process, the subject will need to live here for a while.
+She will have to spend 8 hours per day in the regeneration tank.]],
+	answers = {
+		{"This is great news! I will tell her at once.", action=function(npc, player)
+		player:setQuestStatus("love-melinda", engine.Quest.COMPLETED, "can_come_fortress")
 		end},
 	}
 }

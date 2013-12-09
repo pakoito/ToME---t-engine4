@@ -21,19 +21,27 @@ name = "Melinda, lucky girl"
 desc = function(self, who)
 	local desc = {}
 	desc[#desc+1] = "After rescuing Melinda from Kryl-Feijan and the cultists you met her again in Last Hope."
-	if who.female then
-		desc[#desc+1] = "You talked for a while and it seems she has a crush on you, even though you are yourself a woman."
-	else
-		desc[#desc+1] = "You talked for a while and it seems she has a crush on you."
+	if self:isCompleted("saved-beach") then
+		desc[#desc+1] = "Melinda was saved from the brink of death at the beach, by a strange wave of blight."
+	end
+	if self:isCompleted("death-beach") then
+		desc[#desc+1] = "Melinda died to a Yaech raiding party at the beach."
+	end
+	if self:isCompleted("can_come_fortress") then
+		desc[#desc+1] = "The Fortress Shadow said she could be cured."
 	end
 	if self:isCompleted("moved-in") then
 		desc[#desc+1] = "Melinda decided to come live with you in your Fortress."
+	end
+	if self:isCompleted("portal-done") then
+		desc[#desc+1] = "The Fortress Shadow has established a portal for her so she can come and go freely."
 	end
 	return table.concat(desc, "\n")
 end
 
 function onWin(self, who)
 	if who.dead then return end
+	if not self.inlove then return end
 	return 10, {
 		"After your victory you came back to Last Hope and reunited with Melinda, who after many years remains free of demonic corruption.",
 		"You lived together and led a happy life. Melinda even learned a few adventurer's tricks and you both traveled Eyal, making new legends.",
@@ -48,6 +56,7 @@ function spawnFortress(self, who) game:onTickEnd(function()
 		image = "player/cornac_female_redhair.png",
 		moddable_tile = "human_female",
 		moddable_tile_base = "base_redhead_01.png",
+		moddable_tile_ornament = {female="braid_redhead_01"},
 		desc = [[You saved her from the depth of a cultists lair and fell in love with her. She has moved in the Fortress to see you more often.]],
 		autolevel = "tank",
 		ai = "none",
@@ -107,4 +116,8 @@ function melindaCompanion(self, who, c, sc)
 		control="full", type="companion", title="Melinda",
 		orders = {target=true, leash=true, anchor=true, talents=true, behavior=true},
 	})
+end
+
+function toBeach(self, who)
+	game:changeLevel(1, "south-beach", {direct_switch=true})
 end

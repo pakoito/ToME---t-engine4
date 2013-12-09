@@ -37,6 +37,7 @@ require "mod.class.interface.ActorInscriptions"
 local Faction = require "engine.Faction"
 local Dialog = require "engine.ui.Dialog"
 local Map = require "engine.Map"
+local Chat = require "engine.Chat"
 local DamageType = require "engine.DamageType"
 
 module(..., package.seeall, class.inherit(
@@ -2295,6 +2296,58 @@ end
 
 function _M:die(src, death_note)
 	if self.dead then self:disappear(src) self:deleteFromMap(game.level.map) return true end
+
+	-- Self resurrect, mouhaha!
+	if self:attr("self_resurrect") then
+		self:attr("self_resurrect", -1)
+		game.logSeen(self, "#LIGHT_RED#%s rises from the dead!", self.name:capitalize()) -- src, not self as the source, to make sure the player knows his doom ;>
+		local sx, sy = game.level.map:getTileToScreen(self.x, self.y)
+		game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, -3, "RESURRECT!", {255,120,0})
+
+		local effs = {}
+
+		-- Go through all spell effects
+		for eff_id, p in pairs(self.tmp) do
+			local e = self.tempeffect_def[eff_id]
+			effs[#effs+1] = {"effect", eff_id}
+		end
+
+		-- Go through all sustained spells
+		for tid, act in pairs(self.sustain_talents) do
+			if act then
+				effs[#effs+1] = {"talent", tid}
+			end
+		end
+
+		while #effs > 0 do
+			local eff = rng.tableRemove(effs)
+
+			if eff[1] == "effect" then
+				self:removeEffect(eff[2])
+			else
+				self:forceUseTalent(eff[2], {ignore_energy=true})
+			end
+		end
+		self.life = self.max_life
+		self.mana = self.max_mana
+		self.stamina = self.max_stamina
+		self.equilibrium = 0
+		self.air = self.max_air
+
+		self.dead = false
+		self.died = (self.died or 0) + 1
+		self:move(self.x, self.y, true)
+
+		self:check("on_resurrect", "basic_resurrect")
+
+		if self:attr("self_resurrect_chat") then
+			local chat = Chat.new(self.self_resurrect_chat, self, game.player)
+			chat:invoke()
+			self.self_resurrect_chat = nil
+		end
+
+		return
+	end
 
 	mod.class.interface.ActorLife.die(self, src, death_note)
 

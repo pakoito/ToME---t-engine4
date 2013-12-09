@@ -138,6 +138,13 @@ function _M:hasEntity(e)
 	return self.entities[e.uid]
 end
 
+--- Find an entity
+function _M:findEntity(filter)
+	for uid, e in pairs(self.entities) do
+		if filter.define_as and e.define_as == filter.define_as then return e end
+	end
+end
+
 --- Serialization
 function _M:save()
 	return class.save(self, {entities_list=true})

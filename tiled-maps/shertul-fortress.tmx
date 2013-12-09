@@ -26,6 +26,11 @@
     <property name="value" value="&quot;TELEPORT_OUT&quot;"/>
    </properties>
   </tile>
+  <tile id="55">
+   <properties>
+    <property name="display" value="|"/>
+   </properties>
+  </tile>
   <tile id="75">
    <properties>
     <property name="display" value="="/>
@@ -142,7 +147,7 @@
  </tileset>
  <layer name="Terrain" width="60" height="60">
   <data encoding="base64" compression="zlib">
-   eJzt1k0OgjAQBWB2bD0MiZfwCC71fup9XLn0Xy9gSCBpalva0naY6Vu8EMHE+ZhhcNM0zcYzWwHxtcLLM/Cm93aGSPSanNRueOGN9Z4mrBdh3tr6C29d3oNw71SPS1tLeHU7hTG391mZ1+aS6HU9o61A79Fgpt5RVP2V6HW5pHpD7wO8vLz683vTzt0t31uCd6wn1usbaq9eD4X3NRzfw/GTyWuqx+Z1vXvmWHPNgmt+fea5v7bW6rgGeh+FvT412XaWqY4U86xe2ynpP39neleeNbWRljHnyN/onXvFO6fHIfOs9rdr/vtQqr8U+0r16s8vp33l+z5y9Zejd2o/u343xTznSuz/SXjN3tBzHL2u+1DKldIbO6fwyvNS7aUl9HcJgddvP3MNvPDCyzfwwgsv38ALL7x8Ay+88PJNbd4fJsyoWw==
+   eJzt1k0OgjAQBWB2bD0MiZfwCC71fup9XLn0Xy9gSCBpalva0naY6Vu8EMHE+ZhhcNM0zcYzWwHxtcLLM/Cm93aGSPSanNRueOGN9Z4mrBdh3tr6C29d3oNw71SPS1tLeHU7hTG391mZ1+aS6HU9o61A79Fgpt5RVP2V6HW5pHpD7wO8vLz683vTzt0t31uCd6wn1usbaq9eD4X3NRzfw/GTyWuqx+Z1vXvmWHPNgmt+fea5v7bW6rgGeh+FvT412XaWqY4U86xe2ynpP39neleeNbWRljHnyN/onXvFO6fHIfOs9rdr/vtQqr8U+8rl5bSvfN9H0rxT+9n1uynmOVdi/0/Ca/aGnuPodd2HUq6U3tg5hVeel2ovLaG/Swi8fvuZa+CFF16+gRdeePkGXnjh5Rt44YWXb2rz/gDV+ahY
   </data>
  </layer>
  <objectgroup color="#ff0000" name="Actor" width="60" height="60">
@@ -163,7 +168,7 @@
   <object name="portal back" x="549" y="997" width="21" height="21">
    <properties>
     <property name="subtype" value="&quot;back&quot;"/>
-    <property name="type" value="&quot;portal&quot;"/>
+    <property name="type" value="&quot;portal-melinda&quot;"/>
    </properties>
   </object>
   <object x="36" y="929" width="19" height="23">

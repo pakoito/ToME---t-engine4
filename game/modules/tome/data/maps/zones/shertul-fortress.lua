@@ -31,6 +31,7 @@ defineTile("h", "OLD_FLOOR", nil, "WEIRDLING_BEAST")
 defineTile("G", "GREEN_DRAPPING")
 defineTile("&", "FARPORTAL")
 defineTile("*", "TELEPORT_OUT")
+defineTile("|", "TELEPORT_OUT_MELINDA")
 defineTile("<", "LAKE_NUR")
 defineTile("+", "SOLID_DOOR_SEALED")
 defineTile("=", "OLD_WALL")
@@ -53,7 +54,7 @@ defineTile("9", "MURAL_PAINTING9")
 
 -- addSpot section
 addSpot({11, 29}, "door", "weirdling")
-addSpot({17, 31}, "portal", "back")
+addSpot({17, 31}, "portal-melinda", "back")
 addSpot({1, 29}, "stair", "up")
 addSpot({17, 27}, "portal", "back")
 addSpot({23, 25}, "spawn", "butler")
@@ -149,7 +150,7 @@ return [[
 =.........==####...##.............####...&&&.9##############
 =<.......h.+............... ........+....&F&..##############
 ====..==..==##.#...##.............####...&&&.###############
-=====.....=###.#.*.###...........#####.......###############
+=====.....=###.#...###...........#####.......###############
 ======....=###.#...###...........#####.......###############
 ========..=###.######.............##########################
 ===========###.######.............##########################

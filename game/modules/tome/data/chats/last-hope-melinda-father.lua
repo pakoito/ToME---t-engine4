@@ -40,7 +40,8 @@ newChat{ id="welcome",
 	text = [[@playername@! My daughter's savior!]],
 	answers = {
 		{"Hi, I was just checking in to see if Melinda is all right.", jump="reward", cond=function(npc, player) return not npc.rewarded_for_saving_melinda end, action=function(npc, player) npc.rewarded_for_saving_melinda = true end},
-		{"Hi, I would like to talk to Melinda please.", jump="home1", switch_npc={name="Melinda"}, cond=function(npc, player) return ql and not ql:isCompleted("moved-in") end},
+		{"Hi, I would like to talk to Melinda please.", jump="rewelcome", switch_npc={name="Melinda"}, cond=function(npc, player) return ql and not ql:isCompleted("moved-in") and not ql.inlove end},
+		{"Hi, I would like to talk to Melinda please.", jump="rewelcome-love", switch_npc={name="Melinda"}, cond=function(npc, player) return ql and not ql:isCompleted("moved-in") and ql.inlove end},
 		{"Sorry, I have to go!"},
 	}
 }
@@ -56,6 +57,8 @@ newChat{ id="reward",
 				game.zone:addEntity(game.level, ro, "object")
 				player:addObject(player:getInven("INVEN"), ro)
 			end
+			player:grantQuest("love-melinda")
+			ql = player:hasQuest("love-melinda")
 		end},
 	}
 }
@@ -74,53 +77,65 @@ newChat{ id="melinda",
 -- Flirting
 ------------------------------------------------------------------
 newChat{ id="scars",
-	text = [[#LIGHT_GREEN#*She presses on her lower belly in a provocative way.*#WHITE#
-See, you can touch it. It is fine. No pain any more! This is thanks to you, my... dear friend.]],
+	text = [[Yes it has mostly healed, though I still do nightmares. I feel like something is still lurking.
+Ah well, the bad dreams are still better than the fate you saved me from!]],
 	answers = {
-		{"I am sorry. I do not think your father would approve. Be well, my lady.", quick_reply="I think he would, but if this is what you wish, goodbye and farewell."},
-		{"#LIGHT_GREEN#[touch the spot she indicates] Yes, it seems all right", jump="touch_male", cond=function(npc, player) return player.male end},
-		{"#LIGHT_GREEN#[touch the spot she indicates] Yes, it seems all right", jump="touch_female", cond=function(npc, player) return player.female end},
+		{"Shall I come across a way to help you during my travels I will try to help.", quick_reply="Thank you, you are most welcome."},
+		{"Most certainly, so what are your plans now?", jump="plans"},
+	}
+}
+newChat{ id="rewelcome",
+	text = [[Hi @playername@! I am feeling better now, even starting to grow restless...]],
+	answers = {
+		{"So what are your plans now?", jump="plans"},
+		{"About that, I was thinking that maybe you'd like to hang out sometime?", jump="hiton", cond=function() return not ql.inlove and not ql.nolove end},
+	}
+}
+newChat{ id="rewelcome-love",
+	text = [[#LIGHT_GREEN#*Melinda appears at the door and kisses you*#WHITE#
+Hi my dear, so happy to see you!]],
+	answers = {
+		{"I am still looking out for an explanation of what happened at the beach."},
+		{"About what happened on the beach, I think I have found something.", jump="home1", cond=function() return ql:isStatus(engine.Quest.COMPLETED, "can_come_fortress") end},
 	}
 }
 
-newChat{ id="touch_male",
-	text = [[#LIGHT_GREEN#*She blushes a bit.*#WHITE#
-Your touch feels soft, and yet I can sense so much power in you.
-This feels good. I can try to forget what those... other men... did to me.]],
-	answers = {
-		{"I am here if you want to talk about it. I saw them; I saw what they did. I can understand.", jump="request_explain"},
-		{"I am no demon worshipper. I will not hurt you.", jump="reassurance"},
-		{"You will get over it. Do not worry. Goodbye, Melinda, farewell.", quick_reply="It will be hard, but I know I will. Goodbye."},
+local p = game:getPlayer(true)
+local is_am = p:attr("forbid_arcane")
+local is_mage = (p.faction == "angolwen") or p:isQuestStatus("mage-apprentice", engine.Quest.DONE)
+newChat{ id="plans",
+	text = [[I do not know yet, my father won't let me out until I'm fully healed. I've always wanted to do so many things.
+That is why I got stuck in that crypt, I want to see the world.
+My father gave me some funds to take my future in hands. I have some friends in Derth, maybe open my own little shop there. ]]..(
+is_am and
+	[[I have seen how you fought those corruptors, the way you destroyed their magic. I want to learn to do the same, so that such horrors never happen again. To anyone.]]
+or (is_mage and
+	[[Or maybe, well I suppose I can trust you with this, I've always secretly dreamt of learning magic. Real magic I mean not alchemist tricks!
+I've learnt about a secret place, Angolwen, where I could learn it.]]
+or [[]])),
+	answers = (not is_am and not is_mage) and {
+		{"Derth has its up and downs but I think they could do with a smart girl yes.", action=function() ql.wants_to = "derth" end, quick_reply="Thanks!"},
+	} or {
+		{"Derth has its up and downs but I think they could do with a smart girl yes.", action=function() ql.wants_to = "derth" end, quick_reply="Thanks!"},
+		{"You wish to join our noble crusade against magic, wonderful! I will talk to them for you.", action=function() ql.wants_to = "antimagic" end, cond=function() return is_am end, quick_reply="That would be very nice!"},
+		{"I happen to be welcome among the people of Angolwen, I could say a word for you.", action=function() ql.wants_to = "magic" end, cond=function() return is_mage end, quick_reply="That would be very nice!"},
 	}
 }
 
-newChat{ id="touch_female",
-	text = [[#LIGHT_GREEN#*She blushes a bit.*#WHITE#
-I... I did not know another woman's touch could feel so... soft on my skin.
-This feels good. I can try to forget what those... men... did to me.]],
+newChat{ id="hiton",
+	text = [[Wait, so you think that the fact you rescued me from moderately-to-extremely certain death means you're entitled to sleep with me?!]],
 	answers = {
-		{"I am here if you want to talk about it. I saw them; I saw what they did. I can understand.", jump="request_explain"},
-		{"I am no demon worshipper. I will not hurt you.", jump="reassurance"},
-		{"You will get over it. Do not worry. Goodbye, Melinda, farewell.", quick_reply="It will be hard, but I know I will. Goodbye."},
-	}
-}
-
-newChat{ id="request_explain",
-	text = [[#LIGHT_GREEN#*She seems lost in her thoughts for a while, her eyes reflecting the terror she knew.*#WHITE#
-Thank you for your kindness, but I am not ready to talk about it yet. It is so fresh and vivid in my mind!
-#LIGHT_GREEN#*She starts to cry.*#WHITE#]],
-	answers = {
-		{"#LIGHT_GREEN#[take her in your arms] Everything is all right now. You are safe.", jump="hug"},
-		{"Snap out of it! You are safe here.", quick_reply="Yes, yes. Well, thank you, goodbye."},
+		{"WHY AREN'T WOMEN ATTRACTED TO ME I'M A NICE "..(p.female and "GIRL" or "GUY")..".", quick_reply="Uhh, sorry I hear my father calling, see you.", action=function() ql.nolove = true end},
+		{"Wait, I just meant -", jump="reassurance"},
 	}
 }
 
 newChat{ id="reassurance",
-	text = [[#LIGHT_GREEN#*She looks deeply into your eyes.*#WHITE#
-I know you are not. When you rescued me from the horrors, I knew instantly I could trust you. You might say it was fear, but I like to think I touched you, and you touched me.]],
+	text = [[#LIGHT_GREEN#*She looks at you cheerfully.*#WHITE#
+Just kidding. I would love that!]],
 	answers = {
-		{"#LIGHT_GREEN#[take her in your arms] Everything is all right now. You are safe.", jump="hug"},
-		{"Woah, wait a minute. I am glad to have saved you, but that is all.", quick_reply="Oh, sorry, I was not myself. Goodbye."},
+		{"#LIGHT_GREEN#[walk away with her]#WHITE#What about a little trip to the south, from the coastline we can see the Charred Scar Volcano, it is a wonderous sight.", action=function() ql.inlove = true ql:toBeach() end},
+		{"Joke's on you really, goodbye!", quick_reply="But... ok goodbye.", action=function() ql.nolove = true end},
 	}
 }
 
@@ -128,7 +143,7 @@ newChat{ id="hug",
 	text = [[#LIGHT_GREEN#*You take Melinda in your arms and press her against you. The warmth of the contact lightens your heart.*#WHITE#
 I feel safe in your arms. Please, I know you must leave, but promise to come back soon and hold me again.]],
 	answers = {
-		{"I think I would enjoy that very much. #LIGHT_GREEN#[kiss her]#WHITE#", action=function(npc, player) player:grantQuest("love-melinda") end},
+		{"I think I would enjoy that very much. #LIGHT_GREEN#[kiss her]#WHITE#", action=function(npc, player)  end},
 		{"That thought will carry me in the dark places I shall walk. #LIGHT_GREEN#[kiss her]#WHITE#", action=function(npc, player) player:grantQuest("love-melinda") end},
 		{"Oh, I am sorry. I think you are mistaken. I was only trying to comfort you.", quick_reply="Oh, sorry, I was not myself. Goodbye, then. Farewell."},
 	}
@@ -138,27 +153,28 @@ I feel safe in your arms. Please, I know you must leave, but promise to come bac
 -- Moving in
 ------------------------------------------------------------------
 newChat{ id="home1",
-	text = [[#LIGHT_GREEN#*Melinda appears at the door and kisses you*#WHITE#
-@playername@! I missed you!]],
+	text = [[#LIGHT_GREEN#*Melinda looks worried*#WHITE#
+Please tell me you can help!]],
 	answers = {
-		{"I am sorry, I was a bit busy I fear. You know, the usual: slaying cultists, looting treasures of old."},
-		{"Actually I have thought about something, for us. Some time ago I assumed ownership of a very special home... #LIGHT_GREEN#[tell her the Fortress story]#WHITE#", jump="home2", cond=function(npc, player) return ql and qs and qs:isCompleted("farportal") and not ql:isCompleted("moved-in") end},
+		{"Yes, I think so. Some time ago I assumed ownership of a very special home... #LIGHT_GREEN#[tell her the Fortress story]#WHITE#", jump="home2"},
 	}
 }
 
 newChat{ id="home2",
-	text = [[An ancient fortress of a mythical race?! How #{bold}#exciting#{normal}#!]],
+	text = [[An ancient fortress of a mythical race?! How #{bold}#exciting#{normal}#!
+And you say it could cure me?]],
 	answers = {
-		{"Yes indeed, I will probably spend quite some time there and I wondered if, well maybe, if you would like to stay there with me, there is much free room and...", jump="home3"},
-		{"But really dangerous... anyway, I must be on my way. I will try to stop by again soon. #LIGHT_GREEN#[kiss her]#WHITE#"},
+		{"The Fortress seems to think so. I know this might sound highly inappropriate but you would need to come live there, at least for a while.", jump="home3"},
 	}
 }
 
 newChat{ id="home3",
-	text = [[#LIGHT_GREEN#*Melinda hugs you fiercely, kisses you and rushes to the inside of the shop. While she runs you hear:*#WHITE#
-Daddy, you won't have to fear for me anymore! I'm moving home!]],
+	text = [[#LIGHT_GREEN#*She looks at you cheerfully*#WHITE#
+Ah the plan to sleep with me finally unfolds!
+Shhh you dummy, I thought we were past such silliness, I will come, both for my health and my own pleasure.
+#LIGHT_GREEN#*She kisses you tenderly*#WHITE#]],
 	answers = {
-		{"I take that as a yes. #LIGHT_GREEN#[wait for her return and go to the Fortress]#WHITE#", action=function(npc, player)
+		{"Then my lady, if you will follow me. #LIGHT_GREEN#[take her to the Fortress]", action=function(npc, player)
 			game:changeLevel(1, "shertul-fortress", {direct_switch=true})
 			player:hasQuest("love-melinda"):spawnFortress(player)
 		end},
