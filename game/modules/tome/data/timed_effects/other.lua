@@ -242,6 +242,34 @@ newEffect{
 }
 
 newEffect{
+	name = "HUSK_OFS", image = "talents/animus_purge.png",
+	desc = "Husk out of sight",
+	long_desc = function(self, eff) return "The husk is out of sight of its host; direct control will be lost!" end,
+	type = "other",
+	subtype = { miscellaneous=true },
+	status = "detrimental",
+	parameters = { },
+	on_gain = function(self, err) return "#LIGHT_RED##Target# is out of sight of its master; direct control will break!.", "+Out of sight" end,
+	activate = function(self, eff)
+	end,
+	deactivate = function(self, eff)
+	end,
+	on_timeout = function(self, eff)
+		if game.player ~= self then return true end
+
+		if eff.dur <= 1 then
+			game:onTickEnd(function()
+				game.logPlayer(self, "#LIGHT_RED#You lost sight of your husk for too long; it disintegrates!")
+				game.player:runStop("husk out of sight")
+				game.player:restStop("husk out of sight")
+				game.party:setPlayer(self.summoner)
+				self:die(self)
+			end)
+		end
+	end,
+}
+
+newEffect{
 	name = "CONTINUUM_DESTABILIZATION",
 	desc = "Continuum Destabilization",
 	long_desc = function(self, eff) return ("The target has been affected by space or time manipulations and is becoming more resistant to them (+%d)."):format(eff.power) end,

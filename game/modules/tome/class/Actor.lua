@@ -3387,7 +3387,7 @@ function _M:learnTalent(t_id, force, nb, extra)
 	for event, store in pairs(sustainCallbackCheck) do
 		if t[event] and t.mode ~= "sustained" then
 			self[store] = self[store] or {}
-			self[store][t_id] = true
+			self[store][t_id] = "talent"
 		end
 	end
 
@@ -3498,7 +3498,7 @@ function _M:learnPool(t)
 	if t.stamina or t.sustain_stamina then
 		self:checkPool(t.id, self.T_STAMINA_POOL)
 	end
-	if t.vim or t.sustain_vim then
+	if t.vim or t.sustain_vim or t.drain_vim then
 		self:checkPool(t.id, self.T_VIM_POOL)
 	end
 	if t.positive or t.sustain_positive then
@@ -4021,6 +4021,7 @@ local sustainCallbackCheck = {
 	callbackOnActBase = "talents_on_act_base",
 	callbackOnMove = "talents_on_move",
 	callbackOnRest = "talents_on_rest",
+	callbackOnMeleeAttack = "talents_on_melee_attack",
 	callbackOnMeleeHit = "talents_on_melee_hit",
 	callbackOnMeleeMiss = "talents_on_melee_miss",
 	callbackOnArcheryHit = "talents_on_archery_hit",
@@ -4032,8 +4033,12 @@ function _M:fireTalentCheck(event, ...)
 	local store = sustainCallbackCheck[event]
 	local ret = false
 	if self[store] and next(self[store]) then
-		for tid, _ in pairs(self[store]) do
-			ret = self:callTalent(tid, event, ...) or ret
+		for tid, kind in pairs(self[store]) do
+			if kind == "effect" then
+				ret = self:callEffect(tid, event, ...) or ret
+			else
+				ret = self:callTalent(tid, event, ...) or ret
+			end
 		end
 	end
 	return ret
@@ -4109,6 +4114,9 @@ function _M:postUseTalent(ab, ret, silent)
 			if ab.sustain_vim then
 				trigger = true; self:incMaxVim(-util.getval(ab.sustain_vim, self, ab))
 			end
+			if ab.drain_vim then
+				trigger = true; self:attr("vim_regen", -ab.drain_vim)
+			end
 			if ab.sustain_equilibrium then
 				trigger = true; self:incMinEquilibrium(util.getval(ab.sustain_equilibrium, self, ab))
 			end
@@ -4133,7 +4141,7 @@ function _M:postUseTalent(ab, ret, silent)
 			for event, store in pairs(sustainCallbackCheck) do
 				if ab[event] then
 					self[store] = self[store] or {}
-					self[store][ab.id] = true
+					self[store][ab.id] = "talent"
 				end
 			end
 		else
@@ -4145,6 +4153,9 @@ function _M:postUseTalent(ab, ret, silent)
 			end
 			if ab.sustain_vim then
 				self:incMaxVim(util.getval(ab.sustain_vim, self, ab))
+			end
+			if ab.drain_vim then
+				self:attr("vim_regen", ab.drain_vim)
 			end
 			if ab.sustain_equilibrium then
 				self:incMinEquilibrium(-util.getval(ab.sustain_equilibrium, self, ab))
@@ -4407,6 +4418,7 @@ function _M:getTalentFullDescription(t, addlevel, config, fake_mastery)
 		if t.sustain_stamina then d:add({"color",0x6f,0xff,0x83}, "Sustain stamina cost: ", {"color",0xff,0xcc,0x80}, ""..(util.getval(t.sustain_stamina, self, t)), true) end
 		if t.sustain_equilibrium then d:add({"color",0x6f,0xff,0x83}, "Sustain equilibrium cost: ", {"color",0x00,0xff,0x74}, ""..(util.getval(t.sustain_equilibrium, self, t)), true) end
 		if t.sustain_vim then d:add({"color",0x6f,0xff,0x83}, "Sustain vim cost: ", {"color",0x88,0x88,0x88}, ""..(util.getval(t.sustain_vim, self, t)), true) end
+		if t.drain_vim then d:add({"color",0x6f,0xff,0x83}, "Drain vim: ", {"color",0x88,0x88,0x88}, "-"..(util.getval(t.drain_vim, self, t)), true) end
 		if t.sustain_positive then d:add({"color",0x6f,0xff,0x83}, "Sustain positive energy cost: ", {"color",255, 215, 0}, ""..(util.getval(t.sustain_positive, self, t)), true) end
 		if t.sustain_negative then d:add({"color",0x6f,0xff,0x83}, "Sustain negative energy cost: ", {"color", 127, 127, 127}, ""..(util.getval(t.sustain_negative, self, t)), true) end
 		if t.sustain_hate then d:add({"color",0x6f,0xff,0x83}, "Sustain hate cost:  ", {"color", 127, 127, 127}, ""..(util.getval(t.sustain_hate, self, t)), true) end
@@ -4886,6 +4898,24 @@ function _M:on_set_temporary_effect(eff_id, e, p)
 
 	if self.player and not self.tmp[eff_id] then
 		p.__set_time = core.game.getTime()
+	end
+end
+
+function _M:on_temporary_effect_added(eff_id, e, p)
+	for event, store in pairs(sustainCallbackCheck) do
+		if e[event] then
+			self[store] = self[store] or {}
+			self[store][eff_id] = "effect"
+		end
+	end
+end
+
+function _M:on_temporary_effect_removed(eff_id, e, p)
+	for event, store in pairs(sustainCallbackCheck) do
+		if e[event] then
+			self[store][eff_id] = nil
+			if not next(self[store]) then self[store] = nil end
+		end
 	end
 end
 

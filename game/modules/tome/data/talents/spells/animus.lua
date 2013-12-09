@@ -120,7 +120,7 @@ newTalent{
 			DamageType:get(DamageType.DARKNESS).projector(self, px, py, DamageType.DARKNESS, dam)
 			m.die = olddie
 			game.level.map:particleEmitter(px, py, 1, "dark")
-			if 100 * m.life / m.max_life <= t.getMaxLife(self, t) and self:checkHit(self:combatSpellpower(), m:combatSpellResist()) and m:canBe("instakill") and m.rank <= 3 and not m:attr("undead") and not m.summoner and not m.summon_time then
+			if 100 * m.life / m.max_life <= t.getMaxLife(self, t) and self:checkHit(self:combatSpellpower(), m:combatSpellResist()) and m:canBe("instakill") and m.rank <= 3.2 and not m:attr("undead") and not m.summoner and not m.summon_time then
 				m.type = "undead"
 				m.subtype = "husk"
 				m:attr("no_life_regen", 1)
@@ -146,6 +146,28 @@ newTalent{
 				if m:knowTalent(m.T_MULTIPLY) then m:unlearnTalent(m.T_MULTIPLY, m:getTalentLevelRaw(m.T_MULTIPLY)) end
 				m.no_points_on_levelup = true
 				m.faction = self.faction
+
+				m.on_act = function(self)
+					if game.player ~= self then return end
+					if not self.summoner.dead and not self:hasLOS(self.summoner.x, self.summoner.y) then
+						if not self:hasEffect(self.EFF_HUSK_OFS) then
+							self:setEffect(self.EFF_HUSK_OFS, 3, {})
+						end
+					else
+						if self:hasEffect(self.EFF_HUSK_OFS) then
+							self:removeEffect(self.EFF_HUSK_OFS)
+						end
+					end
+				end
+
+				m.on_can_control = function(self, vocal)
+					if not self:hasLOS(self.summoner.x, self.summoner.y) then
+						if vocal then game.logPlayer(game.player, "Your husk is out of sight; you cannot establish direct control.") end
+						return false
+					end
+					return true
+				end
+
 				m:removeEffectsFilter({status="detrimental"}, nil, true)
 				game.level.map:particleEmitter(px, py, 1, "demon_teleport")
 

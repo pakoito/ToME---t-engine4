@@ -135,6 +135,7 @@ function _M:setEffect(eff_id, dur, p, silent)
 	end
 	if _M.tempeffect_def[eff_id].activate then _M.tempeffect_def[eff_id].activate(self, p) end
 	self.changed = true
+	self:check("on_temporary_effect_added", eff_id, _M.tempeffect_def[eff_id], p)
 end
 
 --- Check timed effect
@@ -169,6 +170,7 @@ function _M:removeEffect(eff, silent, force)
 		end
 	end
 	if _M.tempeffect_def[eff].deactivate then _M.tempeffect_def[eff].deactivate(self, p) end
+	self:check("on_temporary_effect_removed", eff, _M.tempeffect_def[eff], p)
 end
 
 --- Removes the effect
@@ -187,4 +189,12 @@ end
 function _M:effectTemporaryValue(eff, k, v)
 	if not eff.__tmpvals then eff.__tmpvals = {} end
 	eff.__tmpvals[#eff.__tmpvals+1] = {k, self:addTemporaryValue(k, v)}
+end
+
+--- Trigger an effect method
+function _M:callEffect(eff_id, name, ...)
+	local e = _M.tempeffect_def[eff_id]
+	local p = self.tmp[eff_id]
+	name = name or "trigger"
+	if e[name] and p then return e[name](self, p, ...) end
 end

@@ -124,6 +124,7 @@ newTalent{
 	mode = "sustained",
 	points = 5,
 	sustain_vim = 90,
+	drain_vim = 5,
 	remove_on_zero = true,
 	cooldown = 60,
 	no_sustain_autoreset = true,
@@ -230,7 +231,6 @@ newTalent{
 			particle = self:addParticles(Particles.new("shader_wings", 1, {infinite=1, x=bx, y=by, img="bloodwings", flap=28, a=0.6}))
 		end
 		local ret = {
-			vim = self:addTemporaryValue("vim_regen", -5),
 			target = target,
 			x = self.x, y = self.y,
 			particle = particle,
@@ -242,7 +242,6 @@ newTalent{
 		if not self.on_die then return true end
 		
 		if p.particle then self:removeParticles(p.particle) end
-		self:removeTemporaryValue("vim_regen", p.vim)
 
 		game:onTickEnd(function()
 			-- Collect objects
