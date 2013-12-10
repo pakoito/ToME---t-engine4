@@ -72,7 +72,11 @@ newEntity{
 	end,
 	on_die = function(self)
 		local m
-		if self.is_wife then
+		local nb = 0
+		for uid, e in pairs(game.level.entities) do
+			if e.define_as == "ILLUSION_YEEK" then nb = nb + 1 end
+		end
+		if self.is_wife or nb <= 1 then
 			m = game.zone.npc_list.WIFE
 		else
 			local list = require("mod.class.NPC"):loadList("/data/general/npcs/ghoul.lua")
@@ -86,6 +90,9 @@ newEntity{
 			m.life = 30
 			game.zone:addEntity(game.level, m, "actor", self.x, self.y)
 			m:doEmote("GRrrrrrllllll!", 60)
+		elseif nb <= 1 then
+			local g = game.zone.grid_list.DREAM2_END:clone()
+			game.zone:addEntity(game.level, g, "terrain", self.x, self.y)
 		end
 	end,
 }
