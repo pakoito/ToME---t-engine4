@@ -55,7 +55,7 @@ uberTalent{
 
 				local grids = {}
 				for i = x-1, x+1 do for j = y-1, y+1 do
-					local oe = game.level.map(i, j, Map.TERRAIN)
+					local oe = game.level.map(i, j, engine.Map.TERRAIN)
 					if oe and not oe:attr("temporary") and
 					(core.fov.distance(x, y, i, j) < 1 or rng.percent(40)) and (game.level.map:checkEntity(i, j, engine.Map.TERRAIN, "dig") or game.level.map:checkEntity(i, j, engine.Map.TERRAIN, "grow")) then
 						local g = terrains.LAVA_FLOOR:clone()
@@ -69,7 +69,7 @@ uberTalent{
 				end end
 				for _, spot in ipairs(grids) do
 					local i, j = spot.x, spot.y
-					local g = game.level.map(i, j, Map.TERRAIN)
+					local g = game.level.map(i, j, engine.Map.TERRAIN)
 					g.temporary = 8
 					g.x = i g.y = j
 					g.canAct = false
@@ -91,7 +91,7 @@ uberTalent{
 				src:project({type="ball", radius=2, selffire=false}, x, y, engine.DamageType.FIRE, dam/2)
 				src:project({type="ball", radius=2, selffire=false}, x, y, engine.DamageType.PHYSICAL, dam/2)
 				src:project({type="ball", radius=2, selffire=false}, x, y, function(px, py)
-					local target = game.level.map(px, py, Map.ACTOR)
+					local target = game.level.map(px, py, engine.Map.ACTOR)
 					if target then
 						if target:canBe("stun") then
 							target:setEffect(target.EFF_STUNNED, 3, {apply_power=math.max(src:combatSpellpower(), src:combatMindpower())})

@@ -89,5 +89,12 @@ portal_back = function(self, who)
 	g:resolve() g:resolve(nil, true)
 	game.zone:addEntity(game.level, g, "terrain", 15, 13)
 
+	local slasul = game.level:findEntity{define_as="SLASUL"}
+	local rad = 3
+	while slasul and slasul.x == 15 and slasul.y == 13 do
+		slasul:teleportRandom(slasul.x, slasul.y, rad)
+		rad = rad + 1
+	end
+
 	game.logPlayer(game.player, "A portal opens to the flooded cave.")
 end
