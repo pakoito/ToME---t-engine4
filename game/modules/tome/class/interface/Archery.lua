@@ -457,7 +457,9 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 		end
 	end
 
-	local hd = {"Combat:archeryHit", hitted=hitted, target=target, weapon=weapon, ammo=ammo, damtype=damtype, mult=mult, dam=dam}
+	self:fireTalentCheck("callbackOnArcheryAttack", target, hitted, crit, weapon, ammo, damtype, mult, dam)
+
+	local hd = {"Combat:archeryHit", hitted=hitted, crit=crit, target=target, weapon=weapon, ammo=ammo, damtype=damtype, mult=mult, dam=dam}
 	if self:triggerHook(hd) then hitted = hd.hitted end
 
 	-- Zero gravity

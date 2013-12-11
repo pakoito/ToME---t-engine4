@@ -2045,10 +2045,14 @@ function _M:onTakeHit(value, src, death_note)
 	end
 
 	if self:attr("unstoppable") then
-		if value > self.life then
+		if value > self.life - 1 then
 			game:delayedLogDamage(src, self, 0, ("#RED#(%d refused)#LAST#"):format(value - self.life - 1), false)
 			value = self.life - 1
+			self.life = 1
 			game:delayedLogMessage(self, nil, "unstoppable", "#RED##Source# is unstoppable!")
+			if self.life <= 1 then
+				value = 0
+			end
 		end
 	end
 
