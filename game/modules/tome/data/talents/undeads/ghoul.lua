@@ -111,7 +111,7 @@ newTalent{
 		local dam = 10 + self:combatTalentStatDamage(t, "con", 10, 60)
 		return ([[Vomit on the ground around you, healing any undead in the area and damaging anyone else.
 		Lasts %d turns, and deals %d blight damage or heals %d life.
-		Creatures standing in the retch also have %d%% chance to loose a physical effect each turn.
+		Creatures standing in the retch also have %d%% chance to remove a physical effect each turn.
 		Undeads will be stripped from a detrimental effect while others will be stripped from a beneficial effect.]]):format(t.getduration(self, t), damDesc(self, DamageType.BLIGHT, dam), dam * 1.5, t.getPurgeChance(self, t))
 	end,
 }
