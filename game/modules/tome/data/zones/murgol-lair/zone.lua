@@ -36,6 +36,7 @@ return {
 	max_material_level = 2,
 	no_random_lore = true,
 	is_invaded = is_invaded,
+	underwater = true,
 	generator =  {
 		map = {
 			class = "engine.generator.map.Roomer",
