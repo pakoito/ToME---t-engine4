@@ -144,6 +144,7 @@ newTalent{
 				m.clone_on_hit = nil
 				if m:knowTalent(m.T_BONE_SHIELD) then m:unlearnTalent(m.T_BONE_SHIELD, m:getTalentLevelRaw(m.T_BONE_SHIELD)) end
 				if m:knowTalent(m.T_MULTIPLY) then m:unlearnTalent(m.T_MULTIPLY, m:getTalentLevelRaw(m.T_MULTIPLY)) end
+				if m:knowTalent(m.T_SUMMON) then m:unlearnTalent(m.T_SUMMON, m:getTalentLevelRaw(m.T_SUMMON)) end
 				m.no_points_on_levelup = true
 				m.faction = self.faction
 
