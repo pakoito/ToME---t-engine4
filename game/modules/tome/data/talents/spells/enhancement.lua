@@ -158,7 +158,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local statinc = t.getStatIncrease(self, t)
-		return ([[You concentrate on your inner self, increasing your stats each by %d.
+		return ([[You concentrate on your inner self, increasing all your stats by %d.
 		The stat increase will improve with your Spellpower.]]):
 		format(statinc)
 	end,
