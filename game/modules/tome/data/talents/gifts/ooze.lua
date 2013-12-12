@@ -231,12 +231,14 @@ newTalent{
 		self:talentTemporaryValue(p, "blind_immune", t.immunities(self, t))
 		self:talentTemporaryValue(p, "poison_immune", t.immunities(self, t))
 		self:talentTemporaryValue(p, "disease_immune", t.immunities(self, t))
+		self:talentTemporaryValue(p, "cut_immune", t.immunities(self, t))
+		self:talentTemporaryValue(p, "confusion_immune", t.immunities(self, t))
 		self:talentTemporaryValue(p, "ignore_direct_crits", t.critResist(self, t))
 	end,
 	info = function(self, t)
 		return ([[Your body's internal organs are melded together, disguising your vital areas.
 		All direct critical hits (physical, mental, spells) against you have a %d%% lower Critical multiplier (but always do at least normal damage).
-		In addition you gain %d%% disease, poison, cuts, confusion and blindness resistances.]]):
+		In addition you gain %d%% disease, poison, wounds, confusion and blindness resistances.]]):
 		format(t.critResist(self, t), 100*t.immunities(self, t))
 	end,
 }
