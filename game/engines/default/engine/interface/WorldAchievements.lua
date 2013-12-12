@@ -150,7 +150,7 @@ function _M:gainAchievement(id, src, ...)
 	self:gainPersonalAchievement(true, id, src, ...)
 
 	self.achieved[id] = {turn=game.turn, who=self:achievementWho(src), when=os.date("%Y-%m-%d %H:%M:%S")}
-	profile:saveModuleProfile("achievements", {id=id, turn=game.turn, who=self:achievementWho(src), gained_on=os.date("%Y-%m-%d %H:%M:%S")})
+	if not config.settings.cheat then profile:saveModuleProfile("achievements", {id=id, turn=game.turn, who=self:achievementWho(src), gained_on=os.date("%Y-%m-%d %H:%M:%S")}) end
 	local color = a.huge and "GOLD" or "LIGHT_GREEN"
 	game.log("#"..color.."#New Achievement: %s!", a.name)
 	self:showAchievement("New Achievement: #"..color.."#"..a.name, a)
