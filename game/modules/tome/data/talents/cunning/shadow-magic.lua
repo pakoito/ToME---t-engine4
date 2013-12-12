@@ -113,9 +113,13 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y then return nil end
-		local nop, _, _, x, y = self:canProject(tg, x, y)
+		if core.fov.distance(self.x, self.y, x, y) > tg.range then return nil end
 		local target = game.level.map(x, y, Map.ACTOR)
-		if not (nop and game.level.map.seens(x, y)) then return nil end
+		if game.level.map.attrs(x, y, "no_teleport") then
+			if not game.level.map.seens(x, y) or not self:hasLOS(x, y) then return nil end
+		else
+			if not game.level.map.seens(x, y) then return nil end
+		end
 
 		local tx, ty = util.findFreeGrid(x, y, 20, true, {[engine.Map.ACTOR]=true})
 		self:move(tx, ty, true)
