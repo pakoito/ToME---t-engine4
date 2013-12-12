@@ -27,7 +27,7 @@ end
 on_status_change = function(self, who, status, sub)
 	if self:isCompleted() then
 		who:setQuestStatus(self.id, engine.Quest.DONE)
-		world:gainAchievement("TUTORIAL_DONE", game.player)
+		world:gainAchievement({id="TUTORIAL_DONE",no_difficulties=true}, game.player)
 	end
 end
 
