@@ -1900,7 +1900,10 @@ function util.showMainMenu(no_reboot, reboot_engine, reboot_engine_version, rebo
 		local mod = ms[__load_module]
 		Module:instanciate(mod, __player_name, __player_new, true)
 	else
-		if core.steam then core.steam.cancelGrabSubscribedAddons() end
+		if core.steam then
+			core.steam.cancelGrabSubscribedAddons()
+			core.steam.sessionTicketCancel()
+		end
 		
 		-- Tell the C engine to discard the current lua state and make a new one
 		print("[MAIN] rebooting lua state: ", reboot_engine, reboot_engine_version, reboot_module, reboot_name, reboot_new)
