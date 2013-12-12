@@ -46,7 +46,7 @@ function _M:init(title, equip_actor, filter, action, on_select, inven_actor)
 		if item.last_display_x and item.object then
 			local x
 			if self.focus_ui and self.focus_ui.ui == self.c_inven then x = self.c_inven._last_ox - game.tooltip.w end
-			game:tooltipDisplayAtMap(x or item.last_display_x, item.last_display_y, item.object:getDesc({do_color=true}, self.equip_actor:getInven(item.object:wornInven())))
+			game:tooltipDisplayAtMap(x or item.last_display_x, item.last_display_y, item.object:getDesc({do_color=true}, self.equip_actor:getInven(item.object:wornInven()), nil, equip_actor))
 		elseif item.last_display_x and item.data and item.data.desc then
 			game:tooltipDisplayAtMap(item.last_display_x, item.last_display_y, item.data.desc, {up=true})
 		end

@@ -315,8 +315,9 @@ function _M:getShortName(t)
 	end
 end
 
-function _M:descAccuracyBonus(desc, weapon)
-	local _, kind = game.player:isAccuracyEffect(weapon)
+function _M:descAccuracyBonus(desc, weapon, use_actor)
+	use_actor = use_actor or game.player
+	local _, kind = use_actor:isAccuracyEffect(weapon)
 	if not kind then return end
 
 	local showpct = function(v, mult)
@@ -338,7 +339,8 @@ function _M:descAccuracyBonus(desc, weapon)
 end
 
 --- Gets the full textual desc of the object without the name and requirements
-function _M:getTextualDesc(compare_with)
+function _M:getTextualDesc(compare_with, use_actor)
+	use_actor = use_actor or game.player
 	compare_with = compare_with or {}
 	local desc = tstring{}
 
@@ -514,11 +516,11 @@ function _M:getTextualDesc(compare_with)
 		end
 
 		if combat.talented then
-			local t = game.player:combatGetTraining(combat)
+			local t = use_actor:combatGetTraining(combat)
 			if t and t.name then desc:add("Mastery: ", {"color","GOLD"}, t.name, {"color","LAST"}, true) end
 		end
 
-		self:descAccuracyBonus(desc, combat)
+		self:descAccuracyBonus(desc, combat, use_actor)
 
 		if combat.wil_attack then
 			desc:add("Accuracy is based on willpower for this weapon.", true)
@@ -1122,7 +1124,7 @@ function _M:getTextualDesc(compare_with)
 			compare_unarmed[i] = compare_with[i].wielder or {}
 		end
 
-		if (w and w.combat or can_combat_unarmed) and (game.player:knowTalent(game.player.T_EMPTY_HAND) or game.player:attr("show_gloves_combat")) then
+		if (w and w.combat or can_combat_unarmed) and (use_actor:knowTalent(use_actor.T_EMPTY_HAND) or use_actor:attr("show_gloves_combat")) then
 			desc:add({"color","YELLOW"}, "When used to modify unarmed attacks:", {"color", "LAST"}, true)
 			compare_tab = { dam=1, atk=1, apr=0, physcrit=0, physspeed =0.6, dammod={str=1}, damrange=1.1 }
 			desc_combat(w, compare_unarmed, "combat", compare_tab)
@@ -1156,7 +1158,7 @@ function _M:getTextualDesc(compare_with)
 		desc_combat(self, compare_with, "combat")
 	end
 
-	if (self.special_combat or can_special_combat) and (game.player:knowTalentType("technique/shield-offense") or game.player:knowTalentType("technique/shield-defense") or game.player:attr("show_shield_combat")) then
+	if (self.special_combat or can_special_combat) and (use_actor:knowTalentType("technique/shield-offense") or use_actor:knowTalentType("technique/shield-defense") or use_actor:attr("show_shield_combat")) then
 		desc:add({"color","YELLOW"}, "When used to attack (with talents):", {"color", "LAST"}, true)
 		desc_combat(self, compare_with, "special_combat")
 	end
@@ -1177,7 +1179,7 @@ function _M:getTextualDesc(compare_with)
 	if self.wielder or can_wielder then
 		desc:add({"color","YELLOW"}, "When wielded/worn:", {"color", "LAST"}, true)
 		desc_wielder(self, compare_with, "wielder")
-		if self:attr("skullcracker_mult") and game.player:knowTalent(game.player.T_SKULLCRACKER) then
+		if self:attr("skullcracker_mult") and use_actor:knowTalent(use_actor.T_SKULLCRACKER) then
 			compare_fields(self, compare_with, "wielder", "skullcracker_mult", "%+d", "Skullcracker multiplicator: ")
 		end
 	end
@@ -1199,7 +1201,7 @@ function _M:getTextualDesc(compare_with)
 		desc_wielder(self, compare_with, "imbue_powers")
 	end
 
-	if self.alchemist_bomb or self.type == "gem" and game.player:knowTalent(Talents.T_CREATE_ALCHEMIST_GEMS) then
+	if self.alchemist_bomb or self.type == "gem" and use_actor:knowTalent(Talents.T_CREATE_ALCHEMIST_GEMS) then
 		local a = self.alchemist_bomb
 		if not a then
 			a = game.zone.object_list["ALCHEMIST_GEM_"..self.name:upper()]
@@ -1218,10 +1220,10 @@ function _M:getTextualDesc(compare_with)
 	end
 
 	if self.inscription_data and self.inscription_talent then
-		game.player.__inscription_data_fake = self.inscription_data
+		use_actor.__inscription_data_fake = self.inscription_data
 		local t = self:getTalentFromId("T_"..self.inscription_talent.."_1")
-		local tdesc = game.player:getTalentFullDescription(t)
-		game.player.__inscription_data_fake = nil
+		local tdesc = use_actor:getTalentFullDescription(t)
+		use_actor.__inscription_data_fake = nil
 		desc:add({"color","YELLOW"}, "When inscribed on your body:", {"color", "LAST"}, true)
 		desc:merge(tdesc)
 		desc:add(true)
@@ -1288,22 +1290,23 @@ function _M:getTextualDesc(compare_with)
 	end
 
 	if self.curse then
-		local t = game.player:getTalentFromId(game.player.T_DEFILING_TOUCH)
-		if t and t.canCurseItem(game.player, t, self) then
-			desc:add({"color",0xf5,0x3c,0xbe}, game.player.tempeffect_def[self.curse].desc, {"color","LAST"}, true)
+		local t = use_actor:getTalentFromId(use_actor.T_DEFILING_TOUCH)
+		if t and t.canCurseItem(use_actor, t, self) then
+			desc:add({"color",0xf5,0x3c,0xbe}, use_actor.tempeffect_def[self.curse].desc, {"color","LAST"}, true)
 		end
 	end
 
 	self:triggerHook{"Object:descMisc", compare_with=compare_with, compare_fields=compare_fields, compare_table_fields=compare_table_fields, desc=desc, object=self}
 
-	local use_desc = self:getUseDesc()
+	local use_desc = self:getUseDesc(use_actor)
 	if use_desc then desc:merge(use_desc:toTString()) end
 	return desc
 end
 
-function _M:getUseDesc()
+function _M:getUseDesc(use_actor)
+	use_actor = use_actor or game.player
 	local ret = tstring{}
-	local reduce = 100 - util.bound(game.player:attr("use_object_cooldown_reduce") or 0, 0, 100)
+	local reduce = 100 - util.bound(use_actor:attr("use_object_cooldown_reduce") or 0, 0, 100)
 	local usepower = function(power) return math.ceil(power * reduce / 100) end
 	if self.use_power then
 		if self.show_charges then
@@ -1316,8 +1319,8 @@ function _M:getUseDesc()
 	elseif self.use_simple then
 		ret = tstring{{"color","YELLOW"}, ("It can be used to %s."):format(self.use_simple.name), {"color","LAST"}}
 	elseif self.use_talent then
-		local t = game.player:getTalentFromId(self.use_talent.id)
-		local desc = game.player:getTalentFullDescription(t, nil, {force_level=self.use_talent.level, ignore_cd=true, ignore_ressources=true, ignore_use_time=true, ignore_mode=true, custom=self.use_talent.power and tstring{{"color",0x6f,0xff,0x83}, "Power cost: ", {"color",0x7f,0xff,0xd4},("%d out of %d/%d."):format(usepower(self.use_talent.power), self.power, self.max_power)}})
+		local t = use_actor:getTalentFromId(self.use_talent.id)
+		local desc = use_actor:getTalentFullDescription(t, nil, {force_level=self.use_talent.level, ignore_cd=true, ignore_ressources=true, ignore_use_time=true, ignore_mode=true, custom=self.use_talent.power and tstring{{"color",0x6f,0xff,0x83}, "Power cost: ", {"color",0x7f,0xff,0xd4},("%d out of %d/%d."):format(usepower(self.use_talent.power), self.power, self.max_power)}})
 		if self.talent_cooldown then
 			ret = tstring{{"color","YELLOW"}, "It can be used to activate talent ", t.name,", placing all other charms into a ", tostring(math.floor(usepower(self.use_talent.power))) ," cooldown :", {"color","LAST"}, true}
 		else
@@ -1329,7 +1332,7 @@ function _M:getUseDesc()
 	if self.charm_on_use then
 		ret:add(true, "When used:", true)
 		for i, d in ipairs(self.charm_on_use) do
-			ret:add(tostring(d[1]), "% chance to ", d[2](self, game.player), ".", true)
+			ret:add(tostring(d[1]), "% chance to ", d[2](self, use_actor), ".", true)
 		end
 	end
 
@@ -1337,7 +1340,8 @@ function _M:getUseDesc()
 end
 
 --- Gets the full desc of the object
-function _M:getDesc(name_param, compare_with, never_compare)
+function _M:getDesc(name_param, compare_with, never_compare, use_actor)
+	use_actor = use_actor or game.player
 	local desc = tstring{}
 
 	if self.__new_pickup then
@@ -1353,7 +1357,7 @@ function _M:getDesc(name_param, compare_with, never_compare)
 
 	desc:merge(self:getName(name_param):toTString())
 	desc:add({"color", "WHITE"}, true)
-	local reqs = self:getRequirementDesc(game.player)
+	local reqs = self:getRequirementDesc(use_actor)
 	if reqs then
 		desc:merge(reqs)
 	end
@@ -1382,7 +1386,7 @@ function _M:getDesc(name_param, compare_with, never_compare)
 	end
 
 	desc:add(true, true)
-	desc:merge(self:getTextualDesc(compare_with))
+	desc:merge(self:getTextualDesc(compare_with, use_actor))
 
 	if self:isIdentified() then
 		desc:add(true, true, {"color", "ANTIQUE_WHITE"})
