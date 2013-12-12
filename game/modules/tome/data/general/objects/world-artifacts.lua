@@ -1574,7 +1574,7 @@ newEntity{ base = "BASE_CLOTH_ARMOR",
 	},
 }
 
-newEntity{ base = "BASE_CLOTH_ARMOR",
+newEntity{ base = "BASE_CLOTH_ARMOR", define_as = "SET_TEMPORAL_ROBE",
 	power_source = {arcane=true},
 	unique = true,
 	name = "Temporal Augmentation Robe - Designed In-Style", color = colors.BLACK, image = "object/artifact/robe_temporal_augmentation_robe.png",
@@ -1596,6 +1596,56 @@ newEntity{ base = "BASE_CLOTH_ARMOR",
 	},
 	max_power = 25, power_regen = 1,
 	use_talent = { id = Talents.T_DAMAGE_SMEARING, level = 1, power = 25 },
+
+	set_list = { {"define_as", "SET_TEMPORAL_FEZ"} },
+	on_set_complete = function(self, who)
+	end,
+	on_set_broken = function(self, who)
+	end,
+}
+
+newEntity{ base = "BASE_WIZARD_HAT", define_as = "SET_TEMPORAL_FEZ",
+	power_source = {arcane=true, psionic=true},
+	unique = true,
+	name = "Un'fezan's Cap",
+	unided_name = "red stylish hat",
+	desc = [[This fez once belonged to a traveler, it always seems to be found lying around in odd locations.
+#{italic}#Fezzes are cool.#{normal}#]],
+	color = colors.BLUE, image = "object/artifact/fez.png",
+	moddable_tile = "special/fez",
+	moddable_tile_big = true,
+	level_range = {20, 40},
+	rarity = 300,
+	cost = 100,
+	material_level = 3,
+	wielder = {
+		combat_def = 1,
+		combat_spellpower = 8,
+		combat_mindpower = 8,
+		inc_stats = { [Stats.STAT_WIL] = 4, [Stats.STAT_CUN] = 8, },
+		paradox_reduce_fails = 10,
+		resists = {
+			[DamageType.TEMPORAL] = 20,
+		},
+		talents_types_mastery = {
+			["chronomancy/timetravel"]=0.2,
+		},
+	},
+	max_power = 15, power_regen = 1,
+	use_talent = { id = Talents.T_WORMHOLE, level = 1, power = 15 },
+
+	set_list = { {"define_as", "SET_TEMPORAL_ROBE"} },
+	on_set_complete = function(self, who)
+		game.logPlayer(who, "#STEEL_BLUE#A time vortex briefly appears in front of you.")
+		self:specialSetAdd({"wielder","paradox_reduce_fails"}, 40)
+		self:specialSetAdd({"wielder","confusion_immune"}, 0.4)
+		self:specialSetAdd({"wielder","combat_spellspeed"}, 0.1)
+		self:specialSetAdd({"wielder","inc_damage"}, { [DamageType.TEMPORAL] = 10 })
+	end,
+	on_set_broken = function(self, who)
+		self.use_talent = nil
+		game.logPlayer(who, "#STEEL_BLUE#A time vortex briefly appears in front of you.")
+	end,
 }
 
 newEntity{ base = "BASE_GEM", define_as = "GEM_TELOS",
