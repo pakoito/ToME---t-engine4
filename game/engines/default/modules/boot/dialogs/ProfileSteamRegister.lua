@@ -70,23 +70,25 @@ function _M:okclick()
 		return
 	end
 
-	local ticket = core.steam.sessionTicket()
-	if not ticket then
-		Dialog:simplePopup("Steam", "Steam client not found.")
-		return
-	end
-
 	local d = self:simpleWaiter("Registering...", "Registering on http://te4.org/, please wait...") core.display.forceRedraw()
-	profile:performloginSteam(ticket:toHex(), self.c_login.text, self.c_email.text ~= "" and self.c_email.text)
-	profile:waitFirstAuth()
-	d:done()
-	if not profile.auth and profile.auth_last_error then
-		if profile.auth_last_error == "already exists" then
-			self:simplePopup("Error", "Username or Email already taken, please select an other one.")
+	d:timeout(30, function() Dialog:simplePopup("Steam", "Steam client not found.")	end)
+	core.steam.sessionTicket(function(ticket)
+		if not ticket then
+			Dialog:simplePopup("Steam", "Steam client not found.")
+			return
 		end
-	elseif profile.auth then
-		game:unregisterDialog(self)
-	end
+
+		profile:performloginSteam(ticket:toHex(), self.c_login.text, self.c_email.text ~= "" and self.c_email.text)
+		profile:waitFirstAuth()
+		d:done()
+		if not profile.auth and profile.auth_last_error then
+			if profile.auth_last_error == "already exists" then
+				self:simplePopup("Error", "Username or Email already taken, please select an other one.")
+			end
+		elseif profile.auth then
+			game:unregisterDialog(self)
+		end
+	end)
 end
 
 function _M:cancelclick()

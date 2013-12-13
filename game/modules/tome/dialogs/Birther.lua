@@ -1397,7 +1397,7 @@ function _M:selectTile()
 end
 
 function _M:isDonator()
-	if not profile.auth or not tonumber(profile.auth.donated) or tonumber(profile.auth.donated) <= 1 then return false else return true end
+	return profile:isDonator(1)
 end
 
 function _M:customizeOptions()
