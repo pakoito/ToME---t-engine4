@@ -127,7 +127,7 @@ load_tips = {
 
 -- Define the fields that are sync'ed online, and how they are sync'ed
 profile_defs = {
-	allow_build = { {name="index:string:30"}, receive=function(data, save) save[data.name] = true end, export=function(env) for k, _ in pairs(env) do add{name=k} end end },
+	allow_build = { {name="index:string:50"}, receive=function(data, save) save[data.name] = true end, export=function(env) for k, _ in pairs(env) do add{name=k} end end },
 	lore = { {name="index:string:30"}, receive=function(data, save) save.lore = save.lore or {} save.lore[data.name] = true end, export=function(env) for k, v in pairs(env.lore or {}) do add{name=k} end end },
 	escorts = { {fate="index:enum(lost,betrayed,zigur,saved)"}, {nb="number"}, receive=function(data, save) inc_set(save, data.fate, data, "nb") end, export=function(env) for k, v in pairs(env) do add{fate=k, nb=v} end end },
 	artifacts = { {cid="index:string:50"}, {name="index:string:40"}, {nb="number"}, receive=function(data, save) save.artifacts = save.artifacts or {} save.artifacts[data.cid] = save.artifacts[data.cid] or {} inc_set(save.artifacts[data.cid], data.name, data, "nb") end, export=function(env) for cid, d in pairs(env.artifacts or {}) do for name, v in pairs(d) do add{cid=cid, name=name, nb=v} end end end },

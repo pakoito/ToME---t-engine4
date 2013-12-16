@@ -564,12 +564,14 @@ static const struct luaL_Reg gamelib[] =
 static bool no_text_aa = FALSE;
 
 extern bool is_fullscreen;
+extern bool is_borderless;
 static int sdl_screen_size(lua_State *L)
 {
 	lua_pushnumber(L, screen->w);
 	lua_pushnumber(L, screen->h);
 	lua_pushboolean(L, is_fullscreen);
-	return 3;
+	lua_pushboolean(L, is_borderless);
+	return 4;
 }
 
 static int sdl_new_font(lua_State *L)
@@ -2316,9 +2318,10 @@ static int sdl_set_window_size(lua_State *L)
 	int w = luaL_checknumber(L, 1);
 	int h = luaL_checknumber(L, 2);
 	bool fullscreen = lua_toboolean(L, 3);
+	bool borderless = lua_toboolean(L, 4);
 
-	printf("Setting resolution to %dx%d (%s)\n", w, h, fullscreen ? "fullscreen" : "windowed");
-	do_resize(w, h, fullscreen);
+	printf("Setting resolution to %dx%d (%s, %s)\n", w, h, fullscreen ? "fullscreen" : "windowed", borderless ? "borderless" : "with borders");
+	do_resize(w, h, fullscreen, borderless);
 
 	lua_pushboolean(L, TRUE);
 	return 1;

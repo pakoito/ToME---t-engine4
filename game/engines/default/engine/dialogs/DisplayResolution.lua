@@ -20,6 +20,7 @@
 require "engine.class"
 local Dialog = require "engine.ui.Dialog"
 local List = require "engine.ui.List"
+local Checkbox = require "engine.ui.Checkbox"
 
 module(..., package.seeall, class.inherit(Dialog))
 
@@ -27,15 +28,27 @@ function _M:init(on_change)
 	self.on_change = on_change
 	self:generateList()
 
+	local w, h, fullscreen, borderless = core.display.size()
+
 	Dialog.init(self, "Switch Resolution", 300, 20)
 
 	self.c_list = List.new{width=self.iw, nb_items=#self.list, list=self.list, fct=function(item) self:use(item) end}
+	self.c_fs = Checkbox.new{title="Fullscreen", default=fullscreen,
+		fct=function() end,
+		on_change=function(s) if s then self.c_bl.checked = false end end
+	}
+	self.c_bl = Checkbox.new{title="Borderless", default=borderless,
+		fct=function() end,
+		on_change=function(s) if s then self.c_fs.checked = false end end
+	}
 
 	self:loadUI{
-		{left=0, top=0, ui=self.c_list},
+		{left=0, top=0, ui=self.c_fs},
+		{left=self.c_fs.w + 5, top=0, ui=self.c_bl},
+		{left=0, top=self.c_fs.h, ui=self.c_list},
 	}
 	self:setFocus(self.c_list)
-	self:setupUI(false, true)
+	self:setupUI(true, true)
 
 	self.key:addBinds{
 		EXIT = function() game:unregisterDialog(self) end,
@@ -43,15 +56,25 @@ function _M:init(on_change)
 end
 
 function _M:use(item)
-	game:setResolution(item.r)
+	local mode = " Windowed"
+	if self.c_fs.checked then mode = " Fullscreen"
+	elseif self.c_bl.checked then mode = " Borderless"
+	end
+	local r = item.r..mode
+	game:setResolution(r, true)
 	game:unregisterDialog(self)
-	if self.on_change then self.on_change(item.r) end
+	if self.on_change then self.on_change(r) end
 end
 
 function _M:generateList()
 	local l = {}
-	for r, _ in pairs(game.available_resolutions) do
-		l[#l+1] = r
+	local seen = {}
+	for r, d in pairs(game.available_resolutions) do
+		seen[d[1]] = seen[d[1]] or {}
+		if not seen[d[1]][d[2]] then 
+			l[#l+1] = r
+			seen[d[1]][d[2]] = true
+		end
 	end
 	table.sort(l, function(a,b)
 		if game.available_resolutions[a][2] == game.available_resolutions[b][2] then
@@ -67,6 +90,8 @@ function _M:generateList()
 	local list = {}
 	local i = 0
 	for _, r in ipairs(l) do
+		local _, _, w, h = r:find("^([0-9]+)x([0-9]+)")
+		local r = w.."x"..h
 		list[#list+1] = { name=string.char(string.byte('a') + i)..")  "..r, r=r }
 		i = i + 1
 	end

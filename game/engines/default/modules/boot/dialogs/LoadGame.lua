@@ -32,7 +32,7 @@ module(..., package.seeall, class.inherit(Dialog))
 function _M:init()
 	Dialog.init(self, "Load Game", game.w * 0.8, game.h * 0.8)
 
-	self.c_compat = Checkbox.new{default=false, width=math.floor(self.iw / 3 - 40), title="Show incompatible", on_change=function() self:switch() end}
+	self.c_compat = Checkbox.new{default=false, width=math.floor(self.iw / 3 - 40), title="Show older versions", on_change=function() self:switch() end}
 	self.c_play = Button.new{text="  Play!  ", fct=function(text) self:playSave() end}
 	self.c_delete = Button.new{text="Delete", fct=function(text) self:deleteSave() end}
 	self.c_desc = Textzone.new{width=math.floor(self.iw / 3 * 2 - 10), height=self.ih - self.c_delete.h - 10, text=""}

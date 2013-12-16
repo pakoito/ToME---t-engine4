@@ -435,11 +435,15 @@ end
 function _M:setResolution(res, force)
 	local r = available_resolutions[res]
 	if force and not r then
+		local b = false
 		local _, _, w, h, f = res:find("([0-9][0-9][0-9]+)x([0-9][0-9][0-9]+)(.*)")
 		w = tonumber(w)
 		h = tonumber(h)
 		if f == " Fullscreen" then
 			f = true
+		elseif f == " Borderless" then
+			f = false
+			b = true
 		elseif f ~= " Windowed" then
 			-- If no windowed/fullscreen option sent, use the old value.
 			-- If no old value, opt for windowed mode.
@@ -447,14 +451,14 @@ function _M:setResolution(res, force)
 		else
 			f = false
 		end 
-		if w and h then r = {w, h, f} end
+		if w and h then r = {w, h, f, b} end
 	end
 	if not r then return false, "unknown resolution" end
 
 	-- Change the window size
-	print("setResolution: switching resolution to", res, r[1], r[2], r[3], force and "(forced)")
+	print("setResolution: switching resolution to", res, r[1], r[2], r[3], r[4], force and "(forced)")
 	local old_w, old_h, old_f = self.w, self.h, self.fullscreen
-	core.display.setWindowSize(r[1], r[2], r[3])
+	core.display.setWindowSize(r[1], r[2], r[3], r[4])
 	
 	-- Don't write self.w/h/fullscreen yet
 	local new_w, new_h, new_f = core.display.size()
@@ -472,7 +476,7 @@ end
 
 --- Called when screen resolution changes
 function _M:onResolutionChange()
-	local ow, oh, of = self.w, self.h, self.fullscreen
+	local ow, oh, of, ob = self.w, self.h, self.fullscreen, self.borderless
 
 	-- Save old values for a potential revert
 	if game and not self.change_res_dialog_oldw then
@@ -481,8 +485,8 @@ function _M:onResolutionChange()
 	end
 	
 	-- Get new resolution and save
-	self.w, self.h, self.fullscreen = core.display.size()
-	config.settings.window.size = ("%dx%d%s"):format(self.w, self.h, self.fullscreen and " Fullscreen" or " Windowed")
+	self.w, self.h, self.fullscreen, self.borderless = core.display.size()
+	config.settings.window.size = ("%dx%d%s"):format(self.w, self.h, self.fullscreen and " Fullscreen" or (self.borderless and " Borderless" or " Windowed"))
 	self:saveSettings("resolution", ("window.size = '%s'\n"):format(config.settings.window.size))
 	print("onResolutionChange: resolution changed to ", self.w, self.h, "from", ow, oh)
 

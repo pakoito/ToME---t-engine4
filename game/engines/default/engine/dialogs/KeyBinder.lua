@@ -77,10 +77,10 @@ function _M:use(item)
 	-- Make a dialog to ask for the key
 	--
 	if curcol == 1 or curcol == 2 then
-		local title = "Press a key (or escape) for: "..tostring(t.name)
+		local title = "      Press a key (escape to cancel, backspace to remove) for: "..tostring(t.name)
 		local font = self.font
-		local w, h = font:size(title)
-		local d = engine.Dialog.new(title, w + 8, h + 25, nil, nil, nil, font)
+		local w, h = font:size(title:removeColorCodes())
+		local d = engine.Dialog.new(title, w + 20, h + 25, nil, nil, nil, font)
 		d:keyCommands{__DEFAULT=function(sym, ctrl, shift, alt, meta, unicode)
 			-- Modifier keys are not treated
 			if not t.single_key and (sym == KeyBind._LCTRL or sym == KeyBind._RCTRL or

@@ -34,7 +34,7 @@
 #endif
 
 extern int resizeWindow(int width, int height);
-extern void do_resize(int w, int h, bool fullscreen);
+extern void do_resize(int w, int h, bool fullscreen, bool borderless);
 extern void setupRealtime(float freq);
 extern void setupDisplayTimer(int fps);
 extern int docall (lua_State *L, int narg, int nret);

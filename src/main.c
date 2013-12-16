@@ -58,6 +58,7 @@ char **g_argv;
 SDL_Window *window = NULL;
 SDL_GLContext maincontext; /* Our opengl context handle */
 bool is_fullscreen = FALSE;
+bool is_borderless = FALSE;
 static lua_State *L = NULL;
 int nb_cpus;
 bool no_debug = FALSE;
@@ -804,14 +805,14 @@ int resizeWindow(int width, int height)
 	return( TRUE );
 }
 
-void do_resize(int w, int h, bool fullscreen)
+void do_resize(int w, int h, bool fullscreen, bool borderless)
 {
 	/* Temporary width, height (since SDL might reject our resize) */
 	int aw, ah;
 	int mustPushEvent = 0;
 	SDL_Event fsEvent;
 
-	printf("[DO RESIZE] Requested: %dx%d (%d)\n", w, h, fullscreen);
+	printf("[DO RESIZE] Requested: %dx%d (%d, %d)\n", w, h, fullscreen, borderless);
 
 	/* If there is no current window, we have to make one and initialize */
 	if (!window) {
@@ -819,12 +820,15 @@ void do_resize(int w, int h, bool fullscreen)
 				(start_xpos == -1) ? SDL_WINDOWPOS_CENTERED : start_xpos,
 				(start_ypos == -1) ? SDL_WINDOWPOS_CENTERED : start_ypos, w, h,
 				SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE
-						| (fullscreen ? SDL_WINDOW_FULLSCREEN : 0));
+				| (fullscreen ? SDL_WINDOW_FULLSCREEN : 0)
+				| (borderless ? SDL_WINDOW_BORDERLESS : 0)
+		);
 		if (window==NULL) {
 			printf("error opening screen: %s\n", SDL_GetError());
 			exit(1);
 		}
 		is_fullscreen = fullscreen;
+		is_borderless = borderless;
 		screen = SDL_GetWindowSurface(window);
 		maincontext = SDL_GL_CreateContext(window);
 		SDL_GL_MakeCurrent(window, maincontext);
@@ -842,6 +846,8 @@ void do_resize(int w, int h, bool fullscreen)
 
 		/* Update window size */
 		SDL_SetWindowSize(window, w, h);
+		SDL_SetWindowBordered(window, !borderless);
+		is_borderless = borderless;
 
 		/* Jump [back] into fullscreen if requested */
 		if (fullscreen) {
@@ -886,7 +892,7 @@ void do_resize(int w, int h, bool fullscreen)
 
 	/* Check and see if SDL honored our resize request */
 	SDL_GetWindowSize(window, &aw, &ah);
-	printf("[DO RESIZE] Got: %dx%d (%d)\n", aw, ah, is_fullscreen);
+	printf("[DO RESIZE] Got: %dx%d (%d, %d)\n", aw, ah, is_fullscreen, borderless);
 	SDL_GL_MakeCurrent(window, maincontext);
 	resizeWindow(aw, ah);
 
@@ -1195,7 +1201,7 @@ int main(int argc, char *argv[])
 
 	boot_lua(1, FALSE, argc, argv);
 
-	do_resize(WIDTH, HEIGHT, FALSE);
+	do_resize(WIDTH, HEIGHT, FALSE, FALSE);
 	if (screen==NULL) {
 		printf("error opening screen: %s\n", SDL_GetError());
 		return 3;
@@ -1251,7 +1257,7 @@ int main(int argc, char *argv[])
 					/* Note: SDL can't resize a fullscreen window, so don't bother! */
 					if (!is_fullscreen) {
 						printf("SDL_WINDOWEVENT_RESIZED: %d x %d\n", event.window.data1, event.window.data2);
-						do_resize(event.window.data1, event.window.data2, is_fullscreen);
+						do_resize(event.window.data1, event.window.data2, is_fullscreen, is_borderless);
 						if (current_game != LUA_NOREF)
 						{
 							lua_rawgeti(L, LUA_REGISTRYINDEX, current_game);
