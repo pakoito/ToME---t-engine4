@@ -97,6 +97,11 @@ newAchievement{
 	desc = [[Won ToME by closing the Void portal using Aeryn as a sacrifice.]],
 }
 newAchievement{
+	name = "The Sun Still Shines", id = "WIN_AERYN_SURVIVE",
+	show = "name", huge=true,
+	desc = [[Aeryn survived the last battle.]],
+}
+newAchievement{
 	name = "Selfless", id = "WIN_SACRIFICE",
 	show = "name", huge=true,
 	desc = [[Won ToME by closing the Void portal using yourself as a sacrifice.]],

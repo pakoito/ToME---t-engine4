@@ -121,6 +121,9 @@ function win(self, how)
 	elseif how == "yeek-sacrifice" then world:gainAchievement("YEEK_SACRIFICE", game.player)
 	end
 
+	local aeryn = game.level:findEntity{define_as="HIGH_SUN_PALADIN_AERYN"}
+	if aeryn and not aeryn.dead then world:gainAchievement("WIN_AERYN_SURVIVE", game.player) end
+
 	if not game.state.gone_west then world:gainAchievement("WIN_NEVER_WEST", game.player) end
 
 	game:setAllowedBuild("adventurer", true)
