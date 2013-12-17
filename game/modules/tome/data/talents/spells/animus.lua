@@ -97,16 +97,6 @@ newTalent{
 	end,
 	getMaxLife = function(self, t) return self:combatTalentLimit(t, 50, 10, 25) end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 35, 330) end,
-	on_pre_use = function(self, t)
-		if game.party and game.party:hasMember(self) then
-			for act, def in pairs(game.party.members) do
-				if act.summoner and act.summoner == self then
-					if act.type == "undead" and act.subtype == "husk" then return false end
-				end
-			end
-			return true
-		else return false end
-	end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
@@ -114,6 +104,18 @@ newTalent{
 		self:project(tg, x, y, function(px, py)
 			local m = game.level.map(px, py, Map.ACTOR)
 			if not m or not m.max_life or not m.life then return end
+
+			if game.party and game.party:hasMember(self) then
+				for act, def in pairs(game.party.members) do
+					if act.summoner and act.summoner == self then
+						if act.type == "undead" and act.subtype == "husk" then
+							game.party:removeMember(act)
+							act:disappear(act)							
+						end
+					end
+				end
+			end
+
 			local dam = self:spellCrit(t.getDamage(self, t))
 			local olddie = rawget(m, "die")
 			m.die = function() end
