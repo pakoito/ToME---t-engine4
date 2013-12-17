@@ -67,6 +67,24 @@ You will do as asked, for the good of all Yeeks! The Way is always right.
 			player:setQuestStatus("high-peak", engine.Quest.COMPLETED, "yeek")
 			player:hasQuest("high-peak"):win("yeek-sacrifice")
 		end},
+		{"#LIGHT_GREEN#[In a last incredible display of willpower you fight the Way for a few seconds, letting you project your thoughts to Aeryn.]#WHITE# High Lady! Kill me #{bold}#NOW#{normal}#",
+			cond=function(npc, player) return not void_portal_open(nil, player) and aeryn_alive(npc, player) and player:getWil() >= 55 end, jump="yeek-stab"
+		},
+	}
+}
+
+newChat{ id="yeek-stab",
+	text = [[#LIGHT_GREEN#*Through your mind Aeryn sees what the Way is planning.*#WHITE#
+You were a precious ally and a friend. The world will remember your last act of selfless sacrifice. I swear it.
+#LIGHT_GREEN#*As she says this she pierces your body with a mighty thrust of her sword, ending the plans of the Way.*#WHITE#
+]],
+	answers = {
+		{"#LIGHT_GREEN#[slip peacefully into death.]", action=function(npc, player)
+			player.no_resurrect = true
+			player:die(player, {special_death_msg="sacrificing "..string.his_her_self(player).." to stop the Way"})
+			player:setQuestStatus("high-peak", engine.Quest.COMPLETED, "yeek-stab")
+			player:hasQuest("high-peak"):win("yeek-selfless")
+		end},
 	}
 }
 

@@ -112,6 +112,11 @@ newAchievement{
 	desc = [[Won ToME by sacrificing yourself to forcefully spread the Way to every other sentient being on Eyal.]],
 }
 newAchievement{
+	name = "No Way!", id = "YEEK_SELFLESS",
+	show = "name", huge=true,
+	desc = [[Won ToME by closing the Void portal and letting yourself be killed by Aeryn to prevent the Way to enslave every sentient being on Eyal.]],
+}
+newAchievement{
 	name = "Tactical master", id = "SORCERER_NO_PORTAL",
 	show = "name", huge=true,
 	desc = [[Fought the two Sorcerers without closing any invocation portals.]],

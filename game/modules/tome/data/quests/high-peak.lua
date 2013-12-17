@@ -119,6 +119,7 @@ function win(self, how)
 	elseif how == "aeryn-sacrifice" then world:gainAchievement("WIN_AERYN", game.player)
 	elseif how == "self-sacrifice" then world:gainAchievement("WIN_SACRIFICE", game.player)
 	elseif how == "yeek-sacrifice" then world:gainAchievement("YEEK_SACRIFICE", game.player)
+	elseif how == "yeek-selfless" then world:gainAchievement("YEEK_SELFLESS", game.player)
 	end
 
 	local aeryn = game.level:findEntity{define_as="HIGH_SUN_PALADIN_AERYN"}
@@ -149,6 +150,11 @@ function onWin(self, who)
 		desc[#desc+1] = "Your sacrifice worked. Your mental energies were imbued with farportal energies. The Way radiated from the High Peak toward the rest of Eyal like a mental tidal wave."
 		desc[#desc+1] = "Every sentient being in Eyal is now part of the Way. Peace and happiness are enforced for all."
 		desc[#desc+1] = "Only the mages of Angolwen were able to withstand the mental shock and thus are the only unsafe people left. But what can they do against the might of the Way?"
+		return 0, desc
+	elseif who:isQuestStatus("high-peak", engine.Quest.COMPLETED, "yeek-stab") then
+		desc[#desc+1] = "In the aftermath of the battle the Way tried to force you to act as a vessel to bring the Way to every sentient being."
+		desc[#desc+1] = "Through an incredible display of willpower you resisted long enough to ask Aeryn to kill you."
+		desc[#desc+1] = "She sadly agreed and ran her sword through you, enabling you to do the last sacrifice you could for the world."
 		return 0, desc
 	end
 
