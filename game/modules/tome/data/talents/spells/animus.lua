@@ -200,7 +200,7 @@ newTalent{
 		If the target is left with less than %d%% life you try to take control of its body.
 		Should this succeed the target becomes your permanent minion (unaffected by your aura) and you regain 2 souls.
 		Husks prossess the same abilities as they had in life (affected by Dark Empathy), are healed to full when created but can never heal or be healed by any means.
-		Only one husk can be controlled at any time.
+		Only one husk can be controlled at any time, if this spell is cast again it will dispell the previous husk, even if no new one is created.
 		Bosses, other undeads and summoned creatures can not be turned into husks.
 		The damage and chance will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.DARKNESS, damage), t.getMaxLife(self, t))
