@@ -380,6 +380,14 @@ function _M:learnTalent(t_id, force, nb)
 	return true
 end
 
+--- Actor forgets a talent completly
+-- @param t_id the id of the talent to learn
+-- @return true if the talent was unlearnt, nil and an error message otherwise
+function _M:unlearnTalentFull(t_id)
+	local lvl = self:getTalentLevelRaw(t_id)
+	if lvl > 0 then self:unlearnTalent(t_id, lvl) end
+end
+
 --- Actor forgets a talent
 -- @param t_id the id of the talent to learn
 -- @return true if the talent was unlearnt, nil and an error message otherwise

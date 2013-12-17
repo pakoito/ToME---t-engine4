@@ -218,8 +218,8 @@ newTalent{
 		m.exp_worth = 0
 		m.no_inventory_access = true
 		m.clone_on_hit = nil
-		m.talents.T_CREATE_MINIONS = nil
-		m.talents.T_FORGERY_OF_HAZE = nil
+		m:unlearnTalentFull(m.T_CREATE_MINIONS)
+		m:unlearnTalentFull(m.T_FORGERY_OF_HAZE)
 		m.remove_from_party_on_death = true
 		m.inc_damage.all = ((100 + (m.inc_damage.all or 0)) * t.getDam(self, t)) - 100
 
