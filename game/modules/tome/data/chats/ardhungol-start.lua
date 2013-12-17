@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-if not game.state:isAdvanced() then
+if not game.state:isAdvanced() and game.player.level < 20 then
 newChat{ id="welcome",
 	text = [[Good day to you.]],
 	answers = {

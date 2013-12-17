@@ -143,7 +143,7 @@ newTalent{
 	getDuration = function (self, t) return math.floor(self:combatTalentScale(self:getTalentLevel(t)*getParadoxModifier(self, pm), 6, 10)) end,
 	no_npc_use = true,
 	action = function(self, t)
-		local tg = {type="bolt", nowarning=true, range=1, nolock=true, talent=t}
+		local tg = {type="bolt", nowarning=true, range=1, nolock=true, simple_dir_request=true, talent=t}
 		local entrance_x, entrance_y = self:getTarget(tg)
 		if not entrance_x or not entrance_y then return nil end
 		local _ _, entrance_x, entrance_y = self:canProject(tg, entrance_x, entrance_y)
