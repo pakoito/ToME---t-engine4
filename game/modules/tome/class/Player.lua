@@ -264,6 +264,12 @@ end
 
 function _M:move(x, y, force)
 	local ox, oy = self.x, self.y
+
+	if not force and self:enoughEnergy() and game.level.map:checkEntity(x, y, Map.TRAP, "is_store") then
+		game.level.map:checkEntity(x, y, Map.TRAP, "block_move", self, true)
+		return false
+	end
+
 	local moved = mod.class.Actor.move(self, x, y, force)
 
 	if not force and ox == self.x and oy == self.y and self.doPlayerSlide then
