@@ -167,6 +167,7 @@ function _M:event(e)
 		e.msg = e.msg:removeColorCodes()
 		local color = colors.WHITE
 		if e.status == 'dev' then color = colors.CRIMSON
+		elseif e.status == 'mod' then color = colors.GOLD
 		elseif e.donator == "oneshot" then color = colors.LIGHT_GREEN
 		elseif e.donator == "recurring" then color = colors.ROYAL_BLUE end
 
@@ -187,6 +188,7 @@ function _M:event(e)
 		e.msg = e.msg:removeColorCodes()
 		local color = colors.WHITE
 		if e.status == 'dev' then color = colors.CRIMSON
+		elseif e.status == 'mod' then color = colors.GOLD
 		elseif e.donator == "oneshot" then color = colors.LIGHT_GREEN
 		elseif e.donator == "recurring" then color = colors.ROYAL_BLUE end
 
@@ -201,6 +203,7 @@ function _M:event(e)
 		e.msg = e.msg:removeColorCodes()
 		local color = colors.WHITE
 		if e.status == 'dev' then color = colors.CRIMSON
+		elseif e.status == 'mod' then color = colors.GOLD
 		elseif e.donator == "oneshot" then color = colors.LIGHT_GREEN
 		elseif e.donator == "recurring" then color = colors.ROYAL_BLUE end
 
@@ -224,6 +227,7 @@ function _M:event(e)
 	elseif e.se == "SerialData" then
 		local color = colors.WHITE
 		if e.status == 'dev' then color = colors.CRIMSON
+		elseif e.status == 'mod' then color = colors.GOLD
 		elseif e.donator == "oneshot" then color = colors.LIGHT_GREEN
 		elseif e.donator == "recurring" then color = colors.ROYAL_BLUE end
 		e.color_name = color
@@ -244,6 +248,7 @@ function _M:event(e)
 	elseif e.se == "Join" then
 		local color = colors.WHITE
 		if e.status == 'dev' then color = colors.CRIMSON
+		elseif e.status == 'mod' then color = colors.GOLD
 		elseif e.donator == "oneshot" then color = colors.LIGHT_GREEN
 		elseif e.donator == "recurring" then color = colors.ROYAL_BLUE end
 
@@ -258,6 +263,7 @@ function _M:event(e)
 	elseif e.se == "Part" then
 		local color = colors.WHITE
 		if e.status == 'dev' then color = colors.CRIMSON
+		elseif e.status == 'mod' then color = colors.GOLD
 		elseif e.donator == "oneshot" then color = colors.LIGHT_GREEN
 		elseif e.donator == "recurring" then color = colors.ROYAL_BLUE end
 
