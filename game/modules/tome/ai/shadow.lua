@@ -199,7 +199,7 @@ newAI("shadow", function(self)
 	self.summon_time = self.summon_time - 1
 
 	-- make sure no one has turned us against our summoner
-	if self.ai_target.actor == self.summoner then
+	if self:isMySummoner(self.ai_target.actor) then
 		clearTarget(self)
 	end
 

@@ -23,6 +23,15 @@ local Base = require "engine.interface.ActorLife"
 --- Handles actors life and death
 module(..., package.seeall, class.inherit(Base))
 
+local function oktodie(self, value, src, death_note)
+	if self:knowTalent(self.T_CAUTERIZE) and self:triggerTalent(self.T_CAUTERIZE, nil, value) then
+		return false, 0
+	else
+		if src.on_kill and src:on_kill(self) then return false, value end
+		return self:die(src, death_note), value
+	end
+end
+
 --- Remove some HP from an actor
 -- If HP is reduced to 0 then remove from the level and call the die method.<br/>
 -- When an actor dies its dead property is set to true, to wait until garbage collection deletes it
@@ -37,12 +46,11 @@ function _M:takeHit(value, src, death_note)
 			self:removeEffect(self.EFF_PRECOGNITION)
 			return false, 0
 		end
-
-		if self:knowTalent(self.T_CAUTERIZE) and self:triggerTalent(self.T_CAUTERIZE, nil, value) then
-			return false, 0
-		else
-			if src.on_kill and src:on_kill(self) then return false, value end
-			return self:die(src, death_note), value
+		return oktodie(self, value, src, death_note)
+	-- Allow double-death ONLY for npcs
+	elseif self.life <= self.die_at and self.dead then
+		if not game.party or not game.party:hasMember(self) then
+			return oktodie(self, value, src, death_note)
 		end
 	end
 	return false, value

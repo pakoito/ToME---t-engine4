@@ -2288,6 +2288,15 @@ function _M:resolveSource()
 	end
 end
 
+function _M:isMySummoner(act)
+	local me = self
+	while me.summoner do
+		if me.summoner == act then return true end
+		me = me.summoner
+	end
+	return false
+end
+
 function _M:emptyDrops()
 	local inven = self:getInven(self.INVEN_INVEN)
 	for i = #inven, 1, -1 do
