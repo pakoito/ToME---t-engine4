@@ -79,7 +79,7 @@ newEntity{ define_as = "SHADE_OF_TELOS",
 	},
 
 	autolevel = "caster",
-	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
+	ai = "tactical", ai_state = { ai_target="target_player", talent_in=1, ai_move="move_astar", },
 	resolvers.inscriptions(4, "rune"),
 	resolvers.inscriptions(1, {"manasurge rune"}),
 
