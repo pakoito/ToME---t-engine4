@@ -64,6 +64,7 @@ function table.max(t)
 end
 
 function table.print(src, offset, ret)
+	if type(src) ~= "table" then print("table.print has no table:", src) return end
 	offset = offset or ""
 	for k, e in pairs(src) do
 		-- Deep copy subtables, but not objects!
