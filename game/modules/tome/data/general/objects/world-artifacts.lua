@@ -127,7 +127,7 @@ newEntity{ base = "BASE_STAFF",
 			local Stats = require "engine.interface.ActorStats"
 			local DamageType = require "engine.DamageType"
 
-			self:specialWearAdd({"wielder","resists"}, { [DamageType.BLIGHT] = 10})
+			self:specialWearAdd({"wielder","resists"}, { [engine.DamageType.BLIGHT] = 10})
 			self:specialWearAdd({"wielder","disease_immune"}, 0.5)
 			game.logPlayer(who, "#DARK_GREEN#You feel the cleansing power of Penitence attune to you.")
 		end
@@ -585,7 +585,7 @@ newEntity{ base = "BASE_LONGBOW",
 			local Stats = require "engine.interface.ActorStats"
 			local DamageType = require "engine.DamageType"
 
-			self:specialWearAdd({"wielder","resists"}, { [DamageType.DARKNESS] = 20, [DamageType.NATURE] = 20,} )
+			self:specialWearAdd({"wielder","resists"}, { [engine.DamageType.DARKNESS] = 20, [DamageType.NATURE] = 20,} )
 			self:specialWearAdd({"wielder","combat_def"}, 12)
 			game.logPlayer(who, "#DARK_GREEN#You understand this bow-and its connection to nature-in a way few can.")
 		end
@@ -1640,7 +1640,7 @@ newEntity{ base = "BASE_WIZARD_HAT", define_as = "SET_TEMPORAL_FEZ",
 		self:specialSetAdd({"wielder","paradox_reduce_fails"}, 40)
 		self:specialSetAdd({"wielder","confusion_immune"}, 0.4)
 		self:specialSetAdd({"wielder","combat_spellspeed"}, 0.1)
-		self:specialSetAdd({"wielder","inc_damage"}, { [DamageType.TEMPORAL] = 10 })
+		self:specialSetAdd({"wielder","inc_damage"}, { [engine.DamageType.TEMPORAL] = 10 })
 	end,
 	on_set_broken = function(self, who)
 		self.use_talent = nil
@@ -1901,7 +1901,7 @@ newEntity{ base = "BASE_LEATHER_BELT",
 			local Stats = require "engine.interface.ActorStats"
 			local DamageType = require "engine.DamageType"
 
-			self:specialWearAdd({"wielder","resists"}, { [DamageType.MIND] = 20,} )
+			self:specialWearAdd({"wielder","resists"}, { [engine.DamageType.MIND] = 20,} )
 			self:specialWearAdd({"wielder","combat_mentalresist"}, 15)
 			game.logPlayer(who, "#DARK_GREEN#Nessilla's belt seems to come alive as you put it on.")
 		end
@@ -2616,7 +2616,7 @@ newEntity{ base = "BASE_DIGGER",
 			local DamageType = require "engine.DamageType"
 
 			self:specialWearAdd({"wielder","inc_stats"}, { [Stats.STAT_STR] = 5, [Stats.STAT_CON] = 5, })
-			self:specialWearAdd({"wielder","inc_damage"}, { [DamageType.PHYSICAL] = 10 })
+			self:specialWearAdd({"wielder","inc_damage"}, { [engine.DamageType.PHYSICAL] = 10 })
 			self:specialWearAdd({"wielder", "talents_types_mastery"}, { ["race/dwarf"] = 0.2 })
 
 			game.logPlayer(who, "#LIGHT_BLUE#You feel the whisper of your ancestors as you wield this pickaxe!")
