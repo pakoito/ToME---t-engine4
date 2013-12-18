@@ -312,8 +312,8 @@ function _M:generateListGameplay()
 		self.c_list:drawItem(item)
 	end,}
 
-	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Enables quick melee targetting.\nTalents that require a melee target will automatically target when pressing a direction key instead of requiring a confirmation.#WHITE#"}
-	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Quick melee targetting#WHITE##{normal}#", status=function(item)
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Enables quick melee targeting.\nTalents that require a melee target will automatically target when pressing a direction key instead of requiring a confirmation.#WHITE#"}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Quick melee targeting#WHITE##{normal}#", status=function(item)
 		return tostring(config.settings.tome.immediate_melee_keys and "enabled" or "disabled")
 	end, fct=function(item)
 		config.settings.tome.immediate_melee_keys = not config.settings.tome.immediate_melee_keys
@@ -321,12 +321,21 @@ function _M:generateListGameplay()
 		self.c_list:drawItem(item)
 	end,}
 
-	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Enables quick melee targetting auto attacking.\nTalents that require a melee target will automatically target and confirm if there is only one hostile creatue around.#WHITE#"}
-	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Quick melee targetting auto attack#WHITE##{normal}#", status=function(item)
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Enables quick melee targeting auto attacking.\nTalents that require a melee target will automatically target and confirm if there is only one hostile creatue around.#WHITE#"}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Quick melee targeting auto attack#WHITE##{normal}#", status=function(item)
 		return tostring(config.settings.tome.immediate_melee_keys_auto and "enabled" or "disabled")
 	end, fct=function(item)
 		config.settings.tome.immediate_melee_keys_auto = not config.settings.tome.immediate_melee_keys_auto
 		game:saveSettings("tome.immediate_melee_keys_auto", ("tome.immediate_melee_keys_auto = %s\n"):format(tostring(config.settings.tome.immediate_melee_keys_auto)))
+		self.c_list:drawItem(item)
+	end,}
+
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Enables mouse targeting. If disabled mouse movements will not change the target when casting a spell or using a talent.#WHITE#"}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Mouse targeting#WHITE##{normal}#", status=function(item)
+		return tostring(config.settings.tome.disable_mouse_targeting and "disabled" or "enabled")
+	end, fct=function(item)
+		config.settings.tome.disable_mouse_targeting = not config.settings.tome.disable_mouse_targeting
+		game:saveSettings("tome.disable_mouse_targeting", ("tome.disable_mouse_targeting = %s\n"):format(tostring(config.settings.tome.disable_mouse_targeting)))
 		self.c_list:drawItem(item)
 	end,}
 

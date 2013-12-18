@@ -1933,7 +1933,7 @@ function _M:setupMouse(reset)
 		end
 
 		-- Handle targeting
-		if self:targetMouse(button, mx, my, xrel, yrel, event) then return end
+		if not config.settings.tome.disable_mouse_targeting and self:targetMouse(button, mx, my, xrel, yrel, event) then return end
 
 		-- Cheat kill
 		if config.settings.cheat and button == "right" and core.key.modState("ctrl") and core.key.modState("shift") and not xrel and not yrel and event == "button" and self.zone and not self.zone.wilderness then
