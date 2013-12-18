@@ -180,7 +180,7 @@ uberTalent{
 			p.__tmpvals = nil
 		end
 		self:talentTemporaryValue(p, "can_breath", {water = 1})
-		self:talentTemporaryValue(p, "__show_special_talents", {[self.T_EXOTIC_WEAPONS_MASTERY] = 1})
+		self.__show_special_talents[self.T_EXOTIC_WEAPONS_MASTERY] = true
 		self:talentTemporaryValue(p, "talents_inc_cap", {T_EXOTIC_WEAPONS_MASTERY=t.bonusLevel(self,t)})
 		self:talentTemporaryValue(p, "talents", {T_EXOTIC_WEAPONS_MASTERY=t.bonusLevel(self,t)})
 		self:talentTemporaryValue(p, "talents_inc_cap", {T_SPIT_POISON=t.bonusLevel(self,t)})
