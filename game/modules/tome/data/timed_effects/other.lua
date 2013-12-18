@@ -2258,6 +2258,7 @@ newEffect{
 	name = "EIDOLON_PROTECT", image = "shockbolt/npc/unknown_unknown_the_eidolon.png",
 	desc = "Protected by the Eidolon",
 	long_desc = function(self, eff) return "The target is protected by the Eidolon, no creature may harm it (except self-harm)." end,
+	zone_wide_effect = true,
 	decrease = 0, no_remove = true,
 	type = "other",
 	subtype = { eidolon=true },

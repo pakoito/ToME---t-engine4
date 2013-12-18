@@ -659,6 +659,7 @@ function _M:changeLevel(lev, zone, params)
 
 	-- Transmo!
 	local p = self:getPlayer(true)
+	local oldzone, oldlevel = game.zone, game.level
 	if not params.direct_switch and p:attr("has_transmo") and p:transmoGetNumberItems() > 0 and not game.player.no_inventory_access then
 		local d
 		local titleupdator = self.player:getEncumberTitleUpdator(p:transmoGetName())
@@ -680,7 +681,9 @@ function _M:changeLevel(lev, zone, params)
 					p:transmoInven(inven, i, o)
 				end
 			end
-			self:changeLevelReal(lev, zone, params)
+			if game.zone == oldzone and game.level == oldlevel then
+				self:changeLevelReal(lev, zone, params)
+			end
 		end
 		-- Select the chest tab
 		d.c_inven.dont_update_last_tabs = true
