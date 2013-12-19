@@ -91,6 +91,24 @@ newEntity{
 }
 
 newEntity{
+	name = "Lost kitten",
+	type = "harmless", subtype = "special", unique = true,
+	level_range = {15, 35},
+	rarity = 100,
+	min_level = 15,
+	on_world_encounter = "merchant-quest",
+	on_encounter = function(self, who)
+		who.energy.value = game.energy_to_act
+		game.paused = true
+		who:runStop()
+		local Chat = require "engine.Chat"
+		local chat = Chat.new("sage-kitty", mod.class.NPC.new{name="Lost Kitty", image="npc/sage_kitty.png"}, who)
+		chat:invoke()
+		return true
+	end,
+}
+
+newEntity{
 	name = "Ancient Elven Ruins",
 	type = "harmless", subtype = "special", unique = true,
 	immediate = {"world-encounter", "maj-eyal"},

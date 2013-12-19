@@ -17,6 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 load("/data/general/npcs/horror.lua")
+load("/data/general/npcs/feline.lua", function(e) e.rarity = nil end)
 
 local Talents = require("engine.interface.ActorTalents")
 
@@ -156,4 +157,20 @@ newEntity{ define_as="TRAINING_DUMMY",
 
 		return value
 	end,
+}
+
+
+newEntity{ base = "BASE_NPC_CAT", define_as = "KITTY",
+	name = "Pumpkin, the little kitty", color=colors.ORANGE,
+	image="npc/sage_kitty.png",
+	desc = [[An orange kitty with a white star blaze on his chest. Has a strange affinity for licking your face whenever possible.]],
+	level_range = {1, nil}, exp_worth = 1,
+	rarity = 4,
+	self_resurrect = 9,
+	max_life = 50,
+	invulnerable = 1,
+	never_anger = true,
+	movement_speed = 0.6,
+	ai_state = { ai_move="move_snake", ai_target="target_player" },
+	defineDisplayCallback = function() end,
 }

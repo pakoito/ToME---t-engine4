@@ -86,6 +86,19 @@ return {
 			Dialog:simpleLongPopup("Yiilkgur", "This level seems to be removed from the rest of the ruins. The air is fresh and the level is lighted. You hear the distant crackling of magical energies.", 400)
 			game.level.shown_warning = true
 		end
+
+		-- Kitty!
+		local q = game.player:hasQuest("shertul-fortress")
+		if q and q:isCompleted("farportal-done") and game.state.kitty_fed and not game.state.kitty_summoned then
+			local kitty = game.zone:makeEntityByName(game.level, "actor", "KITTY", true)
+			local x, y = util.findFreeGrid(game.player.x, game.player.y, 10, true, {[engine.Map.ACTOR]=true})
+			if kitty and x then
+				game.zone:addEntity(game.level, kitty, "actor", x, y)
+				kitty.faction = game.player.faction
+				game.state.kitty_summoned = true
+				Dialog:simpleLongPopup("Yiilkgur", "As you enter the familiar Fortress you notice a small orange cat has followed you somehow.\nIt looks like the kitty you fed earlier.", 400)
+			end
+		end
 	end,
 
 	-- Handle drop sorting
