@@ -89,6 +89,7 @@ newEntity{ define_as = "FILLAREL",
 	end,
 
 	can_talk = "unremarkable-cave-fillarel",
+	can_talk_only_once = true,
 }
 
 newEntity{ define_as = "CORRUPTOR",
