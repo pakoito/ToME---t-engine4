@@ -161,7 +161,7 @@ newTalent{
 	require = {
 		stat = { mag=function(level) return 40 + (level-1) * 2 end },
 		level = function(level) return 20 + (level-1)  end,
-		special = { desc="'From Death, Life' quest completed and not already undead", fct=function(self, t) return not self:attr("undead") and self:isQuestStatus("lichform", engine.Quest.DONE) end},
+		special = { desc="'From Death, Life' quest completed and not already undead", fct=function(self, t) return not self:attr("undead") and (self:isQuestStatus("lichform", engine.Quest.DONE) or game.state.birth.ignore_prodigies_special_reqs) end},
 	},
 	mode = "sustained",
 	points = 5,
