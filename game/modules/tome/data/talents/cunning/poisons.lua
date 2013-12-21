@@ -120,7 +120,7 @@ newTalent{
 		else
 			local targets = self:archeryAcquireTargets(nil, {one_shot=true})
 			if not targets then return end
-			self:archeryShoot(targets, t, nil, {mult=1})
+			self:archeryShoot(targets, t, nil, {mult=1, damtype=DamageType.NATURE})
 		end
 
 		return true
