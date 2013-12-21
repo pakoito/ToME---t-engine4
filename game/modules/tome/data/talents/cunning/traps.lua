@@ -522,6 +522,7 @@ newTalent{
 	no_break_stealth = trap_stealth,
 	no_unlearn_last = true,
 	getDuration = function(self, t) return math.floor(self:combatTalentScale(self:getTalentLevel(self.T_TRAP_MASTERY), 2.5, 4.5)) end,
+	getDamage = function(self, t) return 20 + self:combatStatScale("cun", 5, 50) * self:callTalent(self.T_TRAP_MASTERY,"getTrapMastery") / 30 end,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, simple_dir_request=true, talent=t}
 		local x, y, target = self:getTarget(tg)
@@ -530,12 +531,14 @@ newTalent{
 		if game.level.map(x, y, Map.TRAP) then game.logPlayer(self, "You somehow fail to set the trap.") return nil end
 
 		local Trap = require "mod.class.Trap"
+		local dam = t.getDamage(self, t)
 		local t = basetrap(self, t, x, y, 5 + self:getTalentLevel(self.T_TRAP_MASTERY), {
 			type = "elemental", name = "flash bang trap", color=colors.YELLOW, image = "trap/blast_acid01.png",
 			dur = t.getDuration(self, t),
 			check_hit = self:combatAttack(),
 			lure_trigger = true,
 			stamina = t.stamina,
+			dam = dam,
 			triggered = function(self, x, y, who)
 				self:project({type="ball", x=x,y=y, radius=2}, x, y, function(px, py)
 					local who = game.level.map(px, py, engine.Map.ACTOR)
@@ -547,6 +550,7 @@ newTalent{
 					elseif who then
 						game.logSeen(who, "%s resists the flash bang!", who.name:capitalize())
 					end
+					engine.DamageType:get(engine.DamageType.PHYSICAL).projector(self.summoner, px, py, engine.DamageType.PHYSICAL, self.dam)
 				end)
 				game.level.map:particleEmitter(x, y, 2, "sunburst", {radius=2, tx=x, ty=y})
 				return true, true
@@ -565,8 +569,9 @@ newTalent{
 	info = function(self, t)
 		return ([[Lay a trap that explodes in a radius of 2, blinding or dazing anything caught inside for %d turns.
 		The duration increases with Trap Mastery.
+		All foes caught inside take %0.2f physical damage.
 		High level lure can trigger this trap.]]):
-		format(t.getDuration(self, t))
+		format(t.getDuration(self, t), damDesc(self, engine.DamageType.PHYSICAL, t.getDamage(self, t)))
 	end,
 }
 
