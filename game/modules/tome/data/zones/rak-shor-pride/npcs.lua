@@ -40,6 +40,7 @@ newEntity{ base="BASE_NPC_ORC_RAK_SHOR", define_as = "RAK_SHOR",
 	infravision = 10,
 	stats = { str=15, dex=10, cun=12, mag=16, con=14 },
 	move_others=true,
+	mana_rating = 15,
 	soul_regen = 1,
 
 	instakill_immune = 1,

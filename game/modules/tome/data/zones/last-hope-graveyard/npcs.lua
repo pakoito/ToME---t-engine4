@@ -53,6 +53,7 @@ newEntity{ define_as = "CELIA",
 
 	max_life = 500, life_regen = 0,
 	mana_regen = 10,
+	mana_rating = 10,
 	life_rating = 20,
 
 	soul = 6,
