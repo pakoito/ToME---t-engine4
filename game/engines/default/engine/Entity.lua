@@ -688,15 +688,15 @@ function _M:addTemporaryValue(prop, v, noupdate)
 				b = 1 - (1 - b) * (1 - v)
 				base[prop] = b + 1
 			elseif method == "highest" then
-				base["__thighest_"..prop] = base["__thighest_"..prop] or {}
+				base["__thighest_"..prop] = base["__thighest_"..prop] or {[-1] = base[prop]}
 				base["__thighest_"..prop][id] = v
 				base[prop] = table.max(base["__thighest_"..prop])
 			elseif method == "lowest" then
-				base["__tlowest_"..prop] = base["__tlowest_"..prop] or {}
+				base["__tlowest_"..prop] = base["__tlowest_"..prop] or {[-1] = base[prop]}
 				base["__tlowest_"..prop][id] = v
 				base[prop] = table.min(base["__tlowest_"..prop])
 			elseif method == "last" then
-				base["__tlast_"..prop] = base["__tlast_"..prop] or {}
+				base["__tlast_"..prop] = base["__tlast_"..prop] or {[-1] = base[prop]}
 				local b = base["__tlast_"..prop]
 				b[id] = v
 				b = table.listify(b)
