@@ -99,7 +99,7 @@ end
 
 -- Move around
 if config.settings.window.pos then
---	core.display.setWindowPos(config.settings.window.pos.x, config.settings.window.pos.y)
+	core.display.setWindowPos(config.settings.window.pos.x, config.settings.window.pos.y)
 end
 
 -- Audio

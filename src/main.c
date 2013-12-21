@@ -890,6 +890,9 @@ void do_resize(int w, int h, bool fullscreen, bool borderless)
 
 	}
 
+
+	if (is_borderless) SDL_SetWindowPosition(window, 0, 0);
+
 	/* Check and see if SDL honored our resize request */
 	SDL_GetWindowSize(window, &aw, &ah);
 	printf("[DO RESIZE] Got: %dx%d (%d, %d)\n", aw, ah, is_fullscreen, borderless);
