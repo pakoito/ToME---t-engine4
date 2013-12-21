@@ -25,7 +25,7 @@ load("/data/general/grids/forest.lua")
 newEntity{
 	define_as = "POST",
 	name = "Zigur Postsign", lore="zigur-post",
-	desc = [[The laws of the Ziguratnh]],
+	desc = [[The laws of the Ziguranth]],
 	image = "terrain/grass.png",
 	display = '_', color=colors.UMBER, back_color=colors.DARK_GREEN,
 	add_displays = {class.new{image="terrain/signpost.png"}},

@@ -187,7 +187,7 @@ newIngredient{ id = "RED_CRYSTAL_SHARD",
 	type = "organic",
 	icon = "object/red_crystal_shard.png",
 	name = "red crystal shard",
-	desc = [[Tiny flames still dance etherally inside this transparent crystal, though its heat seems to have faded... you hope.]],
+	desc = [[Tiny flames still dance ethereally inside this transparent crystal, though its heat seems to have faded... you hope.]],
 	min = 0, max = INFINITY,
 	alchemy_text = "I hear these can be found in a cave near Elvala. I also hear that they can cause you to spontaneously combust, so no need to explain if you come back hideously scarred.",
 }

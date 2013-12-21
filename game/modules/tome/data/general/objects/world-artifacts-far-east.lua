@@ -523,7 +523,7 @@ newEntity{ base = "BASE_STAFF",
 	level_range = {37, 50},
 	color=colors.VIOLET,
 	rarity = 250,
-	desc = [[ A plain looking ceremonial rod. It has connections with Time that even chronomancers do not yet understand.]],
+	desc = [[A plain looking ceremonial rod. It has connections with Time that even chronomancers do not yet understand.]],
 	cost = 400,
 	material_level = 5,
 

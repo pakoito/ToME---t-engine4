@@ -67,7 +67,7 @@ elseif i == 5 then who = "Weisman" nb = 3
 end
 newEntity{ base = "BASE_LORE_RANDOM",
 	name = "letter to "..who.."("..nb..")", lore="adventurer-letter-"..i, unique=true,
-	desc = [[A part of the correspondance between two adventurers]],
+	desc = [[A part of the correspondence between two adventurers]],
 	level_range = {1, 20},
 	rarity = 20,
 	bloodstains = (i == 5) and 2 or nil,

@@ -667,9 +667,9 @@ newTalent{
 					m.faction = "allied-kingdoms"
 					m.resolvers.inscriptions(1, "infusion")
 				elseif race == 2 then
-					m.name = "halfling gardner"
+					m.name = "halfling gardener"
 					m.subtype = "halfling"
-					m.desc = [[A rugged halfling gardner, looking quite confused as to what he's doing here.]]
+					m.desc = [[A rugged halfling gardener, looking quite confused as to what he's doing here.]]
 					m.faction = "allied-kingdoms"
 					m.image = "npc/humanoid_halfling_halfling_gardener.png"
 					m.resolvers.inscriptions(1, "infusion")

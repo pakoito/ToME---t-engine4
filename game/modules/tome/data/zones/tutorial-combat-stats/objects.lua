@@ -30,7 +30,7 @@ newEntity{ base = "BASE_HEAVY_BOOTS", define_as = "PHYSSAVE_BOOTS",
 	color = colors.YELLOW,
 	encumber = 1,
 	rarity = 300,
-	desc = [[Fine boots that increse your physical save by 10.]],
+	desc = [[Fine boots that increase your physical save by 10.]],
 	cost = 100,
 	wielder = {
 		combat_physresist = 10,
@@ -89,4 +89,4 @@ newEntity{ base = "BASE_RING", define_as = "MENTALSAVE_RING",
 	wielder = {
 		combat_mentalresist = 6,
 	},
-}
+}

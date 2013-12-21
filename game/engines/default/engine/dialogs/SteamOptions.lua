@@ -72,7 +72,7 @@ function _M:generateList()
 	local list = {}
 	local i = 0
 
-	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Enable Steam Cloud saves.\nYour saves will be put on steam cloud and always be availwable everywhere.\nDisable if you have bandwidth limitations.#WHITE#"}
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Enable Steam Cloud saves.\nYour saves will be put on steam cloud and always be available everywhere.\nDisable if you have bandwidth limitations.#WHITE#"}
 	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Cloud Saves#WHITE##{normal}#", status=function(item)
 		return tostring(core.steam.isCloudEnabled(true) and "enabled" or "disabled")
 	end, fct=function(item)

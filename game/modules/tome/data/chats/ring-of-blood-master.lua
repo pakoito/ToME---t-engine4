@@ -49,7 +49,7 @@ Then we fight using our pawns for 10 rounds. If your slave survives you will win
 }
 
 newChat{ id="lose",
-	text = [[Normally you would be taken as a slave, but you look like you would be more useful as a fulltime player, so you can just try again.]],
+	text = [[Normally you would be taken as a slave, but you look like you would be more useful as a full-time player, so you can just try again.]],
 	answers = {
 		{"Blood, death without self-harm risks? Great fun!", jump="price"},
 	}

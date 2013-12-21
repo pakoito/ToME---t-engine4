@@ -153,7 +153,7 @@ function _M:pickupFloor(i, vocal, no_sort)
 			return true
 		end
 	else
-		if vocal then game.logSeen(self, "There is nothing to pickup there.") end
+		if vocal then game.logSeen(self, "There is nothing to pick up there.") end
 	end
 end
 

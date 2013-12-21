@@ -24,7 +24,7 @@ local p = game:getPlayer(true)
 newChat{ id="welcome",
 	text = [[Ah, my #{italic}#good#{normal}# friend @playername@!
 Thanks to you I made it safely to this great city! I am planning to open my most excellent boutique soon, but since I am in your debt, perhaps I could open early for you if you are in need of rare goods.]]
-..((p:knowTalent(p.T_TRAP_MASTERY) and not p:knowTalent(p.T_FLASH_BANG_TRAP)) and "\nDuring our escape I found the plans for a #YELLOW#Flash Bang Trap#LAST#, you would not happen to be interrested by any chances?" or "")
+..((p:knowTalent(p.T_TRAP_MASTERY) and not p:knowTalent(p.T_FLASH_BANG_TRAP)) and "\nDuring our escape I found the plans for a #YELLOW#Flash Bang Trap#LAST#, you would not happen to be interested by any chances?" or "")
 ..((game.state:isAdvanced() and "\nOh my friend, good news! As I told you I can now request a truly #{italic}#unique#{normal}# object to be crafted just for you. For a truly unique price..." or "\nI eventually plan to arrange a truly unique service for the most discerning of customers. If you come back later when I'm fully set up I shall be able to order for you something quite marvellous. For a perfectly #{italic}#suitable#{normal}# price, of course.")),
 	answers = {
 		{"Yes please, let me see your wares.", action=function(npc, player)

@@ -242,7 +242,7 @@ newEntity{ define_as = "RED_CRYSTAL_SHARD",
 	unided_name = "red crystal shard",
 	name = "red crystal shard",
 	display = "/", color=colors.RED,
-	desc = [[Tiny flames still dance etherally inside this transparent crystal, though its heat seems to have faded... you hope.]],
+	desc = [[Tiny flames still dance ethereally inside this transparent crystal, though its heat seems to have faded... you hope.]],
 	alch = "I hear these can be found in a cave near Elvala. I also hear that they can cause you to spontaneously combust, so no need to explain if you come back hideously scarred.",
 }
 
