@@ -24,6 +24,7 @@ newTalent{
 	require = psi_wil_req1,
 	mode = "passive",
 	no_unlearn_last = true,
+	psi = 0,
 	-- Speed effect calculations performed in _M:actBase function in mod\class\Actor.lua to handle suppressing the solipsim threshold
 	-- Damage conversion handled in mod.class.Actor.lua _M:onTakeHit
 	getConversionRatio = function(self, t) return self:combatTalentLimit(t, 1, 0.15, 0.5) end, -- Limit < 100% Keep some life dependency
