@@ -57,4 +57,4 @@ function _M:getTooltipAtMap(tmx, tmy, mx, my)
 		return tt
 	end
 	return nil
-end
+end

@@ -168,6 +168,7 @@ function _M:targetMode(v, msg, co, typ)
 				end
 				self.target:scan(5, nil, self.player.x, self.player.y, filter, self.target.target_type and type(self.target.target_type) == "table" and self.target.target_type.scan_on)
 			end
+			if self.target.target.entity and self.target.target.entity.x and self.target.target.entity.y then self.target.target.x, self.target.target.y = self.target.target.entity.x, self.target.target.entity.y end
 		end
 		if self.target.target.x then
 			self.tooltip_x, self.tooltip_y = self.level.map:getTileToScreen(self.target.target.x, self.target.target.y)
