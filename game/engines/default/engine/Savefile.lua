@@ -403,7 +403,7 @@ end
 
 --- Loads a world
 function _M:loadWorld()
-	if core.steam then core.steam.readFile(self.save_dir..self:nameLoadWorld()) end
+	if core.steam and core.steam.isCloudEnabled(true) and core.steam.isCloudEnabled(false) and not savefile_pipe.disable_cloud_saves then core.steam.readFile(self.save_dir..self:nameLoadWorld()) end
 	local path = fs.getRealPath(self.save_dir..self:nameLoadWorld())
 	if not path or path == "" then return nil, "no savefile" end
 
@@ -434,7 +434,7 @@ end
 
 --- Loads a world
 function _M:loadWorldSize()
-	if core.steam then core.steam.readFile(self.save_dir..self:nameLoadWorld()) end
+	if core.steam and core.steam.isCloudEnabled(true) and core.steam.isCloudEnabled(false) and not savefile_pipe.disable_cloud_saves then core.steam.readFile(self.save_dir..self:nameLoadWorld()) end
 	local path = fs.getRealPath(self.save_dir..self:nameLoadWorld())
 	if not path or path == "" then return nil, "no savefile" end
 
@@ -453,7 +453,7 @@ end
 
 --- Loads a game
 function _M:loadGame()
-	if core.steam then core.steam.readFile(self.save_dir..self:nameLoadGame()) end
+	if core.steam and core.steam.isCloudEnabled(true) and core.steam.isCloudEnabled(false) and not savefile_pipe.disable_cloud_saves then core.steam.readFile(self.save_dir..self:nameLoadGame()) end
 	local path = fs.getRealPath(self.save_dir..self:nameLoadGame())
 	if not path or path == "" then return nil, "no savefile" end
 
@@ -487,7 +487,7 @@ end
 
 --- Loads a game
 function _M:loadGameSize()
-	if core.steam then core.steam.readFile(self.save_dir..self:nameLoadGame()) end
+	if core.steam and core.steam.isCloudEnabled(true) and core.steam.isCloudEnabled(false) and not savefile_pipe.disable_cloud_saves then core.steam.readFile(self.save_dir..self:nameLoadGame()) end
 	local path = fs.getRealPath(self.save_dir..self:nameLoadGame())
 	if not path or path == "" then return nil, "no savefile" end
 
@@ -506,7 +506,7 @@ end
 
 --- Loads a zone
 function _M:loadZone(zone)
-	if core.steam then core.steam.readFile(self.save_dir..self:nameLoadZone(zone)) end
+	if core.steam and core.steam.isCloudEnabled(true) and core.steam.isCloudEnabled(false) and not savefile_pipe.disable_cloud_saves then core.steam.readFile(self.save_dir..self:nameLoadZone(zone)) end
 	local path = fs.getRealPath(self.save_dir..self:nameLoadZone(zone))
 	if not path or path == "" then return false end
 
@@ -545,7 +545,7 @@ end
 
 --- Loads a level
 function _M:loadLevel(zone, level)
-	if core.steam then core.steam.readFile(self.save_dir..self:nameLoadLevel(zone, level)) end
+	if core.steam and core.steam.isCloudEnabled(true) and core.steam.isCloudEnabled(false) and not savefile_pipe.disable_cloud_saves then core.steam.readFile(self.save_dir..self:nameLoadLevel(zone, level)) end
 	local path = fs.getRealPath(self.save_dir..self:nameLoadLevel(zone, level))
 	if not path or path == "" then return false end
 
@@ -582,7 +582,7 @@ end
 
 --- Loads an entity
 function _M:loadEntity(name)
-	if core.steam then core.steam.readFile(self.save_dir..self:nameLoadEntity(name)) end
+	if core.steam and core.steam.isCloudEnabled(true) and core.steam.isCloudEnabled(false) and not savefile_pipe.disable_cloud_saves then core.steam.readFile(self.save_dir..self:nameLoadEntity(name)) end
 	local path = fs.getRealPath(self.save_dir..self:nameLoadEntity(name))
 	if not path or path == "" then return false end
 
@@ -636,7 +636,7 @@ end
 
 --- Checks for existence
 function _M:check()
-	if core.steam then core.steam.readFile(self.save_dir..self:nameLoadGame()) end
+	if core.steam and core.steam.isCloudEnabled(true) and core.steam.isCloudEnabled(false) and not savefile_pipe.disable_cloud_saves then core.steam.readFile(self.save_dir..self:nameLoadGame()) end
 	return fs.exists(self.save_dir..self:nameLoadGame())
 end
 

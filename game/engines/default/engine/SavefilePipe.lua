@@ -87,6 +87,12 @@ function _M:steamCleanup()
 	core.steam.setFileNamespace(oldns)
 end
 
+--- Disables/enables clean saves
+-- @param v true or false
+function _M:ignoreCloudSave(v)
+	self.disable_cloud_saves = v
+end
+
 --- Push a savefile request
 -- @param savename the name of the savefile to handle
 -- @param type the Savefile method to use. I.e: "game", "level", "zone". This will cann the Savefile:saveGame, Savefile:saveLevel, Savefile:saveZone methods
