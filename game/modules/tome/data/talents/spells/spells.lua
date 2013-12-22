@@ -46,7 +46,10 @@ newTalentType{ allow_random=true, no_silence=true, is_spell=true, mana_regen=tru
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, mana_regen=true, type="spell/golemancy-base", name = "golemancy", hide = true, description = "Learn to craft and upgrade your golem." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, mana_regen=true, type="spell/golemancy", name = "golemancy", description = "Learn to craft and upgrade your golem." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, mana_regen=true, type="spell/advanced-golemancy", name = "advanced-golemancy", min_lev = 10, description = "Advanced golem operations." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, mana_regen=true, type="spell/war-alchemy", name = "fire alchemy", description = "Alchemical spells designed to wage war." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, mana_regen=true, type="spell/fire-alchemy", name = "fire alchemy", description = "Alchemical control over fire." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, mana_regen=true, type="spell/acid-alchemy", name = "acid alchemy", description = "Alchemical control over acid." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, mana_regen=true, type="spell/frost-alchemy", name = "frost alchemy", description = "Alchemical control over frost." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/stone-alchemy-base", name = "stone alchemy", hide = true, description = "Manipulate gems, and imbue their powers into other objects." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/stone-alchemy", name = "stone alchemy", generic = true, description = "Alchemical control over stone and gems." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/staff-combat", name = "staff combat", generic = true, description = "Harness the power of magical staves." }
@@ -235,6 +238,15 @@ function necroEssenceDead(self, checkonly)
 end
 -------------------------------------------
 
+function cancelAlchemyInfusions(self)
+	local chants = {self.T_FIRE_INFUSION, self.T_FROST_INFUSION, self.T_ACID_INFUSION, self.T_LIGHTNING_INFUSION}
+	for i, t in ipairs(chants) do
+		if self:isTalentActive(t) then
+			self:forceUseTalent(t, {ignore_energy=true})
+		end
+	end
+end
+
 
 load("/data/talents/spells/arcane.lua")
 load("/data/talents/spells/aether.lua")
@@ -255,11 +267,13 @@ load("/data/talents/spells/phantasm.lua")
 load("/data/talents/spells/enhancement.lua")
 
 load("/data/talents/spells/explosives.lua")
-load("/data/talents/spells/infusion.lua")
 load("/data/talents/spells/golemancy.lua")
 load("/data/talents/spells/advanced-golemancy.lua")
 load("/data/talents/spells/staff-combat.lua")
+load("/data/talents/spells/war-alchemy.lua")
 load("/data/talents/spells/fire-alchemy.lua")
+load("/data/talents/spells/frost-alchemy.lua")
+load("/data/talents/spells/acid-alchemy.lua")
 load("/data/talents/spells/stone-alchemy.lua")
 load("/data/talents/spells/golem.lua")
 

@@ -19,32 +19,30 @@
 local Object = require "engine.Object"
 
 newTalent{
-	name = "Heat",
+	name = "Flame Infusion", short_name = "FIRE_INFUSION",
 	type = {"spell/fire-alchemy", 1},
+	mode = "sustained",
 	require = spells_req1,
+	sustain_mana = 30,
 	points = 5,
-	mana = 10,
-	cooldown = 5,
-	random_ego = "attack",
-	refectable = true,
-	proj_speed = 20,
-	range = 10,
-	direct_hit = true,
-	tactical = { ATTACK = { FIRE = 2 } },
-	requires_target = true,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 25, 620) end,
-	action = function(self, t)
-		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.FIREBURN, {dur=8, initial=0, dam=t.getDamage(self, t)}, {type="flame"})
-		game:playSoundNear(self, "talents/fire")
+	cooldown = 30,
+	tactical = { BUFF = 2 },
+	getIncrease = function(self, t) return self:combatTalentScale(t, 0.05, 0.25) * 100 end,
+	activate = function(self, t)
+		cancelAlchemyInfusions(self)
+		game:playSoundNear(self, "talents/arcane")
+		local ret = {}
+		self:talentTemporaryValue(ret, "inc_damage", {[DamageType.FIRE] = t.getIncrease(self, t)})
+		return ret
+	end,
+	deactivate = function(self, t, p)
 		return true
 	end,
 	info = function(self, t)
-		local damage = t.getDamage(self, t)
-		return ([[Turn part of your target into fire, burning the rest for %0.2f fire damage over 8 turns.
-		The damage will increase with your Spellpower.]]):format(damDesc(self, DamageType.FIRE, damage))
+		local daminc = t.getIncrease(self, t)
+		return ([[When you throw your alchemist bombs, you infuse them with flames that burn for a few turns.
+		In addition all fire damage you do is increased by %d%%.]]):
+		format(daminc)
 	end,
 }
 

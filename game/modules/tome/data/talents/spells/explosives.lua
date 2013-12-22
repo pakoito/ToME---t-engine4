@@ -43,21 +43,18 @@ newTalent{
 		if self:isTalentActive(self.T_ACID_INFUSION) then return { ACID = 2 }
 		elseif self:isTalentActive(self.T_LIGHTNING_INFUSION) then return { LIGHTNING = 2 }
 		elseif self:isTalentActive(self.T_FROST_INFUSION) then return { COLD = 2 }
-		else return { FIRE = 2 }
+		elseif self:isTalentActive(self.T_FIRE_INFUSION) then return { FIRE = 2 }
+		else return { PHYSICAL = 2 }
 		end
 	end },
 	computeDamage = function(self, t, ammo)
 		local inc_dam = 0
-		local damtype = DamageType.FIRE
-		local particle = "ball_fire"
-		local acidi = self:getTalentFromId(Talents.T_ACID_INFUSION)
-		local lightningi = self:getTalentFromId(Talents.T_LIGHTNING_INFUSION)
-		local frosti = self:getTalentFromId(Talents.T_FROST_INFUSION)
-		local fireinf = self:getTalentFromId(Talents.T_FIRE_INFUSION)
-		if self:isTalentActive(self.T_ACID_INFUSION) then inc_dam = acidi.getIncrease(self,acidi); damtype = DamageType.ACID_BLIND; particle = "ball_acid"
-		elseif self:isTalentActive(self.T_LIGHTNING_INFUSION) then inc_dam = lightningi.getIncrease(self,lightningi); damtype = DamageType.LIGHTNING_DAZE; particle = "ball_lightning_beam"
-		elseif self:isTalentActive(self.T_FROST_INFUSION) then inc_dam = frosti.getIncrease(self,frosti); damtype = DamageType.ICE; particle = "ball_ice"
-		else inc_dam = fireinf.getIncrease(self,fireinf); damtype = self:knowTalent(self.T_FIRE_INFUSION) and DamageType.FIREBURN or DamageType.FIRE
+		local damtype = DamageType.PHYSICAL
+		local particle = "ball_physical"
+		if self:isTalentActive(self.T_ACID_INFUSION) then damtype = DamageType.ACID_BLIND; particle = "ball_acid"
+		elseif self:isTalentActive(self.T_LIGHTNING_INFUSION) then damtype = DamageType.LIGHTNING_DAZE; particle = "ball_lightning_beam"
+		elseif self:isTalentActive(self.T_FROST_INFUSION) then damtype = DamageType.ICE; particle = "ball_ice"
+		elseif self:isTalentActive(self.T_FIRE_INFUSION) then damtype = DamageType.FIREBURN; particle = "ball_fire"
 		end
 		inc_dam = inc_dam + (ammo.alchemist_bomb and ammo.alchemist_bomb.power or 0) / 100
 		local dam = self:combatTalentSpellDamage(t, 15, 150, ((ammo.alchemist_power or 0) + self:combatSpellpower()) / 2)
@@ -103,7 +100,14 @@ newTalent{
 			-- Protect yourself
 			if tx == self.x and ty == self.y then d = dam * (1 - prot) end
 			-- Protect the golem
-			if golem and tx == golem.x and ty == golem.y then d = dam * (1 - prot) end
+			if golem and tx == golem.x and ty == golem.y then
+				d = dam * (1 - prot)
+				if self:isTalentActive(self.T_FROST_INFUSION) and self:knowTalent(self.T_ICE_ARMOUR) then
+					self:callTalent(self.T_ICE_ARMOUR, "applyEffect", golem)
+				elseif self:isTalentActive(self.T_ACID_INFUSION) and self:knowTalent(self.T_CAUSTIC_GOLEM) then
+					self:callTalent(self.T_CAUSTIC_GOLEM, "applyEffect", golem)
+				end
+			end
 			if d == 0 then return end
 
 			local target = game.level.map(tx, ty, Map.ACTOR)
@@ -222,7 +226,7 @@ newTalent{
 	computeDamage = function(self, t, ammo)
 		local inc_dam = 0
 		local damtype = DamageType.SPELLKNOCKBACK
-		local particle = "ball_fire"
+		local particle = "ball_physical"
 		inc_dam = (ammo.alchemist_bomb and ammo.alchemist_bomb.power or 0) / 100
 		local dam = self:combatTalentSpellDamage(t, 15, 120, ((ammo.alchemist_power or 0) + self:combatSpellpower()) / 2)
 		dam = dam * (1 + inc_dam)

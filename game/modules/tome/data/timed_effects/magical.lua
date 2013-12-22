@@ -2345,3 +2345,43 @@ newEffect{
 		self:removeShaderAura("essence_of_the_dead")
 	end,
 }
+
+newEffect{
+	name = "ICE_ARMOUR", image = "talents/ice_armour.png",
+	desc = "Ice Armour",
+	long_desc = function(self, eff) return ("The target is covered in a layer of ice. Armour increased by %d, damage when hit %0.2f cold, converts 50%% of all damage to cold."):format(eff.armor, eff.dam) end,
+	type = "magical",
+	subtype = { cold=true, armour=true, },
+	status = "beneficial",
+	parameters = {armor=10, dam=10},
+	on_gain = function(self, err) return "#Target# is covered in ice!" end,
+	on_lose = function(self, err) return "#Target# is free from the ice." end,
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "combat_armor", eff.armor)
+		self:effectTemporaryValue(eff, "on_melee_hit", {[DamageType.COLD]=eff.dam})
+		self:effectTemporaryValue(eff, "all_damage_convert", DamageType.COLD)
+		self:effectTemporaryValue(eff, "all_damage_convert_percent", 50)
+	end,
+	deactivate = function(self, eff)
+	end,
+}
+
+newEffect{
+	name = "CAUSTIC_GOLEM", image = "talents/caustic_golem.png",
+	desc = "Caustic Golem",
+	long_desc = function(self, eff) return ("The target is coated with acid. %d%% chances to spray a cone of acid doing %0.2f damage."):format(eff.chance, eff.dam) end,
+	type = "magical",
+	subtype = { acid=true, coating=true, },
+	status = "beneficial",
+	parameters = {chance=10, dam=10},
+	on_gain = function(self, err) return "#Target# is coated in acid!" end,
+	on_lose = function(self, err) return "#Target# is free from the acid." end,
+	callbackOnMeleeHit = function(self, eff, src)
+		if self.turn_procs.caustic_golem then return end
+		if not rng.percent(eff.chance) then return end
+		self.turn_procs.caustic_golem = true
+
+		self:project({type="cone", cone_angle=25, range=0, radius=4}, src.x, src.y, DamageType.ACID, eff.dam)
+		game.level.map:particleEmitter(self.x, self.y, 4, "breath_acid", {radius=4, tx=src.x-self.x, ty=src.y-self.y, spread=20})
+	end,
+}
