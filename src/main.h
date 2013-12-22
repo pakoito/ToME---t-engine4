@@ -34,7 +34,26 @@
 #endif
 
 extern int resizeWindow(int width, int height);
+
+/**
+ * Will the requested do_resize call require a new window?
+ */
+extern bool resizeNeedsNewWindow(int w, int h, bool fullscreen, bool borderless);
+
+/**
+ * Move the window.  Handles both windowed and fullscreen window moves.
+ */
+void do_move(int w, int h);
+
+/**
+ * Handle a resolution change request.
+ *
+ * The three window modes supported are windowed, borderless windowed,
+ * and fullscreen.  These three modes are mutually exclusive, with the
+ * fullscreen flag taking priority over the borderless flag.
+ */
 extern void do_resize(int w, int h, bool fullscreen, bool borderless);
+
 extern void setupRealtime(float freq);
 extern void setupDisplayTimer(int fps);
 extern int docall (lua_State *L, int narg, int nret);

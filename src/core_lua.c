@@ -267,7 +267,7 @@ static GLenum sdl_gl_texture_format(SDL_Surface *s) {
 static char *largest_black = NULL;
 static int largest_size = 0;
 void make_texture_for_surface(SDL_Surface *s, int *fw, int *fh, bool clamp) {
-	// Paramétrage de la texture.
+	// ParamÃ©trage de la texture.
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, clamp ? GL_CLAMP_TO_BORDER : GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, clamp ? GL_CLAMP_TO_BORDER : GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -572,6 +572,15 @@ static int sdl_screen_size(lua_State *L)
 	lua_pushboolean(L, is_fullscreen);
 	lua_pushboolean(L, is_borderless);
 	return 4;
+}
+
+static int sdl_window_pos(lua_State *L)
+{
+	int x, y;
+	SDL_GetWindowPosition(window, &x, &y);
+	lua_pushnumber(L, x);
+	lua_pushnumber(L, y);
+	return 2;
 }
 
 static int sdl_new_font(lua_State *L)
@@ -2327,12 +2336,23 @@ static int sdl_set_window_size(lua_State *L)
 	return 1;
 }
 
-static int sdl_set_window_pos(lua_State *L)
+static int sdl_set_window_size_restart_check(lua_State *L)
 {
 	int w = luaL_checknumber(L, 1);
 	int h = luaL_checknumber(L, 2);
+	bool fullscreen = lua_toboolean(L, 3);
+	bool borderless = lua_toboolean(L, 4);
 
-	SDL_SetWindowPosition(window, w, h);
+	lua_pushboolean(L, resizeNeedsNewWindow(w, h, fullscreen, borderless));
+	return 1;
+}
+
+static int sdl_set_window_pos(lua_State *L)
+{
+	int x = luaL_checknumber(L, 1);
+	int y = luaL_checknumber(L, 2);
+
+	do_move(x, y);
 
 	lua_pushboolean(L, TRUE);
 	return 1;
@@ -2923,6 +2943,7 @@ static const struct luaL_Reg displaylib[] =
 	{"getTextBlended", get_text_aa},
 	{"forceRedraw", sdl_redraw_screen},
 	{"size", sdl_screen_size},
+	{"windowPos", sdl_window_pos},
 	{"newFont", sdl_new_font},
 	{"newSurface", sdl_new_surface},
 	{"newTile", sdl_new_tile},
@@ -2940,6 +2961,7 @@ static const struct luaL_Reg displaylib[] =
 	{"loadImageMemory", sdl_load_image_mem},
 	{"setWindowTitle", sdl_set_window_title},
 	{"setWindowSize", sdl_set_window_size},
+	{"setWindowSizeRequiresRestart", sdl_set_window_size_restart_check},
 	{"setWindowPos", sdl_set_window_pos},
 	{"getModesList", sdl_get_modes_list},
 	{"setMouseCursor", sdl_set_mouse_cursor},

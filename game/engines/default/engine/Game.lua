@@ -457,14 +457,14 @@ function _M:setResolution(res, force)
 
 	-- Change the window size
 	print("setResolution: switching resolution to", res, r[1], r[2], r[3], r[4], force and "(forced)")
-	local old_w, old_h, old_f = self.w, self.h, self.fullscreen
+	local old_w, old_h, old_f, old_b = self.w, self.h, self.fullscreen, self.borderless
 	core.display.setWindowSize(r[1], r[2], r[3], r[4])
 	
 	-- Don't write self.w/h/fullscreen yet
-	local new_w, new_h, new_f = core.display.size()
+	local new_w, new_h, new_f, new_b = core.display.size()
 
 	-- Check if a resolution change actually happened
-	if new_w ~= old_w or new_h ~= old_h or new_f ~= old_f then
+	if new_w ~= old_w or new_h ~= old_h or new_f ~= old_f or new_b ~= old_b then
 		print("setResolution: performing onResolutionChange...\n")
 		self:onResolutionChange()
 		-- onResolutionChange saves settings...
@@ -486,7 +486,8 @@ function _M:onResolutionChange()
 	
 	-- Get new resolution and save
 	self.w, self.h, self.fullscreen, self.borderless = core.display.size()
-	config.settings.window.size = ("%dx%d%s"):format(self.w, self.h, self.fullscreen and " Fullscreen" or (self.borderless and " Borderless" or " Windowed"))
+	config.settings.window.size = ("%dx%d%s"):format(self.w, self.h, self.fullscreen and " Fullscreen" or (self.borderless and " Borderless" or " Windowed"))	
+	
 	self:saveSettings("resolution", ("window.size = '%s'\n"):format(config.settings.window.size))
 	print("onResolutionChange: resolution changed to ", self.w, self.h, "from", ow, oh)
 
@@ -495,9 +496,13 @@ function _M:onResolutionChange()
 		print("onResolutionChange: no game yet!") 
 		return 
 	end
+	
+	-- Redraw existing dialogs
+	self:updateVideoDialogs()
 
 	-- No actual resize
-	if ow == self.w and oh == self.h then 
+	if ow == self.w and oh == self.h 
+		and of == self.fullscreen and ob == self.borderless then 
 		print("onResolutionChange: no actual resize, no confirm dialog.")
 		return 
 	end
@@ -543,7 +548,26 @@ end
 
 --- Called when the game window is moved around
 function _M:onWindowMoved(x, y)
+	config.settings.window.pos.x = x
+	config.settings.window.pos.y = y
 	self:saveSettings("window_pos", ("window.pos = {x=%d, y=%d}\n"):format(x, y))
+	
+	-- Redraw existing dialogs
+	self:updateVideoDialogs()
+end
+
+--- Update any registered video options dialogs with the latest changes.
+function _M:updateVideoDialogs()
+	-- Update the video settings dialogs if any are registered.
+	-- We don't know which dialog (if any) is VideoOptions, so iterate through.
+	--
+	-- Note: If the title of the video options dialog changes, this
+	-- functionality will break.
+	for i, v in ipairs(self.dialogs) do
+		if v.title == "Video Options" then
+			v.c_list:drawTree()
+		end
+	end
 end
 
 --- Sets the gamma of the window

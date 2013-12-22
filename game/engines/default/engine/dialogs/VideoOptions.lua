@@ -66,7 +66,7 @@ function _M:generateList()
 	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Resolution#WHITE##{normal}#", status=function(item)
 		return config.settings.window.size
 	end, fct=function(item)
-		local menu = require("engine.dialogs.DisplayResolution").new(function() self.c_list:drawItem(item) end)
+		local menu = require("engine.dialogs.DisplayResolution").new(function()	self.c_list:drawItem(item) end)
 		game:registerDialog(menu)
 	end,}
 
@@ -180,6 +180,59 @@ function _M:generateList()
 		game:saveSettings("censor_boot", ("censor_boot = %s\n"):format(tostring(config.settings.censor_boot)))
 		self.c_list:drawItem(item)
 	end,}
-
+	
+	-- *Requested* Window Position
+	--  SDL tends to lie about where windows are positioned in fullscreen mode,
+	-- so always store the position requests, not the actual positions. 
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text="Request a specific origin point for the game window.\nThis point corresponds to where the upper left corner of the window will be located.\nUseful when dealing with multiple monitors and borderless windows.\n\nThe default origin is (0,0).\n\nNote: This value will automatically revert after ten seconds if not confirmed by the user.#WHITE#"}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Requested Window Position#WHITE##{normal}#", status=function(item)
+		local curX, curY = config.settings.window.pos.x, config.settings.window.pos.y
+		return table.concat({"(", curX, ",", curY, ")"})
+	end, fct=function(item)
+		local itemRef = item
+		local oldX, oldY = config.settings.window.pos.x, config.settings.window.pos.y
+		local newX, newY
+		local function revertMove() 
+			core.display.setWindowPos(oldX, oldY)
+			config.settings.window.pos.x = oldX
+			config.settings.window.pos.y = oldY
+			self.c_list:drawItem(itemRef)						 
+		end		
+		-- TODO: Maybe change this to a GetText and parse?
+		game:registerDialog(GetQuantity.new("Window Origin: X-Coordinate", "Enter the x-coordinate", oldX, 99999
+			, function(qty) 
+				newX=util.bound(qty, -99999, 99999) 
+				game:registerDialog(GetQuantity.new("Window Origin: Y-Coordinate", "Enter the y-coordinate", oldY, 99999
+					, function(qty)
+						newY = util.bound(qty, -99999, 99999)
+						core.display.setWindowPos(newX, newY)
+						config.settings.window.pos.x = newX
+						config.settings.window.pos.y = newY
+						self.c_list:drawItem(itemRef)
+						local userAnswered = false
+						local confirmDialog = Dialog:yesnoPopup("Position changed.", "Save position?"
+							, function(ret)
+								userAnswered = true
+								if ret then
+									-- Write out settings
+									game:onWindowMoved(newX, newY)
+								else
+									-- Revert
+									revertMove()
+								end
+							end
+							,  "Accept", "Revert")
+						game:registerTimer(10
+							, function()
+								-- Blast out changes if no response
+								if not userAnswered then
+									game:unregisterDialog(confirmDialog)
+									revertMove()
+								end
+							end	)
+					end, -99999))
+			end, -99999))
+	end,}
+	
 	self.list = list
 end

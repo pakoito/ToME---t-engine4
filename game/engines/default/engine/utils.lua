@@ -1888,7 +1888,7 @@ function util.showMainMenu(no_reboot, reboot_engine, reboot_engine_version, rebo
 	core.game.setRealtime(0)
 
 	-- Save any remaining files
-	savefile_pipe:forceWait()
+	if savefile_pipe then savefile_pipe:forceWait() end
 
 	if game and type(game) == "table" and game.__session_time_played_start then
 		if game.onDealloc then game:onDealloc() end

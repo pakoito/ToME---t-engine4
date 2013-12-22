@@ -125,7 +125,7 @@ function _M:generate()
 		end,
 		__TEXTINPUT = function(c)
 			if self.first then self.first = false self.tmp = {} self.cursor = 1 end
-			if #self.tmp and (c == '0' or c == '1' or c == '2' or c == '3' or c == '4' or c == '5' or c == '6' or c == '7' or c == '8' or c == '9') then
+			if #self.tmp and (c == '-' or c == '0' or c == '1' or c == '2' or c == '3' or c == '4' or c == '5' or c == '6' or c == '7' or c == '8' or c == '9') then
 				table.insert(self.tmp, self.cursor, c)
 				self.cursor = self.cursor + 1
 				self.scroll = util.scroll(self.cursor, self.scroll, self.max_display)

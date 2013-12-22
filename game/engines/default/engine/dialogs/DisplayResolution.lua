@@ -61,7 +61,35 @@ function _M:use(item)
 	elseif self.c_bl.checked then mode = " Borderless"
 	end
 	local r = item.r..mode
-	game:setResolution(r, true)
+	local _, _, w, h = r:find("^([0-9]+)x([0-9]+)")
+	
+	-- See if we need a restart (confirm).
+	if core.display.setWindowSizeRequiresRestart(w, h, self.c_fs.checked
+		, self.c_bl.checked) then
+		Dialog:yesnoPopup("Engine Restart Required"
+			, "Continue?" .. (game.creating_player and "" or " (progress will be saved)")
+			, function(restart)
+				if restart then
+					local resetPos = Dialog:yesnoPopup("Reset Window Position?"
+						, "Simply restart or restart+reset window position?"
+						, function(simplyRestart)
+							if not simplyRestart then
+								core.display.setWindowPos(0, 0)
+								game:onWindowMoved(0, 0)
+							end
+							game:setResolution(r, true)
+							-- Save game and reboot
+							if not game.creating_player then game:saveGame() end
+							util.showMainMenu(false, nil, nil
+								, game.__mod_info.short_name, game.save_name
+								, false)
+						end, "Restart", "Restart with reset")
+				end
+			end, "Yes", "No")
+	else
+		game:setResolution(r, true)
+	end
+	
 	game:unregisterDialog(self)
 	if self.on_change then self.on_change(r) end
 end
