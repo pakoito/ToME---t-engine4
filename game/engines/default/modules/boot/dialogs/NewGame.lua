@@ -62,7 +62,7 @@ function _M:init()
 end
 
 function _M:on_register()
-	if #self.list == 1 then
+	if #self.list == 1 and not self.has_incompatible then
 		game:unregisterDialog(self)
 		self.list[1]:fct()
 	end
@@ -75,8 +75,9 @@ function _M:select(item)
 end
 
 function _M:generateList()
-	local list = Module:listModules(self.c_compat.checked)
+	local list = Module:listModules(true)
 	self.list = {}
+	self.has_incompatible = false
 	for i = 1, #list do
 		for j, mod in ipairs(list[i].versions) do
 			if not self.c_switch.checked and j > 1 then break end
@@ -105,7 +106,10 @@ function _M:generateList()
 				tstr:merge(mod.description:toTString())
 				mod.zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=tstr}
 
-				table.insert(self.list, mod)
+				if self.c_compat.checked or not mod.incompatible then
+					table.insert(self.list, mod)
+				end
+				if mod.incompatible then self.has_incompatible = true end
 			end
 		end
 	end
