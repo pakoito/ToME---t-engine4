@@ -548,6 +548,7 @@ end
 
 --- Called when the game window is moved around
 function _M:onWindowMoved(x, y)
+	config.settings.window.pos = config.settings.window.pos or {}
 	config.settings.window.pos.x = x
 	config.settings.window.pos.y = y
 	self:saveSettings("window_pos", ("window.pos = {x=%d, y=%d}\n"):format(x, y))

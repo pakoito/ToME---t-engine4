@@ -1986,6 +1986,24 @@ function util.browserOpenUrl(url)
 	return false
 end
 
+--- Safeboot mode
+function util.setForceSafeBoot()
+	local restore = fs.getWritePath()
+	fs.setWritePath(engine.homepath)
+	local f = fs.open("/settings/force_safeboot.cfg", "w")
+	if f then
+		f:write("force_safeboot = true\n")
+		f:close()
+	end
+	if restore then fs.setWritePath(restore) end
+end
+function util.removeForceSafeBoot()
+	local restore = fs.getWritePath()
+	fs.setWritePath(engine.homepath)
+	fs.delete("/settings/force_safeboot.cfg")
+	if restore then fs.setWritePath(restore) end
+end
+
 -- Ultra weird, this is used by the C serialization code because I'm too dumb to make lua_dump() work on windows ...
 function __dump_fct(f)
 	return string.format("%q", string.dump(f))

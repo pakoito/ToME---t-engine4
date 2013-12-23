@@ -2686,6 +2686,15 @@ static int is_safe_mode(lua_State *L)
 	return 1;
 }
 
+static int set_safe_mode(lua_State *L)
+{
+	safe_mode = TRUE;
+	fbo_active = FALSE;
+	shaders_active = FALSE;
+	multitexture_active = FALSE;
+	return 0;
+}
+
 static int sdl_get_modes_list(lua_State *L)
 {
 	SDL_PixelFormat format;
@@ -2954,6 +2963,7 @@ static const struct luaL_Reg displaylib[] =
 	{"drawQuadPart", gl_draw_quad_part},
 	{"FBOActive", gl_fbo_is_active},
 	{"safeMode", is_safe_mode},
+	{"forceSafeMode", set_safe_mode},
 	{"disableFBO", gl_fbo_disable},
 	{"drawStringNewSurface", sdl_surface_drawstring_newsurface},
 	{"drawStringBlendedNewSurface", sdl_surface_drawstring_newsurface_aa},

@@ -74,6 +74,11 @@ for i, file in ipairs(fs.list("/settings/")) do
 	end
 end
 
+if config.settings.force_safeboot then
+	util.removeForceSafeBoot()
+	core.display.forceSafeMode()
+end
+
 if core.display.safeMode() then
 	config.settings.aa_text = false
 	config.settings.fbo_active = false

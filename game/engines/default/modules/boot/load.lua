@@ -17,6 +17,9 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+-- We are running, set a flag so that if we crash we will restart into safe mode
+util.setForceSafeBoot()
+
 -- This file loads the game module, and loads data
 local KeyBind = require "engine.KeyBind"
 local DamageType = require "engine.DamageType"
