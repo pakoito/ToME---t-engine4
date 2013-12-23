@@ -33,9 +33,7 @@ function _M:enableShadow(v)
 end
 
 function _M:add(x, y, duration, xvel, yvel, str, color, bigfont)
-	assert(x, "no x flyer")
-	assert(y, "no y flyer")
-	assert(str, "no str flyer")
+	if not x or not y or not str then return end
 	color = color or {255,255,255}
 	local s = core.display.drawStringBlendedNewSurface(bigfont and self.bigfont or self.font, str, color[1], color[2], color[3])
 	if not s then return end
