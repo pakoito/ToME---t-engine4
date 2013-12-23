@@ -103,12 +103,16 @@ end
 
 remove_materials = function(self, player)
 	local gem_o, gem_item, gem_inven_id = player:findInAllInventories("Resonating Diamond")
-	player:removeObject(gem_inven_id, gem_item, false)
-	gem_o:removed()
+	if gem_o then
+		player:removeObject(gem_inven_id, gem_item, false)
+		gem_o:removed()
+	end
 
 	local athame_o, athame_item, athame_inven_id = player:findInAllInventories("Blood-Runed Athame")
-	player:removeObject(athame_inven_id, athame_item, false)
-	athame_o:removed()
+	if athame_o then
+		player:removeObject(athame_inven_id, athame_item, false)
+		athame_o:removed()
+	end
 end
 
 open_telmur = function(self, player)
