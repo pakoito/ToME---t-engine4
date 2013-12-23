@@ -245,7 +245,7 @@ end
 
 --- Remove the actor from the level, marking it as dead but not using the death functions
 function _M:disappear(src)
-	if game.level:hasEntity(self) then game.level:removeEntity(self) end
+	if game.level and game.level:hasEntity(self) then game.level:removeEntity(self) end
 	self.dead = true
 	self.changed = true
 end
