@@ -2104,6 +2104,7 @@ function _M:setupMouse(mouse)
 		if (user.donator and user.donator ~= "none") or (user.status and user.status == 'dev') then
 			local text, color = "Donator", colors.WHITE
 			if user.status and user.status == 'dev' then text, color = "Developer", colors.CRIMSON
+			elseif user.status and user.status == 'mod' then text, color = "Moderator / Helper", colors.GOLD
 			elseif user.donator == "oneshot" then text, color = "Donator", colors.LIGHT_GREEN
 			elseif user.donator == "recurring" then text, color = "Recurring Donator", colors.LIGHT_BLUE end
 			str:add({"color",unpack(colors.simple(color))}, text, {"color", "LAST"}, true)
