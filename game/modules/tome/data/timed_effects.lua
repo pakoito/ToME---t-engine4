@@ -34,7 +34,7 @@ local Map = require "engine.Map"
 local Level = require "engine.Level"
 
 local resolveSource = function(self)
-	if self.src then
+	if self.src and self.src.resolveSource then
 		return self.src:resolveSource()
 	else
 		return self
