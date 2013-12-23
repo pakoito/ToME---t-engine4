@@ -478,7 +478,7 @@ newEffect{
 		if eff.timer > 100 then
 			eff.timer = eff.timer - 100
 
-			local distance = core.fov.distance(self.x, self.y, eff.src.x, eff.src.y)
+			local distance = self.x and eff.src.x and core.fov.distance(self.x, self.y, eff.src.x, eff.src.y) or 1000
 			if math.floor(distance) > 1 and distance <= eff.range then
 				-- in range but not adjacent
 
