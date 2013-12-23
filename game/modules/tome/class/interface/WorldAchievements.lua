@@ -33,16 +33,19 @@ local PERMADEATH_INFINITE = 1
 local PERMADEATH_MANY = 2
 local PERMADEATH_ONE = 3
 
-
---- Make a new achievement with a name and desc
-function _M:newAchievement(t)
-	t.id = t.id or t.name
-	t.id = t.id:upper():gsub("[ ]", "_")
+local function findTile(t)
 	if not fs.exists("/data/gfx/achievements/"..t.id:lower()..".png") then
 		t.image = "trophy_gold.png"
 		print("Achievement with default image not found", t.id, "/data/gfx/achievements/"..t.id:lower()..".png")
 	else t.image = "achievements/"..t.id:lower()..".png"
 	end
+end
+
+--- Make a new achievement with a name and desc
+function _M:newAchievement(t)
+	t.id = t.id or t.name
+	t.id = t.id:upper():gsub("[ ]", "_")
+	findTile(t)
 
 	WA.newAchievement(self, t)
 
@@ -53,6 +56,7 @@ function _M:newAchievement(t)
 		t2.name = t2.name.." (Roguelike)"
 		t2.difficulty = DIFFICULTY_NORMAL
 		t2.permadeath = PERMADEATH_ONE
+		findTile(t2)
 		WA.newAchievement(self, t2)
 		
 		-- Exploration
@@ -60,6 +64,7 @@ function _M:newAchievement(t)
 		t2.id = "EXPLORATION_"..t2.id
 		t2.name = t2.name.." (Exploration mode)"
 		t2.permadeath = PERMADEATH_INFINITE
+		findTile(t2)
 		WA.newAchievement(self, t2)
 
 		-- Nightmare
@@ -68,6 +73,7 @@ function _M:newAchievement(t)
 		t2.name = t2.name.." (Nightmare (Adventure) difficulty)"
 		t2.difficulty = DIFFICULTY_NIGHTMARE
 		t2.permadeath = PERMADEATH_MANY
+		findTile(t2)
 		WA.newAchievement(self, t2)
 
 		local t2 = table.clone(t)
@@ -75,6 +81,7 @@ function _M:newAchievement(t)
 		t2.name = t2.name.." (Nightmare (Roguelike) difficulty)"
 		t2.difficulty = DIFFICULTY_NIGHTMARE
 		t2.permadeath = PERMADEATH_ONE
+		findTile(t2)
 		WA.newAchievement(self, t2)
 
 		-- Insane
@@ -83,6 +90,7 @@ function _M:newAchievement(t)
 		t2.name = t2.name.." (Insane (Adventure) difficulty)"
 		t2.difficulty = DIFFICULTY_INSANE
 		t2.permadeath = PERMADEATH_MANY
+		findTile(t2)
 		WA.newAchievement(self, t2)
 
 		local t2 = table.clone(t)
@@ -90,6 +98,7 @@ function _M:newAchievement(t)
 		t2.name = t2.name.." (Insane (Roguelike) difficulty)"
 		t2.difficulty = DIFFICULTY_INSANE
 		t2.permadeath = PERMADEATH_ONE
+		findTile(t2)
 		WA.newAchievement(self, t2)
 		
 		-- Madness
@@ -98,6 +107,7 @@ function _M:newAchievement(t)
 		t2.name = t2.name.." (Madness (Adventure) difficulty)"
 		t2.difficulty = DIFFICULTY_MADNESS
 		t2.permadeath = PERMADEATH_MANY
+		findTile(t2)
 		WA.newAchievement(self, t2)
 
 		local t2 = table.clone(t)
@@ -105,6 +115,7 @@ function _M:newAchievement(t)
 		t2.name = t2.name.." (Madness (Roguelike) difficulty)"
 		t2.difficulty = DIFFICULTY_MADNESS
 		t2.permadeath = PERMADEATH_ONE
+		findTile(t2)
 		WA.newAchievement(self, t2)
 	end
 end
