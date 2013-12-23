@@ -456,7 +456,7 @@ function _M:waitFirstAuth(timeout)
 	if not self.waiting_auth then return end
 	print("[PROFILE] waiting for first auth")
 	local first = true
-	timeout = timeout or 60
+	timeout = timeout or 120
 	while self.waiting_auth and timeout > 0 do
 		if not first then
 			if not self.waiting_auth_no_redraw then core.display.forceRedraw() end
