@@ -105,7 +105,12 @@ end
 -- Move around
 if config.settings.window.pos then
 	core.display.setWindowPos(config.settings.window.pos.x, config.settings.window.pos.y)
+else
+	local px, py = core.display.windowPos()
+	config.settings.window = config.settings.window or {}
+	config.settings.window.pos = {x=px, y=py}
 end
+
 
 -- Audio
 core.sound.enable(config.settings.audio.enable)
