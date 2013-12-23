@@ -186,6 +186,7 @@ function _M:generateList()
 	-- so always store the position requests, not the actual positions. 
 	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text="Request a specific origin point for the game window.\nThis point corresponds to where the upper left corner of the window will be located.\nUseful when dealing with multiple monitors and borderless windows.\n\nThe default origin is (0,0).\n\nNote: This value will automatically revert after ten seconds if not confirmed by the user.#WHITE#"}
 	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Requested Window Position#WHITE##{normal}#", status=function(item)
+		config.settings.window.pos = config.settings.window.pos or {x=0, y=0}
 		local curX, curY = config.settings.window.pos.x, config.settings.window.pos.y
 		return table.concat({"(", curX, ",", curY, ")"})
 	end, fct=function(item)
