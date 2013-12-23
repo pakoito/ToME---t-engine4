@@ -1062,7 +1062,7 @@ newEffect{
 		eff.atk = self:addTemporaryValue("combat_atk", -eff.power)
 	end,
 	on_timeout = function(self, eff)
-		if core.fov.distance(self.x, self.y, eff.src.x, eff.src.y) > 1 or eff.src.dead or not game.level:hasEntity(eff.src) then
+		if not self.x or not eff.src or not eff.src.x or core.fov.distance(self.x, self.y, eff.src.x, eff.src.y) > 1 or eff.src.dead or not game.level:hasEntity(eff.src) then
 			self:removeEffect(self.EFF_GRAPPLED)
 		end
 	end,
