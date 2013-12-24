@@ -385,6 +385,7 @@ end
 function _M:projectDoStop(typ, tg, damtype, dam, particles, lx, ly, tmp, rx, ry, projectile)
 	local grids = {}
 	local function addGrid(x, y)
+		if not x or not y then return end
 		if not grids[x] then grids[x] = {} end
 		grids[x][y] = true
 	end
