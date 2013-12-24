@@ -189,6 +189,8 @@ newEntity{
 	always_remember = true,
 	show_tooltip = true,
 	desc = [[This portal seems to connect to an other part of this level.]],
+	change_level_check = function() game.bignews:say(60, "#GOLD#This portal looks like it reacts only to the Orb of Many Ways.") return true end,
+	change_level = 1,
 	orb_portal = {
 		nothing = true,
 		message = "#VIOLET#You enter the swirling portal and appear in a large room with other portals and the two wizards.",

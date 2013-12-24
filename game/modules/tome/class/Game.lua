@@ -1898,7 +1898,7 @@ function _M:setupMouse(reset)
 	local outline = Shader.new("objectsoutline").shad
 
 	self.mouse:registerZone(Map.display_x, Map.display_y, Map.viewport.width, Map.viewport.height, function(button, mx, my, xrel, yrel, bx, by, event, extra)
-		if not self.uiset:isLocked() then return end
+		if not self.uiset:isLocked() or not game.level then return end
 
 		local tmx, tmy = game.level.map:getMouseTile(mx, my)
 		if core.shader.allow("adv") and outline then
