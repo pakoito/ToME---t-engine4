@@ -168,6 +168,7 @@ return {
 
 			game.logPlayer(game.player, "#LIGHT_RED#You are sent back to the material plane!")
 			game.player:updateMainShader()
+			game:onLevelLoadRun()
 		end)
 	end,
 }

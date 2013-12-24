@@ -18,19 +18,17 @@
 -- darkgod@te4.org
 
 newChat{ id="welcome",
-	action = function(npc, player) player:attr("invulnerable", 1) end,
 	text = [[#LIGHT_GREEN#*A tall man, glowing like a star, appears out of nowhere.*#WHITE#
 You destroyed *it* both? I am sorry for my harsh tone when we first met, but repairing time threads is stressful.
 I cannot stay. I still have much to do. But take this-- it should help you.
 #LIGHT_GREEN#*He disappears again before you can even reply. A rift opens, to Maj'Eyal... you hope.*#WHITE#]],
 	answers = {
-		{"Ok...", action = function(npc, player)
-			player:attr("invulnerable", -1)
+		{"Ok...", action = function(npc, player) game:onLevelLoad("temporal-rift-4", function()
 			local o = game.zone:makeEntityByName(game.level, "object", "RUNE_RIFT")
 			if o then
 				o:identify(true)
 				game.zone:addEntity(game.level, o, "object")
-				player:addObject(player.INVEN_INVEN, o)
+				game.player:addObject(game.player.INVEN_INVEN, o)
 				game.log("The temporal warden gives you: %s.", o:getName{do_color=true})
 			end
 
@@ -40,13 +38,13 @@ I cannot stay. I still have much to do. But take this-- it should help you.
 			local g = game.zone:makeEntityByName(game.level, "terrain", "RIFT")
 			g.change_level = 3
 			g.change_zone = "daikara"
-			local oe = game.level.map(player.x, player.y, engine.Map.TERRAIN)
+			local oe = game.level.map(game.player.x, game.player.y, engine.Map.TERRAIN)
 			if oe:attr("temporary") and oe.old_feat then 
 				oe.old_feat = g
 			else
-				game.zone:addEntity(game.level, g, "terrain", player.x, player.y)
+				game.zone:addEntity(game.level, g, "terrain", game.player.x, game.player.y)
 			end
-		end},
+		end) end},
 	}
 }
 

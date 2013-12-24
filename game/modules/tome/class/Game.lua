@@ -642,6 +642,15 @@ function _M:onLevelLoad(id, fct, data)
 	print("Registering on level load", id, fct, data)
 end
 
+function _M:onLevelLoadRun()
+	self.on_level_load_fcts = self.on_level_load_fcts or {}
+	print("Running on level loads", self.zone.short_name.."-"..self.level.level)
+	for i, fct in ipairs(self.on_level_load_fcts[self.zone.short_name.."-"..self.level.level] or {}) do
+		fct.fct(self.zone, self.level, fct.data)
+	end
+	self.on_level_load_fcts[self.zone.short_name.."-"..self.level.level] = nil
+end
+
 function _M:changeLevel(lev, zone, params)
 	params = params or {}
 	if not self.player.can_change_level then
@@ -832,12 +841,7 @@ function _M:changeLevelReal(lev, zone, params)
 	self.state:zoneCheckBackupGuardian()
 
 	-- Check if we must do some special things on load of this level
-	self.on_level_load_fcts = self.on_level_load_fcts or {}
-	print("Running on level loads", self.zone.short_name.."-"..self.level.level)
-	for i, fct in ipairs(self.on_level_load_fcts[self.zone.short_name.."-"..self.level.level] or {}) do
-		fct.fct(self.zone, self.level, fct.data)
-	end
-	self.on_level_load_fcts[self.zone.short_name.."-"..self.level.level] = nil
+	self:onLevelLoadRun()
 
 	-- Decay level ?
 	if self.level.last_turn and self.level.data.decay and self.level.last_turn + self.level.data.decay[1] * 10 < self.turn then

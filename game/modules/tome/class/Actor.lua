@@ -1799,7 +1799,7 @@ function _M:onTakeHit(value, src, death_note)
 			self.displacement_shield_target:takeHit(displaced, src)
 			game:delayedLogDamage(src, self, 0, ("#CRIMSON#(%d teleported)#LAST#"):format(displaced), false)
 			game:delayedLogDamage(src, self.displacement_shield_target, displaced, ("#CRIMSON#%d teleported#LAST#"):format(displaced), false)
-			if displaced < self.displacement_shield then
+			if self.displacement_shield and displaced < self.displacement_shield then
 				self.displacement_shield = self.displacement_shield - displaced
 				value = 0
 			else
