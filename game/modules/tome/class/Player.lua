@@ -508,8 +508,8 @@ function _M:playerFOV()
 		end
 	end
 
-	if self:knowTalent(self.T_SHADOW_SENSE) then
-		local t = self:getTalentFromId(self.T_SHADOW_SENSE)
+	if self:knowTalent(self.T_SHADOW_SENSES) then
+		local t = self:getTalentFromId(self.T_SHADOW_SENSES)
 		local range = self:getTalentRange(t)
 		local sqsense = range * range
 
