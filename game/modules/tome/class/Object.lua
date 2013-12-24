@@ -1222,11 +1222,13 @@ function _M:getTextualDesc(compare_with, use_actor)
 	if self.inscription_data and self.inscription_talent then
 		use_actor.__inscription_data_fake = self.inscription_data
 		local t = self:getTalentFromId("T_"..self.inscription_talent.."_1")
-		local tdesc = use_actor:getTalentFullDescription(t)
-		use_actor.__inscription_data_fake = nil
-		desc:add({"color","YELLOW"}, "When inscribed on your body:", {"color", "LAST"}, true)
-		desc:merge(tdesc)
-		desc:add(true)
+		if t then
+			local tdesc = use_actor:getTalentFullDescription(t)
+			use_actor.__inscription_data_fake = nil
+			desc:add({"color","YELLOW"}, "When inscribed on your body:", {"color", "LAST"}, true)
+			desc:merge(tdesc)
+			desc:add(true)
+		end
 	end
 
 	local talents = {}
@@ -1320,13 +1322,15 @@ function _M:getUseDesc(use_actor)
 		ret = tstring{{"color","YELLOW"}, ("It can be used to %s."):format(self.use_simple.name), {"color","LAST"}}
 	elseif self.use_talent then
 		local t = use_actor:getTalentFromId(self.use_talent.id)
-		local desc = use_actor:getTalentFullDescription(t, nil, {force_level=self.use_talent.level, ignore_cd=true, ignore_ressources=true, ignore_use_time=true, ignore_mode=true, custom=self.use_talent.power and tstring{{"color",0x6f,0xff,0x83}, "Power cost: ", {"color",0x7f,0xff,0xd4},("%d out of %d/%d."):format(usepower(self.use_talent.power), self.power, self.max_power)}})
-		if self.talent_cooldown then
-			ret = tstring{{"color","YELLOW"}, "It can be used to activate talent ", t.name,", placing all other charms into a ", tostring(math.floor(usepower(self.use_talent.power))) ," cooldown :", {"color","LAST"}, true}
-		else
-			ret = tstring{{"color","YELLOW"}, "It can be used to activate talent ", t.name," (costing ", tostring(math.floor(usepower(self.use_talent.power))), " power out of ", tostring(math.floor(self.power)), "/", tostring(math.floor(self.max_power)), ") :", {"color","LAST"}, true}
+		if t then
+			local desc = use_actor:getTalentFullDescription(t, nil, {force_level=self.use_talent.level, ignore_cd=true, ignore_ressources=true, ignore_use_time=true, ignore_mode=true, custom=self.use_talent.power and tstring{{"color",0x6f,0xff,0x83}, "Power cost: ", {"color",0x7f,0xff,0xd4},("%d out of %d/%d."):format(usepower(self.use_talent.power), self.power, self.max_power)}})
+			if self.talent_cooldown then
+				ret = tstring{{"color","YELLOW"}, "It can be used to activate talent ", t.name,", placing all other charms into a ", tostring(math.floor(usepower(self.use_talent.power))) ," cooldown :", {"color","LAST"}, true}
+			else
+				ret = tstring{{"color","YELLOW"}, "It can be used to activate talent ", t.name," (costing ", tostring(math.floor(usepower(self.use_talent.power))), " power out of ", tostring(math.floor(self.power)), "/", tostring(math.floor(self.max_power)), ") :", {"color","LAST"}, true}
+			end
+			ret:merge(desc)
 		end
-		ret:merge(desc)
 	end
 
 	if self.charm_on_use then
