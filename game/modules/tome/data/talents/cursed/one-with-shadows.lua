@@ -79,6 +79,7 @@ newTalent{
 	require = cursed_cun_req_high3,
 	points = 5,
 	hate = 6,
+	cooldown = 10,
 	no_npc_use = true,
 	radius = function(self, t) return math.floor(self:combatTalentScale(t, 1, 15, 1)) end,
 	getNb = function(self, t) return math.floor(self:combatTalentScale(t, 1, 3, 1)) end,
