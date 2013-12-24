@@ -2952,3 +2952,37 @@ newEffect{
 		eff.power = 2
 	end,
 }
+
+newEffect{
+	name = "SHADOW_EMPATHY", image = "talents/shadow_empathy.png",
+	desc = "Shadow Empathy",
+	long_desc = function(self, eff) return ("%d%% of all damage is redirected to a random shadow."):format(eff.power) end,
+	type = "mental",
+	subtype = { mind=true, shield=true },
+	status = "beneficial",
+	parameters = { power=10 },
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "shadow_empathy", eff.power)
+		eff.particle = self:addParticles(Particles.new("darkness_power", 1))
+	end,
+	deactivate = function(self, eff)
+		self:removeParticles(eff.particle)		
+	end,
+}
+
+newEffect{
+	name = "SHADOW_DECOY", image = "talents/shadow_decoy.png",
+	desc = "Shadow Decoy",
+	long_desc = function(self, eff) return ("A random shadow absorbed a fatal blow for you, granting you a negative shield of %d."):format(eff.power) end,
+	type = "mental",
+	subtype = { mind=true, shield=true },
+	status = "beneficial",
+	parameters = { power=10 },
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "die_at", -eff.power)
+		eff.particle = self:addParticles(Particles.new("darkness_power", 1))
+	end,
+	deactivate = function(self, eff)
+		self:removeParticles(eff.particle)		
+	end,
+}

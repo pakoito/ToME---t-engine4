@@ -1791,6 +1791,19 @@ function _M:onTakeHit(value, src, death_note)
 		end
 	end
 
+	if value > 0 and self:attr("shadow_empathy") then
+		-- Absorb damage into a random shadow
+		local shadow = self:callTalent(self.T_SHADOW_EMPATHY, "getRandomShadow")
+		if shadow then
+			game:delayedLogMessage(self, src,  "displacement_shield"..(shadow.uid or ""), "#CRIMSON##Source# shares some damage with a shadow!")
+			local displaced = math.min(value * self.shadow_empathy / 100, shadow.life)
+			shadow:takeHit(displaced, src)
+			game:delayedLogDamage(src, self, 0, ("#PINK#(%d linked)#LAST#"):format(displaced), false)
+			game:delayedLogDamage(src, shadow, displaced, ("#PINK#%d linked#LAST#"):format(displaced), false)
+			value = value - displaced
+		end
+	end
+
 	if value > 0 and self:attr("displacement_shield") then
 		-- Absorb damage into the displacement shield
 		if rng.percent(self.displacement_shield_chance) then
@@ -2147,6 +2160,14 @@ function _M:onTakeHit(value, src, death_note)
 			game.level.map:particleEmitter(self.x, self.y, 1, "teleport_out")
 			game:playSoundNear(self, "talents/heal")
 			game.level.map:particleEmitter(self.x, self.y, 1, "teleport_in")
+		end
+	end
+	
+	-- Shadow decoy
+	if value >= self.life and self:isTalentActive(self.T_SHADOW_DECOY) then
+		local t = self:getTalentFromId(self.T_SHADOW_DECOY)
+		if t.onDie(self, t, value, src) then
+			value = 0
 		end
 	end
 

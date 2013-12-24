@@ -508,6 +508,24 @@ function _M:playerFOV()
 		end
 	end
 
+	if self:knowTalent(self.T_SHADOW_SENSE) then
+		local t = self:getTalentFromId(self.T_SHADOW_SENSE)
+		local range = self:getTalentRange(t)
+		local sqsense = range * range
+
+		for shadow, _ in pairs(game.party.members) do if shadow.is_doomed_shadow and not shadow.dead then
+			local arr = shadow.fov.actors_dist
+			local tbl = shadow.fov.actors
+			local act
+			for i = 1, #arr do
+				act = arr[i]
+				if act and not act.dead and act.x and tbl[act] and shadow:canSee(act) and tbl[act].sqdist <= sqsense then
+					game.level.map.seens(act.x, act.y, 0.6)
+				end
+			end
+		end end 
+	end
+
 	if not self:attr("blind") then
 		-- Handle dark vision; same as infravision, but also sees past creeping dark
 		-- this is treated as a sense, but is filtered by custom LOS code

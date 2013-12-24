@@ -129,6 +129,7 @@ newBirthDescriptor{
 		["cursed/cursed-form"]={true, 0.0},
 		["cunning/survival"]={false, 0.0},
 		["cursed/fears"]={false, 0.0},
+		["cursed/one-with-shadows"]={false, 0.3},
 	},
 	talents = {
 		[ActorTalents.T_UNNATURAL_BODY] = 1,
