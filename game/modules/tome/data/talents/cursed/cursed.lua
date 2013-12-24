@@ -103,23 +103,23 @@ cursed_cun_req5 = {
 	level = function(level) return 16 + (level-1)  end,
 }
 
-cursed_req_high1 = {
+cursed_cun_req_high1 = {
 	stat = { cun=function(level) return 22 + (level-1) * 2 end },
 	level = function(level) return 10 + (level-1)  end,
 }
-cursed_req_high2 = {
+cursed_cun_req_high2 = {
 	stat = { cun=function(level) return 30 + (level-1) * 2 end },
 	level = function(level) return 14 + (level-1)  end,
 }
-cursed_req_high3 = {
+cursed_cun_req_high3 = {
 	stat = { cun=function(level) return 38 + (level-1) * 2 end },
 	level = function(level) return 18 + (level-1)  end,
 }
-cursed_req_high4 = {
+cursed_cun_req_high4 = {
 	stat = { cun=function(level) return 46 + (level-1) * 2 end },
 	level = function(level) return 22 + (level-1)  end,
 }
-cursed_req_high5 = {
+cursed_cun_req_high5 = {
 	stat = { cun=function(level) return 54 + (level-1) * 2 end },
 	level = function(level) return 26 + (level-1)  end,
 }
