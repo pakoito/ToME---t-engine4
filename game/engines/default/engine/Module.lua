@@ -521,10 +521,10 @@ function _M:loadScreen(mod)
 
 		local logo = {(core.display.loadImage("/data/gfx/background/"..backname.."-logo.png") or core.display.loadImage("/data/gfx/background/tome-logo.png")):glTexture()}
 
-		local left = {core.display.loadImage("/data/gfx/waiter/left.png"):glTexture()}
-		local right = {core.display.loadImage("/data/gfx/waiter/right.png"):glTexture()}
-		local middle = {core.display.loadImage("/data/gfx/waiter/middle.png"):glTexture()}
-		local bar = {core.display.loadImage("/data/gfx/waiter/bar.png"):glTexture()}
+		local left = {core.display.loadImage("/data/gfx/metal-ui/waiter/left.png"):glTexture()}
+		local right = {core.display.loadImage("/data/gfx/metal-ui/waiter/right.png"):glTexture()}
+		local middle = {core.display.loadImage("/data/gfx/metal-ui/waiter/middle.png"):glTexture()}
+		local bar = {core.display.loadImage("/data/gfx/metal-ui/waiter/bar.png"):glTexture()}
 
 		local font = core.display.newFont("/data/font/DroidSans.ttf", 12)
 		local bfont = core.display.newFont("/data/font/DroidSans.ttf", 16)

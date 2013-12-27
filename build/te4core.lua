@@ -37,7 +37,7 @@ project "TEngine"
 	if _OPTIONS.steam then
 		files { "../steamworks/luasteam.c", }
 	end
-	links { "physfs", "lua".._OPTIONS.lua, "fov", "luasocket", "luaprofiler", "lpeg", "tcodimport", "lxp", "expatstatic", "luamd5", "luazlib", "luabitop", "te4-bzip" }
+	links { "physfs", "lua".._OPTIONS.lua, "fov", "luasocket", "luaprofiler", "lpeg", "tcodimport", "lxp", "expatstatic", "luamd5", "luazlib", "luabitop", "te4-bzip", "te4-web" }
 	defines { "_DEFAULT_VIDEOMODE_FLAGS_='SDL_HWSURFACE|SDL_DOUBLEBUF'" }
 	defines { [[TENGINE_HOME_PATH='".t-engine"']], "TE4CORE_VERSION="..TE4CORE_VERSION }
 
@@ -431,6 +431,17 @@ project "te4-bzip"
 	targetname "te4-bzip"
 
 	files { "../src/bzip2/*.c", }
+
+project "te4-web"
+	kind "SharedLib"
+	language "C++"
+	targetname "te4-web"
+
+	libdirs {"/Test/awesomium_v1.7.2_sdk_linux64/bin/"}
+	includedirs {"/Test/awesomium_v1.7.2_sdk_linux64/include/"}
+	links { "awesomium-1-7" }
+	
+	files { "../src/web/*.cpp", }
 
 if _OPTIONS.steam then
 	dofile("../steamworks/build/steam-code.lua")

@@ -191,6 +191,17 @@ function _M:yesnocancelLongPopup(title, text, w, fct, yes_text, no_text, cancel_
 	return d
 end
 
+function _M:webPopup(url)
+	local d = new(url, game.w * 0.9, game.h * 0.9)
+	local w = require("engine.ui.WebView").new{width=d.iw, height=d.ih, url=url, allow_downloads={addons=true}}
+	w.on_title = function(title) d:updateTitle(title) end
+	d:loadUI{{left=0, top=0, ui=w}}
+	d:setupUI()
+	d.key:addBind("EXIT", function() game:unregisterDialog(d) end)
+	game:registerDialog(d)
+	return d
+end
+
 
 title_shadow = true
 

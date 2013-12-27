@@ -27,6 +27,8 @@
 
 extern int luaopen_struct (lua_State *L);
 
+#include "web.h"
+
 #ifdef STEAM_TE4
 #include "luasteam.h"
 #endif

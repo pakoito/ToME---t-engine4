@@ -604,6 +604,7 @@ void on_redraw()
 #ifdef STEAM_TE4
 	if (!no_steam) te4_steam_callbacks();
 #endif
+	te4_web_update();
 }
 
 void pass_command_args(int argc, char *argv[])
@@ -1022,6 +1023,7 @@ void boot_lua(int state, bool rebooting, int argc, char *argv[])
 		luaopen_zlib(L);
 		luaopen_bit(L);
 		luaopen_wait(L);
+		te4_web_init(L);
 #ifdef STEAM_TE4
 		if (!no_steam) te4_steam_lua_init(L);
 #endif
