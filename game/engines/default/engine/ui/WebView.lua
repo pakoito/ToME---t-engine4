@@ -92,17 +92,48 @@ function _M:makeDownloadbox(file)
 	return d
 end
 
+function _M:on_dialog_cleanup()
+	self.downloader = nil
+	self.view = nil
+end
+
 function _M:onDownload(request, update, finish)
-	self.downloader = core.webview.downloader(function(url, file, mime)
-		if mime == "application/t-engine-addon" and self.allow_downloads.addons then
+	local Dialog = require "engine.ui.Dialog"
+
+	self.downloader = core.webview.downloader(function(downid, url, file, mime)
+		print(downid, url, file, mime)
+		if mime == "application/t-engine-addon" and self.allow_downloads.addons and url:find("^http://te4%.org/") then
 			local path = fs.getRealPath("/addons/")
 			if path then
-				print("Accepting addon download to:", path..file)
-				self.download_dialog = self:makeDownloadbox(file)
-				game:registerDialog(self.download_dialog)
-				return path..file
+				Dialog:yesnoPopup("Confirm addon install/update", "Are you sure you want to install this addon? ("..file..")", function(ret)
+					if ret then
+						print("Accepting addon download to:", path..file)
+						self.download_dialog = self:makeDownloadbox(file)
+						game:registerDialog(self.download_dialog)
+						self.view:downloadAction(downid, path..file)
+					else
+						self.view:downloadAction(downid, false)
+					end
+				end)
+				return
+			end
+		elseif mime == "application/t-engine-module" and self.allow_downloads.modules and url:find("^http://te4%.org/") then
+			local path = fs.getRealPath("/modules/")
+			if path then
+				Dialog:yesnoPopup("Confirm module install/update", "Are you sure you want to install this module? ("..file..")", function(ret)
+					if ret then
+						print("Accepting module download to:", path..file)
+						self.download_dialog = self:makeDownloadbox(file)
+						game:registerDialog(self.download_dialog)
+						self.view:downloadAction(downid, path..file)
+					else
+						self.view:downloadAction(downid, false)
+					end
+				end)
+				return
 			end
 		end
+		self.view:downloadAction(downid, false)
 	end, function(cur_size, total_size, speed)
 		self.download_dialog:updateFill(cur_size, total_size, ("%d%% - %d KB/s"):format(cur_size * 100 / total_size, speed / 1024))
 	end, function(url, saved_path)

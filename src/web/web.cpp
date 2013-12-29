@@ -36,6 +36,7 @@ typedef struct {
 	int on_request_ref;
 	int on_update_ref;
 	int on_finish_ref;
+	bool closed;
 } web_downloader_type;
 
 static char *webstring_to_buf(WebString *wstr, size_t *flen) {
@@ -52,12 +53,9 @@ class WebDownloader : public WebViewListener::Download {
 public:
 	web_downloader_type *d;
 	WebDownloader() {}
-	void OnRequestDownload(Awesomium::WebView* caller,
-		int download_id,
-		const Awesomium::WebURL& url,
-		const Awesomium::WebString& suggested_filename,
-		const Awesomium::WebString& mime_type) {
+	void OnRequestDownload(WebView* caller, int download_id, const WebURL& url, const WebString& suggested_filename, const WebString& mime_type) {
 		web_downloader_type *d = this->d;
+		if (d->closed) return;
 
 		size_t slen; char *sbuf = webstring_to_buf((WebString*)&suggested_filename, &slen);
 		size_t mlen; char *mbuf = webstring_to_buf((WebString*)&mime_type, &mlen);
@@ -65,28 +63,18 @@ public:
 		size_t ulen; char *ubuf = webstring_to_buf((WebString*)&rurl, &ulen);
 
 		lua_rawgeti(d->L, LUA_REGISTRYINDEX, d->on_request_ref);
+		lua_pushnumber(d->L, download_id);
 		lua_pushlstring(d->L, ubuf, ulen);
 		lua_pushlstring(d->L, sbuf, slen);
 		lua_pushlstring(d->L, mbuf, mlen);
-		lua_pcall(d->L, 3, 1, 0);
+		lua_pcall(d->L, 4, 0, 0);
 		free(sbuf);
 		free(mbuf);
 		free(ubuf);
-		if (lua_isstring(d->L, -1)) {
-			size_t len;
-			const char *buf = lua_tolstring(d->L, -1, &len);
-			WebString wpath = WebString::CreateFromUTF8(buf, len);
-			caller->DidChooseDownloadPath(download_id, wpath);
-		} else caller->DidCancelDownload(download_id);
-		lua_pop(d->L, 1);
 	}
-	void OnUpdateDownload(Awesomium::WebView* caller,
-		int download_id,
-		int64 total_bytes,
-		int64 received_bytes,
-		int64 current_speed) {
-
+	void OnUpdateDownload(WebView* caller, int download_id, int64 total_bytes, int64 received_bytes, int64 current_speed) {
 		web_downloader_type *d = this->d;
+		if (d->closed) return;
 
 		lua_rawgeti(d->L, LUA_REGISTRYINDEX, d->on_update_ref);
 		lua_pushnumber(d->L, received_bytes);
@@ -94,12 +82,9 @@ public:
 		lua_pushnumber(d->L, current_speed);
 		lua_pcall(d->L, 3, 0, 0);
 	}
-	void OnFinishDownload(Awesomium::WebView* caller,
-		int download_id,
-		const Awesomium::WebURL& url,
-		const Awesomium::WebString& saved_path) {
-
+	void OnFinishDownload(WebView* caller, int download_id, const WebURL& url, const WebString& saved_path) {
 		web_downloader_type *d = this->d;
+		if (d->closed) return;
 
 		WebString rurl = url.spec();
 		size_t ulen; char *ubuf = webstring_to_buf((WebString*)&rurl, &ulen);
@@ -136,8 +121,9 @@ static int lua_web_new(lua_State *L) {
 static int lua_web_close(lua_State *L) {
 	web_view_type *view = (web_view_type*)auxiliar_checkclass(L, "web{view}", 1);
 	if (!view->closed) {
-		view->view->Destroy();		
+		view->view->Destroy();
 		view->closed = true;
+		printf("Destroyed webview\n");
 	}
 	return 0;
 }
@@ -320,6 +306,7 @@ static int lua_downloader_new(lua_State *L) {
 	listener->d = new WebDownloader();
 	listener->d->d = listener;
 	listener->L = L;
+	listener->closed = false;
 
 	lua_pushvalue(L, 1);
 	listener->on_request_ref = luaL_ref(L, LUA_REGISTRYINDEX);
@@ -332,10 +319,27 @@ static int lua_downloader_new(lua_State *L) {
 
 static int lua_downloader_close(lua_State *L) {
 	web_downloader_type *listener = (web_downloader_type*)auxiliar_checkclass(L, "web{downloader}", 1);
-	luaL_unref(L, LUA_REGISTRYINDEX, listener->on_request_ref);
-	luaL_unref(L, LUA_REGISTRYINDEX, listener->on_update_ref);
-	luaL_unref(L, LUA_REGISTRYINDEX, listener->on_finish_ref);
-	delete listener->d;
+	if (!listener->closed) {
+		luaL_unref(L, LUA_REGISTRYINDEX, listener->on_request_ref);
+		luaL_unref(L, LUA_REGISTRYINDEX, listener->on_update_ref);
+		luaL_unref(L, LUA_REGISTRYINDEX, listener->on_finish_ref);
+		delete listener->d;
+		listener->closed = true;
+	}
+	return 0;
+}
+
+static int lua_web_download_action(lua_State *L) {
+	web_view_type *view = (web_view_type*)auxiliar_checkclass(L, "web{view}", 1);
+	if (view->closed) return 0;
+	int download_id = luaL_checknumber(L, 2);
+
+	if (lua_isstring(L, 3)) {
+		size_t len;
+		const char *buf = lua_tolstring(L, 3, &len);
+		WebString wpath = WebString::CreateFromUTF8(buf, len);
+		view->view->DidChooseDownloadPath(download_id, wpath);
+	} else view->view->DidCancelDownload(download_id);
 	return 0;
 }
 
@@ -343,6 +347,7 @@ static const struct luaL_Reg view_reg[] =
 {
 	{"__gc", lua_web_close},
 	{"downloader", lua_web_set_downloader},
+	{"downloadAction", lua_web_download_action},
 	{"toScreen", lua_web_toscreen},
 	{"focus", lua_web_focus},
 	{"loading", lua_web_loading},

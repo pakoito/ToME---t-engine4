@@ -193,7 +193,7 @@ end
 
 function _M:webPopup(url)
 	local d = new(url, game.w * 0.9, game.h * 0.9)
-	local w = require("engine.ui.WebView").new{width=d.iw, height=d.ih, url=url, allow_downloads={addons=true}}
+	local w = require("engine.ui.WebView").new{width=d.iw, height=d.ih, url=url, allow_downloads={addons=true, modules=true}}
 	w.on_title = function(title) d:updateTitle(title) end
 	d:loadUI{{left=0, top=0, ui=w}}
 	d:setupUI()
@@ -563,6 +563,10 @@ end
 --- This provides required cleanups, do not touch
 function _M:cleanup()
 	for p, _ in pairs(self.particles) do p:dieDisplay() end
+
+	for i = 1, #self.uis do
+		if self.uis[i].ui and self.uis[i].ui.on_dialog_cleanup then self.uis[i].ui:on_dialog_cleanup() end
+	end
 end
 
 function _M:drawFrame(x, y, r, g, b, a)

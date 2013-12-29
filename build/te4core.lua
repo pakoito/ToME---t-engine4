@@ -82,6 +82,7 @@ project "TEngine"
 			"-framework libpng",
 			"-framework ogg",
 			"-framework vorbis",
+			"-Wl,-rpath,'@loader_path/../Frameworks'",
 		}
 		if _OPTIONS.lua == "jit2" then
 			linkoptions {
