@@ -262,7 +262,7 @@ static int program_set_uniform_number3_fast(lua_State *L)
 static int program_set_uniform_number4_fast(lua_State *L)
 {
 	shader_type *p = (shader_type*)lua_touserdata(L, 1);
-	GLfloat i[2];
+	GLfloat i[4];
 	i[0] = luaL_checknumber(L, 2);
 	i[1] = luaL_checknumber(L, 3);
 	i[2] = luaL_checknumber(L, 4);

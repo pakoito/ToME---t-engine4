@@ -33,6 +33,7 @@
 #include "SFMT.h"
 #include "tSDL.h"
 #include "main.h"
+#include "useshader.h"
 #include "physfs.h"
 #include "physfsrwops.h"
 
