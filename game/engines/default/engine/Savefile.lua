@@ -240,6 +240,7 @@ function _M:saveGame(game, no_dialog)
 	f:write(("short_name = %q\n"):format(self.short_name))
 	f:write(("timestamp = %d\n"):format(os.time()))
 	f:write(("loadable = %s\n"):format(game:isLoadable() and "true" or "false"))
+	f:write(("cheat = %s\n"):format(game:isTainted() and "true" or "false"))
 	f:write(("description = %q\n"):format(desc.description))
 	f:close()
 	if core.steam then core.steam.writeFile(self.save_dir.."desc.lua") end

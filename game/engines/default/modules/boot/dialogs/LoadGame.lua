@@ -162,7 +162,7 @@ end
 
 function _M:playSave()
 	if not self.save_sel then return end
-	if config.settings.cheat then
+	if config.settings.cheat and not self.save_sel.cheat then
 		Dialog:yesnoPopup("Developer Mode", "#LIGHT_RED#WARNING: #LAST#Loading a savefile while in developer mode will permanently invalidate it. Proceed?", function(ret) if not ret then
 			Module:instanciate(self.save_sel.mod, self.save_sel.base_name, false)
 		end end, "Cancel", "Load anyway", true)
