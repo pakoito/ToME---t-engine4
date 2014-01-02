@@ -472,7 +472,7 @@ function _M:loadAddons(mod, saveuse)
 			hash_valid, hash_err = false, "cheat mode skipping addon validation"
 		else
 			local fmd5 = self:addonMD5(add)
-			hashlist[#hashlist+1] = {addon=add.version_name, md5=fmd5}
+			hashlist[#hashlist+1] = {module=mod.short_name, addon=add.version_name, md5=fmd5}
 --			hash_valid, hash_err = profile:checkAddonHash(mod.short_name, add.version_name, fmd5)
 		end
 
@@ -751,8 +751,8 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 	local hashlist = self:loadAddons(mod, (save_desc and save_desc.addons) or (__module_extra_info.set_addons))
 
 	-- Check all hashes at once
-	hashlist[#hashlist+1] = {module=true, md5=module_md5}
-	hash_valid, hash_err = profile:checkBatchHash(mod.version_name, hashlist)
+	hashlist[#hashlist+1] = {module=mod.version_name, md5=module_md5}
+	hash_valid, hash_err = profile:checkBatchHash(hashlist)
 	print("[MODULE] All hashes validation: ", hash_valid, hash_err)
 
 	-- Now that addons are loaded we can load UI definitions

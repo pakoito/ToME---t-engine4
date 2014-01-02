@@ -688,11 +688,11 @@ function _M:checkAddonHash(module, addon, md5)
 	return true
 end
 
-function _M:checkBatchHash(module, list)
+function _M:checkBatchHash(list)
 	if not self.auth then return nil, "no online profile active" end
 	if config.settings.cheat then return nil, "cheat mode active" end
 	if game and game:isTainted() then return nil, "savefile tainted" end
-	core.profile.pushOrder(table.serialize{o="CheckBatchHash", data={module=module, list=list}})
+	core.profile.pushOrder(table.serialize{o="CheckBatchHash", data=list})
 
 	local ok = false
 	local error = nil

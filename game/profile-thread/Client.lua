@@ -334,10 +334,13 @@ function _M:orderSetConfigsBatch(o)
 
 		print("[PROFILE THREAD] flushing CSETs")
 
-		local data = zlib.compress(table.serialize(self.setConfigsBatching))
-		self:command("FSET", data:len())
-		if self:read("200") then self.sock:send(data) end
-
+		if #self.setConfigsBatching <= 0 then
+			print("[PROFILE THREAD] flushing CSETs ignored, empty dataset")
+		else
+			local data = zlib.compress(table.serialize(self.setConfigsBatching))
+			self:command("FSET", data:len())
+			if self:read("200") then self.sock:send(data) end
+		end
 		self.setConfigsBatching = nil
 	else
 		print("[PROFILE THREAD] batching CSETs")
