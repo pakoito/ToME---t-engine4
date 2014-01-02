@@ -37,7 +37,7 @@ function _M:init(source)
 	local desc
 	local recur = false
 
-	if not profile.auth or not tonumber(profile.auth.donated) or tonumber(profile.auth.donated) <= 1 then
+	if not profile.auth or not tonumber(profile.auth.donated) or tonumber(profile.auth.donated) <= 1) then
 		local donation_features = { "#GOLD#Custom character tiles#WHITE#", "#GOLD#Exploration mode (infinite lives)#WHITE#"}
 		self:triggerHook{"DonationDialog:features", list=donation_features}
 
@@ -67,7 +67,7 @@ Thank you for your kindness!]]}
 		{left=0, top=0, ui=desc},
 		{left=5, bottom=5 + ok.h, ui=self.c_donate},
 		{left=5+self.c_donate.w, bottom=10 + ok.h, ui=euro},
-		{right=5, bottom=5 + ok.h, ui=self.c_recur},
+		{left=5+self.c_donate.w+5, bottom=5 + ok.h, ui=self.c_recur},
 		{left=0, bottom=0, ui=ok},
 		{right=0, bottom=0, ui=cancel},
 	}

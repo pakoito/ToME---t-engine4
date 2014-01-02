@@ -1507,7 +1507,8 @@ function _M:setupCommands()
 			print("===============")
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
---do return end
+			game:registerDialog(require('mod.dialogs.Donation').new())
+do return end
 			local f, err = loadfile("/data/general/events/glimmerstone.lua")
 			print(f, err)
 			setfenv(f, setmetatable({level=self.level, zone=self.zone}, {__index=_G}))
