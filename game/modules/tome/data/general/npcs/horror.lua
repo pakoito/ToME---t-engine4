@@ -905,7 +905,7 @@ newEntity{ base="BASE_NPC_HORROR", define_as = "GRGGLCK_TENTACLE",
 --MUHUHAHAHAHAHAHA
 newEntity{ base = "BASE_NPC_HORROR",
 	name = "Ak'Gishil", color=colors.GREY, unique = true,
-	desc = "This blade horror has grown in power dramatically, and become a nexus of temporal energy. Rifts in space open around it constantly, summoning and banishing blades before vanishing as quickly as they appear.",
+	desc = "This Blade Horror has been infused with intense temporal magic, causing its power to increase dramatically. Rifts in space open around it constantly, summoning and banishing blades before vanishing as quickly as they appear.",
 	resolvers.nice_tile{tall=1},
 	level_range = {30, nil}, exp_worth = 2,
 	rarity = 50,
@@ -961,6 +961,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 }
 
 newEntity{ base="BASE_NPC_HORROR", define_as = "ANIMATED_BLADE",
+	resolvers.nice_tile{tall=1},
 	type = "construct", subtype = "weapon", image="object/magical_animated_sword.png",
 	name = "Animated Sword",
 	color = colors.GREY,

@@ -2224,6 +2224,15 @@ function _M:onTakeHit(value, src, death_note)
 			game:delayedLogMessage(src, self, "life_leech"..self.uid, "#CRIMSON##Source# leeches life from #Target#!")
 		end
 	end
+	
+	-- Life steal from weapon
+	if value > 0 and src and not src.dead and src.attr and src:attr("lifesteal") then
+		local leech = math.min(value, self.life) * src.lifesteal / 100
+		if leech > 0 then
+			src:heal(leech, self)
+			game:delayedLogMessage(src, self, "life_leech"..self.uid, "#CRIMSON##Source# steals life from #Target#!")
+		end
+	end
 
 	-- Flat damage cap
 	if self.flat_damage_cap and self.max_life and death_note and death_note.damtype then
@@ -4368,6 +4377,9 @@ function _M:breakStepUp()
 	end
 	if self:hasEffect(self.EFF_WILD_SPEED) then
 		self:removeEffect(self.EFF_WILD_SPEED)
+	end
+	if self:hasEffect(self.EFF_HUNTER_SPEED) then
+		self:removeEffect(self.EFF_HUNTER_SPEED)
 	end
 	if self:hasEffect(self.EFF_REFLEXIVE_DODGING) then
 		self:removeEffect(self.EFF_REFLEXIVE_DODGING)

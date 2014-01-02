@@ -2244,6 +2244,7 @@ newEffect{
 		self:effectTemporaryValue(eff, "no_breath", 1)
 		self:effectTemporaryValue(eff, "cut_immune", eff.power)
 		self:effectTemporaryValue(eff, "stun_immune", eff.power)
+		self:effectTemporaryValue(eff, "is_shivgoroth", 1)
 
 		if self.hotkey and self.isHotkeyBound then
 			local pos = self:isHotkeyBound("talent", self.T_SHIVGOROTH_FORM)
@@ -2268,6 +2269,58 @@ newEffect{
 			local pos = self:isHotkeyBound("talent", self.T_ICE_STORM)
 			if pos then
 				self.hotkey[pos] = {"talent", self.T_SHIVGOROTH_FORM}
+			end
+		end
+
+		self:unlearnTalent(self.T_ICE_STORM, eff.lvl, nil, {no_unlearn=true})
+		self.replace_display = nil
+		self:removeAllMOs()
+		game.level.map:updateMap(self.x, self.y)
+	end,
+}
+
+--Duplicate for Frost Lord's Chain
+newEffect{
+	name = "SHIVGOROTH_FORM_LORD", image = "talents/shivgoroth_form.png",
+	desc = "Shivgoroth Form",
+	long_desc = function(self, eff) return ("The target assumes the form of a shivgoroth."):format() end,
+	type = "magical",
+	subtype = { ice=true },
+	status = "beneficial",
+	parameters = {},
+	on_gain = function(self, err) return "#Target# turns into a shivgoroth!", "+Shivgoroth Form" end,
+	on_lose = function(self, err) return "#Target# is no longer transformed.", "-Shivgoroth Form" end,
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "damage_affinity", {[DamageType.COLD]=50 + 100 * eff.power})
+		self:effectTemporaryValue(eff, "resists", {[DamageType.COLD]=100 * eff.power / 2})
+		self:effectTemporaryValue(eff, "no_breath", 1)
+		self:effectTemporaryValue(eff, "cut_immune", eff.power)
+		self:effectTemporaryValue(eff, "stun_immune", eff.power)
+		self:effectTemporaryValue(eff, "is_shivgoroth", 1)
+
+		if self.hotkey and self.isHotkeyBound then
+			local pos = self:isHotkeyBound("talent", self.T_SHIV_LORD)
+			if pos then
+				self.hotkey[pos] = {"talent", self.T_ICE_STORM}
+			end
+		end
+
+		local ohk = self.hotkey
+		self.hotkey = nil -- Prevent assigning hotkey, we just did
+		self:learnTalent(self.T_ICE_STORM, true, eff.lvl, {no_unlearn=true})
+		self.hotkey = ohk
+
+		self.replace_display = mod.class.Actor.new{
+			image="invis.png", add_mos = {{image = "npc/elemental_ice_greater_shivgoroth.png", display_y = -1, display_h = 2}},
+		}
+		self:removeAllMOs()
+		game.level.map:updateMap(self.x, self.y)
+	end,
+	deactivate = function(self, eff)
+		if self.hotkey and self.isHotkeyBound then
+			local pos = self:isHotkeyBound("talent", self.T_ICE_STORM)
+			if pos then
+				self.hotkey[pos] = {"talent", self.T_SHIV_LORD}
 			end
 		end
 

@@ -542,7 +542,8 @@ newEntity{ base = "BASE_WARAXE",
 		physcrit = 10,
 		dammod = {str=1},
 		damrange = 1.2,
-		melee_project={[DamageType.BLIGHT] = 20},
+		burst_on_hit={[DamageType.BLIGHT] = 25},
+		lifesteal=5, --You can counter the life regen by fighting, muhuhahah
 	},
 	wielder = {
 		life_regen = -0.3,
@@ -755,6 +756,8 @@ newEntity{ base = "BASE_GREATMAUL",
 
 	wielder = {
 	},
+	max_power = 20, power_regen = 1,
+	use_talent = { id = Talents.T_SUNDER_ARMOR, level = 2, power = 20 },
 }
 
 
@@ -825,7 +828,7 @@ newEntity{ base = "BASE_WHIP",
 
 newEntity{ base = "BASE_GREATSWORD",
 	power_source = {technique=true},
-	define_as = "MURDERBLADE", rarity=false,
+	define_as = "MURDERBLADE",
 	name = "Warmaster Gnarg's Murderblade", unique=true, image="object/artifact/warmaster_gnargs_murderblade.png",
 	unided_name = "blood-etched greatsword", color=colors.CRIMSON,
 	desc = [[A blood-etched greatsword, it has seen many foes. From the inside.]],
@@ -839,7 +842,7 @@ newEntity{ base = "BASE_GREATSWORD",
 		apr = 19,
 		physcrit = 10,
 		dammod = {str=1.2},
-		special_on_hit = {desc="10% chance to send the wielder into a killing frenzy", fct=function(combat, who)
+		special_on_hit = {desc="10% chance to send the wielder into a killing frenzy", on_kill=1, fct=function(combat, who)
 			if not rng.percent(10) then return end
 			who:setEffect(who.EFF_FRENZY, 3, {crit=12, power=0.3, dieat=0.25})
 		end},
@@ -903,9 +906,10 @@ newEntity{ base = "BASE_GLOVES", define_as = "FLAMEWROUGHT",
 	cost = 50,
 	material_level = 1,
 	wielder = {
-		inc_stats = { [Stats.STAT_WIL] = 3, },
+		inc_stats = { [Stats.STAT_WIL] = 3, [Stats.STAT_CUN] = 2,},
 		resists = { [DamageType.FIRE]= 10, },
 		inc_damage = { [DamageType.FIRE]= 5, },
+		combat_mindpower=2,
 		combat_armor = 2,
 		combat = {
 			dam = 5,
@@ -918,7 +922,7 @@ newEntity{ base = "BASE_GLOVES", define_as = "FLAMEWROUGHT",
 		},
 	},
 	max_power = 24, power_regen = 1,
-	use_talent = { id = Talents.T_RITCH_FLAMESPITTER_BOLT, level = 2, power = 6 },
+	use_talent = { id = Talents.T_RITCH_FLAMESPITTER_BOLT, level = 3, power = 8 },
 }
 
 -- The crystal set
@@ -1109,12 +1113,13 @@ newEntity{ base = "BASE_WARAXE",
 	rarity = 220,
 	cost = 50,
 	combat = {
-		dam = 16,
+		dam = 18,
 		apr = 3,
 		physcrit = 12,
 		dammod = {str=1},
 		talent_on_hit = { [Talents.T_GREATER_WEAPON_FOCUS] = {level=2, chance=10} },
-		melee_project={[DamageType.DRAINLIFE] = 10},
+		lifesteal = 10,
+		convert_damage = {[DamageType.BLIGHT] = 25},
 	},
 	wielder = {
 		inc_damage = { [DamageType.BLIGHT] = 8 },
@@ -1560,7 +1565,7 @@ newEntity{ base = "BASE_GREATMAUL", define_as="ROTTING_MAUL",
 		dammod = {str=1.4},
 		convert_damage = {[DamageType.BLIGHT] = 20},
 		melee_project={[DamageType.CORRUPTED_BLOOD] = 30},
-		special_on_hit = {desc="25% to damage nearby creatures", on_kill=true, fct=function(combat, who, target)
+		special_on_hit = {desc="25% chance to damage nearby creatures", on_kill=1, fct=function(combat, who, target)
 			if rng.percent(25) then
 			local o, item, inven_id = who:findInAllInventoriesBy("define_as", "ROTTING_MAUL")
 				local dam = rng.avg(1,2) * (70+ who:getStr() * 1.8)

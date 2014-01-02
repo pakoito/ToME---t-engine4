@@ -657,6 +657,8 @@ function _M:getTextualDesc(compare_with, use_actor)
 		compare_fields(combat, compare_with, field, "travel_speed", "%+d%%", "Travel speed: ", 100, false, false, add_table)
 
 		compare_fields(combat, compare_with, field, "phasing", "%+d%%", "Damage Shield penetration (this weapon only): ", 1, false, false, add_table)
+		
+		compare_fields(combat, compare_with, field, "lifesteal", "%+d%%", "Lifesteal (this weapon only): ", 1, false, false, add_table)
 
 		if combat.tg_type and combat.tg_type == "beam" then
 			desc:add({"color","YELLOW"}, ("Shots beam through all targets."), {"color","LAST"}, true)
@@ -1022,6 +1024,7 @@ function _M:getTextualDesc(compare_with, use_actor)
 		compare_fields(w, compare_with, field, "die_at", "%+.2f life", "Only die when reaching: ", 1, true, true)
 		compare_fields(w, compare_with, field, "max_life", "%+.2f", "Maximum life: ")
 		compare_fields(w, compare_with, field, "max_mana", "%+.2f", "Maximum mana: ")
+		compare_fields(w, compare_with, field, "max_soul", "%+.2f", "Maximum souls: ")
 		compare_fields(w, compare_with, field, "max_stamina", "%+.2f", "Maximum stamina: ")
 		compare_fields(w, compare_with, field, "max_hate", "%+.2f", "Maximum hate: ")
 		compare_fields(w, compare_with, field, "max_psi", "%+.2f", "Maximum psi: ")
@@ -1063,6 +1066,7 @@ function _M:getTextualDesc(compare_with, use_actor)
 		compare_fields(w, compare_with, field, "damage_shield_penetrate", "%+d%%", "Damage Shield penetration: ")
 
 		compare_fields(w, compare_with, field, "projectile_evasion", "%+d%%", "Deflect projectiles away: ")
+		compare_fields(w, compare_with, field, "evasion", "%+d%%", "Chance to avoid attacks: ")
 
 		compare_fields(w, compare_with, field, "defense_on_teleport", "%+d", "Defense after a teleport: ")
 		compare_fields(w, compare_with, field, "resist_all_on_teleport", "%+d%%", "Resist all after a teleport: ")
@@ -1074,6 +1078,9 @@ function _M:getTextualDesc(compare_with, use_actor)
 
 		compare_fields(w, compare_with, field, "nature_summon_max", "%+d", "Max wilder summons: ")
 		compare_fields(w, compare_with, field, "nature_summon_regen", "%+.2f", "Life regen bonus (wilder-summons): ")
+		
+		compare_fields(w, compare_with, field, "shield_dur", "%+d", "Damage Shield Duration: ")
+		compare_fields(w, compare_with, field, "shield_factor", "%+d%%", "Damage Shield Power: ")
 
 		compare_fields(w, compare_with, field, "slow_projectiles", "%+d%%", "Slows Projectiles: ")
 
@@ -1316,7 +1323,7 @@ function _M:getUseDesc(use_actor)
 	local ret = tstring{}
 	local reduce = 100 - util.bound(use_actor:attr("use_object_cooldown_reduce") or 0, 0, 100)
 	local usepower = function(power) return math.ceil(power * reduce / 100) end
-	if self.use_power then
+	if self.use_power and not self.use_power.hidden then
 		if self.show_charges then
 			ret = tstring{{"color","YELLOW"}, ("It can be used to %s, with %d charges out of %d."):format(util.getval(self.use_power.name, self), math.floor(self.power / usepower(self.use_power.power)), math.floor(self.max_power / usepower(self.use_power.power))), {"color","LAST"}}
 		elseif self.talent_cooldown then

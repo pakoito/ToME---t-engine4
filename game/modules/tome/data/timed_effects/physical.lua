@@ -915,6 +915,28 @@ newEffect{
 }
 
 newEffect{
+	name = "HUNTER_SPEED", image = "talents/infusion__movement.png",
+	desc = "Hunter",
+	long_desc = function(self, eff) return ("You are searching for a new target. Any other action other than movement will cancel it. Movement is %d%% faster."):format(eff.power) end,
+	type = "physical",
+	subtype = { nature=true, speed=true },
+	status = "beneficial",
+	parameters = {power=1000},
+	on_gain = function(self, err) return "#Target# prepares for the next kill!.", "+Hunter" end,
+	on_lose = function(self, err) return "#Target# slows down.", "-Hunter" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("wild_speed", 1)
+		eff.moveid = self:addTemporaryValue("movement_speed", eff.power/100)
+		if self.ai_state then eff.aiid = self:addTemporaryValue("ai_state", {no_talents=1}) end -- Make AI not use talents while using it
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("wild_speed", eff.tmpid)
+		if eff.aiid then self:removeTemporaryValue("ai_state", eff.aiid) end
+		self:removeTemporaryValue("movement_speed", eff.moveid)
+	end,
+}
+
+newEffect{
 	name = "STEP_UP", image = "talents/step_up.png",
 	desc = "Step Up",
 	long_desc = function(self, eff) return ("Movement is %d%% faster."):format(eff.power) end,

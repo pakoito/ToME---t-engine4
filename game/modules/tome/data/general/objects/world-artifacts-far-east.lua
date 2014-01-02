@@ -228,9 +228,9 @@ newEntity{ base = "BASE_LONGSWORD", define_as = "BLOODEDGE",
 	unique = true,
 	name = "Blood-Edge", image = "object/artifact/sword_blood_edge.png",
 	unided_name = "red crystalline sword",
-	level_range = {35, 42},
+	level_range = {36, 48},
 	color=colors.RED,
-	rarity = 270,
+	rarity = 260,
 	desc = [[This deep red sword weeps blood continuously. It was born in the labs of the orcish corrupter Hurik, who sought to make a crystal that would house his soul after death. But his plans were disrupted by a band of sun paladins, and though most died purging his keep of dread minions, their leader Raasul fought through to Hurik's lab, sword in hand. There the two did battle, blade against blood magic, till both fell to the floor with weeping wounds. The orc with his last strength crawled towards his fashioned phylactery, hoping to save himself, but Raasul saw his plans and struck the crystal with his light-bathed sword. It shattered, and in the sudden impulse of energies the steel, crystal and blood were fused into one.
 Now the broken fragments of Raasul's soul are trapped in this terrible artifact, his mind warped beyond all sanity by decades of imprisonment. Only the taste of blood calls him forth, his soul stealing the lifeblood of others to take on physical form again, that he may thrash and wail against the living.]],
 	cost = 1000,
@@ -248,15 +248,15 @@ Now the broken fragments of Raasul's soul are trapped in this terrible artifact,
 		max_vim = 25,
 	},
 
-	max_power = 28, power_regen = 1,
-	use_talent = { id = Talents.T_BLEEDING_EDGE, level = 4, power = 28 },
+	max_power = 20, power_regen = 1,
+	use_talent = { id = Talents.T_BLEEDING_EDGE, level = 4, power = 20 },
 	combat = {
-		dam = 44,
-		apr = 4,
-		physcrit = 5,
-		dammod = {str=0.55, mag=0.5},
+		dam = 46,
+		apr = 7,
+		physcrit = 6,
+		dammod = {str=1, mag=0.1},
 		convert_damage = {[DamageType.BLIGHT] = 50},
-
+		lifesteal=5,
 		special_on_hit = {desc="15% chance to animate a bleeding foe's blood", fct=function(combat, who, target)
 			if not rng.percent(15) then return end
 			local cut = false

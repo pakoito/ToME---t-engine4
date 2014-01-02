@@ -403,6 +403,17 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 	if hitted and ammo and ammo.special_on_kill and ammo.special_on_kill.fct and target.dead then
 		ammo.special_on_kill.fct(ammo, self, target)
 	end
+	
+	-- Siege Arrows
+	if hitted and ammo and ammo.siege_impact and (not self.shattering_impact_last_turn or self.shattering_impact_last_turn < game.turn) then
+		local dam = dam * ammo.siege_impact
+		local invuln = target.invulnerable
+		game.logSeen(target, "The shattering blow creates a shockwave!")
+		target.invulnerable = 1 -- Target already hit, don't damage it twice
+		self:project({type="ball", radius=1, friendlyfire=false}, target.x, target.y, DamageType.PHYSICAL, dam)
+		target.invulnerable = invuln
+		self.shattering_impact_last_turn = game.turn
+	end
 
 	-- Temporal cast
 	if hitted and not target.dead and self:knowTalent(self.T_WEAPON_FOLDING) and self:isTalentActive(self.T_WEAPON_FOLDING) then
