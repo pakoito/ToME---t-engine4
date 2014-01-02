@@ -23,7 +23,7 @@ newEntity{
 	define_as = "BASE_GEM",
 	type = "gem", subtype="white",
 	display = "*", color=colors.YELLOW,
-	encumber = 0, slot = "GEM",
+	encumber = 0, slot = "GEM", use_no_wear = true,
 	identified = true,
 	stacking = true,
 	auto_pickup = true, pickup_sound = "actions/gem",
