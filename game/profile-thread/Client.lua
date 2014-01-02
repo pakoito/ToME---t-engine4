@@ -23,7 +23,7 @@ local UserChat = require "profile-thread.UserChat"
 
 module(..., package.seeall, class.make)
 
-local debug = false
+local debug = true
 
 local mport = debug and 2259 or 2257
 local pport = debug and 2260 or 2258
@@ -239,7 +239,7 @@ function _M:run()
 		while order do self:handleOrder(order) order = cprofile.popOrder() end
 
 		self:step()
-		core.game.sleep(20)
+		core.game.sleep(10)
 --	end
 end
 
@@ -381,6 +381,22 @@ function _M:orderCheckAddonHash(o)
 		cprofile.pushEvent("e='CheckAddonHash' ok=true")
 	else
 		cprofile.pushEvent("e='CheckAddonHash' ok=false")
+	end
+end
+
+function _M:orderCheckBatchHash(o)
+	if not self.sock then cprofile.pushEvent("e='CheckBatchHash' ok=false not_connected=true") end
+	local data = table.serialize(o.data)
+	self:command("BMD5", #data)
+	if self:read("200") then
+		self.sock:send(data)
+		if self:read("200") then		
+			cprofile.pushEvent("e='CheckBatchHash' ok=true")
+		else
+			cprofile.pushEvent(("e='CheckBatchHash' ok=false error=%q"):format(self.last_error))
+		end
+	else
+		cprofile.pushEvent(("e='CheckBatchHash' ok=false error=%q"):format("unknown error"))
 	end
 end
 

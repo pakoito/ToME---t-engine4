@@ -370,6 +370,7 @@ function _M:addonMD5(add, base)
 end
 
 function _M:loadAddons(mod, saveuse)
+	local hashlist = {}
 	local adds = self:listAddons(mod, true)
 
 	if saveuse then saveuse = table.reverse(saveuse) end
@@ -471,15 +472,16 @@ function _M:loadAddons(mod, saveuse)
 			hash_valid, hash_err = false, "cheat mode skipping addon validation"
 		else
 			local fmd5 = self:addonMD5(add)
-			hash_valid, hash_err = profile:checkAddonHash(mod.short_name, add.version_name, fmd5)
+			hashlist[#hashlist+1] = {addon=add.version_name, md5=fmd5}
+--			hash_valid, hash_err = profile:checkAddonHash(mod.short_name, add.version_name, fmd5)
 		end
 
-		if hash_err then hash_err = hash_err .. " [addon: "..add.short_name.."]" end
-		add.hash_valid, add.hash_err = hash_valid, hash_err
+--		if hash_err then hash_err = hash_err .. " [addon: "..add.short_name.."]" end
+--		add.hash_valid, add.hash_err = hash_valid, hash_err
 
 		mod.addons[add.short_name] = add
 	end
---	os.exit()
+	return hashlist
 end
 
 -- Grab some fun facts!
@@ -732,6 +734,7 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 	end
 	local hash_valid, hash_err
 	local t = core.game.getTime()
+	local module_md5 = "--"
 	if config.settings.cheat then
 		hash_valid, hash_err = false, "cheat mode skipping validation"
 	else
@@ -740,30 +743,25 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 			fp("/data")
 			fp("/engine")
 			table.sort(md5s)
-			local fmd5 = md5.sumhexa(table.concat(md5s))
+			module_md5 = md5.sumhexa(table.concat(md5s))
 			print("[MODULE LOADER] module MD5", fmd5, "computed in ", core.game.getTime() - t)
-			hash_valid, hash_err = profile:checkModuleHash(mod.version_name, fmd5)
 		end
 	end
 
-	self:loadAddons(mod, (save_desc and save_desc.addons) or (__module_extra_info.set_addons))
+	local hashlist = self:loadAddons(mod, (save_desc and save_desc.addons) or (__module_extra_info.set_addons))
+
+	-- Check all hashes at once
+	hashlist[#hashlist+1] = {module=true, md5=module_md5}
+	hash_valid, hash_err = profile:checkBatchHash(mod.version_name, hashlist)
+	print("[MODULE] All hashes validation: ", hash_valid, hash_err)
 
 	-- Now that addons are loaded we can load UI definitions
 	for _, file in ipairs(fs.list("/data/gfx/ui/definitions")) do
 		if file:find("%.lua$") then UIBase:loadUIDefinitions("/data/gfx/ui/definitions/"..file) end
 	end
 
-	-- Check addons
-	if hash_valid then
-		for name, add in pairs(mod.addons) do
-			if not add.hash_valid then
-				hash_valid = false
-				hash_err = add.hash_err or "?????? unknown ...."
-				profile.hash_valid = false
-				break
-			end
-		end
-	end
+	-- Validate addons if all is valid
+	if hash_valid then for name, add in pairs(mod.addons) do add.hash_valid = true end end
 
 	local addl = {}
 	for name, add in pairs(mod.addons) do

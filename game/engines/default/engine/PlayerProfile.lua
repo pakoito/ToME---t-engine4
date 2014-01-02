@@ -665,6 +665,7 @@ function _M:checkModuleHash(module, md5)
 	if game and game:isTainted() then return nil, "savefile tainted" end
 	core.profile.pushOrder(table.serialize{o="CheckModuleHash", module=module, md5=md5})
 
+	local ok = false
 	self:waitEvent("CheckModuleHash", function(e) ok = e.ok end, 10000)
 
 	if not ok then return nil, "bad game version" end
@@ -679,10 +680,27 @@ function _M:checkAddonHash(module, addon, md5)
 	if game and game:isTainted() then return nil, "savefile tainted" end
 	core.profile.pushOrder(table.serialize{o="CheckAddonHash", module=module, addon=addon, md5=md5})
 
+	local ok = false
 	self:waitEvent("CheckAddonHash", function(e) ok = e.ok end, 10000)
 
 	if not ok then return nil, "bad game addon version" end
 	print("[ONLINE PROFILE] addon hash is valid")
+	return true
+end
+
+function _M:checkBatchHash(module, list)
+	if not self.auth then return nil, "no online profile active" end
+	if config.settings.cheat then return nil, "cheat mode active" end
+	if game and game:isTainted() then return nil, "savefile tainted" end
+	core.profile.pushOrder(table.serialize{o="CheckBatchHash", data={module=module, list=list}})
+
+	local ok = false
+	local error = nil
+	self:waitEvent("CheckBatchHash", function(e) ok = e.ok error = e.error end, 10000)
+
+	if not ok then return nil, error or "unknown error" end
+	print("[ONLINE PROFILE] all hashes are valid")
+	self.hash_valid = true
 	return true
 end
 
