@@ -459,6 +459,9 @@ function _M:addedToLevel(level, x, y)
 				end
 				game.state:applyRandomClass(self, data, true)
 			end
+			local lifeadd = self.max_life * self:getRankLifeAdjust(1) * self.level / 65 / 1.5
+			self.max_life = self.max_life + lifeadd
+			self.life = self.life + lifeadd
 			self:attr("difficulty_boosted", 1)
 		end
 	end
