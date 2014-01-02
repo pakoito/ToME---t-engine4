@@ -362,6 +362,22 @@ void on_event(SDL_Event *event)
 				lua_pushnil(L);
 
 			docall(L, 9, 0);
+
+			// Raw version
+			lua_rawgeti(L, LUA_REGISTRYINDEX, current_keyhandler);
+			lua_pushstring(L, "receiveKeyRaw");
+			lua_gettable(L, -2);
+			lua_remove(L, -2);
+			lua_rawgeti(L, LUA_REGISTRYINDEX, current_keyhandler);
+			lua_pushboolean(L, (event->type == SDL_KEYUP) ? TRUE : FALSE);
+			lua_pushnumber(L, event->key.keysym.scancode);
+			lua_pushnumber(L, event->key.keysym.sym);
+			lua_pushnumber(L, event->key.keysym.sym);
+			lua_pushboolean(L, (_pKeyState & KMOD_CTRL) ? TRUE : FALSE);
+			lua_pushboolean(L, (_pKeyState & KMOD_SHIFT) ? TRUE : FALSE);
+			lua_pushboolean(L, (_pKeyState & KMOD_ALT) ? TRUE : FALSE);
+			lua_pushboolean(L, (_pKeyState & KMOD_GUI) ? TRUE : FALSE);
+			docall(L, 9, 0);
 		}
 		break;
 	case SDL_MOUSEBUTTONDOWN:

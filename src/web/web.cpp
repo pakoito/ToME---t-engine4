@@ -11,16 +11,23 @@ extern "C" {
 #include "lualib.h"
 #include "auxiliar.h"
 #include "tSDL.h"
+#include "physfs.h"
 }
 #include "web.h"
 
 #include <Awesomium/WebCore.h>
 #include <Awesomium/BitmapSurface.h>
+#include <Awesomium/DataSource.h>
 #include <Awesomium/STLHelpers.h>
 #include "gl_texture_surface.h"
 
 using namespace Awesomium;
+
+class PhysfsDataSource;
+
 static WebCore *web_core = NULL;
+static WebSession *web_session = NULL;
+static PhysfsDataSource *web_data_source = NULL;
 
 typedef struct {
 	WebView *view;
@@ -97,6 +104,36 @@ public:
 	}
 };
 
+class PhysfsDataSource : public DataSource {
+	public:
+	PhysfsDataSource() {}
+	virtual ~PhysfsDataSource() {}
+  
+	virtual void OnRequest(int request_id, const WebString& path) {
+		size_t plen;
+		char *rpath = webstring_to_buf((WebString*)&path, &plen);
+		printf("WebViewAsset read: %s (%d)\n", rpath, plen);
+		PHYSFS_file *f = PHYSFS_openRead(rpath);
+		if (!f) {
+			printf(" => not found\n");
+			SendResponse(request_id, 0, NULL, WSLit("text/html"));
+			return;
+		}
+		size_t len = PHYSFS_fileLength(f);
+		size_t rlen = len;
+		size_t pos = 0;
+		char *buf = (char*)malloc(sizeof(char)*len);
+		while (rlen) {
+			size_t r = PHYSFS_read(f, buf + pos, sizeof(char), rlen);
+			rlen -= r;
+			pos += r;
+		}
+
+		SendResponse(request_id, len, (unsigned char*)buf, WSLit("text/plain"));
+		printf(" => size %d\n", len);
+		free((void*)buf);
+	}
+};
 
 static int lua_web_new(lua_State *L) {
 	int w = luaL_checknumber(L, 1);
@@ -106,7 +143,7 @@ static int lua_web_new(lua_State *L) {
 
 	web_view_type *view = (web_view_type*)lua_newuserdata(L, sizeof(web_view_type));
 	auxiliar_setclass(L, "web{view}", -1);
-	view->view = web_core->CreateWebView(w, h, 0, kWebViewType_Offscreen);
+	view->view = web_core->CreateWebView(w, h, web_session, kWebViewType_Offscreen);
 	view->w = w;
 	view->h = h;
 	view->closed = false;
@@ -244,8 +281,8 @@ static int lua_web_inject_key(lua_State *L) {
 	if (view->closed) return 0;
 
 	bool up = lua_toboolean(L, 2);
-	int scancode = lua_toboolean(L, 3);
-	int asymb = lua_toboolean(L, 4);
+	int scancode = lua_tonumber(L, 3);
+	int asymb = lua_tonumber(L, 4);
 	const char *uni = NULL;
 	size_t unilen = 0;
 	if (lua_isstring(L, 5)) uni = lua_tolstring(L, 5, &unilen);
@@ -380,6 +417,9 @@ void te4_web_init(lua_State *L) {
 	if (!web_core) {
 		web_core = WebCore::Initialize(WebConfig());
 		web_core->set_surface_factory(new GLTextureSurfaceFactory());
+		web_session = web_core->CreateWebSession(WSLit(""), WebPreferences());
+		web_data_source = new PhysfsDataSource();
+		web_session->AddDataSource(WSLit("te4"), web_data_source);
 	}
 
 	auxiliar_newclass(L, "web{view}", view_reg);

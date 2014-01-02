@@ -553,7 +553,6 @@ function _M:keyEvent(...)
 		KeyBind.receiveKey(self.key, ...)
 	end
 end
-
 function _M:display() end
 
 --- This does nothing and can be changed by other classes
