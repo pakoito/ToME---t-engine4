@@ -375,10 +375,13 @@ function _M:getTextualDesc(compare_with, use_actor)
 		local added = 0
 		local add = false
 		ret:add(text)
+		local outformatres
+		if type(outformat) == "function" then outformatres = outformat()
+		else outformatres = outformat:format(((item1[field] or 0) + (add_table[field] or 0)) * mod) end
 		if isinversed then
-			ret:add(((item1[field] or 0) + (add_table[field] or 0)) > 0 and {"color","RED"} or {"color","LIGHT_GREEN"}, outformat:format(((item1[field] or 0) + (add_table[field] or 0)) * mod), {"color", "LAST"})
+			ret:add(((item1[field] or 0) + (add_table[field] or 0)) > 0 and {"color","RED"} or {"color","LIGHT_GREEN"}, outformatres, {"color", "LAST"})
 		else
-			ret:add(((item1[field] or 0) + (add_table[field] or 0)) < 0 and {"color","RED"} or {"color","LIGHT_GREEN"}, outformat:format(((item1[field] or 0) + (add_table[field] or 0)) * mod), {"color", "LAST"})
+			ret:add(((item1[field] or 0) + (add_table[field] or 0)) < 0 and {"color","RED"} or {"color","LIGHT_GREEN"}, outformatres, {"color", "LAST"})
 		end
 		if item1[field] then
 			add = true
@@ -393,10 +396,13 @@ function _M:getTextualDesc(compare_with, use_actor)
 				added = added + 1
 				add = true
 				if items[i][infield][field] ~= (item1[field] or 0) then
+					local outformatres
+					if type(outformat) == "function" then outformatres = outformat()
+					else outformatres = outformat:format(((item1[field] or 0) - items[i][infield][field]) * mod) end
 					if isdiffinversed then
-						ret:add(items[i][infield][field] < (item1[field] or 0) and {"color","RED"} or {"color","LIGHT_GREEN"}, outformat:format(((item1[field] or 0) - items[i][infield][field]) * mod), {"color", "LAST"})
+						ret:add(items[i][infield][field] < (item1[field] or 0) and {"color","RED"} or {"color","LIGHT_GREEN"}, outformatres, {"color", "LAST"})
 					else
-						ret:add(items[i][infield][field] > (item1[field] or 0) and {"color","RED"} or {"color","LIGHT_GREEN"}, outformat:format(((item1[field] or 0) - items[i][infield][field]) * mod), {"color", "LAST"})
+						ret:add(items[i][infield][field] > (item1[field] or 0) and {"color","RED"} or {"color","LIGHT_GREEN"}, outformatres, {"color", "LAST"})
 					end
 				else
 					ret:add("-")
@@ -533,7 +539,7 @@ function _M:getTextualDesc(compare_with, use_actor)
 		compare_fields(combat, compare_with, field, "atk", "%+d", "Accuracy: ", 1, false, false, add_table)
 		compare_fields(combat, compare_with, field, "apr", "%+d", "Armour Penetration: ", 1, false, false, add_table)
 		compare_fields(combat, compare_with, field, "physcrit", "%+.1f%%", "Physical crit. chance: ", 1, false, false, add_table)
-		compare_fields(combat, compare_with, field, "physspeed", "%.0f%%", "Attack speed: ", 100, false, true, add_table)
+		compare_fields(combat, compare_with, field, "physspeed", function() return ("%.0f%%"):format(100/(combat.physspeed or 1)) end, "Attack speed: ", 100, false, true, add_table)
 
 		compare_fields(combat, compare_with, field, "block", "%+d", "Block value: ", 1, false, false, add_table)
 

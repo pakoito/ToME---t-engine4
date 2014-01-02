@@ -157,29 +157,26 @@ Those inscriptions give the bearer always-accessible powers. Usually most people
 -- Speeds
 -------------------------------------------------------------
 TOOLTIP_SPEED_GLOBAL = [[#GOLD#Global Speed#LAST#
-Global speed affects everything you do.
-It represents how much "energy" you get per game turn. Once you reach a certain point you can act.
-E.g.: at 200% global speed you get twice as much energy per game turn and thus can act twice when other creatures only act once.
+Global speed represents how fast you are and affects everything you do.
+Higher is faster, so at 200% global speed you can performa twice as many actions as you would at 100% speed.
+Note that the amount of time to performa various actions like moving, casting spells, and attacking is also affected by their respective speeds.
 ]]
 TOOLTIP_SPEED_MOVEMENT = [[#GOLD#Movement Speed#LAST#
-The additional time you have to move.
-It represents how many more movements you can do in the same time.
-E.g.: at 100% you will be able to do 100% more movements (aka twice as many) in the same time it would have taken you to do one at 0% speed.
+How quickly you move compared to normal.
+Higher is faster, so 200% means that you move twice as fast as normal.
 ]]
 TOOLTIP_SPEED_SPELL = [[#GOLD#Spell Speed#LAST#
-The additional time you have cast a spell.
-It represents how many more spells you can cast in the same time.
-E.g.: at 100% you will be able to cast 100% more spells (aka twice as many) in the same time it would have taken you to do one at 0% speed.
+How quickly you cast spells.
+Higher is faster, so 200% means that you can cast spells twice as fast as normal.
 ]]
 TOOLTIP_SPEED_ATTACK = [[#GOLD#Attack Speed#LAST#
-The additional time you have to attack (in melee or ranged).
-It represents how many more attacks you can do in the same time.
-E.g.: at 100% you will be able to do 100% more attacks (aka twice as many) in the same time it would have taken you to do one at 0% speed.
+How quickly you attack with weapons, either ranged or melee.
+Higher is faster, so 200% means that you can attack twice as fast as normal.
+The actual speed may also be affected by the weapon used.
 ]]
 TOOLTIP_SPEED_MENTAL = [[#GOLD#Mental Speed#LAST#
-The additional time you have to use a mental power.
-It represents how many more mental powers you can do in the same time.
-E.g.: at 100% you will be able to do 100% more attacks (aka twice as many) in the same time it would have taken you to do one at 0% speed.
+How quickly you perform mind powers.
+Higher is faster, so 200% means that you can use mind powers twice as fast as normal.
 ]]
 -------------------------------------------------------------
 -- Stats
@@ -231,8 +228,8 @@ Some talents allow you to increase this percentage.
 It is improved by Cunning.
 ]]
 TOOLTIP_COMBAT_SPEED = [[#GOLD#Attack speed#LAST#
-Attack speed represents how fast your attacks are compared to a normal turn.
-The lower it is the faster your attacks are.
+Attack speed represents how fast your attacks are compared to normal.
+Higher is faster, representing more attacks performed in the same amount of time.
 ]]
 TOOLTIP_COMBAT_RANGE = [[#GOLD#Firing range#LAST#
 The maximum distance your weapon can reach.
@@ -295,8 +292,8 @@ Some talents allow you to increase this percentage.
 It is improved by Cunning.
 ]]
 TOOLTIP_SPELL_SPEED = [[#GOLD#Spellcasting speed#LAST#
-Spellcasting speed represents how fast your spellcasting is compared to a normal turn.
-The lower the number, the faster it is.
+Spellcasting speed represents how fast your spellcasting is compared to normal.
+Higher is faster - 200% means that you cast spells twice as fast as someone at 100%.
 ]]
 TOOLTIP_SPELL_COOLDOWN = [[#GOLD#Spellcooldown#LAST#
 Spell cooldown represents how fast your spells will come off of cooldown.
@@ -315,8 +312,8 @@ Some talents allow you to increase this percentage.
 It is improved by Cunning.
 ]]
 TOOLTIP_MIND_SPEED = [[#GOLD#Mental speed#LAST#
-Mental speed represents how fast you use psionic abilities compared to a normal turn.
-The lower the number, the faster it is.
+Mental speed represents how fast you use psionic abilities compared to normal.
+Higher is faster.
 ]]
 -------------------------------------------------------------
 -- Damage and resists
