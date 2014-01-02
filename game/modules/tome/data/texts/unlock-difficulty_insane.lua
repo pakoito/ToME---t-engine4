@@ -26,6 +26,7 @@ But no! If nightmare mode couldn't bring you down, Insane mode will!
 Insane features:#YELLOW#
 - All zone levels increased by 120% + 5
 - All creature talent levels increased by 100%
+- Bosses will have randomly selected talents
 - Player rank is normal instead of elite
 - Player can earn Insane version of achievements if also playing in Roguelike permadeath mode.
 

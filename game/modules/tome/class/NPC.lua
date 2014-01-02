@@ -435,11 +435,29 @@ function _M:addedToLevel(level, x, y)
 			for tid, lev in pairs(self.talents) do
 				self:learnTalent(tid, true, lev)
 			end
+			if not self.randboss and self.rank >= 3.5 then
+				local data = {auto_sustain=true}
+				if self.rank == 3.5 then data = {auto_sustain=true, nb_classes=1}
+				elseif self.rank == 4 then data = {auto_sustain=true, nb_classes=1}
+				elseif self.rank == 5 then data = {auto_sustain=true, nb_classes=2}
+				elseif self.rank >= 10 then data = {auto_sustain=true, nb_classes=3}
+				end
+				game.state:applyRandomClass(self, data, true)
+			end
 			self:attr("difficulty_boosted", 1)
 		elseif game.difficulty == game.DIFFICULTY_MADNESS and not game.party:hasMember(self) then
 			-- Increase talent level
 			for tid, lev in pairs(self.talents) do
 				self:learnTalent(tid, true, math.ceil(lev * 1.7))
+			end
+			if not self.randboss and self.rank >= 3.5 then
+				local data = {auto_sustain=true}
+				if self.rank == 3.5 then data = {auto_sustain=true, nb_classes=1}
+				elseif self.rank == 4 then data = {auto_sustain=true, nb_classes=2}
+				elseif self.rank == 5 then data = {auto_sustain=true, nb_classes=3}
+				elseif self.rank >= 10 then data = {auto_sustain=true, nb_classes=5}
+				end
+				game.state:applyRandomClass(self, data, true)
 			end
 			self:attr("difficulty_boosted", 1)
 		end

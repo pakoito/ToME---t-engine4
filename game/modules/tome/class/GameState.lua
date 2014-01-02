@@ -1665,6 +1665,126 @@ function _M:createRandomZone(zbase)
 	return zone, boss
 end
 
+function _M:applyRandomClass(b, data, instant)
+	if not data.level then data.level = b.level end
+
+	------------------------------------------------------------
+	-- Apply talents from classes
+	------------------------------------------------------------
+
+	-- Apply a class
+	local Birther = require "engine.Birther"
+	b.learn_tids = {}
+	local function apply_class(class)
+		local mclasses = Birther.birth_descriptor_def.class
+		local mclass = nil
+		for name, data in pairs(mclasses) do
+			if data.descriptor_choices and data.descriptor_choices.subclass and data.descriptor_choices.subclass[class.name] then mclass = data break end
+		end
+		if not mclass then return end
+
+		print("Adding to random boss class", class.name, mclass.name)
+		if config.settings.cheat then b.desc = (b.desc or "").."\nClass: "..class.name end
+
+		-- Add stats
+		if b.auto_stats then
+			b.stats = b.stats or {}
+			for stat, v in pairs(class.stats or {}) do
+				b.stats[stat] = (b.stats[stat] or 10) + v
+				for i = 1, v do b.auto_stats[#b.auto_stats+1] = b.stats_def[stat].id end
+			end
+		end
+
+		-- Add talent categories
+		for tt, d in pairs(mclass.talents_types or {}) do b:learnTalentType(tt, true) b:setTalentTypeMastery(tt, (b:getTalentTypeMastery(tt) or 1) + d[2]) end
+		for tt, d in pairs(mclass.unlockable_talents_types or {}) do b:learnTalentType(tt, true) b:setTalentTypeMastery(tt, (b:getTalentTypeMastery(tt) or 1) + d[2]) end
+		for tt, d in pairs(class.talents_types or {}) do b:learnTalentType(tt, true) b:setTalentTypeMastery(tt, (b:getTalentTypeMastery(tt) or 1) + d[2]) end
+		for tt, d in pairs(class.unlockable_talents_types or {}) do b:learnTalentType(tt, true) b:setTalentTypeMastery(tt, (b:getTalentTypeMastery(tt) or 1) + d[2]) end
+
+		-- Add starting equipment
+		local apply_resolvers = function(k, resolver)
+			if type(resolver) == "table" and resolver.__resolver and resolver.__resolver == "equip" then
+			elseif k == "innate_alchemy_golem" then 
+				b.innate_alchemy_golem = true
+			elseif k == "birth_create_alchemist_golem" then
+				b.birth_create_alchemist_golem = resolver
+				if instant then b:check("birth_create_alchemist_golem") end
+			elseif k == "soul" then
+				b.soul = util.bound(1 + math.ceil(data.level / 10), 1, 10) -- Does this need to scale?
+			end
+		end
+		for k, resolver in pairs(mclass.copy or {}) do apply_resolvers(k, resolver) end
+		for k, resolver in pairs(class.copy or {}) do apply_resolvers(k, resolver) end
+
+		-- Starting talents are autoleveling
+		local tres = nil
+		for k, resolver in pairs(b) do if type(resolver) == "table" and resolver.__resolver and resolver.__resolver == "talents" then tres = resolver break end end
+		if not tres then tres = resolvers.talents{} b[#b+1] = tres end
+		for tid, v in pairs(class.talents or {}) do
+			local t = b:getTalentFromId(tid)
+			if not t.no_npc_use and (not t.random_boss_rarity or rng.chance(t.random_boss_rarity)) then
+				local max = (t.points == 1) and 1 or math.ceil(t.points * 1.2)
+				local step = max / 50
+				tres[1][tid] = v + math.ceil(step * data.level)
+			end
+		end
+
+		-- Select additional talents from the class
+		local list = {}
+		for _, t in pairs(b.talents_def) do
+			if (b.talents_types[t.type[1]] or (data.add_trees and data.add_trees[t.type[1]])) and not t.no_npc_use and not t.not_on_random_boss then
+				local ok = true
+				if data.check_talents_level and rawget(t, 'require') then
+					local req = t.require
+					if type(req) == "function" then req = req(b, t) end
+					if req and req.level and util.getval(req.level, 1) > math.ceil(data.level/2) then
+						print("Random boss forbade talent because of level", t.name, data.level)
+						ok = false
+					end
+				end
+
+				if ok then list[t.id] = true end
+			end
+		end
+
+		local nb = 4 + 0.38*data.level^.75 -- = 11 at level 50
+		nb = math.max(rng.range(math.floor(nb * 0.7), math.ceil(nb * 1.3)), 1)
+		print("Adding "..nb.." random class talents to boss")
+
+		for i = 1, nb do
+			local tid = rng.tableIndex(list, b.learn_tids)
+			local t = b:getTalentFromId(tid)
+			if t then
+				print(" * talent", tid)
+				local max = (t.points == 1) and 1 or math.ceil(t.points * 1.2)
+				local step = max / 50
+				local lev = math.ceil(step * data.level)
+				if instant then
+					if b:getTalentLevelRaw(tid) < lev then b:learnTalent(tid, true, lev - b:getTalentLevelRaw(tid)) end
+					if t.mode == "sustained" and data.auto_sustain then b:forceUseTalent(tid, {ignore_energy=true}) end
+				else
+					b.learn_tids[tid] = lev
+				end
+			end
+		end
+	end
+
+	-- Select two classes
+	local classes = Birther.birth_descriptor_def.subclass
+	local list = {}
+	local force_classes = data.force_classes and table.clone(data.force_classes)
+	for name, cdata in pairs(classes) do
+		if force_classes and force_classes[cdata.name] then apply_class(table.clone(cdata, true)) force_classes[cdata.name] = nil
+		elseif not cdata.not_on_random_boss and (not cdata.random_rarity or rng.chance(cdata.random_rarity)) and (not data.class_filter or data.class_filter(cdata))then list[#list+1] = cdata
+		end
+	end
+	for i = 1, data.nb_classes or 2 do
+		local c = rng.tableRemove(list)
+		if not c then break end
+		apply_class(table.clone(c, true))
+	end
+end
+
 function _M:createRandomBoss(base, data)
 	local b = base:clone()
 	data = data or {level=1}
@@ -1752,118 +1872,7 @@ function _M:createRandomBoss(base, data)
 	------------------------------------------------------------
 	-- Apply talents from classes
 	------------------------------------------------------------
-
-	-- Apply a class
-	local Birther = require "engine.Birther"
-	b.learn_tids = {}
-	local function apply_class(class)
-		local mclasses = Birther.birth_descriptor_def.class
-		local mclass = nil
-		for name, data in pairs(mclasses) do
-			if data.descriptor_choices and data.descriptor_choices.subclass and data.descriptor_choices.subclass[class.name] then mclass = data break end
-		end
-		if not mclass then return end
-
-		print("Adding to random boss class", class.name, mclass.name)
-		if config.settings.cheat then b.desc = (b.desc or "").."\nClass: "..class.name end
-
-		-- Add stats
-		b.stats = b.stats or {}
-		for stat, v in pairs(class.stats or {}) do
-			b.stats[stat] = (b.stats[stat] or 10) + v
-			for i = 1, v do b.auto_stats[#b.auto_stats+1] = b.stats_def[stat].id end
-		end
-
-		-- Add talent categories
-		for tt, d in pairs(mclass.talents_types or {}) do b:learnTalentType(tt, true) b:setTalentTypeMastery(tt, (b:getTalentTypeMastery(tt) or 1) + d[2]) end
-		for tt, d in pairs(mclass.unlockable_talents_types or {}) do b:learnTalentType(tt, true) b:setTalentTypeMastery(tt, (b:getTalentTypeMastery(tt) or 1) + d[2]) end
-		for tt, d in pairs(class.talents_types or {}) do b:learnTalentType(tt, true) b:setTalentTypeMastery(tt, (b:getTalentTypeMastery(tt) or 1) + d[2]) end
-		for tt, d in pairs(class.unlockable_talents_types or {}) do b:learnTalentType(tt, true) b:setTalentTypeMastery(tt, (b:getTalentTypeMastery(tt) or 1) + d[2]) end
-
-		-- Add starting equipment
-		local apply_resolvers = function(k, resolver)
-			if type(resolver) == "table" and resolver.__resolver and resolver.__resolver == "equip" then
-				resolver[1].id = nil
-				-- Make sure we equip some nifty stuff instead of player's starting iron stuff
-				for i, d in ipairs(resolver[1]) do
-					d.name = nil
-					d.ego_chance = nil
-					d.tome_drops = data.loot_quality or "boss"
-					d.force_drop = (data.drop_equipment == nil) and true or data.drop_equipment
-				end
-				b[#b+1] = resolver
-			elseif k == "innate_alchemy_golem" then 
-				b.innate_alchemy_golem = true
-			elseif k == "birth_create_alchemist_golem" then
-				b.birth_create_alchemist_golem = resolver
-			elseif k == "soul" then
-				b.soul = util.bound(1 + math.ceil(data.level / 10), 1, 10) -- Does this need to scale?
-			end
-		end
-		for k, resolver in pairs(mclass.copy or {}) do apply_resolvers(k, resolver) end
-		for k, resolver in pairs(class.copy or {}) do apply_resolvers(k, resolver) end
-
-		-- Starting talents are autoleveling
-		local tres = nil
-		for k, resolver in pairs(b) do if type(resolver) == "table" and resolver.__resolver and resolver.__resolver == "talents" then tres = resolver break end end
-		if not tres then tres = resolvers.talents{} b[#b+1] = tres end
-		for tid, v in pairs(class.talents or {}) do
-			local t = b:getTalentFromId(tid)
-			if not t.no_npc_use and (not t.random_boss_rarity or rng.chance(t.random_boss_rarity)) then
-				local max = (t.points == 1) and 1 or math.ceil(t.points * 1.2)
-				local step = max / 50
-				tres[1][tid] = v + math.ceil(step * data.level)
-			end
-		end
-
-		-- Select additional talents from the class
-		local list = {}
-		for _, t in pairs(b.talents_def) do
-			if (b.talents_types[t.type[1]] or (data.add_trees and data.add_trees[t.type[1]])) and not t.no_npc_use and not t.not_on_random_boss then
-				local ok = true
-				if data.check_talents_level and rawget(t, 'require') then
-					local req = t.require
-					if type(req) == "function" then req = req(b, t) end
-					if req and req.level and util.getval(req.level, 1) > math.ceil(data.level/2) then
-						print("Random boss forbade talent because of level", t.name, data.level)
-						ok = false
-					end
-				end
-
-				if ok then list[t.id] = true end
-			end
-		end
-
-		local nb = 4 + 0.38*data.level^.75 -- = 11 at level 50
-		nb = math.max(rng.range(math.floor(nb * 0.7), math.ceil(nb * 1.3)), 1)
-		print("Adding "..nb.." random class talents to boss")
-
-		for i = 1, nb do
-			local tid = rng.tableIndex(list, b.learn_tids)
-			local t = b:getTalentFromId(tid)
-			if t then
-				print(" * talent", tid)
-				local max = (t.points == 1) and 1 or math.ceil(t.points * 1.2)
-				local step = max / 50
-				b.learn_tids[tid] = math.ceil(step * data.level)
-			end
-		end
-	end
-
-	-- Select two classes
-	local classes = Birther.birth_descriptor_def.subclass
-	local list = {}
-	local force_classes = data.force_classes and table.clone(data.force_classes)
-	for name, cdata in pairs(classes) do
-		if force_classes and force_classes[cdata.name] then apply_class(table.clone(cdata, true)) force_classes[cdata.name] = nil
-		elseif not cdata.not_on_random_boss and (not cdata.random_rarity or rng.chance(cdata.random_rarity)) and (not data.class_filter or data.class_filter(cdata))then list[#list+1] = cdata
-		end
-	end
-	for i = 1, data.nb_classes or 2 do
-		local c = rng.tableRemove(list)
-		if not c then break end
-		apply_class(table.clone(c, true))
-	end
+	self:applyRandomClass(b, data)
 
 	b.rnd_boss_on_added_to_level = b.on_added_to_level
 	b._rndboss_resources_boost = data.resources_boost
