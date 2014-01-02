@@ -2,14 +2,13 @@
     TE4 - T-Engine 4
     Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
 
-    No permission to copy or replicate in any ways.
+    No permission to copy or replicate in any ways, awesomium is not gpl so we cant link directly
 */
 
 extern "C" {
 #include "lua.h"
 #include "lauxlib.h"
 #include "lualib.h"
-#include "auxiliar.h"
 #include "tSDL.h"
 #include "physfs.h"
 }
@@ -21,16 +20,171 @@ extern "C" {
 #include <Awesomium/STLHelpers.h>
 #include "gl_texture_surface.h"
 
+/**********************************************************************
+ ******************** Duplicated since we are independant *************
+ **********************************************************************/
+static void auxiliar_newclass(lua_State *L, const char *classname, const luaL_Reg *func);
+static void auxiliar_add2group(lua_State *L, const char *classname, const char *group);
+static void auxiliar_setclass(lua_State *L, const char *classname, int objidx);
+static void *auxiliar_checkclass(lua_State *L, const char *classname, int objidx);
+static void *auxiliar_checkgroup(lua_State *L, const char *groupname, int objidx);
+static void *auxiliar_getclassudata(lua_State *L, const char *groupname, int objidx);
+static void *auxiliar_getgroupudata(lua_State *L, const char *groupname, int objidx);
+static int auxiliar_checkboolean(lua_State *L, int objidx);
+static int auxiliar_tostring(lua_State *L);
+
+/*-------------------------------------------------------------------------*\
+* Creates a new class with given methods
+* Methods whose names start with __ are passed directly to the metatable.
+\*-------------------------------------------------------------------------*/
+static void auxiliar_newclass(lua_State *L, const char *classname, const luaL_Reg *func) {
+    luaL_newmetatable(L, classname); /* mt */
+    /* create __index table to place methods */
+    lua_pushstring(L, "__index");    /* mt,"__index" */
+    lua_newtable(L);                 /* mt,"__index",it */
+    /* put class name into class metatable */
+    lua_pushstring(L, "class");      /* mt,"__index",it,"class" */
+    lua_pushstring(L, classname);    /* mt,"__index",it,"class",classname */
+    lua_rawset(L, -3);               /* mt,"__index",it */
+    /* pass all methods that start with _ to the metatable, and all others
+     * to the index table */
+    for (; func->name; func++) {     /* mt,"__index",it */
+        lua_pushstring(L, func->name);
+        lua_pushcfunction(L, func->func);
+        lua_rawset(L, func->name[0] == '_' ? -5: -3);
+    }
+    lua_rawset(L, -3);               /* mt */
+    lua_pop(L, 1);
+}
+
+/*-------------------------------------------------------------------------*\
+* Prints the value of a class in a nice way
+\*-------------------------------------------------------------------------*/
+static int auxiliar_tostring(lua_State *L) {
+    char buf[32];
+    if (!lua_getmetatable(L, 1)) goto error;
+    lua_pushstring(L, "__index");
+    lua_gettable(L, -2);
+    if (!lua_istable(L, -1)) goto error;
+    lua_pushstring(L, "class");
+    lua_gettable(L, -2);
+    if (!lua_isstring(L, -1)) goto error;
+    sprintf(buf, "%p", lua_touserdata(L, 1));
+    lua_pushfstring(L, "%s: %s", lua_tostring(L, -1), buf);
+    return 1;
+error:
+    lua_pushstring(L, "invalid object passed to 'auxiliar.c:__tostring'");
+    lua_error(L);
+    return 1;
+}
+
+/*-------------------------------------------------------------------------*\
+* Insert class into group
+\*-------------------------------------------------------------------------*/
+static void auxiliar_add2group(lua_State *L, const char *classname, const char *groupname) {
+    luaL_getmetatable(L, classname);
+    lua_pushstring(L, groupname);
+    lua_pushboolean(L, 1);
+    lua_rawset(L, -3);
+    lua_pop(L, 1);
+}
+
+/*-------------------------------------------------------------------------*\
+* Make sure argument is a boolean
+\*-------------------------------------------------------------------------*/
+static int auxiliar_checkboolean(lua_State *L, int objidx) {
+    if (!lua_isboolean(L, objidx))
+        luaL_typerror(L, objidx, lua_typename(L, LUA_TBOOLEAN));
+    return lua_toboolean(L, objidx);
+}
+
+/*-------------------------------------------------------------------------*\
+* Return userdata pointer if object belongs to a given class, abort with
+* error otherwise
+\*-------------------------------------------------------------------------*/
+static void *auxiliar_checkclass(lua_State *L, const char *classname, int objidx) {
+    void *data = auxiliar_getclassudata(L, classname, objidx);
+    if (!data) {
+        char msg[45];
+        sprintf(msg, "%.35s expected", classname);
+        luaL_argerror(L, objidx, msg);
+    }
+    return data;
+}
+
+/*-------------------------------------------------------------------------*\
+* Return userdata pointer if object belongs to a given group, abort with
+* error otherwise
+\*-------------------------------------------------------------------------*/
+static void *auxiliar_checkgroup(lua_State *L, const char *groupname, int objidx) {
+    void *data = auxiliar_getgroupudata(L, groupname, objidx);
+    if (!data) {
+        char msg[45];
+        sprintf(msg, "%.35s expected", groupname);
+        luaL_argerror(L, objidx, msg);
+    }
+    return data;
+}
+
+/*-------------------------------------------------------------------------*\
+* Set object class
+\*-------------------------------------------------------------------------*/
+static void auxiliar_setclass(lua_State *L, const char *classname, int objidx) {
+    luaL_getmetatable(L, classname);
+    if (objidx < 0) objidx--;
+    lua_setmetatable(L, objidx);
+}
+
+/*-------------------------------------------------------------------------*\
+* Get a userdata pointer if object belongs to a given group. Return NULL
+* otherwise
+\*-------------------------------------------------------------------------*/
+static void *auxiliar_getgroupudata(lua_State *L, const char *groupname, int objidx) {
+    if (!lua_getmetatable(L, objidx))
+        return NULL;
+    lua_pushstring(L, groupname);
+    lua_rawget(L, -2);
+    if (lua_isnil(L, -1)) {
+        lua_pop(L, 2);
+        return NULL;
+    } else {
+        lua_pop(L, 2);
+        return lua_touserdata(L, objidx);
+    }
+}
+
+/*-------------------------------------------------------------------------*\
+* Get a userdata pointer if object belongs to a given class. Return NULL
+* otherwise
+\*-------------------------------------------------------------------------*/
+static void *auxiliar_getclassudata(lua_State *L, const char *classname, int objidx) {
+    lua_checkstack(L, 2);
+    return luaL_checkudata(L, objidx, classname);
+}
+
+/**********************************************************************
+ **********************************************************************
+ **********************************************************************/
+
 using namespace Awesomium;
 
 class PhysfsDataSource;
+class WebJShandler;
 
 static WebCore *web_core = NULL;
 static WebSession *web_session = NULL;
 static PhysfsDataSource *web_data_source = NULL;
 
 typedef struct {
+	lua_State *L;
+	WebJShandler *listener;
+	int methods_ref;
+} web_js_type;
+
+typedef struct {
 	WebView *view;
+	JSObject *te4core;
+	web_js_type *js;
 	int w, h;
 	bool closed;
 } web_view_type;
@@ -50,11 +204,41 @@ static char *webstring_to_buf(WebString *wstr, size_t *flen) {
 	char *buf;
 	unsigned int len = 0;
 	len = wstr->ToUTF8(NULL, 0);
-	buf = (char*)malloc(len);
+	buf = (char*)malloc(len + 1);
 	wstr->ToUTF8(buf, len);	
 	*flen = (size_t)len;
 	return buf;
 }
+
+class WebJShandler : public JSMethodHandler {
+public:
+	web_js_type *js;
+	virtual void OnMethodCall(WebView* caller, unsigned int remote_object_id, const WebString& method_name, const JSArray& args) {
+		web_js_type *js = this->js;
+		size_t lfctname;
+		char *fctname = webstring_to_buf((WebString*)&method_name, &lfctname);
+		printf("method call %s\n", fctname);
+
+		lua_rawgeti(js->L, LUA_REGISTRYINDEX, js->methods_ref);
+		lua_pushlstring(js->L, fctname, lfctname);
+		lua_rawget(js->L, -2);
+		lua_pcall(js->L, 0, 0, 0);
+		free(fctname);
+	}
+
+	virtual JSValue OnMethodCallWithReturnValue(WebView* caller, unsigned int remote_object_id, const WebString& method_name, const JSArray& args) {
+		web_js_type *js = this->js;
+		size_t lfctname;
+		char *fctname = webstring_to_buf((WebString*)&method_name, &lfctname);
+		printf("method call %s\n", fctname);
+
+		lua_rawgeti(js->L, LUA_REGISTRYINDEX, js->methods_ref);
+		lua_pushlstring(js->L, fctname, lfctname);
+		lua_rawget(js->L, -2);
+		lua_pcall(js->L, 0, 0, 0);
+		free(fctname);
+	}
+};
 
 class WebDownloader : public WebViewListener::Download {
 public:
@@ -105,16 +289,13 @@ public:
 };
 
 class PhysfsDataSource : public DataSource {
-	public:
-	PhysfsDataSource() {}
-	virtual ~PhysfsDataSource() {}
-  
+public:
 	virtual void OnRequest(int request_id, const WebString& path) {
 		size_t plen;
 		char *rpath = webstring_to_buf((WebString*)&path, &plen);
-		printf("WebViewAsset read: %s (%d)\n", rpath, plen);
 		PHYSFS_file *f = PHYSFS_openRead(rpath);
 		if (!f) {
+			printf("WebViewAsset read: %s (%d)\n", rpath, plen);
 			printf(" => not found\n");
 			SendResponse(request_id, 0, NULL, WSLit("text/html"));
 			return;
@@ -129,8 +310,9 @@ class PhysfsDataSource : public DataSource {
 			pos += r;
 		}
 
-		SendResponse(request_id, len, (unsigned char*)buf, WSLit("text/plain"));
-		printf(" => size %d\n", len);
+		const char *mime = "text/html";
+		if (plen >= 3 && !strcmp(rpath + plen - 3, ".js")) mime = "text/javascript";
+		SendResponse(request_id, len, (unsigned char*)buf, WSLit(mime));
 		free((void*)buf);
 	}
 };
@@ -146,6 +328,8 @@ static int lua_web_new(lua_State *L) {
 	view->view = web_core->CreateWebView(w, h, web_session, kWebViewType_Offscreen);
 	view->w = w;
 	view->h = h;
+	view->te4core = NULL;
+	view->js = NULL;
 	view->closed = false;
 
 	WebURL lurl(WebString::CreateFromUTF8(url, urllen));
@@ -160,6 +344,12 @@ static int lua_web_close(lua_State *L) {
 	if (!view->closed) {
 		view->view->Destroy();
 		view->closed = true;
+		if (view->js) {
+			luaL_unref(L, LUA_REGISTRYINDEX, view->js->methods_ref);
+			delete view->js->listener;
+			free(view->js);
+		}
+		if (view->te4core) delete view->te4core;
 		printf("Destroyed webview\n");
 	}
 	return 0;
@@ -180,7 +370,7 @@ static int lua_web_toscreen(lua_State *L) {
 		if (lua_isnumber(L, 5)) h = lua_tonumber(L, 5);
 		float r = 1, g = 1, b = 1, a = 1;
 
-		tglBindTexture(GL_TEXTURE_2D, surface->GetTexture());
+		glBindTexture(GL_TEXTURE_2D, surface->GetTexture());
 
 		GLfloat texcoords[2*4] = {
 			0, 0,
@@ -380,6 +570,43 @@ static int lua_web_download_action(lua_State *L) {
 	return 0;
 }
 
+static int lua_web_set_method(lua_State *L) {
+	web_view_type *view = (web_view_type*)auxiliar_checkclass(L, "web{view}", 1);
+	if (view->closed) return 0;
+	size_t lfctname;
+	const char *fctname = luaL_checklstring(L, 2, &lfctname);
+
+	if (!view->te4core) {
+		JSValue result = view->view->CreateGlobalJavascriptObject(WSLit("te4core"));
+		if (result.IsObject()) {
+			view->te4core = &result.ToObject();
+			view->js = (web_js_type*)malloc(sizeof(web_js_type));
+			lua_newtable(L);
+			view->js->L = L;
+			view->js->methods_ref = luaL_ref(L, LUA_REGISTRYINDEX);
+			view->js->listener = new WebJShandler();
+			view->js->listener->js = view->js;
+			view->view->set_js_method_handler(view->js->listener);
+		}
+	}
+	if (!view->te4core) {
+		lua_pushboolean(L, false);
+		return 1;
+	}
+	WebString name(WebString::CreateFromUTF8(fctname, lfctname));
+	view->te4core->SetCustomMethod(name, false);
+
+	// Store the function in the table for this view
+	lua_rawgeti(L, LUA_REGISTRYINDEX, view->js->methods_ref);
+	lua_pushstring(L, fctname);
+	lua_pushvalue(L, 3);
+	lua_rawset(L, -3);
+	lua_pop(L, 1);
+
+	lua_pushboolean(L, true);
+	return 1;
+}
+
 static const struct luaL_Reg view_reg[] =
 {
 	{"__gc", lua_web_close},
@@ -393,6 +620,7 @@ static const struct luaL_Reg view_reg[] =
 	{"injectMouseWheel", lua_web_inject_mouse_wheel},
 	{"injectMouseButton", lua_web_inject_mouse_button},
 	{"injectKey", lua_web_inject_key},
+	{"setMethod", lua_web_set_method},
 	{NULL, NULL},
 };
 
@@ -427,4 +655,3 @@ void te4_web_init(lua_State *L) {
 	luaL_openlib(L, "core.webview", weblib, 0);
 	lua_settop(L, 0);
 }
-

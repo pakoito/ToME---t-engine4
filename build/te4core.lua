@@ -37,7 +37,7 @@ project "TEngine"
 	if _OPTIONS.steam then
 		files { "../steamworks/luasteam.c", }
 	end
-	links { "physfs", "lua".._OPTIONS.lua, "fov", "luasocket", "luaprofiler", "lpeg", "tcodimport", "lxp", "expatstatic", "luamd5", "luazlib", "luabitop", "te4-bzip", "te4-web" }
+	links { "physfs", "lua".._OPTIONS.lua, "fov", "luasocket", "luaprofiler", "lpeg", "tcodimport", "lxp", "expatstatic", "luamd5", "luazlib", "luabitop", "te4-bzip" }
 	defines { "_DEFAULT_VIDEOMODE_FLAGS_='SDL_HWSURFACE|SDL_DOUBLEBUF'" }
 	defines { [[TENGINE_HOME_PATH='".t-engine"']], "TE4CORE_VERSION="..TE4CORE_VERSION }
 
@@ -120,7 +120,7 @@ project "TEngine"
 ----------------------------------------------------------------
 ----------------------------------------------------------------
 project "physfs"
-	kind "StaticLib"
+	kind "SharedLib"
 	language "C"
 	targetname "physfs"
 
@@ -274,7 +274,7 @@ elseif _OPTIONS.lua == "jit2" then
 			postbuildcommands { "cp ../bin/Release/buildvm ../src/luajit2/src/", }
 
 	project "luajit2"
-		kind "StaticLib"
+		kind "SharedLib"
 		language "C"
 		targetname "lua"
 		links { "buildvm" }
@@ -440,7 +440,7 @@ project "te4-web"
 
 	libdirs {"/Test/awesomium_v1.7.2_sdk_linux64/bin/"}
 	includedirs {"/Test/awesomium_v1.7.2_sdk_linux64/include/"}
-	links { "awesomium-1-7" }
+	links { "awesomium-1-7", "lua".._OPTIONS.lua }
 	
 	files { "../src/web/*.cpp", }
 

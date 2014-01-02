@@ -109,6 +109,22 @@ int redraw_pending = 0;
 int realtime_pending = 0;
 
 /*
+ * Grab web browser methods
+ */
+void (*te4_web_init)(lua_State *L);
+void (*te4_web_update)();
+void te4_web_load() {
+	void *web = SDL_LoadObject("libte4-web.so");
+	printf("Loading web core: %s\n", SDL_GetError());
+	
+	if (web) {
+		te4_web_init = (void (*)(lua_State*)) SDL_LoadFunction(web, "te4_web_init");
+		te4_web_update = (void (*)()) SDL_LoadFunction(web, "te4_web_update");
+	}
+}
+
+
+/*
  * Used to clean up a lock and its corresponding timer/flag.
  *
  * @param lock
@@ -362,22 +378,6 @@ void on_event(SDL_Event *event)
 				lua_pushnil(L);
 
 			docall(L, 9, 0);
-
-			// Raw version
-			lua_rawgeti(L, LUA_REGISTRYINDEX, current_keyhandler);
-			lua_pushstring(L, "receiveKeyRaw");
-			lua_gettable(L, -2);
-			lua_remove(L, -2);
-			lua_rawgeti(L, LUA_REGISTRYINDEX, current_keyhandler);
-			lua_pushboolean(L, (event->type == SDL_KEYUP) ? TRUE : FALSE);
-			lua_pushnumber(L, event->key.keysym.scancode);
-			lua_pushnumber(L, event->key.keysym.sym);
-			lua_pushnumber(L, event->key.keysym.sym);
-			lua_pushboolean(L, (_pKeyState & KMOD_CTRL) ? TRUE : FALSE);
-			lua_pushboolean(L, (_pKeyState & KMOD_SHIFT) ? TRUE : FALSE);
-			lua_pushboolean(L, (_pKeyState & KMOD_ALT) ? TRUE : FALSE);
-			lua_pushboolean(L, (_pKeyState & KMOD_GUI) ? TRUE : FALSE);
-			docall(L, 9, 0);
 		}
 		break;
 	case SDL_MOUSEBUTTONDOWN:
@@ -620,7 +620,7 @@ void on_redraw()
 #ifdef STEAM_TE4
 	if (!no_steam) te4_steam_callbacks();
 #endif
-	te4_web_update();
+	if (te4_web_update) te4_web_update();
 }
 
 void pass_command_args(int argc, char *argv[])
@@ -1039,7 +1039,7 @@ void boot_lua(int state, bool rebooting, int argc, char *argv[])
 		luaopen_zlib(L);
 		luaopen_bit(L);
 		luaopen_wait(L);
-		te4_web_init(L);
+		if (te4_web_init) te4_web_init(L);
 #ifdef STEAM_TE4
 		if (!no_steam) te4_steam_lua_init(L);
 #endif
@@ -1257,6 +1257,8 @@ int main(int argc, char *argv[])
 #endif
 
 	init_openal();
+
+	te4_web_load();
 
 	// RNG init
 	init_gen_rand(time(NULL));

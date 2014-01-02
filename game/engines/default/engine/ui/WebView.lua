@@ -46,6 +46,10 @@ function _M:generate()
 
 	self.mouse:registerZone(0, 0, self.w, self.h, function(button, x, y, xrel, yrel, bx, by, event)
 		if event == "button" then
+	print("====", self.view:setMethod("testclick", function(...)
+		print("===TESTCLICKED", ...)
+	end))
+
 			if button == "wheelup" then self.scroll_inertia = math.min(self.scroll_inertia, 0) - 5
 			elseif button == "wheeldown" then self.scroll_inertia = math.max(self.scroll_inertia, 0) + 5
 			elseif button == "left" then self.view:injectMouseButton(false, 1) self.view:injectMouseButton(true, 1)
