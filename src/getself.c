@@ -39,6 +39,29 @@ int get_number_cpus()
 //	return 1;
 }
 
+#elif defined(SELFEXE_BSD)
+#include <limits.h>
+#include <stdlib.h>
+const char *get_self_executable(int argc, char **argv)
+{
+	static char res[PATH_MAX];
+	// Like linux, but /proc is not always mounted
+	//  return 0 if it's not
+	if (realpath("/proc/curproc/file", res)) return NULL;
+	return res;
+}
+
+#import <sys/sysctl.h>
+
+int get_number_cpus()
+{
+	int count;
+	size_t size=sizeof(count);
+	
+	if (sysctlbyname("hw.ncpu",&count,&size,NULL,0)) return 1;
+	return count;
+}
+
 #elif defined(SELFEXE_WINDOWS)
 #include <stdlib.h>
 #include <windows.h>

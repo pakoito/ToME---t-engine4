@@ -27,6 +27,12 @@
 #include <vorbis/vorbisfile.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_thread.h>
+#elif defined(__FreeBSD__)
+#include <AL/al.h>
+#include <AL/alc.h>
+#include <vorbis/vorbisfile.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_thread.h>
 #elif defined(WIN32)
 #include <AL/al.h>
 #include <AL/alc.h>

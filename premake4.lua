@@ -28,6 +28,14 @@ if _OPTIONS.steam then
 	dofile("steamworks/build/steam-def.lua")
 end
 
+configuration "bsd"
+	libdirs {
+		"/usr/local/lib",
+	}
+	includedirs {
+		"/usr/local/include",
+	}
+
 configuration "windows"
 	libdirs {
 		"/c/code/SDL/lib",
