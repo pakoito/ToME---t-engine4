@@ -6910,7 +6910,7 @@ newEntity{ base = "BASE_CLOTH_ARMOR", --Thanks SageAcrin!
 	special_desc = function(self) return "Increases your solipsism threshold by 20% (if you have one). If you do, also grants 15% global speed when worn." end,
 	wielder = {
 		combat_def=12,
-		inc_stats = { [Stats.STAT_WIL] = 10, Stats.STAT_CUN] = 10, },
+		inc_stats = { [Stats.STAT_WIL] = 10, [Stats.STAT_CUN] = 10, },
 		combat_mindpower = 20,
 		combat_mindcrit = 9,
 		psi_regen=0.2,
@@ -6990,7 +6990,7 @@ newEntity{ base = "BASE_SHIELD",
 	metallic = false,
 	special_desc = function(self) return "When you block an attack, there is a 30% of petrifying the attacker." end,
 	special_combat = {
-		dam = 40
+		dam = 40,
 		block = 100,
 		physcrit = 5,
 		dammod = {str=1},
