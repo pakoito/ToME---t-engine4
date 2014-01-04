@@ -391,7 +391,8 @@ newTalent{
 		return
 	end,
 	info = function(self, t)
-		return ([[You enter into a fighting trance, gaining 15%% resist all, losing 15 mindpower, but gaining 20 mental save. However, each turn after the fifth that this talent is active, there is a chance that you will be overcome and become confused.]])
+		return ([[You enter into a fighting trance, gaining 15%% resist all, losing 15 mindpower, but gaining 20 mental save. However, each turn after the fifth that this talent is active, there is a chance that you will be overcome and become confused.
+This does not take a turn to use.]])
 	end,
 }
 

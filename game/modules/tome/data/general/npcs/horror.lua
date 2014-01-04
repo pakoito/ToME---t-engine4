@@ -901,14 +901,12 @@ newEntity{ base="BASE_NPC_HORROR", define_as = "GRGGLCK_TENTACLE",
 	end,
 }
 
-
---MUHUHAHAHAHAHAHA
 newEntity{ base = "BASE_NPC_HORROR",
 	name = "Ak'Gishil", color=colors.GREY, unique = true,
 	desc = "This Blade Horror has been infused with intense temporal magic, causing its power to increase dramatically. Rifts in space open around it constantly, summoning and banishing blades before vanishing as quickly as they appear.",
 	resolvers.nice_tile{tall=1},
 	level_range = {30, nil}, exp_worth = 2,
-	rarity = 50,
+	rarity = 45,
 	rank = 3.5,
 	levitate=1,
 	max_psi= 320,
@@ -918,6 +916,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	max_life = resolvers.rngavg(150, 180),
 	life_rating = 32,
 	life_regen = 0.25,
+	global_speed_base = 1.2,
 	combat_armor = 30, combat_def = 18,
 	is_akgishil = true,
 	
@@ -936,7 +935,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	end,
 
 	on_act = function(self)
-		if self.blades > 3 or not rng.percent(18) then return end
+		if self.blades > 5 or not rng.percent(20) then return end
 		self.blades = self.blades + 1
 			self:forceUseTalent(self.T_ANIMATE_BLADE, {ignore_cd=true, force_level=1})
 	end,
@@ -949,6 +948,9 @@ newEntity{ base = "BASE_NPC_HORROR",
 		[Talents.T_PSIONIC_PULL]={base=5, every=3, max=7},
 		[Talents.T_KINETIC_AURA]={base=4, every=3, max=8},
 		[Talents.T_KINETIC_SHIELD]={base=5, every=2, max=9},
+		[Talents.T_THERMAL_SHIELD]={base=5, every=2, max=9},
+		[Talents.T_CHARGED_SHIELD]={base=5, every=2, max=9},
+		[Talents.T_ABSORPTION_MASTERY]=6,
 		[Talents.T_KINETIC_LEECH]={base=3, every=3, max=5},
 		--TEMPORAL
 		[Talents.T_STATIC_HISTORY]={base=1, every=4, max=5},
@@ -956,6 +958,8 @@ newEntity{ base = "BASE_NPC_HORROR",
 		[Talents.T_WEAPON_FOLDING]={base=1, every=4, max=5},
 		[Talents.T_RETHREAD]={base=2, every=4, max=5},
 		[Talents.T_DIMENSIONAL_STEP]={base=3, every=4, max=5},
+		
+		[Talents.T_THROUGH_THE_CROWD]=1,
 	},
 	resolvers.sustains_at_birth(),
 }
@@ -967,18 +971,19 @@ newEntity{ base="BASE_NPC_HORROR", define_as = "ANIMATED_BLADE",
 	color = colors.GREY,
 	desc = [[Time seems to warp and bend around this floating weapon.]],
 	level_range = {30, nil}, exp_worth = 0,
-	max_life = 75, life_rating = 3,
+	max_life = 75, life_rating = 4,
 	rank = 2,
 	no_breath = 1,
 	size_category = 2,
 
 	negative_status_immune = 1,
+	body = { INVEN = 10, MAINHAND=1 },
 	
 	resolvers.equip{
 		{type="weapon", subtype="longsword", ego_chance = 100, autoreq=true},
 	},
 	
-	resists = {[DamageType.MIND] = 75, [DamageType.TEMPORAL] = 30,},
+	resists = {[DamageType.MIND] = 75, [DamageType.TEMPORAL] = 30, all=10},
 
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { talent_in=3, ai_move="move_astar" },
@@ -1025,12 +1030,14 @@ newEntity{ base="BASE_NPC_HORROR", define_as = "DISTORTED_BLADE",
 	color = colors.GREY,
 	desc = [[This floating weapon shifts and shimmers, time and space warping and bending as it moves. It appears to vibrate, as if it may explode at any moment.]],
 	level_range = {30, nil}, exp_worth = 0,
-	max_life = 100, life_rating = 6,
+	max_life = 100, life_rating = 10,
 	rank = 3.5,
 	no_breath = 1,
 	size_category = 2,
 
 	negative_status_immune = 1,
+	
+	body = { INVEN = 10, MAINHAND=1 },
 	
 	resolvers.equip{
 		{type="weapon", subtype="longsword", define_as="RIFT_SWORD", autoreq=true},
@@ -1038,16 +1045,18 @@ newEntity{ base="BASE_NPC_HORROR", define_as = "DISTORTED_BLADE",
 	
 	resolvers.drops{chance=100, nb=1, {defined="RIFT_SWORD"} },
 	
-	resists = {[DamageType.MIND] = 75, [DamageType.TEMPORAL] = 40,},
+	resists = {[DamageType.MIND] = 75, [DamageType.TEMPORAL] = 40, all=15,},
 
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { talent_in=3, ai_move="move_astar" },
 	
 	resolvers.talents{
 		[Talents.T_SWAP]={base=1, every=4, max=4},
-		[Talents.T_WEAPON_COMBAT]={base=1, every=8, max=5},
-		[Talents.T_WEAPONS_MASTERY]={base=4, every=4, max=6},
+		[Talents.T_WEAPON_COMBAT]={base=3, every=8, max=8},
+		[Talents.T_WEAPONS_MASTERY]={base=4, every=4, max=7},
 		[Talents.T_DIMENSIONAL_STEP]={base=2, every=4, max=5},
+		[Talents.T_WEAPON_FOLDING]={base=2, every=4, max=5},
+		[Talents.T_TEMPORAL_WAKE]={base=2, every=4, max=5},
 	},
 	
 	on_added_to_level = function(self)
@@ -1072,6 +1081,7 @@ newEntity{ base="BASE_NPC_HORROR", define_as = "DISTORTED_BLADE",
 	end,
 
 	on_act = function(self)
+		self.paradox = self.paradox + 100
 		if self.summoner and self.summoner:attr("dead") then
 			self:die()
 			game.logSeen(self, "#AQUAMARINE#With the horror's death the chaotic blade clatters to the ground!")
