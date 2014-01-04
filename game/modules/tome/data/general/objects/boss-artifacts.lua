@@ -605,7 +605,7 @@ newEntity{ base = "BASE_AMULET",
 		combat_spellpower = 9,
 		combat_spellcrit = 4,
 		max_mana = 50,
-		combat_spellspeed =0.3,
+		combat_spellspeed = 0.15,
 		max_vim = 50,
 	},
 }
