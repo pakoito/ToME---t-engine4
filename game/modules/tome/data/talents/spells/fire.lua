@@ -119,7 +119,7 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local stunduration = t.getStunDuration(self, t)
 		local radius = self:getTalentRadius(t)
-		return ([[Conjures up a cone of flame with radius %d. Any target caught in the area will take %0.2f fire damage and be stunned for %d turns.
+		return ([[Conjures up a cone of flame with radius %d. Any targets caught in the area will suffer Burning Shock, stunning them and dealing %0.2f fire damage over %d turns.
 		The damage will increase with your Spellpower.]]):
 		format(radius, damDesc(self, DamageType.FIRE, damage), stunduration)
 	end,
