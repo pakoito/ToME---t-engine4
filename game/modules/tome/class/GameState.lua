@@ -1703,7 +1703,16 @@ function _M:applyRandomClass(b, data, instant)
 
 		-- Add starting equipment
 		local apply_resolvers = function(k, resolver)
-			if type(resolver) == "table" and resolver.__resolver and resolver.__resolver == "equip" then
+			if type(resolver) == "table" and resolver.__resolver and resolver.__resolver == "equip" and not data.forbid_equip then
+				resolver[1].id = nil
+				-- Make sure we equip some nifty stuff instead of player's starting iron stuff
+				for i, d in ipairs(resolver[1]) do
+					d.name = nil
+					d.ego_chance = nil
+					d.tome_drops = data.loot_quality or "boss"
+					d.force_drop = (data.drop_equipment == nil) and true or data.drop_equipment
+				end
+				b[#b+1] = resolver
 			elseif k == "innate_alchemy_golem" then 
 				b.innate_alchemy_golem = true
 			elseif k == "birth_create_alchemist_golem" then

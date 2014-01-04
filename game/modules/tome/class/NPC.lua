@@ -436,12 +436,14 @@ function _M:addedToLevel(level, x, y)
 				self:learnTalent(tid, true, lev)
 			end
 			if not self.randboss and self.rank >= 3.5 then
-				local data = {auto_sustain=true}
-				if self.rank == 3.5 then data = {auto_sustain=true, nb_classes=1}
-				elseif self.rank == 4 then data = {auto_sustain=true, nb_classes=1}
-				elseif self.rank == 5 then data = {auto_sustain=true, nb_classes=2}
-				elseif self.rank >= 10 then data = {auto_sustain=true, nb_classes=3}
+				local data = {}
+				if self.rank == 3.5 then data = {nb_classes=1}
+				elseif self.rank == 4 then data = {nb_classes=1}
+				elseif self.rank == 5 then data = {nb_classes=2}
+				elseif self.rank >= 10 then data = {nb_classes=3}
 				end
+				data.auto_sustain = true
+				data.forbid_equip = true
 				game.state:applyRandomClass(self, data, true)
 			end
 			self:attr("difficulty_boosted", 1)
@@ -451,12 +453,14 @@ function _M:addedToLevel(level, x, y)
 				self:learnTalent(tid, true, math.ceil(lev * 1.7))
 			end
 			if not self.randboss and self.rank >= 3.5 then
-				local data = {auto_sustain=true}
-				if self.rank == 3.5 then data = {auto_sustain=true, nb_classes=1}
-				elseif self.rank == 4 then data = {auto_sustain=true, nb_classes=2}
-				elseif self.rank == 5 then data = {auto_sustain=true, nb_classes=3}
-				elseif self.rank >= 10 then data = {auto_sustain=true, nb_classes=5}
+				local data = {}
+				if self.rank == 3.5 then data = {nb_classes=1}
+				elseif self.rank == 4 then data = {nb_classes=2}
+				elseif self.rank == 5 then data = {nb_classes=3}
+				elseif self.rank >= 10 then data = {nb_classes=5}
 				end
+				data.auto_sustain = true
+				data.forbid_equip = true
 				game.state:applyRandomClass(self, data, true)
 			end
 			local lifeadd = self.max_life * self:getRankLifeAdjust(1) * self.level / 65 / 1.5
