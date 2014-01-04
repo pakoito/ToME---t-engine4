@@ -6900,7 +6900,7 @@ newEntity{ base = "BASE_LONGSWORD", --For whatever artists draws this: it's a ra
 newEntity{ base = "BASE_CLOTH_ARMOR", --Thanks SageAcrin!
 	power_source = {psionic=true},
 	unique = true,
-	name = "Crimson Robe", color = colors.RED,
+	name = "Crimson Robe", color = colors.RED, image = "object/artifact/crimson_robe.png",
 	unided_name = "blood-stained robe",
 	desc = [[This robe was formerly owned by Callister the Psion, a powerful Psionic that pioneered many Psionic abilities. After his wife was murdered, Callister became obsessed with finding her killer, using his own hatred as a fuel for new and disturbing arts. After forcing the killer to torture himself to death, Callister walked the land, forcing any he found to kill themselves-his way of releasing them from the world's horrors. One day, he simply disappeared. This robe, soaked in blood, was the only thing he left behind.]],
 	level_range = {40, 50},
@@ -6934,7 +6934,7 @@ newEntity{ base = "BASE_CLOTH_ARMOR", --Thanks SageAcrin!
 
 newEntity{ base = "BASE_RING", --Thanks Alex!
 	power_source = {arcane=true},
-	name = "Exiler", unique=true, image = "object/artifact/void_orbs.png",
+	name = "Exiler", unique=true, image = "object/artifact/exiler.png",
 	desc = [[The chronomancer known as Solith was renowned across all of Maj'Eyal. He always seemed to catch his enemies alone.
 In the case of opponents who weren't alone, he had to improvise.]],
 	unided_name = "insignia ring",
@@ -6978,7 +6978,7 @@ In the case of opponents who weren't alone, he had to improvise.]],
 newEntity{ base = "BASE_SHIELD",
 	power_source = {arcane=true},
 	unique = true,
-	name = "Piercing Gaze",
+	name = "Piercing Gaze", image = "object/artifact/piercing_gaze.png",
 	unided_name = "stone-eyed shield",
 	desc = [[This gigantic shield has a stone eye embedded in it.]],
 	color = colors.BROWN,
@@ -7022,8 +7022,8 @@ newEntity{ base = "BASE_SHIELD",
 newEntity{ base = "BASE_KNIFE", --Shibari's #1
 	power_source = {nature=true},
 	unique = true,
-	name = "Al'akir the Stormblade",
-	unided_name = "thin stormy blade", image = "object/artifact/dagger_orc_feller.png",
+	name = "Shantiz the Stormblade",
+	unided_name = "thin stormy blade", image = "object/artifact/shantiz_the_stromblade.png",
 	level_range = {18, 33},
 	material_level = 3,
 	rarity = 300,
