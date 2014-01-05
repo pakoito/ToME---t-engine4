@@ -53,6 +53,7 @@ newEntity{
 	combat_armor = 3, combat_def = 3,
 
 	on_resurrect = function(self)
+		game.level.data.blight_start_in = nil
 		game.level.map:particleEmitter(self.x, self.y, 10, "ball_blight", {radius=10})
 		local list = {}
 		for uid, e in pairs(game.level.entities) do

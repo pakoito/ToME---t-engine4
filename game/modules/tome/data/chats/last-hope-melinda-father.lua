@@ -20,7 +20,17 @@ local q = game.player:hasQuest("kryl-feijan-escape")
 local qs = game.player:hasQuest("shertul-fortress")
 local ql = game.player:hasQuest("love-melinda")
 
-if not q or not q:isStatus(q.DONE) then
+if ql and ql:isStatus(q.COMPLETED, "death-beach") then
+
+newChat{ id="welcome",
+	text = [[#LIGHT_GREEN#*A man talks to you from inside, the door half open. His voice is sad.*#WHITE#
+Sorry, the store is closed.]],
+	answers = {
+		{"[leave]"},
+	}
+}
+
+elseif not q or not q:isStatus(q.DONE) then
 
 newChat{ id="welcome",
 	text = [[#LIGHT_GREEN#*A man talks to you from inside, the door half open. His voice is sad.*#WHITE#
