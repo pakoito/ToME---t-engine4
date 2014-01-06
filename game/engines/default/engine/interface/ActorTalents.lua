@@ -449,7 +449,7 @@ end
 --- Checks the talent if learnable
 -- @param t the talent to check
 -- @param offset the level offset to check, defaults to 1
-function _M:canLearnTalent(t, offset)
+function _M:canLearnTalent(t, offset, ignore_special)
 	-- Check prerequisites
 	if rawget(t, "require") then
 		local req = t.require
@@ -468,7 +468,7 @@ function _M:canLearnTalent(t, offset)
 				return nil, "not enough levels"
 			end
 		end
-		if req.special then
+		if req.special and not ignore_special then
 			if not req.special.fct(self, t, offset) then
 				return nil, req.special.desc
 			end
