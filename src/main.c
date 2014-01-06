@@ -196,6 +196,7 @@ static int traceback (lua_State *L) {
 			add_lua_error(ar.short_src, ar.currentline, ar.name?ar.name:"");
 		}
 	}
+	fflush(stdout);
 	return 1;
 }
 
@@ -228,6 +229,7 @@ void stackDump (lua_State *L) {
 		i--;
 	}
 	printf("--------------- Stack Dump Finished ---------------\n" );
+	fflush(stdout);
 }
 
 int docall (lua_State *L, int narg, int nret)
