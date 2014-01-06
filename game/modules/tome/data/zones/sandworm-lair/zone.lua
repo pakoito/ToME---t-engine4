@@ -200,7 +200,7 @@ return {
 		local m = game.zone:makeEntityByName(game.level, "actor", "SANDWORM_TUNNELER_HUGE")
 		if not m then return end
 		game.zone:addEntity(game.level, m, "actor", tx, ty)
-		game.log("#OLIVE_DRAB#You feel the ground shacking from the west.")
+		game.log("#OLIVE_DRAB#You feel the ground shaking from the west.")
 		game.level.data.last_worm_turn = game.turn
 	end,
 }
