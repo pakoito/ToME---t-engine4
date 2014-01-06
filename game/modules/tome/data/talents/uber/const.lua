@@ -44,7 +44,7 @@ uberTalent{
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
 			self.x, self.y, 4,
-			DamageType.WAVE, {dam={dam=100 + self:getCon() * 3, healfactor=0.5}, x=self.x, y=self.y, st=DamageType.DRAINLIFE, power=50 + self:getCon() * 2},
+			DamageType.BLOODSPRING, {dam={dam=100 + self:getCon() * 3, healfactor=0.5}, x=self.x, y=self.y, st=DamageType.DRAINLIFE, power=50 + self:getCon() * 2},
 			1,
 			5, nil,
 			engine.Entity.new{alpha=100, display='', color_br=200, color_bg=60, color_bb=20},

@@ -1158,6 +1158,27 @@ newDamageType{
 	end,
 }
 
+-- Bloodspring damage + repulsion; checks for spell power against physical resistance
+newDamageType{
+	name = "bloodspring", type = "BLOODSPRING",
+	projector = function(src, x, y, type, dam)
+		local srcx, srcy = dam.x, dam.y
+		local base = dam
+		dam = dam.dam
+		DamageType:get(base.st).projector(src, x, y, base.st, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			if target:checkHit(base.power or src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then
+				target:knockback(srcx, srcy, base.dist or 1)
+				target:crossTierEffect(target.EFF_OFFBALANCE, base.power or src:combatSpellpower())
+				game.logSeen(target, "%s is knocked back!", target.name:capitalize())
+			else
+				game.logSeen(target, "%s resists the bloody wave!", target.name:capitalize())
+			end
+		end
+	end,
+}
+
 -- Fireburn damage + repulsion; checks for spell power against physical resistance
 newDamageType{
 	name = "fire repulsion", type = "FIREKNOCKBACK",
