@@ -34,7 +34,7 @@ newTalent{
 		if not x or not y or not target then return nil end
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 
-		local hit = target:checkHit(self:combatAttack(), target:combatDefense(), 0, 95) and self:checkEvasion(target)
+		local hit = target:checkHit(self:combatAttack(), target:combatDefense(), 0, 95) and not self:checkEvasion(target)
 		-- Try to knockback !
 		if hit then
 			local can = function(target)
