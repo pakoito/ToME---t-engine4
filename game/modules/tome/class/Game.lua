@@ -1507,7 +1507,7 @@ function _M:setupCommands()
 			print("===============")
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
-			game:registerDialog(require('mod.dialogs.Donation').new())
+			error("for johnny0, with love :)")
 do return end
 			local f, err = loadfile("/data/general/events/glimmerstone.lua")
 			print(f, err)
