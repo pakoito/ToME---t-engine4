@@ -803,7 +803,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	end
 
 	-- Counter Attack!
-	if not hitted and not target.dead and not evaded and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:knowTalent(target.T_COUNTER_ATTACK) and self:isNear(target.x,target.y, 1) then --Adjacency check
+	if not hitted and not target.dead and target:knowTalent(target.T_COUNTER_ATTACK) and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:knowTalent(target.T_COUNTER_ATTACK) and self:isNear(target.x,target.y, 1) then --Adjacency check
 		local cadam = target:callTalent(target.T_COUNTER_ATTACK,"checkCounterAttack")
 		if cadam then
 			game.logSeen(self, "%s counters the attack!", target.name:capitalize())
@@ -818,7 +818,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	end
 
 	-- Defensive Throw!
-	if not hitted and not target.dead and not evaded and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:knowTalent(target.T_DEFENSIVE_THROW) and target:isNear(self.x,self.y,1) then
+	if not hitted and not target.dead and target:knowTalent(target.T_DEFENSIVE_THROW) and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:isNear(self.x,self.y,1) then
 		local t = target:getTalentFromId(target.T_DEFENSIVE_THROW)
 		t.do_throw(target, self, t)
 	end
