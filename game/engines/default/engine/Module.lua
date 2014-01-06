@@ -302,6 +302,7 @@ function _M:listAddons(mod, ignore_compat)
 				add.natural_compatible = engine.version_nearly_same(mod.version, add.version)
 				add.version_txt = ("%d.%d.%d"):format(add.version[1], add.version[2], add.version[3])
 				if add.dlc and not profile:isDonator(add.dlc) then add.dlc = "no" end
+				if add.id_dlc and not profile:allowDLC(add.id_dlc) then add.id_dlc = "no" end
 				adds[#adds+1] = add
 			end
 		end
@@ -389,7 +390,10 @@ function _M:loadAddons(mod, saveuse)
 				print("Removing addon "..add.short_name..": cheat mode required")
 				table.remove(adds, i) removed = true
 			elseif add.dlc == "no" then
-				print("Removing addon "..add.short_name..": DLC required")
+				print("Removing addon "..add.short_name..": donator required")
+				table.remove(adds, i) removed = true
+			elseif add.id_dlc == "no" then
+				print("Removing addon "..add.short_name..": DLC not granted")
 				table.remove(adds, i) removed = true
 			elseif config.settings.addons[add.for_module] and config.settings.addons[add.for_module][add.short_name] ~= nil then
 				-- Forbidden by config
