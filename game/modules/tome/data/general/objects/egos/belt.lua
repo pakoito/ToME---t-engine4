@@ -144,7 +144,7 @@ newEntity{
 
 newEntity{
 	power_source = {psionic=true},
-	name = " of transcendance", suffix=true, instant_resolve=true,
+	name = " of transcendence", suffix=true, instant_resolve=true,
 	keywords = {transcend=true},
 	level_range = {1, 50},
 	rarity = 5,
