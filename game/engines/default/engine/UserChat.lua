@@ -173,11 +173,10 @@ function _M:event(e)
 
 		self.channels[e.channel] = self.channels[e.channel] or {users={}, log={}}
 		if profile and profile.auth and profile.auth.name then
-			local tokens = e.msg:split(" ")
-			for i = 1, #tokens do
-				if tokens[i]:lower() == profile.auth.name:lower() then tokens[i] = "#YELLOW##{underline}#"..tokens[i].."#{normal}##LAST#" end
+			local ni, nj = e.msg:lower():find(profile.auth.name:lower(), 1, true)
+			if ni and nj then
+				e.msg = e.msg:sub(1, ni - 1).."#YELLOW##{underline}#"..profile.auth.name.."#{normal}##LAST#"..e.msg:sub(nj + 1)
 			end
-			e.msg = table.concat(tokens, " ")
 		end
 		self:addMessage("talk", e.channel, e.login, {e.name, color}, e.msg)
 
