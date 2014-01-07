@@ -542,8 +542,28 @@ static int lua_check_error(lua_State *L)
 	return 1;
 }
 
+static char *reboot_message = NULL;
+static int lua_set_reboot_message(lua_State *L)
+{
+	const char *msg = luaL_checkstring(L, 1);
+	if (reboot_message) { free(reboot_message); }
+	reboot_message = strdup(msg);
+	return 0;
+}
+static int lua_get_reboot_message(lua_State *L)
+{
+	if (reboot_message) {
+		lua_pushstring(L, reboot_message);
+		free(reboot_message);
+		reboot_message = NULL;
+	} else lua_pushnil(L);
+	return 1;
+}
+
 static const struct luaL_Reg gamelib[] =
 {
+	{"setRebootMessage", lua_set_reboot_message},
+	{"getRebootMessage", lua_get_reboot_message},
 	{"reboot", lua_reboot_lua},
 	{"set_current_game", lua_set_current_game},
 	{"exit_engine", lua_exit_engine},

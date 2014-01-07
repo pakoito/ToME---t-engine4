@@ -419,6 +419,12 @@ function _M:loadAddons(mod, saveuse)
 					else
 						print("Removing addon "..add.short_name..": DLC class not received")
 						table.remove(adds, i) removed = true
+						if saveuse then
+							-- The savefile requires it, but we couldnt activate it, abord
+							core.game.setRebootMessage(([[The savefile requires the #YELLOW#%s#WHITE# addon.
+Some of its features require being online and could not be enabled. To prevent damaging the savefile loading was aborded.]]):format(add.long_name))
+							util.showMainMenu()
+						end
 						break
 					end
 				end
