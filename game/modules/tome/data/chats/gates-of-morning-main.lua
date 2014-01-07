@@ -26,6 +26,7 @@ newChat{ id="welcome",
 		{"I need help in my hunt for clues about the staff.", jump="clues", cond=function(npc, player) return game.state:isAdvanced() and not player:hasQuest("orc-pride") end},
 		{"I have destroyed the leaders of all the Orc Prides.", jump="prides-dead", cond=function(npc, player) return player:isQuestStatus("orc-pride", engine.Quest.COMPLETED) end},
 		{"I am back from the Charred Scar, where the orcs took the staff.", jump="charred-scar", cond=function(npc, player) return player:hasQuest("charred-scar") and player:hasQuest("charred-scar"):isCompleted() end},
+		{"A dying paladin gave me this map; something about orc breeding pits. [tell her the story]", jump="orc-breeding-pits", cond=function(npc, player) return player:hasQuest("orc-breeding-pits") and player:isQuestStatus("orc-breeding-pits", engine.Quest.COMPLETED, "wuss-out") and not player:isQuestStatus("orc-breeding-pits", engine.Quest.COMPLETED, "wuss-out-done") end},
 		{"Sorry, I have to go!"},
 	}
 }
@@ -141,6 +142,26 @@ newChat{ id="charred-scar-fail",
 I am afraid with the power they gained today they will be even harder to stop, but we do not have a choice.]],
 	answers = {
 		{"I will avenge your men.", action=function(npc, player) player:setQuestStatus("charred-scar", engine.Quest.DONE) end}
+	},
+}
+
+newChat{ id="orc-breeding-pits",
+	text = [[Ah! This is wonderful! Finally a ray of hope amidst the darkness. I will assign my best troops to this. Thank you, @playername@ - take this as a token of gratitude.]],
+	answers = {
+		{"Good luck.", action=function(npc, player)
+			player:setQuestStatus("orc-breeding-pits", engine.Quest.COMPLETED, "wuss-out-done")
+			player:setQuestStatus("orc-breeding-pits", engine.Quest.COMPLETED)
+
+			for i = 1, 5 do
+				local ro = game.zone:makeEntity(game.level, "object", {ignore_material_restriction=true, type="gem", special=function(o) return o.material_level and o.material_level >= 5 end}, nil, true)
+				if ro then
+					ro:identify(true)
+					game.logPlayer(player, "Aeryn gives you: %s", ro:getName{do_color=true})
+					game.zone:addEntity(game.level, ro, "object")
+					player:addObject(player:getInven("INVEN"), ro)
+				end
+			end
+		end}
 	},
 }
 

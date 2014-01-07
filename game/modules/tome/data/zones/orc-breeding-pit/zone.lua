@@ -62,7 +62,7 @@ return {
 			game:placeRandomLoreObject("BREEDING_HISTORY5")
 		end
 
-		for uid, e in pairs(level.entities) do e.faction="orc-pride" end
+		for uid, e in pairs(level.entities) do if e.faction ~= "neutral" then e.faction="orc-pride" end end
 	end,
 	on_enter = function(lev, old_lev, newzone)
 		if newzone and not game.level.shown_warning then
