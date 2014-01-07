@@ -4537,7 +4537,7 @@ newEntity{ base = "BASE_GREATSWORD", -- Thanks Alex!
 	require = { stat = { str=10 }, },
 	sentient=true,
 	material_level = 3,
-	special_desc = function(self) return "Attack speed improves with strength and size category." end,
+	special_desc = function(self) return "Attack speed improves with your strength and size category." end,
 	combat = {
 		dam = 48,
 		apr = 12,
@@ -5392,15 +5392,15 @@ newEntity{ base = "BASE_TOOL_MISC", --Sorta Thanks Donkatsu!
 	desc = [[This small tree shaped totem is imbued with powerful healing energies.]],
 	cost = 320,
 	material_level = 4,
+	special_desc = function(self) return "Heals all nearby living creatures by 5 points each turn." end,
 	sentient=true,
 	wielder = {
 		resists={[DamageType.BLIGHT] = 10, [DamageType.NATURE] = 10},
 		inc_damage={[DamageType.NATURE] = 10},
-		on_melee_hit={[DamageType.NATURE] = 10},
 		talents_types_mastery = { ["wild-gift/call"] = 0.1, ["wild-gift/harmony"] = 0.1, },
 		inc_stats = {[Stats.STAT_WIL] = 7, [Stats.STAT_CON] = 6,},
 		combat_mindpower=7,
-		healing_factor=0.2,
+		healing_factor=0.25,
 	},
 	on_takeoff = function(self, who)
 		self.worn_by=nil
@@ -5422,7 +5422,7 @@ newEntity{ base = "BASE_TOOL_MISC", --Sorta Thanks Donkatsu!
 		if self.worn_by:attr("dead") then return end
 		local who = self.worn_by
 		local blast = {type="ball", range=0, radius=2, selffire=true}
-		who:project(blast, who.x, who.y, engine.DamageType.HEALING_NATURE, 3)
+		who:project(blast, who.x, who.y, engine.DamageType.HEALING_NATURE, 5)
 	end,
 }
 
@@ -5458,7 +5458,7 @@ newEntity{ base = "BASE_CLOAK",
 	wielder = {
 		combat_spellpower=6,
 		combat_armor=10,
-		combat_armor_hardiness=20,
+		combat_armor_hardiness=15,
 		talents_types_mastery = {
 			["spell/earth"] = 0.2,
 			["spell/stone"] = 0.1,
@@ -5466,8 +5466,8 @@ newEntity{ base = "BASE_CLOAK",
 		inc_damage={ [DamageType.PHYSICAL] = 5,},
 		resists={ [DamageType.PHYSICAL] = 5,},
 	},
-	max_power = 50, power_regen = 1,
-	use_talent = { id = Talents.T_STONE_WALL, level = 1, power = 50 },
+	max_power = 60, power_regen = 1,
+	use_talent = { id = Talents.T_STONE_WALL, level = 1, power = 60 },
 }
 
 newEntity{ base = "BASE_LIGHT_ARMOR", --Thanks SageAcrin!
@@ -5484,10 +5484,14 @@ newEntity{ base = "BASE_LIGHT_ARMOR", --Thanks SageAcrin!
 		combat_critical_power = 20,
 		combat_def = 18,
 		combat_armor = 18,
-		combat_armor_hardiness=10,
-		healing_factor=-0.1,
-		melee_project={[DamageType.DARKNESS]=8, [DamageType.COLD]=8},
-		on_melee_hit = {[DamageType.DARKNESS]=8, [DamageType.COLD]=8},
+		combat_armor_hardiness=15,
+		inc_stats = { 
+			[Stats.STAT_MAG] = 5, 
+			[Stats.STAT_CUN] = 5, 
+			[Stats.STAT_DEX] = 5, 
+		},
+		healing_factor=-0.15,
+		on_melee_hit = {[DamageType.DARKNESS]=15, [DamageType.COLD]=15},
 		inc_stealth=10,
  		inc_damage={
 			[DamageType.DARKNESS] = 20,
@@ -5507,7 +5511,7 @@ newEntity{ base = "BASE_LIGHT_ARMOR", --Thanks SageAcrin!
 	max_power = 50, power_regen = 1,
 	use_power = { name = "turn yourself invisible for 10 turns", power = 50,
 		use = function(self, who)
-			who:setEffect(who.EFF_INVISIBILITY, 10, {power=10+who:getCun()/6, penalty=0.5, regen=true})
+			who:setEffect(who.EFF_INVISIBILITY, 10, {power=10+who:getCun()/6+who:getMag()/6, penalty=0.5, regen=true})
 			return {id=true, used=true}
 		end
 	},
@@ -5675,12 +5679,10 @@ newEntity{ base = "BASE_TOOL_MISC", --And finally, Thank you, Darkgod, for makin
 His last known words were "Somehow this feels like an ending, yet I know there is so much more to find."]],
 	cost = 350,
 	material_level = 4,
-	wielder = {
-		resists={[DamageType.PHYSICAL] = 4,},
-		inc_damage={[DamageType.PHYSICAL] = 3,},
-		
-		inc_stats = {[Stats.STAT_LCK] = 5, [Stats.STAT_CUN] = 5,},
+	wielder = {		
+		inc_stats = {[Stats.STAT_LCK] = 10, [Stats.STAT_CUN] = 5,},
 		combat_atk=12,
+		combat_apr=12,
 		combat_physresist = 10,
 		combat_spellresist = 10,
 		combat_mentalresist = 10,
@@ -5705,15 +5707,16 @@ newEntity{ base = "BASE_LEATHER_CAP",
 	cost = 200,
 	material_level=3,
 	wielder = {
-		combat_def=4,
-		inc_stats = { [Stats.STAT_WIL] = 3, [Stats.STAT_CUN] = 6, },
+		combat_def=8,
+		inc_stats = { [Stats.STAT_WIL] = 8, [Stats.STAT_CUN] = 6, },
 		blind_immune=1,
 		combat_mentalresist = 12,
-		resists = {[DamageType.BLIGHT] = 10,},
-		resists_cap = {[DamageType.BLIGHT] = 10,},
+		see_invisible = 15,
+		see_stealth = 15,
 		inc_damage={
 			[DamageType.NATURE] = 20,
 		},
+		infravision=2,
 		resists_pen={
 			[DamageType.NATURE] = 15,
 		},
@@ -5746,21 +5749,21 @@ newEntity{ base = "BASE_MINDSTAR",
 	wielder = {
 		combat_mindpower = 20,
 		combat_mindcrit = 9,
-		disease_immune=0.3,
 		resists={[DamageType.BLIGHT] = 25, [DamageType.NATURE] = 15},
-		on_melee_hit={[DamageType.NATURE] = 20},
 		inc_damage={
-			[DamageType.NATURE] 	= 20,
+			[DamageType.NATURE] = 20,
+			[DamageType.ACID] = 10,
 		},
 		resists_pen={
-			[DamageType.NATURE] 	= 20,
+			[DamageType.NATURE] = 20,
+			[DamageType.ACID] = 10,
 		},
-		inc_stats = { [Stats.STAT_WIL] = 6, [Stats.STAT_CUN] = 3, },
+		inc_stats = { [Stats.STAT_WIL] = 10, [Stats.STAT_CUN] = 5, },
 		learn_talent = {[Talents.T_OOZE_SPIT] = 3},
-		talents_types_mastery = { ["wild-gift/mindstar-mastery"] = 0.1, ["wild-gift/antimagic"] = 0.1,},
+		talents_types_mastery = { ["wild-gift/mindstar-mastery"] = 0.1,},
 	},
-	max_power = 60, power_regen = 1,
-	use_talent = { id = Talents.T_SLIME_WAVE, level = 3, power = 60 },
+	max_power = 30, power_regen = 1,
+	use_talent = { id = Talents.T_SLIME_WAVE, level = 3, power = 30 },
 }
 
 newEntity{ base = "BASE_CLOTH_ARMOR",
@@ -5862,8 +5865,8 @@ newEntity{ base = "BASE_RING",
 		knockback_immune=1,
 		combat_armor = 5,
 	},
-	max_power = 30, power_regen = 1,
-	use_talent = { id = Talents.T_BIND, level = 2, power = 30 },
+	max_power = 28, power_regen = 1,
+	use_talent = { id = Talents.T_BIND, level = 2, power = 25 },
 }
 
 newEntity{ base = "BASE_LONGSWORD",
@@ -5880,7 +5883,7 @@ newEntity{ base = "BASE_LONGSWORD",
 	material_level = 4,
 	combat = {
 		dam = 38,
-		apr = 4,
+		apr = 10,
 		physcrit = 18,
 		dammod = {str=1},
 		convert_damage={[DamageType.FIRE] = 50,},
@@ -5898,8 +5901,8 @@ newEntity{ base = "BASE_LONGSWORD",
 		},
 		inc_stats = { [Stats.STAT_STR] = 7, [Stats.STAT_WIL] = 7 },
 	},
-	max_power = 30, power_regen = 1,
-	use_talent = { id = Talents.T_FIRE_BREATH, level = 2, power = 30 },
+	max_power = 25, power_regen = 1,
+	use_talent = { id = Talents.T_FIRE_BREATH, level = 2, power = 25 },
 }
 
 newEntity{ base = "BASE_STAFF",
@@ -5956,7 +5959,7 @@ newEntity{ base = "BASE_BATTLEAXE",
 	rarity = 300,
 	material_level = 4,
 	combat = {
-		dam = 60,
+		dam = 63,
 		apr = 25,
 		physcrit = 25,
 		dammod = {str=1.3},
@@ -5971,8 +5974,6 @@ newEntity{ base = "BASE_BATTLEAXE",
 	wielder = {
 		combat_critical_power = 25,
 	},
-	max_power = 30, power_regen = 1,
-	use_talent = { id = Talents.T_PERFECT_STRIKE, level = 2, power = 30 },
 }
 
 newEntity{ base = "BASE_CLOAK",
@@ -5987,14 +5988,14 @@ newEntity{ base = "BASE_CLOAK",
 	cost = 300,
 	material_level = 5,
 	wielder = {
-		combat_def = 13,
+		combat_def = 15,
 		combat_spellpower = 8,
 		inc_stats = { 
 			[Stats.STAT_MAG] = 8, 
-			[Stats.STAT_CUN] = 5, 
+			[Stats.STAT_CUN] = 6, 
 			[Stats.STAT_DEX] = 10, 
 		},
-		inc_damage = { [DamageType.LIGHT]= 10 },
+		inc_damage = { [DamageType.LIGHT]= 15 },
 		resists_cap = { [DamageType.LIGHT] = 10, },
 		resists = { [DamageType.LIGHT] = 20, [DamageType.DARKNESS] = 20, },
 		talents_types_mastery = {
@@ -7027,7 +7028,7 @@ newEntity{ base = "BASE_KNIFE", --Shibari's #1
 	level_range = {18, 33},
 	material_level = 3,
 	rarity = 300,
-	desc = [[This text comes later.]],
+	desc = [[This surreal dagger crackles with the intensity of a vicious storm.]],
 	cost = 400,
 	color=colors.BLUE,
 	require = { stat = { dex=30}},
