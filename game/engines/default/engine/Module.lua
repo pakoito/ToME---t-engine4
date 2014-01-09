@@ -416,16 +416,22 @@ function _M:loadAddons(mod, saveuse)
 					local data = profile:getDLCD(add.for_module.."-"..add.short_name, ("%d.%d.%d"):format(add.version[1],add.version[2],add.version[3]), name:gsub("%.", "/")..".lua")
 					if data and data ~= '' then
 						profile.dlc_files.classes[name] = data
-					else
+					elseif not __module_extra_info.ignore_addons_not_loading then
 						print("Removing addon "..add.short_name..": DLC class not received")
 						table.remove(adds, i) removed = true
 						if saveuse then
 							-- The savefile requires it, but we couldnt activate it, abord
 							core.game.setRebootMessage(([[The savefile requires the #YELLOW#%s#WHITE# addon.
-Some of its features require being online and could not be enabled. To prevent damaging the savefile loading was aborded.]]):format(add.long_name))
-							util.showMainMenu()
+Some of its features require being online and could not be enabled. To prevent damaging the savefile loading was aborded.
+
+You may try to force loading if you are sure the savefile does not use that addon, at your own risk, by checking the "Ignore unloadable addons" checkbox on the load game screen..]]):format(add.long_name))
+							util.showMainMenu(nil, nil, nil, nil, nil, nil, "show_ignore_addons_not_loading=true")
 						end
 						break
+					else
+						add.dlc = "no"
+						print("Removing addon "..add.short_name..": dlc file required not found")
+						table.remove(adds, i) removed = true
 					end
 				end
 			end
@@ -674,11 +680,11 @@ end
 -- @param mod the module definition as given by Module:loadDefinition()
 -- @param name the savefile name
 -- @param new_game true if the game must be created (aka new character)
-function _M:instanciate(mod, name, new_game, no_reboot)
+function _M:instanciate(mod, name, new_game, no_reboot, extra_module_info)
 	if not no_reboot then
 		local eng_v = nil
 		if not mod.incompatible then eng_v = ("%d.%d.%d"):format(mod.engine[1], mod.engine[2], mod.engine[3]) end
-		util.showMainMenu(false, mod.engine[4], eng_v, mod.version_string, name, new_game)
+		util.showMainMenu(false, mod.engine[4], eng_v, mod.version_string, name, new_game, extra_module_info)
 		return
 	end
 
