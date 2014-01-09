@@ -68,6 +68,7 @@ newEntity{
 	end
 }
 
+--[[
 newEntity{
 	name = "Orc Breeding Pits",
 	type = "harmless", subtype = "special", unique = true,
@@ -84,3 +85,4 @@ newEntity{
 		return true
 	end,
 }
+]]
