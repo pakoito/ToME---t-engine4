@@ -499,7 +499,7 @@ end
 function _M:aiCanPass(x, y)
 	-- If there is a friendly actor, add shove_pressure to it
 	local target = game.level.map(x, y, engine.Map.ACTOR)
-	if target and target ~= game.player and self:reactionToward(target) > 0 and not target:attr("never_move") then
+	if target and target ~= game.player and self:reactionToward(target) > 0 and not target:attr("never_move") and target.x then
 		target.shove_pressure = (target.shove_pressure or 0) + shove_algorithm(self) + (self.shove_pressure or 0)
 		-- Shove the target?
 		if target.shove_pressure > shove_algorithm(target) * 1.7 then
