@@ -53,7 +53,7 @@ for i = 1, 7 do newEntity{ base="BOGWATER_MISC", define_as = "BOGWATER_MISC"..i,
 
 newEntity{ base="BOGWATER",
 	define_as = "PORTAL",
-	display = "&", color = colors.BLUE,
+	display = "&", color = colors.VIOLET,
 	name = "coral portal",
 	add_displays = {class.new{z=18, image="terrain/naga_portal.png", display_h=2, display_y=-1, embed_particles = {
 		{name="naga_portal_smoke", rad=2, args={smoke="particles_images/smoke_whispery_bright"}},
