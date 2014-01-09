@@ -69,6 +69,9 @@ newEntity{
 }
 
 --[[
+-- A little more context; this made people so annoyed on both sides, taht I've had enough of it.
+-- This was never intended as a reference to any real world thing and if people are annoyed at it i'm sorry
+-- It's gone now
 newEntity{
 	name = "Orc Breeding Pits",
 	type = "harmless", subtype = "special", unique = true,
