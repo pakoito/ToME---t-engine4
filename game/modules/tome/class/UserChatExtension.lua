@@ -85,12 +85,12 @@ function _M:event(e)
 
 			local text = ([[#{bold}#Thank you#{normal}# for you donation, your support means a lot for the continued survival of this game.
 
-Your current donation total is #LIGHT_GREEN#%0.2f euro#WHITE#.
+Your current donation total is #LIGHT_GREEN#%0.2f euro#WHITE# which equals to #ROYAL_BLUE#%d voratun coins to use on te4.org.
 Your Item's Vault has #TEAL#%d slots#WHITE#.
 
 Again, thank you, and enjoy Eyal!
 
-#{italic}#Your malevolent local god of darkness, #GOLD#DarkGod#{normal}#]]):format(data.donated, data.items_vault_slots)
+#{italic}#Your malevolent local god of darkness, #GOLD#DarkGod#{normal}#]]):format(data.donated, data.donated * 10, data.items_vault_slots)
 			Dialog:simpleLongPopup("Thank you", text, 600)
 		end
 	end
