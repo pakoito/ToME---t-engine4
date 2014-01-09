@@ -48,8 +48,12 @@ starter = "mod.load"
 
 -- List of additional team files required
 teams = {
+	-- Normal packaging
 	{ "#name#-#version#-music.team", "optional", "/" },
 	{ "#name#-#version#-gfx.team", "optional", "/" },
+	-- Steam packaging
+	{ "#name#-music.team", "optional", "/" },
+	{ "#name#-gfx.team", "optional", "/" },
 }
 
 show_funfacts = true
