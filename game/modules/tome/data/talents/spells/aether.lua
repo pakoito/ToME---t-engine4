@@ -71,6 +71,8 @@ newTalent{
 			combatSpellpower = function(self) return self.summoner:combatSpellpower() end,
 			rad = 3,
 			energy = {value=0, mod=16},
+			detect_power = self:combatSpellpower() / 2,
+			disarm_power = self:combatSpellpower() / 2,
 			on_added = function(self, level, x, y)
 				self.x, self.y = x, y
 				local tries = {}
