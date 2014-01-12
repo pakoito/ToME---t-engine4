@@ -760,7 +760,7 @@ function _M:instanciate(mod, name, new_game, no_reboot, extra_module_info)
 			fp("/engine")
 			table.sort(md5s)
 			module_md5 = md5.sumhexa(table.concat(md5s))
-			print("[MODULE LOADER] module MD5", fmd5, "computed in ", core.game.getTime() - t)
+			print("[MODULE LOADER] module MD5", module_md5, "computed in ", core.game.getTime() - t)
 		end
 	end
 
