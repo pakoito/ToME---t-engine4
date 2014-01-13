@@ -2625,23 +2625,6 @@ static int gl_fbo_toscreen(lua_State *L)
 		g = luaL_checknumber(L, 8);
 		b = luaL_checknumber(L, 9);
 		a = luaL_checknumber(L, 10);
-		GLfloat colors[4*4] = {
-			r, g, b, a,
-			r, g, b, a,
-			r, g, b, a,
-			r, g, b, a,
-		};
-		glColorPointer(4, GL_FLOAT, 0, colors);
-	}
-	else
-	{
-		GLfloat colors[4*4] = {
-			1, 1, 1, 1,
-			1, 1, 1, 1,
-			1, 1, 1, 1,
-			1, 1, 1, 1,
-		};
-		glColorPointer(4, GL_FLOAT, 0, colors);
 	}
 	if (lua_isuserdata(L, 6))
 	{
@@ -2652,6 +2635,13 @@ static int gl_fbo_toscreen(lua_State *L)
 	if (!allowblend) glDisable(GL_BLEND);
 	tglBindTexture(GL_TEXTURE_2D, fbo->texture);
 
+	GLfloat colors[4*4] = {
+		r, g, b, a,
+		r, g, b, a,
+		r, g, b, a,
+		r, g, b, a,
+	};
+	glColorPointer(4, GL_FLOAT, 0, colors);
 
 	GLfloat texcoords[2*4] = {
 		0, 1,
