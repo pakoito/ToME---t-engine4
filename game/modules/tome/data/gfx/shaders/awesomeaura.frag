@@ -125,7 +125,7 @@ float GetFireDelta(float currTime, vec2 pos, float freqMult, float stretchMult, 
 vec4 GetFireAuraColor(float currTime, vec2 planarPos, float freqMult, float stretchMult, float ampMult, float power, float scrollSpeed, float paletteCoord)
 {		
 	float delta =  
-		GetFireDelta(currTime, planarPos + vec2(currTime * scrollSpeed * 0, 0.0), freqMult, stretchMult, 2.5, 0.5) * (1.0 - planarPos.x)	+ 
+		GetFireDelta(currTime, planarPos + vec2(currTime * scrollSpeed * 0.0, 0.0), freqMult, stretchMult, 2.5, 0.5) * (1.0 - planarPos.x)	+ 
 		GetFireDelta(currTime, vec2(planarPos.x + currTime * scrollSpeed * 0.0 - 1.0, planarPos.y), freqMult, stretchMult, 2.5, 0.5) * planarPos.x;
 		
 	delta *= min(1.0, max(0.0, 1.0 * (1.0 - planarPos.y)));
