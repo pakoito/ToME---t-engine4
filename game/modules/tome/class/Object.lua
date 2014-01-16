@@ -1086,6 +1086,8 @@ function _M:getTextualDesc(compare_with, use_actor)
 
 		compare_fields(w, compare_with, field, "paradox_reduce_fails", "%+d", "Reduces paradox failures(equivalent to willpower): ")
 
+		compare_fields(w, compare_with, field, "damage_backfire", "%+d%%", "Damage Backlash: ", nil, true)
+
 		if w.undead then
 			desc:add("The wearer is treated as an undead.", true)
 		end

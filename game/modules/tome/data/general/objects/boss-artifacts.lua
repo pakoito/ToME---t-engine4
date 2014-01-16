@@ -1339,7 +1339,7 @@ It has been kept somewhat intact with layers of salt and clay, but in spite of t
 	metallic = false,
 	sentient = true,
 	cooldown=0,
-	special_desc = function(self) return "Detects traps.\nGives a 25% to shrug off up to three stuns, pins, and dazes each turn, with a 10 turn cooldown." end,
+	special_desc = function(self) return "Detects traps.\nGives a 25% chance to shrug off up to three stuns, pins, and dazes each turn, with a 10 turn cooldown." end,
 	wielder = {
 		inc_stats = { [Stats.STAT_LCK] = 5, },
 		combat_def = 5,

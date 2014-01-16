@@ -3862,7 +3862,7 @@ newEntity{ base = "BASE_LONGSWORD",
 		dam = 47,
 		apr = 20,
 		physcrit = 7,
-		dammod = {str=0.8,wil=0.2},
+		dammod = {str=1,wil=0.1},
 		damage_convert = {[DamageType.MIND]=20,},
 		special_on_hit = {desc="torments the target with many mental effects", fct=function(combat, who, target)
 			if not who:checkHit(who:combatMindpower(), target:combatMentalResist()*0.9) then return end
@@ -3878,7 +3878,7 @@ newEntity{ base = "BASE_LONGSWORD",
 			elseif eff == "silence" then target:setEffect(target.EFF_SILENCED, 3, {})
 			end
 		end},
-		special_on_kill = {desc="reduces loss of mental save", fct=function(combat, who, target)
+		special_on_kill = {desc="reduces mental save penalty", fct=function(combat, who, target)
 			local o, item, inven_id = who:findInAllInventoriesBy("define_as", "ANIMA")
 			if not o or not who:getInven(inven_id).worn then return end
 			if o.wielder.combat_mentalresist >= 0 then return end
@@ -4509,12 +4509,6 @@ newEntity{ base = "BASE_LEATHER_BOOT", --Thanks Grayswandir!
 
 			-- Check LOS
 			local rad = 2
-			if not who:hasLOS(x, y) and rng.percent(35 + (game.level.map.attrs(who.x, who.y, "control_teleport_fizzle") or 0)) then
-				game.logPlayer(who, "The targeted phase door fizzles and works randomly!")
-				x, y = who.x, who.y
-				rad = tg.range
-			end
-
 			game.level.map:particleEmitter(who.x, who.y, 1, "teleport")
 			who:teleportRandom(x, y, rad)
 			game.level.map:particleEmitter(who.x, who.y, 1, "teleport")
@@ -4761,8 +4755,8 @@ newEntity{ base = "BASE_LITE", --Thanks Grayswandir!
 	cost = 320,
 	material_level=3,
 	wielder = {
-		lite = 4,
-		combat_spellpower=8,
+		lite = 5,
+		combat_spellpower=10,
 		
 		inc_damage = {[DamageType.COLD]=15},
 		resists = {[DamageType.COLD]=20},
@@ -4806,7 +4800,7 @@ newEntity{ base = "BASE_LITE", --Thanks Grayswandir!
 				cut_immune = 1,
 				see_invisible = 80,
 				undead = 1,
-				will_o_wisp_dam = 100 + who:getMag() * 2,
+				will_o_wisp_dam = 110 + who:getMag() * 2.5,
 				resolvers.talents{[Talents.T_WILL_O__THE_WISP_EXPLODE] = 1,},
 				
 				faction = who.faction,
@@ -4967,9 +4961,8 @@ newEntity{ base = "BASE_TOOL_MISC",
 		resists={[DamageType.DARKNESS] = 10, [DamageType.TEMPORAL] = 10},
 		inc_damage={[DamageType.DARKNESS] = 12, [DamageType.TEMPORAL] = 12},
 		on_melee_hit={[DamageType.VOID] = 16},
-		combat_spellresist = 15,
 		inc_stats = {[Stats.STAT_MAG] = 8,},
-		combat_spellpower=3,
+		combat_spellpower=10,
 	},
 	max_power = 40, power_regen = 1,
 	use_power = { name = "release a burst of void energy", power = 20,
@@ -4999,7 +4992,7 @@ newEntity{ base = "BASE_MASSIVE_ARMOR", -- Thanks SageAcrin!
 	encumber = 12,
 	metallic=false,
 	wielder = {
-		inc_stats = { [Stats.STAT_WIL] = 3, [Stats.STAT_DEX] = 3,},
+		inc_stats = { [Stats.STAT_WIL] = 3, [Stats.STAT_DEX] = 3, [Stats.STAT_CON] = 3,},
 		combat_armor = 10,
 		combat_def = 4,
 		fatigue = 14,
@@ -5089,6 +5082,7 @@ newEntity{ base = "BASE_AMULET", --Thanks Grayswandir!
 			[DamageType.MIND] 	= 20,
 		},
 		on_melee_hit={[DamageType.RANDOM_CONFUSION] = 5},
+		melee_project={[DamageType.RANDOM_CONFUSION] = 5},
 	},
 	max_power = 30, power_regen = 1,
 	use_talent = { id = Talents.T_INNER_DEMONS, level = 4, power = 30 },
@@ -5141,7 +5135,7 @@ newEntity{ base = "BASE_SHOT", --Thanks Grayswandir!
 		travel_speed = 1,
 		dammod = {dex=0.7, cun=0.5},
 		talent_on_hit = { [Talents.T_TORNADO] = {level=2, chance=10} },
-		special_on_hit = {desc="35% chance for lightning to arc to a second target", fct=function(combat, who, target)
+		special_on_hit = {desc="35% chance for lightning to arc to a second target", on_kill=1, fct=function(combat, who, target)
 			if not rng.percent(35) then return end
 			local tgts = {}
 			local x, y = target.x, target.y
@@ -5611,11 +5605,11 @@ newEntity{ base = "BASE_TOOL_MISC", --Thanks Alex!
 		if self.finished == true then return end
 		who:onTakeoff(self, true)
 		
-		self.wielder.resists.all = self.wielder.resists.all + direction * 2
+		self.wielder.resists.all = self.wielder.resists.all + direction * 3
 		self.wielder.movement_speed = self.wielder.movement_speed + direction * 0.04
-		self.wielder.combat_physspeed = self.wielder.combat_physspeed - direction * 0.04
-		self.wielder.combat_spellspeed = self.wielder.combat_spellspeed - direction * 0.04
-		self.wielder.combat_mindspeed = self.wielder.combat_mindspeed - direction * 0.04
+		self.wielder.combat_physspeed = self.wielder.combat_physspeed - direction * 0.03
+		self.wielder.combat_spellspeed = self.wielder.combat_spellspeed - direction * 0.03
+		self.wielder.combat_mindspeed = self.wielder.combat_mindspeed - direction * 0.03
 		
 		if self.wielder.resists.all <= -10 then 
 			self.wielder.inc_damage.all = 10
@@ -6989,7 +6983,7 @@ newEntity{ base = "BASE_SHIELD",
 	cost = 400,
 	material_level = 4,
 	metallic = false,
-	special_desc = function(self) return "When you block an attack, there is a 30% of petrifying the attacker." end,
+	special_desc = function(self) return "When you block an attack, there is a 30% chance of petrifying the attacker." end,
 	special_combat = {
 		dam = 40,
 		block = 100,

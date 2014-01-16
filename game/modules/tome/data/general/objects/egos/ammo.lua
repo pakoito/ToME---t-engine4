@@ -174,7 +174,7 @@ newEntity{
 		ranged_project={
 			[DamageType.LIGHTNING] = resolvers.mbonus_material(15, 5),
 		},
-		special_on_hit = {desc="25% chance for lightning to arc to a second target", fct=function(combat, who, target)
+		special_on_hit = {desc="25% chance for lightning to arc to a second target", on_kill=1, fct=function(combat, who, target)
 			if not rng.percent(25) then return end
 			local tgts = {}
 			local x, y = target.x, target.y
@@ -501,7 +501,7 @@ newEntity{
 	cost = 6,
 	combat = {
 		travel_speed = 2,
-		special_on_hit = {desc="10% chance to create an air burst", fct=function(combat, who, target)
+		special_on_hit = {desc="10% chance to create an air burst", on_kill=1, fct=function(combat, who, target)
 			if not rng.percent(10) then return end
 			local dam = 20 + who:combatPhysicalpower()/2
 			local distance = 2 + math.floor(who:combatPhysicalpower()/40)

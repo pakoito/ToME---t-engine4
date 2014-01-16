@@ -2230,7 +2230,15 @@ function _M:onTakeHit(value, src, death_note)
 		local leech = math.min(value, self.life) * src.lifesteal / 100
 		if leech > 0 then
 			src:heal(leech, self)
-			game:delayedLogMessage(src, self, "life_leech"..self.uid, "#CRIMSON##Source# steals life from #Target#!")
+			game:delayedLogMessage(src, self, "lifesteal"..self.uid, "#CRIMSON##Source# steals life from #Target#!")
+		end
+	end
+	
+	-- Damage Backlash
+	if value > 0 and src and not src.dead and src.attr and src:attr("damage_backfire") then
+		local hurt = math.min(value, self.life) * src.damage_backfire / 100
+		if hurt > 0 then
+			src:takeHit(hurt, src)
 		end
 	end
 

@@ -919,12 +919,14 @@ newEntity{ base = "BASE_NPC_HORROR",
 	global_speed_base = 1.2,
 	combat_armor = 30, combat_def = 18,
 	is_akgishil = true,
+	can_spawn = 1,
 	
 	resolvers.drops{chance=100, nb=1, {defined="BLADE_RIFT"} },
 	
 	ai = "tactical", ai_state = { ai_move="move_complex", talent_in=2, ally_compassion=0 },
 		
-	on_melee_hit = {[DamageType.PHYSICALBLEED]=resolvers.mbonus(32, 5)},
+	on_melee_hit = {[DamageType.PHYSICALBLEED]=resolvers.mbonus(12, 5)},
+	melee_project = {[DamageType.PHYSICALBLEED]=resolvers.mbonus(32, 5)},
 	combat = { dam=resolvers.levelup(resolvers.rngavg(20,28), 1, 1.5), physspeed = 0.25,atk=resolvers.levelup(24, 1.2, 1.2), apr=4, dammod={wil=0.3, cun=0.15}, damtype=engine.DamageType.PHYSICALBLEED, },
 	--combat_physspeed = 4, --Crazy fast attack rate
 	
@@ -935,9 +937,12 @@ newEntity{ base = "BASE_NPC_HORROR",
 	end,
 
 	on_act = function(self)
-		if self.blades > 5 or not rng.percent(20) then return end
+		if not self:attr("can_spawn") then return end
+		if self.blades > 4 or not rng.percent(28/(self.blades+1)) then return end
+		self.can_spawn = nil
 		self.blades = self.blades + 1
-			self:forceUseTalent(self.T_ANIMATE_BLADE, {ignore_cd=true, force_level=1})
+		self:forceUseTalent(self.T_ANIMATE_BLADE, {ignore_cd=true, ignore_energy=true, force_level=1})
+		self.can_spawn = 1
 	end,
 	
 	resolvers.talents{
@@ -948,8 +953,8 @@ newEntity{ base = "BASE_NPC_HORROR",
 		[Talents.T_PSIONIC_PULL]={base=5, every=3, max=7},
 		[Talents.T_KINETIC_AURA]={base=4, every=3, max=8},
 		[Talents.T_KINETIC_SHIELD]={base=5, every=2, max=9},
-		[Talents.T_THERMAL_SHIELD]={base=5, every=2, max=9},
-		[Talents.T_CHARGED_SHIELD]={base=5, every=2, max=9},
+		[Talents.T_THERMAL_SHIELD]={base=3, every=2, max=9},
+		[Talents.T_CHARGED_SHIELD]={base=3, every=2, max=9},
 		[Talents.T_ABSORPTION_MASTERY]=6,
 		[Talents.T_KINETIC_LEECH]={base=3, every=3, max=5},
 		--TEMPORAL
@@ -971,7 +976,7 @@ newEntity{ base="BASE_NPC_HORROR", define_as = "ANIMATED_BLADE",
 	color = colors.GREY,
 	desc = [[Time seems to warp and bend around this floating weapon.]],
 	level_range = {30, nil}, exp_worth = 0,
-	max_life = 75, life_rating = 4,
+	max_life = 75, life_rating = 4, fixed_rating=true,
 	rank = 2,
 	no_breath = 1,
 	size_category = 2,
@@ -996,7 +1001,7 @@ newEntity{ base="BASE_NPC_HORROR", define_as = "ANIMATED_BLADE",
 	},
 	
 	on_added_to_level = function(self)
-		self:teleportRandom(self.x, self.y, 3)
+		self:teleportRandom(self.x, self.y, 7)
 		game.logSeen(self, "A rift opens, spawning a free floating blade!")
 		game.level.map:addEffect(self,
 			self.x, self.y, 3,
@@ -1060,7 +1065,7 @@ newEntity{ base="BASE_NPC_HORROR", define_as = "DISTORTED_BLADE",
 	},
 	
 	on_added_to_level = function(self)
-		self:teleportRandom(self.x, self.y, 3)
+		self:teleportRandom(self.x, self.y, 10)
 		game.logSeen(self, "A rift opens, a blade emerging. It does not look like the others.")
 		game.level.map:addEffect(self,
 			self.x, self.y, 5,
@@ -1081,7 +1086,7 @@ newEntity{ base="BASE_NPC_HORROR", define_as = "DISTORTED_BLADE",
 	end,
 
 	on_act = function(self)
-		self.paradox = self.paradox + 100
+		self.paradox = self.paradox + 20
 		if self.summoner and self.summoner:attr("dead") then
 			self:die()
 			game.logSeen(self, "#AQUAMARINE#With the horror's death the chaotic blade clatters to the ground!")
