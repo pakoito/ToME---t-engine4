@@ -25,6 +25,41 @@ local Map = require "engine.Map"
 local Level = require "engine.Level"
 local Combat = require "mod.class.interface.Combat"
 
+-- Design:  Temporary immobility in exchange for a large stat buff.
+newEffect{
+	name = "TREE_OF_LIFE", image = "shockbolt/object/artifact/tree_of_life.png",
+	desc = "You have taken root!",
+	long_desc = function(self, eff) return "You have taken root becoming one with nature.  Or at least the ground.  Your health, armor, and armor hardiness are improved but you cannot move." end,
+	type = "other",
+	subtype = { nature=true },
+	--status = "detrimental",
+	parameters = {},
+	on_gain = function(self, err) return "#LIGHT_BLUE##Target# takes root.", "+Pinned" end,
+	on_lose = function(self, err) return "#LIGHT_BLUE##Target# is no longer a badass tree.", "-Pinned" end,
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "never_move", 1)
+		self:effectTemporaryValue(eff, "max_life", 300)
+		self:effectTemporaryValue(eff, "combat_armor", 20)
+		self:effectTemporaryValue(eff, "combat_armor_hardiness", 20)
+		
+		self.replace_display = mod.class.Actor.new{
+			image="invis.png", 
+			add_mos = {{image = "npc/giant_treant_wrathroot.png", 
+			display_y = -1, 
+			display_h = 2}},
+        }
+		
+		self:removeAllMOs()
+		game.level.map:updateMap(self.x, self.y)
+
+	end,
+	deactivate = function(self, eff)
+		self.replace_display = nil
+		self:removeAllMOs()
+		game.level.map:updateMap(self.x, self.y)
+	end,
+}
+
 newEffect{
 	name = "INFUSION_COOLDOWN", image = "effects/infusion_cooldown.png",
 	desc = "Infusion Saturation",

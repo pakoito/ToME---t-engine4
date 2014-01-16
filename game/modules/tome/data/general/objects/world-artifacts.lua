@@ -26,6 +26,7 @@ for def, e in pairs(game.state:getWorldArtifacts()) do
 	print("Importing "..e.name.." into world artifacts")
 end
 
+
 -- This file describes artifacts not bound to a special location, they can be found anywhere
 newEntity{ base = "BASE_STAFF",
 	power_source = {arcane=true},
@@ -5388,6 +5389,7 @@ newEntity{ base = "BASE_TOOL_MISC", --Sorta Thanks Donkatsu!
 	material_level = 4,
 	special_desc = function(self) return "Heals all nearby living creatures by 5 points each turn." end,
 	sentient=true,
+	use_no_energy = true,
 	wielder = {
 		resists={[DamageType.BLIGHT] = 10, [DamageType.NATURE] = 10},
 		inc_damage={[DamageType.NATURE] = 10},
@@ -5411,6 +5413,7 @@ newEntity{ base = "BASE_TOOL_MISC", --Sorta Thanks Donkatsu!
 	end,
 	act = function(self)
 		self:useEnergy()
+		self:regenPower()
 		if not self.worn_by then return end
 		if game.level and not game.level:hasEntity(self.worn_by) and not self.worn_by.player then self.worn_by=nil return end
 		if self.worn_by:attr("dead") then return end
@@ -5418,6 +5421,13 @@ newEntity{ base = "BASE_TOOL_MISC", --Sorta Thanks Donkatsu!
 		local blast = {type="ball", range=0, radius=2, selffire=true}
 		who:project(blast, who.x, who.y, engine.DamageType.HEALING_NATURE, 5)
 	end,
+	max_power = 15, power_regen = 1,
+	use_power = { name = "take root increasing health, armor, and armor hardiness but rooting you in place", power = 10,
+		use = function(self, who)
+			who:setEffect(who.EFF_TREE_OF_LIFE, 4, {})
+			return {id=true, used=true}
+		end
+	},
 }
 
 newEntity{ base = "BASE_RING",
