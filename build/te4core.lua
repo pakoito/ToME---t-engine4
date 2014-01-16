@@ -37,7 +37,7 @@ project "TEngine"
 	if _OPTIONS.steam then
 		files { "../steamworks/luasteam.c", }
 	end
-	links { "physfs", "lua".._OPTIONS.lua, "fov", "luasocket", "luaprofiler", "lpeg", "tcodimport", "lxp", "expatstatic", "luamd5", "luazlib", "luabitop", "te4-bzip" }
+	links { "physfs", "lua".._OPTIONS.lua, "fov", "luasocket", "luaprofiler", "lpeg", "tcodimport", "lxp", "expatstatic", "luamd5", "luazlib", "luabitop", "te4-bzip", "te4-web" }
 	defines { "_DEFAULT_VIDEOMODE_FLAGS_='SDL_HWSURFACE|SDL_DOUBLEBUF'" }
 	defines { [[TENGINE_HOME_PATH='".t-engine"']], "TE4CORE_VERSION="..TE4CORE_VERSION }
 
@@ -438,11 +438,14 @@ project "te4-web"
 	language "C++"
 	targetname "te4-web"
 
-	libdirs {"/Test/awesomium_v1.7.2_sdk_linux64/bin/"}
-	includedirs {"/Test/awesomium_v1.7.2_sdk_linux64/include/"}
-	links { "awesomium-1-7", "lua".._OPTIONS.lua }
+	buildoptions{"-pthread -I/usr/include/gtk-2.0 -I/usr/lib64/gtk-2.0/include -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/pango-1.0 -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/libpng15 -I/usr/include/libdrm"}
+	libdirs {"/Test/cef_binary_3.1547.1406_linux/Debug/"}
+	includedirs {"/Test/cef_binary_3.1547.1406_linux/include/", "/Test/cef_binary_3.1547.1406_linux/", }
+	links { "cef", "lua".._OPTIONS.lua }
 	
-	files { "../src/web/*.cpp", }
+	files {
+		"../src/web/web.cpp",
+	}
 
 if _OPTIONS.steam then
 	dofile("../steamworks/build/steam-code.lua")

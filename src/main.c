@@ -121,6 +121,7 @@ void te4_web_load() {
 		te4_web_init = (void (*)(lua_State*)) SDL_LoadFunction(web, "te4_web_init");
 		te4_web_update = (void (*)()) SDL_LoadFunction(web, "te4_web_update");
 	}
+	else exit(1);
 }
 
 
