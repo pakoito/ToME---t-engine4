@@ -4075,6 +4075,7 @@ local sustainCallbackCheck = {
 	callbackOnMeleeAttack = "talents_on_melee_attack",
 	callbackOnMeleeHit = "talents_on_melee_hit",
 	callbackOnMeleeMiss = "talents_on_melee_miss",
+	callbackOnArcheryAttack = "talents_on_archery_attack",
 	callbackOnArcheryHit = "talents_on_archery_hit",
 	callbackOnArcheryMiss = "talents_on_archery_miss",
 }
