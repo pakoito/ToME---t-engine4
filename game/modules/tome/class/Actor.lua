@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -1791,6 +1791,19 @@ function _M:onTakeHit(value, src, death_note)
 		end
 	end
 
+	if value > 0 and self:attr("shadow_empathy") then
+		-- Absorb damage into a random shadow
+		local shadow = self:callTalent(self.T_SHADOW_EMPATHY, "getRandomShadow")
+		if shadow then
+			game:delayedLogMessage(self, src,  "displacement_shield"..(shadow.uid or ""), "#CRIMSON##Source# shares some damage with a shadow!")
+			local displaced = math.min(value * self.shadow_empathy / 100, shadow.life)
+			shadow:takeHit(displaced, src)
+			game:delayedLogDamage(src, self, 0, ("#PINK#(%d linked)#LAST#"):format(displaced), false)
+			game:delayedLogDamage(src, shadow, displaced, ("#PINK#%d linked#LAST#"):format(displaced), false)
+			value = value - displaced
+		end
+	end
+
 	if value > 0 and self:attr("displacement_shield") then
 		-- Absorb damage into the displacement shield
 		if rng.percent(self.displacement_shield_chance) then
@@ -1799,7 +1812,7 @@ function _M:onTakeHit(value, src, death_note)
 			self.displacement_shield_target:takeHit(displaced, src)
 			game:delayedLogDamage(src, self, 0, ("#CRIMSON#(%d teleported)#LAST#"):format(displaced), false)
 			game:delayedLogDamage(src, self.displacement_shield_target, displaced, ("#CRIMSON#%d teleported#LAST#"):format(displaced), false)
-			if displaced < self.displacement_shield then
+			if self.displacement_shield and displaced < self.displacement_shield then
 				self.displacement_shield = self.displacement_shield - displaced
 				value = 0
 			else
@@ -2149,6 +2162,14 @@ function _M:onTakeHit(value, src, death_note)
 			game.level.map:particleEmitter(self.x, self.y, 1, "teleport_in")
 		end
 	end
+	
+	-- Shadow decoy
+	if value >= self.life and self:isTalentActive(self.T_SHADOW_DECOY) then
+		local t = self:getTalentFromId(self.T_SHADOW_DECOY)
+		if t.onDie(self, t, value, src) then
+			value = 0
+		end
+	end
 
 	if value <= 0 then return 0 end
 	-- Vim leech
@@ -2203,6 +2224,23 @@ function _M:onTakeHit(value, src, death_note)
 			game:delayedLogMessage(src, self, "life_leech"..self.uid, "#CRIMSON##Source# leeches life from #Target#!")
 		end
 	end
+	
+	-- Life steal from weapon
+	if value > 0 and src and not src.dead and src.attr and src:attr("lifesteal") then
+		local leech = math.min(value, self.life) * src.lifesteal / 100
+		if leech > 0 then
+			src:heal(leech, self)
+			game:delayedLogMessage(src, self, "lifesteal"..self.uid, "#CRIMSON##Source# steals life from #Target#!")
+		end
+	end
+	
+	-- Damage Backlash
+	if value > 0 and src and not src.dead and src.attr and src:attr("damage_backfire") then
+		local hurt = math.min(value, self.life) * src.damage_backfire / 100
+		if hurt > 0 then
+			src:takeHit(hurt, src)
+		end
+	end
 
 	-- Flat damage cap
 	if self.flat_damage_cap and self.max_life and death_note and death_note.damtype then
@@ -2215,6 +2253,11 @@ function _M:onTakeHit(value, src, death_note)
 			value = value - ignored
 			print("[TAKE HIT] after flat damage cap", value)
 		end
+	end
+
+	local cb = {value=value}
+	if self:fireTalentCheck("callbackOnHit", cb, src, death_note) then
+		value = cb.value
 	end
 
 	local hd = {"Actor:takeHit", value=value, src=src, death_note=death_note}
@@ -4030,6 +4073,7 @@ function _M:preUseTalent(ab, silent, fake)
 end
 
 local sustainCallbackCheck = {
+	callbackOnHit = "talents_on_hit",
 	callbackOnAct = "talents_on_act",
 	callbackOnActBase = "talents_on_act_base",
 	callbackOnMove = "talents_on_move",
@@ -4037,6 +4081,7 @@ local sustainCallbackCheck = {
 	callbackOnMeleeAttack = "talents_on_melee_attack",
 	callbackOnMeleeHit = "talents_on_melee_hit",
 	callbackOnMeleeMiss = "talents_on_melee_miss",
+	callbackOnArcheryAttack = "talents_on_archery_attack",
 	callbackOnArcheryHit = "talents_on_archery_hit",
 	callbackOnArcheryMiss = "talents_on_archery_miss",
 }
@@ -4347,6 +4392,9 @@ function _M:breakStepUp()
 	end
 	if self:hasEffect(self.EFF_WILD_SPEED) then
 		self:removeEffect(self.EFF_WILD_SPEED)
+	end
+	if self:hasEffect(self.EFF_HUNTER_SPEED) then
+		self:removeEffect(self.EFF_HUNTER_SPEED)
 	end
 	if self:hasEffect(self.EFF_REFLEXIVE_DODGING) then
 		self:removeEffect(self.EFF_REFLEXIVE_DODGING)
@@ -4663,7 +4711,7 @@ function _M:canSeeNoCache(actor, def, def_pct)
 	-- ESP, see all, or only types/subtypes
 	if self.esp then
 		local esp = self.esp
-		local t, st = rawget(actor, "type") or "???", rawget(actor, "subtype") or "???"
+		local t, st = tostring(rawget(actor, "type") or "???"), tostring(rawget(actor, "subtype") or "???")
 		-- Type based ESP
 		if esp[t] and esp[t] > 0 then
 			return true, 100

@@ -1,5 +1,5 @@
 -- TE4 - T-Engine 4
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -245,7 +245,7 @@ end
 
 --- Remove the actor from the level, marking it as dead but not using the death functions
 function _M:disappear(src)
-	if game.level:hasEntity(self) then game.level:removeEntity(self) end
+	if game.level and game.level:hasEntity(self) then game.level:removeEntity(self) end
 	self.dead = true
 	self.changed = true
 end

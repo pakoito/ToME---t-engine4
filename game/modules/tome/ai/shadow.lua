@@ -1,5 +1,5 @@
 -- ToME - Tales of Middle-Earth
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -199,7 +199,7 @@ newAI("shadow", function(self)
 	self.summon_time = self.summon_time - 1
 
 	-- make sure no one has turned us against our summoner
-	if self:isMySummoner(self.ai_target.actor) then
+	if self.isMySummoner and self:isMySummoner(self.ai_target.actor) then
 		clearTarget(self)
 	end
 

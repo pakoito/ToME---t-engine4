@@ -1,5 +1,5 @@
 -- TE4 - T-Engine 4
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@
 -- darkgod@te4.org
 
 require "engine.class"
+local Dialog = require "engine.ui.Dialog"
 
 --- Module that handles multiplayer chats extensions, automatically loaded by engine.UserChat if found
 module(..., package.seeall, class.make)
@@ -64,6 +65,7 @@ function _M:event(e)
 
 		local color = colors.WHITE
 		if e.status == 'dev' then color = colors.CRIMSON
+		elseif e.status == 'mod' then color = colors.GOLD
 		elseif e.donator == "oneshot" then color = colors.LIGHT_GREEN
 		elseif e.donator == "recurring" then color = colors.ROYAL_BLUE end
 
@@ -73,6 +75,23 @@ function _M:event(e)
 			self.chat:addMessage("link", e.channel, e.login, {e.name, color}, "#ANTIQUE_WHITE#has linked a creature: #WHITE# "..data.name, {mode="tooltip", tooltip=data.desc})
 		elseif data.kind == "killer-link" then
 			self.chat:addMessage("death", e.channel, e.login, {e.name, color}, "#CRIMSON#"..data.msg.."#WHITE#", data.desc and {mode="tooltip", tooltip=data.desc} or nil)
+		elseif data.kind == "donator-update" and data.donated > 0 then
+			if data.donated <= 5 then world:gainAchievement("BRONZE_DONATOR", game:getPlayer(true))
+			elseif data.donated <= 15 then world:gainAchievement("SILVER_DONATOR", game:getPlayer(true))
+			elseif data.donated <= 30 then world:gainAchievement("GOLD_DONATOR", game:getPlayer(true))
+			elseif data.donated <= 60 then world:gainAchievement("STRALITE_DONATOR", game:getPlayer(true))
+			else world:gainAchievement("VORATUN_DONATOR", game:getPlayer(true))
+			end
+
+			local text = ([[#{bold}#Thank you#{normal}# for you donation, your support means a lot for the continued survival of this game.
+
+Your current donation total is #LIGHT_GREEN#%0.2f euro#WHITE# which equals to #ROYAL_BLUE#%d voratun coins to use on te4.org.
+Your Item's Vault has #TEAL#%d slots#WHITE#.
+
+Again, thank you, and enjoy Eyal!
+
+#{italic}#Your malevolent local god of darkness, #GOLD#DarkGod#{normal}#]]):format(data.donated, data.donated * 10, data.items_vault_slots)
+			Dialog:simpleLongPopup("Thank you", text, 600)
 		end
 	end
 end

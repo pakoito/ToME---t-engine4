@@ -1,5 +1,5 @@
 -- TE4 - T-Engine 4
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@
 
 require "engine.class"
 require "engine.dialogs.Chat"
+local slt2 = require "slt2"
 
 --- Handle chats between the player and NPCs
 module(..., package.seeall, class.make)
@@ -30,6 +31,7 @@ function _M:init(name, npc, player, data)
 	self.player = player
 	self.name = name
 	data = setmetatable(data or {}, {__index=_G})
+	self.data = data
 
 	local f, err = loadfile("/data/chats/"..name..".lua")
 	if not f and err then error(err) end
@@ -53,7 +55,7 @@ function _M:addChat(c)
 	self:triggerHook{"Chat:add", c=c}
 
 	assert(c.id, "no chat id")
-	assert(c.text, "no chat text")
+	assert(c.text or c.template, "no chat text or template")
 	assert(c.answers, "no chat answers")
 	self.chats[c.id] = c
 	print("[CHAT] loaded", c.id, c)
@@ -81,7 +83,12 @@ end
 
 --- Gets the chat with the given id
 function _M:get(id)
-	return self.chats[id]
+	local c = self.chats[id]
+	if c and c.template then
+		local tpl = slt2.loadstring(c.template)
+		c.text = slt2.render(tpl, {data=self.data, player=self.player, npc=self.npc})
+	end
+	return c
 end
 
 --- Replace some keywords in the given text

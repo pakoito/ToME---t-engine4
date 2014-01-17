@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -642,6 +642,15 @@ function _M:onLevelLoad(id, fct, data)
 	print("Registering on level load", id, fct, data)
 end
 
+function _M:onLevelLoadRun()
+	self.on_level_load_fcts = self.on_level_load_fcts or {}
+	print("Running on level loads", self.zone.short_name.."-"..self.level.level)
+	for i, fct in ipairs(self.on_level_load_fcts[self.zone.short_name.."-"..self.level.level] or {}) do
+		fct.fct(self.zone, self.level, fct.data)
+	end
+	self.on_level_load_fcts[self.zone.short_name.."-"..self.level.level] = nil
+end
+
 function _M:changeLevel(lev, zone, params)
 	params = params or {}
 	if not self.player.can_change_level then
@@ -832,12 +841,7 @@ function _M:changeLevelReal(lev, zone, params)
 	self.state:zoneCheckBackupGuardian()
 
 	-- Check if we must do some special things on load of this level
-	self.on_level_load_fcts = self.on_level_load_fcts or {}
-	print("Running on level loads", self.zone.short_name.."-"..self.level.level)
-	for i, fct in ipairs(self.on_level_load_fcts[self.zone.short_name.."-"..self.level.level] or {}) do
-		fct.fct(self.zone, self.level, fct.data)
-	end
-	self.on_level_load_fcts[self.zone.short_name.."-"..self.level.level] = nil
+	self:onLevelLoadRun()
 
 	-- Decay level ?
 	if self.level.last_turn and self.level.data.decay and self.level.last_turn + self.level.data.decay[1] * 10 < self.turn then
@@ -1292,6 +1296,7 @@ end
 
 -- log and collate combat damage for later display with displayDelayedLogDamage
 function _M:delayedLogDamage(src, target, dam, desc, crit)
+	if not target or not src then return end
 	src = src.__project_source or src -- assign message to indirect damage source if available
 	local visible, srcSeen, tgtSeen = self:logVisible(src, target)
 	if visible then -- only log damage the player is aware of
@@ -1502,7 +1507,8 @@ function _M:setupCommands()
 			print("===============")
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
---do return end
+			error("for johnny0, with love :)")
+do return end
 			local f, err = loadfile("/data/general/events/glimmerstone.lua")
 			print(f, err)
 			setfenv(f, setmetatable({level=self.level, zone=self.zone}, {__index=_G}))
@@ -1898,7 +1904,7 @@ function _M:setupMouse(reset)
 	local outline = Shader.new("objectsoutline").shad
 
 	self.mouse:registerZone(Map.display_x, Map.display_y, Map.viewport.width, Map.viewport.height, function(button, mx, my, xrel, yrel, bx, by, event, extra)
-		if not self.uiset:isLocked() then return end
+		if not self.uiset:isLocked() or not game.level then return end
 
 		local tmx, tmy = game.level.map:getMouseTile(mx, my)
 		if core.shader.allow("adv") and outline then

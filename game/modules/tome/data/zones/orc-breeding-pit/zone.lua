@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -62,7 +62,7 @@ return {
 			game:placeRandomLoreObject("BREEDING_HISTORY5")
 		end
 
-		for uid, e in pairs(level.entities) do e.faction="orc-pride" end
+		for uid, e in pairs(level.entities) do if e.faction ~= "neutral" then e.faction="orc-pride" end end
 	end,
 	on_enter = function(lev, old_lev, newzone)
 		if newzone and not game.level.shown_warning then

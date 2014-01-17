@@ -1,5 +1,5 @@
 -- TE4 - T-Engine 4
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -33,6 +33,7 @@ function _M:init()
 	Dialog.init(self, "Load Game", game.w * 0.8, game.h * 0.8)
 
 	self.c_compat = Checkbox.new{default=false, width=math.floor(self.iw / 3 - 40), title="Show older versions", on_change=function() self:switch() end}
+	self.c_force_addons = Checkbox.new{default=false, width=math.floor(self.iw / 3 - 40), title="Ignore unloadable addons"}
 	self.c_play = Button.new{text="  Play!  ", fct=function(text) self:playSave() end}
 	self.c_delete = Button.new{text="Delete", fct=function(text) self:deleteSave() end}
 	self.c_desc = Textzone.new{width=math.floor(self.iw / 3 * 2 - 10), height=self.ih - self.c_delete.h - 10, text=""}
@@ -56,14 +57,20 @@ function _M:init()
 	}
 
 	local sep = Separator.new{dir="horizontal", size=self.ih - 10}
-	self:loadUI{
+	local uis = {
 		{left=0, top=0, ui=self.c_tree},
 		{left=self.c_tree.w+sep.w, top=0, ui=self.c_desc},
 		{right=0, bottom=0, ui=self.c_delete, hidden=true},
 		{left=0, bottom=0, ui=self.c_play, hidden=true},
 		{left=self.c_tree.w + 5, top=5, ui=sep},
-		{left=self.c_tree.w - self.c_compat.w, bottom=0, ui=self.c_compat},
 	}
+	if __module_extra_info.show_ignore_addons_not_loading then
+		uis[#uis+1] = {left=self.c_tree.w - self.c_compat.w, bottom=self.c_force_addons.h, ui=self.c_compat}
+		uis[#uis+1] = {left=self.c_tree.w - self.c_force_addons.w, bottom=0, ui=self.c_force_addons}
+	else
+		uis[#uis+1] = {left=self.c_tree.w - self.c_compat.w, bottom=0, ui=self.c_compat}
+	end
+	self:loadUI(uis)
 	self:setFocus(self.c_tree)
 	self:setupUI(false, true)
 
@@ -162,12 +169,14 @@ end
 
 function _M:playSave()
 	if not self.save_sel then return end
-	if config.settings.cheat then
+	if config.settings.cheat and not self.save_sel.cheat then
 		Dialog:yesnoPopup("Developer Mode", "#LIGHT_RED#WARNING: #LAST#Loading a savefile while in developer mode will permanently invalidate it. Proceed?", function(ret) if not ret then
 			Module:instanciate(self.save_sel.mod, self.save_sel.base_name, false)
 		end end, "Cancel", "Load anyway", true)
 	else
-		Module:instanciate(self.save_sel.mod, self.save_sel.base_name, false)
+		local extra_info = nil
+		if self.c_force_addons.checked then extra_info = "ignore_addons_not_loading=true" end
+		Module:instanciate(self.save_sel.mod, self.save_sel.base_name, false, nil, extra_info)
 	end
 end
 

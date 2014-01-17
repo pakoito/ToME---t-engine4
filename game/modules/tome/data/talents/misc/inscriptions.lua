@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -258,7 +258,7 @@ newInscription{
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		return ([[Activate the infusion to increase three of your primary stats by %d for %d turns.
-		Also while Heroism is active, you will only die when reaching -%d life. However, when below 0 you cannot see how much life you have left, and you will die if you did not heal before the effect ends.
+		Also while Heroism is active, you will only die when reaching -%d life. However, when below 0 you cannot see how much life you have left.
 		It will always increase your three highest stats.]]):format(data.power + data.inc_stat, data.dur, data.die_at + data.inc_stat * 30)
 	end,
 	short_info = function(self, t)
@@ -298,7 +298,7 @@ newInscription{
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		return ([[Activate the infusion to spit a bolt of poison doing %0.2f nature damage per turns for 7 turns, and reducing the target's healing received by %d%%.
-		The sudden stream of natural forces also strips you of one random detrimental magical effect.]]):format(damDesc(self, DamageType.COLD, data.power + data.inc_stat) / 7, data.heal_factor)
+		The sudden stream of natural forces also strips you of one random detrimental magical effect.]]):format(damDesc(self, DamageType.NATURE, data.power + data.inc_stat) / 7, data.heal_factor)
 	end,
 	short_info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
@@ -480,7 +480,7 @@ newInscription{
 	end,
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		self:setEffect(self.EFF_DAMAGE_SHIELD, 5, {power=100+3*self:getMag(), reflect=100})
+		self:setEffect(self.EFF_DAMAGE_SHIELD, 5, {power=100+5*self:getMag(), reflect=100})
 		return true
 	end,
 	info = function(self, t)
@@ -490,7 +490,7 @@ The effect will scale with your magic stat.]]):format(100+1.5*self:getMag(), 5)
 	end,
 	short_info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		return ([[absorb and reflect %d for %d turns]]):format(100+3*self:getMag(), 5)
+		return ([[absorb and reflect %d for %d turns]]):format(100+5*self:getMag(), 5)
 	end,
 }
 

@@ -1,5 +1,5 @@
 -- TE4 - T-Engine 4
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -74,6 +74,11 @@ for i, file in ipairs(fs.list("/settings/")) do
 	end
 end
 
+if config.settings.force_safeboot then
+	util.removeForceSafeBoot()
+	core.display.forceSafeMode()
+end
+
 if core.display.safeMode() then
 	config.settings.aa_text = false
 	config.settings.fbo_active = false
@@ -100,7 +105,12 @@ end
 -- Move around
 if config.settings.window.pos then
 	core.display.setWindowPos(config.settings.window.pos.x, config.settings.window.pos.y)
+else
+	local px, py = core.display.windowPos()
+	config.settings.window = config.settings.window or {}
+	config.settings.window.pos = {x=px, y=py}
 end
+
 
 -- Audio
 core.sound.enable(config.settings.audio.enable)

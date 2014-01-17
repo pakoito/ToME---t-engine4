@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -391,7 +391,8 @@ newTalent{
 		return
 	end,
 	info = function(self, t)
-		return ([[You enter into a fighting trance, gaining 15%% resist all, losing 15 mindpower, but gaining 20 mental save. However, each turn after the fifth that this talent is active, there is a chance that you will be overcome and become confused.]])
+		return ([[You enter into a fighting trance, gaining 15%% resist all, losing 15 mindpower, but gaining 20 mental save. However, each turn after the fifth that this talent is active, there is a chance that you will be overcome and become confused.
+This does not take a turn to use.]])
 	end,
 }
 
@@ -462,5 +463,66 @@ newTalent{
 		local best = t.findBest(self, t) or {digspeed=100}
 		return ([[Dig/cut a tree/...
 		Digging takes %d turns (based on your currently best digger available).]]):format(best.digspeed)
+	end,
+}
+
+newTalent{
+	name = "Shivgoroth Form", short_name = "SHIV_LORD", image = "talents/shivgoroth_form.png",
+	type = {"spell/objects",1},
+	points = 5,
+	random_ego = "attack",
+	cooldown = 20,
+	tactical = { BUFF = 3, ATTACKAREA = { COLD = 0.5, PHYSICAL = 0.5 }, DISABLE = { knockback = 1 } },
+	direct_hit = true,
+	range = 10,
+	no_energy = true,
+	is_spell=true,
+	requires_target = true,
+	getDuration = function(self, t) return 4 + math.ceil(self:getTalentLevel(t)) end,
+	getPower = function(self, t) return util.bound(50 + self:combatTalentSpellDamage(t, 50, 450), 0, 500) / 500 end,
+	on_pre_use = function(self, t, silent) if self:attr("is_shivgoroth") then if not silent then game.logPlayer(self, "You are already a Shivgoroth!") end return false end return true end,
+	action = function(self, t)
+		self:setEffect(self.EFF_SHIVGOROTH_FORM_LORD, t.getDuration(self, t), {power=t.getPower(self, t), lvl=self:getTalentLevelRaw(t)})
+		game:playSoundNear(self, "talents/tidalwave")
+		return true
+	end,
+	info = function(self, t)
+		local power = t.getPower(self, t)
+		local dur = t.getDuration(self, t)
+		return ([[You absorb latent cold around you, turning into an ice elemental - a shivgoroth - for %d turns.
+		While transformed, you do not need to breathe, gain access to the Ice Storm talent at level %d, gain %d%% resistance to cuts and stuns, gain %d%% cold resistance, and all cold damage heals you for %d%% of the damage done.
+		The power will increase with your Spellpower.]]):
+		format(dur, self:getTalentLevelRaw(t), power * 100, power * 100 / 2, 50 + power * 100)
+	end,
+}
+
+newTalent{
+	name = "Mental Refresh",
+	type = {"misc/objects", 1},
+	points = 5,
+	equilibrium = 20,
+	cooldown = 50,
+	range = 10,
+	tactical = { BUFF = 2 },
+	action = function(self, t)
+		local nb = 3
+		local tids = {}
+		for tid, _ in pairs(self.talents_cd) do
+			local tt = self:getTalentFromId(tid)
+			if tt.type[1]:find("^wild%-gift/") or tt.type[1]:find("psionic/") or tt.type[1]:find("cursed/") then
+				tids[#tids+1] = tid
+			end
+		end
+		for i = 1, nb do
+			if #tids == 0 then break end
+			local tid = rng.tableRemove(tids)
+			self.talents_cd[tid] = self.talents_cd[tid] - 3
+		end
+		self.changed = true
+		game:playSoundNear(self, "talents/spell_generic2")
+		return true
+	end,
+	info = function(self, t)
+		return ([[Reset up to 3 wild gift, psionic or cursed talents.]])
 	end,
 }

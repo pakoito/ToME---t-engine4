@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@ uberTalent{
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
 			self.x, self.y, 4,
-			DamageType.WAVE, {dam={dam=100 + self:getCon() * 3, healfactor=0.5}, x=self.x, y=self.y, st=DamageType.DRAINLIFE, power=50 + self:getCon() * 2},
+			DamageType.BLOODSPRING, {dam={dam=100 + self:getCon() * 3, healfactor=0.5}, x=self.x, y=self.y, st=DamageType.DRAINLIFE, power=50 + self:getCon() * 2},
 			1,
 			5, nil,
 			engine.Entity.new{alpha=100, display='', color_br=200, color_bg=60, color_bb=20},
@@ -180,10 +180,11 @@ uberTalent{
 	end} },
 	on_learn = function(self, t)
 		self.max_life = self.max_life + 250
+		self.combat_armor_hardiness = self.combat_armor_hardiness + 20
 	end,
 	info = function(self, t)
 		return ([[Thanks to your newfound knowledge of corruption, you've learned some tricks for toughening your body... but only if you are healthy enough to withstand the strain from the changes.
-		Improves your life by 250, your Defense by %d, and your saves by %d as your natural toughness and reflexes are pushed beyond their normal limits.
+		Improves your life by 250, your Defense by %d, your Armour Hardiness by 20%% and your saves by %d as your natural toughness and reflexes are pushed beyond their normal limits.
 		Your saves and Defense will improve with your Constitution.]])
 		:format(self:getCon() / 3, self:getCon() / 3)
 	end,

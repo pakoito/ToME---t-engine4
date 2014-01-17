@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -478,7 +478,7 @@ newEffect{
 		if eff.timer > 100 then
 			eff.timer = eff.timer - 100
 
-			local distance = core.fov.distance(self.x, self.y, eff.src.x, eff.src.y)
+			local distance = self.x and eff.src.x and core.fov.distance(self.x, self.y, eff.src.x, eff.src.y) or 1000
 			if math.floor(distance) > 1 and distance <= eff.range then
 				-- in range but not adjacent
 
@@ -2950,5 +2950,39 @@ newEffect{
 	end,
 	activate = function(self, eff)
 		eff.power = 2
+	end,
+}
+
+newEffect{
+	name = "SHADOW_EMPATHY", image = "talents/shadow_empathy.png",
+	desc = "Shadow Empathy",
+	long_desc = function(self, eff) return ("%d%% of all damage is redirected to a random shadow."):format(eff.power) end,
+	type = "mental",
+	subtype = { mind=true, shield=true },
+	status = "beneficial",
+	parameters = { power=10 },
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "shadow_empathy", eff.power)
+		eff.particle = self:addParticles(Particles.new("darkness_power", 1))
+	end,
+	deactivate = function(self, eff)
+		self:removeParticles(eff.particle)		
+	end,
+}
+
+newEffect{
+	name = "SHADOW_DECOY", image = "talents/shadow_decoy.png",
+	desc = "Shadow Decoy",
+	long_desc = function(self, eff) return ("A random shadow absorbed a fatal blow for you, granting you a negative shield of %d."):format(eff.power) end,
+	type = "mental",
+	subtype = { mind=true, shield=true },
+	status = "beneficial",
+	parameters = { power=10 },
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "die_at", -eff.power)
+		eff.particle = self:addParticles(Particles.new("darkness_power", 1))
+	end,
+	deactivate = function(self, eff)
+		self:removeParticles(eff.particle)		
 	end,
 }

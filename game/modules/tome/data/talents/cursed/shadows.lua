@@ -1,5 +1,5 @@
 -- ToME - Tales of Middle-Earth
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -194,6 +194,7 @@ local function createShadow(self, level, tCallShadows, tShadowWarriors, tShadowM
 		exp_worth=0,
 		hate_regen = 1,
 		avoid_traps = 1,
+		is_doomed_shadow = true,
 
 		max_life = resolvers.rngavg(3,12), life_rating = 5,
 		stats = { -- affected by stat limits

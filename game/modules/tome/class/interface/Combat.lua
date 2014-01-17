@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -340,6 +340,12 @@ end
 function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	damtype = damtype or (weapon and weapon.damtype) or DamageType.PHYSICAL
 	mult = mult or 1
+	
+	--Life Steal
+	if weapon and weapon.lifesteal then
+		self:attr("lifesteal", weapon.lifesteal)
+		self:attr("silent_heal", 1)
+	end
 
 	local mode = "other"
 	if self:hasShield() then mode = "shield"
@@ -797,7 +803,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	end
 
 	-- Counter Attack!
-	if not hitted and not target.dead and not evaded and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:knowTalent(target.T_COUNTER_ATTACK) and self:isNear(target.x,target.y, 1) then --Adjacency check
+	if not hitted and not target.dead and target:knowTalent(target.T_COUNTER_ATTACK) and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:knowTalent(target.T_COUNTER_ATTACK) and self:isNear(target.x,target.y, 1) then --Adjacency check
 		local cadam = target:callTalent(target.T_COUNTER_ATTACK,"checkCounterAttack")
 		if cadam then
 			game.logSeen(self, "%s counters the attack!", target.name:capitalize())
@@ -812,7 +818,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	end
 
 	-- Defensive Throw!
-	if not hitted and not target.dead and not evaded and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:knowTalent(target.T_DEFENSIVE_THROW) and target:isNear(self.x,self.y,1) then
+	if not hitted and not target.dead and target:knowTalent(target.T_DEFENSIVE_THROW) and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:isNear(self.x,self.y,1) then
 		local t = target:getTalentFromId(target.T_DEFENSIVE_THROW)
 		t.do_throw(target, self, t)
 	end
@@ -925,6 +931,12 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 
 	self.turn_procs.weapon_type = nil
 	self.__global_accuracy_damage_bonus = nil
+	
+	--Life Steal
+	if weapon and weapon.lifesteal then
+		self:attr("lifesteal", -weapon.lifesteal)
+		self:attr("silent_heal", -1)
+	end
 
 	return self:combatSpeed(weapon), hitted
 end

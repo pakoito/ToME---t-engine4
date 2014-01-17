@@ -1,5 +1,5 @@
 -- TE4 - T-Engine 4
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -1374,6 +1374,7 @@ function _M:selectTile()
 		"player/ascii_player_exotic_01.png",
 		"player/ascii_player_shopper_01.png",
 	}
+	self:triggerHook{"Birther:donatorTiles", list=list}
 	local remove = Button.new{text="Use default tile", width=500, fct=function()
 		game:unregisterDialog(d)
 		self.has_custom_tile = nil

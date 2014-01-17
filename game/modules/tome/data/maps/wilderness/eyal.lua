@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -451,6 +451,7 @@ addSpot({36, 25}, "world-encounter", "lost-merchant")
 addSpot({37, 25}, "world-encounter", "lost-merchant")
 addSpot({35, 35}, "world-encounter", "noxious-caldera")
 addSpot({53, 5}, "world-encounter", "sludgenest")
+addSpot({162, 59}, "world-encounter", "orc-breeding-pits-spawn")
 
 -- addZone section
 addZone({1, 1, 78, 43}, "zonename", "Maj'Eyal")
@@ -471,6 +472,7 @@ addZone({37, 5, 50, 9}, "world-encounter", "merchant-quest")
 addZone({56, 8, 65, 13}, "world-encounter", "merchant-quest")
 addZone({69, 3, 77, 17}, "world-encounter", "merchant-quest")
 addZone({30, 28, 35, 33}, "world-encounter", "merchant-quest")
+addZone({145, 51, 167, 63}, "world-encounter", "orc-breeding-pits")
 
 -- ASCII map section
 return {

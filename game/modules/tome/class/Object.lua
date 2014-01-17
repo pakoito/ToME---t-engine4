@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -375,10 +375,13 @@ function _M:getTextualDesc(compare_with, use_actor)
 		local added = 0
 		local add = false
 		ret:add(text)
+		local outformatres
+		if type(outformat) == "function" then outformatres = outformat()
+		else outformatres = outformat:format(((item1[field] or 0) + (add_table[field] or 0)) * mod) end
 		if isinversed then
-			ret:add(((item1[field] or 0) + (add_table[field] or 0)) > 0 and {"color","RED"} or {"color","LIGHT_GREEN"}, outformat:format(((item1[field] or 0) + (add_table[field] or 0)) * mod), {"color", "LAST"})
+			ret:add(((item1[field] or 0) + (add_table[field] or 0)) > 0 and {"color","RED"} or {"color","LIGHT_GREEN"}, outformatres, {"color", "LAST"})
 		else
-			ret:add(((item1[field] or 0) + (add_table[field] or 0)) < 0 and {"color","RED"} or {"color","LIGHT_GREEN"}, outformat:format(((item1[field] or 0) + (add_table[field] or 0)) * mod), {"color", "LAST"})
+			ret:add(((item1[field] or 0) + (add_table[field] or 0)) < 0 and {"color","RED"} or {"color","LIGHT_GREEN"}, outformatres, {"color", "LAST"})
 		end
 		if item1[field] then
 			add = true
@@ -393,10 +396,13 @@ function _M:getTextualDesc(compare_with, use_actor)
 				added = added + 1
 				add = true
 				if items[i][infield][field] ~= (item1[field] or 0) then
+					local outformatres
+					if type(outformat) == "function" then outformatres = outformat()
+					else outformatres = outformat:format(((item1[field] or 0) - items[i][infield][field]) * mod) end
 					if isdiffinversed then
-						ret:add(items[i][infield][field] < (item1[field] or 0) and {"color","RED"} or {"color","LIGHT_GREEN"}, outformat:format(((item1[field] or 0) - items[i][infield][field]) * mod), {"color", "LAST"})
+						ret:add(items[i][infield][field] < (item1[field] or 0) and {"color","RED"} or {"color","LIGHT_GREEN"}, outformatres, {"color", "LAST"})
 					else
-						ret:add(items[i][infield][field] > (item1[field] or 0) and {"color","RED"} or {"color","LIGHT_GREEN"}, outformat:format(((item1[field] or 0) - items[i][infield][field]) * mod), {"color", "LAST"})
+						ret:add(items[i][infield][field] > (item1[field] or 0) and {"color","RED"} or {"color","LIGHT_GREEN"}, outformatres, {"color", "LAST"})
 					end
 				else
 					ret:add("-")
@@ -478,7 +484,7 @@ function _M:getTextualDesc(compare_with, use_actor)
 		end
 	end
 
-	local desc_combat = function(combat, compare_with, field, add_table)
+	local desc_combat = function(combat, compare_with, field, add_table, is_fake_add)
 		add_table = add_table or {}
 		add_table.dammod = add_table.dammod or {}
 		combat = combat[field] or {}
@@ -533,7 +539,7 @@ function _M:getTextualDesc(compare_with, use_actor)
 		compare_fields(combat, compare_with, field, "atk", "%+d", "Accuracy: ", 1, false, false, add_table)
 		compare_fields(combat, compare_with, field, "apr", "%+d", "Armour Penetration: ", 1, false, false, add_table)
 		compare_fields(combat, compare_with, field, "physcrit", "%+.1f%%", "Physical crit. chance: ", 1, false, false, add_table)
-		compare_fields(combat, compare_with, field, "physspeed", "%.0f%%", "Attack speed: ", 100, false, true, add_table)
+		compare_fields(combat, compare_with, field, "physspeed", function() return ("%.0f%%"):format(100/((is_fake_add and 1 or 0) + (combat.physspeed or 1))) end, "Attack speed: ", 100, false, true, add_table)
 
 		compare_fields(combat, compare_with, field, "block", "%+d", "Block value: ", 1, false, false, add_table)
 
@@ -651,6 +657,8 @@ function _M:getTextualDesc(compare_with, use_actor)
 		compare_fields(combat, compare_with, field, "travel_speed", "%+d%%", "Travel speed: ", 100, false, false, add_table)
 
 		compare_fields(combat, compare_with, field, "phasing", "%+d%%", "Damage Shield penetration (this weapon only): ", 1, false, false, add_table)
+		
+		compare_fields(combat, compare_with, field, "lifesteal", "%+d%%", "Lifesteal (this weapon only): ", 1, false, false, add_table)
 
 		if combat.tg_type and combat.tg_type == "beam" then
 			desc:add({"color","YELLOW"}, ("Shots beam through all targets."), {"color","LAST"}, true)
@@ -1016,6 +1024,7 @@ function _M:getTextualDesc(compare_with, use_actor)
 		compare_fields(w, compare_with, field, "die_at", "%+.2f life", "Only die when reaching: ", 1, true, true)
 		compare_fields(w, compare_with, field, "max_life", "%+.2f", "Maximum life: ")
 		compare_fields(w, compare_with, field, "max_mana", "%+.2f", "Maximum mana: ")
+		compare_fields(w, compare_with, field, "max_soul", "%+.2f", "Maximum souls: ")
 		compare_fields(w, compare_with, field, "max_stamina", "%+.2f", "Maximum stamina: ")
 		compare_fields(w, compare_with, field, "max_hate", "%+.2f", "Maximum hate: ")
 		compare_fields(w, compare_with, field, "max_psi", "%+.2f", "Maximum psi: ")
@@ -1057,6 +1066,7 @@ function _M:getTextualDesc(compare_with, use_actor)
 		compare_fields(w, compare_with, field, "damage_shield_penetrate", "%+d%%", "Damage Shield penetration: ")
 
 		compare_fields(w, compare_with, field, "projectile_evasion", "%+d%%", "Deflect projectiles away: ")
+		compare_fields(w, compare_with, field, "evasion", "%+d%%", "Chance to avoid attacks: ")
 
 		compare_fields(w, compare_with, field, "defense_on_teleport", "%+d", "Defense after a teleport: ")
 		compare_fields(w, compare_with, field, "resist_all_on_teleport", "%+d%%", "Resist all after a teleport: ")
@@ -1068,10 +1078,15 @@ function _M:getTextualDesc(compare_with, use_actor)
 
 		compare_fields(w, compare_with, field, "nature_summon_max", "%+d", "Max wilder summons: ")
 		compare_fields(w, compare_with, field, "nature_summon_regen", "%+.2f", "Life regen bonus (wilder-summons): ")
+		
+		compare_fields(w, compare_with, field, "shield_dur", "%+d", "Damage Shield Duration: ")
+		compare_fields(w, compare_with, field, "shield_factor", "%+d%%", "Damage Shield Power: ")
 
 		compare_fields(w, compare_with, field, "slow_projectiles", "%+d%%", "Slows Projectiles: ")
 
 		compare_fields(w, compare_with, field, "paradox_reduce_fails", "%+d", "Reduces paradox failures(equivalent to willpower): ")
+
+		compare_fields(w, compare_with, field, "damage_backfire", "%+d%%", "Damage Backlash: ", nil, true)
 
 		if w.undead then
 			desc:add("The wearer is treated as an undead.", true)
@@ -1127,7 +1142,7 @@ function _M:getTextualDesc(compare_with, use_actor)
 		if (w and w.combat or can_combat_unarmed) and (use_actor:knowTalent(use_actor.T_EMPTY_HAND) or use_actor:attr("show_gloves_combat")) then
 			desc:add({"color","YELLOW"}, "When used to modify unarmed attacks:", {"color", "LAST"}, true)
 			compare_tab = { dam=1, atk=1, apr=0, physcrit=0, physspeed =0.6, dammod={str=1}, damrange=1.1 }
-			desc_combat(w, compare_unarmed, "combat", compare_tab)
+			desc_combat(w, compare_unarmed, "combat", compare_tab, true)
 		end
 	end
 	local can_combat = false
@@ -1222,11 +1237,13 @@ function _M:getTextualDesc(compare_with, use_actor)
 	if self.inscription_data and self.inscription_talent then
 		use_actor.__inscription_data_fake = self.inscription_data
 		local t = self:getTalentFromId("T_"..self.inscription_talent.."_1")
-		local tdesc = use_actor:getTalentFullDescription(t)
-		use_actor.__inscription_data_fake = nil
-		desc:add({"color","YELLOW"}, "When inscribed on your body:", {"color", "LAST"}, true)
-		desc:merge(tdesc)
-		desc:add(true)
+		if t then
+			local tdesc = use_actor:getTalentFullDescription(t)
+			use_actor.__inscription_data_fake = nil
+			desc:add({"color","YELLOW"}, "When inscribed on your body:", {"color", "LAST"}, true)
+			desc:merge(tdesc)
+			desc:add(true)
+		end
 	end
 
 	local talents = {}
@@ -1308,7 +1325,7 @@ function _M:getUseDesc(use_actor)
 	local ret = tstring{}
 	local reduce = 100 - util.bound(use_actor:attr("use_object_cooldown_reduce") or 0, 0, 100)
 	local usepower = function(power) return math.ceil(power * reduce / 100) end
-	if self.use_power then
+	if self.use_power and not self.use_power.hidden then
 		if self.show_charges then
 			ret = tstring{{"color","YELLOW"}, ("It can be used to %s, with %d charges out of %d."):format(util.getval(self.use_power.name, self), math.floor(self.power / usepower(self.use_power.power)), math.floor(self.max_power / usepower(self.use_power.power))), {"color","LAST"}}
 		elseif self.talent_cooldown then
@@ -1320,13 +1337,15 @@ function _M:getUseDesc(use_actor)
 		ret = tstring{{"color","YELLOW"}, ("It can be used to %s."):format(self.use_simple.name), {"color","LAST"}}
 	elseif self.use_talent then
 		local t = use_actor:getTalentFromId(self.use_talent.id)
-		local desc = use_actor:getTalentFullDescription(t, nil, {force_level=self.use_talent.level, ignore_cd=true, ignore_ressources=true, ignore_use_time=true, ignore_mode=true, custom=self.use_talent.power and tstring{{"color",0x6f,0xff,0x83}, "Power cost: ", {"color",0x7f,0xff,0xd4},("%d out of %d/%d."):format(usepower(self.use_talent.power), self.power, self.max_power)}})
-		if self.talent_cooldown then
-			ret = tstring{{"color","YELLOW"}, "It can be used to activate talent ", t.name,", placing all other charms into a ", tostring(math.floor(usepower(self.use_talent.power))) ," cooldown :", {"color","LAST"}, true}
-		else
-			ret = tstring{{"color","YELLOW"}, "It can be used to activate talent ", t.name," (costing ", tostring(math.floor(usepower(self.use_talent.power))), " power out of ", tostring(math.floor(self.power)), "/", tostring(math.floor(self.max_power)), ") :", {"color","LAST"}, true}
+		if t then
+			local desc = use_actor:getTalentFullDescription(t, nil, {force_level=self.use_talent.level, ignore_cd=true, ignore_ressources=true, ignore_use_time=true, ignore_mode=true, custom=self.use_talent.power and tstring{{"color",0x6f,0xff,0x83}, "Power cost: ", {"color",0x7f,0xff,0xd4},("%d out of %d/%d."):format(usepower(self.use_talent.power), self.power, self.max_power)}})
+			if self.talent_cooldown then
+				ret = tstring{{"color","YELLOW"}, "It can be used to activate talent ", t.name,", placing all other charms into a ", tostring(math.floor(usepower(self.use_talent.power))) ," cooldown :", {"color","LAST"}, true}
+			else
+				ret = tstring{{"color","YELLOW"}, "It can be used to activate talent ", t.name," (costing ", tostring(math.floor(usepower(self.use_talent.power))), " power out of ", tostring(math.floor(self.power)), "/", tostring(math.floor(self.max_power)), ") :", {"color","LAST"}, true}
+			end
+			ret:merge(desc)
 		end
-		ret:merge(desc)
 	end
 
 	if self.charm_on_use then

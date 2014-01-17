@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -54,6 +54,7 @@ newEntity{ base = "BASE_NPC_ORC_SUMMON",
 	level_range = {25, nil}, exp_worth = 0,
 	resolvers.generic(function(e) if rng.percent(50) then e.female = true end end),
 	rarity = 3,
+	faction = "neutral", hard_faction = "neutral",
 	max_life = resolvers.rngavg(30,50), life_rating = 4,
 	rank = 2,
 	movement_speed = 0.7,
@@ -68,6 +69,7 @@ newEntity{ base = "BASE_NPC_ORC",
 	resolvers.generic(function(e) if rng.percent(50) then e.female = true end end),
 	level_range = {25, nil}, exp_worth = 0,
 	rarity = 3,
+	faction = "neutral", hard_faction = "neutral",
 	max_life = resolvers.rngavg(30,50), life_rating = 9, life_regen = 7,
 	movement_speed = 1.3,
 	size_category = 1,
@@ -100,7 +102,8 @@ newEntity{ base = "BASE_NPC_ORC",
 newEntity{ base = "BASE_NPC_ORC",
 	name = "orc mother", color=colors.YELLOW,
 	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/humanoid_orc_orc_mother.png", display_h=2, display_y=-1}}},
-	desc = [[This giant, bloated form towers above you. Mucus and slime ooze from every orifice, dripping onto the cavern floor. Orc children fight over the right to feed from her distended teats whilst small babies are regularly pushed out from her many pulsating vulvas. The sight and the smell make you retch.]],
+	desc = [[This giant, bloated form towers above you. Mucus and slime ooze from every orifice, dripping onto the cavern floor. Orc children fight over the right to feed from her distended teats whilst small babies are regularly emerge from folds of flesh. The sight and the smell make you retch.
+Here stands a tremendous form almost the size of a dragon. Bloated skin rises in thick folds, seeping viscous slime from its wide pores. Hundreds of hanging teats feed a small army of squabbling, fighting young orcs - only the toughest of them are able to gain the precious nutrients to grow stronger, the weaker ones left to wither on the mouldy floor. At the top of this towering hulk is a shrivelled head coated in long tangled hair. Dazed eyes peer out with a mixture of sadness and pain, but as they fix on you they turn to anger, the creature's face contorted with the fierce desire to protect its young.]],
 	level_range = {25, nil}, exp_worth = 1,
 	female = true,
 	rarity = 8,
@@ -115,7 +118,7 @@ newEntity{ base = "BASE_NPC_ORC",
 	on_melee_hit = {[DamageType.SLIME] = resolvers.rngrange(10, 20)},
 
 	summon = {
-		{type="humanoid", subtype="orc", name="orc baby", number=1, hasxp=false},
+		{type="humanoid", subtype="orc", name="orc baby", number=1, hasxp=false, no_summoner_set=true},
 	},
 
 --	ai = "tactical",
@@ -132,7 +135,8 @@ newEntity{ base = "BASE_NPC_ORC",
 newEntity{ base="BASE_NPC_ORC", define_as = "GREATMOTHER",
 	name = "Orc Greatmother", color=colors.VIOLET, unique = true,
 	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/humanoid_orc_orc_greatmother.png", display_h=2, display_y=-1}}},
-	desc = [[Here stands a tremendous form almost the size of a dragon.  Bloated skin rises in thick folds, seeping viscous slime from its wide pores.  Hundreds of hanging teats feed a small army of squabbling, fighting young orcs - only the toughest of them are able to gain the precious nutrients to grow stronger, the weaker ones left to wither on the mouldy floor.  Dozens of gaping vulvae squelch and pulsate, pushing out new young with alarming rapidity.  At the top of this towering hulk is a shrivelled head coated in long tangled hair.  Dazed eyes peer out with a mixture of sadness and pain, but as they fix on you they turn to anger, the creature's face contorted with the fierce desire to protect its young.]],
+	desc = [[This giant, bloated form towers above you. Mucus and slime ooze from every orifice, dripping onto the cavern floor. Orc children fight over the right to feed from her distended teats whilst small babies are regularly emerge from folds of flesh. The sight and the smell make you retch.
+Here stands a tremendous form almost the size of a dragon. Bloated skin rises in thick folds, seeping viscous slime from its wide pores. Hundreds of hanging teats feed a small army of squabbling, fighting young orcs - only the toughest of them are able to gain the precious nutrients to grow stronger, the weaker ones left to wither on the mouldy floor. At the top of this towering hulk is a shrivelled head coated in long tangled hair. Dazed eyes peer out with a mixture of sadness and pain, but as they fix on you they turn to anger, the creature's face contorted with the fierce desire to protect its young.]],
 	killer_message = "and given to the children as a plaything",
 	level_range = {40, nil}, exp_worth = 1,
 	female = true,
@@ -159,7 +163,7 @@ newEntity{ base="BASE_NPC_ORC", define_as = "GREATMOTHER",
 		{type="humanoid", subtype="orc", name="orc baby", number=4, hasxp=false},
 	},
 	summon = {
-		{type="humanoid", subtype="orc", name="orc baby", number=1, hasxp=false},
+		{type="humanoid", subtype="orc", name="orc baby", number=1, hasxp=false, no_summoner_set=true},
 	},
 
 	resolvers.talents{
@@ -177,5 +181,7 @@ newEntity{ base="BASE_NPC_ORC", define_as = "GREATMOTHER",
 		game.log("#PURPLE#As the orc greatmother falls you realize you have dealt a crippling blow to the orcs.")
 		game.state:eastPatrolsReduce()
 		world:gainAchievement("GREATMOTHER_DEAD", who)
+		who:setQuestStatus("orc-breeding-pits", engine.Quest.COMPLETED, "genocide")
+		who:setQuestStatus("orc-breeding-pits", engine.Quest.COMPLETED)
 	end,
 }

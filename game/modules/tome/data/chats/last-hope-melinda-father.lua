@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -20,7 +20,17 @@ local q = game.player:hasQuest("kryl-feijan-escape")
 local qs = game.player:hasQuest("shertul-fortress")
 local ql = game.player:hasQuest("love-melinda")
 
-if not q or not q:isStatus(q.DONE) then
+if ql and ql:isStatus(q.COMPLETED, "death-beach") then
+
+newChat{ id="welcome",
+	text = [[#LIGHT_GREEN#*A man talks to you from inside, the door half open. His voice is sad.*#WHITE#
+Sorry, the store is closed.]],
+	answers = {
+		{"[leave]"},
+	}
+}
+
+elseif not q or not q:isStatus(q.DONE) then
 
 newChat{ id="welcome",
 	text = [[#LIGHT_GREEN#*A man talks to you from inside, the door half open. His voice is sad.*#WHITE#

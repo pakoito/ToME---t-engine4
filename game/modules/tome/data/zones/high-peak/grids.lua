@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -189,6 +189,8 @@ newEntity{
 	always_remember = true,
 	show_tooltip = true,
 	desc = [[This portal seems to connect to an other part of this level.]],
+	change_level_check = function() game.bignews:say(60, "#GOLD#This portal looks like it reacts only to the Orb of Many Ways.") return true end,
+	change_level = 1,
 	orb_portal = {
 		nothing = true,
 		message = "#VIOLET#You enter the swirling portal and appear in a large room with other portals and the two wizards.",

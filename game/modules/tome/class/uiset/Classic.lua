@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -409,7 +409,9 @@ function _M:setupMouse(mouse)
 		local str = tstring{{"color","GOLD"}, {"font","bold"}, user.name, {"color","LAST"}, {"font","normal"}, true}
 		if user.donator and user.donator ~= "none" then
 			local text, color = "Donator", colors.WHITE
-			if user.donator == "oneshot" then text, color = "Donator", colors.LIGHT_GREEN
+			if user.status and user.status == 'dev' then text, color = "Developer", colors.CRIMSON
+			elseif user.status and user.status == 'mod' then text, color = "Moderator / Helper", colors.GOLD
+			elseif user.donator == "oneshot" then text, color = "Donator", colors.LIGHT_GREEN
 			elseif user.donator == "recurring" then text, color = "Recurring Donator", colors.LIGHT_BLUE end
 			str:add({"color",unpack(colors.simple(color))}, text, {"color", "LAST"}, true)
 		end

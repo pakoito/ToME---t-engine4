@@ -1,5 +1,5 @@
 -- ToME - Tales of Middle-Earth
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -542,7 +542,8 @@ newEntity{ base = "BASE_WARAXE",
 		physcrit = 10,
 		dammod = {str=1},
 		damrange = 1.2,
-		melee_project={[DamageType.BLIGHT] = 20},
+		burst_on_hit={[DamageType.BLIGHT] = 25},
+		lifesteal=5, --You can counter the life regen by fighting, muhuhahah
 	},
 	wielder = {
 		life_regen = -0.3,
@@ -600,10 +601,11 @@ newEntity{ base = "BASE_AMULET",
 	material_level = 5,
 	wielder = {
 		see_invisible = 20,
-		silence_immune = 0.8,
+		silence_immune = 1,
 		combat_spellpower = 9,
 		combat_spellcrit = 4,
 		max_mana = 50,
+		combat_spellspeed = 0.15,
 		max_vim = 50,
 	},
 }
@@ -755,6 +757,8 @@ newEntity{ base = "BASE_GREATMAUL",
 
 	wielder = {
 	},
+	max_power = 20, power_regen = 1,
+	use_talent = { id = Talents.T_SUNDER_ARMOUR, level = 2, power = 20 },
 }
 
 
@@ -825,7 +829,7 @@ newEntity{ base = "BASE_WHIP",
 
 newEntity{ base = "BASE_GREATSWORD",
 	power_source = {technique=true},
-	define_as = "MURDERBLADE", rarity=false,
+	define_as = "MURDERBLADE",
 	name = "Warmaster Gnarg's Murderblade", unique=true, image="object/artifact/warmaster_gnargs_murderblade.png",
 	unided_name = "blood-etched greatsword", color=colors.CRIMSON,
 	desc = [[A blood-etched greatsword, it has seen many foes. From the inside.]],
@@ -839,7 +843,7 @@ newEntity{ base = "BASE_GREATSWORD",
 		apr = 19,
 		physcrit = 10,
 		dammod = {str=1.2},
-		special_on_hit = {desc="10% chance to send the wielder into a killing frenzy", fct=function(combat, who)
+		special_on_hit = {desc="10% chance to send the wielder into a killing frenzy", on_kill=1, fct=function(combat, who)
 			if not rng.percent(10) then return end
 			who:setEffect(who.EFF_FRENZY, 3, {crit=12, power=0.3, dieat=0.25})
 		end},
@@ -903,9 +907,10 @@ newEntity{ base = "BASE_GLOVES", define_as = "FLAMEWROUGHT",
 	cost = 50,
 	material_level = 1,
 	wielder = {
-		inc_stats = { [Stats.STAT_WIL] = 3, },
+		inc_stats = { [Stats.STAT_WIL] = 3, [Stats.STAT_CUN] = 2,},
 		resists = { [DamageType.FIRE]= 10, },
 		inc_damage = { [DamageType.FIRE]= 5, },
+		combat_mindpower=2,
 		combat_armor = 2,
 		combat = {
 			dam = 5,
@@ -918,7 +923,7 @@ newEntity{ base = "BASE_GLOVES", define_as = "FLAMEWROUGHT",
 		},
 	},
 	max_power = 24, power_regen = 1,
-	use_talent = { id = Talents.T_RITCH_FLAMESPITTER_BOLT, level = 2, power = 6 },
+	use_talent = { id = Talents.T_RITCH_FLAMESPITTER_BOLT, level = 3, power = 8 },
 }
 
 -- The crystal set
@@ -1109,12 +1114,13 @@ newEntity{ base = "BASE_WARAXE",
 	rarity = 220,
 	cost = 50,
 	combat = {
-		dam = 16,
+		dam = 18,
 		apr = 3,
 		physcrit = 12,
 		dammod = {str=1},
 		talent_on_hit = { [Talents.T_GREATER_WEAPON_FOCUS] = {level=2, chance=10} },
-		melee_project={[DamageType.DRAINLIFE] = 10},
+		lifesteal = 10,
+		convert_damage = {[DamageType.BLIGHT] = 25},
 	},
 	wielder = {
 		inc_damage = { [DamageType.BLIGHT] = 8 },
@@ -1333,7 +1339,7 @@ It has been kept somewhat intact with layers of salt and clay, but in spite of t
 	metallic = false,
 	sentient = true,
 	cooldown=0,
-	special_desc = function(self) return "Detects traps.\nGives a 25% to shrug off up to three stuns, pins, and dazes each turn, with a 10 turn cooldown." end,
+	special_desc = function(self) return "Detects traps.\nGives a 25% chance to shrug off up to three stuns, pins, and dazes each turn, with a 10 turn cooldown." end,
 	wielder = {
 		inc_stats = { [Stats.STAT_LCK] = 5, },
 		combat_def = 5,
@@ -1560,7 +1566,7 @@ newEntity{ base = "BASE_GREATMAUL", define_as="ROTTING_MAUL",
 		dammod = {str=1.4},
 		convert_damage = {[DamageType.BLIGHT] = 20},
 		melee_project={[DamageType.CORRUPTED_BLOOD] = 30},
-		special_on_hit = {desc="25% to damage nearby creatures", on_kill=true, fct=function(combat, who, target)
+		special_on_hit = {desc="25% chance to damage nearby creatures", on_kill=1, fct=function(combat, who, target)
 			if rng.percent(25) then
 			local o, item, inven_id = who:findInAllInventoriesBy("define_as", "ROTTING_MAUL")
 				local dam = rng.avg(1,2) * (70+ who:getStr() * 1.8)
@@ -1646,13 +1652,14 @@ newEntity{ base = "BASE_RING",
 	material_level = 5,
 	wielder = {
 		max_mana = 35,
-		combat_spellresist = 18,
-		combat_spellpower = 5,
+		combat_spellresist = 10,
+		combat_spellpower = 10,
+		combat_spellcrit=5,
 		silence_immune = 0.3,
 		talent_cd_reduction={
 			[Talents.T_AETHER_AVATAR]=4,
 		},
-		inc_damage={ [DamageType.ARCANE] = 15, [DamageType.PHYSICAL] = 7, [DamageType.FIRE] = 7, [DamageType.COLD] = 7, [DamageType.LIGHTNING] = 7},
+		inc_damage={ [DamageType.ARCANE] = 15, [DamageType.PHYSICAL] = 4, [DamageType.FIRE] = 4, [DamageType.COLD] = 4, [DamageType.LIGHTNING] = 4, all=5},
 		resists={ [DamageType.ARCANE] = 15,},
 		resists_pen={ [DamageType.ARCANE] = 10,},
 		melee_project={ [DamageType.ARCANE] = 15,},
@@ -1711,12 +1718,15 @@ newEntity{ base = "BASE_TOOL_MISC", image="object/temporal_instability.png",
 	level_range = {30, 50},
 	rarity = 500,
 	cost = 500,
-	material_level = 4,
+	material_level = 5,
 	metallic = false,
+	use_no_energy = true,
+	special_desc = function(self) return "This item does not take a turn to use." end,
 	wielder = {
-		combat_spellpower=5,
-		combat_mindpower=5,
+		combat_spellpower=10,
+		combat_mindpower=10,
 		on_melee_hit = {[DamageType.PHYSICALBLEED]=25},
+		melee_project = {[DamageType.PHYSICALBLEED]=25},
 		resists={
 			[DamageType.TEMPORAL] 	= 15,
 		},
@@ -1725,8 +1735,8 @@ newEntity{ base = "BASE_TOOL_MISC", image="object/temporal_instability.png",
 			[DamageType.PHYSICAL] 	= 5,
 		},
 	},
-	max_power = 40, power_regen = 1,
-	use_talent = { id = Talents.T_ANIMATE_BLADE, level = 1, power = 40 },
+	max_power = 25, power_regen = 1,
+	use_talent = { id = Talents.T_ANIMATE_BLADE, level = 1, power = 25 },
 }
 
 newEntity{ base = "BASE_LONGSWORD", define_as = "RIFT_SWORD",
@@ -1744,10 +1754,9 @@ newEntity{ base = "BASE_LONGSWORD", define_as = "RIFT_SWORD",
 		dam = 40,
 		apr = 10,
 		physcrit = 8,
-		dammod = {str=0.8,mag=0.2},
+		dammod = {str=0.9,mag=0.2},
 		convert_damage={[DamageType.TEMPORAL] = 20},
-		special_on_hit = {desc="20% to slow target", fct=function(combat, who, target)
-			if not rng.percent(20) then return end
+		special_on_hit = {desc="inflicts bonus temporal damage and slows target", fct=function(combat, who, target)
 			local dam = (20 + who:getMag()/2)
 			local slow = (10 + who:getMag()/5)/100
 			who:project({type="hit", range=1}, target.x, target.y, engine.DamageType.CHRONOSLOW, {dam=dam, slow=slow})
@@ -1881,7 +1890,7 @@ newEntity{ base = "BASE_TRIDENT",
 	power_source = {arcane=true},
 	define_as = "TRIDENT_STREAM",
 	unided_name = "ornate trident",
-	name = "The River's Fury", unique=true, image = "object/artifact/trident_of_the_tides.png",
+	name = "The River's Fury", unique=true, image = "object/artifact/the_rivers_fury.png",
 	desc = [[This gorgeous and ornate trident was wielded by Lady Nashva, and when you hold it, you can faintly hear the roar of a rushing river.]],
 	require = { stat = { str=12 }, },
 	level_range = {1, 10},
@@ -1938,7 +1947,7 @@ newEntity{ base = "BASE_KNIFE",
 newEntity{ base = "BASE_GLOVES", define_as = "VARSHA_CLAW",
 	power_source = {nature=true},
 	unique = true,
-	name = "Wyrmbreath", color = colors.RED, image = "object/artifact/gloves_flamewrought.png",
+	name = "Wyrmbreath", color = colors.RED, image = "object/artifact/wyrmbreath.png",
 	unided_name = "clawed dragon-scale gloves",
 	desc = [[These dragon scale gloves are tipped with the claws and teeth of a vicious Wyrm. The gloves are warm to the touch.]],
 	level_range = {12, 22},
@@ -1971,16 +1980,15 @@ newEntity{ base = "BASE_TOOL_MISC", define_as = "EYE_OF_THE_DREAMING_ONE",
 	unided_name = "translucent sphere",
 	color = colors.YELLOW,
 	level_range = {1, 10},
-	image = "npc/seed_of_dreams.png",
+	image = "object/artifact/eye_of_the_dreaming_one_new.png",
 	desc = [[This ethereal eye stares eternally, as if seeing things that do not truly exist.]],
 	cost = 320,
 	material_level = 1,
 	wielder = {
-		resists={[DamageType.MIND] = 8},
-		inc_damage={[DamageType.MIND] = 10},
+		combat_mindpower=5,
 		sleep_immune=1,
 		combat_mentalresist = 10,
-		inc_stats = {[Stats.STAT_WIL] = 4,},
+		inc_stats = {[Stats.STAT_WIL] = 5,},
 	},
 	max_power = 25, power_regen = 1,
 	use_talent = { id = Talents.T_SLEEP, level = 3, power = 20 },

@@ -1,6 +1,6 @@
 /*
     TE4 - T-Engine 4
-    Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+    Copyright (C) 2009 - 2014 Nicolas Casalini
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -50,12 +50,14 @@
 #define WIDTH 800
 #define HEIGHT 600
 #define DEFAULT_IDLE_FPS (2)
+#define WINDOW_ICON_PATH ("/engines/default/data/gfx/te4-icon.png")
 
 int start_xpos = -1, start_ypos = -1;
 char *override_home = NULL;
 int g_argc = 0;
 char **g_argv;
 SDL_Window *window = NULL;
+SDL_Surface *windowIconSurface = NULL;
 SDL_GLContext maincontext; /* Our opengl context handle */
 bool is_fullscreen = FALSE;
 bool is_borderless = FALSE;
@@ -194,6 +196,7 @@ static int traceback (lua_State *L) {
 			add_lua_error(ar.short_src, ar.currentline, ar.name?ar.name:"");
 		}
 	}
+	fflush(stdout);
 	return 1;
 }
 
@@ -226,6 +229,7 @@ void stackDump (lua_State *L) {
 		i--;
 	}
 	printf("--------------- Stack Dump Finished ---------------\n" );
+	fflush(stdout);
 }
 
 int docall (lua_State *L, int narg, int nret)
@@ -805,21 +809,81 @@ int resizeWindow(int width, int height)
 	return( TRUE );
 }
 
+/* @see main.h#resizeNeedsNewWindow */
+extern bool resizeNeedsNewWindow(int w, int h, bool fullscreen, bool borderless)
+{
+	/* Note: w and h currently not a factor */
+	bool newWindowNeeded = window && ( (is_borderless && !borderless)
+										|| (!is_borderless && borderless) );
+	return (newWindowNeeded);
+}
+
+/* @see main.h#do_move */
+void do_move(int w, int h) {
+	/* Save the origin in case a window needs to be remade later. */
+	start_xpos = w;
+	start_ypos = h;
+
+	/* Can't move a fullscreen SDL window in one go.*/
+	if (is_fullscreen) {
+		/* Drop out of fullscreen so we can move the window. */
+		SDL_SetWindowFullscreen(window, SDL_FALSE);
+
+	}
+
+	/* Move the window */
+	SDL_SetWindowPosition(window, w, h);
+
+	/* Jump back into fullscreen if necessary */
+	if (is_fullscreen) {
+		if (!SDL_SetWindowFullscreen(window, SDL_TRUE)) {
+			/* Fullscreen change successful */
+			is_fullscreen = SDL_TRUE;
+
+		} else {
+			/* Error switching fullscreen mode */
+			printf("[DO MOVE] Unable to return window"
+					" to fullscreen mode:  %s\n", SDL_GetError());
+			SDL_ClearError();
+		}
+
+	}
+
+}
+
+/* @see main.h#do_resize */
 void do_resize(int w, int h, bool fullscreen, bool borderless)
 {
 	/* Temporary width, height (since SDL might reject our resize) */
 	int aw, ah;
 	int mustPushEvent = 0;
+	int mustCreateIconSurface = 0;
 	SDL_Event fsEvent;
 
 	printf("[DO RESIZE] Requested: %dx%d (%d, %d)\n", w, h, fullscreen, borderless);
+
+	/* See if we need to reinitialize the window */
+	if (resizeNeedsNewWindow(w, h, fullscreen, borderless)) {
+		/* Destroy the current window */
+		SDL_GL_DeleteContext(maincontext);
+		SDL_DestroyWindow(window);
+		maincontext = 0;
+		window = 0;
+		screen = 0;
+		/* Clean up the old window icon */
+		SDL_FreeSurface(windowIconSurface);
+		windowIconSurface = 0;
+		/* Signal a new icon needs to be created. */
+		mustCreateIconSurface = 1;
+	}
 
 	/* If there is no current window, we have to make one and initialize */
 	if (!window) {
 		window = SDL_CreateWindow("TE4",
 				(start_xpos == -1) ? SDL_WINDOWPOS_CENTERED : start_xpos,
 				(start_ypos == -1) ? SDL_WINDOWPOS_CENTERED : start_ypos, w, h,
-				SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE
+				SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL
+				| (!borderless ? SDL_WINDOW_RESIZABLE : 0)
 				| (fullscreen ? SDL_WINDOW_FULLSCREEN : 0)
 				| (borderless ? SDL_WINDOW_BORDERLESS : 0)
 		);
@@ -834,7 +898,13 @@ void do_resize(int w, int h, bool fullscreen, bool borderless)
 		SDL_GL_MakeCurrent(window, maincontext);
 		glewInit();
 
+		/* Set the window icon. */
+		windowIconSurface = IMG_Load_RW(PHYSFSRWOPS_openRead(WINDOW_ICON_PATH)
+				, TRUE);
+		SDL_SetWindowIcon(window, windowIconSurface);
+
 	} else {
+
 		/* SDL won't allow a fullscreen resolution change in one go.  Check. */
 		if (is_fullscreen) {
 			/* Drop out of fullscreen so we can change resolution. */
@@ -846,8 +916,6 @@ void do_resize(int w, int h, bool fullscreen, bool borderless)
 
 		/* Update window size */
 		SDL_SetWindowSize(window, w, h);
-		SDL_SetWindowBordered(window, !borderless);
-		is_borderless = borderless;
 
 		/* Jump [back] into fullscreen if requested */
 		if (fullscreen) {
@@ -863,11 +931,12 @@ void do_resize(int w, int h, bool fullscreen, bool borderless)
 			}
 
 		} else if (mustPushEvent) {
+			/* Handle fullscreen -> nonfullscreen transition */
 			/*
 			 * Our changes will get clobbered by an automatic event from
 			 * setWindowFullscreen.  Push an event to the event loop to make
-			 * sure these changes are applied after whatever that other event
-			 * throws.
+			 * sure these changes are applied after whatever that other
+			 * event throws.
 			 */
 			/* Create an event to push */
 			fsEvent.type = SDL_WINDOWEVENT;
@@ -887,11 +956,7 @@ void do_resize(int w, int h, bool fullscreen, bool borderless)
 		/* Finally, update the screen info */
 		screen = SDL_GetWindowSurface(window);
 
-
 	}
-
-
-	if (is_borderless) SDL_SetWindowPosition(window, 0, 0);
 
 	/* Check and see if SDL honored our resize request */
 	SDL_GetWindowSize(window, &aw, &ah);
@@ -1209,7 +1274,7 @@ int main(int argc, char *argv[])
 		printf("error opening screen: %s\n", SDL_GetError());
 		return 3;
 	}
-	SDL_SetWindowIcon(window, IMG_Load_RW(PHYSFSRWOPS_openRead("/engines/default/data/gfx/te4-icon.png"), TRUE));
+
 	SDL_SetWindowTitle(window, "T4Engine");
 	TTF_Init();
 
@@ -1277,18 +1342,23 @@ int main(int argc, char *argv[])
 					break;
 				case SDL_WINDOWEVENT_MOVED: {
 					int x, y;
-					SDL_GetWindowPosition(window, &x, &y);
-					printf("move %d x %d\n", x, y);
-					if (current_game != LUA_NOREF)
-					{
-						lua_rawgeti(L, LUA_REGISTRYINDEX, current_game);
-						lua_pushstring(L, "onWindowMoved");
-						lua_gettable(L, -2);
-						lua_remove(L, -2);
-						lua_rawgeti(L, LUA_REGISTRYINDEX, current_game);
-						lua_pushnumber(L, x);
-						lua_pushnumber(L, y);
-						docall(L, 3, 0);
+					/* Note: SDL can't resize a fullscreen window, so don't bother! */
+					if (!is_fullscreen) {
+						SDL_GetWindowPosition(window, &x, &y);
+						printf("move %d x %d\n", x, y);
+						if (current_game != LUA_NOREF)
+						{
+							lua_rawgeti(L, LUA_REGISTRYINDEX, current_game);
+							lua_pushstring(L, "onWindowMoved");
+							lua_gettable(L, -2);
+							lua_remove(L, -2);
+							lua_rawgeti(L, LUA_REGISTRYINDEX, current_game);
+							lua_pushnumber(L, x);
+							lua_pushnumber(L, y);
+							docall(L, 3, 0);
+						}
+					} else {
+						printf("SDL_WINDOWEVENT_MOVED: ignored due to fullscreen\n");
 					}
 					break;
 				}

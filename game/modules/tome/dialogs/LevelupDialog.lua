@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -152,7 +152,7 @@ function _M:getMaxTPoints(t)
 end
 
 function _M:finish()
-	local ok, dep_miss = self:checkDeps(true)
+	local ok, dep_miss = self:checkDeps(true, true)
 	if not ok then
 		self:simpleLongPopup("Impossible", "You cannot learn this talent(s): "..dep_miss, game.w * 0.4)
 		return nil
@@ -252,7 +252,7 @@ function _M:computeDeps(t)
 	end
 end
 
-function _M:checkDeps(simple)
+function _M:checkDeps(simple, ignore_special)
 	local talents = ""
 	local stats_ok = true
 
@@ -263,7 +263,7 @@ function _M:checkDeps(simple)
 		checked[t_id] = true
 
 		local t = self.actor:getTalentFromId(t_id)
-		local ok, reason = self.actor:canLearnTalent(t, 0)
+		local ok, reason = self.actor:canLearnTalent(t, 0, ignore_special)
 		if not ok and (self.actor:knowTalent(t) or force) then talents = talents.."\n#GOLD##{bold}#    - "..t.name.."#{normal}##LAST#("..reason..")" end
 		if reason == "not enough stat" then
 			stats_ok = false
@@ -335,7 +335,7 @@ function _M:learnTalent(t_id, v)
 		self.actor:unlearnTalent(t_id, nil, true, {no_unlearn=true})
 		self.talents_changed[t_id] = true
 		local _, reason = self.actor:canLearnTalent(t, 0)
-		local ok, dep_miss, stats_ok = self:checkDeps()
+		local ok, dep_miss, stats_ok = self:checkDeps(nil, true)
 		self.actor:learnTalent(t_id, true, nil, {no_unlearn=true})
 		if ok or reason == "not enough stat" or not stats_ok then
 			self.actor:unlearnTalent(t_id)
@@ -398,7 +398,7 @@ function _M:learnType(tt, v)
 			self.talent_types_learned[tt][2] = nil
 		else
 			self.actor:unlearnTalentType(tt)
-			local ok, dep_miss = self:checkDeps()
+			local ok, dep_miss = self:checkDeps(nil, true)
 			if ok then
 				self.actor.unused_talents_types = self.actor.unused_talents_types + 1
 				self.new_talents_changed = true

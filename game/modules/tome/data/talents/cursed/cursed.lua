@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -31,6 +31,7 @@ newTalentType{ allow_random=true, is_mind=true, type="cursed/force-of-will", nam
 newTalentType{ allow_random=true, is_mind=true, type="cursed/darkness", name = "darkness", description = "Harness the power of darkness to envelop your foes." }
 newTalentType{ allow_random=true, is_mind=true, type="cursed/shadows", name = "shadows", description = "Summon shadows from the darkness to aid you." }
 newTalentType{ allow_random=true, is_mind=true, type="cursed/punishments", name = "punishments", description = "Your hate becomes punishment in the minds of your foes." }
+newTalentType{ allow_random=true, is_mind=true, type="cursed/one-with-shadows", name = "one with shadows", min_lev = 10, description = "Harness your shadows to their full potential." }
 
 -- Generic
 newTalentType{ allow_random=true, is_mind=true, type="cursed/gestures", name = "gestures", generic = true, description = "Enhance the power of you mind with gestures." }
@@ -102,6 +103,27 @@ cursed_cun_req5 = {
 	level = function(level) return 16 + (level-1)  end,
 }
 
+cursed_cun_req_high1 = {
+	stat = { cun=function(level) return 22 + (level-1) * 2 end },
+	level = function(level) return 10 + (level-1)  end,
+}
+cursed_cun_req_high2 = {
+	stat = { cun=function(level) return 30 + (level-1) * 2 end },
+	level = function(level) return 14 + (level-1)  end,
+}
+cursed_cun_req_high3 = {
+	stat = { cun=function(level) return 38 + (level-1) * 2 end },
+	level = function(level) return 18 + (level-1)  end,
+}
+cursed_cun_req_high4 = {
+	stat = { cun=function(level) return 46 + (level-1) * 2 end },
+	level = function(level) return 22 + (level-1)  end,
+}
+cursed_cun_req_high5 = {
+	stat = { cun=function(level) return 54 + (level-1) * 2 end },
+	level = function(level) return 26 + (level-1)  end,
+}
+
 cursed_lev_req1 = {
 	level = function(level) return 0 + (level-1)  end,
 }
@@ -146,6 +168,7 @@ load("/data/talents/cursed/shadows.lua")
 load("/data/talents/cursed/darkness.lua")
 load("/data/talents/cursed/punishments.lua")
 load("/data/talents/cursed/gestures.lua")
+load("/data/talents/cursed/one-with-shadows.lua")
 
 load("/data/talents/cursed/cursed-form.lua")
 load("/data/talents/cursed/cursed-aura.lua")

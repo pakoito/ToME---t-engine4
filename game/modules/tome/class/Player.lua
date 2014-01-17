@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -506,6 +506,24 @@ function _M:playerFOV()
 				game.level.map.seens(effStalker.target.x, effStalker.target.y, 0.6)
 			end
 		end
+	end
+
+	if self:knowTalent(self.T_SHADOW_SENSES) then
+		local t = self:getTalentFromId(self.T_SHADOW_SENSES)
+		local range = self:getTalentRange(t)
+		local sqsense = range * range
+
+		for shadow, _ in pairs(game.party.members) do if shadow.is_doomed_shadow and not shadow.dead then
+			local arr = shadow.fov.actors_dist
+			local tbl = shadow.fov.actors
+			local act
+			for i = 1, #arr do
+				act = arr[i]
+				if act and not act.dead and act.x and tbl[act] and shadow:canSee(act) and tbl[act].sqdist <= sqsense then
+					game.level.map.seens(act.x, act.y, 0.6)
+				end
+			end
+		end end 
 	end
 
 	if not self:attr("blind") then

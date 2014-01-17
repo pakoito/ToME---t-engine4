@@ -28,6 +28,14 @@ if _OPTIONS.steam then
 	dofile("steamworks/build/steam-def.lua")
 end
 
+configuration "bsd"
+	libdirs {
+		"/usr/local/lib",
+	}
+	includedirs {
+		"/usr/local/include",
+	}
+
 configuration "windows"
 	libdirs {
 		"/c/code/SDL/lib",
@@ -46,6 +54,7 @@ configuration "Debug"
 	defines { }
 	flags { "Symbols" }
 	buildoptions { "-ggdb" }
+	buildoptions { "-O3" }
 	targetdir "bin/Debug"
 	if _OPTIONS.luaassert then defines {"LUA_USE_APICHECK"} end
 	if _OPTIONS.pedantic then buildoptions { "-Wall" } end

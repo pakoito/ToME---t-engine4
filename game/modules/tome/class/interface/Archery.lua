@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -402,6 +402,17 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 	-- Special effect on kill A-A-A-AMMMO!
 	if hitted and ammo and ammo.special_on_kill and ammo.special_on_kill.fct and target.dead then
 		ammo.special_on_kill.fct(ammo, self, target)
+	end
+	
+	-- Siege Arrows
+	if hitted and ammo and ammo.siege_impact and (not self.shattering_impact_last_turn or self.shattering_impact_last_turn < game.turn) then
+		local dam = dam * ammo.siege_impact
+		local invuln = target.invulnerable
+		game.logSeen(target, "The shattering blow creates a shockwave!")
+		target.invulnerable = 1 -- Target already hit, don't damage it twice
+		self:project({type="ball", radius=1, friendlyfire=false}, target.x, target.y, DamageType.PHYSICAL, dam)
+		target.invulnerable = invuln
+		self.shattering_impact_last_turn = game.turn
 	end
 
 	-- Temporal cast

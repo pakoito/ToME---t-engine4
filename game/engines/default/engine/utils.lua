@@ -1,5 +1,5 @@
 -- TE4 - T-Engine 4
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -1888,7 +1888,7 @@ function util.showMainMenu(no_reboot, reboot_engine, reboot_engine_version, rebo
 	core.game.setRealtime(0)
 
 	-- Save any remaining files
-	savefile_pipe:forceWait()
+	if savefile_pipe then savefile_pipe:forceWait() end
 
 	if game and type(game) == "table" and game.__session_time_played_start then
 		if game.onDealloc then game:onDealloc() end
@@ -1984,6 +1984,24 @@ function util.browserOpenUrl(url)
 		if os.execute(urlbase) == 0 then return true end
 	end
 	return false
+end
+
+--- Safeboot mode
+function util.setForceSafeBoot()
+	local restore = fs.getWritePath()
+	fs.setWritePath(engine.homepath)
+	local f = fs.open("/settings/force_safeboot.cfg", "w")
+	if f then
+		f:write("force_safeboot = true\n")
+		f:close()
+	end
+	if restore then fs.setWritePath(restore) end
+end
+function util.removeForceSafeBoot()
+	local restore = fs.getWritePath()
+	fs.setWritePath(engine.homepath)
+	fs.delete("/settings/force_safeboot.cfg")
+	if restore then fs.setWritePath(restore) end
 end
 
 -- Ultra weird, this is used by the C serialization code because I'm too dumb to make lua_dump() work on windows ...

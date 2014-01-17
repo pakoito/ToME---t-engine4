@@ -1,6 +1,6 @@
 /*
     TE4 - T-Engine 4
-    Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+    Copyright (C) 2009 - 2014 Nicolas Casalini
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -267,7 +267,7 @@ static GLenum sdl_gl_texture_format(SDL_Surface *s) {
 static char *largest_black = NULL;
 static int largest_size = 0;
 void make_texture_for_surface(SDL_Surface *s, int *fw, int *fh, bool clamp) {
-	// Paramétrage de la texture.
+	// ParamÃ©trage de la texture.
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, clamp ? GL_CLAMP_TO_BORDER : GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, clamp ? GL_CLAMP_TO_BORDER : GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -542,8 +542,28 @@ static int lua_check_error(lua_State *L)
 	return 1;
 }
 
+static char *reboot_message = NULL;
+static int lua_set_reboot_message(lua_State *L)
+{
+	const char *msg = luaL_checkstring(L, 1);
+	if (reboot_message) { free(reboot_message); }
+	reboot_message = strdup(msg);
+	return 0;
+}
+static int lua_get_reboot_message(lua_State *L)
+{
+	if (reboot_message) {
+		lua_pushstring(L, reboot_message);
+		free(reboot_message);
+		reboot_message = NULL;
+	} else lua_pushnil(L);
+	return 1;
+}
+
 static const struct luaL_Reg gamelib[] =
 {
+	{"setRebootMessage", lua_set_reboot_message},
+	{"getRebootMessage", lua_get_reboot_message},
 	{"reboot", lua_reboot_lua},
 	{"set_current_game", lua_set_current_game},
 	{"exit_engine", lua_exit_engine},
@@ -572,6 +592,15 @@ static int sdl_screen_size(lua_State *L)
 	lua_pushboolean(L, is_fullscreen);
 	lua_pushboolean(L, is_borderless);
 	return 4;
+}
+
+static int sdl_window_pos(lua_State *L)
+{
+	int x, y;
+	SDL_GetWindowPosition(window, &x, &y);
+	lua_pushnumber(L, x);
+	lua_pushnumber(L, y);
+	return 2;
 }
 
 static int sdl_new_font(lua_State *L)
@@ -2327,12 +2356,23 @@ static int sdl_set_window_size(lua_State *L)
 	return 1;
 }
 
-static int sdl_set_window_pos(lua_State *L)
+static int sdl_set_window_size_restart_check(lua_State *L)
 {
 	int w = luaL_checknumber(L, 1);
 	int h = luaL_checknumber(L, 2);
+	bool fullscreen = lua_toboolean(L, 3);
+	bool borderless = lua_toboolean(L, 4);
 
-	SDL_SetWindowPosition(window, w, h);
+	lua_pushboolean(L, resizeNeedsNewWindow(w, h, fullscreen, borderless));
+	return 1;
+}
+
+static int sdl_set_window_pos(lua_State *L)
+{
+	int x = luaL_checknumber(L, 1);
+	int y = luaL_checknumber(L, 2);
+
+	do_move(x, y);
 
 	lua_pushboolean(L, TRUE);
 	return 1;
@@ -2585,23 +2625,6 @@ static int gl_fbo_toscreen(lua_State *L)
 		g = luaL_checknumber(L, 8);
 		b = luaL_checknumber(L, 9);
 		a = luaL_checknumber(L, 10);
-		GLfloat colors[4*4] = {
-			r, g, b, a,
-			r, g, b, a,
-			r, g, b, a,
-			r, g, b, a,
-		};
-		glColorPointer(4, GL_FLOAT, 0, colors);
-	}
-	else
-	{
-		GLfloat colors[4*4] = {
-			1, 1, 1, 1,
-			1, 1, 1, 1,
-			1, 1, 1, 1,
-			1, 1, 1, 1,
-		};
-		glColorPointer(4, GL_FLOAT, 0, colors);
 	}
 	if (lua_isuserdata(L, 6))
 	{
@@ -2612,6 +2635,13 @@ static int gl_fbo_toscreen(lua_State *L)
 	if (!allowblend) glDisable(GL_BLEND);
 	tglBindTexture(GL_TEXTURE_2D, fbo->texture);
 
+	GLfloat colors[4*4] = {
+		r, g, b, a,
+		r, g, b, a,
+		r, g, b, a,
+		r, g, b, a,
+	};
+	glColorPointer(4, GL_FLOAT, 0, colors);
 
 	GLfloat texcoords[2*4] = {
 		0, 1,
@@ -2664,6 +2694,15 @@ static int is_safe_mode(lua_State *L)
 {
 	lua_pushboolean(L, safe_mode);
 	return 1;
+}
+
+static int set_safe_mode(lua_State *L)
+{
+	safe_mode = TRUE;
+	fbo_active = FALSE;
+	shaders_active = FALSE;
+	multitexture_active = FALSE;
+	return 0;
 }
 
 static int sdl_get_modes_list(lua_State *L)
@@ -2923,6 +2962,7 @@ static const struct luaL_Reg displaylib[] =
 	{"getTextBlended", get_text_aa},
 	{"forceRedraw", sdl_redraw_screen},
 	{"size", sdl_screen_size},
+	{"windowPos", sdl_window_pos},
 	{"newFont", sdl_new_font},
 	{"newSurface", sdl_new_surface},
 	{"newTile", sdl_new_tile},
@@ -2933,6 +2973,7 @@ static const struct luaL_Reg displaylib[] =
 	{"drawQuadPart", gl_draw_quad_part},
 	{"FBOActive", gl_fbo_is_active},
 	{"safeMode", is_safe_mode},
+	{"forceSafeMode", set_safe_mode},
 	{"disableFBO", gl_fbo_disable},
 	{"drawStringNewSurface", sdl_surface_drawstring_newsurface},
 	{"drawStringBlendedNewSurface", sdl_surface_drawstring_newsurface_aa},
@@ -2940,6 +2981,7 @@ static const struct luaL_Reg displaylib[] =
 	{"loadImageMemory", sdl_load_image_mem},
 	{"setWindowTitle", sdl_set_window_title},
 	{"setWindowSize", sdl_set_window_size},
+	{"setWindowSizeRequiresRestart", sdl_set_window_size_restart_check},
 	{"setWindowPos", sdl_set_window_pos},
 	{"getModesList", sdl_get_modes_list},
 	{"setMouseCursor", sdl_set_mouse_cursor},
