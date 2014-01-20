@@ -493,8 +493,7 @@ function _M:setupDisplayMode(reboot, mode)
 		end
 		self:setupMiniMap()
 
-		self:createFBOs()
-		Map:enableFBORenderer("target_fbo")
+		self:createFBOs()		
 	end
 end
 
@@ -518,6 +517,8 @@ function _M:createFBOs()
 	else core.particles.defineFramebuffer(nil) end
 
 	if self.target then self.target:enableFBORenderer("ui/targetshader.png", "target_fbo") end
+
+	Map:enableFBORenderer("target_fbo")
 
 --	self.mm_fbo = core.display.newFBO(200, 200)
 --	if self.mm_fbo then self.mm_fbo_shader = Shader.new("mm_fbo") if not self.mm_fbo_shader.shad then self.mm_fbo = nil self.mm_fbo_shader = nil end end
