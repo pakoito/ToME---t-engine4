@@ -2402,13 +2402,13 @@ newEffect{
 newEffect{
 	name = "ICE_ARMOUR", image = "talents/ice_armour.png",
 	desc = "Ice Armour",
-	long_desc = function(self, eff) return ("The target is covered in a layer of ice. Armour increased by %d, damage when hit %0.2f cold, converts 50%% of all damage to cold."):format(eff.armor, eff.dam) end,
+	long_desc = function(self, eff) return ("The target is covered in a layer of ice. Its armour is increased by %d, it deals %0.1f Cold damage to attackers that hit in melee, and 50%% of it's damage is converted to cold."):format(eff.armor, self:damDesc(DamageType.COLD, eff.dam)) end,
 	type = "magical",
 	subtype = { cold=true, armour=true, },
 	status = "beneficial",
 	parameters = {armor=10, dam=10},
-	on_gain = function(self, err) return "#Target# is covered in ice!" end,
-	on_lose = function(self, err) return "#Target# is free from the ice." end,
+	on_gain = function(self, err) return "#Target# is covered in icy armor!" end,
+	on_lose = function(self, err) return "#Target#'s ice coating crumbles away." end,
 	activate = function(self, eff)
 		self:effectTemporaryValue(eff, "combat_armor", eff.armor)
 		self:effectTemporaryValue(eff, "on_melee_hit", {[DamageType.COLD]=eff.dam})
@@ -2422,13 +2422,13 @@ newEffect{
 newEffect{
 	name = "CAUSTIC_GOLEM", image = "talents/caustic_golem.png",
 	desc = "Caustic Golem",
-	long_desc = function(self, eff) return ("The target is coated with acid. %d%% chances to spray a cone of acid doing %0.2f damage."):format(eff.chance, eff.dam) end,
+	long_desc = function(self, eff) return ("The target is coated with acid. When struck in melee, it has a %d%% chance to spray a cone of acid towards the attacker doing %0.1f damage."):format(eff.chance, self:damDesc(DamageType.ACID, eff.dam)) end,
 	type = "magical",
 	subtype = { acid=true, coating=true, },
 	status = "beneficial",
 	parameters = {chance=10, dam=10},
 	on_gain = function(self, err) return "#Target# is coated in acid!" end,
-	on_lose = function(self, err) return "#Target# is free from the acid." end,
+	on_lose = function(self, err) return "#Target#'s acid coating is diluted." end,
 	callbackOnMeleeHit = function(self, eff, src)
 		if self.turn_procs.caustic_golem then return end
 		if not rng.percent(eff.chance) then return end

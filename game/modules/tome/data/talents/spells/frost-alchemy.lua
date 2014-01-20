@@ -63,11 +63,11 @@ newTalent{
 	end,
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
-		local dam = t.getDamage(self, t)
+		local dam = self.alchemy_golem and self.alchemy_golem:damDesc(engine.DamageType.COLD, t.getDamage(self, t)) or 0
 		local armor = t.getArmor(self, t)
-		return ([[While you have Frost Infusion active, when your bombs hit your golem they grant it an ice armour for %d turns.
-		The ice armour provides it with %d armour, %0.2f cold damage when it gets hit and 50%% of its damage is done as cold.
-		Effects will increase with your Spellpower.]]):
+		return ([[While Frost Infusion is active, your bombs deposit a layer of ice on your golem for %d turns when they hit it.
+		This ice provides your golem with %d additional armour, melee attacks against it deal %0.1f Cold damage to the attacker, and 50%% of its damage is converted to Cold.
+		The effects increase with your talent level and with the Spellpower and damage modifiers of your golem.]]):
 		format(duration, armor, dam)
 	end,
 }
@@ -85,21 +85,22 @@ newTalent{
 	range = 0,
 	getDuration = function(self, t) return math.floor(self:combatScale(self:combatSpellpower(0.03) * self:getTalentLevel(t), 2, 0, 10, 8)) end,
 	radius = function(self, t) return math.floor(self:combatTalentScale(t, 2, 6)) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 250) end,
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), friendlyfire=false, talent=t}
 	end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
-		local grids = self:project(tg, self.x, self.y, DamageType.COLDNEVERMOVE, {dur=t.getDuration(self, t), dam=1})
+		local grids = self:project(tg, self.x, self.y, DamageType.COLDNEVERMOVE, {dur=t.getDuration(self, t), dam=t.getDamage(self, t)})
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "ball_ice", {radius=tg.radius})
 		game:playSoundNear(self, "talents/ice")
 		return true
 	end,
 	info = function(self, t)
 		local radius = self:getTalentRadius(t)
-		return ([[Blast a wave of cold all around you with a radius of %d, doing %0.2f cold damage and freezing creatures to the ground for %d turns.
+		return ([[Invoke a blast of cold all around you with a radius of %d, doing %0.1f Cold damage and freezing creatures to the ground for %d turns.
 		Affected creatures can still act, but cannot move.
-		The duration will increase with your Spellpower.]]):format(radius, damDesc(self, DamageType.COLD, 1), t.getDuration(self, t))
+		The duration will increase with your Spellpower.]]):format(radius, damDesc(self, DamageType.COLD, t.getDamage(self, t)), t.getDuration(self, t))
 	end,
 }
 
@@ -115,11 +116,12 @@ newTalent{
 	tactical = { BUFF=1 },
 	critResist = function(self, t) return self:combatTalentScale(t, 10, 50) end,
 	getResistance = function(self, t) return self:combatTalentSpellDamage(t, 5, 45) end,
+	getAffinity = function(self, t) return self:combatTalentLimit(t, 50, 5, 20) end, -- Limit <50%
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/ice")
 		local ret = {}
 		self:talentTemporaryValue(ret, "resists", {[DamageType.PHYSICAL] = t.getResistance(self, t) * 0.6})
-		self:talentTemporaryValue(ret, "damage_affinity", {[DamageType.COLD] = t.getResistance(self, t)})
+		self:talentTemporaryValue(ret, "damage_affinity", {[DamageType.COLD] = t.getAffinity(self, t)})
 		self:talentTemporaryValue(ret, "ignore_direct_crits", t.critResist(self, t))
 		return ret
 	end,
@@ -129,9 +131,9 @@ newTalent{
 	info = function(self, t)
 		local resist = t.getResistance(self, t)
 		local crit = t.critResist(self, t)
-		return ([[Turn your body into pure ice, increasing your cold damage affinity by %d%% and your physical resistance by %d%%.
+		return ([[Turn your body into pure ice, increasing your Cold damage affinity by %d%% and your physical resistance by %d%%.
 		All direct critical hits (physical, mental, spells) against you have a %d%% lower Critical multiplier (but always do at least normal damage).
-		The effects will increase with your Spellpower.]]):
-		format(resist, resist * 0.6, crit)
+		The effects increase with your Spellpower.]]):
+		format(t.getAffinity(self, t), resist, resist * 0.6, crit)
 	end,
 }

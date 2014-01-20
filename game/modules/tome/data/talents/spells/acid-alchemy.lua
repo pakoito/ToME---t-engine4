@@ -53,7 +53,7 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	getDuration = function(self, t) return math.floor(self:combatScale(self:combatSpellpower(0.03) * self:getTalentLevel(t), 2, 0, 10, 8)) end,
-	getChance = function(self, t) return math.floor(self:combatScale(self:combatSpellpower(0.03) * self:getTalentLevel(t), 20, 0, 55, 8)) end,
+	getChance = function(self, t) return self:combatLimit(self:combatSpellpower(0.03) * self:getTalentLevel(t), 100, 20, 0, 55, 8) end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 5, 120) end,
 	applyEffect = function(self, t, golem)
 		local duration = t.getDuration(self, t)
@@ -64,10 +64,10 @@ newTalent{
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		local chance = t.getChance(self, t)
-		local dam = t.getDamage(self, t)
-		return ([[While you have Acid Infusion active, when your bombs hit your golem they coat it in acid for %d turns.
-		While coated any melee hits has %d%% chance to trigger a small cone of acid doing %0.2f damage to all caught inside (this can only happen once per turn).
-		Effects will increase with your Spellpower.]]):
+		local dam = self.alchemy_golem and self.alchemy_golem:damDesc(engine.DamageType.ACID, t.getDamage(self, t)) or 0
+		return ([[While Acid Infusion is active, your bombs coat your golem in acid for %d turns when they hit it.
+		While coated, any melee hit agaist your golem has a %d%% chance to trigger a radius 4 cone of acid towards the attacker that does %0.1f Acid damage to all caught inside. (This can only happen once per turn.)
+		The effects increase with your talent level and with the Spellpower and damage modifiers of your golem.]]):
 		format(duration, chance, dam)
 	end,
 }
@@ -95,7 +95,7 @@ newTalent{
 	end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 7, 60) end,
 	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 6, 10)) end,
-	getSlow = function(self, t) return math.floor(self:combatTalentScale(t, 10, 40)) end,
+	getSlow = function(self, t) return self:combatTalentLimit(t, 100, 10, 40) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
@@ -119,7 +119,7 @@ newTalent{
 		local slow = t.getSlow(self, t)
 		local duration = t.getDuration(self, t)
 		local radius = self:getTalentRadius(t)
-		return ([[A pool of acid spawns at the target location in radius %d, doing %0.2f acid damage each turn for %d turns.
+		return ([[A radius %d pool of acid spawns at the target location, doing %0.1f Acid damage each turn for %d turns.
 		All creatures caught in the mire will also suffer a %d%% slowness effect.
 		The damage will increase with your Spellpower.]]):
 		format(radius, damDesc(self, DamageType.ACID, damage), duration, slow)
@@ -152,7 +152,7 @@ newTalent{
 
 			local effs = {}
 
-			-- Go through all spell effects
+			-- Go through all mental and physical effects
 			for eff_id, p in pairs(target.tmp) do
 				local e = target.tempeffect_def[eff_id]
 				if (e.type == "mental" or e.type == "physical") and e.status == "beneficial" then
@@ -160,7 +160,7 @@ newTalent{
 				end
 			end
 
-			-- Go through all sustained spells
+			-- Go through all mental sustains
 			for tid, act in pairs(target.sustain_talents) do
 				local t = self:getTalentFromId(tid)
 				if act and t.is_mind then
@@ -188,8 +188,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Acid errupts all around your target, dealing %0.2f acid damage.
-		The acid attack is extremely distracting, giving a chance to remove up to %d physical or mental temporary effects or mental sustains.
-		The damage and chance will increase with your Spellpower.]]):format(damDesc(self, DamageType.ACID, damage), t.getRemoveCount(self, t))
+		return ([[Acid errupts all around your target, dealing %0.1f acid damage.
+		The acid attack is extremely distracting, and may remove up to %d physical or mental temporary effects or mental sustains (depending on the Spell Save of the target).
+		The damage and chance to remove effects will increase with your Spellpower.]]):format(damDesc(self, DamageType.ACID, damage), t.getRemoveCount(self, t))
 	end,
 }
