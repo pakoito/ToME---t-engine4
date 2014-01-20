@@ -131,7 +131,7 @@ newTalent{
 	type = {"spell/acid-alchemy",4},
 	require = spells_req4,
 	points = 5,
-	mana = 25,
+	mana = 45,
 	cooldown = 12,
 	refectable = true,
 	range = 10,
