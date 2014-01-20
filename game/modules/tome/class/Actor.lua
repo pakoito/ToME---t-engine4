@@ -2233,14 +2233,6 @@ function _M:onTakeHit(value, src, death_note)
 			game:delayedLogMessage(src, self, "lifesteal"..self.uid, "#CRIMSON##Source# steals life from #Target#!")
 		end
 	end
-	
-	-- Damage Backlash
-	if value > 0 and src and not src.dead and src.attr and src:attr("damage_backfire") then
-		local hurt = math.min(value, self.life) * src.damage_backfire / 100
-		if hurt > 0 then
-			src:takeHit(hurt, src)
-		end
-	end
 
 	-- Flat damage cap
 	if self.flat_damage_cap and self.max_life and death_note and death_note.damtype then

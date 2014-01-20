@@ -642,6 +642,14 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		self:incStamina(-15)
 		self.shattering_impact_last_turn = game.turn
 	end
+	
+	-- Damage Backlash
+	if dam > 0 and self.attr and self:attr("damage_backfire") then
+		local hurt = math.min(dam, target.life) * self.damage_backfire / 100
+		if hurt > 0 then
+			self:takeHit(hurt, self)
+		end
+	end
 
 	-- Burst on Hit
 	if hitted and weapon and weapon.burst_on_hit then
