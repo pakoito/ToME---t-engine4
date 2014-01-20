@@ -4003,7 +4003,7 @@ function _M:preUseTalent(ab, silent, fake)
 		end
 	end
 
-	if self:triggerHook{"Actor:preUseTalent", t=ab, silent=silent, fale=fake} then
+	if self:triggerHook{"Actor:preUseTalent", t=ab, silent=silent, fake=fake} then
 		return false
 	end
 
