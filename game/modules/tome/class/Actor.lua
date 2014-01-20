@@ -1648,12 +1648,12 @@ function _M:onTakeHit(value, src, death_note)
 
 	if self:attr("phase_shift") and not self.turn_procs.phase_shift then
 		self.turn_procs.phase_shift = true
-
 		local nx, ny = util.findFreeGrid(self.x, self.y, 1, true, {[Map.ACTOR]=true})
 		if nx then
 			local ox, oy = self.x, self.y
 			self:move(nx, ny, true)
 			game.level.map:particleEmitter(ox, oy, math.max(math.abs(nx-ox), math.abs(ny-oy)), "lightning", {tx=nx-ox, ty=ny-oy})
+			game:delayedLogDamage(src or {}, self, 0, ("#STEEL_BLUE#(%d shifted)#LAST#"):format(value), nil)
 			return 0
 		end
 	end
