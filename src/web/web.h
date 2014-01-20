@@ -22,6 +22,7 @@
 #define WEB_TE4_API
 #endif
 
+WEB_TE4_API void te4_web_setup(int argc, char **argv);
 WEB_TE4_API void te4_web_init(lua_State *L);
 WEB_TE4_API void te4_web_update();
 

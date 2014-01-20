@@ -15,7 +15,9 @@ extern "C" {
 }
 #include "web.h"
 
-#include <capi/cef_app_capi.h>
+#include <cef_app.h>
+#include <cef_client.h>
+#include <cef_render_handler.h>
 
 /**********************************************************************
  ******************** Duplicated since we are independant *************
@@ -180,6 +182,7 @@ class RenderHandler : public CefRenderHandler
 public:
 	GLuint tex;
 	int w, h;
+	CefRefPtr<CefBrowserHost> host;
 
 	RenderHandler(int w, int h) {
 		this->w = w;
@@ -208,6 +211,7 @@ public:
 	bool GetViewRect(CefRefPtr<CefBrowser> browser, CefRect &rect)
 	{
 		rect = CefRect(0, 0, w, h);
+		host = browser->GetHost();
 		return true;
 	}
 	void OnPaint(CefRefPtr<CefBrowser> browser, PaintElementType type, const RectList &dirtyRects, const void *buffer, int width, int height)
@@ -237,9 +241,11 @@ public:
 };
 
 typedef struct {
-	BrowserClient *view;
 	RenderHandler *render;
+	CefBrowser *browser;
+	BrowserClient *view;
 	int w, h;
+	int last_mouse_x, last_mouse_y;
 	bool closed;
 } web_view_type;
 
@@ -252,10 +258,17 @@ static int lua_web_new(lua_State *L) {
 	web_view_type *view = (web_view_type*)lua_newuserdata(L, sizeof(web_view_type));
 	auxiliar_setclass(L, "web{view}", -1);
 
+	CefWindowInfo window_info;
+	CefBrowserSettings browserSettings;
+	window_info.SetAsOffScreen(NULL);
+	view->render = new RenderHandler(w, h);
+	view->view = new BrowserClient(view->render);
+	view->browser = CefBrowserHost::CreateBrowserSync(window_info, view->view, "http://te4.org/", browserSettings);
+
+
 	view->w = w;
 	view->h = h;
 	view->closed = false;
-
 
 	return 1;
 }
@@ -340,13 +353,39 @@ static int lua_web_focus(lua_State *L) {
 	return 0;
 }
 
+static int get_cef_state_modifiers() {
+	SDL_Keymod smod = SDL_GetModState();
+
+	int modifiers = 0;
+
+	if (smod & KMOD_SHIFT)
+		modifiers |= EVENTFLAG_SHIFT_DOWN;
+	else if (smod & KMOD_CTRL)
+		modifiers |= EVENTFLAG_CONTROL_DOWN;
+	else if (smod & KMOD_ALT)
+		modifiers |= EVENTFLAG_ALT_DOWN;
+	else if (smod & KMOD_GUI)
+
+	return modifiers;
+}
+
+
 static int lua_web_inject_mouse_move(lua_State *L) {
 	web_view_type *view = (web_view_type*)auxiliar_checkclass(L, "web{view}", 1);
 	if (view->closed) return 0;
 
 	int x = luaL_checknumber(L, 2);
 	int y = luaL_checknumber(L, 3);
-//	view->view->InjectMouseMove(x, y);
+
+	view->last_mouse_x = x;
+	view->last_mouse_y = y;
+	CefMouseEvent mouse_event;
+	mouse_event.x = x;
+	mouse_event.y = y;
+	mouse_event.modifiers = get_cef_state_modifiers();
+
+	printf("===== %lx\n", (void*)view->render->host);
+	view->render->host->SendMouseMoveEvent(mouse_event, false);
 	return 0;
 }
 
@@ -356,16 +395,24 @@ static int lua_web_inject_mouse_wheel(lua_State *L) {
 
 	int x = luaL_checknumber(L, 2);
 	int y = luaL_checknumber(L, 3);
-//	view->view->InjectMouseWheel(-y, -x);
+
+	CefMouseEvent mouse_event;
+	mouse_event.x = view->last_mouse_x;
+	mouse_event.y = view->last_mouse_y;
+	mouse_event.modifiers = get_cef_state_modifiers();
+	view->render->host->SendMouseWheelEvent(mouse_event, -x, -y);
+
 	return 0;
 }
 
 static int lua_web_inject_mouse_button(lua_State *L) {
 	web_view_type *view = (web_view_type*)auxiliar_checkclass(L, "web{view}", 1);
 	if (view->closed) return 0;
-/*
+
 	bool up = lua_toboolean(L, 2);
 	int kind = luaL_checknumber(L, 3);
+
+/*
 	MouseButton b = kMouseButton_Left;
 	if (kind == 2) b = kMouseButton_Middle;
 	else if (kind == 3) b = kMouseButton_Right;
@@ -373,6 +420,18 @@ static int lua_web_inject_mouse_button(lua_State *L) {
 	if (up) view->view->InjectMouseUp(b);
 	else view->view->InjectMouseDown(b);
 */
+
+	CefBrowserHost::MouseButtonType button_type = MBT_LEFT;
+	if (kind == 2) button_type = MBT_MIDDLE;
+	else if (kind == 3) button_type = MBT_RIGHT;
+
+	CefMouseEvent mouse_event;
+	mouse_event.x = view->last_mouse_x;
+	mouse_event.y = view->last_mouse_y;
+	mouse_event.modifiers = get_cef_state_modifiers();
+
+	view->render->host->SendMouseClickEvent(mouse_event, button_type, up, 1);
+
 	return 0;
 }
 
@@ -460,28 +519,28 @@ static const struct luaL_Reg weblib[] =
 };
 
 void te4_web_update() {
-//	if (web_core) web_core->Update();
+	if (web_core) CefDoMessageLoopWork();
 }
 
-void te4_web_init(lua_State *L) {
+void te4_web_setup(int argc, char **gargv) {
 	if (!web_core) {
-		char *argv[1] = {"cef3"};
-		int argc = 1;
-		struct _cef_main_args_t args;
-		args.argc = argc;
-		args.argv = argv;
-		int result = cef_execute_process(args, NULL);
+		char **cargv = (char**)calloc(argc, sizeof(char*));
+		for (int i = 0; i < argc; i++) cargv[i] = strdup(gargv[i]);
+		CefMainArgs args(argc, cargv);
+		int result = CefExecuteProcess(args, NULL);
 		if (result >= 0) {
 			exit(result);  // child proccess has endend, so exit.
 		} else if (result == -1) {
 			// we are here in the father proccess.
 		}
 
-//		CefSettings settings;
-//		bool resulti = CefInitialize(args, settings, app.get());
+		CefSettings settings;
+		bool resulti = CefInitialize(args, settings, NULL);
 		web_core = true;
 	}
+}
 
+void te4_web_init(lua_State *L) {
 	auxiliar_newclass(L, "web{view}", view_reg);
 //	auxiliar_newclass(L, "web{downloader}", downloader_reg);
 	luaL_openlib(L, "core.webview", weblib, 0);

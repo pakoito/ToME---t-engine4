@@ -37,7 +37,7 @@ project "TEngine"
 	if _OPTIONS.steam then
 		files { "../steamworks/luasteam.c", }
 	end
-	links { "physfs", "lua".._OPTIONS.lua, "fov", "luasocket", "luaprofiler", "lpeg", "tcodimport", "lxp", "expatstatic", "luamd5", "luazlib", "luabitop", "te4-bzip", "te4-web" }
+	links { "physfs", "lua".._OPTIONS.lua, "fov", "luasocket", "luaprofiler", "lpeg", "tcodimport", "lxp", "expatstatic", "luamd5", "luazlib", "luabitop", "te4-bzip" }
 	defines { "_DEFAULT_VIDEOMODE_FLAGS_='SDL_HWSURFACE|SDL_DOUBLEBUF'" }
 	defines { [[TENGINE_HOME_PATH='".t-engine"']], "TE4CORE_VERSION="..TE4CORE_VERSION }
 
@@ -435,16 +435,18 @@ project "te4-bzip"
 
 project "te4-web"
 	kind "SharedLib"
-	language "C"
+	language "C++"
 	targetname "te4-web"
 
 	buildoptions{"-pthread -I/usr/include/gtk-2.0 -I/usr/lib64/gtk-2.0/include -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/pango-1.0 -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/libpng15 -I/usr/include/libdrm"}
-	libdirs {"/Test/cef_binary_3.1547.1406_linux/Release/lib/"}
+	libdirs {"/Test/cef_binary_3.1547.1406_linux/out/Release/obj.target/"}
+	libdirs {"/Test/cef_binary_3.1547.1406_linux/Release/"}
+	links {"cef_dll_wrapper"}
 	includedirs {"/Test/cef_binary_3.1547.1406_linux/include/", "/Test/cef_binary_3.1547.1406_linux/", }
 	links { "cef", "lua".._OPTIONS.lua }
 	
 	files {
-		"../src/web/web.c",
+		"../src/web/web.cpp",
 	}
 
 if _OPTIONS.steam then

@@ -111,6 +111,7 @@ int realtime_pending = 0;
 /*
  * Grab web browser methods
  */
+void (*te4_web_setup)(int argc, char **argv);
 void (*te4_web_init)(lua_State *L);
 void (*te4_web_update)();
 void te4_web_load() {
@@ -118,8 +119,11 @@ void te4_web_load() {
 	printf("Loading web core: %s\n", SDL_GetError());
 	
 	if (web) {
+		te4_web_setup = (void (*)(int, char**)) SDL_LoadFunction(web, "te4_web_setup");
 		te4_web_init = (void (*)(lua_State*)) SDL_LoadFunction(web, "te4_web_init");
 		te4_web_update = (void (*)()) SDL_LoadFunction(web, "te4_web_update");
+
+		te4_web_setup(g_argc, g_argv);
 	}
 	else exit(1);
 }
@@ -1220,6 +1224,8 @@ int main(int argc, char *argv[])
 	g_argc = argc;
 	g_argv = argv;
 
+	te4_web_load();
+
 	// Parse arguments
 	int i;
 	for (i = 1; i < argc; i++)
@@ -1258,8 +1264,6 @@ int main(int argc, char *argv[])
 #endif
 
 	init_openal();
-
-	te4_web_load();
 
 	// RNG init
 	init_gen_rand(time(NULL));
