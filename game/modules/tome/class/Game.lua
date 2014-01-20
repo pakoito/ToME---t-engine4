@@ -494,6 +494,7 @@ function _M:setupDisplayMode(reboot, mode)
 		self:setupMiniMap()
 
 		self:createFBOs()
+		Map:enableFBORenderer("target_fbo")
 	end
 end
 
@@ -1356,7 +1357,7 @@ function _M:displayMap(nb_keyframes)
 		if self.fbo then
 			self.fbo:use(true)
 				if self.level.data.background then self.level.data.background(self.level, 0, 0, nb_keyframes) end
-				map:display(0, 0, nb_keyframes, config.settings.tome.smooth_fov)
+				map:display(0, 0, nb_keyframes, config.settings.tome.smooth_fov, self.fbo)
 				if self.level.data.foreground then self.level.data.foreground(self.level, 0, 0, nb_keyframes) end
 				if self.level.data.weather_particle then self.state:displayWeather(self.level, self.level.data.weather_particle, nb_keyframes) end
 				if self.level.data.weather_shader then self.state:displayWeatherShader(self.level, self.level.data.weather_shader, map.display_x, map.display_y, nb_keyframes) end
@@ -1376,7 +1377,7 @@ function _M:displayMap(nb_keyframes)
 		-- Basic display; no FBOs
 		else
 			if self.level.data.background then self.level.data.background(self.level, map.display_x, map.display_y, nb_keyframes) end
-			map:display(nil, nil, nb_keyframes, config.settings.tome.smooth_fov)
+			map:display(nil, nil, nb_keyframes, config.settings.tome.smooth_fov, nil)
 			if self.target then self.target:display(nil, nil, self.full_fbo, nb_keyframes) end
 			if self.level.data.foreground then self.level.data.foreground(self.level, map.display_x, map.display_y, nb_keyframes) end
 			if self.level.data.weather_particle then self.state:displayWeather(self.level, self.level.data.weather_particle, nb_keyframes) end

@@ -101,7 +101,7 @@ newTalent{
 			DamageType.RETCH, dam,
 			radius,
 			5, nil,
-			engine.Entity.new{alpha=100, display='', color_br=30, color_bg=180, color_bb=60},
+			MapEffect.new{color_br=30, color_bg=180, color_bb=60, effect_shader="shader_images/retch_effect.png"},
 			nil, self:spellFriendlyFire()
 		)
 		game:playSoundNear(self, "talents/cloud")

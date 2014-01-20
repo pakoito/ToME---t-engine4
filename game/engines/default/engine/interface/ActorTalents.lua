@@ -33,6 +33,7 @@ function _M:loadDefinition(file, env)
 		Particles = require("engine.Particles"),
 		Talents = self,
 		Map = require("engine.Map"),
+		MapEffect = require("engine.MapEffect"),
 		newTalent = function(t) self:newTalent(t) end,
 		newTalentType = function(t) self:newTalentType(t) end,
 		load = function(f) self:loadDefinition(f, getfenv(2)) end
