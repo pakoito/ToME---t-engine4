@@ -435,16 +435,16 @@ project "te4-bzip"
 
 project "te4-web"
 	kind "SharedLib"
-	language "C++"
+	language "C"
 	targetname "te4-web"
 
 	buildoptions{"-pthread -I/usr/include/gtk-2.0 -I/usr/lib64/gtk-2.0/include -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/pango-1.0 -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/libpng15 -I/usr/include/libdrm"}
-	libdirs {"/Test/cef_binary_3.1547.1406_linux/Debug/"}
+	libdirs {"/Test/cef_binary_3.1547.1406_linux/Release/lib/"}
 	includedirs {"/Test/cef_binary_3.1547.1406_linux/include/", "/Test/cef_binary_3.1547.1406_linux/", }
 	links { "cef", "lua".._OPTIONS.lua }
 	
 	files {
-		"../src/web/web.cpp",
+		"../src/web/web.c",
 	}
 
 if _OPTIONS.steam then

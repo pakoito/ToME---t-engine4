@@ -15,9 +15,7 @@ extern "C" {
 }
 #include "web.h"
 
-#include <cef_app.h>
-#include <cef_client.h>
-#include <cef_render_handler.h>
+#include <capi/cef_app_capi.h>
 
 /**********************************************************************
  ******************** Duplicated since we are independant *************
@@ -467,19 +465,20 @@ void te4_web_update() {
 
 void te4_web_init(lua_State *L) {
 	if (!web_core) {
-		const char *argv[1] = {"cef3"};
+		char *argv[1] = {"cef3"};
 		int argc = 1;
-		CefMainArgs args(argc, (char**)argv);
-		CefRefPtr<ClientApp> app(new ClientApp());
-		int result = CefExecuteProcess(args, app.get());
+		struct _cef_main_args_t args;
+		args.argc = argc;
+		args.argv = argv;
+		int result = cef_execute_process(args, NULL);
 		if (result >= 0) {
 			exit(result);  // child proccess has endend, so exit.
 		} else if (result == -1) {
 			// we are here in the father proccess.
 		}
 
-		CefSettings settings;
-		bool resulti = CefInitialize(args, settings, app.get());
+//		CefSettings settings;
+//		bool resulti = CefInitialize(args, settings, app.get());
 		web_core = true;
 	}
 
