@@ -105,7 +105,7 @@ newTalent{
 }
 
 newTalent{
-	name = "Body of Ice",
+	name = "Ice Core", short_name = "BODY_OF_ICE",
 	type = {"spell/frost-alchemy",4},
 	require = spells_req4,
 	mode = "sustained",

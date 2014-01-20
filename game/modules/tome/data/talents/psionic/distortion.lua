@@ -28,7 +28,7 @@ function DistortionCount(self)
 			distortion_count = distortion_count + lev
 		end
 	end
-	distortion_count = mod.class.interface.Combat.combatScale(distortion_count, 0, 0, 20, 20, 0.75)
+	distortion_count = mod.class.interface.Combat:combatScale(distortion_count, 0, 0, 20, 20, 0.75)
 	print("Distortion Count", distortion_count)
 	return distortion_count
 end
