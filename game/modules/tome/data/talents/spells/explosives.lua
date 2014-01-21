@@ -102,6 +102,8 @@ newTalent{
 					self:callTalent(self.T_ICE_ARMOUR, "applyEffect", golem)
 				elseif self:isTalentActive(self.T_ACID_INFUSION) and self:knowTalent(self.T_CAUSTIC_GOLEM) then
 					self:callTalent(self.T_CAUSTIC_GOLEM, "applyEffect", golem)
+				elseif self:isTalentActive(self.T_LIGHTNING_INFUSION) and self:knowTalent(self.T_DYNAMIC_RECHARGE) then
+					self:callTalent(self.T_DYNAMIC_RECHARGE, "applyEffect", golem)
 				end
 			else -- reduced damage to friendly npcs (could make random chance like friendlyfire instead)
 				if target and self:reactionToward(target) > 0 then d = dam * (1 - prot) end

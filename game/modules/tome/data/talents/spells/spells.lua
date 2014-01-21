@@ -50,6 +50,7 @@ newTalentType{ allow_random=true, no_silence=true, is_spell=true, mana_regen=tru
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, mana_regen=true, type="spell/fire-alchemy", name = "fire alchemy", description = "Alchemical control over fire." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, mana_regen=true, type="spell/acid-alchemy", name = "acid alchemy", description = "Alchemical control over acid." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, mana_regen=true, type="spell/frost-alchemy", name = "frost alchemy", description = "Alchemical control over frost." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, mana_regen=true, type="spell/energy-alchemy", name = "energy alchemy", min_lev = 10, description = "Alchemical control over lightning energies." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/stone-alchemy-base", name = "stone alchemy", hide = true, description = "Manipulate gems, and imbue their powers into other objects." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/stone-alchemy", name = "stone alchemy", generic = true, description = "Alchemical control over stone and gems." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="spell/staff-combat", name = "staff combat", generic = true, description = "Harness the power of magical staves." }
@@ -274,6 +275,7 @@ load("/data/talents/spells/war-alchemy.lua")
 load("/data/talents/spells/fire-alchemy.lua")
 load("/data/talents/spells/frost-alchemy.lua")
 load("/data/talents/spells/acid-alchemy.lua")
+load("/data/talents/spells/energy-alchemy.lua")
 load("/data/talents/spells/stone-alchemy.lua")
 load("/data/talents/spells/golem.lua")
 

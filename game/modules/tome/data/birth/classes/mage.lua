@@ -71,6 +71,7 @@ newBirthDescriptor{
 		["spell/fire-alchemy"]={true, 0.3},
 		["spell/acid-alchemy"]={true, 0.3},
 		["spell/frost-alchemy"]={true, 0.3},
+		["spell/energy-alchemy"]={false, 0.3},
 		["spell/staff-combat"]={true, 0.3},
 		["cunning/survival"]={false, -0.1},
 	},

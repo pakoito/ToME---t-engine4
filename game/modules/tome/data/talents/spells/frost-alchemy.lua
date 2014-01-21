@@ -80,7 +80,7 @@ newTalent{
 	mana = 30,
 	cooldown = 20,
 	requires_target = true,
-	tactical = { DISABLE = { stun = 1 } },
+	tactical = { DISABLE = { stun = 1 }, ATTACKAREA = { COLD = 2 } },
 	no_energy = true,
 	range = 0,
 	getDuration = function(self, t) return math.floor(self:combatScale(self:combatSpellpower(0.03) * self:getTalentLevel(t), 2, 0, 10, 8)) end,

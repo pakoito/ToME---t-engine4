@@ -72,12 +72,6 @@ newTalent{
 	end,
 }
 
-
---lightning talent idea:
---lightning strike counterattack
---lightning speed, +bonus global speed based on lack of hp
-
-
 newTalent{
 	name = "Caustic Mire",
 	type = {"spell/acid-alchemy",3},
