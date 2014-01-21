@@ -2397,6 +2397,8 @@ function _M:die(src, death_note)
 		return
 	end
 
+	if self:fireTalentCheck("callbackOnDeath", src, death_note) then return end
+
 	mod.class.interface.ActorLife.die(self, src, death_note)
 
 	-- Trigegr on_die effects if any
@@ -2657,6 +2659,8 @@ function _M:die(src, death_note)
 			src:incVim(death_note.source_talent.vim)
 		end)
 	end
+
+	if src.fireTalentCheck then src:fireTalentCheck("callbackOnKill", self, death_note) end
 
 	if src and ((src.resolveSource and src:resolveSource().player) or src.player) then
 		-- Achievements
@@ -4070,6 +4074,8 @@ local sustainCallbackCheck = {
 	callbackOnActBase = "talents_on_act_base",
 	callbackOnMove = "talents_on_move",
 	callbackOnRest = "talents_on_rest",
+	callbackOnDeath = "talents_on_death",
+	callbackOnKill = "talents_on_kill",
 	callbackOnMeleeAttack = "talents_on_melee_attack",
 	callbackOnMeleeHit = "talents_on_melee_hit",
 	callbackOnMeleeMiss = "talents_on_melee_miss",
