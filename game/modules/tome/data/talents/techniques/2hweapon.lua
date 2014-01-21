@@ -261,6 +261,7 @@ newTalent{
 	requires_target = true,
 	tactical = { ATTACK = { weapon = 2 }, DISABLE = { stun = 2 } },
 	on_pre_use = function(self, t, silent) if not self:hasTwoHandedWeapon() then if not silent then game.logPlayer(self, "You require a two handed weapon to use this talent.") end return false end return true end,
+	getShatter = function(self, t) return self:combatTalentLimit(t, 100, 10, 85) end,
 	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 5, 9)) end,
 	getArmorReduc = function(self, t) return self:combatTalentScale(t, 5, 25, 0.75) end,
 	action = function(self, t)
@@ -279,14 +280,37 @@ newTalent{
 		-- Try to Sunder !
 		if hit then
 			target:setEffect(target.EFF_SUNDER_ARMOUR, t.getDuration(self, t), {power=t.getArmorReduc(self,t), apply_power=self:combatPhysicalpower()})
+
+			if rng.percent(t.getShatter(self, t)) then
+				local effs = {}
+
+				-- Go through all shield effects
+				for eff_id, p in pairs(target.tmp) do
+					local e = target.tempeffect_def[eff_id]
+					if e.status == "beneficial" and e.subtype and e.subtype.shield then
+						effs[#effs+1] = {"effect", eff_id}
+					end
+				end
+
+				for i = 1, 1 do
+					if #effs == 0 then break end
+					local eff = rng.tableRemove(effs)
+
+					if eff[1] == "effect" then
+						game.logSeen(self, "#CRIMSON#%s shatters %s shield!", self.name:capitalize(), target.name)
+						target:removeEffect(eff[2])
+					end
+				end
+			end
 		end
 
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target with your weapon, doing %d%% damage. If the attack hits, the target's Armour is reduced by %d for %d turns.
+		return ([[Hits the target with your weapon, doing %d%% damage. If the attack hits, the target's armour and saves are reduced by %d for %d turns.
+		Also if the target is protected by a temporary damage shield there is %d%% chance to shatter it.
 		Armor reduction chance increases with your Physical Power.]])
-		:format( 100 * self:combatTalentWeaponDamage(t, 1, 1.5),t.getArmorReduc(self, t), t.getDuration(self, t))
+		:format(100 * self:combatTalentWeaponDamage(t, 1, 1.5),t.getArmorReduc(self, t), t.getDuration(self, t), t.getShatter(self, t))
 	end,
 }
 

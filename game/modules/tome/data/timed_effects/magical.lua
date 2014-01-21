@@ -1019,7 +1019,7 @@ newEffect{
 	desc = "Providence",
 	long_desc = function(self, eff) return ("The target is under protection and its life regeneration is boosted by %d."):format(eff.power) end,
 	type = "magical",
-	subtype = { light=true },
+	subtype = { light=true, shield=true },
 	status = "beneficial",
 	parameters = {},
 	on_timeout = function(self, eff)
@@ -1348,7 +1348,7 @@ newEffect{
 	desc = "Bone Shield",
 	long_desc = function(self, eff) return ("Any attacks doing more than %d%% of your life is reduced to %d%%."):format(eff.power, eff.power) end,
 	type = "magical",
-	subtype = { arcane=true },
+	subtype = { arcane=true, shield=true },
 	status = "beneficial",
 	parameters = { power=30 },
 	on_gain = function(self, err) return "#Target# protected by flying bones.", "+Bone Shield" end,

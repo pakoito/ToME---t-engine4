@@ -752,16 +752,16 @@ newEffect{
 newEffect{
 	name = "SUNDER_ARMOUR", image = "talents/sunder_armour.png",
 	desc = "Sunder Armour",
-	long_desc = function(self, eff) return ("The target's armour is broken, reducing it by %d."):format(eff.power) end,
+	long_desc = function(self, eff) return ("The target's armour and saves are broken, reducing them by %d."):format(eff.power) end,
 	type = "physical",
 	subtype = { sunder=true },
 	status = "detrimental",
 	parameters = { power=10 },
 	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("combat_armor", -eff.power)
-	end,
-	deactivate = function(self, eff)
-		self:removeTemporaryValue("combat_armor", eff.tmpid)
+		self:effectTemporaryValue(eff, "combat_armor", -eff.power)
+		self:effectTemporaryValue(eff, "combat_physresist", -eff.power)
+		self:effectTemporaryValue(eff, "combat_spellresist", -eff.power)
+		self:effectTemporaryValue(eff, "combat_mentalresist", -eff.power)
 	end,
 }
 

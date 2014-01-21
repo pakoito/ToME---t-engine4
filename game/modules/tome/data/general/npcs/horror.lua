@@ -559,6 +559,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 
 	on_move = function(self)
 			local DamageType = require "engine.DamageType"
+			local MapEffect = require "engine.MapEffect"
 			local duration = 10
 			local radius = 0
 			local dam = 25
@@ -568,7 +569,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 				engine.DamageType.SLIME, 25,
 				radius,
 				5, nil,
-				engine.Entity.new{alpha=100, display='', color_br=25, color_bg=140, color_bb=40},
+				MapEffect.new{color_br=25, color_bg=140, color_bb=40, effect_shader="shader_images/retch_effect.png"},
 				function(e)
 					e.radius = e.radius
 					return true
