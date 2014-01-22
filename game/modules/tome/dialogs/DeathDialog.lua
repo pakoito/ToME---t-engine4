@@ -18,6 +18,7 @@
 -- darkgod@te4.org
 
 require "engine.class"
+local Shader = require "engine.Shader"
 local Dialog = require "engine.ui.Dialog"
 local Textzone = require "engine.ui.Textzone"
 local Separator = require "engine.ui.Separator"
@@ -29,7 +30,8 @@ module(..., package.seeall, class.inherit(Dialog))
 
 function _M:init(actor)
 	self.actor = actor
-	Dialog.init(self, "Death!", 500, 300)
+	self.ui = "deathbox"
+	Dialog.init(self, "You have #LIGHT_RED#died#LAST#!", 500, 600)
 
 	actor:saveUUID()
 
@@ -37,8 +39,7 @@ function _M:init(actor)
 	if self.dont_show then return end
 	if not config.settings.cheat then game:saveGame() end
 
-	local text = [[You have #LIGHT_RED#died#LAST#!
-Death in ToME is usually permanent, but if you have a means of resurrection it will be proposed in the menu below.
+	local text = [[Death in #{bold}#Tales of Maj'Eyal#{normal}# is usually permanent, but if you have a means of resurrection it will be proposed in the menu below.
 You can dump your character data to a file to remember her/him forever, or you can exit and try once again to survive in the wilds!
 ]]
 
@@ -46,7 +47,11 @@ You can dump your character data to a file to remember her/him forever, or you c
 		self.c_achv = Textzone.new{width=self.iw, scrollbar=true, height=100, text="#LIGHT_GREEN#During your game you#WHITE#:\n* "..table.concat(game.party.on_death_show_achieved, "\n* ")}
 	end
 
+	self:setTitleShadowShader(Shader.default.textoutline and Shader.default.textoutline.shad, 1.5)
 	self.c_desc = Textzone.new{width=self.iw, auto_height=true, text=text}
+	self.c_desc:setTextShadow(1)
+	self.c_desc:setShadowShader(Shader.default.textoutline and Shader.default.textoutline.shad, 1.2)
+
 	self.c_list = List.new{width=self.iw, nb_items=#self.list, list=self.list, fct=function(item) self:use(item) end}
 
 	if self.c_achv then
