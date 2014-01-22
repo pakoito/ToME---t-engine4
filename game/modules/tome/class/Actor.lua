@@ -2660,7 +2660,7 @@ function _M:die(src, death_note)
 		end)
 	end
 
-	if src.fireTalentCheck then src:fireTalentCheck("callbackOnKill", self, death_note) end
+	if src and src.fireTalentCheck then src:fireTalentCheck("callbackOnKill", self, death_note) end
 
 	if src and ((src.resolveSource and src:resolveSource().player) or src.player) then
 		-- Achievements

@@ -58,13 +58,13 @@ You can dump your character data to a file to remember her/him forever, or you c
 		self:loadUI{
 			{left=0, top=0, ui=self.c_desc},
 			{left=0, top=self.c_desc.h, ui=self.c_achv},
-			{left=5, top=self.c_desc.h+self.c_achv.h, padding_h=10, ui=Separator.new{dir="vertical", size=self.iw - 10}},
+			{left=5, top=self.c_desc.h+self.c_achv.h, padding_h=10, ui=Separator.new{ui="deathbox", dir="vertical", size=self.iw - 10}},
 			{left=0, bottom=0, ui=self.c_list},
 		}
 	else
 		self:loadUI{
 			{left=0, top=0, ui=self.c_desc},
-			{left=5, top=self.c_desc.h, padding_h=10, ui=Separator.new{dir="vertical", size=self.iw - 10}},
+			{left=5, top=self.c_desc.h, padding_h=10, ui=Separator.new{ui="deathbox", dir="vertical", size=self.iw - 10}},
 			{left=0, bottom=0, ui=self.c_list},
 		}
 	end
