@@ -46,7 +46,7 @@ newEntity{ define_as = "SUPREME_ARCHMAGE_LINANIIL",
 
 	autolevel = "caster",
 	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
-	ai_tactic = resolvers.tactic"ranged",
+	--ai_tactic = resolvers.tactic"ranged",
 	resolvers.inscriptions(5, {}),
 	resolvers.inscriptions(1, {"manasurge rune"}),
 
