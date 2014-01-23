@@ -25,6 +25,7 @@ newTalent{
 	hide = true,
 	innate = true,
 	points = 1,
+	cooldown = 0,
 	range = archery_range,
 	message = "@Source@ shoots!",
 	requires_target = true,

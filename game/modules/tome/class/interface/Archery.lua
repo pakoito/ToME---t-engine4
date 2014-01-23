@@ -32,14 +32,18 @@ module(..., package.seeall, class.make)
 function _M:archeryAcquireTargets(tg, params)
 	params = params or {}
 	local weapon, ammo, offweapon = self:hasArcheryWeapon()
+	-- Awesome, we can shoot from our offhand!
+	if self.can_offshoot and not weapon and offweapon then weapon, offweapon = offweapon, nil end
 	if not weapon then
 		game.logPlayer(self, "You must wield a bow or a sling (%s)!", ammo)
+		print("== no weapon")
 		return nil
 	end
 	local infinite = ammo.infinite or self:attr("infinite_ammo") or params.infinite
 
 	if not ammo or (ammo.combat.shots_left <= 0 and not infinite) then
 		game.logPlayer(self, "You do not have enough ammo left!")
+		print("== no ammo")
 		return nil
 	end
 
@@ -51,6 +55,7 @@ function _M:archeryAcquireTargets(tg, params)
 		local val = self['get'..weapon.use_resource.kind:capitalize()](self)
 		if val < weapon.use_resource.value then
 			game.logPlayer(self, "You do not have enough %s left!", weapon.use_resource.kind)
+			print("== no ressource")
 			return nil
 		end
 	end
@@ -590,6 +595,8 @@ end
 
 function _M:hasDualArcheryWeapon(type)
 	local w, a, o = self:hasArcheryWeapon(type)
+	if self.can_solo_dual_archery and w and not o then w, o = w, w end
+	if self.can_solo_dual_archery and not w and o then w, o = o, o end
 	if w and a and o then return w, a, o end
 	return nil
 end

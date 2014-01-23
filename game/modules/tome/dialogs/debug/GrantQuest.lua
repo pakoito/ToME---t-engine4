@@ -69,12 +69,23 @@ end
 function _M:generateList()
 	local list = {}
 
-	for i, file in ipairs(fs.list("/data/quests/")) do
-		if file:find(".lua$") then
-			local n = file:gsub(".lua$", "")
-			list[#list+1] = {name=n, quest=n, hasit=game.player:hasQuest(n)}
+	local function parse(base, add, add_simple)
+		for i, file in ipairs(fs.list(base.."/quests/")) do
+			if file:find(".lua$") then
+				local n = file:gsub(".lua$", "")
+				list[#list+1] = {name=n..(add_simple and " ["..add_simple.."]" or ""), quest=add..n, hasit=game.player:hasQuest(n)}
+			end
 		end
 	end
+
+	parse("/data", "")
+	for i, dir in ipairs(fs.list("/")) do
+		local _, _, addon = dir:find("^data%-(.+)$")
+		if addon then
+			parse("/"..dir, addon.."+", addon)
+		end
+	end
+
 	table.sort(list, function(a,b) return a.name < b.name end)
 
 	local chars = {}

@@ -27,15 +27,15 @@ As for your probable many questions, they will stay unanswered. I may help, but 
 	answers = {
 		{"Thank you. I will rest for a while."},
 		{"Thank you. I am ready to go back!", 
-			cond=function() return game.level.source_level end,
+			cond=function() return game.level.source_level and not game.level.source_level.no_return_from_eidolon end,
 			action=function() game.level.data.eidolon_exit(false) end
 		},
 		{"Thank you, but I fear I will not survive anyway, can you send me back somewhere else please?",
-			cond=function() return game.level.source_level and (not game.level.source_level.data or not game.level.source_level.data.no_worldport) end,
+			cond=function() return game.level.source_level and not game.level.source_level.no_return_from_eidolon and (not game.level.source_level.data or not game.level.source_level.data.no_worldport) end,
 			action=function() game.level.data.eidolon_exit(true) end
 		},
 		{"Thank you, I am ready to go back!",
-			cond=function() return not game.level.source_level end,
+			cond=function() return not game.level.source_level or game.level.source_level.no_return_from_eidolon end,
 			jump="jump_error",
 		},
 		{"Thank you, but I am weary of this life, I wish no more, please let me go.", jump="die"},
@@ -43,7 +43,7 @@ As for your probable many questions, they will stay unanswered. I may help, but 
 }
 
 newChat{ id="jump_error",
-	text = [[It seems the threads of time have been disrupted...
+	text = [[It seems the threads of time and space have been disrupted...
 I will try to send you to safety.]],
 	answers = {
 		{"Thanks.", action=function(npc, player) game:changeLevel(1, "wilderness") end},

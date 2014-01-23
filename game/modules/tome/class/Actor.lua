@@ -4573,6 +4573,7 @@ function _M:startTalentCooldown(t)
 	t = self:getTalentFromId(t)
 	if not t.cooldown then return end
 	self.talents_cd[t.id] = self:getTalentCooldown(t)
+	if self.talents_cd[t.id] <= 0 then self.talents_cd[t.id] = nil end
 	self.changed = true
 end
 
