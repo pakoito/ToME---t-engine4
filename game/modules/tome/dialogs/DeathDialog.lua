@@ -52,7 +52,23 @@ You can dump your character data to a file to remember her/him forever, or you c
 	self.c_desc:setTextShadow(1)
 	self.c_desc:setShadowShader(Shader.default.textoutline and Shader.default.textoutline.shad, 1.2)
 
-	self.c_list = List.new{width=self.iw, nb_items=#self.list, list=self.list, fct=function(item) self:use(item) end}
+	self.c_list = List.new{width=self.iw, nb_items=#self.list, list=self.list, fct=function(item) self:use(item) end, select=function(item) self.cur_item = item end}
+
+	self.graphical_options = {
+		blood_life = {
+			available   = self:getUITexture("ui/active_blood_life.png"),
+			unavailable = self:getUITexture("ui/inactive_blood_life.png"),
+		},
+		consume = {
+			available   = self:getUITexture("ui/active_consume.png"),
+			unavailable = self:getUITexture("ui/inactive_consume.png"),
+		},
+		skeleton = {
+			available   = self:getUITexture("ui/active_skeleton.png"),
+			unavailable = self:getUITexture("ui/inactive_skeleton.png"),
+		},
+	}
+
 
 	if self.c_achv then
 		self:loadUI{
@@ -271,6 +287,7 @@ end
 
 function _M:generateList()
 	local list = {}
+	self.possible_items = {}
 	local allow_res = true
 
 	-- Pause the game
@@ -303,8 +320,9 @@ function _M:generateList()
 		local consumenb = 1
 		self.actor:inventoryApplyAll(function(inven, item, o)
 			if o.one_shot_life_saving and (not o.slot or inven.worn) then
-				list[#list+1] = {name="Resurrect by consuming "..o:getName{do_colour=true}, action="consume"..consumenb, inven=inven, item=item, object=o}
+				list[#list+1] = {name="Resurrect by consuming "..o:getName{do_colour=true}, action="consume"..consumenb, inven=inven, item=item, object=o, is_consume=true}
 				consumenb = consumenb + 1
+				self.possible_items.consume = true
 			end
 		end)
 	end
@@ -316,4 +334,23 @@ function _M:generateList()
 	list[#list+1] = {name="Exit to main menu", action="exit", subaction="none"}
 
 	self.list = list
+	for _, item in ipairs(list) do self.possible_items[item.action] = true end
+end
+
+function _M:innerDisplayBack(x, y, nb_keyframes, tx, ty)
+	x = x + self.frame.ox1
+	y = y + self.frame.oy1
+
+	if self.possible_items.blood_life then
+		local d = self.graphical_options.blood_life[self.cur_item and self.cur_item.action == "blood_life" and "available" or "unavailable"]
+		d.t:toScreenFull(x + self.frame.w - d.w, y, d.w, d.h, d.tw, d.th, 1, 1, 1, 1)
+	end
+	if self.possible_items.consume then
+		local d = self.graphical_options.consume[self.cur_item and self.cur_item.is_consume and "available" or "unavailable"]
+		d.t:toScreenFull(x, y, d.w, d.h, d.tw, d.th, 1, 1, 1, 1)
+	end
+	if self.possible_items.skeleton then
+		local d = self.graphical_options.skeleton[self.cur_item and self.cur_item.action == "skeleton" and "available" or "unavailable"]
+		d.t:toScreenFull(x, y + self.frame.h - d.h, d.w, d.h, d.tw, d.th, 1, 1, 1, 1)
+	end
 end
