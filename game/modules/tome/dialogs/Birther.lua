@@ -231,6 +231,9 @@ function _M:applyGameState(d)
 		-- Copy normal data
 		table.merge(game.state.birth, copy, true)
 	end
+	if d.game_state_execute then
+		d.game_state_execute()
+	end
 end
 
 function _M:atEnd(v)

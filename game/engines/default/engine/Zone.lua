@@ -817,12 +817,34 @@ function _M:getGenerator(what, level, spots)
 	assert(level.data.generator[what], "requested zone generator of type "..tostring(what).." but it is not defined")
 	assert(level.data.generator[what].class, "requested zone generator of type "..tostring(what).." but it has no class field")
 	print("[GENERATOR] requiring", what, level.data.generator and level.data.generator[what] and level.data.generator[what].class)
-	return require(level.data.generator[what].class).new(
+	if not level.data.generator[what].zoneclass then
+		return require(level.data.generator[what].class).new(
 			self,
 			level.map,
 			level,
 			spots
 		)
+	else
+		local base = require(level.data.generator[what].class)
+		local c = class.inherit(base){}
+		local name = self:getBaseName().."generator"..what:capitalize()..".lua"
+		print("[ZONE] Custom zone generator for "..what.." loading from "..name)
+		local add = loadfile(name)
+		setfenv(add, setmetatable({
+			_M = c,
+			baseGenerator = base,
+			Zone = _M,
+			Map = Map,
+		}, {__index=_G}))
+		add()
+
+		return c.new(
+			self,
+			level.map,
+			level,
+			spots
+		)
+	end
 end
 
 function _M:newLevel(level_data, lev, old_lev, game)
@@ -845,12 +867,7 @@ function _M:newLevel(level_data, lev, old_lev, game)
 	game:setLevel(level)
 
 	-- Generate the map
-	local generator = require(level_data.generator.map.class).new(
-		self,
-		map,
-		level,
-		level_data.generator.map
-	)
+	local generator = self:getGenerator("map", level, level_data.generator.map)
 	local ux, uy, dx, dy, spots = generator:generate(lev, old_lev)
 	spots = spots or {}
 

@@ -2656,7 +2656,7 @@ function _M:die(src, death_note)
 	if src and death_note and death_note.source_talent and death_note.source_talent.vim and src.last_vim_turn ~= game.turn then
 		src.last_vim_turn = game.turn
 		game:onTickEnd(function() -- Do it on tick end to make sure Vim is spent by the talent code before being refunded
-			src:incVim(death_note.source_talent.vim)
+			src:incVim(util.getval(death_note.source_talent.vim, self, death_note.source_talent))
 		end)
 	end
 
@@ -4253,7 +4253,7 @@ function _M:postUseTalent(ab, ret, silent)
 		end
 		-- Vim is not affected by fatigue
 		if ab.vim and not self:attr("zero_resource_cost") then
-			trigger = true; self:incVim(-util.getval(ab.vim, self, ab)) self:incEquilibrium(ab.vim * 5)
+			trigger = true; self:incVim(-util.getval(ab.vim, self, ab)) self:incEquilibrium(util.getval(ab.vim, self, ab) * 5)
 		end
 		if ab.positive and not (self:attr("zero_resource_cost") and ab.positive > 0) then
 			trigger = true; self:incPositive(-util.getval(ab.positive, self, ab) * (100 + self:combatFatigue()) / 100)
