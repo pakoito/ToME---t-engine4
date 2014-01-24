@@ -3431,15 +3431,18 @@ end
 -- @param t_id the id of the talent to learn
 -- @return true if the talent was learnt, nil and an error message otherwise
 function _M:learnTalent(t_id, force, nb, extra)
+	local just_learnt = not self:knowTalent(tid)
 	if not engine.interface.ActorTalents.learnTalent(self, t_id, force, nb) then return false end
 
 	-- If we learned a spell, get mana, if you learned a technique get stamina, if we learned a wild gift, get power
 	local t = _M.talents_def[t_id]
 
-	for event, store in pairs(sustainCallbackCheck) do
-		if t[event] and t.mode ~= "sustained" then
-			self[store] = self[store] or {}
-			self[store][t_id] = "talent"
+	if just_learnt then
+		for event, store in pairs(sustainCallbackCheck) do
+			if t[event] and t.mode ~= "sustained" then
+				self[store] = self[store] or {}
+				self[store][t_id] = "talent"
+			end
 		end
 	end
 
@@ -3600,10 +3603,12 @@ function _M:unlearnTalent(t_id, nb, no_unsustain, extra)
 
 	local t = _M.talents_def[t_id]
 
-	for event, store in pairs(sustainCallbackCheck) do
-		if t[event] and t.mode ~= "sustained" then
-			self[store][t_id] = nil
-			if not next(self[store]) then self[store] = nil end
+	if not self:knowTalent(t_id) then
+		for event, store in pairs(sustainCallbackCheck) do
+			if t[event] and t.mode ~= "sustained" then
+				self[store][t_id] = nil
+				if not next(self[store]) then self[store] = nil end
+			end
 		end
 	end
 
