@@ -17,7 +17,8 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/objects/objects.lua")
+load("/data/general/objects/objects-maj-eyal.lua")
+load("/data/general/objects/objects-far-east.lua")
 
 newEntity{
 	power_source = {technique=true},

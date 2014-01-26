@@ -29,3 +29,7 @@ loadIfNot("/data/general/objects/lore/spellhunt.lua")
 loadIfNot("/data/general/objects/lore/fun.lua")
 loadIfNot("/data/general/objects/lore/misc.lua")
 loadIfNot("/data/general/objects/lore/maj-eyal.lua")
+
+--Artifacts
+loadIfNot("/data/general/objects/world-artifacts-maj-eyal.lua")
+loadIfNot("/data/general/objects/boss-artifacts-maj-eyal.lua")
