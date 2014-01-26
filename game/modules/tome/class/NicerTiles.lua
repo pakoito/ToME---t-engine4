@@ -970,7 +970,7 @@ dirt = { method="road", marker="road",
 },
 wooden_barricade = { method="road", marker="barricade",
 	default82={add_mos={{image="terrain/road_dirt/road_vertical_a_%02d.png"}}, min=1, max=3},
-	default46={add_mos={{image="terrain/road_dirt/road_horizontal_a_%02d.png"}}, min=1, max=3},
+	default46={add_mos={{image="terrain/wooden_barricade/barricade_horizontal_a_%02d.png"}}, min=1, max=1},
 
 	default8246={add_mos={{image="terrain/road_dirt/road_cross_a_%02d.png"}}, min=1, max=1},
 
