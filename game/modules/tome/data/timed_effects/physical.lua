@@ -2143,41 +2143,79 @@ newEffect{
 	type = "physical",
 	subtype = { mucus=true },
 	status = "beneficial",
-	parameters = { },
+	parameters = {},
 	on_gain = function(self, err) return nil, "+Mucus" end,
 	on_lose = function(self, err) return nil, "-Mucus" end,
 	on_timeout = function(self, eff)
-		self:callTalent(self.T_MUCUS, nil, self.x, self.y, self:getTalentLevel(self.T_MUCUS) >=4 and 1 or 0)
+		self:callTalent(self.T_MUCUS, nil, self.x, self.y, self:getTalentLevel(self.T_MUCUS) >=4 and 1 or 0, eff)
 	end,
 }
 
 newEffect{
 	name = "CORROSIVE_NATURE", image = "talents/corrosive_nature.png",
 	desc = "Corrosive Nature",
-	long_desc = function(self, eff) return ("Acid resistance decreased by %d%%."):format(eff.power) end,
+	long_desc = function(self, eff) return ("Acid damage increased by %d%%."):format(eff.power) end,
 	type = "physical",
 	subtype = { nature=true, acid=true },
-	status = "detrimental",
-	parameters = { power=10 },
-	on_gain = function(self, err) return "#Target# is vulnerable to acid.", "+Corrosive Nature" end,
-	on_lose = function(self, err) return "#Target# is less vulnerable to acid.", "-Corrosive Nature" end,
+	status = "beneficial",
+	parameters = { power=1, bonus_level=1},
+	charges = function(self, eff) return math.round(eff.power) end,
+	on_gain = function(self, err) return "#Target#'s acid damage is more potent.", "+Corrosive Nature" end,
+	on_lose = function(self, err) return "#Target#'s acid damage is no longer so potent.", "-Corrosive Nature" end,
+	on_merge = function(self, eff, new_eff)
+		if game.turn < eff.last_update + 10 then return eff end -- update once a turn
+		local t = self:getTalentFromId(self.T_CORROSIVE_NATURE)
+		eff.dur = t.getDuration(self, t)
+		if eff.bonus_level >=5 then return eff end
+		game.logSeen(self, "%s's corrosive nature intensifies!",self.name:capitalize())
+		eff.last_update = game.turn
+		eff.bonus_level = eff.bonus_level + 1
+		eff.power = t.getAcidDamage(self, t, eff.bonus_level)
+		self:removeTemporaryValue("inc_damage", eff.dam_id)
+		eff.dam_id = self:addTemporaryValue("inc_damage", {[DamageType.ACID]=eff.power})
+		return eff
+	end,
 	activate = function(self, eff)
-		self:effectTemporaryValue(eff, "resists", {[DamageType.ACID]=-eff.power})
+		eff.power = self:callTalent(self.T_CORROSIVE_NATURE, "getAcidDamage")
+		eff.dam_id = self:addTemporaryValue("inc_damage", {[DamageType.ACID]=eff.power})
+		eff.last_update = game.turn
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("inc_damage", eff.dam_id)
 	end,
 }
 
 newEffect{
 	name = "NATURAL_ACID", image = "talents/natural_acid.png",
 	desc = "Natural Acid",
-	long_desc = function(self, eff) return ("Nature resistance decreased by %d%%."):format(eff.power) end,
+	long_desc = function(self, eff) return ("Nature damage increased by %d%%."):format(eff.power) end,
 	type = "physical",
 	subtype = { nature=true, acid=true },
-	status = "detrimental",
-	parameters = { power=10 },
-	on_gain = function(self, err) return "#Target# is vulnerable to nature.", "+Natural Acid" end,
-	on_lose = function(self, err) return "#Target# is less vulnerable to nature.", "-Nature Acid" end,
+	status = "beneficial",
+	parameters = { power=1, bonus_level=1},
+	charges = function(self, eff) return math.round(eff.power) end,
+	on_gain = function(self, err) return "#Target#'s nature damage is more potent.", "+Natural Acid" end,
+	on_lose = function(self, err) return "#Target#'s nature damage is no longer so potent.", "-Nature Acid" end,
+	on_merge = function(self, eff, new_eff)
+		if game.turn < eff.last_update + 10 then return eff end -- update once a turn
+		local t = self:getTalentFromId(self.T_NATURAL_ACID)
+		eff.dur = t.getDuration(self, t)
+		if eff.bonus_level >=5 then return eff end
+		game.logSeen(self, "%s's natural acid becomes more concentrated!",self.name:capitalize())
+		eff.last_update = game.turn
+		eff.bonus_level = eff.bonus_level + 1
+		eff.power = t.getNatureDamage(self, t, eff.bonus_level)
+		self:removeTemporaryValue("inc_damage", eff.dam_id)
+		eff.dam_id = self:addTemporaryValue("inc_damage", {[DamageType.NATURE]=eff.power})
+		return eff
+	end,
 	activate = function(self, eff)
-		self:effectTemporaryValue(eff, "resists", {[DamageType.NATURE]=-eff.power})
+		eff.power = self:callTalent(self.T_NATURAL_ACID, "getNatureDamage")
+		eff.dam_id = self:addTemporaryValue("inc_damage", {[DamageType.NATURE]=eff.power})
+		eff.last_update = game.turn
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("inc_damage", eff.dam_id)
 	end,
 }
 
@@ -2233,5 +2271,20 @@ newEffect{
 	deactivate = function(self, eff)
 		self:removeParticles(eff.particle)
 		self:removeTemporaryValue("resists", eff.tmpid)
+	end,
+}
+
+newEffect{
+	name = "NATURE_REPLENISHMENT", image = "talents/meditation.png",
+	desc = "Natural Replenishment",
+	long_desc = function(self, eff) return ("The target has been directly exposed to arcane energies and has responded by reasserting it's connection to nature, restoring %0.1f Equilibrium per turn."):format(eff.power) end,
+	type = "physical",
+	subtype = { nature=true },
+	status = "beneficial",
+	parameters = {power=1},
+	on_gain = function(self, err) return ("#Target# defiantly reasserts %s connection to nature!"):format(string.his_her(self)), "+Nature Replenishment" end,
+	on_lose = function(self, err) return "#Target# stops restoring Equilibrium.", "-Nature Replenishment" end,
+	on_timeout = function(self, eff)
+		self:incEquilibrium(-eff.power)
 	end,
 }

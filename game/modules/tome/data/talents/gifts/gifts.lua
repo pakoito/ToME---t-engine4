@@ -41,6 +41,7 @@ newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/
 newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/malleable-body", name = "malleable body", description = "Your body's anatomy is starting to blur." }
 newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/oozing-blades", name = "oozing blades", description = "You channel ooze through your psiblades." }
 newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/corrosive-blades", name = "corrosive blades", description = "You channel acid through your psiblades." }
+newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/eyals-fury", name = "eyal's fury", description = "Unleash nature's fury against foes around you." }
 
 -- Generic requires for gifts based on talent level
 gifts_req1 = {
@@ -221,3 +222,4 @@ load("/data/talents/gifts/summon-augmentation.lua")
 load("/data/talents/gifts/summon-advanced.lua")
 
 load("/data/talents/gifts/mindstar-mastery.lua")
+load("/data/talents/gifts/eyals-fury.lua")

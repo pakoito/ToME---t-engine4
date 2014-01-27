@@ -25,22 +25,25 @@ newTalent{
 	random_ego = "attack",
 	equilibrium = 4,
 	cooldown = 5,
-	tactical = { ATTACK = { NATURE = 2} },
+	tactical = { ATTACK = { NATURE = 2}, DISABLE = 1 },
 	range = 10,
-	proj_speed = 8,
+	proj_speed = 6,
 	requires_target = true,
+	getTargetCount = function(self, t) return math.floor(self:combatTalentScale(t, 1, 5, "log")) end,
+	bouncePercent = function(self, t) return self:combatTalentLimit(t, 100, 50, 60) end, --Limit < 100%
 	action = function(self, t)
-		local tg = {type="bolt", range=self:getTalentRange(t), selffire=false, talent=t, display={particle="bolt_slime"}}
+		local tg = {type="bolt", range=self:getTalentRange(t), selffire=false, talent=t, display={particle="bolt_slime"}, name = t.name, speed = t.proj_speed}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:projectile(tg, x, y, DamageType.BOUNCE_SLIME, {nb=math.ceil(self:getTalentLevel(t)), dam=self:mindCrit(self:combatTalentMindDamage(t, 30, 290))}, {type="slime"})
+		self:projectile(tg, x, y, DamageType.BOUNCE_SLIME, {nb=t.getTargetCount(self, t), dam=self:mindCrit(self:combatTalentMindDamage(t, 30, 250)), bounce_factor=t.bouncePercent(self, t)/100}, {type="slime"})
 		game:playSoundNear(self, "talents/slime")
 		return true
 	end,
 	info = function(self, t)
-		return ([[Spit slime at your target doing %0.2f nature damage and slowing it down by 30%% for 3 turns.
-		The bolt can bounce to a nearby foe %d times.
-		The damage will increase with Mindpower]]):format(damDesc(self, DamageType.NATURE, self:combatTalentMindDamage(t, 30, 290)), math.ceil(self:getTalentLevel(t)))
+		return ([[Spit slime at your target doing %0.1f nature damage and slowing it down by 30%% for 3 turns.
+		The slime can bounce from foe to foe, hitting up to a total of %d target(s).
+		Additional targets must be within 6 tiles of each other and the slime loses %0.1f%% damage per bounce.
+		The damage will increase with your Mindpower]]):format(damDesc(self, DamageType.NATURE, self:combatTalentMindDamage(t, 30, 250)), t.getTargetCount(self, t), 100-t.bouncePercent(self, t))
 	end,
 }
 
@@ -54,16 +57,16 @@ newTalent{
 	equilibrium = 2,
 	cooldown = 10,
 	range = 10,
-	tactical = { ATTACK = { NATURE = 3 } },
+	tactical = { ATTACKAREA = { NATURE = 2 }, DISABLE = 1 },
 	radius = function(self, t) return math.floor(self:combatTalentScale(t, 1, 2.7)) end, -- yields 2 at tl=3
+	getDamage = function(self, t) return self:combatTalentMindDamage(t, 30, 500) end,
+	critPower = function(self, t) return self:combatTalentMindDamage(t, 10, 60) end,
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), friendlyfire=false}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-
-		local dam = self:mindCrit(self:combatTalentMindDamage(t, 40, 900))
-
+		local dam = self:mindCrit(t.getDamage(self, t), 0, t.critPower(self, t)/100)
 		self:project(tg, x, y, function(px, py)
 			local target = game.level.map(px, py, Map.ACTOR)
 			if target and self:reactionToward(target) < 0 and target:canBe("poison") then
@@ -79,7 +82,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Releases poisonous spores at an area of radius %d, infecting the foes inside with a random poison doing %0.2f nature damage over 10 turns.]]):format(self:getTalentRadius(t), damDesc(self, DamageType.NATURE, self:combatTalentMindDamage(t, 40, 900)))
+		return ([[Releases poisonous spores at an area of radius %d, infecting the foes inside with a random poison doing %0.1f Nature damage over 10 turns.
+		This attack can crit and deals %d%% additional critical damage.
+		The damage and critical bonus increase with your Mindpower.]]):format(self:getTalentRadius(t), damDesc(self, DamageType.NATURE, t.getDamage(self, t)), t.critPower(self, t))
 	end,
 }
 
@@ -96,9 +101,10 @@ newTalent{
 	requires_target = false,
 	tactical = { DEFEND = 1 },
 	getChance = function(self, t) return self:combatTalentLimit(t, 100, 7, 15) end, -- Limit < 100%
+	getDamage = function(self, t) return self:combatTalentMindDamage(t, 10, 50) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/slime")
-		local power = 10 + 5 * self:getTalentLevel(t)
+		local power = t.getDamage(self, t)
 		return {
 			onhit = self:addTemporaryValue("on_melee_hit", {[DamageType.ACID_DISARM]={dam=power, chance=t.getChance(self, t)}}),
 		}
@@ -108,7 +114,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Your skin drips with acid, damaging all that hit you for %0.2f acid damage and giving a %d%% chance to disarm them for 3 turns.]]):format(damDesc(self, DamageType.ACID, self:combatTalentMindDamage(t, 10, 50)), t.getChance(self, t))
+		return ([[Your skin drips with acid, damaging all that hit you for %0.1f Acid damage with a %d%% chance to disarm them for 3 turns.
+		The damage increases with your Mindpower.]]):format(damDesc(self, DamageType.ACID, t.getDamage(self, t)), t.getChance(self, t))
 	end,
 }
 
@@ -120,7 +127,7 @@ newTalent{
 	random_ego = "utility",
 	equilibrium = 5,
 	cooldown = 20,
-	tactical = { CLOSEIN = 2 },
+	tactical = { CLOSEIN = 2, ESCAPE = 1 },
 	requires_target = true,
 	range = function(self, t)
 		return math.floor(self:combatTalentScale(t,4.5,6.5))
@@ -143,13 +150,14 @@ newTalent{
 		if not x then return nil end
 		-- Target code does not restrict the self coordinates to the range, it lets the project function do it
 		-- but we cant ...
-		local _ _, x, y = self:canProject(tg, x, y)
-		game.level.map:particleEmitter(self.x, self.y, 1, "slime")
-		self:teleportRandom(x, y, self:getTalentRadius(t))
+		local _, x, y = self:canProject(tg, x, y)
+		if not x then return nil end
+		local oldx, oldy = self.x, self.y
+		if not self:teleportRandom(x, y, self:getTalentRadius(t)) then return nil end
+		game.level.map:particleEmitter(oldx, oldy, 1, "slime")
 		game.level.map:particleEmitter(self.x, self.y, 1, "slime")
 
 		local nb = t.getNbTalents(self, t)
-
 		local list = {}
 		for tid, cd in pairs(self.talents_cd) do 
 			local tt = self:getTalentFromId(tid)

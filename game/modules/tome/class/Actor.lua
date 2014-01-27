@@ -1725,9 +1725,7 @@ function _M:onTakeHit(value, src, death_note)
 			game:delayedLogMessage(self, nil, "mitosis_damage", "#DARK_GREEN##Source# shares damage with %s oozes!", string.his_her(self))
 			value = value / (#acts+1)
 			for _, act in ipairs(acts) do 
-				act.resists.all = act.resists.all - 50
 				act:takeHit(value, src) 
-				act.resists.all = act.resists.all + 50
 			end
 		end
 	end

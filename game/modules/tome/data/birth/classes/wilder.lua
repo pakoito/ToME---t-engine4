@@ -207,7 +207,7 @@ newBirthDescriptor{
 		["wild-gift/oozing-blades"]={false, 0.3},
 		["wild-gift/corrosive-blades"]={false, 0.3},
 		["wild-gift/moss"]={true, 0.3},
---		["wild-gift/malleable-body"]={true, 0.3},
+		["wild-gift/eyals-fury"]={false, 0.3},
 		["wild-gift/slime"]={true, 0.3},
 	},
 	talents = {
