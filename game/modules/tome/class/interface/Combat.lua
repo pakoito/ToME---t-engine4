@@ -399,12 +399,11 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	elseif self:checkEvasion(target) then
 		evaded = true
 		self:logCombat(target, "#Target# evades #Source#.")
-	elseif self:checkHit(atk, def) and (self:canSee(target) or self:attr("blind_fight") or rng.chance(3)) then
+	elseif self.turn_procs.auto_melee_hit or (self:checkHit(atk, def) and (self:canSee(target) or self:attr("blind_fight") or rng.chance(3))) then
 		local pres = util.bound(target:combatArmorHardiness() / 100, 0, 1)
 		if target.knowTalent and target:hasEffect(target.EFF_DUAL_WEAPON_DEFENSE) then
 			local deflect = math.min(dam, target:callTalent(target.T_DUAL_WEAPON_DEFENSE, "doDeflect"))
 			if deflect > 0 then
---				self:logCombat(target, "#Target# parries %d damage from #Source#'s attack.", deflect)
 				game:delayedLogDamage(self, target, 0, ("%s(%d parried#LAST#)"):format(DamageType:get(damtype).text_color or "#aaaaaa#", deflect), false)
 				dam = math.max(dam - deflect,0)
 				print("[ATTACK] after DUAL_WEAPON_DEFENSE", dam)
@@ -412,7 +411,6 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		end
 		if target.knowTalent and target:hasEffect(target.EFF_GESTURE_OF_GUARDING) and not target:attr("encased_in_ice") then
 			local deflected = math.min(dam, target:callTalent(target.T_GESTURE_OF_GUARDING, "doGuard")) or 0
---			if deflected > 0 then self:logCombat(target, "#Target# dismisses %d damage from #Source#'s attack with a sweeping gesture.", deflected) end
 			if deflected > 0 then
 				game:delayedLogDamage(self, target, 0, ("%s(%d gestured#LAST#)"):format(DamageType:get(damtype).text_color or "#aaaaaa#", deflected), false)
 				dam = dam - deflected
@@ -1614,8 +1612,8 @@ function _M:physicalCrit(dam, weapon, target, atk, def, add_chance, crit_power_a
 
 	chance = util.bound(chance, 0, 100)
 
-	print("[PHYS CRIT %]", chance)
-	if rng.percent(chance) then
+	print("[PHYS CRIT %]", self.turn_procs.auto_phys_crit and 100 or chance)
+	if self.turn_procs.auto_phys_crit or rng.percent(chance) then
 		if target:hasEffect(target.EFF_OFFGUARD) then
 			crit_power_add = crit_power_add + 0.1
 		end
@@ -1650,8 +1648,8 @@ function _M:spellCrit(dam, add_chance, crit_power_add)
 		crit_power_add = crit_power_add + self:callTalent(self.T_SHADOWSTRIKE,"getMultiplier")
 	end
 
-	print("[SPELL CRIT %]", chance)
-	if rng.percent(chance) then
+	print("[SPELL CRIT %]", self.turn_procs.auto_spell_crit and 100 or chance)
+	if self.turn_procs.auto_spell_crit or rng.percent(chance) then
 		self.turn_procs.is_crit = "spell"
 		self.turn_procs.crit_power = (1.5 + crit_power_add + (self.combat_critical_power or 0) / 100)
 		dam = dam * (1.5 + crit_power_add + (self.combat_critical_power or 0) / 100)
@@ -1698,8 +1696,8 @@ function _M:mindCrit(dam, add_chance, crit_power_add)
 		crit_power_add = crit_power_add + self:callTalent(self.T_SHADOWSTRIKE,"getMultiplier")
 	end
 
-	print("[MIND CRIT %]", chance)
-	if rng.percent(chance) then
+	print("[MIND CRIT %]", self.turn_procs.auto_mind_crit and 100 or chance)
+	if self.turn_procs.auto_mind_crit or rng.percent(chance) then
 		self.turn_procs.is_crit = "mind"
 		self.turn_procs.crit_power = (1.5 + crit_power_add + (self.combat_critical_power or 0) / 100)
 		dam = dam * (1.5 + crit_power_add + (self.combat_critical_power or 0) / 100)

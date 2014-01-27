@@ -46,9 +46,9 @@ local function makeGolem(self)
 		canWearObjectCustom = function(self, o)
 			if o.type ~= "gem" then return end
 			if not self.summoner then return "Golem has no master" end
-			if not self.summoner:knowTalent(self.summoner.T_GEM_GOLEM) then return "Runic Golem talent required" end
+			if not self.summoner:knowTalent(self.summoner.T_GEM_GOLEM) then return "Master must know the Gem Golem talent" end
 			if not o.material_level then return "impossible to use this gem" end
-			if o.material_level > self.summoner:getTalentLevelRaw(self.summoner.T_GEM_GOLEM) then return "Runic Golem talent too low for this gem" end
+			if o.material_level > self.summoner:getTalentLevelRaw(self.summoner.T_GEM_GOLEM) then return "Master's Gem Golem talent too low for this gem" end
 		end,
 		equipdoll = "alchemist_golem",
 		infravision = 10,

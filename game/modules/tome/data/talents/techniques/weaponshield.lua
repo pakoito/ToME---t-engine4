@@ -165,10 +165,10 @@ newTalent{
 
 		-- Second & third attack with weapon
 		if hit then
-			self.combat_physcrit = self.combat_physcrit + 1000
+			self.turn_procs.auto_phys_crit = true
 			self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 1, 1.5), true)
 			self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 1, 1.5), true)
-			self.combat_physcrit = self.combat_physcrit - 1000
+			self.turn_procs.auto_phys_crit = nil
 		end
 
 		return true

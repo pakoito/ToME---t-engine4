@@ -175,15 +175,14 @@ newTalent{
 		if self:getTalentLevel(t) >= 4 then
 			self.combat_dam = self.combat_dam + inc
 		end
-		self.combat_physcrit = self.combat_physcrit + 100
-
+		self.turn_procs.auto_phys_crit = true
 		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, self:combatTalentWeaponDamage(t, 0.8, 1.3))
 
 		if self:getTalentLevel(t) >= 4 then
 			self.combat_dam = self.combat_dam - inc
 			self:incStamina(-self.stamina / 2)
 		end
-		self.combat_physcrit = self.combat_physcrit - 100
+		self.turn_procs.auto_phys_crit = nil
 
 		-- Try to insta-kill
 		if hit then
