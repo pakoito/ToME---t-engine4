@@ -18,6 +18,7 @@
 -- darkgod@te4.org
 
 require "engine.class"
+local Tiles = require "engine.Tiles"
 local Base = require "engine.ui.Base"
 local Focusable = require "engine.ui.Focusable"
 
@@ -30,13 +31,23 @@ frame_oy1 = -5
 frame_oy2 = 5
 
 function _M:init(t)
-	self.text = assert(t.text, "no button text")
+	if t.tex then
+		self.tex = t.tex
+	else	
+		self.file = tostring(assert(t.file, "no button file"))
+		self.image = Tiles:loadImage(self.file)
+		local iw, ih = 0, 0
+		if self.image then iw, ih = self.image:getSize() end
+		self.iw, self.ih = iw, ih
+	end
+	if t.force_w then self.iw = t.force_w end
+
 	self.fct = assert(t.fct, "no button fct")
 	self.on_select = t.on_select
-	self.force_w = t.width
 	if t.can_focus ~= nil then self.can_focus = t.can_focus end
 	if t.can_focus_mouse ~= nil then self.can_focus_mouse = t.can_focus_mouse end
 	self.alpha_unfocus = t.alpha_unfocus or 1
+	self.no_decoration = t.no_decoration
 
 	Base.init(self, t)
 end
@@ -46,16 +57,9 @@ function _M:generate()
 	self.key:reset()
 
 	-- Draw UI
-	self.font:setStyle("bold")
-	local w, h = self.font:size(self.text)
-	self.iw, self.ih = w, h
-	if self.force_w then w = self.force_w end
+	local w, h = self.iw, self.ih
 	self.w, self.h = w - frame_ox1 + frame_ox2, h - frame_oy1 + frame_oy2
-
-	local s = core.display.newSurface(w, h)
-	s:drawColorStringBlended(self.font, self.text, 0, 0, 255, 255, 255, true)
-	self.tex = {s:glTexture()}
-	self.font:setStyle("normal")
+	if self.image then self.tex = self.tex or {self.image:glTexture()} end
 
 	-- Add UI controls
 	self.mouse:registerZone(0, 0, self.w+6, self.h+6, function(button, x, y, xrel, yrel, bx, by, event)
@@ -86,30 +90,32 @@ function _M:display(x, y, nb_keyframes, ox, oy)
 	oy = oy + 3
 	local mx, my, button = core.mouse.get()
 	if self.focused then
-		if button == 1 and mx > ox and mx < ox+self.w and my > oy and my < oy+self.h then
-			self:drawFrame(self.frame, x, y, 0, 1, 0, 1)
-		elseif self.glow then
-			local v = self.glow + (1 - self.glow) * (1 + math.cos(core.game.getTime() / 300)) / 2
-			self:drawFrame(self.frame, x, y, v*0.8, v, 0, 1)
-		else
-			self:drawFrame(self.frame_sel, x, y)
+		if not self.no_decoration then
+			if button == 1 and mx > ox and mx < ox+self.w and my > oy and my < oy+self.h then
+				self:drawFrame(self.frame, x, y, 0, 1, 0, 1)
+			elseif self.glow then
+				local v = self.glow + (1 - self.glow) * (1 + math.cos(core.game.getTime() / 300)) / 2
+				self:drawFrame(self.frame, x, y, v*0.8, v, 0, 1)
+			else
+				self:drawFrame(self.frame_sel, x, y)
+			end
 		end
-		if self.text_shadow then self.tex[1]:toScreenFull(x-frame_ox1+1, y-frame_oy1+1, self.rw, self.rh, self.tex[2], self.tex[3], 0, 0, 0, self.text_shadow) end
 		self.tex[1]:toScreenFull(x-frame_ox1, y-frame_oy1, self.rw, self.rh, self.tex[2], self.tex[3])
 	else
-		if self.glow then
-			local v = self.glow + (1 - self.glow) * (1 + math.cos(core.game.getTime() / 300)) / 2
-			self:drawFrame(self.frame, x, y, v*0.8, v, 0, self.alpha_unfocus)
-		else
-			self:drawFrame(self.frame, x, y, 1, 1, 1, self.alpha_unfocus)
-		end
+		if not self.no_decoration then
+			if self.glow then
+				local v = self.glow + (1 - self.glow) * (1 + math.cos(core.game.getTime() / 300)) / 2
+				self:drawFrame(self.frame, x, y, v*0.8, v, 0, self.alpha_unfocus)
+			else
+				self:drawFrame(self.frame, x, y, 1, 1, 1, self.alpha_unfocus)
+			end
 
-		if self.focus_decay and not self.glow then
-			self:drawFrame(self.frame_sel, x, y, 1, 1, 1, self.alpha_unfocus * self.focus_decay / self.focus_decay_max_d)
-			self.focus_decay = self.focus_decay - nb_keyframes
-			if self.focus_decay <= 0 then self.focus_decay = nil end
+			if self.focus_decay and not self.glow then
+				self:drawFrame(self.frame_sel, x, y, 1, 1, 1, self.alpha_unfocus * self.focus_decay / self.focus_decay_max_d)
+				self.focus_decay = self.focus_decay - nb_keyframes
+				if self.focus_decay <= 0 then self.focus_decay = nil end
+			end
 		end
-		if self.text_shadow then self.tex[1]:toScreenFull(x-frame_ox1+1, y-frame_oy1+1, self.rw, self.rh, self.tex[2], self.tex[3], 0, 0, 0, self.alpha_unfocus * self.text_shadow) end
 		self.tex[1]:toScreenFull(x-frame_ox1, y-frame_oy1, self.rw, self.rh, self.tex[2], self.tex[3], 1, 1, 1, self.alpha_unfocus)
 	end
 end
