@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -159,9 +159,9 @@ newTalent{
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
-		if self:getTalentLevel(t) >= 5 then self.combat_atk = self.combat_atk + 1000 end
+		if self:getTalentLevel(t) >= 5 then self.turn_procs.auto_melee_hit = true end
 		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, t.getDamage(self, t))
-		if self:getTalentLevel(t) >= 5 then self.combat_atk = self.combat_atk - 1000 end
+		if self:getTalentLevel(t) >= 5 then self.turn_procs.auto_melee_hit = nil end
 		
 		-- Try to stun !
 		if hit then

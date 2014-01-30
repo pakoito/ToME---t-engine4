@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@ newTalent{
 	no_energy = true,
 	tactical = { ATTACKAREA = {NATURE=1}, DISABLE = {pin = 1} },
 	getDamage = function(self, t) return self:combatTalentMindDamage(t, 6, 40) end,
-	getDuration = function(self, t) return math.ceil(self:combatTalentScale(t, 4, 8)) end, 
+	getDuration = function(self, t) return math.floor(self:combatTalentLimit(t, 16, 4, 8)) end, -- Limit < 16
 	getSlow = function(self, t) return math.ceil(self:combatTalentLimit(t, 100, 36, 60)) end, -- Limit < 100%
 	getPin = function(self, t) return math.ceil(self:combatTalentLimit(t, 100, 25, 45)) end, -- Limit < 100%
 	range = 0,
@@ -85,7 +85,7 @@ newTalent{
 	no_energy = true,
 	tactical = { ATTACKAREA = {NATURE=1}, HEAL = 1 },
 	getDamage = function(self, t) return self:combatTalentMindDamage(t, 6, 40) end,
-	getDuration = function(self, t) return math.ceil(self:combatTalentScale(t,4,8)) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentLimit(t, 16, 4, 8)) end, -- Limit < 16
 	getHeal = function(self, t) return math.floor(self:combatTalentLimit(t, 200, 62, 110)) end, -- Limit < 200%	
 	range = 0,
 	radius = function(self, t)
@@ -131,10 +131,10 @@ newTalent{
 	cooldown = 16,
 	equilibrium = 5,
 	no_energy = true,
-	tactical = { ATTACKAREA = {NATURE=1}, DISABLE = {pin = 1} },
+	tactical = { ATTACKAREA = {NATURE=1}, DISABLE = 2 },
 	getDamage = function(self, t) return self:combatTalentMindDamage(t, 6, 40) end,
-	getDuration = function(self, t) return math.ceil(self:combatTalentScale(t, 4, 8)) end,
-	getFail = function(self, t) return math.min(50, 15 + math.ceil(self:getTalentLevel(t) * 4)) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentLimit(t, 16, 4, 8)) end, -- Limit < 16
+	getFail = function(self, t) return self:combatTalentLimit(t, 50, 19, 35) end, -- Limit < 50%
 	range = 0,
 	radius = function(self, t)
 		return math.floor(self:combatTalentScale(t,2.5, 4.5, nil, 0, 0, true)) 
@@ -166,7 +166,7 @@ newTalent{
 		This moss is very slippery and causes affected foes to have a %d%% chance of failing to perform complex actions.
 		The moss lasts %d turns.
 		Moss talents are instant but place all other moss talents on cooldown for 3 turns.
-		The damage will increase with your Mindpower.]]):
+		The damage and the chance to apply the slippery effect increase with your Mindpower.]]):
 		format(radius, damDesc(self, DamageType.NATURE, damage), fail, duration)
 	end,
 }
@@ -179,9 +179,9 @@ newTalent{
 	cooldown = 16,
 	equilibrium = 5,
 	no_energy = true,
-	tactical = { ATTACKAREA = {NATURE=1}, DISABLE = {pin = 1} },
+	tactical = { ATTACKAREA = {NATURE=1}, DISABLE = {confusion = 1} },
 	getDamage = function(self, t) return self:combatTalentMindDamage(t, 6, 40) end,
-	getDuration = function(self, t) return math.ceil(self:combatTalentScale(t, 4, 8)) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentLimit(t, 16, 4, 8)) end, -- Limit < 16
 	getChance = function(self, t) return math.ceil(self:combatTalentLimit(t, 100, 25.5, 47.5)) end, -- Limit < 100%
 	getPower = function(self, t) return math.max(0,self:combatTalentLimit(t, 50, 20, 40)) end, -- Limit < 50%
 	range = 0,

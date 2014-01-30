@@ -1,6 +1,6 @@
 /*
     TE4 - T-Engine 4
-    Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+    Copyright (C) 2009 - 2014 Nicolas Casalini
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -262,7 +262,7 @@ static int program_set_uniform_number3_fast(lua_State *L)
 static int program_set_uniform_number4_fast(lua_State *L)
 {
 	shader_type *p = (shader_type*)lua_touserdata(L, 1);
-	GLfloat i[2];
+	GLfloat i[4];
 	i[0] = luaL_checknumber(L, 2);
 	i[1] = luaL_checknumber(L, 3);
 	i[2] = luaL_checknumber(L, 4);

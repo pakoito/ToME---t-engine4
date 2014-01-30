@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ return {
 		shockwaveSpeed = shockwaveSpeed or 5.0,
 		flameIntensity = flameIntensity or 0.5, 
 
-		ellipsoidalFactor = 1.0, --1 is perfect circle, >1 is ellipsoidal
+		ellipsoidalFactor = {1.0, 1.0}, --1 is perfect circle, >1 is ellipsoidal
 		antialiasingRadius = antialiasingRadius or 0.98, --1.0 is no antialiasing, 0.0 - fully smoothed(looks worse)
 	},
 	resetargs = {

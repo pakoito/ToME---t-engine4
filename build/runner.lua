@@ -28,6 +28,10 @@ project "TEngineRunner"
 		links { "dl", "SDL", "SDL_ttf", "SDL_image", "SDL_mixer", "GL", "GLU", "m", "pthread" }
 		defines { [[TENGINE_HOME_PATH='".t-engine"']], 'SELFEXE_LINUX'  }
 
+	configuration "bsd"
+		links { "SDL", "SDL_ttf", "SDL_image", "SDL_mixer", "GL", "GLU", "m", "pthread" }
+		defines { [[TENGINE_HOME_PATH='".t-engine"']], 'SELFEXE_BSD'  }
+
 	configuration "windows"
 		links { "mingw32", "SDLmain", "SDL", "SDL_ttf", "SDL_image", "SDL_mixer", "OPENGL32", "GLU32", "wsock32" }
 		defines { [[TENGINE_HOME_PATH='"T-Engine"']], 'SELFEXE_WINDOWS'  }
@@ -56,6 +60,9 @@ project "te4runner"
 
 	configuration "linux"
 		defines { [[TENGINE_HOME_PATH='".t-engine"']], 'SELFEXE_LINUX'  }
+	configuration "bsd"
+		defines { [[TENGINE_HOME_PATH='".t-engine"']], 'SELFEXE_BSD'  }
+
 	configuration "windows"
 		defines { [[TENGINE_HOME_PATH='"T-Engine"']], 'SELFEXE_WINDOWS'  }
 	configuration "macosx"
@@ -77,6 +84,8 @@ project "runner-physfs"
 	files { "../src/physfs/*.c", "../src/zlib/*.c", "../src/physfs/archivers/*.c", }
 
 	configuration "linux"
+		files { "../src/physfs/platform/unix.c", "../src/physfs/platform/posix.c",  }
+	configuration "bsd"
 		files { "../src/physfs/platform/unix.c", "../src/physfs/platform/posix.c",  }
 	configuration "windows"
 		files { "../src/physfs/platform/windows.c",  }

@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -544,7 +544,7 @@ newTalent{
 			DamageType.SLIME, {dam=t.getDamage(self, t), power=0.15, x=self.x, y=self.y},
 			1,
 			5, nil,
-			engine.Entity.new{alpha=100, display='', color_br=30, color_bg=200, color_bb=60},
+			MapEffect.new{color_br=30, color_bg=200, color_bb=60, effect_shader="shader_images/retch_effect.png"},
 			function(e)
 				e.radius = e.radius + 0.5
 				return true
@@ -573,24 +573,25 @@ newTalent{
 	range = 6,
 	tactical = { DISABLE = 1, CLOSEIN = 3 },
 	requires_target = true,
-	getDamage = function(self, t) return self:mindCrit(self:combatTalentMindDamage(t, 5, 50)) end,
+	getDamage = function(self, t) return self:combatTalentMindDamage(t, 5, 70) end,
 	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 3, 7)) end,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
 		local target = game.level.map(x, y, engine.Map.ACTOR)
 		if not x or not y or not target then return nil end
+		local crit = self:mindCrit(1)
 
 		if target:canBe("pin") and self:checkHit(self:combatMindpower(), target:combatPhysicalResist()) then
-			target:setEffect(target.EFF_GRAPPLED, t.getDuration(self, t), {src=self, power=t.getDamage(self, t)/2})
+			target:setEffect(target.EFF_GRAPPLED, t.getDuration(self, t), {src=self, power=t.getDamage(self, t)/2 * crit})
 			self:project(tg, x, y, function(px, py)
 
 				target:pull(self.x, self.y, tg.range)
 
 				if not target:attr("no_breath") and not target:attr("undead") and target:canBe("silence") then
-					target:setEffect(target.EFF_STRANGLE_HOLD, t.getDuration(self, t), {src=self, power=t.getDamage(self, t) * 1.5, damtype="SLIME"})
+					target:setEffect(target.EFF_STRANGLE_HOLD, t.getDuration(self, t), {src=self, power=t.getDamage(self, t) * crit, damtype="SLIME"})
 				else
-					target:setEffect(target.EFF_CRUSHING_HOLD, t.getDuration(self, t), {src=self, power=t.getDamage(self, t), damtype="SLIME"})
+					target:setEffect(target.EFF_CRUSHING_HOLD, t.getDuration(self, t), {src=self, power=t.getDamage(self, t) * crit, damtype="SLIME"})
 				end
 			end)
 		else
@@ -696,7 +697,7 @@ newTalent{
 		local m = false
 		local no_inven = true
 		local list = mod.class.NPC:loadList("/data/general/npcs/horror.lua")
-		if self.is_akgishil and rng.percent(10) and not self.summoned_distort then
+		if self.is_akgishil and rng.percent(3) and not self.summoned_distort then
 			m = list.DISTORTED_BLADE:clone()
 			self.summoned_distort=1
 			no_inven = false
@@ -712,7 +713,7 @@ newTalent{
 			m.summoner = self
 			m.summon_time = 1000
 			if not self.is_akgishil then
-				m.summon_time = 10
+				m.summon_time = 15
 				m.ai_real = m.ai
 				m.ai = "summoned"
 			end
@@ -720,7 +721,7 @@ newTalent{
 			if self:knowTalent(self.T_BLIGHTED_SUMMONING) then
 				m.blighted_summon_talent = self.T_RUIN
 				m:incIncStat("mag", self:getMag())
-				m.summon_time=15
+				m.summon_time=20
 			end
 			game.zone:addEntity(game.level, m, "actor", x, y)
 		end

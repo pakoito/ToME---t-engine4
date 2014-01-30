@@ -1,5 +1,5 @@
 -- TE4 - T-Engine 4
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -96,6 +96,7 @@ function _M:building(leaf, spots)
 	end end
 
 	for i = x1, x2 do for j = y1, y2 do
+		self.map.room_map[i][j].is_building = true
 		if i == x1 or i == x2 or j == y1 or j == y2 then
 			self.map(i, j, Map.TERRAIN, self:resolve("wall"))
 			if not (i == x1 and j == y1) and not (i == x2 and j == y1) and not (i == x1 and j == y2) and not (i == x2 and j == y2) then

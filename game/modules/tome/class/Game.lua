@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -493,7 +493,7 @@ function _M:setupDisplayMode(reboot, mode)
 		end
 		self:setupMiniMap()
 
-		self:createFBOs()
+		self:createFBOs()		
 	end
 end
 
@@ -517,6 +517,8 @@ function _M:createFBOs()
 	else core.particles.defineFramebuffer(nil) end
 
 	if self.target then self.target:enableFBORenderer("ui/targetshader.png", "target_fbo") end
+
+	Map:enableFBORenderer("target_fbo")
 
 --	self.mm_fbo = core.display.newFBO(200, 200)
 --	if self.mm_fbo then self.mm_fbo_shader = Shader.new("mm_fbo") if not self.mm_fbo_shader.shad then self.mm_fbo = nil self.mm_fbo_shader = nil end end
@@ -1356,7 +1358,7 @@ function _M:displayMap(nb_keyframes)
 		if self.fbo then
 			self.fbo:use(true)
 				if self.level.data.background then self.level.data.background(self.level, 0, 0, nb_keyframes) end
-				map:display(0, 0, nb_keyframes, config.settings.tome.smooth_fov)
+				map:display(0, 0, nb_keyframes, config.settings.tome.smooth_fov, self.fbo)
 				if self.level.data.foreground then self.level.data.foreground(self.level, 0, 0, nb_keyframes) end
 				if self.level.data.weather_particle then self.state:displayWeather(self.level, self.level.data.weather_particle, nb_keyframes) end
 				if self.level.data.weather_shader then self.state:displayWeatherShader(self.level, self.level.data.weather_shader, map.display_x, map.display_y, nb_keyframes) end
@@ -1376,7 +1378,7 @@ function _M:displayMap(nb_keyframes)
 		-- Basic display; no FBOs
 		else
 			if self.level.data.background then self.level.data.background(self.level, map.display_x, map.display_y, nb_keyframes) end
-			map:display(nil, nil, nb_keyframes, config.settings.tome.smooth_fov)
+			map:display(nil, nil, nb_keyframes, config.settings.tome.smooth_fov, nil)
 			if self.target then self.target:display(nil, nil, self.full_fbo, nb_keyframes) end
 			if self.level.data.foreground then self.level.data.foreground(self.level, map.display_x, map.display_y, nb_keyframes) end
 			if self.level.data.weather_particle then self.state:displayWeather(self.level, self.level.data.weather_particle, nb_keyframes) end
@@ -1507,7 +1509,8 @@ function _M:setupCommands()
 			print("===============")
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
---do return end
+			error("for johnny0, with love :)")
+do return end
 			local f, err = loadfile("/data/general/events/glimmerstone.lua")
 			print(f, err)
 			setfenv(f, setmetatable({level=self.level, zone=self.zone}, {__index=_G}))

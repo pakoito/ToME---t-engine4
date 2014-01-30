@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -86,6 +86,7 @@ newTalent{
 	type = {"chronomancy/anomalies", 1},
 	points = 1,
 	range = 10,
+	paradox = 0,
 	direct_hit = true,
 	type_no_req = true,
 	cooldown = 1,
@@ -250,6 +251,7 @@ newTalent{
 	points = 1,
 	type_no_req = true,
 	cooldown = 1,
+	paradox = 0,
 	no_unlearn_last = true,
 	getDamage = function(self, t) return getAnomalyDamage(self)/4 end,
 	getDuration = function(self, t) return math.ceil(self:combatScale(self:getParadox(), 0, 0, 1150/50, 1150)) end,

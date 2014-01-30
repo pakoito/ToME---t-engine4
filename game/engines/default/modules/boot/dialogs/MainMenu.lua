@@ -1,5 +1,5 @@
 -- TE4 - T-Engine 4
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@ require "engine.class"
 local Dialog = require "engine.ui.Dialog"
 local List = require "engine.ui.List"
 local Button = require "engine.ui.Button"
+local ButtonImage = require "engine.ui.ButtonImage"
 local Textzone = require "engine.ui.Textzone"
 local Textbox = require "engine.ui.Textbox"
 local Separator = require "engine.ui.Separator"
@@ -62,10 +63,17 @@ function _M:init()
 
 	self.c_list = List.new{width=self.iw, nb_items=#self.list, list=self.list, fct=function(item) end, font={"/data/font/DroidSans-Bold.ttf", 16}}
 
+	self.c_facebook = ButtonImage.new{no_decoration=true, alpha_unfocus=0.5, file="facebook.png", fct=function() util.browserOpenUrl("https://www.facebook.com/tales.of.maj.eyal") end}
+	self.c_twitter = ButtonImage.new{no_decoration=true, alpha_unfocus=0.5, file="twitter.png", fct=function() util.browserOpenUrl("https://twitter.com/darkgodone") end}
+	self.c_forums = ButtonImage.new{no_decoration=true, alpha_unfocus=0.5, file="forums.png", fct=function() util.browserOpenUrl("http://forums.te4.org/") end}
+
 	self.base_uis = {
 		{left=0, top=0, ui=self.c_list},
 		{left=0, bottom=0, absolute=true, ui=self.c_background},
 		{right=0, top=0, absolute=true, ui=self.c_version},
+		{right=0, bottom=self.c_facebook.h+self.c_twitter.h, absolute=true, ui=self.c_forums},
+		{right=0, bottom=self.c_twitter.h, absolute=true, ui=self.c_facebook},
+		{right=0, bottom=0, absolute=true, ui=self.c_twitter},
 	}
 
 	self:updateUI()	

@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@ Madness features:#YELLOW#
 - All zone levels increased by 150% + 10
 - All creature talent levels increased by 170%
 - Rare creatures are far more frequent and random bosses start to appear
+- Bosses will have randomly selected talents
 - Player is being hunted! Randomly all foes in a radius will get a feeling of where she/he is
 - Player rank is normal instead of elite
 - Player can earn Madness version of achievements if also playing in Roguelike or Adventure permadeath mode.

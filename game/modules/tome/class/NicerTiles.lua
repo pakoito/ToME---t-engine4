@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -967,6 +967,27 @@ dirt = { method="road", marker="road",
 	default6={add_mos={{image="terrain/road_dirt/road_end_a_01.png"}}, min=1, max=1},
 	default2={add_mos={{image="terrain/road_dirt/road_end_a_03.png"}}, min=1, max=1},
 	default8={add_mos={{image="terrain/road_dirt/road_end_a_04.png"}}, min=1, max=1},
+},
+wooden_barricade = { method="road", marker="barricade",
+	default82={add_mos={{image="terrain/wooden_barricade/barricade_vertical_a_%02d.png"}}, min=1, max=3},
+	default46={add_mos={{image="terrain/wooden_barricade/barricade_horizontal_a_%02d.png"}}, min=1, max=3},
+
+	default8246={add_mos={{image="terrain/wooden_barricade/barricade_cross_a_%02d.png"}}, min=1, max=1},
+
+	default846={add_mos={{image="terrain/wooden_barricade/barricade_t_section_c_%02d.png"}}, min=1, max=1},
+	default246={add_mos={{image="terrain/wooden_barricade/barricade_t_section_a_%02d.png"}}, min=1, max=1},
+	default824={add_mos={{image="terrain/wooden_barricade/barricade_t_section_b_%02d.png"}}, min=1, max=1},
+	default826={add_mos={{image="terrain/wooden_barricade/barricade_t_section_d_%02d.png"}}, min=1, max=1},
+
+	default84={add_mos={{image="terrain/wooden_barricade/barricade_turn_c_%02d.png"}}, min=1, max=2},
+	default86={add_mos={{image="terrain/wooden_barricade/barricade_turn_d_%02d.png"}}, min=1, max=2},
+	default26={add_mos={{image="terrain/wooden_barricade/barricade_turn_a_%02d.png"}}, min=1, max=2},
+	default24={add_mos={{image="terrain/wooden_barricade/barricade_turn_b_%02d.png"}}, min=1, max=2},
+
+	default4={add_mos={{image="terrain/wooden_barricade/barricade_end_a_02.png"}}, min=1, max=1},
+	default6={add_mos={{image="terrain/wooden_barricade/barricade_end_a_01.png"}}, min=1, max=1},
+	default2={add_mos={{image="terrain/wooden_barricade/barricade_end_a_03.png"}}, min=1, max=1},
+	default8={add_mos={{image="terrain/wooden_barricade/barricade_end_a_04.png"}}, min=1, max=1},
 },
 }
 _M.generic_roads_defs = defs

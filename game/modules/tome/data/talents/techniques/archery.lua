@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@ newTalent{
 	hide = true,
 	innate = true,
 	points = 1,
+	cooldown = 0,
 	range = archery_range,
 	message = "@Source@ shoots!",
 	requires_target = true,

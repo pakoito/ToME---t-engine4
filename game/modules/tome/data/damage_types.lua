@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -493,10 +493,14 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 					src:triggerTalent(src.T_METEORIC_CRASH, nil, target)
 				end
 
-				if not target.dead and t.is_spell and target.knowTalent and target:knowTalent(src.T_SPELL_FEEDBACK) then
-					target:triggerTalent(target.T_SPELL_FEEDBACK, nil, src, t)
+				if not target.dead and t.is_spell and target.knowTalent then
+					if target:knowTalent(target.T_SPELL_FEEDBACK) then
+						target:triggerTalent(target.T_SPELL_FEEDBACK, nil, src, t)
+					end
+					if target:knowTalent(target.T_NATURE_S_DEFIANCE) then
+						target:triggerTalent(target.T_NATURE_S_DEFIANCE, nil, src, t)
+					end
 				end
-
 				if t.is_spell and src.knowTalent and src:knowTalent(src.T_BORN_INTO_MAGIC) then
 					src:triggerTalent(target.T_BORN_INTO_MAGIC, nil, type)
 				end
@@ -607,6 +611,9 @@ newDamageType{
 			local a = game.level.map(x, y, Map.ACTOR)
 			if src.player and a and not a.training_dummy then world:gainAchievement("CRYOMANCER", src, realdam) end
 		end
+		if realdam > 0 and src:attr("cold_freezes") and rng.percent(src.cold_freezes) then
+			DamageType:get(DamageType.FREEZE).projector(src, x, y, DamageType.FREEZE, {dur=2, hp=70+dam*1.5})
+		end
 		return realdam
 	end,
 	death_message = {"frozen", "chilled", "iced", "cooled", "frozen and shattered into a million little shards"},
@@ -625,12 +632,11 @@ newDamageType{
 	name = "acid", type = "ACID", text_color = "#GREEN#",
 	antimagic_resolve = true,
 	projector = function(src, x, y, type, dam)
-		local realdam = DamageType.defaultProjector(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
-		if realdam > 0 and target and src.knowTalent and src:knowTalent(src.T_NATURAL_ACID) and not src:isTalentCoolingDown(src.T_NATURAL_ACID) then
-			src:startTalentCooldown(src.T_NATURAL_ACID)
+		local realdam = DamageType.defaultProjector(src, x, y, type, dam)
+		if realdam > 0 and target and src.knowTalent and src:knowTalent(src.T_NATURAL_ACID) then
 			local t = src:getTalentFromId(src.T_NATURAL_ACID)
-			target:setEffect(target.EFF_NATURAL_ACID, 2, {power=t.getResist(src, t)})
+			src:setEffect(src.EFF_NATURAL_ACID, t.getDuration(src, t), {})
 		end
 		return realdam
 	end,
@@ -642,12 +648,11 @@ newDamageType{
 	name = "nature", type = "NATURE", text_color = "#LIGHT_GREEN#",
 	antimagic_resolve = true,
 	projector = function(src, x, y, type, dam)
-		local realdam = DamageType.defaultProjector(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
-		if realdam > 0 and target and src.knowTalent and src:knowTalent(src.T_CORROSIVE_NATURE) and not src:isTalentCoolingDown(src.T_CORROSIVE_NATURE) then
-			src:startTalentCooldown(src.T_CORROSIVE_NATURE)
+		local realdam = DamageType.defaultProjector(src, x, y, type, dam)
+		if realdam > 0 and target and src.knowTalent and src:knowTalent(src.T_CORROSIVE_NATURE) then
 			local t = src:getTalentFromId(src.T_CORROSIVE_NATURE)
-			target:setEffect(target.EFF_CORROSIVE_NATURE, 2, {power=t.getResist(src, t)})
+			src:setEffect(src.EFF_CORROSIVE_NATURE, t.getDuration(src, t), {})
 		end
 		return realdam
 	end,
@@ -1155,6 +1160,27 @@ newDamageType{
 	end,
 }
 
+-- Bloodspring damage + repulsion; checks for spell power against physical resistance
+newDamageType{
+	name = "bloodspring", type = "BLOODSPRING",
+	projector = function(src, x, y, type, dam)
+		local srcx, srcy = dam.x, dam.y
+		local base = dam
+		dam = dam.dam
+		DamageType:get(base.st).projector(src, x, y, base.st, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			if target:checkHit(base.power or src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then
+				target:knockback(srcx, srcy, base.dist or 1)
+				target:crossTierEffect(target.EFF_OFFBALANCE, base.power or src:combatSpellpower())
+				game.logSeen(target, "%s is knocked back!", target.name:capitalize())
+			else
+				game.logSeen(target, "%s resists the bloody wave!", target.name:capitalize())
+			end
+		end
+	end,
+}
+
 -- Fireburn damage + repulsion; checks for spell power against physical resistance
 newDamageType{
 	name = "fire repulsion", type = "FIREKNOCKBACK",
@@ -1507,13 +1533,29 @@ newDamageType{
 
 -- Confusion
 newDamageType{
-	name = "confusion", type = "RANDOM_CONFUSION",
+	name = "% chance of confusion", type = "RANDOM_CONFUSION",
 	projector = function(src, x, y, type, dam)
 		if _G.type(dam) == "number" then dam = {dam=dam} end
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and rng.percent(dam.dam) then
 			if target:canBe("confusion") then
 				target:setEffect(target.EFF_CONFUSED, 4, {power=75, apply_power=(dam.power_check or src.combatSpellpower)(src), no_ct_effect=true})
+			else
+				game.logSeen(target, "%s resists!", target.name:capitalize())
+			end
+		end
+	end,
+}
+
+-- Confusion
+newDamageType{
+	name = "% chance of confusion", type = "RANDOM_CONFUSION_PHYS",
+	projector = function(src, x, y, type, dam)
+		if _G.type(dam) == "number" then dam = {dam=dam} end
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and rng.percent(dam.dam) then
+			if target:canBe("confusion") then
+				target:setEffect(target.EFF_CONFUSED, 4, {power=75, apply_power=src:combatPhysicalpower(), no_ct_effect=true})
 			else
 				game.logSeen(target, "%s resists!", target.name:capitalize())
 			end
@@ -2598,7 +2640,6 @@ newDamageType{
 	end,
 }
 
-
 newDamageType{
 	name = "natural mucus", type = "MUCUS",
 	projector = function(src, x, y, type, dam, tmp)
@@ -2606,7 +2647,12 @@ newDamageType{
 		if target and not target.turn_procs.mucus then
 			target.turn_procs.mucus = true
 			if src:reactionToward(target) >= 0 then
-				target:incEquilibrium(-dam.equi)
+				if src == target then
+					target:incEquilibrium(-(dam.self_equi or 1))
+				else
+					target:incEquilibrium(-(dam.equi or 1))
+					src:incEquilibrium(-(dam.equi or 1))
+				end
 			elseif target:canBe("poison") then
 				target:setEffect(target.EFF_POISONED, 5, {src=src, power=dam.dam, apply_power=src:combatMindpower()})
 			end
@@ -2641,6 +2687,7 @@ newDamageType{
 newDamageType{
 	name = "corrosive acid", type = "ACID_CORRODE",
 	projector = function(src, x, y, type, dam, tmp)
+		if _G.type(dam) == "number" then dam = {dur = 4, armor = dam/2, defense = dam/2, dam = dam, atk=dam/2} end
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
 			DamageType:get(DamageType.ACID).projector(src, x, y, DamageType.ACID, dam.dam)
@@ -2652,15 +2699,16 @@ newDamageType{
 -- Bouncy slime!
 newDamageType{
 	name = "bouncing slime", type = "BOUNCE_SLIME",
-	projector = function(src, x, y, type, dam, tmp)
+	projector = function(src, x, y, type, dam, tmp, _, tg)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
-			local realdam = DamageType:get(DamageType.SLIME).projector(src, x, y, DamageType.SLIME, dam.dam)
+			local realdam = DamageType:get(DamageType.SLIME).projector(src, x, y, DamageType.SLIME, {dam=dam.dam, power=0.30})
+			
 			if dam.nb > 0 then
 				dam.done = dam.done or {}
 				dam.done[target.uid] = true
 				dam.nb = dam.nb - 1
-
+				dam.dam = dam.dam*(dam.bounce_factor or 0.5) -- lose 50% damage by default
 				local list = {}
 				src:project({type="ball", selffire=false, x=x, y=y, radius=6, range=0}, x, y, function(bx, by)
 					local actor = game.level.map(bx, by, Map.ACTOR)
@@ -2671,10 +2719,23 @@ newDamageType{
 				end)
 				if #list > 0 then
 					local st = rng.table(list)
-					src:projectile({type="bolt", range=6, x=x, y=y, selffire=false, display={particle="bolt_slime"}}, st.x, st.y, DamageType.BOUNCE_SLIME, dam, {type="slime"})
+					src:projectile({type="bolt", range=6, x=x, y=y, speed = tg.speed or 6, name=tg.name or "bouncing slime", selffire=false, display={particle="bolt_slime"}}, st.x, st.y, DamageType.BOUNCE_SLIME, dam, {type="slime"})
 				end
 			end
 			return realdam
 		end		
+	end,
+}
+
+-- Acid damage + Slow
+newDamageType{
+	name = "cautic mire", type = "CAUSTIC_MIRE",
+	projector = function(src, x, y, type, dam, tmp)
+		if _G.type(dam) == "number" then dam = {dur = 2, slow=20} end
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			DamageType:get(DamageType.ACID).projector(src, x, y, DamageType.ACID, dam.dam)
+			target:setEffect(target.EFF_SLOW, dam.dur, {power=dam.slow/100, apply_power=src:combatSpellpower()})
+		end
 	end,
 }

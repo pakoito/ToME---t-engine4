@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -1019,7 +1019,7 @@ newEffect{
 	desc = "Providence",
 	long_desc = function(self, eff) return ("The target is under protection and its life regeneration is boosted by %d."):format(eff.power) end,
 	type = "magical",
-	subtype = { light=true },
+	subtype = { light=true, shield=true },
 	status = "beneficial",
 	parameters = {},
 	on_timeout = function(self, eff)
@@ -1348,7 +1348,7 @@ newEffect{
 	desc = "Bone Shield",
 	long_desc = function(self, eff) return ("Any attacks doing more than %d%% of your life is reduced to %d%%."):format(eff.power, eff.power) end,
 	type = "magical",
-	subtype = { arcane=true },
+	subtype = { arcane=true, shield=true },
 	status = "beneficial",
 	parameters = { power=30 },
 	on_gain = function(self, err) return "#Target# protected by flying bones.", "+Bone Shield" end,
@@ -2244,6 +2244,7 @@ newEffect{
 		self:effectTemporaryValue(eff, "no_breath", 1)
 		self:effectTemporaryValue(eff, "cut_immune", eff.power)
 		self:effectTemporaryValue(eff, "stun_immune", eff.power)
+		self:effectTemporaryValue(eff, "is_shivgoroth", 1)
 
 		if self.hotkey and self.isHotkeyBound then
 			local pos = self:isHotkeyBound("talent", self.T_SHIVGOROTH_FORM)
@@ -2268,6 +2269,58 @@ newEffect{
 			local pos = self:isHotkeyBound("talent", self.T_ICE_STORM)
 			if pos then
 				self.hotkey[pos] = {"talent", self.T_SHIVGOROTH_FORM}
+			end
+		end
+
+		self:unlearnTalent(self.T_ICE_STORM, eff.lvl, nil, {no_unlearn=true})
+		self.replace_display = nil
+		self:removeAllMOs()
+		game.level.map:updateMap(self.x, self.y)
+	end,
+}
+
+--Duplicate for Frost Lord's Chain
+newEffect{
+	name = "SHIVGOROTH_FORM_LORD", image = "talents/shivgoroth_form.png",
+	desc = "Shivgoroth Form",
+	long_desc = function(self, eff) return ("The target assumes the form of a shivgoroth."):format() end,
+	type = "magical",
+	subtype = { ice=true },
+	status = "beneficial",
+	parameters = {},
+	on_gain = function(self, err) return "#Target# turns into a shivgoroth!", "+Shivgoroth Form" end,
+	on_lose = function(self, err) return "#Target# is no longer transformed.", "-Shivgoroth Form" end,
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "damage_affinity", {[DamageType.COLD]=50 + 100 * eff.power})
+		self:effectTemporaryValue(eff, "resists", {[DamageType.COLD]=100 * eff.power / 2})
+		self:effectTemporaryValue(eff, "no_breath", 1)
+		self:effectTemporaryValue(eff, "cut_immune", eff.power)
+		self:effectTemporaryValue(eff, "stun_immune", eff.power)
+		self:effectTemporaryValue(eff, "is_shivgoroth", 1)
+
+		if self.hotkey and self.isHotkeyBound then
+			local pos = self:isHotkeyBound("talent", self.T_SHIV_LORD)
+			if pos then
+				self.hotkey[pos] = {"talent", self.T_ICE_STORM}
+			end
+		end
+
+		local ohk = self.hotkey
+		self.hotkey = nil -- Prevent assigning hotkey, we just did
+		self:learnTalent(self.T_ICE_STORM, true, eff.lvl, {no_unlearn=true})
+		self.hotkey = ohk
+
+		self.replace_display = mod.class.Actor.new{
+			image="invis.png", add_mos = {{image = "npc/elemental_ice_greater_shivgoroth.png", display_y = -1, display_h = 2}},
+		}
+		self:removeAllMOs()
+		game.level.map:updateMap(self.x, self.y)
+	end,
+	deactivate = function(self, eff)
+		if self.hotkey and self.isHotkeyBound then
+			local pos = self:isHotkeyBound("talent", self.T_ICE_STORM)
+			if pos then
+				self.hotkey[pos] = {"talent", self.T_SHIV_LORD}
 			end
 		end
 
@@ -2343,5 +2396,45 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		self:removeShaderAura("essence_of_the_dead")
+	end,
+}
+
+newEffect{
+	name = "ICE_ARMOUR", image = "talents/ice_armour.png",
+	desc = "Ice Armour",
+	long_desc = function(self, eff) return ("The target is covered in a layer of ice. Its armour is increased by %d, it deals %0.1f Cold damage to attackers that hit in melee, and 50%% of it's damage is converted to cold."):format(eff.armor, self:damDesc(DamageType.COLD, eff.dam)) end,
+	type = "magical",
+	subtype = { cold=true, armour=true, },
+	status = "beneficial",
+	parameters = {armor=10, dam=10},
+	on_gain = function(self, err) return "#Target# is covered in icy armor!" end,
+	on_lose = function(self, err) return "#Target#'s ice coating crumbles away." end,
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "combat_armor", eff.armor)
+		self:effectTemporaryValue(eff, "on_melee_hit", {[DamageType.COLD]=eff.dam})
+		self:effectTemporaryValue(eff, "all_damage_convert", DamageType.COLD)
+		self:effectTemporaryValue(eff, "all_damage_convert_percent", 50)
+	end,
+	deactivate = function(self, eff)
+	end,
+}
+
+newEffect{
+	name = "CAUSTIC_GOLEM", image = "talents/caustic_golem.png",
+	desc = "Caustic Golem",
+	long_desc = function(self, eff) return ("The target is coated with acid. When struck in melee, it has a %d%% chance to spray a cone of acid towards the attacker doing %0.1f damage."):format(eff.chance, self:damDesc(DamageType.ACID, eff.dam)) end,
+	type = "magical",
+	subtype = { acid=true, coating=true, },
+	status = "beneficial",
+	parameters = {chance=10, dam=10},
+	on_gain = function(self, err) return "#Target# is coated in acid!" end,
+	on_lose = function(self, err) return "#Target#'s acid coating is diluted." end,
+	callbackOnMeleeHit = function(self, eff, src)
+		if self.turn_procs.caustic_golem then return end
+		if not rng.percent(eff.chance) then return end
+		self.turn_procs.caustic_golem = true
+
+		self:project({type="cone", cone_angle=25, range=0, radius=4}, src.x, src.y, DamageType.ACID, eff.dam)
+		game.level.map:particleEmitter(self.x, self.y, 4, "breath_acid", {radius=4, tx=src.x-self.x, ty=src.y-self.y, spread=20})
 	end,
 }

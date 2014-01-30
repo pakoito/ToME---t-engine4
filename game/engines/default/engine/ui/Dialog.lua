@@ -1,5 +1,5 @@
 -- TE4 - T-Engine 4
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -572,17 +572,17 @@ function _M:drawFrame(x, y, r, g, b, a)
 	x = x + self.frame.ox1
 	y = y + self.frame.oy1
 
-	-- Corners
-	self.b7.t:toScreenFull(x, y, self.b7.w, self.b7.h, self.b7.tw, self.b7.th, r, g, b, a)
-	self.b1.t:toScreenFull(x, y + self.frame.h - self.b1.h, self.b1.w, self.b1.h, self.b1.tw, self.b1.th, r, g, b, a)
-	self.b9.t:toScreenFull(x + self.frame.w - self.b9.w, y, self.b9.w, self.b9.h, self.b9.tw, self.b9.th, r, g, b, a)
-	self.b3.t:toScreenFull(x + self.frame.w - self.b3.w, y + self.frame.h - self.b3.h, self.b3.w, self.b3.h, self.b3.tw, self.b3.th, r, g, b, a)
-
 	-- Sides
 	self.b8.t:toScreenFull(x + self.b7.w, y, self.frame.w - self.b7.w - self.b9.w, self.b8.h, self.b8.tw, self.b8.th, r, g, b, a)
 	self.b2.t:toScreenFull(x + self.b7.w, y + self.frame.h - self.b3.h, self.frame.w - self.b7.w - self.b9.w, self.b2.h, self.b2.tw, self.b2.th, r, g, b, a)
 	self.b4.t:toScreenFull(x, y + self.b7.h, self.b4.w, self.frame.h - self.b7.h - self.b1.h, self.b4.tw, self.b4.th, r, g, b, a)
 	self.b6.t:toScreenFull(x + self.frame.w - self.b9.w, y + self.b7.h, self.b6.w, self.frame.h - self.b7.h - self.b1.h, self.b6.tw, self.b6.th, r, g, b, a)
+
+	-- Corners
+	self.b1.t:toScreenFull(x, y + self.frame.h - self.b1.h, self.b1.w, self.b1.h, self.b1.tw, self.b1.th, r, g, b, a)
+	self.b7.t:toScreenFull(x, y, self.b7.w, self.b7.h, self.b7.tw, self.b7.th, r, g, b, a)
+	self.b9.t:toScreenFull(x + self.frame.w - self.b9.w, y, self.b9.w, self.b9.h, self.b9.tw, self.b9.th, r, g, b, a)
+	self.b3.t:toScreenFull(x + self.frame.w - self.b3.w, y + self.frame.h - self.b3.h, self.b3.w, self.b3.h, self.b3.tw, self.b3.th, r, g, b, a)
 
 	-- Body
 	self.b5.t:toScreenFull(x + self.b7.w, y + self.b7.h, self.frame.w - self.b7.w - self.b3.w , self.frame.h - self.b7.h - self.b3.h, self.b5.tw, self.b5.th, r, g, b, a)
@@ -635,8 +635,15 @@ end
 function _M:firstDisplay()
 end
 
+function _M:setTitleShadowShader(shader, power)
+	self.shadow_shader = shader
+	self.shadow_power = power
+end
+
 function _M:toScreen(x, y, nb_keyframes)
 	if self.__hidden then return end
+
+	local shader = self.shadow_shader
 
 	local zoom = 1
 	if self.__showup then
@@ -670,8 +677,17 @@ function _M:toScreen(x, y, nb_keyframes)
 
 	-- Title
 	if self.title then
-		if self.title_shadow then self.title_tex[1]:toScreenFull(x + (self.w - self.title_tex.w) / 2 + 3 + self.frame.title_x, y + 3 + self.frame.title_y, self.title_tex.w, self.title_tex.h, self.title_tex[2], self.title_tex[3], 0, 0, 0, 0.5) end
+		if self.title_shadow then
+			if shader then
+				shader:use(true)
+				shader:uniOutlineSize(self.shadow_power, self.shadow_power)
+				shader:uniTextSize(self.title_tex[2], self.title_tex[3])
+			else
+				self.title_tex[1]:toScreenFull(x + (self.w - self.title_tex.w) / 2 + 3 + self.frame.title_x, y + 3 + self.frame.title_y, self.title_tex.w, self.title_tex.h, self.title_tex[2], self.title_tex[3], 0, 0, 0, 0.5)
+			end
+		end
 		self.title_tex[1]:toScreenFull(x + (self.w - self.title_tex.w) / 2 + self.frame.title_x, y + self.frame.title_y, self.title_tex.w, self.title_tex.h, self.title_tex[2], self.title_tex[3])
+		if self.title_shadow and shader then shader:use(false) end
 	end
 
 	self:innerDisplayBack(x, y, nb_keyframes, tx, ty)

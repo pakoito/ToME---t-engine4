@@ -1,5 +1,5 @@
 -- TE4 - T-Engine 4
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -136,8 +136,9 @@ function _M:makePod(x, y, radius, room_id, data, floor, wall)
 		elseif not g4 and not g2 and not g8 and g6 then self.map(i, j, Map.TERRAIN, self:resolve(wall or '#')) self.map.room_map[i][j].room = nil
 		end
 	end end
-end
 
+	return { id="podroom"..room_id, x=x, y=y, cx=x, cy=y }
+end
 
 --- Generates a room
 function _M:roomGen(room, id, lev, old_lev)

@@ -1,5 +1,5 @@
 -- ToME - Tales of Middle-Earth
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -177,6 +177,11 @@ Safe Mode disabled all graphical options and sets a low FPS. It is not advisable
 
 Please go to the Video Options and try enabling/disabling options and then restarting until you do not get this message.
 A usual problem is shaders and thus should be your first target to disable.]], 700)
+	end
+
+	local reboot_message = core.game.getRebootMessage()
+	if reboot_message then
+		Dialog:simpleLongPopup("Message", reboot_message, 700)
 	end
 end
 

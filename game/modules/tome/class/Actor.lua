@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -1648,12 +1648,12 @@ function _M:onTakeHit(value, src, death_note)
 
 	if self:attr("phase_shift") and not self.turn_procs.phase_shift then
 		self.turn_procs.phase_shift = true
-
 		local nx, ny = util.findFreeGrid(self.x, self.y, 1, true, {[Map.ACTOR]=true})
 		if nx then
 			local ox, oy = self.x, self.y
 			self:move(nx, ny, true)
 			game.level.map:particleEmitter(ox, oy, math.max(math.abs(nx-ox), math.abs(ny-oy)), "lightning", {tx=nx-ox, ty=ny-oy})
+			game:delayedLogDamage(src or {}, self, 0, ("#STEEL_BLUE#(%d shifted)#LAST#"):format(value), nil)
 			return 0
 		end
 	end
@@ -1725,9 +1725,7 @@ function _M:onTakeHit(value, src, death_note)
 			game:delayedLogMessage(self, nil, "mitosis_damage", "#DARK_GREEN##Source# shares damage with %s oozes!", string.his_her(self))
 			value = value / (#acts+1)
 			for _, act in ipairs(acts) do 
-				act.resists.all = act.resists.all - 50
 				act:takeHit(value, src) 
-				act.resists.all = act.resists.all + 50
 			end
 		end
 	end
@@ -2224,6 +2222,15 @@ function _M:onTakeHit(value, src, death_note)
 			game:delayedLogMessage(src, self, "life_leech"..self.uid, "#CRIMSON##Source# leeches life from #Target#!")
 		end
 	end
+	
+	-- Life steal from weapon
+	if value > 0 and src and not src.dead and src.attr and src:attr("lifesteal") then
+		local leech = math.min(value, self.life) * src.lifesteal / 100
+		if leech > 0 then
+			src:heal(leech, self)
+			game:delayedLogMessage(src, self, "lifesteal"..self.uid, "#CRIMSON##Source# steals life from #Target#!")
+		end
+	end
 
 	-- Flat damage cap
 	if self.flat_damage_cap and self.max_life and death_note and death_note.damtype then
@@ -2236,6 +2243,11 @@ function _M:onTakeHit(value, src, death_note)
 			value = value - ignored
 			print("[TAKE HIT] after flat damage cap", value)
 		end
+	end
+
+	local cb = {value=value}
+	if self:fireTalentCheck("callbackOnHit", cb, src, death_note) then
+		value = cb.value
 	end
 
 	local hd = {"Actor:takeHit", value=value, src=src, death_note=death_note}
@@ -2382,6 +2394,8 @@ function _M:die(src, death_note)
 
 		return
 	end
+
+	if self:fireTalentCheck("callbackOnDeath", src, death_note) then return end
 
 	mod.class.interface.ActorLife.die(self, src, death_note)
 
@@ -2640,9 +2654,11 @@ function _M:die(src, death_note)
 	if src and death_note and death_note.source_talent and death_note.source_talent.vim and src.last_vim_turn ~= game.turn then
 		src.last_vim_turn = game.turn
 		game:onTickEnd(function() -- Do it on tick end to make sure Vim is spent by the talent code before being refunded
-			src:incVim(death_note.source_talent.vim)
+			src:incVim(util.getval(death_note.source_talent.vim, self, death_note.source_talent))
 		end)
 	end
+
+	if src and src.fireTalentCheck then src:fireTalentCheck("callbackOnKill", self, death_note) end
 
 	if src and ((src.resolveSource and src:resolveSource().player) or src.player) then
 		-- Achievements
@@ -3413,15 +3429,18 @@ end
 -- @param t_id the id of the talent to learn
 -- @return true if the talent was learnt, nil and an error message otherwise
 function _M:learnTalent(t_id, force, nb, extra)
+	local just_learnt = not self:knowTalent(tid)
 	if not engine.interface.ActorTalents.learnTalent(self, t_id, force, nb) then return false end
 
 	-- If we learned a spell, get mana, if you learned a technique get stamina, if we learned a wild gift, get power
 	local t = _M.talents_def[t_id]
 
-	for event, store in pairs(sustainCallbackCheck) do
-		if t[event] and t.mode ~= "sustained" then
-			self[store] = self[store] or {}
-			self[store][t_id] = "talent"
+	if just_learnt then
+		for event, store in pairs(sustainCallbackCheck) do
+			if t[event] and t.mode ~= "sustained" then
+				self[store] = self[store] or {}
+				self[store][t_id] = "talent"
+			end
 		end
 	end
 
@@ -3582,10 +3601,12 @@ function _M:unlearnTalent(t_id, nb, no_unsustain, extra)
 
 	local t = _M.talents_def[t_id]
 
-	for event, store in pairs(sustainCallbackCheck) do
-		if t[event] and t.mode ~= "sustained" then
-			self[store][t_id] = nil
-			if not next(self[store]) then self[store] = nil end
+	if not self:knowTalent(t_id) then
+		for event, store in pairs(sustainCallbackCheck) do
+			if t[event] and t.mode ~= "sustained" then
+				self[store][t_id] = nil
+				if not next(self[store]) then self[store] = nil end
+			end
 		end
 	end
 
@@ -3981,7 +4002,7 @@ function _M:preUseTalent(ab, silent, fake)
 		end
 	end
 
-	if self:triggerHook{"Actor:preUseTalent", t=ab, silent=silent, fale=fake} then
+	if self:triggerHook{"Actor:preUseTalent", t=ab, silent=silent, fake=fake} then
 		return false
 	end
 
@@ -4051,13 +4072,17 @@ function _M:preUseTalent(ab, silent, fake)
 end
 
 local sustainCallbackCheck = {
+	callbackOnHit = "talents_on_hit",
 	callbackOnAct = "talents_on_act",
 	callbackOnActBase = "talents_on_act_base",
 	callbackOnMove = "talents_on_move",
 	callbackOnRest = "talents_on_rest",
+	callbackOnDeath = "talents_on_death",
+	callbackOnKill = "talents_on_kill",
 	callbackOnMeleeAttack = "talents_on_melee_attack",
 	callbackOnMeleeHit = "talents_on_melee_hit",
 	callbackOnMeleeMiss = "talents_on_melee_miss",
+	callbackOnArcheryAttack = "talents_on_archery_attack",
 	callbackOnArcheryHit = "talents_on_archery_hit",
 	callbackOnArcheryMiss = "talents_on_archery_miss",
 }
@@ -4231,7 +4256,7 @@ function _M:postUseTalent(ab, ret, silent)
 		end
 		-- Vim is not affected by fatigue
 		if ab.vim and not self:attr("zero_resource_cost") then
-			trigger = true; self:incVim(-util.getval(ab.vim, self, ab)) self:incEquilibrium(ab.vim * 5)
+			trigger = true; self:incVim(-util.getval(ab.vim, self, ab)) self:incEquilibrium(util.getval(ab.vim, self, ab) * 5)
 		end
 		if ab.positive and not (self:attr("zero_resource_cost") and ab.positive > 0) then
 			trigger = true; self:incPositive(-util.getval(ab.positive, self, ab) * (100 + self:combatFatigue()) / 100)
@@ -4368,6 +4393,9 @@ function _M:breakStepUp()
 	end
 	if self:hasEffect(self.EFF_WILD_SPEED) then
 		self:removeEffect(self.EFF_WILD_SPEED)
+	end
+	if self:hasEffect(self.EFF_HUNTER_SPEED) then
+		self:removeEffect(self.EFF_HUNTER_SPEED)
 	end
 	if self:hasEffect(self.EFF_REFLEXIVE_DODGING) then
 		self:removeEffect(self.EFF_REFLEXIVE_DODGING)
@@ -4548,6 +4576,7 @@ function _M:startTalentCooldown(t)
 	t = self:getTalentFromId(t)
 	if not t.cooldown then return end
 	self.talents_cd[t.id] = self:getTalentCooldown(t)
+	if self.talents_cd[t.id] <= 0 then self.talents_cd[t.id] = nil end
 	self.changed = true
 end
 

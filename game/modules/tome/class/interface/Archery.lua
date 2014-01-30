@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -32,14 +32,18 @@ module(..., package.seeall, class.make)
 function _M:archeryAcquireTargets(tg, params)
 	params = params or {}
 	local weapon, ammo, offweapon = self:hasArcheryWeapon()
+	-- Awesome, we can shoot from our offhand!
+	if self.can_offshoot and not weapon and offweapon then weapon, offweapon = offweapon, nil end
 	if not weapon then
 		game.logPlayer(self, "You must wield a bow or a sling (%s)!", ammo)
+		print("== no weapon")
 		return nil
 	end
 	local infinite = ammo.infinite or self:attr("infinite_ammo") or params.infinite
 
 	if not ammo or (ammo.combat.shots_left <= 0 and not infinite) then
 		game.logPlayer(self, "You do not have enough ammo left!")
+		print("== no ammo")
 		return nil
 	end
 
@@ -51,6 +55,7 @@ function _M:archeryAcquireTargets(tg, params)
 		local val = self['get'..weapon.use_resource.kind:capitalize()](self)
 		if val < weapon.use_resource.value then
 			game.logPlayer(self, "You do not have enough %s left!", weapon.use_resource.kind)
+			print("== no ressource")
 			return nil
 		end
 	end
@@ -403,6 +408,17 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 	if hitted and ammo and ammo.special_on_kill and ammo.special_on_kill.fct and target.dead then
 		ammo.special_on_kill.fct(ammo, self, target)
 	end
+	
+	-- Siege Arrows
+	if hitted and ammo and ammo.siege_impact and (not self.shattering_impact_last_turn or self.shattering_impact_last_turn < game.turn) then
+		local dam = dam * ammo.siege_impact
+		local invuln = target.invulnerable
+		game.logSeen(target, "The shattering blow creates a shockwave!")
+		target.invulnerable = 1 -- Target already hit, don't damage it twice
+		self:project({type="ball", radius=1, friendlyfire=false}, target.x, target.y, DamageType.PHYSICAL, dam)
+		target.invulnerable = invuln
+		self.shattering_impact_last_turn = game.turn
+	end
 
 	-- Temporal cast
 	if hitted and not target.dead and self:knowTalent(self.T_WEAPON_FOLDING) and self:isTalentActive(self.T_WEAPON_FOLDING) then
@@ -579,6 +595,8 @@ end
 
 function _M:hasDualArcheryWeapon(type)
 	local w, a, o = self:hasArcheryWeapon(type)
+	if self.can_solo_dual_archery and w and not o then w, o = w, w end
+	if self.can_solo_dual_archery and not w and o then w, o = o, o end
 	if w and a and o then return w, a, o end
 	return nil
 end

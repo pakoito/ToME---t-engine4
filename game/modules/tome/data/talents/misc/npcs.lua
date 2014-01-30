@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -381,9 +381,11 @@ newTalent{
 				if not filter.hasxp then m.exp_worth = 0 end
 				m:resolve()
 
-				m.summoner = self
-				m.summon_time = filter.lastfor
-				m.faction = self.faction
+				if not filter.no_summoner_set then
+					m.summoner = self
+					m.summon_time = filter.lastfor
+				end
+				if not m.hard_faction then m.faction = self.faction end
 
 				if not filter.hasloot then m:forgetInven(m.INVEN_INVEN) end
 

@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -31,33 +31,24 @@ newTalent{
 	target = function(self, t)
 		local ammo = self:hasAlchemistWeapon()
 		if not ammo then return end
-		-- Using friendlyfire, although this could affect escorts etc.
-		local friendlyfire = true
-		local prot = self:getTalentLevelRaw(self.T_ALCHEMIST_PROTECTION) * 20
-		if prot > 0 then
-			friendlyfire = 100 - prot
-		end
-		return {type="ball", range=self:getTalentRange(t)+(ammo and ammo.alchemist_bomb and ammo.alchemist_bomb.range or 0), radius=self:getTalentRadius(t), friendlyfire=friendlyfire, talent=t}
+		return {type="ball", range=self:getTalentRange(t)+(ammo and ammo.alchemist_bomb and ammo.alchemist_bomb.range or 0), radius=self:getTalentRadius(t), talent=t}
 	end,
 	tactical = { ATTACKAREA = function(self, t, target)
 		if self:isTalentActive(self.T_ACID_INFUSION) then return { ACID = 2 }
 		elseif self:isTalentActive(self.T_LIGHTNING_INFUSION) then return { LIGHTNING = 2 }
 		elseif self:isTalentActive(self.T_FROST_INFUSION) then return { COLD = 2 }
-		else return { FIRE = 2 }
+		elseif self:isTalentActive(self.T_FIRE_INFUSION) then return { FIRE = 2 }
+		else return { PHYSICAL = 2 }
 		end
 	end },
 	computeDamage = function(self, t, ammo)
 		local inc_dam = 0
-		local damtype = DamageType.FIRE
-		local particle = "ball_fire"
-		local acidi = self:getTalentFromId(Talents.T_ACID_INFUSION)
-		local lightningi = self:getTalentFromId(Talents.T_LIGHTNING_INFUSION)
-		local frosti = self:getTalentFromId(Talents.T_FROST_INFUSION)
-		local fireinf = self:getTalentFromId(Talents.T_FIRE_INFUSION)
-		if self:isTalentActive(self.T_ACID_INFUSION) then inc_dam = acidi.getIncrease(self,acidi); damtype = DamageType.ACID_BLIND; particle = "ball_acid"
-		elseif self:isTalentActive(self.T_LIGHTNING_INFUSION) then inc_dam = lightningi.getIncrease(self,lightningi); damtype = DamageType.LIGHTNING_DAZE; particle = "ball_lightning_beam"
-		elseif self:isTalentActive(self.T_FROST_INFUSION) then inc_dam = frosti.getIncrease(self,frosti); damtype = DamageType.ICE; particle = "ball_ice"
-		else inc_dam = fireinf.getIncrease(self,fireinf); damtype = self:knowTalent(self.T_FIRE_INFUSION) and DamageType.FIREBURN or DamageType.FIRE
+		local damtype = DamageType.PHYSICAL
+		local particle = "ball_physical"
+		if self:isTalentActive(self.T_ACID_INFUSION) then damtype = DamageType.ACID_BLIND; particle = "ball_acid"
+		elseif self:isTalentActive(self.T_LIGHTNING_INFUSION) then damtype = DamageType.LIGHTNING_DAZE; particle = "ball_lightning_beam"
+		elseif self:isTalentActive(self.T_FROST_INFUSION) then damtype = DamageType.ICE; particle = "ball_ice"
+		elseif self:isTalentActive(self.T_FIRE_INFUSION) then damtype = DamageType.FIREBURN; particle = "ball_fire"
 		end
 		inc_dam = inc_dam + (ammo.alchemist_bomb and ammo.alchemist_bomb.power or 0) / 100
 		local dam = self:combatTalentSpellDamage(t, 15, 150, ((ammo.alchemist_power or 0) + self:combatSpellpower()) / 2)
@@ -100,13 +91,26 @@ newTalent{
 		local tmp = {}
 		local grids = self:project(tg, x, y, function(tx, ty)
 			local d = dam
-			-- Protect yourself
-			if tx == self.x and ty == self.y then d = dam * (1 - prot) end
-			-- Protect the golem
-			if golem and tx == golem.x and ty == golem.y then d = dam * (1 - prot) end
-			if d == 0 then return end
-
 			local target = game.level.map(tx, ty, Map.ACTOR)
+			-- Protect yourself
+			if tx == self.x and ty == self.y then
+				d = dam * (1 - prot)
+			-- Protect the golem
+			elseif golem and tx == golem.x and ty == golem.y then
+				d = dam * (1 - prot)
+				if self:isTalentActive(self.T_FROST_INFUSION) and self:knowTalent(self.T_ICE_ARMOUR) then
+					self:callTalent(self.T_ICE_ARMOUR, "applyEffect", golem)
+				elseif self:isTalentActive(self.T_ACID_INFUSION) and self:knowTalent(self.T_CAUSTIC_GOLEM) then
+					self:callTalent(self.T_CAUSTIC_GOLEM, "applyEffect", golem)
+				elseif self:isTalentActive(self.T_LIGHTNING_INFUSION) and self:knowTalent(self.T_DYNAMIC_RECHARGE) then
+					self:callTalent(self.T_DYNAMIC_RECHARGE, "applyEffect", golem)
+				end
+			else -- reduced damage to friendly npcs (could make random chance like friendlyfire instead)
+				if target and self:reactionToward(target) > 0 then d = dam * (1 - prot) end
+			end
+			if d <= 0 then return end
+
+--			local target = game.level.map(tx, ty, Map.ACTOR)
 			dam_done = dam_done + DamageType:get(damtype).projector(self, tx, ty, damtype, d, tmp)
 			if ammo.alchemist_bomb and ammo.alchemist_bomb.splash then
 				DamageType:get(DamageType[ammo.alchemist_bomb.splash.type]).projector(self, tx, ty, DamageType[ammo.alchemist_bomb.splash.type], ammo.alchemist_bomb.splash.dam)
@@ -136,7 +140,7 @@ newTalent{
 		if ammo then dam, damtype = t.computeDamage(self, t, ammo) end
 		dam = damDesc(self, damtype, dam)
 		return ([[Imbue an alchemist gem with an explosive charge of mana and throw it.
-		The gem will explode for %0.2f %s damage.
+		The gem will explode for %0.1f %s damage.
 		Each kind of gem will also provide a specific effect.
 		The damage will improve with better gems and with your Spellpower.]]):format(dam, DamageType:get(damtype).name)
 	end,
@@ -161,9 +165,9 @@ newTalent{
 		self.resists[DamageType.ACID] = self.resists[DamageType.ACID] - 3
 	end,
 	info = function(self, t)
-		return ([[Improves your resistance (and your golem's) against the elemental damage of your own bombs by %d%%, and against external elemental damage (fire, cold, lightning and acid) by %d%%.
-		At talent level 5 it also protects you against all side effects of your bombs.]]):
-		format(self:getTalentLevelRaw(t) * 20, self:getTalentLevelRaw(t) * 3)
+		return ([[Grants %d%% protection to you, your golem and other friendly creatures against the elemental damage of your own bombs, and against external elemental damage (fire, cold, lightning and acid) by %d%%.
+		At talent level 5 it also protects against all side effects of your bombs.]]):
+		format(math.min(100, self:getTalentLevelRaw(t) * 20), self:getTalentLevelRaw(t) * 3)
 	end,
 }
 
@@ -222,7 +226,7 @@ newTalent{
 	computeDamage = function(self, t, ammo)
 		local inc_dam = 0
 		local damtype = DamageType.SPELLKNOCKBACK
-		local particle = "ball_fire"
+		local particle = "ball_physical"
 		inc_dam = (ammo.alchemist_bomb and ammo.alchemist_bomb.power or 0) / 100
 		local dam = self:combatTalentSpellDamage(t, 15, 120, ((ammo.alchemist_power or 0) + self:combatSpellpower()) / 2)
 		dam = dam * (1 + inc_dam)

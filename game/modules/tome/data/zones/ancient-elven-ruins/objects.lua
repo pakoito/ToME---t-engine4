@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -106,10 +106,10 @@ newEntity{ base = "BASE_LEATHER_CAP", define_as = "CROWN_ETERNAL_NIGHT",
 		self:specialSetAdd({"wielder","inc_damage"}, {[engine.DamageType.DARKNESS]=20})
 		self:specialSetAdd({"wielder","talents_types_mastery"}, {["cunning/stealth"] = 0.1,})
 		self.use_talent = { id = "T_RETCH", level = 2, power = 47 }
-		game.logSeen(who, "#ANTIQUE_WHITE#The Crown of Eternal Night seems to react with the Bindings, you feel tremounduous dark power.")
+		game.logSeen(who, "#ANTIQUE_WHITE#The Crown of Eternal Night seems to react with the Bindings, you feel tremendous dark power.")
 	end,
 	on_set_broken = function(self, who)
-		game.logPlayer(who, "#ANTIQUE_WHITE#The powerful darkness aura you felt vanes away.")
+		game.logPlayer(who, "#ANTIQUE_WHITE#The powerful darkness aura you felt wanes away.")
 		self.use_talent = nil
 	end,
 }

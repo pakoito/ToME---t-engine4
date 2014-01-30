@@ -1,6 +1,6 @@
 /*
     TE4 - T-Engine 4
-    Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+    Copyright (C) 2009 - 2014 Nicolas Casalini
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -542,8 +542,28 @@ static int lua_check_error(lua_State *L)
 	return 1;
 }
 
+static char *reboot_message = NULL;
+static int lua_set_reboot_message(lua_State *L)
+{
+	const char *msg = luaL_checkstring(L, 1);
+	if (reboot_message) { free(reboot_message); }
+	reboot_message = strdup(msg);
+	return 0;
+}
+static int lua_get_reboot_message(lua_State *L)
+{
+	if (reboot_message) {
+		lua_pushstring(L, reboot_message);
+		free(reboot_message);
+		reboot_message = NULL;
+	} else lua_pushnil(L);
+	return 1;
+}
+
 static const struct luaL_Reg gamelib[] =
 {
+	{"setRebootMessage", lua_set_reboot_message},
+	{"getRebootMessage", lua_get_reboot_message},
 	{"reboot", lua_reboot_lua},
 	{"set_current_game", lua_set_current_game},
 	{"exit_engine", lua_exit_engine},
@@ -2605,23 +2625,6 @@ static int gl_fbo_toscreen(lua_State *L)
 		g = luaL_checknumber(L, 8);
 		b = luaL_checknumber(L, 9);
 		a = luaL_checknumber(L, 10);
-		GLfloat colors[4*4] = {
-			r, g, b, a,
-			r, g, b, a,
-			r, g, b, a,
-			r, g, b, a,
-		};
-		glColorPointer(4, GL_FLOAT, 0, colors);
-	}
-	else
-	{
-		GLfloat colors[4*4] = {
-			1, 1, 1, 1,
-			1, 1, 1, 1,
-			1, 1, 1, 1,
-			1, 1, 1, 1,
-		};
-		glColorPointer(4, GL_FLOAT, 0, colors);
 	}
 	if (lua_isuserdata(L, 6))
 	{
@@ -2632,6 +2635,13 @@ static int gl_fbo_toscreen(lua_State *L)
 	if (!allowblend) glDisable(GL_BLEND);
 	tglBindTexture(GL_TEXTURE_2D, fbo->texture);
 
+	GLfloat colors[4*4] = {
+		r, g, b, a,
+		r, g, b, a,
+		r, g, b, a,
+		r, g, b, a,
+	};
+	glColorPointer(4, GL_FLOAT, 0, colors);
 
 	GLfloat texcoords[2*4] = {
 		0, 1,

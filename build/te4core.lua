@@ -40,6 +40,7 @@ project "TEngine"
 	links { "physfs", "lua".._OPTIONS.lua, "fov", "luasocket", "luaprofiler", "lpeg", "tcodimport", "lxp", "expatstatic", "luamd5", "luazlib", "luabitop", "te4-bzip" }
 	defines { "_DEFAULT_VIDEOMODE_FLAGS_='SDL_HWSURFACE|SDL_DOUBLEBUF'" }
 	defines { [[TENGINE_HOME_PATH='".t-engine"']], "TE4CORE_VERSION="..TE4CORE_VERSION }
+	buildoptions { "-O3" }
 
 	links { "m" }
 
@@ -108,6 +109,11 @@ project "TEngine"
 		defines { [[TENGINE_HOME_PATH='".t-engine"']], 'SELFEXE_LINUX' }
 		if steamlin64 then steamlin64() end
 
+	configuration "bsd"
+		libdirs {"/usr/local/lib/"}
+		links { "SDL2", "SDL2_ttf", "SDL2_image", "png", "openal", "vorbisfile", "GL", "GLU", "m", "pthread" }
+		defines { [[TENGINE_HOME_PATH='".t-engine"']], 'SELFEXE_BSD' }
+
 	configuration {"Debug"}
 		postbuildcommands { "cp ../bin/Debug/t-engine ../", }
 	configuration {"Release"}
@@ -130,6 +136,8 @@ project "physfs"
 	files { "../src/physfs/*.c", "../src/zlib/*.c", "../src/physfs/archivers/*.c", }
 
 	configuration "linux"
+		files { "../src/physfs/platform/unix.c", "../src/physfs/platform/posix.c",  }
+	configuration "bsd"
 		files { "../src/physfs/platform/unix.c", "../src/physfs/platform/posix.c",  }
 	configuration "windows"
 		files { "../src/physfs/platform/windows.c",  }
@@ -283,6 +291,20 @@ elseif _OPTIONS.lua == "jit2" then
 		excludes { "../src/luajit2/src/buildvm*.c", "../src/luajit2/src/luajit.c", "../src/luajit2/src/ljamalg.c" }
 
 		configuration "linux"
+			if not _OPTIONS["no-cleanup-jit2"] then
+			local list = "../src/luajit2/src/lib_base.c ../src/luajit2/src/lib_math.c ../src/luajit2/src/lib_bit.c ../src/luajit2/src/lib_string.c ../src/luajit2/src/lib_table.c ../src/luajit2/src/lib_io.c ../src/luajit2/src/lib_os.c ../src/luajit2/src/lib_package.c ../src/luajit2/src/lib_debug.c ../src/luajit2/src/lib_jit.c ../src/luajit2/src/lib_ffi.c"
+			prebuildcommands{
+				"../src/luajit2/src/buildvm -m elfasm -o ../src/luajit2/src/lj_vm.s",
+				"../src/luajit2/src/buildvm -m bcdef -o ../src/luajit2/src/lj_bcdef.h "..list,
+				"../src/luajit2/src/buildvm -m ffdef -o ../src/luajit2/src/lj_ffdef.h "..list,
+				"../src/luajit2/src/buildvm -m libdef -o ../src/luajit2/src/lj_libdef.h "..list,
+				"../src/luajit2/src/buildvm -m recdef -o ../src/luajit2/src/lj_recdef.h "..list,
+				"../src/luajit2/src/buildvm -m vmdef -o ../src/luajit2/vmdef.lua "..list,
+				"../src/luajit2/src/buildvm -m folddef -o ../src/luajit2/src/lj_folddef.h ../src/luajit2/src/lj_opt_fold.c",
+			}
+			end
+
+		configuration "bsd"
 			if not _OPTIONS["no-cleanup-jit2"] then
 			local list = "../src/luajit2/src/lib_base.c ../src/luajit2/src/lib_math.c ../src/luajit2/src/lib_bit.c ../src/luajit2/src/lib_string.c ../src/luajit2/src/lib_table.c ../src/luajit2/src/lib_io.c ../src/luajit2/src/lib_os.c ../src/luajit2/src/lib_package.c ../src/luajit2/src/lib_debug.c ../src/luajit2/src/lib_jit.c ../src/luajit2/src/lib_ffi.c"
 			prebuildcommands{

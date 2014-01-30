@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -64,14 +64,14 @@ end
 function _M:generateList()
 	local list = {}
 
-	local function parse(base, add)
+	local function parse(base, add, add_simple)
 		for i, dir in ipairs(fs.list(base.."/zones/")) do
 			local f = loadfile(base.."/zones/"..dir.."/zone.lua")
 			if f then
 				setfenv(f, setmetatable({}, {__index=_G}))
 				local ok, z = pcall(f)
 				if ok then
-					list[#list+1] = {name=z.name, zone=add..dir, min=1, max=z.max_level}
+					list[#list+1] = {name=z.name..(add_simple and " ["..add_simple.."]" or ""), zone=add..dir, min=1, max=z.max_level}
 				end
 			end
 		end
@@ -81,7 +81,7 @@ function _M:generateList()
 	for i, dir in ipairs(fs.list("/")) do
 		local _, _, addon = dir:find("^data%-(.+)$")
 		if addon then
-			parse("/"..dir, addon.."+")
+			parse("/"..dir, addon.."+", addon)
 		end
 	end
 

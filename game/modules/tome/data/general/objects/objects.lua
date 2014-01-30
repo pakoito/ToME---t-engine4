@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -83,6 +83,6 @@ loadIfNot("/data/general/objects/leather-belt.lua")
 
 -- Artifacts
 loadIfNot("/data/general/objects/world-artifacts.lua")
+loadIfNot("/data/general/objects/boss-artifacts.lua")
 loadIfNot("/data/general/objects/quest-artifacts.lua")
 loadIfNot("/data/general/objects/special-artifacts.lua")
-loadIfNot("/data/general/objects/boss-artifacts.lua")

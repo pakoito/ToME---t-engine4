@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -17,7 +17,8 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/general/objects/objects.lua")
+load("/data/general/objects/objects-maj-eyal.lua")
+load("/data/general/objects/objects-far-east.lua")
 
 newEntity{
 	power_source = {technique=true},

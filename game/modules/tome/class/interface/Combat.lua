@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -340,6 +340,12 @@ end
 function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	damtype = damtype or (weapon and weapon.damtype) or DamageType.PHYSICAL
 	mult = mult or 1
+	
+	--Life Steal
+	if weapon and weapon.lifesteal then
+		self:attr("lifesteal", weapon.lifesteal)
+		self:attr("silent_heal", 1)
+	end
 
 	local mode = "other"
 	if self:hasShield() then mode = "shield"
@@ -393,12 +399,11 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	elseif self:checkEvasion(target) then
 		evaded = true
 		self:logCombat(target, "#Target# evades #Source#.")
-	elseif self:checkHit(atk, def) and (self:canSee(target) or self:attr("blind_fight") or rng.chance(3)) then
+	elseif self.turn_procs.auto_melee_hit or (self:checkHit(atk, def) and (self:canSee(target) or self:attr("blind_fight") or rng.chance(3))) then
 		local pres = util.bound(target:combatArmorHardiness() / 100, 0, 1)
 		if target.knowTalent and target:hasEffect(target.EFF_DUAL_WEAPON_DEFENSE) then
 			local deflect = math.min(dam, target:callTalent(target.T_DUAL_WEAPON_DEFENSE, "doDeflect"))
 			if deflect > 0 then
---				self:logCombat(target, "#Target# parries %d damage from #Source#'s attack.", deflect)
 				game:delayedLogDamage(self, target, 0, ("%s(%d parried#LAST#)"):format(DamageType:get(damtype).text_color or "#aaaaaa#", deflect), false)
 				dam = math.max(dam - deflect,0)
 				print("[ATTACK] after DUAL_WEAPON_DEFENSE", dam)
@@ -406,7 +411,6 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		end
 		if target.knowTalent and target:hasEffect(target.EFF_GESTURE_OF_GUARDING) and not target:attr("encased_in_ice") then
 			local deflected = math.min(dam, target:callTalent(target.T_GESTURE_OF_GUARDING, "doGuard")) or 0
---			if deflected > 0 then self:logCombat(target, "#Target# dismisses %d damage from #Source#'s attack with a sweeping gesture.", deflected) end
 			if deflected > 0 then
 				game:delayedLogDamage(self, target, 0, ("%s(%d gestured#LAST#)"):format(DamageType:get(damtype).text_color or "#aaaaaa#", deflected), false)
 				dam = dam - deflected
@@ -636,6 +640,14 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		self:incStamina(-15)
 		self.shattering_impact_last_turn = game.turn
 	end
+	
+	-- Damage Backlash
+	if dam > 0 and self.attr and self:attr("damage_backfire") then
+		local hurt = math.min(dam, target.life) * self.damage_backfire / 100
+		if hurt > 0 then
+			self:takeHit(hurt, self)
+		end
+	end
 
 	-- Burst on Hit
 	if hitted and weapon and weapon.burst_on_hit then
@@ -797,7 +809,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	end
 
 	-- Counter Attack!
-	if not hitted and not target.dead and not evaded and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:knowTalent(target.T_COUNTER_ATTACK) and self:isNear(target.x,target.y, 1) then --Adjacency check
+	if not hitted and not target.dead and target:knowTalent(target.T_COUNTER_ATTACK) and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:knowTalent(target.T_COUNTER_ATTACK) and self:isNear(target.x,target.y, 1) then --Adjacency check
 		local cadam = target:callTalent(target.T_COUNTER_ATTACK,"checkCounterAttack")
 		if cadam then
 			game.logSeen(self, "%s counters the attack!", target.name:capitalize())
@@ -812,7 +824,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	end
 
 	-- Defensive Throw!
-	if not hitted and not target.dead and not evaded and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:knowTalent(target.T_DEFENSIVE_THROW) and target:isNear(self.x,self.y,1) then
+	if not hitted and not target.dead and target:knowTalent(target.T_DEFENSIVE_THROW) and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:isNear(self.x,self.y,1) then
 		local t = target:getTalentFromId(target.T_DEFENSIVE_THROW)
 		t.do_throw(target, self, t)
 	end
@@ -925,6 +937,12 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 
 	self.turn_procs.weapon_type = nil
 	self.__global_accuracy_damage_bonus = nil
+	
+	--Life Steal
+	if weapon and weapon.lifesteal then
+		self:attr("lifesteal", -weapon.lifesteal)
+		self:attr("silent_heal", -1)
+	end
 
 	return self:combatSpeed(weapon), hitted
 end
@@ -1594,8 +1612,8 @@ function _M:physicalCrit(dam, weapon, target, atk, def, add_chance, crit_power_a
 
 	chance = util.bound(chance, 0, 100)
 
-	print("[PHYS CRIT %]", chance)
-	if rng.percent(chance) then
+	print("[PHYS CRIT %]", self.turn_procs.auto_phys_crit and 100 or chance)
+	if self.turn_procs.auto_phys_crit or rng.percent(chance) then
 		if target:hasEffect(target.EFF_OFFGUARD) then
 			crit_power_add = crit_power_add + 0.1
 		end
@@ -1630,8 +1648,8 @@ function _M:spellCrit(dam, add_chance, crit_power_add)
 		crit_power_add = crit_power_add + self:callTalent(self.T_SHADOWSTRIKE,"getMultiplier")
 	end
 
-	print("[SPELL CRIT %]", chance)
-	if rng.percent(chance) then
+	print("[SPELL CRIT %]", self.turn_procs.auto_spell_crit and 100 or chance)
+	if self.turn_procs.auto_spell_crit or rng.percent(chance) then
 		self.turn_procs.is_crit = "spell"
 		self.turn_procs.crit_power = (1.5 + crit_power_add + (self.combat_critical_power or 0) / 100)
 		dam = dam * (1.5 + crit_power_add + (self.combat_critical_power or 0) / 100)
@@ -1678,8 +1696,8 @@ function _M:mindCrit(dam, add_chance, crit_power_add)
 		crit_power_add = crit_power_add + self:callTalent(self.T_SHADOWSTRIKE,"getMultiplier")
 	end
 
-	print("[MIND CRIT %]", chance)
-	if rng.percent(chance) then
+	print("[MIND CRIT %]", self.turn_procs.auto_mind_crit and 100 or chance)
+	if self.turn_procs.auto_mind_crit or rng.percent(chance) then
 		self.turn_procs.is_crit = "mind"
 		self.turn_procs.crit_power = (1.5 + crit_power_add + (self.combat_critical_power or 0) / 100)
 		dam = dam * (1.5 + crit_power_add + (self.combat_critical_power or 0) / 100)

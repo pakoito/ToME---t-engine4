@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -435,12 +435,37 @@ function _M:addedToLevel(level, x, y)
 			for tid, lev in pairs(self.talents) do
 				self:learnTalent(tid, true, lev)
 			end
+			if not self.randboss and self.rank >= 3.5 then
+				local data = {}
+				if self.rank == 3.5 then data = {nb_classes=1}
+				elseif self.rank == 4 then data = {nb_classes=1}
+				elseif self.rank == 5 then data = {nb_classes=2}
+				elseif self.rank >= 10 then data = {nb_classes=3}
+				end
+				data.auto_sustain = true
+				data.forbid_equip = true
+				game.state:applyRandomClass(self, data, true)
+			end
 			self:attr("difficulty_boosted", 1)
 		elseif game.difficulty == game.DIFFICULTY_MADNESS and not game.party:hasMember(self) then
 			-- Increase talent level
 			for tid, lev in pairs(self.talents) do
 				self:learnTalent(tid, true, math.ceil(lev * 1.7))
 			end
+			if not self.randboss and self.rank >= 3.5 then
+				local data = {}
+				if self.rank == 3.5 then data = {nb_classes=1}
+				elseif self.rank == 4 then data = {nb_classes=2}
+				elseif self.rank == 5 then data = {nb_classes=3}
+				elseif self.rank >= 10 then data = {nb_classes=5}
+				end
+				data.auto_sustain = true
+				data.forbid_equip = true
+				game.state:applyRandomClass(self, data, true)
+			end
+			local lifeadd = self.max_life * self:getRankLifeAdjust(1) * self.level / 65 / 1.5
+			self.max_life = self.max_life + lifeadd
+			self.life = self.life + lifeadd
 			self:attr("difficulty_boosted", 1)
 		end
 	end
@@ -474,7 +499,7 @@ end
 function _M:aiCanPass(x, y)
 	-- If there is a friendly actor, add shove_pressure to it
 	local target = game.level.map(x, y, engine.Map.ACTOR)
-	if target and target ~= game.player and self:reactionToward(target) > 0 and not target:attr("never_move") then
+	if target and target ~= game.player and self:reactionToward(target) > 0 and not target:attr("never_move") and target.x then
 		target.shove_pressure = (target.shove_pressure or 0) + shove_algorithm(self) + (self.shove_pressure or 0)
 		-- Shove the target?
 		if target.shove_pressure > shove_algorithm(target) * 1.7 then
