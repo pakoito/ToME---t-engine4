@@ -261,10 +261,11 @@ static int lua_web_new(lua_State *L) {
 	CefWindowInfo window_info;
 	CefBrowserSettings browserSettings;
 	window_info.SetAsOffScreen(NULL);
+	window_info.SetTransparentPainting(true);
 	view->render = new RenderHandler(w, h);
 	view->view = new BrowserClient(view->render);
-	view->browser = CefBrowserHost::CreateBrowserSync(window_info, view->view, "http://te4.org/", browserSettings);
-
+	CefString curl(url);
+	view->browser = CefBrowserHost::CreateBrowserSync(window_info, view->view, url, browserSettings);
 
 	view->w = w;
 	view->h = h;
@@ -277,6 +278,7 @@ static int lua_web_close(lua_State *L) {
 	web_view_type *view = (web_view_type*)auxiliar_checkclass(L, "web{view}", 1);
 	if (!view->closed) {
 		view->closed = true;
+		view->render->host->CloseBrowser(true);
 		view->render = NULL;
 		view->view = NULL;
 		view->browser = NULL;
@@ -351,8 +353,7 @@ static int lua_web_focus(lua_State *L) {
 	web_view_type *view = (web_view_type*)auxiliar_checkclass(L, "web{view}", 1);
 	if (view->closed) return 0;
 
-//	if (lua_toboolean(L, 2)) view->view->Focus();
-//	else view->view->Unfocus();
+	view->render->host->SendFocusEvent(lua_toboolean(L, 2));
 	return 0;
 }
 
@@ -387,7 +388,6 @@ static int lua_web_inject_mouse_move(lua_State *L) {
 	mouse_event.y = y;
 	mouse_event.modifiers = get_cef_state_modifiers();
 
-	printf("===== %lx\n", (void*)view->render->host);
 	view->render->host->SendMouseMoveEvent(mouse_event, false);
 	return 0;
 }
@@ -415,15 +415,6 @@ static int lua_web_inject_mouse_button(lua_State *L) {
 	bool up = lua_toboolean(L, 2);
 	int kind = luaL_checknumber(L, 3);
 
-/*
-	MouseButton b = kMouseButton_Left;
-	if (kind == 2) b = kMouseButton_Middle;
-	else if (kind == 3) b = kMouseButton_Right;
-
-	if (up) view->view->InjectMouseUp(b);
-	else view->view->InjectMouseDown(b);
-*/
-
 	CefBrowserHost::MouseButtonType button_type = MBT_LEFT;
 	if (kind == 2) button_type = MBT_MIDDLE;
 	else if (kind == 3) button_type = MBT_RIGHT;
@@ -441,51 +432,25 @@ static int lua_web_inject_mouse_button(lua_State *L) {
 static int lua_web_inject_key(lua_State *L) {
 	web_view_type *view = (web_view_type*)auxiliar_checkclass(L, "web{view}", 1);
 	if (view->closed) return 0;
-/*
+
 	bool up = lua_toboolean(L, 2);
 	int scancode = lua_tonumber(L, 3);
-	int asymb = lua_tonumber(L, 4);
-	const char *uni = NULL;
-	size_t unilen = 0;
-	if (lua_isstring(L, 5)) uni = lua_tolstring(L, 5, &unilen);
 
-	WebKeyboardEvent keyEvent;
-	keyEvent.type = !up ? WebKeyboardEvent::kTypeKeyDown : WebKeyboardEvent::kTypeKeyUp;
+	CefKeyEvent key_event;
+	key_event.native_key_code = scancode;
+	key_event.modifiers = get_cef_state_modifiers();
 
-	char buf[20];
-	keyEvent.virtual_key_code = asymb;
-	GetKeyIdentifierFromVirtualKeyCode(keyEvent.virtual_key_code, (char**)&buf);
-	strcpy(keyEvent.key_identifier, buf);
-
-	SDL_Keymod smod = SDL_GetModState();
-
-	keyEvent.modifiers = 0;
-
-	if (smod & KMOD_SHIFT) keyEvent.modifiers |= WebKeyboardEvent::kModShiftKey;
-	else if (smod & KMOD_CTRL) keyEvent.modifiers |= WebKeyboardEvent::kModControlKey;
-	else if (smod & KMOD_ALT) keyEvent.modifiers |= WebKeyboardEvent::kModAltKey;
-	else if (smod & KMOD_GUI) keyEvent.modifiers |= WebKeyboardEvent::kModMetaKey;
-
-	keyEvent.native_key_code = scancode;
-
-	if (up) {
-		view->view->InjectKeyboardEvent(keyEvent);
+	if (!up) {
+		key_event.type = KEYEVENT_RAWKEYDOWN;
+		view->render->host->SendKeyEvent(key_event);
 	} else {
-		if (uni) {
-			WebString wstr = WebString::CreateFromUTF8(uni, unilen);
-			memcpy(keyEvent.text, wstr.data(), wstr.length() * sizeof(wchar16));
-			memcpy(keyEvent.unmodified_text, wstr.data(), wstr.length() * sizeof(wchar16));
-		}
-
-		view->view->InjectKeyboardEvent(keyEvent);
-		if (uni) {
-			keyEvent.type = WebKeyboardEvent::kTypeChar;
-			keyEvent.virtual_key_code = keyEvent.text[0];
-			keyEvent.native_key_code = keyEvent.text[0];
-			view->view->InjectKeyboardEvent(keyEvent);
-		}
+		// Need to send both KEYUP and CHAR events.
+		key_event.type = KEYEVENT_KEYUP;
+		view->render->host->SendKeyEvent(key_event);
+		key_event.type = KEYEVENT_CHAR;
+		view->render->host->SendKeyEvent(key_event);
 	}
-*/
+
 	return 0;
 }
 
