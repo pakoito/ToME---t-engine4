@@ -16,8 +16,11 @@ extern "C" {
 #include "web.h"
 
 #include <cef_app.h>
+#include <cef_app.h>
 #include <cef_client.h>
+#include <cef_display_handler.h>
 #include <cef_render_handler.h>
+#include <cef_request_handler.h>
 
 /**********************************************************************
  ******************** Duplicated since we are independant *************
@@ -225,16 +228,28 @@ public:
 	IMPLEMENT_REFCOUNTING(RenderHandler);
 };
 
-class BrowserClient : public CefClient
+class BrowserClient : public CefClient, public CefRequestHandler, public CefDisplayHandler
 {
 	CefRefPtr<CefRenderHandler> m_renderHandler;
+	char *cur_title;
 
 public:
 	BrowserClient(RenderHandler *renderHandler) : m_renderHandler(renderHandler)
-	{;}
+	{ cur_title = strdup(""); }
 
 	virtual CefRefPtr<CefRenderHandler> GetRenderHandler() {
 		return m_renderHandler;
+	}
+
+	virtual void OnTitleChange(CefRefPtr<CefBrowser> browser, const CefString& title) OVERRIDE {
+		free(cur_title);
+		cur_title = strdup((const char*)title.c_str());
+		printf("===TITLE %s\n", cur_title);
+	}
+
+	virtual bool OnBeforeResourceLoad(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, CefRefPtr<CefRequest> request) OVERRIDE {
+		printf("===LOADING URL %s\n", request->GetURL().c_str());
+		return false;
 	}
 
 	IMPLEMENT_REFCOUNTING(BrowserClient);

@@ -64,7 +64,10 @@ function _M:init()
 		self.background, self.background_tw, self.background_th = self.background:glTexture()
 	end
 
-	self.tooltip = Tooltip.new(nil, 14, nil, colors.DARK_GREY, 380)
+	self.tooltip = require("engine.WebTooltip").new(
+		380, 500,
+		("http://te4.org/tooltip-ingame?steam=%d&v=%d.%d.%d"):format(core.steam and 1 or 0, engine.version[1], engine.version[2], engine.version[3])
+	)
 
 --	self.refuse_threads = true
 	self.normal_key = self.key
@@ -317,9 +320,9 @@ end
 
 function _M:updateNews()
 	if self.news.link then
-		self.tooltip:set("#AQUAMARINE#%s#WHITE#\n---\n%s\n---\n#LIGHT_BLUE##{underline}#%s#LAST##{normal}#", self.news.title, self.news.text, self.news.link)
+--		self.tooltip:set("#AQUAMARINE#%s#WHITE#\n---\n%s\n---\n#LIGHT_BLUE##{underline}#%s#LAST##{normal}#", self.news.title, self.news.text, self.news.link)
 	else
-		self.tooltip:set("#AQUAMARINE#%s#WHITE#\n---\n%s", self.news.title, self.news.text)
+--		self.tooltip:set("#AQUAMARINE#%s#WHITE#\n---\n%s", self.news.title, self.news.text)
 	end
 
 	if self.news.link then
