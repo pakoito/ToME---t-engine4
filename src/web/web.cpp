@@ -14,161 +14,15 @@ extern "C" {
 #include "tgl.h"
 }
 #include "web.h"
-
-#include <cef_app.h>
-#include <cef_app.h>
-#include <cef_client.h>
-#include <cef_display_handler.h>
-#include <cef_render_handler.h>
-#include <cef_request_handler.h>
-
-/**********************************************************************
- ******************** Duplicated since we are independant *************
- **********************************************************************/
-static void auxiliar_newclass(lua_State *L, const char *classname, const luaL_Reg *func);
-static void auxiliar_add2group(lua_State *L, const char *classname, const char *group);
-static void auxiliar_setclass(lua_State *L, const char *classname, int objidx);
-static void *auxiliar_checkclass(lua_State *L, const char *classname, int objidx);
-static void *auxiliar_checkgroup(lua_State *L, const char *groupname, int objidx);
-static void *auxiliar_getclassudata(lua_State *L, const char *groupname, int objidx);
-static void *auxiliar_getgroupudata(lua_State *L, const char *groupname, int objidx);
-static int auxiliar_checkboolean(lua_State *L, int objidx);
-static int auxiliar_tostring(lua_State *L);
-
-/*-------------------------------------------------------------------------*\
-* Creates a new class with given methods
-* Methods whose names start with __ are passed directly to the metatable.
-\*-------------------------------------------------------------------------*/
-static void auxiliar_newclass(lua_State *L, const char *classname, const luaL_Reg *func) {
-    luaL_newmetatable(L, classname); /* mt */
-    /* create __index table to place methods */
-    lua_pushstring(L, "__index");    /* mt,"__index" */
-    lua_newtable(L);                 /* mt,"__index",it */
-    /* put class name into class metatable */
-    lua_pushstring(L, "class");      /* mt,"__index",it,"class" */
-    lua_pushstring(L, classname);    /* mt,"__index",it,"class",classname */
-    lua_rawset(L, -3);               /* mt,"__index",it */
-    /* pass all methods that start with _ to the metatable, and all others
-     * to the index table */
-    for (; func->name; func++) {     /* mt,"__index",it */
-        lua_pushstring(L, func->name);
-        lua_pushcfunction(L, func->func);
-        lua_rawset(L, func->name[0] == '_' ? -5: -3);
-    }
-    lua_rawset(L, -3);               /* mt */
-    lua_pop(L, 1);
-}
-
-/*-------------------------------------------------------------------------*\
-* Prints the value of a class in a nice way
-\*-------------------------------------------------------------------------*/
-static int auxiliar_tostring(lua_State *L) {
-    char buf[32];
-    if (!lua_getmetatable(L, 1)) goto error;
-    lua_pushstring(L, "__index");
-    lua_gettable(L, -2);
-    if (!lua_istable(L, -1)) goto error;
-    lua_pushstring(L, "class");
-    lua_gettable(L, -2);
-    if (!lua_isstring(L, -1)) goto error;
-    sprintf(buf, "%p", lua_touserdata(L, 1));
-    lua_pushfstring(L, "%s: %s", lua_tostring(L, -1), buf);
-    return 1;
-error:
-    lua_pushstring(L, "invalid object passed to 'auxiliar.c:__tostring'");
-    lua_error(L);
-    return 1;
-}
-
-/*-------------------------------------------------------------------------*\
-* Insert class into group
-\*-------------------------------------------------------------------------*/
-static void auxiliar_add2group(lua_State *L, const char *classname, const char *groupname) {
-    luaL_getmetatable(L, classname);
-    lua_pushstring(L, groupname);
-    lua_pushboolean(L, 1);
-    lua_rawset(L, -3);
-    lua_pop(L, 1);
-}
-
-/*-------------------------------------------------------------------------*\
-* Make sure argument is a boolean
-\*-------------------------------------------------------------------------*/
-static int auxiliar_checkboolean(lua_State *L, int objidx) {
-    if (!lua_isboolean(L, objidx))
-        luaL_typerror(L, objidx, lua_typename(L, LUA_TBOOLEAN));
-    return lua_toboolean(L, objidx);
-}
-
-/*-------------------------------------------------------------------------*\
-* Return userdata pointer if object belongs to a given class, abort with
-* error otherwise
-\*-------------------------------------------------------------------------*/
-static void *auxiliar_checkclass(lua_State *L, const char *classname, int objidx) {
-    void *data = auxiliar_getclassudata(L, classname, objidx);
-    if (!data) {
-        char msg[45];
-        sprintf(msg, "%.35s expected", classname);
-        luaL_argerror(L, objidx, msg);
-    }
-    return data;
-}
-
-/*-------------------------------------------------------------------------*\
-* Return userdata pointer if object belongs to a given group, abort with
-* error otherwise
-\*-------------------------------------------------------------------------*/
-static void *auxiliar_checkgroup(lua_State *L, const char *groupname, int objidx) {
-    void *data = auxiliar_getgroupudata(L, groupname, objidx);
-    if (!data) {
-        char msg[45];
-        sprintf(msg, "%.35s expected", groupname);
-        luaL_argerror(L, objidx, msg);
-    }
-    return data;
-}
-
-/*-------------------------------------------------------------------------*\
-* Set object class
-\*-------------------------------------------------------------------------*/
-static void auxiliar_setclass(lua_State *L, const char *classname, int objidx) {
-    luaL_getmetatable(L, classname);
-    if (objidx < 0) objidx--;
-    lua_setmetatable(L, objidx);
-}
-
-/*-------------------------------------------------------------------------*\
-* Get a userdata pointer if object belongs to a given group. Return NULL
-* otherwise
-\*-------------------------------------------------------------------------*/
-static void *auxiliar_getgroupudata(lua_State *L, const char *groupname, int objidx) {
-    if (!lua_getmetatable(L, objidx))
-        return NULL;
-    lua_pushstring(L, groupname);
-    lua_rawget(L, -2);
-    if (lua_isnil(L, -1)) {
-        lua_pop(L, 2);
-        return NULL;
-    } else {
-        lua_pop(L, 2);
-        return lua_touserdata(L, objidx);
-    }
-}
-
-/*-------------------------------------------------------------------------*\
-* Get a userdata pointer if object belongs to a given class. Return NULL
-* otherwise
-\*-------------------------------------------------------------------------*/
-static void *auxiliar_getclassudata(lua_State *L, const char *classname, int objidx) {
-    lua_checkstack(L, 2);
-    return luaL_checkudata(L, objidx, classname);
-}
-
-/**********************************************************************
- **********************************************************************
- **********************************************************************/
+#include "web-internal.h"
+#include "web-code-aux.h"
 
 static bool web_core = false;
+
+static const char *cstring_to_c(const CefString &cstr) {
+	std::string str = cstr.ToString();
+	return (const char*)str.c_str();
+}
 
 class ClientApp : public CefApp {
 public:
@@ -228,32 +82,53 @@ public:
 	IMPLEMENT_REFCOUNTING(RenderHandler);
 };
 
-class BrowserClient : public CefClient, public CefRequestHandler, public CefDisplayHandler
+class BrowserClient : public CefClient, public CefRequestHandler, public CefDisplayHandler, public CefRenderProcessHandler
 {
 	CefRefPtr<CefRenderHandler> m_renderHandler;
-	char *cur_title;
+	int handlers;
 
 public:
-	BrowserClient(RenderHandler *renderHandler) : m_renderHandler(renderHandler)
-	{ cur_title = strdup(""); }
+	BrowserClient(RenderHandler *renderHandler, int handlers) : m_renderHandler(renderHandler) {
+		this->handlers = handlers;
+	}
 
 	virtual CefRefPtr<CefRenderHandler> GetRenderHandler() {
 		return m_renderHandler;
 	}
 
+	virtual CefRefPtr<CefDisplayHandler> GetDisplayHandler() OVERRIDE {
+		return this;
+	}
+
+	virtual CefRefPtr<CefRequestHandler> GetRequestHandler() OVERRIDE {
+		return this;
+	}
+
+	virtual CefRefPtr<CefRenderProcessHandler> GetRenderProcessHandler() OVERRIDE {
+		return this;
+	}
+
 	virtual void OnTitleChange(CefRefPtr<CefBrowser> browser, const CefString& title) OVERRIDE {
-		free(cur_title);
-		cur_title = strdup((const char*)title.c_str());
-		printf("===TITLE %s\n", cur_title);
+		char *cur_title = strdup(cstring_to_c(title));
+		WebEvent *event = new WebEvent();
+		event->kind = TE4_WEB_EVENT_TITLE_CHANGE;
+		event->handlers = handlers;
+		event->data.title = cur_title;
+		push_event(event);
+	}
+
+	virtual bool OnBeforeNavigation(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, CefRefPtr<CefRequest> request, NavigationType navigation_type, bool is_redirect) OVERRIDE { 
+		printf("===RERUSINF URL %s\n", cstring_to_c(request->GetURL()));
+		return true;
 	}
 
 	virtual bool OnBeforeResourceLoad(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, CefRefPtr<CefRequest> request) OVERRIDE {
-		printf("===LOADING URL %s\n", request->GetURL().c_str());
 		return false;
 	}
 
 	IMPLEMENT_REFCOUNTING(BrowserClient);
 };
+
 
 typedef struct {
 	RenderHandler *render;
@@ -261,6 +136,7 @@ typedef struct {
 	BrowserClient *view;
 	int w, h;
 	int last_mouse_x, last_mouse_y;
+	int handlers;
 	bool closed;
 } web_view_type;
 
@@ -273,18 +149,22 @@ static int lua_web_new(lua_State *L) {
 	web_view_type *view = (web_view_type*)lua_newuserdata(L, sizeof(web_view_type));
 	auxiliar_setclass(L, "web{view}", -1);
 
+	lua_pushvalue(L, 4);
+	view->handlers = luaL_ref(L, LUA_REGISTRYINDEX);
+
 	CefWindowInfo window_info;
 	CefBrowserSettings browserSettings;
 	window_info.SetAsOffScreen(NULL);
 	window_info.SetTransparentPainting(true);
 	view->render = new RenderHandler(w, h);
-	view->view = new BrowserClient(view->render);
+	view->view = new BrowserClient(view->render, view->handlers);
 	CefString curl(url);
 	view->browser = CefBrowserHost::CreateBrowserSync(window_info, view->view, url, browserSettings);
 
 	view->w = w;
 	view->h = h;
 	view->closed = false;
+	printf("Created webview: %s\n", url);
 
 	return 1;
 }
@@ -297,6 +177,7 @@ static int lua_web_close(lua_State *L) {
 		view->render = NULL;
 		view->view = NULL;
 		view->browser = NULL;
+		luaL_unref(L, LUA_REGISTRYINDEX, view->handlers);
 		printf("Destroyed webview\n");
 	}
 	return 0;
@@ -352,21 +233,14 @@ static int lua_web_loading(lua_State *L) {
 	web_view_type *view = (web_view_type*)auxiliar_checkclass(L, "web{view}", 1);
 	if (view->closed) return 0;
 
-	lua_pushboolean(L, true);
-	return 1;
-}
-
-static int lua_web_title(lua_State *L) {
-	web_view_type *view = (web_view_type*)auxiliar_checkclass(L, "web{view}", 1);
-	if (view->closed) return 0;
-
-	lua_pushstring(L, "test");
+	lua_pushboolean(L, view->browser->IsLoading());
 	return 1;
 }
 
 static int lua_web_focus(lua_State *L) {
 	web_view_type *view = (web_view_type*)auxiliar_checkclass(L, "web{view}", 1);
 	if (view->closed) return 0;
+	if (!view->render->host) return 0;
 
 	view->render->host->SendFocusEvent(lua_toboolean(L, 2));
 	return 0;
@@ -392,6 +266,7 @@ static int get_cef_state_modifiers() {
 static int lua_web_inject_mouse_move(lua_State *L) {
 	web_view_type *view = (web_view_type*)auxiliar_checkclass(L, "web{view}", 1);
 	if (view->closed) return 0;
+	if (!view->render->host) return 0;
 
 	int x = luaL_checknumber(L, 2);
 	int y = luaL_checknumber(L, 3);
@@ -410,6 +285,7 @@ static int lua_web_inject_mouse_move(lua_State *L) {
 static int lua_web_inject_mouse_wheel(lua_State *L) {
 	web_view_type *view = (web_view_type*)auxiliar_checkclass(L, "web{view}", 1);
 	if (view->closed) return 0;
+	if (!view->render->host) return 0;
 
 	int x = luaL_checknumber(L, 2);
 	int y = luaL_checknumber(L, 3);
@@ -426,6 +302,7 @@ static int lua_web_inject_mouse_wheel(lua_State *L) {
 static int lua_web_inject_mouse_button(lua_State *L) {
 	web_view_type *view = (web_view_type*)auxiliar_checkclass(L, "web{view}", 1);
 	if (view->closed) return 0;
+	if (!view->render->host) return 0;
 
 	bool up = lua_toboolean(L, 2);
 	int kind = luaL_checknumber(L, 3);
@@ -447,6 +324,7 @@ static int lua_web_inject_mouse_button(lua_State *L) {
 static int lua_web_inject_key(lua_State *L) {
 	web_view_type *view = (web_view_type*)auxiliar_checkclass(L, "web{view}", 1);
 	if (view->closed) return 0;
+	if (!view->render->host) return 0;
 
 	bool up = lua_toboolean(L, 2);
 	int scancode = lua_tonumber(L, 3);
@@ -486,7 +364,6 @@ static const struct luaL_Reg view_reg[] =
 	{"toScreen", lua_web_toscreen},
 	{"focus", lua_web_focus},
 	{"loading", lua_web_loading},
-	{"title", lua_web_title},
 	{"injectMouseMove", lua_web_inject_mouse_move},
 	{"injectMouseWheel", lua_web_inject_mouse_wheel},
 	{"injectMouseButton", lua_web_inject_mouse_button},
@@ -501,8 +378,82 @@ static const struct luaL_Reg weblib[] =
 	{NULL, NULL},
 };
 
-void te4_web_update() {
-	if (web_core) CefDoMessageLoopWork();
+static int traceback (lua_State *L) {
+	lua_Debug ar;
+	int n = 0;
+	printf("Lua Error: %s\n", lua_tostring(L, 1));
+	while(lua_getstack(L, n++, &ar)) {
+		lua_getinfo(L, "nSl", &ar);
+		printf("\tAt %s:%d %s\n", ar.short_src, ar.currentline, ar.name?ar.name:"");
+	}
+	return 1;
+}
+
+static void stackDump (lua_State *L) {
+	int i=lua_gettop(L);
+	printf(" ----------------  Stack Dump ----------------\n" );
+	while(  i   ) {
+		int t = lua_type(L, i);
+		switch (t) {
+		case LUA_TSTRING:
+			printf("%d:`%s'\n", i, lua_tostring(L, i));
+			break;
+		case LUA_TBOOLEAN:
+			printf("%d: %s\n",i,lua_toboolean(L, i) ? "true" : "false");
+			break;
+		case LUA_TNUMBER:
+			printf("%d: %g\n",  i, lua_tonumber(L, i));
+			break;
+		default:
+			printf("%d: %s // --\n", i, lua_typename(L, t));
+			break;
+		}
+		i--;
+	}
+	printf("--------------- Stack Dump Finished ---------------\n" );
+	fflush(stdout);
+}
+static int docall(lua_State *L, int narg, int nret)
+{
+	int status;
+	int base = lua_gettop(L) - narg;  /* function index */
+	lua_pushcfunction(L, traceback);  /* push traceback function */
+	lua_insert(L, base);  /* put it under chunk and args */
+	status = lua_pcall(L, narg, nret, base);
+	lua_remove(L, base);  /* remove traceback function */
+	if (status != 0) { lua_pop(L, 1); lua_gc(L, LUA_GCCOLLECT, 0); }
+	if (lua_gettop(L) != nret + (base - 1))
+	{
+		stackDump(L);
+		lua_settop(L, base);
+	}
+	return status;
+}
+
+void te4_web_update(lua_State *L) {
+	if (web_core) { 
+		CefDoMessageLoopWork();
+
+		WebEvent *event;
+		while (event = pop_event()) {
+			switch (event->kind) {
+				case TE4_WEB_EVENT_TITLE_CHANGE:
+				lua_rawgeti(L, LUA_REGISTRYINDEX, event->handlers);
+				lua_pushstring(L, "on_title");
+				lua_gettable(L, -2);
+				lua_remove(L, -2);
+				if (!lua_isnil(L, -1)) {
+					lua_rawgeti(L, LUA_REGISTRYINDEX, event->handlers);
+					lua_pushstring(L, event->data.title);
+					docall(L, 2, 0);
+				} else lua_pop(L, 1);
+				
+				free((void*)event->data.title);
+				break;
+			}
+			delete event;
+		}
+	}
 }
 
 void te4_web_setup(int argc, char **gargv) {
@@ -518,12 +469,15 @@ void te4_web_setup(int argc, char **gargv) {
 		}
 
 		CefSettings settings;
+		settings.multi_threaded_message_loop = false;
 		bool resulti = CefInitialize(args, settings, NULL);
 		web_core = true;
 	}
 }
 
 void te4_web_init(lua_State *L) {
+	te4_web_init_utils();
+
 	auxiliar_newclass(L, "web{view}", view_reg);
 //	auxiliar_newclass(L, "web{downloader}", downloader_reg);
 	luaL_openlib(L, "core.webview", weblib, 0);

@@ -39,12 +39,14 @@ function _M:generate()
 	self.mouse:reset()
 	self.key:reset()
 
-	self.view = core.webview.new(self.w, self.h, self.url)
+	self.view = core.webview.new(self.w, self.h, self.url, {
+		on_title = function(view, title) if self.on_title then self.on_title(title) end end,
+	})
 	self.oldloading = true
 	self.scroll_inertia = 0
 
 	if self.has_frame then
-		self.frame = Base:makeFrame("ui/tooltip/", self.w + 6, self.h + 6)
+		self.frame = Base:makeFrame("ui/tooltip/", self.w + 8, self.h + 8)
 	end
 
 	self:onDownload()
@@ -78,7 +80,7 @@ end
 
 function _M:on_focus(v)
 	game:onTickEnd(function() self.key:unicodeInput(v) end)
-	self.view:focus(v)
+	if self.view then self.view:focus(v) end
 end
 
 function _M:makeDownloadbox(file)
@@ -152,18 +154,15 @@ function _M:display(x, y, nb_keyframes, screen_x, screen_y, offset_x, offset_y, 
 	end
 
 	if self.frame then
-		self:drawFrame(self.frame, x, y, 0, 0, 0, 0.3, self.w, self.h) -- shadow
-		self:drawFrame(self.frame, x, y, 1, 1, 1, 0.75) -- unlocked frame
+		self:drawFrame(self.frame, x - 4, y - 4, 0, 0, 0, 0.3, self.w, self.h) -- shadow
+		self:drawFrame(self.frame, x - 4, y - 4, 1, 1, 1, 0.75) -- unlocked frame
 	end
-	
+
 	if self.view then
 		if self.scroll_inertia ~= 0 then self.view:injectMouseWheel(0, self.scroll_inertia) end
 		self.view:toScreen(x, y)
 
 		local loading = self.view:loading()
-		if self.oldloading ~= loading then
-			if self.on_title then self.on_title(self.view:title()) end
-		end
 		self.oldloading = loading
 	end
 end

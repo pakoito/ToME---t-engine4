@@ -113,7 +113,7 @@ int realtime_pending = 0;
  */
 void (*te4_web_setup)(int argc, char **argv);
 void (*te4_web_init)(lua_State *L);
-void (*te4_web_update)();
+void (*te4_web_update)(lua_State *L);
 void te4_web_load() {
 	void *web = SDL_LoadObject("libte4-web.so");
 	printf("Loading web core: %s\n", SDL_GetError());
@@ -121,7 +121,7 @@ void te4_web_load() {
 	if (web) {
 		te4_web_setup = (void (*)(int, char**)) SDL_LoadFunction(web, "te4_web_setup");
 		te4_web_init = (void (*)(lua_State*)) SDL_LoadFunction(web, "te4_web_init");
-		te4_web_update = (void (*)()) SDL_LoadFunction(web, "te4_web_update");
+		te4_web_update = (void (*)(lua_State*)) SDL_LoadFunction(web, "te4_web_update");
 
 		te4_web_setup(g_argc, g_argv);
 	}
@@ -627,7 +627,7 @@ void on_redraw()
 #ifdef STEAM_TE4
 	if (!no_steam) te4_steam_callbacks();
 #endif
-	if (te4_web_update) te4_web_update();
+	if (te4_web_update) te4_web_update(L);
 }
 
 void pass_command_args(int argc, char *argv[])

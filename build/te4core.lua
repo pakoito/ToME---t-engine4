@@ -460,6 +460,8 @@ project "te4-web"
 	language "C++"
 	targetname "te4-web"
 
+	includedirs {"../src/web/", }
+
 	buildoptions{"-pthread -I/usr/include/gtk-2.0 -I/usr/lib64/gtk-2.0/include -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/pango-1.0 -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/libpng15 -I/usr/include/libdrm"}
 	libdirs {"/Test/cef_binary_3.1547.1406_linux/out/Release/obj.target/"}
 	libdirs {"/Test/cef_binary_3.1547.1406_linux/Release/"}
@@ -469,6 +471,7 @@ project "te4-web"
 	
 	files {
 		"../src/web/web.cpp",
+		"../src/web/web-utils.cpp",
 	}
 
 if _OPTIONS.steam then

@@ -76,11 +76,9 @@ function _M:init()
 		{right=0, bottom=0, absolute=true, ui=self.c_twitter},
 	}
 
-	if core.webview then
-		self.c_tooltip = require("engine.ui.WebView").new{width=380, height=500, has_frame=true,
-			url = ("http://te4.org/tooltip-ingame?steam=%d&v=%d.%d.%d"):format(core.steam and 1 or 0, engine.version[1], engine.version[2], engine.version[3])
-		}
-		self.base_uis[#self.base_uis+1] = {left=5, top=5, absolute=true, ui=self.c_tooltip}
+	if core.webview and game.webtooltip then
+		self.c_tooltip = game.webtooltip
+		self.base_uis[#self.base_uis+1] = {left=9, top=9, absolute=true, ui=self.c_tooltip}
 
 	end
 
