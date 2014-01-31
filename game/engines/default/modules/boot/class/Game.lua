@@ -64,11 +64,6 @@ function _M:init()
 		self.background, self.background_tw, self.background_th = self.background:glTexture()
 	end
 
-	self.tooltip = require("engine.WebTooltip").new(
-		380, 500,
-		("http://te4.org/tooltip-ingame?steam=%d&v=%d.%d.%d"):format(core.steam and 1 or 0, engine.version[1], engine.version[2], engine.version[3])
-	)
-
 --	self.refuse_threads = true
 	self.normal_key = self.key
 	self.stopped = config.settings.boot_menu_background
@@ -129,8 +124,10 @@ Remember that in most roguelikes death is usually permanent so be careful!
 Now go and have some fun!]]
 		}
 
-		self:serverNews()
-		self:updateNews()
+		if self.tooltip then
+			self:serverNews()
+			self:updateNews()
+		end
 	end
 
 --	self:installNewEngine()
@@ -319,10 +316,12 @@ function _M:getPlayer()
 end
 
 function _M:updateNews()
+	if not self.tooltip then return end
+
 	if self.news.link then
---		self.tooltip:set("#AQUAMARINE#%s#WHITE#\n---\n%s\n---\n#LIGHT_BLUE##{underline}#%s#LAST##{normal}#", self.news.title, self.news.text, self.news.link)
+		self.tooltip:set("#AQUAMARINE#%s#WHITE#\n---\n%s\n---\n#LIGHT_BLUE##{underline}#%s#LAST##{normal}#", self.news.title, self.news.text, self.news.link)
 	else
---		self.tooltip:set("#AQUAMARINE#%s#WHITE#\n---\n%s", self.news.title, self.news.text)
+		self.tooltip:set("#AQUAMARINE#%s#WHITE#\n---\n%s", self.news.title, self.news.text)
 	end
 
 	if self.news.link then
@@ -375,8 +374,10 @@ function _M:display(nb_keyframes)
 			end
 			self.background:toScreenFull(x, y, w, h, w * self.background_tw / self.background_w, h * self.background_th / self.background_h)
 		end
-		self.tooltip:display()
-		self.tooltip:toScreen(5, 5)
+		if self.tooltip then
+			self.tooltip:display()
+			self.tooltip:toScreen(5, 5)
+		end
 		self.logdisplay:toScreen()
 		engine.GameEnergyBased.display(self, nb_keyframes)
 		if self.full_fbo then self.full_fbo:use(false) self.full_fbo:toScreen(0, 0, self.w, self.h, self.full_fbo_shader.shad) end
@@ -413,8 +414,10 @@ function _M:display(nb_keyframes)
 --		core.display.drawQuad(0, 0, game.w, game.h, 128, 128, 128, 128)
 	end
 
-	self.tooltip:display()
-	self.tooltip:toScreen(5, 5)
+	if self.tooltip then
+		self.tooltip:display()
+		self.tooltip:toScreen(5, 5)
+	end
 
 	self.logdisplay:toScreen()
 

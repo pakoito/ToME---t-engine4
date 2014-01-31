@@ -30,6 +30,7 @@ function _M:init(t)
 	self.url = assert(t.url, "no webview url")
 	self.on_title = t.on_title
 	self.allow_downloads = t.allow_downloads or {}
+	self.has_frame = t.has_frame
 
 	Base.init(self, t)
 end
@@ -41,6 +42,10 @@ function _M:generate()
 	self.view = core.webview.new(self.w, self.h, self.url)
 	self.oldloading = true
 	self.scroll_inertia = 0
+
+	if self.has_frame then
+		self.frame = Base:makeFrame("ui/tooltip/", self.w + 6, self.h + 6)
+	end
 
 	self:onDownload()
 
@@ -146,6 +151,11 @@ function _M:display(x, y, nb_keyframes, screen_x, screen_y, offset_x, offset_y, 
 	elseif self.scroll_inertia < 0 then self.scroll_inertia = math.min(self.scroll_inertia + 1, 0)
 	end
 
+	if self.frame then
+		self:drawFrame(self.frame, x, y, 0, 0, 0, 0.3, self.w, self.h) -- shadow
+		self:drawFrame(self.frame, x, y, 1, 1, 1, 0.75) -- unlocked frame
+	end
+	
 	if self.view then
 		if self.scroll_inertia ~= 0 then self.view:injectMouseWheel(0, self.scroll_inertia) end
 		self.view:toScreen(x, y)
