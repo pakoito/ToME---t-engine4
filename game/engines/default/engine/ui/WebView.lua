@@ -52,6 +52,7 @@ function _M:generate()
 	self:onDownload()
 
 	self.mouse:registerZone(0, 0, self.w, self.h, function(button, x, y, xrel, yrel, bx, by, event)
+		if not self.view then return end
 		if event == "button" then
 			if button == "wheelup" then self.scroll_inertia = math.min(self.scroll_inertia, 0) - 5
 			elseif button == "wheeldown" then self.scroll_inertia = math.max(self.scroll_inertia, 0) + 5
@@ -72,6 +73,7 @@ function _M:generate()
 	end)
 	
 	function self.key.receiveKey(_, sym, ctrl, shift, alt, meta, unicode, isup, key)
+		if not self.view then return end
 		local symb = self.key.sym_to_name[sym]
 		if not symb then return end
 		self.view:injectKey(isup, symb)
@@ -161,8 +163,5 @@ function _M:display(x, y, nb_keyframes, screen_x, screen_y, offset_x, offset_y, 
 	if self.view then
 		if self.scroll_inertia ~= 0 then self.view:injectMouseWheel(0, self.scroll_inertia) end
 		self.view:toScreen(x, y)
-
-		local loading = self.view:loading()
-		self.oldloading = loading
 	end
 end

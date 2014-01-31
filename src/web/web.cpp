@@ -82,7 +82,12 @@ public:
 	IMPLEMENT_REFCOUNTING(RenderHandler);
 };
 
-class BrowserClient : public CefClient, public CefRequestHandler, public CefDisplayHandler, public CefRenderProcessHandler
+class BrowserClient :
+	public CefClient,
+	public CefRequestHandler,
+	public CefDisplayHandler,
+	public CefRenderProcessHandler,
+	public CefV8Handler,
 {
 	CefRefPtr<CefRenderHandler> m_renderHandler;
 	int handlers;

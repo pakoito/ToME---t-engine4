@@ -14,6 +14,7 @@
 #include <cef_render_handler.h>
 #include <cef_request_handler.h>
 #include <cef_render_process_handler.h>
+#include <cef_v8.h>
 
 enum web_event_kind {
 	TE4_WEB_EVENT_TITLE_CHANGE,
