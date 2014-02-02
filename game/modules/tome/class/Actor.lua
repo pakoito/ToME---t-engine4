@@ -4138,7 +4138,15 @@ function _M:postUseTalent(ab, ret, silent)
 		elseif ab.is_summon then
 			self:useEnergy(game.energy_to_act * self:combatSummonSpeed())
 		elseif ab.type[1]:find("^technique/") then
-			self:useEnergy(game.energy_to_act * self:combatSpeed())
+			local combat = self.combat
+			if self:getInven(self.INVEN_MAINHAND) then
+				local o = self:getInven(self.INVEN_MAINHAND)[1]
+				combat = self:getObjectCombat(o, "mainhand")
+			elseif self:getInven(self.INVEN_OFFHAND) then
+				local o = self:getInven(self.INVEN_OFFHAND)[1]
+				combat = self:getObjectCombat(o, "offhand")
+			end
+			self:useEnergy(game.energy_to_act * self:combatSpeed(combat))
 		elseif ab.is_mind then
 			self:useEnergy(game.energy_to_act * self:combatMindSpeed())
 		else
