@@ -102,7 +102,7 @@ newTalent{
 		if hitted and not self.dead and tx == target.x and ty == target.y then
 			if not self:canMove(tx,ty,true) or not target:canMove(sx,sy,true) then
 				self:logCombat(target, "Terrain prevents #Source# from switching places with #Target#.")
-				return false
+				return true
 			end						
 			self:setEffect(self.EFF_EVASION, t.getDuration(self, t), {chance=50})
 			-- Displace
