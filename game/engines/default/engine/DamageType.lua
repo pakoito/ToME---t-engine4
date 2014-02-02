@@ -71,6 +71,10 @@ function _M:get(id)
 	return _M.dam_def[id]
 end
 
+function _M:exists(id)
+	return _M.dam_def[id]
+end
+
 function _M:projectingFor(src, v)
 	src.__projecting_for = v
 end

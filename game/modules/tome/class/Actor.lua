@@ -4992,9 +4992,12 @@ end
 
 --- Called when we are initiating a projection
 function _M:on_project_init(t, x, y, damtype, dam, particles)
-	if self:attr("nullify_all_friendlyfire") then
-		t.friendlyfire = false
-		t.selffire = false
+	if self:attr("nullify_all_friendlyfire") and not t.ignore_nullify_all_friendlyfire then
+		local dt = DamageType:exists(damtype)
+		if not dt or not dt.ignore_nullify_all_friendlyfire then
+			t.friendlyfire = false
+			t.selffire = false
+		end
 	end
 end
 
