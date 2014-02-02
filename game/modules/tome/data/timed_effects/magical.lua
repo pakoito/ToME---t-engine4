@@ -2414,8 +2414,12 @@ newEffect{
 		self:effectTemporaryValue(eff, "on_melee_hit", {[DamageType.COLD]=eff.dam})
 		self:effectTemporaryValue(eff, "all_damage_convert", DamageType.COLD)
 		self:effectTemporaryValue(eff, "all_damage_convert_percent", 50)
+		self:addShaderAura("ice_armour", "crystalineaura", {}, "particles_images/spikes.png")
+		eff.particle = self:addParticles(Particles.new("snowfall", 1))
 	end,
 	deactivate = function(self, eff)
+		self:removeShaderAura("ice_armour")
+		self:removeParticles(eff.particle)
 	end,
 }
 

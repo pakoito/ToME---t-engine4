@@ -31,12 +31,16 @@ newTalent{
 	getArmor = function(self, t) return self:combatTalentSpellDamage(t, 10, 23) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/earth")
-		return {
+		local ret = {
 			armor = self:addTemporaryValue("combat_armor", t.getArmor(self, t)),
-			particle = self:addParticles(Particles.new("stone_skin", 1)),
 		}
+		if not self:addShaderAura("stone_skin", "crystalineaura", {time_factor=1500, spikeOffset=0.123123, spikeLength=0.9, spikeWidth=3, growthSpeed=2, color={0xD7/255, 0x8E/255, 0x45/255}}, "particles_images/spikes.png") then
+			ret.particle = self:addParticles(Particles.new("stone_skin", 1))
+		end
+		return ret
 	end,
 	deactivate = function(self, t, p)
+		self:removeShaderAura("stone_skin")
 		self:removeParticles(p.particle)
 		self:removeTemporaryValue("combat_armor", p.armor)
 		return true

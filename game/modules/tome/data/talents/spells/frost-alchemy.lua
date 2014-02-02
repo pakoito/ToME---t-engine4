@@ -120,12 +120,16 @@ newTalent{
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/ice")
 		local ret = {}
+		self:addShaderAura("body_of_ice", "crystalineaura", {}, "particles_images/spikes.png")
+		ret.particle = self:addParticles(Particles.new("snowfall", 1))
 		self:talentTemporaryValue(ret, "resists", {[DamageType.PHYSICAL] = t.getResistance(self, t) * 0.6})
 		self:talentTemporaryValue(ret, "damage_affinity", {[DamageType.COLD] = t.getAffinity(self, t)})
 		self:talentTemporaryValue(ret, "ignore_direct_crits", t.critResist(self, t))
 		return ret
 	end,
 	deactivate = function(self, t, p)
+		self:removeParticles(p.particle)
+		self:removeShaderAura("body_of_ice")
 		return true
 	end,
 	info = function(self, t)
