@@ -1366,7 +1366,7 @@ function _M:combatStatLimit(stat, limit, low, high)
 end
 
 --- Gets the damage
-function _M:combatDamage(weapon)
+function _M:combatDamage(weapon, adddammod)
 	weapon = weapon or self.combat or {}
 
 	local sub_cun_to_str = false
@@ -1379,6 +1379,11 @@ function _M:combatDamage(weapon)
 		if self.use_psi_combat and stat == "str" then stat = "wil" end
 		if self.use_psi_combat and stat == "dex" then stat = "cun" end
 		totstat = totstat + self:getStat(stat) * mod
+	end
+	if adddammod then
+		for stat, mod in pairs(adddammod) do
+			totstat = totstat + self:getStat(stat) * mod
+		end
 	end
 	if self.use_psi_combat then
 		if self:knowTalent(self.T_GREATER_TELEKINETIC_GRASP) then
@@ -1401,7 +1406,7 @@ function _M:combatDamage(weapon)
 
 	local power = math.max((weapon.dam or 1), 1)
 	power = (math.sqrt(power / 10) - 1) * 0.5 + 1
-	--print(("[COMBAT DAMAGE] power(%f) totstat(%f) talent_mod(%f)"):format(power, totstat, talented_mod))
+--	print(("[COMBAT DAMAGE] power(%f) totstat(%f) talent_mod(%f)"):format(power, totstat, talented_mod))
 	return self:rescaleDamage(0.3*(self:combatPhysicalpower(nil, weapon) + totstat) * power * talented_mod)
 end
 

@@ -65,7 +65,7 @@ newTalent{
 		if not x or not y then return nil end
 
 		-- Compute damage
-		local dam = self:combatDamage(combat)
+		local dam = self:combatDamage(combat, {mag=0.2})
 		local damrange = self:combatDamageRange(combat)
 		dam = rng.range(dam, dam * damrange)
 		dam = self:spellCrit(dam)
@@ -80,7 +80,8 @@ newTalent{
 		local damagemod = t.getDamageMod(self, t)
 		return ([[Channel raw mana through your staff, projecting a bolt of your staff's damage type, doing %d%% staff damage.
 		The bolt will only hurt hostile targets, and pass safely through friendly ones.
-		This attack always has a 100%% chance to hit, and ignores the target's Armour.]]):
+		This attack always has a 100%% chance to hit, and ignores the target's Armour.
+		When projecting a bolt with your staff its damage modifier is increased by 20%%.]]):
 		format(damagemod * 100)
 	end,
 }
