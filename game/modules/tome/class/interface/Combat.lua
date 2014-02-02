@@ -235,6 +235,7 @@ end
 --- Determines the combat field to use for this item
 function _M:getObjectCombat(o, kind)
 	if kind == "barehand" then return self.combat end
+	if not o then return nil end
 	if kind == "mainhand" then return o.combat end
 	if kind == "offhand" then return o.combat end
 	return nil

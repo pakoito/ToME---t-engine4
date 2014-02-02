@@ -2249,7 +2249,7 @@ function _M:onTakeHit(value, src, death_note)
 	if self:fireTalentCheck("callbackOnHit", cb, src, death_note) then
 		value = cb.value
 	end
-
+	
 	local hd = {"Actor:takeHit", value=value, src=src, death_note=death_note}
 	if self:triggerHook(hd) then value = hd.value end
 
@@ -2289,7 +2289,10 @@ function _M:takeHit(value, src, death_note)
 		end
 	end
 
+
 	local dead, val = mod.class.interface.ActorLife.takeHit(self, value, src, death_note)
+
+	if src.fireTalentCheck then src:fireTalentCheck("callbackOnDealDamage", val, self, dead, death_note) end
 
 	if dead and src and src.attr and src:attr("overkill") and src.project and not src.turn_procs.overkill then
 		src.turn_procs.overkill = true
@@ -4072,6 +4075,7 @@ function _M:preUseTalent(ab, silent, fake)
 end
 
 local sustainCallbackCheck = {
+	callbackOnDealDamage = "talents_on_deal_damage",
 	callbackOnHit = "talents_on_hit",
 	callbackOnAct = "talents_on_act",
 	callbackOnActBase = "talents_on_act_base",
