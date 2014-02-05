@@ -22,7 +22,7 @@ local Map = require "engine.Map"
 
 module(..., package.seeall, class.make)
 
-local NB_VARIATIONS = 1
+local NB_VARIATIONS = 20
 
 function _M:init()
 	self.repo = {}
@@ -394,7 +394,7 @@ grass = { method="borders", type="grass", forbid={lava=true, rock=true},
 	water7i={add_mos={{image="terrain/grass/grass_inner_7_%02d.png", display_x=-1, display_y=-1}}, min=1, max=1},
 	water9i={add_mos={{image="terrain/grass/grass_inner_9_%02d.png", display_x=1, display_y=-1}}, min=1, max=1},
 },
-grass_wm = { method="borders", type="grass", forbid={lava=true},
+grass_wm = { method="borders", type="grass", forbid={lava=true, rock=true},
 	default8={add_mos={{image="terrain/grass_worldmap/grass_2_%02d.png", display_y=-1}}, min=1, max=2},
 	default2={add_mos={{image="terrain/grass_worldmap/grass_8_%02d.png", display_y=1}}, min=1, max=2},
 	default4={add_mos={{image="terrain/grass_worldmap/grass_6_%02d.png", display_x=-1}}, min=1, max=2},
