@@ -223,7 +223,7 @@ function _M:step()
 
 		-- Ping every minute, lest the server kills us
 		local time = os.time()
-		if time - self.last_ping > 60 then
+		if time - self.last_ping > 60 and self.sock then
 			self.last_ping = time
 			self:orderPing()
 		end
