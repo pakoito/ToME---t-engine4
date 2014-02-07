@@ -408,18 +408,28 @@ function _M:computeAttachementSpotsFromTable(ta)
 end
 
 function _M:computeAttachementSpots()
+	local t = {}
 	if fs.exists(Tiles.prefix.."attachements.lua") then
 		print("Loading tileset attachements from ", Tiles.prefix.."attachements.lua")
 		local f, err = loadfile(Tiles.prefix.."attachements.lua")
 		if not f then print("Loading tileset attachements error", err)
 		else
-			local t = {}
 			setfenv(f, t)
 			local ok, err = pcall(f)
 			if not ok then print("Loading tileset attachements error", err) end
-			self:computeAttachementSpotsFromTable(t)
 		end		
 	end
+	for _, file in ipairs(fs.list(Tiles.prefix)) do if file:find("^attachements%-.+.lua$") then
+		print("Loading tileset attachements from ", Tiles.prefix..file)
+		local f, err = loadfile(Tiles.prefix..file)
+		if not f then print("Loading tileset attachements error", err)
+		else
+			setfenv(f, t)
+			local ok, err = pcall(f)
+			if not ok then print("Loading tileset attachements error", err) end
+		end		
+	end end
+	self:computeAttachementSpotsFromTable(t)
 end
 
 function _M:setupDisplayMode(reboot, mode)
