@@ -182,6 +182,7 @@ newEffect{
 	end,
 }
 
+
 newEffect{
 	name = "CRIPPLING_POISON", image = "talents/crippling_poison.png",
 	desc = "Crippling Poison",
@@ -681,6 +682,25 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("resists", eff.pid)
+	end,
+}
+
+-- artifact wild infusion
+newEffect{
+	name = "PRIMAL_ATTUNEMENT", image = "talents/infusion__wild.png",
+	desc = "Primal Attunement",
+	long_desc = function(self, eff) return ("The target is attuned to the wild, increasing all damage affinity by %d%%."):format(eff.power) end,
+	type = "physical",
+	subtype = { nature=true },
+	status = "beneficial",
+	parameters = { power=20 },
+	on_gain = function(self, err) return "#Target# attunes to the wild.", "+Primal" end,
+	on_lose = function(self, err) return "#Target# is no longer one with nature.", "-Primal" end,
+	activate = function(self, eff)
+		eff.pid = self:addTemporaryValue("damage_affinity", {all=eff.power})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("damage_affinity", eff.pid)
 	end,
 }
 

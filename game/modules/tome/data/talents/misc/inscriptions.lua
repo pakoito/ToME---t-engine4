@@ -184,6 +184,80 @@ newInscription{
 	end,
 }
 
+-- fixedart wild variant
+newInscription{
+	name = "Infusion: Primal", image = "talents/infusion__wild.png",
+	type = {"inscriptions/infusions", 1},
+	points = 1,
+	no_energy = true,
+	tactical = {
+		DEFEND = 3,
+		CURE = function(self, t, target)
+			local nb = 0
+			local data = self:getInscriptionData(t.short_name)
+			for eff_id, p in pairs(self.tmp) do
+				local e = self.tempeffect_def[eff_id]
+				if data.what[e.type] and e.status == "detrimental" then
+					nb = nb + 1
+				end
+			end
+			return nb
+		end
+	},
+	action = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+
+		local target = self
+		local effs = {}
+		local force = {}
+		local known = false
+
+		-- Go through all temporary effects
+		for eff_id, p in pairs(target.tmp) do
+			local e = target.tempeffect_def[eff_id]
+			if data.what[e.type] and e.status == "detrimental" and e.subtype["cross tier"] then
+				force[#force+1] = {"effect", eff_id}
+			elseif data.what[e.type] and e.status == "detrimental" then
+				effs[#effs+1] = {"effect", eff_id}
+			end
+		end
+
+		-- Cross tier effects are always removed and not part of the random game, otherwise it is a huge nerf to wild infusion
+		for i = 1, #force do
+			local eff = force[i]
+			if eff[1] == "effect" then
+				target:removeEffect(eff[2])
+				known = true
+			end
+		end
+
+		for i = 1, 1 do
+			if #effs == 0 then break end
+			local eff = rng.tableRemove(effs)
+
+			if eff[1] == "effect" then
+				target:removeEffect(eff[2])
+				known = true
+			end
+		end
+		if known then
+			game.logSeen(self, "%s is cured!", self.name:capitalize())
+		end
+		self:setEffect(self.EFF_PRIMAL_ATTUNEMENT, data.dur, {power=data.power + data.inc_stat})
+		return true
+	end,
+	info = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		local what = table.concat(table.keys(data.what), ", ")
+		return ([[Activate the infusion to cure yourself of %s effects and increase affinity for all damage by %d%% for %d turns.]]):format(what, data.power+data.inc_stat, data.dur)
+	end,
+	short_info = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		local what = table.concat(table.keys(data.what), ", ")
+		return ([[affinity %d%%; cure %s]]):format(data.power + data.inc_stat, what)
+	end,
+}
+
 newInscription{
 	name = "Infusion: Movement",
 	type = {"inscriptions/infusions", 1},
@@ -209,6 +283,8 @@ newInscription{
 		return ([[%d%% speed; %d turns]]):format(data.speed + data.inc_stat, data.dur)
 	end,
 }
+
+
 
 newInscription{
 	name = "Infusion: Sun",
@@ -306,6 +382,7 @@ newInscription{
 	end,
 }
 
+-- Opportunity cost for this is HUGE, it should not hit friendly, also buffed duration
 newInscription{
 	name = "Infusion: Wild Growth",
 	type = {"inscriptions/infusions", 1},
@@ -315,7 +392,7 @@ newInscription{
 	radius = 5,
 	direct_hit = true,
 	target = function(self, t)
-		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, friendlyfire = false, talent=t}
 	end,
 	getDamage = function(self, t) return 10 + self:combatMindpower() * 3.6 end,
 	action = function(self, t)
@@ -538,6 +615,7 @@ newInscription{
 		return ([[speed %d%% for %d turns]]):format(data.power + data.inc_stat, data.dur)
 	end,
 }
+
 
 newInscription{
 	name = "Rune: Vision",

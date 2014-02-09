@@ -26,8 +26,63 @@ for def, e in pairs(game.state:getWorldArtifacts()) do
 	print("Importing "..e.name.." into world artifacts")
 end
 
-
 -- This file describes artifacts not bound to a special location, they can be found anywhere
+
+newEntity{ base = "BASE_GEM", 
+	power_source = {arcane=true},
+	unique = true,
+	unided_name = "windy gem",
+	name = "Windborne Azurite", subtype = "blue",
+	color = colors.BLUE, image = "object/sapphire.png",
+	level_range = {18, 40},
+	desc = [[Air currents swirl around this bright blue jewel.]],
+	rarity = 240,
+	cost = 200,
+	identified = false,
+	material_level = 4,
+	wielder = {
+		inc_stats = {[Stats.STAT_DEX] = 10, [Stats.STAT_CUN] = 10 },
+		inc_damage = {[DamageType.LIGHTNING] = 20 },
+		cancel_damage_chance = 10, -- add to tooltip
+		damage_affinity={
+			[DamageType.LIGHTNING] = 20,
+		},
+		movement_speed = 0.2,
+	},
+	imbue_powers = {
+		inc_stats = {[Stats.STAT_DEX] = 10, [Stats.STAT_CUN] = 10 },
+		inc_damage = {[DamageType.LIGHTNING] = 20 },
+		cancel_damage_chance = 10, -- add to tooltip
+		damage_affinity={
+			[DamageType.LIGHTNING] = 20,
+		},
+		movement_speed = 0.2,
+	},
+	
+}
+
+-- Low base values because you can stack affinity and resist
+-- The 3rd type is pretty meaningless balance-wise.  Magic debuffs hardly matter.  The real advantage is the affinity.
+newEntity{ base = "BASE_INFUSION",
+	name = "Primal Infusion", unique=true, image = "object/artifact/tree_of_life.png",
+	desc = [[This wild infusion has evolved.]],
+	unided_name = "pulsing infusion",
+	level_range = {15, 40},
+	rarity = 300,
+	cost = 300,
+	material_level = 3,
+
+	inscription_kind = "protect",
+	inscription_data = {
+		cooldown = 20,
+		dur = 6,
+		power = 10,
+		use_stat_mod = 0.1, 
+		what = {physical=true, mental=true, magical=true},
+	},
+	inscription_talent = "INFUSION:_PRIMAL",
+}
+
 newEntity{ base = "BASE_STAFF",
 	power_source = {arcane=true},
 	unique = true,
@@ -5920,11 +5975,10 @@ newEntity{ base = "BASE_SHIELD",
 	end,
 }
 
--- Disrupt the backline by attacking the frontline
--- Effect works better fighting in the open
--- Damage stats are pretty bad, not entirely sure they need to be
--- Arcane if necessary, ideally nature scaling off dex.  Dex is thematic with wind.
--- Aesthetic Themes:  Blue, windy, lightning, storm, speed
+-- No longer hits your own projectiles
+-- Hopefully fixed LUA errors with DamageType require
+-- Significant rescaling.  Base damage cut by 50%, crit by 5%.  The reason these hilariously bad numbers happened was derping and not accounting for the awesomeness of the 100% dex scaling.  APR is still extremely high.
+-- Proc chance is now 100% up from 25%.  No matter how I test this--even at 100% and 500% global action speed--it is often a pain in the ass to get procs just to test.  This is supposed to be one of the main features of the item. 
 newEntity{ base = "BASE_KNIFE", --Shibari's #1
 	power_source = {nature=true},
 	unique = true,
@@ -5938,24 +5992,31 @@ newEntity{ base = "BASE_KNIFE", --Shibari's #1
 	color=colors.BLUE,
 	require = { stat = { dex=30}},
 	combat = {
-		dam = 30,
+		dam = 15,
 		apr = 20,
-		physcrit = 18,
+		physcrit = 10,
 		dammod = {dex=1},
-		special_on_hit = {desc="25% chance for lightning to strike and destroy any projectiles in a radius of 10, dealing damage and stunning enemies around the projectile.", on_kill=1, fct=function(combat, who, target)
-			if not rng.percent(25) then return end
+		special_on_hit = {desc="Causes lightning to strike and destroy any projectiles in a radius of 10 dealing damage and dazing enemies in a radius of 5 around it.", on_kill=1, fct=function(combat, who, target)
 			local grids = core.fov.circle_grids(who.x, who.y, 10, true)
 			for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
 				local i = 0
 				local p = game.level.map(x, y, engine.Map.PROJECTILE+i)
-				while p do											   
+				while p do
+					local DamageType = require "engine.DamageType" -- I don't entirely follow why this is necessary
+					if p.src and (p.src == who) then return end -- Keep Arcane Blade procs from hitting them since the projectile is still on top of them.
+					if p.name then 
+						game.logPlayer(who, "#GREEN#Lightning strikes the " .. p.name .. "!")
+					else
+						game.logPlayer(who, "#GREEN#Shantiz strikes down a projectile!")
+					end
+					
 					p:terminate(x, y)
 					game.level:removeEntity(p, true)
 					p.dead = true
-					game.level.map:particleEmitter(x, y, 5, "ball_lightning_beam", {radius=5, tx=x, ty=y}) -- I'm terrible with graphical stuff but I thought I'd at least try?
+					game.level.map:particleEmitter(x, y, 5, "ball_lightning_beam", {radius=5, tx=x, ty=y})
 				   
 					local tg = {type="ball", radius=5, selffire=false}
-					local dam = who:mindCrit(30+(2*who:getDex())) -- generous because of the bad damage type, spell or phys crit would both be fine
+					local dam = 4*who:getDex() -- no more crit or base damage.  no real reason, just like it better.
 
 					who:project(tg, x, y, DamageType.LIGHTNING, dam)
 				   
@@ -5973,9 +6034,9 @@ newEntity{ base = "BASE_KNIFE", --Shibari's #1
 		},
 	},
 	wielder = {
-		inc_stats = { [Stats.STAT_DEX] = 12 },
-		slow_projectiles = 40, -- synergy with proc
-		quick_weapon_swap = 1, -- thematic, also makes this more useful when caught in the open.  In general I like this mechanic and would like to see more of it.
+		inc_stats = { [Stats.STAT_DEX] = 20 },
+		slow_projectiles = 40, 
+		quick_weapon_swap = 1, 
 	},
 }
 --[=[

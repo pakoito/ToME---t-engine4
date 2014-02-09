@@ -296,7 +296,7 @@ newEntity{ base = "BASE_INFUSION",
 	inscription_kind = "utility",
 	inscription_data = {
 		cooldown = 15,
-		dur = 5,
+		dur = 10, -- to 10 from 5, because this should be really good
 		armor = 50,
 		hard = 30,
 	},
