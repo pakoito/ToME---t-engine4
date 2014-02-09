@@ -3422,23 +3422,30 @@ newEntity{ base = "BASE_WHIP", --Thanks Grayswandir!
 	require = { stat = { dex=14 }, },
 	cost = 150,
 	rarity = 325,
-	level_range = {4, 12},
+	level_range = {40, 50},
 	metallic = false,
-	material_level = 1,
+	material_level = 5,
 	combat = {
-		dam = 19,
+		dam = 55,
 		apr = 8,
-		physcrit = 5,
+		physcrit = 9,
 		dammod = {dex=1},
-		melee_project={[DamageType.BLEED] = 15},
+		melee_project={[DamageType.BLEED] = 30},
 		burst_on_crit = {
-			[DamageType.BLEED] = 20,
+			[DamageType.BLEED] = 50,
 		},
-		talent_on_hit = { [Talents.T_BONE_GRAB] = {level=1, chance=20} },
+		talent_on_hit = { [Talents.T_BONE_GRAB] = {level=3, chance=10}, [Talents.T_BONE_SPEAR] = {level=4, chance=20} },
+		
 	},
-	max_power = 24, power_regen = 1,
-	use_talent = { id = Talents.T_BONE_NOVA, level = 2, power = 24 },
-	talent_on_spell = { {chance=10, talent=Talents.T_BONE_SPEAR, level=2} },
+	wielder = {
+		combat_def = 12,
+		combat_spellpower = 4,
+		combat_physspeed = 0.1,
+		talents_types_mastery = { ["corruption/bone"] = 0.25, },
+	},
+	max_power = 20, power_regen = 1,
+	use_talent = { id = Talents.T_BONE_NOVA, level = 4, power = 20 },
+	talent_on_spell = { {chance=10, talent=Talents.T_BONE_SPEAR, level=4} },
 }
 
 newEntity{ base = "BASE_MINDSTAR",
@@ -3447,7 +3454,7 @@ newEntity{ base = "BASE_MINDSTAR",
 	name = "Core of the Forge", image = "object/artifact/core_of_the_forge.png",
 	unided_name = "fiery mindstar",
 	level_range = {38, 50},
-	color=colors.RED, image = "object/artifact/nexus_of_the_way.png",
+	color=colors.RED,
 	rarity = 350,
 	desc = [[This blazing hot mindstar beats rhythmically, releasing a burst of heat with each strike.]],
 	cost = 280,
@@ -3461,7 +3468,7 @@ newEntity{ base = "BASE_MINDSTAR",
 		damtype = DamageType.DREAMFORGE,
 	},
 	wielder = {
-		combat_mindpower = 14,
+		combat_mindpower = 15,
 		combat_mindcrit = 8,
 		combat_atk=10,
 		combat_dam=10,
@@ -3591,7 +3598,7 @@ newEntity{ base = "BASE_ARROW", --Thanks Grayswandir!
 	power_source = {arcane=true},
 	unique = true,
 	name = "Void Quiver",
-	unided_name = "etheral quiver",
+	unided_name = "ethereal quiver",
 	desc = [[An endless supply of arrows lay within this deep black quiver. Tiny white lights dot its surface.]],
 	color = colors.BLUE, image = "object/artifact/void_quiver.png",
 	level_range = {35, 50},
@@ -3605,7 +3612,7 @@ newEntity{ base = "BASE_ARROW", --Thanks Grayswandir!
 		dam = 45,
 		apr = 30, --No armor can stop the void
 		physcrit = 6,
-		dammod = {dex=0.7, str=0.5},
+		dammod = {dex=0.7, str=0.5, mag=0.1,},
 		damtype = DamageType.VOID,
 		talent_on_hit = { [Talents.T_QUANTUM_SPIKE] = {level=1, chance=10}, [Talents.T_TEMPORAL_CLONE] = {level=1, chance=5} },
 	},
@@ -5440,7 +5447,7 @@ newEntity{ base = "BASE_LONGSWORD",
 			local Talents = require "engine.interface.ActorTalents"
 			o.running=true
 			if target:canBe("instakill") then
-				who:forceUseTalent(Talents.T_DEVOUR, {ignore_cd=true, ignore_energy=true, force_target=target, force_level=4, ignore_ressources=true})
+				who:forceUseTalent(Talents.T_SWALLOW, {ignore_cd=true, ignore_energy=true, force_target=target, force_level=4, ignore_ressources=true})
 			end
 			o.running=false
 		end},
