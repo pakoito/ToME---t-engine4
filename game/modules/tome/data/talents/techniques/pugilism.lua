@@ -160,7 +160,7 @@ newTalent{
 	random_ego = "attack",
 	cooldown = function(self, t) return math.ceil(12 * getRelentless(self, cd)) end,
 	stamina = 12,
-	range = function(self, t) return math.ceil(self:combatTalentScale(t, 2.2, 4.3)) end,
+	range = function(self, t) return math.ceil(2 + self:combatTalentScale(t, 2.2, 4.3)) end, -- being able to use this over rush without massive investment is much more fun
 	chargeBonus = function(self, t, dist) return self:combatScale(dist, 0.15, 1, 0.50, 5) end,
 	message = "@Source@ lashes out with a spinning backhand.",
 	tactical = { ATTACKAREA = { weapon = 2 }, CLOSEIN = 1 },

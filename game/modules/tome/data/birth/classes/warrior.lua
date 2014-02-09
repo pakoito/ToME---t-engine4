@@ -305,6 +305,7 @@ newBirthDescriptor{
 		[ActorTalents.T_DOUBLE_STRIKE] = 1,
 		[ActorTalents.T_WEAPON_COMBAT] = 1,
 		[ActorTalents.T_ARMOUR_TRAINING] = 1,
+		[ActorTalents.T_UNARMED_MASTERY] = 1, -- early game is absolutely stupid without this
 	},
 	copy = {
 		resolvers.equip{ id=true,

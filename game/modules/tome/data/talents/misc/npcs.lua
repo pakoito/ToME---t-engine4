@@ -2069,3 +2069,60 @@ newTalent{
 		format(t.getDuration(self, t), damDesc(self, DamageType.COLD, self:combatTalentSpellDamage(t, 5, 140)))
 	end,
 }
+
+
+newTalent{
+	name = "Body Shot",
+	type = {"technique/other", 1},
+	points = 5,
+	cooldown = 10,
+	stamina = 10,
+	message = "@Source@ throws a body shot.",
+	tactical = { ATTACK = { weapon = 2 }, DISABLE = { stun = 2 } },
+	requires_target = true,
+	--on_pre_use = function(self, t, silent) if not self:hasEffect(self.EFF_COMBO) then if not silent then game.logPlayer(self, "You must have a combo going to use this ability.") end return false end return true end,
+	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 1.1, 1.8) + getStrikingStyle(self, dam) end,
+	getDuration = function(self, t, comb) return math.ceil(self:combatTalentScale(t, 1, 5) * (0.25 + comb/5)) end,
+	getDrain = function(self, t) return self:combatTalentScale(t, 2, 10, 0.75) * self:getCombo(combo) end,
+	action = function(self, t)
+		local tg = {type="hit", range=self:getTalentRange(t)}
+		local x, y, target = self:getTarget(tg)
+		if not x or not y or not target then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
+
+		-- breaks active grapples if the target is not grappled
+		if target:isGrappled(self) then
+			grappled = true
+		else
+			self:breakGrapples()
+		end
+
+		local hit = self:attackTarget(target, nil, t.getDamage(self, t), true)
+
+		if hit then
+			-- try to daze
+			if target:canBe("stun") then
+				target:setEffect(target.EFF_DAZED, t.getDuration(self, t, self:getCombo(combo)), {apply_power=self:combatPhysicalpower()})
+			else
+				game.logSeen(target, "%s resists the body shot!", target.name:capitalize())
+			end
+
+			target:incStamina(- t.getDrain(self, t))
+
+		end
+
+		self:clearCombo()
+
+		return true
+	end,
+	info = function(self, t)
+		local damage = t.getDamage(self, t) * 100
+		local drain = self:getTalentLevel(t) * 2
+		local daze = t.getDuration(self, t, 0)
+		local dazemax = t.getDuration(self, t, 5)
+		return ([[A punch to the body that deals %d%% damage, drains %d of the target's stamina per combo point, and dazes the target for %d to %d turns, depending on the amount of combo points you've accumulated.
+		The daze chance will increase with your Physical Power.
+		Using this talent removes your combo points.]])
+		:format(damage, drain, daze, dazemax)
+	end,
+}
