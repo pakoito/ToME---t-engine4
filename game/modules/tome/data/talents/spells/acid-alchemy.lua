@@ -59,7 +59,7 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local chance = t.getChance(self, t)
 		local dam = t.getDamage(self, t)
-		golem:setEffect(golem.EFF_CAUSTIC_GOLEM, duration, {chance=chance, dam=dam})
+		golem:setEffect(golem.EFF_CAUSTIC_GOLEM, duration, {src = golem, chance=chance, dam=dam})
 	end,
 	info = function(self, t)
 		local duration = t.getDuration(self, t)

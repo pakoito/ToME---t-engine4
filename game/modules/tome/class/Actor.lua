@@ -4098,10 +4098,13 @@ function _M:fireTalentCheck(event, ...)
 	if self[store] and next(self[store]) then
 		for tid, kind in pairs(self[store]) do
 			if kind == "effect" then
+				self.__project_source = self.tmp[tid]
 				ret = self:callEffect(tid, event, ...) or ret
 			else
+				self.__project_source = self.sustain_talents[tid]
 				ret = self:callTalent(tid, event, ...) or ret
 			end
+			self.__project_source = nil
 		end
 	end
 	return ret
