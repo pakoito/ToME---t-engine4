@@ -424,6 +424,12 @@ function _M:updateMainShader()
 		if game.level and game.level.data and game.level.data.underwater then game.fbo_shader:setUniform("underwater", 1)
 		else game.fbo_shader:setUniform("underwater", 0) -- Disable
 		end
+
+		-- Wobbling shader
+		if self:attr("stunned") and self.stunned >= 1 then game.fbo_shader:setUniform("wobbling", 1)
+		elseif self:attr("dazed") and self.dazed >= 1 then game.fbo_shader:setUniform("wobbling", 0.7)
+		else game.fbo_shader:setUniform("wobbling", 0) -- Disable
+		end
 	end
 end
 
