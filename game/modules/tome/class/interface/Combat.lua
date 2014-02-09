@@ -468,6 +468,8 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	
 		local oldproj = DamageType:getProjectingFor(self)
 		if self.__talent_running then DamageType:projectingFor(self, {project_type={talent=self.__talent_running}}) end
+		
+		if weapon and weapon.crushing_blow then self:attr("crushing_blow", 1) end
 
 		-- Damage conversion?
 		-- Reduces base damage but converts it into another damage type
@@ -491,6 +493,8 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		if dam > 0 then
 			DamageType:get(damtype).projector(self, target.x, target.y, damtype, math.max(0, dam))
 		end
+		
+		if weapon and weapon.crushing_blow then self:attr("crushing_blow", -1) end
 
 		if self.__talent_running then DamageType:projectingFor(self, oldproj) end
 
@@ -752,15 +756,15 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 
 	-- Special effect
 	if hitted and weapon and weapon.special_on_hit and weapon.special_on_hit.fct and (not target.dead or weapon.special_on_hit.on_kill) then
-		weapon.special_on_hit.fct(weapon, self, target)
+		weapon.special_on_hit.fct(weapon, self, target, dam)
 	end
 
 	if hitted and crit and weapon and weapon.special_on_crit and weapon.special_on_crit.fct and (not target.dead or weapon.special_on_crit.on_kill) then
-		weapon.special_on_crit.fct(weapon, self, target)
+		weapon.special_on_crit.fct(weapon, self, target, dam)
 	end
 
 	if hitted and weapon and weapon.special_on_kill and weapon.special_on_kill.fct and target.dead then
-		weapon.special_on_kill.fct(weapon, self, target)
+		weapon.special_on_kill.fct(weapon, self, target, dam)
 	end
 
 	if hitted and crit and not target.dead and self:knowTalent(self.T_BACKSTAB) and not target:attr("stunned") and rng.percent(self:callTalent(self.T_BACKSTAB, "getStunChance")) then

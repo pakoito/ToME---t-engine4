@@ -315,20 +315,26 @@ newEntity{ base = "BASE_GEM",
 	quest = 1,
 	material_level = 5,
 	wielder = {
-		inc_stats = {[Stats.STAT_CON] = 10, },
+		inc_stats = {[Stats.STAT_CON] = 15, },
 		healing_factor = 0.3,
 		life_regen = 2,
 		resists = {
 			[DamageType.BLIGHT] = 10,
 		},
+		damage_affinity = {
+			[DamageType.NATURE] = 15,
+		},
 	},
 	imbue_powers = {
-		inc_stats = {[Stats.STAT_CON] = 10, },
+		inc_stats = {[Stats.STAT_CON] = 15, },
 		healing_factor = 0.3,
 		life_regen = 2,
 		stun_immune = 0.3,
 		resists = {
 			[DamageType.BLIGHT] = 10,
+		},
+		damage_affinity = {
+			[DamageType.NATURE] = 15,
 		},
 	},
 }

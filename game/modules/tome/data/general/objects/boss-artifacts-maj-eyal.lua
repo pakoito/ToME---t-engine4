@@ -291,9 +291,7 @@ newEntity{ base = "BASE_SHIELD",
 	rarity = 200,
 	cost = 20,
 	material_level = 2,
-	rarity = false,
 	metallic = false,
-
 	special_combat = {
 		dam = resolvers.rngavg(20,30),
 		block = 60,
@@ -318,22 +316,23 @@ newEntity{ base = "BASE_GEM",
 	power_source = {nature=true},
 	unique = true, define_as = "PETRIFIED_WOOD",
 	unided_name = "burned piece of wood",
-	name = "Petrified Wood", subtype = "black",
+	name = "Petrified Wood", subtype = "red", --Visually black, but associate with fire, not acid
 	color = colors.WHITE, image = "object/artifact/petrified_wood.png",
 	level_range = {35, 45},
 	rarity = 280,
-	identified = false,
 	desc = [[A piece of the scorched wood taken from the remains of Snaproot.]],
-	rarity = false,
 	cost = 100,
 	material_level = 4,
+	identified = false,
 	imbue_powers = {
 		resists = { [DamageType.NATURE] = 25, [DamageType.DARKNESS] = 10, [DamageType.COLD] = 10 },
 		inc_stats = { [Stats.STAT_CON] = 25, },
+		ignore_direct_crits = 23,
 	},
 	wielder = {
 		resists = { [DamageType.NATURE] = 25, [DamageType.DARKNESS] = 10, [DamageType.COLD] = 10 },
 		inc_stats = { [Stats.STAT_CON] = 25, },
+		ignore_direct_crits = 23,
 	},
 }
 

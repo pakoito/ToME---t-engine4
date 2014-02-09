@@ -337,6 +337,16 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			local def = src.tempeffect_def[src.EFF_CURSE_OF_MISFORTUNE]
 			dam = def.doUnfortunateEnd(src, eff, target, dam)
 		end
+		
+		if src:attr("crushing_blow") and (dam * (1.25 + (src.combat_critical_power or 0)/200)) > target.life then
+			dam = dam * (1.25 + (src.combat_critical_power or 0)/200)
+			game.logPlayer(src, "You end your target with a crushing blow!")
+		end
+		
+		if target:attr("resist_unseen") and not target:canSee(src) then
+			dam = dam * (1 - math.min(target.resist_unseen,100)/100)
+		end
+		
 		-- Sanctuary: reduces damage if it comes from outside of Gloom
 		if target.isTalentActive and target:isTalentActive(target.T_GLOOM) and target:knowTalent(target.T_SANCTUARY) then
 			if tmp and tmp.sanctuaryDamageChange then
@@ -985,6 +995,7 @@ newDamageType{
 newDamageType{
 	name = "flameshock", type = "FLAMESHOCK",
 	projector = function(src, x, y, type, dam)
+		if _G.type(dam) == "number" then dam = {dam=dam, dur=4} end
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
 			-- Set on fire!
@@ -1096,7 +1107,7 @@ newDamageType{
 
 -- Light damage + blind chance
 newDamageType{
-	name = "blinding light", type = "LIGHT_BLIND",
+	name = "blinding light", type = "LIGHT_BLIND", text_color = "#YELLOW#",
 	projector = function(src, x, y, type, dam)
 		local realdam = DamageType:get(DamageType.LIGHT).projector(src, x, y, DamageType.LIGHT, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
@@ -1113,7 +1124,7 @@ newDamageType{
 
 -- Lightning damage + daze chance
 newDamageType{
-	name = "lightning", type = "LIGHTNING_DAZE", text_color = "#ROYAL_BLUE#",
+	name = "dazing lightning", type = "LIGHTNING_DAZE", text_color = "#ROYAL_BLUE#",
 	projector = function(src, x, y, type, dam)
 		if _G.type(dam) == "number" then dam = {dam=dam, daze=25} end
 		dam.daze = dam.daze or 25
@@ -1564,7 +1575,7 @@ newDamageType{
 }
 
 newDamageType{
-	name = "gloom", type = "RANDOM_GLOOM",
+	name = "% chance of gloom effects", type = "RANDOM_GLOOM",
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and rng.percent(dam) then
@@ -1674,7 +1685,7 @@ newDamageType{
 
 -- Drain Vim
 newDamageType{
-	name = "enervating blight", type = "DRAIN_VIM",
+	name = "vim draining blight", type = "DRAIN_VIM", text_color = "#DARK_GREEN#",
 	projector = function(src, x, y, type, dam)
 		if _G.type(dam) == "number" then dam = {dam=dam, vim=0.2} end
 		local target = game.level.map(x, y, Map.ACTOR)
@@ -1821,7 +1832,7 @@ newDamageType{
 
 -- blood boiled, blight damage + slow
 newDamageType{
-	name = "hindering_blight", type = "BLOOD_BOIL",
+	name = "hindering blight", type = "BLOOD_BOIL", text_color = "#DARK_GREEN#",
 	projector = function(src, x, y, type, dam)
 		DamageType:get(DamageType.BLIGHT).projector(src, x, y, DamageType.BLIGHT, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
@@ -2729,7 +2740,7 @@ newDamageType{
 
 -- Acid damage + Slow
 newDamageType{
-	name = "cautic mire", type = "CAUSTIC_MIRE",
+	name = "caustic mire", type = "CAUSTIC_MIRE",
 	projector = function(src, x, y, type, dam, tmp)
 		if _G.type(dam) == "number" then dam = {dur = 2, slow=20} end
 		local target = game.level.map(x, y, Map.ACTOR)

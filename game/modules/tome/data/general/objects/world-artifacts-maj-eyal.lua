@@ -612,7 +612,6 @@ newEntity{ base = "BASE_WARAXE",
 			[DamageType.COLD] = 20,
 		},
 		iceblock_pierce=25,
-		talent_on_hit = { [Talents.T_ICE_BREATH] = {level=2, chance=15} },
 	},
 	combat = {
 		dam = 33,
@@ -622,6 +621,7 @@ newEntity{ base = "BASE_WARAXE",
 		convert_damage = {
 			[DamageType.ICE] = 50,
 		},
+		talent_on_hit = { [Talents.T_ICE_BREATH] = {level=2, chance=15} },
 	},
 }
 
