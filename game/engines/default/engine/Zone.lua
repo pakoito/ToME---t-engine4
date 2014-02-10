@@ -251,6 +251,7 @@ function _M:checkFilter(e, filter, type)
 	if filter.type and filter.type ~= e.type then return false end
 	if filter.subtype and filter.subtype ~= e.subtype then return false end
 	if filter.name and filter.name ~= e.name then return false end
+	if filter.define_as and filter.define_as ~= e.define_as then return false end
 	if filter.unique and not e.unique then return false end
 	if filter.properties then
 		for i = 1, #filter.properties do if not e[filter.properties[i]] then return false end end
