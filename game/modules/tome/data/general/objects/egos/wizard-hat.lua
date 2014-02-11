@@ -198,7 +198,7 @@ newEntity{
 	keywords = {Brotherhood=true},
 	level_range = {30, 50},
 	greater_ego = 1,
-	rarity = 35,
+	rarity = 25,
 	cost = 40,
 	resolvers.charmt(Talents.T_ARCANE_EYE, 5, 10),
 	wielder = {
@@ -220,7 +220,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 35,
 	cost = 20,
-	resolvers.charmt(Talents.T_STONE_WALL, {1,2,3}, 80),
+	resolvers.charmt(Talents.T_STONE_WALL, 1, 80),
 	wielder = {
 		inc_stats = {
 			[Stats.STAT_CON] = resolvers.mbonus_material(5, 1),

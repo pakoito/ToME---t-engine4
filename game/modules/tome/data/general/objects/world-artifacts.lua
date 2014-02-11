@@ -2977,7 +2977,7 @@ newEntity{ base = "BASE_LONGSWORD",
 		damage_convert = {[DamageType.MIND]=20,},
 		special_on_hit = {desc="torments the target with many mental effects", fct=function(combat, who, target)
 			if not who:checkHit(who:combatMindpower(), target:combatMentalResist()*0.9) then return end
-			target:setEffect(target.EFF_WEAKENED_MIND, 2, {power=18})
+			target:setEffect(target.EFF_WEAKENED_MIND, 2, {power=0, save=20})
 			if not rng.percent(40) then return end
 			local eff = rng.table{"stun", "malign", "agony", "confusion", "silence",}
 			if not target:canBe(eff) then return end
@@ -3019,8 +3019,7 @@ newEntity{ base = "BASE_LONGSWORD",
 				local target = game.level.map(px, py, engine.Map.ACTOR)
 				if not target then return end
 				if not rng.percent(20) then return end
-				if not who:checkHit(who:combatMindpower(), target:combatMentalResist()) then return end
-				target:setEffect(target.EFF_WEAKENED_MIND, 2, {power=5})
+				target:setEffect(target.EFF_WEAKENED_MIND, 2, {power=0, save=5})
 				who:logCombat(target, "Anmalice focuses its mind-piercing eye on #Target#!")
 			end)
 	end,
@@ -3032,7 +3031,7 @@ newEntity{ base = "BASE_LONGSWORD",
 			game.logPlayer(who, "#CRIMSON#The tentacles release your arm, sated.")
 		else
 			game.logPlayer(who, "#CRIMSON#As you tear the tentacles from your arm, horrible images enter your mind!")
-			who:setEffect(who.EFF_WEAKENED_MIND, 15, {power=25})
+			who:setEffect(who.EFF_WEAKENED_MIND, 15, {power=0, save=25})
 			who:setEffect(who.EFF_AGONY, 5, { src=who, damage=15, mindpower=40, range=10, minPercent=10, duration=5})
 		end
 		self.wielder.combat_mentalresist = -30
