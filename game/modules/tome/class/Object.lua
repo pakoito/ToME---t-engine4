@@ -655,7 +655,7 @@ function _M:getTextualDesc(compare_with, use_actor)
 		end
 		
 		if combat.crushing_blow then
-			desc:add({"color", "YELLOW"}, "Crushing Blows: ", {"color", "LAST"}, "Damage dealt by this weapon is increased by your critical multiplier, if doing so would kill the target.", true)
+			desc:add({"color", "YELLOW"}, "Crushing Blows: ", {"color", "LAST"}, "Damage dealt by this weapon is increased by half your critical multiplier, if doing so would kill the target.", true)
 		end
 
 		compare_fields(combat, compare_with, field, "travel_speed", "%+d%%", "Travel speed: ", 100, false, false, add_table)

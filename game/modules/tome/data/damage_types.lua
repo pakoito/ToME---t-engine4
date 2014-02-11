@@ -127,6 +127,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			local inc
 			if src.combatGetDamageIncrease then inc = src:combatGetDamageIncrease(type)
 			else inc = (src.inc_damage.all or 0) + (src.inc_damage[type] or 0) end
+			if src.getVim and src:attr("demonblood_dam") then inc = inc + ((src.demonblood_dam or 0) * (src:getVim() or 0)) end
 
 			-- Increases damage for the entity type (Demon, Undead, etc)
 			if target.type and src.inc_damage_actor_type then
@@ -289,6 +290,13 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			print("[PROJECTOR] after self-resists dam", dam)
 		end
 
+		--Vim based defence
+		if target:attr("demonblood_def") and target.getVim then
+			local demon_block = math.min(dam*0.5,target.demonblood_def*(target:getVim() or 0))
+			dam= dam - demon_block
+			target:incVim((-demon_block)/20)
+		end
+		
 		-- Static reduce damage
 		if dam > 0 and target.isTalentActive and target:isTalentActive(target.T_ANTIMAGIC_SHIELD) then
 			local t = target:getTalentFromId(target.T_ANTIMAGIC_SHIELD)
