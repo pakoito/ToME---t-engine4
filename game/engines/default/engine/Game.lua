@@ -20,6 +20,7 @@
 require "engine.class"
 require "engine.Mouse"
 require "engine.DebugConsole"
+local tween = require "tween"
 local Shader = require "engine.Shader"
 
 --- Represent a game
@@ -181,6 +182,9 @@ function _M:display(nb_keyframes)
 		else self._timers_cb = nil end
 		for _, cb in ipairs(exec) do cb() end
 	end
+
+	-- Update tweening engine
+	if nb_keyframes > 0 then tween.update(nb_keyframes) end
 end
 
 --- Register a timer
