@@ -374,6 +374,9 @@ end
 --- Funky shader stuff
 function _M:updateMainShader()
 	if game.fbo_shader then
+		local effects = {}
+		local pf = game.posteffects
+
 		-- Set shader HP warning
 		if self.life ~= self.shader_old_life then
 			if self.life < self.max_life / 2 then game.fbo_shader:setUniform("hp_warning", 1 - (self.life / self.max_life))
@@ -408,28 +411,26 @@ function _M:updateMainShader()
 		end
 
 		-- Blur shader
-		if self:attr("confused") and self.confused >= 1 then game.fbo_shader:setUniform("blur", 2)
---		elseif game:hasDialogUp() then game.fbo_shader:setUniform("blur", 3)
-		else game.fbo_shader:setUniform("blur", 0) -- Disable
+		if self:attr("confused") and self.confused >= 1 then pf.blur.shad:uniBlur(2) effects[pf.blur.shad] = true
 		end
 
 		-- Moving Blur shader
-		if self:attr("invisible") then game.fbo_shader:setUniform("motionblur", 3)
-		elseif self:attr("lightning_speed") then game.fbo_shader:setUniform("motionblur", 2)
-		elseif game.level and game.level.data and game.level.data.motionblur then game.fbo_shader:setUniform("motionblur", game.level.data.motionblur)
-		else game.fbo_shader:setUniform("motionblur", 0) -- Disable
+		if self:attr("invisible") then pf.motionblur.shad:uniMotionblur(3) effects[pf.motionblur.shad] = true
+		elseif self:attr("lightning_speed") then pf.motionblur.shad:uniMotionblur(2) effects[pf.motionblur.shad] = true
+		elseif game.level and game.level.data and game.level.data.motionblur then pf.motionblur.shad:uniMotionblur(game.level.data.motionblur) effects[pf.motionblur.shad] = true
 		end
 
 		-- Underwater shader
-		if game.level and game.level.data and game.level.data.underwater then game.fbo_shader:setUniform("underwater", 1)
-		else game.fbo_shader:setUniform("underwater", 0) -- Disable
+		if game.level and game.level.data and game.level.data.underwater then effects[pf.underwater.shad] = true
 		end
 
 		-- Wobbling shader
-		if self:attr("stunned") and self.stunned >= 1 then game.fbo_shader:setUniform("wobbling", 1)
-		elseif self:attr("dazed") and self.dazed >= 1 then game.fbo_shader:setUniform("wobbling", 0.7)
-		else game.fbo_shader:setUniform("wobbling", 0) -- Disable
+		if self:attr("stunned") and self.stunned >= 1 then pf.wobbling.shad:uniWobbling(1) effects[pf.wobbling.shad] = true
+		elseif self:attr("dazed") and self.dazed >= 1 then pf.wobbling.shad:uniWobbling(0.7) effects[pf.wobbling.shad] = true
 		end
+
+		game.posteffects_use = table.keys(effects)
+		game.posteffects_use[#game.posteffects_use+1] = game.fbo_shader.shad
 	end
 end
 

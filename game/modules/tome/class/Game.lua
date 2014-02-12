@@ -514,6 +514,13 @@ function _M:createFBOs()
 	self.fbo = core.display.newFBO(Map.viewport.width, Map.viewport.height)
 	if self.fbo then
 		self.fbo_shader = Shader.new("main_fbo")
+		self.posteffects = {
+			wobbling = Shader.new("main_fbo/wobbling"),
+			underwater = Shader.new("main_fbo/underwater"),
+			motionblur = Shader.new("main_fbo/motionblur"),
+			blur = Shader.new("main_fbo/blur"),
+		}
+		self.posteffects_use = { self.fbo_shader.shad }
 		if not self.fbo_shader.shad then self.fbo = nil self.fbo_shader = nil end 
 		self.fbo2 = core.display.newFBO(Map.viewport.width, Map.viewport.height)
 	end
@@ -1392,7 +1399,7 @@ function _M:displayMap(nb_keyframes)
 			self.fbo2:use(false, self.full_fbo)
 
 			_2DNoise:bind(1, false)
-			self.fbo2:toScreen(map.display_x, map.display_y, map.viewport.width, map.viewport.height, self.fbo_shader.shad)
+			self.fbo2:postEffects(self.fbo, self.full_fbo, map.display_x, map.display_y, map.viewport.width, map.viewport.height, unpack(self.posteffects_use))
 			if self.target then self.target:display(nil, nil, self.full_fbo, nb_keyframes) end
 
 		-- Basic display; no FBOs

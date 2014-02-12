@@ -271,30 +271,6 @@ void main(void)
 		sample /= (blur*2.0) * (blur*2.0);
 		gl_FragColor = sample;
 	}
-	else if (underwater > 0.0)
-	{
-		vec2 p = (vec2(gl_FragCoord.x - mapCoord.x, texSize.y - gl_FragCoord.y - mapCoord.y)) / texSize.xy, c1 = p, c2 = p;
-		float cc1 = col(c1);
-
-		c2.x += texSize.x/delta;
-		float dx = emboss*(cc1-col(c2))/delta;
-
-		c2.x = p.x;
-		c2.y += texSize.y/delta;
-		float dy = emboss*(cc1-col(c2))/delta;
-
-		c1.x += dx*2.;
-		c1.y = -(c1.y+dy*2.);
-
-		float alpha = 1.+dot(dx,dy)*intence;
-			
-		float ddx = dx - reflectionCutOff;
-		float ddy = dy - reflectionCutOff;
-		if (ddx > 0. && ddy > 0.) alpha = pow(alpha, ddx*ddy*reflectionIntence);
-			
-		vec4 col = texture2D(tex,c1)*(alpha);
-		gl_FragColor = col;
-	}
 
 	if (colorize.r > 0.0 || colorize.g > 0.0 || colorize.b > 0.0)
 	{
@@ -335,67 +311,3 @@ void main(void)
 		gl_FragColor = mix(gl_FragColor, solipsism_warning_color, dist);
 	}
 }
-
-/*uniform sampler2D tex;
-uniform vec2 texSize;
-int blursize = 5;
-
-void main(void)
-{
-	vec2 offset = 1.0/texSize;
-
-	// Center Pixel
-	vec4 sample = vec4(0.0,0.0,0.0,0.0);
-	float factor = ((float(blursize)*2.0)+1.0);
-	factor = factor*factor;
-
-	for(int i = -blursize; i <= blursize; i++)
-	{
-		for(int j = -blursize; j <= blursize; j++)
-		{
-			sample += texture2D(tex, vec2(gl_TexCoord[0].xy+vec2(float(i)*offset.x, float(j)*offset.y)));
-		}
-	}
-	sample /= float((blursize*2) * (blursize*2));
-
-	float grey = sample.r*0.3+sample.g*0.59+sample.b*0.11;
-	vec3 color = vec3(1, 0, 0);
-	gl_FragColor = vec4(vec3(color*grey),1.0);
-}
-*/
-/*
-uniform sampler2D tex;
-uniform sampler3D noiseVol;
-uniform float tick;
-float do_blur = 3.0;
-uniform vec2 texSize;
-
-void main(void)
-{
-	if (do_blur > 0.0)
-	{
-		vec2 offset = 1.0/texSize;
-		offset.y += texture3D(noiseVol, vec3(gl_TexCoord[0].xy, tick/100000))/30;
-
-		// Center Pixel
-		vec4 sample = vec4(0.0,0.0,0.0,0.0);
-		float factor = ((float(do_blur)*2.0)+1.0);
-		factor = factor*factor;
-
-		for(int i = -do_blur; i <= do_blur; i++)
-		{
-			for(int j = -do_blur; j <= do_blur; j++)
-			{
-				sample += texture2D(tex, vec2(gl_TexCoord[0].xy+vec2(float(i)*offset.x, float(j)*offset.y)));
-			}
-		}
-		sample /= float((do_blur*2) * (do_blur*2));
-
-		gl_FragColor = sample;
-	}
-
-	float grey = gl_FragColor.r*0.3+gl_FragColor.g*0.59+gl_FragColor.b*0.11;
-	vec3 color = vec3(1, 0, 0);
-	gl_FragColor = vec4(vec3(color*grey),1.0);
-}
-*/
