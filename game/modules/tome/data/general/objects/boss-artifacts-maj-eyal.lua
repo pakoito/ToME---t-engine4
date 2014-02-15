@@ -22,6 +22,8 @@ local Talents = require "engine.interface.ActorTalents"
 
 -- This file describes artifacts associated with a boss of the game, they have a high chance of dropping their respective ones, but they can still be found elsewhere
 
+-- Design:  Revamp Wintertide to make it more unique, interesting, and not terrible.
+-- Balance:  A cold themed weapon doesn't play nice with melee scalers, and Ice Block on hit, while useful overall, has some obvious anti-synergy.  So instead of focusing on stats I added a decent passive on hit and a very powerful active.  The active is a "better" Stone Wall but you have to be actively using the weapon in melee to make use of it.  The delayed expansion of the storm also limits its strength as an "oh shit" button.
 newEntity{ base = "BASE_LONGSWORD",
 	power_source = {arcane=true},
 	define_as = "LONGSWORD_WINTERTIDE", unided_name = "glittering longsword", image="object/artifact/wintertide.png",
@@ -31,32 +33,147 @@ It is said the Conclave created this weapon for their warmaster during the dark 
 	require = { stat = { str=35 }, },
 	level_range = {35, 45},
 	rarity = 280,
-	cost = 2000,
+	cost = 1000,
 	material_level = 5,
+	winterStorm = nil,
+	special_desc = function(self)
+		if not self.winterStorm then 
+			return ("Storm Duration:  None") 
+		else
+			return ("Storm Duration: " .. (self.winterStorm.duration or "None"))
+		end
+	end,
 	combat = {
-		dam = 45,
+		dam = 39, -- lower damage, defensive item with extremely powerful effects
 		apr = 10,
 		physcrit = 10,
 		dammod = {str=1},
 		damrange = 1.4,
-		melee_project={[DamageType.ICE] = 45},
+		melee_project={[DamageType.ICE] = 25}, -- Iceblock HP is based on damage, since were adding iceblock pierce we want this to be less generous
+		special_on_hit = {desc="Create a Winter Storm that gradually expands, dealing cold damage to your enemies each turn and reducing their turn energy by 20%.  Melee attacks will relocate the storm on top of your target and increase its duration.", on_kill=1, fct=function(combat, who, target)
+			 local self, item, inven_id = who:findInAllInventoriesBy("define_as", "LONGSWORD_WINTERTIDE")
+			 if not self or not who:getInven(inven_id).worn then return end
+			
+			 if self.winterStorm and self.winterStorm.duration <= 0 then
+				 self.winterStorm = nil
+				 --return
+			 end
+			 
+			 if (self.winterStorm and (game.level.id ~= self.winterStorm.checkZone) ) then
+				self.winterStorm = nil
+			 end
+			 
+			 if not self.winterStorm then
+				local stormDam = who:combatStatScale("str", 20, 80, 0.75) -- does this need a require?
+				 self.winterStorm = game.level.map:addEffect(who,
+				 target.x, target.y, 5,
+				 engine.DamageType.WINTER, {dam=stormDam, x=target.x, y=target.y}, -- Winter is cold damage+energy reduction, enemy only
+				 1,
+				 5, nil,
+				 {type="icestorm", only_one=true},
+				 function(e)	
+					 if e.radius < 4 then
+						e.radius = e.radius + 0.2
+						 
+						 -- this is a hack to fix the effect breaking if you reload with it active, whatever is going on is very weird but the table on the item no longer points to this
+						local self2, item, inven_id = e.src:findInAllInventoriesBy("define_as", "LONGSWORD_WINTERTIDE")
+						if not self2 then return end
+						self2.winterStorm = e
+					 end
+					 return true
+				 end,
+			 false)
+				self.winterStorm.checkZone = game.level.id
+			else
+				-- move the storm on top of the target
+				self.winterStorm.x = target.x
+				self.winterStorm.y = target.y
+				if self.winterStorm.duration < 5 then -- duration can be extended forever while meleeing 
+					self.winterStorm.duration = self.winterStorm.duration + 1
+				end
+			end
+			
+			end
+			
+		},	
+		
 	},
 	wielder = {
-		lite = 1,
-		see_invisible = 2,
-		resists={[DamageType.COLD] = 25},
+		iceblock_pierce=35, -- this can be generous because of how melee specific the item is
+		resists = { [DamageType.COLD] = 25 },
+		on_melee_hit={[DamageType.ICE] = 40},
 		inc_damage = { [DamageType.COLD] = 20 },
 	},
-	max_power = 18, power_regen = 1,
-	use_power = { name = "generate a burst of ice", power = 8,
+	max_power = 40, power_regen = 1,
+	use_power = { name ="intensify your winter storm creating unbreakable ice walls in each space", power = 30,
 		use = function(self, who)
-			local tg = {type="ball", range=0, radius=4, selffire=false}
-			who:project(tg, who.x, who.y, engine.DamageType.ICE, 40 + (who:getMag() + who:getWil()), {type="freeze"})
-			game:playSoundNear(who, "talents/ice")
-			game.logSeen(who, "%s invokes the power of %s!", who.name:capitalize(), self.name)
+			
+			local Object = require "mod.class.Object"
+			local Map = require "engine.Map"
+			
+			if not self.winterStorm then return end
+			
+			if self.winterStorm and self.winterStorm.duration <= 0 then
+				self.winterStorm = nil
+				return
+			end
+			
+			local grids = core.fov.circle_grids(self.winterStorm.x, self.winterStorm.y, self.winterStorm.radius, true)		
+			local self = who
+
+
+			for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
+				local oe = game.level.map(x, y, engine.Map.TERRAIN)
+
+				if oe then
+					local e = Object.new{
+						old_feat = oe,
+						name = "winter wall", image = "npc/iceblock.png",
+						display = '#', color_r=255, color_g=255, color_b=255, back_color=colors.GREY,
+						desc = "a summoned wall of ice",
+						type = "wall", --subtype = "floor",
+						always_remember = true,
+						can_pass = {pass_wall=1},
+						does_block_move = true,
+						show_tooltip = true,
+						block_move = true,
+						block_sight = true,
+						temporary = 10,
+						x = x, y = y,
+						canAct = false,
+						act = function(self)
+							self:useEnergy()
+							self.temporary = self.temporary - 1
+							if self.temporary <= 0 then
+								game.level.map(self.x, self.y, engine.Map.TERRAIN, self.old_feat)
+								game.level:removeEntity(self)
+	--							game.level.map:redisplay()
+							end
+						end,
+						dig = function(src, x, y, old)
+							game.level:removeEntity(old)
+	--						game.level.map:redisplay()
+							return nil, old.old_feat
+						end,
+						summoner_gain_exp = true,
+						summoner = self,
+					}
+					e.tooltip = mod.class.Grid.tooltip
+					game.level:addEntity(e)
+					game.level.map(x, y, engine.Map.TERRAIN, e)				
+				end
+			end end
+			
 			return {id=true, used=true}
 		end
 	},
+	on_wear = function(self, who)
+		--self.winterStorm = nil
+	end,
+	on_pickup = function(self, who)
+		self.winterStorm = nil
+	end,
+	
 }
 
 newEntity{ base = "BASE_LITE", define_as = "WINTERTIDE_PHIAL",

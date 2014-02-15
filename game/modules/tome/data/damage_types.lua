@@ -742,6 +742,25 @@ newDamageType{
 	death_message = {"psyched", "mentally tortured", "mindraped"},
 }
 
+newDamageType{
+	name = "winter", type = "WINTER",
+	projector = function(src, x, y, type, dam)
+		local srcx, srcy = dam.x, dam.y
+		local base = dam
+		dam = dam.dam
+		if not base.st then
+			DamageType:get(DamageType.COLD).projector(src, x, y, DamageType.COLD, dam)
+		else
+			DamageType:get(base.st).projector(src, x, y, base.st, dam)
+		end
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			local energyDrain = (game.energy_to_act * 0.2)	
+			target.energy.value = target.energy.value - energyDrain
+		end
+	end,
+}
+
 -- Temporal damage
 newDamageType{
 	name = "temporal", type = "TEMPORAL", text_color = "#LIGHT_STEEL_BLUE#",
