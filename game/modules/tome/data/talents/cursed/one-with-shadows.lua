@@ -129,7 +129,10 @@ newTalent{
 		self:setEffect(self.EFF_SHADOW_DECOY, 4, {power=t.getPower(self, t)})
 		self:forceUseTalent(t.id, {ignore_energy=true})
 
-		if self.player then self:setEmote(Emote.new("Fools, you never killed me; that was only my shadow!", 45)) end
+		if self.player then
+			self:setEmote(Emote.new("Fools, you never killed me; that was only my shadow!", 45))
+			world:gainAchievement("AVOID_DEATH", self)
+		end
 		return true
 	end,
 	activate = function(self, t)

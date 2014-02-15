@@ -2145,6 +2145,7 @@ function _M:onTakeHit(value, src, death_note)
 			game.logSeen(self, "#YELLOW#%s has been saved by a blast of positive energy!#LAST#", self.name:capitalize())
 			game:delayedLogDamage(tal, self, -sl, ("#LIGHT_GREEN#%d healing#LAST#"):format(sl), false)
 			self:forceUseTalent(self.T_SECOND_LIFE, {ignore_energy=true})
+			if self.player then world:gainAchievement("AVOID_DEATH", self) end
 		end
 	end
 	

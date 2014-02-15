@@ -282,6 +282,7 @@ uberTalent{
 	trigger = function(self, t, value)
 		self:startTalentCooldown(t)
 
+		if self.player then world:gainAchievement("AVOID_DEATH", self) end
 		self:setEffect(self.EFF_CAUTERIZE, 8, {dam=value/10})
 		return true
 	end,
