@@ -20,6 +20,7 @@
 deathbox = {
 	frame_shadow = {x=15, y=15, a=0.5},
 	frame_alpha = 1,
+	frame_darkness = 0.6,
 	frame_ox1 = -60,
 	frame_ox2 =  60,
 	frame_oy1 = -60,

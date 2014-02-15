@@ -219,6 +219,7 @@ function _M:init(title, w, h, x, y, alpha, font, showup, skin)
 		b5 = "ui/dialogframe_5.png",
 		shadow = conf.frame_shadow,
 		a = conf.frame_alpha or 1,
+		darkness = conf.frame_darkness or 1,
 		particles = table.clone(conf.particles, true),
 	}
 	self.frame.ox1 = self.frame.ox1 or conf.frame_ox1
@@ -659,7 +660,7 @@ function _M:toScreen(x, y, nb_keyframes)
 
 	-- Draw the frame and shadow
 	if self.frame.shadow then self:drawFrame(x + self.frame.shadow.x, y + self.frame.shadow.y, 0, 0, 0, self.frame.shadow.a) end
-	self:drawFrame(x, y, 1, 1, 1, self.frame.a)
+	self:drawFrame(x, y, self.frame.darkness, self.frame.darkness, self.frame.darkness, self.frame.a)
 
 	-- Title
 	if self.title then
