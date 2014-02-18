@@ -251,6 +251,7 @@ function _M:use(item)
 		self:restoreResources(self.actor)
 		world:gainAchievement("UNSTOPPABLE", actor)
 		self.actor:check("on_resurrect", "blood_life")
+		game:saveGame()
 	elseif act == "lichform" then
 		local t = self.actor:getTalentFromId(self.actor.T_LICHFORM)
 
@@ -261,6 +262,7 @@ function _M:use(item)
 		t.becomeLich(self.actor, t)
 		self.actor:updateModdableTile()
 		self.actor:check("on_resurrect", "lichform")
+		game:saveGame()
 	elseif act == "easy_mode" then
 		self:eidolonPlane()
 	elseif act == "skeleton" then
@@ -272,6 +274,7 @@ function _M:use(item)
 		self:restoreResources(self.actor)
 		world:gainAchievement("UNSTOPPABLE", actor)
 		self.actor:check("on_resurrect", "skeleton")
+		game:saveGame()
 	elseif act:find("^consume") then
 		local inven, item, o = item.inven, item.item, item.object
 		self.actor:removeObject(inven, item)
@@ -282,6 +285,7 @@ function _M:use(item)
 		self:restoreResources(self.actor)
 		world:gainAchievement("UNSTOPPABLE", actor)
 		self.actor:check("on_resurrect", "consume", o)
+		game:saveGame()
 	end
 end
 
