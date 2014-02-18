@@ -157,7 +157,7 @@ void main(void)
 	offset.x *= texSize.x / texSize.y;
 
 	float ratio = clamp(1.5 * pow(length(vec2(0.5, 0.5) - gl_TexCoord[0].xy) / (0.7071), 2.0), 0.0, 1.0); //sqrt(2) / 2 = 0.7071
-	ratio *= (1.0 + snoise2(vec3(coord / 2.0, scaledTime / 0.25 + 10.0))) * 0.5;
+	ratio *= (1.0 + snoise(vec3(coord / 2.0, scaledTime / 0.25 + 10.0))) * 0.5;
 
 	gl_FragColor = 
 		texture2D(tex, gl_TexCoord[0].xy) * (1.0 - ratio) + 
