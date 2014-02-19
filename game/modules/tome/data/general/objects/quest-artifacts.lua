@@ -34,7 +34,7 @@ newEntity{ define_as = "STAFF_ABSORPTION",
 	encumber = 7,
 	auto_pickup = 1,
 	plot = true, quest = true,
-	desc = [[Carved with runes of power, this staff seems to have been made long ago. Yet it bears no signs of tarnishment.
+	desc = [[Carved with runes of power, this staff seems to have been made long ago, yet it bears no signs of tarnishment.
 Light around it seems to dim and you can feel its tremendous power simply by touching it.]],
 
 	require = { stat = { mag=60 }, },
@@ -54,7 +54,7 @@ Light around it seems to dim and you can feel its tremendous power simply by tou
 	max_power = 1000, power_regen = 1,
 	use_power = { name = "absorb energies", power = 1000,
 		use = function(self, who)
-			game.logPlayer(who, "This power seems too much to wield, you fear it might absorb YOU.")
+			game.logPlayer(who, "This power seems too much to wield; you fear it might absorb YOU.")
 			return {used=true}
 		end
 	},
@@ -353,7 +353,7 @@ You have heard of such items before. They are very useful to adventurers, allowi
 
 	on_pickup = function(self, who)
 		if who == game.player then
-			require("engine.ui.Dialog"):simplePopup("Rod of Recall", "You found a Rod of Recall, you can use it to quickly get out of your current zone and return to the worldmap.")
+			require("engine.ui.Dialog"):simplePopup("Rod of Recall", "You found a Rod of Recall. You can use it to quickly get out of your current zone and return to the worldmap.")
 		end
 	end,
 }
@@ -365,7 +365,7 @@ newEntity{ base = "BASE_ROD",
 	add_name = false,
 	identified=true, force_lore_artifact=true,
 	name = "Transmogrification Chest", display = '~', color=colors.GOLD, unique=true, image = "object/chest4.png",
-	desc = [[This chest is an extension of old Sher'tul places of power, any items dropped inside is transported to an other place, processed and destroyed to extract energy.
+	desc = [[This chest is an extension of old Sher'tul places of power. Any items dropped inside are transported to an other place, processed and destroyed to extract energy.
 The byproduct of this effect is the creation of gold, which is useless to process, so it is sent back to you.
 
 When you possess the chest all items you walk upon will automatically be put inside and transmogrified when you leave the level.
@@ -378,7 +378,7 @@ Items in the chest will not encumber you.]],
 	},
 
 	max_power = 1000, power_regen = 1,
-	use_power = { name = "transmogrify all the items in your chest at once(also done automatically when you change level)", power = 0,
+	use_power = { name = "transmogrify all the items in your chest at once (also done automatically when you change level)", power = 0,
 		use = function(self, who)
 			local inven = who:getInven("INVEN")
 			local nb = 0
@@ -419,7 +419,7 @@ Items in the chest will not encumber you.]],
 	},
 
 	on_pickup = function(self, who)
-		require("engine.ui.Dialog"):simpleLongPopup("Transmogrification Chest", [[This chest is an extension of old Sher'Tul places of power, any items dropped inside is transported to an other place, processed and destroyed to extract energy.
+		require("engine.ui.Dialog"):simpleLongPopup("Transmogrification Chest", [[This chest is an extension of old Sher'Tul places of power. Any items dropped inside is transported to an other place, processed and destroyed to extract energy.
 The byproduct of this effect is the creation of gold, which is useless to process, so it is sent back to you.
 
 When you possess the chest all items you walk upon will automatically be put inside and transmogrified when you leave the level.
