@@ -58,15 +58,6 @@ newEntity{ base = "BASE_GEM",
 		},
 		movement_speed = 0.15,
 	},
-	wielder = {
-		inc_stats = {[Stats.STAT_DEX] = 8, [Stats.STAT_CUN] = 8 },
-		inc_damage = {[DamageType.LIGHTNING] = 20 },
-		cancel_damage_chance = 8,
-		damage_affinity={
-			[DamageType.LIGHTNING] = 20,
-		},
-		movement_speed = 0.15,
-	},
 }
 
 -- Low base values because you can stack affinity and resist
