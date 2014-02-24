@@ -73,7 +73,7 @@ newEntity{ base = "BASE_INFUSION",
 
 	inscription_kind = "protect",
 	inscription_data = {
-		cooldown = 20,
+		cooldown = 18,
 		dur = 6,
 		power = 10,
 		use_stat_mod = 0.1, 
@@ -804,7 +804,7 @@ newEntity{ base = "BASE_CLOTH_ARMOR",
 	wielder = {
 		combat_def = 10,
 		combat_armor = 15,
-		combat_armor_hardiness = 40,
+		combat_armor_hardiness = 30,
 		inc_stats = { [Stats.STAT_CON] = 5, [Stats.STAT_WIL] = 4, },
 		combat_mindpower = 10,
 		combat_mindcrit = 5,

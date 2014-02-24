@@ -30,7 +30,7 @@ newTalent{
 	requires_target = true,
 	--on_pre_use = function(self, t, silent) if not self:hasEffect(self.EFF_COMBO) then if not silent then game.logPlayer(self, "You must have a combo going to use this ability.") end return false end return true end,
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 1.1, 1.8) + getStrikingStyle(self, dam) end,
-	getDuration = function(self, t, comb) return math.ceil(self:combatTalentScale(t, 1, 5) * (0.25 + comb/5)) end,
+	getDuration = function(self, t, comb) return 2 + math.ceil(self:combatTalentScale(t, 1, 5) * (0.25 + comb/5)) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -199,7 +199,7 @@ newTalent{
 	tactical = { ATTACK = { weapon = 2 } },
 	requires_target = true,
 	--on_pre_use = function(self, t, silent) if not self:hasEffect(self.EFF_COMBO) then if not silent then game.logPlayer(self, "You must have a combo going to use this ability.") end return false end return true end,
-	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 2, 3.5) + getStrikingStyle(self, dam) end, 
+	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 1, 2.8) + getStrikingStyle(self, dam) end, 
 	getBonusDamage = function(self, t) return self:getCombo(combo)/5 end, -- shift more of the damage to CP
 	getStamina = function(self, t, comb)
 		return self:combatLimit((self:getTalentLevel(t) + comb), 0.5, 0, 0, 0.2, 10) * self.max_stamina

@@ -2126,3 +2126,51 @@ newTalent{
 		:format(damage, drain, daze, dazemax)
 	end,
 }
+
+newTalent{
+	name = "Relentless Strikes",
+	type = {"technique/other", 1},
+	points = 5,
+	mode = "passive",
+	getStamina = function(self, t) return self:combatTalentScale(t, 1/4, 5/4, 0.75) end,
+	getCooldownReduction = function(self, t) return self:combatTalentLimit(t, 0.67, 0.09, 1/3) end,  -- Limit < 67%
+	info = function(self, t)
+		local stamina = t.getStamina(self, t)
+		local cooldown = t.getCooldownReduction(self, t)
+		return ([[Reduces the cooldown on all your Pugilism talents by %d%%.  Additionally, every time you earn a combo point, you will regain %0.2f stamina.
+		Note that stamina gains from combo points occur before any talent stamina costs.]])
+		:format(cooldown * 100, stamina)
+	end,
+}
+
+newTalent{
+	name = "Combo String",
+	type = {"technique/other", 1},
+	mode = "passive",
+	points = 5,
+	getDuration = function(self, t) return math.ceil(self:combatTalentScale(t, 0.3, 2.3)) end,
+	getChance = function(self, t) return self:combatLimit(self:getTalentLevel(t) * (5 + self:getCun(5, true)), 100, 0, 0, 50, 50) end, -- Limit < 100%
+	info = function(self, t)
+		local duration = t.getDuration(self, t)
+		local chance = t.getChance(self, t)
+		return ([[When gaining a combo point, you have a %d%% chance to gain an extra combo point.  Additionally, your combo points will last %d turns longer before expiring.
+		The chance of building a second combo point will improve with your Cunning.]]):
+		format(chance, duration)
+	end,
+}
+
+newTalent{
+	name = "Steady Mind",
+	type = {"technique/other", 1},
+	mode = "passive",
+	points = 5,
+	getDefense = function(self, t) return self:combatTalentStatDamage(t, "dex", 5, 35) end,
+	getMental = function(self, t) return self:combatTalentStatDamage(t, "cun", 5, 35) end,
+	info = function(self, t)
+		local defense = t.getDefense(self, t)
+		local saves = t.getMental(self, t)
+		return ([[Superior cunning and training allows you to outthink and outwit your opponents' physical and mental assaults.  Increases Defense by %d and Mental Save by %d.
+		The Defense bonus will scale with your Dexterity, and the save bonus with your Cunning.]]):
+		format(defense, saves)
+	end,
+}

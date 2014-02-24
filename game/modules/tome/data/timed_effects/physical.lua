@@ -24,6 +24,26 @@ local Chat = require "engine.Chat"
 local Map = require "engine.Map"
 local Level = require "engine.Level"
 
+
+
+newEffect{
+	name = "DELIRIOUS_CONCUSSION", image = "talents/slippery_moss.png",
+	desc = "Concussion",
+	long_desc = function(self, eff) return ("The target can't think straight, causing their actions to fail."):format() end,
+	type = "physical",
+	subtype = { mental=true },
+	status = "detrimental",
+	parameters = {},
+	on_gain = function(self, err) return "#Target#'s brain isn't quite working right!", "+Concussion" end,
+	on_lose = function(self, err) return "#Target# regains their concentration.", "-Concussion" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("talent_fail_chance", 100)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("talent_fail_chance", eff.tmpid)
+	end,
+}
+
 newEffect{
 	name = "CUT", image = "effects/cut.png",
 	desc = "Bleeding",
