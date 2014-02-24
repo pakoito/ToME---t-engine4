@@ -201,6 +201,7 @@ function _M:makeTrees(base, max, bigheight_limit, tint)
 			display_h = treeid < (bigheight_limit or 9) and 1 or 2,
 			image = (base or "terrain/tree_alpha")..treeid..".png",
 			tint = tint,
+			shader = "tree",
 		}
 	end
 
