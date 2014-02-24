@@ -105,7 +105,7 @@ newEntity{ base = "BASE_NPC_RODENT",
 
 newEntity{ base = "BASE_NPC_RODENT",
 	name = "giant crystal rat", color=colors.PINK,
-	desc = [[Instead of fur, this rat has crystals growing on its back which provide extra protection.]],
+	desc = [[Instead of fur, this rat has crystals growing on its back, which provide extra protection.]],
 	level_range = {1, 5}, exp_worth = 1,
 	rarity = 3,
 	max_life = resolvers.rngavg(35,50),

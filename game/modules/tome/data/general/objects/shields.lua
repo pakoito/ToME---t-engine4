@@ -29,7 +29,7 @@ newEntity{
 	rarity = 5,
 	encumber = 7,
 	metallic = true,
-	desc = [[Handheld deflection devices]],
+	desc = [[Handheld deflection devices.]],
 	require = { talent = { {Talents.T_ARMOUR_TRAINING,2} }, },
 	randart_able = "/data/general/objects/random-artifacts/shields.lua",
 	special_combat = { talented="shield", accuracy_effect="staff", damrange = 1.2 },

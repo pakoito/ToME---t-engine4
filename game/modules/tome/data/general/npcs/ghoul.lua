@@ -86,7 +86,7 @@ newEntity{ base = "BASE_NPC_GHOUL",
 
 newEntity{ base = "BASE_NPC_GHOUL",
 	name = "ghoulking", color={0,0,0},
-	desc = [[Stench rises from this rotting abomination. Its brow is adorned with gold, and it moves at you with hatred gleaming from its eyes.]],
+	desc = [[Stench rises from this rotting abomination. Its brow is adorned with gold, and it moves at you with hatred gleaming in its eyes.]],
 	level_range = {15, nil}, exp_worth = 1,
 	rarity = 6,
 	max_life = resolvers.rngavg(90,100),

@@ -34,7 +34,7 @@ newEntity{ define_as = "STAFF_ABSORPTION",
 	encumber = 7,
 	auto_pickup = 1,
 	plot = true, quest = true,
-	desc = [[Carved with runes of power, this staff seems to have been made long ago, yet it bears no signs of tarnishment.
+	desc = [[Carved with runes of power, this staff seems to have been made long ago, yet it bears no signs of tarnish.
 Light around it seems to dim and you can feel its tremendous power simply by touching it.]],
 
 	require = { stat = { mag=60 }, },

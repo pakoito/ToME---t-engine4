@@ -23,7 +23,7 @@ newEntity{
 	type = "mount",
 	display = "&", color=colors.SLATE,
 	encumber = 0,
-	desc = [[A mount]],
+	desc = [[A mount.]],
 }
 
 newEntity{ base = "BASE_MOUNT", define_as = "ALCHEMIST_GOLEM_MOUNT",

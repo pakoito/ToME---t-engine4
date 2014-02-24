@@ -52,7 +52,7 @@ end
 
 newEntity{ base = "BASE_LORE_RANDOM",
 	name = [["Dust to Dust", an undead hunter's guide, by Aslabor Borys]], lore="dust-to-dust", unique=true,
-	desc = [[An undead hunter's guide, by Aslabor Borys]],
+	desc = [[An undead hunter's guide, by Aslabor Borys.]],
 	level_range = {15, 50},
 	rarity = 60,
 }
@@ -67,7 +67,7 @@ elseif i == 5 then who = "Weisman" nb = 3
 end
 newEntity{ base = "BASE_LORE_RANDOM",
 	name = "letter to "..who.."("..nb..")", lore="adventurer-letter-"..i, unique=true,
-	desc = [[A part of the correspondence between two adventurers]],
+	desc = [[A part of the correspondence between two adventurers.]],
 	level_range = {1, 20},
 	rarity = 20,
 	bloodstains = (i == 5) and 2 or nil,
@@ -76,7 +76,7 @@ end
 
 newEntity{ base = "BASE_LORE_RANDOM",
 	name = "of halfling feet", lore="halfling-feet", unique=true,
-	desc = [[Notes about .. halfling feet ??]],
+	desc = [[Notes about... Halfling feet??]],
 	level_range = {10, 30},
 	rarity = 40,
 	encumber = 0,

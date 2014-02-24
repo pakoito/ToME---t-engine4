@@ -172,7 +172,7 @@ newEntity{
 	type = "potion", subtype="potion", image = "object/elixir_of_serendipity.png",
 	name = "Elixir of Serendipity", unique=true, unided_name="vial of yellow fluid",
 	display = "!", color=colors.YELLOW,
-	desc = [[A vial of lifelike yellow fluid.]],
+	desc = [[A vial of lively yellow fluid.]],
 	no_unique_lore = true,
 	cost = 1000,
 	quest = 1,

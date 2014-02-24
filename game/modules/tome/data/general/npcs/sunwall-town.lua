@@ -79,7 +79,7 @@ newEntity{ base = "BASE_NPC_SUNWALL_TOWN",
 
 newEntity{ base = "BASE_NPC_SUNWALL_TOWN",
 	name = "human sun-paladin", color=colors.GOLD,
-	desc = [[A human in a shiny plate armour.]],
+	desc = [[A human in shiny plate armour.]],
 	level_range = {5, nil}, exp_worth = 1,
 	rarity = 3,
 	rank = 3,

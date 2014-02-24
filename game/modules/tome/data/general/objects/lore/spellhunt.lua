@@ -19,7 +19,7 @@
 
 newEntity{ base = "BASE_LORE_RANDOM",
 	name = "memories of archmage Varil", lore="spellhunt-note-1", unique=true,
-	desc = [[A collection of thoughts and memories of the archmage Varil, during the Age of Dusk]],
+	desc = [[A collection of thoughts and memories of the archmage Varil, during the Age of Dusk.]],
 	level_range = {1, 25},
 	rarity = 40,
 	encumber = 0,

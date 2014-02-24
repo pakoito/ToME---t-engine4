@@ -27,7 +27,7 @@ newEntity{
 	notice = true,
 	always_remember = true,
 	show_tooltip = true,
-	desc = [[The rift leads to an other part of the morass.]],
+	desc = [[The rift leads to another part of the morass.]],
 	change_level = 1,
 }
 
@@ -38,7 +38,7 @@ newEntity{
 	notice = true,
 	always_remember = true,
 	show_tooltip = true,
-	desc = [[The rift leads to an other part of the morass.]],
+	desc = [[The rift leads to another part of the morass.]],
 	change_level = 1,
 	change_zone = "town-point-zero",
 	change_level_check = function()

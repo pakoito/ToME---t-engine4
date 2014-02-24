@@ -65,7 +65,7 @@ newEntity{ base = "BASE_NPC_ELVALA_TOWN",
 
 newEntity{ base = "BASE_NPC_ELVALA_TOWN",
 	name = "shalore rune master", color=colors.RED,
-	desc = [[A tall elf, his skin covered in runes.]],
+	desc = [[A tall Elf, his skin covered in runes.]],
 	level_range = {1, nil}, exp_worth = 1,
 	rarity = 3,
 	max_life = resolvers.rngavg(50,60),

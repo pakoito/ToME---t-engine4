@@ -2450,7 +2450,7 @@ newDamageType{
 			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=2, },
 			stats = { str=20, dex=8, mag=6, con=16 },
 			name = "orc spirit", color=colors.SALMON, image = "npc/humanoid_orc_orc_berserker.png",
-			desc = [[An orc clad in a massive armour, wielding a huge axe.]],
+			desc = [[An orc clad in massive armour, wielding a huge axe.]],
 			level_range = {35, nil}, exp_worth = 0,
 			max_life = resolvers.rngavg(110,120), life_rating = 12,
 			resolvers.equip{

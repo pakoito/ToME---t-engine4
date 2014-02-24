@@ -60,7 +60,7 @@ newEntity{ base = "BASE_NPC_AQUATIC_DEMON",
 
 newEntity{ base = "BASE_NPC_AQUATIC_DEMON",
 	name = "Walrog", color=colors.DARK_SEA_GREEN, unique=true,
-	desc = "Walrog, the lord of Water",
+	desc = "Walrog, the lord of Water, is fearsome to behold. The water writhes around him as if trying to escape, making his form indistinct. He does not seem surprised to see you.",
 	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/aquatic_demon_walrog.png", display_h=2, display_y=-1}}},
 	level_range = {20, 30}, exp_worth = 1,
 	rarity = 50,

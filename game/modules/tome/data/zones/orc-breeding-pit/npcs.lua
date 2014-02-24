@@ -50,7 +50,7 @@ newEntity{
 
 newEntity{ base = "BASE_NPC_ORC_SUMMON",
 	name = "orc baby", color=colors.GREEN,
-	desc = [[Crawling on all fours, this green-skinned creature is far from cute, with vicious little sharp teeth and nails, and mucusy slime still sticking to its skin.]],
+	desc = [[Crawling on all fours, this green-skinned creature is far from cute, with vicious little sharp teeth and nails, and slime still sticking to its skin.]],
 	level_range = {25, nil}, exp_worth = 0,
 	resolvers.generic(function(e) if rng.percent(50) then e.female = true end end),
 	rarity = 3,

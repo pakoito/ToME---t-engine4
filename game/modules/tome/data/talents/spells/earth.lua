@@ -203,7 +203,7 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		return ([[Entomb yourself in a wall of stone for %d turns.
 		At level 4, it becomes targetable.
-		Any hostile creature caught in the radius will also suffer %0.2f physical dmage.
+		Any hostile creature caught in the radius will also suffer %0.2f physical damage.
 		Duration and damage will improve with your Spellpower.]]):
 		format(duration, damDesc(self, DamageType.PHYSICAL, damage))
 	end,

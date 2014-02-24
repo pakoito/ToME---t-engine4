@@ -36,6 +36,6 @@ newEntity{
 	notice = true,
 	always_remember = true,
 	show_tooltip = true,
-	desc = [[The rift leads somewhere ..]],
+	desc = [[The rift leads... somewhere.]],
 	change_level = 3, change_zone = "daikara",
 }

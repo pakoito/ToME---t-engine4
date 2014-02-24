@@ -36,7 +36,7 @@ newEntity{
 	notice = true,
 	always_remember = true,
 	show_tooltip = true,
-	desc = [[The rift leads somewhere ..]],
+	desc = [[The rift leads... somewhere.]],
 	change_level = 1,
 	change_level_check = function()
 		if game.level.level > 1 then return end

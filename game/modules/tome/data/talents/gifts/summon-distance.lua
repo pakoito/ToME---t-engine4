@@ -474,7 +474,7 @@ newTalent{
 			display = "#", color=colors.WHITE,
 			name = "rimebark", faction = self.faction, image = "npc/immovable_plants_rimebark.png",
 			resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/immovable_plants_rimebark.png", display_h=2, display_y=-1}}},
-			desc = [[This huge treant like being is embedded with the fury of winter itself.]],
+			desc = [[This huge treant-like being is embedded with the fury of winter itself.]],
 			autolevel = "none",
 			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=1, ally_compassion=10},
 			ai_tactic = resolvers.tactic"ranged",

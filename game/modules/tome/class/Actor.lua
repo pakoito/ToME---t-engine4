@@ -4287,7 +4287,7 @@ function _M:postUseTalent(ab, ret, silent)
 		if ab.equilibrium and not self:attr("zero_resource_cost") then
 			trigger = true; self:incEquilibrium(util.getval(ab.equilibrium, self, ab))
 		end
-		-- Paradox is not affected by fatigue but it's cost does increase exponentially
+		-- Paradox is not affected by fatigue but its cost does increase exponentially
 		if ab.paradox and not (self:attr("zero_resource_cost") or game.zone.no_anomalies) then
 			trigger = true; self:incParadox(util.getval(ab.paradox, self, ab) * (1 + (self.paradox / 300)))
 		end

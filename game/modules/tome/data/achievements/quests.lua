@@ -297,7 +297,7 @@ newAchievement{
 	name = "Thralless", id = "RING_BLOOD_FREED",
 	show = "full",
 	mode = "player",
-	desc = [[Freed at least 30 enthralled slaves in the slavers compound.]],
+	desc = [[Freed at least 30 enthralled slaves in the slavers' compound.]],
 	can_gain = function(self)
 		self.nb = (self.nb or 0) + 1
 		if self.nb >= 30 then return true end

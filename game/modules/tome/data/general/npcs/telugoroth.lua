@@ -145,7 +145,7 @@ newEntity{ base = "BASE_NPC_TELUGOROTH",
 -- telu vorta = time storm
 newEntity{ base = "BASE_NPC_TELUGOROTH",
 	name = "teluvorta", color=colors.DARK_KHAKI,
-	desc = [[Time and space collapse in upon this erratically moving time elemental.]],
+	desc = [[Time and space collapse in upon this erratically-moving time elemental.]],
 	level_range = {12, nil}, exp_worth = 1,
 	rarity = 4,
 	max_life = resolvers.rngavg(50,70),

@@ -51,7 +51,7 @@ local changer = function(id)
 		cost = 150,
 		encumber = 1,
 		material_level = 3,
-		desc = [[This ancient skull is all that remains of the Rat Lich. Some fragments of its power remain and a faint red light still glows within its eyes]],
+		desc = [[This ancient skull is all that remains of the Rat Lich. Some fragments of its power remain and a faint red light still glows within its eyes.]],
 
 		wielder = {
 			combat_spellpower = 10,

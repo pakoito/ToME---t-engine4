@@ -28,7 +28,7 @@ newEntity{
 	notice = true,
 	always_remember = true,
 	show_tooltip = true,
-	desc = [[The rift leads somewhere ..]],
+	desc = [[The rift leads... somewhere.]],
 	change_level = 1, change_zone = "temporal-rift",
 	change_level_check = function() -- Forbid going back
 		if not game.player:hasQuest("temporal-rift") then
