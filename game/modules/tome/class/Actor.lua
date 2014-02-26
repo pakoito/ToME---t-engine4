@@ -1039,7 +1039,12 @@ function _M:move(x, y, force)
 				self:incStamina(-self:attr("move_stamina_instead_of_energy"))
 			else
 				local speed = self:combatMovementSpeed(x, y)
-				self:useEnergy(game.energy_to_act * speed)
+				local use_energy = true
+				if self:attr("walk_sun_path") then
+					for i, e in ipairs(game.level.map.effects) do if e.damtype == DamageType.SUN_PATH and e.grids[x] and e.grids[x][y] then use_energy = false break end end
+				end
+
+				if use_energy then self:useEnergy(game.energy_to_act * speed) end
 
 				if speed <= 0.125 and self:knowTalent(self.T_FAST_AS_LIGHTNING) then
 					local t = self:getTalentFromId(self.T_FAST_AS_LIGHTNING)
@@ -4011,7 +4016,7 @@ function _M:preUseTalent(ab, silent, fake)
 	end
 
 	-- Confused ? lose a turn!
-	if self:attr("confused") and (ab.mode ~= "sustained" or not self:isTalentActive(ab.id)) and ab.no_energy ~= true and not fake and not self:attr("force_talent_ignore_ressources") then
+	if self:attr("confused") and (ab.mode ~= "sustained" or not self:isTalentActive(ab.id)) and util.getval(ab.no_energy, self, ab) ~= true and not fake and not self:attr("force_talent_ignore_ressources") then
 		if rng.percent(self:attr("confused")) then
 			if not silent then game.logSeen(self, "%s is confused and fails to use %s.", self.name:capitalize(), ab.name) end
 			self:useEnergy()
@@ -4020,7 +4025,7 @@ function _M:preUseTalent(ab, silent, fake)
 	end
 
 	-- Failure chance?
-	if self:attr("talent_fail_chance") and (ab.mode ~= "sustained" or not self:isTalentActive(ab.id)) and ab.no_energy ~= true and not fake and not self:attr("force_talent_ignore_ressources") then
+	if self:attr("talent_fail_chance") and (ab.mode ~= "sustained" or not self:isTalentActive(ab.id)) and util.getval(ab.no_energy, self, ab) ~= true and not fake and not self:attr("force_talent_ignore_ressources") then
 		if rng.percent(self:attr("talent_fail_chance")) then
 			if not silent then game.logSeen(self, "%s fails to use %s.", self.name:capitalize(), ab.name) end
 			self:useEnergy()
@@ -4029,7 +4034,7 @@ function _M:preUseTalent(ab, silent, fake)
 	end
 
 	-- terrified effect
-	if self:attr("terrified") and (ab.mode ~= "sustained" or not self:isTalentActive(ab.id)) and ab.no_energy ~= true and not fake and not self:attr("force_talent_ignore_ressources") then
+	if self:attr("terrified") and (ab.mode ~= "sustained" or not self:isTalentActive(ab.id)) and util.getval(ab.no_energy, self, ab) ~= true and not fake and not self:attr("force_talent_ignore_ressources") then
 		local eff = self:hasEffect(self.EFF_TERRIFIED)
 		if rng.percent(self:attr("terrified")) then
 			if not silent then game.logSeen(self, "%s is too terrified to use %s.", self.name:capitalize(), ab.name) end
@@ -4090,6 +4095,7 @@ local sustainCallbackCheck = {
 	callbackOnArcheryAttack = "talents_on_archery_attack",
 	callbackOnArcheryHit = "talents_on_archery_hit",
 	callbackOnArcheryMiss = "talents_on_archery_miss",
+	callbackOnCrit = "talents_on_crit",
 }
 _M.sustainCallbackCheck = sustainCallbackCheck
 
@@ -4140,7 +4146,7 @@ function _M:postUseTalent(ab, ret, silent)
 		end
 	end)
 
-	if not ab.no_energy then
+	if not util.getval(ab.no_energy, self, ab) then
 		if ab.is_spell then
 			self:useEnergy(game.energy_to_act * self:combatSpellSpeed())
 		elseif ab.is_summon then
@@ -4318,7 +4324,7 @@ function _M:postUseTalent(ab, ret, silent)
 	if ab.id ~= self.T_GATHER_THE_THREADS and ab.id ~= self.T_SPACETIME_TUNING and ab.is_spell then self:breakChronoSpells() end
 	if not ab.no_reload_break then self:breakReloading() end
 	self:breakStepUp()
-	--if not (ab.no_energy or ab.no_break_channel) and not (ab.mode == "sustained" and self:isTalentActive(ab.id)) then self:breakPsionicChannel(ab.id) end
+	--if not (util.getval(ab.no_energy, self, ab) or ab.no_break_channel) and not (ab.mode == "sustained" and self:isTalentActive(ab.id)) then self:breakPsionicChannel(ab.id) end
 
 	for tid, _ in pairs(self.sustain_talents) do
 		local t = self:getTalentFromId(tid)
@@ -4519,7 +4525,8 @@ function _M:getTalentFullDescription(t, addlevel, config, fake_mastery)
 		end
 		if not config.ignore_use_time then
 			local uspeed = "1 turn"
-			if t.no_energy and type(t.no_energy) == "boolean" and t.no_energy == true then uspeed = "instant" end
+			local no_energy = util.getval(t.no_energy, self, t)
+			if no_energy and type(no_energy) == "boolean" and no_energy == true then uspeed = "instant" end
 			d:add({"color",0x6f,0xff,0x83}, "Usage Speed: ", {"color",0xFF,0xFF,0xFF}, uspeed, true)
 		end
 		local is_a = {}
@@ -4614,7 +4621,7 @@ function _M:checkSetTalentAuto(tid, v, opt)
 		end
 
 		local list = {}
-		if t.no_energy ~= true then list[#list+1] = "- requires a turn to use" end
+		if util.getval(t.no_energy, self, t) ~= true then list[#list+1] = "- requires a turn to use" end
 		if t.requires_target then list[#list+1] = "- requires a target, your last hostile one will be automatically used" end
 		if t.auto_use_warning then list[#list+1] = t.auto_use_warning end
 		if opt == 2 then 

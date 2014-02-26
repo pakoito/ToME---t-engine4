@@ -2442,3 +2442,51 @@ newEffect{
 		game.level.map:particleEmitter(self.x, self.y, 4, "breath_acid", {radius=4, tx=src.x-self.x, ty=src.y-self.y, spread=20})
 	end,
 }
+
+newEffect{
+	name = "SUN_VENGEANCE", image = "talents/sun_vengeance.png",
+	desc = "Sun's Vengeance",
+	long_desc = function(self, eff) return ("The target is filled with the Sun's fury, next Sun Beam will be instant cast."):format() end,
+	type = "magical",
+	subtype = { sun=true, },
+	status = "beneficial",
+	parameters = {},
+	on_gain = function(self, err) return "#Target# is filled with the Sun's fury!", "+Sun's Vengeance" end,
+	on_lose = function(self, err) return "#Target#'s solar fury subsides.", "-Sun's Vengeance" end,
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "amplify_sun_beam", 25)
+	end
+}
+
+newEffect{
+	name = "PATH_OF_THE_SUN", image = "talents/path_of_the_sun.png",
+	desc = "Path of the Sun",
+	long_desc = function(self, eff) return ("The target is able to instantly travel alongside Sun Paths."):format() end,
+	type = "magical",
+	subtype = { sun=true, },
+	status = "beneficial",
+	parameters = {},
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "walk_sun_path", 1)
+	end
+}
+
+newEffect{
+	name = "SUNCLOAK", image = "talents/suncloak.png",
+	desc = "Suncloak",
+	long_desc = function(self, eff) return ("The target is filled with the Sun's fury, next Sun Beam will be instant cast."):format() end,
+	type = "magical",
+	subtype = { sun=true, },
+	status = "beneficial",
+	parameters = {},
+	on_gain = function(self, err) return "#Target# is filled with the Sun's fury!", "+Sun's Vengeance" end,
+	on_lose = function(self, err) return "#Target#'s solar fury subsides.", "-Sun's Vengeance" end,
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "resists", {all=eff.resists})
+		self:effectTemporaryValue(eff, "reduce_detrimental_status_effects_time", eff.reduce)
+		eff.particle = self:addParticles(Particles.new("suncloak", 1))
+	end,
+	deactivate = function(self, eff)
+		self:removeParticles(eff.particle)
+	end,
+}

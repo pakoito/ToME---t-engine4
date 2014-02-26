@@ -2777,3 +2777,14 @@ newDamageType{
 		end
 	end,
 }
+
+-- Sun Path damage
+newDamageType{
+	name = "sun path", type = "SUN_PATH",
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and src:reactionToward(target) < 0 then
+			return DamageType:get(DamageType.LIGHT).projector(src, x, y, DamageType.LIGHT, dam)
+		end
+	end,
+}
