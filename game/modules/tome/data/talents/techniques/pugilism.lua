@@ -279,7 +279,7 @@ newTalent{
 		
 		hit1 = self:attackTarget(target, nil, t.getDamage(self, t), true)
 
-		if hit1 then
+		if hit1 and target:canBe("confusion") then
 			target:setEffect(target.EFF_DELIRIOUS_CONCUSSION, t.getDuration(self, t), {})
 		end
 		

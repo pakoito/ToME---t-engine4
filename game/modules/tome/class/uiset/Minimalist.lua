@@ -1208,6 +1208,16 @@ function _M:displayResources(scale, bx, by, a)
 		end
 
 		-----------------------------------------------------------------------------------
+		-- Specific display for zone
+		if game.zone and game.zone.specific_ui then
+			local w, h = game.zone.specific_ui(self, game.zone, x, y)
+			if w and h then
+				self:showResourceTooltip(bx+x*scale, by+y*scale, w, h, "res:levelspec", "")
+				x, y = self:resourceOrientStep(orient, bx, by, scale, x, y, w, h)
+			end
+		elseif game.mouse:getZone("res:levelspec") then game.mouse:unregisterZone("res:levelspec") end
+
+		-----------------------------------------------------------------------------------
 		-- Saving
 		if savefile_pipe.saving then
 			sshat[1]:toScreenFull(x-6, y+8, sshat[6], sshat[7], sshat[2], sshat[3], 1, 1, 1, a)

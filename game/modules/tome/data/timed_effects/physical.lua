@@ -25,7 +25,6 @@ local Map = require "engine.Map"
 local Level = require "engine.Level"
 
 
-
 newEffect{
 	name = "DELIRIOUS_CONCUSSION", image = "talents/slippery_moss.png",
 	desc = "Concussion",

@@ -27,9 +27,15 @@ end
 
 function colors.simple(c) return {c.r, c.g, c.b} end
 
+function colors.unpack(c) return c.r, c.g, c.b end
+
 function colors.hex1(hex)
 	local r, g, b = tonumber("0x"..hex:sub(1, 2)), tonumber("0x"..hex:sub(3, 4)), tonumber("0x"..hex:sub(5, 6))
 	return {r / 255, g / 255, b / 255}
+end
+
+function colors.hex1unpack(hex)
+	return tonumber("0x"..hex:sub(1, 2)), tonumber("0x"..hex:sub(3, 4)), tonumber("0x"..hex:sub(5, 6))
 end
 
 defineColor('BLACK', 0, 0, 0)

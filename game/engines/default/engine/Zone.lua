@@ -28,7 +28,7 @@ local print = function() end
 --- Defines a zone: a set of levels, with depth, npcs, objects, level generator, ...
 module(..., package.seeall, class.make)
 
-_no_save_fields = {temp_memory_levels=true}
+_no_save_fields = {temp_memory_levels=true, _tmp_data=true}
 
 --- Setup classes to use for level generation
 -- Static method
@@ -113,6 +113,8 @@ function _M:init(short_name, dynamic)
 		forceprint("[ZONE] persisting to persist_last_zones", self.short_name)
 		_M:addLastPersistZone(self)
 	end
+
+	self._tmp_data = {}
 end
 
 --- Computes the current base level based on the zone infos
