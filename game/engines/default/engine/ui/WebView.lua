@@ -31,6 +31,7 @@ function _M:init(t)
 	self.on_title = t.on_title
 	self.allow_downloads = t.allow_downloads or {}
 	self.has_frame = t.has_frame
+	self.never_clean = t.never_clean
 
 	Base.init(self, t)
 end
@@ -100,8 +101,10 @@ function _M:makeDownloadbox(file)
 end
 
 function _M:on_dialog_cleanup()
-	self.downloader = nil
-	self.view = nil
+	if not self.never_clean then
+		self.downloader = nil
+		self.view = nil
+	end
 end
 
 function _M:onDownload(request, update, finish)

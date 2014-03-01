@@ -86,8 +86,7 @@ class BrowserClient :
 	public CefClient,
 	public CefRequestHandler,
 	public CefDisplayHandler,
-	public CefRenderProcessHandler,
-	public CefV8Handler,
+	public CefRenderProcessHandler
 {
 	CefRefPtr<CefRenderHandler> m_renderHandler;
 	int handlers;
