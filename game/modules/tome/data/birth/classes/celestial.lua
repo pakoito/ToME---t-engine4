@@ -119,7 +119,7 @@ newBirthDescriptor{
 	stats = { mag=6, cun=3, },
 	talents_types = {
 		["cunning/survival"]={false, 0.1},
-		["celestial/sun"]={true, 0.3},
+		["celestial/sunlight"]={true, 0.3},
 		["celestial/chants"]={true, 0.3},
 		["celestial/glyphs"]={false, 0.3},
 		["celestial/circles"]={false, 0.3},
