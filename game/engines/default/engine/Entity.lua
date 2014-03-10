@@ -258,6 +258,12 @@ function _M:makeMapObject(tiles, idx)
 		if self._mo and self._mo:isValid() then return self._mo, self.z, self._last_mo end
 	end
 
+	-- Texture
+	local ok, btex, btexx, btexy, w, h = pcall(tiles.get, tiles, self.display, self.color_r, self.color_g, self.color_b, self.color_br, self.color_bg, self.color_bb, self.image, self._noalpha and 255, self.ascii_outline, true)
+
+	local dy, dh = 0, 0
+	if ok and self.auto_tall and h > w then dy = -1 dh = 1 end
+
 	-- Create the map object with 1 + additional textures
 	self._mo = core.map.newObject(self.uid,
 		1 + (tiles.use_images and self.textures and #self.textures or 0),
@@ -265,9 +271,9 @@ function _M:makeMapObject(tiles, idx)
 		self:check("display_on_remember"),
 		self:check("display_on_unknown"),
 		self:check("display_x") or 0,
-		self:check("display_y") or 0,
+		(self:check("display_y") or 0) + dy,
 		self:check("display_w") or 1,
-		self:check("display_h") or 1,
+		(self:check("display_h") or 1) + dh,
 		self:check("display_scale") or 1
 	)
 
@@ -278,7 +284,6 @@ function _M:makeMapObject(tiles, idx)
 
 	-- Texture 0 is always the normal image/ascii tile
 	-- we pcall it because some weird cases can not find a tile
-	local ok, btex, btexx, btexy = pcall(tiles.get, tiles, self.display, self.color_r, self.color_g, self.color_b, self.color_br, self.color_bg, self.color_bb, self.image, self._noalpha and 255, self.ascii_outline, true)
 	if ok then
 		if self.anim then
 			self._mo:texture(0, btex, false, btexx / self.anim.max, btexy, nil, nil)

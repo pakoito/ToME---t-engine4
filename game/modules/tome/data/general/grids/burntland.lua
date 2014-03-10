@@ -17,20 +17,25 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-for i = 1, 20 do
 newEntity{
-	define_as = "BURNT_TREE"..i,
+	define_as = "BURNT_TREE",
 	type = "wall", subtype = "burnt",
 	name = "burnt tree",
 	image = "terrain/grass_burnt1.png",
-	add_displays = class:makeTrees("terrain/burnttree_alpha", 8, 0),
 	display = '#', color=colors.LIGHT_GREEN, back_color={r=44,g=95,b=43},
 	always_remember = true,
 	can_pass = {pass_tree=1},
 	does_block_move = true,
 	block_sight = true,
 	dig = "BURNT_GROUND1",
+	nice_tiler = { method="replace", base={"BURNT_TREE", 100, 1, 20} },
 }
+for i = 1, 20 do
+	newEntity(class:makeNewTrees({base="BURNT_TREE", define_as = "BURNT_TREE"..i, image = "terrain/grass_burnt1.png", nice_tiler = false}, {
+		{"gnarled_tree", {"shadow", "trunk", "foliage_bare"}},
+		{"small_elm", {"shadow", "trunk", "foliage_bare"}},
+		{"elm", {tall=-1, "shadow", "trunk", "foliage_bare"}},
+	}))
 end
 
 newEntity{ define_as = "BURNT_GROUND",

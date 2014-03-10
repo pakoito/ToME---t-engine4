@@ -18,6 +18,7 @@
 -- darkgod@te4.org
 
 local layout = game.state:alternateZoneTier1(short_name, {"FLOODED", 1})
+layout="FLOODED"
 if layout == "FLOODED" then
 
 return {
@@ -35,8 +36,8 @@ return {
 	tier1_escort = 2,
 	persistent = "zone",
 	-- Apply a greenish tint to all the map
-	color_shown = {0.8, 1, 0.6, 1},
-	color_obscure = {0.8*0.6, 1*0.6, 0.6*0.6, 0.6},
+--	color_shown = {0.8, 1, 0.6, 1},
+--	color_obscure = {0.8*0.6, 1*0.6, 0.6*0.6, 0.6},
 	ambient_music = "Rainy Day.ogg",
 	min_material_level = function() return game.state:isAdvanced() and 3 or 1 end,
 	max_material_level = function() return game.state:isAdvanced() and 4 or 2 end,
