@@ -62,6 +62,9 @@ for i = 1, 30 do
 		{"pine", {tall=-1, "shadow", "trunk", {"foliage_winter_%02d", 1, 2}, shader_args={attenuation=14}}},
 		{"small_narrow_pine", {"shadow", "trunk", {"foliage_winter_%02d", 1, 2}, shader_args={attenuation=14}}},
 		{"small_wider_pine", {"shadow", "trunk", {"foliage_winter_%02d", 1, 2}, shader_args={attenuation=14}}},
+		{"cypress", {tall=-1, "shadow", "trunk", {"foliage_winter_%02d",1,2}}},
+		{"small_cypress", {tall=-1, "shadow", "trunk", {"foliage_winter_%02d",1,2}}},
+		{"tiny_cypress", {"shadow", "trunk", {"foliage_winter_%02d",1,2}}},
 	}))
 end
 

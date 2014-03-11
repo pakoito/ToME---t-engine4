@@ -20,29 +20,21 @@
 newTalent{
 	name = "Radiance",
 	type = {"celestial/radiance", 1},
-	mode = "sustained",
+	mode = "passive",
 	require = divi_req1,
 	points = 5,
-	cooldown = 10,
-	sustain_positive = 10,
-	tactical = { BUFF = 2 },
-	range = 10,
-	getDamage = function(self, t) return 7 + self:combatSpellpower(0.092) * self:combatTalentScale(t, 1, 5) end,
-	activate = function(self, t)
-		game:playSoundNear(self, "talents/spell_generic2")
-		local ret = {
-		}
-		return ret
-	end,
-	deactivate = function(self, t, p)
-		return true
+	radius = function(self, t) return self:combatTalentScale(t, 3, 7) end,
+	getResist = function(self, t) return math.min(100, self:combatTalentScale(t, 20, 90)) end,
+	passives = function(self, t, p)
+		self:talentTemporaryValue(p, "radiance_aura", self:getTalentRadius(t))
+		self:talentTemporaryValue(p, "blind_immune", t.getResist(self, t) / 100)
 	end,
 	info = function(self, t)
-		local damage = t.getDamage(self, t)
-		return ([[Infuse your weapon with the power of the Sun, doing %0.2f light damage at the cost of 3 positive energy for each blow dealt.
-		If you do not have enough positive energy, the sustain will have no effect.
-		The damage dealt will increase with your Spellpower.]]):
-		format(damDesc(self, DamageType.LIGHT, damage))
+		return ([[You are so infused with sunlight that your body glows permanently in radius %d, even in dark places.
+		The light protects your eyes, giving %d%% blindness resistance.
+		The light radius overrides your normal light if it is bigger (it does not stack).
+		]]):
+		format(self:getTalentRadius(t), t.getResist(self, t))
 	end,
 }
 

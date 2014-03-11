@@ -232,6 +232,7 @@ function _M:makeNewTrees(g, kindsdefs, max_trees)
 		end
 		add[#add+1] = engine.Entity.new{
 			z = z,
+			_st = y,
 			display_x = x,
 			display_y = y + scale * parts.tall,
 			display_w = scale,
@@ -253,7 +254,7 @@ function _M:makeNewTrees(g, kindsdefs, max_trees)
 	else
 		tbl = { makeTree(1, 16), }
 	end
-	table.sort(tbl, function(a,b) return a.display_w < b.display_w end)
+	table.sort(tbl, function(a,b) return a._st < b._st end)
 	for i = 1, #tbl do tbl[i].z = 16 + i - 1 end
 	return g
 end
