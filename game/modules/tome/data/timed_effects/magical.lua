@@ -2490,3 +2490,93 @@ newEffect{
 		self:removeParticles(eff.particle)
 	end,
 }
+
+newEffect{
+	name = "ABSORPTION_STRIKE", image = "talents/absorption_strike.png",
+	desc = "Absorption Strike",
+	long_desc = function(self, eff) return ("The target's light has been drained, reducing light resistance by %d%%."):format(eff.power) end,
+	type = "magical",
+	subtype = { sun=true, },
+	status = "detrimental",
+	parameters = { power = 10 },
+	on_gain = function(self, err) return "#Target# is drained from light!", "+Absorption Strike" end,
+	on_lose = function(self, err) return "#Target#'s light is back.", "-Absorption Strike" end,
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "resists", {[DamageType.LIGHT]=-eff.power})
+	end,
+}
+
+newEffect{
+	name = "MARK_OF_LIGHT", image = "talents/mark_of_light.png",
+	desc = "Mark of Light",
+	long_desc = function(self, eff) return ("The creature that marked the target with light will be healed for all melee attacks against it by %d%%."):format(eff.power) end,
+	type = "magical",
+	subtype = { sun=true, },
+	status = "detrimental",
+	parameters = { power = 10 },
+	on_gain = function(self, err) return "#Target# is marked by light!", "+Mark of Light" end,
+	on_lose = function(self, err) return "#Target#'s mark disappears.", "-Mark of Light" end,
+	callbackOnMeleeHit = function(self, eff, src, dam)
+		if eff.src == src then
+			src:heal(dam * eff.power / 100, self)
+			if core.shader.active(4) then
+				eff.src:addParticles(Particles.new("shader_shield_temp", 1, {toback=true, size_factor=1.5, y=-0.3, img="healcelestial", life=25}, {type="healing", time_factor=2000, beamsCount=20, noup=2.0, beamColor1={0xd8/255, 0xff/255, 0x21/255, 1}, beamColor2={0xf7/255, 0xff/255, 0x9e/255, 1}, circleDescendSpeed=3}))
+				eff.src:addParticles(Particles.new("shader_shield_temp", 1, {toback=false,size_factor=1.5, y=-0.3, img="healcelestial", life=25}, {type="healing", time_factor=2000, beamsCount=20, noup=1.0, beamColor1={0xd8/255, 0xff/255, 0x21/255, 1}, beamColor2={0xf7/255, 0xff/255, 0x9e/255, 1}, circleDescendSpeed=3}))
+			end
+		end
+	end,
+}
+
+newEffect{
+	name = "RIGHTEOUS_STRENGTH", image = "talents/righteous_strength.png",
+	desc = "Righteous Strength",
+	long_desc = function(self, eff) return ("Increase light and physical damage by %d%%."):format(eff.power) end,
+	type = "magical",
+	subtype = { sun=true, },
+	status = "beneficial",
+	parameters = { power = 10 },
+	on_gain = function(self, err) return "#Target# shines with light!", "+Righteous Strength" end,
+	on_lose = function(self, err) return "#Target# stops shining.", "-Righteous Strength" end,
+	charges = function(self, eff) return eff.charges end,
+	on_merge = function(self, old_eff, new_eff)
+		new_eff.charges = math.min(old_eff.charges + 1, 3)
+		new_eff.power = math.min(new_eff.power + old_eff.power, new_eff.max_power)
+		self:removeTemporaryValue("inc_damage", old_eff.tmpid)
+		new_eff.tmpid = self:addTemporaryValue("inc_damage", {[DamageType.PHYSICAL] = new_eff.power, [DamageType.LIGHT] = new_eff.power})
+		return new_eff
+	end,
+	activate = function(self, eff)
+		eff.charges = 1
+		eff.tmpid = self:addTemporaryValue("inc_damage", {[DamageType.PHYSICAL] = eff.power, [DamageType.LIGHT] = eff.power})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("inc_damage", eff.tmpid)
+	end,
+}
+
+newEffect{
+	name = "LIGHTBURN", image = "talents/righteous_strength.png",
+	desc = "Lightburn",
+	long_desc = function(self, eff) return ("The creature is burnt by light, dealing %0.2f light damage each turn and reducing armour by %d."):format(eff.dam, eff.armor) end,
+	type = "magical",
+	subtype = { sun=true, },
+	status = "detrimental",
+	parameters = { armor = 10, dam = 10 },
+	on_gain = function(self, err) return "#Target# burns with light!", "+Lightburn" end,
+	on_lose = function(self, err) return "#Target# stops burning.", "-Lightburn" end,
+	on_merge = function(self, old_eff, new_eff)
+		-- Merge the flames!
+		local olddam = old_eff.dam * old_eff.dur
+		local newdam = new_eff.dam * new_eff.dur
+		local dur = math.ceil((old_eff.dur + new_eff.dur) / 2)
+		old_eff.dur = dur
+		old_eff.dam = (olddam + newdam) / dur
+		return old_eff
+	end,
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "combat_armor", -eff.armor)
+	end,
+	on_timeout = function(self, eff)
+		DamageType:get(DamageType.LIGHT).projector(eff.src, self.x, self.y, DamageType.LIGHT, eff.dam)
+	end,
+}

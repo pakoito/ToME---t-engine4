@@ -508,12 +508,12 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 			dam = dam + total_conversion
 		end
 
-		target:fireTalentCheck("callbackOnMeleeHit", self)
+		target:fireTalentCheck("callbackOnMeleeHit", self, dam)
 
 		hitted = true
 	else
 		self:logCombat(target, "#Source# misses #Target#.")
-		target:fireTalentCheck("callbackOnMeleeMiss", self)
+		target:fireTalentCheck("callbackOnMeleeMiss", self, dam)
 	end
 
 	-- cross-tier effect for accuracy vs. defense
@@ -1641,7 +1641,7 @@ function _M:physicalCrit(dam, weapon, target, atk, def, add_chance, crit_power_a
 
 		if self:knowTalent(self.T_EYE_OF_THE_TIGER) then self:triggerTalent(self.T_EYE_OF_THE_TIGER, nil, "physical") end
 
-		self:fireTalentCheck("callbackOnCrit", "physical", dam, chance)
+		self:fireTalentCheck("callbackOnCrit", "physical", dam, chance, target)
 	end
 	return dam, crit
 end
