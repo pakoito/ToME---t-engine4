@@ -43,6 +43,8 @@ newEffect{
 	end,
 }
 
+
+
 newEffect{
 	name = "CUT", image = "effects/cut.png",
 	desc = "Bleeding",
@@ -1084,54 +1086,67 @@ newEffect{
 newEffect{
 	name = "GRAPPLING", image = "talents/clinch.png",
 	desc = "Grappling",
-	long_desc = function(self, eff) return ("The target is engaged in a grapple.  Any movement will break the effect as will some unarmed talents."):format() end,
+	long_desc = function(self, eff) return ("Engaged in a grapple draining %d stamina per turn and redirecting %d%% of damage taken to %s.  Any movement will break the effect as will some unarmed talents."):format(eff.drain, eff.sharePct*100, eff.trgt.name or "unknown") end,
 	type = "physical",
 	subtype = { grapple=true, },
 	status = "beneficial",
-	parameters = {},
+	parameters = {trgt, sharePct = 0.1, drain = 0},
 	on_gain = function(self, err) return "#Target# is engaged in a grapple!", "+Grappling" end,
 	on_lose = function(self, err) return "#Target# has released the hold.", "-Grappling" end,
 	on_timeout = function(self, eff)
 		local p = eff.trgt:hasEffect(eff.trgt.EFF_GRAPPLED)
-		local drain = 6 - (self:getTalentLevelRaw(self.T_CLINCH) or 0)
 		if not p or p.src ~= self or core.fov.distance(self.x, self.y, eff.trgt.x, eff.trgt.y) > 1 or eff.trgt.dead or not game.level:hasEntity(eff.trgt) then
 			self:removeEffect(self.EFF_GRAPPLING)
 		else
-			self:incStamina(-drain)
+			self:incStamina(-eff.drain)
 		end
 	end,
 	activate = function(self, eff)
 	end,
 	deactivate = function(self, eff)
+	end,
+	callbackOnHit = function(self, eff, cb, src)
+		if not src then return cb.value end
+		local share = cb.value * eff.sharePct
+		
+		-- deal the redirected damage as physical because I don't know how to preserve the damage type in a callback
+		DamageType:get(DamageType.PHYSICAL).projector(self or eff.src, eff.trgt.x, eff.trgt.y, DamageType.PHYSICAL, share)
+		
+		return cb.value - share
 	end,
 }
 
 newEffect{
 	name = "GRAPPLED", image = "talents/grab.png",
 	desc = "Grappled",
-	long_desc = function(self, eff) return ("The target is grappled, unable to move, and has its defense and attack reduced by %d."):format(eff.power) end,
+	long_desc = function(self, eff) return ("The target is grappled, unable to move, and limited in its offensive capabilities.\n#RED#Silenced\nPinned\n%s\n%s\n%s"):format("Damage reduced by " .. eff.reduce, "Slowed by " .. eff.slow, "Damage per turn " .. math.ceil(eff.power) ) end,
 	type = "physical",
 	subtype = { grapple=true, pin=true },
 	status = "detrimental",
-	parameters = {},
+	parameters = {silence = 0, slow = 0, reduce = 1, power = 1},
 	remove_on_clone = true,
 	on_gain = function(self, err) return "#Target# is grappled!", "+Grappled" end,
 	on_lose = function(self, err) return "#Target# is free from the grapple.", "-Grappled" end,
 	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("never_move", 1)
-		eff.def = self:addTemporaryValue("combat_def", -eff.power)
-		eff.atk = self:addTemporaryValue("combat_atk", -eff.power)
+		self:effectTemporaryValue(eff, "never_move", 1)
+		self:effectTemporaryValue(eff, "combat_dam", -eff.reduce)
+		if (eff.silence > 0) then
+			self:effectTemporaryValue(eff, "silence", 1)
+		end
+		if (eff.slow > 0) then
+			self:effectTemporaryValue(eff, "global_speed_add", -eff.slow)
+		end
 	end,
 	on_timeout = function(self, eff)
 		if not self.x or not eff.src or not eff.src.x or core.fov.distance(self.x, self.y, eff.src.x, eff.src.y) > 1 or eff.src.dead or not game.level:hasEntity(eff.src) then
 			self:removeEffect(self.EFF_GRAPPLED)
+		else
+			DamageType:get(DamageType.PHYSICAL).projector(eff.src or self, self.x, self.y, DamageType.PHYSICAL, eff.power)
 		end
 	end,
 	deactivate = function(self, eff)
-		self:removeTemporaryValue("combat_atk", eff.atk)
-		self:removeTemporaryValue("combat_def", eff.def)
-		self:removeTemporaryValue("never_move", eff.tmpid)
-	end,
+
+	end, 
 }
 
 newEffect{

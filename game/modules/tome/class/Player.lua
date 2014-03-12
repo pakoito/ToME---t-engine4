@@ -575,8 +575,8 @@ function _M:playerFOV()
 		-- For each entity, generate lite
 		local uid, e = next(game.level.entities)
 		while uid do
-			if e ~= self and e.lite and e.lite > 0 and e.computeFOV then
-				e:computeFOV(e.lite, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyExtraLite(x, y, fovdist[sqdist]) end, true, true)
+			if e ~= self and ((e.lite and e.lite > 0) or (e.radiance_aura and e.radiance_aura > 0)) and e.computeFOV then
+				e:computeFOV(math.max(e.lite or 0, e.radiance_aura or 0), "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyExtraLite(x, y, fovdist[sqdist]) end, true, true)
 			end
 			uid, e = next(game.level.entities, uid)
 		end

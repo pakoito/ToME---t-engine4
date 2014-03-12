@@ -101,7 +101,8 @@ newTalent{
 
 		if hit then
 			local tg = {type="ball", range=1, radius=self:getTalentRadius(t), selffire=false, talent=t}
-			local damage = t.getAreaDamage(self, t) * (0.25 + (self:getCombo(combo) /5))
+			local damage = self:physicalCrit(t.getAreaDamage(self, t) * (0.25 + (self:getCombo(combo) /5)), nil, target, self:combatAttack(), target:combatDefense())
+			--local damage = self:physicalCrit(t.getAreaDamage(self, t) * (0.25 + (self:getCombo(combo) /5)))
 			self:project(tg, x, y, DamageType.PHYSICAL, damage)
 			game.level.map:particleEmitter(x, y, tg.radius, "ball_earth", {radius=tg.radius})
 			game:playSoundNear(self, "talents/breath")
