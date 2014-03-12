@@ -62,8 +62,8 @@ function _M:newDamageType(t)
 		end
 	end
 
-	table.insert(self.dam_def, t)
-	self[t.type] = #self.dam_def
+	self.dam_def[t.type] = t
+	self[t.type] = t.type
 end
 
 function _M:get(id)
