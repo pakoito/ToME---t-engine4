@@ -17,6 +17,10 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+function radianceRadius(self)
+	return self:getTalentRadius(self:getTalentFromId(self.T_RADIANCE))
+end
+
 newTalent{
 	name = "Radiance",
 	type = {"celestial/radiance", 1},
@@ -26,7 +30,7 @@ newTalent{
 	radius = function(self, t) return self:combatTalentScale(t, 3, 7) end,
 	getResist = function(self, t) return math.min(100, self:combatTalentScale(t, 20, 90)) end,
 	passives = function(self, t, p)
-		self:talentTemporaryValue(p, "radiance_aura", self:getTalentRadius(t))
+		self:talentTemporaryValue(p, "radiance_aura", radianceRadius(self))
 		self:talentTemporaryValue(p, "blind_immune", t.getResist(self, t) / 100)
 	end,
 	info = function(self, t)
@@ -34,7 +38,7 @@ newTalent{
 		The light protects your eyes, giving %d%% blindness resistance.
 		The light radius overrides your normal light if it is bigger (it does not stack).
 		]]):
-		format(self:getTalentRadius(t), t.getResist(self, t))
+		format(radianceRadius(self), t.getResist(self, t))
 	end,
 }
 
@@ -43,65 +47,62 @@ newTalent{
 	type = {"celestial/radiance", 2},
 	require = divi_req2,
 	points = 5,
-	random_ego = "attack",
-	cooldown = 22,
-	positive = 25,
-	tactical = { DISABLE = 2 },
-	range = 6,
-	reflectable = true,
-	requires_target = true,
-	getReturnDamage = function(self, t) return self:combatLimit(self:getTalentLevel(t)^.5, 100, 15, 1, 40, 2.24) end, -- Limit <100%
-	action = function(self, t)
-		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
-		local _ _, x, y = self:canProject(tg, x, y)
-		game:playSoundNear(self, "talents/spell_generic")
-		local target = game.level.map(x, y, Map.ACTOR)
-		if target then
-			target:setEffect(self.EFF_MARTYRDOM, 10, {src = self, power=t.getReturnDamage(self, t), apply_power=self:combatSpellpower()})
-		else
-			return
-		end
-		return true
+	mode = "passive",
+	getPower = function(self, t) return 15 + self:combatTalentSpellDamage(t, 1, 100) end,
+	getDef = function(self, t) return 5 + self:combatTalentSpellDamage(t, 1, 35) end,
+	callbackOnActBase = function(self, t)
+		local radius = radianceRadius(self)
+		local grids = core.fov.circle_grids(self.x, self.y, radius, true)
+		for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do local target = game.level.map(x, y, Map.ACTOR) if target and self ~= target then
+			target:setEffect(target.EFF_ILLUMINATION, 1, {power=t.getPower(self, t), def=t.getDef(self, t)})
+			local ss = self:isTalentActive(self.T_SEARING_SIGHT)
+			if ss then
+				local dist = core.fov.distance(self.x, self.y, target.x, target.y) - 1
+				local coeff = math.scale(radius - dist, 1, radius, 0.1, 1)
+				local realdam = DamageType:get(DamageType.LIGHT).projector(self, target.x, target.y, DamageType.LIGHT, ss.dam * coeff)
+				if ss.daze and rng.percent(ss.daze) and target:canBe("stun") then
+					target:setEffect(target.EFF_DAZED, 3, {apply_power=self:combatSpellpower()})
+				end
+
+				if realdam and realdam > 0 and self:hasEffect(self.EFF_LIGHT_BURST) then
+					self:setEffect(self.EFF_LIGHT_BURST_SPEED, 4, {})
+				end
+			end
+		end end end		
 	end,
 	info = function(self, t)
-		local returndamage = t.getReturnDamage(self, t)
-		return ([[Designate a target as a martyr for 10 turns. When the martyr deals damage, it also damages itself for %d%% of the damage dealt.]]):
-		format(returndamage)
+		return ([[The light of your Radiance allows you to see that which would normally be unseen.
+		All actors in your Radiance aura have their invisibility and stealth power reduced by %d.
+		In addition, all actors affected by illumination are easier to see and therefore hit; their defense is reduced by %d and all evasion bonuses from being unseen are negated.
+		The effects increase with your Spellpower.]]):
+		format(t.getPower(self, t), t.getDef(self, t))
 	end,
 }
 
 newTalent{
-	name = "Searing Ray",
+	name = "Searing Sight",
 	type = {"celestial/radiance",3},
 	require = divi_req3,
+	mode = "sustained",
 	points = 5,
-	random_ego = "attack",
-	cooldown = 6,
-	positive = 10,
-	tactical = { ATTACK = 2 },
-	requires_target = true,
-	range = function(self, t) return 2 + math.max(0, self:combatStatScale("str", 0.8, 8)) end,
-	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 1.1, 1.9) end,
-	action = function(self, t)
-		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
-		local _ _, x, y = self:canProject(tg, x, y)
-		local target = game.level.map(x, y, Map.ACTOR)
-		if target then
-			self:attackTarget(target, nil, t.getDamage(self, t), true)
-		else
-			return
-		end
-		return true
+	cooldown = 15,
+	range = function(self) return radianceRadius(self) end,
+	tactical = { ATTACKAREA = {LIGHT=1} },
+	sustain_positive = 40,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 1, 90) end,
+	getDaze = function(self, t) return self:combatTalentLimit(t, 35, 5, 20) end,
+	activate = function(self, t)
+		local daze = nil
+		if self:getTalentLevel(t) >= 4 then daze = t.getDaze(self, t) end
+		return {dam=t.getDamage(self, t), daze=daze}
+	end,
+	deactivate = function(self, t, p)
 	end,
 	info = function(self, t)
-		local damage = t.getDamage(self, t)
-		return ([[In a pure display of power, you project a melee attack, doing %d%% damage.
-		The range will increase with your Strength.]]):
-		format(100 * damage)
+		return ([[Your Radiance is so powerful it burns all foes caught in it, doing up to %0.2f light damage (reduced with distance) to all foes caught inside.
+		At level 4 the light is so bright it has %d%% chances to daze them for 3 turns.
+		The damage increase with your Spellpower.]]):
+		format(damDesc(self, DamageType.LIGHT, t.getDamage(self, t)), t.getDaze(self, t))
 	end,
 }
 
@@ -109,27 +110,30 @@ newTalent{
 	name = "Light Burst",
 	type = {"celestial/radiance", 4},
 	require = divi_req4,
-	random_ego = "attack",
 	points = 5,
-	cooldown = 10,
-	positive = 10,
-	tactical = { ATTACK = {LIGHT = 2} },
-	range = 1,
+	cooldown = 25,
+	positive = 15,
+	tactical = { DISABLE = {blind=1} },
+	range = function(self) return radianceRadius(self) end,
 	requires_target = true,
-	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.8, 1.6) end,
+	getDur = function(self, t) return self:combatTalentLimit(t, 9, 2, 6) end,
+	getMax = function(self, t) return math.floor(self:combatTalentScale(t, 2, 8)) end,
 	action = function(self, t)
-		local tg = {type="hit", range=self:getTalentRange(t)}
-		local x, y, target = self:getTarget(tg)
-		if not x or not y or not target then return nil end
-		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
-		self:attackTarget(target, DamageType.LIGHT, t.getDamage(self, t), true)
-		self:attackTarget(target, DamageType.LIGHT, t.getDamage(self, t), true)
+		local radius = radianceRadius(self)
+		local grids = core.fov.circle_grids(self.x, self.y, radius, true)
+		for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do local target = game.level.map(x, y, Map.ACTOR) if target and self ~= target then
+			if target:canBe("blind") then
+				target:setEffect(target.EFF_BLINDED, 4, {apply_power=self:combatSpellpower()})
+			end
+		end end end
+
+		self:setEffect(self.EFF_LIGHT_BURST, t.getDur(self, t), {max=t.getMax(self, t)})
 		return true
 	end,
 	info = function(self, t)
-		local damage = t.getDamage(self, t)
-		return ([[Concentrate the power of the Sun into two blows; each blow does %d%% of your weapon damage as light damage.]]):
-		format(100 * damage)
+		return ([[Concentrate your Radiance in a blinding flash of light. All foes caught inside will be blinded for 3 turns.
+		In addition for %d turns each time your Searing Sight damages a foe you gain a movement bonus of 10%%, stacking up to %d times.]]):
+		format(t.getDur(self, t), t.getMax(self, t))
 	end,
 }
 

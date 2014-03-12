@@ -2580,3 +2580,62 @@ newEffect{
 		DamageType:get(DamageType.LIGHT).projector(eff.src, self.x, self.y, DamageType.LIGHT, eff.dam)
 	end,
 }
+
+newEffect{
+	name = "ILLUMINATION",
+	desc = "Illumination ", image = "talents/illumination.png",
+	long_desc = function(self, eff) return ("The target glows in the light, reducing its stealth and invisibility power by %d, defense by %d and looses all evasion bonus from being unseen."):format(eff.power, eff.def) end,
+	type = "physical",
+	subtype = { sun=true },
+	status = "detrimental",
+	parameters = { power=20, def=20 },
+	on_gain = function(self, err) return nil, "+Illumination" end,
+	on_lose = function(self, err) return nil, "-Illumination" end,
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "inc_stealth", -eff.power)
+		if self:attr("invisible") then self:effectTemporaryValue(eff, "invisible", -eff.power) end
+		self:effectTemporaryValue(eff, "combat_def", -eff.def)
+		self:effectTemporaryValue(eff, "blind_fighted", 1)
+	end,
+}
+
+newEffect{
+	name = "LIGHT_BURST",
+	desc = "Light Burst ", image = "talents/light_burst.png",
+	long_desc = function(self, eff) return ("The is invigorated when dealing damage with Searing Sight."):format() end,
+	type = "physical",
+	subtype = { sun=true },
+	status = "beneficial",
+	parameters = { max=1 },
+	on_gain = function(self, err) return nil, "+Light Burst" end,
+	on_lose = function(self, err) return nil, "-Light Burst" end,
+}
+
+newEffect{
+	name = "LIGHT_BURST_SPEED",
+	desc = "Light Burst Speed ", image = "effects/light_burst_speed.png",
+	long_desc = function(self, eff) return ("The is invigorated from Searing Sight, increasing movement speed by %d%%."):format(eff.charges * 10) end,
+	type = "physical",
+	subtype = { sun=true },
+	status = "beneficial",
+	parameters = {},
+	charges = function(self, eff) return eff.charges end,
+	on_gain = function(self, err) return nil, "+Light Burst Speed" end,
+	on_lose = function(self, err) return nil, "-Light Burst Speed" end,
+	on_merge = function(self, old_eff, new_eff)
+		local p = self:hasEffect(self.EFF_LIGHT_BURST)
+		if not p then p = {max=1} end
+
+		new_eff.charges = math.min(old_eff.charges + 1, p.max)
+		self:removeTemporaryValue("movement_speed", old_eff.tmpid)
+		new_eff.tmpid = self:addTemporaryValue("movement_speed", new_eff.charges * 0.1)
+		return new_eff
+	end,
+	activate = function(self, eff)
+		eff.charges = 1
+		eff.tmpid = self:addTemporaryValue("movement_speed", eff.charges * 0.1)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("movement_speed", eff.tmpid)
+	end,
+}
