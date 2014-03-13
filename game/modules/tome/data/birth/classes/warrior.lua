@@ -59,8 +59,8 @@ newBirthDescriptor{
 	talents_types = {
 		["technique/archery-training"]={false, 0.1},
 		["technique/shield-defense"]={false, -0.1},
-		["technique/2hweapon-offense"]={true, 0.3},
-		["technique/2hweapon-cripple"]={true, 0.3},
+		["technique/2hweapon-assault"]={true, 0.3},
+		["technique/strength-of-the-berserker"]={true, 0.3},
 		["technique/combat-techniques-active"]={true, 0.3},
 		["technique/combat-techniques-passive"]={true, 0.3},
 		["technique/combat-training"]={true, 0.3},
@@ -73,8 +73,8 @@ newBirthDescriptor{
 		["cunning/dirty"]={false, 0},
 	},
 	talents = {
-		[ActorTalents.T_DEATH_DANCE] = 1,
-		[ActorTalents.T_STUNNING_BLOW] = 1,
+		[ActorTalents.T_WARSHOUT_BERSERKER] = 1,
+		[ActorTalents.T_STUNNING_BLOW_ASSAULT] = 1,
 		[ActorTalents.T_WEAPON_COMBAT] = 1,
 		[ActorTalents.T_ARMOUR_TRAINING] = 1,
 	},

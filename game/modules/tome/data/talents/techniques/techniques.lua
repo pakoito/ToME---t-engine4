@@ -18,6 +18,8 @@
 -- darkgod@te4.org
 
 -- Physical combat
+newTalentType{ allow_random=true, type="technique/2hweapon-assault", name = "two-handed assault", description = "Specialized two-handed techniques." }
+newTalentType{ allow_random=true, type="technique/strength-of-the-berserker", name = "berserker's strength", description = "Fear nothing!" }
 newTalentType{ allow_random=true, type="technique/2hweapon-offense", name = "two-handed weapons", description = "Specialized two-handed techniques." }
 newTalentType{ allow_random=true, type="technique/2hweapon-cripple", name = "two-handed maiming", description = "Specialized two-handed techniques." }
 newTalentType{ allow_random=true, type="technique/shield-offense", name = "shield offense", description = "Specialized weapon and shield techniques." }
@@ -243,6 +245,8 @@ cancelStances = function(self)
 end
 
 load("/data/talents/techniques/2hweapon.lua")
+load("/data/talents/techniques/2h-assault.lua")
+load("/data/talents/techniques/strength-of-the-berserker.lua")
 load("/data/talents/techniques/dualweapon.lua")
 load("/data/talents/techniques/weaponshield.lua")
 load("/data/talents/techniques/superiority.lua")

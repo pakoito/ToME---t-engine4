@@ -64,6 +64,13 @@ newEffect{
 		old_eff.power = (olddam + newdam) / dur
 		return old_eff
 	end,
+	activate = function(self, eff)
+		if eff.src:knowTalent(self.T_BLOODY_BUTCHER) then
+			local t = eff.src:getTalentFromId(eff.src.T_BLOODY_BUTCHER)
+			local resist = math.min(t.getResist(eff.src, t), math.max(0, self:combatGetResist(DamageType.PHYSICAL)))
+			self:effectTemporaryValue(eff, "resists", {[DamageType.PHYSICAL] = -resist})
+		end
+	end,
 	on_timeout = function(self, eff)
 		DamageType:get(DamageType.PHYSICAL).projector(eff.src or self, self.x, self.y, DamageType.PHYSICAL, eff.power)
 	end,
@@ -2343,3 +2350,34 @@ newEffect{
 	end,
 }
 
+
+newEffect{
+	name = "BERSERKER_RAGE", image = "talents/berserker.png",
+	desc = "Berserker Rage",
+	long_desc = function(self, eff) return ("Increases critical hit chance by %d%%."):format(eff.power) end,
+	type = "physical",
+	subtype = { tactic=true },
+	status = "beneficial",
+	decrease = 0, no_remove = true,
+	parameters = {power=1},
+	charges = function(self, eff) return ("%0.1f%%"):format(eff.power) end,
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "combat_physcrit", eff.power)
+	end,
+}
+
+
+newEffect{
+	name = "RELENTLESS_FURY", image = "talents/relentless_fury.png",
+	desc = "Relentless Fury",
+	long_desc = function(self, eff) return ("Increases stamina regeneration by %d, movement and attack speed by %d%%."):format(eff.stamina, eff.speed) end,
+	type = "physical",
+	subtype = { tactic=true },
+	status = "beneficial",
+	parameters = {stamina=1, speed=10},
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "stamina_regen", eff.stamina)
+		self:effectTemporaryValue(eff, "movement_speed", eff.speed/100)
+		self:effectTemporaryValue(eff, "combat_physspeed", eff.speed/100)
+	end,
+}
