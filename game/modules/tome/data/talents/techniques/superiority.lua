@@ -25,7 +25,7 @@ newTalent{
 	points = 5,
 	random_ego = "attack",
 	cooldown = 40,
-	stamina = 60,
+	stamina = 50,
 	no_energy = true,
 	tactical = { DEFEND = 2 },
 	critResist = function(self, t) return self:combatTalentScale(t, 8, 20, 0.75) end,
