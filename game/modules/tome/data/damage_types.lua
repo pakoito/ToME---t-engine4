@@ -584,6 +584,13 @@ local function tryDestroy(who, inven, dam, destroy_prop, proof_prop, msg)
 end
 
 newDamageType{
+	name = "cosmetic", type = "COSMETIC", text_color = "#WHITE#",
+	projector = function(src, x, y, type, dam)
+	end,
+	death_message = {"cosmeticed"},
+}
+
+newDamageType{
 	name = "physical", type = "PHYSICAL",
 	death_message = {"battered", "bludgeoned", "sliced", "maimed", "raked", "bled", "impaled", "dissected", "disembowelled", "decapitated", "stabbed", "pierced", "torn limb from limb", "crushed", "shattered", "smashed", "cleaved", "swiped", "struck", "mutilated", "tortured", "skewered", "squished", "mauled", "chopped into tiny pieces", "splattered", "ground", "minced", "punctured", "hacked apart", "eviscerated"},
 }

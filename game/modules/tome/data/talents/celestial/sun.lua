@@ -148,7 +148,8 @@ newTalent{
 		grids[self.x] = grids[self.x] or {}
 		grids[self.x][self.y] = true
 		local _ _, x, y = self:canProject(tg, x, y)
-		game.level.map:addEffect(self, self.x, self.y, 5, DamageType.SUN_PATH, dam / 5, 0, 5, grids, {type="sun_path", args={tx=x-self.x, ty=y-self.y}, only_one=true}, nil, true)
+		game.level.map:addEffect(self, self.x, self.y, 5, DamageType.SUN_PATH, dam / 5, 0, 5, grids, MapEffect.new{color_br=255, color_bg=249, color_bb=60, alpha=100, effect_shader="shader_images/sun_effect.png"}, nil, true)
+		game.level.map:addEffect(self, self.x, self.y, 5, DamageType.COSMETIC, 0      , 0, 5, grids, {type="sun_path", args={tx=x-self.x, ty=y-self.y}, only_one=true}, nil, true)
 
 		self:setEffect(self.EFF_PATH_OF_THE_SUN, 5, {})
 
