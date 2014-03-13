@@ -23,8 +23,8 @@ newEntity{ base = "BASE_GEM",
 	define_as = "ATAMATHON_RUBY_EYE",
 	subtype = "red",
 	name = "Atamathon's Ruby Eye", color=colors.VIOLET, quest=true, unique=true, identified=true, image="object/artifact/atamathons_lost_ruby_eye.png",
-	desc = [[One of the ruby eyes of the legendary giant golem: Atamathon.
-It is said it was made by the halflings during the Age of Pyre as a weapon against the orcs. Even though it was destroyed it managed to deal a crippling blow by killing their leader, Garkul the Devourer.]],
+	desc = [[One of the ruby eyes of the legendary giant golem Atamathon.
+It is said it was made by the halflings during the Age of Pyre as a weapon against the orcs. Even though it was destroyed, it managed to deal a crippling blow by killing their leader, Garkul the Devourer.]],
 	material_level = 5,
 	cost = 100,
 	wielder = {

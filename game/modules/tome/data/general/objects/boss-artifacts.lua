@@ -114,7 +114,7 @@ newEntity{ base = "BASE_LONGSWORD", define_as = "RIFT_SWORD",
 	unided_name = "time-warped sword",
 	desc = [[The remnants of a damaged timeline, this blade shifts and fades at random.]],
 	level_range = {30, 50},
-	rarity = nil, --Not random!
+	rarity = 220,
 	require = { stat = { str=44 }, },
 	cost = 300,
 	material_level = 4,

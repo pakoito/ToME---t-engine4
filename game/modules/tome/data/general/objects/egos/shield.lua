@@ -589,7 +589,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 25,
 	cost = 40,
-	resolvers.charmt(Talents.T_STONE_WALL, {2,3,4,5}, 40),
+--	resolvers.charmt(Talents.T_STONE_WALL, {2,3,4,5}, 40),
 	special_combat = {
 		melee_project={
 			[DamageType.PHYSICAL] = resolvers.mbonus_material(10, 10)
@@ -598,6 +598,7 @@ newEntity{
 	wielder = {
 		combat_armor = resolvers.mbonus_material(10, 5),
 		combat_armor_hardiness = resolvers.mbonus_material(5, 5),
+		resists={[DamageType.PHYSICAL] = resolvers.mbonus_material(10, 10)},
 	},
 }
 

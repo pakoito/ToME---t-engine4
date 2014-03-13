@@ -31,7 +31,6 @@ if core.shader.allow("distort") and allow then
 use_shader = {type="distort", power=0.06, power_time=1000000, blacken=30} alterscreen = true
 base_size = 64
 local nb = 0
-
 local life=16
 local sizev=2*64*radius / life
 

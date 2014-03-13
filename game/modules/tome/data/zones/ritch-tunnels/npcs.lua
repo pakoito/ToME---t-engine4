@@ -28,7 +28,7 @@ newEntity{
 	define_as = "BASE_NPC_RITCH_REL",
 	type = "insect", subtype = "ritch",
 	display = "I", color=colors.RED,
-	desc = [[Ritchs are giant insects native to the arid wastes of the southern parts of the Far East.
+	desc = [[Ritches are giant insects native to the arid wastes of the southern parts of the Far East.
 Vicious predators, they inject corrupting diseases into their foes, and their sharp claws cut through most armours.]],
 	killer_message = ", who incubated her eggs in the corpse,",
 

@@ -25,17 +25,19 @@ newTalent{
 	points = 5,
 	random_ego = "attack",
 	cooldown = 40,
-	stamina = 60,
+	stamina = 50,
 	no_energy = true,
 	tactical = { DEFEND = 2 },
+	critResist = function(self, t) return self:combatTalentScale(t, 8, 20, 0.75) end,
 	getResist = function(self, t) return self:combatTalentScale(t, 15, 35) end,
 	action = function(self, t)
-		self:setEffect(self.EFF_JUGGERNAUT, 20, {power=t.getResist(self, t)})
+		self:setEffect(self.EFF_JUGGERNAUT, 20, {power=t.getResist(self, t), crits=t.critResist(self, t)})
 		return true
 	end,
 	info = function(self, t)
 		return ([[Concentrate on the battle, ignoring some of the damage you take.
-		Improves physical damage reduction by %d%% for 20 turns.]]):format(t.getResist(self,t))
+		Improves physical damage reduction by %d%% and provides %d%% chances to shrug off critical damage for 20 turns.]]):
+		format(t.getResist(self,t), t.critResist(self, t))
 	end,
 }
 
@@ -45,14 +47,15 @@ newTalent{
 	require = techs_req_high2,
 	points = 5,
 	mode = "sustained",
-	cooldown = 20,
-	sustain_stamina = 50,
+	cooldown = 10,
+	no_energy = true,
+	sustain_stamina = 10,
 	tactical = { BUFF = 2 },
 	range = function(self,t) return math.floor(self:combatTalentLimit(t, 10, 1, 5)) end, -- Limit KB range to <10
 	activate = function(self, t)
 		return {
 			onslaught = self:addTemporaryValue("onslaught", t.range(self,t)), 
-			stamina = self:addTemporaryValue("stamina_regen", -4),
+			stamina = self:addTemporaryValue("stamina_regen", -1),
 		}
 	end,
 
@@ -63,7 +66,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Take an offensive stance. As you walk through your foes, you knock them all back in an frontal arc (up to %d grids).
-		This consumes stamina rapidly (-4 stamina/turn).]]):
+		This consumes stamina rapidly (-1 stamina/turn).]]):
 		format(t.range(self, t))
 	end,
 }
@@ -124,7 +127,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Put all of your strength into your weapon blows, creating shockwaves that deal %d%% Physical weapon damage to all nearby targets.  Only one shockwave will be created per action, and the primary target does not take extra damage.
-		Each shattering impact will drain 15 stamina.]]):
+		Each shattering impact will drain 8 stamina.]]):
 		format(100*t.weaponDam(self, t))
 	end,
 }

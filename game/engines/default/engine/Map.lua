@@ -986,8 +986,12 @@ function _M:addEffect(src, x, y, duration, damtype, dam, radius, dir, angle, ove
 
 	local grids
 
+	-- Custom grids
+	if type(angle) == "table" then
+		grids = angle
+		angle = nil
 	-- Handle any angle
-	if type(dir) == "table" then
+	elseif type(dir) == "table" then
 		grids = core.fov.beam_any_angle_grids(x, y, radius, angle, dir.source_x or src.x or x, dir.source_y or src.y or y, dir.delta_x, dir.delta_y, true)
 	-- Handle balls
 	elseif dir == 5 then

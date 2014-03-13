@@ -237,7 +237,7 @@ newTalent{
 			ai_target = {actor=target},
 			ai = "summoned", ai_real = target.ai,
 			resists = { all = modifier, [DamageType.DARKNESS] = 50, [DamageType.LIGHT] = - 50, },
-			desc = [[A dark shadowy shape who's form resembles the creature it was taken from.]],
+			desc = [[A dark, shadowy shape whose form resembles the humanoid creature it was taken from. It is not a perfect replica, though, and it makes you feel uneasy to look at it.]],
 		}
 		m:removeAllMOs()
 		m.make_escort = nil

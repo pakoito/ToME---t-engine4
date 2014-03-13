@@ -30,7 +30,7 @@ newEntity{ define_as = "CLOAK_DECEPTION",
 	name = "Cloak of Deception",
 	display = ")", color=colors.DARK_GREY,
 	encumber = 1,
-	desc = [[A black cloak, with subtle illusion enchantments woven in its very fabric.]],
+	desc = [[A black cloak, with subtle illusion enchantments woven into its very fabric.]],
 
 	wielder = {
 		combat_spellpower = 5,

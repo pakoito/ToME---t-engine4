@@ -23,7 +23,6 @@ newTalent{
 	type = {"technique/warcries", 1},
 	require = techs_req_high1,
 	points = 5,
-	random_ego = "attack",
 	cooldown = 7,
 	stamina = 20,
 	range = 0,
@@ -39,11 +38,22 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.PHYSICAL, t.getdamage(self,t))
+		if self:getTalentLevel(t) >= 5 then
+			self:project(tg, x, y, function(px, py)
+				local proj = game.level.map(px, py, Map.PROJECTILE)
+				if not proj then return end
+				proj:terminate(x, y)
+				game.level:removeEntity(proj, true)
+				proj.dead = true
+				self:logCombat(proj, "#Source# shatters '#Target#'.")
+			end)
+		end
 		game.level.map:particleEmitter(self.x, self.y, self:getTalentRadius(t), "directional_shout", {life=8, size=2, tx=x-self.x, ty=y-self.y, distorion_factor=0.1, radius=self:getTalentRadius(t), nb_circles=8, rm=0.8, rM=1, gm=0.8, gM=1, bm=0.1, bM=0.2, am=0.6, aM=0.8})
 		return true
 	end,
 	info = function(self, t)
 		return ([[Release a powerful shout, doing %0.2f physical damage in a radius %d cone in front of you.
+		At level 5 the shout is so strong it shatters all incomming projectiles caught inside.
 		The damage increases with your Strength.]])
 		:format(damDesc(self, DamageType.PHYSICAL, t.getdamage(self,t)), t.radius(self,t))
 	end,
@@ -54,8 +64,8 @@ newTalent{
 	type = {"technique/warcries", 2},
 	require = techs_req_high2,
 	points = 5,
-	random_ego = "utility",
 	cooldown = 50,
+	no_energy = true,
 	tactical = { STAMINA = 2 },
 	getRestore = function(self, t) return self:combatTalentLimit(t, 100, 27, 55) end,
 	action = function(self, t)
@@ -73,18 +83,19 @@ newTalent{
 	type = {"technique/warcries", 3},
 	require = techs_req_high3,
 	points = 5,
-	random_ego = "defensive",
 	cooldown = 30,
-	stamina = 40,
+	stamina = 5,
 	tactical = { DEFEND = 2, BUFF = 1 },
 	getdur = function(self,t) return math.floor(self:combatTalentLimit(t, 30, 7, 15)) end, -- Limit to < 30
-	getPower = function(self, t) return self:combatTalentLimit(t, 50, 11, 15) end, -- Limit to < 50%
+	getPower = function(self, t) return self:combatTalentLimit(t, 50, 11, 25) end, -- Limit to < 50%
 	action = function(self, t)
 		self:setEffect(self.EFF_BATTLE_SHOUT, t.getdur(self,t), {power=t.getPower(self, t)})
 		return true
 	end,
 	info = function(self, t)
-		return ([[Boost your life and stamina by %0.1f%% for %d turns by bellowing your battle shout. When the effect ends, the additional life and stamina will be lost.]]):format(t.getPower(self, t), t.getdur(self, t))
+		return ([[Boost your life and stamina by %0.1f%% for %d turns by bellowing your battle shout.
+		When the effect ends, the additional life and stamina will be lost.]]):
+		format(t.getPower(self, t), t.getdur(self, t))
 	end,
 }
 
@@ -93,7 +104,6 @@ newTalent{
 	type = {"technique/warcries", 4},
 	require = techs_req_high4,
 	points = 5,
-	random_ego = "attack",
 	cooldown = 30,
 	stamina = 40,
 	range = 0,
@@ -117,6 +127,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Your battle cry shatters the will of your foes within a radius of %d, lowering their Defense by %d for 7 turns, making them easier to hit.
+		All evasion and concealment bonuses are also disabled.
 		The chance to hit increases with your Physical Power.]]):
 		format(self:getTalentRadius(t), 7 * self:getTalentLevel(t))
 	end,

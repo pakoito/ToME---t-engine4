@@ -27,7 +27,7 @@ newEntity{
 	notice = true,
 	always_remember = true,
 	show_tooltip = true,
-	desc = [[This portal seems to be connected with Maj'Eyal, you could probably use it to go back.]],
+	desc = [[This portal seems to be connected with Maj'Eyal; you could probably use it to go back.]],
 
 	on_move = function(self, x, y, who)
 		if who == game.player then

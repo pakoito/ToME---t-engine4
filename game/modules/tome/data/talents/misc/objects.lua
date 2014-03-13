@@ -528,3 +528,91 @@ newTalent{
 		return ([[Reset up to 3 wild gift, psionic or cursed talents.]])
 	end,
 }
+
+newTalent{
+	name = "Dagger Block",
+	image = "talents/block.png",
+	type = {"technique/objects", 1},
+	cooldown = function(self, t)
+		return 8 - util.bound(self:getTalentLevelRaw(t), 1, 5)
+	end,
+	points = 5,
+	hard_cap = 5,
+	range = 1,
+	requires_target = true,
+	tactical = { ATTACK = 3, DEFEND = 3 },
+	
+	getProperties = function(self, t)
+		local p = {
+			sp = false,
+			ref = false,
+			br = false,
+			sb = true
+		}
+		return p
+	end,
+	
+	getBlockedTypes = function(self, t)
+	
+		local bt = {[DamageType.PHYSICAL]=true}
+			bt[DamageType.FIRE] = false
+			bt[DamageType.LIGHTNING] = false
+			bt[DamageType.COLD] = false
+			bt[DamageType.ACID] = false
+			bt[DamageType.NATURE] = false
+			bt[DamageType.BLIGHT] = false
+			bt[DamageType.LIGHT] = false
+			bt[DamageType.DARKNESS] = false
+			bt[DamageType.ARCANE] = false
+			bt[DamageType.MIND] = false
+			bt[DamageType.TEMPORAL] = false
+			
+		local n = 0
+		for t, _ in pairs(bt) do n = n + 1 end
+
+		if n < 1 then return "(error 2)" end
+		local e_string = ""
+		if n == 1 then
+			e_string = DamageType.dam_def[next(bt)].name
+		else
+			local list = table.keys(bt)
+			for i = 1, #list do
+				list[i] = DamageType.dam_def[list[i]].name
+			end
+			e_string = table.concat(list, ", ")
+		end
+		return bt, e_string
+		end,
+	
+	action = function(self, t)
+		local properties = t.getProperties(self, t)
+		local bt, bt_string = t.getBlockedTypes(self, t)
+		self:setEffect(self.EFF_BLOCKING, 1 + (self:knowTalent(self.T_ETERNAL_GUARD) and 1 or 0), {power = 120+self:getCun()+self:getDex(), d_types=bt, properties=properties})
+		return true
+	end,
+	info = function(self, t)
+		return ([[Raise your dagger into blocking position for one turn, reducing the damage of all physical attacks by %d. If you block all of an attack's damage, the attacker will be vulnerable to a deadly counterstrike (a normal attack will instead deal 200%% damage) for one turn and be left disarmed for 3 turns.
+		The blocking value will increase with your Dexterity and Cunning.]]):format(120 + self:getCun() + self:getDex())
+	end,
+}
+
+newTalent{
+	name = "Shieldsmaiden Aura",
+	type = {"misc/objects", 1},
+	points = 1,
+	mode = "passive",
+	cooldown = 10,
+	callbackOnHit = function(self, t, cb)
+		if not self:isTalentCoolingDown(t) then
+			self:startTalentCooldown(t)
+			cb.value=0
+			game.logPlayer(self, "Your shield protects you from the blow!")
+			return true
+		else
+		return false
+		end
+	end,
+	info = function(self, t)
+		return ([[Can block up to 1 hit per 10 turns.]])
+	end,
+}

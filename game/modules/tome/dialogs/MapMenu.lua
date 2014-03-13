@@ -138,7 +138,8 @@ function _M:generateList()
 	if a and not self.on_player and game.party:canControl(a, false) then list[#list+1] = {name="Control", action="control", color=colors.simple(colors.TEAL), actor=a} end
 	if a and not self.on_player and game.party:canOrder(a, false) then list[#list+1] = {name="Give order", action="order", color=colors.simple(colors.TEAL), actor=a} end
 	if a and not self.on_player and config.settings.cheat then list[#list+1] = {name="Target player", action="target-player", color=colors.simple(colors.RED), actor=a} end
-	if a and config.settings.cheat then list[#list+1] = {name="Lua inspect", action="debug-inspect", color=colors.simple(colors.LIGHT_BLUE), actor=a} end
+	if a and config.settings.cheat then list[#list+1] = {name="Lua inspect [Actor]", action="debug-inspect", color=colors.simple(colors.LIGHT_BLUE), actor=a} end
+	if g and config.settings.cheat then list[#list+1] = {name="Lua inspect [Terrain]", action="debug-inspect", color=colors.simple(colors.LIGHT_BLUE), actor=g} end
 	if a and config.settings.cheat then list[#list+1] = {name="Show inventory", action="debug-inventory", color=colors.simple(colors.YELLOW), actor=a} end
 	if self.on_player then list[#list+1] = {name="Rest a while", action="rest", color=colors.simple(colors.ANTIQUE_WHITE)} end
 	if self.on_player then list[#list+1] = {name="Auto-explore", action="autoexplore", color=colors.simple(colors.ANTIQUE_WHITE)} end

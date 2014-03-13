@@ -653,6 +653,10 @@ function _M:getTextualDesc(compare_with, use_actor)
 		elseif found then
 			desc:add({"color","RED"}, "When used from stealth a simple attack with it will not break stealth.", {"color","LAST"}, true)
 		end
+		
+		if combat.crushing_blow then
+			desc:add({"color", "YELLOW"}, "Crushing Blows: ", {"color", "LAST"}, "Damage dealt by this weapon is increased by half your critical multiplier, if doing so would kill the target.", true)
+		end
 
 		compare_fields(combat, compare_with, field, "travel_speed", "%+d%%", "Travel speed: ", 100, false, false, add_table)
 
@@ -969,6 +973,7 @@ function _M:getTextualDesc(compare_with, use_actor)
 		end
 
 		compare_fields(w, compare_with, field, "combat_critical_power", "%+.2f%%", "Critical mult.: ")
+		compare_fields(w, compare_with, field, "ignore_direct_crits", "%-.2f%%", "Reduces incoming crit damage: ")
 		compare_fields(w, compare_with, field, "combat_crit_reduction", "%-d%%", "Reduces opponents crit chance: ")
 
 		compare_fields(w, compare_with, field, "disarm_bonus", "%+d", "Trap disarming bonus: ")
@@ -1067,6 +1072,7 @@ function _M:getTextualDesc(compare_with, use_actor)
 
 		compare_fields(w, compare_with, field, "projectile_evasion", "%+d%%", "Deflect projectiles away: ")
 		compare_fields(w, compare_with, field, "evasion", "%+d%%", "Chance to avoid attacks: ")
+		compare_fields(w, compare_with, field, "cancel_damage_chance", "%+d%%", "Chance to avoid any damage: ")
 
 		compare_fields(w, compare_with, field, "defense_on_teleport", "%+d", "Defense after a teleport: ")
 		compare_fields(w, compare_with, field, "resist_all_on_teleport", "%+d%%", "Resist all after a teleport: ")
@@ -1081,12 +1087,16 @@ function _M:getTextualDesc(compare_with, use_actor)
 		
 		compare_fields(w, compare_with, field, "shield_dur", "%+d", "Damage Shield Duration: ")
 		compare_fields(w, compare_with, field, "shield_factor", "%+d%%", "Damage Shield Power: ")
+		
+		compare_fields(w, compare_with, field, "iceblock_pierce", "%+d%%", "Ice block penetration: ")
 
 		compare_fields(w, compare_with, field, "slow_projectiles", "%+d%%", "Slows Projectiles: ")
 
 		compare_fields(w, compare_with, field, "paradox_reduce_fails", "%+d", "Reduces paradox failures(equivalent to willpower): ")
 
 		compare_fields(w, compare_with, field, "damage_backfire", "%+d%%", "Damage Backlash: ", nil, true)
+		
+		compare_fields(w, compare_with, field, "resist_unseen", "%-d%%", "Reduce all damage from unseen attackers: ")
 
 		if w.undead then
 			desc:add("The wearer is treated as an undead.", true)
@@ -1105,11 +1115,11 @@ function _M:getTextualDesc(compare_with, use_actor)
 		end
 
 		if w.blind_fight then
-			desc:add({"color", "YELLOW"}, "Blind-Fight:", {"color", "LAST"}, "This item allows the wearer to attack unseen targets without any penalties.", true)
+			desc:add({"color", "YELLOW"}, "Blind-Fight: ", {"color", "LAST"}, "This item allows the wearer to attack unseen targets without any penalties.", true)
 		end
 		
 		if w.lucid_dreamer then
-			desc:add({"color", "YELLOW"}, "Lucid-Dreamer:", {"color", "LAST"}, "This item allows the wearer to act while sleeping.", true)
+			desc:add({"color", "YELLOW"}, "Lucid Dreamer: ", {"color", "LAST"}, "This item allows the wearer to act while sleeping.", true)
 		end
 
 		if w.no_breath then
@@ -1219,7 +1229,7 @@ function _M:getTextualDesc(compare_with, use_actor)
 	if self.alchemist_bomb or self.type == "gem" and use_actor:knowTalent(Talents.T_CREATE_ALCHEMIST_GEMS) then
 		local a = self.alchemist_bomb
 		if not a then
-			a = game.zone.object_list["ALCHEMIST_GEM_"..self.name:upper()]
+			a = game.zone.object_list["ALCHEMIST_GEM_"..self.name:gsub(" ", "_"):upper()]
 			if a then a = a.alchemist_bomb end
 		end
 		if a then
@@ -1229,7 +1239,13 @@ function _M:getTextualDesc(compare_with, use_actor)
 			if a.mana then desc:add(("Mana regain %d"):format(a.mana), true) end
 			if a.daze then desc:add(("%d%% chance to daze for %d turns"):format(a.daze.chance, a.daze.dur), true) end
 			if a.stun then desc:add(("%d%% chance to stun for %d turns"):format(a.stun.chance, a.stun.dur), true) end
-			if a.splash then desc:add(("Additional %d %s damage"):format(a.splash.dam, DamageType:get(DamageType[a.splash.type]).name), true) end
+			if a.splash then
+				if a.splash.desc then
+					desc:add(a.splash.desc, true)
+				else
+					desc:add(("Additional %d %s damage"):format(a.splash.dam, DamageType:get(DamageType[a.splash.type]).name), true)
+				end
+			end
 			if a.leech then desc:add(("Life regen %d%% of max life"):format(a.leech), true) end
 		end
 	end

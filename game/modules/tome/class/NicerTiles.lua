@@ -22,7 +22,7 @@ local Map = require "engine.Map"
 
 module(..., package.seeall, class.make)
 
-local NB_VARIATIONS = 1
+local NB_VARIATIONS = 20
 
 function _M:init()
 	self.repo = {}
@@ -394,7 +394,38 @@ grass = { method="borders", type="grass", forbid={lava=true, rock=true},
 	water7i={add_mos={{image="terrain/grass/grass_inner_7_%02d.png", display_x=-1, display_y=-1}}, min=1, max=1},
 	water9i={add_mos={{image="terrain/grass/grass_inner_9_%02d.png", display_x=1, display_y=-1}}, min=1, max=1},
 },
-grass_wm = { method="borders", type="grass", forbid={lava=true},
+autumn_grass = { method="borders", type="autumn_grass", forbid={grass=true, lava=true, rock=true},
+	default8={add_mos={{image="terrain/grass/autumn_grass_2_%02d.png", display_y=-1}}, min=1, max=2},
+	default2={add_mos={{image="terrain/grass/autumn_grass_8_%02d.png", display_y=1}}, min=1, max=2},
+	default4={add_mos={{image="terrain/grass/autumn_grass_6_%02d.png", display_x=-1}}, min=1, max=2},
+	default6={add_mos={{image="terrain/grass/autumn_grass_4_%02d.png", display_x=1}}, min=1, max=2},
+
+	default1={add_mos={{image="terrain/grass/autumn_grass_9_%02d.png", display_x=-1, display_y=1}}, min=1, max=1},
+	default3={add_mos={{image="terrain/grass/autumn_grass_7_%02d.png", display_x=1, display_y=1}}, min=1, max=1},
+	default7={add_mos={{image="terrain/grass/autumn_grass_3_%02d.png", display_x=-1, display_y=-1}}, min=1, max=1},
+	default9={add_mos={{image="terrain/grass/autumn_grass_1_%02d.png", display_x=1, display_y=-1}}, min=1, max=1},
+
+	default1i={add_mos={{image="terrain/grass/autumn_grass_inner_1_%02d.png", display_x=-1, display_y=1}}, min=1, max=2},
+	default3i={add_mos={{image="terrain/grass/autumn_grass_inner_3_%02d.png", display_x=1, display_y=1}}, min=1, max=2},
+	default7i={add_mos={{image="terrain/grass/autumn_grass_inner_7_%02d.png", display_x=-1, display_y=-1}}, min=1, max=2},
+	default9i={add_mos={{image="terrain/grass/autumn_grass_inner_9_%02d.png", display_x=1, display_y=-1}}, min=1, max=2},
+
+	water8={add_mos={{image="terrain/grass/autumn_grass_2_%02d.png", display_y=-1}}, min=1, max=1},
+	water2={add_mos={{image="terrain/grass/autumn_grass_8_%02d.png", display_y=1}}, min=1, max=1},
+	water4={add_mos={{image="terrain/grass/autumn_grass_6_%02d.png", display_x=-1}}, min=1, max=1},
+	water6={add_mos={{image="terrain/grass/autumn_grass_4_%02d.png", display_x=1}}, min=1, max=1},
+
+	water1={add_mos={{image="terrain/grass/autumn_grass_9_%02d.png", display_x=-1, display_y=1}}, min=1, max=1},
+	water3={add_mos={{image="terrain/grass/autumn_grass_7_%02d.png", display_x=1, display_y=1}}, min=1, max=1},
+	water7={add_mos={{image="terrain/grass/autumn_grass_3_%02d.png", display_x=-1, display_y=-1}}, min=1, max=1},
+	water9={add_mos={{image="terrain/grass/autumn_grass_1_%02d.png", display_x=1, display_y=-1}}, min=1, max=1},
+
+	water1i={add_mos={{image="terrain/grass/autumn_grass_inner_1_%02d.png", display_x=-1, display_y=1}}, min=1, max=1},
+	water3i={add_mos={{image="terrain/grass/autumn_grass_inner_3_%02d.png", display_x=1, display_y=1}}, min=1, max=1},
+	water7i={add_mos={{image="terrain/grass/autumn_grass_inner_7_%02d.png", display_x=-1, display_y=-1}}, min=1, max=1},
+	water9i={add_mos={{image="terrain/grass/autumn_grass_inner_9_%02d.png", display_x=1, display_y=-1}}, min=1, max=1},
+},
+grass_wm = { method="borders", type="grass", forbid={lava=true, rock=true},
 	default8={add_mos={{image="terrain/grass_worldmap/grass_2_%02d.png", display_y=-1}}, min=1, max=2},
 	default2={add_mos={{image="terrain/grass_worldmap/grass_8_%02d.png", display_y=1}}, min=1, max=2},
 	default4={add_mos={{image="terrain/grass_worldmap/grass_6_%02d.png", display_x=-1}}, min=1, max=2},

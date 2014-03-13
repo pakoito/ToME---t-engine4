@@ -103,7 +103,7 @@ function _M:setCurrent()
 	_M.current = self
 end
 
---- Returns a zone definition by it's name
+--- Returns a zone definition by its name
 function _M:getZone(name)
 	return self.areas_name[name]
 end

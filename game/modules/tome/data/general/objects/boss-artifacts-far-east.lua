@@ -27,7 +27,7 @@ newEntity{ base = "BASE_KNIFE", define_as = "LIFE_DRINKER",
 	unique = true,
 	name = "Life Drinker", image = "object/artifact/dagger_life_drinker.png",
 	unided_name = "blood coated dagger",
-	desc = [[Black blood for foul deads. This dagger serves evil.]],
+	desc = [[Black blood for foul deeds. This dagger serves evil.]],
 	level_range = {40, 50},
 	rarity = 300,
 	require = { stat = { mag=44 }, },
@@ -62,7 +62,7 @@ newEntity{ base = "BASE_TRIDENT",
 	define_as = "TRIDENT_TIDES",
 	unided_name = "ever-dripping trident",
 	name = "Trident of the Tides", unique=true, image = "object/artifact/trident_of_the_tides.png",
-	desc = [[The power of the tides rushing through this trident.
+	desc = [[The power of the tides rush through this trident.
 Tridents require the exotic weapons mastery talent to use correctly.]],
 	require = { stat = { str=35 }, },
 	level_range = {30, 40},
@@ -101,7 +101,7 @@ newEntity{ base = "BASE_AMULET",
 	define_as = "FIERY_CHOKER", 
 	unided_name = "flame-wrought amulet",
 	name = "Fiery Choker", unique=true, image="object/artifact/fiery_choker.png",
-	desc = [[A choker made of pure flame, forever shifting patterns around the neck of its wearer. Its fire seems to not harm the wearer.]],
+	desc = [[A choker made of pure flame, casting forever shifting patterns around the neck of its wearer. Its fire seems to not harm the wearer.]],
 	level_range = {32, 42},
 	rarity = 220,
 	cost = 190,
@@ -458,14 +458,12 @@ newEntity{ base = "BASE_GREATMAUL", define_as="ROTTING_MAUL",
 		dammod = {str=1.4},
 		convert_damage = {[DamageType.BLIGHT] = 20},
 		melee_project={[DamageType.CORRUPTED_BLOOD] = 30},
-		special_on_hit = {desc="25% chance to damage nearby creatures", on_kill=1, fct=function(combat, who, target)
-			if rng.percent(25) then
+		special_on_hit = {desc="Damage nearby creatures", on_kill=1, fct=function(combat, who, target)
 			local o, item, inven_id = who:findInAllInventoriesBy("define_as", "ROTTING_MAUL")
-				local dam = rng.avg(1,2) * (70+ who:getStr() * 1.8)
-				game.logSeen(who, "The ground shakes as the %s hits!", o:getName())
-				local tg = {type="ball", range=0, selffire=false, radius=2, no_restrict=true}
-				who:project(tg, target.x, target.y, engine.DamageType.PHYSICAL, dam)
-			end
+			local dam = rng.avg(1,2) * (70+ who:getStr())
+			game.logSeen(who, "The ground shakes as the %s hits!", o:getName())
+			local tg = {type="ball", range=0, selffire=false, radius=2, no_restrict=true}
+			who:project(tg, target.x, target.y, engine.DamageType.PHYSICAL, dam)
 		end},
 	},
 	wielder = {

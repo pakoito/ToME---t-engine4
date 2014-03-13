@@ -60,8 +60,9 @@ newTalent{
 	points = 5,
 	require = { stat = { cun=function(level) return 12 + level * 6 end }, },
 	mode = "passive",
-	getDamage = function(self, t) return self:getTalentLevel(t) * 10 end,
-	getPercentInc = function(self, t) return math.sqrt(self:getTalentLevel(t) / 5) / 2 end,
+	--getDamage = function(self, t) return self:getTalentLevel(t) * 10 end,
+	getDamage = function(self, t) return self:combatTalentScale(t, 10, 30, 0.25) end,
+	getPercentInc = function(self, t) return math.sqrt(self:getTalentLevel(t) / 5) / 4 end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local inc = t.getPercentInc(self, t)
@@ -72,20 +73,30 @@ newTalent{
 }
 
 newTalent{
-	name = "Steady Mind",
+	name = "Unified Body",
 	type = {"technique/unarmed-training", 2},
-	mode = "passive",
-	points = 5,
 	require = techs_cun_req2,
-	getDefense = function(self, t) return self:combatTalentStatDamage(t, "dex", 5, 35) end,
-	getMental = function(self, t) return self:combatTalentStatDamage(t, "cun", 5, 35) end,
-	info = function(self, t)
-		local defense = t.getDefense(self, t)
-		local saves = t.getMental(self, t)
-		return ([[Superior cunning and training allows you to outthink and outwit your opponents' physical and mental assaults.  Increases Defense by %d and Mental Save by %d.
-		The Defense bonus will scale with your Dexterity, and the save bonus with your Cunning.]]):
-		format(defense, saves)
+	mode = "sustained",
+	points = 5,
+	--sustain_stamina = 50,
+	cooldown = 18,
+	tactical = { BUFF = 2 },
+	getStr = function(self, t) return math.ceil(self:combatTalentScale(t, 1.5, 7.5, 0.75) + self:combatTalentStatDamage(t, "cun", 2, 10)) end,
+	getCon = function(self, t) return math.ceil(self:combatTalentScale(t, 1.5, 7.5, 0.75) + self:combatTalentStatDamage(t, "dex", 5, 20)) end,
+	activate = function(self, t)
+		return {
+			stat1 = self:addTemporaryValue("inc_stats", {[self.STAT_CON] = t.getCon(self, t)}),
+			stat2 = self:addTemporaryValue("inc_stats", {[self.STAT_STR] = t.getStr(self, t)}),	
+		}
 	end,
+	deactivate = function(self, t, p)
+		self:removeTemporaryValue("inc_stats", p.stat1)
+		self:removeTemporaryValue("inc_stats", p.stat2)
+		return true
+	end,
+	info = function(self, t)
+		return ([[Your mastery of unarmed combat unifies your body.  Increases your Strength by %d based on Cunning and your Constitution by %d based on Dexterity.]]):format(t.getStr(self, t), t.getCon(self, t))
+	end
 }
 
 newTalent{
@@ -106,18 +117,41 @@ newTalent{
 }
 
 newTalent{
-	name = "Combo String",
+	name = "Reflex Defense",
 	type = {"technique/unarmed-training", 4},
-	require = techs_cun_req4,
-	mode = "passive",
+	require = techs_cun_req4, -- bit icky since this is clearly dex, but whatever, cun turns defense special *handwave*
 	points = 5,
-	getDuration = function(self, t) return math.ceil(self:combatTalentScale(t, 0.3, 2.3)) end,
-	getChance = function(self, t) return self:combatLimit(self:getTalentLevel(t) * (5 + self:getCun(5, true)), 100, 0, 0, 50, 50) end, -- Limit < 100%
+	mode = "sustained",
+	cooldown = 10,
+	no_energy = true, -- annoying when sustains take energy without a good reason
+	tactical = { BUFF = 2 },
+	getDefensePct = function(self, t)
+		return self:combatTalentLimit(t, 1, 0.05, 0.9) -- ugly, fix later
+	end,
+	getDamageReduction = function(self, t) 
+		return t.getDefensePct(self, t) * self:combatDefense() / 100
+	end,
+	getDamagePct = function(self, t)
+		return 0.2
+	end,
+	activate = function(self, t)
+		
+		return {}
+	end,
+	deactivate = function(self, t, p)
+		return true
+	end,
+	callbackOnHit = function(self, t, cb)
+		if ( cb.value > (t.getDamagePct(self, t) * self.max_life) ) then
+			local damageReduction = cb.value * t.getDamageReduction(self, t)
+			cb.value = cb.value - damageReduction
+			game.logPlayer(self, "#GREEN#You twist your body in complex ways mitigating the blow by " .. math.ceil(damageReduction) .. ".")
+		end
+		return cb.value
+	end, 
 	info = function(self, t)
-		local duration = t.getDuration(self, t)
-		local chance = t.getChance(self, t)
-		return ([[When gaining a combo point, you have a %d%% chance to gain an extra combo point.  Additionally, your combo points will last %d turns longer before expiring.
-		The chance of building a second combo point will improve with your Cunning.]]):
-		format(chance, duration)
+		return ([[Your understanding of physiology allows you to apply your reflexes in new ways.  Whenever you receive damage greater than %d%% of your maximum life you reduce that damage by %d%% based on your defense.]]):
+		format(t.getDamagePct(self, t)*100, t.getDamageReduction(self, t)*100 )
 	end,
 }
+

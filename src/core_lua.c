@@ -2665,6 +2665,95 @@ static int gl_fbo_toscreen(lua_State *L)
 	return 0;
 }
 
+static int gl_fbo_posteffects(lua_State *L)
+{
+	lua_fbo *fbo = (lua_fbo*)auxiliar_checkclass(L, "gl{fbo}", 1);
+	lua_fbo *fbo2 = (lua_fbo*)auxiliar_checkclass(L, "gl{fbo}", 2);
+	lua_fbo *fbo_final = (lua_fbo*)auxiliar_checkclass(L, "gl{fbo}", 3);
+	lua_fbo *tmpfbo;
+	lua_fbo *srcfbo = fbo;
+	lua_fbo *dstfbo = fbo2;
+	int x = luaL_checknumber(L, 4);
+	int y = luaL_checknumber(L, 5);
+	int w = luaL_checknumber(L, 6);
+	int h = luaL_checknumber(L, 7);
+
+	glDisable(GL_BLEND);
+
+	GLfloat colors[4*4] = {
+		1, 1, 1, 1,
+		1, 1, 1, 1,
+		1, 1, 1, 1,
+		1, 1, 1, 1,
+	};
+	glColorPointer(4, GL_FLOAT, 0, colors);
+
+	GLfloat texcoords[2*4] = {
+		0, 1,
+		0, 0,
+		1, 0,
+		1, 1,
+	};
+	glTexCoordPointer(2, GL_FLOAT, 0, texcoords);
+
+	GLfloat vertices[2*4] = {
+		0, 0,
+		0, h,
+		w, h,
+		w, 0,
+	};
+	glVertexPointer(2, GL_FLOAT, 0, vertices);
+
+	// Set the viewport and save the old one
+	glPushAttrib(GL_VIEWPORT_BIT);
+	glViewport(0, 0, fbo->w, fbo->h);
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();
+	glOrtho(0, fbo->w, fbo->h, 0, -1001, 1001);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+
+	tglClearColor(0, 0, 0, 1);
+
+	int shad_idx = 8;
+	while (lua_isuserdata(L, shad_idx) && lua_isuserdata(L, shad_idx+1)) {
+		shader_type *s = (shader_type*)lua_touserdata(L, shad_idx);
+		useShader(s, fbo->w, fbo->h, w, h, 1, 1, 1, 1);
+
+		tglBindFramebufferEXT(GL_FRAMEBUFFER_EXT, dstfbo->fbo);
+		glClear(GL_COLOR_BUFFER_BIT);
+		tglBindTexture(GL_TEXTURE_2D, srcfbo->texture);
+		glDrawArrays(GL_QUADS, 0, 4);
+
+		shad_idx++;
+		tmpfbo = srcfbo;
+		srcfbo = dstfbo;
+		dstfbo = tmpfbo;
+	}
+
+	// Bind final fbo (must have bee previously activated)
+	shader_type *s = (shader_type*)lua_touserdata(L, shad_idx);
+	useShader(s, fbo_final->w, fbo_final->h, w, h, 1, 1, 1, 1);
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+	glMatrixMode(GL_MODELVIEW);
+	glPopAttrib();
+	tglBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo_final->fbo);
+	glClear(GL_COLOR_BUFFER_BIT);
+	tglBindTexture(GL_TEXTURE_2D, srcfbo->texture);
+	vertices[0] = x; vertices[1] = y;
+	vertices[2] = x; vertices[3] = y + h;
+	vertices[4] = x + w; vertices[5] = y + h;
+	vertices[6] = x + w; vertices[7] = y;
+	glDrawArrays(GL_QUADS, 0, 4);
+
+	tglUseProgramObject(0);
+
+	glEnable(GL_BLEND);
+	return 0;
+}
+
 static int gl_fbo_is_active(lua_State *L)
 {
 	lua_pushboolean(L, fbo_active);
@@ -3051,6 +3140,7 @@ static const struct luaL_Reg gl_fbo_reg[] =
 {
 	{"__gc", gl_free_fbo},
 	{"toScreen", gl_fbo_toscreen},
+	{"postEffects", gl_fbo_posteffects},
 	{"use", gl_fbo_use},
 	{"png", gl_fbo_to_png},
 	{NULL, NULL},

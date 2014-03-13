@@ -127,6 +127,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			local inc
 			if src.combatGetDamageIncrease then inc = src:combatGetDamageIncrease(type)
 			else inc = (src.inc_damage.all or 0) + (src.inc_damage[type] or 0) end
+			if src.getVim and src:attr("demonblood_dam") then inc = inc + ((src.demonblood_dam or 0) * (src:getVim() or 0)) end
 
 			-- Increases damage for the entity type (Demon, Undead, etc)
 			if target.type and src.inc_damage_actor_type then
@@ -289,6 +290,13 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			print("[PROJECTOR] after self-resists dam", dam)
 		end
 
+		--Vim based defence
+		if target:attr("demonblood_def") and target.getVim then
+			local demon_block = math.min(dam*0.5,target.demonblood_def*(target:getVim() or 0))
+			dam= dam - demon_block
+			target:incVim((-demon_block)/20)
+		end
+		
 		-- Static reduce damage
 		if dam > 0 and target.isTalentActive and target:isTalentActive(target.T_ANTIMAGIC_SHIELD) then
 			local t = target:getTalentFromId(target.T_ANTIMAGIC_SHIELD)
@@ -337,6 +345,16 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			local def = src.tempeffect_def[src.EFF_CURSE_OF_MISFORTUNE]
 			dam = def.doUnfortunateEnd(src, eff, target, dam)
 		end
+		
+		if src:attr("crushing_blow") and (dam * (1.25 + (src.combat_critical_power or 0)/200)) > target.life then
+			dam = dam * (1.25 + (src.combat_critical_power or 0)/200)
+			game.logPlayer(src, "You end your target with a crushing blow!")
+		end
+		
+		if target:attr("resist_unseen") and not target:canSee(src) then
+			dam = dam * (1 - math.min(target.resist_unseen,100)/100)
+		end
+		
 		-- Sanctuary: reduces damage if it comes from outside of Gloom
 		if target.isTalentActive and target:isTalentActive(target.T_GLOOM) and target:knowTalent(target.T_SANCTUARY) then
 			if tmp and tmp.sanctuaryDamageChange then
@@ -566,6 +584,13 @@ local function tryDestroy(who, inven, dam, destroy_prop, proof_prop, msg)
 end
 
 newDamageType{
+	name = "cosmetic", type = "COSMETIC", text_color = "#WHITE#",
+	projector = function(src, x, y, type, dam)
+	end,
+	death_message = {"cosmeticed"},
+}
+
+newDamageType{
 	name = "physical", type = "PHYSICAL",
 	death_message = {"battered", "bludgeoned", "sliced", "maimed", "raked", "bled", "impaled", "dissected", "disembowelled", "decapitated", "stabbed", "pierced", "torn limb from limb", "crushed", "shattered", "smashed", "cleaved", "swiped", "struck", "mutilated", "tortured", "skewered", "squished", "mauled", "chopped into tiny pieces", "splattered", "ground", "minced", "punctured", "hacked apart", "eviscerated"},
 }
@@ -722,6 +747,25 @@ newDamageType{
 		return 0
 	end,
 	death_message = {"psyched", "mentally tortured", "mindraped"},
+}
+
+newDamageType{
+	name = "winter", type = "WINTER",
+	projector = function(src, x, y, type, dam)
+		local srcx, srcy = dam.x, dam.y
+		local base = dam
+		dam = dam.dam
+		if not base.st then
+			DamageType:get(DamageType.COLD).projector(src, x, y, DamageType.COLD, dam)
+		else
+			DamageType:get(base.st).projector(src, x, y, base.st, dam)
+		end
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			local energyDrain = (game.energy_to_act * 0.2)	
+			target.energy.value = target.energy.value - energyDrain
+		end
+	end,
 }
 
 -- Temporal damage
@@ -985,6 +1029,7 @@ newDamageType{
 newDamageType{
 	name = "flameshock", type = "FLAMESHOCK",
 	projector = function(src, x, y, type, dam)
+		if _G.type(dam) == "number" then dam = {dam=dam, dur=4} end
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
 			-- Set on fire!
@@ -1096,7 +1141,7 @@ newDamageType{
 
 -- Light damage + blind chance
 newDamageType{
-	name = "blinding light", type = "LIGHT_BLIND",
+	name = "blinding light", type = "LIGHT_BLIND", text_color = "#YELLOW#",
 	projector = function(src, x, y, type, dam)
 		local realdam = DamageType:get(DamageType.LIGHT).projector(src, x, y, DamageType.LIGHT, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
@@ -1113,7 +1158,7 @@ newDamageType{
 
 -- Lightning damage + daze chance
 newDamageType{
-	name = "lightning", type = "LIGHTNING_DAZE", text_color = "#ROYAL_BLUE#",
+	name = "dazing lightning", type = "LIGHTNING_DAZE", text_color = "#ROYAL_BLUE#",
 	projector = function(src, x, y, type, dam)
 		if _G.type(dam) == "number" then dam = {dam=dam, daze=25} end
 		dam.daze = dam.daze or 25
@@ -1564,7 +1609,7 @@ newDamageType{
 }
 
 newDamageType{
-	name = "gloom", type = "RANDOM_GLOOM",
+	name = "% chance of gloom effects", type = "RANDOM_GLOOM",
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and rng.percent(dam) then
@@ -1674,7 +1719,7 @@ newDamageType{
 
 -- Drain Vim
 newDamageType{
-	name = "enervating blight", type = "DRAIN_VIM",
+	name = "vim draining blight", type = "DRAIN_VIM", text_color = "#DARK_GREEN#",
 	projector = function(src, x, y, type, dam)
 		if _G.type(dam) == "number" then dam = {dam=dam, vim=0.2} end
 		local target = game.level.map(x, y, Map.ACTOR)
@@ -1821,7 +1866,7 @@ newDamageType{
 
 -- blood boiled, blight damage + slow
 newDamageType{
-	name = "hindering_blight", type = "BLOOD_BOIL",
+	name = "hindering blight", type = "BLOOD_BOIL", text_color = "#DARK_GREEN#",
 	projector = function(src, x, y, type, dam)
 		DamageType:get(DamageType.BLIGHT).projector(src, x, y, DamageType.BLIGHT, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
@@ -2412,7 +2457,7 @@ newDamageType{
 			ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=2, },
 			stats = { str=20, dex=8, mag=6, con=16 },
 			name = "orc spirit", color=colors.SALMON, image = "npc/humanoid_orc_orc_berserker.png",
-			desc = [[An orc clad in a massive armour, wielding a huge axe.]],
+			desc = [[An orc clad in massive armour, wielding a huge axe.]],
 			level_range = {35, nil}, exp_worth = 0,
 			max_life = resolvers.rngavg(110,120), life_rating = 12,
 			resolvers.equip{
@@ -2729,13 +2774,24 @@ newDamageType{
 
 -- Acid damage + Slow
 newDamageType{
-	name = "cautic mire", type = "CAUSTIC_MIRE",
+	name = "caustic mire", type = "CAUSTIC_MIRE",
 	projector = function(src, x, y, type, dam, tmp)
 		if _G.type(dam) == "number" then dam = {dur = 2, slow=20} end
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
 			DamageType:get(DamageType.ACID).projector(src, x, y, DamageType.ACID, dam.dam)
 			target:setEffect(target.EFF_SLOW, dam.dur, {power=dam.slow/100, apply_power=src:combatSpellpower()})
+		end
+	end,
+}
+
+-- Sun Path damage
+newDamageType{
+	name = "sun path", type = "SUN_PATH",
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and src:reactionToward(target) < 0 then
+			return DamageType:get(DamageType.LIGHT).projector(src, x, y, DamageType.LIGHT, dam)
 		end
 	end,
 }

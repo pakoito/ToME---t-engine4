@@ -22,6 +22,8 @@ local Talents = require "engine.interface.ActorTalents"
 
 -- This file describes artifacts associated with a boss of the game, they have a high chance of dropping their respective ones, but they can still be found elsewhere
 
+-- Design:  Revamp Wintertide to make it more unique, interesting, and not terrible.
+-- Balance:  A cold themed weapon doesn't play nice with melee scalers, and Ice Block on hit, while useful overall, has some obvious anti-synergy.  So instead of focusing on stats I added a decent passive on hit and a very powerful active.  The active is a "better" Stone Wall but you have to be actively using the weapon in melee to make use of it.  The delayed expansion of the storm also limits its strength as an "oh shit" button.
 newEntity{ base = "BASE_LONGSWORD",
 	power_source = {arcane=true},
 	define_as = "LONGSWORD_WINTERTIDE", unided_name = "glittering longsword", image="object/artifact/wintertide.png",
@@ -31,32 +33,147 @@ It is said the Conclave created this weapon for their warmaster during the dark 
 	require = { stat = { str=35 }, },
 	level_range = {35, 45},
 	rarity = 280,
-	cost = 2000,
+	cost = 1000,
 	material_level = 5,
+	winterStorm = nil,
+	special_desc = function(self)
+		if not self.winterStorm then 
+			return ("Storm Duration:  None") 
+		else
+			return ("Storm Duration: " .. (self.winterStorm.duration or "None"))
+		end
+	end,
 	combat = {
-		dam = 45,
+		dam = 39, -- lower damage, defensive item with extremely powerful effects
 		apr = 10,
 		physcrit = 10,
 		dammod = {str=1},
 		damrange = 1.4,
-		melee_project={[DamageType.ICE] = 45},
+		melee_project={[DamageType.ICE] = 25}, -- Iceblock HP is based on damage, since were adding iceblock pierce we want this to be less generous
+		special_on_hit = {desc="Create a Winter Storm that gradually expands, dealing cold damage to your enemies each turn and reducing their turn energy by 20%.  Melee attacks will relocate the storm on top of your target and increase its duration.", on_kill=1, fct=function(combat, who, target)
+			 local self, item, inven_id = who:findInAllInventoriesBy("define_as", "LONGSWORD_WINTERTIDE")
+			 if not self or not who:getInven(inven_id).worn then return end
+			
+			 if self.winterStorm and self.winterStorm.duration <= 0 then
+				 self.winterStorm = nil
+				 --return
+			 end
+			 
+			 if (self.winterStorm and (game.level.id ~= self.winterStorm.checkZone) ) then
+				self.winterStorm = nil
+			 end
+			 
+			 if not self.winterStorm then
+				local stormDam = who:combatStatScale("str", 20, 80, 0.75) -- does this need a require?
+				 self.winterStorm = game.level.map:addEffect(who,
+				 target.x, target.y, 5,
+				 engine.DamageType.WINTER, {dam=stormDam, x=target.x, y=target.y}, -- Winter is cold damage+energy reduction, enemy only
+				 1,
+				 5, nil,
+				 {type="icestorm", only_one=true},
+				 function(e)	
+					 if e.radius < 4 then
+						e.radius = e.radius + 0.2
+						 
+						 -- this is a hack to fix the effect breaking if you reload with it active, whatever is going on is very weird but the table on the item no longer points to this
+						local self2, item, inven_id = e.src:findInAllInventoriesBy("define_as", "LONGSWORD_WINTERTIDE")
+						if not self2 then return end
+						self2.winterStorm = e
+					 end
+					 return true
+				 end,
+			 false)
+				self.winterStorm.checkZone = game.level.id
+			else
+				-- move the storm on top of the target
+				self.winterStorm.x = target.x
+				self.winterStorm.y = target.y
+				if self.winterStorm.duration < 5 then -- duration can be extended forever while meleeing 
+					self.winterStorm.duration = self.winterStorm.duration + 1
+				end
+			end
+			
+			end
+			
+		},	
+		
 	},
 	wielder = {
-		lite = 1,
-		see_invisible = 2,
-		resists={[DamageType.COLD] = 25},
+		iceblock_pierce=35, -- this can be generous because of how melee specific the item is
+		resists = { [DamageType.COLD] = 25 },
+		on_melee_hit={[DamageType.ICE] = 40},
 		inc_damage = { [DamageType.COLD] = 20 },
 	},
-	max_power = 18, power_regen = 1,
-	use_power = { name = "generate a burst of ice", power = 8,
+	max_power = 40, power_regen = 1,
+	use_power = { name ="intensify your winter storm creating unbreakable ice walls in each space", power = 30,
 		use = function(self, who)
-			local tg = {type="ball", range=0, radius=4, selffire=false}
-			who:project(tg, who.x, who.y, engine.DamageType.ICE, 40 + (who:getMag() + who:getWil()), {type="freeze"})
-			game:playSoundNear(who, "talents/ice")
-			game.logSeen(who, "%s invokes the power of %s!", who.name:capitalize(), self.name)
+			
+			local Object = require "mod.class.Object"
+			local Map = require "engine.Map"
+			
+			if not self.winterStorm then return end
+			
+			if self.winterStorm and self.winterStorm.duration <= 0 then
+				self.winterStorm = nil
+				return
+			end
+			
+			local grids = core.fov.circle_grids(self.winterStorm.x, self.winterStorm.y, self.winterStorm.radius, true)		
+			local self = who
+
+
+			for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
+				local oe = game.level.map(x, y, engine.Map.TERRAIN)
+
+				if oe then
+					local e = Object.new{
+						old_feat = oe,
+						name = "winter wall", image = "npc/iceblock.png",
+						display = '#', color_r=255, color_g=255, color_b=255, back_color=colors.GREY,
+						desc = "a summoned wall of ice",
+						type = "wall", --subtype = "floor",
+						always_remember = true,
+						can_pass = {pass_wall=1},
+						does_block_move = true,
+						show_tooltip = true,
+						block_move = true,
+						block_sight = true,
+						temporary = 10,
+						x = x, y = y,
+						canAct = false,
+						act = function(self)
+							self:useEnergy()
+							self.temporary = self.temporary - 1
+							if self.temporary <= 0 then
+								game.level.map(self.x, self.y, engine.Map.TERRAIN, self.old_feat)
+								game.level:removeEntity(self)
+	--							game.level.map:redisplay()
+							end
+						end,
+						dig = function(src, x, y, old)
+							game.level:removeEntity(old)
+	--						game.level.map:redisplay()
+							return nil, old.old_feat
+						end,
+						summoner_gain_exp = true,
+						summoner = self,
+					}
+					e.tooltip = mod.class.Grid.tooltip
+					game.level:addEntity(e)
+					game.level.map(x, y, engine.Map.TERRAIN, e)				
+				end
+			end end
+			
 			return {id=true, used=true}
 		end
 	},
+	on_wear = function(self, who)
+		--self.winterStorm = nil
+	end,
+	on_pickup = function(self, who)
+		self.winterStorm = nil
+	end,
+	
 }
 
 newEntity{ base = "BASE_LITE", define_as = "WINTERTIDE_PHIAL",
@@ -215,7 +332,7 @@ newEntity{ base = "BASE_HELM",
 	define_as = "HELM_OF_GARKUL",
 	unided_name = "tribal helm",
 	name = "Steel Helm of Garkul", unique=true, image="object/artifact/helm_of_garkul.png",
-	desc = [[A great helm that belonged to Garkul the Devourer, one of the greatest orcs to live.]],
+	desc = [[A great helm that belonged to Garkul the Devourer, one of the greatest orcs ever to live.]],
 	require = { stat = { str=16 }, },
 	level_range = {12, 22},
 	rarity = 200,
@@ -291,9 +408,7 @@ newEntity{ base = "BASE_SHIELD",
 	rarity = 200,
 	cost = 20,
 	material_level = 2,
-	rarity = false,
 	metallic = false,
-
 	special_combat = {
 		dam = resolvers.rngavg(20,30),
 		block = 60,
@@ -318,22 +433,23 @@ newEntity{ base = "BASE_GEM",
 	power_source = {nature=true},
 	unique = true, define_as = "PETRIFIED_WOOD",
 	unided_name = "burned piece of wood",
-	name = "Petrified Wood", subtype = "black",
+	name = "Petrified Wood", subtype = "red", --Visually black, but associate with fire, not acid
 	color = colors.WHITE, image = "object/artifact/petrified_wood.png",
 	level_range = {35, 45},
 	rarity = 280,
-	identified = false,
 	desc = [[A piece of the scorched wood taken from the remains of Snaproot.]],
-	rarity = false,
 	cost = 100,
 	material_level = 4,
+	identified = false,
 	imbue_powers = {
 		resists = { [DamageType.NATURE] = 25, [DamageType.DARKNESS] = 10, [DamageType.COLD] = 10 },
 		inc_stats = { [Stats.STAT_CON] = 25, },
+		ignore_direct_crits = 23,
 	},
 	wielder = {
 		resists = { [DamageType.NATURE] = 25, [DamageType.DARKNESS] = 10, [DamageType.COLD] = 10 },
 		inc_stats = { [Stats.STAT_CON] = 25, },
+		ignore_direct_crits = 23,
 	},
 }
 
@@ -445,7 +561,7 @@ newEntity{ base = "BASE_STAFF",
 	unided_name = "dark staff",
 	flavor_name = "vilestaff",
 	name = "Kor's Fall", unique=true,
-	desc = [[Made from the bones of many creatures, this staff glows with power. You can feel its evilness even from a distance.]],
+	desc = [[Made from the bones of many creatures, this staff glows with power. You can feel its evil presence even from a distance.]],
 	require = { stat = { mag=25 }, },
 	level_range = {1, 10},
 	rarity = 200,
@@ -505,7 +621,7 @@ newEntity{ base = "BASE_STAFF",
 	twohanded = false,
 	unided_name = "broken staff", flavor_name = "magestaff",
 	name = "Telos's Staff (Top Half)", unique=true,
-	desc = [[The top part of Telos's broken staff.]],
+	desc = [[The top part of Telos' broken staff.]],
 	require = { stat = { mag=35 }, },
 	level_range = {40, 50},
 	rarity = 210,
@@ -898,8 +1014,8 @@ newEntity{ base = "BASE_WARAXE",
 	rarity = 220,
 	cost = 50,
 	combat = {
-		dam = 18,
-		apr = 3,
+		dam = 20,
+		apr = 4,
 		physcrit = 12,
 		dammod = {str=1},
 		talent_on_hit = { [Talents.T_GREATER_WEAPON_FOCUS] = {level=2, chance=10} },
@@ -934,7 +1050,7 @@ newEntity{ base = "BASE_HEAVY_BOOTS",
 	unique = true,
 	name = "The Warped Boots", image = "object/artifact/the_warped_boots.png",
 	unided_name = "pair of painful-looking boots",
-	desc = [[These blackened boots have lost all vestige of any former glory they might have had. Now, they are a testament to the corruption of the Deep Bellow, and its power.]],
+	desc = [[These blackened boots have lost all vestiges of any former glory they might have had. Now, they are a testament to the corruption of the Deep Bellow, and its power.]],
 	color = colors.DARK_GREEN,
 	level_range = {35, 45},
 	rarity = 250,
@@ -991,7 +1107,7 @@ newEntity{ base = "BASE_MASSIVE_ARMOR",
 	unique = true,
 	name = "Borfast's Cage",
 	unided_name = "a suit of pitted and pocked plate-mail",
-	desc = [[Inch thick stralite plates lock together with voratun joints. The whole suit looks impenetrable, but has clearly been subjected to terrible treatment - great dents and misshaping warps, and caustic fissures bored across the surface.
+	desc = [[Inch-thick stralite plates lock together with voratun joints. The whole suit looks impenetrable, but has clearly been subjected to terrible treatment - great dents and misshaping warps, and caustic fissures bored across the surface.
 Though clearly a powerful piece, it must once have been much greater.]],
 	color = colors.WHITE, image = "object/artifact/armor_plate_borfasts_cage.png",
 	level_range = {20, 28},
@@ -1047,8 +1163,8 @@ newEntity{ base = "BASE_SLING",
 	power_source = {nature=true},
 	define_as = "HARESKIN_SLING",
 	name = "Hare-Skin Sling", unique=true, unided_name = "hare-skin sling", image = "object/artifact/sling_hareskin_sling.png",
-	desc = [[This well-tended sling is made from the leather and sinews of a large hare. It feels smooth to the touch yet very durable. Some say that the skin of a hare brings luck and fortune.
-Hard to tell if that really helped its former owner, but it's clear that the skin is at least also strong and reliable..]],
+	desc = [[This well-tended sling is made from the leather and sinews of a large hare. It feels smooth to the touch, yet very durable. Some say that the skin of a hare brings luck and fortune.
+Hard to tell if that really helped its former owner, but it's clear that the skin is at least also strong and reliable.]],
 	level_range = {20, 28},
 	rarity = 200,
 	require = { stat = { dex=35 }, },
@@ -1077,7 +1193,7 @@ newEntity{ base = "BASE_TOOL_MISC",
 	name = "Prox's Lucky Halfling Foot", color = colors.WHITE,
 	unided_name = "a mummified halfling foot", image = "object/artifact/proxs_lucky_halfling_foot.png",
 	desc = [[A large hairy foot, very recognizably a halfling's, is strung on a piece of thick twine. In its decomposed state it's hard to tell how long ago it parted with its owner, but from what look like teeth marks around the ankle you get the impression that it wasn't given willingly.
-It has been kept somewhat intact with layers of salt and clay, but in spite of this it's clear that nature is beginning to take its course on the dead flesh. Some say the foot of a halfling brings luck to its bearer - right now the only thing you can be sure of is it stinks.]],
+It has been kept somewhat intact with layers of salt and clay, but in spite of this it's clear that nature is beginning to take its toll on the dead flesh. Some say the foot of a halfling brings luck to its bearer - right now the only thing you can be sure of is that it stinks.]],
 	level_range = {5, 12},
 	rarity = 200,
 	cost = 10,
@@ -1219,7 +1335,7 @@ newEntity{ base = "BASE_GAUNTLETS", define_as = "STORM_BRINGER_GAUNTLETS",
 	unique = true,
 	name = "Storm Bringer's Gauntlets", color = colors.LIGHT_STEEL_BLUE, image = "object/artifact/storm_bringers_gauntlets.png",
 	unided_name = "fine-mesh gauntlets",
-	desc = [[This pair of fine mesh voratun gauntlets is covered with glyphs of power that spark with azure energy.  The metal is supple and light so as not to interfere with spell-casting.  When and where these gauntlets were forged is a mystery but odds are the crafter knew a thing or two about magic.]],
+	desc = [[This pair of fine mesh voratun gauntlets is covered with glyphs of power that spark with azure energy.  The metal is supple and light so as not to interfere with spell-casting.  When and where these gauntlets were forged is a mystery, but odds are the crafter knew a thing or two about magic.]],
 	level_range = {25, 35},
 	rarity = 250,
 	cost = 1000,

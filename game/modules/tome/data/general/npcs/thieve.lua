@@ -61,7 +61,7 @@ newEntity{
 
 newEntity{ base = "BASE_NPC_THIEF",
 	name = "cutpurse", color_r=0, color_g=0, color_b=resolvers.rngrange(235, 255),
-	desc = [[The lowest of the thieves, they are just learning the tricks of the trade.]],
+	desc = [[The lowest of the thieves, this cutpurse is just learning the tricks of the trade.]],
 	level_range = {1, nil}, exp_worth = 1,
 	rarity = 1,
 	combat_armor = 1, combat_def = 5,

@@ -27,17 +27,36 @@ newEntity{
 	define_as = "BOGTREE",
 	type = "wall", subtype = "water",
 	name = "tree",
-	image = "terrain/swamptree.png",
+	image = "terrain/poisoned_water_01.png",
 	display = '#', color=colors.LIGHT_GREEN, back_color=colors.DARK_BLUE,
 	always_remember = true,
 	can_pass = {pass_tree=1},
 	does_block_move = true,
 	block_sight = true,
 	dig = "SHALLOW_WATER",
-	nice_tiler = { method="replace", base={"BOGTREE", 100, 1, 20}},
+	nice_tiler = { method="replace", base={"BOGTREE", 100, 1, 40}},
 	shader = "water",
 }
-for i = 1, 20 do newEntity{ base="BOGTREE", define_as = "BOGTREE"..i, image = "terrain/poisoned_water_01.png", add_displays = class:makeTrees("terrain/swamptree", 3, 3)} end
+for i = 1, 40 do
+	newEntity(class:makeNewTrees({base="BOGTREE", define_as = "BOGTREE"..i}, {
+		{"small_willow", {"shadow", "trunk", "waterripples", "foliage_bare"}},
+		{"small_willow_moss", {"shadow", "trunk", "waterripples", "foliage_bare"}},
+		{"willow", {tall=-1, "shadow", "trunk", "waterripples", "foliage_bare"}},
+		{"willow_moss", {tall=-1, "shadow", "trunk", "waterripples", "foliage_bare"}},
+		{"small_willow", {"shadow", "trunk", "waterripples", "foliage_spring"}},
+		{"small_willow_moss", {"shadow", "trunk", "waterripples", "foliage_spring"}},
+		{"willow", {tall=-1, "shadow", "trunk", "waterripples", "foliage_spring"}},
+		{"willow_moss", {tall=-1, "shadow", "trunk", "waterripples", "foliage_spring"}},
+		{"small_willow", {"shadow", "trunk", "waterripples", "foliage_spring"}},
+		{"small_willow_moss", {"shadow", "trunk", "waterripples", "foliage_spring"}},
+		{"willow", {tall=-1, "shadow", "trunk", "waterripples", "foliage_spring"}},
+		{"willow_moss", {tall=-1, "shadow", "trunk", "waterripples", "foliage_spring"}},
+		{"small_willow", {"shadow", "trunk", "waterripples", "foliage_spring"}},
+		{"small_willow_moss", {"shadow", "trunk", "waterripples", "foliage_spring"}},
+		{"willow", {tall=-1, "shadow", "trunk", "waterripples", "foliage_spring"}},
+		{"willow_moss", {tall=-1, "shadow", "trunk", "waterripples", "foliage_spring"}},
+	}))
+end
 
 newEntity{ base="WATER_BASE",
 	define_as = "BOGWATER",

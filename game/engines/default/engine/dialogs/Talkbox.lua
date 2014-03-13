@@ -78,6 +78,8 @@ function _M:init(chat, on_end)
 				self.chat:setCurrentTarget(false, self.chat.last_whispers[found])
 				self:updateTitle(self:getTitle())
 			end
+		else
+			self:autoComplete()
 		end
 	end)
 end
@@ -131,6 +133,35 @@ function _M:checkTarget(text)
 				self.chat:setCurrentTarget(true, self.chat.channel_codes_rev[chancode])
 				self:updateTitle(self:getTitle())
 				self.c_box:setText("")
+			end
+		end
+	end
+end
+
+function _M:autoComplete()
+	local text, text_len = self.c_box.text, self.c_box.text:len()
+
+	local matches = {}
+	for k, v in pairs(self.chat.channels[self.chat.cur_channel].users) do
+		if k:sub(1, text_len) == text then
+			matches[#matches+1] = k
+		end
+	end
+	if #matches == 1 then
+		self.c_box:setText(matches[1])
+	elseif #matches > 1 then
+		-- Find the longest common substring and complete it
+		local substring = matches[1]:sub(#text+1)
+		for i=2,#matches do
+			local min_len = math.min(#matches[i]-#text, #substring)
+			for j=1,min_len do
+				if substring:sub(j, j) ~= matches[i]:sub(#text+j, #text+j) then
+					substring = substring:sub(1, util.bound(j-1, 0))
+					break
+				end
+			end
+			if #substring > 0 then
+				self.c_box:setText(text .. substring)
 			end
 		end
 	end

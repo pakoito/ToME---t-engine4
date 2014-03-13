@@ -137,7 +137,7 @@ newEntity{
 	material_level = 1,
 	encumber = 5,
 	not_in_stores = true,
-	desc = [[This was the book that gave power to Kyless and eventually lead to his doom. The book has a simple appearance: bound in leather with no markings on the cover. All of the pages are blank.]],
+	desc = [[This was the book that gave power to Kyless and eventually led to his doom. The book is simple in appearance, bound in leather with no markings on the cover. All of the pages are blank.]],
 }
 
 

@@ -57,7 +57,7 @@ function spawnFortress(self, who) game:onTickEnd(function()
 		moddable_tile = "human_female",
 		moddable_tile_base = "base_redhead_01.png",
 		moddable_tile_ornament = {female="braid_redhead_01"},
-		desc = [[You saved her from the depth of a cultists lair and fell in love with her. She has moved in the Fortress to see you more often.]],
+		desc = [[You saved her from the depth of a cultists' lair and fell in love with her. She has moved into the Fortress to see you more often.]],
 		autolevel = "tank",
 		ai = "none",
 		stats = { str=8, dex=7, mag=8, con=12 },

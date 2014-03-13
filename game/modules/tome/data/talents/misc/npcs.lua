@@ -2069,3 +2069,180 @@ newTalent{
 		format(t.getDuration(self, t), damDesc(self, DamageType.COLD, self:combatTalentSpellDamage(t, 5, 140)))
 	end,
 }
+
+
+newTalent{
+	name = "Body Shot",
+	type = {"technique/other", 1},
+	points = 5,
+	cooldown = 10,
+	stamina = 10,
+	message = "@Source@ throws a body shot.",
+	tactical = { ATTACK = { weapon = 2 }, DISABLE = { stun = 2 } },
+	requires_target = true,
+	--on_pre_use = function(self, t, silent) if not self:hasEffect(self.EFF_COMBO) then if not silent then game.logPlayer(self, "You must have a combo going to use this ability.") end return false end return true end,
+	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 1.1, 1.8) + getStrikingStyle(self, dam) end,
+	getDuration = function(self, t, comb) return math.ceil(self:combatTalentScale(t, 1, 5) * (0.25 + comb/5)) end,
+	getDrain = function(self, t) return self:combatTalentScale(t, 2, 10, 0.75) * self:getCombo(combo) end,
+	action = function(self, t)
+		local tg = {type="hit", range=self:getTalentRange(t)}
+		local x, y, target = self:getTarget(tg)
+		if not x or not y or not target then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
+
+		-- breaks active grapples if the target is not grappled
+		if target:isGrappled(self) then
+			grappled = true
+		else
+			self:breakGrapples()
+		end
+
+		local hit = self:attackTarget(target, nil, t.getDamage(self, t), true)
+
+		if hit then
+			-- try to daze
+			if target:canBe("stun") then
+				target:setEffect(target.EFF_DAZED, t.getDuration(self, t, self:getCombo(combo)), {apply_power=self:combatPhysicalpower()})
+			else
+				game.logSeen(target, "%s resists the body shot!", target.name:capitalize())
+			end
+
+			target:incStamina(- t.getDrain(self, t))
+
+		end
+
+		self:clearCombo()
+
+		return true
+	end,
+	info = function(self, t)
+		local damage = t.getDamage(self, t) * 100
+		local drain = self:getTalentLevel(t) * 2
+		local daze = t.getDuration(self, t, 0)
+		local dazemax = t.getDuration(self, t, 5)
+		return ([[A punch to the body that deals %d%% damage, drains %d of the target's stamina per combo point, and dazes the target for %d to %d turns, depending on the amount of combo points you've accumulated.
+		The daze chance will increase with your Physical Power.
+		Using this talent removes your combo points.]])
+		:format(damage, drain, daze, dazemax)
+	end,
+}
+
+newTalent{
+	name = "Relentless Strikes",
+	type = {"technique/other", 1},
+	points = 5,
+	mode = "passive",
+	getStamina = function(self, t) return self:combatTalentScale(t, 1/4, 5/4, 0.75) end,
+	getCooldownReduction = function(self, t) return self:combatTalentLimit(t, 0.67, 0.09, 1/3) end,  -- Limit < 67%
+	info = function(self, t)
+		local stamina = t.getStamina(self, t)
+		local cooldown = t.getCooldownReduction(self, t)
+		return ([[Reduces the cooldown on all your Pugilism talents by %d%%.  Additionally, every time you earn a combo point, you will regain %0.2f stamina.
+		Note that stamina gains from combo points occur before any talent stamina costs.]])
+		:format(cooldown * 100, stamina)
+	end,
+}
+
+newTalent{
+	name = "Combo String",
+	type = {"technique/other", 1},
+	mode = "passive",
+	points = 5,
+	getDuration = function(self, t) return math.ceil(self:combatTalentScale(t, 0.3, 2.3)) end,
+	getChance = function(self, t) return self:combatLimit(self:getTalentLevel(t) * (5 + self:getCun(5, true)), 100, 0, 0, 50, 50) end, -- Limit < 100%
+	info = function(self, t)
+		local duration = t.getDuration(self, t)
+		local chance = t.getChance(self, t)
+		return ([[When gaining a combo point, you have a %d%% chance to gain an extra combo point.  Additionally, your combo points will last %d turns longer before expiring.
+		The chance of building a second combo point will improve with your Cunning.]]):
+		format(chance, duration)
+	end,
+}
+
+newTalent{
+	name = "Steady Mind",
+	type = {"technique/other", 1},
+	mode = "passive",
+	points = 5,
+	getDefense = function(self, t) return self:combatTalentStatDamage(t, "dex", 5, 35) end,
+	getMental = function(self, t) return self:combatTalentStatDamage(t, "cun", 5, 35) end,
+	info = function(self, t)
+		local defense = t.getDefense(self, t)
+		local saves = t.getMental(self, t)
+		return ([[Superior cunning and training allows you to outthink and outwit your opponents' physical and mental assaults.  Increases Defense by %d and Mental Save by %d.
+		The Defense bonus will scale with your Dexterity, and the save bonus with your Cunning.]]):
+		format(defense, saves)
+	end,
+}
+
+newTalent{
+	name = "Maim",
+	type = {"technique/other", 1},
+	points = 5,
+	random_ego = "attack",
+	cooldown = 12,
+	stamina = 10,
+	tactical = { ATTACK = { PHYSICAL = 2 }, DISABLE = 2 },
+	requires_target = true,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 3, 7)) end,
+	getDamage = function(self, t) return self:combatTalentPhysicalDamage(t, 10, 100) * getUnarmedTrainingBonus(self) end,
+	getMaim = function(self, t) return self:combatTalentPhysicalDamage(t, 5, 30) end,
+	-- Learn the appropriate stance
+	action = function(self, t)
+		local tg = {type="hit", range=self:getTalentRange(t)}
+		local x, y, target = self:getTarget(tg)
+		if not x or not y or not target then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
+
+		local grappled = false
+
+		-- breaks active grapples if the target is not grappled
+		if target:isGrappled(self) then
+			grappled = true
+		else
+			self:breakGrapples()
+		end
+
+		-- end the talent without effect if the target is to big
+		if self:grappleSizeCheck(target) then
+			return true
+		end
+
+		-- start the grapple; this will automatically hit and reapply the grapple if we're already grappling the target
+		local hit = self:startGrapple (target)
+		-- deal damage and maim if appropriate
+		if hit then
+			if grappled then
+				self:project(target, x, y, DamageType.PHYSICAL, self:physicalCrit(t.getDamage(self, t), nil, target, self:combatAttack(), target:combatDefense()))
+				target:setEffect(target.EFF_MAIMED, t.getDuration(self, t), {power=t.getMaim(self, t)})
+			else
+				self:project(target, x, y, DamageType.PHYSICAL, self:physicalCrit(t.getDamage(self, t), nil, target, self:combatAttack(), target:combatDefense()))
+			end
+		end
+
+		return true
+	end,
+	info = function(self, t)
+		local duration = t.getDuration(self, t)
+		local damage = t.getDamage(self, t)
+		local maim = t.getMaim(self, t)
+		return ([[Grapples the target and inflicts %0.2f physical damage. If the target is already grappled, the target will be maimed as well, reducing damage by %d and global speed by 30%% for %d turns.
+		The grapple effects will be based off your grapple talent, if you have it, and the damage will scale with your Physical Power.]])
+		:format(damDesc(self, DamageType.PHYSICAL, (damage)), maim, duration)
+	end,
+}
+
+newTalent{
+	name = "Bloodrage",
+	type = {"technique/other", 1},
+	points = 5,
+	mode = "passive",
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 6, 10)) end,
+	on_kill = function(self, t)
+		self:setEffect(self.EFF_BLOODRAGE, t.getDuration(self, t), {max=math.floor(self:getTalentLevel(t) * 6), inc=2})
+	end,
+	info = function(self, t)
+		return ([[Each time one of your foes bites the dust, you feel a surge of power, increasing your strength by 2 up to a maximum of %d for %d turns.]]):
+		format(math.floor(self:getTalentLevel(t) * 6), t.getDuration(self, t))
+	end,
+}

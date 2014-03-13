@@ -172,7 +172,7 @@ newEntity{
 	type = "potion", subtype="potion", image = "object/elixir_of_serendipity.png",
 	name = "Elixir of Serendipity", unique=true, unided_name="vial of yellow fluid",
 	display = "!", color=colors.YELLOW,
-	desc = [[A vial of lifelike yellow fluid.]],
+	desc = [[A vial of lively yellow fluid.]],
 	no_unique_lore = true,
 	cost = 1000,
 	quest = 1,
@@ -296,7 +296,7 @@ newEntity{ base = "BASE_INFUSION",
 	inscription_kind = "utility",
 	inscription_data = {
 		cooldown = 15,
-		dur = 5,
+		dur = 10, -- to 10 from 5, because this should be really good
 		armor = 50,
 		hard = 30,
 	},
@@ -315,20 +315,26 @@ newEntity{ base = "BASE_GEM",
 	quest = 1,
 	material_level = 5,
 	wielder = {
-		inc_stats = {[Stats.STAT_CON] = 10, },
+		inc_stats = {[Stats.STAT_CON] = 15, },
 		healing_factor = 0.3,
 		life_regen = 2,
 		resists = {
 			[DamageType.BLIGHT] = 10,
 		},
+		damage_affinity = {
+			[DamageType.NATURE] = 15,
+		},
 	},
 	imbue_powers = {
-		inc_stats = {[Stats.STAT_CON] = 10, },
+		inc_stats = {[Stats.STAT_CON] = 15, },
 		healing_factor = 0.3,
 		life_regen = 2,
 		stun_immune = 0.3,
 		resists = {
 			[DamageType.BLIGHT] = 10,
+		},
+		damage_affinity = {
+			[DamageType.NATURE] = 15,
 		},
 	},
 }

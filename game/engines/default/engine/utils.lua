@@ -34,6 +34,13 @@ function math.round(v, mult, num)
 	return v >= 0 and math.floor((v + mult/2)/mult) * mult/num or math.ceil((v - mult/2)/mult) * mult/num
 end
 
+function math.scale(i, imin, imax, dmin, dmax)
+	local bi = i - imin
+	local bm = imax - imin
+	local dm = dmax - dmin
+	return bi * dm / bm + dmin
+end
+
 function lpeg.anywhere (p)
 	return lpeg.P{ p + 1 * lpeg.V(1) }
 end

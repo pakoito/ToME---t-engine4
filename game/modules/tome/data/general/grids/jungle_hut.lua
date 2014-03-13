@@ -22,7 +22,7 @@
 -----------------------------------------
 newEntity{
 	define_as = "BAMBOO_HUT_FLOOR",
-	type = "floor", subtype = "bamboo hut",
+	type = "floor", subtype = "bamboo floor",
 	name = "bamboo hut floor", image = "terrain/bamboo/hut_dirt_floor_01.png",
 	display = '.', color=colors.UMBER, back_color=colors.DARK_UMBER,
 	grow = "BAMBOO_HUT_WALL",
@@ -42,7 +42,7 @@ newEntity{
 	block_sight = true,
 	air_level = -5,
 	dig = "BAMBOO_HUT_FLOOR",
-	nice_tiler = { method="singleWall", type="wall",
+	nice_tiler = { method="singleWall",  use_subtype=true, type="bamboo hut",
 		v_full={"BHW_V_FULL", 100, 1, 1},
 		h_full={"BHW_H_FULL", 20, 1, 8},
 		n_cross={"BHW_N_CROSS", 100, 1, 1},
@@ -82,7 +82,7 @@ newEntity{base="BAMBOO_HUT_WALL", define_as="BHW_SW1", add_displays={class.new{z
 -----------------------------------------
 newEntity{
 	define_as = "BAMBOO_HUT_DOOR",
-	type = "wall", subtype = "floor",
+	type = "wall", subtype = "bamboo hut",
 	name = "door", image = "terrain/bamboo/hut_dirt_floor_01.png",
 	display = '+', color=colors.LIGHT_UMBER, back_color=colors.DARK_UMBER,
 	nice_tiler = { method="door3d", north_south="BAMBOO_HUT_DOOR_VERT", west_east="BAMBOO_HUT_DOOR_HORIZ" },
@@ -95,7 +95,7 @@ newEntity{
 }
 newEntity{
 	define_as = "BAMBOO_HUT_DOOR_OPEN",
-	type = "wall", subtype = "floor",
+	type = "wall", subtype = "bamboo hut",
 	name = "open door", image = "terrain/bamboo/hut_dirt_floor_01.png",
 	display = "'", color=colors.LIGHT_UMBER, back_color=colors.DARK_UMBER,
 	always_remember = true,

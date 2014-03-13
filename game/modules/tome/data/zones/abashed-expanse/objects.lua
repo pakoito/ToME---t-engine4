@@ -30,7 +30,7 @@ newEntity{ base = "BASE_LITE", define_as = "VOID_STAR",
 	color = colors.GREY,
 	encumber = 1,
 	rarity = false,
-	desc = [[It looks like a very tiny star - deep black - and yet it somehow shines.]],
+	desc = [[It looks like a very tiny star -- deep black -- and yet it somehow shines.]],
 	cost = 120,
 	material_level = 2,
 

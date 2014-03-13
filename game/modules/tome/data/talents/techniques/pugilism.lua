@@ -39,23 +39,26 @@ newTalent{
 	no_unlearn_last = true,
 	getAttack = function(self, t) return self:getDex(25, true) end,
 	getDamage = function(self, t) return self:combatStatScale("dex", 5, 50) end,
+	getFlatReduction = function(self, t) return self:combatStatLimit("str", 20, 1, 12) end, -- limit because high flat reduction can fuck melee players
 	activate = function(self, t)
 		cancelStances(self)
 		local ret = {
 			atk = self:addTemporaryValue("combat_atk", t.getAttack(self, t)),
+			flat = self:addTemporaryValue("flat_damage_armor", {all = t.getFlatReduction(self, t)})
 		}
 		return ret
 	end,
 	deactivate = function(self, t, p)
 		self:removeTemporaryValue("combat_atk", p.atk)
+		self:removeTemporaryValue("flat_damage_armor", p.flat)
 		return true
 	end,
 	info = function(self, t)
 		local attack = t.getAttack(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Increases your Accuracy by %d, and the damage multiplier of your striking talents (Pugilism and Finishing Moves) by %d%%.
-		The bonuses will scale with your Dexterity.]]):
-		format(attack, damage)
+		return ([[Increases your Accuracy by %d, the damage multiplier of your striking talents (Pugilism and Finishing Moves) by %d%%, and reduces all damage taken by %d.
+		The offensive bonuses scale with your Dexterity and the damage reduction with your Strength.]]):
+		format(attack, damage, t.getFlatReduction(self, t))
 	end,
 }
 
@@ -65,11 +68,12 @@ newTalent{
 	require = techs_dex_req1,
 	points = 5,
 	random_ego = "attack",
-	cooldown = function(self, t) return math.ceil(3 * getRelentless(self, cd)) end,
+	--cooldown = function(self, t) return math.ceil(3 * getRelentless(self, cd)) end,
+	cooldown = 3,
 	message = "@Source@ throws two quick punches.",
 	tactical = { ATTACK = { weapon = 2 } },
 	requires_target = true,
-	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.1, 0.8) + getStrikingStyle(self, dam) end,
+	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.5, 0.8) + getStrikingStyle(self, dam) end,
 	-- Learn the appropriate stance
 	on_learn = function(self, t)
 		if not self:knowTalent(self.T_STRIKING_STANCE) then
@@ -134,33 +138,18 @@ newTalent{
 	end,
 }
 
+
+
 newTalent{
-	name = "Relentless Strikes",
+	 name = "Spinning Backhand",
 	type = {"technique/pugilism", 2},
 	require = techs_dex_req2,
 	points = 5,
-	random_ego = "utility",
-	mode = "passive",
-	getStamina = function(self, t) return self:combatTalentScale(t, 1/4, 5/4, 0.75) end,
-	getCooldownReduction = function(self, t) return self:combatTalentLimit(t, 0.67, 0.09, 1/3) end,  -- Limit < 67%
-	info = function(self, t)
-		local stamina = t.getStamina(self, t)
-		local cooldown = t.getCooldownReduction(self, t)
-		return ([[Reduces the cooldown on all your Pugilism talents by %d%%.  Additionally, every time you earn a combo point, you will regain %0.2f stamina.
-		Note that stamina gains from combo points occur before any talent stamina costs.]])
-		:format(cooldown * 100, stamina)
-	end,
-}
-
-newTalent{
-	name = "Spinning Backhand",
-	type = {"technique/pugilism", 3},
-	require = techs_dex_req3,
-	points = 5,
 	random_ego = "attack",
-	cooldown = function(self, t) return math.ceil(12 * getRelentless(self, cd)) end,
+	--cooldown = function(self, t) return math.ceil(12 * getRelentless(self, cd)) end,
+	cooldown = 8,
 	stamina = 12,
-	range = function(self, t) return math.ceil(self:combatTalentScale(t, 2.2, 4.3)) end,
+	range = function(self, t) return math.ceil(2 + self:combatTalentScale(t, 2.2, 4.3)) end, -- being able to use this over rush without massive investment is much more fun
 	chargeBonus = function(self, t, dist) return self:combatScale(dist, 0.15, 1, 0.50, 5) end,
 	message = "@Source@ lashes out with a spinning backhand.",
 	tactical = { ATTACKAREA = { weapon = 2 }, CLOSEIN = 1 },
@@ -254,18 +243,74 @@ newTalent{
 	end,
 }
 
+-- If kick, normal attack+small kick effect?
+newTalent{
+	name = "Axe Kick", 
+	type = {"technique/pugilism", 3},
+	require = techs_dex_req3,
+	points = 5,
+	stamina = 20,
+	random_ego = "attack",
+	cooldown = function(self, t)
+		return 20
+	end,
+	getDuration = function(self, t)
+		--return self:combatTalentScale(t, 1, 3)
+		return self:combatTalentLimit(t, 5, 1, 4)
+	end,
+	message = "@Source@ raises their leg and snaps it downward in a devastating axe kick.",
+	tactical = { ATTACK = { weapon = 2 } },
+	requires_target = true,
+	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.8, 2) + getStrikingStyle(self, dam) end, -- low damage scaling, investment gets the extra CP
+	action = function(self, t)
+		local tg = {type="hit", range=self:getTalentRange(t)}
+		local x, y, target = self:getTarget(tg)
+		if not x or not y or not target then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
+
+		-- breaks active grapples if the target is not grappled
+		if target:isGrappled(self) then
+			grappled = true
+		else
+			self:breakGrapples()
+		end
+
+		local hit1 = false
+		
+		hit1 = self:attackTarget(target, nil, t.getDamage(self, t), true)
+
+		if hit1 and target:canBe("confusion") then
+			target:setEffect(target.EFF_DELIRIOUS_CONCUSSION, t.getDuration(self, t), {})
+		end
+		
+		-- build combo points
+		if hit1 then
+			self:buildCombo()
+			self:buildCombo()
+		end
+		return true
+
+	end,
+	info = function(self, t)
+		local damage = t.getDamage(self, t) * 100
+		return ([[Deliver a devastating axe kick dealing %d%% damage.  If the blow connects your target is brain damaged, causing all talents to fail for %d turns and earning 2 combo points.]])
+		:format(damage, t.getDuration(self, t))
+	end,
+}
+
 newTalent{
 	name = "Flurry of Fists",
 	type = {"technique/pugilism", 4},
 	require = techs_dex_req4,
 	points = 5,
 	random_ego = "attack",
-	cooldown = function(self, t) return math.ceil(24 * getRelentless(self, cd)) end,
+	--cooldown = function(self, t) return math.ceil(24 * getRelentless(self, cd)) end,
+	cooldown = 16,
 	stamina = 15,
 	message = "@Source@ lashes out with a flurry of fists.",
 	tactical = { ATTACK = { weapon = 2 } },
 	requires_target = true,
-	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.4, 1.1) + getStrikingStyle(self, dam) end,
+	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.4, 0.8) + getStrikingStyle(self, dam) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -317,4 +362,3 @@ newTalent{
 		:format(damage)
 	end,
 }
-

@@ -188,7 +188,7 @@ newTalent{
 		end end
 
 		-- Randomly take targets
-		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_fire"}, friendlyblock=false}
+		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_fire"}, friendlyblock=false, friendlyfire=false}
 		for i = 1, math.floor(self:getTalentLevel(t)) do
 			if #tgts <= 0 then break end
 			local a, id = rng.table(tgts)

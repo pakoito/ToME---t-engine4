@@ -76,7 +76,7 @@ newTalent{
 	no_energy = true,
 	tactical = { DEFEND = 2 },
 	on_pre_use = function(self, t, silent)
-		if self:isTalentActive(self.T_THERMAL_SHIELD) and self:isTalentActive(self.T_CHARGED_SHIELD) then
+		if self:isTalentActive(self.T_THERMAL_SHIELD) and self:isTalentActive(self.T_CHARGED_SHIELD) and not self:attr("psionic_shield_override") then
 			if not silent then game.logSeen(self, "You may only sustain two shields at once. Shield activation cancelled.") end
 			return false
 		end
@@ -202,7 +202,7 @@ newTalent{
 	no_energy = true,
 	tactical = { DEFEND = 2 },
 	on_pre_use = function(self, t, silent)
-		if self:isTalentActive(self.T_KINETIC_SHIELD) and self:isTalentActive(self.T_CHARGED_SHIELD) then
+		if self:isTalentActive(self.T_KINETIC_SHIELD) and self:isTalentActive(self.T_CHARGED_SHIELD) and not self:attr("psionic_shield_override") then
 			if not silent then game.logSeen(self, "You may only sustain two shields at once. Shield activation cancelled.") end
 			return false
 		end
@@ -325,7 +325,7 @@ newTalent{
 	no_energy = true,
 	tactical = { DEFEND = 2 },
 	on_pre_use = function(self, t, silent)
-		if self:isTalentActive(self.T_KINETIC_SHIELD) and self:isTalentActive(self.T_THERMAL_SHIELD) then
+		if self:isTalentActive(self.T_KINETIC_SHIELD) and self:isTalentActive(self.T_THERMAL_SHIELD) and not self:attr("psionic_shield_override") then
 			if not silent then game.logSeen(self, "You may only sustain two shields at once. Shield activation cancelled.") end
 			return false
 		end

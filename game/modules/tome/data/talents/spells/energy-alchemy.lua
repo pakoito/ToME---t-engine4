@@ -66,7 +66,7 @@ newTalent{
 			end
 		end
 		if did_something then
-			game.logSeen(golem, "%s is energized by the attack, reducing some talents cooldowns!", golem.name:capitalize())
+			game.logSeen(golem, "%s is energized by the attack, reducing some talent cooldowns!", golem.name:capitalize())
 		end
 	end,
 	info = function(self, t)
@@ -184,7 +184,7 @@ newTalent{
 	end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/lightning")
-		local ret = {}
+		local ret = {name = self.name:capitalize().."'s "..t.name}
 		self:talentTemporaryValue(ret, "movement_speed", t.getSpeed(self, t))
 		ret.last_life = self.life
 		return ret
@@ -193,14 +193,15 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local speed = t.getSpeed(self, t)
+		local speed = t.getSpeed(self, t) * 100
 		local dam = t.getDamage(self, t)
 		local turn = t.getTurn(self, t)
 		local range = self:getTalentRange(t)
-		return ([[Infuse your body with lightning energy, bolstering your legs (+%d%% movement speed).
-		Each turn a foe within range %d will get hit by lightning, dealing %0.2f lightning damage.
-		Each time your turn start, if you have lost over 20%% since the last turn you gain %d%% of a turn.
+		return ([[Infuse your body with lightning energy, bolstering your movement speed by +%d%%.
+		Each turn, a foe within range %d will be struck by lightning and be dealt %0.1f Lightning damage.
+		In addition, damage to your health will energize you.
+		At the start of each turn in which you have lost at least %d life (20%% of your maximum life) since your last turn, you will gain %d%% of a turn.
 		The effects increase with your Spellpower.]]):
-		format(speed, range, damDesc(self, DamageType.LIGHTNING, t.getDamage(self, t)), turn)
+		format(speed, range, damDesc(self, DamageType.LIGHTNING, t.getDamage(self, t)), self.max_life * 0.2, turn)
 	end,
 }

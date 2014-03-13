@@ -262,3 +262,14 @@ newAchievement{
 	desc = [[Deal one million damage to training dummies in a single training session.]],
 	mode = "player",
 }
+newAchievement{
+	name = "I meant to do that...", id = "AVOID_DEATH",
+	show = "full",
+	desc = [[Avoid death 50 times with a life-saving talent.]],
+	mode = "player",
+	can_gain = function(self, who)
+		self.nb = (self.nb or 0) + 1
+		if self.nb >= 50 then return true end
+	end,
+	track = function(self) return tstring{tostring(self.nb or 0)," / 50"} end,
+}

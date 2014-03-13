@@ -1039,7 +1039,12 @@ function _M:move(x, y, force)
 				self:incStamina(-self:attr("move_stamina_instead_of_energy"))
 			else
 				local speed = self:combatMovementSpeed(x, y)
-				self:useEnergy(game.energy_to_act * speed)
+				local use_energy = true
+				if self:attr("walk_sun_path") then
+					for i, e in ipairs(game.level.map.effects) do if e.damtype == DamageType.SUN_PATH and e.grids[x] and e.grids[x][y] then use_energy = false break end end
+				end
+
+				if use_energy then self:useEnergy(game.energy_to_act * speed) end
 
 				if speed <= 0.125 and self:knowTalent(self.T_FAST_AS_LIGHTNING) then
 					local t = self:getTalentFromId(self.T_FAST_AS_LIGHTNING)
@@ -2145,6 +2150,7 @@ function _M:onTakeHit(value, src, death_note)
 			game.logSeen(self, "#YELLOW#%s has been saved by a blast of positive energy!#LAST#", self.name:capitalize())
 			game:delayedLogDamage(tal, self, -sl, ("#LIGHT_GREEN#%d healing#LAST#"):format(sl), false)
 			self:forceUseTalent(self.T_SECOND_LIFE, {ignore_energy=true})
+			if self.player then world:gainAchievement("AVOID_DEATH", self) end
 		end
 	end
 	
@@ -2249,7 +2255,7 @@ function _M:onTakeHit(value, src, death_note)
 	if self:fireTalentCheck("callbackOnHit", cb, src, death_note) then
 		value = cb.value
 	end
-
+	
 	local hd = {"Actor:takeHit", value=value, src=src, death_note=death_note}
 	if self:triggerHook(hd) then value = hd.value end
 
@@ -2289,7 +2295,10 @@ function _M:takeHit(value, src, death_note)
 		end
 	end
 
+
 	local dead, val = mod.class.interface.ActorLife.takeHit(self, value, src, death_note)
+
+	if src.fireTalentCheck then src:fireTalentCheck("callbackOnDealDamage", val, self, dead, death_note) end
 
 	if dead and src and src.attr and src:attr("overkill") and src.project and not src.turn_procs.overkill then
 		src.turn_procs.overkill = true
@@ -3061,7 +3070,7 @@ function _M:updateModdableTile()
 
 	self:triggerHook{"Actor:updateModdableTile:back", base=base, add=add}
 
-	i = self.inven[self.INVEN_CLOAK]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile):format("behind")..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1} end
+	i = self.inven[self.INVEN_CLOAK]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile):format("behind")..".png", auto_tall=1} end
 
 	if self.shader_auras and next(self.shader_auras) then
 		for _, def in pairs(self.shader_auras) do
@@ -3073,41 +3082,41 @@ function _M:updateModdableTile()
 
 	if not self:attr("disarmed") then
 		i = self.inven[self.INVEN_MAINHAND]; if i and i[1] and i[1].moddable_tile_back then
-			add[#add+1] = {image = base..(i[1].moddable_tile_back):format("right")..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1}
+			add[#add+1] = {image = base..(i[1].moddable_tile_back):format("right")..".png", auto_tall=1}
 		end
 		i = self.inven[self.INVEN_OFFHAND]; if i and i[1] and i[1].moddable_tile_back then
-			add[#add+1] = {image = base..(i[1].moddable_tile_back):format("left")..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1}
+			add[#add+1] = {image = base..(i[1].moddable_tile_back):format("left")..".png", auto_tall=1}
 		end
 	end
 
-	i = self.inven[self.INVEN_CLOAK]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile):format("shoulder")..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1} end
-	i = self.inven[self.INVEN_FEET]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile)..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1} end
-	i = self.inven[self.INVEN_BODY]; if i and i[1] and i[1].moddable_tile2 then add[#add+1] = {image = base..(i[1].moddable_tile2)..".png"}
+	i = self.inven[self.INVEN_CLOAK]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile):format("shoulder")..".png", auto_tall=1} end
+	i = self.inven[self.INVEN_FEET]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile)..".png", auto_tall=1} end
+	i = self.inven[self.INVEN_BODY]; if i and i[1] and i[1].moddable_tile2 then add[#add+1] = {image = base..(i[1].moddable_tile2)..".png", auto_tall=1}
 	elseif not self.moddable_tile_nude then add[#add+1] = {image = base.."lower_body_01.png"} end
-	i = self.inven[self.INVEN_BODY]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile)..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1}
+	i = self.inven[self.INVEN_BODY]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile)..".png", auto_tall=1}
 	elseif not self.moddable_tile_nude then add[#add+1] = {image = base.."upper_body_01.png"} end
-	i = self.inven[self.INVEN_HEAD]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile)..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1} end
-	i = self.inven[self.INVEN_HANDS]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile)..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1} end
-	i = self.inven[self.INVEN_CLOAK]; if i and i[1] and i[1].moddable_tile_hood then add[#add+1] = {image = base..(i[1].moddable_tile):format("hood")..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1} end
+	i = self.inven[self.INVEN_HEAD]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile)..".png", auto_tall=1} end
+	i = self.inven[self.INVEN_HANDS]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile)..".png", auto_tall=1} end
+	i = self.inven[self.INVEN_CLOAK]; if i and i[1] and i[1].moddable_tile_hood then add[#add+1] = {image = base..(i[1].moddable_tile):format("hood")..".png", auto_tall=1} end
 	if not self:attr("disarmed") then
 		i = self.inven[self.INVEN_MAINHAND]; if i and i[1] and i[1].moddable_tile then
-			add[#add+1] = {image = base..(i[1].moddable_tile):format("right")..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1}
+			add[#add+1] = {image = base..(i[1].moddable_tile):format("right")..".png", auto_tall=1}
 			if i[1].moddable_tile_particle then
 				add[#add].particle = i[1].moddable_tile_particle[1]
 				add[#add].particle_args = i[1].moddable_tile_particle[2]
 			end
-			if i[1].moddable_tile_ornament then add[#add+1] = {image = base..(i[1].moddable_tile_ornament):format("right")..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1} end
+			if i[1].moddable_tile_ornament then add[#add+1] = {image = base..(i[1].moddable_tile_ornament):format("right")..".png", auto_tall=1} end
 		end
 		i = self.inven[self.INVEN_OFFHAND]; if i and i[1] and i[1].moddable_tile then
-			add[#add+1] = {image = base..(i[1].moddable_tile):format("left")..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1}
-			if i[1].moddable_tile_ornament then add[#add+1] = {image = base..(i[1].moddable_tile_ornament):format("left")..".png", display_y=i[1].moddable_tile_big and -1 or 0, display_h=i[1].moddable_tile_big and 2 or 1} end
+			add[#add+1] = {image = base..(i[1].moddable_tile):format("left")..".png", auto_tall=1}
+			if i[1].moddable_tile_ornament then add[#add+1] = {image = base..(i[1].moddable_tile_ornament):format("left")..".png", auto_tall=1} end
 		end
 	end
 
 	self:triggerHook{"Actor:updateModdableTile:front", base=base, add=add}
 
-	if self.moddable_tile_ornament and self.moddable_tile_ornament[self.female and "female" or "male"] then add[#add+1] = {image = base..self.moddable_tile_ornament[self.female and "female" or "male"]..".png"} end
-	if self.moddable_tile_ornament2 and self.moddable_tile_ornament2[self.female and "female" or "male"] then add[#add+1] = {image = base..self.moddable_tile_ornament2[self.female and "female" or "male"]..".png"} end
+	if self.moddable_tile_ornament and self.moddable_tile_ornament[self.female and "female" or "male"] then add[#add+1] = {image = base..self.moddable_tile_ornament[self.female and "female" or "male"]..".png", auto_tall=1} end
+	if self.moddable_tile_ornament2 and self.moddable_tile_ornament2[self.female and "female" or "male"] then add[#add+1] = {image = base..self.moddable_tile_ornament2[self.female and "female" or "male"]..".png", auto_tall=1} end
 
 	if self.x and game.level then game.level.map:updateMap(self.x, self.y) end
 end
@@ -4007,7 +4016,7 @@ function _M:preUseTalent(ab, silent, fake)
 	end
 
 	-- Confused ? lose a turn!
-	if self:attr("confused") and (ab.mode ~= "sustained" or not self:isTalentActive(ab.id)) and ab.no_energy ~= true and not fake and not self:attr("force_talent_ignore_ressources") then
+	if self:attr("confused") and (ab.mode ~= "sustained" or not self:isTalentActive(ab.id)) and util.getval(ab.no_energy, self, ab) ~= true and not fake and not self:attr("force_talent_ignore_ressources") then
 		if rng.percent(self:attr("confused")) then
 			if not silent then game.logSeen(self, "%s is confused and fails to use %s.", self.name:capitalize(), ab.name) end
 			self:useEnergy()
@@ -4016,7 +4025,7 @@ function _M:preUseTalent(ab, silent, fake)
 	end
 
 	-- Failure chance?
-	if self:attr("talent_fail_chance") and (ab.mode ~= "sustained" or not self:isTalentActive(ab.id)) and ab.no_energy ~= true and not fake and not self:attr("force_talent_ignore_ressources") then
+	if self:attr("talent_fail_chance") and (ab.mode ~= "sustained" or not self:isTalentActive(ab.id)) and util.getval(ab.no_energy, self, ab) ~= true and not fake and not self:attr("force_talent_ignore_ressources") then
 		if rng.percent(self:attr("talent_fail_chance")) then
 			if not silent then game.logSeen(self, "%s fails to use %s.", self.name:capitalize(), ab.name) end
 			self:useEnergy()
@@ -4025,7 +4034,7 @@ function _M:preUseTalent(ab, silent, fake)
 	end
 
 	-- terrified effect
-	if self:attr("terrified") and (ab.mode ~= "sustained" or not self:isTalentActive(ab.id)) and ab.no_energy ~= true and not fake and not self:attr("force_talent_ignore_ressources") then
+	if self:attr("terrified") and (ab.mode ~= "sustained" or not self:isTalentActive(ab.id)) and util.getval(ab.no_energy, self, ab) ~= true and not fake and not self:attr("force_talent_ignore_ressources") then
 		local eff = self:hasEffect(self.EFF_TERRIFIED)
 		if rng.percent(self:attr("terrified")) then
 			if not silent then game.logSeen(self, "%s is too terrified to use %s.", self.name:capitalize(), ab.name) end
@@ -4072,6 +4081,7 @@ function _M:preUseTalent(ab, silent, fake)
 end
 
 local sustainCallbackCheck = {
+	callbackOnDealDamage = "talents_on_deal_damage",
 	callbackOnHit = "talents_on_hit",
 	callbackOnAct = "talents_on_act",
 	callbackOnActBase = "talents_on_act_base",
@@ -4085,6 +4095,7 @@ local sustainCallbackCheck = {
 	callbackOnArcheryAttack = "talents_on_archery_attack",
 	callbackOnArcheryHit = "talents_on_archery_hit",
 	callbackOnArcheryMiss = "talents_on_archery_miss",
+	callbackOnCrit = "talents_on_crit",
 }
 _M.sustainCallbackCheck = sustainCallbackCheck
 
@@ -4094,10 +4105,13 @@ function _M:fireTalentCheck(event, ...)
 	if self[store] and next(self[store]) then
 		for tid, kind in pairs(self[store]) do
 			if kind == "effect" then
+				self.__project_source = self.tmp[tid]
 				ret = self:callEffect(tid, event, ...) or ret
 			else
+				self.__project_source = self.sustain_talents[tid]
 				ret = self:callTalent(tid, event, ...) or ret
 			end
+			self.__project_source = nil
 		end
 	end
 	return ret
@@ -4132,13 +4146,21 @@ function _M:postUseTalent(ab, ret, silent)
 		end
 	end)
 
-	if not ab.no_energy then
+	if not util.getval(ab.no_energy, self, ab) then
 		if ab.is_spell then
 			self:useEnergy(game.energy_to_act * self:combatSpellSpeed())
 		elseif ab.is_summon then
 			self:useEnergy(game.energy_to_act * self:combatSummonSpeed())
 		elseif ab.type[1]:find("^technique/") then
-			self:useEnergy(game.energy_to_act * self:combatSpeed())
+			local combat = self.combat
+			if self:getInven(self.INVEN_MAINHAND) then
+				local o = self:getInven(self.INVEN_MAINHAND)[1]
+				combat = self:getObjectCombat(o, "mainhand")
+			elseif self:getInven(self.INVEN_OFFHAND) then
+				local o = self:getInven(self.INVEN_OFFHAND)[1]
+				combat = self:getObjectCombat(o, "offhand")
+			end
+			self:useEnergy(game.energy_to_act * self:combatSpeed(combat))
 		elseif ab.is_mind then
 			self:useEnergy(game.energy_to_act * self:combatMindSpeed())
 		else
@@ -4271,7 +4293,7 @@ function _M:postUseTalent(ab, ret, silent)
 		if ab.equilibrium and not self:attr("zero_resource_cost") then
 			trigger = true; self:incEquilibrium(util.getval(ab.equilibrium, self, ab))
 		end
-		-- Paradox is not affected by fatigue but it's cost does increase exponentially
+		-- Paradox is not affected by fatigue but its cost does increase exponentially
 		if ab.paradox and not (self:attr("zero_resource_cost") or game.zone.no_anomalies) then
 			trigger = true; self:incParadox(util.getval(ab.paradox, self, ab) * (1 + (self.paradox / 300)))
 		end
@@ -4302,7 +4324,7 @@ function _M:postUseTalent(ab, ret, silent)
 	if ab.id ~= self.T_GATHER_THE_THREADS and ab.id ~= self.T_SPACETIME_TUNING and ab.is_spell then self:breakChronoSpells() end
 	if not ab.no_reload_break then self:breakReloading() end
 	self:breakStepUp()
-	--if not (ab.no_energy or ab.no_break_channel) and not (ab.mode == "sustained" and self:isTalentActive(ab.id)) then self:breakPsionicChannel(ab.id) end
+	--if not (util.getval(ab.no_energy, self, ab) or ab.no_break_channel) and not (ab.mode == "sustained" and self:isTalentActive(ab.id)) then self:breakPsionicChannel(ab.id) end
 
 	for tid, _ in pairs(self.sustain_talents) do
 		local t = self:getTalentFromId(tid)
@@ -4503,7 +4525,8 @@ function _M:getTalentFullDescription(t, addlevel, config, fake_mastery)
 		end
 		if not config.ignore_use_time then
 			local uspeed = "1 turn"
-			if t.no_energy and type(t.no_energy) == "boolean" and t.no_energy == true then uspeed = "instant" end
+			local no_energy = util.getval(t.no_energy, self, t)
+			if no_energy and type(no_energy) == "boolean" and no_energy == true then uspeed = "instant" end
 			d:add({"color",0x6f,0xff,0x83}, "Usage Speed: ", {"color",0xFF,0xFF,0xFF}, uspeed, true)
 		end
 		local is_a = {}
@@ -4598,7 +4621,7 @@ function _M:checkSetTalentAuto(tid, v, opt)
 		end
 
 		local list = {}
-		if t.no_energy ~= true then list[#list+1] = "- requires a turn to use" end
+		if util.getval(t.no_energy, self, t) ~= true then list[#list+1] = "- requires a turn to use" end
 		if t.requires_target then list[#list+1] = "- requires a target, your last hostile one will be automatically used" end
 		if t.auto_use_warning then list[#list+1] = t.auto_use_warning end
 		if opt == 2 then 
@@ -4984,9 +5007,12 @@ end
 
 --- Called when we are initiating a projection
 function _M:on_project_init(t, x, y, damtype, dam, particles)
-	if self:attr("nullify_all_friendlyfire") then
-		t.friendlyfire = false
-		t.selffire = false
+	if self:attr("nullify_all_friendlyfire") and not t.ignore_nullify_all_friendlyfire then
+		local dt = DamageType:exists(damtype)
+		if not dt or not dt.ignore_nullify_all_friendlyfire then
+			t.friendlyfire = false
+			t.selffire = false
+		end
 	end
 end
 

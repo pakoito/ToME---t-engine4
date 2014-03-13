@@ -42,9 +42,53 @@ newTalent{
 }
 
 newTalent{
-	name = "Daunting Presence",
+	name = "Unflinching Resolve",
 	type = {"technique/conditioning", 2},
 	require = techs_con_req2,
+	mode = "passive",
+	points = 5,
+	getChance = function(self, t) return self:combatStatLimit("con", 1, .28, .745)*self:combatTalentLimit(t,100, 28,74.8) end, -- Limit < 100%
+	do_unflinching_resolve = function(self, t)
+		local effs = {}
+		-- Go through all spell effects
+		for eff_id, p in pairs(self.tmp) do
+			local e = self.tempeffect_def[eff_id]
+			if e.status == "detrimental" then
+				if e.subtype.stun then 
+					effs[#effs+1] = {"effect", eff_id}
+				elseif e.subtype.blind and self:getTalentLevel(t) >=2 then
+					effs[#effs+1] = {"effect", eff_id}
+				elseif e.subtype.confusion and self:getTalentLevel(t) >=3 then
+					effs[#effs+1] = {"effect", eff_id}
+				elseif e.subtype.pin and self:getTalentLevel(t) >=4 then
+					effs[#effs+1] = {"effect", eff_id}
+				elseif e.subtype.slow and self:getTalentLevel(t) >=5 then
+					effs[#effs+1] = {"effect", eff_id}
+				end
+			end
+		end
+		
+		if #effs > 0 then
+			local eff = rng.tableRemove(effs)
+			if eff[1] == "effect" and rng.percent(t.getChance(self, t)) then
+				self:removeEffect(eff[2])
+				game.logSeen(self, "%s has recovered!", self.name:capitalize())
+			end
+		end
+	end,
+	info = function(self, t)
+		local chance = t.getChance(self, t)
+		return ([[You've learned to recover quickly from effects that would disable you. Each turn, you have a %d%% chance to recover from a single stun effect.
+		At talent level 2 you may also recover from blindness, at level 3 confusion, level 4 pins, and level 5 slows. 
+		Only one effect may be recovered from each turn, and the chance to recover from an effect scales with your Constitution.]]):
+		format(chance)
+	end,
+}
+
+newTalent{
+	name = "Daunting Presence",
+	type = {"technique/conditioning", 3},
+	require = techs_con_req3,
 	points = 5,
 	mode = "sustained",
 	sustain_stamina = 20,
@@ -86,50 +130,6 @@ newTalent{
 		If your health drops below %d, you'll be unable to maintain your daunting presence, and the sustain will deactivate.  
 		The power of the intimidation effect improves with your Physical power, and it's chance to affect your enemies improves with your Strength.]]):
 		format(radius, penalty, min_life)
-	end,
-}
-
-newTalent{
-	name = "Unflinching Resolve",
-	type = {"technique/conditioning", 3},
-	require = techs_con_req3,
-	mode = "passive",
-	points = 5,
-	getChance = function(self, t) return self:combatStatLimit("con", 1, .28, .745)*self:combatTalentLimit(t,100, 28,74.8) end, -- Limit < 100%
-	do_unflinching_resolve = function(self, t)
-		local effs = {}
-		-- Go through all spell effects
-		for eff_id, p in pairs(self.tmp) do
-			local e = self.tempeffect_def[eff_id]
-			if e.status == "detrimental" then
-				if e.subtype.stun then 
-					effs[#effs+1] = {"effect", eff_id}
-				elseif e.subtype.blind and self:getTalentLevel(t) >=2 then
-					effs[#effs+1] = {"effect", eff_id}
-				elseif e.subtype.confusion and self:getTalentLevel(t) >=3 then
-					effs[#effs+1] = {"effect", eff_id}
-				elseif e.subtype.pin and self:getTalentLevel(t) >=4 then
-					effs[#effs+1] = {"effect", eff_id}
-				elseif e.subtype.slow and self:getTalentLevel(t) >=5 then
-					effs[#effs+1] = {"effect", eff_id}
-				end
-			end
-		end
-		
-		if #effs > 0 then
-			local eff = rng.tableRemove(effs)
-			if eff[1] == "effect" and rng.percent(t.getChance(self, t)) then
-				self:removeEffect(eff[2])
-				game.logSeen(self, "%s has recovered!", self.name:capitalize())
-			end
-		end
-	end,
-	info = function(self, t)
-		local chance = t.getChance(self, t)
-		return ([[You've learned to recover quickly from effects that would disable you. Each turn, you have a %d%% chance to recover from a single stun effect.
-		At talent level 2 you may also recover from blindness, at level 3 confusion, level 4 pins, and level 5 slows. 
-		Only one effect may be recovered from each turn, and the chance to recover from an effect scales with your Constitution.]]):
-		format(chance)
 	end,
 }
 

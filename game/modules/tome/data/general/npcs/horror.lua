@@ -921,6 +921,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	combat_armor = 30, combat_def = 18,
 	is_akgishil = true,
 	can_spawn = 1,
+	psionic_shield_override = 1,
 	
 	resolvers.drops{chance=100, nb=1, {defined="BLADE_RIFT"} },
 	
@@ -982,7 +983,7 @@ newEntity{ base="BASE_NPC_HORROR", define_as = "ANIMATED_BLADE",
 	no_breath = 1,
 	size_category = 2,
 
-	negative_status_immune = 1,
+	negative_status_effect_immune = 1,
 	body = { INVEN = 10, MAINHAND=1 },
 	
 	resolvers.equip{
@@ -1041,7 +1042,7 @@ newEntity{ base="BASE_NPC_HORROR", define_as = "DISTORTED_BLADE",
 	no_breath = 1,
 	size_category = 2,
 
-	negative_status_immune = 1,
+	negative_status_effect_immune = 1,
 	
 	body = { INVEN = 10, MAINHAND=1 },
 	

@@ -68,7 +68,6 @@ function _M:loadAchievements()
 	end
 end
 
---[[
 function _M:achievementsDumpCSV()
 	local f = fs.open("/achvs.csv", "w")
 	f:write('"id","name","desc","earned","unearned"\n')
@@ -85,7 +84,6 @@ function _M:achievementsDumpCSV()
 	end
 	f:close()
 end
-]]
 
 function _M:getAchievementFromId(id)
 	return self.achiev_defs[id]

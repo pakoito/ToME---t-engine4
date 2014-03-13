@@ -47,7 +47,7 @@ newEntity{ define_as = "ASSASSIN_LORD",
 
 	resolvers.tmasteries{ ["cunning/stealth"]=1.3, },
 
-	desc = [[He is the leader of a gang of bandits, watch out for his men.]],
+	desc = [[He is the leader of a gang of bandits; watch out for his men.]],
 	level_range = {8, 50}, exp_worth = 1,
 	combat_armor = 5, combat_def = 7,
 	max_life = resolvers.rngavg(90,100), life_rating = 14,

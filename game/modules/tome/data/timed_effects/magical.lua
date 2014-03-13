@@ -2402,7 +2402,7 @@ newEffect{
 newEffect{
 	name = "ICE_ARMOUR", image = "talents/ice_armour.png",
 	desc = "Ice Armour",
-	long_desc = function(self, eff) return ("The target is covered in a layer of ice. Its armour is increased by %d, it deals %0.1f Cold damage to attackers that hit in melee, and 50%% of it's damage is converted to cold."):format(eff.armor, self:damDesc(DamageType.COLD, eff.dam)) end,
+	long_desc = function(self, eff) return ("The target is covered in a layer of ice. Its armour is increased by %d, it deals %0.1f Cold damage to attackers that hit in melee, and 50%% of its damage is converted to cold."):format(eff.armor, self:damDesc(DamageType.COLD, eff.dam)) end,
 	type = "magical",
 	subtype = { cold=true, armour=true, },
 	status = "beneficial",
@@ -2414,8 +2414,12 @@ newEffect{
 		self:effectTemporaryValue(eff, "on_melee_hit", {[DamageType.COLD]=eff.dam})
 		self:effectTemporaryValue(eff, "all_damage_convert", DamageType.COLD)
 		self:effectTemporaryValue(eff, "all_damage_convert_percent", 50)
+		self:addShaderAura("ice_armour", "crystalineaura", {}, "particles_images/spikes.png")
+		eff.particle = self:addParticles(Particles.new("snowfall", 1))
 	end,
 	deactivate = function(self, eff)
+		self:removeShaderAura("ice_armour")
+		self:removeParticles(eff.particle)
 	end,
 }
 
@@ -2436,5 +2440,202 @@ newEffect{
 
 		self:project({type="cone", cone_angle=25, range=0, radius=4}, src.x, src.y, DamageType.ACID, eff.dam)
 		game.level.map:particleEmitter(self.x, self.y, 4, "breath_acid", {radius=4, tx=src.x-self.x, ty=src.y-self.y, spread=20})
+	end,
+}
+
+newEffect{
+	name = "SUN_VENGEANCE", image = "talents/sun_vengeance.png",
+	desc = "Sun's Vengeance",
+	long_desc = function(self, eff) return ("The target is filled with the Sun's fury, next Sun Beam will be instant cast."):format() end,
+	type = "magical",
+	subtype = { sun=true, },
+	status = "beneficial",
+	parameters = {},
+	on_gain = function(self, err) return "#Target# is filled with the Sun's fury!", "+Sun's Vengeance" end,
+	on_lose = function(self, err) return "#Target#'s solar fury subsides.", "-Sun's Vengeance" end,
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "amplify_sun_beam", 25)
+	end
+}
+
+newEffect{
+	name = "PATH_OF_THE_SUN", image = "talents/path_of_the_sun.png",
+	desc = "Path of the Sun",
+	long_desc = function(self, eff) return ("The target is able to instantly travel alongside Sun Paths."):format() end,
+	type = "magical",
+	subtype = { sun=true, },
+	status = "beneficial",
+	parameters = {},
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "walk_sun_path", 1)
+	end
+}
+
+newEffect{
+	name = "SUNCLOAK", image = "talents/suncloak.png",
+	desc = "Suncloak",
+	long_desc = function(self, eff) return ("The target is filled with the Sun's fury, next Sun Beam will be instant cast."):format() end,
+	type = "magical",
+	subtype = { sun=true, },
+	status = "beneficial",
+	parameters = {},
+	on_gain = function(self, err) return "#Target# is filled with the Sun's fury!", "+Sun's Vengeance" end,
+	on_lose = function(self, err) return "#Target#'s solar fury subsides.", "-Sun's Vengeance" end,
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "resists", {all=eff.resists})
+		self:effectTemporaryValue(eff, "reduce_detrimental_status_effects_time", eff.reduce)
+		eff.particle = self:addParticles(Particles.new("suncloak", 1))
+	end,
+	deactivate = function(self, eff)
+		self:removeParticles(eff.particle)
+	end,
+}
+
+newEffect{
+	name = "ABSORPTION_STRIKE", image = "talents/absorption_strike.png",
+	desc = "Absorption Strike",
+	long_desc = function(self, eff) return ("The target's light has been drained, reducing light resistance by %d%%."):format(eff.power) end,
+	type = "magical",
+	subtype = { sun=true, },
+	status = "detrimental",
+	parameters = { power = 10 },
+	on_gain = function(self, err) return "#Target# is drained from light!", "+Absorption Strike" end,
+	on_lose = function(self, err) return "#Target#'s light is back.", "-Absorption Strike" end,
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "resists", {[DamageType.LIGHT]=-eff.power})
+	end,
+}
+
+newEffect{
+	name = "MARK_OF_LIGHT", image = "talents/mark_of_light.png",
+	desc = "Mark of Light",
+	long_desc = function(self, eff) return ("The creature that marked the target with light will be healed for all melee attacks against it by %d%%."):format(eff.power) end,
+	type = "magical",
+	subtype = { sun=true, },
+	status = "detrimental",
+	parameters = { power = 10 },
+	on_gain = function(self, err) return "#Target# is marked by light!", "+Mark of Light" end,
+	on_lose = function(self, err) return "#Target#'s mark disappears.", "-Mark of Light" end,
+	callbackOnMeleeHit = function(self, eff, src, dam)
+		if eff.src == src then
+			src:heal(dam * eff.power / 100, self)
+			if core.shader.active(4) then
+				eff.src:addParticles(Particles.new("shader_shield_temp", 1, {toback=true, size_factor=1.5, y=-0.3, img="healcelestial", life=25}, {type="healing", time_factor=2000, beamsCount=20, noup=2.0, beamColor1={0xd8/255, 0xff/255, 0x21/255, 1}, beamColor2={0xf7/255, 0xff/255, 0x9e/255, 1}, circleDescendSpeed=3}))
+				eff.src:addParticles(Particles.new("shader_shield_temp", 1, {toback=false,size_factor=1.5, y=-0.3, img="healcelestial", life=25}, {type="healing", time_factor=2000, beamsCount=20, noup=1.0, beamColor1={0xd8/255, 0xff/255, 0x21/255, 1}, beamColor2={0xf7/255, 0xff/255, 0x9e/255, 1}, circleDescendSpeed=3}))
+			end
+		end
+	end,
+}
+
+newEffect{
+	name = "RIGHTEOUS_STRENGTH", image = "talents/righteous_strength.png",
+	desc = "Righteous Strength",
+	long_desc = function(self, eff) return ("Increase light and physical damage by %d%%."):format(eff.power) end,
+	type = "magical",
+	subtype = { sun=true, },
+	status = "beneficial",
+	parameters = { power = 10 },
+	on_gain = function(self, err) return "#Target# shines with light!", "+Righteous Strength" end,
+	on_lose = function(self, err) return "#Target# stops shining.", "-Righteous Strength" end,
+	charges = function(self, eff) return eff.charges end,
+	on_merge = function(self, old_eff, new_eff)
+		new_eff.charges = math.min(old_eff.charges + 1, 3)
+		new_eff.power = math.min(new_eff.power + old_eff.power, new_eff.max_power)
+		self:removeTemporaryValue("inc_damage", old_eff.tmpid)
+		new_eff.tmpid = self:addTemporaryValue("inc_damage", {[DamageType.PHYSICAL] = new_eff.power, [DamageType.LIGHT] = new_eff.power})
+		return new_eff
+	end,
+	activate = function(self, eff)
+		eff.charges = 1
+		eff.tmpid = self:addTemporaryValue("inc_damage", {[DamageType.PHYSICAL] = eff.power, [DamageType.LIGHT] = eff.power})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("inc_damage", eff.tmpid)
+	end,
+}
+
+newEffect{
+	name = "LIGHTBURN", image = "talents/righteous_strength.png",
+	desc = "Lightburn",
+	long_desc = function(self, eff) return ("The creature is burnt by light, dealing %0.2f light damage each turn and reducing armour by %d."):format(eff.dam, eff.armor) end,
+	type = "magical",
+	subtype = { sun=true, },
+	status = "detrimental",
+	parameters = { armor = 10, dam = 10 },
+	on_gain = function(self, err) return "#Target# burns with light!", "+Lightburn" end,
+	on_lose = function(self, err) return "#Target# stops burning.", "-Lightburn" end,
+	on_merge = function(self, old_eff, new_eff)
+		-- Merge the flames!
+		local olddam = old_eff.dam * old_eff.dur
+		local newdam = new_eff.dam * new_eff.dur
+		local dur = math.ceil((old_eff.dur + new_eff.dur) / 2)
+		old_eff.dur = dur
+		old_eff.dam = (olddam + newdam) / dur
+		return old_eff
+	end,
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "combat_armor", -eff.armor)
+	end,
+	on_timeout = function(self, eff)
+		DamageType:get(DamageType.LIGHT).projector(eff.src, self.x, self.y, DamageType.LIGHT, eff.dam)
+	end,
+}
+
+newEffect{
+	name = "ILLUMINATION",
+	desc = "Illumination ", image = "talents/illumination.png",
+	long_desc = function(self, eff) return ("The target glows in the light, reducing its stealth and invisibility power by %d, defense by %d and looses all evasion bonus from being unseen."):format(eff.power, eff.def) end,
+	type = "physical",
+	subtype = { sun=true },
+	status = "detrimental",
+	parameters = { power=20, def=20 },
+	on_gain = function(self, err) return nil, "+Illumination" end,
+	on_lose = function(self, err) return nil, "-Illumination" end,
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "inc_stealth", -eff.power)
+		if self:attr("invisible") then self:effectTemporaryValue(eff, "invisible", -eff.power) end
+		self:effectTemporaryValue(eff, "combat_def", -eff.def)
+		self:effectTemporaryValue(eff, "blind_fighted", 1)
+	end,
+}
+
+newEffect{
+	name = "LIGHT_BURST",
+	desc = "Light Burst ", image = "talents/light_burst.png",
+	long_desc = function(self, eff) return ("The is invigorated when dealing damage with Searing Sight."):format() end,
+	type = "physical",
+	subtype = { sun=true },
+	status = "beneficial",
+	parameters = { max=1 },
+	on_gain = function(self, err) return nil, "+Light Burst" end,
+	on_lose = function(self, err) return nil, "-Light Burst" end,
+}
+
+newEffect{
+	name = "LIGHT_BURST_SPEED",
+	desc = "Light Burst Speed ", image = "effects/light_burst_speed.png",
+	long_desc = function(self, eff) return ("The is invigorated from Searing Sight, increasing movement speed by %d%%."):format(eff.charges * 10) end,
+	type = "physical",
+	subtype = { sun=true },
+	status = "beneficial",
+	parameters = {},
+	charges = function(self, eff) return eff.charges end,
+	on_gain = function(self, err) return nil, "+Light Burst Speed" end,
+	on_lose = function(self, err) return nil, "-Light Burst Speed" end,
+	on_merge = function(self, old_eff, new_eff)
+		local p = self:hasEffect(self.EFF_LIGHT_BURST)
+		if not p then p = {max=1} end
+
+		new_eff.charges = math.min(old_eff.charges + 1, p.max)
+		self:removeTemporaryValue("movement_speed", old_eff.tmpid)
+		new_eff.tmpid = self:addTemporaryValue("movement_speed", new_eff.charges * 0.1)
+		return new_eff
+	end,
+	activate = function(self, eff)
+		eff.charges = 1
+		eff.tmpid = self:addTemporaryValue("movement_speed", eff.charges * 0.1)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("movement_speed", eff.tmpid)
 	end,
 }

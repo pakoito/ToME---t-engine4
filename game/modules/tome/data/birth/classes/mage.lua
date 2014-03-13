@@ -62,6 +62,9 @@ newBirthDescriptor{
 		function(actor)
 			actor:addShaderAura("body_of_fire", "awesomeaura", {time_factor=3500, alpha=1, flame_scale=1.1}, "particles_images/wings.png")
 		end,
+		function(actor)
+			actor:addShaderAura("body_of_ice", "crystalineaura", {}, "particles_images/spikes.png")
+		end,
 	},
 	talents_types = {
 		["spell/explosives"]={true, 0.3},
