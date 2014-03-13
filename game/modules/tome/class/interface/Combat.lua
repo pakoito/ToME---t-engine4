@@ -643,7 +643,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		target.invulnerable = 1 -- Target already hit, don't damage it twice
 		self:project({type="ball", radius=1, selffire=false}, target.x, target.y, DamageType.PHYSICAL, dam)
 		target.invulnerable = invuln
-		self:incStamina(-15)
+		self:incStamina(-8)
 		self.shattering_impact_last_turn = game.turn
 	end
 	
