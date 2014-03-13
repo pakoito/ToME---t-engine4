@@ -762,7 +762,7 @@ newEntity{ base = "BASE_GREATMAUL",
 	wielder = {
 	},
 	max_power = 20, power_regen = 1,
-	use_talent = { id = Talents.T_SUNDER_ARMOUR, level = 2, power = 20 },
+	use_talent = { id = Talents.T_SHATTERING_BLOW, level = 2, power = 20 },
 }
 
 
