@@ -126,7 +126,7 @@ project "TEngine"
 ----------------------------------------------------------------
 ----------------------------------------------------------------
 project "physfs"
-	kind "SharedLib"
+	kind "StaticLib"
 	language "C"
 	targetname "physfs"
 
@@ -282,7 +282,7 @@ elseif _OPTIONS.lua == "jit2" then
 			postbuildcommands { "cp ../bin/Release/buildvm ../src/luajit2/src/", }
 
 	project "luajit2"
-		kind "SharedLib"
+		kind "StaticLib"
 		language "C"
 		targetname "lua"
 		links { "buildvm" }
@@ -467,7 +467,7 @@ project "te4-web"
 	libdirs {"/Test/cef_binary_3.1547.1406_linux/Release/"}
 	links {"cef_dll_wrapper"}
 	includedirs {"/Test/cef_binary_3.1547.1406_linux/include/", "/Test/cef_binary_3.1547.1406_linux/", }
-	links { "cef", "lua".._OPTIONS.lua }
+	links { "cef" }
 	
 	files {
 		"../src/web/web.cpp",

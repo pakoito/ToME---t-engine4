@@ -6,12 +6,9 @@
 */
 
 extern "C" {
-#include "lua.h"
-#include "lauxlib.h"
-#include "lualib.h"
 #include "tSDL.h"
-#include "physfs.h"
 #include "tgl.h"
+#include "web-external.h"
 }
 
 #include "web.h"

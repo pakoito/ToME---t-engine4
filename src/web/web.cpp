@@ -6,16 +6,12 @@
 */
 
 extern "C" {
-#include "lua.h"
-#include "lauxlib.h"
-#include "lualib.h"
 #include "tSDL.h"
-#include "physfs.h"
 #include "tgl.h"
+#include "web-external.h"
 }
 #include "web.h"
 #include "web-internal.h"
-#include "web-code-aux.h"
 
 static bool web_core = false;
 
@@ -134,72 +130,57 @@ public:
 };
 
 
-typedef struct {
+class WebViewOpaque {
+public:
 	RenderHandler *render;
 	CefBrowser *browser;
 	BrowserClient *view;
-	int w, h;
-	int last_mouse_x, last_mouse_y;
-	int handlers;
-	bool closed;
-} web_view_type;
+};
 
-static int lua_web_new(lua_State *L) {
-	int w = luaL_checknumber(L, 1);
-	int h = luaL_checknumber(L, 2);
-	size_t urllen;
-	const char* url = luaL_checklstring(L, 3, &urllen);
-
-	web_view_type *view = (web_view_type*)lua_newuserdata(L, sizeof(web_view_type));
-	auxiliar_setclass(L, "web{view}", -1);
-
-	lua_pushvalue(L, 4);
-	view->handlers = luaL_ref(L, LUA_REGISTRYINDEX);
+void te4_web_new(web_view_type *view, const char *url, int w, int h) {
+	size_t urllen = strlen(url);
+	
+	WebViewOpaque *opaque = new WebViewOpaque();
+	view->opaque = (void*)opaque;
 
 	CefWindowInfo window_info;
 	CefBrowserSettings browserSettings;
 	window_info.SetAsOffScreen(NULL);
 	window_info.SetTransparentPainting(true);
-	view->render = new RenderHandler(w, h);
-	view->view = new BrowserClient(view->render, view->handlers);
+	opaque->render = new RenderHandler(w, h);
+	opaque->view = new BrowserClient(opaque->render, view->handlers);
 	CefString curl(url);
-	view->browser = CefBrowserHost::CreateBrowserSync(window_info, view->view, url, browserSettings);
+	opaque->browser = CefBrowserHost::CreateBrowserSync(window_info, opaque->view, url, browserSettings);
 
 	view->w = w;
 	view->h = h;
 	view->closed = false;
 	printf("Created webview: %s\n", url);
-
-	return 1;
 }
 
-static int lua_web_close(lua_State *L) {
-	web_view_type *view = (web_view_type*)auxiliar_checkclass(L, "web{view}", 1);
+bool te4_web_close(web_view_type *view) {
+	WebViewOpaque *opaque = (WebViewOpaque*)view->opaque;
 	if (!view->closed) {
 		view->closed = true;
-		view->render->host->CloseBrowser(true);
-		view->render = NULL;
-		view->view = NULL;
-		view->browser = NULL;
-		luaL_unref(L, LUA_REGISTRYINDEX, view->handlers);
+		opaque->render->host->CloseBrowser(true);
+		opaque->render = NULL;
+		opaque->view = NULL;
+		opaque->browser = NULL;
 		printf("Destroyed webview\n");
+		return true;
 	}
-	return 0;
+	return false;
 }
 
-static int lua_web_toscreen(lua_State *L) {
-	web_view_type *view = (web_view_type*)auxiliar_checkclass(L, "web{view}", 1);
-	if (view->closed) return 0;
+void te4_web_toscreen(web_view_type *view, int x, int y, int w, int h) {
+	WebViewOpaque *opaque = (WebViewOpaque*)view->opaque;
+	if (view->closed) return;
 
-	const RenderHandler* surface = view->render;
+	const RenderHandler* surface = opaque->render;
 
 	if (surface) {
-		int x = luaL_checknumber(L, 2);
-		int y = luaL_checknumber(L, 3);
-		int w = surface->w;
-		int h = surface->h;
-		if (lua_isnumber(L, 4)) w = lua_tonumber(L, 4);
-		if (lua_isnumber(L, 5)) h = lua_tonumber(L, 5);
+		w = (w < 0) ? surface->w : w;
+		h = (h < 0) ? surface->h : h;
 		float r = 1, g = 1, b = 1, a = 1;
 
 		glBindTexture(GL_TEXTURE_2D, surface->tex);
@@ -229,25 +210,21 @@ static int lua_web_toscreen(lua_State *L) {
 
 		glDrawArrays(GL_QUADS, 0, 4);
 	}
-
-	return 0;
 }
 
-static int lua_web_loading(lua_State *L) {
-	web_view_type *view = (web_view_type*)auxiliar_checkclass(L, "web{view}", 1);
-	if (view->closed) return 0;
+bool te4_web_loading(web_view_type *view) {
+	WebViewOpaque *opaque = (WebViewOpaque*)view->opaque;
+	if (view->closed) return false;
 
-	lua_pushboolean(L, view->browser->IsLoading());
-	return 1;
+	return opaque->browser->IsLoading();
 }
 
-static int lua_web_focus(lua_State *L) {
-	web_view_type *view = (web_view_type*)auxiliar_checkclass(L, "web{view}", 1);
-	if (view->closed) return 0;
-	if (!view->render->host) return 0;
+void te4_web_focus(web_view_type *view, bool focus) {
+	WebViewOpaque *opaque = (WebViewOpaque*)view->opaque;
+	if (view->closed) return;
+	if (!opaque->render->host) return;
 
-	view->render->host->SendFocusEvent(lua_toboolean(L, 2));
-	return 0;
+	opaque->render->host->SendFocusEvent(focus);
 }
 
 static int get_cef_state_modifiers() {
@@ -266,14 +243,10 @@ static int get_cef_state_modifiers() {
 	return modifiers;
 }
 
-
-static int lua_web_inject_mouse_move(lua_State *L) {
-	web_view_type *view = (web_view_type*)auxiliar_checkclass(L, "web{view}", 1);
-	if (view->closed) return 0;
-	if (!view->render->host) return 0;
-
-	int x = luaL_checknumber(L, 2);
-	int y = luaL_checknumber(L, 3);
+void te4_web_inject_mouse_move(web_view_type *view, int x, int y) {
+	WebViewOpaque *opaque = (WebViewOpaque*)view->opaque;
+	if (view->closed) return;
+	if (!opaque->render->host) return;
 
 	view->last_mouse_x = x;
 	view->last_mouse_y = y;
@@ -282,34 +255,25 @@ static int lua_web_inject_mouse_move(lua_State *L) {
 	mouse_event.y = y;
 	mouse_event.modifiers = get_cef_state_modifiers();
 
-	view->render->host->SendMouseMoveEvent(mouse_event, false);
-	return 0;
+	opaque->render->host->SendMouseMoveEvent(mouse_event, false);
 }
 
-static int lua_web_inject_mouse_wheel(lua_State *L) {
-	web_view_type *view = (web_view_type*)auxiliar_checkclass(L, "web{view}", 1);
-	if (view->closed) return 0;
-	if (!view->render->host) return 0;
-
-	int x = luaL_checknumber(L, 2);
-	int y = luaL_checknumber(L, 3);
+void te4_web_inject_mouse_wheel(web_view_type *view, int x, int y) {
+	WebViewOpaque *opaque = (WebViewOpaque*)view->opaque;
+	if (view->closed) return;
+	if (!opaque->render->host) return;
 
 	CefMouseEvent mouse_event;
 	mouse_event.x = view->last_mouse_x;
 	mouse_event.y = view->last_mouse_y;
 	mouse_event.modifiers = get_cef_state_modifiers();
-	view->render->host->SendMouseWheelEvent(mouse_event, -x, -y);
-
-	return 0;
+	opaque->render->host->SendMouseWheelEvent(mouse_event, -x, -y);
 }
 
-static int lua_web_inject_mouse_button(lua_State *L) {
-	web_view_type *view = (web_view_type*)auxiliar_checkclass(L, "web{view}", 1);
-	if (view->closed) return 0;
-	if (!view->render->host) return 0;
-
-	bool up = lua_toboolean(L, 2);
-	int kind = luaL_checknumber(L, 3);
+void te4_web_inject_mouse_button(web_view_type *view, int kind, bool up) {
+	WebViewOpaque *opaque = (WebViewOpaque*)view->opaque;
+	if (view->closed) return;
+	if (!opaque->render->host) return;
 
 	CefBrowserHost::MouseButtonType button_type = MBT_LEFT;
 	if (kind == 2) button_type = MBT_MIDDLE;
@@ -320,18 +284,13 @@ static int lua_web_inject_mouse_button(lua_State *L) {
 	mouse_event.y = view->last_mouse_y;
 	mouse_event.modifiers = get_cef_state_modifiers();
 
-	view->render->host->SendMouseClickEvent(mouse_event, button_type, up, 1);
-
-	return 0;
+	opaque->render->host->SendMouseClickEvent(mouse_event, button_type, up, 1);
 }
 
-static int lua_web_inject_key(lua_State *L) {
-	web_view_type *view = (web_view_type*)auxiliar_checkclass(L, "web{view}", 1);
-	if (view->closed) return 0;
-	if (!view->render->host) return 0;
-
-	bool up = lua_toboolean(L, 2);
-	int scancode = lua_tonumber(L, 3);
+void te4_web_inject_key(web_view_type *view, int scancode, bool up) {
+	WebViewOpaque *opaque = (WebViewOpaque*)view->opaque;
+	if (view->closed) return;
+	if (!opaque->render->host) return;
 
 	CefKeyEvent key_event;
 	key_event.native_key_code = scancode;
@@ -339,102 +298,17 @@ static int lua_web_inject_key(lua_State *L) {
 
 	if (!up) {
 		key_event.type = KEYEVENT_RAWKEYDOWN;
-		view->render->host->SendKeyEvent(key_event);
+		opaque->render->host->SendKeyEvent(key_event);
 	} else {
 		// Need to send both KEYUP and CHAR events.
 		key_event.type = KEYEVENT_KEYUP;
-		view->render->host->SendKeyEvent(key_event);
+		opaque->render->host->SendKeyEvent(key_event);
 		key_event.type = KEYEVENT_CHAR;
-		view->render->host->SendKeyEvent(key_event);
+		opaque->render->host->SendKeyEvent(key_event);
 	}
-
-	return 0;
 }
 
-static int lua_web_set_downloader(lua_State *L) {
-	web_view_type *view = (web_view_type*)auxiliar_checkclass(L, "web{view}", 1);
-//	web_downloader_type *listener = (web_downloader_type*)auxiliar_checkclass(L, "web{downloader}", 2);
-	if (view->closed) return 0;
-
-//	view->view->set_download_listener(listener->d);
-	return 0;
-}
-
-static const struct luaL_Reg view_reg[] =
-{
-	{"__gc", lua_web_close},
-//	{"downloader", lua_web_set_downloader},
-//	{"downloadAction", lua_web_download_action},
-	{"toScreen", lua_web_toscreen},
-	{"focus", lua_web_focus},
-	{"loading", lua_web_loading},
-	{"injectMouseMove", lua_web_inject_mouse_move},
-	{"injectMouseWheel", lua_web_inject_mouse_wheel},
-	{"injectMouseButton", lua_web_inject_mouse_button},
-	{"injectKey", lua_web_inject_key},
-//	{"setMethod", lua_web_set_method},
-	{NULL, NULL},
-};
-
-static const struct luaL_Reg weblib[] =
-{
-	{"new", lua_web_new},
-	{NULL, NULL},
-};
-
-static int traceback (lua_State *L) {
-	lua_Debug ar;
-	int n = 0;
-	printf("Lua Error: %s\n", lua_tostring(L, 1));
-	while(lua_getstack(L, n++, &ar)) {
-		lua_getinfo(L, "nSl", &ar);
-		printf("\tAt %s:%d %s\n", ar.short_src, ar.currentline, ar.name?ar.name:"");
-	}
-	return 1;
-}
-
-static void stackDump (lua_State *L) {
-	int i=lua_gettop(L);
-	printf(" ----------------  Stack Dump ----------------\n" );
-	while(  i   ) {
-		int t = lua_type(L, i);
-		switch (t) {
-		case LUA_TSTRING:
-			printf("%d:`%s'\n", i, lua_tostring(L, i));
-			break;
-		case LUA_TBOOLEAN:
-			printf("%d: %s\n",i,lua_toboolean(L, i) ? "true" : "false");
-			break;
-		case LUA_TNUMBER:
-			printf("%d: %g\n",  i, lua_tonumber(L, i));
-			break;
-		default:
-			printf("%d: %s // --\n", i, lua_typename(L, t));
-			break;
-		}
-		i--;
-	}
-	printf("--------------- Stack Dump Finished ---------------\n" );
-	fflush(stdout);
-}
-static int docall(lua_State *L, int narg, int nret)
-{
-	int status;
-	int base = lua_gettop(L) - narg;  /* function index */
-	lua_pushcfunction(L, traceback);  /* push traceback function */
-	lua_insert(L, base);  /* put it under chunk and args */
-	status = lua_pcall(L, narg, nret, base);
-	lua_remove(L, base);  /* remove traceback function */
-	if (status != 0) { lua_pop(L, 1); lua_gc(L, LUA_GCCOLLECT, 0); }
-	if (lua_gettop(L) != nret + (base - 1))
-	{
-		stackDump(L);
-		lua_settop(L, base);
-	}
-	return status;
-}
-
-void te4_web_update(lua_State *L) {
+void te4_web_do_update() {
 	if (web_core) { 
 		CefDoMessageLoopWork();
 
@@ -442,15 +316,6 @@ void te4_web_update(lua_State *L) {
 		while (event = pop_event()) {
 			switch (event->kind) {
 				case TE4_WEB_EVENT_TITLE_CHANGE:
-				lua_rawgeti(L, LUA_REGISTRYINDEX, event->handlers);
-				lua_pushstring(L, "on_title");
-				lua_gettable(L, -2);
-				lua_remove(L, -2);
-				if (!lua_isnil(L, -1)) {
-					lua_rawgeti(L, LUA_REGISTRYINDEX, event->handlers);
-					lua_pushstring(L, event->data.title);
-					docall(L, 2, 0);
-				} else lua_pop(L, 1);
 				
 				free((void*)event->data.title);
 				break;
@@ -479,11 +344,6 @@ void te4_web_setup(int argc, char **gargv) {
 	}
 }
 
-void te4_web_init(lua_State *L) {
+void te4_web_initialize() {
 	te4_web_init_utils();
-
-	auxiliar_newclass(L, "web{view}", view_reg);
-//	auxiliar_newclass(L, "web{downloader}", downloader_reg);
-	luaL_openlib(L, "core.webview", weblib, 0);
-	lua_settop(L, 0);
 }

@@ -16,19 +16,6 @@
 #include <cef_render_process_handler.h>
 #include <cef_v8.h>
 
-enum web_event_kind {
-	TE4_WEB_EVENT_TITLE_CHANGE,
-};
-
-class WebEvent {
-public:
-	web_event_kind kind;
-	int handlers;
-	union {
-		const char *title;		
-	} data;
-};
-
 extern void te4_web_init_utils();
 
 extern void push_order(WebEvent *event);

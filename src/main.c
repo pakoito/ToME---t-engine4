@@ -40,6 +40,7 @@
 #include "music.h"
 #include "serial.h"
 #include "profile.h"
+#include "te4web.h"
 #include "main.h"
 #include "lua_externs.h"
 #include "runner/core.h"
@@ -107,27 +108,6 @@ SDL_mutex *renderingLock;
 SDL_mutex *realtimeLock;
 int redraw_pending = 0;
 int realtime_pending = 0;
-
-/*
- * Grab web browser methods
- */
-void (*te4_web_setup)(int argc, char **argv);
-void (*te4_web_init)(lua_State *L);
-void (*te4_web_update)(lua_State *L);
-void te4_web_load() {
-	void *web = SDL_LoadObject("libte4-web.so");
-	printf("Loading web core: %s\n", SDL_GetError());
-	
-	if (web) {
-		te4_web_setup = (void (*)(int, char**)) SDL_LoadFunction(web, "te4_web_setup");
-		te4_web_init = (void (*)(lua_State*)) SDL_LoadFunction(web, "te4_web_init");
-		te4_web_update = (void (*)(lua_State*)) SDL_LoadFunction(web, "te4_web_update");
-
-		te4_web_setup(g_argc, g_argv);
-	}
-	else exit(1);
-}
-
 
 /*
  * Used to clean up a lock and its corresponding timer/flag.
@@ -627,7 +607,7 @@ void on_redraw()
 #ifdef STEAM_TE4
 	if (!no_steam) te4_steam_callbacks();
 #endif
-	if (te4_web_update) te4_web_update(L);
+	te4_web_update(L);
 }
 
 void pass_command_args(int argc, char *argv[])
@@ -1046,7 +1026,7 @@ void boot_lua(int state, bool rebooting, int argc, char *argv[])
 		luaopen_zlib(L);
 		luaopen_bit(L);
 		luaopen_wait(L);
-		if (te4_web_init) te4_web_init(L);
+		te4_web_init(L);
 #ifdef STEAM_TE4
 		if (!no_steam) te4_steam_lua_init(L);
 #endif
