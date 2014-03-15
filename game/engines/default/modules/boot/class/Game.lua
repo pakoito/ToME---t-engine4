@@ -64,6 +64,8 @@ function _M:init()
 		self.background, self.background_tw, self.background_th = self.background:glTexture()
 	end
 
+	if not core.webview then self.tooltip = Tooltip.new(nil, 14, nil, colors.DARK_GREY, 380) end
+
 --	self.refuse_threads = true
 	self.normal_key = self.key
 	self.stopped = config.settings.boot_menu_background
@@ -89,7 +91,7 @@ function _M:run()
 
 	-- Web Tooltip?
 	if core.webview then
-		self.webtooltip = require("engine.ui.WebView").new{width=380, height=500, has_frame=true, never_clean=true,
+		self.webtooltip = require("engine.ui.WebView").new{width=380, height=500, has_frame=true, never_clean=true, allow_popup=true,
 			url = ("http://te4.org/tooltip-ingame?steam=%d&v=%d.%d.%d"):format(core.steam and 1 or 0, engine.version[1], engine.version[2], engine.version[3])
 		}
 	end

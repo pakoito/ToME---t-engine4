@@ -32,6 +32,24 @@ function _M:init(t)
 	self.allow_downloads = t.allow_downloads or {}
 	self.has_frame = t.has_frame
 	self.never_clean = t.never_clean
+	self.allow_popup = t.allow_popup
+	self.allow_login = t.allow_login
+
+	if self.allow_login and self.url:find("^http://te4%.org/") and profile.auth then
+		local param = "_te4ah="..profile.auth.hash.."&_te4ad="..profile.auth.drupid
+
+		local first = self.url:find("?", 1, 1)
+		if first then self.url = self.url.."&"..param
+		else self.url = self.url.."?"..param end
+	end
+
+	if self.url:find("^http://te4%.org/")  then
+		local param = "_te4"
+
+		local first = self.url:find("?", 1, 1)
+		if first then self.url = self.url.."&"..param
+		else self.url = self.url.."?"..param end
+	end
 
 	Base.init(self, t)
 end
@@ -40,17 +58,21 @@ function _M:generate()
 	self.mouse:reset()
 	self.key:reset()
 
-	self.view = core.webview.new(self.w, self.h, self.url, {
+	local handlers = {
 		on_title = function(view, title) if self.on_title then self.on_title(title) end end,
-	})
+		on_popup = function(view, url, w, h) if self.allow_popup then
+			local Dialog = require "engine.ui.Dialog"
+			Dialog:webPopup(url, w, h)
+		end end,
+	}
+	if self.allow_downloads then self:onDownload(handlers) end
+	self.view = core.webview.new(self.w, self.h, self.url, handlers)
 	self.oldloading = true
 	self.scroll_inertia = 0
 
 	if self.has_frame then
 		self.frame = Base:makeFrame("ui/tooltip/", self.w + 8, self.h + 8)
 	end
-
-	self:onDownload()
 
 	self.mouse:registerZone(0, 0, self.w, self.h, function(button, x, y, xrel, yrel, bx, by, event)
 		if not self.view then return end
@@ -86,14 +108,17 @@ function _M:on_focus(v)
 	if self.view then self.view:focus(v) end
 end
 
-function _M:makeDownloadbox(file)
+function _M:makeDownloadbox(downid, file)
 	local Dialog = require "engine.ui.Dialog"
 	local Waitbar = require "engine.ui.Waitbar"
+	local Button = require "engine.ui.Button"
 
 	local d = Dialog.new("Download: "..file, 600, 100)
+	local b = Button.new{text="Cancel", fct=function() self.view:downloadAction(downid, false) game:unregisterDialog(d) end}
 	local w = Waitbar.new{size=600, text=file}
 	d:loadUI{
 		{left=0, top=0, ui=w},
+		{right=0, bottom=0, ui=b},
 	}
 	d:setupUI(true, true)
 	function d:updateFill(...) w:updateFill(...) end
@@ -107,18 +132,18 @@ function _M:on_dialog_cleanup()
 	end
 end
 
-function _M:onDownload(request, update, finish)
+function _M:onDownload(handlers)
 	local Dialog = require "engine.ui.Dialog"
---[[
-	self.downloader = core.webview.downloader(function(downid, url, file, mime)
-		print(downid, url, file, mime)
+
+	handlers.on_download_request = function(view, downid, url, file, mime)
 		if mime == "application/t-engine-addon" and self.allow_downloads.addons and url:find("^http://te4%.org/") then
 			local path = fs.getRealPath("/addons/")
 			if path then
 				Dialog:yesnoPopup("Confirm addon install/update", "Are you sure you want to install this addon? ("..file..")", function(ret)
 					if ret then
 						print("Accepting addon download to:", path..file)
-						self.download_dialog = self:makeDownloadbox(file)
+						self.download_dialog = self:makeDownloadbox(downid, file)
+						self.download_dialog.install_kind = "Addon"
 						game:registerDialog(self.download_dialog)
 						self.view:downloadAction(downid, path..file)
 					else
@@ -133,7 +158,8 @@ function _M:onDownload(request, update, finish)
 				Dialog:yesnoPopup("Confirm module install/update", "Are you sure you want to install this module? ("..file..")", function(ret)
 					if ret then
 						print("Accepting module download to:", path..file)
-						self.download_dialog = self:makeDownloadbox(file)
+						self.download_dialog = self:makeDownloadbox(downid, file)
+						self.download_dialog.install_kind = "Game Module"
 						game:registerDialog(self.download_dialog)
 						self.view:downloadAction(downid, path..file)
 					else
@@ -144,13 +170,21 @@ function _M:onDownload(request, update, finish)
 			end
 		end
 		self.view:downloadAction(downid, false)
-	end, function(cur_size, total_size, speed)
+	end
+
+	handlers.on_download_update = function(view, downid, cur_size, total_size, percent, speed)
+		if not self.download_dialog then return end
 		self.download_dialog:updateFill(cur_size, total_size, ("%d%% - %d KB/s"):format(cur_size * 100 / total_size, speed / 1024))
-	end, function(url, saved_path)
-		game:unregisterDialog(self.download_dialog)
-	end)
-	self.view:downloader(self.downloader)
-]]
+		if cur_size == total_size then
+			game:unregisterDialog(self.download_dialog)
+			if self.download_dialog.install_kind == "Addon" then
+				Dialog:simplePopup("Addon installed!", "Addon installation successful. New addons are only active for new characters.")
+			elseif self.download_dialog.install_kind == "Game Module" then
+				Dialog:simplePopup("Game installed!", "Game installation successful. Have fun!")
+			end
+			self.download_dialog = nil
+		end
+	end
 end
 
 function _M:display(x, y, nb_keyframes, screen_x, screen_y, offset_x, offset_y, local_x, local_y)

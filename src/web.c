@@ -37,7 +37,7 @@
 static bool webcore = FALSE;
 static void (*te4_web_setup)(int argc, char **argv);
 static void (*te4_web_initialize)();
-static void (*te4_web_do_update)();
+static void (*te4_web_do_update)(void (*cb)(WebEvent*));
 static void (*te4_web_new)(web_view_type *view, const char *url, int w, int h);
 static bool (*te4_web_close)(web_view_type *view);
 static void (*te4_web_toscreen)(web_view_type *view, int x, int y, int w, int h);
@@ -47,16 +47,17 @@ static void (*te4_web_inject_mouse_move)(web_view_type *view, int x, int y);
 static void (*te4_web_inject_mouse_wheel)(web_view_type *view, int x, int y);
 static void (*te4_web_inject_mouse_button)(web_view_type *view, int kind, bool up);
 static void (*te4_web_inject_key)(web_view_type *view, int scancode, bool up);
+static void (*te4_web_download_action)(web_view_type *view, long id, const char *path);
 
 void te4_web_load() {
 	void *web = SDL_LoadObject("libte4-web.so");
-	printf("Loading web core: %s\n", SDL_GetError());
-	
+	printf("Loading web core: %s\n", web ? "loaded!" : SDL_GetError());
+
 	if (web) {
 		webcore = TRUE;
 		te4_web_setup = (void (*)(int, char**)) SDL_LoadFunction(web, "te4_web_setup");
 		te4_web_initialize = (void (*)()) SDL_LoadFunction(web, "te4_web_initialize");
-		te4_web_do_update = (void (*)()) SDL_LoadFunction(web, "te4_web_do_update");
+		te4_web_do_update = (void (*)(void (*cb)(WebEvent*))) SDL_LoadFunction(web, "te4_web_do_update");
 		te4_web_new = (void (*)(web_view_type *view, const char *url, int w, int h)) SDL_LoadFunction(web, "te4_web_new");
 		te4_web_close = (bool (*)(web_view_type *view)) SDL_LoadFunction(web, "te4_web_close");
 		te4_web_toscreen = (void (*)(web_view_type *view, int x, int y, int w, int h)) SDL_LoadFunction(web, "te4_web_toscreen");
@@ -66,6 +67,7 @@ void te4_web_load() {
 		te4_web_inject_mouse_wheel = (void (*)(web_view_type *view, int x, int y)) SDL_LoadFunction(web, "te4_web_inject_mouse_wheel");
 		te4_web_inject_mouse_button = (void (*)(web_view_type *view, int kind, bool up)) SDL_LoadFunction(web, "te4_web_inject_mouse_button");
 		te4_web_inject_key = (void (*)(web_view_type *view, int scancode, bool up)) SDL_LoadFunction(web, "te4_web_inject_key");
+		te4_web_download_action = (void (*)(web_view_type *view, long id, const char *path)) SDL_LoadFunction(web, "te4_web_download_action");
 
 		te4_web_setup(g_argc, g_argv);
 	}
@@ -157,20 +159,18 @@ static int lua_web_inject_key(lua_State *L) {
 	return 0;
 }
 
-static int lua_web_set_downloader(lua_State *L) {
+static int lua_web_download_action(lua_State *L) {
 	web_view_type *view = (web_view_type*)auxiliar_checkclass(L, "web{view}", 1);
-//	web_downloader_type *listener = (web_downloader_type*)auxiliar_checkclass(L, "web{downloader}", 2);
-	if (view->closed) return 0;
-
-//	view->view->set_download_listener(listener->d);
+	long id = lua_tonumber(L, 2);
+	if (lua_isstring(L, 3)) te4_web_download_action(view, id, lua_tostring(L, 3));
+	else te4_web_download_action(view, id, NULL);
 	return 0;
 }
 
 static const struct luaL_Reg view_reg[] =
 {
 	{"__gc", lua_web_close},
-//	{"downloader", lua_web_set_downloader},
-//	{"downloadAction", lua_web_download_action},
+	{"downloadAction", lua_web_download_action},
 	{"toScreen", lua_web_toscreen},
 	{"focus", lua_web_focus},
 	{"loading", lua_web_loading},
@@ -188,30 +188,80 @@ static const struct luaL_Reg weblib[] =
 	{NULL, NULL},
 };
 
-void te4_web_update(lua_State *L) {
-	if (webcore) { 
-		te4_web_do_update();
-		// CefDoMessageLoopWork();
+static lua_State *he_L;
+static void handle_event(WebEvent *event) {
+	switch (event->kind) {
+		case TE4_WEB_EVENT_TITLE_CHANGE:
+			lua_rawgeti(he_L, LUA_REGISTRYINDEX, event->handlers);
+			lua_pushstring(he_L, "on_title");
+			lua_gettable(he_L, -2);
+			lua_remove(he_L, -2);
+			if (!lua_isnil(he_L, -1)) {
+				lua_rawgeti(he_L, LUA_REGISTRYINDEX, event->handlers);
+				lua_pushstring(he_L, event->data.title);
+				docall(he_L, 2, 0);
+			} else lua_pop(he_L, 1);
+			
+			free((void*)event->data.title);
+			break;
 
-		// WebEvent *event;
-		// while (event = pop_event()) {
-		// 	switch (event->kind) {
-		// 		case TE4_WEB_EVENT_TITLE_CHANGE:
-		// 		lua_rawgeti(L, LUA_REGISTRYINDEX, event->handlers);
-		// 		lua_pushstring(L, "on_title");
-		// 		lua_gettable(L, -2);
-		// 		lua_remove(L, -2);
-		// 		if (!lua_isnil(L, -1)) {
-		// 			lua_rawgeti(L, LUA_REGISTRYINDEX, event->handlers);
-		// 			lua_pushstring(L, event->data.title);
-		// 			docall(L, 2, 0);
-		// 		} else lua_pop(L, 1);
-				
-		// 		free((void*)event->data.title);
-		// 		break;
-		// 	}
-		// 	delete event;
-		// }
+		case TE4_WEB_EVENT_REQUEST_POPUP_URL:
+			lua_rawgeti(he_L, LUA_REGISTRYINDEX, event->handlers);
+			lua_pushstring(he_L, "on_popup");
+			lua_gettable(he_L, -2);
+			lua_remove(he_L, -2);
+			if (!lua_isnil(he_L, -1)) {
+				lua_rawgeti(he_L, LUA_REGISTRYINDEX, event->handlers);
+				lua_pushstring(he_L, event->data.popup.url);
+				lua_pushnumber(he_L, event->data.popup.w);
+				lua_pushnumber(he_L, event->data.popup.h);
+				docall(he_L, 4, 0);
+			} else lua_pop(he_L, 1);
+			
+			free((void*)event->data.popup.url);
+			break;
+
+		case TE4_WEB_EVENT_DOWNLOAD_REQUEST:
+			lua_rawgeti(he_L, LUA_REGISTRYINDEX, event->handlers);
+			lua_pushstring(he_L, "on_download_request");
+			lua_gettable(he_L, -2);
+			lua_remove(he_L, -2);
+			if (!lua_isnil(he_L, -1)) {
+				lua_rawgeti(he_L, LUA_REGISTRYINDEX, event->handlers);
+				lua_pushnumber(he_L, event->data.download_request.id);
+				lua_pushstring(he_L, event->data.download_request.url);
+				lua_pushstring(he_L, event->data.download_request.name);
+				lua_pushstring(he_L, event->data.download_request.mime);
+				docall(he_L, 5, 0);
+			} else lua_pop(he_L, 1);
+			
+			free((void*)event->data.download_request.url);
+			free((void*)event->data.download_request.name);
+			free((void*)event->data.download_request.mime);
+			break;
+
+		case TE4_WEB_EVENT_DOWNLOAD_UPDATE:
+			lua_rawgeti(he_L, LUA_REGISTRYINDEX, event->handlers);
+			lua_pushstring(he_L, "on_download_update");
+			lua_gettable(he_L, -2);
+			lua_remove(he_L, -2);
+			if (!lua_isnil(he_L, -1)) {
+				lua_rawgeti(he_L, LUA_REGISTRYINDEX, event->handlers);
+				lua_pushnumber(he_L, event->data.download_update.id);
+				lua_pushnumber(he_L, event->data.download_update.got);
+				lua_pushnumber(he_L, event->data.download_update.total);
+				lua_pushnumber(he_L, event->data.download_update.percent);
+				lua_pushnumber(he_L, event->data.download_update.speed);
+				docall(he_L, 6, 0);
+			} else lua_pop(he_L, 1);
+			break;
+	}
+}
+
+void te4_web_update(lua_State *L) {
+	if (webcore) {
+		he_L = L;
+		te4_web_do_update(handle_event);
 	}
 }
 

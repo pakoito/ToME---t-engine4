@@ -10,13 +10,31 @@
 
 enum web_event_kind {
 	TE4_WEB_EVENT_TITLE_CHANGE,
+	TE4_WEB_EVENT_REQUEST_POPUP_URL,
+	TE4_WEB_EVENT_DOWNLOAD_REQUEST,
+	TE4_WEB_EVENT_DOWNLOAD_UPDATE,
 };
 
 typedef struct {
 	enum web_event_kind kind;
 	int handlers;
 	union {
-		const char *title;		
+		const char *title;
+		struct {
+			const char *url;
+			int w, h;
+		} popup;
+		struct {
+			long id;
+			const char *url;
+			const char *mime;
+			const char *name;
+		} download_request;
+		struct {
+			long id;
+			long total, got, speed;
+			int percent;
+		} download_update;
 	} data;
 } WebEvent;
 

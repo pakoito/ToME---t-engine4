@@ -193,7 +193,7 @@ end
 
 function _M:webPopup(url)
 	local d = new(url, game.w * 0.9, game.h * 0.9)
-	local w = require("engine.ui.WebView").new{width=d.iw, height=d.ih, url=url, allow_downloads={addons=true, modules=true}}
+	local w = require("engine.ui.WebView").new{width=d.iw, height=d.ih, url=url, allow_login=true, allow_popup=true, allow_downloads={addons=true, modules=true}}
 	w.on_title = function(title) d:updateTitle(title) end
 	d:loadUI{{left=0, top=0, ui=w}}
 	d:setupUI()

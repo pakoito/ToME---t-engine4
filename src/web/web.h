@@ -24,7 +24,7 @@
 
 WEB_TE4_API void te4_web_setup(int argc, char **argv);
 WEB_TE4_API void te4_web_initialize();
-WEB_TE4_API void te4_web_do_update();
+WEB_TE4_API void te4_web_do_update(void (*cb)(WebEvent*));
 WEB_TE4_API void te4_web_new(web_view_type *view, const char *url, int w, int h);
 WEB_TE4_API bool te4_web_close(web_view_type *view);
 WEB_TE4_API void te4_web_toscreen(web_view_type *view, int x, int y, int w, int h);
@@ -34,5 +34,6 @@ WEB_TE4_API void te4_web_inject_mouse_move(web_view_type *view, int x, int y);
 WEB_TE4_API void te4_web_inject_mouse_wheel(web_view_type *view, int x, int y);
 WEB_TE4_API void te4_web_inject_mouse_button(web_view_type *view, int kind, bool up);
 WEB_TE4_API void te4_web_inject_key(web_view_type *view, int scancode, bool up);
+WEB_TE4_API void te4_web_download_action(web_view_type *view, long id, const char *path);
 
 #endif
