@@ -131,7 +131,7 @@ local credits = {
 	false,
 
 	{"Others", title=2},
-	{"J.R.R Tolkien - making the world an interresting place"},
+	{"J.R.R Tolkien - making the world an interesting place"},
 	false,
 	{"Lua Creators - making the world a better place"},
 	{"Lua - http://lua.org/"},
