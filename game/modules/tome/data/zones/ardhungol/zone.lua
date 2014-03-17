@@ -39,7 +39,7 @@ return {
 			class = "engine.generator.map.Cavern",
 			zoom = 16,
 			min_floor = 1100,
-			floor = "CAVEFLOOR",
+			floor = function() if rng.percent(96) then return "CAVEFLOOR" else return "WORMHOLE" end end,
 			wall = "CAVEWALL",
 			up = "CAVE_LADDER_UP",
 			down = "CAVE_LADDER_DOWN",
