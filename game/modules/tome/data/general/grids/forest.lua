@@ -87,7 +87,7 @@ newEntity{
 	nice_editer = grass_editer,
 }
 for i = 1, 30 do
-	newEntity(class:makeNewTrees({base="TREE", define_as = "TREE"..i, image = "terrain/grass.png"}, treesdef))
+	newEntity(class:makeNewTrees({base="HARDTREE", define_as = "HARDTREE"..i, image = "terrain/grass.png"}, treesdef))
 end
 
 newEntity{
