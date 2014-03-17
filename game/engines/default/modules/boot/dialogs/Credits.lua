@@ -152,8 +152,7 @@ local credits = {
 }
 
 function _M:init()
-	self.ui = "invisible"
-	Dialog.init(self, "", game.w, game.h)
+	Dialog.init(self, "", game.w, game.h, nil, nil, nil, nil, false, "invisible")
 
 	self:loadUI{}
 	self:setupUI(false, false)
