@@ -372,8 +372,10 @@ function _M:display(nb_keyframes)
 			end
 			self.background:toScreenFull(x, y, w, h, w * self.background_tw / self.background_w, h * self.background_th / self.background_h)
 		end
-		self.tooltip:display()
-		self.tooltip:toScreen(5, 5)
+		if #self.dialogs == 0 or not self.dialogs[#self.dialogs].__show_only then
+			self.tooltip:display()
+			self.tooltip:toScreen(5, 5)
+		end
 		self.logdisplay:toScreen()
 		engine.GameEnergyBased.display(self, nb_keyframes)
 		if self.full_fbo then self.full_fbo:use(false) self.full_fbo:toScreen(0, 0, self.w, self.h, self.full_fbo_shader.shad) end
@@ -410,8 +412,10 @@ function _M:display(nb_keyframes)
 --		core.display.drawQuad(0, 0, game.w, game.h, 128, 128, 128, 128)
 	end
 
-	self.tooltip:display()
-	self.tooltip:toScreen(5, 5)
+	if #self.dialogs == 0 or not self.dialogs[#self.dialogs].__show_only then
+		self.tooltip:display()
+		self.tooltip:toScreen(5, 5)
+	end
 
 	self.logdisplay:toScreen()
 
