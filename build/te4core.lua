@@ -455,24 +455,26 @@ project "te4-bzip"
 
 	files { "../src/bzip2/*.c", }
 
-project "te4-web"
-	kind "SharedLib"
-	language "C++"
-	targetname "te4-web"
+if not _OPTIONS["disable-cef3"] then
+	project "te4-web"
+		kind "SharedLib"
+		language "C++"
+		targetname "te4-web"
 
-	includedirs {"../src/web/", }
+		includedirs {"../src/web/", }
 
-	buildoptions{"-pthread -I/usr/include/gtk-2.0 -I/usr/lib64/gtk-2.0/include -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/pango-1.0 -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/libpng15 -I/usr/include/libdrm"}
-	libdirs {"/Test/cef_binary_3.1547.1406_linux/out/Release/obj.target/"}
-	libdirs {"/Test/cef_binary_3.1547.1406_linux/Release/"}
-	links {"cef_dll_wrapper"}
-	includedirs {"/Test/cef_binary_3.1547.1406_linux/include/", "/Test/cef_binary_3.1547.1406_linux/", }
-	links { "cef" }
-	
-	files {
-		"../src/web/web.cpp",
-		"../src/web/web-utils.cpp",
-	}
+		buildoptions{"-pthread -I/usr/include/gtk-2.0 -I/usr/lib64/gtk-2.0/include -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/pango-1.0 -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/libpng15 -I/usr/include/libdrm"}
+		libdirs {"/Test/cef_binary_3.1547.1406_linux/out/Release/obj.target/"}
+		libdirs {"/Test/cef_binary_3.1547.1406_linux/Release/"}
+		links {"cef_dll_wrapper"}
+		includedirs {"/Test/cef_binary_3.1547.1406_linux/include/", "/Test/cef_binary_3.1547.1406_linux/", }
+		links { "cef" }
+		
+		files {
+			"../src/web/web.cpp",
+			"../src/web/web-utils.cpp",
+		}
+end
 
 if _OPTIONS.steam then
 	dofile("../steamworks/build/steam-code.lua")

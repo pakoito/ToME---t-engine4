@@ -61,4 +61,9 @@ newoption {
 	description = "Steam integration"
 }
 
+newoption {
+	trigger	    = "disable-cef3",
+	description = "Disabled building with CEF3 embedded browser"
+}
+
 _OPTIONS.lua = _OPTIONS.lua or "jit2"

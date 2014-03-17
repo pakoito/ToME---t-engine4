@@ -364,7 +364,9 @@ void on_event(SDL_Event *event)
 			else
 				lua_pushnil(L);
 
-			docall(L, 9, 0);
+			lua_pushnumber(L, event->key.keysym.sym);
+
+			docall(L, 10, 0);
 		}
 		break;
 	case SDL_MOUSEBUTTONDOWN:

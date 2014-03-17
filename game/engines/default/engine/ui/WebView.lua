@@ -95,11 +95,12 @@ function _M:generate()
 		end
 	end)
 	
-	function self.key.receiveKey(_, sym, ctrl, shift, alt, meta, unicode, isup, key)
+	function self.key.receiveKey(_, sym, ctrl, shift, alt, meta, unicode, isup, key, keysym)
 		if not self.view then return end
-		local symb = self.key.sym_to_name[sym]
-		if not symb then return end
-		self.view:injectKey(isup, symb)
+		if unicode then
+			keysym = unicode:sub(1):byte()
+		end
+		self.view:injectKey(isup, keysym)
 	end
 end
 
