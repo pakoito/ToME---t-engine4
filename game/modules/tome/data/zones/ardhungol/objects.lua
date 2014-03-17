@@ -20,6 +20,16 @@
 load("/data/general/objects/objects-far-east.lua")
 load("/data/general/objects/lore/sunwall.lua")
 
+for i = 1, 3 do
+newEntity{ base = "BASE_LORE",
+	define_as = "NOTE"..i,
+	name = "diary page", lore="ardhungol-"..i,
+	desc = [[A page of a diary.]],
+	rarity = false,
+	encumberance = 0,
+}
+end
+
 newEntity{ base = "BASE_ROD",
 	power_source = {nature=true},
 	define_as = "ROD_SPYDRIC_POISON",

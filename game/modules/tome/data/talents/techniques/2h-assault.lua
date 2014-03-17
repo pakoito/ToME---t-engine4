@@ -72,7 +72,7 @@ newTalent{
 		local weapon = self:hasTwoHandedWeapon()
 		if not weapon then return nil end
 
-		local tg = {type="hit", range=self:getTalentRange(t)}
+		local tg = {type="hit", range=self:getTalentRange(t), simple_dir_request=true}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end

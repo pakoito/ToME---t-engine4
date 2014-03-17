@@ -54,6 +54,7 @@ function _M:init()
 		local menu = require("engine.dialogs.GameMenu").new(list)
 		game:registerDialog(menu)
 	end}
+	l[#l+1] = {name="Credits", fct=function() game:registerDialog(require("mod.dialogs.Credits").new()) end}
 	l[#l+1] = {name="Exit", fct=function() game:onQuit() end}
 	if config.settings.cheat then l[#l+1] = {name="Reboot", fct=function() util.showMainMenu() end} end
 	if config.settings.cheat then l[#l+1] = {name="webtest", fct=function() util.browserOpenUrl("http://te4.org/addons/tome?_te4") end} end

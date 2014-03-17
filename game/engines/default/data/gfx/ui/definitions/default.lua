@@ -68,3 +68,10 @@ tombstone = {
 	frame_oy1 = -16,
 	frame_oy2 = 16,
 }
+
+invisible = {
+	frame_ox1 = 0,
+	frame_ox2 = 0,
+	frame_oy1 = 0,
+	frame_oy2 = 0,
+}

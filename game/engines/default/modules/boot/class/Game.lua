@@ -384,8 +384,10 @@ function _M:display(nb_keyframes)
 			self.background:toScreenFull(x, y, w, h, w * self.background_tw / self.background_w, h * self.background_th / self.background_h)
 		end
 		if self.tooltip then
-			self.tooltip:display()
-			self.tooltip:toScreen(5, 5)
+			if #self.dialogs == 0 or not self.dialogs[#self.dialogs].__show_only then
+				self.tooltip:display()
+				self.tooltip:toScreen(5, 5)
+			end
 		end
 		self.logdisplay:toScreen()
 		engine.GameEnergyBased.display(self, nb_keyframes)
@@ -424,8 +426,10 @@ function _M:display(nb_keyframes)
 	end
 
 	if self.tooltip then
-		self.tooltip:display()
-		self.tooltip:toScreen(5, 5)
+		if #self.dialogs == 0 or not self.dialogs[#self.dialogs].__show_only then
+			self.tooltip:display()
+			self.tooltip:toScreen(5, 5)
+		end
 	end
 
 	self.logdisplay:toScreen()

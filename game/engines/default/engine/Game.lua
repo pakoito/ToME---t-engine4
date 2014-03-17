@@ -155,8 +155,10 @@ function _M:display(nb_keyframes)
 		self.flyers:display(nb_keyframes)
 	end
 
-	if not self.suppressDialogs then
-		for i, d in ipairs(self.dialogs) do
+	if not self.suppressDialogs and #self.dialogs then
+		local last = self.dialogs[#self.dialogs]
+		for i = last and last.__show_only and #self.dialogs or 1, #self.dialogs do
+			local d = self.dialogs[i]
 			d:display()
 			d:toScreen(d.display_x, d.display_y, nb_keyframes)
 		end
