@@ -442,6 +442,10 @@ void te4_web_setup(int argc, char **gargv) {
 
 		CefSettings settings;
 		settings.multi_threaded_message_loop = false;
+		// CefString locales("game/thirdparty/cef3/locales/");
+		// CefString(&settings.locales_dir_path) = locales;
+		// CefString resources("game/thirdparty/cef3/");
+		// CefString(&settings.resources_dir_path) = resources;
 		bool resulti = CefInitialize(args, settings, app.get());
 		web_core = true;
 	}
