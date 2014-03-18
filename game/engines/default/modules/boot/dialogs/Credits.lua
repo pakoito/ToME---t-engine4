@@ -131,7 +131,7 @@ local credits = {
 	false,
 
 	{"Others", title=2},
-	{"J.R.R Tolkien - making the world an interresting place"},
+	{"J.R.R Tolkien - making the world an interesting place"},
 	false,
 	{"Lua Creators - making the world a better place"},
 	{"Lua - http://lua.org/"},
@@ -152,8 +152,7 @@ local credits = {
 }
 
 function _M:init()
-	self.ui = "invisible"
-	Dialog.init(self, "", game.w, game.h)
+	Dialog.init(self, "", game.w, game.h, nil, nil, nil, nil, false, "invisible")
 
 	self:loadUI{}
 	self:setupUI(false, false)
