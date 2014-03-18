@@ -61,4 +61,9 @@ newoption {
 	description = "Steam integration"
 }
 
+newoption {
+	trigger	    = "wincross",
+	description = "Enables cross-compilation for windows (from linux)"
+}
+
 _OPTIONS.lua = _OPTIONS.lua or "jit2"
