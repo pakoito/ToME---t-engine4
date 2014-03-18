@@ -35,7 +35,7 @@
  * Grab web browser methods -- availabe only here
  */
 static bool webcore = FALSE;
-static void (*te4_web_setup)(int, char**, void*(*)(), void(*)(void*), void(*)(void*), void(*)(void*), unsigned int (*)(int, int), void (*)(unsigned int, int, int, const void*));
+static void (*te4_web_setup)(int, char**, void*(*)(), void(*)(void*), void(*)(void*), void(*)(void*), unsigned int (*)(int, int), void (*)(unsigned int), void (*)(unsigned int, int, int, const void*), void (*)(bool*, bool*, bool*, bool*));
 static void (*te4_web_initialize)();
 static void (*te4_web_do_update)(void (*cb)(WebEvent*));
 static void (*te4_web_new)(web_view_type *view, const char *url, int w, int h);
@@ -303,9 +303,23 @@ static unsigned int web_make_texture(int w, int h) {
 	free(buffer);
 	return tex;
 }
+static void web_del_texture(unsigned int tex) {
+	GLuint t = tex;
+	glDeleteTextures(1, &t);
+}
 static void web_texture_update(unsigned int tex, int w, int h, const void* buffer) {
 	tglBindTexture(GL_TEXTURE_2D, tex);
 	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, w, h, GL_BGRA, GL_UNSIGNED_BYTE, buffer);
+}
+
+static void web_key_mods(bool *shift, bool *ctrl, bool *alt, bool *meta) {
+	SDL_Keymod smod = SDL_GetModState();
+
+	*shift = *ctrl = *alt = *meta = FALSE;
+	if (smod & KMOD_SHIFT) *shift = TRUE;
+	if (smod & KMOD_CTRL) *ctrl = TRUE;
+	if (smod & KMOD_ALT) *alt = TRUE;
+	if (smod & KMOD_GUI) *meta = TRUE;
 }
 
 void te4_web_load() {
@@ -314,7 +328,7 @@ void te4_web_load() {
 
 	if (web) {
 		webcore = TRUE;
-		te4_web_setup = (void (*)(int, char**, void*(*)(), void(*)(void*), void(*)(void*), void(*)(void*), unsigned int (*)(int, int), void (*)(unsigned int, int, int, const void*) )) SDL_LoadFunction(web, "te4_web_setup");
+		te4_web_setup = (void (*)(int, char**, void*(*)(), void(*)(void*), void(*)(void*), void(*)(void*), unsigned int (*)(int, int), void (*)(unsigned int), void (*)(unsigned int, int, int, const void*), void (*)(bool*, bool*, bool*, bool*) )) SDL_LoadFunction(web, "te4_web_setup");
 		te4_web_initialize = (void (*)()) SDL_LoadFunction(web, "te4_web_initialize");
 		te4_web_do_update = (void (*)(void (*cb)(WebEvent*))) SDL_LoadFunction(web, "te4_web_do_update");
 		te4_web_new = (void (*)(web_view_type *view, const char *url, int w, int h)) SDL_LoadFunction(web, "te4_web_new");
@@ -331,7 +345,8 @@ void te4_web_load() {
 		te4_web_setup(
 			g_argc, g_argv,
 			web_mutex_create, web_mutex_destroy, web_mutex_lock, web_mutex_unlock,
-			web_make_texture, web_texture_update
+			web_make_texture, web_del_texture, web_texture_update,
+			web_key_mods
 			);
 	}
 }

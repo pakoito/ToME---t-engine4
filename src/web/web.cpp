@@ -8,30 +8,22 @@
 #include <map>
 
 extern "C" {
-#include "tSDL.h"
-#include "tgl.h"
 #include "web-external.h"
 #include <stdio.h>
+#include <stdlib.h>
 }
 #include "web.h"
 #include "web-internal.h"
 
-#ifndef GL_BGRA
-#define GL_BGRA 0x80E1
-#endif
-#ifndef GL_TEXTURE_MAX_ANISOTROPY_EXT
-#define GL_TEXTURE_MAX_ANISOTROPY_EXT 0x84FE
-#endif
-#ifndef GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT
-#define GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT 0x84FF
-#endif
 
 void *(*web_mutex_create)();
 void (*web_mutex_destroy)(void *mutex);
 void (*web_mutex_lock)(void *mutex);
 void (*web_mutex_unlock)(void *mutex);
 static unsigned int (*web_make_texture)(int w, int h);
+static void (*web_del_texture)(unsigned int tex);
 static void (*web_texture_update)(unsigned int tex, int w, int h, const void* buffer);
+static void (*web_key_mods)(bool *shift, bool *ctrl, bool *alt, bool *meta);
 
 static bool web_core = false;
 
@@ -43,7 +35,7 @@ static const char *cstring_to_c(const CefString &cstr) {
 class RenderHandler : public CefRenderHandler
 {
 public:
-	GLuint tex;
+	unsigned int tex;
 	int w, h;
 	CefRefPtr<CefBrowserHost> host;
 
@@ -55,7 +47,7 @@ public:
 	}
 
 	~RenderHandler() {
-		glDeleteTextures(1, &tex);
+		web_del_texture(tex);
 	}
 
 	// CefRenderHandler interface
@@ -308,17 +300,16 @@ void te4_web_focus(web_view_type *view, bool focus) {
 }
 
 static int get_cef_state_modifiers() {
-	SDL_Keymod smod = SDL_GetModState();
+	bool shift, ctrl, alt, meta;
+	web_key_mods(&shift, &ctrl, &alt, &meta);
 
 	int modifiers = 0;
-
-	if (smod & KMOD_SHIFT)
+	if (shift)
 		modifiers |= EVENTFLAG_SHIFT_DOWN;
-	else if (smod & KMOD_CTRL)
+	else if (ctrl)
 		modifiers |= EVENTFLAG_CONTROL_DOWN;
-	else if (smod & KMOD_ALT)
+	else if (alt)
 		modifiers |= EVENTFLAG_ALT_DOWN;
-	else if (smod & KMOD_GUI)
 
 	return modifiers;
 }
@@ -622,7 +613,8 @@ void te4_web_do_update(void (*cb)(WebEvent*)) {
 void te4_web_setup(
 	int argc, char **gargv,
 	void*(*mutex_create)(), void(*mutex_destroy)(void*), void(*mutex_lock)(void*), void(*mutex_unlock)(void*),
-	unsigned int (*make_texture)(int, int), void (*texture_update)(unsigned int, int, int, const void*)
+	unsigned int (*make_texture)(int, int), void (*del_texture)(unsigned int), void (*texture_update)(unsigned int, int, int, const void*),
+	void (*key_mods)(bool*, bool*, bool*, bool*)
 	) {
 
 	web_mutex_create = mutex_create;
@@ -630,7 +622,9 @@ void te4_web_setup(
 	web_mutex_lock = mutex_lock;
 	web_mutex_unlock = mutex_unlock;
 	web_make_texture = make_texture;
+	web_del_texture = del_texture;
 	web_texture_update = texture_update;
+	web_key_mods = key_mods;
 
 	if (!web_core) {
 		CefRefPtr<ClientApp> app(new ClientApp);
