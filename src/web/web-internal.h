@@ -27,4 +27,9 @@ extern WebEvent *pop_order();
 extern void push_event(WebEvent *event);
 extern WebEvent *pop_event();
 
+extern void *(*web_mutex_create)();
+extern void (*web_mutex_destroy)(void *mutex);
+extern void (*web_mutex_lock)(void *mutex);
+extern void (*web_mutex_unlock)(void *mutex);
+
 #endif

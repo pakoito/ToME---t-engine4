@@ -35,7 +35,7 @@
  * Grab web browser methods -- availabe only here
  */
 static bool webcore = FALSE;
-static void (*te4_web_setup)(int argc, char **argv);
+static void (*te4_web_setup)(int, char**, void*(*)(), void(*)(void*), void(*)(void*), void(*)(void*), unsigned int (*)(int, int), void (*)(unsigned int, int, int, const void*));
 static void (*te4_web_initialize)();
 static void (*te4_web_do_update)(void (*cb)(WebEvent*));
 static void (*te4_web_new)(web_view_type *view, const char *url, int w, int h);
@@ -48,30 +48,6 @@ static void (*te4_web_inject_mouse_wheel)(web_view_type *view, int x, int y);
 static void (*te4_web_inject_mouse_button)(web_view_type *view, int kind, bool up);
 static void (*te4_web_inject_key)(web_view_type *view, int scancode, bool up);
 static void (*te4_web_download_action)(web_view_type *view, long id, const char *path);
-
-void te4_web_load() {
-	void *web = SDL_LoadObject("libte4-web.so");
-	printf("Loading web core: %s\n", web ? "loaded!" : SDL_GetError());
-
-	if (web) {
-		webcore = TRUE;
-		te4_web_setup = (void (*)(int, char**)) SDL_LoadFunction(web, "te4_web_setup");
-		te4_web_initialize = (void (*)()) SDL_LoadFunction(web, "te4_web_initialize");
-		te4_web_do_update = (void (*)(void (*cb)(WebEvent*))) SDL_LoadFunction(web, "te4_web_do_update");
-		te4_web_new = (void (*)(web_view_type *view, const char *url, int w, int h)) SDL_LoadFunction(web, "te4_web_new");
-		te4_web_close = (bool (*)(web_view_type *view)) SDL_LoadFunction(web, "te4_web_close");
-		te4_web_toscreen = (void (*)(web_view_type *view, int x, int y, int w, int h)) SDL_LoadFunction(web, "te4_web_toscreen");
-		te4_web_loading = (bool (*)(web_view_type *view)) SDL_LoadFunction(web, "te4_web_loading");
-		te4_web_focus = (void (*)(web_view_type *view, bool focus)) SDL_LoadFunction(web, "te4_web_focus");
-		te4_web_inject_mouse_move = (void (*)(web_view_type *view, int x, int y)) SDL_LoadFunction(web, "te4_web_inject_mouse_move");
-		te4_web_inject_mouse_wheel = (void (*)(web_view_type *view, int x, int y)) SDL_LoadFunction(web, "te4_web_inject_mouse_wheel");
-		te4_web_inject_mouse_button = (void (*)(web_view_type *view, int kind, bool up)) SDL_LoadFunction(web, "te4_web_inject_mouse_button");
-		te4_web_inject_key = (void (*)(web_view_type *view, int scancode, bool up)) SDL_LoadFunction(web, "te4_web_inject_key");
-		te4_web_download_action = (void (*)(web_view_type *view, long id, const char *path)) SDL_LoadFunction(web, "te4_web_download_action");
-
-		te4_web_setup(g_argc, g_argv);
-	}
-}
 
 static int lua_web_new(lua_State *L) {
 	int w = luaL_checknumber(L, 1);
@@ -267,3 +243,66 @@ void te4_web_init(lua_State *L) {
 	luaL_openlib(L, "core.webview", weblib, 0);
 	lua_settop(L, 0);
 }
+
+static void *web_mutex_create() {
+	return (void*)SDL_CreateMutex();
+}
+static void web_mutex_destroy(void *mutex) {
+	SDL_DestroyMutex((SDL_mutex*)mutex);
+}
+static void web_mutex_lock(void *mutex) {
+	SDL_mutexP((SDL_mutex*)mutex);
+}
+static void web_mutex_unlock(void *mutex) {
+	SDL_mutexV((SDL_mutex*)mutex);
+}
+
+static unsigned int web_make_texture(int w, int h) {
+	GLuint tex;
+	glGenTextures(1, &tex);
+	glBindTexture(GL_TEXTURE_2D, tex);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+	GLfloat largest_supported_anisotropy;
+	glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &largest_supported_anisotropy);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, largest_supported_anisotropy);
+	unsigned char *buffer = calloc(w * h * 4, sizeof(unsigned char));
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_BGRA, GL_UNSIGNED_BYTE, buffer);
+	free(buffer);
+	return tex;
+}
+static void web_texture_update(unsigned int tex, int w, int h, const void* buffer) {
+	tglBindTexture(GL_TEXTURE_2D, tex);
+	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, w, h, GL_BGRA, GL_UNSIGNED_BYTE, buffer);
+}
+
+void te4_web_load() {
+	void *web = SDL_LoadObject("libte4-web.so");
+	printf("Loading web core: %s\n", web ? "loaded!" : SDL_GetError());
+
+	if (web) {
+		webcore = TRUE;
+		te4_web_setup = (void (*)(int, char**, void*(*)(), void(*)(void*), void(*)(void*), void(*)(void*), unsigned int (*)(int, int), void (*)(unsigned int, int, int, const void*) )) SDL_LoadFunction(web, "te4_web_setup");
+		te4_web_initialize = (void (*)()) SDL_LoadFunction(web, "te4_web_initialize");
+		te4_web_do_update = (void (*)(void (*cb)(WebEvent*))) SDL_LoadFunction(web, "te4_web_do_update");
+		te4_web_new = (void (*)(web_view_type *view, const char *url, int w, int h)) SDL_LoadFunction(web, "te4_web_new");
+		te4_web_close = (bool (*)(web_view_type *view)) SDL_LoadFunction(web, "te4_web_close");
+		te4_web_toscreen = (void (*)(web_view_type *view, int x, int y, int w, int h)) SDL_LoadFunction(web, "te4_web_toscreen");
+		te4_web_loading = (bool (*)(web_view_type *view)) SDL_LoadFunction(web, "te4_web_loading");
+		te4_web_focus = (void (*)(web_view_type *view, bool focus)) SDL_LoadFunction(web, "te4_web_focus");
+		te4_web_inject_mouse_move = (void (*)(web_view_type *view, int x, int y)) SDL_LoadFunction(web, "te4_web_inject_mouse_move");
+		te4_web_inject_mouse_wheel = (void (*)(web_view_type *view, int x, int y)) SDL_LoadFunction(web, "te4_web_inject_mouse_wheel");
+		te4_web_inject_mouse_button = (void (*)(web_view_type *view, int kind, bool up)) SDL_LoadFunction(web, "te4_web_inject_mouse_button");
+		te4_web_inject_key = (void (*)(web_view_type *view, int scancode, bool up)) SDL_LoadFunction(web, "te4_web_inject_key");
+		te4_web_download_action = (void (*)(web_view_type *view, long id, const char *path)) SDL_LoadFunction(web, "te4_web_download_action");
+
+		te4_web_setup(
+			g_argc, g_argv,
+			web_mutex_create, web_mutex_destroy, web_mutex_lock, web_mutex_unlock,
+			web_make_texture, web_texture_update
+			);
+	}
+}
+

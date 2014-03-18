@@ -169,12 +169,13 @@ elseif _OPTIONS.lua == "jit2" then
 		kind "ConsoleApp"
 		language "C"
 		targetname "minilua"
-		links { "m", "mingw32" }
+		links { "m" }
 
 		files { "../src/luajit2/src/host/minilua.c" }
 
 		local arch_test
 		if _OPTIONS.wincross then
+			links {"mingw32"}
 			arch_test = os.capture("i686-pc-mingw32-gcc -E ../src/luajit2/src/lj_arch.h -dM", true)
 		else
 			arch_test = os.capture("gcc -E ../src/luajit2/src/lj_arch.h -dM", true)

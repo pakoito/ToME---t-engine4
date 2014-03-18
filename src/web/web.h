@@ -22,7 +22,7 @@
 #define WEB_TE4_API
 #endif
 
-WEB_TE4_API void te4_web_setup(int argc, char **argv);
+WEB_TE4_API void te4_web_setup(int argc, char **argv, void*(*mutex_create)(), void(*mutex_destroy)(void*), void(*mutex_lock)(void*), void(*mutex_unlock)(void*), unsigned int (*make_texture)(int, int), void (*texture_update)(unsigned int, int, int, const void*));
 WEB_TE4_API void te4_web_initialize();
 WEB_TE4_API void te4_web_do_update(void (*cb)(WebEvent*));
 WEB_TE4_API void te4_web_new(web_view_type *view, const char *url, int w, int h);

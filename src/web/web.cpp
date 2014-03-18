@@ -26,6 +26,12 @@ extern "C" {
 #define GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT 0x84FF
 #endif
 
+void *(*web_mutex_create)();
+void (*web_mutex_destroy)(void *mutex);
+void (*web_mutex_lock)(void *mutex);
+void (*web_mutex_unlock)(void *mutex);
+static unsigned int (*web_make_texture)(int w, int h);
+static void (*web_texture_update)(unsigned int tex, int w, int h, const void* buffer);
 
 static bool web_core = false;
 
@@ -45,18 +51,7 @@ public:
 		this->w = w;
 		this->h = h;
 
-		glGenTextures(1, &tex);
-		glBindTexture(GL_TEXTURE_2D, tex);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-		GLfloat largest_supported_anisotropy;
-		glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &largest_supported_anisotropy);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, largest_supported_anisotropy);
-		unsigned char *buffer = new unsigned char[w * h * 4];
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_BGRA, GL_UNSIGNED_BYTE, buffer);
-		delete[] buffer;
+		tex = web_make_texture(w, h);
 	}
 
 	~RenderHandler() {
@@ -73,8 +68,7 @@ public:
 	}
 	void OnPaint(CefRefPtr<CefBrowser> browser, PaintElementType type, const RectList &dirtyRects, const void *buffer, int width, int height)
 	{
-		glBindTexture(GL_TEXTURE_2D, tex);
-		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_BGRA, GL_UNSIGNED_BYTE, buffer);
+		web_texture_update(tex, width, height, buffer);
 	}
 
 	// CefBase interface
@@ -650,13 +644,25 @@ void te4_web_do_update(void (*cb)(WebEvent*)) {
 	}
 }
 
-void te4_web_setup(int argc, char **gargv) {
+void te4_web_setup(
+	int argc, char **gargv,
+	void*(*mutex_create)(), void(*mutex_destroy)(void*), void(*mutex_lock)(void*), void(*mutex_unlock)(void*),
+	unsigned int (*make_texture)(int, int), void (*texture_update)(unsigned int, int, int, const void*)
+	) {
+
+	web_mutex_create = mutex_create;
+	web_mutex_destroy = mutex_destroy;
+	web_mutex_lock = mutex_lock;
+	web_mutex_unlock = mutex_unlock;
+	web_make_texture = make_texture;
+	web_texture_update = texture_update;
+
 	if (!web_core) {
 		CefRefPtr<ClientApp> app(new ClientApp);
 
 		char **cargv = (char**)calloc(argc, sizeof(char*));
 		for (int i = 0; i < argc; i++) cargv[i] = strdup(gargv[i]);
-		CefMainArgs args();
+		CefMainArgs args(argc, cargv);
 		int result = CefExecuteProcess((const CefMainArgs&)args, app.get());
 		if (result >= 0) {
 			exit(result);  // child proccess has endend, so exit.

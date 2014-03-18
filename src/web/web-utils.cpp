@@ -25,20 +25,20 @@ extern "C" {
 
 static std::vector<WebEvent*> *iqueue = new std::vector<WebEvent*>;
 static std::vector<WebEvent*> *oqueue = new std::vector<WebEvent*>;
-static SDL_mutex *lock_iqueue = NULL;
-static SDL_mutex *lock_oqueue = NULL;
+static void *lock_iqueue = NULL;
+static void *lock_oqueue = NULL;
 
 void te4_web_init_utils() {
-	if (!lock_iqueue) lock_iqueue = SDL_CreateMutex();
-	if (!lock_oqueue) lock_oqueue = SDL_CreateMutex();
+	if (!lock_iqueue) lock_iqueue = web_mutex_create();
+	if (!lock_oqueue) lock_oqueue = web_mutex_create();
 }
 
 void push_order(WebEvent *event)
 {
 	if (!lock_iqueue) return;
-	SDL_mutexP(lock_iqueue);
+	web_mutex_lock(lock_iqueue);
 	iqueue->push_back(event);
-	SDL_mutexV(lock_iqueue);
+	web_mutex_unlock(lock_iqueue);
 }
 
 WebEvent *pop_order()
@@ -46,12 +46,12 @@ WebEvent *pop_order()
 	if (!lock_iqueue) return NULL;
 	WebEvent *event = NULL;
 
-	SDL_mutexP(lock_iqueue);
+	web_mutex_lock(lock_iqueue);
 	if (!iqueue->empty()) {
 		event = iqueue->back();
 		iqueue->pop_back();
 	}
-	SDL_mutexV(lock_iqueue);
+	web_mutex_unlock(lock_iqueue);
 
 	return event;
 }
@@ -59,9 +59,9 @@ WebEvent *pop_order()
 void push_event(WebEvent *event)
 {
 	if (!lock_oqueue) return;
-	SDL_mutexP(lock_oqueue);
+	web_mutex_lock(lock_oqueue);
 	oqueue->push_back(event);
-	SDL_mutexV(lock_oqueue);
+	web_mutex_unlock(lock_oqueue);
 }
 
 WebEvent *pop_event()
@@ -69,12 +69,12 @@ WebEvent *pop_event()
 	if (!lock_oqueue) return NULL;
 	WebEvent *event = NULL;
 
-	SDL_mutexP(lock_oqueue);
+	web_mutex_lock(lock_oqueue);
 	if (!oqueue->empty()) {
 		event = oqueue->back();
 		oqueue->pop_back();
 	}
-	SDL_mutexV(lock_oqueue);
+	web_mutex_unlock(lock_oqueue);
 
 	return event;
 }
