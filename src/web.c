@@ -19,12 +19,12 @@
     darkgod@te4.org
 */
 
+#include "display.h"
 #include "lua.h"
 #include "lauxlib.h"
 #include "lualib.h"
 #include "auxiliar.h"
 #include "core_lua.h"
-#include "tSDL.h"
 #include "types.h"
 #include "main.h"
 #include "te4web.h"

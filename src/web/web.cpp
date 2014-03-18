@@ -629,9 +629,13 @@ void te4_web_setup(
 	if (!web_core) {
 		CefRefPtr<ClientApp> app(new ClientApp);
 
+#ifdef _WIN32
+		CefMainArgs args(GetModuleHandle(NULL));
+#else
 		char **cargv = (char**)calloc(argc, sizeof(char*));
 		for (int i = 0; i < argc; i++) cargv[i] = strdup(gargv[i]);
 		CefMainArgs args(argc, cargv);
+#endif
 		int result = CefExecuteProcess((const CefMainArgs&)args, app.get());
 		if (result >= 0) {
 			exit(result);  // child proccess has endend, so exit.
