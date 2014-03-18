@@ -277,44 +277,19 @@ bool te4_web_close(web_view_type *view) {
 	return false;
 }
 
-void te4_web_toscreen(web_view_type *view, int x, int y, int w, int h) {
+bool te4_web_toscreen(web_view_type *view, int *w, int *h, unsigned int *tex) {
 	WebViewOpaque *opaque = (WebViewOpaque*)view->opaque;
-	if (view->closed) return;
+	if (view->closed) return false;
 
 	const RenderHandler* surface = opaque->render;
 
 	if (surface) {
-		w = (w < 0) ? surface->w : w;
-		h = (h < 0) ? surface->h : h;
-		float r = 1, g = 1, b = 1, a = 1;
-
-		glBindTexture(GL_TEXTURE_2D, surface->tex);
-
-		GLfloat texcoords[2*4] = {
-			0, 0,
-			0, 1,
-			1, 1,
-			1, 0,
-		};
-		GLfloat colors[4*4] = {
-			r, g, b, a,
-			r, g, b, a,
-			r, g, b, a,
-			r, g, b, a,
-		};
-		glColorPointer(4, GL_FLOAT, 0, colors);
-		glTexCoordPointer(2, GL_FLOAT, 0, texcoords);
-
-		GLfloat vertices[2*4] = {
-			x, y,
-			x, y + h,
-			x + w, y + h,
-			x + w, y,
-		};
-		glVertexPointer(2, GL_FLOAT, 0, vertices);
-
-		glDrawArrays(GL_QUADS, 0, 4);
+		*w = (*w < 0) ? surface->w : *w;
+		*h = (*h < 0) ? surface->h : *h;
+		*tex = surface->tex;
+		return true;
 	}
+	return false;
 }
 
 bool te4_web_loading(web_view_type *view) {
