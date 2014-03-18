@@ -95,7 +95,7 @@ function _M:generate()
 		end
 	end)
 	
-	function self.key.receiveKey(_, sym, ctrl, shift, alt, meta, unicode, isup, key, keysym)
+	function self.key.receiveKey(_, sym, ctrl, shift, alt, meta, unicode, isup, key, ismouse, keysym)
 		if not self.view then return end
 		if unicode then
 			keysym = unicode:sub(1):byte()
