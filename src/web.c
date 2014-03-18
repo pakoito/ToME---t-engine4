@@ -201,8 +201,6 @@ static void handle_event(WebEvent *event) {
 				lua_pushstring(he_L, event->data.title);
 				docall(he_L, 2, 0);
 			} else lua_pop(he_L, 1);
-			
-			free((void*)event->data.title);
 			break;
 
 		case TE4_WEB_EVENT_REQUEST_POPUP_URL:
@@ -217,8 +215,6 @@ static void handle_event(WebEvent *event) {
 				lua_pushnumber(he_L, event->data.popup.h);
 				docall(he_L, 4, 0);
 			} else lua_pop(he_L, 1);
-			
-			free((void*)event->data.popup.url);
 			break;
 
 		case TE4_WEB_EVENT_DOWNLOAD_REQUEST:
@@ -234,10 +230,6 @@ static void handle_event(WebEvent *event) {
 				lua_pushstring(he_L, event->data.download_request.mime);
 				docall(he_L, 5, 0);
 			} else lua_pop(he_L, 1);
-			
-			free((void*)event->data.download_request.url);
-			free((void*)event->data.download_request.name);
-			free((void*)event->data.download_request.mime);
 			break;
 
 		case TE4_WEB_EVENT_DOWNLOAD_UPDATE:
