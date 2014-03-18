@@ -511,6 +511,7 @@ project "te4-bzip"
 	files { "../src/bzip2/*.c", }
 
 if not _OPTIONS["disable-cef3"] then
+if not _OPTIONS.wincross then
 	project "te4-web"
 		kind "SharedLib"
 		language "C++"
@@ -537,6 +538,7 @@ if not _OPTIONS["disable-cef3"] then
 			links {"cef_dll_wrapper"}
 			includedirs {"/Test/cef_binary_3.1547.1597_windows32/include/", "/Test/cef_binary_3.1547.1597_windows32/", }
 			links { "cef" }
+end
 end
 
 if _OPTIONS.steam then

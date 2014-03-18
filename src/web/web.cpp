@@ -616,7 +616,7 @@ void te4_web_setup(
 	unsigned int (*make_texture)(int, int), void (*del_texture)(unsigned int), void (*texture_update)(unsigned int, int, int, const void*),
 	void (*key_mods)(bool*, bool*, bool*, bool*)
 	) {
-
+printf("setpu\n");
 	web_mutex_create = mutex_create;
 	web_mutex_destroy = mutex_destroy;
 	web_mutex_lock = mutex_lock;

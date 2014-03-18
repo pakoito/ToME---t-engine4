@@ -323,7 +323,17 @@ static void web_key_mods(bool *shift, bool *ctrl, bool *alt, bool *meta) {
 }
 
 void te4_web_load() {
+#if defined(SELFEXE_LINUX)
 	void *web = SDL_LoadObject("libte4-web.so");
+#elif defined(SELFEXE_BSD)
+	void *web = SDL_LoadObject("libte4-web.so");
+#elif defined(SELFEXE_WINDOWS)
+	void *web = SDL_LoadObject("te4-web.dll");
+#elif defined(SELFEXE_MACOSX)
+	void *web = SDL_LoadObject("libte4-web.dylib");
+#else
+	void *web = NULL;
+#endif
 	printf("Loading web core: %s\n", web ? "loaded!" : SDL_GetError());
 
 	if (web) {
@@ -341,7 +351,7 @@ void te4_web_load() {
 		te4_web_inject_mouse_button = (void (*)(web_view_type *view, int kind, bool up)) SDL_LoadFunction(web, "te4_web_inject_mouse_button");
 		te4_web_inject_key = (void (*)(web_view_type *view, int scancode, bool up)) SDL_LoadFunction(web, "te4_web_inject_key");
 		te4_web_download_action = (void (*)(web_view_type *view, long id, const char *path)) SDL_LoadFunction(web, "te4_web_download_action");
-
+printf("(=====)\n");
 		te4_web_setup(
 			g_argc, g_argv,
 			web_mutex_create, web_mutex_destroy, web_mutex_lock, web_mutex_unlock,
