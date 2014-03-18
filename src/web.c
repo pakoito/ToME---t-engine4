@@ -19,12 +19,12 @@
     darkgod@te4.org
 */
 
+#include "display.h"
 #include "lua.h"
 #include "lauxlib.h"
 #include "lualib.h"
 #include "auxiliar.h"
 #include "core_lua.h"
-#include "tSDL.h"
 #include "types.h"
 #include "main.h"
 #include "te4web.h"
@@ -40,7 +40,7 @@ static void (*te4_web_initialize)();
 static void (*te4_web_do_update)(void (*cb)(WebEvent*));
 static void (*te4_web_new)(web_view_type *view, const char *url, int w, int h);
 static bool (*te4_web_close)(web_view_type *view);
-static void (*te4_web_toscreen)(web_view_type *view, int x, int y, int w, int h);
+static bool (*te4_web_toscreen)(web_view_type *view, int *w, int *h, unsigned int *tex);
 static bool (*te4_web_loading)(web_view_type *view);
 static void (*te4_web_focus)(web_view_type *view, bool focus);
 static void (*te4_web_inject_mouse_move)(web_view_type *view, int x, int y);
@@ -81,8 +81,38 @@ static int lua_web_toscreen(lua_State *L) {
 	int h = -1;
 	if (lua_isnumber(L, 4)) w = lua_tonumber(L, 4);
 	if (lua_isnumber(L, 5)) h = lua_tonumber(L, 5);
+	unsigned int tex;
 
-	te4_web_toscreen(view, x, y, w, h);
+	if (te4_web_toscreen(view, &w, &h, &tex)) {
+		float r = 1, g = 1, b = 1, a = 1;
+
+		glBindTexture(GL_TEXTURE_2D, tex);
+
+		GLfloat texcoords[2*4] = {
+			0, 0,
+			0, 1,
+			1, 1,
+			1, 0,
+		};
+		GLfloat colors[4*4] = {
+			r, g, b, a,
+			r, g, b, a,
+			r, g, b, a,
+			r, g, b, a,
+		};
+		glColorPointer(4, GL_FLOAT, 0, colors);
+		glTexCoordPointer(2, GL_FLOAT, 0, texcoords);
+
+		GLfloat vertices[2*4] = {
+			x, y,
+			x, y + h,
+			x + w, y + h,
+			x + w, y,
+		};
+		glVertexPointer(2, GL_FLOAT, 0, vertices);
+
+		glDrawArrays(GL_QUADS, 0, 4);
+	}
 	return 0;
 }
 
@@ -289,7 +319,7 @@ void te4_web_load() {
 		te4_web_do_update = (void (*)(void (*cb)(WebEvent*))) SDL_LoadFunction(web, "te4_web_do_update");
 		te4_web_new = (void (*)(web_view_type *view, const char *url, int w, int h)) SDL_LoadFunction(web, "te4_web_new");
 		te4_web_close = (bool (*)(web_view_type *view)) SDL_LoadFunction(web, "te4_web_close");
-		te4_web_toscreen = (void (*)(web_view_type *view, int x, int y, int w, int h)) SDL_LoadFunction(web, "te4_web_toscreen");
+		te4_web_toscreen = (bool (*)(web_view_type *view, int *w, int *h, unsigned int *tex)) SDL_LoadFunction(web, "te4_web_toscreen");
 		te4_web_loading = (bool (*)(web_view_type *view)) SDL_LoadFunction(web, "te4_web_loading");
 		te4_web_focus = (void (*)(web_view_type *view, bool focus)) SDL_LoadFunction(web, "te4_web_focus");
 		te4_web_inject_mouse_move = (void (*)(web_view_type *view, int x, int y)) SDL_LoadFunction(web, "te4_web_inject_mouse_move");
