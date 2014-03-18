@@ -8,6 +8,9 @@
 #ifndef __TE4WEB_INTERNAL_H__
 #define __TE4WEB_INTERNAL_H__
 
+#ifndef UINT_MAX
+	#define UINT_MAX 65535
+#endif
 #include <cef_app.h>
 #include <cef_client.h>
 #include <cef_display_handler.h>

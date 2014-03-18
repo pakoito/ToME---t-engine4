@@ -66,4 +66,9 @@ newoption {
 	description = "Disabled building with CEF3 embedded browser"
 }
 
+newoption {
+	trigger	    = "wincross",
+	description = "Enables cross-compilation for windows (from linux)"
+}
+
 _OPTIONS.lua = _OPTIONS.lua or "jit2"

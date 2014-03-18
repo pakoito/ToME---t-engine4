@@ -11,9 +11,21 @@ extern "C" {
 #include "tSDL.h"
 #include "tgl.h"
 #include "web-external.h"
+#include <stdio.h>
 }
 #include "web.h"
 #include "web-internal.h"
+
+#ifndef GL_BGRA
+#define GL_BGRA 0x80E1
+#endif
+#ifndef GL_TEXTURE_MAX_ANISOTROPY_EXT
+#define GL_TEXTURE_MAX_ANISOTROPY_EXT 0x84FE
+#endif
+#ifndef GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT
+#define GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT 0x84FF
+#endif
+
 
 static bool web_core = false;
 
@@ -618,6 +630,21 @@ void te4_web_do_update(void (*cb)(WebEvent*)) {
 		WebEvent *event;
 		while (event = pop_event()) {
 			cb(event);
+
+			switch (event->kind) {
+				case TE4_WEB_EVENT_TITLE_CHANGE:
+					free((void*)event->data.title);
+					break;
+				case TE4_WEB_EVENT_REQUEST_POPUP_URL:
+					free((void*)event->data.popup.url);
+					break;
+				case TE4_WEB_EVENT_DOWNLOAD_REQUEST:
+					free((void*)event->data.download_request.url);
+					free((void*)event->data.download_request.name);
+					free((void*)event->data.download_request.mime);
+					break;
+			}
+
 			delete event;
 		}
 	}
@@ -629,8 +656,8 @@ void te4_web_setup(int argc, char **gargv) {
 
 		char **cargv = (char**)calloc(argc, sizeof(char*));
 		for (int i = 0; i < argc; i++) cargv[i] = strdup(gargv[i]);
-		CefMainArgs args(argc, cargv);
-		int result = CefExecuteProcess(args, app.get());
+		CefMainArgs args();
+		int result = CefExecuteProcess((const CefMainArgs&)args, app.get());
 		if (result >= 0) {
 			exit(result);  // child proccess has endend, so exit.
 		} else if (result == -1) {
@@ -643,7 +670,7 @@ void te4_web_setup(int argc, char **gargv) {
 		// CefString(&settings.locales_dir_path) = locales;
 		// CefString resources("game/thirdparty/cef3/");
 		// CefString(&settings.resources_dir_path) = resources;
-		bool resulti = CefInitialize(args, settings, app.get());
+		bool resulti = CefInitialize((const CefMainArgs&)args, settings, app.get());
 		web_core = true;
 	}
 }
