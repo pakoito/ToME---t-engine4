@@ -22,7 +22,7 @@ local autumn_grass_editer = { method="borders_def", def="autumn_grass"}
 newEntity{
 	define_as = "AUTUMN_GRASS",
 	type = "floor", subtype = "autumn_grass",
-	name = "autumn_grass", image = "terrain/grass/autumn_grass_main_01.png",
+	name = "autumn grass", image = "terrain/grass/autumn_grass_main_01.png",
 	display = '.', color=colors.LIGHT_GREEN, back_color={r=44,g=95,b=43},
 	grow = "AUTUMN_TREE",
 	nice_tiler = { method="replace", base={"AUTUMN_GRASS_PATCH", 100, 1, 14}},
@@ -38,11 +38,11 @@ local autumn_treesdef = {
 newEntity{
 	define_as = "AUTUMN_TREE",
 	type = "wall", subtype = "autumn_grass",
-	name = "autumn_tree",
+	name = "autumn tree",
 	image = "terrain/autumn_tree.png",
 	display = '#', color=colors.LIGHT_GREEN, back_color={r=44,g=95,b=43},
 	always_remember = true,
-	can_pass = {pass_autumn_tree=1},
+	can_pass = {pass_tree=1},
 	does_block_move = true,
 	block_sight = true,
 	dig = "AUTUMN_GRASS",
@@ -56,7 +56,7 @@ end
 newEntity{
 	define_as = "HARDAUTUMN_TREE",
 	type = "wall", subtype = "autumn_grass",
-	name = "tall thick autumn_tree",
+	name = "tall thick tree",
 	image = "terrain/autumn_tree.png",
 	display = '#', color=colors.LIGHT_GREEN, back_color={r=44,g=95,b=43},
 	always_remember = true,
@@ -68,7 +68,7 @@ newEntity{
 	nice_editer = autumn_grass_editer,
 }
 for i = 1, 30 do
-	newEntity(class:makeNewTrees({base="AUTUMN_TREE", define_as = "AUTUMN_TREE"..i, image = "terrain/grass/autumn_grass_main_01.png"}, autumn_treesdef))
+	newEntity(class:makeNewTrees({base="HARDAUTUMN_TREE", define_as = "HARDAUTUMN_TREE"..i, image = "terrain/grass/autumn_grass_main_01.png"}, autumn_treesdef))
 end
 
 -----------------------------------------
