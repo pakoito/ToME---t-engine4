@@ -75,7 +75,7 @@ configuration "Debug"
 	defines { }
 	flags { "Symbols" }
 	buildoptions { "-ggdb" }
-	buildoptions { "-O3" }
+--	buildoptions { "-O3" }
 	targetdir "bin/Debug"
 	if _OPTIONS.luaassert then defines {"LUA_USE_APICHECK"} end
 	if _OPTIONS.pedantic then buildoptions { "-Wall" } end

@@ -62,6 +62,11 @@ newoption {
 }
 
 newoption {
+	trigger	    = "disable-awesomium",
+	description = "Disable using awesomium embedded browser"
+}
+
+newoption {
 	trigger	    = "wincross",
 	description = "Enables cross-compilation for windows (from linux)"
 }

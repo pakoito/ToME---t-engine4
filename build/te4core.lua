@@ -138,7 +138,7 @@ project "TEngine"
 ----------------------------------------------------------------
 ----------------------------------------------------------------
 project "physfs"
-	kind "SharedLib"
+	kind "StaticLib"
 	language "C"
 	targetname "physfs"
 
@@ -339,7 +339,7 @@ elseif _OPTIONS.lua == "jit2" then
 			postbuildcommands { "cp ../bin/Release/buildvm ../src/luajit2/src/", }
 
 	project "luajit2"
-		kind "SharedLib"
+		kind "StaticLib"
 		language "C"
 		targetname "lua"
 		links { "buildvm" }
@@ -512,6 +512,7 @@ project "te4-bzip"
 
 	files { "../src/bzip2/*.c", }
 
+if not _OPTIONS['disable-awesomium'] and not _OPTIONS.wincross then
 project "te4-web"
 	kind "SharedLib"
 	language "C++"
@@ -519,9 +520,10 @@ project "te4-web"
 
 	libdirs {"/Test/awesomium_v1.7.2_sdk_linux64/bin/"}
 	includedirs {"/Test/awesomium_v1.7.2_sdk_linux64/include/"}
-	links { "awesomium-1-7", "lua".._OPTIONS.lua }
+	links { "awesomium-1-7" }
 	
 	files { "../src/web/*.cpp", }
+end
 
 if _OPTIONS.steam then
 	dofile("../steamworks/build/steam-code.lua")
