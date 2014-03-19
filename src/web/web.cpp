@@ -611,12 +611,11 @@ void te4_web_do_update(void (*cb)(WebEvent*)) {
 }
 
 void te4_web_setup(
-	int argc, char **gargv,
+	int argc, char **gargv, char *spawnc,
 	void*(*mutex_create)(), void(*mutex_destroy)(void*), void(*mutex_lock)(void*), void(*mutex_unlock)(void*),
 	unsigned int (*make_texture)(int, int), void (*del_texture)(unsigned int), void (*texture_update)(unsigned int, int, int, const void*),
 	void (*key_mods)(bool*, bool*, bool*, bool*)
 	) {
-printf("setpu\n");
 	web_mutex_create = mutex_create;
 	web_mutex_destroy = mutex_destroy;
 	web_mutex_lock = mutex_lock;
@@ -645,6 +644,9 @@ printf("setpu\n");
 
 		CefSettings settings;
 		settings.multi_threaded_message_loop = false;
+
+		CefString spawn(spawnc);
+		CefString(&settings.browser_subprocess_path) = spawn;
 		// CefString locales("game/thirdparty/cef3/locales/");
 		// CefString(&settings.locales_dir_path) = locales;
 		// CefString resources("game/thirdparty/cef3/");

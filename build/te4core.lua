@@ -538,6 +538,32 @@ if not _OPTIONS.wincross then
 			links {"cef_dll_wrapper"}
 			includedirs {"/Test/cef_binary_3.1547.1597_windows32/include/", "/Test/cef_binary_3.1547.1597_windows32/", }
 			links { "cef" }
+
+	project "cef3spawn"
+		kind "WindowedApp"
+		language "C++"
+		targetname "cef3spawn"
+
+		includedirs {"../src/web/", }
+		
+		files {
+			"../src/web/spawn.cpp",
+		}
+
+		configuration "linux"
+			buildoptions{"-pthread -I/usr/include/gtk-2.0 -I/usr/lib64/gtk-2.0/include -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/pango-1.0 -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/libpng15 -I/usr/include/libdrm"}
+			libdirs {"/Test/cef_binary_3.1547.1406_linux/out/Release/obj.target/"}
+			libdirs {"/Test/cef_binary_3.1547.1406_linux/Release/"}
+			links {"cef_dll_wrapper"}
+			includedirs {"/Test/cef_binary_3.1547.1406_linux/include/", "/Test/cef_binary_3.1547.1406_linux/", }
+			links { "cef" }
+
+		configuration "windows"
+			libdirs {"/Test/cef_binary_3.1547.1597_windows32/out/Release/obj.target/"}
+			libdirs {"/Test/cef_binary_3.1547.1597_windows32/Release/"}
+			links {"cef_dll_wrapper"}
+			includedirs {"/Test/cef_binary_3.1547.1597_windows32/include/", "/Test/cef_binary_3.1547.1597_windows32/", }
+			links { "cef" }
 end
 end
 
