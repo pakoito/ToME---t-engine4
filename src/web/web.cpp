@@ -31,16 +31,10 @@ static void (*web_key_mods)(bool *shift, bool *ctrl, bool *alt, bool *meta);
 using namespace Awesomium;
 
 class PhysfsDataSource;
-class WebJShandler;
 
 static WebCore *web_core = NULL;
 static WebSession *web_session = NULL;
 static PhysfsDataSource *web_data_source = NULL;
-
-typedef struct {
-	WebJShandler *listener;
-	int methods_ref;
-} web_js_type;
 
 class WebListener;
 
@@ -55,20 +49,11 @@ static char *webstring_to_buf(const WebString &wstr, size_t *flen) {
 	return buf;
 }
 
-class WebJShandler : public JSMethodHandler {
-public:
-	web_js_type *js;
-	virtual void OnMethodCall(WebView* caller, unsigned int remote_object_id, const WebString& method_name, const JSArray& args) {
-	}
-
-	virtual JSValue OnMethodCallWithReturnValue(WebView* caller, unsigned int remote_object_id, const WebString& method_name, const JSArray& args) {
-	}
-};
-
 class WebListener : 
 	public WebViewListener::View,
 	public WebViewListener::Download,
-	public WebViewListener::Load
+	public WebViewListener::Load,
+	public JSMethodHandler
 {
 private:
 	int handlers;
@@ -200,6 +185,12 @@ public:
 		event->data.loading.status = 1;
 		push_event(event);
 	}
+
+	virtual void OnMethodCall(WebView* caller, unsigned int remote_object_id, const WebString& method_name, const JSArray& args) {
+	}
+
+	virtual JSValue OnMethodCallWithReturnValue(WebView* caller, unsigned int remote_object_id, const WebString& method_name, const JSArray& args) {
+	}
 };
 
 class PhysfsDataSource : public DataSource {
@@ -214,7 +205,6 @@ public:
 	WebView *view;
 	WebListener *listener;
 	JSObject *te4core;
-	web_js_type *js;
 };
 
 void te4_web_new(web_view_type *view, const char *url, int w, int h) {
@@ -229,7 +219,6 @@ void te4_web_new(web_view_type *view, const char *url, int w, int h) {
 	opaque->view->set_download_listener(opaque->listener);
 	opaque->view->set_load_listener(opaque->listener);
 	opaque->te4core = NULL;
-	opaque->js = NULL;
 	view->w = w;
 	view->h = h;
 	view->closed = false;
@@ -246,10 +235,6 @@ bool te4_web_close(web_view_type *view) {
 		opaque->view->Destroy();
 		delete opaque->listener;
 		view->closed = true;
-		if (opaque->js) {
-			delete opaque->js->listener;
-			free(opaque->js);
-		}
 		if (opaque->te4core) delete opaque->te4core;
 		printf("Destroyed webview\n");
 		return true;
