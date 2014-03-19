@@ -35,7 +35,7 @@
  * Grab web browser methods -- availabe only here
  */
 static bool webcore = FALSE;
-#if 0
+#if 1
 static void (*te4_web_setup)(int, char**, char*, void*(*)(), void(*)(void*), void(*)(void*), void(*)(void*), unsigned int (*)(int, int), void (*)(unsigned int), void (*)(unsigned int, int, int, const void*), void (*)(bool*, bool*, bool*, bool*));
 static void (*te4_web_initialize)();
 static void (*te4_web_do_update)(void (*cb)(WebEvent*));
@@ -343,7 +343,7 @@ void te4_web_load() {
 
 	printf("[WEB] spawn exe %s\n", spawn);
 
-#if 0
+#if 1
 #if defined(SELFEXE_LINUX)
 	void *web = SDL_LoadObject("libte4-web.so");
 #elif defined(SELFEXE_BSD)
