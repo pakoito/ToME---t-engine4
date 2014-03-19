@@ -35,6 +35,7 @@
  * Grab web browser methods -- availabe only here
  */
 static bool webcore = FALSE;
+#if 0
 static void (*te4_web_setup)(int, char**, void*(*)(), void(*)(void*), void(*)(void*), void(*)(void*), unsigned int (*)(int, int), void (*)(unsigned int), void (*)(unsigned int, int, int, const void*), void (*)(bool*, bool*, bool*, bool*));
 static void (*te4_web_initialize)();
 static void (*te4_web_do_update)(void (*cb)(WebEvent*));
@@ -48,6 +49,9 @@ static void (*te4_web_inject_mouse_wheel)(web_view_type *view, int x, int y);
 static void (*te4_web_inject_mouse_button)(web_view_type *view, int kind, bool up);
 static void (*te4_web_inject_key)(web_view_type *view, int scancode, bool up);
 static void (*te4_web_download_action)(web_view_type *view, long id, const char *path);
+#else
+#include "web/web.h"
+#endif
 
 static int lua_web_new(lua_State *L) {
 	int w = luaL_checknumber(L, 1);
@@ -322,6 +326,7 @@ static void web_key_mods(bool *shift, bool *ctrl, bool *alt, bool *meta) {
 	if (smod & KMOD_GUI) *meta = TRUE;
 }
 
+#if 0
 void te4_web_load() {
 #if defined(SELFEXE_LINUX)
 	void *web = SDL_LoadObject("libte4-web.so");
@@ -351,7 +356,7 @@ void te4_web_load() {
 		te4_web_inject_mouse_button = (void (*)(web_view_type *view, int kind, bool up)) SDL_LoadFunction(web, "te4_web_inject_mouse_button");
 		te4_web_inject_key = (void (*)(web_view_type *view, int scancode, bool up)) SDL_LoadFunction(web, "te4_web_inject_key");
 		te4_web_download_action = (void (*)(web_view_type *view, long id, const char *path)) SDL_LoadFunction(web, "te4_web_download_action");
-printf("(=====)\n");
+printf("(=====) %x\n", te4_web_setup);
 		te4_web_setup(
 			g_argc, g_argv,
 			web_mutex_create, web_mutex_destroy, web_mutex_lock, web_mutex_unlock,
@@ -359,5 +364,18 @@ printf("(=====)\n");
 			web_key_mods
 			);
 	}
+	exit(0);
 }
+#else
+void te4_web_load() {
+	printf("Loading web core: done\n");
 
+	webcore = TRUE;
+	te4_web_setup(
+		g_argc, g_argv,
+		web_mutex_create, web_mutex_destroy, web_mutex_lock, web_mutex_unlock,
+		web_make_texture, web_del_texture, web_texture_update,
+		web_key_mods
+		);
+}
+#endif
