@@ -32,9 +32,24 @@ newEntity{
 }
 for i = 1, 20 do
 	newEntity(class:makeNewTrees({base="BURNT_TREE", define_as = "BURNT_TREE"..i, image = "terrain/grass_burnt1.png", nice_tiler = false}, {
-		{"gnarled_tree", {"shadow", "trunk", "foliage_bare"}},
-		{"small_elm", {"shadow", "trunk", "foliage_bare"}},
-		{"elm", {tall=-1, "shadow", "trunk", "foliage_bare"}},
+		-- {"gnarled_tree", {"shadow", "trunk", "foliage_bare"}},
+		-- {"small_elm", {"shadow", "trunk", "foliage_bare"}},
+		-- {"elm", {tall=-1, "shadow", "trunk", "foliage_bare"}},
+		{"burned_tree_01", {tall=-1, "shadow", "trunk", "foliage"}},
+		{"burned_tree_01", {tall=-1, "shadow", "trunk", {"foliage_ash_%02d",1,2}}},
+		{"burned_tree_02", {tall=-1, "shadow", "trunk", "foliage"}},
+		{"burned_tree_02", {tall=-1, "shadow", "trunk", {"foliage_ash_%02d",1,2}}},
+		{"small_burned_tree_01", {"shadow", "trunk"}},
+		{"small_burned_tree_01", {"shadow", {"trunk_ash_%02d",1,2}}},
+		{"small_burned_tree_02", {"shadow", "trunk", "foliage"}},
+		{"small_burned_tree_02", {"shadow", "trunk", {"foliage_ash_%02d",1,2}}},
+		{"small_burned_tree_03", {"shadow", "trunk", "foliage"}},
+		{"small_burned_tree_03", {"shadow", "trunk", {"foliage_ash_%02d",1,2}}},
+		-- {"burned_tree_01", {tall=-1, "shadow", "trunk", "foliage_winter"}},
+		-- {"burned_tree_02", {tall=-1, "shadow", "trunk", "foliage_winter"}},
+		-- {"small_burned_tree_01", {"shadow", "trunk_winter"}},
+		-- {"small_burned_tree_02", {"shadow", "trunk", "foliage_winter"}},
+		-- {"small_burned_tree_03", {"shadow", "trunk", "foliage_winter"}},
 	}))
 end
 
