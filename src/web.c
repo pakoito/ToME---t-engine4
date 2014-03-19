@@ -36,7 +36,7 @@
  */
 static bool webcore = FALSE;
 #if 0
-static void (*te4_web_setup)(int, char**, void*(*)(), void(*)(void*), void(*)(void*), void(*)(void*), unsigned int (*)(int, int), void (*)(unsigned int), void (*)(unsigned int, int, int, const void*), void (*)(bool*, bool*, bool*, bool*));
+static void (*te4_web_setup)(int, char**, char*, void*(*)(), void(*)(void*), void(*)(void*), void(*)(void*), unsigned int (*)(int, int), void (*)(unsigned int), void (*)(unsigned int, int, int, const void*), void (*)(bool*, bool*, bool*, bool*));
 static void (*te4_web_initialize)();
 static void (*te4_web_do_update)(void (*cb)(WebEvent*));
 static void (*te4_web_new)(web_view_type *view, const char *url, int w, int h);
@@ -326,8 +326,24 @@ static void web_key_mods(bool *shift, bool *ctrl, bool *alt, bool *meta) {
 	if (smod & KMOD_GUI) *meta = TRUE;
 }
 
-#if 0
 void te4_web_load() {
+	char *selfexe = get_self_executable(g_argc, g_argv);
+#ifdef _WIN32
+#define SPAWN_SEP '\\'
+#define SPAWN_NAME "cef3spawn.exe"
+#else
+#define SPAWN_SEP '/'
+#define SPAWN_NAME "cef3spawn"
+#endif
+	char *spawn_end = strrchr(selfexe, SPAWN_SEP) + 1;
+	size_t spawn_len = spawn_end - selfexe;
+	char *spawn = malloc(spawn_len + strlen(SPAWN_NAME) + 1);
+	memcpy(spawn, selfexe, spawn_len);
+	strcpy(spawn + spawn_len, SPAWN_NAME);
+
+	printf("[WEB] spawn exe %s\n", spawn);
+
+#if 0
 #if defined(SELFEXE_LINUX)
 	void *web = SDL_LoadObject("libte4-web.so");
 #elif defined(SELFEXE_BSD)
@@ -343,7 +359,7 @@ void te4_web_load() {
 
 	if (web) {
 		webcore = TRUE;
-		te4_web_setup = (void (*)(int, char**, void*(*)(), void(*)(void*), void(*)(void*), void(*)(void*), unsigned int (*)(int, int), void (*)(unsigned int), void (*)(unsigned int, int, int, const void*), void (*)(bool*, bool*, bool*, bool*) )) SDL_LoadFunction(web, "te4_web_setup");
+		te4_web_setup = (void (*)(int, char**, char*, void*(*)(), void(*)(void*), void(*)(void*), void(*)(void*), unsigned int (*)(int, int), void (*)(unsigned int), void (*)(unsigned int, int, int, const void*), void (*)(bool*, bool*, bool*, bool*) )) SDL_LoadFunction(web, "te4_web_setup");
 		te4_web_initialize = (void (*)()) SDL_LoadFunction(web, "te4_web_initialize");
 		te4_web_do_update = (void (*)(void (*cb)(WebEvent*))) SDL_LoadFunction(web, "te4_web_do_update");
 		te4_web_new = (void (*)(web_view_type *view, const char *url, int w, int h)) SDL_LoadFunction(web, "te4_web_new");
@@ -356,26 +372,25 @@ void te4_web_load() {
 		te4_web_inject_mouse_button = (void (*)(web_view_type *view, int kind, bool up)) SDL_LoadFunction(web, "te4_web_inject_mouse_button");
 		te4_web_inject_key = (void (*)(web_view_type *view, int scancode, bool up)) SDL_LoadFunction(web, "te4_web_inject_key");
 		te4_web_download_action = (void (*)(web_view_type *view, long id, const char *path)) SDL_LoadFunction(web, "te4_web_download_action");
-printf("(=====) %x\n", te4_web_setup);
+
 		te4_web_setup(
-			g_argc, g_argv,
+			g_argc, g_argv, spawn,
 			web_mutex_create, web_mutex_destroy, web_mutex_lock, web_mutex_unlock,
 			web_make_texture, web_del_texture, web_texture_update,
 			web_key_mods
 			);
+
+		free(spawn);
 	}
-	exit(0);
-}
 #else
-void te4_web_load() {
 	printf("Loading web core: done\n");
 
 	webcore = TRUE;
 	te4_web_setup(
-		g_argc, g_argv,
+		g_argc, g_argv, spawn,
 		web_mutex_create, web_mutex_destroy, web_mutex_lock, web_mutex_unlock,
 		web_make_texture, web_del_texture, web_texture_update,
 		web_key_mods
 		);
-}
 #endif
+}
