@@ -383,7 +383,6 @@ void te4_web_load() {
 		free(spawn);
 	}
 #else
-	printf("Loading web core: done\n");
 
 	webcore = TRUE;
 	te4_web_setup(
@@ -392,5 +391,7 @@ void te4_web_load() {
 		web_make_texture, web_del_texture, web_texture_update,
 		web_key_mods
 		);
+
+	printf("Loading web core: done\n");
 #endif
 }
