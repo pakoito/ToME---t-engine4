@@ -190,6 +190,7 @@ public:
 	}
 
 	virtual JSValue OnMethodCallWithReturnValue(WebView* caller, unsigned int remote_object_id, const WebString& method_name, const JSArray& args) {
+		return new JSValue();
 	}
 };
 
