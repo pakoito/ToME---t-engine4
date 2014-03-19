@@ -34,6 +34,7 @@ function _M:init(t)
 	self.never_clean = t.never_clean
 	self.allow_popup = t.allow_popup
 	self.allow_login = t.allow_login
+	if self.allow_login == nil then self.allow_login = true end
 
 	if self.allow_login and self.url:find("^http://te4%.org/") and profile.auth then
 		local param = "_te4ah="..profile.auth.hash.."&_te4ad="..profile.auth.drupid
@@ -80,14 +81,15 @@ function _M:generate()
 	end
 	self.loading_icon = self:getUITexture("ui/waiter/loading.png")
 
+	self.mouse:allowDownEvent(true)
 	self.mouse:registerZone(0, 0, self.w, self.h, function(button, x, y, xrel, yrel, bx, by, event)
 		if not self.view then return end
 		if event == "button" then
 			if button == "wheelup" then self.scroll_inertia = math.min(self.scroll_inertia, 0) - 5
 			elseif button == "wheeldown" then self.scroll_inertia = math.max(self.scroll_inertia, 0) + 5
-			elseif button == "left" then self.view:injectMouseButton(false, 1) self.view:injectMouseButton(true, 1)
-			elseif button == "middle" then self.view:injectMouseButton(false, 2) self.view:injectMouseButton(true, 2)
-			elseif button == "right" then self.view:injectMouseButton(false, 3) self.view:injectMouseButton(true, 3)
+			elseif button == "left" then self.view:injectMouseButton(true, 1)
+			elseif button == "middle" then self.view:injectMouseButton(true, 2)
+			elseif button == "right" then self.view:injectMouseButton(true, 3)
 			end				
 		elseif event == "button-down" then
 			if button == "wheelup" then self.scroll_inertia = math.min(self.scroll_inertia, 0) - 5

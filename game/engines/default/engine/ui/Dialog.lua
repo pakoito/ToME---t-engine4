@@ -317,6 +317,7 @@ function _M:generate()
 
 	self:updateTitle(self.title)
 
+	self.mouse:allowDownEvent(true)
 	if self.absolute then
 		self.mouse:registerZone(0, 0, gamew, gameh, function(button, x, y, xrel, yrel, bx, by, event) self:mouseEvent(button, x, y, xrel, yrel, bx - self.display_x, by - self.display_y, event) end)
 	else
