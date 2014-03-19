@@ -616,6 +616,7 @@ void te4_web_setup(
 	unsigned int (*make_texture)(int, int), void (*del_texture)(unsigned int), void (*texture_update)(unsigned int, int, int, const void*),
 	void (*key_mods)(bool*, bool*, bool*, bool*)
 	) {
+
 	web_mutex_create = mutex_create;
 	web_mutex_destroy = mutex_destroy;
 	web_mutex_lock = mutex_lock;
@@ -635,13 +636,6 @@ void te4_web_setup(
 		for (int i = 0; i < argc; i++) cargv[i] = strdup(gargv[i]);
 		CefMainArgs args(argc, cargv);
 #endif
-		int result = CefExecuteProcess((const CefMainArgs&)args, app.get());
-		if (result >= 0) {
-			exit(result);  // child proccess has endend, so exit.
-		} else if (result == -1) {
-			// we are here in the father proccess.
-		}
-
 		CefSettings settings;
 		settings.multi_threaded_message_loop = false;
 
@@ -651,7 +645,7 @@ void te4_web_setup(
 		// CefString(&settings.locales_dir_path) = locales;
 		// CefString resources("game/thirdparty/cef3/");
 		// CefString(&settings.resources_dir_path) = resources;
-		bool resulti = CefInitialize((const CefMainArgs&)args, settings, app.get());
+		bool resulti = CefInitialize(args, settings, app.get());
 		web_core = true;
 	}
 }
